@@ -88,6 +88,7 @@ protected:
             if (sound != NULL)
             {
                parent->addChild( new pjSoundNode( sound ) );
+               sound->trigger();
             }
             else
             {
