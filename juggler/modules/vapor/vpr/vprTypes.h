@@ -50,7 +50,7 @@
 namespace vpr
 {
 #if SIZEOF_CHAR == 1
-   typedef char Int8;
+   typedef signed   char Int8;
    typedef unsigned char Uint8;
 #endif
 

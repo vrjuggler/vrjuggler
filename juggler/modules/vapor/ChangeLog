@@ -1,5 +1,7 @@
 DATE       AUTHOR   CHANGE
 ---------- -------- -----------------------------------------------------------
+2004-11-18 patrickh Changed vpr::Int8 from char to signed char.
+                    NEW VERSION: 0.40.2
 2004-10-27 allenb   Added support for multi-threaded profile data collection.
                     Profile data is now collected and managed per thread.
 2004-10-27 allenb   Refactored BaseThread handling and usage.
