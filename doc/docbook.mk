@@ -47,6 +47,8 @@
 DOCBOOK_XSL_VERSION?=	1.66.1
 XALAN_VERSION?=		2_5_2
 SAXON_VERSION?=		6.5.2
+FOP_VERSION?=		0.20.5
+BATIK_VERSION?=		1.5.1
 
 # Installation paths.
 DOCBOOK_ROOT?=	/home/vr/Juggler/docbook
@@ -57,7 +59,7 @@ TEX_BINDIR?=	$(TEX_DIR)/bin/i386-linux
 # Application paths.
 DVIPDF?=	dvipdf
 DVIPS?=		dvips
-FOP?=		sh $(DOCBOOK_ROOT)/fop/fop.sh
+FOP?=		sh $(DOCBOOK_ROOT)/fop-$(FOP_VERSION)/fop.sh
 HTML2TXT?=	/usr/bin/links
 HTML2TXTOPTS?=	-dump
 JADE?=		openjade -V tex-backend
@@ -67,7 +69,7 @@ PDFJADETEX?=	$(TEX_BINDIR)/pdfjadetex
 PDFLATEX?=	$(TEX_BINDIR)/pdflatex
 PDFTEX?=	$(TEX_BINDIR)/pdftex
 PDFXMLTEX?=	$(TEX_BINDIR)/pdfxmltex
-RASTERIZER?=	$(DOCBOOK_ROOT)/batik-1.5/svgrasterizer
+RASTERIZER?=	$(DOCBOOK_ROOT)/batik-$(BATIK_VERSION)/svgrasterizer
 RM=		rm -f
 SAXON_DIR?=	$(DOCBOOK_ROOT)/saxon-$(SAXON_VERSION)
 SAXON?=		$(SAXON_DIR)/saxon.sh
