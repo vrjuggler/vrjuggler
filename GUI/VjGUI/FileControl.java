@@ -300,55 +300,63 @@ public class FileControl {
 
 
     public static File requestSaveFile (File file, int filtertype) {
-	JFileChooser chooser;
-
-	/* opens up a file requester... */
-	if (file == null) 
-	    chooser = new JFileChooser();
-	else if (file.isDirectory())
-	    chooser = new JFileChooser(file);
-	else {
-	    //System.out.println ("File is " + file + "\n and parent is " + file.getParent());
-	    String dir = file.getParent();
-	    if (dir == null)
-		dir = "";
-	    chooser = new JFileChooser (new File(dir));
-	    //chooser.setSelectedFile (file);
-	}
-	chooser.setDialogType(JFileChooser.SAVE_DIALOG);
-
-        javax.swing.filechooser.FileFilter[] filters = new javax.swing.filechooser.FileFilter[5];
-        if (filtertype < 0 || filtertype > 4)
-            filtertype = 0;
-        filters[0] = chooser.getAcceptAllFileFilter();
-	filters[1] = new SuffixFilter("Config Files (*.config, *.cfg)", ".config");
-        ((SuffixFilter)filters[1]).addSuffix(".cfg");
-	filters[2] = new SuffixFilter("Description Files (*.desc, *.dsc)", ".desc");
-        ((SuffixFilter)filters[2]).addSuffix(".dsc");
-        filters[3] = new SuffixFilter("Chunk Org Tree Files (*.org)", ".org");
-        filters[4] = new SuffixFilter("Perf Data Files (*.perf)", ".perf");
-        for (int i = 1; i < 5; i++)
-            chooser.addChoosableFileFilter (filters[i]);
-        chooser.setFileFilter (filters[filtertype]);
-
-	chooser.setFileHidingEnabled (false);
-	chooser.setApproveButtonText("Save");
-	chooser.setDialogTitle("Save File...");
-
-        if ((file != null) && (!file.isDirectory()))
-            chooser.setSelectedFile (file);
-
-	int returnVal = chooser.showSaveDialog(Core.ui); 
-	if(returnVal == JFileChooser.APPROVE_OPTION) { 
-	    return chooser.getSelectedFile();
-	} 
-	else
-	    return null;
+        try {
+            JFileChooser chooser;
+            if (file != null)
+                file = new File(file.getCanonicalPath());
+            else
+                file = new File(System.getProperty("user.dir"));
+            
+            /* opens up a file requester... */
+            if (file.isDirectory())
+                chooser = new JFileChooser(file.getCanonicalFile());
+            else {
+                //System.out.println ("File is " + file + "\n and parent is " + file.getParent());
+                String dir = file.getCanonicalFile().getParent();
+                if (dir == null) 
+                    dir = "";
+                chooser = new JFileChooser (new File(dir));
+                //chooser.setSelectedFile (file);
+            }
+            chooser.setDialogType(JFileChooser.SAVE_DIALOG);
+            
+            javax.swing.filechooser.FileFilter[] filters = new javax.swing.filechooser.FileFilter[5];
+            if (filtertype < 0 || filtertype > 4)
+                filtertype = 0;
+            filters[0] = chooser.getAcceptAllFileFilter();
+            filters[1] = new SuffixFilter("Config Files (*.config, *.cfg)", ".config");
+            ((SuffixFilter)filters[1]).addSuffix(".cfg");
+            filters[2] = new SuffixFilter("Description Files (*.desc, *.dsc)", ".desc");
+            ((SuffixFilter)filters[2]).addSuffix(".dsc");
+            filters[3] = new SuffixFilter("Chunk Org Tree Files (*.org)", ".org");
+            filters[4] = new SuffixFilter("Perf Data Files (*.perf)", ".perf");
+            for (int i = 1; i < 5; i++)
+                chooser.addChoosableFileFilter (filters[i]);
+            chooser.setFileFilter (filters[filtertype]);
+            
+            chooser.setFileHidingEnabled (false);
+            chooser.setApproveButtonText("Save");
+            chooser.setDialogTitle("Save File...");
+            
+            if ((file != null) && (!file.isDirectory()))
+                chooser.setSelectedFile (file);
+            
+            int returnVal = chooser.showSaveDialog(Core.ui); 
+            if(returnVal == JFileChooser.APPROVE_OPTION) { 
+                return chooser.getSelectedFile();
+            } 
+            else
+                return null;
+        }
+        catch (IOException e) {
+            return null;
+        }
     }
 
 
 
     public static String saveChunkDBFile (ConfigChunkDB db) {
+        //System.out.println ("file name is " + db.file);
 	File f = requestSaveFile (db.file, FILTER_CONFIG);
 	if (f == null)
 	    return db.name;
