@@ -152,12 +152,32 @@ case $target_os in
          esac
       fi
       ;;
-   # Darwin 1.x (aka MacOS X).
-   darwin1.*)
+   # Darwin (aka MacOS X).
+   darwin*)
       AC_DEFINE(__darwin__)
-      AC_DEFINE(__powerpc__)
-      AC_DEFINE(__OSVERSION__, 1)
-      EXTRA_DEFS="$EXTRA_DEFS -D__darwin__ -D__powerpc__ -D__OSVERSION__=1"
+      EXTRA_DEFS="$EXTRA_DEFS -D__darwin__"
+
+      case $target_cpu in
+         powerpc)
+            AC_DEFINE(__powerpc__)
+            EXTRA_DEFS="$EXTRA_DEFS -D__powerpc__"
+            ;;
+         *86)
+            AC_DEFINE(__x86__)
+            EXTRA_DEFS="$EXTRA_DEFS -D__x86__"
+            ;;
+      esac
+
+      case $target_os in
+         darwin1*)
+            AC_DEFINE(__OSVERSION__, 1)
+            EXTRA_DEFS="$EXTRA_DEFS -D__OSVERSION__=1"
+            ;;
+         darwin6*)
+            AC_DEFINE(__OSVERSION__, 6)
+            EXTRA_DEFS="$EXTRA_DEFS -D__OSVERSION__=6"
+            ;;
+      esac
       ;;
    # A machine running FreeBSD.
    freebsd*)
@@ -172,6 +192,10 @@ case $target_os in
          alpha)
             AC_DEFINE(__alpha__)
             EXTRA_DEFS="$EXTRA_DEFS -D__alpha__"
+            ;;
+         sparc)
+            AC_DEFINE(__sparc__)
+            EXTRA_DEFS="$EXTRA_DEFS -D__sparc__"
             ;;
       esac
 
