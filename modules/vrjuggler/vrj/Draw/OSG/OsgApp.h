@@ -56,10 +56,9 @@ namespace vrj
  *
  * PURPOSE:
  *
- * See also: GlApp
- *
+ * @see vrj::GlApp
  */
-class VJ_CLASS_API OsgApp : public GlApp
+class OsgApp : public GlApp
 {
 public:
    OsgApp(Kernel* kern) : GlApp(kern)
