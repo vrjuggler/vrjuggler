@@ -137,50 +137,36 @@ exit 0;
 sub recurseAction ($) {
     my $curfile = shift;
 
-    # This is equivalent to a C switch block.
-    SWITCH: {
-	# Match .txt or .TXT.
-	if ( $curfile =~ /\.txt$/i ) {
-	    installFile("$curfile", $uid, $gid, "$mode", "$dest_dir");
-	    last SWITCH;
-	}
+    # List of installable file extensions.  These are checked with a
+    # case-insensitive regular expression.
+    my (@exts) = qw(.txt .c .h .cxx .cpp .pl .desc .dsc .mk .htm .html .gif
+                    .jpg .dsw .dsp);
 
-	# Match .C, .c, or .h.
-	if ( $curfile =~ /\.[Cch]$/ ) {
-	    installFile("$curfile", $uid, $gid, "$mode", "$dest_dir");
-	    last SWITCH;
-	}
+    my $installed = 0;
 
-	# Match .cxx, .cpp, .CXX or .CPP.
-	if ( $curfile =~ /\.c(xx|pp)$/i ) {
-	    installFile("$curfile", $uid, $gid, "$mode", "$dest_dir");
-	    last SWITCH;
-	}
+    my $ext = '';
+    foreach $ext ( @exts ) {
+        if ( $curfile =~ /$ext$/i ) {
+            installFile("$curfile", $uid, $gid, "$mode", "$dest_dir");
+            $installed = 1;
+            last;
+        }
+    }
 
-	# Match .pl or .PL and install them with the execute bit set.
-	if ( $curfile =~ /\.pl$/i ) {
-	    installFile("$curfile", $uid, $gid, "$script_mode", "$dest_dir");
-	    last SWITCH;
-	}
+    unless ( $installed ) {
+        # This is equivalent to a C switch block.
+        SWITCH: {
+            # Match README.
+            if ( "$curfile" eq "README" ) {
+                installFile("$curfile", $uid, $gid, "$mode", "$dest_dir");
+                last SWITCH;
+            }
 
-	# Match .desc or .dsc for chuck description files.
-	if ( $curfile =~ /\.de?sc$/i ) {
-	    installFile("$curfile", $uid, $gid, "$mode", "$dest_dir");
-	    last SWITCH;
-	}
-
-	# Match Makefile.
-	if ( "$curfile" eq "Makefile" ) {
-	    installFile("$curfile", $uid, $gid, "$mode", "$dest_dir");
-	    last SWITCH;
-	}
-
-	# Match .dsp, .dsw, .DSP or .DSW.  These are Visual C++ workspace
-	# files.
-	if ( $curfile =~ /\.ds[wp]$/i ) {
-	    installFile("$curfile", $uid, $gid, "$mode", "$dest_dir");
-	    last SWITCH;
-	}
-
+            # Match Makefile.
+            if ( "$curfile" eq "Makefile" ) {
+                installFile("$curfile", $uid, $gid, "$mode", "$dest_dir");
+                last SWITCH;
+            }
+        }
     }
 }
