@@ -32,6 +32,7 @@
 
 #include <vrj/vrjConfig.h>
 
+#include <boost/concept_check.hpp>
 #include <OpenGL/gl.h>
 
 #include <vrj/Draw/OGL/GlWindow.h>
@@ -96,8 +97,6 @@ void GlWindowOSX::swapBuffers() {
 int GlWindowOSX::open() {
     vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_STATE_LVL)
        << "vrj::GlWindowOSX::open()" << std::endl << vprDEBUG_FLUSH;
-
-    GDHandle hGDWindow;
 
     //Get the size of the screen from core graphics
     //I'll need to check to see how this works with multiple monitors
@@ -242,10 +241,9 @@ void GlWindowOSX::configWindow(vrj::Display* _display)
 
 }
 
-
-/**** Static Helpers *****/
-/* static */ bool GlWindowOSX::createHardwareSwapGroup(std::vector<GlWindow*> wins)
+bool GlWindowOSX::createHardwareSwapGroup(std::vector<GlWindow*> wins)
 {
+   boost::ignore_unused_variable_warning(wins);
    return true; // This is not supported, just stubbed out.
 }
 
