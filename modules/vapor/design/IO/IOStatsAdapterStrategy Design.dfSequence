@@ -35,6 +35,11 @@ class reference15 {
 @__modelType reference 
 */
 class reference17 {
+}/**
+@__ref <oiref:design#Class#id3rhz8cp2qfpb1cp2t308m.node68:oiref><oihard>
+@__modelType reference 
+*/
+class reference69 {
 }}/**
 
 @__tags
@@ -63,6 +68,7 @@ class __options {
 <oigroup:<oiref:design#Class#id3rhz8cp2qfpb1cp2t308m.node16.link30:oiref>=:oigroup>
 <oigroup:Composite#$messageInplaceEditing#<oiref:design#Class#id3rhz8cp2qfpb1cp2t308m.node8.link27:oiref>=355,403,400,13,0:oigroup>
 <oigroup:Composite#$messageInplaceEditing#<oiref:design#Class#id3rhz8cp2qfpb1cp2t308m.node.link36:oiref>=217,313,53,13,0:oigroup>
+<oigroup:<oiref:design#Class#id3rhz8cp2qfpb1cp2t308m.node68:oiref>=110,610,474,138,1:oigroup>
 <oigroup:Composite#$messageInplaceEditing#<oiref:design#Class#id3rhz8cp2qfpb1cp2t308m.node8.link25:oiref>=355,263,400,13,0:oigroup>
 <oigroup:Composite#$messageInplaceEditing#<oiref:design#Class#id3rhz8cp2qfpb1cp2t308m.node.link20:oiref>=208,199,400,13,0:oigroup>
 <oigroup:<oiref:design#Class#id3rhz8cp2qfpb1cp2t308m.node14.node:oiref>=878,330,14,20,1:oigroup>
@@ -328,4 +334,20 @@ class link {
 @__ref <oiref:design#Class#id3rhz8cp2qfpb1cp2t308m.node:oiref><oihard> 
 */
 class link30 {
-}}
+}}/**
+@shapeType Note
+@__modelType node
+@name Note1
+@text Basic idea
+
+The BlockIO class has a set of strategy template methods (read_s, etc).
+These check if there is an active strategy, and if so they call that
+strategy.
+The Base strategy actually calls back to the BlockIO class to issue the 
+"real" read call to the implementation object.
+
+NOTE: much of this is actually bound statically so the performance
+overhead is minimized as much as possible. 
+*/
+class node68 {
+}
