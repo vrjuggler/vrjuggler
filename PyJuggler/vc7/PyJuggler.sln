@@ -46,6 +46,9 @@ Global
 		{1AC6A573-D42D-4E79-9E25-CCB0BC63413F}.Release.ActiveCfg = Release|Win32
 		{1AC6A573-D42D-4E79-9E25-CCB0BC63413F}.Release.Build.0 = Release|Win32
 	EndGlobalSection
+	GlobalSection(SolutionItems) = postSolution
+		README.html = README.html
+	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 	EndGlobalSection
 	GlobalSection(ExtensibilityAddIns) = postSolution
