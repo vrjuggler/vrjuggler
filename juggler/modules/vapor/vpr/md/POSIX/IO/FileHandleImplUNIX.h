@@ -202,7 +202,7 @@ public:
     * @return vpr::ReturnStatus;:Succeed is returned if the blocking mode was
     *         changed successfully; vpr::ReturnStatus::Fail otherwise.
     */
-   vpr::ReturnStatus setBlocking(const bool& blocking);
+   vpr::ReturnStatus setBlocking(bool blocking);
 
    /**
     * Returns the contained handle.
@@ -288,7 +288,7 @@ public:
     *         changed successfully.  vpr::ReturnStatus::Fail is returned if
     *         the write mode could not be changed for some reason.
     */
-   vpr::ReturnStatus setAppend(const bool& flag);
+   vpr::ReturnStatus setAppend(bool flag);
 
    /**
     * Reconfigures the file handle so that writes are synchronous or
@@ -305,7 +305,7 @@ public:
     *         changed successfully.  vpr::ReturnStatus::Fail is returned if
     *         the write mode could not be changed for some reason.
     */
-   vpr::ReturnStatus setSynchronousWrite(const bool& flag);
+   vpr::ReturnStatus setSynchronousWrite(bool flag);
 
    /**
     * Tests if the I/O device is read-only.

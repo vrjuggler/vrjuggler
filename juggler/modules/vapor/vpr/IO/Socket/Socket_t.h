@@ -237,7 +237,7 @@ public:
     *         blocking mode is set to blocking.  vpr::ReturnStatus::Fail is
     *         returned otherwise.
     */
-   vpr::ReturnStatus setBlocking(const bool& blocking)
+   vpr::ReturnStatus setBlocking(bool blocking)
    {
       return mSocketImpl->setBlocking(blocking);
    }

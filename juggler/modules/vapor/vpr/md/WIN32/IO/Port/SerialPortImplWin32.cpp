@@ -374,7 +374,7 @@ bool SerialPortImplWin32::getInputParityCheckState()
 }
 
 // Enable input parity checking.
-vpr::ReturnStatus SerialPortImplWin32::setInputParityCheck(const bool& flag)
+vpr::ReturnStatus SerialPortImplWin32::setInputParityCheck(bool flag)
 {
    vpr::ReturnStatus s;
    DCB dcb;
@@ -401,7 +401,7 @@ bool SerialPortImplWin32::getLocalAttachState()
 }
 
 // Enable CLOCAL, that is the device is locally attached
-vpr::ReturnStatus SerialPortImplWin32::setLocalAttach(const bool& flag)
+vpr::ReturnStatus SerialPortImplWin32::setLocalAttach(bool flag)
 {
    // Not implemented yet...
    return vpr::ReturnStatus(vpr::ReturnStatus::Fail);
@@ -415,7 +415,7 @@ bool SerialPortImplWin32::getBreakByteIgnoreState()
 }
 
 // Enable ignoring of received BREAK bytes.
-vpr::ReturnStatus SerialPortImplWin32::setBreakByteIgnore(const bool& flag)
+vpr::ReturnStatus SerialPortImplWin32::setBreakByteIgnore(bool flag)
 {
    // Not implemented yet...
    return vpr::ReturnStatus(vpr::ReturnStatus::Fail);
@@ -541,7 +541,7 @@ bool SerialPortImplWin32::getBadByteIgnoreState()
 }
 
 // Enable ignoring of received bytes with framing errors or parity errors.
-vpr::ReturnStatus SerialPortImplWin32::setBadByteIgnore(const bool& flag)
+vpr::ReturnStatus SerialPortImplWin32::setBadByteIgnore(bool flag)
 {
    vpr::ReturnStatus s;
    DCB dcb;
@@ -580,7 +580,7 @@ bool SerialPortImplWin32::getParityGenerationState()
 
 // Enable parity generation for outgoing bytes and parity checking for
 // incoming bytes.
-vpr::ReturnStatus SerialPortImplWin32::setParityGeneration(const bool& enableParity)
+vpr::ReturnStatus SerialPortImplWin32::setParityGeneration(bool enableParity)
 {
    vpr::ReturnStatus s;
    DCB dcb;
@@ -623,7 +623,7 @@ bool SerialPortImplWin32::getParityErrorMarkingState()
 }
 
 // Enable parity error and framing error marking.
-vpr::ReturnStatus SerialPortImplWin32::setParityErrorMarking(const bool& flag)
+vpr::ReturnStatus SerialPortImplWin32::setParityErrorMarking(bool flag)
 {
    vpr::ReturnStatus s;
    DCB dcb;
@@ -734,7 +734,7 @@ bool SerialPortImplWin32::getHardwareFlowControlState()
    }
 }
 
-vpr::ReturnStatus SerialPortImplWin32::setHardwareFlowControl(const bool& enable)
+vpr::ReturnStatus SerialPortImplWin32::setHardwareFlowControl(bool enable)
 {
    vpr::ReturnStatus s;
 
@@ -779,7 +779,7 @@ bool SerialPortImplWin32::getCanonicalState()
    return false;
 }
 
-vpr::ReturnStatus SerialPortImplWin32::setCanonicalInput(const bool& flag)
+vpr::ReturnStatus SerialPortImplWin32::setCanonicalInput(bool flag)
 {
    std::cout << "Canoncial State not yet implemented, EOF is enabled."
              << std::endl;
@@ -792,7 +792,7 @@ bool SerialPortImplWin32::getBitStripState()
    return false;
 }
 
-vpr::ReturnStatus SerialPortImplWin32::setBitStripping(const bool& flag)
+vpr::ReturnStatus SerialPortImplWin32::setBitStripping(bool flag)
 {
    std::cout << "Bit Stripping is not yet implemented on Win32." << std::endl;
    return vpr::ReturnStatus::Fail;
@@ -812,14 +812,14 @@ bool SerialPortImplWin32::getStartStopOutputState()
    return false;
 }
 
-vpr::ReturnStatus SerialPortImplWin32::setStartStopInput(const bool& flag)
+vpr::ReturnStatus SerialPortImplWin32::setStartStopInput(bool flag)
 {
    std::cout << "Start/Stop Input is not yet implemented on Win32."
              << std::endl;
    return vpr::ReturnStatus::Fail;
 }
 
-vpr::ReturnStatus SerialPortImplWin32::setStartStopOutput(const bool& flag)
+vpr::ReturnStatus SerialPortImplWin32::setStartStopOutput(bool flag)
 {
    std::cout << "Start/Stop output is not yet implemented on Win32."
              << std::endl;

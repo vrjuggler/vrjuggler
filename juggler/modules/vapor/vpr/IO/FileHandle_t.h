@@ -151,7 +151,7 @@ public:
     *         was changed successfully.  vpr::ReturnStatus::Fail will be
     *         returned if the blocking mode could not be changed.
     */
-   virtual vpr::ReturnStatus setBlocking(const bool& blocking)
+   virtual vpr::ReturnStatus setBlocking(bool blocking)
    {
       return mHandleImpl.setBlocking(blocking);
    }
@@ -240,7 +240,7 @@ public:
     *         changed successfully.  vpr::ReturnStatus::Fail is returned
     *         otherwise.
     */
-   vpr::ReturnStatus setAppend(const bool& flag)
+   vpr::ReturnStatus setAppend(bool flag)
    {
       return mHandleImpl.setAppend(flag);
    }
@@ -260,7 +260,7 @@ public:
     *         changed successfully.  vpr::ReturnStatus::Fail is returned if
     *         the write mode could not be changed for some reason.
     */
-   vpr::ReturnStatus setSynchronousWrite(const bool& flag)
+   vpr::ReturnStatus setSynchronousWrite(bool flag)
    {
       return mHandleImpl.setSynchronousWrite(flag);
    }
