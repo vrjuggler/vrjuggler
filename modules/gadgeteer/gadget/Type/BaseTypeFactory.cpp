@@ -42,6 +42,8 @@
 #include <gadget/Type/Analog.h>
 #include <gadget/Type/Position.h>
 #include <gadget/Type/EventWindow.h>
+#include <gadget/Type/SpeechRecogDigital.h>
+#include <gadget/Type/SpeechRecogString.h>
 #include <gadget/Type/InputMixer.h>
 //#include <gadget/Type/BaseTypes.h>
 #include <gadget/Util/Debug.h>
