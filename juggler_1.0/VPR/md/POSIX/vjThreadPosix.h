@@ -340,12 +340,7 @@ public:  // ----- Various other thread functions ------
     // -----------------------------------------------------------------------
     inline static int
     msleep (u_int32_t milli) {
-#ifdef VJ_OS_Linux
-        usleep(milli*1000);
-        return 0;  // usleep can't report failure, so assume success.
-#else
-        return ::usleep(milli * 1000);
-#endif
+        return usleep(milli * 1000);
     }
 
     // -----------------------------------------------------------------------
