@@ -46,13 +46,12 @@ dnl Test for JCCL and then define the following variables:
 dnl     JCCL_CXXFLAGS
 dnl     JCCL_CXXFLAGS_ALL
 dnl     JCCL_LIBS_LD
-dnl     JCCL_LIBS_LD_ALL
 dnl     JCCL_LIBS_STATIC_LD
-dnl     JCCL_LIBS_STATIC_LD_ALL
 dnl     JCCL_LIBS_CC
-dnl     JCCL_LIBS_CC_ALL
 dnl     JCCL_LIBS_STATIC_CC
-dnl     JCCL_LIBS_STATIC_CC_ALL
+dnl     JCCL_EXTRA_LIBS
+dnl     JCCL_EXTRA_LIBS_ALL
+dnl     JCCL_VERSION
 dnl ---------------------------------------------------------------------------
 AC_DEFUN(JCCL_PATH,
 [
@@ -108,15 +107,12 @@ dnl                          test JCCL program], , enable_jccltest=yes)
     else
         JCCL_CXXFLAGS=`$JCCL_CONFIG $jccl_config_args --cxxflags $ABI`
         JCCL_CXXFLAGS_ALL=`$JCCL_CONFIG $jccl_config_args --cxxflags $ABI --all`
+        JCCL_LIBS_LD="`$JCCL_CONFIG $jccl_config_args --libs $ABI --linker`"
+        JCCL_LIBS_STATIC_LD="`$JCCL_CONFIG $jccl_config_args --libs $ABI --linker --static`"
+        JCCL_LIBS_CC="`$JCCL_CONFIG $jccl_config_args --libs $ABI`"
+        JCCL_LIBS_STATIC_CC="`$JCCL_CONFIG $jccl_config_args --libs $ABI --static`"
         JCCL_EXTRA_LIBS=`$JCCL_CONFIG $jccl_config_args --extra-libs $ABI`
-        JCCL_LIBS_LD="`$JCCL_CONFIG $jccl_config_args --libs $ABI --linker` $JCCL_EXTRA_LIBS"
-        JCCL_LIBS_LD_ALL="`$JCCL_CONFIG $jccl_config_args --libs $ABI --linker --all` $JCCL_EXTRA_LIBS"
-        JCCL_LIBS_STATIC_LD="`$JCCL_CONFIG $jccl_config_args --libs $ABI --linker --static` $JCCL_EXTRA_LIBS"
-        JCCL_LIBS_STATIC_LD="`$JCCL_CONFIG $jccl_config_args --libs $ABI --linker --static --all` $JCCL_EXTRA_LIBS"
-        JCCL_LIBS_CC="`$JCCL_CONFIG $jccl_config_args --libs $ABI` $JCCL_EXTRA_LIBS"
-        JCCL_LIBS_CC_ALL="`$JCCL_CONFIG $jccl_config_args --libs $ABI --all` $JCCL_EXTRA_LIBS"
-        JCCL_LIBS_STATIC_CC="`$JCCL_CONFIG $jccl_config_args --libs $ABI --static` $JCCL_EXTRA_LIBS"
-        JCCL_LIBS_STATIC_CC="`$JCCL_CONFIG $jccl_config_args --libs $ABI --static --all` $JCCL_EXTRA_LIBS"
+        JCCL_EXTRA_LIBS_ALL=`$JCCL_CONFIG $jccl_config_args --extra-libs $ABI --all`
         JCCL_VERSION=`$JCCL_CONFIG --version`
         DPP_VERSION_CHECK_MSG(JCCL, $JCCL_VERSION, $min_jccl_version,
                               jccl_cv_jccl_version, $2, $3)
@@ -132,24 +128,22 @@ dnl                          test JCCL program], , enable_jccltest=yes)
         JCCL_CXXFLAGS=""
         JCCL_CXXFLAGS_ALL=""
         JCCL_LIBS_LD=""
-        JCCL_LIBS_LD_ALL=""
         JCCL_LIBS_STATIC_LD=""
-        JCCL_LIBS_STATIC_LD_ALL=""
         JCCL_LIBS_CC=""
-        JCCL_LIBS_CC_ALL=""
         JCCL_LIBS_STATIC_CC=""
-        JCCL_LIBS_STATIC_CC_ALL=""
+        JCCL_EXTRA_LIBS=""
+        JCCL_EXTRA_LIBS_ALL=""
+        JCCL_VERSION='-1'
         ifelse([$3], , :, [$3])
     fi
 
     AC_SUBST(JCCL_CXXFLAGS)
     AC_SUBST(JCCL_CXXFLAGS_ALL)
     AC_SUBST(JCCL_LIBS_LD)
-    AC_SUBST(JCCL_LIBS_LD_ALL)
     AC_SUBST(JCCL_LIBS_STATIC_LD)
-    AC_SUBST(JCCL_LIBS_STATIC_LD_ALL)
     AC_SUBST(JCCL_LIBS_CC)
-    AC_SUBST(JCCL_LIBS_CC_ALL)
     AC_SUBST(JCCL_LIBS_STATIC_CC)
-    AC_SUBST(JCCL_LIBS_STATIC_CC_ALL)
+    AC_SUBST(JCCL_EXTRA_LIBS)
+    AC_SUBST(JCCL_EXTRA_LIBS_ALL)
+    AC_SUBST(JCCL_VERSION)
 ])
