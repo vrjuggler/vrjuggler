@@ -30,8 +30,8 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _CLUSTER_SWAP_LOCK_TCP_PLUGIN_H
-#define _CLUSTER_SWAP_LOCK_TCP_PLUGIN_H
+#ifndef _CLUSTER_SWAP_LOCK_WIRED_PLUGIN_H
+#define _CLUSTER_SWAP_LOCK_WIRED_PLUGIN_H
 
 #include <cluster/Plugins/PluginConfig.h>
 
@@ -54,19 +54,17 @@ extern "C" GADGET_CLUSTER_PLUGIN_API(cluster::ClusterPlugin*) initPlugin();
 
 namespace cluster
 {
-class GADGET_CLUSTER_PLUGIN_CLASS_API SwapLockTCPPlugin
+class GADGET_CLUSTER_PLUGIN_CLASS_API SwapLockWiredPlugin
    : public cluster::ClusterPlugin
 {
-   vprSingletonHeader( SwapLockTCPPlugin );
-public:
-   SwapLockTCPPlugin()  : mPluginGUID("5edfc033-1b3e-4741-b0e0-6ebb47967644"),
-      SYNC_SIGNAL('G'), read_timeout(100,vpr::Interval::Msec), mActive(false), mIsMaster(false)
+   vprSingletonHeader( SwapLockWiredPlugin );
+private:
+   SwapLockWiredPlugin() : mWire(-1), mPluginGUID("f4f31d1c-eb4f-41fa-94d4-bde783bf32d6"),
+      mIsMaster(false), mActive(false)
    {;}
-
-   virtual ~SwapLockTCPPlugin()
-   {
-      delete mSyncServerSocket;
-   }
+public:
+   virtual ~SwapLockWiredPlugin()
+   {;}
    
    /**
     * Get the GUID associated with this plugin.
@@ -93,7 +91,7 @@ public:
     */
    virtual void postPostFrame();
    
-   /** Returns the status of SwapLockTCPPlugin(Not Used)
+   /** Returns the status of SwapLockWiredPlugin(Not Used)
     *
     *  @return true If plugin is completly configured
     *               and has no pending tasks.
@@ -111,7 +109,7 @@ public:
     */
    virtual std::string getPluginName()
    {
-      return(std::string("SwapLockTCPPlugin"));
+      return(std::string("SwapLockWiredPlugin"));
    }
 
    /** Add the pending chunk to the configuration.
@@ -136,22 +134,17 @@ public:
    bool configCanHandle(jccl::ConfigChunkPtr chunk);
 private:
    /**
-    * Helper function that determaines if the given ConfigChunk is a SwapLockTCPPlugin.
+    * Helper function that determaines if the given ConfigChunk is a SwapLockWiredPlugin.
     */
-   bool recognizeSwapLockTCPPluginConfig(jccl::ConfigChunkPtr chunk);
+   bool recognizeSwapLockWiredPluginConfig(jccl::ConfigChunkPtr chunk);
    
    /**
-    * Returns the string representation of the chunk type used for the SwapLockTCPPlugin
+    * Returns the string representation of the chunk type used for the SwapLockWiredPlugin
     */   
-   static std::string getChunkType() { return std::string( "SwapLockTCPPlugin" ); }
+   static std::string getChunkType() { return std::string( "SwapLockWiredPlugin" ); }
    
-   /**
-    * Attempts to connect to the sync master.
-    *
-    * @post -If we successfully connect to the sync master, mActive will become true.
-    */
-   vpr::ReturnStatus ConnectToMasterSocket();
-
+   vpr::ReturnStatus ConnectToWiredParallel();
+   vpr::ReturnStatus Init();
    /**
     * Start listening for incoming connection requests.
     *
@@ -186,21 +179,11 @@ private:
     */
    void slaveReceive();
 private:
-   vpr::Thread*                     mAcceptThread;       /**< Thread that listens for incoming connections. */
-   vpr::InetAddr                    mListenAddr;         /**< Address to listen for incoming connections on. */
-   
-   vpr::SocketStream*               mSyncServerSocket;   /**< SocketStream for the sync master. */
-   std::vector<vpr::SocketStream*>  mSyncClients;        /**< Vector of all sync slave's SocketStreams. */
-   vpr::Mutex                       mSyncClientsLock;    /**< Mutex used to ensure thread safty while adding sync slaves */
-   
    std::string                      mBarrierMasterHostname; /**< Hostname of the sync master. */
-   vpr::Uint16                      mTCPport;               /**< TCP Port that the sync master is listening on. */
 
+   int                              mWire;
    vpr::GUID                        mPluginGUID;         /**< GUID for this ClusterPlugin */
 
-   const vpr::Uint8                 SYNC_SIGNAL;         /**< Character that will be sent for each signal. */
-   const vpr::Interval              read_timeout;        /**< Maximum time to wait for the barrier before slipping. */
-   
    bool                             mIsMaster;           /**< Are we the sync master? */
    bool                             mActive;             /**< Is the plugin ready to be used? */
 };

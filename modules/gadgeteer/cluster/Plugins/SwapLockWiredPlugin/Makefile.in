@@ -42,16 +42,16 @@ default: all
 # Include common definitions.
 include @topdir@/make.defs.mk
 
-PLUGIN_NAME=	SwapLockTCPPlugin
+PLUGIN_NAME=	SwapLockWiredPlugin
 
-includedir=	@includedir@/cluster/Plugins/SwapLockTCPPlugin
+includedir=	@includedir@/cluster/Plugins/SwapLockWiredPlugin
 srcdir=		@srcdir@
 top_srcdir=	@top_srcdir@
 INSTALL=	@INSTALL@
 SUBOBJDIR=	$(PLUGIN_NAME)
 C_AFTERBUILD=	plugin-dso
 
-SRCS=		SwapLockTCPPlugin.cpp
+SRCS=		SwapLockWiredPlugin.cpp
 
 include $(MKPATH)/dpp.obj.mk
 
