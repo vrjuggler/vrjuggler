@@ -40,7 +40,7 @@
 #include <math.h>
 #include <Math/vjMatrix.h>
 
-#define VJ_QUAT_EPSILON	    0.00001f
+#define VJ_QUAT_EPSILON     0.00001f
 
 // ----------------------------------------------------------------------------
 //: Class to encapsulate quaternion behaviors.
@@ -52,7 +52,7 @@
 //    Advanced Animation and Rendering Techniques: pp363-365      <br>
 //    Quaternion Calculus for Animation,  Ken Shoemake SIGGRAPH course notes 1989  <br>
 //    Animating Rotation with Quaternion Curves,  Ken Shoemake <br>
-//		   SIGGRAPH Proceedings Vol 19, Number 3, 1985           <br>
+//       SIGGRAPH Proceedings Vol 19, Number 3, 1985           <br>
 //-----------------------------------------------------------------------------
 //!PUBLIC_API:
 class vjQuat : public vjVec4
@@ -74,7 +74,7 @@ public:
    }
 
    //: Construct quat from matrix
-   void makeQuat(vjMatrix& mat);
+   void makeQuat(const vjMatrix& mat);
 
    //: Not implemented
    void getRot(float* angle, float* x, float* y, float* z)

@@ -151,7 +151,7 @@ public:
    //
    //!POST: mat = rX*rY*rZ
    void makeXYZEuler(float xRot, float yRot, float zRot);
-   void getXYZEuler(float& xRot, float& yRot, float& zRot);
+   void getXYZEuler(float& xRot, float& yRot, float& zRot) const;
 
    //: Make ZYX Euler matrix
    //!POST: mat = rZ*rY*rX
@@ -159,11 +159,11 @@ public:
    //!ARGS: rotY - Rotation about the y-axis
    //!ARGS: rotX - Rotation about the x-axis
    void makeZYXEuler(float zRot, float yRot, float xRot);
-   void getZYXEuler(float& zRot, float& yRot, float& xRot);
+   void getZYXEuler(float& zRot, float& yRot, float& xRot) const;
 
    //!POST: mat = rZ*rX*rY
    void makeZXYEuler( float zRot, float xRot, float yRot );
-   void getZXYEuler( float& zRot, float& xRot, float& yRot );
+   void getZXYEuler( float& zRot, float& xRot, float& yRot ) const;
 
    //: extract the yaw information from the matrix
    //!POST:  returned value is from -180 to 180, where 0 is none
@@ -231,8 +231,8 @@ public:
 
    //: Get the translation portion of the matrix
    //!POST: _x, _y, and _z contain the translation portion of the matrix
-   void getTrans(float& _x, float& _y, float& _z);
-   vjVec3 getTrans();
+   void getTrans(float& _x, float& _y, float& _z) const;
+   vjVec3 getTrans() const;
 
    //: Make scale matrix
    void makeScale(float _x, float _y, float _z);

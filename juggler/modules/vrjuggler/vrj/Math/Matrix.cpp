@@ -78,7 +78,7 @@ void vjMatrix::makeXYZEuler(float xRot, float yRot, float zRot)
    zeroClamp();     // Clamp ~ zero values
 }
 
-void vjMatrix::getXYZEuler(float& xRot, float& yRot, float& zRot)
+void vjMatrix::getXYZEuler(float& xRot, float& yRot, float& zRot) const
 {
    float cz;
 
@@ -110,7 +110,7 @@ void vjMatrix::makeZYXEuler(float zRot, float yRot, float xRot)
    zeroClamp();     // Clamp ~ zero values
 }
 
-void vjMatrix::getZYXEuler(float& zRot, float& yRot, float& xRot)
+void vjMatrix::getZYXEuler(float& zRot, float& yRot, float& xRot) const
 {
    float sx;
 
@@ -345,7 +345,7 @@ void vjMatrix::constrainRotAxis( const bool& allowXRot, const bool& allowYRot, c
    result = constrainedMatrix;
 }
 
-void vjMatrix::getZXYEuler(float& zRot, float& xRot, float& yRot)
+void vjMatrix::getZXYEuler(float& zRot, float& xRot, float& yRot) const
 {
    // Extract the rotation directly fromt he matrix
    float x_angle;
@@ -501,14 +501,14 @@ void vjMatrix::setTrans(const vjVec3& trans)
 { setTrans(trans[0],trans[1],trans[2]); }
 
 
-void vjMatrix::getTrans(float& _x, float& _y, float& _z)
+void vjMatrix::getTrans(float& _x, float& _y, float& _z) const
 {
    _x = mat[3][0];
    _y = mat[3][1];
    _z = mat[3][2];
 }
 
-vjVec3 vjMatrix::getTrans()
+vjVec3 vjMatrix::getTrans() const
 {
    vjVec3 trans;;
    getTrans(trans[0],trans[1],trans[2]);
