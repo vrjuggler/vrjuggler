@@ -198,23 +198,7 @@ public:
      *          self that uses the named ChunkDesc.  The memory for the
      *          vector should be deleted by the caller.
      */ 
-    std::vector<ConfigChunkPtr>* getMatching (const std::string& mytypename) const {
-        return getMatching ("type", mytypename);
-    }
-
-
-
-    /** Returns all ConfigChunks matching a given property and value.
-     *
-     *  @param property - name of a property to search for.
-     *  @param value - a value that should match.
-     *  @return A pointer to a vector containing every ConfigChunk in
-     *          self that matches property and value.  The memory for the
-     *          vector should be deleted by the caller.
-     */ 
-    std::vector<ConfigChunkPtr>* getMatching (const std::string& property, const std::string value) const;
-    std::vector<ConfigChunkPtr>* getMatching (const std::string& property, int value) const;
-    std::vector<ConfigChunkPtr>* getMatching (const std::string& property, float value) const;
+    std::vector<ConfigChunkPtr>* getOfDescToken (const std::string& mytypename) const;
 
 
 
@@ -232,17 +216,6 @@ public:
      *          false otherwise.
      */
     bool removeNamed (const std::string& name);
-
-
-
-    /** Removes all chunks matching property and value.
-     *  @param property - name of a property to search for.
-     *  @param value - a value that should match.
-     *  @return Number of ConfigChunks removed.
-     */
-    int removeMatching (const std::string& property, int value);
-    int removeMatching (const std::string& property, float value);
-    int removeMatching (const std::string& property, const std::string& value);
 
 
 
