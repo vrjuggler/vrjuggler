@@ -131,7 +131,7 @@ protected:
     //     remote_addr - The host address structure of the site to which we
     //                   are connected.
     // ------------------------------------------------------------------------
-    SocketStreamImpBSD(const int sock, InetAddr& remote_addr);
+    SocketStreamImpBSD(const int sock, const InetAddr& remote_addr);
 };
 
 }; // End of vpr namespace
