@@ -1,0 +1,7 @@
+SL_LIB = -L../sl.b -lsl
+SL_INCLUDE = -I../sl.b 
+BASE_CLASS_INCLUDES = -I../
+
+############################################################
+ADDITIONAL_INCLUDES = $(SL_INCLUDE) $(BASE_CLASS_INCLUDES)
+ADDITIONAL_LIBS = $(SL_LIB)
