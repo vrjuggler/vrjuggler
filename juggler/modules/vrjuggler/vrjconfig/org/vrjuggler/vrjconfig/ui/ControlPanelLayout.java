@@ -182,7 +182,8 @@ public class ControlPanelLayout
             if (i % 2 == 0)
             {
                // Should be in the right column
-               x += Math.max(maxPrefSize.width, max_width/2-(hgap/2)) + hgap;
+               x += maxPrefSize.width + hgap;
+//               x += Math.max(maxPrefSize.width, max_width/2-(hgap/2)) + hgap;
             }
             else
             {
