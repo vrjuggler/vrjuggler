@@ -49,7 +49,7 @@
 
 //: vjGlove proxy class.
 //!PUBLIC_API:
-class vjGloveProxy : public vjTypedProxy<vjGlove>
+class VJ_CLASS_API vjGloveProxy : public vjTypedProxy<vjGlove>
 {
 public:
      //: Construct the proxy to point to the given glove device and sub-unit number.

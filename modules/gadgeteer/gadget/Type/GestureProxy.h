@@ -57,7 +57,7 @@
 //
 // See also: vjGesture
 //!PUBLIC_API:
-class vjGestureProxy : public vjTypedProxy<vjGesture>
+class VJ_CLASS_API vjGestureProxy : public vjTypedProxy<vjGesture>
 {
 public:
    //: Construct the proxy to point to the given gesture device.
