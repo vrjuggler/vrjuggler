@@ -2,8 +2,10 @@
 <?org-vrjuggler-jccl-settings configuration.version="3.0"?>
 <configuration xmlns="http://www.vrjuggler.org/jccl/xsd/3.0/configuration" name="Configuration" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.0/configuration http://www.vrjuggler.org/jccl/xsd/3.0/configuration.xsd">
    <elements>
-      <input_manager name="Input Manager" version="1">
-         <driver>${VJ_BASE_DIR}/lib/gadgeteer/drivers/IS900_drv.so</driver>
+      <input_manager name="Input Manager" version="2">
+         <driver_path>${VJ_BASE_DIR}/lib/gadgeteer/drivers</driver_path>
+         <driver_path>${VJ_BASE_DIR}/lib32/gadgeteer/drivers</driver_path>
+         <driver>IS900_drv</driver>
       </input_manager>
       <intersense name="Isense1" version="1">
          <port>/dev/ttyd11</port>

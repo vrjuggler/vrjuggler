@@ -17,8 +17,10 @@
          </digital_device>
          <device_host />
       </tweek_gadget>
-      <input_manager name="Tweek Input Manager" version="1">
-         <driver>${VJ_BASE_DIR}/lib/gadgeteer/drivers/TweekGadget_drv.so</driver>
+      <input_manager name="Tweek Input Manager" version="2">
+         <driver_path>${VJ_BASE_DIR}/lib/gadgeteer/drivers</driver_path>
+         <driver_path>${VJ_BASE_DIR}/lib32/gadgeteer/drivers</driver_path>
+         <driver>TweekGadget_drv</driver>
       </input_manager>
       <tweek_gadget_gui name="TweekGadget GUI" version="1">
          <digital_device />
