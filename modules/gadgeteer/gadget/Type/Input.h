@@ -64,7 +64,6 @@
 #include <signal.h>
 #include <float.h>
 
-#include <SharedMem/vjMemory.h>
 #include <Sync/vjMutex.h>
 #include <Sync/vjGuard.h>
 #include <Threads/vjThread.h>

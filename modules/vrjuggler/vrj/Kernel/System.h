@@ -35,7 +35,6 @@
 #define _VJ_SYSTEM_H_
 
 #include <vjConfig.h>
-#include <SharedMem/vjMemory.h>
 #include <Sync/vjMutex.h>
 
 //------------------------------------------------------
