@@ -414,7 +414,7 @@ setup_omniORB ( )
    tweek_omni_lib="omniORB$OMNI_VER"
    tweek_extra_libs=`$VPR_CONFIG --extra-libs`
 
-   if test "x$cxx_org_root" != "x/usr" ; then
+   if test "x$cxx_orb_root" != "x/usr" ; then
       CPPFLAGS="$CPPFLAGS -I$cxx_orb_root/include"
    fi
 
@@ -489,12 +489,12 @@ int omni_main_i(int argc, char** const argv)
          if test "x$tweek_cv_CORBA__ORB_init_in_omniORB" = "xyes" ; then
             BUILD_CXX='Y'
 
-            if "x$cxx_orb_root" != "x/usr" ; then
+            if test "x$cxx_orb_root" != "x/usr" ; then
                CXX_ORB_INCLUDES="-I$cxx_orb_root/include"
-               CXX_ORB_LDFLAGS="-L$OMNI_LIB_DIR"
             fi
 
             CXX_ORB_LIB="-l$tweek_omni_lib -lomnithread -lomniDynamic$OMNI_VER"
+            CXX_ORB_LDFLAGS="-L$OMNI_LIB_DIR"
 
             if test "x$OMNI_VER" = "x3" ; then
                CXX_ORB_LIB="$CXX_ORB_LIB -lomniGK_stub"
