@@ -40,10 +40,12 @@ typedef struct _thread_args thread_args_t;
 namespace vprTest
 {
 
-class SocketTest : public ThreadTestCase
+class SocketTest : public CppUnit::ThreadTestCase
 {
 public:
-   SocketTest( std::string name ) : ThreadTestCase (name), testSendRecv_buffer( "we're sending DATA!!!" )
+   SocketTest( )
+      : CppUnit::ThreadTestCase (),
+        testSendRecv_buffer( "we're sending DATA!!!" )
    {
       mOpenServerSuccess=0;
       mNumSServer=2;
@@ -351,9 +353,9 @@ public:
       }
       closeSuccess=sock->close().success();
 
-      assertTest( openSuccess && "Socket can not be opened!");
-      assertTest( bindSuccess && "Socket can not be bound!");
-      assertTest( closeSuccess && "Socket can not be closed!");
+      assert( openSuccess && "Socket can not be opened!");
+      assert( bindSuccess && "Socket can not be bound!");
+      assert( closeSuccess && "Socket can not be closed!");
       delete sock;
    }
 
@@ -376,19 +378,19 @@ public:
 
       // make sure aditional calls to bind() fails...
       openSuccess = sock.open().success();
-      assertTest( openSuccess == true && "open() failed");
+      assert( openSuccess == true && "open() failed");
 
       bindSuccess = sock.bind().success();
-      assertTest( bindSuccess == true && "bind() failed");
+      assert( bindSuccess == true && "bind() failed");
 
       for (int x = 0; x < 2; ++x)
       {
          bindSuccess = sock.bind().success();
-         assertTest( bindSuccess == false && "Socket was able to bind again, this is bad.");
+         assert( bindSuccess == false && "Socket was able to bind again, this is bad.");
       }
 
       closeSuccess = sock.close().success();
-      assertTest( closeSuccess == true && "close() failed");
+      assert( closeSuccess == true && "close() failed");
    }
 
    // =========================================================================
@@ -416,9 +418,9 @@ public:
       const float success_percent = 1.0f;
       float minimum_for_success = float(runs) * success_percent;
 
-      assertTest( openSuccess >= minimum_for_success && "open() failed");
-      assertTest( bindSuccess >= minimum_for_success && "bind() failed");
-      assertTest( closeSuccess >= minimum_for_success && "close() failed");
+      assert( openSuccess >= minimum_for_success && "open() failed");
+      assert( bindSuccess >= minimum_for_success && "bind() failed");
+      assert( closeSuccess >= minimum_for_success && "close() failed");
    }
 
    // =========================================================================
@@ -448,8 +450,8 @@ public:
       const float success_percent = 1.0f;
       float minimum_for_success = float(runs) * success_percent;
 
-      assertTest( openSuccess >= minimum_for_success && "open() failed");
-      assertTest( bindSuccess >= minimum_for_success && "bind() failed");
+      assert( openSuccess >= minimum_for_success && "open() failed");
+      assert( bindSuccess >= minimum_for_success && "bind() failed");
    }
 
    // =========================================================================
@@ -467,7 +469,7 @@ public:
       for (int xx = 0; xx < runs; ++xx)
       {
          port++;
-         assertTest(local_addr.setAddress("localhost", port).success());
+         assert(local_addr.setAddress("localhost", port).success());
 
          vpr::SocketStream sock( local_addr, vpr::InetAddr::AnyAddr );
 
@@ -479,9 +481,9 @@ public:
       const float success_percent = 1.0f;
       float minimum_for_success = float(runs) * success_percent;
 
-      assertTest( openSuccess >= minimum_for_success && "open() failed");
-      assertTest( bindSuccess >= minimum_for_success && "bind() failed");
-      assertTest( closeSuccess >= minimum_for_success && "close() failed");
+      assert( openSuccess >= minimum_for_success && "open() failed");
+      assert( bindSuccess >= minimum_for_success && "bind() failed");
+      assert( closeSuccess >= minimum_for_success && "close() failed");
    }
 
    // =========================================================================
@@ -499,22 +501,22 @@ public:
       vpr::SocketStream*   sock3;
 
       addr1.setPort(13768);
-      //assertTest(addr2("129.186.232.58", 5438));
+      //assert(addr2("129.186.232.58", 5438));
 
       sock1 = new vpr::SocketStream(addr1, vpr::InetAddr::AnyAddr);
       sock2 = new vpr::SocketStream(addr1, vpr::InetAddr::AnyAddr);
       sock3 = new vpr::SocketStream(addr1, vpr::InetAddr::AnyAddr);
       if (sock1->open().success()){
          sock1->setReuseAddr(true);
-         assertTest(sock1->bind().success());
+         assert(sock1->bind().success());
       }
       else assert(false && "Cannot open sock1");
       if (sock2->open().success()){
-         assertTest(sock2->bind().success() && "Cannot bind second socket re-using addr");
+         assert(sock2->bind().success() && "Cannot bind second socket re-using addr");
       }
       else assert(false && "Cannot open sock2");
       if (sock3->open().success())
-         assertTest(sock3->bind().success() && "Cannot bind third socket re-using addr");
+         assert(sock3->bind().success() && "Cannot bind third socket re-using addr");
       sock1->close();
       sock2->close();
       sock3->close();
@@ -559,7 +561,7 @@ public:
       vpr::SocketStream sock1( addr1, vpr::InetAddr::AnyAddr );
       vpr::SocketStream sock2( addr1, vpr::InetAddr::AnyAddr );
 
-      assertTest( sock1.open().success() && "server Socket::open() failed" );
+      assert( sock1.open().success() && "server Socket::open() failed" );
       sock1.setReuseAddr( true );
       assertTestThread( sock1.bind().success() && "server Socket::bind() failed" );
       assertTestThread( sock1.listen().success() && "server Socket::listen() failed" );
@@ -825,8 +827,8 @@ public:
       vpr::System::sleep(1);
       //serverThread->join();
 
-      assertTest(mOpenServerSuccess ==-1 && "Open server failed");
-      assertTest(mServerCheck==0 && "Not all connections are correct.");
+      assert(mOpenServerSuccess ==-1 && "Open server failed");
+      assert(mServerCheck==0 && "Not all connections are correct.");
       delete serverFunctor;
       delete serverThread;
 
@@ -913,7 +915,7 @@ public:
       ss_sock->write(buffer1, sizeof(buffer1), bytes_written);
       //receive a string from client
       ss_sock->read(buffer2,40, bytes);
-      assertTest(bytes != 0);
+      assert(bytes != 0);
       long compareString=strcmp(buffer1,buffer2);
       if (compareString!=0) {
          mServerCheck=1;
@@ -957,27 +959,27 @@ public:
       //          << std::flush;
       //std::cout <<" Readn Test:\n" << std::flush;
 
-      assertTest(server_sock.open().success() && "Server socket open failed");
-      assertTest(server_sock.bind().success() && "Server socket bind failed");
-      assertTest(server_sock.listen().success() && "Server socket listen failed");
+      assert(server_sock.open().success() && "Server socket open failed");
+      assert(server_sock.bind().success() && "Server socket bind failed");
+      assert(server_sock.listen().success() && "Server socket listen failed");
 
       // Start the client thread.
       vpr::ThreadMemberFunctor<SocketTest> func =
           vpr::ThreadMemberFunctor<SocketTest>(this, &SocketTest::testReadnClient,
                                                (void*) &server_port);
       vpr::Thread* client_thread = new vpr::Thread(&func);
-      assertTest(client_thread->valid() && "Server could not create client thread");
+      assert(client_thread->valid() && "Server could not create client thread");
 
       vpr::SocketStream client_sock;
       vpr::ReturnStatus status = server_sock.accept(client_sock);
-      assertTest(status.success() && "Server could not accept connection");
+      assert(status.success() && "Server could not accept connection");
 
       for ( unsigned int i = 0; i < 20; i += pkt_size ) {
           memset((void*) buffer, 0, sizeof(buffer));
           snprintf(buffer, sizeof(buffer), "%04d", i);
 
           client_sock.write(buffer, pkt_size, bytes);
-          assertTest(bytes != 0 && "Server could not write to client");
+          assert(bytes != 0 && "Server could not write to client");
       }
 
       client_sock.close();
@@ -1116,29 +1118,25 @@ public:
    }
 
    // =========================================================================
-   static Test* suite()
+   void registerTests (CppUnit::TestSuite* suite)
    {
-      TestSuite *test_suite = new TestSuite ("SocketTest");
+      suite->addTest( new CppUnit::TestCaller<SocketTest>("testOpenClose", &SocketTest::testOpenClose));
+      //suite->addTest( new CppUnit::TestCaller<SocketTest>("bind-Again Failure Test", &SocketTest::bindAgainFailTest));
+      suite->addTest( new CppUnit::TestCaller<SocketTest>("sameAddressOpenBindCloseTest", &SocketTest::sameAddressOpenBindCloseTest));
+      suite->addTest( new CppUnit::TestCaller<SocketTest>("sameAddressOpenBindDestructTest", &SocketTest::sameAddressOpenBindDestructTest));
+      suite->addTest( new CppUnit::TestCaller<SocketTest>("differentAddressOpenBindCloseTest", &SocketTest::differentAddressOpenBindCloseTest));
 
-      test_suite->addTest( new TestCaller<SocketTest>("testOpenClose", &SocketTest::testOpenClose));
-      //test_suite->addTest( new TestCaller<SocketTest>("bind-Again Failure Test", &SocketTest::bindAgainFailTest));
-      test_suite->addTest( new TestCaller<SocketTest>("sameAddressOpenBindCloseTest", &SocketTest::sameAddressOpenBindCloseTest));
-      test_suite->addTest( new TestCaller<SocketTest>("sameAddressOpenBindDestructTest", &SocketTest::sameAddressOpenBindDestructTest));
-      test_suite->addTest( new TestCaller<SocketTest>("differentAddressOpenBindCloseTest", &SocketTest::differentAddressOpenBindCloseTest));
+      //suite->addTest( new CppUnit::TestCaller<SocketTest>("ReuseAddr (simple) Test", &SocketTest::reuseAddrSimpleTest));
+      //suite->addTest( new CppUnit::TestCaller<SocketTest>("ReuseAddr (client/server) Test", &SocketTest::reuseAddrTest));
 
-      //test_suite->addTest( new TestCaller<SocketTest>("ReuseAddr (simple) Test", &SocketTest::reuseAddrSimpleTest));
-      //test_suite->addTest( new TestCaller<SocketTest>("ReuseAddr (client/server) Test", &SocketTest::reuseAddrTest));
+      //suite->addTest( new CppUnit::TestCaller<SocketTest>("testOpenCloseOpen", &SocketTest::testOpenCloseOpen));
+      //suite->addTest( new CppUnit::TestCaller<SocketTest>("testSendRecv", &SocketTest::testSendRecv));
 
-      //test_suite->addTest( new TestCaller<SocketTest>("testOpenCloseOpen", &SocketTest::testOpenCloseOpen));
-      //test_suite->addTest( new TestCaller<SocketTest>("testSendRecv", &SocketTest::testSendRecv));
-
-      //test_suite->addTest( new TestCaller<SocketTest>("testBlocking", &SocketTest::testBlocking));
-      //test_suite->addTest( new TestCaller<SocketTest>("testTcpConnection", &SocketTest::testTcpConnection));
-      //test_suite->addTest( new TestCaller<SocketTest>("testReadn", &SocketTest::testReadn));
-      test_suite->addTest(new TestCaller<SocketTest>("testIsConnected",
+      //suite->addTest( new CppUnit::TestCaller<SocketTest>("testBlocking", &SocketTest::testBlocking));
+      //suite->addTest( new CppUnit::TestCaller<SocketTest>("testTcpConnection", &SocketTest::testTcpConnection));
+      //suite->addTest( new CppUnit::TestCaller<SocketTest>("testReadn", &SocketTest::testReadn));
+      suite->addTest(new CppUnit::TestCaller<SocketTest>("testIsConnected",
                           &SocketTest::testIsConnected));
-
-      return test_suite;
    }
 
 protected:

@@ -17,10 +17,10 @@
 namespace vprTest
 {
 
-class ReturnStatusTest : public TestCase
+class ReturnStatusTest : public CppUnit::TestCase
 {
 public:
-   ReturnStatusTest( std::string name ) : TestCase (name)
+   ReturnStatusTest() : CppUnit::TestCase ()
    {
    }
 
@@ -33,43 +33,43 @@ public:
    {
       // default constructor test
       vpr::ReturnStatus s;
-      assertTest( s == vpr::ReturnStatus::Succeed );
-      assertTest( s.code() == vpr::ReturnStatus::Succeed );
+      CPPUNIT_ASSERT( s == vpr::ReturnStatus::Succeed );
+      CPPUNIT_ASSERT( s.code() == vpr::ReturnStatus::Succeed );
 
       // ReturnStatus::Code constructor test
       vpr::ReturnStatus a( vpr::ReturnStatus::WouldBlock );
-      assertTest( a == vpr::ReturnStatus::WouldBlock );
-      assertTest( a.code() == vpr::ReturnStatus::WouldBlock );
+      CPPUNIT_ASSERT( a == vpr::ReturnStatus::WouldBlock );
+      CPPUNIT_ASSERT( a.code() == vpr::ReturnStatus::WouldBlock );
 
       // copy constructor test
       vpr::ReturnStatus b( a );
-      assertTest( b == vpr::ReturnStatus::WouldBlock );
-      assertTest( b.code() == vpr::ReturnStatus::WouldBlock );
+      CPPUNIT_ASSERT( b == vpr::ReturnStatus::WouldBlock );
+      CPPUNIT_ASSERT( b.code() == vpr::ReturnStatus::WouldBlock );
 
       // setCode test
       a.setCode( vpr::ReturnStatus::Fail );
-      assertTest( a == vpr::ReturnStatus::Fail );
-      assertTest( a.code() == vpr::ReturnStatus::Fail );
+      CPPUNIT_ASSERT( a == vpr::ReturnStatus::Fail );
+      CPPUNIT_ASSERT( a.code() == vpr::ReturnStatus::Fail );
 
       // status = status test
       s.setCode( vpr::ReturnStatus::Succeed );
       a.setCode( vpr::ReturnStatus::Fail );
       a = s;
-      assertTest( a == vpr::ReturnStatus::Succeed );
-      assertTest( a.code() == vpr::ReturnStatus::Succeed );
+      CPPUNIT_ASSERT( a == vpr::ReturnStatus::Succeed );
+      CPPUNIT_ASSERT( a.code() == vpr::ReturnStatus::Succeed );
 
       // status = code test
       a.setCode( vpr::ReturnStatus::Fail );
       a = vpr::ReturnStatus::Succeed;
-      assertTest( a == vpr::ReturnStatus::Succeed );
-      assertTest( a.code() == vpr::ReturnStatus::Succeed );
+      CPPUNIT_ASSERT( a == vpr::ReturnStatus::Succeed );
+      CPPUNIT_ASSERT( a.code() == vpr::ReturnStatus::Succeed );
 
       // code() test
       vpr::ReturnStatus c;
       a.setCode( vpr::ReturnStatus::Fail );
       c.setCode( a.code() );
-      assertTest( c == vpr::ReturnStatus::Fail );
-      assertTest( c.code() == vpr::ReturnStatus::Fail );
+      CPPUNIT_ASSERT( c == vpr::ReturnStatus::Fail );
+      CPPUNIT_ASSERT( c.code() == vpr::ReturnStatus::Fail );
 
 
 
@@ -78,14 +78,14 @@ public:
       b.setCode( vpr::ReturnStatus::Succeed );
 
       // ReturnStatus == ReturnStatus test
-      assertTest( a == b );
+      CPPUNIT_ASSERT( a == b );
 
       // Code == Code test
-      assertTest( a.code() == b.code() );
+      CPPUNIT_ASSERT( a.code() == b.code() );
 
       // ReturnStatus == Code test
-      assertTest( a == b.code() );
-      assertTest( b == a.code() );
+      CPPUNIT_ASSERT( a == b.code() );
+      CPPUNIT_ASSERT( b == a.code() );
 
 
       // setup some stuff....
@@ -93,14 +93,14 @@ public:
       b.setCode( vpr::ReturnStatus::Fail );
 
       // ReturnStatus != ReturnStatus test
-      assertTest( a != b );
+      CPPUNIT_ASSERT( a != b );
 
       // Code != Code test
-      assertTest( a.code() != b.code() );
+      CPPUNIT_ASSERT( a.code() != b.code() );
 
       // ReturnStatus != Code test
-      assertTest( a != b.code() );
-      assertTest( b != a.code() );
+      CPPUNIT_ASSERT( a != b.code() );
+      CPPUNIT_ASSERT( b != a.code() );
    }
 
    void helpers()
@@ -111,18 +111,15 @@ public:
       b.setCode( vpr::ReturnStatus::Fail );
       c.setCode( vpr::ReturnStatus::WouldBlock );
 
-      assertTest( a.success() );
-      assertTest( b.failure() );
-      assertTest( c.wouldBlock() );
+      CPPUNIT_ASSERT( a.success() );
+      CPPUNIT_ASSERT( b.failure() );
+      CPPUNIT_ASSERT( c.wouldBlock() );
    }
 
-   static Test* suite()
+   void registerTests (CppUnit::TestSuite* suite)
    {
-      TestSuite *test_suite = new TestSuite ("ReturnStatusTest");
-
-      test_suite->addTest( new TestCaller<ReturnStatusTest>("basic vpr::ReturnStatus Test", &ReturnStatusTest::basic));
-      test_suite->addTest( new TestCaller<ReturnStatusTest>("Helpers for vpr::ReturnStatus test", &ReturnStatusTest::helpers));
-      return test_suite;
+      suite->addTest( new CppUnit::TestCaller<ReturnStatusTest>("basic vpr::ReturnStatus Test", &ReturnStatusTest::basic));
+      suite->addTest( new CppUnit::TestCaller<ReturnStatusTest>("Helpers for vpr::ReturnStatus test", &ReturnStatusTest::helpers));
    }
 };
 

@@ -17,10 +17,10 @@
 namespace vprTest
 {
 
-class GUIDTest : public TestCase
+class GUIDTest : public CppUnit::TestCase
 {
 public:
-   GUIDTest(std::string name) : TestCase (name)
+   GUIDTest() : CppUnit::TestCase ()
    {
    }
 
@@ -38,19 +38,19 @@ public:
       };
 
       vpr::GUID* guid1 = vpr::GUIDFactory::createGUID(guid_str);
-      assertTest(guid_str.compare(guid1->toString()) == 0);
+      CPPUNIT_ASSERT(guid_str.compare(guid1->toString()) == 0);
 
       vpr::GUID* guid2 = vpr::GUIDFactory::createGUID(guid_struct);
-      assertTest(*guid1 == *guid2);
+      CPPUNIT_ASSERT(*guid1 == *guid2);
 
       // Test assignment
       vpr::GUID guid3(true), guid4(true);
       guid3 = guid4;
-      assertTest(guid3 == guid4);
+      CPPUNIT_ASSERT(guid3 == guid4);
 
       // Test copy constructor
       vpr::GUID guid5(guid3);
-      assertTest(guid5 == guid3);
+      CPPUNIT_ASSERT(guid5 == guid3);
 
       delete guid1;
       delete guid2;
@@ -61,7 +61,7 @@ public:
       vpr::GUID* guid1 = vpr::GUIDFactory::createRandomGUID();
       vpr::GUID* guid2 = vpr::GUIDFactory::createRandomGUID();
 
-      assertTest(*guid1 != *guid2);
+      CPPUNIT_ASSERT(*guid1 != *guid2);
 
       delete guid1;
       delete guid2;
@@ -90,25 +90,20 @@ public:
                 << std::flush;
    }
 
-   static Test* suite()
+   void registerTests (CppUnit::TestSuite* suite)
    {
-      TestSuite *test_suite = new TestSuite("GUIDTest");
-      test_suite->addTest(new TestCaller<GUIDTest>("testConstructor",
-                                                   &GUIDTest::testConstructor));
-      test_suite->addTest(new TestCaller<GUIDTest>("testCompare",
-                                                   &GUIDTest::testCompare));
-
-      return test_suite;
+      suite->addTest(new CppUnit::TestCaller<GUIDTest>("testConstructor",
+                                                       &GUIDTest::testConstructor));
+      suite->addTest(new CppUnit::TestCaller<GUIDTest>("testCompare",
+                                                       &GUIDTest::testCompare));
    }
 
-   static Test* metric_suite()
+   void registerMetricsTests (CppUnit::TestSuite* suite)
    {
-      TestSuite *test_suite = new TestSuite("GUIDTest_metric");
-      test_suite->addTest(new TestCaller<GUIDTest>("testCreationOverhead",
-                                                   &GUIDTest::testCreationOverhead));
-
-      return test_suite;
+      suite->addTest(new CppUnit::TestCaller<GUIDTest>("testCreationOverhead",
+                                                       &GUIDTest::testCreationOverhead));
    }
+
 };
 
 }

@@ -23,10 +23,10 @@
 namespace vprTest
 {
 
-class BoostTest : public TestCase
+class BoostTest : public CppUnit::TestCase
 {
 public:
-   BoostTest( std::string name ) : TestCase (name)
+   BoostTest() : CppUnit::TestCase ()
    {
    }
 
@@ -37,20 +37,20 @@ public:
 
    void shared_ptr_basic()
    {
-      assertTest(true);
+      CPPUNIT_ASSERT(true);
 
       boost::shared_ptr<int>  intPtr1(new int(3));
       boost::shared_ptr<int>  intPtr2;
       intPtr2 = intPtr1;
 
-      assertTest(intPtr1 == intPtr2);
-      assertTest(intPtr1.use_count() == 2);
-      assertTest(!intPtr2.unique());
+      CPPUNIT_ASSERT(intPtr1 == intPtr2);
+      CPPUNIT_ASSERT(intPtr1.use_count() == 2);
+      CPPUNIT_ASSERT(!intPtr2.unique());
 
       int* temp_int = new int(5);
 
       intPtr2.reset(temp_int);
-      assertTest(intPtr1.unique());
+      CPPUNIT_ASSERT(intPtr1.unique());
    }
 
    // ---- Classes to use in tests --- //
@@ -82,31 +82,31 @@ public:
 
    void shared_ptr_upcast()
    {
-      assertTest(true);
+      CPPUNIT_ASSERT(true);
 
       boost::shared_ptr<BaseClass>  base1(new BaseClass(1));
       boost::shared_ptr<DerivedClass>  derived1(new DerivedClass(1, 12.3f));
       
-      assertTest(derived1.use_count() == 1);
+      CPPUNIT_ASSERT(derived1.use_count() == 1);
 
       // Test an upcast assignment
       {
          boost::shared_ptr<BaseClass>  base_derivedCopy;
          base_derivedCopy = derived1;
          
-         assertTest(derived1.use_count() == 2);
-         assertTest(base_derivedCopy == derived1);
+         CPPUNIT_ASSERT(derived1.use_count() == 2);
+         CPPUNIT_ASSERT(base_derivedCopy == derived1);
       }
-      assertTest(derived1.use_count() == 1);
+      CPPUNIT_ASSERT(derived1.use_count() == 1);
 
       // Test an upcast Copy constructor
       {
          boost::shared_ptr<BaseClass>  base_derivedCopy(derived1);
          
-         assertTest(derived1.use_count() == 2);
-         assertTest(base_derivedCopy == derived1);
+         CPPUNIT_ASSERT(derived1.use_count() == 2);
+         CPPUNIT_ASSERT(base_derivedCopy == derived1);
       }
-      assertTest(derived1.use_count() == 1);            
+      CPPUNIT_ASSERT(derived1.use_count() == 1);            
    }
 
 
@@ -130,26 +130,22 @@ public:
 
       func = retstat_int_float_functor();    // Make a new one
 
-      assertTest( func(10, 50.0f) == vpr::ReturnStatus::Fail);
+      CPPUNIT_ASSERT( func(10, 50.0f) == vpr::ReturnStatus::Fail);
 
       retstat_int_float_functor functor;
       func = functor;
 
-      assertTest( func(10, 50.0f) == vpr::ReturnStatus::Fail );
+      CPPUNIT_ASSERT( func(10, 50.0f) == vpr::ReturnStatus::Fail );
 
       bool ret_val = doSomethingWithFunc( func );
-      assertTest( ret_val == true );
+      CPPUNIT_ASSERT( ret_val == true );
    }
 
-   static Test* suite()
+   void registerTests (CppUnit::TestSuite* suite)
    {
-      TestSuite *test_suite = new TestSuite ("BoostTest");
-
-      test_suite->addTest( new TestCaller<BoostTest>("shared_ptr_basic", &BoostTest::shared_ptr_basic));
-      test_suite->addTest( new TestCaller<BoostTest>("shared_ptr_upcast", &BoostTest::shared_ptr_upcast));
-      test_suite->addTest( new TestCaller<BoostTest>("testFunctionBasic", &BoostTest::testFunctionBasic));
-      
-      return test_suite;
+      suite->addTest( new CppUnit::TestCaller<BoostTest>("shared_ptr_basic", &BoostTest::shared_ptr_basic));
+      suite->addTest( new CppUnit::TestCaller<BoostTest>("shared_ptr_upcast", &BoostTest::shared_ptr_upcast));
+      suite->addTest( new CppUnit::TestCaller<BoostTest>("testFunctionBasic", &BoostTest::testFunctionBasic));
    }
 };
 

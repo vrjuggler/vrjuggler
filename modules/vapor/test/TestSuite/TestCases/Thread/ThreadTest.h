@@ -16,13 +16,13 @@
 
 #define ThreadTest_INC_COUNT 5000
 
-//namespace vprTest{
+namespace vprTest{
 
-class ThreadTest : public TestCase
+class ThreadTest : public CppUnit::TestCase
 {
 public:
-   ThreadTest( std::string name )
-   : TestCase (name)
+   ThreadTest()
+   : CppUnit::TestCase ()
    {
       mNumRecursions = 0;
    }
@@ -69,13 +69,14 @@ public:
       for(int t=0;t<num_threads;t++)
       {
          if(threads[t]->join() == false)
-            assertTest(false && "Thread was not able to be joined");
+            CPPUNIT_ASSERT(false && "Thread was not able to be joined");
          delete threads[t];
          delete functors[t];
       }
 
-      assertLongsEqual((num_threads*ThreadTest_INC_COUNT), mCounter);
-      //assert(mCounter == (num_threads*50000));
+      CppUnit::TestAssert::assertEquals<long>((num_threads*ThreadTest_INC_COUNT),
+                                              mCounter);
+      //CPPUNIT_ASSERT(mCounter == (num_threads*50000));
       
       std::cout << " done\n" << std::flush;
    }
@@ -143,7 +144,7 @@ public:
             sampleValue2=mCounter1;
          mCounter1Mutex.release();
       }
-      std::cout<<sampleValue1<<" : "<<sampleValue2<<endl;
+      std::cout<<sampleValue1<<" : "<<sampleValue2<<std::endl;
       return sampleValue2-sampleValue1;
    }
 
@@ -161,17 +162,17 @@ public:
       
       vpr::System::msleep(100 );
       
-      assertTest(sampleCompare(1)!=0 && "Counter doesn't work");
+      CPPUNIT_ASSERT(sampleCompare(1)!=0 && "Counter doesn't work");
       
       counter_thread.suspend();
       vpr::System::msleep(100);
         
-      assertTest(sampleCompare(1)==0 && "thread can not be suspended");
+      CPPUNIT_ASSERT(sampleCompare(1)==0 && "thread can not be suspended");
       
       counter_thread.resume();
       vpr::System::msleep(100);
       
-      assertTest(sampleCompare(1)!=0 && "thread can not be resumed");
+      CPPUNIT_ASSERT(sampleCompare(1)!=0 && "thread can not be resumed");
       
       counter_thread.kill();
       std::cout << " done\n" << std::flush;
@@ -222,9 +223,9 @@ public:
       
       diff1=sampleCompare(1);
       diff2=sampleCompare(2);
-      std::cout<<"diff1= "<<diff1<<" : "<<endl;
-      std::cout<<"diff2= "<<diff2<<" : "<<endl;
-//      assertTest(abs(diff2-diff1)<2 && "Counters don't work correctly); 
+      std::cout<<"diff1= "<<diff1<<" : "<<std::endl;
+      std::cout<<"diff2= "<<diff2<<" : "<<std::endl;
+//      CPPUNIT_ASSERT(abs(diff2-diff1)<2 && "Counters don't work correctly); 
       
       counter1_thread.setPrio(vpr::BaseThread::VPR_PRIORITY_HIGH);
       counter2_thread.setPrio(vpr::BaseThread::VPR_PRIORITY_LOW);
@@ -232,9 +233,9 @@ public:
       
       diff1=sampleCompare(1);
       diff2=sampleCompare(2);
-      std::cout<<"diff1= "<<diff1<<" : "<<endl;
-      std::cout<<"diff2= "<<diff2<<" : "<<endl;
-//      assertTest(abs(diff2-diff1)<2 && "Counters don't work correctly); 
+      std::cout<<"diff1= "<<diff1<<" : "<<std::endl;
+      std::cout<<"diff2= "<<diff2<<" : "<<std::endl;
+//      CPPUNIT_ASSERT(abs(diff2-diff1)<2 && "Counters don't work correctly); 
 
       counter1_thread.setPrio(vpr::BaseThread::VPR_PRIORITY_LOW);
       counter2_thread.setPrio(vpr::BaseThread::VPR_PRIORITY_HIGH);
@@ -242,9 +243,9 @@ public:
       
       diff1=sampleCompare(1);
       diff2=sampleCompare(2);
-      std::cout<<"diff1= "<<diff1<<" : "<<endl;
-      std::cout<<"diff2= "<<diff2<<" : "<<endl;
-//      assertTest(abs(diff2-diff1)<2 && "Counters don't work correctly); 
+      std::cout<<"diff1= "<<diff1<<" : "<<std::endl;
+      std::cout<<"diff2= "<<diff2<<" : "<<std::endl;
+//      CPPUNIT_ASSERT(abs(diff2-diff1)<2 && "Counters don't work correctly); 
       
       counter1_thread.kill();
       counter2_thread.kill();
@@ -288,12 +289,12 @@ public:
       for(int t=0;t<num_threads;t++)
       {
          if(threads[t]->join() == false)
-            assertTest(false && "Thread was not able to be joined");
+            CPPUNIT_ASSERT(false && "Thread was not able to be joined");
          delete threads[t];
          delete functors[t];
       }
 
-      assertTest((answer == 'y') || (answer == 'Y'));
+      CPPUNIT_ASSERT((answer == 'y') || (answer == 'Y'));
    }
 
    // This function just grinds the CPU and waits for the flag to flip
@@ -327,11 +328,11 @@ public:
       functor = new vpr::ThreadMemberFunctor<ThreadTest>(this,&ThreadTest::recurseConsumeResources, &arg);
 
       the_thread = new vpr::Thread(functor, vpr::BaseThread::VPR_PRIORITY_NORMAL, vpr::BaseThread::VPR_LOCAL_THREAD, vpr::BaseThread::VPR_JOINABLE_THREAD, stack_size);
-      assertTest(the_thread != NULL);
+      CPPUNIT_ASSERT(the_thread != NULL);
 
-      assertTest(the_thread->join() && "Failed to join with testThreadStackSize thread");
+      CPPUNIT_ASSERT(the_thread->join() && "Failed to join with testThreadStackSize thread");
 
-      //assertTest(mCounter == (num_threads*50000));
+      //CPPUNIT_ASSERT(mCounter == (num_threads*50000));
    }
 
    // Recurse and consume some resources
@@ -342,7 +343,7 @@ public:
       long var1(5), var2(3), var3(7);
       static long total_sum;
       total_sum += (var1+var2+var3);
-      assertTest(total_sum > 0);              // Just to use the vars
+      CPPUNIT_ASSERT(total_sum > 0);              // Just to use the vars
 
       mStackSpaceConsumed += (3 * sizeof(long));
       mNumRecursions--;
@@ -353,20 +354,18 @@ public:
          return;
    }
 
-   static Test* suite()
+   void registerTests (CppUnit::TestSuite* suite)
    {
-      TestSuite *test_suite = new TestSuite ("ThreadTest");
-      test_suite->addTest( new TestCaller<ThreadTest>("testCreateJoin", &ThreadTest::testCreateJoin));
-      test_suite->addTest( new TestCaller<ThreadTest>("testSuspendResume", &ThreadTest::testSuspendResume));
-      test_suite->addTest( new TestCaller<ThreadTest>("testPriority", &ThreadTest::testPriority));
-      test_suite->addTest( new TestCaller<ThreadTest>("testThreadStackSize", &ThreadTest::testThreadStackSize));
-      return test_suite;
+      suite->addTest( new CppUnit::TestCaller<ThreadTest>("testCreateJoin", &ThreadTest::testCreateJoin));
+      suite->addTest( new CppUnit::TestCaller<ThreadTest>("testSuspendResume", &ThreadTest::testSuspendResume));
+      suite->addTest( new CppUnit::TestCaller<ThreadTest>("testPriority", &ThreadTest::testPriority));
+      suite->addTest( new CppUnit::TestCaller<ThreadTest>("testThreadStackSize", &ThreadTest::testThreadStackSize));
    }
 
-   static Test* interactiveSuite()
+   static CppUnit::Test* interactiveSuite()
    {
-      TestSuite* test_suite = new TestSuite ("InteractiveThreadTest");
-      test_suite->addTest( new TestCaller<ThreadTest>("interactiveCPUGrind", &ThreadTest::interactiveTestCPUGrind));
+      CppUnit::TestSuite* test_suite = new CppUnit::TestSuite ("InteractiveThreadTest");
+      test_suite->addTest( new CppUnit::TestCaller<ThreadTest>("interactiveCPUGrind", &ThreadTest::interactiveTestCPUGrind));
       return test_suite;
    }
 
@@ -382,4 +381,4 @@ protected:
    bool           mStopGrindingCPU;            // Flag to tell the test to stop grinding the CPU
 };
 
-//};
+}

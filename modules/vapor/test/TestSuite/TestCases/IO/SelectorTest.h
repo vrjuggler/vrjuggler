@@ -38,11 +38,11 @@ using namespace vpr;
 namespace vprTest
 {
 
-class SelectorTest : public ThreadTestCase
+class SelectorTest : public CppUnit::ThreadTestCase
 {
 public:
-   SelectorTest( std::string name )
-   : ThreadTestCase (name)
+   SelectorTest()
+   : CppUnit::ThreadTestCase ()
    {;}
 
    virtual ~SelectorTest()
@@ -251,8 +251,8 @@ public:
       unsigned i;    // j;
       std::map<vpr::IOSys::Handle, vpr::Uint16> handleTable;      // Table mapping Handles to the socket index
       vpr::Selector selector;
-      vector<vpr::SocketStream>     socks;                        // The acceptor side sockets
-      vector<vpr::SocketAcceptor*>  acceptors;
+      std::vector<vpr::SocketStream>     socks;                        // The acceptor side sockets
+      std::vector<vpr::SocketAcceptor*>  acceptors;
       vpr::ReturnStatus ret_val;
       //bool ret_val(false);
 
@@ -461,14 +461,10 @@ public:
    }
 
 
-   static Test* suite()
+   void registerTests (CppUnit::TestSuite* suite)
    {
-      TestSuite *test_suite = new TestSuite ("SelectorTest");
-
-      test_suite->addTest( new TestCaller<SelectorTest>("testAcceptorPoolSelection", &SelectorTest::testAcceptorPoolSelection));
-      test_suite->addTest( new TestCaller<SelectorTest>("testSendThenPoll", &SelectorTest::testSendThenPoll));
-
-      return test_suite;
+      suite->addTest( new CppUnit::TestCaller<SelectorTest>("testAcceptorPoolSelection", &SelectorTest::testAcceptorPoolSelection));
+      suite->addTest( new CppUnit::TestCaller<SelectorTest>("testSendThenPoll", &SelectorTest::testSendThenPoll));
    }
 
 protected:

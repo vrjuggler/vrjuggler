@@ -33,11 +33,11 @@
 namespace vprTest
 {
 
-class NonBlockingSocketTest : public ThreadTestCase
+class NonBlockingSocketTest : public CppUnit::ThreadTestCase
 {
 public:
-   NonBlockingSocketTest( std::string name )
-      : ThreadTestCase (name), mAcceptorPort(0)
+   NonBlockingSocketTest()
+      : CppUnit::ThreadTestCase (), mAcceptorPort(0)
    {
    }
 
@@ -60,10 +60,10 @@ public:
       acceptor_socket.setOpenNonBlocking();
 
       result = acceptor_socket.open().success();
-      assertTest( result );
+      CPPUNIT_ASSERT( result );
 
       result = acceptor_socket.close().success();
-      assertTest( result );
+      CPPUNIT_ASSERT( result );
    }
 
    // Set OpenNonBlocking
@@ -80,15 +80,15 @@ public:
 
       acceptor_socket.setOpenNonBlocking(); // for opening
       result = acceptor_socket.open().success();
-      assertTest( result );
+      CPPUNIT_ASSERT( result );
 
-      assertTest( acceptor_socket.getNonBlocking() );
+      CPPUNIT_ASSERT( acceptor_socket.getNonBlocking() );
 
       acceptor_socket.enableBlocking(); // for reads and writes
-      assertTest( acceptor_socket.getBlocking() );
+      CPPUNIT_ASSERT( acceptor_socket.getBlocking() );
 
       result = acceptor_socket.close().success();
-      assertTest( result );
+      CPPUNIT_ASSERT( result );
    }
 
    // 2 sockets...
@@ -112,49 +112,49 @@ public:
 
       // a/c: Open
       status = acceptor_socket.open();
-      assertTest( status.failure() != true );
+      CPPUNIT_ASSERT( status.failure() != true );
       status = connector_socket.open();
-      assertTest( status.failure() != true );
+      CPPUNIT_ASSERT( status.failure() != true );
 
       // a/c: enableNonBlock
       acceptor_socket.enableNonBlocking();
-      assertTest( acceptor_socket.getNonBlocking() );
+      CPPUNIT_ASSERT( acceptor_socket.getNonBlocking() );
       connector_socket.enableNonBlocking();
-      assertTest( connector_socket.getNonBlocking() );
+      CPPUNIT_ASSERT( connector_socket.getNonBlocking() );
 
       // a:   bind
       status = acceptor_socket.bind();
-      assertTest( status.failure() != true );
+      CPPUNIT_ASSERT( status.failure() != true );
 
       // a:   listen
       status = acceptor_socket.listen();
-      assertTest( status.failure() != true );
+      CPPUNIT_ASSERT( status.failure() != true );
 
       // c:   connect
       status = connector_socket.connect();
-      assertTest( status.failure() != true );
+      CPPUNIT_ASSERT( status.failure() != true );
       if ( status.success() != true )
       {
-         assertTest( status.inProgress() == true );
+         CPPUNIT_ASSERT( status.inProgress() == true );
       }
 
       // a:   accept
       vpr::SocketStream spawned_socket;
       status = acceptor_socket.accept( spawned_socket );
-      assertTest( status.failure() != true );
-      //assertTest( spawned_socket.isOpen() );
+      CPPUNIT_ASSERT( status.failure() != true );
+      //CPPUNIT_ASSERT( spawned_socket.isOpen() );
       if ( status.success() != true )
       {
-         assertTest( status.inProgress() == true );
+         CPPUNIT_ASSERT( status.inProgress() == true );
       }
 
       // a/c/s: Close
       status = acceptor_socket.close();
-      assertTest( status.failure() != true );
+      CPPUNIT_ASSERT( status.failure() != true );
       status = connector_socket.close();
-      assertTest( status.failure() != true );
+      CPPUNIT_ASSERT( status.failure() != true );
       status = spawned_socket.close();
-      assertTest( status.failure() != true );
+      CPPUNIT_ASSERT( status.failure() != true );
    }
 
    void testNonBlockingTransfer () {
@@ -319,12 +319,12 @@ public:
 
       // a/c: Open
       status = acceptor_socket.open();
-      assertTest( status.failure() != true );
+      CPPUNIT_ASSERT( status.failure() != true );
       status = connector_socket.open();
-      assertTest( status.failure() != true );
+      CPPUNIT_ASSERT( status.failure() != true );
 
-      assertTest( acceptor_socket.getNonBlocking() );
-      assertTest( connector_socket.getNonBlocking() );
+      CPPUNIT_ASSERT( acceptor_socket.getNonBlocking() );
+      CPPUNIT_ASSERT( connector_socket.getNonBlocking() );
 
       // a: getHandle
       vpr::IOSys::Handle handle = acceptor_socket.getHandle();
@@ -336,24 +336,24 @@ public:
 
       // a/c: enableNonBlock
       acceptor_socket.enableNonBlocking();
-      assertTest( acceptor_socket.getNonBlocking() );
+      CPPUNIT_ASSERT( acceptor_socket.getNonBlocking() );
       connector_socket.enableNonBlocking();
-      assertTest( connector_socket.getNonBlocking() );
+      CPPUNIT_ASSERT( connector_socket.getNonBlocking() );
 
       // a:   bind
       status = acceptor_socket.bind();
-      assertTest( status.failure() != true );
+      CPPUNIT_ASSERT( status.failure() != true );
 
       // a:   listen
       status = acceptor_socket.listen();
-      assertTest( status.failure() != true );
+      CPPUNIT_ASSERT( status.failure() != true );
 
       // c:   connect
       status = connector_socket.connect();
-      assertTest( status.failure() != true );
+      CPPUNIT_ASSERT( status.failure() != true );
       if ( status.success() != true )
       {
-         assertTest( status.inProgress() == true );
+         CPPUNIT_ASSERT( status.inProgress() == true );
       }
 
       // block until connection request goes through
@@ -367,14 +367,14 @@ public:
                   && "Handle doesn't match" );
          }
       }
-      assertTest( num_events > 0 && "no events" );
+      CPPUNIT_ASSERT( num_events > 0 && "no events" );
 
 
       // a:   accept
       vpr::SocketStream spawned_socket;
       status = acceptor_socket.accept( spawned_socket );
-      assertTest( status.success() == true && "accepted socket is NULL" );
-      assertTest( spawned_socket.isOpen() && "accepted socket should be open" );
+      CPPUNIT_ASSERT( status.success() == true && "accepted socket is NULL" );
+      CPPUNIT_ASSERT( spawned_socket.isOpen() && "accepted socket should be open" );
 
       // s:    write...
       std::string message = "Hi Maynard, My leg hurts";
@@ -401,7 +401,7 @@ public:
                   && "Handle doesn't match" );
          }
       }
-      assertTest( num_events > 0 && "no events" );
+      CPPUNIT_ASSERT( num_events > 0 && "no events" );
 
       // c:     read
       status = connector_socket.read( message, message.size(), bytes_written );
@@ -410,24 +410,20 @@ public:
 
       // a/c/s: Close
       status = acceptor_socket.close();
-      assertTest( status.failure() != true );
+      CPPUNIT_ASSERT( status.failure() != true );
       status = connector_socket.close();
-      assertTest( status.failure() != true );
+      CPPUNIT_ASSERT( status.failure() != true );
       status = spawned_socket.close();
-      assertTest( status.failure() != true );
+      CPPUNIT_ASSERT( status.failure() != true );
    }
 
-   static Test* suite()
+   void registerTests (CppUnit::TestSuite* suite)
    {
-      TestSuite *test_suite = new TestSuite ("NonBlockingSocketTest");
-
-      test_suite->addTest( new TestCaller<NonBlockingSocketTest>("testSetOpenNonBlockingThenOpenThenClose", &NonBlockingSocketTest::testSetOpenNonBlockingThenOpenThenClose));
-      test_suite->addTest( new TestCaller<NonBlockingSocketTest>("testSetOpenNonBlockingThenOpenThenEnableNonBlockThenClose", &NonBlockingSocketTest::testSetOpenNonBlockingThenOpenThenEnableNonBlockThenClose));
-      test_suite->addTest( new TestCaller<NonBlockingSocketTest>("testConnect2NonBlockingSockets", &NonBlockingSocketTest::testConnect2NonBlockingSockets));
-      test_suite->addTest(new TestCaller<NonBlockingSocketTest>("testNonBlockingTransfer", &NonBlockingSocketTest::testNonBlockingTransfer));
-      test_suite->addTest( new TestCaller<NonBlockingSocketTest>("testConnect2NonBlockingSocketsUsingSelect", &NonBlockingSocketTest::testConnect2NonBlockingSocketsUsingSelect));
-
-      return test_suite;
+      suite->addTest( new CppUnit::TestCaller<NonBlockingSocketTest>("testSetOpenNonBlockingThenOpenThenClose", &NonBlockingSocketTest::testSetOpenNonBlockingThenOpenThenClose));
+      suite->addTest( new CppUnit::TestCaller<NonBlockingSocketTest>("testSetOpenNonBlockingThenOpenThenEnableNonBlockThenClose", &NonBlockingSocketTest::testSetOpenNonBlockingThenOpenThenEnableNonBlockThenClose));
+      suite->addTest( new CppUnit::TestCaller<NonBlockingSocketTest>("testConnect2NonBlockingSockets", &NonBlockingSocketTest::testConnect2NonBlockingSockets));
+      suite->addTest(new CppUnit::TestCaller<NonBlockingSocketTest>("testNonBlockingTransfer", &NonBlockingSocketTest::testNonBlockingTransfer));
+      suite->addTest( new CppUnit::TestCaller<NonBlockingSocketTest>("testConnect2NonBlockingSocketsUsingSelect", &NonBlockingSocketTest::testConnect2NonBlockingSocketsUsingSelect));
    }
 
 protected:
