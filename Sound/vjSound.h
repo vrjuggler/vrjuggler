@@ -39,6 +39,9 @@
 
 class vjSoundEngine;
 
+//: vjSound
+// a sound
+//!PUBLIC_API:
 class vjSound
 {  
 public:

@@ -42,6 +42,11 @@
 #include <Sound/vjSoundEngineConstructor.h>
 class vjConfigChunk;
 
+//: AwSoundEngine
+// link to -lJuggler_aw to use this code (don't instantiate one yourself)
+// calling vjSoundManager::instance()->getHandle("soundname") will get the sound of the correct API for you
+// only if you've linked to the -lJuggler_aw module.
+//
 // you need an Observer node in your .adf file named you
 // usually set it's position to 0,0,0
 // every sound is positoined reletive to this observer
@@ -52,6 +57,7 @@ class vjConfigChunk;
 // awSound node's position can only change with observer position change,
 //  so i'd keep it flexible by using awPlayer nodes for each sound you want.
 // Ambient sounds can be defined as plain awSound nodes.
+//!PUBLIC_API:
 class AwSoundEngine : public vjSoundEngine
 {
 public:

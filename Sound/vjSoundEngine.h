@@ -40,8 +40,10 @@
 class vjSound;
 class vjConfigChunk;
 
+//: SoundEngine
 // Normally, use the vjSoundFactory factory to create a new sound engine.
 // You shouldn't create one directly (but you could if you wanted).
+//!PUBLIC_API:
 class vjSoundEngine
 {
 public:

@@ -54,6 +54,7 @@
 //
 // REQUIRED!!! You must call pfSoundTraverser::preForkInit() in your juggler app's
 //              preForkInit() member function.  Your app is likely to crash otherwise!!
+//!PUBLIC_API:
 class pfSoundTraverser
 {
 public:

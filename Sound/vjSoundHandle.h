@@ -1,5 +1,7 @@
 
-
+//: handle to a sound
+//  This class may be used in future versions of juggler, for now ignore it.
+//!PUBLIC_API:
 class vjSoundHandle
 {
 public:

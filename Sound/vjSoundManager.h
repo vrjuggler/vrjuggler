@@ -38,6 +38,8 @@
 #include <Sound/vjSound.h>
 #include <Kernel/vjConfigChunkHandler.h>
 
+//: sound manager
+//!PUBLIC_API:
 class vjSoundManager : public vjConfigChunkHandler
 {
 public:     // --- Config stuff -- //

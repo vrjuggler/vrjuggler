@@ -45,6 +45,9 @@
 #include <Threads/vjThread.h> // for when update is called.
 #include <Threads/vjThreadFunctor.h> // for when update is called.
 
+//: See AwSoundEngine for details on using the SL juggler module.
+//  you'll link to -lJuggler_sl to use this.
+//!PUBLIC_API:
 class SlSoundEngine : public vjSoundEngine
 {
 public:

@@ -48,7 +48,7 @@
 //  you should keep a pointer to the Sound, so that you can trigger
 //  and change other properties of it.
 //  NOTE: This pfSoundNode does not trigger the Sound object, you must do that.
-//  NOTE: you still need to use the SoundEngine::update function
+//!PUBLIC_API:
 class pfSoundNode : public pfDCS
 {
 public:
