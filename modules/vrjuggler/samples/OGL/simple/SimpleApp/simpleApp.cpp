@@ -65,8 +65,9 @@ void simpleApp::draw()
 
    // -- Create box offset matrix -- //
    Matrix44f box_offset;
-   box_offset = makeRot<Matrix44f>(Math::deg2Rad(-90.0f), Math::deg2Rad(0.0f),
-                                   Math::deg2Rad(0.0f), XYZ);
+   const EulerAngleXYZf euler_ang(Math::deg2Rad(-90.0f), Math::deg2Rad(0.0f),
+                                  Math::deg2Rad(0.0f));
+   box_offset = makeRot<Matrix44f>(euler_ang);
    setTrans(box_offset, Vec3f(0.0f, 1.0f, 0.0f));
 
    // --- Create a color for the wand --- //
