@@ -40,7 +40,7 @@
 AC_REVISION($Revision$)
 AC_INIT(vpr/vprConfig.h)
 AC_CONFIG_HEADER(vpr/vprDefines.h)
-DPP_PREREQ(1.3.10)
+DPP_PREREQ(1.4)
 DPP_INIT
 
 # Generate the reconfig script first so that it's easy to run configure again
