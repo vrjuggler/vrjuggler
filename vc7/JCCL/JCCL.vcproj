@@ -118,7 +118,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(BOOST_INCLUDES)&quot;;&quot;$(CPPDOM_ROOT)\include&quot;;&quot;$(NSPR_ROOT)\include&quot;;.;..\..\modules\vapor;..\VPR;..\..\modules\jackal\common;..\..\modules\jackal\config"
+				AdditionalIncludeDirectories="&quot;$(BOOST_INCLUDES)&quot;;&quot;$(CPPDOM_ROOT)\include&quot;;&quot;$(NSPR_ROOT)\include&quot;;.;..\..\modules\vapor;..\VPR;..\..\modules\jackal\common;..\..\modules\jackal\config;..\..\modules\jackal\rtrc"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;_JCCL_BUILD_"
 				MinimalRebuild="TRUE"
 				BasicRuntimeChecks="3"
