@@ -81,15 +81,10 @@ public:
    /** Destroys a PropertyDefinition, and frees all allocated memory. */
    ~PropertyDefinition();
 
-#ifdef JCCL_DEBUG
    void assertValid() const
    {
       vprASSERT(mIsValid == true && "Trying to use deleted PropertyDefinition");
    }
-#else
-   void assertValid() const
-   {}
-#endif
 
    /**
     * Returns the token (a valid XML element identifier) of this property.

@@ -75,17 +75,10 @@ public:
 
    bool isValid() const;
 
-#ifdef JCCL_DEBUG
    void assertValid() const
    {
       vprASSERT(mValid == true && "Trying to use deleted config element");
    }
-#else
-   void assertValid() const
-   {
-      /* Do nothing. */ ;
-   }
-#endif
 
    /**
     * Initializes this element from cppdom::Node.
