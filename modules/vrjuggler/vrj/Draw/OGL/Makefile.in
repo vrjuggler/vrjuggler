@@ -49,15 +49,15 @@ SUBOBJDIR	= $(GL_LIBRARY)
 VJROOT		= $(top_srcdir)
 VJ_SRCDIR	= @VJ_SRCDIR@/Kernel/GL
 
-SRCS 		= vjGlDrawManager.cpp	\
-                  vjGlPipe.cpp		\
+SRCS 		= vjGlDrawManager.cpp		\
+                  vjGlPipe.cpp			\
                   vjGlWindow.cpp
 
 ifeq (@OS_TYPE@, Win32)
     SRCS	+= vjGlWinWin32.cpp
 else
-    ifeq (@OS_TYPE@, Darwin)
-	SRCS    += vjGlOSXWindow.cpp
+    ifeq (@PLATFORM@, MacOSX)
+        SRCS    += vjGlOSXWindow.cpp
     else
     	SRCS	+= vjGlxWindow.cpp
     endif
