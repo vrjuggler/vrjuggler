@@ -65,6 +65,22 @@ AC_ARG_ENABLE(subsystem,
                           Define OS abstraction subsystem],
               SUBSYSTEM="$enableval", SUBSYSTEM='none')
 
+# Rudimentary spell checking based on the first letter in the $SUBSYSTEM name.
+case $SUBSYSTEM in
+    S*)
+        SUBSYSTEM='SPROC'
+        ;;
+    P*)
+        SUBSYSTEM='POSIX'
+        ;;
+    W*)
+        SUBSYSTEM='WIN32'
+        ;;
+    N*)
+        SUBSYSTEM='NSPR'
+        ;;
+esac
+
 # 
 DPP_ENABLE_NSPR_THREADS(no)
 
