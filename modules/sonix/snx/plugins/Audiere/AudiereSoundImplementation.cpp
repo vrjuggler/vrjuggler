@@ -41,7 +41,8 @@
 #include <vector>
 #include <string>
 #include <iostream>
-#include <stdio.h>// for FILE
+#include <stdio.h> /* for FILE */
+#include <boost/concept_check.hpp>
 
 #include <gmtl/Math.h>
 #include <gmtl/Matrix.h>
@@ -51,6 +52,7 @@
 #include <gmtl/Generate.h>
 #include <gmtl/Xforms.h>
 
+#include <vpr/Util/Assert.h>
 #include <vpr/Util/Debug.h>
 
 #include "snx/xdl.h"
@@ -83,7 +85,7 @@ snx::SoundFactoryReg<AudiereSoundImplementation> audiereRegistrator( "audiere" )
 
 void AudiereSoundImplementation::step( const float & timeElapsed )
 {
-   assert( mDev != NULL && "startAPI must be called prior to this function" );
+   vprASSERT( mDev.get() != NULL && "startAPI must be called prior to this function" );
    
    snx::SoundImplementation::step( timeElapsed );
 }
@@ -114,7 +116,7 @@ AudiereSoundImplementation::~AudiereSoundImplementation()
 void AudiereSoundImplementation::trigger( const std::string& alias, const int& looping )
 {
    
-   assert( mDev != NULL && "startAPI must be called prior to this function" );
+   vprASSERT( mDev.get() != NULL && "startAPI must be called prior to this function" );
    
    vprDEBUG(snxDBG, vprDBG_CONFIG_LVL) << clrOutNORM(clrYELLOW, "Audiere| playing sound\n") << vprDEBUG_FLUSH;
    
@@ -140,7 +142,8 @@ void AudiereSoundImplementation::trigger( const std::string& alias, const int& l
 
 bool AudiereSoundImplementation::isPlaying( const std::string& alias )
 {
-   assert( mDev != NULL && "startAPI must be called prior to this function" );
+   vprASSERT( mDev.get() != NULL && "startAPI must be called prior to this function" );
+   boost::ignore_unused_variable_warning(alias);   
    return false;
 
 }
@@ -148,8 +151,9 @@ bool AudiereSoundImplementation::isPlaying( const std::string& alias )
 /** if the sound is paused, then return true. */
 bool AudiereSoundImplementation::isPaused( const std::string& alias )
 {
-   assert( mDev != NULL && "startAPI must be called prior to this function" );
-
+   vprASSERT( mDev.get() != NULL && "startAPI must be called prior to this function" );
+   boost::ignore_unused_variable_warning(alias);   
+   return false;
 }
 
 /**
@@ -157,7 +161,8 @@ bool AudiereSoundImplementation::isPaused( const std::string& alias )
  */
 void AudiereSoundImplementation::pause( const std::string& alias )
 {
-   assert( mDev != NULL && "startAPI must be called prior to this function" );
+   vprASSERT( mDev.get() != NULL && "startAPI must be called prior to this function" );
+   boost::ignore_unused_variable_warning(alias);   
 }
 
 /**
@@ -165,8 +170,8 @@ void AudiereSoundImplementation::pause( const std::string& alias )
  */
 void AudiereSoundImplementation::unpause( const std::string& alias )
 {
-   assert( mDev != NULL && "startAPI must be called prior to this function" );
-   
+   vprASSERT( mDev.get() != NULL && "startAPI must be called prior to this function" );
+   boost::ignore_unused_variable_warning(alias);   
 }
 
 /**
@@ -175,7 +180,7 @@ void AudiereSoundImplementation::unpause( const std::string& alias )
  */
 void AudiereSoundImplementation::stop( const std::string& alias )
 {
-   assert( mDev != NULL && "startAPI must be called prior to this function" );
+   vprASSERT( mDev.get() != NULL && "startAPI must be called prior to this function" );
    
    if(this->lookup(alias).streaming)
    {
@@ -218,7 +223,7 @@ void AudiereSoundImplementation::configure( const std::string& alias, const snx:
  */
 void AudiereSoundImplementation::setPosition( const std::string& alias, float x, float y, float z )
 {
-   assert( mDev != NULL && "startAPI must be called prior to this function" );
+   vprASSERT( mDev.get() != NULL && "startAPI must be called prior to this function" );
    snx::SoundImplementation::setPosition( alias, x, y, z );
 
 }
@@ -238,7 +243,7 @@ void AudiereSoundImplementation::getPosition( const std::string& alias, float& x
  */
 void AudiereSoundImplementation::setListenerPosition( const gmtl::Matrix44f& mat )
 {
-   assert( mDev != NULL && "startAPI must be called prior to this function" );
+   vprASSERT( mDev.get() != NULL && "startAPI must be called prior to this function" );
    
    snx::SoundImplementation::setListenerPosition( mat );
 }
@@ -278,11 +283,11 @@ void AudiereSoundImplementation::setCutoff( const std::string& alias, float amou
  */
 int AudiereSoundImplementation::startAPI()
 {
-   if (mDev == NULL)
+   if (mDev.get() == NULL)
    {
       // open the device for output
       mDev = audiere::OpenDevice();
-      if (!mDev) 
+      if (!mDev.get()) 
       {
          vprDEBUG(snxDBG, vprDBG_CONFIG_LVL) << clrOutNORM(clrYELLOW, "Audiere| ERROR: Could not open device\n") << vprDEBUG_FLUSH;
          return 0;
@@ -307,21 +312,21 @@ void AudiereSoundImplementation::shutdownAPI()
 {
    if (this->isStarted() == false)
    {
-      vprDEBUG(snxDBG, vprDBG_CONFIG_LVL) << clrOutNORM(clrYELLOW, "Auidere| WARNING:") << "API not started, nothing to shutdown [dev=" << (int)mDev << "]\n" << vprDEBUG_FLUSH;
+      vprDEBUG(snxDBG, vprDBG_CONFIG_LVL)
+         << clrOutNORM(clrYELLOW, "Auidere| WARNING:")
+         << "API not started, nothing to shutdown [dev="
+         << std::hex << mDev.get() << std::dec << "]\n" << vprDEBUG_FLUSH;
       return;
    }
    
    this->unbindAll();
 
-   if (mDev != NULL)
-   {
-      mDev = NULL;
-   }
-
    mDev = NULL;
 
-   
-   vprDEBUG(snxDBG, vprDBG_CONFIG_LVL) << clrOutNORM(clrYELLOW, "Audiere| NOTICE:") << " Audiere API closed: [dev=" << (int)mDev << "]\n" << vprDEBUG_FLUSH;
+   vprDEBUG(snxDBG, vprDBG_CONFIG_LVL)
+      << clrOutNORM(clrYELLOW, "Audiere| NOTICE:")
+      << " Audiere API closed: [dev="
+      << std::hex << mDev.get() << std::dec << "]\n" << vprDEBUG_FLUSH;
 }   
 
 /**
