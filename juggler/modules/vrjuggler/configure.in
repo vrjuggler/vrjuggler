@@ -646,9 +646,12 @@ VJ_SRCDIR='${VJROOT_ABS}'
 #     * TEST_EXTRA_LIBS_BASIC: A basic set of extra libraries and linker flags
 #       needed for compiling.  These are put after those listed in the
 #       previous variables in the compile line.
+#     * TEST_EXTRA_LIBS_BASIC_SUBST: Used only in the top-level Makefile.in.
+#       It is used in the same way as $TEST_VJ_LIBS_BASIC_SUBST but is for the
+#       $TEST_EXTRA_LIBS_BASIC variable.
 #     * TEST_VJ_LIBS_GL: The OpenGL libraries needed for compiling with the
 #       OpenGL API.
-#     * TEST_VJ_LIBS_GL_SUBST: Used only in the top-level Makefile.in  It is
+#     * TEST_VJ_LIBS_GL_SUBST: Used only in the top-level Makefile.in.  It is
 #       used in the same way as $TEST_VJ_LIBS_BASIC_SUBST but is for the
 #       $TEST_VJ_LIBS_GL variable.
 #     * TEST_VJ_LIBS_PF: The Performer libraries needed for compiling with the
@@ -660,6 +663,7 @@ TEST_VJ_LIBS_GL="-lJuggler_ogl"
 TEST_VJ_LIBS_PF="-lJuggler_pf"
 TEST_LIBS_BASIC="-B dynamic -lm -lC"
 TEST_EXTRA_LIBS_BASIC="$LDFLAGS $LIBS"
+TEST_EXTRA_LIBS_BASIC_SUBST="$LDFLAGS $LIBS"
 TEST_EXTRA_LIBS_GL="-L${OGLROOT}/lib${LIBBITSUF} $_SYSTEM_OPENGL"
 TEST_EXTRA_LIBS_GL_SUBST="-L${OGLROOT}/lib\${LIBBITSUF} $_SYSTEM_OPENGL"
 TEST_EXTRA_LIBS_PF="$_PFOGLLIB"
