@@ -176,13 +176,13 @@ case $host in
         # $ABI.
         if test "$ABI" = "64" ; then
             DSOREGFILE='/usr/lib64/so_locations'
-            OPT_FLAGS='-OPT:Olimit=2000'
+            OPT_FLAGS='-OPT:Olimit=0'
         elif test "$ABI" = "N32" ; then
             DSOREGFILE='/usr/lib32/so_locations'
-            OPT_FLAGS='-OPT:Olimit=2000'
+            OPT_FLAGS='-OPT:Olimit=0'
         elif test "$ABI" = "O32" ; then
             DSOREGFILE='/usr/lib/so_locations'
-            OPT_FLAGS='-Olimit 2000'
+            OPT_FLAGS='-Olimit 0'
         fi
 
         AR='${CXX}'
