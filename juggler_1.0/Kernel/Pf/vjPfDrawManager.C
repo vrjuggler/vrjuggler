@@ -1,5 +1,6 @@
 #include <config.h>
 #include <Kernel/Pf/vjPfDrawManager.h>
+#include <Kernel/Pf/vjPfApp.h>
 #include <Kernel/vjDebug.h>
 #include <Kernel/vjDisplayManager.h>
 #include <Kernel/vjProjection.h>
@@ -32,7 +33,7 @@ void vjPfDrawManager::config(vjConfigChunkDB*  chunkDB)
       pipeStrs.push_back(sgiChunk->getProperty("xpipes", i));
       vjDEBUG(0) << "Pipe:" << i << ": " << pipeStrs[i] << endl << vjDEBUG_FLUSH;
    }
-   
+
       // --- Get simulator model info --- //
    vector<vjConfigChunk*>* perf_chunks;
    perf_chunks = chunkDB->getMatching("apiPerformer");      // Get the performer API chunks
@@ -40,18 +41,18 @@ void vjPfDrawManager::config(vjConfigChunkDB*  chunkDB)
    if(perf_chunks->size() > 0)
    {
       vjConfigChunk* perf_chunk = (*perf_chunks)[0];
-      
+
       char* head_file = perf_chunk->getProperty("simHeadModel");
       char* wand_file = perf_chunk->getProperty("simWandModel");
       if(head_file == NULL)
          vjDEBUG(0) << "vjPfDrawManager::config: simHeadModel not set." << endl << vjDEBUG_FLUSH;
       if(wand_file == NULL)
          vjDEBUG(0) << "vjPfDrawManager::config: simWandModel not set." << endl << vjDEBUG_FLUSH;
-      
+
       mHeadModel = string(head_file);
       mWandModel = string(wand_file);
    }
-   
+
    vjDEBUG(0) << "Head Model: " << mHeadModel << endl
               << "Wand Model: " << mWandModel << endl << vjDEBUG_FLUSH;
    vjDEBUG_END(0) << "-----------------------------------------------------" << endl << vjDEBUG_FLUSH;
@@ -69,12 +70,18 @@ void vjPfDrawManager::draw()
 {
    vjDEBUG(2) << "vjPfDrawManager::draw\n" << vjDEBUG_FLUSH;
 
-   pfFrame(); 
+   pfFrame();
 }
+
+//: Set the app the draw whould interact with.
+//! PRE: none
+//! POST: dynamic_cast of the app to a pf app
+void vjPfDrawManager::setApp(vjApp* _app)
+{ app = dynamic_cast<vjPfApp*>(_app);}
 
 //! POST: Calls pfInit()
 void vjPfDrawManager::initAPI()
-{ 
+{
    pfInit();
 }
 
@@ -86,7 +93,7 @@ void vjPfDrawManager::initDrawing()
    pfMultipipe(numPipes);
    pfMultiprocess(PFMP_APP_CULL_DRAW);
 
-   
+
    initLoaders();          // Must call before pfConfig
 
    // --- FORKS HERE --- //
@@ -119,7 +126,7 @@ void vjPfDrawManager::initDrawing()
        dispIter != displayManager->displays.end(); dispIter++)
    {
       vjDEBUG(0) << "------- Opening new Display --------" << endl << vjDEBUG_FLUSH;
-      
+
       pfDisp tempPfDisp;
       tempPfDisp.disp = (*dispIter);
 
@@ -145,7 +152,7 @@ void vjPfDrawManager::initDrawing()
       	tempPfDisp.pWin->setFBConfigAttrs(stereo_win_attrs);     // Configure framebuffer for stereo
       else
          tempPfDisp.pWin->setFBConfigAttrs(norm_win_attrs);       // Configure a "norm" window
-      
+
       tempPfDisp.pWin->setConfigFunc(vjPFconfigPWin); // Set config function
       tempPfDisp.pWin->config();                      // Next pfFrame, config Func will be called
 
@@ -169,7 +176,7 @@ void vjPfDrawManager::initDrawing()
 
    initSimulator();        // Call here to load the scene graph
    initPerformerApp();
-   
+
    // ----- SETUP MASTER CHANNEL ----- //
    pfChannel* masterChan = disps[0].chans[0];
 
@@ -181,7 +188,7 @@ void vjPfDrawManager::initDrawing()
       cerr << "vjPfDrawManager::initDrawing: MasterChan is NULL!!\n";
 
    masterChan->setShare(PFCHAN_NEARFAR | PFCHAN_EARTHSKY |
-                        PFCHAN_STRESS | PFCHAN_LOD | PFCHAN_SWAPBUFFERS | 
+                        PFCHAN_STRESS | PFCHAN_LOD | PFCHAN_SWAPBUFFERS |
                         PFCHAN_APPFUNC | PFCHAN_CULLFUNC | PFCHAN_DRAWFUNC);
 
    // ----- SETUP CHANNEL GROUP ---- //
@@ -194,11 +201,11 @@ void vjPfDrawManager::initDrawing()
    }
 
    // --- Setup channel's scene --- //
-   // Channels that are drawing a simulator get a scene graph with 
+   // Channels that are drawing a simulator get a scene graph with
    // the simulator stuff in it.
    for(dispIndex=0;dispIndex<disps.size();dispIndex++)
    {
-      if(disps[dispIndex].disp->isSimulator())   
+      if(disps[dispIndex].disp->isSimulator())
       {
          if (disps[dispIndex].chans[pfDisp::LEFT] != NULL)
             disps[dispIndex].chans[pfDisp::LEFT]->setScene(mRootWithSim);
@@ -295,7 +302,7 @@ void vjPfDrawManager::updatePfProjection(pfChannel* chan, vjProjection* proj, bo
 
    pfMatrix pfViewMat;
    pfViewMat.set(proj->viewMat.getFloatPtr());      // Hmm...
-   
+
       // The following is scary.  Don't break or you die!!!
       // Basically, Performer does a Rotate of 90 around X
       // first thing in modelview.  So, we have to undo that, put
@@ -313,19 +320,19 @@ void vjPfDrawManager::updatePfProjection(pfChannel* chan, vjProjection* proj, bo
    {
       chan->setAutoAspect(PFFRUST_CALC_NONE);         // No auto aspect
       chan->setNearFar(proj->frustum[vjFrustum::NEAR], proj->frustum[vjFrustum::FAR]);
-      chan->makePersp(proj->frustum[vjFrustum::LEFT], proj->frustum[vjFrustum::RIGHT], 
+      chan->makePersp(proj->frustum[vjFrustum::LEFT], proj->frustum[vjFrustum::RIGHT],
                       proj->frustum[vjFrustum::BOTTOM], proj->frustum[vjFrustum::TOP]);
    } else {
       chan->setAutoAspect(PFFRUST_CALC_VERT);
       chan->setNearFar(0.1, 1000);
       chan->setFOV(80.0f, 0.0f);
    }
-   
+
    vjDEBUG(7) << "Frustum: l:" << proj->frustum[vjFrustum::LEFT]
               << "   r: " << proj->frustum[vjFrustum::RIGHT]
-              << "   b: " << proj->frustum[vjFrustum::BOTTOM] 
+              << "   b: " << proj->frustum[vjFrustum::BOTTOM]
               << "   t: " << proj->frustum[vjFrustum::TOP] << endl << vjDEBUG_FLUSH;
-   
+
    vjDEBUG_END(6) << "vjPfDrawManager::updatePfProjection: Exiting.\n" << vjDEBUG_FLUSH;
 }
 
@@ -343,7 +350,7 @@ void vjPfDrawManager::debugDump()
       vjDEBUG(0) << "\n\tDisplay:" << (void*)(i->disp) << endl << vjDEBUG_FLUSH;
       vjDEBUG(0) << "\tpWin:" << (void*)(i->pWin) << endl << vjDEBUG_FLUSH;
       vjDEBUG(0) << "\t\tvis id:" << hex << i->pWin->getFBConfigId() << vjDEBUG_FLUSH;
-      vjDEBUG(0) << "\tchans: L:" << (void*)(i->chans[pfDisp::LEFT]) << "\tR:" << (void*)(i->chans[pfDisp::RIGHT]) << endl << vjDEBUG_FLUSH; 
+      vjDEBUG(0) << "\tchans: L:" << (void*)(i->chans[pfDisp::LEFT]) << "\tR:" << (void*)(i->chans[pfDisp::RIGHT]) << endl << vjDEBUG_FLUSH;
    }
    vjDEBUG_END(0) << "-------- Dump end ----\n" << vjDEBUG_FLUSH;
 }
@@ -389,6 +396,6 @@ void vgPfDrawFunc(pfChannel *chan, void* chandata)
       // Should we draw the simulator
    if(cur_pf_disp->disp->isSimulator())
    {
-      
+
    }
 }

@@ -6,12 +6,13 @@
 #include <Kernel/vjKernel.h>
 #include <Kernel/vjDebug.h>
 class vjKernel;
+class vjDrawManager;
 
 //----------------------------------------------------------------
 //: Encapsulates the actually application.
-// 
-//	    This class defines the class that all API specific 
-//  application classes should be derived from.  The interface 
+//
+//	    This class defines the class that all API specific
+//  application classes should be derived from.  The interface
 //  given is the interface that the Kernel expects in order to
 //  interface with the application.  Most of the application's
 //  interface will be defined in the derived API specific classes.
@@ -64,7 +65,7 @@ public:
    /// Execute any final cleanup needed for the application
    virtual void exit()
    {;}
-   
+
    //: Function called after tracker update but before start of drawing
    virtual void preDraw()
    {;}
@@ -75,9 +76,14 @@ public:
    virtual void postSync()
    {;}
 
-public:      
+public:
    vjAPI       api;        // Used to signal which API this application works with
    vjKernel*   kernel;     // The library kernel (here for convienence)
+
+public:  // --- Factory functions --- //
+   //: Get the DrawManager to use
+   //! NOTE: Each derived app MUST implement this function
+   virtual vjDrawManager*    getDrawManager() = 0;
 };
- 
+
 #endif

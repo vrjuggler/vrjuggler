@@ -7,7 +7,7 @@
 #include <mstring.h>
 #include <Kernel/vjApp.h>
 #include <Kernel/vjSystemFactory.h>
-#include <Kernel/vjAPIFactory.h>
+//#include <Kernel/vjAPIFactory.h>
 #include <Kernel/vjDisplayManager.h>
 #include <Kernel/vjDrawManager.h>
 #include <Threads/vjThread.h>
@@ -86,10 +86,6 @@ public:      // Global "get" interface
    vjConfigChunkDB* getChunkDB()
    { return chunkDB;}
 
-      //: Get the Factories
-   vjAPIFactory* getAPIFactory()
-   { return apiFactory; }
-
       //: Get the system Factory
    vjSystemFactory* getSysFactory()
    { return sysFactory; }
@@ -107,7 +103,6 @@ protected:
    vjThread*   mControlThread;             //: The thread in control of me.
 
    /// Factories and Managers
-   vjAPIFactory*     apiFactory;          //: The Current API Factory
    vjSystemFactory*  sysFactory;          //: The current System factory
    vjDrawManager*    drawManager;         //: The Draw Manager we are currently using
    vjDisplayManager* displayManager;      //: The Display Manager we are currently using

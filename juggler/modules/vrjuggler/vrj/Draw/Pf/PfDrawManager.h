@@ -16,7 +16,8 @@
 
 #include <Kernel/vjDrawManager.h>
 #include <Kernel/vjDisplay.h>
-#include <Kernel/Pf/vjPfApp.h>
+//#include <Kernel/Pf/vjPfApp.h>
+class vjPfApp;
 class vjProjection;
 class vjConfigChunkDB;
 class vjSimulator;
@@ -47,7 +48,7 @@ protected:
       }
 
       enum {LEFT = 0, RIGHT = 1};
-      
+
       vjDisplay*     disp;
       pfPipeWindow*  pWin;
       pfChannel*     chans[2];
@@ -81,15 +82,14 @@ public:
    //: Set the app the draw whould interact with.
    //! PRE: none
    //! POST: self'.app = _app
-   virtual void setApp(vjApp* _app)
-   { app = dynamic_cast<vjPfApp*>(_app);}
+   virtual void setApp(vjApp* _app);
 
 
    //: Initialize the drawing API (if not already running)
    //  should call pfInit()
    virtual void initAPI();
 
-   //: Initialize the drawing state for the API based on 
+   //: Initialize the drawing state for the API based on
    //: the data in the display manager.
    //
    //! PRE: API is running (initAPI has been called)
@@ -109,7 +109,7 @@ public:
       //: Update all the projections for the displays
       //!POST: All windows have the projections correctly set.
    virtual void updateProjections();
-   
+
    //: dumps the object's internal state
    void debugDump();
 
@@ -127,7 +127,7 @@ protected:
    void initSimulator();
    void initLoaders();
    void updateSimulator(vjSimulator* sim);
-   
+
    //: Helper to get the pfDisp given a channel
    //! RETURNS: NULL - Not found
    pfDisp* getPfDisp(pfChannel* chan)
@@ -171,7 +171,7 @@ protected:
    vjPfDrawManager()
    {;}
 private:
-   static vjPfDrawManager* _instance;    
+   static vjPfDrawManager* _instance;
 };
 
 

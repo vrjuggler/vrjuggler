@@ -17,7 +17,8 @@
 #include <GL/glu.h>
 
 #include <Kernel/vjDrawManager.h>
-#include <Kernel/GL/vjGlApp.h>
+//#include <Kernel/GL/vjGlApp.h>
+class vjGlApp;
 #include <Kernel/GL/vjGlWindow.h>
 #include <Kernel/GL/vjGlPipe.h>
 #include <Threads/vjTSObjectProxy.h>
@@ -80,12 +81,10 @@ public:
    void drawSimulator(vjSimulator* sim);
 
    //: Set the app the draw should interact with.
-   virtual void setApp(vjApp* _app)
-   { app = dynamic_cast<vjGlApp*>(_app);}
+   virtual void setApp(vjApp* _app);
 
    //: Return the app we are rednering
-   vjGlApp* getApp()
-   { return app; }
+   vjGlApp* getApp();
 
    void setDisplayManager(vjDisplayManager* _dispMgr);
 
