@@ -363,9 +363,9 @@ void collideApp::testBallCollision(Sphere<DATA_TYPE>& s1,
    if ((collide_balls) && (first < delta))
    {
       // Find normal for ball 1 and 2
-      Vec3f norm1((s1.getCenter() + s2.getCenter())/2);
+      Vec3f norm1((s1.getCenter() + s2.getCenter())/2.0f);
       normalize(norm1);
-      Vec3f norm2((s2.getCenter() + s1.getCenter())/2);
+      Vec3f norm2((s2.getCenter() + s1.getCenter())/2.0f);
       normalize(norm2);
 
       // Find new velocity for ball 1 and 2
