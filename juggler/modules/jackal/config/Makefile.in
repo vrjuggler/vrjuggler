@@ -181,7 +181,6 @@ docs:
           -classpath $(CLASSPATH) $(DOC_PKGS)
 
 links:
-	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/bin/beans
 	cd $(instlinks)/bin && rm -f ./*.jar
 	cd $(instlinks)/bin && \
           for jar in $(JARS) ; \
@@ -215,7 +214,7 @@ install-docs:
 	rm -rf $(doc_prefix)/$(DOC_ROOT)
 	mv $(DOC_ROOT) $(doc_prefix)
 
-CLEAN_FILES	+= $(JARS) $(CONFIG_CLASSES) $(BEANS_CLASSES)
+CLEAN_FILES	+= $(JARS) $(CONFIG_CLASSES)
 
 ifdef GLOBAL_BUILD
     CLEAN_DIRS	+= $(top_srcdir)/bin
