@@ -57,10 +57,11 @@ extern "C" {
 #  include <global.h>
 #  include <md5.h>
 }
-#endif
+#endif  /* VPR_USE_LEACH_UUID */
 
-// Too bad there isn't a standard location for uuid.h ...
-#if defined(HAVE_UUID_H)
+#if defined(VPR_OS_Win32)
+#  include <rpc.h>
+#elif defined(HAVE_UUID_H)
 #  include <uuid.h>
 #elif defined(HAVE_UUID_UUID_H) || defined(VPR_USE_LEACH_UUID)
 #  include <uuid/uuid.h>
@@ -69,11 +70,11 @@ extern "C" {
 // XXX: On IRIX, sys/uuid.h is not a C++-safe header.  Blah...
 #  ifdef VPR_OS_IRIX
 extern "C" {
-#  endif
+#  endif  /* VPR_OS_IRIX */
 #  include <sys/uuid.h>
 #  ifdef VPR_OS_IRIX
 }
-#  endif
+#  endif  /* VPR_OS_IRIX */
 #endif
 
 #include <boost/concept_check.hpp>  // for ignore_unused_variable_warning
@@ -152,15 +153,18 @@ GUID::GUID(const struct vpr::GUID::StdGUID& guid)
    memcpy(&mGuid, &guid, sizeof(vpr::GUID::StdGUID));
 }
 
-GUID::GUID(const GUID& ns_guid, const std::string& name)
+GUID::GUID(const GUID& nsGuid, const std::string& name)
 {
-   generate(ns_guid,name);
+   generate(nsGuid,name);
 }
 
 void GUID::generate()
 {
+// Windows DCE UUID.
+#if defined(VPR_OS_Win32)
+   UuidCreate((UUID*) &mGuid.standard);
 // DCE 1.1 UUID.
-#if defined(VPR_USE_DCE_1_1_UUID)
+#elif defined(VPR_USE_DCE_1_1_UUID)
    uint32_t status(0);
    uuid_create((uuid_t*) &mGuid.standard, &status);
 // Linux e2fsprogs libuuid.
@@ -170,15 +174,15 @@ void GUID::generate()
    memcpy((void*) &mGuid.standard, storage, sizeof(mGuid));
 // Leach UUID (see juggler/external/leach-uuid).
 #else
-   uuid_create( (uuid_t*)(&mGuid.standard));
+   uuid_create((uuid_t*) &mGuid.standard);
 #endif
 }
 
-void GUID::generate(const GUID& ns_guid, const std::string& name)
+void GUID::generate(const GUID& nsGuid, const std::string& name)
 {
 // Leach UUID (see juggler/external/leach-uuid).
 #if defined(VPR_USE_LEACH_UUID)
-   uuid_t temp_ns_id = *((uuid_t*)(&ns_guid.mGuid.standard));    // nasty, but works
+   uuid_t temp_ns_id = *((uuid_t*) &nsGuid.mGuid.standard); // nasty, but works
 
    uuid_create_from_name((uuid_t*) (&mGuid.standard), temp_ns_id,
                          (void*) name.c_str(), name.length());
@@ -186,7 +190,7 @@ void GUID::generate(const GUID& ns_guid, const std::string& name)
 // Implementation of the algorithm for creating a name-based UUID.
 #else
    // Convert to network byte order.
-   vpr::GUID net_ns_guid = ns_guid;
+   vpr::GUID net_ns_guid = nsGuid;
    net_ns_guid.mGuid.standard.m0 = vpr::System::Htonl(net_ns_guid.mGuid.standard.m0);
    net_ns_guid.mGuid.standard.m1 = vpr::System::Htons(net_ns_guid.mGuid.standard.m1);
    net_ns_guid.mGuid.standard.m2 = vpr::System::Htons(net_ns_guid.mGuid.standard.m2);
