@@ -30,12 +30,12 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vrj/vrjConfig.h>
+#include <gadget/gadgetConfig.h>
 #include <vrj/Kernel/Kernel.h>
-#include <gad/Type/GloveProxy.h>
-#include <vrj/Config/ConfigChunk.h>
+#include <gadget/Type/GloveProxy.h>
+#include <jccl/Config/ConfigChunk.h>
 
-namespace vrj
+namespace gadget
 {
 
 bool GloveProxy::config(ConfigChunk* chunk)

@@ -31,28 +31,28 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include <iostream>
-#include <gad/InputManager.h>
-#include <gad/Devices/Immersion/hci.h>
-#include <gad/Devices/Immersion/iboxStandalone.h>
-#include <gad/Devices/Ascension/Flock.h>
-#include <gad/Devices/Immersion/Ibox.h>
+#include <gadget/InputManager.h>
+#include <gadget/Devices/Immersion/hci.h>
+#include <gadget/Devices/Immersion/iboxStandalone.h>
+#include <gadget/Devices/Ascension/Flock.h>
+#include <gadget/Devices/Immersion/Ibox.h>
 #include <vpr/System.h>
 
 int main()
 {
    vrj::Matrix pos_data;
-   vrj::InputManager* input_manager = new vrj::InputManager ;
+   gadget::InputManager* input_manager = new gadget::InputManager ;
 
       // --- Create Dummy -- //
    std::cout << "\nCreating myDummy: DummyPosition w/X=5.0" << std::endl;
-   vrj::DummyPosition* myDummy = new vrj::DummyPosition;
+   gadget::DummyPosition* myDummy = new gadget::DummyPosition;
    myDummy->SetX(5.0);
 
       // -- get default pos data -- //
    std::cout << "get the position data for proxy 0:" << std::endl;
    data = input_manager->getPosData(pos_data, 0);
-   std::cout  << "  x:" << data->x 
-              << "  y:" << data->y 
+   std::cout  << "  x:" << data->x
+              << "  y:" << data->y
               << "  z:" << data->z << std::endl;
 
       // --- Add dummy to input group -- //
@@ -65,8 +65,8 @@ int main()
       // --- Now get Dummy's data -- //
    std::cout << "Now get the positional data from posproxy0:" << std::endl;
    data = input_manager->getPosData(0);
-   std::cout  << "  x:" << data->x 
-              << "  y:" << data->y 
+   std::cout  << "  x:" << data->x
+              << "  y:" << data->y
               << "  z:" << data->z << std::endl;
 
 
@@ -74,7 +74,7 @@ int main()
              << std::endl;
    (input_manager->getDevice(devNum))->UpdateData();
    std::cout << "\nget the devicename: "
-             << (input_manager->getDevice(devNum))->getDeviceName() 
+             << (input_manager->getDevice(devNum))->getDeviceName()
              << std::endl;
 
    std::cout << "Doing UpdateAllData:" << std::flush;
@@ -88,7 +88,7 @@ int main()
    std::cin.get();
 
 #ifdef TRACKERS
-   vrj::Flock* aFlock = new vrj::Flock;
+   gadget::Flock* aFlock = new gadget::Flock;
    aFlock->startSampling();
    devNum = input_manager->fAddDevice(aFlock);
    input_manager->SetPosProxy(1,devNum,0);
@@ -116,8 +116,8 @@ int main()
 
    aFlock->stopSampling();
 #endif
-   
-   vrj::IBox *myibox = new vrj::IBox;
+
+   gadget::IBox *myibox = new gadget::IBox;
    myibox->startSampling();
    std::cout << "ibox is: " << myibox->getDeviceName();
    C2Dinput_manageritalProxy dp1(myibox,0);
@@ -147,4 +147,4 @@ int main()
    delete input_manager;
 
    return 0;
-} 
+}

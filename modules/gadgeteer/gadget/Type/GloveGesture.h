@@ -30,18 +30,18 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _VRJ_GLOVE_GESTURE_H_
-#define _VRJ_GLOVE_GESTURE_H_
+#ifndef _GADGET_GLOVE_GESTURE_H_
+#define _GADGET_GLOVE_GESTURE_H_
 //#pragma once
 
-#include <gad/gadConfig.h>
-#include <gad/Type/Input.h>
-#include <gad/Type/Gesture.h>
-#include <gad/Type/Glove.h>
-#include <gad/Type/GloveProxy.h>
-#include <vrj/Config/ConfigChunk.h>
+#include <gadget/gadgetConfig.h>
+#include <gadget/Type/Input.h>
+#include <gadget/Type/Gesture.h>
+#include <gadget/Type/Glove.h>
+#include <gadget/Type/GloveProxy.h>
+#include <jccl/Config/ConfigChunk.h>
 
-namespace vrj
+namespace gadget
 {
 
 //: Abstract base class for all glove gesture recognition

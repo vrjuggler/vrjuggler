@@ -8,14 +8,14 @@
 /*  --    Author: Larry Edwards                             --  */
 /*  ==========================================================  */
 
-#include <vrj/vrjConfig.h>
+#include <gadget/gadgetConfig.h>
 #include <stdio.h>
 #include <errno.h>
 #include <stdlib.h>
 #include <X11/Intrinsic.h>
 
-#include <gad/Devices/VirtualTechnologies/vt_globals.h>
-#include <gad/Devices/VirtualTechnologies/vt_error.h>
+#include <gadget/Devices/VirtualTechnologies/vt_globals.h>
+#include <gadget/Devices/VirtualTechnologies/vt_error.h>
 
 static int new_error = FALSE;
 static char routine_with_error[256];

@@ -30,15 +30,15 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vrj/vrjConfig.h>
+#include <gadget/gadgetConfig.h>
 #include <vrj/Kernel/Kernel.h>
-#include <gad/Type/GestureProxy.h>
-#include <vrj/Config/ConfigChunk.h>
+#include <gadget/Type/GestureProxy.h>
+#include <jccl/Config/ConfigChunk.h>
 
-namespace vrj
+namespace gadget
 {
 
-bool GestureProxy::config(ConfigChunk* chunk)
+bool GestureProxy::config(jccl::ConfigChunk* chunk)
 {
    vprDEBUG_BEGIN(vrjDBG_INPUT_MGR,3) << "------------------ GESTURE PROXY config() -----------------\n" << vprDEBUG_FLUSH;
    vprASSERT(((std::string)chunk->getType()) == "GestureProxy");

@@ -42,8 +42,8 @@
 // Last Modified: 4-22-99
 //===============================================================
 
-#ifndef _VRJ_ASCENSION_FLOCKOFBIRD_STANDALONE_H_
-#define _VRJ_ASCENSION_FLOCKOFBIRD_STANDALONE_H_
+#ifndef _GADGET_ASCENSION_FLOCKOFBIRD_STANDALONE_H_
+#define _GADGET_ASCENSION_FLOCKOFBIRD_STANDALONE_H_
 
 #include <vpr/IO/Port/SerialPort.h>
 

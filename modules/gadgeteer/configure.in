@@ -38,8 +38,8 @@
 # -----------------------------------------------------------------------------
 
 AC_REVISION($Revision$)
-AC_INIT(gad/gadConfig.h)
-AC_CONFIG_HEADER(gad/gadDefines.h)
+AC_INIT(gadget/gadgetConfig.h)
+AC_CONFIG_HEADER(gadget/gadgetDefines.h)
 DPP_PREREQ(1.4)
 DPP_INIT
 
@@ -96,13 +96,13 @@ case $target_os in
         ;;
     # HP PA-RISC machine running HP-UX 10.20.
     hpux10.20)
-        AC_DEFINE(GAD_HPUX_VERSION, 10)
+        AC_DEFINE(GADGET_HPUX_VERSION, 10)
         AC_DEFINE(_INCLUDE_TERMIO,)
         AC_DEFINE(_CMA_NOWRAPPERS_,)
         ;;
     # HP PA-RISC machine running HP-UX 11.x.
     hpux11*)
-        AC_DEFINE(GAD_HPUX_VERSION, 11)
+        AC_DEFINE(GADGET_HPUX_VERSION, 11)
         AC_DEFINE(_INCLUDE_TERMIO,)
         AC_DEFINE(_CMA_NOWRAPPERS_,)
         ;;
@@ -151,6 +151,7 @@ DPP_BASIC_PROGS($PLATFORM, $OS_TYPE)
 VPR_PATH(0.4.1, , AC_MSG_ERROR(*** VPR required for Gadgeteer ***))
 VRJUGGLER_PATH(1.1.91, ,
                AC_MSG_ERROR(*** VR Juggler required for Gadgeteer ***))
+JCCL_PATH(0.0.1, , AC_MSG_ERROR(*** JCCL required for Gadgeteer ***))
 
 AC_PATH_X
 
@@ -227,7 +228,7 @@ void dtkMath_matrixPrint(FILE *file, dtkMath_matrix* m); ],
 
         if test "x$ac_cv_dtkMath_matrixPrint_in_dtk" = "xyes" ; then
             HAVE_DTK='Y'
-            AC_DEFINE(GAD_HAVE_DTK)
+            AC_DEFINE(GADGET_HAVE_DTK)
             DTK_INCLUDES=`$DTK_CONFIG --include`
             DTK_LDFLAGS=`$DTK_CONFIG --libs $bits`
         else
@@ -315,17 +316,17 @@ elif test "x$OS_TYPE" = "xWin32" ; then
 fi
 
 # $srcdir is the root directory of the juggler source tree.  To get a value for
-# $GADROOT_ABS, we cd there and save the value of running pwd.  Then return to
-# the directory where configure is being run ($topdir).
+# $GADGETROOT_ABS, we cd there and save the value of running pwd.  Then return
+# to the directory where configure is being run ($topdir).
 cd "$srcdir"
-GADROOT_ABS=`pwd`
-cd "$GADROOT_ABS/../.."
+GADGETROOT_ABS=`pwd`
+cd "$GADGETROOT_ABS/../.."
 JUGGLERROOT_ABS=`pwd`
 cd "$topdir"
 
-# Define the base path to the source directory using $(GADROOT_ABS) as an
+# Define the base path to the source directory using $(GADGETROOT_ABS) as an
 # alternative to using $(srcdir).
-UNIX_GADROOT_ABS="$GADROOT_ABS"
+UNIX_GADGETROOT_ABS="$GADGETROOT_ABS"
 UNIX_JUGGLERROOT_ABS="$JUGGLERROOT_ABS"
 
 if test "x$OS_TYPE" = "xWin32" ; then
@@ -336,12 +337,12 @@ fi
 
 # Put together the basic information needed to compile Gadgeteer applications.
 VJ_APP_COMPILER($CC, $CFLAGS, $CXX, $CXXFLAGS, $DBG_FLAGS, $OPT_FLAGS,
-                GAD_BASE_DIR, $DEFS, $INCLUDES, ${_EXTRA_FLAGS})
-VJ_APP_LINKER($CXX, $EXTRA_LINK_FLAGS, $LDOPTS_DBG, $LDOPTS_OPT, GAD_BASE_DIR,
-              gadget, $APP_EXTRA_LIBS)
+                GADGET_BASE_DIR, $DEFS, $INCLUDES, ${_EXTRA_FLAGS})
+VJ_APP_LINKER($CXX, $EXTRA_LINK_FLAGS, $LDOPTS_DBG, $LDOPTS_OPT,
+              GADGET_BASE_DIR, gadget, $APP_EXTRA_LIBS)
 
 APP_BASE_DIR='$(topdir)/instlinks'
-APP_BASE_DIR_INST='$(GAD_BASE_DIR)'
+APP_BASE_DIR_INST='$(GADGET_BASE_DIR)'
 
 if test "$OS_TYPE" = "UNIX" ; then
     DYLIB_DEPS="$APP_EXTRA_LIBS"
@@ -353,7 +354,7 @@ fi
 
 # Translate paths from UNIX-style to Win32.
 if test "x$OS_TYPE" = "xWin32" ; then
-    GADROOT_ABS=`unix2dos -p "$GADROOT_ABS"`
+    GADGETROOT_ABS=`unix2dos -p "$GADGETROOT_ABS"`
     JUGGLERROOT_ABS=`unix2dos -p "$JUGGLERROOT_ABS"`
 
     DEPEND_EXTRAS=`unix2dos "$DEPEND_EXTRAS"`
@@ -369,7 +370,7 @@ if test "x$OS_TYPE" = "xWin32" ; then
     APP_EXTRA_LIBS_PF=`unix2dos "$APP_EXTRA_LIBS_PF"`
     APP_EXTRA_LIBS_OSG=`unix2dos "$APP_EXTRA_LIBS_OSG"`
 else
-    GADROOT_ABS="$GADROOT_ABS"
+    GADGETROOT_ABS="$GADGETROOT_ABS"
     JUGGLERROOT_ABS="$JUGGLERROOT_ABS"
 fi
 
@@ -403,11 +404,11 @@ gad_extra_libs="$APP_EXTRA_LIBS $APP_EXTRA_LIBS_GL $APP_EXTRA_LIBS_END"
 DPP_SUBST
 
 AC_SUBST(topdir)
-AC_SUBST(UNIX_GADROOT_ABS)
+AC_SUBST(UNIX_GADGETROOT_ABS)
 AC_SUBST(UNIX_JUGGLERROOT_ABS)
-AC_SUBST(GADROOT_ABS)
+AC_SUBST(GADGETROOT_ABS)
 AC_SUBST(JUGGLERROOT_ABS)
-AC_SUBST(GAD_SHARE_DIR)
+AC_SUBST(GADGET_SHARE_DIR)
 AC_SUBST(SUBSYSTEM)
 
 AC_SUBST(EXTRA_LINK_FLAGS)
@@ -434,33 +435,31 @@ AC_SUBST(gad_extra_libs)
 # Final file generation step.
 # -----------------------------------------------------------------------------
 
-VJ_MTREE_LIB_GEN(GAD, mtree, $PLATFORM, $ISA)
+VJ_MTREE_LIB_GEN(GADGET, mtree, $PLATFORM, $ISA)
 
 AC_OUTPUT(Makefile
           Makefile.inc
           common.defs.mk
           make.defs.mk
-          gad/Makefile
-          gad/Makefile.inc
-          gad/Devices/Makefile
-          gad/Devices/Ascension/Makefile
-          gad/Devices/Fakespace/Makefile
-          gad/Devices/Immersion/Makefile
-          gad/Devices/Intersense/Makefile
-          gad/Devices/Keyboard/Makefile
-          gad/Devices/Logitech/Makefile
-          gad/Devices/Open/Makefile
-          gad/Devices/Open/DTK/Makefile
-          gad/Devices/Open/Trackd/Makefile
-          gad/Devices/Sim/Makefile
-          gad/Devices/VirtualTechnologies/Makefile
-          gad/Type/Makefile
-          doc/Makefile
-          mtree/GAD.data.dist
-          mtree/GAD.include.dist
-          mtree/GAD.install.dist
-          mtree/GAD.samples.dist
-          mtree/GAD.test.dist
+          gadget/Makefile
+          gadget/Makefile.inc
+          gadget/Devices/Makefile
+          gadget/Devices/Ascension/Makefile
+          gadget/Devices/Fakespace/Makefile
+          gadget/Devices/Immersion/Makefile
+          gadget/Devices/Intersense/Makefile
+          gadget/Devices/Keyboard/Makefile
+          gadget/Devices/Logitech/Makefile
+          gadget/Devices/Open/Makefile
+          gadget/Devices/Open/DTK/Makefile
+          gadget/Devices/Open/Trackd/Makefile
+          gadget/Devices/Sim/Makefile
+          gadget/Devices/VirtualTechnologies/Makefile
+          gadget/Type/Makefile
+          mtree/GADGET.data.dist
+          mtree/GADGET.include.dist
+          mtree/GADGET.install.dist
+          mtree/GADGET.test.dist
           VARS.pl)
 
 cat <<BUILD_INFO

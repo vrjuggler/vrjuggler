@@ -30,22 +30,22 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vrj/vrjConfig.h>
+#include <gadget/gadgetConfig.h>
 #include <sys/time.h>
 
 // need stdio for sprintf
 #include <stdio.h>
 
-#include <gad/Devices/VirtualTechnologies/vt_types.h>
-#include <gad/Devices/VirtualTechnologies/CyberGlove.h>
-#include <gad/Devices/VirtualTechnologies/vt_globals.h>
-#include <gad/Devices/VirtualTechnologies/vt_types.h>
-#include <gad/Devices/VirtualTechnologies/vt_error.h>
+#include <gadget/Devices/VirtualTechnologies/vt_types.h>
+#include <gadget/Devices/VirtualTechnologies/CyberGlove.h>
+#include <gadget/Devices/VirtualTechnologies/vt_globals.h>
+#include <gadget/Devices/VirtualTechnologies/vt_types.h>
+#include <gadget/Devices/VirtualTechnologies/vt_error.h>
 #include <vrj/Kernel/Kernel.h>
-#include <vrj/Config/ConfigChunk.h>
+#include <jccl/Config/ConfigChunk.h>
 #include <vpr/System.h>
 
-namespace vrj
+namespace gadget
 {
 
 bool CyberGlove::config(ConfigChunk *c)

@@ -30,12 +30,12 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vrj/vrjConfig.h>
+#include <gadget/gadgetConfig.h>
 #include <vrj/Kernel/Kernel.h>
-#include <gad/Type/AnalogProxy.h>
-#include <vrj/Config/ConfigChunk.h>
+#include <gadget/Type/AnalogProxy.h>
+#include <jccl/Config/ConfigChunk.h>
 
-namespace vrj
+namespace gadget
 {
 
 bool AnalogProxy::config(ConfigChunk* chunk)

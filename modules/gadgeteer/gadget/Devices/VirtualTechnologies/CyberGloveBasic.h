@@ -33,7 +33,7 @@
 #ifndef _CYBER_GLOVE_BASIC_H_
 #define _CYBER_GLOVE_BASIC_H_
 
-#include <gad/gadConfig.h>
+#include <gadget/gadgetConfig.h>
 
 #include <stdio.h>
 #include <vpr/vpr.h>
@@ -43,9 +43,9 @@
 #   include <limits>
 #endif
 
-#include <gad/Devices/VirtualTechnologies/vt_types.h>
-#include <gad/Devices/VirtualTechnologies/vt_glove-types.h>
-#include <gad/Devices/VirtualTechnologies/vt_virtual_hand-types.h>
+#include <gadget/Devices/VirtualTechnologies/vt_types.h>
+#include <gadget/Devices/VirtualTechnologies/vt_glove-types.h>
+#include <gadget/Devices/VirtualTechnologies/vt_virtual_hand-types.h>
 
 struct CYBER_GLOVE_DATA {
   float joints[MAX_SENSOR_GROUPS][MAX_SENSOR_VALUES];

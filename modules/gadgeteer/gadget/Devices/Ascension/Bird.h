@@ -36,16 +36,16 @@
 // Note: untested with a standalone configuration, probably doesn't work
 ////////////////////////////////////////////////////////////////////////
 
-#ifndef _VRJ_BIRD_H_
-#define _VRJ_BIRD_H_
+#ifndef _GADGET_BIRD_H_
+#define _GADGET_BIRD_H_
 
-#include <gad/gadConfig.h>
+#include <gadget/gadgetConfig.h>
 #include <vpr/Thread/Thread.h>
-#include <gad/Type/Input.h>
-#include <gad/Type/Position.h>
-#include <gad/Devices/Ascension/Flock.h>
+#include <gadget/Type/Input.h>
+#include <gadget/Type/Position.h>
+#include <gadget/Devices/Ascension/Flock.h>
 
-namespace vrj
+namespace gadget
 {
 
 //: A start at a standalone bird derice driver.

@@ -30,12 +30,12 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vrj/vrjConfig.h>
+#include <gadget/gadgetConfig.h>
 
-#include <gad/Type/Glove.h>
+#include <gadget/Type/Glove.h>
 #include <vrj/Math/Vec4.h>
 
-namespace vrj
+namespace gadget
 {
 
 
@@ -190,7 +190,7 @@ Glove::Glove()
 {
    //vprDEBUG(vrjDBG_INPUT_MGR,3)<<"*** Glove::Glove()\n"<< vprDEBUG_FLUSH;
 
-   for(int i=0;i<VJ_MAX_GLOVE_DEVS;i++)
+   for(int i=0;i<GADGET_MAX_GLOVE_DEVS;i++)
       mGlovePos[i] = NULL;
 }
 
@@ -238,9 +238,9 @@ Matrix Glove::getGlovePos(GloveData::GloveComponent component, int devNum)
       case GloveData::RING:
       case GloveData::PINKY:
       case GloveData::THUMB:
-         dijTtip.makeTrans(mTheData[devNum][current].dims[component][GloveData::DIJ+1][VJ_X],
-                           mTheData[devNum][current].dims[component][GloveData::DIJ+1][VJ_Y],
-                           mTheData[devNum][current].dims[component][GloveData::DIJ+1][VJ_Z]);
+         dijTtip.makeTrans(mTheData[devNum][current].dims[component][GloveData::DIJ+1][GADGET_X],
+                           mTheData[devNum][current].dims[component][GloveData::DIJ+1][GADGET_Y],
+                           mTheData[devNum][current].dims[component][GloveData::DIJ+1][GADGET_Z]);
          baseTdij = mTheData[devNum][current].xforms[component][GloveData::MPJ];            // baseTmpj
          baseTdij.postMult(mTheData[devNum][current].xforms[component][GloveData::PIJ]);    // mpjTpij
          baseTdij.postMult(mTheData[devNum][current].xforms[component][GloveData::DIJ]);    // pijTdij

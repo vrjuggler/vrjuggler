@@ -36,19 +36,19 @@
 //
 ////////////////////////////////////////////////////////////////////////
 
-#ifndef _VRJ_POSPROXY_H_
-#define _VRJ_POSPROXY_H_
+#ifndef _GADGET_POSPROXY_H_
+#define _GADGET_POSPROXY_H_
 
-#include <gad/gadConfig.h>
+#include <gadget/gadgetConfig.h>
 #include <math.h>
 
-#include <gad/Type/Position.h>
-#include <gad/Type/Proxy.h>
+#include <gadget/Type/Position.h>
+#include <gadget/Type/Proxy.h>
 #include <vrj/Math/Matrix.h>
-#include <gad/Type/PositionFilter.h>
+#include <gadget/Type/PositionFilter.h>
 
 
-namespace vrj
+namespace gadget
 {
 
 //-----------------------------------------------------------------------
@@ -62,7 +62,7 @@ namespace vrj
 // See also: Position
 //------------------------------------------------------------------------
 //!PUBLIC_API:
-class GAD_CLASS_API PositionProxy : public TypedProxy<Position>
+class GADGET_CLASS_API PositionProxy : public TypedProxy<Position>
 {
 public:
    PositionProxy() :  mUnitNum(-1), mETrans(false), mFilter(NULL)
@@ -90,7 +90,7 @@ public:
    }
 
     //: returns time of last update...
-    TimeStamp* getUpdateTime () {
+    jccl::TimeStamp* getUpdateTime () {
    return &mPosUpdateTime;
     }
 
@@ -105,7 +105,7 @@ public:
                       float xrot, float yrot, float zrot);   // Rotate
 
    //: Get the data
-   Matrix* getData()
+   vrj::Matrix* getData()
    {
       if(mStupified)
          mPosData.makeIdent();
@@ -127,7 +127,7 @@ public:
    }
 
    //: Get the transform being using by this proxy
-   Matrix& getTransform()
+   vrj::Matrix& getTransform()
    { return mMatrixTransform; }
 
    //: Transform the data in mPosData
@@ -141,7 +141,7 @@ public:
 
    static std::string getChunkType() { return "PositionProxy"; }
 
-   bool config(ConfigChunk* chunk);
+   bool config(jccl::ConfigChunk* chunk);
 
    virtual Input* getProxiedInputDevice()
    {
@@ -154,14 +154,14 @@ public:
    }
 
 private:
-   Matrix       mPosData;
-   TimeStamp    mPosUpdateTime;
-   Matrix       mMatrixTransform;        // reciever_t_modifiedReciever
-   int            mUnitNum;
-   bool           mETrans;                // Are transformation enabled;
-   PositionFilter* mFilter;               // A possible position filter to use
+   vrj::Matrix       mPosData;
+   jccl::TimeStamp   mPosUpdateTime;
+   vrj::Matrix       mMatrixTransform;    // reciever_t_modifiedReciever
+   int               mUnitNum;
+   bool              mETrans;             // Are transformation enabled;
+   PositionFilter*   mFilter;             // A possible position filter to use
 };
 
-};
+} // End of gadget namespace
 
 #endif

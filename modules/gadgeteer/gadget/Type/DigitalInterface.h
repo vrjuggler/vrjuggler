@@ -30,12 +30,12 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _VRJ_DIGITAL_INTERFACE_H_
-#define _VRJ_DIGITAL_INTERFACE_H_
+#ifndef _GADGET_DIGITAL_INTERFACE_H_
+#define _GADGET_DIGITAL_INTERFACE_H_
 
-#include <gad/gadConfig.h>
+#include <gadget/gadgetConfig.h>
 
-#include <gad/Type/DigitalProxy.h>
-#include <gad/Type/DeviceInterface.h>
+#include <gadget/Type/DigitalProxy.h>
+#include <gadget/Type/DeviceInterface.h>
 
 #endif

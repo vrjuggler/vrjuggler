@@ -42,18 +42,18 @@
 // Date: 4-22-99
 //===============================================================
 
-#include <vrj/vrjConfig.h>
+#include <gadget/gadgetConfig.h>
 
 #include <strstream>
 #include <fstream>
 
-#include <gad/Devices/Intersense/Intersense.h>
+#include <gadget/Devices/Intersense/Intersense.h>
 #include <vrj/Math/Coord.h>
 #include <vrj/Math/Quat.h>
 #include <vrj/Util/Debug.h>
-#include <vrj/Config/ConfigChunk.h>
+#include <jccl/Config/ConfigChunk.h>
 
-namespace vrj
+namespace gadget
 {
 
 // Helper to return the index for theData array

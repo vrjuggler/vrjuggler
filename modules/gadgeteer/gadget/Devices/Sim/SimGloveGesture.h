@@ -30,18 +30,18 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _VRJ_SIM_GLOVE_GESTURE_H_
-#define _VRJ_SIM_GLOVE_GESTURE_H_
+#ifndef _GADGET_SIM_GLOVE_GESTURE_H_
+#define _GADGET_SIM_GLOVE_GESTURE_H_
 
-#include <gad/gadConfig.h>
-#include <gad/Type/Input.h>
-#include <gad/Type/Digital.h>
-#include <gad/Type/GloveGesture.h>
-#include <gad/Type/Glove.h>
-#include <gad/Type/Gesture.h>
-#include <gad/Devices/Sim/SimInput.h>
+#include <gadget/gadgetConfig.h>
+#include <gadget/Type/Input.h>
+#include <gadget/Type/Digital.h>
+#include <gadget/Type/GloveGesture.h>
+#include <gadget/Type/Glove.h>
+#include <gadget/Type/Gesture.h>
+#include <gadget/Devices/Sim/SimInput.h>
 
-namespace vrj
+namespace gadget
 {
 
 

@@ -32,11 +32,11 @@
 
 #include <iostream>
 
-#include <vrj/Config/ChunkDescDB.h>
-#include <vrj/Config/ChunkFactory.h>
-#include <vrj/Config/ConfigChunkDB.h>
-#include <gad/InputManager.h>
-#include <gad/Type/PosInterface.h>
+#include <jccl/Config/ChunkDescDB.h>
+#include <jccl/Config/ChunkFactory.h>
+#include <jccl/Config/ConfigChunkDB.h>
+#include <gadget/InputManager.h>
+#include <gadget/Type/PositionInterface.h>
 #include <vrj/Math/Coord.h>
 #include <vpr/System.h>
 
@@ -47,9 +47,9 @@
 int main()
 {
    // --- Load chunk database -- //
-   vrj::ChunkDescDB desc;
+   jccl::ChunkDescDB desc;
    bool load_worked = desc.load(CHUNK_DESC_LOCATION);
-   vrj::ChunkFactory::instance()->addDescs(&desc);
+   jccl::ChunkFactory::instance()->addDescs(&desc);
 
    if(!load_worked)
       std::cerr << "Could not load chunkDesc's\n" << std::flush;
@@ -58,7 +58,7 @@ int main()
              << std::endl;
 
    // -- Load config -- //
-   vrj::ConfigChunkDB *chunkdb = new vrj::ConfigChunkDB();
+   jccl::ConfigChunkDB *chunkdb = new jccl::ConfigChunkDB();
    load_worked = chunkdb->load(CONFIG_LOCATION);
    if(!load_worked)
       std::cerr << "Could not load config file\n" << std::flush;
@@ -67,11 +67,11 @@ int main()
    std::cout << (*chunkdb);
    std::cout << "endochunks" << std::endl;
 
-   vrj::InputManager *input_manager = new vrj::InputManager;
+   gadget::InputManager *input_manager = new gadget::InputManager;
    std::cout << "vjInputManager created" << std::endl;
 
    // --- configure the input manager -- //
-   for ( vrj::ConfigChunkDB::iterator i = chunkdb->begin();
+   for ( jccl::ConfigChunkDB::iterator i = chunkdb->begin();
          i != chunkdb->end();
          i++ )
    {
@@ -87,10 +87,10 @@ int main()
    std::cout << "awake." << std::endl << std::flush;
 
       // get the indices for the devices
-   vrj::PosProxy* head_proxy =
-      dynamic_cast<vrj::PosProxy*>(input_manager->getProxy("VJHead"));
-   vrj::PosProxy* wand_proxy =
-      dynamic_cast<vrj::PosProxy*>(input_manager->getProxy("VJWand"));
+   gadget::PositionProxy* head_proxy =
+      dynamic_cast<gadget::PositionProxy*>(input_manager->getProxy("VJHead"));
+   gadget::PositionProxy* wand_proxy =
+      dynamic_cast<gadget::PositionProxy*>(input_manager->getProxy("VJWand"));
 
    for (int l = 0; l <30; l++)
    {

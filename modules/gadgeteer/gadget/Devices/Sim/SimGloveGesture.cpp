@@ -30,13 +30,13 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vrj/vrjConfig.h>
+#include <gadget/gadgetConfig.h>
 
 #include <vrj/Util/FileIO.h>
-#include <gad/Devices/Sim/SimGloveGesture.h>
-#include <vrj/Config/ConfigChunk.h>
+#include <gadget/Devices/Sim/SimGloveGesture.h>
+#include <jccl/Config/ConfigChunk.h>
 
-namespace vrj
+namespace gadget
 {
 
 //: Construct the SimGloveGesture

@@ -30,7 +30,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vrj/vrjConfig.h>
+#include <gadget/gadgetConfig.h>
 
 #include <strstream>
 #include <fstream>
@@ -39,8 +39,8 @@
 #include <dlfcn.h>
 
 #include <vrj/Util/Debug.h>
-#include <vrj/Config/ConfigChunk.h>
-#include <gad/Devices/Open/DTK/DTK.h>
+#include <jccl/Config/ConfigChunk.h>
+#include <gadget/Devices/Open/DTK/DTK.h>
 
 // Helper to return the index for theData array
 // given the stationNum we are dealing with and the bufferIndex
@@ -49,7 +49,7 @@
 //! ARGS:bufferIndex - the value of current, progress, or valid (it is an offset in the array)
 // XXX: We are going to say the cubes are 0 based
 
-namespace vrj
+namespace gadget
 {
 
 int DTK::getStationIndex(int stationNum, int bufferIndex)

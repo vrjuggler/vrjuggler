@@ -46,8 +46,8 @@
 // Date: 1-23-99
 //===============================================================
 
-#ifndef _VRJ_PINCH_GLOVE_STANDALONE_H_
-#define _VRJ_PINCH_GLOVE_STANDALONE_H_
+#ifndef _GADGET_PINCH_GLOVE_STANDALONE_H_
+#define _GADGET_PINCH_GLOVE_STANDALONE_H_
 
 #include <string>
 

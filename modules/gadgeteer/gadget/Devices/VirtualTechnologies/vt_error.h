@@ -9,7 +9,7 @@
 /*  --  Copyright (C) 1993 Virtual Technologies             --  */
 /*  ==========================================================  */
 
-#include <gad/gadConfig.h>
+#include <gadget/gadgetConfig.h>
 
 enum { Ok = 1, NOERROR = 0, UNIX_ERROR,
      IO_ERROR,IO_ERROR1,IO_ERROR2,IO_ERROR3,IO_ERROR4,IO_ERROR5,

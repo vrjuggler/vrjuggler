@@ -31,7 +31,7 @@
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # -----------------------------------------------------------------------------
-# Makefile.in for gadgeteer/gad/Devices.  It requires GNU make.
+# Makefile.in for gadgeteer/gadget/Devices.  It requires GNU make.
 #
 # Generated for use on @PLATFORM@
 # -----------------------------------------------------------------------------
@@ -40,7 +40,7 @@
 include @topdir@/make.defs.mk
 
 # Prefix for recursive stuff.
-DIRPRFX		= gad/Devices/
+DIRPRFX		= gadget/Devices/
 
 # Subdirectories to compile.
 SUBDIR		= Ascension		\

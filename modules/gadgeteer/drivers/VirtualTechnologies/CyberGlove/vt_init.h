@@ -12,8 +12,8 @@
 /*  ================================================================  */
 
 
-#include <gad/gadConfig.h>
-#include <gad/Devices/VirtualTechnologies/vt_types.h> /* Included for Boolean declaration */
+#include <gadget/gadgetConfig.h>
+#include <gadget/Devices/VirtualTechnologies/vt_types.h> /* Included for Boolean declaration */
 
 enum
 {

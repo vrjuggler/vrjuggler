@@ -7,9 +7,9 @@
 /*  --    Authors: Larry Edwards and William Chapin         --  */
 /*  ==========================================================  */
 
-#include <vrj/vrjConfig.h>
+#include <gadget/gadgetConfig.h>
 #include <math.h>
-#include <gad/Devices/VirtualTechnologies/vt_math3d.h>
+#include <gadget/Devices/VirtualTechnologies/vt_math3d.h>
 
 /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=*/
 /*                         VECTOR MATH ROUTINES                           */

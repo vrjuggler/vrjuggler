@@ -36,21 +36,21 @@
 //
 ////////////////////////////////////////////////////////////////////////
 
-#ifndef _VRJ_POSITION_H_
-#define _VRJ_POSITION_H_
+#ifndef _GADGET_POSITION_H_
+#define _GADGET_POSITION_H_
 
-#include <gad/gadConfig.h>
+#include <gadget/gadgetConfig.h>
 #include <typeinfo>
-#include <gad/Type/Input.h>
+#include <gadget/Type/Input.h>
 #include <vrj/Math/Vec3.h>
 #include <vrj/Math/Matrix.h>
-#include <vrj/Performance/TimeStamp.h>
+#include <jccl/Plugins/PerformanceMonitor/TimeStamp.h>
 
-namespace vrj
+namespace gadget
 {
 
 typedef struct {
-  Vec3 pos, orient;   // orient - EulerZYX , 0-Z, 1-Y, 2-X ???
+  vrj::Vec3 pos, orient;   // orient - EulerZYX , 0-Z, 1-Y, 2-X ???
   //float x,y,z,azi,elev,roll;
   } POS_DATA;
 
@@ -79,22 +79,22 @@ public:
     //: Destructor
     virtual ~Position();
 
-    virtual bool config(ConfigChunk *c);
+    virtual bool config(jccl::ConfigChunk *c);
 
     /* New pure virtual functions */
     //: Get Position data
-    virtual Matrix* getPosData(int devNum = 0) = 0;
-    virtual TimeStamp* getPosUpdateTime (int devNum = 0);
+    virtual vrj::Matrix* getPosData(int devNum = 0) = 0;
+    virtual jccl::TimeStamp* getPosUpdateTime (int devNum = 0);
 
 public:
     /* XXX: Some of this stuff should be removed */
     /* XXX: theData is a ptr because flock needs an infinite number */
     /* XXX: We should change this so that theData is defined in each class and not here */
-    Matrix* theData;   // Ptr to matrix that holds the actually position data
-    TimeStamp* mDataTimes; // time when each buffer was last filled.
+    vrj::Matrix* theData;   // Ptr to matrix that holds the actually position data
+    jccl::TimeStamp* mDataTimes; // time when each buffer was last filled.
 
-    Matrix xformMat;   // The total xform matrix.  T*R  NOTE: Used to move from trk coord system to Juggler coord system
-    Matrix rotMat;     // Only the rotation matrix
+    vrj::Matrix xformMat;   // The total xform matrix.  T*R  NOTE: Used to move from trk coord system to Juggler coord system
+    vrj::Matrix rotMat;     // Only the rotation matrix
 };
 
 };

@@ -30,20 +30,20 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vrj/vrjConfig.h>
+#include <gadget/gadgetConfig.h>
 
-#include <gad/Type/AnalogProxy.h>
-#include <gad/Type/DigitalProxy.h>
-#include <gad/Type/PositionProxy.h>
-#include <gad/Type/GloveProxy.h>
-#include <gad/Type/GestureProxy.h>
-#include <gad/Type/KeyboardProxy.h>
-#include <gad/ProxyDepChecker.h>
+#include <gadget/Type/AnalogProxy.h>
+#include <gadget/Type/DigitalProxy.h>
+#include <gadget/Type/PositionProxy.h>
+#include <gadget/Type/GloveProxy.h>
+#include <gadget/Type/GestureProxy.h>
+#include <gadget/Type/KeyboardProxy.h>
+#include <gadget/ProxyDepChecker.h>
 
-namespace vrj
+namespace gadget
 {
 
-bool ProxyDepChecker::canHandle(ConfigChunk* chunk)
+bool ProxyDepChecker::canHandle(jccl::ConfigChunk* chunk)
 {
    std::string chunk_type = (std::string)chunk->getType();
 

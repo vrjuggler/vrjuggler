@@ -42,10 +42,10 @@
 // Andy Himberger:    v0.0  - Inital version
 ////////////////////////////////////////////////////////////////////////////
 
-#ifndef _GAD_INPUT_H_
-#define _GAD_INPUT_H_
+#ifndef _GADGET_INPUT_H_
+#define _GADGET_INPUT_H_
 
-#include <gad/gadConfig.h>
+#include <gadget/gadgetConfig.h>
 #include <vpr/vpr.h>
 
 #ifndef VPR_OS_Win32
@@ -90,7 +90,7 @@ const unsigned int DEVICE_GROW1    = 64;
 const unsigned int DEVICE_GROW2    = 128;
 */
 
-namespace vrj
+namespace gadget
 {
    class ConfigChunk;
 
@@ -119,7 +119,7 @@ namespace vrj
 //+       it is being updated to the most recent copy.
 //-----------------------------------------------------------------------------
 //!PUBLIC_API:
-class GAD_CLASS_API Input
+class GADGET_CLASS_API Input
 {
 public:
    //: Default Constructor
@@ -246,4 +246,4 @@ protected:
 
 } // end namespace
 
-#endif   /* GAD_INPUT_H */
+#endif   /* GADGET_INPUT_H */

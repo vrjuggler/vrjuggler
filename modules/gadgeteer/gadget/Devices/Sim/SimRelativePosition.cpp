@@ -30,12 +30,12 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vrj/vrjConfig.h>
+#include <gadget/gadgetConfig.h>
 
-#include <gad/Devices/Sim/SimRelativePosition.h>
-#include <vrj/Config/ConfigChunk.h>
+#include <gadget/Devices/Sim/SimRelativePosition.h>
+#include <jccl/Config/ConfigChunk.h>
 
-namespace vrj
+namespace gadget
 {
 
 bool SimRelativePosition::config(ConfigChunk* chunk)

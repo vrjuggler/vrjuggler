@@ -30,14 +30,14 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _VRJ_GESTURE_H_
-#define _VRJ_GESTURE_H_
+#ifndef _GADGET_GESTURE_H_
+#define _GADGET_GESTURE_H_
 //#pragma once
 
-#include <gad/gadConfig.h>
+#include <gadget/gadgetConfig.h>
 
 
-namespace vrj
+namespace gadget
 {
 
 //-------------------------------------------------------------------------

@@ -30,11 +30,11 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <gad/gadConfig.h>
-#include <gad/Type/LinearSigmoidPositionFilter.h>
+#include <gadget/gadgetConfig.h>
+#include <gadget/Type/LinearSigmoidPositionFilter.h>
 
 
-namespace vrj
+namespace gadget
 {
 
 //

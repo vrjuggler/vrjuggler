@@ -9,16 +9,16 @@
 /*  --    Modified by Larry Edwards                         --  */
 /*  ==========================================================  */
 
-#include <vrj/vrjConfig.h>
+#include <gadget/gadgetConfig.h>
 #include <stdio.h>
 
 #include <X11/Intrinsic.h>
 
-#include <gad/Devices/VirtualTechnologies/CyberGlove.h>
-#include <gad/Devices/VirtualTechnologies/vt_read_user_cal-types.h>
-#include <gad/Devices/VirtualTechnologies/vt_virtual_hand-types.h>
-#include <gad/Devices/VirtualTechnologies/vt_globals.h>
-#include <gad/Devices/VirtualTechnologies/vt_error.h>
+#include <gadget/Devices/VirtualTechnologies/CyberGlove.h>
+#include <gadget/Devices/VirtualTechnologies/vt_read_user_cal-types.h>
+#include <gadget/Devices/VirtualTechnologies/vt_virtual_hand-types.h>
+#include <gadget/Devices/VirtualTechnologies/vt_globals.h>
+#include <gadget/Devices/VirtualTechnologies/vt_error.h>
 
 /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-*/
 /*                                                               */

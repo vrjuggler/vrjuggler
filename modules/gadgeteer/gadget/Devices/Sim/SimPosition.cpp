@@ -30,17 +30,17 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vrj/vrjConfig.h>
+#include <gadget/gadgetConfig.h>
 
 #include <vrj/Math/Coord.h>
 #include <vrj/Math/Plane.h>
 #include <vrj/Math/Seg.h>
 #include <vrj/Display/DisplayManager.h>
 #include <vrj/Display/Display.h>
-#include <vrj/Config/ConfigChunk.h>
-#include <gad/Devices/Sim/SimPosition.h>
+#include <jccl/Config/ConfigChunk.h>
+#include <gadget/Devices/Sim/SimPosition.h>
 
-namespace vrj
+namespace gadget
 {
 
 bool SimPosition::config(ConfigChunk* chunk)

@@ -42,7 +42,7 @@
 #include <sys/schedctl.h>
 #include <unistd.h>
 
-#include <gad/Devices/Open/Trackd/trackdmem.h>
+#include <gadget/Devices/Open/Trackd/trackdmem.h>
 
 #define TRACKD_MAX_SENSORS  30
 #define CAVE_MAX_VALUATORS  20
@@ -171,7 +171,7 @@ void setNewTrackerData(int numSensors)
  }
  gettimeofday(&curtime,NULL);
  t = curtime.tv_sec-starttime.tv_sec + (curtime.tv_usec-starttime.tv_usec)/1000000.0f;
- if (nextSensor==0)  
+ if (nextSensor==0)
  {
    tracker->sensor[0].x = fsin(t/2.0f) * 2.0f;
    tracker->sensor[0].y = 6;

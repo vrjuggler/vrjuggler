@@ -30,8 +30,8 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _GAD_DEFINES_H_
-#define _GAD_DEFINES_H_
+#ifndef _GADGET_DEFINES_H_
+#define _GADGET_DEFINES_H_
 
 /*
  * --------------------------------------------------------------------------
@@ -46,7 +46,7 @@
 #undef _BSD_TYPES
 
 /* Define all of the following if building on HP-UX. */
-#undef GAD_HPUX_VERSION
+#undef GADGET_HPUX_VERSION
 #undef _INCLUDE_TERMIO
 #undef _CMA_NOWRAPPERS_
 
@@ -55,8 +55,8 @@
 #undef _MBCS
 
 /* Definte if DTK is installed. */
-#undef GAD_HAVE_DTK
+#undef GADGET_HAVE_DTK
 
 @BOTTOM@
 
-#endif	/* _GAD_DEFINES_H_ */
+#endif  /* _GADGET_DEFINES_H_ */

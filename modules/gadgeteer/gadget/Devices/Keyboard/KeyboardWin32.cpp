@@ -30,14 +30,14 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vrj/vrjConfig.h>
+#include <gadget/gadgetConfig.h>
 
 #include <sys/types.h>
 
 #include <vrj/Math/Coord.h>
-#include <vrj/Config/ConfigChunk.h>
+#include <jccl/Config/ConfigChunk.h>
 #include <vrj/Util/Debug.h>
-#include <gad/Devices/Keyboard/KeyboardWin32.h>
+#include <gadget/Devices/Keyboard/KeyboardWin32.h>
 
 #ifndef GET_X_LPARAM
 #define GET_X_LPARAM(lp)   ((int)(short)LOWORD(lp))
@@ -46,7 +46,7 @@
 #define GET_Y_LPARAM(lp)   ((int)(short)HIWORD(lp))
 #endif
 
-namespace vrj
+namespace gadget
 {
 
 // The message loop

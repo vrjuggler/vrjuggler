@@ -30,16 +30,16 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vrj/vrjConfig.h>
+#include <gadget/gadgetConfig.h>
 #include <sys/time.h>
 #include <vpr/Thread/Thread.h>
 #include <vpr/System.h>
 
-#include <gad/Devices/Immersion/Ibox.h>
+#include <gadget/Devices/Immersion/Ibox.h>
 #include <vrj/Util/Debug.h>
-#include <vrj/Config/ConfigChunk.h>
+#include <jccl/Config/ConfigChunk.h>
 
-namespace vrj
+namespace gadget
 {
 
 //: Config function

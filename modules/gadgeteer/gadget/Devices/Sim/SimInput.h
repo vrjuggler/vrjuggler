@@ -30,15 +30,15 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _VRJ_SIM_INPUT_H
-#define _VRJ_SIM_INPUT_H
+#ifndef _GADGET_SIM_INPUT_H
+#define _GADGET_SIM_INPUT_H
 //#pragma once
 
-#include <gad/gadConfig.h>
-#include <gad/Type/KeyboardInterface.h>
-#include <vrj/Config/VarValue.h>
+#include <gadget/gadgetConfig.h>
+#include <gadget/Type/KeyboardInterface.h>
+#include <jccl/Config/VarValue.h>
 
-namespace vrj
+namespace gadget
 {
 
 class ConfigChunk;

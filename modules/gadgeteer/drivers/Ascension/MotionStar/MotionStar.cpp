@@ -30,15 +30,15 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vrj/vrjConfig.h>
+#include <gadget/gadgetConfig.h>
 
 #include <vrj/Math/Coord.h>
 #include <vrj/Util/Debug.h>
-#include <vrj/Config/ConfigChunk.h>
-#include <gad/Devices/Ascension/MotionStar.h>
+#include <jccl/Config/ConfigChunk.h>
+#include <gadget/Devices/Ascension/MotionStar.h>
 
 
-namespace vrj
+namespace gadget
 {
 
 // ============================================================================

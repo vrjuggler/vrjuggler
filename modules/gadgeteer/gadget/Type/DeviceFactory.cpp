@@ -30,50 +30,50 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vrj/vrjConfig.h>
+#include <gadget/gadgetConfig.h>
 #include <vpr/vpr.h>
-#include <gad/Type/DeviceFactory.h>
+#include <gadget/Type/DeviceFactory.h>
 
 // Sims
-#include <gad/Devices/Sim/SimAnalog.h>
-#include <gad/Devices/Sim/SimDigital.h>
-#include <gad/Devices/Sim/SimPosition.h>
-#include <gad/Devices/Sim/SimGloveGesture.h>
-//#include <gad/Devices/Sim/SimKeyboardDigital.h>
-#include <gad/Devices/Sim/SimRelativePosition.h>
-#include <gad/Devices/Sim/SimDigitalGlove.h>
+#include <gadget/Devices/Sim/SimAnalog.h>
+#include <gadget/Devices/Sim/SimDigital.h>
+#include <gadget/Devices/Sim/SimPosition.h>
+#include <gadget/Devices/Sim/SimGloveGesture.h>
+//#include <gadget/Devices/Sim/SimKeyboardDigital.h>
+#include <gadget/Devices/Sim/SimRelativePosition.h>
+#include <gadget/Devices/Sim/SimDigitalGlove.h>
 
 /* Physical devices */
 #ifndef VPR_OS_Win32
-#   include <gad/Devices/Ascension/Flock.h>
-#   include <gad/Devices/Intersense/Intersense.h>
+#   include <gadget/Devices/Ascension/Flock.h>
+#   include <gadget/Devices/Intersense/Intersense.h>
 
 #   ifdef VPR_OS_Darwin
-#      include <gad/Devices/Keyboard/OSXKeyboard.h>
+#      include <gadget/Devices/Keyboard/OSXKeyboard.h>
 #   else
-#      include <gad/Devices/Immersion/Ibox.h>
-#      include <gad/Devices/VirtualTechnologies/CyberGlove.h>
-#      include <gad/Devices/Fakespace/PinchGlove.h>
-#      include <gad/Devices/Keyboard/KeyboardXWin.h>
-#      include <gad/Devices/Keyboard/KeyboardDepCheckerXWin.h>
-#      include <gad/Devices/Open/Trackd/TrackdController.h>
-#      include <gad/Devices/Open/Trackd/TrackdSensor.h>
+#      include <gadget/Devices/Immersion/Ibox.h>
+#      include <gadget/Devices/VirtualTechnologies/CyberGlove.h>
+#      include <gadget/Devices/Fakespace/PinchGlove.h>
+#      include <gadget/Devices/Keyboard/KeyboardXWin.h>
+#      include <gadget/Devices/Keyboard/KeyboardDepCheckerXWin.h>
+#      include <gadget/Devices/Open/Trackd/TrackdController.h>
+#      include <gadget/Devices/Open/Trackd/TrackdSensor.h>
 #   endif
 
-#   include <gad/Devices/Logitech/logiclass.h>
-#   include <gad/Devices/Ascension/MotionStar.h>
+#   include <gadget/Devices/Logitech/logiclass.h>
+#   include <gadget/Devices/Ascension/MotionStar.h>
 #else
-#   include <gad/Devices/Keyboard/KeyboardWin32.h>
+#   include <gadget/Devices/Keyboard/KeyboardWin32.h>
 #endif
 
 /* PThread Dependant Driver */
-#ifdef VJ_HAVE_DTK
-#   include <gad/Devices/Open/DTK/DTK.h>
+#ifdef GADGET_HAVE_DTK
+#   include <gadget/Devices/Open/DTK/DTK.h>
 #endif
 
 #include <typeinfo>
 
-namespace vrj
+namespace gadget
 {
 
 // Initialize the singleton ptr
@@ -162,7 +162,7 @@ void DeviceFactory::hackLoadKnownDevices()
    }
 
 #endif
-#ifdef VJ_HAVE_DTK
+#ifdef GADGET_HAVE_DTK
    DeviceConstructor<DTK>* dtk_wrapper = new DeviceConstructor<DTK>;
    if( (NULL == dtk_wrapper))
    {
@@ -184,7 +184,7 @@ void DeviceFactory::registerDevice(DeviceConstructorBase* constructor)
 
 // Simply query all device constructors registered looking
 // for one that knows how to load the device
-bool DeviceFactory::recognizeDevice(ConfigChunk* chunk)
+bool DeviceFactory::recognizeDevice(jccl::ConfigChunk* chunk)
 {
    if(findConstructor(chunk) == -1)
       return false;
@@ -197,7 +197,7 @@ bool DeviceFactory::recognizeDevice(ConfigChunk* chunk)
 //!ARGS: chunk - specification of the device to load
 //!RETURNS: null - Device failed to load
 //+         other - Pointer to the loaded device
-Input* DeviceFactory::loadDevice(ConfigChunk* chunk)
+Input* DeviceFactory::loadDevice(jccl::ConfigChunk* chunk)
 {
    vprASSERT(recognizeDevice(chunk));
 
@@ -214,7 +214,7 @@ Input* DeviceFactory::loadDevice(ConfigChunk* chunk)
    return new_dev;
 }
 
-int DeviceFactory::findConstructor(ConfigChunk* chunk)
+int DeviceFactory::findConstructor(jccl::ConfigChunk* chunk)
 {
    std::string chunk_type;
    chunk_type = (std::string)chunk->getType();

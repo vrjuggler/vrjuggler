@@ -42,21 +42,21 @@
 // Allen Bierbaum:    v1.0 -  7-23-99 - Refactored to use new keyboard method
 ////////////////////////////////////////////////////////////////////////////
 
-#ifndef _VRJ_KEYBOARD_WIN32_H_
-#define _VRJ_KEYBOARD_WIN32_H_
+#ifndef _GADGET_KEYBOARD_WIN32_H_
+#define _GADGET_KEYBOARD_WIN32_H_
 
-#include <gad/gadConfig.h>
+#include <gadget/gadgetConfig.h>
 
 
 // Get windows stuff
 #include <windows.h>
 #include <commctrl.h>
 
-#include <gad/Type/Input.h>
-#include <gad/Type/Keyboard.h>
+#include <gadget/Type/Input.h>
+#include <gadget/Type/Keyboard.h>
 #include <vpr/Thread/Thread.h>
 
-namespace vrj
+namespace gadget
 {
 
 class KeyboardWin32 : public Input, public Keyboard

@@ -30,12 +30,12 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vrj/vrjConfig.h>
-#include <gad/Type/DeviceInterface.h>
+#include <gadget/gadgetConfig.h>
+#include <gadget/Type/DeviceInterface.h>
 #include <vrj/Kernel/Kernel.h>
-#include <gad/InputManager.h>
+#include <gadget/InputManager.h>
 
-namespace vrj
+namespace gadget
 {
 
 BaseDeviceInterface::BaseDeviceInterface()

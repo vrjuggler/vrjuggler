@@ -30,15 +30,15 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _VRJ_LINEAR_SIGMOID_POS_FILTER_H_
-#define _VRJ_LINEAR_SIGMOID_POS_FILTER_H_
+#ifndef _GADGET_LINEAR_SIGMOID_POS_FILTER_H_
+#define _GADGET_LINEAR_SIGMOID_POS_FILTER_H_
 
-#include <gad/gadConfig.h>
+#include <gadget/gadgetConfig.h>
 
-#include <gad/Type/PositionFilter.h>
+#include <gadget/Type/PositionFilter.h>
 #include <vrj/Math/Quat.h>
 
-namespace vrj
+namespace gadget
 {
 
 //: A pos filter class that uses a linear sigmoid
