@@ -230,6 +230,7 @@ void velocityNav::update()
    stopWatch.stop();
    stopWatch.start();
 
+   // here to correct for NAN's
    if (mTimeHack < 3)
    {
       stopWatch.timeInstant = 0;
