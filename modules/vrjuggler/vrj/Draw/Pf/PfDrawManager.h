@@ -287,8 +287,8 @@ protected:
    unsigned int mNumPipes;    /**< The number of Performer pipes */
 
    // --- Performer State --- //
-   PfApp*                app;              /**< The User applications */
-   std::vector<pfDisplay>  mDisplays;        /**< All Performer displays */
+   PfApp*                  mApp;              /**< The User applications */
+   std::vector<pfDisplay>  mDisplays;         /**< All Performer displays */
 
    std::vector<pfChannel*> mSurfChannels;
    std::vector<pfChannel*> mSimChannels;        /**< List of sim displays */
