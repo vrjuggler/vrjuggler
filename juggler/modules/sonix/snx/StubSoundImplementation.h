@@ -95,9 +95,10 @@ public:
     * @postconditions if it is, then the loaded sound is triggered.  if it isn't then nothing happens.
     * @semantics Triggers a sound
     */
-   virtual void trigger(const std::string & alias, const int & looping = 0)
+   virtual void trigger( const std::string & alias, const int & looping = 0 )
    {
       snx::SoundImplementation::trigger( alias, looping );
+      this->lookup( alias ).triggerOnNextBind = true;
       // do nothing
       //std::cout << "[snx]Stub::trigger (does nothing)\n"<<std::flush;
    }
@@ -106,9 +107,10 @@ public:
     * @semantics stop the sound
     * @input alias of the sound to be stopped
     */
-   virtual void stop(const std::string & name)
+   virtual void stop( const std::string & name )
    {
       snx::SoundImplementation::stop( name );
+      this->lookup( alias ).triggerOnNextBind = false;
       // do nothing
       //std::cout << "[snx]Stub::stop (does nothing)\n"<<std::flush;
    }

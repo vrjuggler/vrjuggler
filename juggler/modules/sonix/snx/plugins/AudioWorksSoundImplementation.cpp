@@ -569,7 +569,8 @@ namespace snx
           
       
       /*
-      // wav
+      // wav:  here is the beginnings of code to load wav files ourselves.
+      //   this will let us support other rates than 11025...
       awProp( wav, AWWV_NFRAMES, samples );
       awProp( wav, AWWV_FORMAT, AWWV_S16BIT );
       awProp( wav, AWWV_NCHANS, AWWV_MONO );
@@ -641,6 +642,13 @@ namespace snx
       this->setRetriggerable( alias, sinfo.retriggerable );
       
       std::cout<<"                        bind() done...\n"<<std::flush;
+      // was it playing?  if so, then start it up again...
+      if (sinfo.triggerOnNextBind == true)
+      {
+         sinfo.triggerOnNextBind = false; // done...
+         std::cout<<"[snx]AudioWorks| NOTIFY: triggering reconfigured sound x" << sinfo.repeat << "\n"<<std::flush;
+         this->trigger( alias, sinfo.repeat );
+      }
 
    }
 
