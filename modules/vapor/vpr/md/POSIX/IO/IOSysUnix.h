@@ -38,8 +38,12 @@
 
 namespace vpr {
 
-// Base class for all for the IOSys class.
-// The "real" impl is in an included file.
+/**
+ * Base class for all for the IOSys class.
+ * The "real" impl is in an included file.
+ *
+ * @author Allen Bierbaum
+ */
 class IOSysUnix
 {
 public:
@@ -47,9 +51,7 @@ public:
    static const Handle NullHandle;
 };
 
-
-
-}; // End of vpr namespace
+} // End of vpr namespace
 
 
 #endif   /* _VPR_IOSYS_UNIX_H_ */
