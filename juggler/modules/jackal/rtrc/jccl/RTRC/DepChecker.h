@@ -88,10 +88,11 @@ public:
    virtual bool depSatisfied(ConfigElementPtr element);
 
    /** Write element's dependencies to vprDEBUG.
-    *  @param dbg_level Output priority level for vprDEBUG.
+    *  @param element  The element whose dependencies will be printed.
+    *  @param dbgLevel Output priority level for vprDEBUG.
     */
    virtual void debugOutDependencies(ConfigElementPtr element,
-                                      int dbg_lvl = vprDBG_WARNING_LVL);
+                                      int dbgLevel = vprDBG_WARNING_LVL);
 
 }; // class DepChecker
 

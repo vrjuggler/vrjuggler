@@ -142,7 +142,7 @@ void ConfigManager::loadRemoteReconfig()
    search_path[0] = base_dir + std::string("/lib") + bit_suffix +
                     std::string("/jccl/plugins");
 
-   // In the long run, we may not want to hard-code the base name of the 
+   // In the long run, we may not want to hard-code the base name of the
    // plug-in we load.  If we ever reach a point where we have multiple ways
    // of implementing remote run-time reconfiguration, we could have options
    // for which plug-in to load.
@@ -217,10 +217,10 @@ ConfigManager::~ConfigManager()
 //-------------------- Pending List Stuff -------------------------------
 
 /**
- * Add the given configuration to the pending list as adds
+ * Add the given configuration to the pending list as adds.
  *
- * @post - ConfigElements are copied out of configuration. So db pointer may be
- *         deleted by calling method.
+ * @post ConfigElements are copied out of configuration. So db pointer may be
+ *       deleted by calling method.
  */
 void ConfigManager::addPendingAdds(Configuration* db)
 {
@@ -279,13 +279,12 @@ void ConfigManager::refreshPendingList()
 }
 
 static const int pending_repeat_limit = 3;    // Must be one or greater.  1 means only allow one time of no changes
-   
-//: Do we need to check the pending list
-//! CONCURRENCY: concurrent
-// The routine counts the number of pending elements
-// each time it is called.
-// if it goes pending_repeat_limit calls without
-// changing size, then it returns false until mLastPendingSize changes
+
+// Do we need to check the pending list
+// CONCURRENCY: concurrent
+// The routine counts the number of pending elements each time it is called.
+// if it goes pending_repeat_limit calls without changing size, then it returns
+// false until mLastPendingSize changes
 bool ConfigManager::pendingNeedsChecked()
 {
    std::list<PendingElement>::size_type cur_pending_size(0);
@@ -365,17 +364,18 @@ void ConfigManager::addPending(PendingElement& pendingElement)
 {
    // Assert that the pending list is locked prior to calling this method.
    vprASSERT(1 == mPendingLock.test());
-   
+
    mPendingConfig.push_back(pendingElement);
 
    refreshPendingList();
 }
 
-// Look for items in the active list that don't have their dependencies filled anymore
+// Look for items in the active list that don't have their dependencies filled
+// anymore.
 //
-//! POST: Any elements in active with dependencies not filled are added to the
-//+       the pending list. (A remove and an add are added to the pending)
-//! RETURNS: The number of lost dependencies found
+// POST: Any elements in active with dependencies not filled are added to the
+//       the pending list. (A remove and an add are added to the pending).
+// RETURNS: The number of lost dependencies found.
 int ConfigManager::scanForLostDependencies()
 {
    vprASSERT(0 == mActiveLock.test());
@@ -467,9 +467,9 @@ void ConfigManager::debugDumpPending(int debug_level)
 
 //------------------ Active List Stuff -------------------------------
 
-//: Is the element in the active configuration??
-//! CONCURRENCY: concurrent
-//! NOTE: This locks the active list to do processing
+// Is the element in the active configuration??
+// CONCURRENCY: concurrent
+// NOTE: This locks the active list to do processing.
 bool ConfigManager::isElementInActiveList(const std::string& element_name)
 {
    vpr::Guard<vpr::Mutex> guard(mActiveLock);     // Lock the current list
@@ -486,9 +486,9 @@ bool ConfigManager::isElementInActiveList(const std::string& element_name)
    return false;     // Not found, so return false
 }
 
-//: Is there an element of this type in the active configuration?
-//! CONCURRENCY: concurrent
-//! NOTE: This locks the active list to do processing
+// Is there an element of this type in the active configuration?
+// CONCURRENCY: concurrent
+// NOTE: This locks the active list to do processing.
 bool ConfigManager::isElementTypeInActiveList(const std::string& elementType)
 {
    vpr::Guard<vpr::Mutex> guard(mActiveLock);     // Lock the current list
@@ -504,9 +504,9 @@ bool ConfigManager::isElementTypeInActiveList(const std::string& elementType)
    return false;     // Not found, so return false
 }
 
-//: Is there an element of this type in the pending list??
-//! CONCURRENCY: concurrent
-//! NOTE: This locks the pending list to do processing
+// Is there an element of this type in the pending list?
+// CONCURRENCY: concurrent
+// NOTE: This locks the pending list to do processing.
 bool ConfigManager::isElementTypeInPendingList(const std::string& elementType)
 {
    vpr::Guard<vpr::Mutex> guard(mPendingLock);     // Lock the current list
@@ -522,10 +522,10 @@ bool ConfigManager::isElementTypeInPendingList(const std::string& elementType)
    return false;     // Not found, so return false
 }
 
-//: Add an item to the active configuration
-//! NOTE: This DOES NOT process the element
-//+     it just places it into the active configuration list
-//! PRE: Current list must NOT be locked
+// Add an item to the active configuration
+// NOTE: This DOES NOT process the element it just places it into the active
+//       configuration list.
+// PRE: Current list must NOT be locked.
 void ConfigManager::addActive(ConfigElementPtr element)
 {
    vprASSERT(0 == mActiveLock.test());
@@ -534,9 +534,9 @@ void ConfigManager::addActive(ConfigElementPtr element)
    unlockActive();
 }
 
-//: Erase an item from the list
-//! PRE: Active list must be locked && item must be in list
-//! POST: list = old(list).erase(item) && item is invalid
+// Erase an item from the list.
+// PRE: Active list must be locked && item must be in list.
+// POST: list = old(list).erase(item) && item is invalid.
 void ConfigManager::removeActive(const std::string& elementName)
 {
    vprASSERT(0 == mActiveLock.test());
@@ -573,7 +573,7 @@ int ConfigManager::attemptReconfiguration()
       vprDEBUG_OutputGuard(vprDBG_ALL, vprDBG_STATE_LVL,
       std::string("ConfigManager::attemptReconfiguration: Examining pending list.\n"),
       std::string("ConfigManager::attemptReconfiguration: Done Examining pending list.\n"));
-      
+
       lockPending();
 
       for (unsigned int i = 0 ; i < mElementHandlers.size() ; i++)
