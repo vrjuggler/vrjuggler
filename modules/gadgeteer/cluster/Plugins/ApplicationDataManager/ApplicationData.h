@@ -33,7 +33,7 @@
 #ifndef _CLUSTER_APPLICATION_DATA_H
 #define _CLUSTER_APPLICATION_DATA_H
 
-#include <cluster/Plugins/PluginConfig.h>
+#include <cluster/PluginConfig.h>
 #include <vpr/IO/SerializableObject.h>
 
 #include <cluster/ClusterManager.h>
