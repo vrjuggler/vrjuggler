@@ -62,7 +62,7 @@ public:
    virtual void apiInit()
    {;}
 
-   /// Execute any final cleanup needed for the application
+   //: Execute any final cleanup needed for the application
    virtual void exit()
    {;}
 
