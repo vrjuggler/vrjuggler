@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?xml-stylesheet href="/home/users/patrick/src/Juggler/docs/stylesheet/docbook_ab.css" type="text/css"?>
+<?xml-stylesheet href="../../../../../../../../../../../home/users/patrick/src/Juggler/docs/stylesheet/docbook_ab.css" type="text/css"?>
 <?morphon-document-settings
   morphon.document.settings.whitespaces.amount="3"
   morphon.document.settings.print.fixed.attributes="true"
@@ -20,7 +20,7 @@
             <surname>Hartling</surname>
          </author>
       </authorgroup>
-      <releaseinfo>0.0.3</releaseinfo>
+      <releaseinfo>0.0.4</releaseinfo>
       <pubdate>$Date$</pubdate>
    </bookinfo>
    <preface>
@@ -202,7 +202,7 @@
                   <primary>XML</primary>
                </indexterm>. The XML file can contain information about many Beans or about a single Bean. The XML file itself is a <quote>beanlist</quote> document. The four Bean categories, described above, each have an XML element that has children giving information about the specific Bean. The elements are <sgmltag>&lt;service&gt;</sgmltag>, <sgmltag>&lt;viewer&gt;</sgmltag>, <sgmltag>&lt;guipanel&gt;</sgmltag>, and <sgmltag>&lt;generic&gt;</sgmltag>.</para>
             <para>All Bean XML entries must contain a <sgmltag>&lt;file&gt;</sgmltag> element. Through its <literal>source</literal> attribute, this element provides the path to the JAR file that contains the full Bean code. When specifying the JAR file path, environment variables may be used. They must use the syntax <varname>${ENV_VAR}</varname> (the curly braces are required). The <literal>class</literal> element gives the fully qualified name of the class stored within the JAR file that will be instantiated. The extension <filename>.class</filename> must not be specified. This is to allow the use of serialized classes which have the extension <filename>.ser</filename>. The Tweek Bean-loading code will figure out what is available and take the right actions.</para>
-            <para>In addition to the <sgmltag>&lt;file&gt;</sgmltag> element, a &lt;depedencies&gt; element may be specified. Dependecies of the Bean named as external JAR files or other beans may be listed therein. The &lt;dependencies&gt; element may contain zero of more elements of type &lt;jar&gt; and &lt;bean&gt;. The &lt;jar&gt; element has a single attribute, <literal>path</literal>, which gives the path (a semi-colon separated list of directories) where the JAR file may be found. The contents of the &lt;jar&gt; element defines the name of the JAR file. The &lt;bean&gt; element's contents defines the name of the bean that the current bean depends on.</para>
+            <para>In addition to the <sgmltag>&lt;file&gt;</sgmltag> element, a &lt;depedencies&gt; element may be specified. Dependencies of the Bean named as external JAR files or other beans may be listed therein. The &lt;dependencies&gt; element may contain zero of more elements of type &lt;jar&gt; and &lt;bean&gt;. The &lt;jar&gt; element has a single attribute, <literal>path</literal>, which gives the path (a semi-colon separated list of directories) where the JAR file may be found. The contents of the &lt;jar&gt; element defines the name of the JAR file. The &lt;bean&gt; element's contents defines the name of the bean that the current bean depends on.</para>
             <para>Of the four Bean categories, the XML for Panel Beans can contain the most information. In addition to the previously mentioned elements, Panel Bean entries may have two optional elements: <sgmltag>&lt;tree&gt;</sgmltag> and <sgmltag>&lt;icon&gt;</sgmltag>. The element <sgmltag>&lt;tree&gt;</sgmltag> specifies the path within the Bean tree hierarchy where the Panel Bean will be placed. The path is given as a /-separated list of directories. If the named path does not exist when the Bean is loaded, it will be created. The element <sgmltag>&lt;icon&gt;</sgmltag> names a custom icon for the Bean and a tool-tip. An example of a Panel Bean XML entry is shown in <xref linkend="PlexusGraphView.xml.example"/>. Note that this is not the full file--it is only the <sgmltag>&lt;guipanel&gt;</sgmltag> element for a single Bean.</para>
             <example id="PlexusGraphView.xml.example">
                <title>PlexusGraphView.xml snippet</title>
@@ -527,10 +527,14 @@ int main(int argc, char* argv[])
                <primary>Subject Manager</primary>
                <secondary>use of</secondary>
             </indexterm>
-            <para>To demonstrate use of the Subject Manager, we begin by revisiting the main() function examined in the previous section. This time, we will focus our attention on the code related to the Subject Manager only.</para>
-            <example id="TweekApp.cpp.Subject-Manager.example">
-               <title>TweekApp.cpp</title>
-               <programlisting linenumbering="numbered">#include &lt;vpr/vpr.h&gt;
+            <para>To demonstrate use of the Subject Manager, we begin by revisiting the <function>main()</function> function examined in the previous section. This time, we will focus our attention on the code related to the Subject Manager only. We will also explain how to use the extended API of the Subject Manager implementation.</para>
+            <para>It is important to know that the Subject Manager is a CORBA object that can be accessed by remote code. In the following example, the methods used are defined in the class <classname>tweek::SubjectManagerImpl</classname>, the C++ implementation of the <interfacename>tweek::SubjectManager</interfacename> interface. The details of how the Subject Manager is handled through CORBA are largely irrelevant for most users of Tweek. Simply bear in mind that the Subject Manager is accessibly remotely and that it simplifies the use of CORBA in general.</para>
+            <section>
+               <title>Subject Manager Initialization</title>
+               <para>In order to use the Tweek Subject Manager, it must be initialized. Each CORBA Manager should have a single Subject Manager associated with it. If not, use of Tweek will be much more difficult because the CORBA Manager and the Subject Manager together hide most of the details relating to the use of CORBA. The following example shows how to initialize the Subject Manager using the CORBA Manager object created earlier.</para>
+               <example id="TweekApp.cpp.Subject-Manager.example">
+                  <title>TweekApp.cpp</title>
+                  <programlisting linenumbering="numbered">#include &lt;vpr/vpr.h&gt;
 #include &lt;vpr/Thread/Thread.h&gt;
 #include &lt;vpr/Util/Debug.h&gt;
 #include &lt;tweek/CORBA/CorbaManager.h&gt;
@@ -629,22 +633,82 @@ int main(int argc, char* argv[])
 
    return 0;
 }</programlisting>
-               <calloutlist>
-                  <callout arearefs="TweekApp.cpp.subjectmgr.create" id="TweekApp.cpp.subjectmgr.create.co">
-                     <para>After the COBRA Manager has been initialized successfully, the Tweek Subject Manager must be created. We do this by invoking the method <methodname>tweek::CorbaManager::createSubjectManager()</methodname> on our <methodname>tweek::CorbaManager</methodname> instance.</para>
-                  </callout>
-                  <callout arearefs="TweekApp.cpp.subject.create" id="TweekApp.cpp.subject.create.co">
-                     <para>Once we have a valid Subject Manager, we must register subjects with it in order for object references to be passed out by CORBA. This creates the <glossterm linkend="gloss.servant">servant</glossterm> to which <interfacename>mymod::CustomSubject</interfacename> references will be made.</para>
-                  </callout>
-                  <callout arearefs="TweekApp.cpp.subject.register" id="TweekApp.cpp.subject.register.co">
-                     <para>Once the servant is created, it is registered with the Subject Manager. The Subject Manager will activate the servant within the POA so that references to it can be created and returned to clients. We register it with the symbolic name <quote>CustomSubject</quote> that can be referenced later by remote objects.</para>
-                  </callout>
-                  <callout arearefs="TweekApp.cpp.loop" id="TweekApp.cpp.loop.co">
-                     <para>After the subject is registered, all the work is done. This simple application now just waits for clients to request references. It will exit when the user enters '<literal>x</literal>'.</para>
-                  </callout>
-               </calloutlist>
-            </example>
-            <para>Note that all the code relating to the Subject Manager is enclosed within another try/catch block. This block only catches exceptions of type <classname>CORBA::Exception</classname>. Anything more general is caught by the larger try/catch block.</para>
+                  <calloutlist>
+                     <callout arearefs="TweekApp.cpp.subjectmgr.create" id="TweekApp.cpp.subjectmgr.create.co">
+                        <para>After the COBRA Manager has been initialized successfully, the Tweek Subject Manager must be created. We do this by invoking the method <methodname>tweek::CorbaManager::createSubjectManager()</methodname> on our <methodname>tweek::CorbaManager</methodname> instance.</para>
+                     </callout>
+                     <callout arearefs="TweekApp.cpp.subject.create" id="TweekApp.cpp.subject.create.co">
+                        <para>Once we have a valid Subject Manager, we must register subjects with it in order for object references to be passed out by CORBA. This creates the <glossterm linkend="gloss.servant">servant</glossterm> to which <interfacename>mymod::CustomSubject</interfacename> references will be made.</para>
+                     </callout>
+                     <callout arearefs="TweekApp.cpp.subject.register" id="TweekApp.cpp.subject.register.co">
+                        <para>Once the servant is created, it is registered with the Subject Manager. The Subject Manager will activate the servant within the POA so that references to it can be created and returned to clients. We register it with the symbolic name <quote>CustomSubject</quote> that can be referenced later by remote objects.</para>
+                     </callout>
+                     <callout arearefs="TweekApp.cpp.loop" id="TweekApp.cpp.loop.co">
+                        <para>After the subject is registered, all the work is done. This simple application now just waits for clients to request references. It will exit when the user enters '<literal>x</literal>'.</para>
+                     </callout>
+                  </calloutlist>
+               </example>
+               <para>Note that all the code relating to the Subject Manager is enclosed within another try/catch block. This block only catches exceptions of type <classname>CORBA::Exception</classname>. Anything more general is caught by the larger try/catch block.</para>
+            </section>
+            <section>
+               <title>tweek::SubjectManagerImpl API</title>
+               <para>The class <classname>tweek::SubjectManagerImpl</classname> has some methods that are not part of the IDL-specified interface. One such method is <methodname>registerSubject()</methodname>, which was used in the preceding example. Some other methods that may be of interest to users are described in the following subsections.</para>
+               <section>
+                  <title><methodname>setApplicationName()</methodname></title>
+                  <indexterm>
+                     <primary>tweek::SubjectManagerImpl</primary>
+                     <secondary>setApplicationName() method</secondary>
+                  </indexterm>
+                  <methodsynopsis>
+                     <modifier>public</modifier>
+                     <type>void</type>
+                     <methodname>setApplicationName</methodname>
+                     <methodparam>
+                        <type>const std::string&amp;</type>
+                        <parameter>appName</parameter>
+                     </methodparam>
+                  </methodsynopsis>
+                  <para>This method can be used to set one of the application-specific identifiers within the Subject Manager. Namely, it sets the application name identifier. These identifiers are used to aid users in choosing a Subject Manager instance when making remote connections to applications.</para>
+               </section>
+               <section>
+                  <title><methodname>setUserName()</methodname></title>
+                  <indexterm>
+                     <primary>tweek::SubjectManagerImpl</primary>
+                     <secondary>setUserName() method</secondary>
+                  </indexterm>
+                  <methodsynopsis>
+                     <modifier>public</modifier>
+                     <type>void</type>
+                     <methodname>setUserName</methodname>
+                     <methodparam>
+                        <type>const std::string&amp;</type>
+                        <parameter>userName</parameter>
+                     </methodparam>
+                  </methodsynopsis>
+                  <para>Similar to <methodname>setApplicationName()</methodname>, this method allows users to tell the Subject Manager their user name. When multiple users are all running the same application (and are thus using the same parameter to <methodname>setApplicationName()</methodname>), this provides another level of uniqueness. If this method is not used, the Subject Manager will try to get the user name through the <varname>$USER</varname> environment variable.</para>
+               </section>
+               <section>
+                  <title><methodname>addInfoItem()</methodname></title>
+                  <indexterm>
+                     <primary>tweek::SubjectManagerImpl</primary>
+                     <secondary>addInfoItem() method</secondary>
+                  </indexterm>
+                  <methodsynopsis>
+                     <modifier>public</modifier>
+                     <type>void</type>
+                     <methodname>addInfoItem</methodname>
+                     <methodparam>
+                        <type>const std::string&amp;</type>
+                        <parameter>key</parameter>
+                     </methodparam>
+                     <methodparam>
+                        <type>const std::string&amp;</type>
+                        <parameter>value</parameter>
+                     </methodparam>
+                  </methodsynopsis>
+                  <para>If the previous two built-in Subject Manager identifiers are not enough, the method <methodname>addInfoItem()</methodname> allows users to define their own unique identifiers. The first parameter is the identifier, and the second is its (ideally) unique value. Users are free to add any key/value pairs they need in order to aid in the selection of a Subject Manager at runtime.</para>
+               </section>
+            </section>
          </section>
       </chapter>
       <chapter id="prog.java.chapter">
