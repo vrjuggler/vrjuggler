@@ -41,7 +41,8 @@
 #include <Kernel/vjKernel.h>
 #include <Math/vjCoord.h>
 
-vjDisplayManager* vjDisplayManager::_instance = NULL;
+//vjDisplayManager* vjDisplayManager::_instance = NULL;
+vjSingletonImp(vjDisplayManager);
 
 std::vector<vjDisplay*> vjDisplayManager::getAllDisplays()
 {

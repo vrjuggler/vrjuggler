@@ -36,7 +36,8 @@
 #include <Threads/vjThreadManager.h>
 #include <Kernel/vjDebug.h>
 
-vjThreadManager* vjThreadManager::_instance = NULL;
+//vjThreadManager* vjThreadManager::_instance = NULL;
+vjSingletonImp(vjThreadManager);
 
 
 //-----------------------------------------------------
@@ -67,7 +68,7 @@ void vjThreadManager::removeThread(vjBaseThread* thread)
 {
    vjASSERT(mThreadVectorMutex.test()==1); // Assert manager locked
    vjASSERT((thread->getTID() >= 0) && (thread->getTID() < (int)mThreads.size()));
-   mThreads[(unsigned int)thread->getTID()] = NULL;   
+   mThreads[(unsigned int)thread->getTID()] = NULL;
 }
 
 

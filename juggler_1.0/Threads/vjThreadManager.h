@@ -43,6 +43,7 @@
 #include <Sync/vjGuard.h>
 
 #include <Kernel/vjDebug.h>
+#include <Utils/vjSingleton.h>
 
 //----------------------------------------------------
 //: Manager that maintains data about all threads.
@@ -101,7 +102,7 @@ private:
    vjMutex                    mThreadVectorMutex;     //: Mutex to protect the threads vector
    std::vector<vjBaseThread*> mThreads;            //: List of all threads in system
 
-public:    
+public:
    //: Generate a unique key for Thread Specific data
    // This value will be used locally by each thread in the system
    long generateNewTSKey()
@@ -126,6 +127,8 @@ protected:
    vjThreadManager() : mNextTSObjectKey(0)
    {;}
 
+vjSingletonHeader(vjThreadManager);
+/*
 public:
    //-----------------------------------------------------
    //: Get instance of singleton object.
@@ -139,6 +142,7 @@ public:
 
 private:
    static vjThreadManager* _instance;   //: The instance
+   */
 };
 
 #endif

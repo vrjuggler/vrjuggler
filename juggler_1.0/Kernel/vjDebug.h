@@ -41,6 +41,11 @@
 #include <stdlib.h>
 #include <assert.h>
 
+#include <Sync/vjMutex.h>
+#include <Sync/vjGuard.h>
+#include <Kernel/vjStreamLock.h>
+#include <Utils/vjSingleton.h>
+
 // Debug output categories
 #define vjDBG_BASE 0
 #define vjDBG_ALL (vjDBG_BASE+0)         /* Use if you always want it ouput */
@@ -172,12 +177,6 @@
 #   define vjASSERT(val) ((void)0)
 #endif
 
-#include <Sync/vjMutex.h>
-#include <Kernel/vjStreamLock.h>
-
-
-// NOTE: Quick Hack for now.  Need to really design something nice. :)
-extern vjMutex DebugLock;
 
 //------------------------------------------
 //: Class to support debug output
@@ -223,20 +222,29 @@ private:
    int debugLevel;      // Debug level to use
    int indentLevel;     // Amount to indent
 
-   vjMutex  mDebugLock;
+   vjMutex          mDebugLock;
 
    std::vector<bool> mAllowedCategories;      //: The categories we allow
    std::map<std::string,int> mCategoryNames; //: The names and id of allowed catagories
 
+/*
 public:
    static vjDebug* instance()
    {
-      if(_instance == NULL)
-         _instance = new vjDebug;
+      if(_instance == NULL)                     // First check
+      {
+         vjGuard<vjMutex> guard(_inst_lock);    // Serial critical section
+         if (_instance == NULL)                 // Second check
+            _instance = new vjDebug;
+      }
+      vjASSERT(_instance != NULL && "vjDEBUG has NULL _instance");
       return _instance;
    }
 private:
    static vjDebug* _instance;
+   static vjMutex _inst_lock;
+   */
+vjSingletonHeader(vjDebug);
 };
 
 #endif

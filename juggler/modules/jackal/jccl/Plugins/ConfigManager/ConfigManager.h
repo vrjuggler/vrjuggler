@@ -47,6 +47,8 @@ class vjConfigChunk;
 #include <Sync/vjGuard.h>
 #include <list>
 
+#include <Utils/vjSingleton.h>
+
 //: Configuration manager class
 //
 //
@@ -262,18 +264,27 @@ protected:
    {;}
 
 
+/*
 public:
    //: Get instance of singleton object
    static vjConfigManager* instance()
    {
-      if (_instance == NULL)
-         _instance = new vjConfigManager;
+      if(_instance == NULL)                     // First check
+      {
+         vjGuard<vjMutex> guard(_inst_lock);    // Serial critical section
+         if (_instance == NULL)                 // Second check
+            _instance = new vjConfigManager;
+      }
+      vjASSERT(_instance != NULL && "vjConfigManager has NULL _instance");
       return _instance;
    }
 
+
 private:
    static vjConfigManager* _instance;   //: The instance
-
+   static vjMutex _inst_lock;
+   */
+   vjSingletonHeader(vjConfigManager);
 };
 
 

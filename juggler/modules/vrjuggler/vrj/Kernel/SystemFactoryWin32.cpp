@@ -37,7 +37,8 @@
 #include <Kernel/GL/vjGlWinWin32.h>
 
 
-vjWin32SystemFactory* vjWin32SystemFactory::_instance = NULL;
+//vjWin32SystemFactory* vjWin32SystemFactory::_instance = NULL;
+vjSingletonImp(vjWin32SystemFactory);
 
 vjGlWindow* vjWin32SystemFactory::getGLWindow()
 {

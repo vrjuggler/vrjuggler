@@ -36,7 +36,8 @@
 
 
 //std::vector< vjSoundEngineConstructorBase* > vjSoundFactory::mConstructors;
-vjSoundFactory* vjSoundFactory::_instance = NULL;   //: The singleton instance ptr
+//vjSoundFactory* vjSoundFactory::_instance = NULL;   //: The singleton instance ptr
+vjSingletonImp(vjSoundFactory);
 
 vjSoundFactory::vjSoundFactory()
 {
@@ -87,9 +88,9 @@ int vjSoundFactory::findConstructor(vjConfigChunk* chunk)
    std::string chunk_type;
    chunk_type = (std::string)chunk->getType();
    //const char* const stupid_cvd = chunk_type.c_str();
-   
+
    //cout<<stupid_cvd<<"  does===? "<<mConstructors.size()<<"\n"<<flush;
-      
+
 
    for (unsigned int i = 0; i < mConstructors.size(); i++)
    {
@@ -98,7 +99,7 @@ int vjSoundFactory::findConstructor(vjConfigChunk* chunk)
       vjASSERT(construct != NULL);
 
       //const char* const stupid_cvd2 = construct->getChunkType().c_str();
-   
+
       //cout<<stupid_cvd<<"  does===?  "<<stupid_cvd2<<"\n"<<flush;
       if(construct->getChunkType() == chunk_type)
          return i;

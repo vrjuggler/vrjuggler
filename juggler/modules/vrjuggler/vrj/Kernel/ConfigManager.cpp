@@ -39,7 +39,11 @@
 #include <Kernel/vjDebug.h>
 #include <stdlib.h>
 
+/*
 vjConfigManager* vjConfigManager::_instance = NULL;
+vjMutex  vjConfigManager::_inst_lock;
+*/
+vjSingletonImp(vjConfigManager);
 
 //: Do we need to check the pending list
 //! CONCURRENCY: concurrent

@@ -39,6 +39,7 @@
 #include <vjConfig.h>
 #include <Input/vjInput/vjInput.h>
 #include <Config/vjConfigChunk.h>
+#include <Utils/vjSingleton.h>
 
 //: Base class for virtual construction of devices
 // Implementations of this class are registered with the device factory
@@ -131,7 +132,8 @@ private:
 private:
    std::vector<vjDeviceConstructorBase*> mConstructors;  //: List of the device constructors
 
-
+vjSingletonHeader(vjDeviceFactory);
+/*
 public:     // ------ SINGLETON ----- ///
    //: Return singleton instance of the class
    static vjDeviceFactory* instance()
@@ -147,6 +149,7 @@ public:     // ------ SINGLETON ----- ///
 
 private:
    static vjDeviceFactory* mInstance;
+   */
 };
 
 #endif

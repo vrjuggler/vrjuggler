@@ -34,4 +34,8 @@
 
 #include <Config/vjChunkFactory.h>
 
+/*
 vjChunkFactory* vjChunkFactory::_instance = NULL;
+vjMutex  vjChunkFactory::_inst_lock;
+*/
+vjSingletonImp(vjChunkFactory);

@@ -63,7 +63,8 @@
 #include <typeinfo>
 
 // Initialize the singleton ptr
-vjDeviceFactory* vjDeviceFactory::mInstance = NULL;
+//vjDeviceFactory* vjDeviceFactory::mInstance = NULL;
+vjSingletonImp(vjDeviceFactory);
 
 template <class DEV>
 vjDeviceConstructor<DEV>::vjDeviceConstructor()

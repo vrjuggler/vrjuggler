@@ -37,7 +37,8 @@
 #include <Kernel/GL/vjGlxWindow.h>
 
 
-vjSGISystemFactory* vjSGISystemFactory::_instance = NULL;
+//vjSGISystemFactory* vjSGISystemFactory::_instance = NULL;
+vjSingletonImp(vjSGISystemFactory);
 
 vjGlWindow* vjSGISystemFactory::getGLWindow()
 {

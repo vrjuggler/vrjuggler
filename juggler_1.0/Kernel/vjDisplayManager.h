@@ -45,6 +45,8 @@ class vjDisplay;
 #include <Kernel/vjDebug.h>
 #include <Input/InputManager/vjPosInterface.h>
 #include <Kernel/vjConfigChunkHandler.h>
+#include <Utils/vjSingleton.h>
+
 
 //-----------------------------------------------------------------------------
 //: Singleton Container class for all vjDisplays.
@@ -115,7 +117,7 @@ private:
    //!RETURNS: success
    bool configRemoveDisplay(vjConfigChunk* chunk);
 
-   
+
    //: Add a display to the current system
    //! PRE: disp is a valid display
    //! POST: disp has been added to the list of displays
@@ -145,14 +147,7 @@ protected:
    vjDrawManager*    mDrawManager;           //: The current drawManager to communicate with
    vjConfigChunk*    mDisplaySystemChunk;    //: Config chunk for the displaySystem
 
-   // ---- Singleton stuff ---- //
-public:
-   static vjDisplayManager* instance()
-   {
-      if (_instance == NULL)
-         _instance = new vjDisplayManager();
-      return _instance;
-   }
+
 
 protected:
    vjDisplayManager() : mDrawManager(NULL)
@@ -163,8 +158,21 @@ protected:
    virtual ~vjDisplayManager()
    {;}
 
+   vjSingletonHeader(vjDisplayManager);
+/*
+   // ---- Singleton stuff ---- //
+public:
+   static vjDisplayManager* instance()
+   {
+      if (_instance == NULL)
+         _instance = new vjDisplayManager();
+      return _instance;
+   }
+
+
 private:
-   static vjDisplayManager* _instance;
+   static vjDisplayManager* _instance;'
+   */
 };
 
 #endif

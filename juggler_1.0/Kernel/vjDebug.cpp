@@ -33,11 +33,17 @@
 
 #include <vjConfig.h>
 
-#include <Sync/vjMutex.h>
 #include <Kernel/vjDebug.h>
 
-vjMutex DebugLock;
+#include <Sync/vjMutex.h>
+#include <Kernel/vjStreamLock.h>
+
+/*
 vjDebug* vjDebug::_instance = NULL;
+vjMutex  vjDebug::_inst_lock;
+*/
+
+vjSingletonImp(vjDebug);
 
 #include <vjConfig.h>
 #include <stdlib.h>
@@ -68,7 +74,6 @@ vjDebug::vjDebug()
 
    setDefaultCategoryNames();
    getAllowedCatsFromEnv();
-
 }
 
 std::ostream& vjDebug::getStream(int cat, int level, bool show_thread_info,
@@ -78,10 +83,22 @@ std::ostream& vjDebug::getStream(int cat, int level, bool show_thread_info,
       indentLevel += indentChange;
 
    //cout << "VJ " << level << ": ";
+
+   // Lock the stream
+   debugLock().acquire();     // Get the lock
+
+   // --- Create stream header --- //
+   /*
    if(show_thread_info)
       std::cout << vjDEBUG_STREAM_LOCK << vjThread::self() << " VJ:";
    else
       std::cout << vjDEBUG_STREAM_LOCK << "             ";
+   */
+
+   if(show_thread_info)
+      std::cout << vjThread::self() << " VJ:";
+   else
+      std::cout << "             ";
 
       // Insert the correct number of tabs into the stream for indenting
    if(use_indent)

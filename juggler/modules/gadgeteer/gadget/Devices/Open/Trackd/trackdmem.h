@@ -6,13 +6,13 @@
 #define _TRACKD_MEM_H_
 
 #include <sys/types.h>
-//#include <stdint.h>
+#include <stdint.h>
 
 struct CAVE_SENSOR_ST
    {
    float       x, y, z;
    float       azim, elev, roll;
-   uint32_t timestamp[2];
+   uint32_t    timestamp[2];
    int32_t     calibrated;
    int32_t     frame;
    };

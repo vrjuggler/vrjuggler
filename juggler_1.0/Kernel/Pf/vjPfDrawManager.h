@@ -45,6 +45,7 @@
 #include <Kernel/vjDisplay.h>
 //#include <Kernel/Pf/vjPfApp.h>
 #include <Kernel/Pf/vjPfUtil.h>
+#include <Utils/vjSingleton.h>
 
 
 class vjPfApp;
@@ -241,16 +242,6 @@ protected:
    std::string       mHeadModel;    // The head model file path
    std::string       mWandModel;    // The wand model file path
 
-   // --- Singleton Stuff --- //
-public:
-   static vjPfDrawManager* instance()
-   {
-      if (_instance == NULL)
-      {
-         _instance = new vjPfDrawManager();
-      }
-      return _instance;
-   }
 
 protected:
 
@@ -266,9 +257,22 @@ protected:
 
    virtual ~vjPfDrawManager() {}
 
+   vjSingletonHeader(vjPfDrawManager);
+/*
+   // --- Singleton Stuff --- //
+public:
+   static vjPfDrawManager* instance()
+   {
+      if (_instance == NULL)
+      {
+         _instance = new vjPfDrawManager();
+      }
+      return _instance;
+   }
 
 private:
    static vjPfDrawManager* _instance;
+   */
 };
 
 

@@ -40,6 +40,9 @@
 #include <Config/vjConfigChunk.h>
 #include <Config/vjChunkDescDB.h>
 #include <Kernel/vjDebug.h>
+#include <Sync/vjMutex.h>
+#include <Utils/vjSingleton.h>
+
 
 
 //------------------------------------------------------------------
@@ -148,18 +151,26 @@ private:
     vjChunkDescDB descdb;
     vjChunkDesc *nulldesc;
 
+vjSingletonHeader(vjChunkFactory);
+/*
 public:
    //: Get instance of singleton object
    static vjChunkFactory* instance()
    {
-      if (_instance == NULL)
-         _instance = new vjChunkFactory;
+      if(_instance == NULL)                     // First check
+      {
+         vjGuard<vjMutex> guard(_inst_lock);    // Serial critical section
+         if (_instance == NULL)                 // Second check
+            _instance = new vjChunkFactory;
+      }
+      vjASSERT(_instance != NULL && "vjChunkFactory has NULL _instance");
       return _instance;
    }
 
 private:
    static vjChunkFactory* _instance;   //: The instance
-
+   static vjMutex _inst_lock;
+   */
 };
 
 #endif

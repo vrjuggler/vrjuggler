@@ -48,8 +48,8 @@
 //-----------------------------------------------
 
 #include <vjConfig.h>
-#include <Sync/vjSemaphore.h>
-#include <Sync/vjMutex.h>
+//#include <Sync/vjSemaphore.h>
+//#include <Sync/vjMutex.h>
 
 //: Guard wrapper.
 //!PUBLIC_API:

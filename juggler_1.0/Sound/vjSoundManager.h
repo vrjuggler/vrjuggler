@@ -37,6 +37,8 @@
 #include <Sound/vjSoundEngine.h>
 #include <Sound/vjSound.h>
 #include <Kernel/vjConfigChunkHandler.h>
+#include <Utils/vjSingleton.h>
+
 
 //: sound manager
 //!PUBLIC_API:
@@ -83,17 +85,24 @@ public:
       }
       else
       {
-         
+
       }
    }*/
-   
+
 public:
    // get the manager's soundengine
    vjSoundEngine* engine()
    {
       return mSoundEngine;
    }
-   
+   vjSoundEngine* mSoundEngine;
+
+protected:
+   //: Constructor.
+   vjSoundManager();
+
+vjSingletonHeader(vjSoundManager);
+/*
    //: Get instance of singleton object
    static vjSoundManager* instance()
    {
@@ -102,13 +111,10 @@ public:
       return _instance;
    }
 
-protected:
-   //: Constructor.
-   vjSoundManager();
-
 private:
    static vjSoundManager* _instance;   //: The instance
-   vjSoundEngine* mSoundEngine;
+   */
+
 };
 
 #endif   /* _VJ_SOUND_MANAGER_H_ */
