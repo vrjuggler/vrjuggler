@@ -193,7 +193,7 @@ vjThreadPosix::getPrio (int* prio) {
 
     return ret_val;
 #else
-    cerr << "vjThreadPosix::getprio(): Not supported\n";
+    cerr << "vjThreadPosix::getPrio(): Not supported\n";
 
     return -1;
 #endif
@@ -214,7 +214,7 @@ vjThreadPosix::setPrio (int prio) {
 
     return pthread_setschedparam(mThread.obj, SCHED_FIFO, &fifo_sched_param);
 #else
-    cerr << "vjThreadPosix::setprio(): Not supported\n";
+    cerr << "vjThreadPosix::setPrio(): Not supported\n";
 
     return -1;
 #endif
