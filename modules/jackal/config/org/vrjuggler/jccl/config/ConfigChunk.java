@@ -49,6 +49,7 @@ import org.jdom.Attribute;
  * @see ChunkDesc
  */
 public class ConfigChunk
+   implements ConfigTokens
 {
    public final static String EMBEDDED_SEPARATOR = "/";
 
@@ -155,7 +156,7 @@ public class ConfigChunk
       chunk_parent = mDomElement;
 
       while ((prop_parent = chunk_parent.getParent()) != null &&
-              ! prop_parent.getName().equals(ConfigTokens.chunk_db_TOKEN))
+              ! prop_parent.getName().equals(chunk_db_TOKEN))
       {
          full_name = prop_parent.getName() + EMBEDDED_SEPARATOR + full_name;
          chunk_parent = prop_parent.getParent();
