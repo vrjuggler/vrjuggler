@@ -228,7 +228,7 @@ void GlDrawManager::addDisplay(Display* disp)
    // -- Store the window in the wins vector
    // Create the gl window object.  NOTE: The glPipe actually "creates" the opengl window and context later
    GlWindow* new_win = getGLWindow();
-   new_win->config(disp);                                            // Configure it
+   new_win->configWindow(disp);                                            // Configure it
    mWins.push_back(new_win);                                         // Add to our local window list
 
    // -- Create any needed Pipes & Start them

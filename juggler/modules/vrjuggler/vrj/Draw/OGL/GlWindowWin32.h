@@ -87,7 +87,7 @@ public:
     */
    virtual void checkEvents();
 
-   void config( vrj::Display* disp );
+   void configWindow( vrj::Display* disp );
 
 protected:
    // WindowProcedure to deal with the events generated.

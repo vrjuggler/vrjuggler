@@ -81,7 +81,7 @@ int GlWindow::mCurMaxWinId = 0;
 vpr::Mutex GlWindow::mWinIdMutex;
 
 
-void GlWindow::config(vrj::Display* displayWindow)
+void GlWindow::configWindow(vrj::Display* displayWindow)
 {
    vprASSERT(displayWindow != NULL);      // We can't config to a NULL display
    mVrjDisplay = displayWindow;

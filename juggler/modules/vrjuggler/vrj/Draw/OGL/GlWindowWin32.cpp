@@ -265,11 +265,11 @@ void GlWindowWin32::processEvent( UINT message, UINT wParam, LONG lParam )
 
 }
 
-void GlWindowWin32::config( vrj::Display* disp )
+void GlWindowWin32::configWindow( vrj::Display* disp )
 {
    const char neg_one_STRING[] = "-1";
    vprASSERT( disp != NULL );
-   vrj::GlWindow::config( disp );
+   vrj::GlWindow::configWindow( disp );
 
     // Get the vector of display chunks
    jccl::ConfigChunkPtr dispSysChunk = DisplayManager::instance()->getDisplaySystemChunk();

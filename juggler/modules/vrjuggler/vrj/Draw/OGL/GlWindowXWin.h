@@ -81,7 +81,7 @@ public:
    */
    virtual void checkEvents();
 
-   void config(vrj::Display* disp);
+   void configWindow(vrj::Display* disp);
 
 public:  /**** Static Helpers *****/
    /* static */ virtual bool createHardwareSwapGroup(std::vector<vrj::GlWindow*> wins);
