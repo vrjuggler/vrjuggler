@@ -43,6 +43,7 @@
 #include <gadget/Util/Debug.h>
 #include <gadget/gadgetParam.h>
 
+#include <drivers/Microsoft/DirectXJoystick/DirectXJoystickExceptions.h>
 #include <drivers/Microsoft/DirectXJoystick/DirectXJoystick.h>
 
 
@@ -118,13 +119,19 @@ bool DirectXJoystick::startSampling()
    vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CONFIG_STATUS_LVL)
       << "Opening Win Joystick driver " << std::endl << vprDEBUG_FLUSH;
 
-   mActive = (mInputDrv.init() == 0);
-
-   if ( ! mActive )
+   try
+   {
+      mInputDrv.init();
+      mActive = true;
+   }
+   catch(DirectXJoystickException& ex)
    {
       vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
-         << "ERROR: Failed to open Win Joystick." << std::endl
+         << clrOutBOLD(clrRED, "ERROR:")
+         << "[gadget::DirectXJoystick::startSampling()] Failed to open Direct Input joystick:"
          << vprDEBUG_FLUSH;
+      vprDEBUG_NEXT(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
+         << ex.what() << std::endl << vprDEBUG_FLUSH;
       return false;
    }
 
@@ -193,67 +200,69 @@ bool DirectXJoystick::stopSampling()
  */
 void DirectXJoystick::updateData()
 {
-   mInputDrv.poll();
-   const DIJOYSTATE& mJsData = mInputDrv.getData(); 
-
-   //FIXME: if & only if there is events happen, do setTime
-   // for buttons, do update 
-   for ( unsigned int i = 0; i < mCurButtons.size(); ++i )
+   if ( mInputDrv.poll() )
    {
-      mCurButtons[i].setDigital(mJsData.rgbButtons[i]);
-      if( mCurButtons[i].getDigital() != 0)
+      const DIJOYSTATE& mJsData = mInputDrv.getData(); 
+
+      //FIXME: if & only if there is events happen, do setTime
+      // for buttons, do update 
+      for ( unsigned int i = 0; i < mCurButtons.size(); ++i )
       {
-         mCurButtons[i].setTime();
-      }
-   }
-
-   // for axes, do update
-   float norm_value;
-   normalizeMinToMax(mJsData.lX, norm_value);
-   mCurAxes[0] = norm_value;
-   normalizeMinToMax(mJsData.lY, norm_value);
-   mCurAxes[1] = norm_value;
-   normalizeMinToMax(mJsData.lZ, norm_value);
-   mCurAxes[2] = norm_value;
-   normalizeMinToMax(mJsData.lRx, norm_value); // x rotation
-   mCurAxes[3] = norm_value;
-   normalizeMinToMax(mJsData.lRy, norm_value); // y rotation
-   mCurAxes[4] = norm_value;
-   normalizeMinToMax(mJsData.lRz, norm_value); // z rotation
-   mCurAxes[5] = norm_value;
-   normalizeMinToMax(mJsData.rglSlider[0], norm_value); // u-axis
-   mCurAxes[6] = norm_value;
-   normalizeMinToMax(mJsData.rglSlider[1], norm_value); // v-axis
-   mCurAxes[7] = norm_value;
-   mCurAxes[8] = (float(mJsData.rgdwPOV[0])); //hat: -1, 0, 9,000, 18,000, or 27,000.
-
-   // use axes as button, only first 3 are tested.
-   for ( unsigned int axis_number = 0; axis_number < mNumAxes; ++axis_number )
-   {
-      // FIXME: don't know when it is changed
-      mCurAxes[axis_number].setTime();
-
-      // Check for axis buttons
-      // - If we have a mapping
-      // - If axis is gt 0.5, then btn is down
-      if ( axis_number < 3 )
-      {
-         float norm_value(0.0f); // mCurAxes[axis_number].getAnalog();
-         if ( mAxisToButtonIndexLookup[axis_number] != -1 ) // If we map to a virtual button
+         mCurButtons[i].setDigital(mJsData.rgbButtons[i]);
+         if( mCurButtons[i].getDigital() != 0)
          {
-            unsigned vir_btn_index = mAxisToButtonIndexLookup[axis_number];
-            vprASSERT(vir_btn_index < mCurButtons.size() && "Virtual button index out of range");
-            mCurButtons[vir_btn_index] = ((norm_value > 0.5f) ? 1 : 0);
-            mCurButtons[vir_btn_index].setTime();
+            mCurButtons[i].setTime();
          }
       }
+
+      // for axes, do update
+      float norm_value;
+      normalizeMinToMax(mJsData.lX, norm_value);
+      mCurAxes[0] = norm_value;
+      normalizeMinToMax(mJsData.lY, norm_value);
+      mCurAxes[1] = norm_value;
+      normalizeMinToMax(mJsData.lZ, norm_value);
+      mCurAxes[2] = norm_value;
+      normalizeMinToMax(mJsData.lRx, norm_value); // x rotation
+      mCurAxes[3] = norm_value;
+      normalizeMinToMax(mJsData.lRy, norm_value); // y rotation
+      mCurAxes[4] = norm_value;
+      normalizeMinToMax(mJsData.lRz, norm_value); // z rotation
+      mCurAxes[5] = norm_value;
+      normalizeMinToMax(mJsData.rglSlider[0], norm_value); // u-axis
+      mCurAxes[6] = norm_value;
+      normalizeMinToMax(mJsData.rglSlider[1], norm_value); // v-axis
+      mCurAxes[7] = norm_value;
+      mCurAxes[8] = (float(mJsData.rgdwPOV[0])); //hat: -1, 0, 9,000, 18,000, or 27,000.
+
+      // use axes as button, only first 3 are tested.
+      for ( unsigned int axis_number = 0; axis_number < mNumAxes; ++axis_number )
+      {
+         // FIXME: don't know when it is changed
+         mCurAxes[axis_number].setTime();
+
+         // Check for axis buttons
+         // - If we have a mapping
+         // - If axis is gt 0.5, then btn is down
+         if ( axis_number < 3 )
+         {
+            float norm_value(0.0f); // mCurAxes[axis_number].getAnalog();
+            if ( mAxisToButtonIndexLookup[axis_number] != -1 ) // If we map to a virtual button
+            {
+               unsigned vir_btn_index = mAxisToButtonIndexLookup[axis_number];
+               vprASSERT(vir_btn_index < mCurButtons.size() && "Virtual button index out of range");
+               mCurButtons[vir_btn_index] = ((norm_value > 0.5f) ? 1 : 0);
+               mCurButtons[vir_btn_index].setTime();
+            }
+         }
+      }
+
+      addDigitalSample(mCurButtons);
+      swapDigitalBuffers();
+
+      addAnalogSample(mCurAxes);
+      swapAnalogBuffers();
    }
-
-   addDigitalSample(mCurButtons);
-   swapDigitalBuffers();
-
-   addAnalogSample(mCurAxes);
-   swapAnalogBuffers();
-} // end of Update
+}
 
 } // End of gadget namespace

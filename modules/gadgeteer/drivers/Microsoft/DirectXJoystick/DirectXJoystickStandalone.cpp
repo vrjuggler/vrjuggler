@@ -37,6 +37,7 @@
 #include <memory.h>
 #include <tchar.h>
 
+#include <drivers/Microsoft/DirectXJoystick/DirectXJoystickExceptions.h>
 #include <drivers/Microsoft/DirectXJoystick/DirectXJoystickStandalone.h>
 
 
@@ -62,37 +63,106 @@ BOOL CALLBACK enumerateAxesCallback(const DIDEVICEOBJECTINSTANCE* doi,
 DirectXJoystickStandalone::DirectXJoystickStandalone()
    : mDxObject(NULL)
    , mDxJoystick(NULL)
+   , mDataFormatObj(&c_dfDIJoystick)
+   , mDataFormatSize(sizeof(mJsData))
 {
 }
 
-HRESULT DirectXJoystickStandalone::init()
+void DirectXJoystickStandalone::init()
 {
-   // Create a DInput object.
-   HRESULT err = DirectInput8Create(GetModuleHandle(NULL), DIRECTINPUT_VERSION,
-                                    IID_IDirectInput8, (VOID**) &mDxObject,
-                                    NULL);
+   HRESULT status;
 
-   // some error.
-   if(err != DI_OK)
+   // Create a Direct Input manager object.
+   status = DirectInput8Create(GetModuleHandle(NULL), DIRECTINPUT_VERSION,
+                               IID_IDirectInput8, (VOID**) &mDxObject, NULL);
+
+   // An error returned at this point indicates that Direct Input is not
+   // available.  That means that we are effectively done with this device.
+   if ( FAILED(status) )
    {
-      return err;
+      throw DirectXJoystickException("Direct Input is not available");
    }
 
    // Look for joystick.
    mDxObject->EnumDevices(DI8DEVCLASS_GAMECTRL, enumerateJoysticksCallback,
                           (void*) this, (DWORD) DIEDFL_ATTACHEDONLY);
 
-   mDxJoystick->SetDataFormat(&c_dfDIJoystick);
+   status = mDxJoystick->SetDataFormat(mDataFormatObj);
+   if ( FAILED(status) )
+   {
+      if ( status ==  DIERR_ACQUIRED )
+      {
+         throw DirectXJoystickDataFormatException("Cannot set data format while device is acquired");
+      }
+      else if ( status == DIERR_INVALIDPARAM )
+      {
+         throw DirectXJoystickDataFormatException("Invalid data format chosen");
+      }
+      else if ( status == DIERR_NOTINITIALIZED )
+      {
+         throw DirectXJoystickDataFormatException("Cannot set data format on uninitialized device");
+      }
+      else
+      {
+         throw DirectXJoystickDataFormatException("Unknown error when trying to set the data format");
+      }
+   }
 
    // Set the cooperative level to let DInput know how this device should
    // interact with the system and with other DInput applications.
-   mDxJoystick->SetCooperativeLevel((HWND) NULL,
-                                    DISCL_EXCLUSIVE | DISCL_FOREGROUND);
+   // NOTE: This always fails because the first parameter is NULL!
+   status =
+      mDxJoystick->SetCooperativeLevel((HWND) NULL,
+                                       DISCL_EXCLUSIVE | DISCL_FOREGROUND);
+
+/*
+   if ( FAILED(status) )
+   {
+      if ( status == DIERR_INVALIDPARAM )
+      {
+         throw DirectXJoystickCooperationException("Invalid cooperative mode chosen");
+      }
+      else if ( status == DIERR_NOTINITIALIZED )
+      {
+         throw DirectXJoystickCooperationException("Cannot set cooperative mode on uninitialized device");
+      }
+      else if ( status == E_HANDLE )
+      {
+         throw DirectXJoystickCooperationException("Invalid HWND used when setting cooperative mode");
+      }
+      else
+      {
+         throw DirectXJoystickCooperationException("Unknown error when trying to set the cooperative mode");
+      }
+   }
+*/
 
    // Enumerate the axes of the joystick and set the range of each axis found.
    mDxJoystick->EnumObjects(enumerateAxesCallback, (void*) this, DIDFT_AXIS);
 
-   mDxJoystick->Acquire();
+   status = mDxJoystick->Acquire();
+
+   // DI_OK indicates that we acquired the device successfully.
+   // S_FALSE indicates that we had already acquired the device.
+   if ( status != DI_OK && status != S_FALSE )
+   {
+      if ( status == DIERR_INVALIDPARAM )
+      {
+         throw DirectXJoystickDataFormatException("Invalid parameter passed during device acquisition");
+      }
+      else if ( status == DIERR_NOTINITIALIZED )
+      {
+         throw DirectXJoystickDataFormatException("Cannot acquire an uninitialized device");
+      }
+      else if ( status == DIERR_OTHERAPPHASPRIO )
+      {
+         throw DirectXJoystickDataFormatException("A higher priority application has already acquired the device");
+      }
+      else
+      {
+         throw DirectXJoystickDataFormatException("Unknown error when trying to acquire the device");
+      }
+   }
 
    // Get device-specific information.
    DIDEVICEINSTANCE dx_dev_info;
@@ -103,8 +173,6 @@ HRESULT DirectXJoystickStandalone::init()
    {
       mProductName = "unknown";
    }
-
-   return S_OK;
 }
 
 void DirectXJoystickStandalone::close()
@@ -140,11 +208,31 @@ void DirectXJoystickStandalone::close()
 */
 bool DirectXJoystickStandalone::poll()
 {
-   //DIJOYSTATE  js; // DInput joystick state data-structure
-   mDxJoystick->Poll();
-   // FIXME: error tracking
-   mDxJoystick->GetDeviceState(sizeof(DIJOYSTATE), &mJsData);
-   return true;
+   bool sample_taken(false);
+
+   HRESULT status = mDxJoystick->Poll();
+
+   // If we failed to poll the joystick, try to reacquire it.  When we cannot
+   // poll the device, we cannot take a sample.
+   if ( FAILED(status) )
+   {
+      status = mDxJoystick->Acquire();
+      // XXX: It might be necessary to put a limit on the number of times we
+      // try to reacquire the device as this process could hold up the Input
+      // Manager.
+      while ( status == DIERR_INPUTLOST )
+      {
+         status = mDxJoystick->Acquire();
+      }
+   }
+   // We polled the joystick successfully, so we can read a sample.
+   else
+   {
+      status = mDxJoystick->GetDeviceState(mDataFormatSize, &mJsData);
+      sample_taken = true;
+   }
+
+   return sample_taken;
 }
 
 /*
