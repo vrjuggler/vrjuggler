@@ -68,7 +68,7 @@ desc_2.0-2.1.xsl
    Alternatively, you may use the makefile found in this directory as
    follows:
 
-      make INPUT_FILE=<input.desc> OUTPUT_FILE=<output.desc> update-2.0-2.1
+     make INPUT_FILE=<input.desc> OUTPUT_FILE=<output.desc> desc-update-2.0-2.1
 
    This makefile will work with any implementation of make (including
    Microsoft's nmake utility).  You may need to edit the makefile to
