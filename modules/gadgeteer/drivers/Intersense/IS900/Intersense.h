@@ -68,7 +68,7 @@ namespace gadget
 
 struct Isense_Data {
     DigitalData digital[IS_BUTTON_NUM];
-    float analog[IS_ANALOG_NUM];
+    AnalogData analog[IS_ANALOG_NUM];
 };
 
 typedef struct {
@@ -167,7 +167,7 @@ class Intersense :  public Input, public Position,  public Digital,  public Anal
 //+   The rest button layout is described in the Intersense Manual
 //+     (this value is set in the juggler config files)
     DigitalData* getDigitalData(int d = 0);
-    float getAnalogData(int d = 0);
+    AnalogData* getAnalogData(int d = 0);
 
 
 //: see if the flock is active or not
@@ -186,7 +186,7 @@ private:
     PositionData* mData;
 
     std::vector<DigitalData> mDigitalData;
-    std::vector<int> mAnalogData;
+    std::vector<AnalogData> mAnalogData;
 
 //KLUDGE: work around the inherent difference between Position and Digital (and Analog)
 // Motivation: Positional expects multiple positional devices to be connected to the same

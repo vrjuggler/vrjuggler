@@ -50,7 +50,7 @@ namespace gadget
 
 struct IBOX_DATA {
    DigitalData button[4];
-   int analog[4];
+   AnalogData analog[4];
 };
 
 //----------------------------------------------------------------------------
@@ -101,7 +101,7 @@ public:
    //        "min" and "max" are set to 0.0f and 1.0f respectivly.
    //! NOTE: TO ALL ANALOG DEVICE DRIVER WRITERS, you *must* normalize your data using
    //        Analog::normalizeMinToMax()
-   float getAnalogData( int d = 0 );
+   AnalogData* getAnalogData( int d = 0 );
 
 private:
    // juggler ibox data in the range of [0..255]

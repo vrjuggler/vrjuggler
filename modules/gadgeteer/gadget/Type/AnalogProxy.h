@@ -43,6 +43,7 @@
 #include <vrj/Util/Debug.h>
 #include <gadget/Type/Analog.h>
 #include <gadget/Type/Proxy.h>
+#include <gadget/Type/AnalogData.h>
 
 namespace gadget
 {
@@ -62,8 +63,10 @@ class GADGET_CLASS_API AnalogProxy : public TypedProxy<Analog>
 
 public:
    //: Constructor
-   AnalogProxy() : m_unitNum(-1), m_data(-1.0f)
-   {;}
+   AnalogProxy() : m_unitNum(-1)
+   {
+       m_data = -1.0f;
+   }
 
    virtual ~AnalogProxy() {}
 
@@ -72,7 +75,7 @@ public:
    {
       if(!mStupified)
       {
-         m_data = mTypedDevice->getAnalogData(m_unitNum);
+         m_data = *(mTypedDevice->getAnalogData(m_unitNum));
       }
    }
 
@@ -84,7 +87,7 @@ public:
       if(mStupified)
          return analogDefault;
       else
-         return m_data;
+         return (float)m_data;
    }
 
    Analog* getAnalogPtr()
@@ -114,7 +117,7 @@ public:
 
 private:
    int         m_unitNum;
-   float       m_data;
+   AnalogData  m_data;
 };
 
 } // End of gadget namespace
