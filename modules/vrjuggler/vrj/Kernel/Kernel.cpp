@@ -44,6 +44,7 @@
 #include <vpr/Thread/Thread.h>
 #include <vpr/System.h>
 #include <vpr/Util/Version.h>
+#include <vpr/Util/FileUtils.h>
 #include <gadget/Util/Version.h>
 
 #include <gadget/InputManager.h>
@@ -51,6 +52,7 @@
 #include <cluster/ClusterManager.h>
 #include <cluster/ClusterNetwork/ClusterNetwork.h>
 
+#include <jccl/Config/ParseUtil.h>
 #include <jccl/Config/ConfigElement.h>
 #include <jccl/Config/ElementFactory.h>
 #include <jccl/RTRC/ConfigManager.h>
@@ -587,6 +589,40 @@ Kernel::Kernel()
          << "Defaulting to " << def_path << std::endl << vprDEBUG_FLUSH;
    }
    jccl::ElementFactory::instance()->loadDefs(def_path);
+
+   // Set up a default configuration path if the user does not already have
+   // one defined in the environment variable $JCCL_CFG_PATH.  If that
+   // environment variable is not defined, check to see if $VJ_CFG_PATH is
+   // defined.  If it is, use it.  Otherwise, use
+   // $VJ_BASE_DIR/share/data/configFiles as a last-ditch fallback.
+   // XXX: Should $VJ_CFG_PATH supercede $JCCL_CFG_PATH instead of doing it
+   // this way?
+   std::string cfg_path;
+   if ( ! vpr::System::getenv("JCCL_CFG_PATH", cfg_path).success() )
+   {
+      if ( vpr::System::getenv("VJ_CFG_PATH", cfg_path).success() )
+      {
+         vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
+            << "JCCL_CFG_PATH environment variable not set.\n"
+            << vprDEBUG_FLUSH;
+         vprDEBUG_NEXT(vprDBG_ALL, vprDBG_WARNING_LVL)
+            << "Using VJ_CFG_PATH instead.\n" << vprDEBUG_FLUSH;
+      }
+      // Neither $JCCL_CFG_PATH nor $VJ_CFG_PATH is set, so use what basically
+      // amounts to a hard-coded default.
+      else
+      {
+         cfg_path = "${VJ_BASE_DIR}/" VJ_SHARE_DIR "/data/configFiles";
+         vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
+            << "Neither JCCL_CFG_PATH nor VJ_CFG_PATH is set.\n"
+            << vprDEBUG_FLUSH;
+         vprDEBUG_NEXT(vprDBG_ALL, vprDBG_WARNING_LVL)
+            << "Defaulting to " << cfg_path << std::endl << vprDEBUG_FLUSH;
+         cfg_path = vpr::replaceEnvVars(cfg_path);
+      }
+
+      jccl::ParseUtil::setCfgSearchPath(cfg_path);
+   }
 }
 
 }
