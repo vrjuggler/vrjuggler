@@ -291,7 +291,6 @@ AC_CHECK_HEADERS(strings.h)
 # Checks for typedefs, structures, and compiler characteristics.
 # -----------------------------------------------------------------------------
 AC_TYPE_SIZE_T
-DPP_TYPE_SOCKLEN_T
 #DPP_CHECK_TYPE_POSIX
 
 # -----------------------------------------------------------------------------
