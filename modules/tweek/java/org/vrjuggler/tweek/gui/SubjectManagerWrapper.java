@@ -45,6 +45,10 @@ package org.vrjuggler.tweek.gui;
  */
 class SubjectManagerWrapper
 {
+   /**
+    * Creates an instance of this class using the given Subject Manager
+    * reference.  The reference must be valid at the time of creation.
+    */
    public SubjectManagerWrapper(tweek.SubjectManager mgr)
    {
       this.subjectManager = mgr;
@@ -52,7 +56,9 @@ class SubjectManagerWrapper
 
    public String toString()
    {
-      return subjectManager.toString();
+      // This is kind of lame, but I don't know what could be returned that
+      // would be more helpful.
+      return "Subject Manager Reference";
    }
 
    public tweek.SubjectManager getSubjectManager()
