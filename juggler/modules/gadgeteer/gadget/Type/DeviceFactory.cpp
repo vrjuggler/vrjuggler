@@ -37,7 +37,12 @@
 // Platform-independent devices.
 #include <gadget/Devices/Ascension/Flock.h>
 #include <gadget/Devices/Ascension/MotionStar.h>
+
+// XXX: Undo this once the Intersense driver is ported to VPR serial ports.
+#if !defined(VPR_OS_FreeBSD) && !defined(VPR_OS_Darwin)
 #include <gadget/Devices/Intersense/Intersense.h>
+#endif
+
 #include <gadget/Devices/Immersion/Ibox.h>
 #include <gadget/Devices/Fakespace/PinchGlove.h>
 #include <gadget/Devices/5DT/DataGlove.h>
@@ -99,14 +104,22 @@ void DeviceFactory::hackLoadKnownDevices()
    // Platform-independent devices.
    DeviceConstructor<Flock>* flock = new DeviceConstructor<Flock>;
    DeviceConstructor<MotionStar>* motion_star = new DeviceConstructor<MotionStar>;
+
+// XXX: Undo this once the Intersense driver is ported to VPR serial ports.
+#if !defined(VPR_OS_FreeBSD) && !defined(VPR_OS_Darwin)
    DeviceConstructor<Intersense>* intersense = new DeviceConstructor<Intersense>;
+#endif
+
    DeviceConstructor<IBox>* ibox = new DeviceConstructor<IBox>;
    DeviceConstructor<PinchGlove>* pinch_glove = new DeviceConstructor<PinchGlove>;
    DeviceConstructor<DataGlove>* data_glove = new DeviceConstructor<DataGlove>;
    DeviceConstructor<Fastrack>* fastrack = new DeviceConstructor<Fastrack>;
 
    if( (NULL == flock)        ||
+// XXX: Undo this once the Intersense driver is ported to VPR serial ports.
+#if !defined(VPR_OS_FreeBSD) && !defined(VPR_OS_Darwin)
        (NULL == intersense)   ||
+#endif
        (NULL == ibox)         ||
        (NULL == pinch_glove)  ||
        (NULL == data_glove)   ||
