@@ -259,6 +259,12 @@ public:
        return &mAddr;
     }
 
+    // Get the info needed by other NSPR commands
+    const PRNetAddr* getPRNetAddr() const
+    {
+       return &mAddr;
+    }
+
 protected:
   // -------------------------------------------------------------------------
    //: Set this structure's IP address.  The given address must be in host
