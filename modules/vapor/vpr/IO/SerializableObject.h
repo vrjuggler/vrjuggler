@@ -61,6 +61,9 @@ class ObjectReader;
 class WriteableObject
 {
 public:
+   virtual ~WriteableObject()
+   {;}
+
    /**
     * Template method for writing object this object to the given stream.
     *
@@ -78,9 +81,6 @@ protected:
    WriteableObject(const WriteableObject&)
    {;}
 
-   virtual ~WriteableObject()
-   {;}
-
 private:
    /** @link dependency
     * @stereotype use*/
@@ -96,6 +96,9 @@ private:
 class ReadableObject
 {
 public:
+   virtual ~ReadableObject()
+   {;}
+
    /**
     * Template method for reading data into this object from the given stream.
     *
@@ -111,9 +114,6 @@ protected:
    {;}
 
    ReadableObject(const ReadableObject&)
-   {;}
-
-   virtual ~ReadableObject()
    {;}
 
 private:
