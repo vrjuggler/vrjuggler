@@ -30,7 +30,11 @@ int main(int argc, char* argv[])
 
    while(1)
    {
+#ifdef WIN32
+       Sleep(0);
+#else
        usleep (250000);
        //sched_yield();
+#endif
    }
 }

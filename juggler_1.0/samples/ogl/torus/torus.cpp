@@ -12,6 +12,11 @@
 #include <Kernel/vjProjection.h>
 //#include <unistd.h>
 
+#ifndef WIN32
+#include <sched.h>
+#endif
+
+
 int main(int argc, char* argv[])
 {
    vjProjection::setNearFar(0.01f, 10000.0f);
@@ -33,16 +38,18 @@ int main(int argc, char* argv[])
 
    while(1)
    {   
+#ifdef WIN32
+      Sleep(0);
+#else
       /*
       sleep(2);
       kernel->stopApplication();
       sleep(2);
       kernel->setApplication(application);
       */
-       //usleep (250000);
-      Sleep(0);
-      
-       //sched_yield();
+      //usleep (250000);
+      sched_yield();
+#endif
    }
 
    return 1;
