@@ -37,13 +37,18 @@
 #include <cppunit/TextTestRunner.h>
 
 #include <TestCases/Math/QuatSelfTest.h>
-//#include <TestCases/Pf/PfUtilTest.h> // needs performer linked in, doh!
+
+#include <vrj/vrjConfig.h>
+#ifdef VJ_API_PERFORMER
+#include <TestCases/Pf/PfUtilTest.h> /* needs performer linked in, doh! */
+#endif
 #include <vrj/Util/Debug.h>
 
 
 int main (int ac, char **av)
 {
-   vprDEBUG(0,0) << "Starting test\n" << vprDEBUG_FLUSH;       // Do this here to get init text out of the way
+   // Do this here to get init text out of the way
+   vprDEBUG(vprDBG_ALL,0) << "Starting test\n" << vprDEBUG_FLUSH;
 
    CppUnit::TextTestRunner runner;
 
@@ -55,7 +60,10 @@ int main (int ac, char **av)
 
    // add tests to the suite
    noninteractive_suite->addTest(vrjTest::QuatSelfTest::suite());
-//   noninteractive_suite->addTest(vrjTest::PfUtilTest::suite());
+
+#ifdef VJ_API_PERFORMER
+   noninteractive_suite->addTest(vrjTest::PfUtilTest::suite());
+#endif
 
    // Add the test suite to the runner
    runner.addTest(noninteractive_suite);
