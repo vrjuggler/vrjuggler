@@ -175,6 +175,18 @@ all: opt dso dbg ddso
           rm -f ${VJ_LIB_STATIC} && ln -s ${_DEFAULT_DIR}/${VJ_LIB_STATIC} ./
 	cd ${_LIBDIR} &&						\
           rm -f ${VJ_LIB_DYNAMIC} && ln -s ${_DEFAULT_DIR}/${VJ_LIB_DYNAMIC} ./
+ifeq (${GL_API}, Y)
+	cd ${_LIBDIR} &&						\
+          rm -f ${GL_LIB_STATIC} && ln -s ${_DEFAULT_DIR}/${GL_LIB_STATIC} ./
+	cd ${_LIBDIR} &&						\
+          rm -f ${GL_LIB_DYNAMIC} && ln -s ${_DEFAULT_DIR}/${GL_LIB_DYNAMIC} ./
+endif
+ifeq (${PF_API}, Y)
+	cd ${_LIBDIR} &&						\
+          rm -f ${PF_LIB_STATIC} && ln -s ${_DEFAULT_DIR}/${PF_LIB_STATIC} ./
+	cd ${_LIBDIR} &&						\
+          rm -f ${PF_LIB_DYNAMIC} && ln -s ${_DEFAULT_DIR}/${PF_LIB_DYNAMIC} ./
+endif
 	@echo "------------------------------------------------"
 	@echo "Library build complete"
 	@echo "------------------------------------------------"
