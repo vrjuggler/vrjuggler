@@ -229,8 +229,8 @@ inline vpr::ReturnStatus XMLObjectWriter::endTag()
 inline vpr::ReturnStatus XMLObjectWriter::beginAttribute(std::string attributeName)
 {
    // Make sure that we have not called beginAttribute without an endAttribute
-   vprASSERT(mCurAttribData.empty() && "There should not be any attribute data now.  It should have been flushed");
    vprASSERT(mCurAttribName.empty() && "Didn't close previous attribute");
+   vprASSERT(mCurAttribData.empty() && "There should not be any attribute data now.  It should have been flushed");   
 
    mCurAttribName = attributeName;
    mCurTarget = AttribTarget;
