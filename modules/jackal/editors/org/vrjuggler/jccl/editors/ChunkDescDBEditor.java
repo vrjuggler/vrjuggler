@@ -157,11 +157,13 @@ public class ChunkDescDBEditor
       if (this.context != null)
       {
          this.context.removeContextListener(this);
+         getConfigBroker().removeConfigListener(configListener);
       }
       this.context = context;
       if (this.context != null)
       {
          this.context.addContextListener(this);
+         getConfigBroker().addConfigListener(configListener);
       }
 
       // rebuild the tree
@@ -766,6 +768,11 @@ public class ChunkDescDBEditor
    private ConfigContext context = new ConfigContext();
 
    /**
+    * The listener for changes to the configuration.
+    */
+   private ConfigListener configListener = new ChunkDescConfigListener();
+
+   /**
     * We cache the config broker proxy for speed.
     */
    private ConfigBroker broker;
@@ -803,6 +810,31 @@ public class ChunkDescDBEditor
       public boolean getScrollableTracksViewportHeight() { return true; }
    };
    private CardLayout editorPaneLayout = new CardLayout();
+
+   /**
+    * Specialized listener for changes to the configuration.
+    */
+   class ChunkDescConfigListener
+      implements ConfigListener
+   {
+      public void configChunkAdded(ConfigEvent evt) {}
+      public void configChunkRemoved(ConfigEvent evt) {}
+
+      public void chunkDescAdded(ConfigEvent evt)
+      {
+         if (getConfigContext().contains(evt.getResource()))
+         {
+            addDesc(evt.getChunkDesc());
+         }
+      }
+      public void chunkDescRemoved(ConfigEvent evt)
+      {
+         if (getConfigContext().contains(evt.getResource()))
+         {
+            removeDesc(evt.getChunkDesc());
+         }
+      }
+   }
 
    /**
     * Specialized renderer for a ChunkDesc tree.
