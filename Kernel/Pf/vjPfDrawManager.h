@@ -140,6 +140,9 @@ public:
    friend void vjPfDrawFunc(pfChannel *chan, void* chandata,bool left_eye, bool right_eye, bool stereo, bool simulator);
 
 protected:
+   //: Call all the application channel callbacks
+   void callAppChanFuncs();
+
    //: Helper to set channel view params from a vjProjection
    void updatePfProjection(pfChannel* chan, vjProjection* proj, bool simulator=false);
 
@@ -155,6 +158,10 @@ protected:
    //! RETURNS: NULL - Not found
    pfDisp* getPfDisp(pfChannel* chan);
 
+   //: Return the needed mono frame buffer config
+   std::vector<int> getMonoFBConfig();
+   //: Return the needed stereo frame buffer config
+   std::vector<int> getStereoFBConfig();
 
 protected:
    // NOTE:  ---- REMEMBER THAT PF HAS SHARED MEM Model ---
