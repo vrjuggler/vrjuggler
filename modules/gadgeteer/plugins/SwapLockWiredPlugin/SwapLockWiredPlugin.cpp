@@ -91,7 +91,7 @@ namespace cluster
 
       std::string barrier_machine_element_name = element->getProperty<std::string>(std::string("sync_server"));
       jccl::ConfigElementPtr barrier_machine_element = ClusterManager::instance()->getConfigElementPointer(barrier_machine_element_name);
-      vprASSERT(NULL != barrier_machine_element.get() && "ConfigManager Chunk MUST have a barrier_master.");
+      vprASSERT(NULL != barrier_machine_element.get() && "SwapLockWiredPlugin element must have a sync_server.");
       mBarrierMasterHostname = barrier_machine_element->getProperty<std::string>(std::string("host_name"));
       
       //mTCPport = element->getProperty<int>(std::string("listen_port"));
