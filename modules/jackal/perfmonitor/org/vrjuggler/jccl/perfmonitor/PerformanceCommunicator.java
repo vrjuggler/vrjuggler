@@ -131,9 +131,8 @@ public class PerformanceCommunicator
 
     /** Returns true for all stream identifiers we think we understand. */
     public boolean acceptsStreamIdentifier (String id) {
-        if (id.equalsIgnoreCase ("vjc_performance"))
-            return true;
-        return false;
+        return id.equals ("vjc_performance") ||
+	    id.equals ("jccl_performance");
     }
 
 
@@ -141,8 +140,21 @@ public class PerformanceCommunicator
      *  Returns control when it reaches the end of a single command.
      */
     public void readStream (InputStream instream, String id) 
-    throws IOException {
-        perf_module.readStream (instream, id);
+        throws IOException {
+        
+	String name;
+	int num;
+	PerfDataCollector p;
+
+	if (id.equals ("vjc_performance")) {
+	    // old integer-indexed format
+	    ConfigStreamTokenizer st = new ConfigStreamTokenizer (new InputStreamReader (instream));
+	    perf_module.readVjcPerformanceStream (st);
+
+	}
+	else if (id.equals ("jccl_performance")) {
+	    perf_module.readXMLStream (instream);
+	}
     }
 
 

@@ -39,6 +39,11 @@ import VjComponents.PerfMonitor.PerfDataCollector;
 import java.io.*;
 import java.util.*;
 
+import javax.xml.parsers.*;
+import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
+import org.w3c.dom.*;
+
 import VjConfig.ConfigStreamTokenizer;
 import VjConfig.ConfigChunk;
 import VjControl.*;
@@ -169,44 +174,38 @@ public class PerformanceModule extends DefaultCoreModule {
     }
 
 
-    /** Reads a single perfcollection stream 
-     *  The stream begins with "PerfData1 <name> <num>" and ends with
-     *  "-1 <numlost>" 
-     */
-    public void readStream (InputStream instream, String id) 
-        throws IOException {
-        
-	String name;
-	int num;
-	PerfDataCollector p;
+    /** Read an xml-formatted stream of performance data. */
+    public void readXMLStream (InputStream instream) {
+	// new xml format for labeled buffers.
+	// the xml dom may include the jccl protocol element...
+	// if so just descend down into its tree.
+	Document doc;
+	DocumentBuilderFactory factory = 
+	    DocumentBuilderFactory.newInstance();
 
-        ConfigStreamTokenizer st = new ConfigStreamTokenizer (new InputStreamReader (instream));
-
-        st.nextToken();
-        if (st.sval.equalsIgnoreCase ("PerfData1")) {
-            st.nextToken();
-            name = st.sval;
-            st.nextToken();
-            num = Integer.parseInt(st.sval);
-
-            System.out.println ("read perf info for " + name + "\nnum is " + num);
-            p = getCollector (name);
-            if (p == null)
-                p = addCollector (name, num);
-            p.read (st);
-        }
-        else {
-            Core.consoleErrorMessage ("Perf", "Major parsing failure in PerfDataCollection");
-            //System.out.println ("Major parsing failure in PerfDataCollection");
-        }
+	// build the XML stream into a DOM tree
+	try {
+	    DocumentBuilder builder = factory.newDocumentBuilder();
+	    doc = builder.parse (instream);
+	    //buildChunkDB (db, doc, iostatus);
+	}
+	catch (javax.xml.parsers.ParserConfigurationException e1) {
+	    //iostatus.addFailure (e1);
+	}
+	catch (org.xml.sax.SAXException e2) {
+	    //iostatus.addFailure (e2);
+	}
+	catch (IOException e3) {
+	    //iostatus.addFailure (e3);
+	}
     }
 
 
-    /** Read multiple PerfData streams, as from a log file 
-     *  The only reason to have this in addition to readStream is that
-     *  it only sends out one update message at the end of the file.
+    /** Read a stream/file using the "vjc_performance" protocol
+     *  used by juggler 1.0.x (and currentl for output from
+     *  jccl::PerfDataBuffer).
      */
-    public void readFile (ConfigStreamTokenizer st) {
+    public void readVjcPerformanceStream (ConfigStreamTokenizer st) {
 	String perfdatatype, name;
 	int num;
 	PerfDataCollector p;
@@ -225,21 +224,6 @@ public class PerformanceModule extends DefaultCoreModule {
                 }
 
                 if (st.ttype != st.TT_EOF) {
-
-//                     //System.out.println ("ttype is " + st.ttype);
-//                     st.nextToken();
-//                     //if (st.ttype == st.TT_EOF)
-//                     //  break;
-                    
-//                     if (st.ttype != ConfigStreamTokenizer.TT_WORD) {
-//                         st.pushBack();
-//                         break;
-//                     }
-//                     perfdatatype = st.sval;
-//                     if (!st.sval.equalsIgnoreCase ("PerfData1")) {
-//                         st.pushBack();
-//                         break;
-//                     }
 
                     st.nextToken();
                     name = st.sval;
@@ -298,21 +282,31 @@ public class PerformanceModule extends DefaultCoreModule {
 				 "Loading Timing Data file: " + f);
 
 	try {
-	    ConfigStreamTokenizer st = 
-                new ConfigStreamTokenizer(new FileReader (f));
-	    st.eolIsSignificant(true);
 
-	    do {
-		st.nextToken();
-		//System.out.println ("foo" + st.ttype);
-	    } while (st.ttype != '\n');
+            FileInputStream temp_in = new FileInputStream (f);
+            int ch = temp_in.read();
+            if (ch != '<') {
+		// old format
+		ConfigStreamTokenizer st = 
+		    new ConfigStreamTokenizer(new FileReader (f));
 
-	    st.eolIsSignificant(false);
-	    st.quoteChar('"');
+		// read that first info line
+		st.eolIsSignificant(true);
+		do {
+		    st.nextToken();
+		} while (st.ttype != '\n');
+		st.eolIsSignificant(false);
+		st.quoteChar('"');
 
-            // apply to self...
-	    removeAllData();
-	    readFile (st);
+		removeAllData();
+		readVjcPerformanceStream (st);
+            }
+	    else {
+		// new format
+		removeAllData();
+		readXMLStream (new FileInputStream(f));
+	    }
+
 	    file = f;
 
 	    return f.toString();
