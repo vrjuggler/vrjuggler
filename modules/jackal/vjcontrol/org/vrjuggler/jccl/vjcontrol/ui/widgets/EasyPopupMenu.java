@@ -29,15 +29,12 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
+package org.vrjuggler.jccl.vjcontrol.ui.widgets;
 
-
-package VjComponents.UI.Widgets;
-
-import javax.swing.JPopupMenu;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
+import javax.swing.JPopupMenu;
 import java.util.Vector;
-
 
 public class EasyPopupMenu {
 
@@ -146,6 +143,4 @@ public class EasyPopupMenu {
     public void removeMenuItem (String path) {
         System.err.println ("Not implemented!!!");
     }
-
-
 }

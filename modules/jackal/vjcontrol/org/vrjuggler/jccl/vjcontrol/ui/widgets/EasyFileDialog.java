@@ -29,23 +29,20 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-
-
-package VjComponents.UI.Widgets;
+package org.vrjuggler.jccl.vjcontrol.ui.Widgets;
 
 import java.awt.Component;
 import java.io.IOException;
 import java.io.File;
+import java.util.HashMap;
+import java.util.Vector;
 import javax.swing.*;
 import javax.swing.filechooser.FileFilter;
-import java.util.Vector;
-import java.util.HashMap;
 
-import VjControl.SuffixFilter;
+import org.vrjuggler.jccl.vjcontrol.SuffixFilter;
 
 /** Utility functions for managing FileDialogs.
  * 
- *  @author Christopher Just
  *  @version $Revision$
  */
 public class EasyFileDialog {
@@ -191,7 +188,4 @@ public class EasyFileDialog {
              return null;
          }
      }
-
-
 }
-

@@ -29,17 +29,14 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
+package org.vrjuggler.jccl.vjcontrol.ui.widgets;
 
-
-package VjComponents.UI.Widgets;
-
-import javax.swing.*;
 import java.awt.event.*;
+import javax.swing.*;
 
 
 /** A JTextField that only accepts valid VJCL strings (ie no quotes)
  *
- * @author Christopher Just
  * @version $Revision$
  */
 public class StringTextField extends JTextField {
@@ -59,6 +56,4 @@ public class StringTextField extends JTextField {
         if (keyChar != '"')
             super.processKeyEvent (e);
     }
-
 }
-
