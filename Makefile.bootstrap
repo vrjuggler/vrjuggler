@@ -7,8 +7,10 @@ ifdef prefix
 endif
 
 WRKDIR	= $(shell pwd)
-LIBIDL	= external/Equator/libIDL/libIDL-0.6.8
-EQ_VJ	= external/Equator/vj_standalone
+SRCDIR	?= .
+
+LIBIDL	= $(SRCDIR)/external/Equator/libIDL/libIDL-0.6.8
+EQ_VJ	= $(SRCDIR)/external/Equator/vj_standalone
 
 dso-bootstrap:
 	cd $(LIBIDL) && ./configure $(CFG_ARGS)
