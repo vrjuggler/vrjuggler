@@ -76,7 +76,7 @@ class SoundManager;
  * }
  * \endcode
  *
- * @note One time through the loop is a Juggler Frame.
+ * @note One time through the loop is a "Juggler Frame."
  *
  * @see vrj::Kernel
  */
@@ -85,12 +85,16 @@ class VJ_CLASS_API App : public jccl::ConfigElementHandler
 public:
    /**
     * Constructor.
+    *
     * @param kern The vrj::Kernel instance that is active (so that the
     *             application has easy access to the kernel).
     */
    App(Kernel* kern);
 
-   /** Just call App(vrj::Kernel::instance()). */
+   /**
+    * Sets the internal kernel handle to the value returned by
+    * vrj::Kernel::instance().
+    */ 
    App();
 
    virtual ~App()
@@ -104,7 +108,8 @@ public:
     * Application initialization function.
     * Execute any initialization needed before the grahpics API is started.
     *
-    * @note Derived classes MUST call base class version of this method.
+    * @note Derived classes <b>must</b> call the base class version of this
+    *       method.
     */
    virtual void init()
    {;}
@@ -119,21 +124,24 @@ public:
 
    /**
     * Executes any final clean-up needed for this application before exiting.
+    * This is invoked by the kernel prior to this application object being
+    * removed from the kernel.
     */
    virtual void exit()
    {;}
 
    /**
-    * Function called before the Juggler frame starts.
-    * This is called after input device updates but before the start of a new
-    * frame.
+    * Executes any code needed to set up the application object state prior
+    * to rendering the scene.  This is invoked by the kernel once per pass
+    * through the Juggler frame loop.  This is called after input device
+    * updates but before the start of rendering a new frame of the scene.
     */
    virtual void preFrame()
    {;}
 
    /**
     * Function called after preFrame() and application-specific data
-    * syncronization (in a cluster configuration) but before the start of a
+    * synchronization (in a cluster configuration) but before the start of a
     * new frame.
     *
     * @note This is required because we cannot update data during the
@@ -142,13 +150,20 @@ public:
    virtual void latePreFrame()
    {;}
 
-   /** Function called <b>during</b> this application's drawing time. */
+   /**
+    * Function called <b>during</b> this application's drawing time.  This
+    * can be used for "free" parallel processing, but it introduces a critical
+    * section to the code.  If the rendering process is reading state data,
+    * this method should not be modifying any of that data.  Instead, a
+    * double- or triple-buffering scheme must be used to allow parallel
+    * reading and writing of all application state used for rendering.
+    */
    virtual void intraFrame()
    {;}
 
    /**
-    * Function called before updating input devices but after the frame is
-    * complete.
+    * Function called before updating input devices but after the frame
+    * rendering is complete.
     */
    virtual void postFrame()
    {;}
@@ -156,7 +171,13 @@ public:
    /**
     * Resets this application.
     * This is used when the kernel (or applications) would like this
-    * application object to reset to its initial state.
+    * application object to reset to its initial state.  This is one of the
+    * only methods that can be safe for cross-calls from other application
+    * object interface methodss.  That is, of course, as long as the override
+    * of this method is implemented in a safe manner.  The override should be
+    * implemented such that it can be invoked at any time during the Juggler
+    * frame loop by the kernel or from a method such as preFrame() or
+    * postFrame() by the application object itself.
     */
    virtual void reset()
    {;}
@@ -174,7 +195,7 @@ public:
       return mHaveFocus;
    }
 
-   /** Called when the focus state changes. */
+   /** Called by the kernel when the focus state changes. */
    virtual void focusChanged()
    {;}
 
@@ -204,21 +225,23 @@ public:
     * used by VR Juggler to scale the rendering state from meters to whatever
     * units this application wants to use.
     *
-    * Example: to use feet as local app unit, return 3.28;
+    * For example, to use feet as this application object's unit, return 3.28.
+    * Conversion constants can be found in the namespace
+    * \c gadget::PositionUnitConversion which is defined in the header file
+    * \c gadget/Type/Position/PositionUnitConversion.h from the Gadgeteer
+    * library.
     */
    virtual float getDrawScaleFactor()
    {
       return gadget::PositionUnitConversion::ConvertToFeet;
    }
 
-
-public:  // ---
    /**
     * @name Default config handlers.
     */
    //@{
    /**
-    * Defaultsto handling nothing.
+    * Defaults to handling nothing.
     *
     * @note Inherited from jccl::ConfigElementHandler.
     */
@@ -247,10 +270,12 @@ protected:
    virtual bool configRemove(jccl::ConfigElementPtr element);
 
 public:
-   Kernel* mKernel;     // The library kernel (here for convienence)
-   bool    mHaveFocus;
+   Kernel* mKernel;     /**< The Juggler kernel (here for convienence) */
+   bool    mHaveFocus;  /**< The current focus state of this app object */
 
-public:  // --- Factory functions --- //
+public:
+   /** @name Factory functions */
+   //@{
    /**
     * Gets the Draw Manager to use.
     * @note Each derived app MUST implement this function.
@@ -262,6 +287,7 @@ public:  // --- Factory functions --- //
     * @note Each derived app could implement this function if needed.
     */
    virtual SoundManager* getSoundManager();
+   //@}
 };
 
 }
