@@ -62,9 +62,9 @@ namespace vrj
    {
       // TODO: Safeguard from changing tree...ask for names to lookup and return them
       // or keep a master list to compare against.
-      std::map<std::string, float> sample_time_map = vpr::ProfileManager::getValueMap();
+      vpr::ProfileManager::ProfileSampleResult sample_time_map = vpr::ProfileManager::getSampleResult();
 
-      std::map<std::string, float>::iterator itr;
+      vpr::ProfileManager::ProfileSampleResult::iterator itr;
       unsigned long i = 0;
       vrj::PerformanceMonitorSubject::SampleValueMap* value_map = 
          new vrj::PerformanceMonitorSubject::SampleValueMap();
@@ -74,7 +74,7 @@ namespace vrj
       for ( itr = sample_time_map.begin(); itr != sample_time_map.end(); ++itr )
       {
          (*value_map)[i].mName = CORBA::string_dup(itr->first.c_str());
-         (*value_map)[i].mSampleTime = itr->second;
+         (*value_map)[i].mSampleTime = itr->second.msecf();
          i++;
       }
       return value_map;
