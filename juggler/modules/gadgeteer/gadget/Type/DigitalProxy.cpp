@@ -47,6 +47,7 @@ bool DigitalProxy::config(jccl::ConfigChunkPtr chunk)
    if(location.size() > 0){
       mDeviceName = (std::string)chunk->getProperty("name");
       mDeviceName += "_NET_";
+      m_unitNum = 0;
    }
    else{  // normal local devices
       m_unitNum = chunk->getProperty("unit");
@@ -61,6 +62,7 @@ bool DigitalProxy::config(jccl::ConfigChunkPtr chunk)
 
 void DigitalProxy::updateData()
 {
+
    if (!mStupified)
    {
       int old_state = m_data.getDigital();
