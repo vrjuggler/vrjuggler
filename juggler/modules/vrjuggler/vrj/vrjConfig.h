@@ -32,9 +32,6 @@
  */
 
 /* This should always be included first. */
-#ifdef WIN32
-#define HAVE_CONFIG_H
-#endif
 
 #ifdef HAVE_CONFIG_H
 #include <vjDefines.h>
@@ -58,17 +55,18 @@
 
 typedef __int32 int32_t;
 typedef __int64 int64_t;
-typedef UINT u_int;
 #define strcasecmp _stricmp
 
-//#include <gl\gl.h>
+#define M_PI	3.14159265358979323846
+#define M_PI_2	1.57079632679489661923
+#define M_PI_4	0.78539816339744830962
 
 //extern HINSTANCE g_hInst = NULL;
-#endif
+#endif	/* WIN32 */
 
 
-/* Common includes */
-/* Put here for pre-compiled headers */
+/* Common C++ includes. */
+/* Put here for pre-compiled headers. */
 #ifdef __cplusplus
 #include <iostream.h>
 #include <iomanip.h>
@@ -80,7 +78,7 @@ typedef UINT u_int;
 #include <math.h>
 
 //#include <Kernel/vjDebug.h>
-#endif
+#endif	/* __cplusplus */
 
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>
