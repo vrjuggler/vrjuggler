@@ -565,7 +565,6 @@ int FlockStandalone::getReading (const int& n, float& xPos, float& yPos,
         yPos = rawToFloat(buff[3], buff[2]) * POSITION_RANGE;
         zPos = rawToFloat(buff[5], buff[4]) * POSITION_RANGE;
 
-//        std::cerr << "Pos: " << xPos << " : " << yPos << " : " << zPos << std::endl;
 
         // Orientation
         zRot = rawToFloat(buff[7], buff[6])   * ANGLE_RANGE;
@@ -638,7 +637,21 @@ int FlockStandalone::open_port ()
                 retval = -1;
             }
             else {
-                std::cout << "[FlockStandalone] Port opened successfully\n"
+                // ---- Begin almighty code ----
+		vpr::IOSys::Handle handle = _serial_port->getHandle();
+		struct termios tty;
+		tcgetattr(handle, &tty);
+	        tty.c_iflag |=  IGNBRK;
+		tty.c_iflag &=  ~IXON & ~ICRNL;
+		tty.c_lflag &= ~ISIG & ~ECHO & ~ECHOE & ~ECHOK & ~ECHOCTL & ~ECHOKE & ~IEXTEN & ~ICANON;
+		tty.c_oflag &= ~OPOST & ~ONLCR;
+		tty.c_cflag &= ~HUPCL;
+		tcsetattr(handle, TCSANOW, &tty);
+		// ---- End almighty code
+
+		    
+		    
+		std::cout << "[FlockStandalone] Port opened successfully\n"
                           << std::flush;
 
                 _serial_port->setUpdateAction(vpr::SerialTypes::NOW);
