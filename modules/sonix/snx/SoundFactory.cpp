@@ -39,15 +39,13 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-
-
-
 #include <string>
+#include <iostream>
 #include "snx/SoundImplementation.h"
-
 #include "snx/StubSoundImplementation.h" // in case lookup fails...
 
 #include "snx/SoundFactory.h" // my header.
+
 
 namespace snx
 {
