@@ -77,14 +77,14 @@ JAVA_SRCS	= org/vrjuggler/tweek/Tweek.java			\
 
 JARS		= Tweek.jar		\
                   TweekBeans.jar	\
-                  TweekNet.jar
+                  TweekNet.jar		\
+                  TweekServices.jar
 BEANS		= Viewers
 
 # For the following, *.class is used so that these variables may be used as
 # dependencies of .jar targets.
 
-TWEEK_CLASSES	= org/vrjuggler/tweek/*.class			\
-                  org/vrjuggler/tweek/services/*.class
+TWEEK_CLASSES	= org/vrjuggler/tweek/*.class
 TWEEK_EXTRAS	= org/vrjuggler/tweek/*.gif
 
 BEANS_MF	= $(srcdir)/beans.MF
@@ -97,7 +97,7 @@ NET_CLASSES	= org/vrjuggler/tweek/net/*.class		\
                   tweek/SubjectManagerPackage/*.class
 
 SERVICE_MF	= $(srcdir)/services.MF
-SERVICE_CLASSES	=
+SERVICE_CLASSES	= org/vrjuggler/tweek/services/*.class
 
 VIEWERS_MF	= $(srcdir)/viewers.MF
 VIEWERS_CLASSES	= org/vrjuggler/tweek/iconviewer/*.class	\
@@ -124,12 +124,12 @@ TweekNet.jar: $(NET_CLASSES)
 TweekBeans.jar: $(BEANS_MF) $(BEANS_CLASSES)
 	$(JAR) cvfm $@ $(BEANS_MF) $(BEANS_CLASSES)
 
+TweekServices.jar: $(SERVICE_CLASSES)
+	$(JAR) cvfm $@ $(SERVICE_MF) $(SERVICE_CLASSES)
+
 Viewers.jar: $(VIEWERS_CLASSES)
 	$(JAR) cvfm $@ $(VIEWERS_MF) $(VIEWERS_CLASSES)
 	cd $(srcdir) && $(JAR) uvf $(topdir)/java/$@ $(VIEWERS_EXTRAS)
-
-Services.jar: $(SERVICE_CLASSES)
-	$(JAR) cvfm $@ $(SERVICE_MF) $(SERVICE_CLASSES)
 
 links:
 	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/bin/beans
