@@ -191,6 +191,12 @@ JCCL_PATH([0.5.0], , [AC_MSG_ERROR(*** Jackal required for VR Juggler ***)])
 GADGETEER_PATH([0.2.3], ,
                [AC_MSG_ERROR(*** Gadgeteer required for VR Juggler ***)])
 
+if test "x$BUILD_JAVA" = "xY" ; then
+   TWEEK_PATH_JAVA([0.6.0], ,
+                   [AC_MSG_ERROR(*** Tweek Java API required for VRJConfig ***)
+                    BUILD_JAVA='N'])
+fi
+
 vjsave_CPPFLAGS="$CPPFLAGS"
 CPPFLAGS="$CPPFLAGS $STDFLAGS"
 GMTL_PATH(0.0.5, [$JUGGLERROOT_ABS/external/GMTL],
