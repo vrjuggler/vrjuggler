@@ -20,8 +20,8 @@ static void set_hemisphere(int port, BIRD_HEMI hem, int transmitter, int numbird
 static void set_rep_and_stream(int port, char repRate);
 static void set_pos_angles(int port, int transmitter, int numbirds);
 static void set_filter(int port, BIRD_FILT filter);
-static void set_transmitter(int port, int transmitter); 
-static void set_autoconfig(int port, int numbirds); 
+static void set_transmitter(int port, int transmitter);
+static void set_autoconfig(int port, int numbirds);
 static void set_group(int port);
 
 vjFlock::vjFlock(vjConfigChunk *c) : vjPosition(c), vjInput(c)
@@ -33,11 +33,11 @@ vjFlock::vjFlock(vjConfigChunk *c) : vjPosition(c), vjInput(c)
 
   syncStyle = static_cast<int>(c->getProperty("sync"));//1;
   blocking = static_cast<int>(c->getProperty("blocking"));//0;
-  
+
   // to be added to config:
   theTransmitter = static_cast<int>(c->getProperty("transmitter"));
   numBirds = static_cast<int>(c->getProperty("num"));
-  hemisphere = (BIRD_HEMI)(static_cast<int>(c->getProperty("hemi")));  //LOWER_HEMI 
+  hemisphere = (BIRD_HEMI)(static_cast<int>(c->getProperty("hemi")));  //LOWER_HEMI
   char r = static_cast<char*>(c->getProperty("report"))[0];
   if ((r != 'Q') && (r != 'R') &&
       (r != 'S') && (r != 'T'))
@@ -47,7 +47,7 @@ vjFlock::vjFlock(vjConfigChunk *c) : vjPosition(c), vjInput(c)
   }
   else
      repRate = r;
-  
+
   vjDEBUG(0)   << "	  Flock Settings: " << endl
                << "	        theTransmitter: " << theTransmitter << endl
 	            << "             numBirds      : " << numBirds << endl
@@ -56,8 +56,8 @@ vjFlock::vjFlock(vjConfigChunk *c) : vjPosition(c), vjInput(c)
                << "	        sPort         : " << sPort << endl
                << "		instance name : " << instName << endl
                << endl << vjDEBUG_FLUSH;
-  
-  InitCorrectionTable(c->getProperty("calfile")); 
+
+  InitCorrectionTable(c->getProperty("calfile"));
 }
 
 vjFlock::vjFlock(int sync, int block, int numBrds, int transmit,
@@ -67,17 +67,17 @@ vjFlock::vjFlock(int sync, int block, int numBrds, int transmit,
   vjDEBUG(0)   << "        vjFlock::vjFlock(" << sync << "," << block << ","
                << numBrds << "," << transmit
                << "," << hemi << "," << report << "," << calfile << ") " << endl << vjDEBUG_FLUSH;
-       
+
   port_id = -1; active = 0;
   syncStyle = sync;
   blocking = block;
-  theTransmitter = transmit; 
+  theTransmitter = transmit;
   numBirds = numBrds;
   hemisphere = hemi;
   repRate = report;
 
-  myThreadID = NULL;  
-  
+  myThreadID = NULL;
+
   InitCorrectionTable(calfile);
 }
 
@@ -90,11 +90,11 @@ vjFlock::~vjFlock()
 }
 
 static void SampleBirds(void* pointer)
-{ 
+{
 
    //struct timeval tv;
    //double start_time, stop_time;
-   
+
    vjDEBUG(0) << "vjFlock: Spawned SampleBirds starting" << endl << vjDEBUG_FLUSH;
 
    vjFlock* devPointer = (vjFlock*) pointer;
@@ -138,7 +138,7 @@ int vjFlock::StartSampling()
       if (port_id == -1) return 0;
       set_blocking(port_id, blocking);
       set_sync(port_id,syncStyle);
-      set_group(port_id); 
+      set_group(port_id);
       set_autoconfig(port_id, numBirds);
       set_transmitter(port_id, theTransmitter);
       set_filter(port_id, filter);
@@ -166,28 +166,28 @@ int vjFlock::StartSampling()
 }
 
 int vjFlock::Sample()
-{    
+{
      int i;
      int tmp;
-     
+
      for(i=1; i < (numBirds+1); i++)
-     {  
+     {
 	if (i == theTransmitter)
 		continue;
 
-      	int index = progress*(numBirds+1)+i-1;       
+      	int index = progress*(numBirds+1)+i-1;
 	// Sets index to current read buffer
-        
+
          getReading(i, &theData[index], port_id);	
       	//Position_Correct(theData[index].pos[0],
-      	//		           theData[index].pos[1], 
+      	//		           theData[index].pos[1],
       	//		           theData[index].pos[2]);
       	
          if(i==1)
          {
             //cout << "orig pt:" << theData[index].pos;
          }
-         
+
          //theData[index].pos.xformFull(xformMat, theData[index].pos );
       	
          if(i==1)
@@ -200,12 +200,13 @@ int vjFlock::Sample()
              //cout << "\torig or:" << theData[index].orient;
          }
 
-         
+
             // Transforms between the cord frames
             // See transform documentation and VR System pg 146
          vjMatrix world_T_transmitter, transmitter_T_reciever, world_T_reciever;
-         
-         world_T_transmitter = rotMat;                   // Set transmitter offset from local info
+
+         //world_T_transmitter = rotMat;                   // Set transmitter offset from local info
+         world_T_transmitter = xformMat;                   // Set transmitter offset from local info
          transmitter_T_reciever = theData[index];        // Get reciever data from sampled data
          world_T_reciever.mult(world_T_transmitter, transmitter_T_reciever);   // compute total transform
          theData[index] = world_T_reciever;                                     // Store corrected xform back into data
@@ -214,7 +215,7 @@ int vjFlock::Sample()
          {
                 /*
                 cout << "\nnew or:" << theData[index].orient << flush;
-                
+
                 new_dir.xformVec(transmitter_or_reciever, tracker_base_dir);
                 cout << "   Base Tracker dir: " << tracker_base_dir << endl;
                 cout << "\nXformed Tracker dir (in T): " << new_dir << endl;
@@ -224,12 +225,12 @@ int vjFlock::Sample()
                 */
          }
      }
-	      
+	
      lock.acquire();
      tmp = valid;
      valid = progress;
      progress = tmp;
-     lock.release();  
+     lock.release();
 
      return 1;
 }
@@ -246,7 +247,7 @@ int vjFlock::StopSampling()
 
       vjDEBUG(0) << "Stopping the flock..." << vjDEBUG_FLUSH;
 
-      bird_command[0] = 'B'; 
+      bird_command[0] = 'B';
       write(port_id, bird_command, 1);
       ioctl(port_id, TCFLSH, (char *) 0);
       sginap(5);
@@ -284,11 +285,11 @@ void vjFlock::SetHemisphere(BIRD_HEMI h)
 {
   if (active) {
       vjDEBUG(0) << "Cannot change the hemisphere\n" << vjDEBUG_FLUSH;
-      return;  
+      return;
    }
    hemisphere = h;
-}    
-  
+}
+
 void vjFlock::SetFilters(BIRD_FILT f)
 {
   if (active) {
@@ -399,7 +400,7 @@ void vjFlock::InitCorrectionTable(char* fName)
   float dump;
   ifstream inFile;
 
-  vjDEBUG(0) << "	  Initializing calibration table ... " << endl 
+  vjDEBUG(0) << "	  Initializing calibration table ... " << endl
              << "	    " << fName << endl << vjDEBUG_FLUSH;
   inFile.open(fName);
   if (!inFile)
@@ -437,50 +438,58 @@ void vjFlock::InitCorrectionTable(char* fName)
 //////////////////////////////////////////////////////////////////
 inline int getReading(int n, vjMatrix* data, int port)
 {
-  char buff[12], group;
-  int  c,i, addr;
+   char buff[12], group;
+   int  c,i, addr;
 
-  {  
-        c=i = 0;
-	while(!i && c < 99999) { c++;
-	  if((read(port,buff,1) == 1) && (buff[0] & 0x80))
-              i = 1;
-         }
-	while(i != 12 && c < 99999) {
-	  c++;
-	  i += read(port,&buff[i], 12-i);
-          }
-	  
-	while((read(port,&group,1) == 0) && c < 99999) 
-	  c++;
+   do
+   {
+      c=i = 0;
+      while (!i && c < 99999)
+      {
+         c++;
+         if ((read(port,buff,1) == 1) && (buff[0] & 0x80))
+            i = 1;
+      }
+      while (i != 12 && c < 99999)
+      {
+         c++;
+         i += read(port,&buff[i], 12-i);
+      }
 
-        if (c >= 5000) cout << "timeout" << endl;
-        addr = group;
-  }  while(addr != n);
-  //cout << "addr: " << addr << endl;
+      while ((read(port,&group,1) == 0) && c < 99999)
+         c++;
 
-  vjVec3 pos_data, or_data;
+      if (c >= 5000)
+         vjDEBUG(0) << "vjFlock: tracker timeout" << endl << vjDEBUG_FLUSH;
 
-  pos_data[0] = rawToFloat(buff[1],buff[0]) * POSITION_RANGE;       // X
-  pos_data[1] = rawToFloat(buff[3],buff[2]) * POSITION_RANGE;       // Y
-  pos_data[2] = rawToFloat(buff[5],buff[4]) * POSITION_RANGE;       // Z
-  or_data[0] = rawToFloat(buff[7],buff[6]) * ANGLE_RANGE;           // rotZ
+      addr = group;
+   }
+   while (addr != n);
+
+   //cout << "addr: " << addr << endl;
+
+   vjVec3 pos_data, or_data;
+
+   pos_data[0] = rawToFloat(buff[1],buff[0]) * POSITION_RANGE;       // X
+   pos_data[1] = rawToFloat(buff[3],buff[2]) * POSITION_RANGE;       // Y
+   pos_data[2] = rawToFloat(buff[5],buff[4]) * POSITION_RANGE;       // Z
+   or_data[0] = rawToFloat(buff[7],buff[6]) * ANGLE_RANGE;           // rotZ
 //  if (data->or[0] < -180.0f)
 //     data->or[0] += 360.0f;
-  or_data[1] = rawToFloat(buff[9],buff[8]) * ANGLE_RANGE;           // rotY
-  or_data[2] = rawToFloat(buff[11],buff[10]) * ANGLE_RANGE;         // rotX
+   or_data[1] = rawToFloat(buff[9],buff[8]) * ANGLE_RANGE;           // rotY
+   or_data[2] = rawToFloat(buff[11],buff[10]) * ANGLE_RANGE;         // rotX
 
-  data->makeZYXEuler(or_data[0], or_data[1], or_data[2]);
-  data->setTrans(pos_data[0], pos_data[1], pos_data[2]);
+   data->makeZYXEuler(or_data[0], or_data[1], or_data[2]);
+   data->setTrans(pos_data[0], pos_data[1], pos_data[2]);
 
-  return addr;
+   return addr;
 }
 
 inline float rawToFloat(char& r1, char& r2)
 {
    // return ((float) (((r1 & 0x7f) << 9) | (r2 & 0x7f) << 2) / 0x7fff);
    short int ival1,ival2,val;
-   ival1 = r1 & 0x7f; 
+   ival1 = r1 & 0x7f;
    ival2 = r2 & 0x7f;
    val = (ival1 << 9) | ival2<<2;
    return ((float)val) / 0x7fff;
@@ -497,28 +506,30 @@ inline void  pickBird(int birdID, int port)
 static int open_port(char* serialPort, int baud)
 {
    ///////////////////////////////////////////////////////////////////
-   // Open and close the port to reset the tracker, then 
+   // Open and close the port to reset the tracker, then
    // Open the port
    ///////////////////////////////////////////////////////////////////
    int port_id = open(serialPort, O_RDWR | O_NDELAY);
    if (port_id == -1)
-   {vjDEBUG(0) << "!!vjFlock port open failed\n" << vjDEBUG_FLUSH ;
-      return port_id; 
+   {
+      vjDEBUG(0) << "!!vjFlock port open (1 of 2) failed\n" << vjDEBUG_FLUSH ;
+      return port_id;
    }
    else
    {
-      vjDEBUG(0) << "vjFlock port opened successfully\n" << vjDEBUG_FLUSH;
+      vjDEBUG(0) << "vjFlock port open (1 of 2) successfully\n" << vjDEBUG_FLUSH;
    }
    sleep(2);
    close(port_id);
    port_id = open(serialPort,O_RDWR | O_NDELAY);
    if (port_id == -1)
-   {vjDEBUG(0) << "!!vjFlock port open failed\n" << vjDEBUG_FLUSH;
-      return port_id; 
+   {
+      vjDEBUG(0) << "!!vjFlock port open (2 of 2) failed\n" << vjDEBUG_FLUSH;
+      return port_id;
    }
    else
    {
-      vjDEBUG(0) << "vjFlock port opened successfully\n" << vjDEBUG_FLUSH;
+      vjDEBUG(0) << "vjFlock port open (2 of 2) successfully\n" << vjDEBUG_FLUSH;
    }
 
    //////////////////////////////////////////////////////////////////
@@ -540,7 +551,7 @@ static int open_port(char* serialPort, int baud)
       break;
    case 4800:port_a.c_cflag = (B4800 | CS8 | CLOCAL | CREAD);
       break;
-   } 
+   }
 
    port_a.c_cflag = (B38400 | CS8 | CLOCAL | CREAD);
    port_a.c_cc[0] = port_a.c_cc[1] = port_a.c_cc[2] = port_a.c_cc[3] = 0;
@@ -551,7 +562,7 @@ static int open_port(char* serialPort, int baud)
    ioctl(port_id,TIOCNOTTY);
    return port_id;
 }
-  
+
   void set_blocking(int port, int blocking)
   {
  //////////////////////////////////////////////////////////////////
@@ -559,11 +570,11 @@ static int open_port(char* serialPort, int baud)
  //////////////////////////////////////////////////////////////////
   static int blockf,nonblock;
   int flags;
- 
+
   flags = fcntl(port,F_GETFL,0);
-  blockf = flags & ~FNDELAY;  // Turn blocking on 
-  nonblock = flags | FNDELAY; // Turn blocking off 
- 
+  blockf = flags & ~FNDELAY;  // Turn blocking on
+  nonblock = flags | FNDELAY; // Turn blocking off
+
   fcntl(port,F_SETFL,blocking ? blockf : nonblock); // 0 Non Blocked
                                                     // 1 Blocked
   ioctl(port,TCFLSH,2);
@@ -571,14 +582,14 @@ static int open_port(char* serialPort, int baud)
   char junk[1024];
   read(port, junk, 1024);
   sleep(1);
-  
+
   }
 
 static void set_sync(int port, int sync)
 {
 /////////////////////////////////////////////////////////////////
  // Set CRT sync: (manual page 82)
- //   set crt sync 
+ //   set crt sync
  //   nosync    -   0
  //   > 72Hz    -   1 (type 1)
  //                 2 (type 2)
@@ -594,7 +605,7 @@ static void set_hemisphere(int port, BIRD_HEMI hem, int transmitter, int numbird
 {
  /////////////////////////////////////////////////////////////////
  // Set Hemisphere for birds taking input
- //  
+ //
  //  buff   [1]   [2]
  // Front: 0x00, 0x00
  // Aft  : 0x00, 0x01
@@ -604,7 +615,7 @@ static void set_hemisphere(int port, BIRD_HEMI hem, int transmitter, int numbird
  // Right: 0x06, 0x00
  /////////////////////////////////////////////////////////////////
   char buff[3];
-  buff[0] = 'L'; 
+  buff[0] = 'L';
   for (int i = 1; i < (numbirds+1); i++)
   {
 	if (i == transmitter)
@@ -652,7 +663,7 @@ static void set_rep_and_stream(int port, char repRate)
  //             S  every 8 cycles
  //             T  every 32 cycles
  /////////////////////////////////////////////////////////////////
-  buff[0] = repRate; 
+  buff[0] = repRate;
   write(port, buff, 1);
   ioctl(port, TCFLSH, (char *) 0);
   sginap(20);
@@ -661,7 +672,7 @@ static void set_rep_and_stream(int port, char repRate)
  // set stream mode
  ////////////////////////////////////////////////////////////////
   buff[0] = '@';
-  write(port, buff, 1);   
+  write(port, buff, 1);
   ioctl(port, TCFLSH, (char *) 0);
   sginap(5);
 
@@ -682,8 +693,8 @@ static void set_pos_angles(int port, int transmitter, int numbirds)
     write(port, buff, 1);
     ioctl(port, TCFLSH, (char *) 0);
     sginap(5);
-  }  
- 
+  }
+
 }
 
 static void set_filter(int port, BIRD_FILT filter)
@@ -713,7 +724,7 @@ static void set_transmitter(int port, int transmitter)
  ///////////////////////////////////////////////////////////////
   char buff[2];
   buff[0] = (unsigned char) (0x30);
-  buff[1] = (unsigned char) transmitter  << 4; 
+  buff[1] = (unsigned char) transmitter  << 4;
   write(port, buff, 2);
   ioctl(port, TCFLSH,(char*) 0);
   sginap(120);
@@ -740,8 +751,8 @@ static void set_group(int port)
 {
  ////////////////////////////////////////////////////////////////
  // Setup group mode: (manual page 59)
- // 'P' Change Parameter 
- // Number 35 (hex 23), 
+ // 'P' Change Parameter
+ // Number 35 (hex 23),
  // Set flag to 1 enabling group mode.
  ////////////////////////////////////////////////////////////////
   char buff[3];
