@@ -116,9 +116,9 @@ public:
       return mUnitNum;
    }
 
-   static std::string getChunkType() { return "DigProxy"; }
+   static std::string getElementType();
 
-   bool config(jccl::ConfigChunkPtr chunk);
+   bool config(jccl::ConfigElementPtr element);
 
    virtual Input* getProxiedInputDevice()
    {

@@ -39,7 +39,7 @@
 
 #include <gadget/InputManager.h>
 #include <gadget/Type/Input.h>
-#include <jccl/Config/ConfigChunk.h>
+#include <jccl/Config/ConfigElement.h>
 #include <gadget/Util/Debug.h>
 
 namespace gadget
@@ -71,9 +71,9 @@ namespace gadget
        * @post Proxy is configured (it is not registered yet though).
        * @return success.
        */
-      virtual bool config(jccl::ConfigChunkPtr chunk)
+      virtual bool config(jccl::ConfigElementPtr element)
       {
-         mName = chunk->getFullName();
+         mName = element->getFullName();
          return true;
       }
 
@@ -95,10 +95,10 @@ namespace gadget
       virtual Input* getProxiedInputDevice() = 0;
 
       /**
-       * Returns the string rep of the chunk type used to config this device.
-       * Used by the Input Manager to find chunks that construct devices.
+       * Returns the string rep of the element type used to config this device.
+       * Used by the Input Manager to find elements that construct devices.
        */
-      static std::string getChunkType()
+      static std::string getElementType()
       {
          return "Undefined";
       }

@@ -29,15 +29,18 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-
 package org.vrjuggler.gadget.tweekgadget;
 
-import java.io.IOException;
+import java.awt.*;
+import javax.swing.*;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.StringTokenizer;
 import org.omg.CORBA.BAD_PARAM;
 import org.vrjuggler.jccl.config.*;
+import org.vrjuggler.jccl.config.io.*;
 import org.vrjuggler.tweek.beans.FileLoader;
 import org.vrjuggler.tweek.net.*;
 import org.vrjuggler.tweek.net.corba.*;
@@ -45,8 +48,6 @@ import org.vrjuggler.tweek.services.EnvironmentService;
 import org.vrjuggler.tweek.services.ExtensionFileFilter;
 import tweek.Subject;
 import gadget.*;
-import javax.swing.*;
-import java.awt.*;
 
 
 public class TweekGadgetGUI
@@ -55,19 +56,7 @@ public class TweekGadgetGUI
 {
    public TweekGadgetGUI()
    {
-      String desc_file = "${VJ_BASE_DIR}/share/vrjuggler/data/vrj-chunks.desc";
-      String full_desc_file = EnvironmentService.expandEnvVars(desc_file);
-      ChunkDescDB desc_db = new ChunkDescDB();
-
-      try
-      {
-         desc_db.build(new java.io.File(full_desc_file));
-         ChunkFactory.setDescs(desc_db.getAll());
-      }
-      catch (IOException ex)
-      {
-         System.err.println("Shit!");
-      }
+      initRepository();
 
       try
       {
@@ -77,6 +66,99 @@ public class TweekGadgetGUI
       {
          e.printStackTrace();
       }
+   }
+
+   /**
+    * Fills the repository with all the definitions it can find in the
+    * configuration definition search path.
+    */
+   private void initRepository()
+   {
+      mRepos = new ConfigDefinitionRepository();
+
+      // Get a list of the definition files to load
+      List def_file_list = new ArrayList();
+      List def_path = getDefinitionPath();
+      for (Iterator itr = def_path.iterator(); itr.hasNext(); )
+      {
+         // Check if this part of the path is a valid directory we can read
+         String dir_name = (String)itr.next();
+         File dir = new File(dir_name);
+         if (dir.exists() && dir.isDirectory() && dir.canRead())
+         {
+            // Get a list of all the config definition files in the directory
+            File[] def_files = dir.listFiles(new FilenameFilter()
+            {
+               public boolean accept(File dir, String file)
+               {
+                  // Only accept files with a .jdef extension
+                  if (file.endsWith(".jdef"))
+                  {
+                     File def_file = new File(dir, file);
+                     if (def_file.canRead())
+                     {
+                        return true;
+                     }
+                  }
+                  return false;
+               }
+            });
+
+            // Add the files to the list of files to load
+            for (int i=0; i<def_files.length; ++i)
+            {
+               def_file_list.add(def_files[i]);
+            }
+         }
+      }
+
+      // Load in the definitions for each file and place them in the repository
+      for (Iterator itr = def_file_list.iterator(); itr.hasNext(); )
+      {
+         try
+         {
+            // Attempt to load in the definitions in the file
+            File def_file = (File)itr.next();
+            ConfigDefinitionReader reader = new ConfigDefinitionReader(def_file);
+            List defs = reader.readDefinition();
+            for (Iterator def_itr = defs.iterator(); def_itr.hasNext(); )
+            {
+               ConfigDefinition def = (ConfigDefinition)def_itr.next();
+               mRepos.add(def);
+            }
+         }
+         catch (ParseException pe)
+         {
+            pe.printStackTrace();
+         }
+         catch (IOException ioe)
+         {
+            ioe.printStackTrace();
+         }
+      }
+   }
+
+   /**
+    * Gets a list of the directories in which to look for configuration
+    * definitions.
+    */
+   private List getDefinitionPath()
+   {
+      List dirs = new ArrayList();
+
+      // Get the path from the environment
+      String default_path = "${VJ_BASE_DIR}/share/vrjuggler/data/definitions";
+      String path = System.getProperty("JCCL_DEFINITION_PATH", default_path);
+      path = EnvironmentService.expandEnvVars(path);
+
+      // Split the path on the path separator
+      StringTokenizer tokenizer = new StringTokenizer(path, File.pathSeparator);
+      while (tokenizer.hasMoreTokens())
+      {
+         dirs.add(tokenizer.nextToken());
+      }
+
+      return dirs;
    }
 
    public String getFileType()
@@ -97,8 +179,7 @@ public class TweekGadgetGUI
       chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
 
       ExtensionFileFilter filter = new ExtensionFileFilter("JCCL Config Files");
-      filter.addExtension("config");
-      filter.addExtension("cfg");
+      filter.addExtension("jconf");
       chooser.addChoosableFileFilter(filter);
 
       int status = chooser.showOpenDialog(this);
@@ -107,14 +188,16 @@ public class TweekGadgetGUI
       {
          try
          {
-            mConfigFile.build(chooser.getSelectedFile());
+            ConfigurationReader reader = new ConfigurationReader(chooser.getSelectedFile(),
+                                                                 mRepos);
+            mConfig = reader.readConfiguration();
             SwingUtilities.invokeLater(new Runnable()
             {
                public void run()
                {
                   List elts =
-                     ConfigUtilities.getChunksWithDescToken(mConfigFile.getAll(),
-                                                            mLayoutConfigType);
+                     ConfigUtilities.getElementsWithDefinition(mConfig.getElements(),
+                                                               mLayoutConfigType);
                   fillInGUI(elts);
                }
             });
@@ -123,6 +206,13 @@ public class TweekGadgetGUI
          {
             JOptionPane.showMessageDialog(null, "Failed to load config file: '" +
                                           ioEx.getMessage() + "'",
+                                          "I/O Error",
+                                          JOptionPane.ERROR_MESSAGE);
+         }
+         catch (ParseException pe)
+         {
+            JOptionPane.showMessageDialog(null, "Failed to load config file: '" +
+                                          pe.getMessage() + "'",
                                           "I/O Error",
                                           JOptionPane.ERROR_MESSAGE);
          }
@@ -196,16 +286,16 @@ public class TweekGadgetGUI
    protected void fillInGUI(List elements)
    {
       Iterator i = elements.iterator();
-      ConfigChunk cur_elem;
+      ConfigElement cur_elem;
       TweekDigitalButton button;
 
       while ( i.hasNext() )
       {
-         cur_elem = (ConfigChunk) i.next();
+         cur_elem = (ConfigElement) i.next();
 
-         for ( int j = 0; j < cur_elem.getNumPropertyValues("digitalDevice"); ++j )
+         for ( int j = 0; j < cur_elem.getPropertyValueCount("digital_device"); ++j )
          {
-            String ptr_name = (String)cur_elem.getProperty("digitalDevice", j);
+            String ptr_name = (String)cur_elem.getProperty("digital_device", j);
             int index = ptr_name.lastIndexOf("/");
             String subj_name = null;
 
@@ -257,10 +347,10 @@ public class TweekGadgetGUI
       mTitlePanel.add(mTitleLabel, null);
    }
 
-   private static String mLayoutConfigType = "TweekGadgetGUI";
+   private static String mLayoutConfigType = "tweek_gadget_gui";
 
    private int openFileCount = 0;
-   private ConfigChunkDB mConfigFile   = new ConfigChunkDB();
+   private Configuration mConfig;
    private CorbaService  mCorbaService = null;
    private List          mPosDevs      = new ArrayList();
    private List          mDigitalDevs  = new ArrayList();
@@ -269,4 +359,6 @@ public class TweekGadgetGUI
    private JPanel mTitlePanel = new JPanel();
    private BorderLayout mTopLayout = new BorderLayout();
    private JLabel mTitleLabel = new JLabel();
+
+   private ConfigDefinitionRepository mRepos;
 }

@@ -73,12 +73,12 @@ public:
    virtual ~TweekGadget();
 
    /**
-    * Configures this Tweek "device" with the given chunk.  Based on the
+    * Configures this Tweek "device" with the given element.  Based on the
     * configuration, steps will be taken to initliaze the Tweek CORBA server
     * side.  Subject servants will be created and registered for each of the
     * requested devices.
     */
-   virtual bool config(jccl::ConfigChunkPtr c);
+   virtual bool config(jccl::ConfigElementPtr e);
 
    /**
     */
@@ -101,10 +101,7 @@ public:
       return mTweekRunning;
    }
 
-   static std::string getChunkType()
-   {
-      return std::string("TweekGadget");
-   }
+   static std::string getElementType();
 
    /**
     * Invokes the global scope delete operator.  This is required for proper

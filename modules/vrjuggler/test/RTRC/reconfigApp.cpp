@@ -74,7 +74,7 @@ void reconfigApp::init()
    mTesting = false;
    mFinished = false;
 
-   mNewChunkDB = NULL;
+   mNewCfg = NULL;
 }
 
 void reconfigApp::contextInit()
@@ -372,57 +372,57 @@ void reconfigApp::setPath( std::string path )
 }
 
 
-bool reconfigApp::addChunkFile( std::string filename )
+bool reconfigApp::addElementFile( std::string filename )
 {
-   //Attempt to load a new config chunk
-   if (mNewChunkDB != NULL) delete mNewChunkDB;
+   //Attempt to load a new config element
+   if (mNewCfg != NULL) delete mNewCfg;
 
-   mNewChunkDB = new jccl::ConfigChunkDB;
+   mNewCfg = new jccl::Configuration;
 
-   if (mNewChunkDB->load( std::string( filename )))
+   if (mNewCfg->load( std::string( filename )))
    {
-      jccl::ConfigManager::instance()->addPendingAdds( mNewChunkDB );
+      jccl::ConfigManager::instance()->addPendingAdds( mNewCfg );
       return true;
    }
    else
    {
       std::cout << "\tError: Failed to load config file: " << filename << std::endl << std::flush;
-      delete mNewChunkDB;
-      mNewChunkDB = NULL;
+      delete mNewCfg;
+      mNewCfg = NULL;
       return false;
    }
 }
 
-bool reconfigApp::removeChunkFile( std::string filename )
+bool reconfigApp::removeElementFile( std::string filename )
 {
-   //Attempt to load a new config chunk
-   if (mNewChunkDB != NULL) delete mNewChunkDB;
+   //Attempt to load a new config element
+   if (mNewCfg != NULL) delete mNewCfg;
 
-   mNewChunkDB = new jccl::ConfigChunkDB;
+   mNewCfg = new jccl::Configuration;
 
-   if (mNewChunkDB->load( std::string( filename )))
+   if (mNewCfg->load( std::string( filename )))
    {
-      jccl::ConfigManager::instance()->addPendingRemoves( mNewChunkDB );
+      jccl::ConfigManager::instance()->addPendingRemoves( mNewCfg );
       return true;
    }
    else
    {
       std::cout << "\tError: Failed to load config file: " << filename << std::endl << std::flush;
-      delete mNewChunkDB;
-      mNewChunkDB = NULL;
+      delete mNewCfg;
+      mNewCfg = NULL;
       return false;
    }
 }
 
-bool reconfigApp::swapChunkFiles( std::string remove_file, std::string add_file )
+bool reconfigApp::swapElementFiles( std::string remove_file, std::string add_file )
 {
-   if (!removeChunkFile( remove_file ))
+   if (!removeElementFile( remove_file ))
    {
       std::cout << "\tError: Could not remove config file " << remove_file << "\n" << std::flush;
       return false;
    }
 
-   if (!addChunkFile( add_file ))
+   if (!addElementFile( add_file ))
    {
       std::cout << "\tError: Could not add config file " << add_file << "\n" << std::flush;
       return false;
@@ -432,16 +432,16 @@ bool reconfigApp::swapChunkFiles( std::string remove_file, std::string add_file 
 
 }
 
-bool reconfigApp::removeRecentChunkDB()
+bool reconfigApp::removeRecentConfiguration()
 {
-   if (mNewChunkDB != NULL)
+   if (mNewCfg != NULL)
    {
-      jccl::ConfigManager::instance()->addPendingRemoves( mNewChunkDB );
+      jccl::ConfigManager::instance()->addPendingRemoves( mNewCfg );
       return true;
    }
    else
    {
-      std::cout << "\tError: Cannot remove a NULL chunk db\n" << std::flush;
+      std::cout << "\tError: Cannot remove a NULL configuration\n" << std::flush;
       return false;
    }
 }
@@ -577,14 +577,15 @@ bool reconfigApp::verifyDisplayProps(  vrj::Display* disp,
 }
 
 
-bool reconfigApp::verifyAllViewports( vrj::Display* display, jccl::ConfigChunkPtr viewportChunk )
+bool reconfigApp::verifyAllViewports( vrj::Display* display, jccl::ConfigElementPtr viewportElement )
 {
-   //Check to see if this viewport chunk matches with ANY of the display's viewports
+   //Check to see if this viewport element matches with ANY of the display's
+   //viewports
    bool status = false;
    for (unsigned int i=0; i < display->getNumViewports(); i++)
    {
       vrj::Viewport* viewport = display->getViewport( i );
-      if (verifyViewport( viewport, viewportChunk ))
+      if (verifyViewport( viewport, viewportElement ))
       {
          status = true;
       }
@@ -593,30 +594,33 @@ bool reconfigApp::verifyAllViewports( vrj::Display* display, jccl::ConfigChunkPt
    return status;
 }
 
-bool reconfigApp::verifyViewport( vrj::Viewport* viewport, jccl::ConfigChunkPtr viewportChunk )
+bool reconfigApp::verifyViewport( vrj::Viewport* viewport,
+                                   jccl::ConfigElementPtr viewportElement )
 {
    //Verify that the display object has the specified viewport
 
-   //First, get the properties from the config chunk
-   std::string viewportName = viewportChunk->getName();
+   //First, get the properties from the config element
+   std::string viewportName = viewportElement->getName();
 
    //Get origin values
-   if (viewportChunk->getNum( "origin" ) < 2 )
+   if (viewportElement->getNum( "origin" ) < 2 )
    {
-      std::cout << "\tError: viewport chunk named " << viewportName << " doesn't have origin properties\n" << std::flush;
+      std::cout << "\tError: viewport element named " << viewportName
+                << " doesn't have origin properties\n" << std::flush;
       return false;
    }
-   float x_origin = viewportChunk->getProperty<float>("origin", 0);
-   float y_origin = viewportChunk->getProperty<float>("origin", 1);
+   float x_origin = viewportElement->getProperty<float>("origin", 0);
+   float y_origin = viewportElement->getProperty<float>("origin", 1);
 
    //Get size values
-   if (viewportChunk->getNum( "size" ) < 2 )
+   if (viewportElement->getNum( "size" ) < 2 )
    {
-      std::cout << "\tError: viewport chunk named " << viewportName << " doesn't have size properties\n" << std::flush;
+      std::cout << "\tError: viewport element named " << viewportName
+                << " doesn't have size properties\n" << std::flush;
       return false;
    }
-   float x_size = viewportChunk->getProperty<float>("size", 0);
-   float y_size = viewportChunk->getProperty<float>("size", 1);
+   float x_size = viewportElement->getProperty<float>("size", 0);
+   float y_size = viewportElement->getProperty<float>("size", 1);
 
    //TEST size and origin
    float xo, xs, yo, ys;
@@ -628,12 +632,13 @@ bool reconfigApp::verifyViewport( vrj::Viewport* viewport, jccl::ConfigChunkPtr 
    }
 
    //Get view property
-   if (viewportChunk->getNum( "view" ) < 1 )
+   if (viewportElement->getNum( "view" ) < 1 )
    {
-      std::cout << "\tError: viewport chunk named " << viewportName << " doesn't have view properties\n" << std::flush;
+      std::cout << "\tError: viewport element named " << viewportName
+                << " doesn't have view properties\n" << std::flush;
       return false;
    }
-   int view_num = viewportChunk->getProperty<int>("view", 0);
+   int view_num = viewportElement->getProperty<int>("view", 0);
 
    //TEST view prop
    if (view_num != viewport->getView())
@@ -644,23 +649,25 @@ bool reconfigApp::verifyViewport( vrj::Viewport* viewport, jccl::ConfigChunkPtr 
 
 
    //Get cameraPos property
-   if (viewportChunk->getNum( "cameraPos" ) < 1 )
+   if (viewportElement->getNum( "camera_pos" ) < 1 )
    {
-      std::cout << "\tError: viewport chunk named " << viewportName << " doesn't have cameraPos properties\n" << std::flush;
+      std::cout << "\tError: viewport element named " << viewportName
+                << " doesn't have cameraPos properties\n" << std::flush;
       return false;
    }
-   std::string cameraPos = viewportChunk->getProperty<std::string>("cameraPos", 0);
+   std::string cameraPos = viewportElement->getProperty<std::string>("camera_pos", 0);
 
    //TEST cameraPos property
    //There is no camera position property for the vrj::Viewport object
 
    //Get user property
-   if (viewportChunk->getNum( "user" ) < 1 )
+   if (viewportElement->getNum( "user" ) < 1 )
    {
-      std::cout << "\tError: viewport chunk named " << viewportName << " doesn't have user properties\n" << std::flush;
+      std::cout << "\tError: viewport element named " << viewportName
+                << " doesn't have user properties\n" << std::flush;
       return false;
    }
-   std::string username = viewportChunk->getProperty<std::string>("user", 0);
+   std::string username = viewportElement->getProperty<std::string>("user", 0);
    if (viewport->getUser()->getName() != username)
    {
       std::cout << "\tError: viewport has incorrect user name\n" << std::flush;
@@ -668,22 +675,24 @@ bool reconfigApp::verifyViewport( vrj::Viewport* viewport, jccl::ConfigChunkPtr 
    }
 
    //Get wandPos
-   if (viewportChunk->getNum( "wandPos" ) < 1 )
+   if (viewportElement->getNum( "wand_pos" ) < 1 )
    {
-      std::cout << "\tError: viewport chunk named " << viewportName << " doesn't have wandPos properties\n" << std::flush;
+      std::cout << "\tError: viewport element named " << viewportName
+                << " doesn't have wandPos properties\n" << std::flush;
       return false;
    }
-   std::string wandPos = viewportChunk->getProperty<std::string>("wandPos", 0);
+   std::string wandPos = viewportElement->getProperty<std::string>("wand_pos", 0);
    //TEST wandPos property
    //There is no wand position property for the vrj::Viewport object
 
    //Get active
-   if (viewportChunk->getNum( "active" ) < 1 )
+   if (viewportElement->getNum( "active" ) < 1 )
    {
-      std::cout << "\tError: viewport chunk named " << viewportName << " doesn't have cameraPos properties\n" << std::flush;
+      std::cout << "\tError: viewport element named " << viewportName
+                << " doesn't have cameraPos properties\n" << std::flush;
       return false;
    }
-   bool active = (viewportChunk->getProperty<int>("active", 0) == 1 ? true : false );
+   bool active = (viewportElement->getProperty<int>("active", 0) == 1 ? true : false );
 
    if (viewport->isActive() != active)
    {
@@ -692,39 +701,42 @@ bool reconfigApp::verifyViewport( vrj::Viewport* viewport, jccl::ConfigChunkPtr 
    }
 
    //drawProjections
-   if (viewportChunk->getNum( "drawProjections" ) < 1 )
+   if (viewportElement->getNum( "draw_projections" ) < 1 )
    {
-      std::cout << "\tError: viewport chunk named " << viewportName << " doesn't have drawProjections properties\n" << std::flush;
+      std::cout << "\tError: viewport element named " << viewportName
+                << " doesn't have drawProjections properties\n" << std::flush;
       return false;
    }
-   bool drawProjections = viewportChunk->getProperty<bool>("drawProjections");
+   bool drawProjections = viewportElement->getProperty<bool>("draw_projections");
    boost::ignore_unused_variable_warning(drawProjections);
    //TEST drawProjections property
    //There is no test for this property
 
 
    //surfaceColor x 3
-   if (viewportChunk->getNum( "surfaceColor" ) < 3 )
+   if (viewportElement->getNum( "surface_color" ) < 3 )
    {
-      std::cout << "\tError: viewport chunk named " << viewportName << " doesn't have surfaceColor properties\n" << std::flush;
+      std::cout << "\tError: viewport element named " << viewportName
+                << " doesn't have surfaceColor properties\n" << std::flush;
       return false;
    }
    float color[3];
-   color[0] = viewportChunk->getProperty<float>("surfaceColor", 0);
-   color[1] = viewportChunk->getProperty<float>("surfaceColor", 1);
-   color[2] = viewportChunk->getProperty<float>("surfaceColor", 2);
+   color[0] = viewportElement->getProperty<float>("surface_color", 0);
+   color[1] = viewportElement->getProperty<float>("surface_color", 1);
+   color[2] = viewportElement->getProperty<float>("surface_color", 2);
 
    std::cout << "R:" << color[0] << "G:" << color[1] << "B:" << color[2] << std::endl;
    
    //Also no test for this
    
    //vert_fov
-   if (viewportChunk->getNum( "vert_fov" ) < 1 )
+   if (viewportElement->getNum( "vertical_fov" ) < 1 )
    {
-      std::cout << "\tError: viewport chunk named " << viewportName << " doesn't have vert_fov properties\n" << std::flush;
+      std::cout << "\tError: viewport element named " << viewportName
+                << " doesn't have vert_fov properties\n" << std::flush;
       return false;
    }
-   float vert_fov = viewportChunk->getProperty<float>("vert_fov", 0);
+   float vert_fov = viewportElement->getProperty<float>("vertical_fov", 0);
    boost::ignore_unused_variable_warning(vert_fov);
 
    //Also no test for this
@@ -735,113 +747,123 @@ bool reconfigApp::verifyViewport( vrj::Viewport* viewport, jccl::ConfigChunkPtr 
 
 bool reconfigApp::verifyDisplayFile( std::string filename )
 {
-   //Assume that the file given has the displayWindow chunk in it
+   //Assume that the file given has the displayWindow element in it
    //Load up the given file
-   jccl::ConfigChunkDB fileDB ; fileDB.load( filename );
-   std::vector<jccl::ConfigChunkPtr> windowChunks;
-   std::vector<jccl::ConfigChunkPtr> machineChunks;
-   std::vector<jccl::ConfigChunkPtr> machineSpecificChunks;
-   fileDB.getByType( "displayWindow", windowChunks );
-   fileDB.getByType( "machineSpecific", machineChunks );
-   for (unsigned int i=0; i < machineChunks.size(); i++)
+   jccl::Configuration fileDB ; fileDB.load( filename );
+   std::vector<jccl::ConfigElementPtr> windowElements;
+   std::vector<jccl::ConfigElementPtr> machineElements;
+   std::vector<jccl::ConfigElementPtr> machineSpecificElements;
+   fileDB.getByType( "display_window", windowElements );
+   fileDB.getByType( "machine_specific", machineElements );
+   for (unsigned int i=0; i < machineElements.size(); i++)
    {
-      machineSpecificChunks = windowChunks[i]->getEmbeddedChunks();
-      for (unsigned int j=0; j < machineSpecificChunks.size(); j++)
+      machineSpecificElements = windowElements[i]->getChildElements();
+      for (unsigned int j=0; j < machineSpecificElements.size(); j++)
       {
-         if (machineSpecificChunks[j]->getDescToken() == "displayWindow")
+         if (machineSpecificElements[j]->getID() == "display_window")
          {
             std::cout << "Adding an embedded display to the list to test named: "
-               << machineSpecificChunks[j]->getName() << std::endl;
-            windowChunks.push_back(machineSpecificChunks[j]);
+               << machineSpecificElements[j]->getName() << std::endl;
+            windowElements.push_back(machineSpecificElements[j]);
          }
       }
    }
 
    //Verify EACH display in the file
-   for (unsigned int i=0; i < windowChunks.size(); i++)
+   for (unsigned int i=0; i < windowElements.size(); i++)
    {
       //Get its attributes
-      std::string displayName = windowChunks[i]->getName();
+      std::string displayName = windowElements[i]->getName();
 
       //Get the display with the same name from the DisplayManager
       //and make sure it exists first
       vrj::Display* display = getDisplay( displayName );
       if (display == NULL)
       {
-         std::cout << "\tError: display chunk named " << displayName << " is not in the display manager\n" << std::flush;
+         std::cout << "\tError: display element named " << displayName
+                   << " is not in the display manager\n" << std::flush;
          return false;
       }
 
       //Get origin values
-      if (windowChunks[i]->getNum( "origin" ) < 2 )
+      if (windowElements[i]->getNum( "origin" ) < 2 )
       {
-         std::cout << "\tError: display chunk named " << displayName << " doesn't have origin properties\n" << std::flush;
+         std::cout << "\tError: display element named " << displayName
+                   << " doesn't have origin properties\n" << std::flush;
          return false;
       }
-      int x_origin = windowChunks[i]->getProperty<int>("origin", 0);
-      int y_origin = windowChunks[i]->getProperty<int>("origin", 1);
+      int x_origin = windowElements[i]->getProperty<int>("origin", 0);
+      int y_origin = windowElements[i]->getProperty<int>("origin", 1);
 
       //Get size values
-      if (windowChunks[i]->getNum( "size" ) < 2 )
+      if (windowElements[i]->getNum( "size" ) < 2 )
       {
-         std::cout << "\tError: display chunk named " << displayName << " doesn't have size properties\n" << std::flush;
+         std::cout << "\tError: display element named " << displayName
+                   << " doesn't have size properties\n" << std::flush;
          return false;
       }
-      int x_size = windowChunks[i]->getProperty<int>("size", 0);
-      int y_size = windowChunks[i]->getProperty<int>("size", 1);
+      int x_size = windowElements[i]->getProperty<int>("size", 0);
+      int y_size = windowElements[i]->getProperty<int>("size", 1);
 
 
       //Get pipe number
-      if (windowChunks[i]->getNum( "pipe" ) < 1 )
+      if (windowElements[i]->getNum( "pipe" ) < 1 )
       {
-         std::cout << "\tError: display chunk named " << displayName << " doesn't have pipe property\n" << std::flush;
+         std::cout << "\tError: display element named " << displayName
+                   << " doesn't have pipe property\n" << std::flush;
          return false;
       }
-      int pipe_num = windowChunks[i]->getProperty<int>( "pipe" );
+      int pipe_num = windowElements[i]->getProperty<int>( "pipe" );
 
       //Get stereo value
-      if (windowChunks[i]->getNum( "stereo" ) < 1 )
+      if (windowElements[i]->getNum( "stereo" ) < 1 )
       {
-         std::cout << "\tError: display chunk named " << displayName << " doesn't have stereo property\n" << std::flush;
+         std::cout << "\tError: display element named " << displayName
+                   << " doesn't have stereo property\n" << std::flush;
          return false;
       }
-      bool stereo = (windowChunks[i]->getProperty<int>( "stereo" ) == 1 ? true : false );
+      bool stereo = (windowElements[i]->getProperty<int>( "stereo" ) == 1 ? true : false );
 
       //Get border value
-      if (windowChunks[i]->getNum( "border" ) < 1 )
+      if (windowElements[i]->getNum( "border" ) < 1 )
       {
-         std::cout << "\tError: display chunk named " << displayName << " doesn't have border property\n" << std::flush;
+         std::cout << "\tError: display element named " << displayName
+                   << " doesn't have border property\n" << std::flush;
          return false;
       }
-      bool border = (windowChunks[i]->getProperty<int>( "border" ) == 1 ? true : false );
+      bool border = (windowElements[i]->getProperty<int>( "border" ) == 1 ? true : false );
 
       //Get active value
-      if (windowChunks[i]->getNum( "active" ) < 1 )
+      if (windowElements[i]->getNum( "active" ) < 1 )
       {
-         std::cout << "\tError: display chunk named " << displayName << " doesn't have active property\n" << std::flush;
+         std::cout << "\tError: display element named " << displayName
+                   << " doesn't have active property\n" << std::flush;
          return false;
       }
-      bool active = (windowChunks[i]->getProperty<int>( "active" ) == 1 ? true : false );
+      bool active = (windowElements[i]->getProperty<int>( "active" ) == 1 ? true : false );
 
       //Verify the number of viewports
-      if (unsigned(windowChunks[i]->getNum("sim_viewports")) != unsigned(display->getNumViewports()))
+      if (unsigned(windowElements[i]->getNum("simulator_viewports")) != unsigned(display->getNumViewports()))
       {
-         std::cout << "\tError: display chunk named " << displayName << " has the wrong number of viewports\n" << std::flush;
+         std::cout << "\tError: display element named " << displayName
+                   << " has the wrong number of viewports\n" << std::flush;
          return false;
       }
 
       //Verify all of the viewports
-      for (int j=0; j < windowChunks[i]->getNum( "sim_viewports" ); j++)
+      for (int j=0; j < windowElements[i]->getNum( "simulator_viewports" ); j++)
       {
-         jccl::ConfigChunkPtr viewlist = windowChunks[i]->getProperty<jccl::ConfigChunkPtr>("sim_viewports", j);
+         jccl::ConfigElementPtr viewlist = windowElements[i]->getProperty<jccl::ConfigElementPtr>("simulator_viewports", j);
 
-         //Get the actual simViewport chunk and check if it really contains any viewports
-         if (viewlist->getNum("simViewport") > 0)
+         //Get the actual simViewport element and check if it really contains
+         //any viewports
+         if (viewlist->getNum("simulator_viewport") > 0)
          {
-            jccl::ConfigChunkPtr viewport = viewlist->getProperty<jccl::ConfigChunkPtr>("simViewport", 0);
+            jccl::ConfigElementPtr viewport = viewlist->getProperty<jccl::ConfigElementPtr>("simulator_viewport", 0);
             if (!verifyAllViewports( display, viewport ))
             {
-               std::cout << "\tError: display chunk named " << displayName << " has an incorrect viewport\n" << std::flush;
+               std::cout << "\tError: display element named " << displayName
+                         << " has an incorrect viewport\n" << std::flush;
                return false;
             }
          }
@@ -863,7 +885,7 @@ TEST SUITE FUNCTIONS
 bool reconfigApp::addMachineSpecific_exec()
 {
    std::cout << "Beginning test for adding machine specific graphics windows...\n" << std::flush;
-   return addChunkFile( mPath + "sim.ms.01.config" );
+   return addElementFile( mPath + "sim.ms.01.config" );
 }
 
 bool reconfigApp::addMachineSpecific_check()
@@ -876,27 +898,30 @@ bool reconfigApp::addMachineSpecific_check()
 bool reconfigApp::removeMachineSpecific_exec()
 {
    std::cout << "Beginning test for removing machine specific graphics windows...\n" << std::flush;
-   return removeChunkFile( mPath + "sim.ms.01.config" );
+   return removeElementFile( mPath + "sim.ms.01.config" );
 }
 
 bool reconfigApp::removeMachineSpecific_check()
 {
 
    //Load up the given file
-   jccl::ConfigChunkDB fileDB ; fileDB.load( mPath + "sim.extradisplay.01.config" );
-   std::vector<jccl::ConfigChunkPtr> windowChunks;
-   fileDB.getByType( "displayWindow", windowChunks );
+   jccl::Configuration fileDB;
+   fileDB.load( mPath + "sim.extradisplay.01.config" );
+   std::vector<jccl::ConfigElementPtr> windowElements;
+   fileDB.getByType( "display_window", windowElements );
 
-   if (windowChunks.size() != 1)
+   if (windowElements.size() != 1)
    {
-      std::cout << "\tError: the display config chunk file contains " << windowChunks.size() << " displays (should be 1)\n" << std::flush;
+      std::cout << "\tError: the display config element file contains "
+                << windowElements.size() << " displays (should be 1)\n"
+                << std::flush;
       return false;
    }
 
-   vrj::Display* display = getDisplay(windowChunks[0]->getName());
+   vrj::Display* display = getDisplay(windowElements[0]->getName());
    if (display != NULL)
    {
-      std::cout << "\tError: there is still a display in the system named " << windowChunks[0]->getName() << "\n" << std::flush;
+      std::cout << "\tError: there is still a display in the system named " << windowElements[0]->getName() << "\n" << std::flush;
       return false;
    }
 
@@ -908,7 +933,7 @@ bool reconfigApp::removeMachineSpecific_check()
 bool reconfigApp::addGFXWindow_exec()
 {
    std::cout << "Beginning test for adding a graphics window...\n" << std::flush;
-   return addChunkFile( mPath + "sim.extradisplay.01.config" );
+   return addElementFile( mPath + "sim.extradisplay.01.config" );
 }
 
 bool reconfigApp::addGFXWindow_check()
@@ -921,27 +946,30 @@ bool reconfigApp::addGFXWindow_check()
 bool reconfigApp::removeGFXWindow_exec()
 {
    std::cout << "Beginning test for removing a graphics window...\n" << std::flush;
-   return removeChunkFile( mPath + "sim.extradisplay.01.config" );
+   return removeElementFile( mPath + "sim.extradisplay.01.config" );
 }
 
 bool reconfigApp::removeGFXWindow_check()
 {
 
    //Load up the given file
-   jccl::ConfigChunkDB fileDB ; fileDB.load( mPath + "sim.extradisplay.01.config" );
-   std::vector<jccl::ConfigChunkPtr> windowChunks;
-   fileDB.getByType( "displayWindow", windowChunks );
+   jccl::Configuration fileDB;
+   fileDB.load( mPath + "sim.extradisplay.01.config" );
+   std::vector<jccl::ConfigElementPtr> windowElements;
+   fileDB.getByType( "display_window", windowElements );
 
-   if (windowChunks.size() != 1)
+   if (windowElements.size() != 1)
    {
-      std::cout << "\tError: the display config chunk file contains " << windowChunks.size() << " displays (should be 1)\n" << std::flush;
+      std::cout << "\tError: the display config element file contains "
+                << windowElements.size() << " displays (should be 1)\n"
+                << std::flush;
       return false;
    }
 
-   vrj::Display* display = getDisplay(windowChunks[0]->getName());
+   vrj::Display* display = getDisplay(windowElements[0]->getName());
    if (display != NULL)
    {
-      std::cout << "\tError: there is still a display in the system named " << windowChunks[0]->getName() << "\n" << std::flush;
+      std::cout << "\tError: there is still a display in the system named " << windowElements[0]->getName() << "\n" << std::flush;
       return false;
    }
 
@@ -953,8 +981,8 @@ bool reconfigApp::readdGFXWindow_exec()
 {
    std::cout << "Beginning test for readding a graphics window...\n" << std::flush;
 
-   return (   addChunkFile( mPath + "sim.extradisplay.01.config" )
-           && addChunkFile( mPath + "sim.extradisplay.02.config" ));
+   return (   addElementFile( mPath + "sim.extradisplay.01.config" )
+           && addElementFile( mPath + "sim.extradisplay.02.config" ));
 }
 
 bool reconfigApp::readdGFXWindow_check()
@@ -967,7 +995,7 @@ bool reconfigApp::resizeGFXWindow_exec()
 {
    std::cout << "Beginning test for resizing a graphics window...\n" << std::flush;
 
-   return swapChunkFiles( mPath + "sim.extradisplay.02.config",
+   return swapElementFiles( mPath + "sim.extradisplay.02.config",
                           mPath + "sim.extradisplay.02.resize.config" );
 
 }
@@ -981,7 +1009,7 @@ bool reconfigApp::moveGFXWindow_exec()
 {
    std::cout << "Beginning test for moving a graphics window...\n" << std::flush;
 
-   return swapChunkFiles( mPath + "sim.extradisplay.01.config",
+   return swapElementFiles( mPath + "sim.extradisplay.01.config",
                           mPath + "sim.extradisplay.01.move.config" );
 }
 
@@ -994,7 +1022,7 @@ bool reconfigApp::addViewport_exec()
 {
    std::cout << "Beginning test for adding a viewport to a display window...\n" << std::flush;
 
-   return swapChunkFiles( mPath + "sim.extradisplay.02.resize.config",
+   return swapElementFiles( mPath + "sim.extradisplay.02.resize.config",
                           mPath + "sim.extradisplay.02.twoviews.config" );
 }
 
@@ -1007,7 +1035,7 @@ bool reconfigApp::removeViewport_exec()
 {
    std::cout << "Beginning test for removing a viewport from a graphics window...\n" << std::flush;
 
-   return swapChunkFiles( mPath + "sim.extradisplay.02.twoviews.config",
+   return swapElementFiles( mPath + "sim.extradisplay.02.twoviews.config",
                           mPath + "sim.extradisplay.02.oneview.config" );
 }
 
@@ -1020,7 +1048,7 @@ bool reconfigApp::resizeViewport_exec()
 {
    std::cout << "Beginning test for resizing a viewport...\n" << std::flush;
 
-   return swapChunkFiles( mPath + "sim.extradisplay.02.oneview.config",
+   return swapElementFiles( mPath + "sim.extradisplay.02.oneview.config",
                           mPath + "sim.extradisplay.02.largerview.config" );
 }
 
@@ -1033,7 +1061,7 @@ bool reconfigApp::moveViewport_exec()
 {
    std::cout << "Beginning test for moving a viewport...\n" << std::flush;
 
-   return swapChunkFiles( mPath + "sim.extradisplay.02.largerview.config",
+   return swapElementFiles( mPath + "sim.extradisplay.02.largerview.config",
                           mPath + "sim.extradisplay.02.moveview.config" );
 }
 
@@ -1046,27 +1074,28 @@ bool reconfigApp::enableStereoSurface_exec()
 {
    std::cout << "Beginning test for enabling stereo on a surface display...\n" << std::flush;
 
-   return        removeChunkFile( mPath + "sim.extradisplay.02.moveview.config" )
-              && removeChunkFile( mPath + "sim.extradisplay.01.move.config" )
-              && addChunkFile( mPath + "sim.surfacedisplay.01.stereo.config" );
+   return        removeElementFile( mPath + "sim.extradisplay.02.moveview.config" )
+              && removeElementFile( mPath + "sim.extradisplay.01.move.config" )
+              && addElementFile( mPath + "sim.surfacedisplay.01.stereo.config" );
 
 }
 
 bool reconfigApp::enableStereoSurface_check()
 {
    //Load up the given file
-   jccl::ConfigChunkDB fileDB ; fileDB.load( mPath + "sim.surfacedisplay.01.stereo.config" );
-   std::vector<jccl::ConfigChunkPtr> windowChunks;
-   fileDB.getByType( "displayWindow", windowChunks );
+   jccl::Configuration fileDB;
+   fileDB.load( mPath + "sim.surfacedisplay.01.stereo.config" );
+   std::vector<jccl::ConfigElementPtr> windowElements;
+   fileDB.getByType( "display_window", windowElements );
 
-   if (windowChunks.size() < 1)
+   if (windowElements.size() < 1)
    {
-      std::cout << "\tError: There are no display window config chunks in the file\n" << std::flush;
+      std::cout << "\tError: There are no display window config elements in the file\n" << std::flush;
       return false;
    }
 
    //Get the SimSurfaceX01
-   vrj::Display* surfaceDisplay = getDisplay( windowChunks[0]->getName() );
+   vrj::Display* surfaceDisplay = getDisplay( windowElements[0]->getName() );
 
    //If we could not find the window...we have a problem to start with
    if (surfaceDisplay == NULL)
@@ -1078,7 +1107,7 @@ bool reconfigApp::enableStereoSurface_check()
    //Make sure we have one viewport
    if (surfaceDisplay->getNumViewports() != 1)
    {
-      std::cout << "\tError: " << windowChunks[0]->getName() << " has an incorrect number of viewports\n" << std::flush;
+      std::cout << "\tError: " << windowElements[0]->getName() << " has an incorrect number of viewports\n" << std::flush;
       return false;
    }
 
@@ -1098,37 +1127,38 @@ bool reconfigApp::disableStereoSurface_exec()
 {
    std::cout << "Beginning test for disabling stereo on a surface display...\n" << std::flush;
 
-   return swapChunkFiles( mPath + "sim.surfacedisplay.01.stereo.config",
+   return swapElementFiles( mPath + "sim.surfacedisplay.01.stereo.config",
                           mPath + "sim.surfacedisplay.01.mono.config" );
 }
 
 bool reconfigApp::disableStereoSurface_check()
 {
    //Load up the given file
-   jccl::ConfigChunkDB fileDB ; fileDB.load( mPath + "sim.surfacedisplay.01.mono.config" );
-   std::vector<jccl::ConfigChunkPtr> windowChunks;
-   fileDB.getByType( "displayWindow", windowChunks );
+   jccl::Configuration fileDB;
+   fileDB.load( mPath + "sim.surfacedisplay.01.mono.config" );
+   std::vector<jccl::ConfigElementPtr> windowElements;
+   fileDB.getByType( "display_window", windowElements );
 
-   if (windowChunks.size() < 1)
+   if (windowElements.size() < 1)
    {
-      std::cout << "\tError: There are no display window config chunks in the file\n" << std::flush;
+      std::cout << "\tError: There are no display window config elements in the file\n" << std::flush;
       return false;
    }
 
    //Get the SimSurfaceX01
-   vrj::Display* surfaceDisplay = getDisplay( windowChunks[0]->getName() );
+   vrj::Display* surfaceDisplay = getDisplay( windowElements[0]->getName() );
 
    //If we could not find the window...we have a problem to start with
    if (surfaceDisplay == NULL)
    {
-      std::cout << "\tError: Could not find " << windowChunks[0]->getName() << " to check its viewport\n" << std::flush;
+      std::cout << "\tError: Could not find " << windowElements[0]->getName() << " to check its viewport\n" << std::flush;
       return false;
    }
 
    //Make sure we have one viewport
    if (surfaceDisplay->getNumViewports() != 1)
    {
-      std::cout << "\tError: " << windowChunks[0]->getName() << " has an incorrect number of viewports\n" << std::flush;
+      std::cout << "\tError: " << windowElements[0]->getName() << " has an incorrect number of viewports\n" << std::flush;
       return false;
    }
 
@@ -1136,7 +1166,7 @@ bool reconfigApp::disableStereoSurface_check()
 
    if (surfaceViewport->inStereo())
    {
-      std::cout << "\tError: " << windowChunks[0]->getName() << "'s viewport is in stereo\n" << std::flush;
+      std::cout << "\tError: " << windowElements[0]->getName() << "'s viewport is in stereo\n" << std::flush;
       return false;
    }
 
@@ -1149,20 +1179,21 @@ bool reconfigApp::removeKeyboardWin_exec()
 {
    std::cout << "Beginning test for removing a keyboard window...\n" << std::flush;
 
-   //Note that we are assuming ./Chunks/startup/sim.wandkeyboardproxy.config has
+   //Note that we are assuming ./Elements/startup/sim.wandkeyboardproxy.config has
    //already been loaded
 
-   return removeChunkFile( mPath + "startup/sim.wandkeyboard.config" );
+   return removeElementFile( mPath + "startup/sim.wandkeyboard.config" );
 }
 
 bool reconfigApp::removeKeyboardWin_check()
 {
    //First check that the keyboard device no longer exists
-   jccl::ConfigChunkDB fileDB ; fileDB.load( mPath + "startup/sim.wandkeyboard.config" );
-   std::vector<jccl::ConfigChunkPtr> fileChunks;
-   fileDB.getByType( "EventWindow", fileChunks );
+   jccl::Configuration fileDB;
+   fileDB.load( mPath + "startup/sim.wandkeyboard.config" );
+   std::vector<jccl::ConfigElementPtr> fileElements;
+   fileDB.getByType( "event_window", fileElements );
 
-   std::string keyboardName = fileChunks[0]->getName();
+   std::string keyboardName = fileElements[0]->getName();
 
    gadget::EventWindow* keyboard = (gadget::EventWindow*)gadget::InputManager::instance()->getDevice( keyboardName );
 
@@ -1173,27 +1204,28 @@ bool reconfigApp::removeKeyboardWin_check()
    }
 
    //Check the wand keyboard proxy that is supposed to point to it is stupified
-   jccl::ConfigChunkDB fileDB2 ; fileDB2.load( mPath + "startup/sim.wandkeyboardproxy.config" );
-   fileChunks.clear();
-   fileDB2.getByType( "EventWindowProxy", fileChunks );
+   jccl::Configuration fileDB2;
+   fileDB2.load( mPath + "startup/sim.wandkeyboardproxy.config" );
+   fileElements.clear();
+   fileDB2.getByType( "event_window_proxy", fileElements );
 
-   if (fileChunks.size() != 1)
+   if (fileElements.size() != 1)
    {
-      std::cout << "\tError: there are " << fileChunks.size() << " keyboard proxies in the file (should be 1)\n" << std::flush;
+      std::cout << "\tError: there are " << fileElements.size() << " keyboard proxies in the file (should be 1)\n" << std::flush;
       return false;
    }
 
-   gadget::EventWindowProxy* keyboard_proxy = (gadget::EventWindowProxy*)gadget::InputManager::instance()->getProxy( fileChunks[0]->getName() );
+   gadget::EventWindowProxy* keyboard_proxy = (gadget::EventWindowProxy*)gadget::InputManager::instance()->getProxy( fileElements[0]->getName() );
 
    if (keyboard_proxy == NULL)
    {
-      std::cout << "\tError: there is no keyboard proxy named " << fileChunks[0]->getName() << "\n" << std::flush;
+      std::cout << "\tError: there is no keyboard proxy named " << fileElements[0]->getName() << "\n" << std::flush;
       return false;
    }
 
    if (!keyboard_proxy->isStupified())
    {
-      std::cout << "\tError: keyboard proxy named " << fileChunks[0]->getName() << " is not stupified\n" << std::flush;
+      std::cout << "\tError: keyboard proxy named " << fileElements[0]->getName() << " is not stupified\n" << std::flush;
       return false;
 
    }
@@ -1211,7 +1243,7 @@ bool reconfigApp::removeKeyboardWin_check()
 bool reconfigApp::readdKeyboardWin_exec()
 {
    std::cout << "Beginning test for readding a keyboard window...\n" << std::flush;
-   return addChunkFile( mPath + "startup/sim.wandkeyboard.config" );
+   return addElementFile( mPath + "startup/sim.wandkeyboard.config" );
 }
 
 bool reconfigApp::readdKeyboardWin_check()
@@ -1219,11 +1251,12 @@ bool reconfigApp::readdKeyboardWin_check()
    //Check the wand keyboard proxy that is supposed to point to it
 
    //First check that the keyboard device exists again
-   jccl::ConfigChunkDB fileDB ; fileDB.load( mPath + "startup/sim.wandkeyboard.config" );
-   std::vector<jccl::ConfigChunkPtr> fileChunks;
-   fileDB.getByType( "EventWindow", fileChunks );
+   jccl::Configuration fileDB;
+   fileDB.load( mPath + "startup/sim.wandkeyboard.config" );
+   std::vector<jccl::ConfigElementPtr> fileElements;
+   fileDB.getByType( "event_window", fileElements );
 
-   std::string keyboardName = fileChunks[0]->getName();
+   std::string keyboardName = fileElements[0]->getName();
 
    gadget::EventWindow* keyboard = (gadget::EventWindow*)gadget::InputManager::instance()->getDevice( keyboardName );
 
@@ -1234,27 +1267,28 @@ bool reconfigApp::readdKeyboardWin_check()
    }
 
    //Check the wand keyboard proxy that is supposed to point to it is stupified
-   jccl::ConfigChunkDB fileDB2 ; fileDB2.load( mPath + "startup/sim.wandkeyboardproxy.config" );
-   fileChunks.clear();
-   fileDB2.getByType( "EventWindowProxy", fileChunks );
+   jccl::Configuration fileDB2;
+   fileDB2.load( mPath + "startup/sim.wandkeyboardproxy.config" );
+   fileElements.clear();
+   fileDB2.getByType( "event_window_proxy", fileElements );
 
-   if (fileChunks.size() != 1)
+   if (fileElements.size() != 1)
    {
-      std::cout << "\tError: there are " << fileChunks.size() << " keyboard proxies in the file (should be 1)\n" << std::flush;
+      std::cout << "\tError: there are " << fileElements.size() << " keyboard proxies in the file (should be 1)\n" << std::flush;
       return false;
    }
 
-   gadget::EventWindowProxy* keyboard_proxy = (gadget::EventWindowProxy*)gadget::InputManager::instance()->getProxy( fileChunks[0]->getName() );
+   gadget::EventWindowProxy* keyboard_proxy = (gadget::EventWindowProxy*)gadget::InputManager::instance()->getProxy( fileElements[0]->getName() );
 
    if (keyboard_proxy == NULL)
    {
-      std::cout << "\tError: there is no keyboard proxy named " << fileChunks[0]->getName() << "\n" << std::flush;
+      std::cout << "\tError: there is no keyboard proxy named " << fileElements[0]->getName() << "\n" << std::flush;
       return false;
    }
 
    if (keyboard_proxy->isStupified())
    {
-      std::cout << "\tError: keyboard proxy named " << fileChunks[0]->getName() << " is stupified\n" << std::flush;
+      std::cout << "\tError: keyboard proxy named " << fileElements[0]->getName() << " is stupified\n" << std::flush;
       return false;
 
    }
@@ -1279,8 +1313,8 @@ bool reconfigApp::readdKeyboardWin_check()
 bool reconfigApp::addSimPos_exec()
 {
    std::cout << "Beginning test for adding a sim position device and pointing proxies at it...\n" << std::flush;
-   return (  addChunkFile( mPath + "sim.positiondevice.config" )
-          && addChunkFile( mPath + "sim.positiondeviceproxy.config" ));
+   return (  addElementFile( mPath + "sim.positiondevice.config" )
+          && addElementFile( mPath + "sim.positiondeviceproxy.config" ));
 }
 
 bool reconfigApp::addSimPos_check()
@@ -1293,7 +1327,7 @@ bool reconfigApp::addSimPos_check()
 bool reconfigApp::removeSimPos_exec()
 {
    std::cout << "Beginning test for removing a sim position device and checking its proxies...\n" << std::flush;
-   return removeChunkFile( mPath + "sim.positiondevice.config" );
+   return removeElementFile( mPath + "sim.positiondevice.config" );
 }
 
 bool reconfigApp::removeSimPos_check()
@@ -1322,7 +1356,7 @@ bool reconfigApp::removeSimPos_check()
 bool reconfigApp::readdSimPos_exec()
 {
    std::cout << "Beginning test for readding a sim position device and checking its proxies...\n" << std::flush;
-   return addChunkFile( mPath + "sim.positiondevice.config" );
+   return addElementFile( mPath + "sim.positiondevice.config" );
 }
 
 bool reconfigApp::readdSimPos_check()
@@ -1336,7 +1370,7 @@ bool reconfigApp::repointProxy_exec()
 {
    std::cout << "Beginning test for repointing a proxy to something else...\n" << std::flush;
 
-   return swapChunkFiles( mPath + "sim.positiondeviceproxy.config",
+   return swapElementFiles( mPath + "sim.positiondeviceproxy.config",
                           mPath + "sim.positiondeviceproxy.repoint.config" );
 }
 
@@ -1344,25 +1378,26 @@ bool reconfigApp::repointProxy_check()
 {
    //Load the repoint config file, get its device property, match that name
    //with the gadget::Proxy's instance name
-   jccl::ConfigChunkDB fileDB ; fileDB.load( mPath + "sim.positiondeviceproxy.repoint.config" );
-   std::vector<jccl::ConfigChunkPtr> fileChunks;
-   fileDB.getByType( "PosProxy", fileChunks );
+   jccl::Configuration fileDB;
+   fileDB.load( mPath + "sim.positiondeviceproxy.repoint.config" );
+   std::vector<jccl::ConfigElementPtr> fileElements;
+   fileDB.getByType( "position_proxy", fileElements );
 
 
-   if (fileChunks.size() != 1)
+   if (fileElements.size() != 1)
    {
-      std::cout << "\tError: there are " << fileChunks.size() << " proxies in the config file (should be 1)\n" << std::flush;
+      std::cout << "\tError: there are " << fileElements.size() << " proxies in the config file (should be 1)\n" << std::flush;
       return false;
    }
 
-   if (fileChunks[0]->getNum( "device" ) != 1)
+   if (fileElements[0]->getNum( "device" ) != 1)
    {
-      std::cout << "\tError: there are " << fileChunks[0]->getNum("device") << " device properties in the config file (should be 1)\n" << std::flush;
+      std::cout << "\tError: there are " << fileElements[0]->getNum("device") << " device properties in the config file (should be 1)\n" << std::flush;
       return false;
    }
 
    //Get the proxy's name from the file
-   std::string proxyname = fileChunks[0]->getName();
+   std::string proxyname = fileElements[0]->getName();
 
    gadget::PositionProxy* proxy = (gadget::PositionProxy*)gadget::InputManager::instance()->getProxy( proxyname );
 
@@ -1372,10 +1407,10 @@ bool reconfigApp::repointProxy_check()
       return false;
    }
 
-   if (fileChunks[0]->getProperty<std::string>("device", 0) != proxy->getDeviceName())
+   if (fileElements[0]->getProperty<std::string>("device", 0) != proxy->getDeviceName())
    {
       std::cout << "\tError: the proxy points at device named " << proxy->getDeviceName()
-                << ", but should point at " << fileChunks[0]->getProperty<std::string>("device", 0) << "\n" << std::flush;
+                << ", but should point at " << fileElements[0]->getProperty<std::string>("device", 0) << "\n" << std::flush;
       return false;
    }
 
@@ -1387,7 +1422,7 @@ bool reconfigApp::reconfigSimPos_exec()
 {
    std::cout << "Beginning test for reconfiguring a sim position device...\n" << std::flush;
 
-   return swapChunkFiles( mPath + "startup/sim.simheadpos.config", mPath + "sim.simheadpos.reconfig.config" );
+   return swapElementFiles( mPath + "startup/sim.simheadpos.config", mPath + "sim.simheadpos.reconfig.config" );
 }
 
 bool reconfigApp::reconfigSimPos_check()
@@ -1418,7 +1453,7 @@ bool reconfigApp::reconfigSimDigital_exec()
 {
    std::cout << "Beginning test for reconfiguring a sim digital device...\n" << std::flush;
 
-   return swapChunkFiles( mPath + "startup/sim.wandbuttonsdigital02.config",
+   return swapElementFiles( mPath + "startup/sim.wandbuttonsdigital02.config",
                           mPath + "sim.wandbuttonsdigital02.reconfig.config" );
 }
 
@@ -1438,9 +1473,10 @@ bool reconfigApp::reconfigSimDigital_check()
    std::vector<gadget::SimInput::KeyModPair> keypairs = device->getKeys();
 
    //Load up the config file.
-   jccl::ConfigChunkDB fileDB ; fileDB.load( mPath + "sim.wandbuttonsdigital02.reconfig.config" );
-   std::vector<jccl::ConfigChunkPtr> fileChunks;
-   fileDB.getByType( "SimDigital", fileChunks );
+   jccl::Configuration fileDB;
+   fileDB.load( mPath + "sim.wandbuttonsdigital02.reconfig.config" );
+   std::vector<jccl::ConfigElementPtr> fileElements;
+   fileDB.getByType( "simulated_digital_device", fileElements );
 
    bool key_status;
    //For each keymodpair that was defined in the device...
@@ -1448,13 +1484,13 @@ bool reconfigApp::reconfigSimDigital_check()
    {
       key_status = false;
 
-      //Scan the sim digital config chunk to see if was defined there
-      for ( int j=0; j < fileChunks[0]->getNum("keyPairs"); j++ )
+      //Scan the sim digital config element to see if was defined there
+      for ( int j=0; j < fileElements[0]->getNum("key_pair"); j++ )
       {
-         jccl::ConfigChunkPtr key_mod_pair = fileChunks[0]->getProperty<jccl::ConfigChunkPtr>("keyPairs", j);
+         jccl::ConfigElementPtr key_mod_pair = fileElements[0]->getProperty<jccl::ConfigElementPtr>("key_pair", j);
 
          //If they are the same..
-         if (( keypairs[i].mModifier == key_mod_pair->getProperty<int>("modKey", 0))
+         if (( keypairs[i].mModifier == key_mod_pair->getProperty<int>("modifier_key", 0))
             && keypairs[i].mKey == key_mod_pair->getProperty<int>("key", 0))
          {
             key_status = true;
@@ -1480,7 +1516,7 @@ bool reconfigApp::reconfigSimAnalog_exec()
 {
    std::cout << "Beginning test for reconfiguring a sim analog device...\n" << std::flush;
 
-   return swapChunkFiles( mPath + "startup/sim.analogdevice1.config",
+   return swapElementFiles( mPath + "startup/sim.analogdevice1.config",
                           mPath + "sim.analogdevice1.reconfig.config" );
 }
 
@@ -1501,24 +1537,25 @@ bool reconfigApp::reconfigSimAnalog_check()
    std::vector<gadget::SimInput::KeyModPair> keypairsdown = device->getDownKeys();
 
    //Load up the config file.
-   jccl::ConfigChunkDB fileDB ; fileDB.load( mPath + "sim.analogdevice1.reconfig.config" );
-   std::vector<jccl::ConfigChunkPtr> fileChunks;
-   fileDB.getByType( "SimAnalog", fileChunks );
+   jccl::Configuration fileDB;
+   fileDB.load( mPath + "sim.analogdevice1.reconfig.config" );
+   std::vector<jccl::ConfigElementPtr> fileElements;
+   fileDB.getByType( "simulated_analog_device", fileElements );
 
    bool key_status;
 
-   //Scan the sim digital config chunk to see if was defined there
-   for ( int i=0; i < fileChunks[0]->getNum("keyPairs"); i++ )
+   //Scan the sim digital config element to see if was defined there
+   for ( int i=0; i < fileElements[0]->getNum("key_pair"); i++ )
    {
       key_status = false;
 
-      jccl::ConfigChunkPtr key_mod_pair = fileChunks[0]->getProperty<jccl::ConfigChunkPtr>("keyPairs", i);
+      jccl::ConfigElementPtr key_mod_pair = fileElements[0]->getProperty<jccl::ConfigElementPtr>("key_pair", i);
 
       //Scan the up keys
       for (unsigned int j=0; j < keypairsup.size(); j++)
       {
          //If they are the same..
-         if (( keypairsup[j].mModifier == key_mod_pair->getProperty<int>("modKey", 0))
+         if (( keypairsup[j].mModifier == key_mod_pair->getProperty<int>("modifier_key", 0))
             && keypairsup[j].mKey == key_mod_pair->getProperty<int>("key", 0))
          {
             key_status = true;
@@ -1530,7 +1567,7 @@ bool reconfigApp::reconfigSimAnalog_check()
       for (unsigned int j=0; j < keypairsdown.size(); j++)
       {
          //If they are the same..
-         if (( keypairsdown[j].mModifier == key_mod_pair->getProperty<int>("modKey", 0))
+         if (( keypairsdown[j].mModifier == key_mod_pair->getProperty<int>("modifier_key", 0))
             && keypairsdown[j].mKey == key_mod_pair->getProperty<int>("key", 0))
          {
             key_status = true;
@@ -1554,8 +1591,8 @@ bool reconfigApp::addSimDigital_exec()
 {
    std::cout << "Beginning test for adding a sim digital device and pointing proxies at it...\n" << std::flush;
 
-   return (  addChunkFile( mPath + "sim.digitaldevice.config" )
-          && addChunkFile( mPath + "sim.digitalproxy.config"  ));
+   return (  addElementFile( mPath + "sim.digitaldevice.config" )
+          && addElementFile( mPath + "sim.digitalproxy.config"  ));
 }
 
 bool reconfigApp::addSimDigital_check()
@@ -1567,7 +1604,7 @@ bool reconfigApp::addSimDigital_check()
 bool reconfigApp::removeSimDigital_exec()
 {
    std::cout << "Beginning test for removing a sim digital device...\n" << std::flush;
-   return removeChunkFile( mPath + "startup/sim.wandbuttonsdigital.config" );
+   return removeElementFile( mPath + "startup/sim.wandbuttonsdigital.config" );
 }
 
 bool reconfigApp::removeSimDigital_check()
@@ -1595,7 +1632,7 @@ bool reconfigApp::readdSimDigital_exec()
 {
    std::cout << "Beginning test for readding a sim digital device and checking the proxies pointing at it...\n" << std::flush;
 
-   return addChunkFile( mPath + "startup/sim.wandbuttonsdigital.config" );
+   return addElementFile( mPath + "startup/sim.wandbuttonsdigital.config" );
 }
 
 bool reconfigApp::readdSimDigital_check()
@@ -1612,8 +1649,8 @@ bool reconfigApp::addSimAnalog_exec()
 {
    std::cout << "Beginning test for adding a sim analog device and pointing proxies at it...\n" << std::flush;
 
-   return (  addChunkFile( mPath + "sim.extraanalogdevice.config" )
-          && addChunkFile( mPath + "sim.extraanalogproxy.config"  ));
+   return (  addElementFile( mPath + "sim.extraanalogdevice.config" )
+          && addElementFile( mPath + "sim.extraanalogproxy.config"  ));
 }
 
 bool reconfigApp::addSimAnalog_check()
@@ -1625,7 +1662,7 @@ bool reconfigApp::addSimAnalog_check()
 bool reconfigApp::removeSimAnalog_exec()
 {
    std::cout << "Beginning test for removing a sim analog device and checking the proxies that point at it...\n" << std::flush;
-   return removeChunkFile( mPath + "sim.extraanalogdevice.config" );
+   return removeElementFile( mPath + "sim.extraanalogdevice.config" );
 }
 
 bool reconfigApp::removeSimAnalog_check()
@@ -1652,7 +1689,7 @@ bool reconfigApp::removeSimAnalog_check()
 bool reconfigApp::readdSimAnalog_exec()
 {
    std::cout << "Beginning test for readding a sim analog device and checking the old proxies...\n" << std::flush;
-   return addChunkFile( mPath + "sim.extraanalogdevice.config" ) ;
+   return addElementFile( mPath + "sim.extraanalogdevice.config" ) ;
 }
 
 bool reconfigApp::readdSimAnalog_check()
@@ -1663,7 +1700,7 @@ bool reconfigApp::readdSimAnalog_check()
 bool reconfigApp::addAnalogProxy_exec()
 {
    std::cout << "Beginning test for adding an analog proxy...\n" << std::flush;
-   return addChunkFile( mPath + "sim.analogproxy01.config" ) ;
+   return addElementFile( mPath + "sim.analogproxy01.config" ) ;
 }
 
 bool reconfigApp::addAnalogProxy_check()
@@ -1675,7 +1712,7 @@ bool reconfigApp::addAnalogProxy_check()
 bool reconfigApp::reconfigAnalogProxy_exec()
 {
    std::cout << "Beginning test for reconfiguring an analog proxy...\n" << std::flush;
-   return swapChunkFiles( mPath + "sim.analogproxy01.config", mPath + "sim.analogproxy01.reconfig.config" );
+   return swapElementFiles( mPath + "sim.analogproxy01.config", mPath + "sim.analogproxy01.reconfig.config" );
 }
 
 bool reconfigApp::reconfigAnalogProxy_check()
@@ -1687,7 +1724,7 @@ bool reconfigApp::reconfigAnalogProxy_check()
 bool reconfigApp::removeAnalogProxy_exec()
 {
    std::cout << "Beginning test for removing an analog proxy...\n" << std::flush;
-   return removeChunkFile( mPath + "sim.analogproxy01.reconfig.config" );
+   return removeElementFile( mPath + "sim.analogproxy01.reconfig.config" );
 }
 
 bool reconfigApp::removeAnalogProxy_check()
@@ -1708,7 +1745,7 @@ bool reconfigApp::removeAnalogProxy_check()
 bool reconfigApp::addPosProxy_exec()
 {
    std::cout << "Beginning test for adding a sim digital device...\n" << std::flush;
-   return addChunkFile( mPath + "sim.simcam1proxy02.config" );
+   return addElementFile( mPath + "sim.simcam1proxy02.config" );
 }
 
 bool reconfigApp::addPosProxy_check()
@@ -1720,7 +1757,7 @@ bool reconfigApp::addPosProxy_check()
 bool reconfigApp::reconfigPosProxy_exec()
 {
    std::cout << "Beginning test for reconfiguring a position proxy...\n" << std::flush;
-   return swapChunkFiles( mPath + "sim.simcam1proxy02.config", mPath + "sim.simcam1proxy02.reconfig.config");
+   return swapElementFiles( mPath + "sim.simcam1proxy02.config", mPath + "sim.simcam1proxy02.reconfig.config");
 }
 
 bool reconfigApp::reconfigPosProxy_check()
@@ -1732,7 +1769,7 @@ bool reconfigApp::reconfigPosProxy_check()
 bool reconfigApp::removePosProxy_exec()
 {
    std::cout << "Beginning test for removing a position proxy...\n" << std::flush;
-   return removeChunkFile( mPath + "sim.simcam1proxy02.reconfig.config" );
+   return removeElementFile( mPath + "sim.simcam1proxy02.reconfig.config" );
 }
 
 bool reconfigApp::removePosProxy_check()
@@ -1752,7 +1789,7 @@ bool reconfigApp::removePosProxy_check()
 bool reconfigApp::addDigitalProxy_exec()
 {
    std::cout << "Beginning test for adding a digital proxy...\n" << std::flush;
-   return addChunkFile( mPath + "sim.button0proxy02.config" );
+   return addElementFile( mPath + "sim.button0proxy02.config" );
 }
 
 bool reconfigApp::addDigitalProxy_check()
@@ -1764,7 +1801,7 @@ bool reconfigApp::addDigitalProxy_check()
 bool reconfigApp::reconfigDigitalProxy_exec()
 {
    std::cout << "Beginning test for reconfiguring a digital proxy...\n" << std::flush;
-   return swapChunkFiles( mPath + "sim.button0proxy02.config", mPath + "sim.button0proxy02.reconfig.config");
+   return swapElementFiles( mPath + "sim.button0proxy02.config", mPath + "sim.button0proxy02.reconfig.config");
 }
 
 bool reconfigApp::reconfigDigitalProxy_check()
@@ -1776,7 +1813,7 @@ bool reconfigApp::reconfigDigitalProxy_check()
 bool reconfigApp::removeDigitalProxy_exec()
 {
    std::cout << "Beginning test for removing a digital proxy...\n" << std::flush;
-   return removeChunkFile( mPath + "sim.button0proxy02.reconfig.config" );
+   return removeElementFile( mPath + "sim.button0proxy02.reconfig.config" );
 }
 
 bool reconfigApp::removeDigitalProxy_check()
@@ -1796,7 +1833,7 @@ bool reconfigApp::removeDigitalProxy_check()
 bool reconfigApp::addKeyboardProxy_exec()
 {
    std::cout << "Beginning test for adding a keyboard proxy...\n" << std::flush;
-   return addChunkFile( mPath + "sim.wandkeyboardproxy02.config" );
+   return addElementFile( mPath + "sim.wandkeyboardproxy02.config" );
 }
 
 bool reconfigApp::addKeyboardProxy_check()
@@ -1808,7 +1845,7 @@ bool reconfigApp::addKeyboardProxy_check()
 bool reconfigApp::reconfigKeyboardProxy_exec()
 {
    std::cout << "Beginning test for reconfiguring a keyboard proxy...\n" << std::flush;
-   return swapChunkFiles( mPath + "sim.wandkeyboardproxy02.config", mPath + "sim.wandkeyboardproxy02.reconfig.config");
+   return swapElementFiles( mPath + "sim.wandkeyboardproxy02.config", mPath + "sim.wandkeyboardproxy02.reconfig.config");
 }
 
 bool reconfigApp::reconfigKeyboardProxy_check()
@@ -1820,7 +1857,7 @@ bool reconfigApp::reconfigKeyboardProxy_check()
 bool reconfigApp::removeKeyboardProxy_exec()
 {
    std::cout << "Beginning test for removing a keyboard proxy...\n" << std::flush;
-   return removeChunkFile( mPath + "sim.wandkeyboardproxy02.reconfig.config" );
+   return removeElementFile( mPath + "sim.wandkeyboardproxy02.reconfig.config" );
 }
 
 bool reconfigApp::removeKeyboardProxy_check()
@@ -1840,7 +1877,7 @@ bool reconfigApp::removeKeyboardProxy_check()
 bool reconfigApp::addStupifiedAnalogProxy_exec()
 {
    std::cout << "Beginning test for adding a stupified analog proxy...\n" << std::flush;
-   return addChunkFile( mPath + "sim.stupidproxy01.config" );
+   return addElementFile( mPath + "sim.stupidproxy01.config" );
 }
 
 bool reconfigApp::addStupifiedAnalogProxy_check()
@@ -1867,9 +1904,12 @@ bool reconfigApp::addStupifiedAnalogProxy_check()
       std::cout << "\tError: Proxy points at a device\n" << std::flush;
       return false;
    }
-   if (proxy->getChunkType() != "AnaProxy")
+   if (proxy->getElementType() != AnalogProxy::getElementType())
    {
-      std::cout << "\tError: Proxy has the wrong chunk type: " << proxy->getChunkType() << "   It should be AnaProxy\n" << std::flush;
+      std::cout << "\tError: Proxy has the wrong element type: "
+                << proxy->getElementType() << "   It should be "
+                << AnalogProxy::getElementType() << "\n"
+                << std::flush;
       return false;
    }
 
@@ -1878,7 +1918,7 @@ bool reconfigApp::addStupifiedAnalogProxy_check()
 bool reconfigApp::removeStupifiedAnalogProxy_exec()
 {
    std::cout << "Beginning test for removing a stupified analog proxy...\n" << std::flush;
-   return removeChunkFile( mPath + "sim.stupidproxy01.config" );
+   return removeElementFile( mPath + "sim.stupidproxy01.config" );
 }
 
 bool reconfigApp::removeStupifiedAnalogProxy_check()

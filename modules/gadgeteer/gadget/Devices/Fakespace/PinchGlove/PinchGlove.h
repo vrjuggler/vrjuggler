@@ -71,9 +71,9 @@ public:
    /** Shuts down the glove device. */
    virtual ~PinchGlove();
 
-   virtual bool config( jccl::ConfigChunkPtr c );
+   virtual bool config(jccl::ConfigElementPtr e);
 
-   static std::string getChunkType() { return std::string("PinchGlove");}
+   static std::string getElementType();
 
    virtual int startSampling();
    virtual int stopSampling();

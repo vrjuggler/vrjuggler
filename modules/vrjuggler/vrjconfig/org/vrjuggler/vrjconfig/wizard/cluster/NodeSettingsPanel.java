@@ -1,13 +1,3 @@
-/***************** <Tweek heading BEGIN do not edit this line> ****************
- * Tweek
- *
- * -----------------------------------------------------------------
- * File:          $RCSfile$
- * Date modified: $Date$
- * Version:       $Revision$
- * -----------------------------------------------------------------
- ***************** <Tweek heading END do not edit this line> *****************/
-
 /*************** <auto-copyright.pl BEGIN do not edit this line> **************
  *
  * VR Juggler is (C) Copyright 1998-2003 by Iowa State University
@@ -35,17 +25,16 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 package org.vrjuggler.vrjconfig.wizard.cluster;
 
-import java.util.Iterator;
-import java.io.IOException;
-import javax.swing.*;
 import java.awt.*;
-import org.vrjuggler.jccl.config.*;
-import org.vrjuggler.tweek.wizard.*;
 import java.awt.event.*;
+import javax.swing.*;
 import javax.swing.border.*;
-import org.vrjuggler.vrjconfig.wizard.WizardListModel;
 
-public class NodeSettingsPanel extends JPanel
+import org.vrjuggler.jccl.config.*;
+import org.vrjuggler.vrjconfig.wizard.*;
+
+public class NodeSettingsPanel
+   extends JPanel
 {
   BorderLayout baseLayout = new BorderLayout();
   JPanel centerPnl = new JPanel();
@@ -193,7 +182,7 @@ public class NodeSettingsPanel extends JPanel
 
     lstModelNodes = new WizardListModel();
     lstModelNodes.setFileSource(mFileSourceName);
-    lstModelNodes.addChunkType("MachineSpecific");
+    lstModelNodes.addElementType("machine_specific");
     lstNodes.setModel(lstModelNodes);
 
     txtHostname.setText("");
@@ -201,7 +190,7 @@ public class NodeSettingsPanel extends JPanel
 
   public boolean saveFile()
   {
-    createClusterManagerChunk();
+    createClusterManagerElement();
     DataSource mFileSource = mBroker.get(mFileSourceName);
     try{
       mFileSource.commit();
@@ -215,19 +204,18 @@ public class NodeSettingsPanel extends JPanel
   private void addNode()
   {
     String host_name = txtHostname.getText().trim();
-    String chunk_name = "Node(" + host_name + ")";
-    java.util.List chunks_list = mBroker.getChunks(mContext);
-    java.util.List matches = ConfigUtilities.getChunksWithName(chunks_list, chunk_name);
+    String element_name = "Node(" + host_name + ")";
+    java.util.List elts = mBroker.getElements(mContext);
+    java.util.List matches = ConfigUtilities.getElementsWithDefinition(elts, element_name);
 
     if (!host_name.equals("") && matches.size() == 0)
     {
       // Create a MachineSpecific Chunk for the node
-      ConfigChunk chunk = ChunkFactory.createConfigChunk("MachineSpecific");
-      // Generate a default name for the chunk using the hostname
-      chunk.setName(chunk_name);
-      chunk.setProperty("host_name",0,host_name);
-      chunk.setProperty("listen_port",0,"7000");
-      mBroker.add(mContext, chunk);
+      ConfigElementFactory factory = new ConfigElementFactory(mBroker.getRepository().getAllLatest());
+      ConfigElement element = factory.create(element_name, "machine_specific");
+      element.setProperty("host_name",0,host_name);
+      element.setProperty("listen_port",0,"7000");
+      mBroker.add(mContext, element);
       update();
     }
     txtHostname.setText("");
@@ -237,27 +225,26 @@ public class NodeSettingsPanel extends JPanel
   {
 /*    lstModelNodes.clear();
     java.util.List chunks_list = mBroker.getChunks(mContext);
-    java.util.List matches = ConfigUtilities.getChunksWithDescToken(chunks_list, "MachineSpecific");
+    java.util.List matches = ConfigUtilities.getChunksWithDescToken(chunks_list, "machine_specific");
     for(int i = 0; i < matches.size() ; i++)
     {
       lstModelNodes.addElement(((ConfigChunk)matches.get(i)).getName());
     }
 */
   }
-  private void createClusterManagerChunk()
+  private void createClusterManagerElement()
   {
-
-    ConfigChunk cluster_manager = ChunkFactory.createConfigChunk("ClusterManager");
-    cluster_manager.setName("Sample Cluster");
+    ConfigElementFactory factory = new ConfigElementFactory(mBroker.getRepository().getAllLatest());
+    ConfigElement cluster_manager = factory.create("Sample Cluster", "cluster_manager");
     cluster_manager.setProperty("barrier_master",0, (String)lstModelNodes.get(0));
     for(int i = 0 ; i < lstModelNodes.size() ; i++)
     {
       cluster_manager.setProperty("cluster_nodes",i,(String)lstModelNodes.get(0));
     }
-    cluster_manager.setProperty("clusterPlugin",0,"RemoteInputManager");
-    cluster_manager.setProperty("clusterPlugin",1,"ApplicationDataManager");
+    cluster_manager.setProperty("plugin",0,"RemoteInputManager");
+    cluster_manager.setProperty("plugin",1,"ApplicationDataManager");
     mBroker.add(mContext, cluster_manager);
-    //  cluster_manager.setProperty("clusterPlugin",2,"SwapLockPlugin");
+    //  cluster_manager.setProperty("plugin",2,"swap_lock_plugin");
   }
 
   private void removeNode()
@@ -265,10 +252,10 @@ public class NodeSettingsPanel extends JPanel
     String old_node = (String)lstNodes.getSelectedValue();
 
     java.util.List remove_list =
-        ConfigUtilities.getChunksWithName(mBroker.getChunks(mContext), old_node);
+        ConfigUtilities.getElementsWithDefinition(mBroker.getElements(mContext), old_node);
     for(int i = 0 ; i < remove_list.size() ; i++)
     {
-      mBroker.remove(mContext, (ConfigChunk)remove_list.get(i));
+      mBroker.remove(mContext, (ConfigElement)remove_list.get(i));
     }
     update();
   }

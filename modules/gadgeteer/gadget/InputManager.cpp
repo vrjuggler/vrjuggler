@@ -46,8 +46,7 @@
 
 #include <gadget/Util/Debug.h>
 
-#include <jccl/Config/ConfigChunk.h>
-#include <jccl/Config/ConfigChunkPtr.h>
+#include <jccl/Config/ConfigElement.h>
 #include <jccl/RTRC/ConfigManager.h>
 
 #include <cluster/ClusterManager.h>
@@ -61,7 +60,7 @@ namespace gadget
    vprSingletonImp( InputManager );    // Implementation of singleton
 
 // Local helpers
-bool recognizeProxyAlias( jccl::ConfigChunkPtr chunk );
+static bool recognizeProxyAlias(jccl::ConfigElementPtr element);
 
 /**********************************************************
   InputManager::InputManager()
@@ -97,56 +96,56 @@ InputManager::~InputManager()
    }
 }
 
-/** Adds the given config chunk to the input system. */
-bool InputManager::configAdd(jccl::ConfigChunkPtr chunk)
+/** Adds the given config element to the input system. */
+bool InputManager::configAdd(jccl::ConfigElementPtr element)
 {
 vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
-                              std::string("Input Manager: Adding pending config chunk.\n"),
-                              std::string("...done adding chunk.\n"));
+                              std::string("Input Manager: Adding pending config element.\n"),
+                              std::string("...done adding element.\n"));
 
-   vprASSERT(configCanHandle(chunk));
+   vprASSERT(configCanHandle(element));
 
    bool ret_val = false;      // Flag to return success
    
-   if (cluster::ClusterManager::instance()->recognizeRemoteDeviceConfig(chunk))
+   if (cluster::ClusterManager::instance()->recognizeRemoteDeviceConfig(element))
    {
       vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CONFIG_LVL)
          << "InputManager can not handle remote devices, we must use Remote Input Manager."
          << vprDEBUG_FLUSH;
       ret_val = false;
    }
-   else if(DeviceFactory::instance()->recognizeDevice(chunk))
-      ret_val = configureDevice(chunk);
-   else if(ProxyFactory::instance()->recognizeProxy(chunk))
-      ret_val = configureProxy(chunk);
-   else if(recognizeProxyAlias(chunk))
-      ret_val = configureProxyAlias(chunk);
-   else if(chunk->getDescToken() == std::string("displaySystem"))
+   else if(DeviceFactory::instance()->recognizeDevice(element))
+      ret_val = configureDevice(element);
+   else if(ProxyFactory::instance()->recognizeProxy(element))
+      ret_val = configureProxy(element);
+   else if(recognizeProxyAlias(element))
+      ret_val = configureProxyAlias(element);
+   else if(element->getID() == std::string("display_system"))
    {
       // XXX: Put signal here to tell draw manager to lookup new stuff
-      mDisplaySystemChunk = chunk;     // Keep track of the display system chunk
+      mDisplaySystemElement = element;     // Keep track of the display system element
       ret_val = true;
    }
-   else if(chunk->getDescToken() == std::string("gadget_logger"))
+   else if(element->getID() == std::string("gadget_logger"))
    {
-      ret_val = configureInputLogger(chunk);
+      ret_val = configureInputLogger(element);
    }
-   else if(chunk->getDescToken() == std::string("InputManager"))
+   else if(element->getID() == std::string("input_manager"))
    {
       vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
-                                       std::string("Handling InputManager chunk:\n"),
+                                       std::string("Handling InputManager element:\n"),
                                        std::string("-- end state -- \n"));
 
       // --- Load device driver dsos -- //
       // - Load individual drivers
       const std::string driver_prop_name("driver");
-      int driver_count = chunk->getNum(driver_prop_name);
+      int driver_count = element->getNum(driver_prop_name);
       std::string driver_dso;
 
       for ( int i = 0; i < driver_count; ++i )
       {
          driver_dso =
-            vpr::replaceEnvVars(chunk->getProperty<std::string>(driver_prop_name, i));
+            vpr::replaceEnvVars(element->getProperty<std::string>(driver_prop_name, i));
          if(!driver_dso.empty())
          {
             vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL)
@@ -162,16 +161,16 @@ vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
       }
 
       // - Load driver directory
-      const std::string dir_prop_name("driverDirectory");
-      const std::string dso_ext_name("dsoExtName");
-      int dir_count = chunk->getNum(dir_prop_name);
+      const std::string dir_prop_name("driver_directory");
+      const std::string dso_ext_name("dso_file_extension");
+      int dir_count = element->getNum(dir_prop_name);
       std::string driver_dir;
 
-      const std::string driver_ext = chunk->getProperty<std::string>(dso_ext_name);
+      const std::string driver_ext = element->getProperty<std::string>(dso_ext_name);
 
       for ( int i = 0; i < dir_count; ++i )
       {
-         driver_dir = vpr::replaceEnvVars(chunk->getProperty<std::string>(dir_prop_name, i));
+         driver_dir = vpr::replaceEnvVars(element->getProperty<std::string>(dir_prop_name, i));
 
          // The vpr::LibraryFinder will throw an exception if driver_dir is
          // (somehow) an invalid path.
@@ -234,35 +233,35 @@ vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
 
 
 /**
- * Removes the chunk from the current configuration.
+ * Removes the element from the current configuration.
  */
-bool InputManager::configRemove(jccl::ConfigChunkPtr chunk)
+bool InputManager::configRemove(jccl::ConfigElementPtr element)
 {
 vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
                               std::string("InputManager: Removing config...\n"),
                               std::string("done removing config.\n"));
-   vprASSERT(configCanHandle(chunk));
+   vprASSERT(configCanHandle(element));
 
    bool ret_val = false;      // Flag to return success
 
    // NEED TO FIX!!!!
-   if (cluster::ClusterManager::instance()->recognizeRemoteDeviceConfig(chunk))
+   if (cluster::ClusterManager::instance()->recognizeRemoteDeviceConfig(element))
    {
       vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CONFIG_LVL)
          << "InputManager can not handle remote devices, we must use Remote Input Manager."
          << vprDEBUG_FLUSH;
       ret_val = false;
    }
-   else if(DeviceFactory::instance()->recognizeDevice(chunk))
-      ret_val = removeDevice(chunk);
-   else if(recognizeProxyAlias(chunk))
-      ret_val = removeProxyAlias(chunk);
-   else if(ProxyFactory::instance()->recognizeProxy(chunk))
-      ret_val = removeProxy(chunk);
-   else if(chunk->getDescToken() == std::string("displaySystem"))
+   else if(DeviceFactory::instance()->recognizeDevice(element))
+      ret_val = removeDevice(element);
+   else if(recognizeProxyAlias(element))
+      ret_val = removeProxyAlias(element);
+   else if(ProxyFactory::instance()->recognizeProxy(element))
+      ret_val = removeProxy(element);
+   else if(element->getID() == std::string("display_system"))
    {
-      mDisplaySystemChunk.reset();     // Keep track of the display system chunk
-      ret_val = true;                  // We successfully configured.
+      mDisplaySystemElement.reset();  // Keep track of the display system element
+      ret_val = true;                 // We successfully configured.
                                        // This tell processPending to remove it to the active config
    }
    else
@@ -283,54 +282,54 @@ vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
 
 // Return true if:
 //  It is recognized device, proxy, or alias.
-bool InputManager::configCanHandle(jccl::ConfigChunkPtr chunk)
+bool InputManager::configCanHandle(jccl::ConfigElementPtr element)
 {           // NEED TO FIX!!!!
-   return ( (DeviceFactory::instance()->recognizeDevice(chunk) && 
-             !cluster::ClusterManager::instance()->recognizeRemoteDeviceConfig(chunk)) ||
-            ProxyFactory::instance()->recognizeProxy(chunk) ||
-            recognizeProxyAlias(chunk) ||
-            (chunk->getDescToken() == std::string("displaySystem")) ||
-            (chunk->getDescToken() == std::string("InputManager")) ||
-            (chunk->getDescToken() == std::string("gadget_logger"))
+   return ( (DeviceFactory::instance()->recognizeDevice(element) && 
+             !cluster::ClusterManager::instance()->recognizeRemoteDeviceConfig(element)) ||
+            ProxyFactory::instance()->recognizeProxy(element) ||
+            recognizeProxyAlias(element) ||
+            (element->getID() == std::string("display_system")) ||
+            (element->getID() == std::string("input_manager")) ||
+            (element->getID() == std::string("gadget_logger"))
           );
 }
 
-jccl::ConfigChunkPtr InputManager::getDisplaySystemChunk()
+jccl::ConfigElementPtr InputManager::getDisplaySystemElement()
 {
-   if ( mDisplaySystemChunk.get() == NULL )
+   if ( mDisplaySystemElement.get() == NULL )
    {
       jccl::ConfigManager* cfg_mgr = jccl::ConfigManager::instance();
 
       cfg_mgr->lockActive();
       {
-         std::vector<jccl::ConfigChunkPtr>::iterator i;
+         std::vector<jccl::ConfigElementPtr>::iterator i;
          for(i=cfg_mgr->getActiveBegin(); i != cfg_mgr->getActiveEnd();++i)
          {
-            if((*i)->getDescToken() == std::string("displaySystem"))
+            if((*i)->getID() == std::string("display_system"))
             {
-               mDisplaySystemChunk = *i;
-               break;         // This guarantees that we get the first displaySystem chunk.
+               mDisplaySystemElement = *i;
+               break;         // This guarantees that we get the first displaySystem element.
             }
          }
       }
       cfg_mgr->unlockActive();
-      //vprASSERT(mDisplaySystemChunk.get() != NULL && "No Display Manager chunk found!");
+      //vprASSERT(mDisplaySystemElement.get() != NULL && "No Display Manager element found!");
    }
-   return mDisplaySystemChunk;
+   return mDisplaySystemElement;
 }
 
-// Check if the device factory or proxy factory can handle the chunk
-bool InputManager::configureDevice(jccl::ConfigChunkPtr chunk)
+// Check if the device factory or proxy factory can handle the element.
+bool InputManager::configureDevice(jccl::ConfigElementPtr element)
 {
    bool ret_val;
-   std::string dev_name = chunk->getFullName();
+   std::string dev_name = element->getFullName();
 
    vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
                                  std::string("InputManager::configureDevice: dev[") + dev_name + std::string("]\n"),
                                  std::string("done configuring device\n"));
 
    Input* new_device;
-   new_device = DeviceFactory::instance()->loadDevice(chunk);
+   new_device = DeviceFactory::instance()->loadDevice(element);
 
    if ((new_device != NULL) && (new_device->startSampling()))
    {
@@ -355,10 +354,10 @@ bool InputManager::configureDevice(jccl::ConfigChunkPtr chunk)
    return ret_val;
 }
 
-// Check if the device factory or proxy factory can handle the chunk
-bool InputManager::configureProxy(jccl::ConfigChunkPtr chunk)
+// Check if the device factory or proxy factory can handle the element.
+bool InputManager::configureProxy(jccl::ConfigElementPtr element)
 {
-   std::string proxy_name = chunk->getFullName();
+   std::string proxy_name = element->getFullName();
 
 vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
                                  std::string("vjInputManager::configureProxy: Named: ") + proxy_name + std::string("\n"),
@@ -368,7 +367,7 @@ vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
 
    // Tell the factory to load the proxy
    // NOTE: The config for the proxy registers it with the input manager
-   new_proxy = ProxyFactory::instance()->loadProxy(chunk);   
+   new_proxy = ProxyFactory::instance()->loadProxy(element);   
 
    // Check for success
    if(NULL == new_proxy)
@@ -389,11 +388,11 @@ vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
 
 
 /**
- * Removes the device associated with the given chunk.
+ * Removes the device associated with the given element.
  */
-bool InputManager::removeDevice(jccl::ConfigChunkPtr chunk)
+bool InputManager::removeDevice(jccl::ConfigElementPtr element)
 {
-   return removeDevice(chunk->getFullName());
+   return removeDevice(element->getFullName());
 }
 
 
@@ -580,9 +579,9 @@ bool InputManager::removeDevice(std::string mInstName)
 
 
 // Is it a proxy alias
-bool recognizeProxyAlias(jccl::ConfigChunkPtr chunk)
+bool recognizeProxyAlias(jccl::ConfigElementPtr element)
 {
-   return (chunk->getDescToken() == std::string("proxyAlias"));
+   return (element->getID() == "alias");
 }
 
 /**
@@ -591,18 +590,18 @@ bool recognizeProxyAlias(jccl::ConfigChunkPtr chunk)
  * @post (alias not already in list) ==> Alias is added to proxyAlias list<br>
  *       (alias was already is list) ==> Alias is set to point to the new proxy instead
  */
-bool InputManager::configureProxyAlias(jccl::ConfigChunkPtr chunk)
+bool InputManager::configureProxyAlias(jccl::ConfigElementPtr element)
 {
 vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
                            std::string("vjInputManager::Configuring proxy alias\n"),
                            std::string("...done configuring alias.\n"));
 
-   vprASSERT(chunk->getDescToken() == "proxyAlias");
+   vprASSERT(element->getID() == "alias");
 
    std::string alias_name, proxy_name;  // The string of the alias, name of proxy to pt to
 
-   alias_name = chunk->getProperty<std::string>("aliasName");
-   proxy_name = chunk->getProperty<std::string>("proxyPtr");
+   alias_name = element->getName();
+   proxy_name = element->getProperty<std::string>("proxy");
 
    addProxyAlias(alias_name, proxy_name);
 
@@ -615,17 +614,17 @@ vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
  * @post (alias not in list) ==> returns = false<br>
  *       (alias is in list) ==> (alias is removed from list) returns true
  */
-bool InputManager::removeProxyAlias(jccl::ConfigChunkPtr chunk)
+bool InputManager::removeProxyAlias(jccl::ConfigElementPtr element)
 {
 vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
                         std::string("vjInputManager::RemoveProxyAlias\n"),
                         std::string("...done removing alias.\n"));
 
-   vprASSERT(chunk->getDescToken() == "proxyAlias");
+   vprASSERT(element->getID() == "alias");
 
    std::string alias_name, proxy_name;  // The string of the alias, name of proxy to pt to
 
-   alias_name = chunk->getProperty<std::string>("aliasName");
+   alias_name = element->getName();
 
    if(mProxyAliases.end() == mProxyAliases.find(alias_name))
    {
@@ -745,10 +744,10 @@ vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
    return true;
 }
 
-bool InputManager::removeProxy(jccl::ConfigChunkPtr chunk)
+bool InputManager::removeProxy(jccl::ConfigElementPtr element)
 {
    std::string proxy_name;
-   proxy_name = chunk->getFullName();
+   proxy_name = element->getFullName();
    return removeProxy(proxy_name);
 }
 
@@ -815,10 +814,10 @@ gadget::InputLoggerPtr InputManager::getInputLogger()
 }
 
 
-bool InputManager::configureInputLogger(jccl::ConfigChunkPtr chunk)
+bool InputManager::configureInputLogger(jccl::ConfigElementPtr element)
 {
    // Configure it
-   return getInputLogger()->config(chunk);
+   return getInputLogger()->config(element);
 }
 
 } // End of gadget namespace

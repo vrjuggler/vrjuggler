@@ -92,7 +92,7 @@ GlApp* GlDrawManager::getApp()
  * Doesn't do anything right now.
  */
 /*
-void GlDrawManager::configInitial(jccl::ConfigChunkDB*  chunkDB)
+void GlDrawManager::configInitial(jccl::Configuration* cfg)
 {
     // Setup any config data
 }
@@ -247,7 +247,7 @@ void GlDrawManager::addDisplay(Display* disp)
 
       if (vp->isSimulator())
       {
-         jccl::ConfigChunkPtr vp_chunk = vp->getConfigChunk();
+         jccl::ConfigElementPtr vp_element = vp->getConfigElement();
 
          SimViewport* sim_vp(NULL);
          sim_vp = dynamic_cast<SimViewport*>(vp);
@@ -256,25 +256,25 @@ void GlDrawManager::addDisplay(Display* disp)
          sim_vp->setDrawSimInterface(NULL);
 
          // Create the simulator stuff
-         vprASSERT(1 == vp_chunk->getNum("simPlugIn") && "You must supply a simulator plugin.");
+         vprASSERT(1 == vp_element->getNum("simulator_plugin") && "You must supply a simulator plugin.");
 
          // Create the simulator stuff
-         jccl::ConfigChunkPtr sim_chunk =
-            vp_chunk->getProperty<jccl::ConfigChunkPtr>("simPlugIn");
+         jccl::ConfigElementPtr sim_element =
+            vp_element->getProperty<jccl::ConfigElementPtr>("simulator_plugin");
 
          vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CONFIG_LVL)
             << "GlDrawManager::addDisplay() creating simulator of type '"
-            << sim_chunk->getDescToken() << "'\n" << vprDEBUG_FLUSH;
+            << sim_element->getID() << "'\n" << vprDEBUG_FLUSH;
 
          DrawSimInterface* new_sim_i =
-            GlSimInterfaceFactory::instance()->createObject(sim_chunk->getDescToken());
+            GlSimInterfaceFactory::instance()->createObject(sim_element->getID());
 
          // XXX: Change this to an error once the new simulator loading code is
          // more robust.  -PH (4/13/2003)
          vprASSERT(NULL != new_sim_i && "Failed to create draw simulator");
          sim_vp->setDrawSimInterface(new_sim_i);
          new_sim_i->initialize(sim_vp);
-         new_sim_i->config(sim_chunk);
+         new_sim_i->config(sim_element);
       }
    }
 
@@ -365,34 +365,34 @@ void GlDrawManager::closeAPI()
 
 /////// CHUNK HANDLERS ////////////////////
 /**
- * Adds the chunk to the draw manager config.
- * @pre configCanHandle(chunk) == true
- * @post The chunks have reconfigured the system
+ * Adds the element to the draw manager config.
+ * @pre configCanHandle(element) == true.
+ * @post The elements have reconfigured the system.
  */
-bool GlDrawManager::configAdd(jccl::ConfigChunkPtr chunk)
+bool GlDrawManager::configAdd(jccl::ConfigElementPtr element)
 {
-   boost::ignore_unused_variable_warning(chunk);
+   boost::ignore_unused_variable_warning(element);
    return false;
 }
 
 /**
- * Removes the chunk from the current configuration.
- * @pre configCanHandle(chunk) == true
- * @return success
+ * Removes the element from the current configuration.
+ * @pre configCanHandle(element) == true.
+ * @return success.
  */
-bool GlDrawManager::configRemove(jccl::ConfigChunkPtr chunk)
+bool GlDrawManager::configRemove(jccl::ConfigElementPtr element)
 {
-   boost::ignore_unused_variable_warning(chunk);
+   boost::ignore_unused_variable_warning(element);
    return false;
 }
 
 /**
- * Can the handler handle the given chunk?
- * @return false - We can't handle anything
+ * Can the handler handle the given element?
+ * @return false: We can't handle anything.
  */
-bool GlDrawManager::configCanHandle(jccl::ConfigChunkPtr chunk)
+bool GlDrawManager::configCanHandle(jccl::ConfigElementPtr element)
 {
-   boost::ignore_unused_variable_warning(chunk);
+   boost::ignore_unused_variable_warning(element);
    return false;
 }
 

@@ -34,8 +34,6 @@ package org.vrjuggler.jccl.editors;
 import java.awt.*;
 import javax.swing.*;
 import org.vrjuggler.jccl.config.ConfigContext;
-import org.vrjuggler.tweek.beans.BeanRegistry;
-import org.vrjuggler.tweek.beans.loader.BeanJarClassLoader;
 
 /**
  * A generic editor for a configuration. It contains editing components for both
@@ -61,26 +59,25 @@ public class GenericConfigEditor
 
    public void setConfigContext(ConfigContext context)
    {
-      configEditor.setConfigContext(context);
-      defEditor.setConfigContext(context);
+      mContextEditor.setContext(context);
    }
 
    public ConfigContext getConfigContext()
    {
-      return configEditor.getConfigContext();
+      return mContextEditor.getContext();
    }
 
    private void jbInit()
       throws Exception
    {
-      this.setLayout(baseLayout);
-      this.add(tabPane, BorderLayout.CENTER);
-      tabPane.add(configEditor,  "Configuration");
-      tabPane.add(defEditor,  "Definitions");
+      this.setLayout(mBaseLayout);
+      this.add(mTabPane, BorderLayout.CENTER);
+      mTabPane.add(mContextEditor,  "Configuration");
+      mTabPane.add(mDefReposEditor,  "Definitions");
    }
 
-   private BorderLayout baseLayout = new BorderLayout();
-   private JTabbedPane tabPane = new JTabbedPane();
-   private ConfigChunkDBEditor configEditor = new ConfigChunkDBEditor();
-   private ChunkDescDBEditor defEditor = new ChunkDescDBEditor();
+   private BorderLayout mBaseLayout = new BorderLayout();
+   private JTabbedPane mTabPane = new JTabbedPane();
+   private ConfigContextEditor mContextEditor = new ConfigContextEditor();
+   private ConfigDefinitionRepositoryEditor mDefReposEditor = new ConfigDefinitionRepositoryEditor();
 }

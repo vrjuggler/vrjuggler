@@ -36,13 +36,14 @@
 #include <cluster/Plugins/PluginConfig.h>
 #include <map>
 
+#include <vpr/vpr.h>
+#include <vpr/Util/GUID.h>
 #include <vpr/Util/Singleton.h>
 
 // Must implement the Abstract Base Class in order to be a manager used on the ClusterNetwork
 #include <cluster/ClusterPlugin.h>
 
-#include <jccl/Config/ConfigChunk.h>
-#include <jccl/Config/ConfigChunkPtr.h>
+#include <jccl/Config/ConfigElementPtr.h>
 
 
 extern "C" GADGET_CLUSTER_PLUGIN_API(cluster::ClusterPlugin*) initPlugin();
@@ -97,6 +98,7 @@ public:
     * Is this ClusterPlugin ready for the cluster to start the application.
     */
    virtual bool isPluginReady();
+
    /**
     * Return the name of this ClusterPlugin.
     */
@@ -107,38 +109,38 @@ public:
    
 
 
-   // ---------- ConfigChunkHandler Interface ----------- //
+   // ---------- ConfigElementHandler Interface ----------- //
 public:   
-   /** Add the pending chunk to the configuration.
-    *  PRE: configCanHandle (chunk) == true.
-    *  @return true iff chunk was successfully added to configuration.
+   /** Add the pending element to the configuration.
+    *  @pre configCanHandle (element) == true.
+    *  @return true iff element was successfully added to configuration.
     */
-   bool configAdd(jccl::ConfigChunkPtr chunk);
+   bool configAdd(jccl::ConfigElementPtr element);
    
-   /** Remove the pending chunk from the current configuration.
-    *  PRE: configCanHandle (chunk) == true.
-    *  @return true iff the chunk (and any objects it represented)
+   /** Remove the pending element from the current configuration.
+    *  @pre configCanHandle (element) == true.
+    *  @return true iff the element (and any objects it represented)
     *          were successfully removed.
     */
-   bool configRemove(jccl::ConfigChunkPtr chunk);
+   bool configRemove(jccl::ConfigElementPtr element);
 
-   /** Checks if this handler can process chunk.
-    *  Typically, an implementation of handler will check the chunk's
+   /** Checks if this handler can process element.
+    *  Typically, an implementation of handler will check the element's
     *  description name/token to decide if it knows how to deal with
     *  it.
-    *  @return true iff this handler can process chunk.
+    *  @return true iff this handler can process element.
     */
-   bool configCanHandle(jccl::ConfigChunkPtr chunk);
+   bool configCanHandle(jccl::ConfigElementPtr element);
 
 private:      
-   bool recognizeApplicationDataManagerConfig(jccl::ConfigChunkPtr chunk);
-   bool recognizeApplicationDataConfig(jccl::ConfigChunkPtr chunk);
-   /**
-    * Returns the string representation of the chunk type used for the ApplicationDataManager
-    */   
-   static std::string getChunkType() { return std::string( "ApplicationDataManager" ); }
-   
+   bool recognizeApplicationDataManagerConfig(jccl::ConfigElementPtr element);
+   bool recognizeApplicationDataConfig(jccl::ConfigElementPtr chunk);
 
+   /**
+    * Returns the string representation of the element type used for the
+    * ApplicationDataManager.
+    */   
+   static std::string getElementType();
 
    // ---------- ApplicationData Interface ----------- //
 public:

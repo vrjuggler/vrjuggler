@@ -45,7 +45,7 @@
 // Must implement the Abstract Base Class in order to be a manager used on the ClusterNetwork
 #include <cluster/ClusterPlugin.h>
 
-#include <jccl/Config/ConfigChunkPtr.h>
+#include <jccl/Config/ConfigElementPtr.h>
 
 extern "C" GADGET_CLUSTER_PLUGIN_API(cluster::ClusterPlugin*) initPlugin();
 
@@ -249,10 +249,10 @@ public:
    //    CONFIG METHODS    //
    //////////////////////////
 
-   bool configAdd(jccl::ConfigChunkPtr chunk);
-   bool configRemove(jccl::ConfigChunkPtr chunk);
-   bool configCanHandle(jccl::ConfigChunkPtr chunk);
-   jccl::ConfigChunkPtr getConfigChunkPointer(std::string& name);
+   bool configAdd(jccl::ConfigElementPtr element);
+   bool configRemove(jccl::ConfigElementPtr element);
+   bool configCanHandle(jccl::ConfigElementPtr element);
+   jccl::ConfigElementPtr getConfigElementPointer(std::string& name);
    vpr::ReturnStatus createPendingConfigRemove(std::string device_name);
    vpr::ReturnStatus createPendingConfigRemoveAndAdd(std::string device_name);
    

@@ -32,7 +32,7 @@
 
 #include <vrj/vrjConfig.h>
 
-#include <jccl/Config/ConfigChunk.h>
+#include <jccl/Config/ConfigElement.h>
 
 #include <vpr/Util/Assert.h>
 #include <gadget/InputManager.h>
@@ -272,14 +272,14 @@ void GlWindowWin32::configWindow( vrj::Display* disp )
    vrj::GlWindow::configWindow( disp );
 
     // Get the vector of display chunks
-   jccl::ConfigChunkPtr dispSysChunk = DisplayManager::instance()->getDisplaySystemChunk();
-   jccl::ConfigChunkPtr displayChunk = disp->getConfigChunk();
+   jccl::ConfigElementPtr disp_sys_elt = DisplayManager::instance()->getDisplaySystemElement();
+   jccl::ConfigElementPtr display_elt = disp->getConfigElement();
 
    window_name = disp->getName();
    mPipe = disp->getPipe();
    vprASSERT( mPipe >= 0 );
 
-   mXDisplayName = dispSysChunk->getProperty<std::string>("xpipes", mPipe);
+   mXDisplayName = disp_sys_elt->getProperty<std::string>("x11_pipes", mPipe);
    if (mXDisplayName == neg_one_STRING)    // Use display env
    {
        const std::string DISPLAY_str("DISPLAY");    // DISPLAY_str[] = "DISPLAY";
@@ -294,7 +294,7 @@ void GlWindowWin32::configWindow( vrj::Display* disp )
       << mXDisplayName << std::endl << vprDEBUG_FLUSH;
 
    bool was_i_a_keyboard = mAreEventSource;
-   mAreEventSource = displayChunk->getProperty<bool>("act_as_event_source");
+   mAreEventSource = display_elt->getProperty<bool>("act_as_event_source");
 
    // If i'm being configured to NOT be an event source, and I was one already.
    if (false == mAreEventSource && true == was_i_a_keyboard)
@@ -306,11 +306,11 @@ void GlWindowWin32::configWindow( vrj::Display* disp )
    else if (true == mAreEventSource && false == was_i_a_keyboard)
    {
       // Configure event window device portion.
-      jccl::ConfigChunkPtr event_win_chunk =
-         displayChunk->getProperty<jccl::ConfigChunkPtr>("event_window_device");
+      jccl::ConfigElementPtr event_win_chunk =
+         display_elt->getProperty<jccl::ConfigElementPtr>("event_window_device");
 
       // Set the name of the chunk to the same as the parent chunk (so we can point at it)
-      //event_win_chunk->setProperty("name", displayChunk->getName();
+      //event_win_chunk->setProperty("name", display_elt->getName();
 
       gadget::EventWindowWin32::config(event_win_chunk);
 
@@ -415,15 +415,15 @@ bool GlWindowWin32::setPixelFormat(HDC hDC)
    }
 
    int red_size(8), green_size(8), blue_size(8), alpha_size(8), db_size(32);
-   jccl::ConfigChunkPtr gl_fb_chunk = mVrjDisplay->getGlFrameBufferConfig();
+   jccl::ConfigElementPtr gl_fb_chunk = mVrjDisplay->getGlFrameBufferConfig();
 
    if ( gl_fb_chunk.get() != NULL )
    {
-      red_size   = gl_fb_chunk->getProperty<int>("redSize");
-      green_size = gl_fb_chunk->getProperty<int>("greenSize");
-      blue_size  = gl_fb_chunk->getProperty<int>("blueSize");
-      alpha_size = gl_fb_chunk->getProperty<int>("alphaSize");
-      db_size    = gl_fb_chunk->getProperty<int>("depthBufferSize");
+      red_size   = gl_fb_chunk->getProperty<int>("red_size");
+      green_size = gl_fb_chunk->getProperty<int>("green_size");
+      blue_size  = gl_fb_chunk->getProperty<int>("blue_size");
+      alpha_size = gl_fb_chunk->getProperty<int>("alpha_size");
+      db_size    = gl_fb_chunk->getProperty<int>("depth_buffer_size");
 
       if ( red_size < 0 )
       {

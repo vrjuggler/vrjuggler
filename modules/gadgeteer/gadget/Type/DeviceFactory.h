@@ -36,7 +36,7 @@
 
 #include <gadget/gadgetConfig.h>
 #include <vector>
-#include <jccl/Config/ConfigChunkPtr.h>
+#include <jccl/Config/ConfigElementPtr.h>
 #include <vpr/Util/Singleton.h>
 
 #include <gadget/Type/DeviceConstructorBase.h>
@@ -74,20 +74,20 @@ public:
 
    /**
     * Queries if the factory knows about the given device.
-    * @pre chunk != NULL, chunk is a valid chunk.
-    * @param chunk The chunk we are requesting about knowledge to create.
+    * @pre element != NULL, element is a valid element.
+    * @param element The element we are requesting about knowledge to create.
     * @return true if the factory knows how to create the device; false if not.
     */
-   bool recognizeDevice(jccl::ConfigChunkPtr chunk);
+   bool recognizeDevice(jccl::ConfigElementPtr element);
 
    /**
     * Loads the specified device.
-    * @pre recognizeDevice(chunk) == true
-    * @param chunk The specification of the device to load.
+    * @pre recognizeDevice(element) == true
+    * @param element The specification of the device to load.
     * @return NULL is returned if the device failed to load.
     *         Otherwise, a pointer to the loaded device is returned.
     */
-   Input* loadDevice(jccl::ConfigChunkPtr chunk);
+   Input* loadDevice(jccl::ConfigElementPtr element);
 
 private:
    /**
@@ -95,7 +95,7 @@ private:
     * @return -1 is returned if the constructor is not found.
     *         Otherwise, the index of the constructor is returned.
     */
-   int   findConstructor(jccl::ConfigChunkPtr chunk);
+   int findConstructor(jccl::ConfigElementPtr element);
 
    void debugDump();
 

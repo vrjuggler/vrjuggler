@@ -31,7 +31,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include <gadget/gadgetConfig.h>
-#include <jccl/Config/ConfigChunk.h>
+#include <jccl/Config/ConfigElement.h>
 
 //#include <gadget/Type/PositionFilter.h>
 //#include <gadget/Type/LinearSigmoidPositionFilter.h>
@@ -51,44 +51,51 @@
 namespace gadget
 {
 
-bool PositionProxy::config(jccl::ConfigChunkPtr chunk)
+std::string PositionProxy::getElementType()
+{
+   return "position_proxy";
+}
+
+bool PositionProxy::config(jccl::ConfigElementPtr element)
 {
 vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
       std::string("------------------ Position PROXY config() -----------------\n"),
       std::string("\n"));
-   vprASSERT(chunk->getDescToken() == "PosProxy");
+   vprASSERT(element->getID() == getElementType());
 
-   if ( ! Proxy::config(chunk) )
+   if ( ! Proxy::config(element) )
    {
       return false;
    }
 
-   mUnitNum = chunk->getProperty<int>("unit");
-   mDeviceName = chunk->getProperty<std::string>("device");
+   mUnitNum = element->getProperty<int>("unit");
+   mDeviceName = element->getProperty<std::string>("device");
 
    // --- Configure filters --- //
-   unsigned num_filters = chunk->getNum("position_filters");
+   unsigned num_filters = element->getNum("position_filters");
 
    vprDEBUG_OutputGuard(vprDBG_ALL, vprDBG_VERB_LVL,
                         std::string("PositionProxy::config: ") +
-                           chunk->getName() + std::string(":") +
-                           chunk->getDescToken() + std::string("\n"),
+                           element->getName() + std::string(":") +
+                           element->getID() + std::string("\n"),
                         std::string("PositionProxy::config: done.\n") );
 
    vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL) << "Num filters: " << num_filters << std::endl << vprDEBUG_FLUSH;
 
-   jccl::ConfigChunkPtr cur_filter;
+   jccl::ConfigElementPtr cur_filter;
    PositionFilter* new_filter(NULL);
 
    for(unsigned i=0;i<num_filters;++i)
    {
-      cur_filter = chunk->getProperty<jccl::ConfigChunkPtr>("position_filters",i);
+      cur_filter = element->getProperty<jccl::ConfigElementPtr>("position_filters",i);
       vprASSERT(cur_filter.get() != NULL);
 
-      std::string filter_chunk_desc = cur_filter->getDescToken();
-      vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL) << "   Filter [" << i << "]: Type:" << filter_chunk_desc << std::endl << vprDEBUG_FLUSH;
+      std::string filter_id = cur_filter->getID();
+      vprDEBUG( vprDBG_ALL, vprDBG_VERB_LVL)
+         << "   Filter [" << i << "]: Type:" << filter_id << std::endl
+         << vprDEBUG_FLUSH;
 
-      new_filter = PositionFilterFactory::instance()->createObject(filter_chunk_desc);
+      new_filter = PositionFilterFactory::instance()->createObject(filter_id);
       if(new_filter != NULL)
       {
          new_filter->config(cur_filter);

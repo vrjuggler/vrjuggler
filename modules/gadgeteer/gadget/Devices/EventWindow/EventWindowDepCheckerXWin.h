@@ -64,26 +64,26 @@ public:
    }
 
    /// We can handle only EventWindow configuration information.
-   virtual bool canHandle(jccl::ConfigChunkPtr chunk)
+   virtual bool canHandle(jccl::ConfigElementPtr element)
    {
-      const std::string chunk_type = chunk->getDescToken();
-      // Return true if we have a EventWindowXWin chunk type
-      return (chunk_type == EventWindowXWin::getChunkType());
+      const std::string element_type = element->getID();
+      // Return true if we have a EventWindowXWin element type.
+      return (element_type == EventWindowXWin::getElementType());
    }
 
    /**
     * Are the dependencies satisfied?
-    * Check wether the display system chunk is in the active config
+    * Check wether the display system element is in the active config.
     *
     * @return true is returned if default dependencies are satisfied and the
-    *         Display Manager has display system chunk.
+    *         Display Manager has display system element.
     */
-   virtual bool depSatisfied(jccl::ConfigChunkPtr chunk)
+   virtual bool depSatisfied(jccl::ConfigElementPtr element)
    {
-      bool pass = jccl::DepChecker::depSatisfied(chunk);   // Run default check
+      bool pass = jccl::DepChecker::depSatisfied(element);   // Run default check
 
-      // If we can pass normal check and we have a display system chunk
-      if ( haveDisplaySystemChunk() )
+      // If we can pass normal check and we have a display system element.
+      if ( haveDisplaySystemElement() )
       {
          return pass;
       }
@@ -93,22 +93,22 @@ public:
       }
    }
 
-   bool haveDisplaySystemChunk() const
+   bool haveDisplaySystemElement() const
    {
-      return (gadget::InputManager::instance()->getDisplaySystemChunk().get() != NULL);
+      return (gadget::InputManager::instance()->getDisplaySystemElement().get() != NULL);
    }
 
    /// Write out the dependencies to the vprDEBUG macro.
-   virtual void debugOutDependencies(jccl::ConfigChunkPtr chunk,
+   virtual void debugOutDependencies(jccl::ConfigElementPtr element,
                                      int dbg_lvl=vprDBG_WARNING_LVL)
    {
-      jccl::DepChecker::debugOutDependencies(chunk,dbg_lvl);
+      jccl::DepChecker::debugOutDependencies(element, dbg_lvl);
 
       vprDEBUG_NEXT_BEGIN(vprDBG_ALL,dbg_lvl)
-         << "Extra Dependency: Dependent upon getting DisplaySystemChunk from displayManager: "
+         << "Extra Dependency: Dependent upon getting displaySystem element from Display Manager: "
          << vprDEBUG_FLUSH;
 
-      if ( ! haveDisplaySystemChunk() )
+      if ( ! haveDisplaySystemElement() )
       {
          vprDEBUG_CONT(vprDBG_ALL,dbg_lvl) << "FAILED!!!\n" << vprDEBUG_FLUSH;
       }
@@ -118,9 +118,9 @@ public:
       }
 
       vprDEBUG_NEXT(vprDBG_ALL,dbg_lvl)
-         << "Extra Dependencies for: item: " << chunk->getFullName()
-         << " type: " << chunk->getDescToken() << std::endl
-         << "   Dependent upon displaySystemChunk in display Manager. (Needs it to find display strings)"
+         << "Extra Dependencies for: item: " << element->getFullName()
+         << " type: " << element->getID() << std::endl
+         << "   Dependent upon displaySystem element in Display Manager. (Needs it to find display strings)"
          << vprDEBUG_FLUSH;
 
       vprDEBUG_NEXT_END(vprDBG_ALL,dbg_lvl) << std::endl << vprDEBUG_FLUSH;

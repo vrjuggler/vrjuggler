@@ -37,7 +37,7 @@
 
 #include <string>
 #include <vpr/Util/Assert.h>
-#include <jccl/Config/ConfigChunk.h>
+#include <jccl/Config/ConfigElement.h>
 
 #include <gadget/InputManager.h>
 #include <gadget/Type/DeviceFactory.h>
@@ -58,10 +58,10 @@ public:
       inputMgr->getDeviceFactory()->registerDevice(this);
    }
 
-   Input* createDevice(jccl::ConfigChunkPtr chunk)
+   Input* createDevice(jccl::ConfigElementPtr element)
    {
       DEV* new_dev = new DEV;
-      bool success = new_dev->config(chunk);
+      bool success = new_dev->config(element);
       if(success)
       {
          return new_dev;
@@ -73,9 +73,9 @@ public:
       }
    }
 
-   virtual std::string getChunkType()
+   virtual std::string getElementType()
    {
-      return DEV::getChunkType();
+      return DEV::getElementType();
    }
 };
 

@@ -34,7 +34,7 @@
 //#include <sys/types.h>
 #include <string>
 
-#include <jccl/Config/ConfigChunk.h>
+#include <jccl/Config/ConfigElement.h>
 
 #include <vrj/Kernel/Kernel.h>
 
@@ -55,12 +55,11 @@ namespace vrj
 
 
 // Just call the base class constructor
-void SurfaceProjection::config(jccl::ConfigChunkPtr chunk)
+void SurfaceProjection::config(jccl::ConfigElementPtr element)
 {
-   vprASSERT( (chunk->getDescToken() == std::string("surfaceDisplay")) ||
-              (chunk->getDescToken() == std::string("surfaceViewport")) );
+   vprASSERT( element->getID() == "surface_viewport" );
 
-   Projection::config(chunk);        // Call base class config first
+   Projection::config(element);        // Call base class config first
 }
 
 /**

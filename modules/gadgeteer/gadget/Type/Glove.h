@@ -127,9 +127,9 @@ public:
    virtual ~Glove() {}
 
    // Let constructor take care of device abilities and init
-   virtual bool config(jccl::ConfigChunkPtr chunk)
+   virtual bool config(jccl::ConfigElementPtr element)
    {
-      boost::ignore_unused_variable_warning(chunk);
+      boost::ignore_unused_variable_warning(element);
       return true;
    }
 

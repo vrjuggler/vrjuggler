@@ -33,89 +33,108 @@ package org.vrjuggler.jccl.config;
 
 import java.io.*;
 import java.util.*;
-import org.jdom.Document;
-import org.jdom.JDOMException;
-import org.jdom.input.SAXBuilder;
+import org.vrjuggler.jccl.config.io.*;
 
 /**
  * Implementation of data source that uses a resource stored in a file.
  */
 public class FileDataSource
    implements DataSource
-            , ConfigTokens
 {
-   public static final int UNKNOWN     = 0;
-   public static final int DEFINITIONS = 1;
-   public static final int ELEMENTS    = 2;
+   /**
+    * Creates a data source for a new file. This constructor is private, use
+    * create() or open() instead.
+    */
+   private FileDataSource(ConfigDefinitionRepository repos)
+   {
+      mDefinitionRepos = repos;
+   }
 
    /**
-    * Creates a data source for a file. If the file exists, the resulting data
-    * source will contain the contents of the file. If the file does not exist,
-    * a new data source of the given type will be created
+    * Creates a data source for a new configuration file. The configuration will
+    * be stored in the file with the given name.
+    *
+    * @param filename      the name of the file to create
+    *
+    * @throws IOException
+    *             if the file already exists
     */
-   public FileDataSource(String filename, int type)
+   public static FileDataSource create(String filename,
+                                       ConfigDefinitionRepository repos)
       throws IOException
    {
-      setFilename(filename);
+      FileDataSource ds = new FileDataSource(repos);
+      ds.createNew(filename);
+      return ds;
+   }
+
+   /**
+    * Creates a data source for an existing configuration file. The
+    * configuration stored in the file will be loaded.
+    *
+    * @param filename      the name of the file to open
+    *
+    * @throws IOException
+    *             if the file does not exist
+    */
+   public static FileDataSource open(String filename,
+                                     ConfigDefinitionRepository repos)
+      throws IOException
+   {
+      FileDataSource ds = new FileDataSource(repos);
+      ds.openExisting(filename);
+      return ds;
+   }
+
+   /**
+    * Creates a new configuration for the given file.
+    *
+    * @throws IOException
+    *             if the file already exists
+    */
+   private void createNew(String filename)
+      throws IOException
+   {
+      mFile = new File(filename);
       if (mFile.exists())
       {
-         reload();
+         throw new IOException("File already exists: "+filename);
       }
-      else
-      {
-         createNewResource(type);
-      }
+
+      mConfig = new Configuration(filename);
+   }
+
+   /**
+    * Loads a configuration from the given file.
+    *
+    * @throws IOException
+    *             if the file does not exist
+    */
+   private void openExisting(String filename)
+      throws IOException
+   {
+      mFile = new File(filename);
+      reload();
    }
 
    /**
     * Loads the data from the current file.
+    *
+    * @throws IOException
+    *             if there was a problem loading the file
     */
    private void reload()
       throws IOException
    {
-      InputStream in = new BufferedInputStream(new FileInputStream(mFile));
-
-      // Try to load in the resource
-      Document resource_doc = loadResource(in);
-      if (resource_doc.getRootElement().getName().equals(chunk_desc_db_TOKEN))
+      try
       {
-         // We just loaded a ChunkDescDB
-         mDefinitions = new ChunkDescDB();
-         mDefinitions.build(resource_doc);
-         mType = DEFINITIONS;
+         ConfigurationReader reader = new ConfigurationReader(mFile, mDefinitionRepos);
+         mConfig = reader.readConfiguration();
       }
-      else if (resource_doc.getRootElement().getName().equals(chunk_db_TOKEN))
+      catch (ParseException pe)
       {
-         // We just loaded a ConfigChunkDB
-         mElements = new ConfigChunkDB();
-         mElements.build(resource_doc);
-         mType = ELEMENTS;
+         throw new IOException(pe.getMessage());
       }
-      else
-      {
-         throw new IOException("Invalid file");
-      }
-   }
-
-   /**
-    * Creates a new file of the given type in memory. It is not saved to the
-    * disk.
-    */
-   private void createNewResource(int type)
-   {
-      switch (type)
-      {
-      case DEFINITIONS:
-         mDefinitions = new ChunkDescDB();
-         break;
-      case ELEMENTS:
-         mElements = new ConfigChunkDB();
-         break;
-      default:
-         throw new IllegalArgumentException("Invalid type: "+type);
-      }
-
-      mType = type;
    }
 
    /**
@@ -143,119 +162,54 @@ public class FileDataSource
    /**
     * Adds the given configuration element to this resource.
     *
-    * @param chunk   the configuration element to add
+    * @param elt        the configuration element to add
     */
-   public void add(ConfigChunk chunk)
+   public void add(ConfigElement elt)
    {
-      if (acceptsElements() && !isReadOnly())
+      if (!isReadOnly())
       {
-         mElements.add(chunk);
+         mConfig.addElement(elt);
       }
       else
       {
-         throw new UnsupportedOperationException(mFile.getAbsolutePath()+" is not a .config file");
-      }
-   }
-
-   /**
-    * Adds the given configuration definition to this resource.
-    *
-    * @param desc    the configuration definition to add
-    */
-   public void add(ChunkDesc desc)
-   {
-      if (acceptsDefinitions() && !isReadOnly())
-      {
-         mDefinitions.add(desc);
-      }
-      else
-      {
-         throw new UnsupportedOperationException(mFile.getAbsolutePath()+" is not a .desc file");
+         throw new UnsupportedOperationException("Data source is read only.");
       }
    }
 
    /**
     * Removes the given configuration element from this resource.
     *
-    * @param chunk   the configuration element to remove
+    * @param elt     the configuration element to remove
     */
-   public void remove(ConfigChunk chunk)
+   public void remove(ConfigElement elt)
    {
-      if (acceptsElements() && !isReadOnly())
+      if (!isReadOnly())
       {
-         mElements.remove(chunk);
+         mConfig.removeElement(elt);
       }
       else
       {
-         throw new UnsupportedOperationException(mFile.getAbsolutePath()+" is not a .config file");
+         throw new UnsupportedOperationException("Data source is read only.");
       }
    }
-
-   /**
-    * Removes the given configuration definition from this resource.
-    *
-    * @param desc    the configuration definition to remove
-    */
-   public void remove(ChunkDesc desc)
-   {
-      if (acceptsDefinitions() && !isReadOnly())
-      {
-         mDefinitions.remove(desc);
-      }
-      else
-      {
-         throw new UnsupportedOperationException(mFile.getAbsolutePath()+" is not a .desc file");
-      }
-   }
-
    /**
     * Tests if the given configuration element is in this resource.
+    *
+    * @param elt     the configuration element to look for
     */
-   public boolean contains(ConfigChunk chunk)
+   public boolean contains(ConfigElement elt)
    {
-      if (acceptsElements())
-      {
-         return mElements.contains(chunk);
-      }
-      else
-      {
-         throw new UnsupportedOperationException(mFile.getAbsolutePath()+" is not a .config file");
-      }
-   }
-
-   /**
-    * Tests if the given configuration definition is in this resource.
-    */
-   public boolean contains(ChunkDesc desc)
-   {
-      if (acceptsDefinitions())
-      {
-         return mDefinitions.contains(desc);
-      }
-      else
-      {
-         throw new UnsupportedOperationException(mFile.getAbsolutePath()+" is not a .desc file");
-      }
+      return mConfig.getElements().contains(elt);
    }
 
    /**
     * Gets a list of all the elements in this resource.
     *
-    * @return  a list of the ConfigChunks in this resource
+    * @return  a list of the ConfigElements in this resource
     */
    public List getElements()
    {
-      return mElements.getAll();
-   }
-
-   /**
-    * Gets a list of all the definitions in this resource.
-    *
-    * @return  a list of the ChunkDescs in this resource
-    */
-   public List getDefinitions()
-   {
-      return mDefinitions.getAll();
+      return mConfig.getElements();
    }
 
    /**
@@ -265,18 +219,8 @@ public class FileDataSource
    public void commit()
       throws IOException
    {
-      OutputStream out = new BufferedOutputStream(new FileOutputStream(mFile));
-      switch (mType)
-      {
-      case DEFINITIONS:
-         mDefinitions.write(out);
-         break;
-      case ELEMENTS:
-         mElements.write(out);
-         break;
-      default:
-         throw new IOException("Unknown file type");
-      }
+      ConfigurationWriter writer = new ConfigurationWriter(mFile);
+      writer.writeConfiguration(mConfig);
    }
 
    /**
@@ -303,65 +247,13 @@ public class FileDataSource
    }
 
    /**
-    * Checks if this data source can accept configuration elements.
-    */
-   public boolean acceptsElements()
-   {
-      return (mType == ELEMENTS);
-   }
-
-   /**
-    * Checks if this data source can accept configuration definitions.
-    */
-   public boolean acceptsDefinitions()
-   {
-      return (mType == DEFINITIONS);
-   }
-
-   /**
     * Gets a list of the URLs for the resources included by this data source.
     *
     * @return  a list of URLs for the included resources
     */
    public List getIncludes()
    {
-      List includes = new ArrayList();
-      if (acceptsElements())
-      {
-         includes.addAll(mElements.getIncludes());
-      }
-      if (acceptsDefinitions())
-      {
-//XXX         includes.addAll(mDefinitions.getIncludes());
-      }
-      return includes;
-   }
-
-   /**
-    * Loads the DOM document from the given input stream.
-    *
-    * @param input      the stream to read from
-    *
-    * @return  the DOM document corresponding to the resource's data
-    *
-    * @throws IOException     if there was an error loading the resource
-    */
-   private Document loadResource(InputStream input)
-      throws IOException
-   {
-      Document doc = null;
-
-      try
-      {
-         SAXBuilder builder = new SAXBuilder();
-         doc = builder.build(input);
-      }
-      catch (JDOMException e)
-      {
-         throw new IOException(e.getMessage());
-      }
-
-      return doc;
+      return mConfig.getIncludes();
    }
 
    /**
@@ -388,23 +280,12 @@ public class FileDataSource
       super.finalize();
    }
 
-   /**
-    * The file associated with this data source.
-    */
+   /** The file associated with this data source. */
    private File mFile;
 
-   /**
-    * The database of configuration elements.
-    */
-   private ConfigChunkDB mElements;
+   /** The configuration contained in this data source. */
+   private Configuration mConfig;
 
-   /**
-    * The database of configuration descriptions.
-    */
-   private ChunkDescDB mDefinitions;
-
-   /**
-    * The type of configuration elements this file contains.
-    */
-   private int mType;
+   /** The repository from which configuration definitions are retrieved. */
+   private ConfigDefinitionRepository mDefinitionRepos;
 }

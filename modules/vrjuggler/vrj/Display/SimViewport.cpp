@@ -47,49 +47,49 @@ namespace vrj
 {
 
    /**  Configure the simulator */
-void SimViewport::config(jccl::ConfigChunkPtr chunk)
+void SimViewport::config(jccl::ConfigElementPtr element)
 {
-   vprASSERT(chunk.get() != NULL);
-   vprASSERT(chunk->getDescToken() == std::string("simViewport"));
+   vprASSERT(element.get() != NULL);
+   vprASSERT(element->getID() == "simulator_viewport");
 
-   Viewport::config(chunk);
+   Viewport::config(element);
 
    mType = SIM;
 
-   const float vert_fov = chunk->getProperty<float>("vert_fov");
+   const float vert_fov = element->getProperty<float>("vertical_fov");
 
    mLeftProj = new CameraProjection;
    ((CameraProjection*) mLeftProj)->setVerticalFOV(vert_fov);
-   mLeftProj->config(chunk);
+   mLeftProj->config(element);
    mLeftProj->setEye(Projection::LEFT);
    mLeftProj->setViewport(this);
 
    mRightProj = new CameraProjection;
    ((CameraProjection*) mRightProj)->setVerticalFOV(vert_fov);
-   mRightProj->config(chunk);
+   mRightProj->config(element);
    mRightProj->setEye(Projection::RIGHT);
    mRightProj->setViewport(this);
 
    //bool has_simulator(false);
-   //has_simulator = chunk->getProperty<bool>("hasSimPlugin");
+   //has_simulator = element->getProperty<bool>("has_simulator_plugin");
    mSimulator = NULL;
 
    // Create the simulator stuff
    /*if(has_simulator)
    {
-      jccl::ConfigChunkPtr sim_chunk =
-         chunk->getProperty<jccl::ConfigChunkPtr>("simPlugIn");
+      jccl::ConfigElementPtr sim_element =
+         element->getProperty<jccl::ConfigElementPtr>("simulator_plugin");
 
       vprDEBUG(vrjDBG_DISP_MGR, vprDBG_CONFIG_LVL)
          << "SimViewport::config() creating simulator of type '"
-         << sim_chunk->getDescToken() << "'\n" << vprDEBUG_FLUSH;
-      mSimulator = DrawSimInterfaceFactory::instance()->createObject(sim_chunk->getDescToken());
+         << sim_element->getID() << "'\n" << vprDEBUG_FLUSH;
+      mSimulator = DrawSimInterfaceFactory::instance()->createObject(sim_element->getID());
 
       // XXX: Change this to an error once the new simulator loading code is
       // more robust.  -PH (4/13/2003)
       vprASSERT(NULL != mSimulator && "Failed to create draw simulator");
       mSimulator->initialize(this);
-      mSimulator->config(sim_chunk);
+      mSimulator->config(sim_element);
    }
    */
 }

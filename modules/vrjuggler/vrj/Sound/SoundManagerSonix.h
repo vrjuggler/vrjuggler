@@ -45,22 +45,22 @@ namespace vrj
    {
    public:
       /**
-       * Adds the chunk to the configuration.
-       * @pre configCanHandle(chunk) == true
+       * Adds the element to the configuration.
+       * @pre configCanHandle(element) == true
        */
-      virtual bool configAdd(jccl::ConfigChunkPtr chunk);
+      virtual bool configAdd(jccl::ConfigElementPtr element);
 
       /**
-       * Removes the chunk from the current configuration.
-       * @pre configCanHandle(chunk) == true
+       * Removes the element from the current configuration.
+       * @pre configCanHandle(element) == true
        */
-      virtual bool configRemove(jccl::ConfigChunkPtr chunk);
+      virtual bool configRemove(jccl::ConfigElementPtr element);
 
       /**
-       * Can the handler handle the given chunk?
+       * Can the handler handle the given element?
        * @return true if we can handle it; false if not
        */
-      virtual bool configCanHandle(jccl::ConfigChunkPtr chunk);
+      virtual bool configCanHandle(jccl::ConfigElementPtr element);
 
    public:
       /** Enables a frame to be drawn. */

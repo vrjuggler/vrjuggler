@@ -33,7 +33,7 @@
 #include <gadget/gadgetConfig.h>
 #include <typeinfo>
 #include <vpr/vpr.h>
-#include <jccl/Config/ConfigChunk.h>
+#include <jccl/Config/ConfigElement.h>
 #include <gadget/Type/DeviceFactory.h>
 #include <gadget/Type/DeviceConstructor.h>
 
@@ -155,7 +155,7 @@ void DeviceFactory::registerDevice(DeviceConstructorBase* constructor)
    vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL)
       << "gadget::DeviceFactory: Registered: "
       << std::setiosflags(std::ios::right) << std::setw(25)
-      << std::setfill(' ') << constructor->getChunkType()
+      << std::setfill(' ') << constructor->getElementType()
       << std::setiosflags(std::ios::right)
       //<< "   :" << (void*)constructor
       << "  type: " << typeid(*constructor).name() << std::endl
@@ -164,48 +164,46 @@ void DeviceFactory::registerDevice(DeviceConstructorBase* constructor)
 
 // Simply query all device constructors registered looking
 // for one that knows how to load the device
-bool DeviceFactory::recognizeDevice(jccl::ConfigChunkPtr chunk)
+bool DeviceFactory::recognizeDevice(jccl::ConfigElementPtr element)
 {
-   if(findConstructor(chunk) == -1)
-      return false;
-   else
-      return true;
+   return ! (findConstructor(element) == -1);
 }
 
 /**
  * Loads the specified device.
  */
-Input* DeviceFactory::loadDevice(jccl::ConfigChunkPtr chunk)
+Input* DeviceFactory::loadDevice(jccl::ConfigElementPtr element)
 {
-   vprASSERT(recognizeDevice(chunk));
+   vprASSERT(recognizeDevice(element));
 
-   int index = findConstructor(chunk);
+   int index(findConstructor(element));
 
    Input* new_dev;
    DeviceConstructorBase* constructor = mConstructors[index];
 
    vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL)
       << "gadget::DeviceFactory::loadDevice: Loading device: "
-      << chunk->getDescToken() << "  with: " << typeid(*constructor).name()
+      << element->getID() << "  with: " << typeid(*constructor).name()
       << std::endl << vprDEBUG_FLUSH;
 
-   new_dev = constructor->createDevice(chunk);
+   new_dev = constructor->createDevice(element);
    return new_dev;
 }
 
-int DeviceFactory::findConstructor(jccl::ConfigChunkPtr chunk)
+int DeviceFactory::findConstructor(jccl::ConfigElementPtr element)
 {
-   std::string chunk_type;
-   chunk_type = chunk->getDescToken();
+   const std::string element_type(element->getID());
 
-   for(unsigned int i=0;i<mConstructors.size();i++)
+   for ( unsigned int i = 0; i < mConstructors.size(); ++i )
    {
       // Get next constructor
       DeviceConstructorBase* construct = mConstructors[i];
       vprASSERT(construct != NULL);
 
-      if(construct->getChunkType() == chunk_type)
+      if(construct->getElementType() == element_type)
+      {
          return i;
+      }
    }
 
    return -1;
@@ -227,9 +225,9 @@ void DeviceFactory::debugDump()
       vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_VERB_LVL)
          << cNum << ": Constructor:" << (void*)dev_constr
          << "   type:" << typeid(*dev_constr).name() << "\n" << vprDEBUG_FLUSH;
-      vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_VERB_LVL) << "   recog:"
-                                      << dev_constr->getChunkType() << "\n"
-                                      << vprDEBUG_FLUSH;
+      vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_VERB_LVL)
+         << "   recog:" << dev_constr->getElementType() << "\n"
+         << vprDEBUG_FLUSH;
    }
 }
 

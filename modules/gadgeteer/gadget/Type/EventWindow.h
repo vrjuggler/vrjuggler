@@ -43,7 +43,7 @@
 #include <vpr/IO/SerializableObject.h>
 #include <vpr/Sync/Mutex.h>
 #include <vpr/Util/Interval.h>
-#include <jccl/Config/ConfigChunkPtr.h>
+#include <jccl/Config/ConfigElementPtr.h>
 
 #include <gadget/Type/EventWindow/Keys.h>
 #include <gadget/Type/EventWindow/EventPtr.h>
@@ -80,11 +80,8 @@ public:
       /* Do nothing. */ ;
    }
 
-   virtual std::string getBaseType()
-   {
-      return std::string("EventWindow");
-   }
-   
+   virtual std::string getBaseType();
+
    /**
     * Write both mCurKeys and mCurEventQueueLock to a stream using the given ObjectWriter.
     */
@@ -95,9 +92,9 @@ public:
     */
    virtual vpr::ReturnStatus readObject(vpr::ObjectReader* reader);
 
-   virtual bool config(jccl::ConfigChunkPtr chunk)
+   virtual bool config(jccl::ConfigElementPtr element)
    {
-      boost::ignore_unused_variable_warning(chunk);
+      boost::ignore_unused_variable_warning(element);
       return true;
    }
 

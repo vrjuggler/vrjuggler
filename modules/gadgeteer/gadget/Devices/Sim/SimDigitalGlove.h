@@ -66,11 +66,8 @@ public:
    /**  Destructor */
    virtual ~SimDigitalGlove();
 
-   /**
-    *  Takes a config chunk
-    *  The Juggler API calls this
-    */
-   virtual bool config( jccl::ConfigChunkPtr chunk );
+   /** Configures this device.  */
+   virtual bool config(jccl::ConfigElementPtr element);
 
    /**
     * Gets the digital data for the given "finger".
@@ -130,7 +127,7 @@ public:
 
    void updateFingerAngles();
 
-   static std::string getChunkType() { return std::string("SimDigitalGlove");}
+   static std::string getElementType();
 
 // Gesture stuff:
    /**

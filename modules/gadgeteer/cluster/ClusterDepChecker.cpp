@@ -45,21 +45,23 @@
 namespace cluster
 {
 
-bool ClusterDepChecker::depSatisfied(jccl::ConfigChunkPtr chunk)
+bool ClusterDepChecker::depSatisfied(jccl::ConfigElementPtr element)
 {
-   if (chunk->getDescToken() == ClusterNetwork::getMachineSpecificChunkType())
+   if (element->getID() == ClusterNetwork::getMachineSpecificElementType())
    {
-      // Machine Specific Chunks should have no dependencies since we are simply inserting
-      // the embedded chunks into the pending list. This is to fix errors like the embedded
-      // keyboard window in a DisplayWindow would always create a dependancy loop
-      debugOutDependencies(chunk,vprDBG_WARNING_LVL);
+      // Machine Specific elements should have no dependencies since we are
+      // simply inserting the child elements into the pending list. This is
+      // to fix errors like the embedded keyboard window in a DisplayWindow
+      // would always create a dependancy loop.
+      debugOutDependencies(element, vprDBG_WARNING_LVL);
       return true;
    }
-   else if (cluster::ClusterManager::instance()->recognizeRemoteDeviceConfig(chunk))
+   else if (cluster::ClusterManager::instance()->recognizeRemoteDeviceConfig(element))
    {
-      // Remote devices should have no dependencies since we are not actually configuring anything,
-      // we are only creating a data structure that we can determine without any other chunks
-      // Virtual devices should not have any dependencies
+      // Remote devices should have no dependencies since we are not actually
+      // configuring anything, we are only creating a data structure that we
+      // can determine without any other elements.
+      // Virtual devices should not have any dependencies.
 
       // RemoteDeviceConfig has only two dependencies
       //   - deivceHost exists in Active List
@@ -72,14 +74,16 @@ bool ClusterDepChecker::depSatisfied(jccl::ConfigChunkPtr chunk)
       cluster::ClusterNetwork* cluster_net = cluster::ClusterNetwork::instance();
 
       // deviceHost exists in active configuration
-      std::string device_host = chunk->getProperty<std::string>("deviceHost");
+      std::string device_host = element->getProperty<std::string>("device_host");
       ClusterNode* node = cluster_net->getClusterNodeByName(device_host);
 
-      if(!cfg_mgr->isChunkInActiveList(device_host))
+      if(!cfg_mgr->isElementInActiveList(device_host))
       {
          pass = false;
-         vprDEBUG(gadgetDBG_RIM,vprDBG_WARNING_LVL) << "[ClusterDepChecker] Host node's ConfigChunk("
-            << device_host << ") is not in the Active List yet.\n" << vprDEBUG_FLUSH;
+         vprDEBUG(gadgetDBG_RIM,vprDBG_WARNING_LVL)
+            << "[ClusterDepChecker] Host node's ConfigElement("
+            << device_host << ") is not in the Active List yet.\n"
+            << vprDEBUG_FLUSH;
       }
       else if(node == NULL)
       {
@@ -97,33 +101,33 @@ bool ClusterDepChecker::depSatisfied(jccl::ConfigChunkPtr chunk)
             << device_host << ") not connected yet.\n" << vprDEBUG_FLUSH;
       }
       //Not needed, we kind of just did it above
-      // debugOutDependencies(chunk,vprDBG_WARNING_LVL);
+      // debugOutDependencies(element, vprDBG_WARNING_LVL);
 
       return pass;
    }
-   /*else if (cluster::ClusterManager::instance()->recognizeClusterManagerConfig(chunk))
+   /*else if (cluster::ClusterManager::instance()->recognizeClusterManagerConfig(element))
    {
       // We need the following for the Cluster to be setup correctly
       // - All Nodes connected(All listed machines connected)
       // - All Devices configured
 
       // HERE
-      // - No MachineSpecific Chunks Pending
+      // - No MachineSpecific elements Pending
 
 
-      int number_nodes = chunk->getNum("cluster_nodes");
+      int number_nodes = element->getNum("cluster_nodes");
       for (int i = 0 ; i < number_nodes ; i++)
       {
-         std::string node_name = chunk->getProperty<std::string>("cluster_nodes",i);
-         jccl::ConfigChunkPtr node_chunk = ClusterManager::instance()->getConfigChunkPointer(node_name);
-         if (node_chunk == NULL)
+         std::string node_name = element->getProperty<std::string>("cluster_nodes",i);
+         jccl::ConfigElementPtr node_element = ClusterManager::instance()->getConfigElementPointer(node_name);
+         if (node_element.get() == NULL)
          {
             // Node not in current configuration
             jccl::ConfigManager::instance()->delayStalePendingList();
             std::cout << "L" << std::flush;
             return(false);
          }
-         std::string host_name = node_chunk->getProperty<std::string>("host_name");
+         std::string host_name = node_element->getProperty<std::string>("host_name");
          if (host_name != ClusterNetwork::instance()->getLocalHostname())
          {
             ClusterNode* node = ClusterNetwork::instance()->getClusterNodeByName(node_name);
@@ -152,45 +156,48 @@ bool ClusterDepChecker::depSatisfied(jccl::ConfigChunkPtr chunk)
 }
 
 
-// We need to handle Machine Specific Chunks because in reality they have no dependencies
-bool ClusterDepChecker::canHandle(jccl::ConfigChunkPtr chunk)
+// We need to handle Machine Specific elements because in reality they have no
+// dependencies.
+bool ClusterDepChecker::canHandle(jccl::ConfigElementPtr element)
 {
-   return (chunk->getDescToken() == ClusterNetwork::getMachineSpecificChunkType() ||
-           cluster::ClusterManager::instance()->recognizeRemoteDeviceConfig(chunk) /*||
-           cluster::ClusterManager::instance()->recognizeClusterManagerConfig(chunk)*/ );
+   return (element->getID() == ClusterNetwork::getMachineSpecificElementType() ||
+           cluster::ClusterManager::instance()->recognizeRemoteDeviceConfig(element) /*||
+           cluster::ClusterManager::instance()->recognizeClusterManagerConfig(element)*/ );
 }
 
-void ClusterDepChecker::debugOutDependencies(jccl::ConfigChunkPtr chunk,int dbg_lvl)
+void ClusterDepChecker::debugOutDependencies(jccl::ConfigElementPtr element,
+                                             const int dbg_lvl)
 {
    boost::ignore_unused_variable_warning(dbg_lvl);
 
-   if (chunk->getDescToken() == ClusterNetwork::getMachineSpecificChunkType())
+   if (element->getID() == ClusterNetwork::getMachineSpecificElementType())
    {
-      // Machine Specific Chunks should have no dependencies since we are simply inserting
-      // the embedded chunks into the pending list
-      //vprDEBUG(vprDBG_ALL,dbg_lvl) << "MachineSpecific Chunks have NO Deps!!!\n" << vprDEBUG_FLUSH;
+      // Machine Specific element should have no dependencies since we are
+      // simply inserting the child elements into the pending list.
+      //vprDEBUG(vprDBG_ALL,dbg_lvl) << "MachineSpecific elements have NO Deps!!!\n" << vprDEBUG_FLUSH;
    }
-   else if (cluster::ClusterManager::instance()->recognizeRemoteDeviceConfig(chunk))
+   else if (cluster::ClusterManager::instance()->recognizeRemoteDeviceConfig(element))
    {
-      // Remote devices should have no dependencies since we are not actually configuring anything,
-      // we are only creating a data structure that we can determine without any other chunks
-      //vprDEBUG(vprDBG_ALL,dbg_lvl) << "Virtual Device: " << chunk->getName()
+      // Remote devices should have no dependencies since we are not actually
+      // configuring anything, we are only creating a data structure that we
+      // can determine without any other elements.
+      //vprDEBUG(vprDBG_ALL,dbg_lvl) << "Virtual Device: " << element->getName()
       //   << " has NO Deps since it is Virtual!!!\n" << vprDEBUG_FLUSH;
    }
-   /*else if (cluster::ClusterManager::instance()->recognizeClusterManagerConfig(chunk))
+   /*else if (cluster::ClusterManager::instance()->recognizeClusterManagerConfig(element))
    {
-      //int number_nodes = chunk->getNum("cluster_nodes");
+      //int number_nodes = element->getNum("cluster_nodes");
       //for (int i = 0 ; i < number_nodes ; i++)
       //{
-      //   std::string node_name = chunk->getProperty<std::string>("cluster_nodes",i);
-      //   jccl::ConfigChunkPtr node_chunk = RmoteInputManager::instance()->getConfigChunkPointer(node_name);
-      //   if (node_chunk == NULL)
+      //   std::string node_name = element->getProperty<std::string>("cluster_nodes",i);
+      //   jccl::ConfigElementPtr node_element = RmoteInputManager::instance()->getConfigElementPointer(node_name);
+      //   if (node_element.get() == NULL)
       //   {
       //      vprDEBUG(vprDBG_ALL, dbg_lvl) << node_name << " Node not in current configuration."
       //         << std::endl << vprDEBUG_FLUSH;
       //      return;
       //   }
-      //   std::string host_name = node_chunk->getProperty<std::string>("host_name");
+      //   std::string host_name = node_element->getProperty<std::string>("host_name");
       //   if (host_name != ClusterNetwork::instance()->getLocalHostname())
       //   {
       //      ClusterNode* node = ClusterNetwork::instance()->getClusterNodeByName(node_name);

@@ -36,10 +36,10 @@
 #include <list>
 #include <sstream>
 
-#include <jccl/Config/ChunkFactory.h>
-#include <jccl/Config/ConfigChunkDB.h>
-#include <jccl/Config/ChunkDescDB.h>
-#include <jccl/Config/ConfigChunk.h>
+#include <jccl/Config/ElementFactory.h>
+#include <jccl/Config/Configuration.h>
+#include <jccl/Config/ConfigDefinitionRepository.h>
+#include <jccl/Config/ConfigElement.h>
 #include <jccl/RTRC/ConfigManager.h>
 
 #include <jccl/RTRC/RTRCInterfaceSubjectImpl.h>
@@ -47,71 +47,69 @@
 namespace jccl
 {
 
-void RTRCInterfaceSubjectImpl::add( const char* chunkDBString )
+void RTRCInterfaceSubjectImpl::add(const char* configurationString)
 {
-   jccl::ConfigChunkDB newChunks;
-   std::string chunkString = chunkDBString;
+   jccl::Configuration new_elements;
+   std::string cfg_string(configurationString);
 
-   //Create a string that contains a full Juggler config chunk DB
-   //Loading from an istream
-   std::istringstream input (chunkString);
+   // Create a string that contains a full JCCL configuration.
+   // Loading from an istream.
+   std::istringstream input(cfg_string);
 
-   input >> newChunks;
+   input >> new_elements;
    
    //Send pending changes to ConfigManager
-   jccl::ConfigManager::instance()->addPendingAdds( &newChunks );
+   jccl::ConfigManager::instance()->addPendingAdds(&new_elements);
 }
 
 
-void RTRCInterfaceSubjectImpl::remove( const char* chunkDBString )
+void RTRCInterfaceSubjectImpl::remove(const char* configurationString)
 {
-   jccl::ConfigChunkDB deleteChunks;
-   std::string chunkString = chunkDBString;
+   jccl::Configuration delete_elements;
+   std::string cfg_string(configurationString);
 
-   //Create a string that contains a full Juggler config chunk DB
-   //Loading from an istream
-   std::istringstream input (chunkString);
+   // Create a string that contains a full JCCL configuration.
+   // Loading from an istream.
+   std::istringstream input(cfg_string);
 
-   input >> deleteChunks;
+   input >> delete_elements;
 
    //Send pending changes to ConfigManager   
-   jccl::ConfigManager::instance()->addPendingRemoves( &deleteChunks );
-
+   jccl::ConfigManager::instance()->addPendingRemoves(&delete_elements);
 }
 
-
-void RTRCInterfaceSubjectImpl::swap( const char* addChunkDBString, const char* removeChunkDBString )
+void RTRCInterfaceSubjectImpl::swap(const char* addConfigurationString,
+                                    const char* removeConfigurationString)
 {
-   jccl::ConfigChunkDB addChunks;
-   jccl::ConfigChunkDB deleteChunks;
-   std::string addChunkString = addChunkDBString;
-   std::string removeChunkString = removeChunkDBString;
+   jccl::Configuration add_elements, delete_elements;
+   std::string add_element_string(addConfigurationString);
+   std::string remove_element_string(removeConfigurationString);
 
    //Loading from an istream
-   std::istringstream add_input (addChunkString);
-   std::istringstream remove_input (removeChunkString);
+   std::istringstream add_input(add_element_string);
+   std::istringstream remove_input(remove_element_string);
 
-   add_input >> addChunks;
-   remove_input >> deleteChunks;
+   add_input >> add_elements;
+   remove_input >> delete_elements;
    
    //Send pending changes to ConfigManager
-   jccl::ConfigManager::instance()->addPendingRemoves( &deleteChunks );
-   jccl::ConfigManager::instance()->addPendingAdds( &addChunks );
-
+   jccl::ConfigManager::instance()->addPendingRemoves(&delete_elements);
+   jccl::ConfigManager::instance()->addPendingAdds(&add_elements);
 }
 
-char* RTRCInterfaceSubjectImpl::getChunks()
+char* RTRCInterfaceSubjectImpl::getElements()
 {
    //Lock the config manager
    jccl::ConfigManager::instance()->lockActive();
 
-   //Get the list of active config chunks from config manager
-   ConfigChunkDB* activeChunkDB = jccl::ConfigManager::instance()->getActiveConfig();
+   // Get the list of active config elements from config manager.
+   Configuration* active_elements =
+      jccl::ConfigManager::instance()->getActiveConfig();
 
-   //Compile a string of the config chunk DB
+   // Compile a string of the configuration.
    std::ostringstream active_output;
 
-   active_output << activeChunkDB;
+   active_output << active_elements;
 
    //Unlock the list
    jccl::ConfigManager::instance()->unlockActive();
@@ -120,19 +118,19 @@ char* RTRCInterfaceSubjectImpl::getChunks()
    return CORBA::string_dup(active_output.str().c_str());
 }
 
-char* RTRCInterfaceSubjectImpl::getChunkDescs()
+char* RTRCInterfaceSubjectImpl::getDefinitions()
 {
+   // Get the list of definitions from the ElementFactory.
+   ConfigDefinitionRepository* defs =
+      jccl::ElementFactory::instance()->getConfigDefinitionRepository();
 
-   //Get the list of chunk descs from the ChunkFactory
-   ChunkDescDB* chunkDescs = jccl::ChunkFactory::instance()->getChunkDescDB();
+   // Compile a string of the repository.
+   std::ostringstream defs_output;
 
-   //Compile a string of the chunk desc DB
-   std::ostringstream descs_output;
-
-   descs_output << chunkDescs;
+   defs_output << defs;
 
    //Return the full string
-   return CORBA::string_dup(descs_output.str().c_str());
+   return CORBA::string_dup(defs_output.str().c_str());
 }
 
 

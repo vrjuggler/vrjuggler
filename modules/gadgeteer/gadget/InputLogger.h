@@ -40,7 +40,7 @@
 #include <cppdom/cppdom.h>
 
 #include <vpr/vpr.h>
-#include <jccl/Config/ConfigChunkPtr.h>
+#include <jccl/Config/ConfigElementPtr.h>
 
 #include <gadget/Type/DigitalInterface.h>
 #include <gadget/InputLoggerPtr.h>
@@ -62,8 +62,8 @@ public:
    virtual ~InputLogger()
    {;}
 
-   /** Configure the logger */
-   virtual bool config( jccl::ConfigChunkPtr chunk);
+   /** Configures the logger. */
+   virtual bool config(jccl::ConfigElementPtr element);
 
    /** Processing function.
    * This method is called by the input manager each update frame

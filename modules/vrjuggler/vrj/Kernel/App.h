@@ -34,15 +34,16 @@
 #define _VRJ_APP_H_
 
 #include <vrj/vrjConfig.h>
+
+#include <boost/concept_check.hpp>
+
 #include <vpr/Util/Assert.h>
 #include <vrj/Util/Debug.h>
-#include <jccl/RTRC/ConfigChunkHandler.h>
+#include <jccl/RTRC/ConfigElementHandler.h>
 #include <vrj/Sound/SoundManagerFactory.h>
 
 #include <gadget/Type/PositionProxy.h>
 #include <gadget/Type/Position/PositionUnitConversion.h>
-
-#include <boost/concept_check.hpp>
 
 namespace vrj
 {
@@ -78,7 +79,7 @@ class Kernel;
  *       UpdateTrackers();    <br>
  *  }                         <br>
  */
-class VJ_CLASS_API App : public jccl::ConfigChunkHandler
+class VJ_CLASS_API App : public jccl::ConfigElementHandler
 {
 public:
    /** Constructor
@@ -182,11 +183,11 @@ public:
    }
 
 
-public:  // --- DEfault config handlers: (inherited from jccl::ConfigChunkHandler) --- //
+public:  // --- Default config handlers: (inherited from jccl::ConfigElementHandler) --- //
    // Default to not handling anything
-   virtual bool configCanHandle(jccl::ConfigChunkPtr chunk)
+   virtual bool configCanHandle(jccl::ConfigElementPtr element)
    {
-      boost::ignore_unused_variable_warning(chunk);
+      boost::ignore_unused_variable_warning(element);
       return false;
    }
 
@@ -200,16 +201,16 @@ public:  // --- DEfault config handlers: (inherited from jccl::ConfigChunkHandle
    { return true; }
 
 protected:
-   //! NOTE: Inherited from jccl::ConfigChunkHandler
-   virtual bool configAdd(jccl::ConfigChunkPtr chunk)
+   /// @note Inherited from jccl::ConfigElementHandler.
+   virtual bool configAdd(jccl::ConfigElementPtr element)
    {
-     boost::ignore_unused_variable_warning(chunk);
+     boost::ignore_unused_variable_warning(element);
      vprASSERT(false);  return false;
    }
-   //! NOTE: INherited from jccl::ConfigChunkHandler
-   virtual bool configRemove(jccl::ConfigChunkPtr chunk)
+   /// @note Inherited from jccl::ConfigElementHandler.
+   virtual bool configRemove(jccl::ConfigElementPtr element)
    {
-      boost::ignore_unused_variable_warning(chunk);
+      boost::ignore_unused_variable_warning(element);
       vprASSERT(false); return false;
    }
 
@@ -233,5 +234,6 @@ public:  // --- Factory functions --- //
    }
 };
 
-};
+}
+
 #endif

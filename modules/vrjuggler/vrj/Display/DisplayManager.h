@@ -40,8 +40,8 @@
 
 //#include <gadget/Type/Position.h>
 #include <vrj/Util/Debug.h>
-#include <jccl/RTRC/ConfigChunkHandler.h>
-#include <jccl/Config/ConfigChunk.h>
+#include <jccl/RTRC/ConfigElementHandler.h>
+#include <jccl/Config/ConfigElementPtr.h>
 
 namespace vrj
 {
@@ -61,27 +61,27 @@ class Display;
  *
  * @date 9-7-97
  */
-class VJ_CLASS_API DisplayManager : public jccl::ConfigChunkHandler
+class VJ_CLASS_API DisplayManager : public jccl::ConfigElementHandler
 {
 public:     // --- Config stuff -- //
    /**
-    * Adds the chunk to the configuration.
-    * @pre configCanHandle(chunk) == true
+    * Adds the element to the configuration.
+    * @pre configCanHandle(element) == true
     */
-   virtual bool configAdd(jccl::ConfigChunkPtr chunk);
+   virtual bool configAdd(jccl::ConfigElementPtr element);
 
    /**
-    * Removes the chunk from the current configuration.
-    * @pre configCanHandle(chunk) == true
+    * Removes the element from the current configuration.
+    * @pre configCanHandle(element) == true
     */
-   virtual bool configRemove(jccl::ConfigChunkPtr chunk);
+   virtual bool configRemove(jccl::ConfigElementPtr element);
 
    /**
-    * Can the handler handle the given chunk?
+    * Can the handler handle the given configuration element?
     *
     * @return true if we can handle it, false if we can't.
     */
-   virtual bool configCanHandle(jccl::ConfigChunkPtr chunk);
+   virtual bool configCanHandle(jccl::ConfigElementPtr element);
 
 public:
    /**
@@ -119,26 +119,26 @@ public:
     */
    std::vector<vrj::Display*> getAllDisplays();
 
-   jccl::ConfigChunkPtr getDisplaySystemChunk();
+   jccl::ConfigElementPtr getDisplaySystemElement();
 
 private:
    /**
-    * Adds the chunk to the configuration.
+    * Adds the element to the configuration.
     *
-    * @pre configCanHandle(chunk) == true
+    * @pre configCanHandle(element) == true
     * @post (display of same name already loaded) ==> old display closed, new one opened<br>
     *       (display is new) ==> (new display is added)<br>
     *       Draw Manager is notified of the display change.
     */
-   bool configAddDisplay(jccl::ConfigChunkPtr chunk);
+   bool configAddDisplay(jccl::ConfigElementPtr element);
 
    /**
-    * Removes the chunk from the current configuration.
+    * Removes the element from the current configuration.
     *
-    * @pre configCanHandle(chunk) == true
+    * @pre configCanHandle(element) == true
     * @return success
     */
-   bool configRemoveDisplay(jccl::ConfigChunkPtr chunk);
+   bool configRemoveDisplay(jccl::ConfigElementPtr element);
 
 
    /**
@@ -175,7 +175,7 @@ public:
 
 protected:
    DrawManager*    mDrawManager;           /**< The current Draw Manager to communicate with */
-   jccl::ConfigChunkPtr    mDisplaySystemChunk;    /**< Config chunk for the displaySystem */
+   jccl::ConfigElementPtr mDisplaySystemElement; /**< Config element for the displaySystem */
 
 
 
@@ -189,7 +189,7 @@ protected:
    {;}
 
    DisplayManager(const DisplayManager& o)
-      : jccl::ConfigChunkHandler()
+      : jccl::ConfigElementHandler()
    {
       ;
    }

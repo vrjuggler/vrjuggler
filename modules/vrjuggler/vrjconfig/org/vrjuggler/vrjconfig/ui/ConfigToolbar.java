@@ -37,7 +37,6 @@ import java.io.*;
 import java.util.Iterator;
 import java.util.Stack;
 import javax.swing.*;
-import org.vrjuggler.tweek.beans.loader.BeanJarClassLoader;
 import org.vrjuggler.tweek.services.EnvironmentService;
 import org.vrjuggler.jccl.config.*;
 import org.vrjuggler.vrjconfig.PopupButton;
@@ -64,7 +63,7 @@ public class ConfigToolbar
       // Try to get icons for the toolbar buttons
       try
       {
-         ClassLoader loader = BeanJarClassLoader.instance();
+         ClassLoader loader = getClass().getClassLoader();
          newBtn.setIcon(new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/images/newchunk.gif")));
          openBtn.setIcon(new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/images/open.gif")));
          saveBtn.setIcon(new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/images/save.gif")));
@@ -146,23 +145,7 @@ public class ConfigToolbar
     */
    private ConfigContext createDefaultConfigContext()
    {
-      ConfigContext ctx = new ConfigContext();
-
-      try
-      {
-         String default_def_file = expandEnvVars(DEFAULT_DEFINITION_FILE);
-         // Add the VR Juggler definitions into the context
-         FileDataSource defs_data_source = new FileDataSource(default_def_file,
-                                                              FileDataSource.DEFINITIONS);
-         getConfigBroker().add(default_def_file, defs_data_source);
-         ctx.add(default_def_file);
-      }
-      catch (IOException ioe)
-      {
-         ioe.printStackTrace();
-      }
-
-      return ctx;
+      return new ConfigContext();
    }
 
    private boolean openInContext(String filename, ConfigContext ctx)
@@ -170,8 +153,8 @@ public class ConfigToolbar
       try
       {
          String file = expandEnvVars(filename);
-         FileDataSource data_source = new FileDataSource(file, FileDataSource.DEFINITIONS);
-         getConfigBroker().add(file, data_source);
+         FileDataSource data_source = FileDataSource.open(file, getBroker().getRepository());
+         getBroker().add(file, data_source);
          ctx.add(file);
       }
       catch (IOException ioe)
@@ -206,9 +189,8 @@ public class ConfigToolbar
          {
             File new_file = new File(new_dlg.getDirectory(), new_dlg.getName());
             String new_filename = new_file.getAbsolutePath();
-            FileDataSource data_source = new FileDataSource(new_filename,
-                                                            FileDataSource.ELEMENTS);
-            getConfigBroker().add(new_filename, data_source);
+            FileDataSource data_source = FileDataSource.create(new_filename, getBroker().getRepository());
+            getBroker().add(new_filename, data_source);
             ctx.add(new_filename);
          }
          catch (IOException ioe)
@@ -216,9 +198,6 @@ public class ConfigToolbar
             ioe.printStackTrace();
             return false;
          }
-
-         // Make sure descs are available
-         ChunkFactory.setDescs(getConfigBroker().getDescs(ctx));
 
          setConfigContext(ctx);
          fireAction("New");
@@ -243,13 +222,9 @@ public class ConfigToolbar
             return false;
          }
 
-         // Make sure any new descs are available
-         ChunkFactory.setDescs(getConfigBroker().getDescs(ctx));
-
          // Add in the new data source
-         FileDataSource new_data_source = new FileDataSource(filename,
-                                                             FileDataSource.ELEMENTS);
-         getConfigBroker().add(filename, new_data_source);
+         FileDataSource new_data_source = FileDataSource.create(filename, getBroker().getRepository());
+         getBroker().add(filename, new_data_source);
          ctx.add(filename);
          setConfigContext(ctx);
 
@@ -301,8 +276,6 @@ public class ConfigToolbar
 
             ConfigBroker broker = new ConfigBrokerProxy();
 
-            ChunkFactory.setDescs(broker.getDescs(ctx));
-
             // We want to automatically follow include directives. Keep track of
             // all the URLs on a stack and read them one at a time in the order
             // that we come across them
@@ -315,20 +288,9 @@ public class ConfigToolbar
                String res_name = expandEnvVars(res_file.getAbsolutePath());
                System.out.println("Opening included resource: "+res_name);
 
-               FileDataSource data_source = new FileDataSource(res_name,
-                                                               FileDataSource.ELEMENTS);
+               FileDataSource data_source = FileDataSource.open(res_name, getBroker().getRepository());
                broker.add(res_name, data_source);
                ctx.add(res_name);
-
-               // Add the definitions in this data source to the chunk factory
-               if (data_source.acceptsDefinitions())
-               {
-                  java.util.List descs = data_source.getDefinitions();
-                  for (Iterator itr = descs.iterator(); itr.hasNext(); )
-                  {
-                     ChunkFactory.add((ChunkDesc)itr.next());
-                  }
-               }
 
                // Look through the chunks in the newly loaded file and see if
                // any of them are include directives
@@ -484,7 +446,7 @@ public class ConfigToolbar
          {
             File file = fileChooser.getSelectedFile();
             String filename = file.getAbsolutePath();
-            if (! getConfigBroker().containsDataSource(filename))
+            if (! getBroker().containsDataSource(filename))
             {
                name = filename;
             }
@@ -510,7 +472,7 @@ public class ConfigToolbar
    /**
     * Gets a handle to the configuration broker service.
     */
-   private ConfigBroker getConfigBroker()
+   private ConfigBroker getBroker()
    {
       return new ConfigBrokerProxy();
    }

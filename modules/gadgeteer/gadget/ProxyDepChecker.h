@@ -59,23 +59,23 @@ public:
    { return std::string("gadget::ProxyChecker Checker"); }
 
    // We can handle only keyboard configuration information.
-   virtual bool canHandle(jccl::ConfigChunkPtr chunk);
+   virtual bool canHandle(jccl::ConfigElementPtr element);
 
    /**
     * Are the dependencies satisfied?
     * Defaults to all being handled for it.
     */
-   virtual bool depSatisfied(jccl::ConfigChunkPtr chunk)
+   virtual bool depSatisfied(jccl::ConfigElementPtr element)
    {
-      boost::ignore_unused_variable_warning(chunk);
+      boost::ignore_unused_variable_warning(element);
       return true;
    }
 
    /** Writes out the dependencies to the vprDEBUG macro. */
-   virtual void debugOutDependencies (jccl::ConfigChunkPtr chunk,
-                                      int dbg_lvl = vprDBG_WARNING_LVL)
+   virtual void debugOutDependencies(jccl::ConfigElementPtr element,
+                                     int dbg_lvl = vprDBG_WARNING_LVL)
    {
-      jccl::DepChecker::debugOutDependencies(chunk,dbg_lvl);
+      jccl::DepChecker::debugOutDependencies(element, dbg_lvl);
       vprDEBUG_NEXT_BEGIN(vprDBG_ALL,dbg_lvl)
          << "Proxies should never have dependencies!!!" << vprDEBUG_FLUSH;
    }

@@ -39,8 +39,7 @@
 
 #include <gadget/Type/PositionInterface.h>
 
-#include <jccl/Config/ConfigChunk.h>
-#include <jccl/Config/ConfigChunkPtr.h>
+#include <jccl/Config/ConfigElementPtr.h>
 
 #include <gmtl/Matrix.h>
 #include <gmtl/Vec.h>
@@ -61,12 +60,12 @@ public:
 
    /*
    * Configure the basic simulator config
-   * @pre chunk is a valid chunk.
+   * @pre element is a valid configuration element.
    * @post It should be configured
    */
-   virtual bool config(jccl::ConfigChunkPtr chunk);
+   virtual bool config(jccl::ConfigElementPtr element);
 
-   static std::string getChunkType()
+   static std::string getElementType()
    {
       return std::string("default_simulator");
    }
@@ -106,7 +105,7 @@ public:  // Sim Drawing parameters
    { return mSurfaceColor; }
 */
    virtual void updateSimulatorSceneGraph();
-   bool configPerformerAPI(jccl::ConfigChunkPtr chunk);
+   bool configPerformerAPI(jccl::ConfigElementPtr element);
    void initSimulatorGraph();
 
 protected:

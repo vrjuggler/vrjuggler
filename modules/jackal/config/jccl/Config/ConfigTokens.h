@@ -39,55 +39,72 @@
 
 namespace jccl
 {
+   typedef enum
+   {
+      T_INT,
+      T_FLOAT,
+      T_BOOL,
+      T_STRING,
+      T_ELEMENT_PTR,
+      T_CHILD_ELEMENT,
+      VJ_T_INVALID
+   } VarType;
 
-typedef enum
-{
-   T_INT,
-   T_FLOAT,
-   T_BOOL,
-   T_STRING,
-   T_DISTANCE,
-   T_CHUNK,
-   T_EMBEDDEDCHUNK,
-   VJ_T_INVALID
-} VarType;
+   const std::string EMBEDDED_SEPARATOR("/");
 
-// Types
-const std::string int_TOKEN("int");
-const std::string float_TOKEN("float");
-const std::string bool_TOKEN("bool");
-const std::string string_TOKEN("string");
-const std::string distance_TOKEN("distance");
-const std::string chunk_TOKEN("chunk");
-const std::string embeddedchunk_TOKEN("embeddedchunk");
+   namespace types_tokens
+   {
+      const std::string BOOLEAN("boolean");
+      const std::string INTEGER("integer");
+      const std::string FLOAT("float");
+      const std::string STRING("string");
+      const std::string CONFIGELEMENTPOINTER("configelementpointer");
+      const std::string CONFIGELEMENT("configelement");
+   }
 
-// XML format tokens
-const std::string chunk_desc_TOKEN("ChunkDesc");
-const std::string token_TOKEN("token");
-const std::string name_TOKEN("name");
-const std::string property_desc_TOKEN("PropertyDesc");
-const std::string num_TOKEN("num");
-const std::string type_TOKEN("type");
-const std::string help_TOKEN("help");
-const std::string item_TOKEN("item");
-const std::string default_value_TOKEN("defaultvalue");
-const std::string enumeration_TOKEN("enumeration");
-const std::string enumeration_name_TOKEN("name");
-const std::string enumeration_value_TOKEN("value");
+   namespace definition_tokens
+   {
+      /** The current version of the configuration definition file format. */
+      const std::string DEF_VERSION("3.0");
 
-const std::string chunk_desc_db_TOKEN("ChunkDescDB");
-const std::string chunk_db_TOKEN("ConfigChunkDB");
+      // Processing instructions
+      const std::string SETTINGS_INSTRUCTION("org-vrjuggler-jccl-settings");
+      const std::string DEF_VERSION_ATTR("definition.version");
+      const std::string DESC_DB_VERSION_ATTR("desc.db.version");
 
-const std::string vj_include_desc_file_TOKEN("vjIncludeDescFile");
-const std::string vj_include_file_TOKEN("vjIncludeFile");
+      // XML Format tokens
+      const std::string DEFAULTVALUE("defaultvalue");
+      const std::string DEFINITION("definition");
+      const std::string DEFINITION_VERSION("definition_version");
+      const std::string ENUM("enum");
+      const std::string HELP("help");
+      const std::string LABEL("label");
+      const std::string NAME("name");
+      const std::string PROPERTY("property");
+      const std::string VALUE("value");
+      const std::string VALUETYPE("valuetype");
+      const std::string VERSION("version");
+   }
 
-// Processing instruction tokens
-const std::string include_desc_INSTRUCTION("org-vrjuggler-jccl-includedesc");
-const std::string include_INSTRUCTION("org-vrjuggler-jccl-include");
-const std::string file_TOKEN("file");
+   namespace configuration_tokens
+   {
+      /** The current version of the configuration file format. */
+      const std::string CFG_VERSION("3.0");
 
-const std::string EMBEDDED_SEPARATOR("/");
+      // Processing instructions
+      const std::string SETTINGS_INSTRUCTION("org-vrjuggler-jccl-settings");
+      const std::string CFG_VERSION_ATTR("configuration.version");
+      const std::string CONFIG_DB_VERSION_ATTR("config.db.version");
 
+      // XML Format tokens
+      const std::string CONFIGURATION("configuration");
+      const std::string DEFINITION_PATH("definition_path");
+      const std::string DIR("dir");
+      const std::string ELEMENTS("elements");
+      const std::string INCLUDE("include");
+      const std::string NAME("name");
+      const std::string VERSION("version");
+   }
 
 } // End of jccl namespace
 

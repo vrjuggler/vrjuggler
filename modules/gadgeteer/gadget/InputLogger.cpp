@@ -41,7 +41,7 @@
 #include <vpr/IO/XMLObjectWriter.h>
 #include <vpr/IO/XMLObjectReader.h>
 #include <vpr/System.h>
-#include <jccl/Config/ConfigChunk.h>
+#include <jccl/Config/ConfigElement.h>
 
 #include <gadget/InputLogger.h>
 
@@ -85,27 +85,27 @@ namespace gadget
 {
 
 /** Configure the logger */
-bool InputLogger::config( jccl::ConfigChunkPtr chunk)
+bool InputLogger::config( jccl::ConfigElementPtr element)
 {
-   std::string start_name = chunk->getProperty<std::string>("start_digital");
-   std::string stamp_name = chunk->getProperty<std::string>("stamp_digital");
+   std::string start_name = element->getProperty<std::string>("start_digital");
+   std::string stamp_name = element->getProperty<std::string>("stamp_digital");
 
    mStartStopButton.init(start_name);
    mStampButton.init(stamp_name);
 
-   int max_frame_rate = chunk->getProperty<int>("max_framerate");
-   mCompressFactor = chunk->getProperty<unsigned>("compress_factor");
+   int max_frame_rate = element->getProperty<int>("max_framerate");
+   mCompressFactor = element->getProperty<unsigned>("compress_factor");
 
    // Get ignore attribs and elems for compressing
    unsigned num_ignore_elems, num_ignore_attribs;
-   num_ignore_elems = chunk->getNum("ignore_elems");
-   num_ignore_attribs = chunk->getNum("ignore_attribs");
+   num_ignore_elems = element->getNum("ignore_elems");
+   num_ignore_attribs = element->getNum("ignore_attribs");
 
    for(unsigned i=0;i<num_ignore_elems;i++)
-   { mIgnoreElems.push_back(chunk->getProperty<std::string>("ignore_elems",i)); }
+   { mIgnoreElems.push_back(element->getProperty<std::string>("ignore_elems",i)); }
 
    for(unsigned i=0;i<num_ignore_attribs;i++)
-   { mIgnoreAttribs.push_back(chunk->getProperty<std::string>("ignore_attribs",i)); }
+   { mIgnoreAttribs.push_back(element->getProperty<std::string>("ignore_attribs",i)); }
 
    if(max_frame_rate > 0)   // If we are supposed to limit frame rate
    {

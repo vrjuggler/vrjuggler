@@ -32,31 +32,31 @@
 
 #include <gadget/gadgetConfig.h>
 
-#include <jccl/Config/ConfigChunk.h>
+#include <jccl/Config/ConfigElement.h>
 #include <gadget/Devices/Sim/SimInput.h>
 
 namespace gadget
 {
 
-/** Constructs the mod pair from a mod pair chunk. */
-std::vector<SimInput::KeyModPair> SimInput::readKeyList(std::vector<jccl::ConfigChunkPtr>& keyList)
+/** Constructs the mod pair from a mod pair element. */
+std::vector<SimInput::KeyModPair> SimInput::readKeyList(std::vector<jccl::ConfigElementPtr>& keyList)
 {
    std::vector<KeyModPair> key_vec;
 
    if ( ! keyList.empty() )
    {
 #ifdef GADGET_DEBUG
-      jccl::ConfigChunkPtr first_chunk = keyList[0];
-      std::string chunk_type = first_chunk->getDescToken();
-      vprASSERT(chunk_type == std::string("KeyModPair"));
+      jccl::ConfigElementPtr first_element = keyList[0];
+      std::string element_type(first_element->getID());
+      vprASSERT(element_type == std::string("key_modifier_pair"));
 #endif
 
-      for ( std::vector<jccl::ConfigChunkPtr>::iterator i = keyList.begin();
+      for ( std::vector<jccl::ConfigElementPtr>::iterator i = keyList.begin();
             i != keyList.end();
             ++i )
       {
          key_vec.push_back(KeyModPair((gadget::Keys) (*i)->getProperty<int>("key"),
-                                      (gadget::Keys) (*i)->getProperty<int>("modKey")));
+                                      (gadget::Keys) (*i)->getProperty<int>("modifier_key")));
       }
    }
 
@@ -65,12 +65,12 @@ std::vector<SimInput::KeyModPair> SimInput::readKeyList(std::vector<jccl::Config
 
 
 /**
- * Configures the keyboard interface.  Grabs it out of the given config chunk.
+ * Configures the keyboard interface.  Grabs it out of the given config element.
  */
-bool SimInput::config(jccl::ConfigChunkPtr chunk)
+bool SimInput::config(jccl::ConfigElementPtr element)
 {
    // Get the event source.
-   mEventWin.init(chunk->getProperty<std::string>("eventWindowProxy"));
+   mEventWin.init(element->getProperty<std::string>("event_window_proxy"));
 
    return true;
 }

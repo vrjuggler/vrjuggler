@@ -30,16 +30,15 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-
 #ifndef _JCCL_DEP_MGR_H_
 #define _JCCL_DEP_MGR_H_
 
 #include <jccl/jcclConfig.h>
 #include <vector>
-#include <jccl/RTRC/DepChecker.h>
-#include <jccl/Config/ConfigChunkPtr.h>
 #include <typeinfo>
 #include <vpr/Util/Singleton.h>
+#include <jccl/RTRC/DepChecker.h>
+#include <jccl/Config/ConfigElementPtr.h>
 
 namespace jccl
 {
@@ -49,8 +48,8 @@ namespace jccl
  *  ConfigManager, and checks for dependencies for any
  *  configuration add request.
  *  The default behavior is to simply check the ConfigManager's
- *  active list for all ConfigChunk's that the request's
- *  ConfigChunk refers to.  However, additional DepCheckers
+ *  active list for all jccl::ConfigElement's that the request's
+ *  jccl::ConfigElement refers to.  However, additional DepCheckers
  *  can be registered to provide specialized functionality.
  *
  *  Note that this class is a singleton - primarily so that the
@@ -59,45 +58,38 @@ namespace jccl
  */
 class JCCL_CLASS_API DependencyManager
 {
-
 private:
    /** Constructor. Private since this is a singleton. */
    DependencyManager ();
-
 
 public:
 
    /** registers a new dependency checker. */
    void registerChecker (DepChecker* checker);
 
-
-   /** Checks if dependencies are satisfied for the given chunk.
-    *  @return true iff dependencies for chunk are satisfied.
+   /** Checks if dependencies are satisfied for the given element.
+    *  @return true iff dependencies for element are satisfied.
     */
-   bool isSatisfied (ConfigChunkPtr chunk);
+   bool isSatisfied (ConfigElementPtr element);
 
-
-   /** Prints information about chunk's dependencies. */
-   void debugOutDependencies (ConfigChunkPtr chunk, int dbg_lvl);
-
+   /** Prints information about element's dependencies. */
+   void debugOutDependencies (ConfigElementPtr element, int dbg_lvl);
 
 private:
 
-   /** Finds a DepChecker that can handle chunk.
-    *  DepCheckers list the ConfigChunk types that they know how to
-    *  handle; this is checked versus chunk.getDescToken().
-    *  @return A DepChecker that knows how to handle chunk.  If no
+   /** Finds a DepChecker that can handle element.
+    *  DepCheckers list the jccl::ConfigElement types that they know how to
+    *  handle; this is checked versus element.getDefToken().
+    *  @return A DepChecker that knows how to handle element.  If no
     *          specific checker is found, the default checker is
     *          returned.  If multiple specific DepCheckers claim to
-    *          be able to handle chunk, the choice is implementation
+    *          be able to handle element, the choice is implementation
     *          dependent.
     */
-   DepChecker* findDepChecker(ConfigChunkPtr chunk);
-
+   DepChecker* findDepChecker(ConfigElementPtr element);
 
    /** Prints information about the DependencyManager's state to vprDEBUG. */
    void debugDump();
-
 
 private:
 
@@ -105,10 +97,9 @@ private:
    std::vector<DepChecker*> mDepCheckers;
 
    /** Default dependency checker. */
-   DepChecker               mDefaultChecker;
+   DepChecker mDefaultChecker;
 
    vprSingletonHeader(DependencyManager);
-
 
 }; // class DependencyManager
 

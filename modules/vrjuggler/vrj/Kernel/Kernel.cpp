@@ -52,8 +52,8 @@
 #include <cluster/ClusterManager.h>
 #include <cluster/ClusterNetwork/ClusterNetwork.h>
 
-#include <jccl/Config/ConfigChunk.h>
-#include <jccl/Config/ChunkFactory.h>
+#include <jccl/Config/ConfigElement.h>
+#include <jccl/Config/ElementFactory.h>
 #include <jccl/RTRC/ConfigManager.h>
 
 #include <boost/concept_check.hpp>
@@ -146,7 +146,7 @@ void Kernel::controlLoop(void* nullParam)
    while(! (mExitFlag && (mApp == NULL)))     // While not exit flag set and don't have app. (can't exit until app is closed)
    {
       // Might not want the Kernel to know about the ClusterNetwork
-      // It is currently being registered as a ConfigChunkHandler in
+      // It is currently being registered as a jccl::ConfigElementHandler in
       // the ClusterManager constructor
       cluster::ClusterNetwork::instance()->updateNewConnections();
       cluster::ClusterManager::instance()->sendRequests();
@@ -283,7 +283,7 @@ void Kernel::changeApplication(App* newApp)
    // EXIT Previous application
    if(mApp != NULL)
    {
-      cfg_mgr->removeConfigChunkHandler(mApp);
+      cfg_mgr->removeConfigElementHandler(mApp);
       mApp->exit();
       mApp = NULL;      // ASSERT: We have no handles to the application any more (ie. the app could be deleted)
    }
@@ -298,12 +298,12 @@ void Kernel::changeApplication(App* newApp)
       if (new_draw_mgr != mDrawManager)      // Have NEW draw manager
       {
          stopDrawManager();                           // Stop old one
-         cfg_mgr->removeConfigChunkHandler(mDrawManager);
+         cfg_mgr->removeConfigElementHandler(mDrawManager);
 
          mDrawManager = mApp->getDrawManager();             // Get the new draw manager
          mSoundManager = mApp->getSoundManager();           // Get the new sound manager
-         cfg_mgr->addConfigChunkHandler(mDrawManager);      // Tell config manager about them
-         cfg_mgr->addConfigChunkHandler(mSoundManager);     // Tell config manager about them
+         cfg_mgr->addConfigElementHandler(mDrawManager);    // Tell config manager about them
+         cfg_mgr->addConfigElementHandler(mSoundManager);   // Tell config manager about them
          startDrawManager(true);                      // Start the new one
       }
       else     // SAME draw manager
@@ -311,7 +311,7 @@ void Kernel::changeApplication(App* newApp)
          startDrawManager(false);                     // Start new app
       }
 
-      cfg_mgr->addConfigChunkHandler(mApp);
+      cfg_mgr->addConfigElementHandler(mApp);
       cfg_mgr->refreshPendingList();                  // New managers, so we may be able to handle config requests now
    }
    else                 // No app, clear to NULL
@@ -362,10 +362,10 @@ void Kernel::initConfig()
    //??// processPending() // Should I do this here
 
    // hook dynamically-reconfigurable managers up to config manager...
-   jccl::ConfigManager::instance()->addConfigChunkHandler(this);
-   jccl::ConfigManager::instance()->addConfigChunkHandler(mInputManager);
-   jccl::ConfigManager::instance()->addConfigChunkHandler(mClusterManager);
-   jccl::ConfigManager::instance()->addConfigChunkHandler(mDisplayManager);
+   jccl::ConfigManager::instance()->addConfigElementHandler(this);
+   jccl::ConfigManager::instance()->addConfigElementHandler(mInputManager);
+   jccl::ConfigManager::instance()->addConfigElementHandler(mClusterManager);
+   jccl::ConfigManager::instance()->addConfigElementHandler(mDisplayManager);
 
    vprDEBUG_END(vrjDBG_KERNEL,3) << "vjKernel::initConfig: Done.\n" << vprDEBUG_FLUSH;
 }
@@ -388,84 +388,82 @@ void Kernel::updateFrameData()
 //  //  and call it on our selves
 //  int Kernel::configProcessPending(bool lockIt)
 //  {
-//     int chunks_processed(0);     // Needs to return this value
+//     int elements_processed(0);     // Needs to return this value
 
 //     ConfigManager* cfg_mgr = ConfigManager::instance();
 //     if(cfg_mgr->pendingNeedsChecked())
 //     {
 //        vprDEBUG_BEGIN(vprDBG_ALL,vprDBG_STATE_LVL) << "vjKernel::configProcessPending: Examining pending list.\n" << vprDEBUG_FLUSH;
 
-//        chunks_processed += jccl::ConfigChunkHandler::configProcessPending(lockIt);      // Process kernels pending chunks
-//        chunks_processed += getInputManager()->configProcessPending(lockIt);
-//        chunks_processed += mDisplayManager->configProcessPending(lockIt);
+//        elements_processed += jccl::ConfigElementHandler::configProcessPending(lockIt);      // Process kernels pending elements
+//        elements_processed += getInputManager()->configProcessPending(lockIt);
+//        elements_processed += mDisplayManager->configProcessPending(lockIt);
 //        if(NULL != mSoundManager)
-//           chunks_processed += mSoundManager->configProcessPending(lockIt);
+//           elements_processed += mSoundManager->configProcessPending(lockIt);
 //        if(NULL != mDrawManager)
-//           chunks_processed += mDrawManager->configProcessPending(lockIt);              // XXX: We should not necessarily do this for all draw mgrs
+//           elements_processed += mDrawManager->configProcessPending(lockIt);              // XXX: We should not necessarily do this for all draw mgrs
 //        if (NULL != environmentManager)
-//           chunks_processed += environmentManager->configProcessPending(lockIt);
+//           elements_processed += environmentManager->configProcessPending(lockIt);
 //        if(NULL != mApp)
-//           chunks_processed += mApp->configProcessPending(lockIt);
+//           elements_processed += mApp->configProcessPending(lockIt);
 
 //        vprDEBUG_CONT_END(vprDBG_ALL,vprDBG_STATE_LVL) << std::endl
 //                                                     << vprDEBUG_FLUSH;
 //     }
-//     return chunks_processed;
+//     return elements_processed;
 //  }
 
 
-bool Kernel::configCanHandle(jccl::ConfigChunkPtr chunk)
+bool Kernel::configCanHandle(jccl::ConfigElementPtr element)
 {
-   std::string chunk_type = chunk->getDescToken();
-
-   if(std::string("JugglerUser") == chunk_type)
-      return true;
-   else
-      return false;
+   return std::string("user") == element->getID();
 }
 
-bool Kernel::configAdd(jccl::ConfigChunkPtr chunk)
+bool Kernel::configAdd(jccl::ConfigElementPtr element)
 {
-   std::string chunk_type = chunk->getDescToken();
+   const std::string element_type(element->getID());
 
-   vprASSERT(configCanHandle(chunk));
+   vprASSERT(configCanHandle(element));
 
-   if(std::string("JugglerUser") == chunk_type)
+   if(std::string("user") == element_type)
    {
-      return addUser(chunk);
+      return addUser(element);
    }
    else
+   {
       return false;
+   }
 }
 
-bool Kernel::configRemove(jccl::ConfigChunkPtr chunk)
+bool Kernel::configRemove(jccl::ConfigElementPtr element)
 {
-   std::string chunk_type = chunk->getDescToken();
+   const std::string element_type(element->getID());
 
-   vprASSERT(configCanHandle(chunk));
+   vprASSERT(configCanHandle(element));
 
-   if(std::string("JugglerUser") == chunk_type)
+   if(std::string("user") == element_type)
    {
-      return removeUser(chunk);
+      return removeUser(element);
    }
    else
+   {
       return false;
+   }
 }
 
 /** Adds a new user to the kernel. */
-bool Kernel::addUser(jccl::ConfigChunkPtr chunk)
+bool Kernel::addUser(jccl::ConfigElementPtr element)
 {
-   vprASSERT(chunk->getDescToken() == std::string("JugglerUser"));
+   vprASSERT(element->getID() == "user");
 
    User* new_user = new User;
-   bool success = new_user->config(chunk);
+   bool success = new_user->config(element);
 
    if(!success)
    {
       vprDEBUG(vrjDBG_KERNEL,vprDBG_CRITICAL_LVL)
          << clrOutNORM(clrRED,"ERROR:") << "Failed to add new User: "
-         << chunk->getName() << std::endl
-         << vprDEBUG_FLUSH;
+         << element->getName() << std::endl << vprDEBUG_FLUSH;
       delete new_user;
    }
    else
@@ -481,47 +479,49 @@ bool Kernel::addUser(jccl::ConfigChunkPtr chunk)
 }
 
 // XXX: Not implemented
-bool Kernel::removeUser(jccl::ConfigChunkPtr chunk)
+bool Kernel::removeUser(jccl::ConfigElementPtr element)
 {
-   boost::ignore_unused_variable_warning(chunk);
+   boost::ignore_unused_variable_warning(element);
    return false;
 }
 
 // --- STARTUP ROUTINES --- //
 void Kernel::loadConfigFile(std::string filename)
 {
-   vprDEBUG(vrjDBG_KERNEL,vprDBG_CONFIG_LVL) << "Loading config file: "
-                           << filename << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(vrjDBG_KERNEL,vprDBG_CONFIG_LVL)
+      << "Loading config file: " << filename << std::endl << vprDEBUG_FLUSH;
 
-   jccl::ConfigChunkDB* chunk_db = new jccl::ConfigChunkDB;
+   jccl::Configuration* cfg = new jccl::Configuration;
 
    // ------- OPEN Program specified Config file ------ //
    if(filename.empty())   // We have a filename
-     return;
+   {
+      return;
+   }
 
-   bool chunk_db_load_success = chunk_db->load(filename);
-   if (!chunk_db_load_success)
+   bool cfg_load_success = cfg->load(filename);
+   if (!cfg_load_success)
    {
      vprDEBUG(vprDBG_ERROR,vprDBG_CRITICAL_LVL) << clrOutNORM(clrRED,"ERROR:")
-        << "vjKernel::loadConfigFile: DB Load failed to load file: "
-        << filename.c_str() << std::endl << vprDEBUG_FLUSH;
+        << "vrj::Kernel::loadConfigFile: Failed to load file: "
+        << filename << std::endl << vprDEBUG_FLUSH;
      exit(1);
    }
 
    // Put them all in pending
-   jccl::ConfigManager::instance()->addPendingAdds(chunk_db);
+   jccl::ConfigManager::instance()->addPendingAdds(cfg);
 
-   //vprDEBUG(vrjDBG_KERNEL, vprDBG_HVERB_LVL) << "------------  Loaded Config Chunks ----------" << vprDEBUG_FLUSH;
-   //vprDEBUG(vrjDBG_KERNEL, vprDBG_HVERB_LVL) << (*mInitialChunkDB) << vprDEBUG_FLUSH;
+   //vprDEBUG(vrjDBG_KERNEL, vprDBG_HVERB_LVL) << "------------  Loaded Config Elements ----------" << vprDEBUG_FLUSH;
+   //vprDEBUG(vrjDBG_KERNEL, vprDBG_HVERB_LVL) << (*mInitialCfg) << vprDEBUG_FLUSH;
 }
 
 /**
- * Loads a chunk description file.
- * @post The chunk factory can now manage chunks with the given types.
+ * Loads a configuration definition file.
+ * @post The element factory can now manage elements with the given types.
  */
-void Kernel::loadChunkDescFile(std::string filename)
+void Kernel::loadConfigDefinitionFile(std::string filename)
 {
-   jccl::ChunkFactory::instance()->loadDescs(filename);
+   jccl::ElementFactory::instance()->loadDefs(filename);
 }
 
 /**
@@ -607,8 +607,15 @@ Kernel::Kernel()
    vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << std::string(strlen(VJ_VERSION) + 12, '=')
                                              << std::endl << vprDEBUG_FLUSH;
 
-   jccl::ChunkFactory::instance()->loadDescs
-       ("${VJ_BASE_DIR}/" VJ_SHARE_DIR "/data/vrj-chunks.desc");
+   // Load in the configuration definitions
+   std::string def_path;
+   if (vpr::System::getenv("JCCL_DEFINITION_PATH", def_path) != vpr::ReturnStatus::Succeed)
+   {
+      def_path = "${VJ_BASE_DIR}/" VJ_SHARE_DIR "/data/definitions";
+   }
+   jccl::ElementFactory::instance()->loadDefs(def_path);
+//   jccl::ElementFactory::instance()->loadDefs
+//       ("${VJ_BASE_DIR}/" VJ_SHARE_DIR "/data/vrj-chunks.desc");
 }
 
 }

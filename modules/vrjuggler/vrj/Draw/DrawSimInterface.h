@@ -37,8 +37,7 @@
 
 #include <gadget/Type/EventWindowProxy.h>
 #include <gadget/Type/DeviceInterface.h>
-#include <jccl/Config/ConfigChunk.h>
-#include <jccl/Config/ConfigChunkPtr.h>
+#include <jccl/Config/ConfigElementPtr.h>
 #include <vrj/Display/Projection.h>
 
 #include <boost/concept_check.hpp>
@@ -56,11 +55,11 @@ namespace vrj
       virtual ~DrawSimInterface() {}
 
       /*
-      * Configure the sim display
-      * @pre chunk is a valid chunk.
-      * @post It should be configured
+      * Configure the simulator interface.
+      * @pre element is a valid configuration element.
+      * @post It should be configured.
       */
-      virtual bool config(jccl::ConfigChunkPtr chunk) = 0;
+      virtual bool config(jccl::ConfigElementPtr element) = 0;
 
       /** Called as part of the viewports updateProjection call */
       virtual void updateProjectionData(const float positionScale, Projection* leftProj, Projection* rightProj)

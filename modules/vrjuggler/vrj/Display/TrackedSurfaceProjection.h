@@ -75,9 +75,9 @@ public:
 
    virtual ~TrackedSurfaceProjection() {}
 
-   virtual void config(jccl::ConfigChunkPtr chunk)
+   virtual void config(jccl::ConfigElementPtr element)
    {
-      Projection::config(chunk);        // Call base class config first
+      Projection::config(element);        // Call base class config first
    }
 
    /**

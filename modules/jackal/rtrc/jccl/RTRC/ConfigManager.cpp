@@ -35,10 +35,10 @@
 #include <vpr/IO/Socket/InetAddr.h>
 
 #include <jccl/RTRC/ConfigManager.h>
-#include <jccl/Config/ConfigChunk.h>
-#include <jccl/Config/ChunkFactory.h>
+#include <jccl/Config/ConfigElement.h>
+#include <jccl/Config/ElementFactory.h>
 #include <jccl/RTRC/DependencyManager.h>
-#include <jccl/RTRC/ConfigChunkHandler.h>
+#include <jccl/RTRC/ConfigElementHandler.h>
 /*
 #include <jccl/Net/JackalServer.h>
 #include <jccl/Net/Connect.h>
@@ -67,14 +67,14 @@ ConfigManager::~ConfigManager()
 
 //-------------------- Pending List Stuff -------------------------------
 
-// Add the given chunk db to the pending list as adds
-void ConfigManager::addPendingAdds(ConfigChunkDB* db)
+// Add the given configuration to the pending list as adds
+void ConfigManager::addPendingAdds(Configuration* db)
 {
    vprASSERT(0 == mPendingLock.test());     // ASSERT: Make sure we don't already have it
    lockPending();
 
-   PendingChunk pending;
-   pending.mType = PendingChunk::ADD;
+   PendingElement pending;
+   pending.mType = PendingElement::ADD;
 
    // Begin Machine Specific Code
    if(mCachedLocalHostName.empty())
@@ -95,34 +95,34 @@ void ConfigManager::addPendingAdds(ConfigChunkDB* db)
    }
    // End Machine Specific Code
 
-   for ( std::vector<ConfigChunkPtr>::iterator i = db->vec().begin();
+   for ( std::vector<ConfigElementPtr>::iterator i = db->vec().begin();
          i != db->vec().end();
          ++i )
    {
-      pending.mChunk = (*i);
+      pending.mElement = (*i);
       mPendingConfig.push_back(pending);
 
       // Begin Machine Specific Code
-      if ( (*i)->getDescToken() == std::string("MachineSpecific") )
+      if ( (*i)->getID() == "machine_specific" )
       {
          if ( (*i)->getProperty<std::string>("host_name") == mCachedLocalHostName ||
               (*i)->getProperty<std::string>("host_name") == "localhost")
          {
-            // NOTE: Add all machine dependent ConfigChunkPtr's here
-            vprASSERT((*i)->getNum("display_system") == 1 && "A Cluster System Chunk must have exactly 1 display_system chunk");
+            // NOTE: Add all machine dependent ConfigElementPtr's here
+            vprASSERT((*i)->getNum("display_system") == 1 && "A Cluster System element must have exactly 1 display_system element");
 
-            std::vector<jccl::ConfigChunkPtr> machine_specific_chunks = (*i)->getEmbeddedChunks();
+            std::vector<jccl::ConfigElementPtr> machine_specific_elements = (*i)->getChildElements();
 
-            for (std::vector<jccl::ConfigChunkPtr>::iterator i= machine_specific_chunks.begin();
-                 i != machine_specific_chunks.end();
+            for (std::vector<jccl::ConfigElementPtr>::iterator i = machine_specific_elements.begin();
+                 i != machine_specific_elements.end();
                  i++)
             {
-               PendingChunk pending;
-               pending.mType = PendingChunk::ADD;
-               pending.mChunk = (*i);
+               PendingElement pending;
+               pending.mType = PendingElement::ADD;
+               pending.mElement = (*i);
                mPendingConfig.push_back(pending);
                vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << clrSetBOLD(clrCYAN)
-                  << "[ConfigManager] Adding Machine specific ConfigChunk: "
+                  << "[ConfigManager] Adding Machine specific ConfigElement: "
                   << (*i)->getName() << clrRESET << std::endl << vprDEBUG_FLUSH;
             }
          }
@@ -134,19 +134,19 @@ void ConfigManager::addPendingAdds(ConfigChunkDB* db)
    refreshPendingList();
 }
 
-void ConfigManager::addPendingRemoves(ConfigChunkDB* db)
+void ConfigManager::addPendingRemoves(Configuration* db)
 {
    vprASSERT(0 == mPendingLock.test());     // ASSERT: Make sure we don't already have it
    lockPending();
 
-   PendingChunk pending;
-   pending.mType = PendingChunk::REMOVE;
+   PendingElement pending;
+   pending.mType = PendingElement::REMOVE;
 
-   for ( std::vector<ConfigChunkPtr>::iterator i = db->vec().begin();
+   for ( std::vector<ConfigElementPtr>::iterator i = db->vec().begin();
          i != db->vec().end();
          ++i )
    {
-      pending.mChunk = (*i);
+      pending.mElement = (*i);
       mPendingConfig.push_back(pending);
    }
 
@@ -155,7 +155,7 @@ void ConfigManager::addPendingRemoves(ConfigChunkDB* db)
    refreshPendingList();
 }
 
-void ConfigManager::removePending(std::list<PendingChunk>::iterator item)
+void ConfigManager::removePending(std::list<PendingElement>::iterator item)
 {
    vprASSERT(1 == mPendingLock.test());
    mPendingConfig.erase(item);
@@ -173,7 +173,7 @@ static const int pending_repeat_limit = 3;    // Must be one or greater.  1 mean
    
 //: Do we need to check the pending list
 //! CONCURRENCY: concurrent
-// The routine counts the number of pending chunks
+// The routine counts the number of pending elements
 // each time it is called.
 // if it goes pending_repeat_limit calls without
 // changing size, then it returns false until mLastPendingSize changes
@@ -247,11 +247,11 @@ bool ConfigManager::isPendingStale()
    return return_value;
 }
 
-void ConfigManager::addPending(PendingChunk& pendingChunk)
+void ConfigManager::addPending(PendingElement& pendingElement)
 {
    vprASSERT(0 == mPendingLock.test());
    lockPending();
-   mPendingConfig.push_back(pendingChunk);
+   mPendingConfig.push_back(pendingElement);
    unlockPending();
 
    refreshPendingList();
@@ -259,7 +259,7 @@ void ConfigManager::addPending(PendingChunk& pendingChunk)
 
 // Look for items in the active list that don't have their dependencies filled anymore
 //
-//! POST: Any chunks in active with dependencies not filled are added to the
+//! POST: Any elements in active with dependencies not filled are added to the
 //+       the pending list. (A remove and an add are added to the pending)
 //! RETURNS: The number of lost dependencies found
 int ConfigManager::scanForLostDependencies()
@@ -272,40 +272,40 @@ int ConfigManager::scanForLostDependencies()
                             "ConfigManager::scanForLostDependencies() done.\n");
 
    DependencyManager* dep_mgr = DependencyManager::instance();
-   std::vector<ConfigChunkPtr> chunks;
+   std::vector<ConfigElementPtr> elements;
    int num_lost_deps(0);
 
    // NOTE: can't hold this lock because the isSatisfied routines make
    // use of the activeLock as well
-   // NOTE: Make the copy of the chunks so that we can iterate without
+   // NOTE: Make the copy of the elements so that we can iterate without
    // fear of active changing
    mActiveLock.acquire();
-   chunks = mActiveConfig.vec();   // Get a copy of the chunks
+   elements = mActiveConfig.vec();   // Get a copy of the elements
    mActiveLock.release();
 
    // Now test them
-   for ( unsigned int i=0;i<chunks.size();i++ )
+   for ( unsigned int i=0;i<elements.size();i++ )
    {
-      if ( !dep_mgr->isSatisfied(chunks[i]) )     // We are not satisfied
+      if ( !dep_mgr->isSatisfied(elements[i]) )     // We are not satisfied
       {
          vprDEBUG_NEXT(vprDBG_ALL, vprDBG_WARNING_LVL)
-            << chunks[i]->getProperty<std::string>("name")
-            << " type: " << chunks[i]->getDescToken()
+            << elements[i]->getProperty<std::string>("name")
+            << " type: " << elements[i]->getID()
             << " has lost dependencies.\n" << vprDEBUG_FLUSH;
 
          num_lost_deps++;              // Keep a count of the number lost deps found
 
          // Add the pending removal
-         PendingChunk pending;
-         pending.mType = PendingChunk::REMOVE;
-         pending.mChunk = chunks[i];
+         PendingElement pending;
+         pending.mType = PendingElement::REMOVE;
+         pending.mElement = elements[i];
          addPending(pending);
 
          // Add the pending re-addition
-//         ConfigChunkPtr copy_of_chunk;          // Need a copy so that the remove can delete the chunk
-//         copy_of_chunk = new ConfigChunk(*chunks[i]);
-         pending.mType = PendingChunk::ADD;
-         pending.mChunk = chunks[i];//copy_of_chunk;
+//         ConfigElementPtr copy_of_element;          // Need a copy so that the remove can delete the element
+//         copy_of_element = new ConfigElement(*elements[i]);
+         pending.mType = PendingElement::ADD;
+         pending.mElement = elements[i];//copy_of_element;
          addPending(pending);                   // Add the add item
       }
    }
@@ -320,25 +320,25 @@ void ConfigManager::debugDumpPending(int debug_level)
       << clrSetNORM(clrGREEN)
       << "---- Pending list: " << mPendingConfig.size() << " items ----\n"
       << clrRESET << vprDEBUG_FLUSH;
-   std::list<ConfigManager::PendingChunk>::iterator current, end;
+   std::list<ConfigManager::PendingElement>::iterator current, end;
    current = getPendingBegin();
    end = getPendingEnd();
 
    while ( current != end )
    {
-      ConfigChunkPtr cur_chunk = (*current).mChunk;
+      ConfigElementPtr cur_element = (*current).mElement;
 
-      if ( (*current).mType == PendingChunk::ADD )
+      if ( (*current).mType == PendingElement::ADD )
       {
          vprDEBUG_NEXT(vprDBG_ALL,debug_level) << "   ADD -->" << vprDEBUG_FLUSH;
       }
-      else if ( (*current).mType == PendingChunk::REMOVE )
+      else if ( (*current).mType == PendingElement::REMOVE )
       {
          vprDEBUG_NEXT(vprDBG_ALL,debug_level) << "REMOVE -->" << vprDEBUG_FLUSH;
       }
 
       vprDEBUG_CONT(vprDBG_ALL,debug_level)
-         << cur_chunk->getName() << " type: " << cur_chunk->getDescToken()
+         << cur_element->getName() << " type: " << cur_element->getID()
          << std::endl << vprDEBUG_FLUSH;
       current++;
    }
@@ -349,17 +349,17 @@ void ConfigManager::debugDumpPending(int debug_level)
 
 //------------------ Active List Stuff -------------------------------
 
-//: Is the chunk in the active configuration??
+//: Is the element in the active configuration??
 //! CONCURRENCY: concurrent
 //! NOTE: This locks the active list to do processing
-bool ConfigManager::isChunkInActiveList(std::string chunk_name)
+bool ConfigManager::isElementInActiveList(std::string element_name)
 {
    vpr::Guard<vpr::Mutex> guard(mActiveLock);     // Lock the current list
 
-   std::vector<ConfigChunkPtr>::iterator i;
+   std::vector<ConfigElementPtr>::iterator i;
    for ( i = mActiveConfig.vec().begin(); i != mActiveConfig.vec().end(); ++i )
    {
-      if ( std::string((*i)->getName()) == chunk_name )
+      if ( std::string((*i)->getName()) == element_name )
       {
          return true;
       }
@@ -368,20 +368,20 @@ bool ConfigManager::isChunkInActiveList(std::string chunk_name)
    return false;     // Not found, so return false
 }
 
-//: Is there a chunk of this type in the active configuration?
+//: Is there an element of this type in the active configuration?
 //! CONCURRENCY: concurrent
 //! NOTE: This locks the active list to do processing
-bool ConfigManager::isChunkTypeInActiveList(std::string chunk_type)
+bool ConfigManager::isElementTypeInActiveList(std::string elementType)
 {
    vpr::Guard<vpr::Mutex> guard(mActiveLock);     // Lock the current list
 
-   // std::cout << "isChunkTypeInActiveList ActiveConfig.getChunks().size == " << mActiveConfig.getChunks().size() << std::endl;
+   // std::cout << "isElementTypeInActiveList ActiveConfig.getElements().size == " << mActiveConfig.getElements().size() << std::endl;
 
-   std::vector<ConfigChunkPtr>::iterator i;
+   std::vector<ConfigElementPtr>::iterator i;
    for ( i = mActiveConfig.vec().begin(); i != mActiveConfig.vec().end(); ++i )
    {
-      // std::cout << "trying to match " << std::string((*i)->getType()) << " with " << chunk_type << std::endl;
-      if ( std::string((*i)->getDescToken()) == chunk_type )
+      // std::cout << "trying to match " << std::string((*i)->getType()) << " with " << elementType << std::endl;
+      if ( std::string((*i)->getID()) == elementType )
       {
          // std::cout << "match!" << std::endl;
          return true;
@@ -391,20 +391,20 @@ bool ConfigManager::isChunkTypeInActiveList(std::string chunk_type)
    return false;     // Not found, so return false
 }
 
-//: Is there a chunk of this type in the pending list??
+//: Is there an element of this type in the pending list??
 //! CONCURRENCY: concurrent
 //! NOTE: This locks the pending list to do processing
-bool ConfigManager::isChunkTypeInPendingList(std::string chunk_type)
+bool ConfigManager::isElementTypeInPendingList(std::string elementType)
 {
    vpr::Guard<vpr::Mutex> guard(mActiveLock);     // Lock the current list
 
-   // std::cout << "isChunkTypeInPendingList(): mPendingConfig.size == " << mPendingConfig.size() << std::endl;
+   // std::cout << "isElementTypeInPendingList(): mPendingConfig.size == " << mPendingConfig.size() << std::endl;
 
-   std::list<PendingChunk>::iterator i;
+   std::list<PendingElement>::iterator i;
    for ( i = mPendingConfig.begin(); i != mPendingConfig.end(); ++i )
    {
-      // std::cout << "trying to match " << std::string((*i).mChunk->getType()) << " with " << chunk_type << std::endl;
-      if ( std::string((*i).mChunk->getDescToken()) == chunk_type )
+      // std::cout << "trying to match " << std::string((*i).mElement->getType()) << " with " << elementType << std::endl;
+      if ( std::string((*i).mElement->getID()) == elementType )
       {
          // std::cout << "match!" << std::endl;
          return true;
@@ -415,43 +415,43 @@ bool ConfigManager::isChunkTypeInPendingList(std::string chunk_type)
 }
 
 //: Add an item to the active configuration
-//! NOTE: This DOES NOT process the chunk
+//! NOTE: This DOES NOT process the element
 //+     it just places it into the active configuration list
 //! PRE: Current list must NOT be locked
-void ConfigManager::addActive(ConfigChunkPtr chunk)
+void ConfigManager::addActive(ConfigElementPtr element)
 {
    vprASSERT(0 == mActiveLock.test());
    lockActive();
-   mActiveConfig.vec().push_back(chunk);
+   mActiveConfig.vec().push_back(element);
    unlockActive();
 }
 
 //: Erase an item from the list
 //! PRE: Active list must be locked && item must be in list
 //! POST: list = old(list).erase(item) && item is invalid
-void ConfigManager::removeActive(const std::string& chunk_name)
+void ConfigManager::removeActive(const std::string& elementName)
 {
    vprASSERT(0 == mActiveLock.test());
    lockActive();
-   mActiveConfig.remove(chunk_name);
+   mActiveConfig.remove(elementName);
    unlockActive();
 }
 
 //------------------ DynamicReconfig Stuff ------------------------------
 
-void ConfigManager::addConfigChunkHandler(ConfigChunkHandler* h)
+void ConfigManager::addConfigElementHandler(ConfigElementHandler* h)
 {
-   mChunkHandlers.push_back(h);
+   mElementHandlers.push_back(h);
 }
 
-void ConfigManager::removeConfigChunkHandler(ConfigChunkHandler* h)
+void ConfigManager::removeConfigElementHandler(ConfigElementHandler* h)
 {
-   std::vector<ConfigChunkHandler*>::iterator it;
-   for ( it = mChunkHandlers.begin(); it != mChunkHandlers.end(); it++ )
+   std::vector<ConfigElementHandler*>::iterator it;
+   for ( it = mElementHandlers.begin(); it != mElementHandlers.end(); it++ )
    {
       if ( *it == h )
       {
-         mChunkHandlers.erase(it);
+         mElementHandlers.erase(it);
          break;
       }
    }
@@ -459,7 +459,7 @@ void ConfigManager::removeConfigChunkHandler(ConfigChunkHandler* h)
 
 int ConfigManager::attemptReconfiguration()
 {
-   int chunks_processed(0);     // Needs to return this value
+   int elements_processed(0);     // Needs to return this value
    if ( pendingNeedsChecked() )
    {
       vprDEBUG_OutputGuard(vprDBG_ALL, vprDBG_STATE_LVL,
@@ -468,22 +468,22 @@ int ConfigManager::attemptReconfiguration()
       
       lockPending();
 
-      for (unsigned int i = 0 ; i < mChunkHandlers.size() ; i++)
+      for (unsigned int i = 0 ; i < mElementHandlers.size() ; i++)
       {
-         mChunkHandlers[i]->configProcessPending();
+         mElementHandlers[i]->configProcessPending();
       }
 
       unlockPending();
    }
 
 /*
-   if ( chunks_processed > 0 )
+   if ( elements_processed > 0 )
    {
       mConfigCommunicator->configChanged();
    }
 */
 
-   return chunks_processed;
+   return elements_processed;
 }
 
 enum PendItemResult
@@ -497,7 +497,7 @@ enum PendItemResult
 void ConfigManager::addConnect(Connect *c)
 {
    c->addCommunicator(mConfigCommunicator);
-   //addActive(new ConfigChunk(*(c->getConfiguration())));
+   //addActive(new ConfigElement(*(c->getConfiguration())));
    addActive(c->getConfiguration());
 }
 

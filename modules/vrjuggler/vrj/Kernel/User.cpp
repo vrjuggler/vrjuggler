@@ -34,7 +34,7 @@
 
 #include <vrj/Kernel/User.h>
 #include <vrj/Util/Debug.h>
-#include <jccl/Config/ConfigChunk.h>
+#include <jccl/Config/ConfigElement.h>
 
 
 namespace vrj
@@ -49,25 +49,26 @@ int User::getId()
 std::string User::getName()
 { return mName; }
 
-bool User::config(jccl::ConfigChunkPtr chunk)
+bool User::config(jccl::ConfigElementPtr element)
 {
-   vprASSERT(chunk.get() != NULL);
-   vprASSERT(chunk->getDescToken() == std::string("JugglerUser"));
+   vprASSERT(element.get() != NULL);
+   vprASSERT(element->getID() == "user");
 
-   vprDEBUG_BEGIN(vrjDBG_KERNEL,3) << "vjUser::config: Creating a new user\n" << vprDEBUG_FLUSH;
+   vprDEBUG_BEGIN(vrjDBG_KERNEL, vprDBG_STATE_LVL)
+      << "vjUser::config: Creating a new user\n" << vprDEBUG_FLUSH;
 
    // Assign user id
    mUserId = mNextUserId++;
 
    // Setup user name
-   mName = chunk->getName();
+   mName = element->getName();
 
    // Initialize the head stuff
-   std::string head_alias = chunk->getProperty<std::string>("headPos");
+   std::string head_alias = element->getProperty<std::string>("head_position");
    mHead.init(head_alias);
 
    // Initialize interocular distance
-   mInterocularDist = chunk->getProperty<float>("interocular_distance");
+   mInterocularDist = element->getProperty<float>("interocular_distance");
 
    if(mInterocularDist == 0.0f)
    {
@@ -75,7 +76,7 @@ bool User::config(jccl::ConfigChunkPtr chunk)
    }
 
    vprDEBUG(vrjDBG_KERNEL,vprDBG_STATE_LVL) << "id: " << mUserId << "   Name:" << mName.c_str()
-                           << "   headPos:" << head_alias.c_str()
+                           << "   head_positon:" << head_alias.c_str()
                            << "   interocular_distance:" << mInterocularDist
                            << std::endl << vprDEBUG_FLUSH;
 

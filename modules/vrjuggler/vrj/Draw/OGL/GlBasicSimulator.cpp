@@ -69,16 +69,16 @@ GlBasicSimulator::GlBasicSimulator() : mQuadObj(NULL)
 
 /*
 * Configure the basic simulator config
-* @pre chunk is a valid chunk.
+* @pre element is a valid configuration element.
 * @post It should be configured
 */
-bool GlBasicSimulator::config(jccl::ConfigChunkPtr chunk)
+bool GlBasicSimulator::config(jccl::ConfigElementPtr element)
 {
-   vprASSERT(chunk.get() != NULL);
-   vprASSERT(chunk->getDescToken() == std::string("default_simulator"));
+   vprASSERT(element.get() != NULL);
+   vprASSERT(element->getID() == std::string("default_simulator"));
 
-   std::string camera_proxy_str = chunk->getProperty<std::string>("cameraPos");
-   std::string wand_proxy_str = chunk->getProperty<std::string>("wandPos");
+   std::string camera_proxy_str = element->getProperty<std::string>("camera_pos");
+   std::string wand_proxy_str = element->getProperty<std::string>("wand_pos");
 
    mCamera.init(camera_proxy_str);
    mWand.init(wand_proxy_str);      // Configure the wand to use
@@ -93,10 +93,10 @@ bool GlBasicSimulator::config(jccl::ConfigChunkPtr chunk)
    }
 
    // Get drawing parameters
-   mDrawProjections = chunk->getProperty<bool>("drawProjections");
-   mSurfaceColor[0] = chunk->getProperty<float>("surfaceColor", 0);
-   mSurfaceColor[1] = chunk->getProperty<float>("surfaceColor", 1);
-   mSurfaceColor[2] = chunk->getProperty<float>("surfaceColor", 2);
+   mDrawProjections = element->getProperty<bool>("draw_projections");
+   mSurfaceColor[0] = element->getProperty<float>("surface_color", 0);
+   mSurfaceColor[1] = element->getProperty<float>("surface_color", 1);
+   mSurfaceColor[2] = element->getProperty<float>("surface_color", 2);
 
    return true;
 }

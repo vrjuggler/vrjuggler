@@ -33,16 +33,23 @@
 #include <gadget/gadgetConfig.h>
 
 #include <gadget/Devices/Sim/SimSetablePosition.h>
-#include <jccl/Config/ConfigChunk.h>
+#include <jccl/Config/ConfigElement.h>
 #include <vpr/Util/Debug.h>
 
 namespace gadget
 {
 
-bool SimSetablePosition::config(jccl::ConfigChunkPtr chunk)
+std::string SimSetablePosition::getElementType()
 {
-    if(! (Input::config(chunk) && Position::config(chunk)))
+   return "simulated_setable_position";
+}
+
+bool SimSetablePosition::config(jccl::ConfigElementPtr element)
+{
+   if(! (Input::config(element) && Position::config(element)))
+   {
       return false;
+   }
 
    return true;
 }

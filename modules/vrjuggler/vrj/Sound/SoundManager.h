@@ -34,8 +34,8 @@
 #define _VRJUGGLER_SOUND_MANAGER_
 
 #include <vrj/vrjConfig.h>
-#include <jccl/Config/ConfigChunk.h>
-#include <jccl/RTRC/ConfigChunkHandler.h>
+#include <jccl/Config/ConfigElementPtr.h>
+#include <jccl/RTRC/ConfigElementHandler.h>
 
 #include <boost/concept_check.hpp>
 
@@ -44,36 +44,36 @@ namespace vrj
    /**
     * VR Juggler sound manager.
     */
-   class SoundManager : public jccl::ConfigChunkHandler
+   class SoundManager : public jccl::ConfigElementHandler
    {
    public:
       /**
-       * Adds the chunk to the configuration.
-       * @pre configCanHandle(chunk) == true
+       * Adds the element to the configuration.
+       * @pre configCanHandle(element) == true
        */
-      virtual bool configAdd(jccl::ConfigChunkPtr chunk)
+      virtual bool configAdd(jccl::ConfigElementPtr element)
       {
-         boost::ignore_unused_variable_warning(chunk);
+         boost::ignore_unused_variable_warning(element);
          return false;
       }
 
       /**
-       * Removes the chunk from the current configuration.
-       * @pre configCanHandle(chunk) == true
+       * Removes the element from the current configuration.
+       * @pre configCanHandle(element) == true
        */
-      virtual bool configRemove(jccl::ConfigChunkPtr chunk)
+      virtual bool configRemove(jccl::ConfigElementPtr element)
       {
-         boost::ignore_unused_variable_warning(chunk);
+         boost::ignore_unused_variable_warning(element);
          return false;
       }
 
       /**
-       * Can the handler handle the given chunk?
-       * @return true if we can handle the chunk; false if not.
+       * Can the handler handle the given element?
+       * @return true if we can handle the element; false if not.
        */
-      virtual bool configCanHandle(jccl::ConfigChunkPtr chunk)
+      virtual bool configCanHandle(jccl::ConfigElementPtr element)
       {
-         boost::ignore_unused_variable_warning(chunk);
+         boost::ignore_unused_variable_warning(element);
          return false;
       }
 

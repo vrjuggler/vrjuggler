@@ -33,7 +33,7 @@
 #include <gadget/gadgetConfig.h>
 
 #include <stdlib.h>
-#include <jccl/Config/ConfigChunk.h>
+#include <jccl/Config/ConfigElement.h>
 #include <gadget/Type/Input.h>
 
 
@@ -47,7 +47,7 @@ Input::Input()
 {
 }
 
-bool Input::config( jccl::ConfigChunkPtr c)
+bool Input::config(jccl::ConfigElementPtr e)
 {
   //if((!mPort.empty()) && (!mInstName.empty()))
   //{
@@ -57,7 +57,7 @@ bool Input::config( jccl::ConfigChunkPtr c)
   //   return true;
   //}
 
-  mInstName = c->getFullName();
+  mInstName = e->getFullName();
 
   return true;
 }

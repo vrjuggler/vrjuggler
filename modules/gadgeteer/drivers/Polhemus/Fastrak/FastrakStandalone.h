@@ -67,7 +67,7 @@ struct perstation
 
 struct FastrakConfig
 {
-   int found;         // flags: one bit for each feature found in the chunk
+   int found;         // flags: one bit for each feature found in the element
    int len;           // total length of a message sent by the tracker
    char port[20];     // port the tracker is attached to
    int baud;          // port speed

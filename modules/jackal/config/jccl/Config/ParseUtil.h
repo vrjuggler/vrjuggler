@@ -42,8 +42,8 @@ namespace jccl
 {
 
 /** Converts a char* to a jccl::VarType.
- *  @param str A non-NULL c string.
- *  @return The VarType named by str (VJ_T_INVALID if no match).
+ *  @param str A non-NULL string.
+ *  @return The VarType named by str (jccl::VJ_T_INVALID if no match).
  */
 VarType stringToVarType(const std::string& str);
 
@@ -84,10 +84,10 @@ JCCL_API(vpr::ReturnStatus) findFileUsingPathVar(const std::string& file_name,
                                                  std::string& absolute_file);
 
 /** Does the given path have a separator */
-bool hasSeparator(const std::string &path);
+bool hasSeparator(const std::string& path);
 
 /** Get the part of the path after the separator */
-std::string getRemainder(const std::string &path);
+std::string getRemainder(const std::string& path);
 
 /** Get the part of the path before the separator */
 std::string getFirstNameComponent(const std::string& path);

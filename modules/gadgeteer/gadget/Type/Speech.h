@@ -41,7 +41,7 @@ namespace gadget
 class Speech
 {
 public:
-   /** Constructs using chunk. */
+   /** Constructs using element. */
    Speech();
 
    /** Destructor. */

@@ -125,21 +125,21 @@ public class ControlPanelView
 //            else if (item.equals("A n a l o g"))
 //            {
 //               ClassLoader loader = BeanJarClassLoader.instance();
-//               showPanelWithChunks("SimAnalog",
+//               showPanelWithChunks("simulated_analog_device",
 //                                   new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/images/analog_devices64.png")),
 //                                   "Choose an analog device");
 //            }
 //            else if (item.equals("D i g i t a l"))
 //            {
 //               ClassLoader loader = BeanJarClassLoader.instance();
-//               showPanelWithChunks("SimDigital",
+//               showPanelWithChunks("simulated_digital_device",
 //                                   new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/images/digital_devices64.png")),
 //                                   "Choose a digital device");
 //            }
 //            else if (item.equals("P o s i t i o n a l"))
 //            {
 //               ClassLoader loader = BeanJarClassLoader.instance();
-//               showPanelWithChunks("SimPosition",
+//               showPanelWithChunks("simulated_positional_device",
 //                                   new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/images/positional_devices64.png")),
 //                                   "Choose a positional device");
 //
@@ -229,7 +229,7 @@ public class ControlPanelView
             else if (item.equals("D i s p l a y"))
             {
                DisplayEditor display_editor = new DisplayEditor();
-               display_editor.setConfigContext(context);
+               display_editor.setContext(context);
                pushCurrentBack(display_editor);
             }
             else if (item.equals("C l u s t e r"))
@@ -241,8 +241,8 @@ public class ControlPanelView
                dlg.getContentPane().setLayout(new BorderLayout());
                SimAnalogDeviceEditor editor = new SimAnalogDeviceEditor(context);
 
-               List chunks = getConfigBroker().getChunks(context);
-               ConfigChunk device = (ConfigChunk)ConfigUtilities.getChunksWithName(chunks,
+               List chunks = getConfigBroker().getElements(context);
+               ConfigElement device = (ConfigElement)ConfigUtilities.getElementsWithName(chunks,
                                                             "Analog Simulator").get(0);
                editor.setDevice(device);
                dlg.getContentPane().add(editor, BorderLayout.CENTER);
@@ -277,7 +277,7 @@ public class ControlPanelView
             {
                ClassLoader loader = BeanJarClassLoader.instance();
                ControlPanel ctl = createPanelWithChunks(
-                                       "SimAnalog",
+                                       "simulated_analog_device",
                                        new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/images/analog_devices64.png")));
                ctl.setTitle("Choose an analog device");
                ctl.addActionListener(new ActionListener()
@@ -291,9 +291,9 @@ public class ControlPanelView
                      dlg.getContentPane().setLayout(new BorderLayout());
                      SimAnalogDeviceEditor editor = new SimAnalogDeviceEditor(context);
 
-                     List chunks = getConfigBroker().getChunks(context);
+                     List chunks = getConfigBroker().getElements(context);
                      String device_name = (String)((ControlPanel)evt.getSource()).getModel().getElementAt(evt.getID());
-                     ConfigChunk device = (ConfigChunk)ConfigUtilities.getChunksWithName(chunks, device_name).get(0);
+                     ConfigElement device = (ConfigElement)ConfigUtilities.getElementsWithName(chunks, device_name).get(0);
                      editor.setDevice(device);
                      dlg.getContentPane().add(editor, BorderLayout.CENTER);
                      dlg.pack();
@@ -306,7 +306,7 @@ public class ControlPanelView
             {
                ClassLoader loader = BeanJarClassLoader.instance();
                ControlPanel ctl = createPanelWithChunks(
-                                       "SimDigital",
+                                       "simulated_digital_device",
                                        new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/images/digital_devices64.png")));
                ctl.setTitle("Choose a digital device");
                pushCurrentBack(ctl);
@@ -315,7 +315,7 @@ public class ControlPanelView
             {
                ClassLoader loader = BeanJarClassLoader.instance();
                ControlPanel ctl = createPanelWithChunks(
-                                       "SimPosition",
+                                       "simulated_positional_device",
                                        new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/images/positional_devices64.png")));
                ctl.setTitle("Choose a positional device");
                ctl.addActionListener(new ActionListener()
@@ -329,11 +329,11 @@ public class ControlPanelView
                      dlg.getContentPane().setLayout(new BorderLayout());
                      SimPosDeviceEditor editor = new SimPosDeviceEditor(context);
 
-                     List chunks = getConfigBroker().getChunks(context);
+                     List chunks = getConfigBroker().getElements(context);
                      System.out.println("Action Cmd: "+evt.getActionCommand());
 
                      String device_name = (String)((ControlPanel)evt.getSource()).getModel().getElementAt(evt.getID());
-                     ConfigChunk device = (ConfigChunk)ConfigUtilities.getChunksWithName(chunks, device_name).get(0);
+                     ConfigElement device = (ConfigElement)ConfigUtilities.getElementsWithName(chunks, device_name).get(0);
                      editor.setDevice(device);
                      dlg.getContentPane().add(editor, BorderLayout.CENTER);
                      dlg.pack();
@@ -366,11 +366,11 @@ public class ControlPanelView
    {
       ClassLoader loader = BeanJarClassLoader.instance();
       DefaultControlPanelModel model = new DefaultControlPanelModel();
-      List devices = ConfigUtilities.getChunksWithDescToken(
-                           getConfigBroker().getChunks(context), token);
+      List devices = ConfigUtilities.getElementsWithDefinition(
+                           getConfigBroker().getElements(context), token);
       for (Iterator itr = devices.iterator(); itr.hasNext(); )
       {
-         ConfigChunk chunk = (ConfigChunk)itr.next();
+         ConfigElement chunk = (ConfigElement)itr.next();
          model.add(chunk.getName(), icon);
       }
       ControlPanel new_control = new ControlPanel();

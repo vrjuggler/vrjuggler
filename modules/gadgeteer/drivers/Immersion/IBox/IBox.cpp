@@ -34,7 +34,7 @@
 #include <vpr/Thread/Thread.h>
 #include <vpr/System.h>
 
-#include <jccl/Config/ConfigChunk.h>
+#include <jccl/Config/ConfigElement.h>
 #include <gadget/Util/Debug.h>
 #include <gadget/Type/DeviceConstructor.h>
 
@@ -64,19 +64,26 @@ static void sampleBox(void* pointer)
 namespace gadget
 {
 
+std::string IBox::getElementType()
+{
+   return "ibox";
+}
+
 /**
  * Configures the IBox.
  */
-bool IBox::config(jccl::ConfigChunkPtr c)
+bool IBox::config(jccl::ConfigElementPtr e)
 {
-   if(! (Input::config(c) && Analog::config(c) && Digital::config(c) ))
+   if(! (Input::config(e) && Analog::config(e) && Digital::config(e)) )
+   {
       return false;
+   }
 
    vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL)
       << "   IBox::config:" << std::endl
       << vprDEBUG_FLUSH;
-   mPortName = c->getProperty<std::string>("port");
-   mBaudRate = c->getProperty<int>("baud");
+   mPortName = e->getProperty<std::string>("port");
+   mBaudRate = e->getProperty<int>("baud");
 
    vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CONFIG_LVL)
       << "   Creating an IBox.. params: " << std::endl

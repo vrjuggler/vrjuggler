@@ -53,7 +53,7 @@
 
 #include <vpr/Thread/Thread.h>
 #include <vpr/System.h>
-#include <jccl/Config/ConfigChunk.h>
+#include <jccl/Config/ConfigElement.h>
 
 #include <gadget/Type/Input.h>
 #include <gadget/Type/EventWindow.h>
@@ -92,7 +92,7 @@ public:
       stopSampling();
    }
 
-   virtual bool config(jccl::ConfigChunkPtr c);
+   virtual bool config(jccl::ConfigElementPtr e);
 
    /** Main thread of control for this active object. */
    void controlLoop( void* nullParam );
@@ -107,7 +107,7 @@ public:
     */
    int sample();
    void updateData();
-   static std::string getChunkType();
+   static std::string getElementType();
 
    /**
     * Returns the number of times the key was pressed during the last frame.

@@ -46,7 +46,7 @@
 #include <gmtl/EulerAngle.h>
 #include <gmtl/Quat.h>
 
-#include <jccl/Config/ConfigChunk.h>
+#include <jccl/Config/ConfigElement.h>
 #include <gadget/Type/DeviceConstructor.h>
 #include <gadget/Util/Debug.h>
 
@@ -87,55 +87,62 @@ IntersenseAPI::IntersenseAPI()
 //       << " ***\n" << vprDEBUG_FLUSH;
 }
 
-bool IntersenseAPI::config(jccl::ConfigChunkPtr c)
+std::string IntersenseAPI::getElementType()
+{
+   return "intersense_api";
+}
+
+bool IntersenseAPI::config(jccl::ConfigElementPtr e)
 {
     vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL)
-       << "         IntersenseAPI::config(jccl::ConfigChunkPtr)"
+       << "         Intersense::config(jccl::ConfigElementPtr)"
        << std::endl << vprDEBUG_FLUSH;
 
 // read in Position's, Digital's, and Analog's config stuff,
 // --> this will be the port and baud fields
-   if(! (Input::config(c) && Position::config(c) && Digital::config(c) && Analog::config(c) ))
+   if( ! (Input::config(e) && Position::config(e) && Digital::config(e) &&
+          Analog::config(e)) )
+   {
       return false;
+   }
 
-   mISenseDriverLocation = c->getProperty<std::string>("driver");
+   mISenseDriverLocation = e->getProperty<std::string>("driver");
 
-
-   mPortName = c->getProperty<std::string>("port");
-   mBaudRate = c->getProperty<int>("baud");
+   mPortName = e->getProperty<std::string>("port");
+   mBaudRate = e->getProperty<int>("baud");
 
 // keep IntersenseStandalone's port and baud members in sync with Input's port
 // and baud members.
    mTracker.setPortName( mPortName );
    mTracker.setBaudRate( mBaudRate );
-   mTracker.rNumStations() = c->getNum("stations");
+   mTracker.rNumStations() = e->getNum("stations");
 
    if(stations != NULL) delete [] stations;
    stations = new ISStationConfig[mTracker.rNumStations()];
-   jccl::ConfigChunkPtr stationConfig;
+   jccl::ConfigElementPtr stationConfig;
    for( int i = 0; i < mTracker.rNumStations(); i++)
    {
-      stationConfig = c->getProperty<jccl::ConfigChunkPtr>("stations", i);
+      stationConfig = e->getProperty<jccl::ConfigElementPtr>("stations", i);
       stations[i].enabled = stationConfig->getProperty<bool>("enabled");
-      stations[i].stationIndex = stationConfig->getProperty<int>("stationIndex");
-      stations[i].useDigital = stationConfig->getProperty<bool>("useDigital");
-      stations[i].useAnalog = stationConfig->getProperty<bool>("useAnalog");
+      stations[i].stationIndex = stationConfig->getProperty<int>("station_index");
+      stations[i].useDigital = stationConfig->getProperty<bool>("use_digital");
+      stations[i].useAnalog = stationConfig->getProperty<bool>("use_analog");
 
-      stations[i].dig_min = stationConfig->getProperty<int>("digitalFirst");
-      stations[i].dig_num = stationConfig->getProperty<int>("digitalNum");
-      stations[i].ana_min = stationConfig->getProperty<int>("analogFirst");
-      stations[i].ana_num = stationConfig->getProperty<int>("analogNum");
+      stations[i].dig_min = stationConfig->getProperty<int>("digital_first");
+      stations[i].dig_num = stationConfig->getProperty<int>("digital_count");
+      stations[i].ana_min = stationConfig->getProperty<int>("analog_first");
+      stations[i].ana_num = stationConfig->getProperty<int>("analog_count");
    }
 
    // load an init script for the tracker and then pass it to mTracker
-   const char* filename = c->getProperty<std::string>("script").c_str();
+   const char* filename = e->getProperty<std::string>("script").c_str();
    std::stringstream script;
    std::ifstream scriptFile;
    scriptFile.open(filename);
    script<<scriptFile.rdbuf();
    mTracker.setScript(script.str().c_str());
    scriptFile.close();
-   mTracker.rVerbose() = c->getProperty<bool>("verbose");
+   mTracker.rVerbose() = e->getProperty<bool>("verbose");
 
    return true;
 }

@@ -211,7 +211,7 @@ public:
    { return mWindowId; }
 
    // Called by event function to update size info
-   // XXX: Should update Display chunk in some way
+   // XXX: Should update Display configuration element in some way
    void updateOriginSize(int o_x, int o_y, int width, int height)
    {
       origin_x = o_x; origin_y = o_y;

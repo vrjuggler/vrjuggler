@@ -37,7 +37,7 @@
 #include <boost/concept_check.hpp>
 #include <vpr/vpr.h>
 #include <vpr/Util/Debug.h>
-#include <jccl/Config/ConfigChunk.h>
+#include <jccl/Config/ConfigElement.h>
 
 #include <gadget/Type/DeviceConstructor.h>
 #include <gadget/Util/Debug.h>
@@ -72,21 +72,26 @@ TweekGadget::~TweekGadget()
    mTweekRunning = false;
 }
 
-bool TweekGadget::config(jccl::ConfigChunkPtr c)
+std::string TweekGadget::getElementType()
+{
+   return "tweek_gadget";
+}
+
+bool TweekGadget::config(jccl::ConfigElementPtr e)
 {
    bool configured(false);
    vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL) << "TweekGadget::config()\n"
                                                    << vprDEBUG_FLUSH;
 
-   if ( Input::config(c) )
+   if ( Input::config(e) )
    {
       configured = true;
 
       // Extract the bits related to the CORBA Naming Service with which
       // we will be communicating.
-      std::string ns_host  = c->getProperty<std::string>("nsHost");
-      vpr::Uint16 ns_port  = c->getProperty<vpr::Uint16>("nsPort");
-      std::string iiop_ver = c->getProperty<std::string>("iiopVer");
+      std::string ns_host  = e->getProperty<std::string>("naming_service_host");
+      vpr::Uint16 ns_port  = e->getProperty<vpr::Uint16>("naming_service_port");
+      std::string iiop_ver = e->getProperty<std::string>("iiop_version");
 
       try
       {
@@ -133,8 +138,8 @@ bool TweekGadget::config(jccl::ConfigChunkPtr c)
       // element.
       if ( mTweekRunning )
       {
-         const std::string pos_dev_token("positionDevice");
-         const int pos_devs = c->getNum(pos_dev_token);
+         const std::string pos_dev_token("positional_device");
+         const int pos_devs = e->getNum(pos_dev_token);
 
          for ( int i = 0; i < pos_devs; ++i )
          {
@@ -142,8 +147,8 @@ bool TweekGadget::config(jccl::ConfigChunkPtr c)
             TweekPositionSubjectImpl* new_pos_dev =
                new TweekPositionSubjectImpl(this);
 
-            jccl::ConfigChunkPtr pos_dev =
-               c->getProperty<jccl::ConfigChunkPtr>(pos_dev_token, i);
+            jccl::ConfigElementPtr pos_dev =
+               e->getProperty<jccl::ConfigElementPtr>(pos_dev_token, i);
             Position::config(pos_dev);
             const std::string subject_name = pos_dev->getName();
 
@@ -166,8 +171,8 @@ bool TweekGadget::config(jccl::ConfigChunkPtr c)
             }
          }
 
-         const std::string dig_dev_token("digitalDevice");
-         const int dig_devs = c->getNum(dig_dev_token);
+         const std::string dig_dev_token("digital_device");
+         const int dig_devs = e->getNum(dig_dev_token);
 
          for ( int i = 0; i < dig_devs; ++i )
          {
@@ -175,8 +180,8 @@ bool TweekGadget::config(jccl::ConfigChunkPtr c)
             TweekDigitalSubjectImpl* new_dig_dev =
                new TweekDigitalSubjectImpl(this);
 
-            jccl::ConfigChunkPtr dig_dev =
-               c->getProperty<jccl::ConfigChunkPtr>(dig_dev_token, i);
+            jccl::ConfigElementPtr dig_dev =
+               e->getProperty<jccl::ConfigElementPtr>(dig_dev_token, i);
             Digital::config(dig_dev);
             const std::string subject_name = dig_dev->getName();
 
@@ -199,8 +204,8 @@ bool TweekGadget::config(jccl::ConfigChunkPtr c)
             }
          }
 
-         const std::string ana_dev_token("analogDevice");
-         const int ana_devs = c->getNum(ana_dev_token);
+         const std::string ana_dev_token("analog_device");
+         const int ana_devs = e->getNum(ana_dev_token);
 
          for ( int i = 0; i < ana_devs; ++i )
          {
@@ -208,8 +213,8 @@ bool TweekGadget::config(jccl::ConfigChunkPtr c)
             TweekAnalogSubjectImpl* new_ana_dev =
                new TweekAnalogSubjectImpl(this);
 
-            jccl::ConfigChunkPtr ana_dev =
-               c->getProperty<jccl::ConfigChunkPtr>(ana_dev_token, i);
+            jccl::ConfigElementPtr ana_dev =
+               e->getProperty<jccl::ConfigElementPtr>(ana_dev_token, i);
             Analog::config(ana_dev);
             const std::string subject_name = ana_dev->getName();
 

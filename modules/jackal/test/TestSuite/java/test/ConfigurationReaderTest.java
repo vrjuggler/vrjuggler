@@ -7,7 +7,7 @@ import org.jdom.*;
 import org.jdom.input.SAXBuilder;
 
 import org.vrjuggler.jccl.config.*;
-import org.vrjuggler.jccl.config.parser.*;
+import org.vrjuggler.jccl.config.io.*;
 
 /**
  * Test the ConfigurationReader class.
@@ -42,12 +42,19 @@ import org.vrjuggler.jccl.config.parser.*;
 //         assertEquals(config.getIncludes().get(0), "blah.jconf");
          assertEquals(config.getDefinitionPath().get(0), "${DATA_DIR}");
 
+         // The person
          ConfigElement elt = (ConfigElement)config.getElements().get(0);
          assertEquals(elt.getName(), "Ben");
          assertEquals(elt.getDefinition().getVersion(), 1);
          assertEquals(elt.getProperty("name", 0), "Ben");
          assertEquals(elt.getProperty("age", 0), new Integer(22));
          assertEquals(elt.getPropertyValueCount("friends"), 0);
+
+         // The building
+         elt = (ConfigElement)config.getElements().get(1);
+         assertEquals(elt.getName(), "Howe Hall");
+         assertEquals(elt.getDefinition().getVersion(), 1);
+         assertEquals(elt.getProperty("occupant", 0), new ConfigElementPointer("Ben"));
       }
       catch (IOException ioe)
       {

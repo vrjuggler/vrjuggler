@@ -106,7 +106,7 @@ public:
       mThreadID = NULL;
    }
 
-   virtual bool config(jccl::ConfigChunkPtr c);
+   virtual bool config(jccl::ConfigElementPtr e);
 
    /** Input pure virtual functions **/
    int startSampling();
@@ -122,7 +122,7 @@ public:
       return 1;
    }
 
-   static std::string getChunkType() { return std::string("ThreeDMouse");}
+   static std::string getElementType();
 
    /** @name Internal functions from original implementation
     *

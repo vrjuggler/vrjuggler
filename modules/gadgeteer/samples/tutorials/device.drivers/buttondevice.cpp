@@ -46,7 +46,7 @@ public:
    virtual void  startSampling();
    virtual void  sample();
    virtual void  stopSampling();
-   static std::string getChunkType();
+   static std::string getElementType();
 private:
    static void   threadedSampleFunction( void* classPointer );
    int           mDigitalData;
@@ -60,8 +60,8 @@ DeviceConstructor<MyButtonDevice>* this_ptr_not_used = new DeviceConstructor<MyB
 
 //: What is the name of this device?
 //  This function returns a string that should match this device's 
-//  configchunk name.
-static std::string  MyButtonDevice::getChunkType() 
+//  config element name.
+static std::string  MyButtonDevice::getElementType() 
 { 
    return std::string("MyButtonDevice");
 }
@@ -127,15 +127,17 @@ void MyButtonDevice::threadedSampleFunction( void* classPointer )
 }
 
 //: When the system detects a configuration change for your driver, it will
-//  pass the new ConfigChunk into this function.  See the documentation
-//  on config chunks, for information on how to access them.
-bool MyButtonDevice::config( ConfigChunk *c )
+//  pass the new jccl::ConfigElement into this function.  See the documentation
+//  on config elements, for information on how to access them.
+bool MyButtonDevice::config(jccl::ConfigElementPtr e)
 {
-  if (!Digital::config(c))
+  if (!Digital::config(e))
+  {
      return false;
+  }
 
-  mPortId = c->getProperty<int>( "port" );
-  mBaud = c->getProperty<int>( "baud" );
+  mPortId = e->getProperty<int>("port");
+  mBaud = e->getProperty<int>("baud");
 
   return true;
 }

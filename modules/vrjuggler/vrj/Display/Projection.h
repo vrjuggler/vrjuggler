@@ -41,7 +41,7 @@
 #include <gmtl/Matrix.h>
 #include <gmtl/Vec.h>
 
-#include <jccl/Config/ConfigChunkPtr.h>
+#include <jccl/Config/ConfigElementPtr.h>
 
 namespace vrj
 {
@@ -84,7 +84,7 @@ public:
    /** Configures the projection.
    * Default implementation does nothing.
    */
-   virtual void config(jccl::ConfigChunkPtr chunk);
+   virtual void config(jccl::ConfigElementPtr element);
 
    void setEye(Projection::Eye _eye)
    { mEye = _eye; }

@@ -34,8 +34,8 @@
 #define _VRJ_DRAW_MANAGER_
 
 #include <vrj/vrjConfig.h>
-#include <jccl/Config/ConfigChunkDB.h>
-#include <jccl/RTRC/ConfigChunkHandler.h>
+//#include <jccl/Config/Configuration.h>
+#include <jccl/RTRC/ConfigElementHandler.h>
 
 
 namespace vrj
@@ -52,7 +52,7 @@ class Display;
  *
  * @date 9-7-97
  */
-class VJ_CLASS_API DrawManager : public jccl::ConfigChunkHandler
+class VJ_CLASS_API DrawManager : public jccl::ConfigElementHandler
 {
 public:
    DrawManager (void)
@@ -62,9 +62,9 @@ public:
 
    /**
     * Function to initialy config API specific stuff.
-    * Takes a chunkDB and extracts API specific stuff
+    * Takes a jccl::Configuration and extracts API-specific stuff.
     */
-   //**//virtual void configInitial(jccl::ConfigChunkDB*  chunkDB) = 0;
+   //**//virtual void configInitial(jccl::Configuration*  cfg) = 0;
 
    /// Enable a frame to be drawn
    virtual void draw() = 0;

@@ -36,7 +36,7 @@
 #include <GL/gl.h>
 
 #include <gmtl/Matrix.h>
-#include <jccl/Config/ConfigChunk.h>
+#include <jccl/Config/ConfigElementPtr.h>
 #include <gadget/Type/PositionInterface.h>
 #include <gadget/Type/DigitalInterface.h>
 #include <vrj/Draw/OGL/GlApp.h>
@@ -74,7 +74,7 @@ public:
     * @return If the element is of type ConfigApp, true is returned.
     *         Otherwise, false is returned.
     */
-   virtual bool configCanHandle(ConfigChunkPtr element);
+   virtual bool configCanHandle(ConfigElementPtr element);
 
    /**
     * Handles addition of a new configuration element that we can use.
@@ -87,7 +87,7 @@ public:
     *
     * @return true is returned if we used the given element successfully.
     */
-   virtual bool configAdd(ConfigChunkPtr element);
+   virtual bool configAdd(ConfigElementPtr element);
 
    /** Initializes the device interfaces used by this application object. */
    virtual void init();

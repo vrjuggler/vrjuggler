@@ -30,35 +30,30 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-
 #include <jccl/jcclConfig.h>
-#include <jccl/Config/ConfigChunk.h>
-#include <jccl/Config/ChunkDesc.h>
+#include <boost/concept_check.hpp>
+#include <jccl/Config/ConfigElement.h>
 #include <jccl/RTRC/ConfigManager.h>
 #include <jccl/RTRC/DepChecker.h>
-#include <boost/concept_check.hpp>
 
 namespace jccl
 {
 
-DepChecker::DepChecker ()
+DepChecker::DepChecker()
 {;}
 
-
-/*virtual*/ std::string DepChecker::getCheckerName ()
+std::string DepChecker::getCheckerName()
 {
    return std::string("Default Checker");
 }
 
-
-/*virtual*/ bool DepChecker::canHandle (ConfigChunkPtr chunk)
+bool DepChecker::canHandle(ConfigElementPtr element)
 {
-   boost::ignore_unused_variable_warning(chunk);
+   boost::ignore_unused_variable_warning(element);
    return true;
 }
 
-
-/*virtual*/ bool DepChecker::depSatisfied (ConfigChunkPtr chunk)
+bool DepChecker::depSatisfied(ConfigElementPtr element)
 {
    bool pass=true;
 
@@ -66,31 +61,28 @@ DepChecker::DepChecker ()
 
    // Get the list of dependencies
    std::vector<std::string> dependencies =
-      chunk->getChunkPtrDependencies();
+      element->getElementPtrDependencies();
 
    // Check to see if they are loaded already
    for(unsigned int i=0;i<dependencies.size();i++)
    {
-      if(!cfg_mgr->isChunkInActiveList(dependencies[i]))
+      if(!cfg_mgr->isElementInActiveList(dependencies[i]))
          pass = false;
    }
    return pass;
 }
 
-
 // Write out the dependencies to the vprDEBUG macro
-/*virtual*/ void DepChecker::debugOutDependencies (ConfigChunkPtr chunk,
-                                                   int dbg_lvl)
+void DepChecker::debugOutDependencies(ConfigElementPtr element, int dbg_lvl)
 {
    vprDEBUG_NEXT_BEGIN(vprDBG_ALL,dbg_lvl)
-      << "---- Dependencies for: item: " << chunk->getName()
-      << " type: " << chunk->getDescToken()
-      << "-------\n" << vprDEBUG_FLUSH;
+      << "---- Dependencies for: item: " << element->getName()
+      << " type: " << element->getID() << "-------\n" << vprDEBUG_FLUSH;
 
    ConfigManager* cfg_mgr = ConfigManager::instance();
 
    // Get the list of dependencies
-   std::vector<std::string> dependencies = chunk->getChunkPtrDependencies();
+   std::vector<std::string> dependencies = element->getElementPtrDependencies();
 
    // Check to see if they are loaded already
    for(unsigned int i=0;i<dependencies.size();i++)
@@ -98,7 +90,7 @@ DepChecker::DepChecker ()
       vprDEBUG_NEXT(vprDBG_ALL,dbg_lvl) << i << ": "
                                         << dependencies[i].c_str()
                                         << " ==> " << vprDEBUG_FLUSH;
-      if(!cfg_mgr->isChunkInActiveList(dependencies[i]))
+      if(!cfg_mgr->isElementInActiveList(dependencies[i]))
       {
          vprDEBUG_CONT(vprDBG_ALL,dbg_lvl) << "not available.\n" << vprDEBUG_FLUSH;
       }
@@ -111,6 +103,5 @@ DepChecker::DepChecker ()
    vprDEBUG_CONT_END(vprDBG_ALL,dbg_lvl) << std::endl << vprDEBUG_FLUSH;
 
 }
-
 
 } //namespace jccl

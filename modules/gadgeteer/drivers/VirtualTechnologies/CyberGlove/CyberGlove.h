@@ -61,9 +61,9 @@ public:
    /** Destroys the glove. */
    virtual ~CyberGlove();
 
-   virtual bool config(jccl::ConfigChunkPtr c);
+   virtual bool config(jccl::ConfigElementPtr e);
 
-   static std::string getChunkType() { return std::string("CyberGlove");}
+   static std::string getElementType();
 
    virtual int startSampling();
    virtual int stopSampling();

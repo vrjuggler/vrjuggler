@@ -40,7 +40,8 @@
 //spinner() was here also
 namespace gadget_test
 {
-IboxAdaptor::IboxAdaptor(const std::string& devName = "IBox") : button(4), analog(4)
+IboxAdaptor::IboxAdaptor(const std::string& devName)
+   : button(4), analog(4)
 {
     mName=devName;
     mIbox = new IboxStandalone();

@@ -69,7 +69,7 @@
 
 #include <vpr/vpr.h>
 #include <vpr/Util/Debug.h>
-#include <jccl/Config/ConfigChunk.h>
+#include <jccl/Config/ConfigElement.h>
 #include <gadget/InputManager.h>
 #include <gadget/Type/DeviceConstructor.h>
 
@@ -107,18 +107,23 @@ namespace gadget
     gadget::Vrpn *this_ptr = static_cast<gadget::Vrpn*>(userdata);
     this_ptr->handleButton(b);
   }
-  
 
-  bool Vrpn::config(jccl::ConfigChunkPtr c)
+  std::string Vrpn::getElementType()
   {
+     return "vrpn";
+  }
 
-    if(! (Input::config(c) && Position::config(c)))
+  bool Vrpn::config(jccl::ConfigElementPtr e)
+  {
+    if(! (Input::config(e) && Position::config(e)))
+    {
       return false;
-    
+    }
+
     std::cerr << "***************** config ******* " << std::endl;
 
     // tracking
-    mTrackerServer = c->getProperty<std::string>("trackerServer");
+    mTrackerServer = e->getProperty<std::string>("tracker_server");
     if(mTrackerServer == std::string(""))
       {
 	std::cerr << "vrpn tracker server name not set!!!!!!" << std::endl;
@@ -128,10 +133,10 @@ namespace gadget
 	std::cerr << "vrpn tracker server name set to " << mTrackerServer << std::endl;
       }
 
-    mTrackerNumber = c->getProperty<int>("numTrackers");
+    mTrackerNumber = e->getProperty<int>("tracker_count");
 
     // button
-    mButtonServer = c->getProperty<std::string >("buttonServer");
+    mButtonServer = e->getProperty<std::string >("button_server");
     if(mButtonServer == std::string(""))
       {
 	std::cerr << "vrpn button server name not set!!!!!!" << std::endl;
@@ -141,24 +146,24 @@ namespace gadget
 	std::cerr << "vrpn button server name set to " << mButtonServer << std::endl;
       }
     
-    mButtonNumber = c->getProperty<int>("numButtons");
+    mButtonNumber = e->getProperty<int>("button_count");
 
-    if (true == c->getProperty<bool>("etrans") )
+    if (true == e->getProperty<bool>("etrans") )
       {
 	setPreTransform
-	  ( c->getProperty<float>("pretranslate",0) , // xtrans
-            c->getProperty<float>("pretranslate",1) , // ytrans
-            c->getProperty<float>("pretranslate",2) , // ztrans
-            c->getProperty<float>("prerotate",0) , // xrot
-            c->getProperty<float>("prerotate",1) , // yrot
-            c->getProperty<float>("prerotate",2) ,// zrot
-            c->getProperty<float>("prescale",0) , // xrot
-            c->getProperty<float>("prescale",1) , // yrot
-            c->getProperty<float>("prescale",2) );// zrot
+	  ( e->getProperty<float>("pretranslate",0) , // xtrans
+            e->getProperty<float>("pretranslate",1) , // ytrans
+            e->getProperty<float>("pretranslate",2) , // ztrans
+            e->getProperty<float>("prerotate",0) , // xrot
+            e->getProperty<float>("prerotate",1) , // yrot
+            e->getProperty<float>("prerotate",2) ,// zrot
+            e->getProperty<float>("prescale",0) , // xrot
+            e->getProperty<float>("prescale",1) , // yrot
+            e->getProperty<float>("prescale",2) );// zrot
 	setPostTransform
-	  ( c->getProperty<float>("postscale",0) , // xrot
-            c->getProperty<float>("postscale",1) , // yrot
-            c->getProperty<float>("postscale",2) );// zrot
+	  ( e->getProperty<float>("postscale",0) , // xrot
+            e->getProperty<float>("postscale",1) , // yrot
+            e->getProperty<float>("postscale",2) );// zrot
       }
     
 

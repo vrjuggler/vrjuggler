@@ -73,19 +73,19 @@ public:
    ~TrackdAPISensor();
 
    /**
-    * Configures the trackd sensor with the given config chunk.
+    * Configures the trackd sensor with the given config element.
     *
-    * @pre c must be a chunk that has trackd sensor config information
-    * @post If c is a valid config chunk, the device is configured using its
+    * @pre e must be a element that has trackd sensor config information
+    * @post If e is a valid config element, the device is configured using its
     *        contents.  Otherwise, configuration fails and false is returned
     *        to the caller.
     *
-    * @param c  A pointer to a TrackdSensor config chunk.
+    * @param c  A pointer to a TrackdSensor config element.
     *
     * @return true if the device was configured succesfully, fales if the
-    *              config chunk is invalid.
+    *              config element is invalid.
     */
-   virtual bool config(jccl::ConfigChunkPtr c);
+   virtual bool config(jccl::ConfigElementPtr e);
 
    /** Begins sampling. */
    int startSampling() { return 1; }
@@ -107,11 +107,8 @@ public:
    /** Returns the current position of the given sensor number. */
    gmtl::Matrix44f getSensorPos(int sensorNum);
 
-   /** Returns what chunk type is associated with this class. */
-   static std::string getChunkType()
-   {
-      return std::string("TrackdAPISensor");
-   }
+   /** Returns what element type is associated with this class. */
+   static std::string getElementType();
 
    /**
     * Invokes the global scope delete operator.  This is required for proper

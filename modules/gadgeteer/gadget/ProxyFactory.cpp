@@ -41,7 +41,7 @@
 #include <gadget/ProxyDepChecker.h>
 #include <gadget/ProxyFactory.h>
 #include <gadget/Util/Debug.h>
-#include <jccl/Config/ConfigChunk.h>
+#include <jccl/Config/ConfigElement.h>
 
 #include <typeinfo>
 
@@ -91,7 +91,7 @@ void ProxyFactory::registerProxy(ProxyConstructorBase* constructor)
    vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CONFIG_LVL)
       << "gadget::ProxyFactory: Constructor registered for: "
       << std::setiosflags(std::ios::right) << std::setw(25)
-      << std::setfill(' ') << constructor->getChunkType().c_str()
+      << std::setfill(' ') << constructor->getElementType()
       << std::resetiosflags(std::ios::right)
       //<< "   :" << (void*)constructor
       << " type: " << typeid(*constructor).name() << std::endl
@@ -100,42 +100,41 @@ void ProxyFactory::registerProxy(ProxyConstructorBase* constructor)
 
 // Simply query all proxy constructors registered looking
 // for one that knows how to load the proxy
-bool ProxyFactory::recognizeProxy(jccl::ConfigChunkPtr chunk)
+bool ProxyFactory::recognizeProxy(jccl::ConfigElementPtr element)
 {
-   if(findConstructor(chunk) == -1)
-      return false;
-   else
-      return true;
+   return ! (findConstructor(element) == -1);
 }
 
 /**
  * Loads the specified proxy.
  */
-Proxy* ProxyFactory::loadProxy(jccl::ConfigChunkPtr chunk)
+Proxy* ProxyFactory::loadProxy(jccl::ConfigElementPtr element)
 {
-   vprASSERT(recognizeProxy(chunk));
+   vprASSERT(recognizeProxy(element));
 
-   int index = findConstructor(chunk);
+   int index = findConstructor(element);
 
    Proxy* new_proxy;
    ProxyConstructorBase* constructor = mConstructors[index];
 
    vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL)
       << "vjProxyFactory::loadProxy: Loading proxy: "
-      << chunk->getDescToken() << "  with: "
+      << element->getID() << "  with: "
       << typeid(*constructor).name() << std::endl << vprDEBUG_FLUSH;
-   new_proxy = constructor->createProxy(chunk);
+   new_proxy = constructor->createProxy(element);
    return new_proxy;
 }
 
-int ProxyFactory::findConstructor(jccl::ConfigChunkPtr chunk)
+int ProxyFactory::findConstructor(jccl::ConfigElementPtr element)
 {
-   std::string chunk_type;
-   chunk_type = chunk->getDescToken();
+   std::string element_type(element->getID());
+
    for(unsigned i=0;i<mConstructors.size();i++)
    {
-      if(mConstructors[i]->getChunkType() == chunk_type)
+      if(mConstructors[i]->getElementType() == element_type)
+      {
          return i;
+      }
    }
 
    return -1;

@@ -1,12 +1,11 @@
 #include <cppunit/TestSuite.h>
 #include <cppunit/ui/text/TestRunner.h>
 
-//#include <TestCases/VarValueTest.h>
-#include <TestCases/ChunkDescTest.h>
+#include <TestCases/ConfigDefinitionTest.h>
 #include <TestCases/IncludesTest.h>
 #include <TestCases/EnumerationsTest.h>
-#include <TestCases/ConfigChunkTest.h>
-#include <TestCases/ConfigChunkDBTest.h>
+#include <TestCases/ConfigElementTest.h>
+#include <TestCases/ConfigurationTest.h>
 
 
 #include <vpr/Util/Debug.h>
@@ -46,10 +45,9 @@ int main (int ac, char **av)
    CppUnit::TestSuite* noninteractive_suite = new CppUnit::TestSuite("noninteractive");
 
    // add tests to the suite
-   noninteractive_suite->addTest(jcclTest::ConfigChunkTest::suite());
-   noninteractive_suite->addTest(jcclTest::ConfigChunkDBTest::suite());
-   //noninteractive_suite->addTest(jcclTest::VarValueTest::suite());
-   noninteractive_suite->addTest(jcclTest::ChunkDescTest::suite());
+   noninteractive_suite->addTest(jcclTest::ConfigElementTest::suite());
+   noninteractive_suite->addTest(jcclTest::ConfigurationTest::suite());
+   noninteractive_suite->addTest(jcclTest::ConfigDefinitionTest::suite());
    noninteractive_suite->addTest(jcclTest::IncludesTest::suite());
    noninteractive_suite->addTest(jcclTest::EnumerationsTest::suite());
 

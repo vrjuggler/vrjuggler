@@ -38,7 +38,7 @@
 #include <gadget/Type/Input.h>
 #include <gadget/Type/EventWindow.h>
 #include <gadget/Type/InputMixer.h>
-#include <jccl/Config/ConfigChunkPtr.h>
+#include <jccl/Config/ConfigElementPtr.h>
 #include <gadget/Type/EventWindow/Event.h>
 
 #include <Carbon/Carbon.h>
@@ -61,7 +61,7 @@ namespace gadget
  *  driver will "lock" the mouse to the window, thus preventing loss of focus.<br>
  *  CASE 1: The user holds down any key. (ie. a,b, ctrl, shift, etc)<br>
  *  CASE 2: The user can toggle locking using a special "locking" key
- *           defined in the configuration chunk.
+ *           defined in the configuration element.
  *
  * @see EventWindow, EventWindowProxy
  */
@@ -83,7 +83,7 @@ public:
       stopSampling();
    }
 
-   virtual bool config(jccl::ConfigChunkPtr c);
+   virtual bool config(jccl::ConfigElementPtr e);
 
    /** @name Pure virtuals required by gadget::Input. */
    //@{
@@ -101,10 +101,7 @@ public:
    }
    void updateData();
 
-   static std::string getChunkType()
-   {
-      return std::string("EventWindow");
-   }
+   static std::string getElementType();
 
    /**
     * Returns the number of times the key was pressed during the

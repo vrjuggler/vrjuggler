@@ -430,8 +430,6 @@ _LOCAL_CLOBBER=	1
 
 EXTRA_OBJ_TARGETS=	build-java
 
-# Make sure we build java targets serially because javac is stupid and may try
-# to write to the same files at the same time while building different sources.
 build-java:
 ifdef NO_JAVA
 	@echo "------------------------------------------------"
@@ -439,7 +437,7 @@ ifdef NO_JAVA
 	@echo "------------------------------------------------"
 else
 ifeq ($(BUILD_JAVA), Y)
-	$(MAKE) -j 1 RECTARGET=java recursive
+	$(MAKE) RECTARGET=java recursive
 endif
 endif #ifdef NO_JAVA
 

@@ -40,7 +40,7 @@ int main(int argc, char* argv[])
    pfBasicConfigNavApp* application = new pfBasicConfigNavApp();  // Delcare an instance of my application
 
    // Load config information
-   //kernel->loadChunkDescFile(std::string("pfNavChunks.dsc"));
+   //kernel->loadConfigDefinitionFile(std::string("pfNavChunks.dsc"));
 
    for ( int i = 1; i < argc; i++ )
    {

@@ -65,14 +65,14 @@ namespace cluster
 {
    vprSingletonImp( SwapLockWiredPlugin );
 
-   /** Add the pending chunk to the configuration.
-   *  PRE: configCanHandle (chunk) == true.
-   *  @return true iff chunk was successfully added to configuration.
+   /** Add the pending element to the configuration.
+   *  PRE: configCanHandle (element) == true.
+   *  @return true iff element was successfully added to configuration.
    */
-   bool SwapLockWiredPlugin::configAdd(jccl::ConfigChunkPtr chunk)
+   bool SwapLockWiredPlugin::configAdd(jccl::ConfigElementPtr element)
    {
       // We need to make sure that the ClusterManager has been configured so that we
-      // can ensure that the barrier master's config chunk has also been configured.
+      // can ensure that the barrier master's config element has also been configured.
       if(!ClusterManager::instance()->isClusterActive())
       {
          // XXX: This could be made into a dependancy also.
@@ -84,18 +84,18 @@ namespace cluster
       //
       // -Set flag we have started configuring the cluster
       // -Get Sync Machine Chunk Name
-      // -Get ChunkPtr to this chunk
+      // -Get ChunkPtr to this element
       // -Get the Hostname of this node
 
-      std::string barrier_machine_chunk_name = chunk->getProperty<std::string>(std::string("sync_server"));
-      jccl::ConfigChunkPtr barrier_machine_chunk = ClusterManager::instance()->getConfigChunkPointer(barrier_machine_chunk_name);
-      vprASSERT(NULL != barrier_machine_chunk.get() && "ConfigManager Chunk MUST have a barrier_master.");
-      mBarrierMasterHostname = barrier_machine_chunk->getProperty<std::string>(std::string("host_name"));
+      std::string barrier_machine_element_name = element->getProperty<std::string>(std::string("sync_server"));
+      jccl::ConfigElementPtr barrier_machine_element = ClusterManager::instance()->getConfigElementPointer(barrier_machine_element_name);
+      vprASSERT(NULL != barrier_machine_element.get() && "ConfigManager Chunk MUST have a barrier_master.");
+      mBarrierMasterHostname = barrier_machine_element->getProperty<std::string>(std::string("host_name"));
       
-      //mTCPport = chunk->getProperty<int>(std::string("listen_port"));
+      //mTCPport = element->getProperty<int>(std::string("listen_port"));
 
       vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << clrOutBOLD(clrCYAN,"[SwapLockWiredPlugin] ")
-         << "SwapLock Master Chunk Name is: " << barrier_machine_chunk_name << std::endl << vprDEBUG_FLUSH;         
+         << "SwapLock Master Chunk Name is: " << barrier_machine_element_name << std::endl << vprDEBUG_FLUSH;         
       vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << clrOutBOLD(clrCYAN,"[SwapLockWiredPlugin] ")
          << "SwapLock Master Hostname is: " << mBarrierMasterHostname << std::endl << vprDEBUG_FLUSH;         
       // Starting Barrier Stuff
@@ -115,16 +115,16 @@ namespace cluster
       return true;
    }
    
-   /** Remove the pending chunk from the current configuration.
-   *  PRE: configCanHandle (chunk) == true.
-   *  @return true iff the chunk (and any objects it represented)
+   /** Remove the pending element from the current configuration.
+   *  PRE: configCanHandle (element) == true.
+   *  @return true iff the element (and any objects it represented)
    *          were successfully removed.
    */
-   bool SwapLockWiredPlugin::configRemove(jccl::ConfigChunkPtr chunk)
+   bool SwapLockWiredPlugin::configRemove(jccl::ConfigElementPtr element)
    {
-      if (recognizeSwapLockWiredPluginConfig(chunk))
+      if (recognizeSwapLockWiredPluginConfig(element))
       {
-         vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "[SwapLockWiredPlugin] Disabling SwapLock: " << chunk->getName() 
+         vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "[SwapLockWiredPlugin] Disabling SwapLock: " << element->getName() 
          << "\n" << vprDEBUG_FLUSH;
          return(true);
       }
@@ -136,20 +136,20 @@ namespace cluster
       }
    }
    
-   /** Checks if this handler can process chunk.
-   *  Typically, an implementation of handler will check the chunk's
+   /** Checks if this handler can process element.
+   *  Typically, an implementation of handler will check the element's
    *  description name/token to decide if it knows how to deal with
    *  it.
-   *  @return true iff this handler can process chunk.
+   *  @return true iff this handler can process element.
    */
-   bool SwapLockWiredPlugin::configCanHandle(jccl::ConfigChunkPtr chunk)
+   bool SwapLockWiredPlugin::configCanHandle(jccl::ConfigElementPtr element)
    {
-      return( recognizeSwapLockWiredPluginConfig(chunk) );   
+      return( recognizeSwapLockWiredPluginConfig(element) );   
    }
       
-   bool SwapLockWiredPlugin::recognizeSwapLockWiredPluginConfig(jccl::ConfigChunkPtr chunk)
+   bool SwapLockWiredPlugin::recognizeSwapLockWiredPluginConfig(jccl::ConfigElementPtr element)
    {
-      return(chunk->getDescToken() == getChunkType());
+      return(element->getID() == getElementType());
    }
 
    void SwapLockWiredPlugin::preDraw()

@@ -35,15 +35,13 @@
 
 #include <gadget/gadgetConfig.h>
 
-#include <boost/concept_check.hpp>
-
 #include <string> 
 #include <boost/concept_check.hpp>
 
 #include <vpr/Util/Assert.h>
 
-#include <jccl/RTRC/ConfigChunkHandler.h>
-#include <jccl/Config/ConfigChunkPtr.h>
+#include <jccl/RTRC/ConfigElementHandler.h>
+#include <jccl/Config/ConfigElementPtr.h>
 
 namespace vpr
 {
@@ -56,7 +54,7 @@ namespace cluster
    class Packet;
    class ClusterNode;
 
-class GADGET_CLASS_API ClusterPlugin : public jccl::ConfigChunkHandler
+class GADGET_CLASS_API ClusterPlugin : public jccl::ConfigElementHandler
 {
 public:
    ClusterPlugin();
@@ -109,9 +107,9 @@ public:
    }
    
    //virtual bool isPluginReady() = 0;
-   virtual bool configCanHandle(jccl::ConfigChunkPtr chunk) = 0;
-   virtual bool configAdd(jccl::ConfigChunkPtr chunk) = 0;
-   virtual bool configRemove(jccl::ConfigChunkPtr chunk) = 0;
+   virtual bool configCanHandle(jccl::ConfigElementPtr element) = 0;
+   virtual bool configAdd(jccl::ConfigElementPtr element) = 0;
+   virtual bool configRemove(jccl::ConfigElementPtr element) = 0;
 
 private:   
    bool  mActive;

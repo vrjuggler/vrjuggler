@@ -36,7 +36,7 @@
 #include <typeinfo>
 #include <vector>
 
-#include <jccl/Config/ConfigChunkPtr.h>
+#include <jccl/Config/ConfigElementPtr.h>
 #include <gadget/Type/PositionData.h>
 //#include <gadget/Type/SampleBuffer.h>
 
@@ -66,7 +66,7 @@ public:
    /** Configuration for the filter
    * @return Returns true if configured correctly
    */
-   virtual bool config(jccl::ConfigChunkPtr c) = 0;   
+   virtual bool config(jccl::ConfigElementPtr c) = 0;   
 
    /** Apply the pos filter.
    * Apply the filter to the posSample in place.
@@ -75,11 +75,15 @@ public:
    */
    virtual void apply(std::vector< PositionData >& posSample) = 0;
 
-   /** Returns the string rep of the chunk type used to config this device
-   * This string is used by the device factory to look up device drivers
-   * based up the type of chunk it is trying to load.
-   */
-   static std::string getChunkType() { return std::string("UndefinedPosFilter"); }
+   /**
+    * Returns the string rep of the element type used to config this device.
+    * This string is used by the device factory to look up device drivers
+    * based up the type of element it is trying to load.
+    */
+   static std::string getElementType()
+   {
+      return std::string("UndefinedPosFilter");
+   }
 
 };
 

@@ -40,7 +40,7 @@
 #include <vrj/Util/Debug.h>
 #include <vrj/Display/Display.h>
 #include <vrj/Display/DisplayManager.h>
-#include <jccl/Config/ConfigChunk.h>
+#include <jccl/Config/ConfigElement.h>
 
 #include <vrj/Draw/OGL/GlWindowOSX.h>
 
@@ -215,16 +215,16 @@ void GlWindowOSX::configWindow(vrj::Display* _display)
 
    GlWindow::configWindow(_display);
 
-    // Get the vector of display chunks
-   jccl::ConfigChunkPtr dispSysChunk = DisplayManager::instance()->getDisplaySystemChunk();
-   jccl::ConfigChunkPtr displayChunk = _display->getConfigChunk();
+    // Get the vector of display elements.
+   jccl::ConfigElementPtr disp_sys_elt = DisplayManager::instance()->getDisplaySystemElement();
+   jccl::ConfigElementPtr display_elt = _display->getConfigElement();
 
    mPipe = _display->getPipe();
    vprASSERT(mPipe >= 0);
 
    window_title = CFStringCreateWithCString(NULL, _display->getName().c_str(), kCFStringEncodingMacRoman);
 
-   mAreEventSource = displayChunk->getProperty<bool>("act_as_event_source");
+   mAreEventSource = display_elt->getProperty<bool>("act_as_event_source");
    // if should act as an event source
    if ( true == mAreEventSource )
    {
@@ -233,13 +233,14 @@ void GlWindowOSX::configWindow(vrj::Display* _display)
          << vprDEBUG_FLUSH;
 
       // Configure keyboard device portion
-      jccl::ConfigChunkPtr event_win_chunk =
-         displayChunk->getProperty<jccl::ConfigChunkPtr>("event_window_device");
+      jccl::ConfigElementPtr event_win_element =
+         display_elt->getProperty<jccl::ConfigElementPtr>("event_window_device");
 
-      // Set the name of the chunk to the same as the parent chunk (so we can point at it)
-      //event_win_chunk->setProperty("name", displayChunk->getName();
+      // Set the name of the element to the same as the parent element (so we
+      // can point at it).
+      //event_win_element->setProperty("name", display_elt->getName();
 
-      bool test = gadget::EventWindowOSX::config(event_win_chunk);
+      bool test = gadget::EventWindowOSX::config(event_win_element);
 
       if (test == false)
       {

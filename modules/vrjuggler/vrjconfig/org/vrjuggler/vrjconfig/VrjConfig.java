@@ -29,14 +29,13 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-
 package org.vrjuggler.vrjconfig;
 
-import java.awt.*;
+import java.awt.BorderLayout;
 import java.awt.event.*;
 import java.beans.PropertyVetoException;
 import java.io.*;
-import java.util.Iterator;
+import java.util.*;
 import javax.swing.*;
 import javax.swing.event.*;
 
@@ -56,32 +55,6 @@ public class VrjConfig
 {
    public VrjConfig()
    {
-      // Load in the VR Juggler chunk definitions if it has not already been
-      // loaded.
-      String desc_filename = EnvironmentService.expandEnvVars("${VJ_BASE_DIR}/share/vrjuggler/data/vrj-chunks.desc");
-      File desc_file = new File(desc_filename);
-
-      try
-      {
-         System.out.println("Trying to load VR Juggler configuration definitions ...");
-         System.out.println("\tExamining '" + desc_filename + "'");
-         if (desc_file.exists() && desc_file.canRead())
-         {
-            // File exists and is readable. Lets see if we can load it.
-            FileDataSource data_source = new FileDataSource(desc_filename,
-                                                            FileDataSource.DEFINITIONS);
-            getConfigBroker().add(desc_filename, data_source);
-         }
-         else
-         {
-            System.out.println("\tFAILED: File is unreadable.");
-         }
-      }
-      catch (IOException ioe)
-      {
-         System.out.println("\tFAILED: "+ioe.getMessage());
-      }
-
       // Init the GUI
       try
       {
@@ -105,24 +78,24 @@ public class VrjConfig
 
    public boolean openRequested()
    {
-      return toolbar.doOpen();
+      return mToolbar.doOpen();
    }
 
    public boolean canSave() { return true; }
 
    public boolean saveRequested()
    {
-      return toolbar.doSave();
+      return mToolbar.doSave();
    }
 
    public boolean saveAsRequested()
    {
-      return toolbar.doSaveAs();
+      return mToolbar.doSaveAs();
    }
 
    public boolean closeRequested()
    {
-      ConfigIFrame frame = (ConfigIFrame)desktop.getSelectedFrame();
+      ConfigIFrame frame = (ConfigIFrame)mDesktop.getSelectedFrame();
       try
       {
          frame.setClosed(true);
@@ -135,7 +108,7 @@ public class VrjConfig
 
    public int getOpenFileCount()
    {
-      return desktop.getAllFrames().length;
+      return mDesktop.getAllFrames().length;
    }
 
    /**
@@ -146,7 +119,7 @@ public class VrjConfig
    private ConfigIFrame toolbarContextChanged()
    {
       ConfigIFrame frame = new ConfigIFrame();
-      frame.getEditor().setConfigContext(toolbar.getConfigContext());
+      frame.getEditor().setConfigContext(mToolbar.getConfigContext());
       addFrame(frame);
       return frame;
    }
@@ -156,11 +129,11 @@ public class VrjConfig
     */
    private void addFrame(JInternalFrame frame)
    {
-      frame.addInternalFrameListener(activationListener);
-      frame.addInternalFrameListener(closeListener);
+      frame.addInternalFrameListener(mActivationListener);
+      frame.addInternalFrameListener(mCloseListener);
       frame.pack();
       frame.setVisible(true);
-      desktop.add(frame);
+      mDesktop.add(frame);
       try
       {
          frame.setSelected(true);
@@ -173,24 +146,28 @@ public class VrjConfig
     */
    private void removeFrame(JInternalFrame frame)
    {
-      desktop.remove(frame);
-      frame.removeInternalFrameListener(activationListener);
-      frame.removeInternalFrameListener(closeListener);
+      mDesktop.remove(frame);
+      frame.removeInternalFrameListener(mActivationListener);
+      frame.removeInternalFrameListener(mCloseListener);
    }
 
    /**
     * Gets a handle to the configuration broker service.
     */
-   private ConfigBroker getConfigBroker()
+   private synchronized ConfigBroker getBroker()
    {
-      return new ConfigBrokerProxy();
+      if (mBroker == null)
+      {
+         mBroker = new ConfigBrokerProxy();
+      }
+      return mBroker;
    }
 
    /**
     * Returns a copy of the given string with all environment variables
     * expanded.
     */
-   private String expandEnvVars(String str)
+   private static String expandEnvVars(String str)
    {
       return EnvironmentService.expandEnvVars(str);
    }
@@ -201,9 +178,9 @@ public class VrjConfig
    private void jbInit()
       throws Exception
    {
-      this.setLayout(baseLayout);
-      desktop.setBorder(BorderFactory.createEtchedBorder());
-      toolbar.addActionListener(new ActionListener()
+      this.setLayout(mBaseLayout);
+      mDesktop.setBorder(BorderFactory.createEtchedBorder());
+      mToolbar.addActionListener(new ActionListener()
       {
          public void actionPerformed(ActionEvent evt)
          {
@@ -214,24 +191,23 @@ public class VrjConfig
             }
          }
       });
-      this.add(toolbar,  BorderLayout.NORTH);
-      this.add(desktop, BorderLayout.CENTER);
+      this.add(mToolbar,  BorderLayout.NORTH);
+      this.add(mDesktop, BorderLayout.CENTER);
    }
 
    // JBuilder GUI variables
-   private BorderLayout baseLayout = new BorderLayout();
-   private ConfigToolbar toolbar = new ConfigToolbar();
-   private JDesktopPane desktop = new JDesktopPane();
+   private BorderLayout mBaseLayout = new BorderLayout();
+   private ConfigToolbar mToolbar = new ConfigToolbar();
+   private JDesktopPane mDesktop = new JDesktopPane();
 
-   /**
-    * Our listener for activation changes to the internal frames.
-    */
-   private InternalFrameListener activationListener = new ActivationListener();
+   /** A handle to the configuration broker. */
+   private ConfigBroker mBroker;
 
-   /**
-    * Our listener for close notifications from the internal frames.
-    */
-   private InternalFrameListener closeListener = new CloseListener();
+   /** Our listener for activation changes to the internal frames. */
+   private InternalFrameListener mActivationListener = new ActivationListener();
+
+   /** Our listener for close notifications from the internal frames. */
+   private InternalFrameListener mCloseListener = new CloseListener();
 
    /**
     * The special internal frame used to hold configuration editors.
@@ -272,7 +248,7 @@ public class VrjConfig
       public void internalFrameActivated(InternalFrameEvent evt)
       {
          ConfigIFrame frame = (ConfigIFrame)evt.getInternalFrame();
-         toolbar.setConfigContext(frame.getEditor().getConfigContext());
+         mToolbar.setConfigContext(frame.getEditor().getConfigContext());
       }
 
       public void internalFrameDeactivated(InternalFrameEvent evt)
@@ -304,9 +280,9 @@ public class VrjConfig
       public void internalFrameClosed(InternalFrameEvent evt)
       {
          ConfigIFrame frame = (ConfigIFrame)evt.getInternalFrame();
-         toolbar.setConfigContext(frame.getEditor().getConfigContext());
-         toolbar.doClose();
-         toolbar.setConfigContext(new ConfigContext());
+         mToolbar.setConfigContext(frame.getEditor().getConfigContext());
+         mToolbar.doClose();
+         mToolbar.setConfigContext(new ConfigContext());
       }
    }
 }
