@@ -65,7 +65,7 @@ SUBDIR=		DynLoad		\
 		Thread		\
 		Util
 
-ifeq (@SUBSYSTEM@, POSIX)
+ifneq (@SUBSYSTEM@, NSPR)
    SRCS=	SystemPosix.cpp
 endif
 
