@@ -2,7 +2,10 @@ DATE       AUTHOR   CHANGE
 ---------- -------- -----------------------------------------------------------
 2001-12-09 patrickh Disallowed the overriding of the VPR "domain" (the thing
                     that defines what sockets, threads, etc. to use) by user
-                    code.
+                    code.  The classes vpr::BaseIOStatsStrategy,
+                    vpr::SocketAcceptor, and vpr::SocketConnector are now
+                    templatized classes.
+                    NEW VERSION: 0.5.0
 2001-12-07 allenb   GUID now has a constructor that can use a dispatch tag
                     to specify that it should generate a new id an init time.
 2001-12-05 allenb   GUID's default constructor now initialized it to NullGUID.

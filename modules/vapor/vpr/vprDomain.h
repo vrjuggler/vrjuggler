@@ -56,6 +56,8 @@
 namespace vpr
 {
    class BlockIO;
+   class Interval;
+   template<class> class SocketStream_t;
 
    template<class> class Selector_t;
    template<class> class SerialPort_t;
@@ -104,6 +106,15 @@ namespace vpr
    typedef class SerialPort_t<class SerialPortImplTermios> SerialPort;
 
 #endif /* ifdef VPR_USE_NSPR */
+
+   struct AcceptorConnectorConfiguration
+   {
+      typedef vpr::SocketStream_t<SocketConfiguration> SocketStreamImpl;
+      typedef vpr::InetAddr     InetAddrImpl;
+      typedef vpr::IOSys        IOSysImpl;
+      typedef vpr::Selector     SelectorImpl;
+      typedef vpr::Interval     IntervalImpl;
+   };
 
 }
 

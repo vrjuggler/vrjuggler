@@ -43,9 +43,9 @@
 #define _VPR_SOCK_ACCEPTOR_H_
 
 #include <vpr/vprConfig.h>
-#include <vpr/IO/Socket/SocketStream.h>
-#include <vpr/IO/Socket/InetAddr.h>
 #include <vpr/Util/ReturnStatus.h>
+#include <vpr/IO/Socket/SocketStream.h>
+
 
 namespace vpr
 {
@@ -54,8 +54,16 @@ namespace vpr
  * Socket connection acceptor factory.
  * Wraps all the nitty-gritty details of accepting a connection.
  */
-class SocketAcceptor
+template<class SockConfig_ = vpr::AcceptorConnectorConfiguration>
+class SocketAcceptor_t
 {
+public:
+   typedef SockConfig_ Config;
+   typedef typename Config::SocketStreamImpl SocketStreamImpl;
+   typedef typename Config::InetAddrImpl     InetAddrImpl;
+   typedef typename Config::IntervalImpl     IntervalImpl;
+   typedef typename Config::IOSysImpl        IOSysImpl;
+
 public:
     /**
      * Default constructor.  This does nothing.  If this constructor is used
@@ -64,13 +72,13 @@ public:
      *
      * @see open
      */
-    SocketAcceptor()
+    SocketAcceptor_t()
     {;}
 
     /**
      * Destructor.  This makes sure that the accepting socket gets closed.
      */
-    ~SocketAcceptor()
+    ~SocketAcceptor_t()
     {
         if(mSocket.isOpen())
             mSocket.close();
@@ -90,8 +98,8 @@ public:
      * @param backlog   The maximum allowed size for the queue of pending
      *                  connections.
      */
-    SocketAcceptor(const vpr::InetAddr& addr, bool reuseAddr = true,
-                   const int backlog = 5)
+    SocketAcceptor_t(const InetAddrImpl& addr, bool reuseAddr = true,
+                     const int backlog = 5)
     {
        open(addr, reuseAddr, backlog);
     }
@@ -111,8 +119,36 @@ public:
      * @param backlog   The maximum allowed size for the queue of pending
      *                  connections.
      */
-    inline vpr::ReturnStatus open(const vpr::InetAddr& addr, bool reuseAddr = true,
-                            const int backlog = 5);
+    vpr::ReturnStatus open (const InetAddrImpl& addr, bool reuseAddr = true,
+                            const int backlog = 5)
+    {
+       vpr::ReturnStatus ret_val;
+
+       vprASSERT((!mSocket.isOpen()) && "Trying to re-open socket that has already been opened");
+
+        mSocket.setLocalAddr(addr);
+
+        ret_val = mSocket.open();
+        if(ret_val.failure())
+            return ret_val;
+
+        mSocket.setReuseAddr(reuseAddr);
+
+        ret_val = mSocket.bind();
+        if(ret_val.failure())
+        {
+            mSocket.close();
+            return ret_val;
+        }
+
+        ret_val = mSocket.listen(backlog);
+        if(ret_val.failure())
+        {
+            mSocket.close();
+            return ret_val;
+        }
+        return ret_val;
+    }
 
     /**
      * Accepts a new connection.  Creates a new socket on the connection and
@@ -129,15 +165,16 @@ public:
      *                request.  This argument is optional and default to
      *                vpr::Interval::NoTimeout.
      *
-     * @return vpr::ReturnStatus::Succeed is returned when a connection is completed
-     *         successfully.  In this case, the <code>sock</code> argument
+     * @return vpr::ReturnStatus::Succeed is returned when a connection is
+     *         completed successfully.  In this case, the sock argument
      *         returned is the newly created connected socket.<br>
-     *         vpr::ReturnStatus::WouldBlock is returned if this is a non-blocking
-     *         acceptor and there are no pending connections.<br>
-     *         vpr::ReturnStatus::Fail is returned if the socket failed to accept.
+     *         vpr::ReturnStatus::WouldBlock is returned if this is a
+     *         non-blocking acceptor and there are no pending connections.<br>
+     *         vpr::ReturnStatus::Fail is returned if the socket failed to
+     *         accept.
      */
-    vpr::ReturnStatus accept(vpr::SocketStream& sock,
-                       vpr::Interval timeout = vpr::Interval::NoTimeout)
+    vpr::ReturnStatus accept(SocketStreamImpl& sock,
+                             IntervalImpl timeout = IntervalImpl::NoTimeout)
     {
        vprASSERT(mSocket.isOpen());
 
@@ -153,46 +190,17 @@ public:
     /**
      * Gets the member socket that is being used.
      */
-    vpr::SocketStream& getSocket()
+    SocketStreamImpl& getSocket()
     { return mSocket; }
 
-    vpr::IOSys::Handle getHandle()
+    typename IOSysImpl::Handle getHandle()
     { return mSocket.getHandle(); }
 
 private:
-    vpr::SocketStream    mSocket;
+    SocketStreamImpl    mSocket;
 };
 
-inline vpr::ReturnStatus SocketAcceptor::open(const vpr::InetAddr& addr,
-                                        bool reuseAddr, int backlog)
-{
-   vpr::ReturnStatus ret_val;
-
-   vprASSERT((!mSocket.isOpen()) && "Trying to re-open socket that has already been opened");
-
-    mSocket.setLocalAddr(addr);
-
-    ret_val = mSocket.open();
-    if(ret_val.failure())
-        return ret_val;
-
-    mSocket.setReuseAddr(reuseAddr);
-
-    ret_val = mSocket.bind();
-    if(ret_val.failure())
-    {
-        mSocket.close();
-        return ret_val;
-    }
-
-    ret_val = mSocket.listen(backlog);
-    if(ret_val.failure())
-    {
-        mSocket.close();
-        return ret_val;
-    }
-    return ret_val;
-}
+typedef SocketAcceptor_t<> SocketAcceptor;
 
 }
 
