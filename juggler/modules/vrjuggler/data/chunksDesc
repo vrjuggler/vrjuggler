@@ -175,7 +175,7 @@ chunk surfaceDisplay "Surface Display" "This is a surface that images are projec
   origin Int 2 "origin" vj_valuelabels { "X" "Y" } "Window origin (lower left corner) (upper left screen is 0,0)"
   size Int 2 "size" vj_valuelabels { "Width" "Height" } "Window size"
   pipe Int 1 "pipe" "Graphics pipe"
-  view Int 1 "view" vj_enumeration { "left eye=1" "right eye=1" "stereo=1" } ""
+  view Int 1 "view" vj_enumeration { "left eye=1" "right eye=2" "stereo=3" } ""
   border Bool 1 "border" ""
   corners EmbeddedChunk 4 "corners" vj_valuelabels { "lower left" "lower right" "upper right" "upper left" } vj_enumeration { "Vec3" } "The corners of the surface"
   user Chunk 1 "user" vj_enumeration { "JugglerUser" } ""
