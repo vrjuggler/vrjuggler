@@ -45,10 +45,10 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import com.birosoft.liquid.LiquidLookAndFeel;
 import com.incors.plaf.kunststoff.KunststoffLookAndFeel;
 import com.incors.plaf.kunststoff.mini.KunststoffMiniLookAndFeel;
-import com.jgoodies.plaf.windows.ExtWindowsLookAndFeel;
-import com.jgoodies.plaf.plastic.PlasticLookAndFeel;
-import com.jgoodies.plaf.plastic.Plastic3DLookAndFeel;
-import com.jgoodies.plaf.plastic.PlasticXPLookAndFeel;
+import com.jgoodies.looks.windows.WindowsLookAndFeel;
+import com.jgoodies.looks.plastic.PlasticLookAndFeel;
+import com.jgoodies.looks.plastic.Plastic3DLookAndFeel;
+import com.jgoodies.looks.plastic.PlasticXPLookAndFeel;
 import org.vrjuggler.tweek.beans.*;
 import org.vrjuggler.tweek.beans.loader.BeanInstantiationException;
 import org.vrjuggler.tweek.gui.TweekFrame;
@@ -455,7 +455,7 @@ public class TweekCore
       new net.sourceforge.mlf.metouia.MetouiaLookAndFeel();
 
       UIManager.installLookAndFeel("JGoodies Windows",
-                                   ExtWindowsLookAndFeel.class.getName());
+                                   WindowsLookAndFeel.class.getName());
       UIManager.installLookAndFeel("JGoodies Plastic",
                                    PlasticLookAndFeel.class.getName());
       UIManager.installLookAndFeel("JGoodies Plastic 3D",
