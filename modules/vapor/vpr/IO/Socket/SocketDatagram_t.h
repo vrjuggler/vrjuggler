@@ -49,11 +49,13 @@ namespace vpr {
  * @author Allen Bierbaum
  * @author Kevin Meinert
  */
-template<class RealSocketDatagramImpl, class RealSocketDatagramImplParent>
-class SocketDatagram_t : public Socket_t<RealSocketDatagramImplParent>,
-                         public SocketDatagramOpt
+template<class SocketConfig_>
+class SocketDatagram_t : public Socket_t<SocketConfig_>, public SocketStreamOpt
 {
 public:
+   typedef SocketConfig_ Config;
+   typedef typename Config::SocketDatagramImpl SocketDatagramImpl;
+
     /**
      * Default constructor.
      */
@@ -75,7 +77,7 @@ public:
      */
     SocketDatagram_t (const vpr::InetAddr& local_addr,
                       const vpr::InetAddr& remote_addr)
-        : Socket_t<RealSocketDatagramImplParent>(),
+        : Socket_t<Config>(),
           m_socket_dgram_imp(local_addr, remote_addr)
     {
         m_socket_imp = &m_socket_dgram_imp;
@@ -207,7 +209,7 @@ protected:
     }
 
     /// Platform-specific datagram socket implementation object
-    RealSocketDatagramImpl m_socket_dgram_imp;
+    SocketDatagramImpl m_socket_dgram_imp;
 };
 
 }; // End of vpr namespace
