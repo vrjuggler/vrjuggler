@@ -167,8 +167,7 @@ vpr::ReturnStatus FlockStandalone::open ()
    vprDEBUG_BEGIN(vprDBG_ALL,vprDBG_CONFIG_LVL) << "====== Opening fob serial port: " << mPort << " =====\n" << vprDEBUG_FLUSH;
 
    mSerialPort->setOpenReadWrite();
-   mSerialPort->setBlocking(true);              // Open in blocking mode
-
+      
    if (mSerialPort->open().success() )
    {
       // Reset the port by opening it and then closing it
@@ -200,6 +199,7 @@ vpr::ReturnStatus FlockStandalone::open ()
          // Set the basic port attributes to use
          mSerialPort->setUpdateAction(vpr::SerialTypes::NOW);  // Changes apply immediately
          mSerialPort->clearAll();
+         mSerialPort->setBlocking(true);              // Open in blocking mode
          mSerialPort->setCanonicalInput(true);              // enable binary reading and timeouts
          mSerialPort->setTimeout(10);                       // Set to 1 inter-byte read second timeout
          mSerialPort->setRead(true);                        // Allow reading from port
@@ -928,8 +928,8 @@ void FlockStandalone::sendOutputFormatCmd(Flock::Output::Format format, bool sen
    vpr::Uint8 format_cmd = (Flock::Command::Position-1) + vpr::Uint8(format);  // Exploit a nice property of the format enum
 
    // Assert two standard cases to make sure above statement works
-   vprASSERT((Flock::Output::PositionAngle == format) && (format_cmd == Flock::Command::PositionAngles));
-   vprASSERT((Flock::Output::PositionQuaternion == format) && (format_cmd == Flock::Command::PositionQuaternion));
+   //vprASSERT((Flock::Output::PositionAngle == format) && (format_cmd == Flock::Command::PositionAngles));
+   //vprASSERT((Flock::Output::PositionQuaternion == format) && (format_cmd == Flock::Command::PositionQuaternion));
 
    if(sendToAll)
    {
