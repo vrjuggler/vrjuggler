@@ -53,12 +53,12 @@ INSTALL_FILES=
 JAVA_IDL_OPTS=		@JAVA_IDL_OPTS@ @JAVA_IDL_GENDIR_OPT@$(srcdir)
 JAVA_IDL_INCLUDES=	@JAVA_IDL_INCFLAG@$(top_srcdir)
 
-JARS		= CommonEditors.jar
+JARS=			CommonEditors.jar
 
 JOGL_JARS=		@JOGL_JARS@
 
-_LOCAL_CLEAN=1
-JAVA_AFTERBUILD=java_afterbuild
+_LOCAL_CLEAN=		1
+JAVA_AFTERBUILD=	java_afterbuild
 
 include $(MKPATH)/dpp.obj.mk
 
