@@ -27,14 +27,14 @@
 # Boston, MA 02111-1307, USA.
 #
 # -----------------------------------------------------------------
-# File:          common.defs.mk.in,v
-# Date modified: 2001/10/12 14:58:44
-# Version:       1.22
+# File:          RCSfile: common.defs.mk.in,v
+# Date modified: Date: 2002/01/04 20:42:30
+# Version:       Revision: 1.26
 # -----------------------------------------------------------------
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # =============================================================================
-# common.defs.mk.in,v 1.22 2001/10/12 14:58:44 patrickh Exp
+# Id: common.defs.mk.in,v 1.26 2002/01/04 20:42:30 patrickh Exp
 #
 # This file <common.defs.mk> provides variable assignments based on the
 # results of running a Doozer++-aware configure script.  It is distributed
@@ -77,10 +77,12 @@
 # CFLAGS          - Flags for $(CC).
 # CFLAGS_DYLINB   - Special flags used only when building dynamically linked
 #                   libraries with the C compiler.
+# CC_PROF_FLAGS   - Flag(s) to enable compiling profiled C objects.
 # CPPFLAGS        - Flags for $(CPP) and $(CXXCPP).
 # CXXFLAGS        - Flags for $(CXX).
 # CXXFLAGS_DYLINB - Special flags used only when building dynamically linked
 #                   libraries with the C++ compiler.
+# CXX_PROF_FLAGS  - Flag(s) to enable compiling profiled C++ objects.
 # DEFS            - Command-line preprocessor definitions (-Dvariable=value).
 # DEP_GEN_FLAG    - Flag passed to the compiler to generate dependencies.
 # DEPEND_FLAGS    - Flags passed to makedepend(1) (or equivalent program for
@@ -93,6 +95,7 @@
 # EXEC_PERMS      - Executable file permissions.
 # DIR_PERMS       - Directory permissions.
 # DYLIB_NAME_FLAG - Flag passed to the linker to name a dynamic library.
+# EXEEXT          - Suffix for executable file names (e.g., ".exe" or nothing).
 # EXE_NAME_FLAG   - Flag passed to the linker to name an executable file.
 # INCLUDES        - Additions to the include path (-I/path/to/include).
 # JCPS            - The Java classpath separator character for this platform.
@@ -106,6 +109,12 @@
 # LD              - Path to ld(1) (or equivalent program).
 # LDFLAGS         - Flags for $(LD).
 # LDOPTS          - Extra, often platform-specific, options for the linker.
+# LDOPTS_DBG      - Extra, often platform-specific, debugging options for the
+#                   linker.
+# LDOPTS_OPT      - Extra, often platform-specific, optimization options for
+#                   the linker.
+# LDOPTS_PROF     - Extra, often platform-specific, profiling options for the
+#                   linker.
 # LIBS            - Extra external libraries needed at link time.
 # LN_S            - Working 'ln -s' command.
 # MAKEDEPEND      - The makedepend(1) program (if needed).
@@ -161,14 +170,17 @@ CPP		= @CPP@
 CXXCPP		= @CXXCPP@
 CFLAGS		= @CFLAGS@ $(OPTIMIZER) $(EXTRA_CFLAGS)
 CFLAGS_DYNLIB	= @CFLAGS_DYNLIB@
+CC_PROF_FLAGS	= @CC_PROF_FLAGS@
 CPPFLAGS	= @CPPFLAGS@ $(EXTRA_CPPFLAGS)
 CXXFLAGS	= @CXXFLAGS@ $(OPTIMIZER) $(EXTRA_CXXFLAGS)
 CXXFLAGS_DYNLIB	= @CXXFLAGS_DYNLIB@
+CXX_PROF_FLAGS	= @CXX_PROF_FLAGS@
 DEFS		= @DEFS@ $(EXTRA_DEFS)
 DEP_GEN_FLAG	= @DEP_GEN_FLAG@
 DEPEND_FLAGS	= @DEPEND_FLAGS@ @INCLUDES@ -I$(topdir) $(EXTRA_DEPEND_FLAGS)
 DEPEND_EXTRAS	= @DEPEND_EXTRAS@ $(DEFS)
 DYLIB_NAME_FLAG	= @DYLIB_NAME_FLAG@
+EXEEXT		= @EXEEXT@
 EXE_NAME_FLAG	= @EXE_NAME_FLAG@
 INCLUDES	= @INCLUDES@ -I$(topdir) $(EXTRA_INCLUDES)
 INSTALL		= @INSTALL@
@@ -186,6 +198,7 @@ LDOPTS		= @LDOPTS@ $(DPP_EXTRA_LDOPTS) $(EXTRA_LDOPTS)		\
                   $(DSOVERSIONOPTS)
 LDOPTS_DBG	= @LDOPTS_DBG@ $(EXTRA_LDOPTS_DBG)
 LDOPTS_OPT	= @LDOPTS_OPT@ $(EXTRA_LDOPTS_OPT)
+LDOPTS_PROF	= @LDOPTS_PROF@ $(EXTRA_LDOPTS_PROF)
 LIBS		= @LIBS@ $(EXTRA_LIBS)
 LN_S		= @LN_S@
 MAKEDEPEND	= @MAKEDEPEND@
@@ -279,6 +292,12 @@ ifeq ($(ABI), 64)
     CXXFLAGS	+= -64
     LDOPTS	+= -64
     LIBBITSUF	= 64
+endif
+ifeq ($(ABI), HP64)
+    CFLAGS	+= +DD64
+    CXXFLAGS	+= +DD64
+    LDOPTS	+= +DD64
+    LIBBITSUF	= /pa20_64
 endif
 ifeq ($(ABI), ELF)
     LIBBITSUF	=
