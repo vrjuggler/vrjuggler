@@ -1,16 +1,34 @@
-chunk juggler_audio_manager "Juggler Audio Manager" "VR Juggler Audio Manager"
-  Name String 1 "Name" "Unique name of an instance of this chunk type"
-  api String 1 "API" "What Sound API to use? (Stub is default)"
-  listener_position Float 3 "Start Location" ""
-  file_search_path String 1 "File Search Paths" "Paths to search for files"
-  Sound EmbeddedChunk -1 "Sounds" vj_enumeration { "Sound" } "specify a sound here.  usually used "
-  end
-chunk Sound "Sound" ""
-  Name String 1 "Name" "Sound Alias - name that your application references"
-  filename String 1 "File Name" ""
-  ambient Bool 1 "Ambient" "Is it position based sound (vol changes with movement)? Or is it just ambient."
-  retriggerable Bool 1 "Retriggerable" "can the sound retrigger during play?"
-  loop Int 1 "Loop" "How many times does the sound loop? (-1 infinite)"
-  position Float 3 "sound position" ""
-  end
-End
+<?xml version="1.0" encoding="UTF-8"?>
+<ConfigChunkDB>
+  <juggler_audio_manager name="dbMax JugglerSonix">
+  <api>"dbMax"</api>
+  <listener_position>"0.0" "0.0" "0.0"</listener_position>
+  <file_search_path>"."</file_search_path>
+
+  <Sounds>
+      <Sound name="JazzyMusic">
+        <filename>"sample.wav" </filename>
+        <ambient>"False" </ambient>
+        <loop>"-1" </loop>
+        <retriggerable>"False" </retriggerable>
+        <position>"0.0" "0.0" "0.0" </position>
+      </Sound>
+ 
+      <Sound name="Drums">
+        <filename>"sample-drumsolo-2bars.wav" </filename>
+        <ambient>"False" </ambient>
+        <loop>"-1" </loop>
+        <retriggerable>"False" </retriggerable>
+        <position>"0.0" "0.0" "0.0" </position>
+      </Sound>
+ 
+      <Sound name="Bonk">
+        <filename>"attack-arpeg.wav" </filename>
+        <ambient>"False" </ambient>
+        <loop>"1" </loop>
+        <retriggerable>"True" </retriggerable>
+        <position>"0.0" "0.0" "0.0" </position>
+      </Sound>
+  </Sounds>
+  </juggler_audio_manager>
+</ConfigChunkDB>
