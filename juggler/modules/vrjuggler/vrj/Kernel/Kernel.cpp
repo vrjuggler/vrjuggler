@@ -39,6 +39,7 @@
 #include <vrj/Display/DisplayManager.h>
 #include <vrj/Kernel/App.h>
 #include <vrj/Kernel/User.h>
+#include <vrj/Sound/SoundManager.h>
 
 #include <vpr/vpr.h>
 #include <vpr/Thread/Thread.h>
