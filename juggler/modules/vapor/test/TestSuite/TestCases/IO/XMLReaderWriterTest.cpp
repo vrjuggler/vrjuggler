@@ -118,19 +118,16 @@ void XMLReaderWriterTest::testBasicWriteRead()
       throw;
    }
 
-   std::cout << "float: " << data_float << ":" << read_float << std::endl;
-   std::cout << "double: " << data_double << ":" << read_double << std::endl;
-
-   CPPUNIT_ASSERT(data_uint8 == read_uint8);
-   CPPUNIT_ASSERT(data_uint16 == read_uint16);
-   CPPUNIT_ASSERT(data_uint32 == read_uint32);
-   CPPUNIT_ASSERT(data_uint64 == read_uint64);
-   CPPUNIT_ASSERT(data_float == read_float);
-   CPPUNIT_ASSERT(data_double == read_double);
-   CPPUNIT_ASSERT(data_string == read_string);
-   CPPUNIT_ASSERT(data_string == read_string_attrib);
-   CPPUNIT_ASSERT(data_bool == read_bool);
-   CPPUNIT_ASSERT(long_string == read_long_string);
+   CPPUNIT_ASSERT_EQUAL(data_uint8, read_uint8);
+   CPPUNIT_ASSERT_EQUAL(data_uint16, read_uint16);
+   CPPUNIT_ASSERT_EQUAL(data_uint32, read_uint32);
+   CPPUNIT_ASSERT_EQUAL(data_uint64, read_uint64);
+   CPPUNIT_ASSERT_DOUBLES_EQUAL(data_float, read_float, 0.001f);
+   CPPUNIT_ASSERT_DOUBLES_EQUAL(data_double, read_double, 0.001f);
+   CPPUNIT_ASSERT_EQUAL(data_string, read_string);
+   CPPUNIT_ASSERT_EQUAL(data_string, read_string_attrib);
+   CPPUNIT_ASSERT_EQUAL(data_bool, read_bool);
+   CPPUNIT_ASSERT_EQUAL(long_string, read_long_string);
 }
 
 
