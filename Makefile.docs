@@ -52,16 +52,16 @@ SUBDIR=		doc/team.guide					\
 		modules/vrjuggler/doc/vjcontrol.guide
 
 all:
-	for dir in $(SUBDIR) ; do	\
-            $(MAKE) -C $$dir docs ;	\
+	for dir in $(SUBDIR) ; do		\
+            $(MAKE) -C $$dir docs || exit 1;	\
           done
 
 install:
-	for dir in $(SUBDIR) ; do				\
-            $(MAKE) -C $$dir webroot=$(webroot) install-docs ;	\
+	for dir in $(SUBDIR) ; do					\
+            $(MAKE) -C $$dir webroot=$(webroot) install-docs || exit 1;	\
           done
 
 clobber:
-	for dir in $(SUBDIR) ; do	\
-            $(MAKE) -C $$dir clobber ;	\
+	for dir in $(SUBDIR) ; do		\
+            $(MAKE) -C $$dir clobber || exit 1;	\
           done
