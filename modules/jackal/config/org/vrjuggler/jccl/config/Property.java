@@ -187,7 +187,7 @@ public class Property {
 
     public void setValue (VarValue s, int v) {
  	if (valtype != s.getValType()) {
-            System.out.println ("Property.setValue() - type mismatch");
+            System.out.println ("Property.setValue() - " + desc.getToken() + " - type mismatch");
  	    return;
         }
 	if (v < 0)
