@@ -364,7 +364,7 @@ SocketImpBSD::send (const std::vector<char>& buffer, const size_t length,
 // defaults.
 // ----------------------------------------------------------------------------
 SocketImpBSD::SocketImpBSD ()
-    : SocketImp(), m_handle(NULL)
+    : SocketImp_i(), m_handle(NULL)
 {
 fprintf(stderr, "vpr::SocketImpBSD default constructor\n");
     /* Do nothing. */ ;
@@ -380,7 +380,7 @@ SocketImpBSD::SocketImpBSD (const std::string& address,
                             const unsigned short port,
                             const SocketTypes::Domain domain,
                             const SocketTypes::Type type)
-    : SocketImp(address, port, domain, type)
+    : SocketImp_i(address, port, domain, type)
 {
     m_name = address;
     m_addr.setPort(port);

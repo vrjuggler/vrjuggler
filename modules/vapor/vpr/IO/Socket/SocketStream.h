@@ -33,6 +33,8 @@
 #ifndef _VPR_SOCKET_STREAM_H_
 #define _VPR_SOCKET_STREAM_H_
 
+#include <vprConfig.h>
+
 #include <IO/Socket/Socket.h>
 #include <IO/Socket/SocketStreamImp.h>
 #include <IO/Socket/InetAddr.h>
@@ -46,12 +48,17 @@ namespace vpr {
 //: Stream socket interface.
 // ----------------------------------------------------------------------------
 //! PUBLIC_API:
-class SocketStream : public Socket {
+template<class RealSocketStreamImp, class RealSocketStreamImpParent>
+class SocketStream_t : public Socket_t<RealSocketStreamImpParent> {
 public:
     // ------------------------------------------------------------------------
     //: Default constructor.
     // ------------------------------------------------------------------------
-    SocketStream(void);
+    SocketStream_t (void)
+        : m_socket_stream_imp()
+    {
+        m_socket_imp = &m_socket_stream_imp;
+    }
 
     // ------------------------------------------------------------------------
     //: Constructor.  This takes a port number and stores the value for later
@@ -64,7 +71,11 @@ public:
     //
     //! ARGS: port - The port on the remote site to which we will connect.
     // ------------------------------------------------------------------------
-    SocketStream(const unsigned short port);
+    SocketStream_t (const Uint16 port)
+        : m_socket_stream_imp("INADDR_ANY", port)
+    {
+        m_socket_imp = &m_socket_stream_imp;
+    }
 
     // ------------------------------------------------------------------------
     // Constructor.  This takes the address (either hostname or IP address) of
@@ -80,7 +91,12 @@ public:
     //               connect.
     //     port    - The port on the remote site to which we will connect.
     // ------------------------------------------------------------------------
-    SocketStream(const std::string& address, const unsigned short port);
+    SocketStream_t (const std::string& address, const Uint16 port)
+        : Socket_t<RealSocketStreamImpParent>(address),
+          m_socket_stream_imp(address, port)
+    {
+        m_socket_imp = &m_socket_stream_imp;
+    }
 
     // ------------------------------------------------------------------------
     // Constructor.  This takes the address (either hostname or IP address) of
@@ -97,8 +113,13 @@ public:
     //     port    - The port on the remote site to which we will connect.
     //     domain  -
     // ------------------------------------------------------------------------
-    SocketStream(const std::string& address, const unsigned short port,
-                 const SocketTypes::Domain domain);
+    SocketStream_t (const std::string& address, const Uint16 port,
+                    const SocketTypes::Domain domain)
+        : Socket_t<RealSocketStreamImpParent>(address),
+          m_socket_stream_imp(address, port, domain)
+    {
+        m_socket_imp = &m_socket_stream_imp;
+    }
 
     // ------------------------------------------------------------------------
     //: Constructor.  This takes an address of the form
@@ -110,9 +131,24 @@ public:
     //! POST: The host address and port number are extracted, and a socket is
     //+       created using those values.
     //
-    //! ARGS: An address of the form <host addr>:<port number>.
+    //! ARGS: address - An address of the form <host addr>:<port number>.
     // ------------------------------------------------------------------------
-    SocketStream(const std::string& address);
+    SocketStream_t (const std::string& address)
+        : m_socket_stream_imp()
+    {
+        std::string::size_type pos;
+        std::string host_addr, host_port;
+        Uint16 port;
+
+        pos       = address.find(":");
+        host_addr = address.substr(0, pos);
+        host_port = address.substr(pos + 1);
+        port      = atoi(host_port.c_str());
+    
+//        m_socket_stream_imp.getRemoteAddress().setAddress(host_addr);
+//        m_socket_stream_imp.getRemoteAddress().setPort(port);
+        m_socket_imp = &m_socket_stream_imp;
+    }
 
     // ------------------------------------------------------------------------
     //: Constructor.  This takes a reference to a vpr::InetAddr object and
@@ -123,7 +159,11 @@ public:
     //
     //! ARGS: addr - A reference to a vpr::InetAddr object.
     // ------------------------------------------------------------------------
-    SocketStream(const InetAddr& addr);
+    SocketStream_t (const InetAddr& addr)
+        : m_socket_stream_imp(addr)
+    {
+        m_socket_imp = &m_socket_stream_imp;
+    }
 
     // ------------------------------------------------------------------------
     //: Destructor.  This currently does nothing.
@@ -131,7 +171,7 @@ public:
     //! PRE: None.
     //! POST: None.
     // ------------------------------------------------------------------------
-    virtual ~SocketStream (void) {
+    virtual ~SocketStream_t (void) {
         /* Do nothing. */ ;
     }
 
@@ -151,7 +191,7 @@ public:
     // ------------------------------------------------------------------------
     inline virtual bool
     listen (const int backlog) {
-        return m_socket_stream_imp->listen(backlog);
+        return m_socket_stream_imp.listen(backlog);
     }
 
     // ------------------------------------------------------------------------
@@ -171,10 +211,10 @@ public:
     //! NOTE: This is a blocking call and will block until a connection is
     //+       established.
     // ------------------------------------------------------------------------
-    inline virtual SocketStream*
+    inline virtual SocketStream_t*
     accept (void) {
-        SocketStreamImp* sock_imp = m_socket_stream_imp->accept();
-        return new SocketStream(sock_imp);
+        RealSocketStreamImp* sock_imp = m_socket_stream_imp.accept();
+        return new SocketStream_t(sock_imp);
     }
 
     // ------------------------------------------------------------------------
@@ -193,7 +233,21 @@ public:
     //! RETURNS: false - The server socket could not be set up.  An error
     //+                  message is printed explaining what went wrong.
     // ------------------------------------------------------------------------
-    virtual bool openServer(const int backlog = 5);
+    inline virtual bool
+    openServer (const int backlog = 5) {
+        bool retval;
+
+        // First, open the socket.
+        if ( retval = open() ) {
+            // If that succeeded, bind to the internal address.
+            if ( retval = bind() ) {
+                // Finally, if that succeeded, go into listening mode.
+                retval = listen(backlog);
+            }
+        }
+
+        return retval;
+    }
 
 protected:
     // ------------------------------------------------------------------------
@@ -206,17 +260,38 @@ protected:
     //
     //! ARGS: sock_imp - A pointer to a vpr::SocketStreamImp object.
     // ------------------------------------------------------------------------
-    SocketStream (SocketStreamImp* sock_imp)
-        : Socket(sock_imp), m_socket_stream_imp(sock_imp)
+// XXX: This stuff could be a problem!!
+    SocketStream_t (RealSocketStreamImp* sock_imp)
+        : Socket_t<RealSocketStreamImpParent>(), m_socket_stream_imp(*sock_imp)
     {
-        /* Do nothing. */ ;
+        m_socket_imp = &m_socket_stream_imp;
     }
 
-    SocketStreamImp* m_socket_stream_imp; //: Platform-specific stream socket
-                                            //+ implementation
+    RealSocketStreamImp m_socket_stream_imp; //: Platform-specific stream
+                                             //+ socket implementation
 };
 
 }; // End of vpr namespace
+
+#if defined(VPR_USE_NSPR)
+#   include <md/NSPR/SocketStreamImpNSPR.h>
+
+namespace vpr {
+    typedef SocketStream_t<SocketStreamImpNSPR, SocketImpNSPR> SocketStream;
+};
+#elif defined(VPR_OS_Win32)
+#   include <md/WIN32/SocketStreamImpWinSock.h>
+
+namespace vpr {
+    typedef SocketStream_t<SocketStreamImpWinSock, SocketImpWinSock> SocketStream;
+};
+#else
+#   include <md/POSIX/SocketStreamImpBSD.h>
+
+namespace vpr {
+    typedef SocketStream_t<SocketStreamImpBSD, SocketImpBSD> SocketStream;
+};
+#endif
 
 
 #endif	/* _VPR_SOCKET_STREAM_H_ */

@@ -44,10 +44,11 @@ namespace vpr {
 
 // ----------------------------------------------------------------------------
 //: Cross-platform block-based socket interface.  vpr::Socket objects cannot
-//+ be instantiated.  Instead, see vprSocketStream and vprSocketDatagram.
+//+ be instantiated.  Instead, see vpr::SocketStream and vpr::SocketDatagram.
 // ----------------------------------------------------------------------------
 //!PUBLIC_API:
-class Socket : public BlockIO {
+template<class RealSocketImp>
+class Socket_t : public BlockIO {
 public:
     // ========================================================================
     // Block I/O interface.
@@ -801,7 +802,7 @@ protected:
     //! POST: "INADDR_ANY" is passed on to the vpr::BlockIO constructor, and
     //+       m_socket_imp is set to NULL.
     // ------------------------------------------------------------------------
-    Socket (void)
+    Socket_t (void)
         : BlockIO(std::string("INADDR_ANY")), m_socket_imp(NULL)
     {
         /* Do nothing. */ ;
@@ -817,25 +818,8 @@ protected:
     //
     //! ARGS: address - The address string for this socket object.
     // ------------------------------------------------------------------------
-    Socket (const std::string& address)
+    Socket_t (const std::string& address)
         : BlockIO(address), m_socket_imp(NULL)
-    {
-        /* Do nothing. */ ;
-    }
-
-    // ------------------------------------------------------------------------
-    //: Construct a vpr::Socket using the given vpr::SocketImp pointer.  The
-    //+ socket address is set to the given socket's address, and the
-    //+ implementation socket is initialized to the given pointer value.
-    //
-    //! PRE: None.
-    //! POST: The given socket's address is passed on to the vpr::BlockIO
-    //+       constructor, and m_socket_imp is set to the value in sock_imp.
-    //
-    //! ARGS: sock_imp - A pointer to a valid vpr::SocketImp object.
-    // ------------------------------------------------------------------------
-    Socket (SocketImp* sock_imp)
-        : BlockIO(sock_imp->getName()), m_socket_imp(sock_imp)
     {
         /* Do nothing. */ ;
     }
@@ -847,16 +831,35 @@ protected:
     //! PRE: None.
     //! POST: If m_socket_imp is non-NULL, its memory is released.
     // ------------------------------------------------------------------------
-    virtual ~Socket (void) {
-        if ( m_socket_imp != NULL ) {
-            delete m_socket_imp;
-        }
+    virtual ~Socket_t (void) {
+        /* Do nothing. */ ;
     }
 
-    SocketImp* m_socket_imp; //: Platform-specific socket implementation object
+    RealSocketImp* m_socket_imp; //: Platform-specific socket implementation
+                                 //+ object
 };
 
 }; // End of vpr namespace
+
+#if defined(VPR_USE_NSPR)
+#   include <md/NSPR/SocketImpNSPR.h>
+
+namespace vpr {
+  typedef Socket_t<SocketImpNSPR> Socket;
+};
+#elif defined(VPR_OS_Win32)
+#   include <md/WIN32/SocketImpWinSock.h>
+
+namespace vpr {
+  typedef Socket_t<SocketImpWinSock> Socket;
+};
+#else
+#   include <md/POSIX/SocketImpBSD.h>
+
+namespace vpr {
+  typedef Socket_t<SocketImpBSD> Socket;
+};
+#endif
 
 
 #endif  /* _VPR_SOCKET_H_ */

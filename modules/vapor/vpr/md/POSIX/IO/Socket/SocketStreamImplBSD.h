@@ -33,6 +33,8 @@
 #ifndef _VPR_SOCKET_STREAM_IMP_BSD_H_
 #define _VPR_SOCKET_STREAM_IMP_BSD_H_
 
+#include <vprConfig.h>
+
 #include <string>
 
 #include <IO/Socket/SocketStreamImp.h>
@@ -42,7 +44,7 @@
 namespace vpr {
 
 class SocketStreamImpBSD : virtual public SocketImpBSD,
-                           virtual public SocketStreamImp
+                           virtual public SocketStreamImp_i
 {
 public:
     // ========================================================================
@@ -74,7 +76,7 @@ public:
     //               connect.
     //     port    - The port on the remote site to which we will connect.
     // ------------------------------------------------------------------------
-    SocketStreamImpBSD(const std::string& address, const unsigned short port);
+    SocketStreamImpBSD(const std::string& address, const Uint16 port);
 
     // ------------------------------------------------------------------------
     // Constructor.  This takes the address (either hostname or IP address) of
@@ -90,7 +92,7 @@ public:
     //               connect.
     //     port    - The port on the remote site to which we will connect.
     // ------------------------------------------------------------------------
-    SocketStreamImpBSD(const std::string& address, const unsigned short port,
+    SocketStreamImpBSD(const std::string& address, const Uint16 port,
                        const SocketTypes::Domain domain);
 
     // ------------------------------------------------------------------------
@@ -138,7 +140,7 @@ public:
     //     This is a blocking call and will block until a connection is
     //     established.
     // ------------------------------------------------------------------------
-    virtual SocketStreamImp* accept(void);
+    virtual SocketStreamImpBSD* accept(void);
 
 protected:
     // ------------------------------------------------------------------------
