@@ -271,6 +271,13 @@ public:   // ----- ACTIVE LIST ----- //
       return &mActiveConfig;
    }   
 
+public:
+   //: Scan the active list for items that don't have their dependencies filled
+   //! POST: Any chunks in active with dependencies not filled are added to the 
+   //+       the pending list. (A remove and an add are added to the pending)
+   void scanForLostDependencies();
+
+
 private:
    vjConfigChunkDB            mActiveConfig;   //: List of current configuration
    std::list<vjPendingChunk>  mPendingConfig;   //: List of pending configuration changes
