@@ -301,9 +301,7 @@ LIBS="${_vjsave_LIBS}"
 # -----------------------------------------------------------------------------
 AC_HEADER_STDC
 AC_HEADER_TIME
-AC_CHECK_HEADERS(fcntl.h limits.h strings.h sys/file.h sys/ioctl.h	\
-                 sys/time.h termios.h unistd.h		\
-                 sys/capability.h sys/stdsyms.h)
+AC_CHECK_HEADERS(fcntl.h strings.h sys/time.h unistd.h)
 
 # -----------------------------------------------------------------------------
 # Checks for typedefs, structures, and compiler characteristics.
@@ -424,6 +422,7 @@ VJ_APP_COMPILER($CC, $CFLAGS, $CXX, $CXXFLAGS, $DBG_FLAGS, $OPT_FLAGS,
                 JCCL_BASE_DIR, $DEFS, $INCLUDES, ${_EXTRA_FLAGS})
 VJ_APP_LINKER($CXX, $EXTRA_LINK_FLAGS, $LDOPTS_DBG, $LDOPTS_OPT, JCCL_BASE_DIR,
               jccl, $APP_EXTRA_LIBS)
+#echo APP_EXTRA_LIBS is "$APP_EXTRA_LIBS"
 
 APP_BASE_DIR='$(topdir)/instlinks'
 APP_BASE_DIR_INST='$(JCCL_BASE_DIR)'
@@ -432,10 +431,7 @@ if test "$OS_TYPE" = "UNIX" ; then
     DYLIB_DEPS_JCCL="$APP_EXTRA_LIBS"
 elif test "$OS_TYPE" = "Win32" ; then
     DYLIB_DEPS_BASIC="$APP_EXTRA_LIBS"
-#    DYLIB_DEPS_JCCL="/libpath:\$(LIBDIR) jccl.lib $DYLIB_DEPS_BASIC"
      DYLIB_DEPS_JCCL="$DYLIB_DEPS_BASIC"
-#    DYLIB_DEPS_UTILS="$DYLIB_DEPS_BASIC"
-
 fi
 
 # Translate paths from UNIX-style to Win32.
@@ -443,14 +439,22 @@ if test "x$OS_TYPE" = "xWin32" ; then
     JCCLROOT_ABS=`unix2dos -p "$JCCLROOT_ABS"`
     JUGGLERROOT_ABS=`unix2dos -p "$JUGGLERROOT_ABS"`
 
-    DEPEND_EXTRAS=`unix2dos "$DEPEND_EXTRAS"`
-    INCLUDES=`unix2dos "$INCLUDES"`
-    LIBS=`unix2dos "$LIBS"`
+    if test "x$DEPEND_EXTRAS" != "x" ; then
+        DEPEND_EXTRAS=`unix2dos "$DEPEND_EXTRAS"`
+    fi
+
+    if test "x$INCLUDES" != "x" ; then
+        INCLUDES=`unix2dos "$INCLUDES"`
+    fi
+
+    if test "x$LIBS" != "x" ; then
+        LIBS=`unix2dos "$LIBS"`
+    fi
+
     LN_S='cp'
     MTREE_CMD=`unix2dos "$MTREE_CMD"`
     JDK_HOME=`unix2dos -p "$JDK_HOME"`
-
-    APP_EXTRA_LIBS=`unix2dos "$APP_EXTRA_LIBS"`
+#    APP_EXTRA_LIBS=`unix2dos "$APP_EXTRA_LIBS"`
 else
     JCCLROOT_ABS="$JCCLROOT_ABS"
     JUGGLERROOT_ABS="$JUGGLERROOT_ABS"
