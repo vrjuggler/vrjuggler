@@ -148,8 +148,10 @@ public class ConfigChunkFrame extends JFrame
     public ConfigChunk getValue() {
 	/* returns a configchunk based on the values current 
 	 * in this window */
-	ConfigChunk c = new ConfigChunk (chunk.desc, Core.descdb, 
-					 namef.getText());
+	ConfigChunk c = ChunkFactory.createChunk (chunk.desc, namef.getText());
+	//	c.setProperty ("Name", namef.getText());
+// 	ConfigChunk c = new ConfigChunk (chunk.desc, Core.descdb, 
+// 					 namef.getText());
 	c.props.removeAllElements();
 	for (int i = 0; i < chunk.props.size(); i++) {
 	    c.props.addElement (((PropertyPanel)proppanels.elementAt(i)).getValue());

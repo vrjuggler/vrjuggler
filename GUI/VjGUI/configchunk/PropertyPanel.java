@@ -116,7 +116,8 @@ public class PropertyPanel extends JPanel implements ActionListener, VarValuePan
 	    if (valindex < pr.vals.size())
 		ch = ((VarValue)pr.vals.elementAt(valindex)).getEmbeddedChunk();
 	    else
-		ch = new ConfigChunk (pr.embeddesc, pr.descdb);
+		ch = ChunkFactory.createChunk (pr.embeddesc);
+		//ch = new ConfigChunk (pr.embeddesc, pr.descdb);
 	    if (pr.desc.valuelabels.size() > valindex)
 		ch.setName (((DescEnum)pr.desc.valuelabels.elementAt(valindex)).str);
 	    else
@@ -167,7 +168,7 @@ public class PropertyPanel extends JPanel implements ActionListener, VarValuePan
 
 
     public Property getValue() {
-	Property p = new Property (prop.desc, Core.descdb);
+	Property p = new Property (prop.desc);
 	p.vals.removeAllElements();
 	for (int i = 0; i < valuepanels.size(); i++) {
 	    p.vals.addElement (((VarValuePanel)valuepanels.elementAt(i)).getValue());

@@ -190,7 +190,7 @@ public class DescDBPanel extends JPanel
 	    d = new ChunkDesc();
 	    for (j = 0; j <50; j++) {
 		if ((currdb.getByName("unnamed"+j) == null) &&
-		    (currdb.get("unnamed"+j) == null))
+		    (currdb.getByToken("unnamed"+j) == null))
 		    break;
 	    }
 	    d.name = "unnamed" + j;
