@@ -115,6 +115,9 @@ public interface EditorConstants
    public static final String KEYBOARD_MOUSE_PROXY_TYPE =
       "keyboard_mouse_proxy";
 
+   /** Config element type key_modifier_pair. */
+   public static final String KEY_MODIFIER_PAIR_TYPE = "key_modifier_pair";
+
    /** Config element type linux_joydev. */
    public static final String LINUX_JOYDEV_TYPE = "linux_joydev";
 
@@ -232,6 +235,10 @@ public interface EditorConstants
    /** Property type custom_scale. */
    public static final String CUSTOM_SCALE_PROPERTY = "custom_scale";
 
+   /** Property type decrement_keypress. */
+   public static final String DECREMENT_KEYPRESS_PROPERTY =
+      "decrement_keypress";
+
    /** Property type depth_buffer_size. */
    public static final String DEPTH_BUFFER_SIZE_PROPERTY = "depth_buffer_size";
 
@@ -250,8 +257,15 @@ public interface EditorConstants
    /** Property type hide_mouse. */
    public static final String HIDE_MOUSE_PROPERTY = "hide_mouse";
 
-   /** Property type hide_mouse. */
+   /** Property type increment_keypress. */
+   public static final String INCREMENT_KEYPRESS_PROPERTY =
+      "increment_keypress";
+
+   /** Property type key_pair. */
    public static final String KEY_PAIR_PROPERTY = "key_pair";
+
+   /** Property type key. */
+   public static final String KEY_PROPERTY = "key";
 
    /** Property type keyboard_mouse_proxy. */
    public static final String KEYBOARD_MOUSE_PROXY_PTR_PROPERTY =
@@ -270,6 +284,9 @@ public interface EditorConstants
    /** Property type lower_right_corner. */
    public static final String LOWER_RIGHT_CORNER_PROPERTY =
       "lower_right_corner";
+
+   /** Property type modifier_key. */
+   public static final String MODIFIER_KEY_PROPERTY = "modifier_key";
 
    /** Property type origin. */
    public static final String ORIGIN_PROPERTY = "origin";
