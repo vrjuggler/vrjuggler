@@ -107,8 +107,11 @@ protected:
    vector<vjGlPipe*>    pipes;      //: A list of the pipes in the system
 
    // --- MP Stuff -- //
-   vjCond     syncCond;       //: Condition var for syncing
-   bool       triggerRender;  //: Are we able to render
+   // vjCond     syncCond;       //: Condition var for syncing
+   // bool       triggerRender;  //: Are we able to render
+
+   vjSemaphore    drawTriggerSema;  // Semaphore for draw trigger
+   vjSemaphore    drawDoneSema;     // Semaphore for drawing done
 
 
    // --- Singleton Stuff --- //
@@ -120,7 +123,7 @@ public:
       return _instance;
    }
 protected:
-   vjGlDrawManager() : triggerRender(false)
+   vjGlDrawManager() : drawTriggerSema(0), drawDoneSema(0)
    { ;}
 private:
    static vjGlDrawManager* _instance;          

@@ -36,35 +36,22 @@ int vjGlPipe::start()
    return 1;
 }
 
-/** Trigger rendering of the pipe to start
- * POST: The pipe has be told to start rendering
- */
+//: Trigger rendering of the pipe to start
+//! POST: The pipe has be told to start rendering
 void vjGlPipe::triggerRender()
 {
    vjASSERT(mThreadRunning == true);      // We must be running
 
-   renderCond.acquire();
-   {
-      renderState = RENDERING;
-      renderCond.signal();
-   }
-   renderCond.release();
+   renderTriggerSema.release();
 }
 
-/** Blocks until rendering of the windows is completed
- * POST: The pipe has completed its rendering
- */
+//: Blocks until rendering of the windows is completed
+//! POST: The pipe has completed its rendering
 void vjGlPipe::completeRender()
 {
    vjASSERT(mThreadRunning == true);      // We must be running
 
-   renderCond.acquire();
-   {        // Wait for renderState == WAITING
-      while (renderState != WAITING)
-         renderCond.wait();
-      /* Do nothing */
-   }
-   renderCond.release();
+   renderCompleteSema.acquire();
 }
 
 /// Add a GLWindow to the window list
@@ -87,13 +74,7 @@ void vjGlPipe::controlLoop(void* nullParam)
       checkForWindowsToClose();  // Checks for closing windows
 
       // wait for render signal
-      renderCond.acquire();
-      {        // Wait for rendering == RENDERING
-         while (renderState != RENDERING)
-            renderCond.wait();
-         /* Do nothing */
-      }
-      renderCond.release();
+      renderTriggerSema.acquire();
 
          // --- Call the pipe pre-draw function --- //
       vjGlApp* theApp = glManager->getApp();
@@ -105,12 +86,7 @@ void vjGlPipe::controlLoop(void* nullParam)
          renderWindow(openWins[winId]);
 
       // Done rendering. Tell people that we are waiting now.
-      renderCond.acquire();
-      {
-         renderState = WAITING;
-         renderCond.signal();
-      }
-      renderCond.release();
+      renderCompleteSema.release();
    }
 
    mThreadRunning = false;     // We are not running

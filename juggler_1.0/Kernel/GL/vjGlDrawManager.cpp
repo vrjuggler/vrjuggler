@@ -18,32 +18,19 @@ void vjGlDrawManager::config(vjConfigChunkDB*  chunkDB)
 }
     
     // Enable a frame to be drawn
-    // 
+    // Trigger draw
 void vjGlDrawManager::draw()
 {
-     // Allow the processes to draw
-   syncCond.acquire();        // Get exclusive access
-   {
-      triggerRender = true;          // Signal that rendering can happen
-      syncCond.signal();
-   }
-   syncCond.release();
+   drawTriggerSema.release();
 }
     
-    /**
-     * Blocks until the end of the frame
-     * POST:
-     *	The frame has been drawn
-     */
+    
+//: Blocks until the end of the frame
+//! POST:
+//+	   The frame has been drawn
 void vjGlDrawManager::sync()
 {
-   syncCond.acquire();
-   {   // Wait for triggerRender == false
-      while (triggerRender == true)
-         syncCond.wait();
-      /* Do nothing */
-   }
-   syncCond.release();
+   drawDoneSema.acquire();  
 }
 
 
@@ -53,25 +40,14 @@ void vjGlDrawManager::main(void* nullParam)
    //while(!Exit)
    while (1)
    {
-      syncCond.acquire();
-      {
-         vjDEBUG(3) << "vjGlDrawManager::main: Wait for render trigger\n" << flush << vjDEBUG_FLUSH;
-         
-         // Wait for triggerRender == true
-         while (triggerRender == false)
-            syncCond.wait();
-         
-         // THEN --- Do Rendering --- //
-         vjDEBUG(3) << "vjGlDrawManager::main: Draw Pipes\n" << flush << vjDEBUG_FLUSH;
-	
-         drawAllPipes();
+      // Wait for trigger
+      drawTriggerSema.acquire();
+      
+      // THEN --- Do Rendering --- //
+      drawAllPipes();
 
-         vjDEBUG(3) << "vjGlDrawManager::Main: Pipes Rendered\n" << flush << vjDEBUG_FLUSH;
-
-         triggerRender = false;   // We are done rendering
-         syncCond.signal();
-      }
-      syncCond.release();
+      // -- Done rendering --- //
+      drawDoneSema.release();
    }
 }
 

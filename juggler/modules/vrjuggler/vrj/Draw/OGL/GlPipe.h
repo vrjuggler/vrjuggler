@@ -35,7 +35,8 @@ public:
       //: Constructor
       //!ARGS: _num - The id number of the pipe.
       //!NOTE: All contained windows SHOULD have the same pipe number
-   vjGlPipe(int _num, vjGlDrawManager* glMgr) : controlExit(0), glManager(glMgr)
+   vjGlPipe(int _num, vjGlDrawManager* glMgr)
+      : controlExit(0), glManager(glMgr), renderTriggerSema(0), renderCompleteSema(0)
    {
       mThreadRunning = false;
    }
@@ -118,8 +119,11 @@ private:
    vjGlDrawManager*    glManager;    //: The openlGL manager that we are rendering for
                                      //: Needed to get app, etc.
 
-   vjCond      renderCond;          //: Condition variable for Redner state
-   RenderState renderState;         //: The current render state.
+   //vjCond      renderCond;          //: Condition variable for Render state
+   //RenderState renderState;         //: The current render state.
+   vjSemaphore    renderCompleteSema;  //: signals render completed
+   vjSemaphore    renderTriggerSema;   //: Signals render trigger
+   
    int         controlExit;         //: Flag for when to exit the control loop
 
    bool        mThreadRunning;      //: Do we have a running thread? 
