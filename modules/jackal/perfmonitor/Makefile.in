@@ -68,8 +68,8 @@ CLASSPATH	= $(JAXP_JAR)$(JCPS)$(topdir)/config$(JCPS)$(topdir)/net$(JCPS)$(topdi
 
 PERFMONITOR_PKG		= org.vrjuggler.jccl.perfmonitor
 PERFMONITOR_DIR		= $(subst .,/,$(PERFMONITOR_PKG))
-PERFMONITOR_SRCS		= $(wildcard $(srcdir)/$(PERFMONITOR_DIR)/*.java)
-PERFMONITOR_CLASSES	= $(patsubst $(srcdir)/%,%,$(PERFMONITOR_SRCS:.java=.class))
+PERFMONITOR_SRCS		= $(patsubst $(srcdir)/%,%,$(wildcard $(srcdir)/$(PERFMONITOR_DIR)/*.java))
+PERFMONITOR_CLASSES	= $(PERFMONITOR_SRCS:.java=.class)
 
 JAVA_SRCS = $(PERFMONITOR_SRCS)
 JARS		 = jccl_perfmonitor.jar

@@ -69,18 +69,18 @@ JAVA_SRC_PATH = $(top_srcdir)/vjcontrol
 
 EDITORGUI_PKG		= org.vrjuggler.jccl.editorgui
 EDITORGUI_DIR		= $(subst .,/,$(EDITORGUI_PKG))
-EDITORGUI_SRCS		= $(wildcard $(srcdir)/$(EDITORGUI_DIR)/*.java)
-EDITORGUI_CLASSES = $(patsubst $(srcdir)/%,%,$(EDITORGUI_SRCS:.java=.class))
+EDITORGUI_SRCS		= $(patsubst $(srcdir)/%,%,$(wildcard $(srcdir)/$(EDITORGUI_DIR)/*.java))
+EDITORGUI_CLASSES = $(EDITORGUI_SRCS:.java=.class)
 
 CHUNKDESCUI_PKG		= org.vrjuggler.jccl.editorgui.chunkdescui
 CHUNKDESCUI_DIR		= $(subst .,/,$(CHUNKDESCUI_PKG))
-CHUNKDESCUI_SRCS		= $(wildcard $(srcdir)/$(CHUNKDESCUI_DIR)/*.java)
-CHUNKDESCUI_CLASSES = $(patsubst $(srcdir)/%,%,$(CHUNKDESCUI_SRCS:.java=.class))
+CHUNKDESCUI_SRCS		= $(patsubst $(srcdir)/%,%,$(wildcard $(srcdir)/$(CHUNKDESCUI_DIR)/*.java))
+CHUNKDESCUI_CLASSES = $(CHUNKDESCUI_SRCS:.java=.class)
 
 CONFIGCHUNKUI_PKG		= org.vrjuggler.jccl.editorgui.configchunkui
 CONFIGCHUNKUI_DIR		= $(subst .,/,$(CONFIGCHUNKUI_PKG))
-CONFIGCHUNKUI_SRCS		= $(wildcard $(srcdir)/$(CONFIGCHUNKUI_DIR)/*.java)
-CONFIGCHUNKUI_CLASSES	= $(patsubst $(srcdir)/%,%,$(CONFIGCHUNKUI_SRCS:.java=.class))
+CONFIGCHUNKUI_SRCS		= $(patsubst $(srcdir)/%,%,$(wildcard $(srcdir)/$(CONFIGCHUNKUI_DIR)/*.java))
+CONFIGCHUNKUI_CLASSES	= $(CONFIGCHUNKUI_SRCS:.java=.class)
 
 JAVA_SRCS 		= $(EDITORGUI_SRCS) $(CHUNKDESCUI_SRCS) $(CONFIGCHUNKUI_SRCS)
 JAVA_CLASSES	= $(EDITORGUI_CLASSES) $(CHUNKDESCUI_CLASSES) $(CONFIGCHUNKUI_CLASSES)

@@ -69,23 +69,23 @@ JAVA_SRC_PATH	= $(top_srcdir)/editorgui
 
 VJCONTROL_PKG		= org.vrjuggler.jccl.vjcontrol
 VJCONTROL_DIR		= $(subst .,/,$(VJCONTROL_PKG))
-VJCONTROL_SRCS		= $(wildcard $(srcdir)/$(VJCONTROL_DIR)/*.java)
-VJCONTROL_CLASSES = $(patsubst $(srcdir)/%,%,$(VJCONTROL_SRCS:.java=.class))
+VJCONTROL_SRCS		= $(patsubst $(srcdir)/%,%,$(wildcard $(srcdir)/$(VJCONTROL_DIR)/*.java))
+VJCONTROL_CLASSES = $(VJCONTROL_SRCS:.java=.class)
 
 VJCONTROL_UI_PKG		= org.vrjuggler.jccl.vjcontrol.ui
 VJCONTROL_UI_DIR		= $(subst .,/,$(VJCONTROL_UI_PKG))
-VJCONTROL_UI_SRCS		= $(wildcard $(srcdir)/$(VJCONTROL_UI_DIR)/*.java)
-VJCONTROL_UI_CLASSES = $(patsubst $(srcdir)/%,%,$(VJCONTROL_UI_SRCS:.java=.class))
+VJCONTROL_UI_SRCS		= $(patsubst $(srcdir)/%,%,$(wildcard $(srcdir)/$(VJCONTROL_UI_DIR)/*.java))
+VJCONTROL_UI_CLASSES = $(VJCONTROL_UI_SRCS:.java=.class)
 
 VJCONTROL_UI_WIDGETS_PKG		= org.vrjuggler.jccl.vjcontrol.ui.widgets
 VJCONTROL_UI_WIDGETS_DIR		= $(subst .,/,$(VJCONTROL_UI_WIDGETS_PKG))
-VJCONTROL_UI_WIDGETS_SRCS		= $(wildcard $(srcdir)/$(VJCONTROL_UI_WIDGETS_DIR)/*.java)
-VJCONTROL_UI_WIDGETS_CLASSES	= $(patsubst $(srcdir)/%,%,$(VJCONTROL_UI_WIDGETS_SRCS:.java=.class))
+VJCONTROL_UI_WIDGETS_SRCS		= $(patsubst $(srcdir)/%,%,$(wildcard $(srcdir)/$(VJCONTROL_UI_WIDGETS_DIR)/*.java))
+VJCONTROL_UI_WIDGETS_CLASSES	= $(VJCONTROL_UI_WIDGETS_SRCS:.java=.class)
 
 WIZARDS_PKG			= org.vrjuggler.jccl.wizards
 WIZARDS_DIR			= $(subst .,/,$(WIZARDS_PKG))
-WIZARDS_SRCS		= $(wildcard $(srcdir)/$(WIZARDS_DIR)/*.java)
-WIZARDS_CLASSES	= $(patsubst $(srcdir)/%,%,$(WIZARDS_SRCS:.java=.class))
+WIZARDS_SRCS		= $(patsubst $(srcdir)/%,%,$(wildcard $(srcdir)/$(WIZARDS_DIR)/*.java))
+WIZARDS_CLASSES	= $(WIZARDS_SRCS:.java=.class)
 
 JAVA_SRCS 		= $(VJCONTROL_SRCS) $(VJCONTROL_UI_SRCS) $(VJCONTROL_UI_WIDGETS_SRCS) $(WIZARDS_SRCS)
 JAVA_CLASSES	= $(VJCONTROL_CLASSES) $(VJCONTROL_UI_CLASSES) $(VJCONTROL_UI_WIDGETS_CLASSES) $(WIZARDS_CLASSES)

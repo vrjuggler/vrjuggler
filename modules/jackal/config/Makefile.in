@@ -68,8 +68,8 @@ CLASSPATH	= $(JAXP_JAR)
 
 CONFIG_PKG		= org.vrjuggler.jccl.config
 CONFIG_DIR		= $(subst .,/,$(CONFIG_PKG))
-CONFIG_SRCS		= $(wildcard $(srcdir)/$(CONFIG_DIR)/*.java)
-CONFIG_CLASSES = $(patsubst $(srcdir)/%,%,$(CONFIG_SRCS:.java=.class))
+CONFIG_SRCS		= $(patsubst $(srcdir)/%,%,$(wildcard $(srcdir)/$(CONFIG_DIR)/*.java))
+CONFIG_CLASSES = $(CONFIG_SRCS:.java=.class)
 
 JAVA_SRCS = $(CONFIG_SRCS)
 JARS		 = jccl_config.jar

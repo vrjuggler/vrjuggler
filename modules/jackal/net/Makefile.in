@@ -69,8 +69,8 @@ JAVA_SRC_PATH	= $(top_srcdir)/vjcontrol
 
 NET_PKG		= org.vrjuggler.jccl.net
 NET_DIR		= $(subst .,/,$(NET_PKG))
-NET_SRCS		= $(wildcard $(srcdir)/$(NET_DIR)/*.java)
-NET_CLASSES = $(patsubst $(srcdir)/%,%,$(NET_SRCS:.java=.class))
+NET_SRCS		= $(patsubst $(srcdir)/%,%,$(wildcard $(srcdir)/$(NET_DIR)/*.java))
+NET_CLASSES = $(NET_SRCS:.java=.class)
 
 JAVA_SRCS = $(NET_SRCS)
 JARS		 = jccl_net.jar
