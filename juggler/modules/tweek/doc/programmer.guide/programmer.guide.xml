@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?xml-stylesheet href="../../../../../../../../../../../home/users/patrick/src/Juggler/docs/stylesheet/docbook_ab.css" type="text/css"?>
+<?xml-stylesheet href="/home/users/patrick/src/Juggler/docs/stylesheet/docbook_ab.css" type="text/css"?>
+<?morphon-document-settings
+  morphon.document.settings.whitespaces.amount="3"
+  morphon.document.settings.print.fixed.attributes="true"
+  morphon.document.settings.stylesheetpi.autoupdate="true"
+  morphon.document.settings.print.defaultvalues.attributes="false"
+  morphon.document.settings.relative.systemids="0"
+  morphon.document.settings.endofline.type="2"
+  morphon.document.settings.whitespaces.type="indent"
+?>
 <!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd">
 <book>
    <bookinfo>
@@ -11,7 +20,7 @@
             <surname>Hartling</surname>
          </author>
       </authorgroup>
-      <releaseinfo>0.0.2</releaseinfo>
+      <releaseinfo>0.0.3</releaseinfo>
       <pubdate>$Date$</pubdate>
    </bookinfo>
    <preface>
@@ -272,21 +281,370 @@ interface Subject
 #endif</programlisting>
          </example>
          <para>By definition, all objects are passed by reference in CORBA. The modifier stating the readability and/or writability in the IDL file determines how the referenced object may be modified, if at all, within the method.</para>
+         <para>Applications that make use of Tweek will define custom interfaces that extend the <interfacename>Subject</interfacename> interface. For example, consider a custom subject that maintains a floating-point value. It could have the following interface:</para>
+         <example id="CustomSubject.idl.example">
+            <title>CustomSubject.idl</title>
+            <programlisting>#ifndef _CUSTOM_SUBJECT_IDL_
+#define _CUSTOM_SUBJECT_IDL_
+
+#include &lt;tweek/idl/Subject.idl&gt;
+
+module mymod
+{
+
+interface CustomSubject : tweek::Subject
+{
+   float getValue();
+   void setValue(in float v);
+};
+
+};
+
+#endif</programlisting>
+         </example>
+         <para>In this interface, we define two methods: <methodname>getValue()</methodname> and <methodname>setValue()</methodname>. The implementation of this interface would of course include these methods and would derive from the implementation of the <interfacename>Subject</interfacename> interface.</para>
       </chapter>
       <chapter id="prog.cplusplus.chapter">
          <title>C++</title>
-         <para></para>
+         <para>Writing C++ code that makes use of Tweek is not difficult, though it often requires some good planning. With the current code base, the C++ side of things maintains the state information through an implementation of the Tweek <interfacename>Subject</interfacename><indexterm>
+               <primary>interfaces</primary>
+               <secondary>tweek::Subject</secondary>
+            </indexterm> interface. Instances of such an implementation may need to communicate with other parts of a given application, and it is important to define these relationships well. In other words, as a maintainer of application state information, the subject implementation should have easy access to that state information.</para>
+         <para>Furthermore, developers must keep in mind that there may be asynchronous execution of application code as a result of using Tweek. The local ORB runs in its own thread, and as such, it executes methods of <glossterm linkend="gloss.servant">servants</glossterm> from that thread. Whatever the servant does, it should be thread-safe with respect to the rest of the application.</para>
+         <para>In this chapter, we cover each aspect of writing C++ code that uses the Tweek API. We begin by explaining how to make a custom subject implementation. Then, we discuss the use of the CORBA Manager from user-level code. We conclude the chapter with an overview of using the Subject Manager.</para>
          <section>
             <title>Deriving from <classname>tweek::SubjectImpl</classname></title>
-            <para></para>
+            <indexterm>
+               <primary>tweek::SubjectImpl</primary>
+               <secondary>deriving from</secondary>
+            </indexterm>
+            <para>To create a custom subject implementation, you must derive from two classes: the abstract class that defines the custom interface and <classname>tweek::SubjectImpl</classname>. Referring back to the interface shown in <xref linkend="CustomSubject.idl.example"/>, the basic C++ class declaration would appear as follows:</para>
+            <example id="CustomSubjectImpl.h.example">
+               <title>CustomSubjectImpl.h</title>
+               <programlisting linenumbering="numbered">#ifndef _CUSTOM_SUBJECT_IMPL_H_
+#define _CUSTOM_SUBJECT_IMPL_H_
+
+#include &lt;tweek/CORBA/SubjectImpl.h&gt;
+#include &lt;CustomSubject.h&gt;
+
+
+namespace mymod
+{
+
+class CustomSubjectImpl : public POA_mymod::CustomSubject,      <co linkends="CustomSubjectImpl.superclass.co" id="CustomSubjectImpl.interface.line"/>
+                          public tweek::SubjectImpl             <co linkends="CustomSubjectImpl.superclass.co" id="CustomSubjectImpl.SubjectImpl.line"/>
+public:
+   CustomSubjectImpl() : mValue(0.0f)
+   {
+      ;
+   }
+
+   virtual ~CustomSubjectImpl()
+   {
+      ;
+   }
+
+   virtual float getValue();                                    <co linkends="CustomSubjectImpl.interface.methods.co" id="CustomSubjectImpl.setValue.decl"/>
+
+   virtual void setValue(float v);                              <co linkends="CustomSubjectImpl.interface.methods.co" id="CustomSubjectImpl.getValue.decl"/>
+
+   mymod::CustomSubject_ptr _this()                             <co linkends="CustomSubjectImpl._this.hack.co" id="CustomSubjectImpl._this.decl"/>
+   {
+      return POA_mymod::CustomSubject::_this();
+   }
+
+private:
+   float mValue;
+};
+
+}
+
+#endif</programlisting>
+               <calloutlist>
+                  <callout arearefs="CustomSubjectImpl.interface.line CustomSubjectImpl.SubjectImpl.line" id="CustomSubjectImpl.superclass.co">
+                     <para>Here we declare our parent classes, <classname>POA_mymod::CustomSubject</classname> and <classname>tweek::SubjectImpl</classname>. The first is code generated by the IDL compiler, and the second is included as part of the Tweek C++ API. Both are necessary for this custom interface to work correctly as a Tweek subject.</para>
+                  </callout>
+                  <callout arearefs="CustomSubjectImpl.setValue.decl CustomSubjectImpl.getValue.decl" id="CustomSubjectImpl.interface.methods.co">
+                     <para>These two declarations correspond to the <interfacename>CustomSubject</interfacename> interface defined in <xref linkend="CustomSubject.idl.example"/>. The implementations of these methods are not shown here, but they are required for the code to compile. That is, the declarations in <classname>POA_mymod::CustomSubject</classname> are pure virtual methods, and an instance of <classname>mymod::CustomSubjectImpl</classname> cannot be created unless these methods are implemented.</para>
+                  </callout>
+                  <callout arearefs="CustomSubjectImpl._this.decl" id="CustomSubjectImpl._this.hack.co">
+                     <para>Overriding the method named <methodname>_this()</methodname> is required due to the diamond inheritance tree created by deriving from <classname>POA_mymod::CustomSubject</classname> and <classname>tweek::SubjectImpl</classname>. Both of these classes derive from <classname>tweek::Subject</classname>. The <methodname>_this()</methodname> method plays a critical role in the CORBA communication, and it is imperative that it return the correct type to the caller when invoked on a servant instance. Without this override, the returned type will be <classname>tweek::Subject_ptr</classname>, and attempts to narrow to <classname>mymod::CustomSubject_ptr</classname> will fail.</para>
+                     <para>Note the namespaces used on this method. The return type is <classname>mymod::CustomSubject_ptr</classname>, which corresponds to the namespace in which the classes <classname>CustomSubjectImpl</classname> and <classname>CustomSubject</classname> are defined. To get the actual value to return, <classname>POA_mymod::CustomSubject</classname> (one of the two parent classes) is used.</para>
+                  </callout>
+               </calloutlist>
+            </example>
+            <para>The implementations of <methodname>getValue()</methodname> and <methodname>setValue()</methodname> are fairly obvious, though they are presented here for the sake of completeness. Note, however, that <methodname>setValue()</methodname> changes the state of the subject, and thus any observers must be notified of the change. The implementations are shown in the following example.</para>
+            <example>
+               <title>CustomSubjectImpl.cpp</title>
+               <programlisting>#include &lt;CustomSubjectImpl.h&gt;
+
+namespace mymod
+{
+
+float CustomSubjectImpl::getValue()
+{
+   return mValue;
+}
+
+void CustomSubjectImpl::setValue(float v)
+{
+   mValue = v;
+   tweek::SubjectImpl::notify();
+}
+
+}</programlisting>
+            </example>
+            <para>The key point to note is the call to <methodname>tweek::SubjectImpl::notify()</methodname> in the <methodname>setValue()</methodname> implementation. In general, anything that modifies the state of the subject requires that this method be invoked. Note also that the method is fully qualified so that we are sure to call the correct implementation.</para>
          </section>
          <section>
             <title>Using the CORBA Manager</title>
-            <para></para>
+            <indexterm>
+               <primary>CORBA Manager</primary>
+               <secondary>use of</secondary>
+            </indexterm>
+            <para>Initializing the CORBA Manager is straightforward, but it does require exception handling. If the exceptions are not handled correctly, applications will abort if an exception is thrown but not caught. Refer to a C++ reference for more information about exceptions and exception handling in C++.</para>
+            <para>The following example shows a <function>main()</function> function for an application that performs all the Tweek initialization steps. We separate the discussion into two parts: one part for the CORBA Manager and one part for the Subject Manager (discussed in the next section).</para>
+            <example id="TweekApp.cpp.CORBA-Manager.example">
+               <title>TweekApp.cpp</title>
+               <programlisting linenumbering="numbered">#include &lt;vpr/vpr.h&gt;
+#include &lt;vpr/Thread/Thread.h&gt;
+#include &lt;vpr/Util/Debug.h&gt;
+#include &lt;tweek/CORBA/CorbaManager.h&gt;                                        <co linkends="TweekApp.cpp.includes.co" id="TweekApp.cpp.includes.tweek"/>
+
+#include &lt;CustomSubjectImpl.h&gt;                                               <co linkends="TweekApp.cpp.includes.co" id="TweekApp.cpp.includes.gen"/>
+
+
+/**
+ * This application starts the CORBA server for the C++ side of the test.
+ */
+int main(int argc, char* argv[])
+{
+   tweek::CorbaManager mgr;                                                  <co linkends="TweekApp.cpp.corbamgr.decl.co" id="TweekApp.cpp.corbamgr.decl"/>
+
+   // The first thing we have to do is initialize the Tweek CORBA Manager.
+   // If this fails, we're out of luck.
+   try                                                                       <co linkends="TweekApp.cpp.big-try-catch.co" id="TweekApp.cpp.big-try-catch.try"/>
+   {
+      if ( mgr.init("example", argc, argv).success() )                       <co linkends="TweekApp.cpp.corbamgr.init.co" id="TweekApp.cpp.corbamgr.init"/>
+      {
+         vpr::ReturnStatus status;
+
+         // Once the CORBA Manager is initialized, we need to create a
+         // Subject Manager.  This will hold our CustomSubject object.
+         try
+         {
+            status = mgr.createSubjectManager();
+
+            // If we were able to create the Subject Manager, now we register
+            // our objects with it.
+            if ( status.success() )
+            {
+               // First, create real instances of the C++ object that will
+               // be the CORBA servant.  This must be allocated on the heap.
+               mymod::CustomubjectImpl* custom_subj =
+                  new mymod::CustomSubjectImpl();
+
+               // Now we try to register the subject and give it a symbolic,
+               // easy-to-remember name.
+               try
+               {
+                  mgr.getSubjectManager()-&gt;registerSubject(slider_subj,
+                                                           "CustomSubject");
+               }
+               catch (...)
+               {
+                  vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+                     &lt;&lt; "Failed to register subject\n" &lt;&lt; vprDEBUG_FLUSH;
+               }
+            }
+         }
+         catch (CORBA::Exception&amp; ex)
+         {
+            vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+               &lt;&lt; "Caught an unknown CORBA exception when trying to register!\n"
+               &lt;&lt; vprDEBUG_FLUSH;
+         }
+
+         if ( ! status.success() )
+         {
+            vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+               &lt;&lt; "Failed to register Subject Manager instance\n"
+               &lt;&lt; vprDEBUG_FLUSH;
+         }
+
+         std::cout &lt;&lt; "Press 'x' to exit" &lt;&lt; std::endl;
+         char input;
+
+         // Loop forever so that we can act sort of like a server.
+         while ( 1 )
+         {
+            std::cin &gt;&gt; input;
+            if ( input == 'x' )
+            {
+               break;
+            }
+            else
+            {
+               vpr::Thread::msleep(100);
+            }
+         }
+      }
+      else
+      {
+         vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+            &lt;&lt; "CORBA failed to initialize\n" &lt;&lt; vprDEBUG_FLUSH;
+      }
+   }
+   catch (...)                                                               <co linkends="TweekApp.cpp.big-try-catch.co" id="TweekApp.cpp.big-try-catch.catch"/>
+   {
+      vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+         &lt;&lt; "Caught an unknown exception!\n" &lt;&lt; vprDEBUG_FLUSH;
+   }
+
+   vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) &lt;&lt; "Exiting\n" &lt;&lt; vprDEBUG_FLUSH;
+
+   return 0;
+}</programlisting>
+               <calloutlist>
+                  <callout arearefs="TweekApp.cpp.includes.tweek TweekApp.cpp.includes.gen" id="TweekApp.cpp.includes.co">
+                     <para>These two headers are typically needed. The first includes the declaration of the Tweek CORBA Manager, and the second is the subject implementation declaration, shown in <xref linkend="CustomSubjectImpl.h.example"/>.</para>
+                  </callout>
+                  <callout arearefs="TweekApp.cpp.corbamgr.decl" id="TweekApp.cpp.corbamgr.decl.co">
+                     <para>In order to use CORBA through Tweek, the CORBA Manager must be created and initialized. Any number of these may be created, but in general, only one is needed per application. Here, we declare an instance of <classname>tweek::CorbaManager</classname> on the stack.</para>
+                  </callout>
+                  <callout arearefs="TweekApp.cpp.corbamgr.init" id="TweekApp.cpp.corbamgr.init.co">
+                     <para>Next, we must initialize the CORBA Manager using the method <methodname>tweek::CorbaManager::init()</methodname>. The first argument provides a unique (ideally) identifier for the local Portable Object Adapter (POA). The second and third arguments are <varname>argc</varname> and <varname>argv</varname> respectively. They come in through the argument list of <function>main()</function> and represent the command-line arguments. Any arguments relevant to ORB initialization are removed from <varname>argv</varname>, and <varname>argc</varname> is decremented accordingly (it is passed by reference).</para>
+                  </callout>
+                  <callout arearefs="TweekApp.cpp.big-try-catch.try TweekApp.cpp.big-try-catch.catch" id="TweekApp.cpp.big-try-catch.co">
+                     <para>To ensure that no exceptions go uncaught, we enclose the bulk of <function>main()</function> in a try/catch block that catches any exception. This is handled by the argument list passed to the catch block, <literal>(...)</literal>. This is the equivalent of catching <classname>java.lang.Exception</classname> in Java.</para>
+                  </callout>
+               </calloutlist>
+            </example>
          </section>
          <section>
             <title>Using the Subject Manager</title>
-            <para></para>
+            <indexterm>
+               <primary>Subject Manager</primary>
+               <secondary>use of</secondary>
+            </indexterm>
+            <para>To demonstrate use of the Subject Manager, we begin by revisiting the main() function examined in the previous section. This time, we will focus our attention on the code related to the Subject Manager only.</para>
+            <example id="TweekApp.cpp.Subject-Manager.example">
+               <title>TweekApp.cpp</title>
+               <programlisting linenumbering="numbered">#include &lt;vpr/vpr.h&gt;
+#include &lt;vpr/Thread/Thread.h&gt;
+#include &lt;vpr/Util/Debug.h&gt;
+#include &lt;tweek/CORBA/CorbaManager.h&gt;
+
+#include &lt;CustomSubjectImpl.h&gt;
+
+
+/**
+ * This application starts the CORBA server for the C++ side of the test.
+ */
+int main(int argc, char* argv[])
+{
+   tweek::CorbaManager mgr;
+
+   // The first thing we have to do is initialize the Tweek CORBA Manager.
+   // If this fails, we're out of luck.
+   try
+   {
+      if ( mgr.init("corba_test", argc, argv).success() )
+      {
+         vpr::ReturnStatus status;
+
+         // Once the CORBA Manager is initialized, we need to create a
+         // Subject Manager.  This will hold our CustomSubject object.
+         try
+         {
+            status = mgr.createSubjectManager();                             <co linkends="TweekApp.cpp.subjectmgr.create.co" id="TweekApp.cpp.subjectmgr.create"/>
+
+            // If we were able to create the Subject Manager, now we register
+            // our objects with it.
+            if ( status.success() )
+            {
+               // First, create real instances of the C++ object that will
+               // be the CORBA servant.  This must be allocated on the heap.
+               mymod::CustomubjectImpl* custom_subj =
+                  new mymod::CustomSubjectImpl();                            <co linkends="TweekApp.cpp.subject.create.co" id="TweekApp.cpp.subject.create"/>
+
+               // Now we try to register the subject and give it a symbolic,
+               // easy-to-remember name.
+               try
+               {
+                  mgr.getSubjectManager()-&gt;registerSubject(custom_subj,
+                                                           "CustomSubject"); <co linkends="TweekApp.cpp.subject.register.co" id="TweekApp.cpp.subject.register"/>
+               }
+               catch (...)
+               {
+                  vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+                     &lt;&lt; "Failed to register subject\n" &lt;&lt; vprDEBUG_FLUSH;
+               }
+            }
+         }
+         catch (CORBA::Exception&amp; ex)
+         {
+            vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+               &lt;&lt; "Caught an unknown CORBA exception when trying to register!\n"
+               &lt;&lt; vprDEBUG_FLUSH;
+         }
+
+         if ( ! status.success() )
+         {
+            vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+               &lt;&lt; "Failed to register Subject Manager instance\n"
+               &lt;&lt; vprDEBUG_FLUSH;
+         }
+
+         std::cout &lt;&lt; "Press 'x' to exit" &lt;&lt; std::endl;
+         char input;
+
+         // Loop forever so that we can act sort of like a server.
+         while ( 1 )                                                         <co linkends="TweekApp.cpp.loop.co" id="TweekApp.cpp.loop"/>
+         {
+            std::cin &gt;&gt; input;
+            if ( input == 'x' )
+            {
+               break;
+            }
+            else
+            {
+               vpr::Thread::msleep(100);
+            }
+         }
+      }
+      else
+      {
+         vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+            &lt;&lt; "CORBA failed to initialize\n" &lt;&lt; vprDEBUG_FLUSH;
+      }
+   }
+   catch (...)
+   {
+      vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+         &lt;&lt; "Caught an unknown exception!\n" &lt;&lt; vprDEBUG_FLUSH;
+   }
+
+   vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) &lt;&lt; "Exiting\n" &lt;&lt; vprDEBUG_FLUSH;
+
+   return 0;
+}</programlisting>
+               <calloutlist>
+                  <callout arearefs="TweekApp.cpp.subjectmgr.create" id="TweekApp.cpp.subjectmgr.create.co">
+                     <para>After the COBRA Manager has been initialized successfully, the Tweek Subject Manager must be created. We do this by invoking the method <methodname>tweek::CorbaManager::createSubjectManager()</methodname> on our <methodname>tweek::CorbaManager</methodname> instance.</para>
+                  </callout>
+                  <callout arearefs="TweekApp.cpp.subject.create" id="TweekApp.cpp.subject.create.co">
+                     <para>Once we have a valid Subject Manager, we must register subjects with it in order for object references to be passed out by CORBA. This creates the <glossterm linkend="gloss.servant">servant</glossterm> to which <interfacename>mymod::CustomSubject</interfacename> references will be made.</para>
+                  </callout>
+                  <callout arearefs="TweekApp.cpp.subject.register" id="TweekApp.cpp.subject.register.co">
+                     <para>Once the servant is created, it is registered with the Subject Manager. The Subject Manager will activate the servant within the POA so that references to it can be created and returned to clients. We register it with the symbolic name <quote>CustomSubject</quote> that can be referenced later by remote objects.</para>
+                  </callout>
+                  <callout arearefs="TweekApp.cpp.loop" id="TweekApp.cpp.loop.co">
+                     <para>After the subject is registered, all the work is done. This simple application now just waits for clients to request references. It will exit when the user enters '<literal>x</literal>'.</para>
+                  </callout>
+               </calloutlist>
+            </example>
+            <para>Note that all the code relating to the Subject Manager is enclosed within another try/catch block. This block only catches exceptions of type <classname>CORBA::Exception</classname>. Anything more general is caught by the larger try/catch block.</para>
          </section>
       </chapter>
       <chapter id="prog.java.chapter">
@@ -343,21 +701,21 @@ interface Subject
                   <para>Creating an IDL interface involves writing an IDL file. For this example, we will be storing an integer variable in a C++ servant. The Java GUIs will need to read and write the value, so we need two methods: <methodname>getValue()</methodname> and <methodname>setValue()</methodname>. The type being passed between <glossterm linkend="gloss.orb">ORBs</glossterm> will be <type>long</type>, a 32-bit integer. Depending on the target language, this will map to the corresponding type of the same size.</para>
                   <example id="SliderSubject.idl.example">
                      <title>SliderSubject.idl</title>
-                     <programlisting linenumbering="numbered">#ifndef _NETWORK_TEST_SLIDER_SUBJECT_IDL_    <co id="cpp.ifndef.line" linkends="cpp.protection.co"/>
-#define _NETWORK_TEST_SLIDER_SUBJECT_IDL_    <co id="cpp.define.line" linkends="cpp.protection.co"/>
+                     <programlisting linenumbering="numbered">#ifndef _NETWORK_TEST_SLIDER_SUBJECT_IDL_    <co linkends="cpp.protection.co" id="cpp.ifndef.line"/>
+#define _NETWORK_TEST_SLIDER_SUBJECT_IDL_    <co linkends="cpp.protection.co" id="cpp.define.line"/>
 
-#include &lt;tweek/idl/Subject.idl&gt;             <co id="tweek.subject.idl.include" linkends="tweek.subject.idl.include.co"/>
+#include &lt;tweek/idl/Subject.idl&gt;             <co linkends="tweek.subject.idl.include.co" id="tweek.subject.idl.include"/>
 
-module networktest                           <co id="idl.module.block" linkends="idl.module.block.co"/>
+module networktest                           <co linkends="idl.module.block.co" id="idl.module.block"/>
 {
-   interface SliderSubject : tweek::Subject  <co id="idl.interface.decl" linkends="idl.interface.decl.co"/>
+   interface SliderSubject : tweek::Subject  <co linkends="idl.interface.decl.co" id="idl.interface.decl"/>
    {
-      void setValue(in long val);            <co id="SliderSubject.setValue.decl" linkends="SliderSubject.methods.co"/>
-      long getValue();                       <co id="SliderSubject.getValue.decl" linkends="SliderSubject.methods.co"/>
+      void setValue(in long val);            <co linkends="SliderSubject.methods.co" id="SliderSubject.setValue.decl"/>
+      long getValue();                       <co linkends="SliderSubject.methods.co" id="SliderSubject.getValue.decl"/>
    };
 };
 
-#endif                                       <co id="cpp.endif.line" linkends="cpp.protection.co"/>
+#endif                                       <co linkends="cpp.protection.co" id="cpp.endif.line"/>
 </programlisting>
                      <calloutlist>
                         <callout arearefs="cpp.ifndef.line cpp.define.line cpp.endif.line" id="cpp.protection.co">
@@ -391,12 +749,12 @@ module networktest                           <co id="idl.module.block" linkends=
 
 #include &lt;vector&gt;
 
-#include &lt;tweek/CORBA/SubjectImpl.h&gt;                               <co id="SliderSubjectImpl.h.includes.subjimpl" linkends="SliderSubjectImpl.h.includes.co"/>
-#include &lt;tweek/CORBA/Observer.h&gt;                                  <co id="SliderSubjectImpl.h.includes.obs" linkends="SliderSubjectImpl.h.includes.co"/>
-#include &lt;SliderSubject.h&gt;                                         <co id="SliderSubjectImpl.h.include.subj" linkends="SliderSubjectImpl.h.include.subj.co"/>
+#include &lt;tweek/CORBA/SubjectImpl.h&gt;                               <co linkends="SliderSubjectImpl.h.includes.co" id="SliderSubjectImpl.h.includes.subjimpl"/>
+#include &lt;tweek/CORBA/Observer.h&gt;                                  <co linkends="SliderSubjectImpl.h.includes.co" id="SliderSubjectImpl.h.includes.obs"/>
+#include &lt;SliderSubject.h&gt;                                         <co linkends="SliderSubjectImpl.h.include.subj.co" id="SliderSubjectImpl.h.include.subj"/>
 
 
-namespace networktest                                              <co id="SliderSubjectImpl.h.namespace" linkends="SliderSubjectImpl.h.namespace.co"/>
+namespace networktest                                              <co linkends="SliderSubjectImpl.h.namespace.co" id="SliderSubjectImpl.h.namespace"/>
 {
 
 /**
@@ -404,7 +762,7 @@ namespace networktest                                              <co id="Slide
  * multiple inheritance with that class and with the generated CORBA class
  * corresponding to the IDL for SliderSubject.
  */
-class SliderSubjectImpl : public POA_networktest::SliderSubject,   <co id="SliderSubjectImpl.h.class.decl" linkends="SliderSubjectImpl.h.class.decl.co"/>
+class SliderSubjectImpl : public POA_networktest::SliderSubject,   <co linkends="SliderSubjectImpl.h.class.decl.co" id="SliderSubjectImpl.h.class.decl"/>
                           public tweek::SubjectImpl
 {
 public:
@@ -422,12 +780,12 @@ public:
    /**
     * Sets this subject's internal value.
     */
-   virtual void setValue(long value);                              <co id="SliderSubjectImpl.h.setValue" linkends="SliderSubjectImpl.h.virtuals.co"/>
+   virtual void setValue(long value);                              <co linkends="SliderSubjectImpl.h.virtuals.co" id="SliderSubjectImpl.h.setValue"/>
 
    /**
     * Returns this subject's internal value.
     */
-   virtual long getValue();                                        <co id="SliderSubjectImpl.h.getValue" linkends="SliderSubjectImpl.h.virtuals.co"/>
+   virtual long getValue();                                        <co linkends="SliderSubjectImpl.h.virtuals.co" id="SliderSubjectImpl.h.getValue"/>
 
    /**
     * This overriding method is needed so that the correct type is returned
@@ -436,13 +794,13 @@ public:
     *
     * XXX: It may be possible to remove this requirement in the future.
     */  
-   networktest::SliderSubject_ptr _this()                          <co id="SliderSubjectImpl.h.hack" linkends="SliderSubjectImpl.h.hack.co"/>
+   networktest::SliderSubject_ptr _this()                          <co linkends="SliderSubjectImpl.h.hack.co" id="SliderSubjectImpl.h.hack"/>
    {
       return POA_networktest::SliderSubject::_this();
    }
 
 private:
-   long mValue;   /**&lt; Our value */                                <co id="SliderSubjectImpl.h.mValue" linkends="SliderSubjectImpl.h.mValue.co"/>
+   long mValue;   /**&lt; Our value */                                <co linkends="SliderSubjectImpl.h.mValue.co" id="SliderSubjectImpl.h.mValue"/>
 };
 
 } // End of networktest namespace
@@ -477,7 +835,7 @@ private:
                   <example id="SliderSubjectImpl.cpp.example">
                      <title>SliderSubjectImpl.cpp</title>
                      <programlisting linenumbering="numbered">#include &lt;vpr/Util/Debug.h&gt;
-#include &lt;SliderSubjectImpl.h&gt;                   <co id="SliderSubjectImpl.cpp.inc" linkends="SliderSubjectImpl.cpp.inc.co"/>
+#include &lt;SliderSubjectImpl.h&gt;                   <co linkends="SliderSubjectImpl.cpp.inc.co" id="SliderSubjectImpl.cpp.inc"/>
 
 
 namespace networktest
@@ -485,16 +843,16 @@ namespace networktest
 
 void SliderSubjectImpl::setValue(long value)
 {
-   mValue = value;                               <co id="SliderSubjectImpl.cpp.mValue.assign" linkends="SliderSubjectImpl.cpp.mValue.assign.co"/>
+   mValue = value;                               <co linkends="SliderSubjectImpl.cpp.mValue.assign.co" id="SliderSubjectImpl.cpp.mValue.assign"/>
 
    // Notify any observers that our value has changed.  This is very
    // important.
-   tweek::SubjectImpl::notify();                 <co id="SliderSubjectImpl.cpp.notify" linkends="SliderSubjectImpl.cpp.notify.co"/>
+   tweek::SubjectImpl::notify();                 <co linkends="SliderSubjectImpl.cpp.notify.co" id="SliderSubjectImpl.cpp.notify"/>
 }
 
 long SliderSubjectImpl::getValue()
 {
-   return mValue;                                <co id="SliderSubjectImpl.cpp.mValue.return" linkends="SliderSubjectImpl.cpp.mValue.return.co"/>
+   return mValue;                                <co linkends="SliderSubjectImpl.cpp.mValue.return.co" id="SliderSubjectImpl.cpp.mValue.return"/>
 }
 
 } // End networktest namespace</programlisting>
@@ -540,9 +898,9 @@ import tweek.*;
  * registered as CORBA servants.  In addition, CORBA references to the
  * servants must be capable of being attached to remote subjects.
  */
-public class SliderObserverImpl extends ObserverPOA                  <co id="SliderObserverImpl.java.class.decl" linkends="SliderObserverImpl.java.class.decl.co"/>
+public class SliderObserverImpl extends ObserverPOA                  <co linkends="SliderObserverImpl.java.class.decl.co" id="SliderObserverImpl.java.class.decl"/>
 {
-   public SliderObserverImpl(JSlider slider, SliderSubject subject)  <co id="SliderObserverImpl.java.constructor" linkends="SliderObserverImpl.java.constructor.co"/>
+   public SliderObserverImpl(JSlider slider, SliderSubject subject)  <co linkends="SliderObserverImpl.java.constructor.co" id="SliderObserverImpl.java.constructor"/>
    {
       mSlider        = slider;
       mSliderSubject = subject;
@@ -552,7 +910,7 @@ public class SliderObserverImpl extends ObserverPOA                  <co id="Sli
     * Implements the required method in tweek.ObserverPOA.  The remote subject
     * will invoke this method whenever it is notified of a change.
     */
-   public void update()                                              <co id="SliderObserverImpl.java.update" linkends="SliderObserverImpl.java.update.co"/>
+   public void update()                                              <co linkends="SliderObserverImpl.java.update.co" id="SliderObserverImpl.java.update"/>
    {
       // If we have a valid slider object, we need to update its value to
       // whatever our subject has.
@@ -560,7 +918,7 @@ public class SliderObserverImpl extends ObserverPOA                  <co id="Sli
       {
          DefaultBoundedRangeModel model =
             (DefaultBoundedRangeModel) mSlider.getModel();
-         model.setValue(mSliderSubject.getValue());                  <co id="SliderObserverImpl.java.getValue" linkends="SliderObserverImpl.java.getValue.co"/>
+         model.setValue(mSliderSubject.getValue());                  <co linkends="SliderObserverImpl.java.getValue.co" id="SliderObserverImpl.java.getValue"/>
          mSlider.repaint();
       }
    }
@@ -571,7 +929,7 @@ public class SliderObserverImpl extends ObserverPOA                  <co id="Sli
     */
    public void detach()
    {
-      mSliderSubject.detach(this._this());                           <co id="SliderObserverImpl.java.detach" linkends="SliderObserverImpl.java.detach.co"/>
+      mSliderSubject.detach(this._this());                           <co linkends="SliderObserverImpl.java.detach.co" id="SliderObserverImpl.java.detach"/>
    }
 
    private SliderSubject mSliderSubject = null;
@@ -611,11 +969,11 @@ public class SliderObserverImpl extends ObserverPOA                  <co id="Sli
                   </indexterm>, registers a <interfacename>networktest::SliderSubject</interfacename> servant, and then waits for the user to press '<literal>x</literal>' to exit. The use of exceptions may appear unfamiliar to some C++ programmers. CORBA makes use of exceptions as a cross-language mechanism to report errors, and thus, there must be proper exception handling code for the application to work correctly.</para>
                <example id="SliderSubjectApp.cpp.example">
                   <title>SliderSubjectApp.cpp</title>
-                  <programlisting linenumbering="numbered">#include &lt;tweek/CORBA/CorbaManager.h&gt;                                        <co id="SliderSubjectApp.cpp.includes.tweek" linkends="SliderSubjectApp.cpp.includes.co"/>
+                  <programlisting linenumbering="numbered">#include &lt;tweek/CORBA/CorbaManager.h&gt;                                        <co linkends="SliderSubjectApp.cpp.includes.co" id="SliderSubjectApp.cpp.includes.tweek"/>
 #include &lt;vpr/Thread/Thread.h&gt;
 #include &lt;vpr/Util/Debug.h&gt;
 
-#include &lt;SliderSubjectImpl.h&gt;                                               <co id="SliderSubjectApp.cpp.includes.gen" linkends="SliderSubjectApp.cpp.includes.co"/>
+#include &lt;SliderSubjectImpl.h&gt;                                               <co linkends="SliderSubjectApp.cpp.includes.co" id="SliderSubjectApp.cpp.includes.gen"/>
 
 
 /**
@@ -623,13 +981,13 @@ public class SliderObserverImpl extends ObserverPOA                  <co id="Sli
  */
 int main(int argc, char* argv[])
 {
-   tweek::CorbaManager mgr;                                                  <co id="SliderSubjectApp.cpp.corbamgr.decl" linkends="SliderSubjectApp.cpp.corbamgr.co"/>
+   tweek::CorbaManager mgr;                                                  <co linkends="SliderSubjectApp.cpp.corbamgr.co" id="SliderSubjectApp.cpp.corbamgr.decl"/>
 
    // The first thing we have to do is initialize the Tweek CORBA Manager.
    // If this fails, we're out of luck.
    try
    {
-      if ( mgr.init("corba_test", argc, argv).success() )                    <co id="SliderSubjectApp.cpp.corbamgr.init" linkends="SliderSubjectApp.cpp.corbamgr.co"/>
+      if ( mgr.init("corba_test", argc, argv).success() )                    <co linkends="SliderSubjectApp.cpp.corbamgr.co" id="SliderSubjectApp.cpp.corbamgr.init"/>
       {
          vpr::ReturnStatus status;
 
@@ -637,7 +995,7 @@ int main(int argc, char* argv[])
          // Subject Manager.  This will hold our SliderSubject object.
          try
          {
-            status = mgr.createSubjectManager();                             <co id="SliderSubjectApp.cpp.subjectmgr.create" linkends="SliderSubjectApp.cpp.subjectmgr.create.co"/>
+            status = mgr.createSubjectManager();                             <co linkends="SliderSubjectApp.cpp.subjectmgr.create.co" id="SliderSubjectApp.cpp.subjectmgr.create"/>
 
             // If we were able to create the Subject Manager, now we register
             // our objects with it.
@@ -646,14 +1004,14 @@ int main(int argc, char* argv[])
                // First, create real instances of the C++ object that will
                // be the CORBA servant.  This must be allocated on the heap.
                networktest::SliderSubjectImpl* slider_subj =
-                  new networktest::SliderSubjectImpl();                      <co id="SliderSubjectApp.cpp.subject.create" linkends="SliderSubjectApp.cpp.subject.create.co"/>
+                  new networktest::SliderSubjectImpl();                      <co linkends="SliderSubjectApp.cpp.subject.create.co" id="SliderSubjectApp.cpp.subject.create"/>
 
                // Now we try to register the subject and give it a symbolic,
                // easy-to-remember name.
                try
                {
                   mgr.getSubjectManager()-&gt;registerSubject(slider_subj,
-                                                           "SliderSubject"); <co id="SliderSubjectApp.cpp.subject.register" linkends="SliderSubjectApp.cpp.subject.register.co"/>
+                                                           "SliderSubject"); <co linkends="SliderSubjectApp.cpp.subject.register.co" id="SliderSubjectApp.cpp.subject.register"/>
                }
                catch (...)
                {
@@ -680,7 +1038,7 @@ int main(int argc, char* argv[])
          char input;
 
          // Loop forever so that we can act sort of like a server.
-         while ( 1 )                                                         <co id="SliderSubjectApp.cpp.loop" linkends="SliderSubjectApp.cpp.loop.co"/>
+         while ( 1 )                                                         <co linkends="SliderSubjectApp.cpp.loop.co" id="SliderSubjectApp.cpp.loop"/>
          {
             std::cin &gt;&gt; input;
             if ( input == 'x' )
@@ -740,16 +1098,16 @@ int main(int argc, char* argv[])
                <section>
                   <title>Imports</title>
                   <para>The slider JavaBean uses common Java Swing classes, a CORBA exception class, the Tweek Event library, the Tweek Network library, and the Java code generated by an IDL compiler. The following explains how each of these are imported into the main Bean class.</para>
-                  <programlisting>package networktest;                                       <co id="NetworkTest.java.package" linkends="NetworkTest.java.package.co"/>
+                  <programlisting>package networktest;                                       <co linkends="NetworkTest.java.package.co" id="NetworkTest.java.package"/>
 
-import java.awt.*;                                         <co id="NetworkTest.java.imports.gui.awt" linkends="NetworkTest.java.imports.gui.co"/>
-import javax.swing.*;                                      <co id="NetworkTest.java.imports.gui.swing" linkends="NetworkTest.java.imports.gui.co"/>
-import javax.swing.event.*;                                <co id="NetworkTest.java.imports.gui.swing.event" linkends="NetworkTest.java.imports.gui.co"/>
-import org.omg.CORBA.BAD_PARAM;                            <co id="NetworkTest.java.imports.corba" linkends="NetworkTest.java.imports.corba.co"/>
-import org.vrjuggler.tweek.event.*;                        <co id="NetworkTest.java.imports.tweek.event" linkends="NetworkTest.java.imports.tweek.co"/>
-import org.vrjuggler.tweek.net.*;                          <co id="NetworkTest.java.imports.tweek.net" linkends="NetworkTest.java.imports.tweek.co"/>
-import org.vrjuggler.tweek.net.corba.*;                    <co id="NetworkTest.java.imports.tweek.net.corba" linkends="NetworkTest.java.imports.tweek.co"/>
-import tweek.*;                                            <co id="NetworkTest.java.imports.tweek-gen" linkends="NetworkTest.java.imports.tweek-gen.co"/>
+import java.awt.*;                                         <co linkends="NetworkTest.java.imports.gui.co" id="NetworkTest.java.imports.gui.awt"/>
+import javax.swing.*;                                      <co linkends="NetworkTest.java.imports.gui.co" id="NetworkTest.java.imports.gui.swing"/>
+import javax.swing.event.*;                                <co linkends="NetworkTest.java.imports.gui.co" id="NetworkTest.java.imports.gui.swing.event"/>
+import org.omg.CORBA.BAD_PARAM;                            <co linkends="NetworkTest.java.imports.corba.co" id="NetworkTest.java.imports.corba"/>
+import org.vrjuggler.tweek.event.*;                        <co linkends="NetworkTest.java.imports.tweek.co" id="NetworkTest.java.imports.tweek.event"/>
+import org.vrjuggler.tweek.net.*;                          <co linkends="NetworkTest.java.imports.tweek.co" id="NetworkTest.java.imports.tweek.net"/>
+import org.vrjuggler.tweek.net.corba.*;                    <co linkends="NetworkTest.java.imports.tweek.co" id="NetworkTest.java.imports.tweek.net.corba"/>
+import tweek.*;                                            <co linkends="NetworkTest.java.imports.tweek-gen.co" id="NetworkTest.java.imports.tweek-gen"/>
 </programlisting>
                   <calloutlist>
                      <callout arearefs="NetworkTest.java.package" id="NetworkTest.java.package.co">
@@ -780,8 +1138,8 @@ import tweek.*;                                            <co id="NetworkTest.j
  * @version 1.0
  */
 public class NetworkTest
-   extends JPanel                                          <co id="NetworkTest.java.superclass" linkends="NetworkTest.java.superclass.co"/>
-   implements CommunicationListener, TweekFrameListener    <co id="NetworkTest.java.interfaces" linkends="NetworkTest.java.interfaces.co"/>
+   extends JPanel                                          <co linkends="NetworkTest.java.superclass.co" id="NetworkTest.java.superclass"/>
+   implements CommunicationListener, TweekFrameListener    <co linkends="NetworkTest.java.interfaces.co" id="NetworkTest.java.interfaces"/>
 {
 ...
 }</programlisting>
@@ -797,12 +1155,12 @@ public class NetworkTest
                <section>
                   <title>Member Variables</title>
                   <para>Before delving into the methods of the <classname>networktest.NetworkTest</classname> class, it will be helpful to review the member variables used throughout the class. Refer back to this section if there is any confusion regarding the use or the type of some member variable in the method implementations.</para>
-                  <programlisting>private BorderLayout mBeanLayout = new BorderLayout();     <co id="NetworkTest.java.members.layout" linkends="NetworkTest.java.members.layout.co"/>
+                  <programlisting>private BorderLayout mBeanLayout = new BorderLayout();     <co linkends="NetworkTest.java.members.layout.co" id="NetworkTest.java.members.layout"/>
 
-private JPanel mSliderPanel = new JPanel();                <co id="NetworkTest.java.members.slider-group.panel" linkends="NetworkTest.java.members.slider-group.co"/>
-private JSlider mDataSlider = new JSlider();               <co id="NetworkTest.java.members.slider-group.slider" linkends="NetworkTest.java.members.slider-group.co"/>
+private JPanel mSliderPanel = new JPanel();                <co linkends="NetworkTest.java.members.slider-group.co" id="NetworkTest.java.members.slider-group.panel"/>
+private JSlider mDataSlider = new JSlider();               <co linkends="NetworkTest.java.members.slider-group.co" id="NetworkTest.java.members.slider-group.slider"/>
 
-private SliderObserverImpl mSliderObserver = null;         <co id="NetworkTest.java.members.observer" linkends="NetworkTest.java.members.observer.co"/>
+private SliderObserverImpl mSliderObserver = null;         <co linkends="NetworkTest.java.members.observer.co" id="NetworkTest.java.members.observer"/>
 </programlisting>
                   <calloutlist>
                      <callout arearefs="NetworkTest.java.members.layout" id="NetworkTest.java.members.layout.co">
@@ -830,10 +1188,10 @@ public void connectionStateChanged(CommunicationEvent e)
    // event.  We need this so we know to whom we are are connecting.  Once
    // we have the CORBA service, we get its Subject Manager since that's
    // what contains the actual subjects we need.
-   CorbaService corba_service = e.getCorbaService();                      <co id="NetworkTest.java.corba.service" linkends="NetworkTest.java.corba.co"/>
-   SubjectManager mgr         = corba_service.getSubjectManager();        <co id="NetworkTest.java.corba.subjectmgr" linkends="NetworkTest.java.corba.co"/>
+   CorbaService corba_service = e.getCorbaService();                      <co linkends="NetworkTest.java.corba.co" id="NetworkTest.java.corba.service"/>
+   SubjectManager mgr         = corba_service.getSubjectManager();        <co linkends="NetworkTest.java.corba.co" id="NetworkTest.java.corba.subjectmgr"/>
 
-   Subject subject = mgr.getSubject("SliderSubject");                     <co id="NetworkTest.java.getSubject" linkends="NetworkTest.java.getSubject.co"/>
+   Subject subject = mgr.getSubject("SliderSubject");                     <co linkends="NetworkTest.java.getSubject.co" id="NetworkTest.java.getSubject"/>
    SliderSubject slider_subject = null;
 
    // Try to narrow the Subject object to a SliderSubject object.  If this
@@ -841,9 +1199,9 @@ public void connectionStateChanged(CommunicationEvent e)
    // a dialog box saying that the narrowing failed.
    try
    {
-      slider_subject = SliderSubjectHelper.narrow(subject);               <co id="NetworkTest.java.narrow-subject" linkends="NetworkTest.java.narrow.co"/>
+      slider_subject = SliderSubjectHelper.narrow(subject);               <co linkends="NetworkTest.java.narrow.co" id="NetworkTest.java.narrow-subject"/>
    }
-   catch (BAD_PARAM narrow_ex)                                            <co id="NetworkTest.java.narrow-exception" linkends="NetworkTest.java.narrow.co"/>
+   catch (BAD_PARAM narrow_ex)                                            <co linkends="NetworkTest.java.narrow.co" id="NetworkTest.java.narrow-exception"/>
    {
       JOptionPane.showMessageDialog(null,
                                     "Failed to narrow subject to SliderSubject",
@@ -852,7 +1210,7 @@ public void connectionStateChanged(CommunicationEvent e)
    }
 
    // Handle a CORBA connection event from Tweek.
-   if ( CommunicationEvent.CONNECT == e.getType() )                       <co id="NetworkTest.java.connect" linkends="NetworkTest.java.connect.co"/>
+   if ( CommunicationEvent.CONNECT == e.getType() )                       <co linkends="NetworkTest.java.connect.co" id="NetworkTest.java.connect"/>
    {
       // Ensure that slider_subject is a valid object just to be safe.
       if ( slider_subject != null )
@@ -860,28 +1218,28 @@ public void connectionStateChanged(CommunicationEvent e)
          // First, we need a Java object that implements the Observer.  That
          // object must be registered with the Java CORBA service.
          m_slider_observer = new SliderObserverImpl(mDataSlider,
-                                                    slider_subject);      <co id="NetworkTest.java.observer.create" linkends="NetworkTest.java.observer.create.co"/>
-         corba_service.registerObject(mSliderObserver, "SliderObserver"); <co id="NetworkTest.java.observer.register" linkends="NetworkTest.java.observer.register.co"/>
+                                                    slider_subject);      <co linkends="NetworkTest.java.observer.create.co" id="NetworkTest.java.observer.create"/>
+         corba_service.registerObject(mSliderObserver, "SliderObserver"); <co linkends="NetworkTest.java.observer.register.co" id="NetworkTest.java.observer.register"/>
 
          // Now that the observer is registered, we can attach it to the
          // subject.  The subject needs to know who its observers are so
          // that it can notify them of updates.
-         slider_subject.attach(mSliderObserver._this());                  <co id="NetworkTest.java.observer.attach" linkends="NetworkTest.java.observer.attach.co"/>
+         slider_subject.attach(mSliderObserver._this());                  <co linkends="NetworkTest.java.observer.attach.co" id="NetworkTest.java.observer.attach"/>
 
          // Now we set the slider in our GUI to be whatever value the
          // remote subject is holding for us.
-         mDataSlider.setValue(slider_subject.getValue());                 <co id="NetworkTest.java.setValue" linkends="NetworkTest.java.setValue.co"/>
+         mDataSlider.setValue(slider_subject.getValue());                 <co linkends="NetworkTest.java.setValue.co" id="NetworkTest.java.setValue"/>
          mDataSlider.addChangeListener(
             new SliderChangeListener(slider_subject)
-         );                                                               <co id="NetworkTest.java.addChangeListener" linkends="NetworkTest.java.addChangeListener.co"/>
+         );                                                               <co linkends="NetworkTest.java.addChangeListener.co" id="NetworkTest.java.addChangeListener"/>
       }
    }
    // Handle a CORBA disconnect event from Tweek.
-   else if ( CommunicationEvent.DISCONNECT == e.getType() )               <co id="NetworkTest.java.disconnect" linkends="NetworkTest.java.shutdown.co"/>
+   else if ( CommunicationEvent.DISCONNECT == e.getType() )               <co linkends="NetworkTest.java.shutdown.co" id="NetworkTest.java.disconnect"/>
    {
       if ( slider_subject != null )
       {
-         slider_subject.detach(mSliderObserver._this());                  <co id="NetworkTest.java.observer.detach" linkends="NetworkTest.java.shutdown.co"/>
+         slider_subject.detach(mSliderObserver._this());                  <co linkends="NetworkTest.java.shutdown.co" id="NetworkTest.java.observer.detach"/>
       }
    }
 }</programlisting>
@@ -924,11 +1282,11 @@ public void connectionStateChanged(CommunicationEvent e)
                   <para>This Bean makes an effort to shut down open CORBA connections when the Tweek GUI is closed. It does this by implementing <interfacename>org.vrjuggler.tweek.event.TweekFrameListener</interfacename> which has a single method, <methodname>frameStateChanged()</methodname>.</para>
                   <programlisting>public void frameStateChanged(TweekFrameEvent e)
 {
-   if ( e.getType() == TweekFrameEvent.FRAME_CLOSE )            <co id="NetworkTest.java.frame.close" linkends="NetworkTest.java.frame.close.co"/>
+   if ( e.getType() == TweekFrameEvent.FRAME_CLOSE )            <co linkends="NetworkTest.java.frame.close.co" id="NetworkTest.java.frame.close"/>
    {
       if ( mSliderObserver != null )
       {
-         mSliderObserver.detach();                              <co id="NetworkTest.java.frame.detach" linkends="NetworkTest.java.frame.detach.co"/>
+         mSliderObserver.detach();                              <co linkends="NetworkTest.java.frame.detach.co" id="NetworkTest.java.frame.detach"/>
          mSliderObserver = null;
       }
    }
@@ -956,9 +1314,9 @@ public void connectionStateChanged(CommunicationEvent e)
    {
       JSlider source = (JSlider) e.getSource();
 
-      if ( ! source.getValueIsAdjusting() )                     <co id="NetworkTest.java.SliderChangeListener.stateChanged.adjust" linkends="NetworkTest.java.SliderChangeListener.stateChanged.co"/>
+      if ( ! source.getValueIsAdjusting() )                     <co linkends="NetworkTest.java.SliderChangeListener.stateChanged.co" id="NetworkTest.java.SliderChangeListener.stateChanged.adjust"/>
       {
-         mSliderSubject.setValue(source.getValue());            <co id="NetworkTest.java.SliderChangeListener.stateChanged.setValue" linkends="NetworkTest.java.SliderChangeListener.stateChanged.co"/>
+         mSliderSubject.setValue(source.getValue());            <co linkends="NetworkTest.java.SliderChangeListener.stateChanged.co" id="NetworkTest.java.SliderChangeListener.stateChanged.setValue"/>
       }
    }
 
@@ -975,13 +1333,13 @@ public void connectionStateChanged(CommunicationEvent e)
                   <para>With the Bean implementation done, the XML file that describes the Bean must be written. All Beans loaded by the Tweek Java GUI are described by an XML file. In <xref linkend="NetworkTestBean.xml.example"/>, we show the XML file for the Bean we have been developing.</para>
                   <example id="NetworkTestBean.xml.example">
                      <title>NetworkTestBean.xml</title>
-                     <programlisting>&lt;?xml version="1.0" encoding="UTF-8"?&gt;                               <co id="NetworkTestBean.xml.version" linkends="NetworkTestBean.xml.version.co"/>
-&lt;beanlist xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"      <co id="NetworkTestBean.xml.beanlist" linkends="NetworkTestBean.xml.beanlist.co"/>
+                     <programlisting>&lt;?xml version="1.0" encoding="UTF-8"?&gt;                               <co linkends="NetworkTestBean.xml.version.co" id="NetworkTestBean.xml.version"/>
+&lt;beanlist xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"      <co linkends="NetworkTestBean.xml.beanlist.co" id="NetworkTestBean.xml.beanlist"/>
           xsi:noNamespaceSchemaLocation="http://www.vrjuggler.org/tweek/xsd/1.0/beanlist.xsd"&gt;
-  &lt;guipanel name="Network Tester"&gt;                                   <co id="NetworkTestBean.xml.guipanel" linkends="NetworkTestBean.xml.guipanel.co"/>
-    &lt;file name="${TWEEK_BASE_DIR}/bin/beans/NetworkTestBean.jar"     <co id="NetworkTestBean.xml.file" linkends="NetworkTestBean.xml.file.co"/>
+  &lt;guipanel name="Network Tester"&gt;                                   <co linkends="NetworkTestBean.xml.guipanel.co" id="NetworkTestBean.xml.guipanel"/>
+    &lt;file name="${TWEEK_BASE_DIR}/bin/beans/NetworkTestBean.jar"     <co linkends="NetworkTestBean.xml.file.co" id="NetworkTestBean.xml.file"/>
           class="networktest.NetworkTest" /&gt;
-    &lt;tree path="/Beans" /&gt;                                           <co id="NetworkTestBean.xml.tree" linkends="NetworkTestBean.xml.tree.co"/>
+    &lt;tree path="/Beans" /&gt;                                           <co linkends="NetworkTestBean.xml.tree.co" id="NetworkTestBean.xml.tree"/>
   &lt;/guipanel&gt;
 &lt;/beanlist&gt;</programlisting>
                      <calloutlist>
@@ -1034,14 +1392,14 @@ public void connectionStateChanged(CommunicationEvent e)
             <section>
                <title>The JavaBean</title>
                <para>As in the previous example, we focus on the imported classes first. They are as follows:</para>
-               <programlisting>package fileopentestbean;                                       <co id="FileOpenTestBean.java.package" linkends="FileOpenTestBean.java.package.co"/>
+               <programlisting>package fileopentestbean;                                       <co linkends="FileOpenTestBean.java.package.co" id="FileOpenTestBean.java.package"/>
 
-import java.awt.*;                                              <co id="FileOpenTestBean.java.import.awt" linkends="FileOpenTestBean.java.std-imports.co"/>
-import java.io.File;                                            <co id="FileOpenTestBean.java.import.io-File" linkends="FileOpenTestBean.java.std-imports.co"/>
-import java.io.FileInputStream;                                 <co id="FileOpenTestBean.java.import.io-FileInputStream" linkends="FileOpenTestBean.java.std-imports.co"/>
-import javax.swing.*;                                           <co id="FileOpenTestBean.java.import.swing" linkends="FileOpenTestBean.java.std-imports.co"/>
-import org.vrjuggler.tweek.services.ExtensionFileFilter;        <co id="FileOpenTestBean.java.import.ext-filter" linkends="FileOpenTestBean.java.import.ext-filter.co"/>
-import org.vrjuggler.tweek.beans.FileLoader;                    <co id="FileOpenTestBean.java.import.FileLoader" linkends="FileOpenTestBean.java.import.FileLoader.co"/>
+import java.awt.*;                                              <co linkends="FileOpenTestBean.java.std-imports.co" id="FileOpenTestBean.java.import.awt"/>
+import java.io.File;                                            <co linkends="FileOpenTestBean.java.std-imports.co" id="FileOpenTestBean.java.import.io-File"/>
+import java.io.FileInputStream;                                 <co linkends="FileOpenTestBean.java.std-imports.co" id="FileOpenTestBean.java.import.io-FileInputStream"/>
+import javax.swing.*;                                           <co linkends="FileOpenTestBean.java.std-imports.co" id="FileOpenTestBean.java.import.swing"/>
+import org.vrjuggler.tweek.services.ExtensionFileFilter;        <co linkends="FileOpenTestBean.java.import.ext-filter.co" id="FileOpenTestBean.java.import.ext-filter"/>
+import org.vrjuggler.tweek.beans.FileLoader;                    <co linkends="FileOpenTestBean.java.import.FileLoader.co" id="FileOpenTestBean.java.import.FileLoader"/>
 </programlisting>
                <calloutlist>
                   <callout arearefs="FileOpenTestBean.java.package" id="FileOpenTestBean.java.package.co">
@@ -1058,16 +1416,16 @@ import org.vrjuggler.tweek.beans.FileLoader;                    <co id="FileOpen
                   </callout>
                </calloutlist>
                <para>Next, we show the class declaration and the member variables.</para>
-               <programlisting>public class FileOpenTestBean extends JPanel                              <co id="FileOpenTestBean.java.superclass" linkends="FileOpenTestBean.java.superclass.co"/>
-                              implements java.io.Serializable, FileLoader <co id="FileOpenTestBean.java.interfaces" linkends="FileOpenTestBean.java.interfaces.co"/>
+               <programlisting>public class FileOpenTestBean extends JPanel                              <co linkends="FileOpenTestBean.java.superclass.co" id="FileOpenTestBean.java.superclass"/>
+                              implements java.io.Serializable, FileLoader <co linkends="FileOpenTestBean.java.interfaces.co" id="FileOpenTestBean.java.interfaces"/>
 {
    // Methods ...
 
-   private int openFileCount = 0;                                         <co id="FileOpenTestBean.java.openFileCount" linkends="FileOpenTestBean.java.openFileCount.co"/>
+   private int openFileCount = 0;                                         <co linkends="FileOpenTestBean.java.openFileCount.co" id="FileOpenTestBean.java.openFileCount"/>
 
    private BorderLayout mMainLayout    = new BorderLayout();
    private JLabel       mBeanTitle     = new JLabel();
-   private JTabbedPane  mTextContainer = new JTabbedPane();               <co id="FileOpenTestBean.java.mTextContainer" linkends="FileOpenTestBean.java.mTextContainer.co"/>
+   private JTabbedPane  mTextContainer = new JTabbedPane();               <co linkends="FileOpenTestBean.java.mTextContainer.co" id="FileOpenTestBean.java.mTextContainer"/>
 }</programlisting>
                <calloutlist>
                   <callout arearefs="FileOpenTestBean.java.superclass" id="FileOpenTestBean.java.superclass.co">
@@ -1086,34 +1444,34 @@ import org.vrjuggler.tweek.beans.FileLoader;                    <co id="FileOpen
                <para>Now that we have the basics for the class, we can start implementing the <interfacename>FileLoader</interfacename> interface. Of the methods that must be implemented, the most complex is <methodname>openRequested()</methodname>. It will be shown last because of its length. We will begin instead with the simplest methods.</para>
                <programlisting linenumbering="numbered">public String getFileType()
 {
-   return "Text";                                                    <co id="FileOpenTestBean.java.getFileType" linkends="FileOpenTestBean.java.getFileType.co"/>
+   return "Text";                                                    <co linkends="FileOpenTestBean.java.getFileType.co" id="FileOpenTestBean.java.getFileType"/>
 }
 
 public boolean canOpenMultiple()
 {
-   return true;                                                      <co id="FileOpenTestBean.java.canOpenMultiple" linkends="FileOpenTestBean.java.canOpenMultiple.co"/>
+   return true;                                                      <co linkends="FileOpenTestBean.java.canOpenMultiple.co" id="FileOpenTestBean.java.canOpenMultiple"/>
 }
 
 public boolean canSave()
 {
-   return false;                                                     <co id="FileOpenTestBean.java.canSave" linkends="FileOpenTestBean.java.canSave.co"/>
+   return false;                                                     <co linkends="FileOpenTestBean.java.canSave.co" id="FileOpenTestBean.java.canSave"/>
 }
 
 public boolean saveRequested()
 {
-   return false;                                                     <co id="FileOpenTestBean.java.saveRequested" linkends="FileOpenTestBean.java.saveRequested.co"/>
+   return false;                                                     <co linkends="FileOpenTestBean.java.saveRequested.co" id="FileOpenTestBean.java.saveRequested"/>
 }
 
 public boolean closeRequested()
 {
-   mTextContainer.remove(mTextContainer.getSelectedComponent());     <co id="FileOpenTestBean.java.closeRequested" linkends="FileOpenTestBean.java.closeRequested.co"/>
+   mTextContainer.remove(mTextContainer.getSelectedComponent());     <co linkends="FileOpenTestBean.java.closeRequested.co" id="FileOpenTestBean.java.closeRequested"/>
    openFileCount--;
    return true;
 }
 
 public int getOpenFileCount ()
 {
-   return openFileCount;                                             <co id="FileOpenTestBean.java.getOpenFileCount" linkends="FileOpenTestBean.java.getOpenFileCount.co"/>
+   return openFileCount;                                             <co linkends="FileOpenTestBean.java.getOpenFileCount.co" id="FileOpenTestBean.java.getOpenFileCount"/>
 }</programlisting>
                <calloutlist>
                   <callout arearefs="FileOpenTestBean.java.getFileType" id="FileOpenTestBean.java.getFileType.co">
@@ -1143,45 +1501,45 @@ public int getOpenFileCount ()
    // successfully, this can be changed to true.
    boolean opened = false;
 
-   JFileChooser chooser = new JFileChooser();                             <co id="FileOpenTestBean.java.openRequested.chooser" linkends="FileOpenTestBean.java.openRequested.chooser.co"/>
+   JFileChooser chooser = new JFileChooser();                             <co linkends="FileOpenTestBean.java.openRequested.chooser.co" id="FileOpenTestBean.java.openRequested.chooser"/>
    chooser.setMultiSelectionEnabled(false);
    chooser.setDialogTitle("Text File Loader");
    chooser.setFileSelectionMode(JFileChooser.FILES_ONLY);
 
    // Only load .txt files.
-   ExtensionFileFilter filter = new ExtensionFileFilter("Text Files");    <co id="FileOpenTestBean.java.openRequested.filter" linkends="FileOpenTestBean.java.openRequested.filter.co"/>
+   ExtensionFileFilter filter = new ExtensionFileFilter("Text Files");    <co linkends="FileOpenTestBean.java.openRequested.filter.co" id="FileOpenTestBean.java.openRequested.filter"/>
    filter.addExtension("txt");
    chooser.addChoosableFileFilter(filter);
 
-   int status = chooser.showOpenDialog(this);                             <co id="FileOpenTestBean.java.openRequested.show-chooser" linkends="FileOpenTestBean.java.openRequested.show-chooser.co"/>
+   int status = chooser.showOpenDialog(this);                             <co linkends="FileOpenTestBean.java.openRequested.show-chooser.co" id="FileOpenTestBean.java.openRequested.show-chooser"/>
 
    if ( status == JFileChooser.APPROVE_OPTION )
    {
       File file = chooser.getSelectedFile();
 
-      if ( file.canRead() )                                               <co id="FileOpenTestBean.java.openRequested.canRead" linkends="FileOpenTestBean.java.openRequested.read.co"/>
+      if ( file.canRead() )                                               <co linkends="FileOpenTestBean.java.openRequested.read.co" id="FileOpenTestBean.java.openRequested.canRead"/>
       {
          try
          {
             // Read the contents of the file into a byte[] object.
             FileInputStream input_file = new FileInputStream(file);
             byte[] file_data = new byte[(int) file.length()];
-            input_file.read(file_data);                                   <co id="FileOpenTestBean.java.openRequested.do-read" linkends="FileOpenTestBean.java.openRequested.read.co"/>
+            input_file.read(file_data);                                   <co linkends="FileOpenTestBean.java.openRequested.read.co" id="FileOpenTestBean.java.openRequested.do-read"/>
 
             // Create a text area to hold the contents of the file.
-            JTextArea text_area = new JTextArea();                        <co id="FileOpenTestBean.java.openRequested.text-area" linkends="FileOpenTestBean.java.openRequested.text-area.co"/>
+            JTextArea text_area = new JTextArea();                        <co linkends="FileOpenTestBean.java.openRequested.text-area.co" id="FileOpenTestBean.java.openRequested.text-area"/>
             text_area.setEditable(false);
             text_area.insert(new String(file_data), 0);
 
             // Create a scroll pane to hold the text area; add it to the
             // tabbed pane with all the other previously loaded scroll
             // panes; and make the new scroll pane the selected component.
-            JScrollPane text_comp = new JScrollPane(text_area);           <co id="FileOpenTestBean.java.openRequested.scroll-pane" linkends="FileOpenTestBean.java.openRequested.scroll-pane.co"/>
+            JScrollPane text_comp = new JScrollPane(text_area);           <co linkends="FileOpenTestBean.java.openRequested.scroll-pane.co" id="FileOpenTestBean.java.openRequested.scroll-pane"/>
             mTextContainer.add(text_comp, file.getName());
             mTextContainer.setSelectedComponent(text_comp);
 
             // Our work is done.
-            openFileCount++;                                              <co id="FileOpenTestBean.java.openRequested.open-inc" linkends="FileOpenTestBean.java.openRequested.open-inc.co"/>
+            openFileCount++;                                              <co linkends="FileOpenTestBean.java.openRequested.open-inc.co" id="FileOpenTestBean.java.openRequested.open-inc"/>
             opened = true;
          }
          catch (java.io.FileNotFoundException ex)
