@@ -69,16 +69,17 @@ public:
       search_paths.push_back( "${HOME}/.sonix/plugins" );
 
       std::vector<std::string> filelist;
-      for (int x = 0; x < search_paths.size(); ++x)
+      for (unsigned int x = 0; x < search_paths.size(); ++x)
       {
          search_paths[x] = snx::replaceEnvVars( search_paths[x] );
          std::cout << "[snx]SoundFactory| Finding plugins in: \n"
                    << " + " << search_paths[x] << std::endl;
-         if (std::ifstream(search_paths[x].c_str()).good())
+         std::string test_file = search_paths[x] + "/.testjunk";
+         if (std::ofstream(test_file.c_str()).good())
          {
             xdl::dirlist( search_paths[x].c_str(), filelist );
             this->filterOutPluginFileNames( filelist, filelist );
-            this->loadPlugins( filelist );
+            this->loadPlugins( search_paths[x], filelist );
          }
       }
    }
@@ -89,14 +90,14 @@ public:
       {
          xdl::Library lib;
          if (lib.open( filename.c_str(), xdl::NOW ) == false) return false;
-         if (lib.lookup( "regPlugin" ) == NULL) return false;
-         if (lib.lookup( "unregPlugin" ) == NULL) return false;
+         if (lib.lookup( "newPlugin" ) == NULL) return false;
+         if (lib.lookup( "deletePlugin" ) == NULL) return false;
          if (lib.lookup( "getVersion" ) == NULL) return false;
          if (lib.lookup( "getName" ) == NULL) return false;
 
          // @todo give sonix an internal version number string!
-         typedef std::string (*getVersionFunc)(void);
-         getVersionFunc getVersion = (getVersionFunc)lib.lookup( "getVersion" );
+         //typedef char* (*getVersionFunc)(void);
+         //getVersionFunc getVersion = (getVersionFunc)lib.lookup( "getVersion" );
          //if (getVersion != NULL && getVersion() != snx::version) return false;
 
          lib.close();
@@ -111,7 +112,7 @@ public:
    void filterOutPluginFileNames( std::vector<std::string> srclist,
                                   std::vector<std::string>& destlist )
    {
-      for (int x = 0; x < srclist.size(); ++x)
+      for (unsigned int x = 0; x < srclist.size(); ++x)
       {
          if (this->isPlugin( srclist[x] ))
          {
@@ -120,29 +121,66 @@ public:
       }
    }
    
-   void loadPlugins( std::vector<std::string> filelist )
+   void loadPlugins( std::string prefix, std::vector<std::string> filelist )
    {
       unloadPlugins();
       mPlugins.clear();
       mPlugins.resize( filelist.size() );
-      for (int x = 0; x < filelist.size(); ++x)
+      for (unsigned int x = 0; x < filelist.size(); ++x)
       {
-         typedef SoundImplementation* (*regPluginFunc)(void);
-         mPlugins[x].open( filelist[x].c_str(), xdl::NOW );
-         regPluginFunc regPlugin = (regPluginFunc)mPlugins[x].lookup( "regPlugin" );
-         if (regPlugin != NULL)
-            regPlugin();
+         std::string full_path = prefix + std::string( "/" ) + filelist[x];
+         
+         // open the library
+         mPlugins[x].open( full_path.c_str(), xdl::NOW );
+
+         // get the name..
+         typedef char* (*getNameFunc)(void);
+         getNameFunc getName = (getNameFunc)mPlugins[x].lookup( "getName" );
+         std::string name;
+         if (getName != NULL)
+         {
+            name = getName();
+            std::cout << "   o  Got plugin: " << name << " registering..." << std::endl;
+         
+            // create the implementation
+            typedef SoundImplementation* (*newPluginFunc)(void);
+            newPluginFunc newPlugin = (newPluginFunc)mPlugins[x].lookup( "newPlugin" );
+            SoundImplementation* si = NULL;
+            if (newPlugin != NULL)
+            {
+               si = newPlugin();
+               if (NULL != si)
+               {
+                  this->reg( name, si );
+               }
+            }
+         }
       }
    }
 
    void unloadPlugins()
    {
-      for (int x = 0; x < mPlugins.size(); ++x)
+      for (unsigned int x = 0; x < mPlugins.size(); ++x)
       {
-         typedef void (*unregPluginFunc)(void);
-         unregPluginFunc unregPlugin = (unregPluginFunc)mPlugins[x].lookup( "unregPlugin" );
-         if (unregPlugin != NULL)
-            unregPlugin();
+         // get the name..
+         typedef char* (*getNameFunc)(void);
+         getNameFunc getName = (getNameFunc)mPlugins[x].lookup( "getName" );
+         std::string name;
+         if (getName != NULL)
+         {
+            name = getName();
+         
+            // unreg it.
+            this->reg( name, NULL );
+         }
+
+         // delete the memory         
+         typedef void (*deletePluginFunc)(void);
+         deletePluginFunc deletePlugin = (deletePluginFunc)mPlugins[x].lookup( "deletePlugin" );
+         if (deletePlugin != NULL)
+            deletePlugin();
+         
+         // close the library
          mPlugins[x].close();
       }
       mPlugins.clear();
