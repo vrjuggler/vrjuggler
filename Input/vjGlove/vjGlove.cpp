@@ -37,21 +37,26 @@ vjGloveData::calcXforms()
    vjVec3 yAxis(0.0f, 1.0f, 0.0f);
    const float oneIn(1/12.0f);
 
-   dims[INDEX][DIJ] = yAxis * (oneIn * 1.0f);
-   dims[INDEX][PIJ] = yAxis * (oneIn * 1.5f);
-   dims[INDEX][MPJ] = (yAxis * (oneIn * 2.5f)) + (xAxis * -0.75f);
 
-   dims[MIDDLE][DIJ] = yAxis * (oneIn * 1.0f);
-   dims[MIDDLE][PIJ] = yAxis * (oneIn * 1.5f);
-   dims[MIDDLE][MPJ] = (yAxis * (oneIn * 2.5f)) + (xAxis * 0.0f);
+   dims[INDEX][DIJ+1] = yAxis * (oneIn * 0.5f);                      // Length distal
+   dims[INDEX][DIJ] = yAxis * (oneIn * 1.0f);                        // Length medial
+   dims[INDEX][PIJ] = yAxis * (oneIn * 1.3f);                        // Length Proximal
+   dims[INDEX][MPJ] = (yAxis * (oneIn * 1.7f)) + (oneIn* xAxis * -0.4f);   // To finger
 
+   dims[MIDDLE][DIJ+1] = yAxis * (oneIn * 0.5f);
+   dims[MIDDLE][DIJ] = yAxis * (oneIn * 1.1f);
+   dims[MIDDLE][PIJ] = yAxis * (oneIn * 1.4f);
+   dims[MIDDLE][MPJ] = (yAxis * (oneIn * 1.8f)) + (oneIn* xAxis * 0.0f);
+
+   dims[RING][DIJ+1] = yAxis * (oneIn * 0.4f);
    dims[RING][DIJ] = yAxis * (oneIn * 1.0f);
-   dims[RING][PIJ] = yAxis * (oneIn * 1.5f);
-   dims[RING][MPJ] = (yAxis * (oneIn * 2.5f)) + (xAxis * 0.3f);
+   dims[RING][PIJ] = yAxis * (oneIn * 1.1f);
+   dims[RING][MPJ] = (yAxis * (oneIn * 1.7f)) + (oneIn* xAxis * 0.4f);
 
+   dims[PINKY][DIJ+1] = yAxis * (oneIn * 0.3f);
    dims[PINKY][DIJ] = yAxis * (oneIn * 1.0f);
-   dims[PINKY][PIJ] = yAxis * (oneIn * 1.5f);
-   dims[PINKY][MPJ] = (yAxis * (oneIn * 2.5f)) + (xAxis * 0.4f);
+   dims[PINKY][PIJ] = yAxis * (oneIn * 0.85f);
+   dims[PINKY][MPJ] = (yAxis * (oneIn * 1.6f)) + (oneIn* xAxis * 0.7f);
 
 
    // ----------------------- //
@@ -96,6 +101,25 @@ vjGloveData::calcXforms()
    return 1;
 }
 
+// Output the angles in one single line
+ostream& vjGloveData::outputAngles(ostream& out) const
+{
+   for(int i=0;i<NUM_COMPONENTS;i++)
+      for(int j=0;j<NUM_JOINTS;j++)
+         out << angles[i][j] << " ";
+
+   return out;
+}
+
+// Input the angles from one single line
+istream& vjGloveData::inputAngles(istream& in)
+{
+   for(int i=0;i<NUM_COMPONENTS;i++)
+      for(int j=0;j<NUM_JOINTS;j++)
+         in >> angles[i][j];
+
+   return in;
+}
 
 ////////////////////////////////////////////////////////////////////////
 //                          vjGlove                                   //
@@ -123,9 +147,14 @@ vjVec3 vjGlove::getGloveVector(vjGloveData::vjGloveComponent component, int devN
 }
 
 // For now we will not return anything valid
-vjVec3 vjGlove::getGlovePos(vjGloveData::vjGloveComponent component, int devNum)
+vjMatrix vjGlove::getGlovePos(vjGloveData::vjGloveComponent component, int devNum)
 {
-   return vjVec3(1.0, 0.0, 0.0);
+   if(component == vjGloveData::WRIST)    // Return base position
+   {
+      return *(mGlovePos[devNum]->GetData());
+   }
+   else
+      return vjMatrix();
 }
 
 // Grab a copy of the most current glove data
@@ -134,17 +163,4 @@ vjGloveData vjGlove::getGloveData(int devNum)
    return mTheData[devNum][current];
 }
 
-// Create a list of angles
-// Return it to the user
-vector<float> vjGlove::getGloveAngles(int devNum)
-{
-   vector<float> angles(vjGloveData::NUM_COMPONENTS*vjGloveData::NUM_JOINTS);
-
-   // Copy the angles
-   for(int i=0;i<vjGloveData::NUM_COMPONENTS;i++)
-      for(int j=0;j<vjGloveData::NUM_JOINTS;j++)
-         angles.push_back(mTheData[devNum][current].angles[i][j]);
-
-   return angles;
-}
 
