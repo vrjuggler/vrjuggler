@@ -260,14 +260,10 @@ public class BeanContainer
     */
    public void beanInstantiated(BeanInstantiationEvent event)
    {
+      // XXX: This is goofy.  The term "bean" is being used in sort of strange
+      // ways here.
       Object bean = event.getBean();
-
-      if ( ! (bean instanceof PanelBean) )
-      {
-         return;
-      }
-
-      bean = ((PanelBean)bean).getComponent();
+      bean = ((TweekBean) bean).getBean();
 
       try
       {
