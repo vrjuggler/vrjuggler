@@ -4,13 +4,18 @@
 #include <stdio.h>
 #include <string.h>
 #include <iostream>
+#include <vector>
 
 #include <TestCase.h>
 #include <TestSuite.h>
 #include <TestCaller.h>
+#include <ThreadTestCase.h>
 
+#include <vpr/vpr.h>
 #include <vpr/IO/Socket/Socket.h>
 #include <vpr/IO/Socket/SocketStream.h>
+#include <vpr/IO/Socket/SocketAcceptor.h>
+#include <vpr/IO/Socket/SocketConnector.h>
 #include <vpr/IO/Socket/InetAddr.h>
 
 #include <vpr/IO/IOSys.h>
@@ -24,28 +29,17 @@
 #include <vpr/Sync/Mutex.h>
 #include <vpr/Sync/CondVar.h>
 
-#include <vector>
 
 namespace vprTest
 {
 
-class NonBlockingSocketTest : public TestCase
+class NonBlockingSocketTest : public ThreadTestCase
 {
 public:
-   NonBlockingSocketTest( std::string name ) : TestCase (name), mThreadAssertTest( true )
+   NonBlockingSocketTest( std::string name )
+      : ThreadTestCase (name), mAcceptorPort(0)
    {
    }
-
-   void threadAssertTest( bool testcase, std::string text=std::string("none") )
-   {
-      if (testcase == false)
-      {
-         mThreadAssertTest = false;
-         std::cerr << "threadAssertTest - failed: " << text << std::endl;
-      }
-      //assertTest( testcase );     -- Causes crash
-   }
-   bool mThreadAssertTest; // true for no error
 
    virtual ~NonBlockingSocketTest()
    {
@@ -91,7 +85,7 @@ public:
       assertTest( acceptor_socket.getNonBlocking() );
 
       acceptor_socket.enableBlocking(); // for reads and writes
-      assertTest( acceptor_socket.getNonBlocking() );
+      assertTest( acceptor_socket.getBlocking() );
 
       result = acceptor_socket.close().success();
       assertTest( result );
@@ -161,6 +155,143 @@ public:
       assertTest( status.failure() != true );
       status = spawned_socket.close();
       assertTest( status.failure() != true );
+   }
+
+   void testNonBlockingTransfer () {
+      testAssertReset();
+
+      mState        = NOT_READY;                        // Initialize
+      mAcceptorPort = 34567;
+      mMessage      = "The sixth shiek's sixth sheep's sick";
+      mMessageLen   = mMessage.length();
+
+      // Spawn acceptor thread
+      vpr::ThreadMemberFunctor<NonBlockingSocketTest>
+          acceptor_functor(this,
+                           &NonBlockingSocketTest::testNonBlockingTransfer_acceptor);
+      vpr::Thread acceptor_thread( &acceptor_functor);
+
+      // Spawn connector thread
+      vpr::ThreadMemberFunctor<NonBlockingSocketTest>
+          connector_functor(this,
+                            &NonBlockingSocketTest::testNonBlockingTransfer_connector);
+      vpr::Thread connector_thread( &connector_functor);
+
+      // Wait for threads
+      acceptor_thread.join();
+      connector_thread.join();
+
+      assertTest( mThreadAssertTest );
+   }
+
+   void testNonBlockingTransfer_acceptor (void* arg) {
+      vpr::Status status;
+      ssize_t bytes_written;
+      vpr::SocketAcceptor acceptor;
+      vpr::SocketStream client_sock;
+      vpr::InetAddr acceptor_addr(mAcceptorPort);
+
+      status = acceptor.open(acceptor_addr);
+      threadAssertTest(status.success(), "Failed to open acceptor");
+
+      // The acceptor must be non-blocking so that the connected socket it
+      // returns will also be non-blocking.  *sigh*
+      status = acceptor.getSocket().enableNonBlocking();
+      threadAssertTest(status.success(),
+                       "Failed to enable non-blocking for accepted socket");
+
+      mCondVar.acquire();
+      {
+         mState = ACCEPTOR_READY;
+         mCondVar.signal();
+      }
+      mCondVar.release();
+
+      // Wait until the acceptor is ready.
+      // XXX: Maybe this should be imporved upon once non-blocking acceptors
+      // work.
+      while ( acceptor.getSocket().isReadBlocked() ) {
+         vpr::System::usleep(50);
+      }
+
+      status = acceptor.accept(client_sock);
+      threadAssertTest(status.success(), "Accept failed");
+
+      threadAssertTest(client_sock.isOpen(), "Accepted socket should be open");
+      threadAssertTest(client_sock.getNonBlocking(),
+                       "Connected client socket should be non-blocking");
+
+      client_sock.setNoDelay(true);
+      status = client_sock.send(mMessage, mMessageLen, bytes_written);
+      threadAssertTest(! status.failure(),
+                       "Failed to send message to client");
+
+      mCondVar.acquire();
+      {
+         mState = DATA_SENT;
+         mCondVar.signal();
+      }
+      mCondVar.release();
+
+      status = client_sock.close();
+      threadAssertTest(status.success(),
+                       "Could not close acceptor side of client socket");
+   }
+
+   void testNonBlockingTransfer_connector (void* arg) {
+      vpr::Status status;
+      vpr::InetAddr remote_addr;
+      vpr::SocketConnector connector;
+      vpr::SocketStream con_sock;
+      std::string data;
+      ssize_t bytes_read;
+
+      remote_addr.setAddress("localhost", mAcceptorPort);
+
+      mCondVar.acquire();
+      {
+         while ( mState != ACCEPTOR_READY ) {
+            mCondVar.wait();
+         }
+      }
+      mCondVar.release();
+
+      status = con_sock.open();
+      threadAssertTest(status.success(), "Failed to open connector socket");
+
+      status = con_sock.enableNonBlocking();
+      threadAssertTest(status.success(),
+                       "Failed to enable non-blocking for connector");
+      threadAssertTest(con_sock.getNonBlocking(),
+                       "1: Connector should be non-blocking");
+
+      status = connector.connect(con_sock, remote_addr,
+                                 vpr::Interval(5, vpr::Interval::Sec));
+      threadAssertTest(status.success(), "Connector can't connect");
+
+      threadAssertTest(con_sock.getNonBlocking(),
+                       "2: Connector should be non-blocking");
+
+      mCondVar.acquire();
+      {
+         while ( mState != DATA_SENT ) {
+            mCondVar.wait();
+         }
+      }
+      mCondVar.release();
+
+      status = con_sock.recv(data, mMessageLen, bytes_read);
+      threadAssertTest(bytes_read == mMessageLen,
+                       "Connector received message of wrong size");
+
+/*
+      // Make sure we got all the data, then close.
+      while ( con_sock.isReadBlocked() ) {
+         vpr::System::usleep(10);
+      }
+*/
+
+      con_sock.close();
    }
 
    // 2 sockets... use select...
@@ -298,6 +429,7 @@ public:
       test_suite->addTest( new TestCaller<NonBlockingSocketTest>("testSetOpenNonBlockingThenOpenThenClose", &NonBlockingSocketTest::testSetOpenNonBlockingThenOpenThenClose));
       test_suite->addTest( new TestCaller<NonBlockingSocketTest>("testSetOpenNonBlockingThenOpenThenEnableNonBlockThenClose", &NonBlockingSocketTest::testSetOpenNonBlockingThenOpenThenEnableNonBlockThenClose));
       test_suite->addTest( new TestCaller<NonBlockingSocketTest>("testConnect2NonBlockingSockets", &NonBlockingSocketTest::testConnect2NonBlockingSockets));
+      test_suite->addTest(new TestCaller<NonBlockingSocketTest>("testNonBlockingTransfer", &NonBlockingSocketTest::testNonBlockingTransfer));
       test_suite->addTest( new TestCaller<NonBlockingSocketTest>("testConnect2NonBlockingSocketsUsingSelect", &NonBlockingSocketTest::testConnect2NonBlockingSocketsUsingSelect));
 
       return test_suite;
@@ -305,6 +437,21 @@ public:
 
 protected:
    vpr::Mutex     mMutex;
+
+   enum State {
+      ACCEPTOR_READY,
+      NOT_READY,
+      CONNECTOR_CLOSED,
+      DATA_SENT,
+      DONE_READING
+   };
+
+   State           mState;         // State variable
+   vpr::CondVar    mCondVar;       // Condition variable
+   vpr::Uint16     mAcceptorPort;
+
+   std::string     mMessage;
+   vpr::Uint16     mMessageLen;
 };
 
 }
