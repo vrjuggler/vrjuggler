@@ -670,10 +670,10 @@
          <lock_key>0</lock_key>
          <start_locked>false</start_locked>
          <sleep_time>75</sleep_time>
-         <width>300</width>
-         <height>100</height>
          <origin>0</origin>
          <origin>0</origin>
+         <size>300</size>
+         <size>100</size>
          <display_number>0</display_number>
          <device_host />
       </event_window>

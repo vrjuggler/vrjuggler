@@ -10,7 +10,7 @@
          <x11_pipes>mammoth:1.0</x11_pipes>
          <x11_pipes>snow:0.0</x11_pipes>
       </display_system>
-      <display_window name="RightScreen" version="3">
+      <display_window name="RightScreen" version="4">
          <origin>1280</origin>
          <origin>0</origin>
          <size>1280</size>
@@ -30,21 +30,6 @@
          <stereo>false</stereo>
          <border>false</border>
          <hide_mouse>true</hide_mouse>
-         <act_as_event_source>false</act_as_event_source>
-         <event_window_device>
-            <event_window name="EventWindow configuration 0" version="1">
-               <width>0</width>
-               <height>0</height>
-               <origin>0</origin>
-               <origin>0</origin>
-               <mouse_sensitivity>0.0</mouse_sensitivity>
-               <display_number>0</display_number>
-               <lock_key>KEY_NONE</lock_key>
-               <start_locked>false</start_locked>
-               <sleep_time>0</sleep_time>
-               <device_host />
-            </event_window>
-         </event_window_device>
          <active>true</active>
          <surface_viewports>
             <surface_viewport name="RightScreen viewport" version="2">
@@ -72,7 +57,7 @@
             </surface_viewport>
          </surface_viewports>
       </display_window>
-      <display_window name="LeftScreen" version="3">
+      <display_window name="LeftScreen" version="4">
          <origin>1280</origin>
          <origin>0</origin>
          <size>1280</size>
@@ -92,21 +77,6 @@
          <stereo>false</stereo>
          <border>false</border>
          <hide_mouse>true</hide_mouse>
-         <act_as_event_source>false</act_as_event_source>
-         <event_window_device>
-            <event_window name="EventWindow configuration 0" version="1">
-               <width>0</width>
-               <height>0</height>
-               <origin>0</origin>
-               <origin>0</origin>
-               <mouse_sensitivity>0.0</mouse_sensitivity>
-               <display_number>0</display_number>
-               <lock_key>KEY_NONE</lock_key>
-               <start_locked>false</start_locked>
-               <sleep_time>0</sleep_time>
-               <device_host />
-            </event_window>
-         </event_window_device>
          <active>true</active>
          <surface_viewports>
             <surface_viewport name="LeftScreen viewport" version="2">
@@ -134,7 +104,7 @@
             </surface_viewport>
          </surface_viewports>
       </display_window>
-      <display_window name="FrontScreen" version="3">
+      <display_window name="FrontScreen" version="4">
          <origin>1280</origin>
          <origin>0</origin>
          <size>1280</size>
@@ -154,21 +124,6 @@
          <stereo>false</stereo>
          <border>false</border>
          <hide_mouse>true</hide_mouse>
-         <act_as_event_source>false</act_as_event_source>
-         <event_window_device>
-            <event_window name="EventWindow configuration 0" version="1">
-               <width>0</width>
-               <height>0</height>
-               <origin>0</origin>
-               <origin>0</origin>
-               <mouse_sensitivity>0.0</mouse_sensitivity>
-               <display_number>0</display_number>
-               <lock_key>KEY_NONE</lock_key>
-               <start_locked>false</start_locked>
-               <sleep_time>0</sleep_time>
-               <device_host />
-            </event_window>
-         </event_window_device>
          <active>true</active>
          <surface_viewports>
             <surface_viewport name="FrontScreen viewport" version="2">
@@ -196,7 +151,7 @@
             </surface_viewport>
          </surface_viewports>
       </display_window>
-      <display_window name="FloorScreen" version="3">
+      <display_window name="FloorScreen" version="4">
          <origin>0</origin>
          <origin>0</origin>
          <size>1280</size>
@@ -216,21 +171,6 @@
          <stereo>false</stereo>
          <border>false</border>
          <hide_mouse>true</hide_mouse>
-         <act_as_event_source>false</act_as_event_source>
-         <event_window_device>
-            <event_window name="EventWindow configuration 0" version="1">
-               <width>0</width>
-               <height>0</height>
-               <origin>0</origin>
-               <origin>0</origin>
-               <mouse_sensitivity>0.0</mouse_sensitivity>
-               <display_number>0</display_number>
-               <lock_key>KEY_NONE</lock_key>
-               <start_locked>false</start_locked>
-               <sleep_time>0</sleep_time>
-               <device_host />
-            </event_window>
-         </event_window_device>
          <active>true</active>
          <surface_viewports>
             <surface_viewport name="FloorScreen viewport" version="2">

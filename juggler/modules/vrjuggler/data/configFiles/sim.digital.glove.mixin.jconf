@@ -290,16 +290,17 @@
       <alias name="VJGlove" version="1">
          <proxy>GloveProxy</proxy>
       </alias>
-      <event_window name="Glove Event Window" version="1">
-         <width>200</width>
-         <height>200</height>
-         <origin>800</origin>
-         <origin>320</origin>
+      <event_window name="Glove Event Window" version="2">
+         <event_source_name />
          <mouse_sensitivity>2.0</mouse_sensitivity>
-         <display_number>0</display_number>
          <lock_key>KEY_NONE</lock_key>
          <start_locked>false</start_locked>
          <sleep_time>0</sleep_time>
+         <origin>800</origin>
+         <origin>320</origin>
+         <size>200</size>
+         <size>200</size>
+         <display_number>0</display_number>
          <device_host />
       </event_window>
       <digital_proxy name="DigitalLeftThumb" version="1">

@@ -28,7 +28,7 @@
             </display_system>
          </display_system>
          <display_windows>
-            <display_window name="SimWindow1" version="3">
+            <display_window name="SimWindow1" version="4">
                <origin>0</origin>
                <origin>200</origin>
                <size>600</size>
@@ -48,21 +48,6 @@
                <stereo>false</stereo>
                <border>true</border>
                <hide_mouse>false</hide_mouse>
-               <act_as_event_source>true</act_as_event_source>
-               <event_window_device>
-                  <event_window name="Event window configuration 0" version="1">
-                     <width>0</width>
-                     <height>0</height>
-                     <origin>0</origin>
-                     <origin>0</origin>
-                     <mouse_sensitivity>0.0</mouse_sensitivity>
-                     <display_number>0</display_number>
-                     <lock_key>0</lock_key>
-                     <start_locked>false</start_locked>
-                     <sleep_time>0</sleep_time>
-                     <device_host />
-                  </event_window>
-               </event_window_device>
                <active>true</active>
                <simulator_viewports>
                   <simulator_viewport name="Contained Sim Viewports 0" version="3">
@@ -101,7 +86,7 @@
             </display_system>
          </display_system>
          <display_windows>
-            <display_window name="SimWindow1" version="3">
+            <display_window name="SimWindow1" version="4">
                <origin>0</origin>
                <origin>200</origin>
                <size>600</size>
@@ -121,21 +106,6 @@
                <stereo>false</stereo>
                <border>true</border>
                <hide_mouse>false</hide_mouse>
-               <act_as_event_source>true</act_as_event_source>
-               <event_window_device>
-                  <event_window name="Event window configuration 0" version="1">
-                     <width>0</width>
-                     <height>0</height>
-                     <origin>0</origin>
-                     <origin>0</origin>
-                     <mouse_sensitivity>0.0</mouse_sensitivity>
-                     <display_number>0</display_number>
-                     <lock_key>0</lock_key>
-                     <start_locked>false</start_locked>
-                     <sleep_time>0</sleep_time>
-                     <device_host />
-                  </event_window>
-               </event_window_device>
                <active>true</active>
                <simulator_viewports>
                   <simulator_viewport name="Contained Sim Viewports 0" version="3">
@@ -174,7 +144,7 @@
             </display_system>
          </display_system>
          <display_windows>
-            <display_window name="SimWindow1" version="3">
+            <display_window name="SimWindow1" version="4">
                <origin>0</origin>
                <origin>200</origin>
                <size>600</size>
@@ -194,21 +164,6 @@
                <stereo>false</stereo>
                <border>true</border>
                <hide_mouse>false</hide_mouse>
-               <act_as_event_source>true</act_as_event_source>
-               <event_window_device>
-                  <event_window name="Event window configuration 0" version="1">
-                     <width>0</width>
-                     <height>0</height>
-                     <origin>0</origin>
-                     <origin>0</origin>
-                     <mouse_sensitivity>0.0</mouse_sensitivity>
-                     <display_number>0</display_number>
-                     <lock_key>0</lock_key>
-                     <start_locked>false</start_locked>
-                     <sleep_time>0</sleep_time>
-                     <device_host />
-                  </event_window>
-               </event_window_device>
                <active>true</active>
                <simulator_viewports>
                   <simulator_viewport name="Contained Sim Viewports 0" version="3">
@@ -247,7 +202,7 @@
             </display_system>
          </display_system>
          <display_windows>
-            <display_window name="SimWindow1" version="3">
+            <display_window name="SimWindow1" version="4">
                <origin>0</origin>
                <origin>200</origin>
                <size>600</size>
@@ -267,21 +222,6 @@
                <stereo>false</stereo>
                <border>true</border>
                <hide_mouse>false</hide_mouse>
-               <act_as_event_source>true</act_as_event_source>
-               <event_window_device>
-                  <event_window name="Event window configuration 0" version="1">
-                     <width>0</width>
-                     <height>0</height>
-                     <origin>0</origin>
-                     <origin>0</origin>
-                     <mouse_sensitivity>0.0</mouse_sensitivity>
-                     <display_number>0</display_number>
-                     <lock_key>0</lock_key>
-                     <start_locked>false</start_locked>
-                     <sleep_time>0</sleep_time>
-                     <device_host />
-                  </event_window>
-               </event_window_device>
                <active>true</active>
                <simulator_viewports>
                   <simulator_viewport name="Contained Sim Viewports 0" version="3">
