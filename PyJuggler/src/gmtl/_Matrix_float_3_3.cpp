@@ -22,12 +22,12 @@ void _Export_Matrix_float_3_3()
         .def("setTranspose", &gmtl::Matrix<float,3,3>::setTranspose)
         .def("isError", &gmtl::Matrix<float,3,3>::isError)
         .def("setError", &gmtl::Matrix<float,3,3>::setError)
-        .def("__getitem__", &gmtl::Matrix<float,3,3>::operator[])
+        .def("__getitem__", (gmtl::Matrix<float,3,3>::RowAccessor (gmtl::Matrix<float,3,3>::*)(const unsigned) )&gmtl::Matrix<float,3,3>::operator[])
     );
 
     class_< gmtl::Matrix<float,3,3>::RowAccessor >("RowAccessor", no_init)
        .def("__getitem__", &gmtl::Matrix<float,3,3>::RowAccessor::operator[], return_value_policy<copy_non_const_reference>())
-       .def("__setitem__", (void (*)(gmtl::Matrix33f::RowAccessor*, const unsigned, float)) &gmtlWrapper::setArrayElement)
+       .def("__setitem__", (void (*)(gmtl::Matrix<float,3,3>::RowAccessor*, const unsigned, float)) &gmtlWrapper::setArrayElement)
     ;
 
 
@@ -38,11 +38,12 @@ void _Export_Matrix_float_3_3()
 
 
     enum_< gmtl::Matrix<float,3,3>::XformState >("XformState")
-        .value("ORTHONORMAL", gmtl::Matrix<float,3,3>::ORTHONORMAL)
-        .value("XFORM_ERROR", gmtl::Matrix<float,3,3>::XFORM_ERROR)
+        .value("TRANS", gmtl::Matrix<float,3,3>::TRANS)
         .value("FULL", gmtl::Matrix<float,3,3>::FULL)
         .value("ORTHOGONAL", gmtl::Matrix<float,3,3>::ORTHOGONAL)
         .value("AFFINE", gmtl::Matrix<float,3,3>::AFFINE)
+        .value("NON_UNISCALE", gmtl::Matrix<float,3,3>::NON_UNISCALE)
+        .value("XFORM_ERROR", gmtl::Matrix<float,3,3>::XFORM_ERROR)
         .value("IDENTITY", gmtl::Matrix<float,3,3>::IDENTITY)
     ;
 
