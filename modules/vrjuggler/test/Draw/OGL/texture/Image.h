@@ -213,7 +213,7 @@ public:
 	unsigned int&			channels();
 
 	//: name of the image (if set)
-	const char* const		name() const;
+	const char* 			name() const;
 
 	//: size of row padding in bytes.
 	const unsigned int&		rowPadding() const;
@@ -406,7 +406,7 @@ inline const unsigned char*	Image::pixel( const int& x, const int& y ) const
 }
 
 //: name of the image (if set)
-inline const char* const Image::name() const
+inline const char* Image::name() const
 {
 	return _name.data();
 }
