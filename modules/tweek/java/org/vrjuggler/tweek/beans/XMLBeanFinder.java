@@ -48,7 +48,7 @@ public class XMLBeanFinder
       StringTokenizer tokenizer = new StringTokenizer( path, File.pathSeparator );
       while ( tokenizer.hasMoreTokens() ) {
          String token = tokenizer.nextToken();
-         
+
          // if the current path is a directory, search it for xml files
          File file = new File( token );
          if ( file.isDirectory() ) {
@@ -59,10 +59,10 @@ public class XMLBeanFinder
          }
          // otherwise, just add the file directly
          else {
-            files.add( token );
+            files.add(file);
          }
       }
-      
+
       SAXBuilder builder = new SAXBuilder();
 
       // Check each XML file for beans
