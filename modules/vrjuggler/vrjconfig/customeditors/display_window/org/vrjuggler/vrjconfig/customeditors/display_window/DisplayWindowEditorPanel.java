@@ -729,7 +729,7 @@ public class DisplayWindowEditorPanel
          elt.setProperty("vertical_fov", 0, dlg.getVertialFOV());
 
          ConfigElement sim_elt;
-         if ( elt.getPropertyValues("simulator_plugin").size() == 0 )
+         if ( elt.getPropertyValues("simulator_plugin").isEmpty() )
          {
             ConfigDefinition sim_def =
                broker.getRepository().get("default_simulator");

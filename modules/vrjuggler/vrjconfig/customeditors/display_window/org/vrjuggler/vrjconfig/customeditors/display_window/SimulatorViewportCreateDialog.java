@@ -58,7 +58,7 @@ public class SimulatorViewportCreateDialog
       ConfigBrokerProxy broker = new ConfigBrokerProxy();
       ConfigDefinition sim_def = broker.getRepository().get("default_simulator");
 
-      if ( mViewportElement.getPropertyValues("simulator_plugin").size() == 0 )
+      if ( mViewportElement.getPropertyValues("simulator_plugin").isEmpty() )
       {
          ConfigElementFactory factory =
             new ConfigElementFactory(broker.getRepository().getAllLatest());
