@@ -146,6 +146,7 @@ ifndef NO_CLEAN
 endif
 	@$(MAKE) $(BEFOREBUILD)
 	@$(MAKE) libs
+	@$(MAKE) BUILD_TYPE=opt CALLER=world $(AFTERBUILD)
 	@echo "---------------------------------------------------------------"
 	@echo "Beginning Sonix plug-in installation process"
 	@echo "---------------------------------------------------------------"
@@ -174,6 +175,7 @@ endif
             echo "------------------------------------------------" ;	\
             $(MAKE) pluginABI=$$abi libs ;				\
           done
+	@$(MAKE) BUILD_TYPE=opt CALLER=world $(AFTERBUILD)
 	@echo "---------------------------------------------------------------"
 	@echo "Beginning Sonix plug-in installation process"
 	@echo "---------------------------------------------------------------"
@@ -206,9 +208,7 @@ ifndef NO_CLEAN
 endif
 	@$(MAKE) $(BEFOREBUILD)
 	@$(MAKE) BUILD_PROF_C=N BUILD_PROF_CXX=N libs
-ifdef GLOBAL_BUILD
-	@$(MAKE) links
-endif
+	@$(MAKE) BUILD_TYPE=opt $(AFTERBUILD)
 	@echo "---------------------------------------------------------------"
 	@echo "Beginning Sonix plug-in release installation process"
 	@echo "---------------------------------------------------------------"
