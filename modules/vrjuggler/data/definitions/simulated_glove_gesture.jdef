@@ -6,10 +6,10 @@
       <help>Simulate glove gesture device</help>
       <parent>glove_device</parent>
       <category>/Devices/Simulator</category>
-      <property valuetype="configelementpointer" variable="false" name="event_window_proxy">
+      <property valuetype="configelementpointer" variable="false" name="keyboard_mouse_proxy">
          <help>The event window to use.</help>
-         <value label="Event Window Proxy"/>
-         <allowed_type>event_window_proxy</allowed_type>
+         <value label="Keyboard Mouse Proxy"/>
+         <allowed_type>keyboard_mouse_proxy</allowed_type>
       </property>
       <property valuetype="configelement" variable="true" name="key_presses">
          <help/>
