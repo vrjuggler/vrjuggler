@@ -1,0 +1,41 @@
+What follows is an example of a gesture file and description of the format.
+
+The format is generally like this:
+
+<Comments (# leading space)>
+...
+<num Gestures>
+<Gesture name 0>
+...
+<Gesture name N>
+<Exmaple gesture 0>
+...
+<Example gesture N>
+<Recognizor specific to end of file>
+<eof>
+
+Here is an example:
+
+---- begin here ----
+# This is a vjGloveXYZ data file
+# Created: 4/5/97
+# by: Allen Bierbaum
+#
+#  These gestures were created for app PDQ
+#
+5
+Closed Fist
+Open Hand
+Pointing
+Thumbs up
+Vulcan
+0.347 0.895 -.003 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ 0.8
+~
+~
+~
+~
+# begin gesture specific stuff
+67 89 23
+098 08 234
+3421 21 21
+<eof>
