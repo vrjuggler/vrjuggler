@@ -4,6 +4,7 @@
 #include <vpr/vpr.h>
 #include <gmtl/Matrix.h>
 #include <Common/ViewPlatform.h>
+#include <vpr/Util/Singleton.h>
 
 #include <gadget/Type/DeviceInterface.h>
 #include <gadget/Type/PositionProxy.h>
@@ -27,8 +28,12 @@
 * - W - World (rw): This is the "real world".  This actually corresponds exactly to the
 *              platform since the platform is the VR device you are "in"
 */
-class User
+class User : public vpr::Singleton<User>
 {
+public:
+   User()
+   {;}
+
 public:
 
    /** Initialize the user */
