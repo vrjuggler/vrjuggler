@@ -1011,6 +1011,10 @@ if test "$SL" = "Y" ; then
 fi
 
 if test "$OS_TYPE" = "UNIX" ; then
+    DYLIB_DEPS_VJ="$APP_EXTRA_LIBS -lm"
+    DYLIB_DEPS_GL="$OGL_LDFLAGS $LIBOPENGL -lm"
+    DYLIB_DEPS_PF="$PF_LDFLAGS $LIBPERFORMER -lm"
+
     APP_VJ_LIBS_GL="-lJuggler_ogl"
     APP_VJ_LIBS_PF="-lJuggler_pf"
     APP_VJ_LIBS_UTILS="-lJuggler_utils"
@@ -1041,6 +1045,11 @@ if test "$OS_TYPE" = "UNIX" ; then
         APP_EXTRA_LIBS_OSG="$LIBOSG"
     fi
 elif test "$OS_TYPE" = "Win32" ; then
+    DYLIB_DEPS_BASIC="$APP_EXTRA_LIBS"
+    DYLIB_DEPS_VJ="-libpath:\$(LIBPATH) Juggler_utils.lib $DYLIB_DEPS_BASIC"
+    DYLIB_DEPS_UTILS="$DYLIB_DEPS_BASIC"
+    DYLIB_DEPS_GL="-libpath:\$(LIBPATH) Juggler_utils.lib $DYLIB_DEPS_BASIC $OGL_LDFLAGS $LIBOPENGL"
+
     APP_VJ_LIBS_GL='Juggler_ogl.lib'
     APP_VJ_LIBS_PF='Juggler_pf.lib'
     APP_VJ_LIBS_UTILS='Juggler_utils.lib'
@@ -1196,7 +1205,12 @@ AC_SUBST(SL)
 AC_SUBST(SL_INC)
 AC_SUBST(SL_LIB)
 
-AC_SUBST(DYLIB_DEPS)
+AC_SUBST(DYLIB_DEPS_VJ)
+AC_SUBST(DYLIB_DEPS_UTILS)
+AC_SUBST(DYLIB_DEPS_GL)
+AC_SUBST(DYLIB_DEPS_PF)
+AC_SUBST(DYLIB_DEPS_AW)
+AC_SUBST(DYLIB_DEPS_SL)
 
 AC_SUBST(APP_EXTRA_FLAGS_PF)
 AC_SUBST(APP_EXTRA_INC_AW)
