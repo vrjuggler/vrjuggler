@@ -51,26 +51,6 @@ namespace gadget
 class DirectXJoystickStandalone
 {
 public:
-   enum EventMasks
-   {
-      EVENT_AXIS_MASK         = 0x000000ff,
-      EVENT_AXIS_BITOFFSET    = 0,
-      EVENT_BUTTON_MASK       = 0x0000ff00,
-      EVENT_BUTTON_BITOFFSET  = 8,
-      EVENT_KEY_MASK          = 0x00ff0000,
-      EVENT_KEY_BITOFFSET     = 16,
-      EVENT_HAT_MASK          = 0x0f000000,
-      EVENT_HAT_BITOFFSET     = 24,
-      EVENT_RELAXIS_MASK      = 0xf0000000,
-      EVENT_RELAXIS_BITOFFSET = 28,
-   };
-
-   class Event
-   {
-      int   code;
-      float value;
-   };
-
    DirectXJoystickStandalone();
 
    HRESULT init();
