@@ -84,7 +84,7 @@ protected:
    //: VR Juggler devices
    vjGloveInterface    mGlove;
    vjGestureInterface  mGesture;
-   vjPosInterface      mGloveTracker;
+   //vjPosInterface      mGloveTracker;
    
    
    //: Object selection
@@ -139,7 +139,7 @@ inline void gloveApp::init()
     // Initialize devices
     mGlove.init("VJGlove");
     mGesture.init("VJGesture");
-    mGloveTracker.init("GlovePos Proxy");
+    //mGloveTracker.init("GlovePos Proxy");
 }
 
 //: API Init
@@ -290,7 +290,7 @@ inline void gloveApp::preDraw()
     }
     userInfo.setVelocity( userVelocity );
     userInfo.setAngularVelocity( 0.01f );
-    wandInfo.updateWithMatrix( *mGloveTracker->GetData() );
+    wandInfo.updateWithMatrix( mGlove->getPos() );
     userInfo.update( wandInfo, vjVec3(0.0f, 0.0f, 0.0f) );
     userInfo.getSceneTransform( mNavigation );
     ////////////////////////////////////////////////////////
