@@ -981,8 +981,6 @@ fi
 
 # Set up some sed expressions that will help separate the share directory from
 # the full installation prefix.
-_prefix_var_exp='s|^${prefix}/||'
-
 if test "x$prefix" = "xNONE" ; then
     _prefix_exp="s|^$ac_default_prefix/||"
 else
@@ -993,7 +991,7 @@ fi
 # full installation prefix.  This is not foolproof, but it will work in almost
 # all cases.  A person would have to be doing something malicious or foolish
 # to make it break.
-VJ_SHARE_DIR=`echo "$datadir" | sed -e "${_prefix_var_exp}"`
+VJ_SHARE_DIR=`echo "$datadir" | sed -e 's|^${prefix}/||'`
 VJ_SHARE_DIR=`echo "$VJ_SHARE_DIR" | sed -e "${_prefix_exp}"`
 
 # Information needed to generate juggler-config.
