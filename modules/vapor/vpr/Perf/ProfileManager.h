@@ -51,6 +51,9 @@
 
 #include <vpr/vprConfig.h>
 
+#include <string>
+#include <vector>
+
 #include <vpr/Sync/Guard.h>
 #include <vpr/Sync/Mutex.h>
 
@@ -136,6 +139,38 @@ namespace vpr
          }
          mTreeLock.release();
       }
+
+      static std::vector<std::string> getNames(void)
+      {
+            mTreeLock.acquire();
+              std::vector<std::string> names_list;
+              getNamesRecursively(names_list, &mRoot);
+            mTreeLock.release();
+            return names_list;
+      }
+
+      static void getNamesRecursively( std::vector<std::string>& nameList, ProfileNode* node )
+      {
+         getNamesRecursively(nameList, node->getSibling());
+         nameList.push_back(node->getName());
+         getNamesRecursively(nameList, node->getChild());
+       }
+
+       static float getNamedNodeSample( const char * nodeName )
+       {
+           mTreeLock.acquire();
+           ProfileNode* node = mRoot.getNamedNode( nodeName );
+
+           if(node == NULL ) 
+            { 
+               mTreeLock.release();
+               return 0.0; 
+            }
+
+           ProfileNode::NodeHistoryRange p = node->getNodeHistoryRange();
+           mTreeLock.release();
+           return *(p.first);
+       } 
 
       /**
        * @post Iterator has been deleted
