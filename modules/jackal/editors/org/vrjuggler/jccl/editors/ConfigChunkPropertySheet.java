@@ -44,6 +44,7 @@ import org.vrjuggler.jccl.config.PropertyDesc;
 import org.vrjuggler.jccl.config.ValType;
 import org.vrjuggler.tweek.beans.loader.BeanJarClassLoader;
 import org.vrjuggler.tweek.ui.JTreeTable;
+import org.vrjuggler.tweek.ui.treetable.TreeTableModel;
 
 /**
  * A property sheet for a config chunk object.
@@ -96,6 +97,14 @@ public class ConfigChunkPropertySheet
    }
 
    /**
+    * Gets the TreeTableModel this property sheet is using.
+    */
+   public TreeTableModel getTreeTableModel()
+   {
+      return tableModel;
+   }
+
+   /**
     * Gets the cell renderer for the cell at (col, row). This is overridden such
     * that parent nodes (that print the summary value list) for multi-valued
     * properties do not render the summary when they have been expanded.
@@ -113,6 +122,7 @@ public class ConfigChunkPropertySheet
          {
             return new DefaultTableCellRenderer();
          }
+         // Nodes containing a PropertyDesc do NOT render the summary
          else if (value instanceof PropertyDesc)
          {
             if (getTree().isExpanded(path))
@@ -135,6 +145,7 @@ public class ConfigChunkPropertySheet
          }
          else
          {
+            // Make sure we render the enumerated name when available
             PropertyDesc prop_desc = getPropertyDescForRow(row);
             if ((prop_desc != null)
                && (prop_desc.getNumEnums() > 0)
@@ -258,6 +269,30 @@ public class ConfigChunkPropertySheet
       }
    }
 
+   /**
+    * Gets the currently selected object in the tree that serves as the basis for
+    * this property sheet.
+    */
+   public Object getSelectedObject()
+   {
+      ListSelectionModel lsm = getSelectionModel();
+      if (lsm.isSelectionEmpty())
+      {
+         return null;
+      }
+      else
+      {
+         int row = lsm.getMinSelectionIndex();
+         TreePath path = getTree().getPathForRow(row);
+         DefaultMutableTreeNode node = (DefaultMutableTreeNode)path.getLastPathComponent();
+         return node.getUserObject();
+      }
+   }
+
+   /**
+    * Gets the PropertyDesc most appropriate for the currently selected object
+    * in this table.
+    */
    public PropertyDesc getSelectedProperty()
    {
       ListSelectionModel lsm = getSelectionModel();
@@ -272,6 +307,9 @@ public class ConfigChunkPropertySheet
       }
    }
 
+   /**
+    * Gets the PropertyDesc most approriate for the object at the given row.
+    */
    private PropertyDesc getPropertyDescForRow(int row)
    {
       TreePath path = getTree().getPathForRow(row);
