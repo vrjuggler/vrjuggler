@@ -178,6 +178,20 @@ SocketImpWinSock::connect () {
     return retval;
 }
 
+int
+SocketImpWinSock::getOption (const SocketOptions::Types option,
+                             struct SocketOptions::Data& data)
+{
+    return -1;
+}
+
+int
+SocketImpWinSock::setOption (const SocketOptions::Types option,
+                             const struct SocketOptions::Data& data)
+{
+    return -1;
+}
+
 // ============================================================================
 // Protected methods.
 // ============================================================================

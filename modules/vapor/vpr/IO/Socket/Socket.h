@@ -37,6 +37,7 @@
 
 #include <IO/BlockIO.h>
 #include <IO/Socket/SocketTypes.h>
+#include <IO/Socket/SocketOptions.h>
 #include <IO/Socket/InetAddr.h>
 
 
@@ -332,10 +333,212 @@ public:
         return m_socket_imp->getRemoteAddr();
     }
 
-
     bool setRemoteAddr(const InetAddr& addr)
     {
        return m_socket_imp->setRemoteAddr(addr);
+    }
+
+    /**
+     *
+     */
+    inline int
+    getKeepAlive (bool& enabled) const {
+        SocketTypes::OptionData option;
+        int retval;
+
+        retval = m_socket_imp->getOption(SocketTypes::KeepAlive, option);
+
+        if ( retval == 0 ) {
+            enabled = option.keep_alive;
+        }
+
+        return retval;
+    }
+
+    /**
+     *
+     */
+    inline int
+    setKeepAlive (const bool enable_val) {
+        SocketTypes::OptionData option;
+        option.keep_alive = enable_val;
+        return m_socket_imp->setOption(SocketTypes::KeepAlive, option);
+    }
+
+    /**
+     *
+     */
+    inline int
+    getLingerOnClose (bool& enabled, int& linger_sec) const {
+        SocketTypes::OptionData opt;
+        int retval;
+
+        retval = m_socket_imp->getOption(SocketTypes::Linger, opt);
+
+        if ( retval == 0 ) {
+            enabled    = opt.linger.enabled;
+            linger_sec = opt.linger.seconds;
+        }
+
+        return retval;
+    }
+
+    /**
+     *
+     */
+    inline int
+    setLingerOnClose (const bool enable_val, const int linger_sec) {
+        SocketTypes::OptionData opt;
+
+        opt.linger.enabled = enable_val;
+        opt.linger.seconds = linger_sec;
+
+        return m_socket_imp->setOption(SocketTypes::Linger, opt);
+    }
+
+    /**
+     *
+     */
+    inline int
+    getRecvBufferSize (Int32& size) const {
+        SocketTypes::OptionData opt;
+        int retval;
+
+        retval = m_socket_imp->getOption(SocketTypes::RecvBufferSize, opt);
+
+        if ( retval == 0 ) {
+            size = opt.recv_buffer_size;
+        }
+        else {
+            size = -1;
+        }
+
+        return retval;
+    }
+
+    /**
+     *
+     */
+    inline int
+    setRecvBufferSize (const Int32 size) {
+        SocketTypes::OptionData opt;
+
+        opt.recv_buffer_size = size;
+
+        return m_socket_imp->setOption(SocketTypes::RecvBufferSize, opt);
+    }
+
+    /**
+     *
+     */
+    inline int
+    getSendBufferSize (int& size) const {
+        SocketTypes::OptionData opt;
+        int retval;
+
+        retval = m_socket_imp->getOption(SocketTypes::SendBufferSize, opt);
+
+        if ( retval == 0 ) {
+            size = opt.send_buffer_size;
+        }
+        else {
+            size = -1;
+        }
+
+        return retval;
+    }
+
+    /**
+     *
+     */
+    inline int
+    setSendBufferSize (const Int32 size) {
+        SocketTypes::OptionData opt;
+
+        opt.send_buffer_size = size;
+
+        return m_socket_imp->setOption(SocketTypes::SendBufferSize, opt);
+    }
+
+    /**
+     *
+     */
+    inline int
+    getReuseAddr (bool& enabled) const {
+        SocketTypes::OptionData option;
+        int retval;
+
+        reval = m_socket_imp->getOption(SocketTypes::ReuseAddr, option);
+
+        if ( retval == 0 ) {
+            enabled = option.reuse_addr;
+        }
+
+        return retval;
+    }
+
+    /**
+     *
+     */
+    inline int
+    setReuseAddr (const bool enable_val) {
+        SocketTypes::OptionData option;
+        option.reuse_addr = enable_val;
+        return m_socket_imp->setOption(SocketTypes::ReuseAddr, option);
+    }
+
+    /**
+     *
+     */
+    inline int
+    getTypeOfService (SocketOptions::TypeOfService& tos) {
+        SocketTypes::OptionData option;
+        int retval;
+
+        reval = m_socket_imp->getOption(SocketTypes::IpTypeOfService, option);
+
+        if ( retval == 0 ) {
+            tos = option.type_of_service;
+        }
+
+        return retval;
+    }
+
+    /**
+     *
+     */
+    inline int
+    setTypeOfService (const SocketOptions::TypeOfService& tos) {
+        SocketTypes::OptionData option;
+        option.type_of_service = tos;
+        return m_socket_imp->setOption(SocketTypes::IpTypeOfService, option);
+    }
+
+    /**
+     *
+     */
+    inline int
+    getTimeToLive (Int32& ttl) {
+        SocketTypes::OptionData option;
+        int retval;
+
+        reval = m_socket_imp->getOption(SocketTypes::IpTimeToLive, option);
+
+        if ( retval == 0 ) {
+            ttl = option.ip_ttl;
+        }
+
+        return retval;
+    }
+
+    /**
+     *
+     */
+    inline int
+    setTimeToLive (const Int32 ttl) {
+        SocketTypes::OptionData option;
+        option.ip_ttl = ttl;
+        return m_socket_imp->setOption(SocketTypes::IpTimeToLive, option);
     }
 
 protected:

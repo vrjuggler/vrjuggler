@@ -134,6 +134,107 @@ public:
         return m_socket_dgram_imp.sendto(msg, len, flags, to);
     }
 
+    /**
+     *
+     */
+    inline int
+    getMcastInterface (InetAddr& mcast_if) {
+        SocketTypes::OptionData option;
+        int retval;
+
+        reval = m_socket_imp->getOption(SocketTypes::McastInterface, option);
+
+        if ( retval == 0 ) {
+            mcast_if = option.mcast_if;
+        }
+
+        return retval;
+    }
+
+    /**
+     *
+     */
+    inline int
+    setMcastInterface (const InetAddr& mcast_if) {
+        SocketTypes::OptionData option;
+        option.mcast_if = mcast_if;
+        return m_socket_imp->setOption(SocketTypes::McastInterface, option);
+    }
+
+    /**
+     *
+     */
+    inline int
+    getMcastTimeToLive (Uint8& ttl) {
+        SocketTypes::OptionData option;
+        int retval;
+
+        reval = m_socket_imp->getOption(SocketTypes::McastTimeToLive, option);
+
+        if ( retval == 0 ) {
+            ttl = option.mcast_ttl;
+        }
+
+        return retval;
+    }
+
+    /**
+     *
+     */
+    inline int
+    setMcastTimeToLive (const Uint8 ttl) {
+        SocketTypes::OptionData option;
+        option.mcast_ttl = ttl;
+        return m_socket_imp->setOption(SocketTypes::McastTimeToLive, option);
+    }
+
+    /**
+     *
+     */
+    inline int
+    getMcastLoopback (Uint8& ttl) {
+        SocketTypes::OptionData option;
+        int retval;
+
+        reval = m_socket_imp->getOption(SocketTypes::McastLoopback, option);
+
+        if ( retval == 0 ) {
+            loop = option.mcast_loopback;
+        }
+
+        return retval;
+    }
+
+    /**
+     *
+     */
+    inline int
+    setMcastLoopback (const Uint8 loop) {
+        SocketTypes::OptionData option;
+        option.mcast_loopback = loop;
+        return m_socket_imp->setOption(SocketTypes::McastLoopback, option);
+    }
+
+    /**
+     *
+     */
+    inline int
+    addMcastMember (const McastReq& request) {
+        SocketTypes::OptionData option;
+        option.mcast_add_member = request;
+        return m_socket_imp->setOption(SocketTypes::AddMember, option);
+    }
+
+    /**
+     *
+     */
+    inline int
+    dropMcastMember (const McastReq& request) {
+        SocketTypes::OptionData option;
+        option.mcast_drop_member = request;
+        return m_socket_imp->setOption(SocketTypes::DropMember, option);
+    }
+
 protected:
     RealSocketDatagramImp m_socket_dgram_imp;  //: Platform-specific datagram
                                                //+ socket implementation object
