@@ -52,6 +52,7 @@ public:
    vjProxyConstructorBase() {;}
 
    //: Create the proxy
+   //! RETURNS: NULL - Proxy failed creation or configuration
    virtual vjProxy* createProxy(vjConfigChunk* chunk) const = 0;
 
    //: Get the string desc of the type of chunk we can create
@@ -65,13 +66,18 @@ class vjProxyConstructor : public vjProxyConstructorBase
 public:
    vjProxyConstructor();
 
+   //: Create the proxy
+   //! RETURNS: NULL - Proxy failed creation or configuration
    vjProxy* createProxy(vjConfigChunk* chunk) const
    {
       PROXY* new_proxy = new PROXY;             // Create new proxy
       bool success = new_proxy->config(chunk);  // Attempt to configure it
+                                                // config calls inputmgr registrator
 
       if(success)          // Configured succesfully
+      {
          return new_proxy;
+      }
       else                 // Failed
       {
   //XXX//       delete new_proxy;

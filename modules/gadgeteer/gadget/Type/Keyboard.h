@@ -35,7 +35,6 @@
 #define _VJ_KEYBOARD_H_
 
 #include <vjConfig.h>
-#include <Input/vjInput/vjInput.h>
 
 
 // --------- VJKEY's ------------ //
@@ -109,14 +108,16 @@ const int VJMBUTTON3   = LAST_KEY + 7;
 // updates.  Updates in Juggler occur once per frame.
 //-----------------------------------------------------------------------------
 //!PUBLIC_API:
-class vjKeyboard : virtual public vjInput
+class vjKeyboard
 {
 public:
    vjKeyboard()
-   { deviceAbilities = deviceAbilities | DEVICE_KEYBOARD; }
+   { ; }
+
+   virtual ~vjKeyboard() {;}
 
    virtual bool config(vjConfigChunk* chunk)
-   { return vjInput::config(chunk); }
+   { return true; }
 
       //: Is the given key pressed.
    //! RETURNS: The number of times the key was pressed since last update.
@@ -125,9 +126,6 @@ public:
    //:Check for the given modifier key pressed only.
    //! RETURNS: true - key pressed exclusively
    virtual bool modifierOnly(int modKey) =0;
-
-   virtual char* getDeviceName()
-   { return "vjKeyboard"; }
 
    std::string getKeyName(int keyId)
    {

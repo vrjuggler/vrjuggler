@@ -38,7 +38,7 @@
 
 #include <Math/vjVec3.h>
 #include <Input/vjPosition/vjPosition.h>
-#include <Input/InputManager/vjPosInterface.h>
+//#include <Input/InputManager/vjDeviceInterface.h>
 #include <Kernel/vjUser.h>
 
     // Config stuff

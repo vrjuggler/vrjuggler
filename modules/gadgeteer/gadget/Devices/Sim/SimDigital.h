@@ -36,6 +36,7 @@
 //#pragma once
 
 #include <vjConfig.h>
+#include <Input/vjInput/vjInput.h>
 #include <Input/vjInput/vjDigital.h>
 #include <Input/vjSim/vjSimInput.h>
 
@@ -48,7 +49,7 @@
 //
 // This class should not be used directly by the user.
 //!PUBLIC_API:
-class vjSimDigital : virtual public vjDigital, public vjSimInput
+class vjSimDigital : public vjInput, public vjDigital, public vjSimInput
 {
 public:
    vjSimDigital();
@@ -71,8 +72,6 @@ public:
    //: Update the data
    virtual void updateData();
 
-   //: Get the name of the digital device
-   virtual char* getDeviceName() { return "vjSimDigital";}
    static std::string getChunkType() { return std::string("SimDigital");}
 
 private:

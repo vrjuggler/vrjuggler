@@ -34,7 +34,9 @@
 #define _VJ_TRACKD_CONTROLLER_H_
 
 #include <vjConfig.h>
+#include <Input/vjInput/vjInput.h>
 #include <Input/vjInput/vjDigital.h>
+#include <Input/vjInput/vjAnalog.h>
 #include <Input/vjSim/vjSimInput.h>
 #include <Input/Multi/aTrackdController.h>
 #include <vector>
@@ -52,7 +54,7 @@
 // See also: vjDigital, vjAnalog
 //-----------------------------------------------------------------------------
 //!PUBLIC_API:
-class vjTrackdController : virtual public vjDigital, virtual public vjAnalog
+class vjTrackdController : public vjInput, public vjDigital, public vjAnalog
 {
 public:
 
@@ -101,12 +103,6 @@ public:
    // ------------------------------------------------------------------------
    void updateData();
 
-   //: Get the device name.
-   inline char*
-   getDeviceName () {
-      return "vjTrackdController";
-   }
-
    //: Return what chunk type is associated with this class.
    static std::string
    getChunkType () {
@@ -120,21 +116,21 @@ public:
       return mCurButtons[devNum];
    }
 
-   //: Return "analog data".. 
+   //: Return "analog data"..
    //  Gee, that's ambiguous especially on a discrete system such as a digital computer....
-   //  
+   //
    //! PRE: give the device number you wish to access.
    //! POST: returns a value that ranges from 0.0f to 1.0f
-   //! NOTE: for example, if you are sampling a potentiometer, and it returns reading from 
+   //! NOTE: for example, if you are sampling a potentiometer, and it returns reading from
    //        0, 255 - this function will normalize those values (using vjAnalog::normalizeMinToMax())
    //        for another example, if your potentiometer's turn radius is limited mechanically to return
    //        say, the values 176 to 200 (yes this is really low res), this function will still return
-   //        0.0f to 1.0f. 
+   //        0.0f to 1.0f.
    //! NOTE: to specify these min/max values, you must set in your vjAnalog (or analog device) config
-   //        file the field "min" and "max".  By default (if these values do not appear), 
+   //        file the field "min" and "max".  By default (if these values do not appear),
    //        "min" and "max" are set to 0.0f and 1.0f respectivly.
-   //! NOTE: TO ALL ANALOG DEVICE DRIVER WRITERS, you *must* normalize your data using 
-   //        vjAnalog::normalizeMinToMax()   
+   //! NOTE: TO ALL ANALOG DEVICE DRIVER WRITERS, you *must* normalize your data using
+   //        vjAnalog::normalizeMinToMax()
    virtual float getAnalogData(int devNum=0)
    {
       vjASSERT(devNum < (int)mCurValuators.size() && "Analog index out of range");    // Make sure we have enough space

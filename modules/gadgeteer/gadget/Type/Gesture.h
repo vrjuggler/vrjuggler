@@ -36,7 +36,6 @@
 //#pragma once
 
 #include <vjConfig.h>
-#include <Input/vjInput/vjInput.h>
 
 
 //-------------------------------------------------------------------------
@@ -52,17 +51,17 @@
 //
 //-------------------------------------------------------------------------
 //!PUBLIC_API:
-class vjGesture : virtual public vjInput
+class vjGesture
 {
 public:
    vjGesture()
-   {deviceAbilities = deviceAbilities | DEVICE_GESTURE;}
+   {}
 
-   ~vjGesture()
+   virtual ~vjGesture()
    {;}
 
    virtual bool config(vjConfigChunk* c)
-   { return vjInput::config(c);}
+   { return true;}
 
 
 public:  // **** GET GESTURES **** //

@@ -39,7 +39,7 @@
 //: Constructor
 bool vjXWinKeyboard::config(vjConfigChunk *c)
 {
-   if (!vjKeyboard::config(c))
+   if(! (vjInput::config(c) && vjKeyboard::config(c)))
       return false;
 
    const char neg_one_STRING[] = "-1";

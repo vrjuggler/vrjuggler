@@ -63,11 +63,11 @@ protected:
    };
 
 public:
-   vjSimInput() 
+   vjSimInput()
    {
       //vjDEBUG(vjDBG_ALL,4)<<"*** vjSimInput::vjSimInput()\n"<< vjDEBUG_FLUSH;
    }
-   virtual ~vjSimInput() {}   
+   virtual ~vjSimInput() {}
 
    //: Configure the simulated input device
    //! POST: Keyboard proxy is configured <br>

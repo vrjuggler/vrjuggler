@@ -42,7 +42,7 @@ vjSimDigital::vjSimDigital() : vjDigital(), vjSimInput()
 }
 
 //: Destructor
-vjSimDigital::~vjSimDigital() 
+vjSimDigital::~vjSimDigital()
 {
    //vjDEBUG(vjDBG_ALL,4)<<"*** vjSimDigital::~vjSimDigital()\n"<< vjDEBUG_FLUSH;
 }
@@ -50,8 +50,7 @@ vjSimDigital::~vjSimDigital()
 bool vjSimDigital::config(vjConfigChunk* chunk)
 {
    //vjDEBUG(vjDBG_ALL,4)<<"*** vjSimDigital::config()\n"<< vjDEBUG_FLUSH;
-   
-   if((!vjDigital::config(chunk)) || (!vjSimInput::config(chunk)))
+   if(! (vjInput::config(chunk) && vjDigital::config(chunk) && vjSimInput::config(chunk)))
       return false;
 
    std::vector<vjVarValue*> key_list = chunk->getAllProperties("keyPairs");
@@ -70,7 +69,7 @@ bool vjSimDigital::config(vjConfigChunk* chunk)
 void vjSimDigital::updateData()
 {
    //vjDEBUG(vjDBG_ALL,4)<<"*** vjSimDigital::updateData()\n"<< vjDEBUG_FLUSH;
-   
+
    // -- Update digital data --- //
    for (unsigned int i = 0; i < mSimKeys.size(); i++)
    {

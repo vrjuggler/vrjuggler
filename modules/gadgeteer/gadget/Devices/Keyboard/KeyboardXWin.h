@@ -37,6 +37,7 @@
 #include <X11/Xutil.h>
 #include <X11/keysym.h>
 
+#include <Input/vjInput/vjInput.h>
 #include <Input/vjInput/vjKeyboard.h>
 #include <Sync/vjMutex.h>
 
@@ -60,7 +61,7 @@ class vjConfigChunk;
 //
 // See also: vjKeyboard vjKeyboardProxy
 //--------------------------------------------------------------
-class vjXWinKeyboard : virtual public vjKeyboard
+class vjXWinKeyboard : public vjInput, public vjKeyboard
 {
 public:
    // Enum to keep track of current lock state for state machine
@@ -96,7 +97,6 @@ public:
    int sample() { updKeys(); return 1; }
    void updateData();
 
-   char* getDeviceName() { return "vjXwinKeyboard";}
    static std::string getChunkType() { return std::string("Keyboard");}
 
    // returns the number of times the key was pressed during the

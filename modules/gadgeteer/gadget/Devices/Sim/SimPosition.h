@@ -36,6 +36,7 @@
 //#pragma once
 
 #include <vjConfig.h>
+#include <Input/vjInput/vjInput.h>
 #include <Input/vjSim/vjSimInput.h>
 #include <Input/vjPosition/vjPosition.h>
 
@@ -45,7 +46,7 @@
 //
 // This class should not be used directly by the user.
 //!PUBLIC_API:
-class vjSimPosition : virtual public vjPosition, public vjSimInput
+class vjSimPosition : public vjInput, public vjPosition, public vjSimInput
 {
 public:
    /* constants for the key array */
@@ -84,7 +85,7 @@ public:
    }
 
     vjTimeStamp* getPosUpdateTime (int devNum = 0) {
-	return &mUpdateTime;
+   return &mUpdateTime;
     }
 
    /* These functions don't do anything */
@@ -94,9 +95,6 @@ public:
 
    //: Update the data
    virtual void updateData();
-
-   //: Get the name of the digital device
-   char* getDeviceName() { return "vjSimPosition";}
 
    static std::string getChunkType() { return std::string("SimPosition"); }
 

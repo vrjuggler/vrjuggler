@@ -80,6 +80,7 @@ typedef unsigned char byte;
  *  of a vjInput object to query which types it may be
  *  casted up to.
  */
+/*
 const unsigned int DEVICE_POSITION = 1;
 const unsigned int DEVICE_GESTURE  = 2;
 const unsigned int DEVICE_DIGITAL  = 4;
@@ -88,6 +89,7 @@ const unsigned int DEVICE_GLOVE    = 16;
 const unsigned int DEVICE_KEYBOARD = 32;
 const unsigned int DEVICE_GROW1    = 64;
 const unsigned int DEVICE_GROW2    = 128;
+*/
 
 //-----------------------------------------------------------------------------
 //: vjInput is the abstract base class that all input objects derive from.
@@ -121,7 +123,7 @@ public:
    //
    //  The default constructor is intended only for use by the DummyProxies
    //  which do not need to have their serial port and baud rate etc set up.
-   // Also, initializes myThread, active, and deviceAbilities to null values
+   // Also, initializes myThread, and active to null values
    vjInput();
 
    //: vjInput Destructor
@@ -164,13 +166,9 @@ public:
    //  guaranteed to be valid and static until the next call to UpdateData.
    virtual void updateData() = 0;
 
-   //: getDevicename()
-   //
-   //  Returns the name identifying the TYPE of Input Device
-   virtual char* getDeviceName() { return "vjInputBase";}
-
    //: Returns the string rep of the chunk type used to config this device
-   // Used by input manager to find chunks that construct devices
+   // This string is used by the device factory to look up device drivers
+   // based up the type of chunk it is trying to load.
    static std::string getChunkType() { return std::string("Undefined"); }
 
    /** @name Functions to remove (?)
@@ -186,16 +184,18 @@ public:
 
    //: getInstanceName()
    //
-   //  Returns the name identifying the INSTANCE of this InputDevice
+   //  Returns the name identifying this instance of the device.
+   // This is the name given to the device in it's config chunk (ie. "MyFlockOfBirds", "TheIbox", etc)
    const char* getInstanceName() {
-      if (instName == NULL) return "Undefined";
+      if (instName == NULL)
+         return "Undefined";
       return instName;
    }
 
    //: fDeviceSupport(ability)
    //
    //  Returns true/false does this input device support the ability passed in
-   int  fDeviceSupport(int devAbility);
+   //int  fDeviceSupport(int devAbility);
 
    //: Is this input device active?.
    int isActive() { return active;}
@@ -237,11 +237,10 @@ protected:
    // Sample() and will become the next Current data.  (NOTE: no dirty bit
    // checking is done to make SURE that valid is newer than current on
    // UpdateData switches)
-   int current, progress, valid;
+   int current, valid, progress;
 
    vjMutex lock;        //: Mutex for swapping the pointers.
    int baudRate;        //: Baud rate of the device (if it is serial device)
-   unsigned int deviceAbilities;    //: Combined mask of device abilities
 };
 
 #endif   /* VJ_INPUT_H */

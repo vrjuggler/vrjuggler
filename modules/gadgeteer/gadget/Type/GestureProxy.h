@@ -72,8 +72,9 @@ public:
    //! POST: this now proxies the given gesture device
    void set(vjGesture* gesturePtr)
    {
-      vjASSERT( gesturePtr->fDeviceSupport(DEVICE_GESTURE) );
+      //vjASSERT( gesturePtr->fDeviceSupport(DEVICE_GESTURE) );
       mGesturePtr = gesturePtr;
+      stupify(false);
 
       vjDEBUG(vjDBG_INPUT_MGR, vjDBG_VERB_LVL) << "gesturePtr: " << gesturePtr << std::endl << vjDEBUG_FLUSH;
    }
@@ -81,23 +82,46 @@ public:
    //: Get the current gesture.
    //! RETURNS: id of current gesture
    int getGesture()
-   { return mGesturePtr->getGesture(); }
+   {
+      const int defaultGesture(-1);
+
+      if(mStupified)
+         return defaultGesture;
+      else
+         return mGesturePtr->getGesture();
+   }
 
    //: Return the identifier of the string gesture.
    //! ARGS: name - string name of a gesture
    //! RETURNS: -1 if not found
    int getGestureIndex(std::string name)
-   { return mGesturePtr->getGestureIndex(name); }
+   {
+      const int defaultGestureIndex(-1);
+      if(mStupified)
+         return defaultGestureIndex;
+      else
+         return mGesturePtr->getGestureIndex(name);
+   }
 
    //: Get a gesture name
    //! RETURNS: Name of gesture with the given id (gestureId)
    //! NOTE: if gestureId = -1, returns name of current gesture
    std::string getGestureString(int gestureId = -1)
-   { return mGesturePtr->getGestureString(gestureId); }
+   {
+      if(mStupified)
+         return std::string("");
+      else
+         return mGesturePtr->getGestureString(gestureId);
+   }
 
    //: Returns a pointer to the device held by this proxy.
    vjGesture* getGesturePtr()
-   { return mGesturePtr; }
+   {
+      if(mStupified)
+         return NULL;
+      else
+         return mGesturePtr;
+   }
 
    static std::string getChunkType() { return "GestureProxy"; }
 

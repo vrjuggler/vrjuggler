@@ -37,33 +37,34 @@
 
 bool vjDigitalProxy::config(vjConfigChunk* chunk)
 {
-   vjDEBUG_BEGIN(vjDBG_INPUT_MGR,3) << "vjDigitalProxy::config() ----\n" << vjDEBUG_FLUSH;
+   vjDEBUG_BEGIN(vjDBG_INPUT_MGR,3) << "----------- configuring DIGITAL proxy ----\n" << vjDEBUG_FLUSH;
    vjASSERT(((std::string)chunk->getType()) == "DigProxy");
-
 
    int unitNum = chunk->getProperty("unit");
    std::string proxy_name = chunk->getProperty("name");
    std::string dev_name = chunk->getProperty("device");
 
-   int proxy_num = vjKernel::instance()->getInputManager()->addDigProxy(dev_name,unitNum,proxy_name,this);
-
-   if ( proxy_num != -1)
+   vjInput* input_dev = vjKernel::instance()->getInputManager()->getDevice(dev_name);
+   if(NULL == input_dev)       // Not found, ERROR
    {
-      vjDEBUG_END(vjDBG_INPUT_MGR,3) << "DigProxy config()'ed" << std::endl
-                                     << vjDEBUG_FLUSH;
-      return true;
-   }
-   else
-   {
-      vjDEBUG_BEGIN(vjDBG_INPUT_MGR,vjDBG_CONFIG_LVL) << "DigProxy config() failed" << std::endl;
-      vjDEBUG_NEXTnl(vjDBG_INPUT_MGR,vjDBG_CONFIG_LVL) << "dev_name: " << dev_name << std::endl;
-      vjDEBUG_NEXTnl(vjDBG_INPUT_MGR,vjDBG_CONFIG_LVL) << "unitNum: " << unitNum << std::endl;
-      vjDEBUG_NEXTnl(vjDBG_INPUT_MGR,vjDBG_CONFIG_LVL) << "chunk:\n" << *chunk << std::endl;
-      vjDEBUG_CONT_ENDnl(vjDBG_INPUT_MGR,vjDBG_CONFIG_LVL) << vjDEBUG_FLUSH;
-
-      vjDEBUG_END(vjDBG_INPUT_MGR,3) << std::endl << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_INPUT_MGR, vjDBG_CONFIG_LVL) << "vjDigitalProxy::config: Could not find device: " << dev_name << std::endl << vjDEBUG_FLUSH;
       return false;
    }
+
+   vjDigital* dig_dev = dynamic_cast<vjDigital*>(input_dev);
+   if(NULL == dig_dev)
+   {
+      vjDEBUG(vjDBG_INPUT_MGR, vjDBG_CRITICAL_LVL) << "vjDigitalProxy::config: Device was of wrong type: " << dev_name
+                                               << " type:" << typeid(input_dev).name() << std::endl << vjDEBUG_FLUSH;
+      return false;
+   }
+
+   vjDEBUG_CONT(vjDBG_INPUT_MGR,vjDBG_STATE_LVL) << "   attaching to device named: " << dev_name.c_str() << std::endl << vjDEBUG_FLUSH;
+   vjDEBUG_CONT(vjDBG_INPUT_MGR,vjDBG_STATE_LVL) << "   at unit number: " << unitNum << std::endl << vjDEBUG_FLUSH;
+   vjDEBUG_END(vjDBG_INPUT_MGR, vjDBG_STATE_LVL) << "   DigitalProxy config()'ed" << std::endl << vjDEBUG_FLUSH;
+
+   set(dig_dev,unitNum);    // Set the proxy
+   return true;
 }
 
 

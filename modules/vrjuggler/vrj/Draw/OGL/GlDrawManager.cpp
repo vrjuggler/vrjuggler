@@ -342,9 +342,10 @@ void vjGlDrawManager::drawObjects()
    {
       glDisable(GL_LIGHTING);
       glDisable(GL_BLEND);
-      vjInputManager*  input_mgr = vjKernel::instance()->getInputManager();
+      //vjInputManager*  input_mgr = vjKernel::instance()->getInputManager();
 
       // Draw all glove Proxies that have drawing flag set
+      /* XXX: Broken because we don't have list anymore
       vjGloveProxy* cur_glove_proxy;
       for (int glv = 0; glv < input_mgr->getNumGloveProxies(); glv++)    // For each glove in system
       {
@@ -352,6 +353,7 @@ void vjGlDrawManager::drawObjects()
          if (cur_glove_proxy->isVisible())                         // If flag set
             drawGlove( cur_glove_proxy );                           // draw it
       }
+      */
 
       // Draw any other object that need to be seen
    }
@@ -512,7 +514,7 @@ void vjGlDrawManager::drawSimulator(vjSimDisplay* sim)
       glPushMatrix();
          glMultMatrixf(sim->getWandPos().getFloatPtr());
          glColor3f(0.0f, 1.0f, 0.0f);
-         drawCone(0.2f, 0.6f, 6.0f, 1.0f);
+         drawCone(0.2f, 0.6f, 6, 1);
       glPopMatrix();
 
        // Draw a The display surfaces

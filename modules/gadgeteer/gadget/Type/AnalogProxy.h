@@ -40,7 +40,7 @@
 #define _VJ_ANALOGPROXY_H_
 
 #include <vjConfig.h>
-#include <assert.h>
+#include <Kernel/vjDebug.h>
 #include <Input/vjInput/vjAnalog.h>
 #include <Input/InputManager/vjProxy.h>
 
@@ -72,22 +72,29 @@ public:
    //! ARGS: subNum - The subunit number of the analog device
    void set(vjAnalog* anaPtr, int subNum)
    {
-      assert( anaPtr->fDeviceSupport(DEVICE_ANALOG) );
+      //vjASSERT( anaPtr->fDeviceSupport(DEVICE_ANALOG) );
       m_anaPtr = anaPtr;
       m_unitNum = subNum;
+      stupify(false);
 
       vjDEBUG(vjDBG_INPUT_MGR, vjDBG_VERB_LVL) << "anaPtr: " << anaPtr << std::endl
               << "subNum: " << subNum << std::endl << vjDEBUG_FLUSH;
    }
 
    //: Update the cached data copy from the device
-   void updateData()
+   virtual void updateData()
    { m_data = m_anaPtr->getAnalogData(m_unitNum);}
 
    //: Get the current analog data value
    //! RETURNS: The analog data from the device
    float getData() const
-   { return m_data;}
+   {
+      const float analogDefault(0.0f);
+      if(mStupified)
+         return analogDefault;
+      else
+         return m_data;
+   }
 
    vjAnalog* getAnalogPtr()
    { return m_anaPtr;}
@@ -102,7 +109,7 @@ public:
    virtual vjInput* getProxiedInputDevice()
    {
       vjInput* ret_val = dynamic_cast<vjInput*>(m_anaPtr);
-      vjASSERT(ret_val != NULL);
+      vjASSERT((ret_val != NULL) && "Cross-cast in vjAnalogProxy failed");
       return ret_val;
    }
 

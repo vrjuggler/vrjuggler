@@ -36,6 +36,7 @@
 //#pragma once
 
 #include <vjConfig.h>
+#include <Input/vjInput/vjInput.h>
 #include <Input/vjInput/vjAnalog.h>
 #include <Input/vjSim/vjSimInput.h>
 
@@ -45,11 +46,11 @@
 //
 // This class should not be used directly by the user.
 //!PUBLIC_API:
-class vjSimAnalog : virtual public vjAnalog, public vjSimInput
+class vjSimAnalog : public vjInput, public vjAnalog, public vjSimInput
 {
 public:
    vjSimAnalog();
-   
+
    virtual ~vjSimAnalog();
 
    virtual bool config(vjConfigChunk* chunk);
@@ -68,9 +69,6 @@ public:
 
    //: Update the data
    virtual void updateData();
-
-    //: Get the name of the device
-   char* getDeviceName() { return "vjSimAnalog";}
 
    static std::string getChunkType() { return std::string("SimAnalog");}
 

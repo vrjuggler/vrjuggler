@@ -29,12 +29,19 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-
-
 #ifndef _VJ_DEVICE_INTERFACE_H_
 #define _VJ_DEVICE_INTERFACE_H_
 
 #include <vjConfig.h>
+#include <Kernel/vjDebug.h>
+
+class vjProxy;
+class vjAnalogProxy;
+class vjDigitalProxy;
+class vjGestureProxy;
+class vjGloveProxy;
+class vjKeyboardProxy;
+class vjPosProxy;
 
 //: Base class for simplified proxy interfaces
 //
@@ -48,15 +55,15 @@
 //+         application
 //!PUBLIC_API:
 //------------------------------------------------------------------------------
-class vjDeviceInterface
+class vjBaseDeviceInterface
 {
 protected:
-   vjDeviceInterface(const vjDeviceInterface& other) {;}
+   vjBaseDeviceInterface(const vjBaseDeviceInterface& other) {;}
 
 public:
-   vjDeviceInterface();
+   vjBaseDeviceInterface();
 
-   virtual ~vjDeviceInterface();
+   virtual ~vjBaseDeviceInterface();
 
    //: Initialize the object
    //! ARGS: proxyName - String name of the proxy to connect to
@@ -67,18 +74,17 @@ public:
    //+       (mProxyIndex != -1) ==> mProxyName has name of device && local proxy ptr is set to the device
    virtual void refresh();
 
-   //: Return the index of the proxy
-   int getProxyIndex()
-   {  return mProxyIndex; }
-
    //: Return the name of the proxy
    std::string getProxyName()
    { return mProxyName; }
 
+   bool isConnected()
+   { return (NULL != mProxyPtr); }
+
 protected:
-   int         mProxyIndex;         //: The index of the proxy
-   std::string mProxyName;          //: The name of the proxy (or alias) we are looking at
-   bool        mNameSet;            //: Has the user set a name??
+   vjProxy*    mProxyPtr;     //: Ptr to the proxy
+   std::string mProxyName;    //: The name of the proxy (or alias) we are looking at
+   bool        mNameSet;      //: Has the user set a name??
 
 public:
    static void refreshAllDevices();
@@ -87,10 +93,61 @@ private:    // Static information
    /* We need to keep track of all the allocated device interfaces
     * so we can update them when the system reconfigures itself
     */
-   static void addDevInterface(vjDeviceInterface* dev);
-   static void removeDevInterface(vjDeviceInterface* dev);
+   static void addDevInterface(vjBaseDeviceInterface* dev);
+   static void removeDevInterface(vjBaseDeviceInterface* dev);
 
-   static std::vector<vjDeviceInterface*> mAllocatedDevices;
+   static std::vector<vjBaseDeviceInterface*> mAllocatedDevices;
 };
+
+
+// ---- Type specific interfaces ----
+
+template<class PROXY_TYPE>
+class vjDeviceInterface : public vjBaseDeviceInterface
+{
+protected:
+   vjDeviceInterface(vjDeviceInterface& other) {;}
+
+public:
+   vjDeviceInterface() : mTypeSpecificProxy(NULL)
+   {;}
+
+   PROXY_TYPE* operator->()
+   { return mTypeSpecificProxy; }
+
+   PROXY_TYPE& operator*()
+   { return *(mTypeSpecificProxy); }
+
+   virtual void refresh()
+   {
+      vjBaseDeviceInterface::refresh();
+      if(mProxyPtr != NULL)
+      {
+         mTypeSpecificProxy = dynamic_cast<PROXY_TYPE*>(mProxyPtr);
+         if(NULL == mTypeSpecificProxy)
+         {
+            vjDEBUG(vjDBG_INPUT_MGR, vjDBG_CRITICAL_LVL) << "vjAnalogInterface: Tried to point at proxy of incorrect type named: " << mProxyName << std::endl << vjDEBUG_FLUSH;
+         }
+      }
+
+      if((NULL == mProxyPtr) || (NULL == mTypeSpecificProxy))
+      {
+         mTypeSpecificProxy = &mDummyProxy;
+      }
+   }
+
+private:
+   PROXY_TYPE*    mTypeSpecificProxy;    // The proxy that is being wrapped
+   PROXY_TYPE     mDummyProxy;
+};
+
+
+// --- Typedefs to the old types --- //
+typedef vjDeviceInterface<vjAnalogProxy>     vjAnalogInterface;
+typedef vjDeviceInterface<vjDigitalProxy>    vjDigitalInterface;
+typedef vjDeviceInterface<vjGestureProxy>    vjGestureInterface;
+typedef vjDeviceInterface<vjGloveProxy>      vjGloveInterface;
+typedef vjDeviceInterface<vjKeyboardProxy>   vjKeyboardInterface;
+typedef vjDeviceInterface<vjPosProxy>        vjPosInterface;
 
 #endif

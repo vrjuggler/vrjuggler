@@ -47,8 +47,9 @@
 
 bool vjCyberGlove::config(vjConfigChunk *c)
 {
-   if(!vjGlove::config(c))
+   if(! (vjInput::config(c) && vjGlove::config(c) ))
       return false;
+
 
    vjASSERT(myThread == NULL);      // This should have been set by vjInput(c)
 
@@ -68,6 +69,7 @@ bool vjCyberGlove::config(vjConfigChunk *c)
     }
 
     // init glove proxy interface
+    /* XXX: Doesn't appear to be used
     int proxy_index = vjKernel::instance()->getInputManager()->getProxyIndex(glove_pos_proxy);
     if(proxy_index != -1)
        mGlovePos[0] = vjKernel::instance()->getInputManager()->getPosProxy(proxy_index);
@@ -75,6 +77,7 @@ bool vjCyberGlove::config(vjConfigChunk *c)
        vjDEBUG(vjDBG_INPUT_MGR,0)
           << "ERROR: vjCyberGlove::vjCyberGlove: Can't find posProxy."
           << std::endl << std::endl << vjDEBUG_FLUSH;
+    */
 
     mGlove = new CyberGloveBasic( mCalDir, sPort, baudRate );
 
@@ -123,7 +126,7 @@ void vjCyberGlove::controlLoop(void* nullParam)
    // Spin in the sampling
    while(1)
    {
-	   sample();
+      sample();
    }
 }
 
