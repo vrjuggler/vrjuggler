@@ -49,16 +49,12 @@
 namespace vpr
 {
 
-//: Shared memory pool.
-//
-//    Base class that defines how all memory pools
-// should behave.
-//
-// Author:
-//  Allen Bierbaum
-//
-// Date: 1-9-97
-//
+/**
+ * Shared memory pool.
+ * Base class that defines how all memory pools should behave.
+ *
+ * @date 1-9-97
+ */
 class MemPool
 {
 

@@ -52,9 +52,10 @@
 
 namespace vpr {
 
-//: Spawning constructor
-//  This will actually start a new thread
-//  that will execute the specified function.
+/**
+ * Spawning constructor.  This will actually start a new thread that will
+ * execute the specified function.
+ */
 ThreadSGI::ThreadSGI (thread_func_t func, void* arg,
                       BaseThread::VPRThreadPriority priority,
                       BaseThread::VPRThreadScope scope,
@@ -84,9 +85,10 @@ ThreadSGI::ThreadSGI (thread_func_t func, void* arg,
 }
 
 
-//: Spawning constructor with arguments (functor version).
-//   This will start a new
-//   thread that will execute the specified function.
+/**
+ * Spawning constructor with arguments (functor version).  This will start a
+ * new thread that will execute the specified function.
+ */
 ThreadSGI::ThreadSGI (BaseThreadFunctor* functorPtr,
                       BaseThread::VPRThreadPriority priority,
                       BaseThread::VPRThreadScope scope,
@@ -116,12 +118,7 @@ ThreadSGI::ThreadSGI (BaseThreadFunctor* functorPtr,
 }
 
 /**
- * Called by the spawn routine to start the user thread function
- * PRE: Called ONLY by a new thread
- * POST: Do any thread registration necessary
- *       Call the user thread functor
- *
- * @param null_param
+ * Called by the spawn routine to start the user thread function.
  */
 void ThreadSGI::startThread(void* null_param)
 {
@@ -139,13 +136,10 @@ void ThreadSGI::startThread(void* null_param)
 }
 
 
-// -----------------------------------------------------------------------
-//: Make the calling thread wait for the termination of the specified
-//+ thread.
-//! NOTE:  Not implemented.
-//! RETURNS:  0 - Succeedful completion
-//! RETURNS: -1 - Error
-// -----------------------------------------------------------------------
+/**
+ * Makes the calling thread wait for the termination of the specified
+ * thread.
+ */
 int
 ThreadSGI::join (void** arg)
 {

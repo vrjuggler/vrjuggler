@@ -51,7 +51,6 @@
 namespace vpr
 {
 
-//!PUBLIC_API:
 class VPR_CLASS_API RWMutexNSPR
 {
 public:
@@ -65,77 +64,77 @@ public:
       PR_DestroyRWLock(mRwLock);
    }
 
-   //---------------------------------------------------------
-   //: Lock the mutex.
-   //
-   //! RETURNS:  1 - Acquired
-   //! RETURNS: -1 - Error
-   //---------------------------------------------------------
+   /**
+    * Locks the mutex.
+    *
+    * @return  1 - Acquired
+    * @return -1 - Error
+    */
    int acquire (void)
    {
       return acquireWrite();
    }
 
-   //----------------------------------------------------------
-   //: Acquire a read mutex.
-   //----------------------------------------------------------
+   /**
+    * Acquires a read mutex.
+    */
    int acquireRead (void)
    {
       PR_RWLock_Rlock(mRwLock);
       return 1;
    }
 
-   //----------------------------------------------------------
-   //: Acquire a write mutex.
-   //----------------------------------------------------------
+   /**
+    * Acquires a write mutex.
+    */
    int acquireWrite (void)
    {
       PR_RWLock_Wlock(mRwLock);
       return 1;
    }
 
-   //---------------------------------------------------------
-   //: Trys to acquire the mutex.
-   //  Wait until the semaphore value is greater than 0.
-   //  Then decrement by 1 and return.
-   //  P operation.
-   //
-   //! RETURNS: 1 - Acquired
-   //! RETURNS: 0 - Not acquired
-   //---------------------------------------------------------
+   /**
+    * Tries to acquire the mutex.
+    * Wait until the semaphore value is greater than 0.
+    * Then decrement by 1 and return.
+    * P operation.
+    *
+    * @return 1 - Acquired
+    * @return 0 - Not acquired
+    */
    int tryAcquire (void)
    {
       return tryAcquireWrite();
    }
 
-   //----------------------------------------------------------
-   //: Try to acquire a read mutex.
-   //----------------------------------------------------------
+   /**
+    * Tries to acquire a read mutex.
+    */
    int tryAcquireRead (void);
 
-   //----------------------------------------------------------
-   //: Try to acquire a write mutex.
-   //----------------------------------------------------------
+   /**
+    * Tries to acquire a write mutex.
+    */
    int tryAcquireWrite (void);
 
-   //---------------------------------------------------------
-   //: Release the mutex.
-   //
-   //! RETURNS:  0 - Succeed
-   //! RETURNS: -1 - Error
-   //---------------------------------------------------------
+   /**
+    * Releases the mutex.
+    *
+    * @return  0 - Succeed
+    * @return -1 - Error
+    */
    int release (void)
    {
       PR_RWLock_Unlock(mRwLock);
       return 0;
    }
 
-   //------------------------------------------------------
-   //: Test the current lock status.
-   //
-   //! RETURNS: 0 - Not locked
-   //! RETURNS: 1 - Locked
-   //------------------------------------------------------
+   /**
+    * Tests the current lock status.
+    *
+    * @return 0 - Not locked
+    * @return 1 - Locked
+    */
 /*
     int test()
     {
@@ -143,9 +142,9 @@ public:
     }
 */
 
-   //---------------------------------------------------------
-   //: Dump the mutex debug stuff and current state.
-   //---------------------------------------------------------
+   /**
+    * Dumps the mutex debug stuff and current state.
+    */
    void dump (FILE* dest = stderr,
               const char* message = "\n------ Mutex Dump -----\n") const
    {
@@ -153,8 +152,8 @@ public:
    }
 
 protected:
-   int numWaitingReaders;    //: Number of waiting readers.
-   int numWaitingWriters;    //: Number of waiting writers.
+   int numWaitingReaders;    /**<  Number of waiting readers. */
+   int numWaitingWriters;    /**<  Number of waiting writers. */
 
    // Value is -1 if writer has the lock, else this keeps track of the
    // number of readers holding the lock.

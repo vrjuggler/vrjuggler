@@ -52,24 +52,19 @@
 namespace vpr
 {
 
-//----------------------------------------------
-//:    Barrier wrapper for SGI.
-//
-//    A barrier is a primitive that allows several
-//    processes to wait at a sync point.
-//
-// Author:
-//  Allen Bierbaum
-//
-// Date: 1-30-97
-//!PUBLIC_API:
-//-----------------------------------------------
+/**
+ * Barrier wrapper for SGI.
+ * A barrier is a primitive that allows several processes to wait at a sync
+ * point.
+ *
+ * @date 1-30-97
+ */
 class BarrierSGI
 {
 public:
-   // -----------------------------------------------------------------------
-   //: Initialize the barrier to synchronize <count> threads.
-   // -----------------------------------------------------------------------
+   /**
+    * Initializes the barrier to synchronize count threads.
+    */
    BarrierSGI (int count) : syncCount(count)
    {
       if (barrierPool == NULL)
@@ -105,10 +100,10 @@ public:
       }
    }
 
-   // -----------------------------------------------------------------------
-   //: Block the caller until all <count> threads have called <wait> and
-   //+ then allow all the caller threads to continue in parallel.
-   // -----------------------------------------------------------------------
+   /**
+    * Blocks the caller until all <count> threads have called <wait> and
+    * then allow all the caller threads to continue in parallel.
+    */
    int wait(int numProcs)
    {
       ;
@@ -121,20 +116,20 @@ public:
       return 0;
    }
 
-   // -----------------------------------------------------------------------
-   //: Tell the barrier to increase the count of the number of threads to
-   //+ syncronize.
-   // -----------------------------------------------------------------------
+   /**
+    * Tells the barrier to increase the count of the number of threads to
+    * syncronize.
+    */
    void addProcess()
    {
       Guard<Mutex> guard(mutex);
       syncCount++;
    }
 
-   // -----------------------------------------------------------------------
-   //: Tell the barrier to decrease the count of the number of threads to
-   //+ syncronize.
-   // -----------------------------------------------------------------------
+   /**
+    * Tells the barrier to decrease the count of the number of threads to
+    * syncronize.
+    */
    void removeProcess()
    {
       Guard<Mutex> guard(mutex);
