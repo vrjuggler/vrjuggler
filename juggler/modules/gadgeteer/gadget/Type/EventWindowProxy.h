@@ -129,7 +129,7 @@ public:
          return NULL;
 
       Input* ret_val = dynamic_cast<Input*>(mTypedDevice);
-      vprASSERT(ret_val != NULL);
+      vprASSERT((ret_val != NULL) && "Cross-cast in EventWindowProxy failed");
       return ret_val;
    }
 
