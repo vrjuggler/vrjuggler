@@ -145,11 +145,9 @@ public:
    vpr::Interval getWireAccessTime (const vpr::Uint32 bits) const
    {
       // This gets the number of microseconds required to transmit the given
-      // number of bits.  The quotient must be multiplied by 1,000,000 because
-      // the result is (seconds / 1000000).  This happens because mCapacity is
-      // measured in _megabits_ per second but the given argument is simply
-      // bits.
-      double microsec = ((double) bits / mCapacity) * 1000000.0f;
+      // number of bits.  This works because mCapacity is measured in
+      // _megabits_ per second but the given argument is simply bits.
+      double microsec = ((double) bits / mCapacity);
 
       // Round up since vpr::Interval objects deal in whole numbers.
       double time = ceil(microsec);
