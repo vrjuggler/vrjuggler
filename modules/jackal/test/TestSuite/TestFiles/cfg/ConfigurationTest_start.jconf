@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?org-vrjuggler-jccl-settings configuration.version="3.0"?>
+<configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+               name="Test Configuration Starter"
+               xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.0/configuration http://www.vrjuggler.org/jccl/xsd/3.0/configuration.xsd"
+               xmlns="http://www.vrjuggler.org/jccl/xsd/3.0/configuration">
+   <elements>
+     <dependent_elt_2 name="Ext Dependent Element 1" version="1">
+       <stringProp>La la la</stringProp>
+     </dependent_elt_2>
+     <dependent_elt_2 name="Ext Dependent Element 2" version="1">
+       <stringProp>Al al al</stringProp>
+     </dependent_elt_2>
+     <dependent_elt_1 name="Ext Dependent Element 3" version="1">
+       <boolProp>false</boolProp>
+     </dependent_elt_1>
+     <dependent_elt_3 name="Ext Dependent Element 4" version="1">
+       <child_elt>
+           <child_elt_test_1 name="Child element property 0" version="1">
+             <prop1>251</prop1>
+           </child_elt_test_1>
+       </child_elt>
+     </dependent_elt_3>
+   </elements>
+</configuration>

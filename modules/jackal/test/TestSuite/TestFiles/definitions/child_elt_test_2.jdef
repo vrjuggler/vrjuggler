@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?org-vrjuggler-jccl-settings definition.version="3.0"?>
+<definition xmlns="http://www.vrjuggler.org/jccl/xsd/3.0/definition"
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.0/definition http://www.vrjuggler.org/jccl/xsd/3.0/definition.xsd"
+            name="child_elt_test_2">
+   <definition_version version="1" label="Test Child Element 2">
+      <help>This element is to be used as the target for an element pointer to another child element.</help>
+      <parent/>
+      <property valuetype="integer" variable="false" name="prop">
+         <help></help>
+         <value label="Property" defaultvalue="0" />
+      </property>
+      <upgrade_transform/>
+   </definition_version>
+</definition>

@@ -1,0 +1,1987 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN"
+"http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd">
+<book>
+  <bookinfo>
+    <title>Gadgeteer</title>
+
+    <subtitle>Device Driver Authoring Guide</subtitle>
+
+    <releaseinfo>Version 0.4</releaseinfo>
+
+    <pubdate>$Date$</pubdate>
+  </bookinfo>
+
+  <part id="intro.part">
+    <title id="programming.part">Introduction</title>
+
+    <partintro>
+      <para>We begin this book with some basic background information about
+      Gadgeteer and the device drivers it uses. This part is written primarily
+      for programmers who are new to Gadgeteer and VR Juggler in general.
+      Rather than including technical content in this part, we instead review
+      concepts and goals to provide new developers with an understanding of
+      our motivations and our long-term goals for Gadgeteer.</para>
+    </partintro>
+
+    <chapter id="overview.chapter">
+      <title>Overview of Gadgeteer</title>
+
+      <indexterm>
+        <primary>Gadgeteer</primary>
+
+        <secondary>overview</secondary>
+      </indexterm>
+
+      <para>Gadgeteer acts as a hardware device management system. It contains
+      a dynamically extensible Input Manager<indexterm><primary>Input Manager</primary></indexterm>
+      that treats devices in terms of abstract concepts such as
+      <quote>positional,</quote> <quote>digital,</quote> <quote>gesture,</quote>
+      etc. It also contains a Remote Input Manager<indexterm><primary>Remote
+      Input Manager</primary></indexterm> that can share device samples
+      between computers<footnote><para>The Remote Input Manager provides the
+      foundation for Cluster Juggler, the software that allows VR Juggler
+      applications to be run on a cluster of graphics workstations. For more
+      information about Cluster Juggler refer to the <emphasis>Cluster Juggler
+      Guide</emphasis> and to the <ulink url="http://www.vrjuggler.org/">VR
+      Juggler website</ulink>.</para></footnote>. Most importantly, Gadgeteer
+      provides device input for use with VR Juggler applications. As such,
+      Gadgeteer was designed from the beginning to be used with an
+      ever-widening array of virtual reality hardware configurations.</para>
+
+      <section>
+        <title>Goals of Gadgeteer</title>
+
+        <indexterm>
+          <primary>Gadgeteer</primary>
+
+          <secondary>goals</secondary>
+        </indexterm>
+
+        <para>Gadgeteer serves to hide input device hardware from programmers
+        so that immersive software may be written that can take advantage of a
+        wide variety of devices. This goal arises from previous experience
+        with software toolkits that tied immersive applications to specific
+        devices, thereby limiting the portability of the applications between
+        immersive hardware configurations. With Gadgeteer, applications can be
+        written that migrate transparently between different hardware
+        configurations with no required knowledge on the part of the
+        application author relating to vendors, models, drivers, etc.</para>
+
+        <para>Gadgeteer categorizes input devices based on abstract input
+        types. The categories are the following:</para>
+
+        <itemizedlist>
+          <listitem>
+            <para>Position</para>
+          </listitem>
+
+          <listitem>
+            <para>Analog</para>
+          </listitem>
+
+          <listitem>
+            <para>Digital</para>
+          </listitem>
+
+          <listitem>
+            <para>Glove</para>
+          </listitem>
+
+          <listitem>
+            <para>Gesture</para>
+          </listitem>
+
+          <listitem>
+            <para>Simulator</para>
+          </listitem>
+        </itemizedlist>
+
+        <para>Each of these is described in more detail below in <xref
+        linkend="device.types.section" />.</para>
+
+        <para>In this categorization, devices from different vendors may
+        return data that maps to the same abstract form. A single piece of
+        hardware may even map to multiple input types, and more device types
+        can be added as new hardware becomes available. Application authors
+        write their code in terms of abstract input types, so as long as a
+        device is available that provides the needed input, the application
+        can function.</para>
+      </section>
+
+      <section id="driver.goals.section">
+        <title>Goals for Device Driver Authors</title>
+
+        <para>In keeping with the general goals of Gadgeteer, device driver
+        authors should strive to achieve certain goals for each device driver
+        they write. In no particular order, we feel that the most important
+        goals are the following:</para>
+
+        <itemizedlist>
+          <listitem>
+            <para>Portability</para>
+          </listitem>
+
+          <listitem>
+            <para>Maintainability</para>
+          </listitem>
+
+          <listitem>
+            <para>Efficiency</para>
+          </listitem>
+
+          <listitem>
+            <para>Modularity</para>
+          </listitem>
+        </itemizedlist>
+
+        <para>For the most part, these goals are no different than those of
+        any other software project. Nonetheless, we will explain why each is
+        important in the following subsections.</para>
+
+        <section>
+          <title>Portability</title>
+
+          <para>Gadgeteer is a cross-platform device management system, and as
+          such, the devices it manages should be usable on all platforms
+          supported by Gadgeteer. While this may not always be possible<footnote><para>There
+          are various reasons why a given hardware device may not be usable
+          between computers. For example, not all architectures have parallel
+          ports, and thus, a parallel port device could not be expected to be
+          used where no port is available. In general, however, the software
+          device driver should not be the limiting factor in the use of a
+          hardware device.</para></footnote>, device driver authors should
+          still attempt to make their drivers as portable as possible. The
+          <glossterm linkend="gloss.vpr">VR Juggler Portable Runtime</glossterm>
+          (VPR), introduced later in <xref linkend="vpr.chapter" />, provides
+          many features that simplify the work of writing portable software.
+          This applies to device drivers as much as any other piece of
+          software, and thus, programmers should make use of VPR whenever
+          possible.</para>
+        </section>
+
+        <section>
+          <title>Maintainability</title>
+
+          <para>Hardware tends to evolve over time, and new versions of a
+          given device may be released. With new hardware, the communication
+          protocol may change, either through extensions or through extensive
+          changes. In order for Gadgeteer device drivers to be used with new
+          hardware, a driver must be written so that it can be maintained by
+          other programmers. That means that a driver should be documented
+          well, and it should not use complex techniques to communicate with
+          the hardware.</para>
+
+          <para>Based on our experience, we recommend that the following
+          practices when writing a new driver:</para>
+
+          <itemizedlist>
+            <listitem>
+              <para>Do not <quote>brute force</quote> the driver
+              implementation just to get something working. Implement the
+              protocol clearly and completely.</para>
+            </listitem>
+
+            <listitem>
+              <para>Do not hard-code maximum values to match a local
+              installation or the current limitations of the hardware. For
+              example, if a positional tracker at the local facility only has
+              two trackers attached to it, do not assume that everyone else
+              has the same configuration.</para>
+            </listitem>
+
+            <listitem>
+              <para>Do not do tricks with memory buffers. C and C++ provide
+              very nice features for accessing blocks of memory, so there is
+              usually no need to do pointer math by hand. More often than not,
+              a <literal>struct</literal> or a <literal>union</literal> will
+              do a much better job than an array of bytes.</para>
+            </listitem>
+          </itemizedlist>
+        </section>
+
+        <section>
+          <title>Efficiency</title>
+
+          <para>Input devices used with virtual reality systems tend to sample
+          at a much higher rate than the graphics are rendered (1000 Hz versus
+          60 Hz). Thus, for a given frame, the driver may make tens or
+          hundreds of samples. Gadgeteer provides some facilities for
+          efficient collection of samples, but ultimately, the driver author
+          must ensure that the driver will not overwhelm the local computer
+          (or the network if the Remote Input Manager is being used). On the
+          other hand, minimizing input latency is very important in achieving
+          good suspension of disbelief on the part of the user. Thus, it is
+          not advisable to discard samples.</para>
+
+          <para>The key thing to keep in mind when writing a device driver for
+          Gadgeteer is that the driver will be running asynchronously from the
+          graphics. Usually, the sample rate will be limited by how fast the
+          sample can be read from the hardware, be it a memory access, a
+          serial port read, or a network buffer read. A balance between low
+          latency, memory efficiency, and possibly network efficiency must be
+          found.</para>
+        </section>
+
+        <section>
+          <title>Modularity</title>
+
+          <para>The current practices used in Gadgeteer encourage modularity
+          of device drivers. Each driver should be able to stand on its own as
+          a single unit within the Input Manager. This philosophy allows
+          individual drivers to be loaded on demand at runtime, and it
+          simplifies compilation of drivers that are not supported on all
+          operating systems.</para>
+        </section>
+      </section>
+    </chapter>
+
+    <chapter id="vpr.chapter">
+      <title>Using the VR Juggler Portable Runtime</title>
+
+      <indexterm>
+        <primary>VPR</primary>
+
+        <secondary>using</secondary>
+      </indexterm>
+
+      <indexterm>
+        <primary>VPR</primary>
+
+        <secondary>overview</secondary>
+      </indexterm>
+
+      <para>In this chapter, we will review briefly key components of the
+      <ulink url="http://www.vrjuggler.org/vapor/">VR Juggler Portable Runtime</ulink>
+      (VPR) that will be used by Gadgeteer device driver authors. This chapter
+      is not meant to be a comprehensive description of VPR but rather a small
+      guide to be used by programmers new to Gadgeteer, VPR, and other modules
+      used by VR Juggler. We assume that the reader has some familiarity with
+      operating system programming, in particular with serial device I/O,
+      socket I/O, and multi-threaded techniques. One or more of these will
+      almost certainly come into play when writing a device driver for use
+      with Gadgeteer.</para>
+
+      <para>For those developers new to Gadgeteer and VPR, VPR provides an
+      cross-platform, object-oriented abstraction layer to common operating
+      system features. VPR is the key to the portability of Gadgeteer, Tweek,
+      VR Juggler, and other middleware written at the Virtual Reality
+      Applications Center. It has been in development since January 1997, and
+      it has grown to be a highly portable, robust tool. Software written on
+      top of VPR can be compiled on IRIX, Linux, Windows, FreeBSD, and
+      Solaris, usually without modification.</para>
+
+      <para>Internally, VPR wraps platform-specific APIs such as BSD sockets,
+      POSIX threads, and Win32 overlapped I/O. Depending upon how it is
+      compiled, it may also wrap the <ulink
+      url="http://www.mozilla.org/projects/nspr/index.html">Netscape Portable
+      Runtime</ulink> (<glossterm linkend="gloss.nspr">NSPR</glossterm>),
+      another cross-platform OS abstraction layer written in C. By wrapping
+      NSPR, VPR provides developers with an object-oriented interface and
+      gains even better portability. These details are all hidden behind the
+      classes that make up VPR, and users of VPR do not need to worry about
+      platform-specific details as a result.</para>
+
+      <section>
+        <title>Buffered I/O</title>
+
+        <para>Before discussing features of VPR useful to device driver
+        authors, we must first understand how I/O is handled in VPR. All I/O
+        classes (file handles, serial ports, and sockets) share the base class
+        <classname>vpr::BlockIO</classname>. Reads and writes are performed
+        using blocks of memory (buffers). This design provides an API that
+        more closely resembles that of the underlying operating system (with
+        methods called <methodname>read()</methodname> and
+        <methodname>write()</methodname>), but it is in contrast to
+        stream-oriented I/O that is usually seen in C++. Streams could be
+        written on top of the buffered I/O classes, but thus far, the need has
+        not arisen. With this in mind, the design provides an API that is
+        immediately familiar to programmers used to POSIX-based interfaces,
+        but the API may seem clumsy to C++ programmers who are accustomed to
+        using <type>std::ostream</type> and friends.</para>
+      </section>
+
+      <section id="vpr.serial-ports.section">
+        <title>Serial Ports</title>
+
+        <indexterm>
+          <primary>VPR</primary>
+
+          <secondary>serial port abstraction</secondary>
+        </indexterm>
+
+        <para>Most input devices used for virtual reality systems today make
+        use of a computer&#39;s serial port for data communication. For that
+        reason, it is important that device driver authors have at least a
+        basic understanding of the concepts behind the VPR serial port
+        abstraction. In our experience, serial port programming is not much
+        different than other I/O programming. Implementing the communication
+        protocol used by a given device tends to be the hard part, and that
+        will likely be the case regardless of the underlying hardware.</para>
+
+        <para>The VPR serial port abstraction is based on the concepts
+        implemented by the standard termios serial interface used by most
+        modern UNIX-based operating systems <xref
+        linkend="ref.advanced.prog.unix" />. As such, the API allows enabling
+        and disabling of a subset of the serial device features that can be
+        manipulated using termios directly. To provide cross-platform
+        semantics, however, some termios features are not included because
+        there is no corresponding capability with Win32 overlapped I/O.
+        Furthermore, any termios settings that relate specifically to modems
+        are not included in the VPR serial port abstraction.</para>
+      </section>
+
+      <section id="vpr.sockets.section">
+        <title>Sockets</title>
+
+        <indexterm>
+          <primary>VPR</primary>
+
+          <secondary>socket abstraction</secondary>
+        </indexterm>
+
+        <note>
+          <para>Readers not familiar with socket programming should consult a
+          reference manual (<xref linkend="ref.unix.network.programming" /> is
+          recommended). We do not attempt to explain the ins and outs of
+          socket programming. Instead, we assume that readers are familiar
+          with socket-level I/O and the ideas involved with various types of
+          network communication.</para>
+        </note>
+
+        <para>The socket abstraction follows the concepts set forth by the
+        <glossterm linkend="gloss.bsd.sockets">BSD sockets</glossterm> API,
+        which was also the model for the Winsock API used on Windows. In VPR,
+        two types of sockets may be instantiated: stream-oriented (TCP,
+        <classname>vpr::SocketStream</classname>) and datagram (UDP,
+        <classname>vpr::SocketDatagram</classname>). The helper class
+        <classname>vpr::InetAddr</classname> makes use of Internet Protocol
+        (v4) addresses easier. Built on top of <classname>vpr::SocketStream</classname>
+        are two classes that make writing client/server code easier:
+        <classname>vpr::SocketConnector</classname> and
+        <classname>vpr::SocketAcceptor</classname>. The
+        <classname>vpr::System</classname> interface provides cross-platform
+        data conversion functions to deal with endian issues.</para>
+
+        <para>The utility of various socket classes will vary depending on the
+        needs of a given driver protocol. It is usually safe to assume that
+        the driver will connect to a server of some sort that will send out
+        device samples. Unpacking information from the samples may or may not
+        be necessary, depending on the protocol. Such concerns are left
+        entirely to the driver authors.</para>
+      </section>
+
+      <section id="vpr.threads.chapter">
+        <title>Threads</title>
+
+        <indexterm>
+          <primary>VPR</primary>
+
+          <secondary>thread abstraction</secondary>
+        </indexterm>
+
+        <para>All device drivers written for Gadgeteer will process samples in
+        a thread separate from the Input Manager. We have chosen this design
+        to avoid the complications that often arise from using non-blocking
+        I/O and to allow the drivers to act more as independent entities.
+        Thus, it will be important to understand how to use the VPR thread
+        interface.</para>
+
+        <para>First and foremost, developers must always remember that
+        Gadgeteer uses a shared-memory model for all threads, regardless of
+        the underlying platform-specific thread interface. This follows the
+        lightweight thread model set forth by the POSIX threads (pthreads)
+        standard. With a shared-memory model, all threads have access the same
+        memory, and thus it will almost certainly be necessary to control
+        access to shared variables. In most cases, the class
+        <classname>vpr::Mutex</classname> will provide sufficient control over
+        multi-threaded data access.</para>
+
+        <caution>
+          <para>Multi-threaded programming can be tricky, and it is not
+          something that most people can jump into without some background.
+          Those developers who have not done multi-threaded programming before
+          should review a manual or other reference on the topic before
+          beginning work on a new driver. VPR threads are semantically similar
+          to pthreads, and the concepts inherent in multi-threaded programming
+          (e.g., protecting critical sections) will be the same regardless of
+          the specific implementation. To learn more about pthreads
+          specifically, we recommend <xref linkend="ref.pthreads.programming" />.</para>
+        </caution>
+
+        <para>Device driver authors will probably not have to do much with
+        shared data access control because the driver will operate almost
+        entirely in the sample loop thread. Any other method invocations
+        (starting the driver, stopping it, configuring it, etc.) will happen
+        in the Input Manager thread, and common memory accesses have
+        pre-defined helper methods to simplify the work of driver authors.
+        These details will be explained further in later chapters.</para>
+      </section>
+
+      <section>
+        <title>Programmer Reference</title>
+
+        <indexterm>
+          <primary>VPR</primary>
+
+          <secondary>programmer reference</secondary>
+        </indexterm>
+
+        <para>The various VPR abstraction interfaces are documented
+        extensively, and readers are encouraged to review the VPR Programmer
+        Reference (refer to <ulink url="http://www.vrjuggler.org/vapor/">the
+        VPR website</ulink> for more information).</para>
+
+        <para>The VPR class names follow a standard convention, and
+        understanding this can be helpful in navigating the API documentation.
+        Classes that wrap platform-specific interfaces are named as follows:
+        <classname>vpr::&#60;Type&#62;&#60;Platform&#62;</classname>. For
+        example, the NSPR implementation of <classname>vpr::SocketStream</classname>
+        is named <classname>vpr::SocketStreamNSPR</classname>. Here,
+        &#60;Type&#62; is <quote>SocketStream</quote>, and &#60;Platform&#62;
+        is <quote>NSPR</quote>. The full list of platform names (as spelled in
+        the class names) is as follows:</para>
+
+        <itemizedlist>
+          <listitem>
+            <para>Posix: Used for general POSIX-specified interfaces</para>
+          </listitem>
+
+          <listitem>
+            <para>BSD: Used for the BSD socket wrapper classes</para>
+          </listitem>
+
+          <listitem>
+            <para>Termios: Used for the termios serial port wrapper classes</para>
+          </listitem>
+
+          <listitem>
+            <para>NSPR: Used for NSPR wrapper classes</para>
+          </listitem>
+
+          <listitem>
+            <para>SPROC: Used for the SPROC thread wrapper class</para>
+          </listitem>
+
+          <listitem>
+            <para>Win32: Used for Win32-specific wrapper classes</para>
+          </listitem>
+        </itemizedlist>
+      </section>
+    </chapter>
+  </part>
+
+  <part>
+    <title>Programming</title>
+
+    <partintro>
+      <para>In this part of the book, we explain how to write device drivers
+      and add them to Gadgeteer. We begin with a detailed description of
+      device driver conventions in Gadgeteer and how the drivers fit into the
+      Input Manager. We then explain how drivers are configured using JCCL.
+      Throughout the following chapters, example code will be provided.</para>
+    </partintro>
+
+    <chapter>
+      <title>Drivers and the Input Manager</title>
+
+      <para>As its name suggests, the Input Manager is in charge of managing
+      the active input devices and the samples those devices return. Each
+      device driver will hand off a freshly read sample (also known as a
+      sample buffer) to the Input Manager.</para>
+
+      <section>
+        <title>Drivers as Input Manager Plug-Ins</title>
+
+        <indexterm>
+          <primary>device drivers</primary>
+
+          <secondary>plug-ins</secondary>
+        </indexterm>
+
+        <para>The Input Manager itself never cares about the true type of a
+        device. Instead, it looks at each driver as an implementation of the
+        <interfacename>gadget::Input</interfacename><indexterm><primary>classes</primary><secondary>gadget::Input</secondary></indexterm>
+        interface. This design lends itself well to a plug-in architecture
+        wherein drivers can be loaded at runtime without being compiled into
+        Gadgeteer. Using the Gadgeteer driver plug-in system, users can write
+        their own device drivers without modifying Gadgeteer at all. Indeed,
+        they need not even compile Gadgeteer from its source. All that is
+        needed is a binary installation of Gadgeteer against which the
+        user-written driver can be compiled.</para>
+      </section>
+
+      <section id="device.types.section">
+        <title>Device Types</title>
+
+        <indexterm>
+          <primary>device types</primary>
+        </indexterm>
+
+        <para>As of this writing, there are five key device types handled by
+        the Input Manager:</para>
+
+        <orderedlist>
+          <listitem>
+            <para>Position: <classname>gadget::Position</classname><indexterm><primary>classes</primary><secondary>gadget::Position</secondary></indexterm></para>
+          </listitem>
+
+          <listitem>
+            <para>Digital: <classname>gadget::Digital</classname><indexterm><primary>classes</primary><secondary>gadget::Digital</secondary></indexterm></para>
+          </listitem>
+
+          <listitem>
+            <para>Analog: <classname>gadget::Analog</classname><indexterm><primary>classes</primary><secondary>gadget::Position</secondary></indexterm></para>
+          </listitem>
+
+          <listitem>
+            <para>Glove: <classname>gadget::Glove</classname><indexterm><primary>classes</primary><secondary>gadget::Glove</secondary></indexterm></para>
+          </listitem>
+
+          <listitem>
+            <para>Simulator: <classname>gadget::SimInput</classname><indexterm><primary>classes</primary><secondary>gadget::SimInput</secondary></indexterm>,
+            <classname>gadget::SimPosition</classname><indexterm><primary>classes</primary><secondary>gadget::SimPosition</secondary></indexterm>,
+            <classname>gadget::SimDigital</classname><indexterm><primary>classes</primary><secondary>gadget::SimDigital</secondary></indexterm>,
+            <classname>gadget::SimAnalog</classname><indexterm><primary>classes</primary><secondary>gadget::SimAnalog</secondary></indexterm>,
+            <classname>gadget::SimGlove</classname><indexterm><primary>classes</primary><secondary>gadget::SimGlove</secondary></indexterm></para>
+          </listitem>
+        </orderedlist>
+
+        <section>
+          <title>Position</title>
+
+          <indexterm>
+            <primary>device types</primary>
+
+            <secondary>position</secondary>
+          </indexterm>
+
+          <para>Positional input is usually collected from a
+          six-degree-of-freedom (6DOF) tracker such as a Polhemus Fastrak or
+          an Ascension MotionStar. Thus, position devices in Gadgeteer return
+          samples as standard 4×4 transformation matrices representing the
+          position and orientation of a specific tracker. A tracker may not be
+          able to track all six degrees of freedom, and this is allowed with
+          the Gadgeteer position input type.</para>
+        </section>
+
+        <section>
+          <title>Digital</title>
+
+          <indexterm>
+            <primary>device types</primary>
+
+            <secondary>digital</secondary>
+          </indexterm>
+
+          <para>Digital input comes in discrete forms, as its name suggests.
+          However, a digital device in Gadgeteer terms corresponds most
+          closely with a button device that has an <quote>on</quote> state and
+          an <quote>off</quote> state. In that regard, a more appropriate name
+          for a digital device within Gadgeteer would be a Boolean device,
+          except that Gadgeteer provides more than just two values for input
+          from a digital device. Due to its frame-based nature, Gadgeteer can
+          tell users when the state of a digital device has changed since the
+          last frame, thereby allowing for up to four values to be returned
+          from a digital device:</para>
+
+          <orderedlist>
+            <listitem>
+              <para>On: The device is in the on state.</para>
+            </listitem>
+
+            <listitem>
+              <para>Off: The device is in the off state.</para>
+            </listitem>
+
+            <listitem>
+              <para>Toggle on: The device was in the off state during the last
+              frame and changed to the on state this frame.</para>
+            </listitem>
+
+            <listitem>
+              <para>Toggle off: The device was in the on state during the last
+              frame and changed to the off state this frame.</para>
+            </listitem>
+          </orderedlist>
+
+          <para>The management of the toggle states is handled by Gadgeteer;
+          devices simply need to collect the raw on and off values.</para>
+        </section>
+
+        <section>
+          <title>Analog</title>
+
+          <indexterm>
+            <primary>device types</primary>
+
+            <secondary>analog</secondary>
+          </indexterm>
+
+          <para>Analog input represents a continuous range of values. Of
+          course, with digital computers, analog values can only be simulated.
+          In Gadgeteer, this simulation is performed using floating-point
+          values.</para>
+
+          <para>At the application level, programmers get values from an
+          analog device in the range 0.0 to 1.0 inclusive. In other words,
+          values returned by an analog device are normalized before they are
+          returned to the application. This allows applications to get analog
+          input from a variety of analog devices without depending on a
+          specific range of values returned by any given device.</para>
+        </section>
+
+        <section>
+          <title>Glove</title>
+
+          <indexterm>
+            <primary>device types</primary>
+
+            <secondary>glove</secondary>
+          </indexterm>
+
+          <para></para>
+        </section>
+
+        <section>
+          <title>Gesture</title>
+
+          <indexterm>
+            <primary>device types</primary>
+
+            <secondary>gesture</secondary>
+          </indexterm>
+
+          <para></para>
+        </section>
+
+        <section>
+          <title>Simulator</title>
+
+          <indexterm>
+            <primary>device types</primary>
+
+            <secondary>simulator</secondary>
+          </indexterm>
+
+          <para>For each of the above, there is at least one corresponding
+          simulator device type<footnote><para>Gadgeteer is designed so that
+          users may write new simulator devices. In fact, we encourage this so
+          that we can expand on the ways that various input types may be
+          <quote>simulated</quote> for desktop use.</para></footnote>. Such a
+          device stands in for the corresponding <quote>real</quote> device
+          when one is not available. For example, when using a VR application
+          on the desktop, a 6DOF position tracker is not usually available.
+          Instead, the mouse and keyboard could be used to stand in for the
+          6DOF tracker. Alternatively, a 3D graphical user interface (GUI)
+          could be written using GLUT to provide a more visually expressive
+          desktop tracker stand-in.</para>
+
+          <para>The word <quote>simulator</quote> is a bit of a misnomer. As
+          noted above, these devices act more as stand-ins when another device
+          is not available. To a VR application, the data returned will look
+          exactly the same, but the input mechanism employed by the user will
+          vary.</para>
+        </section>
+      </section>
+
+      <section>
+        <title>The Input Mixer</title>
+
+        <indexterm>
+          <primary>input mixer</primary>
+        </indexterm>
+
+        <indexterm>
+          <primary>classes</primary>
+
+          <secondary>gadget::InputMixer&#60;S, T&#62;</secondary>
+        </indexterm>
+
+        <para>The second version of the Remote Input Manager<indexterm><primary>Remote
+        Input Manager</primary></indexterm>, introduced in mid-2002,
+        implemented input distribution by sharing devices rather than proxies,
+        as done in the original version <xref linkend="ref.eolson.thesis" />.
+        This refactoring has changed the class hierarchy for device drivers.
+        Previously, classes such as <classname>gadget::Digital</classname><indexterm><primary>classes</primary><secondary>gadget::Digital</secondary></indexterm>
+        and <classname>gadget::Position</classname><indexterm><primary>classes</primary><secondary>gadget::Position</secondary></indexterm>
+        derived from <classname>gadget::Input</classname><indexterm><primary>classes</primary><secondary>gadget::Input</secondary></indexterm>,
+        and device drivers used multiple inheritance to derive from one or
+        more of <classname>gadget::Analog</classname><indexterm><primary>classes</primary><secondary>gadget::Analog</secondary></indexterm>,
+        <classname>gadget::Digital</classname><indexterm><primary>classes</primary><secondary>gadget::Digital</secondary></indexterm>,
+        etc.</para>
+
+        <para>With the introduction of <classname>gadget::InputMixer&#60;S,
+        T&#62;</classname><indexterm><primary>classes</primary><secondary>gadget::InputMixer&#60;S,
+        T&#62;</secondary></indexterm>, device drivers now derive from this
+        single template class. More information will be given in <xref
+        linkend="add.dev.driver.chapter" />, but as an example, consider a
+        driver for a positional device. In VR Juggler 1.0 and in early
+        versions of Gadgeteer, such a driver class would have derived from
+        <classname>gadget::Position</classname><indexterm><primary>classes</primary><secondary>gadget::Position</secondary></indexterm>.
+        Now, it would derive from <classname>gadget::InputMixer&#60;gadget::Input,
+        gadget::Position&#62;</classname>. Use of <classname>gadget::InputMixer&#60;S,
+        T&#62;</classname><indexterm><primary>classes</primary><secondary>gadget::InputMixer&#60;S,
+        T&#62;</secondary></indexterm> is required if a device is to be used
+        with the Remote Input Manager. If the old class hierarchy is used
+        (which is still allowed), the device cannot be shared between
+        computers.</para>
+
+        <note>
+          <para>As of this writing, the Input Mixer is not expected to be a
+          long-term solution. A future version of Gadgeteer may do away with
+          <classname>gadget::InputMixer&#60;S, T&#62;</classname><indexterm><primary>classes</primary><secondary>gadget::InputMixer&#60;S,
+          T&#62;</secondary></indexterm>, and as such, driver authors should
+          be aware of potential API changes in the future.</para>
+        </note>
+      </section>
+    </chapter>
+
+    <chapter id="driver.conventions.chapter">
+      <title>Device Driver Conventions</title>
+
+      <para>Before we get into the actual coding process, we must first
+      explain the conventions we have used in writing device drivers for
+      Gadgeteer. We strongly recommend that all new drivers follow these
+      conventions as they have proven successful for us for many years.</para>
+
+      <section>
+        <title>Separation of Code</title>
+
+        <para>The most obvious convention that can be seen upon review of
+        existing device drivers is a separation of the driver code into two
+        pieces: a standalone, <quote>low-level</quote> driver and a Gadgeteer
+        wrapper around the standalone driver.</para>
+
+        <para>In this design, the standalone driver implements the complete
+        hardware communication protocol without using any features of
+        Gadgeteer. As such, it stands completely on its own and does not need
+        Gadgeteer to be used. The result is that the driver can be tested and
+        debugged without worrying that some part of Gadgeteer could be causing
+        the driver to malfunction. Driver authors can focus entirely on
+        implementing the hardware communication protocol so as to feel
+        confident that the low-level driver is implemented correctly.</para>
+
+        <note>
+          <para>The standalone driver should use VPR to ensure portability.
+          For example, a driver that will communicate with the hardware via
+          the serial port should use the VPR serial port abstraction. For more
+          information, refer to <xref linkend="vpr.chapter" /> and to <xref
+          linkend="driver.goals.section" />.</para>
+        </note>
+
+        <tip>
+          <para>The low-level driver should have an easy-to-use interface that
+          allows effective manipulation of the driver state (starting,
+          stopping, requesting a sample, etc.). To develop a good interface
+          and to test the standalone driver, write an application that creates
+          an instance of the standalone driver, starts the driver running, and
+          collects samples. In writing the test application, the interface can
+          be matured for use by the Gadgeteer wrapper.</para>
+        </tip>
+
+        <para>Around the low-level driver, a Gadgeteer wrapper is added. This
+        wrapper makes use of the standalone driver interface to activate the
+        driver and read samples. The wrapper class will derive from one or
+        more of the Gadgeteer device types described in <xref
+        linkend="device.types.section" />. Instances of the wrapper class will
+        be handled by the Input Manager.</para>
+
+        <tip>
+          <para>Do not put a sample loop in the low-level driver. Instead,
+          provide a <methodname>sample()</methodname> method in the standalone
+          driver API that the wrapper can call repeatedly. This allows the
+          sample thread to be managed by the Gadgeteer wrapper class.</para>
+        </tip>
+      </section>
+    </chapter>
+
+    <chapter id="add.dev.driver.chapter">
+      <title>Writing Device Drivers</title>
+
+      <indexterm>
+        <primary>device drivers</primary>
+
+        <secondary>writing</secondary>
+      </indexterm>
+
+      <para>At long last, we have covered enough background information to
+      explain how to add device drivers to Gadgeteer. In this chapter, we will
+      examine a very simple device that has an on state and an off state. The
+      general flow of this chapter will model the process that driver
+      programmers would normally follow when writing a new driver from
+      scratch.</para>
+
+      <section>
+        <title>Identifying the Device Type</title>
+
+        <indexterm>
+          <primary>device drivers</primary>
+
+          <secondary>implementing</secondary>
+
+          <tertiary>identifying device type</tertiary>
+        </indexterm>
+
+        <para>As discussed in <xref linkend="device.types.section" />, there
+        are a set of abstract device types supported by Gadgeteer. Based on
+        its capabilities, a new device will fall into at least one of the
+        device type categories. It is perfectly valid for a single device to
+        provide more than one type of input. For example, an Immersion Tech
+        IBox returns both analog and digital data. Determining the device type
+        for a new piece of hardware should be the easiest part of the driver
+        authoring process.</para>
+      </section>
+
+      <section>
+        <title>Implementing the Standalone Device Driver</title>
+
+        <indexterm>
+          <primary>device drivers</primary>
+
+          <secondary>implementing</secondary>
+
+          <tertiary>standalone driver</tertiary>
+        </indexterm>
+
+        <para>The standalone device driver makes use of <emphasis>nothing</emphasis>
+        in Gadgeteer. It can utilize dependencies of Gadgeteer including VPR
+        and GMTL, however. Reusing code from those projects is encouraged. In
+        particular, writing the driver on top of VPR allows it to be much more
+        portable than it would be if all the cross-platform code were written
+        from scratch. The reason that the standalone driver does not use
+        Gadgeteer is so that it can be tested without needing any of the
+        complexity of the Input Manager, thereby allowing easier, more direct
+        debugging.</para>
+
+        <para>In most cases the standalone driver should be an implementation
+        of the hardware communication protocol and nothing more. The
+        standalone driver is written as a single C++ class that provides an
+        interface that the Gadgeteer wrapper class can call. The interface
+        normally has methods such as <methodname>open()</methodname>,
+        <methodname>sample()</methodname>, and <methodname>close()</methodname>
+        for opening the connection to the hardware, collecting a single
+        sample, and closing the connection to the hardware respectively.</para>
+
+        <para>The standalone driver class should return data it is most raw
+        form in the majority of cases, but the data should be meaningful. For
+        example, if logic is needed to convert four bytes read from the
+        hardware into a single floating-point value (a <type>float</type>),
+        that should be performed in the standalone driver. That sort of data
+        processing is part of implementing the communication protocol.
+        However, processing such as unit conversion should not be done in the
+        standalone driver in most cases. Instead, such conversions should be
+        handled by the Gadgeteer wrapper class since that is where the unit
+        configuration is done.</para>
+
+        <para>Typically, the standalone driver will not be multi-threaded.
+        Instead, a method with a name such as <methodname>sample()</methodname>
+        should be provided that returns a single sample. Then, test code and
+        the Gadgeteer wrapper class can call the sampling method in a loop
+        which may or may not be run in a thread.</para>
+
+        <para>With this design, the standalone driver class can be tested by
+        writing a simple console application that makes an instance of the
+        class and invokes each of the methods. The application can be
+        interactive so that users can configure aspects of the driver and take
+        samples. This makes debugging and data validation easy.</para>
+      </section>
+
+      <section>
+        <title>Implementing the Gadgeteer Wrapper Class</title>
+
+        <indexterm>
+          <primary>device drivers</primary>
+
+          <secondary>implementing</secondary>
+
+          <tertiary>Gadgeteer wrapper class</tertiary>
+        </indexterm>
+
+        <para>The Gadgeteer wrapper class has the job of passing samples read
+        from the standalone driver off to the Input Manager. Depending on the
+        device type, a given sample must be of a certain form. This is where
+        sample buffers come into play. We will discuss sample buffers later in
+        this section, but the possible sample buffer types are the following:</para>
+
+        <itemizedlist>
+          <listitem>
+            <para></para>
+          </listitem>
+        </itemizedlist>
+
+        <section>
+          <title>Choose the Base Class(es)</title>
+
+          <para>As discussed earlier in <xref linkend="device.types.section" />,
+          all device drivers in Gadgeteer must derive from one or more classes
+          based on the device type. If a driver is to be used with the Remote
+          Input Manager (i.e., there exists a desire to share a device between
+          two or more computers), then the base class must be
+          gadget::InputMixer&#60;S, T&#62; with appropriate device type
+          classes given as the template parameters. If, for whatever reason,
+          the device will not be used with the Remote Input Manager, it may
+          derive from one or more of the device type classes directly using
+          multiple inheritance.</para>
+
+          <para>For example, to make a driver that registers button presses,
+          derive from <classname>gadget::Digital</classname>:</para>
+
+          <programlisting>class ButtonDevice
+   : public gadget::InputMixer&#60;gadget::Input, gadget::Digital&#62;</programlisting>
+
+          <para>Suppose that a joystick driver supporting buttons and movement
+          is needed. In this case, an additional component, this one for
+          analog input, is needed for the X and Y axes. Since the device is
+          both digital and analog, its class must derive from both
+          <classname>gadget::Digital</classname> and <classname>gadget::Analog</classname>
+          using C++ multiple inheritance:</para>
+
+          <programlisting>class JoystickDevice
+   : public gadget::InputMixer&#60;gadget::Input,
+                               gadget::InputMixer&#60;gadget::Digital,
+                                                  gadget::Analog&#62; &#62;</programlisting>
+
+          <note>
+            <para>To use the joystick in place of a tracker, it should derive
+            instead from <classname>gadget::Position</classname><indexterm><primary>classes</primary><secondary>gadget::Position</secondary></indexterm>.
+            This way, you can replace real trackers with your joystick
+            <quote>pseudo tracker</quote>. The main idea is that to be able to
+            replace one device with another, the alternate device class must
+            derive from the same base classes as the original device.</para>
+          </note>
+
+          <para>Using basic class declaration for <classname>ButtonDevice</classname>
+          from above, we will proceed with the implementation of the driver
+          class. First, there are six member functions that must be
+          implemented:</para>
+
+          <section>
+            <title><methodname>startSampling()</methodname></title>
+
+            <methodsynopsis>
+              <modifier>virtual</modifier>
+
+              <type>bool</type>
+
+              <methodname>startSampling</methodname>
+
+              <void />
+            </methodsynopsis>
+
+            <para>Within this function, a new thread is started. This thread
+            is used to sample the data from the device. The thread creation
+            step may look something like the following:</para>
+
+            <programlisting>vpr::ThreadMemberFunctor&#60;ButtonDevice&#62;* functor =
+   new vpr::ThreadMemberFunctor&#60;ButtonDevice&#62;(this,
+                                              &#38;ButtonDevice::sampleFunction,
+                                              NULL);
+mThread = new vpr::Thread(functor);</programlisting>
+
+            <para>The above creates a thread that will execute
+            <methodname>ButtonDevice::sampleFunction()</methodname>, a
+            non-static member function in the class <classname>ButtonDevice</classname>.
+            The implementation of that method would be similar to the
+            following in most cases</para>
+
+            <programlisting>void ButtonDevice::sampleFunction(void* arg)
+{
+   // Keep working until mRunning becomes false.
+   while ( mRunning )
+   {
+      this-&#62;sample();
+   }
+}</programlisting>
+
+            <para>The thread can be tested for validity using the method
+            <methodname>vpr::BaseThread::valid()</methodname>.</para>
+          </section>
+
+          <section>
+            <title><methodname>stopSampling()</methodname></title>
+
+            <methodsynopsis>
+              <modifier>virtual</modifier>
+
+              <type>bool</type>
+
+              <methodname>stopSampling</methodname>
+
+              <void />
+            </methodsynopsis>
+
+            <para>The job of this function is to kill the thread created in
+            <methodname>startSampling()</methodname>.</para>
+          </section>
+
+          <section>
+            <title><methodname>sample()</methodname></title>
+
+            <methodsynopsis>
+              <modifier>virtual</modifier>
+
+              <type>bool</type>
+
+              <methodname>sample</methodname>
+
+              <void />
+            </methodsynopsis>
+
+            <para>This method reads data from the device and stores it for
+            later use by <methodname>getDigitalData()</methodname>. Note that
+            <methodname>ButtonDevice::sampleFunction()</methodname>, defined
+            above, invokes this method.</para>
+
+            <para>Gadgeteer devices typically use triple-buffered data
+            management. This is done to ensure that data is not being written
+            into a buffer when the Input Manager is trying to read the most
+            recent value. The <classname>gadget::Input</classname> class
+            defines three variables to help programmers keep track of which
+            buffer is in use at any given time: <varname>gadget::Input::current</varname>,
+            <varname>gadget::Input::valid</varname>, and <varname>gadget::Input::progress</varname>.
+            The sampled data would be read into a three-element array of the
+            correct type (this is driver-specific). When writing the freshly
+            sampled data into the array, use <varname>gadget::Input::progress</varname>:</para>
+
+            <programlisting>mSampledDigitalData[gadget::Input::progress] = sampled_digital_value;</programlisting>
+          </section>
+
+          <section>
+            <title><methodname>updateData()</methodname></title>
+
+            <methodsynopsis>
+              <modifier>virtual</modifier>
+
+              <void />
+
+              <methodname>updateData</methodname>
+
+              <void />
+            </methodsynopsis>
+
+            <para>Triple-buffered device drivers use this method to swap the
+            data indices. The member function is usually implemented as
+            follows:</para>
+
+            <programlisting>void ButtonDevice::updateData()
+{
+   vpr::Guard&#60;vpr::Mutex&#62; updateGuard(lock);
+
+   // Copy the valid data to the current data so that both are valid
+   mSampledDigitalData[current] = mSampledDigitalData[valid];
+
+   // swap the indices for the tri-buffer pointers
+   gadget::Input::swapCurrentIndexes();
+}</programlisting>
+
+            <para>Note the use of a <classname>vpr::Guard&#60;&#62;</classname>
+            object to synchronize access to the <varname>mSampledDigitalData</varname>
+            array. This is needed because the sampling and the reading are
+            occurring in separate threads, but both threads need access to
+            <varname>mSampledDigitalData</varname>.</para>
+          </section>
+
+          <section>
+            <title><methodname>getElementType()</methodname></title>
+
+            <methodsynopsis>
+              <modifier>static</modifier>
+
+              <type>std::string</type>
+
+              <methodname>getElementType</methodname>
+
+              <void />
+            </methodsynopsis>
+
+            <para>In the <methodname>getElementType()</methodname> function,
+            the <firstterm>element type</firstterm> of the device must be
+            returned. Its name must be as it appears in the configuration
+            definition file for the driver. For example, the implementation
+            for the simple button driver would appear as:</para>
+
+            <programlisting>std::string ButtonDevice::getElementType()
+{
+   return std:string(&#34;ButtonDevice&#34;);
+}</programlisting>
+
+            <para>At this time, it is useful to point out that every Gadgeteer
+            device needs an element type associated with it. An element type
+            is similar to a struct in C or C++. The data structure is defined
+            in an configuration definition file (which usually has the
+            extension <filename>.jdef</filename>). Once defined, the type for
+            a new driver can be used in JCCL configuration files.</para>
+          </section>
+
+          <section>
+            <title><methodname>getDigitalData()</methodname></title>
+
+            <methodsynopsis>
+              <modifier>virtual</modifier>
+
+              <type>int</type>
+
+              <methodname>getDigitalData</methodname>
+
+              <methodparam>
+                <type>int</type>
+
+                <parameter>devNum = 0</parameter>
+              </methodparam>
+            </methodsynopsis>
+
+            <para>The Input Manager uses this method to read digital data
+            sampled by the driver. This is when the triple-buffered data
+            scheme becomes especially valuable. To provide the Input Manager
+            with the most up-to-date sample, use <varname>gadget::Input::current</varname>
+            as the index, as shown below:</para>
+
+            <programlisting>int JoystickDevice::getDigitalData(int devNum)
+{
+  return mSampledDigitalData[current];
+}</programlisting>
+
+            <para>Note that in this example, the parameter <varname>devNum</varname>
+            is ignored. This is not always the case. Indeed, this button
+            driver would likely have support for more than one button, and in
+            that case, we would use <varname>devNum</varname> as the index
+            into an array or vector containing data sampled from all the
+            buttons.</para>
+          </section>
+
+          <section>
+            <title><methodname>getAnalogData()</methodname></title>
+
+            <para>There are other methods that must be implemented depending
+            on the classes from which a given driver class derives. In the
+            joystick example given earlier, the method
+            <methodname>getAnalogData()</methodname> would have to be
+            implemented in addition to <methodname>getDigitalData()</methodname>.
+            The prototype for <methodname>getAnalogData()</methodname> is:</para>
+
+            <programlisting>virtual float getAnalogData(int devNum = 0)</programlisting>
+
+            <para>The joystick driver would use this to return values for the
+            X and Y axes. The data here is more complex because it would be
+            for triple-buffered two-dimensional samples. An implementation
+            might look similar to the following:</para>
+
+            <programlisting>float JoystickDevice::getAnalogData(int axis)
+{
+   vprASSERT(axis &#62;= 0 &#38;&#38; axis &#60;= 1 &#38;&#38; &#34;only 2 axes (x and y) available&#34;);
+   return mSampledAnalogData[current][axis];
+}</programlisting>
+
+            <para>In this driver, the integer argument to the method is used
+            to represent either the X or the Y axis. The assertion ensures
+            that a valid axis index is passed.</para>
+          </section>
+        </section>
+
+        <section>
+          <title>Register the Driver with the Input Manager</title>
+
+          <indexterm>
+            <primary>device drivers</primary>
+
+            <secondary>registering</secondary>
+          </indexterm>
+
+          <para>Device driver registration is done through a template type
+          called <classname>gadget::DeviceConstructor&#60;T&#62;</classname><indexterm><primary>classes</primary><secondary>gadget::DeviceConstructor&#60;T&#62;</secondary></indexterm>.
+          When this type is used with a special <quote>factory function</quote>
+          called <function>initDevice()</function>, the driver can be used as
+          a plug-in to the Input Manager. While there are some drivers that
+          cannot currently be loaded dynamically, for those that can, we
+          implement an <quote>entry point</quote> function named
+          <function>initDevice(). </function>Because we are dealing with C++
+          code, we must indicate to the compiler that this is a C function, so
+          no name mangling should occur when its symbol table entry is
+          created. We do this by wrapping the function body in an
+          <literal>extern &#34;C&#34;</literal> block. For cross-platform
+          plug-in capabilities, we use the <symbol>GADGET_DRIVER_EXPORT()</symbol>
+          macro. On Win32 systems, this will add the appropriate type
+          modifiers to declare <function>initDevice()</function> as a function
+          exported by the DLL that will be compiled. For other platforms, the
+          macro simply evaluates to the <type>void</type> type. (These details
+          are handled within the <filename>DriverConfig.h</filename> header.)</para>
+
+          <para>With all of that, we can now write the body for
+          <function>initDevice()</function>. No declaration in a header file
+          is needed because this function will be looked up dynamically at run
+          time. The implementation of <function>initDevice()</function> will
+          appear in <filename>ButtonDevice.cpp</filename> as follows:</para>
+
+          <programlisting>#include &#60;gadget/Devices/DriverConfig.h&#62;
+#include &#60;gadget/Type/DeviceConstructor.h&#62;
+#include &#34;ButtonDevice.h&#34;
+
+extern &#34;C&#34;
+{
+
+GADGET_DRIVER_EXPORT(void) initDevice(gadget::InputManager* inputMgr)
+{
+   new gadget::DeviceConstructor&#60;ButtonDevice&#62;(inputMgr);
+}
+
+}</programlisting>
+
+          <para>The new device driver can be compiled into a standalone
+          library (<filename>.so</filename>, <filename>.dll</filename>, or
+          <filename>.dylib</filename> are the usual suffix choices for
+          plug-ins). This library will act as the Input Manager plug-in. In
+          this way, there is no need to modify the Gadgeteer source code to
+          add a new driver. Thus, the driver code is collected into a cohesive
+          unit that can be distributed as a plug-in (in other words, a
+          component) for Gadgeteer.</para>
+
+          <para>Runtime driver registration depends on the Input Manager
+          configuration. Assuming a UNIX-like environment, the Input Manager
+          could be configured to load our driver plug-in using the following
+          configuration file:</para>
+
+          <programlisting>&#60;?xml version=&#34;1.0&#34; encoding=&#34;UTF-8&#34;?&#62;
+&#60;?org-vrjuggler-jccl-settings configuration.version=&#34;3.0&#34;?&#62;
+&#60;configuration
+  xmlns=&#34;http://www.vrjuggler.org/jccl/xsd/3.0/configuration&#34;
+  name=&#34;Configuration&#34;
+  xmlns:xsi=&#34;http://www.w3.org/2001/XMLSchema-instance&#34;
+  xsi:schemaLocation=&#34;http://www.vrjuggler.org/jccl/xsd/3.0/configuration http://www.vrjuggler.org/jccl/xsd/3.0/configuration.xsd&#34;&#62;
+   &#60;elements&#62;
+      &#60;input_manager name=&#34;Button Device Input Manager&#34; version=&#34;2&#34;&#62;
+         &#60;driver_path&#62;${HOME}&#60;/driver_path&#62;
+         &#60;driver&#62;ButtonDevice_drv&#60;/driver&#62;
+      &#60;/input_manager&#62;
+   &#60;/elements&#62;
+&#60;/configuration&#62;</programlisting>
+
+          <para>Here, the driver plug-in is named <filename>ButtonDevice_drv.so</filename>
+          (or some other platform-specific name), and it is found in the
+          user&#39;s home directory.</para>
+        </section>
+      </section>
+    </chapter>
+
+    <chapter>
+      <title>Configuration</title>
+
+      <indexterm>
+        <primary>device drivers</primary>
+
+        <secondary>configuring</secondary>
+      </indexterm>
+
+      <para>To configure a device, two things are needed:</para>
+
+      <orderedlist>
+        <listitem>
+          <para>Configuration files</para>
+        </listitem>
+
+        <listitem>
+          <para>Driver code that accepts the configuration</para>
+        </listitem>
+      </orderedlist>
+
+      <section>
+        <title>Configuration Files</title>
+
+        <para>Before configuring a device, a new configuration definition must
+        be created. We recommend that this be done using VRJConfig. For the
+        button device, the definition file will be the following:</para>
+
+        <example id="MyButtonDevice.desc.example">
+          <title><filename>button_device.jdef</filename>: Configuration
+          Definition File for Simple Button Device</title>
+
+          <programlisting>&#60;?xml version=&#34;1.0&#34; encoding=&#34;UTF-8&#34;?&#62;
+&#60;?org-vrjuggler-jccl-settings definition.version=&#34;3.0&#34;?&#62;
+&#60;definition xmlns=&#34;http://www.vrjuggler.org/jccl/xsd/3.0/definition&#34;
+            xmlns:xsi=&#34;http://www.w3.org/2001/XMLSchema-instance&#34;
+            xsi:schemaLocation=&#34;http://www.vrjuggler.org/jccl/xsd/3.0/definition http://www.vrjuggler.org/jccl/xsd/3.0/definition.xsd&#34;
+            name=&#34;button_device&#34;&#62;                                    <co
+id="MyButtonDevice.desc.token.decl"
+linkends="MyButtonDevice.desc.token.decl.co" />
+   &#60;definition_version version=&#34;1&#34; label=&#34;My Button Device&#34;&#62;
+      &#60;help&#62;Configuration for simple one-button device.&#60;/help&#62;
+      &#60;parent&#62;digital_device&#60;/parent&#62;
+      &#60;category&#62;/Devices/Digital&#60;/category&#62;
+      &#60;property valuetype=&#34;string&#34; variable=&#34;false&#34; name=&#34;port&#34;&#62;     <co
+id="MyButtonDevice.desc.port.decl" linkends="MyButtonDevice.desc.port.decl.co" />
+         &#60;help&#62;Serial port to which this device is connected.&#60;/help&#62;
+         &#60;value label=&#34;Port&#34; defaultvalue=&#34;/dev/ttyd1&#34;/&#62;
+      &#60;/property&#62;
+      &#60;property valuetype=&#34;integer&#34; variable=&#34;false&#34; name=&#34;baud&#34;&#62;    <co
+id="MyButtonDevice.desc.baud.decl" linkends="MyButtonDevice.desc.baud.decl.co" />
+         &#60;help&#62;Serial port speed.&#60;/help&#62;
+         &#60;value label=&#34;Baud&#34; defaultvalue=&#34;38400&#34;/&#62;
+      &#60;/property&#62;
+      &#60;upgrade_transform/&#62;
+   &#60;/definition_version&#62;
+&#60;/definition&#62;</programlisting>
+
+          <calloutlist>
+            <callout arearefs="MyButtonDevice.desc.token.decl"
+            id="MyButtonDevice.desc.token.decl.co">
+              <para>This begins the definition for our device type. The
+              <literal>name</literal> attribute must be named as a valid XML
+              tag because it will be used as such in a configuration file. A
+              free-form, human-friendly string may be specified in the
+              <literal>label</literal> attribute of the <sgmltag>definition_version</sgmltag>
+              element. This string will be presented to the user of VRJConfig,
+              and as such, it should be a meaningful identifier.</para>
+            </callout>
+
+            <callout arearefs="MyButtonDevice.desc.port.decl"
+            id="MyButtonDevice.desc.port.decl.co">
+              <para>This declares the <quote>port</quote> property that will
+              provide the name of the serial port to which the hardware is
+              connected. The serial port name will be interpreted as a string,
+              and it has the default value of <quote>/dev/ttyd1</quote>. In
+              the case of our simple button driver, there is no serial port,
+              but we include this property definition to demonstrate how the
+              whole configuration definition works.</para>
+            </callout>
+
+            <callout arearefs="MyButtonDevice.desc.baud.decl"
+            id="MyButtonDevice.desc.baud.decl.co">
+              <para>This declares the <quote>baud</quote> property that will
+              provide the baud setting for the serial port to which the
+              hardware is connected. The baud value will be interpreted as an
+              integer, and it has the default value of 38400 (kilobits per
+              second). In the case of our simple button driver, there is no
+              serial port, but we include this property definition to
+              demonstrate how the whole configuration definition works.</para>
+            </callout>
+          </calloutlist>
+        </example>
+
+        <note>
+          <para>In the above configuration definition, we do not declare a
+          <quote>device_host</quote> property, which is used in conjunction
+          with the Remote Input Manager. This is not necessary because we have
+          declared our parent type to be <quote>digital_device</quote>, and we
+          inherit its property definitions. All drivers that may be used with
+          the Remote Input Manager must have the <quote>device_host</quote>
+          property, and configuration definition inheritance ensures that this
+          will be the case. Refer to the <emphasis>Cluster Juggler Guide</emphasis>
+          for more information about this property.</para>
+        </note>
+
+        <para>For a more complex device, a more complex configuration
+        definition may be needed. Again, the VRJConfig configuration
+        definition editor simplifies the creation of this definition.</para>
+
+        <para>Once the configuration definition is in place, a new
+        configuration element can be created. Once again, VRJConfig makes the
+        step easier. The following is an example configuration file that
+        configures the one-button device we have been using thus far:</para>
+
+        <example id="MyButtonDevice.config.example">
+          <title><filename>button_device.jconf</filename>: Configuration File
+          for Simple Button Device</title>
+
+          <programlisting>&#60;?xml version=&#34;1.0&#34; encoding=&#34;UTF-8&#34;?&#62;
+&#60;?org-vrjuggler-jccl-settings configuration.version=&#34;3.0&#34;?&#62;
+&#60;configuration xmlns=&#34;http://www.vrjuggler.org/jccl/xsd/3.0/configuration&#34;
+               name=&#34;Configuration&#34;
+               xmlns:xsi=&#34;http://www.w3.org/2001/XMLSchema-instance&#34;
+               xsi:schemaLocation=&#34;http://www.vrjuggler.org/jccl/xsd/3.0/configuration http://www.vrjuggler.org/jccl/xsd/3.0/configuration.xsd&#34;&#62;
+   &#60;elements&#62;
+      &#60;input_manager name=&#34;Button Device Input Manager&#34;
+                     version=&#34;2&#34;&#62;                             <co
+id="MyButtonDevice.config.InputManager"
+linkends="MyButtonDevice.config.driver.co" />
+         &#60;driver_path&#62;${HOME}&#60;/driver_path&#62;
+         &#60;driver&#62;ButtonDevice_drv&#60;/driver&#62;
+      &#60;/input_manager&#62;
+      &#60;button_device name=&#34;Button Device&#34; version=&#34;1&#34;&#62;        <co
+id="MyButtonDevice.config.ButtonDevice"
+linkends="MyButtonDevice.config.ButtonDevice.co" />
+         &#60;port&#62;/dev/ttyd4&#60;/port&#62;                              <co
+id="MyButtonDevice.config.port.value"
+linkends="MyButtonDevice.config.port.value.co" />
+         &#60;baud&#62;9600&#60;/baud&#62;                                    <co
+id="MyButtonDevice.config.baud.value"
+linkends="MyButtonDevice.config.baud.value.co" />
+         &#60;device_host /&#62;                                      <co
+id="MyButtonDevice.config.hostelement.value"
+linkends="MyButtonDevice.config.hostelement.value.co" />
+      &#60;/button_device&#62;
+   &#60;/elements&#62;
+&#60;/configuration&#62;</programlisting>
+
+          <calloutlist>
+            <callout arearefs="MyButtonDevice.config.InputManager"
+            id="MyButtonDevice.config.driver.co">
+              <para>The <sgmltag>input_manager</sgmltag> element configures
+              the Gadgeteer Input Manager. In this case, we are telling the
+              Input Manager about a driver plug-in, found at
+              <filename>${HOME}/ButtonDevice_drv.so</filename>, that should be
+              loaded at runtime.</para>
+            </callout>
+
+            <callout arearefs="MyButtonDevice.config.ButtonDevice"
+            id="MyButtonDevice.config.ButtonDevice.co">
+              <para>Next, we have an instance of the configuration definition
+              shown in <xref linkend="MyButtonDevice.desc.example" />. As
+              described above, <sgmltag>&#60;button_device&#62;</sgmltag> is
+              named based on the <literal>name</literal> attribute of the
+              <sgmltag>definition</sgmltag> element in our configuration
+              definition file. The <literal>name</literal> attribute here
+              gives this <emphasis>instance</emphasis> a unique identifier.</para>
+            </callout>
+
+            <callout arearefs="MyButtonDevice.config.port.value"
+            id="MyButtonDevice.config.port.value.co">
+              <para>Now, we set the value for the serial port name. As noted
+              above, our simple button device does not actually use the serial
+              port, but this demonstrates how the property value is used in a
+              configuration file. If no value were given here, the default
+              value set in b<filename>utton_device.jdef</filename> would be
+              used.</para>
+            </callout>
+
+            <callout arearefs="MyButtonDevice.config.baud.value"
+            id="MyButtonDevice.config.baud.value.co">
+              <para>This provides a value for the serial port baud setting.
+              Again, this will not actually be used by our simple device, but
+              we show it here to give a complete example.</para>
+            </callout>
+
+            <callout arearefs="MyButtonDevice.config.hostelement.value"
+            id="MyButtonDevice.config.hostelement.value.co">
+              <para>For our example, we will not fill in a value for
+              <literal>device_host</literal> because we are not dealing with
+              the Remote Input Manager. Refer to the <emphasis>Cluster Juggler
+              Guide</emphasis> for more information about this.</para>
+            </callout>
+          </calloutlist>
+        </example>
+      </section>
+
+      <section>
+        <title>Writing Code that Accepts the Configuration</title>
+
+        <para>In the driver, there are two methods that must be implemented in
+        order to handle config elements:</para>
+
+        <orderedlist>
+          <listitem>
+            <methodsynopsis>
+              <modifier>static</modifier>
+
+              <type>std::string</type>
+
+              <methodname>ButtonDevice::getElementType</methodname>
+
+              <void />
+            </methodsynopsis>
+
+            <para>When the configuration changes, the JCCL Configuration
+            Manager asks every registered configuration handler for their
+            respective configuration element types. If the type matches the
+            type of the newly received configuration element, then the
+            handler&#39;s <methodname>config()</methodname> method is invoked.
+            All device drivers are configuration handlers and thus need to
+            indicate the configuration element type they accept. The type
+            value is returned by this method, and the implementation for our
+            simple driver is the following:</para>
+
+            <programlisting>std::string ButtonDevice::getElementType()
+{
+   return std::string(&#34;ButtonDevice&#34;);
+}</programlisting>
+
+            <para>Note that the string returned matches the token we defined
+            in <xref linkend="MyButtonDevice.desc.example" />.</para>
+          </listitem>
+
+          <listitem>
+            <methodsynopsis>
+              <modifier>virtual</modifier>
+
+              <type>bool</type>
+
+              <methodname>gadget::Input::config</methodname>
+
+              <methodparam>
+                <type>jccl::ConfigElementPtr</type>
+
+                <parameter>e</parameter>
+              </methodparam>
+            </methodsynopsis>
+
+            <para>When the Configuration Manager detects a configuration
+            change for a given driver, it will pass the new
+            <classname>jccl::ConfigElementPtr</classname> object as the
+            parameter to this method. For more information about how to use
+            instances of <classname>jccl::ConfigElementPtr</classname>, refer
+            to the <emphasis>JCCL Programmer&#39;s Reference</emphasis>. The
+            following is a simple example for the basic button device we have
+            used thus far:</para>
+
+            <programlisting>bool ButtonDevice::config(jccl::ConfigElementPtr e)
+{
+   if ( ! gadget::Digital::config(e) )
+   {
+      return false;
+   }
+
+   mPortName = e-&#62;getProperty&#60;std::string&#62;(&#34;port&#34;);
+   mBaudRate = e-&#62;getProperty&#60;int&#62;(&#34;baud&#34;);
+
+   return true;
+}</programlisting>
+          </listitem>
+        </orderedlist>
+      </section>
+    </chapter>
+  </part>
+
+  <part>
+    <title>Appendices</title>
+
+    <appendix id="driver.code.appendix">
+      <title>Complete Device Driver Code</title>
+
+      <para></para>
+
+      <section id="standalone.driver.section">
+        <title>Standalone Driver</title>
+
+        <para></para>
+      </section>
+
+      <section id="gadgeteer.wrapper.section">
+        <title>Gadgeteer Wrapper</title>
+
+        <indexterm>
+          <primary>device drivers</primary>
+
+          <secondary>example</secondary>
+        </indexterm>
+
+        <para>Now that we have explained the concepts involved in adding a
+        device driver to Gadgeteer, we can show some code. The following
+        example is for a fictitious piece of hardware that has only one
+        button.</para>
+
+        <example id="MyButtonDevice.h.example">
+          <title id="MyButtonDevice.cpp.example"><filename>ButtonDevice.h</filename></title>
+
+          <programlisting linenumbering="numbered">#ifndef _MY_BUTTON_DEVICE_H_
+#define _MY_BUTTON_DEVICE_H_
+
+#include &#60;gadget/Devices/DriverConfig.h&#62;
+
+#include &#60;stdlib.h&#62;
+
+#include &#60;vpr/vpr.h&#62;
+#include &#60;vpr/Thread/Thread.h&#62;
+#include &#60;gadget/Type/Input.h&#62;
+#include &#60;gadget/Type/Digital.h&#62;
+#include &#60;gadget/Type/InputMixer.h&#62;
+
+
+class ButtonDevice
+   : public gadget::InputMixer&#60;gadget::Input, gadget::Digital&#62;
+{
+public:
+   ButtonDevice()
+      : mSampleThread(NULL)
+      , mRunning(false)
+   {
+      /* Do nothing. */ ;
+   }
+
+   virtual ~ButtonDevice()
+   {
+      if ( mRunning )
+      {
+         this-&#62;stopSampling();
+      }
+   }
+
+   virtual void updateData();
+   virtual bool startSampling();
+   virtual bool sample();
+   virtual bool stopSampling();
+
+   static std::string getElementType();
+
+   /**
+    * Invokes the global scope delete operator.  This is required for proper
+    * releasing of memory in DLLs on Win32.
+    */
+   void operator delete(void* p)
+   {
+      ::operator delete(p);
+   }
+
+protected:
+   /**
+    * Deletes this object.  This is an implementation of the pure virtual
+    * gadget::Input::destroy() method.
+    */
+   virtual void destroy()
+   {
+      delete this;
+   }
+
+private:
+   static void   sampleFunction(void* classPointer);
+   int           mDigitalData;
+   vpr::Thread*  mSampleThread;
+
+   bool          mRunning;
+
+   // configuration data set by config()
+   std::string   mPortName;
+   int           mBaudRate;
+};
+
+#endif</programlisting>
+        </example>
+
+        <example>
+          <title><filename>ButtonDevice.cpp</filename></title>
+
+          <programlisting linenumbering="numbered">#include &#60;gadget/Devices/DriverConfig.h&#62;
+
+#include &#60;vpr/vpr.h&#62;
+#include &#60;vpr/System.h&#62;
+#include &#60;gadget/InputManager.h&#62;
+#include &#60;gadget/Type/DeviceConstructor.h&#62;
+
+#include &#34;ButtonDevice.h&#34;
+
+
+using namespace gadget;
+
+extern &#34;C&#34;
+{
+
+GADGET_DRIVER_EXPORT(void) initDevice(InputManager* inputMgr)
+{
+   new DeviceConstructor&#60;ButtonDevice&#62;(inputMgr);
+}
+
+}
+
+/** Returns a string that matches this device&#39;s configuration element type. */
+std::string ButtonDevice::getElementType()
+{
+   return std::string(&#34;MyButtonDevice&#34;);
+}
+
+//: When the system detects a configuration change for your driver, it will
+//  pass the new jccl::ConfigElement into this function.  See the documentation
+//  on config elements, for information on how to access them.
+bool ButtonDevice::config(jccl::ConfigElementPtr e)
+{
+  if ( ! Digital::config(e))
+  {
+     return false;
+  }
+
+  mPort = e-&#62;getProperty&#60;std::string&#62;(&#34;port&#34;);
+  mBaud = e-&#62;getProperty&#60;int&#62;(&#34;baud&#34;);
+
+  return true;
+}
+
+void ButtonDevice::updateData()
+{
+   if ( mRunning )
+   {
+      swapDigitalBuffers();
+   }
+}
+
+/**
+ * Spanws the sample thread, which calls MyButtonDevice::sample() repeatedly.
+ */
+bool ButtonDevice::startSampling()
+{
+   mRunning = true;
+   mSampleThread = new vpr::Thread(threadedSampleFunction, (void*) this);
+
+   if ( ! mSampleThread-&#62;valid() )
+   {
+      mRunning = false;
+      return false; // thread creation failed
+   }
+   else
+   {
+      return true; // thread creation success
+   }
+}
+
+/**
+ * Records (or samples) the current data.  This is called repeatedly by the
+ * sample thread created by startSampling().
+ */
+bool ButtonDevice::sample()
+{
+   bool status(false);
+
+   if ( mRunning )
+   {
+      // Here you would add your code to sample the hardware for a button
+      // press:
+      std::vector&#60;DigitalData&#62; samples(1);
+      samples[0] = 1;
+      addDigitalSample(samples);
+
+      // Successful sample.
+      status = true;
+   }
+
+   return status;
+}
+
+/** Kills the sample thread. */
+bool ButtonDevice::stopSampling()
+{
+   mRunning = false;
+
+   if (mSampleThread != NULL)
+   {
+      mSampleThread-&#62;kill(); // Not guaranteed to work on all platforms
+      mSampleThread-&#62;join();
+      delete mSampleThread;
+      mSampleThread = NULL;
+   }
+   return true;
+}
+
+/**
+ * Our sampling function that is executed by the spawned sample thread.
+ * This function is declared as a static member of MyButtonDevice.  It simply
+ * calls MyButtonDevice::sample() over and over.
+ */
+void ButtonDevice::threadedSampleFunction(void* classPointer)
+{
+   ButtonDevice* this_ptr = static_cast&#60;ButtonDevice*&#62;( classPointer );
+
+   // spin until someone kills &#34;mSampleThread&#34;
+   while ( this_ptr-&#62;mRunning )
+   {
+     this_ptr-&#62;sample();
+     vpr::System::sleep(1); //specify some time here, so you don&#39;t waste CPU cycles
+   }
+}</programlisting>
+        </example>
+      </section>
+
+      <section id="makefile.templates.section">
+        <title>Makefile Templates</title>
+
+        <para>The following is an example <filename>Makefile.in</filename>
+        that could be added to the Gadgeteer build system.</para>
+
+        <example id="Makefile.in.example">
+          <title><filename>Makefile.in</filename> for Gadgeteer Build System</title>
+
+          <programlisting linenumbering="numbered">default: all
+
+# Include common definitions.
+include @topdir@/make.defs.mk
+
+DRIVER_NAME=    ButtonDevice
+
+srcdir=         @srcdir@
+top_srcdir=     @top_srcdir@
+INSTALL=        @INSTALL@
+INSTALL_FILES=
+SUBOBJDIR=      $(DRIVER_NAME)
+C_AFTERBUILD=   driver-dso
+
+SRCS=           ButtonDevice.cpp \
+                DriverStandalone.cpp
+
+include $(MKPATH)/dpp.obj.mk
+include @topdir@/driver.defs.mk
+
+# -----------------------------------------------------------------------------
+# Include dependencies generated automatically.
+# -----------------------------------------------------------------------------
+ifndef DO_CLEANDEPEND
+ifndef DO_BEFOREBUILD
+   -include $(DEPEND_FILES)
+endif
+endif</programlisting>
+        </example>
+
+        <para>The following is a makefile for a driver that is built outside
+        of the Gadgeteer source tree.</para>
+
+        <example>
+          <title>Makefile for Use Outside Gadgeteer Source Tree</title>
+
+          <programlisting linenumbering="unnumbered">BUILD_TYPE=	dbg
+
+DRIVER_NAME=	button
+SRCS=		buttondevice.cpp
+
+include $(GADGET_BASE_DIR)/share/gadgeteer/gadget.driver.mk</programlisting>
+        </example>
+      </section>
+    </appendix>
+  </part>
+
+  <bibliography>
+    <biblioentry id="ref.pthreads.programming">
+      <abbrev>Nic96</abbrev>
+
+      <authorgroup>
+        <author>
+          <firstname>Bradford</firstname>
+
+          <surname>Nichols</surname>
+        </author>
+
+        <author>
+          <firstname>Dick</firstname>
+
+          <surname>Buttlar</surname>
+        </author>
+
+        <author>
+          <firstname>Jacqueline</firstname>
+
+          <othername>Proulx</othername>
+
+          <surname>Farrell</surname>
+        </author>
+      </authorgroup>
+
+      <title>Pthreads Programming</title>
+
+      <subtitle>A POSIX Standard for Better Multiprocessing</subtitle>
+
+      <publisher>
+        <publishername>O&#39;Reilly &#38; Associates</publishername>
+      </publisher>
+
+      <pubdate>1996</pubdate>
+    </biblioentry>
+
+    <biblioentry id="ref.eolson.thesis">
+      <abbrev>Ols92</abbrev>
+
+      <author>
+        <firstname>Eric</firstname>
+
+        <surname>Olson</surname>
+      </author>
+
+      <title>Cluster Juggler: PC cluster virtual reality</title>
+
+      <publisher>
+        <publishername>Iowa State University</publishername>
+      </publisher>
+
+      <orgname>Dept. of Electrical and Computer Engineering</orgname>
+
+      <pubdate>2002</pubdate>
+    </biblioentry>
+
+    <biblioentry id="ref.advanced.prog.unix">
+      <abbrev>Ste92</abbrev>
+
+      <author>
+        <firstname>W. Richard</firstname>
+
+        <surname>Stevens</surname>
+      </author>
+
+      <title>Advanced Programming in the UNIX Environment</title>
+
+      <publisher>
+        <publishername>Addison-Wesley</publishername>
+      </publisher>
+
+      <pubdate>1992</pubdate>
+    </biblioentry>
+
+    <biblioentry id="ref.unix.network.programming">
+      <abbrev>Ste98</abbrev>
+
+      <author>
+        <firstname>W. Richard</firstname>
+
+        <surname>Stevens</surname>
+      </author>
+
+      <title>UNIX Network Programming</title>
+
+      <volumenum>Volume 1</volumenum>
+
+      <subtitle>Network APIS: Sockets and XTI</subtitle>
+
+      <edition>Second Edition</edition>
+
+      <publisher>
+        <publishername>Prentice-Hall PTR</publishername>
+      </publisher>
+
+      <pubdate>1998</pubdate>
+    </biblioentry>
+  </bibliography>
+
+  <glossary>
+    <title>Glossary of Terms</title>
+
+    <glossdiv>
+      <title>B</title>
+
+      <glossentry id="gloss.bsd.sockets">
+        <glossterm>BSD sockets</glossterm>
+
+        <glossdef>
+          <para>The socket programming interface introduced with the Berkeley
+          Software Distribution version of the UNIX operating system. It is
+          made up of a collection of system calls that allow highly flexible
+          socket programming. Most UNIX variants in use today use the BSD
+          sockets API. Moreover, the Winsock API used on Windows is based on
+          this API.</para>
+        </glossdef>
+      </glossentry>
+    </glossdiv>
+
+    <glossdiv>
+      <title>N</title>
+
+      <glossentry id="gloss.nspr">
+        <glossterm>Netscape Portable Runtime</glossterm>
+
+        <acronym>NSPR</acronym>
+
+        <glossdef>
+          <para>More information can be found at <ulink
+          url="http://www.mozilla.org/projects/nspr/index.html">http://www.mozilla.org/projects/nspr/index.html</ulink></para>
+        </glossdef>
+      </glossentry>
+    </glossdiv>
+
+    <glossdiv>
+      <title>V</title>
+
+      <glossentry id="gloss.vpr">
+        <glossterm>VR Juggler Portable Runtime</glossterm>
+
+        <acronym>VPR</acronym>
+
+        <glossdef>
+          <para>More information can be found at <ulink
+          url="http://www.vrjuggler.org/vapor/">http://www.vrjuggler.org/vapor/</ulink></para>
+        </glossdef>
+      </glossentry>
+    </glossdiv>
+  </glossary>
+
+  <index></index>
+</book>

@@ -1,0 +1,138 @@
+package id1qj3gctylgvb1ctypq8f2;
+
+/**
+@version 2.0
+@physicalPackage
+@__modelType diagram 
+*/
+class diagram {
+/**
+@__ref <oiref:java#Class#org.vrjuggler.tweek.beans.BeanPathException:oiref><oihard>
+@__modelType reference 
+*/
+class reference {
+}/**
+@__ref <oiref:java#Class#org.vrjuggler.tweek.beans.BeanCollectionBuilder:oiref><oihard>
+@__modelType reference 
+*/
+class reference63 {
+}/**
+@__ref <oiref:java#Class#org.vrjuggler.tweek.beans.BeanInstantiationListener:oiref><oihard>
+@__modelType reference 
+*/
+class reference64 {
+}/**
+@__ref <oiref:java#Class#org.vrjuggler.tweek.beans.FileFinder:oiref><oihard>
+@__modelType reference 
+*/
+class reference65 {
+}/**
+@__ref <oiref:java#Class#org.vrjuggler.tweek.beans.GenericBean:oiref><oihard>
+@__modelType reference 
+*/
+class reference66 {
+}/**
+@__ref <oiref:java#Class#org.vrjuggler.tweek.beans.UserLevelChangeEvent:oiref><oihard>
+@__modelType reference 
+*/
+class reference67 {
+}/**
+@__ref <oiref:java#Class#org.vrjuggler.tweek.beans.BeanModelViewer:oiref><oihard>
+@__modelType reference 
+*/
+class reference68 {
+}/**
+@__ref <oiref:java#Class#org.vrjuggler.tweek.beans.ServiceBean:oiref><oihard>
+@__modelType reference 
+*/
+class reference69 {
+}/**
+@__ref <oiref:java#Class#org.vrjuggler.tweek.beans.BeanTreeModel:oiref><oihard>
+@__modelType reference 
+*/
+class reference70 {
+}/**
+@__ref <oiref:java#Class#org.vrjuggler.tweek.beans.TreeModelRefreshListener:oiref><oihard>
+@__modelType reference 
+*/
+class reference71 {
+}/**
+@__ref <oiref:java#Class#org.vrjuggler.tweek.beans.DefaultBeanModelViewer:oiref><oihard>
+@__modelType reference 
+*/
+class reference72 {
+}/**
+@__ref <oiref:java#Class#org.vrjuggler.tweek.beans.UserLevelChangeListener:oiref><oihard>
+@__modelType reference 
+*/
+class reference73 {
+}/**
+@__ref <oiref:java#Class#org.vrjuggler.tweek.beans.BeanAlreadyInstantiatedException:oiref><oihard>
+@__modelType reference 
+*/
+class reference74 {
+}/**
+@__ref <oiref:java#Class#org.vrjuggler.tweek.beans.PanelBean:oiref><oihard>
+@__modelType reference 
+*/
+class reference75 {
+}/**
+@__ref <oiref:java#Class#org.vrjuggler.tweek.beans.BeanInstantiationCommunicator:oiref><oihard>
+@__modelType reference 
+*/
+class reference76 {
+}/**
+@__ref <oiref:java#Class#org.vrjuggler.tweek.beans.BeanFocusChangeListener:oiref><oihard>
+@__modelType reference 
+*/
+class reference77 {
+}/**
+@__ref <oiref:design#Class#id18wcxctylgvb1ctypqb8d.diagram:oiref><oihard>
+@__modelType reference
+@__fqn <oiref:#Package#org.vrjuggler.tweek.beans.loader:oiref> 
+*/
+class reference78 {
+}/**
+@__ref <oiref:java#Class#org.vrjuggler.tweek.beans.BeanFocusChangeEvent:oiref><oihard>
+@__modelType reference 
+*/
+class reference79 {
+}/**
+@__ref <oiref:java#Class#org.vrjuggler.tweek.beans.TreeModelRefreshEvent:oiref><oihard>
+@__modelType reference 
+*/
+class reference80 {
+}/**
+@__ref <oiref:java#Class#org.vrjuggler.tweek.beans.ViewerBean:oiref><oihard>
+@__modelType reference 
+*/
+class reference81 {
+}/**
+@__ref <oiref:java#Class#org.vrjuggler.tweek.beans.BeanInstantiationEvent:oiref><oihard>
+@__modelType reference 
+*/
+class reference82 {
+}/**
+@__ref <oiref:java#Class#org.vrjuggler.tweek.beans.TweekBean:oiref><oihard>
+@__modelType reference 
+*/
+class reference83 {
+}/**
+@__ref <oiref:java#Class#org.vrjuggler.tweek.beans.BeanDependency:oiref><oihard>
+@__modelType reference 
+*/
+class reference84 {
+}}/**
+@__tags
+@shapeType ClassDiagram 
+*/
+class __tags {
+}/**
+@__options 
+*/
+class __options {
+}/**
+@__positions 
+*/
+class __positions {
+}

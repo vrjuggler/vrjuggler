@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?org-vrjuggler-jccl-settings definition.version="3.0"?>
+<definition name="sound_manager"
+            icon_path="jar:file:${VJ_BASE_DIR}/bin/beans/ProxyEditor.jar!/org/vrjuggler/vrjconfig/customeditors/proxyeditor/images/position64.jpg"
+            xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.0/definition http://www.vrjuggler.org/jccl/xsd/3.0/definition.xsd"
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xmlns="http://www.vrjuggler.org/jccl/xsd/3.0/definition">
+   <definition_version version="1" label="Sound Manager">
+      <help />
+      <parent/>
+      <category>/Audio</category>
+      <property valuetype="string" variable="true" name="api">
+         <help>What Sound API to use? (Stub is default)</help>
+         <value label="API" defaultvalue="Stub"/>
+      </property>
+      <property valuetype="float" variable="false" name="listener_position">
+         <help>Position of the listener (that's you!) in world coordinate space.  Usually 0,0,0...</help>
+         <value label="x" defaultvalue="0.0"/>
+         <value label="y" defaultvalue="0.0"/>
+         <value label="z" defaultvalue="0.0"/>
+      </property>
+      <property valuetype="string" variable="true" name="file_search_path">
+         <help>Paths to search for files</help>
+         <value label="Search Path" defaultvalue=".:$HOME:$HOME/sounds"/>
+      </property>
+      <property valuetype="configelement" variable="true" name="sound">
+         <help>Specify a list of sounds here.</help>
+         <value label="Sound Object"/>
+         <allowed_type>sound</allowed_type>
+      </property>
+      <upgrade_transform/>
+   </definition_version>
+</definition>

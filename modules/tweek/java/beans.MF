@@ -1,0 +1,17 @@
+Class-Path: jdom.jar xerces.jar
+
+Name: org/vrjuggler/tweek/beans/
+Specification-Title: Tweek Bean-Handling Classes
+Specification-Version: 0.1.0
+Specification-Vendor: vrjuggler.org
+Implementation-Title: org.vrjuggler.tweek.beans
+Implementation-Version: 1.0 alpha1
+Implementation-Vendor: vrjuggler.org
+
+Name: org/vrjuggler/tweek/beans/loader/
+Specification-Title: Tweek Bean-Loading Classes
+Specification-Version: 0.1.0
+Specification-Vendor: vrjuggler.org
+Implementation-Title: org.vrjuggler.tweek.beans.loader
+Implementation-Version: 1.0 alpha1
+Implementation-Vendor: vrjuggler.org

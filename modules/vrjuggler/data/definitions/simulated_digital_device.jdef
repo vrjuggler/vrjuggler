@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?org-vrjuggler-jccl-settings definition.version="3.0"?>
+<definition name="simulated_digital_device"
+            icon_path="jar:file:${VJ_BASE_DIR}/bin/beans/ProxyEditor.jar!/org/vrjuggler/vrjconfig/customeditors/proxyeditor/images/position64.jpg"
+            xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.0/definition http://www.vrjuggler.org/jccl/xsd/3.0/definition.xsd"
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xmlns="http://www.vrjuggler.org/jccl/xsd/3.0/definition">
+   <definition_version version="1" label="Simulated Digital Device">
+      <help>A simulated digital device that gets its input from an event window.</help>
+      <parent>digital_device</parent>
+      <category>/Devices/Digital</category>
+      <property valuetype="configelementpointer" variable="false" name="event_window_proxy">
+         <help>The proxy to the event window to use for user input.</help>
+         <value label="Event Window Proxy" />
+         <allowed_type>event_window_proxy</allowed_type>
+      </property>
+      <property valuetype="configelement" variable="true" name="key_pair">
+         <help>The keys used to trigger multiple digital inputs. The number of the digital inputs corresponds to the index of the key press entry.</help>
+         <value label="Digital Button Key" />
+         <allowed_type>key_modifier_pair</allowed_type>
+      </property>
+      <upgrade_transform />
+   </definition_version>
+</definition>

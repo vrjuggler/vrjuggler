@@ -1,0 +1,89 @@
+package id9orrdddbte8zlddbtjw4a;
+
+/**
+@version 2.0
+@__modelType diagram 
+*/
+class diagram {
+/**
+@__ref <oiref:cpp#Class#vrj::App:oiref><oihard>
+@__modelType reference
+@__imported
+@__hiddenMember <oiref:cpp#Member#vrj::App#$$constructor$$#(#vrj::Kernel*#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::App#reset#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::App#haveFocus#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::App#focusChanged#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::App#setFocus#(#bool#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::App#configCanHandle#(#jccl::ConfigChunkPtr#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::App#depSatisfied#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::App#configAdd#(#jccl::ConfigChunkPtr#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::App#configRemove#(#jccl::ConfigChunkPtr#)#:oiref> 
+@__hiddenMember <oiref:cpp#Member#vrj::App#getDrawManager#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::App#getSoundManager#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::App#$$constructor$$#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::App#$$constructor$$#(#Kernel*#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::App#$$destructor$$#(##)#:oiref>
+@hideAttributes
+*/
+class reference {
+}/**
+@__ref <oiref:cpp#Class#vrj::GlApp:oiref><oihard>
+@__modelType reference
+@__imported
+@__hiddenMember BeanProperty#<oiref:cpp#Member#vrj::GlApp#getDrawManager#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::GlApp#$$constructor$$#(#vrj::Kernel*#)#:oiref> 
+@__hiddenMember <oiref:cpp#Member#vrj::GlApp#$$constructor$$#(#Kernel*#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::GlApp#$$constructor$$#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::GlApp#pipePreDraw#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::GlApp#getDrawManager#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::GlApp#contextClose#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::GlApp#contextPreDraw#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::GlApp#contextPostDraw#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::GlApp#$$destructor$$#(##)#:oiref>
+@hideAttributes
+*/
+class reference55 {
+}/**
+@__ref <oiref:cpp#Class#vrj::PfApp:oiref><oihard>
+@__modelType reference
+@__imported
+@__hiddenMember <oiref:cpp#Member#vrj::PfApp#$$constructor$$#(#vrj::Kernel*#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::PfApp#preForkInit#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::PfApp#appChanFunc#(#pfChannel*#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::PfApp#configPWin#(#pfPipeWindow*#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::PfApp#getFrameBufferAttrs#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::PfApp#preDrawChan#(#pfChannel*#void*#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::PfApp#postDrawChan#(#pfChannel*#void*#)#:oiref> 
+@__hiddenMember <oiref:cpp#Member#vrj::PfApp#getDrawManager#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::PfApp#$$constructor$$#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::PfApp#$$constructor$$#(#Kernel*#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::PfApp#$$destructor$$#(##)#:oiref>
+@hideAttributes
+*/
+class reference56 {
+}}/**
+
+@__tags
+@shapeType ClassDiagram 
+*/
+class __tags {
+}/**
+@__options filter.f.state = off
+filter.d1.state = on
+filter.e.state = off
+filter.d2.state = off 
+*/
+class __options {
+}/**
+@__positions <oigroup:<oiref:cpp#Extends#vrj::GlApp#vrj::App:oiref>=122,230,122,190:oigroup>
+<oigroup:<oiref:cpp#Member#vrj::App#init#(##)#:oiref>=200,70,174,15,1:oigroup>
+<oigroup:<oiref:cpp#Extends#vrj::OpenSGApp#vrj::GlApp:oiref>=236,470,236,430:oigroup>
+<oigroup:<oiref:cpp#Extends#vrj::PfApp#vrj::App:oiref>=232,230,232,190:oigroup>
+<oigroup:<oiref:cpp#Class#vrj::PfApp:oiref>=190,230,148,110,0:oigroup>
+<oigroup:<oiref:cpp#Extends#vrj::OsgApp#vrj::GlApp:oiref>=130,470,130,430:oigroup>
+<oigroup:<oiref:cpp#Class#vrj::GlApp:oiref>=10,230,150,110,0:oigroup>
+<oigroup:<oiref:cpp#Class#vrj::App:oiref>=94,10,180,180,0:oigroup>
+
+*/
+class __positions {
+}

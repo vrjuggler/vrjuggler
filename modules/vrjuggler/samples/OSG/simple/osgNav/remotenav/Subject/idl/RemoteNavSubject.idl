@@ -1,0 +1,54 @@
+#ifndef _REMOTE_NAV_SUBJECT_IDL_
+#define _REMOTE_NAV_SUBJECT_IDL_
+
+#include <tweek/idl/Subject.idl>
+
+
+module vrj
+{
+   interface RemoteNavSubject : tweek::Subject
+   {
+      /**
+       * Sets the absolute position relative to the origin of the virtual
+       * world.
+       */
+      void setPosition(in float xPos, in float yPos, in float zPos);
+
+      /**
+       * Gets the absolute position relative to the origin of the virtual
+       * world.
+       */
+      void getPosition(out float xPos, out float yPos, out float zPos);
+
+      /**
+       * Gets the absolute orientation relative to the virtual world
+       * coordinate frame.
+       */
+      void getOrientation(out float pitch, out float heading, out float roll);
+
+      /**
+       * Sets the absolute orientation relative to the virtual world
+       * coordinate frame.
+       */
+      void setOrientation(in float pitch, in float heading, in float roll);
+      
+      /**
+       * Sets the rotational velocity.
+       */
+      void setVelocity(in float xDelta, in float yDelta, in float zDelta);
+
+      /**
+       * Sets the rotational velocity.
+       */
+      void setRotationalVelocity(in float pitchDelta, in float headingDelta,
+                                 in float rollDelta);
+
+      /**
+       * Toggles between walk/drive mode and fly mode.
+       */
+      void setWalkMode(in boolean walk);
+   };
+};
+
+
+#endif /* _REMOTE_NAV_SUBJECT_IDL_ */

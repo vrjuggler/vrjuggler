@@ -1,0 +1,86 @@
+package idrag6ctylgvb1ctylj8s8;
+
+/**
+@version 2.0
+@physicalPackage
+@__modelType diagram 
+*/
+class diagram {
+/**
+@__ref <oiref:design#Class#id3530qctylgvb1ctyljbbw.diagram:oiref><oihard>
+@__modelType reference
+@__fqn <oiref:#Package#Util:oiref> 
+*/
+class reference {
+}/**
+@__ref <oiref:design#Class#id47wwsctylgvb1ctyljbb6.diagram:oiref><oihard>
+@__modelType reference
+@__fqn <oiref:#Package#CORBA:oiref> 
+*/
+class reference1 {
+}/**
+@__ref <oiref:design#Class#idkfctylgvb1ctyljbch.diagram:oiref><oihard>
+@__modelType reference
+@__fqn <oiref:#Package#idl:oiref> 
+*/
+class reference2 {
+}/**
+@__ref <oiref:idl#Class#example::FloatSubject:oiref><oihard>
+@__modelType reference 
+*/
+class reference5 {
+}/**
+@__ref <oiref:design#Class#idf32jmd9n7fwo9d9n7jfoa.diagram:oiref><oihard>
+@__modelType reference
+@__fqn <oiref:#Package#Client:oiref> 
+*/
+class reference6 {
+}/**
+@__ref <oiref:cpp#Class#FloatSubjectImpl:oiref><oihard>
+@__modelType reference 
+*/
+class reference7 {
+}/**
+@__ref <oiref:java#Class#FloatObserverImpl:oiref><oihard>
+@__modelType reference 
+*/
+class reference14 {
+}/**
+@__ref <oiref:design#Class#id4p6qcdb6vmgwkdb6vn6uy.diagram:oiref><oihard>
+@__modelType reference
+@__fqn <oiref:#Package#tweek:oiref> 
+*/
+class reference3 {
+}/**
+@__ref <oiref:design#Class#id3n3m4db6wvtgodb6xgayw.diagram:oiref><oihard>
+@__modelType reference
+@__fqn <oiref:#Package#example:oiref> 
+*/
+class reference4 {
+}/**
+@__ref <oiref:idl#Class#tweek::Subject:oiref><oihard>
+@__modelType reference 
+*/
+class reference8 {
+}}/**
+@__tags
+@shapeType ClassDiagram 
+*/
+class __tags {
+}/**
+@__options 
+*/
+class __options {
+}/**
+@__positions <oigroup:<oiref:design#Class#id47wwsctylgvb1ctyljbb6.diagram:oiref>=83,10,171,168,1:oigroup>
+<oigroup:<oiref:java#Class#FloatObserverImpl:oiref>=549,402,200,134,1:oigroup>
+<oigroup:<oiref:cpp#Class#FloatSubjectImpl:oiref>=462,71,182,163,1:oigroup>
+<oigroup:<oiref:design#Class#idf32jmd9n7fwo9d9n7jfoa.diagram:oiref>=549,308,99,80,1:oigroup>
+<oigroup:<oiref:idl#Class#example::FloatSubject:oiref>=365,304,167,163,1:oigroup>
+<oigroup:<oiref:java#Implements#FloatObserverImpl#tweek.ObserverPOA:oiref>=704,402,704,298:oigroup>
+<oigroup:<oiref:cpp#Class#FloatObserverImpl:oiref>=120,220,170,88,0:oigroup>
+<oigroup:<oiref:design#Class#id3530qctylgvb1ctyljbbw.diagram:oiref>=10,10,53,65,1:oigroup>
+<oigroup:<oiref:design#Class#idkfctylgvb1ctyljbch.diagram:oiref>=303,10,143,168,1:oigroup>
+*/
+class __positions {
+}

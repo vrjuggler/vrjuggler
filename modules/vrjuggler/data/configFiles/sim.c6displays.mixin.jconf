@@ -1,0 +1,623 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?org-vrjuggler-jccl-settings configuration.version="3.0"?>
+<configuration xmlns="http://www.vrjuggler.org/jccl/xsd/3.0/configuration" name="Configuration" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.0/configuration http://www.vrjuggler.org/jccl/xsd/3.0/configuration.xsd">
+   <elements>
+      <display_window name="Right Surface" version="2">
+         <origin>400</origin>
+         <origin>400</origin>
+         <size>200</size>
+         <size>200</size>
+         <pipe>0</pipe>
+         <frame_buffer_config>
+            <opengl_frame_buffer_config name="GL Frame Buffer" version="1">
+               <visual_id>-1</visual_id>
+               <red_size>1</red_size>
+               <green_size>1</green_size>
+               <blue_size>1</blue_size>
+               <alpha_size>1</alpha_size>
+               <depth_buffer_size>1</depth_buffer_size>
+               <fsaa_enable>false</fsaa_enable>
+            </opengl_frame_buffer_config>
+         </frame_buffer_config>
+         <stereo>false</stereo>
+         <border>false</border>
+         <act_as_event_source>false</act_as_event_source>
+         <event_window_device>
+            <event_window name="Event window configuration 0" version="1">
+               <width>0</width>
+               <height>0</height>
+               <origin>0</origin>
+               <origin>0</origin>
+               <mouse_sensitivity>0.0</mouse_sensitivity>
+               <display_number>0</display_number>
+               <lock_key>KEY_NONE</lock_key>
+               <start_locked>false</start_locked>
+               <sleep_time>0</sleep_time>
+               <device_host />
+            </event_window>
+         </event_window_device>
+         <active>true</active>
+         <surface_viewports>
+            <surface_viewport name="Contained Surface Viewports 0" version="1">
+               <origin>0.0</origin>
+               <origin>0.0</origin>
+               <size>1.0</size>
+               <size>1.0</size>
+               <view>Left Eye</view>
+               <corners>
+                  <vec3 name="lower left" version="1">
+                     <x>1.524</x>
+                     <y>0.0</y>
+                     <z>-1.524</z>
+                  </vec3>
+               </corners>
+               <corners>
+                  <vec3 name="lower right" version="1">
+                     <x>1.524</x>
+                     <y>0.0</y>
+                     <z>1.524</z>
+                  </vec3>
+               </corners>
+               <corners>
+                  <vec3 name="upper right" version="1">
+                     <x>1.524</x>
+                     <y>3.048</y>
+                     <z>1.524</z>
+                  </vec3>
+               </corners>
+               <corners>
+                  <vec3 name="upper left" version="1">
+                     <x>1.524</x>
+                     <y>3.048</y>
+                     <z>-1.524</z>
+                  </vec3>
+               </corners>
+               <user>User1</user>
+               <active>true</active>
+               <tracked>false</tracked>
+               <tracker_proxy />
+            </surface_viewport>
+         </surface_viewports>
+      </display_window>
+      <display_window name="Front Surface" version="2">
+         <origin>200</origin>
+         <origin>400</origin>
+         <size>200</size>
+         <size>200</size>
+         <pipe>0</pipe>
+         <frame_buffer_config>
+            <opengl_frame_buffer_config name="GL Frame Buffer" version="1">
+               <visual_id>-1</visual_id>
+               <red_size>1</red_size>
+               <green_size>1</green_size>
+               <blue_size>1</blue_size>
+               <alpha_size>1</alpha_size>
+               <depth_buffer_size>1</depth_buffer_size>
+               <fsaa_enable>false</fsaa_enable>
+            </opengl_frame_buffer_config>
+         </frame_buffer_config>
+         <stereo>false</stereo>
+         <border>false</border>
+         <act_as_event_source>false</act_as_event_source>
+         <event_window_device>
+            <event_window name="Event window configuration 0" version="1">
+               <width>0</width>
+               <height>0</height>
+               <origin>0</origin>
+               <origin>0</origin>
+               <mouse_sensitivity>0.0</mouse_sensitivity>
+               <display_number>0</display_number>
+               <lock_key>KEY_NONE</lock_key>
+               <start_locked>false</start_locked>
+               <sleep_time>0</sleep_time>
+               <device_host />
+            </event_window>
+         </event_window_device>
+         <active>true</active>
+         <surface_viewports>
+            <surface_viewport name="Contained Surface Viewports 0" version="1">
+               <origin>0.0</origin>
+               <origin>0.0</origin>
+               <size>1.0</size>
+               <size>1.0</size>
+               <view>Left Eye</view>
+               <corners>
+                  <vec3 name="lower left" version="1">
+                     <x>-1.524</x>
+                     <y>0.0</y>
+                     <z>-1.524</z>
+                  </vec3>
+               </corners>
+               <corners>
+                  <vec3 name="lower right" version="1">
+                     <x>1.524</x>
+                     <y>0.0</y>
+                     <z>-1.524</z>
+                  </vec3>
+               </corners>
+               <corners>
+                  <vec3 name="upper right" version="1">
+                     <x>1.524</x>
+                     <y>3.048</y>
+                     <z>-1.524</z>
+                  </vec3>
+               </corners>
+               <corners>
+                  <vec3 name="upper left" version="1">
+                     <x>-1.524</x>
+                     <y>3.048</y>
+                     <z>-1.524</z>
+                  </vec3>
+               </corners>
+               <user>User1</user>
+               <active>true</active>
+               <tracked>false</tracked>
+               <tracker_proxy />
+            </surface_viewport>
+         </surface_viewports>
+      </display_window>
+      <display_window name="Left Surface" version="2">
+         <origin>0</origin>
+         <origin>400</origin>
+         <size>200</size>
+         <size>200</size>
+         <pipe>0</pipe>
+         <frame_buffer_config>
+            <opengl_frame_buffer_config name="GL Frame Buffer" version="1">
+               <visual_id>-1</visual_id>
+               <red_size>1</red_size>
+               <green_size>1</green_size>
+               <blue_size>1</blue_size>
+               <alpha_size>1</alpha_size>
+               <depth_buffer_size>1</depth_buffer_size>
+               <fsaa_enable>false</fsaa_enable>
+            </opengl_frame_buffer_config>
+         </frame_buffer_config>
+         <stereo>false</stereo>
+         <border>false</border>
+         <act_as_event_source>false</act_as_event_source>
+         <event_window_device>
+            <event_window name="Event window configuration 0" version="1">
+               <width>0</width>
+               <height>0</height>
+               <origin>0</origin>
+               <origin>0</origin>
+               <mouse_sensitivity>0.0</mouse_sensitivity>
+               <display_number>0</display_number>
+               <lock_key>KEY_NONE</lock_key>
+               <start_locked>false</start_locked>
+               <sleep_time>0</sleep_time>
+               <device_host />
+            </event_window>
+         </event_window_device>
+         <active>true</active>
+         <surface_viewports>
+            <surface_viewport name="Contained Surface Viewports 0" version="1">
+               <origin>0.0</origin>
+               <origin>0.0</origin>
+               <size>1.0</size>
+               <size>1.0</size>
+               <view>Left Eye</view>
+               <corners>
+                  <vec3 name="lower left" version="1">
+                     <x>-1.524</x>
+                     <y>0.0</y>
+                     <z>1.524</z>
+                  </vec3>
+               </corners>
+               <corners>
+                  <vec3 name="lower right" version="1">
+                     <x>-1.524</x>
+                     <y>0.0</y>
+                     <z>-1.524</z>
+                  </vec3>
+               </corners>
+               <corners>
+                  <vec3 name="upper right" version="1">
+                     <x>-1.524</x>
+                     <y>3.048</y>
+                     <z>-1.524</z>
+                  </vec3>
+               </corners>
+               <corners>
+                  <vec3 name="upper left" version="1">
+                     <x>-1.524</x>
+                     <y>3.048</y>
+                     <z>1.524</z>
+                  </vec3>
+               </corners>
+               <user>User1</user>
+               <active>true</active>
+               <tracked>false</tracked>
+               <tracker_proxy />
+            </surface_viewport>
+         </surface_viewports>
+      </display_window>
+      <display_window name="Floor Surface" version="2">
+         <origin>200</origin>
+         <origin>200</origin>
+         <size>200</size>
+         <size>200</size>
+         <pipe>0</pipe>
+         <frame_buffer_config>
+            <opengl_frame_buffer_config name="GL Frame Buffer" version="1">
+               <visual_id>-1</visual_id>
+               <red_size>1</red_size>
+               <green_size>1</green_size>
+               <blue_size>1</blue_size>
+               <alpha_size>1</alpha_size>
+               <depth_buffer_size>1</depth_buffer_size>
+               <fsaa_enable>false</fsaa_enable>
+            </opengl_frame_buffer_config>
+         </frame_buffer_config>
+         <stereo>false</stereo>
+         <border>false</border>
+         <act_as_event_source>false</act_as_event_source>
+         <event_window_device>
+            <event_window name="Event window configuration 0" version="1">
+               <width>0</width>
+               <height>0</height>
+               <origin>0</origin>
+               <origin>0</origin>
+               <mouse_sensitivity>0.0</mouse_sensitivity>
+               <display_number>0</display_number>
+               <lock_key>KEY_NONE</lock_key>
+               <start_locked>false</start_locked>
+               <sleep_time>0</sleep_time>
+               <device_host />
+            </event_window>
+         </event_window_device>
+         <active>true</active>
+         <surface_viewports>
+            <surface_viewport name="Contained Surface Viewports 0" version="1">
+               <origin>0.0</origin>
+               <origin>0.0</origin>
+               <size>1.0</size>
+               <size>1.0</size>
+               <view>Left Eye</view>
+               <corners>
+                  <vec3 name="lower left" version="1">
+                     <x>-1.524</x>
+                     <y>0.0</y>
+                     <z>1.524</z>
+                  </vec3>
+               </corners>
+               <corners>
+                  <vec3 name="lower right" version="1">
+                     <x>1.524</x>
+                     <y>0.0</y>
+                     <z>1.524</z>
+                  </vec3>
+               </corners>
+               <corners>
+                  <vec3 name="upper right" version="1">
+                     <x>1.524</x>
+                     <y>0.0</y>
+                     <z>-1.524</z>
+                  </vec3>
+               </corners>
+               <corners>
+                  <vec3 name="upper left" version="1">
+                     <x>-1.524</x>
+                     <y>0.0</y>
+                     <z>-1.524</z>
+                  </vec3>
+               </corners>
+               <user>User1</user>
+               <active>true</active>
+               <tracked>false</tracked>
+               <tracker_proxy />
+            </surface_viewport>
+         </surface_viewports>
+      </display_window>
+      <display_window name="Ceiling Surface" version="2">
+         <origin>200</origin>
+         <origin>600</origin>
+         <size>200</size>
+         <size>200</size>
+         <pipe>0</pipe>
+         <frame_buffer_config>
+            <opengl_frame_buffer_config name="GL Frame Buffer" version="1">
+               <visual_id>-1</visual_id>
+               <red_size>1</red_size>
+               <green_size>1</green_size>
+               <blue_size>1</blue_size>
+               <alpha_size>1</alpha_size>
+               <depth_buffer_size>1</depth_buffer_size>
+               <fsaa_enable>false</fsaa_enable>
+            </opengl_frame_buffer_config>
+         </frame_buffer_config>
+         <stereo>false</stereo>
+         <border>false</border>
+         <act_as_event_source>false</act_as_event_source>
+         <event_window_device>
+            <event_window name="Event window configuration 0" version="1">
+               <width>0</width>
+               <height>0</height>
+               <origin>0</origin>
+               <origin>0</origin>
+               <mouse_sensitivity>0.0</mouse_sensitivity>
+               <display_number>0</display_number>
+               <lock_key>KEY_NONE</lock_key>
+               <start_locked>false</start_locked>
+               <sleep_time>0</sleep_time>
+               <device_host />
+            </event_window>
+         </event_window_device>
+         <active>true</active>
+         <surface_viewports>
+            <surface_viewport name="Contained Surface Viewports 0" version="1">
+               <origin>0.0</origin>
+               <origin>0.0</origin>
+               <size>1.0</size>
+               <size>1.0</size>
+               <view>Left Eye</view>
+               <corners>
+                  <vec3 name="lower left" version="1">
+                     <x>-1.524</x>
+                     <y>3.048</y>
+                     <z>-1.524</z>
+                  </vec3>
+               </corners>
+               <corners>
+                  <vec3 name="lower right" version="1">
+                     <x>1.524</x>
+                     <y>3.048</y>
+                     <z>-1.524</z>
+                  </vec3>
+               </corners>
+               <corners>
+                  <vec3 name="upper right" version="1">
+                     <x>1.524</x>
+                     <y>3.048</y>
+                     <z>1.524</z>
+                  </vec3>
+               </corners>
+               <corners>
+                  <vec3 name="upper left" version="1">
+                     <x>-1.524</x>
+                     <y>3.048</y>
+                     <z>1.524</z>
+                  </vec3>
+               </corners>
+               <user>User1</user>
+               <active>true</active>
+               <tracked>false</tracked>
+               <tracker_proxy />
+            </surface_viewport>
+         </surface_viewports>
+      </display_window>
+      <display_window name="Entrance Surface" version="2">
+         <origin>600</origin>
+         <origin>400</origin>
+         <size>200</size>
+         <size>200</size>
+         <pipe>0</pipe>
+         <frame_buffer_config>
+            <opengl_frame_buffer_config name="GL Frame Buffer" version="1">
+               <visual_id>-1</visual_id>
+               <red_size>1</red_size>
+               <green_size>1</green_size>
+               <blue_size>1</blue_size>
+               <alpha_size>1</alpha_size>
+               <depth_buffer_size>1</depth_buffer_size>
+               <fsaa_enable>false</fsaa_enable>
+            </opengl_frame_buffer_config>
+         </frame_buffer_config>
+         <stereo>false</stereo>
+         <border>false</border>
+         <act_as_event_source>false</act_as_event_source>
+         <event_window_device>
+            <event_window name="Event window configuration 0" version="1">
+               <width>0</width>
+               <height>0</height>
+               <origin>0</origin>
+               <origin>0</origin>
+               <mouse_sensitivity>0.0</mouse_sensitivity>
+               <display_number>0</display_number>
+               <lock_key>KEY_NONE</lock_key>
+               <start_locked>false</start_locked>
+               <sleep_time>0</sleep_time>
+               <device_host />
+            </event_window>
+         </event_window_device>
+         <active>true</active>
+         <surface_viewports>
+            <surface_viewport name="Contained Surface Viewports 0" version="1">
+               <origin>0.0</origin>
+               <origin>0.0</origin>
+               <size>1.0</size>
+               <size>1.0</size>
+               <view>Left Eye</view>
+               <corners>
+                  <vec3 name="lower left" version="1">
+                     <x>1.524</x>
+                     <y>0.0</y>
+                     <z>1.524</z>
+                  </vec3>
+               </corners>
+               <corners>
+                  <vec3 name="lower right" version="1">
+                     <x>-1.524</x>
+                     <y>0.0</y>
+                     <z>1.524</z>
+                  </vec3>
+               </corners>
+               <corners>
+                  <vec3 name="upper right" version="1">
+                     <x>-1.524</x>
+                     <y>3.048</y>
+                     <z>1.524</z>
+                  </vec3>
+               </corners>
+               <corners>
+                  <vec3 name="upper left" version="1">
+                     <x>1.524</x>
+                     <y>3.048</y>
+                     <z>1.524</z>
+                  </vec3>
+               </corners>
+               <user>User1</user>
+               <active>true</active>
+               <tracked>false</tracked>
+               <tracker_proxy />
+            </surface_viewport>
+         </surface_viewports>
+      </display_window>
+      <display_window name="rightSurfaceAngled" version="2">
+         <origin>400</origin>
+         <origin>200</origin>
+         <size>200</size>
+         <size>200</size>
+         <pipe>0</pipe>
+         <frame_buffer_config>
+            <opengl_frame_buffer_config name="GL Frame Buffer" version="1">
+               <visual_id>-1</visual_id>
+               <red_size>1</red_size>
+               <green_size>1</green_size>
+               <blue_size>1</blue_size>
+               <alpha_size>1</alpha_size>
+               <depth_buffer_size>1</depth_buffer_size>
+               <fsaa_enable>false</fsaa_enable>
+            </opengl_frame_buffer_config>
+         </frame_buffer_config>
+         <stereo>false</stereo>
+         <border>false</border>
+         <act_as_event_source>false</act_as_event_source>
+         <event_window_device>
+            <event_window name="Event window configuration 0" version="1">
+               <width>0</width>
+               <height>0</height>
+               <origin>0</origin>
+               <origin>0</origin>
+               <mouse_sensitivity>0.0</mouse_sensitivity>
+               <display_number>0</display_number>
+               <lock_key>KEY_NONE</lock_key>
+               <start_locked>false</start_locked>
+               <sleep_time>0</sleep_time>
+               <device_host />
+            </event_window>
+         </event_window_device>
+         <active>true</active>
+         <surface_viewports>
+            <surface_viewport name="Contained Surface Viewports 0" version="1">
+               <origin>0.0</origin>
+               <origin>0.0</origin>
+               <size>1.0</size>
+               <size>1.0</size>
+               <view>Left Eye</view>
+               <corners>
+                  <vec3 name="lower left" version="1">
+                     <x>1.524</x>
+                     <y>0.0</y>
+                     <z>-1.524</z>
+                  </vec3>
+               </corners>
+               <corners>
+                  <vec3 name="lower right" version="1">
+                     <x>2.843784</x>
+                     <y>0.0</y>
+                     <z>1.115568</z>
+                  </vec3>
+               </corners>
+               <corners>
+                  <vec3 name="upper right" version="1">
+                     <x>2.843784</x>
+                     <y>3.048</y>
+                     <z>1.115568</z>
+                  </vec3>
+               </corners>
+               <corners>
+                  <vec3 name="upper left" version="1">
+                     <x>1.524</x>
+                     <y>3.048</y>
+                     <z>-1.524</z>
+                  </vec3>
+               </corners>
+               <user>User1</user>
+               <active>true</active>
+               <tracked>false</tracked>
+               <tracker_proxy />
+            </surface_viewport>
+         </surface_viewports>
+      </display_window>
+      <display_window name="Ceiling Surface Angled" version="2">
+         <origin>200</origin>
+         <origin>800</origin>
+         <size>200</size>
+         <size>200</size>
+         <pipe>0</pipe>
+         <frame_buffer_config>
+            <opengl_frame_buffer_config name="GL Frame Buffer" version="1">
+               <visual_id>-1</visual_id>
+               <red_size>1</red_size>
+               <green_size>1</green_size>
+               <blue_size>1</blue_size>
+               <alpha_size>1</alpha_size>
+               <depth_buffer_size>1</depth_buffer_size>
+               <fsaa_enable>false</fsaa_enable>
+            </opengl_frame_buffer_config>
+         </frame_buffer_config>
+         <stereo>false</stereo>
+         <border>false</border>
+         <act_as_event_source>false</act_as_event_source>
+         <event_window_device>
+            <event_window name="Event window configuration 0" version="1">
+               <width>0</width>
+               <height>0</height>
+               <origin>0</origin>
+               <origin>0</origin>
+               <mouse_sensitivity>0.0</mouse_sensitivity>
+               <display_number>0</display_number>
+               <lock_key>KEY_NONE</lock_key>
+               <start_locked>false</start_locked>
+               <sleep_time>0</sleep_time>
+               <device_host />
+            </event_window>
+         </event_window_device>
+         <active>true</active>
+         <surface_viewports>
+            <surface_viewport name="Contained Surface Viewports 0" version="1">
+               <origin>0.0</origin>
+               <origin>0.0</origin>
+               <size>1.0</size>
+               <size>1.0</size>
+               <view>Left Eye</view>
+               <corners>
+                  <vec3 name="lower left" version="1">
+                     <x>-1.524</x>
+                     <y>3.048</y>
+                     <z>-1.524</z>
+                  </vec3>
+               </corners>
+               <corners>
+                  <vec3 name="lower right" version="1">
+                     <x>1.524</x>
+                     <y>3.048</y>
+                     <z>-1.524</z>
+                  </vec3>
+               </corners>
+               <corners>
+                  <vec3 name="upper right" version="1">
+                     <x>1.524</x>
+                     <y>3.8368802</y>
+                     <z>1.4201419</z>
+                  </vec3>
+               </corners>
+               <corners>
+                  <vec3 name="upper left" version="1">
+                     <x>-1.524</x>
+                     <y>3.8368802</y>
+                     <z>1.4201419</z>
+                  </vec3>
+               </corners>
+               <user>User1</user>
+               <active>true</active>
+               <tracked>false</tracked>
+               <tracker_proxy />
+            </surface_viewport>
+         </surface_viewports>
+      </display_window>
+   </elements>
+</configuration>
+

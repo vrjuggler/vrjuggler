@@ -1,0 +1,63 @@
+package id105xycoygvor1coyhh753;
+
+/**
+@version 2.0
+@physicalPackage
+@__modelType diagram 
+*/
+class diagram {
+/**
+@__ref <oiref:design#Class#id2mxs2coygvor1coyhh8zn.diagram:oiref><oihard>
+@__modelType reference
+@__fqn <oiref:#Package#md:oiref> 
+*/
+class reference {
+}/**
+@__ref <oiref:design#Class#id1j3bzcoygvor1coyhh8xj.diagram:oiref><oihard>
+@__modelType reference
+@__fqn <oiref:#Package#Thread:oiref> 
+*/
+class reference2 {
+}/**
+@__ref <oiref:design#Class#id2uv17coygvor1coyhh8yu.diagram:oiref><oihard>
+@__modelType reference
+@__fqn <oiref:#Package#Util:oiref> 
+*/
+class reference3 {
+}/**
+@__ref <oiref:design#Class#id26gs8coygvor1coyhh8w1.diagram:oiref><oihard>
+@__modelType reference
+@__fqn <oiref:#Package#IO:oiref> 
+*/
+class reference4 {
+}/**
+@__ref <oiref:design#Class#id11utvcoygvor1coyhh8ws.diagram:oiref><oihard>
+@__modelType reference
+@__fqn <oiref:#Package#Sync:oiref> 
+*/
+class reference5 {
+}/**
+@__ref <oiref:design#Class#idvjzwcoygvor1coyjkxtp.diagram:oiref><oihard>
+@__modelType reference
+@__fqn <oiref:#Package#SerialPort:oiref> 
+*/
+class reference38 {
+}}/**
+@__tags
+@shapeType ClassDiagram 
+*/
+class __tags {
+}/**
+@__options 
+*/
+class __options {
+}/**
+@__positions <oigroup:<oiref:design#Class#idvjzwcoygvor1coyjkxtp.diagram:oiref>=496,458,88,52,1:oigroup>
+<oigroup:<oiref:design#Class#id26gs8coygvor1coyhh8w1.diagram:oiref>=10,310,96,156,1:oigroup>
+<oigroup:<oiref:design#Class#id2uv17coygvor1coyhh8yu.diagram:oiref>=293,10,126,166,1:oigroup>
+<oigroup:<oiref:design#Class#id11utvcoygvor1coyhh8ws.diagram:oiref>=293,210,118,140,1:oigroup>
+<oigroup:<oiref:design#Class#id1j3bzcoygvor1coyhh8xj.diagram:oiref>=89,10,184,257,1:oigroup>
+<oigroup:<oiref:design#Class#id2mxs2coygvor1coyhh8zn.diagram:oiref>=10,10,59,111,1:oigroup>
+*/
+class __positions {
+}

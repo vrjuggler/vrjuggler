@@ -1,0 +1,34 @@
+package id2p73bcoygvor1coyhhd11;
+
+/**
+@version 2.0
+@physicalPackage
+@__modelType diagram 
+*/
+class diagram {
+/**
+@__ref <oiref:cpp#Class#vpr::SerialPort_t:oiref><oihard>
+@__modelType reference 
+*/
+class reference {
+}/**
+@__ref <oiref:cpp#Class#vpr::Port:oiref><oihard>
+@__modelType reference 
+*/
+class reference89 {
+}}/**
+@__tags
+@shapeType ClassDiagram 
+*/
+class __tags {
+}/**
+@__options 
+*/
+class __options {
+}/**
+@__positions <oigroup:<oiref:cpp#Class#vpr::Port:oiref>=299,43,200,105,1:oigroup>
+<oigroup:<oiref:cpp#Class#vpr::SerialPort_t:oiref>=439,183,200,920,1:oigroup>
+<oigroup:<oiref:cpp#Extends#vpr::SerialPort_t#vpr::Port:oiref>=469,183,469,148:oigroup> 
+*/
+class __positions {
+}

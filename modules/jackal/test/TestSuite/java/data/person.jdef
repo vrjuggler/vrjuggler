@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?org-vrjuggler-jccl-settings definition.version="3.0"?>
+<definition name="person"
+            xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.0/definition http://www.vrjuggler.org/jccl/xsd/3.0/definition.xsd"
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xmlns="http://www.vrjuggler.org/jccl/xsd/3.0/definition">
+   <definition_version version="1" label="Person">
+      <help>This is a person.</help>
+      <parent />
+      <category>/Personnel</category>
+      <property valuetype="string" variable="false" name="name">
+         <help>This person's first name.</help>
+         <value label="Name" defaultvalue="" />
+      </property>
+      <property valuetype="integer" variable="false" name="age">
+         <help>This person's age.</help>
+         <value label="Age" defaultvalue="0" />
+      </property>
+      <property valuetype="configelement" variable="true" name="friends">
+         <help>All of this person's friends.</help>
+         <value label="Friend" />
+         <allowed_type>person</allowed_type>
+      </property>
+      <upgrade_transform />
+   </definition_version>
+</definition>

@@ -1,0 +1,14 @@
+gfxn1/Debug/GUIDTest/CreationOverhead                              0.97892
+gfxn1/Debug/Main/MetricTest                                        1221.75
+gfxn1/Debug/TSDataOverhead0                                        11.969
+gfxn1/Debug/TSDataOverhead1                                        14.3507
+gfxn1/Debug/TSDataOverhead2                                        13.8054
+gfxn1/Debug/TSDataOverhead3                                        12.4733
+gfxn1/Debug/TSDataOverhead4                                        15.2545
+gfxn1/Debug/TSDataOverhead5                                        15.3244
+gfxn1/Debug/TSDataOverhead6                                        15.5863
+gfxn1/Debug/TSDataOverhead7                                        14.819
+gfxn1/Debug/TSDataOverhead8                                        13.8941
+gfxn1/Debug/TSDataOverhead9                                        13.7644
+gfxn2/Debug/GUIDTest/CreationOverhead                              0.97014
+gfxn2/Debug/Main/MetricTest                                        1221.75

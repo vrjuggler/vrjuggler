@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?org-vrjuggler-jccl-settings definition.version="3.0"?>
+<definition name="trackd_api_sensor"
+            icon_path="jar:file:${VJ_BASE_DIR}/bin/beans/ProxyEditor.jar!/org/vrjuggler/vrjconfig/customeditors/proxyeditor/images/position64.jpg"
+            xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.0/definition http://www.vrjuggler.org/jccl/xsd/3.0/definition.xsd"
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xmlns="http://www.vrjuggler.org/jccl/xsd/3.0/definition">
+   <definition_version version="1" label="TrackdAPI Sensor">
+      <help>Configure the interface to a trackd sensor memory area</help>
+      <parent>positional_device</parent>
+      <category>/Devices</category>
+      <property valuetype="integer" variable="false" name="shared_memory_key">
+         <help>This is the shared memory key for the trackd information.</help>
+         <value label="Shared Memory Key" defaultvalue="4126"/>
+      </property>
+      <property valuetype="configelement" variable="true" name="position_filters">
+         <help>This is a list of all the filters that are to be applied to the postional device data. The filters are applied in the order that they are specified in this configuration.</help>
+         <value label="Position Filter"/>
+         <allowed_type>position_transform_filter</allowed_type>
+      </property>
+      <upgrade_transform/>
+   </definition_version>
+</definition>

@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?org-vrjuggler-jccl-settings definition.version="3.0"?>
+<definition name="flock"
+            icon_path="jar:file:${VJ_BASE_DIR}/bin/beans/ProxyEditor.jar!/org/vrjuggler/vrjconfig/customeditors/proxyeditor/images/fob.jpg"
+            xmlns="http://www.vrjuggler.org/jccl/xsd/3.0/definition"
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.0/definition http://www.vrjuggler.org/jccl/xsd/3.0/definition.xsd">
+   <definition_version version="1" label="Flock of Birds">
+      <help>Configuration for Ascension Flock of Birds</help>
+      <parent>positional_device</parent>
+      <category>/Devices</category>
+      <property valuetype="string" variable="false" name="port">
+         <help>Serial port the Flock is attached to</help>
+         <value label="Port" defaultvalue="/dev/ttyd1"/>
+      </property>
+      <property valuetype="integer" variable="false" name="baud">
+         <help>Serial port speed</help>
+         <value label="Baud Rate" defaultvalue="38400"/>
+      </property>
+      <property valuetype="integer" variable="false" name="number_of_birds">
+         <help>Number of birds in the Flock</help>
+         <value label="Number of Birds" defaultvalue="2"/>
+      </property>
+      <property valuetype="configelement" variable="true" name="position_filters">
+         <help>This is a list of all the filters that are to be applied to the postional device data. The filters are applied in the order that they are specified in this configuration.</help>
+         <value label="Position Filter"/>
+         <allowed_type>position_transform_filter</allowed_type>
+      </property>
+      <property valuetype="string" variable="false" name="calibration_file">
+         <help>Name of a tracker calibration file</help>
+         <value label="Calibration file" defaultvalue="${VJ_BASE_DIR}/share/gadgeteer/data/calibration.table"/>
+      </property>
+      <property valuetype="integer" variable="false" name="hemisphere">
+         <help>Flock Hemisphere</help>
+         <value label="Hemisphere" defaultvalue="3"/>
+         <enum label="FRONT_HEM" value="0"/>
+         <enum label="AFT_HEM" value="1"/>
+         <enum label="UPPER_HEM" value="2"/>
+         <enum label="LOWER_HEM" value="3"/>
+         <enum label="LEFT_HEM" value="4"/>
+         <enum label="RIGHT_HEM" value="5"/>
+      </property>
+      <property valuetype="integer" variable="false" name="filter">
+         <help>Filter</help>
+         <value label="Filter" defaultvalue="0"/>
+         <enum label="AC_NARROW" value="0"/>
+         <enum label="AC_WIDE" value="1"/>
+         <enum label="DC_FILTER" value="2"/>
+      </property>
+      <property valuetype="integer" variable="false" name="sync_style">
+         <help>sync style. See flock man pg 82</help>
+         <value label="Synchronous" defaultvalue="0"/>
+         <enum label="NoSync" value="0"/>
+         <enum label="CRT_Above_72Hz" value="1"/>
+         <enum label="CRT_Below_72hz" value="2"/>
+      </property>
+      <property valuetype="boolean" variable="false" name="blocking">
+         <help>Run in blocking mode or non-blocking mode.</help>
+         <value label="Blocking" defaultvalue="true"/>
+      </property>
+      <property valuetype="string" variable="false" name="report">
+         <help>Q-(every cycle) R-(every other cycle) S-(every 8 cycles) T-(every 32 cycles)</help>
+         <value label="Report Frequency" defaultvalue="R"/>
+         <enum label="Every Cycle" value="Q"/>
+         <enum label="Every Other Cycle" value="R"/>
+         <enum label="Every 8 Cycles" value="S"/>
+         <enum label="Every 32 Cycles" value="T"/>
+      </property>
+      <property valuetype="integer" variable="false" name="transmitter_id">
+         <help>Id of the transmitter</help>
+         <value label="Transmitter ID" defaultvalue="3"/>
+      </property>
+      <property valuetype="boolean" variable="false" name="extended_range">
+         <help>Does an extended range transmitter exist?</help>
+         <value label="Extended Range" defaultvalue="false"/>
+      </property>
+      <upgrade_transform/>
+   </definition_version>
+</definition>

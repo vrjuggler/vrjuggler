@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?org-vrjuggler-jccl-settings configuration.version="3.0"?>
+<configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+               name="Include Test Configuration"
+               xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.0/configuration http://www.vrjuggler.org/jccl/xsd/3.0/configuration.xsd"
+               xmlns="http://www.vrjuggler.org/jccl/xsd/3.0/configuration">
+   <include>included_cfg.jcfg</include>
+   <elements>
+      <include_test name="Test 1" version="1">
+         <int_prop>2</int_prop>
+      </include_test>
+      <include_test name="Superceding Test" version="1">
+         <int_prop>2</int_prop>
+      </include_test>
+   </elements>
+</configuration>

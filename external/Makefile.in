@@ -1,0 +1,401 @@
+# ************** <auto-copyright.pl BEGIN do not edit this line> **************
+#
+# VR Juggler is (C) Copyright 1998-2002 by Iowa State University
+#
+# Original Authors:
+#   Allen Bierbaum, Christopher Just,
+#   Patrick Hartling, Kevin Meinert,
+#   Carolina Cruz-Neira, Albert Baker
+#
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Library General Public
+# License as published by the Free Software Foundation; either
+# version 2 of the License, or (at your option) any later version.
+#
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Library General Public License for more details.
+#
+# You should have received a copy of the GNU Library General Public
+# License along with this library; if not, write to the
+# Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+# Boston, MA 02111-1307, USA.
+#
+# -----------------------------------------------------------------
+# File:          $RCSfile$
+# Date modified: $Date$
+# Version:       $Revision$
+# -----------------------------------------------------------------
+#
+# *************** <auto-copyright.pl END do not edit this line> ***************
+
+bindir=			@bindir@
+datadir=		@datadir@
+deps_prefix=		$(prefix)
+exec_prefix=		@exec_prefix@
+includedir=		@includedir@
+libdir=			@libdir@
+prefix=			@prefix@
+sbindir=		@sbindir@
+sysconfdir=		@sysconfdir@
+topdir=			@topdir@
+
+instlinks=		$(topdir)/instlinks
+releasedir=		@JUGGLERROOT_ABS@/release
+scriptdir=		$(releasedir)/scripts
+top_srcdir=		@top_srcdir@
+DPP_SCRIPTDIR=		@JUGGLERROOT_ABS@/Doozer++/scripts
+
+DIR_PERMS=		@DIR_PERMS@
+EXEC_PERMS=		@EXEC_PERMS@
+FILE_PERMS=		@FILE_PERMS@
+GROUP_NAME=		@GROUP_NAME@
+OWNER_NAME=		@OWNER_NAME@
+
+ifdef GROUP_NAME
+   GROUP_OPT_UNIX?=	-g $(GROUP_NAME)
+endif
+
+EXTROOT_ABS=		@EXTROOT_ABS@
+INSTALL=		@INSTALL@
+JUGGLERROOT_ABS=	@JUGGLERROOT_ABS@
+LN_S=			@LN_S@
+MAKEFLAGS+=		--no-print-directory
+MKINSTALLDIRS=		$(scriptdir)/mkinstalldirs
+PERL=			@PERL@
+RM_LN=			@RM_LN@
+
+BASE_TARGETS=		doozer
+TARGETS=		cppdom boost gmtl @TARGETS@
+ALL_TARGETS=		$(BASE_TARGETS) $(TARGETS)
+EXTS?=			.h
+
+BOOST_ROOT=		@BOOST_ROOT@
+BOOST_INCLUDES=		@BOOST_INCLUDES@
+CPPDOM_ROOT=		@CPPDOM_ROOT@
+GMTL_ROOT=		@GMTL_ROOT@
+
+AUDIERE_ROOT=		@AUDIERE_ROOT@
+CPPUNIT_ROOT=		@CPPUNIT_ROOT@
+CXX_ORB_NAME=		@CXX_ORB_NAME@
+CXX_ORB_ROOT=		@CXX_ORB_ROOT@
+CXX_ORB_BIN_DIR=	@CXX_ORB_BIN_DIR@
+CXX_ORB_LIB_DIR=	@CXX_ORB_LIB_DIR@
+NSPR_ROOT=		@NSPR_ROOT@
+NSPR_INC_DIR=		@NSPR_INC_DIR@
+OPENAL_ROOT=		@OPENAL_ROOT@
+
+OMNIORB_CMDS=		@OMNIORB_CMDS@
+PYTHON_DIR=		@PYTHON_DIR@
+PYTHON_PKG_DIR=		$(PYTHON_DIR)/site-packages
+
+# NOTE: There are no spaces between the commas in the $(subst) function call
+# because that introduces whitespace into the resulting string.
+#BOOST_INCLUDE_DIR=	$(subst $(BOOST_ROOT),,$(BOOST_INCLUDES))
+CXX_ORB_BIN_PATH=	$(subst $(CXX_ORB_ROOT),,$(CXX_ORB_BIN_DIR))
+CXX_ORB_LIB_PATH=	$(subst $(CXX_ORB_ROOT),,$(CXX_ORB_LIB_DIR))
+
+# -----------------------------------------------------------------------------
+# Platform- and binary-specific options.  The assignments preceding the
+# ifeq ... endif blocks are the default values.  Depending on the value of
+# $(ABI), further settings may be made to allow for building with multiple
+# ABIs.
+# -----------------------------------------------------------------------------
+ifdef dppABI
+   ifeq ($(dppABI), N32_M3)
+      ABI=	N32
+   endif
+   ifeq ($(dppABI), N32_M4)
+      ABI=	N32
+   endif
+   ifeq ($(dppABI), 64_M3)
+      ABI=	64
+   endif
+   ifeq ($(dppABI), 64_M4)
+      ABI=	64
+   endif
+else
+   ABI?=	@ABI@
+   LIBBITSUF?=	@LIBBITSUF@
+endif
+
+ifneq ($(findstring gcc, $(CC)), gcc)
+ifeq ($(ABI), N32)
+   LIBBITSUF=	32
+endif
+ifeq ($(ABI), 64)
+   LIBBITSUF=	64
+endif
+endif
+
+world release:
+	@$(MAKE) buildworld
+	@$(MAKE) installworld
+
+all buildworld debug optim profiled dbg dbg-dso opt opt-dso prof	\
+prof-dso links:
+	$(MKINSTALLDIRS) $(instlinks)/include
+	@for target in $(ALL_TARGETS) ; do				\
+            $(MAKE) links-$$target || exit 1;				\
+          done
+
+links-boost:
+	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/include
+	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/lib$(LIBBITSUF)
+	-$(RM_LN) $(instlinks)/include/boost
+	$(LN_S) $(BOOST_INCLUDES)/boost $(instlinks)/include
+	$(INSTALL) -l $(BOOST_ROOT)/lib/libboost_filesystem*.so*	\
+          $(instlinks)/lib$(LIBBITSUF)
+	$(INSTALL) -l $(BOOST_ROOT)/lib/libboost_python*.so*		\
+          $(instlinks)/lib$(LIBBITSUF)
+
+links-cppdom:
+	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/include
+	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/lib$(LIBBITSUF)
+	-$(RM_LN) $(instlinks)/include/cppdom
+	$(LN_S) $(CPPDOM_ROOT)/include/cppdom $(instlinks)/include/cppdom
+	$(INSTALL) -l $(CPPDOM_ROOT)/lib/libcppdom* $(instlinks)/lib$(LIBBITSUF)
+
+links-gmtl:
+	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/include
+	-$(RM_LN) $(instlinks)/include/gmtl
+	$(LN_S) $(CPPDOM_ROOT)/include/gmtl $(instlinks)/include/gmtl
+
+links-audiere:
+	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/include
+	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/lib$(LIBBITSUF)
+	$(INSTALL) -l $(AUDIERE_ROOT)/include/audiere.h			\
+          $(instlinks)/include/audiere.h
+	$(INSTALL) -l $(AUDIERE_ROOT)/lib/libaudiere*			\
+          $(instlinks)/lib$(LIBBITSUF)
+
+links-cppunit:
+	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/include
+	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/lib$(LIBBITSUF)
+	-$(RM_LN) $(instlinks)/include/cppunit
+	$(LN_S) $(CPPUNIT_ROOT)/include/cppunit $(instlinks)/include/cppunit
+	$(INSTALL) -l $(CPPUNIT_ROOT)/lib/libcppunit*			\
+          $(instlinks)/lib$(LIBBITSUF)
+
+links-nspr:
+	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/include
+	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/lib$(LIBBITSUF)
+	-$(RM_LN) $(instlinks)/include/nspr
+	$(LN_S) $(NSPR_INC_DIR) $(instlinks)/include/nspr
+	$(INSTALL) -l $(NSPR_ROOT)/lib/libnspr4* $(instlinks)/lib$(LIBBITSUF)
+	$(INSTALL) -l $(NSPR_ROOT)/lib/libplc4* $(instlinks)/lib$(LIBBITSUF)
+	$(INSTALL) -l $(NSPR_ROOT)/lib/libplds4* $(instlinks)/lib$(LIBBITSUF)
+
+links-omniORB3 links-omniORB4:
+	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/include
+	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/bin
+	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/lib$(LIBBITSUF)
+ifneq ($(PYTHON_DIR),)
+	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/lib$(LIBBITSUF)/$(PYTHON_PKG_DIR)
+endif
+	-$(RM_LN) $(instlinks)/include/$(CXX_ORB_NAME)
+	-$(RM_LN) $(instlinks)/include/omniconfig.h
+	-$(RM_LN) $(instlinks)/include/omnithread
+	-$(RM_LN) $(instlinks)/include/omnithread.h
+	@for c in $(OMNIORB_CMDS) ; do					\
+            $(RM_LN) $(instlinks)/$(CXX_ORB_BIN_PATH)/$$c ;		\
+            $(LN_S) $(CXX_ORB_BIN_DIR)/$$c $(instlinks)/bin/$$c || exit 1; \
+          done
+	$(LN_S) $(CXX_ORB_ROOT)/include/$(CXX_ORB_NAME)			\
+          $(instlinks)/include/$(CXX_ORB_NAME)
+	$(LN_S) $(CXX_ORB_ROOT)/include/omniconfig.h			\
+          $(instlinks)/include/omniconfig.h
+	$(LN_S) $(CXX_ORB_ROOT)/include/omnithread			\
+          $(instlinks)/include/omnithread
+	$(LN_S) $(CXX_ORB_ROOT)/include/omnithread.h			\
+          $(instlinks)/include/omnithread.h
+	$(INSTALL) -l $(CXX_ORB_ROOT)/$(CXX_ORB_LIB_PATH)/libCOS*	\
+          $(instlinks)/lib$(LIBBITSUF)
+	$(INSTALL) -l $(CXX_ORB_ROOT)/$(CXX_ORB_LIB_PATH)/libomni*	\
+          $(instlinks)/lib$(LIBBITSUF)
+ifneq ($(PYTHON_DIR),)
+	$(INSTALL) -l $(CXX_ORB_LIB_DIR)/$(PYTHON_PKG_DIR)/_omni*	\
+          $(instlinks)/lib$(LIBBITSUF)/$(PYTHON_PKG_DIR)
+	$(PERL) $(scriptdir)/install-dir.pl -l				\
+          -i $(CXX_ORB_LIB_DIR)/$(PYTHON_PKG_DIR)/omniidl		\
+          -o $(instlinks)/lib$(LIBBITSUF)/$(PYTHON_PKG_DIR)/omniidl
+	$(PERL) $(scriptdir)/install-dir.pl -l				\
+          -i $(CXX_ORB_LIB_DIR)/$(PYTHON_PKG_DIR)/omniidl_be		\
+          -o $(instlinks)/lib$(LIBBITSUF)/$(PYTHON_PKG_DIR)/omniidl_be
+endif
+
+links-openal:
+	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/include
+	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/lib$(LIBBITSUF)
+	-$(RM_LN) $(instlinks)/include/AL
+	$(LN_S) $(OPENAL_ROOT)/include/AL $(instlinks)/include/AL
+	$(INSTALL) -l $(OPENAL_ROOT)/lib/libopenal*			\
+          $(instlinks)/lib$(LIBBITSUF)
+
+links-doozer:
+	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/share
+	cd $(instlinks)/share && $(RM_LN) ./Doozer &&			\
+          $(LN_S) $(EXTROOT_ABS)/Doozer ./
+
+install install-debug install-optim install-dbg install-dbg-dso		\
+install-opt install-opt-dso install-profiled install-prof		\
+install-prof-dso installworld:
+	@for target in $(BASE_TARGETS) ; do				\
+            $(MAKE) install-$$target || exit 1;				\
+          done
+
+install-deps:
+	@for target in $(TARGETS) ; do					\
+            $(MAKE) install-$$target || exit 1;				\
+          done
+
+install-boost:
+	$(SHELL) $(MKINSTALLDIRS) $(deps_prefix)/include/boost
+	$(SHELL) $(MKINSTALLDIRS) $(deps_prefix)/lib$(LIBBITSUF)
+	$(PERL) $(scriptdir)/install-dir.pl -m $(FILE_PERMS)		\
+          $(GROUP_OPT_UNIX) -e .h,.hpp,.ipp -i $(BOOST_INCLUDES)/boost	\
+          -o $(deps_prefix)/include/boost
+	$(PERL) $(scriptdir)/install-dir.pl -m $(FILE_PERMS)		\
+          $(GROUP_OPT_UNIX)						\
+          -i $(BOOST_INCLUDES)/boost/compatibility/cpp_c_headers	\
+          -o $(deps_prefix)/include/boost/compatibility/cpp_c_headers
+	$(INSTALL) -L $(GROUP_OPT_UNIX) -m $(EXEC_PERMS)		\
+          $(BOOST_ROOT)/lib/libboost_filesystem*.so*			\
+          $(deps_prefix)/lib$(LIBBITSUF)
+	$(INSTALL) -L $(GROUP_OPT_UNIX) -m $(EXEC_PERMS)		\
+          $(BOOST_ROOT)/lib/libboost_python*.so*			\
+          $(deps_prefix)/lib$(LIBBITSUF)
+
+install-cppdom:
+	$(SHELL) $(MKINSTALLDIRS) $(deps_prefix)/include/cppdom
+	$(SHELL) $(MKINSTALLDIRS) $(deps_prefix)/lib$(LIBBITSUF)
+	$(PERL) $(scriptdir)/install-dir.pl -m $(FILE_PERMS)		\
+          $(GROUP_OPT_UNIX) -e .h -i $(CPPDOM_ROOT)/include/cppdom	\
+          -o $(deps_prefix)/include/cppdom
+	$(INSTALL) $(GROUP_OPT_UNIX) -m $(FILE_PERMS)			\
+          $(CPPDOM_ROOT)/lib/libcppdom*.a $(deps_prefix)/lib$(LIBBITSUF)
+	$(INSTALL) $(GROUP_OPT_UNIX) -m $(EXEC_PERMS)			\
+          $(CPPDOM_ROOT)/lib/libcppdom*.so* $(deps_prefix)/lib$(LIBBITSUF)
+
+install-gmtl:
+	$(SHELL) $(MKINSTALLDIRS) $(deps_prefix)/include/gmtl
+	$(PERL) $(scriptdir)/install-dir.pl -m $(FILE_PERMS)		\
+          $(GROUP_OPT_UNIX) -e .h -i $(GMTL_ROOT)/include/gmtl		\
+          -o $(deps_prefix)/include/gmtl
+
+install-audiere:
+	$(SHELL) $(MKINSTALLDIRS) $(deps_prefix)/include
+	$(SHELL) $(MKINSTALLDIRS) $(deps_prefix)/lib$(LIBBITSUF)
+	$(INSTALL) $(GROUP_OPT_UNIX) -m $(FILE_PERMS)			\
+          $(AUDIERE_ROOT)/include/audiere.h $(deps_prefix)/include
+	$(INSTALL) -L $(GROUP_OPT_UNIX) -m $(FILE_PERMS)		\
+          $(AUDIERE_ROOT)/lib/libaudiere*.a $(deps_prefix)/lib$(LIBBITSUF)
+	$(INSTALL) -L $(GROUP_OPT_UNIX) -m $(EXEC_PERMS)		\
+          $(AUDIERE_ROOT)/lib/libaudiere*.so* $(deps_prefix)/lib$(LIBBITSUF)
+
+install-cppunit:
+	$(SHELL) $(MKINSTALLDIRS) $(deps_prefix)/include/cppunit
+	$(SHELL) $(MKINSTALLDIRS) $(deps_prefix)/lib$(LIBBITSUF)
+	$(PERL) $(scriptdir)/install-dir.pl -m $(FILE_PERMS)		\
+          $(GROUP_OPT_UNIX) -e .h -i $(CPPUNIT_ROOT)/include/cppunit	\
+          -o $(deps_prefix)/include/cppunit
+	$(INSTALL) -L $(GROUP_OPT_UNIX) -m $(FILE_PERMS)		\
+          $(CPPUNIT_ROOT)/lib/libcppunit*.a $(deps_prefix)/lib$(LIBBITSUF)
+	$(INSTALL) -L $(GROUP_OPT_UNIX) -m $(EXEC_PERMS)		\
+          $(CPPUNIT_ROOT)/lib/libcppunit*.so* $(deps_prefix)/lib$(LIBBITSUF)
+
+install-nspr:
+	$(SHELL) $(MKINSTALLDIRS) $(deps_prefix)/include/nspr
+	$(SHELL) $(MKINSTALLDIRS) $(deps_prefix)/lib$(LIBBITSUF)
+	$(PERL) $(scriptdir)/install-dir.pl -m $(FILE_PERMS)		\
+          $(GROUP_OPT_UNIX) -e .h,.cfg -i $(NSPR_INC_DIR)/nspr		\
+          -o $(deps_prefix)/include/nspr
+	$(INSTALL) -L $(GROUP_OPT_UNIX) -m $(FILE_PERMS)		\
+          $(NSPR_ROOT)/lib/libnspr4*.a $(deps_prefix)/lib$(LIBBITSUF)
+	$(INSTALL) -L $(GROUP_OPT_UNIX) -m $(EXEC_PERMS)		\
+          $(NSPR_ROOT)/lib/libnspr4*.so* $(deps_prefix)/lib$(LIBBITSUF)
+	$(INSTALL) -L $(GROUP_OPT_UNIX) -m $(FILE_PERMS)		\
+          $(NSPR_ROOT)/lib/libplc4*.a $(deps_prefix)/lib$(LIBBITSUF)
+	$(INSTALL) -L $(GROUP_OPT_UNIX) -m $(EXEC_PERMS)		\
+          $(NSPR_ROOT)/lib/libplc4*.so* $(deps_prefix)/lib$(LIBBITSUF)
+	$(INSTALL) -L $(GROUP_OPT_UNIX) -m $(FILE_PERMS)		\
+          $(NSPR_ROOT)/lib/libplds4*.a $(deps_prefix)/lib$(LIBBITSUF)
+	$(INSTALL) -L $(GROUP_OPT_UNIX) -m $(EXEC_PERMS)		\
+          $(NSPR_ROOT)/lib/libplds4*.so* $(deps_prefix)/lib$(LIBBITSUF)
+
+install-omniORB3 install-omniORB4:
+	$(SHELL) $(MKINSTALLDIRS) $(deps_prefix)/include/$(CXX_ORB_NAME)
+	$(SHELL) $(MKINSTALLDIRS) $(deps_prefix)/include/omnithread
+	$(SHELL) $(MKINSTALLDIRS) $(deps_prefix)/bin
+	$(SHELL) $(MKINSTALLDIRS) $(deps_prefix)/lib$(LIBBITSUF)
+ifneq ($(PYTHON_DIR),)
+	$(SHELL) $(MKINSTALLDIRS) $(deps_prefix)/lib$(LIBBITSUF)/$(PYTHON_PKG_DIR)
+endif
+	@for c in $(OMNIORB_CMDS) ; do					\
+            $(INSTALL) -m $(EXEC_PERMS) $(GROUP_OPT_UNIX) $(CXX_ORB_BIN_DIR)/$$c $(deps_prefix)/bin/$$c || exit 1; \
+          done
+	$(PERL) $(scriptdir)/install-dir.pl -m $(FILE_PERMS) -e .h,.hh	\
+          $(GROUP_OPT_UNIX) -i $(CXX_ORB_ROOT)/include/$(CXX_ORB_NAME)	\
+          -o $(deps_prefix)/include/$(CXX_ORB_NAME)
+	$(INSTALL) $(GROUP_OPT_UNIX) -m $(FILE_PERMS)			\
+          $(CXX_ORB_ROOT)/include/omniconfig.h $(deps_prefix)/include
+	$(PERL) $(scriptdir)/install-dir.pl -m $(FILE_PERMS) -e .h,.hh	\
+          $(GROUP_OPT_UNIX) -i $(CXX_ORB_ROOT)/include/omnithread	\
+          -o $(deps_prefix)/include/omnithread
+	$(INSTALL) $(GROUP_OPT_UNIX) -m $(FILE_PERMS)			\
+          $(CXX_ORB_ROOT)/include/omnithread.h $(deps_prefix)/include
+	$(INSTALL) -L $(GROUP_OPT_UNIX) -m $(FILE_PERMS)		\
+          $(CXX_ORB_ROOT)/$(CXX_ORB_LIB_PATH)/libCOS*.a			\
+          $(deps_prefix)/lib$(LIBBITSUF)
+	$(INSTALL) -L $(GROUP_OPT_UNIX) -m $(EXEC_PERMS)		\
+          $(CXX_ORB_ROOT)/$(CXX_ORB_LIB_PATH)/libCOS*.so*		\
+          $(deps_prefix)/lib$(LIBBITSUF)
+	$(INSTALL) -L $(GROUP_OPT_UNIX) -m $(FILE_PERMS)		\
+          $(CXX_ORB_ROOT)/$(CXX_ORB_LIB_PATH)/libomni*.a		\
+          $(deps_prefix)/lib$(LIBBITSUF)
+	$(INSTALL) -L $(GROUP_OPT_UNIX) -m $(EXEC_PERMS)		\
+          $(CXX_ORB_ROOT)/$(CXX_ORB_LIB_PATH)/libomni*.so*		\
+          $(deps_prefix)/lib$(LIBBITSUF)
+ifneq ($(PYTHON_DIR),)
+	$(INSTALL) -L $(GROUP_OPT_UNIX) -m $(EXEC_PERMS)		\
+          $(CXX_ORB_LIB_DIR)/$(PYTHON_PKG_DIR)/_omni*			\
+          $(deps_prefix)/lib$(LIBBITSUF)/$(PYTHON_PKG_DIR)
+	$(PERL) $(scriptdir)/install-dir.pl $(GROUP_OPT_UNIX)		\
+          -m $(FILE_PERMS) -e .py					\
+          -i $(CXX_ORB_LIB_DIR)/$(PYTHON_PKG_DIR)/omniidl		\
+          -o $(deps_prefix)/lib$(LIBBITSUF)/$(PYTHON_PKG_DIR)/omniidl
+	$(PERL) $(scriptdir)/install-dir.pl $(GROUP_OPT_UNIX)		\
+          -m $(FILE_PERMS) -e .py					\
+          -i $(CXX_ORB_LIB_DIR)/$(PYTHON_PKG_DIR)/omniidl_be		\
+          -o $(deps_prefix)/lib$(LIBBITSUF)/$(PYTHON_PKG_DIR)/omniidl_be
+endif
+
+install-openal:
+	$(SHELL) $(MKINSTALLDIRS) $(deps_prefix)/include/AL
+	$(SHELL) $(MKINSTALLDIRS) $(deps_prefix)/lib$(LIBBITSUF)
+	$(PERL) $(scriptdir)/install-dir.pl -m $(FILE_PERMS)		\
+          $(GROUP_OPT_UNIX) -e .h -i $(OPENAL_ROOT)/include/AL		\
+          -o $(deps_prefix)/include/AL
+	$(INSTALL) -L $(GROUP_OPT_UNIX) -m $(FILE_PERMS)		\
+          $(OPENAL_ROOT)/lib/libopenal*.a $(deps_prefix)/lib$(LIBBITSUF)
+	$(INSTALL) -L $(GROUP_OPT_UNIX) -m $(EXEC_PERMS)		\
+          $(OPENAL_ROOT)/lib/libopenal*.so* $(deps_prefix)/lib$(LIBBITSUF)
+
+install-doozer:
+	@$(PERL) $(scriptdir)/install-dir.pl -m $(FILE_PERMS)		\
+          $(GROUP_OPT_UNIX) -e .mk -i $(EXTROOT_ABS)/Doozer		\
+          -o $(datadir)/Doozer
+
+generic-header-install:
+ifneq ($(DIRS), )
+	for dir in $(DIRS) ; do						\
+            header_dir=`echo $$dir | sed -e 's/\// /g' | awk '{ print $$NF }' -` ; \
+            $(SHELL) $(MKINSTALLDIRS) $(includedir)/$$header_dir ;	\
+            $(PERL) $(scriptdir)/install-dir.pl -m $(FILE_PERMS)	\
+              $(GROUP_OPT_UNIX) -e $(EXTS) -i $(EXTROOT_ABS)/$$dir	\
+              -o $(includedir)/$$header_dir ;				\
+          done
+endif
+
+clean cleandepend clobber:

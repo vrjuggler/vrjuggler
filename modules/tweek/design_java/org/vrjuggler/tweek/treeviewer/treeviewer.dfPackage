@@ -1,0 +1,37 @@
+package id3ht5nctylgvb1ctypq8ij;
+
+/**
+@version 2.0
+@physicalPackage
+@__modelType diagram 
+*/
+class diagram {
+/**
+@__ref <oiref:java#Class#org.vrjuggler.tweek.treeviewer.BeanTreeViewer:oiref><oihard>
+@__modelType reference 
+*/
+class reference {
+}/**
+@__ref <oiref:java#Class#org.vrjuggler.tweek.treeviewer.BeanTree:oiref><oihard>
+@__modelType reference 
+*/
+class reference57 {
+}/**
+@__ref <oiref:java#Class#org.vrjuggler.tweek.treeviewer.BeanSelectionListener:oiref><oihard>
+@__modelType reference 
+*/
+class reference58 {
+}}/**
+@__tags
+@shapeType ClassDiagram 
+*/
+class __tags {
+}/**
+@__options 
+*/
+class __options {
+}/**
+@__positions 
+*/
+class __positions {
+}

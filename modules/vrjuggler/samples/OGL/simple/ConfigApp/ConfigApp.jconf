@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?org-vrjuggler-jccl-settings configuration.version="3.0"?>
+<configuration xmlns="http://www.vrjuggler.org/jccl/xsd/3.0/configuration" name="ConfigApp Example Configuration" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.0/configuration http://www.vrjuggler.org/jccl/xsd/3.0/configuration.xsd">
+   <elements>
+      <config_app name="Config App Example" version="1">
+         <lower_left_color>1.0</lower_left_color>
+         <lower_left_color>0.0</lower_left_color>
+         <lower_left_color>0.0</lower_left_color>
+         <lower_right_color>1.0</lower_right_color>
+         <lower_right_color>1.0</lower_right_color>
+         <lower_right_color>0.0</lower_right_color>
+         <upper_right_color>0.0</upper_right_color>
+         <upper_right_color>1.0</upper_right_color>
+         <upper_right_color>0.0</upper_right_color>
+         <upper_left_color>0.0</upper_left_color>
+         <upper_left_color>0.0</upper_left_color>
+         <upper_left_color>1.0</upper_left_color>
+      </config_app>
+   </elements>
+</configuration>
+

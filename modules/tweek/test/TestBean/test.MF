@@ -1,0 +1,8 @@
+Name: testbean/TestBean.class
+Java-Bean: True
+Specification-Title: Test Bean
+Specification-Version: 0.1.0
+Specification-Vendor: vrjuggler.org
+Implementation-Title: testbean.TestBean
+Implementation-Version: 1.0 alpha1
+Implementation-Vendor: vrjuggler.org

@@ -1,0 +1,75 @@
+package id26gs8coygvor1coyhh8w1;
+
+/**
+@version 2.0
+@physicalPackage
+@__modelType diagram 
+*/
+class diagram {
+/**
+@__ref <oiref:design#Class#idfbvkcoygvor1coyhhd1k.diagram:oiref><oihard>
+@__modelType reference
+@__fqn <oiref:#Package#IO.Socket:oiref> 
+*/
+class reference36 {
+}/**
+@__ref <oiref:design#Class#id2p73bcoygvor1coyhhd11.diagram:oiref><oihard>
+@__modelType reference
+@__fqn <oiref:#Package#IO.Port:oiref> 
+*/
+class reference37 {
+}/**
+@__ref <oiref:cpp#Class#vpr::FileHandle_t:oiref><oihard>
+@__modelType reference 
+*/
+class reference {
+}/**
+@__ref <oiref:cpp#Class#vpr::BlockIO:oiref><oihard>
+@__modelType reference 
+*/
+class reference91 {
+}/**
+@__ref <oiref:cpp#Class#vpr::IOSysBase:oiref><oihard>
+@__modelType reference 
+*/
+class reference92 {
+}/**
+@__ref <oiref:cpp#Class#vpr::Selector_t:oiref><oihard>
+@__modelType reference 
+*/
+class reference93 {
+}/**
+@__ref <oiref:cpp#Class#vpr::SelectorBase:oiref><oihard>
+@__modelType reference 
+*/
+class reference94 {
+}/**
+@__ref <oiref:design#Class#id1fxpzcoygvor1coyklb0i.diagram:oiref><oihard>
+@__modelType reference
+@__fqn <oiref:#Package#IO.Stats:oiref> 
+*/
+class reference109 {
+}}/**
+@__tags
+@shapeType ClassDiagram 
+*/
+class __tags {
+}/**
+@__options 
+*/
+class __options {
+}/**
+@__positions <oigroup:<oiref:cpp#Class#vpr::BlockIO:oiref>=330,20,200,553,1:oigroup>
+<oigroup:<oiref:cpp#Class#vpr::IOSysBase:oiref>=630,70,115,79,1:oigroup>
+<oigroup:<oiref:cpp#Extends#vpr::FileHandle_t#vpr::BlockIO:oiref>=580,503,530,503:oigroup>
+<oigroup:<oiref:cpp#Class#vpr::Selector_t:oiref>=90,230,200,218,1:oigroup>
+<oigroup:<oiref:cpp#Class#vpr::FileHandle_t:oiref>=580,420,200,384,1:oigroup>
+<oigroup:<oiref:cpp#Class#BaseIOStats:oiref>=610,310,173,92,1:oigroup>
+<oigroup:<oiref:design#Class#id2p73bcoygvor1coyhhd11.diagram:oiref>=230,810,86,75,1:oigroup>
+<oigroup:<oiref:design#Class#idfbvkcoygvor1coyhhd1k.diagram:oiref>=60,470,154,244,1:oigroup>
+<oigroup:<oiref:cpp#Class#vpr::SelectorBase:oiref>=150,40,132,79,1:oigroup>
+<oigroup:<oiref:design#Class#id1fxpzcoygvor1coyklb0i.diagram:oiref>=668,265,192,115,0:oigroup>
+<oigroup:<oiref:cpp#Extends#vpr::Selector_t#vpr::SelectorBase:oiref>=216,230,216,119:oigroup>
+*/
+class __positions {
+}

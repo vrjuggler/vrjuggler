@@ -1,0 +1,598 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?org-vrjuggler-jccl-settings configuration.version="3.0"?>
+<configuration xmlns="http://www.vrjuggler.org/jccl/xsd/3.0/configuration" name="Configuration" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.0/configuration http://www.vrjuggler.org/jccl/xsd/3.0/configuration.xsd">
+   <elements>
+      <event_window name="Wand Event Window" version="1">
+         <width>200</width>
+         <height>200</height>
+         <origin>950</origin>
+         <origin>500</origin>
+         <mouse_sensitivity>2.0</mouse_sensitivity>
+         <display_number>0</display_number>
+         <lock_key>KEY_NONE</lock_key>
+         <start_locked>false</start_locked>
+         <sleep_time>0</sleep_time>
+         <device_host />
+      </event_window>
+      <event_window name="Head Event Window" version="1">
+         <width>300</width>
+         <height>100</height>
+         <origin>950</origin>
+         <origin>0</origin>
+         <mouse_sensitivity>1.0</mouse_sensitivity>
+         <display_number>0</display_number>
+         <lock_key>KEY_NONE</lock_key>
+         <start_locked>false</start_locked>
+         <sleep_time>0</sleep_time>
+         <device_host />
+      </event_window>
+      <event_window name="Sim View Cameras Control" version="1">
+         <width>300</width>
+         <height>100</height>
+         <origin>950</origin>
+         <origin>175</origin>
+         <mouse_sensitivity>2.0</mouse_sensitivity>
+         <display_number>0</display_number>
+         <lock_key>KEY_NONE</lock_key>
+         <start_locked>false</start_locked>
+         <sleep_time>0</sleep_time>
+         <device_host />
+      </event_window>
+      <event_window_proxy name="MainSimEventWindow" version="1">
+         <device>Head Event Window</device>
+      </event_window_proxy>
+      <event_window_proxy name="CameraEventWindowProxy" version="1">
+         <device>Sim View Cameras Control</device>
+      </event_window_proxy>
+      <alias name="VJWand" version="1">
+         <proxy>Wand Proxy</proxy>
+      </alias>
+      <alias name="VJButton0" version="1">
+         <proxy>Button0Proxy</proxy>
+      </alias>
+      <alias name="VJButton2" version="1">
+         <proxy>Button2Proxy</proxy>
+      </alias>
+      <alias name="VJButton1" version="1">
+         <proxy>Button1Proxy</proxy>
+      </alias>
+      <alias name="VJHead" version="1">
+         <proxy>Head Proxy</proxy>
+      </alias>
+      <alias name="VJKeyboard" version="1">
+         <proxy>MainSimEventWindow</proxy>
+      </alias>
+      <simulated_positional_device name="SimCamera1" version="2">
+         <event_window_proxy>CameraEventWindowProxy</event_window_proxy>
+         <key_pair>
+            <key_modifier_pair name="Forward" version="1">
+               <modifier_key>NONE</modifier_key>
+               <key>KEY_8</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="Back" version="1">
+               <modifier_key>NONE</modifier_key>
+               <key>KEY_2</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="Left" version="1">
+               <modifier_key>NONE</modifier_key>
+               <key>KEY_4</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="Right" version="1">
+               <modifier_key>NONE</modifier_key>
+               <key>KEY_6</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="Up" version="1">
+               <modifier_key>NONE</modifier_key>
+               <key>KEY_9</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="Down" version="1">
+               <modifier_key>NONE</modifier_key>
+               <key>KEY_7</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="Rot Right" version="1">
+               <modifier_key>CTRL</modifier_key>
+               <key>KEY_6</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="Rot Left" version="1">
+               <modifier_key>CTRL</modifier_key>
+               <key>KEY_4</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="Rot Up" version="1">
+               <modifier_key>CTRL</modifier_key>
+               <key>KEY_8</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="Rot Down" version="1">
+               <modifier_key>CTRL</modifier_key>
+               <key>KEY_2</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="Rot CCW" version="1">
+               <modifier_key>CTRL</modifier_key>
+               <key>KEY_1</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="Rot CW" version="1">
+               <modifier_key>CTRL</modifier_key>
+               <key>KEY_3</key>
+            </key_modifier_pair>
+         </key_pair>
+         <initial_position>1.524</initial_position>
+         <initial_position>1.8288</initial_position>
+         <initial_position>3.6576</initial_position>
+         <initial_rotation>-15.0</initial_rotation>
+         <initial_rotation>10.0</initial_rotation>
+         <initial_rotation>0.0</initial_rotation>
+         <translation_delta>0.02</translation_delta>
+         <rotation_delta>0.1</rotation_delta>
+         <translation_coordinate_system>Local</translation_coordinate_system>
+         <rotation_coordinate_system>Local</rotation_coordinate_system>
+         <position_filters>
+            <position_transform_filter name="Position Filters" version="1">
+               <pre_translate>0.0</pre_translate>
+               <pre_translate>0.0</pre_translate>
+               <pre_translate>0.0</pre_translate>
+               <pre_rotation>0.0</pre_rotation>
+               <pre_rotation>0.0</pre_rotation>
+               <pre_rotation>0.0</pre_rotation>
+               <custom_scale>1.0</custom_scale>
+               <device_units>1.0</device_units>
+               <post_translate>0.0</post_translate>
+               <post_translate>0.0</post_translate>
+               <post_translate>0.0</post_translate>
+               <post_rotation>0.0</post_rotation>
+               <post_rotation>0.0</post_rotation>
+               <post_rotation>0.0</post_rotation>
+            </position_transform_filter>
+         </position_filters>
+         <device_host />
+      </simulated_positional_device>
+      <simulated_positional_device name="SimCamera2" version="2">
+         <event_window_proxy>CameraEventWindowProxy</event_window_proxy>
+         <key_pair>
+            <key_modifier_pair name="Forward" version="1">
+               <modifier_key>SHIFT</modifier_key>
+               <key>KEY_8</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="Back" version="1">
+               <modifier_key>SHIFT</modifier_key>
+               <key>KEY_2</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="Left" version="1">
+               <modifier_key>SHIFT</modifier_key>
+               <key>KEY_4</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="Right" version="1">
+               <modifier_key>SHIFT</modifier_key>
+               <key>KEY_6</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="Up" version="1">
+               <modifier_key>SHIFT</modifier_key>
+               <key>KEY_9</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="Down" version="1">
+               <modifier_key>SHIFT</modifier_key>
+               <key>KEY_7</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="Rot Right" version="1">
+               <modifier_key>ALT</modifier_key>
+               <key>KEY_6</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="Rot Left" version="1">
+               <modifier_key>ALT</modifier_key>
+               <key>KEY_4</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="Rot Up" version="1">
+               <modifier_key>ALT</modifier_key>
+               <key>KEY_2</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="Rot Down" version="1">
+               <modifier_key>ALT</modifier_key>
+               <key>KEY_8</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="Rot CCW" version="1">
+               <modifier_key>SHIFT</modifier_key>
+               <key>KEY_1</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="Rot CW" version="1">
+               <modifier_key>SHIFT</modifier_key>
+               <key>KEY_3</key>
+            </key_modifier_pair>
+         </key_pair>
+         <initial_position>1.524</initial_position>
+         <initial_position>1.8288</initial_position>
+         <initial_position>3.6576</initial_position>
+         <initial_rotation>-15.0</initial_rotation>
+         <initial_rotation>10.0</initial_rotation>
+         <initial_rotation>0.0</initial_rotation>
+         <translation_delta>0.02</translation_delta>
+         <rotation_delta>0.1</rotation_delta>
+         <translation_coordinate_system>Local</translation_coordinate_system>
+         <rotation_coordinate_system>Local</rotation_coordinate_system>
+         <position_filters>
+            <position_transform_filter name="Position Filters" version="1">
+               <pre_translate>0.0</pre_translate>
+               <pre_translate>0.0</pre_translate>
+               <pre_translate>0.0</pre_translate>
+               <pre_rotation>0.0</pre_rotation>
+               <pre_rotation>0.0</pre_rotation>
+               <pre_rotation>0.0</pre_rotation>
+               <custom_scale>1.0</custom_scale>
+               <device_units>1.0</device_units>
+               <post_translate>0.0</post_translate>
+               <post_translate>0.0</post_translate>
+               <post_translate>0.0</post_translate>
+               <post_rotation>0.0</post_rotation>
+               <post_rotation>0.0</post_rotation>
+               <post_rotation>0.0</post_rotation>
+            </position_transform_filter>
+         </position_filters>
+         <device_host />
+      </simulated_positional_device>
+      <simulated_positional_device name="Position Simulator1" version="2">
+         <event_window_proxy>CameraEventWindowProxy</event_window_proxy>
+         <key_pair>
+            <key_modifier_pair name="Forward" version="1">
+               <modifier_key>ALT</modifier_key>
+               <key>KEY_8</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="Back" version="1">
+               <modifier_key>ALT</modifier_key>
+               <key>KEY_2</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="Left" version="1">
+               <modifier_key>ALT</modifier_key>
+               <key>KEY_4</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="Right" version="1">
+               <modifier_key>ALT</modifier_key>
+               <key>KEY_6</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="Up" version="1">
+               <modifier_key>ALT</modifier_key>
+               <key>KEY_7</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="Down" version="1">
+               <modifier_key>ALT</modifier_key>
+               <key>KEY_1</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="Rot Right" version="1">
+               <modifier_key>SHIFT</modifier_key>
+               <key>KEY_6</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="Rot Left" version="1">
+               <modifier_key>SHIFT</modifier_key>
+               <key>KEY_4</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="Rot Up" version="1">
+               <modifier_key>SHIFT</modifier_key>
+               <key>KEY_8</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="Rot Down" version="1">
+               <modifier_key>SHIFT</modifier_key>
+               <key>KEY_2</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="Rot CCW" version="1">
+               <modifier_key>SHIFT</modifier_key>
+               <key>KEY_1</key>
+            </key_modifier_pair>
+         </key_pair>
+         <key_pair>
+            <key_modifier_pair name="Rot CW" version="1">
+               <modifier_key>SHIFT</modifier_key>
+               <key>KEY_7</key>
+            </key_modifier_pair>
+         </key_pair>
+         <initial_position>0.0</initial_position>
+         <initial_position>0.0</initial_position>
+         <initial_position>0.0</initial_position>
+         <initial_rotation>0.0</initial_rotation>
+         <initial_rotation>0.0</initial_rotation>
+         <initial_rotation>0.0</initial_rotation>
+         <translation_delta>0.02</translation_delta>
+         <rotation_delta>0.1</rotation_delta>
+         <translation_coordinate_system>Local</translation_coordinate_system>
+         <rotation_coordinate_system>Local</rotation_coordinate_system>
+         <position_filters>
+            <position_transform_filter name="Position Filters" version="1">
+               <pre_translate>0.0</pre_translate>
+               <pre_translate>0.0</pre_translate>
+               <pre_translate>0.0</pre_translate>
+               <pre_rotation>0.0</pre_rotation>
+               <pre_rotation>0.0</pre_rotation>
+               <pre_rotation>0.0</pre_rotation>
+               <custom_scale>1.0</custom_scale>
+               <device_units>1.0</device_units>
+               <post_translate>0.0</post_translate>
+               <post_translate>0.0</post_translate>
+               <post_translate>0.0</post_translate>
+               <post_rotation>0.0</post_rotation>
+               <post_rotation>0.0</post_rotation>
+               <post_rotation>0.0</post_rotation>
+            </position_transform_filter>
+         </position_filters>
+         <device_host />
+      </simulated_positional_device>
+      <position_proxy name="Wand Proxy" version="1">
+         <device>Flock_o_Birds</device>
+         <unit>1</unit>
+         <position_filters>
+            <position_transform_filter name="Position Filters" version="1">
+               <pre_translate>0.0</pre_translate>
+               <pre_translate>0.0</pre_translate>
+               <pre_translate>0.0</pre_translate>
+               <pre_rotation>0.0</pre_rotation>
+               <pre_rotation>0.0</pre_rotation>
+               <pre_rotation>0.0</pre_rotation>
+               <custom_scale>1.0</custom_scale>
+               <device_units>1.0</device_units>
+               <post_translate>0.0</post_translate>
+               <post_translate>0.0</post_translate>
+               <post_translate>0.0</post_translate>
+               <post_rotation>0.0</post_rotation>
+               <post_rotation>0.0</post_rotation>
+               <post_rotation>-90.0</post_rotation>
+            </position_transform_filter>
+         </position_filters>
+      </position_proxy>
+      <position_proxy name="Head Proxy" version="1">
+         <device>Flock_o_Birds</device>
+         <unit>0</unit>
+         <position_filters>
+            <position_transform_filter name="Position Filters" version="1">
+               <pre_translate>0.0</pre_translate>
+               <pre_translate>0.0</pre_translate>
+               <pre_translate>0.0</pre_translate>
+               <pre_rotation>0.0</pre_rotation>
+               <pre_rotation>0.0</pre_rotation>
+               <pre_rotation>0.0</pre_rotation>
+               <custom_scale>1.0</custom_scale>
+               <device_units>1.0</device_units>
+               <post_translate>0.0</post_translate>
+               <post_translate>0.0</post_translate>
+               <post_translate>0.0</post_translate>
+               <post_rotation>0.0</post_rotation>
+               <post_rotation>0.0</post_rotation>
+               <post_rotation>0.0</post_rotation>
+            </position_transform_filter>
+         </position_filters>
+      </position_proxy>
+      <position_proxy name="SimCam1 Proxy" version="1">
+         <device>SimCamera1</device>
+         <unit>0</unit>
+         <position_filters>
+            <position_transform_filter name="Position Filters" version="1">
+               <pre_translate>0.0</pre_translate>
+               <pre_translate>0.0</pre_translate>
+               <pre_translate>0.0</pre_translate>
+               <pre_rotation>0.0</pre_rotation>
+               <pre_rotation>0.0</pre_rotation>
+               <pre_rotation>0.0</pre_rotation>
+               <custom_scale>1.0</custom_scale>
+               <device_units>1.0</device_units>
+               <post_translate>0.0</post_translate>
+               <post_translate>0.0</post_translate>
+               <post_translate>0.0</post_translate>
+               <post_rotation>0.0</post_rotation>
+               <post_rotation>0.0</post_rotation>
+               <post_rotation>0.0</post_rotation>
+            </position_transform_filter>
+         </position_filters>
+      </position_proxy>
+      <digital_proxy name="Button0Proxy" version="1">
+         <device>IBox1</device>
+         <unit>0</unit>
+      </digital_proxy>
+      <digital_proxy name="Button2Proxy" version="1">
+         <device>IBox1</device>
+         <unit>2</unit>
+      </digital_proxy>
+      <digital_proxy name="Button1Proxy" version="1">
+         <device>IBox1</device>
+         <unit>1</unit>
+      </digital_proxy>
+      <display_system name="Pipe Setup" version="1">
+         <number_of_pipes>1</number_of_pipes>
+         <x11_pipes>-1</x11_pipes>
+         <x11_pipes>:0.1</x11_pipes>
+         <x11_pipes>:0.1</x11_pipes>
+         <x11_pipes>:0.0</x11_pipes>
+         <x11_pipes>:0.0</x11_pipes>
+         <x11_pipes>:0.0</x11_pipes>
+         <x11_pipes>:0.0</x11_pipes>
+         <x11_pipes>:0.0</x11_pipes>
+      </display_system>
+      <user name="User1" version="1">
+         <head_position>VJHead</head_position>
+         <interocular_distance>0.069</interocular_distance>
+      </user>
+      <input_manager name="Input Manager" version="2">
+         <driver_path>${VJ_BASE_DIR}/lib/gadgeteer/drivers</driver_path>
+         <driver_path>${VJ_BASE_DIR}/lib32/gadgeteer/drivers</driver_path>
+         <driver>Flock_drv</driver>
+      </input_manager>
+      <flock name="Flock_o_Birds" version="1">
+         <port>/dev/ttyd3</port>
+         <baud>38400</baud>
+         <number_of_birds>2</number_of_birds>
+         <position_filters>
+            <position_transform_filter name="Position Filters" version="1">
+               <pre_translate>0.0</pre_translate>
+               <pre_translate>1.011936</pre_translate>
+               <pre_translate>2.4384</pre_translate>
+               <pre_rotation>90.0</pre_rotation>
+               <pre_rotation>0.0</pre_rotation>
+               <pre_rotation>180.0</pre_rotation>
+               <custom_scale>1.0</custom_scale>
+               <device_units>0.3048</device_units>
+               <post_translate>0.0</post_translate>
+               <post_translate>0.0</post_translate>
+               <post_translate>0.0</post_translate>
+               <post_rotation>0.0</post_rotation>
+               <post_rotation>0.0</post_rotation>
+               <post_rotation>0.0</post_rotation>
+            </position_transform_filter>
+         </position_filters>
+         <calibration_file />
+         <hemisphere>RIGHT_HEM</hemisphere>
+         <filter>0</filter>
+         <sync_style>0</sync_style>
+         <blocking>false</blocking>
+         <report>R</report>
+         <transmitter_id>3</transmitter_id>
+         <extended_range>false</extended_range>
+         <device_host />
+      </flock>
+      <ibox name="IBox1" version="1">
+         <port>/dev/ttyd4</port>
+         <baud>38400</baud>
+         <min>0.0</min>
+         <max>0.0</max>
+         <device_host />
+      </ibox>
+      <display_window name="big wall" version="2">
+         <origin>922</origin>
+         <origin>768</origin>
+         <size>1844</size>
+         <size>768</size>
+         <pipe>0</pipe>
+         <frame_buffer_config>
+            <opengl_frame_buffer_config name="GL Frame Buffer" version="1">
+               <visual_id>-1</visual_id>
+               <red_size>1</red_size>
+               <green_size>1</green_size>
+               <blue_size>1</blue_size>
+               <alpha_size>1</alpha_size>
+               <depth_buffer_size>1</depth_buffer_size>
+               <fsaa_enable>false</fsaa_enable>
+            </opengl_frame_buffer_config>
+         </frame_buffer_config>
+         <stereo>false</stereo>
+         <border>false</border>
+         <act_as_event_source>false</act_as_event_source>
+         <event_window_device>
+            <event_window name="Event window configuration 0" version="1">
+               <width>0</width>
+               <height>0</height>
+               <origin>0</origin>
+               <origin>0</origin>
+               <mouse_sensitivity>0.0</mouse_sensitivity>
+               <display_number>0</display_number>
+               <lock_key>0</lock_key>
+               <start_locked>false</start_locked>
+               <sleep_time>0</sleep_time>
+               <device_host />
+            </event_window>
+         </event_window_device>
+         <active>false</active>
+         <surface_viewports>
+            <surface_viewport name="Contained Surface Viewports 0" version="1">
+               <origin>0.0</origin>
+               <origin>0.0</origin>
+               <size>1.0</size>
+               <size>1.0</size>
+               <view>Stereo</view>
+               <corners>
+                  <vec3 name="lower left" version="1">
+                     <x>-2.7432</x>
+                     <y>0.0</y>
+                     <z>-0.6096</z>
+                  </vec3>
+               </corners>
+               <corners>
+                  <vec3 name="lower right" version="1">
+                     <x>2.7432</x>
+                     <y>0.0</y>
+                     <z>-0.6096</z>
+                  </vec3>
+               </corners>
+               <corners>
+                  <vec3 name="upper right" version="1">
+                     <x>2.7432</x>
+                     <y>2.286</y>
+                     <z>-0.6096</z>
+                  </vec3>
+               </corners>
+               <corners>
+                  <vec3 name="upper left" version="1">
+                     <x>-2.7432</x>
+                     <y>2.286</y>
+                     <z>-0.6096</z>
+                  </vec3>
+               </corners>
+               <user>User1</user>
+               <active>false</active>
+               <tracked>false</tracked>
+               <tracker_proxy />
+            </surface_viewport>
+         </surface_viewports>
+      </display_window>
+      <corba_remote_reconfig name="CORBA Remote Run-Time Reconfiguration" version="1">
+         <naming_service_host>localhost</naming_service_host>
+         <naming_service_port>2809</naming_service_port>
+         <iiop_version>1.0</iiop_version>
+      </corba_remote_reconfig>
+   </elements>
+</configuration>
+

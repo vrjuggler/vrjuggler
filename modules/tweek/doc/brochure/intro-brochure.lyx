@@ -1,0 +1,217 @@
+#LyX 1.1 created this file. For more info see http://www.lyx.org/
+\lyxformat 218
+\textclass acmsiggraph
+\begin_preamble
+\usepackage{graphicx}
+\setlength{\titlespace}{0in}
+\end_preamble
+\options cameraready
+\language english
+\inputencoding auto
+\fontscheme pslatex
+\graphics default
+\float_placement hb
+\paperfontsize default
+\spacing single 
+\papersize Default
+\paperpackage a4
+\use_geometry 0
+\use_amsmath 0
+\paperorientation portrait
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\defskip medskip
+\quotes_language english
+\quotes_times 2
+\papercolumns 2
+\papersides 1
+\paperpagestyle default
+
+\layout Title
+
+Introduction to Tweek
+\layout Author
+
+Patrick Hartling
+\newline 
+Virtual Reality Applications Center, Iowa State University
+\newline 
+
+\emph on 
+patrick@vrac.iastate.edu
+\layout Section
+
+Introduction
+\layout Standard
+
+Developers of virtual environments often face a difficult problem: users
+ must have some way to interact with the virtual world.
+ The application developers must determine how to map available inputs (buttons,
+ gestures, etc.) to actions within the virtual environment (VE).
+ As a result, user interfaces may be limited by the input hardware available
+ with a given virtual reality (VR) system.
+\layout Standard
+
+To address such limitations, we have developed a middleware tool called
+ Tweek.
+ Tweek presents users with an extensible Java graphical user interface (GUI)
+ that communicates with VR applications.
+ Using this tool, developers are free to create a GUI that provides all
+ the capabilities users need for interacting with the VE.
+ We feel that the increased flexibility of a user-defined GUI combined with
+ the familiarity of traditional GUI components will improve the usability
+ of VEs.
+ This document introduces the design and implementation of Tweek and its
+ uses for providing input in VEs.
+\layout Section
+
+Design
+\layout Standard
+
+Tweek utilizes an extensible object-oriented design that enables the control
+ of a VR application using a GUI.
+ The Observer design pattern 
+\begin_inset LatexCommand \cite{Gamma1995}
+
+\end_inset 
+
+ is implemented such that the VR application is the subject and the GUI
+ is the observer.
+ In other words, the GUI provides a visualization of some state information
+ held by the VR application.
+ The state information is entirely user defined.
+ It may, for example, contain the user position and orientation so that
+ a top-down map can be displayed in the GUI as a navigation aid (see Figure
+ 
+\begin_inset LatexCommand \ref{nexus-nav-fig}
+
+\end_inset 
+
+).
+ Because Tweek and its GUI are designed to be general, programmers are offered
+ more freedom in their VE interaction design.
+\layout Standard
+
+\begin_float fig 
+\layout Standard
+\align center 
+
+\hfill 
+
+\begin_inset Figure size 91 163
+file ipaq+tweek.ps
+subcaption Top-down PDA navigation
+flags 11
+subfigure
+
+\end_inset 
+
+
+\hfill 
+
+\begin_inset Figure size 122 86
+file taj-shot.ps
+subcaption Simulator view in VE
+width 2 1.7
+flags 11
+subfigure
+
+\end_inset 
+
+
+\hfill 
+
+\layout Caption
+
+
+\begin_inset LatexCommand \label{nexus-nav-fig}
+
+\end_inset 
+
+Application navigation using the Tweek Java GUI
+\end_float 
+\layout Section
+
+Implementation
+\layout Standard
+
+Tweek is a collection of multiple technologies: C++, Java, JavaBeans, and
+ CORBA.
+ Combined, these allow a Java GUI composed of plug-ins to communicate with
+ a C++ application.
+ Our implementation aims to simplify the inter-language communication so
+ that programmers can make use of Tweek in their VR applications without
+ having in-depth knowledge of the individual technologies.
+\layout Standard
+
+At the heart of the inter-language communication is CORBA, the Common Object
+ Request Broker Architecture 
+\begin_inset LatexCommand \cite{OMG}
+
+\end_inset 
+
+.
+ It provides a cross-platform, language-independent method for distributed
+ objects to communicate.
+ In Tweek, it manages all communication between the Java GUI and the C++
+ VR application.
+ Because CORBA is language-independent, there exists the potential for use
+ of other languages besides Java and C++.
+\layout Standard
+
+The Java GUI itself is a generalized framework that loads JavaBeans 
+\begin_inset LatexCommand \cite{JavaBeans1997}
+
+\end_inset 
+
+ dynamically using XML-based descriptions.
+ The JavaBeans may encapsulate any functionality, but those that extend
+ the GUI are crucial to the use of Tweek in a VE.
+ Such graphical JavaBeans are written by the VR application developers and
+ are customized for use with a given application.
+\layout Section
+
+Conclusion and Future Work
+\layout Standard
+
+Tweek is already in use at the Virtual Reality Applications Center at Iowa
+ State University.
+ We use the Tweek Java GUI on palmtop computers to control VR applications
+ in our projection-based VR systems.
+ The next stage of development for Tweek will include dynamic installation
+ of GUI panels on the palmtop.
+ The goal is to allow any user to enter the VE and get the GUI panel automatical
+ly.
+ Moving beyond this, we want to be able to 
+\begin_inset Quotes eld
+\end_inset 
+
+push
+\begin_inset Quotes erd
+\end_inset 
+
+ other GUI panels during the lifetime of the application.
+ In this way, the interface can be extended dynamically, thus offering new
+ possibilities for interactivity in VEs.
+\layout Standard
+
+To extend the use of the Java GUI into the three-dimensional (3D) space,
+ we plan to experiment with existing technologies such as 3DWM 
+\begin_inset LatexCommand \cite{3DWM2001}
+
+\end_inset 
+
+ to map the two-dimensional GUI into the 3D virtual space.
+ We hope to offer users an immersive interface that employs familiar GUI
+ controls such as menus, buttons, and sliders without re-inventing GUI technolog
+y.
+\layout Standard
+
+
+\begin_inset LatexCommand \BibTeX[acmsiggraph]{intro-brochure}
+
+\end_inset 
+
+
+\the_end

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?org-vrjuggler-jccl-settings definition.version="3.0"?>
+<definition name="intersense_station"
+            icon_path="jar:file:${VJ_BASE_DIR}/bin/beans/ProxyEditor.jar!/org/vrjuggler/vrjconfig/customeditors/proxyeditor/images/IS_logo.gif"
+            xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.0/definition http://www.vrjuggler.org/jccl/xsd/3.0/definition.xsd"
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xmlns="http://www.vrjuggler.org/jccl/xsd/3.0/definition">
+   <definition_version version="1" label="Intersense Station">
+      <help>Settings for an Intersense Tracker Station</help>
+      <parent/>
+      <category>/Devices/Positional</category>
+      <property valuetype="boolean" variable="false" name="enabled">
+         <help />
+         <value label="Enabled" defaultvalue="false"/>
+      </property>
+      <property valuetype="integer" variable="false" name="station_index">
+         <help />
+         <value label="Station Number" defaultvalue="1"/>
+      </property>
+      <property valuetype="boolean" variable="false" name="use_digital">
+         <help />
+         <value label="Use Digital" defaultvalue="true"/>
+      </property>
+      <property valuetype="boolean" variable="false" name="use_analog">
+         <help />
+         <value label="Use Analog" defaultvalue="true"/>
+      </property>
+      <property valuetype="integer" variable="false" name="digital_first">
+         <help>The first index in the Intersense device that this station will store digital data</help>
+         <value label="Digital First" defaultvalue="0"/>
+      </property>
+      <property valuetype="integer" variable="false" name="digital_count">
+         <help>The number of digital inputs that will be stored into the Intersense device</help>
+         <value label="Digital Count" defaultvalue="0"/>
+      </property>
+      <property valuetype="integer" variable="false" name="analog_first">
+         <help>The first index in the Intersense device that this station will store analog data</help>
+         <value label="Analog First" defaultvalue="0"/>
+      </property>
+      <property valuetype="integer" variable="false" name="analog_count">
+         <help>The number of analog inputs that will be stored into the Intersense device</help>
+         <value label="Analog Count" defaultvalue="0"/>
+      </property>
+      <upgrade_transform/>
+   </definition_version>
+</definition>

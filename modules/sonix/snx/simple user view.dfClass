@@ -1,0 +1,73 @@
+package id2jfsecyc3789gcyc3aol8;
+
+/**
+@version 2.0
+@__modelType diagram 
+*/
+class diagram {
+/**
+@__ref <oiref:cpp#Class#snx::SoundHandle:oiref><oihard>
+@__modelType reference
+@__imported
+@__hiddenMember BeanProperty#<oiref:cpp#Member#snx::SoundHandle#setRetriggerable#(#bool#)#:oiref>
+@__hiddenMember BeanProperty#<oiref:cpp#Member#snx::SoundHandle#setAmbient#(#bool#)#:oiref>
+@__hiddenMember BeanProperty#<oiref:cpp#Member#snx::SoundHandle#setListenerPosition#(#const vrj::Matrix&#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#snx::SoundHandle#getListenerPosition#(#gmtl::Matrix44f&#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#snx::SoundHandle#$$constructor$$#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#snx::SoundHandle#$$constructor$$#(#const std::string&#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#snx::SoundHandle#$$destructor$$#(##)#:oiref>
+@__hiddenMember BeanProperty#<oiref:cpp#Member#snx::SoundHandle#setListenerPosition#(#const gmtl::Matrix44f&#)#:oiref>
+@hideAttributes*/
+class reference {
+}/**
+@__ref <oiref:cpp#Class#sonix:oiref><oihard>
+@__modelType reference
+@__imported
+@__hiddenMember <oiref:cpp#Member#sonix#setRetriggerable#(#const std::string&#bool#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#sonix#setAmbient#(#const std::string&#bool#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#sonix#stop#(#const std::string&#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#sonix#pause#(#const std::string&#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#sonix#unpause#(#const std::string&#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#sonix#mute#(#const std::string&#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#sonix#unmute#(#const std::string&#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#sonix#getPosition#(#const std::string&#float&#float&#float&#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#sonix#getListenerPosition#(#vrj::Matrix&#)#:oiref> 
+@__hiddenMember <oiref:cpp#Member#sonix#configure#(#const std::string&#const snx::SoundInfo&#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#sonix#setVolume#(#const std::string&#float#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#sonix#setCutoff#(#const std::string&#float#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#sonix#setPosition#(#const std::string&#const float&#const float&#const float&#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#sonix#setPitchBend#(#const std::string&#float#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#sonix#isAmbient#(#const std::string&#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#sonix#isPaused#(#const std::string&#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#sonix#isRetriggerable#(#const std::string&#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#sonix#isPlaying#(#const std::string&#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#sonix#trigger#(#const std::string&#const int&#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#sonix#remove#(#const std::string#)#:oiref>
+*/
+class reference29 {
+}/**
+@__ref <oiref:design#Class#id3ejb0cyd7c8e2cyd7fuwu.diagram:oiref><oihard>
+@__modelType reference
+@__imported
+@__hidden 
+*/
+class reference1 {
+}}/**
+
+@__tags
+@shapeType ClassDiagram 
+*/
+class __tags {
+}/**
+@__options filter.g.state = on
+filter.d.state = off 
+*/
+class __options {
+}/**
+@__positions <oigroup:<oiref:cpp#Class#sonix:oiref>=230,20,190,150,0:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#snx::SoundHandle#lnksonix:oiref>=270,125,310,125:oigroup>
+<oigroup:<oiref:cpp#Class#snx::SoundHandle:oiref>=20,20,190,310,0:oigroup>
+<oigroup:<oiref:design#Class#id3ejb0cyd7c8e2cyd7fuwu.diagram:oiref>=463,423,156,114,1:oigroup>
+*/
+class __positions {
+}

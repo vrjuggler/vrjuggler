@@ -1,0 +1,544 @@
+<!DOCTYPE UI><UI version="3.1" stdsetdef="1">
+<class>MainWindowBase</class>
+<widget class="QMainWindow">
+    <property name="name">
+        <cstring>MainWindowBase</cstring>
+    </property>
+    <property name="geometry">
+        <rect>
+            <x>0</x>
+            <y>0</y>
+            <width>295</width>
+            <height>394</height>
+        </rect>
+    </property>
+    <property name="caption">
+        <string>Nav Control</string>
+    </property>
+    <hbox>
+        <property name="name">
+            <cstring>unnamed</cstring>
+        </property>
+        <property name="margin">
+            <number>0</number>
+        </property>
+        <widget class="QTabWidget">
+            <property name="name">
+                <cstring>jumpTab</cstring>
+            </property>
+            <property name="font">
+                <font>
+                    <pointsize>8</pointsize>
+                </font>
+            </property>
+            <property name="toolTip" stdset="0">
+                <string></string>
+            </property>
+            <widget class="QWidget">
+                <property name="name">
+                    <cstring>navTab</cstring>
+                </property>
+                <attribute name="title">
+                    <string>Nav</string>
+                </attribute>
+                <vbox>
+                    <property name="name">
+                        <cstring>unnamed</cstring>
+                    </property>
+                    <widget class="QLayoutWidget">
+                        <property name="name">
+                            <cstring>layout8</cstring>
+                        </property>
+                        <hbox>
+                            <property name="name">
+                                <cstring>unnamed</cstring>
+                            </property>
+                            <widget class="QGroupBox">
+                                <property name="name">
+                                    <cstring>transGroupBox</cstring>
+                                </property>
+                                <property name="title">
+                                    <string>Translate</string>
+                                </property>
+                                <hbox>
+                                    <property name="name">
+                                        <cstring>unnamed</cstring>
+                                    </property>
+                                    <property name="margin">
+                                        <number>4</number>
+                                    </property>
+                                    <widget class="QLabel">
+                                        <property name="name">
+                                            <cstring>mNavTransPix</cstring>
+                                        </property>
+                                        <property name="pixmap">
+                                            <pixmap>image0</pixmap>
+                                        </property>
+                                        <property name="scaledContents">
+                                            <bool>true</bool>
+                                        </property>
+                                        <property name="toolTip" stdset="0">
+                                            <string>Translate user. Up/down is forward/back. Left/right is left/right.</string>
+                                        </property>
+                                    </widget>
+                                </hbox>
+                            </widget>
+                            <spacer>
+                                <property name="name">
+                                    <cstring>spacer7</cstring>
+                                </property>
+                                <property name="orientation">
+                                    <enum>Horizontal</enum>
+                                </property>
+                                <property name="sizeType">
+                                    <enum>Expanding</enum>
+                                </property>
+                                <property name="sizeHint">
+                                    <size>
+                                        <width>20</width>
+                                        <height>20</height>
+                                    </size>
+                                </property>
+                            </spacer>
+                            <widget class="QGroupBox">
+                                <property name="name">
+                                    <cstring>rotGroupBox</cstring>
+                                </property>
+                                <property name="title">
+                                    <string>Rotate</string>
+                                </property>
+                                <hbox>
+                                    <property name="name">
+                                        <cstring>unnamed</cstring>
+                                    </property>
+                                    <property name="margin">
+                                        <number>5</number>
+                                    </property>
+                                    <widget class="QLabel">
+                                        <property name="name">
+                                            <cstring>mNavRotPix</cstring>
+                                        </property>
+                                        <property name="pixmap">
+                                            <pixmap>image0</pixmap>
+                                        </property>
+                                        <property name="scaledContents">
+                                            <bool>true</bool>
+                                        </property>
+                                        <property name="toolTip" stdset="0">
+                                            <string>Rotate the user.</string>
+                                        </property>
+                                    </widget>
+                                </hbox>
+                            </widget>
+                        </hbox>
+                    </widget>
+                    <widget class="QLayoutWidget">
+                        <property name="name">
+                            <cstring>layout9</cstring>
+                        </property>
+                        <hbox>
+                            <property name="name">
+                                <cstring>unnamed</cstring>
+                            </property>
+                            <widget class="QLayoutWidget">
+                                <property name="name">
+                                    <cstring>layout15</cstring>
+                                </property>
+                                <vbox>
+                                    <property name="name">
+                                        <cstring>unnamed</cstring>
+                                    </property>
+                                    <widget class="QCheckBox">
+                                        <property name="name">
+                                            <cstring>mAllowXTransChk</cstring>
+                                        </property>
+                                        <property name="text">
+                                            <string>Allow X</string>
+                                        </property>
+                                        <property name="checked">
+                                            <bool>true</bool>
+                                        </property>
+                                    </widget>
+                                    <widget class="QCheckBox">
+                                        <property name="name">
+                                            <cstring>mAllowYTransChk</cstring>
+                                        </property>
+                                        <property name="text">
+                                            <string>Allow Y</string>
+                                        </property>
+                                        <property name="checked">
+                                            <bool>true</bool>
+                                        </property>
+                                    </widget>
+                                    <widget class="QCheckBox">
+                                        <property name="name">
+                                            <cstring>mAllowZTransChk</cstring>
+                                        </property>
+                                        <property name="text">
+                                            <string>Allow Z</string>
+                                        </property>
+                                        <property name="checked">
+                                            <bool>true</bool>
+                                        </property>
+                                    </widget>
+                                </vbox>
+                            </widget>
+                            <widget class="QLayoutWidget">
+                                <property name="name">
+                                    <cstring>layout18</cstring>
+                                </property>
+                                <hbox>
+                                    <property name="name">
+                                        <cstring>unnamed</cstring>
+                                    </property>
+                                    <widget class="QLayoutWidget">
+                                        <property name="name">
+                                            <cstring>layout17</cstring>
+                                        </property>
+                                        <vbox>
+                                            <property name="name">
+                                                <cstring>unnamed</cstring>
+                                            </property>
+                                            <widget class="QLabel">
+                                                <property name="name">
+                                                    <cstring>mPosLabel</cstring>
+                                                </property>
+                                                <property name="text">
+                                                    <string>Pos:</string>
+                                                </property>
+                                            </widget>
+                                            <widget class="QLabel">
+                                                <property name="name">
+                                                    <cstring>mRotLabel</cstring>
+                                                </property>
+                                                <property name="text">
+                                                    <string>Rot:</string>
+                                                </property>
+                                            </widget>
+                                        </vbox>
+                                    </widget>
+                                    <spacer>
+                                        <property name="name">
+                                            <cstring>spacer8</cstring>
+                                        </property>
+                                        <property name="orientation">
+                                            <enum>Horizontal</enum>
+                                        </property>
+                                        <property name="sizeType">
+                                            <enum>Expanding</enum>
+                                        </property>
+                                        <property name="sizeHint">
+                                            <size>
+                                                <width>40</width>
+                                                <height>20</height>
+                                            </size>
+                                        </property>
+                                    </spacer>
+                                </hbox>
+                            </widget>
+                        </hbox>
+                    </widget>
+                    <widget class="QLayoutWidget">
+                        <property name="name">
+                            <cstring>layout16</cstring>
+                        </property>
+                        <hbox>
+                            <property name="name">
+                                <cstring>unnamed</cstring>
+                            </property>
+                            <widget class="QLayoutWidget">
+                                <property name="name">
+                                    <cstring>layout15</cstring>
+                                </property>
+                                <vbox>
+                                    <property name="name">
+                                        <cstring>unnamed</cstring>
+                                    </property>
+                                    <widget class="QLabel">
+                                        <property name="name">
+                                            <cstring>textLabel3</cstring>
+                                        </property>
+                                        <property name="text">
+                                            <string>Factor</string>
+                                        </property>
+                                    </widget>
+                                    <widget class="QLabel">
+                                        <property name="name">
+                                            <cstring>mFactorValLabel</cstring>
+                                        </property>
+                                        <property name="text">
+                                            <string>1.0</string>
+                                        </property>
+                                        <property name="alignment">
+                                            <set>AlignVCenter</set>
+                                        </property>
+                                    </widget>
+                                </vbox>
+                            </widget>
+                            <widget class="QSlider">
+                                <property name="name">
+                                    <cstring>mFactorSlider</cstring>
+                                </property>
+                                <property name="minValue">
+                                    <number>1</number>
+                                </property>
+                                <property name="maxValue">
+                                    <number>100</number>
+                                </property>
+                                <property name="value">
+                                    <number>10</number>
+                                </property>
+                                <property name="orientation">
+                                    <enum>Horizontal</enum>
+                                </property>
+                            </widget>
+                        </hbox>
+                    </widget>
+                    <spacer>
+                        <property name="name">
+                            <cstring>spacer6</cstring>
+                        </property>
+                        <property name="orientation">
+                            <enum>Vertical</enum>
+                        </property>
+                        <property name="sizeType">
+                            <enum>Expanding</enum>
+                        </property>
+                        <property name="sizeHint">
+                            <size>
+                                <width>20</width>
+                                <height>20</height>
+                            </size>
+                        </property>
+                    </spacer>
+                    <widget class="QLayoutWidget">
+                        <property name="name">
+                            <cstring>layout13_3</cstring>
+                        </property>
+                        <hbox>
+                            <property name="name">
+                                <cstring>unnamed</cstring>
+                            </property>
+                            <spacer>
+                                <property name="name">
+                                    <cstring>spacer5_2</cstring>
+                                </property>
+                                <property name="orientation">
+                                    <enum>Horizontal</enum>
+                                </property>
+                                <property name="sizeType">
+                                    <enum>Expanding</enum>
+                                </property>
+                                <property name="sizeHint">
+                                    <size>
+                                        <width>20</width>
+                                        <height>20</height>
+                                    </size>
+                                </property>
+                            </spacer>
+                            <widget class="QPushButton">
+                                <property name="name">
+                                    <cstring>mResetButton</cstring>
+                                </property>
+                                <property name="text">
+                                    <string>Reset</string>
+                                </property>
+                            </widget>
+                            <spacer>
+                                <property name="name">
+                                    <cstring>spacer4_2</cstring>
+                                </property>
+                                <property name="orientation">
+                                    <enum>Horizontal</enum>
+                                </property>
+                                <property name="sizeType">
+                                    <enum>Expanding</enum>
+                                </property>
+                                <property name="sizeHint">
+                                    <size>
+                                        <width>20</width>
+                                        <height>20</height>
+                                    </size>
+                                </property>
+                            </spacer>
+                        </hbox>
+                    </widget>
+                </vbox>
+            </widget>
+            <widget class="QWidget">
+                <property name="name">
+                    <cstring>tab</cstring>
+                </property>
+                <attribute name="title">
+                    <string>Jump</string>
+                </attribute>
+                <widget class="QComboBox">
+                    <property name="name">
+                        <cstring>comboBox1</cstring>
+                    </property>
+                    <property name="geometry">
+                        <rect>
+                            <x>60</x>
+                            <y>20</y>
+                            <width>85</width>
+                            <height>21</height>
+                        </rect>
+                    </property>
+                </widget>
+                <widget class="QLabel">
+                    <property name="name">
+                        <cstring>textLabel1</cstring>
+                    </property>
+                    <property name="geometry">
+                        <rect>
+                            <x>10</x>
+                            <y>20</y>
+                            <width>40</width>
+                            <height>20</height>
+                        </rect>
+                    </property>
+                    <property name="text">
+                        <string>Place</string>
+                    </property>
+                </widget>
+                <widget class="QLabel">
+                    <property name="name">
+                        <cstring>textLabel1_2</cstring>
+                    </property>
+                    <property name="geometry">
+                        <rect>
+                            <x>10</x>
+                            <y>120</y>
+                            <width>62</width>
+                            <height>20</height>
+                        </rect>
+                    </property>
+                    <property name="text">
+                        <string>Place Name</string>
+                    </property>
+                </widget>
+                <widget class="QLineEdit">
+                    <property name="name">
+                        <cstring>lineEdit1</cstring>
+                    </property>
+                    <property name="geometry">
+                        <rect>
+                            <x>80</x>
+                            <y>120</y>
+                            <width>108</width>
+                            <height>21</height>
+                        </rect>
+                    </property>
+                </widget>
+                <widget class="QPushButton">
+                    <property name="name">
+                        <cstring>pushButton4</cstring>
+                    </property>
+                    <property name="geometry">
+                        <rect>
+                            <x>40</x>
+                            <y>50</y>
+                            <width>75</width>
+                            <height>22</height>
+                        </rect>
+                    </property>
+                    <property name="text">
+                        <string>Jump There</string>
+                    </property>
+                </widget>
+                <widget class="QPushButton">
+                    <property name="name">
+                        <cstring>pushButton4_2</cstring>
+                    </property>
+                    <property name="geometry">
+                        <rect>
+                            <x>50</x>
+                            <y>150</y>
+                            <width>75</width>
+                            <height>22</height>
+                        </rect>
+                    </property>
+                    <property name="text">
+                        <string>Add It</string>
+                    </property>
+                </widget>
+            </widget>
+            <widget class="QWidget">
+                <property name="name">
+                    <cstring>debugTab</cstring>
+                </property>
+                <attribute name="title">
+                    <string>Debug</string>
+                </attribute>
+                <vbox>
+                    <property name="name">
+                        <cstring>unnamed</cstring>
+                    </property>
+                    <property name="margin">
+                        <number>2</number>
+                    </property>
+                    <widget class="QGroupBox">
+                        <property name="name">
+                            <cstring>groupBox1</cstring>
+                        </property>
+                        <property name="title">
+                            <string>Output</string>
+                        </property>
+                        <vbox>
+                            <property name="name">
+                                <cstring>unnamed</cstring>
+                            </property>
+                            <property name="margin">
+                                <number>3</number>
+                            </property>
+                            <widget class="QTextBrowser">
+                                <property name="name">
+                                    <cstring>txtDebugOutput</cstring>
+                                </property>
+                                <property name="font">
+                                    <font>
+                                        <family>Monospace</family>
+                                    </font>
+                                </property>
+                                <property name="vScrollBarMode">
+                                    <enum>AlwaysOn</enum>
+                                </property>
+                                <property name="hScrollBarMode">
+                                    <enum>AlwaysOn</enum>
+                                </property>
+                            </widget>
+                        </vbox>
+                    </widget>
+                </vbox>
+            </widget>
+        </widget>
+    </hbox>
+</widget>
+<toolbars>
+</toolbars>
+<images>
+    <image name="image0">
+        <data format="XPM.GZ" length="15646">789cd59a5973e4388ec7dffb535434df3a3638a954a68ed8d807dfb79de9dbded80792927c66fa4c5f13fbddf74780d5d33b5dd5754c1f9e7647942092c01f20f007a5d4df7efa703cdafaf0d3df7e7878748f17e1433877f71f7e6a6693c9eb7fffcf7ffdfd871fcbfe07fecf7bf587fe8ffff1c38fe3c70fe1c3f6cdb48d823d43303df92fcade7d943b19f7e749ceba46649fe4bcf32287240fbb5ae426c94557897c9fe4aa2b445e4f72dd0d45be48b2eb0622ef25d977b9c8f3496eba4ce4cb24b79de2bd5239cb5ac5779de4bc557c93240f5a27722fc9c356f13e24b96c4b9137925cb78a6f21c9ae557c8f49f6ade2db4f726825b87e96e4b6557c4f2af77b8dc6f339c9fd2688bc98e461a37836935c368aa74a72d568fc96925c378a6f39c9a151fb5b496e1a8dd74a92db46f1ac26b90b9dc899ca792f28beed24f783e23b48721e349e3b492e82ee6f3fc955507ca324d741f1d549f641e3354e72088a7737c94d50bc8749eebce23b5279907bb11fda240fbdc62b4f72e115cf71924baff13b4972ed15cf6992bd173ca14b72eb253e21e5cba0736a7fa0f2b0e7243ec126b9ef343ec3240f9ce45748f5342c9ce229925c3ac1134c922ba7f12a935c3bc11752fd0d1b27f108a9fe86ad537ca9fe8aac967c0f291f8bbcd6f8a47a2c06b5e249f55814b5e009d324d7b5da4bf557b85af23ba4fc2d422dfb1352bd51ce128f70a37299556a3fd55fd9af241e21d55f39a8d47ecaff7258c97e85b9241795e2b94d7259697cee921c2ab59ff8a3ec4ab59feab5ea976a2fd5539597ea7fe28baa2a25bee125c975a9fea67aa95ca9febe26b92935de6f49ee0ab597eaa7ce0bd59ff8a02e0ac59feab77685ea4bf555fb42f32bd56bdd14aa7f4d65d71f2afe54efae18aabec48fae1c6a3c121f393f547da9be5d3bd47c48f5e6b381ee47aa5f3f1868fc53bdfa6aa0f148f5e7dd40f1a6fa0b59aeeb139f8541aeeb131f8722577c890f4293ab3fa95e9bbcaff149f5da547db597eab18511454ef5d8fa4cf940f321a3df287f6b7df491b5beb49e7264e51fcd8f21b2d6bfd663812cf89cf241892cf173ca4f15b2d69bee6f8d2cf9e094ff1cb2c4c3295f7964c1e7b45f0464c947a7fcd1c50624b2f073161b92f2a7ec6fc68dd48f24bf32fc69c51f27fe67798c808c4bfe67036489b793f867f8a7fdc949fc33fc6bd53fd9af0cffb45f39896f867fadf8e7647f33fc49fd4af23fc31fed574ef826c31fed574ef2276b90957f850fb32e365c1997fce9c7062cfe39c9ef3e37b47f39a98f3efe34e28f93faea833ff533e18b7e113342c6a51efae0d7fee6245ffae0d7fee6247ffbec8ff63727f5d5c79f46f747f8b4ef63c6892cf5d86f91a51e9cd4471ffcdadf9cf003f0527f73c2477916335864e18b1c7fb4df39e1bf9c05daef9cf06b8e3f41f743f235c71fed7f4ef828c79fa0fd46f835af62c5882cfd2ac71fed874ef82c07bff64327fd26077f50fcc29f79170f40220bbf0ee28148f14bfe0ec0ef15bff0f300fc5ef14b7d0cc0affdd209bf0fc0affdd249bd0e8ac808224b7e0ec0affdd249bf1980dfeb7e083f0dc0affdd3497e0cc81faff923fe0dc0affdd349bf19c6039de215fe1a82d7295ee94f43f06aff7492ff431cd4fee9a4bf0d51e014aff4d72178b59f3ae19f61191932ca46f279083eed9f46f26348be38c917a3eb43645c91a59f0fc977edaf4ee52e1e48655cf8a3880754c52ff95b6491c14596fe5c80bf16fc46f8a5c823e3cbb8d45b31881d41c6855f0a146aff3512ff02fcb5e2177f8a2a761491a5fe0bfcd1fe6c847f0afcd1fe6c840f0a1f3b92d813be2cf04ffbb5117e28f0af16ff8cf055d1c58e26b2f043190fe4ea9ff067893fdabf9df49f127f2af1c7083f9483d8314596fd2c87b1a38aacf38bd8714516fe2b31a0fddc085f94f853a93fc217a58f1d5b64e19732c48e2ef6753df82bc52f7c52925f95e49711fe2cbb78221059f882f0f54af1c708bf54ec5729fb6524bf2bfcd1f38191fda9c05f2a7ee1870afca5e217feafca7822113c52cf55154f2c322efc51d5f14423b2f045853fa5fa237c5535f18424b2f04705fe52f14b3ed5f10149f18afe1abc85e2153ea8fbf10426f6a5ffd5e0d7f387117ea807f1c426b2f0430d7e3d8f18e1c3ba8a273e91851f6a0c168a57f8aa76f18428b2f0434dfc0bcd1fa9e71abc85e2957aaebbf88027b2d4af8b0f7c8a5ffa8fcbe2895564a95f077e3ddf18e11307fea1e297fa71e01f2a7ee16b378c276091259f5d114fc8228bffae8c276891255f1dfe0cd51fe153e7e2093cca56ead98578421759ead9b11f43d90f2bf5eada78a21759ead375f1c42fb2ec3fdbc91381c8527f1efff47c65a59e3cf8f57c65846f3d780782d74a7efa323e81c8b8f4175fc527141997f382afe3138cc852ef1efc7a1eb352df1efc03c52ff5ecc13f50fcc2771efc03c52ff5ecbbf8c424f6a43f85f880aef8a57e43169fb044167e0c797c221359ea2fe08f9ef78cf07d18c627381997fd0d457cc21359ea2de05f2efe59a9ff50c5274291a57e03fee5ea9fd47ff0f10952f44bbf0f213e61cab8f041c03f3d4f5aa9f7d0c5275491653ec33cc18a2cf5dd64f1095764c99f067ff4fc6924be0dfef4c51f2bf5d00ce313b3c8b21f4d119fa845967835657ce21659fa6b833f7a7eb5c21f0dfbd3d7fd11fe6ef0a72ffe58e19326c4277a91257e0d80fb5affd22f9b36be019071e19ba68b2f544416be68e30b16f54ffa418b7f99fa277cd3f6e31b069125dfdb3cbe811059f2af1dc43714224b3fe5e1a097a9bfc2372dfe66eaaff04d8b7f99fa27fcd5d6f18d88c8c23f3c6cf632e507d5e7e31b151917fe69f137537f85dfda26be811159fa438b4399fa2bfcd476f18592c8128f2e1e98d53fe19b2e1e30d53fe1ab2e1ed8d43fe19f2e1e80d43fe19f2e1e30d43fe1af2e366cf54ff8a78b0d41fd93fedf45c255ff847fba4860ba9fc2875d2c78cd4fd9ff2e1690fa277cd4c50454ff84cfbaeee3fbb2f1e3f7fd59639df536d8c6b6b6b367fc75fcb5c881fbee7bf57e0f267b0e960b7b69afecb59dd8a9bdb1b7f64e30ddf3ef2df294fbd78c5f32ef9bb17d2b26fb8095ce3eda19b69fecb37db1aff6cdced979c1b4c0bf73c8afdc7f66fc96798fccbff8633049741a7c8f6816b1f9068225bb6c57ecaa5db3eb82699dbf35e415ee2f31fec6bc454176c5daaf8cd8d762223e8ddd604f9eec2696b6b0b96ab7ed8e1dd9b1ddb57b765f30edf3b7873ce6fe0ee3abccdb62fe26eba6ac6f7e2f4ce4f2057e4eed813dc4f7232c1d637317fb27f6d4f66c66fb36174c03feed23f7b87fc2f82ef38e997fc4ba43d64fd1f3c57dfc32263b241f2664ef0b7a97d999c296b6c2666d07c61a639cf12698266232ad69b8f6dc33c682b0665ec5fc8275cbac7f41cfc476ff0a2672e88288df988ecc3d123c7bf8df03cd9939c7fe85b93457e6da4ccc5430dd9829d7d7dcbb64ac614e8c5d8f357b82ebc8cea1eb069dbf11addfc2c49e35e616cf0ec98955f263d7dcd9dadc1385c63c6077621ecdcc3c9967f3625e05d32b7f2fc84fdc7f64fc8a790df3ef5977c74eeea0670b7df7e8fd6c6e7d1e937983fd66e4c01bdead9b39336f7b82a7350b585bc4ee8b5932cb66c5ac9a3523756736cc3ad7abdc5b66ec85398bcc5d604dc4d533f3668eca3c42e701badb6fc3449db564e4337cb3623689fca9cdcd96e099128367b36d76b03e3263b36bf6ccbe39104c87e680eb3dee8d195b63ce367367ac89b8b6a88053bb87be15f43ea3ff93a83e8d49623465e717cc1179b08f87d61cb30f13f4bf9813223132a7a66732d337b91998a1290453690aae07dceb33d663ce88b927ac99b1f6011d96ecdab7057a17d0ff49549fc2441e092253b1fb23f62ca38a5a72e3d1d4118fb394d5a173d82e9d77c135ae75d2ef5cc75f8b1c9c07df803987ce382bb86ad65fa1c7a06f1e8e5835d5a751fd1a13b5d6b0d7cf542e88a8983e7b76e1cef0f4953c19b12f19712840d380e0dc5db84b77e5ae05d3c45d737dc9bd73c61a9015cccd583362edab99a1e7823deca31754d878c656f3454c17d4c4819d27ba11514e763e98a99b92196b64c981bb01cf2dd138777720b8770feed1cddc93607a764f5c3f72ef9eb13be6b4ee96f937e4d998f5dbe899a2cf9159a0c2c6bc3d30b7bf8d0986dca0fadfc8c28208f705d10d715f361becc28b19129fd6bdba37acceb979b7e016dd925b762b8269d5ad70bdc4bd05c6e698f3c6dc96780ddd0b3bbe819e1a7d11551ffd0576deb0b7f1794c645264b4437b446decb3ef5b82e8d9adb975d3233b4ab7e136d99b7b62b1e5b6b1bfe3466eec76dd9e60da777b5c8fb9b7c3d836731e997bc99a0dd63a74acbb352a31a2daa207ed63e7087b37bfe4f67fc2746127e4dd161cb247ad19f67ecac37344b46f727780c787e4cc1cb68e88c9c81dbb1377ea7a2e737dc194bb3ed73dee9d303662ce1173e75873c8da03726b5f50d5e8bd20db7bd859b75bd89c7c1a139c74451ce7a888397b4af5b7ee8cfd5f8e88dcc00dc9da3bbc9eb9821d2a8948e56a6f3d4f98defb1031f9c607aed92a8e9935e37bcc5b61fe8c7577ac1fba414485cea98bddd162077bd8bcb757bfc624f536a54b1ed91d763a874baea8b56d72a0478c22a24bdf92c54bbe230695cbfc993f07c585bff4575eeace4ffc35d797dc6b183b2366953b66fe927b66ed654445ac7ae8dc46f79539c6ce3c1de708bbd38ff5f70b4c8eec3ea03ad7e84b3dc9a447aa778dcc76ec5a4434755bfec68dfcadebf93b6cde63fdda3ff8473ff35277fed93f71fdc8bd6bc6ee9973c7dc5bd6dcb0762aa80ed067a8c157f4c7acea616f0dbb071f33fd179862940e395114e68ebed6c2bb359c32a6d64a72e10e3fb7dcb27ff1affecdcf118779a2b2008645bfe497bdd49d5ff52b5c2f71ef89b109731ae6beb1e6859cdf42c79d6bd1f70233aca07f829d7bba7381dd433bfdff9824979e244a7bf470477f9ac1bd23786548ad1d920fcffe06446bae4fbeacb3431bd8ddf45b7edbeff8911f0ba65d3fe67a877b5b8c3d31e78ab98e356bacbd61e7efd1b541ff3940f709361660851a9b31524f9a533f63ba804f635d16f644a234a547ad9a5d77031f6d5237337262e45fd17eeef788c03eb158f6072038f447fed89f08a6537fc2f511f7468c2d33679fb97bfe9c75afd4e1127a26e8f3b0e82efa5fb043a4e0cf02db9b76f60f4ce477c749fe8d0a28c9a51425fa540607c7dc9c7385effc2dbbe0b0d02367367de6fbd8cec131f0432f3dd897bee07ac0bd9cb13e733699db638d63ed2dd95ea0eb92fd2b4c86fe8f91ea617715fbb791a71226c713cf22bc74cc4975c0296c02afad9289395de495786f51d1c764eb1c3b31c14ac5eed4c4e334d860820b3e0817842604ae1df72cb88e98b3cddc196bd6fd1cbc758c9e2df4bdd27172f4af6267c2b97980dd63ec2fda7fc429eedc0b7936822fcea886456a75c4692846e90d2e3e82672a6aad213ff6f17ddb8f431bba7016ce4171112ec39560ba0e575c5f70ef9cb12eb4e4d736f3f759d75083157a8ed0f726913ac4c636b61e38219f627b190cb39f315da69ddb25bfcfe18d274e63a7d4aca78bc628adc27e1999344fd62eb223358826be2426d370136ec35db8174c0fe19eeb5bee4d21cf324c4055337f9175f36455869e5589d439ba1de7ab1d6c5d9973f27c57774f31d1e5b4e6b6e971ba732ff0478ff34f43edced1b74644e90cbe99504bcbe4c951e8b0f81866e1090ccfe125c8793cbc8557ae9fb9f7c4d823733a76b0cf9a27d6dec3a215bab6d179e71ace5f3decbca4dddbc7bed49ebe13e1d9fe99e7d61d6aced2871e394b8fc8ef1286bba6bf2f93073551ba847336a9a743f2e88c18cdc21c719907c94258144c4b6191eb37eedd3336634eacc543d66cb2f69248d5e85a46e7b5eb38f565d859c2de055de604fb4be0b8d6f7383c737dcc26c353d08c13c5d8f4d3ce2dd0e34fe86b0ddcfc04ef8c7c4e669fb33b4f585e0e2b6135ac057946081b619deb55ee2d33f6c49c73b23d67cd166bafd161e9ce3be894dde3843cc6d60c9be6e78c9ae8bb2718fc9593cc58782066d30aec917382bde074b648b44fe9aa17748c45323646c990c537ecd03cd697c266d80adb8269276c73bdc9bd15c6ee981378048d91da66ed033a0c6786113a1fd01de87dbbd88a1915f9600c86573bd5f7639c5f34c3339e61af230ff0ec11b3e9921a59e23cd4835f2ee9634b70f4911f50ed1764f233bbb40a825118875dc1b41776b91e716f95b167e65c70341fb06687b58fe87030c2189d8fe88e19b5277c70cd41224b597ea3eff4a8ba39e92a7d9eac35c3f7e9292d67eb19bbbf4bcd79aa7946ae8ee0e921797249145ec89d35e2320efb419ea5c26138e07accbd35c65e987349fd0d593362ed0c1d9edadb45e70cdd2d3d663f6579e08c1e3bcc9cbdd5f78ef68e73f13a999f5375533af63afda8900c7f82e5f6e80c41b26905be39f1053b7245bebc92d1ebecd62e488e04d37138e27a977beb8cbd32e70a122d5833666dcca8c0a96f0f9d4f92e50576d6b137a5f272ecaf83e34e309dbdafbf778ba9e3e4b9207b37a04bdf10cb0d783fb2d384d3c52a27ff9c2a9e70625be534720a1336749107b27889eadf21b30fc371d4164ed8bd43e41dee2f31fec0bc86ce7ccaba55d64f7cc3997d1f9dcfe88e0c7588ad576cb6c29aebe0b87fb7f9f41eebee3df2d37be4f1f7d8efdee1b98033dd3b3a3fbddf73e63b3d8fbfc3e796f1e37b79be7bdfcfc182ea1dbc2f78ffef55dee7fba714a9bff03ddd67deb1fe85ef33ff7ddefb269efa4bde8f7fe1b78dbfe077847fbfdf5b52fdfda9bf4bfdb3fd4fffa6f867fe7ef76beb9ffdedf54ffa9df353b63fff1bf59ff17bf0a72dffe66ff97ff0efe69fb3fb856f1efec0ef0b3e6ff52bbe0df903bec3f86d8b5ff50dcdeffcbdca97ec7df5b746bfd3773d5f63eb1bbec9fa1dbe7ffa3a4bdffcedda777e27f62d36beeb1bbf6ffc9eee5bf5ff4bdf427ee1bbc3efd5fbe3fffee70fff075fbc204d</data>
+    </image>
+</images>
+<connections>
+    <connection>
+        <sender>mResetButton</sender>
+        <signal>clicked()</signal>
+        <receiver>MainWindowBase</receiver>
+        <slot>resetClicked()</slot>
+    </connection>
+    <connection>
+        <sender>mFactorSlider</sender>
+        <signal>valueChanged(int)</signal>
+        <receiver>MainWindowBase</receiver>
+        <slot>factorChanged(int)</slot>
+    </connection>
+</connections>
+<slots>
+    <slot>helpAbout()</slot>
+    <slot>resetClicked()</slot>
+    <slot>factorChanged(int)</slot>
+</slots>
+<layoutdefaults spacing="6" margin="11"/>
+</UI>

@@ -1,0 +1,15 @@
+#ifndef _NETWORK_TEST_SLIDER_SUBJECT_IDL_
+#define _NETWORK_TEST_SLIDER_SUBJECT_IDL_
+
+#include <tweek/idl/Subject.idl>
+
+module networktest
+{
+   interface SliderSubject : tweek::Subject
+   {
+      void setValue(in long val);
+      long getValue();
+   };
+};
+
+#endif /* _NETWORK_TEST_SLIDER_SUBJECT_IDL_ */

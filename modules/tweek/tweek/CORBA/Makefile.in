@@ -1,0 +1,89 @@
+# **************** <Tweek heading BEGIN do not edit this line> ****************
+# Tweek
+#
+# -----------------------------------------------------------------
+# File:          $RCSfile$
+# Date modified: $Date$
+# Version:       $Revision$
+# -----------------------------------------------------------------
+# **************** <Tweek heading END do not edit this line> ******************
+
+# ************** <auto-copyright.pl BEGIN do not edit this line> **************
+#
+# VR Juggler is (C) Copyright 1998-2003 by Iowa State University
+#
+# Original Authors:
+#   Allen Bierbaum, Christopher Just,
+#   Patrick Hartling, Kevin Meinert,
+#   Carolina Cruz-Neira, Albert Baker
+#
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Library General Public
+# License as published by the Free Software Foundation; either
+# version 2 of the License, or (at your option) any later version.
+#
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Library General Public License for more details.
+#
+# You should have received a copy of the GNU Library General Public
+# License along with this library; if not, write to the
+# Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+# Boston, MA 02111-1307, USA.
+#
+# *************** <auto-copyright.pl END do not edit this line> ***************
+
+# -----------------------------------------------------------------------------
+# Makefile.in for tweek/tweek/CORBA.  It requires GNU make.
+#
+# Generated for use on @PLATFORM@
+# -----------------------------------------------------------------------------
+
+default: all
+
+# Include common definitions.
+include @topdir@/make.defs.mk
+
+includedir=		@includedir@/tweek/CORBA
+srcdir=			@srcdir@
+top_srcdir=		@top_srcdir@
+IDL_GENDIR=		.
+CXX_IDL_OPTS=		@CXX_IDL_OPTS@ @CXX_IDL_GENDIR_OPT@$(IDL_GENDIR)
+CXX_IDL_INCLUDES=	@CXX_IDL_INCFLAG@$(top_srcdir)
+EXTRA_INCLUDES+=	-I$(IDL_GENDIR)
+EXTRA_SRCS_PATH=	$(srcdir)/../idl
+INSTALL=		@INSTALL@
+SUBOBJDIR=		$(TWEEK_LIBRARY)
+
+IDL_CXX_FILES=	SubjectManager.cpp SubjectManager.h		\
+		Subject.cpp Subject.h				\
+		Observer.cpp Observer.h				\
+		BeanDeliverySubject.cpp BeanDeliverySubject.h
+
+SRCS=		BeanDeliverySubject.cpp		\
+		BeanDeliverySubjectImpl.cpp	\
+		CorbaHelpers.cpp		\
+		CorbaManager.cpp		\
+		Observer.cpp			\
+		SubjectManager.cpp		\
+		SubjectManagerImpl.cpp		\
+		Subject.cpp			\
+		SubjectImpl.cpp
+
+include $(MKPATH)/dpp.obj.mk
+
+ifneq ($(srcdir), $(IDL_GENDIR))
+   INSTALL_FILES+=	$(IDL_GENDIR)/*.h
+endif
+
+CLEAN_FILES+=		$(addprefix $(IDL_GENDIR)/, $(IDL_CXX_FILES))
+
+# -----------------------------------------------------------------------------
+# Include dependencies generated automatically.
+# -----------------------------------------------------------------------------
+ifndef DO_CLEANDEPEND
+ifndef DO_IDL
+   -include $(DEPEND_FILES)
+endif
+endif

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beanlist xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:noNamespaceSchemaLocation="http://www.vrjuggler.org/tweek/xsd/1.1/beanlist.xsd">
+   <guipanel name="Configuration Editor">
+      <file name="${TWEEK_BASE_DIR}/bin/beans/VRJConfig.jar"
+            class="org.vrjuggler.vrjconfig.VrjConfig" />
+      <dependencies>
+         <bean>ConfigBroker</bean>
+         <bean>RTRCDataSourceBroker</bean>
+         <jar path="${TWEEK_BASE_DIR}/bin/beans">jccl_editors.jar</jar>
+         <jar path="${TWEEK_BASE_DIR}/bin">TableLayout.jar</jar>
+         <jar path="${TWEEK_BASE_DIR}/bin">ui.jar</jar>
+      </dependencies>
+      <tree path="/VRJConfig/" />
+   </guipanel>
+   <guipanel name="ConfigDefinition Editor">
+      <file name="${TWEEK_BASE_DIR}/bin/beans/jccl_editors.jar"
+            class="org.vrjuggler.jccl.editors.ConfigDefinitionRepositoryEditor" />
+      <dependencies>
+         <bean>ConfigBroker</bean>
+         <jar path="${TWEEK_BASE_DIR}/bin/beans">jccl_editors.jar</jar>
+         <jar path="${TWEEK_BASE_DIR}/bin">ui.jar</jar>
+      </dependencies>
+      <tree path="/VRJConfig/" />
+   </guipanel>
+   <guipanel name="ControlPanel">
+      <file name="${TWEEK_BASE_DIR}/bin/beans/VRJConfig.jar"
+            class="org.vrjuggler.vrjconfig.controlpanel.ControlPanelView" />
+      <dependencies>
+         <bean>ConfigBroker</bean>
+         <bean>RTRCDataSourceBroker</bean>
+         <bean>WizardBuilder</bean>
+         <jar path="${TWEEK_BASE_DIR}/bin/beans">IntersenseEditor.jar</jar>
+         <jar path="${TWEEK_BASE_DIR}/bin/beans">jccl_editors.jar</jar>
+         <jar path="${TWEEK_BASE_DIR}/bin">ui.jar</jar>
+      </dependencies>
+      <tree path="/VRJConfig/" />
+   </guipanel>
+</beanlist>

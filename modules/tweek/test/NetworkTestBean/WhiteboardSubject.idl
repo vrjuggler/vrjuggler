@@ -1,0 +1,16 @@
+#ifndef _NETWORK_TEST_WHITEBOARD_SUBJECT_IDL_
+#define _NETWORK_TEST_WHITEBOARD_SUBJECT_IDL_
+
+#include <tweek/idl/Subject.idl>
+
+module networktest
+{
+   interface WhiteboardSubject : tweek::Subject
+   {
+      void insertText(in long offset, in long length, in string text);
+      void getLastChange(out long offset, out long length, out string text);
+      string getAllText();
+   };
+};
+
+#endif /* _NETWORK_TEST_WHITEBOARD_SUBJECT_IDL_ */

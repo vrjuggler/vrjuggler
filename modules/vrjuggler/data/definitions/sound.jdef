@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?org-vrjuggler-jccl-settings definition.version="3.0"?>
+<definition name="sound"
+            icon_path="jar:file:${VJ_BASE_DIR}/bin/beans/ProxyEditor.jar!/org/vrjuggler/vrjconfig/customeditors/proxyeditor/images/position64.jpg"
+            xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.0/definition http://www.vrjuggler.org/jccl/xsd/3.0/definition.xsd"
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xmlns="http://www.vrjuggler.org/jccl/xsd/3.0/definition">
+   <definition_version version="1" label="Sound Object">
+      <help>This holds information for one sound.</help>
+      <parent/>
+      <category>/Audio</category>
+      <property valuetype="string" variable="false" name="filename">
+         <help>Filename to use for the sound.</help>
+         <value label="file name" defaultvalue="default.wav"/>
+      </property>
+      <property valuetype="boolean" variable="false" name="ambient">
+         <help>Is it position based sound (vol changes with movement)? Or is it just ambient.</help>
+         <value label="Is Ambient" defaultvalue="true"/>
+      </property>
+      <property valuetype="boolean" variable="false" name="retriggerable">
+      <help>can the sound retrigger during play?</help>
+      <value label="Is Retriggerable" defaultvalue="true"/>
+      </property>
+      <property valuetype="integer" variable="false" name="loop">
+         <help>How many times does the sound loop? (-1 infinite)</help>
+         <value label="Loop Count" defaultvalue="1"/>
+      </property>
+      <property valuetype="float" variable="false" name="pitch_bend">
+         <help>Change the pitch of the sound, values can be 0 to n where: 1 is normal, 2 is doubled, 0.5 halved.</help>
+         <value label="Pitch Bend" defaultvalue="1"/>
+      </property>
+      <property valuetype="float" variable="false" name="cutoff">
+         <help>Change the low pass filter cutoff, values can be 0 to 1.</help>
+         <value label="Low Pass Filter Cutoff" defaultvalue="1"/>
+      </property>
+      <property valuetype="float" variable="false" name="volume">
+         <help>Change the loudness of the sound, values can be 0 to 1.</help>
+         <value label="Volume/Gain" defaultvalue="1"/>
+      </property>
+      <property valuetype="float" variable="false" name="position">
+         <help>Position of the sound in world coordinate space</help>
+         <value label="x" defaultvalue="0.0"/>
+         <value label="y" defaultvalue="0.0"/>
+         <value label="z" defaultvalue="0.0"/>
+      </property>
+      <upgrade_transform/>
+   </definition_version>
+</definition>

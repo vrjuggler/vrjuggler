@@ -1,0 +1,69 @@
+To run this test:
+
+reconfigApp [path to chunks]
+
+where [path to chunks] is the directory containing the reconfiguration chunks
+including the startup directory.
+
+Points of interest in the Juggler 1.1 code
+------------------
+
+- vrj/Kernel/Kernel.cpp Kernel::loadConfigFile( filename )
+
+- jackal/rtrc/jccl/RTRC/ConfigManager.cpp jccl::ConfigManager::instance() to
+  reference the singleton instance 
+
+- ConfigManager::addPendingAdds
+- ConfigManager::addPendingRemoves( ConfigChunkDB* db )
+- ConfigManager::lockPending()
+- ConfigManager::unlockPending()
+
+- ConfigManager::lockActive()
+- ConfigManager::unlockActive()
+- ConfigManager::removeActive( string chunkname )
+
+* GFX RELATED
+* Can query the display manager and the draw manager
+* Changes may take several frames to take effect
+
+  - Adding gfx window     
+  - Remove gfx window     
+  - Remove all gfx windows, then add gfx windows (this test having no windows)     
+  - Resize gfx window     
+  - Reposition gfx window     
+  - Adding viewport to existing window     
+  - Removing viewport from existing window     
+  - Resize viewport     
+  - Reposition viewport     
+  - Enable stereo in mono surface display    
+  - Disable stereo in stereo surface display     
+
+* INPUT RELATED
+  - Remove keyboard window, check proxies and devs that pointed at it     
+  - Remove keyboard win, then add it back and check proxies and devs     
+  - Remove sim pos dev, check proxies to it     
+  - Add sim pos dev, point proxies to it and check     
+  - Remove, then re-add sim pos dev, check proxies and dev interfaces     
+  - Repoint proxy and check dev interfaces     
+  - Reconfigure sim pos dev (new keys, etc)     
+  - Reconfigure sim digital dev (new keys, etc)     
+  - Reconfigure sim analog dev (new keys, etc)     
+  - Remove sim dig dev, check proxies to it     
+  - Add sim dig dev, point proxies to it and check     
+  - Remove, then re-add sim dig dev, check proxies and dev interfaces     
+  - Remove sim ana dev, check proxies to it     
+  - Add sim ana dev, point proxies to it and check     
+  - Remove, then re-add sim ana dev, check proxies and dev interfaces     
+  - Reconfig/add/remove pos proxy (test proxy and dev interface)     
+  - Reconfig/add/remove analog proxy (test proxy and dev interface)     
+  - Reconfig/add/remove digital proxy (test proxy and dev interface)     
+  - Reconfig/add/remove keyboard proxy (test proxy and dev interface)     
+
+* OTHER TESTS
+
+
+TODO: 
+      Update the verifyDisplayFile test to include testing on the keyboard values. 
+
+      Some tests don't test for ALL possible testable values. Update them to
+      fill in these possible holes.

@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<control_panel xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:noNamespaceSchemaLocation="http://www.vrjuggler.org/tweek/xsd/1.1/beanlist.xsd"
+          title="Choose a category">
+   <category label="Display" title="Choose a display" icon="org/vrjuggler/vrjconfig/images/display64.png">
+      <wizard label="Test wizard" wizard_location="" icon="org/vrjuggler/vrjconfig/images/simulator64.png" />
+   </category>
+   <editor label="Simulator" class="" icon="org/vrjuggler/vrjconfig/images/simulator64.png" />
+   <category label="Cluster" title="Choose a cluster editor" icon="org/vrjuggler/vrjconfig/images/cluster64.png">
+   </category>
+   <category label="Devices" title="Choose a device" icon="org/vrjuggler/vrjconfig/images/devices64.png">
+      <type label="Analog" title="Choose an analog device" token="analog_device" icon="org/vrjuggler/vrjconfig/images/analog_devices64.png"/>
+      <type label="Digital" title="Choose a digital device" token="digital_device" icon="org/vrjuggler/vrjconfig/images/digital_devices64.png"/>
+      <type label="Positional" title="Choose a position device" token="positional_device" icon="org/vrjuggler/vrjconfig/images/positional_devices64.png"/>
+      <type label="Glove" title="Choose a glove device" token="" icon="org/vrjuggler/vrjconfig/images/glove_devices64.png"/>
+   </category>
+   <category label="Audio" title="Choose an audio editor" icon="org/vrjuggler/vrjconfig/images/audio64.png">
+   </category>
+</control_panel>

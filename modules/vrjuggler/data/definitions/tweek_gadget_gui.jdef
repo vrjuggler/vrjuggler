@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?org-vrjuggler-jccl-settings definition.version="3.0"?>
+<definition name="tweek_gadget_gui"
+            icon_path="jar:file:${VJ_BASE_DIR}/bin/beans/ProxyEditor.jar!/org/vrjuggler/vrjconfig/customeditors/proxyeditor/images/position64.jpg"
+            xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.0/definition http://www.vrjuggler.org/jccl/xsd/3.0/definition.xsd"
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xmlns="http://www.vrjuggler.org/jccl/xsd/3.0/definition">
+   <definition_version version="1" label="TweekGadget GUI">
+      <help />
+      <parent/>
+      <category>/Devices</category>
+      <property valuetype="configelementpointer" variable="true" name="positional_device">
+         <help />
+         <value label="Positional Device"/>
+         <allowed_type>tweek_positional_device</allowed_type>
+      </property>
+      <property valuetype="configelementpointer" variable="true" name="digital_device">
+         <help />
+         <value label="Digital Device"/>
+         <allowed_type>tweek_digital_device</allowed_type>
+      </property>
+      <property valuetype="configelementpointer" variable="true" name="analog_device">
+         <help />
+         <value label="Analog Device"/>
+         <allowed_type>tweek_analog_device</allowed_type>
+      </property>
+      <upgrade_transform/>
+   </definition_version>
+</definition>

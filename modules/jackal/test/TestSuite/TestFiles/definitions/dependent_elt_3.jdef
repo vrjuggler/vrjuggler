@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?org-vrjuggler-jccl-settings definition.version="3.0"?>
+<definition xmlns="http://www.vrjuggler.org/jccl/xsd/3.0/definition"
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.0/definition http://www.vrjuggler.org/jccl/xsd/3.0/definition.xsd"
+            name="dependent_elt_3">
+   <definition_version version="1" label="Dependent Element 3">
+      <help>This is to be used as a dependent element containing a child element (where the child element is pointed to by another element pointer).</help>
+      <parent/>
+      <property valuetype="configelement" variable="false" name="child_elt">
+         <help></help>
+         <value label="Child" defaultvalue="" />
+      </property>
+      <upgrade_transform/>
+   </definition_version>
+</definition>

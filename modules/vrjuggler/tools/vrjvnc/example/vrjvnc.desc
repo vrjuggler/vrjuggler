@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?org-vrjuggler-jccl-settings desc.db.version="2.2"?>
+<ChunkDescDB>
+  <ChunkDesc token="vrjVncApp" name="VNC Desktop Connection">
+    <help>Configuration for Logitech 3D mouse</help>
+    <category>Application-Specific</category>
+    <PropertyDesc name="Use embedded GUI?" token="embeddedGUI" type="bool" variable="0">
+      <help>Enables or disables the embedding of a 2D GUI in the 3D space.</help>
+      <item label="Embedded GUI" defaultvalue="0" />
+    </PropertyDesc>
+    <PropertyDesc name="VNC Server Host" token="vncHost" type="string" variable="0">
+      <help>The host where the VNC server with the Tweek GUI is running.</help>
+      <item label="Hostname" defaultvalue="" />
+    </PropertyDesc>
+    <PropertyDesc name="VNC Server Port" token="vncPort" type="int" variable="0">
+      <help>The port number on which the VNC server is listening for client connections.  This usually begins at 5900 for Windows and 5901 for X11.</help>
+      <item label="Port Number" defaultvalue="5901" />
+    </PropertyDesc>
+    <PropertyDesc name="VNC Password" token="vncPassword" type="string" variable="0">
+      <help>The password needed to access the desktop being managed by the VNC server.  This shouldn't be a valuable password since it is stored in plain text.</help>
+      <item label="Password" defaultvalue="" />
+    </PropertyDesc>
+    <PropertyDesc name="VNC Desktop Dimensions" token="vncDesktopSideLength" type="float" variable="0">
+      <help />
+      <item label="Length" defaultvalue="10.0" />
+    </PropertyDesc>
+  </ChunkDesc>
+</ChunkDescDB>
+

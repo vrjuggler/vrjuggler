@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?org-vrjuggler-jccl-settings definition.version="3.0"?>
+<definition name="machine_specific"
+            icon_path="jar:file:${VJ_BASE_DIR}/bin/beans/ProxyEditor.jar!/org/vrjuggler/vrjconfig/customeditors/proxyeditor/images/position64.jpg"
+            xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.0/definition http://www.vrjuggler.org/jccl/xsd/3.0/definition.xsd"
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xmlns="http://www.vrjuggler.org/jccl/xsd/3.0/definition">
+   <definition_version version="1" label="Machine Specific">
+      <help>Settings for the specified machine.</help>
+      <parent/>
+      <category>/Cluster Juggler</category>
+      <property valuetype="configelement" variable="false" name="display_system">
+         <help>Embedded display system for this specific machine.</help>
+         <value label="Display System"/>
+         <allowed_type>display_system</allowed_type>
+      </property>
+      <property valuetype="configelement" variable="true" name="display_windows">
+         <help>Embedded display windows for this specifc machine. </help>
+         <value label="Display Window"/>
+         <allowed_type>display_window</allowed_type>
+      </property>
+      <property valuetype="integer" variable="false" name="listen_port">
+         <help>Port on which the Remote Input Manager listens for incoming cluster connections.</help>
+         <value label="Listen Port" defaultvalue="0"/>
+      </property>
+      <property valuetype="string" variable="false" name="forced_hostname">
+         <help>Useful if a computer has multiple networks and network names.</help>
+         <value label="Forced Hostname" defaultvalue=""/>
+      </property>
+      <property valuetype="string" variable="false" name="host_name">
+         <help>Host name for this specific machine.</help>
+         <value label="Host Name" defaultvalue=""/>
+      </property>
+      <property valuetype="string" variable="false" name="port">
+         <help>Serial port used for cluster barrier.</help>
+         <value label="Port" defaultvalue="/dev/ttyd1"/>
+      </property>
+      <property valuetype="integer" variable="false" name="baud">
+         <help>Serial port speed</help>
+         <value label="Baud Rate" defaultvalue="38400"/>
+      </property>
+      <upgrade_transform/>
+   </definition_version>
+</definition>

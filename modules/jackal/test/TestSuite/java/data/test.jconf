@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?org-vrjuggler-jccl-settings configuration.version="3.0"?>
+<configuration name="VRAC People"
+            xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.0/configuration http://www.vrjuggler.org/jccl/xsd/3.0/configuration.xsd"
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xmlns="http://www.vrjuggler.org/jccl/xsd/3.0/configuration">
+<!--   <include file="blah.jconf" /> -->
+   <definition_path>
+      <dir>${DATA_DIR}</dir>
+   </definition_path>
+   <elements>
+      <person name="Ben" version="1">
+         <name>Ben</name>
+         <age>22</age>
+      </person>
+      <building name="Howe Hall" version="1">
+         <occupant>Ben</occupant>
+      </building>
+      <person name="Josh" version="1">
+         <name>Josh</name>
+         <age>24</age>
+         <friends>
+            <person name="Aron" version="1">
+               <name>Aron</name>
+               <age>21</age>
+            </person>
+         </friends>
+      </person>
+   </elements>
+</configuration>
