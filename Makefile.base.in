@@ -154,27 +154,22 @@ ifdef vjABI
     ifeq (${vjABI}, O32)
         ABI		= O32
         ISA		= mips2
-        LIBBITSUF	=
     endif
     ifeq (${vjABI}, N32_M3)
         ABI		= N32
         ISA		= mips3
-        LIBBITSUF	= 32
     endif
     ifeq (${vjABI}, N32_M4)
         ABI		= N32
         ISA		= mips4
-        LIBBITSUF	= 32
     endif
     ifeq (${vjABI}, 64_M3)
         ABI		= 64
         ISA		= mips3
-        LIBBITSUF	= 64
     endif
     ifeq (${vjABI}, 64_M4)
         ABI		= 64
         ISA		= mips4
-        LIBBITSUF	= 64
     endif
 else
     ABI		= @ABI@
