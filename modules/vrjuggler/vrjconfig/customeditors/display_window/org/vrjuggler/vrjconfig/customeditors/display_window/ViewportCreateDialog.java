@@ -72,6 +72,8 @@ public abstract class ViewportCreateDialog
       mBoundsPanel = new ViewportBoundsEditorPanel(elt);
       mUserPanel = new ViewportUserEditorPanel(ctx, elt);
       this.setResizable(false);
+
+      this.getRootPane().setDefaultButton(mOkButton);
    }
 
    public void nameChanged(ConfigElementEvent e)
