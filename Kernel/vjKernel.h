@@ -45,6 +45,7 @@ class vjApp;
     // Config stuff
 #include <Config/vjConfigChunkDB.h>
 #include <Config/vjChunkDescDB.h>
+#include <Sync/vjGuardedQueue.h>
 
 
 //-------------------------------------------------------
@@ -106,11 +107,9 @@ public:  // --- Config interface --- //
    }
 
    //: Add a group of config chunks
-   //! ARGS: guarded - Should the add be guarded
-   //! NOTE: All gaurds after kernel has started, should be guarded
-   void configAdd(vjConfigChunkDB* chunkDB, bool guarded=true);
+   void configAdd(vjConfigChunkDB* chunkDB);
 
-      // Remove a group of config chunks
+   //: Remove a group of config chunks
    void configRemove(vjConfigChunkDB* chunkDB);
 
 protected:     // Config chunks local to kernel
@@ -134,6 +133,14 @@ protected:
    //! ARGS: _app - If NULL, stops current application
    //! NOTE: This can only be called from the kernel thread
    void changeApplication(vjApp* _app);
+
+   //: Takes any chunks in add queue and adds them to running system
+   //! NOTE: This can only be called from the kernel thread
+   void processConfigAddQueue();
+
+   //: Takes any chunks in remove queue and reconfigures system by removing them
+   //! NOTE: This can only be called from the kernel thread
+   void processConfigRemoveQueue();
 
 protected:      // --- STARTUP ROUTINES --- //
          // --- Manager Initial setup functions ---- //
@@ -202,8 +209,11 @@ protected:
    vjChunkDescDB*    mConfigDesc;
    vjConfigChunkDB*  mChunkDB;            //: The current chunk db for the system
    vjConfigChunkDB*  mInitialChunkDB;     //: Initial chunks added to system before it is started
-   vjSemaphore       mRuntimeConfigSema;  //: Protects run-time config.  Only when this semaphore
+   //vjSemaphore       mRuntimeConfigSema;  //: Protects run-time config.  Only when this semaphore
                                           //+ is acquired can run-time config occur
+
+   vjGuardedQueue<vjConfigChunkDB*> mConfigAddQueue;      //: A queue of chunDB's to reconfig from
+   vjGuardedQueue<vjConfigChunkDB*> mConfigRemoveQueue;   //: A queue of chunkDB's to remove
 
    /// Shared Memory stuff
    vjMemPool*       sharedMemPool;
@@ -216,7 +226,7 @@ protected:
    // ----------------------- //
 protected:
    //: Constructor:  Hidden, so no instantiation is allowed
-   vjKernel() : mRuntimeConfigSema(0)
+   vjKernel()
    {
       mApp = NULL;
       mNewApp = NULL;
