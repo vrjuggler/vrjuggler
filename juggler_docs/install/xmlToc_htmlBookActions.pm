@@ -290,7 +290,7 @@ sub number ($$$$) {
     # the current value of $$count_ref.  This is accomplished by looping over
     # the input text and inserting numbers before each title.  The new text is
     # reconstructed in the $numbered_text variable.
-    while ( $input_text =~ /(<${section_tag}.*?>)(<[^h].+?>\s*)*?(.*?)(<\/${section_tag}>)/is ) {
+    while ( $input_text =~ /(<${section_tag}.*?>)(\s*<.+?>\s*)*(.*?)(<\/${section_tag}>)/is ) {
         $numbered_text .= "$`$1$2$section_name $$count_ref: $3$4";
         $input_text = $';
         $$count_ref++;
