@@ -39,7 +39,8 @@ import java.awt.*;
  */
 public interface CustomEditor
 {
-   public void setConfigElement(ConfigElement evt);
+   public void setConfigElement(ConfigElement elm);
    public Container getPanel();
    public String getTitle();
+   public void setContext(ConfigContext ctx);
 }

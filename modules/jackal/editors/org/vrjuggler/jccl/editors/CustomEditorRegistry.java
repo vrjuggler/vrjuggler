@@ -52,24 +52,44 @@ public class CustomEditorRegistry
     * @return  an editor object for the given PropertyDefinition token; null if
     *          no suitable editor can be found
     */
-   public static CustomEditor findEditor(String token)
+   public static java.util.List findEditors(String token)
    {
       initialize();
-      CustomEditor editor = null;
      
+      java.util.List editorList = null;
+      
       if (mEditors.containsKey(token))
       {
+         System.out.println("Found: " + token);
          try
          {
-            Class editorClass = (Class)mEditors.get(token);
-            editor = (CustomEditor)editorClass.newInstance();
+            java.util.List classList = (java.util.List)mEditors.get(token);
+               
+            System.out.println("Size of list: " + classList.size());
+            
+            editorList = new ArrayList();
+            
+            for(Iterator itr = classList.iterator() ; itr.hasNext() ; )
+            {
+               
+               Class editorClass = (Class)itr.next();
+               CustomEditor editor = null;
+               
+               editor = (CustomEditor)editorClass.newInstance();
+               
+               System.out.println("Editor: " + editor.getTitle());
+               
+               editorList.add(editor);   
+            }
+            
          }
          catch (Exception e)
          {
+            e.printStackTrace();
             // Silently ignore errors
          }
       }
-      return editor;
+      return editorList;
    }
 
    /**
@@ -84,16 +104,38 @@ public class CustomEditorRegistry
    public static void registerEditor(String token, Class editorClass)
    {
       initialize();
+      
+      System.out.println("Register: " + token);
+      
       // Register the new editor class with the given token
       if (editorClass != null)
       {
-         mEditors.put(token, editorClass);
+         if(mEditors.containsKey(token))
+         {
+            System.out.println("contains key: " + token);
+            
+            java.util.List editorList = (java.util.List)mEditors.get(token);
+            if(!editorList.contains(editorClass))
+            {
+               System.out.println("new to List: " + token);
+               editorList.add(editorClass);
+            }
+         }
+         else
+         {
+            System.out.println("New token: " + token);
+            
+            java.util.List editorList = new ArrayList();
+            editorList.add(editorClass);
+            mEditors.put(token, editorList);
+         }
       }
       // We have been asked to remove the editor under the given token
       else
       {
          mEditors.remove(token);
       }
+      System.out.println("Map: " + mEditors);
    }
 
    /**
