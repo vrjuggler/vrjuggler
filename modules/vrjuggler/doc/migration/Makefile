@@ -2,8 +2,8 @@
 
 default: html
 
-docs: html chunk-html pdf
-install-docs: install-html install-chunk-html install-pdf
+docs: html pdf
+install-docs: install-html install-pdf
 
 NAME=		porting.guide
 
