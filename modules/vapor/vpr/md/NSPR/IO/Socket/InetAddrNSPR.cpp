@@ -1,4 +1,3 @@
-
 /*************** <auto-copyright.pl BEGIN do not edit this line> **************
  *
  * VR Juggler is (C) Copyright 1998, 1999, 2000 by Iowa State University
@@ -109,10 +108,10 @@ bool
 InetAddrNSPR::setAddress (const std::string& address) {
    bool retval;
    PRStatus ret_status;
-   PRHostEnt* host_entry(NULL);
+   PRHostEnt host_entry;
    char buffer[1200];
 
-   ret_status = PR_GetHostByName(address.c_str(), buffer, 1200, host_entry);
+   ret_status = PR_GetHostByName(address.c_str(), buffer, 1200, &host_entry);
 
    if(ret_status == PR_FAILURE)
    {
@@ -123,7 +122,7 @@ InetAddrNSPR::setAddress (const std::string& address) {
       return false;
    }
 
-   retval = (-1 == PR_EnumerateHostEnt(0, host_entry, 0, &mAddr));
+   retval = (-1 == PR_EnumerateHostEnt(0, &host_entry, 0, &mAddr));
 
    return retval;
 }
