@@ -64,11 +64,11 @@ build buildworld:
 install installworld:
 	$(MAKE) GLOBAL_BUILD=1 RECTARGET="installworld" recursive
 
-clean clobber:
+clobber:
 	$(MAKE) GLOBAL_BUILD=1 RECTARGET="$@" recursive
 	rm -rf instlinks
 
-cleandepend:
+clean cleandepend:
 	$(MAKE) GLOBAL_BUILD=1 RECTARGET="$@" recursive
 
 recursive:
