@@ -1001,11 +1001,11 @@ void PfDrawManager::updatePfProjection(pfChannel* chan, Projection* proj)  //, b
 {
 
    vprDEBUG_BEGIN(vrjDBG_DRAW_MGR,vprDBG_HVERB_LVL) << "vjPfDrawManager::updatePfProjection: Entering. viewMat:\n"
-                    << proj->mViewMat << std::endl << vprDEBUG_FLUSH;
+                    << proj->getViewMatrix() << std::endl << vprDEBUG_FLUSH;
 
 
    pfMatrix pfViewMat;
-   pfViewMat.set(proj->mViewMat.mData);      // Hmm...
+   pfViewMat.set(const_cast<float*>(proj->getViewMatrix().mData));  // Hmm...
 
       // Basically, Performer does a Rotate of 90 around X
       // first thing in modelview.  So, we have to undo that, put
@@ -1023,26 +1023,33 @@ void PfDrawManager::updatePfProjection(pfChannel* chan, Projection* proj)  //, b
    if(!simulator)
    {
    */
+      vrj::Frustum frust(proj->getFrustum());
       chan->setAutoAspect(PFFRUST_CALC_NONE);         // No auto aspect
-      chan->setNearFar(proj->mFrustum[Frustum::VJ_NEAR], proj->mFrustum[Frustum::VJ_FAR]);
-      chan->makePersp(proj->mFrustum[Frustum::VJ_LEFT], proj->mFrustum[Frustum::VJ_RIGHT],
-                      proj->mFrustum[Frustum::VJ_BOTTOM], proj->mFrustum[Frustum::VJ_TOP]);
+      chan->setNearFar(frust[Frustum::VJ_NEAR], frust[Frustum::VJ_FAR]);
+      chan->makePersp(frust[Frustum::VJ_LEFT], frust[Frustum::VJ_RIGHT],
+                      frust[Frustum::VJ_BOTTOM], frust[Frustum::VJ_TOP]);
    /*
-   } else {
+   }
+   else
+   {
       CameraProjection* cam_proj = dynamic_cast<CameraProjection*>(proj);
       vprASSERT(cam_proj != NULL && "Trying to use non-camera projection for simulator");
       chan->setAutoAspect(PFFRUST_CALC_HORIZ);
-      chan->setNearFar(proj->mFrustum[Frustum::VJ_NEAR], proj->mFrustum[Frustum::VJ_FAR]);
+      chan->setNearFar(proj->getFrustum()[Frustum::VJ_NEAR],
+                       proj->getFrustum()[Frustum::VJ_FAR]);
       chan->setFOV(0.0f, cam_proj->mVertFOV);
    }
    */
 
-   vprDEBUG(vrjDBG_DRAW_MGR,vprDBG_HEX_LVL) << "Frustum: l:" << proj->mFrustum[Frustum::VJ_LEFT]
-              << "   r: " << proj->mFrustum[Frustum::VJ_RIGHT]
-              << "   b: " << proj->mFrustum[Frustum::VJ_BOTTOM]
-              << "   t: " << proj->mFrustum[Frustum::VJ_TOP] << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(vrjDBG_DRAW_MGR,vprDBG_HEX_LVL)
+      << "Frustum: l:" << proj->getFrustum()[Frustum::VJ_LEFT]
+      << "   r: " << proj->getFrustum()[Frustum::VJ_RIGHT]
+      << "   b: " << proj->getFrustum()[Frustum::VJ_BOTTOM]
+      << "   t: " << proj->getFrustum()[Frustum::VJ_TOP] << std::endl
+      << vprDEBUG_FLUSH;
 
-   vprDEBUG_END(vrjDBG_DRAW_MGR,vprDBG_HVERB_LVL) << "vjPfDrawManager::updatePfProjection: Exiting.\n" << vprDEBUG_FLUSH;
+   vprDEBUG_END(vrjDBG_DRAW_MGR,vprDBG_HVERB_LVL)
+      << "vjPfDrawManager::updatePfProjection: Exiting.\n" << vprDEBUG_FLUSH;
 }
 
 
