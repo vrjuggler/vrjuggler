@@ -161,24 +161,23 @@ public class ChunkDescChooser
    }
 
    /**
-    * Gets the ChunkDescDB that this chooser is using to display the list of
-    * allowable ChunkDescs.
+    * Gets the list of ChunkDescs that this chooser allows the user to choose
+    * from.
     */
-   public ChunkDescDB getChunkDescDB()
+   public List getDescs()
    {
-      return chunkDescDB;
+      return browseListModel.getDescs();
    }
 
    /**
-    * Sets the ChunkDescDB that this chooser should use to display the list of
-    * allowable ChunkDescs from.
+    * Sets the list of ChunkDescs that this chooser allows the user to choose
+    * from.
     */
-   public void setChunkDescDB(ChunkDescDB descDB)
+   public void setDescs(List descs)
    {
-      ChunkDescDB old = chunkDescDB;
-      chunkDescDB = descDB;
-      browseListModel.setChunkDescDB(descDB);
-      firePropertyChange("chunkDescDB", old, descDB);
+      List old = browseListModel.getDescs();
+      browseListModel.setDescs(descs);
+      firePropertyChange("descs", old, descs);
    }
 
    /**
@@ -535,11 +534,6 @@ public class ChunkDescChooser
    private JList searchList = new JList();
 
    /**
-    * The ChunkDescDB containing the allowable ChunkDescs.
-    */
-   private ChunkDescDB chunkDescDB;
-
-   /**
     * The last ChunkDesc that was selected in the dialog.
     */
    private ChunkDesc selectedChunkDesc;
@@ -581,17 +575,17 @@ public class ChunkDescChooser
       extends AbstractListModel
    {
       /**
-       * Creates a new list model with an empty ChunkDescDB.
+       * Creates a new list model with an empty list of ChunkDescs.
        */
       public ChunkDescListModel()
       {
-         chunkDescDB = new ChunkDescDB();
+         descs = new ArrayList();
       }
 
-      public void setChunkDescDB(ChunkDescDB descDB)
+      public void setDescs(List descs)
       {
-         int index1 = chunkDescDB.size() - 1;
-         chunkDescDB = descDB;
+         int index1 = this.descs.size() - 1;
+         this.descs = descs;
 
          // Notify listeners that everything was removed
          if (index1 >= 0)
@@ -599,28 +593,28 @@ public class ChunkDescChooser
             fireIntervalRemoved(this, 0, index1);
          }
          // Notify listeners of the new chunk descs
-         if (chunkDescDB.size() > 0)
+         if (this.descs.size() > 0)
          {
-            fireIntervalAdded(this, 0, chunkDescDB.size()-1);
+            fireIntervalAdded(this, 0, this.descs.size()-1);
          }
       }
 
-      public ChunkDescDB getChunkDescDB()
+      public List getDescs()
       {
-         return chunkDescDB;
+         return descs;
       }
 
       public Object getElementAt(int idx)
       {
-         return chunkDescDB.get(idx);
+         return descs.get(idx);
       }
 
       public int getSize()
       {
-         return chunkDescDB.size();
+         return descs.size();
       }
 
-      private ChunkDescDB chunkDescDB;
+      private List descs;
    }
 
    /**
