@@ -83,6 +83,7 @@ SerialPortImplTermios::~SerialPortImplTermios ()
 // ----------------------------------------------------------------------------
 vpr::ReturnStatus SerialPortImplTermios::open ()
 {
+   vprASSERT(mHandle->getHandle() == -1 && "The port may already be open");
    vpr::ReturnStatus status;
 
    status = mHandle->open();
@@ -174,6 +175,7 @@ void SerialPortImplTermios::setUpdateAction (vpr::SerialTypes::UpdateActionOptio
 // ----------------------------------------------------------------------------
 vpr::ReturnStatus SerialPortImplTermios::getBufferSize (vpr::Uint16& size)
 {
+   vprASSERT(mHandle->getHandle() != -1 && "The port may not be open");
    vpr::ReturnStatus retval;
    struct termios term;
 
@@ -786,6 +788,7 @@ vpr::ReturnStatus SerialPortImplTermios::setOutputBaudRate (const Uint32 baud)
 // ----------------------------------------------------------------------------
 vpr::ReturnStatus SerialPortImplTermios::drainOutput ()
 {
+   vprASSERT(mHandle->mFdesc != -1 && "The port may not be open");
    vpr::ReturnStatus retval;
 
    if ( tcdrain(mHandle->mFdesc) == -1 )
@@ -807,6 +810,7 @@ vpr::ReturnStatus SerialPortImplTermios::drainOutput ()
 // ----------------------------------------------------------------------------
 vpr::ReturnStatus SerialPortImplTermios::controlFlow (SerialTypes::FlowActionOption opt)
 {
+   vprASSERT(mHandle->mFdesc != -1 && "The port may not be open");
    int action = -1;
    vpr::ReturnStatus retval;
 
@@ -873,6 +877,7 @@ vpr::ReturnStatus SerialPortImplTermios::disableHardwareFlowControl ()
 // ----------------------------------------------------------------------------
 vpr::ReturnStatus SerialPortImplTermios::flushQueue (SerialTypes::FlushQueueOption vpr_queue)
 {
+   vprASSERT(mHandle->mFdesc != -1 && "The port may not be open");
    int queue = -1;
    vpr::ReturnStatus retval;
 
@@ -923,6 +928,7 @@ vpr::ReturnStatus SerialPortImplTermios::flushQueue (SerialTypes::FlushQueueOpti
 // ----------------------------------------------------------------------------
 vpr::ReturnStatus SerialPortImplTermios::sendBreak (const Int32 duration)
 {
+   vprASSERT(mHandle->mFdesc != -1 && "The port may not be open");
    vpr::ReturnStatus retval;
 
    if ( tcsendbreak(mHandle->mFdesc, duration) == -1 )
@@ -1002,6 +1008,7 @@ Uint8 SerialPortImplTermios::getControlCharacter (const Uint32 index)
 // ----------------------------------------------------------------------------
 vpr::ReturnStatus SerialPortImplTermios::getAttrs (struct termios* term)
 {
+   vprASSERT(mHandle->mFdesc != -1 && "The port may not be open");
    vpr::ReturnStatus retval;
 
    if ( tcgetattr(mHandle->mFdesc, term) == -1 )
@@ -1021,11 +1028,13 @@ vpr::ReturnStatus SerialPortImplTermios::setAttrs (struct termios* term,
                                                    const char* err_msg,
                                                    const bool print_sys_err)
 {
+   vprASSERT(mHandle->mFdesc != -1 && "The port may not be open");
    vprASSERT(term != NULL);
    vprASSERT(err_msg != NULL);
 
    vpr::ReturnStatus retval;
 
+#ifdef VPR_DEBUG
    vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
       << "[vpr::SerialPortImplTermios] term->c_iflag: " << term->c_iflag
       << std::endl << vprDEBUG_FLUSH;
@@ -1052,6 +1061,7 @@ vpr::ReturnStatus SerialPortImplTermios::setAttrs (struct termios* term,
          << " " << (unsigned int) term->c_cc[i];
    }
    vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL) << std::endl << vprDEBUG_FLUSH;
+#endif
 
    if ( tcsetattr(mHandle->mFdesc, mActions, term) == -1 )
    {
