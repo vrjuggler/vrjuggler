@@ -1,4 +1,6 @@
 DATE        AUTHOR      CHANGE
+-------------------------------------------------------------------------------
+Jun-16-2002 nonchocoboy NEW VERSION: 0.2.2
 Jun-11-2002 nonchocoboy VjControl now runs as a Tweek bean.
 Jun-10-2002 nonchocoboy Ported generic editor panel creation for ChunkDescs and
                         ConfigChunks to a Tweek service.
