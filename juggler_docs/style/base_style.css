@@ -19,7 +19,7 @@ a
 {
 }
 
-p, ul, ol, li, table, td
+p, ul, ol, li, table, td, dl, dt, dd
 {
    font-family: Century Gothic, Arial, Helvetica;
 }
