@@ -63,24 +63,17 @@ namespace gadget
 // Local helpers
 static bool recognizeProxyAlias(jccl::ConfigElementPtr element);
 
-/**********************************************************
-  InputManager::InputManager()
-
-  InputManager Constructor
-
-*********************************************** ahimberg */
+/**
+ * InputManager Constructor
+ */
 InputManager::InputManager()
 {
    
 }
 
-
-/**********************************************************
-  InputManager::~InputManager()
-
-  InputManager Destructor
-
-*********************************************** ahimberg */
+/**
+ * InputManager Destructor
+ */
 InputManager::~InputManager()
 {
    for (tDevTableType::iterator a = mDevTable.begin(); a != mDevTable.end(); ++a)    // Stop all devices
@@ -419,7 +412,9 @@ jccl::ConfigElementPtr InputManager::getDisplaySystemElement()
    return mDisplaySystemElement;
 }
 
-// Check if the device factory or proxy factory can handle the element.
+/**
+ * Check if the device factory or proxy factory can handle the element.
+ */
 bool InputManager::configureDevice(jccl::ConfigElementPtr element)
 {
    bool ret_val;
@@ -457,7 +452,9 @@ bool InputManager::configureDevice(jccl::ConfigElementPtr element)
    return ret_val;
 }
 
-// Check if the device factory or proxy factory can handle the element.
+/**
+ * Check if the device factory or proxy factory can handle the element.
+ */
 bool InputManager::configureProxy(jccl::ConfigElementPtr element)
 {
    std::string proxy_name = element->getFullName();
@@ -502,13 +499,10 @@ bool InputManager::removeDevice(jccl::ConfigElementPtr element)
 }
 
 
-/**********************************************************
-  operator<<()
-
-  Dump the current Status of the InputManager, listing all
-  the devices, proxies and internal settings
-
-*********************************************** ahimberg */
+/**
+ * Dump the current Status of the InputManager, listing all
+ * the devices, proxies and internal settings
+ */
 GADGET_IMPLEMENT(std::ostream&) operator<<(std::ostream& out, InputManager& iMgr)
 {
    out << "\n========== InputManager Status ==========" << std::endl;
@@ -561,13 +555,10 @@ GADGET_IMPLEMENT(std::ostream&) operator<<(std::ostream& out, InputManager& iMgr
    return out;
 }
 
-/**********************************************************
-  InputManager::addDevice(Input* devPtr)
-
-  Add a device to the InputManager, returns the index
-  where the device was placed
-
-*********************************************** ahimberg */
+/**
+ * Add a device to the InputManager, returns the index
+ * where the device was placed
+ */
 bool InputManager::addDevice(Input* devPtr)
 {
    mDevTable[devPtr->getInstanceName()] = devPtr;
@@ -589,12 +580,9 @@ bool InputManager::addRemoteDevice(Input* devPtr, const std::string& device_name
    return true;
 }
 
-/**********************************************************
-  InputManager::updateAllData()
-
-  Call UpdateData() on all the devices and transform proxies
-
-*********************************************** ahimberg */
+/**
+ * Call UpdateData() on all the devices and transform proxies.
+ */
 void InputManager::updateAllData()
 {
    for (tDevTableType::iterator i = mDevTable.begin(); i != mDevTable.end(); ++i)      // all DEVICES
@@ -621,8 +609,11 @@ void InputManager::updateAllData()
    }
 }
 
-// Return a Input ptr to a deviced named
-// RETURNS: NULL - Not found
+/**
+ * Return a Input ptr to a deviced named
+ *
+ * @returns - NULL if not found.
+ */
 Input* InputManager::getDevice(const std::string& deviceName)
 {
    // Look up in Input Manager
@@ -640,7 +631,9 @@ DeviceFactory* InputManager::getDeviceFactory()
    return gadget::DeviceFactory::instance();
 }
 
-// Remove the device that is pointed to by devPtr
+/**
+ * Remove the device that is pointed to by devPtr.
+ */
 bool InputManager::removeDevice(const Input* devPtr)
 {
    for (tDevTableType::iterator i = mDevTable.begin(); i != mDevTable.end(); ++i)      // all DEVICES
@@ -655,13 +648,10 @@ bool InputManager::removeDevice(const Input* devPtr)
 }
 
 
-/**********************************************************
-  InputManager::removeDevice(char* instName)
-
-  InputManager remove instName from the InputManager,
-  currently stupifies all the proxies connected to it.
-
-*********************************************** ahimberg */
+/**
+ * InputManager remove instName from the InputManager,
+ * currently stupifies all the proxies connected to it.
+ */
 bool InputManager::removeDevice(const std::string& instName)
 {
    tDevTableType::iterator dev_found;
@@ -711,7 +701,9 @@ bool InputManager::removeDevice(const std::string& instName)
  * * * * * * * * * * * * * * * * * * * * * * * * * * * */
 
 
-// Is it a proxy alias
+/**
+ * Is it a proxy alias.
+ */
 bool recognizeProxyAlias(jccl::ConfigElementPtr element)
 {
    return (element->getID() == "alias");
@@ -842,7 +834,9 @@ Proxy* InputManager::getProxy(const std::string& proxyName)
    return false;
 }
 
- // Refresh all the proxies to have then update what device they are pointing at
+/**
+ * Refresh all the proxies to have then update what device they are pointing at.
+ */
 void InputManager::refreshAllProxies()
 {
    vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL)
@@ -859,7 +853,7 @@ void InputManager::refreshAllProxies()
 
 bool InputManager::removeProxy(const std::string& proxyName)
 {
-vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
+   vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
                   std::string("gadget::InputManager::removeProxy\n"),
                   std::string("\n"));
    if(mProxyTable.end() == mProxyTable.find(proxyName))
@@ -887,7 +881,9 @@ bool InputManager::removeProxy(jccl::ConfigElementPtr element)
    return removeProxy(proxy_name);
 }
 
-/** Get the input logger connected to the system */
+/**
+ * Get the input logger connected to the system.
+ */
 gadget::InputLoggerPtr InputManager::getInputLogger()
 {
    // Make sure it is allocated -- Lazy allocation
