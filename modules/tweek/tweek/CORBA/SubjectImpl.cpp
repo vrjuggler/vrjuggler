@@ -20,13 +20,13 @@ void SubjectImpl::attach (Observer_ptr o)
 void SubjectImpl::detach (Observer_ptr o)
 {
    vpr::Guard<vpr::Mutex> guard(m_observers_mutex);
-   std::vector<Observer_ptr>::iterator i;
+   observer_vec_t::iterator i;
 
    for ( i = m_observers.begin(); i != m_observers.end(); i++ )
    {
       if ( o->_is_equivalent(*i) )
       {
-         std::vector<Observer_ptr>::iterator j = i;
+         observer_vec_t::iterator j = i;
          i++;
 
          vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL) << "Detaching observer\n"
@@ -40,7 +40,7 @@ void SubjectImpl::detach (Observer_ptr o)
 void SubjectImpl::notify ()
 {
    vpr::Guard<vpr::Mutex> guard(m_observers_mutex);
-   std::vector<Observer_ptr>::iterator i;
+   observer_vec_t::iterator i;
 
    vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL) << "Notifying observers\n"
                                           << vprDEBUG_FLUSH;

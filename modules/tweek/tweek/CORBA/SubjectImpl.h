@@ -37,7 +37,8 @@ public:
    virtual void notify();
 
 private:
-   std::vector<Observer_ptr> m_observers;
+   typedef std::vector<Observer_ptr> observer_vec_t;
+   observer_vec_t m_observers;
    vpr::Mutex m_observers_mutex;
 };
 
