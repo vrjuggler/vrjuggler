@@ -1088,6 +1088,10 @@ The filters are applied in the order that they are specified in this configurati
   </ChunkDesc>
   <ChunkDesc token="OpenGLFBConfig" name="OpenGL Frame Buffer Configuration">
     <category>Display</category>
+    <PropertyDesc name="Visual ID" token="visualID" type="int" variable="0">
+      <item label="ID" defaultvalue="-1" />
+      <help>The specific GLX visual ID to be used.  This causes the remaining values to be ignored.  The value given here must be entered in base 10 as an integer.  It will be converted internally to the base 16 value needed by GLX.  A value of -1 indicates that this setting should be ignored.</help>
+    </PropertyDesc>
     <PropertyDesc name="Red Channel Size" token="redSize" type="int" variable="0">
       <item label="size" defaultvalue="1" />
       <help>The number of bits to use per pixel for the red channel.  A value of 0 indicates that the smallest available size should be used.  Values greater than 0 indicate that the largest available size greater than or equal to the given value should be used.</help>
