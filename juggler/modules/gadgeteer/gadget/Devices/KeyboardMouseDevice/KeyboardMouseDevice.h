@@ -35,9 +35,6 @@
 
 #include <gadget/gadgetConfig.h>
 
-#include <X11/Xlib.h>
-#include <X11/Xutil.h>
-#include <X11/keysym.h>
 #include <boost/concept_check.hpp>
 
 #include <vpr/Sync/Mutex.h>
