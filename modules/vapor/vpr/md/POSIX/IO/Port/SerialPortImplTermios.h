@@ -66,9 +66,6 @@ public:
      * port name and sets the update action to happen immediately.
      *
      * @pre None.
-     * @post m_handle is allocated and connected to port_name, and the update
-     *       action is set to vpr::SerialTypes::NOW, also sets port to open
-     *       in non-blocking mode.
      * @post mHandle is allocated and connected to port_name, and the update
      *       action is set to vpr::SerialTypes::NOW.
      *
