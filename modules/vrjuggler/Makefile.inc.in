@@ -78,8 +78,8 @@ STATICLIB_EXT	= @STATICLIB_EXT@
 DYNAMICLIB_EXT	= @DYNAMICLIB_EXT@
 
 # Full list of the libraries to build.
-LIBS		= $(VJ_LIBRARY)		\
-                  $(UTILS_LIBRARY)
+LIBS		= $(UTILS_LIBRARY)	\
+                  $(VJ_LIBRARY)
 
 ifeq ($(GL_API), Y)
     LIBS	+= $(GL_LIBRARY)
@@ -90,11 +90,7 @@ ifeq ($(PF_API), Y)
 endif
 
 STATIC_LIBS	= $(LIBS)
-
-# We cannot build dynamic libraries on Win32 yet.
-ifneq ($(OS_TYPE), Win32)
-    DYNAMIC_LIBS	= $(LIBS)
-endif
+DYNAMIC_LIBS	= $(LIBS)
 
 # Dependencies for each of the various dynamic libraries we build.
 DYLIB_DEPS_VJ		= @DYLIB_DEPS_VJ@
@@ -151,6 +147,7 @@ afterbuild:
 # -----------------------------------------------
 $(LIBDIR)/$(VJ_LIB_STATIC) $(LIBDIR)/$(UTILS_LIB_STATIC)		\
 $(LIBDIR)/$(GL_LIB_STATIC) $(LIBDIR)/$(PF_LIB_STATIC): $(OBJDIR)/*.$(OBJEXT)
+ifneq (@OS_TYPE@, Win32)
 	@echo "------------------------------------------------"
 	@echo "Creating $@"
 	@echo "------------------------------------------------"
@@ -161,6 +158,7 @@ $(LIBDIR)/$(GL_LIB_STATIC) $(LIBDIR)/$(PF_LIB_STATIC): $(OBJDIR)/*.$(OBJEXT)
 	@echo "------------------------------------------------"
 	@echo "$@ done"
 	@echo "------------------------------------------------"
+endif
 
 # ------------------------------------------------
 # Construct the dynamic version of the libraries.
