@@ -110,6 +110,18 @@ public:
     */
    void shutdown(bool waitForCompletion = true);
 
+   /**
+    * Checks the validity of this service object to ensure that initialization
+    * completed successfully.
+    *
+    * @return true if init() the ORB and POA references were initialized
+    *         successfully.
+    */
+   bool isValid() const
+   {
+      return ! (CORBA::is_nil(mORB) || CORBA::is_nil(mRootPOA));
+   }
+
    const std::string& getNameServiceURI() const
    {
       return mNameServiceURI;
