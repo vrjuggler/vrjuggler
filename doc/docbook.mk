@@ -9,6 +9,8 @@ FOP?=		sh $(DOCBOOK_ROOT)/fop/fop.sh
 JADE?=		openjade
 JADETEX?=	jadetex
 PDFJADETEX?=	pdfjadetex
+PDFLATEX?=	$(DOCBOOK_ROOT)/pdftex-linux/pdflatex
+PDFTEX?=	$(DOCBOOK_ROOT)/pdftex-linux/pdftex
 RM=		rm -f
 SAXON?=		$(DOCBOOK_ROOT)/saxon-$(SAXON_VERSION)/saxon.sh
 XALAN?=		$(DOCBOOK_ROOT)/xalan-j_$(XALAN_VERSION)/bin/xalan.sh
@@ -65,7 +67,9 @@ chunk-html:
           cd $$cur_dir ; \
         done
 
-pdf: images pdfxmltex.fmt $(PDF_FILES)
+LINK_DEPS=	images pdfxmltex.fmt
+
+pdf: $(LINK_DEPS) $(PDF_FILES)
 
 # The method for specifying a path to the images that come with the DocBook
 # XSL stylesheets sucks.  It requires a path relative to the current directory,
@@ -74,12 +78,10 @@ pdf: images pdfxmltex.fmt $(PDF_FILES)
 images:
 	ln -s $(XSL_DIR)/images ./
 
-#ifeq ($(FO_VERSION), PASSIVE_TEX)
-#pdf: pdfxmltex.fmt
-#
-#pdfxmltex.fmt:
-#	ln -s $(DOCBOOK_ROOT)/latex/base/pdfxmltex.fmt ./
-#endif
+ifeq ($(FO_VERSION), PASSIVE_TEX)
+pdfxmltex.fmt:
+	ln -s $(DOCBOOK_ROOT)/latex/base/pdfxmltex.fmt ./
+endif
 
 # Basic XSL conversions -------------------------------------------------------
 
@@ -148,8 +150,8 @@ endif
 # that a simple TeX file be generated from the XML first (see below).
 ifeq ($(FO_VERSION), PASSIVE_TEX)
 .fo.pdf:
-	TEXINPUTS="$(TEXINPUTS)" pdflatex "&pdfxmltex" $*.fo
-#	TEXINPUTS="$(TEXINPUTS)" pdflatex "&pdfxmltex" $*.fo
+	TEXINPUTS="$(TEXINPUTS)" $(PDFLATEX) "&pdfxmltex" $*.fo
+#	TEXINPUTS="$(TEXINPUTS)" $(PDFLATEX) "&pdfxmltex" $*.fo
 
 # Generate a TeX file for use with PassiveTeX.
 #.xml.tex:
@@ -176,4 +178,4 @@ clean:
 
 clobber:
 	@$(MAKE) clean
-	$(RM) *.html *.pdf
+	$(RM) *.html *.pdf $(LINK_DEPS)
