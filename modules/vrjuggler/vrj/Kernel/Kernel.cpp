@@ -78,6 +78,8 @@ int Kernel::start()
       exit(0);
    }
 
+   mIsRunning = true;
+
    // Create a new thread to handle the control
    vpr::ThreadMemberFunctor<Kernel>* memberFunctor =
    new vpr::ThreadMemberFunctor<Kernel>(this, &Kernel::controlLoop, NULL);
@@ -162,6 +164,9 @@ void Kernel::controlLoop(void* nullParam)
       updateFrameData();         // Update the projections, etc.
          mPerfBuffer->set(7);
    }
+
+   // Set the running status to false
+   mIsRunning = false;
 }
 
 // Set the application to run
@@ -525,6 +530,7 @@ Kernel::Kernel()
    mNewApp     = NULL;
    mNewAppSet  = false;
    mExitFlag      = false;
+   mIsRunning     = false;
    mControlThread = NULL;
    mSysFactory    = NULL;
    mInputManager  = NULL;
