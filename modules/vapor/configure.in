@@ -681,7 +681,7 @@ UNIX_VPRROOT_ABS="$VPRROOT_ABS"
 
 # Put together the basic information needed to compile VPR applications.
 if test "x$OS_TYPE" = "xWin32" ; then
-    APP_EXTRA_LIBS="$LDFLAGS $LIBS $NSPR_LDFLAGS_LINK_EXE $NSPR_LIB_LINK_EXE $PLC_LIB_LINK_EXE comctl32.lib user32.lib gdi32.lib ws2_32.lib"
+    APP_EXTRA_LIBS="$LDFLAGS $LIBS $NSPR_LDFLAGS_LINK_EXE $NSPR_LIB_LINK_EXE $PLC_LIB_LINK_EXE ws2_32.lib"
 else
     APP_EXTRA_LIBS="$LDFLAGS $PTHREAD_ARG $LIBS $NSPR_LDFLAGS $NSPR_LIB $PLC_LIB $PTHREAD_LIB $SEM_LIB $SOCKET_LIB $UUID_LIB $DYN_LOAD_LIB"
 fi
@@ -765,7 +765,7 @@ case $SUBSYSTEM in
     NSPR)
         if test "x$OS_TYPE" = "xWin32" ; then
             subsystem_cxxflags="$subsystem_includes"
-            subsystem_libs="$NSPR_LIB_LINK_EXE $PLC_LIB_LINK_EXE comctl32.lib user32.lib gdi32.lib ws2_32.lib"
+            subsystem_libs="$NSPR_LIB_LINK_EXE $PLC_LIB_LINK_EXE ws2_32.lib"
             vpr_ldflags_compiler="/link /libpath:\$prefix/lib/debug"
             vpr_ldflags_linker="/libpath:\$prefix/lib/debug"
             vpr_extra_ldflags_compiler="/link $NSPR_LDFLAGS_LINK_EXE"
