@@ -41,6 +41,7 @@
 #include <Kernel/vjWallProjection.h>
 #include <Kernel/vjTrackedWallProjection.h>
 #include <Math/vjVec3.h>
+#include <Math/vjVec4.h>
 #include <Math/vjCoord.h>
 
 //: Defines a display surface an associated projections

@@ -38,6 +38,7 @@
 #include <Kernel/vjWallProjection.h>
 #include <Math/vjMatrix.h>
 #include <Math/vjVec3.h>
+#include <Math/vjVec4.h>
 #include <Kernel/vjKernel.h>
 #include <Input/vjPosition/vjPosition.h>
 #include <Math/vjCoord.h>
