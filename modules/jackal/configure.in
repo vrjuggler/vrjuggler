@@ -450,7 +450,7 @@ fi
 VJ_APP_COMPILER($CC, $CFLAGS, $CXX, $CXXFLAGS, $DBG_FLAGS, $OPT_FLAGS,
                 VJ_BASE_DIR, $DEFS, $INCLUDES, ${_EXTRA_FLAGS})
 VJ_APP_LINKER($CXX, $EXTRA_LINK_FLAGS, $LDOPTS_DBG, $LDOPTS_OPT, VJ_BASE_DIR,
-              Jackal, $APP_EXTRA_LIBS)
+              jccl, $APP_EXTRA_LIBS)
 
 APP_BASE_DIR='$(topdir)/instlinks'
 APP_BASE_DIR_INST='$(VJ_BASE_DIR)'
@@ -502,12 +502,12 @@ case $OS_TYPE in
         fi
 
         jccl_ldflags="-L\$prefix/lib$LIBBITSUF"
-        jccl_libs='-lJackal'
+        jccl_libs='-ljccl'
 
         ;;
     WIN32)
         jccl_ldflags="/link /libpath:\$prefix/lib/debug "
-        jccl_libs='Jackal.lib'
+        jccl_libs='jccl.lib'
 
         ;;
 esac
