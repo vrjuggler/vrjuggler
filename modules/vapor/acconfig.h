@@ -90,8 +90,8 @@
 /* Define if building on a Win32 platform. */
 #undef VPR_OS_Win32
 
-/* Define if building on Mac OS X. */
-#undef VPR_OS_MacOSX
+/* Define if building on Darwin. */
+#undef VPR_OS_Darwin
 
 /* Define if building on a platform not specified above. */
 #undef VPR_OS_GENERIC
