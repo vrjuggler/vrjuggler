@@ -51,6 +51,7 @@ SUBDIR		= 5DT                   \
                   Keyboard		\
                   Logitech		\
                   Open			\
+                  Polhemus		\
                   Sim			\
                   VirtualTechnologies
 
