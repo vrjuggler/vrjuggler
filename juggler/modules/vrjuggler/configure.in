@@ -571,12 +571,12 @@ case $target_os in
             AR_NAME_FLAG='-out:'
             CFLAGS="-nologo"
             CXXFLAGS="-nologo"
-            DBG_FLAGS='-Od -GZ -MTd'
+            DBG_FLAGS='-Od -GZ -MTd -Z7'
             DEP_GEN_FLAG='-FD'
             OPT_FLAGS='-GB -MT'
             LD='link -dll'
             LDOPTS="$LDOPTS -nologo -out:\"${OBJDIR}/Juggler.lib\""
-            LDOPTS_DBG='-LDd -MDd'
+            LDOPTS_DBG='-LDd -MDd -PDB:NONE'
             LDOPTS_OPT='-LD -MD'
             OBJ_FILE_SUFFIX='obj'
             OBJ_NAME_FLAG='-Fo$@'
@@ -1481,8 +1481,8 @@ if test "$PLATFORM" = "IRIX" ; then
     CFLAGS="$CFLAGS -woff 1685,515,608,658,799,803,852,1048,1233,1499"
     CXXFLAGS="$CXXFLAGS -woff 1183,3322 -w2"
 elif test "$OS_TYPE" = "Win32" -a "x${_use_gcc}" != "xyes" ; then
-    CFLAGS="$CFLAGS -W3 -Gm -GR -GX -ZI -EHc -QIfdiv -QI0f"
-    CXXFLAGS="$CXXFLAGS -W3 -Gm -GR -GX -ZI -EHc -QIfdiv -QI0f"
+    CFLAGS="$CFLAGS -W3 -GR -GX -EHc -QIfdiv -QI0f"
+    CXXFLAGS="$CXXFLAGS -W3 -GR -GX -EHc -QIfdiv -QI0f"
     EXTRA_LINK_FLAGS="$EXTRA_LINK_FLAGS -MTd"
 fi
 
