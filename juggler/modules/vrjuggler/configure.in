@@ -1934,7 +1934,7 @@ AC_OUTPUT(Makefile
           samples/pf/pfNav/Makefile
           samples/tutorials/Makefile
           samples/tutorials/simpleInput/Makefile
-				  samples/tutorials/simplePf/Makefile
+          samples/tutorials/simplePf/Makefile
           test/Makefile 
           test/TestSuite/Makefile
           test/CfgTest/Makefile 
