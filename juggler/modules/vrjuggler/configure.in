@@ -813,6 +813,9 @@ AC_CONFIG_FILES([
    samples/sound/simple/Makefile
    samples/sound/simple/sonix/Makefile
    samples/sound/simple/soundManager/Makefile
+   samples/speech/Makefile
+   samples/speech/simple/Makefile
+   samples/speech/simple/SpeechRecogApp/Makefile
    test/Makefile 
    test/Cluster/Makefile
    test/Cluster/applicationData/Makefile
