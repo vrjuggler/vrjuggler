@@ -119,9 +119,6 @@
 /* Define to `int' if the in_addr_t type is not available.  */
 #undef in_addr_t
 
-/* Define to the appropriate type if the ssize_t type is not available.  */
-#undef ssize_t
-
 /* Define if you have the sched_yield function.  */
 #undef HAVE_SCHED_YIELD
 

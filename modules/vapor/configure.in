@@ -409,19 +409,6 @@ if test "x$SUBSYSTEM" != "xNSPR" ; then
     fi
 fi
 
-# The following checks for availability of the ssize_t type.  Since it is
-# supposed to be defined in sys/types.h, the usual AC_CHECK_TYPE method will
-# not work.  An AC_TYPE_SSIZE_T would be nice...
-AC_CACHE_CHECK(for ssize_t, ac_cv_has_ssize_t,
-    AC_TRY_COMPILE([#include <sys/types.h>],
-                   [ ssize_t var; ],
-                   ac_cv_has_ssize_t='yes',
-                   ac_cv_has_ssize_t='no'))
-
-if test "x$ac_cv_has_ssize_t" = "xno" ; then
-    AC_DEFINE(ssize_t, int)
-fi
-
 # If we are not using NSPR, we make typedefs in vprTypes.h based on the results
 # of the following tests.
 if test "x$SUBSYSTEM" != "xNSPR" ; then
