@@ -49,6 +49,7 @@ import org.jdom.JDOMException;
 import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
 import org.vrjuggler.tweek.services.EnvironmentServiceProxy;
+import org.vrjuggler.tweek.services.GlobalPreferencesServiceProxy;
 
 
 public class PrefsEditor extends JPanel
@@ -64,20 +65,23 @@ public class PrefsEditor extends JPanel
          e.printStackTrace();
       }
 
-      String data_dir = (new EnvironmentServiceProxy()).getAppDataDir();
+      String data_dir;
 
-      // Mac OS X preferences location.
-      if ( System.getProperty("mrj.version") != null ||
-           System.getProperty("os.name").indexOf("Windows") != -1 )
+      try
       {
-         data_dir = data_dir + File.separator + "Tweek";
-         mPrefsFileName = data_dir + File.separator + "tweek-iconviewer-prefs";
+         data_dir = (new GlobalPreferencesServiceProxy()).getPrefsDir();
       }
-      // UNIX.
-      else
+      // If we cannot access the Global Preferences Service, fall back on
+      // the Environment Service and its application-specific data directory
+      // information.
+      catch(java.io.IOException ex)
       {
-         mPrefsFileName = data_dir + File.separator + ".tweek-iconviewer-prefs";
+         System.err.println("WARNING: Could not access Global Preferences " +
+                            "Service: " + ex.getMessage());
+         data_dir = (new EnvironmentServiceProxy()).getAppDataDir();
       }
+
+      mPrefsFileName = data_dir + File.separator + "tweek-iconviewer-prefs";
    }
 
    public boolean isSmallGui()
