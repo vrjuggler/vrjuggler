@@ -168,7 +168,12 @@ public class TweekCore
 
       if ( save_args.size() > 0 )
       {
-         new_args = (String[]) save_args.toArray();
+         new_args = new String[save_args.size()];
+
+         for ( int i = 0; i < save_args.size(); i++ )
+         {
+            new_args[i] = (String) save_args.elementAt(i);
+         }
       }
 
       return new_args;
