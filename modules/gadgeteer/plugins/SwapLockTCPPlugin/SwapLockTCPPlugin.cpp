@@ -303,8 +303,9 @@ namespace cluster
          while ((*i)->availableBytes() > 0)
          {
             vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
-               << clrOutBOLD(clrMAGENTA,"[SwapLockTCPPlugin]")
-               << "Buffer overrun..." << (*i)->availableBytes() << std::endl << vprDEBUG_FLUSH;
+               << clrOutBOLD(clrMAGENTA, "[SwapLockTCPPlugin::masterSend()]")
+               << " Buffer overrun: " << (*i)->availableBytes() << " bytes"
+               << std::endl << vprDEBUG_FLUSH;
 
             (*i)->recvn(&temp , 1, bytes_read);
          }
@@ -327,8 +328,8 @@ namespace cluster
          if((*i)->recv(&temp , 1, bytes_read,read_timeout) == vpr::ReturnStatus::Timeout)
          {
             vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
-               << clrOutBOLD(clrMAGENTA,"[SwapLockTCPPlugin]")
-               << "SwapBarrier slip...\n" << vprDEBUG_FLUSH;
+               << clrOutBOLD(clrMAGENTA,"[SwapLockTCPPlugin::masterReceive()]")
+               << " SwapBarrier slip.\n" << vprDEBUG_FLUSH;
             return;            
 /*            static int numTimeouts = 0;
             numTimeouts++;
@@ -359,8 +360,9 @@ namespace cluster
       while (mSyncServerSocket->availableBytes() > 0)
       {
          vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
-            << clrOutBOLD(clrMAGENTA,"[SwapLockTCPPlugin]")
-            << "Buffer overrun..." << mSyncServerSocket->availableBytes() << std::endl << vprDEBUG_FLUSH;
+            << clrOutBOLD(clrMAGENTA, "[SwapLockTCPPlugin::slaveSend()]")
+            << " Buffer overrun: " << mSyncServerSocket->availableBytes()
+            << " bytes" << std::endl << vprDEBUG_FLUSH;
          mSyncServerSocket->recvn(&temp , 1, bytes_read);
       }
       
@@ -376,8 +378,8 @@ namespace cluster
       if (!mSyncServerSocket->recv(&temp , 1, bytes_read,read_timeout).success())
       {
          vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
-            << clrOutBOLD(clrMAGENTA,"[SwapLockTCPPlugin]")
-            << "SwapBarrier slip...\n" << vprDEBUG_FLUSH;
+            << clrOutBOLD(clrMAGENTA,"[SwapLockTCPPlugin::slaveReceive()]")
+            << " SwapBarrier slip.\n" << vprDEBUG_FLUSH;
          //vpr::System::sleep(read_timeout);
       }
       //vprASSERT(1==bytes_read && "SwapLockTCPPlugin: Slave Barrier received timeout");
