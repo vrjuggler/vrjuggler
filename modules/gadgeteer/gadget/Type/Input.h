@@ -183,23 +183,31 @@ public:
    *  Returns the name identifying this instance of the device.
    * This is the name given to the device in it's config chunk (ie. "MyFlockOfBirds", "TheIbox", etc)
    */
-   const std::string getInstanceName() {
+   const std::string getInstanceName()
+   {
       if (mInstName.empty())
       {
          return std::string("Undefined");
       }
       return mInstName;
    }
-	virtual std::string getBaseType()
-	{
-		return std::string("Input");
-	}
-	virtual vpr::ReturnStatus writeObject(vpr::ObjectWriter* writer)
-	{;}
-	virtual vpr::ReturnStatus readObject(vpr::ObjectReader* reader)
-	{;}
+
+   virtual std::string getBaseType()
+   {
+      return std::string("Input");
+   }
+
+   virtual vpr::ReturnStatus writeObject(vpr::ObjectWriter* writer)
+   {;}
+
+   virtual vpr::ReturnStatus readObject(vpr::ObjectReader* reader)
+   {;}
+
    /** Is this input device active?. */
-   int isActive() { return mActive;}
+   int isActive()
+   {
+      return mActive;
+   }
 
 protected:
    std::string    mPort;
@@ -208,7 +216,8 @@ protected:
    vpr::Thread*   mThread;       /**< The thread being used by the driver */
    int            mActive;       /**< Is the driver active? */
    int            mBaudRate;     /**< Baud rate of the device (if it is serial device) */
-	Input (const Input& o) {;}
+
+   Input (const Input& o) {;}
    void operator= (const Input& o) {;}
 };
 
