@@ -78,6 +78,7 @@ bool vjPosProxy::config(vjConfigChunk* chunk)
       vjDEBUG(vjDBG_INPUT_MGR,4) << "Transform Matrix: " << endl << getTransform() << endl << vjDEBUG_FLUSH;
    }
 
+   // --- SETUP PROXY with INPUT MGR ---- //
    int proxy_num = vjKernel::instance()->getInputManager()->addPosProxy(dev_name,unitNum,proxy_name,this);
 
    if ( proxy_num != -1)
