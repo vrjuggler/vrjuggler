@@ -86,25 +86,55 @@ public class ChunkPointerEditor
     */
    public void setPropertyDesc(PropertyDesc desc)
    {
-      ConfigManagerService cfg_mgr = (ConfigManagerService)
-               BeanRegistry.instance().getBean("ConfigManager").getBean();
-
       // For each ChunkDesc token this desc can point to, look for matching
       // ConfigChunks we can use.
       mTags.clear();
       for (int i=0; i<desc.getNumEnums(); ++i)
       {
          DescEnum de = desc.getEnumAt(i);
-         List chunks = cfg_mgr.findConfigChunksByToken(de.getName());
+
+         List chunks = getChunksWithDescToken(de.getName());
 
          // Grab the name of each matching ConfigChunk
          for (Iterator chk_itr = chunks.iterator(); chk_itr.hasNext(); )
          {
             ConfigChunk chunk = (ConfigChunk)chk_itr.next();
             mTags.add(chunk.getName());
-            System.out.println("ConfigChunk: "+chunk.getName());
          }
       }
+   }
+
+   /**
+    * Gets a list of the config chunks in the current configuration that have
+    * the description with the given token.
+    *
+    * XXX: This is a complete hack. We need a better way to propogate the
+    * current configuration context all the way down to here.
+    */
+   private List getChunksWithDescToken(String token)
+   {
+      List matches = new ArrayList();
+
+      ConfigBroker broker = new ConfigBrokerProxy();
+      // XXX: ACK! We really should look only in the current context, not all resources
+      for (Iterator itr = broker.getResourceNames().iterator(); itr.hasNext(); )
+      {
+         List chunks = broker.getChunksIn((String)itr.next());
+         matches.addAll(ConfigUtilities.getChunksWithDescToken(chunks, token));
+      }
+
+      Collections.sort(matches, new Comparator()
+      {
+         public int compare(Object a, Object b)
+         {
+            if (a instanceof ConfigChunk && b instanceof ConfigChunk)
+            {
+               return ((ConfigChunk)a).getName().compareTo(((ConfigChunk)b).getName());
+            }
+            return 0;
+         }
+      });
+      return matches;
    }
 
    /**
