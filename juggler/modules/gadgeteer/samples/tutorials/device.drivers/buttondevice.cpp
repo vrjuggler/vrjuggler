@@ -79,14 +79,6 @@ bool ButtonDevice::config(jccl::ConfigElementPtr e)
   return true;
 }
 
-void ButtonDevice::updateData()
-{
-   if ( mRunning )
-   {
-      swapDigitalBuffers();
-   }
-}
-
 // Spanws the sample thread, which calls ButtonDevice::sample() repeatedly.
 bool ButtonDevice::startSampling()
 {
@@ -138,6 +130,14 @@ bool ButtonDevice::stopSampling()
       mSampleThread = NULL;
    }
    return true;
+}
+
+void ButtonDevice::updateData()
+{
+   if ( mRunning )
+   {
+      swapDigitalBuffers();
+   }
 }
 
 // Our sampling function that is executed by the spawned sample thread.
