@@ -30,16 +30,15 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <jccl/JackalServer/XMLConfigCommunicator.h>
+#include <jccl/ConfigManager/XMLConfigCommunicator.h>
+#include <jccl/ConfigManager/ConfigManager.h>
 #include <jccl/JackalServer/Connect.h>
 #include <jccl/JackalServer/NetCommunicator.h>
-#include <iostream.h>
-//#include <Kernel/ConfigManager.h>
-#include <jccl/ConfigManager/ConfigManager.h>
 #include <jccl/XMLUtil/XercesXMLParserPool.h>
 #include <jccl/Config/ConfigIO.h>
 #include <jccl/Config/XMLConfigIOHandler.h>
 #include <jccl/Config/ChunkFactory.h>
+
 
 namespace jccl {
 
