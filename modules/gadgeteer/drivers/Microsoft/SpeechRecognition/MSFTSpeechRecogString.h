@@ -37,15 +37,16 @@
 #ifndef _GADGET_MSFTSPEECHRECOG_STRING_H_
 #define _GADGET_MSFTSPEECHRECOG_STRING_H_
 
+#include <gadget/Devices/DriverConfig.h>
+
 #include <string>
 
-#include <gadget/Devices/DriverConfig.h>
 #include <vpr/Thread/Thread.h>
 #include <gadget/Type/Input.h>
 #include <gadget/Type/SpeechRecogString.h>
 #include <gadget/Type/InputMixer.h>
 
-#include "MSFTSpeechServerManager.h"
+#include <drivers/Microsoft/SpeechRecognition/MSFTSpeechServerManager.h>
 
 namespace gadget
 {
@@ -55,7 +56,8 @@ namespace gadget
 namespace gadget
 {
 
-class MSFTSpeechRecogString : public gadget::InputMixer<gadget::Input, gadget::SpeechRecogString>
+class MSFTSpeechRecogString
+   : public gadget::InputMixer<gadget::Input, gadget::SpeechRecogString>
 {
 public:
    MSFTSpeechRecogString();
@@ -80,15 +82,21 @@ public:
    void updateData();
 
    /** Returns what chunk type is associated with this class. */
-   static std::string getElementType() { return std::string("msft_speech_recog_string");}
-   
+   static std::string getElementType()
+   {
+      return std::string("msft_speech_recog_string");
+   }
+
    const StringData getStringData(int devNum = 0)
    {
       std::cout << "MSFTSpeechRecogString getStringData()" << std::endl;
    }
 
    /** Checks if the device is active. */
-   bool isActive() { return mIsActive; };
+   bool isActive()
+   {
+      return mIsActive;
+   }
 
    /**
     * Invokes the global scope delete operator.  This is required for proper
@@ -115,8 +123,7 @@ private:
    bool mIsActive;
    bool mIsInitializing;
 
-	MSFTSpeechServerManager* mSpeechManager;
-
+   MSFTSpeechServerManager* mSpeechManager;
 };
 
 } // End of gadget namespace

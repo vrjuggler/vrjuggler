@@ -6,7 +6,7 @@
 #include <string>
 #include <vector>
 #include <map>
-#include "vpr/Util/Singleton.h"
+#include <vpr/Util/Singleton.h>
 #include <vpr/Sync/Semaphore.h>
 #include <vpr/Thread/Thread.h>
 #include <gadget/Type/Input.h>
@@ -50,11 +50,13 @@ public:
       }
    }
    
-   void resetData(void)
+   void resetData()
    {
       mDataMutex.acquire();
       std::map<gadget::Input*, ReferencedDevice>::iterator RefDeviceIter;
-      for(RefDeviceIter = mDeviceMap.begin() ; RefDeviceIter != mDeviceMap.end() ; ++RefDeviceIter)
+      for(RefDeviceIter = mDeviceMap.begin();
+          RefDeviceIter != mDeviceMap.end();
+          ++RefDeviceIter)
       {
          if( (*RefDeviceIter).second.mHasRecentString )
          {
@@ -68,7 +70,9 @@ public:
          }
       }
       std::map<std::string, Grammar*>::iterator GrammarNameMapIter;
-      for(GrammarNameMapIter = mGrammarNameMap.begin() ; GrammarNameMapIter != mGrammarNameMap.end() ; ++GrammarNameMapIter)
+      for(GrammarNameMapIter = mGrammarNameMap.begin();
+          GrammarNameMapIter != mGrammarNameMap.end();
+          ++GrammarNameMapIter)
       {
          (*GrammarNameMapIter).second->mIntState = 0;
          (*GrammarNameMapIter).second->mStringState = "";
@@ -80,13 +84,16 @@ public:
    void updateLoop(void* nullParam);
 
    /** Checks if the device is active. */
-   bool isActive() { return mReferenceLevel > 0; }
+   bool isActive()
+   {
+      return mReferenceLevel > 0;
+   }
    
    //The NotifyCallbackFunction
    friend SPNOTIFYCALLBACK NotifyCallbackFunction;
 
-   bool startUpdating(void);
-   bool stopUpdating(void);
+   bool startUpdating();
+   bool stopUpdating();
 
    bool addGrammar(const std::string& GrammarFileName, gadget::Input* DevicePtr);
 
@@ -97,9 +104,10 @@ private:
       std::string mFileName;
       int mIntState;
       std::string mStringState;
-	   CComPtr<ISpRecoGrammar> mcpGrammar;
+      CComPtr<ISpRecoGrammar> mcpGrammar;
       bool mIsLoaded;
    };
+
    struct ReferencedDevice
    {
       Grammar *mGrammar;
@@ -109,22 +117,22 @@ private:
       bool mHasRecentInt;
    };
 
-	MSFTSpeechServerManager();
-	~MSFTSpeechServerManager();
+   MSFTSpeechServerManager();
+   ~MSFTSpeechServerManager();
    
-	void UpdateRecoEvent();
-	void RecoUpdate(ISpPhrase *pPhrase);
-   bool loadGrammar(void);
+   void UpdateRecoEvent();
+   void RecoUpdate(ISpPhrase *pPhrase);
+   bool loadGrammar();
    
-   bool Initialize(void);
-	void Uninitialize();
-	void Update();
+   bool Initialize();
+   void Uninitialize();
+   void Update();
 
-	MSG mMSG;
-   CComPtr<ISpRecognizer>	cpEngine;		// Pointer to our recognition engine instance
-	CComPtr<ISpRecoContext> cpContext;
-	CComPtr<ISpRecoGrammar> cpGrammar;
-	//CComPtr<ISpVoice> cpVoice;
+   MSG mMSG;
+   CComPtr<ISpRecognizer> cpEngine; /**< Pointer to our recognition engine instance */
+   CComPtr<ISpRecoContext> cpContext;
+   CComPtr<ISpRecoGrammar> cpGrammar;
+   //CComPtr<ISpVoice> cpVoice;
 
    bool mIsActive;
    bool isInitailized;
@@ -135,12 +143,12 @@ private:
    ULONGLONG mGrammarIDGen;
    int mReferenceLevel;
 
-   vpr::Thread *mUpdateThread;
+   vpr::Thread* mUpdateThread;
 
    vpr::Semaphore mReferenceSem;
    vpr::Mutex mDataMutex;
 
-	void SpeakString(std::string TheString);
+   void SpeakString(std::string TheString);
 };
 
 #endif
