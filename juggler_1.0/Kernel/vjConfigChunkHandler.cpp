@@ -53,8 +53,6 @@ void vjConfigChunkHandler::configProcessPending(bool lockIt)
          // If we know about it
          if(this->configCanHandle(cur_chunk))
          {                        
-            bool removed;
-
             // ---- HANDLE THE CHUNK ---- //
             switch ((*current).mType)
             {
