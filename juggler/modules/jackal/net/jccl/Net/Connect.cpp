@@ -120,9 +120,11 @@ Connect::Connect(ConfigChunkPtr c): commands_mutex(), communicators() {
     }
 
     // logging information to output file...
-    if (mode == OUTPUT_CONNECT)
-        *outstream << "VR Juggler FileConnect output " << name.c_str()
-                   << std::endl;
+    if (mode == OUTPUT_CONNECT) {
+      *outstream << "<?xml version=\"1.0\" encoding=\"UTF-8\"?>" << std::endl;
+//          *outstream << "VR Juggler FileConnect output " << name.c_str()
+//                     << std::endl;
+    }
 
     // populate communicators vector
     // send initconnections...
