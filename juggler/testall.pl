@@ -64,6 +64,9 @@ my $module   = '';
 Getopt::Long::Configure('pass_through');
 GetOptions('cfg=s' => \$user_cfg, 'module=s' => \$module);
 
+# Give ourselves a convenient way to know which OS we're using.
+$ENV{'OSTYPE'} = `uname -s` unless defined($ENV{'OSTYPE'});
+
 $Win32 = 1 if $ENV{'OS'} && $ENV{'OS'} =~ /Windows/;
 
 my $cfg_load = ("$user_cfg" eq "") ? "$base_dir/$cfg" : "$user_cfg";
@@ -78,7 +81,7 @@ $MODULE = ("$module" eq "") ? "$JugglerConfigure::DEFAULT_MODULE" : "$module";
 # a process ID and has the host operating system type prepended if the right
 # environment variable is defined.
 my $unique  = $$;
-$unique     = "$ENV{'OSTYPE'}-$unique" if defined($ENV{'OSTYPE'});
+$unique     = "$ENV{'OSTYPE'}-$unique";
 
 my $build_dir = "build.$unique-test";
 $root_dir     = getcwd();
