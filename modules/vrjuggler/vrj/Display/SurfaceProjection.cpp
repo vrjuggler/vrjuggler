@@ -31,12 +31,10 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include <vrj/vrjConfig.h>
+
+#include <iomanip>
 //#include <sys/types.h>
 #include <string>
-
-#include <jccl/Config/ConfigElement.h>
-
-#include <vrj/Kernel/Kernel.h>
 
 #include <gmtl/Vec.h>
 #include <gmtl/Matrix.h>
@@ -45,10 +43,12 @@
 #include <gmtl/Output.h>
 #include <gmtl/Xforms.h>
 
-//#include <vrj/Math/Coord.h>
+#include <jccl/Config/ConfigElement.h>
+#include <vrj/Kernel/Kernel.h>
 #include <vrj/Util/Debug.h>
 
 #include <vrj/Display/SurfaceProjection.h>
+
 
 namespace vrj
 {
