@@ -5,13 +5,18 @@ import java.util.List;
 import javax.swing.*;
 
 import info.clearthought.layout.*;
-//TODO: Remove these import
-import org.vrjuggler.jccl.config.ConfigElement;
-import org.vrjuggler.jccl.config.PropertyDefinition;
+import org.vrjuggler.jccl.config.*;
 import org.vrjuggler.jccl.config.event.*;
 
+/**
+ * Provides a panel that contains a variable number of property values.
+ */
 public class VarListPanel extends ExpandablePanel implements ConfigElementListener
-{       
+{
+   /**
+    * Construct a panel to hold the sheet that actually contains the list of
+    * properties.
+    */
    public VarListPanel(ConfigElement elm, PropertyDefinition prop_def, Color color)
    {
       super(color);
@@ -34,14 +39,9 @@ public class VarListPanel extends ExpandablePanel implements ConfigElementListen
       add(name, c2);
    }
 
-   public void nameChanged(ConfigElementEvent evt)
-   {
-      // Do Nothing...
-   }
-   public void propertyValueChanged(ConfigElementEvent evt)
-   { 
-      // Do Nothing...
-   }
+   /**
+    * A property value was added so we must show this additional property.
+    */
    public void propertyValueAdded(ConfigElementEvent evt)
    {
       System.out.println("Property value added...");
@@ -50,16 +50,26 @@ public class VarListPanel extends ExpandablePanel implements ConfigElementListen
          elm.getDefinition().getPropertyDefinition(evt.getProperty());
       if(ConfigElement.class == prop_def.getType())
       {
-         // Use the PropertySheetFactory to add a new embeddedElement.
+         // Use the PropertySheetFactory to add an additional embedded element.
          PropertySheetFactory.instance().addEmbeddedElement((PropertySheet)mComponent, elm, evt.getValue(), prop_def, 2);
       }
       else
       {
+         // Use the PropertySheetFactory to add an aditional normal editor.
          String label = prop_def.getPropertyValueDefinition(0).getLabel();
          PropertySheetFactory.instance().addNormalEditor((PropertySheet)mComponent, elm, 
                                                          evt.getValue(), prop_def, label, 2,
                                                          elm.getPropertyValueCount(prop_def.getToken()) - 1);
       }
+   }
+   
+   public void nameChanged(ConfigElementEvent evt)
+   {
+      // Do Nothing...
+   }
+   public void propertyValueChanged(ConfigElementEvent evt)
+   { 
+      // Do Nothing...
    }
    public void propertyValueRemoved(ConfigElementEvent evt)
    {

@@ -258,8 +258,7 @@ public class PropertySheetFactory extends PropertyComponent
                   temp.remove((Component)evt.getSource()); 
                   tl.deleteRow(row);
                }
-               temp.doLayout();
-               temp.repaint();
+               temp.refresh();
                temp.invalidate();
                temp.validate();
             }

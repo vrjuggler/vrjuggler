@@ -12,16 +12,17 @@ import javax.swing.border.TitledBorder;
 
 import info.clearthought.layout.*;
 
-//TODO: Remove these import
 import org.vrjuggler.jccl.config.*;
 import org.vrjuggler.jccl.editors.*;
 
 import com.sun.java.swing.plaf.windows.WindowsTreeUI;
 
+/**
+ * Allows the user to hide/expand a panel that contains property editors.
+ */
 public class ExpandablePanel extends PropertyComponent
 {
    private TableLayout tableLayout;
-// What needs to be here for embedded....
    
    public ExpandablePanel(Color color)
    {
@@ -70,8 +71,7 @@ public class ExpandablePanel extends PropertyComponent
                   refresh();
                   
                   // Refresh our child.
-                  mComponent.doLayout();
-                  mComponent.repaint();
+                  mComponent.refresh();
                   
                   // We are now expanded.
                   mExpanded = true;
