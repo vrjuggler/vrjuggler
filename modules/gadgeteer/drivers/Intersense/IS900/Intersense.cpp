@@ -46,7 +46,7 @@
 #include <gadget/Type/DeviceConstructor.h>
 #include <gadget/Util/Debug.h>
 
-#include <gadget/Devices/Intersense/IS900/Intersense.h>
+#include <drivers/Intersense/IS900/Intersense.h>
 #include <boost/concept_check.hpp>
 
 
