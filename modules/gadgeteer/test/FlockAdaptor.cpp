@@ -74,8 +74,14 @@ FlockAdaptor::~FlockAdaptor()
 }
 bool FlockAdaptor::Start( const std::string& ttyPort, int mBaudRate )
 {
-	mFlock->start();
-	return(true);
+	if(mFlock->start() == vpr::ReturnStatus::Fail)
+    {
+       return(false);
+    }
+    else
+    {
+       return(true);
+    }
 }
 bool FlockAdaptor::Start()
 {
