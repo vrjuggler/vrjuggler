@@ -153,11 +153,11 @@ Table of contents:
 
       # you need to change these to your setup...
       set HOSTTYPE=linux
-      set juggler_root=/root/src/juggler/modules
-      set install_dir=/root/software/$HOSTTYPE
+      set juggler_root=$HOME/src/juggler2/modules
+      set install_dir=$HOME/software/$HOSTTYPE
       setenv OALROOT $HOME/software/$HOSTTYPE
-      setenv XERCESROOT /root/software/src/xerces-c-src1_5_1 
-
+      setenv XERCESROOT $HOME/../allenb/Linux/xerces-c-src1_5_1
+      set parallel_compile=6
 
       # base directories (shouldn't need to change)
       setenv VPR_BASE_DIR $juggler_root/vapor/build.$HOSTTYPE/instlinks
@@ -179,13 +179,20 @@ Table of contents:
       autogen.sh
       cd $juggler_root/vapor/build.$HOSTTYPE
       ../configure  --prefix=$install_dir 
-      gmake -j 2
+      gmake -j $parallel_compile
 
       cd $juggler_root/jackal
       autogen.sh
       cd $juggler_root/jackal/build.$HOSTTYPE
       ../configure  --prefix=$install_dir --with-xercesroot=$XERCESROOT
-      gmake -j 2
+      gmake -j $parallel_compile
+
+
+      cd $juggler_root/gadgeteer
+      autogen.sh
+      cd $juggler_root/gadgeteer/build.$HOSTTYPE
+      ../configure  
+      gmake links
 
       cd $juggler_root/vrjuggler
       autogen.sh
@@ -193,20 +200,19 @@ Table of contents:
       ../configure  
       gmake links
 
-      cd $juggler_root/gadgeteer
-      autogen.sh
-      cd $juggler_root/gadgeteer/build.$HOSTTYPE
-      ../configure  
-      gmake -j2
-
       cd $juggler_root/vrjuggler/build.$HOSTTYPE
-      gmake -j2
+      gmake -j $parallel_compile
+
+      cd $juggler_root/gadgeteer/build.$HOSTTYPE
+      gmake -j $parallel_compile
+
 
       cd $juggler_root/sonix
       autogen.sh
       cd $juggler_root/sonix/build.$HOSTTYPE
       ../configure  --enable-openal --with-oalroot=$OALROOT --prefix=$install_dir 
-      gmake -j 2
+      gmake -j $parallel_compile
+
       
    C. Advanced topics
 
