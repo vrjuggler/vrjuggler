@@ -50,16 +50,25 @@ public:
     //+          vjChunkDesc is found, an "empty" vjChunkDesc,
     //+          containing only a Name vjPropertyDesc, is used.
     static vjConfigChunk* createChunk (const std::string& desctoken) {
+	vjConfigChunk* ch;
+	//cout << " createChunk with val " << flush << desctoken << endl;
+
 	vjChunkDesc* desc = descdb->getChunkDesc (desctoken);
+	//cout <<" chunkdesc is " << flush << *desc << endl;
 	if (desc)
-	    return new vjConfigChunk (desc);
+	    ch = new vjConfigChunk (desc);
 	else
-	    return new vjConfigChunk (nulldesc);
+	    ch = NULL; //return new vjConfigChunk (nulldesc);
+	//cout << " chunk is :\n" << flush << *ch << endl;
+	return ch;
     }
 
     //: Creates a Chunk using the given description
     static vjConfigChunk* createChunk (vjChunkDesc* d) {
-	return new vjConfigChunk (d);
+	if (d)
+	    return new vjConfigChunk (d);
+	else
+	    return NULL;
     }
 
 private:

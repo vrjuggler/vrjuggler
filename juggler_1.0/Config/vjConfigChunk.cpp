@@ -14,34 +14,29 @@
 #include <string.h>
 
 
-typedef enum {
-    TK_String, TK_Float, TK_End, TK_Int, TK_Bool,
-    TK_OpenBracket, TK_CloseBracket, TK_Unit, TK_Error
-} CfgTok;
-
-struct VJCFGToken {
-    CfgTok type;
-    int intval;
-    float floatval;
-    bool boolval;
-    CfgUnit unitval;
-    char strval[1024];
-};
-
 
 vjConfigChunk::vjConfigChunk (vjChunkDesc *d) :props(), type_as_varvalue(T_STRING) {
 
     desc = d;
     type_as_varvalue = desc->getToken();
-    for (int i = 0; i < desc->plist.size(); i++)
-	props.push_back (new vjProperty(desc->plist[i]));
+    //cout << "creating properties" << endl;
+    for (int i = 0; i < desc->plist.size(); i++) {
+	vjPropertyDesc* pd = desc->plist[i];
+	//cout << "propdesc is " << flush << *pd << endl;
+	vjProperty* pr = new vjProperty (pd);
+	//cout << "created property " << flush << *pr << endl;
+	props.push_back (pr);
+    }
+    //cout << "done creating properties" << endl;
 }
 
 
 
 vjConfigChunk::~vjConfigChunk () {
-  for (int i = 0; i < props.size(); i++)
-    delete (props[i]);
+//     cout << "I thought we weren't deleting chunks anymore? -- self is" << endl
+// 	 << *this << "-------------" << endl;
+    for (int i = 0; i < props.size(); i++)
+	delete (props[i]);
 }
 
 
@@ -54,9 +49,12 @@ vjConfigChunk::vjConfigChunk (vjConfigChunk& c):props(), type_as_varvalue(T_STRI
 
 vjConfigChunk& vjConfigChunk::operator = (const vjConfigChunk& c) {
     int i;
+    if (this == &c)     // ack! same object!
+        return *this;   
+
     desc = c.desc;
     type_as_varvalue = c.type_as_varvalue;
-
+    
     for (i = 0; i < props.size(); i++)
         delete (props[i]);
     props.erase (props.begin(), props.end());
@@ -156,88 +154,7 @@ ostream& operator << (ostream& out, vjConfigChunk& self) {
 
 
 
-struct TokTableEntry {
-  char*   name;
-  CfgTok  token;
-  CfgUnit unit;
-  bool    bval;
-};
-
-static TokTableEntry TokTable[] = {
-  { "end", TK_End, U_BadUnit, 0 },
-  { "{", TK_OpenBracket, U_BadUnit, 0 },
-  { "}", TK_CloseBracket, U_BadUnit, 0 },
-  { "true", TK_Bool, U_BadUnit, 1},
-  { "yes", TK_Bool, U_BadUnit, 1},
-  { "false", TK_Bool, U_BadUnit, 0},
-  { "no", TK_Bool, U_BadUnit, 0},
-  { "feet", TK_Unit, U_Feet, 0},
-  { "inches", TK_Unit, U_Inches, 0},
-  { "meters", TK_Unit, U_Meters, 0},
-  { "centimeters", TK_Unit, U_Meters, 0},
-  { "", TK_Error, U_BadUnit, 0},
-};
-
-
-bool vjConfigChunk::getVJCFGToken (istream& in, VJCFGToken& tok) {
-    /* this could stand to be reimplemented */
-
-    int i,j;
-    bool dbl = false, alpha = false;
-    bool quoted;
-
-    if (readString(in,  tok.strval,  1024,  &quoted) == 0) {
-	tok.type = TK_End;
-	return true;
-    }
-
-    // Is it a quoted string?
-    if (quoted) {
-	tok.type = TK_String;
-	return true;
-    }
-
-    // Is it one of our actual tokens?
-    for (j = 0; TokTable[j].token != TK_Error; j++) {
-	if (!strcasecmp (TokTable[j].name, tok.strval)) {
-	    tok.type = TokTable[j].token;
-	    tok.boolval = TokTable[j].bval;
-	    tok.unitval = TokTable[j].unit;
-	    return true;
-	}
-    }
-
-    // Is it a number?
-    for (i = 0; i <strlen(tok.strval); i++) {
-	if (!(isdigit (tok.strval[i]) || (tok.strval[i] == '.')
-	      || (tok.strval[i] == '+')
-	      || (tok.strval[i] == '-'))) {
-	    alpha = true;
-	    break;
-	}
-	if (tok.strval[i] == '.')
-	    dbl = true;
-    }
-    if (alpha) {
-	/* it's a string */
-	tok.type = TK_String;
-	return true;
-    }
-    if (dbl) {
-	tok.type = TK_Float;
-	tok.floatval = (float)strtod (tok.strval,NULL);
-	return true;
-    }
-    /* if all else has failed, it's an int. */
-    tok.type = TK_Int;
-    tok.intval = atoi (tok.strval);
-    return true;
-
-}
-
-
-
-bool vjConfigChunk::tryassign (vjProperty *p, VJCFGToken &tok, int i) {
+bool vjConfigChunk::tryassign (vjProperty *p, int index, const char* val) {
     /* This does some type-checking and translating before just
      * doing an assign into the right value entry of p. Some of
      * this functionality ought to just be subsumed by vjVarValue
@@ -249,63 +166,54 @@ bool vjConfigChunk::tryassign (vjProperty *p, VJCFGToken &tok, int i) {
      * mangled into enumeration entries when assigning strings
      * to T_INTs.
      */	
-    vjEnumEntry *e;
+    char* endval;
+    int i;
+    float f;
+    bool b;
+    vjEnumEntry* e = p->getEnumEntry (val);
+    if (e) {
+	p->setValue (e->getValue());
+	return true;
+    }
 
-    switch (tok.type) {
-
-    case TK_Int:
-	// ints can be assigned to T_INT, T_FLOAT, or T_DISTANCE.
-	if (p->type == T_INT) {
-	    p->setValue(tok.intval, i);
-	    return true;
-	}
-	else if ((p->type == T_FLOAT) || (p->type == T_DISTANCE)) {
-	    p->setValue ((float)tok.intval, i);
-	    return true;
-	}
-	else
-	    return false;
-	
-    case TK_Float:
-	// doubles can be assigned to T_FLOAT or T_DISTANCE
-	if ((p->type == T_FLOAT) || (p->type == T_DISTANCE)) {
-	    p->setValue (tok.floatval, i);
-	    return true;
-	}
-	else
-	    return false;
-	
-    case TK_Bool:
-	// bools are bools and only bools
-	if (p->type == T_BOOL) {
-	    p->setValue (tok.boolval, i);
-	    return true;
-	}
-	else
-	    return false;
-
-    case TK_String:
-	// Strings can be assigned to T_STRINGs, T_CHUNKS, or T_INTs if there's an enum entry
-	if (p->type == T_STRING) {
-	    p->setValue (tok.strval, i);
-	    return true;
-	}
-	else if (p->type == T_CHUNK) {
-	    p->setValue (tok.strval, i);
-	    return true;
-	}
-	else if ((p->type == T_INT)) {
-	    // look it up in the enumerations for p.
-	    e = p->getEnumEntry (tok.strval);
-	    if (e) {
-		p->setValue (e->getVal(), i);
-		return true;
+    switch (p->type) {
+    case T_INT:
+	i = strtol (val, &endval, 0);
+	if (*endval != '\0')
+	    vjDEBUG (vjDBG_CONFIG, 0) << "WARNING: Parser expected int, got '"
+				      << val << "'\n" << vjDEBUG_FLUSH;
+	p->setValue (i, index);
+	return true;
+    case T_FLOAT:
+	f = (float)strtod (val, &endval);
+	if (*endval != '\0')
+	    vjDEBUG (vjDBG_CONFIG, 0) << "WARNING: Parser expected float, got '"
+				      << val << "'\n" << vjDEBUG_FLUSH;
+	p->setValue (f, index);
+	return true;
+    case T_BOOL:
+	b = false;
+	if (!strcasecmp (val, "true"))
+	    b = true;
+	else if (!strcasecmp (val, "false"))
+	    b = false;
+	else { // we'll try to accept a numeric value
+	    b = strtol (val, &endval, 0);
+	    if (endval != '\0') {
+		b = false;
+		vjDEBUG (vjDBG_CONFIG,0) << "WARNING: Parser expected bool, got '"
+					 << val << "'\n" << vjDEBUG_FLUSH;
 	    }
-	    return false;
 	}
-	else
-	    return false;
-	
+	p->setValue (b, index);
+	return true;
+    case T_STRING:
+    case T_CHUNK:
+	p->setValue (val, index);
+	return true;
+    case T_EMBEDDEDCHUNK:
+	cout << "NOT HANDLED HERE!" << endl;
+	return false;
     default:
 	return false;
     }
@@ -313,72 +221,72 @@ bool vjConfigChunk::tryassign (vjProperty *p, VJCFGToken &tok, int i) {
 
 
 
+
+
 istream& operator >> (istream& in, vjConfigChunk& self) {
     /* can't really use property >> because we don't know what
      * property to assign into.
      */
+    const int buflen = 1024;
+    char buf[buflen];
     vjProperty *p;
-    VJCFGToken tok;
     int i;
+    bool quoted;
 
-    self.getVJCFGToken (in, tok);
+    while (readString (in, buf, buflen, NULL)) {
 
-    while (tok.type != TK_End) {
-	
-	if (tok.type != TK_String) {
-	    vjDEBUG(vjDBG_ALL,3) << "ERROR: Unexpected Token #" << tok.type << endl << vjDEBUG_FLUSH;
-	    self.getVJCFGToken(in,tok);
-	    continue;
-	}
-	
+	if (!strcasecmp (buf, "end"))
+	    break;
+
 	// We have a string token; assumably a property name.
-	if (!(p = self.getPropertyPtrFromToken (tok.strval))) {
-	    vjDEBUG(vjDBG_ALL,3) << "ERROR: Property '" << tok.strval << "' is not found in"
+	if (!(p = self.getPropertyPtrFromToken (buf))) {
+	    vjDEBUG(vjDBG_ALL,0) << "ERROR: Property '" << buf << "' is not found in"
 		       << " Chunk " << self.desc->name << endl << vjDEBUG_FLUSH;
-	    self.getVJCFGToken(in,tok);
 	    continue;
 	}
 	
 	// We're reading a line of input for a valid Property.
-	self.getVJCFGToken (in, tok);
-	if (tok.type == TK_OpenBracket) {
-	    // We're reading values until we get a TK_CloseBracket.
+	readString (in, buf, buflen, &quoted);
+
+	if (!quoted && (buf[0] == '{')) {
+	    // We're reading values until we get a close bracket.
 	    i = 0;
-	    self.getVJCFGToken (in, tok);
-	    while ((tok.type != TK_CloseBracket) && (tok.type != TK_End)) {
+	    for (;;) {
+		readString (in, buf, buflen, &quoted);
+		if (!quoted && (buf[0] == '}'))
+		    break;
+
+		// this works because the chunk >> expects the typename to have
+		// already been read (which we did when looking for '}')
 		if (p->type == T_EMBEDDEDCHUNK) {
 		    vjConfigChunk *ch = vjChunkFactory::createChunk (p->embeddesc);
 		    in >> *ch;
 		    p->setValue (ch, i++);
 		}
-		else if (tok.type == TK_Unit) {
-		    p->applyUnits (tok.unitval);
-		}
+//  		else if (tok.type == TK_Unit) {
+//  		    p->applyUnits (tok.unitval);
+//  		}
 		else {
-		    if (!self.tryassign (p, tok, i++))
+		    if (!self.tryassign (p, i++, buf))
 			vjDEBUG(vjDBG_ALL,3) << "ERROR: Assigning to property "
 				   << p->getName() << endl << vjDEBUG_FLUSH;
 		}
-		self.getVJCFGToken (in, tok);
 	    }
+
 	    if ((p->num != -1) && (p->num != i))
-		vjDEBUG(vjDBG_ALL,3) << "ERROR: vjProperty " << p->getName() << " should have "
+		vjDEBUG(vjDBG_CONFIG,3) << "ERROR: vjProperty " << p->getName() << " should have "
 			   << p->num << " values; " << i << " found" << endl << vjDEBUG_FLUSH;
-	    if (tok.type != TK_CloseBracket)
-		vjDEBUG(vjDBG_ALL,3) << "ERROR: vjProperty " << p->getName() << ": '}' expected"
-			   << endl << vjDEBUG_FLUSH;
-	    self.getVJCFGToken (in,tok);
 	}
 	else {
 	    // we're just doing one value.
-	    if (!self.tryassign (p, tok, 0))
-		vjDEBUG(vjDBG_ALL,3) << "ERROR: Assigning to property "
+	    if (!self.tryassign (p, 0, buf))
+		vjDEBUG(vjDBG_CONFIG,3) << "ERROR: Assigning to property "
 			   << p->getName() << endl << vjDEBUG_FLUSH;
-	    self.getVJCFGToken (in,tok);
-	    if (tok.type == TK_Unit) {
-		p->applyUnits (tok.unitval);
-		self.getVJCFGToken (in, tok);
-	    }
+//  	    self.getVJCFGToken (in,tok);
+//  	    if (tok.type == TK_Unit) {
+//  		p->applyUnits (tok.unitval);
+//  		self.getVJCFGToken (in, tok);
+//  	    }
 	    if (p->num > 1) {
 		vjDEBUG(vjDBG_ALL,3) << "ERROR: Property " << p->getName()
 			   << " expects " << p->num << " values." << endl << vjDEBUG_FLUSH;

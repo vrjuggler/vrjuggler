@@ -62,7 +62,7 @@ vjEnumEntry* vjPropertyDesc::getEnumEntryAtIndex (int index) {
 
 vjEnumEntry* vjPropertyDesc::getEnumEntryWithValue (vjVarValue& val) {
     for (int i = 0; i < enumv.size(); i++) {
-	if (enumv[i]->getVal() == val)
+	if (enumv[i]->getValue() == val)
 	    return enumv[i];
     }
     return NULL;
@@ -93,7 +93,7 @@ ostream& operator << (ostream& out, vjPropertyDesc& self) {
 	    out << '"' << e->getName();
 	    if ((self.type != T_STRING) && (self.type != T_CHUNK) &&
 		(self.type != T_EMBEDDEDCHUNK))
-		out << "=" << e->getVal();
+		out << "=" << e->getValue();
 	    out << "\" ";
 	}
 	out << "}";

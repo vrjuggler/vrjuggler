@@ -10,9 +10,11 @@
 #include <Config/vjEnumEntry.h>
 #include <Kernel/vjDebug.h>
 
-vjProperty::vjProperty (vjPropertyDesc *pd):value() {
+vjProperty::vjProperty (vjPropertyDesc *pd) {
+    //cout << "vjProperty(): desc is '" << flush << *pd << "'" << endl;
     int j;
     vjVarValue *v;
+
 
     description = pd;
     num = pd->getNumAllowed();
@@ -33,8 +35,11 @@ vjProperty::vjProperty (vjPropertyDesc *pd):value() {
 	/* we're filling the vector with num copies of a 
 	 * default vjVarValue */
 	for (j = 0; j < num; j++ ) {
+	    //cout << "creating varvalue" << endl;
 	    v = createVarValue (j);
+	    //cout << "created var value: " << flush << *v << endl;
 	    value.push_back(v);
+	    //cout << "pushed" << endl;
 	}
     }
 }

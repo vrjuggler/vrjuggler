@@ -4,13 +4,13 @@
 #include <vjConfig.h>
 #include <Config/vjChunkDesc.h>
 #include <Config/vjProperty.h>
+#include <Config/vjVarValue.h>
 
 #ifdef VJ_OS_HPUX
 #   include <float.h>
 #   include <stddef.h>
 #endif
 
-#include <Config/vjVarValue.h>
 
 
 struct VJCFGToken;
@@ -181,21 +181,14 @@ public:
     std::vector<std::string> getDependencies();
 
 private:
-  vjProperty *getPropertyPtrFromName (const std::string& name);
+    vjProperty *getPropertyPtrFromName (const std::string& name);
+    
+    vjProperty *getPropertyPtrFromToken (const std::string& token);
 
-  vjProperty *getPropertyPtrFromToken (const std::string& token);
-
-  /** Tokenizer for vjConfigChunk read.
-   *  Fills in the Token object passed to it with the next token in _in_.
-   *  Returns false to indicate a parsing failure.
-   */
-  bool getVJCFGToken (istream& in, VJCFGToken& tok);
-
-  /** Attempts to assign a value (in tok) to the vjProperty's ith value.
-   *  This function does a certain amount of type-mangling, and also
-   *  handles enumeration lookups.  Return value is success/failure.
-   */
-  bool tryassign (vjProperty *p, VJCFGToken &tok, int i);
+    //: Attempts to assign a value (in tok) to the vjProperty's ith value.
+    //!NOTE:  This function does a certain amount of type-mangling, and also
+    //+        handles enumeration lookups.  Return value is success/failure.
+    bool tryassign (vjProperty *p, int i, const char* val);
 
 };
 

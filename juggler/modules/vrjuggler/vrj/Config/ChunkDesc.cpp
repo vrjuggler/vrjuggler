@@ -117,16 +117,17 @@ ostream& operator << (ostream& out, vjChunkDesc& self) {
 
 
 istream& operator >> (istream& in, vjChunkDesc& self) {
-    char str[256];
+    const int buflen = 512;
+    char str[buflen];
     vjPropertyDesc *p;
 
-    readString (in, str, 256);
+    readString (in, str, buflen);
     self.token = str;
 
-    readString (in, str, 256);
+    readString (in, str, buflen);
     self.name = str;
 
-    readString (in, str, 256);
+    readString (in, str, buflen);
     self.help = str;
 
     for (int i = 0; i < self.plist.size(); i++)

@@ -85,12 +85,12 @@ ostream& operator << (ostream& out, vjChunkDescDB& self) {
 
 
 istream& operator >> (istream& in, vjChunkDescDB& self) {
-
-    char str[256];
+    const int buflen = 512;
+    char str[buflen];
 
     for (;;) {
 	vjChunkDesc *ch;
-	if (readString (in, str, 256) == 0)
+	if (readString (in, str, buflen) == 0)
 	    break; /* eof */
 	else if (!strcasecmp (str, "chunk")) {
 	    ch = new vjChunkDesc();
