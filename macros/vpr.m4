@@ -97,11 +97,11 @@ dnl                          test VPR program], , enable_vprtest=yes)
         no_vpr=yes
     else
         VPR_CXXFLAGS=`$VPR_CONFIG $vpr_config_args --cxxflags $ABI`
+        VPR_LIBS_LD="`$VPR_CONFIG $vpr_config_args --libs $ABI --linker`"
+        VPR_LIBS_STATIC_LD="`$VPR_CONFIG $vpr_config_args --libs $ABI --linker --static`"
+        VPR_LIBS_CC="`$VPR_CONFIG $vpr_config_args --libs $ABI`"
+        VPR_LIBS_STATIC_CC="`$VPR_CONFIG $vpr_config_args --libs $ABI --static`"
         VPR_EXTRA_LIBS=`$VPR_CONFIG $vpr_config_args --extra-libs $ABI`
-        VPR_LIBS_LD="`$VPR_CONFIG $vpr_config_args --libs $ABI --linker` $VPR_EXTRA_LIBS"
-        VPR_LIBS_STATIC_LD="`$VPR_CONFIG $vpr_config_args --libs $ABI --linker --static` $VPR_EXTRA_LIBS"
-        VPR_LIBS_CC="`$VPR_CONFIG $vpr_config_args --libs $ABI` $VPR_EXTRA_LIBS"
-        VPR_LIBS_STATIC_CC="`$VPR_CONFIG $vpr_config_args --libs $ABI --static` $VPR_EXTRA_LIBS"
         VPR_VERSION=`$VPR_CONFIG --version`
         DPP_VERSION_CHECK_MSG(VPR, $VPR_VERSION, $min_vpr_version,
                               vpr_cv_vpr_version, $2, $3)
@@ -114,11 +114,13 @@ dnl                          test VPR program], , enable_vprtest=yes)
             echo "*** your path, or set the VPR_CONFIG environment variable to the"
             echo "*** full path to vpr-config."
         fi
-        VPR_CXXFLAGS=""
-        VPR_LIBS_LD=""
-        VPR_LIBS_STATIC_LD=""
-        VPR_LIBS_CC=""
-        VPR_LIBS_STATIC_CC=""
+        VPR_CXXFLAGS=''
+        VPR_LIBS_LD=''
+        VPR_LIBS_STATIC_LD=''
+        VPR_LIBS_CC=''
+        VPR_LIBS_STATIC_CC=''
+        VPR_EXTRA_LIBS=''
+        VPR_VERSION='-1'
         ifelse([$3], , :, [$3])
     fi
 
@@ -127,4 +129,6 @@ dnl                          test VPR program], , enable_vprtest=yes)
     AC_SUBST(VPR_LIBS_STATIC_LD)
     AC_SUBST(VPR_LIBS_CC)
     AC_SUBST(VPR_LIBS_STATIC_CC)
+    AC_SUBST(VPR_EXTRA_LIBS)
+    AC_SUBST(VPR_VERSION)
 ])
