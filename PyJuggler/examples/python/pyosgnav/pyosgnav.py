@@ -15,7 +15,7 @@ from PyOSG import *
 
 import os
 
-if os.uname()[0] == 'Darwin':
+if os.name == 'mac':
    os.environ['NO_RTRC_PLUGIN'] = "1"
    os.environ['NO_PERF_PLUGIN'] = "1"
 
