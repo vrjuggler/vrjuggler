@@ -174,7 +174,7 @@ fi
 
 # Make sure ant is available to build the java sources
 if test "x$BUILD_JAVA" = "xY"; then
-   ANT_HOME=$JUGGLERROOT_ABS/external/ant
+   ANT_HOME=$UNIX_JUGGLERROOT_ABS/external/ant
    AC_PATH_PROG([ANT], [ant], [no], [${ANT_HOME}/bin])
    if test "x$ANT" == "xno"; then
       AC_MSG_WARN([*** VRJConfig requires ant to build the java sources -- it will not be built ***])
