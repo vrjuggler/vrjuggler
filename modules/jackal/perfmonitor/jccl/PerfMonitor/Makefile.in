@@ -47,7 +47,8 @@ top_srcdir	= @top_srcdir@
 INSTALL		= @INSTALL@
 SUBOBJDIR	= $(JCCL_LIBRARY)
 
-SRCS		= PerfDataBuffer.cpp	\
+SRCS		= PerformanceManager.cpp \
+		  PerfDataBuffer.cpp	\
                   TimeStamp.cpp
 
 include $(MKPATH)/dpp.obj.mk
