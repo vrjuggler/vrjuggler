@@ -123,7 +123,7 @@ private:
    vjMatrix     m_posData;
    vjTimeStamp  m_posUpdateTime;
    vjMatrix     m_matrixTransform;
-   vjPosition*  m_posPtr;
+   vjPosition*  m_posPtr;                 // Ptr to the position device
    int          m_unitNum;
    bool         etrans;
 };
