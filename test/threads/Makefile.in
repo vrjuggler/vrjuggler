@@ -52,5 +52,5 @@ testPool: testPool.o
 # Clean-up.
 # -----------------------------------------------------------------------------
 clean:
-	rm -f Makedepend ${TEST_PROGS} *.o core so_locations
+	rm -f Makedepend ${TEST_PROGS} *.o *core so_locations
 	rm -rf ./ii_files

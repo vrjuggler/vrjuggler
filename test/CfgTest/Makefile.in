@@ -41,5 +41,5 @@ CfgTest: ${OBJECTS}
 # Clean-up.
 # -----------------------------------------------------------------------------
 clean:
-	rm -f Makedepend CfgTest ${OBJECTS} core so_locations
+	rm -f Makedepend CfgTest ${OBJECTS} *core so_locations
 	rm -rf ./ii_files

@@ -48,5 +48,5 @@ pfNav.o: pfNaver.h
 # Clean-up.
 # -----------------------------------------------------------------------------
 clean:
-	rm -f Makedepend pfNav ${OBJECTS} core so_locations
+	rm -f Makedepend pfNav ${OBJECTS} *core so_locations
 	rm -rf ./ii_files

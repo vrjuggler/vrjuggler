@@ -52,5 +52,5 @@ testCond: testCond.o
 # Clean-up.
 # -----------------------------------------------------------------------------
 clean:
-	rm -f Makedepend ${SYNC_PROGS} *.o core so_locations
+	rm -f Makedepend ${SYNC_PROGS} *.o *core so_locations
 	rm -rf ./ii_files
