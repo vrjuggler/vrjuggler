@@ -411,7 +411,7 @@ sub make_EXTRA_LDFLAGS ($;$$$)
 
    if ( $LIBS{'vrj'} )
    {
-      $extra_libs = qq(@vrj_extra_libs@);
+      $extra_libs = qq(@vrj_extra_libs@ $dep_libs);
    }
    else
    {
