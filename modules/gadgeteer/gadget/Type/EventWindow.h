@@ -48,7 +48,6 @@
 #include <gadget/Type/EventWindow/Keys.h>
 #include <gadget/Type/EventWindow/EventPtr.h>
 
-
 namespace gadget
 {
 
@@ -126,13 +125,13 @@ public:
     */
    EventQueue getEventQueue();
 
+protected:
    /**
     * (0,*): Copy of keys for this frame that the user reads from between
     * updates.
     */
    int mCurKeys[gadget::LAST_KEY];
 
-protected:
    /**
     * Adds the given event object to the in-progress queue.
     */
