@@ -140,7 +140,7 @@ public:
     * @return The number of values that exist for the given property which
     *         may be 0.
     */
-   int getNum(const std::string& property) const;
+   unsigned int getNum(const std::string& property) const;
 
    /**
     * Returns the instance name of this ConfigElement without any hierarchy
