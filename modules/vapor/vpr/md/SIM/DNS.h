@@ -39,27 +39,60 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _VPR_SOCKET_H_
-#define _VPR_SOCKET_H_
+#ifndef _VPR_SIM_DNS_H_
+#define _VPR_SIM_DNS_H_
 
 #include <vpr/vprConfig.h>
 
-// include bridge class
-#include <vpr/IO/Socket/Socket_t.h>
-
-#if VPR_IO_DOMAIN_INCLUDE == VPR_DOMAIN_NSPR
-#include <vpr/md/NSPR/IO/Socket/SocketImplNSPR.h>
-#elif VPR_IO_DOMAIN_INCLUDE == VPR_DOMAIN_POSIX
-#include <vpr/md/POSIX/IO/Socket/SocketImplBSD.h>
-#elif VPR_IO_DOMAIN_INCLUDE == VPR_DOMAIN_SIMULATOR
-#include <vpr/md/SIM/IO/Socket/SocketImplSIM.h>
-#endif
+#include <list>
+#include <map>
+#include <string>
+#include <iostream>
+#include <vpr/Util/Singleton.h>
+#include <vpr/System.h>
+#include <vpr/vprTypes.h> /* Uint32 */
 
 namespace vpr
 {
-   typedef Socket_t<SocketConfiguration> Socket;
-}
 
-#endif  /* _VPR_SOCKET_H_ */
+namespace sim
+{
+
+   // do lookups on addresses, giving results for each unique query
+   class VPR_CLASS_API DNS : public vpr::Singleton<DNS>
+   {
+   public:
+      DNS() : mUniqueGenerator( 0 )
+      {
+         mDnsAddressLookup["localhost"] = 0x7F000001;
+      }
+
+      // given an internet name, return the ip address
+      vpr::Uint32 lookupAddress( const std::string& name )
+      {
+         // if name is found in lookup, return the address
+         if (mDnsAddressLookup.count( name ) > 0)
+         {
+            return mDnsAddressLookup[name];
+         }
+         // if not found, then make an entry for the new address.
+         else
+         {
+            return mDnsAddressLookup[name] = mUniqueGenerator++;
+         }
+      }
 
 
+   protected:
+
+      // use this to look up an address from a name
+      std::map< std::string, vpr::Uint32 > mDnsAddressLookup;
+
+      vpr::Uint32 mUniqueGenerator;   
+   };
+
+} // sim namespace
+
+} // vpr namespace
+
+#endif

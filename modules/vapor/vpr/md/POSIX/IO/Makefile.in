@@ -64,6 +64,7 @@ SUBDIR		= Port		\
 
 SRCS		=
 
+ifneq (@SIMULATOR@, Y)
 ifneq (@SERIAL_PORT_ABS@, WIN32)
     SRCS	+= FileHandleImplUNIX.cpp
 endif
@@ -72,6 +73,7 @@ ifeq (@HANDLE_ABS@, UNIX)
     SRCS	+= IOSysUnix.cpp	\
                    SelectorImplBSD.cpp
 endif
+endif # ifneq (SIMULATOR)
 
 include $(MKPATH)/dpp.obj-subdir.mk
 

@@ -69,6 +69,13 @@ DPP_STD_CPP(yes)
 
 builtin(include, cfgargs.m4)
 
+if test "x$SIMULATOR" != "xno" ; then
+    SIMULATOR='Y'
+    AC_DEFINE(VPR_SIMULATOR,)
+else
+    SIMULATOR='N'
+fi
+
 # Define the binary format.
 DPP_ABI_SETUP
 
@@ -633,6 +640,7 @@ AC_SUBST(VPR_SHARE_DIR)
 AC_SUBST(EXTRA_LINK_FLAGS)
 
 AC_SUBST(SUBSYSTEM)
+AC_SUBST(SIMULATOR)
 AC_SUBST(SEMAPHORE_SYS)
 AC_SUBST(SHMEM_SYS)
 AC_SUBST(MUTEX_SYS)
@@ -690,6 +698,10 @@ AC_OUTPUT(vpr-config
           vpr/md/POSIX/IO/Socket/Makefile
           vpr/md/POSIX/Sync/Makefile
           vpr/md/POSIX/Thread/Makefile
+          vpr/md/SIM/Makefile
+          vpr/md/SIM/IO/Makefile
+          vpr/md/SIM/IO/Socket/Makefile
+          vpr/md/SIM/Network/Makefile
           vpr/md/SPROC/Makefile
           vpr/md/SPROC/SharedMem/Makefile
           vpr/md/SPROC/Sync/Makefile

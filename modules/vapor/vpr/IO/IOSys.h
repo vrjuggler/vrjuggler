@@ -49,6 +49,8 @@
 #   include <vpr/md/NSPR/IO/IOSysNSPR.h>
 #elif VPR_IO_DOMAIN_INCLUDE == VPR_DOMAIN_POSIX
 #   include <vpr/md/POSIX/IO/IOSysUnix.h>
+#elif VPR_IO_DOMAIN_INCLUDE == VPR_DOMAIN_SIMULATOR
+#   include <vpr/md/SIM/IO/IOSysSIM.h>
 #endif
 
 #endif   /* _VPR_IOSYS_FAKE_H_ */

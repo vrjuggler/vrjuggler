@@ -39,27 +39,43 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _VPR_SOCKET_H_
-#define _VPR_SOCKET_H_
-
 #include <vpr/vprConfig.h>
 
-// include bridge class
-#include <vpr/IO/Socket/Socket_t.h>
+#include <vpr/md/SIM/Network/Message.h>
+#include <vpr/md/SIM/Network/MessagePtr.h>
+#include <vpr/md/SIM/SocketManager.h>
+#include <vpr/md/SIM/IO/Socket/SocketDatagramImplSIM.h>
 
-#if VPR_IO_DOMAIN_INCLUDE == VPR_DOMAIN_NSPR
-#include <vpr/md/NSPR/IO/Socket/SocketImplNSPR.h>
-#elif VPR_IO_DOMAIN_INCLUDE == VPR_DOMAIN_POSIX
-#include <vpr/md/POSIX/IO/Socket/SocketImplBSD.h>
-#elif VPR_IO_DOMAIN_INCLUDE == VPR_DOMAIN_SIMULATOR
-#include <vpr/md/SIM/IO/Socket/SocketImplSIM.h>
-#endif
 
 namespace vpr
 {
-   typedef Socket_t<SocketConfiguration> Socket;
+
+vpr::ReturnStatus SocketDatagramImplSIM::recvfrom (void* msg,
+                                                   const vpr::Uint32 length,
+                                                   const int flags,
+                                                   vpr::InetAddr& from,
+                                                   vpr::Uint32& bytes_read,
+                                                   const vpr::Interval timeout)
+{
+   vpr::ReturnStatus status;
+
+   return status;
 }
 
-#endif  /* _VPR_SOCKET_H_ */
+vpr::ReturnStatus SocketDatagramImplSIM::sendto (void* msg,
+                                                 const vpr::Uint32 length,
+                                                 const int flags,
+                                                 vpr::InetAddr& to,
+                                                 vpr::Uint32& bytes_sent,
+                                                 const vpr::Interval timeout)
+{
+   vpr::ReturnStatus status;
 
+   bytes_sent = length;
+   vpr::sim::MessagePtr net_msg(new vpr::sim::Message(msg, length));
+   vpr::sim::SocketManager::instance()->sendMessageTo(net_msg, this, to);
 
+   return status;
+}
+
+} // End of vpr namespace

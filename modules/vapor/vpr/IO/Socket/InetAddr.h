@@ -48,6 +48,8 @@
 #   include <vpr/md/NSPR/IO/Socket/InetAddrNSPR.h>
 #elif VPR_IO_DOMAIN_INCLUDE == VPR_DOMAIN_POSIX
 #   include <vpr/md/POSIX/IO/Socket/InetAddrBSD.h>
+#elif VPR_IO_DOMAIN_INCLUDE == VPR_DOMAIN_SIMULATOR
+#   include <vpr/md/SIM/IO/Socket/InetAddrSIM.h>
 #endif
 
 #if defined(HAVE_HASH_MAP)

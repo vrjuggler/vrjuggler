@@ -39,27 +39,64 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _VPR_SOCKET_H_
-#define _VPR_SOCKET_H_
-
 #include <vpr/vprConfig.h>
 
-// include bridge class
-#include <vpr/IO/Socket/Socket_t.h>
+#include <vpr/md/SIM/Network/Message.h>
 
-#if VPR_IO_DOMAIN_INCLUDE == VPR_DOMAIN_NSPR
-#include <vpr/md/NSPR/IO/Socket/SocketImplNSPR.h>
-#elif VPR_IO_DOMAIN_INCLUDE == VPR_DOMAIN_POSIX
-#include <vpr/md/POSIX/IO/Socket/SocketImplBSD.h>
-#elif VPR_IO_DOMAIN_INCLUDE == VPR_DOMAIN_SIMULATOR
-#include <vpr/md/SIM/IO/Socket/SocketImplSIM.h>
-#endif
 
 namespace vpr
 {
-   typedef Socket_t<SocketConfiguration> Socket;
+
+namespace sim
+{
+
+vpr::Uint32 Message::resize (const vpr::Uint32 bytes_read)
+{
+   vpr::Uint32 resize_amount;
+
+   resize_amount = getSize() - bytes_read;
+
+   // Only resize the message if 0 < bytes_read < mMessageSize.
+   if ( resize_amount > 0 && resize_amount != getSize() ) {
+      char* data;
+      vpr::Uint32 i;
+
+      data = (char*) mMsg;
+
+      // If there is still stuff left in the buffer, move it over.
+      for ( i = 0; i < resize_amount; i++ ) {
+         data[i] = data[bytes_read + i];
+      }
+
+      data[i]  = '\0';
+      mMsgSize = resize_amount;
+   }
+
+   return resize_amount;
 }
 
-#endif  /* _VPR_SOCKET_H_ */
+vpr::ReturnStatus Message::getNextHop (NetworkGraph::net_vertex_t& hop,
+                                       const bool increment_next_hop)
+{
+   vpr::ReturnStatus status;
 
+   if ( mMsgPath->size() > 0 && mNextHop != mMsgPath->end() )
+   {
+      hop = *mNextHop;
 
+      if ( increment_next_hop )
+      {
+         mNextHop++;
+      }
+   }
+   else
+   {
+      status.setCode(vpr::ReturnStatus::Fail);
+   }
+
+   return status;
+}
+
+} // End of sim namespace
+
+} // End of vpr namespace

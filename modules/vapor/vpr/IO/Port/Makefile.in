@@ -56,7 +56,9 @@ top_srcdir	= @top_srcdir@
 INSTALL		= @INSTALL@
 SUBOBJDIR	= $(VPR_LIBRARY)
 
+ifneq (@SIMULATOR@, Y)
 SRCS 		= Port.cpp
+endif
 
 include $(MKPATH)/dpp.obj.mk
 

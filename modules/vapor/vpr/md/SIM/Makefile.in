@@ -40,7 +40,7 @@
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # -----------------------------------------------------------------------------
-# Makefile.in for vapor/vpr/md/NSPR/IO/Socket.  It requires GNU make.
+# Makefile.in for vapor/vpr/md/SIM.  It requires GNU make.
 #
 # Generated for use on @PLATFORM@
 # -----------------------------------------------------------------------------
@@ -50,22 +50,25 @@ default: all
 # Include common definitions.
 include @topdir@/make.defs.mk
 
-includedir	= @includedir@/vpr/md/NSPR/IO/Socket
+includedir	= @includedir@/vpr/md/SIM
 srcdir		= @srcdir@
 top_srcdir	= @top_srcdir@
 INSTALL		= @INSTALL@
 SUBOBJDIR	= $(VPR_LIBRARY)
 
-ifneq (@SIMULATOR@, Y)
-ifeq (@SUBSYSTEM@, NSPR)
-SRCS		= InetAddrNSPR.cpp		\
-                  SocketDatagramImplNSPR.cpp	\
-                  SocketImplNSPR.cpp		\
-                  SocketStreamImplNSPR.cpp
-endif
+# Prefix for recursive stuff.
+DIRPRFX		= vpr/md/SIM/
+
+# Subdirectories used for recursion through the source tree.
+SUBDIR		= Network	\
+                  IO
+
+ifeq (@SIMULATOR@, Y)
+    SRCS	= Controller.cpp	\
+                  SocketManager.cpp
 endif
 
-include $(MKPATH)/dpp.obj.mk
+include $(MKPATH)/dpp.obj-subdir.mk
 
 # -----------------------------------------------------------------------------
 # Include dependencies generated automatically.
