@@ -72,7 +72,7 @@
 #include <jccl/RTRC/ConfigManager.h>
 
 #ifndef VPR_OS_Win32
-#	include <gadget/Devices/EventWindow/EventWindowXWin.h>
+#  include <gadget/Devices/EventWindow/EventWindowXWin.h>
 #endif
 
 #include <boost/concept_check.hpp>
