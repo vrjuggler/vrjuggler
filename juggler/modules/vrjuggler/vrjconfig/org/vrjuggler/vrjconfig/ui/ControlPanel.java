@@ -188,6 +188,8 @@ public class ControlPanel
          item.addActionListener(actionListener);
          iconPanel.add(item);
       }
+      iconPanel.revalidate();
+      iconPanel.repaint();
    }
 
    public void setSize(Dimension newSize)
