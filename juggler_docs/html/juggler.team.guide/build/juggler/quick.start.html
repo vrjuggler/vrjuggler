@@ -45,167 +45,165 @@ Compiling VR Juggler Libraries: Quick Start</H2>
 
 <!-- install-web book-ignore-begin -->
   <P>
-  <B>Table of contents:</B>
-
-    <ol>
-      <li><a href="#one">Choose a directory to put VR Juggler</a></li>
-      <li>
-	<a href="#two">Go to that directory and checkout juggler using CVS</a>
-      </li>
-      <li>
-	<a href="#three">Enter the newly checked out Juggler source
-	directory</a>
-      </li>
-      <li>
-	<a href="#four">Set the environment variable <TT>VJ_BASE_DIR</TT></a>
-      </li>
-      <li>
-	<a href="#five">Compile juggler (using the Autoconf system, and GNU
-	make):</a>
-
-	<ol>
-	  <li>Auto-generate the configuration script <TT>configure</TT></li>
-	  <li>Auto-generate headers</li>
-	  <li>
-	    Probe the system for capabilities, generate Makefiles, etc.
-	    This configures the source tree for the current system.
-	  </li>
-	  <li>``Make'' the distribution using GNU make</li>
-	</ol>
-      </li>
-      <li>
-	<a href="#six">Advanced Topics</a>
-	<ol type="a">
-	  <li>
-	    Send compiler output to a different directory than the source
-	    tree.
-	  </li>
-	</ol>
-      </li>
-    </ol>
+    <B>Table of contents:</B>
   </P>
+
+  <ol>
+    <li><a href="#one">Choose a directory to put VR Juggler</a></li>
+    <li>
+      <a href="#two">Go to that directory and checkout juggler using CVS</a>
+    </li>
+    <li>
+      <a href="#three">Enter the newly checked out Juggler source
+      directory</a>
+    </li>
+    <li>
+      <a href="#four">Set the environment variable <TT>VJ_BASE_DIR</TT></a>
+    </li>
+    <li>
+      <a href="#five">Compile juggler (using the Autoconf system, and GNU
+      make):</a>
+
+      <ol>
+	<li>Auto-generate the configuration script <TT>configure</TT></li>
+	<li>Auto-generate headers</li>
+	<li>
+	  Probe the system for capabilities, generate Makefiles, etc.
+	  This configures the source tree for the current system.
+	</li>
+	<li>``Make'' the distribution using GNU make</li>
+      </ol>
+    </li>
+    <li>
+      <a href="#six">Advanced Topics</a>
+
+      <ol type="a">
+	<li>
+	  Send compiler output to a different directory than the source tree.
+	</li>
+      </ol>
+    </li>
+  </ol>
 
   <HR>
 <!-- install-web book-ignore-end -->
 
-
-  <P>
-    <ol>
-      <li>
-	<a name="one">Choose a directory to put Juggler.</a>  From this point
-	on, we will refer to that directory as <TT>&lt;SRC_DIR&gt;</TT>.
-      </li>
-      <li>
-	<a name="two">Go to that directory and checkout juggler using
-	CVS.</a>  Make sure CVS is set up and pointing to the VR Juggler
-	repository.  Refer to the
-	<A HREF="http://sourceforge.net/cvs/?group_id=8041">SourceForge
-	instructions</A> for getting VR Juggler with CVS.
+  <ol>
+    <li>
+      <a name="one">Choose a directory to put Juggler.</a>  From this point
+      on, we will refer to that directory as <TT>&lt;SRC_DIR&gt;</TT>.
+    </li>
+    <li>
+      <a name="two">Go to that directory and checkout juggler using
+      CVS.</a>  Make sure CVS is set up and pointing to the VR Juggler
+      repository.  Refer to the
+      <A HREF="http://sourceforge.net/cvs/?group_id=8041">SourceForge
+      instructions</A> for getting VR Juggler with CVS.
 
 <PRE>
     % <B>cd &lt;SRC_DIR&gt;</B>
     % <B>cvs checkout juggler</B>
 </PRE>
-      </li>
-      <li>
-	<a name="three">Enter the newly checked-out VR Juggler source
-	directory.</a><BR>
+    </li>
+    <li>
+      <a name="three">Enter the newly checked-out VR Juggler source
+      directory.</a>
 
 <PRE>
     % <B>cd &lt;SRC_DIR&gt;/juggler</B>
 </PRE>
-      </li>
-      <li>
-	<a name="four">Set</a> the
-	<A HREF="${GETTINGSTARTED}/environment.variables.html">environment
-	variable</A> <TT>VJ_BASE_DIR</TT>.  This is required by Juggler's
-	build system (makefiles, etc.).<BR>
+    </li>
+    <li>
+      <a name="four">Set</a> the
+      <A HREF="${GETTINGSTARTED}/environment.variables.html">environment
+      variable</A> <TT>VJ_BASE_DIR</TT>.  This is required by Juggler's
+      build system (makefiles, etc.).<BR>
 
-	<B>NOTES:</B>
-	<OL>
-	  <LI>
-	    The directory <TT>instlinks</TT> is semi-important.<BR>
-	    What does the word ``instlinks'' mean? <BR> It is a working
-	    distribution of the Juggler library.  After <TT>gmake</TT> is
-	    done, you'll be able to use this directory as though it were
-	    an installed version of VR Juggler.
-	  </LI>
-	  <LI>
-	    This directory also determines where juggler files will be
-	    created.  Juggler files will be created in
-	    <TT>&lt;some-directory&gt;/instlinks/..</TT> (in other words,
-	    files are created one directory back from <TT>instlinks</TT>).
-        </OL>
+      <B>NOTES:</B>
 
-	Make sure the following environment variable assignment line is in
-	your shell's startup file:
+      <OL>
+	<LI>
+	  The directory <TT>instlinks</TT> is semi-important.<BR>
+	  What does the word ``instlinks'' mean? <BR> It is a working
+	  distribution of the Juggler library.  After <TT>gmake</TT> is
+	  done, you'll be able to use this directory as though it were
+	  an installed version of VR Juggler.
+	</LI>
+	<LI>
+	  This directory also determines where juggler files will be
+	  created.  Juggler files will be created in
+	  <TT>&lt;some-directory&gt;/instlinks/..</TT> (in other words,
+	  files are created one directory back from <TT>instlinks</TT>).
+      </OL>
+
+      Make sure the following environment variable assignment line is in
+      your shell's startup file:
 
 <PRE>
     <b>VJ_BASE_DIR&nbsp;=&nbsp;&lt;SRC_DIR&gt;/juggler/instlinks</b>
 </PRE>
-      </li>
-      <li>
-        <a name="five">Compile juggler (using the Autoconf system, and
-	GNU make):</a>
+    </li>
+    <li>
+      <a name="five">Compile juggler (using the Autoconf system, and
+      GNU make):</a>
 
-	<ol>
-	  <li> Auto-generate the configuration script <TT>configure</TT>:
+      <ol>
+	<li> Auto-generate the configuration script <TT>configure</TT>:
 
 <PRE>
     % <B>autoconf</B>
 </PRE>
-	  </li>
-	  <li> Auto-generate the <TT>vjDefine.h.in</TT> header template:
+	</li>
+	<li> Auto-generate the <TT>vjDefine.h.in</TT> header template:
 
 <PRE>
     % <B>autoheader</B>
 </PRE>
-	  </li>
-	  <li>
-	    Configure the build.  This probes the system for capabilities,
-	    generate Makefiles, etc.  It ``configures'' the source tree for
-	    the current system.  The <TT>configure</TT> script will let you
-	    change how VR Juggler compiles.  For example, you could build
-	    VR Juggler without the Performer API using an option passed to
-	    the <TT>configure</TT> script.<BR>
-	    <b>NOTE:</b> You can type <TT>configure --help</TT> for
-	    options.
+	</li>
+	<li>
+	  Configure the build.  This probes the system for capabilities,
+	  generate Makefiles, etc.  It ``configures'' the source tree for
+	  the current system.  The <TT>configure</TT> script will let you
+	  change how VR Juggler compiles.  For example, you could build
+	  VR Juggler without the Performer API using an option passed to
+	  the <TT>configure</TT> script.<BR>
+	  <b>NOTE:</b> You can type <TT>configure --help</TT> for
+	  options.
 
 <PRE>
     % <b>./configure</b>
 </PRE>
-	  </li>
-	  <li>
-	    Build (make) the distribution using GNU make.  This compiles,
-	    links, and creates the final distribution tree (in the form of
-	    symbolic links).<BR>
+	</li>
+	<li>
+	  Build (make) the distribution using GNU make.  This compiles,
+	  links, and creates the final distribution tree (in the form of
+	  symbolic links).
 
 <PRE>
     % <b>gmake</b>
 </PRE>
-	  </li>
-	</ol>
-      </li>
-      <li>
-	<a name="six">Advanced Topics</a><BR>
-	<OL TYPE="a">
-	  <LI>
-	    Send compiler output to a different directory than the source
-	    tree.  Run this in the directory you want compiler output to go.
-	    This is typically done with a subdirectory in the
-	    <TT>juggler</TT> source tree.  We will call it
-	    <TT>&lt;BUILD_DIR&gt;</TT>. 
+	</li>
+      </ol>
+    </li>
+    <li>
+      <a name="six">Advanced Topics</a>
+
+      <OL TYPE="a">
+	<LI>
+	  Send compiler output to a different directory than the source
+	  tree.  Run this in the directory you want compiler output to go.
+	  This is typically done with a subdirectory in the <TT>juggler</TT>
+	  source tree.  We will call it <TT>&lt;BUILD_DIR&gt;</TT>. 
 
 <PRE>
     % <B>mkdir &lt;BUILD_DIR&gt;</B>
     % <B>cd &lt;BUILD_DIR&gt;</B>
     % <B>&lt;SRC_DIR&gt;/configure</B>
 </PRE>
-	  </LI>
-	</OL>
-      </li>
-    </ol>
-  </P>
+	</LI>
+      </OL>
+    </li>
+  </ol>
 
 <!-- install-web book-ignore-begin -->
 <HR>
