@@ -123,25 +123,26 @@ else
 {
    if ( $module )
    {
+      generateReconfig("$module", @save_argv);
       configureModule("$module");
       generateMakefile("$module");
-      generateReconfig("$module", @save_argv);
    }
    elsif ( $DEFAULT_MODULE && defined($MODULES{"$DEFAULT_MODULE"}) )
    {
+      generateReconfig("$DEFAULT_MODULE", @save_argv);
       configureModule("$DEFAULT_MODULE");
       generateMakefile("$DEFAULT_MODULE");
-      generateReconfig("$DEFAULT_MODULE", @save_argv);
    }
    else
    {
+      generateReconfig('', @save_argv);
+
       foreach ( keys(%MODULES) )
       {
          configureModule("$_");
       }
 
       generateMakefile();
-      generateReconfig('', @save_argv);
    }
 }
 
