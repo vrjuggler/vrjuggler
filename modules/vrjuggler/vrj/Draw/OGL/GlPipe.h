@@ -40,7 +40,7 @@
 #include <vpr/Sync/CondVar.h>
 #include <vpr/Sync/Semaphore.h>
 
-#include <vrj/Performance/PerfDataBuffer.h>
+#include <jccl/Plugins/PerformanceMonitor/PerfDataBuffer.h>
 
 namespace vrj
 {
@@ -66,14 +66,7 @@ public:
         renderTriggerSema(0), renderCompleteSema(0), swapTriggerSema(0), swapCompleteSema(0)
    {
       mThreadRunning = false;
-      char namebuf[42];  // careful with that buffer, eugene
-
-      sprintf( namebuf, "vjGlPipe %d", mPipeNum );
-
-      // we need to check if we should be enabled... It looks like GlPipe
-      // is gonna need a configure method, though...
-      mPerfBuffer = new PerfDataBuffer( namebuf, 500, 40 );
-
+      mPerfBuffer = 0;
     }
 
       //: Start the pipe running
@@ -181,7 +174,7 @@ private:
    vpr::Semaphore    swapTriggerSema;     //: Signals a swap to happen
    vpr::Semaphore    swapCompleteSema;    //: Signals a swap has been completed
 
-    PerfDataBuffer* mPerfBuffer;  //: Performance data for this pipe
+    jccl::PerfDataBuffer* mPerfBuffer;  //: Performance data for this pipe
     int mPerfPhase;                 //: utility var for perf measurement
 };
 

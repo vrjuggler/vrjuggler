@@ -127,17 +127,6 @@ AC_ARG_WITH(dtk,
             [  --with-dtk=<PATH>       DTK installation],
             _with_dtk="$withval", _with_dtk='no')
 
-# Define the root directory for the Xerces-c installation.
-AC_ARG_WITH(xercesroot,
-            [  --with-xercesroot=<PATH>
-                          Xerces-c installation directory [default=/usr]],
-            XERCESROOT="$withval", XERCESROOT="/usr")
-
-AC_ARG_WITH(xerceslib,
-            [  --with-xerceslib=<NAME>
-                          Xerces-c base library name      [default=xerces-c]],
-            XERCES_LIB="$withval", XERCES_LIB='xerces-c')
-
 # Define the binary format.
 DPP_ABI_SETUP
 
@@ -249,6 +238,8 @@ DPP_BASIC_PROGS($PLATFORM, $OS_TYPE)
 # Checks for libraries.
 # -----------------------------------------------------------------------------
 VPR_PATH(0.4.1, , AC_MSG_ERROR(*** VPR required for VR Juggler ***))
+
+JCCL_PATH(0.0.1, , AC_MSG_ERROR(*** Jackal required for VR Juggler ***))
 
 # ------------
 # OpenGL API.
@@ -441,66 +432,6 @@ elif test "x${_with_dtk}" != "xno" -a "x$try_dtk" = "xno" ; then
     AC_MSG_WARN(*** DTK cannot be used with this subsystem ***)
 fi
 
-# -----------
-# Xerces-c
-# -----------
-_vjsave_CFLAGS="$CFLAGS"
-_vjsave_CPPFLAGS="$CPPFLAGS"
-_vjsave_INCLUDES="$INCLUDES"
-_vjsave_LDFLAGS="$LDFLAGS"
-_vjsave_LIBS="$LIBS"
-
-# Ensure that /usr/include and /usr/lib are not included multiple times
-# if XERCESROOT is "/usr".
-if test "x$XERCESROOT" != "x/usr" ; then
-    CPPFLAGS="-I$XERCESROOT/include $CPPFLAGS"
-    INCLUDES="-I$XERCESROOT/include $INCLUDES"
-    LDFLAGS="-L$XERCESROOT/lib$LIBBITSUF $LDFLAGS"
-fi
-
-CFLAGS="$CFLAGS $INCLUDES ${_EXTRA_FLAGS}"
-LDFLAGS="$LDFLAGS $X_LDFLAGS"
-LIBS="$LIBS -l$XERCES_LIB `$VPR_CONFIG --extra-libs`"
-
-DPP_LANG_SAVE
-DPP_LANG_CPLUSPLUS
-
-AC_CHECK_HEADER(util/XercesDefs.hpp, ,
-    AC_MSG_ERROR(*** Xerces-C headers not found ***))
-
-# Extract the full Xerces version number and transform it into the form x.y.z.
-changequote(<<, >>)
-xerces_ver_str=`grep gXercesFullVersionStr $XERCESROOT/include/util/XercesDefs.hpp | sed -e 's/.*"\([1-9][0-9_]*\)".*/\1/' | sed -e 's/_/./g'`
-changequote([, ])
-
-DPP_VERSION_CHECK_MSG(Xerces C++, $xerces_ver_str, 1.5.1,
-                      acp_cv_xerces_c_version_okay, ,
-                      AC_MSG_ERROR(*** Xerces-C version too old ***))
-
-# Finally, check that the library actually exists where we expect it to be.
-AC_CACHE_CHECK(for XMLPlatformUtils::Initialize in $XERCES_LIB,
-    ac_cv_initialize_in_xerces_c,
-    AC_TRY_LINK([#include <util/PlatformUtils.hpp> ],
-                [ XMLPlatformUtils::Initialize(); ],
-                [ ac_cv_initialize_in_xerces_c='yes' ; rm -rf ./ii_files ],
-                AC_MSG_ERROR(*** Xerces-C library not found ***)))
-
-DPP_LANG_RESTORE
-
-XERCES_INCLUDES="-I$XERCESROOT/include"
-
-if test "x$OS_TYPE" = "xWin32" ; then
-    XERCES_LDFLAGS="/libpath:$XERCESROOT/lib"
-else
-    XERCES_LDFLAGS="-L$XERCESROOT/lib$LIBBITSUF"
-fi
-
-CFLAGS="${_vjsave_CFLAGS}"
-CPPFLAGS="${_vjsave_CPPFLAGS}"
-INCLUDES="${_vjsave_INCLUDES}"
-LDFLAGS="${_vjsave_LDFLAGS}"
-LIBS="${_vjsave_LIBS}"
-
 # -----------------------------------------------------------------------------
 # Checks for header files.
 # -----------------------------------------------------------------------------
@@ -563,11 +494,7 @@ if test "x$DTK_INCLUDES" != "x" ; then
     INCLUDES="$INCLUDES $DTK_INCLUDES"
 fi
 
-if test "x$XERCES_INCLUDES" != "x" ; then
-    INCLUDES="$INCLUDES $XERCES_INCLUDES"
-fi
-
-CXXFLAGS="$CXXFLAGS $VPR_CXXFLAGS"
+CXXFLAGS="$CXXFLAGS $VPR_CXXFLAGS $JCCL_CXXFLAGS"
 EXTRA_LINK_FLAGS="$STDFLAGS $EXTRA_LINK_FLAGS"
 
 if test "x$PLATFORM" = "xIRIX" -a "x$USE_GCC" != "xno" ; then
@@ -608,9 +535,9 @@ UNIX_VJROOT_ABS="$VJROOT_ABS"
 UNIX_JUGGLERROOT_ABS="$JUGGLERROOT_ABS"
 
 if test "x$OS_TYPE" = "xWin32" ; then
-    APP_EXTRA_LIBS="$LDFLAGS $VPR_LIBS_LD $LIBS $XERCES_LDFLAGS $XERCES_LIB.lib comctl32.lib user32.lib gdi32.lib ws2_32.lib"
+    APP_EXTRA_LIBS="$LDFLAGS $VPR_LIBS_LD $LIBS $JCCL_LIBS_LD comctl32.lib user32.lib gdi32.lib ws2_32.lib"
 else
-    APP_EXTRA_LIBS="$LDFLAGS $VPR_LIBS_CC $XERCES_LDFLAGS -l$XERCES_LIB $LIBS $DTK_LDFLAGS -lm"
+    APP_EXTRA_LIBS="$LDFLAGS $VPR_LIBS_CC $JCCL_LIBS_CC $LIBS $DTK_LDFLAGS -lm"
 fi
 
 # Variables set in Makefiles found in the application trees.  All variables
@@ -786,7 +713,6 @@ AC_SUBST(OSG_API)
 AC_SUBST(OSG_INCLUDES)
 AC_SUBST(DTK_CONFIG)
 AC_SUBST(HAVE_DTK)
-AC_SUBST(XERCESROOT)
 
 AC_SUBST(APP_BASE_DIR)
 AC_SUBST(APP_BASE_DIR_INST)

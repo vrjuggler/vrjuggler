@@ -42,7 +42,7 @@
 #include <vrj/Util/Debug.h>
 #include <vrj/Display/Display.h>
 #include <vrj/Display/DisplayManager.h>
-#include <vrj/Config/ConfigChunk.h>
+#include <jccl/Config/ConfigChunk.h>
 
 #include <vrj/Draw/OGL/GlWindowXWin.h>
 
@@ -339,8 +339,8 @@ void GlWindowXWin::config(vrj::Display* disp)
    vrj::GlWindow::config(disp);
 
     // Get the vector of display chunks
-   vrj::ConfigChunk* dispSysChunk = DisplayManager::instance()->getDisplaySystemChunk();
-   vrj::ConfigChunk* displayChunk = disp->getConfigChunk();
+   jccl::ConfigChunk* dispSysChunk = DisplayManager::instance()->getDisplaySystemChunk();
+   jccl::ConfigChunk* displayChunk = disp->getConfigChunk();
 
    window_name = disp->getName();
    mPipe = disp->getPipe();
@@ -362,7 +362,7 @@ void GlWindowXWin::config(vrj::Display* disp)
       mAreKeyboardDevice = true;       // Set flag saying that we need to have the local device
 
       // Configure keyboard device portion
-      ConfigChunk* keyboard_chunk = displayChunk->getProperty("keyboard_device_chunk");
+      jccl::ConfigChunk* keyboard_chunk = displayChunk->getProperty("keyboard_device_chunk");
 
       // Set the name of the chunk to the same as the parent chunk (so we can point at it)
       //keyboard_chunk->setProperty("name", (std::string)displayChunk->getProperty("name"));

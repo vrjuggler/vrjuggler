@@ -39,7 +39,7 @@
 #include <vrj/Util/Debug.h>
 #include <vrj/Display/Display.h>
 #include <vrj/Display/DisplayManager.h>
-#include <vrj/Config/ConfigChunk.h>
+#include <jccl/Config/ConfigChunk.h>
 
 #include <vrj/Draw/OGL/GlWindowOSX.h>
 
@@ -166,8 +166,8 @@ void GlWindowOSX::config(Display* _display)
    GlWindow::config(_display);
 
     // Get the vector of display chunks
-   ConfigChunk* dispSysChunk = DisplayManager::instance()->getDisplaySystemChunk();
-   ConfigChunk* displayChunk = _display->getConfigChunk();
+   jccl::ConfigChunk* dispSysChunk = DisplayManager::instance()->getDisplaySystemChunk();
+   jccl::ConfigChunk* displayChunk = _display->getConfigChunk();
 
    mPipe = _display->getPipe();
    vprASSERT(mPipe >= 0);

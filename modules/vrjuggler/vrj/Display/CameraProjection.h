@@ -35,7 +35,7 @@
 
 #include <vrj/vrjConfig.h>
 #include <vrj/Display/Projection.h>
-#include <vrj/Config/ConfigChunk.h>
+#include <jccl/Config/ConfigChunk.h>
 
 namespace vrj
 {
@@ -52,7 +52,7 @@ public:
       mType = Projection::SIM;
    }
 
-   virtual void config(ConfigChunk* chunk)
+   virtual void config(jccl::ConfigChunk* chunk)
    {
       Projection::config(chunk);
 

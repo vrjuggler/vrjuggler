@@ -43,14 +43,13 @@ include @topdir@/make.defs.mk
 DIRPRFX		= vrj/
 
 # Subdirectories used for recursion through the source tree.
-SUBDIR		= Config	\
+SUBDIR		= \
                   Display	\
                   Draw		\
                   Environment	\
                   Input		\
                   Kernel	\
                   Math		\
-                  Performance	\
                   Sound		\
                   Util
 

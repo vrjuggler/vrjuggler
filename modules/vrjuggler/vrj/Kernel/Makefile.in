@@ -48,9 +48,6 @@ INSTALL		= @INSTALL@
 SUBOBJDIR	= $(VJ_LIBRARY)
 
 SRCS		= App.cpp			\
-                  ConfigManager.cpp		\
-                  ConfigChunkHandler.cpp	\
-                  DependencyManager.cpp		\
                   Kernel.cpp			\
                   User.cpp
 
@@ -58,9 +55,9 @@ ifeq (@OS_TYPE@, Win32)
     SRCS	+= SystemFactoryWin32.cpp
 else
     ifeq (@PLATFORM@, Darwin)
-    	SRCS    += SystemFactoryOSX.cpp
+	SRCS    += SystemFactoryOSX.cpp
     else
-    	SRCS	+= SystemFactoryUNIX.cpp
+	SRCS	+= SystemFactoryUNIX.cpp
     endif
 endif
 

@@ -37,11 +37,14 @@
 //#include <vrj/Config/ConfigChunk.h>
 #include <vrj/Input/Type/PosInterface.h>
 
+namespace jccl {
+    class ConfigChunk;
+};
+
 
 namespace vrj
 {
 
-class ConfigChunk;
 
 //-----------------------------------------
 //: Representation for Juggler user in multi-user environments
@@ -79,12 +82,12 @@ public:
    //: Configure the user object
    //! POST: User has valid ids (int and string)
    //! POST: Positional device for user location has been set
-   virtual bool config(ConfigChunk* chunk);
+   virtual bool config(jccl::ConfigChunk* chunk);
 
    Matrix* getHeadPos()
    { return mHead->getData(); }
 
-   TimeStamp* getHeadUpdateTime()
+   jccl::TimeStamp* getHeadUpdateTime()
    { return mHead->getUpdateTime(); }
 
    float getInterocularDistance()

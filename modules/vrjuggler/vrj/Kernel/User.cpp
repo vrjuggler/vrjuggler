@@ -34,7 +34,7 @@
 
 #include <vrj/Kernel/User.h>
 #include <vrj/Util/Debug.h>
-#include <vrj/Config/ConfigChunk.h>
+#include <jccl/Config/ConfigChunk.h>
 
 
 namespace vrj
@@ -49,7 +49,7 @@ int User::getId()
 std::string User::getName()
 { return mName; }
 
-bool User::config(ConfigChunk* chunk)
+bool User::config(jccl::ConfigChunk* chunk)
 {
    vprASSERT(chunk != NULL);
    vprASSERT((std::string)chunk->getType() == std::string("JugglerUser"));

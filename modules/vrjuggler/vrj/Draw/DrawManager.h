@@ -34,14 +34,15 @@
 #define _VRJ_DRAW_MANAGER_
 
 #include <vrj/vrjConfig.h>
-#include <vrj/Kernel/ConfigChunkHandler.h>
+#include <jccl/Config/ConfigChunkDB.h>
+#include <jccl/Plugins/ConfigManager/ConfigChunkHandler.h>
+
 
 namespace vrj
 {
 
 class DisplayManager;
 class App;
-class ConfigChunkDB;
 class Display;
 //--------------------------------------------------------
 //: Abstract base class for API specific Draw Manager.
@@ -51,7 +52,7 @@ class Display;
 // @author Allen Bierbaum
 //  Date: 9-7-97
 //--------------------------------------------------------
-class VJ_CLASS_API DrawManager : public ConfigChunkHandler
+class VJ_CLASS_API DrawManager : public jccl::ConfigChunkHandler
 {
 public:
    DrawManager (void) {
@@ -60,7 +61,7 @@ public:
 
    //: Function to initialy config API specific stuff.
    // Takes a chunkDB and extracts API specific stuff
-   //**//virtual void configInitial(ConfigChunkDB*  chunkDB) = 0;
+   //**//virtual void configInitial(jccl::ConfigChunkDB*  chunkDB) = 0;
 
    //: Enable a frame to be drawn
    virtual void draw() = 0;
