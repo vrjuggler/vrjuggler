@@ -47,7 +47,7 @@
  */
 namespace gadget
 {
-   const char*VPR GADGET_VERSION  = @VER_STRING@;
+   const char* GADGET_VERSION  = @VER_STRING@;
 }
 
 
