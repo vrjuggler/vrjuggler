@@ -71,18 +71,6 @@ PYSTE_FILES=	vpr.pyste	\
 		gadget.pyste	\
 		vrj.pyste
 
-VJ_AVATAR_ROOT=	@VJ_AVATAR_ROOT@
-VJ_AVATAR_INC=	-I$(VJ_AVATAR_ROOT)/include
-VJ_AVATAR_LIBS=	-L$(VJ_AVATAR_ROOT)/lib -lavatar -lcal3d $(VJ_LIBS)	\
-		$(VJ_EXTRA_LIBS)
-
-# Build the vjAvatar bindings conditionally.
-ifeq (@HAVE_VJ_AVATAR@, Y)
-PYSTE_FILES+=	vjAvatar.pyste
-CXXFLAGS+=	$(VJ_AVATAR_INC)
-INCLUDES+=	$(VJ_AVATAR_INC)
-endif
-
 SRCS=		$(PYSTE_FILES:.pyste=.cpp)
 OBJS=		$(SRCS:.cpp=.$(OBJEXT))
 MODS=		$(PYSTE_FILES:.pyste=.$(DLLEXT))
@@ -91,7 +79,6 @@ VPR_OBJS=	vpr.$(OBJEXT)
 JCCL_OBJS=	jccl.$(OBJEXT)
 GADGET_OBJS=	gadget.$(OBJEXT)
 VRJ_OBJS=	vrj.$(OBJEXT)
-VJ_AVATAR_OBJS=	vjAvatar.$(OBJEXT)
 
 PYJUTIL_LIB=	-L$(topdir)/lib -lpyjutil
 
@@ -147,10 +134,6 @@ gadget.$(DLLEXT): $(GADGET_OBJS)
 vrj.$(DLLEXT): $(VRJ_OBJS)
 	$(CXX_PLUGIN) $(DYLIB_NAME_FLAG) $(VRJ_OBJS) $(PYJUTIL_LIB)	\
           $(LDFLAGS) $(VJ_LIBS) $(VJ_EXTRA_LIBS)
-
-vjAvatar.$(DLLEXT): $(VJ_AVATAR_OBJS)
-	$(CXX_PLUGIN) $(DYLIB_NAME_FLAG) $(VJ_AVATAR_OBJS)		\
-          $(PYJUTIL_LIB) $(LDFLAGS) $(VJ_AVATAR_LIBS)
 
 clean:
 	rm -f $(OBJS)

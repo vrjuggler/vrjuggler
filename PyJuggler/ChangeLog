@@ -1,5 +1,8 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Jun-26-2003 patrickh    Removed the vjAvatar bindings.  They now live along
+                        side the vjAvatar C++ code.
+                        NEW VERSION: 0.7.0
 Jun-13-2003 patrickh    Removed setter methods from vrj.Display and related
                         classes.  These now act as read-only objects when
                         accessed from Python.
