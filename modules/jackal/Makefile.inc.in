@@ -82,6 +82,7 @@ DYNAMIC_LIBS	= $(LIBS)
 
 # Dependencies for each of the various dynamic libraries we build.
 DYLIB_DEPS_JCCL         = @DYLIB_DEPS_JCCL@
+DYLIB_PROF_DEPS_JCCL    = @DYLIB_PROF_DEPS_JCCL@
 JCCL_LIB_STATIC	        = $(JCCL_LIBRARY).$(STATICLIB_EXT)
 JCCL_LIB_DYNAMIC	= $(JCCL_LIBRARY).$(DYNAMICLIB_EXT)
 JCCL_PROF_LIB_STATIC	= $(JCCL_LIBRARY)$(PROFLIB_EXT).$(STATICLIB_EXT)
@@ -141,7 +142,7 @@ endif
 # ------------------------------------------------
 # Construct the dynamic version of the libraries.
 # ------------------------------------------------
-$(LIBDIR)/$(JCCL_LIB_DYNAMIC) $(LIBDIR)/$(JCCL_PROF_LIB_DYNAMIC): $(OBJDIR)/../*/*.$(OBJEXT)
+$(LIBDIR)/$(JCCL_LIB_DYNAMIC): $(OBJDIR)/../*/*.$(OBJEXT)
 	@echo "------------------------------------------------"
 	@echo "Creating $@"
 	@echo "------------------------------------------------"
@@ -163,6 +164,23 @@ endif
 #            $(LN_S) $(LIBDIR)/$(JCCL_LIBRARY).exp ./
 #endif
 
+# ---------------------------------------------------------
+# Construct the profiled dynamic version of the libraries.
+# ---------------------------------------------------------
+$(LIBDIR)/$(JCCL_PROF_LIB_DYNAMIC): $(OBJDIR)/../*/*.$(OBJEXT)
+	@echo "------------------------------------------------"
+	@echo "Creating $@"
+	@echo "------------------------------------------------"
+	@$(SHELL) $(MKINSTALLDIRS) $(LIBDIR)
+	$(LD) $(LDOPTS) $(DYLIB_NAME_FLAG) $(OBJDIR)/../*/*.$(OBJEXT) $(DYLIB_PROF_DEPS_JCCL)
+ifeq (@OS_TYPE@, Win32)
+	cd $(LIBDIR_BASE) && cp $(LIBDIR)/* .
+else
+	cd $(LIBDIR_BASE) && $(RM_LN) $(notdir $@) && $(LN_S) $@ ./
+endif
+	@echo "------------------------------------------------"
+	@echo "$@ done"
+	@echo "------------------------------------------------"
 
 # =============================================================================
 # Make links for developer use that provide the needed functionality for
