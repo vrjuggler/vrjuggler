@@ -69,7 +69,15 @@ vjInput::~vjInput()
 
 bool vjInput::config( vjConfigChunk *c)
 {
-  sPort = NULL;
+  //sPort = NULL;
+  if((sPort != NULL) && (instName != NULL))
+  {
+     // ASSERT: We have already been configured
+     //         this prevents config from being called multiple times (once for each derived class)
+     //         ie. vjDigital, vjAnalog, etc
+     return true;
+  }
+
   char* t = c->getProperty("port").cstring();
   if (t != NULL)
   {
