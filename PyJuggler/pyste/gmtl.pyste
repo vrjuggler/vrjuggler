@@ -128,8 +128,14 @@ rename(Point3f, 'Point3f')
 set_policy(Function('gmtl::operator+=', 'gmtl-functions.h'),
            return_internal_reference())
 Function('gmtl::operator+', 'gmtl-functions.h')
+set_policy(Function('gmtl::operator-=', 'gmtl-functions.h'),
+           return_internal_reference())
 Function('gmtl::operator-', 'gmtl-functions.h')
+set_policy(Function('gmtl::operator*=', 'gmtl-functions.h'),
+           return_internal_reference())
 Function('gmtl::operator*', 'gmtl-functions.h')
+set_policy(Function('gmtl::operator/=', 'gmtl-functions.h'),
+           return_internal_reference())
 Function('gmtl::operator/', 'gmtl-functions.h')
 Function('gmtl::operator==', 'gmtl-functions.h')
 Function('gmtl::operator!=', 'gmtl-functions.h')
