@@ -89,10 +89,6 @@ public:
       return _instance;
    }
 
-protected:
-   //: Constructor.
-   vjSoundManager(void);
-
 private:
    static vjSoundManager* _instance;   //: The instance
 };
