@@ -112,12 +112,12 @@ txt: $(TXT_FILES)
 html: $(LINK_DEPS) $(HTML_FILES)
 
 chunk-html:
-	$(ENV) for file in $(XML_FILES) ; do \
+	for file in $(XML_FILES) ; do \
             dir=`echo $$file | sed -e 's/\.xml//'` ; \
             if [ ! -d $$dir ] ; then mkdir $$dir ; fi ; \
             cur_dir=`pwd` ; \
             cd $$dir ; \
-            $(SAXON) -i $$cur_dir/$$file -xsl $(XSL_DIR)/html/chunk.xsl \
+            $(ENV) $(SAXON) -i $$cur_dir/$$file -xsl $(XSL_DIR)/html/chunk.xsl \
               $(SAXON_HTML_PARAMS) $(EXTRA_SAXON_HTML_PARAMS) ; \
             cd $$cur_dir ; \
             if [ ! -z "$(INSTALL_FILES)" ]; then \
