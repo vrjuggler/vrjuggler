@@ -67,8 +67,11 @@ namespace vpr
 // Constructor.  This initializes the member variables to reasonable defaults
 // and stores the given file name for later use.
 FileHandleImplUNIX::FileHandleImplUNIX(const std::string& file_name)
-   : mName(file_name), mOpen(false), mOpenBlocking(true), mBlocking(true),
-     mFdesc(-1), mOpen_mode(O_RDWR)
+   : mName(file_name)
+   , mOpen(false)
+   , mBlocking(true)
+   , mFdesc(-1)
+   , mOpenMode(O_RDWR)
 {
    /* Do nothing. */ ;
 }
@@ -85,12 +88,11 @@ FileHandleImplUNIX::~FileHandleImplUNIX()
 // Open the file handle.
 vpr::ReturnStatus FileHandleImplUNIX::open()
 {
-   int open_flags;
    vpr::ReturnStatus status;
 
-   open_flags = mOpen_mode;
+   int open_flags(mOpenMode);
 
-   if ( ! mOpenBlocking )
+   if ( ! mBlocking )
    {
       open_flags |= O_NONBLOCK;
    }
@@ -102,7 +104,7 @@ vpr::ReturnStatus FileHandleImplUNIX::open()
    if ( mFdesc == -1 )
    {
       // If we are opening in non-blocking mode, we do not want to bomb out.
-      if ( errno == EWOULDBLOCK && ! mOpenBlocking )
+      if ( errno == EWOULDBLOCK && ! mBlocking )
       {
          status.setCode(vpr::ReturnStatus::WouldBlock);
          mOpen = true;
@@ -120,8 +122,7 @@ vpr::ReturnStatus FileHandleImplUNIX::open()
    // Otherwise, set mOpen to true.
    else
    {
-      mOpen     = true;
-      mBlocking = mOpenBlocking;
+      mOpen = true;
    }
 
    return status;

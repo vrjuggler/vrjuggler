@@ -102,34 +102,6 @@ public:
    }
 
    /**
-    * Sets the blocking flags so that the serial port is opened in blocking
-    * mode.
-    *
-    * @pre None.
-    * @post The open flags are updated so that when the port is opened, it is
-    *       opened in blocking mode.  If the port is already open, this has
-    *       no effect.
-    */
-   void setOpenBlocking()
-   {
-      mSioImpl.setOpenBlocking();
-   }
-
-   /**
-    * Sets the blocking flags so that the serial port is opened in
-    * non-blocking mode.
-    *
-    * @pre None.
-    * @post The open flags are updated so that when the port is opened, it is
-    *       opened in non-blocking mode.  If the port is already open, this
-    *       has no effect.
-    */
-   void setOpenNonBlocking()
-   {
-      mSioImpl.setOpenNonBlocking();
-   }
-
-   /**
     * Opens the serial port.
     *
     * @pre The serial port is not already open.
@@ -163,16 +135,17 @@ public:
 
    /**
     * Reconfigures the serial port so that it is in blocking or non-blocking
-    * mode depending on the value of the parameter.
+    * mode depending on the value of the parameter.  If the serial port has
+    * not been opened yet, it will be opened in blocking or non-blocking mode
+    * appropriately.
     *
-    * @pre The port is open.
     * @post Processes may block when accessing the port.
     *
     * @param blocking A value of true makes the serial port blocking.  A value
     *                 of false makes it non-blocking.
     *
     * @return vpr::ReturnStatus::Succeed is returned if the device's blocking
-    *         mode is set to blocking.<br>
+    *         mode is set to blocking.
     *         vpr::ReturnStatus::Fail is returned otherwise.
     */
    vpr::ReturnStatus setBlocking(bool blocking)

@@ -107,33 +107,6 @@ public:
    }
 
    /**
-    * Sets the blocking flags so that the socket is opened in blocking mode.
-    *
-    * @pre None.
-    * @post The open flags are updated so that when the socket is opened, it
-    *       is opened in blocking mode.  If the socket is already open, this
-    *       has no effect.
-    */
-   void setOpenBlocking()
-   {
-      mOpenBlocking = true;
-   }
-
-   /**
-    * Sets the blocking flags so that the socket is opened in non-blocking
-    * mode.
-    *
-    * @pre None.
-    * @post The open flags are updated so that when the socket is opened, it
-    *       is opened in non-blocking mode.  If the socket is already open,
-    *       this has no effect.
-    */
-   void setOpenNonBlocking()
-   {
-      mOpenBlocking = false;
-   }
-
-   /**
     * Opens the socket.  This creates a new socket using the domain and type
     * options set through member variables.
     *
@@ -217,7 +190,6 @@ public:
    /**
     * Reconfigures the socket so that it is in blocking or non-blocking mode.
     *
-    * @pre The socket is open.
     * @post Processes will block when accessing the socket.
     *
     * @return vpr::ReturnStatus::Succeed is returned if the socket's
@@ -585,7 +557,6 @@ protected:
    std::string mName;
    bool        mOpen;
    bool        mBound;
-   bool        mOpenBlocking;
    bool        mBlocking;
 
    vpr::InetAddr mLocalAddr;  /**< The local site's address structure */

@@ -515,8 +515,13 @@ vpr::ReturnStatus SocketImplSIM::inExceptState()
 // ============================================================================
 
 SocketImplSIM::SocketImplSIM(const vpr::SocketTypes::Type sock_type)
-   : mOpen(false), mBound(false), mOpenBlocking(false), mBlocking(false),
-     mType(sock_type), mReuseAddr(false), mConnected(false), mPeer(NULL)
+   : mOpen(false)
+   , mBound(false)
+   , mBlocking(false)
+   , mType(sock_type)
+   , mReuseAddr(false)
+   , mConnected(false)
+   , mPeer(NULL)
 {
    /* Do nothing. */ ;
 }
@@ -524,9 +529,14 @@ SocketImplSIM::SocketImplSIM(const vpr::SocketTypes::Type sock_type)
 SocketImplSIM::SocketImplSIM(const vpr::InetAddr& local_addr,
                              const vpr::InetAddr& remote_addr,
                              const vpr::SocketTypes::Type sock_type)
-   : mOpen(false), mBound(false), mOpenBlocking(false), mBlocking(false),
-     mLocalAddr(local_addr), mRemoteAddr(remote_addr), mType(sock_type),
-     mConnected(false), mPeer(NULL)
+   : mOpen(false)
+   , mBound(false)
+   , mBlocking(false)
+   , mLocalAddr(local_addr)
+   , mRemoteAddr(remote_addr)
+   , mType(sock_type)
+   , mConnected(false)
+   , mPeer(NULL)
 {
    /* Do nothing. */ ;
 }

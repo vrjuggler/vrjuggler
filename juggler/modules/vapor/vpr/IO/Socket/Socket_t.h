@@ -103,33 +103,6 @@ public:
    }
 
    /**
-    * Sets the blocking flags so that the socket is opened in blocking mode.
-    *
-    * @pre None.
-    * @post The open flags are updated so that when the socket is opened, it
-    *       is opened in blocking mode.  If the socket is already open, this
-    *       has no effect.
-    */
-   void setOpenBlocking()
-   {
-      mSocketImpl->setOpenBlocking();
-   }
-
-   /**
-    * Sets the blocking flags so that the socket is opened in non-blocking
-    * mode.
-    *
-    * @pre None.
-    * @post The open flags are updated so that when the socket is opened, it
-    *       is opened in non-blocking mode.  If the socket is already open,
-    *       this has no effect.
-    */
-   void setOpenNonBlocking()
-   {
-      mSocketImpl->setOpenNonBlocking();
-   }
-
-   /**
     * Opens the socket.
     *
     * @pre The socket is not already open.
@@ -224,9 +197,10 @@ public:
 
    /**
     * Reconfigures the socket so that it is in blocking or non-blocking mode
-    * depending on the value of the parameter.
+    * depending on the value of the parameter.  If the socket has not been
+    * opened yet, it will be opened in blocking or non-blocking mode
+    * appropriately when open() is called.
     *
-    * @pre The socket is open.
     * @post Processes will block when accessing the socket.
     *
     * @param blocking A value of true indicates that the socket should be

@@ -63,11 +63,9 @@ namespace vpr
 // Public methods.
 // ============================================================================
 
-// ----------------------------------------------------------------------------
 // Open the socket.  This creates a new socket using the domain and type
 // options set through member variables.
-// ----------------------------------------------------------------------------
-vpr::ReturnStatus SocketImplBSD::open ()
+vpr::ReturnStatus SocketImplBSD::open()
 {
    int domain, type, sock;
    vpr::ReturnStatus retval;
@@ -155,27 +153,34 @@ vpr::ReturnStatus SocketImplBSD::open ()
       mOpen           = true;
 
       // Since socket(2) cannot open a socket in non-blocking mode, we call
-      // enableNonBlocking() now if the socket is to be opened in
-      // non-blocking mode.
-      if ( ! mOpenBlocking )
-      {
-         retval = setBlocking(false);
-      }
+      // vpr::FileHandleUNIX::setBlocking() directly.
+      retval = mHandle->setBlocking(mOpenBlocking);
    }
 
    return retval;
 }
 
 // Reconfigures the socket so that it is in blocking mode.
-vpr::ReturnStatus SocketImplBSD::setBlocking(const bool& blocking)
+vpr::ReturnStatus SocketImplBSD::setBlocking(bool blocking)
 {
    vpr::ReturnStatus status;
 
-   vprASSERT(isOpen() && "precondition says you must open() the socket first");
    vprASSERT(! mBlockingFixed &&
              "Cannot change blocking state after a blocking call!");
 
-   status = mHandle->setBlocking(blocking);
+   if ( ! mBlockingFixed )
+   {
+      status = mHandle->setBlocking(blocking);
+
+      if ( ! mOpen )
+      {
+         mOpenBlocking = blocking;
+      }
+   }
+   else
+   {
+      status.setCode(vpr::ReturnStatus::Fail);
+   }
 
    return status;
 }

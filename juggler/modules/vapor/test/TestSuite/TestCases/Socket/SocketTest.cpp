@@ -582,7 +582,7 @@ void SocketTest::testBlocking_connector(void* arg)
       vpr::SocketStream connector_socket(vpr::InetAddr::AnyAddr, remote_addr);
 
       // open socket
-      connector_socket.setOpenBlocking();
+      connector_socket.setBlocking(true);
       result = connector_socket.open().success();
       assertTestThread( result != false && "Socket::open() failed when test blocking" );
 
@@ -651,7 +651,7 @@ void SocketTest::testBlocking_acceptor(void* arg)
 
    // make a new socket listening on port "port"
    vpr::SocketStream acceptor_socket( local_addr, vpr::InetAddr::AnyAddr );
-   acceptor_socket.setOpenBlocking();
+   acceptor_socket.setBlocking(true);
 
    // open socket
    result = acceptor_socket.open().success();
