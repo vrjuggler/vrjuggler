@@ -212,6 +212,7 @@ void aMotionStar::setFormat (unsigned int n) { format = n; }
 void aMotionStar::setBirdFormat (unsigned int n) { birdFormat = n; }
 void aMotionStar::setNumBirds (unsigned int n) { birdsRequired = n; }
 void aMotionStar::setBirdRate (double n) { birdRate = n; }
+void aMotionStar::setRunMode ( int n ) { runMode = n; }
 void aMotionStar::setReportRate (unsigned char n) { reportRate = n; } 
 
 void aMotionStar::send_wakeup()
