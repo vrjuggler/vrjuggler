@@ -125,7 +125,7 @@ public class XMLConfigIOHandler
          Document doc = builder.build(file);
          buildChunkDB(db, doc.getRootElement(), iostatus);
       }
-      catch (JDOMException e)
+      catch (Exception e)
       {
          iostatus.addFailure(e);
       }
@@ -142,7 +142,7 @@ public class XMLConfigIOHandler
          Document doc = builder.build(in);
          buildChunkDB(db, doc.getRootElement(), iostatus);
       }
-      catch (JDOMException e)
+      catch (Exception e)
       {
          iostatus.addFailure(e);
       }
@@ -361,7 +361,7 @@ public class XMLConfigIOHandler
          Document doc       = builder.build(file);
          buildChunkDescDB(db, doc.getRootElement(), iostatus);
       }
-      catch (JDOMException e)
+      catch (Exception e)
       {
          iostatus.addFailure(e);
       }
@@ -378,7 +378,7 @@ public class XMLConfigIOHandler
          Document doc       = builder.build(in);
          buildChunkDescDB(db, doc.getRootElement(), iostatus);
       }
-      catch (JDOMException e)
+      catch (Exception e)
       {
          iostatus.addFailure(e);
       }
