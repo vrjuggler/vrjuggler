@@ -825,7 +825,7 @@ fi
 
 # Put together the basic information needed to compile VR Juggler applications.
 VJ_APP_COMPILER($CC, $CFLAGS, $CXX, $CXXFLAGS, $DBG_FLAGS, $OPT_FLAGS,
-                VJ_BASE_DIR, $DEFS, $INCLUDES $X_INCLUDES, ${_EXTRA_FLAGS})
+                VJ_BASE_DIR, $DEFS, $INCLUDES, ${_EXTRA_FLAGS})
 VJ_APP_LINKER($CXX, $EXTRA_LINK_FLAGS, VJ_BASE_DIR, Juggler Juggler_utils,
               $APP_EXTRA_LIBS)
 
