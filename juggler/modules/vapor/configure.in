@@ -50,7 +50,7 @@ AC_REVISION($Revision$)
 AC_INIT([vpr/vprConfig.h])
 AC_CONFIG_AUX_DIR([../../share/config])
 AC_CONFIG_HEADER([vpr/vprDefines.h])
-DPP_PREREQ([1.4.108])
+DPP_PREREQ([1.5.1])
 DPP_INIT
 
 # Generate the reconfig script first so that it's easy to run configure again
@@ -250,8 +250,8 @@ UNIX_JUGGLERROOT_ABS=`pwd`
 cd "$topdir"
 
 if test "x$CYGPATH" != "xno" ; then
-   VPRROOT_ABS=`unix2dos -p "$UNIX_VPRROOT_ABS"`
-   JUGGLERROOT_ABS=`unix2dos -p "$UNIX_JUGGLERROOT_ABS"`
+   VPRROOT_ABS=`dospath -p "$UNIX_VPRROOT_ABS"`
+   JUGGLERROOT_ABS=`dospath -p "$UNIX_JUGGLERROOT_ABS"`
 else
    VPRROOT_ABS="$UNIX_VPRROOT_ABS"
    JUGGLERROOT_ABS="$UNIX_JUGGLERROOT_ABS"
@@ -589,26 +589,26 @@ APP_BASE_DIR_INST='$(VPR_BASE_DIR)'
 
 # Translate paths from UNIX-style to Win32.
 if test "x$OS_TYPE" = "xWin32" ; then
-    VPRROOT_ABS=`unix2dos -p "$VPRROOT_ABS"`
-    JUGGLERROOT_ABS=`unix2dos -p "$JUGGLERROOT_ABS"`
+    VPRROOT_ABS=`dospath -p "$VPRROOT_ABS"`
+    JUGGLERROOT_ABS=`dospath -p "$JUGGLERROOT_ABS"`
 
     if test "x$DEPEND_EXTRAS" != "x" ; then
-        DEPEND_EXTRAS=`unix2dos "$DEPEND_EXTRAS"`
+        DEPEND_EXTRAS=`dospath "$DEPEND_EXTRAS"`
     fi
 
     if test "x$INCLUDES" != "x" ; then
-        INCLUDES=`unix2dos "$INCLUDES"`
+        INCLUDES=`dospath "$INCLUDES"`
     fi
 
     if test "x$LIBS" != "x" ; then
-        LIBS=`unix2dos "$LIBS"`
+        LIBS=`dospath "$LIBS"`
     fi
 
     LN_S='cp -pr'
     RM_LN='rm -rf'
-    MTREE_CMD=`unix2dos "$MTREE_CMD"`
+    MTREE_CMD=`dospath "$MTREE_CMD"`
 
-#    APP_EXTRA_LIBS=`unix2dos "$APP_EXTRA_LIBS"`
+#    APP_EXTRA_LIBS=`dospath "$APP_EXTRA_LIBS"`
 else
     RM_LN='rm -f'
 fi

@@ -41,7 +41,7 @@ AC_REVISION($Revision$)
 AC_INIT(vrj/vrjConfig.h)
 AC_CONFIG_AUX_DIR(../../share/config)
 AC_CONFIG_HEADER(vrj/vrjDefines.h)
-DPP_PREREQ([1.4.108])
+DPP_PREREQ([1.5.1])
 DPP_INIT
 
 # Generate the reconfig script first so that it's easy to run configure again
@@ -493,22 +493,22 @@ UNIX_VJROOT_ABS="$VJROOT_ABS"
 
 # Translate paths from UNIX-style to Win32.
 if test "x$OS_TYPE" = "xWin32" ; then
-    VJROOT_ABS=`unix2dos -p "$VJROOT_ABS"`
-    JUGGLERROOT_ABS=`unix2dos -p "$JUGGLERROOT_ABS"`
+    VJROOT_ABS=`dospath -p "$VJROOT_ABS"`
+    JUGGLERROOT_ABS=`dospath -p "$JUGGLERROOT_ABS"`
 
-    DEPEND_EXTRAS=`unix2dos "$DEPEND_EXTRAS"`
-    INCLUDES=`unix2dos "$INCLUDES"`
-    LIBS=`unix2dos "$LIBS"`
+    DEPEND_EXTRAS=`dospath "$DEPEND_EXTRAS"`
+    INCLUDES=`dospath "$INCLUDES"`
+    LIBS=`dospath "$LIBS"`
     LN_S='cp -r'
     RM_LN='rm -rf'
-    MTREE_CMD=`unix2dos "$MTREE_CMD"`
+    MTREE_CMD=`dospath "$MTREE_CMD"`
 
-    JDK_HOME=`unix2dos -p "$JDK_HOME"`
+    JDK_HOME=`dospath -p "$JDK_HOME"`
 
-#    APP_EXTRA_LIBS=`unix2dos "$APP_EXTRA_LIBS"`
-    APP_EXTRA_LIBS_GL=`unix2dos "$APP_EXTRA_LIBS_GL"`
-    APP_EXTRA_LIBS_PF=`unix2dos "$APP_EXTRA_LIBS_PF"`
-    APP_EXTRA_LIBS_OSG=`unix2dos "$APP_EXTRA_LIBS_OSG"`
+#    APP_EXTRA_LIBS=`dospath "$APP_EXTRA_LIBS"`
+    APP_EXTRA_LIBS_GL=`dospath "$APP_EXTRA_LIBS_GL"`
+    APP_EXTRA_LIBS_PF=`dospath "$APP_EXTRA_LIBS_PF"`
+    APP_EXTRA_LIBS_OSG=`dospath "$APP_EXTRA_LIBS_OSG"`
 else
     RM_LN='rm -f'
     VJROOT_ABS="$VJROOT_ABS"

@@ -38,7 +38,7 @@ AC_REVISION($Revision$)
 AC_INIT(tweek/tweekConfig.h)
 AC_CONFIG_AUX_DIR(../../share/config)
 AC_CONFIG_HEADER(tweek/tweekDefines.h)
-DPP_PREREQ([1.4.108])
+DPP_PREREQ([1.5.1])
 DPP_INIT
 
 DPP_GEN_RECONFIG
@@ -287,8 +287,8 @@ UNIX_JUGGLERROOT_ABS=`pwd`
 cd "$topdir"
 
 if test "x$CYGPATH" != "xno" ; then
-   TWEEKROOT_ABS=`unix2dos -p "$UNIX_TWEEKROOT_ABS"`
-   JUGGLERROOT_ABS=`unix2dos -p "$UNIX_JUGGLERROOT_ABS"`
+   TWEEKROOT_ABS=`dospath -p "$UNIX_TWEEKROOT_ABS"`
+   JUGGLERROOT_ABS=`dospath -p "$UNIX_JUGGLERROOT_ABS"`
 else
    TWEEKROOT_ABS="$UNIX_TWEEKROOT_ABS"
    JUGGLERROOT_ABS="$UNIX_JUGGLERROOT_ABS"
@@ -667,26 +667,26 @@ APP_BASE_DIR_INST='$(TWEEK_BASE_DIR)'
 
 # Translate paths from UNIX-style to Win32.
 if test "x$OS_TYPE" = "xWin32" ; then
-   TWEEKROOT_ABS=`unix2dos -p "$TWEEKROOT_ABS"`
-   JUGGLERROOT_ABS=`unix2dos -p "$JUGGLERROOT_ABS"`
+   TWEEKROOT_ABS=`dospath -p "$TWEEKROOT_ABS"`
+   JUGGLERROOT_ABS=`dospath -p "$JUGGLERROOT_ABS"`
 
    if test "x$DEPEND_EXTRAS" != "x" ; then
-      DEPEND_EXTRAS=`unix2dos "$DEPEND_EXTRAS"`
+      DEPEND_EXTRAS=`dospath "$DEPEND_EXTRAS"`
    fi
 
    if test "x$INCLUDES" != "x" ; then
-      INCLUDES=`unix2dos "$INCLUDES"`
+      INCLUDES=`dospath "$INCLUDES"`
    fi
 
    if test "x$LIBS" != "x" ; then
-      LIBS=`unix2dos "$LIBS"`
+      LIBS=`dospath "$LIBS"`
    fi
 
    LN_S='cp -pr'
    RM_LN='rm -rf'
-   MTREE_CMD=`unix2dos "$MTREE_CMD"`
+   MTREE_CMD=`dospath "$MTREE_CMD"`
 
-#   APP_EXTRA_LIBS_BASIC=`unix2dos "$APP_EXTRA_LIBS_BASIC"`
+#   APP_EXTRA_LIBS_BASIC=`dospath "$APP_EXTRA_LIBS_BASIC"`
 else
    RM_LN='rm -f'
 fi
