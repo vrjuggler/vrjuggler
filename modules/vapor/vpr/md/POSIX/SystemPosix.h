@@ -45,6 +45,7 @@
 
 #include <stdlib.h>
 #include <sys/time.h>
+#include <netinet/in.h>
 #include <sys/param.h>
 
 #include <SystemBase.h>
