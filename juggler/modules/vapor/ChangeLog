@@ -2,8 +2,8 @@ DATE       AUTHOR   CHANGE
 ---------- -------- -----------------------------------------------------------
 2002-12-10 allenb   Removed port constructor for inet addr objects.  This
                     constructor allowed integer types to automatically convert
-					to inet addrs.  This led to many nasty bugs in user code.
-					NEW VERSION: 0.20.0
+                    to inet addrs.  This led to many nasty bugs in user code.
+                    NEW VERSION: 0.20.0
 2002-11-24 allenb   Fixed alignment issues in ObjectReader and ObjectWriter
                     so that data does not have to be padded anymore.
                     This should tighten up the serialized data size.
