@@ -257,7 +257,9 @@ public class SimKeyboardEditorPanel
    {
       this.setLayout(mMainLayout);
       mDevicePanel.setLayout(mDevicePanelLayout);
+      mDeviceSplitPane.setOneTouchExpandable(false);
       mDeviceSplitPane.setOrientation(JSplitPane.VERTICAL_SPLIT);
+      mDeviceSplitPane.setResizeWeight(1.0);
       mAddSimDeviceButton.setText("Create Sim Device");
       mAddSimDeviceButton.setToolTipText("Create a new simulator device configuration");
       mAddSimDeviceButton.addActionListener(
