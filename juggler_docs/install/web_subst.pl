@@ -75,3 +75,4 @@ $alias_subst{"IASTATE"} = 'http://www.iastate.edu';
 
 # font size for the tree control (JEXPLORER)
 $alias_subst{"TREE_FONTSIZE"} = '11';
+
