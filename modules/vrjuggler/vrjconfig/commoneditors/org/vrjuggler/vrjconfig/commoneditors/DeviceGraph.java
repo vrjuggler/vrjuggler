@@ -39,6 +39,7 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import javax.swing.BorderFactory;
 import javax.swing.JComponent;
 
 import org.jgraph.JGraph;
@@ -183,20 +184,18 @@ public class DeviceGraph
 
    /**
     * Centralized creation of an attribute map for graph cells that represent
-    * the ConfigElement for a device.  Internally, this makes use of
-    * <code>JGraph.createBounds()</code>.
+    * the ConfigElement for a device.
     *
     * @param x          the x-coordinate for the device cell
     * @param y          the y-coordinate for the device cell
     * @param autoSize   enable or disable always-on auto sizing of cells
     *
     * @see org.jgraph.graph.GraphConstants
-    * @see org.jgraph.JGraph#createBounds(AttributeMap,int,int,Color)
     */
    public static Map createDeviceAttributes(int x, int y, boolean autoSize)
    {
-      Map map = new AttributeMap();
-      map = JGraph.createBounds((AttributeMap) map, x, y, DEVICE_CELL_COLOR);
+      AttributeMap map = new AttributeMap();
+      createBounds(map, x, y, DEVICE_CELL_COLOR, Color.black);
 
       GraphConstants.setAutoSize(map, autoSize);
       GraphConstants.setResize(map, true);
@@ -222,20 +221,18 @@ public class DeviceGraph
 
    /**
     * Centralized creation of an attribute map for graph cells that represent
-    * the ConfigElement for a device proxy.  Internally, this makes use of
-    * <code>JGraph.createBounds()</code>.
+    * the ConfigElement for a device proxy.
     *
     * @param x          the x-coordinate for the proxy cell
     * @param y          the y-coordinate for the proxy cell
     * @param autoSize   enable or disable always-on auto sizing of cells
     *
     * @see org.jgraph.graph.GraphConstants
-    * @see org.jgraph.JGraph#createBounds(AttributeMap,int,int,Color)
     */
    public static Map createProxyAttributes(int x, int y, boolean autoSize)
    {
-      Map map = new AttributeMap();
-      map = JGraph.createBounds((AttributeMap) map, x, y, PROXY_CELL_COLOR);
+      AttributeMap map = new AttributeMap();
+      createBounds(map, x, y, PROXY_CELL_COLOR, Color.black);
 
       GraphConstants.setAutoSize(map, autoSize);
       GraphConstants.setResize(map, true);
@@ -243,14 +240,13 @@ public class DeviceGraph
       return map;
    }
 
-/*
-   private static Map createBounds(AttributeMap map, int x, int y, Color c)
+   private static void createBounds(AttributeMap map, int x, int y,
+                                    Color bgColor, Color fgColor)
    {
       GraphConstants.setBounds(map, map.createRect(x, y, 90, 30));
       GraphConstants.setBorder(map, BorderFactory.createRaisedBevelBorder());
-      GraphConstants.setBackground(map, c.darker().darker());
-      GraphConstants.setGradientColor(map, c.brighter().brighter().brighter());
-      GraphConstants.setForeground(map, Color.white);
+      GraphConstants.setBackground(map, bgColor);
+      GraphConstants.setForeground(map, fgColor);
+      GraphConstants.setOpaque(map, true);
    }
-*/
 }
