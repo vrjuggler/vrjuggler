@@ -1,5 +1,8 @@
 DATE       AUTHOR   CHANGE
 ---------- -------- -----------------------------------------------------------
+2002-10-24 allenb   Fixed bugs in the DurationStatCollector and SampleCollector
+                    where time and averages were being computed completely
+                    wrong.
 2002-09-19 patrickh Fixed a bug where vpr::Thread::msleep() could not sleep
                     for more than 1000 milliseconds.  The fix was submitted by
                     Chad Austin (aegisk@iastate.edu).
