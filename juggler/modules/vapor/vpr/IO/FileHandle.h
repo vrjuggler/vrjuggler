@@ -45,7 +45,7 @@
 #if defined(VPR_USE_NSPR)
 #   include <vpr/md/NSPR/IO/FileHandleImplNSPR.h>
 namespace vpr {
-  typedef FileHandle_t<FileHandleImplNSPR> Socket;
+  typedef FileHandle_t<FileHandleImplNSPR> FileHandle;
 }
 
 #else
