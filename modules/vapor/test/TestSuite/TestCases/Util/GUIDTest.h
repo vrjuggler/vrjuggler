@@ -54,11 +54,11 @@ public:
       // Test assignment
       //vpr::GUID::generate_tag_type gen_tag;
       //vpr::GUID guid3( gen_tag );
-      typedef vpr::GUID::generate_tag_type gen_type;
-      vpr::GUID guid3( gen_type() );
-      vpr::GUID guidtemp( gen_type() );
+      //typedef vpr::GUID::generate_tag_type gen_type;
+      vpr::GUID guid3( vpr::GUID::generateTag );
+      //vpr::GUID guidtemp( gen_type() );
       vpr::GUID guid4;
-      guid3 = guid4;
+      guid4 = guid3;
       CPPUNIT_ASSERT(guid3 == guid4);
       CPPUNIT_ASSERT(guid3 != vpr::GUID::NullGUID);   // Make sure it generated something
 
