@@ -89,12 +89,14 @@ public:
    //  This baselevel constructor will fill the base datamembers
    //  when found in the vjConfigChunk, such as serial port, instance name
    //  and baud rate.
+   // Also, initializes myThread, active, and deviceAbilities to null values
    vjInput(vjConfigChunk *c);
 
    //: Default Constructor
    //
    //  The default constructor is intended only for use by the DummyProxies
    //  which do not need to have their serial port and baud rate etc set up.
+   // Also, initializes myThread, active, and deviceAbilities to null values
    vjInput();
 
    //: vjInput Destructor
