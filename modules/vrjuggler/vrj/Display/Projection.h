@@ -68,7 +68,7 @@ public:
 public:
    Projection()
    {
-      mType = -1;
+      //mType = -1;
       mEye = 0;
       mFocusPlaneDist = 1.0f;
       mViewport = NULL;
@@ -110,7 +110,7 @@ public:
 
 protected:
    int mEye;
-   int mType;
+   //int mType;
    Viewport*   mViewport;     /**< The containing viewport for the projection. Used in some projections to get size */
 
    float       mFocusPlaneDist;     // Basically the distance to the surface.  Needed for drawing surface in simulator.
