@@ -31,7 +31,7 @@ vjKeyboard::vjKeyboard(vjConfigChunk *c) : vjPosition(c), vjDigital(c),
     
     cout << "Mouse Sensititivty: " << m_mouse_sensitivity << endl;
       
-    for (i = 0; i < 10; i++)
+    for (i = 0; i < NUM_POS_CONTROLS; i++)
     { 
       m_pos0key[i] = c->getProperty("pos0keys",i);       
       m_pos0mod[i] = c->getProperty("pos0mods",i);        
@@ -48,18 +48,20 @@ vjKeyboard::vjKeyboard(vjConfigChunk *c) : vjPosition(c), vjDigital(c),
       m_anakeysdn[z] = c->getProperty("anakeysdn",z);
       m_anamodsdn[z] = c->getProperty("anamodsdn",z);
       
+      /* Got rid of this hack
       if (m_digmods[z] != 0) m_digmods[z] += 4;
       if (m_anamodsup[z] != 0) m_anamodsup[z] += 4;
-      if (m_anamodsdn[z] != 0) m_anamodsdn[z] += 4;
+      if (m_anamodsdn[z] != 0) m_anamodsdn[z] += 4; */
     }
     
-    for(int q = 0; q < 10; q++)
+    /* Got rid of this hack
+    for(int q = 0; q < NUM_POS_CONTROLS; q++)
     {  
        if (m_pos0mod[q] != 0)  // if the key is not NONE, then add 4 to get it
           m_pos0mod[q] += 4;   // to the SHIFT/CTRL/ALT key
        if (m_pos1mod[q] != 0)
           m_pos1mod[q] += 4;
-    }
+    } */
     
     for (int n = 0; n < 2; n++)
       m_posdata[n].makeIdent();
@@ -74,8 +76,10 @@ vjKeyboard::vjKeyboard(vjConfigChunk *c) : vjPosition(c), vjDigital(c),
 	      << "           Rot R   :" << m_pos0key[ROTR]<<"  "<<m_pos0mod[ROTR] << endl
 	      << "           Rot L   :" << m_pos0key[ROTL] <<"  "<<m_pos0mod[ROTL]  << endl
 	      << "           Rot U   :" << m_pos0key[ROTU]   <<"  "<<m_pos0mod[ROTU]    << endl
-	      << "           Rot D   :" << m_pos0key[ROTD] <<"  "<<m_pos0mod[ROTD]  << endl 
-	      << endl;
+	      << "           Rot D   :" << m_pos0key[ROTD] <<"  "<<m_pos0mod[ROTD]  << endl
+         << "           Rot CCW :" << m_pos0key[ROT_ROLL_CCW] << "   " << m_pos0mod[ROT_ROLL_CCW] << endl
+         << "           Rot CW  :" << m_pos0key[ROT_ROLL_CW] << "   " << m_pos0mod[ROT_ROLL_CW] << endl
+           << endl;
  
 }
 
@@ -169,7 +173,7 @@ int vjKeyboard::OnlyModifier(int mod)
      case VJKEY_ALT:
         return (!m_keys[VJKEY_SHIFT] && !m_keys[VJKEY_CTRL] && m_keys[VJKEY_ALT]);
      default:
-       cout << "Something wrong" << endl;
+       vjASSERT(false);
        return 0;
   } 
   
@@ -203,6 +207,10 @@ void vjKeyboard::UpdateData()
       RotUp( 1 * m_keys[m_pos0key[ROTU]] , 0);
   if (m_keys[m_pos0key[ROTD]] && OnlyModifier(m_pos0mod[ROTD]))
       RotUp( -1 * m_keys[m_pos0key[ROTD]] , 0);
+  if (m_keys[m_pos0key[ROT_ROLL_CCW]] && OnlyModifier(m_pos0mod[ROT_ROLL_CCW]))
+      RotRollCCW( 1 * m_keys[m_pos0key[ROT_ROLL_CCW]] , 0);
+  if (m_keys[m_pos0key[ROT_ROLL_CW]] && OnlyModifier(m_pos0mod[ROT_ROLL_CW]))
+      RotRollCCW( -1 * m_keys[m_pos0key[ROT_ROLL_CW]] , 0); 
 
   // --- Update position 1 --- //
   if (m_keys[m_pos1key[FORWARD]] && OnlyModifier(m_pos1mod[FORWARD]))
@@ -226,6 +234,10 @@ void vjKeyboard::UpdateData()
       RotUp( 1 * m_keys[m_pos1key[ROTU]] , 1);
   if (m_keys[m_pos1key[ROTD]] && OnlyModifier(m_pos1mod[ROTD]))
       RotUp( -1 * m_keys[m_pos1key[ROTD]] , 1);
+  if (m_keys[m_pos1key[ROT_ROLL_CCW]] && OnlyModifier(m_pos1mod[ROT_ROLL_CCW]))
+      RotRollCCW( 1 * m_keys[m_pos1key[ROT_ROLL_CCW]] , 1);
+  if (m_keys[m_pos1key[ROT_ROLL_CW]] && OnlyModifier(m_pos1mod[ROT_ROLL_CW]))
+      RotRollCCW( -1 * m_keys[m_pos1key[ROT_ROLL_CW]] , 1); 
 
   // -- Update digital data -- //
   if (m_toggleoff)
@@ -284,13 +296,22 @@ void vjKeyboard::MoveUp(float amt, int n)
 // Pitch up - rot +x axis
 void vjKeyboard::RotUp(float amt, int n)
 {
-   m_posdata[n].postRot(m_posdata[n], amt*m_drot, vjVec3(1.0, 0.0, 0.0));
+   static vjVec3 x_axis(1.0,0.0,0.0);
+   m_posdata[n].postRot(m_posdata[n], amt*m_drot, x_axis);
 }
 
 // Yaw left - rot +Y axis
 void vjKeyboard::RotLeft(float amt, int n)
 {
-   m_posdata[n].postRot(m_posdata[n], amt*m_drot, vjVec3(0.0, 1.0, 0.0));
+   static vjVec3 y_axis(0.0, 1.0, 0.0);
+   m_posdata[n].postRot(m_posdata[n], amt*m_drot, y_axis);
+}
+
+// Roll Left - rot -z axis
+void vjKeyboard::RotRollCCW(float amt, int n)
+{
+   static vjVec3 neg_z_axis(0.0, 0.0, -1.0);
+   m_posdata[n].postRot(m_posdata[n], amt*m_drot, neg_z_axis); 
 }
 
 void vjKeyboard::UpdKeys()
@@ -383,80 +404,98 @@ int vjKeyboard::XKeyTovjKey(KeySym xKey)
 {
    switch (xKey)
    {
-     case XK_Up       : return VJKEY_UP;
-     case XK_Down     : return VJKEY_DOWN;
-     case XK_Left     : return VJKEY_LEFT;
-     case XK_Right    : return VJKEY_RIGHT;
-     case XK_Control_L: return VJKEY_CTRL;
-     case XK_Control_R: return VJKEY_CTRL;
-     case XK_Shift_L  : return VJKEY_SHIFT;
-     case XK_Shift_R  : return VJKEY_SHIFT;
-     case XK_Alt_L    : return VJKEY_ALT;
-     case XK_Alt_R    : return VJKEY_ALT;
-     case XK_1	      : return VJKEY_1;
-     case XK_2        : return VJKEY_2;
-     case XK_3        : return VJKEY_3;
-     case XK_4        : return VJKEY_4;
-     case XK_5	      : return VJKEY_5;
-     case XK_6        : return VJKEY_6;
-     case XK_7        : return VJKEY_7;
-     case XK_8        : return VJKEY_8;
-     case XK_9        : return VJKEY_9;
-     case XK_0        : return VJKEY_0;
-     case XK_A        : return VJKEY_A;
-     case XK_B        : return VJKEY_B;
-     case XK_C        : return VJKEY_C;
-     case XK_D        : return VJKEY_D;
-     case XK_E        : return VJKEY_E;
-     case XK_F        : return VJKEY_F;
-     case XK_G        : return VJKEY_G;
-     case XK_H        : return VJKEY_H;
-     case XK_I        : return VJKEY_I;
-     case XK_J        : return VJKEY_J;
-     case XK_K        : return VJKEY_K;
-     case XK_L        : return VJKEY_L;
-     case XK_M        : return VJKEY_M;
-     case XK_N        : return VJKEY_N;
-     case XK_O        : return VJKEY_O;
-     case XK_P        : return VJKEY_P;
-     case XK_Q        : return VJKEY_Q;
-     case XK_R        : return VJKEY_R;
-     case XK_S        : return VJKEY_S;
-     case XK_T        : return VJKEY_T;
-     case XK_U        : return VJKEY_U;
-     case XK_V        : return VJKEY_V;
-     case XK_W        : return VJKEY_W;
-     case XK_X        : return VJKEY_X;
-     case XK_Y        : return VJKEY_Y;
-     case XK_Z        : return VJKEY_Z;
-     case XK_a        : return VJKEY_A;
-     case XK_b        : return VJKEY_B;
-     case XK_c        : return VJKEY_C;
-     case XK_d        : return VJKEY_D;
-     case XK_e        : return VJKEY_E;
-     case XK_f        : return VJKEY_F;
-     case XK_g        : return VJKEY_G;
-     case XK_h        : return VJKEY_H;
-     case XK_i        : return VJKEY_I;
-     case XK_j        : return VJKEY_J;
-     case XK_k        : return VJKEY_K;
-     case XK_l        : return VJKEY_L;
-     case XK_m        : return VJKEY_M;
-     case XK_n        : return VJKEY_N;
-     case XK_o        : return VJKEY_O;
-     case XK_p        : return VJKEY_P;
-     case XK_q        : return VJKEY_Q;
-     case XK_r        : return VJKEY_R;
-     case XK_s        : return VJKEY_S;
-     case XK_t        : return VJKEY_T;
-     case XK_u        : return VJKEY_U;
-     case XK_v        : return VJKEY_V;
-     case XK_w        : return VJKEY_W;
-     case XK_x        : return VJKEY_X;
-     case XK_y        : return VJKEY_Y;
-     case XK_z        : return VJKEY_Z;
-     case XK_Escape   : return VJKEY_ESC;
-	 default: return 255;
+   case XK_Up        : return VJKEY_UP;
+   case XK_KP_Up     : return VJKEY_UP;
+   case XK_Down      : return VJKEY_DOWN;
+   case XK_KP_Down   : return VJKEY_DOWN;
+   case XK_Left      : return VJKEY_LEFT;
+   case XK_KP_Left   : return VJKEY_LEFT;
+   case XK_Right     : return VJKEY_RIGHT;
+   case XK_KP_Right  : return VJKEY_RIGHT;
+   case XK_Control_L : return VJKEY_CTRL;
+   case XK_Control_R : return VJKEY_CTRL;
+   case XK_Shift_L   : return VJKEY_SHIFT;
+   case XK_Shift_R   : return VJKEY_SHIFT;
+   case XK_Alt_L     : return VJKEY_ALT;
+   case XK_Alt_R     : return VJKEY_ALT;
+   
+      // Map all number keys
+      // Note we map keypad and normal keys making no distinction
+   case XK_1         : return VJKEY_1;
+   case XK_KP_1      : return VJKEY_1;
+   case XK_2         : return VJKEY_2;
+   case XK_KP_2      : return VJKEY_2;
+   case XK_3         : return VJKEY_3;
+   case XK_KP_3      : return VJKEY_3;
+   case XK_4         : return VJKEY_4;
+   case XK_KP_4      : return VJKEY_4;
+   case XK_5         : return VJKEY_5;
+   case XK_KP_5      : return VJKEY_5;
+   case XK_6         : return VJKEY_6;
+   case XK_KP_6      : return VJKEY_6;
+   case XK_7         : return VJKEY_7;
+   case XK_KP_7      : return VJKEY_7;
+   case XK_8         : return VJKEY_8;
+   case XK_KP_8      : return VJKEY_8;
+   case XK_9         : return VJKEY_9;
+   case XK_KP_9      : return VJKEY_9;
+   case XK_0         : return VJKEY_0;
+   case XK_KP_0      : return VJKEY_0;
+   
+   case XK_A         : return VJKEY_A;
+   case XK_B         : return VJKEY_B;
+   case XK_C         : return VJKEY_C;
+   case XK_D         : return VJKEY_D;
+   case XK_E         : return VJKEY_E;
+   case XK_F         : return VJKEY_F;
+   case XK_G         : return VJKEY_G;
+   case XK_H         : return VJKEY_H;
+   case XK_I         : return VJKEY_I;
+   case XK_J         : return VJKEY_J;
+   case XK_K         : return VJKEY_K;
+   case XK_L         : return VJKEY_L;
+   case XK_M         : return VJKEY_M;
+   case XK_N         : return VJKEY_N;
+   case XK_O         : return VJKEY_O;
+   case XK_P         : return VJKEY_P;
+   case XK_Q         : return VJKEY_Q;
+   case XK_R         : return VJKEY_R;
+   case XK_S         : return VJKEY_S;
+   case XK_T         : return VJKEY_T;
+   case XK_U         : return VJKEY_U;
+   case XK_V         : return VJKEY_V;
+   case XK_W         : return VJKEY_W;
+   case XK_X         : return VJKEY_X;
+   case XK_Y         : return VJKEY_Y;
+   case XK_Z         : return VJKEY_Z;
+   case XK_a         : return VJKEY_A;
+   case XK_b         : return VJKEY_B;
+   case XK_c         : return VJKEY_C;
+   case XK_d         : return VJKEY_D;
+   case XK_e         : return VJKEY_E;
+   case XK_f         : return VJKEY_F;
+   case XK_g         : return VJKEY_G;
+   case XK_h         : return VJKEY_H;
+   case XK_i         : return VJKEY_I;
+   case XK_j         : return VJKEY_J;
+   case XK_k         : return VJKEY_K;
+   case XK_l         : return VJKEY_L;
+   case XK_m         : return VJKEY_M;
+   case XK_n         : return VJKEY_N;
+   case XK_o         : return VJKEY_O;
+   case XK_p         : return VJKEY_P;
+   case XK_q         : return VJKEY_Q;
+   case XK_r         : return VJKEY_R;
+   case XK_s         : return VJKEY_S;
+   case XK_t         : return VJKEY_T;
+   case XK_u         : return VJKEY_U;
+   case XK_v         : return VJKEY_V;
+   case XK_w         : return VJKEY_W;
+   case XK_x         : return VJKEY_X;
+   case XK_y         : return VJKEY_Y;
+   case XK_z         : return VJKEY_Z;
+   case XK_Escape    : return VJKEY_ESC;
+   default: return 255;
    }
 
 }
