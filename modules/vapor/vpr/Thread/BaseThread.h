@@ -198,6 +198,7 @@ public:
     */
    virtual int join (void** status = 0)
    {
+      boost::ignore_unused_variable_warning(status);
       return -1;
    }
 
