@@ -46,7 +46,7 @@
 const size_t sockstreambuf::BUFSIZE = 128;
 
 
-sockstreambuf::sockstreambuf (int _sock): std::streambuf() {
+sockstreambuf::sockstreambuf (int _sock) {
     sock = _sock;
     buf = new char[2*BUFSIZE +2];  //allocate a buffer
     setg (buf, buf, buf);            //set the get area
@@ -54,7 +54,7 @@ sockstreambuf::sockstreambuf (int _sock): std::streambuf() {
 }
 
 
-sockstreambuf::sockstreambuf (): std::streambuf() {
+sockstreambuf::sockstreambuf () {
     sock = -1;
     buf = new char[2*BUFSIZE +2];  //allocate a buffer
     setg (buf, buf, buf);            //set the get area
