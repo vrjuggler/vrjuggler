@@ -148,6 +148,14 @@ public:
 
     vjPropertyDesc& operator= (vjPropertyDesc& pd);
 
+    //: Equality Operator
+    // BUG (IPTHACK) - doesn't check equality of enumerations and valuelabels
+    bool operator== (const vjPropertyDesc& pd);
+
+    //: Inequality Operator
+    inline bool operator!= (const vjPropertyDesc& pd) {
+        return !(*this == pd);
+    }
 
 private:
 

@@ -193,3 +193,21 @@ istream& operator >> (istream& in, vjChunkDesc& self) {
    self.plist.insert (self.plist.begin(), new vjPropertyDesc("name",1,T_STRING," "));
     return in;
 }
+
+
+
+//:equality operator
+// a little stricter than it needs to be.. it shouldn't care about the order of
+// propertydescs...
+bool vjChunkDesc::operator== (const vjChunkDesc& d) {
+    if (vjstrcasecmp (token, d.token))
+        return false;
+    if (vjstrcasecmp (name, d.name))
+        return false;
+    if (plist.size() != d.plist.size())
+        return false;
+    for (int i = 0; i < plist.size(); i++)
+        if ((*plist[i]) != (*plist[i]))
+            return false;
+    return true;
+}

@@ -73,6 +73,16 @@ public:
     std::vector<vjPropertyDesc*> plist;
 
 
+    //:equality operator
+    // a little stricter than it needs to be.. it shouldn't care about the order of
+    // propertydescs...
+    bool operator== (const vjChunkDesc& d);
+
+    inline bool operator!= (const vjChunkDesc& d) {
+        return !(*this == d);
+    }
+
+
     //:Constructor
     //!POST: Self is created with name and token "Unnamed",
     //+      and with only a single vjPropertyDesc ("Name")

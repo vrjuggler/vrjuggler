@@ -64,8 +64,18 @@ vjChunkDesc* vjChunkDescDB::getChunkDesc (const std::string& _token) {
 bool vjChunkDescDB::insert (vjChunkDesc *d) {
     for (unsigned int i = 0; i < descs.size(); i++)
         if (!vjstrcasecmp (descs[i]->token, d->token)) {
-            delete (descs[i]);
-            descs[i] = d;
+            cout << "----------------------------------- conflict found...\n" << endl;
+            if (*descs[i] != *d) {
+                vjDEBUG (vjDBG_ALL,vjDBG_CRITICAL_LVL) <<  clrOutNORM(clrRED, "ERROR:") << " redefinition of vjChunkDesc ("
+                                     << d->name.c_str() << ") not allowed:\n"
+                                     << "  Original Desc: \n" << *descs[i] 
+                                     << "\n  New Desc: \n" << *d 
+                                     << "\n (multiple definitions must be identical)\n"
+                                     << vjDEBUG_FLUSH;
+                vjASSERT (false);
+                return false;
+            }
+            //delete d;  // should be safe to delete, not 100% sure (ipt hack)
             return true;
         }
     descs.push_back(d);

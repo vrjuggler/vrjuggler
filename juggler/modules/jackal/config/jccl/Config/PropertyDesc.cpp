@@ -48,7 +48,6 @@ vjPropertyDesc::vjPropertyDesc () : valuelabels(), enumv() {
 }
 
 
-
 vjPropertyDesc::vjPropertyDesc (vjPropertyDesc& d): valuelabels(), enumv() {
     *this = d;
 }
@@ -244,6 +243,19 @@ vjPropertyDesc& vjPropertyDesc::operator= (vjPropertyDesc& pd) {
 }
 
 
+//: Equality Operator
+// BUG (IPTHACK) - doesn't check equality of enumerations and valuelabels
+bool vjPropertyDesc::operator== (const vjPropertyDesc& pd) {
+    if (vjstrcasecmp (name, pd.name))
+        return false;
+    if (vjstrcasecmp (token, pd.token))
+        return false;
+    if (type != pd.type)
+        return false;
+    if (num != pd.num)
+        return false;
+    return true;
+}
 
 
 
