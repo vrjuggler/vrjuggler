@@ -128,7 +128,7 @@ ThreadNSPR::spawn (BaseThreadFunctor* functor_ptr,
     retval = 0;
 
     // Finally create the thread.
-    mThread = PR_CreateThread(PR_USER_THREAD, ThreadFunctorFunction,
+    mThread = PR_CreateThread(PR_USER_THREAD, vprThreadFunctorFunction,
                               (void*) functor_ptr, nspr_prio, nspr_scope,
                               nspr_state, (PRUint32) stack_size);
 

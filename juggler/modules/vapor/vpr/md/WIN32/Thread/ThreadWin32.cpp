@@ -100,7 +100,7 @@ ThreadWin32::spawn (BaseThreadFunctor* functorPtr,
                     VPRThreadState state, size_t stack_size)
 {
     unsigned int thread_id;
-    mThreadHandle = (HANDLE) _beginthreadex(NULL, 0, &ThreadFunctorFunction,
+    mThreadHandle = (HANDLE) _beginthreadex(NULL, 0, &vprThreadFunctorFunction,
                                             functorPtr, 0, &thread_id);
     if (0 == mThreadHandle)
     {

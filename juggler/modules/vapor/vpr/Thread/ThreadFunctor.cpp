@@ -42,13 +42,13 @@ namespace vpr {
 //--------------------------------------------
 #if defined(VPR_USE_IRIX_SPROC)	/* ---- Using IRIX Sproc ------ */
     void
-    ThreadFunctorFunction (void* args) {
+    vprThreadFunctorFunction (void* args) {
         BaseThreadFunctor& func = *(BaseThreadFunctor*)args;
         func();	// Call the functor's operator ()
     }
 #elif defined(VPR_USE_WIN32)	/* ----- Using Win32 ---- */
     unsigned int __stdcall
-    ThreadFunctorFunction (void* args) {
+    vprThreadFunctorFunction (void* args) {
          BaseThreadFunctor& func = *(BaseThreadFunctor*)args;
          func();
          return 0;
@@ -59,7 +59,7 @@ namespace vpr {
 #   else
         void*
 #   endif
-        ThreadFunctorFunction (void* args) {
+        vprThreadFunctorFunction (void* args) {
             ThreadManager* vpr_tm_inst;
             BaseThreadFunctor& func = *((BaseThreadFunctor*) args);
 
@@ -78,13 +78,13 @@ namespace vpr {
 
 #elif defined(VPR_USE_NSPR)
     void
-    ThreadFunctorFunction (void* args) {
+    vprThreadFunctorFunction (void* args) {
         BaseThreadFunctor& func = *(BaseThreadFunctor*)args;
         func();
     }
 #else
     void
-    ThreadFunctorFunction (void* args) {
+    vprThreadFunctorFunction (void* args) {
         BaseThreadFunctor& func = *(BaseThreadFunctor*)args;
         func();
     }

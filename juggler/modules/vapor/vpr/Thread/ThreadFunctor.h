@@ -133,18 +133,18 @@ public:
 // It must be extern "C"
 //---------------------------------------------
 #if defined(VPR_USE_IRIX_SPROC)	/* ---- SGI IPC Barrier ------ */
-    extern "C" void ThreadFunctorFunction(void* args);
+    extern "C" void vprThreadFunctorFunction(void* args);
 #elif defined(VPR_USE_WIN32)
-    unsigned int __stdcall ThreadFunctorFunction(void* args);
+    unsigned int __stdcall vprThreadFunctorFunction(void* args);
 #elif defined(VPR_USE_PTHREADS)
 #   ifdef _PTHREADS_DRAFT_4
         extern "C" void
 #   else
         extern "C" void*
 #   endif
-        ThreadFunctorFunction (void* args);
+        vprThreadFunctorFunction(void* args);
 #else
-    extern "C" void ThreadFunctorFunction(void* args);
+    extern "C" void vprThreadFunctorFunction(void* args);
 #endif	/* VPR_IRIX_SPROC */
 
 }; // End of vpr namespace

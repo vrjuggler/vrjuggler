@@ -108,7 +108,7 @@ public:
           BaseThread::VPRThreadState state = VPR_JOINABLE_THREAD,
           size_t stack_size = 0)
    {
-      mThreadPID = sproc(thread_func_t(&ThreadFunctorFunction), PR_SADDR,
+      mThreadPID = sproc(thread_func_t(&vprThreadFunctorFunction), PR_SADDR,
                          functorPtr);
       return mThreadPID;
    }
