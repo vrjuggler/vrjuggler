@@ -24,10 +24,6 @@
 
                 Sonix
 
-                Plexus
-
-                Distributed Shared Objects (DSO)
-
                 Tweek
 
    VR Juggler 2.0
@@ -184,34 +180,6 @@ Modules
    audio APIs to be safely swapped out at runtime without the dependent
    systems noticing. Systems using this layer expect to be completely
    portable.
-
-  Plexus
-
-    Directory
-
-   juggler/modules/plexus
-
-    Description
-
-   Plexus is a network data routing library that operates at the application
-   level on top of the TCP/IP stack. The focus of Plexus is to make
-   low-latency data networks for use within virtual environments. It is not
-   strictly limited to use with virtual reality (VR), but its design focuses
-   on the needs of VR. Those needs include soft real-time responsiveness to
-   enhance the users' suspension of disbelief.
-
-  Distributed Shared Objects (DSO)
-
-    Directory
-
-   juggler/modules/dso
-
-    Description
-
-   Distributed Shared Objects (DSO) are useful. It provides a simple
-   intuitive interface to share data between applications. The DSO has been
-   engineered with soft real-time requirements in mind and is suitable for
-   collaborative virtual reality applications.
 
   Tweek
 
