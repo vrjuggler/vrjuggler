@@ -21,7 +21,7 @@ dnl # -------------------------------------------- #
 dnl # Enable binary format.  Possible values are "O32", "N32" or "64".
 dnl # The default is "N32".
 AC_ARG_WITH(abi,
-            [  --with-abi=[O32|N32_M3|N32_M4|64_M3|64_M4|HP]
+            [  --with-abi=[O32|N32_M3|N32_M4|64_M3|64_M4|HP|AOUT_i386|ELF_i386]
                           define the Application Binary Interface to use
                           [default=N32_M3]],
             _abi_type="$withval", _abi_type='N32_M3')
@@ -120,6 +120,16 @@ elif test "x${_abi_type}" = "xHP" ; then
     ISA=''
     LIBBITSUF=''
     _EXTRA_FLAGS=''
+elif test "x$abi_type" = "xAOUT_i386" ; then
+    ABI='AOUT'
+    ISA='i386'
+    LIBBITSUF=''
+    _EXTRA_FLAGS='-aout'
+elif test "x$abi_type" = "xELF_i386" ; then
+    ABI='ELF'
+    ISA='i386'
+    LIBBITSUF=''
+    _EXTRA_FLAGS='-elf'
 fi
 
 dnl # -------------------------------------------------------------------------
@@ -243,9 +253,37 @@ case $host_os in
         ;;
     dnl # i386-class machine running FreeBSD.
     freebsd*)
+        if test "$ABI" != "ELF" -a "$ABI" != "AOUT" ; then
+            if test -x "/usr/bin/objformat" ; then
+                _binfmt=`/usr/bin/objformat`
+
+                if test "$_binfmt" = "elf" ; then
+                    ABI="ELF"
+                    LIBBITSUF=''
+                    _EXTRA_FLAGS='-elf'
+                else
+                    ABI="AOUT"
+                    LIBBITSUF=''
+                    _EXTRA_FLAGS='-aout'
+                fi
+            else
+                ABI="AOUT"
+                LIBBITSUF=''
+                _EXTRA_FLAGS='-aout'
+            fi
+        fi
+
+        AR='ar -r'
+        INCLUDES="$INCLUDES -I/usr/include"
+        LD='${CXX} -shared'
+        LDOPTS=''
+        OPT_FLAGS='-O2'
+        SHAREDLIB_EXT='so'
+
         AC_DEFINE(VJ_OS_FreeBSD,)
+        ISA='i386'
         ABI_LIST='AOUT ELF'
-        PLATFORM='i386-FBSD'
+        PLATFORM='FreeBSD'
         ;;
     dnl # Unkown operating system (to config.guess).
     unknown)
@@ -278,6 +316,30 @@ CXXFLAGS="$CXXFLAGS ${_EXTRA_FLAGS}"
 
 AC_PROG_CC
 AC_PROG_CXX
+
+dnl # On FreeBSD, we need to use egcs 1.1.2-release or newer for the C and C++
+dnl # compilers (especially for C++).
+if test "$PLATFORM" = "FreeBSD" ; then
+    AC_CACHE_CHECK(if $CC is egcs 1.1.2 or newer,
+        ac_cv_CC_is_egcs,
+        [ _val=`$CC -v 2>&1 | grep -e '^gcc version' | cut -f4 -d' '` ;
+          if test $_val -ge 19990314 ; then
+              ac_cv_CC_is_egcs='yes' ;
+          else
+              ac_cv_CC_is_egcs='no' ;
+          fi
+        ])
+
+    dnl # If the $CC binary is not egcs 1.1.2 or newer, check for egcc.  If
+    dnl # it exists, we will assume that it is new enough.
+    if test $ac_cv_CC_is_egcs = 'no' ; then
+        AC_CHECK_PROG(CC, egcc, egcc,
+            AC_MSG_ERROR(*** The library requires the egcc C compiler ***))
+        AC_CHECK_PROG(CXX, eg++, eg++,
+            AC_MSG_ERROR(*** The library requires the eg++ C++ compiler ***))
+    fi
+fi
+
 AC_PROG_CPP
 AC_PROG_CXXCPP
 
@@ -369,8 +431,23 @@ if test "x${_thread_pkg}" = "xPOSIX" ; then
         AC_CHECK_LIB(cma, pthread_create,
             AC_CHECK_HEADER(pthread.h,
                 [ THREADS='POSIX'; LIBS="$LIBS -lcma"; ],
-                AC_MSG_WARN(*** POSIX threads will not be used (header file not found) ***)),
-            AC_MSG_WARN(*** POSIX threads will not be used (no library found) ***))
+                AC_MSG_WARN(*** POSIX threads will not be used (header file not found) ***)))
+    fi
+
+    dnl # On FreeBSD, the pthreads stuff is in libc_r.
+    if test -z "$THREADS" ; then
+        _vjsave_CFLAGS="$CFLAGS"
+        CFLAGS="$CFLAGS -pthread"
+
+        AC_CHECK_LIB(c_r, pthread_create,
+            AC_CHECK_HEADER(pthread.h,
+                [ THREADS='POSIX';
+                  CXXFLAGS="$CXXFLAGS -pthread" ;
+                  LIBS="$LIBS -lc_r";
+                ],
+                [ CFLAGS="$_vjsave_CFLAGS" ;
+                  AC_MSG_WARN(*** POSIX threads will not be used (header file not found) ***)
+                ]))
     fi
 
     dnl # If $THREADS is equal to "POSIX" at this point, then the pthread
@@ -402,6 +479,8 @@ if test "x${_thread_pkg}" = "xPOSIX" ; then
             AC_DEFINE(VJ_THREAD_SCOPE, PTHREAD_SCOPE_SYSTEM)
             AC_DEFINE(VJ_POSIX_C_SOURCE, 2)
         fi
+    else
+        AC_MSG_WARN(*** POSIX threads will not be used (no library found) ***)
     fi
 
 dnl # If we are not using POSIX threads, we must be using the SGI IPC model,
@@ -462,6 +541,10 @@ if test "x${_enable_opengl}" = "xyes" ; then
     _vjsave_CPPFLAGS="$CPPFLAGS"
     _vjsave_INCLUDES="$INCLUDES"
     _vjsave_LDFLAGS="$LDFLAGS"
+
+    if test "$PLATFORM" = "FreeBSD" ; then
+        LDFLAGS="$LDFLAGS -lX11 -lXext -lICE -lm"
+    fi
 
     dnl # Add the user-specified OpenGL installation directory to these paths.
     dnl # Ensure that /usr/include and /usr/lib are not included multiple times

@@ -175,6 +175,14 @@ ifdef vjABI
         ABI		= 64
         ISA		= mips4
     endif
+    ifeq (${vjABI}, AOUT_i386)
+        ABI		= AOUT
+        ISA		= i386
+    endif
+    ifeq (${vjABI}, ELF_i386)
+        ABI		= ELF
+        ISA		= i386
+    endif
 else
     ABI		= @ABI@
     ISA		= @ISA@
@@ -203,6 +211,18 @@ ifeq (${ABI}, 64)
     CXXFLAGS	+= -64
     LDOPTS	+= -64
     LIBBITSUF	= 64
+endif
+ifeq (${ABI}, AOUT)
+    CFLAGS	+= -aout
+    CXXFLAGS	+= -aout
+    LDOPTS	+= -aout
+    LIBBITSUF	=
+endif
+ifeq (${ABI}, ELF)
+    CFLAGS	+= -elf
+    CXXFLAGS	+= -elf
+    LDOPTS	+= -elf
+    LIBBITSUF	=
 endif
 
 ifeq (${ISA}, mips3)
