@@ -175,7 +175,7 @@ DPP_PROG_LINKER
 # -----------------------------------------------------------------------------
 # Checks for libraries.
 # -----------------------------------------------------------------------------
-VPR_PATH([0.23.0], , [AC_MSG_ERROR([*** VPR required for Gadgeteer ***])])
+VPR_PATH([0.27.5], , [AC_MSG_ERROR([*** VPR required for Gadgeteer ***])])
 JCCL_PATH_CXX([0.2.0], ,
               [AC_MSG_ERROR([*** JCCL C++ API required for Gadgeteer ***])])
 
