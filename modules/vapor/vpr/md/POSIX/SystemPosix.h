@@ -42,8 +42,8 @@
 /*
  * --------------------------------------------------------------------------
  * NOTES:
- *    - This file (vprSystemPosix.h) MUST be included by vprSystemBase.h,
- *      not the other way around.
+ *    - This file (SystemPosix.h) MUST be included by SystemBase.h, not the
+ *      other way around.
  * --------------------------------------------------------------------------
  */
 
@@ -52,8 +52,6 @@
 
 #include <vpr/vprConfig.h>
 
-#include <stdlib.h>
-#include <string.h>
 #include <string>
 #include <unistd.h>
 #include <sys/time.h>
@@ -67,7 +65,6 @@
 #include <sys/types.h>
 #include <netinet/in.h>
 #include <sys/param.h>
-#include <sys/utsname.h>
 
 #include <vpr/Util/ReturnStatus.h>
 #include <vpr/vprTypes.h>
@@ -104,138 +101,47 @@ public:
       return ::sleep(seconds);
    }
 
-   static int gettimeofday (struct timeval* tp, struct timezone* tzp = NULL)
+   static int gettimeofday(struct timeval* tp, struct timezone* tzp = NULL)
    {
       return ::gettimeofday(tp, tzp);
    }
 
    // ----- Host to network byte order conversions ---- //
-   static vpr::Uint16 Ntohs (vpr::Uint32 conversion)
+   static vpr::Uint16 Ntohs(vpr::Uint32 conversion)
    {
       return ntohs(conversion);
    }
 
-   static vpr::Uint32 Ntohl (vpr::Uint32 conversion)
+   static vpr::Uint32 Ntohl(vpr::Uint32 conversion)
    {
       return ntohl(conversion);
    }
 
-   static vpr::Uint64 Ntohll(vpr::Uint64 conversion)
-   {
-      vpr::Uint64 ret_val;
-      
-      if (isLittleEndian())
-      {
-         *((vpr::Uint32*)(&ret_val) + 1) = SystemPosix::Ntohl(*((vpr::Uint32*)(&conversion)));
-         *( ((vpr::Uint32*)(&ret_val))) = SystemPosix::Ntohl( *( ((vpr::Uint32*)(&conversion))+1) );
-      }
-      else
-      {
-         *((vpr::Uint32*)(&ret_val)) = SystemPosix::Ntohl(*((vpr::Uint32*)(&conversion)));
-         *( ((vpr::Uint32*)(&ret_val)) + 1) = SystemPosix::Ntohl( *( ((vpr::Uint32*)(&conversion))+1) );
-      }
-      return ret_val;
-   }
+   static vpr::Uint64 Ntohll(vpr::Uint64 conversion);
 
-   static vpr::Uint16 Htons (vpr::Uint16 conversion)
+   static vpr::Uint16 Htons(vpr::Uint16 conversion)
    {
       return htons(conversion);
    }
 
-   static vpr::Uint32 Htonl (vpr::Uint32 conversion)
+   static vpr::Uint32 Htonl(vpr::Uint32 conversion)
    {
       return htonl(conversion);
    }
 
-   static vpr::Uint64 Htonll(vpr::Uint64 conversion)
-   {
-      vpr::Uint64 ret_val;
-      if (isLittleEndian())
-      {
-         *((vpr::Uint32*)(&ret_val) + 1) = SystemPosix::Htonl(*((vpr::Uint32*)(&conversion)));
-         *( ((vpr::Uint32*)(&ret_val))) = SystemPosix::Htonl( *( ((vpr::Uint32*)(&conversion))+1) );
-      }
-      else
-      {
-         *((vpr::Uint32*)(&ret_val)) = SystemPosix::Htonl(*((vpr::Uint32*)(&conversion)));
-         *( ((vpr::Uint32*)(&ret_val)) + 1) = SystemPosix::Htonl( *( ((vpr::Uint32*)(&conversion))+1) );
-      }
-      return ret_val;
-   }
+   static vpr::Uint64 Htonll(vpr::Uint64 conversion);
 
-   static ReturnStatus getenv (const std::string& name, std::string& result)
-   {
-      char* val;
-      ReturnStatus status;
+   static vpr::ReturnStatus getenv(const std::string& name,
+                                   std::string& result);
 
-      val = ::getenv(name.c_str());
-
-      if ( val != NULL )
-      {
-         result = val;
-      }
-      else
-      {
-         status.setCode(ReturnStatus::Fail);
-      }
-
-      return status;
-   }
-
-   static ReturnStatus setenv (const std::string& name,
-                               const std::string& value)
-   {
-      // NSPR requires form of "name=value"
-      std::string set_value(name);
-      set_value += "=";
-      set_value += value;
-
-      ReturnStatus status;
-
-      // Purposely leak memory since putenv(3) may want to hold on to the
-      // pointer we pass.
-      char* env_str = strdup(set_value.c_str());
-      int ret_val = ::putenv(env_str);
-
-      if ( ret_val == 0 )
-      {
-         status.setCode(ReturnStatus::Succeed);
-      }
-      else
-      {
-         status.setCode(ReturnStatus::Fail);
-      }
-
-      return status;
-   }
+   static vpr::ReturnStatus setenv(const std::string& name,
+                                   const std::string& value);
 
    /**
     * Returns the name of the host.
     * For example the hostname of: vapor.vrjuggler.org is "vapor"
     */
-   static std::string getHostname (void)
-   {
-      struct utsname buffer;
-
-      if ( uname(&buffer) == 0 )
-      {
-         char* temp;
-         temp = strchr(buffer.nodename, '.');
-
-         // If the node name contains the full host, dots and all, truncate it
-         // at the first dot.
-         if ( temp != NULL )
-         {
-            *temp = '\0';
-         }
-
-         return std::string(buffer.nodename);
-      }
-      else
-      {
-         return std::string("<hostname-lookup failed>");
-      }
-   }
+   static std::string getHostname();
 };
 
 } // End of vpr namespace
