@@ -30,6 +30,10 @@ public:
          writer->writeUint16(shortVal);
          writer->writeUint32(longVal);
          writer->writeUint64(longlongVal);
+         writer->writeUint8(scharVal);
+         writer->writeUint16(sshortVal);
+         writer->writeUint32(slongVal);
+         writer->writeUint64(slonglongVal);
          writer->writeFloat(floatVal);
          writer->writeDouble(doubleVal);
          return vpr::ReturnStatus::Succeed;
@@ -41,6 +45,10 @@ public:
          shortVal = reader->readUint16();
          longVal = reader->readUint32();
          longlongVal = reader->readUint64();
+         scharVal = reader->readUint8();
+         sshortVal = reader->readUint16();
+         slongVal = reader->readUint32();
+         slonglongVal = reader->readUint64();
          floatVal = reader->readFloat();
          doubleVal = reader->readDouble();
          return vpr::ReturnStatus::Succeed;
@@ -52,6 +60,10 @@ public:
                   (shortVal == r.shortVal) &&
                   (longVal == r.longVal) &&
                   (longlongVal == r.longlongVal) &&
+                  (scharVal == r.scharVal) &&
+                  (sshortVal == r.sshortVal) &&
+                  (slongVal == r.slongVal) &&
+                  (slonglongVal == r.slonglongVal) &&
                   (floatVal == r.floatVal) &&
                   (doubleVal == r.doubleVal) );
       }
@@ -61,6 +73,12 @@ public:
       vpr::Uint16 shortVal;
       vpr::Uint32 longVal;
       vpr::Uint64 longlongVal;
+
+      vpr::Int8   scharVal;
+      vpr::Int16  sshortVal;
+      vpr::Int32  slongVal;
+      vpr::Int64  slonglongVal;
+
       float       floatVal;
       double      doubleVal;
    };
