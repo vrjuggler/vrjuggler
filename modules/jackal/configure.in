@@ -191,7 +191,7 @@ if test "x$BUILD_JAVA" = "xY" ; then
         [$JUNIT_JAR])
 
     # Check for the ant build program
-    ANT_HOME=$JUGGLERROOT_ABS/external/ant
+    ANT_HOME=$UNIX_JUGGLERROOT_ABS/external/ant
     AC_PATH_PROG([ANT], [ant], [no], [${ANT_HOME}/bin])
     if test "x$ANT" == "xno"; then
       AC_MSG_WARN([*** Can't find the java build tool ant. Editor JavaBeans will not be built ***])
