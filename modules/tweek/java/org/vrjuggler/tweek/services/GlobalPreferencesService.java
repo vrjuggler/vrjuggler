@@ -278,23 +278,21 @@ public class GlobalPreferencesService
     */
    public void setFileName (String name)
    {
-      File temp_file = new File(name);
+      setFile(new File(name));
+   }
 
-      if ( ! temp_file.exists() )
-      {
-         System.err.println("WARNING: Tweek preferences file " + name +
-                            " does not exist, defaulting to " +
-                            m_prefs_file.getAbsolutePath());
-      }
-      else
-      {
-         m_prefs_file = temp_file;
-      }
+   /**
+    * Changes the default preferences file object to use the given object.
+    */
+   public void setFile (File prefs_file)
+   {
+      m_prefs_file = prefs_file;
    }
 
    /**
     * Loads the user's prefernces file if one exists.  If the user has not
-    * defined a preferences file, one is created.
+    * defined a preferences file (i.e., the named preferences file does not
+    * exist), one is created.
     */
    public synchronized void load ()
    {
