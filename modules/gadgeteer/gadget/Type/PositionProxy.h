@@ -83,7 +83,7 @@ public:
          // Filter the data if there is an active filters
          if(mFilter != NULL)
          {
-            *(mPositionData.getPositionData()) = mFilter->getPos(*(mPositionData.getPositionData()));
+            *(mPositionData.getPosition()) = mFilter->getPos(*(mPositionData.getPosition()));
          }
       }
    }
@@ -107,13 +107,13 @@ public:
    vrj::Matrix* getData()
    {
       if(mStupified)
-         mPositionData.getPositionData()->makeIdent();
+         mPositionData.getPosition()->makeIdent();
 
-      return mPositionData.getPositionData();
+      return mPositionData.getPosition();
    }
 
     /** Get the actual PositionData. */
-    PositionData* getPositionData() {
+    PositionData* getPosition() {
         return &mPositionData;
     }
 
@@ -142,7 +142,7 @@ public:
    //!NOTE: This moves the wMr to the modifed reciever system wMmr
    //+  where w = world, mr = world of the reciever, and r = reciever
    void transformData()
-   { mPositionData.getPositionData()->postMult(mMatrixTransform); }
+   { mPositionData.getPosition()->postMult(mMatrixTransform); }
 
    static std::string getChunkType() { return "PosProxy"; }
 

@@ -101,7 +101,7 @@ namespace gadget
 
     for(int i=0;i<mTrackdSensors->numSensors();i++)
     {
-       *(mCurSensorValues[i].getPositionData())
+       *(mCurSensorValues[i].getPosition())
            = mTrackdSensors->getSensorPos(i);
        mCurSensorValues[i].setTime();
     }

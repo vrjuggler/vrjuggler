@@ -53,38 +53,39 @@ bool DigitalProxy::config(jccl::ConfigChunkPtr chunk)
 
 void DigitalProxy::updateData()
 {
-   if(!mStupified)
+   if (!mStupified)
    {
-       int old_state = m_data.getDigitalData();
-       m_data = *mTypedDevice->getDigitalData(m_unitNum);
-       int new_state = m_data.getDigitalData();
-       if(Digital::OFF == old_state)
+      int old_state = m_data.getDigital();
+      m_data = *mTypedDevice->getDigitalData(m_unitNum);
+      int new_state = m_data.getDigital();
+
+      if (Digital::OFF == old_state)
       {
-          if(new_state)     // Button now pressed
-         m_data = Digital::TOGGLE_ON;
-          else              // Button now released
-         m_data = Digital::OFF;
+         if (new_state)     // Button now pressed
+            m_data = Digital::TOGGLE_ON;
+         else              // Button now released
+            m_data = Digital::OFF;
       }
-       else if(Digital::ON == old_state)
+      else if (Digital::ON == old_state)
       {
-          if(new_state)     // Button now pressed
-         m_data = Digital::ON;
-          else              // Button now released
-         m_data = Digital::TOGGLE_OFF;
+         if (new_state)     // Button now pressed
+            m_data = Digital::ON;
+         else              // Button now released
+            m_data = Digital::TOGGLE_OFF;
       }
-       else if(Digital::TOGGLE_ON == old_state)
+      else if (Digital::TOGGLE_ON == old_state)
       {
-          if(new_state)     // Button now pressed
-         m_data = Digital::ON;
-          else              // Button now released
-         m_data = Digital::TOGGLE_OFF;
+         if (new_state)     // Button now pressed
+            m_data = Digital::ON;
+         else              // Button now released
+            m_data = Digital::TOGGLE_OFF;
       }
-       else if(Digital::TOGGLE_OFF == old_state)
+      else if (Digital::TOGGLE_OFF == old_state)
       {
-          if(new_state)     // Button now pressed
-         m_data = Digital::TOGGLE_ON;
-          else              // Button now released
-         m_data = Digital::OFF;
+         if (new_state)     // Button now pressed
+            m_data = Digital::TOGGLE_ON;
+         else              // Button now released
+            m_data = Digital::OFF;
       }
    }
 }

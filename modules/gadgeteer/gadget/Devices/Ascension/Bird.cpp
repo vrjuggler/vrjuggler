@@ -81,14 +81,14 @@ bool Bird::config(jccl::ConfigChunkPtr c)
       return false;
 
   strncpy(mPort,"/dev/ttyd3", 30);
-  initCorrectionTable();  
+  initCorrectionTable();
 
   return true;
 }
 
 Bird::~Bird()
 {
-  stopSampling();    
+  stopSampling();
 }
 
 static void sampleBirds(void* pointer)
@@ -161,7 +161,7 @@ int Bird::sample()
      //for(i=1; i < theTransmitter; i++)
      {
    //int subNum;
-        getReading( cur_samples[0].getPositionData(), mPortId);
+        getReading( cur_samples[0].getPosition(), mPortId);
         cur_samples[0].setTime();
    /* XXX:
    positionCorrect(theData[progress].pos[0],

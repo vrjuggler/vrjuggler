@@ -243,10 +243,10 @@ int Intersense::sample()
 
       if ( mTracker.rAngleFormat(stationIndex) == ISD_EULER )
       {
-         cur_pos_samples[i].getPositionData()->makeZYXEuler(mTracker.zRot( stationIndex ),
+         cur_pos_samples[i].getPosition()->makeZYXEuler(mTracker.zRot( stationIndex ),
                                                       mTracker.yRot( stationIndex ),
                                                       mTracker.xRot( stationIndex ));
-         cur_pos_samples[i].getPositionData()->setTrans(mTracker.xPos( stationIndex ),
+         cur_pos_samples[i].getPosition()->setTrans(mTracker.xPos( stationIndex ),
                                                   mTracker.yPos( stationIndex ),
                                                   mTracker.zPos( stationIndex ));
       }
@@ -257,7 +257,7 @@ int Intersense::sample()
                              mTracker.yQuat( stationIndex ),
                              mTracker.zQuat( stationIndex ),
                              mTracker.wQuat( stationIndex ));
-         cur_pos_samples[i].getPositionData()->makeQuaternion(quatValue);
+         cur_pos_samples[i].getPosition()->makeQuaternion(quatValue);
       }
 
       cur_pos_samples[i].setTime (cur_pos_samples[0].getTime());
@@ -296,9 +296,9 @@ int Intersense::sample()
       vrj::Matrix world_T_transmitter, transmitter_T_reciever, world_T_reciever;
 
       world_T_transmitter = xformMat;                                       // Set transmitter offset from local info
-      transmitter_T_reciever = *(cur_pos_samples[i].getPositionData());           // Get reciever data from sampled data
+      transmitter_T_reciever = *(cur_pos_samples[i].getPosition());           // Get reciever data from sampled data
       world_T_reciever.mult(world_T_transmitter, transmitter_T_reciever);   // compute total transform
-      *(cur_pos_samples[i].getPositionData()) = world_T_reciever;                                     // Store corrected xform back into data
+      *(cur_pos_samples[i].getPosition()) = world_T_reciever;                                     // Store corrected xform back into data
 
    }
 
