@@ -69,7 +69,6 @@ includedir	= @includedir@
 instlinks	= ${topdir}/instlinks
 srcdir		= @srcdir@
 top_srcdir	= @top_srcdir@
-wwwdir		= ${srcdir}/Doc
 VJROOT		= ${top_srcdir}
 VJ_SRCDIR	= @VJ_SRCDIR@
 WORKDIR		= ${topdir}
