@@ -187,11 +187,19 @@ public class ConfigBrokerImpl
          // Present the user with a dialog from which to choose a resource
          ResourceChooser chooser = new ResourceChooser();
          chooser.setDialogTitle("Choose a Configuration resource");
+         
          List res_names = new ArrayList();
          for (Iterator itr = resources.iterator(); itr.hasNext(); )
          {
-            res_names.add(itr.next());
+            String resource_name = (String)itr.next();
+            
+            // Only add resources that are writable.
+            if (!get(resource_name).isReadOnly())
+            {
+               res_names.add(resource_name);
+            }
          }
+         
          chooser.setResources(res_names);
          int result = chooser.showDialog(null);
          if (result == ResourceChooser.APPROVE_OPTION)
