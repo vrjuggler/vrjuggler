@@ -18,8 +18,11 @@ color: rgb(0, 0, 0);
 }
 table
 {
+font-family: Century Gothic, Arial, Helvetica;
 table-border-color-light: rgb(204, 153, 255);
 table-border-color-dark: rgb(204, 0, 204); 
+background-color: rgb(255, 255, 255);
+color: rgb(0, 0, 0);
 }
 h1, h2, h3, h4, h5, h6, h1style
 {
