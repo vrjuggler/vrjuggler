@@ -54,7 +54,7 @@ void uuid_create_from_name(
          1   u1 is lexically after u2
    Note:   lexical ordering is not temporal ordering!
 */
-int uuid_compare(uuid_t *u1, uuid_t *u2);
+int uuid_compare(const uuid_t *u1, const uuid_t *u2);
 
 #ifdef __cplusplus
 }
