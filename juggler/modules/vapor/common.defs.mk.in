@@ -23,7 +23,7 @@
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # =============================================================================
-# common.defs.mk.in,v 1.9 2001/02/22 23:34:18 patrick Exp
+# common.defs.mk.in,v 1.11 2001/04/22 20:26:28 patrickh Exp
 #
 # This file <common.defs.mk> provides variable assignments based on the
 # results of running a Doozer++-aware configure script.
@@ -80,6 +80,8 @@
 # INCLUDES        - Additions to the include path (-I/path/to/include).
 # JAR             - Command for creating Java JAR files.
 # JAVAC           - Java compiler.
+# JAVAH           - javah utility.
+# JDK_HOME        - Base Java installation directory.
 # LD              - Path to ld(1) (or equivalent program).
 # LDFLAGS         - Flags for $(LD).
 # LDOPTS          - Extra, often platform-specific, options for the linker.
@@ -93,6 +95,7 @@
 # PERL            - Path to Perl 5 binary.
 # RANLIB          - Path to ranlib(1) binary if it is available.  ':'
 #                   otherwise.
+# RMIC            - Java RMI compiler utility.
 #
 # C_COMPILE       - Command for compiling C code.
 # CXX_COMPILE     - Command for compiling C++ code.
@@ -143,6 +146,8 @@ INCLUDES	= @INCLUDES@ -I$(topdir) $(EXTRA_INCLUDES)
 INSTALL		= @INSTALL@
 JAR		= @JAR@
 JAVAC		= @JAVAC@
+JAVAH		= @JAVAH@
+JDK_HOME	= @JDK_HOME@
 LD		= @LD@ $(DPP_EXTRA_LDFLAGS) $(EXTRA_LDFLAGS)
 LDFLAGS		= @LDFLAGS@ -L/usr/lib$(LIBBITSUF) -L/usr/lib
 LDOPTS		= @LDOPTS@ $(DPP_EXTRA_LDOPTS) $(EXTRA_LDOPTS)		\
@@ -157,6 +162,7 @@ OBJ_NAME_FLAG	= @OBJ_NAME_FLAG@
 OS_TYPE		= @OS_TYPE@
 PERL		= @PERL@
 RANLIB		= @RANLIB@
+RMIC		= @RMIC@
 
 # SGI-specific dynamic-shared-object information.
 DSOREGFILE	= @DSOREGFILE@
