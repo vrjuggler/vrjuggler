@@ -74,14 +74,14 @@ public:
    }
 
 public:     // RECONFIG STUFF
-   virtual bool configCanHandle(vrj::ConfigChunk* chunk)
+   virtual bool configCanHandle(jccl::ConfigChunk* chunk)
    {
       return configCanHandleChunk(chunk);
    }
 
    // This function is so that others can query this object to
    // see if it can be configured with the given information
-   static bool configCanHandleChunk(vrj::ConfigChunk* chunk)
+   static bool configCanHandleChunk(jccl::ConfigChunk* chunk)
    {
       std::string chunk_type = (std::string)chunk->getType();
 
@@ -101,22 +101,22 @@ public:     // RECONFIG STUFF
    { return true; }
 
 protected:
-   //! NOTE: Inherited from vrj::ConfigChunkHandler
-   virtual bool configAdd(vrj::ConfigChunk* chunk);
+   //! NOTE: Inherited from jccl::ConfigChunkHandler
+   virtual bool configAdd(jccl::ConfigChunk* chunk);
 
-   //! NOTE: INherited from vrj::ConfigChunkHandler
-   virtual bool configRemove(vrj::ConfigChunk* chunk)
+   //! NOTE: INherited from jccl::ConfigChunkHandler
+   virtual bool configRemove(jccl::ConfigChunk* chunk)
    { vprASSERT(false); return false; }
 
 protected:
-   vrj::ConfigChunk* mCurrentConfig;      // config chunk that is current configuring this thingie
+   jccl::ConfigChunk* mCurrentConfig;      // config chunk that is current configuring this thingie
 };
 
 // Get the properties from the chunks
 // XXX: Smart update
 // Set the properties
 // Load with new settings
-bool pfBasicConfigNavApp::configAdd( vrj::ConfigChunk* chunk )
+bool pfBasicConfigNavApp::configAdd( jccl::ConfigChunk* chunk )
 {
    int x;
 
@@ -168,7 +168,7 @@ bool pfBasicConfigNavApp::configAdd( vrj::ConfigChunk* chunk )
    mModelList.clear();//start out clean
    for (x = 0; x < chunk->getNum( "Model" ); ++x)
    {
-      vrj::ConfigChunk* model_chunk = chunk->getProperty( "Model", x );
+      jccl::ConfigChunk* model_chunk = chunk->getProperty( "Model", x );
       Model m;
       m.description = (std::string)model_chunk->getProperty( "Name" );
       m.filename = (std::string)model_chunk->getProperty( "filename" );
@@ -188,7 +188,7 @@ bool pfBasicConfigNavApp::configAdd( vrj::ConfigChunk* chunk )
    mSoundList.clear();//start out clean
    for (x = 0; x < chunk->getNum( "Sound" ); ++x)
    {
-      vrj::ConfigChunk* sound_chunk = chunk->getProperty( "Sound", x );
+      jccl::ConfigChunk* sound_chunk = chunk->getProperty( "Sound", x );
       Sound s;
       s.name = (std::string)sound_chunk->getProperty( "Name" );
       s.alias = (std::string)sound_chunk->getProperty( "soundAlias" );
