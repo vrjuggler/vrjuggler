@@ -672,6 +672,9 @@ clean-links:
 # independent of the current ABI.
 beforeinstall:
 	${MAKE} hier
+ifdef GROUP_NAME
+	@chgrp -R ${GROUP_NAME} ${prefix}
+endif
 
 # Make the full directory hierarchy for the installation.
 hier:
