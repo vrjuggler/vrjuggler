@@ -539,7 +539,7 @@ int omni_main_i(int argc, char** const argv)
 if test "x$VPR_SUBSYSTEM" = "xSPROC" ; then
    case $cxx_orb_name in
       omniORB*)
-         AC_MSG_WARN([*** Tweek C++ ABI will not run with SPROC threads ***])
+         AC_MSG_WARN([*** Tweek C++ API will not run with SPROC threads ***])
          BUILD_CXX='N'
          ;;
    esac
