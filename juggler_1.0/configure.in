@@ -43,6 +43,14 @@ AC_ARG_WITH(threads,
                           define thread package [default=SGI_IPC]],
             thread_pkg="$withval", thread_pkg='SGI_IPC')
 
+dnl # Define the root directory for the Java installation.
+dnl # The default is /usr/java.
+JDK_HOME_DEFAULT="/usr/java"
+JDK_HOME_ALT_LIST="/usr/local/java"
+AC_ARG_WITH(jdkhome,
+            [  --with-jdkhome=[PATH]  JDK installation directory [default=/usr/java]],
+            JDK_HOME="$withval", JDK_HOME="$JDK_HOME_DEFAULT")
+
 dnl # Define the root directory for the Performer installation.
 dnl # The default is /usr.
 AC_ARG_WITH(pfroot,
@@ -262,6 +270,65 @@ AC_PROG_CC
 AC_PROG_CXX
 AC_PROG_CPP
 AC_PROG_CXXCPP
+
+# Check for the JDK (specifically try to find javac(1) in $JDK_HOME).
+JAVAC=''
+JAR=''
+
+# In checking for javac(1), "${JDK_HOME}/bin" is added to the script's $PATH
+# variable.  This directory may already be in the path, but this ensures that
+# javac(1) will be found by AC_PATH_PROG().
+vjsave_PATH="$PATH"
+PATH="$PATH:${JDK_HOME}/bin"
+AC_PATH_PROG(JAVAC, javac)
+PATH="$vjsave_PATH"
+
+# If $JAVAC was not set by AC_PATH_PROG(), try to find the JDK installation
+# directory using the list in $JDK_HOME_ALT_LIST.
+if test -z "$JAVAC" ; then
+    # Add the default value for $JDK_HOME (found in $JDK_HOME_DEFAULT) to
+    # the list of alternate installation directories in case the user gave
+    # a different value for $JDK_HOME on the command line.
+    if test "x$JDK_HOME" != "x$JDK_HOME_DEFAULT" ; then
+        JDK_HOME_ALT_LIST="$JDK_HOME_DEFAULT $JDK_HOME_ALT_LIST"
+    fi
+
+    # Loop over the list of possible alternate installation directories for
+    # the JDK found in $JDK_HOME_ALT_LIST.
+    for JDK_HOME_TMP in $JDK_HOME_ALT_LIST ; do
+        # Only check the directory in $JDK_HOME_TMP if it is not the same as
+        # the path given by the user on the command line.
+        if test "$JDK_HOME_TMP" != "$JDK_HOME" ; then
+            AC_MSG_CHECKING(for javac in $JDK_HOME_TMP)
+
+            # If an executable javac is found in $JDK_HOME_TMP, set $JAVAC to
+            # the full path to it, save $JDK_HOME_TMP in $JDK_HOME and quit
+            # looping.
+            if test -x "$JDK_HOME_TMP/bin/javac" ; then
+                JAVAC="$JDK_HOME_TMP/bin/javac"
+                JDK_HOME="$JDK_HOME_TMP"
+                AC_MSG_RESULT(yes)
+                break
+            # Otherwise, print "no" and go on to the next directory.
+            else
+                AC_MSG_RESULT(no)
+            fi
+        fi
+    done
+fi
+
+BUILD_GUI=''
+
+# If there is still no value in $JAVAC, then warn that the GUI will not be
+# built.
+if test -z "$JAVAC" ; then
+    AC_MSG_WARN(*** The GUI requires javac -- it will not be built ***)
+# Otherwise, set $JAR to the path to jar(1) and continue.
+else
+    JAR="${JDK_HOME}/bin/jar"
+    BUILD_GUI='yes'
+fi
+
 AC_PROG_INSTALL
 AC_PROG_MAKE_SET
 dnl # AC_PROG_RANLIB
@@ -577,6 +644,11 @@ AC_SUBST(PLATFORM)
 AC_SUBST(DSOREGFILE)
 AC_SUBST(DSOVERSION)
 AC_SUBST(DSOVERSIONOPTS)
+
+AC_SUBST(JDK_HOME)
+AC_SUBST(JAVAC)
+AC_SUBST(JAR)
+AC_SUBST(BUILD_GUI)
 
 #AC_SUBST(OGLROOT)
 #AC_SUBST(PFROOT)
