@@ -141,7 +141,6 @@ public class ContextToolbar
             }
          };
 
-      System.out.println("Registering listener");
       EventListenerRegistry.instance().registerListener(mTweekFrameListener,
                                                         TweekFrameListener.class);
    }
@@ -339,7 +338,7 @@ public class ContextToolbar
                   // Expand env vars in the URL
                   File res_file = (File)urls.pop();
                   String res_name = expandEnvVars(res_file.getAbsolutePath());
-                  System.out.println("Opening included resource: "+res_name);
+                  System.out.println("Opening resource: " + res_name);
 
                   FileDataSource data_source =
                      FileDataSource.open(res_name,
@@ -536,7 +535,6 @@ public class ContextToolbar
          broker.remove((String)itr.next());
       }
 
-      System.out.println("Unregistering listener");
       EventListenerRegistry.instance().unregisterListener(mTweekFrameListener,
                                                           TweekFrameListener.class);
 
