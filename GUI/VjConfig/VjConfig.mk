@@ -22,6 +22,7 @@ VJCONFIG_SOURCES = VjConfig/ChunkDependEntry.java       \
                    VjConfig/ValType.java		\
                    VjConfig/VarValue.java		\
                    VjConfig/VarValueException.java	\
-                   VjConfig/ConfigStreamTokenizer.java  
+                   VjConfig/ConfigStreamTokenizer.java  \
+		   VjConfig/ChunkFactory.java
 
 VJCONFIG_OBJS = ${VJCONFIG_SOURCES:.java=.class}
