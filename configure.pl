@@ -60,7 +60,7 @@ sub parseOutput($$);
 $DEFAULT_MODULE = '';
 %MODULES        = ();
 
-my $help        = 0;
+my $all_help    = 0;
 my $cfg         = "juggler.cfg";
 $module         = '';
 my $script_help = 0;
@@ -78,13 +78,13 @@ $LAST_ARG_GROUP = 5;
 my @save_argv = @ARGV;
 
 Getopt::Long::Configure('pass_through');
-GetOptions('help|?' => \$help, 'cfg=s' => \$cfg, 'module=s' => \$module,
-           'script-help' => \$script_help, 'manual' => \$manual,
+GetOptions('help|?' => \$script_help, 'cfg=s' => \$cfg, 'module=s' => \$module,
+           'all-help' => \$all_help, 'manual' => \$manual,
            'regen' => \$regen, 'modlist' => \$mod_list)
    or pod2usage(2);
 
-# Print the help output and exit if --script-help was on the command line or
-# if no arguments were passed.
+# Print the help output and exit if --help was on the command line or if no
+# arguments were passed.
 if ( $#save_argv == -1 || $script_help )
 {
    pod2usage(1);
@@ -100,7 +100,7 @@ $Win32 = 1 if $ENV{'OS'} && $ENV{'OS'} =~ /Windows/;
 parseConfigFile("$cfg");
 
 listModules() && exit(0) if $mod_list;
-printHelp() && exit(0) if $help;
+printHelp() && exit(0) if $all_help;
 
 if ( $regen )
 {
@@ -692,11 +692,11 @@ configure.pl
 
 =over 8
 
-=item B<--script-help>
+=item B<--help>
 
 Print usage information of this script alone and exit.
 
-=item B<--help>
+=item B<--all-help>
 
 Print usage information for all the known configure scripts.  The
 knowledge of configure scripts comes from the configuration file.  The
