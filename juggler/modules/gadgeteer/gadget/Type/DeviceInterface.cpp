@@ -40,12 +40,12 @@ namespace gadget
 BaseDeviceInterface::BaseDeviceInterface()
 : mProxyPtr(NULL), mProxyName("UnInitialized"), mNameSet(false)
 {
-   BaseDeviceInterface::addDevInterface(this);    // Keep referense to the interface
+   BaseDeviceInterface::addDevInterface(this);    // Keep reference to the interface
 }
 
 BaseDeviceInterface::~BaseDeviceInterface()
 {
-   removeDevInterface(this);     // Remove it from the list of active interfaces;
+   BaseDeviceInterface::removeDevInterface(this);     // Remove it from the list of active interfaces;
 }
 
 

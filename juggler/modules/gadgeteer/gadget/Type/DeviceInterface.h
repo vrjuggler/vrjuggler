@@ -67,6 +67,7 @@ class GADGET_CLASS_API BaseDeviceInterface
 public:
    BaseDeviceInterface(const BaseDeviceInterface& other)
    {
+      BaseDeviceInterface::addDevInterface(this);    // Keep reference to the interface
       boost::ignore_unused_variable_warning(other);
    }
 
