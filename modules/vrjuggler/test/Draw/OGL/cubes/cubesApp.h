@@ -61,6 +61,7 @@
 #include <vrj/Kernel/User.h>
 
 #include <vpr/Util/DurationStatCollector.h>
+#include <vpr/Perf/ProfileManager.h>
 
 
 
@@ -216,6 +217,7 @@ public:
    // calculations and state modifications here.
    virtual void preFrame()
    {
+      VPR_PROFILE("cubesApp::preFrame");
        vprDEBUG(vprDBG_ALL, vprDBG_HVERB_LVL) << "cubesApp::preFrame()"
                                               << std::endl << vprDEBUG_FLUSH;
 
@@ -245,6 +247,7 @@ public:
    // POST: The current scene has been drawn
    virtual void draw()
    {
+      VPR_PROFILE("cubesApp::draw");
       glClear(GL_DEPTH_BUFFER_BIT);
       initGLState();    // This should really be in another function
 
@@ -281,6 +284,11 @@ public:
       // We rely upon users to keep track of the multi-user data structure
       int num_users = vrj::Kernel::instance()->getUsers().size();
       return (num_users > 0);
+   }
+
+   virtual void exit()
+   {
+      VPR_PROFILE_RESULTS();
    }
 
 private:
