@@ -15,8 +15,12 @@ namespace vpr
 /** Statistics collection class
 *
 * STA - Short Term Average (a time limited average)
+*
+* @param TimeBased  Should the return values be /per second or just "normal" stats
+*
+*  This is basically the difference between discrete and continuous values (or interpretation of the values)
 */
-template<class TYPE>
+template<class TYPE, bool TimeBased>
 class StatCollector
 {
 public:
@@ -25,8 +29,7 @@ public:
    */
    StatCollector(vpr::Interval staMaxTime=vpr::Interval(5, vpr::Interval::Sec) )
    {
-      mSTAMaxTime = staMaxTime;      
-
+      mSTAMaxTime = staMaxTime;
       reset();
    }
 
@@ -39,7 +42,7 @@ public:
       mPrevSample1 = 0;
       mPrevSample2 = 0;
 
-      mSampleBuffer.clear();      
+      mSampleBuffer.clear();
    }
 
    void addSample(const TYPE sample);
@@ -65,14 +68,14 @@ private:
 
    vpr::DateTime mInitialSampleTime;   // Time of first sample
    vpr::Interval mPrevSampleTime1, mPrevSampleTime2;      // Time of last 2 samples (mPrevST1 < mPrevSt2)
-   TYPE mPrevSample1, mPrevSample2;                      // Previous samples
+   TYPE          mPrevSample1, mPrevSample2;              // Previous samples
 
    std::deque< std::pair<TYPE,vpr::Interval> >  mSampleBuffer;    // Buffer of samples used to calc STA
 };
 
 
-template <class TYPE>
-void StatCollector<TYPE>::addSample(const TYPE sample)
+template <class TYPE, bool TimeBased>
+void StatCollector<TYPE, TimeBased>::addSample(const TYPE sample)
 {
    mCurTotal += sample;
    mSampleCount += 1;
@@ -96,26 +99,35 @@ void StatCollector<TYPE>::addSample(const TYPE sample)
    mSampleBuffer.push_front( std::pair<TYPE,vpr::Interval>(sample, cur_time) );
 }
 
-template <class TYPE>
-double StatCollector<TYPE>::getMean()
+template <class TYPE, bool TimeBased>
+double StatCollector<TYPE, TimeBased>::getMean()
 {
    if(0 == mCurTotal)
       return 0.0f;
 
-   vpr::DateTime cur_date_time, diff_date_time;
-   double mean_result, diff_secs;
+   double mean_result(0.0);
 
-   cur_date_time.setNow();
-   diff_date_time = cur_date_time - mInitialSampleTime;
-   diff_secs = diff_date_time.getSecondsf();
+   if(TimeBased)
+   {
+      vpr::DateTime cur_date_time, diff_date_time;
+      double diff_secs;
 
-   mean_result = double(mCurTotal)/diff_secs;
+      cur_date_time.setNow();
+      diff_date_time = cur_date_time - mInitialSampleTime;
+      diff_secs = diff_date_time.getSecondsf();
+
+      mean_result = double(mCurTotal)/diff_secs;
+   }
+   else
+   {
+      mean_result = double(mCurTotal)/double(mSampleBuffer.size());
+   }
 
    return mean_result;
 }
 
-template <class TYPE>
-double StatCollector<TYPE>::getInstAverage()
+template <class TYPE, bool TimeBased>
+double StatCollector<TYPE, TimeBased>::getInstAverage()
 {
    //
    //     |
@@ -125,25 +137,40 @@ double StatCollector<TYPE>::getInstAverage()
    vpr::Interval cur_time, diff_time;
    double diff_sec;                       // Num secs different in send times
    cur_time.setNow();                     // Set current time
-   double inst_average(0.0);
-
-   // Compute -- INST BANDWIDTH
    diff_time = cur_time - mPrevSampleTime1;     // Get time to compute the average over
    diff_sec = diff_time.secf();
-   if(diff_sec > 0)
+
+   double inst_average(0.0);
+
+   if(TimeBased)
    {
-     inst_average = double(mPrevSample1 + mPrevSample1)/diff_sec;
+      vpr::Interval cur_time, diff_time;
+      double diff_sec;                       // Num secs different in send times
+      cur_time.setNow();                     // Set current time
+      diff_time = cur_time - mPrevSampleTime1;     // Get time to compute the average over
+      diff_sec = diff_time.secf();
+
+      // Compute -- INST BANDWIDTH
+      if(diff_sec > 0)
+      {
+        inst_average = double(mPrevSample1 + mPrevSample2)/diff_sec;
+      }
+      if(diff_time > mSTAMaxTime)   // Haven't had sample in quite a while, so clamp to zero
+      {
+         inst_average = 0.0;
+      }
    }
-   if(diff_time > mSTAMaxTime)   // Haven't had sample in quite a while, so clamp to zero
+   else
    {
-      inst_average = 0.0;
+      // Just approximate it with the average of the last two entries
+      inst_average = double(mPrevSample1 + mPrevSample)/2.0;
    }
 
    return inst_average;
 }
 
-template <class TYPE>
-double StatCollector<TYPE>::getSTA()
+template <class TYPE, bool TimeBased>
+double StatCollector<TYPE, TimeBased>::getSTA()
 {
    vpr::Interval cur_time, diff_time;
    double diff_sec;                       // Num secs different in send times
@@ -193,12 +220,19 @@ double StatCollector<TYPE>::getSTA()
       for( ; cur_sample != mSampleBuffer.end(); ++cur_sample)       // Sum the total bandwidth up
       {  sum += (*cur_sample).first; }
 
-      diff_time = cur_time - first_sample_time;
-      diff_sec = diff_time.secf();
-      sta_value = sum/diff_sec;
+      if(TimeBased)
+      {
+         diff_time = cur_time - first_sample_time;
+         diff_sec = diff_time.secf();
+         sta_value = sum/diff_sec;
+      }
+      else
+      {
+         sta_value = sum/double(mSampleBuffer.size());      // Compute as average of the buffered samples
+      }
 
       if(sta_value > mMaxSTA)                        // Check for new max
-           mMaxSTA = sta_value;
+         mMaxSTA = sta_value;
    }
 
    return sta_value;

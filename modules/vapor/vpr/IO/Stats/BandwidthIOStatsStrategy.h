@@ -102,15 +102,15 @@ public:
         mWriteStats.addSample(bytes_written);
   }
 
-public:   
-   vpr::StatCollector<vpr::Uint32>& readStats()
+public:
+   vpr::StatCollector<vpr::Uint32, true>& readStats()
       { return mReadStats; }
-   vpr::StatCollector<vpr::Uint32>& writeStats()
+   vpr::StatCollector<vpr::Uint32, true>& writeStats()
       { return mWriteStats; }
 
 private:
-   vpr::StatCollector<vpr::Uint32> mReadStats;
-   vpr::StatCollector<vpr::Uint32> mWriteStats;
+   vpr::StatCollector<vpr::Uint32, true> mReadStats;
+   vpr::StatCollector<vpr::Uint32, true> mWriteStats;
 };
 
 }; //namespace vpr
