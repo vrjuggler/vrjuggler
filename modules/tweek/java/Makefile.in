@@ -77,10 +77,10 @@ else
    CLASSPATH=	$(JDOM_JAR)$(JCPS)$(LAF_JARS)
 endif
 
-IDL_JAVA_FILES=	SubjectManager.java		\
-		Subject.java			\
-		Observer.java			\
-		BeanDeliverySubject.java
+IDL_JAVA_FILES=	$(IDL_GENDIR)/tweek/SubjectManager.java		\
+		$(IDL_GENDIR)/tweek/Subject.java		\
+		$(IDL_GENDIR)/tweek/Observer.java		\
+		$(IDL_GENDIR)/tweek/BeanDeliverySubject.java
 
 JARS=		Tweek.jar		\
 		TweekBeans.jar		\
@@ -91,8 +91,8 @@ JARS=		Tweek.jar		\
 		kunststoff-mod.jar
 BEANS=		Viewers
 
-_LOCAL_CLEAN=_clean
-JAVA_AFTERBUILD=java_afterbuild
+_LOCAL_CLEAN=		_clean
+JAVA_AFTERBUILD=	java_afterbuild
 
 include $(MKPATH)/dpp.obj.mk
 
