@@ -169,6 +169,8 @@ ifneq (@OS_TYPE@, Win32)
 	cd $(instlinks)/include && rm -f ./vprParam.h &&		\
 	  $(LN_S) $(topdir)/include/vprParam.h ./vprParam.h
 	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/bin
+	cd $(instlinks)/bin && rm -f vpr-config &&			\
+          $(LN_S) $(topdir)/vpr-config ./
 	@echo "\n\n"
 	@echo "---------------------------------------------------------------"
 	@echo 'You should now set $$VPR_BASE_DIR to:'
