@@ -46,12 +46,6 @@ class vjQuat;
 class vjVec3;
 class vjCoord;
 
-// Andy: M_PI not defined in win32
-#ifndef M_PI
-#define M_PI 3.14159265358979323846
-#define M_PI_2   1.57079632679489661923
-#endif
-
 
 //-----------------------------------------------------------------------------
 //: vjMatrix: 4x4 Matrix class (OpenGL ordering)
