@@ -91,7 +91,8 @@ crack_sound.configure( info );</programlisting>
          <title>Call sonix::step() in your frame function</title>
          <programlisting>void frame()
 {
-   time_delta = getTimeChangeInSeconds(); // use a system call, or other API to get your time delta
+   time_delta = getTimeChangeInSeconds(); // use a system call, or 
+                                          // other API to get your time delta
    sonix::instance()-&gt;step( time_delta );
 }</programlisting>
       </example>
