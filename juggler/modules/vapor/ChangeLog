@@ -1,5 +1,8 @@
 DATE       AUTHOR   CHANGE
 ---------- -------- -----------------------------------------------------------
+2004-12-22 allenb   Added simplified interface to the profiling code through
+                    the vpr::prof namespace.
+                    NEW VERSION: 0.41.0
 2004-12-15 allenb   Added simple, working, tested Barrier implementation.
                     NEW VERSION: 0.40.6
 2004-12-02 patrickh Updated to allow the use of version 8.1 of the Intel C++
