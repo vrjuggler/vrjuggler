@@ -1,5 +1,9 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Sep-15-2002 patrickh    Disconnected unused JCCL network code from the build.
+                        It will be replaced with the CORBA-based remote
+                        reconfiguration code soon.
+                        NEW VERSION: 0.9.0
 Sep-14-2002 patrickh    Added an XSLT stylesheet that can upgrade configuration
                         files using version 2.0 of the file format to version
                         2.1.

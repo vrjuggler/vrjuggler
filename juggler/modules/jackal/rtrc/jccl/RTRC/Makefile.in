@@ -50,11 +50,9 @@ HAVE_TWEEK_CXX=	@HAVE_TWEEK_CXX@
 
 SRCS= \
 	ConfigChunkHandler.cpp \
-	ConfigCommand.cpp \
 	ConfigManager.cpp \
 	DepChecker.cpp \
-	DependencyManager.cpp \
-	XMLConfigCommunicator.cpp
+	DependencyManager.cpp
 
 ifeq ($(HAVE_TWEEK_CXX), Y)
    CXX_IDL_OPTS=	@TWEEK_CXX_IDL_OPTS@ @TWEEK_CXX_IDL_GENDIR_OPT@$(srcdir)

@@ -48,7 +48,6 @@ SUBOBJDIR=	$(JCCL_PERFMONITOR_LIBRARY)
 
 SRCS= \
 	LabeledPerfDataBuffer.cpp \
-	PerfCommand.cpp \
 	PerformanceCategories.cpp \
 	PerformanceMonitor.cpp
 

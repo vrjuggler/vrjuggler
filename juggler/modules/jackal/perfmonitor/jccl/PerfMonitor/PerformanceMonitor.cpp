@@ -33,9 +33,11 @@
 //
 #include <jccl/PerfMonitor/PerformanceMonitor.h>
 #include <jccl/PerfMonitor/PerformanceCategories.h>
+/*
 #include <jccl/Net/JackalServer.h>
 #include <jccl/Net/Connect.h>
 #include <jccl/PerfMonitor/PerfCommand.h>
+*/
 #include <jccl/Config/ConfigChunk.h>
 #include <jccl/Config/ParseUtil.h>
 
@@ -50,21 +52,21 @@ PerformanceMonitor::PerformanceMonitor()
    mPerfRefreshTime = 500;
 
    mPerfTargetName = "";
-   mPerfTarget = NULL;
+//   mPerfTarget = NULL;
 
-   mBuffersCommand = new CommandWriteLabeledPerfData (mPerfRefreshTime);
+//   mBuffersCommand = new CommandWriteLabeledPerfData (mPerfRefreshTime);
 }
 
 
 
 PerformanceMonitor::~PerformanceMonitor()
 {
-   delete mBuffersCommand;
+//   delete mBuffersCommand;
 }
 
 
-
-/*virtual*/ void PerformanceMonitor::addConnect (Connect* con)
+/*
+void PerformanceMonitor::addConnect (Connect* con)
 {
    vprASSERT (con != NULL);
 
@@ -75,14 +77,14 @@ PerformanceMonitor::~PerformanceMonitor()
 }
 
 
-/*virtual*/ void PerformanceMonitor::removeConnect (Connect* con)
+void PerformanceMonitor::removeConnect (Connect* con)
 {
    vprASSERT (con != NULL);
 
    if (con == mPerfTarget)
       setPerformanceTarget (NULL);
 }
-
+*/
 
 
 //---------------------- ConfigChunkHandler Stuff ----------------------
@@ -95,6 +97,7 @@ bool PerformanceMonitor::configAdd(ConfigChunkPtr chunk)
       mCurrentPerfConfig = chunk;//new ConfigChunk (*chunk);
 
       mPerfTargetName = chunk->getProperty<std::string>("PerformanceTarget");
+/*
       if ((mPerfTarget == 0) || mPerfTarget->getName() == mPerfTargetName)
       {
          std::vector<Connect*>& connections =
@@ -111,10 +114,13 @@ bool PerformanceMonitor::configAdd(ConfigChunkPtr chunk)
       }
       else
       {
+*/
          // just activate buffers to pick up changes to individual
          // buffer activation states.
          activatePerfBuffers();
+/*
       }
+*/
 
       return true;
    }
@@ -154,7 +160,7 @@ bool PerformanceMonitor::configCanHandle(ConfigChunkPtr chunk)
 //-------------------- PRIVATE MEMBER FUNCTIONS -------------------------
 
 
-
+/*
 void PerformanceMonitor::setPerformanceTarget (Connect* con)
 {
    if (con == mPerfTarget)
@@ -165,16 +171,18 @@ void PerformanceMonitor::setPerformanceTarget (Connect* con)
    mPerfTarget = con;
    activatePerfBuffers();
 }
-
+*/
 
 
 void PerformanceMonitor::deactivatePerfBuffers ()
 {
    PerformanceCategories::instance()->deactivate();
+/*
    if (mPerfTarget)
    {
             mPerfTarget->removePeriodicCommand (mBuffersCommand);
    }
+*/
 }
 
 
@@ -184,7 +192,8 @@ void PerformanceMonitor::activatePerfBuffers ()
    // activates all perf buffers configured to do so
    // this is still a bit on the big and bulky side.
 
-   if (mPerfTarget == NULL || mCurrentPerfConfig.get() == NULL)
+//   if (mPerfTarget == NULL || mCurrentPerfConfig.get() == NULL)
+   if (mCurrentPerfConfig.get() == NULL)
    {
       deactivatePerfBuffers();
       return;
@@ -209,12 +218,12 @@ void PerformanceMonitor::activatePerfBuffers ()
    }
 
    PerformanceCategories::instance()->activate();
+/*
    if (mPerfTarget)
    {
       mPerfTarget->addPeriodicCommand (mBuffersCommand);
    }
+*/
 }
 
-
-};
-
+}
