@@ -107,7 +107,7 @@ JNI_CFLAGS=		$(JNI_INC)
 JNI_LDFLAGS=		@JNI_LDFLAGS@ $(JNI_LIB)
 TWEEK_JNI_LIB=		@LIB_PREFIX@tweek_jni.$(JNILIB_EXT)
 
-ARCH=			$(shell uname -p)
+ARCH=			@target_cpu@
 
 include $(MKPATH)/dpp.obj.mk
 
