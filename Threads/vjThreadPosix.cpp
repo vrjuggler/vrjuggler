@@ -16,7 +16,6 @@
 #include <Threads/vjThread.h>
 
 
-thread_id_t vjThreadPosix::mThreadCount = 1;
 vjThreadTable<thread_id_t> vjThreadPosix::mThreadTable;
 
 typedef struct sched_param	sched_param_t;
@@ -236,10 +235,8 @@ vjThreadPosix::setPrio (int prio) {
 void
 vjThreadPosix::checkRegister (int status) {
     if ( status == 0 ) {
-        id = mThreadCount;
         registerThread(true);
         mThreadTable.addThread(this, hash());
-        mThreadCount++;
     } else {
         registerThread(false);	// Failed to create
     }
