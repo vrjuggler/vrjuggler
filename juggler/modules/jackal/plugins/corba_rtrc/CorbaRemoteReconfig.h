@@ -41,8 +41,21 @@ public:
 
    ~RTRCInterface()
    {
-      ;
-      //TODO: Deconstruct/disconnect cleanly
+      //Clean up interface by disconnecting first
+      if (mInterface != NULL)
+      {
+         disable(); 
+         delete mInterface;
+         mInterface = NULL;
+      }
+
+      //Clean up the corba manager and delete it
+      if (mCorbaManager != NULL)
+      {
+         //Corba manager has its own destructor cleanup
+         delete mCorbaManager;
+         mCorbaManager = NULL;
+      }
    }
 
    /**
