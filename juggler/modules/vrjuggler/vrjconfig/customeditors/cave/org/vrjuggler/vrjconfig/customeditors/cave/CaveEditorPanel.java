@@ -395,15 +395,17 @@ public class CaveEditorPanel
          (Container) SwingUtilities.getAncestorOfClass(Container.class,
                                                        this);
       
-      Object selected_wall = mWallList.getSelectedValue();
+      Object value = mWallList.getSelectedValue();
       
-      if (null == selected_wall || !(selected_wall instanceof CaveWall))
+      if (null == value || !(value instanceof CaveWall))
       {
          return;
       }
+
+      CaveWall selected_wall = (CaveWall)value;
          
       WallEditorDialog dlg =
-         new WallEditorDialog(parent, mConfigContext, (CaveWall)selected_wall);
+         new WallEditorDialog(parent, mConfigContext, selected_wall);
 
       status = dlg.showDialog();
       if ( status == DisplayWindowStartDialog.OK_OPTION )
@@ -427,42 +429,20 @@ public class CaveEditorPanel
                                        mContext);
          mSelectedViewport.setProperty(USER_PROPERTY, 0, dlg.getUser(),
                                        mContext);
-
+         */
+         
+         System.out.println("Handling changes from dialog.");
          Point3D[] corners = dlg.getCorners();
-         mSelectedViewport.setProperty(LOWER_LEFT_CORNER_PROPERTY, 0,
-                                       new Float(corners[0].x), mContext);
-         mSelectedViewport.setProperty(LOWER_LEFT_CORNER_PROPERTY, 1,
-                                       new Float(corners[0].y), mContext);
-         mSelectedViewport.setProperty(LOWER_LEFT_CORNER_PROPERTY, 2,
-                                       new Float(corners[0].z), mContext);
-         mSelectedViewport.setProperty(LOWER_RIGHT_CORNER_PROPERTY, 0,
-                                       new Float(corners[1].x), mContext);
-         mSelectedViewport.setProperty(LOWER_RIGHT_CORNER_PROPERTY, 1,
-                                       new Float(corners[1].y), mContext);
-         mSelectedViewport.setProperty(LOWER_RIGHT_CORNER_PROPERTY, 2,
-                                       new Float(corners[1].z), mContext);
-         mSelectedViewport.setProperty(UPPER_RIGHT_CORNER_PROPERTY, 0,
-                                       new Float(corners[2].x), mContext);
-         mSelectedViewport.setProperty(UPPER_RIGHT_CORNER_PROPERTY, 1,
-                                       new Float(corners[2].y), mContext);
-         mSelectedViewport.setProperty(UPPER_RIGHT_CORNER_PROPERTY, 2,
-                                       new Float(corners[2].z), mContext);
-         mSelectedViewport.setProperty(UPPER_LEFT_CORNER_PROPERTY, 0,
-                                       new Float(corners[3].x), mContext);
-         mSelectedViewport.setProperty(UPPER_LEFT_CORNER_PROPERTY, 1,
-                                       new Float(corners[3].y), mContext);
-         mSelectedViewport.setProperty(UPPER_LEFT_CORNER_PROPERTY, 2,
-                                       new Float(corners[3].z), mContext);
-
-         mSelectedViewport.setProperty(TRACKED_PROPERTY, 0, dlg.isTracked(),
-                                       mContext);
+         selected_wall.setCorners(corners, mConfigContext);
+         selected_wall.setTracked(dlg.isTracked(), mConfigContext);
+         selected_wall.setUser(dlg.getUser(), mConfigContext);
+         //selected_wall.setPlane(dlg.getPlane());
+         selected_wall.updateWidthHeight();
 
          if ( dlg.isTracked() == Boolean.TRUE )
          {
-            mSelectedViewport.setProperty(TRACKER_PROXY_PROPERTY, 0,
-                                          dlg.getTrackerProxy(), mContext);
+            selected_wall.setTrackerProxy(dlg.getTrackerProxy(), mConfigContext);
          }
-         */
       }
    }
    
@@ -612,9 +592,10 @@ public class CaveEditorPanel
                                                     boolean isSelected,
                                                     boolean cellHasFocus)
       {
-         //int selected_index = ((Integer) value).intValue();
          CaveWall wall = (CaveWall)value;
          int selected_index = wall.getPlane();
+
+         System.out.println("PlaneRenderer.getListCellRendererComponent(): " + selected_index);
 
          if ( isSelected )
          {

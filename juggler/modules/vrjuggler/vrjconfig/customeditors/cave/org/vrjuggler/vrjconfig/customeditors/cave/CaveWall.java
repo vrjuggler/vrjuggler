@@ -55,8 +55,7 @@ import org.vrjuggler.jccl.editors.PropertyEditorPanel;
 //import org.vrjuggler.vrjconfig.commoneditors.TransmitterTransformPanel;
 import info.clearthought.layout.TableLayout;
 
-
-public class CaveWall
+public class CaveWall implements EditorConstants
 {
    private CaveModel mCaveModel = null;
    private ConfigElement mLeftView = null;
@@ -66,37 +65,35 @@ public class CaveWall
    private float[] lr_corner = new float[3];
    private float[] ur_corner = new float[3];
    private float[] ul_corner = new float[3];
+
+   private Point3D[] mCorners = new Point3D[4];
    
-   float mWallWidth, mWallHeight;
+   double mWallWidth, mWallHeight;
    int mPlane = LEFT_PLANE;
 
    private String mName = null;
-   
-   public static final int ACTIVE_STEREO = 0;
-   public static final int PASSIVE_STEREO = 1;
-   public static final int MONO = 2;
-   
-   private static final int FRONT_PLANE = 0;
-   private static final int BACK_PLANE = 1;
-   private static final int LEFT_PLANE = 2;
-   private static final int RIGHT_PLANE = 3;
-   private static final int BOTTOM_PLANE = 4;
-   private static final int TOP_PLANE = 5;
-   private static final int CUSTOM_PLANE = 6;
    
    private int mStereoMode = -1;
   
    public CaveWall()
    {
+      mCorners[LOWER_LEFT] = new Point3D(-5.0f, -5.0f, 0.0f);
+      mCorners[LOWER_RIGHT] = new Point3D(5.0f, -5.0f, 0.0f);
+      mCorners[UPPER_RIGHT] = new Point3D(5.0f, 5.0f, 0.0f);
+      mCorners[UPPER_LEFT] = new Point3D(-5.0f, 5.0f, 0.0f);
+      
       ll_corner[0] = -5.0f;
       ll_corner[1] = -5.0f;
       ll_corner[2] =  0.0f;
+      
       lr_corner[0] =  5.0f;
       lr_corner[1] = -5.0f;
       lr_corner[2] =  0.0f;
+      
       ur_corner[0] =  5.0f;
       ur_corner[1] =  5.0f;
       ur_corner[2] =  0.0f;
+      
       ul_corner[0] = -5.0f;
       ul_corner[1] =  5.0f;
       ul_corner[2] =  0.0f;
@@ -118,6 +115,11 @@ public class CaveWall
          ur_corner[i] = ur[i];
          ul_corner[i] = ul[i];
       }
+      
+      mCorners[LOWER_LEFT] = new Point3D((double)ll[0], (double)ll[1], (double)ll[2]);
+      mCorners[LOWER_RIGHT] = new Point3D((double)lr[0], (double)lr[1], (double)lr[2]);
+      mCorners[UPPER_RIGHT] = new Point3D((double)ur[0], (double)ur[1], (double)ur[2]);
+      mCorners[UPPER_LEFT] = new Point3D((double)ul[0], (double)ul[1], (double)ul[2]);
    }
    
    public CaveWall(CaveModel cm, Corners c, List views)
@@ -136,6 +138,11 @@ public class CaveWall
       ur_corner[0] = c.getUR()[0];
       ur_corner[1] = c.getUR()[1];
       ur_corner[2] = c.getUR()[2];
+      
+      mCorners[LOWER_LEFT] = new Point3D((double)c.getLL()[0], (double)c.getLL()[1], (double)c.getLL()[2]);
+      mCorners[LOWER_RIGHT] = new Point3D((double)c.getLR()[0], (double)c.getLR()[1], (double)c.getLR()[2]);
+      mCorners[UPPER_RIGHT] = new Point3D((double)c.getUR()[0], (double)c.getUR()[1], (double)c.getUR()[2]);
+      mCorners[UPPER_LEFT] = new Point3D((double)c.getUL()[0], (double)c.getUL()[1], (double)c.getUL()[2]);
          
       int num_views = views.size();
       if(num_views > 2 || num_views < 1)
@@ -256,22 +263,107 @@ public class CaveWall
    {
       return mStereoMode;
    }
+   
+   public Point3D[] getCorners()
+   {
+      return mCorners;
+   }
 
-   public float[] getLL()
+   public void setCorners(Point3D[] corners, ConfigContext context)
    {
-      return ll_corner;
+      for (int i = 0 ; i < 4 ; i++)
+      {
+         mCorners[i] = corners[i];
+      }
+      
+      mLeftView.setProperty(LOWER_LEFT_CORNER_PROPERTY, 0,
+                            new Float(corners[0].x), context);
+      mLeftView.setProperty(LOWER_LEFT_CORNER_PROPERTY, 1,
+                            new Float(corners[0].y), context);
+      mLeftView.setProperty(LOWER_LEFT_CORNER_PROPERTY, 2,
+                            new Float(corners[0].z), context);
+      mLeftView.setProperty(LOWER_RIGHT_CORNER_PROPERTY, 0,
+                            new Float(corners[1].x), context);
+      mLeftView.setProperty(LOWER_RIGHT_CORNER_PROPERTY, 1,
+                            new Float(corners[1].y), context);
+      mLeftView.setProperty(LOWER_RIGHT_CORNER_PROPERTY, 2,
+                            new Float(corners[1].z), context);
+      mLeftView.setProperty(UPPER_RIGHT_CORNER_PROPERTY, 0,
+                            new Float(corners[2].x), context);
+      mLeftView.setProperty(UPPER_RIGHT_CORNER_PROPERTY, 1,
+                            new Float(corners[2].y), context);
+      mLeftView.setProperty(UPPER_RIGHT_CORNER_PROPERTY, 2,
+                            new Float(corners[2].z), context);
+      mLeftView.setProperty(UPPER_LEFT_CORNER_PROPERTY, 0,
+                            new Float(corners[3].x), context);
+      mLeftView.setProperty(UPPER_LEFT_CORNER_PROPERTY, 1,
+                            new Float(corners[3].y), context);
+      mLeftView.setProperty(UPPER_LEFT_CORNER_PROPERTY, 2,
+                            new Float(corners[3].z), context);
+
+      if (null != mRightView)
+      {
+         mRightView.setProperty(LOWER_LEFT_CORNER_PROPERTY, 0,
+                               new Float(corners[0].x), context);
+         mRightView.setProperty(LOWER_LEFT_CORNER_PROPERTY, 1,
+                               new Float(corners[0].y), context);
+         mRightView.setProperty(LOWER_LEFT_CORNER_PROPERTY, 2,
+                               new Float(corners[0].z), context);
+         mRightView.setProperty(LOWER_RIGHT_CORNER_PROPERTY, 0,
+                               new Float(corners[1].x), context);
+         mRightView.setProperty(LOWER_RIGHT_CORNER_PROPERTY, 1,
+                               new Float(corners[1].y), context);
+         mRightView.setProperty(LOWER_RIGHT_CORNER_PROPERTY, 2,
+                               new Float(corners[1].z), context);
+         mRightView.setProperty(UPPER_RIGHT_CORNER_PROPERTY, 0,
+                               new Float(corners[2].x), context);
+         mRightView.setProperty(UPPER_RIGHT_CORNER_PROPERTY, 1,
+                               new Float(corners[2].y), context);
+         mRightView.setProperty(UPPER_RIGHT_CORNER_PROPERTY, 2,
+                               new Float(corners[2].z), context);
+         mRightView.setProperty(UPPER_LEFT_CORNER_PROPERTY, 0,
+                               new Float(corners[3].x), context);
+         mRightView.setProperty(UPPER_LEFT_CORNER_PROPERTY, 1,
+                               new Float(corners[3].y), context);
+         mRightView.setProperty(UPPER_LEFT_CORNER_PROPERTY, 2,
+                               new Float(corners[3].z), context);
+      }
    }
-   public float[] getLR()
+
+   public void setTracked(Boolean tracked, ConfigContext context)
    {
-      return lr_corner;
+      mLeftView.setProperty(TRACKED_PROPERTY, 0, tracked,
+                            context);
+      
+      if (null != mRightView)
+      {
+         mRightView.setProperty(TRACKED_PROPERTY, 0, tracked,
+                                context);
+      }
    }
-   public float[] getUR()
+   
+   public void setTrackerProxy(Object proxy, ConfigContext context)
    {
-      return ur_corner;
+      mLeftView.setProperty(TRACKER_PROXY_PROPERTY, 0, proxy,
+                            context);
+      
+      if (null != mRightView)
+      {
+         mRightView.setProperty(TRACKER_PROXY_PROPERTY, 0, proxy,
+                                context);
+      }
    }
-   public float[] getUL()
+   
+   public void setUser(Object proxy, ConfigContext context)
    {
-      return ul_corner;
+      mLeftView.setProperty(USER_PROPERTY, 0, proxy,
+                            context);
+      
+      if (null != mRightView)
+      {
+         mRightView.setProperty(USER_PROPERTY, 0, proxy,
+                                context);
+      }
    }
 
    public CaveWall(ConfigElement elm, ConfigElement screen_elm)
@@ -291,102 +383,108 @@ public class CaveWall
       ur_corner[0] = ((Number) elm.getProperty("upper_right_corner", 0)).floatValue();
       ur_corner[1] = ((Number) elm.getProperty("upper_right_corner", 1)).floatValue();
       ur_corner[2] = ((Number) elm.getProperty("upper_right_corner", 2)).floatValue();
+      
+      mCorners[LOWER_LEFT] = new Point3D(
+             (double)((Number) elm.getProperty("lower_left_corner", 0)).floatValue(),
+             (double)((Number) elm.getProperty("lower_left_corner", 1)).floatValue(),
+             (double)((Number) elm.getProperty("lower_left_corner", 2)).floatValue());
+      mCorners[LOWER_RIGHT] = new Point3D(
+             (double)((Number) elm.getProperty("lower_right_corner", 0)).floatValue(),
+             (double)((Number) elm.getProperty("lower_right_corner", 1)).floatValue(),
+             (double)((Number) elm.getProperty("lower_right_corner", 2)).floatValue());
+      mCorners[UPPER_RIGHT] = new Point3D(
+             (double)((Number) elm.getProperty("upper_right_corner", 0)).floatValue(),
+             (double)((Number) elm.getProperty("upper_right_corner", 1)).floatValue(),
+             (double)((Number) elm.getProperty("upper_right_corner", 2)).floatValue());
+      mCorners[UPPER_LEFT] = new Point3D(
+             (double)((Number) elm.getProperty("upper_left_corner", 0)).floatValue(),
+             (double)((Number) elm.getProperty("upper_left_corner", 1)).floatValue(),
+             (double)((Number) elm.getProperty("upper_left_corner", 2)).floatValue());
    }
 
    public String getName()
    {
       return mName;
    }
-
+   
    public void updateWidthHeight()
    {
-      /*
-      System.out.println("Corners:");
-      System.out.println(ll_corner[0]);
-      System.out.println(ll_corner[1]);
-      System.out.println(ll_corner[2]);
-      System.out.println(lr_corner[0]);
-      System.out.println(lr_corner[1]);
-      System.out.println(lr_corner[2]);
-      System.out.println(ul_corner[0]);
-      System.out.println(ul_corner[1]);
-      System.out.println(ul_corner[2]);
-
-
-      if ( ll_corner[0] == lr_corner[0] )
+      if ( mCorners[LOWER_LEFT].x == mCorners[LOWER_RIGHT].x &&
+           mCorners[LOWER_LEFT].x == mCorners[UPPER_LEFT].x )
       {
-         if ( ll_corner[2] > lr_corner[2] )
+         if ( mCorners[LOWER_LEFT].z > mCorners[LOWER_RIGHT].z )
          {
             mPlane = LEFT_PLANE;
-            mWallWidth  = ll_corner[2] - lr_corner[2];
-            mWallHeight = ul_corner[1] - ll_corner[1];
+            mWallWidth  = mCorners[LOWER_LEFT].z - mCorners[LOWER_RIGHT].z;
+            mWallHeight = mCorners[UPPER_LEFT].y - mCorners[LOWER_LEFT].y;
          }
          else
          {
             mPlane = RIGHT_PLANE;
-            mWallWidth  = lr_corner[2] - ll_corner[2];
-            mWallHeight = ul_corner[1] - ll_corner[1];
+            mWallWidth  = mCorners[LOWER_RIGHT].z - mCorners[LOWER_LEFT].z;
+            mWallHeight = mCorners[UPPER_LEFT].y - mCorners[LOWER_LEFT].y;
          }
       }
-      else if ( ll_corner[2] == lr_corner[2] )
+      else if ( mCorners[LOWER_LEFT].z == mCorners[LOWER_RIGHT].z &&
+                mCorners[LOWER_LEFT].z == mCorners[UPPER_LEFT].z )
       {
-         if ( lr_corner[0] > ll_corner[0] )
+         if ( mCorners[LOWER_RIGHT].x > mCorners[LOWER_LEFT].x )
          {
             mPlane = FRONT_PLANE;
-            mWallWidth  = lr_corner[0] - ll_corner[0];
-            mWallHeight = ul_corner[1] - ll_corner[1];
+            mWallWidth  = mCorners[LOWER_RIGHT].x - mCorners[LOWER_LEFT].x;
+            mWallHeight = mCorners[UPPER_LEFT].y - mCorners[LOWER_LEFT].y;
          }
          else
          {
             mPlane = BACK_PLANE;
-            mWallWidth  = ll_corner[0] - lr_corner[0];
-            mWallHeight = ul_corner[1] - ll_corner[1];
+            mWallWidth  = mCorners[LOWER_LEFT].x - mCorners[LOWER_RIGHT].x;
+            mWallHeight = mCorners[UPPER_LEFT].y - mCorners[LOWER_LEFT].y;
          }
       }
-      else if ( ll_corner[1] == ul_corner [1] )
+      else if ( mCorners[LOWER_LEFT].y == mCorners[UPPER_LEFT].y &&
+                mCorners[LOWER_LEFT].y == mCorners[LOWER_RIGHT].y )
       {
-         if ( ll_corner[2] > ul_corner[2] )
+         if ( mCorners[LOWER_LEFT].z > mCorners[UPPER_LEFT].z )
          {
             mPlane = BOTTOM_PLANE;
-            mWallWidth  = lr_corner[0] - ll_corner[0];
-            mWallHeight = ll_corner[2] - ul_corner[2];
+            mWallWidth  = mCorners[LOWER_RIGHT].x - mCorners[LOWER_LEFT].x;
+            mWallHeight = mCorners[LOWER_LEFT].z - mCorners[UPPER_LEFT].z;
          }
          else
          {
             mPlane = TOP_PLANE;
-            mWallWidth  = lr_corner[0] - ll_corner[0];
-            mWallHeight = ul_corner[2] - ll_corner[2];
+            mWallWidth  = mCorners[LOWER_RIGHT].x - mCorners[LOWER_LEFT].x;
+            mWallHeight = mCorners[UPPER_LEFT].z - mCorners[LOWER_LEFT].z;
          }
       }
       else
       {
          mPlane = CUSTOM_PLANE;
 
-         float x_diff = lr_corner[0] - ll_corner[0];
-         float y_diff = lr_corner[1] - ll_corner[1];
-         float z_diff = lr_corner[2] - ll_corner[2];
-         float len_sq = x_diff * x_diff + y_diff * y_diff + z_diff * z_diff;
-         mWallWidth = (float) Math.sqrt(len_sq);
+         double x_diff = mCorners[LOWER_RIGHT].x - mCorners[LOWER_LEFT].x;
+         double y_diff = mCorners[LOWER_RIGHT].y - mCorners[LOWER_LEFT].y;
+         double z_diff = mCorners[LOWER_RIGHT].z - mCorners[LOWER_LEFT].z;
+         double len_sq = x_diff * x_diff + y_diff * y_diff + z_diff * z_diff;
+         mWallWidth = Math.sqrt(len_sq);
 
-         x_diff = ul_corner[0] - ll_corner[0];
-         y_diff = ul_corner[1] - ll_corner[1];
-         z_diff = ul_corner[2] - ll_corner[2];
-         float width_sq = x_diff * x_diff + y_diff * y_diff + z_diff * z_diff;
-         mWallHeight = (float) Math.sqrt(width_sq);
+         x_diff = mCorners[UPPER_LEFT].x - mCorners[LOWER_LEFT].x;
+         y_diff = mCorners[UPPER_LEFT].y - mCorners[LOWER_LEFT].y;
+         z_diff = mCorners[UPPER_LEFT].z - mCorners[LOWER_LEFT].z;
+         double width_sq = x_diff * x_diff + y_diff * y_diff + z_diff * z_diff;
+         mWallHeight = Math.sqrt(width_sq);
 
          // XXX: At this point, there needs to be code that figures out the
          // rotational angles for the custom-defined plane.  Those angles
          // then need to go into the text fields.
       }
-   */
    }
-
-   public float getWidth()
+   
+   public double getWidth()
    {
       return mWallWidth;
    }
    
-   public float getHeight()
+   public double getHeight()
    {
       return mWallHeight;
    }
@@ -395,153 +493,6 @@ public class CaveWall
    {
       return mPlane;
    }
-
-   /*
-   public boolean guessMode()
-   {
-      // - If we have only one
-      //   - If stereo active and view stereo
-      //     - ACTIVE_STEREO
-      //   - Else if stereo active or view stereo
-      //     - ERROR, choose correct view
-      //   - Else MONO
-      // - If we have two views
-      //   - If views are the same
-      //     - ERROR, prompt to correct
-      //   - Else
-      //     - PASSIVE_STEREO
-      mRightView = null;
-      mLeftView = null;
-      mStereoView = null;
-      
-      int num_views = mViewList.size();
-      if(num_views > 2)
-      {
-         return false;
-      }
-      else if(num_views < 1)
-      {
-         return false;
-      }
-      else if(num_views == 1)
-      {
-         ConfigElement elm = (ConfigElement)mViewList.get(0);
-         int view = ((Number)elm.getProperty("view", 0)).intValue();
-         boolean stereo = ((Boolean) mScreenElement.getProperty("stereo", 0)).booleanValue();
-
-         if( stereo && (3 == view))
-         {
-            mStereoView = elm;
-            mStereoMode = ACTIVE_STEREO;
-         }
-         else if( stereo || (3 == view))
-         {
-            System.out.println("ERROR: Active stereo walls should have stereo enabled, and their view set to Stereo.");
-            return false;
-         }
-         else if(1 == view)
-         {
-            mLeftView = elm;
-            mStereoMode = MONO;            
-         }
-         else
-         {
-            mRightView = elm;
-            mStereoMode = MONO;
-         }
-      }
-      else if(num_views == 2)
-      {
-         ConfigElement elm0 = (ConfigElement)mViewList.get(0);
-         ConfigElement elm1 = (ConfigElement)mViewList.get(1);
-         int view0 = ((Number)elm0.getProperty("view", 0)).intValue();
-         int view1 = ((Number)elm1.getProperty("view", 0)).intValue();
-         boolean stereo = ((Boolean) mScreenElement.getProperty("stereo", 0)).booleanValue();
-
-         if (stereo)
-         {
-            System.out.println("ERROR: Two surface viewports with same corners should not be on stereo screen.");
-            return false;
-         }
-         else if(3 == view0 || 3 == view1)
-         {
-            System.out.println("ERROR: Two surface viewports with same corners should not have stereo views.");
-            return false;
-         }
-         else if(view0 == view1)
-         {
-            System.out.println("ERROR: Two surface viewports with same corners should not have the same view.");
-            return false;
-         }
-         else
-         {
-            mLeftView = (1 == view0 ? elm0 : elm1);
-            mRightView = (2 == view0 ? elm0 : elm1);
-            mStereoMode = PASSIVE_STEREO;
-         }
-      }
-
-      return false;
-   }
-*/
-      /*
-      mRightView = null;
-      mLeftView = null;
-
-      if(mViewList.size() > 2)
-      {
-         return false;
-      }
-      
-      for(Iterator itr = mViewList.iterator() ; itr.hasNext() ; )
-      {
-         ConfigElement elm = (ConfigElement)itr.next();
-         int view = ((Number) elm.getProperty("view", 2)).intValue();
-
-      }
-
-      
-      switch( view )
-      {
-         case 1:
-            if (null != mLeftView)
-            {
-               System.out.println("ERROR: Multiple left eye views for the same wall.");
-            }
-            else
-            {
-               mLeftView = elm;
-            }
-            break;
-         case 2:
-            if (null != mRightView)
-            {
-               System.out.println("ERROR: Multiple left eye views for the same wall.");
-            }
-            else
-            {
-               mRightView = elm;
-            }
-
-            break;
-         case 3:
-            if (null != mStereoView)
-            {
-               System.out.println("ERROR: Multiple left eye views for the same wall.");
-            }
-            else
-            {
-               mStereoView = elm;
-            }
-            break;
-      }
-      mViewList.add(elm);
-      if ( mLeftView != null && mRightView != null)
-      {
-         setStereoMode(PASSIVE_STEREO);
-      }
-   }
-   */
 
    public ConfigElement getLeftView()
    {
@@ -587,18 +538,10 @@ public class CaveWall
       if (obj instanceof CaveWall)
       {
          CaveWall cw = (CaveWall)obj;
-         if (ll_corner[0] == cw.ll_corner[0] &&
-             ll_corner[1] == cw.ll_corner[1] &&
-             ll_corner[2] == cw.ll_corner[2] &&
-             lr_corner[0] == cw.lr_corner[0] &&
-             lr_corner[1] == cw.lr_corner[1] &&
-             lr_corner[2] == cw.lr_corner[2] &&
-             ur_corner[0] == cw.ur_corner[0] &&
-             ur_corner[1] == cw.ur_corner[1] &&
-             ur_corner[2] == cw.ur_corner[2] &&
-             ul_corner[0] == cw.ul_corner[0] &&
-             ul_corner[1] == cw.ul_corner[1] &&
-             ul_corner[2] == cw.ul_corner[2])
+         if (mCorners[0].equals(cw.mCorners[0]) &&
+             mCorners[1].equals(cw.mCorners[1]) &&
+             mCorners[2].equals(cw.mCorners[2]) &&
+             mCorners[3].equals(cw.mCorners[3]))
          {
             return true;
          }

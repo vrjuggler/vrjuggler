@@ -32,6 +32,7 @@
 
 package org.vrjuggler.vrjconfig.customeditors.cave;
 
+import java.math.BigDecimal;
 
 class Point3D
 {
@@ -92,9 +93,9 @@ class Point3D
 
    public void round()
    {
-      x = Math.round(x);
-      y = Math.round(y);
-      z = Math.round(z);
+      x = (new BigDecimal(x).setScale(5, BigDecimal.ROUND_HALF_UP)).floatValue();
+      y = (new BigDecimal(y).setScale(5, BigDecimal.ROUND_HALF_UP)).floatValue();
+      z = (new BigDecimal(z).setScale(5, BigDecimal.ROUND_HALF_UP)).floatValue();
    }
 
    public double x;
