@@ -77,13 +77,13 @@ class isIntersense {
 public:
     isIntersense()
     {
-   init();
+       init();
     }
 
     ~isIntersense()
     {
-   if(script != NULL) delete [] script;
-   if(mPortName != NULL) delete [] mPortName;
+       if(script != NULL) delete [] script;
+       if(mPortName != NULL) delete [] mPortName;
     }
 
     bool open();
@@ -101,10 +101,10 @@ public:
     int Port() {return mPort;}
 
     char *setPortName(const char* portname) {
-   if(mPortName != NULL) delete [] mPortName;
-   mPortName = new char[strlen(portname)+3];
-   strcpy(mPortName,  portname);
-   return mPortName;
+       if(mPortName != NULL) delete [] mPortName;
+       mPortName = new char[strlen(portname)+3];
+       strcpy(mPortName,  portname);
+       return mPortName;
     }
 
     int& rNumStations() {return mNumStations;}
@@ -150,51 +150,51 @@ public:
 // returns number of station
     int getConfigState(int d)
     {
-   ISD_GetStationState( mHandle, &mConfigData[d], d+1, mVerbose );
+       ISD_GetStationState( mHandle, &mConfigData[d], d+1, mVerbose );
 
-   // WARNING: the following lines should be removed.  For now this is a convenient way
-   // to see what the default tracker data is (as specified by the IS interface box).
-   // these numbers can then be used to initialize the configData properly
-   mLocalConfigData[d].InertiaCube = mConfigData[d].InertiaCube;
-   mLocalConfigData[d].Enhancement = mConfigData[d].Enhancement;
-   mLocalConfigData[d].Sensitivity = mConfigData[d].Sensitivity;
-   mLocalConfigData[d].Prediction = mConfigData[d].Prediction;
-   mLocalConfigData[d].AngleFormat = mConfigData[d].AngleFormat;
-   mLocalConfigData[d].TimeStamped = mConfigData[d].TimeStamped;
-   mLocalConfigData[d].GetButtons = mConfigData[d].GetButtons;
-   mLocalConfigData[d].GetAnalogData = mConfigData[d].GetAnalogData;
-        mLocalConfigData[d].State = mConfigData[d].State;
+       // WARNING: the following lines should be removed.  For now this is a convenient way
+       // to see what the default tracker data is (as specified by the IS interface box).
+       // these numbers can then be used to initialize the configData properly
+       mLocalConfigData[d].InertiaCube = mConfigData[d].InertiaCube;
+       mLocalConfigData[d].Enhancement = mConfigData[d].Enhancement;
+       mLocalConfigData[d].Sensitivity = mConfigData[d].Sensitivity;
+       mLocalConfigData[d].Prediction = mConfigData[d].Prediction;
+       mLocalConfigData[d].AngleFormat = mConfigData[d].AngleFormat;
+       mLocalConfigData[d].TimeStamped = mConfigData[d].TimeStamped;
+       mLocalConfigData[d].GetButtons = mConfigData[d].GetButtons;
+       mLocalConfigData[d].GetAnalogData = mConfigData[d].GetAnalogData;
+       mLocalConfigData[d].State = mConfigData[d].State;
 
-   return d;
+       return d;
     }
 
     int setConfigState(int d)
     {
-   mConfigData[d].State = mLocalConfigData[d].State;
-   mConfigData[d].InertiaCube = mLocalConfigData[d].InertiaCube;
-   mConfigData[d].Enhancement = mLocalConfigData[d].Enhancement;
-   mConfigData[d].Sensitivity = mLocalConfigData[d].Sensitivity;
-   mConfigData[d].Prediction = mLocalConfigData[d].Prediction;
-   mConfigData[d].AngleFormat = mLocalConfigData[d].AngleFormat;
-   mConfigData[d].TimeStamped = mLocalConfigData[d].TimeStamped;
-   mConfigData[d].GetButtons = mLocalConfigData[d].GetButtons;
-   mConfigData[d].GetAnalogData = mLocalConfigData[d].GetAnalogData;
+       mConfigData[d].State = mLocalConfigData[d].State;
+       mConfigData[d].InertiaCube = mLocalConfigData[d].InertiaCube;
+       mConfigData[d].Enhancement = mLocalConfigData[d].Enhancement;
+       mConfigData[d].Sensitivity = mLocalConfigData[d].Sensitivity;
+       mConfigData[d].Prediction = mLocalConfigData[d].Prediction;
+       mConfigData[d].AngleFormat = mLocalConfigData[d].AngleFormat;
+       mConfigData[d].TimeStamped = mLocalConfigData[d].TimeStamped;
+       mConfigData[d].GetButtons = mLocalConfigData[d].GetButtons;
+       mConfigData[d].GetAnalogData = mLocalConfigData[d].GetAnalogData;
 
-   ISD_SetStationState( mHandle, &mConfigData[d], d+1, mVerbose );
-   return d;
+       ISD_SetStationState( mHandle, &mConfigData[d], d+1, mVerbose );
+       return d;
     } // d  i'th station of tracker
 
 //: sendScript
 //+ filename: the name of a file containing an intersense protocol script
     bool sendScript() {
-   return ISD_SendScript( mHandle, (char *) script );
+       return ((ISD_SendScript(mHandle, (char*) script) == 1) ? true : false);
     }
 
     bool setScript(const char* inscript) {
-   if(script != NULL) delete [] script;
-   script = new char [strlen(inscript)+3];
-   strcpy(script, inscript);
-   return true;
+       if(script != NULL) delete [] script;
+       script = new char [strlen(inscript)+3];
+       strcpy(script, inscript);
+       return true;
     }
 
 //TODO: check for euler or quat values in the configstate.
