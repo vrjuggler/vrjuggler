@@ -39,6 +39,7 @@
 #include <vpr/vpr.h>
 #include <vpr/System.h>
 #include <vpr/DynLoad/LibraryFinder.h>
+#include <vpr/DynLoad/LibraryLoader.h>
 #include <vpr/Util/FileUtils.h>
 
 #include <jccl/Config/ConfigElement.h>
@@ -280,21 +281,32 @@ vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
          const std::string driver_prop_name("driver");
          const std::string driver_init_func("initDevice");
          int driver_count = element->getNum(driver_prop_name);
-         std::string driver_dso;
+         std::string driver_dso_name;
 
          for ( int i = 0; i < driver_count; ++i )
          {
-            driver_dso = element->getProperty<std::string>(driver_prop_name, i);
+            driver_dso_name =
+               element->getProperty<std::string>(driver_prop_name, i);
 
-            if ( ! driver_dso.empty() )
+            if ( ! driver_dso_name.empty() )
             {
                vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL)
                   << "[gadget::InputManager::configAdd()] Loading driver DSO '"
-                  << driver_dso << "'\n" << vprDEBUG_FLUSH;
+                  << driver_dso_name << "'\n" << vprDEBUG_FLUSH;
 
+               vpr::ReturnStatus load_status;
                Callable functor(this);
-               mDriverLoader.findAndInitDSO(driver_dso, search_path,
-                                            driver_init_func, functor);
+               vpr::LibraryPtr dso;
+               load_status =
+                  vpr::LibraryLoader::findDSOAndLookup(driver_dso_name,
+                                                       search_path,
+                                                       driver_init_func,
+                                                       functor, dso);
+
+               if ( load_status.success() )
+               {
+                  mLoadedDrivers.push_back(dso);
+               }
             }
          }
 
@@ -336,7 +348,16 @@ vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
                         lib != libs.end();
                         ++lib )
                   {
-                     mDriverLoader.loadAndInitDSO(*lib, driver_init_func, functor);
+                     vpr::ReturnStatus load_status;
+                     load_status =
+                        vpr::LibraryLoader::findEntryPoint(*lib,
+                                                           driver_init_func,
+                                                           functor);
+                     
+                     if ( load_status.success() )
+                     {
+                        mLoadedDrivers.push_back(*lib);
+                     }
                   }
                }
                else
