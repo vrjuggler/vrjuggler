@@ -45,11 +45,12 @@ public class ConfigElementNameEdit extends AbstractUndoableEdit
    /** 
     * Create a ConfigElementNameEdit to all the undo/redo of element additions.
     *
-    * @param ctx        ConfigContext to add/remove the element from.
-    * @param elm        ConfigElement to add/remove.
-    * @param add_remove Whether this edit is for adding or removing an element.
+    * @param elm        ConfigElement whose name has changed.
+    * @param old_name   the old name of the config element.
+    * @param new_name   the new name of the config element.
     */
-   public ConfigElementNameEdit(ConfigElement elm, String old_name, String new_name)
+   public ConfigElementNameEdit(ConfigElement elm, String old_name,
+                                String new_name)
    {
       super();
       mConfigElement = elm;
