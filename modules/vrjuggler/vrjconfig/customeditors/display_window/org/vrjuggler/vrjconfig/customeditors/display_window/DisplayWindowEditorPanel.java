@@ -196,18 +196,18 @@ public class DisplayWindowEditorPanel
 
    public void internalFrameActivated(InternalFrameEvent e)
    {
-      setActiveDisplayWindow((DisplayWindowFrame) e.getInternalFrame());
+      setActiveJugglerWindow((JugglerWindowFrame) e.getInternalFrame());
    }
 
    public void internalFrameClosed(InternalFrameEvent e)
    {
-      DisplayWindowFrame win = (DisplayWindowFrame) e.getInternalFrame();
+      JugglerWindowFrame win = (JugglerWindowFrame) e.getInternalFrame();
 
       // Only change the active window if the internal frame being closed is
       // the same as the active window.
       if ( mActiveWindow == win )
       {
-         setActiveDisplayWindow(null);
+         setActiveJugglerWindow(null);
       }
 
       ConfigElement elt = win.getConfiguration();
@@ -222,7 +222,7 @@ public class DisplayWindowEditorPanel
 
    public void internalFrameDeactivated(InternalFrameEvent e)
    {
-      setActiveDisplayWindow(null);
+      setActiveJugglerWindow(null);
    }
 
    public void internalFrameDeiconified(InternalFrameEvent e)
@@ -246,7 +246,7 @@ public class DisplayWindowEditorPanel
             System.err.println("WARNING: Opened internal frame is already active");
          }
 
-         setActiveDisplayWindow((DisplayWindowFrame) e.getInternalFrame());
+         setActiveJugglerWindow((JugglerWindowFrame) e.getInternalFrame());
       }
    }
 
@@ -370,10 +370,10 @@ public class DisplayWindowEditorPanel
       mContextMenu.add(mAddDisplayItem);
    }
 
-   private void setActiveDisplayWindow(DisplayWindowFrame w)
+   private void setActiveJugglerWindow(JugglerWindowFrame w)
    {
       mActiveWindow = w;
-      boolean enabled = (w != null);
+      boolean enabled = (w != null && w instanceof DisplayWindowFrame);
       mSimViewportButton.setEnabled(enabled);
       mSurfaceViewportButton.setEnabled(enabled);
    }
@@ -655,7 +655,7 @@ public class DisplayWindowEditorPanel
 
    private JDesktopPane mDesktopEditor = new JDesktopPane();
    private DesktopBackgroundImage mDesktopBackground = new DesktopBackgroundImage();
-   private DisplayWindowFrame mActiveWindow = null;
+   private JugglerWindowFrame mActiveWindow = null;
    private java.util.List mAllWindows = new ArrayList();
    private boolean mIsDesktopEditor = false;
    private Dimension mCurrentResolution = new Dimension(1280, 1024);
@@ -704,7 +704,7 @@ public class DisplayWindowEditorPanel
 
          for ( Iterator i = mAllWindows.iterator(); i.hasNext(); )
          {
-            DisplayWindowFrame frame = (DisplayWindowFrame) i.next();
+            JugglerWindowFrame frame = (JugglerWindowFrame) i.next();
             frame.updateResolution(mCurrentResolution);
          }
       }
@@ -714,7 +714,7 @@ public class DisplayWindowEditorPanel
    {
       for ( Iterator i = mAllWindows.iterator(); i.hasNext(); )
       {
-         DisplayWindowFrame frame = (DisplayWindowFrame) i.next();
+         JugglerWindowFrame frame = (JugglerWindowFrame) i.next();
          frame.updateDesktopSize(mDesktopEditor.getSize());
       }
    }

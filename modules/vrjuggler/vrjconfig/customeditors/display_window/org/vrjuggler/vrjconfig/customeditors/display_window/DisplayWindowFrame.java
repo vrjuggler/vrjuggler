@@ -48,7 +48,7 @@ import org.vrjuggler.vrjconfig.commoneditors.placer.PlacerSelectionListener;
 
 
 public class DisplayWindowFrame
-   extends JInternalFrame
+   extends JugglerWindowFrame
    implements PlacerSelectionListener
 {
    private static Cursor mInverseCursor;
@@ -85,21 +85,20 @@ public class DisplayWindowFrame
                              Dimension desktopSize, ConfigContext ctx,
                              ConfigElement elt)
    {
-      super(title, true, true, true, false);
+      super(title, resolution, desktopSize, ctx, elt);
 
-      mContext = ctx;
-      mElement = elt;
-      mResolution = resolution;
-      mDesktopSize = desktopSize;
-
-      mElement.addConfigElementListener(new DisplayWindowFrame_this_configElementAdapter(this));
+      mElementListener =
+         new DisplayWindowFrame_this_configElementAdapter(this);
+      mElement.addConfigElementListener(mElementListener);
 
       try
       {
          mViewportEditor = new ViewportPlacer(this.getSize(), mContext,
                                               mElement);
          mViewportEditor.getPlacer().addPlacerSelectionListener(this);
+
          jbInit();
+
          placeMyself();
 
          mViewportEditor.getPlacer().addMouseListener(
@@ -156,27 +155,6 @@ public class DisplayWindowFrame
       }
    }
 
-   /**
-    * Changes the location of this internal frame based on the new resolution.
-    * @param resolution Dimension
-    */
-   public void updateResolution(Dimension resolution)
-   {
-      mResolution = resolution;
-      placeMyself();
-   }
-
-   public void updateDesktopSize(Dimension size)
-   {
-      mDesktopSize = size;
-      placeMyself();
-   }
-
-   public ConfigElement getConfiguration()
-   {
-      return mElement;
-   }
-
    public void addSurfaceViewport(ConfigElement surfaceVP)
    {
       mElement.addProperty("surface_viewports", surfaceVP);
@@ -224,7 +202,6 @@ public class DisplayWindowFrame
       mViewportStereoItem.setEnabled(false);
       mViewportStereoItem.setText("Stereo");
       mViewportStereoItem.addActionListener(new DisplayWindowFrame_mViewportStereoItem_actionAdapter(this));
-      this.addComponentListener(new DisplayWindowFrame_this_componentAdapter(this));
       mViewportRemoveItem.setEnabled(false);
       mViewportRemoveItem.setText("Delete viewport");
       mViewportRemoveItem.addActionListener(new DisplayWindowFrame_mViewportRemoveItem_actionAdapter(this));
@@ -243,45 +220,6 @@ public class DisplayWindowFrame
       mContextMenu.add(mWinPropsItem);
       mContextMenu.add(mViewportPropsItem);
       this.getContentPane().add(mViewportEditor, BorderLayout.CENTER);
-   }
-
-   private Point desktopToResolution(Point desktopPoint)
-   {
-      float width_conv  = (float) mResolution.width / (float) mDesktopSize.width;
-      float height_conv = (float) mResolution.height / (float) mDesktopSize.height;
-//      System.out.println("To-resolution width conversion: " + width_conv);
-//      System.out.println("To-resolution height conversion: " + height_conv);
-      return new Point((int) ((float) desktopPoint.x * width_conv),
-                       (int) ((float) desktopPoint.y * height_conv));
-   }
-
-   private Point resolutionToDesktop(Point resolutionPoint)
-   {
-      float width_conv  = (float) mDesktopSize.width / (float) mResolution.width;
-      float height_conv = (float) mDesktopSize.height / (float) mResolution.height;
-//      System.out.println("To-desktop width conversion: " + width_conv);
-//      System.out.println("To-desktop height conversion: " + height_conv);
-      return new Point((int) ((float) resolutionPoint.x * width_conv),
-                       (int) ((float) resolutionPoint.y * height_conv));
-   }
-
-   private void placeMyself()
-   {
-      int cfg_size_x = ((Integer) mElement.getProperty("size", 0)).intValue();
-      int cfg_size_y = ((Integer) mElement.getProperty("size", 1)).intValue();
-      Point size = resolutionToDesktop(new Point(cfg_size_x, cfg_size_y));
-      System.out.println("Setting my size to " + size);
-      this.setSize(size.x, size.y);
-
-      int cfg_origin_x = ((Integer) mElement.getProperty("origin", 0)).intValue();
-      int cfg_origin_y =
-         mResolution.height -
-            (((Integer) mElement.getProperty("origin", 1)).intValue() +
-            cfg_size_y);
-      Point origin = resolutionToDesktop(new Point(cfg_origin_x,
-                                                   cfg_origin_y));
-      System.out.println("Setting my origin to " + origin);
-      this.setLocation(origin.x, origin.y);
    }
 
    private void updateContextMenuItems()
@@ -314,10 +252,7 @@ public class DisplayWindowFrame
                          (frame_size.height - dlg_size.height) / 2 + loc.y);
    }
 
-   private Dimension mResolution = null;
-   private Dimension mDesktopSize = null;
-   private ConfigElement mElement = null;
-   private ConfigContext mContext = null;
+   private DisplayWindowFrame_this_configElementAdapter mElementListener = null;
    private boolean mHideMouse = false;
 //   private boolean mMousePressed = false;
    private ViewportPlacer mViewportEditor = null;
@@ -596,41 +531,6 @@ public class DisplayWindowFrame
       mElement.removeProperty(prop, mSelectedViewport);
    }
 
-   void this_componentMoved(ComponentEvent e)
-   {
-//      if ( ! mMousePressed )
-//      {
-         updatePosition(e.getComponent().getBounds());
-//      }
-   }
-
-   void this_componentResized(ComponentEvent e)
-   {
-//      if ( ! mMousePressed )
-//      {
-         Rectangle bounds = e.getComponent().getBounds();
-         updateSize(bounds);
-         updatePosition(bounds);
-//      }
-   }
-
-   private void updatePosition(Rectangle newBounds)
-   {
-      int y_pos = mDesktopSize.height - (newBounds.y + newBounds.height);
-      Point origin = desktopToResolution(new Point(newBounds.x, y_pos));
-      mElement.setProperty("origin", 0, new Integer(origin.x), mContext);
-      mElement.setProperty("origin", 1, new Integer(origin.y), mContext);
-   }
-
-   private void updateSize(Rectangle newBounds)
-   {
-      Point size = desktopToResolution(new Point(newBounds.width,
-                                                 newBounds.height));
-      mElement.setProperty("size", 0, new Integer(size.x), mContext);
-      mElement.setProperty("size", 1, new Integer(size.y), mContext);
-      mViewportEditor.setDesktopSize(this.getSize());
-   }
-
    void frameActivated(InternalFrameEvent e)
    {
       // XXX: Why do we have to do this?
@@ -645,6 +545,12 @@ public class DisplayWindowFrame
    void displayPropertyChanged(ConfigElementEvent e)
    {
       updateContextMenuItems();
+   }
+
+   protected void updateSize(Rectangle newBounds)
+   {
+      super.updateSize(newBounds);
+      mViewportEditor.setDesktopSize(this.getSize());
    }
 }
 
@@ -724,24 +630,6 @@ class DisplayWindowFrame_this_mouseInputAdapter
    public void mouseReleased(MouseEvent e)
    {
       adaptee.this_mouseReleased(e);
-   }
-}
-
-class DisplayWindowFrame_this_componentAdapter extends ComponentAdapter
-{
-   private DisplayWindowFrame adaptee;
-
-   DisplayWindowFrame_this_componentAdapter(DisplayWindowFrame adaptee)
-   {
-      this.adaptee = adaptee;
-   }
-   public void componentMoved(ComponentEvent e)
-   {
-      adaptee.this_componentMoved(e);
-   }
-   public void componentResized(ComponentEvent e)
-   {
-      adaptee.this_componentResized(e);
    }
 }
 
