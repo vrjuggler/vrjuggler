@@ -347,7 +347,7 @@ public:
     * @return NULL - Thread is not in global table
     * @return NonNull - Ptr to the thread that we are running within
     */
-   static BaseThread* self()
+   static Thread* self()
    {
       return getLocalThreadPtr();
    }

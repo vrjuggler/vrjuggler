@@ -355,7 +355,7 @@ public:  // ----- Various other thread functions ------
     *         A non-NULL pointer is returned that points to the thread in
     *         which we are currently running.
     */
-   static BaseThread* self();
+   static Thread* self();
 
    /** Provides a way of printing the process ID neatly. */
    std::ostream& outStream(std::ostream& out);

@@ -183,11 +183,11 @@ int ThreadNSPR::join(void** status)
    return PR_JoinThread(mThread);
 }
 
-BaseThread* ThreadNSPR::self (void)
+Thread* ThreadNSPR::self (void)
 {
    vprASSERT((statics.mStaticsInitialized==1221) && "Trying to call vpr::ThreadNSPR::self before statics are initialized. Don't do that");
 
-   BaseThread* my_thread;
+   Thread* my_thread;
    threadIdKey().getspecific((void**)&my_thread);
 
    return my_thread;
@@ -366,5 +366,7 @@ BaseThread::VPRThreadState ThreadNSPR::nsprThreadStateToVPR(const PRThreadState 
 
    return vpr_state;
 }
+
+
 
 } // End of vpr namespace
