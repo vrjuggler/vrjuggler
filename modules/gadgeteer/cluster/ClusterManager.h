@@ -112,36 +112,6 @@ private:
    
    //Start Barrier Stuff
 public:
-   bool isClusterReady();
-   
-   bool isBarrierMaster()
-   { return mBarrierMaster; }
-   
-   bool isRunning()
-   { return mRunning; }
-   
-   void setRunning(bool run)
-   { mRunning = run;}
-   
-   std::vector<std::string> getBarrierSlaves()
-   { return mSlaves; }
-   
-   std::vector<std::string> getPendingBarrierSlaves()
-   { return mPendingSlaves; }
-   
-   void removePendingBarrierSlave(const std::string& hostname)
-   {
-      for (std::vector<std::string>::iterator i = mPendingSlaves.begin();
-           i != mPendingSlaves.end() ; i++)
-      {
-         if (hostname == (*i))
-         {
-            mPendingSlaves.erase(i);
-            return;
-         }
-      }
-   }
-
    ClusterPlugin* getPluginByGUID(const vpr::GUID& plugin_guid);
 
    vpr::ReturnStatus loadDriverDSO(vpr::LibraryPtr driverDSO);
@@ -150,19 +120,55 @@ public:
 public:
    jccl::ConfigChunkPtr getConfigChunkPointer(std::string& name);
 
+public:
+   /*
+   Truth table for ClusterManager
+
+   Active   Ready
+      1        0  = 0
+      1        1  = 1
+      0        0  = 1
+      0        1  = 1
+
+      (NOT(Active AND (NOT READY)))   
+   */
+
+   bool isClusterActive()
+   {
+      vpr::Guard<vpr::Mutex> guard(mClusterActiveLock);
+      return mClusterActive;
+   }
+
+   bool isClusterReady();
+
+   void setClusterReady(const bool ready)
+   {
+      vpr::Guard<vpr::Mutex> guard(mClusterReadyLock);
+      mClusterReady = ready;
+   }
+
+public:
+   std::vector<std::string> getClusterNodes()
+   {
+      vpr::Guard<vpr::Mutex> guard(mClusterNodesLock);
+      return mClusterNodes;
+   }
+
 private:
    std::list<ClusterPlugin*>     mPlugins;            /**< List of Plugins.*/
    vpr::Mutex                    mPluginsLock;        /**< Lock on plugins list.*/
    std::string                   mBarrierMachineName; /**< Name of the barrier machine.*/
-   
-   // Barrier Variables //
-   std::vector<std::string>      mSlaves;
-   std::vector<std::string>      mPendingSlaves;
-   bool                          mRunning;
-   bool                          mBarrierMaster;
-   std::string                   mBarrierMasterHostname;
    std::map<vpr::GUID, ClusterPlugin*>                   mPluginMap;
    std::vector<vpr::LibraryPtr>  mPluginLibraries;
+
+   vpr::Mutex                    mClusterNodesLock;
+   std::vector<std::string>      mClusterNodes;
+   
+   vpr::Mutex                    mClusterActiveLock;  /**< Lock on ClusterActive bool.*/
+   bool                          mClusterActive;
+   
+   vpr::Mutex                    mClusterReadyLock;  /**< Lock on ClusterActive bool.*/
+   bool                          mClusterReady;
 };
 
 } // end namespace

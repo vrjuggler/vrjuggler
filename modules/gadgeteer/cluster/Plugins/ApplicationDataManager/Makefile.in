@@ -44,10 +44,10 @@ include @topdir@/make.defs.mk
 
 PLUGIN_NAME=	ApplicationDataManager
 
+includedir=	@includedir@/cluster/Plugins/ApplicationDataManager
 srcdir=		@srcdir@
 top_srcdir=	@top_srcdir@
 INSTALL=	@INSTALL@
-INSTALL_FILES=	
 SUBOBJDIR=	$(PLUGIN_NAME)
 C_AFTERBUILD=	plugin-dso
 

@@ -149,8 +149,11 @@ void Kernel::controlLoop(void* nullParam)
       // the ClusterManager constructor
       cluster::ClusterNetwork::instance()->updateNewConnections();
 
+      bool cluster = !(cluster::ClusterManager::instance()->isClusterActive() && 
+                       !cluster::ClusterManager::instance()->isClusterReady());
+      
       // Iff we have an app and a draw manager
-      if((mApp != NULL) && (mDrawManager != NULL))
+      if((mApp != NULL) && (mDrawManager != NULL) && cluster)
       {
             vprDEBUG(vrjDBG_KERNEL,5) << "vjKernel::controlLoop: mApp->preFrame()\n" << vprDEBUG_FLUSH;
          mApp->preFrame();         // PREFRAME: Do Any application pre-draw stuff

@@ -48,7 +48,7 @@ EXTRA_DEFS=	-D_GADGET_CLUSTER_PLUGIN_BUILD_
 # -----------------------------------------------------------------------------
 # Common code for driver DSOs.
 # -----------------------------------------------------------------------------
-PLUGIN_DSO=	$(PLUGIN_NAME)_drv.$(DYNAMICLIB_EXT)
+PLUGIN_DSO=	@LIB_PREFIX@$(PLUGIN_NAME).$(DYNAMICLIB_EXT)
 DYLIB_DEPS=	$(PRE_DSO_DRIVER_DEPS) @DSO_DRIVER_DEPS@ $(POST_DSO_DRIVER_DEPS)
 
 plugin-dso: $(DSO_PLUGIN_DIR)/$(PLUGIN_DSO)

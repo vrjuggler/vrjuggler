@@ -371,6 +371,110 @@ The filters are applied in the order that they are specified in this configurati
       <item label="Accept Connections" defaultvalue="1" />
     </PropertyDesc>
   </ChunkDesc>
+  <ChunkDesc token="EventWindow" name="Event Window" version="1.0">
+    <category>Devices</category>
+    <help>Configures a window that accepts keyboard and mouse events as input.</help>
+    <PropertyDesc token="width" name="width" type="int" variable="0">
+      <help>window width</help>
+      <item label="Window Width" defaultvalue="300" />
+    </PropertyDesc>
+    <PropertyDesc token="height" name="height" type="int" variable="0">
+      <help>window height</help>
+      <item label="Window Height" defaultvalue="100" />
+    </PropertyDesc>
+    <PropertyDesc token="origin" name="origin" type="int" variable="0">
+      <help>Window origin (lower left is 0,0)</help>
+      <item label="X" defaultvalue="0" />
+      <item label="Y" defaultvalue="0" />
+    </PropertyDesc>
+    <PropertyDesc token="msens" name="msens" type="float" variable="0">
+      <help>Mouse sensitivity, 1 is 1 keypress per pixel moved, 0.1 is 1 key for 10 pixels</help>
+      <item label="Mouse Sensitivity" defaultvalue="1.0" />
+    </PropertyDesc>
+    <PropertyDesc token="display_number" name="DisplayNumber" type="int" variable="0">
+      <help>The number of the display on which the event window will be opened. (-1 for local)</help>
+      <item label="Display Number" defaultvalue="0" />
+    </PropertyDesc>
+    <PropertyDesc token="lock_key" name="Lock Key" type="int" variable="0">
+      <help>The key that will lock the mouse to the window</help>
+      <item label="Lock Key" defaultvalue="0" />
+      <enumeration name="KEY_NONE" value="0" />
+      <enumeration name="KEY_UP" value="1" />
+      <enumeration name="KEY_DOWN" value="2" />
+      <enumeration name="KEY_LEFT" value="3" />
+      <enumeration name="KEY_RIGHT" value="4" />
+      <enumeration name="KEY_CTRL" value="5" />
+      <enumeration name="KEY_SHIFT" value="6" />
+      <enumeration name="KEY_ALT" value="7" />
+      <enumeration name="KEY_1" value="8" />
+      <enumeration name="KEY_2" value="9" />
+      <enumeration name="KEY_3" value="10" />
+      <enumeration name="KEY_4" value="11" />
+      <enumeration name="KEY_5" value="12" />
+      <enumeration name="KEY_6" value="13" />
+      <enumeration name="KEY_7" value="14" />
+      <enumeration name="KEY_8" value="15" />
+      <enumeration name="KEY_9" value="16" />
+      <enumeration name="KEY_0" value="17" />
+      <enumeration name="KEY_A" value="18" />
+      <enumeration name="KEY_B" value="19" />
+      <enumeration name="KEY_C" value="20" />
+      <enumeration name="KEY_D" value="21" />
+      <enumeration name="KEY_E" value="22" />
+      <enumeration name="KEY_F" value="23" />
+      <enumeration name="KEY_G" value="24" />
+      <enumeration name="KEY_H" value="25" />
+      <enumeration name="KEY_I" value="26" />
+      <enumeration name="KEY_J" value="27" />
+      <enumeration name="KEY_K" value="28" />
+      <enumeration name="KEY_L" value="29" />
+      <enumeration name="KEY_M" value="30" />
+      <enumeration name="KEY_N" value="31" />
+      <enumeration name="KEY_O" value="32" />
+      <enumeration name="KEY_P" value="33" />
+      <enumeration name="KEY_Q" value="34" />
+      <enumeration name="KEY_R" value="35" />
+      <enumeration name="KEY_S" value="36" />
+      <enumeration name="KEY_T" value="37" />
+      <enumeration name="KEY_U" value="38" />
+      <enumeration name="KEY_V" value="39" />
+      <enumeration name="KEY_W" value="40" />
+      <enumeration name="KEY_X" value="41" />
+      <enumeration name="KEY_Y" value="42" />
+      <enumeration name="KEY_Z" value="43" />
+      <enumeration name="KEY_ESC" value="44" />
+      <enumeration name="MOUSE_POSX" value="45" />
+      <enumeration name="MOUSE_NEGX" value="46" />
+      <enumeration name="MOUSE_POSY" value="47" />
+      <enumeration name="MOUSE_NEGY" value="48" />
+      <enumeration name="MOUSE_BUT1" value="49" />
+      <enumeration name="MOUSE_BUT2" value="50" />
+      <enumeration name="MOUSE_BUT3" value="51" />
+    </PropertyDesc>
+    <PropertyDesc token="start_locked" name="Start Locked" type="bool" variable="0">
+      <help>Do we start with the window locked??</help>
+      <item label="Start Locked" defaultvalue="0" />
+    </PropertyDesc>
+    <PropertyDesc token="sleep_time" name="Sleep time" type="int" variable="0">
+      <help>This is the number of milliseconds that the event update loop should sleep between updates.</help>
+      <item label="Sleep Time" defaultvalue="75" />
+    </PropertyDesc>
+    <PropertyDesc name="Host Node" token="deviceHost" type="chunk" variable="0">
+      <help>Points to the machine that the device is physically connected to.</help>
+      <item label="Host Node" defaultvalue="" />
+      <allowedtype>MachineSpecific</allowedtype>
+    </PropertyDesc>
+  </ChunkDesc>
+  <ChunkDesc token="EventWindowProxy" name="Event Window Proxy" version="1.0">
+    <category>Proxies</category>
+    <help>This proxy points to an event window device.</help>
+    <PropertyDesc token="device" name="Device" type="chunk" variable="0">
+      <help>The event window device to hook the proxy to.</help>
+      <item label="Device" defaultvalue="" />
+      <allowedtype>EventWindow</allowedtype>
+      <allowedtype>simKeyboardDigital</allowedtype>
+    </PropertyDesc>
+  </ChunkDesc>
   <ChunkDesc token="Fastrak" name="Fastrak" version="1.0">
     <category>Devices</category>
     <help>Polhemus Fastrak 3D tracker.</help>
@@ -920,110 +1024,6 @@ The filters are applied in the order that they are specified in this configurati
       <enumeration name="MOUSE_BUT3" value="51" />
     </PropertyDesc>
   </ChunkDesc>
-  <ChunkDesc token="EventWindow" name="Event Window" version="1.0">
-    <category>Devices</category>
-    <help>Configures a window that accepts keyboard and mouse events as input.</help>
-    <PropertyDesc token="width" name="width" type="int" variable="0">
-      <help>window width</help>
-      <item label="Window Width" defaultvalue="300" />
-    </PropertyDesc>
-    <PropertyDesc token="height" name="height" type="int" variable="0">
-      <help>window height</help>
-      <item label="Window Height" defaultvalue="100" />
-    </PropertyDesc>
-    <PropertyDesc token="origin" name="origin" type="int" variable="0">
-      <help>Window origin (lower left is 0,0)</help>
-      <item label="X" defaultvalue="0" />
-      <item label="Y" defaultvalue="0" />
-    </PropertyDesc>
-    <PropertyDesc token="msens" name="msens" type="float" variable="0">
-      <help>Mouse sensitivity, 1 is 1 keypress per pixel moved, 0.1 is 1 key for 10 pixels</help>
-      <item label="Mouse Sensitivity" defaultvalue="1.0" />
-    </PropertyDesc>
-    <PropertyDesc token="display_number" name="DisplayNumber" type="int" variable="0">
-      <help>The number of the display on which the event window will be opened. (-1 for local)</help>
-      <item label="Display Number" defaultvalue="0" />
-    </PropertyDesc>
-    <PropertyDesc token="lock_key" name="Lock Key" type="int" variable="0">
-      <help>The key that will lock the mouse to the window</help>
-      <item label="Lock Key" defaultvalue="0" />
-      <enumeration name="KEY_NONE" value="0" />
-      <enumeration name="KEY_UP" value="1" />
-      <enumeration name="KEY_DOWN" value="2" />
-      <enumeration name="KEY_LEFT" value="3" />
-      <enumeration name="KEY_RIGHT" value="4" />
-      <enumeration name="KEY_CTRL" value="5" />
-      <enumeration name="KEY_SHIFT" value="6" />
-      <enumeration name="KEY_ALT" value="7" />
-      <enumeration name="KEY_1" value="8" />
-      <enumeration name="KEY_2" value="9" />
-      <enumeration name="KEY_3" value="10" />
-      <enumeration name="KEY_4" value="11" />
-      <enumeration name="KEY_5" value="12" />
-      <enumeration name="KEY_6" value="13" />
-      <enumeration name="KEY_7" value="14" />
-      <enumeration name="KEY_8" value="15" />
-      <enumeration name="KEY_9" value="16" />
-      <enumeration name="KEY_0" value="17" />
-      <enumeration name="KEY_A" value="18" />
-      <enumeration name="KEY_B" value="19" />
-      <enumeration name="KEY_C" value="20" />
-      <enumeration name="KEY_D" value="21" />
-      <enumeration name="KEY_E" value="22" />
-      <enumeration name="KEY_F" value="23" />
-      <enumeration name="KEY_G" value="24" />
-      <enumeration name="KEY_H" value="25" />
-      <enumeration name="KEY_I" value="26" />
-      <enumeration name="KEY_J" value="27" />
-      <enumeration name="KEY_K" value="28" />
-      <enumeration name="KEY_L" value="29" />
-      <enumeration name="KEY_M" value="30" />
-      <enumeration name="KEY_N" value="31" />
-      <enumeration name="KEY_O" value="32" />
-      <enumeration name="KEY_P" value="33" />
-      <enumeration name="KEY_Q" value="34" />
-      <enumeration name="KEY_R" value="35" />
-      <enumeration name="KEY_S" value="36" />
-      <enumeration name="KEY_T" value="37" />
-      <enumeration name="KEY_U" value="38" />
-      <enumeration name="KEY_V" value="39" />
-      <enumeration name="KEY_W" value="40" />
-      <enumeration name="KEY_X" value="41" />
-      <enumeration name="KEY_Y" value="42" />
-      <enumeration name="KEY_Z" value="43" />
-      <enumeration name="KEY_ESC" value="44" />
-      <enumeration name="MOUSE_POSX" value="45" />
-      <enumeration name="MOUSE_NEGX" value="46" />
-      <enumeration name="MOUSE_POSY" value="47" />
-      <enumeration name="MOUSE_NEGY" value="48" />
-      <enumeration name="MOUSE_BUT1" value="49" />
-      <enumeration name="MOUSE_BUT2" value="50" />
-      <enumeration name="MOUSE_BUT3" value="51" />
-    </PropertyDesc>
-    <PropertyDesc token="start_locked" name="Start Locked" type="bool" variable="0">
-      <help>Do we start with the window locked??</help>
-      <item label="Start Locked" defaultvalue="0" />
-    </PropertyDesc>
-    <PropertyDesc token="sleep_time" name="Sleep time" type="int" variable="0">
-      <help>This is the number of milliseconds that the event update loop should sleep between updates.</help>
-      <item label="Sleep Time" defaultvalue="75" />
-    </PropertyDesc>
-    <PropertyDesc name="Host Node" token="deviceHost" type="chunk" variable="0">
-      <help>Points to the machine that the device is physically connected to.</help>
-      <item label="Host Node" defaultvalue="" />
-      <allowedtype>MachineSpecific</allowedtype>
-    </PropertyDesc>
-  </ChunkDesc>
-  <ChunkDesc token="EventWindowProxy" name="Event Window Proxy" version="1.0">
-    <category>Proxies</category>
-    <help>This proxy points to an event window device.</help>
-    <PropertyDesc token="device" name="Device" type="chunk" variable="0">
-      <help>The event window device to hook the proxy to.</help>
-      <item label="Device" defaultvalue="" />
-      <allowedtype>EventWindow</allowedtype>
-      <allowedtype>simKeyboardDigital</allowedtype>
-    </PropertyDesc>
-  </ChunkDesc>
   <ChunkDesc token="MachineSpecific" name="Machine Specific" version="1.0">
     <category>Cluster Juggler</category>
     <help>Settings for the specified machine.</help>
@@ -1056,6 +1056,11 @@ The filters are applied in the order that they are specified in this configurati
     <PropertyDesc token="serialBaud" name="Sync Baud Rate" type="int" variable="0">
       <help>Serial port speed</help>
       <item label="Baud Rate" defaultvalue="38400" />
+    </PropertyDesc>
+    <PropertyDesc name="Shared Devices" token="shared_device" type="embeddedchunk" variable="1">
+      <item label="Shared Device" />
+      <allowedtype>EventWindow</allowedtype>
+      <help>This contains all devices on this node to be shared accross the cluster.</help>
     </PropertyDesc>
   </ChunkDesc>
   <ChunkDesc token="MotionStar" name="MotionStar" version="1.0">
@@ -1511,6 +1516,14 @@ The filters are applied in the order that they are specified in this configurati
       <item label="x" defaultvalue="0.0" />
       <item label="y" defaultvalue="0.0" />
       <item label="z" defaultvalue="0.0" />
+    </PropertyDesc>
+  </ChunkDesc>
+  <ChunkDesc token="StartBarrierPlugin" name="StartBarrierPlugin" version="1.0">
+    <category>Cluster Juggler</category>
+    <PropertyDesc name="Start Barrier Master" token="start_master" type="chunk" variable="0">
+      <help>Cluster Node that is responsible for starting the cluster at the right time.</help>
+      <item label="Machine" defaultvalue="" />
+      <allowedtype>MachineSpecific</allowedtype>
     </PropertyDesc>
   </ChunkDesc>
   <ChunkDesc token="ISenseStation" name="Station" version="1.0">

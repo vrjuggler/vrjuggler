@@ -80,10 +80,6 @@ void applicationDataApp::contextInit()
 
 void applicationDataApp::preFrame()
 {
-if (cluster::ClusterManager::instance()->isClusterReady())
-{
-//      std::cout << "Done!" << std::endl;
-//   }
 /*    std::cout  << "Wand Buttons:"
            << " 0:" << mButton0->getData()
            << " 1:" << mButton1->getData()
@@ -104,21 +100,20 @@ if (cluster::ClusterManager::instance()->isClusterReady())
          mMyData->drawBool = false;
       }
    }
-/*   static vpr::Interval last_time;
-   static long iteration=0;
+   static vpr::Interval last_time;
+   static long frame=0;
    //static long count=0;
 
    //count++;
-   iteration++;
+   frame++;
    
    vpr::Interval cur_time = mWand->getTimeStamp();
    vpr::Interval diff_time(cur_time-last_time);
       
-   std::cout << "\nREADANDWRITE Iteration: " << iteration << "  Delta: " << diff_time.getBaseVal() << std::endl;
-   std::cout << "READANDWRITE Current: " << cur_time.getBaseVal() << "Last: " << last_time.getBaseVal() << "\n" << std::endl;
+   std::cout << "\nFrame # " << frame << "  Delta: " << diff_time.getBaseVal() << std::endl;
+   std::cout << "Current: " << cur_time.getBaseVal() << "Last: " << last_time.getBaseVal() << "\n" << std::endl;
       
-   last_time = cur_time; */
-}
+   last_time = cur_time;
 }
 
 void applicationDataApp::bufferPreDraw()
@@ -128,9 +123,6 @@ void applicationDataApp::bufferPreDraw()
 }
 
 void applicationDataApp::draw()
-{
-
-if (cluster::ClusterManager::instance()->isClusterReady())
 {
    glClear(GL_DEPTH_BUFFER_BIT);
    //std::cout << "\n--- myDraw() ---\n";
@@ -235,9 +227,7 @@ if (cluster::ClusterManager::instance()->isClusterReady())
          drawNetwork();
          //std::cout << "Bool: " << (int)mMyDataCopy->drawBool << std::endl;
       }
-
-}
-//   vpr::System::msleep(2000);
+   vpr::System::msleep(2000);
 }
 
 void applicationDataApp::drawNetwork()

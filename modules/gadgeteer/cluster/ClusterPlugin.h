@@ -85,7 +85,7 @@ public:
       return false;
    }
    
-   virtual bool isPluginReady() = 0;
+   //virtual bool isPluginReady() = 0;
    virtual bool configCanHandle(jccl::ConfigChunkPtr chunk) = 0;
    virtual bool configAdd(jccl::ConfigChunkPtr chunk) = 0;
    virtual bool configRemove(jccl::ConfigChunkPtr chunk) = 0;
