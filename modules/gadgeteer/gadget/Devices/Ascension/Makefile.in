@@ -47,14 +47,13 @@ top_srcdir	= @top_srcdir@
 INSTALL		= @INSTALL@
 SUBOBJDIR	= $(GADGET_LIBRARY)
 
-SRCS		=
+SRCS		= MotionStar.cpp		\
+                  MotionStarStandalone.cpp
 
 ifneq (@OS_TYPE@, Win32)
 SRCS		+= Bird.cpp			\
                    Flock.cpp			\
-                   FlockStandalone.cpp		\
-                   MotionStar.cpp		\
-                   MotionStarStandalone.cpp
+                   FlockStandalone.cpp
 endif
 
 include $(MKPATH)/dpp.obj.mk

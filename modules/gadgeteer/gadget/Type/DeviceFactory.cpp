@@ -34,6 +34,9 @@
 #include <vpr/vpr.h>
 #include <gadget/Type/DeviceFactory.h>
 
+// Platform-independent devices.
+#include <gadget/Devices/Ascension/MotionStar.h>
+
 // Sims
 #include <gadget/Devices/Sim/SimAnalog.h>
 #include <gadget/Devices/Sim/SimDigital.h>
@@ -66,7 +69,6 @@
 #   endif
 
 #   include <gadget/Devices/Logitech/logiclass.h>
-#   include <gadget/Devices/Ascension/MotionStar.h>
 #else
 #   include <gadget/Devices/Keyboard/KeyboardWin32.h>
 #endif
@@ -101,6 +103,10 @@ void DeviceFactory::hackLoadKnownDevices()
    // NOTE: These will all given unused variable errors in compiling.
    // That is okay, because the don't actually have to do anything.
    // They just register themselves in their constructor.
+
+   // Platform-independent devices.
+   DeviceConstructor<MotionStar>* motion_star = new DeviceConstructor<MotionStar>;
+
    DeviceConstructor<SimAnalog>* sim_analog = new DeviceConstructor<SimAnalog>;
    DeviceConstructor<SimDigital>* sim_digital = new DeviceConstructor<SimDigital>;
    DeviceConstructor<SimPosition>* sim_position = new DeviceConstructor<SimPosition>;
@@ -157,7 +163,6 @@ void DeviceFactory::hackLoadKnownDevices()
 #endif
    DeviceConstructor<Flock>* flock = new DeviceConstructor<Flock>;
    DeviceConstructor<Intersense>* intersense = new DeviceConstructor<Intersense>;
-   DeviceConstructor<MotionStar>* motion_star = new DeviceConstructor<MotionStar>;
 
    if( (NULL == flock)        ||
        (NULL == intersense)   ||
