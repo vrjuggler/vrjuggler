@@ -39,6 +39,7 @@
 #include <gmtl/Matrix.h>
 #include <gmtl/Vec.h>
 #include <gmtl/Coord.h>
+#include <gmtl/Generate.h>
 
 #include <wandApp.h>
 
@@ -96,8 +97,6 @@ void wandApp::myDraw()
          // A little laser pointer
       glLineWidth(5.0f);
 
-
-
       // Draw Axis
       glDisable(GL_LIGHTING);
       glPushMatrix();
@@ -123,6 +122,20 @@ void wandApp::myDraw()
          glEnd();
       glPopMatrix();
       glEnable(GL_LIGHTING);
+   glPopMatrix();
+
+   // Draw the head history
+   glLineWidth(1.0f);
+   glPushMatrix();
+    glBegin(GL_LINES);
+        glColor3f(0.0f, 0.8f, 0.8f);
+
+        for(unsigned i=0;i<mHeadHistory.size();++i)
+        {
+            glVertex3fv(mHeadHistory[i].mData);
+        }
+    glEnd();
+
    glPopMatrix();
 
 }
