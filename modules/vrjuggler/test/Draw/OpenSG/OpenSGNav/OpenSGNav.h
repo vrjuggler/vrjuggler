@@ -39,10 +39,13 @@
 struct context_data
 {
    context_data()
-     : mContextThreadInitialized(false)
+     : mRenderAction(NULL),
+       mContextThreadInitialized(false),
+       mOsgThread(NULL)
    {;}
 
-   OSG::PassiveWindowPtr      mWin; // passive window to render with (the context)
+   OSG::RenderAction*         mRenderAction;    /**< The render action for the scene */
+   OSG::PassiveWindowPtr      mWin;             /**< passive window to render with (the context) */
    OSG::PerspectiveCameraPtr  mCamera;
    OSG::TransformPtr          mCameraCartTransform;
    OSG::NodePtr               mCameraCartNode;
@@ -76,7 +79,6 @@ public:
 
        vprDEBUG(vprDBG_ALL,0) << "OpenSGNav::initAPI: Called.\n" << vprDEBUG_FLUSH;
 
-       this->initRenderer();
        this->initScene();
        vprASSERT(getSceneRoot().getCPtr() != NULL);    // I don't know if this is even valid
     }
@@ -85,9 +87,6 @@ public:
     virtual OSG::NodePtr getSceneRoot()
     { return mSceneRoot; }
 
-    void initAppGraph();
-
-    void myInit(void);
     void initRenderer();
 
     virtual void draw();
@@ -99,20 +98,6 @@ public:
     void bufferPreDraw();
 
     virtual void preFrame();
-
-    /*
-    virtual void intraFrame()
-    {
-        //std::cout << "OpenSGNav::intraFrame called\n";
-        // Put your intra frame computations here.
-    }
-
-    virtual void postFrame()
-    {
-        //std::cout << "OpenSGNav::postFrame called\n";
-        // Put your post frame computations here.
-    }
-    */
 
     void setModelFileName(std::string filename)
     {
@@ -138,7 +123,7 @@ public:
     //OSG::ImageForegroundPtr   _foreground;
     //OSG::NodePtr              _internalRoot;
     //OSG::DirectionalLightPtr  _headlight;
-    OSG::RenderAction*        mRenderAction;    /**< The render action for the scene */
+
 
     vrj::GlContextData<context_data>  mContextData;
 
