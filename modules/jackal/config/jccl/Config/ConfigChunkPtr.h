@@ -37,12 +37,10 @@
 #include <boost/smart_ptr.hpp>
 
 
-namespace jccl {
-
-    class ConfigChunk;
-
-    typedef boost::shared_ptr<ConfigChunk> ConfigChunkPtr;
-
-};
+namespace jccl
+{
+   class ConfigChunk;
+   typedef boost::shared_ptr<ConfigChunk> ConfigChunkPtr;
+}
 
 #endif

@@ -39,7 +39,7 @@
 
 namespace jccl
 {
-   
+
 class ConfigChunkDB;
 class ConfigChunk;
 class ChunkDescDB;
@@ -48,36 +48,38 @@ class Property;
 class PropertyDesc;
 
 //: Parent interface for XMLConfigIOHandler and StandardConfigIOHandler
-class ConfigIOHandler {
+class ConfigIOHandler
+{
 
 public:
 
-    // ConfigChunkDB Methods
+   // ConfigChunkDB Methods
 
-    virtual bool readConfigChunkDB (const std::string& filename, ConfigChunkDB& db) = 0;
+   virtual bool readConfigChunkDB (const std::string& filename, ConfigChunkDB& db) = 0;
 
-    virtual bool readConfigChunkDB (std::istream& input, ConfigChunkDB& db) = 0;
+   virtual bool readConfigChunkDB (std::istream& input, ConfigChunkDB& db) = 0;
 
-    virtual bool writeConfigChunkDB (std::ostream& output, const ConfigChunkDB& db) = 0;
+   virtual bool writeConfigChunkDB (std::ostream& output, const ConfigChunkDB& db) = 0;
 
-    virtual bool writeConfigChunk (std::ostream& output, const ConfigChunk& ch, const std::string& pad = "") = 0;
+   virtual bool writeConfigChunk (std::ostream& output, const ConfigChunk& ch, const std::string& pad = "") = 0;
 
-    virtual bool writeProperty (std::ostream& out, const Property& p, const std::string& pad = "") = 0;
+   virtual bool writeProperty (std::ostream& out, const Property& p, const std::string& pad = "") = 0;
 
 
-    // ChunkDescDB Methods
+   // ChunkDescDB Methods
 
-    virtual bool readChunkDescDB (const std::string& filename, ChunkDescDB& db) = 0;
+   virtual bool readChunkDescDB (const std::string& filename, ChunkDescDB& db) = 0;
 
-    virtual bool readChunkDescDB (std::istream& input, ChunkDescDB& db) = 0;
+   virtual bool readChunkDescDB (std::istream& input, ChunkDescDB& db) = 0;
 
-    virtual bool writeChunkDescDB (std::ostream& output, const ChunkDescDB& db) = 0;
+   virtual bool writeChunkDescDB (std::ostream& output, const ChunkDescDB& db) = 0;
 
-    virtual bool writeChunkDesc (std::ostream& output, const ChunkDesc& ch, const std::string& pad = "") = 0;
+   virtual bool writeChunkDesc (std::ostream& output, const ChunkDesc& ch, const std::string& pad = "") = 0;
 
-    virtual bool writePropertyDesc (std::ostream& out, const PropertyDesc& p, const std::string& pad = "") = 0;
-
-};
+   virtual bool writePropertyDesc (std::ostream& out, const PropertyDesc& p, const std::string& pad = "") = 0;
 
 };
+
+} // End of jccl namespace
+
 #endif

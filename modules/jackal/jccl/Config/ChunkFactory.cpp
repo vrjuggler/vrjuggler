@@ -30,61 +30,64 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-
+#include <jccl/jcclConfig.h>
 #include <jccl/Config/ChunkFactory.h>
 
-namespace jccl {
 
+namespace jccl
+{
 
-    ChunkFactory::ChunkFactory () {
-        // try to load a defaul "jccl-chunks.desc" file, but don't complain
-        // if it's not there.
+ChunkFactory::ChunkFactory ()
+{
+   // try to load a defaul "jccl-chunks.desc" file, but don't complain
+   // if it's not there.
 
-        std::string file_name = "${JCCL_BASE_DIR}/";
-        file_name += JCCL_SHARE_DIR;
-        file_name += "data/jccl-chunks.desc";
-        bool retval = descdb.load(file_name.c_str());
-        if (retval) {
-            vprDEBUG(jcclDBG_CONFIG,vprDBG_CRITICAL_LVL) 
-                << "Loaded ChunkDesc file: '" << file_name.c_str() << "'.\n"
-                << vprDEBUG_FLUSH;
-        }
-    }
+   std::string file_name = "${JCCL_BASE_DIR}/";
+   file_name += JCCL_SHARE_DIR;
+   file_name += "data/jccl-chunks.desc";
+   bool retval = descdb.load(file_name.c_str());
+   if ( retval )
+   {
+      vprDEBUG(jcclDBG_CONFIG,vprDBG_CRITICAL_LVL)
+         << "Loaded ChunkDesc file: '" << file_name.c_str() << "'.\n"
+         << vprDEBUG_FLUSH;
+   }
+}
 
+//: Adds descriptions in file 'file_name' to the factory
+bool ChunkFactory::loadDescs (const std::string& file_name)
+{
+   //vjConfigIO::instance->readChunkDescDB (file_name, descdb);
+   bool retval = descdb.load(file_name.c_str());
+   if ( retval )
+   {
+      vprDEBUG(jcclDBG_CONFIG,vprDBG_CRITICAL_LVL)
+         << "Loaded ChunkDesc file: '" << file_name.c_str() << "'.\n"
+         << vprDEBUG_FLUSH;
+   }
+   else
+   {
+      vprDEBUG(vprDBG_ALL,vprDBG_CRITICAL_LVL)
+         << "Failed to load ChunkDesc file: '" << file_name.c_str()
+         << "'.\n" << vprDEBUG_FLUSH;
+   }
+   return retval;
+}
 
+//: Creates a Chunk using the given description
+ConfigChunkPtr ChunkFactory::createChunk (ChunkDescPtr d, bool use_defaults)
+{
+   if ( d.get() != 0 )
+   {
+      d->assertValid();
+      return ConfigChunkPtr(new ConfigChunk (d, use_defaults));
+   }
+   else
+   {
+      return ConfigChunkPtr(0);
+   }
+}
 
-    //: Adds descriptions in file 'file_name' to the factory
-    bool ChunkFactory::loadDescs (const std::string& file_name) {
-        //vjConfigIO::instance->readChunkDescDB (file_name, descdb);
-        bool retval = descdb.load(file_name.c_str());
-        if (retval) {
-            vprDEBUG(jcclDBG_CONFIG,vprDBG_CRITICAL_LVL) 
-                << "Loaded ChunkDesc file: '" << file_name.c_str() << "'.\n"
-                << vprDEBUG_FLUSH;
-        }
-        else {
-            vprDEBUG(vprDBG_ALL,vprDBG_CRITICAL_LVL) 
-                << "Failed to load ChunkDesc file: '" << file_name.c_str() 
-                << "'.\n" << vprDEBUG_FLUSH;
-        }
-        return retval;
-    }
+vprSingletonImp(ChunkFactory);
 
-
-   
-    //: Creates a Chunk using the given description
-    ConfigChunkPtr ChunkFactory::createChunk (ChunkDescPtr d, bool use_defaults) {
-        if (d.get() != 0) {
-            d->assertValid();
-            return ConfigChunkPtr(new ConfigChunk (d, use_defaults));
-        }
-        else
-            return ConfigChunkPtr(0);
-    }
-
-
-
-    vprSingletonImp(ChunkFactory);
-
-
-}; // namespace jccl
+} // namespace jccl

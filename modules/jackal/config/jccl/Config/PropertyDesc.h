@@ -30,16 +30,15 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-
-
 #ifndef _JCCL_PROPERTY_DESC_H_
 #define _JCCL_PROPERTY_DESC_H_
 
 #include <jccl/jcclConfig.h>
 #include <jccl/Config/EnumEntry.h>
 
-namespace jccl {
-   
+namespace jccl
+{
+
 //------------------------------------------------------------
 //: A Description used to instantiate a vrj::Property
 //
@@ -57,178 +56,181 @@ namespace jccl {
 // @author:  Christopher Just
 //------------------------------------------------------------
 
-class PropertyDesc {
+class PropertyDesc
+{
 
 public:
 
-    //: Constructor
-    //!POST: name, token, help = NULL, type = T_INVALID, num = 0,
-    //+      valuelabels & enumerations are empty.
-    PropertyDesc ();
+   //: Constructor
+   //!POST: name, token, help = NULL, type = T_INVALID, num = 0,
+   //+      valuelabels & enumerations are empty.
+   PropertyDesc ();
+
+   //:Copy Constructor
+   PropertyDesc (const PropertyDesc& d);
+
+   //: Convenience constructor
+   //!POST: name = token = n, help = h, num = i, type = t,
+   //+      valuelabels & enumerations are empty.
+   PropertyDesc (const std::string& n, int i, VarType t, const std::string& h);
+
+   //: Destroys a PropertyDesc, and frees all allocated memory.
+   ~PropertyDesc ();
+
+#ifdef JCCL_DEBUG
+   void assertValid () const;
+#else
+   inline void assertValid () const
+   {
+      ;
+   }
+#endif
+
+   //: returns the token string for
+   inline const std::string& getToken () const
+   {
+      return token;
+   }
+
+   inline void setToken (const std::string& tok)
+   {
+      token = tok;
+   }
+
+   inline const std::string& getName () const
+   {
+      return name;
+   }
+
+   inline void setName (const std::string& _name)
+   {
+      name = _name;
+   }
+
+   inline const std::string& getHelp () const
+   {
+      return help;
+   }
+
+   inline void setHelp (const std::string& _help)
+   {
+      help = _help;
+   }
+
+   // get rid of this soon
+   inline VarType getType () const
+   {
+      return type;
+   }
+
+   inline VarType getVarType () const
+   {
+      return type;
+   }
+
+   inline void setVarType (VarType _type)
+   {
+      type = _type;
+   }
+
+   inline int getNumAllowed () const
+   {
+      return num;
+   }
+
+   // -1 for variable
+   inline void setNumAllowed (int _num)
+   {
+      num = _num;
+   }
+
+   //: Returns the number of individual value labels
+   inline int getValueLabelsSize () const
+   {
+      return valuelabels.size();
+   }
+
+   void appendValueLabel (const std::string& _label);
+
+   //: Returns the ith value label
+   const std::string& getValueLabel (unsigned int index) const;
 
 
+   inline int getEnumerationsSize() const
+   {
+      return enumv.size();
+   }
 
-    //:Copy Constructor
-    PropertyDesc (const PropertyDesc& d);
+   void appendEnumeration (const std::string& _label, const std::string& _val);
 
+   //: Returns the enumeration entry at index ind
+   //! ARGS: index - index of EnumEntry to retrieve (0-base)
+   //! RETURNS: NULL - if index is < 0 or out of range
+   //! RETURNS: enumentry* - otherwise
+   EnumEntry* getEnumEntryAtIndex (unsigned int index) const;
 
+   //: Returns an enumentry with val matching val...
+   EnumEntry* getEnumEntryWithValue (const VarValue& val) const;
 
-    //: Convenience constructor
-    //!POST: name = token = n, help = h, num = i, type = t,
-    //+      valuelabels & enumerations are empty.
-    PropertyDesc (const std::string& n, int i, VarType t, const std::string& h);
+   //: Returns the enumentry named _name
+   //! RETURNS: NULL - if no match if found
+   //! RETURNS: EnumEntry* - otherwise
+   EnumEntry* getEnumEntry (const std::string& _name) const;
 
+   //: Writes a PropertyDesc to the given ostream
+   //!NOTE: output format is:
+   //+      name typename num token { enum1 enum2=42 } "help string"
+   friend std::ostream& operator << (std::ostream& out, const PropertyDesc& self);
 
-    //: Destroys a PropertyDesc, and frees all allocated memory.
-    ~PropertyDesc ();
+   PropertyDesc& operator= (const PropertyDesc& pd);
 
+   //: Equality Operator
+   // BUG (IPTHACK) - doesn't check equality of enumerations and valuelabels
+   bool operator== (const PropertyDesc& pd) const;
 
-
-    #ifdef JCCL_DEBUG
-    void assertValid () const;
-    #else
-    inline void assertValid () const {
-        ;
-    }
-    #endif
-
-
-
-    //: returns the token string for
-    inline const std::string& getToken () const {
-        return token;
-    }
-
-    inline void setToken (const std::string& tok) {
-        token = tok;
-    }
-
-    inline const std::string& getName () const {
-        return name;
-    }
-
-    inline void setName (const std::string& _name) {
-        name = _name;
-    }
-
-    inline const std::string& getHelp () const {
-        return help;
-    }
-
-    inline void setHelp (const std::string& _help) {
-        help = _help;
-    }
-
-    // get rid of this soon
-    inline VarType getType () const {
-        return type;
-    }
-
-    inline VarType getVarType () const {
-        return type;
-    }
-
-    inline void setVarType (VarType _type) {
-        type = _type;
-    }
-
-    inline int getNumAllowed () const {
-        return num;
-    }
-
-    // -1 for variable
-    inline void setNumAllowed (int _num) {
-        num = _num;
-    }
-
-    //: Returns the number of individual value labels
-    inline int getValueLabelsSize () const {
-        return valuelabels.size();
-    }
-
-    void appendValueLabel (const std::string& _label);
-
-    //: Returns the ith value label
-    const std::string& getValueLabel (unsigned int index) const;
-
-
-    inline int getEnumerationsSize() const {
-        return enumv.size();
-    }
-
-    void appendEnumeration (const std::string& _label, const std::string& _val);
-
-    //: Returns the enumeration entry at index ind
-    //! ARGS: index - index of EnumEntry to retrieve (0-base)
-    //! RETURNS: NULL - if index is < 0 or out of range
-    //! RETURNS: enumentry* - otherwise
-    EnumEntry* getEnumEntryAtIndex (unsigned int index) const;
-
-
-    //: Returns an enumentry with val matching val...
-    EnumEntry* getEnumEntryWithValue (const VarValue& val) const;
-
-
-    //: Returns the enumentry named _name
-    //! RETURNS: NULL - if no match if found
-    //! RETURNS: EnumEntry* - otherwise
-    EnumEntry* getEnumEntry (const std::string& _name) const;
-
-
-    //: Writes a PropertyDesc to the given ostream
-    //!NOTE: output format is:
-    //+      name typename num token { enum1 enum2=42 } "help string"
-    friend std::ostream& operator << (std::ostream& out, const PropertyDesc& self);
-
-
-    PropertyDesc& operator= (const PropertyDesc& pd);
-
-    //: Equality Operator
-    // BUG (IPTHACK) - doesn't check equality of enumerations and valuelabels
-    bool operator== (const PropertyDesc& pd) const;
-
-    //: Inequality Operator
-    inline bool operator!= (const PropertyDesc& pd) const {
-        return !(*this == pd);
-    }
+   //: Inequality Operator
+   inline bool operator!= (const PropertyDesc& pd) const
+   {
+      return !(*this == pd);
+   }
 
 private:
 
-    //: Descriptive name of the Property this object describes. Used in GUI.
-    std::string name;
+   //: Descriptive name of the Property this object describes. Used in GUI.
+   std::string name;
 
-    //: Short name for this PropertyDesc.  Used in app/library code.
-    std::string token;
+   //: Short name for this PropertyDesc.  Used in app/library code.
+   std::string token;
 
-    //: One line of help information for this PropertyDesc.
-    std::string help;
+   //: One line of help information for this PropertyDesc.
+   std::string help;
 
-    //: Type of values allowed in this Property.
-    VarType type;
+   //: Type of values allowed in this Property.
+   VarType type;
 
-    //: Number of value entries allowed for this Property. (-1 for variable)
-    //  Typically this is an integer > 0.  For example, a tracker
-    //  position offset might be described with 3 Float values (xyz).
-    //  A value of -1 indicates that this Property may have a variable
-    //  number of values (e.g. for a list of active Walls).
-    int  num;
+   //: Number of value entries allowed for this Property. (-1 for variable)
+   //  Typically this is an integer > 0.  For example, a tracker
+   //  position offset might be described with 3 Float values (xyz).
+   //  A value of -1 indicates that this Property may have a variable
+   //  number of values (e.g. for a list of active Walls).
+   int  num;
 
-    //: Labels for individual values of this Property (ie. "width", "height")
-    std::vector<EnumEntry*> valuelabels;
+   //: Labels for individual values of this Property (ie. "width", "height")
+   std::vector<EnumEntry*> valuelabels;
 
-    //: A list of labeled values that are allowed.
-    //  string/int pairs for T_INTs,
-    //  valid string values for T_STRINGS, and names of acceptable chunk
-    //  types for T_CHUNK.  Note that in the T_CHUNK case, an empty enumv
-    //  means _all_ chunk types are accepted
-    std::vector<EnumEntry*> enumv;
+   //: A list of labeled values that are allowed.
+   //  string/int pairs for T_INTs,
+   //  valid string values for T_STRINGS, and names of acceptable chunk
+   //  types for T_CHUNK.  Note that in the T_CHUNK case, an empty enumv
+   //  means _all_ chunk types are accepted
+   std::vector<EnumEntry*> enumv;
 
-    int enum_val;
+   int enum_val;
 
-    unsigned int validation;
-
-
+   unsigned int validation;
 };
 
-};
+} // End of jccl namespace
+
+
 #endif

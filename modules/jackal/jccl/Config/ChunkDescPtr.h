@@ -37,12 +37,10 @@
 #include <boost/smart_ptr.hpp>
 
 
-namespace jccl {
-
-    class ChunkDesc;
-
-    typedef boost::shared_ptr<ChunkDesc> ChunkDescPtr;
-
+namespace jccl
+{
+   class ChunkDesc;
+   typedef boost::shared_ptr<ChunkDesc> ChunkDescPtr;
 };
 
 #endif

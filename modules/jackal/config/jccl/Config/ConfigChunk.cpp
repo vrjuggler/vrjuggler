@@ -30,8 +30,11 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-
 #include <jccl/jcclConfig.h>
+
+#include <stdlib.h>
+#include <ctype.h>
+
 #include <jccl/Config/ConfigChunk.h>
 #include <jccl/Config/ParseUtil.h>
 #include <jccl/Util/Debug.h>
@@ -41,223 +44,250 @@
 #include <jccl/Config/ConfigTokens.h>
 #include <jccl/Config/ConfigIO.h>
 
-#include <stdlib.h>
-#include <ctype.h>
 
-
-namespace jccl {
+namespace jccl
+{
 
 /*static*/ const std::string ConfigChunk::embedded_separator("->");
 
 ConfigChunk::ConfigChunk (): mProps()
 {
-    mValidation = 1;
+   mValidation = 1;
 }
-
-
 
 ConfigChunk::ConfigChunk (ChunkDescPtr d, bool use_defaults) :mProps()
 {
-    mValidation = 1;
-    associateDesc (d, use_defaults);
+   mValidation = 1;
+   associateDesc(d, use_defaults);
 }
-
-
 
 ConfigChunk::ConfigChunk (const ConfigChunk& c):mProps()
 {
-    mValidation = 1;
-    *this = c;
+   mValidation = 1;
+   *this = c;
 }
-
-
 
 ConfigChunk::~ConfigChunk ()
 {
-    assertValid();
+   assertValid();
 
-    mValidation = 0;
+   mValidation = 0;
 
-    for (unsigned int i = 0; i < mProps.size(); i++)
-        delete (mProps[i]);
-
+   for ( unsigned int i = 0; i < mProps.size(); i++ )
+   {
+      delete (mProps[i]);
+   }
 }
-
-
 
 bool ConfigChunk::hasSeparator (const std::string &path)
 {
-    return (path.find(embedded_separator) != path.npos);
+   return(path.find(embedded_separator) != path.npos);
 }
-
-
 
 std::string ConfigChunk::getRemainder (const std::string &path)
 {
-    std::string::size_type i = path.find (embedded_separator);
-    if (i == path.npos)
-        return path;
-    else
-        return path.substr (i + embedded_separator.length());
+   std::string::size_type i = path.find (embedded_separator);
+   if ( i == path.npos )
+   {
+      return path;
+   }
+   else
+   {
+      return path.substr(i + embedded_separator.length());
+   }
 }
-
-
 
 std::string ConfigChunk::getFirstNameComponent (const std::string& path)
 {
-    std::string::size_type i = path.find (embedded_separator);
-    if (i == path.npos)
-        return path;
-    else
-        return path.substr (0, i);
+   std::string::size_type i = path.find (embedded_separator);
+   if ( i == path.npos )
+   {
+      return path;
+   }
+   else
+   {
+      return path.substr (0, i);
+   }
 }
-
-
 
 #ifdef JCCL_DEBUG
 void ConfigChunk::assertValid () const
 {
-    vprASSERT (mValidation == 1 && "Trying to use deleted config chunk");
-    for (unsigned int i = 0; i < mProps.size(); i++)
-        mProps[i]->assertValid();
+   vprASSERT (mValidation == 1 && "Trying to use deleted config chunk");
+   for ( unsigned int i = 0; i < mProps.size(); i++ )
+   {
+      mProps[i]->assertValid();
+   }
 }
 #endif
 
-
-
 void ConfigChunk::associateDesc (ChunkDescPtr d, bool use_defaults)
 {
-    assertValid();
-    ConfigChunkPtr ch;
-    if (use_defaults)
-        ch = d->getDefaultChunk();
-    if (ch.get() != 0)
-        *this = *ch;
-    else {
+   assertValid();
+   ConfigChunkPtr ch;
+   if ( use_defaults )
+   {
+      ch = d->getDefaultChunk();
+   }
 
-        unsigned int i;
+   if ( ch.get() != 0 )
+   {
+      *this = *ch;
+   }
+   else
+   {
+      unsigned int i;
 
-        mDesc = d;
+      mDesc = d;
 
-        for (i = 0; i < mProps.size(); i++)
-            delete (mProps[i]);
-        mProps.clear();
+      for ( i = 0; i < mProps.size(); i++ )
+      {
+         delete (mProps[i]);
+      }
 
-        for (i = 0; i < mDesc->plist.size(); i++) {
-            PropertyDesc* pd = mDesc->plist[i];
-            Property* pr = new Property (pd);
-            mProps.push_back (pr);
-        }
-    }
+      mProps.clear();
+
+      for ( i = 0; i < mDesc->plist.size(); i++ )
+      {
+         PropertyDesc* pd = mDesc->plist[i];
+         Property* pr = new Property (pd);
+         mProps.push_back (pr);
+      }
+   }
 }
-
-
 
 ConfigChunk& ConfigChunk::operator = (const ConfigChunk& c)
 {
-    assertValid();
-    c.assertValid();
+   assertValid();
+   c.assertValid();
 
-    unsigned int i;
-    if (this == &c)     // ack! same object!
-        return *this;
+   unsigned int i;
+   if ( this == &c )     // ack! same object!
+   {
+      return *this;
+   }
 
-    mDesc = c.mDesc;
+   mDesc = c.mDesc;
 
-    for (i = 0; i < mProps.size(); i++)
-        delete (mProps[i]);
-    mProps.clear();
+   for ( i = 0; i < mProps.size(); i++ )
+   {
+      delete(mProps[i]);
+   }
+   mProps.clear();
 
-    for (i = 0; i < c.mProps.size(); i++) {
-        mProps.push_back (new Property(*(c.mProps[i])));
-    }
-    return *this;
+   for ( i = 0; i < c.mProps.size(); i++ )
+   {
+      mProps.push_back(new Property(*(c.mProps[i])));
+   }
+   return *this;
 }
-
-
 
 bool ConfigChunk::operator== (const ConfigChunk& c) const
 {
-    assertValid();
-    c.assertValid();
+   assertValid();
+   c.assertValid();
 
-    // equality operator - this makes a couple of assumptions:
-    // 1. the descs must be the _same_object_, not just equal.
-    // 2. the properties will be in the _same_order_.  This is
-    //    reasonable if 1. is true.
+   // equality operator - this makes a couple of assumptions:
+   // 1. the descs must be the _same_object_, not just equal.
+   // 2. the properties will be in the _same_order_.  This is
+   //    reasonable if 1. is true.
 
-    if (mDesc.get() != c.mDesc.get())
-        return false;
-    if (mProps.size() != c.mProps.size()) // probably redundant
-        return false;
-    for (unsigned int i = 0; i < mProps.size(); i++) {
-        if (*(mProps[i]) != *(c.mProps[i]))
-            return false;
-    }
-    return true;
+   if ( mDesc.get() != c.mDesc.get() )
+   {
+      return false;
+   }
+
+   if ( mProps.size() != c.mProps.size() ) // probably redundant
+   {
+      return false;
+   }
+
+   for ( unsigned int i = 0; i < mProps.size(); i++ )
+   {
+      if ( *(mProps[i]) != *(c.mProps[i]) )
+      {
+         return false;
+      }
+   }
+
+   return true;
 }
 
+bool ConfigChunk::operator< (const ConfigChunk& c) const
+{
+   assertValid();
 
-
-bool ConfigChunk::operator< (const ConfigChunk& c) const {
-    assertValid();
-
-    std::string s1 = getProperty ("name");
-    std::string s2 = c.getProperty ("name");
-    return s1 < s2;
+   std::string s1 = getProperty ("name");
+   std::string s2 = c.getProperty ("name");
+   return s1 < s2;
 }
-
-
 
 // used for dependency resolution
 ConfigChunkPtr ConfigChunk::getEmbeddedChunk (const std::string &path)
 {
-    std::string propname, chunkname, subpath;
-    Property* prop;
-    int i;
-    ConfigChunkPtr ch(this);
-    ConfigChunkPtr ch2, ch3;
+   std::string propname, chunkname, subpath;
+   Property* prop;
+   int i;
+   ConfigChunkPtr ch(this);
+   ConfigChunkPtr ch2, ch3;
 
-    if (vjstrcasecmp (ch->getName(), path /*getFirstNameComponent (path)*/)) {
-        return ConfigChunkPtr(0);
-    }
-    else {
-        if (!hasSeparator(path))
-            return ch;
-        else {
-            subpath = getRemainder(path); // strip chunkname
-            propname = getFirstNameComponent(path);
-            subpath = getRemainder(path); // strip propname
-            chunkname = getFirstNameComponent (path);
-            prop = getPropertyPtrFromName(propname);
-            if (prop) {
-                for (i = 0; i < prop->getNum(); i++) {
-                    ch2 = (ConfigChunkPtr)prop->getValue(i);
-                    if (ch2.get() != 0) {
-                        ch3 = ch2->getEmbeddedChunk(path);
-                        if (ch3.get() != 0)
-                            return ch3;
-                    }
-                }
+   if ( vjstrcasecmp (ch->getName(), path /*getFirstNameComponent (path)*/) )
+   {
+      return ConfigChunkPtr(0);
+   }
+   else
+   {
+      if ( !hasSeparator(path) )
+      {
+         return ch;
+      }
+      else
+      {
+         subpath = getRemainder(path); // strip chunkname
+         propname = getFirstNameComponent(path);
+         subpath = getRemainder(path); // strip propname
+         chunkname = getFirstNameComponent (path);
+         prop = getPropertyPtrFromName(propname);
+         if ( prop )
+         {
+            for ( i = 0; i < prop->getNum(); i++ )
+            {
+               ch2 = (ConfigChunkPtr)prop->getValue(i);
+               if ( ch2.get() != 0 )
+               {
+                  ch3 = ch2->getEmbeddedChunk(path);
+                  if ( ch3.get() != 0 )
+                  {
+                     return ch3;
+                  }
+               }
             }
-            else {
-                // this next bit is insurance against some of my
-                // own most likely mistakes
-                prop = getPropertyPtrFromToken(propname);
-                if (prop) {
-                    for (i = 0; i < prop->getNum(); i++) {
-                        ch2 = (ConfigChunkPtr)prop->getValue(i);
-                        if (ch2.get() != 0) {
-                            ch3 = ch2->getEmbeddedChunk(path);
-                            if (ch3.get() != 0)
-                                return ch3;
-                        }
-                    }
-                }
+         }
+         else
+         {
+            // this next bit is insurance against some of my
+            // own most likely mistakes
+            prop = getPropertyPtrFromToken(propname);
+            if ( prop )
+            {
+               for ( i = 0; i < prop->getNum(); i++ )
+               {
+                  ch2 = (ConfigChunkPtr)prop->getValue(i);
+                  if ( ch2.get() != 0 )
+                  {
+                     ch3 = ch2->getEmbeddedChunk(path);
+                     if ( ch3.get() != 0 )
+                     {
+                        return ch3;
+                     }
+                  }
+               }
             }
-            return ConfigChunkPtr();
-        }
-    }
+         }
+
+         return ConfigChunkPtr();
+      }
+   }
 }
 
 
@@ -265,7 +295,7 @@ ConfigChunkPtr ConfigChunk::getEmbeddedChunk (const std::string &path)
 // This is used to sort a db by dependancy.
 std::vector<std::string> ConfigChunk::getChunkPtrDependencies() const
 {
-    assertValid();
+   assertValid();
 
    std::string chunkname;
    std::vector<std::string> dep_list;     // Create return vector
@@ -273,24 +303,24 @@ std::vector<std::string> ConfigChunk::getChunkPtrDependencies() const
    int j;
 
    //cout << "Dependency test for " << getProperty ("name") << endl;
-   for (i=0;i<mProps.size();i++)                       // For each property
+   for ( i=0;i<mProps.size();i++ )                       // For each property
    {
-      if (mProps[i]->getType() == T_CHUNK)             // If it is a chunk ptr
+      if ( mProps[i]->getType() == T_CHUNK )             // If it is a chunk ptr
       {
-         for (j=0;j<mProps[i]->getNum();j++)           // For each property
+         for ( j=0;j<mProps[i]->getNum();j++ )           // For each property
          {
             VarValue prop_var_val = mProps[i]->getValue(j);
             chunkname = static_cast<std::string>(prop_var_val);
-            if (!(chunkname == ""))
+            if ( !(chunkname == "") )
             {
                dep_list.push_back(chunkname);
             }
          }
       }
-      else if (mProps[i]->getType() == T_EMBEDDEDCHUNK)
+      else if ( mProps[i]->getType() == T_EMBEDDEDCHUNK )
       {
          std::vector<std::string> child_deps;
-         for (j = 0; j < mProps[i]->getNum(); j++)
+         for ( j = 0; j < mProps[i]->getNum(); j++ )
          {
             // XXX: if we ever have cyclic dependencies, we're in trouble
             child_deps = ((ConfigChunkPtr)mProps[i]->getValue(j))->getChunkPtrDependencies();
@@ -301,108 +331,101 @@ std::vector<std::string> ConfigChunk::getChunkPtrDependencies() const
    return dep_list;      // Return the list
 }
 
-
-
 Property* ConfigChunk::getPropertyPtrFromName (const std::string& property) const
 {
    assertValid();
 
-   for (unsigned int i = 0; i < mProps.size(); i++)
+   for ( unsigned int i = 0; i < mProps.size(); i++ )
    {
-      if (!vjstrcasecmp (mProps[i]->getName(), property))
+      if ( !vjstrcasecmp (mProps[i]->getName(), property) )
+      {
          return mProps[i];
+      }
    }
    return NULL;
 }
 
-
-
 Property* ConfigChunk::getPropertyPtrFromToken (const std::string& token) const
 {
-    assertValid();
+   assertValid();
 
-    for (unsigned int i = 0; i < mProps.size(); i++) {
-        if (!vjstrcasecmp(mProps[i]->getToken(), token))
-            return mProps[i];
-    }
-    return NULL;
+   for ( unsigned int i = 0; i < mProps.size(); i++ )
+   {
+      if ( !vjstrcasecmp(mProps[i]->getToken(), token) )
+      {
+         return mProps[i];
+      }
+   }
+   return NULL;
 }
-
-
 
 std::vector<VarValue*> ConfigChunk::getAllProperties(const std::string& prop_name) const
 {
-    assertValid();
+   assertValid();
 
-    std::vector<VarValue*> ret_val;
-    Property* p = getPropertyPtrFromToken(prop_name);
-    if (p) {
-        int num_properties = p->getNum();
-        for(int i=0;i<num_properties;i++) {
-            VarValue* new_var_val = new VarValue(p->getValue(i));
-            ret_val.push_back(new_var_val);
-        }
-    }
+   std::vector<VarValue*> ret_val;
+   Property* p = getPropertyPtrFromToken(prop_name);
+   if ( p )
+   {
+      int num_properties = p->getNum();
+      for ( int i=0;i<num_properties;i++ )
+      {
+         VarValue* new_var_val = new VarValue(p->getValue(i));
+         ret_val.push_back(new_var_val);
+      }
+   }
 
-    return ret_val;
+   return ret_val;
 }
-
-
 
 std::ostream& operator << (std::ostream& out, const ConfigChunk& self)
 {
-    self.assertValid();
+   self.assertValid();
 
-    ConfigIO::instance()->writeConfigChunk (out, self);
-    return out;
+   ConfigIO::instance()->writeConfigChunk (out, self);
+   return out;
 }
-
-
 
 int ConfigChunk::getNum (const std::string& property_token) const
 {
-    assertValid();
+   assertValid();
 
-    Property* p = getPropertyPtrFromToken (property_token);
-    if (p)
-        return p->getNum();
-    else
-        return 0;
+   Property* p = getPropertyPtrFromToken (property_token);
+   if ( p )
+   {
+      return p->getNum();
+   }
+   else
+   {
+      return 0;
+   }
 }
-
-
 
 const std::string& ConfigChunk::getDescToken () const
 {
-    return mDesc->getToken();
+   return mDesc->getToken();
 }
-
-
 
 const std::string& ConfigChunk::getType () const
 {
-    return getDescToken ();
+   return getDescToken ();
 }
-
-
 
 const VarValue& ConfigChunk::getProperty (const std::string& property_token, int ind) const
 {
-    assertValid();
+   assertValid();
 
-    Property *p = getPropertyPtrFromToken (property_token);
-    if (!p)
-    {
-        vprDEBUG(jcclDBG_CONFIG,2)
-            << "getProperty(\"" << property_token.c_str() << "\") in chunk \""
-            << getProperty("Name")
-            << "\" - no such property; returning T_INVALID\n" << vprDEBUG_FLUSH;
-        return VarValue::getInvalidInstance();
-    }
-    return p->getValue (ind);
+   Property *p = getPropertyPtrFromToken (property_token);
+   if ( !p )
+   {
+      vprDEBUG(jcclDBG_CONFIG,2)
+         << "getProperty(\"" << property_token.c_str() << "\") in chunk \""
+         << getProperty("Name")
+         << "\" - no such property; returning T_INVALID\n" << vprDEBUG_FLUSH;
+      return VarValue::getInvalidInstance();
+   }
+   return p->getValue (ind);
 }
-
-
 
 /* we're probably gonna need to overload set for each kind of
  * value.  That gets passed on to the VarValue assign...
@@ -410,51 +433,60 @@ const VarValue& ConfigChunk::getProperty (const std::string& property_token, int
 
 bool ConfigChunk::setProperty (const std::string& property, int val, int ind)
 {
-    assertValid();
+   assertValid();
 
-    Property *p;
-    p = getPropertyPtrFromToken (property);
-    if (!p)
-        return false;
-    return p->setValue (val, ind);
+   Property *p;
+   p = getPropertyPtrFromToken (property);
+   if ( !p )
+   {
+      return false;
+   }
+
+   return p->setValue (val, ind);
 }
 
 bool ConfigChunk::setProperty (const std::string& property, float val, int ind)
 {
-    assertValid();
+   assertValid();
 
-    Property *p;
-    p = getPropertyPtrFromToken (property);
-    if (!p)
-        return false;
-    return p->setValue (val, ind);
+   Property *p;
+   p = getPropertyPtrFromToken (property);
+   if ( !p )
+   {
+      return false;
+   }
+
+   return p->setValue (val, ind);
 }
 
 bool ConfigChunk::setProperty (const std::string& property, const std::string& val, int ind)
 {
-    assertValid();
+   assertValid();
 
-    Property *p;
-    p = getPropertyPtrFromToken (property);
-    if (!p)
-        return false;
-    return p->setValue (val, ind);
+   Property *p;
+   p = getPropertyPtrFromToken (property);
+   if ( !p )
+   {
+      return false;
+   }
+
+   return p->setValue (val, ind);
 }
 
 bool ConfigChunk::setProperty (const std::string& property, ConfigChunkPtr val, int ind)
 {
-    assertValid();
+   assertValid();
 
-    Property *p;
-    p = getPropertyPtrFromToken (property);
-    if (!p) {
-        vprDEBUG (vprDBG_ERROR, 1) << "ConfigChunk.setProperty: no such property " << property.c_str()
-                                 << "\n" << vprDEBUG_FLUSH;
-        return false;
-    }
-    return p->setValue (val, ind);
+   Property *p;
+   p = getPropertyPtrFromToken (property);
+   if ( !p )
+   {
+      vprDEBUG (vprDBG_ERROR, 1)
+         << "ConfigChunk.setProperty: no such property " << property.c_str()
+         << "\n" << vprDEBUG_FLUSH;
+      return false;
+   }
+   return p->setValue (val, ind);
 }
 
-
-
-};
+} // End of jccl namespace
