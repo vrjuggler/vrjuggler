@@ -272,7 +272,7 @@ sub build_header {
 sub mlist_map {
     local($dir) = @_;		# perl warns about this....
    
-    return 'kevn@vrjuggler.org,patrick@vrac.iastate.edu,allenb@vrac.iastate.edu';
+    return 'vrjuggler-checkins@lists.sourceforge.net';
 }    
 
 sub do_changes_file {
@@ -310,7 +310,7 @@ sub mail_notification {
     @mailaddrs = &read_logfile("$MAIL_FILE.$id", "");
 
     if ($debug) {
-	open(MAIL, "| /usr/lib/sendmail -odb -oem patrick");
+	open(MAIL, "| /usr/lib/sendmail -odb -oem patrick\@vrac.iastate.edu");
     } else {
 	open(MAIL, "| /usr/lib/sendmail -odb -oem -t");
     }
