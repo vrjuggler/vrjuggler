@@ -112,7 +112,7 @@ public:
    {
        vjDEBUG(2) << "cubesApp::preDraw()" << endl << vjDEBUG_FLUSH;
 
-       //updateNavigation();       // Update the navigation matrix
+       updateNavigation();       // Update the navigation matrix
    }
 
    /// Function called after drawing has been triggered but BEFORE it completes
