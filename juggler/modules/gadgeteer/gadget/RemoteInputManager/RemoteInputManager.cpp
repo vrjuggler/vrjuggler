@@ -90,16 +90,6 @@ namespace gadget
    
    bool RemoteInputManager::recognizeRemoteInputManagerConfig(jccl::ConfigChunkPtr chunk)
    {
-       if (chunk->getDescToken() == std::string("RIMChunk"))
-       {
-           std::cout << "TESTING TRUE for: " << chunk->getName() << std::endl; 
-       }
-       else
-       {
-           std::cout << "TESTING FALSE" << std::endl; 
-       }
-       
-      std::cout << "TESTING:" << chunk->getDescToken() << std::endl; 
       return(chunk->getDescToken() == std::string("RIMChunk"));
    }
    
@@ -125,7 +115,7 @@ namespace gadget
       // check and store if a Remote Input Manager chunk exists in configuration
       
       mActive = true;
-      std::cout << "ConfigAdd:" << chunk->getDescToken() << std::endl; 
+      
       if ( this->recognizeRemoteInputManagerConfig(chunk)) 
       {
          mSyncMasterChunkName = chunk->getProperty<std::string>("sync_machine");
@@ -657,8 +647,7 @@ namespace gadget
          {
              if ((*i)->getSockStream()->availableBytes() > 0)
              {
-                 std::cout << "ERROR: RECEIVING Bytes on socket: " << (*i)->getSockStream()->availableBytes() << std::endl;
-                 vprASSERT(1==2);
+                 vprDEBUG(gadgetDBG_RIM,vprDBG_CRITICAL_LVL) << "ERROR: RECEIVING Bytes on socket: " << (*i)->getSockStream()->availableBytes() << std::endl << vprDEBUG_FLUSH;
              }
          }
          
@@ -667,8 +656,7 @@ namespace gadget
          {
             if ((*i)->getSockStream()->availableBytes() > 0)
             {
-                std::cout << "ERROR: TRANS Bytes on socket: " << (*i)->getSockStream()->availableBytes() << std::endl;
-                vprASSERT(1==2);
+                vprDEBUG(gadgetDBG_RIM,vprDBG_CRITICAL_LVL) << "ERROR: TRANS Bytes on socket: " << (*i)->getSockStream()->availableBytes() << std::endl << vprDEBUG_FLUSH;
             }
          }
 
@@ -1384,7 +1372,6 @@ namespace gadget
       for ( std::list<NetConnection*>::iterator i = mReceivingConnections.begin();
           i != mReceivingConnections.end(); i++ )
       {
-         // std::cout << "Checking for match: " << (*i)->getName() << ", " << location_name << std::endl;
          if ( ! (*i)->getAllPacketsReceived() )
          {
             return false;
@@ -1393,7 +1380,6 @@ namespace gadget
       for ( std::list<NetConnection*>::iterator i = mTransmittingConnections.begin();
           i != mTransmittingConnections.end(); i++ )
       {
-         // std::cout << "Checking for match: " << (*i)->getName() << ", " << location_name << std::endl;
          if ( ! (*i)->getAllPacketsReceived() )
          {
             return false;
@@ -1442,7 +1428,7 @@ namespace gadget
       for ( std::list<NetConnection*>::iterator i = mTransmittingConnections.begin();
           i != mTransmittingConnections.end(); i++ )
       {
-         // std::cout << "Checking for match: " << (*i)->getName() << ", " << location_name << std::endl;
+         
          vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "Checking for match: " << (*i)->getName() << ", " << hostname<<":"<<port << std::endl << vprDEBUG_FLUSH;
          if ( ((*i)->getHostname() == hostname) && ((*i)->getPort() == port) )
          {
@@ -1472,7 +1458,6 @@ namespace gadget
       for ( std::list<NetConnection*>::iterator i = mReceivingConnections.begin();
           i != mReceivingConnections.end(); i++ )
       {
-         // std::cout << "Checking for match: " << (*i)->getName() << ", " << location_name << std::endl;
          vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "Checking for match: " << (*i)->getName() << ", " << hostname<<":"<<port << std::endl << vprDEBUG_FLUSH;
          if ( ((*i)->getHostname() == hostname) && ((*i)->getPort() == port) )
          {

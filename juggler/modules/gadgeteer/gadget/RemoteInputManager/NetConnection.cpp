@@ -93,40 +93,12 @@ namespace gadget
             {
                 vprDEBUG(gadgetDBG_RIM,vprDBG_VERB_LVL) << "[RIM] Sending data for device: " << (*i)->getSourceName() << "\n" << vprDEBUG_FLUSH;
                 (*i)->updateFromLocalSource();
-                //std::cout << "WRITE: " << (*i)->getSourceName() << std::endl;
+                
                 mMsgPackage.createDeviceDataPacket(*i);
                 mMsgPackage.sendAndClearDeviceData(mSockStream,(*i));
             }
         }
    }
-
-   void NetConnection::receiveBarrier()
-   {
-      vpr::Uint8 temp;
-      vpr::Uint32 bytes_read;
-      vpr::ReturnStatus status;
-    
-      std::cout << "Bytes before: " << mSockStream->availableBytes() << std::endl;
-      status = mSockStream->recvn(&temp,1,bytes_read);
-      std::cout << "    bytes: " << bytes_read << std::endl;
-      std::cout << "Bytes after: " << mSockStream->availableBytes() << std::endl;
-      if (temp != MSG_BARRIER)
-      {
-          std::cout << "Real value is" << (int)temp << std::endl;
-      }
-   }
-
-   void NetConnection::sendBarrier()
-   {
-      vpr::Uint8 temp;
-      vpr::Uint32 bytes_read;
-      vpr::ReturnStatus status;
-      std::cout << "Bytes before: " << mSockStream->availableBytes() << std::endl;
-      status = mSockStream->send(&MSG_BARRIER,1,bytes_read);
-      std::cout << "    bytes: " << bytes_read << std::endl;
-      std::cout << "Bytes after: " << mSockStream->availableBytes() << std::endl;
-   }
-
 
    void NetConnection::addTransmittingNetDevice(NetDevice* net_device)
    {
