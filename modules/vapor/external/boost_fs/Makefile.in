@@ -40,7 +40,7 @@
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # -----------------------------------------------------------------------------
-# Makefile.in for vpr/src/Utils/boost_fs.  It requires GNU make.
+# Makefile.in for vpr/external/boost_fs.  It requires GNU make.
 #
 # Generated for use on @PLATFORM@
 # -----------------------------------------------------------------------------
@@ -50,7 +50,7 @@ default: all
 # Include common definitions.
 include @topdir@/make.defs.mk
 
-BOOST_FS_DIR=		@srcdir@/../../../../../external/boost_fs
+BOOST_FS_DIR=		@srcdir@/../../../../external/boost_fs
 
 includedir=		@includedir@/boost/filesystem
 srcdir=			$(BOOST_FS_DIR)/libs/filesystem/src

@@ -873,6 +873,7 @@ AC_OUTPUT(vpr-config
           common.defs.mk
           make.defs.mk
           external/Makefile
+          external/boost_fs/Makefile
           external/cppdom/Makefile
           vpr/Makefile
           vpr/md/Makefile
@@ -910,7 +911,6 @@ AC_OUTPUT(vpr-config
           vpr/Sync/Makefile
           vpr/Thread/Makefile
           vpr/Util/Makefile
-          vpr/Util/boost_fs/Makefile
           vpr/Util/md5/Makefile
           vpr/Util/uuid/Makefile
           test/Makefile
