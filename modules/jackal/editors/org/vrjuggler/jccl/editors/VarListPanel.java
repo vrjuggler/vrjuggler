@@ -36,11 +36,11 @@ public class VarListPanel extends ExpandablePanel implements ConfigElementListen
 
    public void nameChanged(ConfigElementEvent evt)
    {
-      System.out.println("Name changed...");
+      // Do Nothing...
    }
    public void propertyValueChanged(ConfigElementEvent evt)
-   {
-      System.out.println("Property value changed...");
+   { 
+      // Do Nothing...
    }
    public void propertyValueAdded(ConfigElementEvent evt)
    {
