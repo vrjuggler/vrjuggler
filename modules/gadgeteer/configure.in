@@ -604,6 +604,12 @@ AC_OUTPUT(gadgeteer-config
           Makefile.inc
           common.defs.mk
           make.defs.mk
+          cluster/Makefile
+          cluster/ClusterNetwork/Makefile
+          cluster/Packets/Makefile
+          cluster/Plugins/Makefile
+          cluster/Plugins/ApplicationDataManager/Makefile
+          cluster/Plugins/RemoteInputManager/Makefile
           gadget/Makefile
           gadget/Devices/Makefile
           gadget/Devices/driver.defs.mk
@@ -635,12 +641,6 @@ AC_OUTPUT(gadgeteer-config
           gadget/Devices/VRCO/TrackdAPI/Makefile
           gadget/Devices/VirtualTechnologies/Makefile
           gadget/Devices/VirtualTechnologies/CyberGlove/Makefile
-          cluster/Makefile
-          cluster/ClusterNetwork/Makefile
-          cluster/Packets/Makefile
-          cluster/Plugins/Makefile
-          cluster/Plugins/ApplicationDataManager/Makefile
-          cluster/Plugins/RemoteInputManager/Makefile
           gadget/Filter/Makefile
           gadget/Filter/Position/Makefile
           gadget/Type/Makefile
