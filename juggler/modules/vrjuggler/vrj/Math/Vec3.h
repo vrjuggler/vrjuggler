@@ -176,7 +176,10 @@ public:
 
 public:
    //: Assignment Operators
-   vjVec3&  operator =(const vjVec3& _v) {
+   vjVec3&  operator =(const vjVec3& _v)
+   {
+      if(&_v == this)
+         return *this;
       vec[0] = _v[0];
       vec[1] = _v[1];
       vec[2] = _v[2];
