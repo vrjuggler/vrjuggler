@@ -140,6 +140,9 @@ while test $# -gt 0; do
         --cxxflags)
             echo_cxxflags=yes
             case $2 in
+                --*)
+                    # This is another option flag, so leave it alone.
+                    ;;
                 N32)
                     vpr_extra_cxxflags="$vpr_extra_cxxflags $vpr_n32_flags $vpr_isa_flags"
                     shift
@@ -150,6 +153,7 @@ while test $# -gt 0; do
                     ;;
                 *)
                     vpr_extra_cxxflags="$vpr_extra_cxxflags $vpr_abi_flags $vpr_isa_flags"
+                    shift
                     ;;
             esac
             ;;
@@ -159,6 +163,9 @@ while test $# -gt 0; do
         --libs)
             echo_libs=yes
             case $2 in
+                --*)
+                    # This is another option flag, so leave it alone.
+                    ;;
                 N32)
                     ldflags="$vpr_n32_flags $vpr_isa_flags"
                     LIBBITSUF='32'
@@ -171,6 +178,7 @@ while test $# -gt 0; do
                     ;;
                 *)
                     ldflags="$vpr_abi_flags $vpr_isa_flags"
+                    shift
                     ;;
             esac
             ;;
@@ -186,6 +194,9 @@ while test $# -gt 0; do
                     ;;
                 64)
                     LIBBITSUF='64'
+                    shift
+                    ;;
+                *)
                     shift
                     ;;
             esac
