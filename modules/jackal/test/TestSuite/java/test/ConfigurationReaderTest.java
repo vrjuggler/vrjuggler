@@ -30,18 +30,14 @@ import org.vrjuggler.jccl.config.parser.*;
    {
       try
       {
+         // Create the repository
          ConfigDefinitionRepository repos = new ConfigDefinitionRepository();
 
-         ConfigDefinitionBuilder def_builder = new ConfigDefinitionBuilder();
-         List defs = def_builder.parse(new File(System.getProperty("DATA_DIR"), "person.jdef"));
-         for (Iterator itr = defs.iterator(); itr.hasNext(); )
-         {
-            repos.add((ConfigDefinition)itr.next());
-         }
-
+         // Create the reader and read in the configuration
          ConfigurationReader reader = new ConfigurationReader(mConfigFile, repos);
          Configuration config = reader.readConfiguration();
 
+         // Validate that everything was read in correctly
          assertEquals(config.getName(), "VRAC People");
 //         assertEquals(config.getIncludes().get(0), "blah.jconf");
          assertEquals(config.getDefinitionPath().get(0), "${DATA_DIR}");

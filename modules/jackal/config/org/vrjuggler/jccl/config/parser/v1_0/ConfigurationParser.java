@@ -34,6 +34,7 @@ package org.vrjuggler.jccl.config.parser.v1_0;
 import java.io.*;
 import java.util.*;
 import org.jdom.*;
+
 import org.vrjuggler.jccl.config.*;
 import org.vrjuggler.jccl.config.parser.ConfigurationReader;
 import org.vrjuggler.jccl.config.parser.ParseException;
@@ -112,7 +113,7 @@ public class ConfigurationParser
       }
 
       // Get the list of elements in this configuration
-      List config_elts = parseElements(root.getChild(ELEMENTS));
+      List config_elts = parseElements(root.getChild(ELEMENTS), path);
       for (Iterator itr = config_elts.iterator(); itr.hasNext(); )
       {
          // Add the given configuration element to the configuration
@@ -188,7 +189,7 @@ public class ConfigurationParser
     * Parses an elements node in the DOM tree. The result is a list of the
     * configuration elements that are children of the node.
     */
-   private List parseElements(Element root)
+   private List parseElements(Element root, List searchPath)
       throws ParseException
    {
       // Verify that the root element is an elements node
@@ -197,7 +198,8 @@ public class ConfigurationParser
          throw new ParseException("Root element must be: "+ELEMENTS);
       }
 
-      ConfigElementParser parser = new ConfigElementParser(mDefinitionRepos);
+      ConfigElementParser parser = new ConfigElementParser(mDefinitionRepos,
+                                                           searchPath);
       List config_elts = new ArrayList();
 
       // Parse each child of the elements node for a configuration element
