@@ -144,16 +144,6 @@ SocketImplBSD::open () {
         m_open = true;
     }
 
-/*
-    if ( retval ) {
-        // If the value in m_local_addr is the string "INADDR_ANY", use the
-        // INADDR_ANY constant.
-        if ( m_name == "INADDR_ANY" || m_name == "" ) {
-            m_local_addr.setAddressValue(INADDR_ANY);
-        }
-    }
-*/
-
     return retval;
 }
 
