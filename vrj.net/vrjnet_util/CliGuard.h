@@ -28,12 +28,14 @@
 #include <vpr/vpr.h>
 #include <vpr/Thread/TSObjectProxy.h>
 
+#if defined(USE_MONO)
 extern "C"
 {
  
 #include <mono/metadata/appdomain.h>
  
 }
+#endif
 
 
 namespace vrjnet
@@ -55,7 +57,9 @@ private:
       {
       }
 
+#if defined(USE_MONO)
       MonoDomain* mDomain;
+#endif
    };
 
    static vpr::TSObjectProxy<State> mState;

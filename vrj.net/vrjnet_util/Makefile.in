@@ -41,6 +41,7 @@ AR=		@AR@ $(ARFLAGS)
 AR_NAME_FLAG=	@AR_NAME_FLAG@
 ARFLAGS=	@ARFLAGS@
 CXX=		@CXX@
+DEFS=		@DEFS@
 
 ifeq (@OS_TYPE@, Win32)
    ARFLAGS+=	$(LDFLAGS)
@@ -136,7 +137,7 @@ install:
           done
 
 $(OBJDIR)/%.$(OBJEXT): %.cpp
-	$(CXX) $(CXXFLAGS) $(OBJ_NAME_FLAG) -c $<
+	$(CXX) $(DEFS) $(CXXFLAGS) $(OBJ_NAME_FLAG) -c $<
 
 $(UTIL_ARC): $(OBJS)
 	$(AR) $(AR_NAME_FLAG)$@ $(OBJS)

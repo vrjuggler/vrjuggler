@@ -31,12 +31,14 @@
 #include <vpr/Sync/Mutex.h>
 #include <vpr/Sync/Guard.h>
 
+#if defined(USE_MONO)
 extern "C"
 {
 
 #include <mono/metadata/threads.h>
 
 }
+#endif
 
 #include "CliGuard.h"
 
@@ -48,11 +50,13 @@ vpr::TSObjectProxy<CliGuard::State> CliGuard::mState;
 
 CliGuard::CliGuard()
 {
+#if defined(USE_MONO)
    if ( NULL == mState->mDomain )
    {
       mState->mDomain = mono_domain_create();
       mono_thread_attach(mState->mDomain);
    }
+#endif
 }
 
 CliGuard::~CliGuard()
@@ -60,7 +64,10 @@ CliGuard::~CliGuard()
    ;
 }
 
-CliGuard::State::State() : mDomain(NULL)
+CliGuard::State::State()
+#if defined(USE_MONO)
+   : mDomain(NULL)
+#endif
 {
 }
 
