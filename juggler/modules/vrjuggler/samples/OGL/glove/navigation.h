@@ -42,23 +42,23 @@ class TrackedInfo
 {
 public:
     //: call this once per frame with your tracker's matrix.
-    void updateWithMatrix( const vrj::Matrix& matrix );
-    
-    const vrj::Vec3& vector() const { return _vec; }
-    const vrj::Vec3& rotDelta() const { return _rotDelta; }
-    const vrj::Vec3& rotation() const { return _rot; }
-    
-    
+    void updateWithMatrix( const gmtl::Matrix44f& matrix );
+
+    const gmtl::Vec3f& vector() const { return _vec; }
+    const gmtl::Vec3f& rotDelta() const { return _rotDelta; }
+    const gmtl::Vec3f& rotation() const { return _rot; }
+
+
 private:
-    vrj::Vec3 _vec, _rot, _rotOld;
-    vrj::Vec3 _rotDelta;
-    
-    //: a vector pointing forward in our space, 
+    gmtl::Vec3f _vec, _rot, _rotOld;
+    gmtl::Vec3f _rotDelta;
+
+    //: a vector pointing forward in our space,
     //  useful for getting what direction a device is pointing.
-    static const vrj::Vec3 forwardVec;
-    
+    static const gmtl::Vec3f forwardVec;
+
     //: the origin
-    static const vrj::Vec3 origin;
+    static const gmtl::Vec3f origin;
 };
 
 class UserInfo
@@ -66,11 +66,11 @@ class UserInfo
 public:
     //: default constructor
     UserInfo();
-    
+
     //: set the "velocity per frame" once each frame.
     //  required - call this before you use any 'update' functions.
     void  setVelocity( const float& velocity );
-    
+
     //: set the "angular velocity per frame" once each frame.
     //  required - call this before you use any 'update' functions.
     //  give - aVelocity, a value from [0,1]
@@ -78,61 +78,61 @@ public:
 
     //: call this once per frame with the tracker's TrackerInfo
     //  this will update user data such as position, velocity
-    //  NOTE: if in "weightless" mode, 
+    //  NOTE: if in "weightless" mode,
     //        then pass (0,0,0) in for gravity
-    void  update( const TrackedInfo& tracker, const vrj::Vec3& gravity );
-    
+    void  update( const TrackedInfo& tracker, const gmtl::Vec3f& gravity );
+
     //: get the transform to put the scene from the user's point of view
-    //  from the user's info, calculate, then return, the  
+    //  from the user's info, calculate, then return, the
     //  transform to put the scene into the user's point of view
-    void  getSceneTransform( vrj::Matrix& sceneMatrtix ) const;
-    
-    inline void move( vrj::Vec3& dist )
+    void  getSceneTransform( gmtl::Matrix44f& sceneMatrtix ) const;
+
+    inline void move( gmtl::Vec3f& dist )
     { move( dist[0], dist[1], dist[2] ); }
-    
+
     inline void move( float a, float b, float c )
-    { _pos[0] += a; 
+    { _pos[0] += a;
       _pos[1] += b;
       _pos[2] += c;
     }
-    
+
     inline void reset()
     {
-	_pos.set(0, 0, 0);
-	_posOld.set(0, 0, 0);
-	_rot.set(0, 0, 0);
-	_rotOld.set(0, 0, 0);
-	_velocity = 0.0f;
-	_velocityVec.set(0, 0, 0);
-	_angularVelocity = 0;
+    _pos.set(0, 0, 0);
+    _posOld.set(0, 0, 0);
+    _rot.set(0, 0, 0);
+    _rotOld.set(0, 0, 0);
+    _velocity = 0.0f;
+    _velocityVec.set(0, 0, 0);
+    _angularVelocity = 0;
     }
-    
-    
+
+
     inline bool&  walk()
     {
-	return _walkingMode;
+    return _walkingMode;
     }
-    
+
 private:
 
     void _updateWithTracker( const TrackedInfo& tracker );
-    void _updateWithGravity( const vrj::Vec3& gravity );
+    void _updateWithGravity( const gmtl::Vec3f& gravity );
 
     // current and old position
-    vrj::Vec3  _pos, _posOld;
-    
+    gmtl::Vec3f  _pos, _posOld;
+
     // current and old rotations
-    vrj::Vec3  _rot, _rotOld;
-    
+    gmtl::Vec3f  _rot, _rotOld;
+
     // velocity vector
-    vrj::Vec3  _velocityVec;
-    
+    gmtl::Vec3f  _velocityVec;
+
     // velocity per frame
     float _velocity;
-    
+
     // angular velocity
     float _angularVelocity;
-    
+
     // are we in walking or weightless mode?
     bool _walkingMode;
 };

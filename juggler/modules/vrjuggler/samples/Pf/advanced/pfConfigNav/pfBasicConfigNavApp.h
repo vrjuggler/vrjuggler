@@ -124,7 +124,7 @@ bool pfBasicConfigNavApp::configAdd( jccl::ConfigChunkPtr chunk )
    // Set the properties based on the chunk values
    std::string app_name = chunk->getProperty("Name");
    std::string file_path = chunk->getProperty("file_path");
-   vrj::Vec3 initial_pos;
+   gmtl::Vec3f initial_pos;
    initial_pos.set((float)chunk->getProperty("start_location",0),
                    (float)chunk->getProperty("start_location",1),
                    (float)chunk->getProperty("start_location",2));
@@ -134,18 +134,18 @@ bool pfBasicConfigNavApp::configAdd( jccl::ConfigChunkPtr chunk )
    {
       this->enableNav( (bool)chunk->getProperty( "enable_nav" ) );
       vprDEBUG_BEGIN(vprDBG_ALL,0) << "enable_nav: " << (bool)chunk->getProperty( "enable_nav" ) << "\n===========================\n" << vprDEBUG_FLUSH;
-   }   
+   }
    else
    {
       this->enableNav( true );
    }
-   
+
    if (chunk->doesPropertyExistFromToken( "animation_filename" ))
    {
       std::string a = (std::string)chunk->getProperty( "animation_filename" );
       this->loadAnimation( a.c_str() );
    }
-   
+
    if (chunk->doesPropertyExistFromToken( "animation_play" ))
    {
       if ((bool)chunk->getProperty( "animation_play" ) == true)
@@ -156,11 +156,11 @@ bool pfBasicConfigNavApp::configAdd( jccl::ConfigChunkPtr chunk )
       {
          this->keyFramer().stop();
          this->keyFramer().rewind();
-      }   
+      }
       this->keyFramer().loop( (int)chunk->getProperty( "animation_loops" ) );
    }
    ////////////////////////////
-   
+
    vprDEBUG_BEGIN(vprDBG_ALL,0) << "pfBasicConfigNav::configApp: " << app_name << "===========================\n" << vprDEBUG_FLUSH;
 
    // models
@@ -211,8 +211,8 @@ bool pfBasicConfigNavApp::configAdd( jccl::ConfigChunkPtr chunk )
                              << vprDEBUG_FLUSH;
    vprDEBUG_END(vprDBG_ALL,0) << "========================================\n" << vprDEBUG_FLUSH;
 
-   
-   
+
+
    // Initialize the models and sounds
    initializeModels();                 // Only actally gets processed if initScene has already run
    initializeSounds();                 // Only actally gets processed if initScene has already run

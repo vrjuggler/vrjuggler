@@ -35,10 +35,10 @@
 
 #include <vrj/vrjConfig.h>
 
-#include <vrj/Draw/OGL/GlApp.h>
-#include <vrj/Math/Matrix.h>
-#include <vrj/Math/Vec3.h>
+#include <gmtl/Matrix.h>
+#include <gmtl/Vec.h>
 
+#include <vrj/Draw/OGL/GlApp.h>
 #include <vrj/Draw/OGL/GlContextData.h>
 #include <gadget/Type/GloveInterface.h>
 #include <gadget/Type/PositionInterface.h>
@@ -75,7 +75,7 @@ class gloveApp : public vrj::GlApp
 {
 // utility functions
 protected:
-    //friend Vec3 operator*( const Matrix& m, const Vec3& v );
+    //friend gmtl::Vec3f operator*( const Matrix& m, const gmtl::Vec3f& v );
 
 // Application Functions:
 public:
@@ -197,11 +197,11 @@ protected:
    bool                mConeSelected;
 
    //: Object positions
-   vrj::Vec3           mCubePos;
-   vrj::Vec3           mConePos;
-   vrj::Vec3           mSpherePos;
+   gmtl::Vec3f         mCubePos;
+   gmtl::Vec3f         mConePos;
+   gmtl::Vec3f         mSpherePos;
 
-   vrj::Matrix    mNavigation;
+   gmtl::Matrix44f     mNavigation;
 
    vrj::GlContextData<Scene> mScene;
 };
