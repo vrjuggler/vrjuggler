@@ -53,6 +53,7 @@ class GADGET_CLASS_API PositionXformFilter : public PositionFilter
 public:
    /** Constructor */
    PositionXformFilter()
+      : mScaleValue(0.0f)
    {;}
 
    /** Destructor */
@@ -83,6 +84,7 @@ protected:
    * This is an xfrom from world to sensor 
    * ie. world_M_sensor */
    gmtl::Matrix44f m_worldMsensor;
+   float           mScaleValue;     /**< The value to use for scaling */
 };
 
 
