@@ -576,6 +576,8 @@ AC_OUTPUT(Makefile
           samples/jccl/serverdemo/Makefile
           test/Makefile
           test/TestSuite/Makefile
+          tools/Makefile
+          tools/ConfigUpdater/Makefile
           mtree/JCCL.data.dist
           mtree/JCCL.include.dist
           mtree/JCCL.install.dist
