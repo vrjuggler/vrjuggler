@@ -324,10 +324,12 @@ public class ConfigContextEditor
 
       propsSplitPane.setOrientation(JSplitPane.VERTICAL_SPLIT);
       propsSplitPane.setOneTouchExpandable(true);
+      propsSplitPane.setDividerSize(5);
 
       helpScrollPane.setViewportView(helpPane);
       propsSplitPane.add(mElementPropSheetPanel, JSplitPane.TOP);
       propsSplitPane.add(helpScrollPane, JSplitPane.BOTTOM);
+      propsSplitPane.setResizeWeight(1.0);
       
       mElementPropSheetScrollPane.getViewport().add(mElementPropSheet, null);
       mElementTreeScrollPane.getViewport().add(mElementTree, null);
@@ -341,13 +343,12 @@ public class ConfigContextEditor
       mElementTree.setContextEditable(false);
 
       helpScrollPane.setMinimumSize(new Dimension(0, 0));
+      helpScrollPane.setPreferredSize(new Dimension(150, 40));
       helpPane.setBackground(new Color(255, 253, 181));
       helpPane.setBorder(null);
       helpPane.setEditable(false);
       helpPane.setMinimumSize(new Dimension(0, 0));
 
-      helpScrollPane.setViewportView(helpPane);
-      
       addBtn.addActionListener(new ActionListener()
       {
          public void actionPerformed(ActionEvent evt)
