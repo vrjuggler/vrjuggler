@@ -48,7 +48,8 @@
 #include <vpr/Util/ReturnStatus.h>
 
 
-namespace vpr {
+namespace vpr
+{
 
 /**
  * Guard wrapper.
@@ -63,8 +64,7 @@ public:
     * Acquires the lock implicitly.
     * If block = 1 then use a blocking acquire.
     */
-   Guard(LOCK_TYPE &lock, int block = 1)
-   : theLock(&lock)
+   Guard(LOCK_TYPE &lock, int block = 1) : theLock(&lock)
    {
       lockStatus = block ? acquire().success() : tryAcquire().success();
    }
@@ -72,7 +72,7 @@ public:
    /// Releases the lock.
    ~Guard()
    {
-      if (lockStatus)
+      if ( lockStatus )
       {
          theLock->release();
       }
@@ -82,7 +82,8 @@ public:
     * @return true is returned if this guard is locked.
     *         false is returned if this guard is not locked.
     */
-   const bool& locked() {
+   const bool& locked()
+   {
       return lockStatus;
    }
 
@@ -104,13 +105,12 @@ public:
       return theLock->release();
    }
 
-
 private:
    LOCK_TYPE* theLock;    /**< The lock that we are using */
    bool       lockStatus; /**< Are we locked or not */
 };
 
-}; // End of vpr namespace
+} // End of vpr namespace
 
 
 #endif

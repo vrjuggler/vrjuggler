@@ -50,13 +50,13 @@
  * @post The condition has been modifed, but may not be satisfied.
  * @note The call blocks until a condition has been signaled
  */
-vpr::ReturnStatus
-vpr::CondVarGeneric::wait (vpr::Interval time_to_wait) {
+vpr::ReturnStatus vpr::CondVarGeneric::wait (vpr::Interval time_to_wait)
+{
    std::cerr << std::setw(5) << getpid() << "  Wait: Begin:" << std::endl;
    // ASSERT:  We have been locked
-   if (condMutex->test() == 0)    // Not locked
+   if ( condMutex->test() == 0 )    // Not locked
       std::cerr << " vpr::CondVarGeneric::wait: INCORRECT USAGE: Mutex was not locked when wait invoked!!!"
-                << std::endl;
+      << std::endl;
 
    waiters++;              // We have lock already
 
