@@ -64,6 +64,8 @@ public:
    ClusterNetwork();
    virtual ~ClusterNetwork();
      
+   bool isClusterNetworkReady();
+
    void updateNewConnections();
 
    /** Locks the list of ClusterNodes
@@ -155,7 +157,7 @@ public:
       return mClusterNodes.end();
    }
 
-private:
+public:
    /** Locks the list of PendingNodes
     *
     *  This function blocks until it can lock the std::vector of

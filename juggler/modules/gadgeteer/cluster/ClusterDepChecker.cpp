@@ -49,7 +49,8 @@ bool ClusterDepChecker::depSatisfied(jccl::ConfigChunkPtr chunk)
    if (chunk->getDescToken() == ClusterNetwork::getMachineSpecificChunkType())
    {
       // Machine Specific Chunks should have no dependencies since we are simply inserting
-      // the embedded chunks into the pending list
+      // the embedded chunks into the pending list. This is to fix errors like the embedded
+      // keyboard window in a DisplayWindow would always create a dependancy loop
       debugOutDependencies(chunk,vprDBG_WARNING_LVL);
       return true;
    }
@@ -85,7 +86,7 @@ bool ClusterDepChecker::depSatisfied(jccl::ConfigChunkPtr chunk)
          vprDEBUG(gadgetDBG_RIM,vprDBG_WARNING_LVL) << "[ClusterDepChecker] ClusterNode(" 
                << device_host << ") is NULL, so it is not in the Active List yet.\n" << vprDEBUG_FLUSH;
       }
-      else if(!node->isConnected())
+      else if(ClusterNode::DISCONNECTED == node->getConnected())
       {
          pass = false;
          vprDEBUG(gadgetDBG_RIM,vprDBG_WARNING_LVL) << "[ClusterDepChecker] Adding Pending Node??" << vprDEBUG_FLUSH;

@@ -55,6 +55,7 @@ public:
    virtual void preDraw() = 0;
    virtual void postPostFrame() = 0;
    virtual std::string getManagerName() = 0;
+   virtual bool isPluginReady() = 0;
 
    virtual bool configCanHandle(jccl::ConfigChunkPtr chunk) = 0;
    virtual bool configAdd(jccl::ConfigChunkPtr chunk) = 0;
