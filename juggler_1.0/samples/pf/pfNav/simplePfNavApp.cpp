@@ -305,7 +305,7 @@ void simplePfNavApp::enableNav( bool state )
       vjDEBUG_BEGIN(vjDBG_ALL,0) << "====================\nnavigation enabled\n" << vjDEBUG_FLUSH;
    }
 }   
-   
+
 //: Called when the focus state changes
 // If an application has focus:
 // - The user may be attempting to interact with it, so the app should process input

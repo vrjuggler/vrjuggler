@@ -107,7 +107,7 @@ public:
    //: Set from a memory region
    //! PRE: m refers to an array of 16 floats
    //! POST: this' = *m
-   void    set(float *m) {
+   void    set( const float* const m ) {
       memcpy(mat, m, sizeof(float) * 16);
    }
 

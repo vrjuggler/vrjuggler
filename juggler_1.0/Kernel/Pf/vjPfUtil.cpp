@@ -37,39 +37,46 @@
 
 
 //: Convert Performer matrix to Juggler matrix
-vjMatrix vjGetVjMatrix(pfMatrix& perfMat)
+vjMatrix vjGetVjMatrix( const pfMatrix& perfMat )
 {
    vjMatrix mat;
-   vjVec3 x_axis(1,0,0);
-   mat.set(&(perfMat.mat[0][0]));
-   mat.preRot(90, x_axis, mat);
-   mat.postRot(mat, -90, x_axis);
+   vjVec3 x_axis( 1,0,0 );
+   mat.set( &(perfMat.mat[0][0]) );
+   mat.preRot( 90, x_axis, mat );
+   mat.postRot( mat, -90, x_axis );
 
    return mat;
 }
 
 //: Convert Juggler Matrix to Pf Matrix
-pfMatrix vjGetPfMatrix(vjMatrix& mat)
+pfMatrix vjGetPfMatrix( const vjMatrix& mat )
 {
    pfMatrix perf_mat;
 
-   perf_mat.set(mat.getFloatPtr());
-   perf_mat.preRot(-90, 1, 0, 0, perf_mat);
-   perf_mat.postRot(perf_mat, 90, 1, 0, 0);
+   // NOTE: the man page and the pfLinMath.h header file disagree.
+   // the man page says const float* and the header says float*
+   // the man page is correct, there is no reason for a set func to 
+   // change the source data (unless you're ref counting or something weird)
+   // ...this may change in the future so that this cast can someday be removed.
+   float* floatPtr = const_cast<float *>( mat.getFloatPtr() );
+   perf_mat.set( floatPtr );
+   
+   perf_mat.preRot( -90, 1, 0, 0, perf_mat );
+   perf_mat.postRot( perf_mat, 90, 1, 0, 0 );
 
    return perf_mat;
 }
 
 
 
-vjVec3 vjGetVjVec(pfVec3& vec)
+vjVec3 vjGetVjVec( const pfVec3& vec )
 {
    //     Perf     x       z       -y
-   return vjVec3(vec[0], vec[2], -vec[1]);
+   return vjVec3( vec[0], vec[2], -vec[1] );
 }
 
-pfVec3 vjGetPfVec(vjVec3& vec)
+pfVec3 vjGetPfVec( const vjVec3& vec )
 {
    //   Juggler   x        -z       y
-   return pfVec3(vec[0], -vec[2], vec[1]);
+   return pfVec3( vec[0], -vec[2], vec[1] );
 }
