@@ -42,7 +42,6 @@
 
 #include <vjConfig.h>
 #include <math.h>
-#include <assert.h>
 
 #include <Input/vjPosition/vjPosition.h>
 #include <Input/InputManager/vjProxy.h>

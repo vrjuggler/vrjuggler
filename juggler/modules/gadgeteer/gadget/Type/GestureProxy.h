@@ -43,10 +43,10 @@
 
 #include <vjConfig.h>
 #include <math.h>
-#include <assert.h>
 
 #include <Input/vjGesture/vjGesture.h>
 #include <Input/InputManager/vjProxy.h>
+
 
 //: Proxy to vjGesture object
 //
