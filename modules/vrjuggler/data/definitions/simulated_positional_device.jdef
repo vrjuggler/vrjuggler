@@ -2,6 +2,7 @@
 <?org-vrjuggler-jccl-settings definition.version="3.1"?>
 <definition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.vrjuggler.org/jccl/xsd/3.1/definition" name="simulated_positional_device" icon_path="jar:file:${VJ_BASE_DIR}/bin/beans/VRJConfig.jar!/org/vrjuggler/vrjconfig/images/positional_devices64.png" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.1/definition http://www.vrjuggler.org/jccl/xsd/3.1/definition.xsd">
    <definition_version version="2" label="Simulated Positional Device">
+      <abstract>false</abstract>
       <help>A simulated positional device. Gets input from an event window proxy.</help>
       <parent>positional_device</parent>
       <category>/Devices/Positional</category>
