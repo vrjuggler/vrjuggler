@@ -240,7 +240,7 @@ protected:
    bool mActive;
 
 #ifdef VPR_HASH_MAP_INCLUDE
-   typedef std::hash_map<vpr::InetAddr, vpr::SocketStreamImplSIM* > listener_map_t;
+   typedef std::hash_map<vpr::InetAddr, vpr::SocketStreamImplSIM*, vpr::InetAddrHash> listener_map_t;
    typedef std::hash_map<vpr::Uint32, vpr::sim::NetworkNodePtr> node_map_t;
 #else
    typedef std::map<vpr::InetAddr, vpr::SocketStreamImplSIM* > listener_map_t;
