@@ -7,8 +7,8 @@ dnl   Allen Bierbaum
 dnl
 dnl -----------------------------------------------------------------
 dnl File:          gmtl.m4,v
-dnl Date modified: 2004/05/25 18:40:51
-dnl Version:       1.14
+dnl Date modified: 2004/07/02 11:41:34
+dnl Version:       1.15
 dnl -----------------------------------------------------------------
 dnl
 dnl ************************************************************** ggt-head end
@@ -56,7 +56,7 @@ dnl                          found.  This argument is optional.
 dnl    action-if-not-found - The action to take if a GMTL implementation is
 dnl                          not found.  This argument is optional.
 dnl ---------------------------------------------------------------------------
-AC_DEFUN(GMTL_PATH,
+AC_DEFUN([GMTL_PATH],
 [
    dnl Get the cflags and libraries from the gmtl-config script
    AC_ARG_WITH(gmtl,
