@@ -3499,61 +3499,39 @@ gmtl::Matrix44f wand_pos(mWand-&gt;getData());
             <secondary>getting input</secondary>
           </indexterm>
 
-          <table>
-            <title>Tutorial Overview</title>
+          <highlights>
+            <para>In this section, we present a tutorial that demonstrates
+            simple input handling using Gadgeteer device interfaces. The
+            tutorial overview is as follows:</para>
 
-            <tgroup cols="2">
-              <tbody>
-                <row>
-                  <entry>Description</entry>
+            <itemizedlist>
+              <listitem>
+                <para>Description: Simple application that prints the location
+                of the head and the wand.</para>
+              </listitem>
 
-                  <entry>Simple application that prints the location of the
-                  head and the wand</entry>
-                </row>
+              <listitem>
+                <para>Objective: Understand how to get positional and digital
+                input in a VR Juggler application.</para>
+              </listitem>
 
-                <row>
-                  <entry>Objective</entry>
+              <listitem>
+                <para>Member functions:
+                <methodname>vrj::App::init()</methodname>,
+                <methodname>vrj::App::preFrame()</methodname></para>
+              </listitem>
 
-                  <entry>Understand how to get positional and digital input in
-                  a VR Juggler application</entry>
-                </row>
+              <listitem>
+                <para>Directory:
+                <filename>$VJ_BASE_DIR/share/samples/OGL/simple/simpleInput</filename></para>
+              </listitem>
 
-                <row>
-                  <entry>Member functions</entry>
-
-                  <entry><itemizedlist>
-                      <listitem>
-                        <para><methodname>vrj::App::init()</methodname></para>
-                      </listitem>
-
-                      <listitem>
-                        <para><methodname>vrj::App::preFrame()</methodname></para>
-                      </listitem>
-                    </itemizedlist></entry>
-                </row>
-
-                <row>
-                  <entry>Directory</entry>
-
-                  <entry><filename>$VJ_BASE_DIR/share/samples/OGL/simple/simpleInput</filename></entry>
-                </row>
-
-                <row>
-                  <entry>Files</entry>
-
-                  <entry><itemizedlist>
-                      <listitem>
-                        <para><filename>simpleInput.h</filename></para>
-                      </listitem>
-
-                      <listitem>
-                        <para><filename>simpleInput.cpp</filename></para>
-                      </listitem>
-                    </itemizedlist></entry>
-                </row>
-              </tbody>
-            </tgroup>
-          </table>
+              <listitem>
+                <para>Files: <filename>simpleInput.h</filename>,
+                <filename>simpleInput.cpp</filename></para>
+              </listitem>
+            </itemizedlist>
+          </highlights>
 
           <section>
             <title>Class Declaration and Data Members</title>
@@ -3878,62 +3856,41 @@ public:
             <secondary>drawing a cube with OpenGL</secondary>
           </indexterm>
 
-          <table>
-            <title>Tutorial Overview</title>
+          <highlights>
+            <para>In this section, we present a tutorial that demonstrates
+            simple rendering with OpenGL calls. The tutorial overview is as
+            follows:</para>
 
-            <tgroup cols="2">
-              <tbody>
-                <row>
-                  <entry>Description</entry>
+            <itemizedlist>
+              <listitem>
+                <para>Description: Simple OpenGL application that draws a cube
+                in the environment.</para>
+              </listitem>
 
-                  <entry>Simple OpenGL application that draws a cube in the
-                  environment</entry>
-                </row>
+              <listitem>
+                <para>Objectives: Understand how the
+                <methodname>draw()</methodname> member function in
+                <classname>vrj::GlApp</classname> works; create basic
+                OpenGL-based VR Juggler applications.</para>
+              </listitem>
 
-                <row>
-                  <entry>Objectives</entry>
+              <listitem>
+                <para>Member functions:
+                <methodname>vrj::App::init()</methodname>,
+                <methodname>vrj::GlApp::draw()</methodname></para>
+              </listitem>
 
-                  <entry>Understand how the <methodname>draw()</methodname>
-                  member function in <classname>vrj::GlApp</classname> works;
-                  create basic OpenGL-based VR Juggler applications</entry>
-                </row>
+              <listitem>
+                <para>Directory:
+                <filename>$VJ_BASE_DIR/share/samples/OGL/simple/SimpleApp</filename></para>
+              </listitem>
 
-                <row>
-                  <entry>Member functions</entry>
-
-                  <entry><itemizedlist>
-                      <listitem>
-                        <para><methodname>vrj::App::init()</methodname></para>
-                      </listitem>
-
-                      <listitem>
-                        <para><methodname>vrj::GlApp::draw()</methodname></para>
-                      </listitem>
-                    </itemizedlist></entry>
-                </row>
-
-                <row>
-                  <entry>Directory</entry>
-
-                  <entry><filename>$VJ_BASE_DIR/share/samples/OGL/simple/SimpleApp</filename></entry>
-                </row>
-
-                <row>
-                  <entry>Files</entry>
-
-                  <entry><itemizedlist>
-                      <listitem>
-                        <para><filename>simpleApp.h</filename></para>
-                      </listitem>
-
-                      <listitem>
-                        <para><filename>simpleApp.cpp</filename></para>
-                      </listitem>
-                    </itemizedlist></entry>
-                </row>
-              </tbody>
-            </tgroup>
-          </table>
+              <listitem>
+                <para>Files: <filename>simpleApp.h</filename>,
+                <filename>simpleApp.cpp</filename></para>
+              </listitem>
+            </itemizedlist>
+          </highlights>
 
           <section>
             <title>Class Declaration</title>
@@ -4427,65 +4384,40 @@ userApp::draw()
             <secondary>drawing a cube using display lists</secondary>
           </indexterm>
 
-          <table>
-            <title>Tutorial Overview</title>
+          <highlights>
+            <para>In this section, we present a tutorial that demonstrates the
+            use of OpenGL display lists with VR Juggler context-specific data.
+            The tutorial overview is as follows:</para>
 
-            <tgroup cols="2">
-              <tbody>
-                <row>
-                  <entry>Description</entry>
+            <itemizedlist>
+              <listitem>
+                <para>Description: Drawing a cube using a display list in the
+                <methodname>draw()</methodname> member function.</para>
+              </listitem>
 
-                  <entry>Drawing a cube using a display list in the
-                  <methodname>draw()</methodname> member function</entry>
-                </row>
+              <listitem>
+                <para>Objective: Understand how to use context-specific data
+                in an application.</para>
+              </listitem>
 
-                <row>
-                  <entry>Objectives</entry>
+              <listitem>
+                <para>Member functions:
+                <methodname>vrj::App::init()</methodname>,
+                <methodname>vrj::GlApp::contextInit()</methodname>,
+                <methodname>vrj::GlApp::draw()</methodname></para>
+              </listitem>
 
-                  <entry>Understand how to use context-specific data in an
-                  application</entry>
-                </row>
+              <listitem>
+                <para>Directory:
+                <filename>$VJ_BASE_DIR/share/samples/OGL/simple/contextApp</filename></para>
+              </listitem>
 
-                <row>
-                  <entry>Member functions</entry>
-
-                  <entry><itemizedlist>
-                      <listitem>
-                        <para><methodname>vrj::App::init()</methodname></para>
-                      </listitem>
-
-                      <listitem>
-                        <para><methodname>vrj::GlApp::contextInit()</methodname></para>
-                      </listitem>
-
-                      <listitem>
-                        <para><methodname>vrj::GlApp::draw()</methodname></para>
-                      </listitem>
-                    </itemizedlist></entry>
-                </row>
-
-                <row>
-                  <entry>Directory</entry>
-
-                  <entry><filename>$VJ_BASE_DIR/share/samples/OGL/simple/contextApp</filename></entry>
-                </row>
-
-                <row>
-                  <entry>Files</entry>
-
-                  <entry><itemizedlist>
-                      <listitem>
-                        <para><filename>contextApp.h</filename></para>
-                      </listitem>
-
-                      <listitem>
-                        <para><filename>contextApp.cpp</filename></para>
-                      </listitem>
-                    </itemizedlist></entry>
-                </row>
-              </tbody>
-            </tgroup>
-          </table>
+              <listitem>
+                <para>Files: <filename>contextApp.h</filename>,
+                <filename>contextApp.cpp</filename></para>
+              </listitem>
+            </itemizedlist>
+          </highlights>
 
           <section>
             <title>Class Declaration and Data Members</title>
@@ -4721,61 +4653,39 @@ void contextApp::draw()
             <secondary>loading a model with OpenGL Performer</secondary>
           </indexterm>
 
-          <table>
-            <title>Tutorial Overview</title>
+          <highlights>
+            <para>In this section, we present a tutorial that demonstrates
+            model loading with OpenGL Performer. The tutorial overview is as
+            follows:</para>
 
-            <tgroup cols="2">
-              <tbody>
-                <row>
-                  <entry>Description</entry>
+            <itemizedlist>
+              <listitem>
+                <para>Description: Simple OpenGL Performer application that
+                loads a model.</para>
+              </listitem>
 
-                  <entry>Simple OpenGL Performer application that loads a
-                  model</entry>
-                </row>
+              <listitem>
+                <para>Objective: Understand how to load a model, add it to a
+                scene graph, and return the root to VR Juggler.</para>
+              </listitem>
 
-                <row>
-                  <entry>Objectives</entry>
+              <listitem>
+                <para>Member functions:
+                <methodname>vrj::PfApp::initScene()</methodname>,
+                <methodname>vrj::PfApp::getScene()</methodname></para>
+              </listitem>
 
-                  <entry>Understand how to load a model, add it to a scene
-                  graph, and return the root to VR Juggler</entry>
-                </row>
+              <listitem>
+                <para>Directory:
+                <filename>$VJ_BASE_DIR/share/samples/Pf/simple/simplePf</filename></para>
+              </listitem>
 
-                <row>
-                  <entry>Member functions</entry>
-
-                  <entry><itemizedlist>
-                      <listitem>
-                        <para><methodname>vrj::PfApp::initScene()</methodname></para>
-                      </listitem>
-
-                      <listitem>
-                        <para><methodname>vrj::PfApp::getScene()</methodname></para>
-                      </listitem>
-                    </itemizedlist></entry>
-                </row>
-
-                <row>
-                  <entry>Directory</entry>
-
-                  <entry><filename>$VJ_BASE_DIR/share/samples/Pf/simple/simplePf</filename></entry>
-                </row>
-
-                <row>
-                  <entry>Files</entry>
-
-                  <entry><itemizedlist>
-                      <listitem>
-                        <para><filename>simplePfApp.h</filename></para>
-                      </listitem>
-
-                      <listitem>
-                        <para><filename>simplePfApp.cpp</filename></para>
-                      </listitem>
-                    </itemizedlist></entry>
-                </row>
-              </tbody>
-            </tgroup>
-          </table>
+              <listitem>
+                <para>Files: <filename>simplePfApp.h</filename>,
+                <filename>simplePfApp.cpp</filename></para>
+              </listitem>
+            </itemizedlist>
+          </highlights>
 
           <section>
             <title>Class Declaration</title>
@@ -5289,60 +5199,39 @@ pfDraw();</programlisting>
             <secondary>loading a model with OpenSG</secondary>
           </indexterm>
 
-          <table>
-            <title>Tutorial Overview</title>
+          <highlights>
+            <para>In this section, we present a tutorial that demonstrates
+            model loading with OpenSG. The tutorial overview is as
+            follows:</para>
 
-            <tgroup cols="2">
-              <tbody>
-                <row>
-                  <entry>Description</entry>
+            <itemizedlist>
+              <listitem>
+                <para>Description: Simple OpenSG application that loads a
+                model.</para>
+              </listitem>
 
-                  <entry>Simple OpenSG application that loads a model</entry>
-                </row>
+              <listitem>
+                <para>Objectives: Understand how to load a model, add it to a
+                scene graph, and return the root to VR Juggler.</para>
+              </listitem>
 
-                <row>
-                  <entry>Objectives</entry>
+              <listitem>
+                <para>Member functions:
+                <methodname>vrj::OpenSGApp::initScene()</methodname>,
+                <methodname>vrj::OpenSGApp::getScene()</methodname></para>
+              </listitem>
 
-                  <entry>Understand how to load a model, add it to a scene
-                  graph, and return the root to VR Juggler</entry>
-                </row>
+              <listitem>
+                <para>Directory:
+                <filename>$VJ_BASE_DIR/share/vrjuggler/samples/OpenSG/simple/OpenSGNav</filename></para>
+              </listitem>
 
-                <row>
-                  <entry>Member functions</entry>
-
-                  <entry><itemizedlist>
-                      <listitem>
-                        <para><methodname>vrj::OpenSGApp::initScene()</methodname></para>
-                      </listitem>
-
-                      <listitem>
-                        <para><methodname>vrj::OpenSGApp::getScene()</methodname></para>
-                      </listitem>
-                    </itemizedlist></entry>
-                </row>
-
-                <row>
-                  <entry>Directory</entry>
-
-                  <entry><filename>$VJ_BASE_DIR/share/vrjuggler/samples/OpenSG/simple/OpenSGNav</filename></entry>
-                </row>
-
-                <row>
-                  <entry>Files</entry>
-
-                  <entry><itemizedlist>
-                      <listitem>
-                        <para><filename>OpenSGNav.h</filename></para>
-                      </listitem>
-
-                      <listitem>
-                        <para><filename>OpenSGNav.cpp</filename></para>
-                      </listitem>
-                    </itemizedlist></entry>
-                </row>
-              </tbody>
-            </tgroup>
-          </table>
+              <listitem>
+                <para>Files: <filename>OpenSGNav.h</filename>,
+                <filename>OpenSGNav.cpp</filename></para>
+              </listitem>
+            </itemizedlist>
+          </highlights>
 
           <section>
             <title>Class Declaration</title>
@@ -5727,61 +5616,39 @@ public:
             <secondary>loading a model with Open Scene Graph</secondary>
           </indexterm>
 
-          <table>
-            <title>Tutorial Overview</title>
+          <highlights>
+            <para>In this section, we present a tutorial that demonstrates
+            model loading and scene navigation using Open Scene Graph. The
+            tutorial overview is as follows:</para>
 
-            <tgroup cols="2">
-              <tbody>
-                <row>
-                  <entry>Description</entry>
+            <itemizedlist>
+              <listitem>
+                <para>Description: Simple OSG application that loads a model
+                and allows navigation.</para>
+              </listitem>
 
-                  <entry>Simple OSG application that loads a model and allows
-                  navigation</entry>
-                </row>
+              <listitem>
+                <para>Objectives: Understand how to load a model, add it to a
+                scene graph, and return the root to VR Juggler.</para>
+              </listitem>
 
-                <row>
-                  <entry>Objectives</entry>
+              <listitem>
+                <para>Member functions:
+                <methodname>vrj::OsgApp::initScene()</methodname>,
+                <methodname>vrj::OsgApp::getScene()</methodname></para>
+              </listitem>
 
-                  <entry>Understand how to load a model, add it to a scene
-                  graph, and return the root to VR Juggler</entry>
-                </row>
+              <listitem>
+                <para>Directory:
+                <filename>$VJ_BASE_DIR/share/vrjuggler/samples/OSG/simple/osgNav</filename></para>
+              </listitem>
 
-                <row>
-                  <entry>Member functions</entry>
-
-                  <entry><itemizedlist>
-                      <listitem>
-                        <para><methodname>vrj::OsgApp::initScene()</methodname></para>
-                      </listitem>
-
-                      <listitem>
-                        <para><methodname>vrj::OsgApp::getScene()</methodname></para>
-                      </listitem>
-                    </itemizedlist></entry>
-                </row>
-
-                <row>
-                  <entry>Directory</entry>
-
-                  <entry><filename>$VJ_BASE_DIR/share/vrjuggler/samples/OSG/simple/osgNav</filename></entry>
-                </row>
-
-                <row>
-                  <entry>Files</entry>
-
-                  <entry><itemizedlist>
-                      <listitem>
-                        <para><filename>OsgNav.h</filename></para>
-                      </listitem>
-
-                      <listitem>
-                        <para><filename>OsgNav.cpp</filename></para>
-                      </listitem>
-                    </itemizedlist></entry>
-                </row>
-              </tbody>
-            </tgroup>
-          </table>
+              <listitem>
+                <para>Files: <filename>OsgNav.h</filename>,
+                <filename>OsgNav.cpp</filename></para>
+              </listitem>
+            </itemizedlist>
+          </highlights>
 
           <section>
             <title>Class Declaration</title>
@@ -8230,73 +8097,42 @@ int main(int argc, char* argv[])
           intraFrame()</secondary>
         </indexterm>
 
-        <table>
-          <title>Tutorial Overview</title>
+        <highlights>
+          <para>In this section, we present a tutorial demonstrating the use
+          of asynchronous processing and rendering. The tutorial overview is
+          as follows:</para>
 
-          <tgroup cols="2">
-            <tbody>
-              <row>
-                <entry>Description</entry>
+          <itemizedlist>
+            <listitem>
+              <para>Description: Performing the computations to animate a mesh
+              asynchronously to rendering the mesh.</para>
+            </listitem>
 
-                <entry>Performing the computations to animate a mesh
-                asynchronously to rendering the mesh</entry>
-              </row>
+            <listitem>
+              <para>Objectives: Understand how to use multi-threading
+              techniques in an application.</para>
+            </listitem>
 
-              <row>
-                <entry>Objectives</entry>
+            <listitem>
+              <para>Member functions:
+              <methodname>vrj::App::init()</methodname>,
+              <methodname>vrj::App::preFrame()</methodname>,
+              <methodname>vrj::App::intraFrame()</methodname>,
+              <methodname>vrj::GlApp::draw()</methodname></para>
+            </listitem>
 
-                <entry>Understand how to use multi-threading techniques in an
-                application</entry>
-              </row>
+            <listitem>
+              <para>Directory:
+              <filename>$VJ_BASE_DIR/share/samples/OGL/simple/MPApp</filename></para>
+            </listitem>
 
-              <row>
-                <entry>Member functions</entry>
-
-                <entry><itemizedlist>
-                    <listitem>
-                      <para><methodname>vrj::App::init()</methodname></para>
-                    </listitem>
-
-                    <listitem>
-                      <para><methodname>vrj::App::preFrame()</methodname></para>
-                    </listitem>
-
-                    <listitem>
-                      <para><methodname>vrj::App::intraFrame()</methodname></para>
-                    </listitem>
-
-                    <listitem>
-                      <para><methodname>vrj::GlApp::draw()</methodname></para>
-                    </listitem>
-                  </itemizedlist></entry>
-              </row>
-
-              <row>
-                <entry>Directory</entry>
-
-                <entry><filename>$VJ_BASE_DIR/share/samples/OGL/simple/MPApp</filename></entry>
-              </row>
-
-              <row>
-                <entry>Files</entry>
-
-                <entry><itemizedlist>
-                    <listitem>
-                      <para><filename>MPApp.h</filename></para>
-                    </listitem>
-
-                    <listitem>
-                      <para><filename>MPApp.cpp</filename></para>
-                    </listitem>
-
-                    <listitem>
-                      <para><filename>Mesh.h</filename></para>
-                    </listitem>
-                  </itemizedlist></entry>
-              </row>
-            </tbody>
-          </tgroup>
-        </table>
+            <listitem>
+              <para>Files: <filename>MPApp.h</filename>,
+              <filename>MPApp.cpp</filename>,
+              <filename>Mesh.h</filename></para>
+            </listitem>
+          </itemizedlist>
+        </highlights>
 
         <section>
           <title>Class Declaration and Data Members</title>
@@ -9141,76 +8977,45 @@ jccl::ConfigElementPtr elt = element-&gt;getProperty&lt;jccl::ConfigElementPtr&g
           <secondary>using application-specific configurations</secondary>
         </indexterm>
 
-        <table>
-          <title>Tutorial Overview</title>
+        <highlights>
+          <para>In this section, we present a tutorial covering the use of
+          application-specific configurations. The tutorial overview is as
+          follows:</para>
 
-          <tgroup cols="2">
-            <tbody>
-              <row>
-                <entry>Description</entry>
+          <itemizedlist>
+            <listitem>
+              <para>Description: Simple OpenGL application that draws a cube
+              in the environment.</para>
+            </listitem>
 
-                <entry>Simple OpenGL application that draws a cube in the
-                environment</entry>
-              </row>
+            <listitem>
+              <para>Objectives: Understand how the
+              <methodname>configCanHandle()</methodname> and
+              <methodname>configAdd()</methodname> member functions in
+              <classname>jccl::ConfigElementHandler</classname> work; create
+              application-specific configurations using JCCL</para>
+            </listitem>
 
-              <row>
-                <entry>Objectives</entry>
+            <listitem>
+              <para>Member functions:
+              <methodname>jccl::ConfigElementHandler::configCanHandle()</methodname>,
+              <methodname>jccl::ConfigElementHandler::configAdd()</methodname>,
+              <methodname>vrj::GlApp::draw()</methodname></para>
+            </listitem>
 
-                <entry>Understand how the
-                <methodname>configCanHandle()</methodname> and
-                <methodname>configAdd()</methodname> member functions in
-                <classname>jccl::ConfigElementHandler</classname> work; create
-                application-specific configurations using JCCL</entry>
-              </row>
+            <listitem>
+              <para>Directory:
+              <filename>$VJ_BASE_DIR/share/samples/OGL/simple/ConfigApp</filename></para>
+            </listitem>
 
-              <row>
-                <entry>Member functions</entry>
-
-                <entry><itemizedlist>
-                    <listitem>
-                      <para><methodname>jccl::ConfigElementHandler::configCanHandle()</methodname></para>
-                    </listitem>
-
-                    <listitem>
-                      <para><methodname>jccl::ConfigElementHandler::configAdd()</methodname></para>
-                    </listitem>
-
-                    <listitem>
-                      <para><methodname>vrj::GlApp::draw()</methodname></para>
-                    </listitem>
-                  </itemizedlist></entry>
-              </row>
-
-              <row>
-                <entry>Directory</entry>
-
-                <entry><filename>$VJ_BASE_DIR/share/samples/OGL/simple/ConfigApp</filename></entry>
-              </row>
-
-              <row>
-                <entry>Files</entry>
-
-                <entry><itemizedlist>
-                    <listitem>
-                      <para><filename>config_app.jdef</filename></para>
-                    </listitem>
-
-                    <listitem>
-                      <para><filename>ConfigApp.jconf</filename></para>
-                    </listitem>
-
-                    <listitem>
-                      <para><filename>ConfigApp.h</filename></para>
-                    </listitem>
-
-                    <listitem>
-                      <para><filename>ConfigApp.cpp</filename></para>
-                    </listitem>
-                  </itemizedlist></entry>
-              </row>
-            </tbody>
-          </tgroup>
-        </table>
+            <listitem>
+              <para>Files: <filename>config_app.jdef</filename>,
+              <filename>ConfigApp.jconf</filename>,
+              <filename>ConfigApp.h</filename>,
+              <filename>ConfigApp.cpp</filename></para>
+            </listitem>
+          </itemizedlist>
+        </highlights>
 
         <section>
           <title>Class Declaration</title>
