@@ -205,6 +205,11 @@ def setVars():
 
       omni_lib = os.path.join(os.environ['OMNIORB_ROOT'], 'lib')
 
+      if os.getenv('PYTHONPATH', '') != '':
+         os.environ['PYTHONPATH'] = os.path.join(omni_lib, 'python') + os.pathsep + os.environ['PYTHONPATH']
+      else:
+         os.environ['PYTHONPATH'] = os.path.join(omni_lib, 'python')
+
       if os.path.exists(os.path.join(omni_lib, 'omnithread.lib')):
          os.environ['OMNIORB_LIB'] = omni_lib
       else:
