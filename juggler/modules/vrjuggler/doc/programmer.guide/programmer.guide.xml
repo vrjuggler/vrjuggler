@@ -134,7 +134,7 @@
                      <primary>classes</primary>
                      <secondary>vrj::App</secondary>
                   </indexterm> specifies methods for initialization, shutdown, and execution of the application. The Draw Manager interfaces specified in the <classname>vrj::*App</classname> classes define the API-specific functions necessary to render the virtual environment. For example, a Draw Manager interface could have functions for drawing the scene and for initializing context-specific information.</para>
-               <figure float="1" id="vjApp-hier-fig">
+               <figure id="vjApp-hier-fig">
                   <title><classname>vrj::App</classname> hierarchy</title>
                   <mediaobject>
                      <imageobject>
@@ -240,7 +240,7 @@ int main(int argc, char* argv[])
             <para>Before proceeding into application object details, we must understand how VR Juggler calls the application, and we must know what a <firstterm>frame</firstterm><indexterm>
                   <primary>frame</primary>
                </indexterm> is. In the code above, the statement on line 9 tells the kernel thread to start running. When the kernel begins its execution, it follows the sequence shown in <xref linkend="Kernel-seq-diag"/>. The specific methods called are described in more detail in the following section. This diagram will be useful in understanding the order in which the application object methods are invoked.</para>
-            <figure float="1" id="Kernel-seq-diag">
+            <figure id="Kernel-seq-diag">
                <title>Kernel loop sequence</title>
                <mediaobject>
                   <imageobject>
@@ -290,7 +290,7 @@ int main(int argc, char* argv[])
                </listitem>
             </itemizedlist>
             <para>As previously described, the VR Juggler kernel calls these functions from its control loop to allocate processing time to them. These functions handle initialization and computation. Other member functions that can be used for reconfiguration, focus control, resetting, and exiting will be covered later in this book.</para>
-            <figure float="1" id="App-if-diag">
+            <figure id="App-if-diag">
                <title>Application object interface</title>
                <mediaobject>
                   <imageobject>
@@ -401,7 +401,7 @@ int main(int argc, char* argv[])
                      <primary>classes</primary>
                      <secondary>vrj::GlApp</secondary>
                   </indexterm> class are provided in <xref linkend="ogl-app-sect"/>, found in <xref linkend="ch4"/>.</para>
-               <figure float="1" id="vjGlApp-class-diag">
+               <figure id="vjGlApp-class-diag">
                   <title><classname>vrj::GlApp</classname> interface extensions to <classname>vrj::App</classname></title>
                   <mediaobject>
                      <imageobject>
@@ -425,7 +425,7 @@ int main(int argc, char* argv[])
                      <primary>classes</primary>
                      <secondary>vrj::PfApp</secondary>
                   </indexterm> interface. More detailed discussion on this class is provided in <xref linkend="pf-app-sect"/>, found in <xref linkend="ch4"/>.</para>
-               <figure float="1" id="vjPfApp-class-diag">
+               <figure id="vjPfApp-class-diag">
                   <title><classname>vrj::PfApp</classname> interface extensions to <classname>vrj::App</classname></title>
                   <mediaobject>
                      <imageobject>
@@ -1664,7 +1664,7 @@ gmtl::Matrix44f wand_pos(mWand-&gt;getData());
                   <secondary>where to get device input</secondary>
                </indexterm>
                <para>In the previous section, we showed how to get input from devices, but we never said where to put the code. The location, surprisingly, is application dependent. There are some very good guidelines regarding where applications should process input. Before explaining them, however, we should review the VR Juggler kernel control loop, presented again in <xref linkend="Kernel-seq-diag2"/>.</para>
-               <figure float="1" id="Kernel-seq-diag2">
+               <figure id="Kernel-seq-diag2">
                   <title>VR Juggler kernel control loop</title>
                   <mediaobject>
                      <imageobject>
@@ -1819,7 +1819,7 @@ public:
                   <primary>classes</primary>
                   <secondary>vrj::App</secondary>
                </indexterm>. As was discussed in the application object section, <classname>vrj::App</classname> defines the base interface that VR Juggler expects of all applications. The <classname>vrj::GlApp</classname> class extends this interface by adding members that the VR Juggler OpenGL Draw Manager needs to render an OpenGL application correctly.</para>
-            <figure float="1" id="vjGlApp-class-fig">
+            <figure id="vjGlApp-class-fig">
                <title><classname>vrj::GlApp</classname> application class</title>
                <mediaobject>
                   <imageobject>
@@ -2122,7 +2122,7 @@ userApp::draw()
                   <secondary>details</secondary>
                </indexterm>
                <para>Within this section, we provide the details of context-specific data in VR Juggler and justify the rules presented in the previous section.</para>
-               <figure float="1" id="vrj-ogl-system-chart">
+               <figure id="vrj-ogl-system-chart">
                   <title>VR Juggler OpenGL system</title>
                   <mediaobject>
                      <imageobject>
@@ -2255,7 +2255,7 @@ void contextApp::draw()
                   <primary>classes</primary>
                   <secondary>vrj::PfApp</secondary>
                </indexterm>. Similar to <classname>vrj::GlApp</classname> presented in the previous section, <classname>vrj::PfApp</classname> derives from <classname>vrj::App</classname>. <classname>vrj::PfApp</classname> extends <classname>vrj::App</classname> by adding methods that deal with scene graph initialization and access. <xref linkend="vjPfApp-class-diag2"/> shows how <classname>vrj::PfApp</classname> fits into the class hierarchy of a Performer-based VR Juggler application.</para>
-            <figure float="1" id="vjPfApp-class-diag2">
+            <figure id="vjPfApp-class-diag2">
                <title><classname>vrj::PfApp</classname> application class</title>
                <mediaobject>
                   <imageobject>
@@ -2575,7 +2575,7 @@ pfDraw();</programlisting>
                   <primary>classes</primary>
                   <secondary>vrj::OpenSGApp</secondary>
                </indexterm>. The <classname>vrj::OpenSGApp</classname> class is derived from the <classname>vrj::GlApp</classname> presented previously, which in turn derives from <classname>vrj::App</classname>. <classname>vrj::OpenSGApp</classname> extends <classname>vrj::GlApp</classname> by adding methods that deal with scene graph initialization and access. <emphasis>[Insert diagram ref]</emphasis> shows how <classname>vrj::OpenSGApp</classname> fits into the class hierarchy of an OpenSG VR Juggler application.</para>
-            <figure float="1" id="vjOpenSGApp-class-diag">
+            <figure id="vjOpenSGApp-class-diag">
                <title><classname>vrj::OpenSGApp</classname> application class</title>
                <mediaobject>
                   <imageobject>
