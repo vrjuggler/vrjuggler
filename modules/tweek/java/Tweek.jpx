@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--JBuilder XML Project-->
 <project>
+  <property category="debug.0" name="SmartStepRedefineClasses" value="0"/>
+  <property category="debug.0" name="SmartStepSkipStaticInitializers" value="0"/>
+  <property category="debug.0" name="SmartStepSkipSynthetics" value="0"/>
   <property category="idl" name="ProcessIDL" value="false"/>
   <property category="runtime.0" name="RunnableType" value="com.borland.jbuilder.runtime.ApplicationRunner"/>
   <property category="runtime.0" name="application.class" value="org.vrjuggler.tweek.Tweek"/>
@@ -27,16 +30,20 @@
   <property category="sys" name="JbxEventListener0" value="org.vrjuggler.tweek.net.CommunicationListener"/>
   <property category="sys" name="JbxEventListener1" value="org.vrjuggler.tweek.beans.BeanInstantiationListener"/>
   <property category="sys" name="LastTag" value="113"/>
-  <property category="sys" name="Libraries" value="JDOM B7;Xerces;OpenORB"/>
+  <property category="sys" name="Libraries" value="JDOM;Xerces;OpenORB;Metouia LAF 1.0"/>
   <property category="sys" name="MakeStable" value="0"/>
   <property category="sys" name="OutPath" value="classes"/>
-  <property category="sys" name="SourcePath" value=".;../test/TestSuite/java"/>
+  <property category="sys" name="SourcePath" value=".;../test/TestSuite/java;../../../external/swing-laf/kunststoff/sources"/>
   <property category="sys" name="TestPath" value="../test/TestSuite/java"/>
   <property category="sys" name="Title" value="Tweek JavaBean Loader"/>
   <property category="sys" name="TitleLabel" value="Title:"/>
   <property category="sys" name="Version" value="1.0"/>
   <property category="sys" name="VersionLabel" value="@since"/>
   <property category="sys" name="WorkingDirectory" value="."/>
+  <node name="com.incors.plaf" type="Package"/>
+  <node name="com.incors.plaf.kunststoff" type="Package"/>
+  <node name="com.incors.plaf.kunststoff.mini" type="Package"/>
+  <node name="com.incors.plaf.kunststoff.themes" type="Package"/>
   <node name="org.vrjuggler.tweek" type="Package"/>
   <node name="org.vrjuggler.tweek.beans" type="Package"/>
   <node name="org.vrjuggler.tweek.beans.loader" type="Package"/>
