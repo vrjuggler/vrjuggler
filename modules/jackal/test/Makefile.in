@@ -41,7 +41,7 @@
 # -----------------------------------------------------------------------------
 default: TestSuite
 
-SUBDIRS	= \
+SUBDIRS= \
 	TestSuite
 
 all: $(SUBDIRS)

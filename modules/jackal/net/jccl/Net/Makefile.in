@@ -40,13 +40,13 @@ default: all
 # Include common definitions here.
 include @topdir@/make.defs.mk
 
-includedir	= @includedir@/jccl/Net
-srcdir		= @srcdir@
-top_srcdir	= @top_srcdir@
-INSTALL		= @INSTALL@
-SUBOBJDIR	= $(JCCL_NET_LIBRARY)
+includedir=	@includedir@/jccl/Net
+srcdir=		@srcdir@
+top_srcdir=	@top_srcdir@
+INSTALL=	@INSTALL@
+SUBOBJDIR=	$(JCCL_NET_LIBRARY)
 
-SRCS		= \
+SRCS= \
 	Command.cpp \
 	Connect.cpp \
 	JackalServer.cpp \
@@ -54,14 +54,14 @@ SRCS		= \
 	Socket.cpp \
 	SockStream.cpp
 
-EXTRA_INCLUDES = \
+EXTRA_INCLUDES= \
 	-I$(top_srcdir)/common \
 	-I$(top_srcdir)/config \
 	-I$(top_srcdir)/net \
 	-I$(topdir)/common
 
 # Net has a circular dependency with RTRC
-EXTRA_INCLUDES += -I$(top_srcdir)/rtrc
+EXTRA_INCLUDES+=	-I$(top_srcdir)/rtrc
 
 include $(MKPATH)/dpp.obj.mk
 

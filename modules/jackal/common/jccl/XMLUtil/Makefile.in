@@ -41,13 +41,13 @@ default: all
 include @topdir@/make.defs.mk
 
 # There is nothing to install from this directory.
-INSTALL_FILES	=
+INSTALL_FILES=
 
-srcdir		= @UNIX_CPPDOM_ROOT@/cppdom
-top_srcdir	= @top_srcdir@
-SUBOBJDIR	= $(JCCL_COMMON_LIBRARY)
+srcdir=		@UNIX_CPPDOM_ROOT@/cppdom
+top_srcdir=	@top_srcdir@
+SUBOBJDIR=	$(JCCL_COMMON_LIBRARY)
 
-SRCS		= xmlparser.cpp cppdom.cpp xmltokenizer.cpp
+SRCS=		xmlparser.cpp cppdom.cpp xmltokenizer.cpp
 
 include $(MKPATH)/dpp.obj.mk
 

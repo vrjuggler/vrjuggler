@@ -41,72 +41,72 @@
 # -----------------------------------------------------------------------------
 
 # Variables whose values are specific to this file.
-includedir	= @includedir@
-instlinks	= $(topdir)/instlinks
-srcdir		= @srcdir@
-top_srcdir	= @top_srcdir@
+includedir=	@includedir@
+instlinks=	$(topdir)/instlinks
+srcdir=		@srcdir@
+top_srcdir=	@top_srcdir@
 
 # Extra compiler and linker options needed only by this file.
-DBG_FLAGS	= -D_DEBUG @DBG_FLAGS@
-OPT_FLAGS	= -D_OPT @OPT_FLAGS@
+DBG_FLAGS=	-D_DEBUG @DBG_FLAGS@
+OPT_FLAGS=	-D_OPT @OPT_FLAGS@
 
-BUILD_JAVA	= @BUILD_JAVA@
-JDOM_JAR	= @JDOM_JAR@
+BUILD_JAVA=	@BUILD_JAVA@
+JDOM_JAR=	@JDOM_JAR@
 
 # =============================================================================
 # Build and installation directory naming and ownership information.
 # =============================================================================
-DEFAULT_DIR	= $(OPT_DIR)
+DEFAULT_DIR=	$(OPT_DIR)
 
 # If we have a name for the install group, define group-setting options for
 # UNIX commands (chown(1), chgrp(1)) and for local Perl scripts
 # (makefiles-gen.pl in particular).
 ifdef GROUP_NAME
-    _GROUP_OPT_PL	= --gname="$(GROUP_NAME)"
+    _GROUP_OPT_PL=	--gname="$(GROUP_NAME)"
 endif
 
 # --------------------------------------------
 # Library build information.
 # --------------------------------------------
 
-SHLIB_MAJOR	= 1
-SHLIB_MINOR	= 0
+SHLIB_MAJOR=	1
+SHLIB_MINOR=	0
 
-STATICLIB_EXT	= @STATICLIB_EXT@
-DYNAMICLIB_EXT	= @DYNAMICLIB_EXT@
+STATICLIB_EXT=	@STATICLIB_EXT@
+DYNAMICLIB_EXT=	@DYNAMICLIB_EXT@
 
 # Full list of the libraries to build.
-LIBS		= $(JCCL_LIBRARY)
-STATIC_LIBS	= $(LIBS)
-DYNAMIC_LIBS	= $(LIBS)
+LIBS=		$(JCCL_LIBRARY)
+STATIC_LIBS=	$(LIBS)
+DYNAMIC_LIBS=	$(LIBS)
 
 # Dependencies for each of the various dynamic libraries we build.
-DYLIB_DEPS_JCCL         = @DYLIB_DEPS_JCCL@
-DYLIB_PROF_DEPS_JCCL    = @DYLIB_PROF_DEPS_JCCL@
-JCCL_LIB_STATIC	        = $(JCCL_LIBRARY).$(STATICLIB_EXT)
-JCCL_LIB_DYNAMIC	= $(JCCL_LIBRARY).$(DYNAMICLIB_EXT)
-JCCL_PROF_LIB_STATIC	= $(JCCL_LIBRARY)$(PROFLIB_EXT).$(STATICLIB_EXT)
-JCCL_PROF_LIB_DYNAMIC	= $(JCCL_LIBRARY)$(PROFLIB_EXT).$(DYNAMICLIB_EXT)
+DYLIB_DEPS_JCCL=	@DYLIB_DEPS_JCCL@
+DYLIB_PROF_DEPS_JCCL=	@DYLIB_PROF_DEPS_JCCL@
+JCCL_LIB_STATIC=	$(JCCL_LIBRARY).$(STATICLIB_EXT)
+JCCL_LIB_DYNAMIC=	$(JCCL_LIBRARY).$(DYNAMICLIB_EXT)
+JCCL_PROF_LIB_STATIC=	$(JCCL_LIBRARY)$(PROFLIB_EXT).$(STATICLIB_EXT)
+JCCL_PROF_LIB_DYNAMIC=	$(JCCL_LIBRARY)$(PROFLIB_EXT).$(DYNAMICLIB_EXT)
 
 # Version information.
-PARAM_HEADER	= common/jccl/jcclParam.h
-BRANCH		= HEAD
-CANON_NAME	= Bride of Chucky
-VER_ARGS	= -f $(JCCLROOT_ABS)/VERSION -s @SUBSYSTEM@ -b $(BRANCH) \
-                  -i $(JCCLROOT_ABS)/common/jccl/jcclParam.h.in		\
-                  -o $(PARAM_HEADER) -n "$(CANON_NAME)"			\
-                  -d "`date '+%b %e, %Y %H:%M:%S'`"
+PARAM_HEADER=	common/jccl/jcclParam.h
+BRANCH=		HEAD
+CANON_NAME=	Bride of Chucky
+VER_ARGS=	-f $(JCCLROOT_ABS)/VERSION -s @SUBSYSTEM@ -b $(BRANCH)	\
+		-i $(JCCLROOT_ABS)/common/jccl/jcclParam.h.in		\
+		-o $(PARAM_HEADER) -n "$(CANON_NAME)"			\
+		-d "`date '+%b %e, %Y %H:%M:%S'`"
 
 ifdef VERSION
-    VER_ARGS	+= -v $(VERSION)
+   VER_ARGS+=	-v $(VERSION)
 endif
 
 # =============================================================================
 # Library targets.
 # =============================================================================
 
-BEFOREBUILD	= beforebuild
-AFTERBUILD	= afterbuild
+BEFOREBUILD=	beforebuild
+AFTERBUILD=	afterbuild
 
 # Things to do before the object files and library are built.
 beforebuild: $(PARAM_HEADER)
@@ -255,8 +255,8 @@ endif
 #     6) Install the Java-based config editor (if possible).
 # =============================================================================
 
-BEFOREINSTALL	= beforeinstall
-AFTERINSTALL	= afterinstall
+BEFOREINSTALL=	beforeinstall
+AFTERINSTALL=	afterinstall
 
 # Steps to take before beginning the installation process.  This target is
 # independent of the current ABI.
@@ -285,8 +285,8 @@ afterinstall:
 	@echo "Jackal installation complete"
 	@echo "==============================================================="
 
-PREINSTALL	= pre-install
-POSTINSTALL	= post-install
+PREINSTALL=	pre-install
+POSTINSTALL=	post-install
 
 pre-install:
 	$(MTREE_CMD) -Ude -f $(mtreedir)/JCCL.lib.dist -p $(prefix)
@@ -302,8 +302,8 @@ post-install:
 	$(INSTALL) -m $(EXEC_PERMS) $(GROUP_OPT_UNIX)			\
           $(topdir)/jccl-config $(bindir)
 
-PREINSTALL_HEADERS	= pre-install-headers
-POSTINSTALL_HEADERS	= post-install-headers
+PREINSTALL_HEADERS=	pre-install-headers
+POSTINSTALL_HEADERS=	post-install-headers
 
 pre-install-headers:
 	$(MTREE_CMD) -Ude -f $(mtreedir)/JCCL.include.dist -p $(prefix)
@@ -400,7 +400,7 @@ install-data:
 # Clean-up targets.  '_clean' removes all the files in the build directories.  
 # '_clobber' removes the $(BUILDDIR_BASE) and $(LIBDIR_NAME) directories.
 # =============================================================================
-CLOBBER_DIRS	+= $(BUILDDIR_BASE) $(LIBDIR_NAME)
+CLOBBER_DIRS+=	$(BUILDDIR_BASE) $(LIBDIR_NAME)
 
 _clobber:
 	@$(MAKE) cleandepend
@@ -409,9 +409,9 @@ _clobber:
 # Define $(_LOCAL_CLEAN) and $(_LOCAL_CLOBBER) to inform the shared 'clean'
 # and 'clobber' targets that there is a '_clean' target and a '_clobber'
 # target to be run besides the standard targets.
-_LOCAL_CLOBBER	= 1
+_LOCAL_CLOBBER=	1
 
-EXTRA_OBJ_TARGETS = build-java
+EXTRA_OBJ_TARGETS=	build-java
 
 # Make sure we build java targets serially because javac is stupid and may try
 # to write to the same files at the same time while building different sources.
@@ -429,6 +429,6 @@ endif #ifdef NO_JAVA
 include $(MKPATH)/dpp.libs.mk
 include $(MKPATH)/dpp.clean.mk
 
-CLEAN_FILES	+= $(PARAM_HEADER)
-CLEAN_DIRS      += $(BUILDDIR_BASE) $(LIBDIR_NAME)
-CLOBBER_DIRS    += $(BUILDDIR_BASE) $(LIBDIR_NAME)
+CLEAN_FILES+=	$(PARAM_HEADER)
+CLEAN_DIRS+=	$(BUILDDIR_BASE) $(LIBDIR_NAME)
+CLOBBER_DIRS+=	$(BUILDDIR_BASE) $(LIBDIR_NAME)

@@ -1,24 +1,24 @@
 default: all
 
 # Basic options.
-srcdir			= @srcdir@
-JAVAC_FLAGS		= -classpath "$(CLASSPATH)" -sourcepath "$(srcdir)" -d .
-JCPS           = @JCPS@
+srcdir=		@srcdir@
+JAVAC_FLAGS=	-classpath "$(CLASSPATH)" -sourcepath "$(srcdir)" -d .
+JCPS=		@JCPS@
 
-JUNIT_JAR		= @JUNIT_JAR@
-JDOM_JAR		= @JDOM_JAR@
-VJCONTROL_JARS = $(JCCL_BASE_DIR)/bin/jccl_config.jar
-CLASSPATH		= $(JUNIT_JAR)$(JCPS)$(VJCONTROL_JARS)$(JCPS)$(JDOM_JAR)
+JUNIT_JAR=	@JUNIT_JAR@
+JDOM_JAR=	@JDOM_JAR@
+VJCONTROL_JARS=	$(JCCL_BASE_DIR)/bin/jccl_config.jar
+CLASSPATH=	$(JUNIT_JAR)$(JCPS)$(VJCONTROL_JARS)$(JCPS)$(JDOM_JAR)
 
 # Commands to execute.
-JAVA_COMPILE   = @JAVAC@ $(JAVAC_FLAGS)
-JAR            = @JAR@
+JAVA_COMPILE=	@JAVAC@ $(JAVAC_FLAGS)
+JAR=		@JAR@
 
-VPATH		= @srcdir@:@srcdir@/test
+VPATH=		@srcdir@:@srcdir@/test
 
-#IDL_JAVA_FILES	=
+#IDL_JAVA_FILES=
 
-RUNNER = \
+RUNNER= \
 	AllTests
 
 TESTCASES = \
@@ -28,10 +28,10 @@ TESTCASES = \
 	test.ValTypeTest \
 	test.VarValueTest
 
-RUNNER_CLASSES = $(addsuffix .class, $(RUNNER))
-TESTCASE_CLASSES = $(addsuffix .class, $(subst .,/,$(TESTCASES)))
+RUNNER_CLASSES=		$(addsuffix .class, $(RUNNER))
+TESTCASE_CLASSES=	$(addsuffix .class, $(subst .,/,$(TESTCASES)))
 
-CLASSES = $(RUNNER_CLASSES) $(TESTCASE_CLASSES)
+CLASSES=		$(RUNNER_CLASSES) $(TESTCASE_CLASSES)
 
 
 # -----------------------------------------------------------------------------
