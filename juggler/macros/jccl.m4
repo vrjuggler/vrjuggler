@@ -99,7 +99,7 @@ AC_DEFUN(JCCL_PATH,
         JCCL_LIBS_STATIC="`$JCCL_CONFIG $jccl_config_args --libs $ABI --static` $JCCL_EXTRA_LIBS"
         JCCL_VERSION=`$JCCL_CONFIG --version`
         DPP_VERSION_CHECK_MSG(JCCL, $JCCL_VERSION, $min_jccl_version,
-b                              jccl_cv_jccl_version, $2, $3)
+                              jccl_cv_jccl_version, $2, $3)
     fi
 
     if test "x$no_jccl" != x ; then
