@@ -1,5 +1,8 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Sep-17-2004 aronb       Added the ability to the C++ API to test if a
+                        config elmeent is derived from a given token.
+                        NEW VERSION: 0.17.2
 Sep-11-2004 patrickh    Updated for JDOM 1.0.
                         NEW VERSION: 0.17.1
 Apr-05-2004 patrickh    Refactored jccl::ConfigManager to reduce public
