@@ -77,10 +77,10 @@ namespace vrj
          << "Search path: " << file_search_path << "\n" << vprDEBUG_FLUSH;
 
       // configure sonix
-      sonix::instance()->changeAPI( api_to_use );
+      snx::sonix::instance()->changeAPI(api_to_use);
       gmtl::Matrix44f mat;
       gmtl::setTrans( mat, gmtl::Vec3f( listener_position[0], listener_position[1], listener_position[2] ) );
-      sonix::instance()->setListenerPosition( mat );
+      snx::sonix::instance()->setListenerPosition(mat);
 
       // read the list of sounds
       int size = element->getNum( "sound" );
@@ -131,7 +131,7 @@ namespace vrj
             << "  + freq(" << pitchbend << ")," << "retrig(" << retriggerable
             << ")\n" << vprDEBUG_FLUSH;
 
-         sonix::instance()->configure( alias, si );
+         snx::sonix::instance()->configure(alias, si);
       }
       vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_LVL)
          << "======================================\n" << vprDEBUG_FLUSH;
@@ -152,7 +152,7 @@ namespace vrj
          jccl::ConfigElementPtr sound_element =
             element->getProperty<jccl::ConfigElementPtr>("sound", x);
          std::string alias(sound_element->getName());
-         sonix::instance()->remove(alias);
+         snx::sonix::instance()->remove(alias);
       }
 
       return true;
@@ -179,7 +179,7 @@ namespace vrj
    void SoundManagerSonix::update()
    {
       float time_delta = 0.1f; // TODO: get real time since last frame...
-      sonix::instance()->step( time_delta );
+      snx::sonix::instance()->step(time_delta);
    }
 
    /**
