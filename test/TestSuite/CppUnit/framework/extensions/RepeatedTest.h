@@ -1,19 +1,3 @@
-
-#ifndef CPPUNIT_REPEATEDTEST_H
-#define CPPUNIT_REPEATEDTEST_H
-
-#ifndef CPPUNIT_GUARDS_H
-#include "Guards.h"
-#endif
-
-#ifndef CPPUNIT_TESTDECORATOR_H
-#include "TestDecorator.h"
-#endif
-
-class Test;
-class TestResult;
-
-
 /*************** <auto-copyright.pl BEGIN do not edit this line> **************
  *
  * VR Juggler is (C) Copyright 1998, 1999, 2000 by Iowa State University
@@ -45,6 +29,21 @@ class TestResult;
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
+
+#ifndef CPPUNIT_REPEATEDTEST_H
+#define CPPUNIT_REPEATEDTEST_H
+
+#ifndef CPPUNIT_GUARDS_H
+#include "Guards.h"
+#endif
+
+#ifndef CPPUNIT_TESTDECORATOR_H
+#include "TestDecorator.h"
+#endif
+
+class Test;
+class TestResult;
+
 
 class RepeatedTest : public TestDecorator 
 {

@@ -1,4 +1,3 @@
-
 #ifndef CPPUNIT_TESTTEST_H
 #define CPPUNIT_TESTTEST_H
 
@@ -115,4 +114,3 @@ inline Test *TestTest::suite ()
 }
 
 #endif
-

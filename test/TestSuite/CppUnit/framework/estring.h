@@ -1,6 +1,3 @@
-
-
-
 #ifndef CPPUNIT_ESTRING_H
 #define CPPUNIT_ESTRING_H
 

@@ -1,12 +1,3 @@
-
-
-#ifndef CPPUNIT_TEST_H
-#define CPPUNIT_TEST_H
-
-#include <string>
-
-class TestResult;
-
 /*************** <auto-copyright.pl BEGIN do not edit this line> **************
  *
  * VR Juggler is (C) Copyright 1998, 1999, 2000 by Iowa State University
@@ -38,6 +29,13 @@ class TestResult;
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
+
+#ifndef CPPUNIT_TEST_H
+#define CPPUNIT_TEST_H
+
+#include <string>
+
+class TestResult;
 
 
 class Test
@@ -71,5 +69,3 @@ inline std::string Test::toString ()
 
 
 #endif
-
-

@@ -1,11 +1,3 @@
-
-#ifndef CPP_UNIT_EXAMPLETESTCASE_H
-#define CPP_UNIT_EXAMPLETESTCASE_H
-
-#include "TestCase.h"
-#include "TestSuite.h"
-#include "TestCaller.h"
-
 /*************** <auto-copyright.pl BEGIN do not edit this line> **************
  *
  * VR Juggler is (C) Copyright 1998, 1999, 2000 by Iowa State University
@@ -37,6 +29,13 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
+
+#ifndef CPP_UNIT_EXAMPLETESTCASE_H
+#define CPP_UNIT_EXAMPLETESTCASE_H
+
+#include "TestCase.h"
+#include "TestSuite.h"
+#include "TestCaller.h"
 
 class ExampleTestCase : public TestCase
 {

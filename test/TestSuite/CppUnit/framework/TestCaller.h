@@ -1,15 +1,3 @@
-
-#ifndef CPPUNIT_TESTCALLER_H
-#define CPPUNIT_TESTCALLER_H
-
-#ifndef CPPUNIT_GUARDS_H
-#include "Guards.h"
-#endif
-
-#ifndef CPPUNIT_TESTCASE_H
-#include "TestCase.h"
-#endif
-
 /*************** <auto-copyright.pl BEGIN do not edit this line> **************
  *
  * VR Juggler is (C) Copyright 1998, 1999, 2000 by Iowa State University
@@ -41,6 +29,17 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
+
+#ifndef CPPUNIT_TESTCALLER_H
+#define CPPUNIT_TESTCALLER_H
+
+#ifndef CPPUNIT_GUARDS_H
+#include "Guards.h"
+#endif
+
+#ifndef CPPUNIT_TESTCASE_H
+#include "TestCase.h"
+#endif
 
 
 template <class Fixture> class TestCaller : public TestCase
