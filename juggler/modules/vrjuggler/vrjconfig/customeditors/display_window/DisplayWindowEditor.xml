@@ -6,8 +6,8 @@
             class="org.vrjuggler.vrjconfig.customeditors.display_window.DisplayWindowEditorPanel"/>
       <dependencies>
          <bean>ConfigBroker</bean>
-         <jar path="${VJ_BASE_DIR}/bin/beans">jccl_editors.jar</jar>
-         <jar path="${VJ_BASE_DIR}/bin">TableLayout.jar</jar>
+         <jar path="${JCCL_BASE_DIR}/share/jccl/beans">jccl_editors.jar</jar>
+         <jar path="${JCCL_BASE_DIR}/share/jccl/java">TableLayout.jar</jar>
          <jar path="${VJ_BASE_DIR}/lib/vrjuggler">CommonEditors.jar</jar>
       </dependencies>
    </service>
