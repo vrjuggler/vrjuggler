@@ -6951,20 +6951,85 @@ public:
       </section>
     </chapter>
 
-    <chapter id="chapter.add.device.driver">
-      <title>Adding Device Drivers</title>
+    <chapter id="chapter.extend.vrjuggler">
+      <title>Extending VR Juggler</title>
 
-      <indexterm>
-        <primary>device drivers</primary>
+      <indexterm zone="chapter.extend.vrjuggler">
+        <primary>VR Juggler</primary>
 
-        <secondary>adding</secondary>
+        <secondary>extension of</secondary>
       </indexterm>
 
-      <para>Please refer to the <ulink
-      url="http://www.vrjuggler.org/gadgeteer/docs.php">Gadgeteer</ulink>
-      <emphasis>Device Driver Authoring Guide</emphasis> for a comprehensive
-      description of how to write device drivers for use with VR Juggler
-      applications.</para>
+      <indexterm zone="chapter.extend.vrjuggler">
+        <primary>extending VR Juggler</primary>
+      </indexterm>
+
+      <para>VR Juggler can be extended in ways beyond the application object.
+      In this chapter, we review points of extensibility briefly and provide
+      pointers to more complete information for interested readers.</para>
+
+      <section id="section.device.driver.ext">
+        <title>Device Drivers</title>
+
+        <indexterm zone="section.device.driver.ext">
+          <primary>device drivers</primary>
+
+          <secondary>adding</secondary>
+        </indexterm>
+
+        <indexterm zone="section.device.driver.ext">
+          <primary>extending VR Juggler</primary>
+
+          <secondary>device drivers</secondary>
+        </indexterm>
+
+        <para>Please refer to the <ulink
+        url="http://www.vrjuggler.org/gadgeteer/docs.php">Gadgeteer</ulink>
+        <emphasis>Device Driver Authoring Guide</emphasis> for a comprehensive
+        description of how to write device drivers for use with VR Juggler
+        applications.</para>
+      </section>
+
+      <section id="section.custom.simulator.ext">
+        <title>Custom Simulators</title>
+
+        <indexterm zone="section.custom.simulator.ext">
+          <primary>custom simulators</primary>
+
+          <secondary>adding</secondary>
+        </indexterm>
+
+        <indexterm zone="section.custom.simulator.ext">
+          <primary>extending VR Juggler</primary>
+
+          <secondary>custom simulators</secondary>
+        </indexterm>
+
+        <para>To learn about how to add custom simulators to VR Juggler,
+        please refer to the VR Juggler <emphasis>Extension Guide</emphasis>.</para>
+      </section>
+
+      <section id="section.simulator.draw.functors.ext">
+        <title>Simulator Components</title>
+
+        <indexterm zone="section.simulator.draw.functors.ext">
+          <primary>simulator components</primary>
+
+          <secondary>customizing</secondary>
+        </indexterm>
+
+        <indexterm zone="section.simulator.draw.functors.ext">
+          <primary>extending VR Juggler</primary>
+
+          <secondary>simulator components</secondary>
+        </indexterm>
+
+        <para>The basic simulator for the OpenGL Draw Manager uses draw
+        functors to render the simulator components including the head and the
+        wand. Users can provide their own draw functors to customize the look
+        of the basic simulator without going to the trouble of writing a
+        custom simulator.</para>
+      </section>
     </chapter>
   </part>
 
