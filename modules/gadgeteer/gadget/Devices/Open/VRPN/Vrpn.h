@@ -166,19 +166,12 @@ namespace gadget
       void handleTracker(vrpn_TRACKERCB t);
       void handleButton(vrpn_BUTTONCB b);
 
-      void setPreTransform(float xoff, float yoff, float zoff,  
-                           float xrot, float yrot, float zrot,
-                           float xscale, float yscale, float zscale);
-      void setPostTransform(float xscale, float yscale, float zscale);
-
       void readLoop(void *nullParam);
 
 
       gmtl::Matrix44f getSensorPos(int d);
       gadget::DigitalData getDigitalData(int d);
      
-      gmtl::Matrix44f   mPreMatrixTransform;
-      gmtl::Matrix44f   mPostMatrixTransform;
       std::vector<DigitalData>  mCurButtons; /**< The current button states. */
       std::vector<PositionData> mCurPositions; /**< The current button states. */
 
