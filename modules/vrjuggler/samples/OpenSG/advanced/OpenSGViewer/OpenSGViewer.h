@@ -62,7 +62,8 @@
 #include <vrj/Draw/OGL/GlContextData.h>
 
 // Common viewer helper classes
-#include <User.h>
+#include <Common/User.h>
+#include <Common/ViewPlatform.h>
 
 /*-----------------------------OpenSG includes--------------------------------*/
 #include <OpenSG/OSGNode.h>
