@@ -93,7 +93,6 @@ public class Core {
 
 
     static public void initialize () {
-	ConfigChunkDB db;
 
 	instance = new Core();
 	
@@ -111,9 +110,8 @@ public class Core {
 	ChunkFactory.setDefaultChunkDB (default_chunkdb);
 	ChunkFactory.setChunkDescDB (descdb);
 	gui_chunkdb = new ConfigChunkDB ();
-	db = new ConfigChunkDB();
-	db.setName ("Active Configuration");
-	active_chunkdb = new ConfigChunkDB ();
+	active_chunkdb = new ConfigChunkDB();
+	active_chunkdb.setName ("Active Configuration");
 	net = new NetControl();
 
 
