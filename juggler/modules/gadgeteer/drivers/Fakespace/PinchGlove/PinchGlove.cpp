@@ -205,6 +205,9 @@ bool PinchGlove::sample()
       // Add a new digital sample to the buffer.
       addDigitalSample(digital_sample);
 
+      std::vector<GloveData> gloveData=getGloveDataFromDigitalData(digital_sample);
+      addGloveSample(gloveData);
+      
       // Debug print.
       //for(unsigned int i = 0 ; i < data.size() ; ++i)
       //{
@@ -219,6 +222,7 @@ bool PinchGlove::sample()
 void PinchGlove::updateData()
 {
    swapDigitalBuffers();
+   swapGloveBuffers();
    return;
 }
 
