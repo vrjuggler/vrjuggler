@@ -197,7 +197,7 @@ class PyOsgNav(vrj.OsgApp):
          self.mNavigator.setVelocity(gmtl.Vec3f(0.0, 0.0, 0.0))
 
       if self.mButton1.getData() == gadget.Digital.State.TOGGLE_ON:
-         print "Current position:", mNavigator.getCurPos()
+         print "Current position:", self.mNavigator.getCurPos()
 
       # If we are pressing button 2, then rotate in the direction that the
       # wand is pointing.
