@@ -46,6 +46,7 @@
 #include <sched.h>
 #include <unistd.h>
 
+#include <vpr/vprTypes.h>
 #include <vpr/Thread/ThreadFunctor.h>
 #include <vpr/Thread/BaseThread.h>
 
@@ -216,21 +217,21 @@ public:
    // -----------------------------------------------------------------------
    // -----------------------------------------------------------------------
    inline static int
-   usleep (uint32_t micro) {
+   usleep (vpr::Uint32 micro) {
        return ::usleep(micro);
    }
 
    // -----------------------------------------------------------------------
    // -----------------------------------------------------------------------
    inline static int
-   msleep (uint32_t milli) {
+   msleep (vpr::Uint32 milli) {
        return ::usleep(milli * 1000);
    }
 
    // -----------------------------------------------------------------------
    // -----------------------------------------------------------------------
    inline static int
-   sleep (uint32_t seconds) {
+   sleep (vpr::Uint32 seconds) {
        return ::sleep(seconds);
    }
 
