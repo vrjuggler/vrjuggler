@@ -34,6 +34,7 @@
 #define _INTERACT_APP_H_
 
 #include <stdlib.h>
+#include <gmtl/Point.h>
 #include <gmtl/Sphere.h>
 #include <gmtl/AABox.h>
 
@@ -74,6 +75,8 @@ public:
 
    virtual void draw();
 
+   virtual void reset();
+
 private:
    void initShapes();
 
@@ -89,13 +92,18 @@ private:
 
    gadget::PositionInterface mHead;
    gadget::PositionInterface mWand;
-   gadget::DigitalInterface  mButton0;
+   gadget::DigitalInterface  mGrabButton;
+   gadget::DigitalInterface  mResetButton;
 
+   gmtl::Point3f mSphereCenter;
+   float         mSphereRadius;
    gmtl::Spheref mSphere;
    GLUquadric*   mSphereQuad;
    bool          mSphereIsect;
    bool          mSphereSelected;
 
+   gmtl::Point3f mCubeMin;
+   gmtl::Point3f mCubeMax;
    gmtl::AABoxf  mCube;
    bool          mCubeIsect;
    bool          mCubeSelected;
