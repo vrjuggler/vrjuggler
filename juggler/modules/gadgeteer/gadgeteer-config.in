@@ -35,9 +35,28 @@
 %{
 %}
 
-subsystem_cxxflags="@subsystem_cxxflags@"
-subsystem_libs="@subsystem_libs@"
-gad_lib="@gad_lib@"
+gad_libs="@gad_libs@"
+
+gadget_default_abi="@ABI@"
+gadget_default_isa="@ISA@"
+gadget_n32_flags="@gadget_n32_flags@"
+gadget_64_flags="@gadget_64_flags@"
+LIBBITSUF='@LIBBITSUF@'
+
+if [ "x$gadget_default_abi" = "xN32" ]; then
+    gadget_abi_flags="$gadget_n32_flags"
+elif [ "x$gadget_default_abi" = "x64" ]; then
+    gadget_abi_flags="$gadget_64_flags"
+else
+    gadget_abi_flags=''
+fi
+
+if [ "x$gadget_default_isa" = "xmips3" -o "x$gadget_default_isa" = "xmips4" ]
+then
+    gadget_isa_flags="-$gadget_default_isa"
+else
+    gadget_isa_flags=''
+fi
 
 prefix=@prefix@
 exec_prefix=@exec_prefix@
@@ -48,16 +67,16 @@ usage()
     cat <<EOF
 Usage: gadgeteer-config [OPTIONS] [LIBRARIES]
 Options:
-        [--basedir]           Use \$GADGET_BASE_DIR when printing paths
-        [--prefix[=DIR]]      Print the installation prefix or set an
-                              alternate prefix to use when printing paths
-        [--exec-prefix[=DIR]] Print the executable prefix or set an alternate
-                              executable prefix to use when printing paths
-        [--libs]              Print the basic Gadgeteer libraries
-        [--extra-libs]        Print the extra linker options needed for
-                              making an executable
-        [--cxxflags]          Print the flags for the C++ compiler
-        [--subsystem]         Print the OS abstraction layer being used
+        [--basedir]             Use \$GADGET_BASE_DIR when printing paths
+        [--prefix[=DIR]]        Print the installation prefix or set an
+                                alternate prefix to use when printing paths
+        [--exec-prefix[=DIR]]   Print the executable prefix or set an alternate
+                                executable prefix to use when printing paths
+        [--version]             Print the installed Gadgeteer's version number
+        [--cxxflags [N32|64]]   Print the flags for the C++ compiler
+        [--libs [N32|64]]       Print the basic Gadgeteer libraries
+        [--extra-libs [N32|64]] Print the extra linker options needed for
+                                making an executable
 
 Libraries (prints the linker options for one or more of these libraries):
         gadget
@@ -103,15 +122,70 @@ while test $# -gt 0; do
             ;;
         --cxxflags)
             echo_cxxflags=yes
-            ;;
-        --subsystem)
-            echo @SUBSYSTEM@
+            case $2 in
+                --*)
+                    # This is another option flag, so leave it alone.
+                    ;;
+                N32)
+                    gadget_extra_cxxflags="$gadget_extra_cxxflags $gadget_n32_flags $gadget_isa_flags"
+                    shift
+                    ;;
+                64)
+                    gadget_extra_cxxflags="$gadget_extra_cxxflags $gadget_64_flags $gadget_isa_flags"
+                    shift
+                    ;;
+                *)
+                    gadget_extra_cxxflags="$gadget_extra_cxxflags $gadget_abi_flags $gadget_isa_flags"
+                    if [ "x$2" != "x" ] ; then
+                        shift
+                    fi
+                    ;;
+            esac
             ;;
         --libs)
             echo_libs=yes
+            case $2 in
+                --*)
+                    # This is another option flag, so leave it alone.
+                    ;;
+                N32)
+                    ldflags="$gadget_n32_flags $gadget_isa_flags"
+                    LIBBITSUF='32'
+                    shift
+                    ;;
+                64)
+                    ldflags="$gadget_64_flags $gadget_isa_flags"
+                    LIBBITSUF='64'
+                    shift
+                    ;;
+                *)
+                    ldflags="$gadget_abi_flags $gadget_isa_flags"
+                    if [ "x$2" != "x" ] ; then
+                        shift
+                    fi
+                    ;;
+            esac
             ;;
         --extra-libs)
             echo_extra_libs=yes
+            case $2 in
+                --*)
+                    # This is another option flag, so leave it alone.
+                    ;;
+                N32)
+                    LIBBITSUF='32'
+                    shift
+                    ;;
+                64)
+                    LIBBITSUF='64'
+                    shift
+                    ;;
+                *)
+                    if [ "x$2" != "x" ] ; then
+                        shift
+                    fi
+                    ;;
+            esac
             ;;
         --static)
             echo_static=yes
@@ -148,9 +222,9 @@ fi
 
 if test "$echo_cxxflags" = "yes"; then
     if test "$use_base_dir" = "yes"; then
-        echo @CXXFLAGS@ -I$GADGET_BASE_DIR/include $subsystem_cxxflags
+        echo @CXXFLAGS@ $gadget_extra_cxxflags -I$GADGET_BASE_DIR/include
     else
-        echo @CXXFLAGS@ -I@includedir@ $subsystem_cxxflags
+        echo @CXXFLAGS@ $gadget_extra_cxxflags -I@includedir@
     fi
 fi
 
@@ -161,9 +235,9 @@ fi
 
 if test "$echo_libs" = "yes"; then
     if test "$use_base_dir" = "yes"; then
-        ldflags="-L$GADGET_BASE_DIR/lib@LIBBITSUF@"
+        ldflags="$ldflags -L$GADGET_BASE_DIR/lib$LIBBITSUF"
     else
-        ldflags="@gad_ldflags@"
+        ldflags="$ldflags @gad_ldflags@"
     fi
 
     if test "x$lib_gad_all" = "xyes" ; then
