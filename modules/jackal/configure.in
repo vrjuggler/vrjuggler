@@ -459,7 +459,7 @@ if test "x$JDOM_JAR" != "xnone" ; then
 fi
 
 changequote(<<, >>)
-jccl_java_api_jars=`echo "$jars" | sed -e 's/\(jccl_[A-Za-z]*\.jar\)/${prefix}\/bin\/\1/g' -e "s/ /$JCPS/g"`
+jccl_java_api_jars=`echo "$jars" | sed -e 's/\(jccl_[A-Za-z]*\.jar\)/${prefix}\/bin\/beans\/\1/g' -e "s/ /$JCPS/g"`
 changequote([, ])
 
 VJ_VERSION_GROK(VERSION)
