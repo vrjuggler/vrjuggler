@@ -1,9 +1,11 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Sep-13-2002 nonchocoboy Build java sources using ant.
+                        NEW VERSION: 1.1.127
 Aug-26-2002 nonchocoboy VRJConfig will now process vjInclude chunks when a file
                         is opened and open the files they point to in the
                         current context.
-                        NEW VERSION 1.1.126
+                        NEW VERSION: 1.1.126
 Aug-19-2002 nonchocoboy Put vrj-chunks.desc in new contexts by default.
 Aug-16-2002 nonchocoboy Added support in VRJConfig for editing multiple
                         configurations (of multiple files each) simultaneously.
