@@ -7,6 +7,7 @@
 #include <Config/vjParseUtil.h>
 #include <Kernel/vjDebug.h>
 #include <Config/vjChunkFactory.h>
+#include <Config/vjChunkDesc.h>
 
 #include <stdlib.h>
 #include <ctype.h>
@@ -28,10 +29,9 @@ struct VJCFGToken {
 };
 
 
-vjConfigChunk::vjConfigChunk (vjChunkDesc *d, vjChunkDescDB *_descdb) :props(), type_as_varvalue(T_STRING) {
+vjConfigChunk::vjConfigChunk (vjChunkDesc *d) :props(), type_as_varvalue(T_STRING) {
 
     desc = d;
-    descdb = _descdb;
     type_as_varvalue = desc->getToken();
     for (int i = 0; i < desc->plist.size(); i++)
 	props.push_back (new vjProperty(desc->plist[i]));
@@ -56,7 +56,7 @@ vjConfigChunk& vjConfigChunk::operator = (const vjConfigChunk& c) {
     int i;
     desc = c.desc;
     type_as_varvalue = c.type_as_varvalue;
-    descdb = c.descdb;
+
     for (i = 0; i < props.size(); i++)
         delete (props[i]);
     props.erase (props.begin(), props.end());
@@ -74,8 +74,6 @@ bool vjConfigChunk::operator== (const vjConfigChunk& c) {
     // 2. the properties will be in the _same_order_.  This is
     //    reasonable if 1. is true.
 
-    if (descdb != c.descdb)
-	return false;
     if (desc != c.desc)
 	return false;
     if (props.size() != c.props.size()) // probably redundant
