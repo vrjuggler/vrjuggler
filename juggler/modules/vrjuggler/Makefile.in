@@ -196,12 +196,12 @@ ABI_LIST	= @ABI_LIST@
 
 # Build all four versions of the libraries.
 all:
-	${MAKE} beforebuild
-	${MAKE} _opt
-	${MAKE} _dso
-	${MAKE} _dbg
-	${MAKE} _ddso
-	${MAKE} _check_gui
+	@${MAKE} beforebuild
+	@${MAKE} _opt
+	@${MAKE} _dso
+	@${MAKE} _dbg
+	@${MAKE} _ddso
+	@${MAKE} _check_gui
 	@echo "------------------------------------------------"
 	@echo "Creating symlinks in ${_LIBDIR}"
 	@echo "------------------------------------------------"
@@ -221,7 +221,7 @@ ifeq (${PF_API}, Y)
 	cd ${_LIBDIR} &&						\
           rm -f ${PF_LIB_DYNAMIC} && ln -s ${_DEFAULT_DIR}/${PF_LIB_DYNAMIC} ./
 endif
-	${MAKE} afterbuild
+	@${MAKE} afterbuild
 
 # Build all ABIs in ${ABI_LIST}.
 all-abi:
@@ -236,11 +236,11 @@ all-abi:
 
 # Things to do before the object files and library are built.
 beforebuild:
-	${MAKE} depend
+	@${MAKE} depend
 
 # Things to do after the object files and library are built.
 afterbuild:
-	${MAKE} links
+	@${MAKE} links
 	@echo "------------------------------------------------"
 	@echo "Library build complete"
 	@echo "------------------------------------------------"
@@ -249,21 +249,21 @@ afterbuild:
 # Make the debugging version of the libraries.
 # ---------------------------------------------
 dbg:
-	${MAKE} beforebuild
-	${MAKE} _dbg
-	${MAKE} _check_gui
-	${MAKE} afterbuild
+	@${MAKE} beforebuild
+	@${MAKE} _dbg
+	@${MAKE} _check_gui
+	@${MAKE} afterbuild
 
 _dbg:
-	${MAKE} _build_dbg
-	${MAKE} BASE_OBJDIR="${_DBG_BUILDDIR}" LIBDIR="${_DBG_LIBDIR}"	\
+	@${MAKE} _build_dbg
+	@${MAKE} BASE_OBJDIR="${_DBG_BUILDDIR}" LIBDIR="${_DBG_LIBDIR}"	\
           ${VJ_LIB_STATIC}
 ifeq (${GL_API}, Y)
-	${MAKE} BASE_OBJDIR="${_DBG_BUILDDIR}/GL"			\
+	@${MAKE} BASE_OBJDIR="${_DBG_BUILDDIR}/GL"			\
           LIBDIR="${_DBG_LIBDIR}" ${GL_LIB_STATIC}
 endif
 ifeq (${PF_API}, Y)
-	${MAKE} BASE_OBJDIR="${_DBG_BUILDDIR}/Pf"			\
+	@${MAKE} BASE_OBJDIR="${_DBG_BUILDDIR}/Pf"			\
           LIBDIR="${_DBG_LIBDIR}" ${PF_LIB_STATIC}
 endif
 
@@ -271,21 +271,21 @@ endif
 # Make the debugging version of the libraries that uses DSOs.
 # ------------------------------------------------------------
 ddso:
-	${MAKE} beforebuild
-	${MAKE} _ddso
-	${MAKE} _check_gui
-	${MAKE} afterbuild
+	@${MAKE} beforebuild
+	@${MAKE} _ddso
+	@${MAKE} _check_gui
+	@${MAKE} afterbuild
 
 _ddso:
-	${MAKE} _build_dbg
-	${MAKE} BASE_OBJDIR="${_DBG_BUILDDIR}" LIBDIR="${_DBG_LIBDIR}"	\
+	@${MAKE} _build_dbg
+	@${MAKE} BASE_OBJDIR="${_DBG_BUILDDIR}" LIBDIR="${_DBG_LIBDIR}"	\
           ${VJ_LIB_DYNAMIC}
 ifeq (${GL_API}, Y)
-	${MAKE} BASE_OBJDIR="${_DBG_BUILDDIR}/GL"			\
+	@${MAKE} BASE_OBJDIR="${_DBG_BUILDDIR}/GL"			\
           LIBDIR="${_DBG_LIBDIR}" ${GL_LIB_DYNAMIC}
 endif
 ifeq (${PF_API}, Y)
-	${MAKE} BASE_OBJDIR="${_DBG_BUILDDIR}/Pf"			\
+	@${MAKE} BASE_OBJDIR="${_DBG_BUILDDIR}/Pf"			\
           LIBDIR="${_DBG_LIBDIR}" ${PF_LIB_DYNAMIC}
 endif
 
@@ -293,21 +293,21 @@ endif
 # Make the optimized version of the libraries.
 # ---------------------------------------------
 opt:
-	${MAKE} beforebuild
-	${MAKE} _opt
-	${MAKE} _check_gui
-	${MAKE} afterbuild
+	@${MAKE} beforebuild
+	@${MAKE} _opt
+	@${MAKE} _check_gui
+	@${MAKE} afterbuild
 
 _opt:
-	${MAKE} _build_opt
-	${MAKE} BASE_OBJDIR="${_OPT_BUILDDIR}" LIBDIR="${_OPT_LIBDIR}"	\
+	@${MAKE} _build_opt
+	@${MAKE} BASE_OBJDIR="${_OPT_BUILDDIR}" LIBDIR="${_OPT_LIBDIR}"	\
           ${VJ_LIB_STATIC}
 ifeq (${GL_API}, Y)
-	${MAKE} BASE_OBJDIR="${_OPT_BUILDDIR}/GL"			\
+	@${MAKE} BASE_OBJDIR="${_OPT_BUILDDIR}/GL"			\
           LIBDIR="${_OPT_LIBDIR}" ${GL_LIB_STATIC}
 endif
 ifeq (${PF_API}, Y)
-	${MAKE} BASE_OBJDIR="${_OPT_BUILDDIR}/Pf"			\
+	@${MAKE} BASE_OBJDIR="${_OPT_BUILDDIR}/Pf"			\
           LIBDIR="${_OPT_LIBDIR}" ${PF_LIB_STATIC}
 endif
 
@@ -315,21 +315,21 @@ endif
 # Make the optimized version of the libraries that uses DSOs.
 # ------------------------------------------------------------
 dso:
-	${MAKE} beforebuild
-	${MAKE} _dso
-	${MAKE} _check_gui
-	${MAKE} afterbuild
+	@${MAKE} beforebuild
+	@${MAKE} _dso
+	@${MAKE} _check_gui
+	@${MAKE} afterbuild
 
 _dso:
-	${MAKE} _build_opt
-	${MAKE} BASE_OBJDIR="${_OPT_BUILDDIR}" LIBDIR="${_OPT_LIBDIR}"	\
+	@${MAKE} _build_opt
+	@${MAKE} BASE_OBJDIR="${_OPT_BUILDDIR}" LIBDIR="${_OPT_LIBDIR}"	\
           ${VJ_LIB_DYNAMIC}
 ifeq (${GL_API}, Y)
-	${MAKE} BASE_OBJDIR="${_OPT_BUILDDIR}/GL"			\
+	@${MAKE} BASE_OBJDIR="${_OPT_BUILDDIR}/GL"			\
           LIBDIR="${_OPT_LIBDIR}" ${GL_LIB_DYNAMIC}
 endif
 ifeq (${PF_API}, Y)
-	${MAKE} BASE_OBJDIR="${_OPT_BUILDDIR}/Pf"			\
+	@${MAKE} BASE_OBJDIR="${_OPT_BUILDDIR}/Pf"			\
           LIBDIR="${_OPT_LIBDIR}" ${PF_LIB_DYNAMIC}
 endif
 
@@ -344,7 +344,7 @@ _build_dbg:
 	@echo "------------------------------------------------"
 	@echo "Building object files"
 	@echo "------------------------------------------------"
-	${MAKE} RECTARGET="dbg" OPTIMIZER="-g"				\
+	@${MAKE} RECTARGET="dbg" OPTIMIZER="-g"				\
           BASE_OBJDIR="${_DBG_BUILDDIR}" recursive
 
 # ------------------------------------------------------------
@@ -358,7 +358,7 @@ _build_opt:
 	@echo "------------------------------------------------"
 	@echo "Building object files"
 	@echo "------------------------------------------------"
-	${MAKE} RECTARGET="opt" OPTIMIZER="${OPT_FLAGS}"		\
+	@${MAKE} RECTARGET="opt" OPTIMIZER="${OPT_FLAGS}"		\
           BASE_OBJDIR="${_OPT_BUILDDIR}" recursive
 
 # --------------------------------------------------------------------
@@ -368,7 +368,7 @@ obj:
 	@echo "------------------------------------------------"
 	@echo "Making library object files"
 	@echo "------------------------------------------------"
-	${MAKE} RECTARGET="$@" recursive
+	@${MAKE} RECTARGET="$@" recursive
 	@echo "------------------------------------------------"
 	@echo "Object files built"
 	@echo "------------------------------------------------"
@@ -383,14 +383,14 @@ newdepend:
 	@echo "Regenerating dependencies"
 	@echo "------------------------------------------------"
 	-@rm -f .depend_done
-	${MAKE} RECTARGET="$@" recursive
+	@${MAKE} RECTARGET="$@" recursive
 	@touch .depend_done
 
 .depend_done:
 	@echo "------------------------------------------------"
 	@echo "Generating dependencies"
 	@echo "------------------------------------------------"
-	${MAKE} RECTARGET="depend" recursive
+	@${MAKE} RECTARGET="depend" recursive
 	@touch .depend_done
 
 # -----------------------------------------------
@@ -403,7 +403,7 @@ ${VJ_LIB_STATIC} ${PF_LIB_STATIC} ${GL_LIB_STATIC}:
 	@echo "Creating $@"
 	@echo "------------------------------------------------"
 	${scriptdir}/mkinstalldirs ${LIBDIR}
-	${MAKE} LIBDIR="${LIBDIR}" LIBNAME="$@" OBJS="${OBJDIR}/*.o" static-lib
+	@${MAKE} LIBDIR="${LIBDIR}" LIBNAME="$@" OBJS="${OBJDIR}/*.o" static-lib
 	cd ${_LIBDIR_BASE} && ln -sf ${LIBDIR}/$@ ./
 	@echo "------------------------------------------------"
 	@echo "$@ done"
@@ -419,7 +419,7 @@ ${VJ_LIB_DYNAMIC} ${PF_LIB_DYNAMIC} ${GL_LIB_DYNAMIC}:
 	@echo "Creating $@"
 	@echo "------------------------------------------------"
 	${scriptdir}/mkinstalldirs ${LIBDIR}
-	${MAKE} LIBDIR="${LIBDIR}" LIBNAME="$@" OBJS="${OBJDIR}/*.o" shared-lib
+	@${MAKE} LIBDIR="${LIBDIR}" LIBNAME="$@" OBJS="${OBJDIR}/*.o" shared-lib
 	cd ${_LIBDIR_BASE} && ln -sf ${LIBDIR}/$@ ./
 	@echo "------------------------------------------------"
 	@echo "$@ done"
@@ -522,10 +522,10 @@ afterinstall:
 # files.
 # ------------------------------------------------------------------------
 install-all:
-	${MAKE} beforeinstall
+	@${MAKE} beforeinstall
 	@${MAKE} _install_libs
 	@${MAKE} _install_post_libs
-	${MAKE} afterinstall
+	@${MAKE} afterinstall
 
 # -----------------------------------------------------------------------------
 # Do a full installation of all versions of the libraries built in each of the
@@ -566,16 +566,16 @@ _install_post_libs:
 # Do a full installation of the static debugging version of the libraries.
 # -------------------------------------------------------------------------
 install:
-	${MAKE} beforeinstall
-	${MAKE} install-dbg
+	@${MAKE} beforeinstall
+	@${MAKE} install-dbg
 	@${MAKE} _install_post_libs
-	${MAKE} afterinstall
+	@${MAKE} afterinstall
 
 # ------------------------------------------------------------
 # Install only the static debugging version of the libraries.
 # ------------------------------------------------------------
 install-dbg:
-	${MAKE} dbg
+	@${MAKE} dbg
 	@echo "------------------------------------------------"
 	@echo "Installing static debugging libraries"
 	@echo "------------------------------------------------"
@@ -597,7 +597,7 @@ endif
 # Install only the dynamic debugging version of the libraries.
 # -------------------------------------------------------------
 install-ddso:
-	${MAKE} ddso
+	@${MAKE} ddso
 	@echo "------------------------------------------------"
 	@echo "Installing dynamic debugging libraries"
 	@echo "------------------------------------------------"
@@ -619,7 +619,7 @@ endif
 # Install only the static optimized version of the libraries.
 # ------------------------------------------------------------
 install-opt:
-	${MAKE} opt
+	@${MAKE} opt
 	@echo "------------------------------------------------"
 	@echo "Installing static optimized libraries"
 	@echo "------------------------------------------------"
@@ -641,7 +641,7 @@ endif
 # Install only the dynamic optimized version of the libraries.
 # -------------------------------------------------------------
 install-dso:
-	${MAKE} dso
+	@${MAKE} dso
 	@echo "------------------------------------------------"
 	@echo "Installing dynamic optimizied libraries"
 	@echo "------------------------------------------------"
@@ -709,7 +709,7 @@ install-headers:
 	@echo "Installing header files"
 	@echo "------------------------------------------------"
 	${MTREE_CMD} -Ude -f ${mtreedir}/VJ.include.dist -p ${prefix}
-	${MAKE} RECTARGET="install" recursive
+	@${MAKE} RECTARGET="install" recursive
 	@cat ${VJROOT_ABS}/vjConfig.h |					\
             sed -e 's/^#ifdef HAVE_CONFIG_H//'				\
                 -e 's/^#endif..*HAVE_CONFIG_H.*$$//' >./vjConfig.tmp
@@ -752,7 +752,7 @@ install-data:
 
 # Install the Java-based config editor if possible.
 install-gui:
-	${MAKE} _check_gui
+	@${MAKE} _check_gui
 ifeq (${BUILD_GUI}, Y)
 	@echo "------------------------------------------------"
 	@echo "Installing vjcontrol"
@@ -775,7 +775,7 @@ _clean:
 	@echo "------------------------------------------------"
 	@echo "Cleaning up the build tree"
 	@echo "------------------------------------------------"
-	${MAKE} RECTARGET="clean" recursive
+	@${MAKE} RECTARGET="clean" recursive
 	cd GUI && ${MAKE} clean
 	@if test -d ${_DBG_BUILDDIR}; then				\
             echo "------------------------------------------------" ;	\
@@ -796,8 +796,8 @@ _clean:
 	@echo "------------------------------------------------"
 
 clobber:
-	${MAKE} _clean
-	${MAKE} clean-links
+	@${MAKE} _clean
+	@${MAKE} clean-links
 	@echo "------------------------------------------------"
 	@echo "Clobbering build directories"
 	@echo "------------------------------------------------"
