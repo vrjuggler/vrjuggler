@@ -98,6 +98,7 @@ vpr::ReturnStatus NetworkLine::getArrivedMessageFromQueue (const vpr::Interval& 
       << msg->whenArrivesFully().getBaseVal() << ", event time is "
       << event_time.getBaseVal() << "\n" << vprDEBUG_FLUSH;
 
+   queue.pop_front();
    status.setCode(vpr::ReturnStatus::Succeed);
 
    return status;
