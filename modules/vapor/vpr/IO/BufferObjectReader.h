@@ -78,6 +78,16 @@ public:
    virtual void resetReading()
    { setCurPos(0); }
 
+   virtual void pushState()
+   { mHeadPosStateStack.push_back(mCurHeadPos); }
+   virtual void popState()
+   {
+      unsigned new_head_pos = mHeadPosStateStack.back();
+      mHeadPosStateStack.pop_back();
+      setCurPos(new_head_pos);
+   }
+
+
    /** @name Tag and attribute handling */
    //@{
    /** Starts a new section/element of name tagName.
@@ -146,6 +156,7 @@ public:
 public:
    std::vector<vpr::Uint8>*   mData;
    unsigned                   mCurHeadPos;
+   std::vector<unsigned>      mHeadPosStateStack;  /**< Store pushed and popped state information */
 };
 
 /* Read out the single byte.

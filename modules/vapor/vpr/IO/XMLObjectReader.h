@@ -88,6 +88,10 @@ public:
 
    virtual void resetReading();
 
+   virtual void pushState();
+   virtual void popState();
+
+
    virtual vpr::Uint8 readUint8();
    virtual vpr::Uint16 readUint16();
    virtual vpr::Uint32 readUint32();
@@ -157,6 +161,13 @@ protected:
    std::vector<NodeState>  mCurNodeStack;    /**< Stack of current nodes we are examining recursively */
    std::stringstream       mAttribSource;    /**< Source of attribute data */
    CurSource               mCurSource;       /**< The current source of reading data */
+
+   // Stack to store state information
+   struct ReadState
+   {
+      std::vector<NodeState> mNodeStack;      
+   };
+   std::vector<ReadState>  mReadStateStack;  /**< Stack of previous read states */
 };
 
 
