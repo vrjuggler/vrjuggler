@@ -71,7 +71,7 @@ public:
 
    //: Initialize the object
    //! ARGS: proxyName - String name of the proxy to connect to
-   void init(std::string proxyName);
+   void init(const std::string proxyName);
 
    //: Refreshes the interface based on the current configuration
    //! POST: (mProxyIndex == -1) ==> Proxy not initi.ized yet
