@@ -49,7 +49,6 @@
 
 #include <vrj/Display/SurfaceViewport.h>
 #include <vrj/Display/SimViewport.h>
-#include <jccl/PerfMonitor/PerformanceMonitor.h>
 #include <vrj/Draw/OGL/GlSimInterface.h>
 
 namespace vrj
@@ -160,8 +159,6 @@ void GlPipe::controlLoop(void* nullParam)
 
    while (!controlExit)
    {
-         jcclTIMESTAMP (jcclPERF_ALL, "GlPipe/startframe");
-
       checkForWindowsToClose();  // Checks for closing windows
       checkForNewWindows();      // Checks for new windows to open
 
@@ -179,10 +176,8 @@ void GlPipe::controlLoop(void* nullParam)
 
          GlApp* the_app = glManager->getApp();
 
-            jcclTIMESTAMP (jcclPERF_ALL, "GlPipe/window events and render sema");
          // --- pipe PRE-draw function ---- //
          the_app->pipePreDraw();      // Can't get a context since I may not be guaranteed a window
-            jcclTIMESTAMP (jcclPERF_ALL, "GlPipe/app/pipePreDraw()");
 
          // Render the windows
          for (unsigned int winId=0;winId < mOpenWins.size();winId++) {
@@ -197,12 +192,12 @@ void GlPipe::controlLoop(void* nullParam)
 
          // Swap all the windows
          for(unsigned int winId=0;winId < mOpenWins.size();winId++)
+         {
             swapWindowBuffers(mOpenWins[winId]);
+         }
 
          swapCompleteSema.release();
       }
-
-      jcclTIMESTAMP (jcclPERF_ALL, "GlPipe/finish swap");
    }
 
    mThreadRunning = false;     // We are not running
@@ -322,10 +317,9 @@ void GlPipe::renderWindow(GlWindow* win)
 
    // VIEWPORT cleaning
    if(win->hasDirtyViewport())
+   {
       win->updateViewport();
-
-   jcclTIMESTAMP (jcclPERF_ALL, "GlPipe/renderWindow/setup");
-
+   }
 
    // CONTEXT INIT(): Check if we need to call contextInit()
    // - Must call when context is new OR application is new
@@ -340,7 +334,6 @@ void GlPipe::renderWindow(GlWindow* win)
       the_app->contextInit();              // Call context init function
       win->setDirtyContext(false);        // All clean now
    }
-   jcclTIMESTAMP (jcclPERF_ALL, "GlPipe/renderWindow/context setup");
 
    // BUFFER PRE DRAW: Check if we need to clear stereo buffers
    if(win->isStereo())
@@ -351,14 +344,11 @@ void GlPipe::renderWindow(GlWindow* win)
       the_app->bufferPreDraw();
    }
    else
+   {
       the_app->bufferPreDraw();
-
-   jcclTIMESTAMP (jcclPERF_ALL, "GlPipe/renderWindow/app/bufferPreDraw");
+   }
 
    the_app->contextPreDraw();                 // Do any context pre-drawing
-
-   jcclTIMESTAMP (jcclPERF_ALL, "GlPipe/renderWindow/app/contextPreDraw");
-
 
    // --- FOR EACH VIEWPORT -- //
    Viewport* viewport = NULL;
@@ -370,8 +360,6 @@ void GlPipe::renderWindow(GlWindow* win)
       // Should viewport be rendered???
       if(viewport->isActive())
       {
-         viewport->recordLatency (0, 1);
-
          view = viewport->getView();
 
          // Set the glViewport to draw within
@@ -382,8 +370,6 @@ void GlPipe::renderWindow(GlWindow* win)
          glManager->currentUserData()->setUser(viewport->getUser());       // Set user data
          glManager->currentUserData()->setViewport(viewport);              // Set the viewport
          glManager->currentUserData()->setGlWindow(win);                   // Set the gl window
-
-         jcclTIMESTAMP (jcclPERF_ALL, "GlPipe/renderWindow/set viewport and user");
 
          // ---- SURFACE & Simulator --- //
          // if (viewport->isSurface())
@@ -404,19 +390,12 @@ void GlPipe::renderWindow(GlWindow* win)
                win->setProjection(viewport->getLeftProj());
                glManager->currentUserData()->setProjection(viewport->getLeftProj());
 
-               jcclTIMESTAMP (jcclPERF_ALL, "GlPipe/renderWindow/set left buffer and projection");
-
                the_app->draw();
-                              
-               jcclTIMESTAMP (jcclPERF_ALL, "GlPipe/renderWindow/app/left draw()");
 
                if(NULL != draw_sim_i)
                {
                   draw_sim_i->draw(scale_factor);
                }               
-
-               jcclTIMESTAMP (jcclPERF_ALL, "GlPipe/renderWindow/left draw objects and sim");
-
             }
             if ((Viewport::STEREO == view) || (Viewport::RIGHT_EYE == view))    // RIGHT EYE
             {
@@ -424,18 +403,12 @@ void GlPipe::renderWindow(GlWindow* win)
                win->setProjection(viewport->getRightProj());
                glManager->currentUserData()->setProjection(viewport->getRightProj());
 
-               jcclTIMESTAMP (jcclPERF_ALL, "GlPipe/renderWindow/set right buffer and projection");
-
                the_app->draw();
                               
-               jcclTIMESTAMP (jcclPERF_ALL, "GlPipe/renderWindow/app/right draw()");
-
                if(NULL != draw_sim_i)
                {
                   draw_sim_i->draw(scale_factor);
                }
-
-               jcclTIMESTAMP (jcclPERF_ALL, "GlPipe/renderWindow/right draw objects and sim");
             }
          }
       }  // should viewport be rendered
@@ -443,8 +416,6 @@ void GlPipe::renderWindow(GlWindow* win)
 
    // -- Post context stuff --- //
    the_app->contextPostDraw();
-
-   jcclTIMESTAMP (jcclPERF_ALL, "GlPipe/renderWindow/app/contextPostDraw()");
 }
 
 /**
@@ -455,9 +426,6 @@ void GlPipe::swapWindowBuffers(GlWindow* win)
 {
    win->makeCurrent();           // Set correct context
    win->swapBuffers();           // Implicitly calls a glFlush
-//     vjDisplayWindow* the_display = win->getDisplay();   // Get the display for easy access
-//     the_display->recordLatency (2, 3);
 }
 
-};
-
+}
