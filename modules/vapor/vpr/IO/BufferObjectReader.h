@@ -71,6 +71,27 @@ public:
    unsigned getCurPos()
    { return mCurHeadPos; }
 
+   /** @name Tag and attribute handling */
+   //@{
+   /** Starts a new section/element of name tagName.
+   */
+   virtual vpr::ReturnStatus beginTag(std::string tagName)
+   {;}
+   
+   /** Ends the most recently named tag. */
+   virtual vpr::ReturnStatus endTag()
+   {;}
+   
+   /** Starts an attribute of the name attributeName */
+   virtual vpr::ReturnStatus beginAttribute(std::string attributeName)
+   {;}
+
+   /** Ends the most recently named attribute */
+   virtual vpr::ReturnStatus endAttribute()
+   {;}
+   //@}
+
+
    virtual vpr::Uint8 readUint8();
    virtual vpr::Uint16 readUint16();
    virtual vpr::Uint32 readUint32();
