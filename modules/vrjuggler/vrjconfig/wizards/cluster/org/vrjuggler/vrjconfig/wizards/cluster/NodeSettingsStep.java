@@ -1,13 +1,3 @@
-/***************** <Tweek heading BEGIN do not edit this line> ****************
- * Tweek
- *
- * -----------------------------------------------------------------
- * File:          $RCSfile$
- * Date modified: $Date$
- * Version:       $Revision$
- * -----------------------------------------------------------------
- ***************** <Tweek heading END do not edit this line> *****************/
-
 /*************** <auto-copyright.pl BEGIN do not edit this line> **************
  *
  * VR Juggler is (C) Copyright 1998-2003 by Iowa State University
@@ -31,6 +21,12 @@
  * License along with this library; if not, write to the
  * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
  * Boston, MA 02111-1307, USA.
+ * 
+ * -----------------------------------------------------------------
+ * File:          $RCSfile$
+ * Date modified: $Date$
+ * Version:       $Revision$
+ * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 package org.vrjuggler.vrjconfig.wizard.cluster;

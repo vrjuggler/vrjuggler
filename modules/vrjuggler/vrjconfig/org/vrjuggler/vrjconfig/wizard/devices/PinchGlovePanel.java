@@ -1,13 +1,3 @@
-/***************** <Tweek heading BEGIN do not edit this line> ****************
- * Tweek
- *
- * -----------------------------------------------------------------
- * File:          $RCSfile$
- * Date modified: $Date$
- * Version:       $Revision$
- * -----------------------------------------------------------------
- ***************** <Tweek heading END do not edit this line> *****************/
-
 /*************** <auto-copyright.pl BEGIN do not edit this line> **************
  *
  * VR Juggler is (C) Copyright 1998-2003 by Iowa State University
@@ -32,6 +22,12 @@
  * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
  * Boston, MA 02111-1307, USA.
  *
+ * -----------------------------------------------------------------
+ * File:          $RCSfile$
+ * Date modified: $Date$
+ * Version:       $Revision$
+ * -----------------------------------------------------------------
+ *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 package org.vrjuggler.vrjconfig.wizard.devices;
 
@@ -45,217 +41,194 @@ import org.vrjuggler.vrjconfig.wizard.*;
 
 public class PinchGlovePanel extends JPanel
 {
-  BorderLayout baseLayout = new BorderLayout();
-  JPanel centerPnl = new JPanel();
-  BorderLayout centerLayout = new BorderLayout();
+   BorderLayout baseLayout = new BorderLayout();
+   JPanel centerPnl = new JPanel();
+   BorderLayout centerLayout = new BorderLayout();
 
 
-  ////////
-  private ConfigContext mContext = null;
-  private ConfigBroker mBroker = null;
-  private TitledBorder titledBorder1;
-  private JPanel jPanel3 = new JPanel();
-  private JPanel jPanel2 = new JPanel();
-  private JPanel directionsPanel = new JPanel();
-  private JLabel jLabel2 = new JLabel();
-  private BorderLayout borderLayout1 = new BorderLayout();
-  private JLabel lblTitle = new JLabel();
-  private JLabel lblDirections = new JLabel();
-  private JLabel fakespaceImage = new JLabel();
-  ///////
-  private String mFileSourceName = null;
-  private WizardComboBoxModel cbGlovePositionModel = null;
-  private WizardComboBoxModel cbDeviceHostModel = null;
-  private JPanel jPanel1 = new JPanel();
-  private JComboBox cbGlovePosition = new JComboBox();
-  private JTextField textPort = new JTextField();
-  private JTextField textBaud = new JTextField();
-  private JComboBox cbDeviceHost = new JComboBox();
-  private GridLayout gridLayout1 = new GridLayout();
-  private JLabel lblPort = new JLabel();
-  private JLabel lblGlovePosition = new JLabel();
-  private JLabel lblBaud = new JLabel();
-  private JLabel lblDeviceHost = new JLabel();
-  private JTextField textName = new JTextField();
-  private JLabel lblName = new JLabel();
+   ////////
+   private ConfigContext        mContext = null;
+   private ConfigBroker         mBroker = null;
+   private JPanel jPanel3 = new JPanel();
+   private JPanel jPanel2 = new JPanel();
+   private JPanel               mDirectionsPanel = new JPanel();
+   private JLabel               mGloveIconLbl = new JLabel();
+   private BorderLayout         mDirectionsBorderLayout = new BorderLayout();
+   private JLabel               mTitleLbl = new JLabel();
+   private JLabel               mDirectionsLbl = new JLabel();
+   private JLabel               mPinchGloveImageLbl = new JLabel();
+   ///////
+   private String               mFileSourceName = null;
+   private WizardComboBoxModel  mGlovePositionModel = null;
+   private WizardComboBoxModel  mDeviceHostModel = null;
+   private JPanel jPanel1 = new JPanel();
+   private JComboBox            mGlovePosition = new JComboBox();
+   private JTextField           mSerialPort = new JTextField();
+   private JTextField           mBaud = new JTextField();
+   private JComboBox            mDeviceHost = new JComboBox();
+   private GridLayout gridLayout1 = new GridLayout();
+   private JLabel               mPortLbl = new JLabel();
+   private JLabel               mGlovePositionLbl = new JLabel();
+   private JLabel               mBaudLbl = new JLabel();
+   private JLabel               mDeviceHostLbl = new JLabel();
+   private JTextField           mName = new JTextField();
+   private JLabel               mNameLbl = new JLabel();
+   private Box                  mInfoBox = Box.createVerticalBox();
+   private Component            mInfoGlue = Box.createVerticalGlue();
 
-  public PinchGlovePanel()
-  {
-     try
-     {
-       jbInit();
-     }
-     catch(Exception e)
-     {
-        e.printStackTrace();
-     }
-
-     this.loadLabelIcon(jLabel2, "org/vrjuggler/vrjconfig/wizard/devices/images/GloveIcon.png", "ICON");
-     this.loadLabelIcon(fakespaceImage, "org/vrjuggler/vrjconfig/wizard/devices/images/PinchGlove.jpg", "PinchGlove");
-  }
-
-  public void setFileSourceName(String file_name)
-  {
-    mFileSourceName = file_name;
-  }
-  public String getFileSourceName()
-  {
-    return(mFileSourceName);
-  }
-
-  private void loadLabelIcon(JLabel button, String path, String alt)
-  {
-    try{
-      button.setIcon(new ImageIcon(this.getClass().getClassLoader().getResource(path)));
-    }
-    catch(NullPointerException exp)
-    {
-      button.setIcon(null);
-      button.setText(alt);
-    }
-  }
-
-
-  private void jbInit() throws Exception
-  {
-    titledBorder1 = new TitledBorder("");
-    this.setLayout(baseLayout);
-    jLabel2.setIcon(new ImageIcon("/home/users/aronb/Source/ClusterWizard/images/GloveIcon.png"));
-
-    directionsPanel.setBorder(BorderFactory.createEtchedBorder());
-    directionsPanel.setLayout(borderLayout1);
-    fakespaceImage.setIcon(new ImageIcon("/home/users/aronb/Source/ClusterWizard/images/PinchGlove.jpg"));
-    lblTitle.setFont(new java.awt.Font("Serif", 1, 20));
-    lblTitle.setHorizontalAlignment(SwingConstants.LEFT);
-    lblTitle.setText("FakeSpace PinchGlove");
-    lblDirections.setText("Fill in the following fields for the your PinchGlove device.");
-    baseLayout.setHgap(5);
-    baseLayout.setVgap(5);
-    centerPnl.setLayout(centerLayout);
-    textBaud.setText("9600");
-    jPanel1.setLayout(gridLayout1);
-    gridLayout1.setColumns(2);
-    gridLayout1.setRows(5);
-    lblPort.setText("Port");
-    lblGlovePosition.setText("Glove Position");
-    lblBaud.setText("Baud");
-    lblDeviceHost.setText("Device Host");
-    textPort.setText("/dev/ttyd4");
-    lblName.setText("Name");
-    textName.setText("PinchGlove");
-    this.add(centerPnl, BorderLayout.CENTER);
-    centerPnl.add(fakespaceImage,  BorderLayout.WEST);
-    centerPnl.add(jPanel1,  BorderLayout.CENTER);
-    jPanel1.add(lblName, null);
-    jPanel1.add(textName, null);
-    jPanel1.add(lblPort, null);
-    jPanel1.add(textPort, null);
-    jPanel1.add(lblBaud, null);
-    jPanel1.add(textBaud, null);
-    jPanel1.add(lblGlovePosition, null);
-    jPanel1.add(cbGlovePosition, null);
-    jPanel1.add(lblDeviceHost, null);
-    jPanel1.add(cbDeviceHost, null);
-    directionsPanel.add(jPanel3, BorderLayout.EAST);
-    jPanel3.add(jLabel2, null);
-    directionsPanel.add(jPanel2, BorderLayout.CENTER);
-    jPanel2.add(lblTitle, null);
-    jPanel2.add(lblDirections, null);
-    this.add(directionsPanel, BorderLayout.NORTH);
-  }
-  public void init()
-  {
-    // Get handle to broker
-    mBroker = new ConfigBrokerProxy();
-
-    // Create a context
-    mContext = new ConfigContext();
-    mContext.add(mFileSourceName);
-
-    cbGlovePositionModel = new WizardComboBoxModel();
-    cbGlovePositionModel.setFileSource(mFileSourceName);
-    cbGlovePositionModel.addElementType("alias");
-    cbGlovePositionModel.addElementType("position_proxy");
-    cbGlovePosition.setModel(cbGlovePositionModel);
-
-    cbDeviceHostModel = new WizardComboBoxModel();
-    cbDeviceHostModel.setFileSource(mFileSourceName);
-    cbDeviceHostModel.addElementType("machine_specific");
-    cbDeviceHost.setModel(cbDeviceHostModel);
-    textBaud.setText("9600");
-    textPort.setText("/dev/ttyd4");
-    textName.setText("PinchGlove");
-  }
-
-  public boolean saveFile()
-  {
-    DataSource mFileSource = mBroker.get(mFileSourceName);
-    try{
-      mFileSource.commit();
-    }
-    catch(java.io.IOException exp)
-    {
-      exp.printStackTrace();
-    }
-    return(true);
-  }
-
-  public boolean createPinchGloveConfigChunk()
-  {
-    if (ConfigUtilities.getElementsWithName(mBroker.getElements(mContext),
-                                            textName.getText()).size() != 0)
-    {
-      int result = JOptionPane.showConfirmDialog(this,
-          "ConfigChunk by this name already exists. "
-         +"Do you want to replace it?.","ClusterWizard",JOptionPane.YES_NO_OPTION);
-      if(result == JOptionPane.NO_OPTION)
+   public PinchGlovePanel()
+   {
+      try
       {
-        return false;
+         jbInit();
+      }
+      catch(Exception e)
+      {
+         e.printStackTrace();
       }
 
-      //Remove all old chunks by this name
-      java.util.List old_list =
-          ConfigUtilities.getElementsWithName(mBroker.getElements(mContext), textName.getText());
+      this.loadLabelIcon(mGloveIconLbl, "org/vrjuggler/vrjconfig/wizard/devices/images/GloveIcon.png", "ICON");
+      this.loadLabelIcon(mPinchGloveImageLbl, "org/vrjuggler/vrjconfig/wizard/devices/images/PinchGlove.jpg", "PinchGlove");
+   }
 
-      for(int i=0;i<old_list.size();i++)
+   public void setFileSourceName(String file_name)
+   {
+      mFileSourceName = file_name;
+   }
+   
+   public String getFileSourceName()
+   {
+      return(mFileSourceName);
+   }
+
+   private void loadLabelIcon(JLabel button, String path, String alt)
+   {
+      try
       {
-        mBroker.remove(mContext,(ConfigElement)old_list.get(i));
+         button.setIcon(new ImageIcon(this.getClass().getClassLoader().getResource(path)));
       }
-    }
+      catch(NullPointerException exp)
+      {
+         button.setIcon(null);
+         button.setText(alt);
+      }
+   }
 
-    ConfigElementFactory factory = new ConfigElementFactory(mBroker.getRepository().getAllLatest());
-    ConfigElement glove = factory.create(textName.getText(), "pinch_glove");
-    glove.setProperty("port",0,textPort.getText());
-    glove.setProperty("baud",0,textBaud.getText());
-    glove.setProperty("device_host",0,(String)cbDeviceHost.getSelectedItem());
-    glove.setProperty("glove_position",0,(String)cbGlovePosition.getSelectedItem());
-    mBroker.add(mContext, glove);
-    return true;
-  }
+   private void jbInit() throws Exception
+   {
+      this.setLayout(baseLayout);
+      mGloveIconLbl.setIcon(new ImageIcon("/home/users/aronb/Source/ClusterWizard/images/GloveIcon.png"));
+
+      mDirectionsPanel.setBorder(BorderFactory.createEtchedBorder());
+      mDirectionsPanel.setLayout(mDirectionsBorderLayout);
+      mPinchGloveImageLbl.setIcon(new ImageIcon("/home/users/aronb/Source/ClusterWizard/images/PinchGlove.jpg"));
+      mTitleLbl.setFont(new java.awt.Font("Serif", 1, 20));
+      mTitleLbl.setHorizontalAlignment(SwingConstants.LEFT);
+      mTitleLbl.setText("FakeSpace PinchGlove");
+      mDirectionsLbl.setText("Fill in the following fields for the your PinchGlove device.");
+      baseLayout.setHgap(5);
+      baseLayout.setVgap(5);
+      centerPnl.setLayout(centerLayout);
+      mBaud.setText("9600");
+      jPanel1.setLayout(gridLayout1);
+      gridLayout1.setColumns(2);
+      gridLayout1.setRows(5);
+      mPortLbl.setText("Port");
+      mGlovePositionLbl.setText("Glove Position");
+      mBaudLbl.setText("Baud");
+      mDeviceHostLbl.setText("Device Host");
+      mSerialPort.setText("/dev/ttyd4");
+      mNameLbl.setText("Name");
+      mName.setText("PinchGlove");
+      this.add(centerPnl, BorderLayout.CENTER);
+      centerPnl.add(mPinchGloveImageLbl,  BorderLayout.WEST);
+      centerPnl.add(mInfoBox,  BorderLayout.CENTER);
+      mInfoBox.add(mNameLbl, null);
+      mInfoBox.add(mName, null);
+      mInfoBox.add(mPortLbl, null);
+      mInfoBox.add(mSerialPort, null);
+      mInfoBox.add(mBaudLbl, null);
+      mInfoBox.add(mBaud, null);
+      mInfoBox.add(mGlovePositionLbl, null);
+      mInfoBox.add(mGlovePosition, null);
+      mInfoBox.add(mDeviceHostLbl, null);
+      mInfoBox.add(mDeviceHost, null);
+      mInfoBox.add(mInfoGlue, null);
+      mDirectionsPanel.add(jPanel3, BorderLayout.EAST);
+      jPanel3.add(mGloveIconLbl, null);
+      mDirectionsPanel.add(jPanel2, BorderLayout.CENTER);
+      jPanel2.add(mTitleLbl, null);
+      jPanel2.add(mDirectionsLbl, null);
+      this.add(mDirectionsPanel, BorderLayout.NORTH);
+   }
+   
+   public void init()
+   {
+      // Get handle to broker
+      mBroker = new ConfigBrokerProxy();
+
+      // Create a context
+      mContext = new ConfigContext();
+      mContext.add(mFileSourceName);
+
+      mGlovePositionModel = new WizardComboBoxModel();
+      mGlovePositionModel.setFileSource(mFileSourceName);
+      mGlovePositionModel.addElementType("alias");
+      mGlovePositionModel.addElementType("position_proxy");
+      mGlovePosition.setModel(mGlovePositionModel);
+
+      mDeviceHostModel = new WizardComboBoxModel();
+      mDeviceHostModel.setFileSource(mFileSourceName);
+      mDeviceHostModel.addElementType("machine_specific");
+      mDeviceHost.setModel(mDeviceHostModel);
+      mBaud.setText("9600");
+      mSerialPort.setText("/dev/ttyS0");
+      mName.setText("PinchGlove");
+   }
+
+   public boolean saveFile()
+   {
+      DataSource mFileSource = mBroker.get(mFileSourceName);
+      try
+      {
+         mFileSource.commit();
+      }
+      catch(java.io.IOException exp)
+      {
+         exp.printStackTrace();
+      }
+      return(true);
+   }
+
+   public boolean createPinchGloveConfigChunk()
+   {
+      if (ConfigUtilities.getElementsWithName(mBroker.getElements(mContext), mName.getText()).size() != 0)
+      {
+         int result = JOptionPane.showConfirmDialog(this, "ConfigChunk by this name already exists. "
+            +"Do you want to replace it?.", "ClusterWizard", JOptionPane.YES_NO_OPTION);
+         
+         if(result == JOptionPane.NO_OPTION)
+         {
+            return false;
+         }
+
+         //Remove all old chunks by this name
+         java.util.List old_list =
+            ConfigUtilities.getElementsWithName(mBroker.getElements(mContext), mName.getText());
+
+         for(int i=0;i<old_list.size();i++)
+         {
+            mBroker.remove(mContext,(ConfigElement)old_list.get(i));
+         }
+      }
+
+      ConfigElementFactory factory = new ConfigElementFactory(mBroker.getRepository().getAllLatest());
+      ConfigElement glove = factory.create(mName.getText(), "pinch_glove");
+      glove.setProperty("port",0,mSerialPort.getText());
+      glove.setProperty("baud",0,mBaud.getText());
+      glove.setProperty("device_host",0,(String)mDeviceHost.getSelectedItem());
+      glove.setProperty("glove_position",0,(String)mGlovePosition.getSelectedItem());
+      mBroker.add(mContext, glove);
+      return true;
+   }
 }
-
-/*
-<ChunkDesc token="PinchGlove" name="PinchGlove" version="1.0">
-  <category>Devices</category>
-  <help>Configuration for the PinchGlove</help>
-  <PropertyDesc token="port" name="Port" type="string" variable="0">
-    <help>Serial port that the PinchGlove is connected to</help>
-    <item label="Port" defaultvalue="/dev/ttyd1" />
-  </PropertyDesc>
-  <PropertyDesc token="baud" name="Baud Rate" type="int" variable="0">
-    <help>Serial port speed</help>
-    <item label="Baud Rate" defaultvalue="9600" />
-  </PropertyDesc>
-  <PropertyDesc token="glove_position" name="Glove Position" type="chunk" variable="0">
-    <help>The position proxy for the glove position. i.e. the tracker on the glove.</help>
-    <item label="Glove Position" defaultvalue="" />
-    <allowedtype>proxyAlias</allowedtype>
-    <allowedtype>PosProxy</allowedtype>
-  </PropertyDesc>
-  <PropertyDesc name="Host Node" token="device_host" type="chunk" variable="0">
-    <help>Points to the machine that the device is physically connected to.</help>
-    <item label="Host Node" defaultvalue="" />
-    <allowedtype>MachineSpecific</allowedtype>
-  </PropertyDesc>
-</ChunkDesc>
-*/
