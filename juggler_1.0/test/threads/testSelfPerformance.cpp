@@ -40,20 +40,29 @@
 #include <Kernel/vjDebug.h>
 #include <Utils/vjTimer.h>
 
-#define NUM_THREADS 4
+#define MAX_NUM_THREADS 1000
 
 int thread_count = 0;
 vjMutex thread_count_mutex;        // Protect the count of number of threads running
 
-vjTimer timers[NUM_THREADS];        // Timers to get the times to call self()
+vjTimer timers[MAX_NUM_THREADS];        // Timers to get the times to call self()
 
 const long num_reps = 100000;          // Number of times to call
 
 void doFunc(void*);
 
-int main(void)
+int main(int argc, char* argv[])
 {
-   for(int thread_num=0;thread_num < NUM_THREADS;thread_num++)
+   if(argc <= 1)
+   {
+      cout << "Usage: testSelfPerformance <num_threads>\n" << flush;
+      exit(1);
+   }
+
+   int num_threads = atoi(argv[1]);
+   cout << "Using num_threads: " << num_threads << endl;
+
+   for(int thread_num=0;thread_num < num_threads;thread_num++)
    {
       vjThread* new_thread = new vjThread(doFunc, (void*)(thread_num));
 
@@ -69,12 +78,12 @@ int main(void)
    {;}
 
    double total_avg(0.0f);
-   for(int x=0;x<NUM_THREADS;x++)
+   for(int x=0;x<num_threads;x++)
    {
       total_avg += timers[x].getTiming();
    }
 
-   total_avg /= (double)NUM_THREADS;
+   total_avg /= (double)num_threads;
 
    vjDEBUG(vjDBG_ALL,0) << "AVERAGE TIMING: " << total_avg*1000.0f << "ms" << endl << vjDEBUG_FLUSH;
 }
