@@ -83,6 +83,24 @@ Debug::Debug()
                 << std::endl << std::flush;
    }
 
+   char* debug_enable = getenv("VPR_DEBUG_ENABLE");
+   if(debug_enable != NULL)
+   {
+      unsigned debug_enable_val = atoi(debug_enable);
+      if(debug_enable_val)
+         mDebugEnabled = true;
+      else
+         mDebugEnabled = false;
+      std::cout << "VPR_DEBUG_ENABLE: Set to " << mDebugEnabled << std::endl
+                << std::flush;
+   } else {
+      mDebugEnabled = true;
+      std::cout << "VPR_DEBUG_ENABLE: Not found. " << std::endl
+                << std::flush;
+      std::cout << "VPR_DEBUG_ENABLE: Defaults to " << mDebugEnabled
+                << std::endl << std::flush;
+   }
+
    setDefaultCategoryNames();
    getAllowedCatsFromEnv();
 }
