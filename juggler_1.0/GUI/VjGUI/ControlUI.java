@@ -393,13 +393,16 @@ public class ControlUI
 	System.out.println ("loadhelp: " + s);
 	URL url = ClassLoader.getSystemResource (s);
 	HTMLFrame help_frame = new HTMLFrame (this, "VjControl Help", url);
+        help_frame.setContentsURL (ClassLoader.getSystemResource ("VjFiles/table.of.contents.html"));
 	child_frames.addElement (help_frame);
 	help_frame.show();
     }
     
 
 
-    //: Callback when one of ControlUI's children is closed (this sucks)
+    /**
+     * Callback when one of ControlUI's children is closed (this sucks).
+     */
     public void closedChild (ChildFrame frame, boolean ok) {
 	if (frame instanceof HTMLFrame) {
 	    child_frames.removeElement (frame);
@@ -426,7 +429,9 @@ public class ControlUI
     }
 
 
-    //: Callback when one of ControlUI's children is closed (this sucks)
+    /**
+     * Callback when one of ControlUI's children is applied (this sucks)
+     */
     public void applyChild (ChildFrame frame) {
 	if (frame instanceof HTMLFrame) {
             ;
