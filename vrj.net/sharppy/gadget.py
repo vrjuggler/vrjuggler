@@ -88,7 +88,6 @@ exclude(PositionProxy.getPositionPtr)
 
 BaseDeviceInterface = ReferenceType(mod, 'gadget::BaseDeviceInterface',
                                     'gadget/Type/DeviceInterface.h')
-#final(BaseDeviceInterface.refresh)
 
 DeviceInterface = ReferenceTemplate(mod, 'gadget::DeviceInterface',
                                     'gadget/Type/DeviceInterface.h')
@@ -119,3 +118,10 @@ use_smart_ptr(PositionInterface)
 no_smart_ptr(PositionInterface.getProxy)
 no_smart_ptr(PositionInterface.refresh)
 exclude(PositionInterface.setProxy)
+
+PositionUnitConv = FreeTypesHolder(mod, 'PositionUnitConversion',
+                                   'gadget/Type/Position/PositionUnitConversion.h')
+PositionUnitConv.addConstant('gadget::PositionUnitConversion::ConvertToFeet')
+PositionUnitConv.addConstant('gadget::PositionUnitConversion::ConvertToInches')
+PositionUnitConv.addConstant('gadget::PositionUnitConversion::ConvertToMeters')
+PositionUnitConv.addConstant('gadget::PositionUnitConversion::ConvertToCentimeters')
