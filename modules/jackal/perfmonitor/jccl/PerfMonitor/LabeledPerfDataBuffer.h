@@ -41,6 +41,7 @@
 #include <vpr/Sync/Mutex.h>
 #include <vpr/Util/GUID.h>
 #include <jccl/Util/Debug.h>
+#include <vpr/Util/Singleton.h>
 
 namespace jccl {
 
@@ -84,6 +85,42 @@ class JCCL_CLASS_API LabeledPerfDataBuffer {
         }
     };
 
+    /** Singleton for data shared between all LabeledPerfDataBuffers. */
+    class LabeledPerfDataGlobal {
+    private:
+        bool active;
+
+        LabeledPerfDataGlobal() {
+            active = false;
+        }
+
+    public:
+
+        inline void activate () {
+            active = true;
+        }
+
+        inline void deactivate () {
+            active = false;
+        }
+
+        inline bool isActive () const {
+            return active;
+        }
+
+        /** Returns whether the given category is active.
+         *  @return True iff the category is active.
+         */
+        bool isCategoryActive (const vpr::GUID& category) {
+            if (!active)
+                return false;
+            // do something with categories
+            return true;
+        }
+
+        vprSingletonHeader (LabeledPerfDataGlobal);
+
+    };
 
 
     buf_entry*  buffer;
@@ -93,8 +130,6 @@ class JCCL_CLASS_API LabeledPerfDataBuffer {
 
     int         read_begin;
     int         write_pos;
-
-    bool        active;
 
     std::string name;
 
@@ -127,32 +162,16 @@ public:
     }
 
 
-    /** Activates the PerfDataBuffer.
-     *  Once this method is called, the buffer will store a data 
-     *  point whenever a set() is made.
-     */
-    void activate();
+    inline static void activate() {
+        LabeledPerfDataGlobal::instance()->activate();
+    }
 
+    inline static void deactivate() {
+        LabeledPerfDataGlobal::instance()->activate();
+    }
 
-    /** Deactivates the PerfDataBuffer.
-     *  When the buffer is deactivated, the set() and write calls
-     *  will return without performing any actions.
-     */
-    void deactivate();
-
-
-    /** Returns whether the buffer is active.
-     *  @return True iff the buffer is active.
-     */
-    bool isActive() const;
-
-
-
-    /** Returns whether the given category is active.
-     *  @return True iff the category is active.
-     */
-    bool isCategoryActive (const vpr::GUID& category) {
-        return true;
+    inline static void isActive() {
+        LabeledPerfDataGlobal::instance()->isActive();
     }
 
 
