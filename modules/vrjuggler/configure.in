@@ -1830,7 +1830,7 @@ AC_OUTPUT(Makefile Makefile.base Config/Makefile Environment/Makefile
           Kernel/Pf/Makefile Kernel/GL/Makefile Math/Makefile
           Performance/Makefile SharedMem/Makefile Sound/Makefile
           Sound/aw/Makefile Sound/pf/Makefile Sound/sl/Makefile Sync/Makefile
-          Threads/Makefile
+          Threads/Makefile Utils/Makefile
           test/Makefile test/CfgTest/Makefile test/GLWindow/Makefile
           test/Math/Makefile test/Matrix/Makefile test/Performance/Makefile
           test/Performance/analyzer/Makefile
@@ -1847,7 +1847,6 @@ AC_OUTPUT(Makefile Makefile.base Config/Makefile Environment/Makefile
           release/mtree/VJ.data.dist release/mtree/VJ.include.dist
           release/mtree/VJ.install.dist release/mtree/VJ.samples.dist
           release/mtree/VJ.test.dist release/mtree/VJ.tools.dist
-          Utils/Makefile
           VARS.pl)
 
 cat <<BUILD_INFO
