@@ -34,6 +34,7 @@
 #define _VPR_INET_ADDR_H_
 
 #include <vprConfig.h>
+#include <iostream>
 
 #if defined(VPR_USE_NSPR)
 #   include <md/NSPR/InetAddrNSPR.h>
@@ -51,5 +52,24 @@ namespace vpr {
     typedef InetAddrBSD InetAddr;
 };
 #endif
+
+#include <hash_map.h>
+
+// Nice little helper class for hashing an inetaddr
+template<>
+struct std::hash<vpr::InetAddr> {
+   size_t operator()(vpr::InetAddr addr) const { return ((addr.getAddressValue() << 16) | addr.getPort()); }
+};
+
+bool operator<(const vpr::InetAddr& addr1, const vpr::InetAddr& addr2)
+{
+   return ((addr1.getAddressValue() < addr2.getAddressValue()) ? true : (addr1.getPort() < addr2.getPort()));
+}
+
+std::ostream& operator<<(std::ostream& out, const vpr::InetAddr& addr)
+{
+   out << addr.getAddressString() << ":" << addr.getPort();
+   return out;
+}
 
 #endif   /* _VPR_INET_ADDR_H_ */
