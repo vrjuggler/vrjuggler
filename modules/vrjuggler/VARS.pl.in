@@ -97,4 +97,17 @@ $VARS{'APP_EXTRA_LIBS_PF'}  = '@APP_EXTRA_LIBS_PF@';
 $VARS{'APP_EXTRA_LIBS_AW'}  = '@APP_EXTRA_LIBS_AW@';
 $VARS{'APP_EXTRA_LIBS_SL'}  = '@APP_EXTRA_LIBS_SL@';
 
+$VARS{'DEPEND_EXTRAS'}        = '@DEPEND_EXTRAS@';
+$VARS{'DEPEND_FLAGS'}         = '@DEPEND_FLAGS@';
+$VARS{'EXTRA_LINK_FLAGS'}     = '@EXTRA_LINK_FLAGS@';
+
+$VARS{'LD'}                   = '@LD@';
+$VARS{'LDFLAGS'}              = '@LDFLAGS@';
+$VARS{'LIBS'}                 = '@LIBS@';
+$VARS{'OS_TYPE'}              = '@OS_TYPE@';
+$VARS{'MAKEDEPEND'}           = '@MAKEDEPEND@';
+$VARS{'USE_MAKEDEPEND'}       = '@USE_MAKEDEPEND@';
+
+$VARS{'APP_BASE_DIR'}         = '@APP_BASE_DIR_INST@';
+
 1;
