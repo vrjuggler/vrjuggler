@@ -245,7 +245,7 @@ ifndef NO_JAVA_GUI
           $(LN_S) $(topdir)/GUI/VjControl.jar ./
 	cd $(instlinks)/bin && rm -f ./vjcontrol &&			\
           sed -e 's,#VJ_SHARE_DIR#,${VJ_SHARE_DIR},g'			\
-              ${VJROOT_ABS}/GUI/vjcontrol > vjcontrol &&		\
+              ${VJROOT_ABS}/GUI/vjcontrol.sh > vjcontrol &&		\
           chmod ${EXEC_PERMS} vjcontrol
 endif
 	@echo "\n\n"
@@ -399,7 +399,7 @@ ifeq ($(BUILD_GUI), Y)
 	@echo "------------------------------------------------"
 ifeq (@OS_TYPE@, UNIX)
 	@sed -e 's,#VJ_SHARE_DIR#,$(VJ_SHARE_DIR),g'			\
-          $(VJROOT_ABS)/GUI/vjcontrol > vjcontrol
+          $(VJROOT_ABS)/GUI/vjcontrol.sh > vjcontrol
 	$(INSTALL) -m $(EXEC_PERMS) $(GROUP_OPT_UNIX)			\
           vjcontrol $(bindir)/vjcontrol && rm -f vjcontrol
 else
