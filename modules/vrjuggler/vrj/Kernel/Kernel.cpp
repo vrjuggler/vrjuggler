@@ -15,13 +15,13 @@ int vjKernel::start()
    }
 
    // Create a new thread to handle the control
-   vjThreadMemberFunctor<vjKernel>* memberFunctor = 
+   vjThreadMemberFunctor<vjKernel>* memberFunctor =
    new vjThreadMemberFunctor<vjKernel>(this, &vjKernel::controlLoop, NULL);
 
-   controlPid = vjThread::spawn(memberFunctor, 0);
+   mControlThread = new vjThread(memberFunctor, 0);
 
    vjDEBUG(0) << "vjKernel::start: Just started control loop.  "
-              << *controlPid << endl << vjDEBUG_FLUSH;
+              << mControlThread << endl << vjDEBUG_FLUSH;
 
    return 1;
 }
@@ -49,7 +49,7 @@ void vjKernel::initConfig()
 
       vjDEBUG(0) << "vjKernel::initConfig: Calling setupDisplayManager.\n" << vjDEBUG_FLUSH;
    setupDisplayManager();
-      vjDEBUG(0) << "vjKernel::initConfig: Calling setupDrawManager.\n" << vjDEBUG_FLUSH; 
+      vjDEBUG(0) << "vjKernel::initConfig: Calling setupDrawManager.\n" << vjDEBUG_FLUSH;
    setupDrawManager();
    displayManager->setDrawManager(drawManager);
       vjDEBUG_END(0) << "vjKernel::initConfig: Exiting.\n" << vjDEBUG_FLUSH;
@@ -83,7 +83,7 @@ void vjKernel::controlLoop(void* nullParam)
          vjDEBUG(3) << "vjKernel::controlLoop: Update Trackers\n" << vjDEBUG_FLUSH;
       data.inputManager->UpdateAllData();
          vjDEBUG(3) << "vjKernel::controlLoop: Update Projections\n" << vjDEBUG_FLUSH;
-      drawManager->updateProjections(); 
+      drawManager->updateProjections();
    }
 }
 
@@ -124,7 +124,7 @@ void vjKernel::loadConfig()
    char* homeDir = getenv("HOME");     // Get users home directory
    strcpy(configFile, homeDir);
    strcat(configFile, "/.vjconfig/activeConfig");
-   
+
    if (!chunkDB->load(configFile))
    {
       cerr << "vjKernel::loadConfig: DB Load failed to load file: " << configFile << endl;
@@ -155,14 +155,14 @@ void vjKernel::setupInputManager()
    vjDEBUG(0) << "      Input manager has passed. (Andy did good)" << endl << vjDEBUG_FLUSH;
 
    data.inputManager->UpdateAllData();
-   
+
    vjDEBUG(0) << "      First Update trackers succeeded..." << endl << vjDEBUG_FLUSH;
 }
 
 void vjKernel::setupDisplayManager()
 {
    vjDEBUG_BEGIN(0) << "------- vjKernel::setupDisplayManager\n -------" << vjDEBUG_FLUSH;
-   
+
    // Setup displays
    displayManager = vjDisplayManager::instance();
 
