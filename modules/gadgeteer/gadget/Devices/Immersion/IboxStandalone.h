@@ -594,8 +594,6 @@ private:
     vpr::SerialPort  *port;
 	//Creat setPort
 	//char	    	_port[256];
-    vpr::Uint8       mSlow_timeout;    /* slow timeout setting (in tenths of seconds) */
-    vpr::Uint8       mFast_timeout;    /* fast timeout setting (in tenths of seconds) */
     std::string      mPortName;            /* name of serial port */
     int              mBaudRate;            /* baud rate of ibox */
     ////////////////////////////////////////////////////////////////

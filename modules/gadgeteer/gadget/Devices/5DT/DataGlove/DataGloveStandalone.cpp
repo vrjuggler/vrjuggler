@@ -113,8 +113,8 @@ int generate_gestures(float motion1/*Index flexure*/, float motion2/*Middle flex
 // Read data from the DataGlove hardware
 int DataGloveStandalone::ReadRecordsFromHardware( float *ch0, float *ch1, float *ch2, float *ch3, float *ch4, float *ch5, float *ch6 , int *ch7, int *ch8 )
 {
-   char buf[10];   // Define buffer
-   char packet[10];   // Define packet
+   unsigned char buf[10];   // Define buffer
+   unsigned char packet[10];   // Define packet
    vpr::Uint32 written;
 
    port->read(buf, 1, written);
@@ -163,10 +163,10 @@ bool DataGloveStandalone::connectToHardware(const std::string& ttyPort, int mBau
 ///////////////////////////////////////////////////////////
 int DataGloveStandalone::mConnectToHardware(const std::string& ttyPort, int baud)
 {
-   const int BUFFER_LEN = 100;
-   char buf[BUFFER_LEN];
-   int cnt;
-   vpr::Uint32 written;
+   //const int BUFFER_LEN = 100;
+   //char buf[BUFFER_LEN];
+   //int cnt;
+   //vpr::Uint32 written;
 
    // Create new serial port
    port = new vpr::SerialPort(ttyPort);

@@ -709,9 +709,15 @@ void KeyboardXWin::setHints(Window window,
          1, /* 1 string to convert */
          &w_name);
 
+   if(0 == status)
+      vprDEBUG(vprDBG_ALL, 0) << "Error allocating XString\n" << vprDEBUG_FLUSH;
+
    status = XStringListToTextProperty(&icon_name,
          1, /* 1 string to convert */
          &i_name);
+
+   if(0 == status)
+      vprDEBUG(vprDBG_ALL, 0) << "Error allocating XString\n" << vprDEBUG_FLUSH;
 
     sizehints.width       = m_width;    /* -- Obsolete in R4 */
     sizehints.height      = m_height;   /* -- Obsolete in R4 */
