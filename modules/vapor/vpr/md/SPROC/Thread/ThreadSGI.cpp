@@ -32,6 +32,7 @@
 
 #include <vprConfig.h>
 #include <sys/types.h>
+#include <sys/wait.h>
 #include <sys/prctl.h>
 
 #include <Threads/Thread.h>
