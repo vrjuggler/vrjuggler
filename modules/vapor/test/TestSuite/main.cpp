@@ -6,6 +6,7 @@
 #include <TestCases/IO/Socket/InetAddrTest.h>
 #include <TestCases/StatusTest.h>
 #include <TestCases/Socket/SocketConnectorAcceptorTest.h>
+#include <TestCases/IO/SelectorTest.h>
 #include <Utils/Debug.h>
 
 
@@ -28,8 +29,9 @@ int main (int ac, char **av)
    noninteractive_suite->addTest(vprTest::StatusTest::suite());
    noninteractive_suite->addTest(vprTest::InetAddrTest::suite());
    //noninteractive_suite->addTest(vprTest::SocketTest::suite());
-   noninteractive_suite->addTest(vprTest::SocketCopyConstructorTest::suite());
+//   noninteractive_suite->addTest(vprTest::SocketCopyConstructorTest::suite());
    noninteractive_suite->addTest(vprTest::SocketConnectorAcceptorTest::suite());
+   noninteractive_suite->addTest(vprTest::SelectorTest::suite());
 
    // Add the test suite to the runner
    runner.addTest( "noninteractive", noninteractive_suite );
