@@ -30,9 +30,9 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <cluster/Plugins/PluginConfig.h>
+#include <cluster/PluginConfig.h>
 
-#include <cluster/Plugins/SwapLockTCPPlugin/SwapLockTCPPlugin.h> // my header...
+#include <plugins/SwapLockTCPPlugin/SwapLockTCPPlugin.h> // my header...
 
 #include <gadget/Util/Debug.h>
 #include <cluster/ClusterDepChecker.h>

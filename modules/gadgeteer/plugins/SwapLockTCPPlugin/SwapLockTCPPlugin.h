@@ -33,7 +33,7 @@
 #ifndef _CLUSTER_SWAP_LOCK_TCP_PLUGIN_H
 #define _CLUSTER_SWAP_LOCK_TCP_PLUGIN_H
 
-#include <cluster/Plugins/PluginConfig.h>
+#include <cluster/PluginConfig.h>
 
 #include <map>
 #include <vpr/Util/Singleton.h>
