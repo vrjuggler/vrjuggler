@@ -72,11 +72,15 @@ public:
    virtual ~ObjectWriter()
    {;}
 
-   /** Returns true if the writer is a binary based format. 
-    * This can be used to choose wether to use human-readable forms of serialization.
+   /**
+    * Returns true if the writer is using a binary based format.
+    * This can be used to choose whether to use human-readable forms of
+    * serialization.
     */
    bool isBinary()
-   { return mIsBinary; }
+   {
+      return mIsBinary;
+   }
 
    /** @name Tag and attribute handling.
     * ObjectReader and ObjectWriter support an interface that allows for using
@@ -88,12 +92,14 @@ public:
     * are similar to XML attributes in that they are properties of the most
     * recently started tag.
     *
-    * The structure looks something like (based on XML):
-    *  
-    * <tag1>
-    *   <tag2 attrib1="XXX">
-    *   </tag2>
-    * </tag1>
+    * The structure looks something like the following (based on XML):
+    *
+\verbatim
+<tag1>
+   <tag2 attrib1="XXX">
+   </tag2>
+</tag1>
+\endverbatim
     */
    //@{
    /** Starts a new section/element of name tagName. */
@@ -119,7 +125,7 @@ public:
    virtual vpr::ReturnStatus writeBool(bool val) = 0;
 
 protected:
-   bool mIsBinary;   /**< Is this a binary serializer. */
+   bool mIsBinary;   /**< Is this a binary serializer? */
 };
 
 } // namespace vpr

@@ -51,7 +51,7 @@
 namespace vpr
 {
 
-/** Interface used to read object data to a stream. */
+/** Interface used to read object data from a stream. */
 class ObjectReader : public AttributeMapBase
 {
 protected:
@@ -67,13 +67,19 @@ public:
    virtual ~ObjectReader()
    {;}
 
-   /** Returns true if the writer is a binary based format. 
-    * This can be used to choose wether to use human-readable forms of serialization.
+   /**
+    * Returns true if this writer is using a binary-based format.
+    * This can be used to choose whether to use human-readable forms of
+    * serialization.
     */
    bool isBinary()
-   { return mIsBinary; }
-    
-   /** @name Tag and attribute handling.
+   {
+      return mIsBinary;
+   }
+
+   /**
+    * @name Tag and attribute handling.
+    *
     * ObjectReader and ObjectWriter support an interface that allows for using
     * tags and attributes in the written output data.  This allows support
     * for formats such as XML where there is a logical grouping of the data.
@@ -83,12 +89,14 @@ public:
     * are similar to XML attributes in that they are properties of the most
     * recently started tag.
     *
-    * The structure looks something like (based on XML):
+    * The structure looks something like like the following (based on XML):
     *
-    * <tag1>
-    *   <tag2 attrib1="XXX">
-    *   </tag2>
-    * </tag1>
+\verbatim
+<tag1>
+   <tag2 attrib1="XXX">
+   </tag2>
+</tag1>
+\endverbatim
     */
    //@{
    /** Starts a new section/element of name tagName. */
@@ -112,7 +120,7 @@ public:
    virtual void resetReading() = 0;
 
    /**
-    * The following methods allow users to push/pop that active state of
+    * The following methods allow users to push/pop the active state of
     * reading.  This can be used to move back to previous reading states if
     * needed.
     */
@@ -147,7 +155,7 @@ public:
    { val = this->readBool(); }
 
 protected:
-   bool mIsBinary;   /**< Is this a binary serializer. */
+   bool mIsBinary;   /**< Is this a binary serializer? */
 };
 
 } // namespace vpr

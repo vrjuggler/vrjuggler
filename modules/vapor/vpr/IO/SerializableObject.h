@@ -43,7 +43,6 @@
 #define _VPR_SERIALIZABLE_OBJ_H
 
 #include <vpr/vprConfig.h>
-#include <boost/concept_check.hpp>
 #include <vpr/Util/ReturnStatus.h>
 
 
@@ -53,23 +52,31 @@ namespace vpr
 class ObjectWriter;
 class ObjectReader;
 
+/**
+ * The abstract base class for all types that can be written to a stream.
+ * Instances of this type can be serialized to a stream (also known as
+ * marshalling).
+ */
 class WriteableObject
 {
 public:
    /**
-    * Template method for writing object.
+    * Template method for writing object this object to the given stream.
+    *
     * @post All object data is written to the writer.
+    *
+    * @param writer The object writer to which the data for this object
+    *               will be written to allow serialization of this object.
     */
-   virtual vpr::ReturnStatus writeObject(ObjectWriter* writer) = 0;
+   virtual vpr::ReturnStatus writeObject(vpr::ObjectWriter* writer) = 0;
 
 protected:
+
    WriteableObject()
    {;}
 
-   WriteableObject(const WriteableObject& o)
-   {
-      boost::ignore_unused_variable_warning(o);
-   }
+   WriteableObject(const WriteableObject&)
+   {;}
 
 private:
 
@@ -78,23 +85,31 @@ private:
    /*#  ObjectWriter lnkObjectWriter; */
 };
 
+/**
+ * The abstract base class for all types that can be read from a stream.
+ * Instances of this type can be de-serialized from a stream (also known as
+ * de-marshalling).
+ */
 class ReadableObject
 {
 public:
    /**
-    * Template method for reading object.
+    * Template method for reading data into this object from the given stream.
+    *
     * @post All object data is read from the reader.
+    *
+    * @param reader The object reader from which the data for this object
+    *               can be read to allow de-serialization of this object.
     */
-   virtual vpr::ReturnStatus readObject(ObjectReader* reader) = 0;
+   virtual vpr::ReturnStatus readObject(vpr::ObjectReader* reader) = 0;
 
 protected:
+
    ReadableObject()
    {;}
 
-   ReadableObject(const ReadableObject& o)
-   {
-      boost::ignore_unused_variable_warning(o);
-   }
+   ReadableObject(const ReadableObject&)
+   {;}
 
 private:
 
@@ -103,9 +118,17 @@ private:
    /*#  ObjectReader lnkObjectReader; */
 };
 
+/**
+ * The abstract base class for all types that support serialization.
+ * Instances of this type can be serialized to and de-serialized from data
+ * streams.  This is based on a concept that is very similar to the notion
+ * of serializable objects in the Java programming langauge (classes that
+ * derive from \c java.io.Serializable).
+ */
 class SerializableObject : public WriteableObject, public ReadableObject
 {
 protected:
+
    SerializableObject()
       : WriteableObject(), ReadableObject()
    {;}
@@ -115,24 +138,39 @@ protected:
    {;}
 };
 
-/** Mixin to add serializable capabilities to an existing object.
-* 
-* Users can add Serializable capabilities by just defining two methods.
-*
-* ex: SerializableObjectMixin<MyType>  mMySerializableObj;
-*
-* Then somewhere...
-*    vpr::ReturnStatus vpr::SerializableObjectMixin<MyType>::writeObject(ObjectWriter* writer)
-*    { ... };
-*    vpr::ReturnStatus vpr::SerializableObjectMixin<MyType>::readObject(ObjectReader* writer)
-*    { ... };
-*/
+/**
+ * Mix-in type to add serialization capabilities to an existing type, usually
+ * one that is defined in third-party code and therefore cannot have its base
+ * type list modified.  Users can add serialization capabilities to an
+ * existing type by defining just two methods.
+ *
+ * The following demonstrates the way in which this class is specialized for
+ * an existing type (for example, \c MyType):
+ *
+ * \code
+ * vpr::ReturnStatus
+ * vpr::SerializableObjectMixin<MyType>::writeObject(vpr::ObjectWriter* writer)
+ * { ... }
+ *
+ * vpr::ReturnStatus
+ * vpr::SerializableObjectMixin<MyType>::readObject(vpr::ObjectReader* writer)
+ * { ... }
+ * \endcode
+ *
+ * A serializable instance of \c MyType can then be declared as follows:
+ *
+ * \code
+ * vpr::SerializableObjectMixin<MyType> mSerializableMyType;
+ * \endcode
+ *
+ * @see vpr::ObjectWriter, vpr::ObjectReader
+ */
 template<class BASE>
 class SerializableObjectMixin : public SerializableObject, public BASE
 {
-public:   
-   virtual vpr::ReturnStatus writeObject(ObjectWriter* writer);
-   virtual vpr::ReturnStatus readObject(ObjectReader* reader);
+public:
+   virtual vpr::ReturnStatus writeObject(vpr::ObjectWriter* writer);
+   virtual vpr::ReturnStatus readObject(vpr::ObjectReader* reader);
 };
 
 } // namespace vpr
