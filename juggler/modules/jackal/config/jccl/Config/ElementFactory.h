@@ -56,8 +56,14 @@ namespace jccl
    public:
       /**
        * Adds definitions from definition files found in the given search path.
+       * The given path is treated as the default search path.  If the
+       * environment variable \c JCCL_DEFINITION_PATH is set, the value of
+       * that variable is appended to the default search path.
+       *
+       * @param defaultPath The default search path to use for finding .jdef
+       *                    files.
        */
-      void loadDefs(const std::string& path);
+      void loadDefs(const std::string& defaultPath);
       
 
       /** Adds the definition in file 'filename' to the factory. */
