@@ -293,6 +293,7 @@ void Controller::moveMessage (vpr::sim::MessagePtr msg,
          << msg->getDestinationSocket()->getLocalAddr() << std::endl
          << vprDEBUG_FLUSH;
 
+      vprASSERT(msg->getDestinationSocket()->isOpen() && "The destination socket has been closed (or possibly destroyed)");
       msg->getDestinationSocket()->addArrivedMessage(msg);
 
       if ( recvSocket != NULL)
