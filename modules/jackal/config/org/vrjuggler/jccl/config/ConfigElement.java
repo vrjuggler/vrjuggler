@@ -216,10 +216,10 @@ public class ConfigElement implements ConfigElementPointerListener
 
       // Notify listeners of the change
       firePropertyValueChanged(name, index, value);
-      System.out.println("Adding a new Property edit...");
+      System.out.println("setProperty("+name+","+index+","+value+")");
       
       //TODO:  This will only work if we make sure we do not skip over a
-      //       propertyAdd/removr event. Otherwise the index value could be
+      //       propertyAdd/remove event. Otherwise the index value could be
       //       wrong.
       return(new ConfigElementPropertyEdit(this, name, index, old_value, value));
    }

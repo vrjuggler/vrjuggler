@@ -2,6 +2,9 @@ package org.vrjuggler.jccl.config;
 
 import javax.swing.undo.*;
 
+/**
+ * Allows the user to undo/redo changes made to ConfigElements.
+ */
 public class ConfigUndoManager extends UndoManager
 {
    /**
