@@ -178,19 +178,15 @@
          <help>This is the number of milliseconds that the event update loop should sleep between updates.</help>
          <value label="Sleep Time" defaultvalue="75"/>
       </property>
-      
-      <property valuetype="integer" variable="false" name="width">
-         <help>The width of the window in pixels.</help>
-         <value label="Window Width" defaultvalue="300"/>
-      </property>
-      <property valuetype="integer" variable="false" name="height">
-         <help>The height of the window in pixels.</help>
-         <value label="Window Height" defaultvalue="100"/>
-      </property>
       <property valuetype="integer" variable="false" name="origin">
          <help>Window origin (lower left is 0,0)</help>
          <value label="X" defaultvalue="0"/>
          <value label="Y" defaultvalue="0"/>
+      </property>
+      <property valuetype="integer" variable="false" name="size">
+         <help>The dimensions (width and height) of the window in pixels.</help>
+         <value label="Width" defaultvalue="100"/>
+         <value label="Height" defaultvalue="100"/>
       </property>
       <property valuetype="integer" variable="false" name="display_number">
          <help>The number of the display on which the event window will be opened. (-1 for local)</help>
