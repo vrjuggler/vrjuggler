@@ -92,16 +92,32 @@ if ( $opts{'o'} ) {
         $input =~ s/#undef\s+__VJ_version/#define __VJ_version $version_number/;
         $input =~ s/#undef\s+VJ_VERSION/#define VJ_VERSION "$version_string"/;
 
-        # Create the output file.
-        open(OUTPUT, "> $opts{'o'}")
-            or die "ERROR: Could not create $opts{'o'}: $!\n";
+        # If the output file already exists, read it and compare it with the
+        # output we have now.  If they are different, overwrite the old file.
+        # Otherwise, don't bother.
+        if ( -r "$opts{'o'}" && open(INPUT, "$opts{'o'}") ) {
+            my $old_file = '';
 
-        print OUTPUT "/* $opts{'o'}.  Generated automatically by " .
-                     "record-version.pl */\n";
-        # Print the contents of the input template with the above
-        # substitutions performed to the new output file.
-        print OUTPUT "$input";
-        close(OUTPUT) or warn "WARNING: Could not close $opts{'o'}: $!\n";
+            # Read in the existing file except for the heading line added by
+            # this script.
+            while ( <INPUT> ) {
+                next if m|^/\* $opts{'o'}\.  Generated.+?\*/$|o;
+                $old_file .= "$_";
+            }
+
+            close(INPUT);
+
+            # Print the contents of the input template with the above
+            # substitutions performed to the new output file only if the new
+            # file is different than the old one.
+            writeFile("$opts{'o'}", "$input") unless "$old_file" eq "$input";
+        }
+        # If the output file does not exist, print the contents of the input
+        # template with the above substitutions performed to the new output
+        # file.
+        else {
+            writeFile("$opts{'o'}", "$input");
+        }
     }
     else {
         die "ERROR: Must have input file to create output file!\n";
@@ -112,3 +128,16 @@ else {
 }
 
 exit 0;
+
+sub writeFile ($$) {
+    my $file = shift;
+    my $data = shift;
+
+    # Create the output file.
+    open(OUTPUT, "> $file") or die "ERROR: Could not create $file: $!\n";
+
+    print OUTPUT "/* $file.  Generated automatically by record-version.pl */\n";
+    print OUTPUT "$data";
+
+    close(OUTPUT) or warn "WARNING: Could not close $file: $!\n";
+}
