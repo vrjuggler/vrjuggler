@@ -32,6 +32,7 @@
 #include <stdio.h>
 #include <ulocks.h>
 #include <SharedMem/vjMemPool.h>
+//#include <Kernel/vjDebug.h>
 
 // - Call usinit in new processes created.  Try to overcome limitation on number of users.
 // otherwise wet to a "big" number.
@@ -47,6 +48,9 @@ public:
       usconfig(CONF_INITUSERS, numProcs);
       usconfig(CONF_INITSIZE, initialSize);
       usconfig(CONF_AUTOGROW, 1);   // Default, but we set anyway
+//#ifdef DEBUG_VJ
+      usconfig(CONF_LOCKTYPE, US_DEBUGPLUS);    // what type of lock information
+//#endif
 
       //static char* staticTempName = "/var/tmp/memPoolSGIXXXXXX";  // Do it this way because mktemp overwrite's the variable
       char* tempName = new char[strlen(staticTempName)+1];      // Therefore we need to use a non-static variable
