@@ -53,7 +53,7 @@
     </itemizedlist>
   </preface>
 
-  <chapter id="install.vrj.chapter">
+  <chapter id="chapter.vrj.install">
     <title>Installing VR Juggler</title>
 
     <para>As with most Open Source projects, VR Juggler is distributed as
@@ -156,9 +156,9 @@
 
       <para>Once you have downloaded the VR Juggler ZIP file, the easiest way
       to extract it is to double-click on its icon in the open folder window
-      as shown in <xref linkend="windows.temp.folder-view.figure" />.</para>
+      as shown in <xref linkend="figure.windows.temp.folder.view" />.</para>
 
-      <figure id="windows.temp.folder-view.figure">
+      <figure id="figure.windows.temp.folder.view">
         <title>Windows Folder View of ZIP File</title>
 
         <mediaobject>
@@ -170,9 +170,9 @@
       </figure>
 
       <para>Double-clicking opens the main WinZip window, as shown in <xref
-      linkend="winzip.main.figure" />.</para>
+      linkend="figure.winzip.main" />.</para>
 
-      <figure id="winzip.main.figure">
+      <figure id="figure.winzip.main">
         <title>Open WinZip Window</title>
 
         <mediaobject>
@@ -187,9 +187,9 @@
       button is highlighted. Click this button to open the following window.
       Note that in this screen shot, the <guibutton>Extract</guibutton> button
       is highlighted. Click this button to open the dialog box shown in <xref
-      linkend="winzip.extract.figure" />.</para>
+      linkend="figure.winzip.extract" />.</para>
 
-      <figure id="winzip.extract.figure">
+      <figure id="figure.winzip.extract">
         <title>WinZip Extract Dialog</title>
 
         <mediaobject>
@@ -208,7 +208,7 @@
     </section>
   </chapter>
 
-  <chapter id="envvar.chapter">
+  <chapter id="chapter.envvar">
     <title>Environment Variables</title>
 
     <para>There are several <firstterm>environment variables</firstterm> that
@@ -345,7 +345,7 @@
         your home directory.</para>
       </section>
 
-      <section id="envvar.dos.section">
+      <section id="section.envvar.dos">
         <title>DOS Shell</title>
 
         <para>The typical syntax for setting an environment variable from the
@@ -388,7 +388,7 @@ C:\WINDOWS;C:\bin;C:\</screen>
         <title>Win 32 GUI</title>
 
         <para>Before reading this section, please be sure to have read <xref
-        linkend="envvar.dos.section" />. This is necessary because the Win32
+        linkend="section.envvar.dos" />. This is necessary because the Win32
         GUI for setting environment variables is simply a front-end to that
         older method and thus uses the same conventions and syntax. The
         versions of Windows to which this subsection applies are indicated
@@ -548,7 +548,7 @@ value</screen>
       </section>
     </section>
 
-    <section id="envvars.required.section">
+    <section id="section.envvars.required">
       <title>Required Environment Variables</title>
 
       <variablelist>
@@ -670,7 +670,7 @@ value</screen>
       </variablelist>
     </section>
 
-    <section id="envvars.optional.section">
+    <section id="section.envvars.optional">
       <title>Optional Related Environment Variables</title>
 
       <variablelist>
@@ -888,7 +888,7 @@ value</screen>
     </section>
   </chapter>
 
-  <chapter id="app.compile.chapter">
+  <chapter id="chapter.app.compile">
     <title>Compiling a VR Juggler Sample Program</title>
 
     <para>Now that you have VR Juggler installed and you have your environment
@@ -903,8 +903,8 @@ value</screen>
 
       <para>Before reading any further, make sure you have already read the
       instructions on how to install VR Juggler (in <xref
-      linkend="install.vrj.chapter" />) and on how to configure your
-      environment (in <xref linkend="envvar.chapter" />). That information
+      linkend="chapter.vrj.install" />) and on how to configure your
+      environment (in <xref linkend="chapter.envvar" />). That information
       will not be repeated, and it is assumed that you already know what we
       mean by <envar>VJ_BASE_DIR</envar>. You should also have a basic
       understanding of how <command>make</command>(1) works, but in these
@@ -956,7 +956,7 @@ value</screen>
         <filename>MPApp</filename> file (or <filename>MPApp.exe</filename> on
         Win32) in the directory. Now that you have a program compiled, it is
         time to learn how to run it. (Readers who are not using Visual Studio
-        can skip ahead to <xref linkend="running.app.chapter" />.)</para>
+        can skip ahead to <xref linkend="chapter.app.running" />.)</para>
       </section>
 
       <section>
@@ -994,10 +994,10 @@ value</screen>
 
         <para>Visual Studio will open, and the MPApp project will be loaded.
         The unexpanded class view will appear as shown in <xref
-        linkend="visual.studio.start.figure" /> when Visual Studio first
+        linkend="figure.visual.studio.start" /> when Visual Studio first
         loads.</para>
 
-        <figure id="visual.studio.start.figure">
+        <figure id="figure.visual.studio.start">
           <title>MPApp Project</title>
 
           <mediaobject>
@@ -1012,11 +1012,11 @@ value</screen>
         properties. The project properties dialog can be opened in several
         ways. For example, right-clicking on the project name in the Solution
         Explorer brings up the menu shown in <xref
-        linkend="visual.studio.project-menu.figure" />. We are interested in
+        linkend="figure.visual.studio.menu.project" />. We are interested in
         changing the project's properties, so we select the
         <guimenuitem>Properties</guimenuitem> item from the popup menu.</para>
 
-        <figure id="visual.studio.project-menu.figure">
+        <figure id="figure.visual.studio.menu.project">
           <title>Project Menu</title>
 
           <mediaobject>
@@ -1038,11 +1038,11 @@ value</screen>
         <para>Once the program properties are set, compile the application.
         Under the <guimenu>Build</guimenu> menu, choose the <guimenuitem>Build
         MPApp</guimenuitem> item as shown in <xref
-        linkend="visual.studio.build-menu.figure" />. Visual C++ will compile
+        linkend="figure.visual.studio.menu.build" />. Visual C++ will compile
         the application, and if you have everything configured properly on
         your computer, the compiling will complete successfully.</para>
 
-        <figure id="visual.studio.build-menu.figure">
+        <figure id="figure.visual.studio.menu.build">
           <title>Build <filename>MPApp.exe</filename></title>
 
           <mediaobject>
@@ -1062,7 +1062,7 @@ value</screen>
     </section>
   </chapter>
 
-  <chapter id="running.app.chapter">
+  <chapter id="chapter.app.running">
     <title>Running a VR Juggler Sample Program</title>
 
     <para>It is important to note that the same VR Juggler application can be
@@ -1081,25 +1081,24 @@ value</screen>
     directory will be referenced in the examples provided, so be sure you know
     where they are.</para>
 
-    <section>
-      <title><anchor id="reading" />Required Reading</title>
+    <section id="section.required.reading">
+      <title>Required Reading</title>
 
       <para>Before reading any further, make sure you have already read the
       instructions on how to install VR Juggler (see <xref
-      linkend="install.vrj.chapter" />) and on how to configure your
-      environment (see <xref linkend="envvar.chapter" />). That information
+      linkend="chapter.vrj.install" />) and on how to configure your
+      environment (see <xref linkend="chapter.envvar" />). That information
       will not be repeated, and it is assumed that you already know what we
       mean by <envar>VJ_BASE_DIR</envar> and <envar>LD_LIBRARY_PATH</envar>,
       to name two environment variables. At this point, it is also assumed
       that you already have compiled an application (MPApp in the case of the
       examples provided), so you should be sure to have read about how to
       compile a sample VR Juggler application (in <xref
-      linkend="app.compile.chapter" />) before proceeding.</para>
+      linkend="chapter.app.compile" />) before proceeding.</para>
     </section>
 
-    <section>
-      <title><anchor id="simulator" />Running an Application in Simulator
-      Mode</title>
+    <section id="section.running.simulator">
+      <title>Running an Application with a Simulator Configuration</title>
 
       <para>Running in <quote>simulator mode</quote> means that your input is
       simulated and your display windows may have limited functionality. (By
@@ -1236,7 +1235,7 @@ value</screen>
         <filename>$HOME/.vjconfig</filename>. The environment variable
         <envar>VJ_CFG_PATH</envar> is useful in providing a search path for
         finding your configuration files. (Refer to <xref
-        linkend="envvars.optional.section" /> for more information on using
+        linkend="section.envvars.optional" /> for more information on using
         <envar>VJ_CFG_PATH</envar>). To simplify running applications, you may
         want to make a shell script (or batch file as appropriate) that does
         all the work of passing configuration files and common command-line
@@ -1258,7 +1257,7 @@ value</screen>
         animated blue mesh, a cyan ellipsoid, and a green pointer. The mesh is
         what you have come to see; the ellipsoid is the user's head; and the
         pointer is the user's hand. In <xref
-        linkend="MPApp.running.figure" />, we show what this looks on a RedHat
+        linkend="figure.MPApp.running" />, we show what this looks on a RedHat
         Linux 7.2 desktop for comparison with what you are seeing. Note that
         the head and wand are only rendered in the simulator windows. They are
         present because head and wand input are being simulated, and it is
@@ -1266,7 +1265,7 @@ value</screen>
         exit the application, press <keysym>ESC</keysym> in the window titled
         <quote>Head Window</quote>.</para>
 
-        <figure id="MPApp.running.figure">
+        <figure id="figure.MPApp.running">
           <title>MPApp running on a Linux desktop with multiple input
           windows</title>
 
@@ -1286,11 +1285,11 @@ value</screen>
         <screen>% MPApp standalone.jconf</screen>
 
         <para>This time, only a single window opens, as shown in <xref
-        linkend="MPApp.running.single.figure" />. It shows the same graphics
+        linkend="figure.MPApp.running.single" />. It shows the same graphics
         as before, but now it is configured to take keyboard and mouse input.
         To exit, press <keysym>ESC</keysym> in the graphics window.</para>
 
-        <figure id="MPApp.running.single.figure">
+        <figure id="figure.MPApp.running.single">
           <title>MPApp running on a Linux desktop with one window</title>
 
           <mediaobject>
@@ -1320,11 +1319,11 @@ value</screen>
           As was stated above, the full path need not be specified, so
           referencing <envar>VJ_BASE_DIR</envar> in the path to the example
           configuration files will not be necessary in most cases.. In <xref
-          linkend="visual.studio.project-settings.dialog.figure" />, we see
+          linkend="figure.visual.studio.dialog.project.settings" />, we see
           the use of <filename>standalone.jconf</filename> as the single
           command argument to MPApp.</para>
 
-          <figure id="visual.studio.project-settings.dialog.figure">
+          <figure id="figure.visual.studio.dialog.project.settings">
             <title>Setting Command Arguments</title>
 
             <mediaobject>
@@ -1339,9 +1338,9 @@ value</screen>
           <para>With the application already compiled, execute the MPApp
           program by choosing the <guimenuitem>Start</guimenuitem> item from
           the <guimenu>Debug</guimenu> menu, shown below in <xref
-          linkend="visual.studio.debug-menu.exectue.figure" />.</para>
+          linkend="figure.visual.studio.menu.debug.execute" />.</para>
 
-          <figure id="visual.studio.debug-menu.exectue.figure">
+          <figure id="figure.visual.studio.menu.debug.execute">
             <title>Execute <filename>MPApp.exe</filename></title>
 
             <mediaobject>
@@ -1368,17 +1367,17 @@ value</screen>
           variable will be set correctly, and it is recommended that VR
           Juggler applications be launched from this xterm. From this xterm,
           set the necessary environment variables as described earlier in
-          <xref linkend="envvars.required.section" />. Once this is done, the
+          <xref linkend="section.envvars.required" />. Once this is done, the
           application can be executed from the command line just as described
           in the previous section.</para>
 
           <para>MPApp is shown executing on a Mac OS X desktop in <xref
-          linkend="MPApp.OSX.running.single.figure" />. Note that in the dock,
+          linkend="figure.MPApp.running.single.OSX" />. Note that in the dock,
           the X11 icon is activated and that the application menu is for an
           X11 application. This truly is an X11 application running on OS
           X.</para>
 
-          <figure id="MPApp.OSX.running.single.figure">
+          <figure id="figure.MPApp.running.single.OSX">
             <title>MPApp running on Mac OS X using X11 with one window</title>
 
             <mediaobject>
@@ -1758,9 +1757,9 @@ value</screen>
         </note>
 
         <para>The key presses used for controlling the analog devices are
-        listed in <xref linkend="sim.analog.keys.table" />.</para>
+        listed in <xref linkend="table.sim.analog.keys" />.</para>
 
-        <table id="sim.analog.keys.table">
+        <table id="table.sim.analog.keys">
           <title>Analog Device Simulator Keys</title>
 
           <tgroup cols="2">
