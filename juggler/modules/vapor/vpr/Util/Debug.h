@@ -142,6 +142,8 @@
 #define vprDEBUG_BEGINlg(cat,val,show_thread,use_indent,lockIt) if (val>VPR_MAX_DBG_LEVEL) ; else if((vpr::Debug::instance()->isDebugEnabled()) && (val <= vpr::Debug::instance()->getLevel()) && (vpr::Debug::instance()->isCategoryAllowed(cat))) vpr::Debug::instance()->getStream(cat, val, show_thread, use_indent, 1, lockIt)
 #define vprDEBUG_END(cat,val) if (val>VPR_MAX_DBG_LEVEL) ; else if((vpr::Debug::instance()->isDebugEnabled()) && (val <= vpr::Debug::instance()->getLevel()) && (vpr::Debug::instance()->isCategoryAllowed(cat))) vpr::Debug::instance()->getStream(cat, val, true, true, -1)
 #define vprDEBUG_ENDlg(cat,val,show_thread,use_indent,lockIt) if (val>VPR_MAX_DBG_LEVEL) ; else if((vpr::Debug::instance()->isDebugEnabled()) && (val <= vpr::Debug::instance()->getLevel()) && (vpr::Debug::instance()->isCategoryAllowed(cat))) vpr::Debug::instance()->getStream(cat, val, show_thread, use_indent, -1, lockIt)
+#define vprDEBUG_DECREMENT_INDENT() vpr::Debug::instance()->decrementIndentLevel()
+
 
 #define vprDEBUG_CONT(cat,val) vprDEBUGlg(cat,val,false,false,true)
 #define vprDEBUG_CONT_END(cat,val) vprDEBUG_ENDlg(cat,val,false,false,true)
@@ -282,6 +284,20 @@ namespace vpr
       /** Dump the current status to screen */
       void debugDump();
 
+      /// Decrement the level of indention
+      void decrementIndentLevel()
+      {
+         if(indentLevel>0)
+            indentLevel--;
+      }
+
+      /// Increment the level of indention
+      void incrementIndentLevel()
+      {
+         indentLevel++;
+      }
+
+      
    private:
       bool mDebugEnabled;  // Is debug output enabled
       int debugLevel;      //! Debug level to use
@@ -292,7 +308,8 @@ namespace vpr
       Mutex          mDebugLock;
 
       //std::vector<bool> mAllowedCategories;      //! The categories we allow
-
+   
+      
       struct CategoryInfo
       {
          /*CategoryInfo()
@@ -360,16 +377,45 @@ namespace vpr
             vprDEBUG(mCat, mLevel) << mEntryText << vprDEBUG_FLUSH;
          }
       }
+      
+      DebugOutputGuard(const vpr::DebugCategory& cat, const int level, 
+                       std::string entryText, bool indent = true)
+         : mCat(cat), mLevel(level), mEntryText(entryText), mIndent(indent)
+         {
+            if(mIndent)
+            {
+               vprDEBUG_BEGIN(mCat, mLevel) << mEntryText << vprDEBUG_FLUSH;
+            }
+            else
+            {
+               vprDEBUG(mCat, mLevel) << mEntryText << vprDEBUG_FLUSH;
+            }
+            mExitText=std::string("");
+         }
 
       ~DebugOutputGuard()
       {
          if(mIndent)
          {
-            vprDEBUG_END(mCat, mLevel) << mExitText << vprDEBUG_FLUSH;
+            if(mExitText==std::string(""))
+            {
+               vprDEBUG_DECREMENT_INDENT();
+            }
+            else
+            {     
+               vprDEBUG_END(mCat, mLevel) << mExitText << vprDEBUG_FLUSH;
+            }
          }
          else
          {
-            vprDEBUG(mCat, mLevel) << mExitText << vprDEBUG_FLUSH;
+            if(mExitText==std::string(""))
+            {
+               vprDEBUG_DECREMENT_INDENT();
+            }
+            else
+            {
+               vprDEBUG(mCat, mLevel) << mExitText << vprDEBUG_FLUSH;
+            }
          }
       }
 
@@ -379,7 +425,6 @@ namespace vpr
       std::string               mExitText;
       bool                      mIndent;
    };
-
 
 
 }; // End of vpr namespace
