@@ -71,9 +71,15 @@ ThreadPosix::staticWrapper ThreadPosix::statics;
 // Non-spawning constructor.  This will not start a new thread.
 ThreadPosix::ThreadPosix(VPRThreadPriority priority, VPRThreadScope scope,
                          VPRThreadState state, size_t stackSize)
-   : mUserThreadFunctor(NULL), mDeleteThreadFunctor(false), mRunning(false),
-     mPriority(priority), mScope(scope), mState(state), mStackSize(stackSize),
-     mThreadStartCompleted(false), mStartFunctor(NULL)
+   : mUserThreadFunctor(NULL)
+   , mDeleteThreadFunctor(false)
+   , mRunning(false)
+   , mPriority(priority)
+   , mScope(scope)
+   , mState(state)
+   , mStackSize(stackSize)
+   , mThreadStartCompleted(false)
+   , mStartFunctor(NULL)
 {
    /* Do nothing. */ ;
 }
@@ -83,9 +89,15 @@ ThreadPosix::ThreadPosix(VPRThreadPriority priority, VPRThreadScope scope,
 ThreadPosix::ThreadPosix(thread_func_t func, void* arg,
                          VPRThreadPriority priority, VPRThreadScope scope,
                          VPRThreadState state, size_t stackSize)
-   : mUserThreadFunctor(NULL), mDeleteThreadFunctor(false), mRunning(false),
-     mPriority(priority), mScope(scope), mState(state), mStackSize(stackSize),
-     mThreadStartCompleted(false), mStartFunctor(NULL)
+   : mUserThreadFunctor(NULL)
+   , mDeleteThreadFunctor(false)
+   , mRunning(false)
+   , mPriority(priority)
+   , mScope(scope)
+   , mState(state)
+   , mStackSize(stackSize)
+   , mThreadStartCompleted(false)
+   , mStartFunctor(NULL)
 {
    // Create the thread functor to start.  This will be deleted in the
    // destructor.
@@ -99,9 +111,15 @@ ThreadPosix::ThreadPosix(thread_func_t func, void* arg,
 ThreadPosix::ThreadPosix(BaseThreadFunctor* functorPtr,
                          VPRThreadPriority priority, VPRThreadScope scope,
                          VPRThreadState state, size_t stackSize)
-   : mUserThreadFunctor(NULL), mDeleteThreadFunctor(false), mRunning(false),
-     mPriority(priority), mScope(scope), mState(state), mStackSize(stackSize),
-     mThreadStartCompleted(false), mStartFunctor(NULL)
+   : mUserThreadFunctor(NULL)
+   , mDeleteThreadFunctor(false)
+   , mRunning(false)
+   , mPriority(priority)
+   , mScope(scope)
+   , mState(state)
+   , mStackSize(stackSize)
+   , mThreadStartCompleted(false)
+   , mStartFunctor(NULL)
 {
    setFunctor(functorPtr);
    start();
