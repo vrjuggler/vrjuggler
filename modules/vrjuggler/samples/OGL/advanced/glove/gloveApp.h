@@ -274,31 +274,16 @@ inline void gloveApp::preDraw()
 
     //vjDEBUG(7) << "Gesture: " << mGesture->getGestureString(mGesture->getGesture())<<"\n"<<flush;
     //vjDEBUG(7) << glovePos[0]<<" "<<glovePos[1]<<" "<<glovePos[2]<<" : "<<mCubePos[0]<<" "<<mCubePos[1]<<" "<<mCubePos[2]<<"\n"<<flush;
-/*
-    //: Navagate Rotationally when open hand...
-    if (mGesture->getGesture() == mGesture->getGestureIndex("Open Hand"))
-    {
-	float roll, pitch, yaw;
-	finger_matrix.getZXYEuler( roll, pitch, yaw );
-	vjVec3 up(0.0f, 1.0f, 0.0f);
-	mNavigation.preRot( yaw * 0.02f, up, mNavigation);
-    }
 
-    //: Navagate in hand direction when pointing...
-    if (mGesture->getGesture() == mGesture->getGestureIndex("Pointing"))
-    {
-	float roll, pitch, yaw;
-	finger_matrix.getZXYEuler( roll, pitch, yaw );
-	vjVec3 up(0.0f, 1.0f, 0.0f);
-	mNavigation.preRot( yaw * 0.02f, up, mNavigation);
-	mNavigation.preTrans( 0.0f, 0.0f, 0.1f, mNavigation );
-    }
-*/
     static float userVelocity = 0;
     
     if (mGesture->getGesture() == mGesture->getGestureIndex("Pointing"))
     {
 	userVelocity += 0.0001f;
+    } else
+    if (mGesture->getGesture() == mGesture->getGestureIndex("Closed Fist"))
+    {
+	userVelocity = 0.0f;
     }
     userInfo.setVelocity( userVelocity );
     userInfo.setAngularVelocity( 0.01f );
@@ -308,7 +293,7 @@ inline void gloveApp::preDraw()
 
     //: pick up the object if you're pointing.
     //  set the object position equal to the glove position.
-    if ( mGesture->getGesture() == mGesture->getGestureIndex("Closed Fist"))
+    if ( mGesture->getGesture() == mGesture->getGestureIndex("Open Hand"))
     {
 	if (mConeSelected)
 	    mConePos = glovePos;
@@ -335,7 +320,7 @@ inline void gloveApp::preDraw()
     // ...otherwise,
     //   If glove is not pointing, or
     //   we don't already have a selected one, then...
-    else if ( mGesture->getGesture() != mGesture->getGestureIndex("Closed Fist") ||
+    else if ( mGesture->getGesture() != mGesture->getGestureIndex("Open Hand") ||
 	      (mCubeSelected   == false &&
 	       mSphereSelected == false &&
 	       mConeSelected   == false)   )
