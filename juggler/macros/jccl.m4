@@ -172,28 +172,28 @@ AC_DEFUN([JCCL_PATH_CXX],
             JCCL_INCLUDES=`$JCCL_CONFIG $jccl_config_args --includes`
             JCCL_EXTRA_LIBS_CC=`$JCCL_CONFIG $jccl_config_args --extra-libs $ABI`
             JCCL_EXTRA_LIBS_LD=`$JCCL_CONFIG $jccl_config_args --extra-libs $ABI --linker`
-            JCCL_LIBS_CC="`$JCCL_CONFIG $jccl_config_args --libs $ABI` $JCCL_EXTRA_LIBS_CC"
-            JCCL_LIBS_LD="`$JCCL_CONFIG $jccl_config_args --libs $ABI --linker` $JCCL_EXTRA_LIBS_LD"
-            JCCL_PROF_LIBS_CC="`$JCCL_CONFIG $jccl_config_args --libs $ABI --profiled` $JCCL_EXTRA_LIBS_CC"
-            JCCL_PROF_LIBS_LD="`$JCCL_CONFIG $jccl_config_args --libs $ABI --linker --profiled` $JCCL_EXTRA_LIBS_LD"
-            JCCL_LIBS_STATIC_CC="`$JCCL_CONFIG $jccl_config_args --libs $ABI --static` $JCCL_EXTRA_LIBS_CC"
-            JCCL_LIBS_STATIC_LD="`$JCCL_CONFIG $jccl_config_args --libs $ABI --linker --static` $JCCL_EXTRA_LIBS_LD"
-            JCCL_PROF_LIBS_STATIC_CC="`$JCCL_CONFIG $jccl_config_args --libs $ABI --static --profiled` $JCCL_EXTRA_LIBS_CC"
-            JCCL_PROF_LIBS_STATIC_LD="`$JCCL_CONFIG $jccl_config_args --libs $ABI --linker --static --profiled` $JCCL_EXTRA_LIBS_LD"
+            JCCL_LIBS_CC=`$JCCL_CONFIG $jccl_config_args --libs $ABI`
+            JCCL_LIBS_LD=`$JCCL_CONFIG $jccl_config_args --libs $ABI --linker`
+            JCCL_PROF_LIBS_CC=`$JCCL_CONFIG $jccl_config_args --libs $ABI --profiled`
+            JCCL_PROF_LIBS_LD=`$JCCL_CONFIG $jccl_config_args --libs $ABI --linker --profiled`
+            JCCL_LIBS_STATIC_CC=`$JCCL_CONFIG $jccl_config_args --libs $ABI --static`
+            JCCL_LIBS_STATIC_LD=`$JCCL_CONFIG $jccl_config_args --libs $ABI --linker --static`
+            JCCL_PROF_LIBS_STATIC_CC=`$JCCL_CONFIG $jccl_config_args --libs $ABI --static --profiled`
+            JCCL_PROF_LIBS_STATIC_LD=`$JCCL_CONFIG $jccl_config_args --libs $ABI --linker --static --profiled`
 
             JCCL_CXXFLAGS_MIN=`$JCCL_CONFIG $jccl_config_args --cxxflags $ABI --min`
             JCCL_INCLUDES_MIN=`$JCCL_CONFIG $jccl_config_args --includes --min`
             JCCL_EXTRA_LIBS_CC_MIN=`$JCCL_CONFIG $jccl_config_args --extra-libs $ABI --min`
             JCCL_EXTRA_LIBS_LD_MIN=`$JCCL_CONFIG $jccl_config_args --extra-libs $ABI --linker --min`
-            JCCL_LIBS_CC_MIN="`$JCCL_CONFIG $jccl_config_args --libs $ABI --min` $JCCL_EXTRA_LIBS_CC_MIN"
-            JCCL_LIBS_LD_MIN="`$JCCL_CONFIG $jccl_config_args --libs $ABI --linker --min` $JCCL_EXTRA_LIBS_LD_MIN"
-            JCCL_LIBS_LD_MIN="`$JCCL_CONFIG $jccl_config_args --libs $ABI --linker --min` $JCCL_EXTRA_LIBS_LD_MIN"
-            JCCL_PROF_LIBS_CC_MIN="`$JCCL_CONFIG $jccl_config_args --libs $ABI --min --profiled` $JCCL_EXTRA_LIBS_CC_MIN"
-            JCCL_PROF_LIBS_LD_MIN="`$JCCL_CONFIG $jccl_config_args --libs $ABI --linker --min --profiled` $JCCL_EXTRA_LIBS_LD_MIN"
-            JCCL_LIBS_STATIC_CC_MIN="`$JCCL_CONFIG $jccl_config_args --libs $ABI --static --min` $JCCL_EXTRA_LIBS_CC_MIN"
-            JCCL_LIBS_STATIC_LD_MIN="`$JCCL_CONFIG $jccl_config_args --libs $ABI --linker --static --min` $JCCL_EXTRA_LIBS_LD_MIN"
-            JCCL_PROF_LIBS_STATIC_CC_MIN="`$JCCL_CONFIG $jccl_config_args --libs $ABI --static --min --profiled` $JCCL_EXTRA_LIBS_CC_MIN"
-            JCCL_PROF_LIBS_STATIC_LD_MIN="`$JCCL_CONFIG $jccl_config_args --libs $ABI --linker --static --min --profiled` $JCCL_EXTRA_LIBS_LD_MIN"
+            JCCL_LIBS_CC_MIN=`$JCCL_CONFIG $jccl_config_args --libs $ABI --min`
+            JCCL_LIBS_LD_MIN=`$JCCL_CONFIG $jccl_config_args --libs $ABI --linker --min`
+            JCCL_LIBS_LD_MIN=`$JCCL_CONFIG $jccl_config_args --libs $ABI --linker --min`
+            JCCL_PROF_LIBS_CC_MIN=`$JCCL_CONFIG $jccl_config_args --libs $ABI --min --profiled`
+            JCCL_PROF_LIBS_LD_MIN=`$JCCL_CONFIG $jccl_config_args --libs $ABI --linker --min --profiled`
+            JCCL_LIBS_STATIC_CC_MIN=`$JCCL_CONFIG $jccl_config_args --libs $ABI --static --min`
+            JCCL_LIBS_STATIC_LD_MIN=`$JCCL_CONFIG $jccl_config_args --libs $ABI --linker --static --min`
+            JCCL_PROF_LIBS_STATIC_CC_MIN=`$JCCL_CONFIG $jccl_config_args --libs $ABI --static --min --profiled`
+            JCCL_PROF_LIBS_STATIC_LD_MIN=`$JCCL_CONFIG $jccl_config_args --libs $ABI --linker --static --min --profiled`
 
             ifelse([$2], , :, [$2])
          fi
