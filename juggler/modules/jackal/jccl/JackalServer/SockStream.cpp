@@ -31,6 +31,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include <jccl/jcclConfig.h>
+#include <vpr/vpr.h>
 
 #ifdef VPR_OS_Win32
 #include <winsock2.h>
