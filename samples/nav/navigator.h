@@ -34,6 +34,8 @@
 #include <vjVec3.h>
 #include <vjMatrix.h>
 #include <vjCoord.h>
+#include <collider.h>
+#include <vector>
 
 
 #ifndef _NAVIGATOR_H_
@@ -53,14 +55,14 @@ public:
 
    void allowTrans( const bool& state = true ){mAllowTrans = state;}
    void allowRot( const bool& state = true ){mAllowRot = state;}
-   
+
    virtual void heading( float& pitch, float& yaw, float& roll )
    {
       mCurPos.getXYZEuler( pitch, yaw, roll );
       pitch = -pitch;
       yaw = -yaw;
       roll = -roll;
-   }   
+   }
 
    vjMatrix getCurPos()
    { return mCurPos; }
@@ -68,43 +70,128 @@ public:
    void setCurPos(vjMatrix pos)
    { mCurPos = pos; }
 
+   //: Add a collider to the system
+   void addCollider( collider* val )
+   { mColliders.push_back( val ); }
+
 protected:
-      
-   // give a translation vector in local coordinates
-   // i.e. if you want to move forward in the scene, just give (0,0,-1).
-   // NOTE: the direction "forward" would be relative to current rotation
-   bool navTranslate( vjVec3 trans );
+
+   // give a translation vector in local user coordinates (relative to the user's current orientation)
+   // i.e. if you want to move forward (direction facing) in the scene, just give (0,0,-1).
+   // NOTE: the direction "forward" would be relative to current user position
+   // ARGS: didCollide - true - The navigator collided with the model
+   //       totalCorrection - The actual amount moved given the correction (in modelspace)
+   void navTranslate( const vjVec3 trans, bool& didCollide, vjVec3& totalCorrection);
+
    void navRotate( vjMatrix rot_mat );
 
+   // Correct the given attempted translation
+   // Checks the given translation (in model cordinate space) against
+   // the collidors given
+   // Returns the corrected trans in trans, also returns the totalCorrection used
+   bool navCollideTransCorrect(vjVec3& trans, bool& didCollide, vjVec3& totalCorrection);
+
 protected:
-   bool mAllowRot, mAllowTrans;
-   vjMatrix    mCurPos;       // The current position or the user- In Juggler coords
-   bool        allowAxis[3];  // The collider to use
+   bool mAllowRot,   mAllowTrans;
+   vjMatrix          mCurPos;       // (modelspace_M_user) The current position or the user- In Juggler coords
+                                    // Moves the "user" from the models origin to the user's navigated origin (coord system)
+   bool              allowAxis[3];  // Which axes are we allowed to rotate on
+
+   std::vector<collider*>  mColliders;    // The collidors in the system
 };
 
-bool navigator::navTranslate(vjVec3 trans)
-{
-   bool ret_val(false);
-   vjCoord cur_pos(mCurPos);
-   //cerr << "Cur P: " << cur_pos.pos << endl;
-   //cerr << "Trans: " << trans << endl;
-   //cerr << "    =: " << cur_pos.pos+trans << endl;
 
-   // Pre mult cur_mat by the trans we need to do
-   //trans *= -1;
-   vjMatrix trans_mat;  
-   trans_mat.makeTrans(trans[0],trans[1],trans[2]);
-   mCurPos.postMult(trans_mat);
-   return ret_val;
+void navigator::navTranslate(vjVec3 trans, bool& didCollide, vjVec3& totalCorrection)
+{
+   /*
+   vjCoord cur_pos(mCurPos);
+   cerr << "Cur P: " << cur_pos.pos << endl << "Trans: " << trans << endl;
+        << "    =: " << cur_pos.pos+trans << endl;
+   */
+
+   // convert the info to model coordinates, since that's what the nav routines take.
+   // trans is in local (user) coordinates,  xform it to model coordinates (since we are testing against virtual world (model))
+   // Mtrans_model = model_M_user * Mtrans_user
+   vjMatrix cur_rotation = mCurPos;             // Get rotation only part of model_M_user
+   cur_rotation.setTrans( 0.0f, 0.0f, 0.0f );   // zero out the translation...
+   vjVec3 trans_in_modelspace;
+   trans_in_modelspace.xformFull( cur_rotation, trans );
+
+   // Do correction for collision detection
+   // Will return corrected trans value
+   navCollideTransCorrect(trans_in_modelspace, didCollide, totalCorrection);
+
+   // Convert back to trans_in_modelspace back into local space
+   vjMatrix inv_cur_rotation;
+   inv_cur_rotation.invert(cur_rotation);
+   trans.xformFull(inv_cur_rotation, trans_in_modelspace);
+
+   // Post mult cur_mat by the trans we need to do
+   // model_M_new-user = model_M_user*user_M_new-user
+   vjMatrix user_M_newUser;
+   user_M_newUser.makeTrans(trans);
+   mCurPos.postMult(user_M_newUser);
 }
 
 
-
 void navigator::navRotate( vjMatrix rot_mat )
-{  
+{
    //rot_mat.constrainRotAxis( allowAxis[0], allowAxis[1], allowAxis[2], rot_mat );
    mCurPos.postMult( rot_mat );
-   mCurPos.constrainRotAxis( allowAxis[0], allowAxis[1], allowAxis[2], mCurPos );
+   //mCurPos.constrainRotAxis( allowAxis[0], allowAxis[1], allowAxis[2], mCurPos );
+   vjMatrix old_pos = mCurPos;
+   float x_pos, y_pos, z_pos;
+   old_pos.getTrans(x_pos,y_pos,z_pos);
+   mCurPos.makeXYZEuler(0,old_pos.getYRot(),0);     // Only allow Yaw (rot y)
+   mCurPos.setTrans(x_pos,y_pos,z_pos);
+
+   /*
+   float x_rot, y_rot, z_rot;
+   mCurPos.getXYZEuler(x_rot,y_rot,z_rot);
+   mCurPos.makeXYZEuler((allowAxis[0]?x_rot:0),(allowAxis[1]?y_rot:0),(allowAxis[2]?z_rot:0));
+   */
+}
+
+
+// Correct the given attempted translation
+// Checks the given translation (in model cordinate space) against
+// the collidors given
+// returns the modified trans, and the total correction that was applied
+bool navigator::navCollideTransCorrect(vjVec3& trans, bool& didCollide, vjVec3& totalCorrection)
+{
+   // mCurPos (model_M_user) is already in model coordinates,
+   // since it is used to move the geometry from modelspace to userSpace
+   vjVec3 whereYouAre = vjCoord(mCurPos).pos;
+   //vjCoord cur_pos(mCurPos);
+   //whereYouAre = cur_pos.pos;
+
+   // Find out where you want to move to (modelspace = modelspace + modelspace::: no conversion nessesary)
+   //whereYouWantToBe = whereYouAre + trans;
+
+   // the collider will return a correction vector in modelspace coordinates
+   // add this to correct your distance requested to move.
+   vjVec3 local_correction;
+   totalCorrection.set(0.0,0.0,0.0);
+
+   ////////////////////////////////////////////////////////////
+   // Test for collisions with all registered colliders
+   ////////////////////////////////////////////////////////////
+   for (unsigned x = 0; x < mColliders.size(); x++)
+   {
+      // If collision, then ...
+      if (mColliders[x]->testMove( whereYouAre, trans, local_correction ))
+      {
+                  // ... apply the correction.
+         trans += local_correction;
+         totalCorrection += local_correction;
+
+         // HACK(!) - use the correction vectors to decide how much velocity from gravity to remove
+         //        here i'm just zeroing it out... sometimes many times per frame!!! (real bad)
+         //    this should really only be affected by the Y component of the correction vector.
+         //mVelocityFromGravityAccumulator.set( 0.0f, 0.0f, 0.0f );
+         didCollide = true;      // Tell callee that we collided
+      }
+   }
 }
 
 
