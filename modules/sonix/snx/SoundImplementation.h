@@ -130,8 +130,24 @@ public:
     */
    virtual void setAmbient( const std::string& alias, bool setting = false )
    {
+      this->lookup( alias ).ambient = setting;
+   }
+   
+   /**
+    * is the sound ambient - attached to the listener, doesn't change volume
+    * when listener moves...
+    */
+   virtual bool isAmbient( const std::string& alias )
+   {
+      return this->lookup( alias ).ambient;
    }
 
+   /** bend the pitch of the sound. */
+   virtual void setPitchBend( const std::string& alias, float amount )
+   {
+      this->lookup( alias ).pitchbend = amount;
+   }
+   
    /**
     * @semantics stop the sound
     * @input alias of the sound to be stopped

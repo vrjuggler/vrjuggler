@@ -67,6 +67,31 @@ class reference12 {
 @__modelType reference 
 */
 class reference13 {
+}/**
+@__ref <oiref:cpp#Class#SoundHandle:oiref><oihard>
+@__modelType reference 
+*/
+class reference9 {
+}/**
+@__ref <oiref:cpp#Class#sonix1:oiref><oihard>
+@__modelType reference 
+*/
+class reference10 {
+}/**
+@__ref <oiref:cpp#Class#SoundImplementation:oiref><oihard>
+@__modelType reference 
+*/
+class reference14 {
+}/**
+@__ref <oiref:cpp#Class#SoundFactory:oiref><oihard>
+@__modelType reference 
+*/
+class reference16 {
+}/**
+@__ref <oiref:cpp#Class#SoundInfo:oiref><oihard>
+@__modelType reference 
+*/
+class reference18 {
 }}/**
 @__tags
 @shapeType ClassDiagram 
@@ -139,7 +164,7 @@ class __options {
 <oigroup:MemberLink#<oiref:cpp#Member#ajSoundFactory#lnkajStubSoundImplementation:oiref>=1030,879,444,879:oigroup>
 <oigroup:MemberLink#<oiref:cpp#Member#ajSoundFactory#lnkajOpenALSoundImplementation:oiref>=1030,864,902,864:oigroup>
 <oigroup:<oiref:cpp#Member#ajStubSoundImplementation#isStarted#(##)#:oiref>=306,786,0,0,1:oigroup>
-<oigroup:MemberLink#<oiref:cpp#Member#snx::SoundFactory#StubSoundImplementation:oiref>=380,1162,200,1075:oigroup>
+
 <oigroup:MemberLink#<oiref:cpp#Member#ajSoundFactory#lnkajAudioWorksSoundImplementation:oiref>=1030,894,670,894:oigroup>
 <oigroup:MemberLink#<oiref:cpp#Member#ajAudioWorksSoundImplementation#lnkajSoundAPIInfo:oiref>=557,582,813,108:oigroup>
 <oigroup:MemberLink#<oiref:cpp#Member#snx::IAudioInputStream#audioFormat:oiref>=1020,306,737,306:oigroup>

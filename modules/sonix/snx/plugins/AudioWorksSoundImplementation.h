@@ -98,6 +98,8 @@ public:
     */
    virtual void setAmbient( const std::string& alias, bool isAmbient = false );
 
+   /** bend the pitch. */
+   virtual void setPitchBend( const std::string& alias, float amount );
 
    /*
     * mute, sound continues to play, but you can't hear it...

@@ -203,8 +203,14 @@ namespace snx
          float xyz[3] = { 0.0f, 0.0f, 0.0f };
          float hpr[3] = { 0.0f, 0.0f, 0.0f };
          snx::SoundImplementation::getPosition( alias, xyz[0], xyz[1], xyz[2] );
-         awXYZHPR( mBindTable[alias].mSound, xyz, hpr );  //Set sound at origin
+         
+         if (this->isAmbient( alias ) == true)
+            awXYZHPR( mBindTable[alias].mSound, xyz, hpr );  //Set sound at origin
+         else
+            awXYZHPR( mBindTable[alias].mPlayer, xyz, hpr );  //Set sound at origin
+         //std::cout<<"awXYZHPR( "<<xyz[0]<<" "<<xyz[1]<<" "<<xyz[2]<<std::endl;
       }
+      //std::cout<<"you asked for "<<x<<" "<<y<<" "<<z<<std::endl;
    }
 
    /**
@@ -233,6 +239,18 @@ namespace snx
       snx::SoundImplementation::getListenerPosition( mat );
    }
 
+   void AudioWorksSoundImplementation::setPitchBend( const std::string& alias, float amount )
+   {
+      snx::SoundImplementation::setPitchBend( alias, amount );
+      if (mBindTable.count( alias ) > 0 && mSounds.count( alias ) > 0)
+      {
+         if (this->isAmbient( alias ) == true)
+            awProp( mBindTable[alias].mSound, AWSND_PBEND, amount );
+         else
+            awProp( mBindTable[alias].mPlayer, AWSND_PBEND, amount );
+      }
+   }   
+   
    /**
     * start the sound API, creating any contexts or other configurations at startup
     * @postconditions sound API is ready to go.
