@@ -22,7 +22,7 @@
 				Name="VCCLCompilerTool"
 				AdditionalOptions="/Zm800"
 				Optimization="0"
-				AdditionalIncludeDirectories=".;&quot;$(VJ_DEPS_DIR)\include&quot;;&quot;$(VJ_BASE_DIR)\include&quot;"
+				AdditionalIncludeDirectories=".;..\..\advanced\glove;&quot;$(VJ_DEPS_DIR)\include&quot;;&quot;$(VJ_BASE_DIR)\include&quot;"
 				PreprocessorDefinitions="_DEBUG;_CONSOLE;WIN32"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -80,7 +80,7 @@
 				Name="VCCLCompilerTool"
 				InlineFunctionExpansion="1"
 				OmitFramePointers="FALSE"
-				AdditionalIncludeDirectories=".;&quot;$(VJ_DEPS_DIR)\include&quot;;&quot;$(VJ_BASE_DIR)\include&quot;"
+				AdditionalIncludeDirectories=".;..\..\advanced\glove;&quot;$(VJ_DEPS_DIR)\include&quot;;&quot;$(VJ_BASE_DIR)\include&quot;"
 				PreprocessorDefinitions="_OPT;NDEBUG;_CONSOLE;WIN32"
 				StringPooling="TRUE"
 				RuntimeLibrary="2"
@@ -138,12 +138,18 @@
 			<File
 				RelativePath="main.cpp">
 			</File>
+			<File
+				RelativePath="..\..\advanced\glove\navigation.cxx">
+			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl">
 			<File
 				RelativePath="ConfigApp.h">
+			</File>
+			<File
+				RelativePath="..\..\advanced\glove\navigation.h">
 			</File>
 		</Filter>
 		<Filter
