@@ -684,7 +684,7 @@ vjMotionStar::initCorrectionTable (const char* table_file) {
 unsigned int
 vjMotionStar::getBirdIndex (int bird_num, int buffer_index) {
    unsigned int ret_val = (bird_num * 3) + buffer_index;
-   vjASSERT(ret_val >= 0 && ret_val < ((getNumBirds() + 1) * 3));
+   vjASSERT(ret_val < ((getNumBirds() + 1) * 3));
 
    return ret_val;
 }
