@@ -85,8 +85,10 @@ std::string GUID::toString () const
 
 bool GUID::operator== (const GUID& guid) const
 {
-   return (uuid_compare( (uuid_t*)(&m_guid.standard), (uuid_t*)(&guid.m_guid.standard) ) == 0 ? true :
-                                                                  false);
+   return ( (m_guid.packed.l0 == guid.m_guid.packed.l0) &&
+            (m_guid.packed.l1 == guid.m_guid.packed.l1) &&
+            (m_guid.packed.l2 == guid.m_guid.packed.l2) &&
+            (m_guid.packed.l3 == guid.m_guid.packed.l3) );
 }
 
 // ============================================================================
