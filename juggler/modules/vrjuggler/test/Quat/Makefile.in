@@ -39,10 +39,10 @@ testQuat.o: testQuat.cpp
 glquat.o: glquat.c
 
 .c.o:
-	${COMPILE} -c ${srcdir}/$<
+	${COMPILE} -c $<
 
 .cpp.o:
-	${COMPILE} -c ${srcdir}/$<
+	${COMPILE} -c $<
 
 # -----------------------------------------------------------------------------
 # Clean-up.

@@ -41,7 +41,7 @@ testSeg: testSeg.o
 testSeg.o: testSeg.cpp
 
 .cpp.o:
-	${COMPILE} -c ${srcdir}/$<
+	${COMPILE} -c $<
 
 # -----------------------------------------------------------------------------
 # Clean-up.
