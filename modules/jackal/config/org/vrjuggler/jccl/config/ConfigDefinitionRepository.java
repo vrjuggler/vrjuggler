@@ -86,11 +86,18 @@ public class ConfigDefinitionRepository
       }
 
       // Get the maximal version number
-      Integer latest_version = getNewestVersionNumber(token);
+      try
+      {
+         Integer latest_version = getNewestVersionNumber(token);
 
-      Map version_map = (Map)mDefs.get(token);
-      // Return the latest version
-      return (ConfigDefinition)version_map.get(latest_version);
+         Map version_map = (Map)mDefs.get(token);
+         // Return the latest version
+         return (ConfigDefinition)version_map.get(latest_version);
+      }
+      catch(DefinitionLookupException dle)
+      {
+         return null;
+      }
    }
 
    /**
@@ -99,15 +106,18 @@ public class ConfigDefinitionRepository
     * @param token      the token of the definition in question.
     */
    public synchronized Integer getNewestVersionNumber(String token)
+      throws DefinitionLookupException
    {
       // Get the maximal key
       Map version_map = (Map)mDefs.get(token);
+
       if(null == version_map)
       {
-         throw new IllegalArgumentException("Can not find a definition for token: " + token);  
+         throw new DefinitionLookupException("Failed to find definintion " +
+                                             "of type '" + token + "'");
       }
-      Integer latest_version = (Integer)Collections.max(version_map.keySet());
-      return latest_version;
+
+      return (Integer) Collections.max(version_map.keySet());
    }
 
    /**
