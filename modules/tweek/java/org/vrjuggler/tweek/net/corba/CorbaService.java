@@ -216,7 +216,8 @@ public class CorbaService
     * Resolves all the CORBA objects implementing tweek.SubjectManager in
     * bindingList and stores the resulting tweek.SubjectManager object(s) in
     * mgrList.  If bindingList contains no such objects, mgrList will not be
-    * modified.
+    * modified.  All references added to mgrList are guaranteed to refer to
+    * extant objects.
     */
    private void addSubjectManagers(Binding[] bindingList, List mgrList)
    {
@@ -238,7 +239,23 @@ public class CorbaService
                {
                   org.omg.CORBA.Object ref = localContext.resolve(name_comp);
                   tweek.SubjectManager mgr = tweek.SubjectManagerHelper.narrow(ref);
-                  mgrList.add(mgr);
+
+                  // Do not present invalid Subject Manager references to the
+                  // user.  This little test is pretty sweet--I just hope it's
+                  // fast.
+                  try
+                  {
+                     if ( ! mgr._non_existent() )
+                     {
+                        mgrList.add(mgr);
+                     }
+                  }
+                  catch (Exception e)
+                  {
+                     System.err.println("Caught unexpected exception of type " +
+                                         e.getClass().getName());
+                     e.printStackTrace();
+                  }
                }
                catch (InvalidName e)
                {
