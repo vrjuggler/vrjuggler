@@ -132,7 +132,7 @@
 //#   define vjDEBUG_END(cat,val) if (1) ; else std::cout
 #endif
 
-#undef LOCK_DEBUG_STREAM
+// #undef LOCK_DEBUG_STREAM
 
 // Define the actual macros to use
 // vjDEBUG - Outputs debug info
