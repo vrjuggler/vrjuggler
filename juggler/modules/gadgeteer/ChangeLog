@@ -1,7 +1,9 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
-Sep-24-2004 aronb       Added gadget::InputManager::updateAllProxies().
-                        NEW VERSION: 0.16.1
+Sep-24-2004 aronb       Split gadget::InputManager::updateAllData() into
+                        gadget::InputManager::updateAllDevices() and
+                        gadget::InputManager::updateAllProxies().
+                        NEW VERSION: 0.17.0
 Aug-19-2004 patrickh    Added a driver for joysticks on Windows that uses
                         Direct Input.  Submitted by Kejian Jin
                         <kjin@ats.ucla.edu>.
