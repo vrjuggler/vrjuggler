@@ -21,6 +21,14 @@
     </LI>
     <LI>
       <A HREF="#compiling">Compiling an Application</A>
+      <OL TYPE="i">
+        <LI>
+          <A HREF="#command-line">From the Command Line</A>
+        </LI>
+        <LI>
+          <A HREF="#visual-studio">With Visual Studio</A>
+        </LI>
+      </OL>
     </LI>
     <LI>
       <A HREF="#extra">Additional Notes</A>
@@ -54,6 +62,16 @@
   </P>
 
 <A NAME="compiling"><H2>Compiling an Application</H2></A>
+
+  <P>
+    There are two ways to compile VR Juggler applications: from the
+    command line or with Microsoft Visual Studio.  Compiling an
+    application at the command line will work on all supported platforms
+    including Win32.  Using Microsoft Visual Studio will only work on
+    Win32.
+  </P>
+
+<A NAME="command-line"><H3>Compiling From the Command Line</H3></A>
 
   <P>
     All the sample programs in <TT>$VJ_BASE_DIR/samples</TT> use the same
@@ -92,6 +110,85 @@
     program compiled, it's time to
     <A HREF="${GETTINGSTARTED}/app.running.html">learn how to run it</A>.
   </P>
+
+<A NAME="visual-studio"><H3>Compiling Using Microsoft Visual Studio</H3></A>
+
+  <P>
+    All of the OpenGL sample applications are shipped with pre-configured
+    Microsoft Visual C++ workspaces.  This is done to help new users get
+    started with compiling VR Juggler applications and to give experienced
+    Visual Studio users a starting place for their application development.
+    To use the workspace for the <TT>torus</TT> application, begin by
+    opening the folder containing the source code and double-clicking on
+    <TT>torus.dsw</TT>.
+  </P>
+
+  <BLOCKQUOTE>
+    <IMG SRC="torus.dir.jpg" ALT="">
+  </BLOCKQUOTE>
+
+  <P>
+    Visual C++ will open, and the <TT>torus</TT> project will be loaded.
+    The unexpanded class view will look like the following when Visual
+    C++ first loads:
+  </P>
+
+  <BLOCKQUOTE>
+    <IMG SRC="torus.visual.c++.jpg" ALT="">
+  </BLOCKQUOTE>
+
+  <P>
+    Before proceeding, the program arguments must be set.  This is done
+    using the ``Settings'' item under the ``Project'' menu:
+  </P>
+
+  <BLOCKQUOTE>
+    <IMG SRC="torus.visual.c++.settings.jpg" ALT="">
+  </BLOCKQUOTE>
+
+  <P>
+    Selecting this item opens the ``Project Settings'' dialog.  In this
+    window, choose the ``Debug'' tab.  There will be an empty text entry
+    field under the heading ``Project arguments''.  Here, enter the full
+    paths to the VR Juggler config files that will be used to run the
+    <TT>torus</TT> application.  The <TT>$VJ_BASE_DIR</TT> environment
+    variable cannot be used here, unfortunately, so the <I>full path</I>
+    to <I>every</I> file must be used.  The following shows the beginning
+    of the program arguments listing <TT>sim.base.config</TT>,
+    <TT>sim.wand.mixin.config</TT>, and <TT>sim.displays.config</TT>:
+  </P>
+
+  <BLOCKQUOTE>
+    <IMG SRC="torus.visual.c++.args.jpg" ALT="">
+  </BLOCKQUOTE>
+
+  <P>
+    Note that in this example, the <TT>/</TT> directory separator is used
+    instead of <TT>\</TT>.  This is not strictly required in this case,
+    but doing it this way maintains consistency with other examples.
+  </P>
+
+  <P>
+    Once the program arguments are set up, compile the application.
+    Under the ``Build'' menu, choose the ``Build torus.exe'' item as
+    shown below:
+  </P>
+
+  <BLOCKQUOTE>
+    <IMG SRC="torus.visual.c++.build.jpg" ALT="">
+  </BLOCKQUOTE>
+
+  <P>
+    Visual C++ will compile the application, and if you have everything
+    configured properly on your computer, the compiling will complete
+    successfully.  Once it is done, execute the <TT>torus</TT> program
+    by choosing the ``Execute torus.exe'' item from the ``Build'' menu,
+    shown below.
+  </P>
+
+  <BLOCKQUOTE>
+    <IMG SRC="torus.visual.c++.run.jpg" ALT="">
+  </BLOCKQUOTE>
 
 <A NAME="extra"><H2>Additional Notes</H2></A>
 
