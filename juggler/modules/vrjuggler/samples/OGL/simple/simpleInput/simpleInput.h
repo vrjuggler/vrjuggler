@@ -18,8 +18,11 @@
 //: Simple Input Demonstration application
 //
 // This application demonstrates getting and printing input
+//
+// NOTE: It is derived from vjGlApp only because vjApp
+//        is an abstract base class.
 //----------------------------------------------------
-class simpleInput : public vjApp
+class simpleInput : public vjGlApp
 {
 public:
    simpleInput()
@@ -65,6 +68,8 @@ public:
       std::cout << "Wand pos: \n" << wand_matrix << std::endl;
    }
 
+public:
+   virtual void draw() {;}
 
 public:
    vjPosInterface    mWand;         // Positional interface for Wand position
