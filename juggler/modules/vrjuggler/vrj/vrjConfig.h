@@ -122,6 +122,10 @@
 #   define asinf(x) ((float) asin(x))
 #endif
 
+#ifndef HAVE_ACOSF
+#   define acosf(x) ((float) acos(x))
+#endif
+
 #ifndef HAVE_ATAN2F
 #   define atan2f(x, y) ((float) atan2(x, y))
 #endif
