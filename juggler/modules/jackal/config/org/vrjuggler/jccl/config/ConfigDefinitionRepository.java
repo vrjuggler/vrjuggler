@@ -85,12 +85,25 @@ public class ConfigDefinitionRepository
          return null;
       }
 
+      // Get the maximal version number
+      Integer latest_version = getNewestVersionNumber(token);
+
+      Map version_map = (Map)mDefs.get(token);
+      // Return the latest version
+      return (ConfigDefinition)version_map.get(latest_version);
+   }
+
+   /**
+    * Gets the latest version number for the given token.
+    *
+    * @param token      the token of the definition in question.
+    */
+   public synchronized Integer getNewestVersionNumber(String token)
+   {
       // Get the maximal key
       Map version_map = (Map)mDefs.get(token);
       Integer latest_version = (Integer)Collections.max(version_map.keySet());
-
-      // Return the latest version
-      return (ConfigDefinition)version_map.get(latest_version);
+      return latest_version;
    }
 
    /**
