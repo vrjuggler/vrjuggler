@@ -58,6 +58,19 @@ dnl ignore the nasty paths appended by the config scripts...
 saveCXXFLAGS="$CXXFLAGS"
 saveINCLUDES="$INCLUDES"
 
+# -----------------------------------------------------------------------------
+# Path setup.
+# -----------------------------------------------------------------------------
+
+# $srcdir is the root directory of the SNX source tree.  To get a value
+# for $VPRROOT_ABS, we cd there and save the value of running pwd.  Then
+# return to the directory where configure is being run ($topdir).
+cd "$srcdir"
+SNXROOT_ABS=`pwd`
+
+cd "$SNXROOT_ABS/../.."
+JUGGLERROOT_ABS=`pwd`
+cd "$topdir"
 
 # -----------------------------------------------------------------------------
 # Checks for libraries.
@@ -232,16 +245,6 @@ if test "x$PLATFORM" = "xHP" -a "x$USE_GCC" != "xyes" ; then
 elif test "x$OS_TYPE" = "xWin32" ; then
     DEPEND_EXTRAS="$DEPEND_EXTRAS -D__cplusplus"
 fi
-
-# $srcdir is the root directory of the SNX source tree.  To get a value
-# for $VPRROOT_ABS, we cd there and save the value of running pwd.  Then
-# return to the directory where configure is being run ($topdir).
-cd "$srcdir"
-SNXROOT_ABS=`pwd`
-
-cd "$SNXROOT_ABS/../.."
-JUGGLERROOT_ABS=`pwd`
-cd "$topdir"
 
 # Define the base path to the source directory using $SNXROOT_ABS as an
 # alternative to using $srcdir.
