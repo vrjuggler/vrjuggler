@@ -134,9 +134,10 @@ public class ChunkDescDBEditor
             // Edit an entire desc
             else if (node.getUserObject() instanceof ChunkDesc)
             {
-               ChunkDesc desc = (ChunkDesc)node.getUserObject();
-               descPropSheet.setChunkDesc(desc);
-               editorPaneLayout.show(editorPane, CHUNK_DESC);
+//               ChunkDesc desc = (ChunkDesc)node.getUserObject();
+//               descPropSheet.setChunkDesc(desc);
+//               editorPaneLayout.show(editorPane, CHUNK_DESC);
+               return;
             }
             // Edit a specific property desc
             else if (node.getUserObject() instanceof PropertyDesc)
