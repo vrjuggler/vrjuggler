@@ -190,6 +190,11 @@ sub recurseAction($)
     $alias_subst{"CurrentFilePath"} = "$full_src_path/$curfile";
     $alias_subst{"CurrentURL"} = "$html_install_prefix/$rel_path/$curfile";
    
+   my $UniquePageID = "$html_install_prefix/$rel_path/$curfile";
+   $UniquePageID =~ s/\//-/gis;
+   $UniquePageID =~ s/:/./gis;
+   $alias_subst{"UniquePageID"} = $UniquePageID;
+   
     # print "recurseAction: $curfile , $full_src_path , $full_dest_path, $rel_path\n";
 
     # I need the full name of the file where it is going to be installed
