@@ -121,10 +121,10 @@ AC_ARG_WITH(python-orb-bin,
             python_orb_bin_dir="$withval", python_orb_bin_dir='none')
 
 AC_ARG_WITH(java-orb,
-            [  --with-java-orb=<NAME>  Name of Java ORB to use         [default=OpenORB]
+            [  --with-java-orb=<NAME>  Name of Java ORB to use         [default=JDK]
                           Allowed values are:
                             JDK, OpenORB, JacORB],
-            java_orb_name="$withval", java_orb_name='OpenORB')
+            java_orb_name="$withval", java_orb_name='JDK')
 
 AC_ARG_WITH(java-orb-jar,
             [  --with-java-orb-jar=<PATH>
@@ -774,7 +774,7 @@ case $java_orb_name in
    JDK)
       # If we are going to use Java IDL, we have to have JDK 1.4 or newer so
       # that we get an ORB that supports INS.
-      DPP_JDK_VERSION($JDK_HOME, 1.4, ,
+      DPP_JDK_VERSION([$JDK_HOME], [1.4], ,
          [AC_MSG_ERROR([*** JDK 1.4 or newer required for Java IDL use ***])])
       ;;
    *)
