@@ -161,20 +161,26 @@ vpr::ReturnStatus FlockStandalone::open ()
    unsigned attempt_num = 0;
    const unsigned max_open_attempts(7);
    
+   // Allocate the port if we need to
+   if ( NULL == mSerialPort )
+   {
+      mSerialPort = new vpr::SerialPort(mPort);
+      if (!mSerialPort)
+      {  return vpr::ReturnStatus::Fail; }
+   }
+
+   // Initially open and close the port (this seems to help connections on some os's
+   mSerialPort->open();
+   mSerialPort->setRequestToSend(true);
+   vpr::System::msleep(200);
+   mSerialPort->close();
+
    // do: open port and try to read
    // while: not successful
    // --> Repetitively try to open port and setup parameters until connection works correctly
    do
    {
       open_successfull = true;
-
-      // Allocate the port if we need to
-      if ( NULL == mSerialPort )
-      {
-         mSerialPort = new vpr::SerialPort(mPort);
-         if (!mSerialPort)
-         {  return vpr::ReturnStatus::Fail; }
-      }
 
       mSerialPort->setOpenReadWrite();
 
@@ -244,12 +250,18 @@ vpr::ReturnStatus FlockStandalone::open ()
             }
          }
 
+         // If not successfull
+         // - close port
+         // - delete and allocate a new one
          if(!open_successfull)
          {
             if (mSerialPort->isOpen())
             {  mSerialPort->close(); }
             delete mSerialPort;
-            mSerialPort = NULL;
+            
+            mSerialPort = new vpr::SerialPort(mPort);
+            if (!mSerialPort)
+            {  return vpr::ReturnStatus::Fail; }
 
             vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_LVL) << "FlockStandalone::open: Failed to open successfully on attempt: "
                                                     << attempt_num << ".  Trying again...\n" << vprDEBUG_FLUSH;
@@ -334,6 +346,10 @@ vpr::ReturnStatus FlockStandalone::configure()
    // Check for errors
    checkError();
 
+   // ---- Final setup for all data structures --- //
+   // Allocate space for sensor data structure
+   mSensorData.resize(mNumSensors);             // Make sure we have enough room for all sensor ids
+
    // flock is active.
    mStatus = FlockStandalone::RUNNING;
 
@@ -358,48 +374,69 @@ void FlockStandalone::sample()
    }
    const unsigned data_record_size(mNumSensors*single_bird_data_size);    // Size of the data record to read
 
-   // - Get a data record in whatever way we should for this mode
-   // - Take into account phasing bits
-   // - Process the data record
-   if(FlockStandalone::RUNNING == mStatus)     // Must use point mode
-   {
-      mSerialPort->drainOutput();
-      mSerialPort->flushQueue(vpr::SerialTypes::IO_QUEUES);       // Clear the buffers
-      sendCommand(Flock::Command::Point);       // Triggers a data record update
+   bool sample_succeeded;        // Flag for success. When false, there was an error so repeat.
 
-      mSerialPort->read(data_record, data_record_size, bytes_read, mReadTimeout);
-      if(data_record_size != bytes_read)
-      { throw Flock::CommandFailureException("Did not read full data record in point mode."); }
-   }
-   else if(FlockStandalone::STREAMING == mStatus)
+   // Try to send/read sample until it succeeds
+   do
    {
-      // Look for phasing bit
-      vpr::Uint8 buffer;
-
-      // Read one byte at a time looking for phasing bit
-      // Do while we don't have phasing bit
-      do
+      sample_succeeded = true;      // Default to success
+      data_record.clear();
+      try
       {
-         mSerialPort->read(&buffer, 1, bytes_read, mReadTimeout);
-         if(1 != bytes_read)
-         { throw Flock::CommandFailureException("No response looking for first byte of streaming data"); }
+         // - Get a data record in whatever way we should for this mode
+         // - Take into account phasing bits
+         // - Process the data record
+         if(FlockStandalone::RUNNING == mStatus)     // Must use point mode
+         {
+            //mSerialPort->drainOutput();
+            //mSerialPort->flushQueue(vpr::SerialTypes::IO_QUEUES);       // Clear the buffers
+            //vprASSERT(mSerialPort->
+            sendCommand(Flock::Command::Point);       // Triggers a data record update
+      
+            mSerialPort->read(data_record, data_record_size, bytes_read, mReadTimeout);
+            if(data_record_size != bytes_read)
+            { throw Flock::CommandFailureException("Did not read full data record in point mode."); }
+         }
+         else if(FlockStandalone::STREAMING == mStatus)
+         {
+            // Look for phasing bit
+            vpr::Uint8 buffer;
+      
+            // Read one byte at a time looking for phasing bit
+            // Do while we don't have phasing bit
+            do
+            {
+               mSerialPort->read(&buffer, 1, bytes_read, mReadTimeout);
+               if(1 != bytes_read)
+               { throw Flock::CommandFailureException("No response looking for first byte of streaming data"); }
+            }
+            while(!(phase_mask & buffer));
+      
+            vprASSERT(phase_mask & buffer);
+      
+            // Now read the rest of the record
+            mSerialPort->read(data_record, data_record_size-1, bytes_read, mReadTimeout);
+            if(data_record_size-1 != bytes_read)
+            { throw Flock::CommandFailureException("Could not find entire streaming data record"); }
+      
+            // Check to make sure there are no other phase bits in the data record
+            for(unsigned b=0;b<data_record.size();++b)
+            {  vprASSERT(!(phase_mask & data_record[b])); }
+      
+            data_record.insert(data_record.begin(), buffer);
+         }
       }
-      while(!(phase_mask & buffer));
-
-      vprASSERT(phase_mask & buffer);
-
-      // Now read the rest of the record
-      mSerialPort->read(data_record, data_record_size-1, bytes_read, mReadTimeout);
-      if(data_record_size-1 != bytes_read)
-      { throw Flock::CommandFailureException("Could not find entire streaming data record"); }
-
-      // Check to make sure there are no other phase bits in the data record
-      for(unsigned b=0;b<data_record.size();++b)
-      {  vprASSERT(!(phase_mask & data_record[b])); }
-
-      data_record.insert(data_record.begin(), buffer);
+      catch(Flock::CommandFailureException& cfe)
+      {
+         vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL) << "FlockStandalone::sample: Warning: exception:" << cfe.getMessage() << std::endl << vprDEBUG_FLUSH;
+         vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL) << "FlockStandalone::sample: Flushing queues to correct.\n" << vprDEBUG_FLUSH;
+         vpr::System::msleep(750);     // Wait for data to arrive and clear
+         mSerialPort->flushQueue(vpr::SerialTypes::IO_QUEUES);
+         sample_succeeded = false;
+      }
    }
-
+   while(!sample_succeeded);
+      
    // Process the data record
    vprASSERT(data_record[0] & phase_mask);
    processDataRecord(data_record);
