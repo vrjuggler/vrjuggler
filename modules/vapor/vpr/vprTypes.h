@@ -42,6 +42,7 @@
 #ifndef _VPR_TYPES_H_
 #define _VPR_TYPES_H_
 
+#include <vpr/vprConfig.h>
 
 #ifdef VPR_USE_NSPR
 #  include <vpr/md/NSPR/vprTypesNSPR.h>
