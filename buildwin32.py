@@ -1127,6 +1127,13 @@ def installOmniORB(prefix):
       destdir = os.path.join(prefix, 'lib', 'python')
       installDir(srcdir, destdir)
 
+   # If omnipython is installed along with omniORB, we need to install it, too.
+   srcdir = os.path.join(root, 'lib', 'python1.5')
+
+   if os.path.exists(srcdir):
+      destdir = os.path.join(prefix, 'lib', 'python1.5')
+      installDir(srcdir, destdir)
+
    # Install all executables and DLLs.
    # NOTE: When we install the omniORB .dll files, we get rid of the x86_win32
    # subdirectory.
