@@ -622,12 +622,14 @@ dnl Variables set in Makefiles found in the application trees.  All variables
 dnl listed are for use only in the Makefile.in's found in that tree unless
 dnl otherwise noted.  They are used in the following way:
 dnl
-dnl     * APP_EXTRA_LFLAGS: Extra flags for the linker.
-dnl     * APP_BASIC_LIBS: The basic libraries being built in this system.
-dnl     * APP_EXTRA_LIBS_BEGIN: Options used at the beginning of the list of
-dnl       extra libraries.
-dnl     * APP_EXTRA_LIBS_END: Options used at the end of the list of extra
-dnl       libraries.
+dnl     * APP_LINK: The command that will be used to link applications.
+dnl     * APP_LINK_FLAGS: Flags passed to the linker.
+dnl     * APP_DEBUG_LDFLAGS: Debugging linker flags.
+dnl     * APP_OPTIM_LDFLAGS: Optimizing linker flags.
+dnl     * PROJ_BASE_DIR_ENV: The name of the environment variable that deifnes
+dnl       the base installation directory.
+dnl     * BASIC_LIBS: The platform-indepenedent names of the basic libraries
+dnl       that must be linked (for example, "GL X11 m").
 dnl     * APP_EXTRA_LIBS: A basic set of extra libraries and linker flags
 dnl       needed for compiling.  These are put after those listed in the
 dnl       previous variables in the compile line.
