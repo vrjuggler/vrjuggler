@@ -15,6 +15,11 @@
 #
 # Example:
 #     CLEAN_FILES += file1.o file2.o
+#
+# Similarly, a "local" 'cleandepend' target can be used by defining
+# #{_LOCAL_CLEANDEP} before including this file.  The name of the local
+# target is '_cleandepend', and it will be run after the standard
+# 'cleandepend' target is finished.
 # -----------------------------------------------------------------------------
 
 CLEAN_FILES	= Makedepend core so_locations
@@ -27,4 +32,7 @@ ifdef _LOCAL_CLEAN
 endif
 
 cleandepend:
-	-rm -f .depend_done
+	-rm -f *.d
+ifdef _LOCAL_CLEANDEP
+	${MAKE} _cleandepend
+endif
