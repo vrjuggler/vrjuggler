@@ -721,21 +721,34 @@ vpr::ReturnStatus SerialPortImplWin32::controlFlow(SerialTypes::FlowActionOption
 
 bool SerialPortImplWin32::getHardwareFlowControlState ()
 {
-   return false;
+    DCB dcb;
+    GetCommState(mHandle, &dcb);
+    if(dcb.fRtsControl==RTS_CONTROL_DISABLE && dcb.fDtrControl==DTR_CONTROL_DISABLE)
+         return false;
+    else
+         return false;
 }
 
 vpr::ReturnStatus SerialPortImplWin32::enableHardwareFlowControl ()
 {
    vpr::ReturnStatus status;
-
-   return status;
+   DCB dcb;
+   GetCommState(mHandle, &dcb);
+   dcb.fRtsControl=RTS_CONTROL_ENABLE;
+   dcb.fDtrControl=DTR_CONTROL_ENABLE;
+   EscapeCommFunction(mHandle, &dcb);
+   return s;
 }
 
 vpr::ReturnStatus SerialPortImplWin32::disableHardwareFlowControl ()
 {
    vpr::ReturnStatus status;
-
-   return status;
+   DBC dcb;
+   GetCommState(mHandle, &dcb);
+   dcb.fTrsControl=RTS_CONTROL_DISABLE;
+   dcb.fDtrControl=DTR_CONTROL_DISABLE;
+   EscapeCommFunction(mHandle, &dcb);
+   return s;
 }
 
 vpr::ReturnStatus SerialPortImplWin32::flushQueue(vpr::SerialTypes::FlushQueueOption queue)
