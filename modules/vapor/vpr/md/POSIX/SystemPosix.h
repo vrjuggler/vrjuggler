@@ -60,7 +60,7 @@
 // I don't know why this is necessary, but I think something is being defined
 // incorrectly somewhere.
 #ifdef VPR_OS_IRIX
-   #include <sys/endian.h>
+#  include <sys/endian.h>
 #endif
 
 #include <sys/types.h>
@@ -149,7 +149,10 @@ public:
 
       ReturnStatus status;
 
-      int ret_val = ::putenv(const_cast<char*>(set_value.c_str()));
+      // Purposely leak memory since putenv(3) may want to hold on to the
+      // pointer we pass.
+      char* env_str = strdup(set_value.c_str());
+      int ret_val = ::putenv(env_str);
 
       if ( ret_val == 0 )
       {
