@@ -62,23 +62,30 @@ class OsgApp : public GlApp
 {
 public:
    OsgApp(Kernel* kern) : GlApp(kern)
-   {;}
+   {
+      ;
+   }
 
    OsgApp() : GlApp()
-   {;}
+   {
+      ;
+   }
 
-   virtual ~OsgApp() {;}
+   virtual ~OsgApp()
+   {
+      ;
+   }
 
    /**
-   * Initialize the scene.
-   * Called by init() to initialize the scene.
-   */
+    * Initializes the scene.
+    * Called by init() to initialize the scene.
+    */
    virtual void initScene() = 0;
 
    /**
-   * Get the root of the scene to render.
-   * Called each frame to get the current scene to render.
-   */
+    * Gets the root of the scene to render.
+    * Called each frame to get the current scene to render.
+    */
    virtual osg::Group* getScene() = 0;
 
    /**
@@ -90,7 +97,7 @@ public:
    virtual void configSceneView(osgUtil::SceneView* newSceneViewer)
    {
       newSceneViewer->setDefaults();
-      newSceneViewer->setBackgroundColor( osg::Vec4(0.0f, 0.0f, 0.0f, 0.0f) );
+      newSceneViewer->setBackgroundColor(osg::Vec4(0.0f, 0.0f, 0.0f, 0.0f));
    }
 
    /**
@@ -127,7 +134,9 @@ public:
     * Use the function to clean up any context data structures.
     */
    virtual void contextClose()
-   {;}
+   {
+      ;
+   }
 
    /**
     * Function that is called upon entry into the context for a draw.
@@ -140,7 +149,9 @@ public:
     *   <br> Ex: Dynamically Create display lists
     */
    virtual void contextPreDraw()
-   {;}
+   {
+      ;
+   }
 
    /**
     * Function that is called upon entry into a buffer of a GL context.
@@ -154,7 +165,9 @@ public:
     *   <br> Ex: glClear's need to be done in this method
     */
    virtual void bufferPreDraw()
-   {;}
+   {
+      ;
+   }
 
    /**
     * Function that is called at the beginning of the drawing of each pipe.
@@ -165,7 +178,9 @@ public:
     *       This is a TEST function.  USE AT YOUR OWN RISK!!!
     */
    virtual void pipePreDraw()
-   {;}
+   {
+      ;
+   }
 
 protected:
    vrj::GlContextData< osgUtil::SceneView* > sceneViewer;
@@ -187,56 +202,56 @@ inline void OsgApp::contextInit()
 
    (*sceneViewer) = new_sv;
 
-    //Setup OpenGL light
-    //This should actualy be done in the simulator code
-    GLfloat light0_ambient[] = { 0.1f,  0.1f,  0.1f,  1.0f};
-    GLfloat light0_diffuse[] = { 0.8f,  0.8f,  0.8f,  1.0f};
-    GLfloat light0_specular[] = { 1.0f,  1.0f,  1.0f,  1.0f};
-    GLfloat light0_position[] = {0.0f, 0.75f, 0.75f, 0.0f};
+   //Setup OpenGL light
+   //This should actualy be done in the simulator code
+   GLfloat light0_ambient[] = { 0.1f,  0.1f,  0.1f,  1.0f};
+   GLfloat light0_diffuse[] = { 0.8f,  0.8f,  0.8f,  1.0f};
+   GLfloat light0_specular[] = { 1.0f,  1.0f,  1.0f,  1.0f};
+   GLfloat light0_position[] = {0.0f, 0.75f, 0.75f, 0.0f};
 
-    GLfloat mat_ambient[] = { 0.7f, 0.7f,  0.7f,  1.0f};
-    GLfloat mat_diffuse[] = { 1.0f,  0.5f,  0.8f,  1.0f};
-    GLfloat mat_specular[] = { 1.0f,  1.0f,  1.0f,  1.0f};
-    GLfloat mat_shininess[] = { 50.0f};
-    //GLfloat mat_emission[] = { 1.0f,  1.0f,  1.0f,  1.0f};
-    GLfloat no_mat[] = { 0.0f,  0.0f,  0.0f,  1.0f};
+   GLfloat mat_ambient[] = { 0.7f, 0.7f,  0.7f,  1.0f};
+   GLfloat mat_diffuse[] = { 1.0f,  0.5f,  0.8f,  1.0f};
+   GLfloat mat_specular[] = { 1.0f,  1.0f,  1.0f,  1.0f};
+   GLfloat mat_shininess[] = { 50.0f};
+   //GLfloat mat_emission[] = { 1.0f,  1.0f,  1.0f,  1.0f};
+   GLfloat no_mat[] = { 0.0f,  0.0f,  0.0f,  1.0f};
 
-    glLightfv(GL_LIGHT0, GL_AMBIENT,  light0_ambient);
-    glLightfv(GL_LIGHT0, GL_DIFFUSE,  light0_diffuse);
-    glLightfv(GL_LIGHT0, GL_SPECULAR,  light0_specular);
-    glLightfv(GL_LIGHT0, GL_POSITION,  light0_position);
+   glLightfv(GL_LIGHT0, GL_AMBIENT,  light0_ambient);
+   glLightfv(GL_LIGHT0, GL_DIFFUSE,  light0_diffuse);
+   glLightfv(GL_LIGHT0, GL_SPECULAR,  light0_specular);
+   glLightfv(GL_LIGHT0, GL_POSITION,  light0_position);
 
-    glMaterialfv( GL_FRONT, GL_AMBIENT, mat_ambient );
-    glMaterialfv( GL_FRONT,  GL_DIFFUSE, mat_diffuse );
-    glMaterialfv( GL_FRONT, GL_SPECULAR, mat_specular );
-    glMaterialfv( GL_FRONT,  GL_SHININESS, mat_shininess );
-    glMaterialfv( GL_FRONT,  GL_EMISSION, no_mat);
+   glMaterialfv( GL_FRONT, GL_AMBIENT, mat_ambient );
+   glMaterialfv( GL_FRONT,  GL_DIFFUSE, mat_diffuse );
+   glMaterialfv( GL_FRONT, GL_SPECULAR, mat_specular );
+   glMaterialfv( GL_FRONT,  GL_SHININESS, mat_shininess );
+   glMaterialfv( GL_FRONT,  GL_EMISSION, no_mat);
 
-    glEnable(GL_DEPTH_TEST);
-    glEnable(GL_NORMALIZE);
-    glEnable(GL_LIGHTING);
-    glEnable(GL_LIGHT0);
-    glEnable(GL_COLOR_MATERIAL);
-    glShadeModel(GL_SMOOTH);
+   glEnable(GL_DEPTH_TEST);
+   glEnable(GL_NORMALIZE);
+   glEnable(GL_LIGHTING);
+   glEnable(GL_LIGHT0);
+   glEnable(GL_COLOR_MATERIAL);
+   glShadeModel(GL_SMOOTH);
 }
 
 
 inline void OsgApp::draw()
 {
    glPushAttrib(GL_TRANSFORM_BIT);
-	glPushAttrib(GL_VIEWPORT_BIT);
-	
-	glMatrixMode(GL_MODELVIEW);
-	glPushMatrix();
-	
-	glMatrixMode(GL_PROJECTION);
-	glPushMatrix();
-	
-	glMatrixMode(GL_TEXTURE);
-	glPushMatrix();
-	
-	
-	osgUtil::SceneView* sv(NULL);
+   glPushAttrib(GL_VIEWPORT_BIT);
+
+   glMatrixMode(GL_MODELVIEW);
+   glPushMatrix();
+
+   glMatrixMode(GL_PROJECTION);
+   glPushMatrix();
+
+   glMatrixMode(GL_TEXTURE);
+   glPushMatrix();
+
+
+   osgUtil::SceneView* sv(NULL);
    sv = (*sceneViewer);    // Get context specific scene viewer
    vprASSERT( sv != NULL);
 
@@ -262,7 +277,7 @@ inline void OsgApp::draw()
    sv->setViewport(ll_x, ll_y, x_size, y_size);
 
    //Get the view matrix and the frustrum form the draw manager
-   GlDrawManager* drawMan = dynamic_cast<GlDrawManager*> ( this->getDrawManager() );
+   GlDrawManager* drawMan = dynamic_cast<GlDrawManager*>(this->getDrawManager());
    vprASSERT(drawMan != NULL);
    GlUserData* userData = drawMan->currentUserData();
 
@@ -274,7 +289,7 @@ inline void OsgApp::draw()
 
    //Get the frustrum
    Frustum frustum = project->getFrustum();
-
+    /*
    //Reset the camera
    osg::Camera* the_cam = sv->getCamera();
 
@@ -284,33 +299,39 @@ inline void OsgApp::draw()
 
    //Set the frustrum
    //float near_val = frustum[Frustum::VJ_NEAR];
-   the_cam->setFrustum(frustum[Frustum::VJ_LEFT],    frustum[Frustum::VJ_RIGHT],
-                       frustum[Frustum::VJ_BOTTOM],  frustum[Frustum::VJ_TOP],
-                       frustum[Frustum::VJ_NEAR],    frustum[Frustum::VJ_FAR]);
+   the_cam->setFrustum(frustum[Frustum::VJ_LEFT],  frustum[Frustum::VJ_RIGHT],
+                       frustum[Frustum::VJ_BOTTOM],frustum[Frustum::VJ_TOP],
+                       frustum[Frustum::VJ_NEAR],  frustum[Frustum::VJ_FAR]);
 
    //Set the look at
    // NOTE: This is on the wrong stack !!!!
    the_cam->attachTransform(osg::Camera::MODEL_TO_EYE, osg_proj_xform_mat);
+   */
+   sv->setProjectionMatrixAsFrustum(frustum[Frustum::VJ_LEFT],    frustum[Frustum::VJ_RIGHT],
+                       frustum[Frustum::VJ_BOTTOM],  frustum[Frustum::VJ_TOP],
+                       frustum[Frustum::VJ_NEAR],    frustum[Frustum::VJ_FAR]);
+   
+   sv->setViewMatrix(*osg_proj_xform_mat);
 
    //Draw the scene
    sv->update();
    sv->cull();
    sv->draw();
-	
-	glMatrixMode(GL_TEXTURE);
-	glPopMatrix();
-	
-	glMatrixMode(GL_PROJECTION);
-	glPopMatrix();
-	
-	glMatrixMode(GL_MODELVIEW);
-	glPopMatrix();
-	
-	glPopAttrib();
-	glPopAttrib();
+
+   glMatrixMode(GL_TEXTURE);
+   glPopMatrix();
+
+   glMatrixMode(GL_PROJECTION);
+   glPopMatrix();
+
+   glMatrixMode(GL_MODELVIEW);
+   glPopMatrix();
+
+   glPopAttrib();
+   glPopAttrib();
+}
+
 }
 
 
-};
-
-#endif
+#endif /* _VRJ_OSG_APP_H_ */
