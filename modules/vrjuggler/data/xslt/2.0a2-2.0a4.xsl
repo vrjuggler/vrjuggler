@@ -46,7 +46,8 @@
 -->
 
 <xsl:stylesheet version="1.0"
-                xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
+                xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
    <xsl:output method="xml" version="1.0" encoding="UTF-8" indent="yes"/>
 
    <!-- Define a handy way to insert newlines when necessary. -->
@@ -81,13 +82,13 @@
          <xsl:attribute name="name">
             <xsl:text>Configuration</xsl:text>
          </xsl:attribute>
+         <xsl:attribute name="xmlns:xsi">
+            <xsl:text>http://www.w3.org/2001/XMLSchema-instance</xsl:text>
+         </xsl:attribute>
          <xsl:attribute name="xsi:schemaLocation">
             <xsl:value-of select="$cfg_namespace" />
             <xsl:text> </xsl:text>
             <xsl:value-of select="$cfg_schema" />
-         </xsl:attribute>
-         <xsl:attribute name="xmlns:xsi">
-            <xsl:text>http://www.w3.org/2001/XMLSchema-instance</xsl:text>
          </xsl:attribute>
          <xsl:attribute name="xmlns">
             <xsl:value-of select="$cfg_namespace" />
@@ -1030,6 +1031,13 @@
       </xsl:element>
    </xsl:template>
 
+   <!-- Intersense property "position_filters". -->
+   <xsl:template match="Intersense/position_filters">
+      <xsl:element name="position_filters">
+         <xsl:apply-templates select="./*" />
+      </xsl:element>
+   </xsl:template>
+
    <!-- Intersense property "stations". -->
    <xsl:template match="Intersense/stations">
       <xsl:element name="stations">
@@ -1161,6 +1169,13 @@
    <xsl:template match="MotionStar/serverType">
       <xsl:element name="server_type">
          <xsl:value-of select="." />
+      </xsl:element>
+   </xsl:template>
+
+   <!-- MotionStar property "position_filters". -->
+   <xsl:template match="MotionStar/position_filters">
+      <xsl:element name="position_filters">
+         <xsl:apply-templates select="./*" />
       </xsl:element>
    </xsl:template>
 
@@ -1846,6 +1861,13 @@
       </xsl:element>
    </xsl:template>
 
+   <!-- TrackdSensor property "position_filters". -->
+   <xsl:template match="TrackdSensor/position_filters">
+      <xsl:element name="position_filters">
+         <xsl:apply-templates select="./*" />
+      </xsl:element>
+   </xsl:template>
+
 
 <!-- TweekAnalogDevice ===================================================== -->
    <!-- Rename TweekAnalogDevice to tweek_analog_device. -->
@@ -1900,21 +1922,21 @@
    <!-- TweekGadget property "positionDevice". -->
    <xsl:template match="TweekGadget/positionDevice">
       <xsl:element name="position_device">
-         <xsl:value-of select="." />
+         <xsl:apply-templates select="./*" />
       </xsl:element>
    </xsl:template>
 
    <!-- TweekGadget property "analogDevice". -->
    <xsl:template match="TweekGadget/analogDevice">
       <xsl:element name="analog_device">
-         <xsl:value-of select="." />
+         <xsl:apply-templates select="./*" />
       </xsl:element>
    </xsl:template>
 
    <!-- TweekGadget property "digitalDevice". -->
    <xsl:template match="TweekGadget/digitalDevice">
       <xsl:element name="digital_device">
-         <xsl:value-of select="." />
+         <xsl:apply-templates select="./*" />
       </xsl:element>
    </xsl:template>
 
@@ -2009,7 +2031,7 @@
    <!-- juggler_audio_manager property "Sounds". -->
    <xsl:template match="juggler_audio_manager/Sounds">
       <xsl:element name="sound">
-         <xsl:value-of select="." />
+         <xsl:apply-templates select="./*" />
       </xsl:element>
    </xsl:template>
 
