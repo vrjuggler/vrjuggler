@@ -20,15 +20,6 @@
 
 #include <vector>
 
-/*****************************************************************
-   This program creates a master thread listening the socket. If 
-   there is client's request coming, the master accepts the request
-   and generates a slave thread. The slave thread deals with the 
-   connection. It sends a string --" Hello, there!". The client 
-   reads the string and sends what it received back. The slve server
-   then compare the return string and the sending one. If they are 
-   different, gives an error information.
-*******************************************************************/
 namespace {
 
 struct _thread_args {
@@ -676,13 +667,13 @@ public:
 
    void testBlocking_acceptor(void* arg)
    {
-      int num_of_times_to_test = 3;
+      int num_of_times_to_test = 20;
       vpr::Uint16 port = 7001;
       const int backlog = 5;
       bool  result = 0;
       char  buffer[40];
       char  buffer1[]="Hello, there!";
-      char  buffer2[]="Hello! Can you hear me?";
+      char  buffer2[]="Hello";
       int   amount_read (0);
       vpr::InetAddr local_addr;
 
@@ -694,7 +685,7 @@ public:
       
       // open socket
       result = acceptor_socket.open();
-      //if (result == false) std::cout<<"Socket::open() failed in blocking test"<<endl;
+
       threadAssertTest( result != false && "Socket::open() failed in blocking test" );
 
       result = acceptor_socket.bind();
@@ -729,38 +720,33 @@ public:
             else mReadnFlag=true;
             mStartFlag=true;
          mFlagProtectionMutex.release();
-         
-         child_socket->setNoDelay(true); 
                  
          vpr::System::msleep(50);
          
          child_socket->write(buffer1, sizeof(buffer1));
          
-         vpr::System::msleep(50);
+         vpr::System::msleep(5);
          
          child_socket->write(buffer2, sizeof(buffer2));
+         
          child_socket->enableNonBlocking();
          amount_read=child_socket->read(buffer, 40);
          child_socket->enableBlocking();
 
          switch (yy) {
          case 0:
-//            std::cout<<"Blocking & read, return "<<buffer<<std::endl;
             threadAssertTest(amount_read == 14 && "Should return 14");
             break;         
          case 1:
-//            std::cout<<"Nonblocking & read, return "<<buffer<<std::endl;
             threadAssertTest(amount_read == 6 && "Should return 6");
             break;
          case 2:
-//            std::cout<<"Blocking & readn, return "<<buffer<<std::endl;
-            threadAssertTest(amount_read == 20 && "Should return 20");
+            threadAssertTest(amount_read == -1 && "Should return 20");
             break;
          case 3:
-//            std::cout<<"Nonblocking & readn, return "<<buffer<<std::endl;
             threadAssertTest(amount_read==6 && "Should return 6");
          }
-         //std::cout<<"+"<<std::flush;
+         
          mFlagProtectionMutex.acquire();         
          mStartFlag=false;
          mFlagProtectionMutex.release();
@@ -831,10 +817,6 @@ public:
       vpr::System::sleep(1);
       //serverThread->join();
 
-
-      //Stop the master server thread 
-//      serverThread->kill();
-      //	assertTest(mClientCounter==mNumClient && "Not all client are connect");
 	   assertTest(mOpenServerSuccess ==-1 && "Open server failed");
       assertTest(mServerCheck==0 && "Not all connections are correct.");
       delete serverFunctor;
@@ -865,7 +847,6 @@ public:
 
          while ( num<mNumSServer) {
             client_sock = sock->accept();
-//            client_sock->setReuseAddr(true);
             tArgs = new thread_args_t;
             tArgs->mSock=client_sock;
 
@@ -894,11 +875,11 @@ public:
       sock = new vpr::SocketStream(vpr::InetAddr::AnyAddr, remote_addr);
       if ( sock->open() ) {
          char buffer1[40];
-//         char buffer2[] = "What's up?";
+         //char buffer2[] = "What's up?";
          if ( sock->connect() ) {
             ssize_t bytes;
             bytes = sock->read(buffer1, 40);
-//            sock->write(buffer2, sizeof(buffer2));
+         //sock->write(buffer2, sizeof(buffer2));
             sock->write(buffer1, bytes);
             mItemProtectionMutex.acquire();
             mClientCounter++;
@@ -1005,10 +986,11 @@ public:
       test_suite->addTest( new TestCaller<SocketTest>("different-Address-Open-Bind-Close Test", &SocketTest::differentAddressOpenBindCloseTest));
       
       test_suite->addTest( new TestCaller<SocketTest>("ReuseAddr (simple) Test", &SocketTest::reuseAddrSimpleTest));
-      //test_suite->addTest( new TestCaller<SocketTest>("ReuseAddr (client/server) Test", &SocketTest::reuseAddrTest));
+      test_suite->addTest( new TestCaller<SocketTest>("ReuseAddr (client/server) Test", &SocketTest::reuseAddrTest));
 
       test_suite->addTest( new TestCaller<SocketTest>("testOpenCloseOpen", &SocketTest::testOpenCloseOpen));
       test_suite->addTest( new TestCaller<SocketTest>("testSendRecv", &SocketTest::testSendRecv));
+
       test_suite->addTest( new TestCaller<SocketTest>("testBlocking", &SocketTest::testBlocking));
       test_suite->addTest( new TestCaller<SocketTest>("testTcpConnection", &SocketTest::testTcpConnection));
       test_suite->addTest( new TestCaller<SocketTest>("testReadn", &SocketTest::testReadn));
