@@ -129,8 +129,8 @@ protected:
    }
 
 
-   float min() const { return mMin; }
-   float max() const { return mMax; }
+   float getMin() const { return mMin; }
+   float getMax() const { return mMax; }
    void setMin( float min ) { mMin = min; }
    void setMax( float max ) { mMax = max; }
 
