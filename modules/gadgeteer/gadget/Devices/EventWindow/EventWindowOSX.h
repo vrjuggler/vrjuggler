@@ -95,10 +95,16 @@ public:
     * Do nothing the events are handled by call backs from the
     * Carbon event manager.
     */
-   int sample() { return 1; }
+   int sample()
+   {
+      return 1;
+   }
    void updateData();
 
-   static std::string getChunkType() { return std::string("EventWindow");}
+   static std::string getChunkType()
+   {
+      return std::string("EventWindow");
+   }
 
    /**
     * Returns the number of times the key was pressed during the
@@ -115,9 +121,8 @@ public:
     * Called by callback function.
     * Processes the event.
     */
-   pascal OSStatus gotKeyEvent (  EventHandlerCallRef  nextHandler,
-                                  EventRef             theEvent,
-                                  void*                userData);
+   pascal OSStatus gotKeyEvent(EventHandlerCallRef nextHandler,
+                               EventRef theEvent, void* userData);
 
    /**
     * Invokes the global scope delete operator.  This is required for proper
@@ -139,7 +144,7 @@ protected:
    }
 
 protected:
-    int attachEvents(WindowRef aWindow);
+   int attachEvents(WindowRef aWindow);
 
 private:
    /** @name Private functions for processing input data */
@@ -214,9 +219,9 @@ private:
 
 
 protected:
-  // bool         mWeOwnTheWindow;       // True if this class owns the window (is reposible for opening and closing)
-                                       // NOTE: In a case where it does not, then the window vars must be set prior
-                                       //    to starting the controlLoop (startSampling)
+   // bool         mWeOwnTheWindow;       // True if this class owns the window (is reposible for opening and closing)
+   // NOTE: In a case where it does not, then the window vars must be set prior
+   //    to starting the controlLoop (startSampling)
    bool           mShared;   /**< True if the window is shared between multiple processes */
 //   vpr::Mutex     mXfuncLock;      /**< Lock for exclusive access to x functions.  Must be held if mshared==true */
 
@@ -258,70 +263,70 @@ protected:
 
 enum OSXKeyMap
 {
-    OSXK_a = 0,
-    OSXK_b = 11,
-    OSXK_c = 8,
-    OSXK_d = 2,
-    OSXK_e = 14,
-    OSXK_f = 3,
-    OSXK_g = 5,
-    OSXK_h = 4,
-    OSXK_i = 34,
-    OSXK_j = 38,
-    OSXK_k = 40,
-    OSXK_l = 37,
-    OSXK_m = 46,
-    OSXK_n = 45,
-    OSXK_o = 31,
-    OSXK_p = 35,
-    OSXK_q = 12,
-    OSXK_r = 15,
-    OSXK_s = 1,
-    OSXK_t = 17,
-    OSXK_u = 32,
-    OSXK_v = 9,
-    OSXK_w = 13,
-    OSXK_x = 7,
-    OSXK_y = 16,
-    OSXK_z = 6,
+   OSXK_a = 0,
+   OSXK_b = 11,
+   OSXK_c = 8,
+   OSXK_d = 2,
+   OSXK_e = 14,
+   OSXK_f = 3,
+   OSXK_g = 5,
+   OSXK_h = 4,
+   OSXK_i = 34,
+   OSXK_j = 38,
+   OSXK_k = 40,
+   OSXK_l = 37,
+   OSXK_m = 46,
+   OSXK_n = 45,
+   OSXK_o = 31,
+   OSXK_p = 35,
+   OSXK_q = 12,
+   OSXK_r = 15,
+   OSXK_s = 1,
+   OSXK_t = 17,
+   OSXK_u = 32,
+   OSXK_v = 9,
+   OSXK_w = 13,
+   OSXK_x = 7,
+   OSXK_y = 16,
+   OSXK_z = 6,
 
-    OSXK_1 = 18,
-    OSXK_2 = 19,
-    OSXK_3 = 20,
-    OSXK_4 = 21,
-    OSXK_5 = 23,
-    OSXK_6 = 22,
-    OSXK_7 = 26,
-    OSXK_8 = 28,
-    OSXK_9 = 25,
-    OSXK_0 = 29,
+   OSXK_1 = 18,
+   OSXK_2 = 19,
+   OSXK_3 = 20,
+   OSXK_4 = 21,
+   OSXK_5 = 23,
+   OSXK_6 = 22,
+   OSXK_7 = 26,
+   OSXK_8 = 28,
+   OSXK_9 = 25,
+   OSXK_0 = 29,
 
-    OSXK_KP_1 = 83,
-    OSXK_KP_2 = 84,
-    OSXK_KP_3 = 85,
-    OSXK_KP_4 = 86,
-    OSXK_KP_5 = 87,
-    OSXK_KP_6 = 88,
-    OSXK_KP_7 = 89,
-    OSXK_KP_8 = 91,
-    OSXK_KP_9 = 92,
-    OSXK_KP_0 = 82,
+   OSXK_KP_1 = 83,
+   OSXK_KP_2 = 84,
+   OSXK_KP_3 = 85,
+   OSXK_KP_4 = 86,
+   OSXK_KP_5 = 87,
+   OSXK_KP_6 = 88,
+   OSXK_KP_7 = 89,
+   OSXK_KP_8 = 91,
+   OSXK_KP_9 = 92,
+   OSXK_KP_0 = 82,
 
-    OSXK_Return = 36,
-    OSXK_Enter = 76,
-    OSXK_NumLock = 71,
-    OSXK_Help = 114,
-    OSXK_Del = 117,
-    OSXK_Home = 115,
-    OSXK_End = 119,
-    OSXK_Page_Up = 116,
-    OSXK_Page_Down = 121,
-    OSXK_Ecs = 53,
+   OSXK_Return = 36,
+   OSXK_Enter = 76,
+   OSXK_NumLock = 71,
+   OSXK_Help = 114,
+   OSXK_Del = 117,
+   OSXK_Home = 115,
+   OSXK_End = 119,
+   OSXK_Page_Up = 116,
+   OSXK_Page_Down = 121,
+   OSXK_Ecs = 53,
 
-    OSXK_Up = 126,
-    OSXK_Down = 125,
-    OSXK_Left = 123,
-    OSXK_Right = 124
+   OSXK_Up = 126,
+   OSXK_Down = 125,
+   OSXK_Left = 123,
+   OSXK_Right = 124
 
 
 };
