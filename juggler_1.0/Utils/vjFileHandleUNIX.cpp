@@ -428,7 +428,7 @@ vjFileHandleUNIX::readn (std::vector<char>& buffer, const size_t length) {
 // Write the buffer to the file handle.
 // ----------------------------------------------------------------------------
 ssize_t
-vjFileHandleUNIX::write (void* buffer, const size_t length) {
+vjFileHandleUNIX::write (const void* buffer, const size_t length) {
     ssize_t bytes;
 
     bytes = ::write(m_fdesc, buffer, length);
@@ -446,7 +446,7 @@ vjFileHandleUNIX::write (void* buffer, const size_t length) {
 // Write the buffer to the file handle.
 // ----------------------------------------------------------------------------
 ssize_t
-vjFileHandleUNIX::write (unsigned char* buffer, const size_t length) {
+vjFileHandleUNIX::write (const unsigned char* buffer, const size_t length) {
     return write((void*) buffer, length);
 }
 
@@ -454,7 +454,7 @@ vjFileHandleUNIX::write (unsigned char* buffer, const size_t length) {
 // Write the buffer to the file handle.
 // ----------------------------------------------------------------------------
 ssize_t
-vjFileHandleUNIX::write (char* buffer, const size_t length) {
+vjFileHandleUNIX::write (const char* buffer, const size_t length) {
     return write((void*) buffer, length);
 }
 
@@ -462,7 +462,8 @@ vjFileHandleUNIX::write (char* buffer, const size_t length) {
 // Write the buffer to the file handle.
 // ----------------------------------------------------------------------------
 ssize_t
-vjFileHandleUNIX::write (std::vector<char>& buffer, const size_t length) {
+vjFileHandleUNIX::write (const std::vector<char>& buffer, const size_t length)
+{
     size_t bytes;
     char* temp_buf;
     size_t buf_len;

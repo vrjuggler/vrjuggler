@@ -411,7 +411,7 @@ public:
     //! RETURNS:  -1 - An error occurred when writing.
     // ------------------------------------------------------------------------
     inline virtual ssize_t
-    write (void* buffer, const size_t length) {
+    write (const void* buffer, const size_t length) {
         return m_sio_imp->write(buffer, length);
     }
 
@@ -431,7 +431,7 @@ public:
     //! RETURNS:  -1 - An error occurred when writing.
     // ------------------------------------------------------------------------
     inline virtual ssize_t
-    write (unsigned char* buffer, const size_t length) {
+    write (const unsigned char* buffer, const size_t length) {
         return m_sio_imp->write(buffer, length);
     }
 
@@ -451,7 +451,7 @@ public:
     //! RETURNS:  -1 - An error occurred when writing.
     // ------------------------------------------------------------------------
     inline virtual ssize_t
-    write (char* buffer, const size_t length) {
+    write (const char* buffer, const size_t length) {
         return m_sio_imp->write(buffer, length);
     }
 
@@ -473,7 +473,7 @@ public:
     //! RETURNS:  -1 - An error occurred when writing.
     // ------------------------------------------------------------------------
     inline virtual ssize_t
-    write (std::vector<char>& buffer, const size_t length = 0) {
+    write (const std::vector<char>& buffer, const size_t length = 0) {
         return m_sio_imp->write(buffer, length);
     }
 

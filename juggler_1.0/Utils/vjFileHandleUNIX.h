@@ -292,7 +292,7 @@ public:
     //+                handle.
     //! RETURNS:  -1 - An error occurred when writing.
     // ------------------------------------------------------------------------
-    virtual ssize_t write(void* buffer, const size_t length);
+    virtual ssize_t write(const void* buffer, const size_t length);
 
     // ------------------------------------------------------------------------
     //: Write the buffer to the file handle.
@@ -309,7 +309,7 @@ public:
     //+                handle.
     //! RETURNS:  -1 - An error occurred when writing.
     // ------------------------------------------------------------------------
-    virtual ssize_t write(unsigned char* buffer, const size_t length);
+    virtual ssize_t write(const unsigned char* buffer, const size_t length);
 
     // ------------------------------------------------------------------------
     //: Write the buffer to the file handle.
@@ -326,7 +326,7 @@ public:
     //+                handle.
     //! RETURNS:  -1 - An error occurred when writing.
     // ------------------------------------------------------------------------
-    virtual ssize_t write(char* buffer, const size_t length);
+    virtual ssize_t write(const char* buffer, const size_t length);
 
     // ------------------------------------------------------------------------
     //: Write the buffer to the file handle.
@@ -343,7 +343,8 @@ public:
     //+                handle.
     //! RETURNS:  -1 - An error occurred when writing.
     // ------------------------------------------------------------------------
-    virtual ssize_t write(std::vector<char>& buffer, const size_t length = 0);
+    virtual ssize_t write(const std::vector<char>& buffer,
+                          const size_t length = 0);
 
     // ========================================================================
     // vjFileHandle implementation.
