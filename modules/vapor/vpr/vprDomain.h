@@ -56,12 +56,9 @@
 // used for doing I/O (sockets and serial ports mostly) in VPR.
 namespace vpr
 {
-   class BlockIO;
-
    template<class> class Selector_t;
    template<class> class SerialPort_t;
 
-   template<class> class BaseIOStatsStrategy;
    template<class BASE_ONE, class BASE_TWO> class IOStatsStrategyAdapter;
 
 #ifdef VPR_SIMULATOR
@@ -72,7 +69,7 @@ namespace vpr
       typedef class SocketImplSIM           SocketImpl;
       typedef class SocketDatagramImplSIM   SocketDatagramImpl;
       typedef class SocketStreamImplSIM     SocketStreamImpl;
-      typedef class IOStatsStrategyAdapter<class BaseIOStatsStrategy<BlockIO>, class BandwidthIOStatsStrategy>     SocketIOStatsStrategy;
+      typedef class IOStatsStrategyAdapter<class BaseIOStatsStrategy, class BandwidthIOStatsStrategy>     SocketIOStatsStrategy;
    };
 
    typedef class InetAddrSIM InetAddr;
@@ -101,7 +98,7 @@ namespace vpr
       typedef class SocketImplNSPR           SocketImpl;
       typedef class SocketDatagramImplNSPR   SocketDatagramImpl;
       typedef class SocketStreamImplNSPR     SocketStreamImpl;
-      typedef class IOStatsStrategyAdapter<class BaseIOStatsStrategy<BlockIO>, class BandwidthIOStatsStrategy>     SocketIOStatsStrategy;
+      typedef class IOStatsStrategyAdapter<class BaseIOStatsStrategy, class BandwidthIOStatsStrategy>     SocketIOStatsStrategy;
    };
 
    typedef class InetAddrNSPR InetAddr;
@@ -124,7 +121,7 @@ namespace vpr
       typedef class SocketImplBSD           SocketImpl;
       typedef class SocketDatagramImplBSD   SocketDatagramImpl;
       typedef class SocketStreamImplBSD     SocketStreamImpl;
-      typedef IOStatsStrategyAdapter<class BaseIOStatsStrategy<BlockIO>, class BandwidthIOStatsStrategy>     SocketIOStatsStrategy;
+      typedef IOStatsStrategyAdapter<class BaseIOStatsStrategy, class BandwidthIOStatsStrategy>     SocketIOStatsStrategy;
    };
 
    typedef class InetAddrBSD InetAddr;

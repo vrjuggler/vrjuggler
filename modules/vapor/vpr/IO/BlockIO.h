@@ -638,7 +638,7 @@ public:
    /**
     * Sets the IO stats strategy to use.
     */
-   void setIOStatStrategy(vpr::BaseIOStatsStrategy<>* strat)
+   void setIOStatStrategy(vpr::BaseIOStatsStrategy* strat)
    {
       mStatsStrategy = strat;
       if(mStatsStrategy != NULL)              // If we have a non-NULL strategy
@@ -648,7 +648,7 @@ public:
    /**
     * Gets the current IO stats strategy.
     */
-   vpr::BaseIOStatsStrategy<>* getIOStatStrategy()
+   vpr::BaseIOStatsStrategy* getIOStatStrategy()
    { return mStatsStrategy; }
 
 protected:
@@ -857,7 +857,7 @@ protected:
                                      const vpr::Interval timeout = vpr::Interval::NoTimeout) = 0;
 
    // Friends
-   friend class vpr::BaseIOStatsStrategy<>;    // Need it to be able to call the protected read_i, readn_i, and write_i memebers
+   friend class vpr::BaseIOStatsStrategy;    // Need it to be able to call the protected read_i, readn_i, and write_i memebers
 
 protected:
    /// The name of the I/O device.
@@ -873,7 +873,7 @@ protected:
    bool m_blocking;
 
    /// Perf monitor
-   vpr::BaseIOStatsStrategy<>*   mStatsStrategy;
+   vpr::BaseIOStatsStrategy*   mStatsStrategy;
 };
 
 }; // End of vpr namespace
