@@ -3,4 +3,4 @@
 # shell script for running vjcontrol under jdk 1.2 using the java command
 
 CLASSPATH=
-${JDK_HOME}/bin/java -DVJ_BASE_DIR=${VJ_BASE_DIR} -cp ${VJ_BASE_DIR}/bin/VjControl.jar VjGUI.VjControl $*
+${JDK_HOME-/usr/java}/bin/java -DVJ_BASE_DIR=${VJ_BASE_DIR} -cp ${VJ_BASE_DIR}/bin/VjControl.jar VjGUI.VjControl $*
