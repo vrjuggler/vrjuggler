@@ -51,7 +51,6 @@
 //#include <gadget/Type/NetPosition.h>
 #include <gadget/RemoteInputManager/NetDevice.h>
 #include <gadget/Type/BaseTypeFactory.h>
-#include <gadget/RemoteInputManager/ClusterSync.h>
 
 namespace gadget{
 
@@ -66,11 +65,7 @@ namespace gadget{
    class GADGET_CLASS_API RemoteInputManager
    {
    protected:
-      unsigned                      mIncomingConnections;
-      int                           mNumMachines;
-      ClusterSync                   mClusterSync;
       bool                          mListenWasInitialized;
-      bool                          mConfigureDone;
       bool                          mActive;
       IdGenerator<VJ_NETID_TYPE>    mLocalIdGen;            /**< keeps track of used/free network ids */
 
@@ -82,7 +77,10 @@ namespace gadget{
       std::string                   mShortHostname;
       std::string                   mLongHostname;
       std::string                   mLocalMachineChunkName;
-      std::list<NetConnection*>     mConnections;           /**< network connections to other juggler instances */
+      
+      std::list<NetConnection*>     mTransmittingConnections;           /**< network connections to other juggler instances */
+      std::list<NetConnection*>     mReceivingConnections;           /**< network connections to other juggler instances */
+      
       std::list<NetDevice*>         mTransmittingDevices;   /**< devices/proxies that we transmit from */
       std::list<NetDevice*>         mReceivingDevices;      /**< devices/proxies that we receive from */
 
@@ -94,19 +92,6 @@ namespace gadget{
       vpr::Thread*         mAcceptThread;
       vpr::InetAddr        mListenAddr;
       vpr::Mutex           mConfigMutex;  // prevents us from try to read devices while they are being modified (added or removed)
-
-      //enum
-      //{
-      //   RIM_FALSE, RIM_TRUE, RIM_UNKNOWN
-      //} mRmtMgrChunkExists;  // needed to deteremine if we get our listening port
-      // from an optional Manager chunk or from the Device Host Chunks
-
-      // bool mWaitingForOtherHosts;  // flag checked by InputManager to see if we need to stall configuration to wait for connections to hosts
-      //vpr::Mutex mNetInitMutex; // on windows helps us call WSAStartup only once
-      //bool mNetworkInitted; // need for windows WSAStartup
-
-      // bool mMetStartingRequirements;
-      // int mMinConnections;   // allows us to wait until network devices are connected and synchronize our start
 
    public:
       RemoteInputManager(InputManager* input_manager);
@@ -285,6 +270,7 @@ namespace gadget{
        * they need
        */
       void receiveDeviceNetData();
+      void receiveTemp();
       
       /**
        * Parse incoming packets.
@@ -297,16 +283,25 @@ namespace gadget{
        * received all of their data
        *
        * @return	TRUE if all connections have received their data.
-       *				FALSE if the haven't.
+       *			FALSE if the haven't.
        */
       bool allDataReceived();
       void markDataUnreceived();
 
+     /**
+      * Finds a local NetDevice that is transmitting data.
+      *
+      * @param device_name device that we are looking for
+      *
+      * @return Pointer to the transmitting NetDevice
+      */
       NetDevice* findTransmittingNetDevice(const std::string& device_name);
-      NetConnection* getConnectionByHostAndPort(const std::string& hostname, const int port); // NetConnection* getConnectionByHostAndPort(const std::string& location_name);
-      NetConnection* getConnectionByAliasName(const std::string& alias_name);
-      NetConnection* getConnectionByManagerId(const vpr::GUID& manager_id);
 
+      NetConnection* getTransmittingConnectionByHostAndPort(const std::string& hostname, const int port); // NetConnection* getConnectionByHostAndPort(const std::string& location_name);
+      NetConnection* getTransmittingConnectionByManagerId(const vpr::GUID& manager_id);
+
+      NetConnection* getReceivingConnectionByHostAndPort(const std::string& hostname, const int port); // NetConnection* getConnectionByHostAndPort(const std::string& location_name);
+      NetConnection* getReceivingConnectionByManagerId(const vpr::GUID& manager_id);
 
       // returns unsigned short by default
       VJ_NETID_TYPE generateLocalId()

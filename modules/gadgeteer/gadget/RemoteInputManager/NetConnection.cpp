@@ -229,21 +229,21 @@ namespace gadget
          << "------ " << "Host Name: " << clrSetNORM(clrGREEN)  << mHostname << ":" << mPort 
          << clrRESET << " -----\n" << vprDEBUG_FLUSH;
 
-      vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "Transmitting: LocalID  RemoteID\n" << vprDEBUG_FLUSH;
+      vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "Trans./Receive \tLocalID \tRemoteID\n" << vprDEBUG_FLUSH;
+      
       for (std::list<NetDevice*>::iterator i = mTransmittingDevices.begin();
            i != mTransmittingDevices.end();i++)
       {
-         vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "   " << (*i)->getSourceName() 
+         vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "Transmitting:   " << (*i)->getSourceName() 
          << " " << (*i)->getLocalId() << " " << (*i)->getRemoteId() 
-         << " " << "\n" << vprDEBUG_FLUSH;
+         << "\n" << vprDEBUG_FLUSH;
       }
-      vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "Receiving: LocalID   RemoteID\n" << vprDEBUG_FLUSH;
       for (std::list<NetDevice*>::iterator i = mReceivingDevices.begin();
            i != mReceivingDevices.end();i++)
       {
-         vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "   " << (*i)->getSourceName() 
+         vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "Receiving:   " << (*i)->getSourceName() 
          << " " << (*i)->getLocalId() << " " << (*i)->getRemoteId() 
-         << " " << "\n" << vprDEBUG_FLUSH;
+         << "\n" << vprDEBUG_FLUSH;
       }
       vprDEBUG_END(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
          << "----------------------------------\n" << vprDEBUG_FLUSH;
