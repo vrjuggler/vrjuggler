@@ -4,6 +4,8 @@
 #include <gadget/gadgetConfig.h>
 #include <gadget/RemoteInputManager/NetUtils.h>
 #include <gadget/Type/NetInput.h>
+#include <gadget/Type/Digital.h>
+#include <gadget/Type/DigitalInterface.h>
 #include <gadget/Type/DigitalData.h>
 
 namespace gadget{
