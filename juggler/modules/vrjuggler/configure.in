@@ -425,7 +425,7 @@ if test "$OS_TYPE" = "UNIX" ; then
         APP_EXTRA_LIBS_X11="$X_LDFLAGS -lX11"
     fi
 
-    APP_EXTRA_LIBS_OSG='-L$(OSGHOME)/lib -losg -losgDB -losgGA -losgUtil'
+    APP_EXTRA_LIBS_OSG='-L$(OSGHOME)/lib -losg -losgDB -losgGA -losgUtil -lOpenThreads'
 
     if test "x$OGL_LDFLAGS" != "x" ; then
         if test "x$PLATFORM" = "xDarwin" ; then
