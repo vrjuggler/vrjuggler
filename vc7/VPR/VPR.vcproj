@@ -238,6 +238,9 @@
 				RelativePath="..\..\modules\vapor\vpr\IO\XMLObjectReader.cpp">
 			</File>
 			<File
+				RelativePath="..\..\modules\vapor\vpr\IO\XMLObjectWriter.cpp">
+			</File>
+			<File
 				RelativePath="..\..\external\md5-c\md5c.c">
 			</File>
 			<File
