@@ -41,6 +41,8 @@ Released: July 18, 2000
           instance on its own if none is provided.  If, however, a kernel
           instance is provided and it is NULL, a fatal error will still
           occur.
+        * SoundManager is available to abstract sound functionality for 
+          cross platform audio.
 
     VjControl now requires the Java 2 compiler and runtime environment.
 
