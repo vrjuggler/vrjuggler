@@ -195,7 +195,7 @@ namespace snx
 
       if (mBindTable.count( alias ) > 0)
       {
-         awProp(mBindTable[alias].mSound, AWSND_STATE, AW_ON);
+         awProp(mBindTable[alias].mSound, AWSND_STATE, AW_OFF);
       }
    }
 
