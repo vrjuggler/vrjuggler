@@ -66,6 +66,22 @@ public:
    virtual ~ObjectWriter()
    {;}
 
+   /** @name Tag and attribute handling */
+   //@{
+   /** Starts a new section/element of name tagName.
+   */
+   virtual vpr::ReturnStatus beginTag(std::string tagName) = 0;
+   
+   /** Ends the most recently named tag. */
+   virtual vpr::ReturnStatus endTag() = 0;
+
+   /** Starts an attribute of the name attributeName */
+   virtual vpr::ReturnStatus beginAttribute(std::string attributeName) = 0;
+
+   /** Ends the most recently named attribute */
+   virtual vpr::ReturnStatus endAttribute() = 0;
+   //@}
+
    virtual vpr::ReturnStatus writeUint8(vpr::Uint8 val) = 0;
    virtual vpr::ReturnStatus writeUint16(vpr::Uint16 val) = 0;
    virtual vpr::ReturnStatus writeUint32(vpr::Uint32 val) = 0;
