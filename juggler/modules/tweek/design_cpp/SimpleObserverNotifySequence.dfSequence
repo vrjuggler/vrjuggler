@@ -35,14 +35,14 @@ class __options {
 <oigroup:<oiref:design#Class#id67f1sd9n7fwo9d9n7rehe.node.node17:oiref>=498,220,14,75,0:oigroup>
 <oigroup:<oiref:design#Class#id67f1sd9n7fwo9d9n7rehe.node9.node16:oiref>=228,210,14,20,1:oigroup>
 <oigroup:<oiref:design#Class#id67f1sd9n7fwo9d9n7rehe.node4:oiref>=200,30,120,345,0:oigroup>
-<oigroup:<oiref:design#Class#id67f1sd9n7fwo9d9n7rehe.node11:oiref>=30,30,90,290,1:oigroup>
+<oigroup:<oiref:design#Class#id67f1sd9n7fwo9d9n7rehe.node11:oiref>=30,30,97,290,1:oigroup>
 <oigroup:<oiref:design#Class#id67f1sd9n7fwo9d9n7rehe.node4.node:oiref>=253,260,14,25,0:oigroup>
 <oigroup:<oiref:design#Class#id67f1sd9n7fwo9d9n7rehe.node4.link:oiref>=276,220,498,220:oigroup>
 <oigroup:<oiref:design#Class#id67f1sd9n7fwo9d9n7rehe.node7.node:oiref>=348,170,14,70,1:oigroup>
 <oigroup:<oiref:design#Class#id67f1sd9n7fwo9d9n7rehe.node:oiref>=440,30,130,345,0:oigroup>
 <oigroup:<oiref:design#Class#id67f1sd9n7fwo9d9n7rehe.node4.node15:oiref>=253,137,14,103,1:oigroup>
-<oigroup:<oiref:design#Class#id67f1sd9n7fwo9d9n7rehe.node11.link:oiref>=82,132,228,132:oigroup>
-<oigroup:Composite#$messageInplaceEditing#<oiref:design#Class#id67f1sd9n7fwo9d9n7rehe.node7.link15:oiref>=245,191,99,15,0:oigroup>
+<oigroup:<oiref:design#Class#id67f1sd9n7fwo9d9n7rehe.node11.link:oiref>=85,132,228,132:oigroup>
+<oigroup:Composite#$messageInplaceEditing#<oiref:design#Class#id67f1sd9n7fwo9d9n7rehe.node7.link15:oiref>=237,184,107,22,0:oigroup>
 <oigroup:<oiref:design#Class#id67f1sd9n7fwo9d9n7rehe.node7.link15:oiref>=348,210,242,210:oigroup>
 <oigroup:<oiref:design#Class#id67f1sd9n7fwo9d9n7rehe.node11.link13:oiref>=:oigroup>
 <oigroup:<oiref:design#Class#id67f1sd9n7fwo9d9n7rehe.node13.link16:oiref>=:oigroup>
@@ -53,9 +53,9 @@ class __options {
 <oigroup:<oiref:design#Class#id67f1sd9n7fwo9d9n7rehe.node7:oiref>=310,30,90,290,1:oigroup>
 <oigroup:<oiref:design#Class#id67f1sd9n7fwo9d9n7rehe.node13.link:oiref>=98,137,253,137:oigroup>
 <oigroup:<oiref:design#Class#id67f1sd9n7fwo9d9n7rehe.node13:oiref>=30,30,123,345,0:oigroup>
-<oigroup:Composite#$messageInplaceEditing#<oiref:design#Class#id67f1sd9n7fwo9d9n7rehe.node11.link:oiref>=86,113,122,15,0:oigroup>
+<oigroup:Composite#$messageInplaceEditing#<oiref:design#Class#id67f1sd9n7fwo9d9n7rehe.node11.link:oiref>=89,106,133,22,0:oigroup>
 <oigroup:<oiref:design#Class#id67f1sd9n7fwo9d9n7rehe.node4.link7:oiref>=:oigroup>
-<oigroup:Composite#$messageInplaceEditing#<oiref:design#Class#id67f1sd9n7fwo9d9n7rehe.node9.link:oiref>=246,151,89,15,0:oigroup>
+<oigroup:Composite#$messageInplaceEditing#<oiref:design#Class#id67f1sd9n7fwo9d9n7rehe.node9.link:oiref>=246,144,94,22,0:oigroup>
 */
 class __positions {
 }/**

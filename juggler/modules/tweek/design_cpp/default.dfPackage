@@ -57,6 +57,11 @@ class reference3 {
 @__fqn <oiref:#Package#example:oiref> 
 */
 class reference4 {
+}/**
+@__ref <oiref:idl#Class#tweek::Subject:oiref><oihard>
+@__modelType reference 
+*/
+class reference8 {
 }}/**
 @__tags
 @shapeType ClassDiagram 
