@@ -586,12 +586,25 @@ void FlockStandalone::setReportRate(Flock::ReportRate rRate )
 
 void FlockStandalone::setOutputFormat(Flock::Output::Format format)
 {
-   if ( (FlockStandalone::CLOSED != mStatus) && (FlockStandalone::OPEN != mStatus) )
-   {
-      throw Flock::CommandFailureException("Setting output format not allowed after flock configured");
+   bool was_streaming(false);
+   if (FlockStandalone::STREAMING == mStatus)
+   {  
+      was_streaming = true; 
+      stopStreaming();
    }
 
    mOutputFormat = format;
+   
+   if (FlockStandalone::RUNNING == mStatus)
+   {
+      vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << " [FlockStandalone] Setting output format to: " << Flock::Output::getFormatString(mOutputFormat) << "\n" << vprDEBUG_FLUSH;
+      sendOutputFormatCmd(mOutputFormat, true);
+   }
+
+   if(was_streaming)
+   {
+      startStreaming();
+   }
 }
 
 
@@ -696,10 +709,10 @@ gmtl::Matrix44f FlockStandalone::processSensorRecord(vpr::Uint8* buff)
       m13 = rawToFloat(buff[13], buff[12]);
       m23 = rawToFloat(buff[15], buff[14]);
       m33 = rawToFloat(buff[17], buff[16]);
-      ret_mat.set( m11, m12, m13, 0.0f,
-                   m21, m22, m23, 0.0f,
-                   m31, m32, m33, 0.0f,
-                   0.0f, 0.0f, 0.0f, 1.0f);
+      ret_mat.set( m11, m21, m31, 0.0f,
+                   m12, m22, m32, 0.0f,
+                   m13, m23, m33, 0.0f,
+                   0.0f, 0.0f, 0.0f, 1.0f);      
       }
       break;
    case Flock::Output::Position:
@@ -735,10 +748,10 @@ gmtl::Matrix44f FlockStandalone::processSensorRecord(vpr::Uint8* buff)
       m13 = rawToFloat(buff[19], buff[18]);
       m23 = rawToFloat(buff[21], buff[20]);
       m33 = rawToFloat(buff[23], buff[22]);
-      ret_mat.set( m11, m12, m13, x,
-                   m21, m22, m23, y,
-                   m31, m32, m33, z,
-                   0.0f, 0.0f, 0.0f, 1.0f);
+      ret_mat.set( m11, m21, m31, x,
+                   m12, m22, m32, y,
+                   m13, m23, m33, z,
+                   0.0f, 0.0f, 0.0f, 1.0f);      
       }
       break;
    case Flock::Output::PositionQuaternion:
@@ -749,7 +762,7 @@ gmtl::Matrix44f FlockStandalone::processSensorRecord(vpr::Uint8* buff)
       q1 = rawToFloat(buff[9], buff[8]);
       q2 = rawToFloat(buff[11], buff[10]);
       q3 = rawToFloat(buff[13], buff[12]);
-      gmtl::setRot(ret_mat, gmtl::Quatf(q0,q1,q2,q3));
+      gmtl::setRot(ret_mat, gmtl::Quatf(q3, q0,q1,q2));
       gmtl::setTrans(ret_mat, gmtl::Vec3f(x,y,z));
       break;
    case Flock::Output::Quaternion:
@@ -757,7 +770,7 @@ gmtl::Matrix44f FlockStandalone::processSensorRecord(vpr::Uint8* buff)
       q1 = rawToFloat(buff[3], buff[2]);
       q2 = rawToFloat(buff[5], buff[4]);
       q3 = rawToFloat(buff[7], buff[6]);
-      gmtl::setRot(ret_mat, gmtl::Quatf(q0,q1,q2,q3));
+      gmtl::setRot(ret_mat, gmtl::Quatf(q3,q0,q1,q2));
       break;
    }
 
