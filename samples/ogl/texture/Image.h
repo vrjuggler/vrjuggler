@@ -12,7 +12,7 @@
 #define IMAGE_INCLUDED
 
 #include <string>
-#include <iostream.h>
+#include <iostream>
 
 //: Image class
 //  "an image: pixmap, bitmap, or whatever."
@@ -482,13 +482,13 @@ inline const unsigned int& Image::rowAlignment() const
 
 inline void Image::outputImageProperties() const
 {
-    cout<<"Image Properties:\n\n";
-    cout<<"Name            - "<<this->name()<<"\n";
-    cout<<"Color Depth     - "<<this->bpp()<<"-bit color\n";
-    cout<<"Size            - "<<this->width()<<" x "<<this->height()<<"\n";
-    cout<<"Channels        - "<<this->channels()<<" color channel(s).\n";
-    cout<<"BPC             - "<<this->bpc()<<" byte(s) per channel\n";
-    cout<<"Memory Alignent - "<<this->rowAlignment()<<"-byte boundary addressing\n";
+    std::cout<<"Image Properties:\n\n";
+    std::cout<<"Name            - "<<this->name()<<"\n";
+    std::cout<<"Color Depth     - "<<this->bpp()<<"-bit color\n";
+    std::cout<<"Size            - "<<this->width()<<" x "<<this->height()<<"\n";
+    std::cout<<"Channels        - "<<this->channels()<<" color channel(s).\n";
+    std::cout<<"BPC             - "<<this->bpc()<<" byte(s) per channel\n";
+    std::cout<<"Memory Alignent - "<<this->rowAlignment()<<"-byte boundary addressing\n";
 }
 
 #endif

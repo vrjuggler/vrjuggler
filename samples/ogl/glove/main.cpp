@@ -40,7 +40,6 @@
 
       // --- Lib Stuff --- //
 #include <Kernel/vjKernel.h>
-#include <sched.h>
 
 int main(int argc, char* argv[])
 {
@@ -62,6 +61,5 @@ int main(int argc, char* argv[])
    while(1)
    {
        usleep (250000);
-       //sched_yield();
    }
 }

@@ -81,6 +81,6 @@ int main( int argc, char* argv[] )
    std::cout << "Press CTRL-C to exit\n" << std::flush;
    while (1)
    {
-      ::usleep( 100000 );
+      usleep( 100000 );
    }
 }
