@@ -48,6 +48,8 @@ top_srcdir	= @top_srcdir@
 INSTALL		= @INSTALL@
 SUBOBJDIR	= $(GADGET_LIBRARY)
 
+ifneq (@PLATFORM@, FreeBSD)
+ifneq (@PLATFORM@, Darwin)
 SRCS		= isdriver.cpp			\
                   isense.cpp 			\
                   itcom.cpp 			\
@@ -56,7 +58,9 @@ SRCS		= isdriver.cpp			\
                   wsock.cpp			\
                   Intersense.cpp		\
                   IntersenseStandalone.cpp
-               
+endif
+endif
+
 include $(MKPATH)/dpp.obj.mk
 
 # -----------------------------------------------------------------------------
