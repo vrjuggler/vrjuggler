@@ -725,21 +725,15 @@ public class MultiUnitDeviceVertexView
 
                   // Update the labels for the remaining units to reflect that
                   // they have been shifted up one.
-                  Class property_type =
-                     mDeviceInfo.getUnitPropertyType(unit_info.getUnitType());
-                  if ( property_type == ConfigElement.class )
+                  List comp_list = (List) mUnitRowMap.get(unit_info);
+
+                  for ( Iterator comp = comp_list.iterator(); comp.hasNext(); )
                   {
-                     List comp_list = (List) mUnitRowMap.get(unit_info);
+                     Object comp_obj = comp.next();
 
-                     for ( Iterator comp = comp_list.iterator();
-                           comp.hasNext(); )
+                     if ( comp_obj instanceof JLabel )
                      {
-                        Object comp_obj = comp.next();
-
-                        if ( comp_obj instanceof JLabel )
-                        {
-                           setLabelText((JLabel) comp_obj, unit_info);
-                        }
+                        setLabelText((JLabel) comp_obj, unit_info);
                      }
                   }
                }
