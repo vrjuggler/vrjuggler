@@ -62,6 +62,17 @@ SUBDIR          = snx
 # needed for compiling the DSO
 EXTRA_LIBS      = @LIBS@ -lm
 
+# Version information.
+BRANCH		= HEAD
+CANON_NAME	= Mario
+VER_ARGS	= -f $(ROOT_ABS)/VERSION -s @SUBSYSTEM@ -b $(BRANCH)	\
+                  -i $(ROOT_ABS)/snx/snxParam.h.in -o snx/snxParam.h		\
+                  -d "`date '+%b %e, %Y %H:%M:%S'`" -n "$(CANON_NAME)"
+
+ifdef VERSION
+    VER_ARGS	+= -v $(VERSION)
+endif
+
 
 # -----------------------------------------------
 # Construct the static version of the libraries.
@@ -105,6 +116,11 @@ AFTERBUILD	= afterbuild
 # Things to do before the object files and library are built.
 beforebuild:
 	@chmod +x $(topdir)/sonix-config
+	@$(SHELL) $(scriptdir)/make-ver.sh $(VER_ARGS)
+	@$(PERL) $(scriptdir)/incvt.pl -i $(topdir)/config.status \
+            -t $(ROOT_ABS)/sonix-config.in -v$(ROOT_ABS)/VERSION \
+            -o $(topdir)/sonix-config
+	@chmod +x $(topdir)/sonix-config
 
 # Things to do after the object files and library are built.
 afterbuild:
@@ -121,6 +137,7 @@ links:
 	@echo "------------------------------------------------"
 	$(SHELL) $(MKINSTALLDIRS) $(instlinks)
 	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/include
+	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/bin
 	cd $(instlinks)/include &&                                      \
           for dir in $(SUBDIR) ; do                                     \
               rm -f ./$$dir ;                                           \
@@ -133,6 +150,9 @@ links:
            ln -s $(ROOT_ABS)/data ./share/sonix/data
 	cd $(instlinks)/share/sonix &&                          \
           ln -s $(topdir)/samples ./src
+	$(PERL) $(scriptdir)/incvt.pl -i $(topdir)/config.status	\
+            -t $(ROOT_ABS)/sonix-config.in -p 'use_base_dir=yes'	\
+            -v $(ROOT_ABS)/VERSION -o $(instlinks)/bin/sonix-config -x
 	@echo "\n\n"
 	@echo "---------------------------------------------------------------"
 	@echo 'You should now set $$SNX_BASE_DIR to:'
@@ -207,8 +227,8 @@ post-install:
 	@$(MAKE) install-samples
 	@$(MAKE) install-test
 	@$(MAKE) install-data
-#	$(INSTALL) -m $(EXEC_PERMS) $(GROUP_OPT_UNIX)			\
-#          $(topdir)/juggler-config $(bindir)
+	$(INSTALL) -m $(EXEC_PERMS) $(GROUP_OPT_UNIX)			\
+          $(topdir)/sonix-config $(bindir)
 
 install-data:
 	cp -r $(ROOT_ABS)/data/*.wav $(datadir)/sonix/data

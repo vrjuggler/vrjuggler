@@ -1,1 +1,270 @@
-do something here...
+#!/bin/sh
+
+# ************** <auto-copyright.pl BEGIN do not edit this line> **************
+#
+# VR Juggler is (C) Copyright 1998, 1999, 2000, 2001 by Iowa State University
+#
+# Original Authors:
+#   Allen Bierbaum, Christopher Just,
+#   Patrick Hartling, Kevin Meinert,
+#   Carolina Cruz-Neira, Albert Baker
+#
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Library General Public
+# License as published by the Free Software Foundation; either
+# version 2 of the License, or (at your option) any later version.
+#
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Library General Public License for more details.
+#
+# You should have received a copy of the GNU Library General Public
+# License along with this library; if not, write to the
+# Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+# Boston, MA 02111-1307, USA.
+#
+# *************** <auto-copyright.pl END do not edit this line> ***************
+
+%{
+%}
+
+#subsystem_cxxflags="@subsystem_cxxflags@"
+#subsystem_libs="@subsystem_libs@"
+snx_extra_cxxflags="@snx_extra_cxxflags@"
+snx_libs="@snx_libs@"
+snx_lib="@snx_lib@"
+
+snx_extra_include_dirs="@snx_extra_include_dirs@"
+
+snx_default_abi="@ABI@"
+snx_default_isa="@ISA@"
+snx_n32_flags="@snx_n32_flags@"
+snx_64_flags="@snx_64_flags@"
+LIBBITSUF='@LIBBITSUF@'
+
+if [ "x$snx_default_abi" = "xN32" ]; then
+    snx_abi_flags="$snx_n32_flags"
+elif [ "x$snx_default_abi" = "x64" ]; then
+    snx_abi_flags="$snx_64_flags"
+else
+    snx_abi_flags=''
+fi
+
+if [ "x$snx_default_isa" = "xmips3" -o "x$snx_default_isa" = "xmips4" ]; then
+    snx_isa_flags="-$snx_default_isa"
+else
+    snx_isa_flags=''
+fi
+
+prefix=@prefix@
+exec_prefix=@exec_prefix@
+exec_prefix_set='no'
+use_linker='no'
+
+#if [ "x$snx_extra_include_dirs" != "x" ]; then
+#    for dir in $snx_extra_include_dirs ; do
+#        snx_extra_includes="$snx_extra_includes -I@includedir@/$dir"
+#        snx_basedir_extra_includes="$snx_basedir_extra_includes -I$SNX_BASE_DIR/include/$dir"
+#    done
+#fi
+
+usage()
+{
+    cat <<EOF
+Usage: snx-config [OPTIONS] [LIBRARIES]
+Options:
+        [--basedir]             Use \$SNX_BASE_DIR when printing paths
+        [--prefix[=DIR]]        Print the installation prefix or set an
+                                alternate prefix to use when printing paths
+        [--exec-prefix[=DIR]]   Print the executable prefix or set an
+                                alternate executable prefix to use when
+                                printing paths
+        [--version]             Print the installed SNX's version number
+        [--cxxflags [N32|64]]   Print the flags for the C++ compiler
+        [--libs [N32|64]]       Print the basic SNX libraries
+        [--extra-libs [N32|64]] Print the extra linker options needed for
+                                making an executable
+        [--linker]              Print libraries as direct arguments to the
+                                linker rather than to the compiler
+        [--subsystem]           Print the OS abstraction layer being used
+EOF
+
+    exit $1
+}
+
+if test $# -eq 0; then
+    usage 1 1>&2
+fi
+
+while test $# -gt 0; do
+    case "$1" in
+        -*=*) optarg=`echo "$1" | sed 's/[-_a-zA-Z0-9]*=//'` ;;
+        *) optarg= ;;
+    esac
+
+    case $1 in
+        --basedir)
+            use_base_dir=yes
+            ;;
+        --prefix=*)
+            prefix=$optarg
+            if test $exec_prefix_set = no ; then
+                exec_prefix=$optarg
+            fi
+            ;;
+        --prefix)
+            echo_prefix=yes
+            ;;
+        --exec-prefix=*)
+            exec_prefix=$optarg
+            exec_prefix_set=yes
+            ;;
+        --exec-prefix)
+            echo_exec_prefix=yes
+            ;;
+        --version)
+            echo @MAJOR_VERSION@.@MINOR_VERSION@.@MICRO_VERSION@
+            ;;
+        --cxxflags)
+            echo_cxxflags=yes
+            case $2 in
+                --*)
+                    # This is another option flag, so leave it alone.
+                    ;;
+                N32)
+                    snx_extra_cxxflags="$snx_extra_cxxflags $snx_n32_flags $snx_isa_flags"
+                    shift
+                    ;;
+                64)
+                    snx_extra_cxxflags="$snx_extra_cxxflags $snx_64_flags $snx_isa_flags"
+                    shift
+                    ;;
+                *)
+                    snx_extra_cxxflags="$snx_extra_cxxflags $snx_abi_flags $snx_isa_flags"
+                    if [ "x$2" != "x" ] ; then
+                        shift
+                    fi
+                    ;;
+            esac
+            ;;
+        --subsystem)
+            echo "maybe OpenAL or possibly Audioworks"
+            ;;
+        --libs)
+            echo_libs=yes
+            case $2 in
+                --*)
+                    # This is another option flag, so leave it alone.
+                    ;;
+                N32)
+                    ldflags="$snx_n32_flags $snx_isa_flags"
+                    LIBBITSUF='32'
+                    shift
+                    ;;
+                64)
+                    ldflags="$snx_64_flags $snx_isa_flags"
+                    LIBBITSUF='64'
+                    shift
+                    ;;
+                *)
+                    ldflags="$snx_abi_flags $snx_isa_flags"
+                    if [ "x$2" != "x" ] ; then
+                        shift
+                    fi
+                    ;;
+            esac
+            ;;
+        --extra-libs)
+            echo_extra_libs=yes
+            case $2 in
+                --*)
+                    # This is another option flag, so leave it alone.
+                    ;;
+                N32)
+                    LIBBITSUF='32'
+                    shift
+                    ;;
+                64)
+                    LIBBITSUF='64'
+                    shift
+                    ;;
+                *)
+                    if [ "x$2" != "x" ] ; then
+                        shift
+                    fi
+                    ;;
+            esac
+            ;;
+        --linker)
+            use_linker=yes
+            ;;
+        --static)
+            echo_static=yes
+            ;;
+        *)
+            usage 1 1>&2
+            ;;
+    esac
+    shift
+done
+
+if test "$echo_prefix" = "yes"; then
+    if test "$use_base_dir" = "yes"; then
+        echo $SNX_BASE_DIR
+    else
+        echo $prefix
+    fi
+fi
+
+if test "$echo_exec_prefix" = "yes"; then
+    if test "$use_base_dir" = "yes"; then
+        echo $SNX_BASE_DIR
+    else
+        echo $exec_prefix
+    fi
+fi
+
+if test "$echo_cxxflags" = "yes"; then
+    if test "$use_base_dir" = "yes"; then
+        echo @CXXFLAGS@ $snx_extra_cxxflags -I$SNX_BASE_DIR/include
+    else
+        echo @CXXFLAGS@ $snx_extra_cxxflags -I@includedir@
+    fi
+fi
+
+if test "$echo_static" = "yes" ; then
+    static_begin='@static_begin@'
+    static_end='@static_end@'
+fi
+
+if test "$echo_libs" = "yes"; then
+    if test "$use_base_dir" = "yes"; then
+        ldflags="$ldflags -L$SNX_BASE_DIR/lib$LIBBITSUF"
+    else
+        if test "$use_linker" = "yes" ; then
+            ldflags="$ldflags @snx_ldflags_linker@"
+        else
+            ldflags="$ldflags @snx_ldflags_compiler@"
+        fi
+    fi
+
+#    for i in $subsystem_libs ; do
+#        if test $i != -L@libdir@ ; then
+#            if test -z "$my_subsystem_libs" ; then
+#                my_subsystem_libs="$i"
+#            else
+#                my_subsystem_libs="$my_subsystem_libs $i"
+#            fi
+#        fi
+#    done
+
+    echo $ldflags $static_begin $snx_libs $static_end 
+#$my_subsystem_libs
+fi      
+
+if test "x$echo_extra_libs" = "xyes"; then
+    snx_extra_ldflags="@snx_extra_ldflags@"
+    snx_extra_libs="@snx_extra_libs@"
+    echo $snx_extra_ldflags $snx_extra_libs
+fi
