@@ -33,7 +33,7 @@
 #ifndef _GADGET_DTK_MEMORY_SEGMENT_H_
 #define _GADGET_DTK_MEMORY_SEGMENT_H_
 
-#include <gadget/gadgetConfig.h>
+#include <gadget/Devices/DriverConfig.h>
 #include <gadget/Devices/Open/DTK/DTK.h>
 
 namespace gadget

@@ -33,7 +33,7 @@
 #ifndef _GADGET_IBOX_STANDALONE_H_
 #define _GADGET_IBOX_STANDALONE_H_
 
-#include <gadget/gadgetConfig.h>
+#include <gadget/Devices/DriverConfig.h>
 #include <string>
 #include <vpr/IO/Port/SerialPort.h>
 

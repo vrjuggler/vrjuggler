@@ -9,7 +9,7 @@
 /*  --    Authors: William Chapin and Larry Edwards         --  */
 /*  ==========================================================  */
 
-#include <gadget/gadgetConfig.h>
+#include <gadget/Devices/DriverConfig.h>
 
 #ifdef HAVE_SYS_STDSYMS_H
 #   include <sys/stdsyms.h>

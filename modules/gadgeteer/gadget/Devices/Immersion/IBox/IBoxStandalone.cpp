@@ -32,7 +32,7 @@
 
 #define MIN_TIMEOUT 0.1
 
-#include <gadget/gadgetConfig.h>
+#include <gadget/Devices/DriverConfig.h>
 #include <stdio.h>
 #include <vpr/System.h>
 #include <gadget/Devices/Immersion/IBox/IBoxStandalone.h>

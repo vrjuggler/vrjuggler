@@ -11,7 +11,7 @@
 /*  --  Copyright (C) 1987,88,89,90,91,92 Larry Edwards         --  */
 /*  ==============================================================  */
 
-#include <gadget/gadgetConfig.h>
+#include <gadget/Devices/DriverConfig.h>
 #include <gadget/Devices/VirtualTechnologies/CyberGlove/vt_math3d.h>
 
 #ifndef NULL

@@ -30,7 +30,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <gadget/gadgetConfig.h>
+#include <gadget/Devices/DriverConfig.h>
 
 #include <gmtl/Matrix.h>
 #include <gmtl/MatrixOps.h>

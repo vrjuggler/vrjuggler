@@ -36,7 +36,7 @@
 //     February 2001
 // ----------------------------------------------------------------------------
 
-#include <gadget/gadgetConfig.h>
+#include <gadget/Devices/DriverConfig.h>
 
 #include <gmtl/EulerAngle.h>
 #include <gmtl/Vec.h>

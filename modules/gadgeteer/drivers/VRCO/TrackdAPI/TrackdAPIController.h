@@ -33,7 +33,7 @@
 #ifndef _GADGET_TRACKD_API_CONTROLLER_H_
 #define _GADGET_TRACKD_API_CONTROLLER_H_
 
-#include <gadget/gadgetConfig.h>
+#include <gadget/Devices/DriverConfig.h>
 #include <vector>
 #include <gadget/Type/Input.h>
 #include <gadget/Type/Digital.h>
@@ -49,7 +49,7 @@ namespace gadget
    class InputManager;
 }
 
-extern "C" GADGET_API(void) initDevice(gadget::InputManager* inputMgr);
+extern "C" GADGET_DRIVER_API(void) initDevice(gadget::InputManager* inputMgr);
 
 
 namespace gadget

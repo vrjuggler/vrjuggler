@@ -30,7 +30,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <gadget/gadgetConfig.h>
+#include <gadget/Devices/DriverConfig.h>
 
 // need stdio for sprintf
 #include <stdio.h>

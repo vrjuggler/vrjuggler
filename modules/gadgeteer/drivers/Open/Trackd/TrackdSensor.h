@@ -33,7 +33,7 @@
 #ifndef _GADGET_TRACKD_SENSOR_H_
 #define _GADGET_TRACKD_SENSOR_H_
 
-#include <gadget/gadgetConfig.h>
+#include <gadget/Devices/DriverConfig.h>
 #include <vector>
 #include <gadget/Type/Input.h>
 #include <gadget/Type/Position.h>

@@ -33,7 +33,7 @@
 #ifndef _GADGET_DATA_GLOVE_STANDALONE_H_
 #define _GADGET_DATA_GLOVE_STANDALONE_H_
 
-#include <gadget/gadgetConfig.h>
+#include <gadget/Devices/DriverConfig.h>
 #include <string>
 #include <vpr/IO/Port/SerialPort.h>
 
