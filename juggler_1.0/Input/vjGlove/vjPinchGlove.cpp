@@ -87,7 +87,7 @@ int vjPinchGlove::Sample()
     // Update the xform data 
     mTheData[progress][0].calcXforms();    
     
-    swapValidIndices();
+    swapValidIndexes();
     return 1;
 }
 
