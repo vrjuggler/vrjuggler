@@ -447,13 +447,13 @@ def generateAntBuildFiles():
       java3d_jars_re    = re.compile(r'^(.*)@JAVA3D_JAR@(.*)$')
 
       jdom_jars = [
-         os.path.join(gJugglerDir, r'external\jdom\jaxen-core.jar'),
-         os.path.join(gJugglerDir, r'external\jdom\xalan.jar'),
-         os.path.join(gJugglerDir, r'external\jdom\jaxen-jdom.jar'),
-         os.path.join(gJugglerDir, r'external\jdom\xerces.jar'),
-         os.path.join(gJugglerDir, r'external\jdom\jdom.jar'),
-         os.path.join(gJugglerDir, r'external\jdom\xml-apis.jar'),
-         os.path.join(gJugglerDir, r'external\jdom\saxpath.jar')
+         os.path.join(gJugglerDir, r'external\jdom\build\jdom.jar'),
+         os.path.join(gJugglerDir, r'external\jdom\lib\jaxen-core.jar'),
+         os.path.join(gJugglerDir, r'external\jdom\lib\xalan.jar'),
+         os.path.join(gJugglerDir, r'external\jdom\lib\jaxen-jdom.jar'),
+         os.path.join(gJugglerDir, r'external\jdom\lib\xerces.jar'),
+         os.path.join(gJugglerDir, r'external\jdom\lib\xml-apis.jar'),
+         os.path.join(gJugglerDir, r'external\jdom\lib\saxpath.jar')
       ]
 
       tweek_jars = [
@@ -694,10 +694,12 @@ def installVPR(prefix):
    srcdir  = os.path.join(gJugglerDir, 'modules', 'vapor', 'test')
    installDir(srcdir, destdir, None, ['.in'])
 
+   # Install additional files into <prefix>\share\vpr
    destdir = os.path.join(prefix, 'share', 'vpr')
    srcroot = os.path.join(gJugglerDir, 'modules', 'vapor')
 
-   extra_files = ['ChangeLog', 'COPYING.txt', 'README.txt', 'RELEASE_NOTES.txt']
+   shutil.copy2(os.path.join(gJugglerDir, 'COPYING.txt'), destdir)
+   extra_files = ['ChangeLog', 'README.txt', 'RELEASE_NOTES.txt']
    for f in extra_files:
       shutil.copy2(os.path.join(srcroot, f), destdir)
 
@@ -723,10 +725,12 @@ def installTweek(prefix):
    srcdir  = os.path.join(gJugglerDir, 'modules', 'tweek', 'data')
    installDir(srcdir, destdir)
 
+   # Install additional files into <prefix>\share\tweek
    destdir = os.path.join(prefix, 'share', 'tweek')
    srcroot = os.path.join(gJugglerDir, 'modules', 'tweek')
 
-   extra_files = ['ChangeLog', 'COPYING.txt', 'RELEASE_NOTES.txt']
+   shutil.copy2(os.path.join(gJugglerDir, 'COPYING.txt'), destdir)
+   extra_files = ['ChangeLog', 'RELEASE_NOTES.txt']
    for f in extra_files:
       shutil.copy2(os.path.join(srcroot, f), destdir)
 
@@ -840,10 +844,12 @@ def installJCCL(prefix):
    srcdir  = os.path.join(gJugglerDir, 'modules', 'jackal', 'data')
    installDir(srcdir, destdir)
 
+   # Install additional files into <prefix>\share\jccl
    destdir = os.path.join(prefix, 'share', 'jccl')
    srcroot = os.path.join(gJugglerDir, 'modules', 'jackal')
 
-   extra_files = ['ChangeLog', 'COPYING.txt', 'RELEASE_NOTES.txt']
+   shutil.copy2(os.path.join(gJugglerDir, 'COPYING.txt'), destdir)
+   extra_files = ['ChangeLog', 'RELEASE_NOTES.txt']
    for f in extra_files:
       shutil.copy2(os.path.join(srcroot, f), destdir)
 
@@ -907,10 +913,12 @@ def installSonix(prefix):
    srcdir  = os.path.join(gJugglerDir, 'modules', 'sonix', 'data')
    installDir(srcdir, destdir)
 
+   # Install additional files into <prefix>\share\sonix
    destdir = os.path.join(prefix, 'share', 'sonix')
    srcroot = os.path.join(gJugglerDir, 'modules', 'sonix')
 
-   extra_files = ['ChangeLog', 'COPYING.txt', 'README.txt']
+   shutil.copy2(os.path.join(gJugglerDir, 'COPYING.txt'), destdir)
+   extra_files = ['ChangeLog', 'README.txt']
    for f in extra_files:
       shutil.copy2(os.path.join(srcroot, f), destdir)
 
@@ -962,10 +970,12 @@ def installGadgeteer(prefix):
    srcdir  = os.path.join(gJugglerDir, 'modules', 'gadgeteer', 'tools')
    installDir(srcdir, destdir, None, ['.in'])
 
+   # Install additional files into <prefix>\share\gadgeteer
    destdir = os.path.join(prefix, 'share', 'gadgeteer')
    srcroot = os.path.join(gJugglerDir, 'modules', 'gadgeteer')
 
-   extra_files = ['ChangeLog', 'COPYING.txt', 'RELEASE_NOTES.txt']
+   shutil.copy2(os.path.join(gJugglerDir, 'COPYING.txt'), destdir)
+   extra_files = ['ChangeLog', 'RELEASE_NOTES.txt']
    for f in extra_files:
       shutil.copy2(os.path.join(srcroot, f), destdir)
 
@@ -1040,10 +1050,12 @@ def installVRJuggler(prefix):
    srcdir  = os.path.join(gJugglerDir, 'modules', 'vrjuggler', 'tools')
    installDir(srcdir, destdir, None, ['.in'])
 
+   # Install additional files into <prefix>\share\vrjuggler
    destdir = os.path.join(prefix, 'share', 'vrjuggler')
    srcroot = os.path.join(gJugglerDir, 'modules', 'vrjuggler')
 
-   extra_files = ['ChangeLog', 'COPYING.txt', 'RELEASE_NOTES.txt']
+   shutil.copy2(os.path.join(gJugglerDir, 'COPYING.txt'), destdir)
+   extra_files = ['ChangeLog', 'RELEASE_NOTES.txt']
    for f in extra_files:
       shutil.copy2(os.path.join(srcroot, f), destdir)
 
