@@ -102,7 +102,7 @@ void SubjectManagerImpl::registerSubject(SubjectImpl* subjectServant,
    }
    mSubjectIdsMutex.release();
 
-   registerSubject(subjectServant->_this(), name_str);
+   storeSubject(subjectServant->_this(), name_str);
 }
 
 vpr::ReturnStatus SubjectManagerImpl::unregisterSubject(const char* name)
@@ -136,8 +136,8 @@ vpr::ReturnStatus SubjectManagerImpl::unregisterSubject(const char* name)
    return status;
 }
 
-void SubjectManagerImpl::registerSubject(Subject_ptr subject,
-                                         const std::string& name)
+void SubjectManagerImpl::storeSubject(Subject_ptr subject,
+                                      const std::string& name)
 {
    vpr::Guard<vpr::Mutex> guard(mSubjectsMutex);
 

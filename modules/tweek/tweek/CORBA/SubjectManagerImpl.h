@@ -204,7 +204,7 @@ protected:
       /* Do nothing. */ ;
    }
 
-   void registerSubject(Subject_ptr subject, const std::string& name);
+   void storeSubject(Subject_ptr subject, const std::string& name);
 
    /**
     * Intializes the encapsulated map of key/value pairs for this Subject
