@@ -39,6 +39,12 @@ package org.vrjuggler.vrjconfig.commoneditors;
  */
 public interface EditorConstants
 {
+   // Miscellaneous constants.
+
+   /** Location of images in the CommonEditors distribution. */
+   public static final String COMMON_IMG_ROOT =
+      "org/vrjuggler/vrjconfig/commoneditors/images";
+
    // Config element types (definition tokens).
 
    /** Config element type alias. */
@@ -235,6 +241,9 @@ public interface EditorConstants
 
    /** Property type tracker_proxy. */
    public static final String TRACKER_PROXY_PROPERTY = "tracker_proxy";
+
+   /** Property type unit. */
+   public static final String UNIT_PROPERTY = "unit";
 
    /** Property type upper_left_corner. */
    public static final String UPPER_LEFT_CORNER_PROPERTY = "upper_left_corner";
