@@ -543,9 +543,9 @@ public class TweekFrame
       editGlobalPrefs(null);
    }
 
-   public void handleQuit()
+   public boolean handleQuit()
    {
-      fileQuitAction(null);
+      return fileQuitAction(null);
    }
 
    public synchronized void addTweekFrameListener(TweekFrameListener l)
@@ -1303,13 +1303,18 @@ public class TweekFrame
    /**
     * File | Quit action performed.
     */
-   private void fileQuitAction(ActionEvent e)
+   private boolean fileQuitAction(ActionEvent e)
    {
-      if ( fireFrameClosing(new TweekFrameEvent(this, WindowEvent.WINDOW_CLOSING)) )
+      boolean should_quit =
+         fireFrameClosing(new TweekFrameEvent(this,
+                                              WindowEvent.WINDOW_CLOSING)); 
+
+      if ( should_quit )
       {
          shutdown();
-         System.exit(0);
       }
+
+      return should_quit;
    }
 
    /**
