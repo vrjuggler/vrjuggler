@@ -1,8 +1,0 @@
-Name: tweektest/beans/GenericBean.class
-Java-Bean: True
-Specification-Title: Generic Test Bean
-Specification-Version: 0.1.0
-Specification-Vendor: vrjuggler.org
-Implementation-Title: tweektest.beans.GenericBean
-Implementation-Version: 1.0 alpha1
-Implementation-Vendor: vrjuggler.org
