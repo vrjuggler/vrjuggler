@@ -104,27 +104,27 @@ LIBBITSUF=''
 # substitution variables $LIBBITSUF and $ABI.
 if test "x$abi_type" = "x64_M3" ; then
     ABI='64'
-    INST_SET='mips3'
+    ISA='mips3'
     LIBBITSUF='64'
     _EXTRA_FLAGS='-64 -mips3'
 elif test "x$abi_type" = "x64_M4" ; then
     ABI='64'
-    INST_SET='mips4'
+    ISA='mips4'
     LIBBITSUF='64'
     _EXTRA_FLAGS='-64 -mips4'
 elif test "x$abi_type" = "xN32_M3" ; then
     ABI='N32'
-    INST_SET='mips3'
+    ISA='mips3'
     LIBBITSUF='32'
     _EXTRA_FLAGS='-n32 -mips3'
 elif test "x$abi_type" = "xN32_M4" ; then
     ABI='N32'
-    INST_SET='mips4'
+    ISA='mips4'
     LIBBITSUF='32'
     _EXTRA_FLAGS='-n32 -mips4'
 elif test "x$abi_type" = "xO32" ; then
     ABI='O32'
-    INST_SET='mips2'
+    ISA='mips2'
     LIBBITSUF=''
     _EXTRA_FLAGS='-o32 -mips2'
 fi
@@ -638,7 +638,7 @@ AC_SUBST(OPT_FLAGS)
 AC_SUBST(SHAREDLIB_EXT)
 
 AC_SUBST(ABI)
-AC_SUBST(INST_SET)
+AC_SUBST(ISA)
 AC_SUBST(ABI_LIST)
 AC_SUBST(LIBBITSUF)
 AC_SUBST(PLATFORM)

@@ -137,32 +137,32 @@ CXX_COMPILE	= ${CXX} ${DEFS} ${INCLUDES} ${CPPFLAGS} ${CXXFLAGS}
 ifdef vjABI
     ifeq (${vjABI}, O32)
         ABI		= O32
-        INST_SET	= mips2
+        ISA		= mips2
         LIBBITSUF	=
     endif
     ifeq (${vjABI}, N32_M3)
         ABI		= N32
-        INST_SET	= mips3
+        ISA		= mips3
         LIBBITSUF	= 32
     endif
     ifeq (${vjABI}, N32_M4)
         ABI		= N32
-        INST_SET	= mips4
+        ISA		= mips4
         LIBBITSUF	= 32
     endif
     ifeq (${vjABI}, 64_M3)
         ABI		= 64
-        INST_SET	= mips3
+        ISA		= mips3
         LIBBITSUF	= 64
     endif
     ifeq (${vjABI}, 64_M4)
         ABI		= 64
-        INST_SET	= mips4
+        ISA		= mips4
         LIBBITSUF	= 64
     endif
 else
     ABI		= @ABI@
-    INST_SET	= @INST_SET@
+    ISA		= @ISA@
     LIBBITSUF	= @LIBBITSUF@
 endif
 
@@ -190,13 +190,13 @@ ifeq (${ABI}, 64)
     LIBBITSUF	= 64
 endif
 
-ifeq (${INST_SET}, mips3)
+ifeq (${ISA}, mips3)
     ARFLAGS	:= -mips3 ${ARFLAGS}
     CFLAGS	+= -mips3
     CXXFLAGS	+= -mips3
     LDOPTS	+= -mips3
 endif
-ifeq (${INST_SET}, mips4)
+ifeq (${ISA}, mips4)
     ARFLAGS	:= -mips4 ${ARFLAGS}
     CFLAGS	+= -mips4
     CXXFLAGS	+= -mips4
