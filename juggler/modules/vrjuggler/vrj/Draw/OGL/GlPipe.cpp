@@ -204,6 +204,7 @@ void vjGlPipe::checkForWindowsToClose()
          // Call contextClose
          vjGlApp* theApp = glManager->getApp();       // Get application for easy access
          vjDisplay* theDisplay = win->getDisplay();   // Get the display for easy access
+         theDisplay->recordLatency (0, 1);
 
          glManager->setCurrentContext(win->getId());     // Set TS data of context id
          glManager->currentUserData()->setUser(theDisplay->getUser());         // Set user data
@@ -360,6 +361,6 @@ void vjGlPipe::swapWindowBuffers(vjGlWindow* win)
 {
    win->makeCurrent();           // Set correct context
    win->swapBuffers();           // Implicitly calls a glFlush
-   //vjTimeStamp* stamp = win->getDisplay()->getUser()->getHeadUpdateTime();
-   //cout << "timestamp time is: " << stamp->usecs() << " usecs" << endl;
+   vjDisplay* theDisplay = win->getDisplay();   // Get the display for easy access
+   theDisplay->recordLatency (2, 3);
 }
