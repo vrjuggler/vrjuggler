@@ -88,12 +88,12 @@ private:
 
    bool mHaveKeyboard;
 
-   gmtl::Point2f mRectSize;
-   int mTexWidth;
-   int mTexHeight;
+   float mDesktopWidth, mDesktopHeight;      /**< Width and height of the virtual desktop. VRJ units */
+   int   mTexWidth;                          /**< Width of the texture in pixels */
+   int   mTexHeight;                         /**< Height of the texture in pixels */
 
-   float mWidthScale;
-   float mHeightScale;
+   float          mWidthScale;
+   float          mHeightScale;
 
    gmtl::Matrix44f  mDesktopMatrix;  /**< vnc_T_world */
    gmtl::AABoxf     mDesktopBox;
