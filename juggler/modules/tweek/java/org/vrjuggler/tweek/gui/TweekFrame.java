@@ -138,7 +138,7 @@ public class TweekFrame extends JFrame implements TreeModelRefreshListener,
 
    public void treeModelRefresh (TreeModelRefreshEvent e)
    {
-      BeanTreeModel data_model = TweekCore.instance().getTreeModel();
+      BeanTreeModel data_model = TweekCore.instance().getPanelTreeModel();
       List viewers = BeanRegistry.instance().getBeansOfType( ViewerBean.class.getName() );
 
       for ( Iterator itr = viewers.iterator(); itr.hasNext(); )
@@ -552,7 +552,7 @@ public class TweekFrame extends JFrame implements TreeModelRefreshListener,
          {
             String exp_path = EnvironmentService.expandEnvVars(path);
             loadBeansFromPath(exp_path);
-            TweekCore.instance().getTreeModel().fireTreeModelRefreshEvent();
+            TweekCore.instance().getPanelTreeModel().fireTreeModelRefreshEvent();
          }
       }
       else
@@ -580,7 +580,7 @@ public class TweekFrame extends JFrame implements TreeModelRefreshListener,
                   loadBeansFromPath(path);
                }
 
-               TweekCore.instance().getTreeModel().fireTreeModelRefreshEvent();
+               TweekCore.instance().getPanelTreeModel().fireTreeModelRefreshEvent();
             }
          }
       }
