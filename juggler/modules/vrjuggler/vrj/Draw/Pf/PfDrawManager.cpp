@@ -71,7 +71,9 @@
 #include <jccl/Config/ConfigElement.h>
 #include <jccl/RTRC/ConfigManager.h>
 
-#include <gadget/Devices/EventWindow/EventWindowXWin.h>
+#ifndef VPR_OS_Win32
+#	include <gadget/Devices/EventWindow/EventWindowXWin.h>
+#endif
 
 #include <boost/concept_check.hpp>
 
@@ -559,6 +561,7 @@ void PfDrawManager::addDisplay(Display* disp)
    // Call pfFrame to cause the pipeWindow configured to be opened and setup.
    pfFrame();
 
+#ifndef VPR_OS_Win32
    // ----------- Register this window with XEvent Device registry --------- //
    gadget::EventWindowXWin::WindowRegistry::WindowInfo xwin_info;
    xwin_info.displayName = mPipeStrs[disp->getPipe()];
@@ -566,6 +569,7 @@ void PfDrawManager::addDisplay(Display* disp)
    vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CONFIG_LVL) << "PfDrawManager::addDisplay: window id: " << int(xwin_info.xWindow) << "\n" << vprDEBUG_FLUSH;
 
    gadget::EventWindowXWin::WindowRegistry::instance()->addWindow(disp->getName(), xwin_info);
+#endif
 
    // Dump the state
    vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CONFIG_LVL)

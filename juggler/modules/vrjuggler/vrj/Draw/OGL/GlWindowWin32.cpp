@@ -49,8 +49,7 @@ namespace vrj
 {
 
 GlWindowWin32::GlWindowWin32()
-   : mWinHandle(NULL)
-   , mRenderContext(NULL)
+   : mRenderContext(NULL)
    , mDeviceContext(NULL)
 {
    /* Do nothing. */ ;
@@ -69,12 +68,12 @@ bool GlWindowWin32::open()
 {
    if ( false == GlWindowWin32::registerWindowClass() )
    {
-      return 0;
+      return false;
    }
 
    if ( mWindowIsOpen )
    {
-      return 1;
+      return true;
    }
 
    HMODULE hMod = GetModuleHandle(NULL);
@@ -115,6 +114,7 @@ bool GlWindowWin32::open()
    // If window was not created, quit
    if ( NULL == mWinHandle )
    {
+		doInternalError("Could not create EventWindowWin32!");
       return 0;
    }
 
@@ -142,46 +142,16 @@ bool GlWindowWin32::open()
    mWindowIsOpen = true;
 
    // ----------- Event window device starting -------------- //
-   // Are we going to act like as an event source?
-   if (true == mIsEventSource)
-   {
-      this->becomeEventWindowDevice();
-   }
+	gadget::InputAreaWin32::InputAreaRegistry::InputAreaInfo input_area_info;
+	input_area_info.mDisplayName = mWindowName;
+	input_area_info.mInputArea = this;
+
+	gadget::InputAreaWin32::InputAreaRegistry::instance()->addInputArea(mWindowName, input_area_info);
 
    // If mHideMouse is true we must pass false to ShowCursor
    ShowCursor(! mHideMouse);
 
    return 1;
-}
-
-/** Do the stuff needed to become an event window. */
-void GlWindowWin32::becomeEventWindowDevice()
-{
-   // Set the parameters that we will need to get events
-   gadget::EventWindowWin32::m_hWnd = mWinHandle;
-
-   gadget::Input* dev_ptr = dynamic_cast<gadget::Input*>(this);
-   vprASSERT( dev_ptr != NULL );
-
-   // @todo Possibly not the best way to add this to input manager
-   // - What happens when the event window is removed at run-time???
-   // - What happens when this is called again?
-   vrj::Kernel::instance()->getInputManager()->addDevice(dev_ptr);
-}
-
-void GlWindowWin32::removeEventWindowDevice()
-{
-   gadget::EventWindowWin32::m_hWnd = 0;
-
-   gadget::Input* dev_ptr = dynamic_cast<gadget::Input*>(this);
-   vprASSERT( dev_ptr != NULL );
-
-   // @todo Possibly not the best way to add this to input manager
-   // - What happens when the event window is removed at run-time???
-   // - What happens when this is called again?
-
-   // @todo reenable this when InputManager::removeDevice(Input*) is public
-   //vrj::Kernel::instance()->getInputManager()->removeDevice( dev_ptr );
 }
 
 /**
@@ -194,11 +164,6 @@ bool GlWindowWin32::close()
    if ( !mWindowIsOpen )
    {
       return false;
-   }
-
-   if (mIsEventSource)
-   {
-      this->removeEventWindowDevice();
    }
 
    // Remove window from window list
@@ -231,13 +196,12 @@ void GlWindowWin32::swapBuffers()
 
 void GlWindowWin32::checkEvents()
 {
+   vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_HVERB_LVL)
+      << "[vrj::GlWindowWin32::checkEvents()]"
+      << std::endl << vprDEBUG_FLUSH;
    if (true == mIsEventSource)
    {
-      /** Sample from the window */
-      gadget::EventWindowWin32::sample();
-      // if event source, use its event processor
-      // it will pass all events up to this->processEvent()
-      // when done, so that we can see the messages.
+		handleEvents();
    }
    else
    {
@@ -257,18 +221,13 @@ void GlWindowWin32::checkEvents()
    }
 }
 
-void GlWindowWin32::processEvent(UINT message, UINT wParam, LONG lParam)
-{
-
-}
-
 void GlWindowWin32::configWindow(vrj::Display* disp)
 {
    const char neg_one_STRING[] = "-1";
    vprASSERT( disp != NULL );
    vrj::GlWindow::configWindow(disp);
 
-    // Get the vector of display chunks
+	// Get the vector of display chunks
    jccl::ConfigElementPtr disp_sys_elt =
       DisplayManager::instance()->getDisplaySystemElement();
    jccl::ConfigElementPtr display_elt = disp->getConfigElement();
@@ -290,42 +249,6 @@ void GlWindowWin32::configWindow(vrj::Display* disp)
    vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_VERB_LVL)
       << "glxWindow::config: display name is: "
       << mXDisplayName << std::endl << vprDEBUG_FLUSH;
-
-   bool was_i_a_keyboard = mIsEventSource;
-   mIsEventSource = display_elt->getProperty<bool>("act_as_event_source");
-
-   // If i'm being configured to NOT be an event source, and I was one already.
-   if (false == mIsEventSource && true == was_i_a_keyboard)
-   {
-      this->removeEventWindowDevice();
-   }
-
-   // If i'm being configured to be an event source, and I wasn't one already.
-   else if (true == mIsEventSource && false == was_i_a_keyboard)
-   {
-      // Configure event window device portion.
-      jccl::ConfigElementPtr event_win_chunk =
-         display_elt->getProperty<jccl::ConfigElementPtr>("event_window_device");
-
-      // Set the name of the chunk to the same as the parent chunk (so we can
-      // point at it).
-      //event_win_chunk->setProperty("name", display_elt->getName();
-
-      gadget::EventWindowWin32::config(event_win_chunk);
-
-      // Custom configuration
-      gadget::EventWindowWin32::mWidth = GlWindowWin32::mWindowWidth;
-      gadget::EventWindowWin32::mHeight = GlWindowWin32::mWindowHeight;
-
-      mWeOwnTheWindow = false;      // Event window device does not own window
-
-      // if the window is already open, then make it an event window device
-      // otherwise, this will be called once the window opens.
-      if (mWindowIsOpen)
-      {
-         this->becomeEventWindowDevice();
-      }
-   }
 }
 
 // WindowProcedure to deal with the events generated.
@@ -367,9 +290,11 @@ LRESULT GlWindowWin32::handleEvent(HWND hWnd, UINT message, WPARAM wParam,
       case WM_SIZE:
          // Call our function which modifies the clipping
          // volume and viewport
+			vprDEBUG(vrjDBG_DRAW_MGR, 0)
+				<< "GlWindowWin32::handleEvent() Size changed."
+				<< mXDisplayName << std::endl << vprDEBUG_FLUSH;
          sizeChanged(LOWORD(lParam), HIWORD(lParam));
          break;
-
 
          // The painting function.  This message sent by Windows
          // whenever the screen needs updating.
@@ -380,7 +305,10 @@ LRESULT GlWindowWin32::handleEvent(HWND hWnd, UINT message, WPARAM wParam,
             EndPaint(hWnd, &ps);
          }
          break;
-
+		// Catch the ALT key so that it does not open the system menu.
+      case WM_SYSKEYDOWN:
+      case WM_SYSKEYUP:
+			break;
       default:   // Passes it on if unproccessed
          return DefWindowProc(hWnd, message, wParam, lParam);
    }
@@ -464,11 +392,11 @@ bool GlWindowWin32::setPixelFormat(HDC hDC)
 
       if ( result == 0 )
       {
-         vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
-            << "ERROR: Failed to get requested visual (ID 0x" << std::hex
-            << visual_id << std::dec << ")\n" << vprDEBUG_FLUSH;
-         // XXX: It would be helpful to print out the Windows error message.
-//         DWORD error = GetLastError();
+			std::stringstream error;
+			error << "Failed to get requested visual (ID 0x" << std::hex
+					<< visual_id << std::dec << ")" << std::flush;
+			
+			doInternalError(error.str());
          return false;
       }
 
@@ -524,6 +452,7 @@ bool GlWindowWin32::setPixelFormat(HDC hDC)
          {
             if ( !(match.dwFlags & PFD_STEREO) )
             {
+					doInternalError("Could not get a stereo pixel format.");
                return false;
             }
          }
@@ -567,11 +496,14 @@ LRESULT CALLBACK GlWindowWin32::WndProc(HWND hWnd, UINT message,
 
    if ( glWin != NULL )       // Message for one of ours
    {
-      glWin->processEvent(message, wParam, lParam);
       return glWin->handleEvent(hWnd, message, wParam, lParam);
    }
    else
    {
+		vprDEBUG(vrjDBG_DRAW_MGR, 0)
+			<< "Could not find GlWindow to process event."
+			<< std::endl << vprDEBUG_FLUSH;
+
       return DefWindowProc(hWnd, message, wParam, lParam);
    }
 }
@@ -603,14 +535,30 @@ bool GlWindowWin32::registerWindowClass()
    mWinClass.cbClsExtra  = 0;
    mWinClass.cbWndExtra  = 0;
    mWinClass.hInstance   = hInstance;            // Get handle to the module that created current process
-   mWinClass.hIcon       = LoadIcon(NULL, IDI_WINLOGO);;
+	mWinClass.hIcon		 = LoadIcon(hInstance, "VRJUGGLER_ICON" );
    mWinClass.hCursor     = LoadCursor(NULL, IDC_ARROW);
 
    // No need for background brush for OpenGL window
-   mWinClass.hbrBackground  = NULL;
+   //mWinClass.hbrBackground  = NULL;
+   mWinClass.hbrBackground = (HBRUSH)(COLOR_WINDOW+1);
 
    mWinClass.lpszMenuName   = NULL;
    mWinClass.lpszClassName  = GL_WINDOW_WIN32_CLASSNAME;
+
+#ifdef _DEBUG
+#	define LIBNAME "vrj_ogl_d.dll"
+#else
+#	define LIBNAME "vrj_ogl.dll"
+#endif
+
+   if (mWinClass.hIcon == NULL)
+   {
+      HINSTANCE hDLLInstance = LoadLibrary( LIBNAME );
+      if (hDLLInstance != NULL)
+      {
+			mWinClass.hIcon = LoadIcon(hDLLInstance, "VRJUGGLER_ICON");
+		}
+	}
 
    // Register the window class
    if ( RegisterClass(&mWinClass) == 0 )
