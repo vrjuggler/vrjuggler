@@ -271,9 +271,8 @@ fi
 # Checks for header files.
 # -----------------------------------------------------------------------------
 AC_HEADER_STDC
-AC_HEADER_TIME
-AC_CHECK_HEADERS(fcntl.h limits.h strings.h sys/file.h sys/ioctl.h	\
-                 sys/time.h termios.h unistd.h sys/z8530.h sys/stdsyms.h)
+AC_CHECK_HEADERS([fcntl.h sys/ioctl.h sys/time.h termios.h unistd.h      \
+                  sys/z8530.h sys/stdsyms.h])
 
 # -----------------------------------------------------------------------------
 # Checks for typedefs, structures, and compiler characteristics.
