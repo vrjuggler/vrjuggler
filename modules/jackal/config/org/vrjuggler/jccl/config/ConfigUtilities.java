@@ -87,6 +87,57 @@ public class ConfigUtilities
    }
 
    /**
+    * Returns a list of all the <code>ConfigDefinition</code> objects that
+    * are of the given type.  The base types of the config definitions are
+    * searched, which means that this performs a "polymorphic" search through
+    * the given list of config definitions.  For an exact type match, use
+    * <code>getDefinitionsWithToken(List,String)</code>.
+    *
+    * @param defs               the list of config definitions to search
+    * @param baseTypeToken      the type name used for the polymorphic
+    *                           comparison
+    *
+    * @see #getDefinitionsWithToken(List,String)
+    *
+    * @since 0.92.9
+    */
+   public static List getDefinitionsOfType(List defs, String baseTypeToken)
+   {
+      List results = new ArrayList();
+
+      for ( Iterator d = defs.iterator(); d.hasNext(); )
+      {
+         ConfigDefinition def = (ConfigDefinition) d.next();
+         if ( def.isOfType(baseTypeToken) )
+         {
+            results.add(def);
+         }
+      }
+
+      return results;
+   }
+
+   /**
+    * Returns a list of all the <code>ConfigDefinition</code> objects that
+    * are of the given type.  The base types of the config definitions are
+    * searched, which means that this performs a "polymorphic" search through
+    * the given list of config definitions.  For an exact type match, use
+    * <code>getDefinitionsWithToken(List,String)</code>.
+    *
+    * @param defs       the list of config definitions to search
+    * @param baseType   the type used for the polymorphic comparison
+    *
+    * @see #getDefinitionsOfType(List,String)
+    *
+    * @since 0.92.9
+    */
+   public static List getDefinitionsOfType(List defs,
+                                           ConfigDefinition baseType)
+   {
+      return getDefinitionsOfType(defs, baseType.getToken());
+   }
+
+   /**
     * Looks through the given list of configuration elements and finds the ones
     * that have the given name.
     *
