@@ -1,6 +1,5 @@
-#include <string.h>
 #include <cppunit/TestSuite.h>
-#include <cppunit/TextTestResult.h>
+#include <cppunit/TextTestRunner.h>
 
 #include <TestCases/Socket/SocketTest.h>
 #include <TestCases/Socket/NonBlockingSocketsTest.h>
@@ -8,7 +7,6 @@
 #include <TestCases/Socket/SocketConnectorAcceptorTest.h>
 
 #include <TestCases/Thread/ThreadTest.h>
-#include <TestCases/Thread/SignalTest.h>
 
 #include <TestCases/IO/Socket/InetAddrTest.h>
 #include <TestCases/IO/SelectorTest.h>
@@ -27,60 +25,11 @@
 
 //#define vprtest_RANDOM_SEED 1
 
-//using namespace vpr;
-
-static void addNoninteractive (CppUnit::TestSuite* suite)
-{
-   static vprTest::ReturnStatusTest return_test;
-   static vprTest::BoostTest boost_test;
-   static vprTest::SystemTest system_test;
-   static vprTest::IntervalTest interval_test;
-   static vprTest::GUIDTest guid_test;
-   static vprTest::InetAddrTest inet_addr_test;
-   static vprTest::SocketTest sock_test;
-   static vprTest::NonBlockingSocketTest non_block_test;
-   static vprTest::SocketCopyConstructorTest sock_copy_test;
-   static vprTest::SocketConnectorAcceptorTest sock_conn_accept_test;
-   static vprTest::SelectorTest selector_test;
-//   static vprTest::SignalTest signal_test;
-
-   // add tests to the suite
-   return_test.registerTests(suite);
-   boost_test.registerTests(suite);
-   system_test.registerTests(suite);
-   interval_test.registerTests(suite);
-   guid_test.registerTests(suite);
-   inet_addr_test.registerTests(suite);
-   sock_test.registerTests(suite);
-   non_block_test.registerTests(suite);
-//   sock_copy_test.registerTests(suite);
-   sock_conn_accept_test.registerTests(suite);
-   selector_test.registerTests(suite);
-//   signal_test.registerTests(suite);
-}
-
-static void addMetrics (CppUnit::TestSuite* suite)
-{
-   static vprTest::IntervalTest interval_test;
-   static vprTest::GUIDTest guid_test;
-   static vprTest::SocketBandwidthIOStatsTest sock_bw_test;
-
-   interval_test.registerMetricsTests(suite);
-   guid_test.registerMetricsTests(suite);
-   sock_bw_test.registerMetricsTests(suite);
-}
-
-static void addInteractive (CppUnit::TestSuite* suite)
-{
-   static vprTest::ThreadTest thread_test;
-
-   thread_test.registerTests(suite);
-}
 
 int main (int ac, char **av)
 {
-   vprDEBUG(vprDBG_ALL,vprDBG_CRITICAL_LVL) << "\n\n-----------------------------------------\n" << vprDEBUG_FLUSH;
-   vprDEBUG(vprDBG_ALL,vprDBG_CRITICAL_LVL) << "Starting test\n" << vprDEBUG_FLUSH;       // Do this here to get init text out of the way
+   vprDEBUG(vprDBG_ALL,0) << "\n\n-----------------------------------------\n" << vprDEBUG_FLUSH;
+   vprDEBUG(vprDBG_ALL,0) << "Starting test\n" << vprDEBUG_FLUSH;       // Do this here to get init text out of the way
 
     // Init random number generation
     unsigned int random_seed;
@@ -89,7 +38,7 @@ int main (int ac, char **av)
     timeval cur_time;
     vpr::System::gettimeofday(&cur_time);
     random_seed = cur_time.tv_usec;
-    vprDEBUG(vprDBG_ALL,vprDBG_CRITICAL_LVL) << "timeval.usec: " << cur_time.tv_usec << std::endl << vprDEBUG_FLUSH;
+    vprDEBUG(vprDBG_ALL,0) << "timeval.usec: " << cur_time.tv_usec << std::endl << vprDEBUG_FLUSH;
 #else
     random_seed = 1;                // Use this for repeatability
 #endif
@@ -99,43 +48,81 @@ int main (int ac, char **av)
     srandom(random_seed);
     srand(random_seed);
 
-   CppUnit::TestSuite suite;
+   CppUnit::TextTestRunner runner;
 
-   if ( ac > 1 && strcmp(av[1], "all") != 0 ) {
-      for ( int i = 1; i < ac; i++ ) {
-         //------------------------------------
-         //  noninteractive
-         //------------------------------------	
-         // create non-interactive test suite
-         if ( strcmp(av[i], "noninteractive") == 0 ) {
-            addNoninteractive(&suite);
-         }
-         // ------------------------------
-         // METRICS
-         // ------------------------------
-         else if ( strcmp(av[i], "metrics") == 0 ) {
-            addMetrics(&suite);
-         }
-         // -------------------------------
-         // INTERACTIVE
-         // -------------------------------
-         else if ( strcmp(av[i], "interactive") == 0 ) {
-            addInteractive(&suite);
-         }
-         else {
-            std::cerr << "WARNING: Unknown suite name " << av[i] << std::endl;
-         }
+   //------------------------------------
+   //  noninteractive
+   //------------------------------------	
+   // create non-interactive test suite
+   CppUnit::TestSuite* noninteractive_suite = new CppUnit::TestSuite("noninteractive");
+
+   // add tests to the suite
+   noninteractive_suite->addTest(vprTest::ReturnStatusTest::suite());
+   noninteractive_suite->addTest(vprTest::BoostTest::suite());
+   noninteractive_suite->addTest(vprTest::SystemTest::suite());
+   noninteractive_suite->addTest(vprTest::IntervalTest::suite());
+   noninteractive_suite->addTest(vprTest::GUIDTest::suite());
+   noninteractive_suite->addTest(vprTest::InetAddrTest::suite());
+   noninteractive_suite->addTest(vprTest::SocketTest::suite());
+   noninteractive_suite->addTest(vprTest::NonBlockingSocketTest::suite());
+//   noninteractive_suite->addTest(vprTest::SocketCopyConstructorTest::suite());
+   noninteractive_suite->addTest(vprTest::SocketConnectorAcceptorTest::suite());
+   noninteractive_suite->addTest(vprTest::SelectorTest::suite());   
+
+   // Add the test suite to the runner
+   runner.addTest( noninteractive_suite );
+
+   // ------------------------------
+   // METRICS
+   // ------------------------------
+   CppUnit::TestSuite* metrics_suite = new CppUnit::TestSuite("metrics");
+
+   metrics_suite->addTest(vprTest::IntervalTest::metric_suite());
+   metrics_suite->addTest(vprTest::GUIDTest::metric_suite());
+   metrics_suite->addTest(vprTest::SocketBandwidthIOStatsTest::metric_suite());
+
+   runner.addTest(metrics_suite);
+
+   //noninteractive_suite->addTest(metrics_suite);
+
+
+   // -------------------------------
+   // INTERACTIVE
+   // -------------------------------
+   CppUnit::TestSuite* interactive_suite = new CppUnit::TestSuite("interactive");
+
+   interactive_suite->addTest(vprTest::ThreadTest::suite());
+
+   runner.addTest(interactive_suite);
+
+   // run all test suites
+   if ( ac > 1 )
+   {
+      if ( strcmp(av[1], "interactive") == 0 )
+      {
+         runner.run("interactive");
+      }
+      else if ( strcmp(av[1], "noninteractive") == 0 )
+      {
+         runner.run("noninteractive");
+      }
+      else if ( strcmp(av[1], "metrics") == 0 )
+      {
+         runner.run("metrics");
+      }
+      else if ( strcmp(av[1], "all") == 0 )
+      {
+         runner.run("noninteractive");
+         runner.run("metrics");
+         runner.run("interactive");
       }
    }
-   else {
-      addNoninteractive(&suite);
-      addMetrics(&suite);
-      addInteractive(&suite);
+   else
+   {
+      runner.run("noninteractive");
+      runner.run("metrics");
+      runner.run("interactive");
    }
-
-   CppUnit::TextTestResult result;
-   suite.run(&result);
-   result.print(std::cout);
 
    return 0;
 }

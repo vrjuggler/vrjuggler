@@ -22,6 +22,9 @@ public:
    {
    }
 
+   IntervalTest(std::string name) : CppUnit::TestCase (name)
+   {
+   }
 
    virtual ~IntervalTest()
    {
@@ -179,23 +182,31 @@ public:
       std::cout << "vpr::Interval::setNow: overhead = " << per_call << "ns per call\n" << std::flush;
    }
 
-   void registerTests (CppUnit::TestSuite* suite)
+   static CppUnit::Test* suite()
    {
-      suite->addTest( new CppUnit::TestCaller<IntervalTest>("construction", &IntervalTest::construction));
-      suite->addTest( new CppUnit::TestCaller<IntervalTest>("testSet", &IntervalTest::testSet));
-      suite->addTest( new CppUnit::TestCaller<IntervalTest>("testSetf", &IntervalTest::testSetf));
-      suite->addTest( new CppUnit::TestCaller<IntervalTest>("testSec", &IntervalTest::testSec));
-      suite->addTest( new CppUnit::TestCaller<IntervalTest>("testSecf", &IntervalTest::testSecf));
-      suite->addTest( new CppUnit::TestCaller<IntervalTest>("testMsec", &IntervalTest::testMsec));
-      suite->addTest( new CppUnit::TestCaller<IntervalTest>("testMsecf", &IntervalTest::testMsecf));
-      suite->addTest( new CppUnit::TestCaller<IntervalTest>("testUsec", &IntervalTest::testUsec));
-      suite->addTest( new CppUnit::TestCaller<IntervalTest>("testUsecf", &IntervalTest::testUsecf));
-      suite->addTest( new CppUnit::TestCaller<IntervalTest>("testSubtract", &IntervalTest::testSubtract));
+      CppUnit::TestSuite* test_suite = new CppUnit::TestSuite("IntervalTest");
+
+      test_suite->addTest( new CppUnit::TestCaller<IntervalTest>("construction", &IntervalTest::construction));
+      test_suite->addTest( new CppUnit::TestCaller<IntervalTest>("testSet", &IntervalTest::testSet));
+      test_suite->addTest( new CppUnit::TestCaller<IntervalTest>("testSetf", &IntervalTest::testSetf));
+      test_suite->addTest( new CppUnit::TestCaller<IntervalTest>("testSec", &IntervalTest::testSec));
+      test_suite->addTest( new CppUnit::TestCaller<IntervalTest>("testSecf", &IntervalTest::testSecf));
+      test_suite->addTest( new CppUnit::TestCaller<IntervalTest>("testMsec", &IntervalTest::testMsec));
+      test_suite->addTest( new CppUnit::TestCaller<IntervalTest>("testMsecf", &IntervalTest::testMsecf));
+      test_suite->addTest( new CppUnit::TestCaller<IntervalTest>("testUsec", &IntervalTest::testUsec));
+      test_suite->addTest( new CppUnit::TestCaller<IntervalTest>("testUsecf", &IntervalTest::testUsecf));
+      test_suite->addTest( new CppUnit::TestCaller<IntervalTest>("testSubtract", &IntervalTest::testSubtract));
+
+      return test_suite;
    }
 
-   void registerMetricsTests (CppUnit::TestSuite* suite)
+   static CppUnit::Test* metric_suite()
    {
-      suite->addTest( new CppUnit::TestCaller<IntervalTest>("testSetNowOverhead", &IntervalTest::testSetNowOverhead));
+      CppUnit::TestSuite* test_suite = new CppUnit::TestSuite("IntervalTest_metric");
+
+      test_suite->addTest( new CppUnit::TestCaller<IntervalTest>("testSetNowOverhead", &IntervalTest::testSetNowOverhead));
+
+      return test_suite;
    }
 
 };

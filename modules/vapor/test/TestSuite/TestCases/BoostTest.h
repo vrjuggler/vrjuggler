@@ -30,6 +30,9 @@ public:
    {
    }
 
+   BoostTest (std::string name) : CppUnit::TestCase (name)
+   {
+   }
 
    virtual ~BoostTest()
    {
@@ -141,11 +144,14 @@ public:
       CPPUNIT_ASSERT( ret_val == true );
    }
 
-   void registerTests (CppUnit::TestSuite* suite)
+   static CppUnit::Test* suite()
    {
-      suite->addTest( new CppUnit::TestCaller<BoostTest>("shared_ptr_basic", &BoostTest::shared_ptr_basic));
-      suite->addTest( new CppUnit::TestCaller<BoostTest>("shared_ptr_upcast", &BoostTest::shared_ptr_upcast));
-      suite->addTest( new CppUnit::TestCaller<BoostTest>("testFunctionBasic", &BoostTest::testFunctionBasic));
+      CppUnit::TestSuite* test_suite = new CppUnit::TestSuite ("BoostTest");
+      test_suite->addTest( new CppUnit::TestCaller<BoostTest>("shared_ptr_basic", &BoostTest::shared_ptr_basic));
+      test_suite->addTest( new CppUnit::TestCaller<BoostTest>("shared_ptr_upcast", &BoostTest::shared_ptr_upcast));
+      test_suite->addTest( new CppUnit::TestCaller<BoostTest>("testFunctionBasic", &BoostTest::testFunctionBasic));
+
+      return test_suite;
    }
 };
 

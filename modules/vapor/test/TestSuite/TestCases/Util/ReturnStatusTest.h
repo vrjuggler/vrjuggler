@@ -24,6 +24,9 @@ public:
    {
    }
 
+   ReturnStatusTest(std::string name) : CppUnit::TestCase (name)
+   {
+   }
 
    virtual ~ReturnStatusTest()
    {
@@ -116,10 +119,14 @@ public:
       CPPUNIT_ASSERT( c.wouldBlock() );
    }
 
-   void registerTests (CppUnit::TestSuite* suite)
+   static CppUnit::Test* suite()
    {
-      suite->addTest( new CppUnit::TestCaller<ReturnStatusTest>("basic vpr::ReturnStatus Test", &ReturnStatusTest::basic));
-      suite->addTest( new CppUnit::TestCaller<ReturnStatusTest>("Helpers for vpr::ReturnStatus test", &ReturnStatusTest::helpers));
+      CppUnit::TestSuite* test_suite = new CppUnit::TestSuite("ReturnStatusTest");
+
+      test_suite->addTest( new CppUnit::TestCaller<ReturnStatusTest>("basic vpr::ReturnStatus Test", &ReturnStatusTest::basic));
+      test_suite->addTest( new CppUnit::TestCaller<ReturnStatusTest>("Helpers for vpr::ReturnStatus test", &ReturnStatusTest::helpers));
+
+      return test_suite;
    }
 };
 

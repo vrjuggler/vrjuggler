@@ -1,3 +1,6 @@
+#ifndef _VPR_TEST_INET_ADDR_TEST_H_
+#define _VPR_TEST_INET_ADDR_TEST_H_
+
 #include <iostream>
 
 #include <cppunit/TestCase.h>
@@ -14,6 +17,10 @@ class InetAddrTest : public CppUnit::TestCase
 public:
    InetAddrTest()
    : CppUnit::TestCase ()
+   {;}
+
+   InetAddrTest(std::string name)
+   : CppUnit::TestCase (name)
    {;}
 
    virtual ~InetAddrTest()
@@ -90,13 +97,17 @@ public:
       CPPUNIT_ASSERT(addr3 == addr5);
    }
 
-   void registerTests (CppUnit::TestSuite* suite)
+   static CppUnit::Test* suite()
    {
-      suite->addTest( new CppUnit::TestCaller<InetAddrTest>("testCreation", &InetAddrTest::testCreation));
-      suite->addTest( new CppUnit::TestCaller<InetAddrTest>("testEqual", &InetAddrTest::testEqual));
-      suite->addTest( new CppUnit::TestCaller<InetAddrTest>("testSets", &InetAddrTest::testSets));
-      suite->addTest( new CppUnit::TestCaller<InetAddrTest>("testAddressLookup",
-                                                        &InetAddrTest::testAddressLookup));
+      CppUnit::TestSuite* test_suite = new CppUnit::TestSuite("NoninteractiveInetAddrTest");
+
+      test_suite->addTest( new CppUnit::TestCaller<InetAddrTest>("testCreation", &InetAddrTest::testCreation));
+      test_suite->addTest( new CppUnit::TestCaller<InetAddrTest>("testEqual", &InetAddrTest::testEqual));
+      test_suite->addTest( new CppUnit::TestCaller<InetAddrTest>("testSets", &InetAddrTest::testSets));
+      test_suite->addTest( new CppUnit::TestCaller<InetAddrTest>("testAddressLookup",
+                                                                 &InetAddrTest::testAddressLookup));
+
+      return test_suite;
    }
 
    static CppUnit::Test* interactiveSuite()
@@ -111,3 +122,5 @@ protected:
 };
 
 };
+
+#endif
