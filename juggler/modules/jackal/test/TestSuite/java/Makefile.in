@@ -30,6 +30,7 @@ TESTCASES = \
 	test.ValTypeTest \
 	\
 	test.ConfigDefinitionTest	     \
+	test.ConfigDefinitionBuilderTest     \
 	test.ConfigDefinitionRepositoryTest  \
 	test.ConfigElementTest		     \
 	test.ConfigElementFactoryTest	     \
@@ -48,10 +49,10 @@ all:
 	$(MAKE) java
 
 run: $(CLASSES)
-	java -classpath "$(CLASSPATH)$(JCPS)." AllTests
+	java -classpath "$(CLASSPATH)$(JCPS)." -DDATA_DIR=$(srcdir)/data AllTests
 
 run-text: $(CLASSES)
-	java -classpath "$(CLASSPATH)$(JCPS)." junit.textui.TestRunner AllTests
+	java -classpath "$(CLASSPATH)$(JCPS)." -DDATA_DIR=$(srcdir)/data junit.textui.TestRunner AllTests
 
 java:
 	$(MAKE) tests
