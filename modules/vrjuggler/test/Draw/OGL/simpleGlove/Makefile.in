@@ -35,7 +35,7 @@
 # This requires GNU make.
 # -----------------------------------------------------------------------------
 
-all: simpleGlove$(EXT_EXT)
+all: simpleGlove$(EXE_EXT)
 
 APP_NAME=	simpleGlove$(EXE_EXT)
 

@@ -35,7 +35,7 @@
 # This requires GNU make.
 # -----------------------------------------------------------------------------
 
-all: cubes$(EXT_EXT)
+all: cubes$(EXE_EXT)
 
 APP_NAME=	cubes$(EXE_EXT)
 

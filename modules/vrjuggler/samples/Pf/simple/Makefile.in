@@ -35,7 +35,7 @@
 # This requires GNU make.
 # -----------------------------------------------------------------------------
 
-all: simplePf$(EXT_EXT)
+all: simplePf$(EXE_EXT)
 
 APP_NAME=	simplePf$(EXE_EXT)
 

@@ -35,7 +35,7 @@
 # This requires GNU make.
 # -----------------------------------------------------------------------------
 
-all: MPApp$(EXT_EXT)
+all: MPApp$(EXE_EXT)
 
 APP_NAME=	MPApp$(EXE_EXT)
 

@@ -35,7 +35,7 @@
 # It requires GNU make.
 # -----------------------------------------------------------------------------
 
-all: pfBasicConfigNav$(EXT_EXT)
+all: pfBasicConfigNav$(EXE_EXT)
 
 APP_NAME=	pfBasicConfigNav$(EXE_EXT)
 

@@ -35,7 +35,7 @@
 # This requires GNU make.
 # -----------------------------------------------------------------------------
 
-all: simpleInput$(EXT_EXT)
+all: simpleInput$(EXE_EXT)
 
 APP_NAME=	simpleInput$(EXE_EXT)
 

@@ -35,7 +35,7 @@
 # This requires GNU make.
 # -----------------------------------------------------------------------------
 
-all: glove$(EXT_EXT)
+all: glove$(EXE_EXT)
 
 APP_NAME=	glove$(EXE_EXT)
 
