@@ -81,6 +81,7 @@ $alias_subst{"SOURCEFORGE"} = 'http://sourceforge.net';
 $alias_subst{"JUGGLER_SOURCEFORGE"} = 'http://sourceforge.net/project/?group_id=8041';
 $alias_subst{"JUGGLER_SOURCEFORGE_CVS"} = 'http://sourceforge.net/cvs/?group_id=8041';
 $alias_subst{"JUGGLER_SOURCEFORGE_IMAGE"} = 'http://sourceforge.net/sflogo.php?group_id=8041&type=1';
+$alias_subst{"VRJ_CVS"} = 'http://cvs.sourceforge.net/cgi-bin/viewcvs.cgi/vrjuggler/';
 
 # An alias for a New Window.
 # when you click, should bring content up in a completely new window.
