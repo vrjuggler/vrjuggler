@@ -72,14 +72,6 @@ AC_ARG_ENABLE(pf-api,
               [  --enable-pf-api         Use Perfromer API               [default=yes]],
               _enable_pf_api="$enableval", _enable_pf_api='yes')
 
-# Enable compilation of the OpenScenegraph API.  Possible values are "yes" or
-# "no".  "yes" is set with --enable-osg-api and "no" is set with
-# --disable-osg-api.
-# The default is "yes".
-AC_ARG_ENABLE(osg-api,
-              [  --enable-osg-api        Use OpenScenegraph API          [default=yes]],
-              _enable_osg_api="$enableval", _enable_osg_api='yes')
-
 # -------------------------------------------- #
 # --with-pkg[=arg] and --without-pkg arguments #
 # -------------------------------------------- #
@@ -250,78 +242,6 @@ if test "x${_enable_pf_api}" = "xyes" ; then
         [AC_MSG_WARN(*** Performer API will not be used (files not found) ***)])
 fi
 
-# --------------------
-# OpenScenegraph API.
-# --------------------
-OSG_API=''		# 'Y' then we are using OpenScenegraph
-
-# Test for the OpenScenegraph library if the OpenScenegraph API was enabled.
-if test "x${_enable_osg_api}" = "xyes" ; then
-    # Define the root directory for the OpenScenegraph installation.
-    AC_ARG_WITH(osgroot,
-                [  --with-osgroot=<PATH>   OpenScenegraph installation
-                          directory                       [default=\$OSGHOME
-                                                           then /usr]],
-                OSGROOT="$withval", OSGROOT="${OSGHOME-/usr}")
-
-    _vjsave_CFLAGS="$CFLAGS"
-    _vjsave_CPPFLAGS="$CPPFLAGS"
-    _vjsave_INCLUDES="$INCLUDES"
-    _vjsave_LDFLAGS="$LDFLAGS"
-    _vjsave_LIBS="$LIBS"
-
-    # Ensure that /usr/include and /usr/lib are not included multiple times
-    # if $OSGROOT is "/usr".
-    if test "x$OSGROOT" != "x/usr" ; then
-        CPPFLAGS="-I$OSGROOT/include $CPPFLAGS"
-        INCLUDES="-I$OSGROOT/include $INCLUDES"
-        LDFLAGS="-L$OSGROOT/lib $LDFLAGS"
-    fi
-
-    CFLAGS="$CFLAGS $INCLUDES ${_EXTRA_FLAGS}"
-    LDFLAGS="$LDFLAGS $X_LDFLAGS"
-
-    vj_have_osg='no'
-
-    DPP_LANG_SAVE
-    DPP_LANG_CPLUSPLUS
-
-    _vjsave_CPPFLAGS="$CPPFLAGS"
-    CPPFLAGS="$CPPFLAGS $STDFLAGS"
-
-    AC_CHECK_LIB([osg], [osgGetVersion],
-        [AC_CHECK_HEADER([osg/Vec3], [vj_have_osg='yes'], [vj_have_osg='no'])],
-        [vj_have_osg='no'], [-lX11 -lXext])
-
-    CPPFLAGS="${_vjsave_CPPFLAGS}"
-
-    DPP_LANG_RESTORE
-
-    if test "x$vj_have_osg" = "xyes" ; then
-        OSG_API='Y'
-        AC_DEFINE(VJ_API_OPENSCENEGRAPH,)
-    else
-        OSG_API='N'
-        OSGROOT='$(OSGHOME)'
-    fi
-
-    OSG_INCLUDES="-I$OSGROOT/include"
-
-    if test "x$OS_TYPE" = "xWin32" ; then
-        OSG_LDFLAGS="/libpath:$OSGROOT/lib"
-        LIBOSG='osg.lib osgGLUT.lib osgUtil.lib osgDB.lib'
-    else
-        OSG_LDFLAGS="-L$OSGROOT/lib"
-        LIBOSG='-losg -losgGLUT -losgUtil -losgDB'
-    fi
-
-    CFLAGS="${_vjsave_CFLAGS}"
-    CPPFLAGS="${_vjsave_CPPFLAGS}"
-    INCLUDES="${_vjsave_INCLUDES}"
-    LDFLAGS="${_vjsave_LDFLAGS}"
-    LIBS="${_vjsave_LIBS}"
-fi
-
 DPP_HAVE_CPPUNIT([1.9.10])
 
 # -----------------------------------------------------------------------------
@@ -403,11 +323,6 @@ if test "x$PF_INCLUDES" != "x" ; then
    vrj_cxxflags="$vrj_cxxflags $PF_INCLUDES"
 fi
 
-if test "x$OSG_INCLUDES" != "x" -a "x$OSG_API" = "xY" ; then
-   INCLUDES="$INCLUDES $OSG_INCLUDES"
-   vrj_cxxflags="$vrj_cxxflags $OSG_INCLUDES"
-fi
-
 # For makedepend(1) to work properly on HP-UX with aCC, we have to include
 # these extra paths.
 if test "x$PLATFORM" = "xHP" ; then
@@ -440,8 +355,6 @@ VJ_APP_EXTRA_LIBS_INST='$(VRJ_EXTRA_LIBS)'
 #       OpenGL API.
 #     * APP_EXTRA_LIBS_PF: The Performer libraries needed for compiling with
 #       the Performer API.
-#     * APP_EXTRA_LIBS_OSG: The OpenScenegraph libraries needed for compiling
-#       with the OpenScenegraph API.
 
 # Put together the basic information needed to compile VR Juggler applications.
 VJ_APP_COMPILER($CC, $CFLAGS, $CXX, $VJ_APP_CXXFLAGS, $DBG_FLAGS, $OPT_FLAGS,
@@ -483,12 +396,6 @@ if test "$OS_TYPE" = "UNIX" ; then
     else
         APP_EXTRA_LIBS_PF="$LIBPERFORMER"
     fi
-
-    if test "x$OSG_LDFLAGS" != "x" ; then
-        APP_EXTRA_LIBS_OSG="-L$OSGROOT/lib $LIBOSG"
-    else
-        APP_EXTRA_LIBS_OSG="$LIBOSG"
-    fi
 elif test "$OS_TYPE" = "Win32" ; then
     REQ_EXTRA_LIBS="$LDFLAGS $GADGET_LIBS_LD_MIN $SNX_LIBS_LD $JCCL_LIBS_LD_MIN $JCCL_EXTRA_LIBS_LD $LIBS"
     BASIC_WIN32_LIBS='comctl32.lib user32.lib gdi32.lib ws2_32.lib'
@@ -500,7 +407,6 @@ elif test "$OS_TYPE" = "Win32" ; then
 
     APP_EXTRA_LIBS_GL="$OGL_LDFLAGS $LIBOPENGL"
     APP_EXTRA_LIBS_PF="$PF_LDFLAGS $LIBPERFORMER"
-    APP_EXTRA_LIBS_OSG="$OSG_LDFLAGS $LIBOSG"
 fi
 
 # Define the base path to the source directory using $(VJROOT_ABS) as an
@@ -524,7 +430,6 @@ if test "x$OS_TYPE" = "xWin32" ; then
 #    APP_EXTRA_LIBS=`dospath "$APP_EXTRA_LIBS"`
     APP_EXTRA_LIBS_GL=`dospath "$APP_EXTRA_LIBS_GL"`
     APP_EXTRA_LIBS_PF=`dospath "$APP_EXTRA_LIBS_PF"`
-#    APP_EXTRA_LIBS_OSG=`dospath "$APP_EXTRA_LIBS_OSG"`
 else
     RM_LN='rm -f'
     VJROOT_ABS="$VJROOT_ABS"
@@ -625,9 +530,6 @@ AC_SUBST(BUILD_JAVA)
 
 AC_SUBST(OPENGL_API)
 AC_SUBST(PERFORMER_API)
-AC_SUBST(OSGROOT)
-AC_SUBST(OSG_API)
-AC_SUBST(OSG_INCLUDES)
 
 AC_SUBST(APP_BASE_DIR)
 AC_SUBST(APP_BASE_DIR_INST)
