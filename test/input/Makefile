@@ -4,11 +4,16 @@
 # $Id$
 # -----------------------------------------------------------------------------
 
+TERMTYPE = -D_OLD_TERMIOS
+#TERMTYPE = 
+
 srcdir		= .
 
-COMPILE		= CC -D_OLD_TERMIOS -DHAVE_CONFIG_H ${VJ_INCLUDES}  -ptv  -nostdinc -woff 3322 -w2 -g
-VJ_INCLUDES	=  -D_OLD_TERMIOS -I/usr/include/CC -I/usr/include -I${VJ_BASE_DIR}/include -I${srcdir}
-VJ_LIBS		= -D_OLD_TERMIOS -B static -L${VJ_BASE_DIR}/lib32 -lJuggler -lJuggler_ogl -B dynamic -lm -lC
+COMPILE		= CC $(TERMTYPE) -DHAVE_CONFIG_H ${VJ_INCLUDES}  -ptv  -nostdinc -woff 3322 -w2 -g
+VJ_INCLUDES	=  $(TERMTYPE) -I/usr/include/CC -I/usr/include -I${VJ_BASE_DIR}/include -I${srcdir}
+VJ_LIBS		= $(TERMTYPE) -B static -L${VJ_BASE_DIR}/lib32 -lJuggler -lJuggler_ogl -B dynamic -lm -lC
+
+
 
 # These test programs require the following libraries to be linked:
 #
@@ -40,25 +45,25 @@ aFlockTest: aFlockTest.o aFlock.o
 	CC -mips3 -n32 -all -o $@ aFlockTest.o aFlock.o 
 
 aFlockTest.o: aFlockTest.cpp
-	CC -D_OLD_TERMIOS -mips3 -n32 -all -I../.. namespaces=ON bool=ON -woff 3303 -c aFlockTest.cpp -o $@  
+	CC $(TERMTYPE) -mips3 -n32 -all -I../.. namespaces=ON bool=ON -woff 3303 -c aFlockTest.cpp -o $@  
 
 aFlock.o: ../../Input/vjPosition/aFlock.cpp
-	CC -D_OLD_TERMIOS -mips3 -n32 -all -I../.. namespaces=ON bool=ON -woff 3303 -c $@ ../../Input/vjPosition/aFlock.cpp
+	CC $(TERMTYPE) -mips3 -n32 -all -I../.. namespaces=ON bool=ON -woff 3303 -c $@ ../../Input/vjPosition/aFlock.cpp
 
 # ----------------
 # vjFlock test driver
 # ----------------
 vjFlockTest: vjFlockTest.o vjFlock.o aFlock.o
-	${COMPILE} -D_OLD_TERMIOS -o $@ aFlock.o vjFlockTest.o vjFlock.o ${VJ_LIBS} ${EXTRA_LIBS}
+	${COMPILE} $(TERMTYPE) -o $@ aFlock.o vjFlockTest.o vjFlock.o ${VJ_LIBS} ${EXTRA_LIBS}
 
 vjFlockTest.o: vjFlockTest.cpp
-	${COMPILE} -D_OLD_TERMIOS -woff 3303 -c ${srcdir}/vjFlockTest.cpp -o $@ 
+	${COMPILE} $(TERMTYPE) -woff 3303 -c ${srcdir}/vjFlockTest.cpp -o $@ 
 
 vjFlock.o: ../../Input/vjPosition/vjFlock.cpp
-	${COMPILE} -D_OLD_TERMIOS -woff 3303 -c ../../Input/vjPosition/vjFlock.cpp -o $@ 
+	${COMPILE} $(TERMTYPE) -woff 3303 -c ../../Input/vjPosition/vjFlock.cpp -o $@ 
 
 aFlock.o: ../../Input/vjPosition/aFlock.cpp
-	CC -D_OLD_TERMIOS -mips3 -n32 -all namespaces=ON bool=ON -woff 3303 -c $@ ../../Input/vjPosition/aFlock.cpp
+	CC $(TERMTYPE) -mips3 -n32 -all namespaces=ON bool=ON -woff 3303 -c $@ ../../Input/vjPosition/aFlock.cpp
 
 
 # ----------------
