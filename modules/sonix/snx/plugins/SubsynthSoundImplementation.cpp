@@ -60,6 +60,7 @@
 
 /////////////////////////
 // plugin API:
+#ifdef NO_SELF_REGISTER
 extern "C"
 {
 XDL_EXPORT const char* getVersion() { return "sonix xx.xx.xx"; }
@@ -67,6 +68,7 @@ XDL_EXPORT const char* getName() { return "Subsynth"; }
 XDL_EXPORT snx::ISoundImplementation* newPlugin() { return new snx::SubsynthSoundImplementation; }
 XDL_EXPORT void deletePlugin( snx::ISoundImplementation* &p ) { if (NULL == p) return; delete p; p = NULL; }
 }
+#endif
 /////////////////////////
 
 namespace snx
@@ -86,7 +88,7 @@ void SubsynthSoundImplementation::remove( const std::string alias )
 }
 
 SubsynthSoundImplementation::SubsynthSoundImplementation() : snx::SoundImplementation(), 
-                                                         mBindLookup()
+                                                         mBindLookup(), mIsOpen( false )
 {
 }
 
@@ -340,17 +342,20 @@ void SubsynthSoundImplementation::setCutoff( const std::string& alias, float amo
  */
 void SubsynthSoundImplementation::startAPI()
 {
+   if (mIsOpen == true) return;
+
    bool result = false;
    
    // output
    syn::OStreamModule* sink = new syn::OStreamModule;
-   sink->setStream( syn::AudioOStreamPtr(new syn::PortAudioOStream) );
+   syn::AudioOStreamPtr ostream( new syn::PortAudioOStream );
+   sink->setStream( ostream );
    sink->setInstanceName( "sink" );
    mSink = syn::ModulePtr( sink );
    
    // open the audio port
    result = sink->open();
-   if (result == false) { std::cout<<"out couldn't open"<<std::endl; return 0; }
+   if (result == false) { std::cout<<"out couldn't open"<<std::endl; return; }
    
    // mixer
    syn::MixerModule* mixer = new syn::MixerModule;
@@ -359,16 +364,16 @@ void SubsynthSoundImplementation::startAPI()
    
    // open the mixer
    result = mixer->open();
-   if (result == false) { std::cout<<"mix couldn't open"<<std::endl; return 0; }
+   if (result == false) { std::cout<<"mix couldn't open"<<std::endl; return; }
 
    std::cout<<"make connections\n"<<std::flush;
    syn::TerminalPtr output, input;
 
    std::cout<<"mixer -> audioport connection\n"<<std::flush;
    result = mixer->getOutput( "output", output );
-   if (result == false) { std::cout << "couldn't get mixer out-term" << std::endl; return 0; }
+   if (result == false) { std::cout << "couldn't get mixer out-term" << std::endl; return; }
    result = sink->getInput( "mono audio", input );
-   if (result == false) { std::cout << "couldn't get audioport in-term" << std::endl; return 0; }
+   if (result == false) { std::cout << "couldn't get audioport in-term" << std::endl; return; }
    syn::Terminal::connect( input, output );
 //   syn::SampleBufferRepos::instance()->setBlockSize( blocksize );
       
@@ -380,6 +385,7 @@ void SubsynthSoundImplementation::startAPI()
    // alListenerfv( AL_VELOCITY, velocity );
    
    mRunner.run( 1 );
+   mIsOpen = true;
 }
 
 /**
@@ -389,9 +395,11 @@ void SubsynthSoundImplementation::startAPI()
  */
 void SubsynthSoundImplementation::shutdownAPI()
 {
+   if (mIsOpen == false) return;
+   mIsOpen = false;
    if (this->isStarted() == false)
    {
-      std::cerr << "[snx]Subsynth| WARNING: API not started, nothing to shutdown [dev="<<(int)mDev<<",ctx="<<(int)mContextId<<"]\n" << std::flush;
+      std::cerr << "[snx]Subsynth| WARNING: API not started, nothing to shutdown\n" << std::flush;
       return;
    }
 
@@ -400,7 +408,7 @@ void SubsynthSoundImplementation::shutdownAPI()
    mMixer->close();
    mSink->close();
    
-   std::cerr<<"[snx]Subsynth| NOTICE: Subsynth API closed: [dev="<<(int)mDev<<",ctx="<<(int)mContextId<<"]\n"<<std::flush;
+   std::cerr<<"[snx]Subsynth| NOTICE: Subsynth API closed\n"<<std::flush;
 }   
 
 /**
@@ -423,13 +431,13 @@ void SubsynthSoundImplementation::reschedule()
    for (it = mBindLookup.begin(); it != mBindLookup.end(); ++it)
    {
       mRunner.modules().insert( mRunner.modules().begin(),
-                                (*it)->getChildren().begin(), 
-                                (*it)->getChildren().end() );
+                                (*it).second.inst->getChildren().begin(), 
+                                (*it).second.inst->getChildren().end() );
    }
    //std::map< std::string, ImplSoundInfo >::iterator it;
    //for (it = mBindLookup.begin(); it != mBindLookup.end(); ++it)
    //{
-   //   mRunner.modules().push_back( (*it) );
+   //   mRunner.modules().push_back( (*it).second.inst );
    //}
    mRunner.modules().push_back( mMixer );
    mRunner.modules().push_back( mSink );
@@ -487,8 +495,9 @@ void SubsynthSoundImplementation::bind( const std::string& alias )
 
          // connect the instrument to the mixer...
          syn::TerminalPtr output, input;
+         bool result = false;
          result = mBindLookup[alias].inst->getOutput( "mono audio", output );
-         if (result == false) { std::cout<<"[snx]Subsynth| ERORR: couldn't get inst out-term"<<std::endl; return 0; }
+         if (result == false) { std::cout<<"[snx]Subsynth| ERORR: couldn't get inst out-term"<<std::endl; return; }
          mMixer->getInput( alias, input );
          
          mRunner.pause();
