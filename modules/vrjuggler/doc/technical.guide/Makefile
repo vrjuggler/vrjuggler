@@ -1,6 +1,6 @@
 # $Id$
 
-default: pdf
+default: html
 
 docs: html chunk-html pdf
 install-docs: install-html install-chunk-html install-pdf
@@ -38,7 +38,7 @@ IMAGES=		$(SVG_IMAGES:%.svg=%.png)
 
 # Fill these in!!  Together, they make up the installation prefix.
 webroot=	$(HOME)/public_html/jugglerweb
-instdir=	vrjuggler/1.0/technical.guide
+instdir=	vrjuggler/$(PROJECT_NUMBER)/technical.guide
 
 prefix=		$(webroot)/$(instdir)
 INSTALL_DIRS=	figures
@@ -53,8 +53,9 @@ TXT_FILES=    $(NAME).txt
 HTML_FILES=   $(NAME).html
 PDF_FILES=    $(NAME).pdf
 
-$(NAME).txt:  $(NAME).xml $(IMAGES) # README.fo
+$(NAME).txt:  $(NAME).xml $(IMAGES) # $(NAME).fo
 $(NAME).html: $(NAME).xml $(IMAGES)
 $(NAME).pdf:  $(NAME).xml $(NAME).fo $(IMAGES)
 
+include ../version.mk
 include $(MK_PATH)/docbook.mk
