@@ -55,6 +55,7 @@ KERNEL_SRCS	:= vjAPI.cpp			\
                    vjProjection.cpp		\
                    vjSGISystemFactory.cpp	\
                    vjStreamLock.cpp		\
+                   vjTrackedWallProjection.cpp	\
                    vjUser.cpp			\
                    vjWallProjection.cpp
 

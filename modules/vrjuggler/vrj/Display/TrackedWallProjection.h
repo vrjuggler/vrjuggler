@@ -23,6 +23,7 @@
 
 #include <vjConfig.h>
 #include <Kernel/vjWallProjection.h>
+#include <Input/InputManager/vjPosInterface.h>
 
 class vjMatrix;
 
@@ -88,21 +89,5 @@ private:
    vjPosInterface    mTracker;
 };
 
-void vjTrackedWallProjection::updateWallParams()
-{
-   vjMatrix tracker_mat = *(mTracker->getData());
-
-   // Compute the correct rotation matrix
-   mWallRotationMatrix.mult(tracker_mat,mWallRotationMatrix_bak);
-
-   // Compute the correct rotation parameters
-}
-
-ostream& vjTrackedWallProjection::outStream(ostream& out)
-{
-   out << "vjTrackedWallProjection:\n";
-   out << "Pos Proxy: " << mTracker.getProxyName() << endl;
-   return vjWallProjection::outStream(out);
-}
 
 #endif
