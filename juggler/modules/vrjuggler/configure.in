@@ -829,11 +829,6 @@ VJ_APP_COMPILER($CC, $CFLAGS, $CXX, $CXXFLAGS, $DBG_FLAGS, $OPT_FLAGS,
 VJ_APP_LINKER($CXX, $EXTRA_LINK_FLAGS, VJ_BASE_DIR, Juggler Juggler_utils,
               $APP_EXTRA_LIBS)
 
-# FreeBSD needs to use libcompat for linking.
-if test "x$PLATFORM" = "xFreeBSD" ; then
-    APP_EXTRA_LIBS="$APP_EXTRA_LIBS -lcompat"
-fi
-
 # If we have AudioWorks, make it available in the application makefiles.
 if test "$AUDIO_WORKS" = "Y" ; then
     if test "$OS_TYPE" = "Win32" ; then
