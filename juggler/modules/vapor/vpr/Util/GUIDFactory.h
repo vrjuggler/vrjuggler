@@ -71,6 +71,7 @@ public:
 
    static vpr::GUID* createGUID (const char* name)
    {
+      vprASSERT(name != NULL);
       return createGUID(std::string(name));
    }
 

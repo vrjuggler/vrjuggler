@@ -49,6 +49,7 @@
 //#include <uuid/uuid.h>
 
 #include <vpr/vprTypes.h>
+#include <vpr/Util/Assert.h>
 
 
 namespace vpr
@@ -125,11 +126,17 @@ public:
     * Generates a GUID from the given string representation of the GUID using
     * a char*.
     * Format: "8x-4x-4x-2x2x-2x2x2x2x2x2x"
+    * @param   guid_string    Ptr to a string that is used to inialize guid. Must be non-NULL
     */
    GUID (const char* guid_string)
    {
-      std::string temp(guid_string);
-      fromString(temp);
+      vprASSERT( (guid_string != NULL) && "Tried to initialize with NULL ptr");
+      vprASSERT( ((*guid_string) >= 0) && "Possibly invalid pointer passed to constructor");
+      if(NULL != guid_string)
+      {
+         std::string temp(guid_string);
+         fromString(temp);
+      }
    }
 
    /**
