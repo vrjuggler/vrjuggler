@@ -11,13 +11,13 @@
 // ---------------------------------------------------------------------------------
 //: Class to encapsulate quaternion behaviors.
 //
-// Note: The code for most of these routines was taken from the the folling sources.
+// Note: The code for most of these routines was borrowed from the the folling sources.
 //
-// ** Game Developer Magazine: Feb 98, pg.34-42
-//    Advanced Animation and Rendering Techniques: pp363-365
-//    Quaternion Calculus for Animation,  Ken Shoemake SIGGRAPH course notes 1989
-//    Animating Rotation with Quaternion Curves,  Ken Shoemake
-//		   SIGGRAPH Proceedings Vol 19, Number 3, 1985
+//    Game Developer Magazine: Feb 98, pg.34-42                   <br>
+//    Advanced Animation and Rendering Techniques: pp363-365      <br>
+//    Quaternion Calculus for Animation,  Ken Shoemake SIGGRAPH course notes 1989  <br>
+//    Animating Rotation with Quaternion Curves,  Ken Shoemake <br>
+//		   SIGGRAPH Proceedings Vol 19, Number 3, 1985           <br>
 //----------------------------------------------------------------------------------
 //!PUBLIC_API:
 class vjQuat : public vjVec4
@@ -39,7 +39,6 @@ public:
    }
 
    //: Construct quat from matrix
-   // WARNING: I don't know if this will work.
    void makeQuat(vjMatrix& mat);
 
    //: Not implemented
@@ -87,7 +86,7 @@ public:
       vec[VJ_W] = r.vec[VJ_W] / s.vec[VJ_W];
    }
 
-   /// quat = inv(q1)
+   // quat = inv(q1)
    void invert(const vjQuat& q1);
 
    //void exp(const vjQuat& _q);
@@ -96,7 +95,6 @@ public:
    void slerp(float _t, const vjQuat& _q1, const vjQuat& _q2);
    void squad(float _t, const vjQuat& _q1, const vjQuat& _q2, const vjQuat& _a, const vjQuat& _b);
 
-   //CAPI:noverb
    //void meanTangent(const vjQuat& _q1, const vjQuat& _q2, const vjQuat& _q3);
 
 public:

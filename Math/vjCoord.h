@@ -20,8 +20,8 @@ public:
    {;}
 
    //: Construct from a matrix
-   //! ARGS: mat - A matrix to construct the coord from
-   //! POST: this is constrcuted with pos and orientation
+   //! ARGS: mat - A matrix used to construct the coord
+   //! POST: this is constructed with pos and orientation
    //+       specified by the matrix.
    vjCoord(vjMatrix mat);
 
