@@ -212,7 +212,7 @@ void Debug::getAllowedCatsFromEnv()
          if (dbg_cats.find(cat_name) != std::string::npos )    // Found one
          {
             std::cout << "vprDEBUG::getAllowedCatsFromEnv: Allowing: "
-                      << (*i).first.c_str() << " val:" << (*i).second
+                      << (*i).first.c_str() << " val:" << (*i).second.toString()
                       << std::endl << std::flush;
             addAllowedCategory((*i).second);                   // Add the category
          }
