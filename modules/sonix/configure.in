@@ -321,7 +321,10 @@ dnl external stuff (like sample apps, also for those who use sonix-config)....
 dnl -------------------------------------------------------------
 sample_application_includes="-I\${SNX_BASE_DIR}/include $INCLUDES"
 sample_application_ldflags="$LDFLAGS"
-if test "x$dpp_os_type" = "xWin32" ; then
+
+snx_dep_scripts='vpr-config'
+
+if test "x$OS_TYPE" = "xWin32" ; then
    snx_ldflags_compiler="/link /libpath:\$prefix/lib"
    snx_ldflags_linker="/libpath:\$prefix/lib"
    snx_lib='sonix.lib'
@@ -354,12 +357,13 @@ dnl ===================================================
 snx_extra_cxxflags="$GMTL_INCLUDES"
 snx_extra_include_dirs=''
 snx_extra_ldflags="$APP_EXTRA_LIBS_BEGIN"
-#snx_extra_libs="$LDFLAGS $VPR_LIBS $LIBS $APP_EXTRA_LIBS_END"
+#snx_extra_libs="$LDFLAGS $VPR_LIBS_CC_MIN $LIBS $APP_EXTRA_LIBS_END"
 snx_extra_libs="$LDFLAGS $LIBS $APP_EXTRA_LIBS_END"
 
 
 AC_SUBST(static_begin)
 AC_SUBST(static_end)
+AC_SUBST(snx_dep_scripts)
 AC_SUBST(snx_lib)
 AC_SUBST(snx_libs)
 AC_SUBST(snx_n32_flags)

@@ -544,10 +544,14 @@ done
 #   tweek_idlflags_java="$tweek_idlflags_java ${JAVA_IDL_INCFLAG}\${prefix}/include/$dir"
 #done
 
-CXXFLAGS="$CXXFLAGS $VPR_CXXFLAGS"
+CXXFLAGS="$CXXFLAGS $VPR_CXXFLAGS_MIN"
 INCLUDES="$INCLUDES $CXX_ORB_INCLUDES"
 tweek_cxxflags="$STDFLAGS $EXTRA_DEFS $INCLUDES $tweek_idl_gen_includes"
-tweek_cxxflags_all="$VPR_CXXFLAGS"
+
+# List the scripts vrjuggler-config will call to get flags.  This should be
+# in the order used for linking.  That means the dependencies are satisfied
+# right to left.
+tweek_dep_scripts="vpr-config"
 
 if test "x$PLATFORM" = "xIRIX" -a "x$USE_GCC" != "xyes" ; then
    CFLAGS="$CFLAGS -woff 1685,515,608,658,799,803,852,1048,1233,1499"
@@ -560,7 +564,6 @@ elif test "x$OS_TYPE" = "xWin32" -a "x$USE_GCC" != "xyes" ; then
    OPT_FLAGS="$OPT_FLAGS /MD"
    EXTRA_LINK_FLAGS="$EXTRA_LINK_FLAGS /nologo /incremental:no"
    tweek_cxxflags="$CXXFLAGS $EXTRA_DEFS $INCLUDES $IDL_GEN_INCLUDES"
-   tweek_cxxflags_all="$VPR_CXXFLAGS"
 fi
 
 DPP_SYSTEM_SUBST
@@ -590,9 +593,9 @@ UNIX_TWEEKROOT_ABS="$TWEEKROOT_ABS"
 UNIX_JUGGLERROOT_ABS="$JUGGLERROOT_ABS"
 
 if test "x$OS_TYPE" = "xWin32" ; then
-   APP_EXTRA_LIBS="$LDFLAGS $CXX_ORB_LDFLAGS $CXX_ORB_LIB_LINK_EXE $VPR_LIBS_LD $LIBS $VPR_EXTRA_LIBS_LD"
+   APP_EXTRA_LIBS="$LDFLAGS $CXX_ORB_LDFLAGS $CXX_ORB_LIB_LINK_EXE $VPR_LIBS_LD_MIN $LIBS $VPR_EXTRA_LIBS_LD_MIN"
 else
-   APP_EXTRA_LIBS="$LDFLAGS $CXX_ORB_LDFLAGS $CXX_ORB_LIB $VPR_LIBS_CC $LIBS $VPR_EXTRA_LIBS_CC"
+   APP_EXTRA_LIBS="$LDFLAGS $CXX_ORB_LDFLAGS $CXX_ORB_LIB $VPR_LIBS_CC_MIN $LIBS $VPR_EXTRA_LIBS_CC_MIN"
 fi
 
 # Put together the basic information needed to compile VR Juggler applications.
@@ -635,9 +638,9 @@ fi
 
 # Dependencies for dynamic/shared libraries.
 if test "x$OS_TYPE" = "xWin32" ; then
-   DYLIB_DEPS="$VPR_LIBS_LD"
+   DYLIB_DEPS="$VPR_LIBS_LD_MIN"
 else
-   DYLIB_DEPS="$VPR_LIBS_CC"
+   DYLIB_DEPS="$VPR_LIBS_CC_MIN"
 fi
 
 # Information needed to generate tweek-config.
@@ -657,14 +660,12 @@ case $OS_TYPE in
       tweek_ldflags_linker="$tweek_ldflags_compiler"
       tweek_libs="-ltweek"
       tweek_extra_libs="$CXX_ORB_LIB"
-      tweek_extra_libs_juggler="$VPR_LIBS_CC $VPR_EXTRA_LIBS_CC"
       ;;
    Win32)
       tweek_ldflags_compiler="/link /libpath:\$prefix/lib/debug"
       tweek_ldflags_linker="/libpath:\$prefix/lib/debug"
       tweek_libs="tweek.lib"
       tweek_extra_libs="$CXX_ORB_LIB_LINK_EXE"
-      tweek_extra_libs_juggler="$VPR_LIBS_LD $VPR_EXTRA_LIBS_LD"
       ;;
 esac
 
@@ -742,8 +743,8 @@ AC_SUBST(DYLIB_DEPS)
 
 AC_SUBST(static_begin)
 AC_SUBST(static_end)
+AC_SUBST(tweek_dep_scripts)
 AC_SUBST(tweek_cxxflags)
-AC_SUBST(tweek_cxxflags_all)
 AC_SUBST(tweek_ldflags_compiler)
 AC_SUBST(tweek_ldflags_linker)
 AC_SUBST(tweek_libs)
@@ -751,7 +752,6 @@ AC_SUBST(tweek_extra_cxxflags)
 AC_SUBST(tweek_extra_include_dirs)
 AC_SUBST(tweek_extra_ldflags)
 AC_SUBST(tweek_extra_libs)
-AC_SUBST(tweek_extra_libs_juggler)
 AC_SUBST(tweek_n32_flags)
 AC_SUBST(tweek_64_flags)
 AC_SUBST(tweek_idlflags_cxx)
