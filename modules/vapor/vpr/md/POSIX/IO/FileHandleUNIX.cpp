@@ -505,13 +505,11 @@ FileHandleUNIX::setFlags (const int flags) {
 
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
-bool
+Status
 FileHandleUNIX::isReadable (const vpr::Interval timeout) {
-    bool ready;
+    Status ready;
 
-    ready = true;
-
-    if ( timeout == vpr::Interval::NoTimeout ) {
+    if ( timeout != vpr::Interval::NoTimeout ) {
         fd_set read_set;
         int num_events;
         struct timeval timeout_obj;
@@ -530,7 +528,12 @@ FileHandleUNIX::isReadable (const vpr::Interval timeout) {
         num_events = select(m_fdesc + 1, &read_set, NULL, NULL,
                             (timeout.usec() > 0) ? &timeout_obj: NULL);
 
-        ready = (num_events == 1);
+        if ( num_events == 0 ) {
+            ready.setCode(vpr::Status::Timeout);
+        }
+        else if ( num_events < 0 ) {
+            ready.setCode(vpr::Status::Failure);
+        }
     }
 
     return ready;
@@ -538,13 +541,11 @@ FileHandleUNIX::isReadable (const vpr::Interval timeout) {
 
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
-bool
+Status
 FileHandleUNIX::isWriteable (const vpr::Interval timeout) {
-    bool ready;
+    Status ready;
 
-    ready = false;
-
-    if ( timeout == vpr::Interval::NoTimeout ) {
+    if ( timeout != vpr::Interval::NoTimeout ) {
         fd_set write_set;
         vpr::Uint16 num_events;
         struct timeval timeout_obj;
@@ -563,7 +564,12 @@ FileHandleUNIX::isWriteable (const vpr::Interval timeout) {
         num_events = select(m_fdesc + 1, NULL, &write_set, NULL,
                             (timeout.usec() > 0) ? &timeout_obj: NULL);
 
-        ready = (num_events == 1);
+        if ( num_events == 0 ) {
+            ready.setCode(vpr::Status::Timeout);
+        }
+        else if ( num_events < 0 ) {
+            ready.setCode(vpr::Status::Failure);
+        }
     }
 
     return ready;
