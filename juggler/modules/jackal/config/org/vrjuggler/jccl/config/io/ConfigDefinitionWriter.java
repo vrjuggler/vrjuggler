@@ -35,6 +35,7 @@ import java.io.*;
 import java.util.*;
 import org.jdom.*;
 import org.jdom.filter.*;
+import org.jdom.output.Format;
 import org.jdom.output.XMLOutputter;
 import org.vrjuggler.jccl.config.*;
 
@@ -109,11 +110,11 @@ public class ConfigDefinitionWriter
       }
 
       // Write the document out to the stream
-      XMLOutputter out = new XMLOutputter();
-      out.setTextNormalize(true);
-      out.setIndent("   ");
-      out.setNewlines(true);
-      out.setLineSeparator(System.getProperty("line.separator"));
+      Format f = Format.getPrettyFormat();
+      f.setIndent("   ");
+      f.setLineSeparator(System.getProperty("line.separator"));
+      f.setTextMode(Format.TextMode.NORMALIZE);
+      XMLOutputter out = new XMLOutputter(f);
       out.output(doc, this);
    }
 
