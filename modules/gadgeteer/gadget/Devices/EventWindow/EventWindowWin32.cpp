@@ -638,7 +638,52 @@ gadget::Keys EventWindowWin32::VKKeyToKey(int vkKey)
       case /*VK_X*/0x58   : return gadget::KEY_X;
       case /*VK_Y*/0x59   : return gadget::KEY_Y;
       case /*VK_Z*/0x5a   : return gadget::KEY_Z;
-      case VK_ESCAPE   : return gadget::KEY_ESC;
+
+      case VK_ESCAPE  : return gadget::KEY_ESC;
+      case VK_TAB     : return gadget::KEY_TAB;
+//      case VK_BACKTAB : return gadget::KEY_BACKTAB;
+      case VK_BACK    : return gadget::KEY_BACKSPACE;
+      case VK_RETURN  : return gadget::KEY_RETURN;
+      case VK_INSERT  : return gadget::KEY_INSERT;
+      case VK_DELETE  : return gadget::KEY_DELETE;
+      case VK_PAUSE   : return gadget::KEY_PAUSE;
+//      case VK_???     : return gadget::KEY_SYSREQ;
+      case VK_HOME    : return gadget::KEY_HOME;
+      case VK_END     : return gadget::KEY_END;
+      case VK_PRIOR   : return gadget::KEY_PRIOR;
+      case VK_NEXT    : return gadget::KEY_NEXT;
+      case VK_CAPITAL : return gadget::KEY_CAPS_LOCK;
+      case VK_NUMLOCK : return gadget::KEY_NUM_LOCK;
+      case VK_SCROLL  : return gadget::KEY_SCROLL_LOCK;
+
+      case VK_F1  : return gadget::KEY_F1;
+      case VK_F2  : return gadget::KEY_F2;
+      case VK_F3  : return gadget::KEY_F3;
+      case VK_F4  : return gadget::KEY_F4;
+      case VK_F5  : return gadget::KEY_F5;
+      case VK_F6  : return gadget::KEY_F6;
+      case VK_F7  : return gadget::KEY_F7;
+      case VK_F8  : return gadget::KEY_F8;
+      case VK_F9  : return gadget::KEY_F9;
+      case VK_F10 : return gadget::KEY_F10;
+      case VK_F11 : return gadget::KEY_F11;
+      case VK_F12 : return gadget::KEY_F12;
+      case VK_F13 : return gadget::KEY_F13;
+      case VK_F14 : return gadget::KEY_F14;
+      case VK_F15 : return gadget::KEY_F15;
+      case VK_F16 : return gadget::KEY_F16;
+      case VK_F17 : return gadget::KEY_F17;
+      case VK_F18 : return gadget::KEY_F18;
+      case VK_F19 : return gadget::KEY_F19;
+      case VK_F20 : return gadget::KEY_F20;
+      case VK_F21 : return gadget::KEY_F21;
+      case VK_F22 : return gadget::KEY_F22;
+      case VK_F23 : return gadget::KEY_F23;
+      case VK_F24 : return gadget::KEY_F24;
+
+      case VK_HELP  : return gadget::KEY_HELP;
+      case VK_SPACE : return gadget::KEY_SPACE;
+
       default: return gadget::KEY_UNKNOWN;
    }
 
