@@ -27,7 +27,6 @@ package org.vrjuggler.vrjconfig;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.beans.PropertyVetoException;
 import java.io.*;
 import javax.swing.*;
 
@@ -91,11 +90,18 @@ public class VrjConfig
       toolbar.setFloatable(false);
       openBtn.setToolTipText("Open Configuration");
       openBtn.setActionCommand("Open");
-      openBtn.addActionListener(new java.awt.event.ActionListener()
+      openBtn.addActionListener(new ActionListener()
       {
-         public void actionPerformed(ActionEvent e)
+         public void actionPerformed(ActionEvent evt)
          {
-            openBtn_actionPerformed(e);
+            openBtn_actionPerformed(evt);
+         }
+      });
+      saveBtn.addActionListener(new ActionListener()
+      {
+         public void actionPerformed(ActionEvent evt)
+         {
+            saveBtn_actionPerformed(evt);
          }
       });
       newBtn.setToolTipText("New Configuration");
@@ -141,6 +147,8 @@ public class VrjConfig
             File file = fileChooser.getSelectedFile();
             ConfigService config = (ConfigService)BeanRegistry.instance().getBean("Config").getBean();
             ConfigManagerService mgr = (ConfigManagerService)BeanRegistry.instance().getBean("ConfigManager").getBean();
+
+            JInternalFrame new_frame = null;
             if (file.getName().endsWith(".desc"))
             {
                InputStream in = new BufferedInputStream(new FileInputStream(file));
@@ -148,41 +156,86 @@ public class VrjConfig
                mgr.add(desc_db);
 
                ChunkDescDBEditorIFrame frame = new ChunkDescDBEditorIFrame();
+               frame.setFilename(file.getAbsolutePath());
                frame.getEditor().setChunkDescDB(desc_db);
-               frame.setTitle(file.getName());
-               frame.pack();
-               frame.setVisible(true);
-               desktop.add(frame);
-               try
-               {
-                  frame.setSelected(true);
-               }
-               catch (PropertyVetoException pve) { /* ignore */ }
+               new_frame = frame;
             }
             else if (file.getName().endsWith(".config"))
             {
                InputStream in = new BufferedInputStream(new FileInputStream(file));
                ConfigChunkDB chunk_db = config.loadConfigChunks(in, mgr.getAllChunkDescs());
+               mgr.add(chunk_db);
+
                ConfigChunkDBEditorIFrame frame = new ConfigChunkDBEditorIFrame();
+               frame.setFilename(file.getAbsolutePath());
                frame.getEditor().setConfigChunkDB(chunk_db);
-               frame.setTitle(file.getName());
-               frame.pack();
-               frame.setVisible(true);
-               desktop.add(frame);
-               try
-               {
-                  frame.setSelected(true);
-               }
-               catch (PropertyVetoException pve) { /* ignore */ }
+               new_frame = frame;
             }
             else
             {
                System.err.println("ERROR: Unknown file");
             }
+
+            // If we were able to create a new frame, add it to the desktop
+            if (new_frame != null)
+            {
+               new_frame.pack();
+               new_frame.setVisible(true);
+               desktop.add(new_frame);
+               try
+               {
+                  new_frame.setSelected(true);
+               }
+               catch (java.beans.PropertyVetoException pve) { /*ignore*/ }
+            }
          }
          catch (IOException ioe)
          {
             ioe.printStackTrace();
+         }
+      }
+   }
+
+   void saveBtn_actionPerformed(ActionEvent evt)
+   {
+      JInternalFrame sel_frame = desktop.getSelectedFrame();
+      if (sel_frame != null)
+      {
+         if (sel_frame instanceof ConfigChunkDBEditorIFrame)
+         {
+            ConfigChunkDBEditorIFrame frame = (ConfigChunkDBEditorIFrame)sel_frame;
+            ConfigChunkDB chunk_db = frame.getEditor().getConfigChunkDB();
+            String file = frame.getFilename();
+
+            // Get the config service
+            ConfigService config = (ConfigService)BeanRegistry.instance().getBean("Config").getBean();
+            try
+            {
+               OutputStream out = new BufferedOutputStream(new FileOutputStream(file));
+               config.saveConfigChunks(out, chunk_db);
+            }
+            catch (IOException ioe)
+            {
+               ioe.printStackTrace();
+            }
+         }
+         else if (sel_frame instanceof ChunkDescDBEditorIFrame)
+         {
+            ChunkDescDBEditorIFrame frame = (ChunkDescDBEditorIFrame)sel_frame;
+            ChunkDescDB desc_db = frame.getEditor().getChunkDescDB();
+            String file = frame.getFilename();
+
+            // Get the config service
+            ConfigService config = (ConfigService)BeanRegistry.instance().getBean("Config").getBean();
+            try
+            {
+               OutputStream out = new BufferedOutputStream(new FileOutputStream(file));
+               config.saveChunkDescs(out, desc_db);
+            }
+            catch (IOException ioe)
+            {
+               ioe.printStackTrace();
+            }
          }
       }
    }
