@@ -69,13 +69,13 @@ vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
    // --- Configure filters --- //
    unsigned num_filters = chunk->getNum("position_filters");
 
-   vprDEBUG_OutputGuard(vprDBG_ALL, 0,
+   vprDEBUG_OutputGuard(vprDBG_ALL, vprDBG_VERB_LVL,
                         std::string("PositionProxy::config: ") +
                            chunk->getName() + std::string(":") +
                            chunk->getDescToken() + std::string("\n"),
                         std::string("PositionProxy::config: done.\n") );
 
-   vprDEBUG( vprDBG_ALL, 0) << "Num filters: " << num_filters << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL) << "Num filters: " << num_filters << std::endl << vprDEBUG_FLUSH;
 
    jccl::ConfigChunkPtr cur_filter;
    PositionFilter* new_filter(NULL);
@@ -86,7 +86,7 @@ vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
       vprASSERT(cur_filter.get() != NULL);
 
       std::string filter_chunk_desc = cur_filter->getDescToken();
-      vprDEBUG( vprDBG_ALL, 0) << "   Filter [" << i << "]: Type:" << filter_chunk_desc << std::endl << vprDEBUG_FLUSH;
+      vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL) << "   Filter [" << i << "]: Type:" << filter_chunk_desc << std::endl << vprDEBUG_FLUSH;
 
       new_filter = PositionFilterFactory::instance()->createObject(filter_chunk_desc);
       if(new_filter != NULL)
@@ -96,7 +96,7 @@ vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
       }
       else
       {
-         vprDEBUG( vprDBG_ALL, 0) << "   NULL Filter!!!" << std::endl << vprDEBUG_FLUSH;
+         vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL) << "   NULL Filter!!!" << std::endl << vprDEBUG_FLUSH;
       }
    }  // if have filters
 
