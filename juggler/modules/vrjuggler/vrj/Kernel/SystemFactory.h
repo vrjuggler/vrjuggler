@@ -37,16 +37,11 @@
 
 namespace vrj
 {
-
-//------------------------------------------------------------
-//: Abstract base class for system specific Factory.
-//
-//  In order to create System specific Factories, Concrete
-//  derived classes must be created.
-//
-// @author Allen Bierbaum
-//  Date: 9-7-97
-//
+/** Abstract base class for system specific Factory.
+ *
+ *  In order to create System specific Factories, Concrete
+ *  derived classes must be created.
+ */
 class SystemFactory
 {
 public:

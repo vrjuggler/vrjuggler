@@ -43,15 +43,10 @@ namespace vrj
 
 class DisplayManager;
 
-//---------------------------------------------------
-//: Concrete class for Mac OS X System specific Factory.
-//
-//  Concrete class to create Mac OS X system specific objects.
-//
-// @author Allen Bierbaum
-//  Date: 9-9-97
-//----------------------------------------------------
-
+/** Concrete class for Mac OS X System specific Factory.
+ *
+ *  Concrete class to create Mac OS X system specific objects.
+ */
 static OSErr QuitAppleEventHandler(const AppleEvent *appleEvt, AppleEvent* reply, UInt32 refcon);
 
 class SystemFactoryOSX : public SystemFactory
