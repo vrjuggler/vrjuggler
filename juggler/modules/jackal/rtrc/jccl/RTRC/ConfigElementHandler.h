@@ -39,22 +39,23 @@
 namespace jccl
 {
 
-class ConfigManager;
-
-/** Abstract base class for all classes that can handle ConfigElements
- *  Any class supporting this interface can be dynamically reconfigured,
- *  for example by Jackal's ConfigurationManager.
+/**
+ * Abstract base class for all classes that can handle ConfigElement objects.
+ * Any class supporting this interface can be dynamically reconfigured by
+ * the JCCL Configuration Manager.
  *
- *  The idea is that you override configCanHandle() to recognize those
- *  elements that your derived class cares about.  Then you override
- *  configAdd() and configRemove() to actually process those elements.
+ * The idea is that a subclass overrides configCanHandle() to recognize those
+ * elements types that the derived class cares about.  Then override
+ * configAdd() and configRemove() to process instances of those elements.
  *
- *  The actually work of checking the list of pending add and remove
- *  requests and throwing them at configCanHandle() et. al. is done
- *  by configProcessPending.  This can also be overriden to provide
- *  special behavior, however this is strongly discouraged.  The default
- *  implementation should be sufficient for almost any conceivable
- *  dynamic reconfiguration need.
+ * The actual work of checking the list of pending add and remove requests
+ * and passing them to the methods of this interface is done by
+ * configProcessPending().  This can also be overriden to provide special
+ * behavior, but this is strongly discouraged.  The default implementation
+ * should be sufficient for almost any conceivable dynamic reconfiguration
+ * need.
+ *
+ * @see ConfigManager
  */
 class JCCL_CLASS_API ConfigElementHandler
 {
@@ -65,48 +66,63 @@ public:
       /* Do nothing. */ ;
    }
 
-   /** Checks if this handler can process element.
-    *  Typically, an implementation of handler will check the element's
-    *  definition name/token to decide if it knows how to deal with it.
-    *  @return true iff this handler can process element.
+   /**
+    * Checks if this handler can process the given config element.
+    * Typically, an implementation of this method will check the element's
+    * definition ID to decide if it knows how to deal with it.
+    *
+    * @param element The current config element that is ready to be processed.
+    *
+    * @return true iff this handler can process element.
     */
    virtual bool configCanHandle(ConfigElementPtr element) = 0;
 
-
-   /** Process any pending reconfiguration requests that we know how to
-    *  deal with.
+   /**
+    * Processes any pending reconfiguration requests that we know how to
+    * deal with.
     *
-    *  The default implementation does the following for each item in the
-    *  pending list:
+    * The default implementation does the following for each item in the
+    * pending list:
     *
-    *  <pre>
+    * <code>
     *    for each pending item p in the pending list do
-    *        if this->configCanHandle(p) AND p's dependencies are met
-    *            retval = configAdd or configRemove (p)
-    *            if retval = true
-    *                remove request from pending
-    *                add or remove p.element from active
-    *  </pre>
+    *       if this->configCanHandle(p) AND p's dependencies are met
+    *          retval = configAdd or configRemove (p)
+    *          if retval == true
+    *             remove request from pending
+    *             add or remove p.element from active
+    * </code>
     *
-    *  ConfigManager's pending list MUST be locked before this function
-    *  is called.  Typically, configProcessPending will be called by
-    *  ConfigManager::attemptReconfiguration(), which takes care of
-    *  this automatically.
+    * ConfigManager's pending list MUST be locked before this function
+    * is called.  Typically, configProcessPending() will be called by
+    * jccl::ConfigManager::attemptReconfiguration(), which takes care of
+    * this automatically.
+    *
+    * @see ConfigManager
     */
    virtual int configProcessPending();
 
-
-   /** Add the pending element to the configuration.
-    *  PRE: configCanHandle(element) == true.
-    *  @return true iff element was successfully added to configuration.
+   /**
+    * Adds the pending element to the configuration.
+    *
+    * @pre configCanHandle(element) == true.
+    *
+    * @param element A newly added config element to be processed.
+    *
+    * @return true is returned if and only if the given element was processed
+    *         successfully.
     */
    virtual bool configAdd(ConfigElementPtr element) = 0;
 
-
-   /** Remove the pending element from the current configuration.
-    *  PRE: configCanHandle(element) == true.
-    *  @return true iff the element (and any objects it represented)
-    *          were successfully removed.
+   /**
+    * Removes the pending element from the current configuration.
+    *
+    * @pre configCanHandle(element) == true.
+    *
+    * @param element A newly removed config element to be processed.
+    *
+    * @return true is returned if and only if the given element was processed
+    *         successfully.
     */
    virtual bool configRemove(ConfigElementPtr element) = 0;
 };
