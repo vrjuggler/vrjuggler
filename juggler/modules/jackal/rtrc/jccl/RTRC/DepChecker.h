@@ -38,62 +38,65 @@
 #include <jccl/Config/ConfigChunkPtr.h>
 #include <vpr/Util/Debug.h>
 
-namespace jccl {
+namespace jccl
+{
 
-    /** Base class for dependency checkers.
-     *  A dependency checker is responsible for figuring out if
-     *  the system has all the required dependencies filled for
-     *  a given ConfigChunk.
-     *
-     *  This class also implements a default behavior for
-     *  dependency checkers, which just looks at any ConfigChunk
-     *  pointer properties in the given chunk and returns true
-     *  if all the chunks named by those properties exist in the
-     *  ConfigManager's current configuration.
-     *
-     *  Configuration information with special dependency
-     *  requirements should specialize this class and register
-     *  an instance with the DependencyManager.
-     *
-     *  Note: The DepChecker must be registered BEFORE a
-     *  chunk of the given type is checked for dependencies.
-     */
+
+/** Base class for dependency checkers.
+ *  A dependency checker is responsible for figuring out if
+ *  the system has all the required dependencies filled for
+ *  a given ConfigChunk.
+ *
+ *  This class also implements a default behavior for
+ *  dependency checkers, which just looks at any ConfigChunk
+ *  pointer properties in the given chunk and returns true
+ *  if all the chunks named by those properties exist in the
+ *  ConfigManager's current configuration.
+ *
+ *  Configuration information with special dependency
+ *  requirements should specialize this class and register
+ *  an instance with the DependencyManager.
+ *
+ *  Note: The DepChecker must be registered BEFORE a
+ *  chunk of the given type is checked for dependencies.
+ */
 class DepChecker
 {
 
 public:
 
-    /** Constructor. */
-    DepChecker ();
+   /** Constructor. */
+   DepChecker ();
 
 
-    /** Return a string name for the checker.
-     *  This is used to output messages in checker listings.
-     */
-    virtual std::string getCheckerName ();
+   /** Return a string name for the checker.
+    *  This is used to output messages in checker listings.
+    */
+   virtual std::string getCheckerName ();
 
 
-    /** Checks if this DepChecker knows how to handle chunk.
-     *  @return true if we understand the chunk.  The default
-     *          behavior returns true (the default checker can
-     *          check anything).
-     */
-    virtual bool canHandle (ConfigChunkPtr chunk);
+   /** Checks if this DepChecker knows how to handle chunk.
+    *  @return true if we understand the chunk.  The default
+    *          behavior returns true (the default checker can
+    *          check anything).
+    */
+   virtual bool canHandle (ConfigChunkPtr chunk);
 
 
-    /** Checks if chunk's dependencies are satisfied.
-     *  @return true iff chunk's dependencies are satisfied.
-     */
-    virtual bool depSatisfied (ConfigChunkPtr chunk);
+   /** Checks if chunk's dependencies are satisfied.
+    *  @return true iff chunk's dependencies are satisfied.
+    */
+   virtual bool depSatisfied (ConfigChunkPtr chunk);
 
 
-    /** Write chunk's dependencies to vprDEBUG.
-     *  @param dbg_level Output priority level for vprDEBUG.
-     */
-    virtual void debugOutDependencies (ConfigChunkPtr chunk,
+   /** Write chunk's dependencies to vprDEBUG.
+    *  @param dbg_level Output priority level for vprDEBUG.
+    */
+   virtual void debugOutDependencies (ConfigChunkPtr chunk,
                                        int dbg_lvl=vprDBG_WARNING_LVL);
 
 }; // class DepChecker
+
 
 }; // namespace jccl
 
