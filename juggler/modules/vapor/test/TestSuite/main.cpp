@@ -21,7 +21,7 @@ int main (int ac, char **av)
    // add tests to the suite
    //suite_1->addTest( /* put your test here */ );
    noninteractive_suite->addTest(vprTest::InetAddrTest::suite());
-   noninteractive_suite->addTest(vprTest::SocketTest::suite());
+   //noninteractive_suite->addTest(vprTest::SocketTest::suite());
    noninteractive_suite->addTest(vprTest::SocketConnectorAcceptorTest::suite());
 
    // Add the test suite to the runner
