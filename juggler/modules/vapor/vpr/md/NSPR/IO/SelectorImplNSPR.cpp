@@ -129,7 +129,8 @@ Status SelectorImpNSPR::select(vpr::Uint16& numWithEvents, vpr::Uint16 timeout)
 
    PRInt32 result;
 
-   result = PR_Poll(&(mPollDescs[0]), mPollDescs.size(), PR_MillisecondsToInterval(timeout));
+   // Call poll - If timeout == 0, then make sure we pass 0
+   result = PR_Poll(&(mPollDescs[0]), mPollDescs.size(), ( (timeout > 0) ? (PR_MillisecondsToInterval(timeout)) : 0);
 
    if( -1 == result)
    {

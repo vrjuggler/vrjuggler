@@ -93,6 +93,11 @@ public:
       return mPollDescs[index].fd;
    }
 
+   bool containsHandle(IOSys::Handle handle)
+   {
+      return (getHandle(handle) != mPollDescs.end());
+   }
+
 protected:
 
    // Get the index of the handle given
