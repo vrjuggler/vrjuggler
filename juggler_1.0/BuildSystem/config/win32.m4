@@ -10,7 +10,7 @@ dnl     unix2dos - Convert a UNIX-style path into a DOS-style path.
 dnl     dos2unix - Convert a DOS-style path into a UNIX-style path.
 dnl ===========================================================================
 
-dnl win32.m4,v 1.6 2001/01/09 17:45:17 patrick Exp
+dnl win32.m4,v 1.7 2001/01/17 16:36:07 patrick Exp
 
 dnl ---------------------------------------------------------------------------
 dnl Define path conversion (DOS to UNIX and UNIX to DOS) subroutines.
@@ -52,8 +52,8 @@ AC_DEFUN(DPP_WIN32_SETUP,
                 dnl With the newer Cygwin code, we can use $CYGPATH to get the
                 dnl Win32 version of /.
                 dpp_cygroot=`$CYGPATH --windows / | sed -e ['s/\\\\/\//g']`
-                dpp_cygroot_exp=["s/^\//$dpp_cygroot\//"]
-                dpp_retval=`echo ${1} | sed -e "$dpp_drive_exp" -e "$dpp_drive_exp2" -e "$dpp_add_home_exp" -e "$dpp_cygroot_exp"`
+                dpp_cygroot_exp=["s|^\/|$dpp_cygroot\/|"]
+                dpp_retval=`echo ${1} | sed -e "$dpp_drive_exp" -e "$dpp_drive_exp2" -e "$dpp_cygroot_exp" -e "$dpp_add_home_exp"`
             fi
         dnl Otherwise, use only sed(1) which is a little more clumsy.
         else

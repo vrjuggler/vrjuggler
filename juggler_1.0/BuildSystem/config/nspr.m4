@@ -23,7 +23,7 @@ dnl     PLC_LIB_STATIC  - Full path to the static NSPR PLC library.
 dnl     PLDS_LIB_STATIC - Full path to the static NSPR PLDS library.
 dnl ===========================================================================
 
-dnl nspr.m4,v 1.5 2001/01/07 16:02:02 patrick Exp
+dnl nspr.m4,v 1.7 2001/01/23 19:59:11 patrick Exp
 
 dnl ---------------------------------------------------------------------------
 dnl State that NSPR threads are in use within NSPR.
@@ -67,6 +67,8 @@ AC_DEFUN(DPP_HAVE_NSPR,
 
     if test "x$PTHREADS_ENABLED" = "xyes" -o "x$2" = "xyes" ; then
         AC_REQUIRE([DPP_CC_PTHREAD_ARG])
+        AC_REQUIRE([DPP_CC_PTHREADS_ARG])
+        AC_REQUIRE([DPP_GET_POSIX_SEMAPHORE_LIB])
         true
     fi
 
@@ -83,19 +85,10 @@ AC_DEFUN(DPP_HAVE_NSPR,
 
     dpp_save_CPPFLAGS="$CPPFLAGS"
     dpp_save_LDFLAGS="$LDFLAGS"
+    dpp_save_LIBS="$LIBS"
 
     CPPFLAGS="$CPPFLAGS -I$NSPR_ROOT/include"
-    LDFLAGS="-L$NSPR_ROOT/lib $LDFLAGS"
-
-    if test "x$PTHREADS_ENABLED" = "xyes" -o "x$2" = "xyes" ; then
-        if test "x$CC_ACCEPTS_PTHREAD" = "xyes" ; then
-            LDFLAGS="$LDFLAGS -pthread"
-        else
-            dpp_pthread_lib="$PTHREAD_LIB"
-        fi
-    else
-        dpp_pthread_lib=''
-    fi
+    LDFLAGS="$PTHREAD_ARG -L$NSPR_ROOT/lib $LDFLAGS"
 
     dnl Check the NSPR version if a version number was given.
     if test "x$1" != "x" ; then
@@ -105,10 +98,11 @@ AC_DEFUN(DPP_HAVE_NSPR,
     fi
 
     AC_CHECK_LIB(nspr$NSPR_VER, PR_CreateThread, AC_CHECK_HEADER(nspr.h, , $3),
-                 $3, $dpp_pthread_lib)
+                 $3, [$PTHREAD_LIB $SEM_LIB])
 
     CPPFLAGS="$dpp_save_CPPFLAGS"
     LDFLAGS="$dpp_save_LDFLAGS"
+    LIBS="$dpp_save_LIBS"
 
     AC_LANG_RESTORE
 

@@ -64,7 +64,7 @@ dnl     IRIXREL      - Defined to the string "IRIX5" or "IRIX6" based on the
 dnl                    determined version of IRIX.
 dnl ===========================================================================
 
-dnl sys.m4,v 1.8 2001/01/08 23:36:59 patrick Exp
+dnl sys.m4,v 1.11 2001/01/19 15:55:29 patrick Exp
 
 dnl ---------------------------------------------------------------------------
 dnl Based on the given target host and CPU, set up the system-specific
@@ -144,6 +144,8 @@ AC_DEFUN(DPP_SYSTEM_SETUP,
     OS_TYPE='UNIX'
     PLATFORM=''
 
+    dpp_opt_level=${OPT_LEVEL-2}
+
     dnl The OS for which this is being configured.  The operating systems are
     dnl listed alphabetically.
     case $target_os in
@@ -159,7 +161,7 @@ AC_DEFUN(DPP_SYSTEM_SETUP,
             ARFLAGS='-ruv'
             LD='$(CXX) -shared'
             LDOPTS=''
-            OPT_FLAGS='-O1'
+            OPT_FLAGS="-O$dpp_opt_level"
             DBG_FLAGS='-g'
             DYNAMICLIB_EXT='so'
 
@@ -240,7 +242,7 @@ AC_DEFUN(DPP_SYSTEM_SETUP,
             LD='$(CXX) -shared'
             LDOPTS=''
             DBG_FLAGS='-g'
-            OPT_FLAGS='-O1'
+            OPT_FLAGS="-O$dpp_opt_level"
             DYNAMICLIB_EXT='so'
 
             ABI_LIST='ELF'
@@ -282,7 +284,7 @@ AC_DEFUN(DPP_SYSTEM_SETUP,
                 ARFLAGS='-ruv'
                 LDOPTS=''
                 DBG_FLAGS='-g'
-                OPT_FLAGS='-O1'
+                OPT_FLAGS="-O$dpp_opt_level"
 
                 dpp_cc_defs_file='/etc/compiler.defaults'
 
@@ -325,13 +327,13 @@ AC_DEFUN(DPP_SYSTEM_SETUP,
                 dnl depending on $ABI.
                 if test "x$ABI" = "x64" ; then
                     DSOREGFILE='/usr/lib64/so_locations'
-                    OPT_FLAGS='-O1 -OPT:Olimit=0'
+                    OPT_FLAGS="-O$dpp_opt_level -OPT:Olimit=0"
                 elif test "x$ABI" = "xN32" ; then
                     DSOREGFILE='/usr/lib32/so_locations'
-                    OPT_FLAGS='-O1 -OPT:Olimit=0'
+                    OPT_FLAGS="-O$dpp_opt_level -OPT:Olimit=0"
                 elif test "x$ABI" = "xO32" ; then
                     DSOREGFILE='/usr/lib/so_locations'
-                    OPT_FLAGS='-O1 -Olimit 0'
+                    OPT_FLAGS="-O$dpp_opt_level -Olimit 0"
                 fi
 
                 AR='$(CXX)'
@@ -373,7 +375,7 @@ AC_DEFUN(DPP_SYSTEM_SETUP,
             ARFLAGS='-ruv'
             LD='$(CXX) -shared'
             LDOPTS=''
-            OPT_FLAGS='-O1'
+            OPT_FLAGS="-O$dpp_opt_level"
             DBG_FLAGS='-g'
             DYNAMICLIB_EXT='so'
 
@@ -392,7 +394,7 @@ AC_DEFUN(DPP_SYSTEM_SETUP,
             ARFLAGS='-ruv'
             LD='$(CXX) -shared'
             LDOPTS=''
-            OPT_FLAGS='-O1'
+            OPT_FLAGS="-O$dpp_opt_level"
             DYNAMICLIB_EXT='so'
 
             ABI_LIST='ALPHA'
@@ -411,7 +413,7 @@ AC_DEFUN(DPP_SYSTEM_SETUP,
             LD='$(CXX) -G'
             LDOPTS=''
             DBG_FLAGS='-g'
-            OPT_FLAGS='-O1'
+            OPT_FLAGS="-O$dpp_opt_level"
             DYNAMICLIB_EXT='so'
 
             ABI_LIST='ELF'
@@ -445,11 +447,8 @@ AC_DEFUN(DPP_SYSTEM_SUBST,
 [
     AC_REQUIRE([DPP_SYSTEM_SETUP])
 
-    DEPEND_FLAGS=''
-    DEPEND_EXTRAS=''
-
     if test "x$dpp_os_type" = "xWin32" ; then
-        DEPEND_EXTRAS='-D_WIN32 -D_M_IX86'
+        DEPEND_EXTRAS="-D_WIN32 -D_M_IX86 $DEPEND_EXTRAS"
     fi
 
     dnl Provide the linker options for static and dynamic linking of

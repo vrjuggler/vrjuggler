@@ -1,5 +1,5 @@
 # =============================================================================
-# dpp.libs.mk,v 1.2 2000/12/30 22:31:35 patrick Exp
+# dpp.libs.mk,v 1.3 2001/01/22 16:40:35 patrick Exp
 #
 # This file <dpp.libs.mk> defines many targets for use in compiling a software
 # library (or a set of libraries).  An including makefile can take advantage
@@ -251,8 +251,8 @@ dbg:
 ifdef BEFOREBUILD
 	@$(MAKE) $(BEFOREBUILD)
 endif
-	@$(MAKE) _build_dbg_obj $(EXTRA_OBJ_TARGETS)
-	@$(MAKE) _build_dbg_lib_static
+	@$(MAKE) obj.dbg.build $(EXTRA_OBJ_TARGETS)
+	@$(MAKE) lib.static.dbg.build
 ifdef AFTERBUILD
 	@$(MAKE) $(AFTERBUILD)
 endif
@@ -270,8 +270,8 @@ ddso:
 ifdef BEFOREBUILD
 	@$(MAKE) $(BEFOREBUILD)
 endif
-	@$(MAKE) _build_dbg_obj $(EXTRA_OBJ_TARGETS)
-	@$(MAKE) _build_dbg_lib_dynamic
+	@$(MAKE) obj.dbg.build $(EXTRA_OBJ_TARGETS)
+	@$(MAKE) lib.dynamic.dbg.build
 ifdef AFTERBUILD
 	@$(MAKE) $(AFTERBUILD)
 endif
@@ -289,8 +289,8 @@ opt:
 ifdef BEFOREBUILD
 	@$(MAKE) $(BEFOREBUILD)
 endif
-	@$(MAKE) _build_opt_obj $(EXTRA_OBJ_TARGETS)
-	@$(MAKE) _build_opt_lib_static
+	@$(MAKE) obj.opt.build $(EXTRA_OBJ_TARGETS)
+	@$(MAKE) lib.static.opt.build
 ifdef AFTERBUILD
 	@$(MAKE) $(AFTERBUILD)
 endif
@@ -308,8 +308,8 @@ dso:
 ifdef BEFOREBUILD
 	@$(MAKE) $(BEFOREBUILD)
 endif
-	@$(MAKE) _build_opt_obj $(EXTRA_OBJ_TARGETS)
-	@$(MAKE) _build_opt_lib_dynamic
+	@$(MAKE) obj.opt.build $(EXTRA_OBJ_TARGETS)
+	@$(MAKE) lib.dynamic.opt.build
 ifdef AFTERBUILD
 	@$(MAKE) $(AFTERBUILD)
 endif
@@ -323,20 +323,20 @@ libs:
 ifdef PRELIB
 	@$(MAKE) $(PRELIB)
 endif
-	@$(MAKE) _build_opt_obj
-	@$(MAKE) _build_opt_lib_static
-	@$(MAKE) _build_opt_lib_dynamic
-	@$(MAKE) _build_dbg_obj
-	@$(MAKE) _build_dbg_lib_static
-	@$(MAKE) _build_dbg_lib_dynamic
-	@$(MAKE) _LIB_LINK_DIR="$(LIBDIR)" _lib_links
+	@$(MAKE) obj.opt.build
+	@$(MAKE) lib.static.opt.build
+	@$(MAKE) lib.dynamic.opt.build
+	@$(MAKE) obj.dbg.build
+	@$(MAKE) lib.static.dbg.build
+	@$(MAKE) lib.dynamic.dbg.build
+	@$(MAKE) _LIB_LINK_DIR="$(LIBDIR)" lib.links.build
 ifdef POSTLIB
 	@$(MAKE) $(POSTLIB)
 endif
 
 # Make symlinks in $(_LIB_LINK_DIR) pointing to the library binaries in
 # $(DEFAULT_DIR).
-_lib_links:
+lib.links.build:
 	@echo "------------------------------------------------"
 	@echo "Creating symlinks in $(_LIB_LINK_DIR)"
 	@echo "------------------------------------------------"
@@ -358,9 +358,9 @@ debug:
 ifdef BEFOREBUILD
 	@$(MAKE) $(BEFOREBUILD)
 endif
-	@$(MAKE) _build_dbg_obj $(EXTRA_OBJ_TARGETS)
-	@$(MAKE) _build_dbg_lib_static
-	@$(MAKE) _build_dbg_lib_dynamic
+	@$(MAKE) obj.dbg.build $(EXTRA_OBJ_TARGETS)
+	@$(MAKE) lib.static.dbg.build
+	@$(MAKE) lib.dynamic.dbg.build
 ifdef AFTERBUILD
 	@$(MAKE) $(AFTERBUILD)
 endif
@@ -379,9 +379,9 @@ optim:
 ifdef BEFOREBUILD
 	@$(MAKE) $(BEFOREBUILD)
 endif
-	@$(MAKE) _build_opt_obj $(EXTRA_OBJ_TARGETS)
-	@$(MAKE) _build_opt_lib_static
-	@$(MAKE) _build_opt_lib_dynamic
+	@$(MAKE) obj.opt.build $(EXTRA_OBJ_TARGETS)
+	@$(MAKE) lib.static.opt.build
+	@$(MAKE) lib.dynamic.opt.build
 ifdef AFTERBUILD
 	@$(MAKE) $(AFTERBUILD)
 endif
@@ -402,7 +402,7 @@ obj:
 	@echo "------------------------------------------------"
 
 # Build the object files with the debugging flags enabled.
-_build_dbg_obj:
+obj.dbg.build:
 	@echo "------------------------------------------------"
 	@echo "Building object files with debugging symbols"
 	@echo "------------------------------------------------"
@@ -414,7 +414,7 @@ _build_dbg_obj:
           BASE_OBJDIR="$(DBG_BUILDDIR)" recursive
 
 # Build the object files with the optimization flags enabled.
-_build_opt_obj:
+obj.opt.build:
 	@echo "------------------------------------------------"
 	@echo "Building optimized object files"
 	@echo "------------------------------------------------"
@@ -426,7 +426,7 @@ _build_opt_obj:
           BASE_OBJDIR="$(OPT_BUILDDIR)" recursive
 
 # Build the static libraries with the debugging flags enabled.
-_build_dbg_lib_static:
+lib.static.dbg.build:
 	@echo "================================================"
 	@echo "Building static debugging libraries"
 	@echo "================================================"
@@ -438,7 +438,7 @@ ifneq ("$(STATIC_LIBS)", "")
 endif
 
 # Build the dynamic libraries with the debugging flags enabled.
-_build_dbg_lib_dynamic:
+lib.dynamic.dbg.build:
 	@echo "================================================"
 	@echo "Building dynamic debugging libraries"
 	@echo "================================================"
@@ -450,7 +450,7 @@ ifneq ("$(DYNAMIC_LIBS)", "")
 endif
 
 # Build the static libraries with the optimization flags enabled.
-_build_opt_lib_static:
+lib.static.opt.build:
 	@echo "================================================"
 	@echo "Building static optmized libraries"
 	@echo "================================================"
@@ -462,7 +462,7 @@ ifneq ("$(STATIC_LIBS)", "")
 endif
 
 # Build the static libraries with the optimization flags enabled.
-_build_opt_lib_dynamic:
+lib.dynamic.opt.build:
 	@echo "================================================"
 	@echo "Building dynamic optmized libraries"
 	@echo "================================================"
@@ -533,7 +533,7 @@ install-libs:
 	@$(MAKE) NOLINK=1 install-dso
 	@$(MAKE) NOLINK=1 install-dbg
 	@$(MAKE) NOLINK=1 install-ddso
-	@$(MAKE) _install_lib_links
+	@$(MAKE) lib.links.install
 
 # Do everything needed after installing the library binaries.
 do-post-install:
@@ -576,7 +576,7 @@ ifneq ("$(STATIC_LIBS)", "")
               $(DBG_LIBDIR)/$$lib.$(STATICLIB_EXT)			\
               $(_install_libdir_abs)/$(DBG_DIR)/ ;			\
           done
-	@$(MAKE) DEFAULT_DIR="$(DBG_DIR)" _install_lib_links
+	@$(MAKE) DEFAULT_DIR="$(DBG_DIR)" lib.links.install
 endif
 
 # -------------------------------------------------------------
@@ -596,7 +596,7 @@ ifneq ("$(DYNAMIC_LIBS)", "")
               $(DBG_LIBDIR)/$$lib.$(DYNAMICLIB_EXT)			\
               $(_install_libdir_abs)/$(DBG_DIR)/ ;			\
           done
-	@$(MAKE) DEFAULT_DIR="$(DBG_DIR)" _install_lib_links
+	@$(MAKE) DEFAULT_DIR="$(DBG_DIR)" lib.links.install
 endif
 
 # ------------------------------------------------------------
@@ -633,7 +633,7 @@ ifneq ("$(STATIC_LIBS)", "")
               $(OPT_LIBDIR)/$$lib.$(STATICLIB_EXT)			\
               $(_install_libdir_abs)/$(OPT_DIR)/ ;			\
           done
-	@$(MAKE) DEFAULT_DIR="$(OPT_DIR)" _install_lib_links
+	@$(MAKE) DEFAULT_DIR="$(OPT_DIR)" lib.links.install
 endif
 
 # -------------------------------------------------------------
@@ -653,12 +653,12 @@ ifneq ("$(DYNAMIC_LIBS)", "")
               $(OPT_LIBDIR)/$$lib.$(DYNAMICLIB_EXT)			\
               $(_install_libdir_abs)/$(OPT_DIR)/ ;			\
           done
-	@$(MAKE) DEFAULT_DIR="$(OPT_DIR)" _install_lib_links
+	@$(MAKE) DEFAULT_DIR="$(OPT_DIR)" lib.links.install
 endif
 
 # Install symlinks to the installed library binaries in the destination
 # directory.
-_install_lib_links:
+lib.links.install:
 ifndef NOLINK
 	@echo "------------------------------------------------"
 	@echo "Creating symlinks in $(libdir)$(LIBBITSUF)"

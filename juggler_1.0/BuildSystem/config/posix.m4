@@ -6,7 +6,7 @@ dnl     DPP_CHECK_TYPE_POSIX - Check for POSIX types such as int32_t and
 dnl                            caddr_t.
 dnl ===========================================================================
 
-dnl posix.m4,v 1.2 2000/12/29 04:17:20 patrick Exp
+dnl posix.m4,v 1.3 2001/01/22 21:42:30 patrick Exp
 
 dnl ---------------------------------------------------------------------------
 dnl Check for POSIX types such as int32_t and caddr_t.
@@ -24,6 +24,7 @@ AC_DEFUN(DPP_CHECK_TYPE_POSIX,
         AC_CHECK_TYPE(int64_t, __int64)
     else
         AC_CHECK_TYPE(u_int, unsigned int)
+        AC_CHECK_TYPE(u_int32_t, unsigned int)
     fi
 
     AC_CHECK_TYPE(caddr_t, char*)

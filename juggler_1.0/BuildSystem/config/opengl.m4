@@ -23,7 +23,7 @@ dnl     X_INCLUDES  - Extra include path for the X11 header directory.
 dnl     X_LDFLAGS   - Extra linker flags for the X11 library directory.
 dnl ===========================================================================
 
-dnl opengl.m4,v 1.2 2001/01/09 22:48:42 patrick Exp
+dnl opengl.m4,v 1.3 2001/01/19 20:01:34 patrick Exp
 
 dnl ---------------------------------------------------------------------------
 dnl Determine if the target system has OpenGL (or Mesa3D) installed.  This
@@ -96,7 +96,7 @@ AC_DEFUN(DPP_HAVE_OPENGL,
 
     dnl On HP-UX, we have to compile the test code with the C++ compiler
     dnl because the HP-UX OpenGL 1.1 implementation mandates this.
-    if test "$dpp_platform" = "HP" ; then
+    if test "x$dpp_platform" = "xHP" ; then
         AC_LANG_SAVE
         AC_LANG_CPLUSPLUS
 
@@ -115,7 +115,7 @@ AC_DEFUN(DPP_HAVE_OPENGL,
         dnl If the library was found, add the OpenGL API object files to
         dnl the files to be compiled and enable the OpenGL API compile-time
         dnl option.
-        if test "$ac_cv_glEnable_available" = "yes" ; then
+        if test "x$ac_cv_glEnable_available" = "xyes" ; then
             dpp_have_opengl='yes'
             $3
             true
@@ -126,7 +126,7 @@ AC_DEFUN(DPP_HAVE_OPENGL,
         LIBS="$dpp_save_LIBS"
 
         AC_LANG_RESTORE
-    elif test "$dpp_os_type" = "Win32" ; then
+    elif test "x$dpp_os_type" = "xWin32" ; then
         AC_MSG_WARN(Assuming that OpenGL is available in a standard location)
         dpp_have_opengl='yes'
         $3

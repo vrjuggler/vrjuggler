@@ -27,6 +27,10 @@ dnl
 dnl Variables defined:
 dnl     PTHREAD_LIB         - The name of the POSIX threads library (named as
 dnl                           -l<pthread lib>).
+dnl     PTHREAD_ARG         - The argument accepted by the compiler for
+dnl                           linking pthreads applications.
+dnl     SEM_LIB             - The name of the POSIX.4 library with the
+dnl                           semaphore implementation.
 dnl     CC_ACCEPTS_PTHREAD  - A cache variable stating whether or not (i.e.,
 dnl                           'yes' or 'no) the compilers accept -pthread as a
 dnl                           valid argument.
@@ -40,7 +44,7 @@ dnl     _PTHREADS_DRAFT_10 - The POSIX thread implementation is Draft 10.
 dnl     _PTHREADS_DRAFT_4  - The POSIX thread implementation is Draft 4.
 dnl ===========================================================================
 
-dnl pthreads.m4,v 1.5 2001/01/16 18:08:26 patrick Exp
+dnl pthreads.m4,v 1.11 2001/01/23 19:59:11 patrick Exp
 
 dnl ---------------------------------------------------------------------------
 dnl State that POSIX threads are needed for compiling.
@@ -92,6 +96,10 @@ AC_DEFUN(DPP_CC_PTHREAD_ARG,
 
     CC_ACCEPTS_PTHREAD="$dpp_cv_CC_accepts_pthread"
 
+    if test "x$CC_ACCEPTS_PTHREAD" = "xyes" ; then
+        PTHREAD_ARG='-pthread'
+    fi
+
     AC_LANG_RESTORE
 ])
 
@@ -127,6 +135,10 @@ AC_DEFUN(DPP_CC_PTHREADS_ARG,
 
     CC_ACCEPTS_PTHREADS="$dpp_cv_CC_accepts_pthreads"
 
+    if test "x$CC_ACCEPTS_PTHREADS" = "xyes" ; then
+        PTHREAD_ARG='-pthreads'
+    fi
+
     AC_LANG_RESTORE
 ])
 
@@ -149,7 +161,6 @@ AC_DEFUN(DPP_GET_PTHREAD_LIB,
 [
     AC_REQUIRE([DPP_CC_PTHREAD_ARG])
     AC_REQUIRE([DPP_CC_PTHREADS_ARG])
-    AC_BEFORE([$0], [DPP_GET_PTHREAD_VER])
 
     dpp_pthread_lib=''
 
@@ -165,10 +176,12 @@ AC_DEFUN(DPP_GET_PTHREAD_LIB,
         dpp_pthread_lib_names="$1 pthread pthreads cma c_r"
 
         for lib in $dpp_pthread_lib_names ; do
+            dpp_save_LIBS="$LIBS"
             AC_CHECK_LIB($lib, pthread_create,
                 AC_CHECK_HEADER(pthread.h,
                     [ dpp_pthread_lib="-l${lib}" ; break ],
                     AC_MSG_WARN(*** POSIX threads will not be used (header file not found) ***)))
+            LIBS="$dpp_save_LIBS"
         done
 
         AC_LANG_RESTORE
@@ -232,7 +245,8 @@ AC_DEFUN(DPP_GET_PTHREAD_VER,
     if test "x$2" != "x" ; then
         dnl Define the appropriate value for _POSIX_C_SOURCE on the current
         dnl platform.
-        if test "$1" = "IRIX" -o "$1" = "Linux" -o "$1" = "Solaris" ; then
+        if test "x$1" = "xIRIX" -o "x$1" = "xLinux" -o "x$1" = "xSolaris"
+        then
             AC_DEFINE($2, 199506L)
         else
             AC_DEFINE($2, 2)
@@ -240,6 +254,52 @@ AC_DEFUN(DPP_GET_PTHREAD_VER,
     fi
 
     AC_LANG_RESTORE
+])
+
+dnl ---------------------------------------------------------------------------
+dnl Determine the name of the POSIX.4 semaphore library needed for linking.
+dnl The default libraries checked are the standard C library and posix4 in
+dnl that order.  Based on the result of the check, the variable $SEM_LIB is
+dnl set to the linker option with the name of the library (-l<name>).
+dnl
+dnl Usage:
+dnl     DPP_GET_POSIX_SEMAPHORE_LIB([action-if-found [, action-if-not-found]])
+dnl
+dnl Arguments:
+dnl     action-if-found     - The action to take if the semaphore library is
+dnl                           found.  This argument is optional.
+dnl     action-if-not-found - The action to take if the semaphore library can
+dnl                           not be found.  This argument is optional.
+dnl ---------------------------------------------------------------------------
+AC_DEFUN(DPP_GET_POSIX_SEMAPHORE_LIB,
+[
+    AC_REQUIRE([DPP_CC_PTHREAD_ARG])
+    AC_REQUIRE([DPP_CC_PTHREADS_ARG])
+
+    dpp_save_CFLAGS="$CFLAGS"
+    dpp_save_LDFLAGS="$LDFLAGS"
+    dpp_save_LIBS="$LIBS"
+
+    LDFLAGS="$LDFLAGS $PTHREAD_ARG"
+    LIBS="$LIBS $PTHREAD_LIB"
+
+    AC_LANG_SAVE
+    AC_LANG_C
+
+    dnl # If we have sem_init(3), we can use POSIX semaphores.  If not, exit
+    dnl # with a fatal error.  If we are using POSIX threads, we need to have
+    dnl # working POSIX semaphores too.
+    AC_CHECK_FUNC(sem_init, ,
+        AC_CHECK_LIB(posix4, sem_init,
+            [ SEM_LIB='-lposix4'
+              $1 ],
+            $2))
+
+    AC_LANG_RESTORE
+
+    CFLAGS="$dpp_save_CFLAGS"
+    LDFLAGS="$dpp_save_LDFLAGS"
+    LIBS="$dpp_save_LIBS"
 ])
 
 dnl ---------------------------------------------------------------------------
