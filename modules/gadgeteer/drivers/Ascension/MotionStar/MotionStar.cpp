@@ -76,12 +76,12 @@ sampleBirds (void* arg) {
 // Constructor.  This invokes the aMotionStar constructor and initializes
 // member variables.
 // ----------------------------------------------------------------------------
-vjMotionStar::vjMotionStar (char* address, int hemisphere,
-                            unsigned int birdFormat,
+vjMotionStar::vjMotionStar (char* address, const unsigned short port,
+                            int hemisphere, unsigned int birdFormat,
                             unsigned int birdsRequired, int runMode,
                             double birdRate)
-    : mMotionStar(address, hemisphere, birdFormat, birdsRequired, runMode,
-                  birdRate, 1)
+    : mMotionStar(address, port, hemisphere, birdFormat, birdsRequired,
+                  runMode, birdRate, 1)
 {
    myThread = NULL;
 }
@@ -113,6 +113,7 @@ vjMotionStar::config (vjConfigChunk *c) {
    mMotionStar.setBirdRate(static_cast<double>(c->getProperty("brate")));
    mMotionStar.setRunMode(static_cast<int>(c->getProperty("mode")));
    mMotionStar.setAddress(static_cast<std::string>(c->getProperty("address")).c_str());
+   mMotionStar.setServerPort((unsigned short) static_cast<int>(c->getProperty("serverPort")));
 //   mMotionStar.setReportRate(static_cast<unsigned char>(c->getProperty("rrate"))); 
  
    return true;
@@ -413,6 +414,21 @@ vjMotionStar::setAddress (const char* n) {
          << vjDEBUG_FLUSH;
    } else {
       mMotionStar.setAddress(n);
+   }
+}
+
+// ----------------------------------------------------------------------------
+// Set the port on the server to which we connect.
+// ----------------------------------------------------------------------------
+void
+vjMotionStar::setServerPort (const unsigned short port) {
+   // If the device active, we cannot change the server port.
+   if ( this->isActive() ) {
+      vjDEBUG(vjDBG_INPUT_MGR,2)
+         << "vjMotionStar: Cannot change server port while active\n"
+         << vjDEBUG_FLUSH;
+   } else {
+      mMotionStar.setServerPort(port);
    }
 }
 

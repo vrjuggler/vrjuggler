@@ -52,11 +52,11 @@
 // Constructor.  This initializes member variables and determines the
 // endianness of the host machine.
 // ----------------------------------------------------------------------------
-aMotionStar::aMotionStar(char* _address, int _hemisphere,
-                         unsigned int _birdFormat, unsigned int _birdsRequired,
-                         int _runMode, double _birdRate,
-                         unsigned char _reportRate)
-    : active(0), hemisphere(_hemisphere), birdFormat(_birdFormat),
+aMotionStar::aMotionStar(char* _address, const unsigned short port,
+                         int _hemisphere, unsigned int _birdFormat,
+                         unsigned int _birdsRequired, int _runMode,
+                         double _birdRate, unsigned char _reportRate)
+    : m_port(port), active(0), hemisphere(_hemisphere), birdFormat(_birdFormat),
       birdsRequired(_birdsRequired), runMode(_runMode), birdRate(_birdRate),
       reportRate(_reportRate)
 {
@@ -166,7 +166,7 @@ aMotionStar::start () {
 
   bzero((char *)&server, sizeof(server));
   server.sin_family = AF_INET;
-  server.sin_port   = htons(TCP_PORT);		// Server port number
+  server.sin_port   = htons(m_port);		// Server port number
 
   // Try to look up address by name.  This will work for an IP address too,
   // but we fall back on inet_addr(3) below just to be safe.

@@ -77,6 +77,8 @@ public:
     //! ARGS: address       - The IP address or hostname of the MotionStar PC
     //+                       to which we are connecting.  This defaults to
     //+                       NULL.
+    //! ARGS: port          - The server port to which we are connecting.  The
+    //+                       default is 6000.
     //! ARGS: hemisphere    - The hemisphere in use on the transmitter.  The
     //+                       default is 3.
     //! ARGS: birdFormat    - The bird format.  The default is 4.
@@ -85,9 +87,10 @@ public:
     //! ARGS: runMode       - The run mode for the device.  The default is 0.
     //! ARGS: birdRate      - The bird rate.  The default is 90.0.
     // ------------------------------------------------------------------------
-    vjMotionStar(char* address = NULL, int hemisphere = 3,
-                 unsigned int birdFormat = 4, unsigned int birdsRequired = 10,
-                 int runMode = 0, double birdRate = 90.0);
+    vjMotionStar(char* address = NULL, const unsigned short port = 6000,
+                 int hemisphere = 3, unsigned int birdFormat = 4,
+                 unsigned int birdsRequired = 10, int runMode = 0,
+                 double birdRate = 90.0);
 
     // ------------------------------------------------------------------------
     //: Destructor.  Sampling is stopped, and the data pool is deallocated.
@@ -400,6 +403,29 @@ public:
         return mMotionStar.getAddress();
     }
  
+    // ------------------------------------------------------------------------
+    //: Set the port on the server to which we connect.
+    //
+    //! PRE: mMotionStar has been initialized.
+    //! POST: If the device is not active, the port is set to the given value.
+    //
+    //! ARGS: port - The new value for the server port.
+    // ------------------------------------------------------------------------
+    void setServerPort(const unsigned short port);
+
+    // ------------------------------------------------------------------------
+    //: Get the server port.
+    //
+    //! PRE: mMotionStar has been initialized.
+    //! POST: The current server port is returned to the caller.
+    //
+    //! RETURNS: An unsigned short integer containing the server port number.
+    // ------------------------------------------------------------------------
+    inline unsigned short
+    getServerPort () {
+        return mMotionStar.getServerPort();
+    }
+
     // ------------------------------------------------------------------------
     //: Get the x position of the i'th reciever.
     //
