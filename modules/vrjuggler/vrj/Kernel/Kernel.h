@@ -128,11 +128,16 @@ public:
    void loadConfigFile(std::string filename);
 
    /**
-    * Loads an element definition file.
-    * @post The config element factory can now manage elements with the given
-    *       types.
+    * Scans the given directory (or directories) for .jdef files and loads all
+    * discovered files into the JCCL Element Factory.
+    *
+    * @post The const element factory can now manage elements with the
+    *       discovered types.
+    *
+    * @param path One or more directories, delineated by a platform-specific
+    *             path separator, that will be searched for .jdef files.
     */
-   void loadConfigDefinitionFile(std::string filename);
+   void scanForConfigDefinitions(const std::string& path);
 
 
 protected:  // -- CONFIG ELEMENT HANDLER
