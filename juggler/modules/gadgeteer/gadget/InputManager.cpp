@@ -32,9 +32,12 @@
 
 #include <gadget/gadgetConfig.h>
 
+#include <boost/filesystem/path.hpp>
 #include <boost/filesystem/exception.hpp>
 #include <boost/filesystem/operations.hpp>
 
+#include <vpr/vpr.h>
+#include <vpr/System.h>
 #include <vpr/DynLoad/LibraryFinder.h>
 #include <vpr/Util/FileUtils.h>
 
@@ -54,6 +57,8 @@
 
 #include <gadget/InputManager.h> // my header...
 
+
+namespace fs = boost::filesystem;
 
 namespace gadget
 {
@@ -189,7 +194,7 @@ vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
       {
          vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
             << clrOutBOLD(clrRED, "ERROR")
-            << " [gadget::InputManager::configAdd()]: Element named '"
+            << " [gadget::InputManager::configAdd()] Element named '"
             << element->getName() << "'" << std::endl << vprDEBUG_FLUSH;
          vprDEBUG_NEXT(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
             << "is version " << element->getVersion()
@@ -205,12 +210,72 @@ vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
       {
          const std::string driver_path_prop_name("driver_path");
          const int path_count(element->getNum(driver_path_prop_name));
-         std::vector<std::string> search_path(path_count);
+         std::vector<fs::path> search_path(path_count);
 
          for ( unsigned int i = 0; i < search_path.size(); ++i )
          {
-            search_path[i] =
+            std::string temp_str =
                vpr::replaceEnvVars(element->getProperty<std::string>(driver_path_prop_name, i));
+
+            try
+            {
+               search_path[i] = fs::path(temp_str, fs::native);
+            }
+            catch(fs::filesystem_error& fsEx)
+            {
+               vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
+                  << clrOutNORM(clrRED, "ERROR:")
+                  << "[gadget::InputManager::configAdd()] File system "
+                  << "exception caught while converting\n" << vprDEBUG_FLUSH;
+               vprDEBUG_NEXT(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
+                  << "'" << temp_str << "'\n" << vprDEBUG_FLUSH;
+               vprDEBUG_NEXT(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
+                  << "to a Boost.Filesystem path.\n" << vprDEBUG_FLUSH;
+               vprDEBUG_NEXT(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
+                  << fsEx.what() << std::endl << vprDEBUG_FLUSH;
+            }
+         }
+
+         // Append a default driver search path to search_path.
+         const std::string gadget_base_dir("GADGET_BASE_DIR");
+         const std::string vj_base_dir("VJ_BASE_DIR");
+         std::string base_dir;
+         bool append_default(true);
+
+         // Try get to the value of $GADGET_BASE_DIR first.  If that fails,
+         // fall back on $VJ_BASE_DIR.
+         if ( ! vpr::System::getenv(gadget_base_dir, base_dir).success() )
+         {
+            if ( ! vpr::System::getenv(vj_base_dir, base_dir).success() )
+            {
+               // If neither $GADGET_BASE_DIR nor $VJ_BASE_DIR is set, then
+               // we cannot append a default driver search path.
+               append_default = false;
+            }
+         }
+
+         if ( append_default )
+         {
+#if defined(VPR_OS_IRIX) && defined(_ABIN32)
+            const std::string bit_suffix("32");
+#elif defined(VPR_OS_IRIX) && defined(_ABI64)
+            const std::string bit_suffix("64");
+#else
+            const std::string bit_suffix("");
+#endif
+
+            fs::path default_search_dir =
+               fs::path(base_dir, fs::native) /
+                  (std::string("lib") + bit_suffix) /
+                  std::string("gadgeteer") / std::string("drivers");
+
+            vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_VERB_LVL)
+               << "[gadget::InputManager::configAdd()] Appending default "
+               << "search path '"
+               << default_search_dir.native_directory_string() << "'\n"
+               << vprDEBUG_FLUSH;
+
+            search_path.push_back(default_search_dir);
          }
 
          // --- Load device driver dsos -- //
@@ -227,8 +292,8 @@ vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
             if ( ! driver_dso.empty() )
             {
                vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL)
-                  << "InputMgr::config: Loading driver DSO '" << driver_dso
-                  << "'\n" << vprDEBUG_FLUSH;
+                  << "[gadget::InputManager::configAdd()] Loading driver DSO '"
+                  << driver_dso << "'\n" << vprDEBUG_FLUSH;
 
                Callable functor(this);
                mDriverLoader.findAndInitDSO(driver_dso, search_path,
@@ -257,13 +322,13 @@ vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
             // (somehow) an invalid path.
             try
             {
-               boost::filesystem::path drv_path(driver_dir,
-                                                boost::filesystem::native);
+               fs::path drv_path(driver_dir, fs::native);
 
-               if (boost::filesystem::exists(drv_path))
+               if ( fs::exists(drv_path) )
                {
                   vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
-                     << "Searching for driver DSOs in '" << driver_dir << "'\n"
+                     << "[gadget::InputManager::configAdd()] Searching for "
+                     << "driver DSOs in '" << driver_dir << "'\n"
                      << vprDEBUG_FLUSH;
 
                   vpr::LibraryFinder finder(driver_dir, driver_ext);
@@ -281,16 +346,19 @@ vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
                {
                   vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
                      << clrOutBOLD(clrYELLOW, "WARNING:")
-                     << " Invalid directory for driver dso's: " << driver_dir
+                     << " [gadget::InputManager::configAdd()] Invalid "
+                     << "directory for driver dso's: " << driver_dir
                      << std::endl << vprDEBUG_FLUSH;
                }
             }
-            catch (boost::filesystem::filesystem_error& fsEx)
+            catch(fs::filesystem_error& fsEx)
             {
                vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
                   << clrOutNORM(clrRED, "ERROR:")
-                  << " File system exception caught: " << fsEx.what()
-                  << std::endl << vprDEBUG_FLUSH;
+                  << " [gadget::InputManager::configAdd()] File system "
+                  << "exception caught!\n" << vprDEBUG_FLUSH;
+               vprDEBUG_NEXT(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
+                  << fsEx.what() << std::endl << vprDEBUG_FLUSH;
             }
          }
 

@@ -1,5 +1,9 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Apr-11-2004 patrickh    The Input and Cluster Managers now append a default
+                        search path for driver and plug-in DSOs respectively.
+                        Updated to VPR 0.35.2.
+                        NEW VERSION: 0.14.4
 Apr-05-2004 patrickh    Updated to JCCL 0.17.0.
 Apr-01-2004 patrickh    Fixed MotionStar crashing bugs on Windows and array
             aronb       initialization problems in gadget::EventWindow on all
