@@ -42,20 +42,21 @@
 // Andy Himberger:    v0.0  - Inital version
 ////////////////////////////////////////////////////////////////////////////
 
-#ifndef _VRJ_INPUT_H_
-#define _VRJ_INPUT_H_
+#ifndef _GAD_INPUT_H_
+#define _GAD_INPUT_H_
 
 #include <gad/gadConfig.h>
+#include <vpr/vpr.h>
 
-#ifndef VJ_OS_Win32
+#ifndef VPR_OS_Win32
 #  include <unistd.h>
 
 #  include <termios.h>
 
 #  ifdef HAVE_SYS_PRCTL_H
 #     include <sys/prctl.h>
-#  endif      /* ifdef HAVE_SYS_PRCTL_H */
-#endif      /* ifndef VJ_OS_Win32 */
+#  endif    /* ifdef HAVE_SYS_PRCTL_H */
+#endif      /* ifndef VPR_OS_Win32 */
 
 #include <limits.h>
 #include <string.h>
@@ -245,4 +246,4 @@ protected:
 
 } // end namespace
 
-#endif   /* VJ_INPUT_H */
+#endif   /* GAD_INPUT_H */
