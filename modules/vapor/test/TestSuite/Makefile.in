@@ -44,7 +44,7 @@
 ###############################################################################$
 
 # project name...
-PROJECT_NAME = runner
+PROJECT_NAME = runner@EXEEXT@
 
 default: echo_info $(PROJECT_NAME)
 
