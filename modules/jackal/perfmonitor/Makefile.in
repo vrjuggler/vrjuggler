@@ -174,7 +174,7 @@ ifdef GLOBAL_BUILD
 endif
 
 jccl_perfmonitor.jar: $(PERFMONITOR_CLASSES)
-	$(JAR) cvf $@ $(PERFMONITOR_CLASSES)
+	$(JAR) cvf $@ $(PERFMONITOR_DIR)/*.class
 
 docs:
 	$(JDK_HOME)/bin/javadoc -d $(DOC_ROOT) -sourcepath $(srcdir)	\
