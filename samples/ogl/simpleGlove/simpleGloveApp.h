@@ -31,8 +31,8 @@
  * -----------------------------------------------------------------
  */
 
-#ifndef _WAND_APP_
-#define _WAND_APP_
+#ifndef _SIMPLE_GLOVE_APP_
+#define _SIMPLE_GLOVE_APP_
 
 #include <vjConfig.h>
 
