@@ -2,12 +2,18 @@
 
 #ifndef AJ_H
 #define AJ_H
-#include "ISoundInterface.h"
-class aj : public ISoundInterface
+#include "IAudioJuggler.h"
+#include "ajSoundInfo.h"
+#include "IAudioJuggler.h"
+#include "ajSoundFactory.h"
+#include "ajSoundFactory.h"
+class ajSoundImplementation;
+
+class aj : public IAudioJuggler
 {
 public:
 
-   aj() : ISoundInterface()
+   aj() : ISoundInterface(), mImplementation( NULL )
    {
    }
 
@@ -51,7 +57,7 @@ public:
     * @postconditions alias will point to loaded sound data
     * @semantics associate an alias to sound data.  later this alias can be used to operate on this sound data.
     */
-   virtual void associate( const std::string& alias, const SoundInfo& description )
+   virtual void associate( const std::string& alias, const ajSoundInfo& description )
    {
       this->impl().associate( alias, description );
    }
@@ -81,7 +87,7 @@ public:
     */
    virtual void getPosition( const std::string& alias, float& x, float& y, float& z )
    {
-      this->impl().setPosition( alias, x, y, z );
+      this->impl().getPosition( alias, x, y, z );
    }
 
    /**
@@ -102,28 +108,38 @@ public:
 
       if (oldImpl != NULL)
       {
+         // shutdown old api if exists
+         oldImpl->shutdownAPI();
          delete oldImpl;
          oldImpl = NULL;
       }
+
+      // startup the new API
+      mImplementation->startAPI();
    }
 
 protected:
-   SoundImplementation& impl()
+   ajSoundImplementation& impl()
    {
       if (mImplementation == NULL)
       {
          SoundFactory::instance()->createImplementation( "stub", mImplementation, result );
+         mImplementation->startAPI();
          assert( result != false && "couldn't create dummy impl" );
       }
       return *mImplementation;
    }
 private:
    /** @link dependency */
-   /*#  SoundFactory lnkSoundFactory; */
+   /*#  ajSoundFactory lnkSoundFactory; */
 
    /** @link aggregation 
     * @clientCardinality 1
     * @supplierCardinality 1*/
-   SoundImplementation* mImplementation;
+   ajSoundImplementation* mImplementation;
+        
+   /** AudioJuggler API includes objects of this type
+    * @link dependency */
+   /*#  ajSoundInfo lnkSoundInfo; */
 };
 #endif //AJ_H
