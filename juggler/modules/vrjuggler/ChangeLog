@@ -17,6 +17,7 @@ Jul-11-2000 allenb    Rewrote the way that threads call self()
 Jul-07-2000 patrick   Debugging symbols are now compiled into object files on
                       Win32 which fixes long-standing (but unreported)
                       problems with linking Juggler applications.
+Jun-29-2000 cjust     Java 1.1 compatability has been dropped from VjControl
 Jun-23-2000 patrick   Set the stereo bit in an OpenGL window on Win32 if
                       stereo is enabled in the windwo's config chunk.
                       _OLD_TERMIOS is no longer set on IRIX.  The serial
@@ -26,8 +27,11 @@ Jun-23-2000 patrick   Set the stereo bit in an OpenGL window on Win32 if
                       Added the new utility library Juggler_utils which is
                       required by most, if not all, applications after this
                       date.
+Jun-08-2000 allenb    vjApp no longer needs to be passed a vjKernel instance
+Jun-06-2000 kevn      vjGetVJMatrix() has been renamed to vjGetVjMatrix()
 ==[ 0.1.96 ]=========================
-Bug fixes for OpenGL
-
+                      Bug fixes for OpenGL
+Jan-31-2000 patrick   Improved usability of the configure script on Solaris
+Jan-28-2000 patrick   Initial configure script support for AIX
 ==[ 0.1.95 ]=========================
 
