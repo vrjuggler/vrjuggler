@@ -52,33 +52,13 @@ class vjWin32SystemFactory : public vjSystemFactory
 {
 public:
 
-   /**
-	 * POST: Returns an SGI OpenGL window
-    */
-    virtual vjGlWindow* getGLWindow();
-
-
-      // --- Singleton stuff --- //
+   // --- Singleton stuff --- //
 protected:
    /// Constructor:  Hidden, so no instantiation is allowed
    vjWin32SystemFactory()   // Do nothing, but hide
    {;}
 
    vjSingletonHeader(vjWin32SystemFactory);
-/*
-public:
-   /// Get instance of singleton object
-   static vjWin32SystemFactory* instance()
-   {
-      if (_instance == NULL)
-         _instance = new vjWin32SystemFactory;
-      return _instance;
-   }
-
-private:
-   /// The instance
-   static vjWin32SystemFactory* _instance;
-   */
 };
 
 #endif
