@@ -1,5 +1,6 @@
 DATE       AUTHOR   CHANGE
 ---------- -------- -----------------------------------------------------------
+2001-12-19 patrickh Support for building a profiled VPR library has been added.
 2001-12-13 patrickh The simulated Socket Manager separates the binding of UDP
                     and TCP sockets.
                     NEW VERSION: 0.8.1
