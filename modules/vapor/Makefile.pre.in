@@ -41,7 +41,7 @@ CONFIGURE_ARGS=	@CONFIGURE_ARGS@
 CFG_SHELL=	@CFG_SHELL@
 
 DPP_CFG_DIR=	$(top_srcdir)/Doozer++/config
-
+DPP_PKG_DIR=	$(top_srcdir)/Doozer++/config/pkgs
 VJ_M4_DIR=	$(top_srcdir)/macros
 EXT_M4_DIR=	$(top_srcdir)/external/macros
 
