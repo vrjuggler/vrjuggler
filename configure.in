@@ -1589,6 +1589,8 @@ dnl # listed are for use only in the Makefile.in's found in that tree unless
 dnl # otherwise noted.  They are used in the following way:
 dnl #
 dnl #     * APP_EXTRA_FLAGS: Extra flags for the compiler and linker.
+dnl #     * APP_EXTRA_FLAGS_PF: Extra flags for the compiler and linker when
+dnl #       building Performer applications.
 dnl #     * APP_VJ_INC_AW: The include path for the AudioWorks header files.
 dnl #     * APP_VJ_INC_SL: The include path for hte SL header files.
 dnl #     * APP_VJ_LIBS_BASIC: The basic VR Juggler library.
@@ -1676,6 +1678,10 @@ if test "$OS_TYPE" = "UNIX" ; then
     APP_EXTRA_LIBS_BASIC="$LDFLAGS $LIBS"
     APP_EXTRA_LIBS_GL="${_LIBOPENGL}"
     APP_EXTRA_LIBS_PF="${_PFOGLLIB}"
+
+    if test "x$PLATFORM" = "xLinux" ; then
+        APP_EXTRA_FLAGS_PF="-O $APP_EXTRA_FLAGS_PF"
+    fi
 elif test "$OS_TYPE" = "Win32" ; then
     APP_VJ_LIBS_BEGIN="-link -libpath:\$(VJ_BASE_DIR)/lib/debug"
     APP_VJ_LIBS_END=''
@@ -1784,6 +1790,7 @@ AC_SUBST(SL_INC)
 AC_SUBST(SL_LIB)
 
 AC_SUBST(APP_EXTRA_FLAGS)
+AC_SUBST(APP_EXTRA_FLAGS_PF)
 AC_SUBST(APP_EXTRA_INC_AW)
 AC_SUBST(APP_EXTRA_INC_SL)
 AC_SUBST(APP_VJ_LIBS_BEGIN)
