@@ -45,6 +45,8 @@ import org.vrjuggler.jccl.editors.*;
 import org.vrjuggler.tweek.beans.BeanRegistry;
 import org.vrjuggler.tweek.beans.FileLoader;
 import org.vrjuggler.tweek.beans.loader.BeanJarClassLoader;
+import org.vrjuggler.tweek.event.TweekFrameEvent;
+import org.vrjuggler.tweek.event.TweekFrameListener;
 import org.vrjuggler.tweek.services.EnvironmentService;
 import org.vrjuggler.tweek.services.EnvironmentServiceProxy;
 
@@ -53,7 +55,7 @@ import org.vrjuggler.vrjconfig.ui.ContextToolbar;
 
 public class VrjConfig
    extends JPanel
-   implements FileLoader//, TweekFrameListener
+   implements FileLoader, TweekFrameListener
 {
    public VrjConfig()
    {
@@ -96,7 +98,27 @@ public class VrjConfig
    {
       mEnvService = new EnvironmentServiceProxy();
    }
-
+   
+   public void frameStateChanged(TweekFrameEvent e)
+   {
+      if (TweekFrameEvent.FRAME_CLOSE == e.getType())
+      {
+         try
+         {
+            JInternalFrame[] frames = mDesktop.getAllFrames();
+            for (int i = 0 ; i < frames.length ; i++)
+            {
+               frames[i].setClosed(true);
+            }
+         }
+         catch (java.beans.PropertyVetoException ex)
+         {
+            System.out.println(ex);
+            ex.printStackTrace();
+         }
+      }
+   }
+   
    //--------------------------------------------------------------------------
    // FileLoader implementation
    //--------------------------------------------------------------------------
@@ -309,6 +331,14 @@ public class VrjConfig
       public void removeActionListener(ActionListener listener)
       {
          listenerList.remove(ActionListener.class, listener);
+      }
+
+      /**
+       * Return the ConfigContext associated with the ConfigIFrame.
+       */
+      public ConfigContext getConfigContext()
+      {
+         return ( mToolbar.getConfigContext() );
       }
       
       /**
