@@ -140,7 +140,7 @@
    <!-- SimAnalog property "eventWindowProxy". -->
    <xsl:template match="SimAnalog/eventWindowProxy">
       <xsl:element name="event_window_proxy">
-         <xsl:apply-templates select="./*" />
+         <xsl:value-of select="." />
       </xsl:element>
    </xsl:template>
 
@@ -161,7 +161,7 @@
    <!-- SimAnalog property "anastep". -->
    <xsl:template match="SimAnalog/anastep">
       <xsl:element name="delta">
-         <xsl:apply-templates select="./*" />
+         <xsl:value-of select="." />
       </xsl:element>
    </xsl:template>
 
@@ -437,7 +437,7 @@
    <!-- SimDigital property "eventWindowProxy". -->
    <xsl:template match="SimDigital/eventWindowProxy">
       <xsl:element name="event_window_proxy">
-         <xsl:apply-templates select="./*" />
+         <xsl:value-of select="." />
       </xsl:element>
    </xsl:template>
 
@@ -466,14 +466,14 @@
    <!-- displaySystem property "numpipes". -->
    <xsl:template match="displaySystem/numpipes">
       <xsl:element name="number_of_pipes">
-         <xsl:apply-templates select="./*" />
+         <xsl:value-of select="." />
       </xsl:element>
    </xsl:template>
 
    <!-- displaySystem property "xpipes". -->
    <xsl:template match="displaySystem/xpipes">
       <xsl:element name="x11_pipes">
-         <xsl:apply-templates select="./*" />
+         <xsl:value-of select="." />
       </xsl:element>
    </xsl:template>
 
@@ -889,7 +889,7 @@
    <!-- SimGloveGesture property "eventWindowProxy". -->
    <xsl:template match="SimGloveGesture/eventWindowProxy">
       <xsl:element name="event_window_proxy">
-         <xsl:apply-templates select="./*" />
+         <xsl:value-of select="." />
       </xsl:element>
    </xsl:template>
 
@@ -1041,8 +1041,31 @@
 
    <!-- KeyModPair property "modKey". -->
    <xsl:template match="KeyModPair/modKey">
+      <xsl:variable name="modifier_key">
+         <xsl:value-of select="." />
+      </xsl:variable>
+
       <xsl:element name="modifier_key">
-         <xsl:apply-templates select="./*" />
+         <xsl:choose>
+            <xsl:when test="$modifier_key = 0">
+               <xsl:text>NONE</xsl:text>
+            </xsl:when>
+            <xsl:when test="$modifier_key = 5">
+               <xsl:text>SHIFT</xsl:text>
+            </xsl:when>
+            <xsl:when test="$modifier_key = 6">
+               <xsl:text>CTRL</xsl:text>
+            </xsl:when>
+            <xsl:when test="$modifier_key = 7">
+               <xsl:text>ALT</xsl:text>
+            </xsl:when>
+            <xsl:when test="$modifier_key = -1">
+               <xsl:text>ANY</xsl:text>
+            </xsl:when>
+            <xsl:otherwise>
+               <xsl:value-of select="." />
+            </xsl:otherwise>
+         </xsl:choose>
       </xsl:element>
    </xsl:template>
 
@@ -1278,6 +1301,13 @@
       </xsl:element>
    </xsl:template>
 
+   <!-- PosProxy property "position_filters". -->
+   <xsl:template match="PosProxy/position_filters">
+      <xsl:element name="position_filters">
+         <xsl:apply-templates select="./*" />
+      </xsl:element>
+   </xsl:template>
+
 
 <!-- SimPosition =========================================================== -->
    <!-- Rename SimPosition to simulated_positional_device. -->
@@ -1296,7 +1326,7 @@
    <!-- SimPosition property "eventWindowProxy". -->
    <xsl:template match="SimPosition/eventWindowProxy">
       <xsl:element name="event_window_proxy">
-         <xsl:apply-templates select="./*" />
+         <xsl:value-of select="." />
       </xsl:element>
    </xsl:template>
 
@@ -1310,41 +1340,48 @@
    <!-- SimPosition property "initialPos". -->
    <xsl:template match="SimPosition/initialPos">
       <xsl:element name="initial_position">
-         <xsl:apply-templates select="./*" />
+         <xsl:value-of select="." />
       </xsl:element>
    </xsl:template>
 
    <!-- SimPosition property "initialRot". -->
    <xsl:template match="SimPosition/initialRot">
       <xsl:element name="initial_rotation">
-         <xsl:apply-templates select="./*" />
+         <xsl:value-of select="." />
       </xsl:element>
    </xsl:template>
 
    <!-- SimPosition property "dtrans". -->
    <xsl:template match="SimPosition/dtrans">
       <xsl:element name="translation_delta">
-         <xsl:apply-templates select="./*" />
+         <xsl:value-of select="." />
       </xsl:element>
    </xsl:template>
 
    <!-- SimPosition property "drot". -->
    <xsl:template match="SimPosition/drot">
       <xsl:element name="rotation_delta">
-         <xsl:apply-templates select="./*" />
+         <xsl:value-of select="." />
       </xsl:element>
    </xsl:template>
 
    <!-- SimPosition property "transCoordSystem". -->
    <xsl:template match="SimPosition/transCoordSystem">
       <xsl:element name="translation_coordinate_system">
-         <xsl:apply-templates select="./*" />
+         <xsl:value-of select="." />
       </xsl:element>
    </xsl:template>
 
    <!-- SimPosition property "rotCoordSystem". -->
    <xsl:template match="SimPosition/rotCoordSystem">
       <xsl:element name="rotation_coordinate_system">
+         <xsl:value-of select="." />
+      </xsl:element>
+   </xsl:template>
+
+   <!-- SimPosition property "position_filters". -->
+   <xsl:template match="SimPosition/position_filters">
+      <xsl:element name="position_filters">
          <xsl:apply-templates select="./*" />
       </xsl:element>
    </xsl:template>
@@ -1358,16 +1395,20 @@
             <xsl:value-of select="@name"/>
          </xsl:attribute>
          <xsl:attribute name="version">
-            <xsl:text>2</xsl:text>
+            <xsl:text>1</xsl:text>
          </xsl:attribute>
          <xsl:apply-templates select="./*" />
       </xsl:element>
    </xsl:template>
 
+   <!-- proxyAlias property "aliasName" which has been removed. -->
+   <xsl:template match="proxyAlias/aliasName">
+   </xsl:template>
+
    <!-- proxyAlias property "proxyPtr". -->
    <xsl:template match="proxyAlias/proxyPtr">
       <xsl:element name="proxy">
-         <xsl:apply-templates select="./*" />
+         <xsl:value-of select="." />
       </xsl:element>
    </xsl:template>
 
@@ -1606,6 +1647,30 @@
       <xsl:element name="tracker_proxy">
          <xsl:apply-templates select="./*" />
       </xsl:element>
+   </xsl:template>
+
+   <!--
+      surfaceViewport property "view" which had its enumeration symbols change.
+   -->
+   <xsl:template match="surfaceViewport/view">
+      <xsl:element name="view">
+         <xsl:variable name="view">
+            <xsl:value-of select="."/>
+         </xsl:variable>
+
+         <xsl:choose>
+            <xsl:when test="$view = 1 or starts-with($view, left_eye)">
+               <xsl:text>Left Eye</xsl:text>
+            </xsl:when>
+            <xsl:when test="$view = 2 or starts-with($view, right_eye)">
+               <xsl:text>Right Eye</xsl:text>
+            </xsl:when>
+            <xsl:when test="$view = 3 or starts-with($view, stereo)">
+               <xsl:text>Stereo</xsl:text>
+            </xsl:when>
+         </xsl:choose>
+      </xsl:element>
+      <xsl:value-of select="$newline"/>
    </xsl:template>
 
 
@@ -1925,7 +1990,7 @@
    <!-- JugglerUser property "headPos". -->
    <xsl:template match="JugglerUser/headPos">
       <xsl:element name="head_position">
-         <xsl:apply-templates select="./*" />
+         <xsl:value-of select="." />
       </xsl:element>
    </xsl:template>
 
