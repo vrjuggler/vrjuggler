@@ -17,7 +17,6 @@ AW_INCLUDES 	= @APP_EXTRA_INC_AW@
 AW_LIBS		= @APP_EXTRA_LIBS_AW@
 VJ_INCLUDES	= @INCLUDES@ $(AW_INCLUDES) -I$(VJ_BASE_DIR)/include	\
                   -I$(srcdir) -I$(VJ_BASE_DIR)/samples/nav		\
-                  -I$(VJ_BASE_DIR)/samples/tools			\
                   -I$(VJ_BASE_DIR)/samples/pf/pfTools
 VJ_LIBS		= @APP_VJ_LIBS_BASIC@ @APP_VJ_LIBS_GL@ @APP_VJ_LIBS_PF@ @APP_VJ_LIBS_AW@ @APP_LIBS_BASIC@ 
 
@@ -42,8 +41,7 @@ vpath %.cpp $(VJ_BASE_DIR)/samples/pf/pfTools
 # use -L/usr/lib64.
 EXTRA_LIBS	= @APP_EXTRA_LIBS_BEGIN@ @APP_EXTRA_LIBS_BASIC@ $(AW_LIBS) @APP_EXTRA_LIBS_PF@ @APP_EXTRA_LIBS_GL@ @APP_EXTRA_LIBS_END@
 
-COMMON_OBJECTS	= fileIO.@OBJ_FILE_SUFFIX@		\
-                  pfFileIO.@OBJ_FILE_SUFFIX@		\
+COMMON_OBJECTS	= pfFileIO.@OBJ_FILE_SUFFIX@		\
                   pfTerryCollide.@OBJ_FILE_SUFFIX@	\
                   pfTerryPogoCollide.@OBJ_FILE_SUFFIX@	\
                   pfTerryBoxCollide.@OBJ_FILE_SUFFIX@	\
