@@ -61,8 +61,9 @@ TEX_BINDIR?=	$(TEX_DIR)/bin/i386-linux
 DVIPDF?=	dvipdf
 DVIPS?=		dvips
 FOP?=		sh $(DOCBOOK_ROOT)/fop-$(FOP_VERSION)/fop.sh
-HTML2TXT?=	/usr/bin/links
-HTML2TXTOPTS?=	-dump
+HTML2TXT?=	html2text
+HTML2TXTOPTS?=	-ascii -nobs -style pretty -width 76 -rcfile html2text.rc
+HTML2TXTFILE?=	file:$<
 JADE?=		openjade -V tex-backend
 JADEPROC?=	$(DOCBOOK_ROOT)/jadeproc.pl
 JADETEX?=	$(TEX_BINDIR)/jadetex
@@ -245,7 +246,7 @@ else
 endif
 
 .html.txt:
-	$(HTML2TXT) $(HTML2TXTOPTS) $(EXTRA_HTML2TXTOPTS) $< > $@
+	$(HTML2TXT) $(HTML2TXTOPTS) $(EXTRA_HTML2TXTOPTS) $(HTML2TXTFILE) > $@
 
 #.xml.txt:
 #ifeq ($(XSLT_TOOL), Xalan)
