@@ -126,7 +126,7 @@ public:
       return PR_Sleep(PR_SecondsToInterval(seconds));
    }
 
-   static int gettimeofday (struct timeval* tp, struct timezone* tzp = NULL)
+   static int gettimeofday(struct timeval* tp, struct timezone* tzp = NULL)
    {
       boost::ignore_unused_variable_warning(tzp);
       PRTime now = PR_Now();
@@ -141,10 +141,12 @@ public:
    {
       return PR_ntohs(conversion);
    }
+
    static vpr::Uint32 Ntohl(vpr::Uint32 conversion)
    {
       return PR_ntohl(conversion);
    }
+
    static vpr::Uint64 Ntohll(vpr::Uint64 conversion)
    {
       vpr::Uint64 ret_val;
@@ -160,14 +162,17 @@ public:
       }
       return ret_val;
    }
+
    static vpr::Uint16 Htons(vpr::Uint16 conversion)
    {
       return PR_htons(conversion);
    }
+
    static vpr::Uint32 Htonl(vpr::Uint32 conversion)
    {
       return PR_htonl(conversion);
    }
+
    static vpr::Uint64 Htonll(vpr::Uint64 conversion)
    {
       vpr::Uint64 ret_val;
@@ -184,7 +189,7 @@ public:
       return ret_val;
    }
 
-   static ReturnStatus getenv (const std::string& name, std::string& result)
+   static ReturnStatus getenv(const std::string& name, std::string& result)
    {
       char* val;
       ReturnStatus status;
@@ -207,8 +212,7 @@ public:
    /*
    * If value is "" then it either unsets the variable or clears it
    */
-   static ReturnStatus setenv (const std::string& name,
-                               const std::string& value)
+   static ReturnStatus setenv(const std::string& name, const std::string& value)
    {
       // NSPR requires form of "name=value"
       // NSPR takes possesion of the string memory, so we just leak here
@@ -241,11 +245,16 @@ public:
 
       //PR_SI_HOSTNAME
       //PR_SI_SYSNAME
-      PRStatus ret_val = PR_GetSystemInfo( PR_SI_HOSTNAME, hn_buf, SYS_INFO_BUFFER_LENGTH );
+      PRStatus ret_val = PR_GetSystemInfo(PR_SI_HOSTNAME, hn_buf,
+                                          SYS_INFO_BUFFER_LENGTH);
       if ( ret_val == PR_SUCCESS )
+      {
          return std::string(hn_buf);
+      }
       else
+      {
          return std::string("<hostname-lookup failed>");
+      }
    }
 };
 
