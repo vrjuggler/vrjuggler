@@ -65,6 +65,10 @@
             Util
             ..
             md
+                DARWIN
+                    DynLoad
+                    ..
+                ..
                 NSPR
                     DynLoad
                     ..
