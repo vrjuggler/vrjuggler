@@ -37,6 +37,7 @@
 /* Define all of the following if building on IRIX. */
 #undef VJ_OS_SGI
 #undef _BSD_TYPES
+#undef _OLD_TERMIOS
 
 /* Define to be either IRIX5 or IRIX6 depending on your system. */
 #undef IRIXREL
