@@ -30,10 +30,11 @@
 #include <vrj/Kernel/User.h>
 #include <vrj/Kernel/App.h>
 #include <vrj/Display/SimViewport.h>
-#include <vrj/Display/Viewport.h>
-#include <vrj/Draw/OGL/GlApp.h>
-#include <vrj/Display/Projection.h>
 #include <vrj/Display/CameraProjection.h>
+#include <vrj/Display/Frustum.h>
+#include <vrj/Display/Projection.h>
+#include <vrj/Draw/OGL/GlApp.h>
+#include <vrj/Display/Viewport.h>
 #include <vrj/Kernel/Kernel.h>
 #include <vrj/Display/Display.h>
 #include <pyjutil/InterpreterGuard.h>
@@ -678,6 +679,14 @@ inline tuple vrj_Viewport_getOriginAndSize_wrapper(vrj::Viewport* vp)
    return make_tuple(xo, yo, xs, ys);
 }
 
+template<typename OBJ_TYPE, typename DATA_TYPE>
+void setArrayElement(OBJ_TYPE* obj, const unsigned i, DATA_TYPE value)
+{
+   (*obj)[i] = value;
+}
+
+template void setArrayElement(vrj::Frustum*, const unsigned, float);
+
 
 }// namespace 
 
@@ -709,6 +718,28 @@ BOOST_PYTHON_MODULE(vrj)
         .def("config", &vrj::Display::config, &vrj_Display_Wrapper::default_config)
 //        .def(self_ns::str(self))
     ;
+
+    scope* vrj_Frustum_scope = new scope(
+    class_< vrj::Frustum >("Frustum", init<  >())
+        .def(init< const vrj::Frustum & >())
+        .def("setBottomLeftTopRight", &vrj::Frustum::setBottomLeftTopRight)
+        .def("setNearFar", &vrj::Frustum::setNearFar)
+        .def("set", &vrj::Frustum::set)
+        .def("__getitem__", (float& (vrj::Frustum::*)(int)) &vrj::Frustum::operator[], return_value_policy<copy_non_const_reference>())
+        .def("__setitem__", (void (*)(vrj::Frustum*, const unsigned, float)) &setArrayElement)
+//        .def(self_ns::str(self))
+    );
+
+    enum_< vrj::Frustum::entry >("entry")
+        .value("VJ_TOP", vrj::Frustum::VJ_TOP)
+        .value("VJ_BOTTOM", vrj::Frustum::VJ_BOTTOM)
+        .value("VJ_LEFT", vrj::Frustum::VJ_LEFT)
+        .value("VJ_FAR", vrj::Frustum::VJ_FAR)
+        .value("VJ_NEAR", vrj::Frustum::VJ_NEAR)
+        .value("VJ_RIGHT", vrj::Frustum::VJ_RIGHT)
+    ;
+
+    delete vrj_Frustum_scope;
 
     scope* vrj_Projection_scope = new scope(
     class_< vrj::Projection, boost::noncopyable, vrj_Projection_Wrapper >("Projection", init<  >())

@@ -46,6 +46,11 @@ exclude(GlApp.getSoundManager)
 User = Class('vrj::User', 'vrj/Kernel/User.h')
 exclude(User.getHeadPosProxy)
 
+# -----------------------------------------------------------------------------
+# XXX: The classes beyond this point have questinoable value.  They are not
+# needed for applicatinos, but they can be useful for simplifying work on
+# Python-based extensions to VR Juggler itself.
+# -----------------------------------------------------------------------------
 Display = Class('vrj::Display', 'vrj/Display/Display.h')
 set_policy(Display.getViewport, return_internal_reference())
 
@@ -67,3 +72,6 @@ exclude(Viewport.outStream)
 SimViewport = Class('vrj::SimViewport', 'vrj/Display/SimViewport.h')
 set_policy(SimViewport.getDrawSimInterface, return_internal_reference())
 exclude(SimViewport.outStream)
+
+Frustum = Class('vrj::Frustum', 'vrj/Display/Frustum.h')
+exclude(Frustum.frust)
