@@ -69,7 +69,7 @@ vpr::ReturnStatus SocketDatagramImplBSD::recvfrom (void* msg,
                                                    vpr::Uint32& bytes_read,
                                                    const vpr::Interval timeout)
 {
-#ifdef VPR_OS_IRIX
+#if defined(VPR_OS_IRIX) || defined(VPR_OS_HPUX)
    int fromlen;
 #else
    socklen_t fromlen;
