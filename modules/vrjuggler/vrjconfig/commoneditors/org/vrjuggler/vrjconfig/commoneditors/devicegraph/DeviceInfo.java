@@ -192,6 +192,39 @@ public class DeviceInfo
       }
    }
 
+   /**
+    * Adds the given number of units to the artificial unit property and
+    * stores the result in the given unit type map.  If there is already an
+    * artificial unit property for the given unit type in the map, then
+    * <code>numUnits</code> are added to the current set of units.
+    *
+    * @param unitTypeMap        the unit type map providing a mapping from
+    *                           unit types (instances of
+    *                           <code>java.lang.Integer</code>) to the
+    *                           artificial unit property for that type
+    * @param unitType           the type of the artificial unit property
+    *                           (one of the <code>UnitConstants</code>
+    *                           values)
+    * @param numUnits           the number of units to add to the artificial
+    *                           unit property
+    *
+    * @see UnitConstants
+    */
+   public static void addArtificialUnits(Map unitTypeMap, Integer unitType,
+                                         int numUnits)
+   {
+      if ( unitTypeMap.get(unitType) == null )
+      {
+         unitTypeMap.put(unitType, new Integer(numUnits));
+      }
+      else
+      {
+         Integer cur_count = (Integer) unitTypeMap.get(unitType);
+         unitTypeMap.put(unitType,
+                         new Integer(cur_count.intValue() + numUnits));
+      }
+   }
+
    public void nameChanged(ConfigElementEvent evt)
    {
       /* Do nothing. */ ;
