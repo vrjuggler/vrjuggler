@@ -50,7 +50,7 @@ namespace vpr
    template<class> class Selector_t;
    template<class> class SerialPort_t;
 
-   template<class, class> class IOStatsStrategyAdapter;
+   template<class BASE_ONE, class BASE_TWO> class IOStatsStrategyAdapter;
 
 #ifdef VPR_USE_NSPR
 #  define VPR_IO_DOMAIN_INCLUDE VPR_DOMAIN_NSPR
@@ -60,7 +60,7 @@ namespace vpr
       typedef class SocketImplNSPR           SocketImpl;
       typedef class SocketDatagramImplNSPR   SocketDatagramImpl;
       typedef class SocketStreamImplNSPR     SocketStreamImpl;
-      typedef IOStatsStrategyAdapter<class BaseIOStatsStrategy, class BandwidthIOStatsStrategy>     SocketIOStatsStrategy;
+      typedef class IOStatsStrategyAdapter<class BaseIOStatsStrategy, class BandwidthIOStatsStrategy>     SocketIOStatsStrategy;
    };
 
    typedef class InetAddrNSPR InetAddr;
