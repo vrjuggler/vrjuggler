@@ -12,6 +12,7 @@
 #include <Math/vjVec3.h>
 #include <math.h>
 
+#include <Kernel/GL/vjGlContextData.h>
 #include <Input/InputManager/vjGloveInterface.h>
 #include <Input/InputManager/vjGestureInterface.h>
 #include <Input/InputManager/vjPosInterface.h>
@@ -99,13 +100,13 @@ public:
    float conePos[3];
    float spherePos[3];
    
-   Scene scene;
+   vjGlContextData<Scene> scene;
 };
 
 inline void gloveApp::contextInit()
 {
     // Init the scene's displaylists for this context.
-    scene.init();
+    scene->init();
 }
 
 //: Constructor
@@ -168,6 +169,7 @@ inline void gloveApp::initGlState()
     glEnable(GL_LIGHTING);
     glEnable(GL_LIGHT0);
     glShadeModel(GL_SMOOTH); 
+    glEnable(GL_CULL_FACE);   
 }
 
 inline void gloveApp::myDraw()
@@ -182,34 +184,37 @@ inline void gloveApp::myDraw()
     // draw the floor
     glPushMatrix();
 	glScalef( 3.0f, 1.0f, 3.0f );
-	scene.drawFloor();
+	scene->drawFloor();
     glPopMatrix();
     
     // draw cube.
     glPushMatrix();
 	glColor3f( 0.4f, 0.1f, 0.2f );
 	glTranslatef( cubePos[0], cubePos[1], cubePos[2] );
-	scene.drawCube( 1.0f, 1.0f, 1.0f, cubeSelected );
+	scene->drawCube( 1.0f, 1.0f, 1.0f, cubeSelected );
     glPopMatrix();
     
     // draw cone.
     glPushMatrix();
 	glColor3f( 0.6f, 0.2f, 0.6f );
 	glTranslatef( conePos[0], conePos[1], conePos[2] );
-	scene.drawCone( 1.0f, 1.0f, 1.0f, coneSelected );
+	scene->drawCone( 1.0f, 1.0f, 1.0f, coneSelected );
     glPopMatrix();
     
     // draw Sphere.
     glPushMatrix();
 	glColor3f( 0.8f, 0.8f, 0.2f );
 	glTranslatef( spherePos[0], spherePos[1], spherePos[2] );
-	scene.drawSphere( 1.0f, 1.0f, 1.0f, sphereSelected );
+	scene->drawSphere( 1.0f, 1.0f, 1.0f, sphereSelected );
     glPopMatrix();
     
     // draw table.
     glPushMatrix();
 	glTranslatef( 0.0f, 0.0f, -20.0f );
-	scene.drawTable();
+	glEnable(GL_TEXTURE_2D);
+	scene->renderWoodTexture();
+	scene->drawTable();
+	glDisable(GL_TEXTURE_2D);
     glPopMatrix();
 }
 
