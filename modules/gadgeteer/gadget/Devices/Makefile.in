@@ -42,7 +42,7 @@ include @topdir@/make.defs.mk
 # Prefix for recursive stuff.
 DIRPRFX		= gadget/Devices/
 
-include $(top_srcdir)/drivers.mk
+include @UNIX_GADGETROOT_ABS@/drivers.mk
 
 # Subdirectories to compile.
 SUBDIR=		$(DRIVERS)
