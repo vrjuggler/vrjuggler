@@ -30,26 +30,11 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _VPR_IOSYS_UNIX_H_
-#define _VPR_IOSYS_UNIX_H_
-
-#include <vprConfig.h>
+#include <md/POSIX/IOSysUnix.h>
 
 
 namespace vpr {
 
-// Base class for all for the IOSys class.
-// The "real" impl is in an included file.
-class IOSysUnix
-{
-public:
-   typedef int Handle;
-   static const Handle NullHandle;
-};
-
-
+const IOSysUnix::Handle IOSysUnix::NullHandle = -1;
 
 }; // End of vpr namespace
-
-
-#endif   /* _VPR_IOSYS_UNIX_H_ */
