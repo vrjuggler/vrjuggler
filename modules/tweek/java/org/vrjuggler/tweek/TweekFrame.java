@@ -168,9 +168,9 @@ public class TweekFrame extends JFrame implements TreeModelRefreshListener,
       this.setTitle("Tweek JavaBean Loader");
 
       // Define the Connect option in the Network menu.
-      m_menu_net_connect.setActionCommand("Connect to ORB ...");
       m_menu_net_connect.setMnemonic('C');
       m_menu_net_connect.setText("Connect to ORB ...");
+      m_menu_net_connect.setAccelerator(javax.swing.KeyStroke.getKeyStroke(67, KeyEvent.CTRL_MASK | KeyEvent.SHIFT_MASK, false));
       m_menu_net_connect.addActionListener(new ActionListener()
          {
             public void actionPerformed (ActionEvent e)
@@ -212,6 +212,7 @@ public class TweekFrame extends JFrame implements TreeModelRefreshListener,
 
       m_menu_beans_load.setMnemonic('L');
       m_menu_beans_load.setText("Load Beans ...");
+      m_menu_beans_load.setAccelerator(javax.swing.KeyStroke.getKeyStroke(66, KeyEvent.CTRL_MASK, false));
       m_menu_beans_load.addActionListener(new ActionListener ()
          {
             public void actionPerformed (ActionEvent e)
@@ -233,6 +234,7 @@ public class TweekFrame extends JFrame implements TreeModelRefreshListener,
 
       m_menu_file_open.setText("Open ...");
       m_menu_file_open.setMnemonic('O');
+      m_menu_file_open.setAccelerator(javax.swing.KeyStroke.getKeyStroke(79, KeyEvent.CTRL_MASK, false));
 /*
       m_menu_file_open.addActionListener(new ActionListener ()
          {
@@ -245,6 +247,7 @@ public class TweekFrame extends JFrame implements TreeModelRefreshListener,
 
       m_menu_file_exit.setText("Exit");
       m_menu_file_exit.setMnemonic('X');
+      m_menu_file_exit.setAccelerator(javax.swing.KeyStroke.getKeyStroke(88, KeyEvent.CTRL_MASK, false));
       m_menu_file_exit.addActionListener(new ActionListener ()
          {
             public void actionPerformed(ActionEvent e)
