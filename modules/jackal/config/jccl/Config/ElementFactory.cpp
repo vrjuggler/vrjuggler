@@ -31,6 +31,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include <jccl/jcclConfig.h>
+#include <vpr/vpr.h>
 #include <jccl/Util/Debug.h>
 #include <jccl/Config/ElementFactory.h>
 #include <jccl/Config/ConfigDefinitionReader.h>
@@ -53,13 +54,19 @@ namespace jccl
 
    void ElementFactory::loadDefs(const std::string& path)
    {
+#ifdef VPR_OS_Win32
+      static const std::string path_sep(";");
+#else
+      static const std::string path_sep(":");
+#endif
+
       // Split the path on the native separator character
       std::vector<std::string> search_path;
       std::string::size_type sep_index = 0;
       while (sep_index != std::string::npos)
       {
-         // This will not work on windows since the path seperator is ";" not ":"
-         std::string::size_type next_sep_index = path.find_first_of(":", sep_index);
+         std::string::size_type next_sep_index =
+            path.find_first_of(path_sep, sep_index);
 
          std::string dir_str;
          
