@@ -29,9 +29,10 @@ VJGUI_SOURCES = VjGUI/VjControl.java		\
 		VjGUI/HTMLFrame.java		\
 		VjGUI/SuffixFilter.java         \
 		VjGUI/DependencyFrame.java      \
-		VjGUI/CoreDBEvent.java		\
 		VjGUI/CoreDBListener.java	\
-		VjGUI/LogMessageEvent.java	\
+		VjGUI/CoreDBEvent.java		\
 		VjGUI/LogMessageListener.java	\
+		VjGUI/LogMessageEvent.java	\
+		VjGUI/ChunkDBTreeModelFactory.java 
 
 VJGUI_OBJS = ${VJGUI_SOURCES:.java=.class}
