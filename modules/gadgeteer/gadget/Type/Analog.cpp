@@ -40,6 +40,13 @@
 namespace gadget
 {
 
+Analog::Analog()
+   : mMin(0.0f), mMax(0.0f)
+{}
+
+Analog::~Analog()
+{}
+
 vpr::ReturnStatus Analog::writeObject(vpr::ObjectWriter* writer)
 {
    //std::cout << "[Remote Input Manager] In Analog write" << std::endl;
@@ -180,6 +187,30 @@ AnalogData Analog::getAnalogData(int devNum)
    }
 }
 
+void Analog::addAnalogSample(const std::vector<AnalogData>& anaSample)
+{
+   // Locks and then swaps the indices.
+   mAnalogSamples.lock();
+   mAnalogSamples.addSample(anaSample);
+   mAnalogSamples.unlock();
+}
+
+void Analog::swapAnalogBuffers()
+{
+   mAnalogSamples.swapBuffers();
+}
+
+const Analog::SampleBuffer_t::buffer_t&
+Analog::getAnalogDataBuffer()
+{
+   return mAnalogSamples.stableBuffer();
+}
+
+std::string Analog::getBaseType()
+{
+   return std::string("Analog");
+}
+
 // Gives a value that will range from [min() <= n <= max()].
 // This returns a value that is normalized to the range of mMin <= n <= mMax
 // if n < mMin or n > mMax, then result = mMin or mMax respectively.
@@ -199,6 +230,26 @@ void Analog::normalizeMinToMax(const float& plainJaneValue,
 
    // since [tmin/tmax...tmax/tmax] == [0.0f...1.0f], the normalized value will be value/tmax
    normedFromMinToMax = tvalue / tmax;
+}
+
+float Analog::getMin() const
+{
+   return mMin;
+}
+
+float Analog::getMax() const
+{
+   return mMax;
+}
+
+void Analog::setMin(float mIn)
+{
+   mMin = mIn;
+}
+
+void Analog::setMax(float mAx)
+{
+   mMax = mAx;
 }
 
 } // End of gadget namespace

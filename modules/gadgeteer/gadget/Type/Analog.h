@@ -70,14 +70,9 @@ public:
     * @post Set device abilities.
     * @note Must be called from all derived classes.
     */
-   Analog() : mMin( 0.0f ), mMax( 1.0f )
-   {
-      ;
-   }
+   Analog();
 
-   virtual ~Analog()
-   {
-   }
+   virtual ~Analog();
 
    virtual vpr::ReturnStatus writeObject(vpr::ObjectWriter* writer);
 
@@ -117,33 +112,18 @@ public:
    * The data samples passed in will then be modified by any local filters.
    * @post Sample is added to the buffers and the local filters are run on that sample.
    */
-   void addAnalogSample(const std::vector< AnalogData >& anaSample)
-   {
-      // Locks and then swaps the indices.
-      mAnalogSamples.lock();
-      mAnalogSamples.addSample(anaSample);
-      mAnalogSamples.unlock();
-   }
+   void addAnalogSample(const std::vector< AnalogData >& anaSample);
 
    /** Swap the analog data buffers.
     * @post If ready has values, then copy values from ready to stable
     *        if not, then stable keeps its old values
     */
-   void swapAnalogBuffers()
-   {
-      mAnalogSamples.swapBuffers();
-   }
+   void swapAnalogBuffers();
 
 
-   const SampleBuffer_t::buffer_t& getAnalogDataBuffer()
-   {
-      return mAnalogSamples.stableBuffer();
-   }
+   const SampleBuffer_t::buffer_t& getAnalogDataBuffer();
 
-   virtual std::string getBaseType()
-   {
-      return std::string("Analog");
-   }
+   virtual std::string getBaseType();
 
 protected:
    /**
@@ -160,22 +140,10 @@ protected:
     * This value is used to normalize the return value of getAnalogData.
     * @note this function is not needed by an application author.
     */
-   float getMin() const
-   {
-      return mMin;
-   }
-   float getMax() const
-   {
-      return mMax;
-   }
-   void setMin( float mIn )
-   {
-      mMin = mIn;
-   }
-   void setMax( float mAx )
-   {
-      mMax = mAx;
-   }
+   float getMin() const;
+   float getMax() const;
+   void setMin(float mIn);
+   void setMax(float mAx);
 
 private:
    float mMin, mMax;
