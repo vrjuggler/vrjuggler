@@ -139,13 +139,6 @@ void UserData::updateNavigation()
 // cubesApp methods.
 // ----------------------------------------------------------------------------
 
-static void
-runOnce (void* arg) {
-    vjDEBUG(vjDBG_ALL, 0) << "--> runOnce starting!\n" << vjDEBUG_FLUSH;
-    vjThread::sleep(5);
-    vjDEBUG(vjDBG_ALL, 0) << "--> runOnce exiting!\n" << vjDEBUG_FLUSH;
-}
-
 // Execute any initialization needed before the API is started.  Put device
 // initialization here.
 void cubesApp::init()
@@ -158,8 +151,6 @@ void cubesApp::init()
 
    UserData* new_user=NULL;
    mUserData = std::vector<UserData*>(num_users);
-
-   vjThread* blah = new vjThread(runOnce);
 
    switch (num_users)
    {
