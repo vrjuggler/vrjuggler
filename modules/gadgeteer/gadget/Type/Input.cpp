@@ -42,7 +42,7 @@ bool vjInput::config( vjConfigChunk *c)
 }
 
 
-void vjInput::SetPort(char* serialPort)
+void vjInput::SetPort(const char* serialPort)
 {
 if (myThread != NULL) {
      cerr << "Cannot change the serial Port while active\n";
