@@ -275,61 +275,6 @@ public class PerformanceModule extends DefaultCoreModule {
     }
 
 
-    /** Read a stream/file using the "vjc_performance" protocol
-     *  used by juggler 1.0.x (and currentl for output from
-     *  jccl::PerfDataBuffer).
-     */
-    public void readVjcPerformanceStream (ConfigStreamTokenizer st) {
-	String perfdatatype, name;
-	int num;
-	PerfDataCollector p;
-
-	try {
-            for (;;) {
-
-                perfdatatype = "";
-                for (;;) {
-                    st.nextToken();
-                    if (st.ttype == st.TT_EOF)
-                        break;
-                    if (st.ttype == st.TT_WORD)
-                        if (st.sval.equalsIgnoreCase ("PerfData1"))
-                            break;
-                }
-
-                if (st.ttype != st.TT_EOF) {
-
-                    st.nextToken();
-                    name = st.sval;
-                    st.nextToken();
-                    num = Integer.parseInt(st.sval);
-                
-                    //System.out.println ("read perf info for " + name + "\nnum is " + num);
-                
-                    p = getCollector (name);
-                    if (p == null) {
-			p = new NumberedPerfDataCollector (name, num, max_samples);
-			addCollector (p);
-		    }
-                    if (p instanceof NumberedPerfDataCollector) {
-                        ((NumberedPerfDataCollector)p).read (st);
-                    }
-                    else {
-                        System.out.println ("perfdatacollector type mismatch");
-                    }
-                }
-            }
-
-	}
-	catch (IOException e) {
-	    // I always seem to hit an exception at eof of a data file...
-	    // so for now I'm just gonna ignore it.  this isn't good.
-	    //System.out.println ("ERROR - " + e);
-	    //System.out.println ("at line " + st.lineno());
-	    //e.printStackTrace();
-	}
-    }
-
 
     public String dumpAverages (int preskip, int postskip, boolean doanomaly, float anomalycutoff) {
 	PerfDataCollector p;
@@ -369,20 +314,8 @@ public class PerformanceModule extends DefaultCoreModule {
             FileInputStream temp_in = new FileInputStream (f);
             int ch = temp_in.read();
             if (ch != '<') {
-		// old format
-		ConfigStreamTokenizer st = 
-		    new ConfigStreamTokenizer(new FileReader (f));
-
-		// read that first info line
-		st.eolIsSignificant(true);
-		do {
-		    st.nextToken();
-		} while (st.ttype != '\n');
-		st.eolIsSignificant(false);
-		st.quoteChar('"');
-
-		removeAllData();
-		readVjcPerformanceStream (st);
+               Core.consoleErrorMessage (component_name, "File isn't XML.");
+               return null;               
             }
 	    else {
 		// new format
