@@ -43,3 +43,5 @@ protected:
 private:
    vjKeyboardInterface mKeyboard;
 }
+
+#endif	/* _VJ_SIM_INPUT_H */
