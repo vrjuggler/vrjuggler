@@ -532,12 +532,6 @@ int rs232SetSpeed(COMM_PORT *port, DWORD baudRate)
         return FALSE;
     }
 
-    if (fcntl(port->desc, F_SETFL, O_NDELAY) < 0)
-    {
-        perror( "Tracker-Port Setup");
-        return FALSE;
-    }
-
     if( tcflush(port->desc, TCIOFLUSH ) == -1 )
     {
         perror( "Flushing Port for InterSense Tracker" );
