@@ -217,7 +217,6 @@ public class Placer
 
       PlacerRenderer old_value = this.renderer;
       this.renderer = renderer;
-      System.out.println("Set renderer to: " + renderer);
       firePropertyChange("renderer", old_value, renderer);
    }
 
@@ -585,12 +584,10 @@ public class Placer
             // Update the object as necessary
             if (newDesktopSize != null)
             {
-               System.out.println("Updated size to: ("+newDesktopSize.width+", "+newDesktopSize.height+")");
                getModel().setSizeOf(selectedIndex, newDesktopSize);
             }
             if (newDesktopPos != null)
             {
-               System.out.println("Updated location to: ("+newDesktopPos.x+", "+newDesktopPos.y+")");
                getModel().setLocationOf(selectedIndex, newDesktopPos);
             }
 
@@ -728,7 +725,6 @@ public class Placer
     */
    public synchronized void paint(Graphics g)
    {
-      System.out.println("Painting the Placer!, selIdx = "+selectedIndex);
       super.paint(g);
 
       // Paint each object in the model using the current renderer
@@ -739,11 +735,6 @@ public class Placer
                                                 (i == selectedIndex), false, i);
          Point pos = desktopToComponent(getModel().getLocationOf(i));
          Dimension dim = desktopToComponent(getModel().getSizeOf(i));
-         System.out.println("Placer.paint() painting component " + i + " ...");
-         System.out.println("\trendererPane: " + rendererPane);
-         System.out.println("\trendererComponent: " + rendererComponent);
-         System.out.println("\tposition: " + pos);
-         System.out.println("\tdimensions: " + dim);
          rendererPane.paintComponent(g, rendererComponent, this,
                                      pos.x, pos.y, dim.width, dim.height);
       }
