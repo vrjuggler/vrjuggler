@@ -44,7 +44,8 @@ import javax.swing.*;
 
 import org.vrjuggler.jccl.config.*;
 import org.vrjuggler.jccl.config.event.*;
-import org.vrjuggler.vrjconfig.customeditors.display_window.placer.*;
+import org.vrjuggler.vrjconfig.commoneditors.Placer;
+import org.vrjuggler.vrjconfig.commoneditors.placer.*;
 
 
 /**

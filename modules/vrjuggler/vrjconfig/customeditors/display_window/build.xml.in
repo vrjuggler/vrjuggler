@@ -14,9 +14,14 @@
       <pathelement path="@JCCL_JARS@" />
    </path>
 
+   <path id="commoneditors.classpath">
+      <pathelement path="${topdir}/vrjconfig/commoneditors/CommonEditors.jar" />
+   </path>
+
    <property name="tweek.classpath" refid="tweek.classpath" />
    <property name="jccl.classpath" refid="jccl.classpath" />
    <property name="table_layout_dir" value="@JUGGLERROOT_ABS@/external/TableLayout" />
+   <property name="commoneditors.classpath" refid="commoneditors.classpath" />
 
    <!-- Compile all java sources -->
    <target name="compile">
@@ -30,6 +35,7 @@
             <pathelement path="${tweek.classpath}" />
             <pathelement path="${jccl.classpath}" />
             <pathelement path="${table_layout_dir}/TableLayout.jar" />
+            <pathelement path="${commoneditors.classpath}" />
          </classpath>
       </javac>
    </target>
