@@ -341,7 +341,7 @@ dnl ===================================================
 snx_extra_cxxflags=""
 snx_extra_include_dirs=''
 snx_extra_ldflags="$APP_EXTRA_LIBS_BEGIN"
-snx_extra_libs="$LDFLAGS $VPR_LIBS $VRJ_LIBS $LIBS $APP_EXTRA_LIBS_END"
+snx_extra_libs="$LDFLAGS $VPR_LIBS $VRJ_LIBS -L\$(GADGET_BASE_DIR)/lib$LIBBITSUF -lgadget $LIBS $APP_EXTRA_LIBS_END"
 
 
 AC_SUBST(snx_lib)
