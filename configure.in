@@ -150,14 +150,14 @@ AC_ARG_ENABLE(performance,
                 fi
               ], _enable_perf='SGI')
 
-dnl # Set default values for these before checking $abi_type.  Currently,
+dnl # Set default values for these before checking ${_abi_type}.  Currently,
 dnl # these are for non-SGI platforms.
 ABI=''
 LIBBITSUF=''
 
 dnl # Based on the value of $abi_type, set $ABI for later use and the Makefile
 dnl # substitution variables $LIBBITSUF and $ISA.
-case "x$_abi_type" in
+case "x${_abi_type}" in
     x64_M3)
         ABI='64'
         ISA='mips3'
