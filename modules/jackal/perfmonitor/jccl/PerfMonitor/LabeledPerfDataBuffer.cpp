@@ -39,13 +39,14 @@ namespace jccl {
 
 LabeledPerfDataBuffer::LabeledPerfDataBuffer () {
     name = "untitled";
-    numbufs = 100;
+    numbufs = 5000;
     buffer = new buf_entry[numbufs];
     read_begin = 0;
     write_pos = 1;
     lost = 0;
     PerformanceCategories::instance()->addBuffer (this);
 }
+
 
 
 LabeledPerfDataBuffer::LabeledPerfDataBuffer (const std::string& _name, 
@@ -68,35 +69,42 @@ LabeledPerfDataBuffer::~LabeledPerfDataBuffer () {
 
 
 
+void LabeledPerfDataBuffer::setBufferSize (int n) {
+    delete[] buffer;
+    numbufs = n;
+    buffer = new buf_entry[numbufs];
+    read_begin = 0;
+    write_pos = 1;
+    lost = 0;
+}
+
+
 void LabeledPerfDataBuffer::set (const vpr::GUID &category, 
                                  const std::string& index_name) {
-    int tw;
-
-    if (PerformanceCategories::instance()->isCategoryActive (category)) {
-
-        if (write_pos == read_begin) {
-            if (lost_lock.acquire().success()) {
-                lost++;
-                lost_lock.release();
-            }
-            else
-                vprDEBUG(vprDBG_ALL,2) 
-                    << "LabeledPerfDataBuffer: lock acquire "
-                    << "failed\n" << vprDEBUG_FLUSH;
-            tw = (write_pos + numbufs - 1) % numbufs;
-            buffer[tw].category = category;
-            buffer[tw].index = &index_name;
-            buffer[tw].index_cstring = 0;
-            buffer[tw].stamp.set();
+    if (write_pos == read_begin) {
+        //std::cout << "lost something!!!" << std::endl;
+        if (lost_lock.acquire().success()) {
+            lost++;
+            lost_lock.release();
         }
-        else {
-            buffer[write_pos].category = category;
-            buffer[write_pos].index = &index_name;
-            buffer[write_pos].index_cstring = 0;
-            buffer[write_pos].stamp.set();
-            write_pos = (write_pos+1)%numbufs;
-        }
+        else
+            vprDEBUG(vprDBG_ALL,2) 
+                << "LabeledPerfDataBuffer: lock acquire "
+                << "failed\n" << vprDEBUG_FLUSH;
+        int tw = (write_pos + numbufs - 1) % numbufs;
+        buffer[tw].category = category;
+        buffer[tw].index = &index_name;
+        buffer[tw].index_cstring = 0;
+        buffer[tw].stamp.set();
     }
+    else {
+        buffer[write_pos].category = category;
+        buffer[write_pos].index = &index_name;
+        buffer[write_pos].index_cstring = 0;
+        buffer[write_pos].stamp.set();
+        write_pos = (write_pos+1)%numbufs;
+    }
+
 
 }
 
