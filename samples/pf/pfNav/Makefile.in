@@ -11,7 +11,7 @@ srcdir		= @srcdir@
 
 COMPILE		= @CXX@ @DEFS@ $(VJ_INCLUDES) @CPPFLAGS@ @CXXFLAGS@ @DBG_FLAGS@
 LINK		= @CXX@ @CPPFLAGS@ @CXXFLAGS@ @EXTRA_LINK_FLAGS@
-VJ_INCLUDES	= @INCLUDES@ -I$(VJ_BASE_DIR)/include -I$(srcdir) -I$(srcdir)/../nav
+VJ_INCLUDES	= @INCLUDES@ -I$(VJ_BASE_DIR)/include -I$(VJ_BASE_DIR)/include/Math -I$(srcdir) -I$(srcdir)/../nav
 VJ_LIBS		= @TEST_VJ_LIBS_BASIC@ @TEST_VJ_LIBS_GL@ @TEST_VJ_LIBS_PF@ @TEST_LIBS_BASIC@
 VPATH		= @srcdir@
 
@@ -29,7 +29,7 @@ VPATH		= @srcdir@
 # use -L/usr/lib64.
 EXTRA_LIBS	= @TEST_EXTRA_LIBS_BASIC@ @TEST_EXTRA_LIBS_PF@ @TEST_EXTRA_LIBS_GL@
 
-OBJECTS		= pfNav.@OBJ_FILE_SUFFIX@
+OBJECTS		= pfNav.@OBJ_FILE_SUFFIX@ ../nav/pfTerryCollide.@OBJ_FILE_SUFFIX@ ../nav/pfTerryPogoCollide.@OBJ_FILE_SUFFIX@ ../nav/pfTerryBoxCollide.@OBJ_FILE_SUFFIX@
 
 # -----------------------------------------------------------------------------
 # Targets.

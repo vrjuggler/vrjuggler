@@ -48,32 +48,45 @@
 
     // --- VR Juggler Stuff --- //
 #include <Kernel/vjKernel.h>
-#include <Kernel/Pf/vjPfApp.h>
+#include <Kernel/Pf/vjPfApp.h>    // the performer application base type
 #include <Kernel/vjDebug.h>
-#include <Kernel/vjProjection.h>
+#include <Kernel/vjProjection.h>  // for setNearFar (for setting clipping planes)
+#include <Input/InputManager/vjPosInterface.h>
+#include <Input/InputManager/vjDigitalInterface.h>
 
-#include <pfNaver.h>
-#include <collidor.h>
-#include <planeCollidor.h>
-#include <pfCollidor.h>
+
+// nav includes
+#include <CaveNavigator.h>
+#include <collider.h>
+#include <planeCollider.h>
+#include <pfPogoCollider.h>
+#include <pfRayCollider.h>
+#include <pfBoxCollider.h>
 
 char* filename = NULL;
 
 
 // Declare my application class
-class myApp : public vjPfApp
+class pfNavJugglerApplication : public vjPfApp
 {
 public:
-   myApp(vjKernel* kern) : vjPfApp(kern)
+   pfNavJugglerApplication( vjKernel* kern ) : mFpsEmitCount(0), vjPfApp( kern )
    {
-      //rotation = 0.0f;
-      //zPos = 0.0f;
+      // get a valid time on the stopwatch...
+      stopWatch.stop();
+      stopWatch.start();
    }
 
    virtual void init()
    {
       vjDEBUG(vjDBG_ALL, 1) << "app::init\n" << vjDEBUG_FLUSH;
       vjProjection::setNearFar(0.5, 1000);
+      
+      mWand.init( "VJWand" );
+      mHead.init( "VJHead" );
+      mActionButton.init( "VJButton0" );
+      mActionButton2.init( "VJButton1" );
+      mModeChangeButton.init( "VJButton2" );
    }
 
    virtual void apiInit()
@@ -85,11 +98,26 @@ public:
    {
       // Initialize type system
       vjDEBUG(vjDBG_ALL,1) << "app::preForkInit: Initializing new types.\n" << vjDEBUG_FLUSH;
-      pfNaver::init();
 
       // Initialize loaders
+      pfdInitConverter("terrain.flt");
    }
 
+   inline void textures( bool state ) const
+   {
+      if (state == true)
+      {
+         pfEnable( PFEN_TEXTURE );
+         pfOverride(PFSTATE_ENTEXTURE, PF_ON);
+      }
+      
+      else
+      {
+         pfDisable( PFEN_TEXTURE );
+         pfOverride(PFSTATE_ENTEXTURE, PF_OFF);
+      }      
+   }   
+   
    /// Initialize the scene graph
    virtual void initScene()
    {
@@ -102,7 +130,7 @@ public:
       vjDEBUG(vjDBG_ALL, 0) << "app::initScene\n" << vjDEBUG_FLUSH;
       rootNode = new pfGroup;
 
-      naver = new pfNaver();
+      mNavigationDCS = new pfDCS();
 
       sun1 = new pfLightSource;
       sun1->setPos(0.3f, 0.0f, 0.3f, 0.0f);
@@ -110,7 +138,7 @@ public:
       sun1->setColor(PFLT_AMBIENT,0.4f,0.4f,0.4f);
       sun1->setColor(PFLT_SPECULAR, 1.0f, 1.0f, 1.0f);
       sun1->on();
-      naver->addChild(sun1);
+      mNavigationDCS->addChild(sun1);
 
       // Light the root node
       ///*
@@ -127,44 +155,43 @@ public:
       //pfNode* obj = new pfGroup;
       //pfNode* obj = pfdLoadFile("/usr/share/Performer/data/klingon.flt");
       pfNode* obj = pfdLoadFile( filename );
-      rootNode->addChild(naver);
+      rootNode->addChild( mNavigationDCS );
 
       pfDCS* world_model = new pfDCS;    // The node with the world under it
-      //rootNode->addChild(world_model);
       world_model->addChild(obj);
       world_model->setScale(0.25f);
       world_model->setTrans(0.0,5.0,-5.0);
-
-      vjMatrix initial_pos;
-      initial_pos.setTrans(0,0,0);
-      naver->getNavigator()->setCurPos(initial_pos);
-      naver->addChild(world_model);
-      //*/
-
-      // Load the TOWN
+      mNavigationDCS->addChild(world_model);
       
+      // Load the TOWN
       //pfFilePath("/usr/share/Performer/data:/usr/share/Performer/data/town");
       //pfNode* obj = pfdLoadFile("/usr/share/Performer/data/town/town_ogl_pfi.pfb");
       //pfDCS* world_model = new pfDCS;    // The node with the world under it
-      //rootNode->addChild(naver);
-
+      //rootNode->addChild(mNavigationDCS);
       //world_model->addChild(obj);
       //world_model->setScale(3.0f);
-      //vjMatrix initial_pos;
+      
+      // Configure the Navigator DCS node:
+      // Set it's initial position:
+      vjMatrix initial_pos;
       //initial_pos.setTrans(7500,50,-7500);
-      //naver->getNavigator()->setCurPos(initial_pos);
-      //naver->addChild(world_model);
+      initial_pos.setTrans(0, 6, 0);
+      mNavigator.getNavigator()->setCurPos(initial_pos);
 
-      //planeCollidor* collide = new planeCollidor;
-      pfVolumeCollidor* correction_collide = new pfVolumeCollidor(world_model);
-      pfRideCollidor*  ride_collide = new pfRideCollidor(world_model);
+      // Set its terrain follower
+      //planeCollider* collide = new planeCollider;
+      pfPogoCollider*  ride_collide = new pfPogoCollider(world_model);
+      mNavigator.getNavigator()->addCollider(ride_collide);
 
-      naver->getNavigator()->setGravityCollidor(ride_collide);
-      naver->getNavigator()->setCorrectingCollidor(correction_collide);
+      // Set the navigator's collider.
+      pfBoxCollider* correction_collide = new pfBoxCollider( world_model );
+      mNavigator.getNavigator()->addCollider( correction_collide );
       
 
-      //pfuTravPrintNodes(rootNode, "nodes.out");
-      //pfdStoreFile(rootNode, "nodes.pfb");
+      // load these files into perfly to see just what your scenegraph 
+      // looked like. . . . .useful for debugging.
+      pfuTravPrintNodes( rootNode, "nodes.out" );
+      pfdStoreFile( rootNode, "nodes.pfb" );
    }
 
    /// Return the current scene graph
@@ -178,8 +205,7 @@ public:
    // and drawing the next frame (pfFrame())
    virtual void preDrawChan(pfChannel* chan, void* chandata)
    {
-      pfDisable(PFEN_TEXTURE);
-      pfOverride(PFSTATE_TEXTURE,PF_ON);     // Override texturing to turn it off;
+      this->textures( true );     // Override texturing to turn it on;
    }
 
 
@@ -192,31 +218,51 @@ public:
    /// Function called after pfSync and before pfDraw
    virtual void preFrame()
    {
-      //vjDEBUG(vjDBG_ALL, 1) << "app::preFrame\n" << vjDEBUG_FLUSH;
-      static float x=10;
-      static float y=-5;
-      static float z=3;
-      static float amb=0.0f;
+      // Keep time, for FPS measurments...
+      stopWatch.stop();
+      stopWatch.start();
+      
+      /////////////////////////////////////////////////////////
+      //: Handle navigation
 
-      x+=0.05;
-      y+=0.04;
-      z+=0.02;
-      amb += 0.025f;
+      if (mActionButton2->getData() == vjDigital::TOGGLE_ON)
+         cout<<"Brake\n"<<flush;
+      if (mActionButton->getData() == vjDigital::TOGGLE_ON)
+         cout<<"Accelerate\n"<<flush;
 
-      if(x>20.0f)
-         x = -20.0f;
-      if(y>20.0f)
-         y = -20.0f;
-      if(z>20.0f)
-         z = -20.0f;
-      if(amb>1.0f)
-         amb = 0.0f;
-
-      //sun1->setPos(x,y,z, 1.0f);
-      //cerr << "set ambient: " << amb << endl;
-      //sun1->setColor(PFLT_AMBIENT, amb, amb, amb);
+      // let the navigator collect some instructions from input devices...
+      mNavigator.accelerate( mActionButton->getData() == vjDigital::ON ||
+                             mActionButton->getData() == vjDigital::TOGGLE_ON );
+      mNavigator.brake( mActionButton2->getData() == vjDigital::ON ||
+                       mActionButton2->getData() == vjDigital::TOGGLE_ON );
+      mNavigator.rotate( mActionButton2->getData() != vjDigital::ON && 
+                         mActionButton2->getData() != vjDigital::TOGGLE_ON );
+      vjMatrix* wandMatrix = mWand->getData();
+      vjMatrix rotMatrix = *wandMatrix;
+      rotMatrix( 0, 3 ) = 0.0f;
+      rotMatrix( 1, 3 ) = 0.0f;
+      rotMatrix( 2, 3 ) = 0.0f;
+      mNavigator.setMatrix( rotMatrix );
+      
+      // tell the navigator to update itself with any new instructions just given to it.
+      mNavigator.update();
+      
+      // notify the navigator DCS of the mNavigator's new matrix
+      pfMatrix mNavigator_pf = vjGetPfMatrix( mNavigator );
+      mNavigationDCS->setMat( mNavigator_pf );
+      
+      // output the FPS so the team artist can get metrics on their model
+      ++mFpsEmitCount;
+      if (mFpsEmitCount >= 15)
+      {
+         cout<<"FPS: "<<stopWatch.fpsAverage<<"\n"<<flush;
+         mFpsEmitCount = 0;
+      }
    }
 
+   int mFpsEmitCount;
+   StopWatch stopWatch;
+   
    /// Function called after pfDraw
    virtual void intraFrame()
    {
@@ -224,10 +270,21 @@ public:
    }
 
 public:
+   // the sun
    pfLightSource* sun1;
 
-   pfNaver*    naver;
-   //pfDCS*      baseDCS;
+   // navigation objects.
+   CaveNavigator  mNavigator;
+   pfDCS*         mNavigationDCS;
+   
+   // juggler device interface objects
+   vjPosInterface          mWand;      // the Wand
+   vjPosInterface          mHead;      // the Head
+   vjDigitalInterface      mActionButton;
+   vjDigitalInterface      mActionButton2;
+   vjDigitalInterface      mModeChangeButton;
+   
+   // scene's root (as far as we're concerned here)
    pfGroup*   rootNode;
 };
 
@@ -238,7 +295,7 @@ float transSpeed = 0.1;
 int main(int argc, char* argv[])
 {
     vjKernel* kernel = vjKernel::instance(); // Declare a new Kernel
-    myApp* application = new myApp(kernel);  // Delcare an instance of my application
+    pfNavJugglerApplication* application = new pfNavJugglerApplication(kernel);  // Delcare an instance of my application
 
     if (argc < 2)
     {
