@@ -173,7 +173,7 @@ SerialPortImpTermios::disableLocalAttach () {
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
 Status
-SerialPortImpTermios::getBufferSize (unsigned char& size) {
+SerialPortImpTermios::getBufferSize (Uint8& size) {
     Status retval;
     struct termios term;
 
@@ -187,7 +187,7 @@ SerialPortImpTermios::getBufferSize (unsigned char& size) {
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
 Status
-SerialPortImpTermios::setBufferSize (const unsigned char size) {
+SerialPortImpTermios::setBufferSize (const Uint8 size) {
     Status retval;
     struct termios term;
 
@@ -202,7 +202,7 @@ SerialPortImpTermios::setBufferSize (const unsigned char size) {
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
 Status
-SerialPortImpTermios::getTimeout (unsigned char& timeout) {
+SerialPortImpTermios::getTimeout (Uint8& timeout) {
     Status retval;
     struct termios term;
 
@@ -216,7 +216,7 @@ SerialPortImpTermios::getTimeout (unsigned char& timeout) {
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
 Status
-SerialPortImpTermios::setTimeout (const unsigned char timeout) {
+SerialPortImpTermios::setTimeout (const Uint8 timeout) {
     Status retval;
     struct termios term;
 
@@ -231,7 +231,7 @@ SerialPortImpTermios::setTimeout (const unsigned char timeout) {
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
 Status
-SerialPortImpTermios::getCharacterSize (unsigned short& size) {
+SerialPortImpTermios::getCharacterSize (Uint16& size) {
     Status retval;
     struct termios term;
 
@@ -245,7 +245,7 @@ SerialPortImpTermios::getCharacterSize (unsigned short& size) {
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
 Status
-SerialPortImpTermios::setCharacterSize (const unsigned short bpb) {
+SerialPortImpTermios::setCharacterSize (const Uint16 bpb) {
     struct termios term;
     Status retval;
 
@@ -310,7 +310,7 @@ SerialPortImpTermios::disableRead () {
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
 Status
-SerialPortImpTermios::getStopBits (unsigned short& num_bits) {
+SerialPortImpTermios::getStopBits (Uint16& num_bits) {
     struct termios term;
     Status retval;
 
@@ -331,7 +331,7 @@ SerialPortImpTermios::getStopBits (unsigned short& num_bits) {
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
 Status
-SerialPortImpTermios::setStopBits (const unsigned short num_bits) {
+SerialPortImpTermios::setStopBits (const Uint16 num_bits) {
     struct termios term;
     Status retval;
 
@@ -755,9 +755,9 @@ SerialPortImpTermios::disableParityErrorMarking () {
 
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
-int
+Int8
 SerialPortImpTermios::getParity () {
-    int retval;
+    Int8 retval;
 
     // Odd parity if PARODD is set.
     if ( getBit(PARODD, SerialPortImpTermios::CFLAG) ) {
@@ -790,7 +790,7 @@ SerialPortImpTermios::setEvenParity () {
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
 Status
-SerialPortImpTermios::getInputBaudRate (int& rate) {
+SerialPortImpTermios::getInputBaudRate (Int32& rate) {
     struct termios term;
     Status retval;
 
@@ -807,7 +807,7 @@ SerialPortImpTermios::getInputBaudRate (int& rate) {
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
 Status
-SerialPortImpTermios::setInputBaudRate (const int baud) {
+SerialPortImpTermios::setInputBaudRate (const Int32 baud) {
     struct termios term;
     Status retval;
 
@@ -839,7 +839,7 @@ fprintf(stderr, "Setting input baud rate to %d\n", new_rate);
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
 Status
-SerialPortImpTermios::getOutputBaudRate (int& rate) {
+SerialPortImpTermios::getOutputBaudRate (Int32& rate) {
     struct termios term;
     Status retval;
 
@@ -856,7 +856,7 @@ SerialPortImpTermios::getOutputBaudRate (int& rate) {
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
 Status
-SerialPortImpTermios::setOutputBaudRate (const int baud) {
+SerialPortImpTermios::setOutputBaudRate (const Int32 baud) {
     struct termios term;
     Status retval;
 
@@ -979,7 +979,7 @@ SerialPortImpTermios::flushQueue (SerialTypes::FlushQueueOption opt) {
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
 Status
-SerialPortImpTermios::sendBreak (const int duration) {
+SerialPortImpTermios::sendBreak (const Int32 duration) {
     Status retval;
 
     if ( tcsendbreak(m_handle->m_fdesc, duration) == -1 ) {
@@ -995,8 +995,8 @@ SerialPortImpTermios::sendBreak (const int duration) {
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
 void
-SerialPortImpTermios::setControlCharacter (const unsigned int index,
-                                          const unsigned char value)
+SerialPortImpTermios::setControlCharacter (const Uint32 index,
+                                           const Uint8 value)
 {
     struct termios term;
 
@@ -1022,10 +1022,10 @@ SerialPortImpTermios::setControlCharacter (const unsigned int index,
 
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
-unsigned char
-SerialPortImpTermios::getControlCharacter (const unsigned int index) {
+Uint8
+SerialPortImpTermios::getControlCharacter (const Uint32 index) {
     struct termios term;
-    unsigned char retval;
+    Uint8 retval;
 
     retval = 0;
 
@@ -1199,9 +1199,9 @@ SerialPortImpTermios::setBit (const tcflag_t bit,
 
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
-int
+Int32
 SerialPortImpTermios::baudToInt (const speed_t baud_rate) {
-    int retval;
+    Int32 retval;
 
     switch (baud_rate) {
       case B50:
@@ -1260,7 +1260,7 @@ SerialPortImpTermios::baudToInt (const speed_t baud_rate) {
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
 speed_t
-SerialPortImpTermios::intToBaud (const int speed_int) {
+SerialPortImpTermios::intToBaud (const Int32 speed_int) {
     speed_t rate;
 
     switch (speed_int) {

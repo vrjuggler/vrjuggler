@@ -251,76 +251,76 @@ public:
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
     inline vpr::Status
-    getBufferSize (unsigned char& size) {
+    getBufferSize (vpr::Uint8& size) {
         return m_sio_imp.getBufferSize(size);
     }
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
     inline vpr::Status
-    setBufferSize (const unsigned char size) {
+    setBufferSize (const vpr::Uint8 char size) {
         return m_sio_imp.setBufferSize(size);
     }
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
     inline vpr::Status
-    getTimeout (unsigned char& timeout) {
+    getTimeout (vpr::Uint8& timeout) {
         return m_sio_imp.getTimeout(timeout);
     }
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
     inline vpr::Status
-    setTimeout (const unsigned char timeout_val) {
+    setTimeout (const vpr::Uint8 timeout_val) {
         return m_sio_imp.setTimeout(timeout_val);
     }
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
     inline vpr::Status
-    getCharacterSize (unsigned short& size) {
+    getCharacterSize (vpr::Uint16& size) {
         return m_sio_imp.getCharacterSize(size);
     }
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
     inline vpr::Status
-    setCharacterSize (const unsigned short bpb) {
+    setCharacterSize (const vpr::Uint16 bpb) {
         return m_sio_imp.setCharacterSize(bpb);
     }
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
     inline void
-    setControlCharacter (const unsigned int index, const unsigned char value) {
+    setControlCharacter (const vpr::Uint32 index, const vpr::Uint8 value) {
         m_sio_imp.setControlCharacter(index, value);
     }
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    inline unsigned char
-    getControlCharacter (const unsigned int index) {
+    inline vpr::Uint8
+    getControlCharacter (const vpr::Uint32 index) {
         return m_sio_imp.getControlCharacter(index);
     }
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
     inline vpr::Status
-    getStopBits (unsigned short& num_bits) {
+    getStopBits (vpr::Uint16& num_bits) {
         return m_sio_imp.getStopBits(num_bits);
     }
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
     inline vpr::Status
-    setStopBits (const unsigned short num_bits) {
+    setStopBits (const vpr::Uint16 num_bits) {
         return m_sio_imp.setStopBits(num_bits);
     }
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    inline int
+    inline vpr::Int8
     getParity (void) {
         return m_sio_imp.getParity();
     }
@@ -342,28 +342,28 @@ public:
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
     inline vpr::Status
-    getInputBaudRate (int& rate) {
+    getInputBaudRate (vpr::Int32& rate) {
         return m_sio_imp.getInputBaudRate(rate);
     }
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
     inline vpr::Status
-    setInputBaudRate (const int baud) {
+    setInputBaudRate (const vpr::Int32 baud) {
         return m_sio_imp.setInputBaudRate(baud);
     }
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
     inline vpr::Status
-    getOutputBaudRate (int& rate) {
+    getOutputBaudRate (vpr::Int32& rate) {
         return m_sio_imp.getOutputBaudRate(rate);
     }
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
     inline vpr::Status
-    setOutputBaudRate (const int baud) {
+    setOutputBaudRate (const vpr::Int32 baud) {
         return m_sio_imp.setOutputBaudRate(baud);
     }
 
