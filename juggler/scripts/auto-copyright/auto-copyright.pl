@@ -31,11 +31,20 @@
 #       $Id$
 #
 
-use lib qw(../);
+use File::Basename;
+use Getopt::Std;
+
+# Do this to include the path to the script in @INC.
+my $path;
+
+BEGIN {
+    $path = (fileparse("$0"))[1];
+}
+
+use lib($path);
 use RecurseDir;
 
 # get opts:
-use Getopt::Std;
 getopts('d:t:c:e:ha');
 
 my $tags_file = "$opt_t";
