@@ -2,7 +2,8 @@
 #define VT_HAND_MODEL_TYPES_H
 /*************** <auto-copyright.pl BEGIN do not edit this line> **************
  *
- * VR Juggler is (C) Copyright 1998, 1999, 2000 by Iowa State University
+ * VR Juggler is (C) Copyright 1998, 1999, 2000, 2001, 2002
+ *   by Iowa State University
  *
  * Original Authors:
  *   Allen Bierbaum, Christopher Just,
