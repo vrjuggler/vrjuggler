@@ -39,6 +39,13 @@ of Juggler you've downloaded.
 compilation creates a directory called <tt>instlinks</tt> which can be used
 as a Juggler base:
 <p>ex.&nbsp;<tt>setenv&nbsp;VJ_BASE_DIR&nbsp;~/my_build_dir/instlinks</tt>
+
+<P>In either case, on a Win32 platform, you should use <TT>/</TT>'s as the
+path separator for VJ_BASE_DIR rather than <TT>\</TT>'s.  The compiler tools
+can handle either, and the utilities in <TT>juggler-tools</TT> will behave
+much better if UNIX-style paths are used.  It is safe to use the drive
+letter at the start of the path (e.g.,
+``<TT>C:/software/vrjuggler-0.1.95</TT>'').
 </blockquote>
 
 <h4>JDK_HOME</h4>
