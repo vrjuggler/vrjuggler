@@ -48,10 +48,6 @@
 #include <string>
 #include <string.h>
 
-#ifdef VPR_OS_FreeBSD
-#include <sys/types.h>
-#endif
-
 #include <vpr/Util/Assert.h>
 #include <vpr/Util/ReturnStatus.h>
 #include <vpr/Util/Interval.h>
@@ -823,7 +819,7 @@ protected:
     *         vpr::ReturnStatus::WouldBlock if the device is in non-blocking
     *         mode, and there is no data to read.<br>
     *         vpr::ReturnStatus::Timeout is returned if the read
-    *         could not begin within the timeoBaseIOStatsStrategyut interval.
+    *         could not begin within the timeout interval.
     */
    virtual vpr::ReturnStatus readn_i(void* buffer, const vpr::Uint32 length,
                                      vpr::Uint32& bytes_read,
