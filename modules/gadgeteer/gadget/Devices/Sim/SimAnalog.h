@@ -39,6 +39,7 @@
 #include <Input/vjInput/vjInput.h>
 #include <Input/vjInput/vjAnalog.h>
 #include <Input/vjSim/vjSimInput.h>
+#include <Utils/vjDebug.h>
 
 //: Simulated analog device
 // Simulates an analog device from a keyboard device.
@@ -59,7 +60,11 @@ public:
    virtual float getAnalogData(int devNum=0)
    {
       vjASSERT(devNum < (int)mAnaData.size());    // Make sure we have enough space
-      return mAnaData[devNum];
+
+      float value = static_cast<float>( mAnaData[devNum] );
+      float normalized;
+      this->normalizeMinToMax( value, normalized );
+      return normalized;
    }
 
    /* These functions don't do anything */
