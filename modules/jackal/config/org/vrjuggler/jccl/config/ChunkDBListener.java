@@ -35,6 +35,18 @@ package VjConfig;
 
 import VjConfig.ChunkDBEvent;
 
+/** Listener for ConfigChunkDB modification events.
+ *  By registering as a ChunkDBListener, an object can receive events
+ *  whenever the ChunkDB is modified.
+ *  <p>
+ *  ChunkDBEvents may be sent by any thread; a listener intending
+ *  to update GUI components based on the event must use 
+ *  SwingUtilities.invokeLater or something similar to ensure correct
+ *  synchronization.
+ *
+ *  @author Christopher Just
+ *  @version $Revision$
+ */
 public interface ChunkDBListener extends java.util.EventListener {
 
     public abstract void addChunk (ChunkDBEvent e);

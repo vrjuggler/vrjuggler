@@ -34,15 +34,23 @@ package VjControl;
 
 import VjControl.ComponentFactoryEvent;
 
+/** Listener for ComponentFactory registration events.
+ *  By registering with the ComponentFactory, a class can receive 
+ *  notification whenever a new VjComponent class is registered with
+ *  the factory.
+ *  <p>
+ *  ComponentFactoryEvents may be sent by any thread; a listener intending
+ *  to update GUI components based on the event must use 
+ *  SwingUtilities.invokeLater or something similar to ensure correct
+ *  synchronization.
+ *
+ *  @author Christopher Just
+ *  @version $Revision$
+ */
 public interface ComponentFactoryListener extends java.util.EventListener {
 
-    /* called when componentfactory has registered a new component class */
+    /** Called when ComponentFactory registers a new VjComponent class. */
     public abstract void loadNewComponent (ComponentFactoryEvent e);
 
 }
-
-
-
-
-
 

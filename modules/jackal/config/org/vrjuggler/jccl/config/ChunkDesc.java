@@ -37,16 +37,21 @@
 package VjConfig;
 
 import java.util.Vector;
+import java.util.List;
 import java.io.*;
+import org.w3c.dom.*;
+
 import VjConfig.PropertyDesc;
 
-public class ChunkDesc {
+public class ChunkDesc implements Cloneable {
     
-    public Vector props;
+    private List props;
     public String name;
     public String token;
     public String help;
 
+    private ConfigChunk default_chunk;
+    private Node default_node;
 
     public ChunkDesc (String n) {
 	props = new Vector();
@@ -54,6 +59,8 @@ public class ChunkDesc {
 	name = n;
 	token = n;
 	help = "";
+        default_node = null;
+        default_chunk = null;
     }
 
 
@@ -63,19 +70,24 @@ public class ChunkDesc {
 	name = "";
 	token = "";
 	help = "";
+        default_node = null;
+        default_chunk = null;
     }
 
 
-
-    public ChunkDesc (ChunkDesc d) {
-        props = new Vector();
-        int n = d.props.size();
-        for (int i = 0; i < n; i++) {
-            props.addElement (d.props.elementAt(i));
+    public Object clone () {
+        try {
+            ChunkDesc d = (ChunkDesc)super.clone();
+            d.props = new Vector();
+            int n = props.size();
+            for (int i = 0; i < n; i++) {
+                d.props.add (((PropertyDesc)props.get(i)).clone());
+            }
+            return d;
         }
-        name = d.name;
-        token = d.token;
-        help = d.help;
+        catch (CloneNotSupportedException e) {
+            return null;
+        }
     }
 
 
@@ -95,14 +107,77 @@ public class ChunkDesc {
     }
 
 
+    public final void setToken (String _token) {
+        token = _token;
+    }
+
+    public final String getHelp () {
+        return help;
+    }
+
+    public final void setHelp (String _help) {
+        help = _help;
+    }
+
+
+    public void setDefaultChunk (ConfigChunk ch) {
+        default_chunk = ch;
+    }
+
+    public void setDefaultChunk (Node n) {
+        default_node = n;
+        default_chunk = null;
+    }
+
+    public ConfigChunk getDefaultChunk () {
+        synchronized (this) {
+            if ((default_chunk == null) && (default_node != null)) {
+                XMLConfigIOHandler h = 
+                    (XMLConfigIOHandler)ConfigIO.getHandler (ConfigIO.XML);
+                default_chunk = h.buildConfigChunk (default_node, false);
+                ConfigIO.releaseHandler(h);
+            }
+            return default_chunk;
+        }
+    }
+
+
+    public void addPropertyDesc (PropertyDesc newp) {
+        PropertyDesc oldp;
+        int n = props.size();
+        for (int i = 0; i < n; i++) {
+            oldp = (PropertyDesc)props.get(i);
+            if (oldp.getToken().equalsIgnoreCase (newp.getToken())) {
+                props.set (i, newp);
+                return;
+            }
+        }
+        props.add (newp);
+    }
+
+
+    public PropertyDesc[] getPropertyDescs () {
+        PropertyDesc[] p = new PropertyDesc[props.size()];
+        return (PropertyDesc[])props.toArray(p);
+    }
+
+    public int propertyDescsSize() {
+        return props.size();
+    }
+
+    public PropertyDesc getPropertyDesc(int i) {
+        return (PropertyDesc)props.get(i);
+    }
+
     public boolean equals (ChunkDesc c) {
 	PropertyDesc p1, p2;
 	if (!token.equals(c.token))
 	    return false;
 	
 	/* This next part is O(n^2) <sigh> */
-	for (int i = 0; i < props.size(); i++) {
-	    p1 = (PropertyDesc) props.elementAt(i);
+        int n = props.size();
+	for (int i = 0; i < n; i++) {
+	    p1 = (PropertyDesc) props.get(i);
 	    p2 = c.getPropertyDesc(p1.token);
 	    if ((p2 == null) || (!p1.equals(p2)))
 		return false;
@@ -123,7 +198,7 @@ public class ChunkDesc {
 	    named.name = named.token = "Name";
 	    named.help = "Unique name of an instance of this chunk type";
 	    named.valtype = new ValType("string");
-	    props.insertElementAt (named,0);
+	    props.add(0, named);
 	}
 	else
 	    named.help = "Unique name of an instance of this chunk type";
@@ -135,7 +210,7 @@ public class ChunkDesc {
 	String s = "chunk " + token + " \""
 	    + name + "\" \"" + help + "\"\n";
 	for (int i = 0; i < props.size(); i++)
-	    s += "  " + ((PropertyDesc)props.elementAt(i)).toString() + "\n";
+	    s += "  " + ((PropertyDesc)props.get(i)).toString() + "\n";
 	s += "  end\n";
 	//System.out.println ("string rep is:\n" + s);
 	return s;
@@ -145,8 +220,9 @@ public class ChunkDesc {
 
     public PropertyDesc getPropertyDesc (String tok) {
 	PropertyDesc p;
-	for (int i = 0; i < props.size(); i++) {
-	    p = (PropertyDesc)props.elementAt(i);
+        int n = props.size();
+	for (int i = 0; i < n; i++) {
+	    p = (PropertyDesc)props.get(i);
 	    if (p.token.equalsIgnoreCase(tok))
 		return p;
 	}
@@ -155,38 +231,71 @@ public class ChunkDesc {
 
 
 
-  public boolean read (ConfigStreamTokenizer st) {
-    /* the first line of the description ("chunk name") has already been
-     * read. So, we need to read a series of property lines terminated
-     * with an "end"
-     */
-    String s;
-    PropertyDesc p;
-    try {
-	st.nextToken();
-	name = st.sval;
-	st.nextToken();
-	help = st.sval;
-      while (true) {
-	st.nextToken();
-	if (st.sval.equalsIgnoreCase ("end"))
-	  break;
-	else
-	  st.pushBack();
-	// else it's a property description.
-	p = new PropertyDesc (st);
-	if (p != null && p.name != null)
-	    if (!p.name.equalsIgnoreCase("Name"))
-		props.addElement (p);
-      }
-      return true;
-    }
-    catch (IOException io) {
-      System.err.println ("IOException in ChunkDesc read");
-      return false;
+    public boolean read (ConfigStreamTokenizer st) {
+        /* the first line of the description ("chunk name") has already been
+         * read. So, we need to read a series of property lines terminated
+         * with an "end"
+         */
+        String s;
+        PropertyDesc p;
+        try {
+            st.nextToken();
+            name = st.sval;
+            st.nextToken();
+            help = st.sval;
+            while (true) {
+                st.nextToken();
+                if (st.sval.equalsIgnoreCase ("end"))
+                    break;
+                else
+                    st.pushBack();
+                // else it's a property description.
+                p = new PropertyDesc (st);
+                if (p != null && p.name != null)
+                    if (!p.name.equalsIgnoreCase("Name"))
+                        props.add (p);
+            }
+            return true;
+        }
+        catch (IOException io) {
+            System.err.println ("IOException in ChunkDesc read");
+            return false;
+        }   
     }
 
-  }
+
+    public String xmlRep (String pad) {
+        String newpad = pad + pad;
+        StringBuffer retval = new StringBuffer(256);
+        retval.append(pad);
+        retval.append("<ChunkDesc token=\"");
+        retval.append(XMLConfigIOHandler.escapeString(token));
+        retval.append("\" name=\"");
+        retval.append(XMLConfigIOHandler.escapeString(name));
+        retval.append("\">\n");
+        if (!help.equals ("")) {
+            retval.append(newpad);
+            retval.append("<help>");
+            retval.append(XMLConfigIOHandler.escapeString(help));
+            retval.append("</help>\n");
+        }
+        int n = props.size();
+        for (int i = 0; i < n; i++) {
+            PropertyDesc p = (PropertyDesc)props.get(i);
+            retval.append(p.xmlRep(newpad));
+        }
+        ConfigChunk ch = getDefaultChunk();
+        if (ch != null) {
+            retval.append(newpad);
+            retval.append("<Defaults>\n");
+            retval.append(ch.xmlRep(newpad + "  "));
+            retval.append(newpad);
+            retval.append("</Defaults>\n");
+        }
+        retval.append(pad);
+        retval.append("</ChunkDesc>\n");
+        return retval.toString();
+    }
   
 }
 

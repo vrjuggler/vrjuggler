@@ -86,12 +86,13 @@ public class EasyFileDialog {
     public FileFilter addFilter (FileFilter f, String id) {
         FileFilter oldfilter = getFilter(id);
         if (oldfilter == null) {
-            filters.addElement (f);
+            filters.add (f);
             filter_lookup.put (id, f);
             return f;
         }
-        else
+        else {
             return oldfilter;
+        }
     }
 
 
@@ -132,7 +133,7 @@ public class EasyFileDialog {
  	JFileChooser chooser = new JFileChooser(dir);
 
         for (int i = 0; i < filters.size(); i++)
-            chooser.addChoosableFileFilter ((FileFilter)filters.elementAt(i));
+            chooser.addChoosableFileFilter ((FileFilter)filters.get(i));
         if (default_filter != null)
             chooser.setFileFilter (default_filter);
  	chooser.setFileHidingEnabled (false);
@@ -169,7 +170,7 @@ public class EasyFileDialog {
              chooser.setDialogType(JFileChooser.SAVE_DIALOG);
 
              for (int i = 0; i < filters.size(); i++)
-                 chooser.addChoosableFileFilter ((FileFilter)filters.elementAt(i));
+                 chooser.addChoosableFileFilter ((FileFilter)filters.get(i));
              if (default_filter != null)
                  chooser.setFileFilter (default_filter);
             

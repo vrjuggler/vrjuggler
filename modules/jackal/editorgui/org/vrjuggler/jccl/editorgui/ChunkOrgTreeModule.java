@@ -36,7 +36,7 @@ package VjComponents.ConfigEditor;
 
 import java.awt.event.*;
 import java.io.*;
-import java.util.Vector;
+import java.util.*;
 import VjConfig.ConfigStreamTokenizer;
 import VjConfig.ConfigChunk;
 import VjConfig.VarValue;
@@ -97,9 +97,9 @@ public class ChunkOrgTreeModule extends DefaultCoreModule {
         // if autoloading is ok, and we haven't been superceded by the
         // command line anyway, check the global prefs...
         if (autoload && (orgtreename == null)) {
-            Vector v = Core.gui_chunkdb.getOfDescToken ("vjcontrol");
+            List v = Core.vjcontrol_chunkdb.getOfDescToken ("vjcontrol");
             for (i = 0; i < v.size(); i++) {
-                ConfigChunk chunk = (ConfigChunk)v.elementAt(i);
+                ConfigChunk chunk = (ConfigChunk)v.get(i);
                 VarValue val = chunk.getValueFromToken ("orgtreefile", 0);
                 if (val != null)
                     orgtreename = val.getString();

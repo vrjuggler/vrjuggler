@@ -101,6 +101,7 @@ public class ChunkDBPanel
     protected JPopupMenu chunktreeitem_menu;
     protected JMenuItem help1_mi, help2_mi, remove_mi, insert_mi;
 
+    protected boolean ui_initialized;
 
     public ChunkDBPanel (int _controls_on_side) {
 	super();
@@ -112,19 +113,7 @@ public class ChunkDBPanel
         ui_module = null;
         confighelper_module = null;
 
-//         config_module = (ConfigModule)Core.getModule ("Config Module");
-//         if (config_module == null)
-//             Core.consoleErrorMessage ("UI", "ChunkDBPanel expected Config Module to exist.");
-//         ui_module = (ControlUIModule)Core.getModule ("ControlUI Module");
-//         if (ui_module == null)
-//             Core.consoleErrorMessage ("UI", "ChunkDBPanel expected ControlUI Module to exist.");
-//         confighelper_module = (ConfigUIHelper)Core.getModule ("ConfigUIHelper Module");
-//         if (confighelper_module == null)
-//             Core.consoleErrorMessage ("UI", "ChunkDBPanel expected ConfigUIHelper Module to exist.");
-
-	JPanel south_panel;
-	JPanel side_panel; 
-	Box center_panel;
+        ui_initialized = false;
 
 	current_font = null;
 	chunkdb = null;
@@ -132,142 +121,16 @@ public class ChunkDBPanel
 	sendacross_target = null;
 
 	controls_on_side = _controls_on_side;
-	setBorder (new EmptyBorder (5,5,5,5));
-	setLayout (new BorderLayout (5, 5));
-
-	// south panel - add/load etc. buttons
- 	south_panel = new JPanel();
- 	add (south_panel, "South");
-	south_panel.setLayout (new BoxLayout (south_panel, BoxLayout.X_AXIS));
-
-	//ImageIcon new_icn, load_icn, save_icn, close_icn;
-
-	load_button = new JButton ("Load");
-	save_button = new JButton ("Save");
-	new_button = new JButton ("New");
-	close_button = new JButton ("Close");
-
-	Insets ins = new Insets (0,0,0,0);
-	new_button.setMargin (ins);
-	load_button.setMargin (ins);
-	save_button.setMargin (ins);
-	close_button.setMargin (ins);
-
-	side_panel = new JPanel();
-	side_panel.setLayout (new GridLayout (12, 1));
-
-	side_panel.add (new JLabel ("File"));
-
-	side_panel.add (new_button);
-	side_panel.add (load_button);
-	side_panel.add (save_button);
-	side_panel.add (close_button);
-
-	side_panel.add (checkdepend_button = new JButton ("Verify"));
-
-	side_panel.add (new JLabel ("Chunk"));
-	if (controls_on_side == 0) {
-	    side_panel.add (send_button = new JButton (">>"));
-	    side_panel.add (send_all_button = new JButton (">All>"));
-	    add (side_panel, "East");
-	}
-	else {
-	    side_panel.add (send_button = new JButton ("<<"));
-	    side_panel.add (send_all_button = new JButton ("<All<"));
-	    add (side_panel, "West");
-	}
-
-	side_panel.add (remove_button = new JButton ("Remove"));
-	side_panel.add (duplicate_button = new JButton ("Duplicate"));
-	side_panel.add (insert_button = new JButton ("Insert"));
-
-	GridBagLayout gbl = new GridBagLayout();
-	south_panel.setLayout (gbl);
-	GridBagConstraints gbc = new GridBagConstraints();
-	gbc.fill = gbc.BOTH;
-	gbc.gridwidth = 1;
-	JLabel tl = new JLabel ("Insert type:");
-	gbl.setConstraints (tl, gbc);
-	south_panel.add (tl);
-	gbc.gridwidth = gbc.RELATIVE;
-	insert_type = new JComboBox();
-	gbl.setConstraints (insert_type, gbc);
-	south_panel.add (insert_type);
-	chunkhelp_button = new JButton ("Help");
-	chunkhelp_button.setMargin (new Insets (0,0,0,0));
-	gbc.gridwidth = 1;
-	gbl.setConstraints (chunkhelp_button, gbc);
-	south_panel.add (chunkhelp_button);
-
-	// center: scrolled pane w/ tree
-	center_panel = new Box (BoxLayout.Y_AXIS);
-	center_panel.add (db_combobox = new JComboBox());
-// 	buildDBList();
-
-	scroll_pane = new JScrollPane (JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
-				       JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-
-	center_panel.add (scroll_pane);
-	add (center_panel, "Center");
-
-// 	// set up initial tree viewing stuff. can't use selectDB() for this
-// 	// because it sees the chunkdb is already null and decides not to do
-// 	// anything.
-//         dbt = confighelper_module.getChunkDBTreeModel (chunkdb);
-// 	scroll_pane.setViewportView (dbt.tree);
-// 	dbt.tree.addMouseListener(this);
-// 	db_combobox.setSelectedItem (dbt.getName());
-// 	setButtonsEnabled (false);
-
-	// setup event handling
-	db_combobox.addActionListener (this);
-	load_button.addActionListener (this);
-	save_button.addActionListener (this);
-	checkdepend_button.addActionListener (this);
-	insert_button.addActionListener (this);
-	duplicate_button.addActionListener (this);
-	remove_button.addActionListener (this);
-	send_button.addActionListener (this);
-	send_all_button.addActionListener (this);
-	new_button.addActionListener (this);
-	close_button.addActionListener (this);
-	chunkhelp_button.addActionListener (this);
-
-	// tooltips
-	new_button.setToolTipText ("Create a new Config file");
-	load_button.setToolTipText ("Load another Config file");
-	save_button.setToolTipText ("Save this Config file");
-	close_button.setToolTipText ("Close this file (doesn't save)");
-	checkdepend_button.setToolTipText ("Check for missing dependencies");
-	send_button.setToolTipText ("Copy selected chunks to the other panel");
-	send_all_button.setToolTipText ("Copy all chunks over to the other panel");
-	insert_button.setToolTipText ("Inserts new chunk (select type below)");
-	duplicate_button.setToolTipText ("Insert copies of all selected chunks");
-	remove_button.setToolTipText ("Remove all selected chunks");
-	chunkhelp_button.setToolTipText ("Information about the insert selection");
-
-	// initialize popup menus
-	treeitem_menu_path = null;
-	desctreeitem_menu = new JPopupMenu ();
-	desctreeitem_menu.add (help1_mi = new JMenuItem ("Chunk Help"));
-	desctreeitem_menu.add (insert_mi = new JMenuItem ("Insert"));
-	chunktreeitem_menu = new JPopupMenu ();
-	chunktreeitem_menu.add (help2_mi = new JMenuItem ("Chunk Help"));
-	chunktreeitem_menu.add (remove_mi = new JMenuItem ("Remove"));
-
-	help1_mi.addActionListener (this);
-	help2_mi.addActionListener (this);
-	remove_mi.addActionListener (this);
-	insert_mi.addActionListener (this);
-
     }
 
 
 
     public void updateUI () {
         super.updateUI();
-        if (dbt != null)
-            dbt.updateUI();
+        if (ui_initialized) {
+            if (dbt != null)
+                dbt.updateUI();
+        }
     }
 
 
@@ -416,7 +279,7 @@ public class ChunkDBPanel
 	    config_module.closeChunkDB (chunkdb);
 	}
 	else if (source == checkdepend_button) {
-	    Vector vec = chunkdb.getDependencies();
+	    java.util.List vec = chunkdb.getDependencies();
 	    for (i = 0; i < config_module.chunkdbs.size(); i++) {
 		ConfigChunkDB db = (ConfigChunkDB)config_module.chunkdbs.elementAt(i);
 		if (db != chunkdb)
@@ -464,7 +327,7 @@ public class ChunkDBPanel
 		if (ni.isChunkNode()) {
 		    // create a copy of this node...
 		    ch = new ConfigChunk (ni.getChunk());
-		    ch.setName ("copy of " + ch.name);
+		    ch.setName (chunkdb.getNewName("copy of " + ch.getName()));
 		    chunkdb.add (ch);
 		}
 	    }
@@ -496,7 +359,7 @@ public class ChunkDBPanel
 	    if (ni.isDescNode())
                 confighelper_module.loadDescHelp (config_module.getDescTokenFromName (ni.toString()));
 	    else if (ni.isChunkNode())
-		confighelper_module.loadDescHelp (ni.getChunk().desc.getToken());
+		confighelper_module.loadDescHelp (ni.getChunk().getDescToken());
 	}
 	else if (source == remove_mi) {
 	    ni = ((ChunkTreeNodeInfo)((DefaultMutableTreeNode)treeitem_menu_path.getLastPathComponent()).getUserObject());
@@ -532,9 +395,10 @@ public class ChunkDBPanel
 	if (e.getClickCount() == 1) {
 	    if (ni.isChunkNode()) {
                 ConfigChunk ch = ni.getChunk();
-		String h = (ch.desc.help.equals(""))?"No help available"
-		    :ch.desc.help;
-		Core.consoleTempMessage (ch.desc.getName(), h);
+                String h = ch.getDescHelp();
+                if (h.equals(""))
+                    h = "No help available";
+		Core.consoleTempMessage (ch.getDescName(), h);
 	    }
 	    else if (ni.isDescNode()) {
 		ChunkDesc d = Core.descdb.getByName (ni.toString());
@@ -543,7 +407,8 @@ public class ChunkDBPanel
                 Core.consoleTempMessage (n, h);
 	    }
 	}
-	else if(e.getClickCount() == 2) {
+	else if ((mod == MouseEvent.BUTTON1_MASK) &&
+                 (e.getClickCount() == 2)) {
 	    openChunkFrame (ni.getChunk());
 	}
     }
@@ -681,34 +546,9 @@ public class ChunkDBPanel
     }
 
     public void initialize () {
-
-	load_button.setIcon (ui_module.getIcon ("open file", 0));
-	save_button.setIcon (ui_module.getIcon ("save file", 0));
-	new_button.setIcon (ui_module.getIcon ("new file", 0));
-	close_button.setIcon (ui_module.getIcon ("close file", 0));
-
-
         chunkdb_filter = new SuffixFilter ("Config Files (*.config, *.cfg)", ".config");
         chunkdb_filter.addSuffix(".cfg");
         chunkdb_filter = (SuffixFilter)ui_module.getEasyFileDialog().addFilter (chunkdb_filter, "ConfigChunkDB");
-
-
-	// set up initial tree viewing stuff. can't use selectDB() for this
-	// because it sees the chunkdb is already null and decides not to do
-	// anything.
-        dbt = confighelper_module.getChunkDBTreeModel (chunkdb);
-	scroll_pane.setViewportView (dbt.tree);
-	dbt.tree.addMouseListener(this);
-	db_combobox.setSelectedItem (dbt.getName());
-	setButtonsEnabled (false);
-
-	buildDBList();
-
-	// listen for new/delete chunkdb events from Core
-	config_module.addConfigModuleListener (this);
-
-        // get initial set of chunkdesc names for the type selector box.
-        updateInsertTypes();
 
     }
 
@@ -728,15 +568,160 @@ public class ChunkDBPanel
     }
 
 
+    public JComponent getUIComponent () {
+        return this;
+    }
+
+
+    public boolean initUIComponent () {
+        if (!ui_initialized) {
+            setBorder (BorderFactory.createEmptyBorder (5,5,5,5));
+            setLayout (new BorderLayout (5, 5));
+
+            // side panel - add/load etc. buttons
+
+            load_button = new JButton ("Load", 
+                                       ui_module.getIcon ("open file", 0));
+            save_button = new JButton ("Save", 
+                                       ui_module.getIcon ("save file", 0));
+            new_button = new JButton ("New", 
+                                      ui_module.getIcon ("new file", 0));
+            close_button = new JButton ("Close", 
+                                        ui_module.getIcon ("close file", 0));
+
+            Insets ins = new Insets (0,0,0,0);
+            load_button.setMargin (ins);
+            save_button.setMargin (ins);
+            new_button.setMargin (ins);
+            close_button.setMargin (ins);
+
+            JPanel side_panel = new JPanel();
+            side_panel.setLayout (new GridLayout (12, 1));
+
+            side_panel.add (new JLabel ("File"));
+
+            side_panel.add (new_button);
+            side_panel.add (load_button);
+            side_panel.add (save_button);
+            side_panel.add (close_button);
+
+            side_panel.add (checkdepend_button = new JButton ("Verify"));
+
+            side_panel.add (new JLabel ("Chunk"));
+            if (controls_on_side == 0) {
+                side_panel.add (send_button = new JButton (">>"));
+                side_panel.add (send_all_button = new JButton (">All>"));
+                add (side_panel, "East");
+            }
+            else {
+                side_panel.add (send_button = new JButton ("<<"));
+                side_panel.add (send_all_button = new JButton ("<All<"));
+                add (side_panel, "West");
+            }
+
+            side_panel.add (remove_button = new JButton ("Remove"));
+            side_panel.add (duplicate_button = new JButton ("Duplicate"));
+            side_panel.add (insert_button = new JButton ("Insert"));
+
+            // south: insert types selector
+            JPanel south_panel = new JPanel();
+            south_panel.setLayout (new BoxLayout (south_panel, BoxLayout.X_AXIS));
+            south_panel.add (new JLabel ("Insert type:"));
+            insert_type = new JComboBox();
+            south_panel.add (insert_type);
+            chunkhelp_button = new JButton ("Help");
+            chunkhelp_button.setMargin (new Insets (0,0,0,0));
+            south_panel.add (chunkhelp_button);
+
+            add (south_panel, "South");
+
+            // center: scrolled pane w/ tree
+            Box center_panel = new Box (BoxLayout.Y_AXIS);
+            center_panel.add (db_combobox = new JComboBox());
+
+            scroll_pane = new JScrollPane (JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
+                                           JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+
+            center_panel.add (scroll_pane);
+            add (center_panel, "Center");
+
+            // setup event handling
+            db_combobox.addActionListener (this);
+            load_button.addActionListener (this);
+            save_button.addActionListener (this);
+            checkdepend_button.addActionListener (this);
+            insert_button.addActionListener (this);
+            duplicate_button.addActionListener (this);
+            remove_button.addActionListener (this);
+            send_button.addActionListener (this);
+            send_all_button.addActionListener (this);
+            new_button.addActionListener (this);
+            close_button.addActionListener (this);
+            chunkhelp_button.addActionListener (this);
+
+            // tooltips
+            new_button.setToolTipText ("Create a new Config file");
+            load_button.setToolTipText ("Load another Config file");
+            save_button.setToolTipText ("Save this Config file");
+            close_button.setToolTipText ("Close this file (doesn't save)");
+            checkdepend_button.setToolTipText ("Check for missing dependencies");
+            send_button.setToolTipText ("Copy selected chunks to the other panel");
+            send_all_button.setToolTipText ("Copy all chunks over to the other panel");
+            insert_button.setToolTipText ("Inserts new chunk (select type below)");
+            duplicate_button.setToolTipText ("Insert copies of all selected chunks");
+            remove_button.setToolTipText ("Remove all selected chunks");
+            chunkhelp_button.setToolTipText ("Information about the insert selection");
+
+            // initialize popup menus
+            treeitem_menu_path = null;
+            desctreeitem_menu = new JPopupMenu ();
+            desctreeitem_menu.add (help1_mi = new JMenuItem ("Chunk Help"));
+            desctreeitem_menu.add (insert_mi = new JMenuItem ("Insert"));
+            chunktreeitem_menu = new JPopupMenu ();
+            chunktreeitem_menu.add (help2_mi = new JMenuItem ("Chunk Help"));
+            chunktreeitem_menu.add (remove_mi = new JMenuItem ("Remove"));
+
+            help1_mi.addActionListener (this);
+            help2_mi.addActionListener (this);
+            remove_mi.addActionListener (this);
+            insert_mi.addActionListener (this);
+
+
+            // set up initial tree viewing stuff. can't use selectDB() for this
+            // because the chunkdb is already null and it decides not to do
+            // anything.
+            dbt = confighelper_module.getChunkDBTreeModel (chunkdb);
+            scroll_pane.setViewportView (dbt.tree);
+            dbt.tree.addMouseListener(this);
+            db_combobox.setSelectedItem (dbt.getName());
+            setButtonsEnabled (false);
+
+            buildDBList();
+
+            // listen for new/delete chunkdb events from Core
+            config_module.addConfigModuleListener (this);
+
+            // get initial set of chunkdesc names for the type selector box.
+            updateInsertTypes();
+
+            ui_initialized = true;
+        }
+        return ui_initialized;
+    }
+
+
     public void destroy () {
-	config_module.removeConfigModuleListener (this);
+        if (ui_initialized)
+            config_module.removeConfigModuleListener (this);
     }
 
 
     public void rebuildDisplay () {
-        String s = getDBName();
-        selectDB (null);
-        selectDB (s);
+        if (ui_initialized) {
+            String s = getDBName();
+            selectDB (null);
+            selectDB (s);
+        }
     }
 }
 

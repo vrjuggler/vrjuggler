@@ -45,7 +45,7 @@ import javax.swing.*;
 import javax.swing.border.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.Vector;
+import java.util.List;
 
 import VjConfig.*;
 import VjComponents.UI.Widgets.ChildFrame;
@@ -56,7 +56,7 @@ public class DependencyFrame extends JFrame
     implements ChildFrame, ActionListener {
 
     ConfigChunkDB    chunkdb;
-    Vector           deps;
+    List             deps;
     ChunkDBPanel     par;
     JTextArea        textarea;
     JPanel           mainpanel;
@@ -71,7 +71,7 @@ public class DependencyFrame extends JFrame
 	JTextArea chtext;
 	JPanel panel;
 	GridBagConstraints gbc = new GridBagConstraints();
-	int i, j;
+	int i, j, n, m;
 
 	gbc.anchor = gbc.NORTHWEST;
 	gbc.insets = new Insets (4, 4, 4, 4);
@@ -79,15 +79,17 @@ public class DependencyFrame extends JFrame
 
 	innerpanel.removeAll();
 	
-	for (i = 0; i < deps.size(); i++) {
-	    cde = (ChunkDependEntry)deps.elementAt(i);
+        n = deps.size();
+	for (i = 0; i < n; i++) {
+	    cde = (ChunkDependEntry)deps.get(i);
 	    chbutton = new JButton (cde.chunk.getName());
 	    chbutton.addActionListener (this);
 	    chtext = new JTextArea();
 	    chtext.setEditable (false);
 	    chtext.setBorder (BorderFactory.createBevelBorder (BevelBorder.LOWERED));
-	    for (j = 0; j < cde.propdepends.size(); j++) {
-		pde = (PropDependEntry)cde.propdepends.elementAt(j);
+            m = cde.propdepends.size();
+	    for (j = 0; j < m; j++) {
+		pde = (PropDependEntry)cde.propdepends.get(j);
 		chtext.append (pde.toString());
 	    }
 	    gbc.gridwidth = 1;
@@ -107,11 +109,11 @@ public class DependencyFrame extends JFrame
     }
 
 
-    public DependencyFrame (ChunkDBPanel _par, ConfigChunkDB _db, Vector v) {
+    public DependencyFrame (ChunkDBPanel _par, ConfigChunkDB _db, List _deps) {
 	super ("Dependencies for '" + _db.name + "'");
 
 	chunkdb = _db;
-	deps = v;
+	deps = _deps;
 	par = _par;
 
 	mainpanel = new JPanel();
@@ -136,7 +138,7 @@ public class DependencyFrame extends JFrame
 
 
 
-    public void refreshData (Vector v) {
+    public void refreshData (List v) {
 	deps = v;
 	buildInnerPanel();
     }

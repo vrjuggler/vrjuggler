@@ -34,7 +34,7 @@
 
 package VjConfig;
 
-import java.util.Vector;
+import java.util.List;
 import VjConfig.ConfigChunkDB;
 import VjConfig.ChunkDescDB;
 import VjConfig.ChunkDesc;
@@ -49,6 +49,10 @@ public class ChunkFactory {
 	descdb = _db;
     }
 
+    static public void addChunkDescDB (ChunkDescDB _db) {
+        descdb.addAll (_db);
+    }
+
     static public void setDefaultChunkDB (ConfigChunkDB _db) {
 	default_chunkdb = _db;
     }
@@ -58,38 +62,46 @@ public class ChunkFactory {
     }
 
     static public ConfigChunk createChunkWithDescName (String s) {
+        return createChunkWithDescName (s, true);
+    }
+
+    static public ConfigChunk createChunkWithDescName (String s, boolean use_defaults) {
 	ConfigChunk newchunk = null;
 
 	if (default_chunkdb != null) {
-	    Vector v = default_chunkdb.getOfDescName (s);
+	    List v = default_chunkdb.getOfDescName (s);
 	    if (!v.isEmpty()) {
 		//System.out.println ("creating chunk from default");
-		return new ConfigChunk ((ConfigChunk)v.elementAt(0));
+		return new ConfigChunk ((ConfigChunk)v.get(0));
 	    }
 	}
 	if (descdb != null) {
 	    ChunkDesc cd = descdb.getByName(s);
 	    if (cd != null)
-		return new ConfigChunk (cd);
+		return new ConfigChunk (cd, use_defaults);
 	}
 	return null;
     }
 
 
     static public ConfigChunk createChunkWithDescToken (String s) {
+        return createChunkWithDescToken (s, true);
+    }
+
+    static public ConfigChunk createChunkWithDescToken (String s, boolean use_defaults) {
 	ConfigChunk newchunk = null;
 
 	if (default_chunkdb != null) {
-	    Vector v = default_chunkdb.getOfDescToken (s);
+	    List v = default_chunkdb.getOfDescToken (s);
 	    if (!v.isEmpty()) {
 		//System.out.println ("creating chunk from default");
-		return new ConfigChunk ((ConfigChunk)v.elementAt(0));
+		return new ConfigChunk ((ConfigChunk)v.get(0));
 	    }
 	}
 	if (descdb != null) {
 	    ChunkDesc cd = descdb.getByToken(s);
 	    if (cd != null)
-		return new ConfigChunk (cd);
+		return new ConfigChunk (cd, use_defaults);
 	}
 	return null;
     }
@@ -99,7 +111,21 @@ public class ChunkFactory {
 	return new ConfigChunk (cd);
     }
 
-    static public ConfigChunk createChunk (ChunkDesc cd, String name) {
-	return new ConfigChunk (cd, name);
+    // Utility functions dealing with the global DescDB 
+    /** Returns the names of all ChunkDescs defined in any of our DBs.
+     *  This is useful for GUI components that want to provide a list
+     *  or menu of desc names.
+     */
+    static public String[] getDescNames () {
+        int n = descdb.size();
+        String[] names = new String[n];
+        for (int i = 0; i < n; i++)
+            names[i] = ((ChunkDesc)descdb.get(i)).getName();
+        return names;
     }
+
+    static public String getNameFromToken (String tok) {
+        return descdb.getNameFromToken (tok);
+    }
+
 }

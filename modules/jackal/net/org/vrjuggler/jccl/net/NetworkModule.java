@@ -35,7 +35,7 @@ package VjComponents.Network;
 
 import java.io.*;
 import java.net.*;
-import java.util.Vector;
+import java.util.*;
 import VjConfig.*;
 import VjControl.*;
 import VjComponents.Network.NetCommunicator;
@@ -64,14 +64,14 @@ public class NetworkModule
 
     private String                   remote_name;
     private Socket                   sock;
-    private ConfigStreamTokenizer    instream;
+    private InputStream              instream;
     private DataOutputStream         outstream;
     private int                      port;
     private volatile boolean         connected;
     private Thread                   thread;
 
-    private Vector                   netcontrol_targets;
-    private Vector                   communicators;
+    private List                     netcontrol_targets;
+    private List                     communicators;
 
 
     public NetworkModule() {
@@ -80,9 +80,9 @@ public class NetworkModule
 	remote_name = new String ("localhost");
 	port = 4450;
 	connected = false;
-	netcontrol_targets = new Vector();
-        communicators = new Vector();
-	Core.gui_chunkdb.addChunkDBListener (this);
+	netcontrol_targets = new ArrayList();
+        communicators = new ArrayList();
+	Core.vjcontrol_chunkdb.addChunkDBListener (this);
     }
 
 
@@ -158,7 +158,7 @@ public class NetworkModule
 
 
     public void destroy () {
-        Core.gui_chunkdb.removeChunkDBListener (this);
+        Core.vjcontrol_chunkdb.removeChunkDBListener (this);
     }
 
 
@@ -208,8 +208,8 @@ public class NetworkModule
 	    //			+ remote_name + ":" + port);
 	    sock = new Socket (remote_name, port);
 	    outstream = new DataOutputStream (sock.getOutputStream());
-	    instream = 
-		new ConfigStreamTokenizer (new InputStreamReader(sock.getInputStream()));
+	    instream = sock.getInputStream();
+		//new ConfigStreamTokenizer (new InputStreamReader(sock.getInputStream()));
 	    connected = true;
 
 	    NetControlEvent e = new NetControlEvent (this, NetControlEvent.OPENED, remote_name, port);
@@ -222,8 +222,9 @@ public class NetworkModule
             // check communicators
             NetCommunicator comm;
             synchronized (communicators) {
-                for (int i = 0; i < communicators.size(); i++) {
-                    comm = (NetCommunicator)communicators.elementAt(i);
+                int i, n = communicators.size();
+                for (i = 0; i < n; i++) {
+                    comm = (NetCommunicator)communicators.get(i);
                     comm.initConnection ();
                 }
             }
@@ -269,8 +270,9 @@ public class NetworkModule
         // check communicators
         NetCommunicator comm;
         synchronized (communicators) {
-            for (int i = 0; i < communicators.size(); i++) {
-                comm = (NetCommunicator)communicators.elementAt(i);
+            int i, n = communicators.size();
+            for (i = 0; i < n; i++) {
+                comm = (NetCommunicator)communicators.get(i);
                 comm.shutdownConnection ();
             }
         }
@@ -305,13 +307,32 @@ public class NetworkModule
     }
 
 
+    /** Tells each communicator to try to update its current information
+     *  from the network.  For example, the ConfigCommunicator's requestUpdate
+     *  requests the complete ChunkDB from the Juggler app on the other side
+     *  of the connection.
+     */
+    public boolean requestUpdates() {
+        synchronized (communicators) {
+            int i, n = communicators.size();
+            NetCommunicator nc;
+            for (i = 0; i < n; i++) {
+                nc = (NetCommunicator)communicators.get(i);
+                nc.requestUpdate();
+            }
+        }
+        return true;
+    }
+
 
     public NetCommunicator getCommunicator (String name) {
         synchronized (communicators) {
-            for (int i = 0; i < communicators.size(); i++) {
-                NetCommunicator n = (NetCommunicator)communicators.elementAt(i);
-                if (n.getComponentName().equalsIgnoreCase (name))
-                    return n;
+            NetCommunicator nc;
+            int i, n = communicators.size();
+            for (i = 0; i < n; i++) {
+                nc = (NetCommunicator)communicators.get(i);
+                if (nc.getComponentName().equalsIgnoreCase (name))
+                    return nc;
             }
             return null;
         }
@@ -321,7 +342,7 @@ public class NetworkModule
     public void addCommunicator (NetCommunicator n) {
         synchronized (communicators) {
             n.setNetworkModule (this);
-            communicators.addElement (n);
+            communicators.add (n);
             Core.registerComponent (n);
         }
     }
@@ -382,6 +403,22 @@ public class NetworkModule
     }
 
 
+    protected String readLine (InputStream instream) throws IOException {
+        StringBuffer s = new StringBuffer(64);
+        char ch;
+        int i;
+        for (;;) {
+            i = instream.read();
+            if (i == -1)
+                throw new IOException();
+            ch = (char)i;
+            if (ch == '\n')
+                break;
+            s.append (ch);
+        }
+        return new String(s);
+    }
+
 
     /** Attempts to read a command from the network.
      *  Networking currently fails if one of the readers encounters
@@ -389,33 +426,49 @@ public class NetworkModule
      */
     protected boolean read () throws IOException {
 	ConfigChunk c;
-        String id;
+        String id = null;
 	NetCommunicator comm = null;
         boolean accepted = false;
+        boolean retval = false;
 
 	if (!connected)
 	    return false;
 
-        instream.nextToken();
-        id = instream.sval;
+        String s;
+        int j, k;
+        // need to parse the <protocol handler="foo"> line
+        do {
+            s = readLine (instream);
+            System.out.println ("read stream begin: '" + s + "'");
+            j = s.indexOf ("<protocol handler=\"");
+            k = s.lastIndexOf ('"');
+            if ((j != -1) && (k >= j + 19))
+                id = s.substring (j+19,k);
+            
+        } while (id == null);
+        System.out.println ("protocol id name is '" + id + "'");
 
         // check communicators
         synchronized (communicators) {
-            for (int i = 0; i < communicators.size(); i++) {
-                comm = (NetCommunicator)communicators.elementAt(i);
+            int i, n = communicators.size();
+            for (i = 0; i < n; i++) {
+                comm = (NetCommunicator)communicators.get(i);
                 if (comm.acceptsStreamIdentifier (id)) {
-                    //comm.readStream (instream, id);
                     accepted = true;
                     break;
                 }
             }
         }
-        if (accepted)
-            return comm.readStream (instream, id);
-        
-        if (accepted == false)
-            Core.consoleErrorMessage (component_name, "Unknown command: " + instream.sval);
-        return false;
+        if (accepted) {
+            ProtocolInputStream in = new ProtocolInputStream (instream, "</protocol>");
+            retval = comm.readStream (in, id);
+            in.windToEnd();
+        }
+        else {
+            Core.consoleErrorMessage (component_name, "Unknown protocol handler: '" + s + "'");
+            retval = false;;
+        }
+        return retval;
     }
 
 
@@ -424,32 +477,32 @@ public class NetworkModule
 
     public synchronized void addNetControlListener (NetControlListener l) {
 	synchronized (netcontrol_targets) {
-	    netcontrol_targets.addElement (l);
+	    netcontrol_targets.add (l);
 	}
     }
 
 
     public void removeNetControlListener (NetControlListener l) {
 	synchronized (netcontrol_targets) {
-	    netcontrol_targets.removeElement (l);
+	    netcontrol_targets.remove (l);
 	}
     }
 
 
     protected void notifyNetControlTargets (NetControlEvent e) {
-	Vector l;
+        NetControlListener[] l;
 	synchronized (netcontrol_targets) {
-	    l = (Vector) netcontrol_targets.clone();
+            l = new NetControlListener[netcontrol_targets.size()];
+	    l = (NetControlListener[]) netcontrol_targets.toArray(l);
 	}
-	for (int i = 0; i < l.size(); i++) {
-	    NetControlListener lis = (NetControlListener)l.elementAt (i);
+	for (int i = 0; i < l.length; i++) {
 	    int a = e.event_type;
 	    if (a == e.OPENED)
-		lis.openedConnection (e);
+		l[i].openedConnection (e);
 	    if (a == e.CLOSED)
-		lis.closedConnection (e);
+		l[i].closedConnection (e);
 	    if (a == e.ADDRESS)
-		lis.addressChanged (e);
+		l[i].addressChanged (e);
 	}
     }
 

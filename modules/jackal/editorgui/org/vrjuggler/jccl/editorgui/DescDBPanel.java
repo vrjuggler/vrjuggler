@@ -69,18 +69,19 @@ public class DescDBPanel
 
     protected SuffixFilter descdb_filter;
 
-    JTree tree;
-    ChunkDescDB currdb;
-    DefaultTreeModel model;
-    JButton new_button;
-    JButton load_button;
-    JButton save_button;
-    JButton close_button;
-    JButton insert_button;
-    JButton remove_button;
-    JComboBox db_combobox;
-    JScrollPane scroll_pane;
+    protected JTree tree;
+    protected ChunkDescDB currdb;
+    protected DefaultTreeModel model;
+    protected JButton new_button;
+    protected JButton load_button;
+    protected JButton save_button;
+    protected JButton close_button;
+    protected JButton insert_button;
+    protected JButton remove_button;
+    protected JComboBox db_combobox;
+    protected JScrollPane scroll_pane;
 
+    protected boolean ui_initialized;
 
 
     public DescDBPanel () {
@@ -89,69 +90,19 @@ public class DescDBPanel
         component_name = "Unconfigured DescDBPanel";
         component_chunk = null;
 
-	JPanel south_panel, side_panel; Box center_panel;
+        ui_initialized = false;
 
 	currdb = null;
+        model = null;
 
         config_module = null;
         ui_module = null;
         confighelper_module = null;
-
-	setBorder (BorderFactory.createEmptyBorder (5,5,5,5));
-	setLayout (new BorderLayout (5, 5));
-
-	// create buttons
-	load_button = new JButton ("Load");
-	save_button = new JButton ("Save");
-	new_button = new JButton ("New");
-	close_button = new JButton ("Close");
-	insert_button = new JButton ("Insert");
-	remove_button = new JButton ("Remove");
-	
-	// south panel - add/load etc. buttons
-	side_panel = new JPanel();
-	side_panel.setLayout (new GridLayout (8, 1));
-	side_panel.add (new_button);
-	side_panel.add (load_button);
-	side_panel.add (save_button);
-	side_panel.add (close_button);
-	side_panel.add (insert_button);
-	side_panel.add (remove_button);
-	add (side_panel, "East");
-
-	// side panel - send & send all buttons
-//  	side_panel = new JPanel();
-//  	side_panel.setLayout (new BoxLayout (side_panel, BoxLayout.Y_AXIS));
-//  	add (side_panel, "West");
-	
-	// center: scrolled pane w/ tree
-	center_panel = new Box (BoxLayout.Y_AXIS);
-	center_panel.add (db_combobox = new JComboBox());
-        //	buildDBList();
-	tree = new JTree();
-	scroll_pane = new JScrollPane (tree, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
-				       JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-	center_panel.add (scroll_pane);
-	add (center_panel, "Center");
-	
-	// setup event handling
-	tree.addMouseListener (this);
-	db_combobox.addActionListener (this);
-	new_button.addActionListener (this);
-	load_button.addActionListener (this);
-	save_button.addActionListener (this);
-	close_button.addActionListener (this);
-	insert_button.addActionListener (this);
-	remove_button.addActionListener (this);
-	
-	//can't use selectDB yet...
-        tree.setModel (new DefaultTreeModel (new DefaultMutableTreeNode ("no selection")));
-        currdb = null;
     }
 
 
 
-    public void buildDBList () {
+    protected void buildDBList () {
 	int i;
 	db_combobox.addItem ("No Selection");
         String[] descdb_names = config_module.getDescDBNames();
@@ -163,7 +114,6 @@ public class DescDBPanel
 
     public void selectDB (String name) {
 	/* changes the currently displayed db in the panel to name... */
-	int i;
 	ChunkDesc d;
 	DefaultMutableTreeNode root;
 
@@ -175,10 +125,12 @@ public class DescDBPanel
 	if (db == null)
 	    name = "No Selection";
 	if (name.equalsIgnoreCase ("No Selection")) {
-	    tree.setModel (new DefaultTreeModel (new DefaultMutableTreeNode ("no selection")));
+            model = new DefaultTreeModel (new DefaultMutableTreeNode ("no selection"));
+	    tree.setModel (model);
 	    if (currdb != null)
 		currdb.removeDescDBListener(this);
 	    currdb = null;
+            setButtonsEnabled (false);
 	}
 	else {
 	    if (currdb != null)
@@ -186,24 +138,22 @@ public class DescDBPanel
 	    currdb = db;
 	    currdb.addDescDBListener(this);
 	    root = new DefaultMutableTreeNode ("root");
-	    for (i = 0; i < currdb.size(); i++) {
-		d = currdb.elementAt(i);
+            int i, n = currdb.size();
+	    for (i = 0; i < n; i++) {
+		d = currdb.get(i);
 		root.add (new DefaultMutableTreeNode (d.name));
 	    }
 	    model = new DefaultTreeModel (root);
 	    tree.setModel (model);
 	    tree.setRootVisible (false);
 	    db_combobox.setSelectedItem (currdb.name);
+            setButtonsEnabled (true);
 	}
-	if (name.equalsIgnoreCase ("No Selection"))
-	    setButtonsEnabled(false);
-	else
-	    setButtonsEnabled(true);
     }
 
 
 
-    private void setButtonsEnabled (boolean b) {
+    protected void setButtonsEnabled (boolean b) {
 	save_button.setEnabled(b);
 	close_button.setEnabled(b);
 	insert_button.setEnabled(b);
@@ -211,6 +161,7 @@ public class DescDBPanel
     }
 
 
+    //----------------------- Action Listener stuff --------------------------
 
     public void actionPerformed (ActionEvent e) {
 	int i,j;
@@ -223,7 +174,6 @@ public class DescDBPanel
 	Object source = e.getSource();
     
 	if (source == remove_button) {
-	    model = (DefaultTreeModel)tree.getModel();
 	    tp = tree.getSelectionPaths();
 	    if (tp == null)
 		return;
@@ -234,7 +184,6 @@ public class DescDBPanel
 	    }
 	}
 	else if (source == insert_button) {
-	    model = (DefaultTreeModel)tree.getModel();
 	    d = new ChunkDesc();
 	    for (j = 0; j <50; j++) {
 		if ((currdb.getByName("unnamed"+j) == null) &&
@@ -279,16 +228,18 @@ public class DescDBPanel
     }
 
 
+    //----------------------- Mouse Listener Stuff --------------------------
 
     public void mouseClicked(MouseEvent e) {
 	DefaultMutableTreeNode n;
 	String selected;
 
-	if(e.getClickCount() == 2) {
+	if ((e.getModifiers() == MouseEvent.BUTTON1_MASK) && 
+            (e.getClickCount() == 2)) {
 	    TreePath selPath = tree.getPathForLocation(e.getX(), e.getY());
 	    if(selPath != null) {
 		n = (DefaultMutableTreeNode)selPath.getLastPathComponent();
-		if (tree.getModel().getRoot() == n)
+		if (model.getRoot() == n)
 		    return; // it was the root node...
 		selected = (String)n.getUserObject();
 		if (selected != null) {
@@ -299,7 +250,6 @@ public class DescDBPanel
     }
 
 
-
     public void mouseEntered(MouseEvent e) {}
     public void mouseExited(MouseEvent e) {}
     public void mousePressed(MouseEvent e) {}
@@ -307,7 +257,7 @@ public class DescDBPanel
 
 
 
-    /****************** ConfigModuleListener stuff **********************/
+    //---------------------- ConfigModuleListener Stuff ----------------------
 
     public void addDescDB (ConfigModuleEvent e) {
         // add new DescDB to our drop-down list.
@@ -329,7 +279,7 @@ public class DescDBPanel
 
 
 
-    /***************** DescDBListener Stuff **********************/
+    //---------------------- DescDBListener Stuff ----------------------------
 
 
     public void addDesc (DescDBEvent e) {
@@ -337,7 +287,7 @@ public class DescDBPanel
 	DefaultMutableTreeNode root = (DefaultMutableTreeNode)tree.getModel().getRoot();
 	DefaultMutableTreeNode n = new DefaultMutableTreeNode(e.getNewDesc().name);
 	root.add(n);
-	((DefaultTreeModel)tree.getModel()).reload(root);
+	model.reload(root);
     }	
 
 
@@ -350,7 +300,7 @@ public class DescDBPanel
 	    n = (DefaultMutableTreeNode)en.nextElement();
 	    if (e.getOldDesc().name.equals((String)n.getUserObject())) {
 		root.remove(n);
-		((DefaultTreeModel)tree.getModel()).reload(root);
+		model.reload(root);
 		break;
 	    }
 	}
@@ -367,7 +317,7 @@ public class DescDBPanel
 	    n = (DefaultMutableTreeNode)en.nextElement();
 	    if (e.getOldDesc().name.equals((String)n.getUserObject())) {
 	        n.setUserObject(e.getNewDesc().name);
-		((DefaultTreeModel)tree.getModel()).reload(n);
+		model.reload(n);
 		return;
 	    }
 	}
@@ -379,12 +329,12 @@ public class DescDBPanel
     public void removeAllDescs (DescDBEvent e) {
 	DefaultMutableTreeNode root = (DefaultMutableTreeNode)tree.getModel().getRoot();
 	root.removeAllChildren();
-	((DefaultTreeModel)tree.getModel()).reload(root);
+	model.reload(root);
     }
 
 
 
-    /***************** PlugPanel Stuff ***************************/
+    //----------------------- PlugPanel Stuff --------------------------------
 
     public String getComponentName () {
         return component_name;
@@ -432,20 +382,9 @@ public class DescDBPanel
         }
 
 
-
         descdb_filter = new SuffixFilter("Description Files (*.desc, *.dsc)", ".desc");
         descdb_filter.addSuffix(".dsc");
         descdb_filter = (SuffixFilter)ui_module.getEasyFileDialog().addFilter (descdb_filter, "ChunkDescDB");
-
-
-	load_button.setIcon (ui_module.getIcon ("open file", 0));
-	save_button.setIcon (ui_module.getIcon ("save file", 0));
-	new_button.setIcon (ui_module.getIcon ("new file", 0));
-	close_button.setIcon (ui_module.getIcon ("close file", 0));
-
-	config_module.addConfigModuleListener (this);
-
-        buildDBList();
 
         return true;
     }
@@ -466,10 +405,86 @@ public class DescDBPanel
     }
 
 
+    public JComponent getUIComponent () {
+        return this;
+    }
+
+
+    public boolean initUIComponent() {
+        if (!ui_initialized) {
+            JPanel south_panel, side_panel; Box center_panel;
+
+            setBorder (BorderFactory.createEmptyBorder (5,5,5,5));
+            setLayout (new BorderLayout (5, 5));
+
+            // create buttons
+            load_button = new JButton ("Load",
+                                       ui_module.getIcon ("open file", 0));
+            save_button = new JButton ("Save",
+                                       ui_module.getIcon ("save file", 0));
+            new_button = new JButton ("New",
+                                      ui_module.getIcon ("new file", 0));
+            close_button = new JButton ("Close",
+                                        ui_module.getIcon ("close file", 0));
+            insert_button = new JButton ("Insert");
+            remove_button = new JButton ("Remove");
+	
+            // south panel - add/load etc. buttons
+            side_panel = new JPanel();
+            side_panel.setLayout (new GridLayout (8, 1));
+            side_panel.add (new_button);
+            side_panel.add (load_button);
+            side_panel.add (save_button);
+            side_panel.add (close_button);
+            side_panel.add (insert_button);
+            side_panel.add (remove_button);
+            add (side_panel, "East");
+
+	// side panel - send & send all buttons
+//  	side_panel = new JPanel();
+//  	side_panel.setLayout (new BoxLayout (side_panel, BoxLayout.Y_AXIS));
+//  	add (side_panel, "West");
+	
+            // center: scrolled pane w/ tree
+            center_panel = new Box (BoxLayout.Y_AXIS);
+            center_panel.add (db_combobox = new JComboBox());
+            //	buildDBList();
+            tree = new JTree();
+            scroll_pane = new JScrollPane (tree, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
+                                           JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+            center_panel.add (scroll_pane);
+            add (center_panel, "Center");
+            
+            // setup event handling
+            tree.addMouseListener (this);
+            db_combobox.addActionListener (this);
+            new_button.addActionListener (this);
+            load_button.addActionListener (this);
+            save_button.addActionListener (this);
+            close_button.addActionListener (this);
+            insert_button.addActionListener (this);
+            remove_button.addActionListener (this);
+	
+            //can't use selectDB yet...
+            model = new DefaultTreeModel (new DefaultMutableTreeNode ("no selection"));
+            tree.setModel (model);
+
+            config_module.addConfigModuleListener (this);
+
+            buildDBList();
+
+            ui_initialized = true;
+        }
+        return ui_initialized;
+    }
+
+
     public void destroy () {
-	config_module.removeConfigModuleListener (this);
-	if (currdb != null)
-	    currdb.removeDescDBListener (this);
+        if (ui_initialized) {
+            config_module.removeConfigModuleListener (this);
+            if (currdb != null)
+                currdb.removeDescDBListener (this);
+        }
     }
 
 

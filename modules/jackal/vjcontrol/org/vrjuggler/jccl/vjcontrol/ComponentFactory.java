@@ -179,9 +179,8 @@ public class ComponentFactory {
             try {
                 // Get an optional chunkdescs file "contents.desc"
                 URL descdb_url = new URL (jar_file_url + "contents.desc");
-                InputStreamReader inr = new InputStreamReader (descdb_url.openStream());
                 ChunkDescDB descdb = new ChunkDescDB();
-                descdb.read (new ConfigStreamTokenizer (inr));
+                ConfigIO.readChunkDescDB (descdb_url.openStream(), descdb, ConfigIO.GUESS);
                 Core.descdb.addAll (descdb);
             }
             catch (FileNotFoundException e1) {
@@ -196,15 +195,13 @@ public class ComponentFactory {
 
             // Get the required contents file "contents.config"
             URL chunkdb_url = new URL (jar_file_url + "contents.config");
-	    InputStreamReader inr = new InputStreamReader (chunkdb_url.openStream());
 
             ConfigChunkDB chunkdb = new ConfigChunkDB();
-            chunkdb.read(new ConfigStreamTokenizer(inr));
-            //System.out.println (chunkdb.fileRep());
+            ConfigIO.readConfigChunkDB (chunkdb_url.openStream(), chunkdb, ConfigIO.GUESS);
             /* now we need to analyze the read-in chunks and deal with 'em */
 
             for (int i = 0; i < chunkdb.size(); i++)
-                registerComponent (chunkdb.elementAt(i));
+                registerComponent (chunkdb.get(i));
 
         }
         catch (Exception e) {

@@ -37,7 +37,7 @@ package VjConfig;
 
 import VjConfig.VarValue;
 
-public class DescEnum {
+public class DescEnum implements Cloneable {
 
     public String str;
     public VarValue val;
@@ -51,7 +51,11 @@ public class DescEnum {
 	    return new String (str);
     }
 
-
+    public Object clone () throws CloneNotSupportedException {
+            DescEnum e = (DescEnum)super.clone();
+            e.val = new VarValue (val);
+            return e;
+    }
 
     public DescEnum (DescEnum other) {
 	str = other.str;
@@ -66,17 +70,6 @@ public class DescEnum {
 	//System.out.println(toString());
     }
 
-
-    public DescEnum (String s, String v) {
-	str = s;
-	val = new VarValue (v);
-    }
-
-    public DescEnum (String s, int v) {
-	str = s;
-	val = new VarValue(v);
-    }
-    
 
 
     public boolean equals (DescEnum d) {
