@@ -51,12 +51,6 @@
 #undef RW_MULTI_THREAD
 #undef _REENTRANT
 
-/* Define if using POSIX threads Draft 4. */
-#undef _PTHREADS_DRAFT_4
-
-/* Define if using POSIX threads Draft 10 (the "final" draft). */
-#undef _PTHREADS_DRAFT_10
-
 /* Define to use POSIX semaphores. */
 #undef VPR_POSIX_SEMAPHORES
 
@@ -72,9 +66,6 @@
 /* Define all of the following if building on IRIX. */
 #undef VPR_OS_IRIX
 #undef _BSD_TYPES
-
-/* Define to be either IRIX5 or IRIX6 depending on your system. */
-#undef IRIXREL
 
 /* Define all of the following if building on HP-UX. */
 #undef VPR_OS_HPUX
@@ -100,8 +91,6 @@
 
 /* Define if building on a Win32 platform. */
 #undef VPR_OS_Win32
-#undef WIN32
-#undef _MBCS
 
 /* Define if building on Mac OS X. */
 #undef VPR_OS_MACOSX
