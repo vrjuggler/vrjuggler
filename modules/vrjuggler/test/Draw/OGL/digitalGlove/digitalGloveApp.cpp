@@ -31,12 +31,12 @@
  * -----------------------------------------------------------------
  */
 
-#include <simpleGloveApp.h>
+#include <digitalGloveApp.h>
 
 
-void simpleGloveApp::myDraw()
+void digitalGloveApp::myDraw()
 {
-	//cout<<"simpleGloveApp::myDraw()\n"<<flush;
+	//cout<<"digitalGloveApp::myDraw()\n"<<flush;
    
    // Clear the scene
    glClearColor(0.0, 0.0, 0.0, 0.0);
@@ -85,9 +85,9 @@ void simpleGloveApp::myDraw()
    glPopMatrix();
 }
 
-void simpleGloveApp::initGLState()
+void digitalGloveApp::initGLState()
 {
-   //cout<<"simpleGloveApp::initGLState()\n"<<flush;
+   //cout<<"digitalGloveApp::initGLState()\n"<<flush;
    
    GLfloat light0_ambient[] = { .2,  .2,  .2,  1.0};
    GLfloat light0_diffuse[] = { 1.0,  1.0,  1.0,  1.0};
