@@ -1,5 +1,9 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Feb-06-2005 patrickh    Custom editors of config elements can now provide a
+                        means to respond to help requests raised by a user
+                        clicking on a button.
+                        NEW VERSION: 0.92.2
 Feb-03-2005 patrickh    Use $JCCL_DEFINITION_PATH to augment the .jdef search
                         path rather than having it override the default search
                         path.
