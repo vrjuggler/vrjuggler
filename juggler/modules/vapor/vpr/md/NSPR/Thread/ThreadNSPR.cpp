@@ -104,7 +104,11 @@ ThreadNSPR::ThreadNSPR(BaseThreadFunctor* functorPtr,
 // Destructor.
 ThreadNSPR::~ThreadNSPR()
 {
-   ;
+   ThreadManager::instance()->lock();
+   {
+      unregisterThread();
+   }
+   ThreadManager::instance()->unlock();
 }
 
 void ThreadNSPR::setFunctor(BaseThreadFunctor* functorPtr)
