@@ -37,11 +37,11 @@
 #include <iostream>
 #include <vpr/IO/Socket/Socket.h>
 
-namespace vrj
-{
-
 
 #ifndef VJ_OS_Win32
+
+namespace vrj
+{
 
 typedef int SocketIDPosix;
 extern const int SOCKID_INVALID;
@@ -90,6 +90,7 @@ public:
 typedef SocketPosix Socket;
 typedef SocketIDPosix SocketID;
 
+} // End of vrj namespace
 
 #else
 
@@ -97,6 +98,9 @@ typedef SocketIDPosix SocketID;
 
 #include <winsock2.h>
 //#include <Environment/sockstream.h>
+
+namespace vrj
+{
 
 typedef SOCKET SocketIDWin32;
 extern const int SOCKID_INVALID;
@@ -143,9 +147,10 @@ public:
 typedef SocketWin32 Socket;
 typedef SocketIDWin32 SocketID;
 
+} // End of vrj namespace
 
 
 #endif //ifndef VJ_OS_Win32
-};
+
 #endif
 
