@@ -25,7 +25,9 @@ PROJECT_NAME = driver
 OBJDIR = .
 DEPDIR = 
 
-INCLUDE_PATHS =  -I${srcdir} -I${srcdir}/TestCases -I${srcdir}/CppUnit/framework -I${srcdir}/CppUnit/textui
+INCLUDE_PATHS =  -I${srcdir} \
+                 -I${srcdir}/TestCases -I${srcdir}/CppUnit/framework -I${srcdir}/CppUnit/textui \
+                 -I${VPR_BASE_DIR}/include
 PATH_TO_SRCS = ${srcdir} ${srcdir}/TestCases ${srcdir}/CppUnit/framework ${srcdir}/CppUnit/textui
 MK_DIR = ${srcdir}/mk
 
@@ -59,6 +61,8 @@ endif
 ########################################################################
 
 include ${MK_DIR}/mk.objs
+
+LIBS += -L${VPR_BASE_DIR}/lib32 -B static -lvpr -B dynamic
 
 # Compile then Link
 build: $(OBJS)
