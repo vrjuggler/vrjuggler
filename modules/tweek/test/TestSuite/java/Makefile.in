@@ -51,8 +51,8 @@ GenericBean.jar: $(GENERIC_CLASSES)
 	$(JAR) cvf $@ $(GENERIC_CLASSES)
 
 #install:
-#	cp NetworkTestBean.jar $(TWEEK_BASE_DIR)/bin/beans
-#	cp $(srcdir)/NetworkTestBean.xml $(TWEEK_BASE_DIR)/bin/beans
+#	cp NetworkTestBean.jar $(TWEEK_BASE_DIR)/share/tweek/beans
+#	cp $(srcdir)/NetworkTestBean.xml $(TWEEK_BASE_DIR)/share/tweek/beans
 
 # Suffix rules for building object files.
 .SUFFIXES: .java .class .idl

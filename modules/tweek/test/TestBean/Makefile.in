@@ -29,8 +29,8 @@ TestBean.jar: $(CLASSES)
 	$(JAR) cvf $@ $(CLASSES)
 
 install:
-	cp TestBean.jar $(TWEEK_BASE_DIR)/bin/beans
-	cp $(srcdir)/TestBean.xml $(TWEEK_BASE_DIR)/bin/beans
+	cp TestBean.jar $(TWEEK_BASE_DIR)/share/tweek/beans
+	cp $(srcdir)/TestBean.xml $(TWEEK_BASE_DIR)/share/tweek/beans
 
 # Suffix rules for building object files.
 .SUFFIXES: .java .class

@@ -85,9 +85,17 @@ public class TweekCore
       // This needs to be the first step to ensure that all the basic services
       // and viewers get loaded.
       String default_path = System.getProperty("TWEEK_BASE_DIR") +
-                            File.separator + "bin" + File.separator + "beans";
+                            File.separator + "share" +
+                            File.separator + "tweek" +
+                            File.separator + "beans";
+
+      // Add in the old default Bean directory for backwards compatibility.
+      // This will be removed before Tweek 1.0 is relesaed.
+      String compat_path = System.getProperty("TWEEK_BASE_DIR") +
+                           File.separator + "bin" + File.separator + "beans";
 
       mBeanDirs.add(default_path);
+      mBeanDirs.add(compat_path);
 
       // As a side effect, the following may add more paths to mBeanDirs.
       String[] new_args = parseTweekArgs(args);

@@ -45,9 +45,11 @@ default: all
 # Include common definitions.
 include @topdir@/make.defs.mk
 
-beandir=		$(bindir)/beans
+beandir=		$(projdatadir)/beans
+javadir=		$(projdatadir)/java
 srcdir=			@srcdir@
 top_srcdir=		@top_srcdir@
+
 EXTRA_SRCS_PATH=	$(srcdir)/../tweek/idl
 EXTRA_JAVA_SRCS_PATH=	$(IDL_GENDIR)/tweek $(KUNSTSTOFF_SRCDIR)
 IDL_GENDIR=		.
@@ -134,12 +136,14 @@ else
 	$(INSTALL) -m $(EXEC_PERMS) $(GROUP_OPT_UNIX)			\
           $(TWEEKROOT_ABS)/java/tweek.bat $(bindir)/tweek.bat
 endif	# if OS_TYPE == UNIX
+	$(SHELL) $(MKINSTALLDIRS) $(projdatadir)
+	$(MTREE_CMD) -Ude -f $(mtreedir)/TWEEK.java.dist -p $(projdatadir)
 	$(INSTALL) $(EXTRA_INSTALL_ARGS) -m $(FILE_PERMS)		\
-          $(GROUP_OPT_UNIX) $(srcdir)/java.security.policy.txt $(bindir)
+          $(GROUP_OPT_UNIX) $(srcdir)/java.security.policy.txt $(javadir)
 	for jar in $(JARS) ;						\
           do								\
               $(INSTALL) $(EXTRA_INSTALL_ARGS) -m $(FILE_PERMS)		\
-                $(GROUP_OPT_UNIX) $(topdir)/java/$$jar $(bindir) ;	\
+                $(GROUP_OPT_UNIX) $(topdir)/java/$$jar $(javadir) ;	\
           done
 	for bean in $(BEANS) ;						\
           do								\
@@ -152,19 +156,19 @@ endif	# if OS_TYPE == UNIX
 	for jar in $(JDOM_JARS) ;					\
           do								\
               $(INSTALL) $(EXTRA_INSTALL_ARGS) -m $(FILE_PERMS)		\
-                $(GROUP_OPT_UNIX) $$jar $(bindir) ;			\
+                $(GROUP_OPT_UNIX) $$jar $(javadir) ;			\
           done
 ifneq ($(JAVA_ORB_JAR), none)
 	for jar in `echo "$(JAVA_ORB_JAR)" | sed -e 's/$(JCPS)/ /g'` ;	\
           do								\
               $(INSTALL) $(EXTRA_INSTALL_ARGS) -m $(FILE_PERMS)		\
-                $(GROUP_OPT_UNIX) $$jar $(bindir) ;			\
+                $(GROUP_OPT_UNIX) $$jar $(javadir) ;			\
           done
 endif
 	for jar in `echo "$(LAF_JARS)" | sed -e 's/$(JCPS)/ /g'` ;	\
           do								\
               $(INSTALL) $(EXTRA_INSTALL_ARGS) -m $(FILE_PERMS)		\
-                $(GROUP_OPT_UNIX) $$jar $(bindir) ;			\
+                $(GROUP_OPT_UNIX) $$jar $(javadir) ;			\
           done
 
 CLEAN_DIRS+=	tweek $(srcdir)/tweek
