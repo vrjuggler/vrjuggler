@@ -1,5 +1,7 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Jan-31-2005 patrickh    Separated the builds for VR Juggler and VRJConfig.
+
 [2.0 Beta 2 released - 1.18.2005]==============================================
 Jan-18-2005 patrickh    NEW VERSION: 1.1.167
 Jan-11-2005 patrickh    Added a VRJConfig custom editor for flock config

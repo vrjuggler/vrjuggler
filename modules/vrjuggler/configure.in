@@ -75,16 +75,6 @@ AC_ARG_ENABLE(pf-api,
               [  --enable-pf-api         Use Perfromer API               [default=yes]],
               _enable_pf_api="$enableval", _enable_pf_api='yes')
 
-# Specify where Java3D is located
-AC_ARG_WITH(java3d,
-            [  --with-java3d=<PATH>    Path to Java3D JAR file(s) ],
-            JAVA3D_JAR="$withval", JAVA3D_JAR='none')
-
-# Specify where JOGL is located
-AC_ARG_WITH(jogl,
-            [  --with-jogl=<PATH>      Path to JOGL JAR file(s) ],
-            JOGL_JARS="$withval", JOGL_JARS='')
-
 # -------------------------------------------- #
 # --with-pkg[=arg] and --without-pkg arguments #
 # -------------------------------------------- #
@@ -149,17 +139,6 @@ DPP_CXX_RTTI(AC_MSG_ERROR(*** The library requires C++ RTTI support ***))
 DPP_CXX_STATIC_CAST(AC_MSG_ERROR(*** The library requires C++ static_cast<> ***))
 DPP_CXX_DYNAMIC_CAST(AC_MSG_ERROR(*** The library requires C++ dynamic_cast<> ***))
 
-# Check for the JDK.
-DPP_PATH_JAVA( , [BUILD_JAVA='Y'], [BUILD_JAVA='N'])
-
-# If there is still no value in $JAVAC, then warn that VRJConfig will not be
-# built
-if test "x$BUILD_JAVA" = "xN" ; then
-   AC_MSG_WARN([*** VRJConfig requires the JDK -- it will not be built ***])
-fi
-
-ANT="JAVA_HOME=\"$JDK_HOME\" \"$UNIX_JUGGLERROOT_ABS/external/ant/bin/ant\" --noconfig"
-
 # Ensure that a version of Perl greater than or equal to 5.004 is available.
 DPP_PERL_VER(5.004, , , [AC_MSG_ERROR([*** Perl is required ***])])
 AC_CHECK_PROG([MTREE_CMD], [mtree], [mtree], [\$(PERL) \$(scriptdir)/mtree.pl])
@@ -174,8 +153,7 @@ DPP_PROG_INSTALL
 # -----------------------------------------------------------------------------
 VPR_PATH([0.41.0], , [AC_MSG_ERROR(*** VPR required for VR Juggler ***)])
 VPR_SUBSYSTEM=`$VPR_CONFIG --subsystem`
-vrj_min_jccl_ver='0.91.1'
-JCCL_PATH_CXX([$vrj_min_jccl_ver], ,
+JCCL_PATH_CXX([0.91.1], ,
               [AC_MSG_ERROR(*** JCCL C++ API required for VR Juggler ***)])
 GADGETEER_PATH([0.22.0], ,
                [AC_MSG_ERROR(*** Gadgeteer required for VR Juggler ***)])
@@ -184,15 +162,6 @@ SNX_PATH([0.5.0], , [AC_MSG_ERROR(*** Sonix required for VR Juggler ***)])
 VRJ_USE_X11="$GADGET_USE_X11"
 if test "x$VRJ_USE_X11" = "xyes" ; then
    AC_DEFINE([VRJ_USE_X11], , [Define if the X Window System will be used.])
-fi
-
-if test "x$BUILD_JAVA" = "xY" ; then
-   TWEEK_PATH_JAVA([0.92.1],
-                   [JCCL_PATH_JAVA([$vrj_min_jccl_ver], ,
-                       [AC_MSG_WARN([*** JCCL Java API required for VRJConfig ***])
-                       BUILD_JAVA='N'])],
-                   [AC_MSG_WARN(*** Tweek Java API required for VRJConfig ***)
-                    BUILD_JAVA='N'])
 fi
 
 vjsave_CPPFLAGS="$CPPFLAGS"
@@ -275,53 +244,6 @@ if test "x${_enable_pf_api}" = "xyes" ; then
 fi
 
 DPP_HAVE_CPPUNIT([1.9.10])
-
-# ----------------------
-# JDK 1.4 for VRJConfig.
-# ----------------------
-if test "x$BUILD_JAVA" = "xY" ; then
-   DPP_JDK_VERSION([$JDK_HOME], [1.4],
-      [AC_MSG_WARN([*** JDK 1.4 or newer required for the VRJConfig Proxy Editor ***])])
-fi
-
-# --------
-# Java3D.
-# --------
-BUILD_JAVA_3D_EDITOR='N'
-if test "x$BUILD_JAVA" = "xY" ; then
-   # If we are building VRJConfig, we can try to enable building the
-   # Java3D-based editor(s).
-   if test "x$BUILD_JAVA" = "xY" ; then
-      DPP_CHECK_JAVA_STATIC_METHOD(javax.media.j3d.VirtualUniverse, getJ3DThreadPriority() , ,
-         BUILD_JAVA_3D_EDITOR='Y',
-         [ AC_MSG_WARN([*** Java3D required for Java3D custom editor ***])
-           BUILD_JAVA_3D_EDITOR='N' ],
-         $JAVA3D_JAR)
-   fi
-fi
-
-# --------
-# JOGL.
-# --------
-BUILD_JOGL_EDITOR='N'
-if test "x$BUILD_JAVA" = "xY" ; then
-   # If we are building VRJConfig, we can try to enable building the
-   # JOGL-based editor(s).
-   if test "x$BUILD_JAVA" = "xY" ; then
-      DPP_CHECK_JAVA_STATIC_METHOD(net.java.games.jogl.Version, getVersion() , ,
-         BUILD_JOGL_EDITOR='Y',
-         [ AC_MSG_WARN([*** JOGL required for JOGL custom editor ***])
-           BUILD_JOGL_EDITOR='N' ],
-         $JOGL_JARS)
-      if test "x$BUILD_JOGL_EDITOR" = "xY" ; then
-         DPP_CHECK_JAVA_STATIC_METHOD(gleem.ManipManager, getManipManager() , ,
-            BUILD_JOGL_EDITOR='Y',
-            [ AC_MSG_WARN([*** Gleem required for JOGL custom editor ***])
-              BUILD_JOGL_EDITOR='N' ],
-            $JOGL_JARS)
-      fi
-   fi
-fi
 
 # -----------------------------------------------------------------------------
 # Checks for header files.
@@ -624,23 +546,6 @@ fi
 vrj_extra_ldflags_compiler="$APP_EXTRA_LIBS_BEGIN"
 vrj_extra_ldflags_linker="$vrj_extra_ldflags_compiler"
 
-if test "x$PLATFORM" = "xDarwin" ; then
-   changequote(<<, >>)
-   vrjconfig_bundle_tweek_jardir=`echo $TWEEK_JARS | awk -F: '{ print $1 }' | sed -e 's/^\(.*\)\/[^/]*\.jar$/\1/'`
-   vrjconfig_bundle_jccl_jardir=`echo $JCCL_JARS | awk -F: '{ print $1 }' | sed -e 's/^\(.*\)\/[^/]*\.jar$/\1/'`
-
-   tweek_java_api_jars_bundle=`echo $TWEEK_JARS | sed -e "s|$vrjconfig_bundle_tweek_jardir/\([^/]*.jar\)|"'$JAVAROOT/\1|g'`
-   tweek_ext_java_api_jars_bundle=`echo $TWEEK_EXT_JARS | sed -e 's/:/ /g' -e "s|$vrjconfig_bundle_tweek_jardir/\([^/].jar\)|\1|g"`
-   changequote([, ])
-
-   tweek_datadir=`echo $vrjconfig_bundle_tweek_jardir | sed -e 's/\(.*\)java$/\1/'`
-   vrjconfig_bundle_tweek_beandir="${tweek_datadir}beans"
-
-   jccl_datadir=`echo $vrjconfig_bundle_jccl_jardir | sed -e 's/\(.*\)java$/\1/'`
-   vrjconfig_bundle_jccl_beandir="${jccl_datadir}beans"
-   vrjconfig_bundle_jccl_datadir="${jccl_datadir}data"
-fi
-
 # -----------------------------------------------------------------------------
 # Do Makefile substitutions.
 # -----------------------------------------------------------------------------
@@ -660,11 +565,6 @@ AC_SUBST(ANT)
 AC_SUBST(EXTRA_LDFLAGS)
 AC_SUBST(RM_LN)
 AC_SUBST(VPR_SUBSYSTEM)
-
-AC_SUBST(BUILD_JAVA)
-AC_SUBST(BUILD_JAVA_3D_EDITOR)
-AC_SUBST(JAVA3D_JAR)
-AC_SUBST(JOGL_JARS)
 
 AC_SUBST(OPENGL_API)
 AC_SUBST(PERFORMER_API)
@@ -706,11 +606,6 @@ AC_SUBST(vrj_pf_extra_libs)
 
 AC_SUBST(tweek_java_api_jars_bundle)
 AC_SUBST(tweek_ext_java_api_jars_bundle)
-AC_SUBST(vrjconfig_bundle_tweek_beandir)
-AC_SUBST(vrjconfig_bundle_tweek_jardir)
-AC_SUBST(vrjconfig_bundle_jccl_beandir)
-AC_SUBST(vrjconfig_bundle_jccl_datadir)
-AC_SUBST(vrjconfig_bundle_jccl_jardir)
 
 # -----------------------------------------------------------------------------
 # Final file generation step.
@@ -723,7 +618,6 @@ AC_CONFIG_FILES([
    Makefile
    Makefile.inc
    common.defs.mk
-   java.defs.mk
    make.defs.mk
    vrj/Makefile
    vrj/Display/Makefile
@@ -738,27 +632,6 @@ AC_CONFIG_FILES([
    vrj/Test/Makefile
    vrj/Util/Makefile
    vrj.appdefs.mk
-   vrjconfig/build.xml
-   vrjconfig/Info.plist
-   vrjconfig/Makefile
-   vrjconfig/Makefile.inc
-   vrjconfig/commoneditors/build.xml
-   vrjconfig/commoneditors/Makefile
-   vrjconfig/customeditors/Makefile
-   vrjconfig/customeditors/display_window/build.xml
-   vrjconfig/customeditors/display_window/Makefile
-   vrjconfig/customeditors/flock/build.xml
-   vrjconfig/customeditors/flock/Makefile
-   vrjconfig/customeditors/intersense/build.xml
-   vrjconfig/customeditors/intersense/Makefile
-   vrjconfig/customeditors/motionstar/build.xml
-   vrjconfig/customeditors/motionstar/Makefile
-   vrjconfig/customeditors/pinchglove/build.xml
-   vrjconfig/customeditors/pinchglove/Makefile
-   vrjconfig/customeditors/proxyeditor/build.xml
-   vrjconfig/customeditors/proxyeditor/Makefile
-   vrjconfig/customeditors/surfacedisplayeditor/build.xml
-   vrjconfig/customeditors/surfacedisplayeditor/Makefile
    samples/Makefile
    samples/OGL/Makefile
    samples/OGL/advanced/Makefile

@@ -86,8 +86,7 @@ ifneq ($(JARS), )
           do								\
               $(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)		\
                 $(EXTRA_INSTALL_ARGS)					\
-                $(topdir)/vrjconfig/commoneditors/$$jar			\
-                $(jardir) || exit 1;					\
+                $(topdir)/commoneditors/$$jar $(jardir) || exit 1;	\
           done
 endif
 
@@ -104,8 +103,8 @@ ifneq ($(JARS), )
           do								\
               $(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)		\
                 $(EXTRA_INSTALL_ARGS)					\
-                $(topdir)/vrjconfig/commoneditors/$$jar			\
-                $(bundle_vrj_javadir) || exit 1 ;			\
+                $(topdir)/commoneditors/$$jar $(bundle_vrj_javadir) ||	\
+                exit 1 ;						\
           done
 endif
 

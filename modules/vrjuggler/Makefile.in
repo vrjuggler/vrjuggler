@@ -144,10 +144,6 @@ endif
 # Subdirectories used for recursion through the source tree.
 SUBDIR=		vrj
 
-ifeq (@BUILD_JAVA@, Y)
-   SUBDIR+=	vrjconfig
-endif
-
 # =============================================================================
 # Library targets.  The default is 'debug' as defined above.  The steps for 
 # building the 'dbg', 'dbg-dso', 'opt' and 'opt-dso' are as follows:
@@ -155,8 +151,7 @@ endif
 #    1) Build dependencies (if necessary).
 #    2) Compile all object files that are out of date.
 #    3) Compile the actual libraries from the object files.
-#    4) Build the Java-based config editor (if necessary).
-#    5) Set up the developer installation links.
+#    4) Set up the developer installation links.
 # =============================================================================
 
 # ------------------------------------------------
