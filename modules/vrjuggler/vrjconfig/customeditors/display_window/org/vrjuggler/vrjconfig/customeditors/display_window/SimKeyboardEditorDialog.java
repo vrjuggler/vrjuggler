@@ -56,8 +56,6 @@ public class SimKeyboardEditorDialog
 
       this.setModal(true);
 
-      mContext = ctx;
-
       try
       {
          jbInit();
@@ -88,16 +86,10 @@ public class SimKeyboardEditorDialog
 
       if ( null != kbdDevElt )
       {
-         mKbdDevElement = kbdDevElt;
-         mResourceChooser.setEnabled(false);
-         mKbdCreateButton.setEnabled(false);
          this.setTitle("Keyboard Editor: " + kbdDevElt.getName());
       }
       else
       {
-         mKbdDevElement = null;
-         mResourceChooser.setEnabled(true);
-         mKbdCreateButton.setEnabled(true);
          this.setTitle("Keyboard Editor");
       }
 
@@ -119,7 +111,7 @@ public class SimKeyboardEditorDialog
    public ConfigElement showDialog()
    {
       setVisible(true);
-      return mKbdDevElement;
+      return mKbdEditor.getKeyboardDeviceElement();
    }
 
    protected void processWindowEvent(WindowEvent e)
@@ -147,12 +139,7 @@ public class SimKeyboardEditorDialog
       mResourceChooser.addActionListener(
          new SimKeyboardEditorDialog_mResourceChooser_actionAdapter(this)
       );
-      mKbdCreateButton.setText("Create Keyboard/Mouse Input Handler");
-      mKbdCreateButton.addActionListener(
-         new SimKeyboardEditorDialog_mKbdCreateButton_actionAdapter(this)
-      );
       mTopButtonPanel.add(mResourceChooser);
-      mTopButtonPanel.add(mKbdCreateButton);
       mButtonPanel.setLayout(mButtonPanelLayout);
       mCloseButton.setText("Close");
       mCloseButton.addActionListener(
@@ -162,15 +149,11 @@ public class SimKeyboardEditorDialog
       this.getContentPane().add(mButtonPanel, BorderLayout.SOUTH);
    }
 
-   private ConfigContext mContext       = null;
-   private ConfigElement mKbdDevElement = null;
-
    private SimKeyboardEditorPanel mKbdEditor = null;
 
    private BorderLayout mMainLayout = new BorderLayout();
    private JPanel mTopButtonPanel = new JPanel();
    private JComboBox mResourceChooser = new JComboBox();
-   private JButton mKbdCreateButton = new JButton();
    private JPanel mButtonPanel = new JPanel();
    private FlowLayout mButtonPanelLayout = new FlowLayout();
    private JButton mCloseButton = new JButton();
@@ -186,46 +169,6 @@ public class SimKeyboardEditorDialog
          String resource_name = (String) mResourceChooser.getSelectedItem();
          mKbdEditor.setDataSourceName(resource_name);
       }
-   }
-
-   void mKbdCreateButton_actionPerformed(ActionEvent actionEvent)
-   {
-      ConfigBrokerProxy broker = new ConfigBrokerProxy();
-      ConfigDefinition kbd_def =
-         broker.getRepository().get(KEYBOARD_MOUSE_TYPE);
-      ConfigElementFactory factory =
-         new ConfigElementFactory(broker.getRepository().getAllLatest());
-
-      // Create the new KEYBOARD_MOUSE_TYPE config element.  We won't bother
-      // to ask the user for a name since they probably won't care anyway.
-      mKbdDevElement = factory.createUnique(kbd_def, mContext);
-
-      // Create a proxy to the new KEYBOARD_MOUSE_TYPE config element.
-      ConfigDefinition kbd_proxy_def =
-         broker.getRepository().get(KEYBOARD_MOUSE_PROXY_TYPE);
-      ConfigElement kbd_proxy =
-         factory.create(mKbdDevElement.getName() + " Proxy", kbd_proxy_def);
-      kbd_proxy.setProperty(DEVICE_PROPERTY, 0, kbd_proxy.getName());
-
-      String resource_name = (String) mResourceChooser.getSelectedItem();
-
-      // Add the newly created config elements to the data source that the
-      // user selected.
-      broker.add(mContext, mKbdDevElement, resource_name);
-      broker.add(mContext, kbd_proxy, resource_name);
-
-      // Remove the old SimKeyboardEditorPanel instance as it is holding onto
-      // a config element that is no longer associated with this dialog.
-      this.getContentPane().remove(mKbdEditor);
-
-      // Create a new SimKeyboardEditorPanel, associate it with the newly
-      // created config element, and add it to as our new child.
-      mKbdEditor = new SimKeyboardEditorPanel();
-      mKbdEditor.setConfig(mContext, mKbdDevElement, resource_name);
-      this.getContentPane().add(mKbdEditor, BorderLayout.CENTER);
-
-      mResourceChooser.setEnabled(false);
-      mKbdCreateButton.setEnabled(false);
    }
 
    void mCloseButton_actionPerformed(ActionEvent actionEvent)
@@ -246,21 +189,6 @@ class SimKeyboardEditorDialog_mResourceChooser_actionAdapter
    public void actionPerformed(ActionEvent actionEvent)
    {
       adaptee.mResourceChooser_actionPerformed(actionEvent);
-   }
-}
-
-class SimKeyboardEditorDialog_mKbdCreateButton_actionAdapter
-   implements ActionListener
-{
-   private SimKeyboardEditorDialog adaptee;
-   SimKeyboardEditorDialog_mKbdCreateButton_actionAdapter(SimKeyboardEditorDialog adaptee)
-   {
-      this.adaptee = adaptee;
-   }
-
-   public void actionPerformed(ActionEvent actionEvent)
-   {
-      adaptee.mKbdCreateButton_actionPerformed(actionEvent);
    }
 }
 

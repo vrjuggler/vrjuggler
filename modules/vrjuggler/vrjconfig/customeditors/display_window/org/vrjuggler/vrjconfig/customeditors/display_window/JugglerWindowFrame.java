@@ -32,17 +32,24 @@
 
 package org.vrjuggler.vrjconfig.customeditors.display_window;
 
-import java.awt.*;
+import java.awt.Container;
+import java.awt.Dimension;
+import java.awt.Frame;
+import java.awt.Point;
+import java.awt.Rectangle;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.util.List;
 import javax.swing.*;
 
-import org.vrjuggler.jccl.config.ConfigContext;
-import org.vrjuggler.jccl.config.ConfigElement;
+import org.vrjuggler.jccl.config.*;
 
 
 public class JugglerWindowFrame
    extends JInternalFrame
+   implements EditorConstants
 {
    public JugglerWindowFrame(String title, Dimension resolution,
                              Dimension desktopSize, ConfigContext ctx,
@@ -54,6 +61,11 @@ public class JugglerWindowFrame
       mDesktopSize = desktopSize;
       mContext = ctx;
       mElement = elt;
+
+      mEditButton.setText("Edit Simulator Input Settings ...");
+      mEditButton.addActionListener(
+         new JugglerWindowFrame_mEditButton_actionAdapter(this)
+      );
 
       this.addComponentListener(new JugglerWindowFrame_this_componentAdapter(this));
    }
@@ -139,6 +151,77 @@ public class JugglerWindowFrame
    protected Dimension mDesktopSize = null;
    protected Dimension mResolution = null;
 
+   protected JButton mEditButton = new JButton();
+
+   private ConfigElement mKeyboardDevElement = null;
+
+   /**
+    * Opens a dialog box showing all the simulated devices referring to the
+    * keyboard selected in the EditorConstants.KEYBOARD_MOUSE_PTR_PROPERTY
+    * property value of mElement.
+    */
+   void mEditButton_actionPerformed(ActionEvent actionEvent)
+   {
+      ConfigElementPointer kbd_ptr =
+         (ConfigElementPointer) mElement.getProperty(KEYBOARD_MOUSE_PTR_PROPERTY, 0);
+      String kbd_dev_name = kbd_ptr.getTarget();
+
+      ConfigElement kbd_dev_elt = null;
+
+      if ( kbd_dev_name != null && ! kbd_dev_name.equals("") )
+      {
+         ConfigBroker cfg_broker = new ConfigBrokerProxy();
+         List all_elts = cfg_broker.getElements(mContext);
+         List kbd_devs = ConfigUtilities.getElementsWithName(all_elts,
+                                                             kbd_dev_name);
+
+         if ( kbd_devs.size() > 0 )
+         {
+            // Pull the first object out of the list.  For now, we will not
+            // worry about the case when we have a context with multiple
+            // elements having the same name.
+            kbd_dev_elt = (ConfigElement) kbd_devs.get(0);
+
+            // Verify that kbd_dev is the right type of config element.
+            // If it is not the right type of element, pop up a dialog box
+            // saying so.
+            if ( ! kbd_dev_elt.getDefinition().getToken().equals(KEYBOARD_MOUSE_TYPE) )
+            {
+               Frame parent =
+                  (Frame) SwingUtilities.getAncestorOfClass(Frame.class, this);
+               JOptionPane.showMessageDialog(parent,
+                                             "Conifg elements named '" +
+                                                kbd_dev_name + "'\n" +
+                                                "is not a keyboard/mouse " +
+                                                "device element",
+                                             "Invalid Configuration Error",
+                                             JOptionPane.WARNING_MESSAGE);
+               mEditButton.setEnabled(false);
+            }
+         }
+      }
+
+      // At this point, kbd_dev_elt may be null, and that is fine.
+      Container parent =
+         (Container) SwingUtilities.getAncestorOfClass(Container.class, this);
+      SimKeyboardEditorDialog dlg = new SimKeyboardEditorDialog(parent,
+                                                                mContext,
+                                                                kbd_dev_elt);
+      ConfigElement ret_kbd_dev_elt = dlg.showDialog();
+
+      // If the ConfigElement returned by SimKeyboardEditorDialog.showDialog()
+      // is not the same as what we currently have, then the user changed the
+      // keyboard/device element using the dialog box.  We need to update our
+      // INPUT_AREA_TYPE config element to reflect that change.  If null was
+      // returned, then it is because kbd_dev_elt is also null and the user
+      // did not create a new config element.
+      if ( kbd_dev_elt != ret_kbd_dev_elt )
+      {
+         mElement.setProperty(KEYBOARD_MOUSE_PTR_PROPERTY, 0,
+                              ret_kbd_dev_elt.getName());
+      }
+   }
+
    void this_componentMoved(ComponentEvent e)
    {
 //      if ( ! mMousePressed )
@@ -155,6 +238,21 @@ public class JugglerWindowFrame
          updateSize(bounds);
          updatePosition(bounds);
 //      }
+   }
+}
+
+class JugglerWindowFrame_mEditButton_actionAdapter
+   implements ActionListener
+{
+   private JugglerWindowFrame adaptee;
+   JugglerWindowFrame_mEditButton_actionAdapter(JugglerWindowFrame adaptee)
+   {
+      this.adaptee = adaptee;
+   }
+
+   public void actionPerformed(ActionEvent actionEvent)
+   {
+      adaptee.mEditButton_actionPerformed(actionEvent);
    }
 }
 
