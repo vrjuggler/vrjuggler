@@ -41,8 +41,10 @@ JDK_HOME?=	/usr/java
 
 # List the packages for which JavaDoc documentation will be generated.
 BASE_PKG=	org.vrjuggler.vrjconfig
-DOC_PKGS=	$(BASE_PKG)			\
-		$(BASE_PKG).commoneditors	\
+DOC_PKGS=	$(BASE_PKG)				\
+		$(BASE_PKG).commoneditors		\
+		$(BASE_PKG).commoneditors.event		\
+		$(BASE_PKG).commoneditors.placer	\
 		$(BASE_PKG).ui
 SRC_PATH=	$(srcdir)/vrjconfig:$(srcdir)/vrjconfig/commoneditors
 JDOM_DIR=	../../external/jdom
