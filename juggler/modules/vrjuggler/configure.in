@@ -156,7 +156,7 @@ DPP_CXX_DYNAMIC_CAST(AC_MSG_ERROR(*** The library requires C++ dynamic_cast<> **
 # Ensure that a version of Perl greater than or equal to 5.004 is available.
 DPP_PERL_VER(5.004)
 
-AC_CHECK_PROG(MTREE_CMD, mtree, mtree, \$(PERL) \$(scriptdir)/mtree.pl)
+AC_CHECK_PROG([MTREE_CMD], [mtree], [mtree], [\$(PERL) \$(scriptdir)/mtree.pl])
 
 DPP_BASIC_PROGS($PLATFORM, $OS_TYPE)
 
@@ -233,9 +233,9 @@ if test "x${_enable_osg_api}" = "xyes" ; then
     _vjsave_CPPFLAGS="$CPPFLAGS"
     CPPFLAGS="$CPPFLAGS $STDFLAGS"
 
-    AC_CHECK_LIB(osg, osgGetVersion,
-        AC_CHECK_HEADER(osg/Vec3, vj_have_osg='yes', vj_have_osg='no'),
-        vj_have_osg='no', -lX11 -lXext)
+    AC_CHECK_LIB([osg], [osgGetVersion],
+        [AC_CHECK_HEADER([osg/Vec3], [vj_have_osg='yes'], [vj_have_osg='no'])],
+        [vj_have_osg='no'], [-lX11 -lXext])
 
     CPPFLAGS="${_vjsave_CPPFLAGS}"
 
@@ -289,13 +289,13 @@ if test "x$OS_TYPE" = "xWin32" -a "x$USE_GCC" != "xyes" ; then
     AC_CHECK_FUNCS(sinf cosf sqrtf asinf acosf atan2f fabsf)
 # Otherwise, they are in libmath if they are anywhere.
 else
-    AC_CHECK_LIB(m, sinf, AC_DEFINE(HAVE_SINF))
-    AC_CHECK_LIB(m, cosf, AC_DEFINE(HAVE_COSF))
-    AC_CHECK_LIB(m, sqrtf, AC_DEFINE(HAVE_SQRTF))
-    AC_CHECK_LIB(m, asinf, AC_DEFINE(HAVE_ASINF))
-    AC_CHECK_LIB(m, acosf, AC_DEFINE(HAVE_ACOSF))
-    AC_CHECK_LIB(m, atan2f, AC_DEFINE(HAVE_ATAN2F))
-    AC_CHECK_LIB(m, fabsf, AC_DEFINE(HAVE_FABSF))
+    AC_CHECK_LIB([m], [sinf], [AC_DEFINE(HAVE_SINF)])
+    AC_CHECK_LIB([m], [cosf], [AC_DEFINE(HAVE_COSF)])
+    AC_CHECK_LIB([m], [sqrtf], [AC_DEFINE(HAVE_SQRTF)])
+    AC_CHECK_LIB([m], [asinf], [AC_DEFINE(HAVE_ASINF)])
+    AC_CHECK_LIB([m], [acosf], [AC_DEFINE(HAVE_ACOSF)])
+    AC_CHECK_LIB([m], [atan2f], [AC_DEFINE(HAVE_ATAN2F)])
+    AC_CHECK_LIB([m], [fabsf], [AC_DEFINE(HAVE_FABSF)])
 fi
 
 # -----------------------------------------------------------------------------
@@ -656,6 +656,11 @@ AC_OUTPUT(Makefile
           test/TestSuite/test.defs.mk
           test/TestSuite/TestCases/Makefile
           test/TestSuite/TestCases/Pf/Makefile
+          test/UI/Makefile
+          test/UI/OGL/Makefile
+          test/UI/OGL/torus/Makefile
+          test/UI/Pf/Makefile
+          test/UI/Pf/simple/Makefile
           tools/Makefile
           mtree/VJ.data.dist
           mtree/VJ.include.dist
