@@ -492,9 +492,9 @@ case $OS_TYPE in
         jccl_lib='-ljccl'
 
         ;;
-    WIN32)
+    Win32)
         jccl_ldflags_compiler="/link /libpath:\$prefix/lib/debug"
-        jccl_ldflags_linker="libpath:\$prefix/lib/debug"
+        jccl_ldflags_linker="/libpath:\$prefix/lib/debug"
         jccl_libs='jccl.lib'
         jccl_lib='jccl.lib'
 
