@@ -48,6 +48,7 @@ velocityNav::velocityNav()
    , mRotating(false)
    , mStopping(false)
    , mResetting(false)
+   , mTimeDelta()
    , mLastTimeStamp(0,vpr::Interval::Base)
    , mUnits(velocityNav::FEET)
    , mMode(velocityNav::DRIVE)
@@ -188,18 +189,17 @@ void velocityNav::update()
    //stopWatch.stop();
    //stopWatch.start();
    
-   /* Cluster Sync Debug code
    vpr::Interval cur_time = mNavWand->getTimeStamp();
    vpr::Interval diff_time(cur_time-mLastTimeStamp);
       
    mTimeDelta = diff_time.secf();
 
+   /* Cluster Sync Debug code
    std::cout << "Delta: " << diff_time.getBaseVal() << std::endl;
    std::cout << "Current: " << cur_time.getBaseVal() << "Last: " << mLastTimeStamp.getBaseVal() << "\n" << std::endl;
+   */
       
    mLastTimeStamp = cur_time;
-   */
-
 
    if(mTimeDelta > 2.0f)    // If the time is greater than 2 seconds ( 1/2 fps)
    {
@@ -284,7 +284,7 @@ void velocityNav::update()
       mVelocityFromGravityAccumulator += (gravity * mTimeDelta);
 
       //vprDEBUG_CONT(vprDBG_ALL,0) << " new vel: " << velocityAccumulator
-      //                          << " new grav: " << mVelocityFromGravityAccumulator << endl << vprDEBUG_FLUSH;
+      //                          << " new grav: " << mVelocityFromGravityAccumulator << std::endl << vprDEBUG_FLUSH;
    }
    if (mAllowTrans)
    {
@@ -302,7 +302,7 @@ void velocityNav::update()
    // NOTE: this is not the final distance, since we still have to do collision correction.
    gmtl::Vec3f distanceToMove = velocityAccumulator * mTimeDelta;
 
-   //vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << "velNav: distToMove = velAcum * instant: " << velocityAccumulator << " * " << mTimeDelta << endl << vprDEBUG_FLUSH;
+   //vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << "velNav: distToMove = velAcum * instant: " << velocityAccumulator << " * " << mTimeDelta << std::endl << vprDEBUG_FLUSH;
 
    // --- TRANSLATION and COLLISION DETECTION --- //
    bool     did_collide;               // Did we collide with anything
