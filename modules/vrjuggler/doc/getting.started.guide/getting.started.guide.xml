@@ -507,7 +507,7 @@ value</screen>
       </section>
     </section>
 
-    <section>
+    <section id="envvars.required.section">
       <title>Required Environment Variables</title>
 
       <variablelist>
@@ -609,10 +609,64 @@ value</screen>
       </variablelist>
     </section>
 
-    <section>
+    <section id="envvars.optional.section">
       <title>Optional Related Environment Variables</title>
 
       <variablelist>
+        <varlistentry>
+          <term>VJ_CFG_PATH</term>
+
+          <listitem>
+            <para>This variable provides a search path for looking up
+            configuration files. It lists one or more directories where VR
+            Juggler configuration files may be found. At run time, this path
+            will be used to find configuration files that are not named using
+            absolute paths. This variable is set using a platform-specific
+            format. On Windows, DOS paths should be used, and they must be
+            separated by the semi-colon (;) character. On UNIX variants and
+            Mac OS X, the paths should be separated by the colon (:)
+            character. This is exactly the way that the <envar>$PATH</envar>
+            environment variable would be set on all of these platforms. If
+            not set, the default search path for configuration files is
+            <filename>$VJ_BASE_DIR/share/vrjuggler/data/configFiles</filename>.</para>
+
+            <note>
+              <para>The configuration files are loaded by the module JCCL, and
+              it will recognize the environment variable <envar>JCCL_CFG_PATH</envar>.
+              If <envar>JCCL_CFG_PATH</envar> is set, it takes precedence over
+              <envar>VJ_CFG_PATH</envar>.</para>
+            </note>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>JCCL_DEFINITION_PATH</term>
+
+          <listitem>
+            <para>This variable provides the search path for JCCL definition
+            files (those files with the extension <filename>.jdef</filename>).
+            It is set using a platform-specific format. On Windows, DOS paths
+            should be used, and they must be separated by the semi-colon (;)
+            character. On UNIX variants and Mac OS X, the paths should be
+            separated by the colon (:) character. This is exactly the way that
+            the <envar>PATH</envar> environment variable would be set on these
+            platforms. If not set, the default search path for configuration
+            files is <filename>$VJ_BASE_DIR/share/vrjuggler/data/definitions</filename>.</para>
+          </listitem>
+        </varlistentry>
+
+        <varlistentry>
+          <term>SNX_BASE_DIR</term>
+
+          <listitem>
+            <para>The environment variable that defines the root directory of
+            a Sonix installation. At run time, Sonix uses this variable to
+            search for plug-ins. If it is not set, Sonix plug-in loading may
+            fail. In genereal, it will be set to the same value as
+            <envar>VJ_BASE_DIR</envar>.</para>
+          </listitem>
+        </varlistentry>
+
         <varlistentry>
           <term>VPR_DEBUG_NFY_LEVEL</term>
 
@@ -1136,24 +1190,25 @@ value</screen>
         <screen>% MPApp sim.base.jconf sim.wand.mixin.jconf</screen>
 
         <para>You will notice that no paths are specified for finding the
-        three configuration files. This is intentional to shorten the command
-        line given in the example. In general, you always have to give the
-        full path to the files<footnote><para>This is being remedied for VR
-        Juggler 2.0 and beyond.</para></footnote>. Beginning users will
-        typically want to reference the example configuration files in
-        <filename>$VJ_BASE_DIR/share/vrjuggler/data/configFiles</filename>. As
-        you get more comfortable with VR Juggler and its configuration system,
-        you may want to make your own modified files and put them in the
-        directory <filename>$HOME/.vjconfig</filename>. To simplify running
-        applications, you may want to make a shell script (or batch file as
-        appropriate) that does all the work of passing configuration files and
-        common command-line arguments. For now, though, use the path
-        <filename>$VJ_BASE_DIR/share/vrjuggler/data/configFiles</filename> for
-        each of the configuration files you pass on the command line.</para>
+        configuration files. The full paths to the configuration files is not
+        necessary because the default search path will correctly find these
+        files in <filename>$VJ_BASE_DIR/share/vrjuggler/data/configFiles</filename>.
+        Beginning users will typically want to reference the example
+        configuration files in that directory. As you get more comfortable
+        with VR Juggler and its configuration system, you may want to make
+        your own modified files and put them in the directory
+        <filename>$HOME/.vjconfig</filename>. The environment variable
+        <envar>VJ_CFG_PATH</envar> is useful in providing a search path for
+        finding your configuration files. (Refer to <xref
+        linkend="envvars.optional.section" /> for more information on using
+        <envar>VJ_CFG_PATH</envar>). To simplify running applications, you may
+        want to make a shell script (or batch file as appropriate) that does
+        all the work of passing configuration files and common command-line
+        arguments.</para>
 
-        <para>As the application starts, you will see a plethora of output
-        (more or less depending on how you have <envar>$VPR_DEBUG_NFY_LEVEL</envar>,
-        <envar>$VPR_DEBUG_ALLOW_CATEGORIES</envar>, and <envar>$VPR_DEBUG_DISALLOW_CATEGORIES</envar>
+        <para>As the application starts, you will see a status output printed
+        to the console (more or less depending on how you have <envar>VPR_DEBUG_NFY_LEVEL</envar>,
+        <envar>VPR_DEBUG_ALLOW_CATEGORIES</envar>, and <envar>VPR_DEBUG_DISALLOW_CATEGORIES</envar>
         set), and then one moderately sized simulator display window will open
         on the left side of your screen while three blank keyboard input
         windows open on the right side of your screen. The display window will
@@ -1220,9 +1275,9 @@ value</screen>
         set correctly, and it is recommended that VR Juggler applications be
         launched from this xterm. From this xterm, set the necessary
         environment variables as described earlier in <xref
-        linkend="envvar.chapter" />. Once this is done, the application can be
-        executed from the command line just as described in the previous
-        section.</para>
+        linkend="envvars.required.section" />. Once this is done, the
+        application can be executed from the command line just as described in
+        the previous section.</para>
 
         <para>MPApp is shown executing on a Mac OS X desktop in <xref
         linkend="MPApp.OSX.running.single.figure" />. Note that in the dock,
