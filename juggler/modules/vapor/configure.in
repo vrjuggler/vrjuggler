@@ -138,7 +138,7 @@ case $target_os in
             SUBSYSTEM='NSPR' 
         fi
 
-        AC_DEFINE(VPR_OS_MACOSX,)
+        AC_DEFINE(VPR_OS_MacOSX,)
         AC_DEFINE(_BSD_TYPES,) 
         ;;
     # A machine running FreeBSD.  Currently only i386 is known to compile.

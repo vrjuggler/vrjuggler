@@ -91,7 +91,7 @@
 #undef VPR_OS_Win32
 
 /* Define if building on Mac OS X. */
-#undef VPR_OS_MACOSX
+#undef VPR_OS_MacOSX
 
 /* Define if building on a platform not specified above. */
 #undef VPR_OS_GENERIC
