@@ -10,10 +10,10 @@
  */
 
 
-#include "Input/InputManager/vjInputManager.h"
-#include "vjNetworkConnect.h"
-#include "vjTimedUpdate.h"
-#include "Kernel/vjKernel.h"
+#include <Input/InputManager/vjInputManager.h>
+#include <Environment/vjNetworkConnect.h>
+#include <Environment/vjTimedUpdate.h>
+#include <Kernel/vjKernel.h>
 
 void vjTrackerTimedUpdate::controlLoop(void* nullParam) {
   vector<vjConfigChunk*> results;
