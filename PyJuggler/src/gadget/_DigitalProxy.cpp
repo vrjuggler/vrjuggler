@@ -231,7 +231,7 @@ void _Export_DigitalProxy()
          )
         .def("getUnit", &gadget::DigitalProxy::getUnit,
              "getUnit() -> int\n"
-             "Returns the unit index into the analog device from which this\n"
+             "Returns the unit index into the digital device from which this\n"
              "proxy is reading data."
          )
         .def("getElementType", &gadget::DigitalProxy::getElementType,
