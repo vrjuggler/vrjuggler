@@ -435,9 +435,11 @@ void _Export_App()
         .def("preFrame", &vrj::App::preFrame,
              &pyj::vrj_App_Wrapper::default_preFrame,
              "preFrame()\n"
-             "Function called before the Juggler frame starts.  This is\n"
-             "called after input device updates but before the start of a\n"
-             "new frame."
+             "Executes any code needed to set up the application object\n"
+             "state prior to rendering the scene.  This is invoked by the\n"
+             "kernel once per pass through the Juggler frame loop.  This is\n"
+             "called after input device updates but before the start of\n"
+             "rendering a new frame of the scene."
          )
         .def("latePreFrame", &vrj::App::latePreFrame,
              &pyj::vrj_App_Wrapper::default_latePreFrame,
@@ -452,24 +454,37 @@ void _Export_App()
         .def("intraFrame", &vrj::App::intraFrame,
              &pyj::vrj_App_Wrapper::default_intraFrame,
              "intraFrame()\n"
-             "Function called during the application's drawing time."
+             "Function called <b>during</b> this application's drawing time.\n"
+             "This can be used for \"free\" parallel processing, but it\n"
+             "introduces a critical section to the code.  If the rendering\n"
+             "process is reading state data, this method should not be\n"
+             "modifying any of that data.  Instead, a double- or\n"
+             "triple-buffering scheme must be used to allow parallel\n"
+             "reading and writing of all application state used for rendering."
          )
         .def("postFrame", &vrj::App::postFrame,
              &pyj::vrj_App_Wrapper::default_postFrame,
              "postFrame()\n"
-             "Function alled before updating input devices but after the\n"
-             "frame is complete."
+             "Function called before updating input devices but after the\n"
+             "frame rendering is complete."
          )
         .def("reset", &vrj::App::reset, &pyj::vrj_App_Wrapper::default_reset,
              "reset()\n"
              "Resets the application.  This is used when the kernel (or\n"
-             "applications would like this application to reset to its\n"
-             "initial state."
+             "applications) would like this application object to reset to\n"
+             "its initial state.  This is one of the only methods that can\n"
+             "be safe for cross-calls from other application object\n"
+             "interface methodss.  That is, of course, as long as the\n"
+             "override of this method is implemented in a safe manner.  The\n"
+             "override should be implemented such that it can be invoked at\n"
+             "any time during the Juggler frame loop by the kernel or from\n"
+             "a method such as preFrame() or postFrame() by the application\n"
+             "object itself."
          )
         .def("focusChanged", &vrj::App::focusChanged,
              &pyj::vrj_App_Wrapper::default_focusChanged,
              "focusChanged()\n"
-             "Called when the focus state changes."
+             "Called by the kernel when the focus state changes."
          )
         .def("getDrawScaleFactor", &vrj::App::getDrawScaleFactor,
              &pyj::vrj_App_Wrapper::default_getDrawScaleFactor,
