@@ -78,11 +78,12 @@ public class ChunkDescChooser
          e.printStackTrace();
       }
 
+      // Make sure the focus and selected chunk desc get updated appropriately
+      // for the currently visible tab when the tab selection changes.
       browseTab.addComponentListener(new ComponentAdapter()
       {
          public void componentShown(ComponentEvent evt)
          {
-            System.out.println("Showing browseTab");
             browseSearchTextField.requestFocus();
             setSelectedChunkDesc((ChunkDesc)browseList.getSelectedValue());
          }
@@ -91,7 +92,6 @@ public class ChunkDescChooser
       {
          public void componentShown(ComponentEvent evt)
          {
-            System.out.println("Showing searchTab");
             searchSearchTextField.requestFocus();
             setSelectedChunkDesc((ChunkDesc)searchList.getSelectedValue());
          }
