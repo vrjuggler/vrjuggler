@@ -49,7 +49,7 @@ DOC_PKGS=	$(BASE_PKG).config		\
 SRC_PATH=	$(srcdir)/config:$(srcdir)/editors
 JDOM_DIR=	../../external/jdom
 TL_DIR=		../../external/TableLayout
-CLASSPATH=	$(TL_DIR)/TableLayout.jar:$(JDOM_DIR)/jdom.jar
+CLASSPATH=	$(TL_DIR)/TableLayout.jar:$(JDOM_DIR)/build/jdom.jar
 
 include doc/version.mk
 
