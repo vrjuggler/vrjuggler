@@ -223,7 +223,7 @@ public class VrjConfig
     * The special internal frame used to hold configuration editors.
     */
    private class ConfigIFrame
-      extends JInternalFrame
+      extends JInternalFrame implements ActionListener
    {
       public ConfigIFrame(File curDir, ConfigContext ctx)
       {
@@ -233,8 +233,12 @@ public class VrjConfig
                true,
                true);
          getContentPane().setLayout(new BorderLayout());
-         getContentPane().add(new ContextToolbar(curDir, ctx),
-                              BorderLayout.NORTH);
+         mContextToolbar = new ContextToolbar(curDir, ctx);
+
+         mToolbar.addActionListener(this);
+         addActionListener(editor.getContextEditor().getElementTree());
+               
+         getContentPane().add(mContextToolbar, BorderLayout.NORTH);
          getContentPane().add(editor, BorderLayout.CENTER);
          setDefaultCloseOperation(JInternalFrame.DO_NOTHING_ON_CLOSE);
       }
@@ -247,7 +251,58 @@ public class VrjConfig
          return editor;
       }
 
-      private GenericConfigEditor editor = new GenericConfigEditor();
+      /**
+       * When the ConfigToolbar performs an action, we only want to propogate it
+       * to our listeners if we are the currently selected JInternalFrame.
+       */
+      public void actionPerformed(ActionEvent evt)
+      {
+         // We only want to propogate ActionEvents if we are selected.
+         if(isSelected())
+         {
+            fireAction(evt.getActionCommand());
+         }
+      }
+      
+      /**
+       * Add an ActionListener that will recieve events that we recieve only if
+       * we are the currently selecdted JInternalFrame.
+       */
+      public void addActionListener(ActionListener listener)
+      {
+         listenerList.add(ActionListener.class, listener);
+      }
+      
+      /**
+       * Remove an ActionListener.
+       */
+      public void removeActionListener(ActionListener listener)
+      {
+         listenerList.remove(ActionListener.class, listener);
+      }
+      
+      /**
+       * Propogate an ActionEvent to our listeners.
+       */
+      protected void fireAction(String command)
+      {
+         ActionEvent evt = null;
+         Object[] listeners = listenerList.getListenerList();
+         for (int i=listeners.length-2; i>=0; i-=2)
+         {
+            if (listeners[i] == ActionListener.class)
+            {
+               if (evt == null)
+               {
+                  evt = new ActionEvent(this, 0, command);
+               }
+               ((ActionListener)listeners[i+1]).actionPerformed(evt);
+            }
+         }
+      }
+      
+      private ContextToolbar        mContextToolbar = null;
+      private GenericConfigEditor   editor   = new GenericConfigEditor();
    }
 
    /**
