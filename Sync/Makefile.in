@@ -27,7 +27,7 @@ include ${MKPATH}/vj.install.mk
 vpath
 vpath %.c @srcdir@
 vpath %.cpp @srcdir@
-vpath %.o ${OBJDIR}
+vpath %.${OBJ_FILE_SUFFIX} ${OBJDIR}
 
 SYNC_SRCS	= vjCondGeneric.cpp	\
                   vjRWMutex.cpp
@@ -44,7 +44,7 @@ else
 endif
 endif
 
-SYNC_OBJECTS	:= ${addprefix ${OBJDIR}/,${SYNC_SRCS:.cpp=.o}}
+SYNC_OBJECTS	:= ${addprefix ${OBJDIR}/,${SYNC_SRCS:.cpp=.${OBJ_FILE_SUFFIX}}}
 DEPEND_FILES	:= ${SYNC_SRCS:.cpp=.d}
 
 # -----------------------------------------------------------------------------

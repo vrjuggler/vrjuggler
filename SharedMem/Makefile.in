@@ -27,7 +27,7 @@ include ${MKPATH}/vj.install.mk
 vpath
 vpath %.c @srcdir@
 vpath %.cpp @srcdir@
-vpath %.o ${OBJDIR}
+vpath %.${OBJ_FILE_SUFFIX} ${OBJDIR}
 
 SHM_SRCS	:= vjMemory.cpp
 
@@ -38,7 +38,7 @@ ifeq (@SHMEM_SYS@,WIN32)
     SHM_SRCS	+= vjMemPoolWin32.cpp
 endif
 
-SHM_OBJECTS	:= ${addprefix ${OBJDIR}/, ${SHM_SRCS:.cpp=.o}}
+SHM_OBJECTS	:= ${addprefix ${OBJDIR}/, ${SHM_SRCS:.cpp=.${OBJ_FILE_SUFFIX}}}
 DEPEND_FILES	:= ${SHM_SRCS:.cpp=.d}
 
 # -----------------------------------------------------------------------------

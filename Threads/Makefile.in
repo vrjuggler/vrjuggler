@@ -27,7 +27,7 @@ include ${MKPATH}/vj.install.mk
 vpath
 vpath %.c @srcdir@
 vpath %.cpp @srcdir@
-vpath %.o ${OBJDIR}
+vpath %.${OBJ_FILE_SUFFIX} ${OBJDIR}
 
 THREAD_SRCS	:= vjBaseThread.cpp	\
                    vjTSObject.cpp	\
@@ -46,7 +46,7 @@ ifeq (@THREAD_SYS@,WIN32)
     THREAD_SRCS += vjThreadWin32.cpp
 endif
 
-THREAD_OBJECTS	:= ${addprefix ${OBJDIR}/,${THREAD_SRCS:.cpp=.o}}
+THREAD_OBJECTS	:= ${addprefix ${OBJDIR}/,${THREAD_SRCS:.cpp=.${OBJ_FILE_SUFFIX}}}
 DEPEND_FILES	:= ${THREAD_SRCS:.cpp=.d}
 
 # -----------------------------------------------------------------------------

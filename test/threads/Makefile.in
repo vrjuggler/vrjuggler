@@ -5,7 +5,7 @@
 # Generated for use on @PLATFORM@
 # -----------------------------------------------------------------------------
 
-.SUFFIXES: .cpp
+.SUFFIXES: .cpp .@OBJ_FILE_SUFFIX@
 
 srcdir		= @srcdir@
 
@@ -38,22 +38,22 @@ default: all
 
 all: $(TEST_PROGS)
 
-test: test.o
-	$(LINK) -o $@ test.o $(VJ_LIBS) $(EXTRA_LIBS)
+test: test.@OBJ_FILE_SUFFIX@
+	$(LINK) -o $@ test.@OBJ_FILE_SUFFIX@ $(VJ_LIBS) $(EXTRA_LIBS)
 
-stlTest: stlTest.o
-	$(LINK) -o $@ stlTest.o $(VJ_LIBS) $(EXTRA_LIBS)
+stlTest: stlTest.@OBJ_FILE_SUFFIX@
+	$(LINK) -o $@ stlTest.@OBJ_FILE_SUFFIX@ $(VJ_LIBS) $(EXTRA_LIBS)
 
-testPool: testPool.o
-	$(LINK) -o $@ testPool.o $(VJ_LIBS) $(EXTRA_LIBS)
+testPool: testPool.@OBJ_FILE_SUFFIX@
+	$(LINK) -o $@ testPool.@OBJ_FILE_SUFFIX@ $(VJ_LIBS) $(EXTRA_LIBS)
 
-.cpp.o:
+.cpp.@OBJ_FILE_SUFFIX@:
 	$(COMPILE) @OBJ_NAME_FLAG@ -c $<
 
 # -----------------------------------------------------------------------------
 # Clean-up.
 # -----------------------------------------------------------------------------
 clean:
-	rm -f Makedepend $(TEST_PROGS) *.exe *.ilk *.o *core *.?db	\
-          so_locations
+	rm -f Makedepend $(TEST_PROGS) *.exe *.ilk *.@OBJ_FILE_SUFFIX@	\
+          *core *.?db so_locations
 	rm -rf ./ii_files

@@ -13,7 +13,7 @@
 #     with Visual C++ 6.0.  You must use GNU make.
 # -----------------------------------------------------------------------------
 
-.SUFFIXES: .cpp
+.SUFFIXES: .cpp .@OBJ_FILE_SUFFIX@
 
 srcdir		= @srcdir@
 
@@ -36,7 +36,8 @@ VPATH		= @srcdir@:@srcdir@/../cubes:@srcdir@/../wand:@srcdir@/../torus
 # use -L/usr/lib64.
 EXTRA_LIBS	= @TEST_EXTRA_LIBS_BASIC@ @TEST_EXTRA_LIBS_GL@
 
-OBJECTS		= combo.o cubesApp.o wandApp.o torusApp.o
+OBJECTS		= combo.@OBJ_FILE_SUFFIX@ cubesApp.@OBJ_FILE_SUFFIX@	\
+                  wandApp.@OBJ_FILE_SUFFIX@ torusApp.@OBJ_FILE_SUFFIX@
 
 # -----------------------------------------------------------------------------
 # Targets.
@@ -48,12 +49,12 @@ all: combo
 combo: $(OBJECTS)
 	$(LINK) -o $@ $(OBJECTS) $(VJ_LIBS) $(EXTRA_LIBS)
 
-combo.o: torusApp.h wandApp.h cubesApp.h
-cubesApp.o: cubesApp.h
-wandApp.o: wandApp.h
-torusApp.o: torusApp.h
+combo.@OBJ_FILE_SUFFIX@: torusApp.h wandApp.h cubesApp.h
+cubesApp.@OBJ_FILE_SUFFIX@: cubesApp.h
+wandApp.@OBJ_FILE_SUFFIX@: wandApp.h
+torusApp.@OBJ_FILE_SUFFIX@: torusApp.h
 
-.cpp.o:
+.cpp.@OBJ_FILE_SUFFIX@:
 	$(COMPILE) @OBJ_NAME_FLAG@ -c $<
 
 # -----------------------------------------------------------------------------
