@@ -302,10 +302,10 @@ inline void velocityNav::update()
    vpr::Interval diff_time(cur_time-mLastTimeStamp);
       
    mTimeDelta = diff_time.secf();
-
+/*
    std::cout << "READANDWRITE Delta: " << diff_time.getBaseVal() << std::endl;
    std::cout << "READANDWRITE Current: " << cur_time.getBaseVal() << "Last: " << mLastTimeStamp.getBaseVal() << "\n" << std::endl;
-      
+*/      
    mLastTimeStamp = cur_time;
 
 
