@@ -40,7 +40,7 @@
 AC_REVISION($Revision$)
 AC_INIT(boost/boost/version.hpp)
 AC_CONFIG_AUX_DIR(../share/config)
-DPP_PREREQ(1.5.1)
+DPP_PREREQ([1.5.1])
 DPP_INIT
 
 # -----------------------------------------------------------------------------
