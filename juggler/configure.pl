@@ -62,6 +62,7 @@ $DEFAULT_MODULE = '';
 
 my $all_help    = 0;
 my $cfg         = "juggler.cfg";
+my $user_cfg    = '';
 $module         = '';
 my $script_help = 0;
 my $manual      = 0;
@@ -78,21 +79,22 @@ $LAST_ARG_GROUP = 5;
 my @save_argv = @ARGV;
 
 Getopt::Long::Configure('pass_through');
-GetOptions('help|?' => \$script_help, 'cfg=s' => \$cfg, 'module=s' => \$module,
-           'all-help' => \$all_help, 'manual' => \$manual,
-           'regen' => \$regen, 'modlist' => \$mod_list)
+GetOptions('help|?' => \$script_help, 'cfg=s' => \$user_cfg,
+           'module=s' => \$module, 'all-help' => \$all_help,
+           'manual' => \$manual, 'regen' => \$regen, 'modlist' => \$mod_list)
    or pod2usage(2);
 
 # Print the help output and exit if --help was on the command line.
 pod2usage(1) if $script_help;
 pod2usage(-exitstatus => 0, -verbose => 2) if $manual;
 
-die "ERROR: No configuration given\n" unless $cfg;
+die "ERROR: No configuration given\n" unless $cfg || $user_cfg;
 
 $base_dir = (fileparse("$0"))[1];
 $Win32 = 1 if $ENV{'OS'} && $ENV{'OS'} =~ /Windows/;
 
-parseConfigFile("$base_dir/$cfg");
+my $cfg_load = ("$user_cfg" eq "") ? "$base_dir/$cfg" : "$user_cfg";
+parseConfigFile("$cfg_load");
 
 listModules() && exit(0) if $mod_list;
 printHelp() && exit(0) if $all_help;
