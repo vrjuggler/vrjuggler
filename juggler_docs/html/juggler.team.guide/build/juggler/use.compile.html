@@ -288,6 +288,41 @@
           makefiles, <A HREF="#variables">see below</A>.
   </DL>
 
+  <P>
+    Build targets executed from the top-level directory generate the
+    object files in a directory tree created during compilation named as
+    <TT>obj/&lt;platform&gt;/&lt;ABI&gt;/&lt;ISA&gt;/&lt;opt|debug&gt;</TT>.
+    It is always a subdirectory of the top-level directory in the build
+    environment.  The path to this directory is passed as an argument to the
+    recursive make process overriding the <TT>${OBJDIR}</TT> variable.
+  </P>
+
+  <P>
+    Similarly, a subtree is made for the library binaries.  It is named as
+    <TT>lib/&lt;ISA&gt;/&lt;opt|debug&gt;</TT> (or <TT>lib32/...</TT> or
+    <TT>lib64/...</TT> depending on the platform and the ABI).  Since the
+    library binaries are built only by the <TT>Makefile</TT> in the
+    top-level directory, it is only used by builds from that directory.
+  </P>
+
+  <P>
+    Targets such as `<TT>dbg</TT>', `<TT>opt</TT>' and `<TT>clean</TT>' are
+    available for use in the individual subdirectories.  Building a target
+    from within a subdirectory is localized to that subdirectory.  Thus,
+    all object files would be generated in the directory where the target
+    was run rather than in the <TT>obj</TT> subdirectory.  For example, the
+    following process would build only the object files in the
+    <TT>Config</TT> directory:
+
+<PRE>
+    % <B>cd Config</B>
+    % <B>gmake opt</B>
+</PRE>
+
+    Those object files can be removed by running the `<TT>clean</TT>' target
+    in that directory.
+  </P>
+
 <A NAME="variables"><H4>Useful Variables</H4></A>
 
   <P>
@@ -361,8 +396,9 @@
     This section describes the steps taken by the `<TT>world</TT>' target
     as it <I>builds</I> Juggler.  All other build targets are subsets of
     `<TT>world</TT>', and this information can be applied accordingly.
-    The steps are:
-    
+    Note that `<TT>world</TT>' can only be run from the top-level directory
+    of the build environment.  The steps are:
+
     <OL>
       <LI>
         Clobber the build environment so that it is as it would be after
