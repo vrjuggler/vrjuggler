@@ -664,6 +664,7 @@
     <help>Configuration of the Gadgeteer Input Manager.</help>
     <PropertyDesc name="Driver DSO" token="driver" type="string" variable="1">
       <item label="DSO Path" defaultvalue="" />
+      <help>Each value is the full path to a driver DSO (.so or .dll, usually).  The path may make use of environment variables.  For example: ${VJ_BASE_DIR}/lib/gadgeteer/drivers/libPinchGlove.so.</help>
     </PropertyDesc>
   </ChunkDesc>
   <ChunkDesc token="Intersense" name="Intersense">
@@ -1429,35 +1430,6 @@
       <enumeration name="PosProxy" />
     </PropertyDesc>
   </ChunkDesc>
-  <ChunkDesc token="TrackdController" name="TrackdController">
-    <category>Devices</category>
-    <help>Configure the interface to a trackd controller memory area.</help>
-    <PropertyDesc token="shm_key" name="SharedMemoryKey" type="int" variable="0">
-      <help>This is the shared memory key for the trackd information.</help>
-      <item label="Shared Memory Key" defaultvalue="4127" />
-    </PropertyDesc>
-    <PropertyDesc token="min" name="min" type="float" variable="0">
-      <help>the actual analog data values range - lower bound</help>
-      <item label="Range Minimum" defaultvalue="0.0" />
-    </PropertyDesc>
-    <PropertyDesc token="max" name="max" type="float" variable="0">
-      <help>the actual analog data values range - upper bound</help>
-      <item label="Range Maximum" defaultvalue="255.0" />
-    </PropertyDesc>
-    <PropertyDesc name="Host Node" token="host_chunk" type="chunk" variable="0">
-      <help>Points to the machine that the device is physically connected to.</help>
-      <item label="Host Node" defaultvalue="" />
-      <enumeration name="MachineSpecific" value="MachineSpecific" />
-    </PropertyDesc>
-  </ChunkDesc>
-  <ChunkDesc token="TrackdSensor" name="TrackdSensor">
-    <category>Devices</category>
-    <help>Configure the interface to a trackd sensor memory area</help>
-    <PropertyDesc token="shm_key" name="SharedMemoryKey" type="int" variable="0">
-      <help>This is the shared memory key for the trackd information.</help>
-      <item label="Shared Memory Key" defaultvalue="4126" />
-    </PropertyDesc>
-  </ChunkDesc>
   <ChunkDesc token="TrackdAPIController" name="TrackdAPIController">
     <category>Devices</category>
     <help>Configure the interface to a trackdAPI controller memory area.</help>
@@ -1480,6 +1452,35 @@
     </PropertyDesc>
   </ChunkDesc>
   <ChunkDesc token="TrackdAPISensor" name="TrackdAPISensor">
+    <category>Devices</category>
+    <help>Configure the interface to a trackd sensor memory area</help>
+    <PropertyDesc token="shm_key" name="SharedMemoryKey" type="int" variable="0">
+      <help>This is the shared memory key for the trackd information.</help>
+      <item label="Shared Memory Key" defaultvalue="4126" />
+    </PropertyDesc>
+  </ChunkDesc>
+  <ChunkDesc token="TrackdController" name="TrackdController">
+    <category>Devices</category>
+    <help>Configure the interface to a trackd controller memory area.</help>
+    <PropertyDesc token="shm_key" name="SharedMemoryKey" type="int" variable="0">
+      <help>This is the shared memory key for the trackd information.</help>
+      <item label="Shared Memory Key" defaultvalue="4127" />
+    </PropertyDesc>
+    <PropertyDesc token="min" name="min" type="float" variable="0">
+      <help>the actual analog data values range - lower bound</help>
+      <item label="Range Minimum" defaultvalue="0.0" />
+    </PropertyDesc>
+    <PropertyDesc token="max" name="max" type="float" variable="0">
+      <help>the actual analog data values range - upper bound</help>
+      <item label="Range Maximum" defaultvalue="255.0" />
+    </PropertyDesc>
+    <PropertyDesc name="Host Node" token="host_chunk" type="chunk" variable="0">
+      <help>Points to the machine that the device is physically connected to.</help>
+      <item label="Host Node" defaultvalue="" />
+      <enumeration name="MachineSpecific" value="MachineSpecific" />
+    </PropertyDesc>
+  </ChunkDesc>
+  <ChunkDesc token="TrackdSensor" name="TrackdSensor">
     <category>Devices</category>
     <help>Configure the interface to a trackd sensor memory area</help>
     <PropertyDesc token="shm_key" name="SharedMemoryKey" type="int" variable="0">
