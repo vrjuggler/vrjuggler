@@ -1,5 +1,7 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Sep-26-2002 patrickh    Regorganized the samples directory to separate simple
+                        applications from advanced examples.
 Sep-25-2002 nonchocoboy VRJConfig now uses a custom dialog for collection the
                         information necessary to make a new configuration. As
                         part of this, the user can specify additional files to
@@ -7,6 +9,8 @@ Sep-25-2002 nonchocoboy VRJConfig now uses a custom dialog for collection the
 Sep-23-2002 nonchocoboy VRJConfig can now successfully close files.
 Sep-13-2002 nonchocoboy Build java sources using ant.
                         NEW VERSION: 1.1.127
+
+[1.1 DR2 released - 9.6.2002]==================================================
 Aug-26-2002 nonchocoboy VRJConfig will now process vjInclude chunks when a file
                         is opened and open the files they point to in the
                         current context.

@@ -31,7 +31,7 @@
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # -----------------------------------------------------------------------------
-# Makefile.in for juggler/test/Draw/OGL/wand
+# Makefile.in for vrjuggler/samples/sound/simple/soundManager
 # This requires GNU make.
 # -----------------------------------------------------------------------------
 
