@@ -6,8 +6,8 @@
       <parent></parent>
       <category>/Devices</category>
       <property valuetype="configelementpointer" variable="false" name="keyboard_mouse_device_name">
-         <help>Points to element of another window to get events from</help>
-         <value label="Keyboard Mouse Device"/>
+         <help>Points to the keyboard/mouse input handler to which this device will feed keyboard and mouse events from the winodwing system.</help>
+         <value label="Keyboard/Mouse Input Handler"/>
          <allowed_type>keyboard_mouse_device</allowed_type>
       </property>
       <property valuetype="integer" variable="false" name="lock_key">
