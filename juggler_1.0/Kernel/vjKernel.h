@@ -36,6 +36,7 @@
 //#pragma once
 
 #include <vjConfig.h>
+#include <vjParam.h>
 #include <Kernel/vjApp.h>
 class vjApp;
 #include <Kernel/vjSystemFactory.h>
@@ -252,6 +253,15 @@ protected:
       //mChunkDB = NULL;
 
       sharedMemPool = NULL;
+
+      // Print out the Juggler version number when the kernel is created.
+      vjDEBUG(vjDBG_BASE, 0) << "======================================"
+                             << std::endl << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_BASE, 0) << clrOutNORM(clrGREEN, "VR Juggler version: ")
+                             << clrOutNORM(clrGREEN, VJ_VERSION) << clrRESET
+                             << std::endl << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_BASE, 0) << "======================================"
+                             << std::endl << vjDEBUG_FLUSH;
    }
 
    virtual ~vjKernel()
