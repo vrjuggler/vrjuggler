@@ -37,7 +37,6 @@
 #include <jccl/Config/ConfigChunk.h>
 
 #include <gadget/Util/Debug.h>
-//#include <gadget/InputManager.h>
 #include <gadget/Type/EventWindow/KeyEvent.h>
 #include <gadget/Type/EventWindow/MouseEvent.h>
 
@@ -45,6 +44,14 @@
 
 namespace gadget
 {
+
+/**
+ * Call back function to register with the carbon event loop.  The userData
+ * argument contains a reference to the instance of the EventWindowOSX class
+ * that registered to receive the event for its window.
+ */
+static pascal OSStatus keyboardHandlerOSX(EventHandlerCallRef nextHandler,
+                                          EventRef theEvent, void* userData);
 
 EventWindowOSX::EventWindowOSX()
    : InputMixer<Input, EventWindow>()
