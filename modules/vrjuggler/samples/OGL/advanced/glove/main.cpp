@@ -38,14 +38,14 @@
 #include <gloveApp.h>
 
       // --- Lib Stuff --- //
-#include <Kernel/vjKernel.h>
+#include <vrj/Kernel/Kernel.h>
 #include <vpr/System.h>
 
 
 int main(int argc, char* argv[])
 {
-   Kernel* kernel = Kernel::instance();           // Get the kernel
-   gloveApp* application = new gloveApp(kernel);       // Declare an instance of the app
+   vrj::Kernel* kernel   = vrj::Kernel::instance(); // Get the kernel
+   gloveApp* application = new gloveApp(kernel);    // Declare an instance of the app
 
    // Load any config files specified on the command line
    for(int i=1;i<argc;i++)

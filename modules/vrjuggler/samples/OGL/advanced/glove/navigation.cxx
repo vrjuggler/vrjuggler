@@ -31,27 +31,27 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 //#include <Common.h>
-#include <Math/vjVec3.h>
-#include <Math/vjMatrix.h>
+#include <vrj/Math/Vec3.h>
+#include <vrj/Math/Matrix.h>
 
 #include "navigation.h"
 
 //: a vector pointing forward in our space, 
 //  useful for getting what direction a device is pointing.
-const Vec3 TrackedInfo::forwardVec( 0.0f, 0.0f, -1.0f );
+const vrj::Vec3 TrackedInfo::forwardVec( 0.0f, 0.0f, -1.0f );
 
 //: the origin
-const Vec3 TrackedInfo::origin( 0.0f, 0.0f, 0.0f );
+const vrj::Vec3 TrackedInfo::origin( 0.0f, 0.0f, 0.0f );
 
 //: call this once per frame with your tracker's matrix.
-void TrackedInfo::updateWithMatrix( const Matrix& matrix )
+void TrackedInfo::updateWithMatrix( const vrj::Matrix& matrix )
 {
     // save the old values.
     _rotOld = _rot;
     
     // get the forward direction that the tracker is pointing.
     // (_vec = matrix * forwardVec)
-    Vec3 wandPos, wandForward;
+    vrj::Vec3 wandPos, wandForward;
     wandForward.xformVec( matrix, forwardVec );
     wandPos.xformVec( matrix, origin );
     _vec = wandForward - wandPos;
@@ -73,7 +73,7 @@ UserInfo::UserInfo() : _walkingMode(true)
 //  this will update user data such as position, velocity
 //  NOTE: if in "weightless" mode, 
 //        then pass (0,0,0) in for gravity
-void  UserInfo::update( const TrackedInfo& tracker, const Vec3& gravity )
+void  UserInfo::update( const TrackedInfo& tracker, const vrj::Vec3& gravity )
 {
     // save the old values.
     _posOld = _pos;
@@ -86,12 +86,12 @@ void  UserInfo::update( const TrackedInfo& tracker, const Vec3& gravity )
 void UserInfo::_updateWithTracker( const TrackedInfo& tracker )
 {
     //: get the scene's rotation for use in computing tracker vector
-    Matrix sceneRotation;
+    vrj::Matrix sceneRotation;
     sceneRotation.makeIdent();
     sceneRotation.makeXYZEuler( _rot[0], _rot[1], _rot[2] );
     
     //: transform the tracker vector from cave space to model space.
-    Vec3 trackerVec;
+    vrj::Vec3 trackerVec;
     trackerVec.xformFull( sceneRotation, tracker.vector() );
     
     // constrain this vector in XZ plane if in walking mode.
@@ -123,7 +123,7 @@ void UserInfo::_updateWithTracker( const TrackedInfo& tracker )
     _rot[2] = 0;
 }
 
-void UserInfo::_updateWithGravity( const Vec3& gravity )
+void UserInfo::_updateWithGravity( const vrj::Vec3& gravity )
 {
     // apply gravity to the position
     // NOTE gravity is in (vel = pos/frame)
@@ -136,10 +136,10 @@ void UserInfo::_updateWithGravity( const Vec3& gravity )
 //: get the transform to put the scene from the user's point of view
 //  from the user's info, calculate, then return, the  
 //  transform to put the scene into the user's point of view
-void  UserInfo::getSceneTransform( Matrix& sceneMatrtix ) const
+void  UserInfo::getSceneTransform( vrj::Matrix& sceneMatrtix ) const
 {
-    Matrix sceneTranslation;
-    Matrix sceneRotation;
+    vrj::Matrix sceneTranslation;
+    vrj::Matrix sceneRotation;
     
     //: set the translation of the scene
     //  if we want to move forward in the scene, then we need to move the scene backwards.

@@ -42,23 +42,23 @@ class TrackedInfo
 {
 public:
     //: call this once per frame with your tracker's matrix.
-    void updateWithMatrix( const Matrix& matrix );
+    void updateWithMatrix( const vrj::Matrix& matrix );
     
-    const Vec3& vector() const { return _vec; }
-    const Vec3& rotDelta() const { return _rotDelta; }
-    const Vec3& rotation() const { return _rot; }
+    const vrj::Vec3& vector() const { return _vec; }
+    const vrj::Vec3& rotDelta() const { return _rotDelta; }
+    const vrj::Vec3& rotation() const { return _rot; }
     
     
 private:
-    Vec3 _vec, _rot, _rotOld;
-    Vec3 _rotDelta;
+    vrj::Vec3 _vec, _rot, _rotOld;
+    vrj::Vec3 _rotDelta;
     
     //: a vector pointing forward in our space, 
     //  useful for getting what direction a device is pointing.
-    static const Vec3 forwardVec;
+    static const vrj::Vec3 forwardVec;
     
     //: the origin
-    static const Vec3 origin;
+    static const vrj::Vec3 origin;
 };
 
 class UserInfo
@@ -80,14 +80,14 @@ public:
     //  this will update user data such as position, velocity
     //  NOTE: if in "weightless" mode, 
     //        then pass (0,0,0) in for gravity
-    void  update( const TrackedInfo& tracker, const Vec3& gravity );
+    void  update( const TrackedInfo& tracker, const vrj::Vec3& gravity );
     
     //: get the transform to put the scene from the user's point of view
     //  from the user's info, calculate, then return, the  
     //  transform to put the scene into the user's point of view
-    void  getSceneTransform( Matrix& sceneMatrtix ) const;
+    void  getSceneTransform( vrj::Matrix& sceneMatrtix ) const;
     
-    inline void move( Vec3& dist )
+    inline void move( vrj::Vec3& dist )
     { move( dist[0], dist[1], dist[2] ); }
     
     inline void move( float a, float b, float c )
@@ -116,16 +116,16 @@ public:
 private:
 
     void _updateWithTracker( const TrackedInfo& tracker );
-    void _updateWithGravity( const Vec3& gravity );
+    void _updateWithGravity( const vrj::Vec3& gravity );
 
     // current and old position
-    Vec3  _pos, _posOld;
+    vrj::Vec3  _pos, _posOld;
     
     // current and old rotations
-    Vec3  _rot, _rotOld;
+    vrj::Vec3  _rot, _rotOld;
     
     // velocity vector
-    Vec3  _velocityVec;
+    vrj::Vec3  _velocityVec;
     
     // velocity per frame
     float _velocity;
