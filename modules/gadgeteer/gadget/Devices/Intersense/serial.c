@@ -445,11 +445,13 @@ int rs232InitCommunications(COMM_PORT *port, const char* comPort, DWORD baudRate
 	    case 9600: magicBaudRate = B9600; break;
 	    case 19200: magicBaudRate = B19200; break;
 	
-        #ifndef _POSIX_SOURCE
+#ifndef _POSIX_SOURCE
             case 57600: magicBaudRate = B57600; break;
+#ifdef B76800
             case 76800: magicBaudRate = B76800; break;
+#endif
             case 115200: magicBaudRate = B115200; break;
-        #endif
+#endif
 
         case 38400:
         default:
@@ -509,11 +511,13 @@ int rs232SetSpeed(COMM_PORT *port, DWORD baudRate)
 	    case 9600: magicBaudRate = B9600; break;
 	    case 19200: magicBaudRate = B19200; break;
 	
-        #ifndef _POSIX_SOURCE
+#ifndef _POSIX_SOURCE
             case 57600: magicBaudRate = B57600; break;
+#ifdef B76800
             case 76800: magicBaudRate = B76800; break;
+#endif
             case 115200: magicBaudRate = B115200; break;
-        #endif
+#endif
 
         case 38400:
         default:

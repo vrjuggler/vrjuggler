@@ -58,8 +58,8 @@
 extern "C" {
     #include <Input/intersense/isense.h>
 }
-#include <fstream.h>
-#include <string.h>
+#include <fstream>
+#include <string>
 
 struct isConfig {
     bool State;
