@@ -141,7 +141,7 @@ bool vjDisplayManager::configAddDisplay(vjConfigChunk* chunk)
 {
    vjASSERT(configCanHandle(chunk));      // We must be able to handle it first of all
 
-   vjDEBUG_BEGIN(vjDBG_DISP_MGR,3) << "------- vjDisplayManager::configAddDisplay -------\n" << vjDEBUG_FLUSH;
+   vjDEBUG_BEGIN(vjDBG_DISP_MGR,vjDBG_STATE_LVL) << "------- vjDisplayManager::configAddDisplay -------\n" << vjDEBUG_FLUSH;
 
    // Find out if we already have a window of this name
    // If so, then close it before we open a new one of the same name
@@ -149,7 +149,7 @@ bool vjDisplayManager::configAddDisplay(vjConfigChunk* chunk)
    vjDisplay* cur_disp = findDisplayNamed(chunk->getProperty("name"));
    if(cur_disp != NULL)                         // We have an old display
    {
-      vjDEBUG(vjDBG_DISP_MGR,1) << "Removing old window: " << cur_disp->getName().c_str() << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_DISP_MGR,vjDBG_CONFIG_LVL) << "Removing old window: " << cur_disp->getName().c_str() << vjDEBUG_FLUSH;
       closeDisplay(cur_disp,true);              // Close the display and notify the draw manager to close the window
    }
 
@@ -159,8 +159,8 @@ bool vjDisplayManager::configAddDisplay(vjConfigChunk* chunk)
       vjDisplay* newDisp = new vjSurfaceDisplay();    // Create display
       newDisp->config(chunk);                         // Config it
       addDisplay(newDisp, true);                            // Add it
-      vjDEBUG(vjDBG_DISP_MGR,1) << "Adding display: " << newDisp->getName().c_str() << endl << vjDEBUG_FLUSH;
-      vjDEBUG(vjDBG_DISP_MGR,4) << "Display: "  << newDisp << endl << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_DISP_MGR,vjDBG_WARNING_LVL) << "Adding display: " << newDisp->getName().c_str() << endl << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_DISP_MGR,vjDBG_VERB_LVL) << "Display: "  << newDisp << endl << vjDEBUG_FLUSH;
    }
 
    if((std::string)chunk->getType() == std::string("simDisplay"))      // Surface DISPLAY
@@ -168,11 +168,11 @@ bool vjDisplayManager::configAddDisplay(vjConfigChunk* chunk)
       vjDisplay* newDisp = new vjSimDisplay();     // Create display
       newDisp->config(chunk);                      // Config it
       addDisplay(newDisp, true);                         // Add it
-      vjDEBUG(vjDBG_DISP_MGR,1) << "Adding Display: " << newDisp->getName().c_str() << endl << vjDEBUG_FLUSH;
-      vjDEBUG(vjDBG_DISP_MGR,4) << "Display: "  << newDisp << endl << flush << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_DISP_MGR,vjDBG_WARNING_LVL) << "Adding Display: " << newDisp->getName().c_str() << endl << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_DISP_MGR,vjDBG_VERB_LVL) << "Display: "  << newDisp << endl << flush << vjDEBUG_FLUSH;
    }
 
-   vjDEBUG_END(vjDBG_DISP_MGR,3) << "------- vjDisplayManager::configAddDisplay Done. --------\n" << vjDEBUG_FLUSH;
+   vjDEBUG_END(vjDBG_DISP_MGR,vjDBG_STATE_LVL) << "------- vjDisplayManager::configAddDisplay Done. --------\n" << vjDEBUG_FLUSH;
    return true;
 }
 

@@ -77,7 +77,7 @@ void vjDeviceInterface::refresh()
    }
    else if((mProxyIndex != -1) && (prev_proxy_index == -1))   // ASSERT: We have just gotten a valid proxy to point to
    {
-      vjDEBUG(vjDBG_ALL,vjDBG_CONFIG_LVL) << "vjDeviceInterface::refresh: Success: Now able to find proxy: " << mProxyName.c_str() << endl << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_ALL,vjDBG_WARNING_LVL) << "vjDeviceInterface::refresh: Success: Now able to find proxy: " << mProxyName.c_str() << endl << vjDEBUG_FLUSH;
    }
 }
 
