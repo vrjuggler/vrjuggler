@@ -203,6 +203,9 @@ def getDefaultVars():
                                'OpenGL Performer installation directory',
                                r'C:\Program Files\Silicon Graphics\OpenGL Performer',
                                required = False))
+   optional.append(BuildOption('MS_SPEECH_SDK_ROOT',
+                               'Microsoft Speech SDK directory', '',
+                               required = False))
    optional.append(BuildOption('VRPN_ROOT', 'VRPN installation directory', '',
                                required = False))
    optional.append(BuildOption('AUDIERE_ROOT',
