@@ -3,7 +3,7 @@
 # sonix
 #
 # Original Authors:
-#   Kevin Meinert, Carolina Cruz-Neira
+#   Kevin Meinert
 #
 # -----------------------------------------------------------------
 # File:          $RCSfile$
@@ -313,52 +313,6 @@ else
    fi
 fi
 
-dnl -------------------------------------------------------------
-dnl external stuff (like sample apps, also for those who use sonix-config)....
-dnl -------------------------------------------------------------
-sample_application_includes="-I\${SNX_BASE_DIR}/include $INCLUDES"
-sample_application_ldflags="$LDFLAGS"
-
-
-if test "x$OS_TYPE" = "xWin32" ; then
-   snx_ldflags_compiler="/link /libpath:\$prefix/lib"
-   snx_ldflags_linker="/libpath:\$prefix/lib"
-   snx_lib='sonix.lib'
-   snx_libs='sonix.lib'
-   sample_application_libs="/LIBPATH:\$(SNX_BASE_DIR)/lib$LIBBITSUF/sonix.lib $LIBS"
-else
-   if test "x$GXX" = "xyes" ; then
-      static_begin="-Wl,-Bstatic"
-      static_end="-Wl,-Bdynamic"
-   else
-      static_begin="-B static"
-      static_end="-B dynamic"
-   fi
-
-   snx_ldflags_compiler="-L\$prefix/lib$LIBBITSUF"
-   snx_ldflags_linker="$snx_ldflags_compiler"
-   snx_lib='-lsonix'
-   snx_libs="-lsonix"
-   sample_application_libs="-L\$(SNX_BASE_DIR)/lib$LIBBITSUF -lsonix $LIBS $VPR_LIBS_CC -lm"
-fi
-
-sample_application_libs="$APP_LINKALL_ON $sample_application_libs $APP_LINKALL_OFF"
-
-if test "x$PLATFORM" = "xIRIX" -a "x$USE_GCC" != "xyes" ; then
-    snx_n32_flags='-n32'
-    snx_64_flags='-64'
-fi
-
-dnl ===================================================
-dnl  Just extra stuff here (non-sonic stuff)
-dnl ===================================================
-snx_extra_cxxflags="$GMTL_INCLUDES"
-snx_extra_include_dirs=''
-snx_extra_ldflags="$APP_EXTRA_LIBS_BEGIN"
-#snx_extra_libs="$LDFLAGS $VPR_LIBS_CC_MIN $LIBS $APP_EXTRA_LIBS_END"
-snx_extra_libs="$LDFLAGS $LIBS $APP_EXTRA_LIBS_END"
-
-
 # -----------------------------------------------------------------------------
 # figure out what the flags are to link all symbols
 # only needed until sonix can load plugins dynamically ala dlopen
@@ -384,6 +338,50 @@ fi
 AC_SUBST(APP_LINKALL_ON)
 AC_SUBST(APP_LINKALL_OFF)
 
+dnl -------------------------------------------------------------
+dnl external stuff (like sample apps, also for those who use sonix-config)....
+dnl -------------------------------------------------------------
+sample_application_includes="$sample_application_includes -I\${SNX_BASE_DIR}/include $INCLUDES"
+sample_application_ldflags="$sample_application_ldflags $LDFLAGS"
+
+
+if test "x$OS_TYPE" = "xWin32" ; then
+   snx_ldflags_compiler="$snx_ldflags_compiler /link /libpath:\$prefix/lib"
+   snx_ldflags_linker="$snx_ldflags_linker /libpath:\$prefix/lib"
+   snx_lib='sonix.lib'
+   snx_libs='$snx_libs sonix.lib'
+   sample_application_libs="$sample_application_libs /LIBPATH:\$(SNX_BASE_DIR)/lib$LIBBITSUF/sonix.lib $LIBS"
+else
+   if test "x$GXX" = "xyes" ; then
+      static_begin="-Wl,-Bstatic"
+      static_end="-Wl,-Bdynamic"
+   else
+      static_begin="-B static"
+      static_end="-B dynamic"
+   fi
+
+   snx_ldflags_compiler="$snx_ldflags_compiler -L\$prefix/lib$LIBBITSUF"
+   snx_ldflags_linker="$snx_ldflags_compiler"
+   snx_lib='-lsonix'
+   snx_libs="$snx_libs -lsonix"
+   sample_application_libs="$sample_application_libs -L\$(SNX_BASE_DIR)/lib$LIBBITSUF $APP_LINKALL_ON -lsonix $APP_LINKALL_OFF $LIBS $VPR_LIBS_CC -lm"
+fi
+
+#sample_application_libs="$sample_application_libs"
+
+if test "x$PLATFORM" = "xIRIX" -a "x$USE_GCC" != "xyes" ; then
+    snx_n32_flags='-n32'
+    snx_64_flags='-64'
+fi
+
+dnl ===================================================
+dnl  Just extra stuff here (non-sonic stuff)
+dnl ===================================================
+snx_extra_cxxflags="$snx_extra_cxxflags $GMTL_INCLUDES"
+snx_extra_include_dirs="$snx_extra_include_dirs"
+snx_extra_ldflags="$snx_extra_ldflags $APP_EXTRA_LIBS_BEGIN"
+#snx_extra_libs="$snx_extra_libs $LDFLAGS $VPR_LIBS_CC_MIN $LIBS $APP_EXTRA_LIBS_END"
+snx_extra_libs="$snx_extra_libs $LDFLAGS $LIBS $APP_EXTRA_LIBS_END"
 
 AC_SUBST(static_begin)
 AC_SUBST(static_end)
