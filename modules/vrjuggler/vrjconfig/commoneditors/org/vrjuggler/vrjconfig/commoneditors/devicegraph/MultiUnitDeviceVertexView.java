@@ -508,12 +508,6 @@ public class MultiUnitDeviceVertexView
                }
             );
 
-            List components = new ArrayList(3);
-            components.add(0, port_widget);
-            components.add(1, name_field);
-            components.add(2, remove_btn);
-            mUnitRowMap.put(unit_info, components);
-
             this.add(remove_btn,
                      new TableLayoutConstraints(BUTTON0_START_COLUMN, row,
                                                 BUTTON0_END_COLUMN, row,
@@ -556,16 +550,8 @@ public class MultiUnitDeviceVertexView
 
       private void removeUnitRow(DefaultPort port)
       {
-         List components = (List) mUnitRowMap.get(port.getUserObject());
-         mUnitRowMap.remove(port.getUserObject());
-         removeUnitRow(port, components);
-      }
+         UnitInfo old_unit_info = (UnitInfo) port.getUserObject();
 
-      /**
-       *
-       */
-      private void removeUnitRow(DefaultPort port, List components)
-      {
          // Get the preferred size of the renderer so that we can modify it
          // after the row is removed.
          Dimension pref_size = this.getPreferredSize();
@@ -576,23 +562,26 @@ public class MultiUnitDeviceVertexView
          int height = pref_size.height;
          int max_height = 0;
 
-         // Find the row containing the components being removed.  We expect
-         // that all the components in the given array are in the same row.
-         // XXX: Is there a more robust way to do this?
-         TableLayoutConstraints tlc =
-            mMainLayout.getConstraints((JComponent) components.get(0));
-         int row = tlc.row1;
+         UnitTypeGroup ug =
+            (UnitTypeGroup) mUnitGroups.get(old_unit_info.getUnitType());
+         TableLayoutConstraints add_tlc =
+            mMainLayout.getConstraints(ug.addButton);
+         int row = add_tlc.row1 + old_unit_info.getUnitNumber().intValue() + 1;
 
-         for ( Iterator c = components.iterator(); c.hasNext(); )
+         Component[] components = this.getComponents();
+
+         // Find the row containing the components being removed.
+         for ( int i = 0; i < components.length; ++i )
          {
-            JComponent component = (JComponent) c.next();
+            TableLayoutConstraints cur_tlc =
+               mMainLayout.getConstraints(components[i]);
 
-            if ( max_height < component.getPreferredSize().height )
+            if ( cur_tlc.row1 == row )
             {
-               max_height = component.getPreferredSize().height;
+               max_height = Math.max(max_height,
+                                     components[i].getPreferredSize().height);
+               this.remove(components[i]);
             }
-
-            this.remove(component);
          }
 
          // The height of the renderer will be decreased by the component
@@ -657,10 +646,6 @@ public class MultiUnitDeviceVertexView
          // Remove port as a child of our cell.
          DefaultGraphCell device_cell = (DefaultGraphCell) mView.getCell();
          device_cell.remove(port);
-
-         UnitInfo old_unit_info = (UnitInfo) port.getUserObject();
-         UnitTypeGroup ug =
-            (UnitTypeGroup) mUnitGroups.get(old_unit_info.getUnitType());
 
          // Account for the unit removal from its group.
          ug.unitCount--;
@@ -750,13 +735,6 @@ public class MultiUnitDeviceVertexView
       private transient CellView   mView       = null;
       private transient DeviceInfo mDeviceInfo = null;
       private transient Map        mUnitGroups = new HashMap();
-
-      /**
-       * Maps from a UnitInfo object to a List object.  The List instance
-       * contains the JComponents in the row that is identified uniquely by
-       * the UnitInfo key.
-       */
-      private transient Map mUnitRowMap = new HashMap();
 
       /**
        * This variable is used for a hack to communicate information between
