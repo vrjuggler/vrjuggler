@@ -108,29 +108,26 @@ private:
 	char        repRate;
 	BIRD_HEMI   hemisphere;
 	BIRD_FILT   filter;
+	
+// bird declarations.
+private:	
+	int   getReading(int i, vjMatrix* data, int port);
+	float rawToFloat(char& r1, char& r2);
+	void  pickBird(int sensor, int port_id);
+	int   open_port(char* serialPort, int baud);
+	void  set_blocking(int port, int blocking);
+	void  set_sync(int port, int sync);
+	void  set_hemisphere(int port, BIRD_HEMI hem, int transmitter, int numbirds);
+	void  set_rep_and_stream(int port, char repRate);
+	void  set_pos_angles(int port, int transmitter, int numbirds);
+	void  set_filter(int port, BIRD_FILT filter);
+	void  set_transmitter(int port, int transmitter);
+	void  set_autoconfig(int port, int numbirds);
+	void  set_group(int port);
 };
 
 
-inline void vjInput::SetPort(const char* serialPort)
-{
-    if (myThread != NULL) {
-     cerr << "Cannot change the serial Port while active\n";
-     return;
-  }
-  strncpy(sPort,serialPort,(size_t)30);
-}
 
-inline char* vjInput::GetPort()
-{
-  if (sPort == NULL) return "No port";
-  return sPort;
-}
-
-inline void vjInput::SetBaudRate(int baud)
-{
-  if (myThread != NULL)
-     baudRate = baud;
-}
 
 #endif
 
