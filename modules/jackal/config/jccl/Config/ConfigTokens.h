@@ -71,6 +71,9 @@ const std::string type_TOKEN("type");
 const std::string help_TOKEN("help");
 const std::string item_TOKEN("item");
 const std::string default_value_TOKEN("defaultvalue");
+const std::string enumeration_TOKEN("enumeration");
+const std::string enumeration_name_TOKEN("name");
+const std::string enumeration_value_TOKEN("value");
 
 const std::string chunk_desc_db_TOKEN("ChunkDescDB");
 const std::string chunk_db_TOKEN("ConfigChunkDB");

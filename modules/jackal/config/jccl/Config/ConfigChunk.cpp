@@ -463,6 +463,26 @@ cppdom::NodePtr ConfigChunk::getPropertyCdataNode(const std::string& prop, int i
    return cdata_node;
 }
 
+/**
+ * Unary predicate for use with CppDOM node lists.  This could be removed if
+ * CppDOM had a predicate that allowed matching of the element name and the
+ * value of a named attribute.
+ */
+struct EnumValuePredicate
+{
+   EnumValuePredicate(const std::string& value) : mValue(value)
+   {
+   }
+
+   bool operator()(const cppdom::NodePtr& n)
+   {
+      return (n->getName() == jccl::enumeration_TOKEN &&
+              mValue == (std::string) n->getAttribute(jccl::enumeration_name_TOKEN));
+   }
+
+   std::string mValue;
+};
+
 std::string ConfigChunk::getPropertyString(const std::string& prop, int ind) const
 {
    vprASSERT(mNode.get() != NULL);
@@ -472,6 +492,9 @@ std::string ConfigChunk::getPropertyString(const std::string& prop, int ind) con
    // Get the cdata node without auto create
    cppdom::NodePtr cdata_node = getPropertyCdataNode(prop,ind,false);
 
+   PropertyDesc prop_desc = mDesc->getPropertyDesc(prop);
+   vprASSERT(prop_desc.getNode().get() != NULL && "Invalid property requested.  Bad programmer");
+
    if(cdata_node.get() != NULL)
    {
       prop_string_rep = cdata_node->getCdata();            // Get the cdata
@@ -479,8 +502,25 @@ std::string ConfigChunk::getPropertyString(const std::string& prop, int ind) con
    // Fall back on the default value.
    else
    {
-      PropertyDesc prop_desc = mDesc->getPropertyDesc(prop);
       prop_string_rep = prop_desc.getDefaultValueString(ind);
+   }
+
+   // XXX: This isn't as optimized as I would like it to be.  --PH (5/6/2003)
+   // Then again, the loop should be inlined, so it can't do too much better.
+   cppdom::NodeList enum_vals(prop_desc.getNode()->getChildrenPred(EnumValuePredicate(prop_string_rep)));
+
+   // If the property description has an enumeration, the string in
+   // prop_string_rep may be symbolic.  We need to translate it to the
+   // real value before returning.
+   if ( ! enum_vals.empty() )
+   {
+      vprDEBUG(jcclDBG_CONFIG, vprDBG_HVERB_LVL)
+         << "jccl::ConfigChunk::getPropertyString(): Converting '"
+         << prop_string_rep << "' to '"
+         << (std::string) enum_vals[0]->getAttribute(jccl::enumeration_value_TOKEN)
+         << "'\n" << vprDEBUG_FLUSH;
+      prop_string_rep =
+         (std::string) enum_vals[0]->getAttribute(jccl::enumeration_value_TOKEN);
    }
 
    return prop_string_rep;
