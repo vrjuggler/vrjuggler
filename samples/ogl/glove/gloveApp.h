@@ -275,6 +275,9 @@ inline void gloveApp::preDraw()
     //vjDEBUG(7) << "Gesture: " << mGesture->getGestureString(mGesture->getGesture())<<"\n"<<flush;
     //vjDEBUG(7) << glovePos[0]<<" "<<glovePos[1]<<" "<<glovePos[2]<<" : "<<mCubePos[0]<<" "<<mCubePos[1]<<" "<<mCubePos[2]<<"\n"<<flush;
 
+    ////////////////////////
+    // NAVIGATION         //
+    ////////////////////////////////////////////////////////
     static float userVelocity = 0;
     
     if (mGesture->getGesture() == mGesture->getGestureIndex("Pointing"))
@@ -290,7 +293,9 @@ inline void gloveApp::preDraw()
     wandInfo.updateWithMatrix( *mGloveTracker->GetData() );
     userInfo.update( wandInfo, vjVec3(0.0f, 0.0f, 0.0f) );
     userInfo.getSceneTransform( mNavigation );
+    ////////////////////////////////////////////////////////
 
+    ////////////////////////////////////////////////////////
     //: pick up the object if you're pointing.
     //  set the object position equal to the glove position.
     if ( mGesture->getGesture() == mGesture->getGestureIndex("Open Hand"))
