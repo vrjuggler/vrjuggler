@@ -129,6 +129,23 @@ if ( $regen )
 }
 else
 {
+   my $cache_file_set = 0;
+
+   foreach ( @ARGV )
+   {
+      if ( /-cache-f/ )
+      {
+         $cache_file_set = 1;
+         last;
+      }
+   }
+
+   if ( ! $cache_file_set )
+   {
+      my $cwd = getcwd();
+      push(@ARGV, "--cache-file=$cwd/config.cache");
+   }
+
    if ( $module )
    {
       die "ERROR: No such module $module in $cfg!\n"
@@ -460,6 +477,7 @@ sub generateReconfig ($@)
       }
    }
 
+   print RECONFIG "rm -f config.cache\n";
    print RECONFIG "$0 ", "@save_argv\n";
    close(RECONFIG);
    chmod(0755, "reconfig");
