@@ -34,11 +34,11 @@
 
 
 void
-vjCyberGlove::vt_init(char *indir, AppDataStruct &app)
+CyberGloveBasic::vt_init(char *indir, AppDataStruct &app)
 {
   int i;
   char defaultcalfile[100];
-  
+
   /* fills in app's fields based on the application resources */
   /* app is a global variable declared in vt_globals.c */
 
@@ -54,7 +54,7 @@ vjCyberGlove::vt_init(char *indir, AppDataStruct &app)
   app.glove[0].devname = "/dev/ttyd2";
   app.glove[0].baud = 38400;
   app.glove[0].tracker = 1;
-  app.glove[0].receiver = 1;  
+  app.glove[0].receiver = 1;
   app.glove[1].on = False;
   app.glove[1].devname = "/dev/ttyd2";
   app.glove[1].baud = 38400;
@@ -67,14 +67,14 @@ vjCyberGlove::vt_init(char *indir, AppDataStruct &app)
   app.wire_frame = False;
   app.walls_on = False;
   app.cal_panel = False;
-  
+
   /* Must add the following two lines since initializing these fields with  */
   /* a string constant in the above resources[] array will not work. This   */
   /* is because we realloc these fields in file_read() in "panel.c" and     */
   /* reallocing a pointer pointing to the DATA section rather than the heap */
   /* is bad news. So as it stands these fields are initialized to NULL in   */
   /* resources[] and pointed to strings alloced on the heap here.	    */
-  
+
   sprintf( defaultcalfile, "%s/%s", indir, "default.cal");
   app.glove[0].incalfile  = strdup(defaultcalfile);
   app.glove[1].incalfile  = strdup(defaultcalfile);
