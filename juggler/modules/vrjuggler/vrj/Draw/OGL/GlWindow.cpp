@@ -133,15 +133,32 @@ void GlWindow::finishSetup()
             kb_proxy_name += std::string("-Proxy");
             kb_proxy->setName(kb_proxy_name);
             bool add_success = gadget::InputManager::instance()->addProxy(kb_proxy);
-            vprASSERT(add_success && "Failed to add sim wind kb proxy: Check for unique name");
 
-            gadget::EventWindowInterface kb_interface;
-            kb_interface.setProxy(kb_proxy);
+            if ( ! add_success )
+            {
+               vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_WARNING_LVL)
+                  << clrOutBOLD(clrYELLOW, "WARNING")
+                  << ": [vrj::GlWindow::finishSetup()] Failed to add the "
+                  << "event window proxy.  Check for a unique name."
+                  << std::endl << vprDEBUG_FLUSH;
+               vprASSERT(false && "Failed to add sim wind kb proxy: Check for unique name");
 
-            gl_draw_sim->setEventWindow(kb_interface); // Initialize the simulator
+               gadget::EventWindowInterface kb_interface;
+               kb_interface.setProxy(kb_proxy);
+
+               gl_draw_sim->setEventWindow(kb_interface); // Initialize the simulator
+            }
          }
          else
          {
+            vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CRITICAL_LVL)
+               << clrOutBOLD(clrRED, "ERROR")
+               << ": [vrj::GlWindow::finishSetup()] You configured a simulator "
+               << "viewport, but I cannot find a DrawSimInterface for it.\n"
+               << vprDEBUG_FLUSH;
+            vprDEBUG_CONT(vrjDBG_DRAW_MGR, vprDBG_CRITICAL_LVL)
+               << "Check your configuration for missing information.\n"
+               << vprDEBUG_FLUSH;
             vprASSERT(false && "You configured a simulator viewport, but I cannot find a DrawSimInterface for it");
          }
       }
