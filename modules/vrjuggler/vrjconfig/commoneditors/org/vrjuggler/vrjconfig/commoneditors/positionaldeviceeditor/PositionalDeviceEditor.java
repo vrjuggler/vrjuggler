@@ -174,9 +174,14 @@ public class PositionalDeviceEditor extends JPanel
    private ConfigElement mConfigElement = null;
    private ConfigElement mPosFilterConfigElement = null;
    private ConfigContext mConfigContext = null;
-   
-   public void setConfigElement(ConfigElement elm)
+
+   /**
+    * Specify the ConfigContext and ConfigElement to use with this
+    * CustomEditor.
+    */
+   public void setConfig(ConfigContext ctx, ConfigElement elm)
    {
+      mConfigContext = ctx;
       mConfigElement = elm;
       ConfigDefinition def = mConfigElement.getDefinition();
      
@@ -253,14 +258,6 @@ public class PositionalDeviceEditor extends JPanel
       return((float)Math.toRadians(in));
    }
 
-   /**
-    * Specify the ConfigContext to use with this CustomEditor.
-    */
-   public void setContext(ConfigContext ctx)
-   {
-      mConfigContext = ctx;
-   }
-   
    public Container getPanel()
    {
 //      this.setPreferredSize(new Dimension (450,375));
