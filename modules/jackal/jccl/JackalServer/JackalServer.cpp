@@ -71,7 +71,7 @@ bool vjEnvironmentManager::isAccepting() {
 
 
 void vjEnvironmentManager::addPerfDataBuffer (vjPerfDataBuffer *v) {
-    vjDEBUG (3) << "EM adding perf data buffer " << v->getName() << "\n"
+    vjDEBUG (vjDBG_ALL,3) << "EM adding perf data buffer " << v->getName() << "\n"
 		<< vjDEBUG_FLUSH;
     perf_buffers.push_back(v);
     activatePerfBuffers();
@@ -95,10 +95,6 @@ void vjEnvironmentManager::removePerfDataBuffer (vjPerfDataBuffer *b) {
     }
 
 }
-
-
-
-
 
 
 
@@ -159,7 +155,7 @@ bool vjEnvironmentManager::configAdd(vjConfigChunk* chunk) {
 	vn->startProcess();
 	return true;
     }
-    vjDEBUG(1) << "EnvironmentManager::configAdd - Unrecognized Chunk " + s << endl
+    vjDEBUG(vjDBG_ALL,1) << "EnvironmentManager::configAdd - Unrecognized Chunk " + s << endl
 	       << vjDEBUG_FLUSH;
     return false;
 }
@@ -291,12 +287,6 @@ void vjEnvironmentManager::deactivatePerfBuffers () {
     }
 }
 
-void vjEnvironmentManager::sendRefresh() {
-    for (int i = 0; i < connections.size(); i++) {
-	connections[i]->sendRefresh();
-
-    }
-}
 
 void vjEnvironmentManager::activatePerfBuffers () {
     // activates all perf buffers configured to do so
@@ -356,12 +346,12 @@ bool vjEnvironmentManager::acceptConnections() {
 
     if (bind ( listen_socket, (sockaddr*)&sockaddress,
 	       sizeof (struct sockaddr_in))) {
-	vjDEBUG(0) << "vjEnvironmentManager couldn't open socket\n"
+	vjDEBUG(vjDBG_ALL,0) << "vjEnvironmentManager couldn't open socket\n"
 		   << vjDEBUG_FLUSH;
 	return false;
     }
     else
-	vjDEBUG(0) << "vjEnvironmentManager accepting connections on port "
+	vjDEBUG(vjDBG_ALL,0) << "vjEnvironmentManager accepting connections on port "
 		   << Port << '\n' << vjDEBUG_FLUSH;
 
     /* now we ought to spin off a thread to do the listening */

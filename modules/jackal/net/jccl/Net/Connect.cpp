@@ -43,7 +43,7 @@ vjConnect::vjConnect(vjConfigChunk* c): output() {
     connect_thread = NULL;
     fd = open (filename.c_str(), O_WRONLY | O_CREAT | O_TRUNC, 0660 );
     if (fd == -1) {
-	vjDEBUG(0) << "ERROR: file open failed for " << filename << endl
+	vjDEBUG(vjDBG_ALL,0) << "ERROR: file open failed for " << filename << endl
 		   << vjDEBUG_FLUSH;
     }
     output.attach (fd);
@@ -225,11 +225,11 @@ void vjConnect::readCommand(ifstream& fin) {
 	//	   << vjDEBUG_FLUSH;
 	return;
     }
-    vjDEBUG(0) << "vjConnect:: read: '" << rbuf
+    vjDEBUG(vjDBG_ALL,0) << "vjConnect:: read: '" << rbuf
 	       << "'.\n" << vjDEBUG_FLUSH;
     fin.get(c);
     if (c != '\n')
-	vjDEBUG(1) << "Error: vjConnect:: oops - "
+	vjDEBUG(vjDBG_ALL,1) << "Error: vjConnect:: oops - "
 	    "didn't completely get command line\n"
 	    "from the socket.  This is a bug!\n"
 		   << vjDEBUG_FLUSH;
@@ -249,7 +249,7 @@ void vjConnect::readCommand(ifstream& fin) {
             sendChunkDB (db, true);
 	}
 	else {
-            vjDEBUG(1) << "Error: vjConnect:: Received "
+            vjDEBUG(vjDBG_ALL,1) << "Error: vjConnect:: Received "
 		"unknown GET " << s << endl << vjDEBUG_FLUSH;
 	}
     }
@@ -305,7 +305,7 @@ void vjConnect::readCommand(ifstream& fin) {
 
 	}
 	else
-            vjDEBUG(1) << "Error: vjConnect: Unknown remove type: "
+            vjDEBUG(vjDBG_ALL,1) << "Error: vjConnect: Unknown remove type: "
 		       << s << endl << vjDEBUG_FLUSH;
     }
 #if 0
