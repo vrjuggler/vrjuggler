@@ -205,21 +205,37 @@ namespace Flock
 
       inline Transmitter::Type getTransmitterType(vpr::Uint8 bstatus)
       {
+         Transmitter::Type type;
+
          if(!hasTransmitter(bstatus))
-         {  return Transmitter::None; }
+         {
+            type = Transmitter::None;
+         }
          else if(hasStandardTransmitter(bstatus))
-         {  return Transmitter::Standard; }
+         {
+            type = Transmitter::Standard;
+         }
          else
          {
             if (Ert1Bit & bstatus)
-            { return Transmitter::Ert1; }
+            {
+               type = Transmitter::Ert1;
+            }
             else if (Ert2Bit & bstatus)
-            { return Transmitter::Ert2; }
+            {
+               type = Transmitter::Ert2;
+            }
             else if (Ert3Bit & bstatus)
-            { return Transmitter::Ert3; }
+            {
+               type = Transmitter::Ert3;
+            }
             else if (TransmitterBit & bstatus)
-            { return Transmitter::Ert0; }
+            {
+               type = Transmitter::Ert0;
+            }
          }
+
+         return type;
       }
 
 
