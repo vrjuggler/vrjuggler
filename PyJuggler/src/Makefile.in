@@ -28,19 +28,15 @@
 srcdir=		@srcdir@
 prefix=		@prefix@
 
-PYTHON_ROOT=	@PYTHON_ROOT@
-PYTHON_VERSION=	@PYTHON_VERSION@
-
-CXX=		c++
-CXXFLAGS=	$(shell vrjuggler-config --cxxflags)			\
-		-I$(PYTHON_ROOT)/include/python$(PYTHON_VERSION)
+CXX=		@CXX@
+CXXFLAGS=	$(shell vrjuggler-config --cxxflags) @PYTHON_INCLUDES@
 LIBS=		$(shell vrjuggler-config --libs)
 EXTRA_LIBS=	$(shell vrjuggler-config --extra-libs)
 
 BOOST_PYTHON_LIBDIR=	/home/patrick/src/Juggler/main/juggler/external/boost/libs/python/build/bin/libboost_python.so/gcc/release/inlining-on/runtime-link-dynamic/shared-linkable-true
 BOOST_PYTHON_LIBS=	-L$(BOOST_PYTHON_LIBDIR) -lboost_python		\
-			-L$(PYTHON_ROOT)/lib/python$(PYTHON_VERSION)/config \
-			-lpython$(PYTHON_VERSION)
+			@PYTHON_LDFLAGS@ @PYTHON_LIB@ @PYTHON_LIB_DEPS@	\
+			$(NULL)
 
 SRCS=		PyJuggler.cpp
 OBJS=		$(SRCS:.cpp=.o)
