@@ -39,106 +39,106 @@
 namespace gadget
 {
 
-      vpr::ReturnStatus Digital::writeObject(vpr::ObjectWriter* writer)
+vpr::ReturnStatus Digital::writeObject(vpr::ObjectWriter* writer)
+{
+   writer->beginTag(Digital::getBaseType());
+   //std::cout << "[Remote Input Manager] In Digital write" << std::endl;
+   SampleBuffer_t::buffer_t& stable_buffer = mDigitalSamples.stableBuffer();
+   writer->beginAttribute(gadget::tokens::DataTypeAttrib);
+      writer->writeUint16(MSG_DATA_DIGITAL);                               // Write out the data type so that we can assert if reading in wrong place
+   writer->endAttribute();
+
+   writer->beginAttribute(gadget::tokens::SampleBufferLenAttrib);
+      writer->writeUint16(stable_buffer.size());                           // Write the # of vectors in the stable buffer
+   writer->endAttribute();
+
+   if ( !stable_buffer.empty() )
+   {
+      mDigitalSamples.lock();
+      for ( unsigned j=0;j<stable_buffer.size();j++ )                               // For each vector in the stable buffer
       {
-         writer->beginTag(Digital::getBaseType());
-         //std::cout << "[Remote Input Manager] In Digital write" << std::endl;
-         SampleBuffer_t::buffer_t& stable_buffer = mDigitalSamples.stableBuffer();
-         writer->beginAttribute(gadget::tokens::DataTypeAttrib);
-            writer->writeUint16(MSG_DATA_DIGITAL);                               // Write out the data type so that we can assert if reading in wrong place
+         writer->beginTag(gadget::tokens::BufferSampleTag);
+         writer->beginAttribute(gadget::tokens::BufferSampleLenAttrib);
+            writer->writeUint16(stable_buffer[j].size());                           // Write the # of DigitalDatas in the vector
          writer->endAttribute();
-
-         writer->beginAttribute(gadget::tokens::SampleBufferLenAttrib);
-            writer->writeUint16(stable_buffer.size());                           // Write the # of vectors in the stable buffer
-         writer->endAttribute();
-
-         if ( !stable_buffer.empty() )
+         for ( unsigned i=0;i<stable_buffer[j].size();i++ )                         // For each DigitalData in the vector
          {
-            mDigitalSamples.lock();
-            for ( unsigned j=0;j<stable_buffer.size();j++ )                               // For each vector in the stable buffer
-            {
-               writer->beginTag(gadget::tokens::BufferSampleTag);
-               writer->beginAttribute(gadget::tokens::BufferSampleLenAttrib);
-                  writer->writeUint16(stable_buffer[j].size());                           // Write the # of DigitalDatas in the vector
-               writer->endAttribute();
-               for ( unsigned i=0;i<stable_buffer[j].size();i++ )                         // For each DigitalData in the vector
-               {
-                  writer->beginTag(gadget::tokens::DigitalValue);
-                  writer->beginAttribute(gadget::tokens::TimeStamp);
-                     writer->writeUint64(stable_buffer[j][i].getTime().usec());           // Write Time Stamp vpr::Uint64
-                  writer->endAttribute();
-                  writer->writeUint32((vpr::Uint32)stable_buffer[j][i].getDigital());  // Write Digital Data(int)
-                  writer->endTag();
-               }
-               writer->endTag();
-            }
-            mDigitalSamples.unlock();
+            writer->beginTag(gadget::tokens::DigitalValue);
+            writer->beginAttribute(gadget::tokens::TimeStamp);
+               writer->writeUint64(stable_buffer[j][i].getTime().usec());           // Write Time Stamp vpr::Uint64
+            writer->endAttribute();
+            writer->writeUint32((vpr::Uint32)stable_buffer[j][i].getDigital());  // Write Digital Data(int)
+            writer->endTag();
          }
          writer->endTag();
-
-         return vpr::ReturnStatus::Succeed;
       }
+      mDigitalSamples.unlock();
+   }
+   writer->endTag();
 
-      vpr::ReturnStatus Digital::readObject(vpr::ObjectReader* reader)
+   return vpr::ReturnStatus::Succeed;
+}
+
+vpr::ReturnStatus Digital::readObject(vpr::ObjectReader* reader)
+{
+      //std::cout << "[Remote Input Manager] In Digital read" << std::endl;
+   vprASSERT(reader->attribExists("rim.timestamp.delta"));
+   vpr::Uint64 delta = reader->getAttrib<vpr::Uint64>("rim.timestamp.delta");
+
+      // ASSERT if this data is really not Digital Data
+   reader->beginTag(Digital::getBaseType());
+   reader->beginAttribute(gadget::tokens::DataTypeAttrib);
+      vpr::Uint16 temp = reader->readUint16();
+   reader->endAttribute();
+
+   // XXX: Should there be error checking for the case when vprASSERT()
+   // is compiled out?  -PH 8/21/2003
+   vprASSERT(temp==MSG_DATA_DIGITAL && "[Remote Input Manager]Not Digital Data");
+   boost::ignore_unused_variable_warning(temp);
+
+   std::vector<DigitalData> dataSample;
+
+   unsigned numDigitalDatas;
+   vpr::Uint32 value;
+   vpr::Uint64 timeStamp;
+   DigitalData temp_digital_data;
+
+   reader->beginAttribute(gadget::tokens::SampleBufferLenAttrib);
+      unsigned numVectors = reader->readUint16();
+   reader->endAttribute();
+
+   //std::cout << "Stable Digital Buffer Size: "  << numVectors << std::endl;
+   mDigitalSamples.lock();
+   for ( unsigned i=0;i<numVectors;i++ )
+   {
+      reader->beginTag(gadget::tokens::BufferSampleTag);
+      reader->beginAttribute(gadget::tokens::BufferSampleLenAttrib);
+         numDigitalDatas = reader->readUint16();
+      reader->endAttribute();
+
+      dataSample.clear();
+      for ( unsigned j=0;j<numDigitalDatas;j++ )
       {
-            //std::cout << "[Remote Input Manager] In Digital read" << std::endl;
-         vprASSERT(reader->attribExists("rim.timestamp.delta"));
-         vpr::Uint64 delta = reader->getAttrib<vpr::Uint64>("rim.timestamp.delta");
-
-            // ASSERT if this data is really not Digital Data
-         reader->beginTag(Digital::getBaseType());
-         reader->beginAttribute(gadget::tokens::DataTypeAttrib);
-            vpr::Uint16 temp = reader->readUint16();
+         reader->beginTag(gadget::tokens::DigitalValue);
+         reader->beginAttribute(gadget::tokens::TimeStamp);
+            timeStamp = reader->readUint64();    // read Time Stamp vpr::Uint64
          reader->endAttribute();
-
-         // XXX: Should there be error checking for the case when vprASSERT()
-         // is compiled out?  -PH 8/21/2003
-         vprASSERT(temp==MSG_DATA_DIGITAL && "[Remote Input Manager]Not Digital Data");
-         boost::ignore_unused_variable_warning(temp);
-
-         std::vector<DigitalData> dataSample;
-
-         unsigned numDigitalDatas;
-         vpr::Uint32 value;
-         vpr::Uint64 timeStamp;
-         DigitalData temp_digital_data;
-
-         reader->beginAttribute(gadget::tokens::SampleBufferLenAttrib);
-            unsigned numVectors = reader->readUint16();
-         reader->endAttribute();
-
-         //std::cout << "Stable Digital Buffer Size: "  << numVectors << std::endl;
-         mDigitalSamples.lock();
-         for ( unsigned i=0;i<numVectors;i++ )
-         {
-            reader->beginTag(gadget::tokens::BufferSampleTag);
-            reader->beginAttribute(gadget::tokens::BufferSampleLenAttrib);
-               numDigitalDatas = reader->readUint16();
-            reader->endAttribute();
-
-            dataSample.clear();
-            for ( unsigned j=0;j<numDigitalDatas;j++ )
-            {
-               reader->beginTag(gadget::tokens::DigitalValue);
-               reader->beginAttribute(gadget::tokens::TimeStamp);
-                  timeStamp = reader->readUint64();               // read Time Stamp vpr::Uint64
-               reader->endAttribute();
-               value = reader->readUint32();                   // read Digital Data(int)
-               reader->endTag();
-
-               temp_digital_data.setDigital(value);
-               temp_digital_data.setTime(vpr::Interval(timeStamp + delta,vpr::Interval::Usec));
-               dataSample.push_back(temp_digital_data);
-            }
-            mDigitalSamples.addSample(dataSample);
-            reader->endTag();
-         }
-         mDigitalSamples.unlock();
-         mDigitalSamples.swapBuffers();
-
+         value = reader->readUint32();           // read Digital Data(int)
          reader->endTag();
 
-         return vpr::ReturnStatus::Succeed;
+         temp_digital_data.setDigital(value);
+         temp_digital_data.setTime(vpr::Interval(timeStamp + delta,vpr::Interval::Usec));
+         dataSample.push_back(temp_digital_data);
       }
+      mDigitalSamples.addSample(dataSample);
+      reader->endTag();
+   }
+   mDigitalSamples.unlock();
+   mDigitalSamples.swapBuffers();
+
+   reader->endTag();
+
+   return vpr::ReturnStatus::Succeed;
+}
 
 } // End of gadget namespace
