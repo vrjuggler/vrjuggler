@@ -28,8 +28,11 @@ package org.vrjuggler.vrjconfig.ui;
 import java.awt.*;
 import javax.swing.*;
 
+import org.vrjuggler.jccl.config.ConfigChunk;
+import org.vrjuggler.jccl.editors.ConfigChunkPropertySheet;
 import org.vrjuggler.tweek.beans.loader.BeanJarClassLoader;
 import org.vrjuggler.vrjconfig.ui.DisplayPlacer;
+import org.vrjuggler.vrjconfig.ui.placer.*;
 
 /**
  * A custom editor for the displays and the surfaces contained therein.
@@ -56,6 +59,27 @@ public class DisplayEditor
       ClassLoader loader = BeanJarClassLoader.instance();
       displayEditorBasicBtn.setIcon(new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/ui/images/displayeditor_basic32.png")));
       displayEditor3DBtn.setIcon(new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/ui/images/displayeditor_3d32.png")));
+
+      // Connect the selections in the display placer to the property sheet
+      displayPlacer.getPlacer().addPlacerSelectionListener(new PlacerSelectionListener()
+      {
+         public void valueChanged(PlacerSelectionEvent evt)
+         {
+            displaySelectionChanged();
+         }
+      });
+
+//      mainScrollPane.resetToPreferredSizes();
+   }
+
+   /**
+    * Called by our listener on the display placer whenever the selection on
+    * the display placer has changed.
+    */
+   protected void displaySelectionChanged()
+   {
+      ConfigChunk display_chunk = displayPlacer.getSelectedDisplay();
+      propSheet.setConfigChunk(display_chunk);
    }
 
    /**
@@ -75,7 +99,9 @@ public class DisplayEditor
       displayEditorBasicBtn.setContentAreaFilled(false);
       displayEditor3DBtn.setBorderPainted(false);
       displayEditor3DBtn.setContentAreaFilled(false);
-      mainPanel.setLayout(mainLayout);
+//      mainPanel.setLayout(mainLayout);
+      mainSplitPane.setOrientation(JSplitPane.VERTICAL_SPLIT);
+      mainSplitPane.setResizeWeight(1.0);
       this.add(toolbar, BorderLayout.NORTH);
       toolbar.add(titleLbl, null);
       toolbar.add(Box.createHorizontalGlue(), null);
@@ -83,8 +109,13 @@ public class DisplayEditor
       toolbar.add(Box.createHorizontalStrut(8));
       toolbar.add(displayEditor3DBtn, null);
       toolbar.add(Box.createHorizontalStrut(8), null);
-      this.add(mainPanel, BorderLayout.CENTER);
-      mainPanel.add(displayPlacer, BorderLayout.CENTER);
+      this.add(mainSplitPane, BorderLayout.CENTER);
+      mainSplitPane.add(displayPlacer, JSplitPane.TOP);
+      mainSplitPane.add(propSheetScrollPane, JSplitPane.BOTTOM);
+//      this.add(mainPanel, BorderLayout.CENTER);
+//      mainPanel.add(displayPlacer, BorderLayout.CENTER);
+//      mainPanel.add(propSheetScrollPane, BorderLayout.SOUTH);
+      propSheetScrollPane.setViewportView(propSheet);
    }
 
    //--- JBuilder GUI variables ---//
@@ -93,7 +124,10 @@ public class DisplayEditor
    private JLabel titleLbl = new JLabel();
    private JButton displayEditorBasicBtn = new JButton();
    private JButton displayEditor3DBtn = new JButton();
-   private BorderLayout mainLayout = new BorderLayout();
-   private JPanel mainPanel = new JPanel();
+//   private BorderLayout mainLayout = new BorderLayout();
+//   private JPanel mainPanel = new JPanel();
+   private JSplitPane mainSplitPane = new JSplitPane();
    private DisplayPlacer displayPlacer = new DisplayPlacer();
+   private JScrollPane propSheetScrollPane = new JScrollPane();
+   private ConfigChunkPropertySheet propSheet = new ConfigChunkPropertySheet();
 }
