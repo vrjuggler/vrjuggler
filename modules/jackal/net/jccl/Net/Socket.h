@@ -38,7 +38,7 @@
 #include <vpr/IO/Socket/Socket.h>
 
 
-#ifndef JCCL_OS_Win32
+#ifndef VPR_OS_Win32
 
 namespace jccl {
 
@@ -146,7 +146,7 @@ typedef SocketIDWin32 SocketID;
 
 };
 
-#endif //ifndef JCCL_OS_Win32
+#endif //ifndef VPR_OS_Win32
 
 #endif
 
