@@ -1,5 +1,7 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Jan-04-2003 patrickh    Updated to use CppDOM 0.1.0.
+                        NEW VERSION: 0.9.3
 Oct-24-2002 nonchocoboy VRJConfig now supports ability to choose embedded
                         chunks for propertys that contain ConfigChunk pointers.
 Oct-10-2002 nonchocoboy JCCL C++ config code loads in included files relative

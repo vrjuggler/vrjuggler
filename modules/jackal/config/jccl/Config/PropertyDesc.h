@@ -132,7 +132,7 @@ public:
     * Retrieves the default value (as an XML string) for the i'th item in this
     * property description.
     */
-   cppdom::XMLString getDefaultValueString(int index);
+   std::string getDefaultValueString(int index);
 
    /*
    //: Returns the number of individual value labels

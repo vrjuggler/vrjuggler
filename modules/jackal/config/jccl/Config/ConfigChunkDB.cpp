@@ -349,7 +349,7 @@ bool ConfigChunkDB::load(const std::string& filename, const std::string& parentf
    catch (cppdom::XMLError& xml_e)
    {
       cppdom::XMLLocation where( chunk_db_doc->getContext()->getLocation() );
-      cppdom::XMLString errmsg;
+      std::string errmsg;
       xml_e.getStrError(errmsg);
 
       // print out where the error occured

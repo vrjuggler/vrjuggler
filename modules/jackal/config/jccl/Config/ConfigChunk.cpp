@@ -128,7 +128,7 @@ bool ConfigChunk::operator<(const ConfigChunk& c) const
  */
 struct NamePred
 {
-   NamePred(const cppdom::XMLString& name) : mName(name)
+   NamePred(const std::string& name) : mName(name)
    {
       ;
    }
@@ -138,7 +138,7 @@ struct NamePred
       return (node->getAttribute(name_TOKEN).getString() == mName);
    }
 
-   cppdom::XMLString mName;
+   std::string mName;
 };
 
 // used for dependency resolution
