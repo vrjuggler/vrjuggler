@@ -1,5 +1,7 @@
 DATE       AUTHOR   CHANGE
 ---------- -------- -----------------------------------------------------------
+2003-01-10 patrickh Added vpr::ThreadRunFunctor<T>.
+                    NEW VERSION: 0.23.2
 2003-01-10 allenb   Added tag and attribute interface for object reader and 
                     object writer.
 2003-01-10 patrickh Fixed a race condition between vpr::BaseThread::valid() and

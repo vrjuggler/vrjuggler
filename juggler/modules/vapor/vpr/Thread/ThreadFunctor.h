@@ -158,6 +158,69 @@ private:
    void*      mArgument;
 };
 
+/**
+ * A variation on vpr::ThreadMemberFunctor that requires a class that
+ * implements the "runnable" concept.  That is, the class must have a run()
+ * method with the following signature: void run().  No argument will be
+ * passed to the runnable object when its run() method is invoked.  Instead,
+ * it is up to the class author to ensure that the object has all information
+ * it needs to do its job before the thread is spawned.
+ */
+template<typename OBJ_TYPE>
+class ThreadRunFunctor : public BaseThreadFunctor
+{
+public:
+   typedef void (OBJ_TYPE::* FunPtr)();
+
+   ThreadRunFunctor(OBJ_TYPE* theObject) : mObject(NULL), mFunction(NULL)
+   {
+      mObject   = theObject;
+      mFunction = &OBJ_TYPE::run;
+   }
+
+   virtual ~ThreadRunFunctor()
+   {
+      mObject   = (OBJ_TYPE*) 0xDEADBEEF;
+      mFunction = (FunPtr) 0xDEADBEEF;
+   }
+
+   void operator() (void* arg)
+   {
+      (mObject->*mFunction)();
+   }
+
+   void operator() ()
+   {
+      (mObject->*mFunction)();
+   }
+
+   virtual void setArg(void* arg)
+   {
+   }
+
+   virtual bool isValid()
+   {
+      if ( (NULL == mObject) || ((OBJ_TYPE*) 0xDEADBEEF == mObject) )
+      {
+         vprASSERT(NULL != mObject);
+         vprASSERT((OBJ_TYPE*)0xDEADBEEF != mObject);
+         return false;
+      }
+      else if ( (NULL == mFunction) || ((FunPtr) 0xDEADBEEF == mFunction) )
+      {
+         return false;
+      }
+      else
+      {
+         return true;
+      }
+   }
+
+private:
+   OBJ_TYPE*  mObject;
+   FunPtr     mFunction;
+};
+
 
 /**
  * Nonmember functor class.  Converts a non-member function or a static class
