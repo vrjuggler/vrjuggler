@@ -54,16 +54,39 @@ class EnvironmentServiceImpl
 {
    static
    {
+      mHaveTweekJni = false;
+
+      String jvm_ver_str = System.getProperty("java.version").substring(0, 3);
+      boolean jvm_has_getenv = false;
+
       try
       {
-         System.loadLibrary("tweek_jni");
-         mHaveTweekJni = true;
+         // JDK 1.5.0 has restored the usability of System.getenv().
+         float jvm_ver = Float.parseFloat(jvm_ver_str);
+         jvm_has_getenv = (jvm_ver >= 1.5);
       }
-      catch(UnsatisfiedLinkError ex)
+      catch(NumberFormatException ex)
       {
-         System.err.println("WARNING: Failed to load tweek_jni extension: " +
-                            ex.getMessage());
-         mHaveTweekJni = false;
+         // jvm_has_getenv remains false.
+      }
+
+      mJvmHasGetenv = jvm_has_getenv;
+
+      // If the JVM does not have System.getenv(), then we use our workaround
+      // in the tweek_jni library.
+      if ( ! jvm_has_getenv )
+      {
+         try
+         {
+            System.loadLibrary("tweek_jni");
+            mHaveTweekJni = true;
+         }
+         catch(UnsatisfiedLinkError ex)
+         {
+            System.err.println("WARNING: Failed to load tweek_jni extension: " +
+                               ex.getMessage());
+            // mHaveTweekJni remains false.
+         }
       }
 
       String os_name = System.getProperty("os.name");
@@ -217,11 +240,12 @@ class EnvironmentServiceImpl
 
    /**
     * Returns the value of the named environment variable or null if the
-    * variable is not set in the user's environment.  This is implementing
-    * using a native method call because System.getenv() is not available
-    * with JDK 1.4.  If the native method call is not available, this method
-    * always returns null.  With JDK 1.5, System.getenv() has returned, so
-    * this could be implemented in terms of that function.
+    * variable is not set in the user's environment.  With versions of the
+    * JDK prior to 1.5, this is implemented using a native method call
+    * because System.getenv() is not available.  If the native method call is
+    * not available, this method always returns null.  With JDK 1.5,
+    * System.getenv() is usable again, so it is used directly rather than
+    * using the native method call.
     *
     * @param envVarName The name of the variable to look up in the user's
     *                   environment.
@@ -236,7 +260,14 @@ class EnvironmentServiceImpl
    {
       String value = null;
 
-      if ( mHaveTweekJni )
+      // Prefer the JVM System.getenv() over the native method whenever
+      // possible.
+      if ( mJvmHasGetenv )
+      {
+         value = System.getenv(envVarName);
+      }
+      // Fall back on the native method if we have it.
+      else if ( mHaveTweekJni )
       {
          value = tweekJniGetenv(envVarName);
       }
@@ -251,4 +282,5 @@ class EnvironmentServiceImpl
 
    private static int os;
    private static boolean mHaveTweekJni;
+   private static boolean mJvmHasGetenv;
 }
