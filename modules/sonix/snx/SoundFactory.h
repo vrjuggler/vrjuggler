@@ -49,8 +49,9 @@
 #include <string>
 #include <vpr/Util/Singleton.h>
 #include <vpr/DynLoad/Library.h>
+#include <vpr/DynLoad/LibraryFinder.h>
 
-#include "snx/xdl.h"
+#include <vpr/DynLoad/Library.h>
 #include "snx/ISoundImplementation.h"
 
 namespace snx
@@ -59,15 +60,11 @@ namespace snx
 class SNX_CLASS_API SoundFactory
 {
 public:
-   void errorOutput(std::string filename, const char* test);
+   void errorOutput(vpr::LibraryPtr lib, const char* test);
 
-   bool isPlugin(std::string filename);
+   bool isPlugin(vpr::LibraryPtr lib);
 
-   void filterOutPluginFileNames(const char* dir,
-                                 std::vector<std::string> srclist,
-                                 std::vector<std::string>& destlist);
-
-   void loadPlugins(std::string prefix, std::vector<std::string> filelist);
+   void loadPlugins(vpr::LibraryFinder::LibraryList libs);
 
    void unloadPlugins();
 
@@ -85,7 +82,7 @@ public:
    void reg(const std::string& apiName, snx::ISoundImplementation* impl);
 
    std::map< std::string, snx::ISoundImplementation* > mRegisteredImplementations;
-   std::vector<xdl::Library> mPlugins;
+   std::vector<vpr::LibraryPtr> mPlugins;
 
 private:
    SoundFactory();
