@@ -30,18 +30,6 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-//===============================================================
-// Flock (a Wrapper for FlockStandalone)
-//
-// Purpose:
-//      VR Juggler Ascention Flock of birds tracking class
-//
-// Author:
-// Kevin Meinert
-//
-// Date: 4-22-99
-//===============================================================
-
 #include <gadget/gadgetConfig.h>
 
 #include <sys/file.h>
@@ -62,42 +50,30 @@
 namespace gadget
 {
 
-//: Configure Constructor
-// Give:                                                 <BR>
-//   port - such as "/dev/ttyd3"                         <BR>
-//   baud - such as 38400, 19200, 9600, 14400, etc...    <BR>
-//   sync - sync type.                                   <BR>
-//   block - blocking                                    <BR>
-//   numBrds - number of birds in flock,                 <BR>
-//   transmit - transmitter unit number,                 <BR>
-//   hemi - hemisphere to track from,                    <BR>
-//   filt - filtering type,                              <BR>
-//   report - flock report rate.                         <BR>
-//   calfile - a calibration file, if "", then use none. <BR>
-//                                                       <BR>
-// Result: configures internal data members,
-//         doesn't actually talk to the FOB yet.
-Flock::Flock(const char* const port,
-      const int& baud,
-      const int& sync,
-      const int& block,
-      const int& numBrds,
-      const int& transmit,
-      const BIRD_HEMI& hemi,
-      const BIRD_FILT& filt,
-      const char& report,
-      const char* const calfile) : mFlockOfBirds(port,
-                      baud,
-                      sync,
-                      block,
-                      numBrds,
-                      transmit,
-                      hemi,
-                      filt,
-                      report,
-                      calfile)
+/**
+ * Configure constructor.
+ *
+ * @param port  such as "/dev/ttyd3"
+ * @param baud  such as 38400, 19200, 9600, 14400, etc...
+ * @param sync  sync type
+ * @param block  blocking
+ * @param numBrds  number of birds in flock (without transmitter)
+ * @param transmit  transmitter unit number
+ * @param hemi  hemisphere to track from
+ * @param filt  filtering type
+ * @param report  flock report rate
+ * @param calfile  a calibration file, if "", then use none
+ */
+Flock::Flock(const char* const port, const int& baud, const int& sync,
+             const int& block, const int& numBrds, const int& transmit,
+             const BIRD_HEMI& hemi, const BIRD_FILT& filt, const char& report,
+             const char* const calfile)
+   : mThread(NULL),
+     mFlockOfBirds(port, baud, sync, block, numBrds, transmit, hemi, filt,
+                   report, calfile)
+    
 {
-   mThread = NULL;
+   ;
 }
 
 bool Flock::config(jccl::ConfigChunkPtr c)
@@ -110,7 +86,9 @@ bool Flock::config(jccl::ConfigChunkPtr c)
    // read in Position's config stuff,
    // --> this will be the port and baud fields
    if(! (Input::config(c) && Position::config(c)))
+   {
       return false;
+   }
 
    // keep FlockStandalone's port and baud members in sync with Input's port
    // and baud members.
@@ -136,7 +114,9 @@ bool Flock::config(jccl::ConfigChunkPtr c)
       mFlockOfBirds.setReportRate( 'R' );
    }
    else
+   {
       mFlockOfBirds.setReportRate( r );
+   }
 
    // output what was read.
    vprDEBUG(gadgetDBG_INPUT_MGR,1)
@@ -218,7 +198,9 @@ int Flock::startSampling()
       }
    }
    else
+   {
       return 0; // already sampling
+   }
 }
 
 int Flock::sample()
@@ -226,7 +208,9 @@ int Flock::sample()
    std::vector< gadget::PositionData > cur_samples(mFlockOfBirds.getNumBirds());
 
    if (this->isActive() == false)
+   {
       return 0;
+   }
 
    int i;
 
@@ -234,7 +218,8 @@ int Flock::sample()
 
    // get an initial timestamp for this entire sample. we'll copy it into
    // each PositionData for this sample.
-   if (!cur_samples.empty()) {
+   if (!cur_samples.empty())
+   {
        cur_samples[0].setTime();
    }
 
@@ -298,7 +283,9 @@ int Flock::sample()
 int Flock::stopSampling()
 {
    if (this->isActive() == false)
+   {
       return 0;
+   }
 
    if (mThread != NULL)
    {
@@ -333,7 +320,9 @@ int Flock::stopSampling()
 void Flock::updateData()
 {
    if (this->isActive() == false)
+   {
       return;
+   }
 
    mPosSamples.swapBuffers();
 
@@ -467,4 +456,4 @@ void Flock::setBaudRate( const int& baud )
     Input::setBaudRate( baud );
 }
 
-};
+} // End of gadget namespace
