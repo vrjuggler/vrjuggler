@@ -47,28 +47,31 @@ int main (int argc, char* argv[])
    write_port->setOpenWriteOnly();
    write_port->setOpenBlocking();
 
-   if ( write_port->open().success() )
+   for ( int i = 1; i <= 4; i++ )
    {
-      char* buffer = "This is a test...\n";
-      vpr::Uint32 bytes;
-      vpr::Uint16 size;
-
-      std::cout << "Port opened\n";
-
-      if ( write_port->getBufferSize(size).success() )
+      if ( write_port->open().success() )
       {
-         std::cout << "Min buffer size: " << size << std::endl;
+         char buffer[] = "This is a test...";
+         vpr::Uint32 bytes;
+         vpr::Uint16 size;
+
+         std::cout << "Port opened\n";
+
+         if ( write_port->getBufferSize(size).success() )
+         {
+            std::cout << "Min buffer size: " << size << std::endl;
+         }
+
+         write_port->disableCanonicalInput();
+         write_port->setUpdateAction(vpr::SerialTypes::NOW);
+         write_port->setCharacterSize(vpr::SerialTypes::CS_BITS_8);
+         write_port->write(buffer, sizeof(char) * (strlen(buffer) + 1), bytes);
+         write_port->flushQueue(vpr::SerialTypes::IO_QUEUES);
+         std::cout << "Wrote " << bytes << " bytes to " << argv[1] << std::endl;
       }
 
-      write_port->disableCanonicalInput();
-      write_port->setUpdateAction(vpr::SerialTypes::NOW);
-      write_port->setCharacterSize(vpr::SerialTypes::CS_BITS_8);
-      write_port->write(buffer, sizeof(char) * (strlen(buffer) + 1), bytes);
-      write_port->flushQueue(vpr::SerialTypes::IO_QUEUES);
-      std::cout << "Wrote " << bytes << " bytes to " << argv[1] << std::endl;
+      write_port->close();
    }
-
-   write_port->close();
 
    return 0;
 }

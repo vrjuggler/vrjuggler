@@ -37,52 +37,57 @@
 #include <vpr/IO/Socket/InetAddr.h>
 
 
-int
-main (int argc, char* argv[]) {
-    int status;
-    vpr::InetAddr local;
-    vpr::Uint16 port = 15432;   // Default listening port
+int main (int argc, char* argv[])
+{
+   int status;
+   vpr::InetAddr local;
+   vpr::Uint16 port = 15432;   // Default listening port
 
-    // If a command-line argument was given, use it as the port value instead
-    // of the default.
-    if ( argc == 2 ) {
-        port = (unsigned short) atoi(argv[1]);
-    }
+   // If a command-line argument was given, use it as the port value instead
+   // of the default.
+   if ( argc == 2 )
+   {
+      port = (unsigned short) atoi(argv[1]);
+   }
 
-    // Create a datagram socket that will be bound to port.
-    local.setPort(port);
-    vpr::SocketDatagram sock(local, vpr::InetAddr::AnyAddr);
+   // Create a datagram socket that will be bound to port.
+   local.setPort(port);
+   vpr::SocketDatagram sock(local, vpr::InetAddr::AnyAddr);
 
-    // Bind the socket to the port.
-    if ( sock.open().success() && sock.bind().success() ) {
-        char recv_buf[32];
-        char send_buf[] = "Hello there!";
-        vpr::Uint32 bytes;
-        vpr::ReturnStatus sock_stat;
+   // Bind the socket to the port.
+   if ( sock.open().success() && sock.bind().success() )
+   {
+      char recv_buf[32];
+      char send_buf[] = "Hello there!";
+      vpr::Uint32 bytes;
+      vpr::ReturnStatus sock_stat;
 
-        // Loop forever reading messages from clients.
-        while ( 1 ) {
-            vpr::InetAddr addr;
+      // Loop forever reading messages from clients.
+      while ( 1 )
+      {
+         vpr::InetAddr addr;
 
-            // Read a message from a client.
-            sock_stat = sock.recvfrom(recv_buf, sizeof(recv_buf), 0, addr,
-                                      bytes);
+         // Read a message from a client.
+         sock_stat = sock.recvfrom(recv_buf, sizeof(recv_buf), 0, addr,
+                                   bytes);
 
-            // If we read anything, print it and send a response.
-            if ( sock_stat.success() ) {
-                std::cout << "Read '" << recv_buf << "' (" << bytes
-                          << " bytes) from " << addr.getAddressString()
-                          << std::endl;
+         // If we read anything, print it and send a response.
+         if ( sock_stat.success() )
+         {
+            std::cout << "Read '" << recv_buf << "' (" << bytes
+                      << " bytes) from " << addr.getAddressString()
+                      << std::endl;
 
-                sock.sendto(send_buf, sizeof(send_buf), 0, addr, bytes);
-            }
-        }
+            sock.sendto(send_buf, sizeof(send_buf), 0, addr, bytes);
+         }
+      }
 
-        status = 0;
-    }
-    else {
-        status = 1;
-    }
+      status = 0;
+   }
+   else
+   {
+      status = 1;
+   }
 
-    return status;
+   return status;
 }
