@@ -87,10 +87,9 @@ std::ostream& TrackedSurfaceProjection::outStream(std::ostream& out,
 
    const std::string indent_text(indentLevel, ' ');
 
+   out << indent_text << "vrj::TrackedSurfaceProjection:\n";
    out << indent_text << std::setw(pad_width_dot)
-       << "Type " << " vrj::TrackedSurfaceProjection\n";
-   out << indent_text << std::setw(pad_width_dot)
-       << "Pos Proxy " << " " << mTracker.getProxyName() << std::endl;
+       << "  Pos Proxy " << " " << mTracker.getProxyName() << std::endl;
 
    return SurfaceProjection::outStream(out, indentLevel);
 }
