@@ -36,7 +36,7 @@ package VjComponents.ConfigEditor.ConfigChunkUI;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
-import java.util.Vector;
+import java.util.*;
 
 import VjConfig.*;
 import VjComponents.ConfigEditor.*;
@@ -52,24 +52,27 @@ import VjComponents.UI.Widgets.*;
  * @author Christopher Just
  * @version $Revision$
  */
-public class VarValueMiniChunkPanel extends VarValuePanel implements ActionListener, VarValuePanel.VarValuePanelParent {
+public class VarValueMiniChunkPanel 
+    extends VarValuePanel 
+    implements ActionListener {
 
-    VarValuePanelParent     parent; // the parent is a listener on the remove button
-    JButton           removebutton;
-    ConfigChunk       chunk;
-    boolean           use_remove_button;
-    Vector            panels;
-    ConfigUIHelper    uihelper_module;
 
-    public VarValueMiniChunkPanel(VarValuePanelParent par, 
-                                  boolean _use_remove_button, 
+    protected java.util.List    action_listeners;
+    protected JButton           remove_button;
+    protected ConfigChunk       chunk;
+    protected boolean           use_remove_button;
+    protected Vector            panels;
+    protected ConfigUIHelper    uihelper_module;
+
+
+    public VarValueMiniChunkPanel(boolean _use_remove_button, 
                                   ConfigChunk _chunk,
                                   ConfigUIHelper _uihelper_module) {
 	super();
-	parent = par;
         use_remove_button = _use_remove_button;
 	chunk = new ConfigChunk (_chunk);
         uihelper_module = _uihelper_module;
+        action_listeners = new ArrayList();
 
         setLayout (new BoxLayout (this, BoxLayout.X_AXIS));
 
@@ -86,7 +89,7 @@ public class VarValueMiniChunkPanel extends VarValuePanel implements ActionListe
 	    j = p.getNum();
 	    for (k = 0; k < j; k++) {
 		v2 = p.getValue (j);
-		VarValuePanel vp = new VarValueStandardPanel (this, p.getDesc(), uihelper_module);
+		VarValuePanel vp = new VarValueStandardPanel (p.getDesc(), uihelper_module);
 		if (v2 != null)
 		    vp.setValue (v2);
                 add (vp);
@@ -95,11 +98,11 @@ public class VarValueMiniChunkPanel extends VarValuePanel implements ActionListe
 	}
 
 	if (use_remove_button) {
-	    removebutton = new JButton("Remove");
+	    remove_button = new JButton("Remove");
 	    Insets in = new Insets (0,0,0,0);
-	    removebutton.setMargin (in);
-            add (removebutton);
-	    removebutton.addActionListener(this);
+	    remove_button.setMargin (in);
+            add (remove_button);
+	    remove_button.addActionListener(this);
 	}
     }
 
@@ -145,14 +148,41 @@ public class VarValueMiniChunkPanel extends VarValuePanel implements ActionListe
 
     }
 
-    public void removePanel (VarValuePanel p) {
-	System.out.println ("Not Implemented");
-    }
 
     public void actionPerformed (ActionEvent e) {
-	if (e.getSource() == removebutton)
-	    parent.removePanel(this);
+	if (e.getSource() == remove_button)
+	    notifyActionListenersRemove();
     }
+
+
+    //--------------------- ActionEvent Stuff ------------------------
+
+    public void addActionListener (ActionListener l) {
+	synchronized (action_listeners) {
+	    action_listeners.add (l);
+	}
+    }
+
+    public void removeActionListener (ActionListener l) {
+	synchronized (action_listeners) {
+	    action_listeners.remove (l);
+	}
+    }
+
+    private void notifyActionListenersRemove () {
+        ActionEvent e = new ActionEvent (this, ActionEvent.ACTION_PERFORMED,
+                                         "Remove");
+        ActionListener l;
+        int i, n;
+        synchronized (action_listeners) {
+            n = action_listeners.size();
+            for (i = 0; i < n; i++) {
+                l = (ActionListener)action_listeners.get(i);
+                l.actionPerformed (e);
+            }
+        }
+    }
+
 
 
 }
