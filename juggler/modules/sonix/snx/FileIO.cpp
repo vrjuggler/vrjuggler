@@ -41,6 +41,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <fstream>
 
 #include <snx/FileIO.h>
 
@@ -147,7 +148,7 @@ int WriteLong( Endianness fileByteOrdering, FILE *fp, const unsigned long& value
    return WriteData( fileByteOrdering, fp, value );
 }
 
-void getLine( ifstream& f, std::string& text  )
+void getLine( std::ifstream& f, std::string& text  )
 {
    char buffer[2049];
    f.getline( buffer, 2048, '\n' );
@@ -159,7 +160,7 @@ void getLine( ifstream& f, std::string& text  )
    text = buffer;
 }
 
-void getAll( ifstream& f, std::string& buffer )
+void getAll( std::ifstream& f, std::string& buffer )
 {
    //cout<<"Reading:["<<flush;
    while ((f.eof() == false) && (f.fail() == 0) )

@@ -76,7 +76,7 @@
 
 #include <string>
 #include <vector>
-#include <fstream.h>
+#include <fstream>
 #include <stdio.h> // for FILE
 
 #include <snx/Endian.h> //needed for snxEndian::isBig, snxEndian::isLittle funcs
@@ -159,9 +159,9 @@ namespace snxFileIO
    // NOTE: these enhance readability and type checking, try to use them over the generic WriteData function
    static int WriteLong( Endianness fileByteOrdering, FILE *fp, const unsigned long& value );
 
-   static void getLine( ifstream& f, std::string& text  );
+   static void getLine( std::ifstream& f, std::string& text  );
 
-   static void getAll( ifstream& f, std::string& buffer );
+   static void getAll( std::ifstream& f, std::string& buffer );
 
 }; //end namespace.
 
