@@ -385,7 +385,9 @@ case $target_os in
         AR='${CXX}'
         ARFLAGS='-LANG:std -J6 -ar -WR,-v -o'
         CFLAGS="$CFLAGS -ansi"
+        CFLAGS_DYNLIB="$CFLAGS_DYNLIB -KPIC"
         CXXFLAGS="$CXXFLAGS -ansi -LANG:std"
+        CXXFLAGS_DYNLIB="$CXXFLAGS_DYNLIB -KPIC"
         DBG_FLAGS="-g -gslim"
         LD='${CXX} -shared'
         _LD_REGOPTS='-check_registry ${DSOREGFILE}'
@@ -714,6 +716,18 @@ CXXFLAGS="$CXXFLAGS ${_EXTRA_FLAGS}"
 
 AC_PROG_CC
 AC_PROG_CXX
+
+dnl # If we are using GCC as the C compiler, the option for making
+dnl # position-independent code is -fPIC.
+if test "x$GCC" = "xyes" ; then
+    CFLAGS_DYNLIB="$CFLAGS_DYNLIB -fPIC"
+fi
+
+dnl # If we are using GCC as the C++ compiler, the option for making
+dnl # position-independent code is -fPIC.
+if test "x$GXX" = "xyes" ; then
+    CXXFLAGS_DYNLIB="$CXXFLAGS_DYNLIB -fPIC"
+fi
 
 dnl # If we are using GCC as the compiler, we need to be using at least egcs
 dnl # 1.1.2.  A newer version (e.g., 2.95.2) is even better.
@@ -1771,7 +1785,9 @@ AC_SUBST(AR)
 AC_SUBST(ARFLAGS)
 AC_SUBST(AR_NAME_FLAG)
 AC_SUBST(CFLAGS)
+AC_SUBST(CFLAGS_DYNLIB)
 AC_SUBST(CXXFLAGS)
+AC_SUBST(CXXFLAGS_DYNLIB)
 AC_SUBST(DEP_GEN_FLAG)
 AC_SUBST(DEPENDFLAGS)
 AC_SUBST(DEPEND_EXTRAS)
