@@ -199,6 +199,15 @@ public class ConfigElementParser
       {
          if (type == Boolean.class)
          {
+            if ( valueStr.equals("1") )
+            {
+               valueStr = "true";
+            }
+            else if ( valueStr.equals("0") )
+            {
+               valueStr = "false";
+            }
+
             return new Boolean(valueStr);
          }
          else if (type == Integer.class)
