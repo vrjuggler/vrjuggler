@@ -75,9 +75,10 @@ if ( $#ARGV < 3 || $#ARGV > 9 ) {
 
 # Get the -i and -o options and store their values in $opt_i and $opt_o
 # respectively.
-getopt('g:i:m:o:v:');
+getopt('e:g:i:m:o:v:');
 
-my $src_dir = "$opt_i";
+my(@exts)    = split(/,/, "$opt_e") if $opt_e;
+my $src_dir  = "$opt_i";
 my $dest_dir = "$opt_o";
 
 require "$opt_v" if $opt_v;
@@ -128,42 +129,54 @@ exit 0;
 sub recurseAction {
     my $curfile = shift;
 
-    # If the current file is a .in template file, process it before
-    # installing.
-    if ( $curfile =~ /^(.+?)\.in$/ ) {
-	my $filename = "$1";
-
-	my $workfile;
-
-	if ( $Win32 ) {
-	    $workfile = "C:/temp/$curfile";
-	} else {
-	    $workfile = "/tmp/$curfile";
-	}
-
-	# Make a working copy of the input file to be safe.
-	copy("$curfile", "$workfile") unless "$curfile" eq "$workfile";
-
-	# Replace the tags in $workfile with the values in %VARS.
-	if ( replaceTags("$workfile", %VARS) < 0 ) {
-	    copy("$curfile", "$filename");
-	}
-	# If replaceTags() succeeded, move the work file to the file name
-	# to be installed.
-	else {
-	    copy("$workfile", "$filename");
-	    unlink("$workfile")
-	        or warn "WARNING: Could not delete $workfile: $!";
-	}
-
-	installFile("$filename", $uid, $gid, "$mode", "$dest_dir");
-
-	# Delete the generated file now that we are done with it.
-	unlink("$filename") or warn "WARNING: Could not delete $filename: $!";
+    # Install only the files with extensions listed in @exts if there are any
+    # elements in @exts.
+    if ( $#exts != -1 ) {
+        foreach ( @exts ) {
+            if ( $curfile =~ /$_$/ ) {
+                installFile("$curfile", $uid, $gid, "$mode", "$dest_dir");
+                last;
+            }
+        }
     }
-    # Otherwise, install it as-is.
     else {
-	installFile("$curfile", $uid, $gid, "$mode", "$dest_dir");
-    }
+        # If the current file is a .in template file, process it before
+        # installing.
+        if ( $curfile =~ /^(.+?)\.in$/ ) {
+            my $filename = "$1";
 
+            my $workfile;
+
+            if ( $Win32 ) {
+                $workfile = "C:/temp/$curfile";
+            } else {
+                $workfile = "/tmp/$curfile";
+            }
+
+            # Make a working copy of the input file to be safe.
+            copy("$curfile", "$workfile") unless "$curfile" eq "$workfile";
+
+            # Replace the tags in $workfile with the values in %VARS.
+            if ( replaceTags("$workfile", %VARS) < 0 ) {
+                copy("$curfile", "$filename");
+            }
+            # If replaceTags() succeeded, move the work file to the file name
+            # to be installed.
+            else {
+                copy("$workfile", "$filename");
+                unlink("$workfile")
+                    or warn "WARNING: Could not delete $workfile: $!";
+            }
+
+            installFile("$filename", $uid, $gid, "$mode", "$dest_dir");
+
+            # Delete the generated file now that we are done with it.
+            unlink("$filename")
+                or warn "WARNING: Could not delete $filename: $!";
+        }
+        # Otherwise, install it as-is.
+        else {
+            installFile("$curfile", $uid, $gid, "$mode", "$dest_dir");
+        }
+    }
 }
