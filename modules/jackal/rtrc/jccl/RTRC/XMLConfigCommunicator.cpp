@@ -30,27 +30,13 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <jccl/RTRC/XMLConfigCommunicator.h>
+#include <jccl/jcclConfig.h>
 #include <jccl/RTRC/ConfigManager.h>
 #include <jccl/RTRC/ConfigCommand.h>
 #include <jccl/Net/Connect.h>
 #include <jccl/Net/JackalServer.h>
-#include <jccl/XMLUtil/XercesXMLParserPool.h>
-#include <jccl/Config/ConfigIO.h>
-#include <jccl/Config/XMLConfigIOHandler.h>
 #include <jccl/Config/ChunkFactory.h>
-
-
-// a totally cheezy kludge to avoid asserts becasue of some disagreement
-// between xerces & jackal/juggler/etc.  Doing this causes the loader code
-// to leak memory like a sieve.
-//  #ifdef VPR_OS_Win32
-
-//  #define delete[] //
-
-//  #endif
-
-
+#include <jccl/RTRC/XMLConfigCommunicator.h>
 
 
 namespace jccl
@@ -60,20 +46,13 @@ namespace jccl
 XMLConfigCommunicator::XMLConfigCommunicator (ConfigManager* _config_manager):
    NetCommunicator()
 {
-
    vprASSERT (_config_manager != 0);
-
    mConfigManager = _config_manager;
-   
-   mConfigIOHandler = (XMLConfigIOHandler*)ConfigIO::instance()->getHandler ();
-   mXMLParser = XercesXMLParserPool::instance()->getParser();
 }
 
 
 /*virtual*/ XMLConfigCommunicator::~XMLConfigCommunicator ()
 {
-   ConfigIO::instance()->releaseHandler (mConfigIOHandler);
-   XercesXMLParserPool::instance()->releaseParser (mXMLParser);
 }
 
 
@@ -95,103 +74,129 @@ XMLConfigCommunicator::XMLConfigCommunicator (ConfigManager* _config_manager):
 }
 
 
-/*virtual*/ bool XMLConfigCommunicator::readStream (Connect* con, std::istream& instream, const std::string& id)
+/*virtual*/ bool XMLConfigCommunicator::readStream( Connect* con,
+                                                    std::istream& instream )
 {
-   DOM_Node doc;
-   bool retval = mXMLParser->readStream (instream, doc);
-   if (retval)
+   bool retval;
+
+   try
    {
-      retval = interpretDOM_Node (con, doc);
+      cppdom::XMLNodePtr doc;
+      cppdom::XMLContextPtr context = ChunkFactory::instance()->getXMLContext();
+      doc->load( instream, context );
+      retval = interpretNode( con, doc );
    }
+   catch (...)
+   {
+      retval = false;
+   }
+
    return retval;
 }
 
 
-bool XMLConfigCommunicator::interpretDOM_Node (Connect* con, DOM_Node& doc)
+bool XMLConfigCommunicator::interpretNode (Connect* con, cppdom::XMLNodePtr doc)
 {
    bool retval = true;
-   DOMString node_name = doc.getNodeName();
-   DOMString node_value = doc.getNodeValue();
-   char* name = node_name.transcode();
-   DOM_Node child;
-   DOM_NamedNodeMap attributes;
-//     int attrCount;
-//     int i;
-   //ConfigChunk* ch = 0;
+   cppdom::XMLString node_name = doc->getName();
    ConfigChunkDB newchunkdb;
     //      cout << "ok, we've got a node named '" << name << "' with a value of '" << node_value << "'." << endl;
-    
-   switch (doc.getNodeType())
+
+   switch (doc->getType())
    {
-      case DOM_Node::DOCUMENT_NODE:
-         //cout << "document node..." << endl;
-         child = doc.getFirstChild();
-         while (child != 0)
+      case cppdom::xml_nt_document:
          {
-            retval = retval && (interpretDOM_Node(con, child));
-            child = child.getNextSibling();
+            //cout << "document node..." << endl;
+            cppdom::XMLNodeList& children = doc->getChildren();
+
+            for ( cppdom::XMLNodeList::iterator i = children.begin();
+                  i != children.end();
+                  ++i )
+            {
+               if ( ! interpretNode(con, *i) )
+               {
+                  retval = false;
+                  break;
+               }
+            }
          }
+
          break;
-      case DOM_Node::ELEMENT_NODE:
-         //cout << "command is '" << name << "'." << endl;
-         if (!strcasecmp (name, "apply_chunks"))
+      case cppdom::xml_nt_node:
          {
-            // we've received a set of configchunks to apply.
-            newchunkdb.clear();
-            child = doc.getFirstChild();
-            while (child != 0)
+            //cout << "command is '" << name << "'." << endl;
+            if ( node_name == cppdom::XMLString("apply_chunks") )
             {
-               retval = retval && mConfigIOHandler->buildChunkDB
-                  (newchunkdb, child);
-               child = child.getNextSibling();
+               // we've received a set of configchunks to apply.
+               newchunkdb.clear();
+
+               cppdom::XMLNodeList& children = doc->getChildren();
+               for ( cppdom::XMLNodeList::iterator i = children.begin();
+                     i != children.end();
+                     ++i )
+               {
+                  if ( ! newchunkdb.loadFromChunkDBNode(*i) )
+                  {
+                     retval = false;
+                     break;
+                  }
+               }
+
+               if (retval)
+               {
+                  mConfigManager->addPendingAdds(&newchunkdb);
+               }
             }
-            if (retval)
+            else if ( node_name == cppdom::XMLString("remove_chunks") )
             {
-               mConfigManager->addPendingAdds(&newchunkdb);
+               cppdom::XMLNodeList& children = doc->getChildren();
+
+               for ( cppdom::XMLNodeList::iterator i = children.begin();
+                     i != children.end();
+                     ++i )
+               {
+                  // i really want to just send names of chunks, but right now
+                  // the ConfigManager actually needs a full chunkdb :(
+                  if ( ! newchunkdb.loadFromChunkDBNode(*i) )
+                  {
+                     retval = false;
+                     break;
+                  }
+               }
+
+               if (retval)
+               {
+                  mConfigManager->addPendingRemoves (&newchunkdb);
+               }
             }
-         }
-         else if (!strcasecmp (name, "remove_chunks"))
-         {
-            child = doc.getFirstChild();
-            while (child != 0)
+            else if ( node_name == cppdom::XMLString( "remove_descs") )
             {
-               // i really want to just send names of chunks, but right now
-               // the ConfigManager actually needs a full chunkdb :(
-               retval =
-                  retval && mConfigIOHandler->buildChunkDB (newchunkdb, child);
-               child = child.getNextSibling();
+               // that could be dangerous, so we quietly refuse to honor
+               // this request.
             }
-            if (retval)
+            else if ( node_name == cppdom::XMLString("request_current_chunks") )
             {
-               mConfigManager->addPendingRemoves (&newchunkdb);
+               mConfigManager->lockActive();
+               ConfigChunkDB* db = new ConfigChunkDB((*(mConfigManager->getActiveConfig())));   // Make a copy
+               mConfigManager->unlockActive();
+
+               //vprDEBUG(jcclDBG_SERVER,4) << "Connect: Sending (requested) chunkdb.\n" << vprDEBUG_FLUSH;
+               //vprDEBUG(jcclDBG_SERVER,5) << *db << std::endl << vprDEBUG_FLUSH;
+               con->addCommand (new CommandSendChunkDB (db, true));
             }
-         }
-         else if (!strcasecmp (name, "remove_descs"))
-         {
-            // that could be dangerous, so we quietly refuse to honor
-            // this request.
-         }
-         else if (!strcasecmp (name, "request_current_chunks"))
-         {
-            mConfigManager->lockActive();
-            ConfigChunkDB* db = new ConfigChunkDB((*(mConfigManager->getActiveConfig())));   // Make a copy
-            mConfigManager->unlockActive();
-            
-            //vprDEBUG(jcclDBG_SERVER,4) << "Connect: Sending (requested) chunkdb.\n" << vprDEBUG_FLUSH;
-            //vprDEBUG(jcclDBG_SERVER,5) << *db << std::endl << vprDEBUG_FLUSH;
-            con->addCommand (new CommandSendChunkDB (db, true));
-         }
-         else if (!strcasecmp (name, "request_current_descs"))
-         {
-            ChunkDescDB* db = ChunkFactory::instance()->getChunkDescDB();
-            vprDEBUG(jcclDBG_SERVER,4) << "Connect: Sending (requested) chunkdesc.\n" << vprDEBUG_FLUSH;
-            vprDEBUG(jcclDBG_SERVER,5) << *db << std::endl << vprDEBUG_FLUSH;
-            con->addCommand (new CommandSendDescDB (db));
-         }
-         else
-         {
-            vprDEBUG (jcclDBG_SERVER,0) << "Connect: Unrecognized command: '"
-                                        << name << "'\n" << vprDEBUG_FLUSH;
+            else if ( node_name == cppdom::XMLString("request_current_descs") )
+            {
+               ChunkDescDB* db = ChunkFactory::instance()->getChunkDescDB();
+               vprDEBUG(jcclDBG_SERVER,4) << "Connect: Sending (requested) chunkdesc.\n" << vprDEBUG_FLUSH;
+               vprDEBUG(jcclDBG_SERVER,5) << *db << std::endl << vprDEBUG_FLUSH;
+               con->addCommand (new CommandSendDescDB (db));
+            }
+            else
+            {
+               vprDEBUG (jcclDBG_SERVER,0) << "Connect: Unrecognized command: '"
+                                           << node_name << "'\n"
+                                           << vprDEBUG_FLUSH;
+            }
          }
          break; // ELEMENT_NODE
       default:
@@ -203,18 +208,18 @@ bool XMLConfigCommunicator::interpretDOM_Node (Connect* con, DOM_Node& doc)
 
 
 //----------------------- ConfigStatus Stuff ----------------------------
-    
+
 void XMLConfigCommunicator::configChanged ()
 {
    mConfigManager->lockActive();
    ConfigChunkDB* db = new ConfigChunkDB(*(mConfigManager->getActiveConfig()));   // Make a copy
    mConfigManager->unlockActive();
-   
-   std::vector<Connect*>& connections 
+
+   std::vector<Connect*>& connections
       = JackalServer::instance()->getConnections();
-   for (unsigned int i = 0, n = connections.size(); i < n; i++) 
+   for (unsigned int i = 0, n = connections.size(); i < n; i++)
    {
-      if (connections[i]->getConnectMode() == INTERACTIVE_CONNECT) 
+      if (connections[i]->getConnectMode() == INTERACTIVE_CONNECT)
       {
          connections[i]->addCommand (new CommandSendChunkDB (db, true));
       }

@@ -57,19 +57,16 @@ public class ConfigChunk {
 
     protected ArrayList props;
     protected String    name;
-    protected ChunkDesc desc;
+    protected ChunkDesc desc = null;
 
-    public final static String embedded_separator = "->";
+    public final static String embedded_separator = "/";
 
 
     public ConfigChunk (ConfigChunk ch) {
         init (null, ch);
     }
     public ConfigChunk (ChunkDesc d) {
-        init (d, d.getDefaultChunk());
-    }
-    public ConfigChunk (ChunkDesc d, boolean use_defaults) {
-        init (d, use_defaults?d.getDefaultChunk():null);
+        init (d, null);
     }
 
     /** Initializes a new ConfigChunk - utility for Constructor methods.
@@ -165,7 +162,7 @@ public class ConfigChunk {
                 for (k = 0; k < p.getNum(); k++) {
                     ch = p.getValue(k).getEmbeddedChunk();
                     // set name will also cause recursive validation.
-                    ch.name = (name + embedded_separator + p.getToken() + embedded_separator + ch.getLastNameComponent());
+                    ch.name = ch.getLastNameComponent();
                     ch.validateEmbeddedChunkNames();
                 }
             }

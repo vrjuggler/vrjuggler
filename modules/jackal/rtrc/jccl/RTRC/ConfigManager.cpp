@@ -49,15 +49,15 @@ vprSingletonImp(ConfigManager);
 
 
 
-ConfigManager::ConfigManager() 
+ConfigManager::ConfigManager()
 {
    mPendingCheckCount = 0;
    mLastPendingSize = 0;
    mConfigCommunicator = new XMLConfigCommunicator(this);
 }
 
-    
-/*virtual*/ ConfigManager::~ConfigManager () 
+
+/*virtual*/ ConfigManager::~ConfigManager ()
 {
    ;
 }
@@ -66,43 +66,43 @@ ConfigManager::ConfigManager()
 //-------------------- Pending List Stuff -------------------------------
 
 // Add the given chunk db to the pending list as adds
-void ConfigManager::addPendingAdds (ConfigChunkDB* db) 
+void ConfigManager::addPendingAdds (ConfigChunkDB* db)
 {
    vprASSERT(0 == mPendingLock.test());     // ASSERT: Make sure we don't already have it
    lockPending();
-   
+
    PendingChunk pending;
    pending.mType = PendingChunk::ADD;
-   
-   for(ConfigChunkDB::iterator i=db->begin();i!=db->end();i++) 
+
+   for(ConfigChunkDB::iterator i=db->begin();i!=db->end();i++)
    {
       pending.mChunk = (*i);
       mPendingConfig.push_back(pending);
    }
-        
+
    unlockPending();
-   
+
    refreshPendingList();
 }
-    
 
 
-void ConfigManager::addPendingRemoves (ConfigChunkDB* db) 
+
+void ConfigManager::addPendingRemoves (ConfigChunkDB* db)
 {
    vprASSERT(0 == mPendingLock.test());     // ASSERT: Make sure we don't already have it
    lockPending();
-   
+
    PendingChunk pending;
    pending.mType = PendingChunk::REMOVE;
-        
-   for(ConfigChunkDB::iterator i=db->begin();i!=db->end();i++) 
+
+   for(ConfigChunkDB::iterator i=db->begin();i!=db->end();i++)
    {
       pending.mChunk = (*i);
       mPendingConfig.push_back(pending);
    }
-        
+
    unlockPending();
-   
+
    refreshPendingList();
 }
 
@@ -116,7 +116,7 @@ void ConfigManager::removePending(std::list<PendingChunk>::iterator item)
 
 
 
-void ConfigManager::refreshPendingList () 
+void ConfigManager::refreshPendingList ()
 {
    vprASSERT (0 == mPendingCountMutex.test());
    mPendingCountMutex.acquire();
@@ -132,16 +132,16 @@ void ConfigManager::refreshPendingList ()
 // each time it is called.
 // if it goes pending_repeat_limit calls without
 // changing size, then it returns false until mLastPendingSize changes
-bool ConfigManager::pendingNeedsChecked() 
+bool ConfigManager::pendingNeedsChecked()
 {
    const int pending_repeat_limit = 3;    // Must be one or greater.  1 means only allow one time of no changes
    int cur_pending_size = 0;
    bool ret_val = false;
-        
+
    mPendingCountMutex.acquire();
-   
+
    cur_pending_size = mPendingConfig.size();
-   if(cur_pending_size != mLastPendingSize) 
+   if(cur_pending_size != mLastPendingSize)
    {
       ret_val = true;                           // Flag it for a check
       mPendingCheckCount = 0;                     // Reset the counter
@@ -151,12 +151,12 @@ bool ConfigManager::pendingNeedsChecked()
    {
       // allowed in at least once [1...pending_repeat_limit]
       mPendingCheckCount++;   // Increment it
-      
-      if(mPendingCheckCount < pending_repeat_limit) 
+
+      if(mPendingCheckCount < pending_repeat_limit)
       {
          ret_val = true;        // Repeats still allowed
       }
-      else 
+      else
       {
          vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
             << "ConfigManager::pendingNeedsChecked: Pending list is now\n"
@@ -177,21 +177,21 @@ bool ConfigManager::pendingNeedsChecked()
             << "      it may be waiting for more configuration information.\n"
             << vprDEBUG_FLUSH;
          //            vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << vprDEBUG_FLUSH;
-                
+
          lockPending();
          debugDumpPending(vprDBG_CRITICAL_LVL); // Output the stale pending list
          unlockPending();
-                
+
          ret_val = false;
       }
    }
-   else 
+   else
    {
       ret_val = false;
    }
 
    mPendingCountMutex.release();
-   
+
    return ret_val;
 }
 
@@ -203,7 +203,7 @@ void ConfigManager::addPending(PendingChunk& pendingChunk)
    lockPending();
    mPendingConfig.push_back(pendingChunk);
    unlockPending();
-        
+
    refreshPendingList();
 }
 
@@ -216,11 +216,11 @@ void ConfigManager::addPending(PendingChunk& pendingChunk)
 //! RETURNS: The number of lost dependencies found
 int ConfigManager::scanForLostDependencies()
 {
-   vprASSERT(0 == mActiveLock.test());        
+   vprASSERT(0 == mActiveLock.test());
    // We can't hold the lock upon entry
 
    vprDEBUG_BEGIN(vprDBG_ALL,vprDBG_CONFIG_LVL) << "ConfigManager::scanForLostDependencies: Entered: \n" << vprDEBUG_FLUSH;
-   
+
    DependencyManager* dep_mgr = DependencyManager::instance();
    std::vector<ConfigChunkPtr> chunks;
    int num_lost_deps(0);
@@ -230,19 +230,19 @@ int ConfigManager::scanForLostDependencies()
    // NOTE: Make the copy of the chunks so that we can iterate without
    // fear of active changing
    mActiveLock.acquire();
-   chunks = mActiveConfig.getChunks();   // Get a copy of the chunks
+   chunks = mActiveConfig;   // Get a copy of the chunks
    mActiveLock.release();
-   
+
    // Now test them
    for(unsigned int i=0;i<chunks.size();i++)
    {
       if(!dep_mgr->isSatisfied(chunks[i]))     // We are not satisfied
       {
          vprDEBUG_NEXT(vprDBG_ALL,1)
-            << chunks[i]->getProperty("name")
-            << " type: " << ((std::string)chunks[i]->getType()).c_str()
+            << chunks[i]->getProperty<std::string>("name")
+            << " type: " << chunks[i]->getDescToken()
             << " has lost dependencies.\n" << vprDEBUG_FLUSH;
-                
+
          num_lost_deps++;              // Keep a count of the number lost deps found
 
          // Add the pending removal
@@ -250,7 +250,7 @@ int ConfigManager::scanForLostDependencies()
          pending.mType = PendingChunk::REMOVE;
          pending.mChunk = chunks[i];
          addPending(pending);
-         
+
          // Add the pending re-addition
 //                 ConfigChunkPtr copy_of_chunk;          // Need a copy so that the remove can delete the chunk
 //                 copy_of_chunk = new ConfigChunk (*chunks[i]);
@@ -263,7 +263,7 @@ int ConfigManager::scanForLostDependencies()
    vprDEBUG_END(vprDBG_ALL,1)
       << "ConfigManager::scanForLostDependencies: Exiting: \n"
       << vprDEBUG_FLUSH;
-   
+
    return num_lost_deps;
 }
 
@@ -279,23 +279,22 @@ void ConfigManager::debugDumpPending(int debug_level)
    std::list<ConfigManager::PendingChunk>::iterator current, end;
    current = getPendingBegin();
    end = getPendingEnd();
-        
+
    while(current != end)
    {
       ConfigChunkPtr cur_chunk = (*current).mChunk;
-      
-      if((*current).mType == PendingChunk::ADD) 
+
+      if((*current).mType == PendingChunk::ADD)
       {
          vprDEBUG_NEXT(vprDBG_ALL,debug_level) << "   ADD -->" << vprDEBUG_FLUSH;
       }
-      else if((*current).mType == PendingChunk::REMOVE) 
+      else if((*current).mType == PendingChunk::REMOVE)
       {
          vprDEBUG_NEXT(vprDBG_ALL,debug_level) << "REMOVE -->" << vprDEBUG_FLUSH;
       }
-      
+
       vprDEBUG_CONT(vprDBG_ALL,debug_level)
-         << cur_chunk->getProperty("name") << " type: "
-         << ((std::string)cur_chunk->getType()).c_str()
+         << cur_chunk->getName() << " type: " << cur_chunk->getDescToken()
          << std::endl << vprDEBUG_FLUSH;
       current++;
    }
@@ -312,14 +311,14 @@ void ConfigManager::debugDumpPending(int debug_level)
 bool ConfigManager::isChunkInActiveList(std::string chunk_name)
 {
    vpr::Guard<vpr::Mutex> guard(mActiveLock);     // Lock the current list
-   
+
    ConfigChunkDB::iterator i;
    for(i=mActiveConfig.begin(); i != mActiveConfig.end();i++)
    {
-      if(std::string((*i)->getProperty("name")) == chunk_name)
+      if(std::string((*i)->getName()) == chunk_name)
          return true;
    }
-        
+
    return false;     // Not found, so return false
 }
 
@@ -330,14 +329,14 @@ bool ConfigManager::isChunkInActiveList(std::string chunk_name)
 bool ConfigManager::isChunkTypeInActiveList(std::string chunk_type)
 {
    vpr::Guard<vpr::Mutex> guard(mActiveLock);     // Lock the current list
-   
+
    // std::cout << "isChunkTypeInActiveList ActiveConfig.getChunks().size == " << mActiveConfig.getChunks().size() << std::endl;
 
    std::vector<ConfigChunkPtr>::iterator i;
    for(i=mActiveConfig.begin(); i != mActiveConfig.end();i++)
    {
       // std::cout << "trying to match " << std::string((*i)->getType()) << " with " << chunk_type << std::endl;
-      if(std::string((*i)->getType()) == chunk_type){
+      if(std::string((*i)->getDescToken()) == chunk_type){
          // std::cout << "match!" << std::endl;
          return true;
       }
@@ -353,14 +352,14 @@ bool ConfigManager::isChunkTypeInActiveList(std::string chunk_type)
 bool ConfigManager::isChunkTypeInPendingList(std::string chunk_type)
 {
    vpr::Guard<vpr::Mutex> guard(mActiveLock);     // Lock the current list
-   
+
    // std::cout << "isChunkTypeInPendingList(): mPendingConfig.size == " << mPendingConfig.size() << std::endl;
-   
+
    std::list<PendingChunk>::iterator i;
    for(i=mPendingConfig.begin(); i != mPendingConfig.end();i++)
    {
       // std::cout << "trying to match " << std::string((*i).mChunk->getType()) << " with " << chunk_type << std::endl;
-      if(std::string((*i).mChunk->getType()) == chunk_type){
+      if(std::string((*i).mChunk->getDescToken()) == chunk_type){
          // std::cout << "match!" << std::endl;
          return true;
       }
@@ -379,7 +378,7 @@ void ConfigManager::addActive (ConfigChunkPtr chunk)
 {
    vprASSERT(0 == mActiveLock.test());
    lockActive();
-   mActiveConfig.addChunk(chunk);
+   mActiveConfig.push_back(chunk);
    unlockActive();
 }
 
@@ -392,7 +391,7 @@ void ConfigManager::removeActive (const std::string& chunk_name)
 {
    vprASSERT(0 == mActiveLock.test());
    lockActive();
-   mActiveConfig.removeNamed(chunk_name);
+   mActiveConfig.remove(chunk_name);
    unlockActive();
 }
 
@@ -422,7 +421,7 @@ void ConfigManager::removeConfigChunkHandler (ConfigChunkHandler* h)
 int ConfigManager::attemptReconfiguration ()
 {
    int chunks_processed(0);     // Needs to return this value
-   if (pendingNeedsChecked()) 
+   if (pendingNeedsChecked())
    {
       vprDEBUG_BEGIN(vprDBG_ALL,vprDBG_STATE_LVL)
          << "ConfigManager::attemptReconfiguration: Examining pending list.\n"
@@ -436,7 +435,7 @@ int ConfigManager::attemptReconfiguration ()
       {
          chunks_processed += (*it)->configProcessPending ();
       }
-      
+
       unlockPending();
    }
 
@@ -444,7 +443,7 @@ int ConfigManager::attemptReconfiguration ()
    {
       mConfigCommunicator->configChanged();
    }
-   
+
    return chunks_processed;
 }
 
@@ -453,7 +452,7 @@ enum PendItemResult { SUCCESS, FAILED, NEED_DEPS };
 
 
 //------------------ JackalControl Stuff --------------------------------
-    
+
 /*virtual*/ void ConfigManager::addConnect (Connect *c)
 {
    c->addCommunicator (mConfigCommunicator);

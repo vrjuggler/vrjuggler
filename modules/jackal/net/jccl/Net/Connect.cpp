@@ -61,10 +61,10 @@ Connect::Connect(Socket* s, const std::string& _name,
     // we need to add a chunk describing ourself
     connect_chunk = ChunkFactory::instance()->createChunk ("FileConnect");
     if (connect_chunk.get()) {
-        connect_chunk->setProperty ("Name", name);
-        connect_chunk->setProperty ("Mode", INTERACTIVE_CONNECT);
-        connect_chunk->setProperty ("filename", filename);
-        connect_chunk->setProperty ("Enabled", true);
+        connect_chunk->setProperty<std::string>("Name", 0, name);
+        connect_chunk->setProperty<int>("Mode", 3, INTERACTIVE_CONNECT);
+        connect_chunk->setProperty<std::string>("filename", 1, filename);
+        connect_chunk->setProperty<bool>("Enabled", 2, true);
         //ConfigManager::instance()->addActive(ch);              // Add to active config
     }
 
@@ -82,9 +82,9 @@ Connect::Connect(ConfigChunkPtr c): commands_mutex(), communicators() {
 
     connect_chunk = c;
     sock = NULL;
-    filename = (std::string)c->getProperty ("FileName");
-    name = (std::string)c->getProperty ("Name");
-    mode = (ConnectMode)(int)c->getProperty ("Mode");
+    filename = c->getProperty<std::string>("FileName");
+    name = c->getName();
+    mode = (ConnectMode)c->getProperty<int>("Mode");
 
     read_die = write_die = false;
     read_connect_thread = NULL;
@@ -377,7 +377,7 @@ bool Connect::readCommand(std::istream& fin) {
 
 //      protocol_name = strtok_r (buf+protocol_start_string_len, "\"", &c);
 //      cout << "using protocol " << protocol_name << std::endl;
-        
+
     // find a communicator for this protocol.
     std::vector<NetCommunicator*>::iterator i;
     for (i = communicators.begin(); i != communicators.end(); i++) {

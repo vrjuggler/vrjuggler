@@ -5,9 +5,6 @@
 #include <cppunit/TestSuite.h>
 #include <cppunit/TestCaller.h>
 
-/*****************************************************************
- tests out the functionality expected of enumerations in ConfigChunks
-*******************************************************************/
 
 namespace jcclTest
 {

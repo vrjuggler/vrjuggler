@@ -65,6 +65,6 @@ links:
 		done
 	cd $(instlinks)/bin && rm -f ./vjcontrol && \
 		sed -e 's,#JCCL_SHARE_DIR#,${JCCL_SHARE_DIR},g' \
-			 -e 's,#JAXP_JAR#,${JAXP_JAR},g' \
+			 -e 's,#JDOM_JAR#,${JDOM_JAR},g' \
 			$(JCCLROOT_ABS)/vjcontrol/vjcontrol.sh > vjcontrol && \
 		chmod $(EXEC_PERMS) vjcontrol

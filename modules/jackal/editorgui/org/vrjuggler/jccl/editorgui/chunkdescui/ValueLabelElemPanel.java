@@ -45,77 +45,89 @@ import org.vrjuggler.jccl.vjcontrol.ui.widgets.*;
  *
  *  @version $Revision$
  */
-public class ValueLabelElemPanel extends JPanel implements MouseListener {
+public class ValueLabelElemPanel extends JPanel implements MouseListener
+{
 
-    static AbstractBorder select_border=null;
-    static AbstractBorder unselect_border=null;
+   static AbstractBorder select_border =
+      new CompoundBorder(new BevelBorder(BevelBorder.LOWERED),
+                         new EmptyBorder(5,5,5,5));
 
-    JTextField namef;
-    boolean selected;
+   static AbstractBorder unselect_border =
+      new CompoundBorder(new BevelBorder(BevelBorder.RAISED),
+                         new EmptyBorder (5,5,5,5));
 
+   private PropertyDesc.Item mItem = null;
 
-    public ValueLabelElemPanel (String _name) {
-	super();
-	if (select_border == null) {
-	    select_border = new CompoundBorder ( new BevelBorder (BevelBorder.LOWERED),
-						 new EmptyBorder (5,5,5,5));
-	}
-	if (unselect_border == null) {
-	    unselect_border = new CompoundBorder ( new BevelBorder (BevelBorder.RAISED),
-						   new EmptyBorder (5,5,5,5));
-	}
-    
-	selected = false;
-	setBorder (unselect_border);
+   JTextField namef;
+   JTextField mDefaultField;
+   boolean selected = false;
 
-	int i, j;
+   public ValueLabelElemPanel (PropertyDesc.Item item)
+   {
+      super();
+      mItem = item;
+      jbInit();
+   }
 
-	addMouseListener (this);
+   private void jbInit ()
+   {
+      setBorder(unselect_border);
+      addMouseListener (this);
 
-	JLabel l = new JLabel ("Label Name:");
-	l.addMouseListener(this);
-	add (l);
-        namef = new JTextField (_name, 20);
-        add (namef);
+      JLabel name_label = new JLabel("Label Name:");
+      name_label.addMouseListener(this);
+      add(name_label);
+      namef = new JTextField(mItem.getLabel(), 20);
+      add (namef);
+      JLabel default_label = new JLabel ("Default Value:");
+      default_label.addMouseListener(this);
+      add(default_label);
+      mDefaultField = new JTextField(mItem.getDefaultValue().toString(), 20);
+      add(mDefaultField);
 
-	Dimension d3 = getPreferredSize();
-	Dimension d4 = getMaximumSize();
-	d4.height = d3.height;
-	setMaximumSize (d4);
+      Dimension d3 = getPreferredSize();
+      Dimension d4 = getMaximumSize();
+      d4.height = d3.height;
+      setMaximumSize (d4);
+   }
 
-    }
-
-
-    /* I'm going to let the parent frame deal with building the actual desc
-     * enum & catch any possible numberformat exceptions.  we'll just return
-     * bits and pieces.
-     */
-    public String getName() {
-        return namef.getText();
-    }
-
-
-    private void toggleSelected() {
-	selected = !selected;
-        super.setBorder(selected?select_border:unselect_border);
-        repaint();
-    }
-
-    public boolean getSelected() {
-	return selected;
-    }
+   public void commit () throws ConfigUIException
+   {
+      mItem.setLabel(namef.getText());
+      VarValue temp_val = new VarValue(mItem.getValType());
+      temp_val.set(mDefaultField.getText());
+      mItem.setDefaultValue(temp_val);
+   }
 
 
-    /* MouseListener stuff */
-    public void mouseClicked (MouseEvent e) {
-	toggleSelected();
-    }
-    public void mouseEntered (MouseEvent e) {
-    }
-    public void mouseExited (MouseEvent e) {
-    }
-    public void mousePressed (MouseEvent e) {
-    }
-    public void mouseReleased (MouseEvent e) {
-    }
+   private void toggleSelected()
+   {
+      selected = !selected;
+      super.setBorder(selected?select_border:unselect_border);
+      repaint();
+   }
+
+   public boolean getSelected()
+   {
+      return selected;
+   }
+
+
+   /* MouseListener stuff */
+   public void mouseClicked (MouseEvent e)
+   {
+      toggleSelected();
+   }
+   public void mouseEntered (MouseEvent e)
+   {
+   }
+   public void mouseExited (MouseEvent e)
+   {
+   }
+   public void mousePressed (MouseEvent e)
+   {
+   }
+   public void mouseReleased (MouseEvent e)
+   {
+   }
 }

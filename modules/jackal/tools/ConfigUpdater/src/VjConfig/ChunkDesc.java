@@ -39,7 +39,6 @@ package VjConfig;
 import java.util.Vector;
 import java.util.List;
 import java.io.*;
-import org.w3c.dom.*;
 
 import VjConfig.PropertyDesc;
 
@@ -50,17 +49,12 @@ public class ChunkDesc implements Cloneable {
     public String token;
     public String help;
 
-    private ConfigChunk default_chunk;
-    private Node default_node;
-
     public ChunkDesc (String n) {
 	props = new Vector();
 	addNameProperty();
 	name = n;
 	token = n;
 	help = "";
-        default_node = null;
-        default_chunk = null;
     }
 
 
@@ -70,8 +64,6 @@ public class ChunkDesc implements Cloneable {
 	name = "";
 	token = "";
 	help = "";
-        default_node = null;
-        default_chunk = null;
     }
 
 
@@ -118,34 +110,6 @@ public class ChunkDesc implements Cloneable {
     public final void setHelp (String _help) {
         help = _help;
     }
-
-
-    public void setDefaultChunk (ConfigChunk ch) {
-        default_chunk = ch;
-    }
-
-    public void setDefaultChunk (Node n) {
-        default_node = n;
-        default_chunk = null;
-    }
-
-    public ConfigChunk getDefaultChunk () {
-        synchronized (this) {
-            if ((default_chunk == null) && (default_node != null)) {
-                XMLConfigIOHandler h = 
-                    (XMLConfigIOHandler)ConfigIO.getHandler (ConfigIO.XML);
-                ConfigIOStatus iostatus = new ConfigIOStatus();
-                default_chunk = h.buildConfigChunk (default_node, false,
-                                                    iostatus);
-                // slightly crude reporting here...
-                if (iostatus.getStatus() != iostatus.SUCCESS)
-                    System.out.println (iostatus.toString());
-                ConfigIO.releaseHandler(h);
-            }
-            return default_chunk;
-        }
-    }
-
 
     public void addPropertyDesc (PropertyDesc newp) {
         PropertyDesc oldp;
@@ -287,14 +251,6 @@ public class ChunkDesc implements Cloneable {
         for (int i = 0; i < n; i++) {
             PropertyDesc p = (PropertyDesc)props.get(i);
             retval.append(p.xmlRep(newpad));
-        }
-        ConfigChunk ch = getDefaultChunk();
-        if (ch != null) {
-            retval.append(newpad);
-            retval.append("<Defaults>\n");
-            retval.append(ch.xmlRep(newpad + "  "));
-            retval.append(newpad);
-            retval.append("</Defaults>\n");
         }
         retval.append(pad);
         retval.append("</ChunkDesc>\n");

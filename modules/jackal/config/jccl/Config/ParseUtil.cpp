@@ -41,49 +41,33 @@
 namespace jccl
 {
 
-VarType stringToVarType (const char* str)
+VarType stringToVarType (const std::string& str)
 {
-   if ( !strcasecmp (str, int_TOKEN) )
+   if ( str == int_TOKEN)
    {
       return T_INT;
    }
-
-   if ( !strcasecmp (str, integer_TOKEN) )
-   {
-      return T_INT;
-   }
-
-   if ( !strcasecmp (str, float_TOKEN) )
+   if ( str == float_TOKEN)
    {
       return T_FLOAT;
    }
-
-   if ( !strcasecmp (str, bool_TOKEN) )
+   if ( str == bool_TOKEN)
    {
       return T_BOOL;
    }
-
-   if ( !strcasecmp (str, boolean_TOKEN) )
-   {
-      return T_BOOL;
-   }
-
-   if ( !strcasecmp (str, string_TOKEN) )
+   if ( str == string_TOKEN)
    {
       return T_STRING;
    }
-
-   if ( !strcasecmp (str, distance_TOKEN) )
+   if ( str == distance_TOKEN )
    {
       return T_DISTANCE;
    }
-
-   if ( !strcasecmp (str, chunk_TOKEN) )
+   if ( str == chunk_TOKEN )
    {
       return T_CHUNK;
    }
-
-   if ( !strcasecmp (str, embeddedchunk_TOKEN) )
+   if ( str == embeddedchunk_TOKEN)
    {
       return T_EMBEDDEDCHUNK;
    }
@@ -91,27 +75,28 @@ VarType stringToVarType (const char* str)
    return VJ_T_INVALID;
 }
 
-char *typeString (VarType t)
+std::string typeString (const VarType t)
 {
    switch ( t )
    {
       case T_INT:
-         return "Int";
+         return int_TOKEN;
       case T_BOOL:
-         return "Bool";
+         return bool_TOKEN;
       case T_FLOAT:
-         return "Float";
+         return float_TOKEN;
       case T_STRING:
-         return "String";
+         return string_TOKEN;
       case T_CHUNK:
-         return "Chunk";
+         return chunk_TOKEN;
       case T_EMBEDDEDCHUNK:
-         return "EmbeddedChunk";
+         return embeddedchunk_TOKEN;
       default:
          return "Unrecognized_Type";
    }
 }
 
+/*
 char *unitString (CfgUnit t)
 {
    switch ( t )
@@ -145,76 +130,7 @@ float toFeet (float val, CfgUnit unit)
          return val;
    }
 }
-
-bool vjstrcasecmp (const std::string& a, const std::string& b)
-{
-   if ( a.size() != b.size() )
-   {
-      return true;
-   }
-
-   for ( unsigned int i = 0; i < a.size(); i++ )
-   {
-      if ( toupper(a[i]) != toupper(b[i]) )
-      {
-         return true;
-      }
-   }
-
-   return false;
-}
-
-bool vjstrncasecmp (const std::string& a, const std::string& b, int _n)
-{
-   int m = a.size();
-   int n = b.size();
-   n = (n < m)?n:m;
-   if ( _n >= 0 )
-   {
-      n = (n < _n)?n:_n;
-//      int n = Math::Min (a.size(), b.size());
-//      if (_n >= 0)
-//      {
-//         n = Math::Min (n, _n);
-//      }
-   }
-
-   for ( int i = 0; i < n; i++ )
-   {
-      if ( toupper(a[i]) != toupper(b[i]) )
-      {
-         return true;
-      }
-   }
-
-   return false;
-}
-
-bool vjstrncmp (const std::string& a, const std::string& b, int _n)
-{
-   int m = a.size();
-   int n = b.size();
-   n = (n < m)?n:m;
-
-   if ( _n >= 0 )
-   {
-      n = (n < _n)?n:_n;
-   }
-
-//      int n = Math::Min (a.size(), b.size());
-//      if (_n >= 0)
-//          n = Math::Min (n, _n);
-
-   for ( int i = 0; i < n; i++ )
-   {
-      if ( a[i] != b[i] )
-      {
-         return true;
-      }
-   }
-
-   return false;
-}
+*/
 
 //: is n an absolute path name?
 bool isAbsolutePathName (const std::string& n)
@@ -364,5 +280,38 @@ const std::string findFileUsingPathVar (std::ifstream& in,
 
    return retval;
 }
+
+bool hasSeparator (const std::string &path)
+{
+   return(path.find(char('/')) != path.npos);
+}
+
+std::string getRemainder (const std::string &path)
+{
+   std::string::size_type i = path.find (char('/'));
+   if ( i == path.npos )
+   {
+      return path;
+   }
+   else
+   {
+      return path.substr(i + 1);    // Skip the "/"
+   }
+}
+
+std::string getFirstNameComponent (const std::string& path)
+{
+   std::string::size_type i = path.find (char('/'));
+   if ( i == path.npos )
+   {
+      return path;
+   }
+   else
+   {
+      return path.substr (0, i);
+   }
+}
+
+
 
 } // End of jccl namespace

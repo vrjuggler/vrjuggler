@@ -34,22 +34,11 @@ default: all
 # Include common definitions here.
 include @topdir@/make.defs.mk
 
-includedir	= @includedir@/jccl/XMLUtil
-srcdir		= @srcdir@
+srcdir		= @CPPDOM_ROOT@/cppdom
 top_srcdir	= @top_srcdir@
-INSTALL		= @INSTALL@
 SUBOBJDIR	= $(JCCL_COMMON_LIBRARY)
 
-SRCS		= \
-	XercesStreamInputSource.cpp \
-	XercesStreamInputStream.cpp \
-	XercesXMLError.cpp \
-	XercesXMLParser.cpp \
-	XercesXMLParserPool.cpp
-
-EXTRA_INCLUDES = \
-	-I$(top_srcdir)/common \
-	-I$(topdir)/common
+SRCS		= xmlparser.cpp cppdom.cpp xmltokenizer.cpp
 
 include $(MKPATH)/dpp.obj.mk
 

@@ -37,28 +37,37 @@
 namespace jccl
 {
 
-ChunkFactory::ChunkFactory ()
+ChunkFactory::ChunkFactory () : mLoadedDefaultDescs(false)
 {
-   // try to load a defaul "jccl-chunks.desc" file, but don't complain
-   // if it's not there.
+   // Create global context
+   mGlobalContext = cppdom::XMLContextPtr(new cppdom::XMLContext);
+}
 
+void ChunkFactory::loadDefaultDescs()
+{
+   // try to load a defaul "jccl-chunks.desc" file, but don't complain if it's not there.
    std::string file_name = "${JCCL_BASE_DIR}/";
    file_name += JCCL_SHARE_DIR;
-   file_name += "data/jccl-chunks.desc";
-   bool retval = descdb.load(file_name.c_str());
+   file_name += "/data/jccl-chunks.desc";
+   bool retval = mDescDB.load(file_name.c_str());
    if ( retval )
    {
       vprDEBUG(jcclDBG_CONFIG,vprDBG_CRITICAL_LVL)
          << "Loaded ChunkDesc file: '" << file_name.c_str() << "'.\n"
          << vprDEBUG_FLUSH;
    }
+
+   mLoadedDefaultDescs = true;
 }
 
 //: Adds descriptions in file 'file_name' to the factory
-bool ChunkFactory::loadDescs (const std::string& file_name)
+bool ChunkFactory::loadDescs (const std::string& file_name,
+                              const std::string& parentFile)
 {
-   //vjConfigIO::instance->readChunkDescDB (file_name, descdb);
-   bool retval = descdb.load(file_name.c_str());
+   if(!mLoadedDefaultDescs)
+   {  loadDefaultDescs(); }
+
+   bool retval = mDescDB.load(demangleFileName(file_name, parentFile));
    if ( retval )
    {
       vprDEBUG(jcclDBG_CONFIG,vprDBG_CRITICAL_LVL)
@@ -75,12 +84,15 @@ bool ChunkFactory::loadDescs (const std::string& file_name)
 }
 
 //: Creates a Chunk using the given description
-ConfigChunkPtr ChunkFactory::createChunk (ChunkDescPtr d, bool use_defaults)
+ConfigChunkPtr ChunkFactory::createChunk (ChunkDescPtr d)
 {
-   if ( d.get() != 0 )
+   if(!mLoadedDefaultDescs)
+   {  loadDefaultDescs(); }
+
+   if ( d.get() != NULL )
    {
       d->assertValid();
-      return ConfigChunkPtr(new ConfigChunk (d, use_defaults));
+      return ConfigChunkPtr(new ConfigChunk (d));
    }
    else
    {

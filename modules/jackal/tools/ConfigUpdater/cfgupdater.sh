@@ -54,11 +54,16 @@ else
         JCCL_SHARE_DIR=$JCCL_BASE_DIR/#JCCL_SHARE_DIR#
     fi
 
-#    CLASSPATH=
-    ${JDK_HOME}/bin/java -DVJ_BASE_DIR="${VJ_BASE_DIR}"		\
-      -DVJ_SHARE_DIR="${VJ_SHARE_DIR}"				\
-      -DJCCL_BASE_DIR="${JCCL_BASE_DIR}" -DJCCL_SHARE_DIR="${JCCL_SHARE_DIR}" \
-      -jar ${JCCL_BASE_DIR}/bin/ConfigUpdater.jar $*
+    if  test "x$CLASSPATH" != "x" ; then
+        CLASSPATH="$CLASSPATH:$JCCL_BASE_DIR/bin/ConfigUpdater.jar:$JCCL_BASE_DIR/bin/jdom.jar:$JCCL_BASE_DIR/bin/xerces.jar"
+    else
+        CLASSPATH="$JCCL_BASE_DIR/bin/ConfigUpdater.jar:$JCCL_BASE_DIR/bin/jdom.jar:$JCCL_BASE_DIR/bin/xerces.jar"
+    fi
+
+    $JDK_HOME/bin/java -classpath $CLASSPATH				\
+      -DVJ_BASE_DIR="$VJ_BASE_DIR" -DVJ_SHARE_DIR="$VJ_SHARE_DIR"	\
+      -DJCCL_BASE_DIR="$JCCL_BASE_DIR" -DJCCL_SHARE_DIR="$JCCL_SHARE_DIR" \
+      ConfigUpdater.Main $*
     status=0
 fi
 

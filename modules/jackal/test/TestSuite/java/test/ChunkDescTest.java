@@ -1,6 +1,7 @@
 package test;
 
 import junit.framework.*;
+import org.jdom.Element;
 import org.vrjuggler.jccl.config.*;
 
 /**
@@ -24,23 +25,24 @@ public class ChunkDescTest
    public void testConstructor()
    {
       ChunkDesc c = new ChunkDesc();
-      assertTrue( c.propertyDescsSize() == 1 );
-      assertEquals( c.name, "" );
-      assertEquals( c.token, "" );
-      assertEquals( c.help, "" );
+      assertTrue( c.propertyDescsSize() == 0 );
+      assertEquals( c.getName(), "" );
+      assertEquals( c.getToken(), "" );
+      assertEquals( c.getHelp(), "" );
    }
 
    /**
-    * Test constructor w/ string arg.
+    * Test constructor w/ JDOM element arg.
     */
    public void testConstructorString()
    {
       String s = "stuff";
-      ChunkDesc c = new ChunkDesc( s );
-      assertTrue( c.propertyDescsSize() == 1 );
-      assertEquals( c.name, s );
-      assertEquals( c.token, s );
-      assertEquals( c.help, "" );
+      ChunkDesc c = new ChunkDesc();
+      c.setToken( s );
+      assertTrue( c.propertyDescsSize() == 0 );
+      assertEquals( c.getName(), s );
+      assertEquals( c.getToken(), s );
+      assertEquals( c.getHelp(), "" );
    }
 
    /**
@@ -48,14 +50,13 @@ public class ChunkDescTest
     */
    public void testClone()
    {
-      String name = "gnome";
-      ChunkDesc c1 = new ChunkDesc( name );
+      ChunkDesc c1 = new ChunkDesc();
       ChunkDesc c2 = (ChunkDesc)c1.clone();
       
       assertEquals( c1.propertyDescsSize(), c2.propertyDescsSize() );
-      assertEquals( c1.name, c2.name );
-      assertEquals( c1.token, c2.token );
-      assertEquals( c1.help, c2.help );
+      assertEquals( c1.getName(), c2.getName() );
+      assertEquals( c1.getToken(), c2.getToken() );
+      assertEquals( c1.getHelp(), c2.getHelp() );
    }
 
    //--------------------------------------------------------------------------
@@ -67,7 +68,8 @@ public class ChunkDescTest
       assertEquals( c.getName(), "" );
 
       String name = "stuff";
-      c = new ChunkDesc( name );
+      c = new ChunkDesc();
+      c.setName(name);
       assertEquals( c.getName(), name );
    }
 
@@ -76,7 +78,7 @@ public class ChunkDescTest
       ChunkDesc c = new ChunkDesc();
       String s = "blah";
       c.setName( s );
-      assertEquals( c.name, s );
+      assertEquals( c.getName(), s );
    }
 
    public void testGetToken()
@@ -85,7 +87,8 @@ public class ChunkDescTest
       assertEquals( c.getToken(), "" );
 
       String t = "mytoken";
-      c = new ChunkDesc( t );
+      c = new ChunkDesc();
+      c.setToken( t );
       assertEquals( c.getToken(), t );
    }
 
@@ -94,7 +97,7 @@ public class ChunkDescTest
       ChunkDesc c = new ChunkDesc();
       String t = "blah";
       c.setToken( t );
-      assertEquals( c.token, t );
+      assertEquals( c.getToken(), t );
    }
 
    // test set before get for help
@@ -103,7 +106,7 @@ public class ChunkDescTest
       ChunkDesc c = new ChunkDesc();
       String s = "helpme";
       c.setHelp( s );
-      assertEquals( c.help, s );
+      assertEquals( c.getHelp(), s );
    }
 
    public void testGetHelp()
@@ -124,7 +127,7 @@ public class ChunkDescTest
       p.setName( "myproperty" );
       ChunkDesc c = new ChunkDesc();
       c.addPropertyDesc( p );
-      assertEquals( c.getPropertyDesc( 1 ), p );
+      assertEquals( c.getPropertyDesc( 0 ), p );
    }
 
    //--------------------------------------------------------------------------

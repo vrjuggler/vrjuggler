@@ -63,8 +63,8 @@ INSTALL_FILES			=
 # -----------------------------------------------------------------------------
 # Java-related setup
 # -----------------------------------------------------------------------------
-JAXP_JAR		= @JAXP_JAR@
-CLASSPATH	= $(JAXP_JAR)
+JDOM_JAR	= @JDOM_JAR@
+CLASSPATH	= $(JDOM_JAR)
 
 CONFIG_PKG		= org.vrjuggler.jccl.config
 CONFIG_DIR		= $(subst .,/,$(CONFIG_PKG))
@@ -189,7 +189,7 @@ config-install:
               $(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX) \
                 $(topdir)/config/$$jar $(bindir) ; \
           done
-	for jar in `echo "$(JAXP_JAR)" | sed -e 's/$(JCPS)/ /g'` ; \
+	for jar in `echo "$(JDOM_JAR)" | sed -e 's/$(JCPS)/ /g'` ; \
           do \
               $(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX) \
                 $$jar $(bindir) ; \

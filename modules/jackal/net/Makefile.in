@@ -63,8 +63,8 @@ INSTALL_FILES			=
 # -----------------------------------------------------------------------------
 # Java-related setup
 # -----------------------------------------------------------------------------
-JAXP_JAR		= @JAXP_JAR@
-CLASSPATH	= $(JAXP_JAR)$(JCPS)$(topdir)/config$(JCPS)$(topdir)/vjcontrol
+JDOM_JAR	= @JDOM_JAR@
+CLASSPATH	= $(JDOM_JAR)$(JCPS)$(topdir)/config$(JCPS)$(topdir)/vjcontrol
 JAVA_SRC_PATH	= $(top_srcdir)/vjcontrol
 
 NET_PKG		= org.vrjuggler.jccl.net
@@ -190,7 +190,7 @@ net-install:
               $(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX) \
                 $(topdir)/net/$$jar $(bindir) ; \
           done
-	for jar in `echo "$(JAXP_JAR)" | sed -e 's/$(JCPS)/ /g'` ; \
+	for jar in `echo "$(JDOM_JAR)" | sed -e 's/$(JCPS)/ /g'` ; \
           do \
               $(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX) \
                 $$jar $(bindir) ; \

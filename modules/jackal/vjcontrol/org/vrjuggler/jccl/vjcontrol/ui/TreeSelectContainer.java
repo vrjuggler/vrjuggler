@@ -46,7 +46,7 @@ import org.vrjuggler.jccl.vjcontrol.*;
 import org.vrjuggler.jccl.config.*;
 
 public class TreeSelectContainer
-    extends JSplitPane 
+    extends JSplitPane
     implements PlugPanelContainer,
                MouseListener {
 
@@ -76,8 +76,8 @@ public class TreeSelectContainer
 
 
     /** Cell Renderer for the tree widget. */
-    public class tscTreeCellRenderer 
-        extends JLabel 
+    public class tscTreeCellRenderer
+        extends JLabel
         implements TreeCellRenderer {
 
         private Icon mOpenIcon;
@@ -110,13 +110,13 @@ public class TreeSelectContainer
                     disabled = false;
                     setIcon (o.icon);
                 }
-                    
+
             }
             catch (ClassCastException e) {
                 setText ("foo");
                 disabled = false;
             }
-	    
+
             if (disabled) {
                 setForeground (Color.lightGray);
                 setBackground (UIManager.getColor ("Tree.textBackground"));
@@ -178,7 +178,7 @@ JScrollPane sp;
         //add (container_panel, "Center");
         child_panels = new Vector();
         active_panel = null;
-        
+
         dummypanel = new JPanel ();
         setRightComponent (dummypanel);
 
@@ -194,7 +194,7 @@ JScrollPane sp;
                                                            r.getClosedIcon()));
 
         sp = new JScrollPane (JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
-				       JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+                   JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         sp.setViewportView (nav_tree);
         setLeftComponent (sp);
 
@@ -203,17 +203,17 @@ JScrollPane sp;
 
 
     /** Update look-n-feel.
-     *  We need to override this ourselves so that child panels which aren't 
-     *  being displayed (and therefore aren't in the normal awt component 
+     *  We need to override this ourselves so that child panels which aren't
+     *  being displayed (and therefore aren't in the normal awt component
      *  hierarcy) get updated appropriately.
-     *  This still doesn't seem to be propogating correctly to the plugpanel's 
+     *  This still doesn't seem to be propogating correctly to the plugpanel's
      *  children JComponents.
      */
     public void updateUI () {
         super.updateUI();
         int i;
         JComponent p;
-        if (child_panels != null) { 
+        if (child_panels != null) {
             int n = child_panels.size();
             for (i = 0; i < n; i++) {
                 p = (JComponent)child_panels.get(i);
@@ -237,7 +237,7 @@ JScrollPane sp;
             String s = "";
             ConfigChunk ch = p.getConfiguration();
             if (ch != null) {
-                VarValue v = ch.getValueFromToken ("Category", 0);
+                VarValue v = ch.getProperty(VjComponentTokens.CATEGORY, 0);
                 if (v != null)
                     s = v.getString();
             }
@@ -265,7 +265,7 @@ JScrollPane sp;
                     nav_tree_model.reload (nav_tree_root);
                 }
             }
-           
+
 
 
             // if it's the "default" panel, display it
@@ -286,7 +286,7 @@ JScrollPane sp;
             resetToPreferredSizes();
         }
         catch (ClassCastException e) {
-            Core.consoleErrorMessage ("GUI", "PlugPanel '" + 
+            Core.consoleErrorMessage ("GUI", "PlugPanel '" +
                                       p.getComponentName() +
                                       "' isn't a JComponent!");
         }
@@ -302,7 +302,7 @@ JScrollPane sp;
             child_panels.removeElement (p);
         }
         catch (ClassCastException e) {
-            Core.consoleErrorMessage ("GUI", "PlugPanel '" + 
+            Core.consoleErrorMessage ("GUI", "PlugPanel '" +
                                       p.getComponentName() +
                                       "' isn't a JComponent!");
         }
@@ -367,10 +367,11 @@ JScrollPane sp;
         component_chunk = ch;
         component_name = ch.getName();
 
-        defaultpanel_name = ch.getValueFromToken("default_panel",0).getString();
+        defaultpanel_name =
+           ch.getProperty(VjComponentTokens.DEFAULT_PANEL, 0).getString();
     }
 
-    
+
     public ConfigChunk getConfiguration () {
         return component_chunk;
     }
@@ -410,15 +411,15 @@ JScrollPane sp;
 
     public void mouseClicked(MouseEvent e) {
 
-	int selRow = nav_tree.getRowForLocation(e.getX(), e.getY());
-	if (selRow == -1)
-	    return;
-	TreePath treeitem_menu_path = nav_tree.getPathForLocation(e.getX(), e.getY());
-	tscUserObject ud = ((tscUserObject)((DefaultMutableTreeNode)treeitem_menu_path.getLastPathComponent()).getUserObject());
+   int selRow = nav_tree.getRowForLocation(e.getX(), e.getY());
+   if (selRow == -1)
+       return;
+   TreePath treeitem_menu_path = nav_tree.getPathForLocation(e.getX(), e.getY());
+   tscUserObject ud = ((tscUserObject)((DefaultMutableTreeNode)treeitem_menu_path.getLastPathComponent()).getUserObject());
 
 
-	int mod = e.getModifiers();
-	if (e.getClickCount() == 1) {
+   int mod = e.getModifiers();
+   if (e.getClickCount() == 1) {
             if (ud.style == tscUserObject.LEAF) {
                 setActivePanel ((PlugPanel)ud.object);
             }

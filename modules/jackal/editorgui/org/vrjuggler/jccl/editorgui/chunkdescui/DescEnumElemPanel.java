@@ -37,6 +37,7 @@ import javax.swing.*;
 import javax.swing.border.*;
 
 import org.vrjuggler.jccl.config.*;
+import org.vrjuggler.jccl.editorgui.TrueFalseCellRenderer;
 import org.vrjuggler.jccl.vjcontrol.Core;
 import org.vrjuggler.jccl.vjcontrol.ui.widgets.*;
 
@@ -51,183 +52,228 @@ import org.vrjuggler.jccl.vjcontrol.ui.widgets.*;
  * the more cool I make this GUI, the more it gets all interconnected together
  * <sigh>.  I guess sometimes you really do want global variables ;)
  */
-public class DescEnumElemPanel extends JPanel implements MouseListener {
+public class DescEnumElemPanel extends JPanel implements MouseListener
+{
 
-    static AbstractBorder select_border=null;
-    static AbstractBorder unselect_border=null;
+   static AbstractBorder select_border=null;
+   static AbstractBorder unselect_border=null;
 
-    JTextField namef;
-    JComboBox namechoice;
-    JTextField valf;
-    boolean selected;
-
-
-    public DescEnumElemPanel (ValType t) {
-	super();
-	init (t);
-    }
+   JTextField namef;
+   JComboBox namechoice;
+   JTextField valf;
+   boolean selected;
 
 
-    public DescEnumElemPanel (DescEnum e, ValType t) {
-	super();
-
-	//System.out.println ("build descenumelempanel " + e);
-	init (t);
-	if (namef != null)
-	    namef.setText (e.str);
-	if (namechoice != null) {
-	    if (t == ValType.CHUNK || t == ValType.EMBEDDEDCHUNK) {
-                String s = ChunkFactory.getNameFromToken (e.str);
-		if (s == null) 
-		    s = "";
-		namechoice.setSelectedItem (s);
-	    }
-	    else if (t == ValType.BOOL) 
-		namechoice.setSelectedItem (e.val.getBoolean()?"True":"False");
-	    else
-		namechoice.setSelectedItem(e.str);
-	}
-	if (valf != null)
-	    valf.setText (e.val.toString());
-    }
+   public DescEnumElemPanel (ValType t)
+   {
+      super();
+      init (t);
+   }
 
 
+   public DescEnumElemPanel (DescEnum e, ValType t)
+   {
+      super();
 
-    public void init(ValType t) {
-	if (select_border == null) {
-	    select_border = new CompoundBorder ( new BevelBorder (BevelBorder.LOWERED),
-						 new EmptyBorder (5,5,5,5));
-	}
-	if (unselect_border == null) {
-	    unselect_border = new CompoundBorder ( new BevelBorder (BevelBorder.RAISED),
-						   new EmptyBorder (5,5,5,5));
-	}
-    
-	setBorder (unselect_border);
+      //System.out.println ("build descenumelempanel " + e);
+      init (t);
+      if ( namef != null )
+      {
+         namef.setText (e.str);
+      }
 
-	int i, j;
-	ChunkDescDB db;
+      if( namechoice != null )
+      {
+         if( t == ValType.CHUNK || t == ValType.EMBEDDEDCHUNK )
+         {
+            String s = ChunkFactory.getNameFromToken (e.str);
+            if( s == null )
+               s = "";
+            namechoice.setSelectedItem (s);
+         }
+         else if( t == ValType.BOOL )
+         {
+            namechoice.setSelectedItem(e.val.toString());
+         }
+         else
+         {
+            namechoice.setSelectedItem(e.str);
+         }
+      }
 
-	selected = false;
-	addMouseListener (this);
-
-	namechoice = null;
-	valf = null;
-	namef = null;
-
-	/* next bit is specific on valtype of the propertydesc */
-	if (t == ValType.CHUNK) {
-	    addLabel ("Accept chunks of type: ");
-	    namechoice = new JComboBox (ChunkFactory.getDescNames());
-            add (namechoice);
-	}
-	else if (t == ValType.EMBEDDEDCHUNK) {
-	    addLabel ("Embedded chunk type: ");
-	    namechoice = new JComboBox (ChunkFactory.getDescNames());
-	    add (namechoice);
-	}
-	else if (t == ValType.BOOL) {
-	    addLabel ("Name: ");
-	    namef = new JTextField (20);
-	    add (namef);
-	    addLabel ("Value: ");
-	    namechoice = new JComboBox();
-	    namechoice.addItem ("False");
-	    namechoice.addItem ("True");
-	    add (namechoice);
-	}
-	else {
-	    addLabel ("Name: ");
-	    namef = new JTextField (20);
-	    add (namef);
-	    addLabel ("Value: ");
-	    if (t == ValType.INT)
-		valf = new IntegerTextField (10);
-	    else if (t == ValType.FLOAT)
-		valf = new FloatTextField (10);
-	    else
-		valf = new StringTextField (10);
-	    add (valf);
-	}
-	
-	Dimension d3 = getPreferredSize();
-	Dimension d4 = getMaximumSize();
-	d4.height = d3.height;
-	setMaximumSize (d4);
-
-    }
-
-
-    /* I'm going to let the parent frame deal with building the actual desc
-     * enum & catch any possible numberformat exceptions.  we'll just return
-     * bits and pieces.
-     */
-    public String getName() {
-	// order is important cuz bools use namef for label & namechoice 
-	// for value
-	if (namef != null)
-	    return namef.getText();
-	else
-	    return (String)(namechoice.getSelectedItem());
-    }
+      if( valf != null )
+      {
+         valf.setText (e.val.toString());
+      }
+   }
 
 
 
-    public String getVal () {
-	if (namechoice != null)
-	    return (String)namechoice.getSelectedItem();
-	else if (valf != null)
-	    return valf.getText();
-	else
-	    return namef.getText();
-    }
-    
+   public void init(ValType t)
+   {
+      if( select_border == null )
+      {
+         select_border = new CompoundBorder ( new BevelBorder (BevelBorder.LOWERED),
+                                              new EmptyBorder (5,5,5,5));
+      }
+      if( unselect_border == null )
+      {
+         unselect_border = new CompoundBorder ( new BevelBorder (BevelBorder.RAISED),
+                                                new EmptyBorder (5,5,5,5));
+      }
 
-    private void addLabel (String s) {
-	/* just a convenience used below */
-	JLabel l = new JLabel (s);
-	l.addMouseListener(this);
-	add (l);
-    }
+      setBorder (unselect_border);
+
+      int i, j;
+      ChunkDescDB db;
+
+      selected = false;
+      addMouseListener (this);
+
+      namechoice = null;
+      valf = null;
+      namef = null;
+
+      /* next bit is specific on valtype of the propertydesc */
+      if( t == ValType.CHUNK )
+      {
+         addLabel ("Accept chunks of type: ");
+         namechoice = new JComboBox (ChunkFactory.getDescNames());
+         add (namechoice);
+      }
+      else if( t == ValType.EMBEDDEDCHUNK )
+      {
+         addLabel ("Embedded chunk type: ");
+         namechoice = new JComboBox (ChunkFactory.getDescNames());
+         add (namechoice);
+      }
+      else if( t == ValType.BOOL )
+      {
+         addLabel ("Name: ");
+         namef = new JTextField (20);
+         add (namef);
+         addLabel ("Value: ");
+         namechoice = new JComboBox();
+         namechoice.setRenderer(new TrueFalseCellRenderer());
+         namechoice.addItem("0");
+         namechoice.addItem("1");
+         add (namechoice);
+      }
+      else
+      {
+         addLabel ("Name: ");
+         namef = new JTextField (20);
+         add (namef);
+         addLabel ("Value: ");
+
+         if( t == ValType.INT )
+         {
+            valf = new IntegerTextField (10);
+         }
+         else if( t == ValType.FLOAT )
+         {
+            valf = new FloatTextField (10);
+         }
+         else
+         {
+            valf = new StringTextField (10);
+         }
+
+         add (valf);
+      }
+
+      Dimension d3 = getPreferredSize();
+      Dimension d4 = getMaximumSize();
+      d4.height = d3.height;
+      setMaximumSize (d4);
+
+   }
+
+
+   /* I'm going to let the parent frame deal with building the actual desc
+    * enum & catch any possible numberformat exceptions.  we'll just return
+    * bits and pieces.
+    */
+   public String getName()
+   {
+      // order is important cuz bools use namef for label & namechoice
+      // for value
+      if( namef != null )
+      {
+         return namef.getText();
+      }
+      else
+      {
+         return(String)(namechoice.getSelectedItem());
+      }
+   }
+
+
+
+   public String getVal ()
+   {
+      if( namechoice != null )
+      {
+         return(String)namechoice.getSelectedItem();
+      }
+      else if( valf != null )
+      {
+         return valf.getText();
+      }
+      else
+      {
+         return namef.getText();
+      }
+   }
+
+
+   private void addLabel (String s)
+   {
+      /* just a convenience used below */
+      JLabel l = new JLabel (s);
+      l.addMouseListener(this);
+      add (l);
+   }
 
 
 
 //      private void setSelected(boolean v) {
-//  	selected = v;
-//  	if (selected)
-//  	    super.setBorder(select_border);
-//  	else
-//  	    super.setBorder(unselect_border);
-//  	repaint();
+//      selected = v;
+//      if (selected)
+//          super.setBorder(select_border);
+//      else
+//          super.setBorder(unselect_border);
+//      repaint();
 //      }
 
-    private void toggleSelected() {
-	selected = !selected;
-        super.setBorder(selected?select_border:unselect_border);
-        repaint();
-    }
+   private void toggleSelected()
+   {
+      selected = !selected;
+      super.setBorder(selected?select_border:unselect_border);
+      repaint();
+   }
 
-    public boolean getSelected() {
-	return selected;
-    }
-
-
-    /* MouseListener stuff */
-    public void mouseClicked (MouseEvent e) {
-	toggleSelected();
-    }
-    public void mouseEntered (MouseEvent e) {
-    }
-    public void mouseExited (MouseEvent e) {
-    }
-    public void mousePressed (MouseEvent e) {
-    }
-    public void mouseReleased (MouseEvent e) {
-    }
+   public boolean getSelected()
+   {
+      return selected;
+   }
 
 
+   /* MouseListener stuff */
+   public void mouseClicked (MouseEvent e)
+   {
+      toggleSelected();
+   }
+   public void mouseEntered (MouseEvent e)
+   {
+   }
+   public void mouseExited (MouseEvent e)
+   {
+   }
+   public void mousePressed (MouseEvent e)
+   {
+   }
+   public void mouseReleased (MouseEvent e)
+   {
+   }
 }
-
-
-
-

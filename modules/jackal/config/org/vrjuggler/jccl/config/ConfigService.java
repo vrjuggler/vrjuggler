@@ -55,15 +55,7 @@ public class ConfigService
    {
       // Read in the config chunks
       ConfigChunkDB chunk_db = new ConfigChunkDB();
-      ConfigIOStatus status = ConfigIO.readConfigChunkDB(input, chunk_db);
-
-      // Check for failure condition
-      if (status.getStatus() == status.FAILURE)
-      {
-         throw new IOException("Failed to read in config chunk DB: "
-                              + status.getSummary());
-      }
-
+      chunk_db.build(input);
       return chunk_db;
    }
 
@@ -81,7 +73,7 @@ public class ConfigService
    {
       //Write out the config chunks
       DataOutputStream data_out = new DataOutputStream(output);
-      ConfigIO.writeConfigChunkDB(data_out, chunkDB);
+      chunkDB.write(data_out);
    }
 
    /**
@@ -98,15 +90,7 @@ public class ConfigService
    {
       // Read in the config chunks
       ChunkDescDB desc_db = new ChunkDescDB();
-      ConfigIOStatus status = ConfigIO.readChunkDescDB(input, desc_db);
-
-      // Check for failure condition
-      if (status.getStatus() == status.FAILURE)
-      {
-         throw new IOException("Failed to read in chunk desc DB"
-                              + status.getSummary());
-      }
-
+      desc_db.build(input);
       return desc_db;
    }
 
@@ -124,6 +108,6 @@ public class ConfigService
    {
       //Write out the config chunks
       DataOutputStream data_out = new DataOutputStream(output);
-      ConfigIO.writeChunkDescDB(data_out, descDB);
+      descDB.write(data_out);
    }
 };

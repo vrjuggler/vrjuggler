@@ -32,42 +32,28 @@
 package org.vrjuggler.jccl.config;
 
 import java.io.*;
-import java.util.List;
+import java.util.Iterator;
 import java.util.Vector;
-import org.w3c.dom.*;
+import org.jdom.Element;
+
 
 /** This corresponds to the config ChunkDesc class */
 public class ChunkDesc
    implements Cloneable
 {
-   private List props;
-   public String name;
-   public String token;
-   public String help;
-
-   private ConfigChunk default_chunk;
-   private Node default_node;
-
-   public ChunkDesc(String n)
+   public ChunkDesc (Element root)
    {
-      props = new Vector();
-      addNameProperty();
-      name = n;
-      token = n;
-      help = "";
-      default_node = null;
-      default_chunk = null;
+      this.mDomElement = root;
    }
 
+   /**
+    * Creates an empty chunk description with only a name property.
+    */
    public ChunkDesc()
    {
-      props = new Vector();
-      addNameProperty();
-      name = "";
-      token = "";
-      help = "";
-      default_node = null;
-      default_chunk = null;
+      mDomElement = new Element(ConfigTokens.chunk_desc_TOKEN);
+      this.setName("");
+      this.setToken("");
    }
 
    public Object clone()
@@ -75,12 +61,7 @@ public class ChunkDesc
       try
       {
          ChunkDesc d = (ChunkDesc)super.clone();
-         d.props = new Vector();
-         int n = props.size();
-         for (int i = 0; i < n; i++)
-         {
-            d.props.add(((PropertyDesc)props.get(i)).clone());
-         }
+         d.mDomElement = (Element) mDomElement.clone();
          return d;
       }
       catch (CloneNotSupportedException e)
@@ -91,207 +72,160 @@ public class ChunkDesc
 
    public final String getName()
    {
+      String name;
+      org.jdom.Attribute attr = mDomElement.getAttribute("name");
+
+      // If this description does not have a name, assign it the value of its
+      // token.
+      if ( attr == null || attr.getValue().equals("") )
+      {
+         name = mDomElement.getAttribute("token").getValue();
+         mDomElement.setAttribute("name", name);
+      }
+      // Otherwise, just return the current name token.
+      else
+      {
+         name = mDomElement.getAttribute("name").getValue();
+      }
+
       return name;
    }
 
-   public final void setName(String _name)
+   public final void setName (String newName)
    {
-      name = _name;
+      mDomElement.setAttribute("name", newName);
    }
 
    public final String getToken()
    {
-      return token;
+      return mDomElement.getAttribute("token").getValue();
    }
 
-   public final void setToken(String _token)
+   public final void setToken (String newToken)
    {
-      token = _token;
+      mDomElement.setAttribute("token", newToken);
    }
 
    public final String getHelp()
    {
+      String help = "";
+      Element help_child = mDomElement.getChild("help");
+
+      if ( null != help_child )
+      {
+         help = help_child.getText();
+      }
+
       return help;
    }
 
-   public final void setHelp(String _help)
+   public final void setHelp (String helpText)
    {
-      help = _help;
-   }
+      Element help_child = mDomElement.getChild("help");
 
-   public void setDefaultChunk(ConfigChunk ch)
-   {
-      default_chunk = ch;
-   }
-
-   public void setDefaultChunk(Node n)
-   {
-      default_node = n;
-      default_chunk = null;
-   }
-
-   public ConfigChunk getDefaultChunk()
-   {
-      synchronized (this)
+      if ( null == help_child )
       {
-         if ((default_chunk == null) && (default_node != null))
-         {
-            XMLConfigIOHandler h = 
-            (XMLConfigIOHandler)ConfigIO.getHandler ();
-            ConfigIOStatus iostatus = new ConfigIOStatus();
-            default_chunk = h.buildConfigChunk(default_node, false,
-                                               iostatus);
-            // slightly crude reporting here...
-            if (iostatus.getStatus() != iostatus.SUCCESS)
-            {
-               System.out.println(iostatus.toString());
-            }
-            ConfigIO.releaseHandler(h);
-         }
-         return default_chunk;
+         help_child = new Element("help");
+         mDomElement.addContent(help_child);
       }
+
+      help_child.setText(helpText);
    }
 
-   public void addPropertyDesc(PropertyDesc newp)
+   public void addPropertyDesc (PropertyDesc newPropDesc)
    {
-      PropertyDesc oldp;
-      int n = props.size();
-      for (int i = 0; i < n; i++)
+      mDomElement.addContent(newPropDesc.getNode());
+   }
+
+   public void removePropertyDesc (PropertyDesc propDesc)
+   {
+      mDomElement.removeContent(propDesc.getNode());
+   }
+
+   public Vector getPropertyDescs()
+   {
+      Vector prop_descs = new Vector();
+      Iterator i =
+         mDomElement.getChildren(ConfigTokens.property_desc_TOKEN).iterator();
+
+      while ( i.hasNext() )
       {
-         oldp = (PropertyDesc)props.get(i);
-         if (oldp.getToken().equalsIgnoreCase(newp.getToken()))
-         {
-            props.set(i, newp);
-            return;
-         }
+         prop_descs.add(new PropertyDesc((Element) i.next()));
       }
-      props.add (newp);
+
+      return prop_descs;
    }
 
-
-   public PropertyDesc[] getPropertyDescs()
-   {
-      PropertyDesc[] p = new PropertyDesc[props.size()];
-      return(PropertyDesc[])props.toArray(p);
-   }
-
+   /**
+    * Returns the number of property descriptions associated with this chunk
+    * description.
+    */
    public int propertyDescsSize()
    {
-      return props.size();
+      return mDomElement.getChildren(ConfigTokens.property_desc_TOKEN).size();
    }
 
-   public PropertyDesc getPropertyDesc(int i)
+   /**
+    * Retrives the i'th property description.  If no such property description
+    * exists, null is returned.
+    */
+   public PropertyDesc getPropertyDesc (int i)
    {
-      return(PropertyDesc)props.get(i);
+      PropertyDesc prop_desc = null;
+
+      // Verify that i is a valid index.
+      if ( i < this.propertyDescsSize() )
+      {
+         Element prop_desc_child =
+            (Element) mDomElement.getChildren(ConfigTokens.property_desc_TOKEN).get(i);
+         prop_desc = new PropertyDesc(prop_desc_child);
+      }
+
+      return prop_desc;
    }
 
    public boolean equals (ChunkDesc c)
    {
-      PropertyDesc p1, p2;
-      if (! name.equals(c.name))
-      {
-         return false;
-      }
-      if (! token.equals(c.token))
-      {
-         return false;
-      }
-      if (! help.equals(c.help))
-      {
-         return false;
-      }
-
-      if (props.size() != c.propertyDescsSize())
-      {
-         return false;
-      }
-
-      /* This next part is O(n^2) <sigh> */
-      int n = props.size();
-      for (int i = 0; i < n; i++)
-      {
-         p1 = (PropertyDesc) props.get(i);
-         p2 = c.getPropertyDesc(p1.getToken());
-         if ((p2 == null) || (!p1.equals(p2)))
-         {
-            return false;
-         }
-      }
-      return true;
+      return (mDomElement == c.mDomElement);
    }
 
-   private void addNameProperty()
+   public PropertyDesc getPropertyDesc (String propDescToken)
    {
-      /* quick little function to add in a name property if it isn't already
-       * in the ChunkDesc.
-       */
-      PropertyDesc named;
-      named = getPropertyDesc("Name");
-      if (named == null)
-      {
-         named = new PropertyDesc();
-         named.setName("Name");
-         named.setToken("Name");
-         named.setHelp("Unique name of an instance of this chunk type");
-         named.setValType(ValType.STRING);
-         props.add(0, named);
-      }
-   }
+      Iterator i = mDomElement.getChildren(ConfigTokens.property_desc_TOKEN).iterator();
+      PropertyDesc p = null;
 
-   public PropertyDesc getPropertyDesc(String tok)
-   {
-      PropertyDesc p;
-      int n = props.size();
-      for (int i = 0; i < n; i++)
+      while ( i.hasNext() )
       {
-         p = (PropertyDesc)props.get(i);
-         if (p.getToken().equalsIgnoreCase(tok))
+         Element prop_desc_elem = (Element) i.next();
+         String token = prop_desc_elem.getAttribute("token").getValue();
+
+         if ( token.equals(propDescToken) )
          {
-            return p;
+            p = new PropertyDesc(prop_desc_elem);
+            break;
          }
       }
-      return null;
+
+      return p;
+   }
+
+   /**
+    * Returns the internal DOM node for this chunk description.  It is
+    * package visible to prevent abuse of this exposure of implementation
+    * by outside packages.
+    */
+   Element getNode ()
+   {
+      return mDomElement;
    }
 
    public String toString()
    {
-      return xmlRep("");
+      org.jdom.output.XMLOutputter outputter =
+         new org.jdom.output.XMLOutputter("   ", true);
+      outputter.setLineSeparator(System.getProperty("line.separator"));
+      return outputter.outputString(mDomElement);
    }
 
-   public String xmlRep(String pad)
-   {
-      String newpad = pad + pad;
-      StringBuffer retval = new StringBuffer(256);
-      retval.append(pad);
-      retval.append("<ChunkDesc token=\"");
-      retval.append(XMLConfigIOHandler.escapeString(token));
-      retval.append("\" name=\"");
-      retval.append(XMLConfigIOHandler.escapeString(name));
-      retval.append("\">\n");
-      if (!help.equals (""))
-      {
-         retval.append(newpad);
-         retval.append("<help>");
-         retval.append(XMLConfigIOHandler.escapeString(help));
-         retval.append("</help>\n");
-      }
-      int n = props.size();
-      for (int i = 0; i < n; i++)
-      {
-         PropertyDesc p = (PropertyDesc)props.get(i);
-         retval.append(p.xmlRep(newpad));
-      }
-      ConfigChunk ch = getDefaultChunk();
-      if (ch != null)
-      {
-         retval.append(newpad);
-         retval.append("<Defaults>\n");
-         retval.append(ch.xmlRep(newpad + "  "));
-         retval.append(newpad);
-         retval.append("</Defaults>\n");
-      }
-      retval.append(pad);
-      retval.append("</ChunkDesc>\n");
-      return retval.toString();
-   }
+   private Element mDomElement = null;
 }

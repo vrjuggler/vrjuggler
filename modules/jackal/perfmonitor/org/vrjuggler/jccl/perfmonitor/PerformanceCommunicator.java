@@ -39,14 +39,14 @@ import org.vrjuggler.jccl.vjcontrol.*;
 
 /** NetControl Communicator for VR Juggler performance data.
  *  This Communicator reads performance data written about by
- *  VR Juggler's PerfDataBuffers.  Data is stored in a 
+ *  VR Juggler's PerfDataBuffers.  Data is stored in a
  *  PerformanceModule object.
  *  <p>
- *  It is illegal to call any of the reading or message sending 
+ *  It is illegal to call any of the reading or message sending
  *  functions until the ConfigCommunicator has been assigned a
  *  NetworkModule object to talk to.
  */
-public class PerformanceCommunicator 
+public class PerformanceCommunicator
     extends DefaultNetCommunicator {
 
 
@@ -70,14 +70,15 @@ public class PerformanceCommunicator
         component_name = ch.getName();
 
         // get pointers to the modules we need.
-        Property p = ch.getPropertyFromToken ("Dependencies");
-        if (p != null) {
+        VarValue prop_val = ch.getProperty(VjComponentTokens.DEPENDENCIES);
+        if ( null != prop_val )
+        {
             int i;
-            int n = p.getNum();
+            int n = ch.getPropertyCount(VjComponentTokens.DEPENDENCIES);
             String s;
             VjComponent c;
             for (i = 0; i < n; i++) {
-                s = p.getValue(i).toString();
+                s = ch.getProperty(VjComponentTokens.DEPENDENCIES, i).toString();
                 c = Core.getVjComponent (s);
                 if (c != null) {
                     if (c instanceof PerformanceModule)
@@ -136,19 +137,19 @@ public class PerformanceCommunicator
     }
 
 
-    /** Reads a command stream from the network.  
+    /** Reads a command stream from the network.
      *  Returns control when it reaches the end of a single command.
      */
-    public void readStream (InputStream instream, String id) 
+    public void readStream (InputStream instream, String id)
         throws IOException {
-        
-	String name;
-	int num;
-	PerfDataCollector p;
 
-	if (id.equals ("jccl_performance")) {
-	    perf_module.readXMLStream (instream);
-	}
+   String name;
+   int num;
+   PerfDataCollector p;
+
+   if (id.equals ("jccl_performance")) {
+       perf_module.readXMLStream (instream);
+   }
     }
 
 

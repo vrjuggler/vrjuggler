@@ -60,21 +60,29 @@ public class UserProfile {
         // a set of ints.
         // chunks that use these should use enumerations to give them
         // reasonable names.
-        Property p;
         boolean retval = true;
-        p = ch.getPropertyFromToken ("user_level");
-        if (p != null)
-            user_level = p.getValue(0).getInt();
-        else {
+        VarValue prop_val = ch.getProperty(VjComponentTokens.USER_LEVEL);
+
+        if ( prop_val != null )
+        {
+            user_level = prop_val.getInt();
+        }
+        else
+        {
             user_level = BEGINNER;
             retval = false;
         }
+
         clearUserTypes();
-        p = ch.getPropertyFromToken ("user_type");
-        if (p != null) {
-            int i, n = p.getNum();
-            for (i = 0; i < n; i++) {
-                user_types[i] = p.getValue(i).getBoolean();
+        prop_val = ch.getProperty(VjComponentTokens.USER_TYPE);
+
+        if ( null != prop_val)
+        {
+            int n = ch.getPropertyCount(VjComponentTokens.USER_TYPE);
+            for ( int i = 0; i < n; ++i )
+            {
+                user_types[i] =
+                   ch.getProperty(VjComponentTokens.USER_TYPE, i).getBoolean();
             }
         }
         else {

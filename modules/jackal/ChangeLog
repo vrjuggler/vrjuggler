@@ -1,6 +1,53 @@
 DATE        AUTHOR      CHANGE
 ----------- ---------   --------------------------------------------------------
+May-23-2002 patrickh    Merged changes from jccl_file_format_change_branch.
+            allenb      The JCCL C++ code now depends on CppDOM instead of
+                        Xerces-C; the Java code depends on JDOM instead of
+                        JAXP.
+                        NEW VERSION: 0.2.0
+May-23-2002 patrickh    Added jccl::ConfigChunk::getFullName() which returns
+                        the fully qualified name of a chunk.  For child
+                        chunks, the full name is the full path to the child.
 May-22-2002 allenb      Updated to work with Boost 0.1.28.
+May-19-2002 patrickh    Updated the ConfigUpdater utility to convert VR Juggler
+                        1.0 configuration files to the second revision of the
+                        XML file format.
+May-13-2002 patrickh    Chunks are edited inline rather than being edited and
+                        and then replaced in the chunk databases.
+May-10-2002 patrickh    Chunk descriptions are edited inline rather than being
+                        edited and then replaced in the description
+                        databases.
+May-09-2002 patrickh    Completely rewrote the loading and saving of config
+                        files and chunk descriptions in VjControl.
+                        Fixed the ConfigChunk Java API to match the C++ API.
+May-08-2002 subatomic   Ported to cppdom.  xmlpp no longer required.
+May-07-2002 patrickh    Default values are now associated with individual
+                        properties.  As a result, there is no longer a
+                        circular dependency between chunks and their
+                        descriptions.
+May-07-2002 allenb      Fix getProperty to specialize it for std::string 
+                        and ChunkPtr's. I had to work around some bugs in
+                        gcc's handling of member specialization, but the 
+                        code is still standard so it should work on all 
+                        compilers.  In the future if gcc ever fixes its 
+                        implementation this code could be simplified a little.
+May-06-2002 patrickh    Chunk descriptions use lower-case spellings for
+                        property type identifiers.
+May-06-2002 patrickh    Started work towards making config files and
+                        description files case sensitive.
+May-06-2002 patrickh    Finished removal of Xerces-C as a dependency.
+May-06-2002 allenb      Added exception handling code for desc db load/save.
+May-06-2002 allenb      Refactor to use new file format and xmlpp.
+                          - Simplify config processing
+                          - Remove all parsing code
+                          - Use STL objects to simplify and reduce code         
+                          - Replace VarValue with more general method that 
+                              allows user-define types in properties
+May-05-2002 allenb      Added code to config scripts to get xmlpp paths in.
+May-05-2002 patrickh    Removed dependency on JAXP in favor of JDOM in the
+                        Java code.
+May-04-2002 patrickh    Initial support for loading and saving a version of
+                        XML config files that requires no user-level parsing.
 May-02-2002 allenb      Added test cases for ConfigChunk.
 Apr-29-2002 nonchocoboy Modularized directory structure.
                         NEW VERSION: 0.1.0

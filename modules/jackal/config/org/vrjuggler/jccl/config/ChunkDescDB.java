@@ -32,33 +32,22 @@
 package org.vrjuggler.jccl.config;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Vector;
+import java.util.*;
+import org.jdom.*;
+import org.jdom.input.SAXBuilder;
+import org.jdom.output.XMLOutputter;
+
 
 /** Corresponds to ChunkDescDB.C/.h */
 public class ChunkDescDB
 {
-   public String name;
-   public File file;
-
-   private ArrayList targets;
-   private ArrayList descs;
-
-   public boolean need_to_save;
-
    public ChunkDescDB()
    {
-      name = "Unnamed";
-      file = new File ("");
-      targets = new ArrayList();
-      descs = new ArrayList();
-      need_to_save = false;
    }
 
-   public final void setName(String _name)
+   public final void setName(String name)
    {
-      name = _name;
+      this.name = name;
    }
 
    public final String getName()
@@ -66,14 +55,73 @@ public class ChunkDescDB
       return name;
    }
 
-   public final void setFile(File _file)
+   public final void setInputFile (File file)
    {
-      file = _file;
+      inputFile = file;
    }
 
-   public final File getFile()
+   public final File getInputFile()
    {
-      return file;
+      return inputFile;
+   }
+
+   /**
+    * Builds the database using the given DOM node.  The node's type must be
+    * <ConfigChunkDB>
+    */
+   public void build (Element elem) throws IOException
+   {
+      loadChunkDescs(elem);
+   }
+
+   public void build () throws IOException
+   {
+      build(inputFile);
+   }
+
+   public void build (File file) throws IOException
+   {
+      if ( file != inputFile )
+      {
+         inputFile = file;
+      }
+
+      if ( null != inputFile || ! inputFile.canRead() )
+      {
+         // build the XML stream into a DOM tree
+         try
+         {
+            SAXBuilder builder = new SAXBuilder();
+            Document doc       = builder.build(file);
+
+            loadChunkDescs(doc.getRootElement());
+         }
+         catch (JDOMException e)
+         {
+            throw new IOException(e.getMessage());
+         }
+      }
+      else
+      {
+         throw new IOException("No readable file given for input!");
+      }
+   }
+
+   public void build (InputStream stream) throws IOException
+   {
+      this.inputFile = null;
+
+      // build the XML stream into a DOM tree
+      try
+      {
+         SAXBuilder builder = new SAXBuilder();
+         Document doc       = builder.build(stream);
+         loadChunkDescs(doc.getRootElement());
+      }
+      catch (JDOMException e)
+      {
+         throw new IOException(e.getMessage());
+      }
    }
 
    public final synchronized int size()
@@ -86,45 +134,10 @@ public class ChunkDescDB
       return (ChunkDesc)descs.get(i);
    }
 
-//      public synchronized ChunkDescDB diff (ChunkDescDB d) {
-//      /* builds a new ChunkDescDB that's sort of the difference of its
-//       * arguments - the returned db contains every chunk in d that isn't
-//       * in self or differs from the same-named chunk in self
-//       */
-//      ChunkDesc c1, c2;
-//      ChunkDescDB newdb = new ChunkDescDB();
-//          synchronized (d) {
-//              int n = d.descs.size();
-//              for (int i = 0; i < n; i++) {
-//                  c1 = (ChunkDesc)d.descs.get(i);
-//                  c2 = getByToken (c1.token);
-//                  if ((c2 == null) || (!c1.equals(c2)))
-//                      newdb.descs.add(c1);
-//              }
-//          }
-//      return newdb;
-//      }
-
-   public void replace(ChunkDesc oldc, ChunkDesc newc)
+   public void fireDescDBUpdate (String origName, ChunkDesc updatedDesc)
    {
-      DescDBEvent e = null;
-      synchronized (this)
-      {
-         int i = descs.indexOf(oldc);
-         if (i >= 0)
-         {
-            e = new DescDBEvent(this, DescDBEvent.REPLACE, oldc, newc);
-            descs.set(i, newc);
-         }
-      }
-      if (e == null)
-      {
-         add(newc);
-      }
-      else
-      {
-         notifyDescDBTargets(e);
-      }
+      notifyDescDBTargets(new DescDBEvent(this, DescDBEvent.REPLACE, origName,
+                                          updatedDesc));
    }
 
    public void clear()
@@ -133,7 +146,7 @@ public class ChunkDescDB
       {
          descs.clear();
       }
-      notifyDescDBTargets(new DescDBEvent(this, DescDBEvent.REMOVEALL, null, null));
+      notifyDescDBTargets(new DescDBEvent(this, DescDBEvent.REMOVEALL, null));
    }
 
    public ChunkDesc remove(ChunkDesc d)
@@ -150,7 +163,7 @@ public class ChunkDescDB
          for (int i = 0; i < n; i++)
          {
             d = (ChunkDesc)descs.get(i);
-            if (d.token.equals(tok))
+            if (d.getToken().equals(tok))
             {
                retval = d;
                descs.remove(i);
@@ -160,8 +173,7 @@ public class ChunkDescDB
       }
       if (retval != null)
       {
-         DescDBEvent e = new DescDBEvent(this, DescDBEvent.REMOVE,
-                                         retval, null);
+         DescDBEvent e = new DescDBEvent(this, DescDBEvent.REMOVE, retval);
          notifyDescDBTargets(e);
       }
       return retval;
@@ -176,7 +188,7 @@ public class ChunkDescDB
          for (int i = 0; i < n; i++)
          {
             d = (ChunkDesc)descs.get(i);
-            if (d.name.equalsIgnoreCase(tok))
+            if ( d.getName().equals(tok) )
             {
                retval = d;
                descs.remove(i);
@@ -186,8 +198,7 @@ public class ChunkDescDB
       }
       if (retval != null)
       {
-         DescDBEvent e = new DescDBEvent(this, DescDBEvent.REMOVE,
-                                         retval, null);
+         DescDBEvent e = new DescDBEvent(this, DescDBEvent.REMOVE, retval);
          notifyDescDBTargets (e);
       }
       return retval;
@@ -206,7 +217,7 @@ public class ChunkDescDB
       for (int i = 0; i < da.length; i++)
       {
          //d = (ChunkDesc)descs.get(i);
-         if (da[i].token.startsWith (tok))
+         if ( da[i].getToken().startsWith(tok) )
          {
             v.add(da[i]);
          }
@@ -221,7 +232,7 @@ public class ChunkDescDB
          int n = descs.size();
          for (int i = 0; i < n; i++)
          {
-            if (((ChunkDesc)descs.get(i)).token.equalsIgnoreCase(tok))
+            if (((ChunkDesc)descs.get(i)).getToken().equals(tok))
             {
                return (ChunkDesc)descs.get(i);
             }
@@ -235,7 +246,7 @@ public class ChunkDescDB
       int n = descs.size();
       for (int i = 0; i < n; i++)
       {
-         if (((ChunkDesc)descs.get(i)).name.equalsIgnoreCase(tok))
+         if ( ((ChunkDesc)descs.get(i)).getName().equals(tok) )
          {
             return (ChunkDesc)descs.get(i);
          }
@@ -248,9 +259,9 @@ public class ChunkDescDB
       int n = descs.size();
       for (int i = 0; i < n; i++)
       {
-         if (((ChunkDesc)descs.get(i)).name.equalsIgnoreCase(_name))
+         if ( ((ChunkDesc)descs.get(i)).getName().equals(_name) )
          {
-            return ((ChunkDesc)descs.get(i)).token;
+            return ((ChunkDesc)descs.get(i)).getToken();
          }
       }
       return null;
@@ -261,22 +272,48 @@ public class ChunkDescDB
       int n = descs.size();
       for (int i = 0; i < n; i++)
       {
-         if (((ChunkDesc)descs.get(i)).token.equalsIgnoreCase(tok))
+         if ( ((ChunkDesc)descs.get(i)).getToken().equals(tok) )
          {
-            return ((ChunkDesc)descs.get(i)).name;
+            return ((ChunkDesc)descs.get(i)).getName();
          }
       }
       return null;
    }
 
-   /** Adds d to self.
-    *  Note: addElement may alter the name of d in order to avoid
-    *  conflicts with ChunkDescs already in self.
+   public void setUnsavedChanges (boolean dirty)
+   {
+      mNeedToSave = dirty;
+   }
+
+   public boolean hasUnsavedChanges ()
+   {
+      return mNeedToSave;
+   }
+
+   /**
+    * Adds the give chunk description object to this database's internal
+    * collection of chunk descriptions.  A chunk description with the same
+    * token will be removed before insertion.  The DOM node held by the chunk
+    * description is added to this database's DOM tree.
     */
-   public void add(ChunkDesc d)
+   public void add (ChunkDesc newDesc)
+   {
+      // Detach from the chunk description from its parent (if it has one).
+      newDesc.getNode().detach();
+
+      // Now do the insertion into the database.
+      insertDesc(newDesc);
+   }
+
+   /**
+    * Inserts the given chunk description into the internal database.  The
+    * node held by d must already be part of the DOM tree.
+    */
+   private void insertDesc (ChunkDesc d)
    {
       // remove any desc with the same token
-      removeByToken(d.token);
+      removeByToken(d.getToken());
+
       synchronized (this)
       {
          // make sure the name will be unique
@@ -296,7 +333,8 @@ public class ChunkDescDB
          // do the deed
          descs.add(d);
       }
-      DescDBEvent e = new DescDBEvent(this, DescDBEvent.INSERT, null, d);
+
+      DescDBEvent e = new DescDBEvent(this, DescDBEvent.INSERT, d);
       notifyDescDBTargets (e);
    }
 
@@ -331,23 +369,47 @@ public class ChunkDescDB
 
    public String toString()
    {
-      return xmlRep();
+      XMLOutputter outputter = new XMLOutputter("   ", true);
+      outputter.setLineSeparator(System.getProperty("line.separator"));
+
+      // Construct an XML document to write out.
+      Document doc = new Document();
+      this.makeDocument(doc);
+
+      return outputter.outputString(doc);
    }
 
-   public String xmlRep()
+   public void write () throws IOException
    {
-      StringBuffer s = new StringBuffer(512);
-      s.append("<ChunkDescDB>\n");
-      synchronized (this)
+      write(inputFile);
+   }
+
+   public void write (File file) throws IOException
+   {
+      Document doc = new Document();
+      this.makeDocument(doc);
+
+      if ( inputFile != file )
       {
-         int n = size();
-         for (int i = 0; i < descs.size(); i++)
-         {
-            s.append(((ChunkDesc)descs.get(i)).xmlRep("  "));
-         }
+         inputFile = file;
       }
-      s.append("</ChunkDescDB>\n");
-      return s.toString();
+
+      XMLOutputter outputter = new XMLOutputter("  ", true);
+      FileWriter writer      = new FileWriter(file);
+
+      outputter.setLineSeparator(System.getProperty("line.separator"));
+      outputter.output(doc, writer);
+      writer.close();
+   }
+
+   public void write (OutputStream outStream) throws IOException
+   {
+      Document doc = new Document();
+      this.makeDocument(doc);
+
+      XMLOutputter outputter = new XMLOutputter("  ", true);
+      outputter.setLineSeparator(System.getProperty("line.separator"));
+      outputter.output(doc, outStream);
    }
 
    /*-******************* DescDB Target Stuff *********************/
@@ -370,12 +432,15 @@ public class ChunkDescDB
    protected void notifyDescDBTargets(DescDBEvent e)
    {
       DescDBListener[] l = new DescDBListener[20];
-      need_to_save = true;
+      mNeedToSave = true;
+
       synchronized (targets)
       {
          l = (DescDBListener[]) targets.toArray(l);
       }
+
       int a = e.getAction();
+
       for (int i = 0; (i < l.length) && (l[i] != null); i++)
       {
          if (a == e.INSERT)
@@ -396,4 +461,60 @@ public class ChunkDescDB
          }
       }
    }
+
+   protected void loadChunkDescs (Element docRoot) throws IOException
+   {
+      String name = docRoot.getName();
+
+      if ( name.equals(ConfigTokens.chunk_desc_db_TOKEN) )
+      {
+         Iterator i = docRoot.getChildren().iterator();
+         Element desc_elem;
+
+         while ( i.hasNext() )
+         {
+            desc_elem = (Element) i.next();
+            if ( desc_elem.getName().equals(ConfigTokens.chunk_desc_TOKEN) )
+            {
+               // We have to detach this node from its parent so that we can
+               // create a new root document when writing out the database.
+               this.insertDesc(new ChunkDesc((Element) desc_elem.clone()));
+            }
+            else
+            {
+            }
+         }
+      }
+      else
+      {
+         throw new IOException("Unrecognized chunk description element '" +
+                               name + "'.");
+      }
+   }
+
+   private void makeDocument (Document doc)
+   {
+      Element root = new Element(ConfigTokens.chunk_desc_db_TOKEN);
+      doc.setRootElement(root);
+
+      ChunkDesc cur_desc;
+
+      Iterator i = descs.iterator();
+      while ( i.hasNext() )
+      {
+         cur_desc = (ChunkDesc) i.next();
+
+         // Ensure that the node isn't attached somewhere else.
+         cur_desc.getNode().detach();
+         root.addContent(cur_desc.getNode());
+      }
+   }
+
+   private String name = "Unnamed";
+   private File inputFile = null;
+
+   private List targets = new ArrayList();
+   private List descs   = new ArrayList();
+
+   private boolean mNeedToSave = false;
 }

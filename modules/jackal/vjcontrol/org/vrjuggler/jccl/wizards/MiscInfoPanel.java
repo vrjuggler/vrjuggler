@@ -45,8 +45,8 @@ import org.vrjuggler.jccl.editorgui.ConfigUIHelper;
  * Company:      VRAC
  */
 
-public class MiscInfoPanel 
-    extends JPanel 
+public class MiscInfoPanel
+    extends JPanel
     implements WizardSubPanel {
 
     GridBagLayout gridBagLayout1 = new GridBagLayout();
@@ -118,7 +118,7 @@ public class MiscInfoPanel
     }
 
 
-    /** Sets the state of the UI components to reflect the resultsDB. 
+    /** Sets the state of the UI components to reflect the resultsDB.
      *  This is called when the ui is initialized or when a new input db
      *  is set.
      */
@@ -131,16 +131,16 @@ public class MiscInfoPanel
         chunks = results_db.getOfDescToken ("EnvironmentManager");
         ch = (ConfigChunk)chunks.get(0);
 
-        em_checkbox.setSelected (ch.getValueFromToken("AcceptConnections",0).getBoolean());
+        em_checkbox.setSelected(ch.getProperty("AcceptConnections",0).getBoolean());
 
-        em_port_field.setText (Integer.toString(ch.getValueFromToken("Port",0).getInt()));
+        em_port_field.setText(Integer.toString(ch.getProperty("Port",0).getInt()));
 
         chunks = results_db.getOfDescToken ("apiPerformer");
         ch = (ConfigChunk)chunks.get(0);
 
-        head_model_field.setText (ch.getValueFromToken("SimHeadModel",0).getString());
+        head_model_field.setText(ch.getProperty("SimHeadModel",0).getString());
 
-        wand_model_field.setText (ch.getValueFromToken("SimWandModel",0).getString());
+        wand_model_field.setText(ch.getProperty("SimWandModel",0).getString());
 
         results_dirty = false;
     }
@@ -156,7 +156,7 @@ public class MiscInfoPanel
         if (!ui_initialized) {
             if (results_db != null)
                 setUIState();
-            
+
             ui_initialized = true;
         }
         return ui_initialized;
@@ -183,26 +183,25 @@ public class MiscInfoPanel
             // query the GUI widgets to update results_db
             java.util.List chunks;
             ConfigChunk ch;
-            Property p;
             String window_name;
 
             chunks = results_db.getOfDescToken ("EnvironmentManager");
             ch = (ConfigChunk)chunks.get(0);
 
-            p = ch.getPropertyFromToken ("AcceptConnections");
-            p.setValue (em_checkbox.getSelectedObjects() != null, 0);
+            ch.setProperty("AcceptConnections", 0,
+                           new VarValue(em_checkbox.getSelectedObjects() != null));
 
-            p = ch.getPropertyFromToken ("Port");
-            p.setValue (new VarValue (Integer.parseInt (em_port_field.getText())), 0);
+            ch.setProperty("Port", 0,
+                           new VarValue(Integer.parseInt(em_port_field.getText())));
 
             chunks = results_db.getOfDescToken ("apiPerformer");
             ch = (ConfigChunk)chunks.get(0);
 
-            p = ch.getPropertyFromToken ("SimHeadModel");
-            p.setValue (head_model_field.getText(), 0);
+            ch.setProperty("SimHeadModel", 0,
+                           new VarValue(head_model_field.getText()));
 
-            p = ch.getPropertyFromToken ("SimWandModel");
-            p.setValue (wand_model_field.getText(), 0);
+            ch.setProperty("SimWandModel", 0,
+                           new VarValue(wand_model_field.getText()));
 
             results_dirty = false;
         }
@@ -213,7 +212,4 @@ public class MiscInfoPanel
     public void reset () {
         results_db = null;
     }
-
-
-
 }

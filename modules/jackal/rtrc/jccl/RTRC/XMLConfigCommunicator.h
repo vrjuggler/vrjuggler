@@ -35,18 +35,17 @@
 
 #include <jccl/jcclConfig.h>
 #include <jccl/Net/NetCommunicator.h>
-#include <jccl/XMLUtil/XercesXMLParser.h>
+#include <cppdom/cppdom.h>
 
 namespace jccl
 {
 
 class Connect;
 class ConfigManager;
-class XMLConfigIOHandler;
 
 
 /** Communications protocol handler for the Environment Manager.
- *  This design is based off of Control's 
+ *  This design is based off of Control's
  *  Components/Network/NetCommunicator pluggable communications
  *  interface.
  */
@@ -54,21 +53,19 @@ class XMLConfigCommunicator: public NetCommunicator
 {
 private:
 
-   XMLConfigIOHandler *mConfigIOHandler;
-   XercesXMLParser *mXMLParser;
-   ConfigManager *mConfigManager;
-   
+   ConfigManager* mConfigManager;
+
 public:
 
-   
+
    /** Constructor */
-   XMLConfigCommunicator (ConfigManager* _config_manager);
+   XMLConfigCommunicator( ConfigManager* _config_manager );
 
-   
+
    /** Destructor */
-   virtual ~XMLConfigCommunicator ();
+   virtual ~XMLConfigCommunicator();
 
-   
+
    //: Called when a new connection is established.
    //  Used to send any initial messages on a new connection.
    //  Useful for any initial data queries that need to be sent
@@ -78,9 +75,9 @@ public:
    //! PRE: _connection is open & valid for writing to; connection
    //+      is NULL.
    //! POST: true.
-   virtual void initConnection(Connect* _connection);
-        
-        
+   virtual void initConnection( Connect* _connection );
+
+
    //: Called when the connection is shut down.
    //  Useful for doing things like removing the Active chunkdb/descdb
    //  (at least on control's side).
@@ -91,13 +88,13 @@ public:
 
    //: True if the identifier represents a stream we can read.
    //  The id is the token in the handler attribute of a
-   //  protocol tag in the EM/C command stream.  A given 
+   //  protocol tag in the EM/C command stream.  A given
    //  NetCommunicator can theoretically serve several handlers;
    //  this is useful for backwards compatibility.
    //! RETURNS: True - if self knows how to parse this stream.
    //! RETURNS: False - otherwise.
-   virtual bool acceptsStreamIdentifier (const std::string& id);
-        
+   virtual bool acceptsStreamIdentifier( const std::string& id );
+
 
    //: Reads data from a communications stream.
    //  This should only be called by the Connect object self is
@@ -111,16 +108,16 @@ public:
    //! RETURNS: true - if reading the protocol stream was succesful.
    //! RETURNS: false - if EOF or a fatal error occurs.  This will
    //+                  kill the Connect.
-   virtual bool readStream (Connect* con, std::istream& instream, const std::string& id);
-        
-   bool interpretDOM_Node (Connect* con, DOM_Node& doc);
-   
-   
-   //----------------------- ConfigStatus Stuff ------------------------
-   
-   void configChanged ();
+   virtual bool readStream( Connect* con, std::istream& instream );
 
-   
+   bool interpretNode( Connect* con, cppdom::XMLNodePtr doc );
+
+
+   //----------------------- ConfigStatus Stuff ------------------------
+
+   void configChanged();
+
+
 }; // class XMLConfigCommunicator
 
 

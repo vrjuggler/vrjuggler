@@ -33,6 +33,8 @@ package org.vrjuggler.jccl.config;
 
 import java.util.*;
 import java.io.*;
+import org.jdom.Element;
+
 
 /** Individual PropertyDesc of a ChunkDesc.
  *  The PropertyDesc represents a single property, with its own name and type
@@ -49,144 +51,322 @@ import java.io.*;
 public class PropertyDesc
    implements Cloneable
 {
-   private String name;
-   private String token;
-   private String help;
-   private int num;
-   private ValType valtype;
-   private int enumval; // for assigning numeric defaults to enum entries
+   private int enumval = 0; // for assigning numeric defaults to enum entries
 
    // items for assisting in GUI displays of chunks.
 
-   /** User level - 0 for beginner, 1 for expert.  default = 0. */
-   private int user_level;
-
-   /** Contains a fixed set of possible values with string labels. */
-   private ArrayList enums;
-
-   /** Assigns an individual label to each value of a property. */
-   private ArrayList valuelabels;
+   /** Creates an "empty" PropertyDesc */
+   public PropertyDesc (Element root)
+   {
+      mDomElement = root;
+   }
 
    public PropertyDesc ()
    {
-      /* creates an "empty" PropertyDesc */
-      name = "";
-      token = "";
-      help = "";
-      enums = new ArrayList();
-      valuelabels = new ArrayList();
-      num = 1;
-      valtype = ValType.INVALID;
-      enumval = 0;
-      user_level = 0;
+      mDomElement = new Element(ConfigTokens.property_desc_TOKEN);
+      this.setName("");
+      this.setToken("");
+      this.setNumAllowed(1);
    }
 
    public Object clone ()
       throws CloneNotSupportedException
    {
       PropertyDesc p = (PropertyDesc)super.clone();
-      p.valuelabels = (ArrayList)valuelabels.clone(); // safe; it's a list of strings
-      p.enums = new ArrayList();
-      int i, n = enums.size();
-      for (i = 0; i < n; i++)
-      {
-         p.enums.add (((DescEnum)enums.get(i)).clone());
-      }
+      p.mDomElement  = (Element) mDomElement.clone();
       return p;
    }
 
-   public void setName(String _name)
+   public void setName (String newName)
    {
-      name = _name;
+      mDomElement.setAttribute("name", newName);
    }
 
-   public String getName()
+   /**
+    * Gets the name of this property description, if it has one.
+    *
+    * @return The empty string will be returned if this property description
+    *         has no name.
+    */
+   public String getName ()
    {
+      String name = "";
+
+      if ( mDomElement.getAttribute("name") != null )
+      {
+         name = mDomElement.getAttribute("name").getValue();
+      }
+
       return name;
    }
 
-   public void setToken(String _token)
+   public void setToken (String newToken)
    {
-      token = _token;
+      mDomElement.setAttribute("token", newToken);
    }
 
+   /**
+    * Gets the token (type) of this property description, if it has one.
+    *
+    * @return The empty string will be returned if this property description
+    *         has no token/type set yet.
+    */
    public String getToken()
    {
+      String token = "";
+
+      if ( mDomElement.getAttribute("token") != null )
+      {
+         token = mDomElement.getAttribute("token").getValue();
+      }
+
       return token;
    }
 
-   public void setHelp(String _help)
+   public void setHelp (String helpText)
    {
-      help = _help;
+      Element help_child = mDomElement.getChild("help");
+
+      if ( null == help_child )
+      {
+         help_child = new Element("help");
+         mDomElement.addContent(help_child);
+      }
+
+      help_child.setText(helpText);
    }
 
    public String getHelp()
    {
-      return help;
+      Element help_child = mDomElement.getChild("help");
+      String help_text = "";
+
+      if ( null != help_child )
+      {
+         help_text = help_child.getText();
+      }
+
+      return help_text;
    }
 
-   public void setValType(ValType t)
+   public void setValType (ValType t)
    {
-      valtype = t;
+      mDomElement.setAttribute("type", t.toString());
    }
 
    public ValType getValType()
    {
-      return valtype;
+      if ( mDomElement.getAttribute("type") == null )
+      {
+         System.err.println("Invalid PropertyDesc named " + getName());
+         return ValType.INVALID;
+      }
+      else
+      {
+         return ValType.getValType(mDomElement.getAttribute("type").getValue());
+      }
    }
 
-   public void setHasVariableNumberOfValues(boolean b)
+   /**
+    * Adds the given Item object as a child of this property description.
+    */
+   public void addItem (Item item)
    {
-      if (b)
+      mDomElement.addContent(item.getNode());
+   }
+
+   public Vector getItems ()
+   {
+      Vector items = new Vector();
+
+      Iterator i = mDomElement.getChildren(ConfigTokens.item_TOKEN).iterator();
+
+      while ( i.hasNext() )
+      {
+         Element item_elem = (Element) i.next();
+         items.add(new Item(item_elem, this.getValType()));
+      }
+
+      return items;
+   }
+
+   public void setItem (int index, Item item)
+   {
+      if ( index >= mDomElement.getChildren(ConfigTokens.item_TOKEN).size() )
+      {
+         mDomElement.addContent(item.getNode());
+      }
+      else
+      {
+         Element item_elem =
+            (Element) mDomElement.getChildren(ConfigTokens.item_TOKEN).get(index);
+
+         // XXX: Not sure if this is right... There may be an issue with the
+         // default value setting not being copied into item_elem.
+         item_elem.setAttribute(ConfigTokens.item_label_TOKEN, item.getLabel());
+         item_elem.setAttribute(ConfigTokens.default_value_TOKEN,
+                                item.getDefaultValue().toString());
+      }
+   }
+
+   /**
+    * Returns a reference to the default value at the given index.  If there
+    * is no such value, an empty VarValue object is returned.
+    */
+   public VarValue getDefaultValue (int index)
+   {
+      ValType val_type = this.getValType();
+      VarValue val = new VarValue(val_type);
+
+      List children = mDomElement.getChildren(ConfigTokens.item_TOKEN);
+
+      if ( index < children.size() )
+      {
+         Element item_child = (Element) children.get(index);
+
+         if ( item_child.getAttribute(ConfigTokens.default_value_TOKEN) != null )
+         {
+            val.set(item_child.getAttribute(ConfigTokens.default_value_TOKEN).getValue().trim());
+         }
+         // XXX: Default values for embedded chunks are not yet supported.
+         else if ( ValType.EMBEDDEDCHUNK == val_type )
+         {
+            String chunk_type = this.getEnumAtIndex(0).str;
+            ChunkDesc desc = ChunkFactory.getChunkDescByToken(chunk_type);
+            ConfigChunk emb_chunk = new ConfigChunk(desc);
+            emb_chunk.setName(item_child.getAttribute("label").getValue());
+            val.set(emb_chunk);
+         }
+      }
+
+      return val;
+   }
+
+   /**
+    * Returns a copy of the default value at the given index.  If there is
+    * no such default value, null is returned.
+    */
+   public VarValue getDefaultValueCopy (int index)
+   {
+      VarValue val = getDefaultValue(index);
+      VarValue val_copy = null;
+
+      // If we do have a default value at the given index, make the copy.
+      if ( val != null )
+      {
+         val_copy = new VarValue(val);
+      }
+
+      return val_copy;
+   }
+
+   public void setHasVariableNumberOfValues (boolean allowsVariable)
+   {
+      if ( allowsVariable )
+      {
+         mDomElement.setAttribute("num", ConfigTokens.var_num_TOKEN);
+      }
+      else
+      {
+         mDomElement.setAttribute("num", "1");
+      }
+   }
+
+   /**
+    * Determines if this property description allows a variable number of
+    * values.
+    */
+   public boolean hasVariableNumberOfValues()
+   {
+      boolean result;
+
+      // If, for some weird reason, this property description does not have a
+      // num attribute, this is a good place to add it.  The default is 1, so
+      // that's the value we'll use.
+      if ( mDomElement.getAttribute("num") == null )
+      {
+         result = false;
+         mDomElement.setAttribute("num", "1");
+      }
+      // Otherwise, we test the attribute value against the variable number
+      // token.
+      else
+      {
+         String value = mDomElement.getAttribute("num").getValue();
+         result = value.equals(ConfigTokens.var_num_TOKEN);
+      }
+
+      return result;
+   }
+
+   public void setNumAllowed (int n)
+   {
+      mDomElement.setAttribute("num", String.valueOf(n));
+   }
+
+   public int getNumAllowed()
+   {
+      int num = 0;
+      String value = mDomElement.getAttribute("num").getValue();
+
+      if ( value.equals(ConfigTokens.var_num_TOKEN) )
       {
          num = -1;
       }
       else
       {
-         num = 1;
+         num = Integer.valueOf(value.trim()).intValue();
       }
-   }
 
-   public boolean getHasVariableNumberOfValues()
-   {
-      return(num == -1);
-   }
-
-   public void setNumValues(int n)
-   {
-      num = n;
-   }
-
-   public int getNumValues()
-   {
       return num;
    }
 
    public void setUserLevel(int level)
    {
-      user_level = level;
+      mDomElement.setAttribute(ConfigTokens.user_level_TOKEN,
+                               String.valueOf(level));
    }
 
    public int getUserLevel()
    {
-      return user_level;
-   }
+      int level = 0;
 
-   public void appendValueLabel(String label)
-   {
-      valuelabels.add(label);
-   }
-
-   public int getValueLabelsSize()
-   {
-      return valuelabels.size();
-   }
-
-   public String getValueLabel(int i)
-   {
-      if (i < valuelabels.size())
+      // XXX: The following code will probably not be needed in the long run.
+      // (PH 5/10/2002)
+      if ( mDomElement.getAttribute(ConfigTokens.user_level_TOKEN) != null )
       {
-         return(String)valuelabels.get(i);
+         String value =
+            mDomElement.getAttribute(ConfigTokens.user_level_TOKEN).getValue();
+
+         if ( value.equals(ConfigTokens.beginner_TOKEN) )
+         {
+            level = 0;
+         }
+         else if ( value.equals(ConfigTokens.expert_TOKEN) )
+         {
+            level = 1;
+         }
+         else
+         {
+            level = Integer.valueOf(value.trim()).intValue();
+         }
+      }
+
+      return level;
+   }
+
+   public int getValueLabelsSize ()
+   {
+      return mDomElement.getChildren(ConfigTokens.item_TOKEN).size();
+   }
+
+   public String getValueLabel (int i)
+   {
+      if ( i < getValueLabelsSize() )
+      {
+         Element item_elem =
+            (Element) mDomElement.getChildren(ConfigTokens.item_TOKEN).get(i);
+         return item_elem.getAttribute(ConfigTokens.item_label_TOKEN).getValue();
       }
       else
       {
@@ -194,26 +374,47 @@ public class PropertyDesc
       }
    }
 
-   public String[] getValueLabels()
+   /**
+    * Replaces the current <item> children with the given list without setting
+    * default values.  In other words, this wipes out any default values that
+    * were set previously.  To avoid this, use addItem().
+    *
+    * @see addItem()
+    */
+   public void setValueLabels (List labels)
    {
-      String[] e = new String[valuelabels.size()];
-      return(String[])valuelabels.toArray(e);
+      mDomElement.removeChildren(ConfigTokens.item_TOKEN);
+      Iterator i = labels.iterator();
+
+      while ( i.hasNext() )
+      {
+         Element new_elem = new Element(ConfigTokens.item_TOKEN);
+         new_elem.setAttribute(ConfigTokens.item_label_TOKEN,
+                               (String) i.next());
+         mDomElement.addContent(new_elem);
+      }
    }
 
-   /* c had better be a collection of String, or things will get
-    * real ugly real fast.
+   /**
+    * Appends the given value label to the current list of property items
+    * without setting a default value.  To set a default value, too, use
+    * addItem().
+    *
+    * @see addItem()
     */
-   public void setValueLabels(Collection c)
+   public void appendValueLabel (String label)
    {
-      valuelabels.clear();
-      valuelabels.addAll(c);
+      Element new_item = new Element(ConfigTokens.item_TOKEN);
+      new_item.setAttribute(ConfigTokens.item_label_TOKEN, label);
+      mDomElement.addContent(new_item);
    }
 
    public void appendEnumeration(String label, String value)
    {
-      DescEnum d;
       VarValue v;
-      if (value == "")
+      ValType valtype = this.getValType();
+
+      if ( value.equals("") )
       {
          /* no explicit value */
          if (valtype == ValType.STRING ||
@@ -222,6 +423,9 @@ public class PropertyDesc
          {
             v = new VarValue(label);
          }
+         // XXX: This seems incredibly unsafe.  Basically, no constant mapping
+         // is being retained between the enumeration ID and the value.
+         // (PH 5/9/2002)
          else
          {
             v = new VarValue(enumval++);
@@ -231,211 +435,269 @@ public class PropertyDesc
       {
          v = new VarValue(valtype);
          v.set (value);
-         /* explicit value */
-//              VarValue val = new VarValue(valtype);
-//              val.set (value);
-//              d = new DescEnum (label, val);
       }
-      enums.add(new DescEnum(label, v));
-   }
 
+      Element enum_elem = new Element(ConfigTokens.prop_enum_TOKEN);
+      enum_elem.setAttribute("name", label);
+      enum_elem.setAttribute("value", v.toString());
+      mDomElement.addContent(enum_elem);
+   }
 
    /* c had better be a collection of DescEnums, or things will get
     * real ugly real fast.
     */
-   public void setEnumerations(Collection c)
+   public void setEnumerations (Collection c)
    {
-      enums.clear();
-      enums.addAll (c);
+      mDomElement.removeChildren(ConfigTokens.prop_enum_TOKEN);
+
+      Iterator i = c.iterator();
+      while ( i.hasNext() )
+      {
+         DescEnum enum     = (DescEnum) i.next();
+         Element enum_elem = new Element(ConfigTokens.prop_enum_TOKEN);
+
+         // Fill in the enumeration element's attributes.
+         enum_elem.setAttribute("name", enum.str);
+
+         // Dang special cases...
+         if ( this.getValType() != ValType.EMBEDDEDCHUNK )
+         {
+            enum_elem.setAttribute("value", enum.val.toString());
+         }
+
+         // Add the new element to the DOM tree.
+         mDomElement.addContent(enum_elem);
+      }
    }
 
    public DescEnum[] getEnumerations()
    {
+      List enums = mDomElement.getChildren(ConfigTokens.prop_enum_TOKEN);
       DescEnum[] e = new DescEnum[enums.size()];
-      return(DescEnum[])enums.toArray(e);
+      String name;
+      VarValue value;
+
+      for ( int i = 0; i < enums.size(); ++i )
+      {
+         Element enum_elem = (Element) enums.get(i);
+         name  = enum_elem.getAttribute("name").getValue();
+         value = new VarValue(this.getValType());
+
+         if ( enum_elem.getAttribute("value") != null )
+         {
+            value.set(enum_elem.getAttribute("value").getValue());
+         }
+
+         e[i] = new DescEnum(name, value);
+      }
+
+      return e;
    }
 
    public int getEnumerationsSize()
    {
-      return enums.size();
+      return mDomElement.getChildren(ConfigTokens.prop_enum_TOKEN).size();
    }
 
-   public DescEnum getEnumAtIndex(int ind)
+   public DescEnum getEnumAtIndex (int index)
    {
-      return(DescEnum)enums.get(ind);
+      DescEnum enum_val = null;
+      List enums = mDomElement.getChildren(ConfigTokens.prop_enum_TOKEN);
+
+      if ( index < enums.size() )
+      {
+         Element enum_element = (Element) enums.get(index);
+
+         String name = enum_element.getAttribute("name").getValue();
+         VarValue value = new VarValue(this.getValType());
+
+         if ( enum_element.getAttribute("value") != null )
+         {
+            value.set(enum_element.getAttribute("value").getValue());
+         }
+
+         enum_val = new DescEnum(name, value);
+      }
+
+      return enum_val;
    }
 
-   public boolean equals(PropertyDesc d)
+   public boolean equals (PropertyDesc d)
    {
-      DescEnum e1, e2;
       if (d == null)
       {
          return false;
       }
-      if (!name.equalsIgnoreCase(d.name))
-      {
-         return false;
-      }
-      if (!token.equalsIgnoreCase(d.token))
-      {
-         return false;
-      }
-      if (!help.equalsIgnoreCase(d.help))
-      {
-         return false;
-      }
-      if (num != d.num)
-      {
-         return false;
-      }
-      if (valtype != d.valtype)
-      {
-         return false;
-      }
 
-      /* KLUDGE: This next part returns false if both
-       * PropertyDescs have the same descenums in a
-       * different order.  I'm not sure if the enums
-       * code enforces any kind of order or not, or
-       * if this is reasonable behavior. This should
-       * be examined more carefully.
-       */
-      for (int i = 0; i <enums.size(); i++)
-      {
-         try
-         {
-            e1 = (DescEnum)enums.get(i);
-            e2 = (DescEnum)d.enums.get(i);
-            if (!e1.equals(e2))
-            {
-               return false;
-            }
-         }
-         catch (ArrayIndexOutOfBoundsException e)
-         {
-            return false;
-         }
-      }
-      return true;
+      return mDomElement == d.mDomElement;
    }
 
    public String toString()
    {
-      return xmlRep ("");
-   }
-
-   public String xmlRep(String pad)
-   {
-      int i, n;
-      DescEnum e;
-      String newpad = pad + pad;
-      // string buffer is a lot more painful code-wise but noticeably 
-      // faster.
-      StringBuffer retval = new StringBuffer(256);
-      retval.append(pad);
-      retval.append("<PropertyDesc token=\"");
-      retval.append(XMLConfigIOHandler.escapeString(token));
-      retval.append("\" name=\"");
-      retval.append(XMLConfigIOHandler.escapeString(name));
-      if (user_level != 0)
-      {
-         retval.append("\" userlevel=\"expert");
-      }
-      retval.append("\" type=\"");
-      retval.append(valtype.toString());
-      retval.append("\" num=\"");
-      if (num == -1)
-      {
-         retval.append ("variable\">\n");
-      }
-      else
-      {
-         retval.append (num);
-         retval.append ("\">\n");
-      }
-      if (!help.equals (""))
-      {
-         retval.append(newpad);
-         retval.append("<help>");
-         retval.append(XMLConfigIOHandler.escapeString(help));
-         retval.append("</help>\n");
-      }
-      n = valuelabels.size();
-      if (n > 0)
-      {
-         for (i = 0; i < n; i++)
-         {
-            retval.append(newpad);
-            retval.append("<label name=\"");
-            retval.append(XMLConfigIOHandler.escapeString((String)valuelabels.get(i)));
-            retval.append("\"/>\n");
-         }
-      }
-      n = enums.size();
-      if (n > 0)
-      {
-         for (i = 0; i < n; i++)
-         {
-            e = (DescEnum)enums.get(i);
-            retval.append(newpad);
-            retval.append("<enumeration name=\"");
-            retval.append(XMLConfigIOHandler.escapeString(e.str));
-            if (valtype == ValType.STRING ||
-                valtype == ValType.CHUNK ||
-                valtype == ValType.EMBEDDEDCHUNK)
-            {
-               retval.append("\"/>\n");
-            }
-            else
-            {
-               retval.append("\" value=\"");
-               retval.append(XMLConfigIOHandler.escapeString(e.val.toString()));
-               retval.append("\"/>\n");
-            }
-         }
-      }
-      retval.append(pad);
-      retval.append("</PropertyDesc>\n");
-      return retval.toString();
+      org.jdom.output.XMLOutputter outputter =
+         new org.jdom.output.XMLOutputter("   ", true);
+      outputter.setLineSeparator(System.getProperty("line.separator"));
+      return outputter.outputString(mDomElement);
    }
 
    /** Maps a string to an enumeration value.
     *  @return The VarValue which is mapped by val, or null if no such
     *          mapping exists.
     */
-   public VarValue getEnumValue(String val)
+   public VarValue getEnumValue (String val)
    {
-      /* returns the value associated with this enum el */
-      DescEnum t;
-      VarValue v;
+      VarValue enum_value = null;
+      Iterator i = mDomElement.getChildren(ConfigTokens.prop_enum_TOKEN).iterator();
 
-      for (int i = 0; i < enums.size(); i++)
+      while ( i.hasNext() )
       {
-         t = (DescEnum)enums.get(i);
-         if (t.str.equalsIgnoreCase(val))
+         Element enum_elem = (Element) i.next();
+
+         if ( enum_elem.getAttribute("name").getValue().equals(val) )
          {
-            v = new VarValue(t.val);
-            return v;
+            enum_value = new VarValue(this.getValType());
+
+            if ( enum_elem.getAttribute("value") != null )
+            {
+               enum_value.set(enum_elem.getAttribute("value").getValue());
+            }
+
+            break;
          }
       }
-      return null;
+
+      // If no enumeration value was found, make a new var value from the
+      // original input string.
+      if ( null == enum_value )
+      {
+         enum_value = new VarValue(this.getValType());
+         enum_value.set(val);
+      }
+
+      return enum_value;
    }
 
-   public String getEnumString(VarValue val)
+   /**
+    * Maps a value back to the name of the enum entry.  This does the reverse
+    * of getEnumVal(), but it is much, much slower.
+    */
+   public String getEnumString (VarValue val)
    {
-      /* does the reverse mapping of getEnumVal - maps a value 
-       * back to the name of the enum entry 
+      VarValue val_storage = new VarValue(val.getValType());
+      Iterator i =
+         mDomElement.getChildren(ConfigTokens.prop_enum_TOKEN).iterator();
+      Element enum_elem;
+      String return_val = val.toString();
+
+      while ( i.hasNext() )
+      {
+         enum_elem = (Element) i.next();
+
+         // If the current element has a value attribute, we extract its and
+         // set its value to the value of val_storage.  Slow, slow, slow...
+         if ( enum_elem.getAttribute("value") != null )
+         {
+            val_storage.set(enum_elem.getAttribute("value").getValue());
+
+            if ( val_storage.equals(val) )
+            {
+               return_val = enum_elem.getAttribute("name").getValue();
+               break;
+            }
+         }
+      }
+
+      return return_val;
+   }
+
+   /**
+    * Returns the internal DOM node for this chunk description.  It is
+    * package visible to prevent abuse of this exposure of implementation
+    * by outside packages.
+    */
+   Element getNode ()
+   {
+      return mDomElement;
+   }
+
+   /**
+    * This is used to contain the attributes of a <ProprtyDesc>'s <item>
+    * child(ren).
+    */
+   public static class Item implements Cloneable
+   {
+      public Item (ValType type)
+      {
+         this.mNode    = new Element(ConfigTokens.item_TOKEN);
+         this.mValType = type;
+
+         this.setLabel("");
+         this.setDefaultValue("");
+      }
+
+      public Item (Element root, ValType type)
+      {
+         this.mNode    = root;
+         this.mValType = type;
+      }
+
+      public Object clone () throws CloneNotSupportedException
+      {
+         Item new_item  = (Item) super.clone();
+         new_item.mNode = (Element) this.mNode.clone();
+
+         return new_item;
+      }
+
+      public String getLabel ()
+      {
+         return mNode.getAttribute(ConfigTokens.item_label_TOKEN).getValue();
+      }
+
+      public void setLabel (String label)
+      {
+         mNode.setAttribute(ConfigTokens.item_label_TOKEN, label);
+      }
+
+      public ValType getValType ()
+      {
+         return mValType;
+      }
+
+      public VarValue getDefaultValue ()
+      {
+         VarValue default_value = null;
+
+         if ( mNode.getAttribute(ConfigTokens.default_value_TOKEN) != null )
+         {
+            default_value = new VarValue(mValType);
+            default_value.set(mNode.getAttribute(ConfigTokens.default_value_TOKEN).getValue());
+         }
+
+         return default_value;
+      }
+
+      public void setDefaultValue (VarValue value)
+      {
+         setDefaultValue(value.toString());
+      }
+
+      private void setDefaultValue (String value)
+      {
+         mNode.setAttribute(ConfigTokens.default_value_TOKEN, value);
+      }
+
+      /**
+       * @note This is private so that only the PropertyDesc class call it.
        */
-      DescEnum t;
-
-      for (int i = 0; i < enums.size(); i++)
+      private Element getNode ()
       {
-         t = (DescEnum)enums.get(i);
-         if (t.val.equals(val))
-         {
-            return t.str;
-         }
+         return mNode;
       }
-      return val.toString();
+
+      private Element mNode    = null;
+      private ValType mValType = null;
    }
+
+   private Element mDomElement = null;
 }

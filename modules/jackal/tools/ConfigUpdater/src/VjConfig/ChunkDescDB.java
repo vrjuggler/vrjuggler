@@ -355,14 +355,14 @@ public class ChunkDescDB {
 
     public String xmlRep () {
         StringBuffer s = new StringBuffer(512);
-        s.append("<ChunkDescDB>\n");
+        s.append("<" + ConfigTokens.chunk_desc_db_TOKEN + ">\n");
         synchronized (this) {
             int n = size();
             for (int i = 0; i < descs.size(); i++) {
                 s.append (((ChunkDesc)descs.get(i)).xmlRep("  "));
             }
         }
-        s.append ("</ChunkDescDB>\n");
+        s.append ("</" + ConfigTokens.chunk_desc_db_TOKEN + ">\n");
         return s.toString();
     }
 

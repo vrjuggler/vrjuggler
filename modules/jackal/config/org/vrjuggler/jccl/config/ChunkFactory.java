@@ -31,7 +31,10 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 package org.vrjuggler.jccl.config;
 
+import java.util.Iterator;
 import java.util.List;
+import org.jdom.Element;
+
 
 public class ChunkFactory
 {
@@ -60,20 +63,16 @@ public class ChunkFactory
 
    static public ConfigChunk createChunkWithDescName(String s)
    {
-      return createChunkWithDescName(s, true);
-   }
-
-   static public ConfigChunk createChunkWithDescName(String s, boolean use_defaults)
-   {
       ConfigChunk newchunk = null;
 
+      // XXX: What is this??
       if (default_chunkdb != null)
       {
          List v = default_chunkdb.getOfDescName(s);
          if (!v.isEmpty())
          {
             //System.out.println ("creating chunk from default");
-            return new ConfigChunk((ConfigChunk)v.get(0));
+            newchunk = new ConfigChunk((ConfigChunk)v.get(0));
          }
       }
       if (descdb != null)
@@ -81,28 +80,25 @@ public class ChunkFactory
          ChunkDesc cd = descdb.getByName(s);
          if (cd != null)
          {
-            return new ConfigChunk(cd, use_defaults);
+            newchunk = new ConfigChunk(cd);
          }
       }
-      return null;
+
+      return newchunk;
    }
 
    static public ConfigChunk createChunkWithDescToken(String s)
    {
-      return createChunkWithDescToken(s, true);
-   }
-
-   static public ConfigChunk createChunkWithDescToken(String s, boolean use_defaults)
-   {
       ConfigChunk newchunk = null;
 
+      // XXX: What is this??
       if (default_chunkdb != null)
       {
          List v = default_chunkdb.getOfDescToken(s);
          if (!v.isEmpty())
          {
             //System.out.println ("creating chunk from default");
-            return new ConfigChunk((ConfigChunk)v.get(0));
+            newchunk = new ConfigChunk((ConfigChunk)v.get(0));
          }
       }
       if (descdb != null)
@@ -110,10 +106,11 @@ public class ChunkFactory
          ChunkDesc cd = descdb.getByToken(s);
          if (cd != null)
          {
-            return new ConfigChunk(cd, use_defaults);
+            newchunk = new ConfigChunk(cd);
          }
       }
-      return null;
+
+      return newchunk;
    }
 
    static public ConfigChunk createChunk(ChunkDesc cd)
@@ -121,7 +118,7 @@ public class ChunkFactory
       return new ConfigChunk(cd);
    }
 
-   // Utility functions dealing with the global DescDB 
+   // Utility functions dealing with the global DescDB
    /** Returns the names of all ChunkDescs defined in any of our DBs.
     *  This is useful for GUI components that want to provide a list
     *  or menu of desc names.
