@@ -84,86 +84,15 @@ public:
   inline vpr::Status connect (vpr::SocketStream& newStream,
                               const vpr::InetAddr& remoteAddr,
                               vpr::Interval timeout = vpr::Interval::NoTimeout,
-                              const vpr::InetAddr& localAddr = vpr::InetAddr::AnyAddr)
-  {
-      vpr::Status ret_val;
-      vpr::InetAddr remote_addr;
-
-      if(!checkOpen(newStream))
-          return vpr::Status(vpr::Status::Failure);
-
-      if(!connectStart(newStream, timeout, localAddr))
-          return vpr::Status(vpr::Status::Failure);
-
-      newStream.setRemoteAddr(remoteAddr);
-
-      ret_val = newStream.connect();
-
-      // If the connect call did not return success, it may be the result of
-      // using non-blocking sockets.
-      if ( ! ret_val.success() ) {
-         // If connect() gave us a status saying that the connection is in
-         // progress, try to complete the connection after the timeout period.
-         // If there is no timeout period, simply return immediately.
-         if ( ret_val == vpr::Status::InProgress ||
-              ret_val == vpr::Status::WouldBlock )
-         {
-            if ( timeout != vpr::Interval::NoWait ) {
-               ret_val = complete(newStream, &remote_addr, timeout);
-            }
-         }
-      }
-      // Finish up successful connection.
-      else if(vpr::Interval::NoWait != timeout) {
-         ret_val = complete(newStream, &remote_addr, timeout);
-      }
-
-      return ret_val;
-  }
+                              const vpr::InetAddr& localAddr = vpr::InetAddr::AnyAddr);
 
   /**
    * Complete a non-blocking connection
    * Try to complete a non-blocking connection.
-   *
-   * @param newStream  The connected stream.
-   * @param remoteAddr returns the address of the remote connection.
    */
   inline vpr::Status complete (vpr::SocketStream &newStream,
                                vpr::InetAddr* remoteAddr = NULL,
-                               const vpr::Interval timeout = vpr::Interval::NoTimeout)
-  {
-     vpr::Status status;
-
-     // If this is a non-blocking socket, we have some extra work to do to
-     // complete the connection and complete the creation of the connector.
-     if ( newStream.getNonBlocking() ) {
-        vpr::IOSys::Handle handle;
-        vpr::Selector selector;
-        vpr::Uint16 num_events;
-
-        // Use the selector to be informed when the SocketStream object is
-        // ready to be used.  That is, when the object is connected.
-        handle = newStream.getHandle();
-        selector.addHandle(handle);
-        selector.setIn(handle, vpr::Selector::Read | vpr::Selector::Write);
-        status = selector.select(num_events, timeout);
-
-        // If the selector told us that our handle is ready, we are
-        // successfully connected.
-        if ( num_events == 1 ) {
-           if ( remoteAddr != NULL ) {
-              (*remoteAddr) = newStream.getRemoteAddr();
-           }
-        }
-     }
-     else {
-        if ( remoteAddr != NULL ) {
-           (*remoteAddr) = newStream.getRemoteAddr();
-        }
-     }
-
-     return status;
-  }
+                               const vpr::Interval timeout = vpr::Interval::NoTimeout);
 
 protected:
   // Make sure we have opened the socket
@@ -184,32 +113,123 @@ protected:
   // Do preconnection rituals
   // - If not bound, then bind to local addr
   // - If timeout == 0, then set nonblocking
-  inline bool connectStart (SocketStream& newStream,
+  inline bool connectStart (vpr::SocketStream& newStream,
                             vpr::Interval timeout = vpr::Interval::NoTimeout,
-                            const InetAddr& localAddr = InetAddr::AnyAddr)
-  {
-     vprASSERT(newStream.isOpen());
-
-     // If timeout is 0, then we are non-blocking
-     if(vpr::Interval::NoWait == timeout)
-     {
-        newStream.enableNonBlocking();
-        vprASSERT(false && "vpr does not support non-blocking connections yet");
-     }
-
-    // Check to bind to local addr
-     if(localAddr != InetAddr::AnyAddr)
-     {
-
-        if(!newStream.setLocalAddr(localAddr).success())
-           return false;
-        if(!newStream.bind().success())
-          return false;
-     }
-
-     return true;
-  }
+                            const vpr::InetAddr& localAddr = vpr::InetAddr::AnyAddr);
 };
+
+inline vpr::Status SocketConnector::connect(SocketStream& newStream,
+                                            const vpr::InetAddr& remoteAddr,
+                                            vpr::Interval timeout,
+                                            const vpr::InetAddr& localAddr)
+{
+    vpr::Status ret_val;
+    vpr::InetAddr remote_addr;
+
+    if(!checkOpen(newStream))
+        return vpr::Status(vpr::Status::Failure);
+
+    if(!connectStart(newStream, timeout, localAddr))
+        return vpr::Status(vpr::Status::Failure);
+
+    newStream.setRemoteAddr(remoteAddr);
+
+    ret_val = newStream.connect();
+
+    // If the connect call did not return success, it may be the result of
+    // using non-blocking sockets.
+    if ( ! ret_val.success() ) {
+       // If connect() gave us a status saying that the connection is in
+       // progress, try to complete the connection after the timeout period.
+       // If there is no timeout period, simply return immediately.
+       if ( ret_val == vpr::Status::InProgress ||
+            ret_val == vpr::Status::WouldBlock )
+       {
+          if ( timeout != vpr::Interval::NoWait ) {
+             ret_val = complete(newStream, &remote_addr, timeout);
+          }
+       }
+    }
+    // Finish up successful connection.
+    else if(vpr::Interval::NoWait != timeout) {
+       ret_val = complete(newStream, &remote_addr, timeout);
+    }
+
+    return ret_val;
+}
+
+ /**
+   * Complete a non-blocking connection
+   * Try to complete a non-blocking connection.
+   *
+   * @param newStream  The connected stream.
+   * @param remoteAddr returns the address of the remote connection.
+   */
+inline vpr::Status SocketConnector::complete (SocketStream &newStream,
+                                              vpr::InetAddr* remoteAddr,
+                                              const vpr::Interval timeout)
+{
+   vpr::Status status;
+
+   // If this is a non-blocking socket, we have some extra work to do to
+   // complete the connection and complete the creation of the connector.
+   if ( newStream.getNonBlocking() ) {
+      vpr::IOSys::Handle handle;
+      vpr::Selector selector;
+      vpr::Uint16 num_events;
+
+      // Use the selector to be informed when the SocketStream object is ready
+      // to be used.  That is, when the object is connected.
+      handle = newStream.getHandle();
+      selector.addHandle(handle);
+      selector.setIn(handle, vpr::Selector::Read | vpr::Selector::Write);
+      status = selector.select(num_events, timeout);
+
+      // If the selector told us that our handle is ready, we are successfully
+      // connected.
+      if ( num_events == 1 ) {
+         if ( remoteAddr != NULL ) {
+            (*remoteAddr) = newStream.getRemoteAddr();
+         }
+      }
+   }
+   else {
+      if ( remoteAddr != NULL ) {
+         (*remoteAddr) = newStream.getRemoteAddr();
+      }
+   }
+
+   return status;
+}
+
+// Do preconnection rituals
+// - If not bound, then bind to local addr
+// - If timeout == 0, then set nonblocking
+inline bool SocketConnector::connectStart (SocketStream& newStream,
+                                           vpr::Interval timeout,
+                                           const vpr::InetAddr& localAddr)
+{
+   vprASSERT(newStream.isOpen());
+
+   // If timeout is 0, then we are non-blocking
+   if(vpr::Interval::NoWait == timeout)
+   {
+      newStream.enableNonBlocking();
+      vprASSERT(false && "vpr does not support non-blocking connections yet");
+   }
+
+  // Check to bind to local addr
+   if(localAddr != InetAddr::AnyAddr)
+   {
+
+      if(!newStream.setLocalAddr(localAddr).success())
+         return false;
+      if(!newStream.bind().success())
+        return false;
+   }
+
+   return true;
+}
 
 }  // namespace vpr
 
