@@ -17,10 +17,11 @@
 
     <para>This book is for people who are just getting started with VR
     Juggler. It guides new users through getting and installing VR Juggler,
-    configuring users&#39; environment to use it, and compiling and running a
+    configuring users' environment to use it, and compiling and running a
     sample application.</para>
 
-    <para>The prerequisites for reading this book are minimal. They are:</para>
+    <para>The prerequisites for reading this book are minimal. They
+    are:</para>
 
     <itemizedlist>
       <listitem>
@@ -43,9 +44,9 @@
       </listitem>
 
       <listitem>
-        <para>Knowledge of one of VR Juggler&#39;s currently supported
-        graphics APIs (<ulink url="http://www.opengl.org/">OpenGL</ulink>,
-        <ulink url="http://www.sgi.com/software/performer/">OpenGL Performer</ulink>,
+        <para>Knowledge of one of VR Juggler's currently supported graphics
+        APIs (<ulink url="http://www.opengl.org/">OpenGL</ulink>, <ulink
+        url="http://www.sgi.com/software/performer/">OpenGL Performer</ulink>,
         <ulink url="http://www.opensg.org/">OpenSG</ulink>, or <ulink
         url="http://www.openscenegraph.org/">Open Scene Graph</ulink>)</para>
       </listitem>
@@ -77,18 +78,18 @@
       is made for each VR Juggler distribution, and some distributions come in
       other formats as well. You can always count on the availability of a TAR
       file, though. The TAR files are compressed using either GZIP or BZIP2,
-      both of which are standard compression formats. The <command>gzip</command>(1)
-      utility is freely available from the GNU Project, and the
-      <command>bzip2</command>(1) utility can be downloaded for free from
-      <ulink url="http://sources.redhat.com/bzip2/">RedHat, Inc.</ulink>. The
-      GNU version of TAR has the GZIP and BZIP2 algorithms built in. The
-      compression algorithm used can be determined by the file extension.
-      Files compressed with GZIP end in <filename>.gz</filename>; files
-      compressed with BZIP2 end in <filename>.bz2</filename>.</para>
+      both of which are standard compression formats. The
+      <command>gzip</command>(1) utility is freely available from the GNU
+      Project, and the <command>bzip2</command>(1) utility can be downloaded
+      for free from <ulink url="http://sources.redhat.com/bzip2/">RedHat,
+      Inc.</ulink>. The GNU version of TAR has the GZIP and BZIP2 algorithms
+      built in. The compression algorithm used can be determined by the file
+      extension. Files compressed with GZIP end in <filename>.gz</filename>;
+      files compressed with BZIP2 end in <filename>.bz2</filename>.</para>
 
       <para>Once you have downloaded a VR Juggler TAR distribution, you can
-      unpack it one of two ways depending on what your platform&#39;s version
-      of TAR supports. Before extracting the installation tree, make sure that
+      unpack it one of two ways depending on what your platform's version of
+      TAR supports. Before extracting the installation tree, make sure that
       your current directory is the one where you want to install VR Juggler.
       If your version of TAR does not have GZIP built in (it does not support
       the <option>-z</option> option), the following command will do the
@@ -101,11 +102,12 @@
 
       <screen>% bzip2 -cd vrjuggler-distribution.tar.bz2 | tar -xvf -</screen>
 
-      <para>Here, you should fill in <filename>vrjuggler-distribution.tar.gz</filename>
-      (or <filename>vrjuggler-distribution.tar.bz2</filename>) with the name
-      of the VR Juggler distribution file you downloaded. The above commands
-      will work with any shell that supports redirection of standard output to
-      a pipe. If that looks too scary, you can separate the decompression and
+      <para>Here, you should fill in
+      <filename>vrjuggler-distribution.tar.gz</filename> (or
+      <filename>vrjuggler-distribution.tar.bz2</filename>) with the name of
+      the VR Juggler distribution file you downloaded. The above commands will
+      work with any shell that supports redirection of standard output to a
+      pipe. If that looks too scary, you can separate the decompression and
       extraction into two commands (for GZIP):</para>
 
       <screen>% gunzip vrjuggler-distribution.tar.gz
@@ -117,16 +119,17 @@
 % tar -xvf vrjuggler-distribution.tar</screen>
 
       <para>Note that the distribution file in the second command does not
-      have the <filename>.gz</filename> extension after <command>gzip</command>(1)
-      is run. These steps also work if your version of <command>tar</command>(1)
-      supports the <option>-z</option> option (<option>-j</option> for BZIP2),
-      but you can simplify your work if that option is supported. The
-      following illustrates how to decompress and extract a TAR file
-      compressed with GZIP all in one step:</para>
+      have the <filename>.gz</filename> extension after
+      <command>gzip</command>(1) is run. These steps also work if your version
+      of <command>tar</command>(1) supports the <option>-z</option> option
+      (<option>-j</option> for BZIP2), but you can simplify your work if that
+      option is supported. The following illustrates how to decompress and
+      extract a TAR file compressed with GZIP all in one step:</para>
 
       <screen>% tar -xzvf vrjuggler-distribution.tar.gz</screen>
 
-      <para>The following would be used for a TAR file compressed with BZIP2:</para>
+      <para>The following would be used for a TAR file compressed with
+      BZIP2:</para>
 
       <screen>% tar -xjvf vrjuggler-distribution.tar.bz2</screen>
 
@@ -135,10 +138,10 @@
       <option>-v</option> option to <command>tar</command>(1) that tells it to
       be verbose in its efforts. <command>tar</command>(1) takes care of
       creating all the directories in the installation tree, so you only need
-      to have the base directory (for example, <filename>/usr/local</filename>)
-      when you start. For more information about these utilities, please refer
-      to the <command>tar</command>(1) and <command>gzip</command>(1) manual
-      pages.</para>
+      to have the base directory (for example,
+      <filename>/usr/local</filename>) when you start. For more information
+      about these utilities, please refer to the <command>tar</command>(1) and
+      <command>gzip</command>(1) manual pages.</para>
     </section>
 
     <section>
@@ -146,9 +149,10 @@
 
       <para>On the Win32 family of platforms, the ZIP format rules. In the old
       days, you would use the PKZIP utility to uncompress and extract a ZIP
-      file. Nowadays, most people use <ulink url="http://www.winzip.com/">WinZip</ulink>
-      or some other comparable graphical interface. This documentation covers
-      only the use of WinZip when extracting a ZIP file.</para>
+      file. Nowadays, most people use <ulink
+      url="http://www.winzip.com/">WinZip</ulink> or some other comparable
+      graphical interface. This documentation covers only the use of WinZip
+      when extracting a ZIP file.</para>
 
       <para>Once you have downloaded the VR Juggler ZIP file, the easiest way
       to extract it is to double-click on its icon in the open folder window
@@ -160,7 +164,7 @@
         <mediaobject>
           <imageobject>
             <imagedata align="center" fileref="figures/Window.Download.png"
-            format="PNG" />
+                       format="PNG" />
           </imageobject>
         </mediaobject>
       </figure>
@@ -174,7 +178,7 @@
         <mediaobject>
           <imageobject>
             <imagedata align="center" fileref="figures/Window.WinZip.png"
-            format="PNG" scalefit="1" />
+                       format="PNG" scalefit="1" />
           </imageobject>
         </mediaobject>
       </figure>
@@ -191,7 +195,8 @@
         <mediaobject>
           <imageobject>
             <imagedata align="center"
-            fileref="figures/Window.WinZip.Extract.png" format="PNG" />
+                       fileref="figures/Window.WinZip.Extract.png"
+                       format="PNG" />
           </imageobject>
         </mediaobject>
       </figure>
@@ -217,18 +222,19 @@
       <para>The syntax for setting or changing an environment variable varies
       with operating systems and shell interpreters. Instead of choosing one
       style of syntax that is specific to a particular shell type, we define
-      our own syntax which you must then translate to your shell&#39;s
-      specific syntax. Before defining this syntax, we present the method used
-      to set environment variables in the three most common types of shells.
-      We also provide a quick overview of how to set environment variables
-      using Win32-based GUIs.</para>
+      our own syntax which you must then translate to your shell's specific
+      syntax. Before defining this syntax, we present the method used to set
+      environment variables in the three most common types of shells. We also
+      provide a quick overview of how to set environment variables using
+      Win32-based GUIs.</para>
 
       <section>
         <title>Common Conventions and Background</title>
 
         <para>A convention used throughout this book is to name the variables
         using all capital letters. In almost all cases, regardless of the
-        shell, this is the naming convention used for environment variables.</para>
+        shell, this is the naming convention used for environment
+        variables.</para>
 
         <para>Setting a path with an environment variable can require special
         syntax. Because of this, the method for doing so may vary from shell
@@ -256,21 +262,22 @@
 
         <para>In a C-style shell (i.e., one whose interface is based on the C
         programming language), setting environment variables is done using the
-        built-in command <command>setenv</command>. It is used as follows:</para>
+        built-in command <command>setenv</command>. It is used as
+        follows:</para>
 
-        <screen>% setenv &#60;VARIABLE_NAME&#62; &#60;value&#62;</screen>
+        <screen>% setenv &lt;VARIABLE_NAME&gt; &lt;value&gt;</screen>
 
-        <para>where the string <literal>&#60;VARIABLE_NAME&#62;</literal>
+        <para>where the string <literal>&lt;VARIABLE_NAME&gt;</literal>
         represents the name of the variable you are going to set and
-        <literal>&#60;value&#62;</literal> represents the value assigned to
-        that variable. Both are required. If the named variable did not exist
+        <literal>&lt;value&gt;</literal> represents the value assigned to that
+        variable. Both are required. If the named variable did not exist
         before, it will pop into existence. Otherwise, you overwrite the old
         setting with the new one.</para>
 
         <para>To print the value of an environment variable, use the following
         command:</para>
 
-        <screen>% printenv &#60;VARIABLE_NAME&#62;</screen>
+        <screen>% printenv &lt;VARIABLE_NAME&gt;</screen>
 
         <para>Referring to a variable, however, is done using the following
         syntax:</para>
@@ -298,21 +305,21 @@
         using the built-in command <command>export</command>. It is used as
         follows:</para>
 
-        <screen>% export &#60;VARIABLE_NAME&#62;=&#60;value&#62;</screen>
+        <screen>% export &lt;VARIABLE_NAME&gt;=&lt;value&gt;</screen>
 
         <para>or</para>
 
-        <screen>% &#60;VARIABLE_NAME&#62;=&#60;value&#62;
-% export &#60;VARIABLE_NAME&#62;</screen>
+        <screen>% &lt;VARIABLE_NAME&gt;=&lt;value&gt;
+% export &lt;VARIABLE_NAME&gt;</screen>
 
-        <para>Here, the string <literal>&#60;VARIABLE_NAME&#62;</literal>
+        <para>Here, the string <literal>&lt;VARIABLE_NAME&gt;</literal>
         represents the name of the variable you are going to set and
-        <literal>&#60;value&#62;</literal> represents the value assigned to
-        that variable. Both are required. Note that there is no space between
-        the variable name and its value. If the named variable did not exist
+        <literal>&lt;value&gt;</literal> represents the value assigned to that
+        variable. Both are required. Note that there is no space between the
+        variable name and its value. If the named variable did not exist
         before, it will pop into existence. Otherwise, you overwrite the old
         setting with the new one. If the variable was already among your
-        current shell&#39;s environment variables, the export command is not
+        current shell's environment variables, the export command is not
         necessary.</para>
 
         <para>To print the value of an environment variable, use the following
@@ -331,11 +338,11 @@
         <para>For these types of shells, a <quote>permanent</quote> setting
         for a given variable should usually be done in the
         <filename>.profile</filename> file in your home directory or in your
-        shell&#39;s <quote>rc</quote> file. Different shells have different
-        names for this file. Examples are <filename>.bashrc</filename> for
-        BASH and <filename>.zshrc</filename> for Zsh. Please refer to your
-        shell&#39;s documentation for more information. In any case, the file
-        will be in your home directory.</para>
+        shell's <quote>rc</quote> file. Different shells have different names
+        for this file. Examples are <filename>.bashrc</filename> for BASH and
+        <filename>.zshrc</filename> for Zsh. Please refer to your shell's
+        documentation for more information. In any case, the file will be in
+        your home directory.</para>
       </section>
 
       <section id="envvar.dos.section">
@@ -344,36 +351,37 @@
         <para>The typical syntax for setting an environment variable from the
         command line (in a DOS shell window) under Win32 is:</para>
 
-        <screen>C:\&#62; set &#60;VARIABLE_NAME&#62;=&#60;value&#62;</screen>
+        <screen>C:\&gt; set &lt;VARIABLE_NAME&gt;=&lt;value&gt;</screen>
 
-        <para>Here, <literal>&#60;VARIABLE_NAME&#62;</literal> is the name of
-        the environment variable to be set, and <literal>&#60;value&#62;</literal>
-        is the value being assigned to that variable. If the named variable
-        did not exist before, it will pop into existence. Otherwise, you
-        overwrite the old setting with the new one.</para>
+        <para>Here, <literal>&lt;VARIABLE_NAME&gt;</literal> is the name of
+        the environment variable to be set, and
+        <literal>&lt;value&gt;</literal> is the value being assigned to that
+        variable. If the named variable did not exist before, it will pop into
+        existence. Otherwise, you overwrite the old setting with the new
+        one.</para>
 
         <para>To print the value of an environment variable, use the following
         command:</para>
 
-        <screen>C:\&#62; set &#60;VARIABLE_NAME&#62;</screen>
+        <screen>C:\&gt; set &lt;VARIABLE_NAME&gt;</screen>
 
         <para>Referring to a variable, however, is done using the following
         syntax:</para>
 
-        <screen>C:\&#62; cd %VARIABLE_NAME%\bin</screen>
+        <screen>C:\&gt; cd %VARIABLE_NAME%\bin</screen>
 
         <para>Paths are specified as a semicolon-separated list. An example of
         this is:</para>
 
-        <screen>C:\&#62; set PATH
+        <screen>C:\&gt; set PATH
 C:\WINDOWS;C:\bin;C:\</screen>
 
         <para>For some versions of Windows, a <quote>permanent</quote> setting
-        for a given variable should usually be done in <filename>C:\AUTOEXEC.BAT</filename>.
-        In newer versions (Windows ME in particular) and in the Windows NT
-        line of operating systems, the setting is done using the Control
-        Panel. Please refer to the next section for more information on that
-        method.</para>
+        for a given variable should usually be done in
+        <filename>C:\AUTOEXEC.BAT</filename>. In newer versions (Windows ME in
+        particular) and in the Windows NT line of operating systems, the
+        setting is done using the Control Panel. Please refer to the next
+        section for more information on that method.</para>
       </section>
 
       <section>
@@ -389,15 +397,17 @@ C:\WINDOWS;C:\bin;C:\</screen>
         for <quote>environment variables</quote>.</para>
 
         <section>
-          <title>Windows 2000</title>
+          <title>Windows 2000 and Windows XP</title>
 
           <para>In the Control Panel, open the <guiicon>System</guiicon> icon.
           Under the <guilabel>Advanced</guilabel> tab, there is a button
-          labeled <guibutton>Environment Variables</guibutton> (shown in <xref
-          linkend="figure.win2k.sysprops" />). Clicking this button opens the
-          dialog box shown in <xref linkend="figure.win2k.envvars" />. Here,
-          you can set variables for yourself and, if you have the access
-          privileges, for all users.</para>
+          labeled <guibutton>Environment Variables</guibutton>, shown in <xref
+          linkend="figure.win2k.sysprops" /> (the Windows XP version is shown
+          in <xref linkend="figure.winxp.sysprops" />). Clicking this button
+          opens the dialog box shown in <xref
+          linkend="figure.win2k.envvars" />. Here, you can set variables for
+          yourself and, if you have the access privileges, for all
+          users.</para>
 
           <figure id="figure.win2k.sysprops">
             <title>Windows 2000 System Properties Dialog</title>
@@ -405,7 +415,19 @@ C:\WINDOWS;C:\bin;C:\</screen>
             <mediaobject>
               <imageobject>
                 <imagedata align="center"
-                fileref="figures/Window.SystemProperties.png" format="PNG" />
+                           fileref="figures/Window.SystemProperties.png"
+                           format="PNG" />
+              </imageobject>
+            </mediaobject>
+          </figure>
+
+          <figure id="figure.winxp.sysprops">
+            <title>Windows XP System Properties Dialog</title>
+
+            <mediaobject>
+              <imageobject>
+                <imagedata fileref="figures/Window.SystemProperties.winxp.png"
+                           format="PNG" />
               </imageobject>
             </mediaobject>
           </figure>
@@ -416,30 +438,29 @@ C:\WINDOWS;C:\bin;C:\</screen>
             <mediaobject>
               <imageobject>
                 <imagedata align="center"
-                fileref="figures/Window.EnvironmentVariables.png" format="PNG" />
+                           fileref="figures/Window.EnvironmentVariables.png"
+                           format="PNG" />
               </imageobject>
             </mediaobject>
           </figure>
 
-          <para>To set up VR Juggler, the environment variable <envar>VJ_BASE_DIR</envar>
-          needs to be set, probably for all users, though it depends very much
-          on local system requirements. For this example, let us say that the
-          Win32 version of VR Juggler is installed in the
-          <filename>D:\</filename> directory. As such, we will set
-          <envar>VJ_BASE_DIR</envar> as shown in <xref
-          linkend="figure.win2k.envvar.set" />. Note that we use a forward
-          slash (/) instead of a backslash (\) for the directory separator.
-          This is not required, though it is helpful in reducing confusion
-          with respect to other examples.</para>
+          <para>To set up VR Juggler, the environment variable
+          <envar>VJ_BASE_DIR</envar> needs to be set, probably for all users,
+          though it depends very much on local system requirements. For this
+          example, let us say that the Win32 version of VR Juggler is
+          installed in the <filename>D:\</filename> directory. As such, we
+          will set <envar>VJ_BASE_DIR</envar> as shown in <xref
+          linkend="figure.win2k.envvar.set" />. <envar>VJ_DEPS_DIR</envar> is
+          set similarly.</para>
 
           <figure id="figure.win2k.envvar.set">
-            <title>Setting <envar>VJ_BASE_DIR</envar> on Windows 2000</title>
+            <title>Setting <envar>VJ_BASE_DIR</envar> on Windows</title>
 
             <mediaobject>
               <imageobject>
                 <imagedata align="center"
-                fileref="figures/Window.EnvironmentVariables.VJ_BASE_DIR.png"
-                format="PNG" />
+                           fileref="figures/Window.EnvironmentVariables.VJ_BASE_DIR.png"
+                           format="PNG" />
               </imageobject>
             </mediaobject>
           </figure>
@@ -478,17 +499,17 @@ C:\WINDOWS;C:\bin;C:\</screen>
 
           <para>The syntax to set an environment variable is:</para>
 
-          <screen>% &#60;VARIABLE_NAME&#62; = &#60;value&#62;</screen>
+          <screen>% &lt;VARIABLE_NAME&gt; = &lt;value&gt;</screen>
 
           <para>Setting an environment variable also creates it if it is not
-          already present in the current shell&#39;s environment.</para>
+          already present in the current shell's environment.</para>
         </section>
 
         <section>
           <title>Printing an the Value of an Environment Variable</title>
 
-          <para>Printing an environment variable&#39;s value to standard
-          output (stdout) is done as follows:</para>
+          <para>Printing an environment variable's value to standard output
+          (stdout) is done as follows:</para>
 
           <screen>% echo $VARIABLE_NAME
 value</screen>
@@ -502,7 +523,8 @@ value</screen>
 
           <screen>% cd $VARIABLE_NAME/bin</screen>
 
-          <para>Here, the reference to the value is <envar>$VARIABLE_NAME</envar>.</para>
+          <para>Here, the reference to the value is
+          <envar>$VARIABLE_NAME</envar>.</para>
         </section>
       </section>
     </section>
@@ -529,8 +551,9 @@ value</screen>
             version of Juggler you have downloaded.</para>
 
             <para>If you downloaded and built VR Juggler from the source code,
-            the compilation creates a directory called <filename>instlinks</filename>
-            which can be used as a VR Juggler base:</para>
+            the compilation creates a directory called
+            <filename>instlinks</filename> which can be used as a VR Juggler
+            base:</para>
 
             <screen>% VJ_BASE_DIR = $HOME/juggler/my_build_dir/instlinks</screen>
           </listitem>
@@ -563,11 +586,13 @@ value</screen>
             <screen>% PATH = $PATH:$VJ_BASE_DIR/bin</screen>
 
             <para>Depending on your shell, you may need to run the
-            <command>rehash</command> command after executing the above.</para>
+            <command>rehash</command> command after executing the
+            above.</para>
 
             <para>Windows users must also include the directories
-            <filename>$VJ_DEPS_DIR/bin</filename>, <filename>$VJ_DEPS_DIR/lib</filename>,
-            and <filename>$VJ_BASE_DIR/lib</filename> in their <envar>PATH</envar>
+            <filename>$VJ_DEPS_DIR/bin</filename>,
+            <filename>$VJ_DEPS_DIR/lib</filename>, and
+            <filename>$VJ_BASE_DIR/lib</filename> in their <envar>PATH</envar>
             setting. This is so that the DLLs for VR Juggler and its
             dependencies will be found when an application is executed.</para>
           </listitem>
@@ -579,9 +604,9 @@ value</screen>
           <listitem>
             <para>The <envar>JDK_HOME</envar> environment variable is required
             by the script that starts VRJConfig, the VR Juggler configuration
-            program. If Java is installed on your system, <envar>JDK_HOME</envar>
-            may already be set. If not, it needs to be set to the base of the
-            Java installation.</para>
+            program. If Java is installed on your system,
+            <envar>JDK_HOME</envar> may already be set. If not, it needs to be
+            set to the base of the Java installation.</para>
           </listitem>
         </varlistentry>
 
@@ -596,21 +621,23 @@ value</screen>
 
           <listitem>
             <para>UNIX/Linux systems use these environment variables to find
-            dynamically loaded libraries, such as <filename>libvrj.so</filename>.
-            Unless you are building everything with static libraries, you will
-            need to set these to include the VR Juggler library directory
-            (under <envar>VJ_BASE_DIR</envar>). IRIX supports several
-            Application Binary Interfaces (ABIs). VR Juggler supports only the
-            N32 and 64 formats, and there are different library path variables
-            for each. The N32 ABI uses the <envar>LD_LIBRARYN32_PATH</envar>
-            variable, and the 64 ABI uses <envar>LD_LIBRARY64_PATH</envar>. An
-            example of setting the library path is as follows:</para>
+            dynamically loaded libraries, such as
+            <filename>libvrj.so</filename>. Unless you are building everything
+            with static libraries, you will need to set these to include the
+            VR Juggler library directory (under <envar>VJ_BASE_DIR</envar>).
+            IRIX supports several Application Binary Interfaces (ABIs). VR
+            Juggler supports only the N32 and 64 formats, and there are
+            different library path variables for each. The N32 ABI uses the
+            <envar>LD_LIBRARYN32_PATH</envar> variable, and the 64 ABI uses
+            <envar>LD_LIBRARY64_PATH</envar>. An example of setting the
+            library path is as follows:</para>
 
             <screen>% LD_LIBRARY_PATH = $VJ_BASE_DIR/lib</screen>
 
             <para>If you have <envar>VJ_DEPS_DIR</envar> set and it is not the
-            same as <envar>VJ_BASE_DIR</envar>, then <envar>$VJ_DEPS_DIR/lib</envar>
-            also needs to be in <envar>LD_LIBRARY_PATH</envar>.</para>
+            same as <envar>VJ_BASE_DIR</envar>, then
+            <envar>$VJ_DEPS_DIR/lib</envar> also needs to be in
+            <envar>LD_LIBRARY_PATH</envar>.</para>
 
             <note>
               <para>On some SGI systems running IRIX, users of the MIPSpro
@@ -647,9 +674,9 @@ value</screen>
 
             <note>
               <para>The configuration files are loaded by the module JCCL, and
-              it will recognize the environment variable <envar>JCCL_CFG_PATH</envar>.
-              If <envar>JCCL_CFG_PATH</envar> is set, it takes precedence over
-              <envar>VJ_CFG_PATH</envar>.</para>
+              it will recognize the environment variable
+              <envar>JCCL_CFG_PATH</envar>. If <envar>JCCL_CFG_PATH</envar> is
+              set, it takes precedence over <envar>VJ_CFG_PATH</envar>.</para>
             </note>
           </listitem>
         </varlistentry>
@@ -666,7 +693,8 @@ value</screen>
             separated by the colon (:) character. This is exactly the way that
             the <envar>PATH</envar> environment variable would be set on these
             platforms. If not set, the default search path for configuration
-            files is <filename>$VJ_BASE_DIR/share/vrjuggler/data/definitions</filename>.</para>
+            files is
+            <filename>$VJ_BASE_DIR/share/vrjuggler/data/definitions</filename>.</para>
           </listitem>
         </varlistentry>
 
@@ -691,9 +719,10 @@ value</screen>
             is a number between 0 (only very important messages are printed)
             and 7 (vast amounts of data) inclusive. Non-hackers are advised to
             use levels 0 through 3, as higher debug levels become increasingly
-            cryptic and <emphasis>can severely impact application performance</emphasis>.
-            The default is level 1—only errors and critical information are
-            output. An example of setting a value for this variable is:</para>
+            cryptic and <emphasis>can severely impact application
+            performance</emphasis>. The default is level 1—only errors and
+            critical information are output. An example of setting a value for
+            this variable is:</para>
 
             <screen>% VPR_DEBUG_NFY_LEVEL = 3</screen>
           </listitem>
@@ -708,17 +737,19 @@ value</screen>
             you set <envar>VPR_DEBUG_NFY_LEVEL</envar> to 5 or higher, this
             variable can be used to filter the output. The value of
             <envar>VPR_DEBUG_CATEGORIES</envar> is a space-separated list of
-            Juggler debug component names (defined in <filename>$VJ_BASE_DIR/include/vrj/Util/Debug.h</filename>,
+            Juggler debug component names (defined in
+            <filename>$VJ_BASE_DIR/include/vrj/Util/Debug.h</filename>,
             <filename>$VJ_BASE_DIR/include/vpr/Util/Debug.h</filename>,
             <filename>$VJ_BASE_DIR/include/tweek/Util/Debug.h</filename>,
             <filename>$VJ_BASE_DIR/include/jccl/Util/Debug.h</filename>, and
             <filename>$VJ_BASE_DIR/include/gadget/Util/Debug.h</filename>).
             The default value is <quote>DBG_ALL</quote>, which performs no
-            filtering whatsoever. Examples of setting it are as follows:</para>
+            filtering whatsoever. Examples of setting it are as
+            follows:</para>
 
             <screen>% VPR_DEBUG_ALLOW_CATEGORIES = DBG_ERROR
-% VPR_DEBUG_ALLOW_CATEGORIES = &#34;DBG_KERNEL DBG_INPUT_MGR DBG_DRAW_MGR&#34;
-% VPR_DEBUG_ALLOW_CATEGORIES = &#34;DBG_CONFIG DBG_RECONFIGURATION&#34;</screen>
+% VPR_DEBUG_ALLOW_CATEGORIES = "DBG_KERNEL DBG_INPUT_MGR DBG_DRAW_MGR"
+% VPR_DEBUG_ALLOW_CATEGORIES = "DBG_CONFIG DBG_RECONFIGURATION"</screen>
           </listitem>
         </varlistentry>
 
@@ -726,15 +757,16 @@ value</screen>
           <term>VPR_DEBUG_DISALLOW_CATEGORIES</term>
 
           <listitem>
-            <para>This variable is basically the opposite of <envar>VPR_DEBUG_ALLOW_CATEGORIES</envar>.
-            Instead of specifying which debugging categories you want to see,
-            you specify which ones you <emphasis>do not</emphasis> want to
-            see. Its default value is empty which means that no debugging
-            categories are excluded. Examples of setting it are as follows:</para>
+            <para>This variable is basically the opposite of
+            <envar>VPR_DEBUG_ALLOW_CATEGORIES</envar>. Instead of specifying
+            which debugging categories you want to see, you specify which ones
+            you <emphasis>do not</emphasis> want to see. Its default value is
+            empty which means that no debugging categories are excluded.
+            Examples of setting it are as follows:</para>
 
             <screen>% VPR_DEBUG_DISALLOW_CATEGORIES = DBG_ERROR
-% VPR_DEBUG_DISALLOW_CATEGORIES = &#34;DBG_KERNEL DBG_INPUT_MGR DBG_DRAW_MGR&#34;
-% VPR_DEBUG_DISALLOW_CATEGORIES = &#34;DBG_CONFIG DBG_RECONFIGURATION&#34;</screen>
+% VPR_DEBUG_DISALLOW_CATEGORIES = "DBG_KERNEL DBG_INPUT_MGR DBG_DRAW_MGR"
+% VPR_DEBUG_DISALLOW_CATEGORIES = "DBG_CONFIG DBG_RECONFIGURATION"</screen>
           </listitem>
         </varlistentry>
       </variablelist>
@@ -757,11 +789,13 @@ value</screen>
       <title>Tutorial Applications</title>
 
       <para>Some sample applications designed for getting started with VR
-      Juggler are found in <filename>$VJ_BASE_DIR/share/vrjuggler/samples/OGL/simple</filename>.
+      Juggler are found in
+      <filename>$VJ_BASE_DIR/share/vrjuggler/samples/OGL/simple</filename>.
       All of these applications were designed to be used as part of courses
       teaching people how to write VR Juggler applications using OpenGL. They
       contain clear comments explaining what the code is doing, and they are
-      intended to be as simple as possible. These tutorials are as follows:</para>
+      intended to be as simple as possible. These tutorials are as
+      follows:</para>
 
       <itemizedlist>
         <listitem>
@@ -800,10 +834,10 @@ value</screen>
 
       <para>For a step-by-step lesson how to use these applications to learn
       VR Juggler application programming, please refer to the
-      <emphasis>Programmer&#39;s Guide</emphasis>. It contains sections
-      explaining each of the above applications in great detail. Each lesson
-      ends with an exercise where the reader extends the application to
-      include some new functionality.</para>
+      <emphasis>Programmer's Guide</emphasis>. It contains sections explaining
+      each of the above applications in great detail. Each lesson ends with an
+      exercise where the reader extends the application to include some new
+      functionality.</para>
     </section>
 
     <section>
@@ -842,7 +876,8 @@ value</screen>
     all configured, it is time for the fun to begin. No, seriously. You are
     now ready to compile and run VR Juggler applications, and that is the
     whole point, right? This chapter explains how to compile the applications
-    provided in the directory <filename>$VJ_BASE_DIR/share/vrjuggler/samples/OGL/simple</filename>.</para>
+    provided in the directory
+    <filename>$VJ_BASE_DIR/share/vrjuggler/samples/OGL/simple</filename>.</para>
 
     <section>
       <title>Required Reading</title>
@@ -854,9 +889,10 @@ value</screen>
       will not be repeated, and it is assumed that you already know what we
       mean by <envar>VJ_BASE_DIR</envar>. You should also have a basic
       understanding of how <command>make</command>(1) works, but in these
-      examples, nothing more will be necessary than typing <literal>make</literal>
-      on the command line. Refer to the <command>make</command>(1) manual page
-      for more information about it.</para>
+      examples, nothing more will be necessary than typing
+      <literal>make</literal> on the command line. Refer to the
+      <command>make</command>(1) manual page for more information about
+      it.</para>
     </section>
 
     <section>
@@ -872,19 +908,22 @@ value</screen>
       <section>
         <title>Compiling from the Command Line</title>
 
-        <para>All the sample programs in <filename>$VJ_BASE_DIR/share/vrjuggler/samples</filename>
-        use the same basic steps to compile unless otherwise noted. Always
-        refer to the top of the sample application&#39;s <filename>Makefile</filename>
-        for information that may be specific to building that application. In
-        general, though, all applications&#39; makefiles require the GNU
-        version of the <command>make</command>(1) utility, sometimes installed
-        as <command>gmake</command>.</para>
+        <para>All the sample programs in
+        <filename>$VJ_BASE_DIR/share/vrjuggler/samples</filename> use the same
+        basic steps to compile unless otherwise noted. Always refer to the top
+        of the sample application's <filename>Makefile</filename> for
+        information that may be specific to building that application. In
+        general, though, all applications' makefiles require the GNU version
+        of the <command>make</command>(1) utility, sometimes installed as
+        <command>gmake</command>.</para>
 
         <para>The example used here will be the MPApp tutorial application
-        found in <filename>$VJ_BASE_DIR/share/vrjuggler/samples/OGL/simple/MPApp</filename>.
+        found in
+        <filename>$VJ_BASE_DIR/share/vrjuggler/samples/OGL/simple/MPApp</filename>.
         It is an OpenGL-based application that will compile and run on all
         platforms supported by VR Juggler. Begin by changing into the
-        directory <filename>$VJ_BASE_DIR/share/vrjuggler/samples/OGL/simple/MPApp</filename>
+        directory
+        <filename>$VJ_BASE_DIR/share/vrjuggler/samples/OGL/simple/MPApp</filename>
         in a command shell.</para>
 
         <para>To compile MPApp, simply enter the following:</para>
@@ -910,7 +949,9 @@ value</screen>
           directory must be in your path (via the <envar>PATH</envar>
           environment variable) for proper application execution. The NSPR can
           be downloaded from the <ulink
-          url="http://www.mozilla.org/projects/nspr">NSPR home page</ulink>.</para>
+          url="http://www.mozilla.org/projects/nspr">NSPR home page</ulink>.
+          If the pre-compiled VR Juggler dependencies are installed, then NSPR
+          is already available.</para>
         </note>
 
         <para>All OpenGL sample applications are shipped with pre-configured
@@ -927,7 +968,7 @@ value</screen>
           <mediaobject>
             <imageobject>
               <imagedata align="center" fileref="figures/MPApp.dir.png"
-              format="PNG" />
+                         format="PNG" />
             </imageobject>
           </mediaobject>
         </figure>
@@ -943,18 +984,18 @@ value</screen>
           <mediaobject>
             <imageobject>
               <imagedata align="center" fileref="figures/MPApp.visual.c++.png"
-              format="PNG" />
+                         format="PNG" />
             </imageobject>
           </mediaobject>
         </figure>
 
-        <para>Before proceeding, the program arguments must be set. In Visual
-        Studio 7, this can be performed several ways. For example,
-        right-clicking on the project name in the Solution Explorer brings up
-        the menu shown in <xref linkend="visual.studio.project-menu.figure" />.
-        We are interested in changing the project&#39;s properties, so we
-        select the <guimenuitem>Properties</guimenuitem> item from the popup
-        menu.</para>
+        <para>In some cases, it may be necessary to change the default project
+        properties. The project properties dialog can be opened in several
+        ways. For example, right-clicking on the project name in the Solution
+        Explorer brings up the menu shown in <xref
+        linkend="visual.studio.project-menu.figure" />. We are interested in
+        changing the project's properties, so we select the
+        <guimenuitem>Properties</guimenuitem> item from the popup menu.</para>
 
         <figure id="visual.studio.project-menu.figure">
           <title>Project Menu</title>
@@ -962,52 +1003,25 @@ value</screen>
           <mediaobject>
             <imageobject>
               <imagedata align="center"
-              fileref="figures/MPApp.visual.c++.properties.png" format="PNG" />
+                         fileref="figures/MPApp.visual.c++.properties.png"
+                         format="PNG" />
             </imageobject>
           </mediaobject>
         </figure>
 
-        <para>Selecting this item opens the <quote>Project Pages</quote>
-        dialog, shown in <xref
-        linkend="visual.studio.project-settings.dialog.figure" />. In this
-        window, choose the <guilabel>Debugging</guilabel> item. There will be
-        an empty text entry field under the heading <guilabel>Command
-        Arguments</guilabel>. Here, enter the full paths to the VR Juggler
-        configuration files that will be used to run the torus application. To
-        use the <envar>VJ_BASE_DIR</envar> environment variable, makefile
-        syntax must be used. In other words, to load <filename>sim.base.jconf</filename>,
-        use <filename>$(VJ_BASE_DIR)/share/vrjuggler/data/configFiles/sim.base.jconf</filename>.
-        The following shows the beginning of the program arguments listing
-        <filename>sim.base.jconf</filename> and <filename>sim.wand.mixin.jconf</filename>:</para>
+        <para>Under the MPApp project settings, the path(s) to the VR Juggler
+        C++ dependencies must be filled in. This means setting paths to find
+        headers and libraries. All the Visual C++ project files shipped with
+        VR Juggler refer to the VR Juggler C++ dependency installation via the
+        <envar>VJ_DEPS_DIR</envar> environment variable. If this is not set or
+        cannot be used, the paths must be filled in manually.</para>
 
-        <figure id="visual.studio.project-settings.dialog.figure">
-          <title>Project Settings Dialog</title>
-
-          <mediaobject>
-            <imageobject>
-              <imagedata align="center"
-              fileref="figures/MPApp.visual.c++.args.png" format="PNG" />
-            </imageobject>
-          </mediaobject>
-        </figure>
-
-        <para>Note that in this example, the / directory separator is used
-        instead of \ for the program arguments. This is not strictly required
-        in this case, but doing it this way maintains consistency with other
-        examples.</para>
-
-        <para>Also under the MPApp project settings, the path(s) to the VR
-        Juggler C++ dependencies must be filled in. This means setting paths
-        to find headers and libraries. All the Visual C++ project files
-        shipped with VR Juggler refer to the VR Juggler C++ dependency
-        installation via the <envar>VJ_DEPS_DIR</envar> environment variable.
-        If this is not set or cannot be used, the paths must be filled in
-        manually.</para>
-
-        <para>Once the program arguments are set up, compile the application.
-        Under the <guimenu>Build</guimenu> menu, choose the
-        <guimenuitem>Build MPApp</guimenuitem> item as shown in <xref
-        linkend="visual.studio.build-menu.figure" />.</para>
+        <para>Once the program properties are set, compile the application.
+        Under the <guimenu>Build</guimenu> menu, choose the <guimenuitem>Build
+        MPApp</guimenuitem> item as shown in <xref
+        linkend="visual.studio.build-menu.figure" />. Visual C++ will compile
+        the application, and if you have everything configured properly on
+        your computer, the compiling will complete successfully.</para>
 
         <figure id="visual.studio.build-menu.figure">
           <title>Build <filename>MPApp.exe</filename></title>
@@ -1015,31 +1029,16 @@ value</screen>
           <mediaobject>
             <imageobject>
               <imagedata align="center"
-              fileref="figures/MPApp.visual.c++.build.png" format="PNG" />
+                         fileref="figures/MPApp.visual.c++.build.png"
+                         format="PNG" />
             </imageobject>
           </mediaobject>
         </figure>
 
-        <para>Visual C++ will compile the application, and if you have
-        everything configured properly on your computer, the compiling will
-        complete successfully. Once it is done, execute the MPApp program by
-        choosing the <guimenuitem>Start</guimenuitem> item from the
-        <guimenu>Debug</guimenu> menu, shown below in <xref
-        linkend="visual.studio.debug-menu.exectue.figure" />. For the
-        remainder of this book, we will explain how to run applications from
-        the command line rather than from the Visual Studio GUI. Readers can
-        follow whichever method they prefer.</para>
-
-        <figure id="visual.studio.debug-menu.exectue.figure">
-          <title>Execute <filename>MPApp.exe</filename></title>
-
-          <mediaobject>
-            <imageobject>
-              <imagedata align="center"
-              fileref="figures/MPApp.visual.c++.run.png" format="PNG" />
-            </imageobject>
-          </mediaobject>
-        </figure>
+        <para>For the remainder of this book, much of the discussion will
+        concentrate on running applications from the command line rather than
+        from the Visual Studio GUI. Readers can follow whichever method they
+        prefer.</para>
       </section>
     </section>
   </chapter>
@@ -1050,16 +1049,18 @@ value</screen>
     <para>It is important to note that the same VR Juggler application can be
     run in simulator mode or in a full-scale VR system with no modifications.
     What does change is the configuration files used when starting the
-    program. In <filename>$VJ_BASE_DIR/share/vrjuggler/data/configFiles</filename>,
-    you can find many basic configuration files including those for running in
+    program. In
+    <filename>$VJ_BASE_DIR/share/vrjuggler/data/configFiles</filename>, you
+    can find many basic configuration files including those for running in
     simulator using a mouse and keyboard to simulate VR input devices and some
     example files based on those used for the VRAC C4 system. In the
-    directory, you will see some files with names containing <quote>mixin</quote>.
-    These are special files that provide a specific capability not necessarily
-    needed by all applications. They can be mixed in (hence the name) with
-    other configuration files as needed. The configuration files found in the
-    <filename>configFiles</filename> directory will be referenced in the
-    examples provided, so be sure you know where they are.</para>
+    directory, you will see some files with names containing
+    <quote>mixin</quote>. These are special files that provide a specific
+    capability not necessarily needed by all applications. They can be mixed
+    in (hence the name) with other configuration files as needed. The
+    configuration files found in the <filename>configFiles</filename>
+    directory will be referenced in the examples provided, so be sure you know
+    where they are.</para>
 
     <section>
       <title><anchor id="reading" />Required Reading</title>
@@ -1078,7 +1079,8 @@ value</screen>
     </section>
 
     <section>
-      <title><anchor id="simulator" />Running an Application in Simulator Mode</title>
+      <title><anchor id="simulator" />Running an Application in Simulator
+      Mode</title>
 
       <para>Running in <quote>simulator mode</quote> means that your input is
       simulated and your display windows may have limited functionality. (By
@@ -1105,7 +1107,8 @@ value</screen>
       configuration files and how to view or modify the configuration, refer
       to the <emphasis>VRJConfig Guide</emphasis>. (Using VRJConfig is the
       best way to find out how a specific configuration file is set up.) The
-      configuration files of interest for simulator mode are as follows:</para>
+      configuration files of interest for simulator mode are as
+      follows:</para>
 
       <itemizedlist>
         <listitem>
@@ -1134,15 +1137,16 @@ value</screen>
 
         <listitem>
           <para><filename>sim.analog.mixin.jconf</filename> - This version of
-          the analog simulator opens its own window. See the previous file (<filename>sim.analog.wandmixin.jconf</filename>)
-          for other details.</para>
+          the analog simulator opens its own window. See the previous file
+          (<filename>sim.analog.wandmixin.jconf</filename>) for other
+          details.</para>
         </listitem>
 
         <listitem>
           <para><filename>sim.c6displays.mixin.jconf</filename> - A
           <quote>mix-in</quote> configuration file that defines the surface
-          displays of VRAC&#39;s C6. This is not required for any application
-          but can be used to test opening multiple display windows (each
+          displays of VRAC's C6. This is not required for any application but
+          can be used to test opening multiple display windows (each
           containing either a surface or a simulator viewport) before running
           in a multi-screen VR system.</para>
         </listitem>
@@ -1156,25 +1160,27 @@ value</screen>
         </listitem>
 
         <listitem>
-          <para><filename>sim.glove.mixin.jconf</filename> - A <quote>mix-in</quote>
-          configuration file that defines simulated gesture-based glove input
-          using the keyboard. This is only required for applications where
-          gesture-based glove input is used and needs to be simulated when in
-          simulator mode.</para>
+          <para><filename>sim.glove.mixin.jconf</filename> - A
+          <quote>mix-in</quote> configuration file that defines simulated
+          gesture-based glove input using the keyboard. This is only required
+          for applications where gesture-based glove input is used and needs
+          to be simulated when in simulator mode.</para>
         </listitem>
 
         <listitem>
-          <para><filename>sim.wand.mixin.jconf</filename> - A <quote>mix-in</quote>
-          configuration file that defines simulated wand input using the
-          mouse. This is only required for applications where wand input is
-          used and needs to be simulated when in simulator mode.</para>
+          <para><filename>sim.wand.mixin.jconf</filename> - A
+          <quote>mix-in</quote> configuration file that defines simulated wand
+          input using the mouse. This is only required for applications where
+          wand input is used and needs to be simulated when in simulator
+          mode.</para>
         </listitem>
 
         <listitem>
           <para><filename>standalone.jconf</filename> - A configuration file
           that stands on its own and combines the functionality of
-          <filename>sim.base.jconf</filename> and <filename>sim.wand.mixin.jconf</filename>.
-          Note that it uses a single display window for all input.</para>
+          <filename>sim.base.jconf</filename> and
+          <filename>sim.wand.mixin.jconf</filename>. Note that it uses a
+          single display window for all input.</para>
 
           <note>
             <para>At the time of this writing, this configuration file only
@@ -1201,7 +1207,8 @@ value</screen>
         <para>You will notice that no paths are specified for finding the
         configuration files. The full paths to the configuration files is not
         necessary because the default search path will correctly find these
-        files in <filename>$VJ_BASE_DIR/share/vrjuggler/data/configFiles</filename>.
+        files in
+        <filename>$VJ_BASE_DIR/share/vrjuggler/data/configFiles</filename>.
         Beginning users will typically want to reference the example
         configuration files in that directory. As you get more comfortable
         with VR Juggler and its configuration system, you may want to make
@@ -1216,19 +1223,21 @@ value</screen>
         arguments.</para>
 
         <para>As the application starts, you will see a status output printed
-        to the console (more or less depending on how you have <envar>VPR_DEBUG_NFY_LEVEL</envar>,
-        <envar>VPR_DEBUG_ALLOW_CATEGORIES</envar>, and <envar>VPR_DEBUG_DISALLOW_CATEGORIES</envar>
-        set), and then one moderately sized simulator display window will open
-        on the left side of your screen while three blank keyboard input
-        windows open on the right side of your screen. The display window will
-        be titled <quote>SimWindow1</quote>, and the keyboard input windows
-        will be titled <quote>Head Keyboard</quote>, <quote>Sim View Cameras
+        to the console (more or less depending on how you have
+        <envar>VPR_DEBUG_NFY_LEVEL</envar>,
+        <envar>VPR_DEBUG_ALLOW_CATEGORIES</envar>, and
+        <envar>VPR_DEBUG_DISALLOW_CATEGORIES</envar> set), and then one
+        moderately sized simulator display window will open on the left side
+        of your screen while three blank keyboard input windows open on the
+        right side of your screen. The display window will be titled
+        <quote>SimWindow1</quote>, and the keyboard input windows will be
+        titled <quote>Head Keyboard</quote>, <quote>Sim View Cameras
         Control</quote> and <quote>Wand Keyboard</quote> (in order from the
         top of the display to the bottom). Do not worry that the keyboard
         windows are black—that is normal. The display window will have an
         animated blue mesh, a cyan ellipsoid, and a green pointer. The mesh is
-        what you have come to see; the ellipsoid is the user&#39;s head; and
-        the pointer is the user&#39;s hand. In <xref
+        what you have come to see; the ellipsoid is the user's head; and the
+        pointer is the user's hand. In <xref
         linkend="MPApp.running.figure" />, we show what this looks on a RedHat
         Linux 7.2 desktop for comparison with what you are seeing. Note that
         the head and wand are only rendered in the simulator windows. They are
@@ -1238,12 +1247,14 @@ value</screen>
         <quote>Head Window</quote>.</para>
 
         <figure id="MPApp.running.figure">
-          <title>MPApp running on a Linux desktop with multiple input windows</title>
+          <title>MPApp running on a Linux desktop with multiple input
+          windows</title>
 
           <mediaobject>
             <imageobject>
               <imagedata align="center"
-              fileref="figures/MPApp.thumbnail.multi.png" format="PNG" />
+                         fileref="figures/MPApp.thumbnail.multi.png"
+                         format="PNG" />
             </imageobject>
           </mediaobject>
         </figure>
@@ -1265,44 +1276,96 @@ value</screen>
           <mediaobject>
             <imageobject>
               <imagedata align="center"
-              fileref="figures/MPApp.thumbnail.single.png" format="PNG" />
+                         fileref="figures/MPApp.thumbnail.single.png"
+                         format="PNG" />
             </imageobject>
           </mediaobject>
         </figure>
-      </section>
 
-      <section>
-        <title>Running an Application on Mac OS X with the X Window System</title>
+        <section>
+          <title>Running an Application on Windows from Within Visual
+          Studio</title>
 
-        <para>Running a VR Juggler application on Mac OS X is slightly
-        different if VR Juggler was compiled against <ulink
-        url="http://www.apple.com/macosx/x11/">X11 for OS X</ulink>. Before
-        starting the VR Juggler application, X11 must be running. This can be
-        accomplished by double-clicking on the X11 icon in the Applications
-        folder. By default, X11 will open a standard xterm when it starts. In
-        this xterm, the <envar>$DISPLAY</envar> environment variable will be
-        set correctly, and it is recommended that VR Juggler applications be
-        launched from this xterm. From this xterm, set the necessary
-        environment variables as described earlier in <xref
-        linkend="envvars.required.section" />. Once this is done, the
-        application can be executed from the command line just as described in
-        the previous section.</para>
+          <para>To run MPApp from within the Visual Studio IDE, the program
+          arguments must be set first. This is done by opening the properties
+          dialog for the project. In this dialog box, choose the
+          <guilabel>Debugging</guilabel> item. There will be an empty text
+          entry field under the heading <guilabel>Command
+          Arguments</guilabel>. Here, enter the full paths to the VR Juggler
+          configuration files that will be used to run the torus application.
+          To use the <envar>VJ_BASE_DIR</envar> environment variable, makefile
+          syntax must be used. In other words, to load
+          <filename>sim.base.jconf</filename>, use
+          <filename>$(VJ_BASE_DIR)\share\vrjuggler\data\configFiles\sim.base.jconf</filename>.
+          The following shows the beginning of the arguments set to
+          <filename>standalone.jconf</filename>.</para>
 
-        <para>MPApp is shown executing on a Mac OS X desktop in <xref
-        linkend="MPApp.OSX.running.single.figure" />. Note that in the dock,
-        the X11 icon is activated and that the application menu is for an X11
-        application. This truly is an X11 application running on OS X.</para>
+          <figure id="visual.studio.project-settings.dialog.figure">
+            <title>Setting Command Arguments</title>
 
-        <figure id="MPApp.OSX.running.single.figure">
-          <title>MPApp running on Mac OS X using X11 with one window</title>
+            <mediaobject>
+              <imageobject>
+                <imagedata align="center"
+                           fileref="figures/MPApp.visual.c++.args.png"
+                           format="PNG" />
+              </imageobject>
+            </mediaobject>
+          </figure>
 
-          <mediaobject>
-            <imageobject>
-              <imagedata align="center"
-              fileref="figures/MPApp-OSX.thumbnail.single.png" format="PNG" />
-            </imageobject>
-          </mediaobject>
-        </figure>
+          <para>With the application already compiled, execute the MPApp
+          program by choosing the <guimenuitem>Start</guimenuitem> item from
+          the <guimenu>Debug</guimenu> menu, shown below in <xref
+          linkend="visual.studio.debug-menu.exectue.figure" />.</para>
+
+          <figure id="visual.studio.debug-menu.exectue.figure">
+            <title>Execute <filename>MPApp.exe</filename></title>
+
+            <mediaobject>
+              <imageobject>
+                <imagedata align="center"
+                           fileref="figures/MPApp.visual.c++.run.png"
+                           format="PNG" />
+              </imageobject>
+            </mediaobject>
+          </figure>
+        </section>
+
+        <section>
+          <title>Running an Application on Mac OS X with the X Window
+          System</title>
+
+          <para>Running a VR Juggler application on Mac OS X is slightly
+          different if VR Juggler was compiled against <ulink
+          url="http://www.apple.com/macosx/x11/">X11 for OS X</ulink>. Before
+          starting the VR Juggler application, X11 must be running. This can
+          be accomplished by double-clicking on the X11 icon in the
+          Applications folder. By default, X11 will open a standard xterm when
+          it starts. In this xterm, the <envar>$DISPLAY</envar> environment
+          variable will be set correctly, and it is recommended that VR
+          Juggler applications be launched from this xterm. From this xterm,
+          set the necessary environment variables as described earlier in
+          <xref linkend="envvars.required.section" />. Once this is done, the
+          application can be executed from the command line just as described
+          in the previous section.</para>
+
+          <para>MPApp is shown executing on a Mac OS X desktop in <xref
+          linkend="MPApp.OSX.running.single.figure" />. Note that in the dock,
+          the X11 icon is activated and that the application menu is for an
+          X11 application. This truly is an X11 application running on OS
+          X.</para>
+
+          <figure id="MPApp.OSX.running.single.figure">
+            <title>MPApp running on Mac OS X using X11 with one window</title>
+
+            <mediaobject>
+              <imageobject>
+                <imagedata align="center"
+                           fileref="figures/MPApp-OSX.thumbnail.single.png"
+                           format="PNG" />
+              </imageobject>
+            </mediaobject>
+          </figure>
+        </section>
       </section>
 
       <section>
@@ -1318,15 +1381,15 @@ value</screen>
         in <quote>Wand Keyboard</quote>. Using the single-window
         configuration, all input is done with the keyboard and mouse in
         <quote>Sim Window</quote>. Note, however, that for the single-window
-        configuration, the camera is attached to the user&#39;s head for an
+        configuration, the camera is attached to the user's head for an
         over-the-shoulder view, and hence, it does not move separately from
         the head. For information on how to verify these settings and to view
-        the current configuration, refer to the <emphasis>VRJConfig Guide</emphasis>.
-        The following list of tables provides all the keyboard and mouse
-        controls for the simulator when using these particular configuration
-        files. Note that it is possible to reconfigure the simulator to suit
-        your preferences. This is provided mainly for those who just want
-        something that works now.</para>
+        the current configuration, refer to the <emphasis>VRJConfig
+        Guide</emphasis>. The following list of tables provides all the
+        keyboard and mouse controls for the simulator when using these
+        particular configuration files. Note that it is possible to
+        reconfigure the simulator to suit your preferences. This is provided
+        mainly for those who just want something that works now.</para>
 
         <table>
           <title>Moving the simulated head</title>
@@ -1648,23 +1711,26 @@ value</screen>
         glove position and selected gesture. Movement control of the glove
         uses the mouse and is the same as that of the wand. The mouse buttons
         are used to select gestures. The mapping of the gesture numbers to
-        actual hand positions is controlled by the <quote>training file</quote>
-        for the sim glove. The default training file is <filename>$VJ_BASE_DIR/share/vrjuggler/data/gesture/simpleSimGestures.dat</filename>.</para>
+        actual hand positions is controlled by the <quote>training
+        file</quote> for the sim glove. The default training file is
+        <filename>$VJ_BASE_DIR/share/vrjuggler/data/gesture/simpleSimGestures.dat</filename>.</para>
       </section>
 
       <section>
         <title>Using a Simulated Analog Device</title>
 
-        <para>If you include the <filename>sim.analog.wandmixin.jconf</filename>
-        file, your application will also have access to a set of four analog
-        devices (devices with a value in a range from 0.0 to 1.0). The analog
-        devices are also controlled using the <quote>Wand Keyboard</quote>
-        window which means that their configuration file requires the wand
-        configuration file.</para>
+        <para>If you include the
+        <filename>sim.analog.wandmixin.jconf</filename> file, your application
+        will also have access to a set of four analog devices (devices with a
+        value in a range from 0.0 to 1.0). The analog devices are also
+        controlled using the <quote>Wand Keyboard</quote> window which means
+        that their configuration file requires the wand configuration
+        file.</para>
 
         <note>
           <para>A separate file, <filename>sim.analog.mixin.jconf</filename>,
-          is provided for analog input from a separate simulator window.</para>
+          is provided for analog input from a separate simulator
+          window.</para>
         </note>
 
         <para>The key presses used for controlling the analog devices are
@@ -1744,30 +1810,32 @@ value</screen>
       VR systems tend to differ in configuration and in available hardware. VR
       Juggler is flexible enough to handle most any configuration you throw at
       it, but those configurations need to be put together first. Examples of
-      configuration files used in VRAC&#39;s C4 system are provided, and they
-      are used in this documentation. It should be noted, however, that for
-      any particular system, custom configuration files will probably have to
-      be written. The idea behind this section is to provide a basic
+      configuration files used in VRAC's C4 system are provided, and they are
+      used in this documentation. It should be noted, however, that for any
+      particular system, custom configuration files will probably have to be
+      written. The idea behind this section is to provide a basic
       understanding of what is needed to get started with running in a VR
       system.</para>
 
       <para>The example configuration files in the directory
       <filename>$VJ_BASE_DIR/share/vrjuggler/data/configFiles</filename>
-      modeled after those used for VRAC&#39;s C4 system are as follows:</para>
+      modeled after those used for VRAC's C4 system are as follows:</para>
 
       <itemizedlist>
         <listitem>
           <para><filename>C4.closed.jconf</filename> - The single
           configuration file that includes the other configuration files
           necessary for loading a VR Juggler application in the C4 in its
-          closed configuration with full tracking and stereoscopic graphics.</para>
+          closed configuration with full tracking and stereoscopic
+          graphics.</para>
         </listitem>
 
         <listitem>
           <para><filename>C4.closed.mono.jconf</filename> - The single
           configuration file that includes the other configuration files
           necessary for loading a VR Juggler application in the C4 in its
-          closed configuration with full tracking and monoscopic graphics.</para>
+          closed configuration with full tracking and monoscopic
+          graphics.</para>
         </listitem>
 
         <listitem>
