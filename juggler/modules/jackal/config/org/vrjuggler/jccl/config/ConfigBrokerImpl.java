@@ -531,6 +531,7 @@ public class ConfigBrokerImpl
       // Get a list of the definition files to load
       List def_file_list = new ArrayList();
       List def_path = getDefinitionPath();
+      FilenameFilter filter = new DefinitionFilenameFilter();
       for (Iterator itr = def_path.iterator(); itr.hasNext(); )
       {
          // Check if this part of the path is a valid directory we can read
@@ -539,22 +540,7 @@ public class ConfigBrokerImpl
          if (dir.exists() && dir.isDirectory() && dir.canRead())
          {
             // Get a list of all the config definition files in the directory
-            File[] def_files = dir.listFiles(new FilenameFilter()
-            {
-               public boolean accept(File dir, String file)
-               {
-                  // Only accept files with a .jdef extension
-                  if (file.endsWith(".jdef"))
-                  {
-                     File def_file = new File(dir, file);
-                     if (def_file.canRead())
-                     {
-                        return true;
-                     }
-                  }
-                  return false;
-               }
-            });
+            File[] def_files = dir.listFiles(filter);
 
             // Add the files to the list of files to load
             for (int i=0; i<def_files.length; ++i)
