@@ -78,14 +78,6 @@ JGOODIES_JAR=	$(LAF_DIR)/jgoodies-looks/looks.jar
 
 LAF_JARS=	$(METOUIA_JAR)$(JCPS)$(JGOODIES_JAR)
 
-# The following check is done this way to prevent unwanted spaces from
-# appearing in $(CLASSPATH)
-ifneq ($(JAVA_ORB_JAR), none)
-   CLASSPATH=	$(JDOM_JARS)$(JCPS)$(JAVA_ORB_JAR)$(JCPS)$(LAF_JARS)
-else
-   CLASSPATH=	$(JDOM_JAR)$(JCPS)$(LAF_JARS)
-endif
-
 IDL_JAVA_FILES=	SubjectManager.java		\
 		Subject.java			\
 		Observer.java			\
@@ -156,7 +148,7 @@ endif	# if OS_TYPE == UNIX
                 $(GROUP_OPT_UNIX) $(top_srcdir)/java/$$bean.xml		\
                 $(beandir) ;						\
           done
-	for jar in `echo "$(JDOM_JARS)" | sed -e 's/$(JCPS)/ /g'` ;	\
+	for jar in $(JDOM_JARS) ;					\
           do								\
               $(INSTALL) $(EXTRA_INSTALL_ARGS) -m $(FILE_PERMS)		\
                 $(GROUP_OPT_UNIX) $$jar $(bindir) ;			\
