@@ -199,7 +199,7 @@ vpr::ReturnStatus LibraryLoader::loadAndInitDSO(vpr::LibraryPtr dso,
          vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
             << clrOutNORM(clrYELLOW, "WARNING")
             << ": Failed to look up initialization function '"
-            << initFuncName << "' in DSO '" << dso << "'\n"
+            << initFuncName << "' in DSO '" << dso->getName() << "'\n"
             << vprDEBUG_FLUSH;
          status.setCode(vpr::ReturnStatus::Fail);
       }
