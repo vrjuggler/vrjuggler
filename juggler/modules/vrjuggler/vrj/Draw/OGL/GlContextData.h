@@ -86,7 +86,7 @@ protected:
       while(mContextDataVector.size() <= context_id)
       {
          mContextDataVector.push_back(ContextDataType());
-         vjDEBUG(vjDBG_ALL,0) << "Adding ContextDataVector element: size now: " << mContextDataVector.size() << endl << vjDEBUG_FLUSH;
+         vjDEBUG(vjDBG_DRAW_MGR,3) << "Adding ContextDataVector element: size now: " << mContextDataVector.size() << endl << vjDEBUG_FLUSH;
       }
 
       return &mContextDataVector[context_id];

@@ -81,8 +81,8 @@ public:
       vjMatrix cur_head_pos = *(mUser->getHeadPos());
       vjCoord  head_coord(cur_head_pos);       // Create a user readable version
 
-      vjDEBUG(vjDBG_ALL,4) << "vjDisplay::updateProjections: Getting head position" << endl << vjDEBUG_FLUSH;
-      vjDEBUG(vjDBG_ALL,4) << "\tHeadPos:" << head_coord.pos << "\tHeadOr:" << head_coord.orient << endl << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_ALL,5) << "vjDisplay::updateProjections: Getting head position" << endl << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_ALL,5) << "\tHeadPos:" << head_coord.pos << "\tHeadOr:" << head_coord.orient << endl << vjDEBUG_FLUSH;
 
       // Compute location of left and right eyes
       float interocularDist = 2.75/12.0f;
@@ -134,7 +134,7 @@ protected:
       mxULCorner.xformFull(mSurfaceRotation,mULCorner);
 
       // Verify that they are all in the same x,y plane
-      vjDEBUG(vjDBG_ALL,0) << mxLLCorner[VJ_Z]  << " " << mxLRCorner[VJ_Z]
+      vjDEBUG(vjDBG_ALL,5) << mxLLCorner[VJ_Z]  << " " << mxLRCorner[VJ_Z]
                          << " " <<  mxURCorner[VJ_Z]  << " " <<  mxULCorner[VJ_Z] << "\n" << vjDEBUG_FLUSH;
       vjASSERT((mxLLCorner[VJ_Z] == mxLRCorner[VJ_Z]) &&
                (mxURCorner[VJ_Z] == mxULCorner[VJ_Z]) &&
@@ -152,7 +152,7 @@ protected:
       norm2 = bot_side.cross(right_side);
       norm1.normalize(); norm2.normalize();
       if(norm1 != norm2)
-         vjDEBUG(vjDBG_ALL,0) << "ERROR: Invalid surface corners.\n" << vjDEBUG_FLUSH;
+         vjDEBUG(vjDBG_ERROR,0) << "ERROR: Invalid surface corners.\n" << vjDEBUG_FLUSH;
    }
 
 

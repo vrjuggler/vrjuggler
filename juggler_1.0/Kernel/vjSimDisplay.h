@@ -34,7 +34,7 @@ public:
 
       if(mCamera.getProxyIndex() == -1)
       {
-         vjDEBUG(vjDBG_ALL,0) << "ERROR: vjSimDisplay:: Fatal Error: Camera not found named: " << camera_proxy_str << endl;
+         vjDEBUG(vjDBG_ERROR,0) << "ERROR: vjSimDisplay:: Fatal Error: Camera not found named: " << camera_proxy_str << endl;
          exit(1);
       }
 

@@ -11,7 +11,7 @@ int vjKernel::start()
 {
    if(mControlThread != NULL) // Have already started
    {
-      vjDEBUG(vjDBG_ALL,0) << "ERROR: vjKernel::start called when kernel already running\n" << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_ERROR,0) << "ERROR: vjKernel::start called when kernel already running\n" << vjDEBUG_FLUSH;
       vjASSERT(false);
       exit(0);
    }
@@ -22,8 +22,7 @@ int vjKernel::start()
 
    mControlThread = new vjThread(memberFunctor, 0);
 
-   vjDEBUG(vjDBG_KERNEL,1) << "vjKernel::start: Just started control loop.  "
-              << mControlThread << endl << vjDEBUG_FLUSH;
+   vjDEBUG(vjDBG_KERNEL,1) << "vjKernel::start: Just started control loop.  " << mControlThread << endl << vjDEBUG_FLUSH;
 
    return 1;
 }
@@ -31,7 +30,7 @@ int vjKernel::start()
 /// The Kernel loop
 void vjKernel::controlLoop(void* nullParam)
 {
-   vjDEBUG(vjDBG_KERNEL,1) << "vjKernel::controlLoop: Entered.\n" << vjDEBUG_FLUSH;
+   vjDEBUG(vjDBG_KERNEL,1) << "vjKernel::controlLoop: Started.\n" << vjDEBUG_FLUSH;
    vjTimeStamp::initialize();
    // Do any initial configuration
    initConfig();
@@ -46,19 +45,19 @@ void vjKernel::controlLoop(void* nullParam)
       // Iff we have an app and a draw manager
       if((mApp != NULL) && (mDrawManager != NULL))
       {
-            vjDEBUG(vjDBG_KERNEL,3) << "vjKernel::controlLoop: mApp->preDraw()\n" << vjDEBUG_FLUSH;
+            vjDEBUG(vjDBG_KERNEL,5) << "vjKernel::controlLoop: mApp->preDraw()\n" << vjDEBUG_FLUSH;
          mApp->preDraw();         // PREDRAW: Do Any application pre-draw stuff
             perfBuffer->set (0);
-            vjDEBUG(vjDBG_KERNEL,3) << "vjKernel::controlLoop: drawManager->draw()\n" << vjDEBUG_FLUSH;
+            vjDEBUG(vjDBG_KERNEL,5) << "vjKernel::controlLoop: drawManager->draw()\n" << vjDEBUG_FLUSH;
          mDrawManager->draw();    // DRAW: Trigger the beginning of frame drawing
             perfBuffer->set (1);
-            vjDEBUG(vjDBG_KERNEL,3) << "vjKernel::controlLoop: mApp->postDraw\n" << vjDEBUG_FLUSH;
+            vjDEBUG(vjDBG_KERNEL,5) << "vjKernel::controlLoop: mApp->postDraw\n" << vjDEBUG_FLUSH;
          mApp->postDraw();        // POST DRAW: Do computations that can be done while drawing.  This should be for next frame.
             perfBuffer->set (2);
-            vjDEBUG(vjDBG_KERNEL,3) << "vjKernel::controlLoop: drawManager->sync()\n" << vjDEBUG_FLUSH;
+            vjDEBUG(vjDBG_KERNEL,5) << "vjKernel::controlLoop: drawManager->sync()\n" << vjDEBUG_FLUSH;
          mDrawManager->sync();    // SYNC: Block until drawing is done
             perfBuffer->set (3);
-            vjDEBUG(vjDBG_KERNEL,3) << "vjKernel::controlLoop: mApp->postSync()\n" << vjDEBUG_FLUSH;
+            vjDEBUG(vjDBG_KERNEL,5) << "vjKernel::controlLoop: mApp->postSync()\n" << vjDEBUG_FLUSH;
          mApp->postSync();        // POST SYNC: Do processing after drawing is complete
             perfBuffer->set (4);
       }
@@ -76,10 +75,10 @@ void vjKernel::controlLoop(void* nullParam)
 
       perfBuffer->set(5);
 
-         vjDEBUG(vjDBG_KERNEL,3) << "vjKernel::controlLoop: Update Trackers\n" << vjDEBUG_FLUSH;
+         vjDEBUG(vjDBG_KERNEL,5) << "vjKernel::controlLoop: Update Trackers\n" << vjDEBUG_FLUSH;
       getInputManager()->updateAllData();    // Update the trackers
          perfBuffer->set(6);
-         vjDEBUG(vjDBG_KERNEL,3) << "vjKernel::controlLoop: Update Projections\n" << vjDEBUG_FLUSH;
+         vjDEBUG(vjDBG_KERNEL,5) << "vjKernel::controlLoop: Update Projections\n" << vjDEBUG_FLUSH;
       updateFrameData();         // Update the projections, etc.
          perfBuffer->set(7);
    }
@@ -95,11 +94,11 @@ void vjKernel::setApplication(vjApp* _app)
 {
 vjGuard<vjSemaphore> runtime_guard(mRuntimeConfigSema);     // Have to hold to configure
 
-   vjDEBUG(vjDBG_KERNEL,0) << "vjKernel::SetApplication: Setting to:" << _app << endl << vjDEBUG_FLUSH;
+   vjDEBUG(vjDBG_KERNEL,1) << "vjKernel::SetApplication: Setting to:" << _app << endl << vjDEBUG_FLUSH;
 
    if(mControlThread == NULL) // Have not started control loop
    {
-      vjDEBUG(vjDBG_ALL,0) << "ERROR: vjKernel::setApplication: Kernel not started yet.\n" << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_ERROR,0) << "ERROR: vjKernel::setApplication: Kernel not started yet.\n" << vjDEBUG_FLUSH;
       vjASSERT(false);
       exit(0);
    }
@@ -147,7 +146,7 @@ void vjKernel::stopApplication()
 //----------------------------------------------
 void vjKernel::initConfig()
 {
-   vjDEBUG_BEGIN(vjDBG_KERNEL,1) << "vjKernel::initConfig: Entered.\n" << vjDEBUG_FLUSH;
+   vjDEBUG_BEGIN(vjDBG_KERNEL,3) << "vjKernel::initConfig: Setting initial config.\n" << vjDEBUG_FLUSH;
 
    // --- CREATE SHARED MEMORY --- //
    vjSharedPool::init();         // Try to init the pool stuff
@@ -167,11 +166,12 @@ void vjKernel::initConfig()
 #ifdef VJ_OS_Linux
    mSysFactory = vjSGISystemFactory::instance(); // HACK - this could be trouble, using SGI factory
 #else
-   vjDEBUG (vjDBG_KERNEL,0) << "ERROR!: Don't know how to create System Factory!\n" << vjDEBUG_FLUSH;
+   vjDEBUG (vjDBG_ERROR,0) << "ERROR!: Don't know how to create System Factory!\n" << vjDEBUG_FLUSH;
+   vjASSERT(false);
 #endif
 #endif
 
-   vjDEBUG_END(vjDBG_KERNEL,1) << "vjKernel::initConfig: Exiting.\n" << vjDEBUG_FLUSH;
+   vjDEBUG_END(vjDBG_KERNEL,3) << "vjKernel::initConfig: Done.\n" << vjDEBUG_FLUSH;
 }
 
 
@@ -197,7 +197,7 @@ void vjKernel::configAdd(vjConfigChunkDB* chunkDB, bool guarded)
    // If sort fails, exit with error
    if(dep_result == -1)
    {
-      vjDEBUG(vjDBG_ALL,0) << "vjKernel::configAdd: ERROR: Dependency sort failed. Aborting add.\n" << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_ERROR,0) << "vjKernel::configAdd: ERROR: Dependency sort failed. Aborting add.\n" << vjDEBUG_FLUSH;
       return;
    }
 
@@ -209,7 +209,7 @@ void vjKernel::configAdd(vjConfigChunkDB* chunkDB, bool guarded)
    {
       bool added_chunk = false;        // Flag: true - chunk was added
 
-      vjDEBUG(vjDBG_KERNEL,1) << "vjKernel::configAdd: chunk: " << chunks[i]->getProperty("name") << endl << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_KERNEL,3) << "vjKernel::configAdd: chunk: " << chunks[i]->getProperty("name") << endl << vjDEBUG_FLUSH;
 
       // Find manager to handle them
       if(this->configKernelHandle(chunks[i]))            // Kernel
@@ -236,13 +236,13 @@ void vjKernel::configAdd(vjConfigChunkDB* chunkDB, bool guarded)
       }
       else                 // Else: Give unrecognized error
       {
-         vjDEBUG(vjDBG_KERNEL,1) << "vjKernel::configAdd: Unrecognized chunk.\n"
+         vjDEBUG(vjDBG_KERNEL,0) << "vjKernel::configAdd: Unrecognized chunk.\n"
                     << "   type: " << chunks[i]->getType() << endl << vjDEBUG_FLUSH;
       }
    }
 
-   // Dump status
-   vjDEBUG(vjDBG_KERNEL,0) << (*getInputManager()) << endl << vjDEBUG_FLUSH;
+   // Dump status of the managers after reconfig
+   vjDEBUG(vjDBG_KERNEL,1) << (*getInputManager()) << endl << vjDEBUG_FLUSH;
 
    if(guarded)
       mRuntimeConfigSema.release();
@@ -250,7 +250,7 @@ void vjKernel::configAdd(vjConfigChunkDB* chunkDB, bool guarded)
    // Tell the environment manager to refresh
    environmentManager->sendRefresh();
 
-   vjDEBUG_END(vjDBG_KERNEL,1) << "vjKernel: configAdd: Exiting.\n" << vjDEBUG_FLUSH;
+   vjDEBUG_END(vjDBG_KERNEL,1) << "vjKernel: configAdd: Done adding\n\n" << vjDEBUG_FLUSH;
 }
 
 void vjKernel::configRemove(vjConfigChunkDB* chunkDB)
@@ -292,17 +292,17 @@ vjGuard<vjSemaphore> runtimeSem(mRuntimeConfigSema);
          vjASSERT(mChunkDB != NULL);
          mChunkDB->removeNamed(chunks[i]->getProperty("name"));
          int num_chunks = mChunkDB->getChunks().size();
-         vjDEBUG(vjDBG_KERNEL,1) << "vjKernel::configRemove: Removed chunk: Now have " << num_chunks << " chunks.\n" << vjDEBUG_FLUSH;
+         vjDEBUG(vjDBG_KERNEL,3) << "vjKernel::configRemove: Removed chunk: Now have " << num_chunks << " chunks.\n" << vjDEBUG_FLUSH;
       }
       else                 // Else: Give unrecognized error
       {
-         vjDEBUG(vjDBG_KERNEL,1) << "vjKernel::configRemove: Unrecognized chunk.\n"
+         vjDEBUG(vjDBG_KERNEL,0) << "vjKernel::configRemove: Unrecognized chunk.\n"
                     << "   type: " << chunks[i]->getType() << endl << vjDEBUG_FLUSH;
       }
    }
 
-   // Dump status
-   vjDEBUG(vjDBG_ALL,0) << (*getInputManager()) << endl << vjDEBUG_FLUSH;
+   // Dump status of managers after teh reconfiguration
+   vjDEBUG(vjDBG_ALL,1) << (*getInputManager()) << endl << vjDEBUG_FLUSH;
 
    vjDEBUG_END(vjDBG_KERNEL,1) << "vjKernel: configRemove: Exiting.\n" << vjDEBUG_FLUSH;
 
@@ -360,7 +360,7 @@ void vjKernel::loadConfigFile(std::string filename)
    char* vj_base_dir = getenv("VJ_BASE_DIR");
    if(vj_base_dir == NULL)
    {
-      vjDEBUG(vjDBG_ALL,0) << "vjKernel::loadConfig: Env var VJ_BASE_DIR not defined.\n" << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_ERROR,0) << "vjKernel::loadConfig: Env var VJ_BASE_DIR not defined.\n" << vjDEBUG_FLUSH;
       exit(1);
    }
 
@@ -374,7 +374,7 @@ void vjKernel::loadConfigFile(std::string filename)
       vjChunkFactory::setChunkDescDB (mConfigDesc);
       if (!mConfigDesc->load(chunk_desc_file))
       {
-         vjDEBUG(vjDBG_ALL,0) << "ERROR: vjKernel::loadConfig: Config Desc failed to load file: " << endl << vjDEBUG_FLUSH;
+         vjDEBUG(vjDBG_ERROR,0) << "ERROR: vjKernel::loadConfig: Config Desc failed to load file: " << endl << vjDEBUG_FLUSH;
          exit(1);
       }
    }
@@ -393,19 +393,18 @@ void vjKernel::loadConfigFile(std::string filename)
    {
       if (!mInitialChunkDB->load(filename.c_str()))
       {
-         vjDEBUG(vjDBG_ALL,0) << "ERROR: vjKernel::loadConfig: DB Load failed to load file: " << filename << endl << vjDEBUG_FLUSH;
+         vjDEBUG(vjDBG_ERROR,0) << "ERROR: vjKernel::loadConfig: DB Load failed to load file: " << filename << endl << vjDEBUG_FLUSH;
          exit(1);
       }
    }
 
-   vjDEBUG(vjDBG_ALL,5) << "------------  Config Chunks ----------" << vjDEBUG_FLUSH;
-   vjDEBUG(vjDBG_ALL,5) << (*mInitialChunkDB) << vjDEBUG_FLUSH;
+   vjDEBUG(vjDBG_KERNEL,5) << "------------  Loaded Config Chunks ----------" << vjDEBUG_FLUSH;
+   vjDEBUG(vjDBG_KERNEL,5) << (*mInitialChunkDB) << vjDEBUG_FLUSH;
 }
 
 
 void vjKernel::initialSetupInputManager()
 {
-   vjDEBUG(vjDBG_KERNEL,1) << "   vjKernel::initialSetupInputManager\n" << vjDEBUG_FLUSH;
    mInputManager = new (sharedMemPool) vjInputManager;
    mInputManager->configureInitial(mInitialChunkDB);
 }
@@ -413,10 +412,8 @@ void vjKernel::initialSetupInputManager()
 
 void vjKernel::initialSetupDisplayManager()
 {
-   vjDEBUG_BEGIN(vjDBG_KERNEL,1) << "------- vjKernel::initialSetupDisplayManager -------\n" << vjDEBUG_FLUSH;
    mDisplayManager = vjDisplayManager::instance();  // Get display manager
    vjASSERT(mDisplayManager != NULL);                 // Did we get an object
-   vjDEBUG_END(vjDBG_KERNEL,1) << "--------- vjKernel::initialSetupDisplayManger. exit -----\n" << vjDEBUG_FLUSH;
 }
 
 
@@ -424,7 +421,6 @@ void vjKernel::initialSetupDisplayManager()
 // All processes and data should be created by draw manager after this is done
 void vjKernel::startDrawManager(bool newMgr)
 {
-   vjDEBUG_BEGIN(vjDBG_KERNEL,1) << "   vjKernel::setupDrawManager" << endl << vjDEBUG_FLUSH;
    vjASSERT((mApp != NULL) && (mDrawManager != NULL) && (mDisplayManager != NULL));
 
    if(newMgr)
@@ -441,9 +437,7 @@ void vjKernel::startDrawManager(bool newMgr)
    if(newMgr)
    {
      mDisplayManager->setDrawManager(mDrawManager);      // This can trigger the update of windows to the draw manager
-     //mDrawManager->initDrawing();   // Configs and Starts drawing procs
    }
-   vjDEBUG_END(vjDBG_KERNEL,1) << "   vjKernel::setupDrawManager: Exiting." << endl << vjDEBUG_FLUSH;
 }
 
 // Stop the draw manager and close it's resources, then delete it
@@ -461,12 +455,9 @@ void vjKernel::stopDrawManager()
 }
 
 
-void vjKernel::setupEnvironmentManager() {
-   vjDEBUG(vjDBG_KERNEL,1) << "   vjKernel::setupEnvironmentManager\n"
-              << vjDEBUG_FLUSH;
-   //   vjTimeStamp::initialize();
+void vjKernel::setupEnvironmentManager()
+{
    environmentManager = new vjEnvironmentManager();
-   vjDEBUG(vjDBG_KERNEL,1) << "      Environment Manager running\n" << vjDEBUG_FLUSH;
 }
 
 vjUser* vjKernel::getUser(std::string userName)
