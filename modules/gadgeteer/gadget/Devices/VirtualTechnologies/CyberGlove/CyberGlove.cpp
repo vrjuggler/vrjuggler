@@ -114,13 +114,15 @@ void vjCyberGlove::controlLoop(void* nullParam)
    // Open the port and run with it
    if(mGlove->open() == 0)
    {
-      vjDEBUG(vjDBG_INPUT_MGR,0) << "ERROR: Can't open Cyberglove or it is already opened." << vjDEBUG_FLUSH;
-      return;
+     vjDEBUG(vjDBG_INPUT_MGR,0) << "ERROR: Can't open Cyberglove or it is already opened." << vjDEBUG_FLUSH;
+     return;
    }
 
    // Spin in the sampling
    while(1)
-      sample();
+   {
+	   sample();
+   }
 }
 
 int vjCyberGlove::sample()
