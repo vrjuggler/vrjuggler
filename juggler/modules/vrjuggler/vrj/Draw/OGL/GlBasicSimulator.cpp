@@ -142,9 +142,10 @@ void GlBasicSimulator::updateProjectionData(const float positionScale,
 
    // -- Calculate camera (eye) Positions -- //
    vprDEBUG(vprDBG_ALL, vprDBG_HEX_LVL)
-      << "vjDisplay::updateProjections: Getting cam position" << std::endl
-      << vprDEBUG_FLUSH;
-   vprDEBUG(vprDBG_ALL, vprDBG_HEX_LVL) << "CamPos:" << camera_trans << std::endl << vprDEBUG_FLUSH;
+      << "[vrj::GlBasicSimulator::updateProjectionData()] Getting cam position"
+      << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(vprDBG_ALL, vprDBG_HEX_LVL) << "CamPos:" << camera_trans
+                                        << std::endl << vprDEBUG_FLUSH;
 
    // Compute location of left and right eyes
    float interocular_dist = mSimViewport->getUser()->getInterocularDistance();
