@@ -49,18 +49,21 @@ namespace gadget
 
    const unsigned short MSG_DATA_SPEECH_RECOG_DIGITAL = 423;
 
-   /** Digital is the abstract base class that devices with digital data derive from.
-   *
-   *  Digital is the base class that digital devices must derive from.
-   *  Digital inherits from Input, so it has pure virtual function
-   *  constraints from Input in the following functions: StartSampling,
-   *  StopSampling, Sample, and UpdateData. <br>
-   *  Digital adds one new pure virtual function, getDigitalData() for
-   *  retreiving the digital data, similar to the addition for gadget::Position
-   *  and gadget::Analog.
-   *
-   * @see Input
-   */
+   /**
+    * SpeechRecogDigital is the abstract base class for devices that
+    * translate spoken commends into integer-identified commands.  Drivers
+    * for all such devices must derive from this class (through
+    * gadget::InputMixer).  This is in addition to gadget::Input.
+    * gadget::Input provides pure virtual function constraints in the
+    * following functions: startSampling(), stopSampling(), sample(), and
+    * updateData().
+    *
+    * gadget::SpeechRecogDigital adds the function getDigitalData() for
+    * retreiving the received commands.  This is similar to the additions made
+    * by gadget::Position and gadget::Analog.
+    *
+    * @see Input, InputMixer
+    */
    class GADGET_CLASS_API SpeechRecogDigital : public vpr::SerializableObject
    {
    public:
@@ -115,11 +118,16 @@ namespace gadget
          }
       }
 
-      /** Helper method to add a sample to the sample buffers.
-      * This MUST be called by all digital devices to add a new sample.
-      * The data samples passed in will then be modified by any local filters.
-      * @post Sample is added to the buffers and the local filters are run on that sample.
-      */
+      /**
+       * Helper method to add a collection of digital samples to the sample
+       * buffers.  This MUST be called by all digital devices to add new
+       * samples.
+       *
+       * @post The given digital samples are added to the buffers.
+       *
+       * @param digSample A vector of DigitalData objects that represent the
+       *                  newest samples taken.
+       */
       void addDigitalSample(const std::vector< DigitalData >& digSample)
       {
          // Locks and then swaps the indices.
@@ -128,26 +136,35 @@ namespace gadget
          mDigitalSamples.unlock();
       }
 
-      /** Swap the digital data buffers.
-       * @post If ready has values, then copy values from ready to stable
-       *        if not, then stable keeps its old values
+      /**
+       * Swaps the digital data buffers.
+       *
+       * @post If the ready queue has values, then those values are copied from
+       *       the ready queue to the stable queue.  If not, then stable queue
+       *       is not changed.
        */
       void swapDigitalBuffers()
       {
          mDigitalSamples.swapBuffers();
       }
 
+      /**
+       * Returns the current stable sample buffers for this device.
+       */
       const SampleBuffer_t::buffer_t& getDigitalDataBuffer()
       {
          return mDigitalSamples.stableBuffer();
       }
+
       virtual std::string getInputTypeName()
       {
          return std::string("SpeechRecogDigital");
       }
 
+      /** Serializes this object. */
       virtual vpr::ReturnStatus writeObject(vpr::ObjectWriter* writer);
 
+      /** De-serializes this object. */
       virtual vpr::ReturnStatus readObject(vpr::ObjectReader* reader);
 
    protected:

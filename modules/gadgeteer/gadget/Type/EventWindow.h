@@ -55,18 +55,16 @@ const unsigned short MSG_DATA_EVENT_WINDOW = 420;
 
 /**
  * gadget::EventWindow is an abstract class for interfacing with keyboard (and
- * other key-based) devices.
- *
- * Informally, an event window can be thought of as map of keys to number of
- * times prseed since last update.
- *
- * That is to say, that gadget::EventWindow counts the number of key presses
- * between updates.  Updates in Juggler occur once per frame.
+ * other key-based) devices.  Informally, an event window can be thought of as
+ * a map of keyboard and mouse events (presses, releases, and movements) to
+ * integers.  The integers indicate the number of times the event occurred
+ * since the last update.  That is to say, gadget::EventWindow counts the
+ * number of keyboard and mouse events between updates.  Updates in Juggler
+ * occur once per frame.
  */
 class GADGET_CLASS_API EventWindow : public vpr::SerializableObject
 {
 public:
-   //typedef std::queue<gadget::EventPtr> EventQueue;
    typedef std::vector<gadget::EventPtr> EventQueue;
 
    EventWindow();
@@ -79,12 +77,14 @@ public:
    virtual std::string getInputTypeName();
 
    /**
-    * Write both mCurKeys and mCurEventQueueLock to a stream using the given ObjectWriter.
+    * Writes both mCurKeys and mCurEventQueueLock to a stream using the given
+    * object writer.
     */
    virtual vpr::ReturnStatus writeObject(vpr::ObjectWriter* writer);
 
    /**
-    * Read mCurKeys and mCurEventQueueLock from a stream using the given ObjectReader.
+    * Reads mCurKeys and mCurEventQueueLock from a stream using the given
+    * object reader.
     */
    virtual vpr::ReturnStatus readObject(vpr::ObjectReader* reader);
 
@@ -95,7 +95,7 @@ public:
    }
 
    /**
-    * Get the interval that will be used for syncronization while only sharing
+    * Gets the interval that will be used for syncronization while only sharing
     * keyboard data across the cluster.
     */
    vpr::Interval getSyncTime()
@@ -104,24 +104,39 @@ public:
    }
 
    /**
-    * Returns the number of times the key was pressed during the last frame.
-    * You can put this in an if to check if was pressed at all, or if you are
-    * doing processing based on this catch the actual number.
+    * Returns the number of times the given key was pressed during the last
+    * frame.  The value returned can be used in a conditional expression to
+    * determine if the key was pressed at all.
+    *
+    * @param keyId The identifier for the key whose state will be queried.
+    *
     * @return The number of times the key was pressed since last update.
     */
    int keyPressed(gadget::Keys keyId)
    {
       return mCurKeys[keyId];
    }
-	
-	/**
-    * Checks for the given modifier key pressed only.
-    * @return true if key pressed exclusively.
+
+   /**
+    * Determines if the given modifier key is the only modifier pressed.
+    *
+    * @pre The given key identifier is one of gadget::NONE, gadget::KEY_ALT,
+    *      gadget::KEY_CTRL, or gadget::KEY_SHIFT.
+    *
+    * @param modKey A gadget::Keys value that must be one of gadget::NONE,
+    *               gadget::KEY_ALT, gadget::KEY_CTRL, or gadget::KEY_SHIFT.
+    *
+    * @return true if the given modifier key is the only modifier key pressed.
     */
    bool modifierOnly(gadget::Keys modKey);
 
-   /** Return the vrjuggler name associated with keyId.
-    * @example getKeyName(KEY_UP) returns "KEY_UP"
+   /**
+    * Returns the symbolic Gadgeteer name associated with keyId.  For example,
+    * getKeyName(gadget::KEY_UP) retuns "KEY_UP".
+    *
+    * @param keyId The identifier for the key whose name will be returned.
+    *
+    * @return A string that is the symbolic name of the given key.
     */
    std::string getKeyName(gadget::Keys keyId);
 
@@ -130,7 +145,6 @@ public:
     */
    EventQueue getEventQueue();
 
-public:
    /**
     * Adds the given event object to the in-progress queue.
     */
@@ -166,9 +180,10 @@ protected:
    EventQueue mWorkingEventQueue; /**< In-progress queue of events. */
    vpr::Mutex mWorkingEventQueueLock;
 
-   // We have to create a Interval that the user can use across the cluster to syncronize
-   // their applications navigation. We would like to use the timestamps from the event queue
-   // but we only get events during frames that have key presses and mouse motion.
+   // We have to create a Interval that the user can use across the cluster to
+   // syncronize their applications navigation. We would like to use the
+   // timestamps from the event queue but we only get events during frames
+   // that have key presses and mouse motion.
    vpr::Interval mSyncTime;      /**< Holds an Interval that is syncrnized across the cluster */
 };
 
