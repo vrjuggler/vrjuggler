@@ -38,14 +38,8 @@
 
 #include <string.h>
 #include <string>
-
-#if defined __WIN32__ || defined WIN32 || defined _Windows || defined _WIN32
-#include <winsock2.h>
-#include <windows.h>
-#else
 #include <sys/types.h>
 #include <netinet/in.h>
-#endif
 
 #include <IO/Socket/SocketTypes.h>
 
