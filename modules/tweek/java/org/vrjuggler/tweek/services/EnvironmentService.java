@@ -36,16 +36,24 @@
 
 package org.vrjuggler.tweek.services;
 
+import org.vrjuggler.tweek.beans.BeanAttributes;
+import org.vrjuggler.tweek.beans.ServiceBean;
+
+import java.util.ArrayList;
 
 /**
- * The Environment Service Bean.
+ * The Environment Service Bean. This service will expand environment variables
+ * in a string.
  *
  * @since 1.0
  */
-public class EnvironmentService implements java.io.Serializable
+public class EnvironmentService
+   extends ServiceBean
+   implements java.io.Serializable
 {
-   public EnvironmentService ()
+   public EnvironmentService( BeanAttributes attrs)
    {
+      super( attrs );
    }
 
    /**
@@ -65,6 +73,17 @@ public class EnvironmentService implements java.io.Serializable
       return commandLineArgs;
    }
 
+   /**
+    * Expands environment variables in the input string. Environment variables
+    * may be specified using either $(variable_name) or ${variable_name}
+    * everything between the parenthesis or braces will be considered the name
+    * of the variables.
+    *
+    * @param input_str  the string in which to look for and expand environment
+    *                   variables
+    *
+    * @return  the input string with the variables replaced by their values
+    */
    public static String expandEnvVars (String input_str)
    {
       String new_str = input_str;
@@ -116,6 +135,12 @@ public class EnvironmentService implements java.io.Serializable
       return new_str;
    }
 
+   /**
+    * Gets the user's HOME environment variable using the JVM instead of the
+    * environment variable.
+    *
+    * @return  the path to the user's home directory
+    */
    public static String getUserHome ()
    {
       return System.getProperty("user.home");

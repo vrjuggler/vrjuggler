@@ -53,6 +53,13 @@ import java.io.FilenameFilter;
  */
 public class FileFinder
 {
+   /**
+    * Constructs a new FileFinder object looking for files with the given
+    * extension in the given path.
+    *
+    * @param ext     the extension to match against not including the '.'
+    * @param path    the path in which to search for files
+    */
    public FileFinder (String ext, String path) throws BeanPathException
    {
       m_directory = new File(path);
