@@ -215,7 +215,7 @@ DPP_LANG_RESTORE
 if test "x$OS_TYPE" = "xWin32" ; then
    PYTHON_LIB="$PYTHON_LIB.lib"
    PYTHON_LIB_OPT="$PYTHON_LIB.lib"
-   PYTHON_LIB_DBG="${PYTHON_LIB_OPT}_d.lib"
+   PYTHON_LIB_DBG="${PYTHON_LIB}_d.lib"
 else
    PYTHON_LIB="-l$PYTHON_LIB"
    PYTHON_LIB_OPT="$PYTHON_LIB"
@@ -252,8 +252,8 @@ if test "x$BOOST_HACKS" = "xyes" -a $boost_minor_ver -ge 31; then
                   toolset='mp'
                   ;;
                Solaris)
-                     toolset='sw'
-               ;;
+                  toolset='sw'
+                  ;;
             esac
          fi
          ;;
