@@ -8,17 +8,18 @@
 #include <GL/glu.h>
 
 
-// Quaternion Structure
-// quaternion is represented as (w,[x,y,z])
-// where: w       - scalar part
-//        x, y, z - vector part
+/* Quaternion Structure
+   quaternion is represented as (w,[x,y,z])
+   where: w       - scalar part
+          x, y, z - vector part
+*/
 typedef struct tag_GL_QUAT { 
   GLfloat w, x, y, z;
 } GL_QUAT;
 
 
 
-// define APIENTRY and CALLBACK to null string if we aren't on Win32
+/* define APIENTRY and CALLBACK to null string if we aren't on Win32 */
 #if !defined(WIN32)
 #define APIENTRY
 #define CALLBACK
@@ -53,7 +54,7 @@ extern GLfloat APIENTRY gluQuatLength_EXT(GL_QUAT*);
 extern void APIENTRY gluQuatNegate_EXT(GL_QUAT*, GL_QUAT*);
 extern void APIENTRY gluQuatExp_EXT(GL_QUAT*, GL_QUAT*);
 extern void APIENTRY gluQuatLog_EXT(GL_QUAT*, GL_QUAT*);
-//extern void APIENTRY gluQuatLnDif_EXT(GL_QUAT*, GL_QUAT*, GL_QUAT*);
+/*extern void APIENTRY gluQuatLnDif_EXT(GL_QUAT*, GL_QUAT*, GL_QUAT*); */
 
 
 
@@ -67,5 +68,5 @@ extern void APIENTRY gluQuatLog_EXT(GL_QUAT*, GL_QUAT*);
 #endif
 
 
-#endif  // __gluquat__
+#endif  /* __gluquat__ */
 

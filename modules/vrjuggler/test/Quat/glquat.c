@@ -27,20 +27,20 @@
 
 
 
-// includes
+/* includes */
 #include "glquat.h"
 #include <math.h>
 
-// some math.h do not have M_PI definition
+/* some math.h do not have M_PI definition */
 #ifndef M_PI
 #define M_PI 3.14159265358979323846264338327950288419716939937510f
 #endif
 
 
-#define DELTA 1e-6     // error tolerance
+#define DELTA 1e-6     /* error tolerance */
 
 #if defined (WIN32)
-#pragma warning (disable:4244)	// disable conversion warnings (dbl -> fl)
+#pragma warning (disable:4244)	/* disable conversion warnings (dbl -> fl) */
 #endif
 
 
@@ -88,7 +88,7 @@ void APIENTRY gluQuatToMat_EXT(GL_QUAT * quat, GLfloat m[4][4])
   m[3][2] = 0;
   m[3][3] = 1;
 */
-  // fixed by kevin (transposed the matrix)...
+  /* fixed by kevin (transposed the matrix)... */
   m[0][0] = 1.0 - (yy + zz);
   m[0][1] = xy + wz;
   m[0][2] = xz - wy;
@@ -183,7 +183,7 @@ void APIENTRY gluMatToQuat_EXT(GLfloat m[4][4], GL_QUAT * quat)
 
   tr = m[0][0] + m[1][1] + m[2][2];
 
-  // check the diagonal
+  /* check the diagonal */
 
   if (tr > 0.0)
   {
@@ -199,7 +199,7 @@ void APIENTRY gluMatToQuat_EXT(GLfloat m[4][4], GL_QUAT * quat)
 
   } else {		
 	
-	  // diagonal is negative
+	  /* diagonal is negative */
 
 	  i = 0;
 
@@ -253,11 +253,11 @@ void APIENTRY gluQuatSlerp_EXT(GL_QUAT * from, GL_QUAT * to, GLfloat t,
         GLdouble          omega, cosom, sinom;
         GLdouble          scale0, scale1;
 
-        // calc cosine
+        /* calc cosine */
         cosom = from->x * to->x + from->y * to->y + from->z * to->z
 			       + from->w * to->w;
 
-        // adjust signs (if necessary)
+        /* adjust signs (if necessary) */
         if ( cosom < 0.0 )
 		{
 			cosom = -cosom;
@@ -276,25 +276,25 @@ void APIENTRY gluQuatSlerp_EXT(GL_QUAT * from, GL_QUAT * to, GLfloat t,
 
         }
 
-        // calculate coefficients
+        /* calculate coefficients */
 
         if ( (1.0 - cosom) > DELTA )
 		{
-                // standard case (slerp)
+                /* standard case (slerp) */
                 omega = acos(cosom);
                 sinom = sin(omega);
                 scale0 = sin((1.0 - t) * omega) / sinom;
                 scale1 = sin(t * omega) / sinom;
 
         } else {
-			    // "from" and "to" quaternions are very close
-			    //  ... so we can do a linear interpolation
+			    /* "from" and "to" quaternions are very close */
+			    /*  ... so we can do a linear interpolation */
 
                 scale0 = 1.0 - t;
                 scale1 = t;
         }
 
-		// calculate final values
+		/* calculate final values */
 		res->x = scale0 * from->x + scale1 * to1[0];
 		res->y = scale0 * from->y + scale1 * to1[1];
 		res->z = scale0 * from->z + scale1 * to1[2];
@@ -325,11 +325,11 @@ void APIENTRY gluQuatLerp_EXT(GL_QUAT * from, GL_QUAT * to, GLfloat t,
         GLdouble          cosom;
         GLdouble          scale0, scale1;
 
-        // calc cosine
+        /* calc cosine */
         cosom = from->x * to->x + from->y * to->y + from->z * to->z
 			       + from->w * to->w;
 
-        // adjust signs (if necessary)
+        /* adjust signs (if necessary) */
         if ( cosom < 0.0 )
 		{
 			to1[0] = - to->x;
@@ -347,11 +347,11 @@ void APIENTRY gluQuatLerp_EXT(GL_QUAT * from, GL_QUAT * to, GLfloat t,
         }
 
 
-		// interpolate linearly
+		/* interpolate linearly */
         scale0 = 1.0 - t;
         scale1 = t;
 
-		// calculate final values
+		/* calculate final values */
 		res->x = scale0 * from->x + scale1 * to1[0];
 		res->y = scale0 * from->y + scale1 * to1[1];
 		res->z = scale0 * from->z + scale1 * to1[2];
@@ -415,7 +415,7 @@ void APIENTRY gluQuatGetValue_EXT(GL_QUAT *quat, GLfloat *x, GLfloat *y,
     GLfloat	len;
     GLfloat tx, ty, tz;
 
-	// cache variables
+	/* cache variables */
 	tx = quat->x;
 	ty = quat->y;
 	tz = quat->z;
@@ -460,7 +460,7 @@ void APIENTRY gluQuatSetValue_EXT(GL_QUAT *quat, GLfloat x, GLfloat y,
 {
 	GLfloat temp, dist;
 
-	// normalize
+	/* normalize */
 	temp = x*x + y*y + z*z;
 
     dist = (GLfloat)(1.0 / sqrt(temp));
@@ -494,8 +494,8 @@ void APIENTRY gluQuatSetValue_EXT(GL_QUAT *quat, GLfloat x, GLfloat y,
 ***********************************************************************EDOC*/
 void APIENTRY gluQuatScaleAngle_EXT(GL_QUAT * quat, GLfloat scale)
 {
-    GLfloat x, y, z;	// axis
-    GLfloat angle;		// and angle
+    GLfloat x, y, z;	/* axis */
+    GLfloat angle;		/* and angle */
 
 	gluQuatGetValue_EXT(quat, &x, &y, &z, &angle);
 
@@ -558,18 +558,18 @@ void APIENTRY gluQuatSetFromAx_EXT(GLfloat x1,GLfloat y1, GLfloat z1,
 
     GLfloat	cost, len, ss;
 
-	// get dot product of two vectors
+	/* get dot product of two vectors */
     cost = x1 * x2 + y1 * y2 + z1 * z2;
 
-    // check if parallel
+    /* check if parallel */
     if (cost > 0.99999f) {
 	quat->x = quat->y = quat->z = 0.0f;
 	quat->w = 1.0f;
 	return;
     }
-    else if (cost < -0.99999f) {		// check if opposite
+    else if (cost < -0.99999f) {		/* check if opposite */
 
-	// check if we can use cross product of from vector with [1, 0, 0]
+	/* check if we can use cross product of from vector with [1, 0, 0] */
 	tx = 0.0;
 	ty = x1;
 	tz = -y1;
@@ -578,13 +578,13 @@ void APIENTRY gluQuatSetFromAx_EXT(GLfloat x1,GLfloat y1, GLfloat z1,
 
 	if (len < DELTA)
 	{
-		// nope! we need cross product of from vector with [0, 1, 0]
+		/* nope! we need cross product of from vector with [0, 1, 0] */
 		tx = -z1;
 		ty = 0.0;
 		tz = x1;
 	}
 
-	// normalize
+	/* normalize */
 	temp = tx*tx + ty*ty + tz*tz;
 
     dist = (GLfloat)(1.0 / sqrt(temp));
@@ -601,7 +601,7 @@ void APIENTRY gluQuatSetFromAx_EXT(GLfloat x1,GLfloat y1, GLfloat z1,
 	return;
     }
 
-	// ... else we can just cross two vectors
+	/* ... else we can just cross two vectors */
 
 	tx = y1 * z2 - z1 * y2;
 	ty = z1 * x2 - x1 * z2;
@@ -616,7 +616,7 @@ void APIENTRY gluQuatSetFromAx_EXT(GLfloat x1,GLfloat y1, GLfloat z1,
     tz *= dist;
 
 
-    // we have to use half-angle formulae (sin^2 t = ( 1 - cos (2t) ) /2)
+    /* we have to use half-angle formulae (sin^2 t = ( 1 - cos (2t) ) /2) */
 	
 	ss = (float)sqrt(0.5f * (1.0f - cost));
 
@@ -624,13 +624,13 @@ void APIENTRY gluQuatSetFromAx_EXT(GLfloat x1,GLfloat y1, GLfloat z1,
 	ty *= ss;
     tz *= ss;
 
-    // scale the axis to get the normalized quaternion
+    /* scale the axis to get the normalized quaternion */
     quat->x = tx;
     quat->y = ty;
     quat->z = tz;
 
-    // cos^2 t = ( 1 + cos (2t) ) / 2
-    // w part is cosine of half the rotation angle
+    /* cos^2 t = ( 1 + cos (2t) ) / 2 */
+    /* w part is cosine of half the rotation angle */
     quat->w = (float)sqrt(0.5f * (1.0f + cost));
 
 }
@@ -660,7 +660,7 @@ void APIENTRY gluQuatMul_EXT(GL_QUAT* q1, GL_QUAT* q2, GL_QUAT* res)
 	res->w = q1->w * q2->w - q1->x * q2->x - q1->y * q2->y - q1->z * q2->z;
 
 
-	// make sure the resulting quaternion is a unit quat.
+	/* make sure the resulting quaternion is a unit quat. */
 	gluQuatNormalize_EXT(res);
 
 }
@@ -686,7 +686,7 @@ void APIENTRY gluQuatAdd_EXT(GL_QUAT* q1, GL_QUAT* q2, GL_QUAT* res)
 	res->z = q1->z + q2->z;
 	res->w = q1->w + q2->w;
 
-	// make sure the resulting quaternion is a unit quat.
+	/* make sure the resulting quaternion is a unit quat. */
 	gluQuatNormalize_EXT(res);
 }
 
@@ -711,7 +711,7 @@ void APIENTRY gluQuatSub_EXT(GL_QUAT* q1, GL_QUAT* q2, GL_QUAT* res)
 	res->z = q1->z - q2->z;
 	res->w = q1->w - q2->w;
 
-	// make sure the resulting quaternion is a unit quat.
+	/* make sure the resulting quaternion is a unit quat. */
 	gluQuatNormalize_EXT(res);
 }
 
@@ -735,7 +735,7 @@ void APIENTRY gluQuatDiv_EXT(GL_QUAT* q1, GL_QUAT* q2, GL_QUAT* res)
 
 	gluQuatCopy_EXT(q2, &q);
 
-	// invert vector
+	/* invert vector */
     q.x = -q.x;
     q.y = -q.y;
     q.z = -q.z;
@@ -950,7 +950,7 @@ void APIENTRY gluQuatLog_EXT(GL_QUAT* q1, GL_QUAT* q2)
 
 	length = sqrt (q1->x * q1->x + q1->y * q1->y + q1->z * q1->z);
 
-	//make sure we do not divide by 0
+	/*make sure we do not divide by 0 */
 	if (q1->w != 0.0)
 		length = atan (length / q1->w);
 	else length = (GLfloat)M_PI/2;
@@ -998,7 +998,7 @@ void APIENTRY gluQuatLnDif_EXT(GL_QUAT *q1, GL_QUAT *q2, GL_QUAT *res)
 */
 
 
-// cleanup stuff we changed
+/* cleanup stuff we changed */
 #if defined (WIN32)
-#pragma warning( default : 4244 )	// set it to default again
+#pragma warning( default : 4244 )	/* set it to default again */
 #endif
