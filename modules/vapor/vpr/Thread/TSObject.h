@@ -58,8 +58,7 @@ namespace vpr
 class TSBaseObject
 {
 public:
-   virtual ~TSBaseObject()
-   {;}
+   virtual ~TSBaseObject();
 };
 
 /**
