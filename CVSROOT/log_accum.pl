@@ -962,7 +962,7 @@ for (my $i = 0; ; $i++) {
 }
 
 &cleanup_tmpfiles();
-&cleanup_lockfiles();
+#&cleanup_lockfiles();
 &print_exit_message();
 exit 0;
 # EOF
