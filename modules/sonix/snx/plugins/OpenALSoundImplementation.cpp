@@ -616,7 +616,7 @@ void OpenALSoundImplementation::bind( const std::string& alias )
    {
       soundInfo.triggerOnNextBind = false; // done...
       std::cout<<"[snx]OpenAL| NOTIFY: triggering reconfigured sound\n"<<std::flush;
-      this->trigger( alias );
+      this->trigger( alias, soundInfo.repeat );
    }
 }   
 
