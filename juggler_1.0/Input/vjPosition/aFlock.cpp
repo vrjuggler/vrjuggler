@@ -37,7 +37,7 @@
 // it allows this driver to work under 6.5 (6.2 worked fine)
 #define _OLD_TERMIOS
 
-#include <termio.h>        // for definition of NCCS
+#include <termios.h>
 
 // including sys/termio.h is bad for linux, and totally useless since
 // we just included termio.h which #includes it...
@@ -280,19 +280,13 @@ int aFlock::stop()
     bird_command[0] = 'B';
     write( _portId, bird_command, 1 );
 
-    // TCFLSH = 0, flush the input
-    // TCFLSH = 1, flush the output queue;
-    // TCFLSH = 2, flush both the input and output queues.
-    ioctl( _portId, TCFLSH, 2 );
+    tcflush(_portId, TCIOFLUSH);
 
     sginap( 5 );
     bird_command[0] = 'G';
     write( _portId, bird_command, 1 );
 
-    // TCFLSH = 0, flush the input
-    // TCFLSH = 1, flush the output queue;
-    // TCFLSH = 2, flush both the input and output queues.
-    ioctl( _portId, TCFLSH, 2 );
+    tcflush(_portId, TCIOFLUSH);
 
     sleep( 2 );
     close( _portId );
@@ -581,10 +575,7 @@ void  aFlock::pickBird( const int& birdID, const int& port )
     char buff = 0xF0 + birdID;
     write( port, &buff, 1 );
 
-    // TCFLSH = 0, flush the input
-    // TCFLSH = 1, flush the output queue;
-    // TCFLSH = 2, flush both the input and output queues.
-    ioctl( port, TCFLSH, 2 );
+    tcflush(port, TCIOFLUSH);
 
     sginap( 1 );
 }
@@ -603,7 +594,7 @@ int aFlock::open_port( const char* const serialPort,
     // with - 48
     // without - 40
     // ... of course these may change in the future ...
-    cout<<"  ** termio struct size = "<<sizeof(termio)<<"\n"<<flush;
+    cout<<"  ** termio struct size = "<<sizeof(termios)<<"\n"<<flush;
 
     ///////////////////////////////////////////////////////////////////
     // Open and close the port to reset the tracker, then
@@ -636,8 +627,8 @@ int aFlock::open_port( const char* const serialPort,
     //////////////////////////////////////////////////////////////////
 
     cout << "  Getting current term setting\n" << flush;
-    termio termIoPort;
-    ioctl( portId, TCGETA, &termIoPort );
+    termios termIoPort;
+    tcgetattr(portId, &termIoPort);
 
     // set the flags to 0.  why???
     termIoPort.c_iflag =
@@ -702,7 +693,7 @@ int aFlock::open_port( const char* const serialPort,
     // Set the new attributes
     int result = 0;
     cout << "  Setting new term setting: "<<baud<<" baud..." << flush;
-    result = ioctl( portId, TCSETA, &termIoPort );
+    result = tcsetattr(portId, TCSANOW, &termIoPort);
 
     // did it succeed?
     if (result == 0)
@@ -734,10 +725,7 @@ void aFlock::set_blocking( const int& port, const int& blocking )
     // 1 Blocked
     fcntl( port, F_SETFL, blocking ? blockf : nonblock );
 
-    // TCFLSH = 0, flush the input
-    // TCFLSH = 1, flush the output queue;
-    // TCFLSH = 2, flush both the input and output queues.
-    ioctl( port, TCFLSH, 2 );
+    tcflush(port, TCIOFLUSH);
 
     sginap( 10 );
 
@@ -761,10 +749,7 @@ void aFlock::set_sync( const int& port, const int& sync )
     buff[1] = sync;
     write( port,buff,2 );
 
-    // TCFLSH = 0, flush the input
-    // TCFLSH = 1, flush the output queue;
-    // TCFLSH = 2, flush both the input and output queues.
-    ioctl( port, TCFLSH, 2 );
+    tcflush(port, TCIOFLUSH);
 }
 
 
@@ -819,11 +804,8 @@ void aFlock::set_hemisphere( const int& port,
 	    break;
 	}
 	write( port, buff, 3 );
-	
-	// TCFLSH = 0, flush the input
-	// TCFLSH = 1, flush the output queue;
-	// TCFLSH = 2, flush both the input and output queues.
-	ioctl( port, TCFLSH, 2 );
+
+        tcflush(port, TCIOFLUSH);
 
 	sginap( 5 );
     }
@@ -842,10 +824,7 @@ void aFlock::set_rep_and_stream(const int& port, const char& reportRate)
     buff[0] = reportRate;
     write( port, buff, 1 );
 
-    // TCFLSH = 0, flush the input
-    // TCFLSH = 1, flush the output queue;
-    // TCFLSH = 2, flush both the input and output queues.
-    ioctl( port, TCFLSH, 2 );
+    tcflush(port, TCIOFLUSH);
 
     sginap( 20 );
 
@@ -855,10 +834,7 @@ void aFlock::set_rep_and_stream(const int& port, const char& reportRate)
     buff[0] = '@';
     write( port, buff, 1 );
 
-    // TCFLSH = 0, flush the input
-    // TCFLSH = 1, flush the output queue;
-    // TCFLSH = 2, flush both the input and output queues.
-    ioctl( port, TCFLSH, 2 );
+    tcflush(port, TCIOFLUSH);
 
     sginap( 5 );
 }
@@ -876,11 +852,8 @@ void aFlock::set_pos_angles(const int& port, const int& transmitter, const int& 
 	aFlock::pickBird( i,port );
 	buff[0] = 'Y';
 	write( port, buff, 1 );
-	
-	// TCFLSH = 0, flush the input
-	// TCFLSH = 1, flush the output queue;
-	// TCFLSH = 2, flush both the input and output queues.
-	ioctl( port, TCFLSH, 2 );
+
+        tcflush(port, TCIOFLUSH);
 
 	sginap( 5 );
     }
@@ -901,10 +874,7 @@ void aFlock::set_filter(const int& port, const BIRD_FILT& filter)
     buff[3] = 0;
     write(port, buff, 4);
 
-    // TCFLSH = 0, flush the input
-    // TCFLSH = 1, flush the output queue;
-    // TCFLSH = 2, flush both the input and output queues.
-    ioctl( port, TCFLSH, 2 );
+    tcflush(port, TCIOFLUSH);
 
     //TODO: Do I need to sleep here?
     sginap(120);
@@ -921,10 +891,7 @@ void aFlock::set_transmitter(const int& port, const int& transmitter)
     buff[1] = (unsigned char) transmitter  << 4;
     write(port, buff, 2);
 
-    // TCFLSH = 0, flush the input
-    // TCFLSH = 1, flush the output queue;
-    // TCFLSH = 2, flush both the input and output queues.
-    ioctl( port, TCFLSH, 2 );
+    tcflush(port, TCIOFLUSH);
 
     sginap(120);
 }
@@ -943,10 +910,7 @@ void aFlock::set_autoconfig(const int& port, const int& numbirds)
     buff[2] = numbirds+1;  //number of input devices + 1 for transmitter
     write(port, buff,3);
 
-    // TCFLSH = 0, flush the input
-    // TCFLSH = 1, flush the output queue;
-    // TCFLSH = 2, flush both the input and output queues.
-    ioctl( port, TCFLSH, 2 );
+    tcflush(port, TCIOFLUSH);
 
     sleep(2);
 }
@@ -965,10 +929,7 @@ void aFlock::set_group(const int& port)
     buff[2] = 0x01;
     write(port, buff, 3);
 
-    // TCFLSH = 0, flush the input
-    // TCFLSH = 1, flush the output queue;
-    // TCFLSH = 2, flush both the input and output queues.
-    ioctl( port, TCFLSH, 2 );
+    tcflush(port, TCIOFLUSH);
 
     sleep(2);
 }
