@@ -34,6 +34,7 @@
 
 #include <vpr/Util/Debug.h>
 #include <gadget/Type/Analog.h>
+#include <gadget/Util/DeviceSerializationTokens.h>
 
 
 namespace gadget
@@ -45,34 +46,44 @@ vpr::ReturnStatus Analog::writeObject(vpr::ObjectWriter* writer)
 
    ////////////////////////////////////////////////////
    SampleBuffer_t::buffer_t& stable_buffer = mAnalogSamples.stableBuffer();
-   writer->writeUint16(MSG_DATA_ANALOG);                                           // Write out the data type so that we can assert if reading in wrong place
+   writer->beginTag(Analog::getBaseType());
+   writer->beginAttribute(gadget::tokens::DataTypeAttrib);
+      writer->writeUint16(MSG_DATA_ANALOG);                                           // Write out the data type so that we can assert if reading in wrong place
+   writer->endAttribute();
 
    if ( !stable_buffer.empty() )
    {
       mAnalogSamples.lock();
-      writer->writeUint16(stable_buffer.size());                                          // Write the # of vectors in the stable buffer
+      writer->beginAttribute(gadget::tokens::SampleBufferLenAttrib);
+         writer->writeUint16(stable_buffer.size());                                          // Write the # of vectors in the stable buffer
+      writer->endAttribute();
       for ( unsigned j=0;j<stable_buffer.size();j++ )                                            // For each vector in the stable buffer
       {
-         writer->writeUint16(stable_buffer[j].size());                                   // Write the # of AnalogDatas in the vector
-         //std::cout << "Analog Data Size: "  << stable_buffer.back().size() << std::endl;
-         //std::cout << "ME: ";
+         writer->beginTag(gadget::tokens::BufferSampleTag);
+         writer->beginAttribute(gadget::tokens::BufferSampleLenAttrib);
+            writer->writeUint16(stable_buffer[j].size());                                   // Write the # of AnalogDatas in the vector
+         writer->endAttribute();
          for ( unsigned i=0;i<stable_buffer[j].size();i++ )                                 // For each AnalogData in the vector
          {
             writer->writeFloat(stable_buffer[j][i].getAnalog());    // Write Analog Data(int)
-            //std::cout << stable_buffer[j][i].getAnalog();
             writer->writeUint64(stable_buffer[j][i].getTime().usec());              // Write Time Stamp vpr::Uint64
          }
-         //std::cout << std::endl;
+         writer->endTag();
       }
       mAnalogSamples.unlock();
    }
    else        // No data or request out of range, return default value
    {
-      writer->writeUint16(0);
+      writer->beginTag(gadget::tokens::BufferSampleTag);
+         writer->beginAttribute(gadget::tokens::BufferSampleLenAttrib);
+            writer->writeUint16(0);
+         writer->endAttribute();
+      writer->endTag();
       vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
          << "Warning: Analog::writeObject: Stable buffer is empty. If this is not the first write, then this is a problem.\n"
          << vprDEBUG_FLUSH;
    }
+   writer->endTag();
 
    return vpr::ReturnStatus::Succeed;
    ////////////////////////////////////////////////////
@@ -83,7 +94,10 @@ vpr::ReturnStatus Analog::readObject(vpr::ObjectReader* reader)
    vprASSERT(reader->attribExists("rim.timestamp.delta"));
    vpr::Uint64 delta = reader->getAttrib<vpr::Uint64>("rim.timestamp.delta");
 
-   vpr::Uint16 temp = reader->readUint16();
+   reader->beginTag(Analog::getBaseType());
+   reader->beginAttribute(gadget::tokens::DataTypeAttrib);
+      vpr::Uint16 temp = reader->readUint16();
+   reader->endAttribute();
    vprASSERT(temp==MSG_DATA_ANALOG && "[Remote Input Manager]Not Analog Data");                          // ASSERT if this data is really not Analog Data
    std::vector<AnalogData> dataSample;
 
@@ -91,13 +105,17 @@ vpr::ReturnStatus Analog::readObject(vpr::ObjectReader* reader)
    float value;
    vpr::Uint64 timeStamp;
    AnalogData temp_analog_data;
+   reader->beginAttribute(gadget::tokens::SampleBufferLenAttrib);
+      unsigned numVectors = reader->readUint16();
+   reader->endAttribute();
 
-   unsigned numVectors = reader->readUint16();
-   //std::cout << "Stable Analog Buffer Size: "  << numVectors << std::endl;
    mAnalogSamples.lock();
    for ( unsigned i=0;i<numVectors;i++ )
    {
-      numAnalogDatas = reader->readUint16();
+      reader->beginTag(gadget::tokens::BufferSampleTag);
+      reader->beginAttribute(gadget::tokens::BufferSampleLenAttrib);
+         numAnalogDatas = reader->readUint16();
+      reader->endAttribute();
       //std::cout << "Analog Data Size: "    << numAnalogDatas << std::endl;
       dataSample.clear();
       //std::cout << "ME: ";
@@ -112,9 +130,13 @@ vpr::ReturnStatus Analog::readObject(vpr::ObjectReader* reader)
       }
       //std::cout << std::endl;
       mAnalogSamples.addSample(dataSample);
+      reader->endTag();
    }
    mAnalogSamples.unlock();
    swapAnalogBuffers();
+
+   reader->endTag();
+
    return vpr::ReturnStatus::Succeed;
 }
 

@@ -48,6 +48,8 @@
 #include <jccl/RTRC/ConfigChunkHandler.h>
 #include <map>
 
+#include <boost/smart_ptr.hpp>
+
 
 namespace gadget
 {
@@ -57,6 +59,7 @@ class Proxy;
 class Input;
 class RemoteInputManager;
 class DeviceFactory;
+class InputLogger;
 
 /**
  * The Input Manager holds an manages all Gadgeteer Input devices.
@@ -215,6 +218,9 @@ protected:
     */
    vpr::ReturnStatus loadDriverDSO(vpr::LibraryPtr driverDSO);
 
+   /* friends */
+   friend class InputLogger;  /**< Make input logger a friend */
+
 protected:
    std::vector<vpr::LibraryPtr> mDeviceDrivers;
 
@@ -222,14 +228,18 @@ protected:
 
    tDevTableType                        mDevTable;
    std::map<std::string, Proxy*>        mProxyTable;    /**< list of proxies in the system */
-   std::map<std::string, std::string>   mProxyAliases;  /**< List of alias names for proxies */
 
-   // The mProxyAlias table serves as a secondary lookup for proxies.  ie. if
-   // the proxy name is not found in mProxyTable, then search mProxyAliases
-   // for it.
+   /** List of alias names for proxies.
+   * The mProxyAlias table serves as a secondary lookup for proxies.  ie. if
+   * the proxy name is not found in mProxyTable, then search mProxyAliases
+   * for it.
+   */
+   std::map<std::string, std::string>   mProxyAliases;
 
-   jccl::ConfigChunkPtr    mDisplaySystemChunk;    /**< Config chunk for the displaySystem */
-    std::string localHostName;
+   jccl::ConfigChunkPtr             mDisplaySystemChunk;    /**< Config chunk for the displaySystem */
+
+   boost::shared_ptr<InputLogger>   mInputLogger;           /**< The input logger for the system. Constructed on demand. */
+
 private:
    /** Function to configure the proxy Alias array. */
    bool configureProxyAlias(jccl::ConfigChunkPtr chunk);
@@ -239,6 +249,9 @@ private:
 
    /** Adds a proxy alias. */
    void addProxyAlias(std::string alias_name, std::string proxy_name);
+
+   /** Configure/create a logger for the system */
+   bool configureInputLogger(jccl::ConfigChunkPtr chunk);
 
    /*********************************************************
    *          RemoteInputManger                             *
