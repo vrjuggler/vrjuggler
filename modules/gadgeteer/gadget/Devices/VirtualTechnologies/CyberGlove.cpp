@@ -10,19 +10,30 @@
 #include <Input/vjGlove/vt_globals.h>
 #include <Input/vjGlove/vt_types.h>
 #include <Input/vjGlove/vt_error.h>
+#include <Kernel/vjKernel.h>
 
-char version_string[] = "2.0.2";
-int vt_error_code = 0;
-int vt_error_level = 2;
 
 vjCyberGlove::vjCyberGlove(vjConfigChunk *c) : vjGlove(c)
 {
-    char* home_dir = c->getProperty("homedir");
+    char* home_dir = c->getProperty("calDir");
     if (home_dir != NULL)
     {
         mCalDir = new char [strlen(home_dir) + 1];
 	     strcpy(mCalDir,home_dir);
     }
+
+    string glove_pos_proxy = (char*)c->getProperty("glovePos");    // Get the name of the pos_proxy
+    if(glove_pos_proxy == string(""))
+    {
+       vjDEBUG(0) << "ERROR: vjCyberglove has no posProxy." << endl << vjDEBUG_FLUSH;
+       return;
+    }
+    // init glove proxy interface
+    int proxy_index = vjKernel::instance()->getInputManager()->GetProxyIndex(glove_pos_proxy);
+    if(proxy_index != -1)
+       mGlovePos[0] = vjKernel::instance()->getInputManager()->GetPosProxy(proxy_index);
+    else
+       vjDEBUG(0) << "ERROR: vjCyberGlove::vjCyberGlove: Can't find posProxy." << endl << vjDEBUG_FLUSH << endl;
 
     myThread = NULL;
 
@@ -74,8 +85,9 @@ int vjCyberGlove::Sample()
    mGlove->Sample();       // Tell the glove to sample
 
    copyDataFromGlove();                   // Copy the data across
-   mTheData[progress][0].calcXforms();    // Update the xform data
-   swapValidIndices();
+   mTheData[0][progress].calcXforms();    // Update the xform data
+
+   swapValidIndexes();
    return 1;
 }
 
@@ -116,8 +128,9 @@ void vjCyberGlove::copyDataFromGlove()
 
    for(int i=0;i<vjGloveData::NUM_COMPONENTS;i++)
       for(int j=0;j<vjGloveData::NUM_JOINTS;j++)
-         mTheData[progress][0].angles[i][j] = glove_data->joints[i][j];
+         mTheData[0][progress].angles[i][j] = glove_data->joints[i][j];
 
-   vjASSERT(mTheData[progress][0].angles[vjGloveData::MIDDLE][vjGloveData::MPJ]
+   vjASSERT(mTheData[0][progress].angles[vjGloveData::MIDDLE][vjGloveData::MPJ]
              == glove_data->joints[MIDDLE][MCP]);
 }
+
