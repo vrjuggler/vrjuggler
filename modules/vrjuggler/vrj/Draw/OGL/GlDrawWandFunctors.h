@@ -33,6 +33,7 @@
 #ifndef GL_DRAW_WAND_FUNCTORS_H
 #define GL_DRAW_WAND_FUNCTORS_H
 
+#include <vpr/vprConfig.h>
 #include <vrj/vrjConfig.h>
 
 #ifdef VPR_OS_Darwin
