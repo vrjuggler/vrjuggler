@@ -1,0 +1,71 @@
+<H2><img border=0 src="${IMAGES}/Icons/24x24_Images/Document.gif"> Juggler Documentation Build System </H2>
+
+<H3> Table Of Contents: </H3>
+<ul>
+	<li><a href="#intro">Introduction</a></li>
+	<li><a href="#required">Required Reading</a></li>
+	<li><A href="#building">Building the project</a></li>
+	<li><A href="#docs">Step by step build of the Juggler documentation.</a> </li>
+	<li><A href="#class_ref">Step by step build of the C++ class reference.</a> </li>
+</ul>
+
+
+<a name="intro">
+<H4> Introduction </H4>
+</a>
+The Juggler Documentation project uses a few Perl scripts to generate and
+install the documentation.  In addition, Juggler uses Perceps to 
+auto-generate it's C++ Class reference.
+
+IMPORTANT: To better understand what you're doing, please understand the 
+concepts listed above in Required Reading.  
+
+To view the documentation, you must first build it.
+
+<a name="required">
+<H4> Required Reading </H4>
+</a>
+<ul>
+<li><a href="http://www.perl.com/">Perl</a> documentation. (Try doing a 'man' or 'info' on perl, there also is a good book by O'Reilly.)</a>.</li>
+<li><a href="http://starship.python.net/crew/tbryan/PERCEPS/">perceps</a> documentation (Used in juggler to autogenerate documentation for CPP classes).</li>
+<li><a href="http://www.sourcegear.com/CVS">CVS</a> documentation (used for revision control, lets you directly check in and out source)</li>
+</ul>
+
+<H4> Building the project: </H4>
+To view the documentation, you must first build it.  Many of the HTML files have
+tags which web browsers cannot read - thus you'd get many broken links if you 
+tried load the index.html locally.  The install script (in the install directory) 
+will parse the documentation and install a viewable copy into a location of 
+your choice.  (NOTE: you may have to install the docs into a web server to 
+view, there have been some problems using the tree control locally)
+
+Build the project by running "install-web.pl" from the install directory.
+If you run this with a -z option, it will save your arguments in a script 
+that you can then use to build the project (this is recommended).
+
+
+<H4> Directory tree description: </H4>
+CVS/           repository directory
+README         project description (this file)
+index.html*    VRJ start page
+pub/           put zip, tar, gz, binaries, pdf, and other downloadable stuff here.
+todo.txt       looking for something to do?  read this file for motivation.
+JExplorer/     information and examples on how to use JExplorer.
+html/          all site content in the form of HTML 
+install/       installation scripts: this will compile the docs using Perl.
+style/         style sheets (.css files)
+LEGAL          The license for the content found in this tree.
+images/        all site images.
+java.class/    all byte code for the java controls (.class files)
+supplemental/  site specific info
+
+
+<a name="docs">
+<H5> Step by step build of the Juggler documentation. </H5>
+</a>
+This tutorial is not done, please <a href="${JUGGLER_DEV_MAILING_LIST}">Tell Us</a><BR>
+
+<a name="class_ref">
+<H5> Step by step build of the C++ class reference. </H5>
+</a>
+This tutorial is not done, please <a href="${JUGGLER_DEV_MAILING_LIST}">Tell Us</a>
