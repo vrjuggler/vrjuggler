@@ -47,5 +47,13 @@ package org.vrjuggler.tweek.net;
  */
 public interface CommunicationListener extends java.util.EventListener
 {
-   public void connectionStateChanged(CommunicationEvent e);
+   /**
+    * Invoked when a new network connection is opened.
+    */
+   public void connectionOpened(CommunicationEvent e);
+
+   /**
+    * Invoked when an existing network connection is closed.
+    */
+   public void connectionClosed(CommunicationEvent e);
 }

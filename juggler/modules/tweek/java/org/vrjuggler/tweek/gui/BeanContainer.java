@@ -177,7 +177,7 @@ public class BeanContainer extends JPanel
       for ( int i = 0; i < listeners.size(); i++ )
       {
          l = (CommunicationListener) listeners.elementAt(i);
-         l.connectionStateChanged(e);
+         l.connectionOpened(e);
       }
    }
 
@@ -198,7 +198,7 @@ public class BeanContainer extends JPanel
       for ( int i = 0; i < listeners.size(); i++ )
       {
          l = (CommunicationListener) listeners.elementAt(i);
-         l.connectionStateChanged(e);
+         l.connectionClosed(e);
       }
    }
 
