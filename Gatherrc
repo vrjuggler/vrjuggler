@@ -38,6 +38,6 @@ cppdom
 {
    CVSROOT:  :pserver:anonymous@cvs.xml-cppdom.sourceforge.net:/cvsroot/xml-cppdom;
    Module: cppdom;
-   Tag: rel-0-1-0;
+   Tag: HEAD;
    Path: external;
 };
