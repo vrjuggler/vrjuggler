@@ -69,6 +69,11 @@ public:
    DepChecker ();
 
 
+   /** Destructor. */
+   virtual ~DepChecker ()
+   {;}
+   
+
    /** Return a string name for the checker.
     *  This is used to output messages in checker listings.
     */
