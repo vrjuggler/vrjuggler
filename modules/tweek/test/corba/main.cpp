@@ -1,5 +1,4 @@
 #include <tweek/CORBA/CorbaManager.h>
-#include <tweek/CORBA/SubjectManagerImpl.h>
 #include <vpr/Thread/Thread.h>
 #include <vpr/Util/Debug.h>
 
@@ -16,7 +15,7 @@ int main (int argc, char* argv[])
 
          try
          {
-            status = mgr.registerSubjectManager(tweek::SubjectManagerImpl::instance());
+            status = mgr.createSubjectManager();
          }
          catch (CORBA::Exception& ex)
          {
