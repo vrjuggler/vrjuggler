@@ -35,7 +35,6 @@
 #define _GADGET_INPUTDATA_H_
 
 #include <gadget/gadgetConfig.h>
-#include <jccl/Plugins/PerformanceMonitor/TimeStamp.h>
 #include <vpr/Util/Interval.h>
 
 namespace gadget {
@@ -43,63 +42,37 @@ namespace gadget {
     /** Base class for all input data returned by Gadgeteer.
      *  This provides all input data with a standard timestamping
      *  system used to calculate input latency.
-     *  Note that currently two timestamping systems are supported,
-     *  vpr::Interval and jccl::TimeStamp.  It's likely that the
-     *  TimeStamp interface will be deprecated in favor of 
-     *  Interval, but in the short term TimeStamp is needed to
-     *  provide an appearance of consistency between measurements
-     *  taken with VR Juggler 1.0.x.
      */
 class GADGET_CLASS_API InputData {
 
 public:
 
-    /** Constructor. */
-    InputData () {;}
+   /** Constructor. */
+   InputData () {;}
 
 
-    /** Record the current time using the jccl::TimeStamp. */
-    void setTime () {
-        mTimeStamp.set();
-    }
+   /** Record the current time using the vpr::Interval. */
+   void setTime () {
+      mInterval.setNow();
+   }
 
-    /** Record the given time. */
-    void setTime (const jccl::TimeStamp& ts) {
-        mTimeStamp = ts;
-    }
+   /** Record the given time. */
+   void setTime (const vpr::Interval& iv) {
+      mInterval = iv;
+   }
 
-    /** Return the last marked time using the jccl::TimeStamp. */
-    jccl::TimeStamp getTime () {
-        return mTimeStamp;
-    }
-
-    // uncomment these & comment out the above to switch from 
-    // jccl::TimeStamp to vpr::Interval.
-
-//     /** Record the current time using the vpr::Interval. */
-//     void setTime () {
-//         mInterval.setNow();
-//     }
-
-//     /** Record the given time. */
-//     void setTime (const vpr::Interval& iv) {
-//         mInterval = iv;
-//     }
-
-//     /** Return the last marked time using the vpr::Interval. */
-//     vpr::Interval getTime () {
-//         return mInterval;
-//     }
+   /** Return the last marked time using the vpr::Interval. */
+   vpr::Interval getTime () {
+      return mInterval;
+   }
 
 protected:
 
-    void copy (const InputData& id) {
-        mInterval = id.mInterval;
-        mTimeStamp = id.mTimeStamp;
-    }
+   void copy (const InputData& id) {
+      mInterval = id.mInterval;
+   }
 
-    vpr::Interval    mInterval;
-    jccl::TimeStamp  mTimeStamp;
+   vpr::Interval    mInterval;
 
 
 }; // class InputData
