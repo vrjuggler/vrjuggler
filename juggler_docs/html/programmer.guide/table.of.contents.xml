@@ -62,6 +62,10 @@ Builder: JExplorerBuilder V 1. 0. 7
 					link="getting.started/running.html" 
 					info="Run the juggler application, to see if everything worked." 
 					image="Leaf.gif">
+				< item title="Developing" 
+					link="getting.started/developing.html" 
+					info="Get started writing applications for VR Juggler!" 
+					image="Leaf.gif">
 				< item title="Troubleshooting" 
 					link="${MISC}/faq.html" 
 					info="Find your problem in the FAQ, or mail us if not found!" 
