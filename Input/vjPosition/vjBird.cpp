@@ -178,7 +178,7 @@ int vjBird::stopSampling()
       delete(myThread);
       myThread = NULL;
 
-      sginap(1);
+      usleep(100);
       char   bird_command[4];
 
       cout << "stopping the flock.." << endl;
@@ -186,7 +186,7 @@ int vjBird::stopSampling()
       bird_command[0] = 'B';
       write(port_id, bird_command, 1);
       tcflush(port_id, TCIFLUSH);
-      sginap(5);
+      usleep(500);
       bird_command[0] = 'G';
       write(port_id, bird_command, 1);
       tcflush(port_id, TCIFLUSH);
@@ -413,7 +413,7 @@ inline void  pickBird(int birdID, int port)
    char buff = 0xF0 + birdID;
    write(port, &buff, 1);
    tcflush(port, TCIFLUSH);
-   sginap(1);
+   usleep(100);
 }
 
 static int open_port(char* serialPort, int baud)
@@ -480,7 +480,7 @@ static int open_port(char* serialPort, int baud)
   fcntl(port,F_SETFL,blocking ? blockf : nonblock); // 0 Non Blocked
                                                     // 1 Blocked
   tcflush(port, TCIOFLUSH);
-  sginap(10);
+  usleep(1000);
   char junk[1024];
   read(port, junk, 1024);
   sleep(1);
@@ -549,7 +549,7 @@ static void set_hemisphere(int port, BIRD_HEMI hem)//, int transmitter)
    }
     write(port, buff, 3);
     tcflush(port, TCIFLUSH);
-    sginap(5);
+    usleep(500);
   }
 }
 
@@ -566,7 +566,7 @@ static void set_rep_and_stream(int port, char repRate)
   buff[0] = repRate;
   write(port, buff, 1);
   tcflush(port, TCIFLUSH);
-  sginap(20);
+  usleep(2000);
 
  ////////////////////////////////////////////////////////////////
  // set stream mode
@@ -574,7 +574,7 @@ static void set_rep_and_stream(int port, char repRate)
   buff[0] = '@';
   write(port, buff, 1);
   tcflush(port, TCIFLUSH);
-  sginap(5);
+  usleep(500);
 
 }
 
@@ -590,7 +590,7 @@ static void set_pos_angles(int port)//, int transmitter)
     buff[0] = 'Y';
     write(port, buff, 1);
     tcflush(port, TCIFLUSH);
-    sginap(5);
+    usleep(500);
   }
 
 }
@@ -625,7 +625,7 @@ static void set_transmitter(int port, int transmitter)
   buff[1] = (unsigned char) transmitter  << 4;
   write(port, buff, 2);
   tcflush(port, TCIFLUSH);
-  sginap(120);
+  usleep(12000);
  }
 
 

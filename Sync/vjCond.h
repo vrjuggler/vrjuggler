@@ -1,7 +1,7 @@
 /*
- *  File:	    $RCSfile$
+ *  File:       $RCSfile$
  *  Date modified:  $Date$
- *  Version:	    $Revision$
+ *  Version:       $Revision$
  *
  *
  *                                VR Juggler
@@ -29,7 +29,9 @@
     
     typedef  vjCondGeneric vjCond;
 #elif defined(VJ_USE_PTHREADS)
+#ifndef _POSIX_C_SOURCE
 #   define _POSIX_C_SOURCE VJ_POSIX_C_SOURCE
+#endif
 
 #   include <Sync/vjCondPosix.h>
     
@@ -38,6 +40,6 @@
 #    include <Sync/vjCondGeneric.h>
     
     typedef  vjCondGeneric vjCond;
-#endif	/* VJ_IRIX_SPROC */
+#endif   /* VJ_IRIX_SPROC */
 
 #endif
