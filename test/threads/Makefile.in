@@ -21,7 +21,7 @@ VPATH		= @srcdir@
 # use -L/usr/lib64.
 EXTRA_LIBS	= @TEST_EXTRA_LIBS_BASIC@ @TEST_EXTRA_LIBS_GL@
 
-TEST_OBJECTS	= test.o
+TEST_PROGS	= test stlTest testPool
 
 # -----------------------------------------------------------------------------
 # Targets.
@@ -35,6 +35,16 @@ test: ${TEST_OBJECTS}
 
 test.o: test.cpp
 
+stlTest: stlTest.o
+	${COMPILE} -o $@ stlTest.o ${VJ_LIBS} ${EXTRA_LIBS}
+
+stlTest.o: stlTest.cpp
+
+testPool: testPool.o
+	${COMPILE} -o $@ testPool.o ${VJ_LIBS} ${EXTRA_LIBS}
+
+testPool.o: testPool.cpp
+
 .cpp.o:
 	${COMPILE} -c -o $@ ${srcdir}/$<
 
@@ -42,5 +52,5 @@ test.o: test.cpp
 # Clean-up.
 # -----------------------------------------------------------------------------
 clean:
-	rm -f Makedepend test ${TEST_OBJECTS} core so_locations
+	rm -f Makedepend ${TEST_PROGS} *.o core so_locations
 	rm -rf ./ii_files
