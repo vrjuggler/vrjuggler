@@ -188,9 +188,9 @@ void outputPendingItemState(int debugLevel, std::string chunkName, std::string c
 
    const std::string name_prefix("Pending item: ");
    const std::string type_prefix(" type: ");
-   vjDEBUG(vjDBG_ALL,debugLevel) << "Pending item: " << setiosflags(ios::right) << std::setfill(' ') << std::setw(item_width) << chunkName
-                                 <<    "     type: " << setiosflags(ios::right) << std::setfill(' ') << std::setw(type_width) << chunkType
-                                                     << resetiosflags(ios::right) << "  ";
+   vjDEBUG(vjDBG_ALL,debugLevel) << "Pending item: " << std::setiosflags(ios::right) << std::setfill(' ') << std::setw(item_width) << chunkName
+                                 <<    "     type: " << std::setiosflags(ios::right) << std::setfill(' ') << std::setw(type_width) << chunkType
+                                                     << std::resetiosflags(ios::right) << "  ";
 
    /*
    const int prefix_len = name_prefix.length() + type_prefix.length();
