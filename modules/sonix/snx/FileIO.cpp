@@ -39,6 +39,8 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
+#include <snx/snxConfig.h>
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
@@ -49,7 +51,7 @@
 namespace snxFileIO
 {
 
-bool fileExists( const char* const name )
+bool fileExists(const char* name)
 {
    if (name == NULL) return false;
       
@@ -65,7 +67,7 @@ bool fileExists( const char* const name )
    }
 }
    
-int fileSize( const char* const filename )
+int fileSize(const char* filename)
 {
    if (filename == NULL) return 0;
    
@@ -85,7 +87,7 @@ int fileSize( const char* const filename )
    }
 }
 
-void fileLoad( const char* const filename, std::vector<unsigned char>& data )
+void fileLoad(const char* filename, std::vector<unsigned char>& data)
 {
    if (filename == NULL) return;
    
@@ -173,4 +175,4 @@ void getAll( std::ifstream& f, std::string& buffer )
    //cout << "Gcount == " << f.gcount() << "\n"<<flush;
 }
 
-} // End of snx namespace
+} // End of snxFileIO namespace
