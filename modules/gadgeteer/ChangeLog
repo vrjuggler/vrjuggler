@@ -1,5 +1,9 @@
 DATE        AUTHOR    CHANGE
 ----------- --------- ---------------------------------------------------------
+Sep-13-2002 aronb     gadget::Input no longer defines member variables for the
+                      port name and baud rate of a device.  The individual
+                      devices are responsible for that now.
+                      NEW VERSION: 0.4.0
 Sep-13-2002 patrickh  Removed Bird.cpp and Bird.h from the source tree.
 Sep-05-2002 aronb     Fixed the Intersense driver on Linux & IRIX
                       Fixed the Flock of Birds driver on both Linux and IRIX
