@@ -133,6 +133,8 @@ vpr::ReturnStatus SerialPortImplWin32::close()
 
 vpr::ReturnStatus SerialPortImplWin32::setBlocking(bool blocking)
 {
+   vpr::ReturnStatus status;
+
    if ( ! mOpen )
    {
        vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
@@ -151,9 +153,12 @@ vpr::ReturnStatus SerialPortImplWin32::setBlocking(bool blocking)
          vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
             << "ERROR: Non-Blocking not currently supported in win32."
             << std::endl << vprDEBUG_FLUSH;
+         status.setCode(vpr::ReturnStatus::Fail);
 //         mBlocking |= FILE_FLAG_OVERLAPPED;
       }
    }
+
+   return status;
 }
 
 vpr::SerialTypes::UpdateActionOption SerialPortImplWin32::getUpdateAction() const
