@@ -59,6 +59,7 @@ public interface ConfigTokens
 
    public static final String chunk_desc_TOKEN    = "ChunkDesc";
    public static final String name_TOKEN          = "name";
+   public static final String token_TOKEN         = "token";
    public static final String property_desc_TOKEN = "PropertyDesc";
    public static final String num_TOKEN           = "num";
    public static final String type_TOKEN          = "type";
