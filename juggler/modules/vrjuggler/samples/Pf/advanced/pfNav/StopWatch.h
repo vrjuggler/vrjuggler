@@ -2,7 +2,7 @@
 #define STOP_WATCH_INCLUDED
 
 #ifndef WIN32
-    #include <sys/time.h>
+#include <sys/time.h>
 #endif
 
 //: A StopWatch

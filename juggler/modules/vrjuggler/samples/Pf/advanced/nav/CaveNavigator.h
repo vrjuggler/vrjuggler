@@ -34,9 +34,9 @@
 #define _MATRIX_NAVIGATOR_H_
 
 
-//#include <Kernel/vjKernel.h>
-#include <vjCoord.h>
-//#include <Utils/vjDebug.h>
+//#include <vrj/Kernel/Kernel.h>
+#include <vrj/Math/Coord.h>
+//#include <vrj/Util/Debug.h>
 
 #include <velocityNav.h>
 
@@ -46,7 +46,7 @@
 //  The matrix is in the OpenGL form,
 //  For performer, convert this matrix,
 //  and copy it to a DCS node once per frame as well.
-class CaveNavigator : public Matrix
+class CaveNavigator : public vrj::Matrix
 {
 public:
    CaveNavigator();
@@ -95,7 +95,7 @@ public:
    }
 
    //: tell the navigator the matrix that reset() uses as it's origin.
-   virtual void setOrigin( const Matrix& matrix )
+   virtual void setOrigin( const vrj::Matrix& matrix )
    {
       mVNav.setOrigin( matrix );
    }
@@ -128,8 +128,8 @@ public:
 
    //: tell the navigator what the pointing device's matrix is.
    //  you can usually do this to get that matrix
-   //  Matrix* wand_mat = mWand->getData();
-   virtual void setMatrix( const Matrix& matrix )
+   //  vrj::Matrix* wand_mat = mWand->getData();
+   virtual void setMatrix( const vrj::Matrix& matrix )
    {
       mDeviceMatrix = matrix;
    }
@@ -138,7 +138,7 @@ private:
    velocityNav          mVNav;      // My navigator
 
 protected:
-   Matrix mDeviceMatrix;
+   vrj::Matrix mDeviceMatrix;
    bool     mNowAccelerating;
    bool     mNowRotating;
    bool     mNowStopping;
@@ -149,7 +149,7 @@ protected:
 
 
 
-CaveNavigator::CaveNavigator() : Matrix(), mNowReversing(false), mNowStopping(false), mNowAccelerating( false ), mNowRotating( false )
+CaveNavigator::CaveNavigator() : vrj::Matrix(), mNowReversing(false), mNowStopping(false), mNowAccelerating( false ), mNowRotating( false )
 {
    mVNav.setRotAxis(false, true, false);
    this->setGravity( ON );
@@ -164,7 +164,7 @@ int CaveNavigator::update()
    if (true == mNowAccelerating)
    {
       // magic number!  acceleration of 10 units per second
-      mVNav.accelerate( Vec3(0,0,-10.0f) );
+      mVNav.accelerate( vrj::Vec3(0,0,-10.0f) );
    }
 
    if (true == mNowStopping)
@@ -196,7 +196,7 @@ int CaveNavigator::update()
    }
 
    // Set the matrix to the navigation matrix
-   Matrix cur_pos,world_pos;
+   vrj::Matrix cur_pos,world_pos;
    cur_pos = mVNav.getCurPos();  // Invert because we want to move the world
    //cerr << "Set Pos: " << Coord(cur_pos).pos << endl;
    world_pos.invert( cur_pos );

@@ -37,7 +37,7 @@
 
 #include <string>
 #include <assert.h>
-#include <Utils/vjFileIO.h> // bool fileExists()
+#include <vrj/Util/FileIO.h> // bool fileExists()
 #include <Performer/pf/pfDCS.h>
 
 // use this class to store your filepath etc...
@@ -55,14 +55,14 @@ public:
    static std::string filePath;
    static void setFilePath( const std::string& filepath = ".:" )
    {
-      std::string demangled_path = FileIO::replaceEnvVars( filepath );
+      std::string demangled_path = vrj::FileIO::replaceEnvVars( filepath );
       filePath = demangled_path;
       //std::cout << "pfFileIO::setFilePath: path now: " << filePath << std::endl;
    }
 
    static void addFilePath( const std::string& filepath)
    {
-      std::string demangled_path = FileIO::replaceEnvVars( filepath );
+      std::string demangled_path = vrj::FileIO::replaceEnvVars( filepath );
       filePath += demangled_path;
       filePath += std::string(":");    // Add on trailing seperator
       //std::cout << "pfFileIO::addFilePath: path now: " << filePath << std::endl;

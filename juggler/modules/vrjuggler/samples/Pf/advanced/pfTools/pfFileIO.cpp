@@ -57,7 +57,7 @@ std::string pfFileIO::filePath = ".:";
 // outputs useful stuff, to let you know current status.
 pfNode* pfFileIO::loadFile( const std::string& filename )
 {
-   const std::string file_name = FileIO::demangleFileName( filename, "" );
+   const std::string file_name = vrj::FileIO::demangleFileName( filename, "" );
    pfdInitConverter( file_name.c_str() );
    pfFilePath( filePath.c_str() );
    pfNode* node = pfdLoadFile( file_name.c_str() );
@@ -114,7 +114,7 @@ pfNode* pfFileIO::autoloadFile( const std::string& fileName, const pfFileIO::uni
       std::cout<<"Loading(o) "<<fileName.c_str()<<".\n "<<std::flush;
       node = loadFile( fileName );
    }   
-   else if (FileIO::fileExists(optimizedFileName))
+   else if (vrj::FileIO::fileExists(optimizedFileName))
    {
       // don't need to output this, because performer already does. :)
       //std::cout<<"Loading "<<optimizedFileName.c_str()<<"\n"<<std::flush;

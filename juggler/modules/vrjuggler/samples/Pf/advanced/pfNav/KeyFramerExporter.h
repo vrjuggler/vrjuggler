@@ -1,8 +1,8 @@
-#include "vjConfig.h" // for DEG2RAD macro
+#include <vrj/vjConfig.h> // for DEG2RAD macro
 #include <fstream.h>		// for ifstream
 #include "KeyFramer.h"
-#include "Kernel/vjDebug.h"
-#include <Math/vjMath.h>
+#include <vrj/Util/Debug.h>
+#include <vrj/Math/Math.h>
 
 namespace kev
 {
@@ -39,12 +39,12 @@ namespace kev
          {
             const kev::KeyFramer::Key& key = (*it1).second;
             const float& time = key.time();
-            const Vec3& pos = key.position();
+            const vrj::Vec3& pos = key.position();
             const Quat& quat = key.rotation();
             float deg;
-            Vec3 vec;
+            vrj::Vec3 vec;
             quat.getRot( deg, vec[0], vec[1], vec[2] );
-            deg = Math::rad2deg( deg ); 
+            deg = vrj::Math::rad2deg( deg ); 
             frames_file<<time<<" "<<pos[0]<<" "<<pos[1]<<" "
                        <<pos[2]<<" "<<deg<<" "<<vec[0]<<" "
                        <<vec[1]<<" "<<vec[2]<<"\n";
