@@ -1,5 +1,8 @@
 DATE       AUTHOR       CHANGE
 ---------- ------------ -------------------------------------------------------
+2004-03-01 patrickh     Renamed the variable $_EXTRA_FLAGS variable in abi.m4
+                        to the more meaningful $ABI_FLAGS.
+                        NEW VERSION: 1.99.15
 2003-11-23 patrickh     Fully synchronized with RELENG_1_5.
                         NEW VERSION: 1.99.14
 2003-11-23 patrickh     Added support for generating Python code from IDL.

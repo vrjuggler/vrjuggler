@@ -1,5 +1,5 @@
 dnl ************* <auto-copyright.pl BEGIN do not edit this line> *************
-dnl Doozer++ is (C) Copyright 2000-2003 by Iowa State University
+dnl Doozer++ is (C) Copyright 2000-2004 by Iowa State University
 dnl
 dnl Original Author:
 dnl   Patrick Hartling
@@ -21,8 +21,8 @@ dnl Boston, MA 02111-1307, USA.
 dnl
 dnl -----------------------------------------------------------------
 dnl File:          cppunit.m4,v
-dnl Date modified: 2003/11/23 20:21:33
-dnl Version:       1.13
+dnl Date modified: 2004/07/02 11:35:55
+dnl Version:       1.16
 dnl -----------------------------------------------------------------
 dnl ************** <auto-copyright.pl END do not edit this line> **************
 
@@ -50,7 +50,7 @@ dnl     CPPUNIT_EXTRA_LIBS - Extra libraries that are needed for linking
 dnl                          against the CppUnit library directory.
 dnl ===========================================================================
 
-dnl cppunit.m4,v 1.13 2003/11/23 20:21:33 patrickh Exp
+dnl cppunit.m4,v 1.16 2004/07/02 11:35:55 patrickh Exp
 
 dnl ---------------------------------------------------------------------------
 dnl Determine if the target system has CppUnit installed.  This
@@ -73,7 +73,7 @@ dnl                           is found.  This argument is optional.
 dnl     action-if-not-found - The action to take if an CppUnit implementation
 dnl                           is not found.  This argument is optional.
 dnl ---------------------------------------------------------------------------
-AC_DEFUN(DPP_HAVE_CPPUNIT,
+AC_DEFUN([DPP_HAVE_CPPUNIT],
 [
    AC_REQUIRE([DPP_SYSTEM_SETUP])
    AC_REQUIRE([DPP_CHECK_DYNLOAD_LIB])
@@ -91,7 +91,7 @@ AC_DEFUN(DPP_HAVE_CPPUNIT,
                CPPUNIT_ROOT="$withval", CPPUNIT_ROOT=$2)
 
    dnl Save these values in case they need to be restored later.
-   dpp_save_CFLAGS="$CFLAGS"
+   dpp_save_CXXFLAGS="$CXXFLAGS"
    dpp_save_CPPFLAGS="$CPPFLAGS"
    dpp_save_LDFLAGS="$LDFLAGS"
    dpp_save_LIBS="$LIBS"
@@ -132,7 +132,7 @@ AC_DEFUN(DPP_HAVE_CPPUNIT,
       DPP_VERSION_CHECK([$CPPUNIT_VERSION], [$min_cppunit_version], , [$4])
    fi
 
-   CFLAGS="$CFLAGS ${_EXTRA_FLAGS}"
+   CXXFLAGS="$CXXFLAGS $ABI_FLAGS"
 
    if test "x$OS_TYPE" = "xWin32" ; then
       dpp_cppunit_lib='cppunit.lib'
@@ -157,7 +157,7 @@ AC_DEFUN(DPP_HAVE_CPPUNIT,
    dpp_have_cppunit="$dpp_cv_CppUnit_TestSuite_countTestCases_in_cppunit"
 
    dnl Restore all the variables now that we are done testing.
-   CFLAGS="$dpp_save_CFLAGS"
+   CXXFLAGS="$dpp_save_CXXFLAGS"
    CPPFLAGS="$dpp_save_CPPFLAGS"
    LDFLAGS="$dpp_save_LDFLAGS"
    LIBS="$dpp_save_LIBS"

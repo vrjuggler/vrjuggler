@@ -1,5 +1,5 @@
 dnl ************* <auto-copyright.pl BEGIN do not edit this line> *************
-dnl Doozer++ is (C) Copyright 2000-2003 by Iowa State University
+dnl Doozer++ is (C) Copyright 2000-2004 by Iowa State University
 dnl
 dnl Original Author:
 dnl   Patrick Hartling
@@ -21,8 +21,8 @@ dnl Boston, MA 02111-1307, USA.
 dnl
 dnl -----------------------------------------------------------------
 dnl File:          portaudio.m4,v
-dnl Date modified: 2003/12/01 22:24:33
-dnl Version:       1.9
+dnl Date modified: 2004/07/02 11:35:55
+dnl Version:       1.12
 dnl -----------------------------------------------------------------
 dnl ************** <auto-copyright.pl END do not edit this line> **************
 
@@ -48,7 +48,7 @@ dnl     PORTAUDIO_LDFLAGS  - Extra linker flags for the PortAudio library
 dnl                          directory.
 dnl ===========================================================================
 
-dnl portaudio.m4,v 1.9 2003/12/01 22:24:33 patrickh Exp
+dnl portaudio.m4,v 1.12 2004/07/02 11:35:55 patrickh Exp
 
 dnl ---------------------------------------------------------------------------
 dnl Determine if the target system has PortAudio installed.  This
@@ -77,7 +77,7 @@ dnl                                  is found.  This argument is optional.
 dnl     action-if-pablio-not-found - The action to take if the Pablio library
 dnl                                  is not found.  This argument is optional.
 dnl ---------------------------------------------------------------------------
-AC_DEFUN(DPP_HAVE_PORTAUDIO,
+AC_DEFUN([DPP_HAVE_PORTAUDIO],
 [
    AC_REQUIRE([DPP_SYSTEM_SETUP])
 
@@ -113,7 +113,7 @@ AC_DEFUN(DPP_HAVE_PORTAUDIO,
       LDFLAGS="$pa_ldflags $LDFLAGS"
    fi
 
-   CFLAGS="$CFLAGS ${_EXTRA_FLAGS}"
+   CFLAGS="$CFLAGS $ABI_FLABS"
 
    dnl WIN32 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!
    if test "x$dpp_os_type" = "xWin32" ; then

@@ -2,7 +2,7 @@
 
 # ************** <auto-copyright.pl BEGIN do not edit this line> **************
 #
-# Doozer++ is (C) Copyright 2000-2003 by Iowa State University
+# Doozer++ is (C) Copyright 2000-2004 by Iowa State University
 #
 # Original Author:
 #   Patrick Hartling
@@ -24,7 +24,7 @@
 #
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
-# bsd-install.pl,v 1.4 2003/11/07 16:48:44 patrickh Exp
+# bsd-install.pl,v 1.7 2004/04/14 15:37:54 patrickh Exp
 
 use 5.004;
 
@@ -49,6 +49,7 @@ my $Win32 = 1 if exists($ENV{'OS'}) && $ENV{'OS'} =~ /Windows/;
 # -d: Create directories if parent directories are missing.
 # -f: Specify the target's file flags (chflags behavior).
 # -g: Specify a group.
+# -L: Preserve symlinks when installing.
 # -l: Use symlinks to the source file(s) instead of copy(ies).
 # -M: Disable all use of mmap(2).
 # -m: Specify an alternate mode (default is 0755).
@@ -57,10 +58,10 @@ my $Win32 = 1 if exists($ENV{'OS'}) && $ENV{'OS'} =~ /Windows/;
 # -S: Use "safe copy" where a temporary file is created and then renamed.
 # -s: Strip binaries.
 # -v: Be verbose.
-getopts('bB:Ccdf:g:lMm:o:pSsv', \%opts);
+getopts('bB:Ccdf:g:LlMm:o:pSsv', \%opts);
 
 my $backup_suffix = (exists($opts{'B'}) ? "$opts{'B'}" : '.old');
-my $file_mode     = (exists($opts{'m'}) ? $opts{'m'} : 0755);
+my $file_mode     = (exists($opts{'m'}) ? $opts{'m'} : '0755');
 
 warn "WARNING: -f option is not portable" if $opts{'f'};
 
@@ -157,7 +158,12 @@ sub installFile($$)
    {
       my $dest_name = (exists($opts{'S'}) ? "$dest.$$" : "$dest");
 
-      if ( copy("$source", "$dest_name") )
+      if ( ! $Win32 && $opts{'L'} && -l "$source" )
+      {
+         my $pointed_file = basename(readlink("$source"));
+         symlink("$pointed_file", "$dest_name");
+      }
+      elsif ( copy("$source", "$dest_name") )
       {
          # Finish the safe copy.
          if ( $opts{'S'} )

@@ -1,5 +1,5 @@
 dnl ************* <auto-copyright.pl BEGIN do not edit this line> *************
-dnl Doozer++ is (C) Copyright 2000-2003 by Iowa State University
+dnl Doozer++ is (C) Copyright 2000-2004 by Iowa State University
 dnl
 dnl Original Author:
 dnl   Patrick Hartling
@@ -21,8 +21,8 @@ dnl Boston, MA 02111-1307, USA.
 dnl
 dnl -----------------------------------------------------------------
 dnl File:          ace.m4,v
-dnl Date modified: 2003/11/23 20:21:15
-dnl Version:       1.11
+dnl Date modified: 2004/07/02 11:35:55
+dnl Version:       1.14
 dnl -----------------------------------------------------------------
 dnl ************** <auto-copyright.pl END do not edit this line> **************
 
@@ -51,7 +51,7 @@ dnl     ACE_LDFLAGS  - The compiler argument to add the ACE library path and
 dnl                    libraries.
 dnl ===========================================================================
 
-dnl	ace.m4,v 1.11 2003/11/23 20:21:15 patrickh Exp
+dnl	ace.m4,v 1.14 2004/07/02 11:35:55 patrickh Exp
 
 dnl ---------------------------------------------------------------------------
 dnl Usage:
@@ -64,7 +64,7 @@ dnl     action-if-found     - Action to take if the ACE is found.
 dnl     action-if-not-found - Action to take if the ACE could not be found or
 dnl                           if the ACE version requirement is not met.
 dnl ---------------------------------------------------------------------------
-AC_DEFUN(DPP_HAVE_ACE,
+AC_DEFUN([DPP_HAVE_ACE],
 [
    AC_ARG_WITH([ace],
                [  --with-ace=<PATH>       ACE installation directory
@@ -106,7 +106,7 @@ AC_DEFUN(DPP_HAVE_ACE,
    fi
 
    CPPFLAGS="$CPPFLAGS $ACE_INCLUDES"
-   CXXFLAGS="$CXXFLAGS $ACE_INCLUDES ${_EXTRA_FLAGS}"
+   CXXFLAGS="$CXXFLAGS $ACE_INCLUDES $ABI_FLAGS"
 
    if test "x$dpp_os_type" = "xWin32" ; then
       CPPFLAGS="$CPPFLAGS -DACE_HAS_DLL=0 /GX /MT"
@@ -174,7 +174,7 @@ dnl                           met.
 dnl     action-if-not-found - Action to take if the version requirement is not
 dnl                           met.
 dnl ---------------------------------------------------------------------------
-AC_DEFUN(DPP_ACE_VER,
+AC_DEFUN([DPP_ACE_VER],
 [
    dnl -----------------------------------------------------------------------
    dnl Define the version number of the ACE installation.

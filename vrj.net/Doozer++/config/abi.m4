@@ -1,5 +1,5 @@
 dnl ************* <auto-copyright.pl BEGIN do not edit this line> *************
-dnl Doozer++ is (C) Copyright 2000-2003 by Iowa State University
+dnl Doozer++ is (C) Copyright 2000-2004 by Iowa State University
 dnl
 dnl Original Author:
 dnl   Patrick Hartling
@@ -28,8 +28,8 @@ dnl Boston, MA 02111-1307, USA.
 dnl
 dnl -----------------------------------------------------------------
 dnl File:          abi.m4,v
-dnl Date modified: 2003/02/22 03:31:57
-dnl Version:       1.12
+dnl Date modified: 2004/07/02 11:35:54
+dnl Version:       1.16
 dnl -----------------------------------------------------------------
 dnl ************** <auto-copyright.pl END do not edit this line> **************
 
@@ -40,7 +40,7 @@ dnl substitution for the variables $ABI, $ISA and $LIBBITUF (described below).
 dnl ---------------------------------------------------------------------------
 dnl Macros:
 dnl     DPP_ABI_CFG   - Set the values for $ABI, $ISA, $LIBBITSUF and
-dnl                     ${_EXTRA_FLAGS} respectively.  These variables are
+dnl                     $ABI_FLAGS respectively.  These variables are
 dnl                     described next.
 dnl     DPP_ABI_SETUP - Add the --with-abi option and configure the ABI/ISA
 dnl                     settings based on the value given.
@@ -67,13 +67,14 @@ dnl                    values: mips3, mips4, i386
 dnl     LIBBITSUF    - The suffix for some library directories (which are
 dnl                    typically named in $LDFLAGS).  If it has a value, it
 dnl                    will be 32 or 64 which only has meaning on IRIX.
-dnl     _EXTRA_FLAGS - Any extra compiler flags needed for compiling with the
-dnl                    named ABI/ISA setting.  This will be appended to
-dnl                    $CFLAGS and $CXXFLAGS.
+dnl     ABI_FLAGS    - Any extra compiler flags needed for compiling with the
+dnl                    named ABI/ISA setting.  This should be appended to
+dnl                    $CFLAGS and $CXXFLAGS for all compile and link tests
+dnl                    that Autconf performs.
 dnl     DPP_ABI_TYPE - The argument given to --with-abi.
 dnl ===========================================================================
 
-dnl abi.m4,v 1.12 2003/02/22 03:31:57 patrickh Exp
+dnl abi.m4,v 1.16 2004/07/02 11:35:54 patrickh Exp
 
 dnl ---------------------------------------------------------------------------
 dnl Define a macro DPP_ABI_CFG for setting up the configuration parameters
@@ -93,7 +94,7 @@ dnl                      This argument is optional.
 dnl     extra-flags    - Extra compiler flags related to the ABI and ISA.
 dnl                      This argument is optional.
 dnl ---------------------------------------------------------------------------
-AC_DEFUN(DPP_ABI_CFG, [ ABI=$1 ISA=$2 LIBBITSUF=$3 _EXTRA_FLAGS=$4 ; ])
+AC_DEFUN([DPP_ABI_CFG], [ ABI=$1 ISA=$2 LIBBITSUF=$3 ABI_FLAGS=$4 _EXTRA_FLAGS=$4 ; ])
 
 dnl ---------------------------------------------------------------------------
 dnl Adds the --with-abi option and configure the ABI/ISA settings based on the
@@ -103,7 +104,7 @@ dnl
 dnl Usage:
 dnl     DPP_ABI_SETUP
 dnl ---------------------------------------------------------------------------
-AC_DEFUN(DPP_ABI_SETUP,
+AC_DEFUN([DPP_ABI_SETUP],
 [
    AC_BEFORE([$0], [DPP_SYSTEM_SETUP])
 

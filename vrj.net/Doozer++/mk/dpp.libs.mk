@@ -1,5 +1,5 @@
 # ************** <auto-copyright.pl BEGIN do not edit this line> **************
-# Doozer++ is (C) Copyright 2000-2003 by Iowa State University
+# Doozer++ is (C) Copyright 2000-2004 by Iowa State University
 #
 # Original Author:
 #   Patrick Hartling
@@ -21,13 +21,13 @@
 #
 # -----------------------------------------------------------------
 # File:          dpp.libs.mk,v
-# Date modified: 2003/02/22 03:31:58
-# Version:       1.14
+# Date modified: 2004/04/04 16:38:04
+# Version:       1.16
 # -----------------------------------------------------------------
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # =============================================================================
-# dpp.libs.mk,v 1.14 2003/02/22 03:31:58 patrickh Exp
+# dpp.libs.mk,v 1.16 2004/04/04 16:38:04 patrickh Exp
 #
 # This file <dpp.libs.mk> defines many targets for use in compiling a software
 # library (or a set of libraries).  An including makefile can take advantage
@@ -111,7 +111,7 @@
 # DBG_FLAGS           - Compiler debugging flags.  If not specified, it
 #                       defaults to -D_DEBUG.
 # OPT_FLAGS           - Compiler optimizing flags.  If not specified, it
-#                       defaults to -D_OPT.
+#                       defaults to "-D_OPT -DNDEBUG".
 # PROF_OPT_FLAGS      - Compiler optimizing flags to use when building profiled
 #                       binaries.  If not specified, it defaults to
 #                       $(OPT_FLAGS).
@@ -162,7 +162,7 @@
 
 MKINSTALLDIRS?=		mkinstalldirs
 DBG_FLAGS?=		-D_DEBUG
-OPT_FLAGS?=		-D_OPT
+OPT_FLAGS?=		-D_OPT -DNDEBUG
 PROF_OPT_FLAGS?=	$(OPT_FLAGS)
 
 # =============================================================================

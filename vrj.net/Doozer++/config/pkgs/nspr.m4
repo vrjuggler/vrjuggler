@@ -1,5 +1,5 @@
 dnl ************* <auto-copyright.pl BEGIN do not edit this line> *************
-dnl Doozer++ is (C) Copyright 2000-2003 by Iowa State University
+dnl Doozer++ is (C) Copyright 2000-2004 by Iowa State University
 dnl
 dnl Original Author:
 dnl   Patrick Hartling
@@ -21,8 +21,8 @@ dnl Boston, MA 02111-1307, USA.
 dnl
 dnl -----------------------------------------------------------------
 dnl File:          nspr.m4,v
-dnl Date modified: 2003/02/22 03:31:58
-dnl Version:       1.35
+dnl Date modified: 2004/07/02 11:35:55
+dnl Version:       1.38
 dnl -----------------------------------------------------------------
 dnl ************** <auto-copyright.pl END do not edit this line> **************
 
@@ -81,7 +81,7 @@ dnl     PLC_LIB_STATIC        - Full path to the static NSPR PLC library.
 dnl     PLDS_LIB_STATIC       - Full path to the static NSPR PLDS library.
 dnl ===========================================================================
 
-dnl nspr.m4,v 1.35 2003/02/22 03:31:58 patrickh Exp
+dnl nspr.m4,v 1.38 2004/07/02 11:35:55 patrickh Exp
 
 dnl ---------------------------------------------------------------------------
 dnl State that NSPR threads are in use within NSPR.
@@ -95,7 +95,7 @@ dnl                                     disabling pthreads.  This should be
 dnl                                     either "yes" or "no".  This argument
 dnl                                     is optional.
 dnl ---------------------------------------------------------------------------
-AC_DEFUN(DPP_ENABLE_NSPR_THREADS,
+AC_DEFUN([DPP_ENABLE_NSPR_THREADS],
 [
    AC_ARG_ENABLE(nspr-threads,
                  [  --enable-nspr-threads   Use NSPR threads                [default=$1]],
@@ -116,7 +116,7 @@ dnl                           POSIX threads.
 dnl     action-if-not-found - Action to take if the NSPR could not be found or
 dnl                           if the NSPR version requirement is not met.
 dnl ---------------------------------------------------------------------------
-AC_DEFUN(DPP_HAVE_NSPR,
+AC_DEFUN([DPP_HAVE_NSPR],
 [
    if test "x$2" = "x" ; then
       AC_REQUIRE([DPP_ENABLE_NSPR_THREADS])
@@ -144,8 +144,7 @@ AC_DEFUN(DPP_HAVE_NSPR,
                _with_nspr_inc="$withval", _with_nspr_inc="$NSPR_ROOT/include")
 
    AC_ARG_WITH(nspr-libs,
-               [  --with-nspr-libs=<DIR>
-                          NSPR libraries are in DIR       [default=/usr/lib]],
+               [  --with-nspr-libs=<DIR>  NSPR libraries are in DIR       [default=/usr/lib]],
                _with_nspr_lib="$withval", _with_nspr_lib="$NSPR_ROOT/lib")
 
    if test "x$NSPR_ROOT" != "xno" ; then
@@ -264,7 +263,7 @@ dnl     version             - Minimum required version.
 dnl     action-if-not-found - Action to take if the version requirement is not
 dnl                           met.
 dnl ---------------------------------------------------------------------------
-AC_DEFUN(DPP_NSPR_VER,
+AC_DEFUN([DPP_NSPR_VER],
 [
    AC_REQUIRE([DPP_PROG_CC_NOSTDINC])
 

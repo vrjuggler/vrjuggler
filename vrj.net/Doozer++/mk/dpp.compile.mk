@@ -1,5 +1,5 @@
 # ************** <auto-copyright.pl BEGIN do not edit this line> **************
-# Doozer++ is (C) Copyright 2000-2003 by Iowa State University
+# Doozer++ is (C) Copyright 2000-2004 by Iowa State University
 #
 # Original Author:
 #   Patrick Hartling
@@ -28,13 +28,13 @@
 #
 # -----------------------------------------------------------------
 # File:          dpp.compile.mk,v
-# Date modified: 2003/11/23 20:22:43
-# Version:       1.12
+# Date modified: 2004/01/29 04:28:00
+# Version:       1.13
 # -----------------------------------------------------------------
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # =============================================================================
-# dpp.compile.mk,v 1.12 2003/11/23 20:22:43 patrickh Exp
+# dpp.compile.mk,v 1.13 2004/01/29 04:28:00 patrickh Exp
 #
 # This include file <dpp.compile.mk> handles source code compiling.
 # -----------------------------------------------------------------------------

@@ -2,7 +2,7 @@
 
 # ************** <auto-copyright.pl BEGIN do not edit this line> **************
 #
-# Doozer++ is (C) Copyright 2000-2003 by Iowa State University
+# Doozer++ is (C) Copyright 2000-2004 by Iowa State University
 #
 # Original Author:
 #   Patrick Hartling
@@ -24,7 +24,7 @@
 #
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
-# cvs-gather.pl,v 1.31 2003/07/03 16:54:54 patrickh Exp
+# cvs-gather.pl,v 1.32 2004/01/29 04:27:50 patrickh Exp
 
 use 5.005;
 

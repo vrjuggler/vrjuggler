@@ -1,5 +1,5 @@
 dnl ************* <auto-copyright.pl BEGIN do not edit this line> *************
-dnl Doozer++ is (C) Copyright 2000-2003 by Iowa State University
+dnl Doozer++ is (C) Copyright 2000-2004 by Iowa State University
 dnl
 dnl Original Author:
 dnl   Patrick Hartling
@@ -21,8 +21,8 @@ dnl Boston, MA 02111-1307, USA.
 dnl
 dnl -----------------------------------------------------------------
 dnl File:          boost.m4,v
-dnl Date modified: 2004/01/09 23:46:09
-dnl Version:       1.18
+dnl Date modified: 2004/07/02 11:35:55
+dnl Version:       1.23
 dnl -----------------------------------------------------------------
 dnl ************** <auto-copyright.pl END do not edit this line> **************
 
@@ -43,7 +43,7 @@ dnl     BOOST_INCLUDES - Extra include path for the Boost header directory.
 dnl     BOOST_LDFLAGS  - Extra library path for the Boost libraries.
 dnl ===========================================================================
 
-dnl boost.m4,v 1.18 2004/01/09 23:46:09 patrickh Exp
+dnl boost.m4,v 1.23 2004/07/02 11:35:55 patrickh Exp
 
 dnl ---------------------------------------------------------------------------
 dnl Determine if the target system has Boost installed.  This adds the
@@ -70,7 +70,7 @@ dnl                           is found.  This argument is optional.
 dnl     action-if-not-found - The action to take if an Boost implementation
 dnl                           is not found.  This argument is optional.
 dnl ---------------------------------------------------------------------------
-AC_DEFUN(DPP_HAVE_BOOST,
+AC_DEFUN([DPP_HAVE_BOOST],
 [
    AC_REQUIRE([DPP_SYSTEM_SETUP])
    
@@ -110,15 +110,6 @@ AC_DEFUN(DPP_HAVE_BOOST,
       CPPFLAGS="$CPPFLAGS -I$dpp_boost_incdir"
    fi
 
-   dnl This is not quite right because it restricts the user to testing for
-   dnl the exact version required.
-   if test ! -d "$dpp_boost_incdir/boost" ; then
-      dpp_boost_ver=`echo $1 | sed -e 's/\./ /g' | awk '{ print $[1] "_" $[2] }' -`
-      dpp_boost_incdir="$dpp_boost_incdir/boost-$dpp_boost_ver"
-
-      CPPFLAGS="$dpp_save_CPPFLAGS -I$dpp_boost_incdir"
-   fi
-
    DPP_LANG_SAVE
    DPP_LANG_CPLUSPLUS
 
@@ -126,11 +117,17 @@ AC_DEFUN(DPP_HAVE_BOOST,
 
    DPP_LANG_RESTORE
 
-   if test "x$dpp_have_boost" = "xyes" ; then
+   boost_version="$dpp_boost_incdir/boost/version.hpp"
+
+   if test "x$dpp_have_boost" = "xyes" -a -r "$boost_version" ; then
       dnl This expression passed to grep(1) is not great.  It could stand to
       dnl test for one or more whitespace characters instead of just one for
       dnl book-ending BOOST_VERSION.
-      BOOST_VERSION=`grep 'define BOOST_VERSION ' $dpp_boost_incdir/boost/version.hpp | awk '{ print $[3] }' -`
+      dnl NOTE: Using sed(1) here is done to avoid problems with version.hpp
+      dnl being a Windows text file instead of a UNIX text file.
+      changequote(<<, >>)
+      BOOST_VERSION=`grep 'define BOOST_VERSION ' "$boost_version" | sed -e 's/^[^0-9]*\([0-9][0-9]*\)[^0-9]*$/\1/'`
+      changequote([, ])
       dpp_boost_patch=`expr $BOOST_VERSION % 100`
       dpp_boost_minor=`expr $BOOST_VERSION / 100 % 1000`
       dpp_boost_major=`expr $BOOST_VERSION / 100000`
@@ -139,6 +136,11 @@ AC_DEFUN(DPP_HAVE_BOOST,
       AC_MSG_CHECKING([whether Boost version is >= $1])
       AC_MSG_RESULT([$dpp_boost_version])
       DPP_VERSION_CHECK([$dpp_boost_version], [$1], , [dpp_have_boost=no])
+   else
+      dpp_have_boost='no'
+      AC_MSG_WARN([$boost_version is not readable.
+Using the option --with-boost-includes may help fix this.])
+      ifelse([$5], , :, [$5])
    fi
 
    dnl If Boost API files were found, define this extra stuff that may be

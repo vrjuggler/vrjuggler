@@ -1,5 +1,5 @@
 # ************** <auto-copyright.pl BEGIN do not edit this line> **************
-# Doozer++ is (C) Copyright 2000-2003 by Iowa State University
+# Doozer++ is (C) Copyright 2000-2004 by Iowa State University
 #
 # Original Author:
 #   Patrick Hartling
@@ -21,13 +21,13 @@
 #
 # -----------------------------------------------------------------
 # File:          Makefile.in,v
-# Date modified: 2003/02/22 03:31:57
-# Version:       1.6
+# Date modified: 2004/01/29 04:28:55
+# Version:       1.7
 # -----------------------------------------------------------------
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 #
-#	Makefile.in,v 1.6 2003/02/22 03:31:57 patrickh Exp
+#	Makefile.in,v 1.7 2004/01/29 04:28:55 patrickh Exp
 #
 
 datadir	= @datadir@/Doozer++

@@ -1,5 +1,5 @@
 dnl ************* <auto-copyright.pl BEGIN do not edit this line> *************
-dnl Doozer++ is (C) Copyright 2000-2003 by Iowa State University
+dnl Doozer++ is (C) Copyright 2000-2004 by Iowa State University
 dnl
 dnl Original Author:
 dnl   Patrick Hartling
@@ -28,8 +28,8 @@ dnl Boston, MA 02111-1307, USA.
 dnl
 dnl -----------------------------------------------------------------
 dnl File:          basic_progs.m4,v
-dnl Date modified: 2003/02/22 03:31:57
-dnl Version:       1.15
+dnl Date modified: 2004/07/02 11:35:54
+dnl Version:       1.17
 dnl -----------------------------------------------------------------
 dnl ************** <auto-copyright.pl END do not edit this line> **************
 
@@ -49,7 +49,7 @@ dnl Variables defined:
 dnl     GMAKE                - The GNU make executable.
 dnl ===========================================================================
 
-dnl basic_progs.m4,v 1.15 2003/02/22 03:31:57 patrickh Exp
+dnl basic_progs.m4,v 1.17 2004/07/02 11:35:54 patrickh Exp
 
 dnl ---------------------------------------------------------------------------
 dnl Test for basic programs need by most, if not all, build systems.
@@ -57,7 +57,7 @@ dnl
 dnl Usage:
 dnl     DPP_BASIC_PROGS
 dnl ---------------------------------------------------------------------------
-AC_DEFUN(DPP_BASIC_PROGS,
+AC_DEFUN([DPP_BASIC_PROGS],
 [
    AC_REQUIRE([DPP_SYSTEM_SETUP])
 
@@ -97,7 +97,7 @@ dnl     action-if-not-gnu-make - The action(s) to take if the given command is
 dnl                              not a GNU make executable.  This argument is
 dnl                              optional.
 dnl ---------------------------------------------------------------------------
-AC_DEFUN(DPP_MAKE_IS_GNU_MAKE,
+AC_DEFUN([DPP_MAKE_IS_GNU_MAKE],
 [
    AC_MSG_CHECKING([whether $1 is GNU make])
    dpp_gmake_ver_cmd='$1 --version | grep GNU 1>&AC_FD_CC'
@@ -129,7 +129,7 @@ dnl                           This must be a colon-separated list of
 dnl                           UNIX-style directories. This argument is
 dnl                           optional.
 dnl ---------------------------------------------------------------------------
-AC_DEFUN(DPP_HAVE_GNU_MAKE,
+AC_DEFUN([DPP_HAVE_GNU_MAKE],
 [
    dpp_GMAKE=''
 

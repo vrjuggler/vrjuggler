@@ -1,5 +1,5 @@
 dnl ************* <auto-copyright.pl BEGIN do not edit this line> *************
-dnl Doozer++ is (C) Copyright 2000-2003 by Iowa State University
+dnl Doozer++ is (C) Copyright 2000-2004 by Iowa State University
 dnl
 dnl Original Author:
 dnl   Patrick Hartling
@@ -28,8 +28,8 @@ dnl Boston, MA 02111-1307, USA.
 dnl
 dnl -----------------------------------------------------------------
 dnl File:          performer.m4,v
-dnl Date modified: 2003/11/23 20:21:33
-dnl Version:       1.16
+dnl Date modified: 2004/07/02 11:35:55
+dnl Version:       1.19
 dnl -----------------------------------------------------------------
 dnl ************** <auto-copyright.pl END do not edit this line> **************
 
@@ -70,7 +70,7 @@ dnl                             directory for use with Microsoft Visual C++j
 dnl                             LINK.EXE.
 dnl ===========================================================================
 
-dnl performer.m4,v 1.16 2003/11/23 20:21:33 patrickh Exp
+dnl performer.m4,v 1.19 2004/07/02 11:35:55 patrickh Exp
 
 dnl ---------------------------------------------------------------------------
 dnl Determine if the target system has IRIS/OpenGL Performer installed.  This
@@ -98,7 +98,7 @@ dnl                           argument is optional.
 dnl     action-if-not-found - The action to take if Performer is not found.
 dnl                           This argument is optional.
 dnl ---------------------------------------------------------------------------
-AC_DEFUN(DPP_HAVE_PERFORMER,
+AC_DEFUN([DPP_HAVE_PERFORMER],
 [
    AC_REQUIRE([DPP_SYSTEM_SETUP])
 
@@ -129,7 +129,7 @@ AC_DEFUN(DPP_HAVE_PERFORMER,
       fi
    fi
 
-   CFLAGS="$CFLAGS ${_EXTRA_FLAGS}"
+   CFLAGS="$CFLAGS $ABI_FLABS"
 
    dnl Default to OpenGL Performer 2.4 if nothing was given for the default
    dnl argument.

@@ -1,5 +1,5 @@
 dnl ************* <auto-copyright.pl BEGIN do not edit this line> *************
-dnl Doozer++ is (C) Copyright 2000-2003 by Iowa State University
+dnl Doozer++ is (C) Copyright 2000-2004 by Iowa State University
 dnl
 dnl Original Author:
 dnl   Patrick Hartling
@@ -21,8 +21,8 @@ dnl Boston, MA 02111-1307, USA.
 dnl
 dnl -----------------------------------------------------------------
 dnl File:          audioworks.m4,v
-dnl Date modified: 2003/06/10 19:15:58
-dnl Version:       1.11
+dnl Date modified: 2004/07/02 11:35:55
+dnl Version:       1.14
 dnl -----------------------------------------------------------------
 dnl ************** <auto-copyright.pl END do not edit this line> **************
 
@@ -49,7 +49,7 @@ dnl     AUDIOWORKS__LDFLAGS  - Extra linker flags for the AudioWorks library
 dnl                            directory.
 dnl ===========================================================================
 
-dnl audioworks.m4,v 1.11 2003/06/10 19:15:58 patrickh Exp
+dnl audioworks.m4,v 1.14 2004/07/02 11:35:55 patrickh Exp
 
 dnl ---------------------------------------------------------------------------
 dnl Determine if the target system has AudioWorks installed.  This
@@ -71,7 +71,7 @@ dnl                           is found.  This argument is optional.
 dnl     action-if-not-found - The action to take if an AudioWorks installation
 dnl                           is not found.  This argument is optional.
 dnl ---------------------------------------------------------------------------
-AC_DEFUN(DPP_HAVE_AUDIOWORKS,
+AC_DEFUN([DPP_HAVE_AUDIOWORKS],
 [
    AC_REQUIRE([DPP_SYSTEM_SETUP])
 
@@ -88,7 +88,7 @@ AC_DEFUN(DPP_HAVE_AUDIOWORKS,
                AUDIOWORKS_ROOT="$withval", AUDIOWORKS_ROOT=$1)
 
    dnl Save these values in case they need to be restored later.
-   dpp_save_CFLAGS="$CFLAGS"
+   dpp_save_CXXFLAGS="$CXXFLAGS"
    dpp_save_CPPFLAGS="$CPPFLAGS"
    dpp_save_INCLUDES="$INCLUDES"
    dpp_save_LDFLAGS="$LDFLAGS"
@@ -101,7 +101,7 @@ AC_DEFUN(DPP_HAVE_AUDIOWORKS,
    fi
 
    CPPFLAGS="$CPPFLAGS -I$AUDIOWORKS_ROOT/include/PSI"
-   CFLAGS="$CFLAGS ${_EXTRA_FLAGS}"
+   CXXFLAGS="$CXXFLAGS $ABI_FLAGS"
 
    dnl This is necessary because AC_CHECK_LIB() adds -laudioworks to
    dnl $LIBS.  We want to do that ourselves later.
@@ -138,7 +138,7 @@ AC_DEFUN(DPP_HAVE_AUDIOWORKS,
    fi
 
    dnl Restore all the variables now that we are done testing.
-   CFLAGS="$dpp_save_CFLAGS"
+   CXXFLAGS="$dpp_save_CXXFLAGS"
    CPPFLAGS="$dpp_save_CPPFLAGS"
    INCLUDES="$dpp_save_INCLUDES"
    LDFLAGS="$dpp_save_LDFLAGS"

@@ -1,5 +1,5 @@
 dnl ************* <auto-copyright.pl BEGIN do not edit this line> *************
-dnl Doozer++ is (C) Copyright 2000-2003 by Iowa State University
+dnl Doozer++ is (C) Copyright 2000-2004 by Iowa State University
 dnl
 dnl Original Author:
 dnl   Patrick Hartling
@@ -21,8 +21,8 @@ dnl Boston, MA 02111-1307, USA.
 dnl
 dnl -----------------------------------------------------------------
 dnl File:          glut.m4,v
-dnl Date modified: 2003/06/10 19:15:58
-dnl Version:       1.7
+dnl Date modified: 2004/07/02 11:35:55
+dnl Version:       1.10
 dnl -----------------------------------------------------------------
 dnl ************** <auto-copyright.pl END do not edit this line> **************
 
@@ -42,7 +42,7 @@ dnl     GLUT_INCLUDES - Extra include path for the GLUT header directory.
 dnl     GLUT_LDFLAGS  - Extra linker flags for the GLUT library directory.
 dnl ===========================================================================
 
-dnl glut.m4,v 1.7 2003/06/10 19:15:58 patrickh Exp
+dnl glut.m4,v 1.10 2004/07/02 11:35:55 patrickh Exp
 
 dnl ---------------------------------------------------------------------------
 dnl Determine if the target system has GLUT installed.  This adds the
@@ -64,7 +64,7 @@ dnl                           found.  This argument is optional.
 dnl     action-if-not-found - The action to take if a GLUT installation is not
 dnl                           found.  This argument is optional.
 dnl ---------------------------------------------------------------------------
-AC_DEFUN(DPP_HAVE_GLUT,
+AC_DEFUN([DPP_HAVE_GLUT],
 [
    AC_REQUIRE([DPP_SYSTEM_SETUP])
    AC_REQUIRE([DPP_HAVE_OPENGL])
@@ -90,7 +90,7 @@ AC_DEFUN(DPP_HAVE_GLUT,
       LDFLAGS="-L$GLUT_ROOT/lib$LIBBITSUF $LDFLAGS"
    fi
 
-   CFLAGS="$CFLAGS ${_EXTRA_FLAGS}"
+   CFLAGS="$CFLAGS $ABI_FLAGS"
 
    if test "x$dpp_os_type" = "xWin32" ; then
       AC_MSG_WARN([Assuming that GLUT is available in a standard location])

@@ -1,5 +1,5 @@
 dnl ************* <auto-copyright.pl BEGIN do not edit this line> *************
-dnl Doozer++ is (C) Copyright 2000-2003 by Iowa State University
+dnl Doozer++ is (C) Copyright 2000-2004 by Iowa State University
 dnl
 dnl Original Author:
 dnl   Patrick Hartling
@@ -28,8 +28,8 @@ dnl Boston, MA 02111-1307, USA.
 dnl
 dnl -----------------------------------------------------------------
 dnl File:          types.m4,v
-dnl Date modified: 2003/02/22 03:31:57
-dnl Version:       1.7
+dnl Date modified: 2004/07/02 11:35:54
+dnl Version:       1.9
 dnl -----------------------------------------------------------------
 dnl ************** <auto-copyright.pl END do not edit this line> **************
 
@@ -48,7 +48,7 @@ dnl
 dnl Usage:
 dnl     DPP_TYPE_SOCKLEN_T
 dnl ---------------------------------------------------------------------------
-AC_DEFUN(DPP_TYPE_SOCKLEN_T,
+AC_DEFUN([DPP_TYPE_SOCKLEN_T],
 [
    AC_CHECK_HEADERS([sys/socket.h])
 

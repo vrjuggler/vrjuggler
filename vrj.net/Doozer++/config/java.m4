@@ -1,5 +1,5 @@
 dnl ************* <auto-copyright.pl BEGIN do not edit this line> *************
-dnl Doozer++ is (C) Copyright 2000-2003 by Iowa State University
+dnl Doozer++ is (C) Copyright 2000-2004 by Iowa State University
 dnl
 dnl Original Author:
 dnl   Patrick Hartling
@@ -21,8 +21,8 @@ dnl Boston, MA 02111-1307, USA.
 dnl
 dnl -----------------------------------------------------------------
 dnl File:          java.m4,v
-dnl Date modified: 2003/10/11 15:03:46
-dnl Version:       1.48
+dnl Date modified: 2004/07/02 11:35:54
+dnl Version:       1.50
 dnl -----------------------------------------------------------------
 dnl ************** <auto-copyright.pl END do not edit this line> **************
 
@@ -58,7 +58,7 @@ dnl     JNI_LIB  - The library which needs to be statically linked for JNI.
 dnl     JCPS     - Java classpath separator character (: on UNIX, ; on Win32).
 dnl ===========================================================================
 
-dnl java.m4,v 1.48 2003/10/11 15:03:46 patrickh Exp
+dnl java.m4,v 1.50 2004/07/02 11:35:54 patrickh Exp
 
 dnl ---------------------------------------------------------------------------
 dnl Find the path to the Java installation.  Substition is performed on the
@@ -80,7 +80,7 @@ dnl     path - A colon-separated list of directories giving possible
 dnl            locations of the Java installation.  These must be directories
 dnl            where javac can be found.
 dnl ---------------------------------------------------------------------------
-AC_DEFUN(DPP_PATH_JAVA,
+AC_DEFUN([DPP_PATH_JAVA],
 [
    AC_REQUIRE([DPP_SYSTEM_SETUP])
    AC_REQUIRE([DPP_WIN32_SETUP])
@@ -200,7 +200,7 @@ dnl                           found.
 dnl     action-if-not-found - The action to take if the JNI libraries are not
 dnl                           found.
 dnl ---------------------------------------------------------------------------
-AC_DEFUN(DPP_JDK_VERSION,
+AC_DEFUN([DPP_JDK_VERSION],
 [
    AC_REQUIRE([DPP_PATH_JAVA])
 
@@ -231,7 +231,7 @@ dnl                           found.
 dnl     extra-libraries     - Any extra libraries or library paths needed for
 dnl                           the JNI code.
 dnl ---------------------------------------------------------------------------
-AC_DEFUN(DPP_CHECK_JNI,
+AC_DEFUN([DPP_CHECK_JNI],
 [
    AC_ARG_WITH(jni-inc, [  --with-jni-inc=<val>    JNI include path(s)],
                JNI_INC="$withval")
@@ -371,7 +371,7 @@ dnl     action-if-not-found - The action(s) to take if the class does not
 dnl                           contain the method.
 dnl     classpath           - The classpath to use for looking up the class.
 dnl ---------------------------------------------------------------------------
-AC_DEFUN(DPP_CHECK_JAVA_STATIC_METHOD,
+AC_DEFUN([DPP_CHECK_JAVA_STATIC_METHOD],
 [
    DPP_LANG_SAVE
    DPP_LANG_JAVA
@@ -466,7 +466,7 @@ dnl     action-if-not-found - The action(s) to take if the class does not
 dnl                           contain the method.
 dnl     classpath           - The classpath to use for looking up the class.
 dnl ---------------------------------------------------------------------------
-AC_DEFUN(DPP_CHECK_JAVA_METHOD,
+AC_DEFUN([DPP_CHECK_JAVA_METHOD],
 [
    DPP_LANG_SAVE
    DPP_LANG_JAVA
