@@ -41,6 +41,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.vrjuggler.jccl.config.*;
 import org.vrjuggler.jccl.editors.PropertyEditorPanel;
+import org.vrjuggler.vrjconfig.commoneditors.ProxyEditor;
 import org.vrjuggler.vrjconfig.commoneditors.TransmitterTransformPanel;
 
 
@@ -112,7 +113,12 @@ public class MotionStarEditorPanel
          new PropertyEditorPanel(ctx, elt.getProperty("mode", 0),
                                  mstar_def.getPropertyDefinition("mode"),
                                  elt, 0, Color.white);
+      mDeviceHostEditor =
+         new PropertyEditorPanel(ctx, elt.getProperty("device_host", 0),
+                                 mstar_def.getPropertyDefinition("device_host"),
+                                 elt, 0, Color.white);
 
+      ConfigBrokerProxy broker = new ConfigBrokerProxy();
       java.util.List filters = elt.getPropertyValues("position_filters");
 
       if ( filters == null || filters.size() == 0 )
@@ -131,7 +137,6 @@ public class MotionStarEditorPanel
                                        JOptionPane.WARNING_MESSAGE);
 
          // Create the new position_transform_filter config element.
-         ConfigBrokerProxy broker = new ConfigBrokerProxy();
          ConfigDefinition filter_def =
             broker.getRepository().get("position_transform_filter");
          ConfigElementFactory factory =
@@ -162,6 +167,9 @@ public class MotionStarEditorPanel
          }
       }
 
+      mProxyEditorPanel.setConfig(ctx, elt,
+                                  broker.getRepository().get("position_proxy"));
+
       try
       {
          jbInit();
@@ -182,6 +190,7 @@ public class MotionStarEditorPanel
       mHardwarePanel.setBorder(mHardwarePanelTitle);
       mHardwarePanel.setLayout(nHardwarePanelLayout);
       mHardwarePanelTitle.setTitle("Hardware Settings");
+      mRealHardwarePanel.setLayout(nRealHardwarePanelLayout);
       mAddressLabel.setHorizontalAlignment(SwingConstants.TRAILING);
       mAddressLabel.setLabelFor(mAddressField);
       mAddressLabel.setText("Server Address:");
@@ -206,101 +215,121 @@ public class MotionStarEditorPanel
       mMeasurementRateLabel.setText("Chassis Measurement Rate:");
       mReportRateLabel.setForeground(Color.black);
       mReportRateLabel.setHorizontalAlignment(SwingConstants.TRAILING);
+      mReportRateLabel.setLabelFor(mReportRateSpinner);
       mReportRateLabel.setText("Sensor Report Rate:");
       mReportRateSpinner.setMinimumSize(new Dimension(70, 24));
       mReportRateSpinner.setPreferredSize(new Dimension(70, 24));
       mMeasurementRateSpinner.setMinimumSize(new Dimension(70, 24));
       mMeasurementRateSpinner.setPreferredSize(new Dimension(70, 24));
-      mHardwarePanel.add(mAddressField,
+      mDeviceHostLabel.setForeground(Color.black);
+      mDeviceHostLabel.setHorizontalAlignment(SwingConstants.TRAILING);
+      mDeviceHostLabel.setLabelFor(mDeviceHostEditor);
+      mDeviceHostLabel.setText("Device Host:");
+      mRealHardwarePanel.add(mAddressField,
                          new GridBagConstraints(1, 0, 1, 1, 1.0, 0.0,
                                                 GridBagConstraints.WEST,
                                                 GridBagConstraints.HORIZONTAL,
                                                 new Insets(0, 0, 0, 0), 0, 0));
-      mHardwarePanel.add(mServerPortEditor,
+      mRealHardwarePanel.add(mServerPortEditor,
                          new GridBagConstraints(1, 1, 1, 1, 1.0, 1.0,
                                                 GridBagConstraints.WEST,
                                                 GridBagConstraints.BOTH,
                                                 new Insets(0, 0, 0, 0), 0, 0));
-      mHardwarePanel.add(mMasterEditor,
+      mRealHardwarePanel.add(mMasterEditor,
                          new GridBagConstraints(1, 2, 1, 1, 1.0, 1.0,
                                                 GridBagConstraints.WEST,
                                                 GridBagConstraints.BOTH,
                                                 new Insets(0, 0, 0, 0), 0, 0));
-      mHardwarePanel.add(mServerPortLabel,
+      mRealHardwarePanel.add(mServerPortLabel,
                          new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0,
                                                 GridBagConstraints.EAST,
                                                 GridBagConstraints.NONE,
                                                 new Insets(0, 0, 0, 3), 0, 0));
-      mHardwarePanel.add(mAddressLabel,
+      mRealHardwarePanel.add(mAddressLabel,
                          new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0,
                                                 GridBagConstraints.EAST,
                                                 GridBagConstraints.NONE,
                                                 new Insets(0, 0, 0, 3), 0, 0));
-      mHardwarePanel.add(mMasterLabel,
+      mRealHardwarePanel.add(mMasterLabel,
                          new GridBagConstraints(0, 2, 1, 1, 0.0, 0.0,
                                                 GridBagConstraints.EAST,
                                                 GridBagConstraints.NONE,
                                                 new Insets(0, 0, 0, 3), 0, 0));
-      mHardwarePanel.add(mHemisphereLabel,
+      mRealHardwarePanel.add(mHemisphereLabel,
                          new GridBagConstraints(0, 3, 1, 1, 0.0, 0.0,
                                                 GridBagConstraints.EAST,
                                                 GridBagConstraints.NONE,
                                                 new Insets(0, 0, 0, 3), 0, 0));
-      mHardwarePanel.add(mDataFormatLabel,
+      mRealHardwarePanel.add(mDataFormatLabel,
                          new GridBagConstraints(0, 4, 1, 1, 0.0, 0.0,
                                                 GridBagConstraints.EAST,
                                                 GridBagConstraints.NONE,
                                                 new Insets(0, 0, 0, 3), 0, 0));
-      mHardwarePanel.add(mHemisphereEditor,
+      mRealHardwarePanel.add(mHemisphereEditor,
                          new GridBagConstraints(1, 3, 1, 1, 1.0, 1.0,
                                                 GridBagConstraints.WEST,
                                                 GridBagConstraints.BOTH,
                                                 new Insets(0, 0, 0, 0), 0, 0));
-      mHardwarePanel.add(mDataFormatEditor,
+      mRealHardwarePanel.add(mDataFormatEditor,
                          new GridBagConstraints(1, 4, 1, 1, 1.0, 1.0,
                                                 GridBagConstraints.WEST,
                                                 GridBagConstraints.BOTH,
                                                 new Insets(0, 0, 0, 0), 0, 0));
-      mHardwarePanel.add(mModeEditor,
+      mRealHardwarePanel.add(mModeEditor,
                          new GridBagConstraints(1, 5, 1, 1, 1.0, 1.0,
                                                 GridBagConstraints.WEST,
                                                 GridBagConstraints.BOTH,
                                                 new Insets(0, 0, 0, 0), 0, 0));
-      mHardwarePanel.add(mModeLabel,
+      mRealHardwarePanel.add(mModeLabel,
                          new GridBagConstraints(0, 5, 1, 1, 0.0, 0.0,
                                                 GridBagConstraints.EAST,
                                                 GridBagConstraints.NONE,
                                                 new Insets(0, 0, 0, 3), 0, 0));
-      mHardwarePanel.add(mReportRateLabel,
+      mRealHardwarePanel.add(mReportRateLabel,
                          new GridBagConstraints(0, 6, 1, 1, 0.0, 0.0,
                                                 GridBagConstraints.EAST,
                                                 GridBagConstraints.NONE,
                                                 new Insets(0, 0, 0, 3), 0, 0));
-      mHardwarePanel.add(mMeasurementRateLabel,
+      mRealHardwarePanel.add(mMeasurementRateLabel,
                          new GridBagConstraints(0, 7, 1, 1, 0.0, 0.0,
                                                 GridBagConstraints.EAST,
                                                 GridBagConstraints.NONE,
-                                                new Insets(0, 3, 2, 3), 0, 0));
-      this.add(mHardwarePanel,
-               new GridBagConstraints(0, 0, 1, 1, 1.0, 1.0,
-                                      GridBagConstraints.WEST,
-                                      GridBagConstraints.BOTH,
-                                      new Insets(0, 0, 2, 0), 20, 0));
-      this.add(mPosXformFilterPanel,
-               new GridBagConstraints(0, 1, 1, 1, 1.0, 1.0,
-                                      GridBagConstraints.WEST,
-                                      GridBagConstraints.BOTH,
-                                      new Insets(0, 0, 2, 0), 20, 0));
-      mHardwarePanel.add(mReportRateSpinner,
+                                                new Insets(0, 3, 0, 3), 0, 0));
+      mRealHardwarePanel.add(mReportRateSpinner,
                          new GridBagConstraints(1, 6, 1, 1, 1.0, 1.0,
                                                 GridBagConstraints.WEST,
                                                 GridBagConstraints.NONE,
                                                 new Insets(0, 0, 2, 0), 0, 0));
-      mHardwarePanel.add(mMeasurementRateSpinner,
+      mRealHardwarePanel.add(mMeasurementRateSpinner,
                          new GridBagConstraints(1, 7, 1, 1, 1.0, 1.0,
                                                 GridBagConstraints.WEST,
                                                 GridBagConstraints.NONE,
                                                 new Insets(0, 0, 2, 0), 0, 0));
+      mRealHardwarePanel.add(mDeviceHostLabel,
+                         new GridBagConstraints(0, 8, 1, 1, 1.0, 1.0,
+                                                GridBagConstraints.EAST,
+                                                GridBagConstraints.NONE,
+                                                new Insets(0, 3, 2, 3), 0, 0));
+      mRealHardwarePanel.add(mDeviceHostEditor,
+                         new GridBagConstraints(1, 8, 1, 1, 1.0, 1.0,
+                                                GridBagConstraints.WEST,
+                                                GridBagConstraints.BOTH,
+                                                new Insets(0, 0, 2, 0), 0, 0));
+      mHardwarePanel.add(mRealHardwarePanel,
+                         new GridBagConstraints(0, 0, 1, 1, 1.0, 1.0,
+                                                GridBagConstraints.WEST,
+                                                GridBagConstraints.VERTICAL,
+                                                new Insets(0, 0, 0, 0), 0, 0));
+      this.add(mHardwarePanel,
+               new GridBagConstraints(0, 0, 1, 1, 1.0, 1.0,
+                                      GridBagConstraints.CENTER,
+                                      GridBagConstraints.BOTH,
+                                      new Insets(0, 0, 2, 0), 0, 0));
+      this.add(mTabbedPane, new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0
+         , GridBagConstraints.CENTER, GridBagConstraints.BOTH,
+         new Insets(0, 0, 0, 0), 0, 0));
+      mTabbedPane.add(mPosXformFilterPanel, "Transmitter");
+      mTabbedPane.add(mProxyEditorPanel, "Sensors");
    }
 
    private ConfigContext mContext = null;
@@ -308,8 +337,10 @@ public class MotionStarEditorPanel
 
    private TransmitterTransformPanel mPosXformFilterPanel =
       new TransmitterTransformPanel();
+   private ProxyEditor mProxyEditorPanel = new ProxyEditor();
    private JPanel mHardwarePanel = new JPanel();
    private TitledBorder mHardwarePanelTitle = new TitledBorder("");
+   private JPanel mRealHardwarePanel = new JPanel();
    private JLabel mAddressLabel = new JLabel();
    private JFormattedTextField mAddressField = new JFormattedTextField();
    private JLabel mServerPortLabel = new JLabel();
@@ -326,8 +357,12 @@ public class MotionStarEditorPanel
    private JSpinner mReportRateSpinner = new JSpinner();
    private JLabel mMeasurementRateLabel = new JLabel();
    private JSpinner mMeasurementRateSpinner = new JSpinner();
+   private JLabel mDeviceHostLabel = new JLabel();
+   private PropertyEditorPanel mDeviceHostEditor = null;
    private GridBagLayout nHardwarePanelLayout = new GridBagLayout();
+   private GridBagLayout nRealHardwarePanelLayout = new GridBagLayout();
    private GridBagLayout mMainLayout = new GridBagLayout();
+   private JTabbedPane mTabbedPane = new JTabbedPane();
 
    public void mAddressField_propertyChange(PropertyChangeEvent propertyChangeEvent)
    {
