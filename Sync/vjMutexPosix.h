@@ -80,6 +80,8 @@ public:
             pthread_mutex_unlock(mMutex);
             pthread_mutex_destroy(mMutex);
         }
+
+	free(mMutex);
     }
 
     // -----------------------------------------------------------------------
