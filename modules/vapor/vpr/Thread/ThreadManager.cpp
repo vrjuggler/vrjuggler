@@ -44,8 +44,8 @@
 #include <vpr/Util/Assert.h>
 #include <vpr/Util/Debug.h>
 
+#include <vpr/Thread/Thread.h>
 #include <vpr/Thread/ThreadManager.h>
-
 
 namespace vpr {
 
@@ -56,14 +56,14 @@ vprSingletonImp(ThreadManager);
 /**
  * Called when a thread has been added to the system.
  */
-void ThreadManager::addThread(BaseThread* thread)
+void ThreadManager::addThread(Thread* thread)
 {
    vprASSERT(mThreadVectorMutex.test()==1); // Assert manager locked
    vprASSERT(thread->getTID() >= 0);
 
    // Insert thread into local table
    while ((int)mThreads.size() <= thread->getTID())
-      mThreads.push_back(NULL);
+   { mThreads.push_back(NULL); }
    mThreads[thread->getTID()] = thread;
 
    debugDump();               // Dump current state
@@ -72,7 +72,7 @@ void ThreadManager::addThread(BaseThread* thread)
 /**
  * Called when a thread has been removed from the system.
  */
-void ThreadManager::removeThread(BaseThread* thread)
+void ThreadManager::removeThread(Thread* thread)
 {
    vprASSERT(mThreadVectorMutex.test()==1); // Assert manager locked
    vprASSERT((thread->getTID() >= 0) && (thread->getTID() < (int)mThreads.size()));
@@ -91,14 +91,18 @@ void ThreadManager::debugDump()
    for (unsigned int i=0;i<mThreads.size();i++)
    {
       if (mThreads[i] != NULL)
+      {
          vprDEBUGnl(vprDBG_VPR, vprDBG_STATE_LVL) << i << ": ["
                                                 << (void*)mThreads[i] << "] "
-                                                << std::endl;
-                                                //<< mThreads[i] << std::endl;
+                                                //<< std::endl;
+                                                << mThreads[i] << std::endl;
+      }
       else
+      {
          vprDEBUGnl(vprDBG_VPR, vprDBG_STATE_LVL) << i << ": ["
                                                 << (void*)mThreads[i]
                                                 << "] No thread\n";
+      }
    }
 
    vprDEBUG_ENDnl(vprDBG_VPR, vprDBG_STATE_LVL) << "---------------------\n"

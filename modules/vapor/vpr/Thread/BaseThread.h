@@ -44,14 +44,9 @@
 
 #include <vpr/vprConfig.h>
 
-#include <iomanip>
-#include <map>
 #include <boost/concept_check.hpp>
 #include <vpr/vprTypes.h>
 #include <vpr/Thread/TSTable.h>            /* Needed to cache a copy here */
-#include <vpr/Sync/Mutex.h>
-#include <vpr/Sync/Guard.h>
-
 
 namespace vpr
 {
@@ -67,7 +62,12 @@ typedef void (*thread_func_t)(void *);
 class BaseThreadFunctor;
 
 /**
- * This is used as the base class for all thread classes.
+ * Base class for all thread implementations.
+ *
+ * Provides functionality that is common to all threading implementations.
+ *
+ * @note This class is not designed to be used as a polymorphic base class
+ * to hold references to threads.  Just use the real thread type.
  */
 class VPR_CLASS_API BaseThread
 {
@@ -318,13 +318,7 @@ public:
    /**
     * Ouputs the state of the object.
     */
-   virtual std::ostream& outStream(std::ostream& out)
-   {
-      out.setf(std::ios::right);
-      out << std::setw(3) << mThreadId;
-      out.unsetf(std::ios::right);
-      return out;
-   }
+   virtual std::ostream& outStream(std::ostream& out);
 
 protected:
    /**
@@ -340,7 +334,7 @@ private:
    BaseThread(BaseThread&)
    {;}
 
-private:
+protected:
    vpr::Int32  mThreadId;    //! The local id for the thread, -1 ==> invalid thread
 
    // --- STATICS ---- //
@@ -356,7 +350,7 @@ private:
 };
 
 /// Ouput operator.
-VPR_API(std::ostream&) operator<<(std::ostream& out, BaseThread* threadPtr);
+VPR_API(std::ostream&) operator<<(std::ostream& out, Thread* threadPtr);
 
 } // End of vpr namespace
 

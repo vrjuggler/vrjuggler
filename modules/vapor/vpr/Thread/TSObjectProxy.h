@@ -123,7 +123,7 @@ public:
     * NOTE: This should only be used by expert users.  It can cause
     *        MAJOR synchronization issues and even data corruption.
     */
-   T* getObjPtrForThread(vpr::BaseThread* thread)
+   T* getObjPtrForThread(vpr::Thread* thread)
    {
       return getSpecific(thread);
    }
@@ -137,13 +137,13 @@ private:
     * - Get the obj pointer<br>
     * - Attempts a dynamic cast<br>
     */
-   T* getSpecific(vpr::BaseThread* reqThread=NULL)
+   T* getSpecific(vpr::Thread* reqThread=NULL)
    {
       TSTable* table(NULL);
 
       // --- GET TS TABLE --- //
       // - If have self, get mine.  Otherwise use global one
-      vpr::BaseThread* thread_self(reqThread);
+      vpr::Thread* thread_self(reqThread);
       if(NULL == thread_self)       // If didn't request specific thread, then get for current thread
       {
          thread_self = Thread::self();
