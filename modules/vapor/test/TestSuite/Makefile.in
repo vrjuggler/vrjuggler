@@ -68,10 +68,10 @@ OBJDIR = .
 DEPDIR = 
 
 INCLUDE_PATHS = 
-PATH_TO_SRCS = ${srcdir} ${srcdir}/TestCases ${srcdir}/CppUnit/framework ${srcdir}/CppUnit/textui
-MK_DIR = ${srcdir}/mk
+PATH_TO_SRCS = $(srcdir) $(srcdir)/TestCases $(srcdir)/CppUnit/framework $(srcdir)/CppUnit/textui
+MK_DIR = $(srcdir)/mk
 
-include ${MK_DIR}/objs.mk
+include $(MK_DIR)/objs.mk
 
 # Compile then Link
 $(PROJECT_NAME): $(OBJS) $(VPR_BASE_DIR)/lib$(LIBBITSUF)/libvpr.a
@@ -103,5 +103,5 @@ clean:
 clobber: clean
 	rm -f *.d
 
-include ${MK_DIR}/depend.mk
+include $(MK_DIR)/depend.mk
 
