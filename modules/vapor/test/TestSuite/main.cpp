@@ -3,6 +3,23 @@
 #include <cppunit/TestSuite.h>
 #include <cppunit/TextTestRunner.h>
 
+// Common (sim and real) tests.
+#include <TestCases/Socket/SocketTest.h>
+#include <TestCases/Socket/NonBlockingSocketsTest.h>
+#include <TestCases/Socket/SocketCopyConstructorTest.h>
+#include <TestCases/Socket/SocketConnectorAcceptorTest.h>
+
+#include <TestCases/Thread/ThreadTest.h>
+
+#include <TestCases/IO/Socket/InetAddrTest.h>
+#include <TestCases/IO/SelectorTest.h>
+
+#include <TestCases/IO/Stats/SocketBandwidthIOStatsTest.h>
+
+#include <TestCases/Util/ReturnStatusTest.h>
+#include <TestCases/Util/IntervalTest.h>
+#include <TestCases/Util/GUIDTest.h>
+
 // Simulator tests.
 #ifdef VPR_SIMULATOR
 #  include <TestCases/Simulator/SimSelectorTest.h>
@@ -10,32 +27,27 @@
 
 // Real tests.
 #else
-#  include <TestCases/Socket/SocketTest.h>
-#  include <TestCases/Socket/NonBlockingSocketsTest.h>
-#  include <TestCases/Socket/SocketCopyConstructorTest.h>
-#  include <TestCases/Socket/SocketConnectorAcceptorTest.h>
-
-#  include <TestCases/Thread/ThreadTest.h>
-
-#  include <TestCases/IO/Socket/InetAddrTest.h>
-#  include <TestCases/IO/SelectorTest.h>
-
-#  include <TestCases/IO/Stats/SocketBandwidthIOStatsTest.h>
 #endif
-
-// Common (sim and real) tests.
-#include <TestCases/Util/ReturnStatusTest.h>
-#include <TestCases/Util/IntervalTest.h>
-#include <TestCases/Util/GUIDTest.h>
 
 #include <TestCases/BoostTest.h>
 #include <TestCases/SystemTest.h>
 
+#include <vpr/Thread/Thread.h>
 #include <vpr/Util/Debug.h>
 #include <vpr/System.h>
 
 //#define vprtest_RANDOM_SEED 1
 
+#ifdef VPR_SIMULATOR
+static void run (void* arg)
+{
+   while ( true )
+   {
+      vpr::sim::Controller::instance()->processNextEvent();
+      vpr::Thread::yield();
+   }
+}
+#endif
 
 int main (int ac, char **av)
 {
@@ -54,40 +66,58 @@ int main (int ac, char **av)
     random_seed = 1;                // Use this for repeatability
 #endif
 
-    vprDEBUG(vprDBG_ALL,0) << " Random seed: " << random_seed << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(vprDBG_ALL,0) << " Random seed: " << random_seed << std::endl
+                          << vprDEBUG_FLUSH;
 
-    srandom(random_seed);
-    srand(random_seed);
+   srandom(random_seed);
+   srand(random_seed);
+
+#ifdef VPR_SIMULATOR
+   std::string path_base;
+
+   if ( ! vpr::System::getenv("VPR_TEST_DIR", path_base).success() )
+   {
+      vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
+         << clrOutBOLD(clrRED, "WARNING: Could not construct sim network graph -- $VPR_TEST_DIR not set\n")
+         << vprDEBUG_FLUSH;
+   }
+   else
+   {
+      vpr::sim::Controller::instance()->constructNetwork(path_base.append("/test_network.tiers"));
+   }
+
+   vpr::Thread sim_thread(run);
+#endif
 
    CppUnit::TextTestRunner runner;
 
    //------------------------------------
    //  noninteractive
-   //------------------------------------	
+   //------------------------------------
    // create non-interactive test suite
    CppUnit::TestSuite* noninteractive_suite = new CppUnit::TestSuite("noninteractive");
-
-   // Common tests (both real and simulator).
-   noninteractive_suite->addTest(vprTest::ReturnStatusTest::suite());
-   noninteractive_suite->addTest(vprTest::BoostTest::suite());
-   noninteractive_suite->addTest(vprTest::SystemTest::suite());
-   noninteractive_suite->addTest(vprTest::GUIDTest::suite());
 
    // add tests to the suite
 #ifdef VPR_SIMULATOR
    // Simulator tests.
    noninteractive_suite->addTest(vprTest::SocketSimulatorTest::suite());
-//   noninteractive_suite->addTest(vprTest::SimSelectorTest::suite());
+   noninteractive_suite->addTest(vprTest::SimSelectorTest::suite());
 #else
    // Real tests.
+#endif
+
+   // Common tests (both real and simulator).
+   noninteractive_suite->addTest(vprTest::ReturnStatusTest::suite());
+   noninteractive_suite->addTest(vprTest::BoostTest::suite());
+   noninteractive_suite->addTest(vprTest::SystemTest::suite());
    noninteractive_suite->addTest(vprTest::IntervalTest::suite());
+   noninteractive_suite->addTest(vprTest::GUIDTest::suite());
    noninteractive_suite->addTest(vprTest::InetAddrTest::suite());
    noninteractive_suite->addTest(vprTest::SocketTest::suite());
    noninteractive_suite->addTest(vprTest::NonBlockingSocketTest::suite());
 //   noninteractive_suite->addTest(vprTest::SocketCopyConstructorTest::suite());
    noninteractive_suite->addTest(vprTest::SocketConnectorAcceptorTest::suite());
-   noninteractive_suite->addTest(vprTest::SelectorTest::suite());   
-#endif
+   noninteractive_suite->addTest(vprTest::SelectorTest::suite());
 
    // Add the test suite to the runner
    runner.addTest( noninteractive_suite );
@@ -99,10 +129,7 @@ int main (int ac, char **av)
 
    metrics_suite->addTest(vprTest::IntervalTest::metric_suite());
    metrics_suite->addTest(vprTest::GUIDTest::metric_suite());
-
-#ifndef VPR_SIMULATOR
    metrics_suite->addTest(vprTest::SocketBandwidthIOStatsTest::metric_suite());
-#endif
 
    runner.addTest(metrics_suite);
 
@@ -114,9 +141,7 @@ int main (int ac, char **av)
    // -------------------------------
    CppUnit::TestSuite* interactive_suite = new CppUnit::TestSuite("interactive");
 
-#ifndef VPR_SIMULATOR
    interactive_suite->addTest(vprTest::ThreadTest::suite());
-#endif
 
    runner.addTest(interactive_suite);
 
