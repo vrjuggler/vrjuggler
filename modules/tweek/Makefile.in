@@ -113,6 +113,17 @@ include @topdir@/make.defs.mk
 
 STARTTIME	:= $(shell LC_TIME=C date)
 
+BUILD_PROF_C	= @BUILD_PROF_C@
+BUILD_PROF_CXX	= @BUILD_PROF_CXX@
+
+# If we can build both C and C++ profiled objects, we will build profiled
+# libraries.
+ifeq ($(BUILD_PROF_C), Y)
+ifeq ($(BUILD_PROF_CXX), Y)
+    BUILD_PROF_LIBS	= 1
+endif
+endif
+
 # =============================================================================
 # Lists used for various types of recursion.
 # =============================================================================
@@ -204,7 +215,7 @@ ifndef NO_CLEAN
 	@$(MAKE) clobber
 endif
 	@$(MAKE) $(BEFOREBUILD)
-	@$(MAKE) libs
+	@$(MAKE) BUILD_PROF_C=N BUILD_PROF_CXX=N libs
 ifdef GLOBAL_BUILD
 	@$(MAKE) links
 endif
@@ -212,8 +223,8 @@ endif
 	@echo "Beginning Tweek release installation process"
 	@echo "---------------------------------------------------------------"
 	@$(MAKE) beforeinstall
-	@$(MAKE) install-libs
-	@$(MAKE) do-post-install
+	@$(MAKE) BUILD_PROF_C=N BUILD_PROF_CXX=N install-libs
+	@$(MAKE) BUILD_PROF_C=N BUILD_PROF_CXX=N do-post-install
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
           $(TWEEKROOT_ABS)/ChangeLog $(projdatadir)
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
