@@ -46,7 +46,7 @@ Input::Input()
  : mPort(""),
    mInstName(""),
    mThread(NULL),
-   mActive(0),
+   mActive(false),
    mBaudRate(0)
 {
 }
