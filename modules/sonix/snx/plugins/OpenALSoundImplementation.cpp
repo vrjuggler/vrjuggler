@@ -284,7 +284,7 @@ void OpenALSoundImplementation::bindAll()
    std::map< std::string, aj::SoundInfo >::iterator it;
    for( it = mSounds.begin(); it != mSounds.end(); ++it)
    {
-      std::cout<<(*it).first<<"\n"<<std::flush;
+      //std::cout<<"DEBUG: loading alias: "<<(*it).first<<"\n"<<std::flush;
       this->bind( (*it).first );
    }
 }   
@@ -464,8 +464,19 @@ void OpenALSoundImplementation::unbind( const std::string& alias )
      
    if (mBindLookup.count( alias ) > 0)
    {
+      int err = alGetError();
       alDeleteSources( 1, &mBindLookup[alias].source );
+      err = alGetError();
+      if (err != AL_NO_ERROR)
+      {
+         std::cout<<"ERROR: unbind() deleting source\n"<<std::flush;
+      }
       alDeleteBuffers( 1, &mBindLookup[alias].buffer );
+      err = alGetError();
+      if (err != AL_NO_ERROR)
+      {
+         std::cout<<"ERROR: unbind() deleting buffer\n"<<std::flush;
+      }
       mBindLookup.erase( alias );
    }
 

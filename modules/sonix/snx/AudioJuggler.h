@@ -8,11 +8,12 @@
 #include "aj/SoundFactory.h"
 #include "aj/SoundImplementation.h"
 #include "aj/SoundAPIInfo.h"
+#include "aj/Singleton.h"
 
-class AudioJuggler : public IAudioJuggler
+class AudioJuggler : public IAudioJuggler, public aj::Singleton<AudioJuggler>
 {
-public:
-
+protected:
+   friend class aj::Singleton<AudioJuggler>;
    AudioJuggler() : IAudioJuggler(), mImplementation( NULL )
    {
    }
@@ -31,6 +32,8 @@ public:
          mImplementation = NULL;
       }
    }
+
+public:
 
    /**
     * @input alias of the sound to trigger, and number of times to play
@@ -155,12 +158,12 @@ public:
       aj::SoundImplementation& oldImpl = this->impl();
       assert( &oldImpl != NULL && "this->impl() should ensure that oldImpl is non-NULL" );
       
-      std::cout<<"changing from "<<oldImpl.name();
+      std::cout<<"NOTIFY: Changing API from "<<oldImpl.name();
       
       // change the current api to the newly requested one.
       aj::SoundFactory::instance().createImplementation( apiName, mImplementation );
 
-      std::cout<<" to "<<mImplementation->name()<<"\n"<<std::flush;
+      std::cout<<" to "<<mImplementation->name()<<".\n"<<std::flush;
       
       
       // copy sound state from old to current (doesn't do binding yet)

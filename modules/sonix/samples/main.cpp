@@ -13,7 +13,7 @@ void usage( int argc, char* argv[] )
 
 int main( int argc, char* argv[] )
 {
-   char bok[] = "../../../Audio/wav/sample.wav";
+   char bok[] = "../../data/sample.wav";
    std::string filename, api;
    
    if (argc == 1 || argc == 2)
@@ -48,27 +48,38 @@ int main( int argc, char* argv[] )
       
    
    std::cout<<"AudioJuggler: \n" << std::flush;
-   AudioJuggler aj;
-   
+  
    //aj.startAPI();
    std::cout<<"associate: \n" << std::flush;
-   aj.configure( "kevin", si );
+   AudioJuggler::instance().configure( "kevin", si );
    
    std::cout<<"trigger: \n" << std::flush;
-   aj.trigger( "kevin" );
+   AudioJuggler::instance().trigger( "kevin" );
    
    std::cout<<"sleep: \n" << std::flush;
    sleep( 1 );
    
-   aj.changeAPI( api );
+   AudioJuggler::instance().changeAPI( api );
    
    std::cout<<"trigger: \n" << std::flush;
-   aj.trigger( "kevin" );
+   AudioJuggler::instance().trigger( "kevin" );
    
    std::cout<<"sleep: \n" << std::flush;
    sleep( 3 );
    
-   aj.changeAPI( "stub" );
+   AudioJuggler::instance().changeAPI( "stub" );
+   
+   sleep( 1 );
+   
+   AudioJuggler::instance().changeAPI( api );
+   
+   std::cout<<"trigger: \n" << std::flush;
+   AudioJuggler::instance().trigger( "kevin" );
+   
+   std::cout<<"sleep: \n" << std::flush;
+   sleep( 3 );
+   
+   AudioJuggler::instance().changeAPI( "stub" );
    
    return 1;
 }
