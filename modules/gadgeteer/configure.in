@@ -41,7 +41,7 @@ AC_REVISION($Revision$)
 AC_INIT(gadget/gadgetConfig.h)
 AC_CONFIG_AUX_DIR(../../share/config)
 AC_CONFIG_HEADER(gadget/gadgetDefines.h)
-DPP_PREREQ(1.4.98)
+DPP_PREREQ(1.4.103)
 DPP_INIT
 
 # Generate the reconfig script first so that it's easy to run configure again
@@ -417,7 +417,8 @@ if test "x$PLATFORM" = "xIRIX" ; then
     gadget_64_flags='-64'
 fi
 
-gadget_extra_ldflags="$APP_EXTRA_LIBS_BEGIN"
+gadget_extra_ldflags_compiler="$APP_EXTRA_LIBS_BEGIN"
+gadget_extra_ldflags_linker="$gadget_extra_ldflags_compiler"
 
 VJ_VERSION_GROK(VERSION)
 
@@ -453,7 +454,8 @@ AC_SUBST(gadget_ldflags_linker)
 AC_SUBST(gadget_libs)
 AC_SUBST(gadget_libs_all)
 AC_SUBST(Gadgeteer_lib)
-AC_SUBST(gadget_extra_ldflags)
+AC_SUBST(gadget_extra_ldflags_compiler)
+AC_SUBST(gadget_extra_ldflags_linker)
 AC_SUBST(gadget_extra_libs)
 AC_SUBST(gadget_extra_libs_juggler)
 AC_SUBST(gadget_n32_flags)

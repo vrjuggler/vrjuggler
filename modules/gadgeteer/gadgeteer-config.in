@@ -44,6 +44,8 @@ gadget_n32_flags="@gadget_n32_flags@"
 gadget_64_flags="@gadget_64_flags@"
 LIBBITSUF='@LIBBITSUF@'
 
+USE_GCC='@USE_GCC@'
+
 if [ "x$gadget_default_abi" = "xN32" ]; then
     gadget_abi_flags="$gadget_n32_flags"
 elif [ "x$gadget_default_abi" = "x64" ]; then
@@ -52,11 +54,13 @@ else
     gadget_abi_flags=''
 fi
 
-if [ "x$gadget_default_isa" = "xmips3" -o "x$gadget_default_isa" = "xmips4" ]
-then
-    gadget_isa_flags="-$gadget_default_isa"
-else
-    gadget_isa_flags=''
+gadget_isa_flags=''
+
+if [ "x$USE_GCC" != "xyes" ]; then
+   if [ "x$gadget_default_isa" = "xmips3" -o "x$gadget_default_isa" = "xmips4" ]
+   then
+      gadget_isa_flags="-$gadget_default_isa"
+   fi
 fi
 
 prefix=@prefix@
@@ -107,6 +111,9 @@ while test $# -gt 0; do
     esac
 
     case $1 in
+        --help)
+            usage 0 1>&2
+            ;;
         --all)
             print_all='yes'
             ;;
@@ -288,7 +295,12 @@ if test "x$echo_extra_libs" = "xyes"; then
         gadget_extra_libs_addtl=''
     fi
 
-    gadget_extra_ldflags="@gadget_extra_ldflags@"
+    if test "$use_linker" = "yes" ; then
+        gadget_extra_ldflags="$ldflags @gadget_extra_ldflags_linker@"
+    else
+        gadget_extra_ldflags="$ldflags @gadget_extra_ldflags_compiler@"
+    fi
+
     gadget_extra_libs="@gadget_extra_libs@"
     echo $gadget_extra_ldflags $gadget_extra_libs $gadget_extra_libs_addtl
 fi
