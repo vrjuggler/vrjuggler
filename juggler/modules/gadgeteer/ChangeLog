@@ -1,33 +1,35 @@
 DATE        AUTHOR    CHANGE
 ----------- --------- ---------------------------------------------------------
+Nov-13-2002 patrickh  Merged all changes from SC02_DEV branch.
+                      NEW VERSION: 0.6.4
 Nov-01-2002 patrickh  Added a driver that allows Tweek Subjects to act as
                       input devices for Gadgeteer.
-		      NEW VERSION: 0.6.3
+                      NEW VERSION: 0.6.3
 Oct-30-2002 allenb    Added a new interface to PosProxy for specifying what
                       units to return position data in.  This also completes
-		      the change over to using positional filters and
-		      converting gadgeteer to using meters as the common unit
-		      for all internal positional data and all configuration
-		      units.
+                      the change over to using positional filters and
+                      converting gadgeteer to using meters as the common unit
+                      for all internal positional data and all configuration
+                      units.
 Oct-30-2002 allenb    PositionXformFilter now supports pre and post transforms
                       This will allow it to be used for pos devices and for
-		      position proxies.
-		      NEW VERSION: 0.6.3
+                      position proxies.
+                      NEW VERSION: 0.6.3
 Oct-29-2002 patrickh  The Input Manager can now scan a list of directories to
                       find driver DSOs.  Scanning is performed in addition to
                       the individual driver loading added in version 0.5.0.
-		      NEW VERSION: 0.6.2
+                      NEW VERSION: 0.6.2
 Oct-29-2002 allenb    Migrated Positional devices to use new PositionFilter
                       interface for all data transformations.  This removes
-		      all transformation code from the devices drivers and
-		      moves it into common code in gadget::Position.
-		      NEW VERSION: 0.6.1
+                      all transformation code from the devices drivers and
+                      moves it into common code in gadget::Position.
+                      NEW VERSION: 0.6.1
 Oct-28-2002 allenb    All base device type interfaces now make the sample
                       buffers private data.  Derived devices add data and swap
-		      the buffer using a new interface in the base device type
-		      class.  This is a first step in adding the filter code
-		      to the system.
-		      NEW VERSION: 0.6.0
+                      the buffer using a new interface in the base device type
+                      class.  This is a first step in adding the filter code
+                      to the system.
+                      NEW VERSION: 0.6.0
 Oct-19-2002 patrickh  Use of the numeric keypad works on HP and Sun hardware.
                       Submitted by Fuel Tech Inc.
                       NEW VERSION: 0.5.1
