@@ -89,11 +89,14 @@ public class EmbeddedElementPanel extends ExpandablePanel
       //JLabel name = new JLabel(title);
       mNameComponent = new JTextField(title);
 
-      TableLayoutConstraints c2 = new TableLayoutConstraints(2, 0, 2, 0, TableLayout.LEFT, TableLayout.TOP);
+      TableLayoutConstraints c2 =
+         new TableLayoutConstraints(TITLE_COLUMN, TITLE_ROW,
+                                    TITLE_COLUMN, TITLE_ROW,
+                                    TableLayout.FULL, TableLayout.CENTER);
       add(mNameComponent, c2);
 
       mNameComponent.setBorder(BorderFactory.createLoweredBevelBorder());
-      mNameComponent.setBackground(getBackground());
+      mNameComponent.setBackground(getBackground().brighter());
      
       // The following two listeners allow the user to change the name of the
       // embedded element.
