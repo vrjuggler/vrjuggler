@@ -68,6 +68,9 @@ bool vjKeyboardWin32::config(vjConfigChunk *c)
     if (m_width == 0) m_width = 400;
     if (m_height == 0) m_height = 400;
 
+    m_x = c->getProperty("origin", 0);
+    m_y = c->getProperty("origin", 1);
+
     newx = oldx = 0xfffff;
     newy = oldy = 0xfffff;
 
@@ -92,8 +95,6 @@ int vjKeyboardWin32::startSampling()
       int i;
 
       resetIndexes();
-
-      m_x = 100; m_y = 200;
 
       vjDEBUG(vjDBG_INPUT_MGR, vjDBG_CONFIG_LVL)
                  << "vjWin32Keyboard::startSampling() : ready to go.."
@@ -550,8 +551,8 @@ void vjKeyboardWin32::createWindowWin32 ()
    m_hWnd = CreateWindow(("Juggler Keyboard"),
                          (instName),
                          WS_OVERLAPPEDWINDOW,
-                         CW_USEDEFAULT,
-                         CW_USEDEFAULT,
+                         m_x,
+                         m_y,
                          m_width,//CW_USEDEFAULT,
                          m_height,//CW_USEDEFAULT,
                          (HWND) NULL,
