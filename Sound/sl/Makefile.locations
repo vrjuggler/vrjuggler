@@ -1,5 +1,5 @@
-SL_LIB = -L../sl.b -lsl -laudio
-SL_INCLUDE = -I../sl.b 
+SL_LIB = -L/home/users/kevn/lib/sl -lsl -laudio
+SL_INCLUDE = -I/home/users/kevn/include/sl 
 BASE_CLASS_INCLUDES = -I../
 
 ############################################################

@@ -11,16 +11,16 @@ public:
    {
       this->addDescriptor( "sl" );
       this->addDescriptor( "SL" );
+      cout<<"[soundengine] Regging SL Creator\n"<<flush;
       SoundFactory::registerCreator( &mSoundEngineCreator );
    }
    virtual SoundEngine* newEngine()
    {
-      cout<<"Regging SL Creator\n"<<flush;
       return new SlSoundEngine;
    }
    virtual ~SlSoundEngineCreator()
    {
-      cout<<"SL Creator Died (application probably exited, or library was unloaded)\n"<<flush;
+      cout<<"[soundengine] SL Creator Died (application probably exited, or library was unloaded)\n"<<flush;
    }
    
    static SlSoundEngineCreator mSoundEngineCreator;
