@@ -380,7 +380,7 @@ public:
 	void set_report_rate(char rate);
 
 	/**  clear the reads bytes till buffer is zeroed */
-	void clear_buffer();
+//	void clear_buffer();
 
 
 

@@ -35,7 +35,7 @@
 #include <string.h>
 
 #include <unistd.h>        // for sleep, and ioctl
-#include <assert.h>        // for assert
+#include <vpr/Util/Assert.h> /* for vprASSERT */
 
 #include <gadget/Devices/Ascension/FlockStandalone.h>
 
@@ -80,7 +80,7 @@ FlockStandalone::FlockStandalone(const char* const port, const int& baud,
       (_reportRate != 'S') && (_reportRate != 'T'))
   {
      // illegal report rate, defaulting to "every other cycle" (R)
-     assert(false);
+     vprASSERT(false);
      _reportRate = 'R';
   }
 
@@ -229,7 +229,7 @@ int FlockStandalone::start()
 int FlockStandalone::sample()
 {
      // can't sample when not active.
-     assert( _active == true );
+     vprASSERT( _active == true );
      int i;
      int loopCount = _numBirds + 1;
      if (_xmitterUnitNumber <= _numBirds) {loopCount++;} 
@@ -252,7 +252,7 @@ int FlockStandalone::sample()
 // the transmitter, but equal to "i-1" afterwards.
 
    // you can never go above the maximum number of sensors.
-   assert( i < MAX_SENSORS );
+   vprASSERT( i < MAX_SENSORS );
    getReading(i, xPos(j), yPos(j), zPos(j), zRot(j), yRot(j), xRot(j));
 
    if (_usingCorrectionTable)
@@ -502,12 +502,12 @@ void FlockStandalone::initCorrectionTable( const char* const fName )
    inFile.close();
 }
 
- float& FlockStandalone::xPos( const int& i )  { assert( i < MAX_SENSORS ); return _position[i][0]; }
- float& FlockStandalone::yPos( const int& i )  { assert( i < MAX_SENSORS ); return _position[i][1]; }
- float& FlockStandalone::zPos( const int& i )  { assert( i < MAX_SENSORS ); return _position[i][2]; }
- float& FlockStandalone::zRot( const int& i )  { assert( i < MAX_SENSORS ); return _orientation[i][0]; }
- float& FlockStandalone::yRot( const int& i )  { assert( i < MAX_SENSORS ); return _orientation[i][1]; }
- float& FlockStandalone::xRot( const int& i )  { assert( i < MAX_SENSORS ); return _orientation[i][2]; }
+ float& FlockStandalone::xPos( const int& i )  { vprASSERT( i < MAX_SENSORS ); return _position[i][0]; }
+ float& FlockStandalone::yPos( const int& i )  { vprASSERT( i < MAX_SENSORS ); return _position[i][1]; }
+ float& FlockStandalone::zPos( const int& i )  { vprASSERT( i < MAX_SENSORS ); return _position[i][2]; }
+ float& FlockStandalone::zRot( const int& i )  { vprASSERT( i < MAX_SENSORS ); return _orientation[i][0]; }
+ float& FlockStandalone::yRot( const int& i )  { vprASSERT( i < MAX_SENSORS ); return _orientation[i][1]; }
+ float& FlockStandalone::xRot( const int& i )  { vprASSERT( i < MAX_SENSORS ); return _orientation[i][2]; }
 
 
 ///////////////////////////////////////////////////////////////////
@@ -958,7 +958,7 @@ void FlockStandalone::check_config(){
         char in[2] = {'a','a'};
         int i = 0;
 
-   clear_buffer();
+//   clear_buffer();
 
    while(i < 400){
             i++;
