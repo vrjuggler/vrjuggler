@@ -46,6 +46,7 @@
 #include <termios.h>
 #include <errno.h>
 
+#include <vpr/Util/Debug.h>
 #include <vpr/md/POSIX/IO/Port/SerialPortImplTermios.h>
 
 
@@ -697,7 +698,10 @@ vpr::ReturnStatus SerialPortImplTermios::setInputBaudRate (const Uint32 baud)
 
       new_rate = intToBaud(baud);
 
-      fprintf(stderr, "Setting input baud rate to %d\n", new_rate);
+      vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL)
+         << "SerialPortImplTermios::setInputBaudRate(): Setting input baud "
+         << "rate to " << new_rate << " (converted from " << baud << ")\n"
+         << vprDEBUG_FLUSH;
 
       if ( cfsetispeed(&term, new_rate) == -1 )
       {
@@ -752,7 +756,10 @@ vpr::ReturnStatus SerialPortImplTermios::setOutputBaudRate (const Uint32 baud)
 
       new_rate = intToBaud(baud);
 
-      fprintf(stderr, "Setting output baud rate to %d\n", new_rate);
+      vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL)
+         << "SerialPortImplTermios::setInputBaudRate(): Setting output baud "
+         << "rate to " << new_rate << " (converted from " << baud << ")\n"
+         << vprDEBUG_FLUSH;
 
       if ( cfsetospeed(&term, new_rate) == -1 )
       {
@@ -1211,6 +1218,32 @@ Uint32 SerialPortImplTermios::baudToInt (const speed_t baud_rate)
       case B38400:
          retval = 38400;
          break;
+      case B57600:
+         retval = 57600;
+         break;
+#ifdef B76800
+      case B76800:
+         retval = 76800;
+         break;
+#endif
+      case B115200:
+         retval = 115200;
+         break;
+#ifdef B230400
+      case B230400:
+         retval = 230400;
+         break;
+#endif
+#ifdef B460800
+      case B460800:
+         retval = 460800;
+         break;
+#endif
+#ifdef B921600
+      case B921600:
+         retval = 921600;
+         break;
+#endif
       default:
          retval = baud_rate;
          break;
@@ -1273,6 +1306,32 @@ speed_t SerialPortImplTermios::intToBaud (const Uint32 speed_int)
       case 38400:
          rate = B38400;
          break;
+      case 57600:
+         rate = B57600;
+         break;
+#ifdef B76800
+      case 76800:
+         rate = B76800;
+         break;
+#endif
+      case 115200:
+         rate = B115200;
+         break;
+#ifdef B230400
+      case 230400:
+         rate = B230400;
+         break;
+#endif
+#ifdef B460800
+      case 460800:
+         rate = B460800;
+         break;
+#endif
+#ifdef B921600
+      case 921600:
+         rate = B921600;
+         break;
+#endif
       default:
          rate = speed_int;
          break;
