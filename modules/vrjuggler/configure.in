@@ -673,25 +673,29 @@ AC_OUTPUT(vrjuggler-config
           vrjconfig/Makefile.inc
           samples/Makefile
           samples/OGL/Makefile
-          samples/OGL/glove/Makefile
-          samples/OGL/sonix/Makefile
-          samples/OGL/soundManager/Makefile
+          samples/OGL/advanced/Makefile
+          samples/OGL/advanced/glove/Makefile
+          samples/OGL/simple/Makefile
+          samples/OGL/simple/MPApp/Makefile
+          samples/OGL/simple/SimpleApp/Makefile
+          samples/OGL/simple/contextApp/Makefile
+          samples/OGL/simple/simpleInput/Makefile
           samples/OSG/Makefile
-          samples/OSG/osgNav/Makefile
+          samples/OSG/simple/Makefile
+          samples/OSG/simple/osgNav/Makefile
           samples/OpenSG/Makefile
           samples/OpenSG/simple/Makefile
           samples/OpenSG/simple/OpenSGNav/Makefile
           samples/Pf/Makefile
-          samples/Pf/simple/Makefile
           samples/Pf/advanced/Makefile
           samples/Pf/advanced/pfConfigNav/Makefile
           samples/Pf/advanced/pfNav/Makefile
-          samples/tutorials/Makefile
-          samples/tutorials/MPApp/Makefile
-          samples/tutorials/SimpleApp/Makefile
-          samples/tutorials/contextApp/Makefile
-          samples/tutorials/simpleInput/Makefile
-          samples/tutorials/simplePf/Makefile
+          samples/Pf/simple/Makefile
+          samples/Pf/simple/simplePf/Makefile
+          samples/sound/Makefile
+          samples/sound/simple/Makefile
+          samples/sound/simple/sonix/Makefile
+          samples/sound/simple/soundManager/Makefile
           test/Makefile 
           test/Draw/Makefile
           test/Draw/OGL/Makefile

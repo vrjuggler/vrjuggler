@@ -32,22 +32,22 @@
 
 # -----------------------------------------------------------------------------
 # Makefile.in for vrjuggler/samples/Pf/simple
-# This requires GNU make.
+#
+# Generated for use on @PLATFORM@
 # -----------------------------------------------------------------------------
 
-all: simplePf@EXEEXT@
+# -----------------------------------------------------------------------------
+# Build targets.
+# -----------------------------------------------------------------------------
+default: all
 
-APP_NAME=	simplePf@EXEEXT@
+all: simplePf
 
-# Basic options.
-srcdir=		@srcdir@
-SRCS=		main.cpp simplePfApp.cpp
-
-include $(VJ_BASE_DIR)/share/vrjuggler/vrj.appdefs.mk
-include $(DZR_BASE_DIR)/ext/vrjuggler/dzr.vrjuggler.pfapp.mk
+simplePf::
+	cd $@ && $(MAKE) all
 
 # -----------------------------------------------------------------------------
-# Application build targets.
+# Clean-up.
 # -----------------------------------------------------------------------------
-simplePf@EXEEXT@: $(OBJS)
-	$(LINK) $(LINK_OUT)$@ $(OBJS) $(EXTRA_LIBS) $(LIBS)
+clean:
+	-cd simplePf && $(MAKE) clean

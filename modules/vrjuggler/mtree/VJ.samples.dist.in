@@ -39,11 +39,25 @@
 .
     samples
         OGL
-            glove
+            advanced
+                glove
+                ..
             ..
+            simple
+                MPApp
+                ..
+                SimpleApp
+                ..
+                contextApp
+                ..
+                simpleInput
+                ..
+           ..
         ..
         OSG
-            osgNav
+            simple
+                osgNav
+                ..
             ..
         ..
         OpenSG
@@ -64,20 +78,16 @@
                 ..
             ..
             simple
+                simplePf
+                ..
             ..
         ..
-        tutorials
-            MPApp
-            ..
-            SimpleApp
-            ..
-            contextApp
-            ..
-            device.drivers
-            ..
-            simpleInput
-            ..
-            simplePfApp
+        sound
+            simple
+                sonix
+                ..
+                soundManager
+                ..
             ..
         ..
     ..

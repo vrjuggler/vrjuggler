@@ -31,23 +31,23 @@
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # -----------------------------------------------------------------------------
-# Makefile.in for vrjuggler/samples/tutorials/simplePf
-# This requires GNU make.
+# Makefile.in for vrjuggler/samples/OGL/advanced
+#
+# Generated for use on @PLATFORM@
 # -----------------------------------------------------------------------------
 
-all: simplePf@EXEEXT@
+# -----------------------------------------------------------------------------
+# Build targets.
+# -----------------------------------------------------------------------------
+default: all
 
-APP_NAME=	simplePf@EXEEXT@
+all: glove
 
-# Basic options.
-srcdir=		@srcdir@
-SRCS=		main.cpp simplePfApp.cpp
-
-include $(VJ_BASE_DIR)/share/vrjuggler/vrj.appdefs.mk
-include $(DZR_BASE_DIR)/ext/vrjuggler/dzr.vrjuggler.pfapp.mk
+glove::
+	cd $@ && $(MAKE) all
 
 # -----------------------------------------------------------------------------
-# Application build targets.
+# Clean-up.
 # -----------------------------------------------------------------------------
-simplePf@EXEEXT@: $(OBJS)
-	$(LINK) $(LINK_OUT)$@ $(OBJS) $(EXTRA_LIBS) $(LIBS)
+clean:	
+	-cd glove && $(MAKE) clean

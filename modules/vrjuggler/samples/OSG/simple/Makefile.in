@@ -31,23 +31,28 @@
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # -----------------------------------------------------------------------------
-# Makefile.in for vrjuggler/samples/tutorials/contextApp
-# This requires GNU make.
+# Makefile.in for juggler/samples/OSG/simple
+#
+# Generated for use on @PLATFORM@
 # -----------------------------------------------------------------------------
 
-all: contextApp@EXEEXT@
-
-APP_NAME=	contextApp@EXEEXT@
-
-# Basic options.
-srcdir=		@srcdir@
-SRCS=		contextApp.cpp main.cpp
-
-include $(VJ_BASE_DIR)/share/vrjuggler/vrj.appdefs.mk
-include $(DZR_BASE_DIR)/ext/vrjuggler/dzr.vrjuggler.glapp.mk
+APPS=	osgNav
 
 # -----------------------------------------------------------------------------
-# Application build targets.
+# Build targets.
 # -----------------------------------------------------------------------------
-contextApp@EXEEXT@: $(OBJS)
-	$(LINK) $(LINK_OUT)$@ $(OBJS) $(EXTRA_LIBS) $(LIBS)
+default: all
+
+all: $(APPS)
+
+$(APPS)::
+	cd $@ && $(MAKE)
+
+# -----------------------------------------------------------------------------
+# Clean-up.
+# -----------------------------------------------------------------------------
+clean:
+	@for app in $(APPS) ; do		\
+            cd $$app && $(MAKE) clean ;		\
+            cd .. ;				\
+        done
