@@ -1397,10 +1397,6 @@ The filters are applied in the order that they are specified in this configurati
       <help>Vertical field of view in degrees</help>
       <item label="Vertical Field Of View" defaultvalue="80.0" />
     </PropertyDesc>
-    <PropertyDesc name="Enable Sim Plug-in" token="hasSimPlugin" type="bool" variable="0">
-      <item label="hasSimPlugin" defaultvalue="false" />
-      <help>Does this viewport have a custom simulator plug-in?</help>
-    </PropertyDesc>
     <PropertyDesc name="Sim Plug-In" token="simPlugIn" type="embeddedchunk" variable="1">
       <item label="simPlugIn" />
       <allowedtype>default_simulator</allowedtype>
