@@ -1,5 +1,10 @@
 DATE        AUTHOR    CHANGE
 ----------- --------- ---------------------------------------------------------
+May-07-2002 patrickh  Changed the type of gadget::Input::mPort to be
+                      std::string instead of char*.  Drivers that were relying
+                      on this member have been updated, and code with
+                      questionable memory safety has been fixed.
+                      NEW VERSION: 0.2.1
 Apr-29-2002 patrickh  Added a device driver for the 5DT Data Glove (submitted
                       by Chang Kim <changkim@vrac.iastate.edu>).
 Apr-20-2002 patrickh  Enabled the Ascension MotionStar and Intersense IS-900
