@@ -163,21 +163,27 @@ public class CorbaService
       return mgr;
    }
 
-   public void registerObject (Servant servant, String name)
+   public byte[] registerObject (Servant servant, String name)
    {
+      byte[] obj_id = null;
+
       // Get object reference from the servant.
       try
       {
-         org.omg.CORBA.Object ref = m_root_poa.servant_to_reference(servant);
+         obj_id = m_root_poa.activate_object(servant);
       }
-      catch (ServantNotActive ex)
+      catch (ServantAlreadyActive ex)
       {
+         System.err.println("WARNING: (CorbaService.registerObject() " +
+                            "Servant already active in root POA!");
          ex.printStackTrace();
       }
       catch (WrongPolicy ex)
       {
          ex.printStackTrace();
       }
+
+      return obj_id;
    }
 
    /**
@@ -185,29 +191,31 @@ public class CorbaService
     * objects.  In CORBA terms, the servant is deactivated within the POA and
     * cannot be referenced after this occurs.
     */
-   public void unregisterObject (Servant servant)
+   public void unregisterObject (byte[] servant_id)
    {
-/*
-      // Get object reference from the servant and deactivate it within the
-      // POA.
-      try
+      if ( servant_id != null )
       {
-         org.omg.CORBA.Object ref = m_root_poa.servant_to_reference(servant);
-         m_root_poa.deactivate_object(servant._object_id());
+         // Deactivate the identified object within the root POA.
+         try
+         {
+            m_root_poa.deactivate_object(servant_id);
+         }
+         catch (ObjectNotActive ex)
+         {
+            System.err.println("WARNING: (CorbaService.unregisterObject()) " +
+                               "Servant not active in root POA!");
+            ex.printStackTrace();
+         }
+         catch (WrongPolicy ex)
+         {
+            ex.printStackTrace();
+         }
       }
-      catch (ObjectNotActive ex)
+      else
       {
-         ex.printStackTrace();
+         System.err.println("WARNING: Tried to unregister null ID in " +
+                            "CorbaService.unregisterObject()!");
       }
-      catch (ServantNotActive ex)
-      {
-         ex.printStackTrace();
-      }
-      catch (WrongPolicy ex)
-      {
-         ex.printStackTrace();
-      }
-*/
    }
 
    private class OrbThread extends Thread
