@@ -1,5 +1,5 @@
 dnl ************* <auto-copyright.pl BEGIN do not edit this line> *************
-dnl Doozer++
+dnl Doozer++ is (C) Copyright 2000-2003 by Iowa State University
 dnl
 dnl Original Author:
 dnl   Patrick Hartling
@@ -28,8 +28,8 @@ dnl Boston, MA 02111-1307, USA.
 dnl
 dnl -----------------------------------------------------------------
 dnl File:          sys.m4,v
-dnl Date modified: 2002/08/29 00:33:13
-dnl Version:       1.47.2.10
+dnl Date modified: 2003/02/22 03:23:19
+dnl Version:       1.47.2.12
 dnl -----------------------------------------------------------------
 dnl ************** <auto-copyright.pl END do not edit this line> **************
 
@@ -58,7 +58,7 @@ dnl     IRIXREL      - Defined to the string "IRIX5" or "IRIX6" based on the
 dnl                    determined version of IRIX.
 dnl ===========================================================================
 
-dnl sys.m4,v 1.47.2.10 2002/08/29 00:33:13 patrickh Exp
+dnl sys.m4,v 1.47.2.12 2003/02/22 03:23:19 patrickh Exp
 
 dnl ---------------------------------------------------------------------------
 dnl Based on the given detected host and CPU, set up the system-specific
@@ -149,10 +149,10 @@ AC_DEFUN(DPP_SYSTEM_SETUP,
          ;;
       dnl A machine running Darwin (aka, Mac OS X).
       darwin*)
-         dnl If no ABI has been set yet, default to MAC with whatever the
+         dnl If no ABI has been set yet, default to Mach-O with whatever the
          dnl CPU architecture is.
          if test "x$ABI" = "x" ; then
-            DPP_ABI_CFG('MAC', $target_cpu)
+            DPP_ABI_CFG('Mach-O', $target_cpu)
          fi
 
          PLATFORM='Darwin'

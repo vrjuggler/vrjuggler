@@ -1,5 +1,5 @@
 dnl ************* <auto-copyright.pl BEGIN do not edit this line> *************
-dnl Doozer++
+dnl Doozer++ is (C) Copyright 2000-2003 by Iowa State University
 dnl
 dnl Original Author:
 dnl   Patrick Hartling
@@ -28,14 +28,14 @@ dnl Boston, MA 02111-1307, USA.
 dnl
 dnl -----------------------------------------------------------------
 dnl File:          performer.m4,v
-dnl Date modified: 2002/04/06 20:23:20
-dnl Version:       1.9.2.1
+dnl Date modified: 2003/02/22 03:23:18
+dnl Version:       1.9.2.5
 dnl -----------------------------------------------------------------
 dnl ************** <auto-copyright.pl END do not edit this line> **************
 
 dnl ===========================================================================
 dnl Find the target host's IRIS/OpenGL Performer installation if one exists.
-dnl This supports Performer 2.2, 2.3, and 2.4.
+dnl This supports Performer 2.2 through 3.0.
 dnl ---------------------------------------------------------------------------
 dnl Macros:
 dnl     DPP_HAVE_ERFORMER - Determine if the target system has IRIS/OpenGL
@@ -47,14 +47,29 @@ dnl     --with-pfver  - Give the Performer version installed on the target
 dnl                     system.
 dnl
 dnl Variables defined:
-dnl     PFROOT      - The Performer installation directory.
-dnl     PF_VER      - The Performer version being used.
-dnl     LIBERFORMER - The list of libraries to link for Performer appliations.
-dnl     PF_INCLUDES - Extra include path for the Performer header directory.
-dnl     PF_LDFLAGS  - Extra linker flags for the Performer library directory.
+dnl     PFROOT                - The Performer installation directory.
+dnl     PF_VER                - The Performer version being used.
+dnl     LIBERFORMER           - The list of libraries to link for Performer
+dnl                             appliations (safe for use with the msvccc
+dnl                             shell script).
+dnl     PF_INCLUDES           - Extra include path for the Performer header
+dnl                             directory.
+dnl     PF_LDFLAGS            - Extra linker flags for the Performer library
+dnl                             directory.
+dnl     LIBPERFORMER_MSVCCC   - The list of libraries to link for Performer
+dnl                             applications using the msvccc shell script.
+dnl     PF_LDFLAGS_MSVCCC     - Extra linker flags for the Performer library
+dnl                             directory for use with the msvccc shell
+dnl                             script.
+dnl     LIBPERFORMER_LINK_EXE - The list of libraries to link for Performer
+dnl                             applications using Microsoft Visual C++
+dnl                             LINK.EXE.
+dnl     PF_LDFLAGS_LINK_EXE   - Extra linker flags for the Performer library
+dnl                             directory for use with Microsoft Visual C++j
+dnl                             LINK.EXE.
 dnl ===========================================================================
 
-dnl performer.m4,v 1.9.2.1 2002/04/06 20:23:20 patrickh Exp
+dnl performer.m4,v 1.9.2.5 2003/02/22 03:23:18 patrickh Exp
 
 dnl ---------------------------------------------------------------------------
 dnl Determine if the target system has IRIS/OpenGL Performer installed.  This
@@ -99,7 +114,6 @@ AC_DEFUN(DPP_HAVE_PERFORMER,
 
    dpp_save_CFLAGS="$CFLAGS"
    dpp_save_CPPFLAGS="$CPPFLAGS"
-   dpp_save_INCLUDES="$INCLUDES"
    dpp_save_LDFLAGS="$LDFLAGS"
    dpp_save_LIBS="$LIBS"
 
@@ -107,11 +121,14 @@ AC_DEFUN(DPP_HAVE_PERFORMER,
    dnl if $PFROOT is "/usr".
    if test "x$PFROOT" != "x/usr" ; then
       CPPFLAGS="-I$PFROOT/include $CPPFLAGS"
-      INCLUDES="-I$PFROOT/include $INCLUDES"
       LDFLAGS="-L$PFROOT/lib$LIBBITSUF $LDFLAGS"
+
+      if test "x$OS_TYPE" = "xWin32" ; then
+         CPPFLAGS="$CPPFLAGS -I$PFROOT/include/Performer"
+      fi
    fi
 
-   CFLAGS="$CFLAGS $INCLUDES ${_EXTRA_FLAGS}"
+   CFLAGS="$CFLAGS ${_EXTRA_FLAGS}"
 
    dnl Default to OpenGL Performer 2.4 if nothing was given for the default
    dnl argument.
@@ -119,12 +136,11 @@ AC_DEFUN(DPP_HAVE_PERFORMER,
       PF_VER='2.4'
    fi
 
-   dnl We are using Performer 2.[23] as defined by the second argument.
-   if test "x$2" = "x2.2" -o "x$2" = "x2.3" ; then
-      pf_ext='_ogl'
-   dnl We are using Performer 2.[23] as defined by the --with-pfver
-   dnl command-line argument.
-   elif test "x$PF_VER" = "x2.2" -o "x$PF_VER" = "x2.3" ; then
+   dnl We are using Performer 2.[23] as defined by the second argument or by
+   dnl the --with-pfver command-line argument.
+   if test "x$2" = "x2.2" -o "x$2" = "x2.3" -o \
+           "x$PF_VER" = "x2.2" -o "x$PF_VER" = "x2.3"
+   then
       pf_ext='_ogl'
    dnl We are using Performer 2.4 or newer.
    else
@@ -139,10 +155,20 @@ AC_DEFUN(DPP_HAVE_PERFORMER,
 
    dpp_have_performer='no'
 
+   dnl Argh!
+   if test "x$OS_TYPE" = "xWin32" ; then
+      PF_LIB_NAME_PREFIX='lib'
+   fi
+
+   dpp_pf_lib="${PF_LIB_NAME_PREFIX}pf"
+   dpp_pfdu_lib="${PF_LIB_NAME_PREFIX}pfdu"
+   dpp_pfui_lib="${PF_LIB_NAME_PREFIX}pfui"
+   dpp_pfutil_lib="${PF_LIB_NAME_PREFIX}pfutil"
+
    dnl If the Performer library was found, add the API object files to the
    dnl files to be compiled and enable the Performer API compile-time
    dnl option.
-   AC_CHECK_LIB([pf], [pfInit],
+   AC_CHECK_LIB([$dpp_pf_lib], [pfInit],
       [AC_CHECK_HEADER([Performer/pf.h], [dpp_have_performer='yes'], $4)],
       $4)
 
@@ -155,7 +181,13 @@ AC_DEFUN(DPP_HAVE_PERFORMER,
    dnl Restore $LIBS to its original value (it was modified before the
    dnl previous check block).
    if test "x$dpp_have_performer" = "xyes" ; then
-      LIBPERFORMER="-lpf$pf_ext -lpfdu$pf_ext -lpfui -lpfutil$pf_ext"
+      if test "x$OS_TYPE" = "xWin32" ; then
+         LIBPERFORMER="-llibpf -llibpfdu-util -llibpfui"
+         LIBPERFORMER_MSVCCC="$LIBPERFORMER"
+         LIBPERFORMER_LINK_EXE="libpf.lib libpfdu-util.lib libpfui.lib"
+      else
+         LIBPERFORMER="-lpf$pf_ext -lpfdu$pf_ext -lpfui -lpfutil$pf_ext"
+      fi
 
       case $dpp_platform in
          dnl Under IRIX users will need -limage to load .flt files
@@ -172,13 +204,18 @@ AC_DEFUN(DPP_HAVE_PERFORMER,
       if test "x$PFROOT" != "x/usr" ; then
          PF_INCLUDES="-I$PFROOT/include"
          PF_LDFLAGS="-L$PFROOT/lib\$(LIBBITSUF)"
+
+         if test "x$OS_TYPE" = "xWin32" ; then
+            PF_INCLUDES="$PF_INCLUDES -I$PFROOT/include/Performer"
+            PF_LDFLAGS_MSVCCC="$PF_LDFLAGS"
+            PF_LDFLAGS_LINK_EXE="/libpath:\"$PFROOT/lib\""
+         fi
       fi
    fi
 
    dnl Restore all the variables now that we are done testing.
    CFLAGS="$dpp_save_CFLAGS"
    CPPFLAGS="$dpp_save_CPPFLAGS"
-   INCLUDES="$dpp_save_INCLUDES"
    LDFLAGS="$dpp_save_LDFLAGS"
 
    AC_SUBST(PFROOT)

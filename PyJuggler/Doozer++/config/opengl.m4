@@ -1,5 +1,5 @@
 dnl ************* <auto-copyright.pl BEGIN do not edit this line> *************
-dnl Doozer++
+dnl Doozer++ is (C) Copyright 2000-2003 by Iowa State University
 dnl
 dnl Original Author:
 dnl   Patrick Hartling
@@ -28,8 +28,8 @@ dnl Boston, MA 02111-1307, USA.
 dnl
 dnl -----------------------------------------------------------------
 dnl File:          opengl.m4,v
-dnl Date modified: 2002/08/05 14:13:48
-dnl Version:       1.20.2.2
+dnl Date modified: 2003/02/22 03:23:18
+dnl Version:       1.20.2.3
 dnl -----------------------------------------------------------------
 dnl ************** <auto-copyright.pl END do not edit this line> **************
 
@@ -60,7 +60,7 @@ dnl     X_INCLUDES   - Extra include path for the X11 header directory.
 dnl     X_LDFLAGS    - Extra linker flags for the X11 library directory.
 dnl ===========================================================================
 
-dnl opengl.m4,v 1.20.2.2 2002/08/05 14:13:48 patrickh Exp
+dnl opengl.m4,v 1.20.2.3 2003/02/22 03:23:18 patrickh Exp
 
 dnl ---------------------------------------------------------------------------
 dnl Determine if the target system has OpenGL (or Mesa3D) installed.  This

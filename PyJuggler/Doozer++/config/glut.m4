@@ -1,15 +1,8 @@
 dnl ************* <auto-copyright.pl BEGIN do not edit this line> *************
-dnl Doozer++
+dnl Doozer++ is (C) Copyright 2000-2003 by Iowa State University
 dnl
 dnl Original Author:
 dnl   Patrick Hartling
-dnl ---------------------------------------------------------------------------
-dnl VR Juggler is (C) Copyright 1998, 1999, 2000, 2001 by Iowa State University
-dnl
-dnl Original Authors:
-dnl   Allen Bierbaum, Christopher Just,
-dnl   Patrick Hartling, Kevin Meinert,
-dnl   Carolina Cruz-Neira, Albert Baker
 dnl
 dnl This library is free software; you can redistribute it and/or
 dnl modify it under the terms of the GNU Library General Public
@@ -28,8 +21,8 @@ dnl Boston, MA 02111-1307, USA.
 dnl
 dnl -----------------------------------------------------------------
 dnl File:          glut.m4,v
-dnl Date modified: 2002/04/06 20:23:20
-dnl Version:       1.4.2.1
+dnl Date modified: 2003/02/22 03:23:17
+dnl Version:       1.4.2.3
 dnl -----------------------------------------------------------------
 dnl ************** <auto-copyright.pl END do not edit this line> **************
 
@@ -40,50 +33,46 @@ dnl Macros:
 dnl     DPP_HAVE_GLUT - Determine if the target system has GLUT.
 dnl
 dnl Command-line options added:
-dnl     --with-glutroot - Give the root directory of the GLUT installation.
+dnl     --with-glut   - Give the root directory of the GLUT installation.
 dnl
 dnl Variables defined:
-dnl     GLUTROOT      - The GLUT installation directory.
+dnl     GLUT_ROOT     - The GLUT installation directory.
 dnl     LIBGLUT       - The list of libraries to link for GLUT appliations.
 dnl     GLUT_INCLUDES - Extra include path for the GLUT header directory.
 dnl     GLUT_LDFLAGS  - Extra linker flags for the GLUT library directory.
 dnl ===========================================================================
 
-dnl glut.m4,v 1.4.2.1 2002/04/06 20:23:20 patrickh Exp
+dnl glut.m4,v 1.4.2.3 2003/02/22 03:23:17 patrickh Exp
 
 dnl ---------------------------------------------------------------------------
 dnl Determine if the target system has GLUT installed.  This adds the
-dnl command-line argument --with-glutroot.
+dnl command-line argument --with-glut.
 dnl
 dnl Usage:
-dnl     DPP_HAVE_GLUT(glutroot[, action-if-found [, action-if-not-found]])
+dnl     DPP_HAVE_GLUT(glut-root [, action-if-found [, action-if-not-found]])
 dnl
 dnl Arguments:
-dnl     glutroot            - The default directory where the GLUT
+dnl     glut-root           - The default directory where the GLUT
 dnl                           installation is rooted.  This directory should
 dnl                           contain an include/GL directory with the GLUT
 dnl                           headers and a lib (with appropriate bit suffix)
 dnl                           directory with the GLUT libraries.  The value
 dnl                           given is used as the default value of the
-dnl                           --with-glutroot command-line argument.
-dnl     action-if-found     - The action to take if an GLUT implementation
-dnl                           is found.  This argument is optional.
-dnl     action-if-not-found - The action to take if an GLUT implementation
-dnl                           is not found.  This argument is optional.
+dnl                           --with-glut command-line argument.
+dnl     action-if-found     - The action to take if a GLUT installation is
+dnl                           found.  This argument is optional.
+dnl     action-if-not-found - The action to take if a GLUT installation is not
+dnl                           found.  This argument is optional.
 dnl ---------------------------------------------------------------------------
 AC_DEFUN(DPP_HAVE_GLUT,
 [
    AC_REQUIRE([DPP_SYSTEM_SETUP])
+   AC_REQUIRE([DPP_HAVE_OPENGL])
 
    dnl Define the root directory for the GLUT installation.
-   AC_ARG_WITH(glutroot,
-               [  --with-glutroot=<PATH>  GLUT installation directory     [default=$1]],
-               GLUTROOT="$withval", GLUTROOT=$1)
-
-   dnl Get the path to the X-Window libraries and header files.  We will need
-   dnl these for all UNIX applications.
-   AC_REQUIRE([AC_PATH_X])
-   AC_REQUIRE([DPP_HAVE_OPENGL])
+   AC_ARG_WITH(glut,
+               [  --with-glut=<PATH>  GLUT installation directory     [default=$1]],
+               GLUT_ROOT="$withval", GLUT_ROOT=$1)
 
    dpp_have_glut='no'
    LIBGLUT=''
@@ -91,16 +80,14 @@ AC_DEFUN(DPP_HAVE_GLUT,
    dnl Save these values in case they need to be restored later.
    dpp_save_CFLAGS="$CFLAGS"
    dpp_save_CPPFLAGS="$CPPFLAGS"
-   dpp_save_INCLUDES="$INCLUDES"
    dpp_save_LDFLAGS="$LDFLAGS"
 
    dnl Add the user-specified GLUT installation directory to these
    dnl paths.  Ensure that /usr/include and /usr/lib are not included
-   dnl multiple times if $GLUTROOT is "/usr".
-   if test "x$GLUTROOT" != "x/usr" ; then
-      CPPFLAGS="$CPPFLAGS -I$GLUTROOT/include"
-      INCLUDES="$INCLUDES -I$GLUTROOT/include"
-      LDFLAGS="-L$GLUTROOT/lib$LIBBITSUF $LDFLAGS"
+   dnl multiple times if $GLUT_ROOT is "/usr".
+   if test "x$GLUT_ROOT" != "x/usr" ; then
+      CPPFLAGS="$CPPFLAGS -I$GLUT_ROOT/include"
+      LDFLAGS="-L$GLUT_ROOT/lib$LIBBITSUF $LDFLAGS"
    fi
 
    CFLAGS="$CFLAGS ${_EXTRA_FLAGS}"
@@ -110,16 +97,8 @@ AC_DEFUN(DPP_HAVE_GLUT,
       dpp_have_glut='yes'
       ifelse([$3], , :, [$3])
    else
-      X_LDFLAGS=''
-
-      if test "x$x_libraries" != "xNONE" -a "x$x_libraries" != "x" ; then
-         X_LDFLAGS="-L$x_libraries"
-      fi
-
-      LDFLAGS="$X_LDFLAGS $LDFLAGS"
-
       dpp_save_LIBS="$LIBS"
-      LIBS="$LIBS -lglut -l${MESA}GL -l${MESA}GLU -lX11 -lXext -lXmu -lm"
+      LIBS="$LIBS -lglut $LIBOPENGL -lm"
 
       AC_LANG_SAVE
       AC_LANG_C
@@ -155,17 +134,16 @@ AC_DEFUN(DPP_HAVE_GLUT,
          LIBGLUT='glut.lib'
       fi
 
-      if test "x$GLUTROOT" != "x/usr" ; then
-         GLUT_INCLUDES="-I$GLUTROOT/include"
-         GLUT_LDFLAGS="-L$GLUTROOT/lib\$(LIBBITSUF)"
+      if test "x$GLUT_ROOT" != "x/usr" ; then
+         GLUT_INCLUDES="-I$GLUT_ROOT/include"
+         GLUT_LDFLAGS="-L$GLUT_ROOT/lib\$(LIBBITSUF)"
       fi
    fi
 
    dnl Restore all the variables now that we are done testing.
    CFLAGS="$dpp_save_CFLAGS"
    CPPFLAGS="$dpp_save_CPPFLAGS"
-   INCLUDES="$dpp_save_INCLUDES"
    LDFLAGS="$dpp_save_LDFLAGS"
 
-   AC_SUBST(GLUTROOT)
+   AC_SUBST(GLUT_ROOT)
 ])

@@ -1,15 +1,8 @@
 dnl ************* <auto-copyright.pl BEGIN do not edit this line> *************
-dnl Doozer++
+dnl Doozer++ is (C) Copyright 2000-2003 by Iowa State University
 dnl
 dnl Original Author:
 dnl   Patrick Hartling
-dnl ---------------------------------------------------------------------------
-dnl VR Juggler is (C) Copyright 1998, 1999, 2000, 2001 by Iowa State University
-dnl
-dnl Original Authors:
-dnl   Allen Bierbaum, Christopher Just,
-dnl   Patrick Hartling, Kevin Meinert,
-dnl   Carolina Cruz-Neira, Albert Baker
 dnl
 dnl This library is free software; you can redistribute it and/or
 dnl modify it under the terms of the GNU Library General Public
@@ -28,8 +21,8 @@ dnl Boston, MA 02111-1307, USA.
 dnl
 dnl -----------------------------------------------------------------
 dnl File:          nspr.m4,v
-dnl Date modified: 2002/10/24 15:59:07
-dnl Version:       1.29.2.4
+dnl Date modified: 2003/02/22 03:23:18
+dnl Version:       1.29.2.6
 dnl -----------------------------------------------------------------
 dnl ************** <auto-copyright.pl END do not edit this line> **************
 
@@ -57,19 +50,19 @@ dnl     NSPR_ROOT             - The root of the NSPR installation.
 dnl     NSPR_INCLUDES         - The compiler option giving the NSPR include
 dnl                             path.
 dnl     NSPR_LIB              - The linker option for the basic NSPR library
-dnl                             (save for use with the msvccc shell script).
+dnl                             (safe for use with the msvccc shell script).
 dnl     PLC_LIB               - The linker option for the NSPR PLC library
-dnl                             (save for use with the msvccc shell script).
+dnl                             (safe for use with the msvccc shell script).
 dnl     PLDS_LIB              - The linker option for the NSPR PLDS library
-dnl                             (save for use with the msvccc shell script).
+dnl                             (safe for use with the msvccc shell script).
 dnl     NSPR_LDFLAGS          - The linker option for finding the NSPR
-dnl                             libraries (save for use with the msvccc shell
+dnl                             libraries (safe for use with the msvccc shell
 dnl                             script).
 dnl     NSPR_LIB_MSVCCC       - The linker option for the basic NSPR library
 dnl                             for use with the msvccc shell script.
 dnl     PLC_LIB_MSVCCC        - The linker option for the NSPR PLC library
 dnl                             for use with the msvccc shell script.
-dnl     PLDS_LIB_MSVCCCC      - The linker option for the NSPR PLDS library
+dnl     PLDS_LIB_MSVCCC       - The linker option for the NSPR PLDS library
 dnl                             for use with the msvccc shell script.
 dnl     NSPR_LDFLAGS_MSVCCC   - The linker option for finding the NSPR
 dnl                             libraries for use with the msvccc shell
@@ -87,7 +80,7 @@ dnl     PLC_LIB_STATIC        - Full path to the static NSPR PLC library.
 dnl     PLDS_LIB_STATIC       - Full path to the static NSPR PLDS library.
 dnl ===========================================================================
 
-dnl nspr.m4,v 1.29.2.4 2002/10/24 15:59:07 patrickh Exp
+dnl nspr.m4,v 1.29.2.6 2003/02/22 03:23:18 patrickh Exp
 
 dnl ---------------------------------------------------------------------------
 dnl State that NSPR threads are in use within NSPR.
@@ -241,7 +234,7 @@ AC_DEFUN(DPP_HAVE_NSPR,
       NSPR_LIB_LINK_EXE="$dpp_nspr_lib.lib"
       PLC_LIB_LINK_EXE="$dpp_plc_lib.lib"
       PLDS_LIB_LINK_EXE="$dpp_plds_lib.lib"
-      NSPR_LDFLAGS_LINK_EXE="/libpath:$dpp_nspr_libdir"
+      NSPR_LDFLAGS_LINK_EXE="/libpath:\"$dpp_nspr_libdir\""
 
       NSPR_LIB_STATIC="\$(NSPR_ROOT)/lib/libnspr$NSPR_VER.a"
       PLC_LIB_STATIC="\$(NSPR_ROOT)/lib/libplc$NSPR_VER.a"
@@ -321,9 +314,9 @@ AC_DEFUN(DPP_NSPR_VER,
    dnl Otherwise, use prinit.h to determine the NSPR version being used.
    else
       dpp_ver_num_exp=['s/.*\([0-9][0-9]*\)$/\1/']
-      dpp_nspr_ver_major=`grep PR_VMAJOR $dpp_include_path/prinit.h | sed -e $dpp_ver_num_exp`
-      dpp_nspr_ver_minor=`grep PR_VMINOR $dpp_include_path/prinit.h | sed -e $dpp_ver_num_exp`
-      dpp_nspr_ver_patch=`grep PR_VPATCH $dpp_include_path/prinit.h | sed -e $dpp_ver_num_exp`
+      dpp_nspr_ver_major=`grep PR_VMAJOR "$dpp_include_path/prinit.h" | sed -e $dpp_ver_num_exp`
+      dpp_nspr_ver_minor=`grep PR_VMINOR "$dpp_include_path/prinit.h" | sed -e $dpp_ver_num_exp`
+      dpp_nspr_ver_patch=`grep PR_VPATCH "$dpp_include_path/prinit.h" | sed -e $dpp_ver_num_exp`
 
       dpp_nspr_ver="${dpp_nspr_ver_major}.${dpp_nspr_ver_minor}.${dpp_nspr_ver_patch}"
 

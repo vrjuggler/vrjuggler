@@ -1,15 +1,8 @@
 dnl ************* <auto-copyright.pl BEGIN do not edit this line> *************
-dnl Doozer++
+dnl Doozer++ is (C) Copyright 2000-2003 by Iowa State University
 dnl
 dnl Original Author:
 dnl   Patrick Hartling
-dnl ---------------------------------------------------------------------------
-dnl VR Juggler is (C) Copyright 1998, 1999, 2000, 2001 by Iowa State University
-dnl
-dnl Original Authors:
-dnl   Allen Bierbaum, Christopher Just,
-dnl   Patrick Hartling, Kevin Meinert,
-dnl   Carolina Cruz-Neira, Albert Baker
 dnl
 dnl This library is free software; you can redistribute it and/or
 dnl modify it under the terms of the GNU Library General Public
@@ -28,8 +21,8 @@ dnl Boston, MA 02111-1307, USA.
 dnl
 dnl -----------------------------------------------------------------
 dnl File:          compiler.m4,v
-dnl Date modified: 2002/10/01 19:05:48
-dnl Version:       1.29.2.4
+dnl Date modified: 2003/02/22 03:23:17
+dnl Version:       1.29.2.6
 dnl -----------------------------------------------------------------
 dnl ************** <auto-copyright.pl END do not edit this line> **************
 
@@ -129,7 +122,7 @@ dnl     WIN32
 dnl     _MBCS
 dnl ===========================================================================
 
-dnl compiler.m4,v 1.29.2.4 2002/10/01 19:05:48 nonchocoboy Exp
+dnl compiler.m4,v 1.29.2.6 2003/02/22 03:23:17 patrickh Exp
 
 dnl ---------------------------------------------------------------------------
 dnl Check if the given compiler accepts a given flag.  This can be used for
@@ -233,7 +226,7 @@ AC_DEFUN(DPP_SETUP_COMPILER,
             OPT_FLAGS="/Ogityb$dpp_opt_level /GB"
             LD='link /dll'
             LDOPTS="$LDOPTS /nologo"
-            LDOPTS_DBG='/DEBUG /PDB:NONE'
+            LDOPTS_DBG='/DEBUG'
             LDOPTS_OPT='/RELEASE'
             OBJ_NAME_FLAG='/Fo$[@]'
             OBJ_BUILD_FLAG='/c'

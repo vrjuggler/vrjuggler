@@ -1,15 +1,8 @@
 dnl ************* <auto-copyright.pl BEGIN do not edit this line> *************
-dnl Doozer++
+dnl Doozer++ is (C) Copyright 2000-2003 by Iowa State University
 dnl
 dnl Original Author:
 dnl   Patrick Hartling
-dnl ---------------------------------------------------------------------------
-dnl VR Juggler is (C) Copyright 1998, 1999, 2000, 2001 by Iowa State University
-dnl
-dnl Original Authors:
-dnl   Allen Bierbaum, Christopher Just,
-dnl   Patrick Hartling, Kevin Meinert,
-dnl   Carolina Cruz-Neira, Albert Baker
 dnl
 dnl This library is free software; you can redistribute it and/or
 dnl modify it under the terms of the GNU Library General Public
@@ -28,8 +21,8 @@ dnl Boston, MA 02111-1307, USA.
 dnl
 dnl -----------------------------------------------------------------
 dnl File:          linker.m4,v
-dnl Date modified: 2002/11/19 17:19:25
-dnl Version:       1.1.2.1
+dnl Date modified: 2003/02/22 03:23:18
+dnl Version:       1.1.2.7
 dnl -----------------------------------------------------------------
 dnl ************** <auto-copyright.pl END do not edit this line> **************
 
@@ -43,14 +36,14 @@ dnl     DPP_PROG_LINKER      - Finds the tool used for linking object files.
 dnl     DPP_LINKER_IS_GNU_LD - Test if the given ld(1) command is GNU ld.
 dnl
 dnl Variables defined:
-dnl     LINKER               - The full path to the linker (as determined by
+dnl     LD                   - The full path to the linker (as determined by
 dnl                            DPP_PROG_LINKER).
 dnl     GNU_LD               - This will be set to "yes" if the linker is
 dnl                            GNU ld (as determined by DPP_LINKER_IS_GNU_LD).
 dnl                            It will be set to "no" otherwise.
 dnl ===========================================================================
 
-dnl linker.m4,v 1.1.2.1 2002/11/19 17:19:25 patrickh Exp
+dnl linker.m4,v 1.1.2.7 2003/02/22 03:23:18 patrickh Exp
 
 dnl ---------------------------------------------------------------------------
 dnl Finds the platform-specific tool used for linking object files.  The
@@ -75,12 +68,53 @@ dnl ---------------------------------------------------------------------------
 AC_DEFUN(DPP_PROG_LINKER,
 [
    AC_REQUIRE([DPP_SYSTEM_SETUP])
+   AC_REQUIRE([AC_PROG_CC])
 
-   if test "x$OS_TYPE" = "xWin32" ; then
-      AC_PATH_PROG(LINKER, link, no, [$1])
-   else
-      AC_PATH_PROG(LINKER, ld, no, [$1])
+   dpp_linker_prog='ld'
+
+   if test "x$GCC" = "xyes" ; then
+      AC_MSG_CHECKING([for linker used by $CC])
+      dpp_linker_prog=`($CC -print-prog-name=ld) 2>&5`
    fi
+
+   case $dpp_linker_prog in
+      dnl Accept absolute paths.
+      [[\\/]* | [A-Za-z]:[\\/]*)]
+         [re_direlt='/[^/][^/]*/\.\./']
+         dnl Canonicalize the path of the linker.
+         dpp_linker_prog=`echo $dpp_linker_prog | sed 's%\\\\%/%g'`
+         while echo $dpp_linker_prog | grep "$re_direlt" > /dev/null 2>&1; do
+            dpp_linker_prog=`echo $dpp_linker_prog | sed "s%$re_direlt%/%"`
+         done
+         ;;
+      "")
+         dnl If it fails, then pretend we aren't using GCC.
+         dpp_linker_prog='ld'
+         ;;
+      *)
+         GNU_LD='unknown'
+         ;;
+   esac
+
+   test -z "$LD" && LD="$dpp_linker_prog"
+
+   dnl Print the result of the above check for GCC's linker.
+   if test "x$GCC" = "xyes" ; then
+      AC_MSG_RESULT($dpp_linker_prog)
+   fi
+
+   case $dpp_linker_prog in
+      [[\\/]* | [A-Za-z]:[\\/]*)]
+         LINKER="$dpp_linker_prog"
+         ;;
+      *)
+         if test "x$OS_TYPE" = "xWin32" ; then
+            AC_PATH_PROG(LINKER, link, no, [$1])
+         else
+            AC_PATH_PROG(LINKER, $dpp_linker_prog, no, [$1])
+         fi
+         ;;
+   esac
 
    dnl Failure.
    if test "x$LINKER" = "xno" ; then
@@ -91,16 +125,17 @@ AC_DEFUN(DPP_PROG_LINKER,
       ifelse([$2], , :, [$2])
       true
    fi
+
+   DPP_LINKER_IS_GNU_LD
 ])
 
 dnl ---------------------------------------------------------------------------
-dnl Test if the given ld(1) command (linker-cmd) is GNU ld.
+dnl Test if the given $LD command (linker-cmd) is GNU ld.
 dnl
 dnl Usage:
-dnl     DPP_LINKER_IS_GNU_LD(linker-cmd [, action-if-gnu-ld [, action-if-not-gnu-ld]])
+dnl     DPP_LINKER_IS_GNU_LD([action-if-gnu-ld [, action-if-not-gnu-ld]])
 dnl
 dnl Arguments:
-dnl     linker-cmd           - The linker command to test.
 dnl     action-if-gnu-ld     - The action(s) to take if the given command is
 dnl                            a GNU ld executable.  This argument is
 dnl                            optional.
@@ -110,16 +145,16 @@ dnl                            optional.
 dnl ---------------------------------------------------------------------------
 AC_DEFUN(DPP_LINKER_IS_GNU_LD,
 [
-   AC_MSG_CHECKING([whether $1 is GNU ld])
-   dpp_ld_ver_cmd='$1 --version | grep GNU 1>&AC_FD_CC'
+   AC_MSG_CHECKING([whether $LINKER is GNU ld])
+   dpp_linker_ver_cmd='$LINKER --version | grep GNU 1>&AC_FD_CC'
 
-   if (eval "$dpp_ld_ver_cmd") 2>&AC_FD_CC ; then
+   if (eval "$dpp_linker_ver_cmd") 2>&AC_FD_CC ; then
       AC_MSG_RESULT(yes)
       GNU_LD="yes"
-      ifelse([$2], , :, [$2])
+      ifelse([$1], , :, [$1])
    else
-      GNU_LD="no"
       AC_MSG_RESULT(no)
-      ifelse([$3], , :, [$3])
+      GNU_LD="no"
+      ifelse([$2], , :, [$2])
    fi
 ])

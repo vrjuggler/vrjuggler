@@ -1,5 +1,5 @@
 dnl ************* <auto-copyright.pl BEGIN do not edit this line> *************
-dnl Doozer++
+dnl Doozer++ is (C) Copyright 2000-2003 by Iowa State University
 dnl
 dnl Original Author:
 dnl   Patrick Hartling
@@ -28,8 +28,8 @@ dnl Boston, MA 02111-1307, USA.
 dnl
 dnl -----------------------------------------------------------------
 dnl File:          abi.m4,v
-dnl Date modified: 2002/04/06 20:24:54
-dnl Version:       1.8.2.2
+dnl Date modified: 2003/02/22 03:23:16
+dnl Version:       1.8.2.4
 dnl -----------------------------------------------------------------
 dnl ************** <auto-copyright.pl END do not edit this line> **************
 
@@ -73,7 +73,7 @@ dnl                    $CFLAGS and $CXXFLAGS.
 dnl     DPP_ABI_TYPE - The argument given to --with-abi.
 dnl ===========================================================================
 
-dnl abi.m4,v 1.8.2.2 2002/04/06 20:24:54 patrickh Exp
+dnl abi.m4,v 1.8.2.4 2003/02/22 03:23:16 patrickh Exp
 
 dnl ---------------------------------------------------------------------------
 dnl Define a macro DPP_ABI_CFG for setting up the configuration parameters
@@ -119,10 +119,10 @@ AC_DEFUN(DPP_ABI_SETUP,
    dnl     ELF_ALPHA     - On an Alpha, use ELF binaries
    dnl     HP            - On HP-UX, use PA-RISC binaries
    dnl     HP64          - On HP-UX, use 64-bit PA-RISC binaries
-   dnl     MACINTOSH_PPC - On Macintosh, use PowerPC binaries
+   dnl     DARWIN_PPC    - On Darwin, use PowerPC binaries
    dnl -----------------------------------------------------------------------
    AC_ARG_WITH(abi,
-               [  --with-abi=<N32_M3|N32_M4|64_M3|64_M4|ELF_i386|WIN32_i386|COFF_ALPHA|ELF_ALPHA|HP|HP64|MACINTOSH_PPC>
+               [  --with-abi=<N32_M3|N32_M4|64_M3|64_M4|ELF_i386|WIN32_i386|COFF_ALPHA|ELF_ALPHA|HP|HP64|DARWIN_PPC>
                           Define the Application Binary
                           Interface to use],
                DPP_ABI_TYPE="$withval")
@@ -165,8 +165,8 @@ AC_DEFUN(DPP_ABI_SETUP,
       xHP64)
          DPP_ABI_CFG('HP64', 'pa-risc', '/pa20_64', '+DD64')
          ;;
-      xMACINTOSH_PPC)
-         DPP_ABI_CFG('MAC', 'powerpc')
+      xDARWIN_PPC)
+         DPP_ABI_CFG('Mach-O', 'powerpc')
          ;;
    esac
 

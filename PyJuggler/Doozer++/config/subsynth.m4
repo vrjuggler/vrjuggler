@@ -1,15 +1,8 @@
 dnl ************* <auto-copyright.pl BEGIN do not edit this line> *************
-dnl Doozer++
+dnl Doozer++ is (C) Copyright 2000-2003 by Iowa State University
 dnl
 dnl Original Author:
 dnl   Patrick Hartling
-dnl ---------------------------------------------------------------------------
-dnl VR Juggler is (C) Copyright 1998, 1999, 2000, 2001 by Iowa State University
-dnl
-dnl Original Authors:
-dnl   Allen Bierbaum, Christopher Just,
-dnl   Patrick Hartling, Kevin Meinert,
-dnl   Carolina Cruz-Neira, Albert Baker
 dnl
 dnl This library is free software; you can redistribute it and/or
 dnl modify it under the terms of the GNU Library General Public
@@ -28,8 +21,8 @@ dnl Boston, MA 02111-1307, USA.
 dnl
 dnl -----------------------------------------------------------------
 dnl File:          subsynth.m4,v
-dnl Date modified: 2002/08/15 15:37:16
-dnl Version:       1.1.2.8
+dnl Date modified: 2003/02/22 03:23:18
+dnl Version:       1.1.2.11
 dnl -----------------------------------------------------------------
 dnl ************** <auto-copyright.pl END do not edit this line> **************
 
@@ -37,37 +30,41 @@ dnl ===========================================================================
 dnl Find the target host's Subsynth installation if one exists.
 dnl ---------------------------------------------------------------------------
 dnl Macros:
-dnl     DPP_HAVE_SUBSYNTH - Determine if the target system has Subsynth installed.
+dnl     DPP_HAVE_SUBSYNTH - Determine if the target system has Subsynth
+dnl                         installed.
 dnl
 dnl Command-line options added:
-dnl     --with-synroot - Give the root directory of the Subsynth implementation
-dnl                      installation.
+dnl     --with-subsynth   - Give the root directory of the Subsynth
+dnl                         implementation installation.
 dnl
 dnl Variables defined:
-dnl     SUBSYNTH      - do we have subsynth on the system?
-dnl     SYNROOT     - The Subsynth installation directory.
-dnl     LIBSUBSYNTH   - The list of libraries to link for Subsynth appliations.
-dnl     SYN_INCLUDES - Extra include path for the Subsynth header directory.
-dnl     SYN_LDFLAGS  - Extra linker flags for the Subsynth library directory.
+dnl     SUBSYNTH          - do we have subsynth on the system?
+dnl     SUBSYNTH_ROOT     - The Subsynth installation directory.
+dnl     LIBSUBSYNTH       - The list of libraries to link for Subsynth
+dnl                         appliations.
+dnl     SUBSYNTH_INCLUDES - Extra include path for the Subsynth header
+dnl                         directory.
+dnl     SUBSYNTH_LDFLAGS  - Extra linker flags for the Subsynth library
+dnl                         directory.
 dnl ===========================================================================
 
-dnl subsynth.m4,v 1.1.2.8 2002/08/15 15:37:16 subatomic Exp
+dnl subsynth.m4,v 1.1.2.11 2003/02/22 03:23:18 patrickh Exp
 
 dnl ---------------------------------------------------------------------------
-dnl Determine if the target system has Subsynth installed.  This
-dnl adds command-line arguments --with-synroot.
+dnl Determine if the target system has Subsynth installed.  This adds the
+dnl command-line argument --with-subsynth.
 dnl
 dnl Usage:
-dnl     DPP_HAVE_SUBSYNTH(synroot [, action-if-found [, action-if-not-found]])
+dnl     DPP_HAVE_SUBSYNTH(subsynth-root [, action-if-found [, action-if-not-found]])
 dnl
 dnl Arguments:
-dnl     synroot             - The default directory where the Subsynth
+dnl     subsynth-root       - The default directory where the Subsynth
 dnl                           installation is rooted.  This directory should
 dnl                           contain an include/AL directory with the AL
 dnl                           headers and a lib (with appropriate bit suffix)
 dnl                           directory with the AL libraries.  The value
 dnl                           given is used as the default value of the
-dnl                           --with-synroot command-line argument.
+dnl                           --with-subsynth command-line argument.
 dnl     action-if-found     - The action to take if an Subsynth implementation
 dnl                           is found.  This argument is optional.
 dnl     action-if-not-found - The action to take if an Subsynth implementation
@@ -75,20 +72,21 @@ dnl                           is not found.  This argument is optional.
 dnl ---------------------------------------------------------------------------
 AC_DEFUN(DPP_HAVE_SUBSYNTH,
 [
+   AC_REQUIRE([DPP_SYSTEM_SETUP])
+
    dnl initialize returned data...
    SUBSYNTH='no'
    LIBSUBSYNTH=''
-   SYN_INCLUDES=''
-   SYN_LDFLAGS=''
+   SUBSYNTH_INCLUDES=''
+   SUBSYNTH_LDFLAGS=''
    dpp_have_subsynth='no'
 
-   AC_REQUIRE([DPP_SYSTEM_SETUP])
    DPP_HAVE_PORTAUDIO( /usr, AC_MSG_RESULT(+ Found PortAudio), AC_MSG_RESULT(+ PortAudio not found, skipping use of Subsynth), )
 
    dnl Define the root directory for the Subsynth installation.
-   AC_ARG_WITH(synroot,
-               [  --with-synroot=<PATH>   Subsynth installation directory   [default=$1]],
-               SYNROOT="$withval", SYNROOT=$1)
+   AC_ARG_WITH(subsynth,
+               [  --with-subsynth=<PATH>  Subsynth installation dir.      [default=$1]],
+               SUBSYNTH_ROOT="$withval", SUBSYNTH_ROOT=$1)
 
    dnl Only continue checking for subsynth if we found port audio
    if test "x$PORTAUDIO" == "xyes"; then
@@ -100,29 +98,22 @@ AC_DEFUN(DPP_HAVE_SUBSYNTH,
 
       dnl Add the user-specified Subsynth installation directory to these
       dnl paths.  Ensure that /usr/include and /usr/lib are not included
-      dnl multiple times if $SYNROOT is "/usr".
-      if test "x$SYNROOT" != "x/usr" ; then
-         CPPFLAGS="$CPPFLAGS -I$SYNROOT/include $PA_INCLUDES"
-         INCLUDES="$INCLUDES -I$SYNROOT/include $PA_INCLUDES"
-         if test -d "$SYNROOT/lib$LIBBITSUF" ; then
-            LDFLAGS="-L$SYNROOT/lib$LIBBITSUF $PA_LDFLAGS $LDFLAGS"
+      dnl multiple times if $SUBSYNTH_ROOT is "/usr".
+      if test "x$SUBSYNTH_ROOT" != "x/usr" ; then
+         CPPFLAGS="$CPPFLAGS -I$SUBSYNTH_ROOT/include $PA_INCLUDES"
+         INCLUDES="$INCLUDES -I$SUBSYNTH_ROOT/include $PA_INCLUDES"
+         if test -d "$SUBSYNTH_ROOT/lib$LIBBITSUF" ; then
+            LDFLAGS="-L$SUBSYNTH_ROOT/lib$LIBBITSUF $PA_LDFLAGS $LDFLAGS"
          fi
       fi
 
-      dnl debugging output...
-      dnl echo "+ setting CPPFLAGS == $CPPFLAGS"
-      dnl echo "+ setting INCLUDES == $INCLUDES"
-      dnl echo "+ setting LDFLAGS == $LDFLAGS"
-
       CFLAGS="$CFLAGS ${_EXTRA_FLAGS}"
-
-      echo "checking for Subsynth in  $SYNROOT/lib$LIBBITSUF and $SYNROOT/include"
 
       dnl WIN32 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
       if test "x$dpp_os_type" = "xWin32" ; then
-         AC_LANG_SAVE
-         AC_LANG_C
+         DPP_LANG_SAVE
+         DPP_LANG_CPLUSPLUS
 
          LIBS="$LIBS subsynth.lib"
 
@@ -148,28 +139,23 @@ AC_DEFUN(DPP_HAVE_SUBSYNTH,
             ifelse([$3], , :, [$3])
          fi
 
-         AC_LANG_RESTORE
+         DPP_LANG_RESTORE
 
       dnl UNIX !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
       else
-         dnl LDFLAGS="$LDFLAGS"
-
          dpp_save_LIBS="$LIBS"
 
          AC_LANG_SAVE
          AC_LANG_C
 
-         CPPFLAGS="$CPPFLAGS"
-         INCLUDES="$INCLUDES"
-
          dpp_have_subsynth='no'
 
          # no C symbols in subsynth,...  there has to be a better way,
          # but this is good enough for me...
-         echo "checking for Subsynth in $SYNROOT/lib$LIBBITSUF/libsubsynth.[a|so]..."
-         if test -e "$SYNROOT/lib$LIBBITSUF/libsubsynth.a" && test -e "$SYNROOT/lib$LIBBITSUF/libsubsynth.so" ; then
-            echo "checking for Subsynth in $SYNROOT/include/syn/Util/Endian.h..."
-            if test -e "$SYNROOT/include/syn/Util/Endian.h" ; then
+         echo "checking for Subsynth in $SUBSYNTH_ROOT/lib$LIBBITSUF/libsubsynth.[a|so]..."
+         if test -e "$SUBSYNTH_ROOT/lib$LIBBITSUF/libsubsynth.a" && test -e "$SUBSYNTH_ROOT/lib$LIBBITSUF/libsubsynth.so" ; then
+            echo "checking for Subsynth in $SUBSYNTH_ROOT/include/syn/Util/Endian.h..."
+            if test -e "$SUBSYNTH_ROOT/include/syn/Util/Endian.h" ; then
                dpp_have_subsynth='yes'
             fi
          fi
@@ -203,9 +189,9 @@ AC_DEFUN(DPP_HAVE_SUBSYNTH,
             LIBSUBSYNTH='subsynth.lib $LIBPORTAUDIO'
          fi
 
-         if test "x$SYNROOT" != "x/usr" ; then
-            SYN_INCLUDES="-I$SYNROOT/include $PA_INCLUDES"
-            SYN_LDFLAGS="-L$SYNROOT/lib$LIBBITSUF $PA_LDFLAGS"
+         if test "x$SUBSYNTH_ROOT" != "x/usr" ; then
+            SUBSYNTH_INCLUDES="-I$SUBSYNTH_ROOT/include $PA_INCLUDES"
+            SUBSYNTH_LDFLAGS="-L$SUBSYNTH_ROOT/lib$LIBBITSUF $PA_LDFLAGS"
          fi
 
          SUBSYNTH='yes'
@@ -218,15 +204,15 @@ AC_DEFUN(DPP_HAVE_SUBSYNTH,
       LDFLAGS="$dpp_save_LDFLAGS"
       
       if test "x$PLATFORM" = "xIRIX" ; then
-         SYN_INCLUDES="-DNO_METAPROG $SYN_INCLUDES"
+         SUBSYNTH_INCLUDES="-DNO_METAPROG $SUBSYNTH_INCLUDES"
       fi
 
    fi
 
    dnl Export all of the output vars for use by makefiles and configure script.
    AC_SUBST(SUBSYNTH)
-   AC_SUBST(SYNROOT)
+   AC_SUBST(SUBSYNTH_ROOT)
    AC_SUBST(LIBSUBSYNTH)
-   AC_SUBST(SYN_INCLUDES)
-   AC_SUBST(SYN_LDFLAGS)
+   AC_SUBST(SUBSYNTH_INCLUDES)
+   AC_SUBST(SUBSYNTH_LDFLAGS)
 ])

@@ -1,15 +1,8 @@
 dnl ************* <auto-copyright.pl BEGIN do not edit this line> *************
-dnl Doozer++
+dnl Doozer++ is (C) Copyright 2000-2003 by Iowa State University
 dnl
 dnl Original Author:
 dnl   Patrick Hartling
-dnl ---------------------------------------------------------------------------
-dnl VR Juggler is (C) Copyright 1998, 1999, 2000, 2001 by Iowa State University
-dnl
-dnl Original Authors:
-dnl   Allen Bierbaum, Christopher Just,
-dnl   Patrick Hartling, Kevin Meinert,
-dnl   Carolina Cruz-Neira, Albert Baker
 dnl
 dnl This library is free software; you can redistribute it and/or
 dnl modify it under the terms of the GNU Library General Public
@@ -28,8 +21,8 @@ dnl Boston, MA 02111-1307, USA.
 dnl
 dnl -----------------------------------------------------------------
 dnl File:          audioworks.m4,v
-dnl Date modified: 2002/07/30 21:18:28
-dnl Version:       1.5.2.2
+dnl Date modified: 2003/02/22 03:23:16
+dnl Version:       1.5.2.5
 dnl -----------------------------------------------------------------
 dnl ************** <auto-copyright.pl END do not edit this line> **************
 
@@ -38,57 +31,61 @@ dnl Find the target host's AudioWorks installation if one exists.
 dnl NOTE: only works on UNIX type systems... (does AW exist on Win32?)
 dnl ---------------------------------------------------------------------------
 dnl Macros:
-dnl     DPP_HAVE_AUDIOWORKS - Determine if the target system has AudioWorks installed.
+dnl     DPP_HAVE_AUDIOWORKS - Determine if the target system has AudioWorks
+dnl                           installed.
 dnl
 dnl Command-line options added:
-dnl     --with-awroot - Give the root directory of the AudioWorks implementation
-dnl                      installation.
+dnl     --with-audioworks - Give the root directory of an AudioWorks
+dnl                         installation.
 dnl
 dnl Variables defined:
-dnl     AUDIOWORKS - does the system have audioworks?
-dnl     AWROOT     - The AudioWorks installation directory.
-dnl     LIBAUDIOWORKS   - The list of libraries to link for AudioWorks appliations.
-dnl     AW_INCLUDES - Extra include path for the AudioWorks header directory.
-dnl     AW_LDFLAGS  - Extra linker flags for the AudioWorks library directory.
+dnl     AUDIOWORKS           - Does the system have AudioWorks?
+dnl     AUDIOWORKS_ROOT      - The AudioWorks installation directory.
+dnl     LIBAUDIOWORKS        - The list of libraries to link for AudioWorks
+dnl                            appliations.
+dnl     AUDIOWORKS__INCLUDES - Extra include path for the AudioWorks header
+dnl                            directory.
+dnl     AUDIOWORKS__LDFLAGS  - Extra linker flags for the AudioWorks library
+dnl                            directory.
 dnl ===========================================================================
 
-dnl audioworks.m4,v 1.5.2.2 2002/07/30 21:18:28 patrickh Exp
+dnl audioworks.m4,v 1.5.2.5 2003/02/22 03:23:16 patrickh Exp
 
 dnl ---------------------------------------------------------------------------
 dnl Determine if the target system has AudioWorks installed.  This
-dnl adds command-line arguments --with-awroot.
+dnl adds command-line arguments --with-audioworks.
 dnl
 dnl Usage:
-dnl     DPP_HAVE_AUDIOWORKS(awroot [, action-if-found [, action-if-not-found]])
+dnl     DPP_HAVE_AUDIOWORKS(audioworks [, action-if-found [, action-if-not-found]])
 dnl
 dnl Arguments:
-dnl     awroot             - The default directory where the AudioWorks
+dnl     audioworks-root     - The default directory where the AudioWorks
 dnl                           installation is rooted.  This directory should
 dnl                           contain an include/PSI directory with the PSI
 dnl                           headers and a lib (with appropriate bit suffix)
 dnl                           directory with the PSI libraries.  The value
 dnl                           given is used as the default value of the
-dnl                           --with-awroot command-line argument.
-dnl     action-if-found     - The action to take if an AudioWorks implementation
+dnl                           --with-audioworks command-line argument.
+dnl     action-if-found     - The action to take if an AudioWorks installation
 dnl                           is found.  This argument is optional.
-dnl     action-if-not-found - The action to take if an AudioWorks implementation
+dnl     action-if-not-found - The action to take if an AudioWorks installation
 dnl                           is not found.  This argument is optional.
 dnl ---------------------------------------------------------------------------
 AC_DEFUN(DPP_HAVE_AUDIOWORKS,
 [
+   AC_REQUIRE([DPP_SYSTEM_SETUP])
+
    dnl initialize returned data...
    AUDIOWORKS='no'
    LIBAUDIOWORKS=''
-   AW_INCLUDES=''
-   AW_LDFLAGS=''
+   AUDIOWORKS_INCLUDES=''
+   AUDIOWORKS_LDFLAGS=''
    dpp_have_audioworks='no'
-   
-   AC_REQUIRE([DPP_SYSTEM_SETUP])
 
    dnl Define the root directory for the AudioWorks installation.
-   AC_ARG_WITH(awroot,
-               [  --with-awroot=<PATH>   AudioWorks installation directory   [default=$1]],
-               AWROOT="$withval", AWROOT=$1)
+   AC_ARG_WITH(audioworks,
+               [  --with-audioworks=<PATH> AudioWorks installation directory   [default=$1]],
+               AUDIOWORKS_ROOT="$withval", AUDIOWORKS_ROOT=$1)
 
    dnl Save these values in case they need to be restored later.
    dpp_save_CFLAGS="$CFLAGS"
@@ -97,26 +94,14 @@ AC_DEFUN(DPP_HAVE_AUDIOWORKS,
    dpp_save_LDFLAGS="$LDFLAGS"
 
    dnl Add the user-specified AudioWorks installation directory to these
-   dnl paths.  Ensure that /usr/include and /usr/lib are not included
-   dnl multiple times if $AWROOT is "/usr".
-   if test "x$AWROOT" != "x/usr" ; then
-      CPPFLAGS="$CPPFLAGS -I$AWROOT/include"
-      INCLUDES="$INCLUDES -I$AWROOT/include"
-      LDFLAGS="-L$AWROOT/lib$LIBBITSUF $LDFLAGS"
+   dnl paths.  Ensure that /usr/lib(32|64) is not included multiple times if
+   dnl if $AUDIOWORKS_ROOT is "/usr".
+   if test "x$AUDIOWORKS_ROOT" != "x/usr" ; then
+      LDFLAGS="-L$AUDIOWORKS_ROOT/lib$LIBBITSUF $LDFLAGS"
    fi
 
-   CPPFLAGS="$CPPFLAGS -I$AWROOT/include/PSI"
-   INCLUDES="$INCLUDES -I$AWROOT/include/PSI"
-   LDFLAGS="-L$AWROOT/lib$LIBBITSUF/PSI $LDFLAGS"
-   
-   dnl debugging output...
-   dnl echo "+ setting CPPFLAGS == $CPPFLAGS"
-   dnl echo "+ setting INCLUDES == $INCLUDES"
-   dnl echo "+ setting LDFLAGS == $LDFLAGS"
-
+   CPPFLAGS="$CPPFLAGS -I$AUDIOWORKS_ROOT/include/PSI"
    CFLAGS="$CFLAGS ${_EXTRA_FLAGS}"
-
-   echo "+ looking for AudioWorks in $AWROOT/lib and $AWROOT/include"
 
    dnl This is necessary because AC_CHECK_LIB() adds -laudioworks to
    dnl $LIBS.  We want to do that ourselves later.
@@ -139,14 +124,16 @@ AC_DEFUN(DPP_HAVE_AUDIOWORKS,
 
    if test "x$dpp_have_audioworks" = "xyes" ; then
       ifelse([$2], , :, [$2])
+   else
+      ifelse([$3], , :, [$3])
    fi
 
    dnl If AudioWorks API files were found, define this extra stuff that may be
    dnl helpful in some Makefiles.
    if test "x$dpp_have_audioworks" = "xyes" ; then
       LIBAUDIOWORKS="-law -lawhwi -lpsi -laudiofile -lm"
-      AW_INCLUDES="-I$AWROOT/include/PSI"
-      AW_LDFLAGS="-L$AWROOT/lib$LIBBITSUF/PSI"
+      AUDIOWORKS_INCLUDES="-I$AUDIOWORKS_ROOT/include/PSI"
+      AUDIOWORKS_LDFLAGS="-L$AUDIOWORKS_ROOT/lib$LIBBITSUF/PSI"
       AUDIOWORKS='yes'
    fi
 
@@ -158,8 +145,8 @@ AC_DEFUN(DPP_HAVE_AUDIOWORKS,
 
    dnl export all of the output vars for use by makefiles and configure script
    AC_SUBST(AUDIOWORKS)
-   AC_SUBST(AWROOT)
+   AC_SUBST(AUDIOWORKS_ROOT)
    AC_SUBST(LIBAUDIOWORKS)
-   AC_SUBST(AW_INCLUDES)
-   AC_SUBST(AW_LDFLAGS)
+   AC_SUBST(AUDIOWORKS_INCLUDES)
+   AC_SUBST(AUDIOWORKS_LDFLAGS)
 ])

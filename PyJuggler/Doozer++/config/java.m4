@@ -1,15 +1,8 @@
 dnl ************* <auto-copyright.pl BEGIN do not edit this line> *************
-dnl Doozer++
+dnl Doozer++ is (C) Copyright 2000-2003 by Iowa State University
 dnl
 dnl Original Author:
 dnl   Patrick Hartling
-dnl ---------------------------------------------------------------------------
-dnl VR Juggler is (C) Copyright 1998, 1999, 2000, 2001 by Iowa State University
-dnl
-dnl Original Authors:
-dnl   Allen Bierbaum, Christopher Just,
-dnl   Patrick Hartling, Kevin Meinert,
-dnl   Carolina Cruz-Neira, Albert Baker
 dnl
 dnl This library is free software; you can redistribute it and/or
 dnl modify it under the terms of the GNU Library General Public
@@ -28,8 +21,8 @@ dnl Boston, MA 02111-1307, USA.
 dnl
 dnl -----------------------------------------------------------------
 dnl File:          java.m4,v
-dnl Date modified: 2002/09/19 04:59:42
-dnl Version:       1.40.2.4
+dnl Date modified: 2003/02/22 03:23:17
+dnl Version:       1.40.2.6
 dnl -----------------------------------------------------------------
 dnl ************** <auto-copyright.pl END do not edit this line> **************
 
@@ -65,7 +58,7 @@ dnl     JNI_LIB  - The library which needs to be statically linked for JNI.
 dnl     JCPS     - Java classpath separator character (: on UNIX, ; on Win32).
 dnl ===========================================================================
 
-dnl java.m4,v 1.40.2.4 2002/09/19 04:59:42 nonchocoboy Exp
+dnl java.m4,v 1.40.2.6 2003/02/22 03:23:17 patrickh Exp
 
 dnl ---------------------------------------------------------------------------
 dnl Find the path to the Java installation.  Substition is performed on the
@@ -211,14 +204,16 @@ AC_DEFUN(DPP_JDK_VERSION,
 [
    AC_REQUIRE([DPP_PATH_JAVA])
 
-   dpp_jdk_ver_line=`$1/bin/java -version 2>&1 | grep 'java version'`
+   if test -x "$1/bin/java" ; then
+      dpp_jdk_ver_line=`$1/bin/java -version 2>&1 | grep 'java version'`
 
-   changequote(<<, >>)
-   dpp_jdk_ver=`echo $dpp_jdk_ver_line | sed -e 's/^.*"[^0-9]*\([0-9][.0-9]*\).*"$/\1/'`
-   changequote([, ])
+      changequote(<<, >>)
+      dpp_jdk_ver=`echo $dpp_jdk_ver_line | sed -e 's/^.*"[^0-9]*\([0-9][.0-9]*\).*"$/\1/'`
+      changequote([, ])
 
-   DPP_VERSION_CHECK_MSG([JDK], [$dpp_jdk_ver], $2,
-                         [dpp_cv_JDK_version_okay], $3, $4)
+      DPP_VERSION_CHECK_MSG([JDK], [$dpp_jdk_ver], $2,
+                            [dpp_cv_JDK_version_okay], $3, $4)
+   fi
 ])
 
 dnl ---------------------------------------------------------------------------

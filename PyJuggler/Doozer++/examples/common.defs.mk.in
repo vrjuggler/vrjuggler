@@ -1,15 +1,8 @@
 # ************** <auto-copyright.pl BEGIN do not edit this line> **************
-# Doozer++
+# Doozer++ is (C) Copyright 2000-2003 by Iowa State University
 #
 # Original Author:
 #   Patrick Hartling
-# -----------------------------------------------------------------------------
-# VR Juggler is (C) Copyright 1998, 1999, 2000, 2001 by Iowa State University
-#
-# Original Authors:
-#   Allen Bierbaum, Christopher Just,
-#   Patrick Hartling, Kevin Meinert,
-#   Carolina Cruz-Neira, Albert Baker
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Library General Public
@@ -28,13 +21,13 @@
 #
 # -----------------------------------------------------------------
 # File:          common.defs.mk.in,v
-# Date modified: 2002/07/31 23:08:45
-# Version:       1.30.2.3
+# Date modified: 2003/02/22 03:23:19
+# Version:       1.30.2.4
 # -----------------------------------------------------------------
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # =============================================================================
-# common.defs.mk.in,v 1.30.2.3 2002/07/31 23:08:45 patrickh Exp
+# common.defs.mk.in,v 1.30.2.4 2003/02/22 03:23:19 patrickh Exp
 #
 # This file <common.defs.mk> provides variable assignments based on the
 # results of running a Doozer++-aware configure script.  It is distributed

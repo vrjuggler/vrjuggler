@@ -1,5 +1,23 @@
 DATE       AUTHOR       CHANGE
 ---------- ------------ -------------------------------------------------------
+2003-01-15 patrickh     Added the cygcl.pl Perl script as a replacement for
+                        msvccc.  Using cygcl, the NSPR and OpenGL Performer
+                        macros are now safe to use when the installation
+                        directory contains spaces.
+2003-02-07 patrickh     The OpenGL Performer macro works on Windows.
+2002-12-04 patrickh     Began overhauling the macros DPP_HAVE_SUBSYNTH,
+                        DPP_HAVE_PORTAUDIO, DPP_HAVE_AUDIOWORKS, and
+                        DPP_HAVE_GLUT.  See RELEASE_NOTES.txt for required
+                        migration changes.
+2002-12-02 patrickh     Added macros for determining which linker to use and if
+                        that linker is GNU ld.
+2002-12-02 patrickh     Swapped the order of the first two arguments to
+                        DPP_HAVE_CPPUNIT.
+                        Added the new macro DPP_CHECK_DYNLOAD_LIB.
+2002-11-27 patrickh     Rewrote the CppUnit detection macro.  The command-line
+                        argument it adds has been changed to --with-cppunit.
+                        It now takes another argument specifying the minimum
+                        required version.
 2002-09-18 nonchocoboy  Renamed dos2unix and unix2dos to unixpath and dospath
                         respectively.
                         NEW VERSION: 1.5.1

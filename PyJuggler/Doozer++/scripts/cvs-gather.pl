@@ -2,7 +2,7 @@
 
 # ************** <auto-copyright.pl BEGIN do not edit this line> **************
 #
-# Doozer++ is (C) Copyright 2000, 2001 by Iowa State University
+# Doozer++ is (C) Copyright 2000-2003 by Iowa State University
 #
 # Original Author:
 #   Patrick Hartling
@@ -24,7 +24,7 @@
 #
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
-# cvs-gather.pl,v 1.12.2.5 2002/10/25 16:01:52 patrickh Exp
+# cvs-gather.pl,v 1.12.2.7 2003/02/22 03:23:20 patrickh Exp
 
 use 5.005;
 
@@ -60,7 +60,7 @@ sub nextSpinnerFrame($);
 # *********************************************************************
 # Here is the version for this script!
 
-my $VERSION = '0.0.16';
+my $VERSION = '0.0.17';
 # *********************************************************************
 
 my $cfg_file      = '';
@@ -739,7 +739,7 @@ sub updateModule ($$$$$$)
    {
       my $cmd_line = "cvs update ";
 
-      $cmd_line .= "-r $tag " if $tag;
+      $cmd_line .= "-r $tag " if $tag && "$tag" ne "HEAD";
       $cmd_line .= "-D \"$date\" " if $date;
 
       $status = runCvsCommand("$cmd_line");

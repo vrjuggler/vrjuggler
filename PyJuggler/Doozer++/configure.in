@@ -1,15 +1,8 @@
 # ************** <auto-copyright.pl BEGIN do not edit this line> **************
-# Doozer++
+# Doozer++ is (C) Copyright 2000-2003 by Iowa State University
 #
 # Original Author:
 #   Patrick Hartling
-# -----------------------------------------------------------------------------
-# VR Juggler is (C) Copyright 1998, 1999, 2000, 2001 by Iowa State University
-#
-# Original Authors:
-#   Allen Bierbaum, Christopher Just,
-#   Patrick Hartling, Kevin Meinert,
-#   Carolina Cruz-Neira, Albert Baker
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Library General Public
@@ -28,12 +21,12 @@
 #
 # -----------------------------------------------------------------
 # File:          configure.in,v
-# Date modified: 2001/06/29 23:47:51
-# Version:       1.5
+# Date modified: 2003/02/22 03:23:16
+# Version:       1.5.4.1
 # -----------------------------------------------------------------
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
-AC_REVISION(1.5)
+AC_REVISION(1.5.4.1)
 AC_INIT(config/general.m4)
 AC_CONFIG_AUX_DIR(scripts)
 

@@ -1,5 +1,5 @@
 # ************** <auto-copyright.pl BEGIN do not edit this line> **************
-# Doozer++
+# Doozer++ is (C) Copyright 2000-2003 by Iowa State University
 #
 # Original Author:
 #   Patrick Hartling
@@ -28,13 +28,13 @@
 #
 # -----------------------------------------------------------------
 # File:          dpp.libs.targets.mk,v
-# Date modified: 2002/11/17 17:28:42
-# Version:       1.15.2.15
+# Date modified: 2003/02/22 03:23:20
+# Version:       1.15.2.18
 # -----------------------------------------------------------------
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # =============================================================================
-# dpp.libs.targets.mk,v 1.15.2.15 2002/11/17 17:28:42 patrickh Exp
+# dpp.libs.targets.mk,v 1.15.2.18 2003/02/22 03:23:20 patrickh Exp
 #
 # This file <dpp.libs.targets.mk> defines many targets for use in compiling a
 # software library (or a set of libraries).  It should not be included
@@ -755,6 +755,13 @@ ifneq ("$(DYNAMIC_LIBS)", "")
               $(DBG_LIBDIR)/$$lib.$(DYNAMICLIB_EXT)			\
               $(INSTALL_LIBDIR_ABS)/$(DBG_DIR)/$$lib.$(DYNAMICLIB_EXT)$(DYNAMICLIB_VER) ; \
           done
+ifneq ($(DYNAMICLIB_VER), )
+	@for lib in $(DYNAMIC_LIBS) ; do				\
+            cd $(INSTALL_LIBDIR_ABS)/$(DBG_DIR) &&			\
+              rm -f $$lib.$(DYNAMICLIB_EXT) ;				\
+              $(LN_S) $$lib.$(DYNAMICLIB_EXT)$(DYNAMICLIB_VER) $$lib.$(DYNAMICLIB_EXT) ; \
+          done
+endif
 ifeq ($(OS_TYPE), Win32)
 	@for lib in $(DYNAMIC_LIBS) ; do				\
             echo "$(DBG_LIBDIR)/$$lib.lib ==> $(INSTALL_LIBDIR_ABS)/$(DBG_DIR)/" ; \
@@ -822,6 +829,13 @@ ifneq ("$(DYNAMIC_LIBS)", "")
               $(OPT_LIBDIR)/$$lib.$(DYNAMICLIB_EXT)			\
               $(INSTALL_LIBDIR_ABS)/$(OPT_DIR)/$$lib.$(DYNAMICLIB_EXT)$(DYNAMICLIB_VER) ; \
           done
+ifneq ($(DYNAMICLIB_VER), )
+	@for lib in $(DYNAMIC_LIBS) ; do				\
+            cd $(INSTALL_LIBDIR_ABS)/$(OPT_DIR) &&			\
+              rm -f $$lib.$(DYNAMICLIB_EXT) ;				\
+              $(LN_S) $$lib.$(DYNAMICLIB_EXT)$(DYNAMICLIB_VER) $$lib.$(DYNAMICLIB_EXT) ; \
+          done
+endif
 ifeq ($(OS_TYPE), Win32)
 	@for lib in $(DYNAMIC_LIBS) ; do				\
             echo "$(OPT_LIBDIR)/$$lib.lib ==> $(INSTALL_LIBDIR_ABS)/$(OPT_DIR)/" ; \
@@ -889,6 +903,13 @@ ifneq ("$(DYNAMIC_LIBS)", "")
               $(PROF_LIBDIR)/$${lib}$(PROFLIB_EXT).$(DYNAMICLIB_EXT)	\
               $(INSTALL_LIBDIR_ABS)/$(PROF_DIR)/$${lib}$(PROFLIB_EXT).$(DYNAMICLIB_EXT)$(DYNAMICLIB_VER) ; \
           done
+ifneq ($(DYNAMICLIB_VER), )
+	@for lib in $(DYNAMIC_LIBS) ; do				\
+            cd $(INSTALL_LIBDIR_ABS)/$(PROF_DIR) &&			\
+              rm -f $${lib}$(PROFLIB_EXT).$(DYNAMICLIB_EXT) ;		\
+              $(LN_S) $${lib}$(PROFLIB_EXT).$(DYNAMICLIB_EXT)$(DYNAMICLIB_VER) $${lib}$(PROFLIB_EXT).$(DYNAMICLIB_EXT) ; \
+          done
+endif
 ifeq ($(OS_TYPE), Win32)
 	@for lib in $(DYNAMIC_LIBS) ; do				\
             echo "$(PROF_LIBDIR)/$${lib}$(PROFLIB_EXT).lib ==> $(INSTALL_LIBDIR_ABS)/$(PROF_DIR)/" ; \

@@ -2,7 +2,7 @@
 
 # ************** <auto-copyright.pl BEGIN do not edit this line> **************
 #
-# Doozer++ is (C) Copyright 2000, 2001 by Iowa State University
+# Doozer++ is (C) Copyright 2000-2003 by Iowa State University
 #
 # Original Author:
 #   Patrick Hartling
@@ -26,7 +26,7 @@
 
 # Run this to generate all the initial makefiles, etc.
 
-# dppgen.sh,v 1.2 2001/12/28 15:27:06 patrickh Exp
+# dppgen.sh,v 1.2.2.1 2003/02/22 03:23:20 patrickh Exp
 
 DIE=0
 

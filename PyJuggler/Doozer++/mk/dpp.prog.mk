@@ -1,5 +1,5 @@
 # ************** <auto-copyright.pl BEGIN do not edit this line> **************
-# Doozer++
+# Doozer++ is (C) Copyright 2000-2003 by Iowa State University
 #
 # Original Author:
 #   Patrick Hartling
@@ -28,13 +28,13 @@
 #
 # -----------------------------------------------------------------
 # File:          dpp.prog.mk,v
-# Date modified: 2001/06/29 23:47:52
-# Version:       1.3
+# Date modified: 2003/02/22 03:23:20
+# Version:       1.3.4.1
 # -----------------------------------------------------------------
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # =============================================================================
-# dpp.prog.mk,v 1.3 2001/06/29 23:47:52 patrickh Exp
+# dpp.prog.mk,v 1.3.4.1 2003/02/22 03:23:20 patrickh Exp
 #
 # This file <dpp.prog.mk> is intended to be used by makefiles that need to
 # build programs.  It provides some handy targets and includes other .mk

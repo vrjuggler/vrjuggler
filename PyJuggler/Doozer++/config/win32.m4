@@ -1,5 +1,5 @@
 dnl ************* <auto-copyright.pl BEGIN do not edit this line> *************
-dnl Doozer++
+dnl Doozer++ is (C) Copyright 2000-2003 by Iowa State University
 dnl
 dnl Original Author:
 dnl   Patrick Hartling
@@ -28,8 +28,8 @@ dnl Boston, MA 02111-1307, USA.
 dnl
 dnl -----------------------------------------------------------------
 dnl File:          win32.m4,v
-dnl Date modified: 2002/09/19 04:59:42
-dnl Version:       1.12.2.2
+dnl Date modified: 2003/02/22 03:23:19
+dnl Version:       1.12.2.5
 dnl -----------------------------------------------------------------
 dnl ************** <auto-copyright.pl END do not edit this line> **************
 
@@ -39,6 +39,8 @@ dnl ---------------------------------------------------------------------------
 dnl Macros:
 dnl     DPP_WIN32_SETUP - Define path conversion (DOS to UNIX and UNIX to DOS)
 dnl                       subroutines.
+dnl     DPP_PROG_CYGCL  - Find the cygcl Perl script wrapper around the
+dnl                       Microsoft Visual C++ command-line compiler CL.EXE.
 dnl     DPP_PROG_MSVCCC - Find the msvccc shell script wrapper around the
 dnl                       Microsoft Visual C++ command-line compiler CL.EXE.
 dnl 
@@ -47,11 +49,13 @@ dnl     dospath  - Convert a UNIX-style path into a DOS-style path.
 dnl     unixpath - Convert a DOS-style path into a UNIX-style path.
 dnl
 dnl Variables defined:
+dnl     DPP_USING_CYGCL  - Set to either 'yes' or 'no' depending on whether
+dnl                        cygcl will be used as the compiler.
 dnl     DPP_USING_MSVCCC - Set to either 'yes' or 'no' depending on whether
 dnl                        msvccc will be used as the compiler.
 dnl ===========================================================================
 
-dnl win32.m4,v 1.12.2.2 2002/09/19 04:59:42 nonchocoboy Exp
+dnl win32.m4,v 1.12.2.5 2003/02/22 03:23:19 patrickh Exp
 
 dnl ---------------------------------------------------------------------------
 dnl Define path conversion (DOS to UNIX and UNIX to DOS) subroutines.
@@ -151,6 +155,44 @@ AC_DEFUN(DPP_WIN32_SETUP,
 ])
 
 dnl ---------------------------------------------------------------------------
+dnl Find the cygcl Perl script wrapper around the Microsoft Visual C++
+dnl command-line compiler CL.EXE.  This works similarly to a normal
+dnl AC_CHECK_PROG call, but it looks for a specific program (cygcl) and will
+dnl perform an optional action if that program is not found.  The variable
+dnl $DPP_USING_CYGCL will be set to 'yes' or 'no' depending on the results of
+dnl the lookup of cygcl in the path.
+dnl
+dnl Note:
+dnl     This macro must be called before any compiler checks are performed.
+dnl
+dnl Usage:
+dnl     DPP_PROG_CYGCL([path [, action-if-found [, action-if-not-found]]])
+dnl
+dnl Arguments:
+dnl     path                - The path to use when trying to find cygcl.
+dnl                           This argument is optional.
+dnl     action-if-found     - Any action(s) to take if cygcl is found.  This
+dnl                           argument is optional.
+dnl     action-if-not-found - Any action(s) to take if cygcl is not found.
+dnl                           This argument is optional.
+dnl ---------------------------------------------------------------------------
+AC_DEFUN(DPP_PROG_CYGCL,
+[
+   AC_CHECK_PROG([dpp_cygcl], [cygcl], [cygcl], [no], $1)
+
+   if test "x$dpp_cygcl" = "xno" ; then
+      DPP_USING_CYGCL='no'
+      ifelse([$3], , :, [$3])
+   else
+      DPP_USING_CYGCL='yes'
+      CXX='cygcl'
+      CC="$CXX"
+
+      ifelse([$2], , :, [$2])
+   fi
+])
+
+dnl ---------------------------------------------------------------------------
 dnl Find the msvccc shell script wrapper around the Microsoft Visual C++
 dnl command-line compiler CL.EXE.  This works similarly to a normal
 dnl AC_CHECK_PROG call, but it looks for a specific program (msvccc) and will
@@ -180,6 +222,8 @@ AC_DEFUN(DPP_PROG_MSVCCC,
       DPP_USING_MSVCCC='no'
       ifelse([$3], , :, [$3])
    else
+      AC_MSG_WARN([*** msvccc has many bugs--consider using cygcl from Doozer++ instead ***])
+
       DPP_USING_MSVCCC='yes'
       CXX='msvccc'
       CC="$CXX"

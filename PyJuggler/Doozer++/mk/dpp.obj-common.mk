@@ -1,5 +1,5 @@
 # ************** <auto-copyright.pl BEGIN do not edit this line> **************
-# Doozer++
+# Doozer++ is (C) Copyright 2000-2003 by Iowa State University
 #
 # Original Author:
 #   Patrick Hartling
@@ -28,13 +28,13 @@
 #
 # -----------------------------------------------------------------
 # File:          dpp.obj-common.mk,v
-# Date modified: 2002/02/14 15:46:05
-# Version:       1.17
+# Date modified: 2003/02/22 03:23:20
+# Version:       1.17.2.1
 # -----------------------------------------------------------------
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # =============================================================================
-# dpp.obj-common.mk,v 1.17 2002/02/14 15:46:05 patrickh Exp
+# dpp.obj-common.mk,v 1.17.2.1 2003/02/22 03:23:20 patrickh Exp
 #
 # This file <dpp.obj-subdir.mk> is intended to be used by makefiles that need
 # to build object files AND to recurse into subdirectories.  It defines

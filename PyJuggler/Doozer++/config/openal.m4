@@ -1,15 +1,8 @@
 dnl ************* <auto-copyright.pl BEGIN do not edit this line> *************
-dnl Doozer++
+dnl Doozer++ is (C) Copyright 2000-2003 by Iowa State University
 dnl
 dnl Original Author:
 dnl   Patrick Hartling
-dnl ---------------------------------------------------------------------------
-dnl VR Juggler is (C) Copyright 1998, 1999, 2000, 2001 by Iowa State University
-dnl
-dnl Original Authors:
-dnl   Allen Bierbaum, Christopher Just,
-dnl   Patrick Hartling, Kevin Meinert,
-dnl   Carolina Cruz-Neira, Albert Baker
 dnl
 dnl This library is free software; you can redistribute it and/or
 dnl modify it under the terms of the GNU Library General Public
@@ -28,8 +21,8 @@ dnl Boston, MA 02111-1307, USA.
 dnl
 dnl -----------------------------------------------------------------
 dnl File:          openal.m4,v
-dnl Date modified: 2002/09/28 15:52:44
-dnl Version:       1.4.2.4
+dnl Date modified: 2003/02/22 03:23:18
+dnl Version:       1.4.2.7
 dnl -----------------------------------------------------------------
 dnl ************** <auto-copyright.pl END do not edit this line> **************
 
@@ -51,7 +44,7 @@ dnl     AL_INCLUDES - Extra include path for the OpenAL header directory.
 dnl     AL_LDFLAGS  - Extra linker flags for the OpenAL library directory.
 dnl ===========================================================================
 
-dnl openal.m4,v 1.4.2.4 2002/09/28 15:52:44 patrickh Exp
+dnl openal.m4,v 1.4.2.7 2003/02/22 03:23:18 patrickh Exp
 
 dnl ---------------------------------------------------------------------------
 dnl Determine if the target system has OpenAL installed.  This
@@ -85,7 +78,7 @@ AC_DEFUN(DPP_HAVE_OPENAL,
    AC_REQUIRE([DPP_SYSTEM_SETUP])
 
    dnl The UNIX version of OpenAL requires the use of pthreads.
-   if test "x$dpp_os_type" = "xUNIX" ; then
+   if test "x$OS_TYPE" = "xUNIX" ; then
       AC_REQUIRE([DPP_CC_PTHREAD_ARG])
       AC_REQUIRE([DPP_CC_PTHREADS_ARG])
       AC_REQUIRE([DPP_GET_PTHREAD_LIB])
@@ -102,7 +95,6 @@ AC_DEFUN(DPP_HAVE_OPENAL,
    dnl Save these values in case they need to be restored later.
    dpp_save_CFLAGS="$CFLAGS"
    dpp_save_CPPFLAGS="$CPPFLAGS"
-   dpp_save_INCLUDES="$INCLUDES"
    dpp_save_LDFLAGS="$LDFLAGS"
 
    dnl Add the user-specified OpenAL installation directory to these
@@ -110,44 +102,51 @@ AC_DEFUN(DPP_HAVE_OPENAL,
    dnl multiple times if $OALROOT is "/usr".
    if test "x$OALROOT" != "x/usr" ; then
       CPPFLAGS="$CPPFLAGS -I$OALROOT/include"
-      INCLUDES="$INCLUDES -I$OALROOT/include"
-      if test -d "$OALROOT/lib" ; then
+
+      dnl The OpenAL SDK for Windows has a 'libs' directory.  We set that by
+      dnl default below.  Other platforms use 'lib' (as far as I have seen,
+      dnl anyway).
+      if test "x$OS_TYPE" != "xWin32" ; then
          LDFLAGS="-L$OALROOT/lib $LDFLAGS"
       fi
    fi
 
    CFLAGS="$CFLAGS ${_EXTRA_FLAGS}"
 
-   dnl WIN32 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-
-   if test "x$dpp_os_type" = "xWin32" ; then
+   dnl Win32 test.
+   if test "x$OS_TYPE" = "xWin32" ; then
       DPP_LANG_SAVE
       DPP_LANG_C
 
+      dnl XXX: I am assuming we'll be using Visual C++.  Worse yet, this may
+      dnl just be a nasty hack to deal with unexpected behavior when spaces
+      dnl appear in path names ...
+dnl      LDFLAGS="/link /libpath:\"$OALROOT/libs\" $LDFLAGS"
+      LDFLAGS="-L\"$OALROOT/libs\" $LDFLAGS"
       LIBS="$LIBS ALut.lib OpenAL32.lib"
 
-      AC_CACHE_CHECK([for alEnable in Openal32.lib],
+      AC_CACHE_CHECK([for alEnable in OpenAL32.lib],
                      [dpp_cv_alEnable_openal_lib],
                      [AC_TRY_LINK([#include <windows.h>
-#include <AL/al.h>],
-                        [alEnable(DISTANCE_ATTENUATION);],
+#include <al.h>],
+                        [alEnable(0);],
                         [dpp_cv_alEnable_openal_lib='yes'],
                         [dpp_cv_alEnable_openal_lib='no'])])
 
-      if test "x$dpp_cv_alEnable_openal_lib" = "xno" ; then
-         ifelse([$3], , :, [$3])
-      fi
-
       LIBS="$dpp_save_LIBS"
 
+      dnl Success.
       if test "x$dpp_cv_alEnable_openal_lib" = "xyes" ; then
+         dpp_have_openal='yes'
          ifelse([$2], , :, [$2])
+      dnl Failure.
       else
+         dpp_have_openal='no'
          ifelse([$3], , :, [$3])
       fi
 
       DPP_LANG_RESTORE
-   dnl UNIX !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+   dnl Non-Win32 platforms.
    else
       dpp_saveLDFLAGS="$LDFLAGS"
       dpp_save_LIBS="$LIBS"
@@ -168,10 +167,13 @@ AC_DEFUN(DPP_HAVE_OPENAL,
       dnl This is necessary because AC_CHECK_LIB() adds -lopenal to
       dnl $LIBS.  We want to do that ourselves later.
       LIBS="$dpp_save_LIBS"
-      LDFLAGS="$dpp_save_LDFLAGS"
 
+      dnl Success.
       if test "x$dpp_have_openal" = "xyes" ; then
          ifelse([$2], , :, [$2])
+      dnl Failure.
+      else
+         ifelse([$3], , :, [$3])
       fi
 
       DPP_LANG_RESTORE
@@ -183,12 +185,17 @@ AC_DEFUN(DPP_HAVE_OPENAL,
       if test "x$OS_TYPE" = "xUNIX" ;  then
          LIBOPENAL="-lopenal -lm"
       else
-         LIBOPENAL='openal.lib'
+         LIBOPENAL='ALut.lib OpenAL32.lib'
       fi
 
       if test "x$OALROOT" != "x/usr" ; then
          AL_INCLUDES="-I$OALROOT/include"
-         AL_LDFLAGS="-L$OALROOT/lib"
+
+         if test "x$OS_TYPE" = "xWin32" ; then
+            AL_LDFLAGS="-L$OALROOT/libs"
+         else
+            AL_LDFLAGS="-L$OALROOT/lib"
+         fi
       fi
 
       OPENAL='yes'
@@ -197,7 +204,6 @@ AC_DEFUN(DPP_HAVE_OPENAL,
    dnl Restore all the variables now that we are done testing.
    CFLAGS="$dpp_save_CFLAGS"
    CPPFLAGS="$dpp_save_CPPFLAGS"
-   INCLUDES="$dpp_save_INCLUDES"
    LDFLAGS="$dpp_save_LDFLAGS"
 
    dnl Export all of the output vars for use by makefiles and configure script.
