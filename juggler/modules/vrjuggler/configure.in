@@ -764,18 +764,17 @@ AC_SUBST(TEST_EXTRA_LIBS_PF)
 # -----------------------------------------------------------------------------
 # Final file generation step.
 # -----------------------------------------------------------------------------
-AC_OUTPUT(Makefile Makefile.base Config/Makefile Math/Makefile
-          Input/Makefile Input/vjGlove/Makefile Input/vjInput/Makefile
-          Input/vjPosition/Makefile Input/InputManager/Makefile
-          Input/ibox/Makefile Kernel/Makefile Kernel/Pf/Makefile
-          Input/vjKeyboard/Makefile Input/vjSim/Makefile Input/vjGesture/Makefile
-          Kernel/GL/Makefile SharedMem/Makefile Sync/Makefile
-          Threads/Makefile Environment/Makefile Performance/Makefile
+AC_OUTPUT(Makefile Makefile.base Config/Makefile Environment/Makefile
+          GUI/Makefile Input/Makefile Input/InputManager/Makefile
+          Input/ibox/Makefile Input/vjGesture/Makefile Input/vjGlove/Makefile
+          Input/vjInput/Makefile Input/vjKeyboard/Makefile
+          Input/vjPosition/Makefile Input/vjSim/Makefile Kernel/Makefile
+          Kernel/Pf/Makefile Kernel/GL/Makefile Math/Makefile
+          Performance/Makefile SharedMem/Makefile Sync/Makefile
+          Threads/Makefile
           test/Makefile test/CfgTest/Makefile test/Matrix/Makefile
           test/Sync/Makefile test/Quat/Makefile test/input/Makefile
-          test/ogl/Makefile test/ogl/cubes/Makefile test/ogl/wand/Makefile
-	  test/ogl/simpleGlove/Makefile
-	  test/ogl/glove/Makefile
+          test/ogl/Makefile test/ogl/cubes/Makefile test/ogl/glove/Makefile
+          test/ogl/simpleGlove/Makefile test/ogl/wand/Makefile
           test/pfNav/Makefile test/testDynamicCastSTL/Makefile
-          test/threads/Makefile GUI/Makefile
-	  )
+          test/threads/Makefile)
