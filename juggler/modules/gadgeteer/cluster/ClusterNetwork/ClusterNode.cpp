@@ -59,35 +59,13 @@
 
 namespace cluster
 {
-
-   ClusterNode::ClusterNode() : mUpdateTriggerSema(0), mClusterNodeDoneSema(0), mControlThread(NULL)
-   {
-      mThreadActive = false;
-      mPendingConnectionRequest = false;
-      mUpdated = false;
-      mRunning = false;
-
-      mConnected = DISCONNECTED;
-
-      mName = std::string("None Given");
-      mHostname = std::string("None Given");
-      mPort = 0;
-      mSockStream = NULL;
-      
-      vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
-            << clrOutBOLD(clrBLUE,"[ClusterNode]")
-            << " Created a ClusterNode: No name given." 
-            << std::endl << vprDEBUG_FLUSH;
-   }
-
    ClusterNode::ClusterNode(const std::string& name, const std::string& host_name, 
                             const vpr::Uint16& port, vpr::SocketStream* socket_stream) 
-      : mUpdateTriggerSema(0), mClusterNodeDoneSema(0), mControlThread(NULL)
+      : mUpdateTriggerSema(0), mClusterNodeDoneSema(0), mControlThread(NULL), mRunning(false)
    {
       mThreadActive = false;
       mUpdated = false;
       mPendingConnectionRequest = false;
-      mRunning = false;
 
       mConnected = DISCONNECTED;
 
@@ -104,24 +82,20 @@ namespace cluster
    ClusterNode::~ClusterNode()
    {
       shutdown();
-      // This may break the acept code since we migt not want to delete the Socket. We may be able to just 
-      // use a smart pointer to point to the SocketStream.
-      /*
-      if (mSockStream != NULL)
-      {
-         mSockStream->close();
-         delete mSockStream;
-      }
-      */
    }
 
    void ClusterNode::shutdown()
-   {     // Kill the accepting thread
-      if ( mControlThread )
+   {
+      // This may break the acept code since we migt not want to delete the Socket. We may be able to just 
+      // use a smart pointer to point to the SocketStream.
+      mRunning = false;
+      if (mSockStream != NULL)
       {
-         mThreadActive = false;
-         mControlThread->kill();
-         mControlThread = NULL;
+         if(mSockStream->isOpen())
+         {
+            mSockStream->close();
+         }
+         delete mSockStream;
       }
    }
 
@@ -132,16 +106,9 @@ namespace cluster
       //   - Create a ConnectionRequest Packet
       //   - Send request(a responce will come later in the normal controlLoop)
 
-      /////////////////////////////////////////////
 
-      /*if (mSockStream != NULL)
-      {
-         mSockStream->close();
-         delete mSockStream;
-         mSockStream == NULL;
-      }*/
-
-         // If ClusterNode is already connected
+      // If ClusterNode is already connected
+      
       // XXX: FIX THIS, it should not return SUCCESS or WOULDBLOCK
       if (isConnected())
       {
@@ -160,26 +127,27 @@ namespace cluster
       vpr::SocketStream* sock_stream;
       vpr::InetAddr inet_addr;
 
-      //vprDEBUG(gadgetDBG_RIM,vprDBG_VERB_LVL)
-      //   << clrOutBOLD(clrBLUE,"[ClusterNode::attemptConnect]")
-      //   << " HostName: " << mHostname << ":" << mPort << std::endl << vprDEBUG_FLUSH;
+      vprDEBUG(gadgetDBG_RIM,vprDBG_VERB_LVL)
+         << clrOutBOLD(clrBLUE,"[ClusterNode::attemptConnect]")
+         << " HostName: " << mHostname << ":" << mPort << std::endl << vprDEBUG_FLUSH;
 
-         // Set the address that we want to connect to
+      // Set the address that we want to connect to
       if ( !inet_addr.setAddress(mHostname, mPort).success() )
       {
-         vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
+         vprDEBUG(gadgetDBG_RIM,vprDBG_CRITICAL_LVL)
             << clrOutBOLD(clrBLUE,"[ClusterNode::attemptConnect]")
             << clrOutBOLD(clrRED," ERROR: Failed to set address\n") << vprDEBUG_FLUSH;
          return vpr::ReturnStatus::Fail;
       }
-         // Create a new socket stream to this address
+   
+      // Create a new socket stream to this address
       sock_stream = new vpr::SocketStream(vpr::InetAddr::AnyAddr, inet_addr);
 
 
-         // If we can successfully open the socket and connect to the server
+      // If we can successfully open the socket and connect to the server
       if ( sock_stream->open().success() && sock_stream->connect().success() )
       {
-         vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
+         vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_STATUS_LVL)
             << clrOutBOLD(clrBLUE,"[ClusterNode::attemptConnect]")
             << " Successfully connected to: " << mHostname <<":"<< mPort << "\n"<< vprDEBUG_FLUSH;
          sock_stream->setNoDelay(true);
@@ -188,10 +156,10 @@ namespace cluster
       else
       {
          delete sock_stream;
-//         vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
-//            << clrOutBOLD(clrBLUE,"[ClusterNode::attemptConnect]")
-//            << clrSetNORM(clrRED) << "ERROR: Could not connect to device server: "
-//            << mHostname <<" : "<< mPort << "\n" << clrRESET << vprDEBUG_FLUSH;
+         vprDEBUG(gadgetDBG_RIM,vprDBG_VERB_LVL)
+            << clrOutBOLD(clrBLUE,"[ClusterNode::attemptConnect]")
+            << clrSetNORM(clrRED) << "ERROR: Could not connect to device server: "
+            << mHostname << " : " << mPort << clrRESET << std::endl << vprDEBUG_FLUSH;
          return vpr::ReturnStatus::Fail;
       }
 
@@ -211,7 +179,8 @@ namespace cluster
       ConnectionRequest request(local_host_name,0/*Might be needed, look above*/);
 
       send(&request);
-      
+     
+      // XXX: This is really bad! We should not be doing a blocking read call here!
       Packet* temp_packet = recvPacket();
 
       //vprASSERT(temp_packet->getPacketType() == cluster::Header::RIM_CONNECTION_ACK && "We must be receiving a ConnectionAck here");
@@ -258,6 +227,7 @@ namespace cluster
          vprDEBUG(gadgetDBG_RIM,debug_level) << clrOutBOLD(clrRED,"DISCONNECTED") << std::endl << vprDEBUG_FLUSH;
       }
    }
+
    void ClusterNode::printStats(int debug_level)
    {
       vpr::BaseIOStatsStrategy* stats = mSockStream->getIOStatStrategy();
@@ -266,19 +236,19 @@ namespace cluster
       if(bw_interface != NULL)
       {
          // Dump out write stats
-         vprDEBUG(gadgetDBG_RIM,debug_level) << "Socket Write bandwidth stats ---\n";
-         vprDEBUG(gadgetDBG_RIM,debug_level) << "stats type: " << typeid(stats).name() << vprDEBUG_FLUSH;
-         vprDEBUG(gadgetDBG_RIM,debug_level) << "      sent bytes: " << bw_interface->writeStats().getTotal() << vprDEBUG_FLUSH;
-         vprDEBUG(gadgetDBG_RIM,debug_level) << "         av send: " << bw_interface->writeStats().getMean()/1024.0f << " k/s" << vprDEBUG_FLUSH;
-         vprDEBUG(gadgetDBG_RIM,debug_level) << "        STA send: " << bw_interface->writeStats().getSTA()/1024.0f << " k/s" << vprDEBUG_FLUSH;
-         vprDEBUG(gadgetDBG_RIM,debug_level) << "       Inst send: " << bw_interface->writeStats().getInstAverage()/1024.0f << " k/s" << vprDEBUG_FLUSH;
-         vprDEBUG(gadgetDBG_RIM,debug_level) << "    Max STA send: " << bw_interface->writeStats().getMaxSTA()/1024.0f << " k/s" << vprDEBUG_FLUSH;
+         vprDEBUG(gadgetDBG_RIM,debug_level) << "Socket Write bandwidth stats ---" << std::endl << vprDEBUG_FLUSH;
+         vprDEBUG(gadgetDBG_RIM,debug_level) << "stats type: " << typeid(stats).name() << std::endl << vprDEBUG_FLUSH;
+         vprDEBUG(gadgetDBG_RIM,debug_level) << "      sent bytes: " << bw_interface->writeStats().getTotal() << std::endl << vprDEBUG_FLUSH;
+         vprDEBUG(gadgetDBG_RIM,debug_level) << "         av send: " << bw_interface->writeStats().getMean()/1024.0f << " k/s" << std::endl << vprDEBUG_FLUSH;
+         vprDEBUG(gadgetDBG_RIM,debug_level) << "        STA send: " << bw_interface->writeStats().getSTA()/1024.0f << " k/s" << std::endl << vprDEBUG_FLUSH;
+         vprDEBUG(gadgetDBG_RIM,debug_level) << "       Inst send: " << bw_interface->writeStats().getInstAverage()/1024.0f << " k/s" << std::endl << vprDEBUG_FLUSH;
+         vprDEBUG(gadgetDBG_RIM,debug_level) << "    Max STA send: " << bw_interface->writeStats().getMaxSTA()/1024.0f << " k/s" << std::endl << std::endl << vprDEBUG_FLUSH;
 
-         vprDEBUG(gadgetDBG_RIM,debug_level) << "      read bytes: " << bw_interface->readStats().getTotal() << vprDEBUG_FLUSH;
-         vprDEBUG(gadgetDBG_RIM,debug_level) << "         av read: " << bw_interface->readStats().getMean()/1024.0f << " k/s" << vprDEBUG_FLUSH;
-         vprDEBUG(gadgetDBG_RIM,debug_level) << "        STA read: " << bw_interface->readStats().getSTA()/1024.0f << " k/s" << vprDEBUG_FLUSH;
-         vprDEBUG(gadgetDBG_RIM,debug_level) << "       Inst read: " << bw_interface->readStats().getInstAverage()/1024.0f << " k/s" << vprDEBUG_FLUSH;
-         vprDEBUG(gadgetDBG_RIM,debug_level) << "    Max STA read: " << bw_interface->readStats().getMaxSTA()/1024.0f << " k/s" << vprDEBUG_FLUSH;
+         vprDEBUG(gadgetDBG_RIM,debug_level) << "      read bytes: " << bw_interface->readStats().getTotal() << std::endl << vprDEBUG_FLUSH;
+         vprDEBUG(gadgetDBG_RIM,debug_level) << "         av read: " << bw_interface->readStats().getMean()/1024.0f << " k/s" << std::endl << vprDEBUG_FLUSH;
+         vprDEBUG(gadgetDBG_RIM,debug_level) << "        STA read: " << bw_interface->readStats().getSTA()/1024.0f << " k/s" << std::endl << vprDEBUG_FLUSH;
+         vprDEBUG(gadgetDBG_RIM,debug_level) << "       Inst read: " << bw_interface->readStats().getInstAverage()/1024.0f << " k/s" << std::endl << vprDEBUG_FLUSH;
+         vprDEBUG(gadgetDBG_RIM,debug_level) << "    Max STA read: " << bw_interface->readStats().getMaxSTA()/1024.0f << " k/s" << std::endl << vprDEBUG_FLUSH;
 
       }
       else
@@ -297,14 +267,15 @@ namespace cluster
       vpr::Guard<vpr::Mutex> guard(mConnectedLock);
       if (mConnected == CONNECTED && connect == DISCONNECTED)
       {
-         /*
-         if (mSockStream != NULL && mSockStream->isOpen())
+         if(NULL != mSockStream)
          {
-            mSockStream->close();
-            //delete mSockStream;
-            //mSockStream = NULL;
+            if(mSockStream->isOpen())
+            {
+               mSockStream->close();
+            }
+            delete mSockStream;
+            mSockStream = NULL;
          }
-         */
          //TODO: ADD This back in SOON
          //ClusterManager::instance()->recoverFromLostNode(this);
       }
@@ -314,15 +285,6 @@ namespace cluster
       }
       mConnected = connect;
    }
-
-   /*void ClusterNode::getData()
-   {
-      while (mSockStream != NULL && mSockStream->availableBytes() > 0)
-      {
-         update();
-      }
-   }
-   */
 
    void ClusterNode::update()
    {
@@ -362,25 +324,20 @@ namespace cluster
 
    void ClusterNode::controlLoop(void* nullParam)
    {
-      // -Block on an update call
-      // -Update Local Data
-      // -Send
-      // -Signal Sync
+      // - Block on an update call
+      // - Update Local Data
+      // - Send
+      // - Signal Sync
 
       boost::ignore_unused_variable_warning(nullParam);
       
-      bool running = true;
-
-      while(running)
+      while(mRunning)
       {
          // Wait for trigger
          mUpdateTriggerSema.acquire();
          {
-            //vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << getName() << "Dropping into ClusterNode::controlLoop() "
-            //                                          << std::endl << vprDEBUG_FLUSH;
-
-            setUpdated(false);
-            while (!isUpdated())
+            mUpdated = false;
+            while (!mUpdated)
             {
                try
                {
@@ -400,7 +357,8 @@ namespace cluster
                   setConnected(DISCONNECTED);
                   // Break out of the two loops we are in to stop the tread
                   setUpdated(true);             
-                  running = false;
+                  
+                  shutdown();
                   
                   // TODO: Deleting mSockStream causes a seg fault
                   mSockStream = NULL;
@@ -428,6 +386,8 @@ namespace cluster
                << std::endl << vprDEBUG_FLUSH;
          return;
       }
+
+      mRunning = true;
 
       vpr::ThreadMemberFunctor<ClusterNode>* memberFunctor =
          new vpr::ThreadMemberFunctor<ClusterNode>(this, &ClusterNode::controlLoop, NULL);
@@ -581,6 +541,9 @@ namespace cluster
       // -Read in Packet data
       // -Parse data into new packet
       // -Return finished packet
+      
+      vpr::Guard<vpr::Mutex> guard(mSockReadLock);
+      
       Header* packet_head = new Header(mSockStream);
       
       vprDEBUG(gadgetDBG_RIM,vprDBG_VERB_LVL) << "ClusterNode::recvPacket() PacketFactory is trying to make a packet type: " 

@@ -156,11 +156,6 @@ namespace cluster
          std::string host_name   = temp_connection_request->getHostname();
          vpr::Uint16 port        = temp_connection_request->getPort();
 
-         // If difference warn us
-         node->setHostname(host_name);
-         node->setPort(port);
-
-
          // Send back a responce
          vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
                         << clrOutBOLD(clrMAGENTA,"[ClusterNetwork]")
@@ -194,7 +189,6 @@ namespace cluster
                << cluster_exception.getMessage() << std::endl << vprDEBUG_FLUSH;
 
             node->setConnected(ClusterNode::DISCONNECTED);
-            node->setSockStream(NULL);
          }
 
          delete responce_packet;
@@ -217,11 +211,9 @@ namespace cluster
 
          if ( temp_connection_ack->getAck() )
          {
-            std::string host_name   = temp_connection_ack->getHostname();
+            std::string host_name  = temp_connection_ack->getHostname();
 
-            //node->setConnected(ClusterNode::CONNECTED);
             node->setConnected(ClusterNode::NEWCONNECTION);
-            node->setHostname(host_name);
 
             // Since we have gained a new connection we should start updating
             node->start();
@@ -321,10 +313,16 @@ namespace cluster
       if (getPendingNode(node->getHostname()) == NULL)
       {
          vpr::Guard<vpr::Mutex> guard(mPendingNodesLock);
-         vprDEBUG(gadgetDBG_RIM,vprDBG_VERB_LVL)
+         vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_STATUS_LVL)
             << "[ClusterNetwork] Adding Pending ClusterNode: " << node->getHostname()
             << "\n"<< vprDEBUG_FLUSH;
          mPendingNodes.push_back(node);
+      }
+      else
+      {
+          vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_STATUS_LVL)
+            << "[ClusterNetwork] ClusterNode: " << node->getHostname()
+            << " already in pending list." << std::endl << vprDEBUG_FLUSH;
       }
    }
 
@@ -512,22 +510,30 @@ namespace cluster
                // Add the new node to the cluster
                ClusterNetwork::instance()->addClusterNode(requesting_node);
             }
-            else
+            else if(NULL != requesting_node->getSockStream())
             {
-               vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
+               //TODO: Check to see if this is a problem.
+               vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_STATUS_LVL)
                   << clrOutBOLD(clrMAGENTA,"[ClusterNetwork]")
                   << " ClusterNode already exists in ClusterNetwork."
-                  << " Setting the SocketStream." << std::endl << vprDEBUG_FLUSH;
+                  << " And has a non NULL SocketStream."
+                  << std::endl << vprDEBUG_FLUSH;
+            }
+            else
+            {
+               vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_STATUS_LVL)
+                  << clrOutBOLD(clrMAGENTA,"[ClusterNetwork]")
+                  << " ClusterNode already configured, setting the SockStream."
+                  << std::endl << vprDEBUG_FLUSH;
 
-               // Set the SocketStream to use for this ClusterNode.
-               requesting_node->setSockStream(client_sock);
+                  requesting_node->setSockStream(client_sock);
             }
 
-            // -Try to receive a Packet
-            // -If we catch an exception then
-            //  -Print error message
-            //  -Delete new socket
-            //  -Listen for another request
+            // - Try to receive a Packet
+            // - If we catch an exception then
+            //   - Print error message
+            //   - Delete new socket
+            //   - Listen for another request
             Packet* temp_packet;
             try
             {
@@ -539,7 +545,7 @@ namespace cluster
             }
             catch(cluster::ClusterException cluster_exception)
             {
-               vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
+               vprDEBUG(gadgetDBG_RIM,vprDBG_CRITICAL_LVL)
                   << clrOutBOLD(clrRED,"ERROR:")
                   << "ClusterNetwork::acceptLoop() Caught an exception: "
                   << cluster_exception.getMessage() << std::endl << vprDEBUG_FLUSH;
@@ -653,7 +659,7 @@ namespace cluster
             {
                jccl::ConfigManager::instance()->addConfigElement(*i, jccl::ConfigManager::PendingElement::ADD);
 
-               vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << clrSetBOLD(clrCYAN)
+               vprDEBUG(gadgetDBG_RIM, vprDBG_CONFIG_LVL) << clrSetBOLD(clrCYAN)
                   << "[ClusterNetwork] Adding Machine specific ConfigElement: "
                   << (*i)->getName() << clrRESET << std::endl << vprDEBUG_FLUSH;
             }
