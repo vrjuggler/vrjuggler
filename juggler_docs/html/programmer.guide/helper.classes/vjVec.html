@@ -27,7 +27,7 @@
   </OL>
 <!-- install-web toc-end -->
 
-<A NAME="intro"><H3>Introduction</H3></A>
+<H3><A NAME="intro">Introduction</A></H3>
 
   <P>
     This document is intended to provide an introduction into how the
@@ -40,7 +40,7 @@
     the classes.
   </P>
 
-<A NAME="high-level"><H3>High-Level Description</H3></A>
+<H3><A NAME="high-level">High-Level Description</A></H3>
 
   <P>
     The classes <TT>vjVec3</TT> and <TT>vjVec4</TT> are designed to work
@@ -126,7 +126,7 @@
     can be thought of at this high level, using them should be a snap.
   </P>
 
-<A NAME="use"><H3>Using <TT>vjVec3</TT> and <TT>vjVec4</TT></H3></A>
+<H3><A NAME="use">Using <TT>vjVec3</TT> and <TT>vjVec4</TT></A></H3>
 
   <P>
     Now that you are familiar with these classes as standard mathematical
@@ -140,7 +140,7 @@
     We begin with creating the objects and setting their values.
   </P>
 
-<A NAME="inversion"><H4>Creating Vectors and Setting Their Values</H4></A>
+<H4><A NAME="inversion">Creating Vectors and Setting Their Values</A></H4>
 
   <P>
     Before you can do anything with vectors, you will need to create
@@ -183,7 +183,7 @@
     of course).
   </P>
 
-<A NAME="inversion"><H4>Inversion (Finding the Negative of a Vector)</H4></A>
+<H4><A NAME="inversion">Inversion (Finding the Negative of a Vector)</A></H4>
 
   <P>
     Once you have your vector created, the simplest operation you can
@@ -202,7 +202,7 @@
     above does a copy operation to return the negatives.)
   </P>
 
-<A NAME="normalization"><H4>Normalization</H4></A>
+<H4><A NAME="normalization">Normalization</A></H4>
 
   <P>
     Normalizing a vector is another simple operation (at the interface
@@ -231,7 +231,7 @@
     This only works with <TT>vjVec3</TT>s, though.
   </P>
 
-<A NAME="length"><H4>Length Calculation</H4></A>
+<H4><A NAME="length">Length Calculation</A></H4>
 
   <P>
     Part of normalizing a vector requires finding its length first.  To
@@ -253,7 +253,7 @@
     length of the vector without calculating the square root.
   </P>
 
-<A NAME="scalar_mult"><H4>Multiplication by a Scalar</H4></A>
+<H4><A NAME="scalar_mult">Multiplication by a Scalar</A></H4>
 
   <P>
     The VR Juggler vector classes provide an easy way to multiply a
@@ -289,7 +289,7 @@
     After this, <TT>vec1</TT> has the value &lt;3.0,&nbsp;4.5,&nbsp;-3.0&gt;.
   </P>
 
-<A NAME="scalar_div"><H4>Division by a Scalar</H4></A>
+<H4><A NAME="scalar_div">Division by a Scalar</A></H4>
 
   <P>
     Very similar to multiplying by a scalar, division by scalars is also
@@ -327,7 +327,7 @@
     &lt;0.333333,&nbsp;0.5,&nbsp;-0.333333&gt;.
   </P>
 
-<A NAME="pfVec3"><H4>Converting to a Performer Vector</H4></A>
+<H4><A NAME="pfVec3">Converting to a Performer Vector</A></H4>
 
   <P>
     SGI's OpenGL Performer likes to work with its own <TT>pfVec3</TT>
@@ -362,7 +362,7 @@
     functions are found in the header <TT>Kernel/Pf/vjPfUtil.h</TT>.
   </P>
 
-<A NAME="assign"><H4>Assignment</H4></A>
+<H4><A NAME="assign">Assignment</A></H4>
 
   <P>
     You have already seen vector assignment in action above whether you
@@ -381,7 +381,7 @@
     VR Juggler vectors.
   </P>
 
-<A NAME="equality"><H4>Equality/Inequality Comparison</H4></A>
+<H4><A NAME="equality">Equality/Inequality Comparison</A></H4>
 
   <P>
     To compare the equality of two vectors, you have three available
@@ -418,7 +418,7 @@
     You can use whichever method is most convenient for your needs.
   </P>
 
-<A NAME="dot"><H4>Dot Product</H4></A>
+<H4><A NAME="dot">Dot Product</A></H4>
 
   <P>
     Given two vectors, finding the dot product is often needed.  VR
@@ -436,7 +436,7 @@
     Now, <TT>dot_product</TT> has the value 4.0.
   </P>
 
-<A NAME="cross"><H4>Cross Product (<TT>vjVec3</TT> only)</H4></A>
+<H4><A NAME="cross">Cross Product (<TT>vjVec3</TT> only)</A></H4>
 
   <P>
     Besides the dot product of two vectors, the cross product is another
@@ -452,7 +452,7 @@
     <TT>vec2</TT>.
   </P>
 
-<A NAME="addition"><H4>Addition</H4></A>
+<H4><A NAME="addition">Addition</A></H4>
 
   <P>
     Adding two vectors can be done one of two ways.  The first method
@@ -476,7 +476,7 @@
     Now, <TT>vec1</TT> has the value &lt;2.5,&nbsp;2.5,&nbsp;-2.0&gt;.
   </P>
 
-<A NAME="subtraction"><H4>Subtraction</H4></A>
+<H4><A NAME="subtraction">Subtraction</A></H4>
 
   <P>
     Subtracting two vectors gives the same options as addition, and while
@@ -499,7 +499,7 @@
     Now, <TT>vec1</TT> has the value &lt;-0.5,&nbsp;0.5,&nbsp;0.0&gt;.
   </P>
 
-<A NAME="details"><H3>The Gory Details</H3></A>
+<H3><A NAME="details">The Gory Details</A></H3>
 
   <P>
     The details behind <TT>vjVec3</TT> and <TT>vjVec4</TT> really aren't
