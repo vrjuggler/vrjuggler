@@ -28,6 +28,8 @@ vpath %.cpp @srcdir@
 vpath %.o ${OBJDIR}
 
 THREAD_SRCS	:= vjBaseThread.cpp	\
+                   vjTSObject.cpp	\
+                   vjTSTable.cpp	\
                    vjThreadFunctor.cpp	\
                    vjThreadManager.cpp	\
                    vjThreadPool.cpp
