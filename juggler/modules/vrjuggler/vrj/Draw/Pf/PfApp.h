@@ -114,6 +114,7 @@ public:
     * Returns the needed parameters for the performer framebuffer.
     * @note Stereo, doublebuffer, depth buffer, and rgba are all requested by
     *       default.
+    * ex: To request multisampling return a vector containing: [PFB_SAMPLE_BUFFER,1,PFFB_SAMPLES,1]
     */
    virtual std::vector<int> getFrameBufferAttrs()
    { return std::vector<int>();}
