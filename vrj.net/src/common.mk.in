@@ -25,16 +25,12 @@
 #
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
-include @topdir@/src/common.mk
+exec_prefix=	@exec_prefix@
+libdir=		@libdir@
+prefix=		@prefix@
+scriptdir=	$(top_srcdir)/release/scripts
+topdir=		@topdir@
 
-MODS=		vpr jccl gmtl gadget vrj
+MKINSTALLDIRS=	$(scriptdir)/mkinstalldirs
 
-CXX_DIRS=	$(addsuffix _bridge_cpp, $(MODS))
-CS_DIRS=	$(addsuffix _bridge_cs, $(MODS))
-DIRS=		$(CXX_DIRS) $(CS_DIRS)
-
-all clean debug optim:
-	[ ! -d $(LIBDIR) ] && mkdir $(LIBDIR) || true
-	for d in $(DIRS) ; do			\
-            $(MAKE) -C $$d $@ || exit 1;	\
-          done
+LIBDIR=		$(topdir)/lib

@@ -252,6 +252,7 @@ AC_CONFIG_FILES([Makefile
                  VARS.pl
                  vrjnet_util/Makefile
                  src/Makefile
+                 src/common.mk
                  src/common-csharp.mk
                  src/common-cxx.mk
                  src/gadget_bridge_cpp/Makefile
