@@ -36,6 +36,8 @@
 
 #include <jccl/Config/ConfigChunk.h>
 #include <gadget/Util/Debug.h>
+#include <gadget/Type/EventWindow/KeyEvent.h>
+#include <gadget/Type/EventWindow/MouseEvent.h>
 #include <gadget/Devices/EventWindow/EventWindowWin32.h>
 
 #ifndef GET_X_LPARAM
@@ -62,7 +64,7 @@ bool EventWindowWin32::config(jccl::ConfigChunkPtr c)
    }
 
    int i;
-   for ( i =0; i < 256; ++i )
+   for ( i =0; i < gadget::LAST_KEY; ++i )
    {
       mCurKeys[i] = mRealkeys[i] = mKeys[i] = 0;
    }
@@ -191,7 +193,7 @@ vpr::Guard<vpr::Mutex> guard(mKeysLock);
       ::TranslateMessage(&msg);
 
       // do our own special handling of kb/mouse...
-      this->updKeys(msg.message, msg.wParam, msg.lParam);
+      this->updKeys(msg);
 
       // send the message to the registered event handler
       ::DispatchMessage(&msg);
@@ -277,7 +279,7 @@ void EventWindowWin32::updateData()
    mKeys[gadget::MOUSE_NEGY] = int(float(mKeys[gadget::MOUSE_NEGY]) * mMouseSensitivity);
 
    // Copy over values
-   for ( unsigned int i = 0; i < 256; ++i )
+   for ( unsigned int i = 0; i < gadget::LAST_KEY; ++i )
    {
       mCurKeys[i] = mKeys[i];
    }
@@ -285,29 +287,32 @@ void EventWindowWin32::updateData()
    // Re-initialize the mKeys based on current key state in realKeys
    // Set the initial state of the mKey key counts based on the current state of the system
    // this is to ensure that if a key is still down, we get at least one event for it
-   for ( unsigned int j = 0; j < 256; ++j )
+   for ( unsigned int j = 0; j < gadget::LAST_KEY; ++j )
    {
       mKeys[j] = mRealkeys[j];
    }
+
+   updateEventQueue();
 }
 
 // UpdKeys: translates windows message into key updates
 // The WNDPROC uses its USERDATA pointer to the keyboard
 // to forward on messages to be handled from in the keyboard object.
-void EventWindowWin32::updKeys(UINT message, UINT wParam, LONG lParam)
+void EventWindowWin32::updKeys(const MSG& message)
 {
    vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_HVERB_LVL)
       << mInstName << ": KeyWin32::updKeys: Processing keys.\n"
       << vprDEBUG_FLUSH;
 
-   int key;
+   gadget::Keys key;
 
-   switch ( message )
+   switch ( message.message )
    {
       case WM_ACTIVATE:
          // if was activated, and not minimized
-         if ( (WA_ACTIVE == LOWORD(wParam) || WA_CLICKACTIVE == LOWORD(wParam)) &&
-              0 == HIWORD(wParam) )
+         if ( (WA_ACTIVE == LOWORD(message.wParam) ||
+               WA_CLICKACTIVE == LOWORD(message.wParam)) &&
+              0 == HIWORD(message.wParam) )
          {
             // and was previously locked...
             if ( Unlocked != mLockState )
@@ -317,7 +322,8 @@ void EventWindowWin32::updKeys(UINT message, UINT wParam, LONG lParam)
          }
          // if was deactivated and minimized
          // otherwise let CAPTURECHANGED handle the lose capture case
-         else if ( WA_INACTIVE == LOWORD(wParam) && 0 != HIWORD(wParam) )
+         else if ( WA_INACTIVE == LOWORD(message.wParam) &&
+                   0 != HIWORD(message.wParam) )
          {
             // and was locked...
             if ( Unlocked != mLockState )
@@ -349,15 +355,17 @@ void EventWindowWin32::updKeys(UINT message, UINT wParam, LONG lParam)
       case WM_KEYDOWN:
          {
             // collect data about the keypress.
-            key = this->VKKeyToKey(wParam);
+            key = this->VKKeyToKey(message.wParam);
+
+            addKeyEvent(key, gadget::KeyPressEvent, message);
 
             // get the repeat count in case the key was pressed
             // multiple times since last we got this message
-            int repeat_count = lParam & 0x0000ffff;
+            int repeat_count = message.lParam & 0x0000ffff;
 
             // check if the key was down already
             // this indicates key repeat, which we [may] want to ignore.
-            bool was_down = (lParam & 0x40000000) == 0x40000000;
+            bool was_down = (message.lParam & 0x40000000) == 0x40000000;
             if ( was_down )
             {
                break;
@@ -410,11 +418,13 @@ void EventWindowWin32::updKeys(UINT message, UINT wParam, LONG lParam)
          // release
       case WM_SYSKEYUP:  //Need WM_SYSKEYUP to capture ALT key
       case WM_KEYUP:
-         key = VKKeyToKey(wParam);
+         key = VKKeyToKey(message.wParam);
          mRealkeys[key] = 0;
          vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_HVERB_LVL)
             << mInstName << ": WM_KEYUP: " << key << std::endl
             << vprDEBUG_FLUSH;
+
+         addKeyEvent(key, gadget::KeyReleaseEvent, message);
 
          // -- Update lock state -- //
          // lock_keyDown[key==storedKey]/unlockMouse -> unlocked
@@ -429,18 +439,24 @@ void EventWindowWin32::updKeys(UINT message, UINT wParam, LONG lParam)
       case WM_LBUTTONDOWN:
          mRealkeys[gadget::MBUTTON1] = 1;
          mKeys[gadget::MBUTTON1] += 1;
+         addMouseButtonEvent(gadget::MBUTTON1, gadget::MouseButtonPressEvent,
+                             message);
          vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_HVERB_LVL)
             << "LeftButtonDown\n" << vprDEBUG_FLUSH;
          break;
       case WM_MBUTTONDOWN:
          mRealkeys[gadget::MBUTTON2] = 1;
          mKeys[gadget::MBUTTON2] += 1;
+         addMouseButtonEvent(gadget::MBUTTON2, gadget::MouseButtonPressEvent,
+                             message);
          vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_HVERB_LVL)
             << "MiddleButtonDown\n" << vprDEBUG_FLUSH;
          break;
       case WM_RBUTTONDOWN:
          mRealkeys[gadget::MBUTTON3] = 1;
          mKeys[gadget::MBUTTON3] += 1;
+         addMouseButtonEvent(gadget::MBUTTON3, gadget::MouseButtonPressEvent,
+                             message);
          vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_HVERB_LVL)
             << "RightButtonDown\n" << vprDEBUG_FLUSH;
          break;
@@ -448,16 +464,22 @@ void EventWindowWin32::updKeys(UINT message, UINT wParam, LONG lParam)
          // release...
       case WM_LBUTTONUP:
          mRealkeys[gadget::MBUTTON1] = 0;
+         addMouseButtonEvent(gadget::MBUTTON1,
+                             gadget::MouseButtonReleaseEvent, message);
          vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_HVERB_LVL)
             << "LeftButtonUp\n" << vprDEBUG_FLUSH;
          break;
       case WM_MBUTTONUP:
          mRealkeys[gadget::MBUTTON2] = 0;
+         addMouseButtonEvent(gadget::MBUTTON2,
+                             gadget::MouseButtonReleaseEvent, message);
          vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_HVERB_LVL)
             << "MiddleButtonUp\n" << vprDEBUG_FLUSH;
          break;
       case WM_RBUTTONUP:
          mRealkeys[gadget::MBUTTON3] = 0;
+         addMouseButtonEvent(gadget::MBUTTON3,
+                             gadget::MouseButtonReleaseEvent, message);
          vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_HVERB_LVL)
             << "RightButtonUp\n" << vprDEBUG_FLUSH;
          break;
@@ -465,14 +487,16 @@ void EventWindowWin32::updKeys(UINT message, UINT wParam, LONG lParam)
          // mouse movement
       case WM_MOUSEMOVE:
          {
+            addMouseMoveEvent(message);
+
             int win_center_x(mWidth / 2), win_center_y(mHeight / 2);
 
             int cur_x, cur_y, dx, dy;
 
             // Determine how far the mouse pointer moved since the last event.
             // x & y are relative to the x window
-            cur_x = GET_X_LPARAM(lParam);
-            cur_y = GET_Y_LPARAM(lParam);
+            cur_x = GET_X_LPARAM(message.lParam);
+            cur_y = GET_Y_LPARAM(message.lParam);
 
             vprDEBUG(vprDBG_ALL,vprDBG_HVERB_LVL) << "MotionNotify: x:"
                << std::setw(6) << cur_x
@@ -530,12 +554,12 @@ void EventWindowWin32::updKeys(UINT message, UINT wParam, LONG lParam)
             {
                mKeys[gadget::MOUSE_NEGY] += -dy;    // Negative movement in the y direction.
             }
-            break;
          }
+         break;
    } // end of switch...
 
    // Let any other event watchers process their events
-   this->processEvent(message, wParam, lParam);
+   this->processEvent(message.message, message.wParam, message.lParam);
 }
 
 int EventWindowWin32::stopSampling()
@@ -557,7 +581,7 @@ int EventWindowWin32::stopSampling()
    return 1;
 }
 
-int EventWindowWin32::VKKeyToKey(int vkKey)
+gadget::Keys EventWindowWin32::VKKeyToKey(int vkKey)
 {
    switch ( vkKey )
    {
@@ -615,7 +639,7 @@ int EventWindowWin32::VKKeyToKey(int vkKey)
       case /*VK_Y*/0x59   : return gadget::KEY_Y;
       case /*VK_Z*/0x5a   : return gadget::KEY_Z;
       case VK_ESCAPE   : return gadget::KEY_ESC;
-      default: return 255;
+      default: return gadget::KEY_UNKNOWN;
    }
 
 }
@@ -839,6 +863,40 @@ void EventWindowWin32::lockMouse()
 void EventWindowWin32::unlockMouse()
 {
    BOOL result = ::ReleaseCapture();
+}
+
+void EventWindowWin32::addKeyEvent(const gadget::Keys& key,
+                                   const gadget::EventType& type,
+                                   const MSG& msg)
+{
+   // XXX: Missing modifier key information here...
+   // XXX: Missing ASCII character value here...
+   gadget::EventPtr key_event(new gadget::KeyEvent(type, key, 0, msg.time));
+   addEvent(key_event);
+}
+
+void EventWindowWin32::addMouseButtonEvent(const gadget::Keys& button,
+                                           const gadget::EventType& type,
+                                           const MSG& msg)
+{
+   // XXX: Missing keyboard modifier information here...
+   gadget::EventPtr mouse_event(new gadget::MouseEvent(type, button,
+                                                       GET_X_LPARAM(msg.lParam),
+                                                       GET_Y_LPARAM(msg.lParam),
+                                                       msg.pt.x, msg.pt.y, 0,
+                                                       msg.time));
+   addEvent(mouse_event);
+}
+
+void EventWindowWin32::addMouseMoveEvent(const MSG& msg)
+{
+   gadget::EventPtr mouse_event(new gadget::MouseEvent(gadget::MouseMoveEvent,
+                                                       gadget::NO_MBUTTON,
+                                                       GET_X_LPARAM(msg.lParam),
+                                                       GET_Y_LPARAM(msg.lParam),
+                                                       msg.pt.x, msg.pt.y, 0,
+                                                       msg.time));
+   addEvent(mouse_event);
 }
 
 } // End of gadget namespace

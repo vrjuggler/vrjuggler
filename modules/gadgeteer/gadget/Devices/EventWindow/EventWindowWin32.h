@@ -45,6 +45,8 @@
 #ifndef _GADGET_EVENT_WINDOW_WIN32_H_
 #define _GADGET_EVENT_WINDOW_WIN32_H_
 
+#include <gadget/gadgetConfig.h>
+
 // Get windows stuff
 #include <windows.h>
 #include <commctrl.h>
@@ -53,13 +55,12 @@
 #include <vpr/System.h>
 #include <jccl/Config/ConfigChunk.h>
 
-#include <gadget/gadgetConfig.h>
 #include <gadget/Type/Input.h>
 #include <gadget/Type/EventWindow.h>
-#include <gadget/Type/InputMixer.h>
+//#include <gadget/Type/InputMixer.h>
 
-#include <gadget/Util/Debug.h>
-#include <gadget/InputManager.h>
+#include <gadget/Type/EventWindow/Keys.h>
+#include <gadget/Type/EventWindow/Event.h>
 
 
 namespace gadget
@@ -138,6 +139,14 @@ protected:
    {
    }
 
+   void addKeyEvent(const gadget::Keys& key, const gadget::EventType& type,
+                    const MSG& message);
+
+   void addMouseButtonEvent(const gadget::Keys& button,
+                            const gadget::EventType& type, const MSG& message);
+
+   void addMouseMoveEvent(const MSG& message);
+
    void lockMouse();
    void unlockMouse();
    friend LONG APIENTRY MenuWndProc(HWND hWnd, UINT message, UINT wParam, LONG lParam);
@@ -145,7 +154,7 @@ protected:
    HINSTANCE   m_hInst;
    HWND        m_hWnd;
    void createWindowWin32();
-   void updKeys(UINT message,  UINT wParam, LONG lParam);
+   void updKeys(const MSG& message);
 
    /**
     * Handles any events in the system.
@@ -161,7 +170,7 @@ protected:
 
    /** @name Windows utility functions */
    //@{
-   int VKKeyToKey(int vkKey);
+   gadget::Keys VKKeyToKey(int vkKey);
    char* checkArgs(char* look_for);
 
    BOOL MenuInit(HINSTANCE hInstance);
