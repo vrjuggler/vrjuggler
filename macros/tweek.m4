@@ -179,14 +179,14 @@ AC_DEFUN([TWEEK_PATH_CXX],
             TWEEK_INCLUDES=`$TWEEK_CONFIG $tweek_config_args --includes`
             TWEEK_EXTRA_LIBS_CC=`$TWEEK_CONFIG $tweek_config_args --extra-libs $ABI`
             TWEEK_EXTRA_LIBS_LD=`$TWEEK_CONFIG $tweek_config_args --extra-libs $ABI --linker`
-            TWEEK_LIBS_CC="`$TWEEK_CONFIG $tweek_config_args --libs $ABI` $TWEEK_EXTRA_LIBS_CC"
-            TWEEK_LIBS_LD="`$TWEEK_CONFIG $tweek_config_args --libs $ABI --linker` $TWEEK_EXTRA_LIBS_LD"
-            TWEEK_PROF_LIBS_CC="`$TWEEK_CONFIG $tweek_config_args --libs $ABI --profiled` $TWEEK_EXTRA_LIBS_CC"
-            TWEEK_PROF_LIBS_LD="`$TWEEK_CONFIG $tweek_config_args --libs $ABI --linker --profiled` $TWEEK_EXTRA_LIBS_LD"
-            TWEEK_LIBS_STATIC_CC="`$TWEEK_CONFIG $tweek_config_args --libs $ABI --static` $TWEEK_EXTRA_LIBS_CC"
-            TWEEK_LIBS_STATIC_LD="`$TWEEK_CONFIG $tweek_config_args --libs $ABI --linker --static` $TWEEK_EXTRA_LIBS_LD"
-            TWEEK_PROF_LIBS_STATIC_CC="`$TWEEK_CONFIG $tweek_config_args --libs $ABI --static --profiled` $TWEEK_EXTRA_LIBS_CC"
-            TWEEK_PROF_LIBS_STATIC_LD="`$TWEEK_CONFIG $tweek_config_args --libs $ABI --linker --static --profiled` $TWEEK_EXTRA_LIBS_LD"
+            TWEEK_LIBS_CC=`$TWEEK_CONFIG $tweek_config_args --libs $ABI`
+            TWEEK_LIBS_LD=`$TWEEK_CONFIG $tweek_config_args --libs $ABI --linker`
+            TWEEK_PROF_LIBS_CC=`$TWEEK_CONFIG $tweek_config_args --libs $ABI --profiled`
+            TWEEK_PROF_LIBS_LD=`$TWEEK_CONFIG $tweek_config_args --libs $ABI --linker --profiled`
+            TWEEK_LIBS_STATIC_CC=`$TWEEK_CONFIG $tweek_config_args --libs $ABI --static`
+            TWEEK_LIBS_STATIC_LD=`$TWEEK_CONFIG $tweek_config_args --libs $ABI --linker --static`
+            TWEEK_PROF_LIBS_STATIC_CC=`$TWEEK_CONFIG $tweek_config_args --libs $ABI --static --profiled`
+            TWEEK_PROF_LIBS_STATIC_LD=`$TWEEK_CONFIG $tweek_config_args --libs $ABI --linker --static --profiled`
 
             TWEEK_CXX_IDL="`$TWEEK_CONFIG $tweek_config_args --idl cxx`"
             TWEEK_CXX_IDL_OPTS="`$TWEEK_CONFIG $tweek_config_args --idlflags cxx`"
