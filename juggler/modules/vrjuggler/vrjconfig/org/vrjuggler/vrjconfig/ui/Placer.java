@@ -385,7 +385,7 @@ public class Placer
     */
    public synchronized void paint(Graphics g)
    {
-      System.out.println("Painting the Placer!, selIdx = "+selectedIndex);
+//      System.out.println("Painting the Placer!, selIdx = "+selectedIndex);
       super.paint(g);
 
       // Paint each object in the model using the current renderer

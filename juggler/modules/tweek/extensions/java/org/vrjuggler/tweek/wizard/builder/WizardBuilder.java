@@ -103,6 +103,19 @@ public class WizardBuilder
          e.printStackTrace();
       }
 
+      // Temporary hack to setup the step chooser dialog
+      try
+      {
+         WizardStepFactory.registerWizardStep(
+               Class.forName("org.vrjuggler.vrjconfig.wizard.SimDisplayPane",
+                             true,
+                             BeanJarClassLoader.instance()));
+      }
+      catch (ClassNotFoundException cnfe)
+      {
+         cnfe.printStackTrace();
+      }
+
       // setup the main toolbar
       ClassLoader loader = BeanJarClassLoader.instance();
       newBtn.setIcon(new ImageIcon(loader.getResource("org/vrjuggler/tweek/wizard/builder/images/new24.gif")));

@@ -4,7 +4,9 @@
    <guipanel name="WizardBuilder">
       <file name="${TWEEK_BASE_DIR}/bin/beans/WizardBuilder.jar"
             class="org.vrjuggler.tweek.wizard.builder.WizardBuilder" />
+      <dependency file="ui.jar" path="${TWEEK_BASE_DIR}/bin" />
       <dependency file="wizard.jar" path="${TWEEK_BASE_DIR}/bin" />
+      <dependency file="VRJConfig.jar" path="${TWEEK_BASE_DIR}/bin/beans" />
       <tree path="/Wizards/" />
    </guipanel>
 </beanlist>
