@@ -48,7 +48,7 @@
 int main(int argc, char* argv[])
 {
    vrj::Kernel* kernel = vrj::Kernel::instance();  // Get the kernel
-   OsgNav* application = new OsgNav(kernel);             // Instantiate an instance of the app
+   OsgNav* application = new OsgNav(kernel, argc, argv);             // Instantiate an instance of the app
 
    if ( argc <= 2 )
    {
