@@ -152,6 +152,9 @@ tweek::SubjectManager::SubjectList* SubjectManagerImpl::getAllSubjects()
       << "Constructing sequence of subjects to return to caller ...\n"
       << vprDEBUG_FLUSH;
 
+   // Lock mSubjects while we read from it.
+   vpr::Guard<vpr::Mutex> guard(mSubjectsMutex);
+
    // Create the sequence and size it.
    tweek::SubjectManager::SubjectList* subjects =
       new tweek::SubjectManager::SubjectList();
