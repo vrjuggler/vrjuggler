@@ -33,6 +33,12 @@
 
 #include <vrj/vrjConfig.h>
 
+#ifdef HAVE_EXT_FUNCTIONAL
+#include <ext/functional>
+#else
+#include <functional>
+#endif
+
 #include <Performer/pf.h>
 #include <Performer/pfdu.h>
 #include <Performer/pf/pfDCS.h>
