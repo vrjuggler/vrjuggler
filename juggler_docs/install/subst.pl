@@ -108,6 +108,7 @@ $alias_subst{"PERFORMERBOOK"} = 'http://techpubs.sgi.com';
 
 # Miscellaneous
 $alias_subst{'CONFIGURE_REV'} = '1.182';
+$alias_subst{'CURRENT_JUGGLER_VERSION'} = '0.1.95';
 
 # Time of posting
 require "ctime.pl";
