@@ -27,6 +27,27 @@ vjConfigChunkDB::~vjConfigChunkDB () {
 
 
 
+//: copy constructor
+vjConfigChunkDB::vjConfigChunkDB (vjConfigChunkDB& db): chunks() {
+    *this = db;
+}
+
+
+
+vjConfigChunkDB& vjConfigChunkDB::operator = (vjConfigChunkDB& db) {
+    int i;
+    descs = db.descs;
+    for (i = 0; i < chunks.size(); i++)
+	delete chunks[i];
+    chunks.erase (chunks.begin(), chunks.end());
+    for (i = 0; i < db.chunks.size(); i++) {
+        chunks.push_back (new vjConfigChunk(*(db.chunks[i])));
+    }
+    return *this;
+}
+
+
+
 void vjConfigChunkDB::setChunkDescDB (vjChunkDescDB *d) {
   descs = d;
 }

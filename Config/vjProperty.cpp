@@ -41,6 +41,32 @@ vjProperty::~vjProperty () {
 
 
 
+vjProperty::vjProperty (vjProperty& p):value() {
+    *this = p;
+}
+
+
+
+vjProperty& vjProperty::operator= (vjProperty& p) {
+    int i;
+
+    description = p.description;
+    name = description->token;
+    num = p.num;
+    type = p.type;
+    units = p.units;
+
+    for (i = 0; i < value.size(); i++) 
+        delete (value[i]);
+    value.erase (value.begin(), value.end());
+    for (i = 0; i < p.value.size(); i++) {
+        value.push_back (new vjVarValue(*(p.value[i])));
+    }
+    return *this;
+}
+
+
+
 bool vjProperty::applyUnits (CfgUnit u) {
 
   if (type == T_DISTANCE) {
