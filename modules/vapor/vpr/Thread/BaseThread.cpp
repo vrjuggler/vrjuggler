@@ -45,6 +45,8 @@
 #include <vpr/Thread/ThreadManager.h>
 
 vpr::Int32 vpr::BaseThread::mNextThreadId = 0;
+vpr::TSTable vpr::BaseThread::gTSTable;
+
 
 	// ---- Ouput operator ---- //
 std::ostream& vpr::operator<<(std::ostream& out, vpr::BaseThread* threadPtr)
