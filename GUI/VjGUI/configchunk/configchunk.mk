@@ -10,11 +10,12 @@
 # VJGUICONFIGCHUNK_OBJS    - The list of .class files that will be created.
 # -----------------------------------------------------------------------------
 
-VJGUICONFIGCHUNK_SOURCES = VjGUI/configchunk/ConfigChunkFrame.java 	\
-			   VjGUI/configchunk/ListBoxModel.java          \
-			   VjGUI/configchunk/PropertyPanel.java		\
+VJGUICONFIGCHUNK_SOURCES = VjGUI/configchunk/ConfigChunkFrame.java 	  \
+			   VjGUI/configchunk/ListBoxModel.java            \
+			   VjGUI/configchunk/PropertyPanel.java		  \
+			   VjGUI/configchunk/VarValuePanel.java           \
 			   VjGUI/configchunk/VarValueStandardPanel.java   \
-			   VjGUI/configchunk/VarValueMiniChunkPanel.java    \
+			   VjGUI/configchunk/VarValueMiniChunkPanel.java  \
 			   VjGUI/configchunk/VarValueBigChunkPanel.java
 
 VJGUICONFIGCHUNK_OBJS = ${VJGUICONFIGCHUNK_SOURCES:.java=.class}
