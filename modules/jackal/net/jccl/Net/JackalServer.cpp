@@ -177,10 +177,10 @@ bool vjEnvironmentManager::configRemove(vjConfigChunk* chunk) {
 	return true;
     }
     else if (!vjstrcasecmp (s, "FileConnect")) {
-	vjConnect* c = getConnect (chunk->getProperty ("Name"));
-	if (c) {
-	    removeConnect (c);
-	}
+//  	vjConnect* c = getConnect (chunk->getProperty ("Name"));
+//  	if (c) {
+//  	    removeConnect (c);
+//  	}
 	return true;
     }
 
@@ -283,8 +283,10 @@ void vjEnvironmentManager::activatePerfBuffers () {
     // activates all perf buffers configured to do so
     // this is still a bit on the big and bulky side.
 
-    if (perf_target == NULL || current_perf_config == NULL)
+    if (perf_target == NULL || current_perf_config == NULL) {
 	deactivatePerfBuffers();
+	return;
+    }
 
     if (perf_buffers.empty())
 	return;
@@ -317,6 +319,7 @@ void vjEnvironmentManager::activatePerfBuffers () {
     for (val = v.begin(); val != v.end(); val++) {
 	delete (*val);
     }
+
 }
 
 
