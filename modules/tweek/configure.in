@@ -380,10 +380,13 @@ else
          [ ORB_CLASS_PROP='org.openorb.CORBA.ORB'
            ORB_SINGLETON_CLASS_PROP='org.openorb.CORBA.ORBSingleton'
          ],
-         [ AC_MSG_WARN(*** OpenORB required for Tweek GUI execution ***) ],
+         [ AC_MSG_WARN(*** OpenORB required for Tweek GUI execution ***)
+           BUILD_JAVA='N'
+         ],
          $OPENORB_JAR)
    else
-      AC_MSG_WARN(*** OpenORB required for Tweek GUI execution ***)
+      AC_MSG_WARN(*** OpenORB required for Tweek ***)
+      BUILD_JAVA='N'
    fi
 fi
 
