@@ -16,6 +16,7 @@
 #include <gadget/gadgetConfig.h>
 #include <stdio.h>
 #include <gadget/Devices/Immersion/IboxStandalone.h>
+#include <vpr/System.h>
 
 // ----------------------------------------------------------------------------
 // Constructor:  This sets all the default values for the ibox.
