@@ -582,9 +582,9 @@ UNIX_TWEEKROOT_ABS="$TWEEKROOT_ABS"
 UNIX_JUGGLERROOT_ABS="$JUGGLERROOT_ABS"
 
 if test "x$OS_TYPE" = "xWin32" ; then
-   APP_EXTRA_LIBS="$LDFLAGS $CXX_ORB_LDFLAGS $CXX_ORB_LIB_LINK_EXE $VPR_LIBS_LD $LIBS $VPR_EXTRA_LIBS"
+   APP_EXTRA_LIBS="$LDFLAGS $CXX_ORB_LDFLAGS $CXX_ORB_LIB_LINK_EXE $VPR_LIBS_LD $LIBS $VPR_EXTRA_LIBS_LD"
 else
-   APP_EXTRA_LIBS="$LDFLAGS $CXX_ORB_LDFLAGS $CXX_ORB_LIB $VPR_LIBS_CC $LIBS $VPR_EXTRA_LIBS"
+   APP_EXTRA_LIBS="$LDFLAGS $CXX_ORB_LDFLAGS $CXX_ORB_LIB $VPR_LIBS_CC $LIBS $VPR_EXTRA_LIBS_CC"
 fi
 
 # Put together the basic information needed to compile VR Juggler applications.
@@ -649,21 +649,21 @@ case $OS_TYPE in
       tweek_ldflags_linker="$tweek_ldflags_compiler"
       tweek_libs="-ltweek"
       tweek_extra_libs="$CXX_ORB_LIB"
-      tweek_extra_libs_juggler="$VPR_LIBS_CC $VPR_EXTRA_LIBS"
+      tweek_extra_libs_juggler="$VPR_LIBS_CC $VPR_EXTRA_LIBS_CC"
       ;;
    Win32)
       tweek_ldflags_compiler="/link /libpath:\$prefix/lib/debug"
       tweek_ldflags_linker="/libpath:\$prefix/lib/debug"
       tweek_libs="tweek.lib"
       tweek_extra_libs="$CXX_ORB_LIB_LINK_EXE"
-      tweek_extra_libs_juggler="$VPR_LIBS_LD $VPR_EXTRA_LIBS"
+      tweek_extra_libs_juggler="$VPR_LIBS_LD $VPR_EXTRA_LIBS_LD"
       ;;
 esac
 
 tweek_extra_cxxflags=''
 tweek_extra_include_dirs=''
 
-if test "x$PLATFORM" = "xIRIX" ; then
+if test "x$PLATFORM" = "xIRIX" -a "x$USE_GCC" != "xyes" ; then
    tweek_n32_flags='-n32'
    tweek_64_flags='-64'
 fi
