@@ -250,6 +250,7 @@ fi
 # Ensure that the C++ compiler we've found is capable of compiling the newer
 # newer C++ features that we need.
 DPP_CXX_NAMESPACE(AC_MSG_ERROR(*** Tweek requires C++ namesapce support ***))
+DPP_CXX_EXCEPTIONS(AC_MSG_ERROR(*** Tweek requires C++ exception support ***))
 DPP_CXX_HAVE_STD
 
 DPP_HAVE_GNU_MAKE(3.78, ,
