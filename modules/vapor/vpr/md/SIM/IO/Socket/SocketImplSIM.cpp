@@ -56,13 +56,8 @@ namespace vpr
 
 SocketImplSIM::~SocketImplSIM ()
 {
-   if ( mNodeAssigned )
-   {
-      // Release the node to which we were bound.
-      vpr::sim::Controller::instance()->getSocketManager().unbind(this);
-      mNodeAssigned = false;
-   }
-
+   close();
+   
    // cant do this because accept retuns an imp, which gets deleted
    // after constructing the returned Socket_t
 /*
@@ -87,16 +82,15 @@ vpr::ReturnStatus SocketImplSIM::close ()
       mPeer = NULL;
    }
 
-   status = vpr::sim::Controller::instance()->getSocketManager().unbind(this);
-
-   if ( status.success() )
+   if ( mBound )
    {
-      mNodeAssigned = false;
+      // Release the node to which we were bound.
+      status = vpr::sim::Controller::instance()->getSocketManager().unbind(this);
+      mBound = false;
    }
-
+      
    mOpen  = false;
-   mBound = false;
-
+   
    return status;
 }
 
@@ -106,19 +100,7 @@ vpr::ReturnStatus SocketImplSIM::bind ()
    vpr::sim::SocketManager& sock_mgr =
       vpr::sim::Controller::instance()->getSocketManager();
 
-   if ( vpr::InetAddr::AnyAddr == mLocalAddr )
-   {
-      status = sock_mgr.bindUnusedPort(this, mLocalAddr);
-      vprASSERT(status.success() && "Failed to assign port number to socket");
-   }
-
-   vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
-      << "SocketImplSIM::bind(): Assigning socket to a node in the graph\n"
-      << vprDEBUG_FLUSH;
-   status = sock_mgr.assignToNode(this, mLocalAddr);
-   vprASSERT(status.success() && "Failed to assign socket to a node");
-
-   status = sock_mgr.bind(this, mLocalAddr);
+   status = sock_mgr.bind(this);
    mBound = status.success();
 
    return status;
@@ -130,24 +112,17 @@ vpr::ReturnStatus SocketImplSIM::connect (vpr::Interval timeout)
    vprASSERT(mOpen && "An unopened socket cannot connect");
    vpr::sim::SocketManager& sock_mgr =
       vpr::sim::Controller::instance()->getSocketManager();
-
-   if ( ! mNodeAssigned )
+   
+   // If not bound, then bind us
+   if (!mBound)
    {
-      if ( vpr::InetAddr::AnyAddr == mLocalAddr )
-      {
-         status = sock_mgr.bindUnusedPort(this, mLocalAddr);
-         vprASSERT(status.success() && "Failed to assign port number to socket");
-      }
-
-      vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
-         << "SocketImplSIM::connect(): Assigning socket to a node in the "
-         << "graph\n" << vprDEBUG_FLUSH;
-      status = sock_mgr.assignToNode(this, mLocalAddr);
+      bind();
    }
+   
+   vprASSERT(mBound && "We must be bound first");   
 
-   vprASSERT(mNodeAssigned && "A node-less socket cannot connect");
    status = sock_mgr.connect(this, &mPeer, mRemoteAddr, mPathToPeer, timeout);
-   mBound = mConnected = status.success();
+   mConnected = status.success();
 
    // Now that we are connected (or queued to get connected), we do not have
    // to manipulate our local address as is done in the real VPR sockets.
@@ -159,6 +134,8 @@ vpr::ReturnStatus SocketImplSIM::connect (vpr::Interval timeout)
 
 vpr::Uint32 SocketImplSIM::availableBytes ()
 {
+   vprASSERT(mBound && "We must be bound first");
+
    vpr::Guard<vpr::Mutex> guard(mArrivedQueueMutex);
    vpr::Uint32 bytes = 0;
 
@@ -262,9 +239,13 @@ vpr::ReturnStatus SocketImplSIM::write_i (const void* buffer,
                                           vpr::Interval timeout)
 {
    vpr::ReturnStatus status;
+   vprASSERT(mBound && "We must be bound first");
+   vprASSERT(mOpen && "We must be open first");
+
 
    if ( mPeer == NULL )
    {
+      vprASSERT(false && "Trying to write to NULL peer");      // XXX: This may not be a good way to do this
       status.setCode(vpr::ReturnStatus::Fail);
       data_written = 0;
    }
@@ -306,6 +287,7 @@ vpr::ReturnStatus SocketImplSIM::write_i (const void* buffer,
          << "\n---------------------------\n" << std::dec << vprDEBUG_FLUSH;
 #endif
 
+      vprASSERT(!mPathToPeer->empty() && "Path not set");
       vpr::sim::MessagePtr msg(new vpr::sim::Message(buffer, length));
       msg->setPath(mPathToPeer, this, mPeer);
       vpr::sim::Controller::instance()->getSocketManager().sendMessage(msg);
@@ -319,15 +301,20 @@ vpr::ReturnStatus SocketImplSIM::write_i( vpr::sim::Message::MessageDataPtr msgD
                            vpr::Uint32& data_written,
                            vpr::Interval timeout = vpr::Interval::NoTimeout )
 {
+   vprASSERT(mBound && "We must be bound first");
+   vprASSERT(mOpen && "We must be open first");
+
    vpr::ReturnStatus status;
 
    if ( mPeer == NULL )
    {
+      vprASSERT(false && "Trying to write to NULL peer");      // XXX: This may not be a good way to do this
       status.setCode(vpr::ReturnStatus::Fail);
       data_written = 0;
    }
    else
    {
+      vprASSERT(!mPathToPeer->empty() && "Path not set");
       data_written = msgData->size();
       vpr::sim::MessagePtr msg(new vpr::sim::Message(msgData));
       msg->setPath(mPathToPeer, this, mPeer);
@@ -362,14 +349,9 @@ vpr::ReturnStatus SocketImplSIM::inExceptState ()
 
 SocketImplSIM::SocketImplSIM (const vpr::SocketTypes::Type sock_type)
    : mOpen(false), mBound(false), mConnected(false), mOpenBlocking(false),
-     mBlocking(false), mType(sock_type), mReuseAddr(false), mPeer(NULL),
-     mNodeAssigned(false)
+     mBlocking(false), mType(sock_type), mReuseAddr(false), mPeer(NULL)
 {
    /* Do nothing. */ ;
-//   vpr::ReturnStatus status;
-//   status = vpr::sim::Controller::instance()->getSocketManager().assignToNode(this);
-//
-//   vprASSERT(status.success() && "Failed to assign new socket to a node");
 }
 
 SocketImplSIM::SocketImplSIM (const vpr::InetAddr& local_addr,
@@ -377,13 +359,9 @@ SocketImplSIM::SocketImplSIM (const vpr::InetAddr& local_addr,
                               const vpr::SocketTypes::Type sock_type)
    : mOpen(false), mBound(false), mConnected(false), mOpenBlocking(false),
      mBlocking(false), mLocalAddr(local_addr), mRemoteAddr(remote_addr),
-     mType(sock_type), mPeer(NULL), mNodeAssigned(false)
+     mType(sock_type), mPeer(NULL)
 {
    /* Do nothing. */ ;
-//   vpr::ReturnStatus status;
-//   status = vpr::sim::Controller::instance()->getSocketManager().assignToNode(this, local_addr);
-//
-//   vprASSERT(status.success() && "Failed to assign new socket to a node");
 }
 
 void SocketImplSIM::disconnect ()

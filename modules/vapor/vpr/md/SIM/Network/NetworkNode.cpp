@@ -47,6 +47,8 @@
 #include <vpr/System.h>
 
 #include <vpr/md/SIM/IO/Socket/SocketImplSIM.h>
+#include <vpr/md/SIM/IO/Socket/SocketStreamImplSIM.h>
+#include <vpr/md/SIM/IO/Socket/SocketDatagramImplSIM.h>
 #include <vpr/md/SIM/Network/Message.h>
 #include <vpr/md/SIM/Network/MessagePtr.h>
 #include <vpr/md/SIM/Network/NetworkNode.h>
@@ -95,20 +97,40 @@ bool NetworkNode::hasSocket (const vpr::Uint32 port,
    switch (type)
    {
       case vpr::SocketTypes::DATAGRAM:
-         result = mDgramSocketMap.count(port) > 0;
+         result = (mDgramSocketMap.find(port) != mDgramSocketMap.end());
          break;
       case vpr::SocketTypes::STREAM:
-         result = mStreamSocketMap.count(port) > 0;
+         result = (mStreamSocketMap.find(port) != mStreamSocketMap.end());;
          break;
    }
 
    return  result;
 }
 
+vpr::SocketImplSIM* NetworkNode::getSocket(const vpr::Uint32 port,
+                              const vpr::SocketTypes::Type type)
+{
+   vprASSERT( hasSocket(port,type) && "getSocket doesn't have a socket of the given type");
+
+   switch (type)
+   {
+      case vpr::SocketTypes::DATAGRAM:
+         return mDgramSocketMap[port];
+         break;
+      case vpr::SocketTypes::STREAM:
+         return mStreamSocketMap[port];
+         break;
+   }
+
+   return NULL;
+}
+
 void NetworkNode::addSocket (vpr::SocketImplSIM* sock)
 {
    vpr::Uint32 port = sock->getLocalAddr().getPort();
+   vprASSERT( mIpAddr == sock->getLocalAddr().getAddressValue() && "Trying to add socket to node of wrong ip addr");
    vprASSERT(! hasSocket(port, sock->getType()) && "Tried to overwrite an existing socket");
+   
    vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
       << "NetworkNode::addSocket() [" << mIpStr << "]: Adding socket (" << sock
       << ") with local address " << sock->getLocalAddr() << " to node "
@@ -117,9 +139,11 @@ void NetworkNode::addSocket (vpr::SocketImplSIM* sock)
    switch (sock->getType())
    {
       case vpr::SocketTypes::DATAGRAM:
+         vprASSERT( dynamic_cast<vpr::SocketStreamImplSIM*>(sock) != NULL);
          mDgramSocketMap[port] = sock;
          break;
       case vpr::SocketTypes::STREAM:
+         vprASSERT( dynamic_cast<vpr::SocketDatagramImplSIM*>(sock) != NULL);
          mStreamSocketMap[port] = sock;
          break;
    }
@@ -128,10 +152,13 @@ void NetworkNode::addSocket (vpr::SocketImplSIM* sock)
 vpr::ReturnStatus NetworkNode::removeSocket (const vpr::SocketImplSIM* sock)
 {
    vpr::ReturnStatus status(vpr::ReturnStatus::Fail);
-   std::map<vpr::Uint32, vpr::SocketImplSIM*>::iterator i;
-   vpr::Uint32 port;
+   socket_map_t::iterator i;
+   
+   vpr::Uint32 port( sock->getLocalAddr().getPort() );
+   vpr::Uint32 ip_addr( sock->getLocalAddr().getAddressValue() );
 
-   port = sock->getLocalAddr().getPort();
+   vprASSERT( hasSocket(port, sock->getType())  && "Trying to remove a socket that isn't registered with node");
+   vprASSERT( mIpAddr == ip_addr && "Removing socket from wrong node [ip addresses differ]");
 
    vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
       << "NetworkNode::removeSocket() [" << mIpStr
@@ -147,10 +174,9 @@ vpr::ReturnStatus NetworkNode::removeSocket (const vpr::SocketImplSIM* sock)
          {
             mDgramSocketMap.erase(i);
             status.setCode(vpr::ReturnStatus::Succeed);
-            vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL)
-               << "NetworkNode::removeSocket() [" << mIpStr
-               << "]: Removed datagram socket\n" << vprDEBUG_FLUSH;
-            vprASSERT(mDgramSocketMap.count(port) == 0 && "Erasing did nothing");
+            vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL) << "NetworkNode::removeSocket() [" << mIpStr
+                                                  << "]: Removed datagram socket\n" << vprDEBUG_FLUSH;
+            vprASSERT(!hasSocket(port, sock->getType()) && "Erasing did nothing");
          }
          break;
       case vpr::SocketTypes::STREAM:
@@ -160,10 +186,9 @@ vpr::ReturnStatus NetworkNode::removeSocket (const vpr::SocketImplSIM* sock)
          {
             mStreamSocketMap.erase(i);
             status.setCode(vpr::ReturnStatus::Succeed);
-            vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL)
-               << "NetworkNode::removeSocket() [" << mIpStr
-               << "]: Removed stream socket\n" << vprDEBUG_FLUSH;
-            vprASSERT(mStreamSocketMap.count(port) == 0 && "Erasing did nothing");
+            vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL) << "NetworkNode::removeSocket() [" << mIpStr
+                                                  << "]: Removed stream socket\n" << vprDEBUG_FLUSH;
+            vprASSERT(!hasSocket(port, sock->getType()) && "Erasing did nothing");
          }
          break;
    }

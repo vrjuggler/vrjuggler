@@ -69,6 +69,8 @@ vpr::ReturnStatus SocketStreamImplSIM::accept( SocketStreamImplSIM& client_sock,
       SocketStreamImplSIM** peer_remote_ptr;
 
       peer_ptr        = mConnectorQueue.front().first;
+      vprASSERT(peer_ptr == this);
+
       peer_remote_ptr = mConnectorQueue.front().second;
       mConnectorQueue.pop();
 
@@ -76,25 +78,25 @@ vpr::ReturnStatus SocketStreamImplSIM::accept( SocketStreamImplSIM& client_sock,
 
       vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
          << "SocketStreamImplSIM::accept() [" << mLocalAddr
-         << "]: Got pending connector from " << peer_ptr->getLocalAddr()
+         << "]: Got pending connector from " << this->getLocalAddr()
          << "\n" << vprDEBUG_FLUSH;
 
-      client_sock.mLocalAddr  = mLocalAddr;
-      client_sock.mRemoteAddr = peer_ptr->mLocalAddr;
+      // -- Set known properties of the next socket
+      client_sock.mRemoteAddr = this->mLocalAddr;    // Get the remote node's address (it must have called bind, so this is final)
       client_sock.mOpen       = true;
       client_sock.mBlocking   = mBlocking;
-      client_sock.mType       = vpr::SocketTypes::STREAM;
-      client_sock.mPeer       = peer_ptr;
+      client_sock.mPeer       = this;
 
       // Get an address for the new socket, bind it, and attach the socket to
       // the correct node.
       vpr::sim::SocketManager& sock_mgr =
          vpr::sim::Controller::instance()->getSocketManager();
-      sock_mgr.bindUnusedPort(client_sock.getHandle(), client_sock.mLocalAddr);
-      sock_mgr.assignToNode(client_sock.getHandle(), client_sock.mLocalAddr);
-
+      client_sock.mLocalAddr  = mLocalAddr;              // Start with local socket's address
+      client_sock.mLocalAddr.setPort(0);                 // Clear port so that we get a unique one
+      client_sock.bind();                                // Bind to a port (and assign to net node)
+            
       // Now define the route for messages between the two sockets.
-      sock_mgr.findRoute(peer_ptr, client_sock.getHandle());
+      sock_mgr.findRoute(this, client_sock.getHandle());
 
       // Finally, tell the connecting socket its peer.  It's okay to do this
       // cast since getHandle() returns 'this'.
@@ -102,7 +104,7 @@ vpr::ReturnStatus SocketStreamImplSIM::accept( SocketStreamImplSIM& client_sock,
 
       // Make sure the peer's remote address has the right port number.
       // Prior to this point, it has the port of the accepting socket.
-      vprASSERT(peer_ptr->mRemoteAddr.getAddressValue() == client_sock.mLocalAddr.getAddressValue() && "Connector doesn't know peer's IP address");
+      vprASSERT(this->mRemoteAddr.getAddressValue() == client_sock.mLocalAddr.getAddressValue() && "Connector doesn't know peer's IP address");
       peer_ptr->mRemoteAddr.setPort(client_sock.mLocalAddr.getPort());
    }
    else
@@ -114,11 +116,11 @@ vpr::ReturnStatus SocketStreamImplSIM::accept( SocketStreamImplSIM& client_sock,
    return status;
 }
 
-vpr::ReturnStatus SocketStreamImplSIM::addConnector ( const vpr::SocketImplSIM* local,
+vpr::ReturnStatus SocketStreamImplSIM::addConnector ( vpr::SocketImplSIM* local,
                                                       vpr::SocketImplSIM** remote )
 {
-   vpr::SocketImplSIM* non_const_local;
-   SocketStreamImplSIM* stream_local;
+   vprASSERT( local == this );         // XXX: If this passes, then remove the "local" parameter all together
+
    SocketStreamImplSIM** stream_remote;
 
    vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
@@ -126,81 +128,44 @@ vpr::ReturnStatus SocketStreamImplSIM::addConnector ( const vpr::SocketImplSIM* 
       << "]: Adding connector from " << local->getLocalAddr() << "\n"
       << vprDEBUG_FLUSH;
 
-   non_const_local = const_cast<vpr::SocketImplSIM*>(local);
-   stream_local    = dynamic_cast<SocketStreamImplSIM*>(non_const_local);
    stream_remote   = (SocketStreamImplSIM**) (remote);
 
-   vprASSERT(NULL != stream_local && "Tried to connect from a non-stream socket!");
    vprASSERT(NULL != stream_remote && "Tried to connect to a non-stream socket!");
 
    mConnectorQueueMutex.acquire();
    {
-      mConnectorQueue.push(queue_obj_t(stream_local, stream_remote));
+      mConnectorQueue.push(queue_obj_t(this, stream_remote));
    }
    mConnectorQueueMutex.release();
 
    return vpr::ReturnStatus(vpr::ReturnStatus::InProgress);
 }
 
-vpr::ReturnStatus SocketStreamImplSIM::isReadReady (const vpr::Interval timeout)
-   const
+vpr::ReturnStatus SocketStreamImplSIM::isReadReady () const
 {
    vpr::ReturnStatus status(vpr::ReturnStatus::Fail);
 
-   if ( vpr::Interval::NoWait == timeout )
+   if ( mOpen && (NULL != mPeer) && (! mArrivedQueue.empty()) )
    {
-      vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
-         << "SocketStreamImplSIM::isReadReady(): Timeouts not supported "
-         << "with sim sockets--yet\n" << vprDEBUG_FLUSH;
+      status.setCode(vpr::ReturnStatus::Succeed);
    }
 
-//   if ( vpr::Interval::NoWait == timeout )
-//   {
-      if ( mOpen && NULL != mPeer && (! mArrivedQueue.empty()) )
-      {
-         status.setCode(vpr::ReturnStatus::Succeed);
-      }
-
-      if ( mOpen && getConnectorCount() > 0 )
-      {
-         status.setCode(vpr::ReturnStatus::Succeed);
-      }
-//   }
-/*
-   XXX: Will there be a way to handle waiting until the timeout expires?
-   else
+   if ( mOpen && getConnectorCount() > 0 )
    {
+      status.setCode(vpr::ReturnStatus::Succeed);
    }
-*/
 
    return status;
 }
 
-vpr::ReturnStatus SocketStreamImplSIM::isWriteReady (const vpr::Interval timeout)
-   const
+vpr::ReturnStatus SocketStreamImplSIM::isWriteReady () const
 {
    vpr::ReturnStatus status;
 
-   if ( vpr::Interval::NoWait == timeout )
+   if ( !mOpen || (NULL == mPeer) )
    {
-      vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
-         << "SocketStreamImplSIM::isWriteReady(): Timeouts not supported with "
-         << "sim sockets--yet\n" << vprDEBUG_FLUSH;
+      status.setCode(vpr::ReturnStatus::Fail);
    }
-
-//   if ( vpr::Interval::NoWait == timeout )
-//   {
-      if ( ! mOpen || NULL == mPeer )
-      {
-         status.setCode(vpr::ReturnStatus::Fail);
-      }
-//   }
-/*
-   XXX: Will there be a way to handle waiting until the timeout expires?
-   else
-   {
-   }
-*/
 
    return status;
 }

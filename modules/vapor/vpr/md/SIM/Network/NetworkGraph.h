@@ -82,7 +82,7 @@ struct network_line_t
    typedef boost::edge_property_tag kind;
 };
 
-typedef boost::property<network_node_t, vpr::sim::NetworkNode> NodeProperty;
+typedef boost::property<network_node_t, vpr::sim::NetworkNodePtr > NodeProperty;
 typedef boost::property<network_line_t, vpr::sim::NetworkLine,
                         boost::property<boost::edge_weight_t, int> > LineProperty;
 
@@ -172,7 +172,7 @@ public:
     *
     * @pre The given vertex object must be in the graph.
     */
-   vpr::sim::NetworkNode& getNodeProperty(const net_vertex_t& e);
+   vpr::sim::NetworkNodePtr getNodeProperty(const net_vertex_t& e);
 
    /**
     * Assigns the given property to the designated node.
@@ -180,7 +180,7 @@ public:
     * @pre The node object must be in the graph.
     */
    void setNodeProperty(const net_vertex_t& v,
-                        const vpr::sim::NetworkNode& prop);
+                        vpr::sim::NetworkNodePtr prop);
 
    /**
     * Returns the edge that connects vertices u and v in this graph.

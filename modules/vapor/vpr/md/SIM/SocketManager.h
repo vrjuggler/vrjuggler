@@ -54,7 +54,7 @@
 #include <vpr/IO/Socket/SocketTypes.h>
 #include <vpr/Sync/Mutex.h>
 
-#include <vpr/md/SIM/IO/Socket/InetAddrSIM.h> /* Plexus InetAddr implementation */
+#include <vpr/md/SIM/IO/Socket/InetAddrSIM.h> /* SIM InetAddr implementation */
 #include <vpr/md/SIM/Network/NetworkGraph.h>
 #include <vpr/md/SIM/Network/MessagePtr.h>
 
@@ -91,12 +91,6 @@ public:
       mActive = true;
    }
 
-   /**
-    * Queries if there are currently any active sockets registered with this
-    * manager.
-    */
-   bool hasActiveSockets(void);
-
    // ===========
    // connector:
    // ===========
@@ -117,8 +111,8 @@ public:
     *   Datagram sockets may dissolve the association by connecting to an
     *   invalid address, such as a zero-filled address.
     */
-   vpr::ReturnStatus connect( const vpr::SocketImplSIM* local_sock,
-                              vpr::SocketImplSIM** remote_sock,
+   vpr::ReturnStatus connect( vpr::SocketImplSIM* localSock,
+                              vpr::SocketImplSIM** remoteSock,
                               const vpr::InetAddrSIM& remoteName,
                               NetworkGraph::VertexListPtr& path,
                               vpr::Interval timeout );
@@ -132,54 +126,50 @@ public:
     * registers the given socket object with the simulator and makes it
     * possible to look up the socket by its address.
     *
+    * Assign the socket to the network somwhere
+    * Case localAddr = InetAddr::Any  ==> 0x7F000001 with random port
+    * Case localAddr = Have IP and port=0 (ie. Give me a random port. I don't care)
+    * Case localAddr = Have IP and port != 0 (bind me to that exact one)
+    *
     * @post If the binding process succeeds, the given socket is assigned a
     *       node in the network graph.
     *
-    * @param handle    The socket object to be bound.
-    * @param localName The address to which the socket object will be bound.
+    * @param handle    The socket object to be bound (this must have it's local addr assigned already)
     *
     * @return vpr::ReturnStatus::Success is returned if the handle could be
     *         bound to the given address.  vpr::ReturnStatus::Failure is
     *         returned otherwise.
     */
-   vpr::ReturnStatus bind( const vpr::SocketImplSIM* handle,
-                           const vpr::InetAddrSIM& localName );
+   vpr::ReturnStatus bind( vpr::SocketImplSIM* handle);
 
    /**
     * Unbinds the given socket from its registered address.  Once the socket
     * is unbound, it should close.  For sockets that are not bound, no action
     * is taken.
     *
-    * @post The bound address is released so that another socket may bind to
-    *       it.
+    * @post The bound address is released so another socket may bind to it.
     *
-    * @param handle The closed socket object to be unbound from its registered
-    *        address.
+    * @param handle The socket object to be unbound from its registered address.
     *
     * @return vpr::ReturnStatus::Success is returned if the handle could be unbound
     *         from its local address.  vpr::ReturnStatus::Failure is returned
     *         otherwise.
     */
-   vpr::ReturnStatus unbind( const vpr::SocketImplSIM* handle );
+   vpr::ReturnStatus unbind( vpr::SocketImplSIM* handle );
 
    /**
     * Sets a socket s to listen for connections.
-    * A willingness to accept incoming connections and a queue limit for
-    * incoming connections are specified with listen(2), and then each new
-    * connection is accepted with accept(2).  The listen call applies only
-    * to sockets of type SOCK_STREAM.
+    * 
+    * @pre The listen call applies only to sockets of type SOCK_STREAM.
     *
     * @return true for success, false for error
     */
-   vpr::ReturnStatus listen( const vpr::SocketStreamImplSIM* handle,
+   vpr::ReturnStatus listen( vpr::SocketStreamImplSIM* handle,
                              const int backlog = 5 );
 
 // extra stuff...
 public:
-   vpr::ReturnStatus assignToNode(vpr::SocketImplSIM* handle);
-
-   vpr::ReturnStatus assignToNode(vpr::SocketImplSIM* handle,
-                                  const vpr::InetAddrSIM& addr);
+      
 
    void findRoute(vpr::SocketImplSIM* src_sock, vpr::SocketImplSIM* dest_sock);
 
@@ -201,99 +191,47 @@ public:
                       const vpr::InetAddrSIM& dest_addr);
 
    /**
-    * Is the socket bound to an address?
-    */
-   bool isBound( const vpr::SocketImplSIM* handle );
-
-   /**
-    * Is the address bound to a socket?
-    */
-   bool isBound(const vpr::InetAddrSIM& addr,
-                const vpr::SocketTypes::Type addr_type);
-
-   /**
     * Is there someone listening on the address?
     */
    bool isListening( const vpr::InetAddrSIM& address );
 
-   /**
-    * Is there someone listening on the address?
+protected:  // -- Internal helpers -- //
+  /** Assign the given socket to a node on the actual network
+   * This is based on the following address scheme for assignment
+   *
+   * Assign the socket to the network somwhere
+   * Case localAddr = InetAddr::Any  ==> 0x7F000001 with random port
+   * Case localAddr = Have IP and port=0 (ie. Give me a random port. I don't care)
+   * Case localAddr = Have IP and port != 0 (bind me to that exact one)
+   */
+   vpr::ReturnStatus assignToNode(vpr::SocketImplSIM* handle);
+
+   /** Unassigns the socket from the node that it is bound to
+    * This is basically the opposite of assignToNode (and unbind if you will)
     */
-   bool isListening( const vpr::SocketStreamImplSIM* address );
+   vpr::ReturnStatus unassignFromNode (vpr::SocketImplSIM* handle);
+   
+   /** Make sure that the local data structures know about the node at the given address
+   * @pre addr is a valid address in the network
+   * @return success  completed successfully
+   */
+   vpr::ReturnStatus ensureNetworkNodeIsRegistered(const vpr::Uint32& ipAddr);
 
-   vpr::InetAddrSIM getBoundAddress( const vpr::SocketImplSIM* handle );
+   vpr::sim::NetworkGraph::net_vertex_t getLocalhostVertex(void);
 
-   /**
-    * Binds the given socket to the given address after assigning that address
-    * a new port number.
-    *
-    * @pre The given socket is not already bound.
-    * @post The socket is bound to the address, and the address has a unique
-    *       port number.
-    *
-    * @param sock The socket to be bound.
-    * @param addr The address to which the socket will ultimately be bound.
-    *
-    * @return vpr::ReturnStatus::Success is returned if the socket is bound
-    *         successfully.<br>
-    *         vpr::ReturnStatus::Failure is returned otherwise.
-    */
-   vpr::ReturnStatus bindUnusedPort( vpr::SocketImplSIM* sock,
-                                     vpr::InetAddrSIM& addr );
-
-private:
-   /**
-    * The "internal" bind method called by the public bind() method.  This one
-    * actually performs the binding.  It is assumed that checks for the
-    * validity of the original bind request have already happened so that it is
-    * safe to find the socket to the address.
-    *
-    * @pre  The given socket is not already bound to an address, and no socket
-    *       is bound to the given address.
-    * @post The socket is bound to the given address, and a node in the network
-    *       graph is assigned to the given socket.
-    */
-   void _bind( const vpr::SocketImplSIM* handle, const vpr::InetAddrSIM& addr );
-
-   vpr::ReturnStatus _unbind(const vpr::SocketImplSIM* handle);
-
-public:
-   /**
-    * Returns an unused port at some existing address, or 0 for error.
-    */
-   vpr::Uint32 genUnusedPort(const vpr::SocketTypes::Type addr_type);
-
-private:
-   vpr::sim::NetworkGraph::net_vertex_t getLocalhost(void);
-
+protected:
    bool mActive;
 
    /** This is a list of sockets that have gone into a listening state
     * Used to track which sockets are currently in a listening state
     * XXX: Could move this into the actually socket as a socket state instead.
    */
-   std::map<vpr::InetAddrSIM, std::pair<const vpr::SocketStreamImplSIM*, int> > mListenerList;
+   std::map<vpr::InetAddrSIM, std::pair<vpr::SocketStreamImplSIM*, int> > mListenerList;
    vpr::Mutex mListenerListMutex;
 
-   /**
-    * @note Handles are doubly mapped between the two maps.  Use _bind() and
-    *       _unbind() to access these.
-    */
-   ///*
-   std::map<const vpr::SocketImplSIM*, vpr::InetAddrSIM> mBindListSockUDP;
-   std::map<vpr::InetAddrSIM, const vpr::SocketImplSIM*> mBindListAddrUDP;
-
-   vpr::Mutex mBindListSockMutexUDP;
-   vpr::Mutex mBindListAddrMutexUDP;
-
-   std::map<const vpr::SocketImplSIM*, vpr::InetAddrSIM> mBindListSockTCP;
-   std::map<vpr::InetAddrSIM, const vpr::SocketImplSIM*> mBindListAddrTCP;
-
-   vpr::Mutex mBindListSockMutexTCP;
-   vpr::Mutex mBindListAddrMutexTCP;
-
-   vpr::Mutex mPortMutex;          /**< Mutex to protect port generation */
-   //*/
+   typedef std::map<vpr::Uint32, vpr::sim::NetworkNodePtr> node_map_t;
+   node_map_t     mNetworkNodes;    /**< The nodes in the managed network */
+   vpr::Mutex     mNetworkNodesMutex;
 };
 
 } // namespace sim

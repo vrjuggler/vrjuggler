@@ -160,7 +160,9 @@ public:
     */
    bool isRunning (void)
    {
-      return mGraph.isValid() && mSocketManager.hasActiveSockets();
+      vprASSERT(false && "Not supported right now.  If you want it, then implement it.");
+      //return mGraph.isValid() && mSocketManager.hasActiveSockets();
+      return false;
    }
 
    /**
