@@ -102,7 +102,7 @@
    <!-- ThreeDMouse property "deviceHost". -->
    <xsl:template match="ThreeDMouse/deviceHost">
       <xsl:element name="device_host">
-         <xsl:apply-templates select="./*" />
+         <xsl:value-of select="." />
       </xsl:element>
       <xsl:value-of select="$newline"/>
    </xsl:template>
@@ -228,28 +228,28 @@
    <!-- CyberGlove property "baud". -->
    <xsl:template match="CyberGlove/baud">
       <xsl:element name="baud_rate">
-         <xsl:apply-templates select="./*" />
+         <xsl:value-of select="." />
       </xsl:element>
    </xsl:template>
 
    <!-- CyberGlove property "calDir". -->
    <xsl:template match="CyberGlove/calDir">
       <xsl:element name="calibration_dir">
-         <xsl:apply-templates select="./*" />
+         <xsl:value-of select="." />
       </xsl:element>
    </xsl:template>
 
    <!-- CyberGlove property "glovePos". -->
    <xsl:template match="CyberGlove/glovePos">
       <xsl:element name="glove_position">
-         <xsl:apply-templates select="./*" />
+         <xsl:value-of select="." />
       </xsl:element>
    </xsl:template>
 
    <!-- CyberGlove property "deviceHost". -->
    <xsl:template match="CyberGlove/deviceHoste">
       <xsl:element name="device_host">
-         <xsl:apply-templates select="./*" />
+         <xsl:value-of select="." />
       </xsl:element>
    </xsl:template>
 
@@ -286,35 +286,35 @@
    <!-- DTKsegment property "segmentName". -->
    <xsl:template match="DTKsegment/segmentName">
       <xsl:element name="segment_name">
-         <xsl:apply-templates select="./*" />
+         <xsl:value-of select="." />
       </xsl:element>
    </xsl:template>
 
    <!-- DTKsegment property "remoteHost". -->
    <xsl:template match="DTKsegment/remoteHost">
       <xsl:element name="host_name">
-         <xsl:apply-templates select="./*" />
+         <xsl:value-of select="." />
       </xsl:element>
    </xsl:template>
 
    <!-- DTKsegment property "dataType". -->
    <xsl:template match="DTKsegment/dataType">
       <xsl:element name="data_type">
-         <xsl:apply-templates select="./*" />
+         <xsl:value-of select="." />
       </xsl:element>
    </xsl:template>
 
    <!-- DTKsegment property "itemCount". -->
    <xsl:template match="DTKsegment/itemCount">
       <xsl:element name="item_count">
-         <xsl:apply-templates select="./*" />
+         <xsl:value-of select="." />
       </xsl:element>
    </xsl:template>
 
    <!-- DTKsegment property "inputType". -->
    <xsl:template match="DTKsegment/inputType">
       <xsl:element name="input_type">
-         <xsl:apply-templates select="./*" />
+         <xsl:value-of select="." />
       </xsl:element>
    </xsl:template>
 
@@ -336,14 +336,14 @@
    <!-- DataGlove property "glovePos". -->
    <xsl:template match="DataGlove/glovePos">
       <xsl:element name="glove_position">
-         <xsl:apply-templates select="./*" />
+         <xsl:value-of select="." />
       </xsl:element>
    </xsl:template>
 
    <!-- DataGlove property "deviceHost". -->
    <xsl:template match="DataGlove/deviceHost">
       <xsl:element name="device_host">
-         <xsl:apply-templates select="./*" />
+         <xsl:value-of select="." />
       </xsl:element>
    </xsl:template>
 
@@ -365,42 +365,42 @@
    <!-- default_simulator property "cameraPos". -->
    <xsl:template match="default_simulator/cameraPos">
       <xsl:element name="camera_pos">
-         <xsl:apply-templates select="./*" />
+         <xsl:value-of select="." />
       </xsl:element>
    </xsl:template>
 
    <!-- default_simulator property "wandPos". -->
    <xsl:template match="default_simulator/wandPos">
       <xsl:element name="wand_pos">
-         <xsl:apply-templates select="./*" />
+         <xsl:value-of select="." />
       </xsl:element>
    </xsl:template>
 
    <!-- default_simulator property "drawProjections". -->
    <xsl:template match="default_simulator/drawProjections">
       <xsl:element name="draw_projections">
-         <xsl:apply-templates select="./*" />
+         <xsl:value-of select="." />
       </xsl:element>
    </xsl:template>
 
    <!-- default_simulator property "surfaceColor". -->
    <xsl:template match="default_simulator/surfaceColor">
       <xsl:element name="surface_color">
-         <xsl:apply-templates select="./*" />
+         <xsl:value-of select="." />
       </xsl:element>
    </xsl:template>
 
    <!-- default_simulator property "simHeadModel". -->
    <xsl:template match="default_simulator/simHeadModel">
       <xsl:element name="sim_head_model">
-         <xsl:apply-templates select="./*" />
+         <xsl:value-of select="." />
       </xsl:element>
    </xsl:template>
 
    <!-- default_simulator property "simWandModel". -->
    <xsl:template match="default_simulator/simWandModel">
       <xsl:element name="sim_wand_model">
-         <xsl:apply-templates select="./*" />
+         <xsl:value-of select="." />
       </xsl:element>
    </xsl:template>
 
@@ -554,14 +554,14 @@
    <!-- EventWindow property "msens". -->
    <xsl:template match="eventWindow/msens">
       <xsl:element name="mouse_sensitivity">
-         <xsl:apply-templates select="./*" />
+         <xsl:value-of select="." />
       </xsl:element>
    </xsl:template>
 
    <!-- EventWindow property "deviceHost". -->
    <xsl:template match="eventWindow/deviceHost">
       <xsl:element name="device_host">
-         <xsl:apply-templates select="./*" />
+         <xsl:value-of select="." />
       </xsl:element>
    </xsl:template>
 
@@ -598,175 +598,175 @@
    <!-- Fastrak property "Rec1". -->
    <xsl:template match="Fastrak/Rec1">
       <xsl:element name="rec1">
-         <xsl:apply-templates select="./*" />
+         <xsl:value-of select="." />
       </xsl:element>
    </xsl:template>
 
    <!-- Fastrak property "Rec2". -->
    <xsl:template match="Fastrak/Rec2">
       <xsl:element name="rec2">
-         <xsl:apply-templates select="./*" />
+         <xsl:value-of select="." />
       </xsl:element>
    </xsl:template>
 
    <!-- Fastrak property "Rec3". -->
    <xsl:template match="Fastrak/Rec3">
       <xsl:element name="rec3">
-         <xsl:apply-templates select="./*" />
+         <xsl:value-of select="." />
       </xsl:element>
    </xsl:template>
 
    <!-- Fastrak property "Rec4". -->
    <xsl:template match="Fastrak/Rec4">
       <xsl:element name="rec4">
-         <xsl:apply-templates select="./*" />
+         <xsl:value-of select="." />
       </xsl:element>
    </xsl:template>
 
    <!-- Fastrak property "Tip1". -->
    <xsl:template match="Fastrak/Tip1">
       <xsl:element name="tip1">
-         <xsl:apply-templates select="./*" />
+         <xsl:value-of select="." />
       </xsl:element>
    </xsl:template>
 
    <!-- Fastrak property "Tip2". -->
    <xsl:template match="Fastrak/Tip2">
       <xsl:element name="tip2">
-         <xsl:apply-templates select="./*" />
+         <xsl:value-of select="." />
       </xsl:element>
    </xsl:template>
 
    <!-- Fastrak property "Tip3". -->
    <xsl:template match="Fastrak/Tip3">
       <xsl:element name="tip3">
-         <xsl:apply-templates select="./*" />
+         <xsl:value-of select="." />
       </xsl:element>
    </xsl:template>
 
    <!-- Fastrak property "Tip4". -->
    <xsl:template match="Fastrak/Tip4">
       <xsl:element name="tip4">
-         <xsl:apply-templates select="./*" />
+         <xsl:value-of select="." />
       </xsl:element>
    </xsl:template>
 
    <!-- Fastrak property "Inc1". -->
    <xsl:template match="Fastrak/Inc1">
       <xsl:element name="inc1">
-         <xsl:apply-templates select="./*" />
+         <xsl:value-of select="." />
       </xsl:element>
    </xsl:template>
 
    <!-- Fastrak property "Inc2". -->
    <xsl:template match="Fastrak/Inc2">
       <xsl:element name="inc2">
-         <xsl:apply-templates select="./*" />
+         <xsl:value-of select="." />
       </xsl:element>
    </xsl:template>
 
    <!-- Fastrak property "Inc3". -->
    <xsl:template match="Fastrak/Inc3">
       <xsl:element name="inc3">
-         <xsl:apply-templates select="./*" />
+         <xsl:value-of select="." />
       </xsl:element>
    </xsl:template>
 
    <!-- Fastrak property "Inc4". -->
    <xsl:template match="Fastrak/Inc4">
       <xsl:element name="inc4">
-         <xsl:apply-templates select="./*" />
+         <xsl:value-of select="." />
       </xsl:element>
    </xsl:template>
 
    <!-- Fastrak property "Hem1". -->
    <xsl:template match="Fastrak/Hem1">
       <xsl:element name="hem1">
-         <xsl:apply-templates select="./*" />
+         <xsl:value-of select="." />
       </xsl:element>
    </xsl:template>
 
    <!-- Fastrak property "Hem2". -->
    <xsl:template match="Fastrak/Hem2">
       <xsl:element name="hem2">
-         <xsl:apply-templates select="./*" />
+         <xsl:value-of select="." />
       </xsl:element>
    </xsl:template>
 
    <!-- Fastrak property "Hem3". -->
    <xsl:template match="Fastrak/Hem3">
       <xsl:element name="hem3">
-         <xsl:apply-templates select="./*" />
+         <xsl:value-of select="." />
       </xsl:element>
    </xsl:template>
 
    <!-- Fastrak property "Hem4". -->
    <xsl:template match="Fastrak/Hem4">
       <xsl:element name="hem4">
-         <xsl:apply-templates select="./*" />
+         <xsl:value-of select="." />
       </xsl:element>
    </xsl:template>
 
    <!-- Fastrak property "ARF1". -->
    <xsl:template match="Fastrak/ARF1">
       <xsl:element name="arf1">
-         <xsl:apply-templates select="./*" />
+         <xsl:value-of select="." />
       </xsl:element>
    </xsl:template>
 
    <!-- Fastrak property "ARF2". -->
    <xsl:template match="Fastrak/ARF2">
       <xsl:element name="arf2">
-         <xsl:apply-templates select="./*" />
+         <xsl:value-of select="." />
       </xsl:element>
    </xsl:template>
 
    <!-- Fastrak property "ARF3". -->
    <xsl:template match="Fastrak/ARF3">
       <xsl:element name="arf3">
-         <xsl:apply-templates select="./*" />
+         <xsl:value-of select="." />
       </xsl:element>
    </xsl:template>
 
    <!-- Fastrak property "ARF4". -->
    <xsl:template match="Fastrak/ARF4">
       <xsl:element name="arf4">
-         <xsl:apply-templates select="./*" />
+         <xsl:value-of select="." />
       </xsl:element>
    </xsl:template>
 
    <!-- Fastrak property "TMF1". -->
    <xsl:template match="Fastrak/TMF1">
       <xsl:element name="tmf1">
-         <xsl:apply-templates select="./*" />
+         <xsl:value-of select="." />
       </xsl:element>
    </xsl:template>
 
    <!-- Fastrak property "TMF2". -->
    <xsl:template match="Fastrak/TMF2">
       <xsl:element name="tmf2">
-         <xsl:apply-templates select="./*" />
+         <xsl:value-of select="." />
       </xsl:element>
    </xsl:template>
 
    <!-- Fastrak property "TMF3". -->
    <xsl:template match="Fastrak/TMF3">
       <xsl:element name="tmf3">
-         <xsl:apply-templates select="./*" />
+         <xsl:value-of select="." />
       </xsl:element>
    </xsl:template>
 
    <!-- Fastrak property "TMF4". -->
    <xsl:template match="Fastrak/TMF4">
       <xsl:element name="tmf4">
-         <xsl:apply-templates select="./*" />
+         <xsl:value-of select="." />
       </xsl:element>
    </xsl:template>
 
    <!-- Fastrak property "deviceHost". -->
    <xsl:template match="Fastrak/deviceHost">
       <xsl:element name="device_host">
-         <xsl:apply-templates select="./*" />
+         <xsl:value-of select="." />
       </xsl:element>
    </xsl:template>
 
@@ -788,56 +788,56 @@
    <!-- Flock property "num". -->
    <xsl:template match="Flock/num">
       <xsl:element name="number_of_birds">
-         <xsl:apply-templates select="./*" />
+         <xsl:value-of select="." />
       </xsl:element>
    </xsl:template>
 
    <!-- Flock property "calfile". -->
    <xsl:template match="Flock/calfile">
       <xsl:element name="calibration_file">
-         <xsl:apply-templates select="./*" />
+         <xsl:value-of select="." />
       </xsl:element>
    </xsl:template>
 
    <!-- Flock property "hemi". -->
    <xsl:template match="Flock/hemi">
       <xsl:element name="hemisphere">
-         <xsl:apply-templates select="./*" />
+         <xsl:value-of select="." />
       </xsl:element>
    </xsl:template>
 
    <!-- Flock property "filt". -->
    <xsl:template match="Flock/filt">
       <xsl:element name="filter">
-         <xsl:apply-templates select="./*" />
+         <xsl:value-of select="." />
       </xsl:element>
    </xsl:template>
 
    <!-- Flock property "sync". -->
    <xsl:template match="Flock/sync">
       <xsl:element name="sync_style">
-         <xsl:apply-templates select="./*" />
+         <xsl:value-of select="." />
       </xsl:element>
    </xsl:template>
 
    <!-- Flock property "transmitter". -->
    <xsl:template match="Flock/transmitter">
       <xsl:element name="transmitter_id">
-         <xsl:apply-templates select="./*" />
+         <xsl:value-of select="." />
       </xsl:element>
    </xsl:template>
 
    <!-- Flock property "extendedRange". -->
    <xsl:template match="Flock/extendedRange">
       <xsl:element name="extended_range">
-         <xsl:apply-templates select="./*" />
+         <xsl:value-of select="." />
       </xsl:element>
    </xsl:template>
 
    <!-- Flock property "deviceHost". -->
    <xsl:template match="Flock/deviceHost">
       <xsl:element name="device_host">
-         <xsl:apply-templates select="./*" />
+         <xsl:value-of select="." />
       </xsl:element>
    </xsl:template>
 
@@ -903,14 +903,14 @@
    <!-- SimGloveGesture property "trainedFilename". -->
    <xsl:template match="SimGloveGesture/trainedFilename">
       <xsl:element name="trained_filename">
-         <xsl:apply-templates select="./*" />
+         <xsl:value-of select="." />
       </xsl:element>
    </xsl:template>
 
    <!-- SimGloveGesture property "glovePos". -->
    <xsl:template match="SimGloveGesture/glovePos">
       <xsl:element name="glove_position">
-         <xsl:apply-templates select="./*" />
+         <xsl:value-of select="." />
       </xsl:element>
    </xsl:template>
 
@@ -947,7 +947,7 @@
    <!-- IBox property "deviceHost". -->
    <xsl:template match="IBox/deviceHost">
       <xsl:element name="device_host">
-         <xsl:apply-templates select="./*" />
+         <xsl:value-of select="." />
       </xsl:element>
    </xsl:template>
 
@@ -969,14 +969,14 @@
    <!-- InputManger property "driverDirectory". -->
    <xsl:template match="InputManger/driverDirectory">
       <xsl:element name="driver_directory">
-         <xsl:apply-templates select="./*" />
+         <xsl:value-of select="." />
       </xsl:element>
    </xsl:template>
 
    <!-- InputManger property "dsoExtName". -->
    <xsl:template match="InputManger/dso_file_extension">
       <xsl:element name="dso_file_extension">
-         <xsl:apply-templates select="./*" />
+         <xsl:value-of select="." />
       </xsl:element>
    </xsl:template>
 
@@ -998,7 +998,7 @@
    <!-- Intersense property "deviceHost". -->
    <xsl:template match="Intersense/deviceHost">
       <xsl:element name="device_host">
-         <xsl:apply-templates select="./*" />
+         <xsl:value-of select="." />
       </xsl:element>
    </xsl:template>
 
@@ -1020,7 +1020,7 @@
    <!-- IntersenseAPI property "deviceHost". -->
    <xsl:template match="IntersenseAPI/deviceHost">
       <xsl:element name="device_host">
-         <xsl:apply-templates select="./*" />
+         <xsl:value-of select="." />
       </xsl:element>
    </xsl:template>
 
@@ -1041,31 +1041,12 @@
 
    <!-- KeyModPair property "modKey". -->
    <xsl:template match="KeyModPair/modKey">
-      <xsl:variable name="modifier_key">
-         <xsl:value-of select="." />
-      </xsl:variable>
-
       <xsl:element name="modifier_key">
-         <xsl:choose>
-            <xsl:when test="$modifier_key = 0">
-               <xsl:text>NONE</xsl:text>
-            </xsl:when>
-            <xsl:when test="$modifier_key = 5">
-               <xsl:text>SHIFT</xsl:text>
-            </xsl:when>
-            <xsl:when test="$modifier_key = 6">
-               <xsl:text>CTRL</xsl:text>
-            </xsl:when>
-            <xsl:when test="$modifier_key = 7">
-               <xsl:text>ALT</xsl:text>
-            </xsl:when>
-            <xsl:when test="$modifier_key = -1">
-               <xsl:text>ANY</xsl:text>
-            </xsl:when>
-            <xsl:otherwise>
+         <xsl:call-template name="convert-modifier-key">
+            <xsl:with-param name="modifier_key">
                <xsl:value-of select="." />
-            </xsl:otherwise>
-         </xsl:choose>
+            </xsl:with-param>
+         </xsl:call-template>
       </xsl:element>
    </xsl:template>
 
@@ -1087,14 +1068,14 @@
    <!-- MachineSpecific property "serialPort". -->
    <xsl:template match="MachineSpecific/serialPort">
       <xsl:element name="port">
-         <xsl:apply-templates select="./*" />
+         <xsl:value-of select="." />
       </xsl:element>
    </xsl:template>
 
    <!-- MachineSpecific property "serialBaud". -->
    <xsl:template match="MachineSpecific/serialBaud">
       <xsl:element name="baud">
-         <xsl:apply-templates select="./*" />
+         <xsl:value-of select="." />
       </xsl:element>
    </xsl:template>
 
@@ -1116,49 +1097,49 @@
    <!-- MotionStar property "serverPort". -->
    <xsl:template match="MotionStar/serverPort">
       <xsl:element name="server_port">
-         <xsl:apply-templates select="./*" />
+         <xsl:value-of select="." />
       </xsl:element>
    </xsl:template>
 
    <!-- MotionStar property "serverType". -->
    <xsl:template match="MotionStar/serverType">
       <xsl:element name="server_type">
-         <xsl:apply-templates select="./*" />
+         <xsl:value-of select="." />
       </xsl:element>
    </xsl:template>
 
    <!-- MotionStar property "num". -->
    <xsl:template match="MotionStar/num">
       <xsl:element name="number_of_birds">
-         <xsl:apply-templates select="./*" />
+         <xsl:value-of select="." />
       </xsl:element>
    </xsl:template>
 
    <!-- MotionStar property "bformat". -->
    <xsl:template match="MotionStar/bformat">
       <xsl:element name="data_format">
-         <xsl:apply-templates select="./*" />
+         <xsl:value-of select="." />
       </xsl:element>
    </xsl:template>
 
    <!-- MotionStar property "reportRate". -->
    <xsl:template match="MotionStar/reportRate">
       <xsl:element name="report_rate">
-         <xsl:apply-templates select="./*" />
+         <xsl:value-of select="." />
       </xsl:element>
    </xsl:template>
 
    <!-- MotionStar property "measurementRate". -->
    <xsl:template match="MotionStar/measurementRate">
       <xsl:element name="measurement_rate">
-         <xsl:apply-templates select="./*" />
+         <xsl:value-of select="." />
       </xsl:element>
    </xsl:template>
 
    <!-- MotionStar property "deviceHost". -->
    <xsl:template match="MotionStar/deviceHost">
       <xsl:element name="device_host">
-         <xsl:apply-templates select="./*" />
+         <xsl:value-of select="." />
       </xsl:element>
    </xsl:template>
 
@@ -1253,14 +1234,14 @@
    <!-- PinchGlove property "glovePos". -->
    <xsl:template match="PinchGlove/glovePos">
       <xsl:element name="glove_position">
-         <xsl:apply-templates select="./*" />
+         <xsl:value-of select="." />
       </xsl:element>
    </xsl:template>
 
    <!-- PinchGlove property "deviceHost". -->
    <xsl:template match="PinchGlove/deviceHost">
       <xsl:element name="device_host">
-         <xsl:apply-templates select="./*" />
+         <xsl:value-of select="." />
       </xsl:element>
    </xsl:template>
 
@@ -1282,7 +1263,7 @@
    <!-- PosXformFilter property "dev_units". -->
    <xsl:template match="PinchGlove/dev_units">
       <xsl:element name="device_units">
-         <xsl:apply-templates select="./*" />
+         <xsl:value-of select="." />
       </xsl:element>
    </xsl:template>
 
@@ -1430,7 +1411,7 @@
    <!-- SimDigitalGlove property "eventWindowProxy". -->
    <xsl:template match="SimDigitalGlove/eventWindowProxy">
       <xsl:element name="event_window_proxy">
-         <xsl:apply-templates select="./*" />
+         <xsl:value-of select="." />
       </xsl:element>
    </xsl:template>
 
@@ -1444,14 +1425,14 @@
    <!-- SimDigitalGlove property "glovePos". -->
    <xsl:template match="SimDigitalGlove/glovePos">
       <xsl:element name="left_glove_position">
-         <xsl:apply-templates select="./*" />
+         <xsl:value-of select="." />
       </xsl:element>
    </xsl:template>
 
    <!-- SimDigitalGlove property "rightGlovePos". -->
    <xsl:template match="SimDigitalGlove/rightGlovePos">
       <xsl:element name="right_glove_position">
-         <xsl:apply-templates select="./*" />
+         <xsl:value-of select="." />
       </xsl:element>
    </xsl:template>
 
@@ -1503,8 +1484,22 @@
    <!-- simViewport property "vert_fov". -->
    <xsl:template match="simViewport/vert_fov">
       <xsl:element name="vertical_fov">
-         <xsl:apply-templates select="./*" />
+         <xsl:value-of select="." />
       </xsl:element>
+   </xsl:template>
+
+   <!--
+      simViewport property "view" which had its enumeration symbols change.
+   -->
+   <xsl:template match="simViewport/view">
+      <xsl:element name="view">
+         <xsl:call-template name="rename-view">
+            <xsl:with-param name="view">
+               <xsl:value-of select="."/>
+            </xsl:with-param>
+         </xsl:call-template>
+      </xsl:element>
+      <xsl:value-of select="$newline"/>
    </xsl:template>
 
    <!-- simViewport property "simPlugIn". -->
@@ -1532,7 +1527,7 @@
    <!-- Sound property "pitchbend". -->
    <xsl:template match="Sound/pitchbend">
       <xsl:element name="pitch_bend">
-         <xsl:apply-templates select="./*" />
+         <xsl:value-of select="." />
       </xsl:element>
    </xsl:template>
 
@@ -1569,49 +1564,49 @@
    <!-- ISenseStation property "stationIndex". -->
    <xsl:template match="ISenseStation/stationIndex">
       <xsl:element name="station_index">
-         <xsl:apply-templates select="./*" />
+         <xsl:value-of select="." />
       </xsl:element>
    </xsl:template>
 
    <!-- ISenseStation property "useDigital". -->
    <xsl:template match="ISenseStation/useDigital">
       <xsl:element name="use_digital">
-         <xsl:apply-templates select="./*" />
+         <xsl:value-of select="." />
       </xsl:element>
    </xsl:template>
 
    <!-- ISenseStation property "useAnalog". -->
    <xsl:template match="ISenseStation/useAnalog">
       <xsl:element name="use_analog">
-         <xsl:apply-templates select="./*" />
+         <xsl:value-of select="." />
       </xsl:element>
    </xsl:template>
 
    <!-- ISenseStation property "digitalFirst". -->
    <xsl:template match="ISenseStation/digitalFirst">
       <xsl:element name="digital_first">
-         <xsl:apply-templates select="./*" />
+         <xsl:value-of select="." />
       </xsl:element>
    </xsl:template>
 
    <!-- ISenseStation property "digitalCount". -->
    <xsl:template match="ISenseStation/digitalCount">
       <xsl:element name="digital_count">
-         <xsl:apply-templates select="./*" />
+         <xsl:value-of select="." />
       </xsl:element>
    </xsl:template>
 
    <!-- ISenseStation property "analogFirst". -->
    <xsl:template match="ISenseStation/analogFirst">
       <xsl:element name="analog_first">
-         <xsl:apply-templates select="./*" />
+         <xsl:value-of select="." />
       </xsl:element>
    </xsl:template>
 
    <!-- ISenseStation property "analogCount". -->
    <xsl:template match="ISenseStation/analogCount">
       <xsl:element name="analog_count">
-         <xsl:apply-templates select="./*" />
+         <xsl:value-of select="." />
       </xsl:element>
    </xsl:template>
 
@@ -1645,7 +1640,7 @@
    <!-- surfaceViewport property "trackerproxy". -->
    <xsl:template match="surfaceViewport/trackerproxy">
       <xsl:element name="tracker_proxy">
-         <xsl:apply-templates select="./*" />
+         <xsl:value-of select="." />
       </xsl:element>
    </xsl:template>
 
@@ -1654,21 +1649,11 @@
    -->
    <xsl:template match="surfaceViewport/view">
       <xsl:element name="view">
-         <xsl:variable name="view">
-            <xsl:value-of select="."/>
-         </xsl:variable>
-
-         <xsl:choose>
-            <xsl:when test="$view = 1 or starts-with($view, left_eye)">
-               <xsl:text>Left Eye</xsl:text>
-            </xsl:when>
-            <xsl:when test="$view = 2 or starts-with($view, right_eye)">
-               <xsl:text>Right Eye</xsl:text>
-            </xsl:when>
-            <xsl:when test="$view = 3 or starts-with($view, stereo)">
-               <xsl:text>Stereo</xsl:text>
-            </xsl:when>
-         </xsl:choose>
+         <xsl:call-template name="rename-view">
+            <xsl:with-param name="view">
+               <xsl:value-of select="."/>
+            </xsl:with-param>
+         </xsl:call-template>
       </xsl:element>
       <xsl:value-of select="$newline"/>
    </xsl:template>
@@ -1721,14 +1706,14 @@
    <!-- TrackdAPIController property "shm_key". -->
    <xsl:template match="TrackdAPIController/shm_key">
       <xsl:element name="shared_memory_key">
-         <xsl:apply-templates select="./*" />
+         <xsl:value-of select="." />
       </xsl:element>
    </xsl:template>
 
    <!-- TrackdAPIController property "deviceHost". -->
    <xsl:template match="TrackdAPIController/deviceHost">
       <xsl:element name="device_host">
-         <xsl:apply-templates select="./*" />
+         <xsl:value-of select="." />
       </xsl:element>
    </xsl:template>
 
@@ -1750,7 +1735,7 @@
    <!-- TrackdAPISensor property "shm_key". -->
    <xsl:template match="TrackdAPISensor/shm_key">
       <xsl:element name="shared_memory_key">
-         <xsl:apply-templates select="./*" />
+         <xsl:value-of select="." />
       </xsl:element>
    </xsl:template>
 
@@ -1772,14 +1757,14 @@
    <!-- TrackdController property "shm_key". -->
    <xsl:template match="TrackdController/shm_key">
       <xsl:element name="shared_memory_key">
-         <xsl:apply-templates select="./*" />
+         <xsl:value-of select="." />
       </xsl:element>
    </xsl:template>
 
    <!-- TrackdController property "deviceHost". -->
    <xsl:template match="TrackdController/deviceHost">
       <xsl:element name="device_host">
-         <xsl:apply-templates select="./*" />
+         <xsl:value-of select="." />
       </xsl:element>
    </xsl:template>
 
@@ -1801,7 +1786,7 @@
    <!-- TrackdSensor property "shm_key". -->
    <xsl:template match="TrackdSensor/shm_key">
       <xsl:element name="shared_memory_key">
-         <xsl:apply-templates select="./*" />
+         <xsl:value-of select="." />
       </xsl:element>
    </xsl:template>
 
@@ -1838,49 +1823,49 @@
    <!-- TweekGadget property "nsHost". -->
    <xsl:template match="TweekGadget/nsHost">
       <xsl:element name="naming_service_host">
-         <xsl:apply-templates select="./*" />
+         <xsl:value-of select="." />
       </xsl:element>
    </xsl:template>
 
    <!-- TweekGadget property "nsPort". -->
    <xsl:template match="TweekGadget/nsPort">
       <xsl:element name="naming_service_port">
-         <xsl:apply-templates select="./*" />
+         <xsl:value-of select="." />
       </xsl:element>
    </xsl:template>
 
    <!-- TweekGadget property "iiopVer". -->
    <xsl:template match="TweekGadget/iiopVer">
       <xsl:element name="iiop_version">
-         <xsl:apply-templates select="./*" />
+         <xsl:value-of select="." />
       </xsl:element>
    </xsl:template>
 
    <!-- TweekGadget property "positionDevice". -->
    <xsl:template match="TweekGadget/positionDevice">
       <xsl:element name="position_device">
-         <xsl:apply-templates select="./*" />
+         <xsl:value-of select="." />
       </xsl:element>
    </xsl:template>
 
    <!-- TweekGadget property "analogDevice". -->
    <xsl:template match="TweekGadget/analogDevice">
       <xsl:element name="analog_device">
-         <xsl:apply-templates select="./*" />
+         <xsl:value-of select="." />
       </xsl:element>
    </xsl:template>
 
    <!-- TweekGadget property "digitalDevice". -->
    <xsl:template match="TweekGadget/digitalDevice">
       <xsl:element name="digital_device">
-         <xsl:apply-templates select="./*" />
+         <xsl:value-of select="." />
       </xsl:element>
    </xsl:template>
 
    <!-- TweekGadget property "deviceHost". -->
    <xsl:template match="TweekGadget/deviceHost">
       <xsl:element name="device_host">
-         <xsl:apply-templates select="./*" />
+         <xsl:value-of select="." />
       </xsl:element>
    </xsl:template>
 
@@ -1968,7 +1953,7 @@
    <!-- juggler_audio_manager property "Sounds". -->
    <xsl:template match="juggler_audio_manager/Sounds">
       <xsl:element name="sound">
-         <xsl:apply-templates select="./*" />
+         <xsl:value-of select="." />
       </xsl:element>
    </xsl:template>
 
@@ -2027,28 +2012,28 @@
    <!-- Vrpn property "trackerServer". -->
    <xsl:template match="Vrpn/trackerServer">
       <xsl:element name="tracker_server">
-         <xsl:apply-templates select="./*" />
+         <xsl:value-of select="." />
       </xsl:element>
    </xsl:template>
 
    <!-- Vrpn property "buttonServer". -->
    <xsl:template match="Vrpn/buttonServer">
       <xsl:element name="button_server">
-         <xsl:apply-templates select="./*" />
+         <xsl:value-of select="." />
       </xsl:element>
    </xsl:template>
 
    <!-- Vrpn property "numTrackers". -->
    <xsl:template match="Vrpn/numTrackers">
       <xsl:element name="tracker_count">
-         <xsl:apply-templates select="./*" />
+         <xsl:value-of select="." />
       </xsl:element>
    </xsl:template>
 
    <!-- Vrpn property "numButtons". -->
    <xsl:template match="Vrpn/numButtons">
       <xsl:element name="button_count">
-         <xsl:apply-templates select="./*" />
+         <xsl:value-of select="." />
       </xsl:element>
    </xsl:template>
 
@@ -2060,6 +2045,49 @@
    <xsl:template match="*">
       <xsl:copy-of select="." />
       <xsl:value-of select="$newline"/>
+   </xsl:template>
+
+
+<!-- Helpers =============================================================== -->
+   <xsl:template name="rename-view">
+      <xsl:param name="view" />
+
+      <xsl:choose>
+         <xsl:when test="$view = 1 or starts-with($view, 'left_eye')">
+            <xsl:text>Left Eye</xsl:text>
+         </xsl:when>
+         <xsl:when test="$view = 2 or starts-with($view, 'right_eye')">
+            <xsl:text>Right Eye</xsl:text>
+         </xsl:when>
+         <xsl:when test="$view = 3 or starts-with($view, 'stereo')">
+            <xsl:text>Stereo</xsl:text>
+         </xsl:when>
+      </xsl:choose>
+   </xsl:template>
+
+   <xsl:template name="convert-modifier-key">
+      <xsl:param name="modifier_key" />
+
+      <xsl:choose>
+         <xsl:when test="$modifier_key = 0">
+            <xsl:text>NONE</xsl:text>
+         </xsl:when>
+         <xsl:when test="$modifier_key = 5">
+            <xsl:text>SHIFT</xsl:text>
+         </xsl:when>
+         <xsl:when test="$modifier_key = 6">
+            <xsl:text>CTRL</xsl:text>
+         </xsl:when>
+         <xsl:when test="$modifier_key = 7">
+            <xsl:text>ALT</xsl:text>
+         </xsl:when>
+         <xsl:when test="$modifier_key = -1">
+            <xsl:text>ANY</xsl:text>
+         </xsl:when>
+         <xsl:otherwise>
+            <xsl:value-of select="." />
+         </xsl:otherwise>
+      </xsl:choose>
    </xsl:template>
 
 </xsl:stylesheet>
