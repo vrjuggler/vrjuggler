@@ -40,24 +40,30 @@
 #include <gmtl/Vec.h>
 #include <gmtl/Coord.h>
 
-#include <wandApp.h>
+#include <sonixApp.h>
 
 
 namespace vrjTest
 {
 
-void wandApp::bufferPreDraw()
+void sonixApp::bufferPreDraw()
 {
    glClearColor(0.0, 0.0, 0.0, 0.0);
    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
+void sonixApp::preFrame()
+{
+   if(mButton0->getData() == gadget::Digital::ON)
+   {
+            sound.trigger();
+   }
+}
 
 //----------------------------------------------
 //  Draw the scene.  A box on the end of the wand
 //----------------------------------------------
-
-void wandApp::myDraw()
+void sonixApp::myDraw()
 {
    //std::cout << "\n--- myDraw() ---\n";
 
@@ -76,10 +82,8 @@ void wandApp::myDraw()
          //glColor3f(1.0f, 0.0f, 1.0f);
          float wand_color[3];
          wand_color[0] = wand_color[1] = wand_color[2] = 0.0f;
-         if(mButton0->getData() == gadget::Digital::ON){
-            sound.trigger();
+         if(mButton0->getData() == gadget::Digital::ON)
             wand_color[0] += 0.5f;
-         }
          if(mButton1->getData() == gadget::Digital::ON)
             wand_color[1] += 0.5f;
          if(mButton2->getData() == gadget::Digital::ON)
@@ -97,7 +101,6 @@ void wandApp::myDraw()
 
          // A little laser pointer
       glLineWidth(5.0f);
-
 
 
       // Draw Axis
@@ -129,7 +132,7 @@ void wandApp::myDraw()
 
 }
 
-void wandApp::initSonix()
+void sonixApp::initSonix()
 {
    
    // initialize a sound
@@ -148,7 +151,7 @@ void wandApp::initSonix()
 }
 
 
-void wandApp::initGLState()
+void sonixApp::initGLState()
 {
    GLfloat light0_ambient[] = { 0.1f,  0.1f,  0.1f,  1.0f};
    GLfloat light0_diffuse[] = { 0.8f,  0.8f,  0.8f,  1.0f};
