@@ -4,6 +4,8 @@
 #include <cppunit/TestCase.h>
 #include <cppunit/TestSuite.h>
 #include <cppunit/TestCaller.h>
+#include <cppunit/extensions/MetricRegistry.h>
+
 
 #include <vpr/Util/GUID.h>
 //#include <vpr/Util/GUIDFactory.h>
@@ -115,13 +117,16 @@ public:
         guid1.generate();    // = *(vpr::GUIDFactory::createRandomGUID());
       }
 
+      time_out.setNow();
       vpr::Interval diff = time_out - time_in;
 
-      double per_call;      // Num ns per call
-      per_call = (diff.usecf()*1000.0f) / double(iters);
+      double per_call;      // Num ms per call
+      per_call = diff.usecf() / double(iters);
 
-      vprDEBUG(vprDBG_ALL,vprDBG_CRITICAL_LVL) << "vpr::GUID(): overhead = " << per_call << "ns per call\n"
-                << vprDEBUG_FLUSH;
+      //vprDEBUG(vprDBG_ALL,vprDBG_CRITICAL_LVL) << "vpr::GUID(): overhead = " << per_call << "us per call\n"
+      //          << vprDEBUG_FLUSH;
+      
+      CPPUNIT_ASSERT_METRIC_LE("GUIDTest/CreationOverhead", per_call, 0.1f, 0.05f);
    }
 
    void testDebugOutput()
@@ -157,6 +162,8 @@ public:
                                                             &GUIDTest::testConstructor));
       test_suite->addTest(new CppUnit::TestCaller<GUIDTest>("testCompare",
                                                             &GUIDTest::testCompare));
+      test_suite->addTest(new CppUnit::TestCaller<GUIDTest>("testCreationOverhead",
+                                                            &GUIDTest::testCreationOverhead));
 
       return test_suite;
    }
