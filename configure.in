@@ -1994,6 +1994,7 @@ AC_OUTPUT(Makefile
           Utils/Makefile
           samples/Makefile
           samples/ogl/Makefile
+          samples/ogl/analog/Makefile
           samples/ogl/combo/Makefile
           samples/ogl/cones/Makefile
           samples/ogl/cubes/Makefile
