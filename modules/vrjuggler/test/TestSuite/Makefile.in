@@ -44,7 +44,7 @@ srcdir          = @srcdir@
 topdir          = @topdir@
 #top_srcdir     = @top_srcdir@
 VJ_BASE_DIR	?= @APP_BASE_DIR@
-CPP_UNIT	= $(srcdir)/../../../../external
+CPP_UNIT	= $(srcdir)/../../../../external/cppunit
 
 CXX             = @CXX@
 CFLAGS          = @CFLAGS@ $(OPTIMIZER) $(EXTRA_CFLAGS)
@@ -58,9 +58,7 @@ EXTRA_CFLAGS    = @APP_EXTRA_CFLAGS@
 EXTRA_LFLAGS    = @APP_EXTRA_LFLAGS@
 INCLUDES        = @INCLUDES@ -I$(topdir) -I$(VJ_BASE_DIR)/include	\
                   -I$(srcdir) -I$(srcdir)/TestCases			\
-                  -I$(CPP_UNIT)/CppUnit.old				\
-                  -I$(CPP_UNIT)/CppUnit.old/framework			\
-                  -I$(CPP_UNIT)/CppUnit.old/textui
+                  -I$(CPP_UNIT)/include
 OPTIMIZER       = @DBG_FLAGS@ -D_DEBUG
 LD              = @LD@
 LDFLAGS         = @LDFLAGS@ -L/usr/lib$(LIBBITSUF)
@@ -92,11 +90,15 @@ CXX_COMPILE     = $(CXX) $(DEFS) $(INCLUDES) $(CPPFLAGS) $(CXXFLAGS)
 # objects to be included in the project....
 # SRC Files
 TEST_SRCS =
-CPPUNIT_TEXTUI_SRCS = TestRunner.cpp TextTestResult.cpp
-CPPUNIT_SRCS	= TestCase.cpp		\
+CPPUNIT_TEXTUI_SRCS = TextTestResult.cpp
+CPPUNIT_SRCS	= Exception.cpp		\
+                  NotEqualException.cpp	\
+                  TestAssert.cpp	\
+                  TestCase.cpp		\
                   TestResult.cpp	\
                   TestFailure.cpp	\
                   TestSuite.cpp
+
 RUNNER_SRCS	= main.cpp
 SRCS		= $(TEST_SRCS)			\
                   $(CPPUNIT_TEXTUI_SRCS)	\
@@ -107,8 +109,7 @@ OBJDIR = .
 DEPDIR =
 
 INCLUDE_PATHS =
-PATH_TO_SRCS = $(srcdir) $(srcdir)/TestCases				\
-               $(CPP_UNIT)/CppUnit.old/framework $(CPP_UNIT)/CppUnit.old/textui
+PATH_TO_SRCS = $(srcdir) $(srcdir)/TestCases $(CPP_UNIT)/src/cppunit
 MK_DIR = $(srcdir)/../../../../share/mk
 
 include $(MK_DIR)/objs.mk

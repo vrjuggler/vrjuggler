@@ -30,44 +30,86 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <TestSuite.h>
-#include <TestRunner.h>
+#include <iostream>
+#include <vector>
+
+#include <cppunit/TestSuite.h>
+#include <cppunit/TextTestResult.h>
+
 #include <TestCases/Math/QuatSelfTest.h>
 #include <vrj/Util/Debug.h>
 
 
-//using namespace vpr;
+static void addNoninteractive (CppUnit::TestSuite* suite)
+{
+   std::vector<vrjTest::JugglerTest*> tests;
+
+   // Add new tests to this vector.
+   tests.push_back(new vrjTest::QuatSelfTest());
+
+   for ( std::vector<vrjTest::JugglerTest*>::iterator i = tests.begin();
+         i != tests.end();
+         i++ )
+   {
+      (*i)->registerTests(suite);
+   }
+}
+
+static void addInteractive (CppUnit::TestSuite* suite)
+{
+}
+
+static void addMetrics (CppUnit::TestSuite* suite)
+{
+}
 
 int main (int ac, char **av)
 {
-    vjDEBUG(0,0) << "Starting test\n" << vjDEBUG_FLUSH;       // Do this here to get init text out of the way
+   vjDEBUG(0,0) << "Starting test\n" << vjDEBUG_FLUSH;       // Do this here to get init text out of the way
 
-    TestRunner runner;
+   CppUnit::TestSuite suite;
 
-   //------------------------------------
-   //  noninteractive
-   //------------------------------------
-   // create non-interactive test suite
-   TestSuite* noninteractive_suite = new TestSuite( "NonInteractive" );
+   if ( ac > 1 && strcmp(av[1], "all") != 0 )
+   {
+      for ( int i = 1; i < ac; i++ )
+      {
+         // -------------------------------
+         // NON-INTERACTIVE
+         // -------------------------------
+         if ( strcmp(av[i], "noninteractive") == 0 )
+         {
+            addNoninteractive(&suite);
+         }
+         // ------------------------------
+         // METRICS
+         // ------------------------------
+         else if ( strcmp(av[i], "metrics") == 0 )
+         {
+            addMetrics(&suite);
+         }
+         // -------------------------------
+         // INTERACTIVE
+         // -------------------------------
+         else if ( strcmp(av[i], "interactive") == 0 )
+         {
+            addInteractive(&suite);
+         }
+         else
+         {
+            std::cerr << "WARNING: Unknown suite name " << av[i] << std::endl;
+         }
+      }
+   }
+   else
+   {
+      addNoninteractive(&suite);
+      addMetrics(&suite);
+      addInteractive(&suite);
+   }
 
-   // add tests to the noninteractive suite
-   noninteractive_suite->addTest( vrjTest::QuatSelfTest::suite() );
-   
-   // Add the test suite to the runner
-   runner.addTest( "noninteractive", noninteractive_suite );
-
-   // create test suite #2
-   TestSuite* interactive_suite = new TestSuite("Interactive");
-
-   // add tests to the interactive suite
-   //interactive_suite->addTest( ThreadTest::suite() );
-
-   // Add the test suite to the runner
-   runner.addTest( "interactive", interactive_suite );
-
-   // run all test suites
-   runner.run( ac, av );
-
+   CppUnit::TextTestResult result;
+   suite.run(&result);
+   result.print(std::cout);
 
    return 0;
 }
