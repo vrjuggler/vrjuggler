@@ -19,6 +19,7 @@
 #include <Input/InputManager/vjAnalogInterface.h>
 #include <Input/InputManager/vjDigitalInterface.h>
 
+#include "defines.h"
 #include "Scene.h"
 
 //: GloveApp - A Demonstration OpenGL application class
@@ -40,19 +41,9 @@
 //  }
 class gloveApp : public vjGlApp
 {
-// Macros:
+// utility functions
 protected:
-    //: MAX macro
-    //  returns - the maximum of a, b, and c.
-    template<class T> 
-    inline const T& nMax(const T& a, const T& b, const T& c)
-	     { return (a>=b) ? ((a>=c)?a:c) : ((b>=c)?b:c); }
-    
-    //: MIN macro
-    //  returns - the minimum of a, b, and c.
-    template<class T> 
-    inline const T& nMin(const T& a, const T& b, const T& c)
-	     { return (a<=b) ? ((a<=c)?a:c) : ((b<=c)?b:c); }
+    friend vjVec3 operator*( const vjMatrix& m, const vjVec3& v );
 
 // Application Functions:
 public:
@@ -89,35 +80,54 @@ private:
     void renderLightsAndMaterials();
     void myDraw();
     
-public:
-   vjGloveInterface    mGlove;      // the glove
-   vjGestureInterface  mGesture;    // the gesture
-   bool cubeSelected;
-   bool sphereSelected;
-   bool coneSelected;
+protected:
+   //: VR Juggler devices
+   vjGloveInterface    mGlove;
+   vjGestureInterface  mGesture;
    
-   float cubePos[3];
-   float conePos[3];
-   float spherePos[3];
+   //: Object selection
+   bool                mCubeSelected;
+   bool                mSphereSelected;
+   bool                mConeSelected;
    
-   vjGlContextData<Scene> scene;
+   //: Object positions
+   vjVec3               mCubePos;
+   vjVec3               mConePos;
+   vjVec3               mSpherePos;
+   
+   vjMatrix		mNavigation;
+   
+   vjGlContextData<Scene> mScene;
 };
 
+inline vjVec3 operator*( const vjMatrix& m, const vjVec3& v )
+{
+    float a[4];
+    a[0] = m(0,0) * v[0] + m(0,1) * v[1] + m(0,2)  * v[2] + m(0,3) * 1.0f;
+    a[1] = m(1,0) * v[0] + m(1,1) * v[1] + m(1,2)  * v[2] + m(1,3) * 1.0f;
+    a[2] = m(2,0) * v[0] + m(2,1) * v[1] + m(2,2) * v[2] + m(2,3) * 1.0f;
+    a[3] = m(3,0) * v[0] + m(3,1) * v[1] + m(3,2) * v[2] + m(3,3) * 1.0f;
+    
+    float invA3 = 1.0f / a[3];
+    
+    return vjVec3( a[0] * invA3, a[1] * invA3, a[2] * invA3 );
+}
+    
 inline void gloveApp::contextInit()
 {
     // Init the scene's displaylists for this context.
-    scene->init();
+    mScene->init();
 }
 
 //: Constructor
 inline gloveApp::gloveApp(vjKernel* kern) : vjGlApp(kern), 
-                                cubeSelected(false), 
-                                sphereSelected(false), 
-                                coneSelected(false)
+                                mCubeSelected(false), 
+                                mSphereSelected(false), 
+                                mConeSelected(false), 
+				mCubePos(0.0f, 3.5f, -20.0f), 
+				mConePos(-2.5f, 3.5f, -20.0f), 
+				mSpherePos(2.5f, 3.5f, -20.0f)
 {
-   cubePos[0] = 0.0f;cubePos[1] = 3.5f;cubePos[2] = -20.0f;
-   conePos[0] = -2.5f;conePos[1] = 3.5f;conePos[2] = -20.0f;
-   spherePos[0] = 2.5f;spherePos[1] = 3.5f;spherePos[2] = -20.0f;
 }
 
 //: Initialize
@@ -176,48 +186,52 @@ inline void gloveApp::myDraw()
 {   
     glClearColor(0.0, 0.0, 0.0, 0.0);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glMatrixMode(GL_MODELVIEW);
-    
+    	
     this->initGlState();
     this->renderLightsAndMaterials();
-    
-    // draw the floor
+
     glPushMatrix();
-	glScalef( 3.0f, 1.0f, 3.0f );
-	scene->drawFloor();
-    glPopMatrix();
-    
-    // draw cube.
-    glPushMatrix();
-	glColor3f( 0.4f, 0.1f, 0.2f );
-	glTranslatef( cubePos[0], cubePos[1], cubePos[2] );
-	glEnable(GL_TEXTURE_2D);
-	scene->renderRainbowTexture();
-	scene->drawCube( 1.0f, 1.0f, 1.0f, cubeSelected );
-	glDisable(GL_TEXTURE_2D);
-    glPopMatrix();
-    
-    // draw cone.
-    glPushMatrix();
-	glColor3f( 0.6f, 0.2f, 0.6f );
-	glTranslatef( conePos[0], conePos[1], conePos[2] );
-	scene->drawCone( 1.0f, 1.0f, 1.0f, coneSelected );
-    glPopMatrix();
-    
-    // draw Sphere.
-    glPushMatrix();
-	glColor3f( 0.8f, 0.8f, 0.2f );
-	glTranslatef( spherePos[0], spherePos[1], spherePos[2] );
-	scene->drawSphere( 1.0f, 1.0f, 1.0f, sphereSelected );
-    glPopMatrix();
-    
-    // draw table.
-    glPushMatrix();
-	glTranslatef( 0.0f, 0.0f, -20.0f );
-	glEnable(GL_TEXTURE_2D);
-	scene->renderWoodTexture();
-	scene->drawTable();
-	glDisable(GL_TEXTURE_2D);
+	glMatrixMode(GL_MODELVIEW);	
+	glMultMatrixf( mNavigation.getFloatPtr() );
+	
+	// draw the floor
+	glPushMatrix();
+	    glScalef( 3.0f, 1.0f, 3.0f );
+	    mScene->drawFloor();
+	glPopMatrix();
+	
+	// draw cube.
+	glPushMatrix();
+	    glColor3f( 0.4f, 0.1f, 0.2f );
+	    glTranslatef( mCubePos[0], mCubePos[1], mCubePos[2] );
+	    glEnable(GL_TEXTURE_2D);
+	    mScene->renderRainbowTexture();
+	    mScene->drawCube( 1.0f, 1.0f, 1.0f, mCubeSelected );
+	    glDisable(GL_TEXTURE_2D);
+	glPopMatrix();
+	
+	// draw cone.
+	glPushMatrix();
+	    glColor3f( 0.6f, 0.2f, 0.6f );
+	    glTranslatef( mConePos[0], mConePos[1], mConePos[2] );
+	    mScene->drawCone( 1.0f, 1.0f, 1.0f, mConeSelected );
+	glPopMatrix();
+	
+	// draw Sphere.
+	glPushMatrix();
+	    glColor3f( 0.8f, 0.8f, 0.2f );
+	    glTranslatef( mSpherePos[0], mSpherePos[1], mSpherePos[2] );
+	    mScene->drawSphere( 1.0f, 1.0f, 1.0f, mSphereSelected );
+	glPopMatrix();
+	
+	// draw table.
+	glPushMatrix();
+	    glTranslatef( 0.0f, 0.0f, -20.0f );
+	    glEnable(GL_TEXTURE_2D);
+	    mScene->renderWoodTexture();
+	    mScene->drawTable();
+	    glDisable(GL_TEXTURE_2D);
+	glPopMatrix();
     glPopMatrix();
 }
 
@@ -238,73 +252,88 @@ inline void gloveApp::postSync()
 //  In the glove application, this function does the logic for picking the objects.
 inline void gloveApp::preDraw()
 {
-    float x, y, z;
+    vjVec3 glovePos;
     vjMatrix finger_matrix;
+    vjMatrix invNav;
+    invNav.invert(mNavigation);
     
     //: Get the position of the index finger:
     finger_matrix = mGlove->getPos(vjGloveData::INDEX);
-    finger_matrix.getTrans( x, y, z );
+    finger_matrix.getTrans( glovePos[0], glovePos[1], glovePos[2] );
+    glovePos = invNav * glovePos;
+    
+    //vjDEBUG(7) << "Gesture: " << mGesture->getGestureString(mGesture->getGesture())<<"\n"<<flush;
+    //vjDEBUG(7) << glovePos[0]<<" "<<glovePos[1]<<" "<<glovePos[2]<<" : "<<mCubePos[0]<<" "<<mCubePos[1]<<" "<<mCubePos[2]<<"\n"<<flush;
+    
+    //: Navagate Rotationally when open hand...
+    if (mGesture->getGesture() == mGesture->getGestureIndex("Open Hand"))
+    {
+	float roll, pitch, yaw;
+	finger_matrix.getZXYEuler( roll, pitch, yaw );
+	vjVec3 up(0.0f, 1.0f, 0.0f);
+	mNavigation.preRot( yaw * 0.02f, up, mNavigation);
+    }
+    
+    //: Navagate in hand direction when pointing...
+    if (mGesture->getGesture() == mGesture->getGestureIndex("Pointing"))
+    {
+	float roll, pitch, yaw;
+	finger_matrix.getZXYEuler( roll, pitch, yaw );
+	vjVec3 up(0.0f, 1.0f, 0.0f);
+	mNavigation.preRot( yaw * 0.02f, up, mNavigation);
+	mNavigation.preTrans( 0.0f, 0.0f, 0.1f, mNavigation );
+    }
     
     //: pick up the object if you're pointing.
     //  set the object position equal to the glove position.
-    if ( mGesture->getGesture() == mGesture->getGestureIndex("Pointing"))
+    if ( mGesture->getGesture() == mGesture->getGestureIndex("Closed Fist"))
     {
-	if (coneSelected)
-	{ 
-	    conePos[0] = x; 
-	    conePos[1] = y; 
-	    conePos[2] = z; 
-	} else if (sphereSelected)
-	{ 
-	    spherePos[0] = x; 
-	    spherePos[1] = y; 
-	    spherePos[2] = z; 
-	} else if (cubeSelected)
-	{ 
-	    cubePos[0] = x; 
-	    cubePos[1] = y; 
-	    cubePos[2] = z; 
-	}
+	if (mConeSelected)
+	    mConePos = glovePos; 
+	else if (mSphereSelected)
+	    mSpherePos = glovePos; 
+	else if (mCubeSelected)
+	    mCubePos = glovePos; 
     }
-    
-    float cubeDistance   = sqrtf( pow(x - cubePos[0], 2) + pow(y - cubePos[1], 2) + pow(z - cubePos[2], 2) );
-    float sphereDistance = sqrtf( pow(x - spherePos[0], 2) + pow(y - spherePos[1], 2) + pow(z - spherePos[2], 2) );
-    float coneDistance   = sqrtf( pow(x - conePos[0], 2) + pow(y - conePos[1], 2) + pow(z - conePos[2], 2) );
-    float min = this->nMin( cubeDistance, sphereDistance, coneDistance);
+   
+    float cubeDistance   = (glovePos - mCubePos).length();
+    float sphereDistance = (glovePos - mSpherePos).length();
+    float coneDistance   = (glovePos - mConePos).length();
+    float min = nMin( cubeDistance, sphereDistance, coneDistance);
     
      //: If the distance between hand and object is too far
      //  don't highlight any of them.
      if (min > 1.0f)
      {
-	 cubeSelected = false; 
-	 sphereSelected = false; 
-	 coneSelected = false; 
+	 mCubeSelected = false; 
+	 mSphereSelected = false; 
+	 mConeSelected = false; 
      }
     
     // ...otherwise, 
     //   If glove is not pointing, or 
     //   we don't already have a selected one, then...
-    else if ( mGesture->getGesture() != mGesture->getGestureIndex("Pointing") ||
-	      (cubeSelected   == false &&
-	       sphereSelected == false &&
-	       coneSelected   == false)   )
+    else if ( mGesture->getGesture() != mGesture->getGestureIndex("Closed Fist") ||
+	      (mCubeSelected   == false &&
+	       mSphereSelected == false &&
+	       mConeSelected   == false)   )
     {
 	// ... highlight the closest one to the glove.
     	if (min == coneDistance)
 	{ 
-	    cubeSelected = false; 
-	    sphereSelected = false; 
-	    coneSelected = true; 
+	    mCubeSelected = false; 
+	    mSphereSelected = false; 
+	    mConeSelected = true; 
 	} else if (min == sphereDistance)
 	{ 
-	    cubeSelected = false; 
-	    sphereSelected = true; 
-	    coneSelected = false; 
+	    mCubeSelected = false; 
+	    mSphereSelected = true; 
+	    mConeSelected = false; 
 	} else if (min == cubeDistance)
 	{
-	    cubeSelected = true; 
-	    sphereSelected = false; 
-	    coneSelected = false; 
+	    mCubeSelected = true; 
+	    mSphereSelected = false; 
+	    mConeSelected = false; 
 	} 
     }
 }
