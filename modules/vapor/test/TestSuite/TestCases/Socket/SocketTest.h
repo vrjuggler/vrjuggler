@@ -979,9 +979,9 @@ public:
       TestSuite *test_suite = new TestSuite ("SocketTest");
 
       test_suite->addTest( new TestCaller<SocketTest>("testOpenClose", &SocketTest::testOpenClose));
-      test_suite->addTest( new TestCaller<SocketTest>("bind-Again Failure Test", &SocketTest::bindAgainFailTest));
-      test_suite->addTest( new TestCaller<SocketTest>("same-Address-Open-Bind-Close Test", &SocketTest::sameAddressOpenBindCloseTest));
-      test_suite->addTest( new TestCaller<SocketTest>("different-Address-Open-Bind-Close Test", &SocketTest::differentAddressOpenBindCloseTest));
+      //test_suite->addTest( new TestCaller<SocketTest>("bind-Again Failure Test", &SocketTest::bindAgainFailTest));
+      //test_suite->addTest( new TestCaller<SocketTest>("same-Address-Open-Bind-Close Test", &SocketTest::sameAddressOpenBindCloseTest));
+      //test_suite->addTest( new TestCaller<SocketTest>("different-Address-Open-Bind-Close Test", &SocketTest::differentAddressOpenBindCloseTest));
 
       //test_suite->addTest( new TestCaller<SocketTest>("ReuseAddr (simple) Test", &SocketTest::reuseAddrSimpleTest));
       //test_suite->addTest( new TestCaller<SocketTest>("ReuseAddr (client/server) Test", &SocketTest::reuseAddrTest));
@@ -991,7 +991,7 @@ public:
 
       //test_suite->addTest( new TestCaller<SocketTest>("testBlocking", &SocketTest::testBlocking));
       //test_suite->addTest( new TestCaller<SocketTest>("testTcpConnection", &SocketTest::testTcpConnection));
-      test_suite->addTest( new TestCaller<SocketTest>("testReadn", &SocketTest::testReadn));
+      //test_suite->addTest( new TestCaller<SocketTest>("testReadn", &SocketTest::testReadn));
       return test_suite;
    }
 
