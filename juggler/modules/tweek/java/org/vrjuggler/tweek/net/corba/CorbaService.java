@@ -44,47 +44,58 @@ import org.omg.CosNaming.NamingContextPackage.*;
 
 public class CorbaService
 {
-   public CorbaService (String _host, int _port)
+   /**
+    * @param ns_uri The URI that can be used as the initial reference for the
+    *               NameService.
+    * @param
+    */
+   public CorbaService (String ns_host, int ns_port, String subcontext_id)
    {
-      host = _host;
-      port = _port;
+      nameServiceHost  = ns_host;
+      nameServicePort  = ns_port;
+      namingSubcontext = subcontext_id;
+
+      nameServiceURI = "corbaloc:iiop:1.0@" + ns_host + ":" + ns_port + "/NameService";
+
+      System.out.println("nameServiceURI: " + nameServiceURI);
    }
 
    public void init (String[] args) throws SystemException
    {
-      Properties props = new Properties();
-      props.put("org.omg.CORBA.ORBInitialHost", host);
-      props.put("org.omg.CORBA.ORBInitialPort", String.valueOf(port));
-
-      m_orb = ORB.init(args, props);
-
-      org.omg.CORBA.Object init_ref = null;
+      m_orb = ORB.init(args, null);
 
       try
       {
-         init_ref      = m_orb.resolve_initial_references("NameService");
+         org.omg.CORBA.Object init_ref = null;
+
+         init_ref    = m_orb.string_to_object(nameServiceURI);
          rootContext = NamingContextHelper.narrow(init_ref);
 
-         NameComponent[] tweek_name_context = new NameComponent[1];
-         tweek_name_context[0] = new NameComponent("tweek", "context");
+         if ( rootContext != null )
+         {
+            // XXX: Need to allow users to specify this through
+            // namingSubcontext.
+            NameComponent[] tweek_name_context = new NameComponent[1];
+            tweek_name_context[0] = new NameComponent("tweek", "context");
 
-         init_ref     = rootContext.resolve(tweek_name_context);
-         localContext = NamingContextHelper.narrow(init_ref);
+            init_ref     = rootContext.resolve(tweek_name_context);
+            localContext = NamingContextHelper.narrow(init_ref);
+         }
+         else
+         {
+            System.out.println("Failed to get root naming context!");
+         }
       }
       catch (UserException user_ex)
       {
+         user_ex.getMessage();
          user_ex.printStackTrace();
       }
    }
 
-   public String getHost ()
+   public String getNameServiceURI ()
    {
-      return host;
-   }
-
-   public int getPort ()
-   {
-      return port;
+      return nameServiceURI;
    }
 
    public NamingContext getLocalContext ()
@@ -127,8 +138,11 @@ public class CorbaService
       return mgr;
    }
 
-   private String host = null;
-   private int    port = 0;
+   private String nameServiceHost = null;
+   private int    nameServicePort = 2809;
+   private String nameServiceURI  = null;
+
+   private String namingSubcontext = null;
 
    private ORB           m_orb        = null;
    private NamingContext rootContext  = null;

@@ -55,8 +55,8 @@ public class CommunicationEvent extends java.util.EventObject
    public CommunicationEvent (Object source, int _type, CorbaService corba_if)
    {
       super(source);
-      type          = _type;
-      corbaRegistry = corba_if;
+      type         = _type;
+      corbaService = corba_if;
    }
 
    public int getType ()
@@ -64,21 +64,16 @@ public class CommunicationEvent extends java.util.EventObject
       return type;
    }
 
-   public String getHostAddress ()
+   public String getNameServiceURI ()
    {
-      return corbaRegistry.getHost();
+      return corbaService.getNameServiceURI();
    }
 
-   public int getHostPort ()
+   public CorbaService getCorbaService ()
    {
-      return corbaRegistry.getPort();
+      return corbaService;
    }
 
-   public CorbaService getCorbaRegistry ()
-   {
-      return corbaRegistry ;
-   }
-
-   private int          type          = -1;
-   private CorbaService corbaRegistry = null;
+   private int          type         = -1;
+   private CorbaService corbaService = null;
 }
