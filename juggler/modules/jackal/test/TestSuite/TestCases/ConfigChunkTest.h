@@ -90,20 +90,21 @@ public:
          CPPUNIT_ASSERT( retval == true );
          CPPUNIT_ASSERT( std::string( "bahamas mamas" ) == (std::string)chunk_multi->getProperty( "test prop multi", 0 ) );
 
-         // @todo this test currently fails, but it shouldn't
          retval = chunk_multi->setProperty( "test prop multi", 2, 0 );
          CPPUNIT_ASSERT( retval == true );
+         // @todo this test currently fails, but it shouldn't
          CPPUNIT_ASSERT( std::string( "bahamas mamas" ) != (std::string)chunk_multi->getProperty( "test prop multi", 0 ) );
          CPPUNIT_ASSERT( 2 == (int)chunk_multi->getProperty( "test prop multi", 0 ) );
          
-         // @todo this test currently fails, but it shouldn't
          retval = chunk_multi->setProperty( "test prop multi", 678.098f, 0 );
          CPPUNIT_ASSERT( retval == true );
+         // @todo this test currently fails, but it shouldn't
          CPPUNIT_ASSERT( 2 != (int)chunk_multi->getProperty( "test prop multi", 0 ) );
          CPPUNIT_ASSERT( 678.098f == (float)chunk_multi->getProperty( "test prop multi", 0 ) );
          
          retval = chunk_multi->setProperty( "test prop multi", "bahamas mamas", 0 );
          CPPUNIT_ASSERT( retval == true );
+         // @todo this test currently fails, but it shouldn't
          CPPUNIT_ASSERT( 678.098f != (float)chunk_multi->getProperty( "test prop multi", 0 ) );
          CPPUNIT_ASSERT( std::string( "bahamas mamas" ) == (std::string)chunk_multi->getProperty( "test prop multi", 0 ) );
       }
