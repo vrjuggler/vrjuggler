@@ -51,6 +51,9 @@ DPP_STD_CPP(yes)
 # Define the binary format.
 DPP_ABI_SETUP
 
+# Ensure that a version of Perl greater than or equal to 5.004 is available.
+DPP_PERL_VER(5.004)
+
 DPP_BASIC_PROGS($PLATFORM, $OS_TYPE)
 
 DPP_SYSTEM_SUBST
@@ -293,16 +296,44 @@ if test "x$AUDIOWORKS_ENABLED" = "xyes" ; then
 fi
 
 dnl -------------------------------------------------------------
-dnl project specific stuff....
+dnl external stuff (like sample apps, also for those who use sonix-config)....
 dnl -------------------------------------------------------------
 application_includes="-I\$(SNX_BASE_DIR)/include $INCLUDES"
 application_ldflags="$LDFLAGS"
 if test "x$dpp_os_type" = "xWin32" ; then
-   application_libs="/LIBPATH:\$(SNX_BASE_DIR)/lib$LIBBITSUF -lsonix $LIBS"
+   application_libs="/LIBPATH:\$(SNX_BASE_DIR)/lib$LIBBITSUF/sonix.lib $LIBS"
+   snx_ldflags_compiler="/link /libpath:\$prefix/lib"
+   snx_ldflags_linker="/libpath:\$prefix/lib"
+   snx_lib='sonix.lib'
+   snx_libs='sonix.lib'
 else
    application_libs="-L\$(SNX_BASE_DIR)/lib$LIBBITSUF -lsonix $LIBS -lm"
+   snx_ldflags_compiler="-L\$prefix/lib$LIBBITSUF"
+   snx_ldflags_linker="$snx_ldflags_compiler"
+   snx_lib='-lsonix'
+   snx_libs='-lsonix'
 fi
 
+if test "x$PLATFORM" = "xIRIX" ; then
+    snx_n32_flags='-n32'
+    snx_64_flags='-64'
+fi
+snx_extra_cxxflags=''
+snx_extra_include_dirs=''
+snx_extra_ldflags="$APP_EXTRA_LIBS_BEGIN"
+snx_extra_libs="$LDFLAGS $LIBS $APP_EXTRA_LIBS_END"
+
+
+AC_SUBST(snx_lib)
+AC_SUBST(snx_libs)
+AC_SUBST(snx_n32_flags)
+AC_SUBST(snx_64_flags)
+AC_SUBST(snx_extra_cxxflags)
+AC_SUBST(snx_extra_include_dirs)
+AC_SUBST(snx_extra_ldflags)
+AC_SUBST(snx_extra_libs)
+AC_SUBST(snx_ldflags_compiler)
+AC_SUBST(snx_ldflags_linker)
 AC_SUBST(application_includes)
 AC_SUBST(application_ldflags)
 AC_SUBST(application_libs)
