@@ -28,11 +28,11 @@ public:
    MsgPackage();
 
    // send contents of current package to the socket specified
-   void sendContents(vpr::SocketStream sock_stream) const;
+   void sendContents(vpr::SocketStream& sock_stream) const;
 
    // send contents of current package to the socket specified
    // and then clear the message
-   void sendAndClear(vpr::SocketStream sock_stream);
+   void sendAndClear(vpr::SocketStream& sock_stream);
 
    // clear our current message buffer
    void clear(){ mDataLength = 0; }
@@ -67,6 +67,13 @@ public:
    // returns the number of bytes used from buffer (excluding the already read opcode)
    // A return value of zero means unable to process -- complete message not received yet. 
    int receiveDeviceAck(char* ptr, int len);
+
+   void createClockSync(const float& time_a, const float& time_b, const bool clock_is_synced);
+   int receiveClockSync(char* ptr, int len, float& time_a, float& time_b, bool& clock_is_synced);
+   void createClockSyncHaveSrc(const vpr::GUID& id, const bool clock_is_synced);
+   int receiveClockSyncHaveSrc(char* ptr, int len, vpr::GUID& id, bool& clock_is_synced);
+
+
 
 };
 
