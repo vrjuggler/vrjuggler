@@ -2,7 +2,7 @@
 #define __gluquat__
 
 
-#include <vjConfig.h>
+#include <vrj/vjConfig.h>
 
 #include <GL/gl.h>
 #include <GL/glu.h>

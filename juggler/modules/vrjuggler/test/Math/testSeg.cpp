@@ -32,34 +32,34 @@
 
 #include <iostream>
 
-#include <Math/vjPlane.h>
-#include <Math/vjVec3.h>
-#include <Math/vjSeg.h>
+#include <vrj/Math/Plane.h>
+#include <vrj/Math/Vec3.h>
+#include <vrj/Math/Seg.h>
 
-// Program to test the functionality of the Seg class
+// Program to test the functionality of the vrj::Seg class
 //
 //
 int main(void)
 {
    // Create some planes and segs to use in the tests
-   const Vec3 x_axis(1,0,0);
-   const Vec3 y_axis(0,1,0);
-   const Vec3 z_axis(0,0,1);
-   const Vec3 origin(0,0,0);
-   Plane zy_plane; zy_plane.makePts(z_axis,origin,y_axis);
+   const vrj::Vec3 x_axis(1,0,0);
+   const vrj::Vec3 y_axis(0,1,0);
+   const vrj::Vec3 z_axis(0,0,1);
+   const vrj::Vec3 origin(0,0,0);
+   vrj::Plane zy_plane; zy_plane.makePts(z_axis,origin,y_axis);
 
    // Test finding collision with a triangle
-   Seg seg_through, seg_parallel, seg_miss;
+   vrj::Seg seg_through, seg_parallel, seg_miss;
    float t_dist;
    bool hit;
 
-   seg_through.makePts(Vec3(1,0.25,0.25), Vec3(-1,0.25,0.25) );    // Passes through the plane at the origin
+   seg_through.makePts(vrj::Vec3(1,0.25,0.25), vrj::Vec3(-1,0.25,0.25) );    // Passes through the plane at the origin
    seg_parallel.makePts(x_axis, (x_axis+z_axis));                 // Is parallel to the plane
-   seg_miss.makePts(Vec3(1,1,1), Vec3(-1,0.5,0.5));  // Misses
+   seg_miss.makePts(vrj::Vec3(1,1,1), vrj::Vec3(-1,0.5,0.5));  // Misses
 
    hit = seg_through.isectTriangle(z_axis,origin,y_axis,&t_dist);
    std::cout << "Testing isectTriangle (through): ";
-   if(hit && Math::isZero(t_dist - 1.0f))
+   if(hit && vrj::Math::isZero(t_dist - 1.0f))
       std::cout << "Passed.\n";
    else
       std::cout << "FAILED!!!!\n";
