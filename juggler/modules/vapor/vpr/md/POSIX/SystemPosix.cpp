@@ -39,73 +39,35 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _VPR_SYSTEM_BASE_H_
-#define _VPR_SYSTEM_BASE_H_
-
 #include <vpr/vprConfig.h>
+
+#include <vpr/md/POSIX/SystemPosix.h>
 
 
 namespace vpr
 {
 
-/**
- * vpr::SystemBase is a base class for vpr::System so, for xplatform system
- * functions, use vpr::System (don't use vpr::SystemBase).
- *
- * @see vpr::SystemPosix
- * @see vpr::SystemNSPR
- */
-class VPR_CLASS_API SystemBase
+int SystemPosix::usleep(vpr::Uint32 micro)
 {
-public:
-   /**
-    * Determines the endianness of the host platform.  A return nvalue of 0
-    * means that the host uses little-endian byte order.  A return value of
-    * 1 means that the host uses big-endian byte order.
-    *
-    * @return 0 is returned for little-endian hosts<br>
-    *         1 is returned for big-endian hosts
-    */
-   static int getEndian (void)
+#ifdef VPR_OS_Linux
+   ::usleep(micro);
+   return 0;  // usleep can't report failure, so assume success.
+#else
+   return ::usleep(micro);
+#endif
+}
+
+int SystemPosix::msleep(vpr::Uint32 milli)
+{
+   // usleep() cannot sleep for more than 1 second, so we have to work
+   // around that here.  First, we sleep for N seconds.
+   if ( milli >= 1000 )
    {
-      union
-      {
-         char   c[sizeof(short)];
-         short  value;
-      } endian;
-
-      // The way this works is that we access the first byte of endian.value
-      // directly.  If it is 1, the host treats that as the high-order byte.
-      // Otherwise, it is the low-order byte.
-      endian.value = 256;
-
-      return endian.c[0];
+      SystemPosix::sleep(milli / 1000);
    }
 
-   /**
-    * Tells if the host uses little-endian byte order or not.
-    *
-    * @return <code>true</code> is returned on a little-endian host.<br>
-    *         <code>false</code> is returned on a big-endian host.<br>
-    */
-   static bool isLittleEndian (void)
-   {
-      return(getEndian() == 0);
-   }
-
-   /**
-    * Tells if the host uses big-endian byte order or not.
-    *
-    * @return <code>true</code> is returned on a big-endian host.<br>
-    *         <code>false</code> is returned on a little-endian host.<br>
-    */
-   static bool isBigEndian (void)
-   {
-      return(getEndian() == 1);
-   }
-};
+   // Then we finish off by sleeping for (N mod 1000) milliseconds.
+   return SystemPosix::usleep((milli % 1000) * 1000);
+}
 
 } // End of vpr namespace
-
-
-#endif   /* _VPR_SYSTEM_BASE_H_ */
