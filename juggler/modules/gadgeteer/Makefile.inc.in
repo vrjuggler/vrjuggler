@@ -173,10 +173,6 @@ ifneq (@OS_TYPE@, Win32)
 	@$(MAKE) -C gad instlinks=$(instlinks) links
 	cd $(instlinks) && rm -f ./$(LIBDIR_NAME) &&			\
           ln -s $(LIBDIR_BASE) ./$(LIBDIR_NAME)
-	cd $(instlinks) && rm -rf ./$(GAD_SHARE_DIR) &&			\
-          $(SHELL) $(MKINSTALLDIRS) ./$(GAD_SHARE_DIR)
-	cd $(instlinks)/$(GAD_SHARE_DIR) && rm -f ./Data &&		\
-          ln -s $(GADROOT_ABS)/Data ./Data
 	cd $(instlinks)/include/gad && rm -f ./*.h &&			\
           $(LN_S) $(GADROOT_ABS)/gad/*.h ./
 	cd $(instlinks)/include/gad && rm -f ./gadDefines.h &&		\
