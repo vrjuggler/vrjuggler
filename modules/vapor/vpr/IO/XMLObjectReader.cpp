@@ -50,6 +50,7 @@
 #include <vpr/Util/Debug.h>
 
 #include <cppdom/cppdom.h>
+#include <cppdom/version.h>
 #include <string>
 #include <sstream>
 #include <iterator>
@@ -204,7 +205,11 @@ vpr::ReturnStatus XMLObjectReader::beginTag(std::string tagName)
 
       // Make sure that we get to child of type node.
       // While next child is not of type node skip over cdata...
+#if CPPDOM_VERSION_MAJOR == 0 && CPPDOM_VERSION_MINOR < 4
+      while( (*(mCurNodeStack.back().nextChild_i))->getType() != cppdom::xml_nt_node)
+#else
       while( (*(mCurNodeStack.back().nextChild_i))->getType() != cppdom::Node::xml_nt_node)
+#endif
       {
          vprDEBUG(vprDBG_ALL,XML_OR_LEVEL) << "Skip node: " << (*(mCurNodeStack.back().nextChild_i))->getName() << " -- non nt_node type.\n" << vprDEBUG_FLUSH;
          mCurNodeStack.back().nextChild_i++;
