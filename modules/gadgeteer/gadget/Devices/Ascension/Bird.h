@@ -42,7 +42,7 @@
 #include <vjConfig.h>
 #include <Input/vjInput/vjInput.h>
 #include <Input/vjPosition/vjPosition.h>
-#include <VPR/Threads/vjThread.h>
+#include <vpr/Thread/Thread.h>
 #include <Input/vjPosition/vjFlock.h>
 
 //: A start at a standalone bird derice driver.
@@ -117,7 +117,7 @@ public:
 private:
    void positionCorrect(float&x,float&y,float&z);
    void initCorrectionTable();
-   vjThread*   myThread;      // ptr to our thread object
+   vpr::Thread*   myThread;      // ptr to our thread object
    CalStruct   caltable;
    int  syncStyle, blocking;
    char repRate;

@@ -49,15 +49,15 @@
 class vjGlApp;
 #include <Kernel/GL/vjGlWindow.h>
 #include <Kernel/GL/vjGlPipe.h>
-#include <VPR/Threads/vjTSObjectProxy.h>
+#include <vpr/Thread/TSObjectProxy.h>
 #include <Kernel/GL/vjGlUserData.h>
 
 class vjConfigChunkDB;
 class vjGloveProxy;
 class vjSimViewport;
 
-//#include <VPR/Sync/vjCond.h>
-#include <VPR/Sync/vjSemaphore.h>
+//#include <vpr/Sync/CondVar.h>
+#include <vpr/Sync/Semaphore.h>
 #include <Utils/vjSingleton.h>
 
 //-----------------------------------------------
@@ -213,13 +213,13 @@ protected:
    std::vector<vjGlPipe*>   pipes;    //: A list of the pipes in the system
 
    // --- Helper field data --- //
-   vjTSObjectProxy<int>             mContextId;    //: TS Data for context id
-   vjTSObjectProxy<vjGlUserData>    mUserData;     //: User data for draw func
+   vpr::TSObjectProxy<int>             mContextId;    //: TS Data for context id
+   vpr::TSObjectProxy<vjGlUserData>    mUserData;     //: User data for draw func
 
    // --- MP Stuff -- //
-   vjSemaphore    drawTriggerSema;  // Semaphore for draw trigger
-   vjSemaphore    drawDoneSema;     // Semaphore for drawing done
-   vjSemaphore    mRuntimeConfigSema;  //: Protects run-time config.  Only when this semaphore
+   vpr::Semaphore    drawTriggerSema;  // Semaphore for draw trigger
+   vpr::Semaphore    drawDoneSema;     // Semaphore for drawing done
+   vpr::Semaphore    mRuntimeConfigSema;  //: Protects run-time config.  Only when this semaphore
                                        //+ is acquired can run-time config occur
 
 protected:

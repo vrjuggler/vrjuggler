@@ -35,13 +35,13 @@
 #define _VJ_SYSTEM_H_
 
 #include <vjConfig.h>
-#include <VPR/Sync/vjMutex.h>
+#include <vpr/Sync/Mutex.h>
 
 //------------------------------------------------------
 //:  This class holds the state of the library system
 //
 //-------------------------------------------------------
-class vjSystem
+class vpr::System
 {
 // ----------- Base vjMemPool Stuff    --------- //
 //  Since we need to put the singleton in Shared memory
@@ -70,24 +70,24 @@ public:
     static void init()  // Just makes sure that we have been allocated
     { getInstance(); }
 
-    static vjSystem* getInstance()
+    static vpr::System* getInstance()
     {
    if (_instance == NULL) {
        // Called automatically --- vjSharedPool::init();   // Initialize the vjMemPoolStuff
        baseMemPool = new vjSharedPool(baseMemPoolSize, baseNumProcs);
-       _instance = new vjSystem(baseMemPool);
+       _instance = new vpr::System(baseMemPool);
    }
    return _instance;
     }
 
 protected:
    // -- Constructor protected so it cannot be called except by getInstance --- //
-    vjSystem()
+    vpr::System()
     {
 
     }
 private:
-    static vjSystem* _instance;
+    static vpr::System* _instance;
 };
 
 #endif  /* _VJ_SYSTEM_H_ */

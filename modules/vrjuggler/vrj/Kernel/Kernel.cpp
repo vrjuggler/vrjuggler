@@ -42,10 +42,9 @@
 #include <Kernel/vjApp.h>
 #include <Kernel/vjUser.h>
 
-#include <VPR/Threads/vjThread.h>
+#include <vpr/Thread/Thread.h>
 #include <Environment/vjEnvironmentManager.h>
-#include <VPR/SharedMem/vjMemPool.h>
-#include <VPR/vjSystem.h>
+#include <vpr/System.h>
 
 #include <Input/InputManager/vjInputManager.h>
 
@@ -77,11 +76,11 @@ int vjKernel::start()
    }
 
    // Create a new thread to handle the control
-   vjThreadMemberFunctor<vjKernel>* memberFunctor =
-   new vjThreadMemberFunctor<vjKernel>(this, &vjKernel::controlLoop, NULL);
+   vpr::ThreadMemberFunctor<vjKernel>* memberFunctor =
+   new vpr::ThreadMemberFunctor<vjKernel>(this, &vjKernel::controlLoop, NULL);
 
-   vjThread* new_thread;   // I set mControlThread in vjKernel::controlLoop
-   new_thread = new vjThread(memberFunctor);
+   vpr::Thread* new_thread;   // I set mControlThread in vjKernel::controlLoop
+   new_thread = new vpr::Thread(memberFunctor);
    //vjASSERT(new_thread->valid());
 
    vjDEBUG(vjDBG_KERNEL,vjDBG_STATE_LVL) << "vjKernel::start: Just started control loop.  "
@@ -95,12 +94,12 @@ void vjKernel::controlLoop(void* nullParam)
 {
    vjDEBUG(vjDBG_KERNEL,1) << "vjKernel::controlLoop: Started.\n" << vjDEBUG_FLUSH;
 
-   while (0 == vjThread::self())
+   while (0 == vpr::Thread::self())
    {
       vjDEBUG(vjDBG_ALL,1) << "vjKernel: Waiting for (thread::self() != NULL)\n" << vjDEBUG_FLUSH;
-      vjSystem::usleep(50);
+      vpr::System::usleep(50);
    }
-   mControlThread = (vjThread*) vjThread::self();
+   mControlThread = (vpr::Thread*) vpr::Thread::self();
 
    vjTimeStamp::initialize();
    // Do any initial configuration
@@ -139,7 +138,7 @@ void vjKernel::controlLoop(void* nullParam)
       {
          // ??? Should we do this, or just grind up the CPU as fast as possible
          vjASSERT(NULL != mControlThread);      // If control thread is not set correctly, it will seg fault here
-         vjThread::yield();   // Give up CPU
+         vpr::Thread::yield();   // Give up CPU
       }
 
       //vjSystem::usleep(10000);
@@ -172,7 +171,7 @@ void vjKernel::setApplication(vjApp* _app)
 //! NOTE: Can only be called by the kernel thread
 void vjKernel::checkForReconfig()
 {
-   vjASSERT(vjThread::self() == mControlThread);      // ASSERT: We are being called from kernel thread
+   vjASSERT(vpr::Thread::self() == mControlThread);      // ASSERT: We are being called from kernel thread
 
    // ---- RECONFIGURATION --- //
    int total_chunks_processed(0);
@@ -225,7 +224,7 @@ void vjKernel::changeApplication(vjApp* _app)
    vjDEBUG(vjDBG_KERNEL,1) << "vjKernel::changeApplication: Changing to:"
                            << _app << std::endl << vjDEBUG_FLUSH;
 
-   vjASSERT(vjThread::self() == mControlThread);      // ASSERT: We are being called from kernel thread
+   vjASSERT(vpr::Thread::self() == mControlThread);      // ASSERT: We are being called from kernel thread
 
    // EXIT Previous application
    if(mApp != NULL)
@@ -260,18 +259,14 @@ void vjKernel::changeApplication(vjApp* _app)
 
 
 //-----------------------------------------------
-// Initialize Shared Memory
 // Load config
 // Setup Input, Display, and kernel
 //!NOTE: Does initial configuration and then sends config file to configAdd
-//!POST: Shared Memory Initialized
+//!POST: config is init'd
 //----------------------------------------------
 void vjKernel::initConfig()
 {
    vjDEBUG_BEGIN(vjDBG_KERNEL,3) << "vjKernel::initConfig: Setting initial config.\n" << vjDEBUG_FLUSH;
-
-   // --- CREATE SHARED MEMORY --- //
-   vjSharedPool::init();         // Try to init the pool stuff
 
    // ---- ALLOCATE MANAGERS --- //
    //initialSetupInputManager();

@@ -157,7 +157,7 @@ public:
    int mouseFD;
    vjPOS_DATA theData[3];
 
-   vjThread*   myThreadID; // Ptr to the thread object
+   vpr::Thread*   myThreadID; // Ptr to the thread object
    vjVec3      baseVector; // Used to store the base location tooffset from
             // Originally set to 0,0,0
 

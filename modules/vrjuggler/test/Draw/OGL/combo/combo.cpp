@@ -44,7 +44,7 @@
       // --- Lib Stuff --- //
 #include <Kernel/vjKernel.h>
 #include <Kernel/vjProjection.h>
-#include <VPR/vjSystem.h>
+#include <vpr/System.h>
 
 int main(int argc, char* argv[])
 {
@@ -83,13 +83,13 @@ int main(int argc, char* argv[])
 
    while(1)
    {
-      vjSystem::sleep(5);
+      vpr::System::sleep(5);
       kernel->setApplication(wand_app);
-      vjSystem::sleep(5);
+      vpr::System::sleep(5);
       kernel->setApplication(cubes_app);
-      vjSystem::sleep(5);
+      vpr::System::sleep(5);
       kernel->setApplication(torus_app);
 
-      vjThread::yield();
+      vpr::Thread::yield();
    }
 }

@@ -209,7 +209,7 @@ vjMotionStar::startSampling () {
             vjDEBUG(vjDBG_INPUT_MGR, 1) << "vjMotionStar ready to go.\n"
                                         << vjDEBUG_FLUSH;
 
-            m_my_thread = new vjThread(sampleBirds, (void*) this);
+            m_my_thread = new vpr::Thread(sampleBirds, (void*) this);
 
             if ( m_my_thread == NULL ) {
                vjDEBUG(vjDBG_INPUT_MGR, 0)
@@ -394,7 +394,7 @@ vjMotionStar::updateData () {
    }
    // Otherwise, go through with the update.
    else {
-      vjGuard<vjMutex> updateGuard(lock);
+      vpr::Guard<vpr::Mutex> updateGuard(lock);
 
       // Copy the valid data to the current data so that both are valid.
       for ( unsigned int i = 0; i < getNumBirds(); i++ ) {

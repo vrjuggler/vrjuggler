@@ -39,7 +39,7 @@
 #include <Config/vjConfigChunk.h>
 #include <Config/vjChunkDescDB.h>
 #include <Utils/vjDebug.h>
-#include <VPR/Sync/vjMutex.h>
+#include <vpr/Sync/Mutex.h>
 #include <Utils/vjSingleton.h>
 
 
@@ -124,7 +124,7 @@ public:
    {
       if(_instance == NULL)                     // First check
       {
-         vjGuard<vjMutex> guard(_inst_lock);    // Serial critical section
+         vpr::Guard<vpr::Mutex> guard(_inst_lock);    // Serial critical section
          if (_instance == NULL)                 // Second check
             _instance = new vjChunkFactory;
       }
@@ -134,7 +134,7 @@ public:
 
 private:
    static vjChunkFactory* _instance;   //: The instance
-   static vjMutex _inst_lock;
+   static vpr::Mutex _inst_lock;
    */
 };
 

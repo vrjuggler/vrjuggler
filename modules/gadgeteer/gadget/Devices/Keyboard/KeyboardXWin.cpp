@@ -30,12 +30,15 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include <vjConfig.h>
-#include <Input/vjKeyboard/vjXWinKeyboard.h>
+
+#include <vpr/Thread/Thread.h>
+#include <vpr/System.h>
+
 #include <Utils/vjDebug.h>
 #include <Kernel/vjDisplayManager.h>
-#include <VPR/Threads/vjThread.h>
 #include <Config/vjConfigChunk.h>
-#include <VPR/vjSystem.h>
+
+#include <Input/vjKeyboard/vjXWinKeyboard.h>
 
 
 //: Constructor
@@ -106,12 +109,12 @@ void vjXWinKeyboard::controlLoop(void* nullParam)
 {
    vjDEBUG(vjDBG_INPUT_MGR,vjDBG_STATE_LVL) << "vjXWinKeyboard::controlLoop: Thread started.\n" << vjDEBUG_FLUSH;
 
-   while (NULL == vjThread::self())
+   while (NULL == vpr::Thread::self())
    {
-      vjSystem::usleep(50);
+      vpr::System::usleep(50);
       vjDEBUG(vjDBG_ALL,vjDBG_VERB_LVL) << "vjXWinKeyboard: Waiting for (thread::self() != NULL)\n" << vjDEBUG_FLUSH;
    }
-   myThread = (vjThread*) vjThread::self();
+   myThread = (vpr::Thread*) vpr::Thread::self();
 
    // Open the x-window
    if(mWeOwnTheWindow)
@@ -135,7 +138,7 @@ void vjXWinKeyboard::controlLoop(void* nullParam)
 
       usleep_time = mSleepTimeMS*1000;
 
-      vjSystem::usleep(usleep_time);
+      vpr::System::usleep(usleep_time);
    }
 
    // Exit, cleanup code
@@ -159,11 +162,11 @@ int vjXWinKeyboard::startSampling()
    resetIndexes();      // Reset the buffering variables
 
    // Create a new thread to handle the control
-   vjThreadMemberFunctor<vjXWinKeyboard>* memberFunctor =
-      new vjThreadMemberFunctor<vjXWinKeyboard>(this, &vjXWinKeyboard::controlLoop, NULL);
+   vpr::ThreadMemberFunctor<vjXWinKeyboard>* memberFunctor =
+      new vpr::ThreadMemberFunctor<vjXWinKeyboard>(this, &vjXWinKeyboard::controlLoop, NULL);
 
-   vjThread* new_thread;
-   new_thread = new vjThread(memberFunctor);
+   vpr::Thread* new_thread;
+   new_thread = new vpr::Thread(memberFunctor);
    myThread = new_thread;
 
    return 1;
@@ -188,7 +191,7 @@ int vjXWinKeyboard::onlyModifier(int mod)
 
 void vjXWinKeyboard::updateData()
 {
-vjGuard<vjMutex> guard(mKeysLock);      // Lock access to the m_keys array
+vpr::Guard<vpr::Mutex> guard(mKeysLock);      // Lock access to the m_keys array
    if(mHandleEventsHasBeenCalled)            // If we haven't updated anything, then don't swap stuff
    {
       mHandleEventsHasBeenCalled = false;
@@ -239,7 +242,7 @@ void vjXWinKeyboard::HandleEvents()
 // GUARD m_keys for duration of loop
 // Doing it here gives makes sure that we process all events and don't get only part of them for an update
 // In order to copy data over to the m_curKeys array
-vjGuard<vjMutex> guard(mKeysLock);      // Lock access to the m_keys array for the duration of this function
+vpr::Guard<vpr::Mutex> guard(mKeysLock);      // Lock access to the m_keys array for the duration of this function
 
    mHandleEventsHasBeenCalled = true;       // We have been called now - Tell tehm to swap because we do have data
    // Loop while the event queue contains events for m_window that are part
@@ -443,7 +446,7 @@ int vjXWinKeyboard::stopSampling()
   if (myThread != NULL)
   {
     mExitFlag = true;
-    vjSystem::sleep(1);
+    vpr::System::sleep(1);
   }
 
   return 1;

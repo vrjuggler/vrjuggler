@@ -39,7 +39,7 @@
 #include <Input/ibox/ibox.h>
 #include <Input/vjInput/vjIbox.h>
 #include <Input/vjGlove/vjCyberGlove.h>
-#include <VPR/vjSystem.h>
+#include <vpr/System.h>
 
 int main()
 {
@@ -123,7 +123,7 @@ int main()
                  << gdata->joints[3][1] << " " << gdata->joints[3][2] << " "
                  << gdata->joints[3][3] << std::endl;
 */
-         vjSystem::sleep(2);
+         vpr::System::sleep(2);
     }
      break;
    }

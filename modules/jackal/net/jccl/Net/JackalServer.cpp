@@ -414,11 +414,11 @@ bool vjEnvironmentManager::acceptConnections() {
             << vjDEBUG_FLUSH;
 
     /* now we ought to spin off a thread to do the listening */
-    vjThreadMemberFunctor<vjEnvironmentManager>* memberFunctor =
-        new vjThreadMemberFunctor<vjEnvironmentManager>(this,
+    vpr::ThreadMemberFunctor<vjEnvironmentManager>* memberFunctor =
+        new vpr::ThreadMemberFunctor<vjEnvironmentManager>(this,
                                                         &vjEnvironmentManager::controlLoop,
                                                         NULL);
-    listen_thread = new vjThread(memberFunctor);
+    listen_thread = new vpr::Thread(memberFunctor);
 
     return (listen_thread != NULL);
 }

@@ -39,7 +39,7 @@
 #include <vjConfig.h>
 #include <Environment/vjTimedUpdate.h>
 #include <Performance/vjTimeStamp.h>
-#include <VPR/Sync/vjMutex.h>
+#include <vpr/Sync/Mutex.h>
 #include <Utils/vjDebug.h>
 
 //---------------------------------------------------------------
@@ -89,7 +89,7 @@ class VJ_CLASS_API vjPerfDataBuffer: public vjTimedUpdate {
     buf_entry*  buffer;
     int         numbufs;
     int         lost;
-    vjMutex     lost_lock;
+    vpr::Mutex     lost_lock;
 
     int         read_begin;
     int         write_pos;

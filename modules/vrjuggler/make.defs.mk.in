@@ -86,16 +86,17 @@
 # Base variables needed by all makefiles.
 # -----------------------------------------------------------------------------
 mtreedir	= $(topdir)/release/mtree
-releasedir	= @SAFE_VJROOT_ABS@/release
+releasedir	= @SAFE_JUGGLERROOT_ABS@/release
 scriptdir	= $(releasedir)/scripts
 topdir		= @topdir@
 MAKEFLAGS	+= --no-print-directory
 MKDEPS_CC	= @CC@
 MKDEPS_CXX	= @CXX@
 MKINSTALLDIRS	= $(scriptdir)/mkinstalldirs
-MKPATH		= $(VJROOT_ABS)/BuildSystem/mk
+MKPATH		= $(JUGGLERROOT_ABS)/Doozer++/mk
 MTREE_CMD	= @MTREE_CMD@
 VJROOT_ABS	= @SAFE_VJROOT_ABS@
+JUGGLERROOT_ABS   = @SAFE_JUGGLERROOT_ABS@
 VJ_SHARE_DIR	= @VJ_SHARE_DIR@
 
 # -----------------------------------------------------------------------------

@@ -55,7 +55,7 @@
 #include <unistd.h>   // for close()
 #include <sys/time.h>
 
-#include <VPR/vjSystem.h>
+#include <vpr/System.h>
 #include <Input/vjPosition/logiclass.h>   // classprototypes and data types
 
 // uncommenting the following will produce debug print statements */
@@ -71,7 +71,7 @@ int vjThreeDMouse::startSampling()
    vjThreeDMouse* devicePtr = this;
    void sampleMouse(void*);
 
-   myThread = new vjThread(sampleMouse, (void *) devicePtr);
+   myThread = new vpr::Thread(sampleMouse, (void *) devicePtr);
    if ( !myThread->valid() ) {
       return -1;
    } else {
@@ -366,7 +366,7 @@ void vjThreeDMouse::cuResetControlUnit ()
 void vjThreeDMouse::getDiagnostics ( char data[])
 {
   vjThreeDMouse::cuRequestDiagnostics ();	/* command diagnostics */
-  vjSystem::sleep(1);
+  vpr::System::sleep(1);
   read (mouseFD, data, DIAGNOSTIC_SIZE);
 }
 
@@ -415,9 +415,9 @@ int vjThreeDMouse::getRecord ( vjPOS_DATA* data)
 void vjThreeDMouse::resetControlUnit ()
 {
   vjThreeDMouse::cuDemandReporting ();	/* make sure control unit is processing */
-  vjSystem::usleep ((long) 100000);	/* wait 10 clock ticks = 100 ms */
+  vpr::System::usleep ((long) 100000);	/* wait 10 clock ticks = 100 ms */
   vjThreeDMouse::cuResetControlUnit ();	/* command a reset */
-  vjSystem::sleep(1);
+  vpr::System::sleep(1);
 }
 
 

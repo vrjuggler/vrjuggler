@@ -36,7 +36,7 @@
 
 #include <vjConfig.h>
 #include <iostream>
-
+#include <vpr/IO/Socket/Socket.h>
 #ifndef VJ_OS_Win32
 
 

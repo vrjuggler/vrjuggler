@@ -36,7 +36,7 @@
 //#include <VPR/SharedMem/vjSharedType.h>
 #include <Input/vjPosition/logiclass.h>
 //#include <Input/ibox/ibox.h>
-#include <VPR/vjSystem.h>
+#include <vpr/System.h>
 
 int main()
 {
@@ -74,7 +74,7 @@ int main()
                    << "   roll:" << std::setw(10) <<data->orient.vec[2] << std::endl
                    << std::endl;
          std::cout << std::endl;
-         vjSystem::sleep(2);
+         vpr::System::sleep(2);
     }
      break;
    }

@@ -50,7 +50,7 @@
 #include <Input/vjPosition/vjPosition.h>
 #include <Input/vjInput/vjDigital.h>
 #include <Input/vjInput/vjAnalog.h>
-#include <VPR/Threads/vjThread.h>
+#include <vpr/Thread/Thread.h>
 #include <Input/vjPosition/isIntersense.h>
 #include <vector>
 
