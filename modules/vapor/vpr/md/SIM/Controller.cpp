@@ -90,13 +90,14 @@ vpr::ReturnStatus Controller::constructNetwork (const std::string& graph_file)
 }
 
 void Controller::addEvent (const vpr::Interval& event_time,
-                           const NetworkGraph::net_edge_t edge)
+                           const NetworkGraph::net_edge_t edge,
+                           const NetworkLine::LineDirection dir)
 {
    vprDEBUG(vprDBG_ALL, vprDBG_HVERB_LVL)
       << "Controller::addEvent(): Adding event scheduled for time "
       << event_time.getBaseVal() << " on edge " << edge << "\n"
       << vprDEBUG_FLUSH;
-   mEvents.insert(std::pair<vpr::Interval, NetworkGraph::net_edge_t>(event_time, edge));
+   mEvents.insert(std::pair<vpr::Interval, EventData>(event_time, EventData(edge, dir)));
 }
 
 void Controller::processNextEvent ()
@@ -105,9 +106,9 @@ void Controller::processNextEvent ()
 
    if ( cur_event != mEvents.end() )
    {
-      bool event_processed                = false;
       vpr::Interval event_time            = (*cur_event).first;
-      NetworkGraph::net_edge_t event_edge = (*cur_event).second;
+      NetworkGraph::net_edge_t event_edge = (*cur_event).second.edge;
+      NetworkLine::LineDirection dir      = (*cur_event).second.direction;
       vpr::sim::NetworkLine line          = mGraph.getLineProperty(event_edge);
       vpr::sim::MessagePtr msg;
       vpr::ReturnStatus status;
@@ -122,86 +123,21 @@ void Controller::processNextEvent ()
       // Process event in the line's transmission queue.
       // ----------------------------------------------------------------------
 
-      status = line.checkForArrivedMessage(event_time, msg,
-                                           NetworkLine::FORWARD);
+      status = line.getArrivedMessage(event_time, msg, dir);
+      vprASSERT(status.success() && "No arrived message at this time");
 
-      if ( status.success() )
+      vprDEBUG(vprDBG_ALL, vprDBG_HVERB_LVL)
+         << "Controller::processNextEvent(): Event is an arrived message on "
+         << "forward queue of line " << line.getNetworkAddressString()
+         << "\n" << vprDEBUG_FLUSH;
+      mClock.setCurrentTime(event_time);
+      moveMessage(msg, event_time);
+
+      mEvents.erase(cur_event);
+
+      if ( mSleepTime != 0 )
       {
-         vprDEBUG(vprDBG_ALL, vprDBG_HVERB_LVL)
-            << "Controller::processNextEvent(): Event is an arrived message on "
-            << "forward queue of line " << line.getNetworkAddressString()
-            << "\n" << vprDEBUG_FLUSH;
-         mClock.setCurrentTime(event_time);
-         moveMessage(msg, event_time);
-         event_processed = true;
-      }
-      else
-      {
-         status = line.checkForArrivedMessage(event_time, msg,
-                                              NetworkLine::REVERSE);
-
-         if ( status.success() )
-         {
-            vprDEBUG(vprDBG_ALL, vprDBG_HVERB_LVL)
-               << "Controller::processNextEvent(): Event is an arrived "
-               << "message on reverse queue of line "
-               << line.getNetworkAddressString() << "\n" << vprDEBUG_FLUSH;
-            mClock.setCurrentTime(event_time);
-            moveMessage(msg, event_time);
-            event_processed = true;
-         }
-      }
-
-      // If the event was not processed as a message arrival, try to process
-      // the event as a message that is ready to start transmission.
-      if ( ! event_processed )
-      {
-         // -------------------------------------------------------------------
-         // Process event in the line's ready queue.
-         // -------------------------------------------------------------------
-
-         status = line.checkForReadyMessage(event_time, msg,
-                                            NetworkLine::FORWARD);
-
-         if ( status.success() )
-         {
-            vprDEBUG(vprDBG_ALL, vprDBG_HVERB_LVL)
-               << "Controller::processNextEvent(): Event is a ready "
-               << "message on forward queue of line "
-               << line.getNetworkAddressString() << "\n" << vprDEBUG_FLUSH;
-            mClock.setCurrentTime(event_time);
-            event_processed = true;
-            addEvent(msg->whenArrivesFully(), event_edge);
-         }
-         else
-         {
-            status = line.checkForReadyMessage(event_time, msg,
-                                               NetworkLine::REVERSE);
-
-            if ( status.success() )
-            {
-               vprDEBUG(vprDBG_ALL, vprDBG_HVERB_LVL)
-                  << "Controller::processNextEvent(): Event is a ready "
-                  << "message on reverse queue of line "
-                  << line.getNetworkAddressString() << "\n" << vprDEBUG_FLUSH;
-               mClock.setCurrentTime(event_time);
-               event_processed = true;
-               addEvent(msg->whenArrivesFully(), event_edge);
-            }
-         }
-      }
-
-      vprASSERT(event_processed && "The event was not processed!");
-
-      // If the event was processed, we remove it from the queue and return.
-      if ( event_processed )
-      {
-         mEvents.erase(cur_event);
-
-         if ( mSleepTime > 0 )
-         {
-            vpr::Thread::usleep(mSleepTime);
-         }
+         vpr::Thread::usleep(mSleepTime);
       }
    }
 }
@@ -265,9 +201,9 @@ void Controller::moveMessage (vpr::sim::MessagePtr msg,
             << "arrives = " << msg->whenArrivesFully().getBaseVal()
             << std::endl << vprDEBUG_FLUSH;
 
-         next_line_prop.addReadyMessage(msg, dir);
+         next_line_prop.addMessage(msg, dir);
          mGraph.setLineProperty(next_line, next_line_prop);
-         addEvent(msg->whenStartOnWire(), next_line);
+         addEvent(msg->whenArrivesFully(), next_line, dir);
       }
       // End of the path--we have reached our destination.
       else
