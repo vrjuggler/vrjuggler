@@ -60,17 +60,18 @@ class VNCDesktop;
 void drawbox( GLdouble x0, GLdouble x1, GLdouble y0, GLdouble y1,
                 GLdouble z0, GLdouble z1, GLenum type );
 
-//----------------------------------------------------
-//: Demonstration OpenGL application class
-//
-// This application simply renders a box on the wand
-//----------------------------------------------------
+/**
+ * This application demonstrates how to use VNC within a VR Juggler
+ * application object to embed any 2D GUI in the 3D space.
+ */
 class vncApp : public vrj::GlApp
 {
 public:
    // Constructor.
    vncApp(vrj::Kernel* kern)
-      : vrj::GlApp(kern), mEmbeddedGUI(false), mFrameRate(vpr::Interval(1, vpr::Interval::Sec))
+      : vrj::GlApp(kern)
+      , mFrameRate(vpr::Interval(1, vpr::Interval::Sec))
+      , mEmbeddedGUI(false)
    {
       ;
    }
