@@ -239,7 +239,6 @@ esac
 # -----------------------------------------------------------------------------
 # Path setup.
 # -----------------------------------------------------------------------------
-DPP_WIN32_SETUP
 
 # $srcdir is the root directory of the juggler source tree.  To get a value
 # for $VPRROOT_ABS, we cd there and save the value of running pwd.  Then
