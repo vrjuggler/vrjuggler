@@ -33,10 +33,12 @@
 package org.vrjuggler.vrjconfig.customeditors.motionstar;
 
 import java.awt.Container;
+import java.awt.Dimension;
 import org.vrjuggler.jccl.config.ConfigContext;
 import org.vrjuggler.jccl.config.ConfigElement;
 import org.vrjuggler.jccl.editors.CustomEditor;
 import org.vrjuggler.jccl.editors.CustomEditorRegistry;
+import org.vrjuggler.vrjconfig.commoneditors.DeviceEditorPanel;
 
 
 public class MotionStarEditor
@@ -44,6 +46,15 @@ public class MotionStarEditor
 {
    public MotionStarEditor()
    {
+      java.net.URL help_url =
+         getClass().getClassLoader().getResource("org/vrjuggler/vrjconfig/customeditors/motionstar/data/help.html");
+
+      mMainEditorPanel = new DeviceEditorPanel(help_url,
+                                               new MotionStarEditorPanel(),
+                                               new Dimension(0, 0),
+                                               new Dimension(225, 680),
+                                               new Dimension(600, 680),
+                                               new Dimension(735, 680));
       CustomEditorRegistry.registerEditor("motion_star", getClass());
    }
 
@@ -66,5 +77,5 @@ public class MotionStarEditor
 
    private ConfigContext mContext = null;
    private ConfigElement mElement = null;
-   private MainEditorPanel mMainEditorPanel = new MainEditorPanel();
+   private DeviceEditorPanel mMainEditorPanel = null;
 }

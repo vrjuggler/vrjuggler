@@ -41,6 +41,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import org.vrjuggler.jccl.config.*;
 import org.vrjuggler.jccl.editors.PropertyEditorPanel;
+import org.vrjuggler.vrjconfig.commoneditors.DeviceTypeEditor;
 import org.vrjuggler.vrjconfig.commoneditors.ProxyEditor;
 import org.vrjuggler.vrjconfig.commoneditors.TransmitterTransformPanel;
 
@@ -48,6 +49,7 @@ import org.vrjuggler.vrjconfig.commoneditors.TransmitterTransformPanel;
 public class MotionStarEditorPanel
    extends JPanel
    implements ChangeListener
+            , DeviceTypeEditor
 {
    public MotionStarEditorPanel()
    {
