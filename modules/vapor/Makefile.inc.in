@@ -301,6 +301,9 @@ install-m4:
 	@echo "Installing Autoconf m4 macros"
 	@echo "------------------------------------------------"
 	$(SHELL) $(MKINSTALLDIRS) $(datadir)/aclocal
+	$(INSTALL) -m $(FILE_PERMS) $(EXTRA_INSTALL_ARGS)		\
+          $(GROUP_OPT_UNIX) $(JUGGLERROOT_ABS)/macros/vrj-helpers.m4	\
+          $(datadir)/aclocal
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
           $(EXTRA_INSTALL_ARGS) $(JUGGLERROOT_ABS)/macros/vpr.m4	\
           $(datadir)/aclocal
