@@ -6,8 +6,8 @@
 # Contributors (Alphabetically): 
 #               Albert Baker, Allen Bierbaum, Carolina Cruz-Neira, 
 #               Jesse Coats, Patrick Hartling, Andrew Himberger, 
-#               Chris Johanson, Christopher Just,
-#               Kevin Meinert, Ben Thompson
+#               Chris Johanson, Christopher Just, Kevin Meinert,
+#               Ben Thompson, Terry Welsh
 # 
 
 ------------------
