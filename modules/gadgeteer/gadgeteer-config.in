@@ -264,3 +264,5 @@ if test "x$echo_extra_libs" = "xyes"; then
     gad_extra_libs="@gad_extra_libs@"
     echo $gad_extra_ldflags $gad_extra_libs
 fi
+
+exit 0
