@@ -54,6 +54,7 @@
 #include <vpr/vprConfig.h>
 #include <pthread.h>
 #include <vpr/md/POSIX/Sync/MutexPosix.h>
+#include <vpr/Util/Interval.h>
 
 
 namespace vpr {
@@ -118,20 +119,36 @@ public:
      *         condition variable.
      */
     int
-    wait (void) {
+    wait (vpr::Interval time_to_wait = vpr::Interval::NoTimeout) {
         // ASSERT:  We have been locked
+        int status;
 
         // If not locked ...
         if ( mCondMutex->test() == 0 ) {
             std::cerr << "vpr::CondVarPosix::wait: INCORRECT USAGE: Mutex was not "
                       << "locked when wait invoked!!!\n";
 
-            return -1;
+            status = -1;
+        }
+        else {
+            // The mutex variable must be locked when passed to
+            // pthread_cond_wait().
+            if ( vpr::Interval::NoTimeout == time_to_wait )
+            {
+                return pthread_cond_wait(&mCondVar, &(mCondMutex->mMutex));
+            }
+            else
+            {
+                struct timespec abstime;
+                abstime.tv_sec  = time_to_wait.sec();
+                abstime.tv_nsec = time_to_wait.usec();
+
+                return pthread_cond_timedwait(&mCondVar, &(mCondMutex->mMutex),
+                                              &abstime);
+            }
         }
 
-        // The mutex variable must be locked when passed to
-        // pthread_cond_wait().
-        return pthread_cond_wait(&mCondVar, &(mCondMutex->mMutex));
+        return status;
     }
 
     /**
