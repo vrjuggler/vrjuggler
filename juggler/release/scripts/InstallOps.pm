@@ -221,7 +221,12 @@ sub installFile ($$$$$) {
     }
 
     copy("$src_file", "$inst_dir") or warn "copy: $!\n";
-    chown($uid, $gid, "$inst_dir/$filename") or die "chown: $!\n";
+
+    if ( ! $Win32 )
+    {
+       chown($uid, $gid, "$inst_dir/$filename") or die "chown: $!\n";
+    }
+
     chmod(oct($mode), "$inst_dir/$filename") or die "chmod: $!\n";
 }
 
