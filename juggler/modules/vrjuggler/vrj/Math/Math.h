@@ -282,7 +282,14 @@ public:
    //: Linear Interpolation between number [a] and [b]
    // use double or float only...
    template <class dataType>
-   inline static void lerp( dataType& result, const dataType& lerp, const dataType& a,
+   inline static void lerp( dataType& result, const float& lerp, const dataType& a,
+                     const dataType& b )
+   {
+       dataType size = b - a;
+       result = a + (size * lerp);
+   }
+   template <class dataType>
+   inline static void lerp( dataType& result, const double& lerp, const dataType& a,
                      const dataType& b )
    {
        dataType size = b - a;
