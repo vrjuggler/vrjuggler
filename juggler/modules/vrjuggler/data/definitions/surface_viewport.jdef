@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?org-vrjuggler-jccl-settings definition.version="3.0"?>
-<definition name="surface_viewport"
-            icon_path="jar:file:${VJ_BASE_DIR}/bin/beans/ProxyEditor.jar!/org/vrjuggler/vrjconfig/customeditors/proxyeditor/images/position64.jpg"
-            xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.0/definition http://www.vrjuggler.org/jccl/xsd/3.0/definition.xsd"
-            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-            xmlns="http://www.vrjuggler.org/jccl/xsd/3.0/definition">
+<?org-vrjuggler-jccl-settings definition.version="3.1"?>
+<definition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.vrjuggler.org/jccl/xsd/3.1/definition" name="surface_viewport" icon_path="jar:file:${VJ_BASE_DIR}/bin/beans/ProxyEditor.jar!/org/vrjuggler/vrjconfig/customeditors/proxyeditor/images/position64.jpg" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.1/definition http://www.vrjuggler.org/jccl/xsd/3.1/definition.xsd">
    <definition_version version="1" label="Surface Viewport">
       <help>This is a viewport surface that images are projected onto.</help>
       <parent/>
@@ -20,11 +16,13 @@
          <value label="Height" defaultvalue="1.0"/>
       </property>
       <property valuetype="integer" variable="false" name="view">
-         <help />
+         <help/>
          <value label="View" defaultvalue="1"/>
-         <enum label="Left Eye" value="1"/>
-         <enum label="Right Eye" value="2"/>
-         <enum label="Stereo" value="3"/>
+         <enumeration editable="false">
+            <enum label="Left Eye" value="1"/>
+            <enum label="Right Eye" value="2"/>
+            <enum label="Stereo" value="3"/>
+         </enumeration>
       </property>
       <property valuetype="configelement" variable="false" name="corners">
          <help>The corners of the surface</help>
@@ -35,7 +33,7 @@
          <allowed_type>vec3</allowed_type>
       </property>
       <property valuetype="configelementpointer" variable="false" name="user">
-         <help />
+         <help/>
          <value label="User"/>
          <allowed_type>user</allowed_type>
       </property>
@@ -69,11 +67,13 @@
          <value label="Height" defaultvalue="1.0"/>
       </property>
       <property valuetype="integer" variable="false" name="view">
-         <help />
+         <help/>
          <value label="View" defaultvalue="1"/>
-         <enum label="Left Eye" value="1"/>
-         <enum label="Right Eye" value="2"/>
-         <enum label="Stereo" value="3"/>
+         <enumeration editable="false">
+            <enum label="Left Eye" value="1"/>
+            <enum label="Right Eye" value="2"/>
+            <enum label="Stereo" value="3"/>
+         </enumeration>
       </property>
       <property valuetype="float" variable="false" name="lower_left_corner">
          <help/>
@@ -100,7 +100,7 @@
          <value label="Z" defaultvalue="0.0"/>
       </property>
       <property valuetype="configelementpointer" variable="false" name="user">
-         <help />
+         <help/>
          <value label="User"/>
          <allowed_type>user</allowed_type>
       </property>
@@ -118,16 +118,13 @@
          <allowed_type>position_proxy</allowed_type>
       </property>
       <upgrade_transform>
-         <xsl:stylesheet version="1.0"
-                         xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-                         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                         xmlns:jconf="http://www.vrjuggler.org/jccl/xsd/3.0/configuration">
+         <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:jconf="http://www.vrjuggler.org/jccl/xsd/3.0/configuration" version="1.0">
 
             <xsl:output method="xml" version="1.0" encoding="UTF-8" indent="yes"/>
             <xsl:variable name="jconf">http://www.vrjuggler.org/jccl/xsd/3.0/configuration</xsl:variable>
 
             <xsl:template match="/">
-               <xsl:apply-templates />
+               <xsl:apply-templates/>
             </xsl:template>
 
             <xsl:template match="jconf:surface_viewport">

@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?org-vrjuggler-jccl-settings definition.version="3.0"?>
-<definition name="intersense"
-            icon_path="jar:file:${VJ_BASE_DIR}/lib/vrjuggler/customeditors/IntersenseEditor.jar!/org/vrjuggler/vrjconfig/customeditors/intersense/images/IS_logo.gif"
-            xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.0/definition http://www.vrjuggler.org/jccl/xsd/3.0/definition.xsd"
-            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-            xmlns="http://www.vrjuggler.org/jccl/xsd/3.0/definition">
+<?org-vrjuggler-jccl-settings definition.version="3.1"?>
+<definition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.vrjuggler.org/jccl/xsd/3.1/definition" name="intersense" icon_path="jar:file:${VJ_BASE_DIR}/lib/vrjuggler/customeditors/IntersenseEditor.jar!/org/vrjuggler/vrjconfig/customeditors/intersense/images/IS_logo.gif" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.1/definition http://www.vrjuggler.org/jccl/xsd/3.1/definition.xsd">
    <definition_version version="1" label="Intersense">
       <help>Intersense Tracking Devices</help>
       <parent>positional_device</parent>
@@ -22,7 +18,7 @@
       <property valuetype="configelement" variable="true" name="position_filters">
          <help>This is a list of all the filters that are to be applied to the postional device data. The filters are applied in the order that they are specified in this configuration.</help>
          <value label="Position Filter"/>
-      <allowed_type>position_transform_filter</allowed_type>
+         <allowed_type>position_transform_filter</allowed_type>
       </property>
       <property valuetype="configelement" variable="true" name="stations">
          <help>Settings for each Station.</help>

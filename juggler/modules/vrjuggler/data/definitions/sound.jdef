@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?org-vrjuggler-jccl-settings definition.version="3.0"?>
-<definition name="sound"
-            icon_path="jar:file:${VJ_BASE_DIR}/bin/beans/ProxyEditor.jar!/org/vrjuggler/vrjconfig/customeditors/proxyeditor/images/position64.jpg"
-            xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.0/definition http://www.vrjuggler.org/jccl/xsd/3.0/definition.xsd"
-            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-            xmlns="http://www.vrjuggler.org/jccl/xsd/3.0/definition">
+<?org-vrjuggler-jccl-settings definition.version="3.1"?>
+<definition xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://www.vrjuggler.org/jccl/xsd/3.1/definition" name="sound" icon_path="jar:file:${VJ_BASE_DIR}/bin/beans/ProxyEditor.jar!/org/vrjuggler/vrjconfig/customeditors/proxyeditor/images/position64.jpg" xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.1/definition http://www.vrjuggler.org/jccl/xsd/3.1/definition.xsd">
    <definition_version version="1" label="Sound Object">
       <help>This holds information for one sound.</help>
       <parent/>
@@ -18,8 +14,8 @@
          <value label="Is Ambient" defaultvalue="true"/>
       </property>
       <property valuetype="boolean" variable="false" name="retriggerable">
-      <help>can the sound retrigger during play?</help>
-      <value label="Is Retriggerable" defaultvalue="true"/>
+         <help>can the sound retrigger during play?</help>
+         <value label="Is Retriggerable" defaultvalue="true"/>
       </property>
       <property valuetype="integer" variable="false" name="loop">
          <help>How many times does the sound loop? (-1 infinite)</help>
