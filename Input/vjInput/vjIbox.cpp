@@ -109,7 +109,7 @@ int vjIBox::startSampling()
 	       << vjDEBUG_FLUSH;
 	    return 0;
       }
-      hci_std_cmd(&thingie, 0,0,0);
+      hci_std_cmd(&thingie, 0,4,0);
 
 
       vjIBox* devicePtr = this;
@@ -164,7 +164,7 @@ int vjIBox::sample()
 	     ;
      else if (result == SUCCESS)
      {
-        hci_std_cmd(&thingie, 0,0,0);
+        hci_std_cmd(&thingie, 0,4,0);
 // 	if (c == 0) {
 // 	  gettimeofday(&tv,0);
 // 	  start_time = (double)tv.tv_sec+ (double)tv.tv_usec / 1000000.0;
@@ -261,11 +261,10 @@ int vjIBox::getDigitalData(int d)
 *********************************************** ahimberg */
 void vjIBox::updateData()
 {
-vjGuard<vjMutex> updateGuard(lock);
+//vjGuard<vjMutex> updateGuard(lock);
 
    // Copy the valid data to the current data so that both are valid
-   theData[current] = theData[valid];   // ASSERT: only one data entry for the ibox
-
+   swapValidIndexes();
    // swap the indicies for the pointers
    swapCurrentIndexes();
 
