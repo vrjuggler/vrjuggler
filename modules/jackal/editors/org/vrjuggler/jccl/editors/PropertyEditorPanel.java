@@ -103,7 +103,12 @@ public class PropertyEditorPanel extends PropertyComponent
       {
          //XXX Print this out to the Tweek console
          System.out.println(iae.getMessage());
-         JOptionPane.showMessageDialog(null, "Warning: " + iae.getMessage());
+         JOptionPane.showMessageDialog(null,
+                                       "Warning: Invalid property value '" +
+                                          iae.getMessage() + "'",
+                                       "Invalid Property Value Set",
+                                       JOptionPane.WARNING_MESSAGE);
+
          if (mEditorComponent instanceof JTextField)
          {
             ((JTextField)mEditorComponent).setText(mEditor.getAsText());
@@ -120,6 +125,7 @@ public class PropertyEditorPanel extends PropertyComponent
       // Populate the box with the tags
       final JComboBox box = new JComboBox(mEditor.getTags());
       //box.setBorder(BorderFactory.createLoweredBevelBorder());
+      box.setEditable(mPropDef.enumIsEditable());
       box.setSelectedItem(mEditor.getAsText());
       box.setFont(box.getFont().deriveFont(Font.PLAIN));
       box.addActionListener(new ActionListener()

@@ -49,13 +49,15 @@ public class PropertyDefinition
     */
    public PropertyDefinition(String name, String token, Class type,
                              String help, List propValueDefs, 
-                             Map enums, List allowedTypes, boolean variable)
+                             boolean editableEnum, Map enums,
+                             List allowedTypes, boolean variable)
    {
       mName = name;
       mToken = token;
       mType = type;
       mHelp = help;
       mPropValueDefs = propValueDefs;
+      mEditableEnum = editableEnum;
       mEnums = enums;
       mAllowedTypes = allowedTypes;
       mVariable = variable;
@@ -227,6 +229,11 @@ public class PropertyDefinition
    public synchronized int getEnumsCount()
    {
       return mEnums.size();
+   }
+
+   public boolean enumIsEditable()
+   {
+      return mEditableEnum;
    }
 
    /**
@@ -661,6 +668,8 @@ public class PropertyDefinition
 
    /** A list of the property value definitions for this property definition. */
    private List mPropValueDefs;
+
+   private boolean mEditableEnum;
 
    /** A map of all the enumerations for this property definition. */
    private Map mEnums;

@@ -10,6 +10,14 @@ For all versions:
 
 ===============================================================================
 
+ Version: 0.18.0
+Released: September 17, 2004
+
+    The config definition file format is now at version 3.1.  To update
+    from version 3.0, use the transform code in the file
+    tools/xmlupdate/jdef_3.0-3.1.xsl.  Updating to version 3.1 is required
+    for .jdef files to be loaded by the C++ and the Java code.
+
  Version: 0.2.0
 Released: May 23, 2002
 

@@ -231,6 +231,52 @@ desc_2.3-3.0.xsl
    new additions.  Using VRJConfig, you can make customizations for your
    specific configuration types.
 
+jdef_3.0-3.1.xsl
+----------------
+   An XSLT stylesheet that provides the upgrade path from version 3.0 of
+   the configuration definition file format to version 3.1.  Simply use
+   this stylesheet with an XSLT processor to update old configuration
+   definition (.jdef) files.
+   
+   The old files must have the following processing instruction:
+
+      <?org-vrjuggler-jccl-settings definition.version="3.0" ?>
+
+   The stylesheet uses this instruction to be sure that its input is
+   the correct version.  Version 3.0 was in use between July 10, 2003,
+   and September 17, 2004.  Any definition files created using VRJConfig
+   between that time qualify as using version 3.0 of the file format,
+   though they may not include the above processing instruction.  In that
+   case, the processing instruction should be added as the second line of
+   the source input definition file(s).
+
+   To use this stylesheet with the xsltproc command, run xsltproc as
+   follows:
+
+      xsltproc -o <output.jdef> jdef_3.0-3.1.xsl <input.jdef>
+
+   To use it with Xalan, run the xalan wrapper (shell script or batch
+   file) as follows:
+
+      xalan -in <input.jdef> -out <output.jdef> -xsl desc_3.0-3.1.xsl
+
+   Fill in your input and output file names appropriately.
+
+   Alternatively, you may use the makefile found in this directory as
+   follows:
+
+     make INPUT_FILE=<input.jdef> OUTPUT_FILE=<output.jdef> jdef-update-3.0-3.1
+
+   This makefile will work with any implementation of make (including
+   Microsoft's nmake utility).  You may need to edit the makefile to
+   provide a path to the 'xsltproc' or 'xalan' executables.
+
+   Once you have updated the file, you should load the generated
+   definition file using VRJConfig and review it.  The changes made to
+   the file structure are slight, affecting only enumerations of allowed
+   values for properties.  Using VRJConfig, you can make customizations
+   for your specific configuration types.
+
 cfg_2.0-2.1.xsl
 ---------------
    An XSLT stylesheet that provides the upgrade path from version 2.0 of
