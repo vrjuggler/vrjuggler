@@ -39,8 +39,8 @@ all: ${PROGS}
 new: new.o
 	${COMPILE} -o $@ new.o ${VJ_LIBS} ${EXTRA_LIBS}
 
-new.o: new.C
-	${COMPILE} -c -o $@ ${srcdir}/new.C
+new.o: new.cpp
+	${COMPILE} -c -o $@ ${srcdir}/new.cpp
 
 # ----------------
 # go
@@ -48,8 +48,8 @@ new.o: new.C
 go: main.o
 	${COMPILE} -o $@ main.o ${VJ_LIBS} ${EXTRA_LIBS}
 
-main.o: main.C
-	${COMPILE} -c -o $@ ${srcdir}/main.C
+main.o: main.cpp
+	${COMPILE} -c -o $@ ${srcdir}/main.cpp
 
 # ----------------
 # go-ibox
@@ -57,8 +57,8 @@ main.o: main.C
 go-ibox: main-ibox.o
 	${COMPILE} -o $@ main-ibox.o ${VJ_LIBS} ${EXTRA_LIBS}
 
-main-ibox.o: main-ibox.C
-	${COMPILE} -c -o $@ ${srcdir}/main-ibox.C
+main-ibox.o: main-ibox.cpp
+	${COMPILE} -c -o $@ ${srcdir}/main-ibox.cpp
 
 # ----------------
 # go-inputgroup
@@ -66,8 +66,8 @@ main-ibox.o: main-ibox.C
 go-inputgroup: main-inputgroup.o
 	${COMPILE} -o $@ main-inputgroup.o ${VJ_LIBS} ${EXTRA_LIBS}
 
-main-inputgroup.o: main-inputgroup.C
-	${COMPILE} -c -o $@ ${srcdir}/main-inputgroup.C
+main-inputgroup.o: main-inputgroup.cpp
+	${COMPILE} -c -o $@ ${srcdir}/main-inputgroup.cpp
 
 # ----------------
 # go-logiclass
@@ -75,8 +75,8 @@ main-inputgroup.o: main-inputgroup.C
 go-logiclass: main-logiclass.o
 	${COMPILE} -o $@ main-logiclass.o ${VJ_LIBS} ${EXTRA_LIBS}
 
-main-logiclass.o: main-logiclass.C
-	${COMPILE} -c -o $@ ${srcdir}/main-logiclass.C
+main-logiclass.o: main-logiclass.cpp
+	${COMPILE} -c -o $@ ${srcdir}/main-logiclass.cpp
 
 # -----------------------------------------------------------------------------
 # Clean-up.

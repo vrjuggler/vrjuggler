@@ -23,20 +23,20 @@ include ${MKPATH}/vj.install.mk
 #--- Search path -------
 vpath
 vpath %.c @srcdir@
-vpath %.C @srcdir@
+vpath %.cpp @srcdir@
 vpath %.o ${OBJDIR}
 #------------------------
 
-DEPEND_SRCS	:= vjChunkDesc.C	\
-                   vjChunkDescDB.C	\
-                   vjConfigChunk.C	\
-                   vjConfigChunkDB.C	\
-                   vjPropertyDesc.C	\
-                   vjParseUtil.C	\
-                   vjProperty.C		\
-                   vjPropertyDesc.C
+DEPEND_SRCS	:= vjChunkDesc.cpp	\
+                   vjChunkDescDB.cpp	\
+                   vjConfigChunk.cpp	\
+                   vjConfigChunkDB.cpp	\
+                   vjPropertyDesc.cpp	\
+                   vjParseUtil.cpp	\
+                   vjProperty.cpp		\
+                   vjPropertyDesc.cpp
 
-CONFIG_OBJECTS	:= $(addprefix $(OBJDIR)/,$(DEPEND_SRCS:.C=.o))
+CONFIG_OBJECTS	:= $(addprefix $(OBJDIR)/,$(DEPEND_SRCS:.cpp=.o))
 
 # -----------------------------------------------------------------------------
 # Library targets.

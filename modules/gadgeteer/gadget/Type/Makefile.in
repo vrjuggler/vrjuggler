@@ -23,15 +23,15 @@ include ${MKPATH}/vj.install.mk
 #--- Search path -------
 vpath
 vpath %.c @srcdir@
-vpath %.C @srcdir@
+vpath %.cpp @srcdir@
 vpath %.o ${OBJDIR}
 #------------------------
 
-DEPEND_SRCS	:= vjInputManager.C	\
-                   vjDeviceInterface.C	\
-                   vjPosInterface.C
+DEPEND_SRCS	:= vjInputManager.cpp	\
+                   vjDeviceInterface.cpp	\
+                   vjPosInterface.cpp
 
-INPUT_MGR_OBJECTS := $(addprefix $(OBJDIR)/,$(DEPEND_SRCS:.C=.o))
+INPUT_MGR_OBJECTS := $(addprefix $(OBJDIR)/,$(DEPEND_SRCS:.cpp=.o))
 
 # -----------------------------------------------------------------------------
 # Library targets.

@@ -1,4 +1,4 @@
-/* vjProperty.C
+/* vjProperty.cpp
  *
  */
 
@@ -35,7 +35,7 @@ vjProperty::vjProperty (vjPropertyDesc *pd):value() {
 vjProperty::~vjProperty () {
   int i;
 
-  for (i = 0; i < value.size(); i++) 
+  for (i = 0; i < value.size(); i++)
     delete (value)[i];
 }
 
@@ -56,7 +56,7 @@ vjProperty& vjProperty::operator= (vjProperty& p) {
     type = p.type;
     units = p.units;
 
-    for (i = 0; i < value.size(); i++) 
+    for (i = 0; i < value.size(); i++)
         delete (value[i]);
     value.erase (value.begin(), value.end());
     for (i = 0; i < p.value.size(); i++) {
@@ -115,13 +115,13 @@ ostream& operator << (ostream &out, vjProperty& p) {
 	out << e->getName();
       else
 	out << *v;
-    } 
+    }
     else {
       out << *v;
     }
     out << " ";
   }
-  if (p.type == T_DISTANCE) 
+  if (p.type == T_DISTANCE)
     out << " " << unitString (p.units);
   out << " } ";
   return out;
@@ -146,7 +146,7 @@ int vjProperty::getNum () {
 bool vjProperty::preSet (int ind) {
   int i;
   vjVarValue *v;
-  
+
   if (ind < 0)
     return false;
   if (ind >= value.size()) {
@@ -166,7 +166,7 @@ bool vjProperty::preSet (int ind) {
 
 
 bool vjProperty::setValue (int val, int ind ) {
-  
+
   if (!preSet(ind))
     return false;
   *((value)[ind]) = val;
@@ -186,7 +186,7 @@ bool vjProperty::setValue (float val, int ind ) {
 
 
 bool vjProperty::setValue (char* val, int ind) {
-  
+
   if (!preSet(ind))
     return false;
   *((value)[ind]) = val;

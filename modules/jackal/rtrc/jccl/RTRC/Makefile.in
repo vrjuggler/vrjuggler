@@ -39,27 +39,27 @@ SUBDIRS = Pf GL
 #--- Search path -------
 vpath
 vpath %.c @srcdir@
-vpath %.C @srcdir@
+vpath %.cpp @srcdir@
 vpath %.o ${OBJDIR}
 #------------------------
-    
-DEPEND_SRCS	:= vjAPI.C		\
-                   vjDebug.C		\
-                   vjDisplay.C		\
-                   vjDisplayManager.C	\
-                   vjDrawManager.C	\
-                   vjFrustum.C		\
-                   vjKernel.C		\
-                   vjProjection.C	\
-                   vjStreamLock.C	\
-                   vjWallProjection.C	\
-                   vjSGISystemFactory.C
 
-KERNEL_OBJECTS	= $(addprefix $(OBJDIR)/,$(DEPEND_SRCS:.C=.o))
+DEPEND_SRCS	:= vjAPI.cpp		\
+                   vjDebug.cpp		\
+                   vjDisplay.cpp		\
+                   vjDisplayManager.cpp	\
+                   vjDrawManager.cpp	\
+                   vjFrustum.cpp		\
+                   vjKernel.cpp		\
+                   vjProjection.cpp	\
+                   vjStreamLock.cpp	\
+                   vjWallProjection.cpp	\
+                   vjSGISystemFactory.cpp
+
+KERNEL_OBJECTS	= $(addprefix $(OBJDIR)/,$(DEPEND_SRCS:.cpp=.o))
 
 # ----------------------------------------------------------------------------- # Library targets.
 # -----------------------------------------------------------------------------
-all dbg opt dso ddso obj: ${KERNEL_OBJECTS} 
+all dbg opt dso ddso obj: ${KERNEL_OBJECTS}
 	${MAKE} RECTARGET="$@" OPTIMIZER="${OPTIMIZIER}"	\
             BASE_OBJDIR="${BASE_OBJDIR}" recursive
 

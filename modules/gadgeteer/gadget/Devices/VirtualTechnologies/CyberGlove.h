@@ -170,9 +170,9 @@ class vjCyberGlove : public vjInput {
    *  Utility functions provided by Virtual Technologies
    */
    //@{
-    // vt_init.C
+    // vt_init.cpp
     void vt_init(char *dir, AppDataStruct &app);
-    // vt_virtual_hand.C
+    // vt_virtual_hand.cpp
     VirtualHand vt_create_VirtualHand(char *port, int baud,
 					 AppDataStruct &app );
     void vt_destroy_VirtualHand(VirtualHand hand);
@@ -191,7 +191,7 @@ class vjCyberGlove : public vjInput {
 		 char calfile[],
 		 Boolean visible);
 
-    // vt_read_user_cal.C
+    // vt_read_user_cal.cpp
     int vt_geom_in(FILE *inputfp, UserGeometry user);
     void vt_geom_out( FILE *outputfp, UserGeometry user);
     int vt_read_glove_calibration(FILE *infile, CbGlove glove);

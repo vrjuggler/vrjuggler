@@ -23,22 +23,22 @@ include ${MKPATH}/vj.install.mk
 #--- Search path -------
 vpath
 vpath %.c @srcdir@
-vpath %.C @srcdir@
+vpath %.cpp @srcdir@
 vpath %.o ${OBJDIR}
 #------------------------
 
-DEPEND_SRCS	:= vjCyberGlove.C	\
-                   vt_glove.C		\
-        	   vt_error.C		\
-                   vt_init.C		\
-                   vt_math3d.C		\
-                   vt_read_hand_model.C	\
-                   vt_read_object.C	\
-                   vt_read_user_cal.C	\
-                   vt_serial_io.C	\
-                   vt_virtual_hand.C
+DEPEND_SRCS	:= vjCyberGlove.cpp	\
+                   vt_glove.cpp		\
+        	   vt_error.cpp		\
+                   vt_init.cpp		\
+                   vt_math3d.cpp		\
+                   vt_read_hand_model.cpp	\
+                   vt_read_object.cpp	\
+                   vt_read_user_cal.cpp	\
+                   vt_serial_io.cpp	\
+                   vt_virtual_hand.cpp
 
-VJGLOVE_OBJECTS := $(addprefix $(OBJDIR)/,$(DEPEND_SRCS:.C=.o))
+VJGLOVE_OBJECTS := $(addprefix $(OBJDIR)/,$(DEPEND_SRCS:.cpp=.o))
 
 # -----------------------------------------------------------------------------
 # Library targets.

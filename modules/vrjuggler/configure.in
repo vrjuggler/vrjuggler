@@ -7,7 +7,7 @@
 # -----------------------------------------------------------------------------
 
 AC_REVISION($Revision$)
-AC_INIT(Config/vjChunkDesc.C)
+AC_INIT(Config/vjChunkDesc.cpp)
 AC_CONFIG_HEADER(vjDefines.h)
 
 # -----------------------------------------------------------------------------
