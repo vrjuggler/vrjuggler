@@ -32,10 +32,12 @@
 
 
 #include <jccl/Plugins/PerformanceMonitor/LabeledPerfDataBuffer.h>
+//#include <jccl/Plugins/PerformanceMonitor/PerformanceMonitor.h>
 //#include <vpr/Util/Debug.h>
 
 namespace jccl {
 
+    vprSingletonImp (LabeledPerfDataBuffer::LabeledPerfDataGlobal);
 
 LabeledPerfDataBuffer::LabeledPerfDataBuffer () {
     name = "untitled";
@@ -44,7 +46,6 @@ LabeledPerfDataBuffer::LabeledPerfDataBuffer () {
     read_begin = 0;
     write_pos = 1;
     lost = 0;
-    active = false;
 }
 
 
@@ -56,51 +57,21 @@ LabeledPerfDataBuffer::LabeledPerfDataBuffer (const std::string& _name,
     read_begin = 0;
     write_pos = 1;
     lost = 0;
-    active = false;
 }
 
 
 
 LabeledPerfDataBuffer::~LabeledPerfDataBuffer () {
-    active = false;
     delete[] buffer;
 }
 
-
-
-void LabeledPerfDataBuffer::activate() {
-    active = true;
-    vprDEBUG(jcclDBG_PERFORMANCE,1) << "Performance Buffer " << name << 
-	" activated.\n" << vprDEBUG_FLUSH;
-}
-
-
-
-void LabeledPerfDataBuffer::deactivate() {
-    active = 0;
-    /* deactivate maybe should reset the buffer so it's reactivated
-     * with a clean slate, thusly:
-     */
-    read_begin = 0;
-    write_pos = 1;
-    lost = 0;
-    vprDEBUG(jcclDBG_PERFORMANCE,1) << "Performance Buffer " << name << 
-	" deactivated.\n" << vprDEBUG_FLUSH;
-
-}
-
-
-
-bool LabeledPerfDataBuffer::isActive() const {
-    return active;
-}
 
 
 void LabeledPerfDataBuffer::set (const vpr::GUID &category, 
                                  const std::string& index_name) {
     int tw;
 
-    if (active && isCategoryActive (category)) {
+    if (LabeledPerfDataGlobal::instance()->isCategoryActive (category)) {
 
         if (write_pos == read_begin) {
             if (lost_lock.acquire() != -1) {
@@ -132,7 +103,7 @@ void LabeledPerfDataBuffer::set (const vpr::GUID &category,
                                  TimeStamp& value) {
     int tw;
 
-    if (active && isCategoryActive (category)) {
+    if (LabeledPerfDataGlobal::instance()->isCategoryActive (category)) {
 
         if (write_pos == read_begin) {
             if (lost_lock.acquire() != -1) {
@@ -162,7 +133,7 @@ void LabeledPerfDataBuffer::set (const vpr::GUID &category,
 void LabeledPerfDataBuffer::setBeginCycle (const vpr::GUID &category) {
     int tw;
 
-    if (active && isCategoryActive (category)) {
+    if (LabeledPerfDataGlobal::instance()->isCategoryActive (category)) {
 
         if (write_pos == read_begin) {
             if (lost_lock.acquire() != -1) {
