@@ -187,17 +187,8 @@ public class ConnectionDialog extends JDialog
     */
    private void cancelButtonAction(ActionEvent e)
    {
-/*
-      // If we have an ORB running, we have to shut it down.
-      if ( null != corbaService )
-      {
-         corbaService.shutdown(true);
-         corbaService = null;
-      }
-
       status = CANCEL_OPTION;
       dispose();
-*/
    }
 
    /**
