@@ -782,9 +782,10 @@ void FlockStandalone::processDataRecord(std::vector<vpr::Uint8> dataRecord)
    // - Get matrix from data format
    // - If not standalone find sensor address
    // - Store the sensor data
-   for(vpr::Uint8 sensor=0; sensor<mNumSensors; ++sensor)
+   vpr::Uint8 sensor = 0;
+   for(unsigned int i=0; i<mNumSensors; ++i)
    {
-      unsigned int data_offset = (single_bird_data_size*sensor);
+      unsigned int data_offset = (single_bird_data_size*i);
       vprASSERT(dataRecord[data_offset] & phase_mask && "Unit record within data record does not have correct phase mask");
       gmtl::Matrix44f sensor_mat = processSensorRecord(&(dataRecord[data_offset]));
       int sensor_number(0);                                              // In standalone mode, only read into sensor 0
@@ -806,6 +807,7 @@ void FlockStandalone::processDataRecord(std::vector<vpr::Uint8> dataRecord)
          vprASSERT(sensor_number != -1 && "Got addr of unit we don't think has sensor");
       }
       mSensorData[(unsigned int)sensor_number] = sensor_mat;
+      ++sensor;
    }
 }
 
