@@ -8,6 +8,7 @@
  *                                    by
  *                              Allen Bierbaum
  *                             Christopher Just
+ *                             Patrick Hartling
  *                            Carolina Cruz-Neira
  *                               Albert Baker
  *
