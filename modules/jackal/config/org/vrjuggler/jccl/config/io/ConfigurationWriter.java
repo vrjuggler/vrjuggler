@@ -102,7 +102,7 @@ public class ConfigurationWriter
 
       // Insert the PI with the file format version
       ProcessingInstruction pi = new ProcessingInstruction(SETTINGS_INSTRUCTION,
-                                                           CONFIGURATION_VERSION_ATTR+"="+CFG_VERSION);
+                                                           CONFIGURATION_VERSION_ATTR + "=" + "\"" + CFG_VERSION + "\"");
       doc.addContent(pi);
 
       // Create the configuration root element
@@ -141,8 +141,7 @@ public class ConfigurationWriter
             // If the property is a simple type, add it as text
             if (prop_def.getType() != ConfigElement.class)
             {
-               System.out.println("   With value '" + prop_value.toString() + "'");
-               prop_elt.setText(prop_value.toString());
+               prop_elt.setText(prop_def.getValueString(prop_value));
             }
             // Otherwise, recurse on the embedded element
             else
