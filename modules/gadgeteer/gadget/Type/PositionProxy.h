@@ -62,7 +62,7 @@ namespace vrj
 // See also: Position
 //------------------------------------------------------------------------
 //!PUBLIC_API:
-class VJ_CLASS_API PosProxy : public TypedProxy<Position>
+class GAD_CLASS_API PosProxy : public TypedProxy<Position>
 {
 public:
    PosProxy() :  mUnitNum(-1), mETrans(false), mFilter(NULL)

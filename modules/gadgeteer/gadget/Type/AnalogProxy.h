@@ -57,7 +57,7 @@ namespace vrj
 // See also: Analog
 //
 //!PUBLIC_API:
-class VJ_CLASS_API AnalogProxy : public TypedProxy<Analog>
+class GAD_CLASS_API AnalogProxy : public TypedProxy<Analog>
 {
 
 public:

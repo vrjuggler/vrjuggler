@@ -53,7 +53,7 @@ namespace vrj
 // TODO rename to InputProxy
 //
 //!PUBLIC_API:
-class VJ_CLASS_API Proxy
+class GAD_CLASS_API Proxy
 {
 public:
    Proxy()
@@ -99,7 +99,7 @@ protected:
 
 
 template <class DEV_TYPE>
-class VJ_CLASS_API TypedProxy : public Proxy
+class GAD_CLASS_API TypedProxy : public Proxy
 {
 public:
    TypedProxy() : mDeviceName("Unknown"), mTypedDevice(NULL)

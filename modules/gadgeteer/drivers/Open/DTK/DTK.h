@@ -47,7 +47,7 @@ typedef DTKMemorySegment* DTKMemorySegmentHandle;
 
 class dtkClient;
 
-class VJ_CLASS_API DTK : public Input, public Position, public Digital,
+class GAD_CLASS_API DTK : public Input, public Position, public Digital,
                            public Analog
 {
 public:
