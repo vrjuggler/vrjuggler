@@ -74,8 +74,8 @@ void SubjectImpl::detach (Observer_ptr o)
    vpr::Guard<vpr::Mutex> guard(m_observers_mutex);
    observer_vec_t::iterator i;
 
-   i = remove_if(m_observers.begin(), m_observers.end(),
-                 RemovePred<Observer_ptr>(o));
+   i = std::remove_if(m_observers.begin(), m_observers.end(),
+                      RemovePred<Observer_ptr>(o));
 
    if ( i != m_observers.end() )
    {
