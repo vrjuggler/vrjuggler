@@ -56,7 +56,7 @@ SRCS		= AnalogProxy.cpp			\
                   LinearSigmoidPositionFilter.cpp	\
                   NetDigital.cpp                        \
                   NetInput.cpp				\
-                  NetPositionData.cpp                   \
+                  NetPosition.cpp                       \
                   Position.cpp				\
                   PositionProxy.cpp			\
                   Glove.cpp				\
