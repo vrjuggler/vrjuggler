@@ -35,13 +35,13 @@
 <!--
 
    This stylesheet provides an upgrade path for VR Juggler 2.0 Alpha 2 or
-   Alpha 3 configuration files to changes made for VR Juggler 2.0 Beta 1.
+   Alpha 3 configuration files to changes made for VR Juggler 2.0 Alpha 4.
 
-      xsltproc -o new-file.jconf 2.0a2-2.0b1.xsl old-file.config
+      xsltproc -o new-file.jconf 2.0a2-2.0a4.xsl old-file.config
 
    or
 
-      xalan -in old-file.config -xsl 2.0a2-2.0b1.xsl -out new-file.jconf
+      xalan -in old-file.config -xsl 2.0a2-2.0a4.xsl -out new-file.jconf
 
 -->
 
