@@ -125,43 +125,39 @@ public:
 
    virtual vpr::ReturnStatus readObject(vpr::ObjectReader* reader)
    {
-		vprASSERT(reader->readUint16()==MSG_DATA_ANALOG);							// ASSERT if this data is really not Analog Data		
-		std::vector<AnalogData> dataSample;
+      vprASSERT(reader->readUint16()==MSG_DATA_ANALOG && "[Remote Input Manager]Not Analog Data");							// ASSERT if this data is really not Analog Data		
+	  std::vector<AnalogData> dataSample;
 
-		unsigned numAnalogDatas;
-		float value;
-		vpr::Uint64 timeStamp;
-		AnalogData temp_analog_data;
+      unsigned numAnalogDatas;
+      float value;
+      vpr::Uint64 timeStamp;
+      AnalogData temp_analog_data;
 
-		unsigned numVectors = reader->readUint16();
-		//std::cout << "Stable Analog Buffer Size: "	<< numVectors << std::endl;
-		mAnalogSamples.lock();
-		for(unsigned i=0;i<numVectors;i++)
-		{
-			numAnalogDatas = reader->readUint16();
-			//std::cout << "Analog Data Size: "	<< numAnalogDatas << std::endl;
-			dataSample.clear();
-			//std::cout << "ME: ";
-			for(unsigned j=0;j<numAnalogDatas;j++)
-			{
-				value = reader->readFloat();			//Write Analog Data(int)
-				//std::cout << value;
-				timeStamp = reader->readUint64();						//Write Time Stamp vpr::Uint64
-				temp_analog_data.setAnalog(value);
-				temp_analog_data.setTime(vpr::Interval(timeStamp + mDelta,vpr::Interval::Usec));
-				dataSample.push_back(temp_analog_data);
-			}
-			//std::cout << std::endl;
-			
-			mAnalogSamples.addSample(dataSample);
-		
-		}
-		mAnalogSamples.unlock();
-		mAnalogSamples.swapBuffers();
-		return vpr::ReturnStatus::Succeed;
-		/////////////////////////////////////////////////////////////
-		
-	}                          
+      unsigned numVectors = reader->readUint16();
+      //std::cout << "Stable Analog Buffer Size: "	<< numVectors << std::endl;
+      mAnalogSamples.lock();
+      for(unsigned i=0;i<numVectors;i++)
+      {
+         numAnalogDatas = reader->readUint16();
+         //std::cout << "Analog Data Size: "	<< numAnalogDatas << std::endl;
+         dataSample.clear();
+         //std::cout << "ME: ";
+         for(unsigned j=0;j<numAnalogDatas;j++)
+         {
+            value = reader->readFloat();			//Write Analog Data(int)
+            //std::cout << value;
+            timeStamp = reader->readUint64();						//Write Time Stamp vpr::Uint64
+            temp_analog_data.setAnalog(value);
+            temp_analog_data.setTime(vpr::Interval(timeStamp + mDelta,vpr::Interval::Usec));
+            dataSample.push_back(temp_analog_data);
+         }
+         //std::cout << std::endl;
+         mAnalogSamples.addSample(dataSample);
+      }
+      mAnalogSamples.unlock();
+      mAnalogSamples.swapBuffers();
+      return vpr::ReturnStatus::Succeed;
+   }                          
    
 
    /**
