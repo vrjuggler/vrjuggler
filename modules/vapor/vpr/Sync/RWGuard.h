@@ -98,6 +98,7 @@ public:
    /// Explicity releases the lock.
    vpr::ReturnStatus release()
    {
+      mLockStatus = false;
       return mTheLock->release();
    }
 
@@ -142,18 +143,19 @@ public:
    /// Acquires the lock.
    vpr::ReturnStatus acquire()
    {
-      return mTheLock->acquireRead();
+      return mTheLock->acquireWrite();
    }
 
    /// Tries to acquire lock.
    vpr::ReturnStatus tryAcquire()
    {
-      return mTheLock->tryAcquireRead();
+      return mTheLock->tryAcquireWrite();
    }
 
    /// Explicity releases the lock.
    vpr::ReturnStatus release()
    {
+      mLockStatus = false;
       return mTheLock->release();
    }
 
