@@ -166,9 +166,10 @@ ifneq (@OS_TYPE@, Win32)
 	@echo "Setting up developer installation links"
 	@echo "------------------------------------------------"
 	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/include/gadget
+	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/$(LIBDIR_NAME)
 	@$(MAKE) -C gadget instlinks=$(instlinks) links
-	cd $(instlinks) && rm -f ./$(LIBDIR_NAME) &&			\
-          ln -s $(LIBDIR_BASE) ./$(LIBDIR_NAME)
+	cd $(instlinks)/$(LIBDIR_NAME) && rm -f ./* &&			\
+          ln -s $(LIBDIR_BASE)/* ./
 	cd $(instlinks)/include/gadget && rm -f ./*.h &&		\
           $(LN_S) $(GADGETROOT_ABS)/gadget/*.h ./
 	cd $(instlinks)/include/gadget && rm -f ./gadgetDefines.h &&	\

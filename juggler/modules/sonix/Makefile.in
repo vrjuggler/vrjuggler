@@ -138,13 +138,14 @@ links:
 	$(SHELL) $(MKINSTALLDIRS) $(instlinks)
 	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/include
 	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/bin
+	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/$(LIBDIR_BASE)
 	cd $(instlinks)/include &&                                      \
           for dir in $(SUBDIR) ; do                                     \
               rm -f ./$$dir ;                                           \
               ln -s $(ROOT_ABS)/$$dir ./$$dir ;                       \
           done
-	cd $(instlinks) && rm -f ./$(LIBDIR_NAME) &&                    \
-      	  ln -s $(LIBDIR_BASE) ./$(LIBDIR_NAME)
+	cd $(instlinks)/$(LIBDIR_NAME) && rm -f ./* &&                    \
+      	  ln -s $(LIBDIR_BASE)/* ./
 	cd $(instlinks) && rm -rf ./share &&                  \
        	  $(SHELL) $(MKINSTALLDIRS) ./share/sonix && \
            ln -s $(ROOT_ABS)/data ./share/sonix/data
