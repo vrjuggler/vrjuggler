@@ -53,6 +53,7 @@ BOOST_PYTHON_MODULE(vjAvatar)
         .def("markDirtyContext", &vjAvatar::markDirtyContext)
         .def("markCleanContext", &vjAvatar::markCleanContext)
         .def("hasDirtyContext", &vjAvatar::hasDirtyContext)
+        .def("getBone", &vjAvatar::getBone, return_internal_reference<1>())
     );
 
     enum_< vjAvatar::ContextType >("ContextType")
