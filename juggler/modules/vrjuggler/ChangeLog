@@ -1,5 +1,10 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Sep-25-2002 nonchocoboy VRJConfig now uses a custom dialog for collection the
+                        information necessary to make a new configuration. As
+                        part of this, the user can specify additional files to
+                        include into the context by default.
+Sep-23-2002 nonchocoboy VRJConfig can now successfully close files.
 Sep-13-2002 nonchocoboy Build java sources using ant.
                         NEW VERSION: 1.1.127
 Aug-26-2002 nonchocoboy VRJConfig will now process vjInclude chunks when a file
