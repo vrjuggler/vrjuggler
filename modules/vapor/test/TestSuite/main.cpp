@@ -2,6 +2,7 @@
 
 #include <cppunit/TestSuite.h>
 #include <cppunit/TextTestRunner.h>
+#include <cppunit/extensions/MetricRegistry.h>
 
 // Common (sim and real) tests.
 #include <TestCases/Socket/SocketTest.h>
@@ -72,7 +73,7 @@ int main (int ac, char **av)
    srandom(random_seed);
    srand(random_seed);
 
-#ifdef VPR_SIMULATOR
+#ifdef VPR_SIMULATOR       // ------ CONFIGURE SIM NETWORK ------ //
    std::string path_base;
 
    if ( ! vpr::System::getenv("VPR_TEST_DIR", path_base).success() )
@@ -88,6 +89,23 @@ int main (int ac, char **av)
 
    vpr::Thread sim_thread(run);
 #endif
+
+   // -------- CONFIGURE METRIC REGISTRY ------- //
+   CppUnit::MetricRegistry* metric_reg = CppUnit::MetricRegistry::instance();
+   std::string metric_prefix;    // Prefix for all metric labels (mode/hostname)
+
+   std::string host_name = vpr::System::getHostname();   
+   metric_prefix = host_name + "/";
+#ifdef VPR_SIMULATOR
+   metric_prefix += "Sim/";
+#endif
+   
+   std::cout << "Setting up metrics for host: " << host_name << std::endl;
+   std::cout << "                     prefix: " << metric_prefix << std::endl;
+
+   metric_reg->setPrefix(metric_prefix);
+   metric_reg->setFilename("vapor_metrics.txt");
+   metric_reg->setMetric("Main/MetricTest", 1221.75f);
 
    CppUnit::TextTestRunner runner;
 
