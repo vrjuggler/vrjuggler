@@ -174,7 +174,8 @@ AC_DEFUN(VJ_COMPILER_SETUP,
             CXX_ERR='*** The library requires the HP-UX aCC C++ compiler ***'
         # On Windows, we have to use the Microsoft Visual C++ compiler CL.EXE.
         elif test "$OS_TYPE" = "Win32" -a "x$USE_GCC" != "xyes" ; then
-            DPP_PROG_MSVCCC
+            # Prefer the use of cygcl over msvccc.
+            DPP_PROG_CYGCL( , , [DPP_PROG_MSVCCC])
             CXX_ERR='*** The library requires the MS Visual C++ compiler ***'
         # On IRIX, we can use MIPSpro or GCC.  We default to MIPSpro.
         elif test "x$PLATFORM" = "xIRIX" -a "x$USE_GCC" != "xyes" ; then
@@ -441,7 +442,8 @@ AC_DEFUN(VJ_APP_COMPILER,
         APP_CC="$1"
         APP_CXX="$3"
     elif test "$OS_TYPE" = "Win32" ; then
-        if test "x$DPP_USING_MSVCCC" = "xyes" ; then
+        if test "x$DPP_USING_CYGCL" = "xyes" -o "x$DPP_USING_MSVCCC" = "xyes"
+        then
             APP_CC='cl'
             APP_CXX='cl'
         else
@@ -541,7 +543,8 @@ AC_DEFUN(VJ_APP_LINKER,
         APP_LINKALL_ON=''
         APP_LINKALL_OFF=''
 
-        if test "x$DPP_USING_MSVCCC" = "xyes" ; then
+        if test "x$DPP_USING_CYGCL" = "xyes" -o "x$DPP_USING_MSVCCC" = "xyes"
+        then
             APP_LINK='link'
         else
             APP_lINK="$1"
@@ -637,7 +640,8 @@ AC_DEFUN(VJ_APP_LINKER_DOOZER,
       APP_LINKALL_ON=''
       APP_LINKALL_OFF=''
 
-      if test "x$DPP_USING_MSVCCC" = "xyes" ; then
+      if test "x$DPP_USING_CYGCL" = "xyes" -o "x$DPP_USING_MSVCCC" = "xyes"
+      then
          APP_LINK='link'
       else
          APP_lINK=$1
