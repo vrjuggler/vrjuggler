@@ -37,7 +37,7 @@ _MKDEP_SED_EXP	= '\''s/.*\($*\)\.$(OBJEXT)[ :]*/$$(OBJDIR)\/\1.$(OBJEXT) $@: /g'
 # Determine, based on the C compiler, how to generate the dependencies.  If
 # the compiler is cl (Windows only), use makedepend(1).  Otherwise, we can use
 # the compiler itself to do the job.
-ifeq ($(CC), cl)
+ifeq ($(USE_MAKEDEPEND), Y)
     _C_DEPGEN	= $(SHELL) -ec 'makedepend -f- -o.$(OBJEXT)    \
                       $(DEPENDFLAGS) -- $(DEPEND_EXTRAS) -- $< |	\
                       sed $(_MKDEP_SED_EXP) > $@ ; [ -s $@ ] || rm -f $@'
