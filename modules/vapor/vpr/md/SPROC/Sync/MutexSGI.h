@@ -62,7 +62,8 @@
 #include <vpr/Util/ReturnStatus.h>
 
 
-namespace vpr {
+namespace vpr
+{
 
 //: Mutex wrapper for the SGI systems.  Used for critical section protection.
 //!PUBLIC_API:
@@ -72,7 +73,8 @@ public:
    MutexSGI ()
    {
       // BUG: Possible race condition here
-      if(mutexPool == NULL) {
+      if ( mutexPool == NULL )
+      {
          mutexPool = new MemPoolSGI(65536, 32,
                                     "/var/tmp/memMutexPoolSGIXXXXXX");
          attachedCounter = static_cast<int*>(mutexPool->allocate(sizeof(int)));
@@ -102,7 +104,7 @@ public:
 //      vprDEBUG << "vpr::MutexSGI::~MutexSGI: attachedCounter: "
 //               << *attachedCounter << endl << vprDEBUG_FLUSH;
 
-      if(*attachedCounter == 0)
+      if ( *attachedCounter == 0 )
       {
          mutexPool->deallocate(attachedCounter);
          attachedCounter = NULL;
@@ -138,9 +140,9 @@ public:
       return this->acquire();      // No special "read" semaphore -- For now
    }
 
-  //----------------------------------------------------------
-  //: Acquire a write mutex.
-  //----------------------------------------------------------
+   //----------------------------------------------------------
+   //: Acquire a write mutex.
+   //----------------------------------------------------------
    vpr::ReturnStatus acquireWrite() const
    {
       return this->acquire();      // No special "write" semaphore -- For now
@@ -231,7 +233,7 @@ protected:
    static int* attachedCounter;
 };
 
-}; // End of vpr namespace
+} // End of vpr namespace
 
 
 #endif
