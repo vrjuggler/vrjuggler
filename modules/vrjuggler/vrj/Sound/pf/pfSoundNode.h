@@ -43,7 +43,7 @@
 #include <Performer/pf/pfDCS.h>
 #include <Performer/pf/pfTraverser.h>
 
-#   include <snx/sonix.h>
+#include <snx/sonix.h>
 
 /**
  * Performer-Juggler sound node.
@@ -52,7 +52,7 @@
  * and change other properties of it.
  * @note This pfSoundNode does not trigger the Sound object, you must do that.
  */
-class pfSoundNode : public pfDCS
+class VJ_CLASS_API pfSoundNode : public pfDCS
 {
 public:
    /**
