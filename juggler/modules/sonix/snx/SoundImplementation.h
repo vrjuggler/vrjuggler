@@ -118,6 +118,14 @@ public:
    }
 
    /**
+     * is the sound currently playing?
+     */
+   virtual bool isPlaying( const std::string& alias )
+   {
+      return false;
+   }   
+   
+   /**
     * when sound is already playing then you call trigger,
     * does the sound restart from beginning?
     * (if a tree falls and no one is around to hear it, does it make sound?)

@@ -100,6 +100,14 @@ public:
       this->impl().trigger( alias, repeat );
    }
    
+   /**
+     * is the sound currently playing?
+     */
+   virtual bool isPlaying( const std::string& alias )
+   {
+      return this->impl().isPlaying( alias );
+   }  
+
    /*
     * when sound is already playing then you call trigger,
     * does the sound restart from beginning?
