@@ -131,7 +131,7 @@ class aMotionStar {
 
     // constructor
 
-      aMotionStar(unsigned int format,
+      aMotionStar(int hemisphere,
 		  unsigned int birdFormat,
 		  unsigned int birdsRequired,
 		  int runMode,
@@ -152,7 +152,7 @@ class aMotionStar {
 
     // gets singleShots # of samplings, if 0 then runs continuously
 
-      void sample(int singleShots);
+      void sample();
 
     // stops the flock
 
@@ -170,8 +170,8 @@ class aMotionStar {
 
     // getters, setters
 
-      void setFormat ( unsigned int n );
-inline unsigned int getFormat () {return format;}
+      void setHemisphere ( int n );
+inline unsigned int getHemisphere () {return hemisphere;}
 
       void setBirdFormat ( unsigned int n );
 inline unsigned int getBirdFormat () {return birdFormat;}
@@ -197,11 +197,11 @@ private:
 
   // tells the MotionStar to sample continuously
 
-    void run_continuous(unsigned long);
+    void runContinuous();
 
   // requests a single sampling of the MotionStar
 
-    void single_shot();
+    void singleShot();
 
   // gets the system status
 
@@ -213,7 +213,7 @@ private:
 
   // prints out the MotionStar information
 
-    void printinfo();
+    void printInfo();
 
   // prints out the MotionStar's header information
 
@@ -281,6 +281,7 @@ int                     digit, no, j;
 char                    rate[7];
 
 unsigned int    format;
+int             hemisphere;
 unsigned int    birdFormat;
 unsigned int    birdsRequired;
 double          birdRate;
