@@ -13,6 +13,49 @@
 // Using =======================================================================
 using namespace boost::python;
 
+// Declarations ================================================================
+namespace pyj
+{
+
+template<typename T>
+T ConfigElement_getProperty(jccl::ConfigElement* elt,
+                            const std::string& propName, int index)
+{
+   return elt->template getProperty<T>(propName, index);
+}
+
+template bool ConfigElement_getProperty<bool>(jccl::ConfigElement*,
+                                              const std::string&, int);
+template int ConfigElement_getProperty<int>(jccl::ConfigElement*,
+                                            const std::string&, int);
+template double ConfigElement_getProperty<double>(jccl::ConfigElement*,
+                                                  const std::string&, int);
+template jccl::ConfigElementPtr ConfigElement_getProperty<jccl::ConfigElementPtr>(jccl::ConfigElement*,
+                                                                                  const std::string&, int);
+template std::string ConfigElement_getProperty<std::string>(jccl::ConfigElement*,
+                                                            const std::string&,
+                                                            int);
+
+template<typename T>
+bool ConfigElement_setProperty(jccl::ConfigElement* elt,
+                               const std::string& propName, const int index,
+                               T value)
+{
+   return elt->setProperty(propName, index, value);
+}
+
+// Only provide specializations for the signatures that are not already
+// specialized in jccl::ConfigElement.
+template bool ConfigElement_setProperty(jccl::ConfigElement*,
+                                        const std::string&, const int, int);
+template bool ConfigElement_setProperty(jccl::ConfigElement*,
+                                        const std::string&, const int, double);
+template bool ConfigElement_setProperty(jccl::ConfigElement*,
+                                        const std::string&, const int,
+                                        std::string);
+
+}
+
 
 // Module ======================================================================
 void _Export_ConfigElement()
@@ -80,9 +123,74 @@ void _Export_ConfigElement()
         .def("getID", &jccl::ConfigElement::getID,
              "getID() -> string\n"
              "Returns the string that identifies self's ConfigDefinition.")
+        .def("getPropertyBool",
+             (bool (*)(jccl::ConfigElement*, const std::string&, int))pyj::ConfigElement_getProperty<bool>,
+             "getPropertyBool(prop, index) -> Boolean\n"
+             "Returns a Boolean value from the named property in self.\n"
+             "Arguments:\n"
+             "prop -- The token string for the desired property.\n"
+             "index -- The index of the property's list of values.  Use\n"
+             "         getNum() to determine the number of values for a\n"
+             "         given property.  The valid range is 0 to getNum() - 1.\n"
+         )
+        .def("getPropertyInt",
+             (int (*)(jccl::ConfigElement*, const std::string&, int))pyj::ConfigElement_getProperty<int>,
+             "getPropertyInt(prop, index) -> int\n"
+             "Returns an integer value from the named property in self.\n"
+             "Arguments:\n"
+             "prop -- The token string for the desired property.\n"
+             "index -- The index of the property's list of values.  Use\n"
+             "         getNum() to determine the number of values for a\n"
+             "         given property.  The valid range is 0 to getNum() - 1.\n"
+         )
+        .def("getPropertyFloat",
+             (double (*)(jccl::ConfigElement*, const std::string&, int))pyj::ConfigElement_getProperty<double>,
+             "getPropertyFloat(prop, index) -> floating-point value\n"
+             "Returns a floating-point value from the named property in self.\n"
+             "Arguments:\n"
+             "prop -- The token string for the desired property.\n"
+             "index -- The index of the property's list of values.  Use\n"
+             "         getNum() to determine the number of values for a\n"
+             "         given property.  The valid range is 0 to getNum() - 1.\n"
+         )
+        .def("getPropertyString",
+             (std::string (*)(jccl::ConfigElement*, const std::string&, int))pyj::ConfigElement_getProperty<std::string>,
+             "getPropertyString(prop, index) -> string object\n"
+             "Returns a string object from the named property in self.\n"
+             "Arguments:\n"
+             "prop -- The token string for the desired property.\n"
+             "index -- The index of the property's list of values.  Use\n"
+             "         getNum() to determine the number of values for a\n"
+             "         given property.  The valid range is 0 to getNum() - 1.\n"
+         )
+        .def("getPropertyConfigElement",
+             (jccl::ConfigElementPtr (*)(jccl::ConfigElement*, const std::string&, int))pyj::ConfigElement_getProperty<jccl::ConfigElementPtr>,
+             "getPropertyConfigElement(prop, index) -> ConfigElement object\n"
+             "Returns a ConfigElement object from the named property in self.\n"
+             "Arguments:\n"
+             "prop -- The token string for the desired property.\n"
+             "index -- The index of the property's list of values.  Use\n"
+             "         getNum() to determine the number of values for a\n"
+             "         given property.  The valid range is 0 to getNum() - 1.\n"
+         )
         .def("setProperty",
-             (bool (jccl::ConfigElement::*)(const std::string&, const int, bool) )&jccl::ConfigElement::setProperty)
+             (bool (jccl::ConfigElement::*)(const std::string&, const int, bool) )&jccl::ConfigElement::setProperty,
+             "setProperty(prop, index, value) -> Boolean\n"
+             "Sets a value for the given property.\n"
+             "Arguments:\n"
+             "prop  -- The token string for the property whose value will be\n"
+             "         set.\n"
+             "index -- The index of the property's list of values.\n"
+             "value -- The value to set.  It may be of type Boolean, integer,\n"
+             "         float, string, or ConfigElement."
+         )
         .def("setProperty", (bool (jccl::ConfigElement::*)(const std::string&, int, jccl::ConfigElementPtr) )&jccl::ConfigElement::setProperty)
+        .def("setProperty",
+             (bool (*)(jccl::ConfigElement*, const std::string&, const int, int))pyj::ConfigElement_setProperty)
+        .def("setProperty",
+             (bool (*)(jccl::ConfigElement*, const std::string&, const int, double))pyj::ConfigElement_setProperty)
+        .def("setProperty",
+             (bool (*)(jccl::ConfigElement*, const std::string&, const int, std::string))pyj::ConfigElement_setProperty)
         .def("getElementPtrDependencies",
              &jccl::ConfigElement::getElementPtrDependencies,
              "getElementPtrDependencies() -> string list\n"
