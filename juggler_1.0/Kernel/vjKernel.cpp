@@ -214,7 +214,7 @@ void vjKernel::configAdd(vjConfigChunkDB* chunkDB, bool guarded)
       if((mDrawManager != NULL) && (mDrawManager->configCanHandle(chunks[i])))   // drawMgr
          added_chunk = mDrawManager->configAdd(chunks[i]);
       if(environmentManager->configCanHandle(chunks[i]))                   // envMgr
-	      added_chunk = environmentManager->configAdd(chunks[i]);
+	  added_chunk = environmentManager->configAdd(chunks[i]);
       if((mApp != NULL) && (mApp->configCanHandle(chunks[i])))                // App
          added_chunk = mApp->configAdd(chunks[i]);
 
@@ -237,11 +237,12 @@ void vjKernel::configAdd(vjConfigChunkDB* chunkDB, bool guarded)
    // Dump status
    vjDEBUG(vjDBG_ALL,0) << (*getInputManager()) << endl << vjDEBUG_FLUSH;
 
-   // Tell the environment manager to refresh
-   //**//environmentManager->sendRefresh();
-
    if(guarded)
       mRuntimeConfigSema.release();
+
+   // Tell the environment manager to refresh
+   environmentManager->sendRefresh();
+
 }
 
 void vjKernel::configRemove(vjConfigChunkDB* chunkDB)
@@ -294,7 +295,7 @@ vjGuard<vjSemaphore> runtimeSem(mRuntimeConfigSema);
    vjDEBUG(vjDBG_ALL,0) << (*getInputManager()) << endl << vjDEBUG_FLUSH;
 
    // Tell the environment manager to refresh
-   //**//environmentManager->sendRefresh();
+   environmentManager->sendRefresh();
 }
 
 
