@@ -37,8 +37,8 @@
       <title>What You Will Need</title>
 
       <listitem>
-        <para><ulink url="www.vrjuggler.org">VRJuggler</ulink> - An Open
-        Source virtual reality platform.</para>
+        <para><ulink url="http://www.vrjuggler.org/">VR Juggler</ulink> - An
+        Open Source virtual reality platform.</para>
       </listitem>
 
       <listitem>
@@ -46,7 +46,7 @@
       </listitem>
 
       <listitem>
-        <para>VRJConfig - Configuration tool distributed with VRJuggler</para>
+        <para>VRJConfig - Configuration tool distributed with VR Juggler</para>
       </listitem>
     </itemizedlist>
 
