@@ -43,8 +43,8 @@
 #define _VPR_SERIALIZABLE_OBJ_H
 
 #include <vpr/vprConfig.h>
-
 #include <boost/concept_check.hpp>
+#include <vpr/Util/ReturnStatus.h>
 
 
 namespace vpr
@@ -56,10 +56,10 @@ class ObjectReader;
 class WriteableObject
 {
 public:
-   /*
-   * Template method for writing object.
-   * POST: All object data is written to the writer
-   */
+   /**
+    * Template method for writing object.
+    * @post All object data is written to the writer.
+    */
    virtual vpr::ReturnStatus writeObject(ObjectWriter* writer) = 0;
 
 protected:
@@ -81,10 +81,10 @@ private:
 class ReadableObject
 {
 public:
-   /*
-   * Template method for reading object.
-   * POST: All object data is read from the reader
-   */
+   /**
+    * Template method for reading object.
+    * @post All object data is read from the reader.
+    */
    virtual vpr::ReturnStatus readObject(ObjectReader* reader) = 0;
 
 protected:
@@ -134,6 +134,7 @@ public:
    virtual vpr::ReturnStatus writeObject(ObjectWriter* writer);
    virtual vpr::ReturnStatus readObject(ObjectReader* reader);
 };
+
 } // namespace vpr
 
 #endif
