@@ -41,7 +41,7 @@
 # -----------------------------------------------------------------------------
 default: all
 
-all: simple
+all: simple advanced
 
 simple::
 	cd $@ && $(MAKE) all
