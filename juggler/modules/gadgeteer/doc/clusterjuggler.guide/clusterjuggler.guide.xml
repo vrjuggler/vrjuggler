@@ -300,7 +300,7 @@
         beginning of the loop so that preFrame() can use this data to
         calculate the state of the scene such as the navigation matrix. In
         order to accommodate all possible needs of a plug in, there are calls
-        into the ClusterManager at numerous different locations during the
+        into the ClusterManager at numerous locations during the
         kernel loop. The Cluster Manager is then responsible for calling any
         plugin that needs to use the network to transfer data.</para>
       </formalpara>
