@@ -597,7 +597,7 @@ public class ProxyEditorUI
 
       public void overlay(Graphics g, boolean clear)
       {
-         super.overlay(g, clear);
+         super.overlay(deviceProxyEditor.getGraph(), g, clear);
 
          highlightPort(deviceProxyEditor.getGraph().getGraphics());
 
