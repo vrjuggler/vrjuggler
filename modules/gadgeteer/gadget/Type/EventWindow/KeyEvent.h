@@ -38,10 +38,16 @@
 #include <gadget/Type/EventWindow/Event.h>
 #include <gadget/Type/EventWindow/KeyEventPtr.h>
 #include <gadget/Type/EventWindow/Keys.h>
+#include <gadget/Type/EventWindow/EventFactory.h>
+
+#include <vpr/IO/SerializableObject.h>
 
 
 namespace gadget
 {
+
+GADGET_REGISTER_EVENT_CREATOR( KeyEvent, KeyPressEvent );
+GADGET_REGISTER_EVENT_CREATOR( KeyEvent, KeyReleaseEvent );
 
 /**
  * Key press or release event class.
@@ -77,6 +83,14 @@ public:
    {
    }
 
+   KeyEvent() 
+      : gadget::Event(NoEvent, 0)
+   {
+      mKey           = gadget::KEY_SPACE;
+      mModifierMask  = 0;
+      mAsciiKey      = ' ';
+   }
+
    const gadget::Keys& getKey() const
    {
       return mKey;
@@ -101,6 +115,39 @@ public:
    const char& getKeyChar() const
    {
       return mAsciiKey;
+   }
+
+   /**
+    * Serializes this event using the given ObjectWriter
+    */
+   vpr::ReturnStatus KeyEvent::writeObject(vpr::ObjectWriter* writer)
+   {
+      writer->writeUint16(mType);
+
+      // Serialize all member variables
+      writer->writeUint32(mKey);
+      writer->writeUint32(mModifierMask);
+      writer->writeUint64(mTime);
+      writer->writeUint8(mAsciiKey);
+      
+      return vpr::ReturnStatus::Succeed;
+   }
+   
+   /**
+    * De-Serializes this event using the given ObjectReader
+    */
+   vpr::ReturnStatus KeyEvent::readObject(vpr::ObjectReader* reader)
+   {
+      // We have already read the type in EventWindow to decide
+      // if we should construct a KeyEvent or a MouseEvent
+      //mType = reader->readUint16();
+
+      // De-Serialize all member variables
+      mKey = (gadget::Keys)reader->readUint32();
+      mModifierMask = reader->readUint32();
+      mTime = reader->readUint64();
+      mAsciiKey = reader->readUint8();
+      return vpr::ReturnStatus::Succeed;
    }
 
 protected:

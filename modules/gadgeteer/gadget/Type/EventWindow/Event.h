@@ -33,10 +33,10 @@
 #ifndef _GADGET_EVENT_H_
 #define _GADGET_EVENT_H_
 
+#include <vpr/IO/SerializableObject.h>
 
 namespace gadget
 {
-
 /// Possible event types.
 enum EventType
 {
@@ -52,7 +52,7 @@ enum EventType
  * Base event type that an event source may generate.  This class cannot be
  * instantiated directly, and instead, subclasses must be used.
  */
-class Event
+class Event : public vpr::SerializableObject
 {
 public:
    /**
@@ -62,6 +62,18 @@ public:
    const EventType& type() const
    {
       return mType;
+   }
+
+   /**
+    * Set the type of this event. This is needed because while using an
+    * Object Reader to de-serialize an Event we can not set the type 
+    * during construction. We must set the event type after creating
+    * this event using the EventFactory. This could later be removed if
+    * the EventFactory is chaged to take care of this.
+    */
+   void setType(const EventType& type)
+   {
+      mType = type;
    }
 
    /**

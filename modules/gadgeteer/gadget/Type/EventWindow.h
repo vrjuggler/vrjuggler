@@ -49,7 +49,7 @@
 namespace gadget
 {
 
-const unsigned short MSG_DATA_KEYBOARD = 420;
+const unsigned short MSG_DATA_EVENT_WINDOW = 420;
 
 /**
  * gadget::EventWindow is an abstract class for interfacing with keyboard (and
@@ -80,9 +80,15 @@ public:
    {
       return std::string("EventWindow");
    }
-
+   
+   /**
+    * Write both mCurKeys and mCurEventQueueLock to a stream using the given ObjectWriter.
+    */
    virtual vpr::ReturnStatus writeObject(vpr::ObjectWriter* writer);
 
+   /**
+    * Read mCurKeys and mCurEventQueueLock from a stream using the given ObjectReader.
+    */
    virtual vpr::ReturnStatus readObject(vpr::ObjectReader* reader);
 
    virtual bool config(jccl::ConfigChunkPtr chunk)
@@ -137,7 +143,7 @@ protected:
    EventQueue mCurEventQueue;     /**< Queue of events returned to users. */
    vpr::Mutex mCurEventQueueLock;
 
-   EventQueue mWorkingEventQueue; /**< In-rpgress queeue of events. */
+   EventQueue mWorkingEventQueue; /**< In-progress queue of events. */
    vpr::Mutex mWorkingEventQueueLock;
 };
 
