@@ -44,11 +44,16 @@ namespace gadget
 {
 
 Analog::Analog()
-   : mMin(0.0f), mMax(0.0f)
-{}
+   : mMin(0.0f)
+   , mMax(0.0f)
+{
+   /* Do nothing. */ ;
+}
 
 Analog::~Analog()
-{}
+{
+   /* Do nothing. */ ;
+}
 
 vpr::ReturnStatus Analog::writeObject(vpr::ObjectWriter* writer)
 {
@@ -67,13 +72,13 @@ vpr::ReturnStatus Analog::writeObject(vpr::ObjectWriter* writer)
       writer->beginAttribute(gadget::tokens::SampleBufferLenAttrib);
          writer->writeUint16(stable_buffer.size());                           // Write the # of vectors in the stable buffer
       writer->endAttribute();
-      for ( unsigned j=0;j<stable_buffer.size();j++ )                         // For each vector in the stable buffer
+      for ( unsigned j = 0; j < stable_buffer.size(); ++j )                   // For each vector in the stable buffer
       {
          writer->beginTag(gadget::tokens::BufferSampleTag);
          writer->beginAttribute(gadget::tokens::BufferSampleLenAttrib);
             writer->writeUint16(stable_buffer[j].size());                     // Write the # of AnalogDatas in the vector
          writer->endAttribute();
-         for ( unsigned i=0;i<stable_buffer[j].size();i++ )                   // For each AnalogData in the vector
+         for ( unsigned i = 0;i < stable_buffer[j].size(); ++i )              // For each AnalogData in the vector
          {
             writer->beginTag(gadget::tokens::AnalogValue);
             writer->beginAttribute(gadget::tokens::TimeStamp);
@@ -94,7 +99,8 @@ vpr::ReturnStatus Analog::writeObject(vpr::ObjectWriter* writer)
          writer->endAttribute();
       writer->endTag();
       vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
-         << "Warning: Analog::writeObject: Stable buffer is empty. If this is not the first write, then this is a problem.\n"
+         << "WARNING: [gadget::Analog::writeObject()] Stable buffer is empty.  "
+         << "If this is not the first write, then this is a problem.\n"
          << vprDEBUG_FLUSH;
    }
    writer->endTag();
@@ -130,16 +136,16 @@ vpr::ReturnStatus Analog::readObject(vpr::ObjectReader* reader)
    reader->endAttribute();
 
    mAnalogSamples.lock();
-   for ( unsigned i=0;i<numVectors;i++ )
+   for ( unsigned i = 0; i < numVectors; ++i )
    {
       reader->beginTag(gadget::tokens::BufferSampleTag);
       reader->beginAttribute(gadget::tokens::BufferSampleLenAttrib);
          numAnalogDatas = reader->readUint16();
       reader->endAttribute();
-      //std::cout << "Analog Data Size: "    << numAnalogDatas << std::endl;
+
       dataSample.clear();
-      //std::cout << "ME: ";
-      for ( unsigned j=0;j<numAnalogDatas;j++ )
+
+      for ( unsigned j = 0; j < numAnalogDatas; ++j )
       {
          reader->beginTag(gadget::tokens::AnalogValue);
          reader->beginAttribute(gadget::tokens::TimeStamp);
@@ -152,7 +158,7 @@ vpr::ReturnStatus Analog::readObject(vpr::ObjectReader* reader)
          temp_analog_data.setTime(vpr::Interval(timeStamp + delta,vpr::Interval::Usec));
          dataSample.push_back(temp_analog_data);
       }
-      //std::cout << std::endl;
+
       mAnalogSamples.addSample(dataSample);
       reader->endTag();
    }
@@ -170,7 +176,7 @@ bool Analog::config(jccl::ConfigElementPtr e)
    mMax = e->getProperty<float>("max");
 
    vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL)
-      << " Analog::config() min:" << mMin
+      << "[gadget::Analog::config()] min:" << mMin
       << " max:" << mMax << "\n" << vprDEBUG_FLUSH;
 
    return true;
@@ -192,13 +198,16 @@ AnalogData Analog::getAnalogData(int devNum)
       if ( stable_buffer.empty() )
       {
          vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
-            << "Warning: Analog::getAnalogData: Stable buffer is empty. If this is not the first read, then this is a problem.\n"
-            << vprDEBUG_FLUSH;
+            << "WARNING: [gadget::Analog::getAnalogData()] "
+            << "Stable buffer is empty.  If this is not the first read, "
+            << "then this is a problem.\n" << vprDEBUG_FLUSH;
       }
       else
       {
          vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_LVL)
-            << "Warning: Analog::getAnalogData: Requested devNum is not in the range available.  May have configuration error\n"
+            << "WARNING: [gadget::Analog::getAnalogData()] "
+            << "Requested devNum (" << devNum << ") is not within the "
+            << "available range.  This is probably a configuration error.\n"
             << vprDEBUG_FLUSH;
       }
       return mDefaultValue;
@@ -218,8 +227,7 @@ void Analog::swapAnalogBuffers()
    mAnalogSamples.swapBuffers();
 }
 
-const Analog::SampleBuffer_t::buffer_t&
-Analog::getAnalogDataBuffer()
+const Analog::SampleBuffer_t::buffer_t& Analog::getAnalogDataBuffer()
 {
    return mAnalogSamples.stableBuffer();
 }
