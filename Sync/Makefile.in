@@ -26,11 +26,16 @@ vpath %.c @srcdir@
 vpath %.cpp @srcdir@
 vpath %.o ${OBJDIR}
 
+SYNC_SRCS	= vjCondGeneric.cpp	\
+                  vjRWMutex.cpp
+
 # Determine what objects to use.
 ifeq (@SYNC_SYS@,POSIX)
-    SYNC_SRCS	:=
+    SYNC_SRCS	+= vjBarrier.cpp	\
+                   vjMutexPosix.cpp
 else
-    SYNC_SRCS	:= vjMutexSGI.cpp	\
+    SYNC_SRCS	+= vjBarrierSGI.cpp	\
+                   vjMutexSGI.cpp	\
                    vjSemaphoreSGI.cpp
 endif
 
