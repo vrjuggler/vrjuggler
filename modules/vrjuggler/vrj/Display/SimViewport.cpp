@@ -33,7 +33,9 @@
 #include <vrj/vrjConfig.h>
 
 #include <vpr/Util/Assert.h>
+#include <vpr/Util/Debug.h>
 
+#include <vrj/Util/Debug.h>
 #include <vrj/Display/CameraProjection.h>
 #include <vrj/Display/Projection.h>
 #include <gadget/Type/Position/PositionUnitConversion.h>
@@ -80,6 +82,9 @@ void SimViewport::config(jccl::ConfigChunkPtr chunk)
       jccl::ConfigChunkPtr sim_chunk =
          chunk->getProperty<jccl::ConfigChunkPtr>("simPlugIn");
 
+      vprDEBUG(vrjDBG_DISP_MGR, vprDBG_CONFIG_LVL)
+         << "SimViewport::config() creating simulator of type '"
+         << sim_chunk->getDescToken() << "'\n" << vprDEBUG_FLUSH;
       mSimulator = DrawSimInterfaceFactory::instance()->createObject(sim_chunk->getDescToken());
 
       // XXX: Change this to an error once the new simulator loading code is
