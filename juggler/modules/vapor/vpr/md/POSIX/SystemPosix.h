@@ -139,6 +139,30 @@ public:
       return status;
    }
 
+   inline static ReturnStatus
+    setenv (const std::string& name, const std::string& value)
+    {
+       // NSPR requires form of "name=value"
+       std::string set_value(name);
+       set_value += "=";
+       set_value += value;
+
+        ReturnStatus status;
+
+        int ret_val = ::putenv(set_value.c_str());
+
+        if ( ret_val == 0 )
+        {
+            status.setCode(ReturnStatus::Succeed);
+        }
+        else 
+        {
+            status.setCode(ReturnStatus::Fail);
+        }
+
+        return status;
+    }   
+
    /**
     * Returns the name of the host.
     * For example the hostname of: vapor.vrjuggler.org is "vapor"

@@ -130,10 +130,41 @@ public:
 
         val = PR_GetEnv(name.c_str());
 
-        if ( val != NULL ) {
+        if ( val != NULL )
+        {
             result = val;
+            status.setCode(ReturnStatus::Succeed);
         }
-        else {
+        else 
+        {
+            status.setCode(ReturnStatus::Fail);
+        }
+
+        return status;
+    }
+
+    /* 
+    * If value is "" then it either unsets the variable or clears it
+    */
+    inline static ReturnStatus
+    setenv (const std::string& name, const std::string& value)
+    {
+       // NSPR requires form of "name=value"
+       // NSPR takes possesion of the string memory, so we just leak here
+       std::string* set_value = new std::string(name);
+       (*set_value) += "=";
+       (*set_value) += value;
+
+        ReturnStatus status;
+
+        PRStatus ret_val = PR_SetEnv(set_value->c_str());
+
+        if ( ret_val != PR_SUCCESS )
+        {
+            status.setCode(ReturnStatus::Succeed);
+        }
+        else 
+        {
             status.setCode(ReturnStatus::Fail);
         }
 
