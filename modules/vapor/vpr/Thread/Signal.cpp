@@ -42,6 +42,7 @@
 #include <vpr/vprConfig.h>
 
 #include <signal.h>
+#include <boost/concept_check.hpp>
 
 #include <vpr/vprTypes.h>
 #include <vpr/Util/Assert.h>
@@ -164,6 +165,7 @@ vpr::ReturnStatus SigHandler::registerHandler (const int sig_num,
                                                vpr::SignalHandler_t handler,
                                                const bool restart)
 {
+   boost::ignore_unused_variable_warning(restart);
    vpr::SignalAction sa(handler);
    return registerHandler(sig_num, sa);
 }
