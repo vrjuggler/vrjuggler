@@ -66,7 +66,7 @@ public:
 
 }; // End of vpr namespace
 
-#if defined(VPR_IRIX_SPROC)
+#if defined(VPR_USE_IRIX_SPROC)
 #   include <md/SPROC/MemPoolSGI.h>
 #   include <SharedMem/MemPoolHeap.h>
 
@@ -75,7 +75,7 @@ namespace vpr {
     typedef MemPoolHeap HeapPool;
     typedef MemPoolSGI  SyncPool;
 };
-#elif defined(VPR_OS_Win32)
+#elif defined(VPR_USE_WIN32)
 #   include <md/WIN32/MemPoolWin32.h>
 #   include <SharedMem/MemPoolHeap.h>  // Everything is heap!!!
 

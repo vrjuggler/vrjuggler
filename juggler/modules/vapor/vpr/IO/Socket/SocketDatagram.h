@@ -147,7 +147,7 @@ protected:
 namespace vpr {
   typedef SocketDatagram_t<SocketDatagramImpNSPR, SocketImpNSPR> SocketDatagram;
 };
-#elif defined(VPR_OS_Win32)
+#elif defined(VPR_USE_WIN32)
 #   include <md/WIN32/SocketDatagramImpWinSock.h>
 
 namespace vpr {

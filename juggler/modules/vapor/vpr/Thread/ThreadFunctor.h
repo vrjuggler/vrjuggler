@@ -132,9 +132,9 @@ public:
 // This is the actual function that is called.
 // It must be extern "C"
 //---------------------------------------------
-#if defined(VPR_IRIX_SPROC)	/* ---- SGI IPC Barrier ------ */
+#if defined(VPR_USE_IRIX_SPROC)	/* ---- SGI IPC Barrier ------ */
     extern "C" void ThreadFunctorFunction(void* args);
-#elif defined(VPR_OS_Win32)
+#elif defined(VPR_USE_WIN32)
     unsigned int __stdcall ThreadFunctorFunction(void* args);
 #elif defined(VPR_USE_PTHREADS)
 #   ifdef _PTHREADS_DRAFT_4

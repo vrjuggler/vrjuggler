@@ -40,7 +40,7 @@ namespace vpr {
 //--------------------------------------------
 // This is the actual function that is called.
 //--------------------------------------------
-#if defined(VPR_IRIX_SPROC)	/* ---- Using IRIX Sproc ------ */
+#if defined(VPR_USE_IRIX_SPROC)	/* ---- Using IRIX Sproc ------ */
     void
     ThreadFunctorFunction (void* args) {
         BaseThreadFunctor& func = *(BaseThreadFunctor*)args;
@@ -88,6 +88,6 @@ namespace vpr {
         BaseThreadFunctor& func = *(BaseThreadFunctor*)args;
         func();
     }
-#endif	/* VPR_IRIX_SPROC */
+#endif	/* VPR_USE_IRIX_SPROC */
 
 }; // End of vpr namespace

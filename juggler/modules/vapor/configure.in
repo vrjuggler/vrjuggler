@@ -362,6 +362,8 @@ if test "x$SUBSYSTEM" = "xPOSIX" ; then
     SEMPANORE_SYS='POSIX'
 dnl # We are using WIN32 threads.
 elif test "x$SUBSYSTEM" = "xWIN32" ; then
+    AC_DEFINE(VPR_USE_WIN32,)
+
     dnl # Set to Win32 threading, synchronization and shared memory.
     SEMPANORE_SYS='WIN32'
     THREAD_SYS='WIN32'
@@ -373,7 +375,7 @@ elif test "x$SUBSYSTEM" = "xSPROC" ; then
     AC_CHECK_HEADERS(sys/prctl.h, ,
         AC_MSG_ERROR(*** IRIX sproc(2) threading will not be used (no headers found) ***))
 
-    AC_DEFINE(VPR_IRIX_SPROC,)
+    AC_DEFINE(VPR_USE_IRIX_SPROC,)
 
     dnl # Set to IRIX sproc threading, synchronization and shared memory.
     THREAD_SYS='SPROC'

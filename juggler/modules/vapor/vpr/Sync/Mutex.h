@@ -48,14 +48,14 @@
 
 #include <vprConfig.h>
 
-#if defined(VPR_IRIX_SPROC)
+#if defined(VPR_USE_IRIX_SPROC)
 #   include <ulocks.h>
 #   include <md/SPROC/MutexSGI.h>    
     
 namespace vpr {
     typedef MutexSGI Mutex;
 };
-#elif defined(VPR_OS_Win32)
+#elif defined(VPR_USE_WIN32)
 #   include <md/WIN32/MutexWin32.h>
 
 namespace vpr {

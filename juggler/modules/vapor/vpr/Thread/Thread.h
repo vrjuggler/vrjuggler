@@ -46,7 +46,7 @@ namespace vpr {
 };
 
 /* IRIX SPROC */
-#if defined(VPR_IRIX_SPROC)
+#if defined(VPR_USE_IRIX_SPROC)
 namespace vpr {
     typedef struct cancel_state cancel_state_t;
 
@@ -58,7 +58,7 @@ namespace vpr {
 #   include <md/SPROC/ThreadKeySGI.h>
 
 /* Win32 */
-#elif defined(VPR_OS_Win32)
+#elif defined(VPR_USE_WIN32)
 #   include <process.h>
 #   include <md/WIN32/ThreadWin32.h>
 #   include <md/WIN32/ThreadKeyWin32.h>
@@ -91,7 +91,7 @@ namespace vpr {
     typedef class ThreadNSPR    Thread;
 //    typedef class ThreadKeyNSPR KeyId;
 };
-#endif  /* VPR_IRIX_SPROC */
+#endif  /* VPR_USE_IRIX_SPROC */
 
 
 #endif  /* _VPR_THREAD_H_ */
