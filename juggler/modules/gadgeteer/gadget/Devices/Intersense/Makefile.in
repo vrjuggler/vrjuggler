@@ -54,8 +54,8 @@ SRCS		= isdriver.c			\
                   itcom.c 			\
                   timer.c 			\
                   serial.c			\
-                  IntersenseStandalone.cpp	\
-                  Isense.cpp
+                  Intersense.cpp		\
+                  IntersenseStandalone.cpp
 
 include $(MKPATH)/dpp.obj.mk
 
