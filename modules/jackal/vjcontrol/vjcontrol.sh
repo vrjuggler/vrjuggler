@@ -39,6 +39,8 @@ for jar in ${VJC_JARS}; do
    VJC_CP=${VJC_CP}:${JCCL_BASE_DIR}/bin/$jar
 done
 
+JAXP_JAR=#JAXP_JAR#
+
 # If the environment variable JDK_HOME is not set, default it to /usr/java.
 if test "x${JDK_HOME}" = "x" ; then
     echo "WARNING: Setting JDK_HOME environment variable to /usr/java"
@@ -63,7 +65,7 @@ else
     ${JDK_HOME}/bin/java -DVJ_BASE_DIR="${VJ_BASE_DIR}"		\
       -DVJ_SHARE_DIR="${VJ_SHARE_DIR}"				\
       -DJCCL_BASE_DIR="${JCCL_BASE_DIR}" -DJCCL_SHARE_DIR="${JCCL_SHARE_DIR}" \
-      -cp ${CLASSPATH}:${VJC_CP} org.vrjuggler.jccl.vjcontrol.Init $*
+      -cp ${CLASSPATH}:${VJC_CP}:${JAXP_JAR} org.vrjuggler.jccl.vjcontrol.Init $*
     status=0
 fi
 
