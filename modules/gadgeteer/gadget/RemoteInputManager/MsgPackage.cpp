@@ -31,335 +31,712 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include <gadget/gadgetConfig.h>
-
+#include <jccl/RTRC/ConfigManager.h>
 #include <gadget/RemoteInputManager/NetUtils.h>
 #include <gadget/Util/Debug.h>
 #include <gadget/RemoteInputManager/MsgPackage.h>
-
+#include <gadget/Type/DeviceFactory.h>
 
 namespace gadget
 {
-
-
-// Constructor
-
-MsgPackage::MsgPackage()
-{
-   mDataLength = 0;
-}
-
-
-// send contents of current package to the socket specified
-
-void MsgPackage::sendContents(vpr::SocketStream& sock_stream) const
-{
-   if ( mDataLength > 0 )
+   
+   bool doneConfig();
+   
+   MsgPackage::MsgPackage()
    {
-      sendAtOnce(sock_stream, mBuffer, mDataLength);
+      mObjectWriter = new vpr::ObjectWriter;
+      mTempWriter = new vpr::ObjectWriter;
    }
-}
 
-
-// send contents of current package to the socket specified
-// and then clear the message
-
-void MsgPackage::sendAndClear(vpr::SocketStream& sock_stream)
-{
-   if ( mDataLength > 0 )
+   void MsgPackage::sendAndClear(vpr::SocketStream* sock_stream)
    {
-      sendAtOnce(sock_stream, mBuffer, mDataLength);
-   }
-   clear();
-}
-
-
-// creates a device request message with the specified id and name
-
-void MsgPackage::createDeviceRequest(vpr::Uint16 device_id,
-                                     const std::string device_name)
-{
-   vpr::Uint16 code = MSG_DEVICE_REQ;  // stands for Device Request
-   code = htons(code);
-   char code_str[2];
-   vpr::Uint16 net_device_id = htons(device_id);
-   char device_id_str[2];
-   ushortTo2Bytes(code_str, code);
-   ushortTo2Bytes(device_id_str, net_device_id);
-
-   sprintf(mBuffer, "%c%c%c%c%s;", code_str[0], code_str[1], device_id_str[0],
-           device_id_str[1], device_name.c_str());
-
-   // DEBUGGING
-   char some_name[64];
-   uint i;
-   for ( i = 4; i < device_name.length() + 4 ; i++ )
-   {
-      some_name[i-4] = mBuffer[i];
-   }
-   some_name[i-4] = '\0';
-   vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_DETAILED_LVL)
-      << "createDeviceRequest:code=" << binaryToUshort(code_str,2)
-      << ", name = " << some_name << std::endl << vprDEBUG_FLUSH;
-   // END DEBUGGING
-
-   // length of message is 2 bytes of instruction code + 2 bytes id + name length + 1 semicolon
-   mDataLength = 5 + device_name.size();
-   vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_DETAILED_LVL)
-      << "createDeviceRequest: last char = " << mBuffer[mDataLength - 1]
-      << std::endl << vprDEBUG_FLUSH;
-}
-
-
-// creates a device acknowledgement message with the specified id and name
-
-void MsgPackage::createDeviceAck(const vpr::Uint16 remote_device_id,
-                                 const vpr::Uint16 local_device_id,
-                                 const std::string device_name)
-{
-   vpr::Uint16 code = MSG_DEVICE_ACK;  // stands for Device Acknowledgement
-   code = htons(code);
-   char code_str[2];
-   vpr::Uint16 net_local_device_id = htons(local_device_id);        // sender id
-   vpr::Uint16 net_remote_device_id = htons(remote_device_id);      // receiver id
-   char remote_device_id_str[2];
-   char local_device_id_str[2];
-   ushortTo2Bytes(code_str, code);
-   ushortTo2Bytes(remote_device_id_str, net_remote_device_id);
-   ushortTo2Bytes(local_device_id_str, net_local_device_id);
-   // std::cout << "Creating ACK code: " << binaryToUshort(code_str,2) << std::endl;
-   // std::cout << "Creating ACK code, local_dev id: " << local_device_id << ", " << binaryToUshort(local_device_id_str,2) << std::endl;
-   // std::cout << "Creating ACK code, remote_dev id: " << remote_device_id << ", " << binaryToUshort(remote_device_id_str,2) << std::endl;
-
-   // the device name string isn't absolutely necessary in the ack, but it helps prevent errors in what's only a one-time config message
-   sprintf(mBuffer, "%c%c%c%c%c%c%s;", code_str[0], code_str[1],
-           remote_device_id_str[0], remote_device_id_str[1],
-           local_device_id_str[0], local_device_id_str[1],
-           device_name.c_str());
-   mDataLength = 7 + device_name.size();
-}
-
-
-// creates a rejection (negative acknowledgement) message with the specified id and name
-// for simplicity, same as ACK, but with different opcode
-
-void MsgPackage::createDeviceNack(const vpr::Uint16 remote_device_id, const vpr::Uint16 local_device_id, const std::string device_name)
-{
-   vpr::Uint16 code = MSG_DEVICE_NACK;  // stands for Negative Device Acknowledement
-   code = htons(code);
-   char code_str[2];
-   vpr::Uint16 net_local_device_id = htons(local_device_id);        // sender id
-   vpr::Uint16 net_remote_device_id = htons(remote_device_id);      // receiver id
-   char remote_device_id_str[2];
-   char local_device_id_str[2];
-   ushortTo2Bytes(code_str, code);
-   ushortTo2Bytes(remote_device_id_str, net_remote_device_id);
-   ushortTo2Bytes(local_device_id_str, net_local_device_id);
-   // std::cout << "Creating NACK code: " << binaryToUshort(code_str,2) << std::endl;
-   // std::cout << "Creating NACK code, local_dev id: " << local_device_id << ", " << binaryToUshort(local_device_id_str,2) << std::endl;
-   // std::cout << "Creating NACK code, remote_dev id: " << remote_device_id << ", " << binaryToUshort(remote_device_id_str,2) << std::endl;
-
-   // the device name string isn't absolutely necessary in the ack, but it helps prevent errors in what's only a one-time config message
-   sprintf(mBuffer, "%c%c%c%c%c%c%s;", code_str[0], code_str[1],
-           remote_device_id_str[0], remote_device_id_str[1],
-           local_device_id_str[0], local_device_id_str[1],
-           device_name.c_str());
-   mDataLength = 7 + device_name.size();
-}
-
-
-// processes a device request message
-// returns the number of bytes used from buffer (excluding the already read opcode)
-// A return value of zero means unable to process -- complete message not received yet.
-
-int MsgPackage::receiveDeviceRequest(char* ptr, int len)
-{
-   vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_HEX_LVL)
-      << "receiveDeviceRequest: len=" << len << std::endl << vprDEBUG_FLUSH;
-   // read sender's id from buffer
-   VJ_NETID_TYPE tmp = binaryToUshort(ptr,len);
-   mSenderId = ntohs(tmp);
-
-
-   // read device name from buffer
-   int index;
-   int endline = 0;
-   for ( index = 2; index < len; index++ )
-   {
-      if ( ptr[index] == ';' )
+      if (sock_stream != NULL && sock_stream->isOpen())
       {
-         endline = 1;
-         index++;  // we want to count the semicolon as a character that's been read
-         break;      // we at least
+         vpr::Uint32 bytes_just_sent = 0;
+         if ( !mObjectWriter->getData()->empty() )
+         {
+            sock_stream->send(*(mObjectWriter->getData()),mObjectWriter->getData()->size(),bytes_just_sent);
+         }
+         mTempWriter->mData->clear();
+         mTempWriter->mCurHeadPos = 0;
+
+         mObjectWriter->mData->clear();
+         mObjectWriter->mCurHeadPos = 0;
       }
+      else
+      {  
+         vprDEBUG(gadgetDBG_RIM,vprDBG_CRITICAL_LVL) <<  clrOutBOLD(clrRED,"ERROR: Can not send packet, connection has been lost. ")
+               <<  clrOutBOLD(clrRED,"And NetConnection should be deleted. \n") << vprDEBUG_FLUSH;
+         mTempWriter->mData->clear();
+         mTempWriter->mCurHeadPos = 0;
+
+         mObjectWriter->mData->clear();
+         mObjectWriter->mCurHeadPos = 0;
+
+         //vprASSERT(sock_stream->isOpen() && "Socket no longer open!!");
+      }
+      
+
    }
 
-   if ( !endline )
-   { // couldn't read a full line, so try again later when there will be more data
-      vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_DETAILED_LVL)
-         << "receiveDeviceRequest: couldn't read full line yet"
-         << std::endl << vprDEBUG_FLUSH;
-      // for(int i = 0; i < len; i++)
-      // std::cout << ptr[i];
-      // std::cout << std::endl;
-      return 0;
-   }
-
-   // DEBUGGING
-   char some_name[64];
-   int i;
-   for ( i = 2; i < len - 1 - 2; i++ )
+   void MsgPackage::createDeviceRequest(vpr::Uint16 device_id,
+                                        const std::string device_name)
    {
-      some_name[i-2] = ptr[i];
+      ///////////////////////////////////////////////////////////////////////
+      //                                                                   //
+      // CONSTRUCT ACK PACKET 											   //				
+      //	FORM:		 vpr::Uint16		vpr::Uint16		 vpr::Uint32   //				
+      //			 -------------------------------------------------	   //			
+      //			| RIM_PACKET_MSG | MSG_DEVICE_REQ |   length     |	   //			
+      //			-------------------------------------------------	   //			
+      //																   //				
+      //			   vpr::Uint16	 	uint    std::string  			   //			
+      //			 -------------------------------------  			   //			
+      //			| device_id  |	str_len | device_name |  			   //			
+      //			-------------------------------------				   //			
+      //																   //
+      ///////////////////////////////////////////////////////////////////////
+
+      vprDEBUG_BEGIN(gadgetDBG_RIM,vprDBG_VERB_LVL) <<  "[PACKET]CREATING A DEVICE REQUEST\n" << vprDEBUG_FLUSH;
+      vprDEBUG(gadgetDBG_RIM,vprDBG_VERB_LVL) <<  "Name:      " << device_name << "\n" << vprDEBUG_FLUSH;
+      vprDEBUG(gadgetDBG_RIM,vprDBG_VERB_LVL) <<  "Remote ID: " << device_id << "\n" << vprDEBUG_FLUSH;
+      
+      /////////////////
+      // CREATE BODY //
+      /////////////////
+
+      // Device ID
+      mTempWriter->writeUint16(device_id);
+
+      // Device Name
+      mTempWriter->writeUint16(device_name.size());
+      mTempWriter->writeString(device_name);
+
+      // Set the size of the data
+      vpr::Uint32 length = mTempWriter->getData()->size();
+
+      ///////////////////
+      // CREATE HEADER //
+      ///////////////////
+      mObjectWriter->writeUint16(RIM_PACKET_MSG);
+      mObjectWriter->writeUint16(MSG_DEVICE_REQ);    
+      mObjectWriter->writeUint32(length + RIM_HEAD_LENGTH);
+      //std::cout << "		LENGTH OF PACKET " << length + RIM_HEAD_LENGTH << std::endl;
+      vprDEBUG(gadgetDBG_RIM,vprDBG_VERB_LVL) <<  "LENGTH OF PACKET: " << length + RIM_HEAD_LENGTH <<"\n" << vprDEBUG_FLUSH;
+      ///////////////////////
+      // ADD HEADER & BODY //
+      ///////////////////////
+
+      mObjectWriter->getData()->insert(mObjectWriter->getData()->end(),mTempWriter->getData()->begin(),mTempWriter->getData()->end());
+      mObjectWriter->setCurPos(length + RIM_HEAD_LENGTH);
+      vprDEBUG_END(gadgetDBG_RIM,vprDBG_VERB_LVL) <<  "[PACKET]CREATING A DEVICE REQUEST\n" << vprDEBUG_FLUSH;
+      createEndBlock();
    }
-   some_name[i-2] = '\0';
-   vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_DETAILED_LVL)
-      << "receiveDeviceRequest:SenderId=" << mSenderId
-      << ", name = " << some_name << std::endl << vprDEBUG_FLUSH;
-   // END DEBUGGING
 
-   // read the name of the device
-   int name_length = index - 1 - 2;  // don't include the semicolon(-1) or the device_id(-2) in the name
-   vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_DETAILED_LVL)
-      << "receiveDeviceRequest:name_length=" << name_length << std::endl
-      << vprDEBUG_FLUSH;
-
-   // copy the Device Name string
-   mDataString = "";
-   for ( int j = 0; j < name_length ; j++ )
+   void MsgPackage::createDeviceAck(const vpr::Uint16 remote_device_id,
+                                    const vpr::Uint16 local_device_id,
+                                    const std::string device_name,
+                                    const std::string base_type)
    {
-      mDataString += ptr[j+2];             // + 2 is to bypass sender id;
+      /////////////////////////////////////////////////////////////////////
+      //																 //
+      // CONSTRUCT ACK PACKET 											 //
+      //	FORM:		 vpr::Uint16		vpr::Uint16		 vpr::Uint32 //
+      //			 -------------------------------------------------	 //
+      //			| RIM_PACKET_MSG | MSG_DEVICE_ACK |   length     |   //
+      //			-------------------------------------------------	 //
+      //																 //
+      //				 vpr::Uint16		   vpr::Uint16		  		 //
+      //			 ---------------------------------------			 //
+      //			| remote_device_id  | local_device_id  |			 //
+      //			---------------------------------------				 //
+      //																 //
+      // 			uint      std::string    uint     std::string		 //
+      //			 -----------------------------------------------	 //
+      //			|	str_len | device_name | str_len | base_type | 	 //
+      //   	        -----------------------------------------------		 //
+      /////////////////////////////////////////////////////////////////////
+
+
+      /////////////////
+      // CREATE BODY //
+      /////////////////
+
+      //std::cout << "CREATE DEVICE_ACK" << std::endl;
+      vprDEBUG_BEGIN(gadgetDBG_RIM,vprDBG_VERB_LVL) <<  "[PACKET]CREATE DEVICE_ACK\n" << vprDEBUG_FLUSH;
+      vprDEBUG(gadgetDBG_RIM,vprDBG_VERB_LVL) <<  "Name:      " << device_name << "\n" << vprDEBUG_FLUSH;
+      vprDEBUG(gadgetDBG_RIM,vprDBG_VERB_LVL) <<  "Remote ID: " << remote_device_id << "\n" << vprDEBUG_FLUSH;
+      vprDEBUG(gadgetDBG_RIM,vprDBG_VERB_LVL) <<  "Local ID:  " << local_device_id << "\n" << vprDEBUG_FLUSH;
+      vprDEBUG(gadgetDBG_RIM,vprDBG_VERB_LVL) <<  "BaseType:  " << base_type << "\n" << vprDEBUG_FLUSH;
+      // Remote and Local ID's
+      mTempWriter->writeUint16(remote_device_id);
+      mTempWriter->writeUint16(local_device_id);
+
+      // Device Name
+      mTempWriter->writeUint16(device_name.size());
+      mTempWriter->writeString(device_name);
+
+      // Base Type
+      mTempWriter->writeUint16(base_type.size());
+      mTempWriter->writeString(base_type);
+
+
+      // Set the size of the packet
+      vpr::Uint32 length = mTempWriter->getData()->size();
+
+
+
+      ///////////////////
+      // CREATE HEADER //
+      ///////////////////
+      mObjectWriter->writeUint16(RIM_PACKET_MSG);
+      mObjectWriter->writeUint16(MSG_DEVICE_ACK);    
+      mObjectWriter->writeUint32(length + RIM_HEAD_LENGTH);
+      //std::cout << "		LENGTH OF PACKET " << length + RIM_HEAD_LENGTH << std::endl;
+      vprDEBUG(gadgetDBG_RIM,vprDBG_VERB_LVL) <<  "LENGTH OF PACKET: " << length + RIM_HEAD_LENGTH <<"\n" << vprDEBUG_FLUSH;
+      ///////////////////////
+      // ADD HEADER & BODY //
+      ///////////////////////
+
+      mObjectWriter->getData()->insert(mObjectWriter->getData()->end(),mTempWriter->getData()->begin(),mTempWriter->getData()->end());
+      mObjectWriter->setCurPos(length + RIM_HEAD_LENGTH);
+      vprDEBUG_END(gadgetDBG_RIM,vprDBG_VERB_LVL) <<  "[PACKET]CREATE DEVICE_ACK\n" << vprDEBUG_FLUSH;
+
+      createEndBlock();
    }
 
-   vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL)
-      << "receiveDeviceRequest: name=" << mDataString << std::endl
-      << vprDEBUG_FLUSH;
-   return (2 + name_length + 1);  // sender id(2) name(n) semicolon(1)
-}
-
-
-// This works for both ACK and NACK
-// returns the number of bytes used from buffer (excluding the already read opcode)
-// A return value of zero means unable to process -- complete message not received yet.
-
-int MsgPackage::receiveDeviceAck(char* ptr, int len)
-{
-   // read ids from buffer
-   mReceiverId = binaryToUshort(ptr,len);
-   mReceiverId = ntohs(mReceiverId);
-   mSenderId = binaryToUshort(ptr+2,len);
-   mSenderId = ntohs(mSenderId);
-
-   // read device name from buffer
-   int endline = 0;
-   int index;
-   for ( index = 2; index < len; index++ )
+   void MsgPackage::createDeviceNack(const vpr::Uint16 remote_device_id, const vpr::Uint16 local_device_id, const std::string device_name)
    {
-      if ( ptr[index] == ';' )
+      ///////////////////////////////////////////////////////////////////////
+      //																   //
+      // CONSTRUCT NACK PACKET 											   //
+      //	FORM:		 vpr::Uint16		vpr::Uint16		 vpr::Uint32   //
+      //			 -------------------------------------------------	   //
+      //			| RIM_PACKET_MSG | MSG_DEVICE_NACK |   length     |	   //
+      //			-------------------------------------------------	   //
+      //																   //
+      //				 vpr::Uint16		   vpr::Uint16		  		   //
+      //			 ---------------------------------------			   //
+      //			| remote_device_id  | local_device_id  |			   //
+      //			---------------------------------------				   //
+      //																   //
+      // 			uint      std::string    uint     std::string		   //
+      //			 -----------------------------------------------	   //
+      //			|	str_len | device_name | str_len | base_type | 	   //
+      //   	   -----------------------------------------------			   //
+      ///////////////////////////////////////////////////////////////////////
+
+
+      /////////////////
+      // CREATE BODY //
+      /////////////////
+      vprDEBUG_BEGIN(gadgetDBG_RIM,vprDBG_VERB_LVL) <<  "[PACKET]CREATE DEVICE_NACK\n" << vprDEBUG_FLUSH;
+      vprDEBUG(gadgetDBG_RIM,vprDBG_VERB_LVL) <<  "Name:      " << device_name << "\n" << vprDEBUG_FLUSH;
+      vprDEBUG(gadgetDBG_RIM,vprDBG_VERB_LVL) <<  "Remote ID: " << remote_device_id << "\n" << vprDEBUG_FLUSH;
+      vprDEBUG(gadgetDBG_RIM,vprDBG_VERB_LVL) <<  "Local ID:  " << local_device_id << "\n" << vprDEBUG_FLUSH;
+      
+      
+      //std::cout << "CREATE DEVICE_NACK" << std::endl;
+      // Remote and Local ID's
+      mTempWriter->writeUint16(remote_device_id);
+
+      mTempWriter->writeUint16(local_device_id);
+
+      // Device Name
+      mTempWriter->writeUint16(device_name.size());
+      mTempWriter->writeString(device_name);
+
+      // Base Type
+      std::string base_type = "I Don't have it!";
+      mTempWriter->writeUint16(base_type.size());
+      mTempWriter->writeString(base_type);
+
+
+      // Set the size of the packet
+      vpr::Uint32 length = mTempWriter->getData()->size();
+
+
+
+      ///////////////////
+      // CREATE HEADER //
+      ///////////////////
+      mObjectWriter->writeUint16(RIM_PACKET_MSG);
+      mObjectWriter->writeUint16(MSG_DEVICE_NACK);   
+      mObjectWriter->writeUint32(length + RIM_HEAD_LENGTH);
+      //std::cout << "		LENGTH OF PACKET " << length + RIM_HEAD_LENGTH << std::endl;
+      vprDEBUG(gadgetDBG_RIM,vprDBG_VERB_LVL) <<  "LENGTH OF PACKET: " << length + RIM_HEAD_LENGTH <<"\n" << vprDEBUG_FLUSH;
+      ///////////////////////
+      // ADD HEADER & BODY //
+      ///////////////////////
+
+      mObjectWriter->getData()->insert(mObjectWriter->getData()->end(),mTempWriter->getData()->begin(),mTempWriter->getData()->end());
+      mObjectWriter->setCurPos(length + RIM_HEAD_LENGTH);
+      vprDEBUG_END(gadgetDBG_RIM,vprDBG_VERB_LVL) <<  "[PACKET]CREATE DEVICE_NACK\n" << vprDEBUG_FLUSH;
+
+      createEndBlock();
+   }
+
+
+   bool  MsgPackage::receiveDeviceAck(vpr::ObjectReader* object_reader)
+   {
+      ///////////////////////////////////////////////////////////////////////
+      //																   //
+      // CONSTRUCT ACK PACKET 										       //
+      //	FORM:		 vpr::Uint16		vpr::Uint16		 vpr::Uint32   //
+      //			 -------------------------------------------------	   //
+      //			| RIM_PACKET_MSG | MSG_DEVICE_ACK |   length     |	   //
+      //			-------------------------------------------------	   //
+      //			A						 					    A	   //
+      //			|_______________________________________________|	   //
+      //									Already Parsed				   //
+      //																   //
+      //				 vpr::Uint16		   vpr::Uint16		  		   //
+      //			 ---------------------------------------			   //
+      //			| remote_device_id  | local_device_id  |			   //
+      //			---------------------------------------				   //
+      //																   //
+      // 			uint      std::string    uint     std::string		   //
+      //			 -----------------------------------------------	   //
+      //			|	str_len | device_name | str_len | base_type | 	   //
+      //   	        -----------------------------------------------		   //
+      ///////////////////////////////////////////////////////////////////////
+
+      vprDEBUG_BEGIN(gadgetDBG_RIM,vprDBG_VERB_LVL) <<  "[PACKET]RECEIVE DEVICE_ACK\n" << vprDEBUG_FLUSH;
+      //std::cout << "RECEIVE DEVICE_ACK" << std::endl;
+      //std::cout << "		LENGTH OF PACKET " << object_reader->mData->size() + RIM_HEAD_LENGTH << std::endl;
+      
+      vprDEBUG(gadgetDBG_RIM,vprDBG_VERB_LVL) <<  "LENGTH OF PACKET: " << object_reader->mData->size() + RIM_HEAD_LENGTH <<"\n" << vprDEBUG_FLUSH;
+      // Remote and Local ID's
+      mReceiverId = object_reader->readUint16();
+      mSenderId = object_reader->readUint16();
+
+      // Device Name
+      vpr::Uint16 temp_string_len = object_reader->readUint16();
+      mDataString = object_reader->readString(temp_string_len);
+
+      // Base Type
+      temp_string_len = object_reader->readUint16();
+      mBaseType = object_reader->readString(temp_string_len);
+      
+      vprDEBUG(gadgetDBG_RIM,vprDBG_VERB_LVL) <<  "Name:      " << mDataString << "\n" << vprDEBUG_FLUSH;
+      vprDEBUG(gadgetDBG_RIM,vprDBG_VERB_LVL) <<  "Remote ID: " << mSenderId << "\n" << vprDEBUG_FLUSH;
+      vprDEBUG(gadgetDBG_RIM,vprDBG_VERB_LVL) <<  "Local ID:  " << mReceiverId << "\n" << vprDEBUG_FLUSH;
+      vprDEBUG(gadgetDBG_RIM,vprDBG_VERB_LVL) <<  "BaseType:  " << mBaseType << "\n" << vprDEBUG_FLUSH;
+
+      vprDEBUG_END(gadgetDBG_RIM,vprDBG_VERB_LVL) <<  "[PACKET]RECEIVE DEVICE_ACK\n" << vprDEBUG_FLUSH;
+      
+      return true;
+   }
+   bool MsgPackage::receiveDeviceRequest(vpr::ObjectReader* object_reader)
+   {
+      ///////////////////////////////////////////////////////////////////////
+      //																   //
+      // CONSTRUCT ACK PACKET 										       //
+      //	FORM:		 vpr::Uint16		vpr::Uint16		 vpr::Uint32   //
+      //			 -------------------------------------------------	   //
+      //			| RIM_PACKET_MSG | MSG_DEVICE_REQ |   length     |	   //
+      //			-------------------------------------------------	   //
+      //			A												A	   //
+      //			|_______________________________________________|	   //
+      //								Already Parsed					   //
+      //																   //
+      //			   vpr::Uint16	 	uint    std::string  			   //
+      //			 -------------------------------------  			   //
+      //			| device_id  |	str_len | device_name |  			   //
+      //			-------------------------------------				   //
+      //																   //
+      ///////////////////////////////////////////////////////////////////////
+
+      vprDEBUG_BEGIN(gadgetDBG_RIM,vprDBG_VERB_LVL) <<  "[PACKET]RECEIVEING A DEVICE REQUEST\n" << vprDEBUG_FLUSH;
+      //std::cout << "RECEIVEING A DEVICE REQUEST" << std::endl;
+      //std::cout << "		LENGTH OF PACKET " << object_reader->mData->size() + RIM_HEAD_LENGTH << std::endl;
+      vprDEBUG(gadgetDBG_RIM,vprDBG_VERB_LVL) <<  "LENGTH OF PACKET: " << object_reader->mData->size() + RIM_HEAD_LENGTH <<"\n" << vprDEBUG_FLUSH;
+      // Device ID
+      mSenderId = object_reader->readUint16();
+
+      // Device Name
+      vpr::Uint16 temp_name_len = object_reader->readUint16();
+      mDataString = object_reader->readString(temp_name_len);
+      vprDEBUG(gadgetDBG_RIM,vprDBG_VERB_LVL) <<  "Name: " << mDataString << "\n" << vprDEBUG_FLUSH;
+      vprDEBUG_END(gadgetDBG_RIM,vprDBG_VERB_LVL) <<  "[PACKET]RECEIVEING A DEVICE REQUEST\n" << vprDEBUG_FLUSH;
+      return true;
+   }
+
+   bool MsgPackage::createDeviceDataPacket(NetDevice* net_device)
+   {
+      ////////////////////////////////////////////////////////////////////
+      //														        //
+      // CONSTRUCT DEVICE PACKET 										//
+      //																//
+      //	FORM:		 vpr::Uint16		vpr::Uint16	 vpr::Uint32    //
+      //			 ------------------------------------------------   //
+      //			| RIM_PACKET_MSG | MSG_DEVICE_DATA | length     |   //
+      //			------------------------------------------------    //
+      //																//
+      //             vpr::Uint16	 			                        //
+      //           --------------------	                                //
+      //          | device_id  | data |	                                //
+      //          --------------------		                            //
+      ////////////////////////////////////////////////////////////////////
+
+      vprDEBUG_BEGIN(gadgetDBG_RIM,vprDBG_VERB_LVL) <<  "[PACKET]CREATING A DEVICE DATA PACKET\n" << vprDEBUG_FLUSH;
+      vprDEBUG(gadgetDBG_RIM,vprDBG_VERB_LVL) <<  "Name:      " << net_device->getSourceName() << "\n" << vprDEBUG_FLUSH;
+      vprDEBUG(gadgetDBG_RIM,vprDBG_VERB_LVL) <<  "Remote ID: " << net_device->getRemoteId() << "\n" << vprDEBUG_FLUSH;
+      //std::cout << "CREATING A DEVICE DATA PACKET" << std::endl;
+
+      /////////////////
+      // CREATE BODY //
+      /////////////////
+      //mTempWriter->writeUint16(net_device->getRemoteId());   
+      //net_device->getRealDevice()->writeObject(mTempWriter);
+      mTempWriter->mData = net_device->getObjectWriter()->getData();
+      // Set the size of the packet
+      //vpr::Uint32 length = mTempWriter->getData()->size();
+      vpr::Uint32 length = net_device->getObjectWriter()->getData()->size();
+      
+      ///////////////////
+      // CREATE HEADER //
+      ///////////////////
+      mObjectWriter->writeUint16(RIM_PACKET_MSG);    
+      mObjectWriter->writeUint16(MSG_DEVICE_DATA);
+      mObjectWriter->writeUint32(length + RIM_HEAD_LENGTH + 2);
+      
+      vprDEBUG(gadgetDBG_RIM,vprDBG_VERB_LVL) <<  "LENGTH OF PACKET: " << length + RIM_HEAD_LENGTH + 2 <<"\n" << vprDEBUG_FLUSH;
+      mObjectWriter->writeUint16(net_device->getRemoteId());   
+      ///////////////////////
+      // ADD HEADER & BODY //
+      ///////////////////////
+
+      mObjectWriter->getData()->insert(mObjectWriter->getData()->end(),net_device->getObjectWriter()->getData()->begin(),net_device->getObjectWriter()->getData()->end());
+      mObjectWriter->setCurPos(length + RIM_HEAD_LENGTH);
+
+      vprDEBUG_END(gadgetDBG_RIM,vprDBG_VERB_LVL) <<  "[PACKET]CREATING A DEVICE DATA PACKET\n" << vprDEBUG_FLUSH;
+
+      // NO createEndBlock(); becasue the point of this call is to end all connection data,
+      // 							not just after each device's data
+      return true;
+   }
+
+   bool MsgPackage::recieveDeviceDataPacket(vpr::ObjectReader* object_reader, Input* virtual_device)
+   {
+      //////////////////////////////////////////////////////////////////////////////////////
+      //																			      //
+      // CONSTRUCT DEVICE PACKET 													      //
+      //																			      //
+      //	FORM:		 vpr::Uint16		vpr::Uint16	 vpr::Uint32  vpr::Uint16	 	  //
+      //			--------------------------------------------------------------------- //
+      //			| RIM_PACKET_MSG | MSG_DEVICE_DATA | length     | device_id  | data | //
+      //			--------------------------------------------------------------------  //
+      //			A															A		  //
+      //			|___________________________________________________________|		  //
+      //							 Already Parsed										  //
+      //																				  //
+      //////////////////////////////////////////////////////////////////////////////////////
+      vprDEBUG_BEGIN(gadgetDBG_RIM,vprDBG_VERB_LVL) <<  "RECEIVEING A DEVICE DATA PACKET\n" << vprDEBUG_FLUSH;
+      //std::cout << "RECEIVEING A DEVICE DATA PACKET" << std::endl;
+      //std::cout << "		LENGTH OF PACKET " << object_reader->mData->size() + RIM_HEAD_LENGTH + 2 << std::endl;
+      vprDEBUG(gadgetDBG_RIM,vprDBG_VERB_LVL) <<  "LENGTH OF PACKET: " << object_reader->mData->size() + RIM_HEAD_LENGTH <<"\n" << vprDEBUG_FLUSH;
+      // We add 2 because we also have already received the device_id
+      virtual_device->readObject(object_reader); 
+      vprDEBUG_END(gadgetDBG_RIM,vprDBG_VERB_LVL) <<  "[PACKET]RECEIVEING A DEVICE DATA PACKET\n" << vprDEBUG_FLUSH;
+      return true;
+   }
+//////////////////////////////////////////////////////////////////////
+   bool doneConfig()
+   {
+      /*jccl::ConfigManager* cfg_mgr = jccl::ConfigManager::instance();
+      
+      std::list<jccl::ConfigManager::PendingChunk>::iterator pendingItr;
+      cfg_mgr->lockPending();
+      for (pendingItr=cfg_mgr->getPendingBegin();pendingItr!=cfg_mgr->getPendingEnd();pendingItr++)
       {
-         endline = 1;
-         index++;  // we want to count the semicolon as a character that's been read
-         break;      // we at least
+         if (DeviceFactory::instance()->recognizeDevice( (*pendingItr.mChunk ))
+         { 
+            return false;
+         }
       }
+      return true;*/
    }
-
-   if ( !endline )
-   { // couldn't read a full line, so try again later when there will be more data
-      vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_DETAILED_LVL)
-         << "receiveDeviceAck: couldn't read full line yet" << std::endl
-         << vprDEBUG_FLUSH;
-      // for(int i = 0; i < len; i++)
-      // std::cout << ptr[i];
-      // std::cout << std::endl;
-      return 0;
-   }
-
-   // read the name of the device
-   int name_length = index - 1 - 2 - 2;  // don't include the semicolon(-1), local_device_id(-2), or remote_device_id
-
-   // copy the Device Name string
-   mDataString = "";
-   for ( int j = 4; j < len - 1 ; j++ )         // + 2 is to bypass sender id;
+/////////////////////////////////////////////////////////////////////////////////
+   void MsgPackage::createEndBlock()
    {
-      mDataString += ptr[j];
+      /////////////////////////////////////////////////////
+      //										         //
+      // CONSTRUCT END BLOCK` 							 //
+      //	FORM:		 vpr::Uint16		vpr::Uint16	 //
+      //			 ---------------------------------	 //
+      //			| RIM_PACKET_MSG | MSG_END_BLOCK |	 //
+      //			---------------------------------	 //
+      //												 //
+      /////////////////////////////////////////////////////
+
+      mObjectWriter->writeUint16(RIM_PACKET_MSG);    
+      mObjectWriter->writeUint16(MSG_END_BLOCK);
+      mObjectWriter->writeUint32(12);
+      mObjectWriter->writeUint32(12);
    }
 
-   return (4 + name_length + 1);  // sender id(2), receiver_id(2), name(n) semicolon(1)
-}
-
-// creates a clock sync message containing two times
-void MsgPackage::createClockSync(const float& time_a, const float& time_b, const bool clock_is_synced)
-{
-   vpr::Uint16 code = MSG_CLOCK_SYNC;
-   code = htons(code);
-   ushortTo2Bytes(&(mBuffer[0]), code);
-   floatTo4Bytes(&(mBuffer[2]), vj_htonf(time_a) );
-   floatTo4Bytes(&(mBuffer[6]), vj_htonf(time_b) );
-   mBuffer[10] = (char) clock_is_synced;
-   mBuffer[11] = ';';
-   mDataLength = 12; // code(2) + float(4) + float(4) + clock_is_synced(1) + semicolon(1)
-   return;
-}
-
-// returns the number of bytes used from buffer (excluding the already read opcode)
-// A return value of zero means unable to process -- complete message not received yet.
-int MsgPackage::receiveClockSync(char* ptr, int len, float& time_a, float& time_b, bool& clock_is_synced)
-{
-   if ( len < 2 * sizeof(float) + 1 )
+   /*void MsgPackage::createDeviceDelete(const vpr::Uint16 remote_device_id)
    {
-      return 0;  // only partial message received, wait for more data
-   }
+      /////////////////////////////////////////////////////////////////////
+      //																 //
+      // CONSTRUCT ACK PACKET 											 //
+      //	FORM:		 vpr::Uint16		vpr::Uint16		 vpr::Uint32 //
+      //			 -------------------------------------------------	 //
+      //			| RIM_PACKET_MSG | MSG_DEVICE_ACK |   length     |   //
+      //			-------------------------------------------------	 //
+      //																 //
+      //				 vpr::Uint16		   vpr::Uint16		  		 //
+      //			 ---------------------------------------			 //
+      //			| remote_device_id  | local_device_id  |			 //
+      //			---------------------------------------				 //
+      //																 //
+      // 			uint      std::string    uint     std::string		 //
+      //			 -----------------------------------------------	 //
+      //			|	str_len | device_name | str_len | base_type | 	 //
+      //   	        -----------------------------------------------		 //
+      /////////////////////////////////////////////////////////////////////
 
-   bytes4ToFloat(time_a, ptr);
-   bytes4ToFloat(time_b, ptr + 4);
-   clock_is_synced = (bool) ptr[8];
-   return (4 + 4 + 1 + 1);  // float(4) + float(4) + clock_is_synced(1) + semicolon(1)
-}
 
-// creates a message with a Manager id, and whether we have it or not
-void MsgPackage::createClockSyncHaveSrc(const vpr::GUID& id, const bool clock_is_synced)
-{
-   vpr::Uint16 code = MSG_CLOCK_SRC;
-   code = htons(code);
-   ushortTo2Bytes(&(mBuffer[0]), code);
-   std::string id_str(id.toString());
+      /////////////////
+      // CREATE BODY //
+      /////////////////
 
-   int i = 0;
-   for ( ; i < id_str.length(); i++ )
+      std::cout << "CREATE DEVICE_ACK" << std::endl;
+      // Remote and Local ID's
+      mTempWriter->writeUint16(remote_device_id);
+
+      // Set the size of the packet
+      vpr::Uint32 length = mTempWriter->getData()->size();
+      
+
+      ///////////////////
+      // CREATE HEADER //
+      ///////////////////
+      mObjectWriter->writeUint16(RIM_PACKET_MSG);
+      mObjectWriter->writeUint16(MSG_DELETE_DEVICE);    
+      mObjectWriter->writeUint32(length + RIM_HEAD_LENGTH);
+      std::cout << "		LENGTH OF PACKET " << length + RIM_HEAD_LENGTH << std::endl;
+
+      ///////////////////////
+      // ADD HEADER & BODY //
+      ///////////////////////
+
+      mObjectWriter->getData()->insert(mObjectWriter->getData()->end(),mTempWriter->getData()->begin(),mTempWriter->getData()->end());
+      mObjectWriter->setCurPos(length + RIM_HEAD_LENGTH);
+
+
+      createEndBlock();
+   } */
+
+   /*vpr::Uint16 MsgPackage::recieveDeviceDelete(vpr::ObjectReader* object_reader)
    {
-      mBuffer[2+i] = id_str[i];
-   }
+      ////////////////////////////////////////////////////////////////////
+      //																 //
+      // CONSTRUCT ACK PACKET 											 //
+      //	FORM:		 vpr::Uint16		vpr::Uint16		 vpr::Uint32 //
+      //			 -------------------------------------------------	 //
+      //			| RIM_PACKET_MSG | MSG_DEVICE_ACK |   length     |   //
+      //			-------------------------------------------------	 //
+      //																 //
+      //				 vpr::Uint16		   vpr::Uint16		  		 //
+      //			 ---------------------------------------			 //
+      //			| remote_device_id  | local_device_id  |			 //
+      //			---------------------------------------				 //
+      //																 //
+      // 			uint      std::string    uint     std::string		 //
+      //			 -----------------------------------------------	 //
+      //			|	str_len | device_name | str_len | base_type | 	 //
+      //   	        -----------------------------------------------		 //
+      ////////////////////////////////////////////////////////////////////
 
-   mBuffer[2 + i++] = (bool) clock_is_synced;
-   mBuffer[2 + i++] = ';';
 
-   mDataLength = 2 + i; // opcode(2) + vpr::GUID length + 1 + 1
-   return;
-}
+      /////////////////
+      // CREATE BODY //
+      /////////////////
 
-// returns the number of bytes used from buffer (excluding the already read opcode)
-// A return value of zero means unable to process -- complete message not received yet.
-int MsgPackage::receiveClockSyncHaveSrc(char* ptr, int len, vpr::GUID& id, bool& clock_is_synced)
-{
-   if ( len < vpr::GUID().toString().length() + 1 )
+      std::cout << "DELETE DEVICE" << std::endl;
+      // Remote and Local ID's
+      
+      return(object_reader->readUint16()); 
+   } */
+
+
+
+
+
+
+   void MsgPackage::createClockSyncClientRequest()
    {
-      return 0;  // only partial message received, wait for more data
+      /////////////////////////////////////////////////////
+      //										         //
+      // CONSTRUCT END BLOCK` 							 //
+      //	FORM:		 vpr::Uint16		vpr::Uint16	 //
+      //			 ---------------------------------	 //
+      //			| RIM_PACKET_MSG | MSG_END_BLOCK |	 //
+      //			---------------------------------	 //
+      //												 //
+      /////////////////////////////////////////////////////
+      
+      vprDEBUG(gadgetDBG_RIM,vprDBG_VERB_LVL) <<  "[PACKET]Requesting a clock sync client.\n" << vprDEBUG_FLUSH;
+      mObjectWriter->writeUint16(RIM_PACKET_MSG);    
+      mObjectWriter->writeUint16(MSG_END_BLOCK);
+      mObjectWriter->writeUint32(10);
+      mObjectWriter->writeUint16(10);
    }
 
-   std::string id_str(vpr::GUID().toString());
-   int i = 0;
-   for ( ; i < id_str.length(); i++ )
+   bool MsgPackage::createHandshake(bool accept_reject, const std::string& host, const vpr::Uint16& port, std::string manager_id)
    {
-      id_str[i] = ptr[i];
+      ///////////////////////////////////////////////////////////////////////
+      //													               //
+      // CONSTRUCT NACK PACKET 											   //
+      //	FORM:		 vpr::Uint16		vpr::Uint16		 vpr::Uint32   //
+      //			 -------------------------------------------------	   //
+      //			| RIM_PACKET_MSG | MSG_HANDSHAKE |   length     |	   //
+      //			-------------------------------------------------	   //
+      //																   //
+      // 			bool 			 uint      std::string   vpr::Uint16   //
+      //			 --------------------------------------------------	   //
+      //			| rejection? | str_len |    host    |    port     |    //
+      //   	        --------------------------------------------------	   //
+      // 			uint      std::string  								   //
+      //			 -------------------------							   //
+      //			|	str_len | manager_id | 							   //
+      //   	        ------------------------- 							   //
+      ///////////////////////////////////////////////////////////////////////
+      
+      vprDEBUG_BEGIN(gadgetDBG_RIM,vprDBG_VERB_LVL) <<  "[PACKET]CREATING HANDSHAKE\n" << vprDEBUG_FLUSH;
+      vprDEBUG(gadgetDBG_RIM,vprDBG_VERB_LVL) <<  "Host: " << host << "\n" << vprDEBUG_FLUSH;
+      vprDEBUG(gadgetDBG_RIM,vprDBG_VERB_LVL) <<  "Port: " << port << "\n" << vprDEBUG_FLUSH;
+      //std::cout << "CREATING HANDSHAKE" << std::endl;
+      /////////////////
+      // CREATE BODY //
+      /////////////////
+
+      mTempWriter->writeBool(accept_reject);    //Must use two because of alignment issues
+      mTempWriter->writeBool(accept_reject);
+
+      // Write hostname
+      mTempWriter->writeUint16(host.size());
+      mTempWriter->writeString(host);
+
+      // Write port
+      mTempWriter->writeUint16(port);
+
+      mTempWriter->writeUint16(manager_id.size());
+      mTempWriter->writeString(manager_id);
+
+      // Get the length of the data
+      vpr::Uint32 length = mTempWriter->getData()->size();
+
+
+      ///////////////////
+      // CREATE HEADER //
+      ///////////////////
+      mObjectWriter->writeUint16(RIM_PACKET_MSG);
+
+      mObjectWriter->writeUint16(MSG_HANDSHAKE);     
+      mObjectWriter->writeUint32(length + RIM_HEAD_LENGTH);
+      //std::cout << "LENGTH OF PACKET " << length + RIM_HEAD_LENGTH << std::endl;
+      vprDEBUG(gadgetDBG_RIM,vprDBG_VERB_LVL) <<  "LENGTH OF PACKET: " << length + RIM_HEAD_LENGTH <<"\n" << vprDEBUG_FLUSH;
+      ///////////////////////
+      // ADD HEADER & BODY //
+      ///////////////////////
+
+      mObjectWriter->getData()->insert(mObjectWriter->getData()->end(),mTempWriter->getData()->begin(),mTempWriter->getData()->end());
+      mObjectWriter->setCurPos(length + RIM_HEAD_LENGTH);
+
+      vprDEBUG_END(gadgetDBG_RIM,vprDBG_VERB_LVL) <<  "[PACKET]CREATING HANDSHAKE\n" << vprDEBUG_FLUSH;
+
+      // NO createEndBlock(); becasue the point of this call is to end all connection data,
+      // 							not just after each device's data
+
+      return true;
    }
-   id = vpr::GUID(id_str);
 
-   clock_is_synced = (bool) ptr[i++];
+   bool MsgPackage::receiveHandshake(std::string& receivedHostname, vpr::Uint16& receivedPort,std::string& received_manager_id, vpr::SocketStream* newStream)
+   {
+      ///////////////////////////////////////////////////////////////////////
+      //														           //
+      // CONSTRUCT NACK PACKET 											   //
+      //	FORM:		 vpr::Uint16		vpr::Uint16		 vpr::Uint32   //
+      //			 -------------------------------------------------	   //
+      //			| RIM_PACKET_MSG | MSG_HANDSHAKE |   length     |	   //
+      //			-------------------------------------------------	   //
+      //																   //
+      // 			bool 			 uint      std::string   vpr::Uint16   //
+      //			 ---------------------------------------------------   //
+      //			| rejection? | str_len |    host    |    port     |    //
+      //   	        --------------------------------------------------	   //
+      // 			uint      std::string  								   //
+      //			 -------------------------							   //
+      //			|	str_len | manager_id | 							   //
+      //   	        ------------------------ 							   //
+      ///////////////////////////////////////////////////////////////////////
 
-   // i++; // trailing semicolon
-   // vprASSERT(i == id_str.length() + 1 + 1;
+      vprDEBUG_BEGIN(gadgetDBG_RIM,vprDBG_CONFIG_LVL) <<  "[PACKET]RECEIVING HANDSHAKE\n" << vprDEBUG_FLUSH;
+      //std::cout << "RECEIVING HANDSHAKE" << std::endl;
 
-   return (id_str.length() + 1 + 1);  // id_str(n) + bool(1)
-}
+      std::vector<vpr::Uint8> packet_head(100);
+
+      vpr::Uint32 bytes_read;
+      bool accept_reject;
+
+
+
+      // Read in the Packet Header
+      vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) <<  "[PACKET]BEFORE READ\n" << vprDEBUG_FLUSH;
+      vpr::ReturnStatus status = newStream->recvn(packet_head,8,bytes_read);
+      if (status == vpr::ReturnStatus::WouldBlock)
+      {
+         vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) <<  clrOutNORM(clrRED,"[PACKET]WouldBlock\n") << vprDEBUG_FLUSH;
+         //vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) <<  "[PACKET]WouldBlock\n" << vprDEBUG_FLUSH;
+         //vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) <<  "[PACKET]BEFORE READ\n" << vprDEBUG_FLUSH;
+         //status = newStream->recvn(packet_head,8,bytes_read);
+         //vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) <<  "[PACKET]BEFORE READ\n" << vprDEBUG_FLUSH;
+      }
+      
+      std::cout << (int)status.failure() << (int)status.inProgress() << (int)status.success()
+                  << (int)status.timeout() << (int)status.wouldBlock() << std::endl;
+
+      vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) <<  "[PACKET]READ SUCCESSFUL\n" << vprDEBUG_FLUSH;
+      vpr::ObjectReader* head_reader = new vpr::ObjectReader(&packet_head);
+
+      // Read the info from the header
+      vpr::Uint16 rimcode =  head_reader->readUint16();
+      vpr::Uint16 opcode  =  head_reader->readUint16();
+      vpr::Uint32 length  =  head_reader->readUint32();
+
+      std::vector<vpr::Uint8> packet_data(100);
+      newStream->recvn(packet_data,length-RIM_HEAD_LENGTH,bytes_read);
+
+      vpr::ObjectReader* reader = new vpr::ObjectReader(&packet_data);
+
+      //std::cout << "		LENGTH OF PACKET " << reader->mData->size() + RIM_HEAD_LENGTH << std::endl;
+      vprDEBUG(gadgetDBG_RIM,vprDBG_VERB_LVL) <<  "LENGTH OF PACKET: " << reader->mData->size() + RIM_HEAD_LENGTH <<"\n" << vprDEBUG_FLUSH;
+      if ( opcode == MSG_HANDSHAKE )
+      {
+         accept_reject = reader->readBool();
+         accept_reject = reader->readBool();
+         vpr::Uint16 temp_string_len = reader->readUint16();
+         receivedHostname = reader->readString(temp_string_len);
+         receivedPort = reader->readUint16();
+         temp_string_len = reader->readUint16();
+         received_manager_id = reader->readString(temp_string_len);
+         vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) <<  "Host: " << receivedHostname << "\n" << vprDEBUG_FLUSH;
+         vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) <<  "Port: " << receivedPort << "\n" << vprDEBUG_FLUSH;
+         if (!accept_reject)
+         {
+            vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) <<  clrOutBOLD(clrRED, "HANDSHAKE FALSE\n") << vprDEBUG_FLUSH;
+         }
+            
+      }
+      vprDEBUG_END(gadgetDBG_RIM,vprDBG_CONFIG_LVL) <<  "[PACKET]RECEIVING HANDSHAKE\n" << vprDEBUG_FLUSH;
+      return accept_reject;
+   }
+
+
+
 
 
 }     // end namespace gadget

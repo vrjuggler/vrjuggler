@@ -48,6 +48,7 @@
 #include <vector>
 
 #include <boost/static_assert.hpp>
+#include <vpr/IO/Socket/SocketStream.h>
 
 
 namespace gadget
@@ -77,8 +78,9 @@ public:
    unsigned getCurPos()
    { return mCurHeadPos; }
 
-   std::vector<vpr::Uint8>* getData()
-   { return mData; }
+	std::vector<vpr::Uint8>* getDataPtr()
+	{ return mData; }
+
 
    vpr::ReturnStatus writeUint8(vpr::Uint8 val);
    vpr::ReturnStatus writeUint16(vpr::Uint16 val);
@@ -165,12 +167,7 @@ inline vpr::ReturnStatus StreamWriter::writeRaw(vpr::Uint8* data, unsigned len)
 }
 inline vpr::ReturnStatus StreamWriter::sendAllAndClear(vpr::SocketStream& sock_stream)
 {
-	sendAtOnce(sock_stream);  // transmit data
-
-   vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_HEX_LVL)
-		<< "SendBuffer sent  bytes. " << std::endl
-      << vprDEBUG_FLUSH;
-
+   sendAtOnce(sock_stream);  // transmit data
    this->clearBuffer();
    return vpr::ReturnStatus::Succeed;
 }
@@ -178,6 +175,7 @@ inline vpr::ReturnStatus StreamWriter::sendAllAndClear(vpr::SocketStream& sock_s
 inline vpr::ReturnStatus StreamWriter::clearBuffer()
 {
    mData->clear();
+	return(vpr::ReturnStatus::Succeed);
 }
 
 inline vpr::ReturnStatus StreamWriter::sendAtOnce(vpr::SocketStream& sock_stream)
@@ -191,13 +189,19 @@ inline vpr::ReturnStatus StreamWriter::sendAtOnce(vpr::SocketStream& sock_stream
    while ( !mData->empty() )
    {
       sock_stream.send(*mData, mData->size(), bytes_just_sent);
-      i = i + (bytes_just_sent-1);
-		mData->erase(
-      i = mData->erase(mData->begin(),i);
+		i=mData->begin();
+		
+		for(unsigned j =0; j<bytes_just_sent;j++)
+		{
+			i++;
+		}
+
+		i = mData->erase(mData->begin(),i);
+
       //std::vector<std::string> test;
 		//test.
    }		 
-   return true;
+   return vpr::ReturnStatus::Succeed;
 }
 
 

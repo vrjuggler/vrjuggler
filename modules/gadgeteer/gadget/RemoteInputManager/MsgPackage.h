@@ -33,101 +33,178 @@
 #ifndef GADGET_MSG_PACKAGE_H
 #define GADGET_MSG_PACKAGE_H
 
-// The Remote Input Manager allows a proxy or device on one machine to point to a device on
-// on another machine
-
 #include <gadget/gadgetConfig.h>
 #include <vpr/IO/Socket/SocketStream.h>
+#include <vpr/IO/ObjectReader.h>
+#include <vpr/IO/ObjectWriter.h>
+#include <gadget/RemoteInputManager/NetDevice.h>
 
 namespace gadget
 {
 
-// CLASS MsgPackage
-// Handles the packaging and unpackaging of network messages for the Remote Input Manager.
-// It packages and processes configuration messages for the manager's network connections.
-
-class GADGET_CLASS_API MsgPackage
-{
-   char mBuffer[256];
-   int mDataLength;
-
-   // Mostly used when receiving data
-   vpr::Uint16 mOpcode;
-   vpr::Uint16 mSenderId;
-   vpr::Uint16 mReceiverId;
-   std::string mDataString;  // can hold the name of the device being requested
-
-public:
-   MsgPackage();
-
-   // send contents of current package to the socket specified
-   void sendContents(vpr::SocketStream& sock_stream) const;
-
-   // send contents of current package to the socket specified
-   // and then clear the message
-   void sendAndClear(vpr::SocketStream& sock_stream);
-
-   // clear our current message buffer
-   void clear()
+  /** 
+   * MsgPackage
+   * 
+   * Handles the packaging and unpackaging of network packets for the Remote Input Manager.
+   */
+   class GADGET_CLASS_API MsgPackage
    {
-      mDataLength = 0;
-   }
+      vpr::ObjectWriter* mObjectWriter;
+      vpr::ObjectWriter* mTempWriter;
 
-   // The sender and receiver ids found inside messages
-   vpr::Uint16 getSenderId()
-   {
-      return mSenderId;
-   }
-   vpr::Uint16 getReceiverId()
-   {
-      return mReceiverId;
-   }
+      // Mostly used when receiving data
+      vpr::Uint16 mOpcode;
+      vpr::Uint16 mSenderId;
+      vpr::Uint16 mReceiverId;
+      std::string mDataString;  // can hold the name of the device being requested
+      std::string mBaseType;
 
-   // GetDataString
-   // When data is part of an incoming message, this class parses the message
-   //   and stores the data. it can be retrieved with the following two functions
-   //   Not used in all messages.
-   const std::string& getDataString()
-   {
-      return mDataString;
-   }
-   int getDataLength() const
-   {
-      return mDataLength;
-   }
+   public:
+      MsgPackage();
 
-   // creates a device request message with the specified id and name
-   void createDeviceRequest(vpr::Uint16 device_id, const std::string device_name);
+     /**
+      * Send contents of current ObjectWriter to the specified socket and 
+      * clear the ObjectWriter.
+      * 
+      * @pre   The ObjectWriter contains the packet(s) you want to send.
+      * @post  An empty ObjectWriter and the packets sent over the network.
+      * 
+      * @param sock_stream The network socket that you want to send the 
+      *                    data over.
+      */
+      void sendAndClear(vpr::SocketStream* sock_stream);
 
-   // creates a device acknowledgement message with the specified id and name
-   void createDeviceAck(const vpr::Uint16 remote_device_id,
-                        const vpr::Uint16 local_device_id,
-                        const std::string device_name);
+      /**
+       * Returns the sender's unique ID
+       */
+      vpr::Uint16 getSenderId()
+      {
+         return mSenderId;
+      }
+      
+     /**
+      * Returns the receiver's unique ID
+      */
+      vpr::Uint16 getReceiverId()
+      {
+         return mReceiverId;
+      }
 
-   // creates a rejection (negative acknowledgement) message with the specified id and name
-   // for simplicity, same as ACK, but with different opcode
-   void createDeviceNack(const vpr::Uint16 remote_device_id,
-                         const vpr::Uint16 local_device_id,
-                         const std::string device_name);
+      /**
+       * Returns a string mDataString which is used to store the device name.
+       */
+      const std::string& getDataString()
+      {
+         return mDataString;
+      }
+      
+     /**
+      * Returns the BaseType of the remote device.
+      */
+      const std::string& getBaseType()
+      {
+         return mBaseType;
+      }
 
-   // processes a device request message
-   // returns the number of bytes used from buffer (excluding the already read opcode)
-   // A return value of zero means unable to process -- complete message not received yet.
-   int receiveDeviceRequest(char* ptr, int len);
+     /**
+      * Creates a handshake packet to be sent to the remote host.
+      *
+      * @param send_reject Sends either a accept handshake or a rejection handshake.
+      * @param host        local hostname
+      * @param port        local port 
+      * @param manager_id  local manager ID
+      *
+      */
+      bool  createHandshake(bool send_reject, const std::string& host, const vpr::Uint16& port, std::string manager_id);
 
-   // This works for both ACK and NACK
-   // returns the number of bytes used from buffer (excluding the already read opcode)
-   // A return value of zero means unable to process -- complete message not received yet.
-   int receiveDeviceAck(char* ptr, int len);
+     /**
+      * Receives that data from a hanshake packet.
+      *
+      * @param receivedHostname     remote hostname
+      * @param receivedPort         remote port
+      * @param received_manager_id  remote manager ID 
+      * @param newStream            socket stream to listen on
+      * 
+      */
+      bool  receiveHandshake(std::string& receivedHostname, vpr::Uint16& receivedPort,std::string& received_manager_id, vpr::SocketStream* newStream);
 
-   void createClockSync(const float& time_a, const float& time_b, const bool clock_is_synced);
-   int receiveClockSync(char* ptr, int len, float& time_a, float& time_b, bool& clock_is_synced);
-   void createClockSyncHaveSrc(const vpr::GUID& id, const bool clock_is_synced);
-   int receiveClockSyncHaveSrc(char* ptr, int len, vpr::GUID& id, bool& clock_is_synced);
+     /**
+      * Creates a device request packet
+      *
+      * @param device_id   local unique ID for the remote device
+      * @param sevice_name name of the device that we want to connect to
+      */
+      void  createDeviceRequest(vpr::Uint16 device_id, const std::string device_name);
+
+     /**
+      * Processes a device request packet.
+      *
+      * @param object_reader The object that contains the incoming packet.
+      *
+      */ 
+      bool  receiveDeviceRequest(vpr::ObjectReader* object_reader);
+      
+      /**
+       * Creates a device acknowledgement packet.
+       *
+       * @param remote_device_id  unique device ID on the requesting machine
+       * @param local_device_id   unique device ID on the responding machine
+       * @param device_name       name of the device
+       * @param base_type         base type of the device
+       */
+      void  createDeviceAck(const vpr::Uint16 remote_device_id,
+                            const vpr::Uint16 local_device_id,
+                            const std::string device_name,
+                            const std::string base_type);
+
+      /**
+       * Creates a device negative acknowledgement packet.
+       *
+       * @param remote_device_id  unique device ID on the requesting machine
+       * @param local_device_id   unique device ID on the responding machine
+       * @param device_name       name of the device
+       */
+      void  createDeviceNack(const vpr::Uint16 remote_device_id,
+                             const vpr::Uint16 local_device_id,
+                             const std::string device_name);
 
 
+     /**
+      * Receives a device acknowledgement packet.
+      *
+      * @param object_reader  The object that contains the incoming packet.
+      */ 
+      bool  receiveDeviceAck(vpr::ObjectReader* object_reader);
+      
+     /**
+      * Creates a packet that requests the remote computer to act as a client
+      * in a synchronization process.
+      */
+      void  createClockSyncClientRequest();
+      
+     /**
+      * Create a packet containing all of the device data that needs to be sent
+      * over the network.
+      *
+      * @param net_device  device that we want to send the data for
+      */
+      bool  createDeviceDataPacket(NetDevice* net_device);
+      
+     /**
+      * Receives a packet containing all of the device data for a remote device.
+      *
+      * @param object_reader  The object that contains the incoming packet.
+      * @param virtual_device pointer to the local "virtual" device
+      */
+      bool  recieveDeviceDataPacket(vpr::ObjectReader* object_reader, Input* virtual_device);
+      
+     /**
+      * Creates a marker for the end of a given update cycle.
+      *
+      */
+      void  createEndBlock();
 
-};
+   };
 
 }  // end namespace gadget
 

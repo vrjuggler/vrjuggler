@@ -53,6 +53,9 @@
 #include <vpr/Thread/Thread.h>
 #include <jccl/Config/ConfigChunkPtr.h>
 
+#include <vpr/IO/ObjectReader.h>
+#include <vpr/IO/ObjectWriter.h>
+
 // consider moving this
 typedef unsigned char byte;
 
@@ -187,7 +190,14 @@ public:
       }
       return mInstName;
    }
-
+	virtual std::string getBaseType()
+	{
+		return std::string("Input");
+	}
+	virtual vpr::ReturnStatus writeObject(vpr::ObjectWriter* writer)
+	{;}
+	virtual vpr::ReturnStatus readObject(vpr::ObjectReader* reader)
+	{;}
    /** Is this input device active?. */
    int isActive() { return mActive;}
 
@@ -198,8 +208,7 @@ protected:
    vpr::Thread*   mThread;       /**< The thread being used by the driver */
    int            mActive;       /**< Is the driver active? */
    int            mBaudRate;     /**< Baud rate of the device (if it is serial device) */
-
-   Input (const Input& o) {;}
+	Input (const Input& o) {;}
    void operator= (const Input& o) {;}
 };
 

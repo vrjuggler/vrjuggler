@@ -99,7 +99,7 @@ public:
 
    buffer_t& stableBuffer()
    { return mStableBuffer; }   
-
+   
 protected:
    buffer_t   mStableBuffer;
    buffer_t   mReadyBuffer;

@@ -39,6 +39,7 @@
 #include <gadget/Type/Input.h>
 #include <gadget/Type/Glove.h>
 #include <gadget/Type/Digital.h>
+#include <gadget/Type/InputMixer.h>
 #include <gadget/Devices/Fakespace/PinchGloveStandalone.h>
 
 #include <gadget/Type/Finger.h>
@@ -51,6 +52,7 @@ namespace gadget
  * Fakespace Pinchglove Device.
  */
 class PinchGlove : virtual public Input, public Glove, public Digital
+//class PinchGlove : public InputMixer<Input,Digital>
 {
 public:
    /** Default constructor. */

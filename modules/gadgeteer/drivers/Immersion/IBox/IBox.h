@@ -43,6 +43,7 @@
 #include <gadget/Type/Input.h>
 #include <gadget/Type/Digital.h>
 #include <gadget/Type/Analog.h>
+#include <gadget/Type/InputMixer.h>
 #include <gadget/Devices/Immersion/IboxStandalone.h>
 #include <vector>
 
@@ -56,7 +57,8 @@ namespace gadget
  * therefore must inherit from both Digital and Analog.  The class uses
  * the HCI library for a simple interface to the IBox.
  */
-class IBox : public Input, public Digital, public Analog
+//class IBox : public Input, public Digital, public Analog
+class IBox : public InputMixer<InputMixer<Input,Digital>,Analog>
 {
 protected:
    struct IboxData
@@ -87,7 +89,7 @@ protected:
 
 public:
    /** Construction/Destruction */
-   IBox() : Input(), Digital(), Analog()
+   IBox() //: Input(), Digital(), Analog()  <<<<< HERE
    {
       // re-set Analog min/max values to ibox defaults.
       this->setMin( 0.0f );

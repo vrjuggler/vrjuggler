@@ -45,7 +45,7 @@
 #include <jccl/RTRC/ConfigManager.h>
 
 #include <gadget/RemoteInputManager/RemoteInputManager.h>
-
+#include <gadget/Type/BaseTypeFactory.h>
 
 namespace gadget
 {
@@ -54,8 +54,6 @@ namespace gadget
 
 // Local helpers
 bool recognizeProxyAlias( jccl::ConfigChunkPtr chunk );
-bool recognizeRemoteInputManagerConfig(jccl::ConfigChunkPtr chunk);
-bool recognizeRemoteConnectionConfig(jccl::ConfigChunkPtr chunk);
 
 /**********************************************************
   InputManager::InputManager()
@@ -94,7 +92,6 @@ InputManager::~InputManager()
    }
 }
 
-
 /** Adds the given config chunk to the input system. */
 bool InputManager::configAdd(jccl::ConfigChunkPtr chunk)
 {
@@ -103,15 +100,10 @@ bool InputManager::configAdd(jccl::ConfigChunkPtr chunk)
       << vprDEBUG_FLUSH;
    vprASSERT(configCanHandle(chunk));
 
-   // check and store if a Remote Input Manager chunk exists in configuration
-   mRemoteInputManager->mgrChunkExists();
-
    bool ret_val = false;      // Flag to return success
 
-   if(recognizeRemoteInputManagerConfig(chunk))
-      ret_val = configureRemoteInputManager(chunk);
-   else if(recognizeRemoteConnectionConfig(chunk))
-      ret_val = configureRemoteConnection(chunk);
+   if (mRemoteInputManager->configCanHandle(chunk))
+      ret_val = mRemoteInputManager->configAdd(chunk);
    else if(DeviceFactory::instance()->recognizeDevice(chunk))
       ret_val = configureDevice(chunk);
    else if(ProxyFactory::instance()->recognizeProxy(chunk))
@@ -157,7 +149,9 @@ bool InputManager::configRemove(jccl::ConfigChunkPtr chunk)
 
    bool ret_val = false;      // Flag to return success
 
-   if(DeviceFactory::instance()->recognizeDevice(chunk))
+   if (mRemoteInputManager->configCanHandle(chunk)) 
+		ret_val = mRemoteInputManager->configRemove(chunk);
+   else if(DeviceFactory::instance()->recognizeDevice(chunk))
       ret_val = removeDevice(chunk);
    else if(recognizeProxyAlias(chunk))
       ret_val = removeProxyAlias(chunk);
@@ -194,8 +188,7 @@ bool InputManager::configCanHandle(jccl::ConfigChunkPtr chunk)
    return ( DeviceFactory::instance()->recognizeDevice(chunk) ||
             ProxyFactory::instance()->recognizeProxy(chunk) ||
             recognizeProxyAlias(chunk) ||
-            recognizeRemoteInputManagerConfig(chunk) ||
-            recognizeRemoteConnectionConfig(chunk) ||
+            mRemoteInputManager->configCanHandle(chunk) ||
             (chunk->getDescToken() == std::string("displaySystem"))
            );
 }
@@ -219,10 +212,8 @@ jccl::ConfigChunkPtr InputManager::getDisplaySystemChunk()
          }
       }
       cfg_mgr->unlockActive();
-
-//      vprASSERT(mDisplaySystemChunk.get() != NULL && "No Display Manager chunk found!");
+      //vprASSERT(mDisplaySystemChunk.get() != NULL && "No Display Manager chunk found!");
    }
-
    return mDisplaySystemChunk;
 }
 
@@ -231,31 +222,27 @@ bool InputManager::configureDevice(jccl::ConfigChunkPtr chunk)
 {
    bool ret_val;
    std::string dev_name = chunk->getFullName();
-   vprDEBUG_BEGIN(gadgetDBG_INPUT_MGR,vprDBG_STATE_LVL)
-      << "ConfigureDevice: Named: " << dev_name.c_str() << std::endl
-      << vprDEBUG_FLUSH;
-
+   
    Input* new_device;
    new_device = DeviceFactory::instance()->loadDevice(chunk);
 
    if ((new_device != NULL) && (new_device->startSampling()))
    {
       addDevice(new_device);
-      ret_val = true;
-      vprDEBUG(gadgetDBG_INPUT_MGR,vprDBG_STATE_LVL)
-         << "   Successfully added dev: " << dev_name.c_str() << std::endl
-         << vprDEBUG_FLUSH;
+	  ret_val = true;
+	  vprDEBUG(gadgetDBG_INPUT_MGR,vprDBG_STATE_LVL)
+	     << "   Successfully added dev: " << dev_name.c_str() << std::endl
+		 << vprDEBUG_FLUSH;
    }
    else
    {
       vprDEBUG(vprDBG_ERROR,vprDBG_CRITICAL_LVL) << clrOutNORM(clrRED,"ERROR:")
-                  << "new dev " << clrSetBOLD(clrCYAN) << dev_name.c_str() << clrRESET << " failed to start.. deleting instance" << std::endl << vprDEBUG_FLUSH;
-      delete new_device;
-      ret_val = false;
+	   				<< "new dev " << clrSetBOLD(clrCYAN) << dev_name.c_str() << clrRESET << " failed to start.. deleting instance" << std::endl << vprDEBUG_FLUSH;
+	  delete new_device;
+	  ret_val = false;
    }
-
    vprDEBUG_END(gadgetDBG_INPUT_MGR,vprDBG_STATE_LVL) << std::endl
-                                                      << vprDEBUG_FLUSH;
+	        		<< vprDEBUG_FLUSH;
    return ret_val;
 }
 
@@ -267,29 +254,6 @@ bool InputManager::configureProxy(jccl::ConfigChunkPtr chunk)
       << "vjInputManager::configureProxy: Named: " << proxy_name.c_str()
       << std::endl << vprDEBUG_FLUSH;
 
-   std::string location_name = chunk->getProperty<std::string>("location");
-   if(location_name.size() > 0){
-      // configuring a remote input proxy, so make sure connections don't change while we're here
-      mRemoteInputManager->acquireConfigMutex();
-
-      NetConnection* connection = mRemoteInputManager->getConnectionByAliasName(location_name);
-
-      if(connection != NULL){
-         // std::cout << "remote device: " << proxy_name << std::endl;
-
-         mRemoteInputManager->configureReceivingNetInput(chunk, connection);  // requests a connection to the device
-         //Proxy* some_proxy;
-         // config() is called in next line, and it asks RIM for NetInput
-         // some_proxy = ProxyFactory::instance()->loadProxy(chunk);
-         // return true;
-      }
-      else{
-         ; // std::cout << "local device: " << proxy_name << std::endl;
-      }
-
-      mRemoteInputManager->releaseConfigMutex();
-   }
-   // else process locally (since remote location was not specified
 
    Proxy* new_proxy;
 
@@ -400,15 +364,17 @@ void InputManager::updateAllData()
      if ((*i).second != NULL)
          i->second->updateData();
 
-   // Update proxies
+   // Update proxies MIGHT NOT NEED
    for (std::map<std::string, Proxy*>::iterator i_p = mProxyTable.begin();
        i_p != mProxyTable.end(); i_p++)
    {
       (*i_p).second->updateData();
    }
-
    // send and receive net device messages
-   mRemoteInputManager->updateAll();
+   if (mRemoteInputManager->isActive())
+   {
+      mRemoteInputManager->updateAll();
+   }
 }
 
 
@@ -491,21 +457,6 @@ bool InputManager::removeDevice(std::string mInstName)
 bool recognizeProxyAlias(jccl::ConfigChunkPtr chunk)
 {
    return (chunk->getDescToken() == std::string("proxyAlias"));
-}
-
-bool recognizeRemoteInputManagerConfig(jccl::ConfigChunkPtr chunk)
-{
-   // if( ((std::string)chunk->getType()) == std::string("RemoteInputManager") )
-     // std::cout << "recognizeRemoteInputManagerConfig: TRUE" << std::endl;
-   // else
-     // std::cout << "recognizeRemoteInputManagerConfig: FALSE" << std::endl;
-
-   return (chunk->getDescToken() == std::string("RemoteInputManager"));
-}
-
-bool recognizeRemoteConnectionConfig(jccl::ConfigChunkPtr chunk)
-{
-      return (chunk->getDescToken() == std::string("RemoteInputHost"));
 }
 
 /**
@@ -642,7 +593,6 @@ void InputManager::refreshAllProxies()
    {
       (*i).second->refresh();
    }
-
 }
 
 bool InputManager::removeProxy(std::string proxyName)
@@ -676,30 +626,5 @@ bool InputManager::removeProxy(jccl::ConfigChunkPtr chunk)
    proxy_name = chunk->getFullName();
    return removeProxy(proxy_name);
 }
-
-bool InputManager::configureRemoteInputManager(jccl::ConfigChunkPtr chunk){
-   vprDEBUG(gadgetDBG_INPUT_MGR,vprDBG_CRITICAL_LVL)
-      << "InputManager:configure Remote Input Manager" << std::endl
-      << vprDEBUG_FLUSH;
-
-   mRemoteInputManager->acquireConfigMutex();
-   bool return_value = mRemoteInputManager->config(chunk);
-   mRemoteInputManager->releaseConfigMutex();
-
-   return return_value;
-}
-
-bool InputManager::configureRemoteConnection(jccl::ConfigChunkPtr chunk){
-   vprDEBUG(gadgetDBG_INPUT_MGR,vprDBG_STATE_LVL)
-      << "InputManager:configure RemoteConnection" << std::endl
-      << vprDEBUG_FLUSH;
-
-   mRemoteInputManager->acquireConfigMutex();
-   bool return_value = mRemoteInputManager->configConnection(chunk);
-   mRemoteInputManager->releaseConfigMutex();
-
-   return return_value;
-}
-
 
 };
