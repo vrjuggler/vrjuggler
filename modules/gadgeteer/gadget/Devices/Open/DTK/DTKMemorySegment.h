@@ -39,21 +39,23 @@
 namespace gadget
 {
 
-typedef enum {
-    dtk_pos_ZYXEuler = 0,
-    dtk_pos_XYZEuler,
-    dtk_pos_QUAT,
-    dtk_digital,
-    dtk_analog,
-    dtk_custom
+typedef enum
+{
+   dtk_pos_ZYXEuler = 0,
+   dtk_pos_XYZEuler,
+   dtk_pos_QUAT,
+   dtk_digital,
+   dtk_analog,
+   dtk_custom
 } DTK_memoryType;
 
-typedef enum {
-    DTK_INVALID = 0,
-    DTK_INT,
-    DTK_FLOAT,
-    DTK_BYTES,
-    DTK_CSTRING
+typedef enum
+{
+   DTK_INVALID = 0,
+   DTK_INT,
+   DTK_FLOAT,
+   DTK_BYTES,
+   DTK_CSTRING
 } DTK_dataType;
 
 class dtkSharedMem;
@@ -62,64 +64,70 @@ class dtkClient;
 class GADGET_CLASS_API DTKMemorySegment
 {
 public:
-    DTKMemorySegment();
-    ~DTKMemorySegment();
+   DTKMemorySegment();
+   ~DTKMemorySegment();
 
-    /** Configure the device with a config chunk. */
-    bool config(jccl::ConfigChunkPtr c);
+   /** Configure the device with a config chunk. */
+   bool config(jccl::ConfigChunkPtr c);
 
-    /** Returns what chunk type is associated with this class. */
-    static std::string getChunkType()
-    {
-       return std::string("DTKMemorySegment");
-    }
+   /** Returns what chunk type is associated with this class. */
+   static std::string getChunkType()
+   {
+      return std::string("DTKMemorySegment");
+   }
 
-    const char* SegmentName()
-    {
-       return _segmentName;
-    }
+   const char* SegmentName()
+   {
+      return _segmentName;
+   }
 
-    const char* RemoteHost()
-    {
-       return _remotehost;
-    }
+   const char* RemoteHost()
+   {
+      return _remotehost;
+   }
 
-    DTK_memoryType SegmentType()
-    {
-       return _segmentType;
-    }
+   DTK_memoryType SegmentType()
+   {
+      return _segmentType;
+   }
 
-    /**
-     * Returns the number of items, size of each item, and the total memory
-     * size of the specified memory segment.  This allows users to make sure
-     * they are receiving the correct data.
-     */
-    int ItemCount()
-    {
-       return _numItems;
-    }
+   /**
+    * Returns the number of items, size of each item, and the total memory
+    * size of the specified memory segment.  This allows users to make sure
+    * they are receiving the correct data.
+    */
+   int ItemCount()
+   {
+      return _numItems;
+   }
 
-    int ItemSize()
-    {
-        if(_segmentSize % _numItems != 0); //ERROR!!!  Do something here!!!
-        return _segmentSize/_numItems;
-    }
+   int ItemSize()
+   {
+      if ( _segmentSize % _numItems != 0 ); //ERROR!!!  Do something here!!!
+      return _segmentSize/_numItems;
+   }
 
-    int SegmentSize()
-    {
-       return _segmentSize;
-    }
+   int SegmentSize()
+   {
+      return _segmentSize;
+   }
 
-    /**
-     * The index is used by the Multi type device DTK.  The index is used for
-     * the proxy interfaces.  The Item index is specified at configuration
-     * time, depending on the order each chunk was entered.
-     */
-    int ItemIndex() { return InputIndex; }
-    void setItemIndex(int i) { InputIndex = i; }
+   /**
+    * The index is used by the Multi type device DTK.  The index is used for
+    * the proxy interfaces.  The Item index is specified at configuration
+    * time, depending on the order each chunk was entered.
+    */
+   int ItemIndex()
+   {
+      return InputIndex;
+   }
+   void setItemIndex(int i)
+   {
+      InputIndex = i;
+   }
 
-    /** Makes the connection to the DTK Client and gets the memory segment. */
-    bool connectSegment(dtkClient* in_parent);
+   /** Makes the connection to the DTK Client and gets the memory segment. */
+   bool connectSegment(dtkClient* in_parent);
 
 public:
 
@@ -131,24 +139,24 @@ public:
    //@}
 
 private:
-    dtkSharedMem* m;
-    dtkClient* parent_client;
+   dtkSharedMem* m;
+   dtkClient* parent_client;
 
-    char* _segmentName;
-    char* _remotehost;
+   char* _segmentName;
+   char* _remotehost;
 
-    DTK_memoryType _segmentType;
-    DTK_dataType _type;
+   DTK_memoryType _segmentType;
+   DTK_dataType _type;
 
-    int InputIndex;
+   int InputIndex;
 
 
-    int _numItems;
-    int _segmentSize;
+   int _numItems;
+   int _segmentSize;
 
-    float *floatData;
-    int   *intData;
-    char  *charData;
+   float *floatData;
+   int   *intData;
+   char  *charData;
 };
 
 } // End of gadget namespace
