@@ -1,4 +1,4 @@
-package org.vrjuggler.vrjconfig.commoneditors;
+package org.vrjuggler.vrjconfig.commoneditors.positionaldeviceeditor;
 
 import java.awt.*;
 import java.awt.image.*;
@@ -406,17 +406,17 @@ public class PositionalDeviceEditor extends JPanel
       initGLState(gl);
 
       // Load textures
-      Texture temp = new Texture(gl, glu, "org/vrjuggler/vrjconfig/commoneditors/images/carpet.png");
+      Texture temp = new Texture(gl, glu, "org/vrjuggler/vrjconfig/commoneditors/positionaldeviceeditor/images/carpet.png");
       mFloorTextures.add(temp);
-      temp = new Texture(gl, glu, "org/vrjuggler/vrjconfig/commoneditors/images/wood.png");
+      temp = new Texture(gl, glu, "org/vrjuggler/vrjconfig/commoneditors/positionaldeviceeditor/images/wood.png");
       mFloorTextures.add(temp);
-      temp = new Texture(gl, glu, "org/vrjuggler/vrjconfig/commoneditors/images/grassy_t.png");
+      temp = new Texture(gl, glu, "org/vrjuggler/vrjconfig/commoneditors/positionaldeviceeditor/images/grassy_t.png");
       mFloorTextures.add(temp);
-      temp = new Texture(gl, glu, "org/vrjuggler/vrjconfig/commoneditors/images/mixgrs_t.png");
+      temp = new Texture(gl, glu, "org/vrjuggler/vrjconfig/commoneditors/positionaldeviceeditor/images/mixgrs_t.png");
       mFloorTextures.add(temp);
-      temp = new Texture(gl, glu, "org/vrjuggler/vrjconfig/commoneditors/images/concrete.png");
+      temp = new Texture(gl, glu, "org/vrjuggler/vrjconfig/commoneditors/positionaldeviceeditor/images/concrete.png");
       mFloorTextures.add(temp);
-      temp = new Texture(gl, glu, "org/vrjuggler/vrjconfig/commoneditors/images/cncrt1_t.png");
+      temp = new Texture(gl, glu, "org/vrjuggler/vrjconfig/commoneditors/positionaldeviceeditor/images/cncrt1_t.png");
       mFloorTextures.add(temp);
 
       mCurrentFloorTexture = (Texture)(mFloorTextures.get(mCurrentFloorIndex));

@@ -1,4 +1,4 @@
-package org.vrjuggler.vrjconfig.commoneditors;
+package org.vrjuggler.vrjconfig.commoneditors.positionaldeviceeditor;
 
 import java.awt.*;
 import java.awt.event.*;

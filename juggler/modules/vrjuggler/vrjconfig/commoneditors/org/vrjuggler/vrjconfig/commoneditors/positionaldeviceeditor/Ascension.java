@@ -1,4 +1,4 @@
-package org.vrjuggler.vrjconfig.commoneditors;
+package org.vrjuggler.vrjconfig.commoneditors.positionaldeviceeditor;
 
 import java.util.List;
 import gleem.linalg.*;
@@ -97,7 +97,7 @@ public class Ascension extends MovableObject
    {
       super();
 
-      mTexture = new Texture(gl, glu, "org/vrjuggler/vrjconfig/commoneditors/images/ert2.png");
+      mTexture = new Texture(gl, glu, "org/vrjuggler/vrjconfig/commoneditors/positionaldeviceeditor/images/ert2.png");
    }
    
    static float BOUNDING_BOX_SIZE = 0.35f;
