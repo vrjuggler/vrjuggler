@@ -327,8 +327,28 @@ post-install:
 	@$(MAKE) install-tweek-gui
 	@$(MAKE) install-test
 	@$(MAKE) install-m4
+	@$(MAKE) install-java-idl
 	$(INSTALL) -m $(EXEC_PERMS) $(GROUP_OPT_UNIX)			\
           $(topdir)/tweek-config $(bindir)
+
+install-java-idl:
+ifeq ($(BUILD_JAVA), Y)
+	$(INSTALL) $(SYMLINK) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)	\
+          $(JUGGLERROOT_ABS)/external/JacORB/COPYING.LIB-2.0 $(projdatadir)
+	$(INSTALL) $(SYMLINK) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)	\
+          $(JUGGLERROOT_ABS)/external/JacORB/COPYRIGHT $(projdatadir)
+	$(INSTALL) $(SYMLINK) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)	\
+          $(JUGGLERROOT_ABS)/external/JacORB/README.source $(projdatadir)
+	$(INSTALL) $(SYMLINK) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)	\
+          $(JUGGLERROOT_ABS)/external/JacORB/idl.jar $(bindir)
+ifeq (@OS_TYPE@, Win32)
+	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
+          $(JUGGLERROOT_ABS)/external/JacORB/idl.bat $(bindir)
+else
+	$(INSTALL) $(SYMLINK) -m $(EXEC_PERMS) $(GROUP_OPT_UNIX)	\
+          $(JUGGLERROOT_ABS)/external/JacORB/idl $(bindir)
+endif
+endif
 
 ifeq ($(BUILD_CXX), Y)
 PREINSTALL_HEADERS	= pre-install-headers
