@@ -30,6 +30,73 @@ dnl -----------------------------------------------------------------
 dnl
 dnl ************* <auto-copyright.pl END do not edit this line> *************
 
+dnl ---------------------------------------------------------------------------
+dnl Usage:
+dnl     VJ_PROG_CC_PROF_FLAG([prefer-gnu])
+dnl ---------------------------------------------------------------------------
+AC_DEFUN(VJ_PROG_CC_PROF_FLAG,
+[
+    if test "x$GCC" = "xyes" ; then
+        if test "x$1" = "xyes" ; then
+            DPP_PROG_CC_PROF_PG
+
+            if test "x$CC_PROF_FLAGS" = "x" ; then
+                DPP_PROG_CC_PROF_P
+            fi
+        else
+            DPP_PROG_CC_PROF_P
+
+            if test "x$CC_PROF_FLAGS" = "x" ; then
+                DPP_PROG_CC_PROF_PG
+            fi
+        fi
+
+        if test "x$CC_PROF_FLAGS" = "x" ; then
+            BUILD_PROF_C='N'
+        else
+            BUILD_PROF_C='Y'
+        fi
+    else
+        BUILD_PROF_C='N'
+    fi
+
+    AC_SUBST(BUILD_PROF_C)
+])
+
+dnl ---------------------------------------------------------------------------
+dnl Usage:
+dnl     VJ_PROG_CXX_PROF_FLAG([prefer-gnu])
+dnl ---------------------------------------------------------------------------
+AC_DEFUN(VJ_PROG_CXX_PROF_FLAG,
+[
+    if test "x$GXX" = "xyes" ; then
+        if test "x$1" = "xyes" ; then
+            DPP_PROG_CXX_PROF_PG
+
+            if test "x$CXX_PROF_FLAGS" = "x" ; then
+                DPP_PROG_CXX_PROF_P
+            fi
+        else
+            DPP_PROG_CXX_PROF_P
+
+            if test "x$CXX_PROF_FLAGS" = "x" ; then
+                DPP_PROG_CXX_PROF_PG
+            fi
+        fi
+
+        if test "x$CXX_PROF_FLAGS" = "x" ; then
+            BUILD_PROF_CXX='N'
+        else
+            BUILD_PROF_CXX='Y'
+            LDOPTS_PROF="$LDOPTS_PROF $CXX_PROF_FLAGS"
+        fi
+    else
+        BUILD_PROF_CXX='N'
+    fi
+
+    AC_SUBST(BUILD_PROF_CXX)
+])
+
 AC_DEFUN(VJ_COMPILER_SETUP,
 [
     AC_REQUIRE([DPP_WITH_GCC])
@@ -148,11 +215,15 @@ AC_DEFUN(VJ_MTREE_LIB_GEN,
             ..
             opt
             ..
+            profiled
+            ..
         ..
         mips4
             debug
             ..
             opt
+            ..
+            profiled
             ..
         ..
     ..
@@ -162,11 +233,15 @@ AC_DEFUN(VJ_MTREE_LIB_GEN,
             ..
             opt
             ..
+            profiled
+            ..
         ..
         mips4
             debug
             ..
             opt
+            ..
+            profiled
             ..
         ..
     ..
@@ -183,6 +258,8 @@ END_IRIX_DIST
             ..
             opt
             ..
+            profiled
+            ..
         ..
     ..
 ..
@@ -196,6 +273,8 @@ END_ISA_DIST
         debug
         ..
         opt
+        ..
+        profiled
         ..
     ..
 ..
