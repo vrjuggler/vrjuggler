@@ -1,3 +1,25 @@
+#include <iostream>
+#include <math.h>
+#include <stdlib.h>
+#include <stdio.h>
+#include <fstream>
+#include <unistd.h>
+
+#include <gmtl/Matrix.h>
+#include <gmtl/Vec.h>
+#include <gmtl/Generate.h>
+
+#include <jccl/RTRC/ConfigManager.h>
+#include <gadget/InputManager.h>
+#include <gadget/Devices/Sim/SimPosition.h>
+#include <gadget/Devices/Sim/SimDigital.h>
+#include <gadget/Devices/Sim/SimAnalog.h>
+#include <gadget/Devices/Sim/SimInput.h>
+#include <gadget/Devices/Keyboard/KeyboardXWin.h>
+#include <gadget/Type/AnalogProxy.h>
+
+#include <vrj/Display/DisplayManager.h>
+#include <vrj/Util/Debug.h>
 #include <reconfigApp.h>
 
 void reconfigApp::init()
