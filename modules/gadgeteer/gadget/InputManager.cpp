@@ -232,7 +232,7 @@ bool InputManager::removeDevice(ConfigChunk* chunk)
   the devices, proxies and internal settings
 
 *********************************************** ahimberg */
-VJ_IMPLEMENT(std::ostream&) operator<<(std::ostream& out, InputManager& iMgr)
+GAD_IMPLEMENT(std::ostream&) operator<<(std::ostream& out, InputManager& iMgr)
 {
   out << "\n=============== InputManager Status: ===============================" << std::endl;
 
