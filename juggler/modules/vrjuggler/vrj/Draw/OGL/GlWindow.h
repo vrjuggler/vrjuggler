@@ -85,7 +85,7 @@ public:
       mAreEventSource = false;
    }
 
-   // Cirtual destructor
+   // Virtual destructor
    virtual ~GlWindow()
    {;}
 
