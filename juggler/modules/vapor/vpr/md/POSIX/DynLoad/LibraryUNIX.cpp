@@ -42,6 +42,7 @@
 #include <vpr/vprConfig.h>
 
 #include <stdlib.h>
+#include <boost/concept_check.hpp>
 
 #include <vpr/Util/Assert.h>
 #include <vpr/Util/Debug.h>
