@@ -18,20 +18,22 @@
     <title>Introduction</title>
 
     <para>Congratulations, you have downloaded the source code to the Juggler
-    Project, open source software for virtual reality from the Virtual Reality
-    Applications Center at Iowa State University. Within this document, you
-    will find information about the new VR Juggler 2.0 directory structure
-    including descriptions of all the component modules that make up the
-    Juggler Project. Instructions for building the individual modules can be
-    found within the specific module directories and on the VR Juggler
-    website.</para>
+    Project, open source software for virtual reality from the <ulink
+    url="http://www.vrac.iastate.edu/">Virtual Reality Applications Center</ulink>
+    at <ulink url="http://www.iastate.edu/">Iowa State University</ulink>.
+    Within this document, you will find information about the new VR Juggler
+    2.0 directory structure including descriptions of all the component
+    modules that make up the Juggler Project. Instructions for building the
+    individual modules can be found within the specific module directories and
+    on the VR Juggler website.</para>
   </section>
 
   <section>
     <title>Compiling</title>
 
-    <para>For information on compiling the source code, refer to the
-    <filename>INSTALL</filename> file found in this directory.</para>
+    <para>For information on compiling the source code, refer to either the
+    <filename>INSTALL.txt</filename> or <filename>INSTALL.html</filename> file
+    found in this directory.</para>
   </section>
 
   <section id="modules-section">
@@ -57,9 +59,10 @@
         <para>VR Juggler is still VR Juggler. There are many new features in
         VR Juggler since the 1.0 series, but in essence, it is still the same
         familiar tool. Of the projects listed below, VR Juggler depends on
-        VPR, JCCL, and Gadgeteer. Its individual components have simply been
-        broken out into individually developed modules. More information about
-        the latest version of VR Juggler is given in the following section.</para>
+        VPR, JCCL, Sonix, and Gadgeteer. Its individual components have simply
+        been broken out into individually developed modules. More information
+        about the latest version of VR Juggler is given in the following
+        section.</para>
       </section>
     </section>
 
@@ -80,15 +83,15 @@
         operating system features such as threads, semaphores, and sockets.
         All the other modules depend on VPR so that they may be ported easily
         to other platforms. In VR Juggler 1.0, VPR was the collection of
-        directories Threads, SharedMem, and Sync. Since then, that code
-        collected into a single library and greatly extended into what is now
-        VPR.</para>
+        directories Threads, SharedMem, and Sync. Since then, that code has
+        been collected into a single library and greatly extended into what is
+        now VPR.</para>
 
         <para>VPR itself contains a great deal of platform-specific code. It
         categorizes this code into subsystems, and various subsystems may be
         chosen depending upon the target platform and target threading system.
         For example, on IRIX, there are three possible subsystems: SPROC,
-        POSIX and Netscape Portable Runtime (NSPR). Win32, on the other hand,
+        POSIX, and Netscape Portable Runtime (NSPR). Win32, on the other hand,
         only uses the NSPR subsystem. The subsystems are:</para>
 
         <itemizedlist>
@@ -128,7 +131,7 @@
 
         <para>As mentioned above, all the other modules depend on VPR, so it
         must be compiled before anything else. For more information on
-        compiling VPR, refer to modules/vapor/INSTALL.txt.</para>
+        compiling VPR, refer to <filename>modules/vapor/INSTALL.txt</filename>.</para>
       </section>
     </section>
 
@@ -147,8 +150,8 @@
         <para>JCCL provides the configuration layer for VR Juggler and other
         modules. The config chunks and reusable configuration editor JavaBeans
         come from JCCL. These JavaBeans are used by the VR Juggler
-        configuration editor tool, VRJConfig. In essence, JCCL is the VR
-        Juggler 1.0 Config directory with many new features including
+        configuration editor tool, VRJConfig (see below). In essence, JCCL is
+        the VR Juggler 1.0 Config directory with many new features including
         XML-based config files.</para>
 
         <para>To build the JCCL C++ library, CppDOM is required for parsing
@@ -241,6 +244,26 @@
         user in some sort of structured manner (for example, a collection of
         icons with web-style navigation).</para>
       </section>
+    </section>
+
+    <section>
+      <title>VRJConfig</title>
+
+      <para>VRJConfig is the configuration editor for VR Juggler. It is a
+      complete rewrite of VjControl, both in terms of the user interface and
+      the back-end code. The new interface is based on open discussion and
+      feedback from users of VR Juggler 1.0 and VjControl.</para>
+
+      <para>The back-end is much more extensible. It allows users to write
+      plug-in editors to simplify complex editing tasks. User-defined
+      configuration elements can be handled in a much more dynamic manner as
+      well. No modification of VR Juggler or JCCL <quote>system</quote> files
+      must be made to get user-defined elements into the editor.</para>
+
+      <para>VRJConfig is itself a JavaBean that is loaded into the Tweek Java
+      GUI. VRJConfig uses JavaBeans internally to facilitate user extensions.
+      All in all, VRJConfig is a highly dynamic, powerful editor for VR
+      Juggler configurations.</para>
     </section>
   </section>
 
