@@ -84,29 +84,6 @@ public class VrjConfig
       {
          e.printStackTrace();
       }
-
-      SwingUtilities.invokeLater(new Runnable()
-      {
-         public void run()
-         {
-            addDefaultFrame();
-         }
-      });
-   }
-
-   /**
-    * Sets up the default frame. At the time this method is called, we are
-    * guaranteed that this frame is shown.
-    */
-   private void addDefaultFrame()
-   {
-      // Add in the default editor frame
-      ConfigIFrame frame = createNewConfiguration();
-      try
-      {
-         frame.setMaximum(true);
-      }
-      catch (PropertyVetoException pve) { /*ignore*/ }
    }
 
    /**
