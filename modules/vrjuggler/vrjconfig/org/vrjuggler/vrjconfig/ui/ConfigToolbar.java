@@ -440,29 +440,29 @@ public class ConfigToolbar
     */
    public boolean doRTRC(ConfigContext ctx)
    {
-         try
-         {
-            ConfigBroker broker = new ConfigBrokerProxy();
-            RTRCDataSourceBroker RTRCBroker = new RTRCDataSourceBrokerProxy();
-            ConnectionDialog dialog = new ConnectionDialog("RTRCDataSources Connections");
-            //XXX: add this function
-            //positionDialog(dialog);
-            dialog.show();
+      try
+      {
+         ConfigBroker broker = new ConfigBrokerProxy();
+         RTRCDataSourceBroker RTRCBroker = new RTRCDataSourceBrokerProxy();
+         ConnectionDialog dialog = new ConnectionDialog("RTRCDataSources Connections");
+         //XXX: add this function
+         //positionDialog(dialog);
+         dialog.show();
 
-            RTRCDataSource data_src = dialog.getDataSource();
+         RTRCDataSource data_src = dialog.getDataSource();
 
-            broker.add(data_src.toString(), data_src);
-            ctx.add(data_src.toString());
+         broker.add(data_src.toString(), data_src);
+         ctx.add(data_src.toString());
 
-            setConfigContext(ctx);
-            return true;
-         }
-         catch (Exception ioe)
-         {
-            JOptionPane.showMessageDialog(this, ioe.getMessage(), "Error",
-                                          JOptionPane.ERROR_MESSAGE);
-            ioe.printStackTrace();
-         }
+         setConfigContext(ctx);
+         return true;
+      }
+      catch (Exception ioe)
+      {
+         JOptionPane.showMessageDialog(this, ioe.getMessage(), "Error",
+                                       JOptionPane.ERROR_MESSAGE);
+         ioe.printStackTrace();
+      }
 
       return false;
    }
