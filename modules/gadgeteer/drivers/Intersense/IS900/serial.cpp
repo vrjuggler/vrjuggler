@@ -40,7 +40,10 @@ static void errorMessage(char *message)
 {
     printf("%s\n", message);
 }
-
+int rs232InitCommunications(COMM_PORT *port, std::string comPort, int baud_rate)
+{
+   return FALSE;
+}
 /********************** rs232InitCommunications ********************/
 int rs232InitCommunicationsOld(COMM_PORT *port, DWORD comPort, DWORD baudRate)
 {
