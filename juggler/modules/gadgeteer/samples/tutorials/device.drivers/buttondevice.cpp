@@ -70,11 +70,17 @@ static std::string  MyButtonDevice::getChunkType()
 // which calls MyButtonDevice::sample() repeatedly
 void MyButtonDevice::startSampling()
 {
-   mSampleThread = new vpr::Thread( threadedSampleFunction, (void*)this, 0 );
-   if (!mSampleThread->valid())
+   mSampleThread = new vpr::Thread(threadedSampleFunction, (void*) this, 0);
+   vpr::ReturnStatus start_status = mSampleThread->start();
+
+   if ( ! start_status.success() || ! mSampleThread->valid() )
+   {
       return 0; // thread creation failed
+   }
    else 
+   {
       return 1; // thread creation success
+   }
 }
    
 //: Record (or sample) the current data

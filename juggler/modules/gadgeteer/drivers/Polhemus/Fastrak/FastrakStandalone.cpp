@@ -281,6 +281,7 @@ void FastrackStandalone::checkchild()
                                                        &FastrackStandalone::readloop,
                                                        NULL);
    mReadThread = new vpr::Thread(read_func);
+   mReadThread->start();
 */
    if ( NULL == mReadThread )
    {
@@ -289,6 +290,7 @@ void FastrackStandalone::checkchild()
                                                           &FastrackStandalone::readloop,
                                                           NULL);
       mReadThread = new vpr::Thread(read_func);
+      mReadThread->start();
    }
 }
 

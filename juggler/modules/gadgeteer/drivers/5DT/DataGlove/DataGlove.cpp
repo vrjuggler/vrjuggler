@@ -102,20 +102,24 @@ int DataGlove::startSampling()
       vpr::ThreadMemberFunctor<DataGlove>* memberFunctor =
          new vpr::ThreadMemberFunctor<DataGlove>(this, &DataGlove::controlLoop, NULL);
       mThread = new vpr::Thread(memberFunctor);
-      if (!mThread->valid())
+      vpr::ReturnStatus start_status = mThread->start();
+
+      if ( ! start_status.success() || ! mThread->valid() )
       {
          return 0;
       }
+      else
+      {
+         vprDEBUG(gadgetDBG_INPUT_MGR,1) << "[dataglove] DataGlove is active "
+                                         << std::endl << vprDEBUG_FLUSH;
+         mActive = true;
+         return 1;
+      }
+   }
    else
    {
-      vprDEBUG(gadgetDBG_INPUT_MGR,1) << "[dataglove] DataGlove is active "
-                                      << std::endl << vprDEBUG_FLUSH;
-      mActive = true;
-      return 1;
+      return 0; // already sampling
    }
-  }
-  else
-     return 0; // already sampling
 }
 
 void DataGlove::controlLoop(void* nullParam)

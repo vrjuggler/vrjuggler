@@ -134,7 +134,9 @@ int IBox::startSampling()
       mPhysicalIbox.std_cmd(0,4,0);
 
       mThread = new vpr::Thread(sampleBox, (void*) this);
-      if (!mThread->valid())
+      vpr::ReturnStatus start_status = mThread->start();
+
+      if ( ! start_status.success() || ! mThread->valid() )
          return 0; //fail
       else
       {
