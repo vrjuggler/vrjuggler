@@ -104,13 +104,13 @@ public:
    /// Function called before updating trackers but after the frame is drawn
    virtual void postSync()
    {
-      vjDEBUG(2) << "cubesApp::postSync" << endl;
+      vjDEBUG(2) << "cubesApp::postSync" << endl << vjDEBUG_FLUSH;
    }
    
    /// Function called after tracker update but before start of drawing
    virtual void preDraw()
    {
-       vjDEBUG(2) << "cubesApp::preDraw()" << endl;
+       vjDEBUG(2) << "cubesApp::preDraw()" << endl << vjDEBUG_FLUSH;
 
        //updateNavigation();       // Update the navigation matrix
    }
@@ -118,7 +118,7 @@ public:
    /// Function called after drawing has been triggered but BEFORE it completes
    virtual void postDraw()
    {
-       vjDEBUG(2) << "cubesApp::postDraw()" << endl;
+       vjDEBUG(2) << "cubesApp::postDraw()" << endl << vjDEBUG_FLUSH;
    }
 
 private:
