@@ -267,11 +267,43 @@ public class TransformTranslationEditor
       }
    }
 
+   private float toMeters(float value, int units)
+   {
+      float val_in_meters;
+
+      if ( units == CENTIMETERS )
+      {
+         val_in_meters = value * 0.1f;
+      }
+      else if ( units == FEET )
+      {
+         val_in_meters = value * 0.3048f;
+      }
+      else if ( units == INCHES )
+      {
+         val_in_meters = value * 0.0254f;
+      }
+      else
+      {
+         val_in_meters = value;
+      }
+
+      return val_in_meters;
+   }
+
+   private void setTranslateProperty(Float value, int index)
+   {
+      int units = mTrackerPosUnitsChooser.getSelectedIndex();
+
+      mElement.setProperty(mTranslateProp, index,
+                           new Float(toMeters(value.floatValue(), units)));
+   }
+
    void mTrackerXPosField_propertyChange(PropertyChangeEvent propertyChangeEvent)
    {
       if ( propertyChangeEvent.getPropertyName().equals("value") )
       {
-         mElement.setProperty(mTranslateProp, 0, mTrackerXPosField.getValue());
+         setTranslateProperty((Float) mTrackerXPosField.getValue(), 0);
       }
    }
 
@@ -279,7 +311,7 @@ public class TransformTranslationEditor
    {
       if ( propertyChangeEvent.getPropertyName().equals("value") )
       {
-         mElement.setProperty(mTranslateProp, 1, mTrackerYPosField.getValue());
+         setTranslateProperty((Float) mTrackerYPosField.getValue(), 1);
       }
    }
 
@@ -287,7 +319,7 @@ public class TransformTranslationEditor
    {
       if ( propertyChangeEvent.getPropertyName().equals("value") )
       {
-         mElement.setProperty(mTranslateProp, 2, mTrackerZPosField.getValue());
+         setTranslateProperty((Float) mTrackerZPosField.getValue(), 2);
       }
    }
 }
