@@ -83,7 +83,9 @@ bool vjMotionStar::config(vjConfigChunk *c)
 
    if (!vjPosition::config(c))
        return false;
-   vjDEBUG(vjDBG_INPUT_MGR,3) << "       vjMotionStar::vjMotionStar(vjConfigChunk*)" << endl << vjDEBUG_FLUSH;
+
+   vjDEBUG(vjDBG_INPUT_MGR,3) << "       vjMotionStar::config(vjConfigChunk*)\n"
+                              << vjDEBUG_FLUSH;
 
    // set mMotionStar with the config info.
    mMotionStar.setHemisphere((unsigned int)(static_cast<int> (c->getProperty("hemisphere"))));
