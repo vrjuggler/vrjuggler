@@ -8,8 +8,12 @@ DIE=0
 : ${DPP_PATH=../../Doozer++}
 : ${MACRO_PATH=../../macros}
 
-if [ -n "$dpp_path" ]; then
-   ACLOCAL_FLAGS="-I $DPP_PATH/config -I $MACRO_PATH $ACLOCAL_FLAGS"
+if [ -n "$DPP_PATH" ]; then
+   ACLOCAL_FLAGS="-I $DPP_PATH/config $ACLOCAL_FLAGS"
+fi
+
+if [ -n "$MACRO_PATH" ]; then
+   ACLOCAL_FLAGS="-I $MACRO_PATH $ACLOCAL_FLAGS"
 fi
 
 : ${AUTOCONF=autoconf}
