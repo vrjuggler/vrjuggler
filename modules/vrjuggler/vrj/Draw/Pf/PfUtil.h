@@ -47,26 +47,7 @@ namespace vrj
 
 
 //: Convert Performer matrix to Juggler matrix
-vrj::Matrix GetVjMatrix( const pfMatrix& perfMat ); //TODO!!! FIXME!!! change VJ to Vj
-
-#define featureChange(var)\
-   std::cout<<"  !!!!!!!!!!!!\n"<<std::flush;\
-   std::cout<<" !!!!!!!!!!!!!!\n"<<std::flush;\
-   std::cout<<"!!!!!!!!!!!!!!!!\n"<<std::flush;\
-   std::cout<<"              \n"<<std::flush;\
-   std::cout<<"FEATURE CHANGED:  "<<var<<"\n"<<std::flush;\
-   std::cout<<"              \n"<<std::flush;\
-   std::cout<<"!!!!!!!!!!!!!!!!\n"<<std::flush;\
-   std::cout<<" !!!!!!!!!!!!!!\n"<<std::flush;\
-   std::cout<<"  !!!!!!!!!!!!\n"<<std::flush;\
-   std::cout<<"Exiting...\n"<<std::flush;\
-   exit(-1);
-
-inline vrj::Matrix GetVJMatrix( const pfMatrix& perfMat )
-{
-   featureChange("Please change all references to GetVJMatrix to GetVjMatrix (lower case j)")
-   return Matrix();
-}
+vrj::Matrix GetVjMatrix( const pfMatrix& perfMat );
 
 //: Convert Juggler Matrix to Pf Matrix
 pfMatrix GetPfMatrix( const Matrix& mat );
