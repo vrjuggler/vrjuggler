@@ -197,10 +197,8 @@ double StatCollector<TYPE, TimeBased>::getInstAverage()
    //     |                  |
    // mPrevTime1        mPrevTime2             cur_time
    vpr::Interval cur_time, diff_time;
-   double diff_sec;                       // Num secs different in send times
    cur_time.setNow();                     // Set current time
    diff_time = cur_time - mPrevSampleTime1;     // Get time to compute the average over
-   diff_sec = diff_time.secf();
 
    double inst_average(0.0);
 
