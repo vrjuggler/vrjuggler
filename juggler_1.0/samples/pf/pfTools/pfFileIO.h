@@ -13,6 +13,11 @@
 class pfFileIO
 {
 public:
+   enum units
+   {
+      FEET, METERS, NOCONVERT
+   };   
+      
    // == "." by default
    static std::string filePath;
    static void setFilePath( const std::string& filepath = "." )
@@ -38,9 +43,12 @@ public:
    // this function automatically keeps track of optimised versions of the filename.
    // if there is no .pfb file, or the .pfb is older than filename, then
    // function generates a new pfb file.
-   // if there is a current pfb file, then functino uses it instead.
+   // if there is a current pfb file, then function uses it instead.
    // TODO: add time stamp check - not implemented yet.
-   static pfNode* autoloadFile( std::string fileName );
+   // 
+   // function will auto scale your model based on the units you provide, 
+   // default is no conversion.
+   static pfNode* autoloadFile( std::string fileName, const units& un );
 
    //: Write node to File
    // stores the geometry under node, in file originalFltName.pbf
@@ -49,6 +57,34 @@ public:
 
    //: get the name of the optimized file given the original name
    static std::string optimizedName( std::string originalFltName );
+   
+   
+      
+   // returns a DCS that will scale an flt model to the suitable size for
+   // viewing in a cave environment.
+   // setting the units in multigen doesn't seem to do anything, but if anything
+   // set them to METERS (in multigen), in VRAC's cave, they use FEET as their main
+   // units, so call this function with FEET
+   //
+   // using the returned DCS addChild() your geometry returned from autoloadFile()
+   // then add the DCS to your scene (but not under another one of these!!!)
+   static pfDCS* newConversionDCS( const units& un = FEET )
+   {
+      pfDCS* dcs = new pfDCS();
+      switch (un)
+      {
+         case FEET:
+            dcs->setScale( 3.8f );
+            break;
+         case METERS:
+         case NOCONVERT:
+         default:
+            // do nothing.
+            break;
+      }
+      
+      return dcs;
+   }   
 };
 
 

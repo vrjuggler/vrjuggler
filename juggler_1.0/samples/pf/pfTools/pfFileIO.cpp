@@ -57,10 +57,10 @@ void pfFileIO::writeOptimizedFile( pfNode* node, std::string optimizedName )
 // function generates a new pfb file.
 // if there is a current pfb file, then functino uses it instead.
 // TODO: add time stamp check - not implemented yet.
-pfNode* pfFileIO::autoloadFile( std::string fileName )
+pfNode* pfFileIO::autoloadFile( std::string fileName, const pfFileIO::units& un )
 {
    pfNode* node = NULL;
-
+      
    std::string optimizedFileName = optimizedName( fileName );
    if (fileExists(optimizedFileName))
    {
@@ -76,9 +76,21 @@ pfNode* pfFileIO::autoloadFile( std::string fileName )
       writeOptimizedFile( node, optimizedFileName );
       // TODO: consider if the user has write access,
       //       for demos, they may not.
-      // one workaround is to always distribute this app with the pfb's.
+      // one workaround is to always distribute the app with the pfb's.
    }
 
    assert( node != NULL );
-   return node;
+   
+   // convert it if requested.
+   if (un != NOCONVERT)
+   {
+      pfDCS* conversionDCS = pfFileIO::newConversionDCS( un );
+      conversionDCS->addChild( node );
+      return conversionDCS;
+   }   
+   
+   else
+   {
+      return node;
+   }
 }
