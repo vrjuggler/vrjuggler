@@ -54,36 +54,36 @@ import java.io.*;
  */
 public class PropertyDesc implements Cloneable {
 
-    private String name;
-    private String token;
-    private String help;
-    private int num;
-    private ValType valtype;
-    private int enumval; // for assigning numeric defaults to enum entries
+   private String name;
+   private String token;
+   private String help;
+   private int num;
+   private ValType valtype;
+   private int enumval; // for assigning numeric defaults to enum entries
 
-    // items for assisting in GUI displays of chunks.
+   // items for assisting in GUI displays of chunks.
 
-    /** User level - 0 for beginner, 1 for expert.  default = 0. */
-    private int user_level;
+   /** User level - 0 for beginner, 1 for expert.  default = 0. */
+   private int user_level;
 
-    /** Contains a fixed set of possible values with string labels. */
-    private ArrayList enums;
+   /** Contains a fixed set of possible values with string labels. */
+   private ArrayList enums;
 
-    /** Assigns an individual label to each value of a property. */
-    private ArrayList valuelabels;
+   /** Assigns an individual label to each value of a property. */
+   private ArrayList valuelabels;
 
 
-    public PropertyDesc () {
-	/* creates an "empty" PropertyDesc */
-	name = "";
-	token = "";
-	help = "";
-	enums = new ArrayList();
-	valuelabels = new ArrayList();
-	num = 1;
-	valtype = ValType.INVALID;
-        enumval = 0;
-        user_level = 0;
+   public PropertyDesc () {
+      /* creates an "empty" PropertyDesc */
+      name = "";
+      token = "";
+      help = "";
+      enums = new ArrayList();
+      valuelabels = new ArrayList();
+      num = 1;
+      valtype = ValType.INVALID;
+      enumval = 0;
+      user_level = 0;
     }
 
 
