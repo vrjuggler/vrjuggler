@@ -7,7 +7,7 @@
 
     <subtitle>Getting Started Guide</subtitle>
 
-    <releaseinfo>Version 2.0 Alpha 2</releaseinfo>
+    <releaseinfo>Version 2.0 Alpha 1</releaseinfo>
 
     <pubdate>$Date$</pubdate>
   </bookinfo>
@@ -577,6 +577,8 @@ value</screen>
         <varlistentry>
           <term>LD_LIBRARY_PATH (UNIX/Linux only)</term>
 
+          <term>DYLD_LIBRARY_PATH (Darwin/Mac OS X only)</term>
+
           <term>LD_LIBRARYN32_PATH (IRIX only)</term>
 
           <term>LD_LIBRARY64_PATH (IRIX only)</term>
@@ -1126,409 +1128,455 @@ value</screen>
       <para>For the MPApp application, we need the base configuration file and
       the wand mix-in configuration file.</para>
 
-      <para>Now it is time to run the application—finally! Make sure that all
-      your environment variables are set properly before trying to start the
-      application. Once you are ready, specify the name of the application and
-      all the configuration files it needs. An example of this is:</para>
-
-      <screen>% MPApp sim.base.config sim.wand.mixin.config</screen>
-
-      <para>You will notice that no paths are specified for finding the three
-      configuration files. This is intentional to shorten the command line
-      given in the example. In general, you always have to give the full path
-      to the files<footnote><para>This is being remedied for VR Juggler 2.0
-      and beyond.</para></footnote>. Beginning users will typically want to
-      reference the example configuration files in <filename>$VJ_BASE_DIR/share/vrjuggler/data/configFiles</filename>.
-      As you get more comfortable with VR Juggler and its configuration
-      system, you may want to make your own modified files and put them in the
-      directory <filename>$HOME/.vjconfig</filename>. To simplify running
-      applications, you may want to make a shell script (or batch file as
-      appropriate) that does all the work of passing configuration files and
-      common command-line arguments. For now, though, use the path
-      <filename>$VJ_BASE_DIR/share/vrjuggler/data/configFiles</filename> for
-      each of the configuration files you pass on the command line.</para>
-
-      <para>As the application starts, you will see a plethora of output (more
-      or less depending on how you have <envar>$VPR_DEBUG_NFY_LEVEL</envar>,
-      <envar>$VPR_DEBUG_ALLOW_CATEGORIES</envar>, and <envar>$VPR_DEBUG_DISALLOW_CATEGORIES</envar>
-      set), and then one moderately sized simulator display window will open
-      on the left side of your screen while three blank keyboard input windows
-      open on the right side of your screen. The display window will be titled
-      <quote>SimWindow1</quote>, and the keyboard input windows will be titled
-      <quote>Head Keyboard</quote>, <quote>Sim View Cameras Control</quote>
-      and <quote>Wand Keyboard</quote> (in order from the top of the display
-      to the bottom). Do not worry that the keyboard windows are black—that is
-      normal. The display window will have an animated blue mesh, a cyan
-      ellipsoid, and a green pointer. The mesh is what you have come to see;
-      the ellipsoid is the user&#39;s head; and the pointer is the user&#39;s
-      hand. In <xref linkend="MPApp.running.figure" />, we show what this
-      looks on a RedHat Linux 7.2 desktop for comparison with what you are
-      seeing. Note that the head and wand are only rendered in the simulator
-      windows. They are present because head and wand input are being
-      simulated, and it is typically quite helpful to see the results of that
-      simulated input. To exit the application, press <keysym>ESC</keysym> in
-      the window titled <quote>Head Window</quote>.</para>
-
-      <figure id="MPApp.running.figure">
-        <title>MPApp running on a Linux desktop with multiple input windows</title>
-
-        <mediaobject>
-          <imageobject>
-            <imagedata align="center"
-            fileref="figures/MPApp.thumbnail.multi.png" format="PNG" />
-          </imageobject>
-        </mediaobject>
-      </figure>
-
-      <para>With VR Juggler 1.1/2.0, it is possible to use a single window for
-      graphics and for input. To use such a configuration, execute MPApp as
-      follows:</para>
-
-      <screen>% MPApp standalone.config</screen>
-
-      <para>This time, only a single window opens, as shown in <xref
-      linkend="MPApp.running.single.figure" />. It shows the same graphics as
-      before, but now it is configured to take keyboard and mouse input. To
-      exit, press <keysym>ESC</keysym> in the graphics window.</para>
-
-      <figure id="MPApp.running.single.figure">
-        <title>MPApp running on a Linux desktop with one window</title>
-
-        <mediaobject>
-          <imageobject>
-            <imagedata align="center"
-            fileref="figures/MPApp.thumbnail.single.png" format="PNG" />
-          </imageobject>
-        </mediaobject>
-      </figure>
-
-      <para>So now you are probably wondering what you can do with this fancy
-      application. Both of the preceding configurations use the same
-      keyboard/mouse mappings; they vary only in which windows accept the
-      keyboard and mouse input. Using the multi-window configuration, head
-      movement is done with the keyboard in <quote>Head Keyboard</quote>;
-      camera movement is done with the keyboard in <quote>Sim View Cameras
-      Control</quote>; and wand movement is done with the keyboard and mouse
-      in <quote>Wand Keyboard</quote>. Using the single-window configuration,
-      all input is done with the keyboard and mouse in <quote>Sim Window</quote>.
-      Note, however, that for the single-window configuration, the camera is
-      attached to the user&#39;s head for an over-the-shoulder view, and
-      hence, it does not move separately from the head. For information on how
-      to verify these settings and to view the current configuration, refer to
-      the <emphasis>VRJConfig Guide</emphasis>. The following list of tables
-      provides all the keyboard and mouse controls for the simulator when
-      using these particular configuration files. Note that it is possible to
-      reconfigure the simulator to suit your preferences. This is provided
-      mainly for those who just want something that works now.</para>
-
-      <table>
-        <title>Moving the simulated head</title>
-
-        <tgroup cols="2">
-          <thead>
-            <row>
-              <entry>Transformation</entry>
+      <section>
+        <title>Starting the Application</title>
+
+        <para>Now it is time to run the application—finally! Make sure that
+        all your environment variables are set properly before trying to start
+        the application. Once you are ready, specify the name of the
+        application and all the configuration files it needs. An example of
+        this is:</para>
+
+        <screen>% MPApp sim.base.config sim.wand.mixin.config</screen>
+
+        <para>You will notice that no paths are specified for finding the
+        three configuration files. This is intentional to shorten the command
+        line given in the example. In general, you always have to give the
+        full path to the files<footnote><para>This is being remedied for VR
+        Juggler 2.0 and beyond.</para></footnote>. Beginning users will
+        typically want to reference the example configuration files in
+        <filename>$VJ_BASE_DIR/share/vrjuggler/data/configFiles</filename>. As
+        you get more comfortable with VR Juggler and its configuration system,
+        you may want to make your own modified files and put them in the
+        directory <filename>$HOME/.vjconfig</filename>. To simplify running
+        applications, you may want to make a shell script (or batch file as
+        appropriate) that does all the work of passing configuration files and
+        common command-line arguments. For now, though, use the path
+        <filename>$VJ_BASE_DIR/share/vrjuggler/data/configFiles</filename> for
+        each of the configuration files you pass on the command line.</para>
+
+        <para>As the application starts, you will see a plethora of output
+        (more or less depending on how you have <envar>$VPR_DEBUG_NFY_LEVEL</envar>,
+        <envar>$VPR_DEBUG_ALLOW_CATEGORIES</envar>, and <envar>$VPR_DEBUG_DISALLOW_CATEGORIES</envar>
+        set), and then one moderately sized simulator display window will open
+        on the left side of your screen while three blank keyboard input
+        windows open on the right side of your screen. The display window will
+        be titled <quote>SimWindow1</quote>, and the keyboard input windows
+        will be titled <quote>Head Keyboard</quote>, <quote>Sim View Cameras
+        Control</quote> and <quote>Wand Keyboard</quote> (in order from the
+        top of the display to the bottom). Do not worry that the keyboard
+        windows are black—that is normal. The display window will have an
+        animated blue mesh, a cyan ellipsoid, and a green pointer. The mesh is
+        what you have come to see; the ellipsoid is the user&#39;s head; and
+        the pointer is the user&#39;s hand. In <xref
+        linkend="MPApp.running.figure" />, we show what this looks on a RedHat
+        Linux 7.2 desktop for comparison with what you are seeing. Note that
+        the head and wand are only rendered in the simulator windows. They are
+        present because head and wand input are being simulated, and it is
+        typically quite helpful to see the results of that simulated input. To
+        exit the application, press <keysym>ESC</keysym> in the window titled
+        <quote>Head Window</quote>.</para>
+
+        <figure id="MPApp.running.figure">
+          <title>MPApp running on a Linux desktop with multiple input windows</title>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata align="center"
+              fileref="figures/MPApp.thumbnail.multi.png" format="PNG" />
+            </imageobject>
+          </mediaobject>
+        </figure>
+
+        <para>With VR Juggler 1.1/2.0, it is possible to use a single window
+        for graphics and for input. To use such a configuration, execute MPApp
+        as follows:</para>
+
+        <screen>% MPApp standalone.config</screen>
+
+        <para>This time, only a single window opens, as shown in <xref
+        linkend="MPApp.running.single.figure" />. It shows the same graphics
+        as before, but now it is configured to take keyboard and mouse input.
+        To exit, press <keysym>ESC</keysym> in the graphics window.</para>
+
+        <figure id="MPApp.running.single.figure">
+          <title>MPApp running on a Linux desktop with one window</title>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata align="center"
+              fileref="figures/MPApp.thumbnail.single.png" format="PNG" />
+            </imageobject>
+          </mediaobject>
+        </figure>
+      </section>
+
+      <section>
+        <title>Running an Application on Mac OS X with the X Window System</title>
+
+        <para>Running a VR Juggler application on Mac OS X is slightly
+        different if VR Juggler was compiled against <ulink
+        url="http://www.apple.com/macosx/x11/">X11 for OS X</ulink>. Before
+        starting the VR Juggler application, X11 must be running. This can be
+        accomplished by double-clicking on the X11 icon in the Applications
+        folder. By default, X11 will open a standard xterm when it starts. In
+        this xterm, the <envar>$DISPLAY</envar> environment variable will be
+        set correctly, and it is recommended that VR Juggler applications be
+        launched from this xterm. From this xterm, set the necessary
+        environment variables as described earlier in <xref
+        linkend="envvar.chapter" />. Once this is done, the application can be
+        executed from the command line just as described in the previous
+        section.</para>
+
+        <para>MPApp is shown executing on a Mac OS X desktop in <xref
+        linkend="MPApp.OSX.running.single.figure" />. Note that in the dock,
+        the X11 icon is activated and that the application menu is for an X11
+        application. This truly is an X11 application running on OS X.</para>
+
+        <figure id="MPApp.OSX.running.single.figure">
+          <title>MPApp running on Mac OS X using X11 with one window</title>
+
+          <mediaobject>
+            <imageobject>
+              <imagedata align="center"
+              fileref="figures/MPApp-OSX.thumbnail.single.png" format="PNG" />
+            </imageobject>
+          </mediaobject>
+        </figure>
+      </section>
 
-              <entry>Key Press</entry>
-            </row>
-          </thead>
+      <section>
+        <title>Basic Desktop Configuration Controls</title>
 
-          <tbody>
-            <row>
-              <entry align="left">Move head backward</entry>
+        <para>So now you are probably wondering what you can do with this
+        fancy application. Both of the preceding configurations use the same
+        keyboard/mouse mappings; they vary only in which windows accept the
+        keyboard and mouse input. Using the multi-window configuration, head
+        movement is done with the keyboard in <quote>Head Keyboard</quote>;
+        camera movement is done with the keyboard in <quote>Sim View Cameras
+        Control</quote>; and wand movement is done with the keyboard and mouse
+        in <quote>Wand Keyboard</quote>. Using the single-window
+        configuration, all input is done with the keyboard and mouse in
+        <quote>Sim Window</quote>. Note, however, that for the single-window
+        configuration, the camera is attached to the user&#39;s head for an
+        over-the-shoulder view, and hence, it does not move separately from
+        the head. For information on how to verify these settings and to view
+        the current configuration, refer to the <emphasis>VRJConfig Guide</emphasis>.
+        The following list of tables provides all the keyboard and mouse
+        controls for the simulator when using these particular configuration
+        files. Note that it is possible to reconfigure the simulator to suit
+        your preferences. This is provided mainly for those who just want
+        something that works now.</para>
+
+        <table>
+          <title>Moving the simulated head</title>
+
+          <tgroup cols="2">
+            <thead>
+              <row>
+                <entry>Transformation</entry>
 
-              <entry align="left">2 on keypad</entry>
-            </row>
+                <entry>Key Press</entry>
+              </row>
+            </thead>
 
-            <row>
-              <entry align="left">Move head left</entry>
+            <tbody>
+              <row>
+                <entry align="left">Move head backward</entry>
 
-              <entry align="left">4 on keypad</entry>
-            </row>
+                <entry align="left">2 on keypad</entry>
+              </row>
 
-            <row>
-              <entry align="left">Move head right</entry>
+              <row>
+                <entry align="left">Move head left</entry>
 
-              <entry align="left">6 on keypad</entry>
-            </row>
+                <entry align="left">4 on keypad</entry>
+              </row>
 
-            <row>
-              <entry align="left">Move head forward</entry>
+              <row>
+                <entry align="left">Move head right</entry>
 
-              <entry align="left">8 on keypad</entry>
-            </row>
+                <entry align="left">6 on keypad</entry>
+              </row>
 
-            <row>
-              <entry align="left">Move head down</entry>
+              <row>
+                <entry align="left">Move head forward</entry>
 
-              <entry align="left">7 on keypad</entry>
-            </row>
+                <entry align="left">8 on keypad</entry>
+              </row>
 
-            <row>
-              <entry align="left">Move head up</entry>
+              <row>
+                <entry align="left">Move head down</entry>
 
-              <entry align="left">9 on keypad</entry>
-            </row>
+                <entry align="left">7 on keypad</entry>
+              </row>
 
-            <row>
-              <entry align="left">Turn head up</entry>
+              <row>
+                <entry align="left">Move head up</entry>
 
-              <entry align="left">CTRL+2 on keypad</entry>
-            </row>
+                <entry align="left">9 on keypad</entry>
+              </row>
 
-            <row>
-              <entry align="left">Turn head left</entry>
+              <row>
+                <entry align="left">Turn head up</entry>
 
-              <entry align="left">CTRL+4 on keypad</entry>
-            </row>
+                <entry align="left">CTRL+2 on keypad</entry>
+              </row>
 
-            <row>
-              <entry align="left">Turn head right</entry>
+              <row>
+                <entry align="left">Turn head left</entry>
 
-              <entry align="left">CTRL+6 on keypad</entry>
-            </row>
+                <entry align="left">CTRL+4 on keypad</entry>
+              </row>
 
-            <row>
-              <entry align="left">Turn head down</entry>
+              <row>
+                <entry align="left">Turn head right</entry>
 
-              <entry align="left">CTRL+8 on keypad</entry>
-            </row>
+                <entry align="left">CTRL+6 on keypad</entry>
+              </row>
 
-            <row>
-              <entry align="left">Rotate head clockwise</entry>
+              <row>
+                <entry align="left">Turn head down</entry>
 
-              <entry align="left">1 on keypad</entry>
-            </row>
+                <entry align="left">CTRL+8 on keypad</entry>
+              </row>
 
-            <row>
-              <entry align="left">Rotate head counter-clockwise</entry>
+              <row>
+                <entry align="left">Rotate head clockwise</entry>
 
-              <entry align="left">3 on keypad</entry>
-            </row>
-          </tbody>
-        </tgroup>
-      </table>
+                <entry align="left">1 on keypad</entry>
+              </row>
 
-      <table>
-        <title>Moving the simulated wand</title>
+              <row>
+                <entry align="left">Rotate head counter-clockwise</entry>
 
-        <tgroup cols="2">
-          <thead>
-            <row>
-              <entry>Transformation</entry>
+                <entry align="left">3 on keypad</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table>
 
-              <entry>Mouse Input/Key Press</entry>
-            </row>
-          </thead>
+        <table>
+          <title>Moving the simulated wand</title>
 
-          <tbody>
-            <row>
-              <entry>Move wand backward</entry>
+          <tgroup cols="2">
+            <thead>
+              <row>
+                <entry>Transformation</entry>
 
-              <entry>ALT+move mouse backward</entry>
-            </row>
+                <entry>Mouse Input/Key Press</entry>
+              </row>
+            </thead>
 
-            <row>
-              <entry>Move wand forward</entry>
+            <tbody>
+              <row>
+                <entry>Move wand backward</entry>
 
-              <entry>ALT+move mouse forward</entry>
-            </row>
+                <entry>ALT+move mouse backward</entry>
+              </row>
 
-            <row>
-              <entry>Move wand left</entry>
+              <row>
+                <entry>Move wand forward</entry>
 
-              <entry>CTRL+move mouse left</entry>
-            </row>
+                <entry>ALT+move mouse forward</entry>
+              </row>
 
-            <row>
-              <entry>Move wand right</entry>
+              <row>
+                <entry>Move wand left</entry>
 
-              <entry>CTRL+move mouse right</entry>
-            </row>
+                <entry>CTRL+move mouse left</entry>
+              </row>
 
-            <row>
-              <entry>Move wand up</entry>
+              <row>
+                <entry>Move wand right</entry>
 
-              <entry>CTRL+move mouse forward</entry>
-            </row>
+                <entry>CTRL+move mouse right</entry>
+              </row>
 
-            <row>
-              <entry>Move wand down</entry>
+              <row>
+                <entry>Move wand up</entry>
 
-              <entry>CTRL+move mouse backward</entry>
-            </row>
+                <entry>CTRL+move mouse forward</entry>
+              </row>
 
-            <row>
-              <entry>Rotate wand left</entry>
+              <row>
+                <entry>Move wand down</entry>
 
-              <entry>SHIFT+move mouse left</entry>
-            </row>
+                <entry>CTRL+move mouse backward</entry>
+              </row>
 
-            <row>
-              <entry>Rotate wand right</entry>
+              <row>
+                <entry>Rotate wand left</entry>
 
-              <entry>SHIFT+move mouse right</entry>
-            </row>
+                <entry>SHIFT+move mouse left</entry>
+              </row>
 
-            <row>
-              <entry>Rotate wand up</entry>
+              <row>
+                <entry>Rotate wand right</entry>
 
-              <entry>SHIFT+move mouse backward</entry>
-            </row>
+                <entry>SHIFT+move mouse right</entry>
+              </row>
 
-            <row>
-              <entry>Rotate wand down</entry>
+              <row>
+                <entry>Rotate wand up</entry>
 
-              <entry>SHIFT+move mouse forward</entry>
-            </row>
+                <entry>SHIFT+move mouse backward</entry>
+              </row>
 
-            <row>
-              <entry>Rotate wand clockwise</entry>
+              <row>
+                <entry>Rotate wand down</entry>
 
-              <entry>Right arrow</entry>
-            </row>
+                <entry>SHIFT+move mouse forward</entry>
+              </row>
 
-            <row>
-              <entry>Rotate wand counter-clockwise</entry>
+              <row>
+                <entry>Rotate wand clockwise</entry>
 
-              <entry>Left arrow</entry>
-            </row>
+                <entry>Right arrow</entry>
+              </row>
 
-            <row>
-              <entry>Wand button #1</entry>
+              <row>
+                <entry>Rotate wand counter-clockwise</entry>
 
-              <entry>Left mouse button</entry>
-            </row>
+                <entry>Left arrow</entry>
+              </row>
 
-            <row>
-              <entry>Wand button #2</entry>
+              <row>
+                <entry>Wand button #1</entry>
 
-              <entry>Middle mouse button</entry>
-            </row>
+                <entry>Left mouse button</entry>
+              </row>
 
-            <row>
-              <entry>Wand button #3</entry>
+              <row>
+                <entry>Wand button #2</entry>
 
-              <entry>Right mouse button</entry>
-            </row>
+                <entry>Middle mouse button</entry>
+              </row>
 
-            <row>
-              <entry>Wand button #4</entry>
+              <row>
+                <entry>Wand button #3</entry>
 
-              <entry>4</entry>
-            </row>
+                <entry>Right mouse button</entry>
+              </row>
 
-            <row>
-              <entry>Wand button #5</entry>
+              <row>
+                <entry>Wand button #4</entry>
 
-              <entry>5</entry>
-            </row>
+                <entry>4</entry>
+              </row>
 
-            <row>
-              <entry>Wand button #6</entry>
+              <row>
+                <entry>Wand button #5</entry>
 
-              <entry>6</entry>
-            </row>
-          </tbody>
-        </tgroup>
-      </table>
+                <entry>5</entry>
+              </row>
 
-      <table>
-        <title>Moving the camera (multi-window configuration only)</title>
+              <row>
+                <entry>Wand button #6</entry>
 
-        <tgroup cols="2">
-          <thead>
-            <row>
-              <entry>Transformation</entry>
+                <entry>6</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table>
 
-              <entry>Key Press</entry>
-            </row>
-          </thead>
+        <table>
+          <title>Moving the camera (multi-window configuration only)</title>
 
-          <tbody>
-            <row>
-              <entry>Move camera backward</entry>
+          <tgroup cols="2">
+            <thead>
+              <row>
+                <entry>Transformation</entry>
 
-              <entry>2 on keypad</entry>
-            </row>
+                <entry>Key Press</entry>
+              </row>
+            </thead>
 
-            <row>
-              <entry>Move camera left</entry>
+            <tbody>
+              <row>
+                <entry>Move camera backward</entry>
 
-              <entry>4 on keypad</entry>
-            </row>
+                <entry>2 on keypad</entry>
+              </row>
 
-            <row>
-              <entry>Move camera right</entry>
+              <row>
+                <entry>Move camera left</entry>
 
-              <entry>6 on keypad</entry>
-            </row>
+                <entry>4 on keypad</entry>
+              </row>
 
-            <row>
-              <entry>Move camera forward</entry>
+              <row>
+                <entry>Move camera right</entry>
 
-              <entry>8 on keypad</entry>
-            </row>
+                <entry>6 on keypad</entry>
+              </row>
 
-            <row>
-              <entry>Move camera down</entry>
+              <row>
+                <entry>Move camera forward</entry>
 
-              <entry>7 on keypad</entry>
-            </row>
+                <entry>8 on keypad</entry>
+              </row>
 
-            <row>
-              <entry>Move camera up</entry>
+              <row>
+                <entry>Move camera down</entry>
 
-              <entry>9 on keypad</entry>
-            </row>
+                <entry>7 on keypad</entry>
+              </row>
 
-            <row>
-              <entry>Turn camera up</entry>
+              <row>
+                <entry>Move camera up</entry>
 
-              <entry>CTRL+2 on keypad</entry>
-            </row>
+                <entry>9 on keypad</entry>
+              </row>
 
-            <row>
-              <entry>Turn camera left</entry>
+              <row>
+                <entry>Turn camera up</entry>
 
-              <entry>CTRL+4 on keypad</entry>
-            </row>
+                <entry>CTRL+2 on keypad</entry>
+              </row>
 
-            <row>
-              <entry>Turn camera right</entry>
+              <row>
+                <entry>Turn camera left</entry>
 
-              <entry>CTRL+6 on keypad</entry>
-            </row>
+                <entry>CTRL+4 on keypad</entry>
+              </row>
 
-            <row>
-              <entry>Turn camera down</entry>
+              <row>
+                <entry>Turn camera right</entry>
 
-              <entry>CTRL+8 on keypad</entry>
-            </row>
+                <entry>CTRL+6 on keypad</entry>
+              </row>
 
-            <row>
-              <entry>Rotate camera clockwise</entry>
+              <row>
+                <entry>Turn camera down</entry>
 
-              <entry>1 on keypad</entry>
-            </row>
+                <entry>CTRL+8 on keypad</entry>
+              </row>
 
-            <row>
-              <entry>Rotate camera counter-clockwise</entry>
+              <row>
+                <entry>Rotate camera clockwise</entry>
 
-              <entry>3 on keypad</entry>
-            </row>
-          </tbody>
-        </tgroup>
-      </table>
+                <entry>1 on keypad</entry>
+              </row>
 
-      <para>Before continuing on to running an application in a full-scale VR
-      system, we provide two asides: using a simulated glove and using a
-      simulated analog device. The examples provided thus far have not
-      discussed this because the information was not relevant to the
-      particular sample application being used. Knowing how to use these
-      simulated devices is important, however, and it is treated separately as
-      a reference for your future endeavors in running VR Juggler
-      applications.</para>
+              <row>
+                <entry>Rotate camera counter-clockwise</entry>
+
+                <entry>3 on keypad</entry>
+              </row>
+            </tbody>
+          </tgroup>
+        </table>
+
+        <para>Before continuing on to running an application in a full-scale
+        VR system, we provide two asides: using a simulated glove and using a
+        simulated analog device. The examples provided thus far have not
+        discussed this because the information was not relevant to the
+        particular sample application being used. Knowing how to use these
+        simulated devices is important, however, and it is treated separately
+        as a reference for your future endeavors in running VR Juggler
+        applications.</para>
+      </section>
 
       <section>
         <title>Using a Simulated Glove</title>
