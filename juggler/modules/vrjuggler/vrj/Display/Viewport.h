@@ -65,6 +65,16 @@ public:
       mActive = false;
    }
 
+   Viewport(const Viewport& v)
+      : mName(v.mName), mUser(v.mUser), mType(v.mType), mView(v.mView),
+        mActive(v.mActive), mDisplay(v.mDisplay),
+        mViewportChunk(v.mViewportChunk), mXorigin(v.mXorigin),
+        mYorigin(v.mYorigin), mXsize(v.mXsize), mYsize(v.mYsize),
+        mLeftProj(v.mLeftProj), mRightProj(v.mRightProj)
+   {
+      // XXX: mLatencyMeasure is not copyable ...
+   }
+
    virtual ~Viewport()
    {;}
 

@@ -48,8 +48,18 @@ namespace vrj
 class SimViewport : public Viewport
 {
 public:
-   SimViewport()
+   SimViewport() : Viewport()
    {;}
+
+   SimViewport(const SimViewport& sv) : Viewport(sv), mSimulator(sv.mSimulator)
+   {
+      ;
+   }
+
+   virtual ~SimViewport()
+   {
+      ;
+   }
 
 public:
    /**  Configure the simulator */
@@ -67,5 +77,6 @@ protected:
    DrawSimInterface*    mSimulator;    /**< The simulator that we are using here */
 };
 
-};
+}
+
 #endif
