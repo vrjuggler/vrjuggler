@@ -294,6 +294,24 @@ public:
       mCondMutex = mutex;
    }
 
+   /** Test the mutex to see if it is held.
+    */
+   int test()
+   { return mCondMutex->test(); }
+
+   /**
+    * Prints out information about the condition variable to stderr.
+    *
+    * @pre None.
+    * @post All important data and debugging information related to the
+    *       condition variable and its mutex are dumped to stderr.
+    */
+   void dump (void) const
+   {
+      std::cerr << "------------- vpr::CondVarPosix::Dump ---------\n"
+                << "Not Implemented yet.\n";
+   }
+
 private:
    pthread_cond_t mCondVar;      /**< Condition variable */
    MutexPosix*    mCondMutex;    /**< Mutex for the condition variable */
