@@ -207,10 +207,6 @@ public:
                                               const ChunkDesc& self);
 
 
-    //: Reads self's value from the given input stream
-    friend JCCL_API(std::istream&) operator >> (std::istream& in,
-                                              ChunkDesc& self);
-
 };
 
 

@@ -199,6 +199,15 @@ bool XMLConfigIOHandler::writeConfigChunk (XMLFormatter* f, const ConfigChunk& c
 }
 
 
+/*virtual*/ bool XMLConfigIOHandler::writeProperty (std::ostream& out, const Property& prop, const std::string& pad) {
+    vjXMLFormatTarget target(out);
+    XMLFormatter formatter ("USASCII", &target, 
+                            XMLFormatter::NoEscapes, 
+                            XMLFormatter::UnRep_Replace);
+    return writeProperty (&formatter, prop, pad);
+}
+
+
 bool XMLConfigIOHandler::writeProperty (XMLFormatter* f, const Property& p, const std::string& pad) {
     writeBuf (f, pad);
     writeBuf (f, "<");
@@ -654,6 +663,15 @@ bool XMLConfigIOHandler::writeChunkDesc (XMLFormatter* f, const ChunkDesc& desc,
     writeBuf (f, pad);
     writeBuf (f, "</ChunkDesc>\n");
     return retval;
+}
+
+
+/*virtual*/ bool XMLConfigIOHandler::writePropertyDesc (std::ostream& out, const PropertyDesc& prop, const std::string& pad) {
+    vjXMLFormatTarget target(out);
+    XMLFormatter formatter ("USASCII", &target, 
+                            XMLFormatter::NoEscapes, 
+                            XMLFormatter::UnRep_Replace);
+    return writePropertyDesc (&formatter, prop, pad);
 }
 
 

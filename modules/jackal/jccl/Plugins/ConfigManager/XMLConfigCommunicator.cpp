@@ -63,7 +63,7 @@ XMLConfigCommunicator::XMLConfigCommunicator (ConfigManager* _config_manager):
 
     config_manager = _config_manager;
 
-    config_xml_handler = (XMLConfigIOHandler*)ConfigIO::instance()->getHandler (ConfigIO::XML_HANDLER);
+    config_xml_handler = (XMLConfigIOHandler*)ConfigIO::instance()->getHandler ();
     xml_parser = XercesXMLParserPool::instance()->getParser();
 }
 
