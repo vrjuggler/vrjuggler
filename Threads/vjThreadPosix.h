@@ -59,7 +59,7 @@ typedef unsigned int thread_id_t;
 #elif defined(VJ_OS_FreeBSD)
 typedef caddr_t thread_id_t;
 #else
-typedef u_int32_t thread_id_t;
+typedef uint32_t thread_id_t;
 #endif
 
 #include <Threads/vjThreadKeyPosix.h>     // To get the posix key stuff for storing self
