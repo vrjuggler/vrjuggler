@@ -235,13 +235,17 @@ int vjConfigChunkDB::dependencySort(vjConfigChunkDB* auxChunks)
 	    vjDEBUG(vjDBG_ALL,4) << "Checking depencies for: " << (*cur_item)->getProperty("name") << "\n" << vjDEBUG_FLUSH;
 
 	    deps = (*cur_item)->getDependencies();             // Get src dependencies
-	    for(int dep_num=0;dep_num<deps.size();dep_num++)   // For each dependency
+	    for(int dep_num=0;dep_num<deps.size();dep_num++) {  // For each dependency
+		bool dep_not_found = (getChunk(deps[dep_num]) == NULL);
+		bool aux_dep_not_found = ((auxChunks == NULL) ||
+					  (auxChunks->getChunk(deps[dep_num]) == NULL));
+
 		// If dependency not in list yet or in aux buffer
 		// If (not in src && (!aux exists || not in aux))
-		if ((getChunk(deps[dep_num]) == NULL) &&
-		    ((auxChunks == NULL) || (auxChunks->getChunk(deps[dep_num]) == NULL)))
+		if ( dep_not_found && aux_dep_not_found )
 		    dep_pass = false;                                   // Failed check (we don't pass)
-
+	    }
+	
 	    if(dep_pass)        // If all dependencies are accounted for
 		{
 		    chunks.push_back(*cur_item);        // Copy src to dst
