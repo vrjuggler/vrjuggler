@@ -96,6 +96,14 @@ dnl # -------------------------------------------- #
 dnl # --with-pkg[=arg] and --without-pkg arguments #
 dnl # -------------------------------------------- #
 
+dnl # Override the C compiler that configure would otherwise find itself.
+AC_ARG_WITH(cc, [  --with-cc=<PATH>        Alternate C compiler ],
+            _alt_cc="$withval", _alt_cc='none')
+
+dnl # Override the C++ compiler that configure would otherwise find itself.
+AC_ARG_WITH(cxx, [  --with-cxx=<PATH>       Alternate C++ compiler ],
+            _alt_cxx="$withval", _alt_cxx='none')
+
 dnl # Force the use of GCC as the compiler.
 dnl # NOTE: This is not fully implemented yet for any platform, but it is
 dnl # partially usable on Windows.
@@ -666,21 +674,39 @@ dnl # -------------------------------------------------------------------------
 _vjsave_CFLAGS="$CFLAGS"
 _vjsave_CXXFLAGS="$CXXFLAGS"
 
-dnl # On HP-UX, we have to use the aCC C++ compiler.
-if test "$PLATFORM" = "HP" ; then
-    AC_CHECK_PROG(CXX, aCC, aCC,
-        AC_MSG_ERROR(*** The library requires the HP-UX aCC C++ compiler ***))
-dnl # On Windows, we have to use the Microsoft Visual C++ compiler CL.EXE.
-elif test "$OS_TYPE" = "Win32" -a "x${_use_gcc}" != "xyes" ; then
-    AC_CHECK_PROG(CXX, cl, cl,
-        AC_MSG_ERROR(*** The library requires the MS Visual C++ compiler ***))
-    CC=$CXX
-dnl # On IRIX, we have to use cc and CC (not gcc or g++).
-elif test "$PLATFORM" = "IRIX" ; then
-    AC_CHECK_PROG(CC, cc, cc,
-        AC_MSG_ERROR(*** The library requires the IRIX cc C compiler ***))
-    AC_CHECK_PROG(CXX, CC, CC,
-        AC_MSG_ERROR(*** The library requires the IRIX CC C++ compiler ***))
+dnl # If no alternate C compiler was specified, check to see if it is
+dnl # necessary to force the use of a specific compiler on a given platform.
+if test "x${_alt_cc}" = "xnone" ; then
+    dnl # On IRIX, we have to use cc (not gcc).
+    if test "$PLATFORM" = "IRIX" ; then
+        AC_CHECK_PROG(CC, cc, cc,
+            AC_MSG_ERROR(*** The library requires the IRIX cc C compiler ***))
+    fi
+dnl # Otherwise, force the use of the alternate C compiler.
+else
+    CC="${_alt_cc}"
+fi
+
+dnl # If no alternate C++ compiler was specified, check to see if it is
+dnl # necessary to force the use of a specific compiler on a given platform.
+if test "x${_alt_cxx}" = "xnone" ; then
+    dnl # On HP-UX, we have to use the aCC C++ compiler.
+    if test "$PLATFORM" = "HP" ; then
+        AC_CHECK_PROG(CXX, aCC, aCC,
+            AC_MSG_ERROR(*** The library requires the HP-UX aCC C++ compiler ***))
+    dnl # On Windows, we have to use the Microsoft Visual C++ compiler CL.EXE.
+    elif test "$OS_TYPE" = "Win32" -a "x${_use_gcc}" != "xyes" ; then
+        AC_CHECK_PROG(CXX, cl, cl,
+            AC_MSG_ERROR(*** The library requires the MS Visual C++ compiler ***))
+        CC=$CXX
+    dnl # On IRIX, we have to use CC (not g++).
+    elif test "$PLATFORM" = "IRIX" ; then
+        AC_CHECK_PROG(CXX, CC, CC,
+            AC_MSG_ERROR(*** The library requires the IRIX CC C++ compiler ***))
+    fi
+dnl # Otherwise, force the use of the alternate C++ compiler.
+else
+    CXX="${_alt_cxx}"
 fi
 
 CFLAGS="$CFLAGS ${_EXTRA_FLAGS}"
