@@ -9,7 +9,7 @@ LATEX_OUTPUT_DIR=	latex
 
 # Fill these in!!  Together, they form the installation prefix.
 webroot=	$(HOME)/public_html/phpjug
-instdir=	tweek/1.0/programmer.reference
+instdir=	tweek/1.0/programmer.reference.cxx
 
 prefix=		$(webroot)/$(instdir)
 
