@@ -25,7 +25,7 @@
   <property category="sys" name="JbxEventListener0" value="org.vrjuggler.tweek.net.CommunicationListener" />
   <property category="sys" name="JbxEventListener1" value="org.vrjuggler.tweek.beans.BeanInstantiationListener" />
   <property category="sys" name="LastTag" value="113" />
-  <property category="sys" name="Libraries" value="JDOM B7;Xerces" />
+  <property category="sys" name="Libraries" value="JDOM B7;Xerces;OpenORB" />
   <property category="sys" name="MakeStable" value="0" />
   <property category="sys" name="OutPath" value="classes" />
   <property category="sys" name="SourcePath" value="." />
@@ -60,6 +60,7 @@
   <file path="org/vrjuggler/tweek/net/corba/CorbaService.java" />
   <file path="org/vrjuggler/tweek/beans/DefaultBeanModelViewer.java" />
   <file path="org/vrjuggler/tweek/services/EnvironmentService.java" />
+  <file path="org/vrjuggler/tweek/services/ExtensionFileFilter.java" />
   <file path="org/vrjuggler/tweek/beans/FileFinder.java" />
   <file path="org/vrjuggler/tweek/beans/GenericBean.java" />
   <file path="org/vrjuggler/tweek/services/GlobalPreferencesService.java" />
