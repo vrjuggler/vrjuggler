@@ -54,6 +54,21 @@
         <label name="Analyze Juggler performance data"/>
         <label name="Define new types of config info"/>
     </PropertyDesc>
+    <Defaults>
+      <vjcontrol name="">
+        <looknfeel>"Java" </looknfeel>
+        <host>"localhost" </host>
+        <port>"4450" </port>
+        <descfiles></descfiles>
+        <chunkfiles></chunkfiles>
+        <defaultchunkfiles></defaultchunkfiles>
+        <fontname>"" </fontname>
+        <fontsize>"0" </fontsize>
+        <windowsize>"0" "0" </windowsize>
+        <user_level>"0" </user_level>
+        <user_type>"True" "False" "False" "False" "False" </user_type>
+      </vjcontrol>
+    </Defaults>
   </ChunkDesc>
   <ChunkDesc token="vjIncludeFile" name="Include File">
     <help>File that should be loaded along with this one</help>
