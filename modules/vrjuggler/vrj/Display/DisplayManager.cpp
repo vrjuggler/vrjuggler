@@ -54,7 +54,12 @@ bool vjDisplayManager::configCanHandle(vjConfigChunk* chunk)
 // notifyDrawMgr = 0; Defaults to 0
 int vjDisplayManager::addDisplay(vjDisplay* disp, bool notifyDrawMgr)
 {
-   vjASSERT(mDrawManager != NULL);     // If draw mgr is null, then we can't update it.
+   //XXX: When we add this back in, we have to deal wiht several issues
+   // - drawmanager needs to be known by the time we get here
+   // - If it is not (because kernel has no app) then we just store the windows
+   // - If it is, then pass the window on
+   // - There is a lot of kernel, app, draw manager going on here that needs ironed out
+   //vjASSERT(mDrawManager != NULL);     // If draw mgr is null, then we can't update it.
 
    // For now just do this
    mDisplays.push_back(disp);
