@@ -42,6 +42,8 @@
 #include <vpr/IO/Socket/Socket.h>
 #include <vpr/Util/ReturnStatus.h>
 
+#include <gadget/Devices/Ascension/MotionStarExceptions.h>
+
 
 /** Ascension Flock namespace. */
 namespace FLOCK
@@ -476,8 +478,13 @@ public:
     * @return -3 - No address has been set for the server.
     * @return -4 - The position scaling factor was not determined from
     *              information sent by the server.
+    *
+    * @throws mstar::NetworkException, mstar::ConnectException,
+    *         mstar::ScaleFactorUnknownException
     */
-   int start();
+   vpr::ReturnStatus start()
+      throw(mstar::NetworkException, mstar::ConnectException,
+            mstar::ScaleFactorUnknownException);
 
    /**
     * The data flow from the server is stopped, the server is told to go to
@@ -487,8 +494,10 @@ public:
     * @post If the run mode is BIRDNET::CONTINUOUS, the data flow is
     *        stopped, the server is told to shut down, the state is set to
     *        inactive and the socket is closed.
+    *
+    * @throws mstar::CommandException
     */
-   void stop();
+   void stop() throw(mstar::CommandException);
 
    /**
     * Based on the current run mode, a single sample is taken (run mode is
@@ -510,8 +519,10 @@ public:
     *
     * @return  0 - The data flow was stopped.
     * @return -1 - The data flow could not be stopped for some reason.
+    *
+    * @throws mstar::CommandException
     */
-   vpr::ReturnStatus stopData();
+   vpr::ReturnStatus stopData() throw(mstar::CommandException);
 
    /**
     * Shuts down the server chassis.
@@ -523,8 +534,10 @@ public:
     *
     * @return  0 - Data flow was stopped.
     * @return -1 - Data flow could not be stopped.
+    *
+    * @throws mstar::CommandException
     */
-   vpr::ReturnStatus shutdown();
+   vpr::ReturnStatus shutdown() throw(mstar::CommandException);
 
    /**
     * Returns whether the MotionStar is active or not.
@@ -698,8 +711,10 @@ public:
     *       m_run_mode is set to mode after all of that is handled.
     *
     * @param mode The new value for the run mode.
+    *
+    * @throws mstar::CommandException
     */
-   void setRunMode(const BIRDNET::run_mode mode);
+   void setRunMode(const BIRDNET::run_mode mode) throw(mstar::CommandException);
 
    /**
     * Gets the current run mode for the device.
@@ -1021,8 +1036,10 @@ private:
     *       and another MSG_WAKE_UP packet to restart the server.
     *
     * @return  0 if the server was awakened; -1 otherwise.
+    *
+    * @throws mstar::CommandException
     */
-   vpr::ReturnStatus sendWakeUp();
+   vpr::ReturnStatus sendWakeUp() throw(mstar::CommandException);
 
    /**
     * Gets the system status.
@@ -1036,8 +1053,10 @@ private:
     * @return Non-NULL - A pointer to a BIRDNET::SYSTEM_STATUS object that
     *                      fully describes the system state.
     * @return NULL     - The system status could not be read.
+    *
+    * @throws mstar::CommandException
     */
-   BIRDNET::SYSTEM_STATUS* getSystemStatus();
+   BIRDNET::SYSTEM_STATUS* getSystemStatus() throw(mstar::CommandException);
 
    /**
     * Sets the system status.
@@ -1138,8 +1157,11 @@ private:
     *                    caller should delete when it has finished with it.
     * @return NULL     - The status for the given device could not be
     *                    requested for some reason.
+    *
+    * @throws mstar::NoDeviceStatusException
     */
-   BIRDNET::DATA_PACKET* getDeviceStatus(const unsigned char device);
+   BIRDNET::DATA_PACKET* getDeviceStatus(const unsigned char device)
+      throw(mstar::NoDeviceStatusException);
 
    /**
     * Sets the status of the requested FBB device using the given
@@ -1175,10 +1197,13 @@ private:
     * @post A MSG_RUN_CONTINUOUS packet is sent to the server.  The server
     *       responds and then begins sending a continuous stream of data.
     *
-    * @return 0 if the server is now sending continuous data.  -1 is returned
-    *         if the run mode could not be set to BIRDNET::CONTINUOUS.
+    * @return vpr::ReturnStatus::Success if the server is now sending
+    *         continuous data.  vpr::ReturnStatus::Fail is returned if the
+    *         run mode could not be set to BIRDNET::CONTINUOUS.
+    *
+    * @throws mstar::CommandException)
     */
-   int setContinuous();
+   vpr::ReturnStatus setContinuous() throw(mstar::CommandException);
 
    /**
     * Converts the raw positional information in the given array to the
@@ -1457,8 +1482,11 @@ private:
     *         usually due to a system error.
     * @return -2 if nothing was sent to the server.  This is likely to be
     *         caused by an attempt to send an empty packet.
+    *
+    * @throws mstar::NetworkWriteException, mstar::NoDataWrittenException
     */
-   vpr::ReturnStatus sendMsg(const void* packet, const size_t packetSize);
+   vpr::ReturnStatus sendMsg(const void* packet, const size_t packetSize)
+      throw(mstar::NetworkWriteException, mstar::NoDataWrittenException);
 
    /**
     * Gets the server's response to a sent message.
@@ -1475,8 +1503,11 @@ private:
     *         usually due to a system error.
     * @return -2 if nothing was read from the server.  This is likely to be
     *         caused by the server sending an empty packet for some reason.
+    *
+    * @throws mstar::NetworkReadException, mstar::NoDataReadException
     */
-   vpr::ReturnStatus getRsp(void* packet, const size_t packetSize);
+   vpr::ReturnStatus getRsp(void* packet, const size_t packetSize)
+      throw(mstar::NetworkReadException, mstar::NoDataReadException);
 
    /**
     * Prints the system status as read from the server.
