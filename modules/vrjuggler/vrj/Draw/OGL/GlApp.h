@@ -48,16 +48,37 @@ namespace vrj
    class Kernel;
 
 /** GlApp: Encapulates an actual OpenGL application.
-*
-* PURPOSE:
-* This class defines the class that OpenGL
-* application classes should be derived from.  The interface
-* given is the interface that the System expects in order to
-* interface with the application.
-*
-* See also: App
-*
-*/
+ *
+ * PURPOSE:
+ * This class defines the class that OpenGL
+ * application classes should be derived from.  The interface
+ * given is the interface that the System expects in order to
+ * interface with the application.<br> <br>
+ *
+ * <h3> The control loop will look similar to this: </h3>
+ *  NOTE: One time through the loop is a Juggler Frame <br>
+ *
+ * \code
+ *  contextInit();                 // called for each context                 
+ *  while (drawing)                                 
+ *  {                                               
+ *     preFrame();                 
+ *     <b>bufferPreDraw();</b>     // called for each draw buffer
+ *     <b>contextPreDraw();</b>    // called for each context
+ *     <b>draw();</b>              // called for each surfacewindow
+ *     <b>contextPostDraw();</b>   // called for each context
+ *     intraFrame();               // called in parallel to the draw functions.
+ *     sync();
+ *     postFrame();
+ *
+ *     UpdateTrackers();
+ *  }                                               
+ *                                                  
+ *  contextClose();                // called for each context
+ * \endcode
+ *
+ * @see App
+ */
 class VJ_CLASS_API GlApp : public App
 {
 public:
