@@ -54,9 +54,9 @@ class XMLConfigCommunicator: public NetCommunicator
 {
 private:
 
-   XMLConfigIOHandler *config_xml_handler;
-   XercesXMLParser *xml_parser;
-   ConfigManager *config_manager;
+   XMLConfigIOHandler *mConfigIOHandler;
+   XercesXMLParser *mXMLParser;
+   ConfigManager *mConfigManager;
    
 public:
 
