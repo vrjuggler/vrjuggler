@@ -62,6 +62,11 @@ UI_DIR			= $(subst .,/,$(UI_PKG))
 UI_SRCS			= $(patsubst $(srcdir)/%,%,$(wildcard $(srcdir)/$(UI_DIR)/*.java))
 UI_CLASSES		= $(UI_SRCS:.java=.class)
 
+UI_TREETABLE_PKG	= org.vrjuggler.tweek.ui.treetable
+UI_TREETABLE_DIR	= $(subst .,/,$(UI_TREETABLE_PKG))
+UI_TREETABLE_SRCS	= $(patsubst $(srcdir)/%,%,$(wildcard $(srcdir)/$(UI_TREETABLE_DIR)/*.java))
+UI_TREETABLE_CLASSES	= $(UI_TREETABLE_SRCS:.java=.class)
+
 WIZARD_PKG		= org.vrjuggler.tweek.wizard
 WIZARD_DIR		= $(subst .,/,$(WIZARD_PKG))
 WIZARD_SRCS		= $(patsubst $(srcdir)/%,%,$(wildcard $(srcdir)/$(WIZARD_DIR)/*.java))
@@ -80,6 +85,7 @@ WIZARD_PANES_CLASSES	= $(WIZARD_PANES_SRCS:.java=.class)
 
 JAVA_SRCS = \
 	$(UI_SRCS) \
+	$(UI_TREETABLE_SRCS) \
 	$(WIZARD_SRCS) \
 	$(WIZARD_BUILDER_SRCS) \
 	$(WIZARD_PANES_SRCS)
@@ -91,7 +97,11 @@ JARS		= wizard.jar ui.jar
 BEANS		= WizardBuilder
 
 # List the packages for which JavaDoc documentation will be generated.
-DOC_PKGS	= $(UI_PKG) $(WIZARD_PKG) $(WIZARD_BUILDER_PKG) $(WIZARD_PANES_PKG)
+DOC_PKGS	= $(UI_PKG) \
+		  $(UI_TREETABLE) \
+		  $(WIZARD_PKG) \
+		  $(WIZARD_BUILDER_PKG) \
+		  $(WIZARD_PANES_PKG)
 webroot		= $(HOME)/public_html/jugglerweb
 instdir		= tweek/wizard/1.0
 doc_prefix	= $(webroot)/$(instdir)
@@ -114,9 +124,10 @@ ifneq ($(BEANS), )
 endif
 endif
 
-ui.jar: $(UI_CLASSES)
+ui.jar: $(UI_CLASSES) $(UI_TREETABLE_CLASSES)
 	$(JAR) cvf $@ \
 		$(UI_DIR)/*.class \
+		$(UI_TREETABLE_DIR)/*.class
 
 wizard.jar: $(WIZARD_CLASSES) $(WIZARD_PANES)
 	$(JAR) cvf $@ \
@@ -171,6 +182,7 @@ install-docs:
 CLEAN_FILES	+= \
 	$(JARS) \
 	$(UI_CLASSES) \
+	$(UI_TREETABLE_CLASSES) \
 	$(WIZARD_CLASSES) \
 	$(WIZARD_BUILDER_CLASSES) \
 	$(WIZARD_PANES_CLASSES)
