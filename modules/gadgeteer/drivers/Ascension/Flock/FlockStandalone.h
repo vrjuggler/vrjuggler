@@ -702,7 +702,7 @@ protected:     // -- Bird commands --- //
 
 
 protected: // -- Helpers --- //
-   /** Process a reading from the flock */
+   /** Process a reading (of all sensors) from the flock */
    void processDataRecord(std::vector<vpr::Uint8> dataRecord);
 
    /** Get a matrix position from bird input data in the buffer. */
