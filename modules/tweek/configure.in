@@ -376,7 +376,10 @@ if test "x${_enable_javaidl}" != "xno" ; then
 else
    if test "x$OPENORB_ROOT" != "xnone" ; then
       DPP_CHECK_JAVA_STATIC_METHOD(org.omg.CORBA.ORB,
-         init(), , ,
+         init(), ,
+         [ ORB_CLASS_PROP='org.openorb.CORBA.ORB'
+           ORB_SINGLETON_CLASS_PROP='org.openorb.CORBA.ORBSingleton'
+         ],
          [ AC_MSG_WARN(*** OpenORB required for Tweek GUI execution ***) ],
          $OPENORB_JAR)
    else
@@ -548,6 +551,9 @@ AC_SUBST(BUILD_JAVA)
 AC_SUBST(JDOM_JAR)
 AC_SUBST(OPENORB_JAR)
 
+AC_SUBST(ORB_CLASS_PROP)
+AC_SUBST(ORB_SINGLETON_CLASS_PROP)
+
 AC_SUBST(APP_BASE_DIR)
 AC_SUBST(APP_BASE_DIR_INST)
 AC_SUBST(APP_EXTRA_FLAGS)
@@ -588,6 +594,7 @@ AC_OUTPUT(tweek-config
           make.defs.mk
           java/Makefile
           java/Makefile.inc
+          java/tweek.sh
           tweek/Makefile
           tweek/Makefile.inc
           tweek/CORBA/Makefile
@@ -599,7 +606,8 @@ AC_OUTPUT(tweek-config
           mtree/TWEEK.test.dist, ,
    [ sed -e 's/^\(%.*\)/#\1/g' tweek-config > tweek-config.tmp
      mv tweek-config.tmp tweek-config
-     chmod a+x tweek-config ])
+     chmod a+x tweek-config
+     chmod a+x java/tweek.sh ])
 
 cat <<BUILD_INFO
 

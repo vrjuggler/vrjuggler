@@ -44,7 +44,7 @@ if test "x$TWEEK_BASE_DIR" = "x" ; then
 fi
 
 # If the environment variable JDK_HOME is not set, default it to /usr/java.
-if test "x${JDK_HOME}" = "x" ; then
+if test "x$JDK_HOME" = "x" ; then
     echo "WARNING: Setting JDK_HOME environment variable to /usr/java"
     JDK_HOME='/usr/java' ; export JDK_HOME
 fi
@@ -56,10 +56,26 @@ if test ! -x "$JDK_HOME/bin/java" ; then
     status=1
 # Otherwise, start up Tweek and exit with status 0.
 else
-    CLASSPATH="${TWEEK_BASE_DIR}/bin/jdom.jar:${TWEEK_BASE_DIR}/bin/xerces.jar:${TWEEK_BASE_DIR}/bin/Tweek.jar:${TWEEK_BASE_DIR}/bin/TweekBeans.jar:${TWEEK_BASE_DIR}/bin/TweekComm.jar"
+    # Set these to the location where the JDOM and the Java ORB JAR files can
+    # be found.  If using the ORB distributed with the JDK, assign $ORB_JAR a
+    # null string.
+    JDOM_JAR="@JDOM_JAR@"
+    ORB_JAR="@OPENORB_JAR@"
+
+    # Java classpath separator character.
+    JCPS="@JCPS@"
+
+    CLASSPATH="${JDOM_JAR}${JCPS}${ORB_JAR}${JCPS}${TWEEK_BASE_DIR}/bin/Tweek.jar${JCPS}${TWEEK_BASE_DIR}/bin/TweekBeans.jar${JCPS}${TWEEK_BASE_DIR}/bin/TweekComm.jar${JCPS}"
     export CLASSPATH
 
-    $JDK_HOME/bin/java -Djava.security.policy="$TWEEK_BASE_DIR/bin/java.security.policy.txt" -DTWEEK_BASE_DIR="${TWEEK_BASE_DIR}" org.vrjuggler.tweek.Tweek $*
+    # If using an ORB other than that distributed with the JDK, these must be
+    # defined appropriately.
+    if test "x$ORB_JAR" != "x" ; then
+        ORBClass_PROP='-Dorg.omg.CORBA.ORBClass=@ORB_CLASS_PROP@'
+        ORBSingletonClass_PROP='-Dorg.omg.CORBA.ORBSingletonClass=@ORB_SINGLETON_CLASS_PROP@'
+    fi
+
+    $JDK_HOME/bin/java $ORBClass_PROP $ORBSingletonClass_PROP -Djava.security.policy="$TWEEK_BASE_DIR/bin/java.security.policy.txt" -DTWEEK_BASE_DIR="${TWEEK_BASE_DIR}" org.vrjuggler.tweek.Tweek $*
     status=0
 fi
 
