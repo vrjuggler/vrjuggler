@@ -22,7 +22,7 @@ VPATH		= @srcdir@
 # Binary Interface (ABI) used.  For o32 binaries, -L/usr/lib is the
 # appropriate path.  For n32 binaries, use -L/usr/lib32.  For 64-bit binaries,
 # use -L/usr/lib64.
-EXTRA_LIBS	= @TEST_EXTRA_LIBS_BASIC@
+EXTRA_LIBS	= @TEST_EXTRA_LIBS_BASIC@ @TEST_EXTRA_LIBS_GL@
 
 OBJECTS		= main.o
 PROGS		= main
