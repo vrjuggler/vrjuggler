@@ -89,7 +89,9 @@ dnl # -------------------------------------------- #
 dnl # --with-pkg[=arg] and --without-pkg arguments #
 dnl # -------------------------------------------- #
 
-dnl # 
+dnl # Force the use of GCC as the compiler.
+dnl # NOTE: This is not fully implemented yet for any platform, but it is
+dnl # partially usable on Windows.
 AC_ARG_WITH(gcc,
             [  --with-gcc              Force the use of GCC as the compiler],
             _use_gcc="$withval")
@@ -865,7 +867,7 @@ if test "x${_thread_pkg}" = "xPOSIX" ; then
     dnl # Restore these in case any changes were made above.
     CFLAGS="${_vjsave_CFLAGS}"
     CXXFLAGS="${_vjsave_CXXFLAGS}"
-dnl #
+dnl # We are using WIN32 threads.
 elif test "x${_thread_pkg}" = "xWIN32" ; then
     THREADS='WIN32'
 
