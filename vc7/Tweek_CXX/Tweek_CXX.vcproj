@@ -166,6 +166,9 @@ $(OMNIORB_BIN)\omniidl -bcxx -Wbh=.h,s=.cpp -Ctweek\CORBA -I../../modules/tweek 
 			<File
 				RelativePath="..\..\modules\tweek\tweek\Util\Version.cpp">
 			</File>
+			<File
+				RelativePath="tweek\tweekParam.cpp">
+			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
