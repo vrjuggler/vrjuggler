@@ -58,8 +58,11 @@ import java.io.*;
 import java.util.*;
 import org.vrjuggler.jccl.config.io.*;
 
-public class PerformanceMonitorGUI extends JPanel
-implements CommunicationListener, TweekFrameListener, ActionListener
+public class PerformanceMonitorGUI
+   extends JPanel
+   implements CommunicationListener
+            , TweekFrameListener
+            , ActionListener
 {
    private PerformanceMonitorSubject mPerformanceMonitorSubject = null;
    private PerformanceMonitorObserverImpl mPerfMonObserver = null;
@@ -213,15 +216,36 @@ implements CommunicationListener, TweekFrameListener, ActionListener
       }
    }
 
-   /**
-    * Catch a frame close event to cleanly shutdown our CORBA subjects.
-    */
-   public void frameStateChanged (TweekFrameEvent e)
+   public void frameClosed(TweekFrameEvent e)
    {
-      if ( e.getType() == TweekFrameEvent.FRAME_CLOSE )
-      {
-         disconnect();
-      }
    }
 
+   /**
+    * Catch the frame closing event to cleanly shutdown our CORBA subjects.
+    */
+   public boolean frameClosing(TweekFrameEvent e)
+   {
+      disconnect();
+      return true;
+   }
+
+   public void frameDeiconified(TweekFrameEvent e)
+   {
+   }
+
+   public void frameFocused(TweekFrameEvent e)
+   {
+   }
+
+   public void frameIconified(TweekFrameEvent e)
+   {
+   }
+
+   public void frameOpened(TweekFrameEvent e)
+   {
+   }
+
+   public void frameUnfocused(TweekFrameEvent e)
+   {
+   }
 }

@@ -157,8 +157,9 @@ JCCL_PATH_CXX([$jccl_version], [test_tweek_cxx='Y'],
     test_tweek_cxx='N'
    ])
 
+min_tweek_version='0.20.0'
 if test "x$test_tweek_cxx" = "xY" ; then
-   TWEEK_PATH_CXX([0.15.0], [HAVE_TWEEK_CXX='Y'],
+   TWEEK_PATH_CXX([$min_tweek_version], [HAVE_TWEEK_CXX='Y'],
       [AC_MSG_WARN([*** Tweek C++ API required for remote reconfig ***])
        HAVE_TWEEK_CXX='N'
       ])
@@ -171,7 +172,7 @@ if test "x$BUILD_JAVA" = "xY" ; then
       ])
 
    if test "x$test_tweek_java" = "xY" ; then
-      TWEEK_PATH_JAVA([0.15.0], [HAVE_TWEEK_JAVA='Y'],
+      TWEEK_PATH_JAVA([$min_tweek_version], [HAVE_TWEEK_JAVA='Y'],
          [AC_MSG_WARN([*** Tweek Java required for remote reconfig JavaBean ***])
           HAVE_TWEEK_JAVA='N'
          ])
