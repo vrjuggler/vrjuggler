@@ -160,13 +160,12 @@ vpr::ReturnStatus NetworkGraph::construct (const std::string& path)
    return status;
 }
 
-NetworkLine NetworkGraph::getLineProperty (const NetworkGraph::net_edge_t& e)
-   const
+vpr::sim::NetworkLine& NetworkGraph::getLineProperty (const NetworkGraph::net_edge_t& e)
 {
    // XXX: Need to make an assertion that e is in mGraph!
 //   vprASSERT(... && "Given edge not found in the graph!");
 
-   boost::property_map<net_graph_t, network_line_t>::const_type line_prop_map;
+   boost::property_map<net_graph_t, network_line_t>::type line_prop_map;
 
    line_prop_map = boost::get(network_line_t(), mGraph);
 
@@ -211,13 +210,12 @@ vpr::ReturnStatus NetworkGraph::getNodeWithAddr (const vpr::Uint32 addr,
    return status;
 }
 
-NetworkNode NetworkGraph::getNodeProperty (const NetworkGraph::net_vertex_t& v)
-   const
+vpr::sim::NetworkNode& NetworkGraph::getNodeProperty (const NetworkGraph::net_vertex_t& v)
 {
    // XXX: Need to make an assertion that v is in mGraph!
 //   vprASSERT(... && "Given vertex not found in the graph!");
 
-   boost::property_map<net_graph_t, network_node_t>::const_type node_prop_map;
+   boost::property_map<net_graph_t, network_node_t>::type node_prop_map;
 
    node_prop_map = boost::get(network_node_t(), mGraph);
 
