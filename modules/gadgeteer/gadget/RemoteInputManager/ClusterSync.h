@@ -42,12 +42,12 @@
 #ifndef _GADGET_CLUSTER_SYNC_H
 #define _GADGET_CLUSTER_SYNC_H
 
-#include <vpr/vprConfig.h>
-#include <vpr/System.h>
+#include <gadget/gadgetConfig.h>
 
 #include <vector>
-
 #include <boost/static_assert.hpp>
+
+#include <vpr/System.h>
 #include <vpr/IO/Socket/SocketStream.h>
 #include <vpr/IO/ObjectWriter.h>
 #include <vpr/IO/ObjectReader.h>
@@ -76,48 +76,50 @@ namespace gadget
 class GADGET_CLASS_API ClusterSync
 {
 public:
-	ClusterSync() : syncPacket(12)
-	{
-		mTol = 2;
-		mAccept = false;
-	}
+   ClusterSync() : syncPacket(12)
+   {
+      mTol = 2;
+      mAccept = false;
+   }
    void getPacket(unsigned num);
-	void sendAndClear();
-	void clearIntervals();
-	void recieveExpectedTime();
-	void createExpectedTime();
-	void recieveHandshake();
-	void createHandshake();
-	void createResponce();
-	void recieveResponce();
-	void clientClusterSync(vpr::SocketStream* socket_stream);
-	vpr::Interval getClusterSync(vpr::SocketStream* socket_stream);
-	void setSocketStream(vpr::SocketStream* socket_stream)
-	{mSocketStream = socket_stream;}
+   void sendAndClear();
+   void clearIntervals();
+   void recieveExpectedTime();
+   void createExpectedTime();
+   void recieveHandshake();
+   void createHandshake();
+   void createResponce();
+   void recieveResponce();
+   void clientClusterSync(vpr::SocketStream* socket_stream);
+   vpr::Interval getClusterSync(vpr::SocketStream* socket_stream);
+   void setSocketStream(vpr::SocketStream* socket_stream)
+   {
+      mSocketStream = socket_stream;
+   }
 
 private:
-	vpr::Interval mLocalSendTime;
+   vpr::Interval mLocalSendTime;
    vpr::Interval mLocalReceiveTime;
    vpr::Interval mRemoteSendTime;
-	vpr::Interval mRemoteReceiveTime;
-	vpr::Interval mExpectedRemoteTime;
-	vpr::Interval mLatencyTime;
-	vpr::Interval mDelta;
+   vpr::Interval mRemoteReceiveTime;
+   vpr::Interval mExpectedRemoteTime;
+   vpr::Interval mLatencyTime;
+   vpr::Interval mDelta;
    vpr::Interval mErrorTime;
-	std::vector<vpr::Uint8> syncPacket;
-	bool mAccept;
+   std::vector<vpr::Uint8> syncPacket;
+   bool mAccept;
 
-	// Tolerance
-	float                   mTol;
-	
-	// Object Reader & Writer
-	unsigned                   mCurHeadPos;
-   vpr::ObjectWriter 			mWriter;
-	vpr::ObjectReader* 			mReader;
-	vpr::SocketStream* 			mSocketStream;
+   // Tolerance
+   float                   mTol;
+   
+   // Object Reader & Writer
+   unsigned                mCurHeadPos;
+   vpr::ObjectWriter       mWriter;
+   vpr::ObjectReader*      mReader;
+   vpr::SocketStream*      mSocketStream;
 };
 
+} // namespace gadget
 
-} // namespace vpr
 
 #endif
