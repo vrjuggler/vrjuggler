@@ -1,7 +1,11 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Aug-09-2002 patrickh    Made compilation of the C++ remote reconfiguration code
+                        optional.
 Aug-06-2002 patrickh    Developer installations are now constructed using the
                         standard installation targets.
+Aug-02-2002 jahare      Initial version of the new C++ remote reconfiguration
+                        code added.
 Jul-30-2002 nonchocoboy Added ConfigBroker Tweek service to be the intermediary
                         between a view unto a configuration and the files that
                         make up that configuration.
