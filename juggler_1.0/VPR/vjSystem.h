@@ -38,24 +38,6 @@
 #include <VPR/Threads/vjThread.h>
 
 
-//: Linear Interpolation
-// use double or float only...
-template <class dataType>
-inline void VJ_LERP( dataType& result, const dataType& lerp, const dataType& a,
-                  const dataType& b )
-{
-    dataType size = b - a;
-    result = a + (size * lerp);
-}
-/* #include <Utils/vjDebug.h> */
-
-//: Is almost equal?
-// test for equality with tolerance...
-template <class dataType>
-inline bool VJ_ISEQUAL( const dataType& a, const dataType& b, const dataType& tolerance )
-{
-   return vjSystem::abs( a - b ) <= tolerance;
-}
 
 
 class vjSystemBase {
@@ -312,6 +294,26 @@ public:
     }
 
 };
+
+//: Linear Interpolation
+// use double or float only...
+template <class dataType>
+inline void VJ_LERP( dataType& result, const dataType& lerp, const dataType& a,
+                  const dataType& b )
+{
+    dataType size = b - a;
+    result = a + (size * lerp);
+}
+/* #include <Utils/vjDebug.h> */
+
+//: Is almost equal?
+// test for equality with tolerance...
+template <class dataType>
+inline bool VJ_ISEQUAL( const dataType& a, const dataType& b, const dataType& tolerance )
+{
+   return vjSystem::abs( a - b ) <= tolerance;
+}
+
 
 
 #if defined(VJ_IRIX_SPROC) || defined(VJ_USE_PTHREADS)
