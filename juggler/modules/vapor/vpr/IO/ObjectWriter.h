@@ -45,7 +45,6 @@
 #include <vpr/vprConfig.h>
 #include <vpr/System.h>
 #include <vpr/Util/Debug.h>
-#include <gadget/Util/Debug.h>
 
 #include <vector>
 
