@@ -33,16 +33,12 @@
 #include <vprConfig.h>
 
 #include <stdio.h>
-
-#if ! defined(__WIN32__) && ! defined(WIN32) && ! defined(_Windows) && \
-    ! defined(_WIN32)
 #include <sys/types.h>
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <netdb.h>
 #include <errno.h>
-#endif
 
 #include <md/POSIX/InetAddrBSD.h>
 
@@ -156,15 +152,8 @@ InetAddrBSD::getAddressString (void) const {
 
     addr.value = m_addr.sin_addr.s_addr;
 
-    // I don't know why Win32 has this stupid _snprintf() function.  Maybe I
-    // am missing something because I'm not a Windows programmer...
-#ifdef WIN32
-    _snprintf(ip_addr, sizeof(ip_addr), "%u.%u.%u.%u", (Uint8) addr.c[0],
-              (Uint8) addr.c[1], (Uint8) addr.c[2], (Uint8) addr.c[3]);
-#else
     snprintf(ip_addr, sizeof(ip_addr), "%u.%u.%u.%u", (Uint8) addr.c[0],
              (Uint8) addr.c[1], (Uint8) addr.c[2], (Uint8) addr.c[3]);
-#endif
     ip_str = ip_addr;
 
     return ip_str;
