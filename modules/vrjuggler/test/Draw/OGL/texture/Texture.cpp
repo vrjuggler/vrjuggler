@@ -11,17 +11,17 @@
 #include "Texture.h" // My Header
 
 //	Constructor.
-Texture::Texture() : model( MODULATE ), wrapT( REPEAT ), 
-		    wrapS( REPEAT ), 
-		    mImage(), 
-		    filtering( NEAREST ), mData( NULL )
+Texture::Texture() : model( MODULATE ), 
+		    wrapS( REPEAT ), wrapT( REPEAT ), 
+		    filtering( NEAREST ), mImage(), 
+		    mData( NULL )
 {
 }
 
-Texture::Texture( const Texture &texture ) : model( MODULATE ), wrapT( REPEAT ), 
-		    wrapS( REPEAT ), 
-		    mImage(), 
-		    filtering( NEAREST ), mData( NULL )
+Texture::Texture( const Texture &texture ) : model( MODULATE ), 
+		    wrapS( REPEAT ), wrapT( REPEAT ), 
+		    filtering( NEAREST ), mImage(), 
+		    mData( NULL )
 {
     // reference the image.
     this->setImage( texture.mImage );
