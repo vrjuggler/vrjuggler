@@ -102,7 +102,7 @@ public class PerfAnalyzerPanel
     }
 
 
-    public interface DataPanelElem 
+    protected interface DataPanelElem 
         extends ActionListener {
 
 	public void initialize (JPanel panel, 
@@ -116,7 +116,7 @@ public class PerfAnalyzerPanel
     }
 
 
-    public class NumberedDataPanelElem 
+    protected class NumberedDataPanelElem 
         implements DataPanelElem {
 
 	public NumberedPerfDataCollector col;
@@ -229,7 +229,7 @@ public class PerfAnalyzerPanel
 
 
 
-    public class LabeledDataPanelElem 
+    protected class LabeledDataPanelElem 
         implements DataPanelElem {
 
 	public LabeledPerfDataCollector col;
