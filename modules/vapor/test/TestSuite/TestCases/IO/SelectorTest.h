@@ -469,8 +469,10 @@ public:
    {
       CppUnit::TestSuite* test_suite = new CppUnit::TestSuite("SelectorTest");
 
+#ifndef VPR_SIMULATOR
       test_suite->addTest( new CppUnit::TestCaller<SelectorTest>("testAcceptorPoolSelection", &SelectorTest::testAcceptorPoolSelection));
       test_suite->addTest( new CppUnit::TestCaller<SelectorTest>("testSendThenPoll", &SelectorTest::testSendThenPoll));
+#endif
 
       return test_suite;
    }
