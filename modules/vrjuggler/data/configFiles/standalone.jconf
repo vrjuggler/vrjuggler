@@ -425,7 +425,7 @@
          </key_pair>
          <device_host />
       </simulated_digital_device>
-      <display_window name="SimWindow" version="2">
+      <display_window name="SimWindow" version="3">
          <origin>50</origin>
          <origin>100</origin>
          <size>800</size>

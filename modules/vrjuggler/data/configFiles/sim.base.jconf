@@ -569,7 +569,7 @@
          <x11_pipes>:0.0</x11_pipes>
          <x11_pipes>:0.0</x11_pipes>
       </display_system>
-      <display_window name="SimWindow1" version="2">
+      <display_window name="SimWindow1" version="3">
          <origin>0</origin>
          <origin>200</origin>
          <size>600</size>

@@ -511,7 +511,7 @@
          <max>0.0</max>
          <device_host />
       </ibox>
-      <display_window name="big wall" version="2">
+      <display_window name="big wall" version="3">
          <origin>922</origin>
          <origin>768</origin>
          <size>1844</size>
