@@ -183,6 +183,15 @@ public:
     }
 
     /**
+     * Queries if the blocking state for this socket is fixed and can no
+     * longer be changed.
+     */
+    inline bool
+    isBlockingFixed (void) {
+        return m_blocking_fixed;
+    }
+
+    /**
      * Reconfigures the socket so that it is in blocking mode.
      *
      * @pre The socket is open.
