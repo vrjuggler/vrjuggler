@@ -58,6 +58,7 @@ public class PrefsDialog extends JDialog implements TableModelListener
                        GlobalPreferencesService prefs)
    {
       super(owner, title);
+      enableEvents(AWTEvent.WINDOW_EVENT_MASK);
 
       mPrefs = prefs;
 
@@ -104,13 +105,7 @@ public class PrefsDialog extends JDialog implements TableModelListener
       }
 
       this.setModal(true);
-      this.setLocationRelativeTo(owner);
-   }
-
-   public void display ()
-   {
       this.pack();
-      this.setVisible(true);
    }
 
    /**
@@ -254,14 +249,15 @@ public class PrefsDialog extends JDialog implements TableModelListener
    public static final int CANCEL_OPTION = JOptionPane.CANCEL_OPTION;
    public static final int CLOSED_OPTION = JOptionPane.CLOSED_OPTION;
 
-   protected void processWindowEvent (WindowEvent e)
+   protected void processWindowEvent(WindowEvent e)
    {
-      super.processWindowEvent(e);
-
       if (e.getID() == WindowEvent.WINDOW_CLOSING)
       {
          status = CLOSED_OPTION;
+         dispose();
       }
+
+      super.processWindowEvent(e);
    }
 
    private void jbInit() throws Exception
@@ -609,7 +605,7 @@ public class PrefsDialog extends JDialog implements TableModelListener
    {
       status = OK_OPTION;
       commitAndSave();
-      setVisible(false);
+      dispose();
    }
 
    private void applyButtonAction(ActionEvent e)
@@ -621,7 +617,7 @@ public class PrefsDialog extends JDialog implements TableModelListener
    private void cancelButtonAction (ActionEvent e)
    {
       status = CANCEL_OPTION;
-      setVisible(false);
+      dispose();
    }
 
    private void commit ()

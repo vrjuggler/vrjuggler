@@ -843,7 +843,12 @@ public class TweekFrame extends JFrame implements BeanFocusChangeListener,
 
       PrefsDialog dialog = new PrefsDialog(this, "Global Preferences", prefs);
       dialog.addGlobalPrefsUpdateListener(this);
-      dialog.display();
+      Dimension dlgSize = dialog.getPreferredSize();
+      Dimension frmSize = getSize();
+      Point loc = getLocation();
+      dialog.setLocation((frmSize.width - dlgSize.width) / 2 + loc.x,
+                         (frmSize.height - dlgSize.height) / 2 + loc.y);
+      dialog.show();
    }
 
    private void prefsEditBean (ActionEvent e)
