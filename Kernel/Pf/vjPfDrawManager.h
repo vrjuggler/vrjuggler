@@ -26,7 +26,7 @@ class vjSimulator;
 
     // Performer Config function called in draw proc after window is set up
 void vjPFconfigPWin(pfPipeWindow* pWin);
-void vgPfDrawFunc(pfChannel *chan, void* chandata);
+void vjPfDrawFunc(pfChannel *chan, void* chandata);
 
 //------------------------------------------------------------
 //: Concrete singleton class for API specific Draw Manager.
