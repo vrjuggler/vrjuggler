@@ -61,4 +61,8 @@ bool vjstrncasecmp (const std::string& a, const std::string& b, int _n = -1);
 //! RETURNS: false - if the first n chars of strings a & b match
 bool vjstrncmp (const std::string& a, const std::string& b, int _n = -1);
 
+//: mangles a filename n in several ways: replacing env variables & appending
+//+ the parentfile's directory if n is a relative pathname
+std::string demangleFileName (const std::string& n, std::string parentfile);
+
 #endif
