@@ -72,7 +72,8 @@ namespace vpr
 
       /**
        * Copies the given object into this object.
-       * RESULT: this = status
+       *
+       * @post this = status
        *
        * @param status The <code>vpr::ReturnStatus</code> object to be copied.
        */
@@ -83,7 +84,8 @@ namespace vpr
 
       /**
        * Sets the status code.
-       * RESULT: set status to code
+       *
+       * @post Set status to code.
        */
       void setCode( const Code& code )
       {
@@ -110,8 +112,11 @@ namespace vpr
          this->setCode( code );
       }
 
-      //: operator=
-      // RESULT: this = status
+      /**
+       * operator=
+       *
+       * @post this = status
+       */
       ReturnStatus& operator=( const ReturnStatus& status )
       {
          if((&status) != this)
@@ -121,37 +126,52 @@ namespace vpr
          return *this;
       }
 
-      //: operator=
-      // RESULT: this = status
+      /**
+       * operator=
+       *
+       * @post this = status
+       */
       ReturnStatus& operator=( const Code& code )
       {
          this->setCode( code );
          return *this;
       }
 
-      //: operator==
-      // RESULT: return true if equal, false if not
+      /**
+       * operator==
+       *
+       * @return true if equal, false if not
+       */
       bool operator==( const ReturnStatus& status ) const
       {
          return status.mReturnStatus == mReturnStatus;
       }
 
-      //: operator==
-      // RESULT: return true if equal, false if not
+      /**
+       * operator==
+       *
+       * @return true if equal, false if not
+       */
       bool operator==( const Code& code ) const
       {
          return code == mReturnStatus;
       }
 
-      //: operator!=
-      // RESULT: return false if equal, true if not
+      /**
+       * operator!=
+       *
+       * @return false if equal, true if not
+       */
       bool operator!=( const ReturnStatus& status ) const
       {
          return status.mReturnStatus != mReturnStatus;
       }
 
-      //: operator!=
-      // RESULT: return false if equal, true if not
+      /**
+       * operator!=
+       *
+       * @return false if equal, true if not
+       */
       bool operator!=( const Code& code ) const
       {
          return code != mReturnStatus;

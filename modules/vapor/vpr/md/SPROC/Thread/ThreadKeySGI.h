@@ -65,51 +65,51 @@ typedef thread_func_t   KeyDestructor;
 class ThreadKeySGI
 {
 public:
-   // -----------------------------------------------------------------------
-   //: Constructor.
-   // -----------------------------------------------------------------------
+   /**
+    * Constructor.
+    */
    ThreadKeySGI (thread_func_t destructor, void* arg = 0)
    {
       keycreate(destructor, arg);
    }
 
-   // -----------------------------------------------------------------------
-   //: Constructor.
-   // -----------------------------------------------------------------------
+   /**
+    * Constructor.
+    */
    ThreadKeySGI (BaseThreadFunctor* destructor)
    {
       keycreate(destructor);
    }
 
-   // -----------------------------------------------------------------------
-   //: Destructor.
-   // -----------------------------------------------------------------------
+   /**
+    * Destructor.
+    */
    ~ThreadKeySGI (void)
    {
       keyfree();
    }
 
-   // -----------------------------------------------------------------------
-   //: Allocate a <keyp> that is used to identify data that is specific to
-   //+ each thread in the process, is global to all threads in the process
-   //+ and is destroyed using the spcefied destructor function that takes a
-   //+ single argument.
-   //
-   //! PRE: None.
-   //! POST: A key is created and is associated with the specified
-   //+       destructor function and argument.
-   //
-   //! ARGS: dest_func - The destructor function for the key.  This uses
-   //+                   the functor data structure.
-   //! ARGS: arg - Argument to be passed to destructor (optional).
-   //
-   //! RETURNS:  0 - Succeedful completion
-   //! RETURNS: -1 - Error
-   //
-   //! NOTE: Use this routine to construct the key destructor function if
-   //+       it requires arguments.  Otherwise, use the two-argument
-   //+       version of keycreate().
-   // -----------------------------------------------------------------------
+   /**
+    * Allocates a <keyp> that is used to identify data that is specific to
+    * each thread in the process, is global to all threads in the process
+    * and is destroyed using the spcefied destructor function that takes a
+    * single argument.
+    *
+    * @pre None.
+    * @post A key is created and is associated with the specified
+    *        destructor function and argument.
+    *
+    * @param dest_func  The destructor function for the key.  This uses
+    *                    the functor data structure.
+    * @param arg  Argument to be passed to destructor (optional).
+    *
+    * @return  0 - Succeedful completion
+    * @return -1 - Error
+    *
+    * @note Use this routine to construct the key destructor function if
+    *        it requires arguments.  Otherwise, use the two-argument
+    *        version of keycreate().
+    */
    int keycreate (thread_func_t destructor, void* arg = 0)
    {
       std::cerr << "vpr::ThreadKeySGI::keycreate() not implemented yet!\n";
@@ -117,22 +117,22 @@ public:
       return -1;
    }
 
-   // -----------------------------------------------------------------------
-   //: Allocates a <keyp> that is used to identify data that is specific to
-   //+ each thread in the process, is global to all threads in the process
-   //+ and is destroyed by the specified destructor function.
-   //
-   //! PRE: None.
-   //! POST: A key is created and is associated with the specified
-   //+       destructor function.
-   //
-   //! ARGS: desctructor - Procedure to be called to destroy a data value
-   //+                     associated with the key when the thread
-   //+                     terminates.
-   //
-   //! RETURNS:  0 - Succeedful completion
-   //! RETURNS: -1 - Error
-   // -----------------------------------------------------------------------
+   /**
+    * Allocates a <keyp> that is used to identify data that is specific to
+    * each thread in the process, is global to all threads in the process
+    * and is destroyed by the specified destructor function.
+    *
+    * @pre None.
+    * @post A key is created and is associated with the specified
+    *        destructor function.
+    *
+    * @param desctructor  Procedure to be called to destroy a data value
+    *                      associated with the key when the thread
+    *                      terminates.
+    *
+    * @return  0 - Succeedful completion
+    * @return -1 - Error
+    */
    int keycreate (BaseThreadFunctor* destructor)
    {
       std::cerr << "vpr::ThreadKeySGI::keycreate() not implemented yet!\n";
@@ -140,19 +140,19 @@ public:
       return -1;
    }
 
-   // -----------------------------------------------------------------------
-   //: Free up the key so that other threads may reuse it.
-   //
-   //! PRE: The specified key must have been properly created using the
-   //+      keycreate() member function.
-   //! POST: The specified key is destroyed using the destructor function
-   //+       previously associated with it, and its resources are freed.
-   //
-   //! RETURNS:  0 - Succeedful completion
-   //! RETURNS: -1 - Error
-   //
-   //! NOTE: This is not currently supported on HP-UX 10.20.
-   // -----------------------------------------------------------------------
+   /**
+    * Frees up the key so that other threads may reuse it.
+    *
+    * @pre The specified key must have been properly created using the
+    *       keycreate() member function.
+    * @post The specified key is destroyed using the destructor function
+    *        previously associated with it, and its resources are freed.
+    *
+    * @return  0 - Succeedful completion
+    * @return -1 - Error
+    *
+    * @note This is not currently supported on HP-UX 10.20.
+    */
    int keyfree (void)
    {
       std::cerr << "vpr::ThreadKeySGI::keyfree() not implemented yet!\n";
@@ -160,21 +160,21 @@ public:
       return -1;
    }
 
-   // -----------------------------------------------------------------------
-   //: Bind value to the thread-specific data key, <key>, for the calling
-   //+ thread.
-   //
-   //! PRE: The specified key must have been properly created using the
-   //+      keycreate() member function.
-   //! POST: The specified value is associated with the key for the calling
-   //+       thread.
-   //
-   //! ARGS: value - Address containing data to be associated with the
-   //+               specified key for the current thread.
-   //
-   //! RETURNS:  0 - Succeedful completion
-   //! RETURNS: -1 - Error
-   // -----------------------------------------------------------------------
+   /**
+    * Binds value to the thread-specific data key, <key>, for the calling
+    * thread.
+    *
+    * @pre The specified key must have been properly created using the
+    *       keycreate() member function.
+    * @post The specified value is associated with the key for the calling
+    *        thread.
+    *
+    * @param value  Address containing data to be associated with the
+    *                specified key for the current thread.
+    *
+    * @return  0 - Succeedful completion
+    * @return -1 - Error
+    */
    int setspecific (void* value)
    {
       std::cerr << "vpr::ThreadKeySGI::setspecific() not implemented yet!\n";
@@ -182,21 +182,21 @@ public:
       return -1;
    }
 
-   // -----------------------------------------------------------------------
-   //: Stores the current value bound to <key> for the calling thread into
-   //+ the location pointed to by <valuep>.
-   //
-   //! PRE: The specified key must have been properly created using the
-   //+      keycreate() member function.
-   //! POST: The value associated with the key is obtained and stored in the
-   //+       pointer valuep so that the caller may work with it.
-   //
-   //! ARGS: valuep - Address of the current data value associated with the
-   //+                key.
-   //
-   //! RETURNS:  0 - Succeedful completion
-   //! RETURNS: -1 - Error
-   // -----------------------------------------------------------------------
+   /**
+    * Stores the current value bound to <key> for the calling thread into
+    * the location pointed to by <valuep>.
+    *
+    * @pre The specified key must have been properly created using the
+    *       keycreate() member function.
+    * @post The value associated with the key is obtained and stored in the
+    *        pointer valuep so that the caller may work with it.
+    *
+    * @param valuep  Address of the current data value associated with the
+    *                 key.
+    *
+    * @return  0 - Succeedful completion
+    * @return -1 - Error
+    */
    int getspecific (void** valuep)
    {
       std::cerr << "vpr::ThreadKeySGI::getspecific() not implemented yet!\n";
@@ -205,7 +205,7 @@ public:
    }
 
 private:
-   int keyID;      //: Thread key ID
+   int keyID;      /**<  Thread key ID */
 };
 
 } // End of vpr namespace

@@ -109,31 +109,31 @@ public:
       mOpenBlocking = false;
    }
 
-   // ------------------------------------------------------------------------
-   // Open the socket.  This creates a new socket using the domain and type
-   // options set through member variables.
-   //
-   // PRE: mDomain and mType have been set to values recognized
-   // POST: A new socket is created
-   //
-   // Returns:
-   //     true  - The socket was opened successfully.
-   //     false - The socket could not be opened for some reason (an error
-   //             message is printed explaining why).
-   // ------------------------------------------------------------------------
+   /**
+    * Opens the socket.  This creates a new socket using the domain and type
+    * options set through member variables.
+    *
+    * @pre mDomain and mType have been set to values recognized.
+    * @post A new socket is created.
+    *
+    * Returns:
+    *     true  - The socket was opened successfully.
+    *     false - The socket could not be opened for some reason (an error
+    *             message is printed explaining why).
+    */
    vpr::ReturnStatus open(void);
 
-   // ------------------------------------------------------------------------
-   //: Close the socket.
-   //
-   //! PRE: The socket is open.
-   //! POST: An attempt is made to close the socket.  The resulting status is
-   //+       returned to the caller.  If the socket is closed, mOpen is set
-   //+       to false.
-   //
-   //! RETURNS: true  - The socket was closed successfully.
-   //! RETURNS: false - The socket could not be closed for some reason.
-   // ------------------------------------------------------------------------
+   /**
+    * Closes the socket.
+    *
+    * @pre The socket is open.
+    * @post An attempt is made to close the socket.  The resulting status is
+    *        returned to the caller.  If the socket is closed, mOpen is set
+    *        to false.
+    *
+    * @return true if the socket was closed successfully.
+    * @return false if the socket could not be closed for some reason.
+    */
    vpr::ReturnStatus close(void);
 
    /**
@@ -143,8 +143,7 @@ public:
     * @post The boolean value giving the open state is returned to the
     *       caller.
     *
-    * @return <code>true</code> is returned if this socket is open;
-    *         <code>false</code> otherwise.
+    * @return true is returned if this socket is open; false otherwise.
     */
    bool isOpen (void)
    {
@@ -156,23 +155,23 @@ public:
       return mBound;
    }
 
-   // ------------------------------------------------------------------------
-   // Bind this socket to the address in the host address member variable.
-   //
-   // PRE: The socket is open, and mLocalAddr has been initialized properly.
-   // POST: The socket is bound to the address in mLocalAddr.
-   //
-   // Returns:
-   //     true  - The socket was bound to the address successfully.
-   //     false - The socket could not be bound to the address in
-   //             mLocalAddr.  An error message is printed explaining what
-   //             went wrong.
-   // ------------------------------------------------------------------------
+   /**
+    * Binds this socket to the address in the host address member variable.
+    *
+    * @pre The socket is open, and mLocalAddr has been initialized properly.
+    * @post The socket is bound to the address in mLocalAddr.
+    *
+    * Returns:
+    *     true  - The socket was bound to the address successfully.
+    *     false - The socket could not be bound to the address in
+    *             mLocalAddr.  An error message is printed explaining what
+    *             went wrong.
+    */
    vpr::ReturnStatus bind(void);
 
-   // ---------------------------------------
-   //: Return the contained handle
-   // --------------------------------------
+   /**
+    *  Return the contained handle
+    */
    vpr::IOSys::Handle getHandle()
    {
       return mHandle;
@@ -187,12 +186,8 @@ public:
       return mBlockingFixed;
    }
 
-   // ------------------------------------------------------------------------
-   // ------------------------------------------------------------------------
    vpr::ReturnStatus enableBlocking(void);
 
-   // ------------------------------------------------------------------------
-   // ------------------------------------------------------------------------
    vpr::ReturnStatus enableNonBlocking(void);
 
    /**
@@ -221,32 +216,33 @@ public:
    // vpr::SocketImp interface implementation.
    // ========================================================================
 
-   // ------------------------------------------------------------------------
-   // Connect the socket on the client side to the server side.  For a
-   // datagram socket, this makes the address given to the constructor the
-   // default destination for all packets.  For a stream socket, this has
-   // the effect of establishing a connection with the destination.
-   //
-   // PRE: The socket is open.
-   // POST: The socket is connected to the address in mLocalAddr.  For a
-   //       stream socket, this means that a connection for future
-   //       communication has been established.  For a datagram socket, the
-   //       default destination for all packets is now mLocalAddr.
-   //
-   // Returns:
-   //     true  - The connection was made.
-   //     false - The connect could not be made.  An error message is
-   //             printed explaining what happened.
-   // ------------------------------------------------------------------------
+   /**
+    * Connects the socket on the client side to the server side.  For a
+    * datagram socket, this makes the address given to the constructor the
+    * default destination for all packets.  For a stream socket, this has
+    * the effect of establishing a connection with the destination.
+    *
+    * @pre The socket is open.
+    * @post The socket is connected to the address in mLocalAddr.  For a
+    *       stream socket, this means that a connection for future
+    *       communication has been established.  For a datagram socket, the
+    *       default destination for all packets is now mLocalAddr.
+    *
+    * Returns:
+    *     true  - The connection was made.
+    *     false - The connect could not be made.  An error message is
+    *             printed explaining what happened.
+    */
    vpr::ReturnStatus connect(const vpr::Interval timeout = vpr::Interval::NoTimeout);
 
-   // ------------------------------------------------------------------
-   //: Get the status of a possibly connected socket
-   //
-   //! PRE: None
-   //! RETURNS: true - The socket is connected to a remote addr
-   //! RETURNS: false - The socket is not currently connect (the other side may have disconnected)
-   // -----------------------------------------------------------------
+   /**
+    * Gets the status of a possibly connected socket.
+    *
+    * @pre None
+    * @return true if the socket is connected to a remote addr.
+    * @return false if the socket is not currently connect (the other side
+    *         may have disconnected).
+    */
    bool isConnected()
    {
       if ( mConnected )        // If it is not open, then it can't be connected
@@ -269,22 +265,20 @@ public:
          return false;           // Not open --> not connected
    }
 
-   // ------------------------------------------------------------------------
-   //: Get the type of this socket (e.g., vpr::SocketTypes::STREAM).
-   //
-   //! PRE: The socket implementation pointer is valid.
-   //! POST: The socket type for this socket is returned to the caller.
-   //
-   //! RETURNS: A vpr::SocketTypes::Type value giving the socket type for
-   //+          this socket.
-   // ------------------------------------------------------------------------
+   /**
+    * Gets the type of this socket (e.g., vpr::SocketTypes::STREAM).
+    *
+    * @pre The socket implementation pointer is valid.
+    * @post The socket type for this socket is returned to the caller.
+    *
+    * @return A vpr::SocketTypes::Type value giving the socket type for
+    *           this socket.
+    */
    const SocketTypes::Type& getType (void) const
    {
       return mType;
    }
 
-   // ------------------------------------------------------------------------
-   // ------------------------------------------------------------------------
    const vpr::InetAddr& getLocalAddr (void) const
    {
       return mLocalAddr;
@@ -305,8 +299,6 @@ public:
       return status;
    }
 
-   // ------------------------------------------------------------------------
-   // ------------------------------------------------------------------------
    const vpr::InetAddr& getRemoteAddr (void) const
    {
       return mRemoteAddr;
@@ -329,20 +321,14 @@ public:
       return status;
    }
 
-   // ------------------------------------------------------------------------
-   // ------------------------------------------------------------------------
    vpr::ReturnStatus read_i(void* buffer, const vpr::Uint32 length,
                             vpr::Uint32& bytes_read,
                             const vpr::Interval timeout = vpr::Interval::NoTimeout);
 
-   // ------------------------------------------------------------------------
-   // ------------------------------------------------------------------------
    vpr::ReturnStatus readn_i(void* buffer, const vpr::Uint32 length,
                              vpr::Uint32& bytes_read,
                              const vpr::Interval timeout = vpr::Interval::NoTimeout);
 
-   // ------------------------------------------------------------------------
-   // ------------------------------------------------------------------------
    vpr::ReturnStatus write_i(const void* buffer, const vpr::Uint32 length,
                              vpr::Uint32& bytes_written,
                              const vpr::Interval timeout = vpr::Interval::NoTimeout);
@@ -377,44 +363,43 @@ public:
    vpr::ReturnStatus setOption(const vpr::SocketOptions::Types option,
                                const struct vpr::SocketOptions::Data& data);
 
-
-   // ------------------------------------------------------------------------
-   // Destructor.
-   //
-   // PRE: None.
-   // POST: Closes the socket, and deallocates and resources associated with the socket.
-   // ------------------------------------------------------------------------
+   /**
+    * Destructor.
+    *
+    * @pre None.
+    * @post Closes the socket, and deallocates and resources associated with
+    *       the socket.
+    */
    ~SocketImplNSPR(void);
 
 protected:
-   // ------------------------------------------------------------------------
-   // Default constructor.  This just initializes member variables to
-   // reasonable defaults.
-   //
-   // PRE: None.
-   // POST: The member variables are initialized accordingly to reasonable
-   //       defaults.
-   // ------------------------------------------------------------------------
+   /**
+    * Default constructor.  This just initializes member variables to
+    * reasonable defaults.
+    *
+    * @pre None.
+    * @post The member variables are initialized accordingly to reasonable
+    *       defaults.
+    */
    SocketImplNSPR(const SocketTypes::Type sock_type);
 
-   // ------------------------------------------------------------------------
-   // Standard constructor.  This takes two InetAddr objects, a local address
-   // and a remote address.
-   //
-   // PRE: None.
-   // POST: The member variables are initialized with the given values.
-   //
-   // Arguments:
-   //     local_addr  - The local address for the socket.
-   //     remote_addr - The remote address for the socket.
-   // ------------------------------------------------------------------------
+   /**
+    * Standard constructor.  This takes two InetAddr objects, a local address
+    * and a remote address.
+    *
+    * @pre None.
+    * @post The member variables are initialized with the given values.
+    *
+    * @param local_addr  The local address for the socket.
+    * @param remote_addr The remote address for the socket.
+    */
    SocketImplNSPR(const InetAddr& local_addr, const InetAddr& remote_addr,
                   const SocketTypes::Type sock_type);
 
-   // ------------------------------------------------------------------------
-   // Copy constructor.
-   // XXX: We need to have a reference count here
-   // ------------------------------------------------------------------------
+   /**
+    * Copy constructor.
+    * XXX: We need to have a reference count here
+    */
    SocketImplNSPR (const SocketImplNSPR& sock)
    {
       mLocalAddr      = sock.mLocalAddr;
@@ -430,16 +415,16 @@ protected:
    }
 
    std::string       mName;
-   PRFileDesc*       mHandle;      //: Handle to the socket
-   vpr::InetAddr     mLocalAddr;  //: The local site's address structure
-   vpr::InetAddr     mRemoteAddr; //: The remote site's address structure
+   PRFileDesc*       mHandle;     /**< Handle to the socket */
+   vpr::InetAddr     mLocalAddr;  /**< The local site's address structure */
+   vpr::InetAddr     mRemoteAddr; /**< The remote site's address structure */
 
-   vpr::SocketTypes::Type mType;        //:
+   vpr::SocketTypes::Type mType;  /**< Socket type */
 
    bool mOpen;
    bool mOpenBlocking;
    bool mBound;          /**< Is the socket bound to a port yet (connect
-                               and bind do this */
+                               and bind do this) */
    bool mConnected;
    bool mBlocking;
    bool mBlockingFixed;

@@ -59,14 +59,11 @@ std::ostream& vpr::operator<<(std::ostream& out, vpr::BaseThread* threadPtr)
    return out;
 }
 
-//: After the object has been created, call this routine to complete initialization.
-// Done this way, because I need to call this based on stuff that happens
-// in derived class's constructor... and that means what???
-//! PRE: The thread manager should be lock()'ed before calling this function so that the
-//+       addThread function can execute correctly
-//! POST: Thread is setup correctly to run
-//+       The thread has been registered with the system
-//! ARGS: successfulCreation - Did the thread get created correctly
+/**
+ * After the object has been created, call this routine to complete
+ * initialization.  Done this way, because I need to call this based on stuff
+ * that happens in derived class's constructor... and that means what???
+ */
 void vpr::BaseThread::registerThread(bool succesfulCreation)
 {
    if(succesfulCreation)   // Succeed

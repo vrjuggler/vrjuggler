@@ -117,9 +117,9 @@ private:
 };
 
 
-//-----------------------------------------------------------------
-//: Set an object entry in the table.
-//-----------------------------------------------------------------
+/**
+ * Sets an object entry in the table.
+ */
 void TSTable::setObject(TSBaseObject* object, unsigned long key)
 {
    //vprASSERT(key >= 0);
@@ -137,11 +137,11 @@ void TSTable::setObject(TSBaseObject* object, unsigned long key)
 #endif
 }
 
-//-----------------------------------------------------------------
-//: Release the object given by key.
-//
-//! POST: Obj(key) is deleted, and the ptr is set to NULL.
-//-----------------------------------------------------------------
+/**
+ * Releases the object given by key.
+ *
+ * @post Obj(key) is deleted, and the ptr is set to NULL.
+ */
 void TSTable::releaseObject(unsigned long key)
 {
    vprASSERT(containsKey(key));
