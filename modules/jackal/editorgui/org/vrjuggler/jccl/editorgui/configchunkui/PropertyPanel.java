@@ -205,9 +205,12 @@ public class PropertyPanel extends JPanel implements ActionListener, VarValuePan
 	    if (comps[i] == p) {
 		eastpanel.remove (comps[i-1]);
 		eastpanel.remove(p);
-		JPanel pr = (JPanel)getParent();
+                System.out.println ("What the fuck is going on here?");
+		Box pr = (Box)getParent();
 		pr.validate();
-		pr.repaint (pr.getBounds());
+		//pr.repaint (pr.getBounds());
+                pr.repaint();  // in jdk < 1.4, box isn't a JComponent.
+                               // what in cthulhu's name were they thinking?
 		return;
 	    }
 	}
