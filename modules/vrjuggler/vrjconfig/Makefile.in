@@ -117,8 +117,8 @@ VRJConfig.jar: $(VRJCONFIG_CLASSES) $(UI_CLASSES) $(PLACER_CLASSES) $(WIZARD_CLA
 		$(WIZARD_DIR)/*.class
 	cd $(srcdir) && $(JAR) uvf $(topdir)/vrjconfig/$@ \
 		$(VRJCONFIG_DIR)/images/*.gif \
-		$(WIZARD_DIR)/images/*.gif \
-		$(WIZARD_DIR)/images/*.png \
+		$(UI_DIR)/images/*.gif \
+		$(UI_DIR)/images/*.png \
 		LICENSE-java-laf.txt
 
 links:
