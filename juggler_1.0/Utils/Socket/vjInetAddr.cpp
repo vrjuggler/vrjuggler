@@ -70,7 +70,7 @@ vjInetAddr::getFamily (void) const {
         family = vjSocketTypes::INET6;
         break;
 #endif
-#ifndef _WINSOCKAPI_
+#if defined(PF_LINK) || defined(PF_RAW)
 #ifdef PF_LINK
       case PF_LINK:
 #else
@@ -78,7 +78,7 @@ vjInetAddr::getFamily (void) const {
 #endif
         family = vjSocketTypes::LINK;
         break;
-#endif	/* ! _WINSOCKAPI_ */
+#endif
     }
 
     return family;
