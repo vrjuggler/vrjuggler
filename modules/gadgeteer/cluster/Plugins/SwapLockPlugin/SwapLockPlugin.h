@@ -50,6 +50,8 @@
 #include <jccl/RTRC/ConfigChunkHandler.h>
 
 
+extern "C" GADGET_CLUSTER_PLUGIN_API(cluster::ClusterPlugin*) initPlugin();
+
 namespace cluster
 {
    class ClusterBarrier;
@@ -82,7 +84,14 @@ public:
 
    virtual void preDraw();
    virtual void postPostFrame();
-   //virtual bool isPluginReady();
+   
+   /** Returns the status of SwapLockPlugin(Not Used)
+    *
+    *  @return true If plugin is completly configured
+    *               and has no pending tasks.
+    *  
+    */
+   virtual bool isPluginReady();
    
    bool createBarrier();
 

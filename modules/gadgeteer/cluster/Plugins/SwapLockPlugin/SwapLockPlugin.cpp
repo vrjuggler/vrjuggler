@@ -42,6 +42,10 @@
 #include <cluster/ClusterNetwork/ClusterNetwork.h>
 #include <cluster/ClusterNetwork/ClusterNode.h>
 
+cluster::ClusterPlugin* initPlugin()
+{
+   return cluster::SwapLockPlugin::instance();
+}
 
 namespace cluster
 {
@@ -186,12 +190,13 @@ namespace cluster
             if (ClusterNetwork::instance()->getLocalHostname()== server_chunk->getProperty<std::string>("host_name"))
             {
                mBarrier->setMaster(true);
-               mBarrier->Init();
-               vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "SYNC This machine is sync server!" << std::endl << vprDEBUG_FLUSH;
+               //mBarrier->Init();
+               //vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "SYNC This machine is sync server!" << std::endl << vprDEBUG_FLUSH;
             }
             else
             {
-               mBarrier->Init();
+               mBarrier->setMaster(false);
+               //mBarrier->Init();
             }
          }
          //////////////////////
@@ -243,13 +248,13 @@ namespace cluster
    {;
    }
    
-   /*
+   
    bool SwapLockPlugin::isPluginReady()
    {
       // We could do some sort of signal here I guess?
       return (true);
    }
-   */
+   
    
    bool SwapLockPlugin::createBarrier()
    {
@@ -262,7 +267,15 @@ namespace cluster
       // - for each slave
       //   - send ready
 
-      if (/*mConfigured &&*/ mBarrier != NULL && mBarrier->isActive())
+      if (NULL == mBarrier)
+      {
+         return false;
+      }
+      else if (!mBarrier->isActive())
+      {
+         mBarrier->Init();
+      }
+      else
       {
          //vpr::Interval first_time, second_time;
          //first_time.setNow();

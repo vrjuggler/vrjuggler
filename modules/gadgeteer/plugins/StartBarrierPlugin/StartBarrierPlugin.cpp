@@ -52,11 +52,11 @@ namespace cluster
 {
    vprSingletonImp( StartBarrierPlugin );
    
-   StartBarrierPlugin::StartBarrierPlugin() : mDone(false), mPluginGUID("566a50ff-5e73-43e0-a9a9-0fb62b76731a")
-   {
-      mBarrierMaster = false;   
-      mRunning = false;
-   }
+   StartBarrierPlugin::StartBarrierPlugin() : mBarrierMaster(false),
+      mComplete(false), mPluginGUID("566a50ff-5e73-43e0-a9a9-0fb62b76731a"),
+      mSlaveWaitingOnPlugins(false), mSlowDownMaster(0)
+   {;}
+
    StartBarrierPlugin::~StartBarrierPlugin()
    {
    
@@ -89,8 +89,8 @@ namespace cluster
             {
                vprDEBUG(gadgetDBG_RIM,vprDBG_VERB_LVL) << clrOutBOLD(clrCYAN,"[StartBarrierPlugin] ")
                   << "handlePacket() Slave has finished start barrier\n" << vprDEBUG_FLUSH;         
+               mComplete = true;
                ClusterManager::instance()->setClusterReady(true);
-               mDone = true;
             }      
          }
          else
@@ -182,82 +182,81 @@ namespace cluster
    {;
    }
    void StartBarrierPlugin::postPostFrame()
-   {      
-      // -If NOT Started
-      //   -If Slave
-      //     -Find BarrierMaster ClusterNode
-      //     -Send Barrier Signal
-      //   -Else
-      //     -Nothing
+   {
+      // -If we are not complete
+      //   -If all other plugins are ready
+      //     -If Slave
+      //       -Find the barrier master
+      //       -If connected
+      //         -Send a start block
+      //       -Else
+      //         -Add barrier node to pending list
+      // -Else
+      //   -If number of pending start nodes is 0
+      //     -Send a start block to all of them
       
       //This is where all the real work gets done
-      if (ClusterManager::instance()->isClusterActive() && !ClusterManager::instance()->isClusterReady())
+      if (!mComplete)
       {
-         if (!mBarrierMaster)
+         if (ClusterManager::instance()->pluginsReady())
          {
-            ClusterNode* barrier_master = ClusterNetwork::instance()->getClusterNodeByHostname(mBarrierMasterHostname);
-            if (NULL == barrier_master)
+            if (!mBarrierMaster)
             {
-               vprDEBUG(gadgetDBG_RIM,vprDBG_CRITICAL_LVL) 
-                  << clrOutBOLD(clrRED,"[StartBarrierPlugin] Barrier machine configuration chunk not yet loaded.")
-                  << std::endl << vprDEBUG_FLUSH;
-            }
-            else if (barrier_master->isConnected())
-            {
-               //Send packet to server machine
-               StartBlock temp_start_block(getPluginGUID(), 0);
-               temp_start_block.send(barrier_master->getSockStream());
-               vprDEBUG(gadgetDBG_RIM,vprDBG_VERB_LVL) << clrOutBOLD(clrCYAN,"[StartBarrierPlugin] ")
-                  << "Sending signal to start master: " << mBarrierMasterHostname << std::endl << vprDEBUG_FLUSH;
+               ClusterNode* barrier_master = ClusterNetwork::instance()->getClusterNodeByHostname(mBarrierMasterHostname);
+               if (NULL == barrier_master)
+               {
+                  vprDEBUG(gadgetDBG_RIM,vprDBG_CRITICAL_LVL) 
+                     << clrOutBOLD(clrRED,"[StartBarrierPlugin] Barrier machine configuration chunk not yet loaded.")
+                     << std::endl << vprDEBUG_FLUSH;
+               }
+               else if (barrier_master->isConnected())
+               {
+                  //Send packet to server machine
+                  StartBlock temp_start_block(getPluginGUID(), 0);
+                  temp_start_block.send(barrier_master->getSockStream());
+                  vprDEBUG(gadgetDBG_RIM,vprDBG_VERB_LVL) << clrOutBOLD(clrCYAN,"[StartBarrierPlugin] ")
+                     << "Sending signal to start master: " << mBarrierMasterHostname << std::endl << vprDEBUG_FLUSH;
+               }
+               else
+               {
+                  //If we are not connected and we are not in pending list, add to the pending list
+                  if (NULL == ClusterNetwork::instance()->getPendingNode(barrier_master->getHostname()))
+                  {
+                     ClusterNetwork::instance()->addPendingNode(barrier_master);
+                  }
+               }
             }
             else
             {
-               //If we are not connected and we are not in pending list, add to the pending list
-               if (NULL == ClusterNetwork::instance()->getPendingNode(barrier_master->getHostname()))
+               vprDEBUG(gadgetDBG_RIM,vprDBG_VERB_LVL) << clrOutBOLD(clrCYAN,"[StartBarrierPlugin] ")
+                  << "Barrier Master waiting...\n" << vprDEBUG_FLUSH;         
+               int num_pending_nodes = getPendingBarrierSlaves().size();
+               if (0 == num_pending_nodes)
                {
-                  ClusterNetwork::instance()->addPendingNode(barrier_master);
-               }
-            }
-         }
-         else
-         {
-            vprDEBUG(gadgetDBG_RIM,vprDBG_VERB_LVL) << clrOutBOLD(clrCYAN,"[StartBarrierPlugin] ")
-               << "Barrier Master waiting...\n" << vprDEBUG_FLUSH;         
-            
-            int num_pending_nodes = getPendingBarrierSlaves().size();
-            if (0 == num_pending_nodes)
-            {
-               StartBlock temp_start_block(getPluginGUID(), 0);
-
-               //Send responce to all nodes
-               for (std::vector<std::string>::iterator i = mSlaves.begin();
-                    i != mSlaves.end() ; i++)
-               {
-                  // Dead lock since we are actually in a recursion of ClusterNodes
-                  ClusterNode* node = ClusterNetwork::instance()->getClusterNodeByHostname(*i);
-                  temp_start_block.send(node->getSockStream());
-                  vprDEBUG(gadgetDBG_RIM,vprDBG_VERB_LVL) << clrOutBOLD(clrCYAN,"[StartBarrierPlugin] ")
-                     << "Sending start signal to slave: " << (*i) << std::endl << vprDEBUG_FLUSH;              
-               }
-               
-               //Set running true
-               ClusterManager::instance()->setClusterReady(true);
-            }
-         }
-      }
-   }
+                  mComplete = true;
+                  ClusterManager::instance()->setClusterReady(true);
+                  std::cout << "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX DONE - list=0 XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX" << std::endl;
+                  
+                  StartBlock temp_start_block(getPluginGUID(), 0);
    
-   /*
+                  //Send responce to all nodes
+                  for (std::vector<std::string>::iterator i = mSlaves.begin();
+                       i != mSlaves.end() ; i++)
+                  {
+                     // Dead lock since we are actually in a recursion of ClusterNodes
+                     ClusterNode* node = ClusterNetwork::instance()->getClusterNodeByHostname(*i);
+                     temp_start_block.send(node->getSockStream());
+                     vprDEBUG(gadgetDBG_RIM,vprDBG_VERB_LVL) << clrOutBOLD(clrCYAN,"[StartBarrierPlugin] ")
+                        << "Sending start signal to slave: " << (*i) << std::endl << vprDEBUG_FLUSH;              
+                  }
+               }//End (0==num_pending_nodes)
+            }//End (mBarrierMaster)
+         }//End (Plugins Ready)
+      }//End (!mComplete)
+   }
+
    bool StartBarrierPlugin::isPluginReady()
    {
-      // We could do some sort of signal here I guess?
       return true;
    }
-   */
-   /*
-   bool StartBarrierPlugin::isClusterReady()
-   {
-       return true;
-   }
-   */
 } // End of gadget namespace
