@@ -41,7 +41,7 @@
 #ifndef _GADGET_FASTRACK_
 #define _GADGET_FASTRACK_
 
-#include <vrj/vrjConfig.h>
+#include <gadget/gadgetConfig.h>
 
 #include <iostream>
 #include <string>
