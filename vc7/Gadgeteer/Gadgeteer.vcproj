@@ -277,6 +277,18 @@
 				RelativePath="..\..\modules\gadgeteer\gadget\Devices\Sim\SimSetablePosition.cpp">
 			</File>
 			<File
+				RelativePath="..\..\modules\gadgeteer\gadget\Type\SpeechRecogDigital.cpp">
+			</File>
+			<File
+				RelativePath="..\..\modules\gadgeteer\gadget\Type\SpeechRecogDigitalProxy.cpp">
+			</File>
+			<File
+				RelativePath="..\..\modules\gadgeteer\gadget\Type\SpeechRecogString.cpp">
+			</File>
+			<File
+				RelativePath="..\..\modules\gadgeteer\gadget\Type\SpeechRecogStringProxy.cpp">
+			</File>
+			<File
 				RelativePath="..\..\modules\gadgeteer\cluster\Packets\StartBlock.cpp">
 			</File>
 			<File
@@ -545,7 +557,28 @@
 				RelativePath="..\..\modules\gadgeteer\gadget\Type\Speech.h">
 			</File>
 			<File
+				RelativePath="..\..\modules\gadgeteer\gadget\Type\SpeechRecogDigital.h">
+			</File>
+			<File
+				RelativePath="..\..\modules\gadgeteer\gadget\Type\SpeechRecogDigitalInterface.h">
+			</File>
+			<File
+				RelativePath="..\..\modules\gadgeteer\gadget\Type\SpeechRecogDigitalProxy.h">
+			</File>
+			<File
+				RelativePath="..\..\modules\gadgeteer\gadget\Type\SpeechRecogString.h">
+			</File>
+			<File
+				RelativePath="..\..\modules\gadgeteer\gadget\Type\SpeechRecogStringInterface.h">
+			</File>
+			<File
+				RelativePath="..\..\modules\gadgeteer\gadget\Type\SpeechRecogStringProxy.h">
+			</File>
+			<File
 				RelativePath="..\..\modules\gadgeteer\cluster\Packets\StartBlock.h">
+			</File>
+			<File
+				RelativePath="..\..\modules\gadgeteer\gadget\Type\StringData.h">
 			</File>
 			<File
 				RelativePath="..\..\modules\gadgeteer\cluster\Packets\SyncAck.h">
