@@ -1093,30 +1093,21 @@ void PfDrawFuncStereoLeft(pfChannel *chan, void* chandata)
 {
    vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_VERB_LVL) << "--- PfDrawFuncStereoLeft: Enter ---.\n" << vprDEBUG_FLUSH;
    vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_VERB_LVL) << "chan: " << chan << std::endl << vprDEBUG_FLUSH;
-   PfDrawFunc(chan,chandata,true,false,true,false);
+   PfDrawFunc(chan,chandata,true,false,true);
 }
 
 void PfDrawFuncStereoRight(pfChannel *chan, void* chandata)
 {
    vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_VERB_LVL) << "--- PfDrawFuncStereoRight: Enter ---.\n" << vprDEBUG_FLUSH;
    vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_VERB_LVL) << "chan: " << chan << std::endl << vprDEBUG_FLUSH;
-   PfDrawFunc(chan,chandata,false,true,true,false);
+   PfDrawFunc(chan,chandata,false,true,true);
 }
 
 void PfDrawFuncMonoBackbuffer(pfChannel *chan, void* chandata)
 {
    vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_VERB_LVL) << "--- PfDrawFuncMonoBackbuffer: Enter ---.\n" << vprDEBUG_FLUSH;
    vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_VERB_LVL) << "chan: " << chan << std::endl << vprDEBUG_FLUSH;
-   PfDrawFunc(chan,chandata,false,false,false,false);
+   PfDrawFunc(chan,chandata,false,false,false);
 }
-
-/*
-void PfDrawFuncSimulator(pfChannel* chan, void* chandata)
-{
-   vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_VERB_LVL) << "--- PfDrawFuncSimulator: Enter ---.\n" << vprDEBUG_FLUSH;
-   vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_VERB_LVL) << "chan: " << chan << std::endl << vprDEBUG_FLUSH;
-   PfDrawFunc(chan,chandata,false,false,false,true);
-}
-*/
 
 };
