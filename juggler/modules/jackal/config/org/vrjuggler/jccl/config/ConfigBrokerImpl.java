@@ -182,13 +182,16 @@ public class ConfigBrokerImpl
          List res_names = new ArrayList();
          for (Iterator itr = resources.iterator(); itr.hasNext(); )
          {
-            res_names.add(getNameFor(itr.next()));
+            //System.out.println(getNameFor(itr.next()));
+            //res_names.add(getNameFor(itr.next()));
+            System.out.println(itr.next());
+            res_names.add(itr.next());
          }
          chooser.setResources(res_names);
          int result = chooser.showDialog(null);
          if (result == ResourceChooser.APPROVE_OPTION)
          {
-            String data_source_name = (String)mResources.get(chooser.getSelectedResource());
+            String data_source_name = chooser.getSelectedResource();
             target_ds = get(data_source_name);
          }
          else
@@ -202,7 +205,7 @@ public class ConfigBrokerImpl
          String data_source_name = (String)resources.get(0);
          target_ds = get(data_source_name);
       }
-
+      
       target_ds.add(elt);
       fireConfigElementAdded(getNameFor(target_ds), elt);
       return true;
