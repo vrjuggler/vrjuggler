@@ -43,6 +43,7 @@ APP_NAME=	OpenSGViewer@EXEEXT@
 srcdir=		@srcdir@
 SRCS=		OpenSGViewer.cpp \
          app.cpp \
+	 HoverSelectionMethod.cpp \
          PointAndGo.cpp \
          User.cpp \
          ViewPlatform.cpp
