@@ -47,7 +47,6 @@
 #include <string>
 #include <vpr/IO/Socket/SocketTypes.h>
 #include <vpr/IO/Socket/InetAddrBase.h> // my base class...
-#include <vpr/System.h>
 
 
 // XXX: Extend to work with IPv6.
@@ -199,7 +198,7 @@ public:
     */
    vpr::Uint32 getAddressValue( void ) const
    {
-      return vpr::System::Ntohl(mAddress);
+      return mAddress;
    }
 
    /**
@@ -263,7 +262,7 @@ protected:
     */
    void setAddressValue( const vpr::Uint32 addr_value )
    {
-      mAddress = vpr::System::Htonl(addr_value);
+      mAddress = addr_value;
    }
 
    /**
