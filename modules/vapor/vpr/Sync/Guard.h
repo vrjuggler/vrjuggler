@@ -54,7 +54,7 @@ namespace vpr {
  *
  * @date 1-31-97
  */
-template <class LOCK>
+template <class LOCK_TYPE>
 class Guard
 {
 public:
@@ -62,7 +62,7 @@ public:
     * Acquires the lock implicitly.
     * If block = 1 then use a blocking acquire.
     */
-   Guard(LOCK &lock, int block = 1)
+   Guard(LOCK_TYPE &lock, int block = 1)
    : theLock(&lock)
    {
       lockStatus = block ? acquire() : tryAcquire();
@@ -105,7 +105,7 @@ public:
 
 
 private:
-   LOCK* theLock;	//! The lock that we are using
+   LOCK_TYPE* theLock;	//! The lock that we are using
    int   lockStatus;	//! Are we locked or not
 };
 
