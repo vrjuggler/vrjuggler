@@ -787,6 +787,13 @@ def installTweekJava(prefix):
       for j in jars:
          shutil.copy2(os.path.join(srcdir, j), destdir)
 
+      # Install the tweek_jni DLL.
+      dll = os.path.join(srcdir, 'tweek_jni', 'ReleaseDLL', 'tweek_jni.dll')
+      arch = os.environ['PROCESSOR_ARCHITECTURE']
+      destdir = os.path.join(destdir, arch)
+      mkinstalldirs(destdir)
+      shutil.copy2(dll, destdir)
+
       destdir = os.path.join(prefix, 'share', 'tweek', 'beans')
       mkinstalldirs(destdir)
 
@@ -1139,14 +1146,15 @@ def installVRJConfig(prefix):
       ]
 
       # Install JAR files that act as reusable Java class libraries.
-      destdir = os.path.join(prefix, 'bin')
-      for j in lib_jars:
+      destdir = os.path.join(prefix, 'share', 'vrjuggler', 'java')
+      mkinstalldirs(destdir)
+      for j in lib_jars + common_editors:
          jar_file = os.path.join(jardir, j)
          if os.path.exists(jar_file):
             shutil.copy2(jar_file, destdir)
 
       # Install the base set of VRJConfig JavaBeans.
-      destdir = os.path.join(prefix, 'bin', 'beans')
+      destdir = os.path.join(prefix, 'share', 'vrjuggler', 'beans')
       mkinstalldirs(destdir)
       for j in bean_jars:
          jar_file = os.path.join(jardir, j)
@@ -1155,17 +1163,10 @@ def installVRJConfig(prefix):
 
       shutil.copy2(os.path.join(vrjconfig_src, 'VRJConfig.xml'), destdir)
 
-      # Install any common editors that were compiled.
-      destdir = os.path.join(prefix, 'lib', 'vrjuggler')
-      mkinstalldirs(destdir)
-      for e in common_editors:
-         jar_file = os.path.join(jardir, 'commoneditors', e)
-         shutil.copy2(jar_file, destdir)
-
       # Install any custom editors that were compiled.
-      destdir = os.path.join(prefix, 'lib', 'vrjuggler', 'customeditors')
+      destdir = os.path.join(prefix, 'share', 'vrjuggler', 'beans',
+                             'customeditors')
       mkinstalldirs(destdir)
-
       for e in custom_editors:
          jar_file = os.path.join(jardir, e[1] + '.jar')
          xml_file = os.path.join(custom_editor_src, e[0], e[1] + '.xml')
@@ -1183,6 +1184,7 @@ def installVRJConfig(prefix):
       ]
 
       srcroot = os.path.join(gJugglerDir, 'external')
+      destdir = os.path.join(prefix, 'share', 'vrjuggler', 'java')
       for j in dep_jars:
          shutil.copy2(os.path.join(srcroot, j), destdir)
    else:
@@ -1208,7 +1210,7 @@ def installVRJugglerPluginsJava(prefix):
       if os.path.exists(os.path.join(srcdir, name + '.jar')):
          printStatus("Installing VR Juggler Java plug-ins ...")
 
-         destdir = os.path.join(prefix, 'bin', 'beans')
+         destdir = os.path.join(prefix, 'share', 'vrjuggler', 'beans')
          mkinstalldirs(destdir)
          shutil.copy2(os.path.join(srcdir, name + '.jar'), destdir)
 
@@ -1219,7 +1221,7 @@ def installVRJugglerPluginsJava(prefix):
          printStatus("VR Juggler %s Java plug-ins not built.  Skipping." % name)
 
    # Install JFreeChart.
-   destdir = os.path.join(prefix, 'bin')
+   destdir = os.path.join(prefix, 'share', 'vrjuggler', 'java')
    srcdir = os.path.join(gJugglerDir, 'external', 'jfreechart')
    installDir(srcdir, destdir, ['.jar'])
 
