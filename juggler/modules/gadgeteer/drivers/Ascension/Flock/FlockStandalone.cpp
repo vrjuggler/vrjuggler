@@ -1185,16 +1185,23 @@ void FlockStandalone::sendHemisphere()
    // Left : 0x06, 0x01
    // Right: 0x06, 0x00
    /////////////////////////////////////////////////////////////////
+   
    vpr::Uint32 written;
    if ( mSerialPort != NULL )
    {
       char buff[3];
 
       buff[0] = 'L';
+      
+      int loop_count = mNumBirds;
+      if (mExtendedRange)
+      {
+         loop_count++;
+      }    
 
       // This will loop over all the birds and the transmitter.  When it
       // encounters the transmitter, it skips it.
-      for ( int i = 1; i <= (mNumBirds + 1); i++ )
+      for ( int i = 1; i < loop_count; i++ )
       {
          // Skip the transmitter.
          if (! isTransmitter(i))
