@@ -8,6 +8,20 @@ For all versions:
     - See the Known Bugs page on the VR Juggler website (www.vrjuggler.org)
       for the current list of bugs.
 
+ Version: 1.0.3
+Released: November 26, 2001
+
+    Major bug fixes:
+        * The helper function vjGetVjMatrix() did not convert a pfMatrix to
+          a vjMatrix correctly.
+        * A memory bug in the low-level MotionStar driver has been patched.
+        * VjControl works with JDK 1.4.
+        * The vjMatrix constructor that initializes the matrix elements
+          individually assigns all values correctly.
+        * Shared libraries can be built on HP-UX 11.x.
+
+===============================================================================
+
  Version: 1.0.2
 Released: August 6, 2001
 
