@@ -355,7 +355,8 @@ aMotionStar::sample () {
           perror("recv2"), exit(1);
 
         if ( second.tv_usec - first.tv_usec > 5000 ) {
-            fprintf(stderr, "WARNING: Packet took longer than 5 ms\n");
+            fprintf(stderr,
+                    "aMotionStar WARNING: Packet took longer than 5 ms\n");
         }
 
         totalBytesReceived = totalBytesReceived + bytesReceived;
