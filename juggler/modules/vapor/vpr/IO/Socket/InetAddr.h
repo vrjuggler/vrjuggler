@@ -40,6 +40,11 @@
 namespace vpr {
     typedef InetAddrNSPR InetAddr;
 };
+#elif defined(VPR_USE_WIN32)
+#   include <md/WIN32/InetAddrWinSock.h>
+namespace vpr {
+    typedef InetAddrWinSock InetAddr;
+};
 #else
 #   include <md/POSIX/InetAddrBSD.h>
 namespace vpr {
