@@ -137,6 +137,18 @@ public class BeanRegistry
    }
 
    /**
+    * Tests if a bean is registered under the given name.
+    *
+    * @param name    the name of the bean to test for
+    *
+    * @return  true if the bean is registered; false otherwise
+    */
+   public synchronized boolean isRegistered(String name)
+   {
+      return mBeans.containsKey(name);
+   }
+
+   /**
     * Adds a new listener for bean registration events.
     *
     * @param l    the object that wishes to listen to this registry

@@ -55,7 +55,7 @@ public class BeanAttributes
     */
    public BeanAttributes( String name )
    {
-      this( name, "", "", new ArrayList() );
+      this( name, "", "", new ArrayList(), new ArrayList() );
    }
 
    /**
@@ -64,16 +64,19 @@ public class BeanAttributes
     * @param name          the name of the bean
     * @param jarURL        the URL string of the jar that contains the bean
     * @param classname     the bean's fully-qualified classname
-    * @param dependencies  a list of BeanDependency objects that describe the
+    * @param beanDeps      a list of BeanDependency objects that describe the
     *                      beans this bean depends on as
+    * @param jarDeps       a list of JarDependency objects that describe the
+    *                      jar files this bean depends on
     */
    public BeanAttributes( String name, String jarURL, String classname,
-                          List dependencies )
+                          List beanDeps, List jarDeps )
    {
       this.name         = name;
       this.jarURL       = jarURL;
       this.classname    = classname;
-      this.dependencies = dependencies;
+      this.beanDeps     = beanDeps;
+      this.jarDeps      = jarDeps;
    }
 
    /**
@@ -90,7 +93,8 @@ public class BeanAttributes
       String name = "";
       String jarURL = "";
       String classname = "";
-      List dependencies = new ArrayList();
+      List beanDeps = new ArrayList();
+      List jarDeps = new ArrayList();
 
       name = root.getAttribute("name").getValue();
 
@@ -102,25 +106,30 @@ public class BeanAttributes
       {
          Element e = (Element) i.next();
 
-         // Parse a dependency element
-         if ( e.getName().equals("dependency") )
+         // Parse the dependencies list
+         if ( e.getName().equals("dependencies") )
          {
-            String dep_file = null;
-
-            if ( e.getAttribute("file") != null )
+            List deps = e.getChildren();
+            for (Iterator dep_itr = deps.iterator(); dep_itr.hasNext(); )
             {
-               dep_file = e.getAttribute("file").getValue();
+               Element dep_elem = (Element)dep_itr.next();
+
+               // bean dependency
+               if (dep_elem.getName().equals("bean"))
+               {
+                  String bean_name = dep_elem.getTextTrim();
+                  beanDeps.add(new BeanDependency(bean_name));
+               }
+               // jar dependency
+               else if (dep_elem.getName().equals("jar"))
+               {
+                  String path = expandEnvVars(dep_elem.getAttribute("path").getValue());
+                  String file = dep_elem.getTextTrim();
+                  jarDeps.add(new JarDependency(file, path));
+               }
             }
-
-            String dep_path = null;
-
-            if ( e.getAttribute("path") != null )
-            {
-               dep_path = expandEnvVars(e.getAttribute("path").getValue());
-            }
-
-            dependencies.add(new BeanDependency(dep_file, dep_path));
          }
+
          // Parse a file element that contains the JAR file and JAR entry
          else if ( e.getName().equals("file") )
          {
@@ -139,7 +148,7 @@ public class BeanAttributes
          }
       }
 
-      return new BeanAttributes( name, jarURL, classname, dependencies );
+      return new BeanAttributes( name, jarURL, classname, beanDeps, jarDeps );
    }
 
    /**
@@ -176,11 +185,22 @@ public class BeanAttributes
     * Gets the list of the beans the bean depends on.
     *
     * @return  a list of BeanDependency objects that describe the beans that are
-    *          required by for the bean described by this BeanAttributes object.
+    *          required by the bean described by this BeanAttributes object.
     */
-   public List getDependencies()
+   public List getBeanDependencies()
    {
-      return dependencies;
+      return beanDeps;
+   }
+
+   /**
+    * Gets a list of the jar files the bean depends on.
+    *
+    * @return  a list of JarDependency objects that decribe the JAR files that
+    *          are required by the bean described in this BeanAttributes object.
+    */
+   public List getJarDependencies()
+   {
+      return jarDeps;
    }
 
    /**
@@ -250,5 +270,11 @@ public class BeanAttributes
     * A list of BeanDependency objects that describe the beans that are required
     * for the bean described by this BeanAttributes object.
     */
-   private List dependencies;
+   private List beanDeps;
+
+   /**
+    * A list of JarDependency objects that describe the JAR files that are
+    * required for the bean described by this BeanAttributes object.
+    */
+   private List jarDeps;
 }
