@@ -29,7 +29,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Driver - Intersense IS900",
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Driver - Ascension MotionStar", "Gadgeteer\MotionStar\MotionStar.vcproj", "{2BB1C6DC-A6DB-42A3-A91A-DBD8BA7A8432}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Driver - Fakespace Pinch Glove", "Gadgeteer\PinchGlvoe\PinchGlove.vcproj", "{2BB1C6DC-A6DB-42A3-A91A-DBD8BA7A8432}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Driver - Fakespace Pinch Glove", "Gadgeteer\PinchGlove\PinchGlove.vcproj", "{2BB1C6DC-A6DB-42A3-A91A-DBD8BA7A8432}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Driver - Trackd API", "Gadgeteer\TrackdAPI\TrackdAPI.vcproj", "{2BB1C6DC-A6DB-42A3-A91A-DBD8BA7A8432}"
 EndProject
