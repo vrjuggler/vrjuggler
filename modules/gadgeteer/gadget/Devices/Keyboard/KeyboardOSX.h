@@ -50,7 +50,7 @@ namespace gadget
 
 
 pascal OSStatus keyboardHandlerOSX ( EventHandlerCallRef  nextHandler,
-                                     EventRef             theEvent, 
+                                     EventRef             theEvent,
                                      void*                userData);
 
 //---------------------------------------------------------------
@@ -93,7 +93,7 @@ public:
         //mWeOwnTheWindow = true;
         //mShared = false;                         // False by default
    }
-   
+
    ~KeyboardOSX() { stopSampling();}
 
    virtual bool config(jccl::ConfigChunkPtr c);
@@ -101,9 +101,9 @@ public:
    // Pure Virtuals required by Input //
    int startSampling();
    int stopSampling();
-   
 
- 
+
+
    // Do nothing the events are handled by call backs from the
    // Carbon event manager
    int sample() { return 1; }
@@ -122,7 +122,7 @@ public:
    // Called by callback function
    // processes the event
    pascal OSStatus gotKeyEvent (  EventHandlerCallRef  nextHandler,
-                                  EventRef             theEvent, 
+                                  EventRef             theEvent,
                                   void*                userData);
 
 protected:
@@ -142,8 +142,8 @@ private:
    //: Perform anything that must be done when state switches
    void lockMouse();
    void unlockMouse();
-   
-   
+
+
 
 protected:
   // bool         mWeOwnTheWindow;       // True if this class owns the window (is reposible for opening and closing)
@@ -178,8 +178,8 @@ protected:
    float m_mouse_sensitivity;
    //int   mSleepTimeMS;            // Amount of time to sleep in milliseconds between updates
    //int   mPrevX, mPrevY;          // Previous mouse location
-   bool	 mAmSampling;
-   WindowRef mWindow;		    // The carbon window
+   bool  mAmSampling;
+   WindowRef mWindow;           // The carbon window
 };
 
 
@@ -214,7 +214,7 @@ enum OSXKeyMap
     OSXK_x = 7,
     OSXK_y = 16,
     OSXK_z = 6,
-    
+
     OSXK_1 = 18,
     OSXK_2 = 19,
     OSXK_3 = 20,
@@ -225,7 +225,7 @@ enum OSXKeyMap
     OSXK_8 = 28,
     OSXK_9 = 25,
     OSXK_0 = 29,
-    
+
     OSXK_KP_1 = 83,
     OSXK_KP_2 = 84,
     OSXK_KP_3 = 85,
@@ -247,7 +247,7 @@ enum OSXKeyMap
     OSXK_Page_Up = 116,
     OSXK_Page_Down = 121,
     OSXK_Ecs = 53,
-    
+
     OSXK_Up = 126,
     OSXK_Down = 125,
     OSXK_Left = 123,
@@ -256,7 +256,7 @@ enum OSXKeyMap
 
 };
 
+} // end namespace
 
-}; // end namespace
 
 #endif

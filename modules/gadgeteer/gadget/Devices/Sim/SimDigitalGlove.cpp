@@ -167,7 +167,7 @@ void SimDigitalGlove::updateData()
 //NOTE: this function *is* slightly different...
 void SimDigitalGlove::updateFingerAngles()
 {
-/* TEMPORARILY REMOVE    
+/* TEMPORARILY REMOVE
     const int LEFT_HAND = 0;
     const int RIGHT_HAND = 1;
 
@@ -301,4 +301,4 @@ void SimDigitalGlove::loadTrainedFile(std::string fileName)
 }
 #endif
 
-};
+} // End of gadget namespace

@@ -151,7 +151,7 @@ private:
    std::vector<DigitalData>       mCurButtons;            // The current button states
 };
 
-};
+} // End of gadget namespace
 
 #endif
 

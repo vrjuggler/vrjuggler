@@ -429,4 +429,4 @@ bool DTK::stopDTK()
     return true;
 }
 
-};
+} // End of gadget namespace

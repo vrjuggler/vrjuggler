@@ -42,9 +42,9 @@
 #include <vpr/IO/ObjectWriter.h>
 #include <gadget/RemoteInputManager/SerializableDevice.h>
 
+
 namespace gadget
 {
-
 
 /**
  * Base class for all simulated input devices.
@@ -132,6 +132,7 @@ protected:
    KeyboardInterface     mKeyboard; /**< The keyboard we are getting events from */
 };
 
-};
+} // End of gadget namespace
+
 
 #endif

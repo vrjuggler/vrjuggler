@@ -150,7 +150,7 @@ namespace gadget
             for ( unsigned j=0;j<stable_buffer.size();j++ )                               // For each vector in the stable buffer
             {
                writer->writeUint16(stable_buffer[j].size());                           // Write the # of DigitalDatas in the vector
-               //std::cout << "Digital Data Size: "	
+               //std::cout << "Digital Data Size: "
                //<< stable_buffer.back().size() << std::endl;
                //std::cout << "ME: ";
                for ( unsigned i=0;i<stable_buffer[j].size();i++ )                         // For each DigitalData in the vector
@@ -173,11 +173,11 @@ namespace gadget
       virtual vpr::ReturnStatus readObject(vpr::ObjectReader* reader, vpr::Uint64* delta)
       {
             //std::cout << "[Remote Input Manager] In Digital read" << std::endl;
-         
+
             // ASSERT if this data is really not Digital Data
          vpr::Uint16 temp = reader->readUint16();
          vprASSERT(temp==MSG_DATA_DIGITAL && "[Remote Input Manager]Not Digital Data");
-         
+
          std::vector<DigitalData> dataSample;
 
          unsigned numDigitalDatas;
@@ -186,12 +186,12 @@ namespace gadget
          DigitalData temp_digital_data;
 
          unsigned numVectors = reader->readUint16();
-         //std::cout << "Stable Digital Buffer Size: "	<< numVectors << std::endl;
+         //std::cout << "Stable Digital Buffer Size: "  << numVectors << std::endl;
          mDigitalSamples.lock();
          for ( unsigned i=0;i<numVectors;i++ )
          {
             numDigitalDatas = reader->readUint16();
-            //std::cout << "Digital Data Size: "	<< numDigitalDatas << std::endl;
+            //std::cout << "Digital Data Size: "    << numDigitalDatas << std::endl;
             dataSample.clear();
             //std::cout << "ME: ";
             for ( unsigned j=0;j<numDigitalDatas;j++ )
@@ -211,7 +211,7 @@ namespace gadget
          mDigitalSamples.unlock();
          mDigitalSamples.swapBuffers();
          return vpr::ReturnStatus::Succeed;
-      }                            
+      }
 
 
    protected:
@@ -219,6 +219,6 @@ namespace gadget
       DigitalData       mDefaultValue;   /**< Default analog value to return */
    };
 
-};
+} // End of gadget namespace
 
 #endif   /* _GADGET_DIGITAL_H_ */

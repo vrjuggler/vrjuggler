@@ -68,4 +68,4 @@ void SimRelativePosition::updateData()
 }
 
 
-};
+} // End of gadget namespace

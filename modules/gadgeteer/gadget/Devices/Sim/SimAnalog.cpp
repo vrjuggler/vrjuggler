@@ -114,4 +114,4 @@ void SimAnalog::updateData()
    mAnalogSamples.swapBuffers();
 }
 
-};
+} // End of gadget namespace

@@ -77,6 +77,6 @@ protected:
    int               mBaudRate;
 };
 
-};
+} // End of gadget namespace
 
 #endif   /* _GADGET_CYBER_GLOVE_H_ */

@@ -69,7 +69,7 @@ bool IBox::config(jccl::ConfigChunkPtr c)
                                   << vprDEBUG_FLUSH;
    mPortName = c->getProperty<std::string>("port");
    mBaudRate = c->getProperty<int>("baud");
-   
+
    vprDEBUG(gadgetDBG_INPUT_MGR,1)
       << "   Creating an IBox.. params: " << std::endl
       << "    portnum: " << mPortName << std::endl
@@ -244,4 +244,4 @@ void IBox::updateData()
    return;
 }
 
-};
+} // End of gadget namespace

@@ -106,4 +106,4 @@ void DigitalProxy::updateData()
    }
 }
 
-};
+} // End of gadget namespace

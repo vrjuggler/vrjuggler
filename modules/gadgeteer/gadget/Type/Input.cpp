@@ -72,5 +72,4 @@ bool Input::config( jccl::ConfigChunkPtr c)
   return true;
 }
 
-
-};
+} // End of gadget namespace

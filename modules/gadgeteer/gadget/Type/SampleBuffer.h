@@ -39,7 +39,7 @@
 #include <vpr/Sync/Mutex.h>
 #include <vpr/Sync/Guard.h>
 #include <vector>
-      
+
 namespace gadget
 {
 
@@ -54,8 +54,8 @@ namespace gadget
 * Stable - Samples that the application is actually looking at
 * Ready   - Samples that have been completed and could be swapped over to current
 *
-* ASSERTION: The buffers can be empty at the start, but after the first cycle 
-*            (first time stable gets values) the Stable buffer must have at least 
+* ASSERTION: The buffers can be empty at the start, but after the first cycle
+*            (first time stable gets values) the Stable buffer must have at least
 *            one sample.
 */
 template <class DATA_TYPE>
@@ -75,38 +75,39 @@ public:
    }
 
    /** Swap the data buffers
-    * @post If ready has values, then copy values from ready to stable 
+    * @post If ready has values, then copy values from ready to stable
     *        if not, then stable keeps its old values
     * @note This means that until the first sample, StableBuffer is possibly empty.
     */
    void swapBuffers()
    {
    vpr::Guard<vpr::Mutex>  guard(mLock);
-      
+
       if(!mReadyBuffer.empty())            // If Ready buffer has data
       {
          mStableBuffer = mReadyBuffer;       // Copy over the ready values
       }
-      
-      mReadyBuffer.clear();      
+
+      mReadyBuffer.clear();
    }
-   
+
    void lock()
    {  mLock.acquire(); }
-   
+
    void unlock()
    {  mLock.release(); }
 
    buffer_t& stableBuffer()
-   { return mStableBuffer; }   
-   
+   { return mStableBuffer; }
+
 protected:
    buffer_t   mStableBuffer;
    buffer_t   mReadyBuffer;
-   
-   vpr::Mutex  mLock;   /**< Lock to protect the buffer */   
+
+   vpr::Mutex  mLock;   /**< Lock to protect the buffer */
 };
 
-}; // end namespace gadget
+} // end namespace gadget
+
 
 #endif

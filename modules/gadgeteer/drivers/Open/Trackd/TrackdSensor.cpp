@@ -117,4 +117,4 @@ namespace gadget
 
 
 
-};
+} // End of gadget namespace

@@ -81,6 +81,6 @@ private:
    float                      mAnaStep;      /**< The analog step size */
 };
 
-};
+} // End of gadget namespace
 
 #endif

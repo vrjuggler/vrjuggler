@@ -193,4 +193,4 @@ void SimGloveGesture::loadTrainedFile(std::string fileName)
    }
 }
 
-};
+} // End of gadget namespace

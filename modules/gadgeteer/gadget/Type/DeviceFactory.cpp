@@ -279,4 +279,4 @@ void DeviceFactory::debugDump()
    }
 }
 
-};
+} // End of gadget namespace

@@ -113,6 +113,6 @@ protected:
    GloveProxy*            mGloveProxy;        /**< Proxy to the glove */
 };
 
-};
+} // End of gadget namespace
 
 #endif

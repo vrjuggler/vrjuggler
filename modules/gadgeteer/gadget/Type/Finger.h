@@ -72,7 +72,7 @@ private:
    float mDij, mPij, mMpj, mAbduct;
 };
 
+} // End of gadget namespace
 
-};
 
 #endif

@@ -94,11 +94,11 @@ int KeyboardOSX::startSampling()
             << vprDEBUG_FLUSH;
         vprASSERT(false);
     }
-    
-    
+
+
     openTheWindow();
     mAmSampling = true;
-    
+
     return 1;
 }
 
@@ -177,58 +177,58 @@ int KeyboardOSX::osxKeyToKey(UInt32 osxKey)
         //case XK_Shift_R   : return VJKEY_SHIFT;
         //case XK_Alt_L     : return VJKEY_ALT;
         //case XK_Alt_R     : return VJKEY_ALT;
-        
+
         // Map all number keys
         // Note we map keypad and normal keys making no distinction
-        case OSXK_1	: return VJKEY_1;
-        case OSXK_KP_1	: return VJKEY_1;
-        case OSXK_2	: return VJKEY_2;
-        case OSXK_KP_2	: return VJKEY_2;
-        case OSXK_3	: return VJKEY_3;
-        case OSXK_KP_3	: return VJKEY_3;
-        case OSXK_4	: return VJKEY_4;
-        case OSXK_KP_4	: return VJKEY_4;
-        case OSXK_5	: return VJKEY_5;
-        case OSXK_KP_5	: return VJKEY_5;
-        case OSXK_6	: return VJKEY_6;
-        case OSXK_KP_6	: return VJKEY_6;
-        case OSXK_7	: return VJKEY_7;
-        case OSXK_KP_7	: return VJKEY_7;
-        case OSXK_8	: return VJKEY_8;
-        case OSXK_KP_8	: return VJKEY_8;
-        case OSXK_9	: return VJKEY_9;
-        case OSXK_KP_9	: return VJKEY_9;
-        case OSXK_0	: return VJKEY_0;
-        case OSXK_KP_0	: return VJKEY_0;
-        
-        case OSXK_a	: return VJKEY_A;
-        case OSXK_b	: return VJKEY_B;
-        case OSXK_c	: return VJKEY_C;
-        case OSXK_d	: return VJKEY_D;
-        case OSXK_e	: return VJKEY_E;
-        case OSXK_f	: return VJKEY_F;
-        case OSXK_g	: return VJKEY_G;
-        case OSXK_h	: return VJKEY_H;
-        case OSXK_i	: return VJKEY_I;
-        case OSXK_j	: return VJKEY_J;
-        case OSXK_k	: return VJKEY_K;
-        case OSXK_l	: return VJKEY_L;
-        case OSXK_m	: return VJKEY_M;
-        case OSXK_n	: return VJKEY_N;
-        case OSXK_o	: return VJKEY_O;
-        case OSXK_p	: return VJKEY_P;
-        case OSXK_q	: return VJKEY_Q;
-        case OSXK_r	: return VJKEY_R;
-        case OSXK_s	: return VJKEY_S;
-        case OSXK_t	: return VJKEY_T;
-        case OSXK_u	: return VJKEY_U;
-        case OSXK_v	: return VJKEY_V;
-        case OSXK_w	: return VJKEY_W;
-        case OSXK_x	: return VJKEY_X;
-        case OSXK_y	: return VJKEY_Y;
-        case OSXK_z	: return VJKEY_Z;
-        case OSXK_Ecs	: return VJKEY_ESC;
-        default		: return 255;
+        case OSXK_1 : return VJKEY_1;
+        case OSXK_KP_1  : return VJKEY_1;
+        case OSXK_2 : return VJKEY_2;
+        case OSXK_KP_2  : return VJKEY_2;
+        case OSXK_3 : return VJKEY_3;
+        case OSXK_KP_3  : return VJKEY_3;
+        case OSXK_4 : return VJKEY_4;
+        case OSXK_KP_4  : return VJKEY_4;
+        case OSXK_5 : return VJKEY_5;
+        case OSXK_KP_5  : return VJKEY_5;
+        case OSXK_6 : return VJKEY_6;
+        case OSXK_KP_6  : return VJKEY_6;
+        case OSXK_7 : return VJKEY_7;
+        case OSXK_KP_7  : return VJKEY_7;
+        case OSXK_8 : return VJKEY_8;
+        case OSXK_KP_8  : return VJKEY_8;
+        case OSXK_9 : return VJKEY_9;
+        case OSXK_KP_9  : return VJKEY_9;
+        case OSXK_0 : return VJKEY_0;
+        case OSXK_KP_0  : return VJKEY_0;
+
+        case OSXK_a : return VJKEY_A;
+        case OSXK_b : return VJKEY_B;
+        case OSXK_c : return VJKEY_C;
+        case OSXK_d : return VJKEY_D;
+        case OSXK_e : return VJKEY_E;
+        case OSXK_f : return VJKEY_F;
+        case OSXK_g : return VJKEY_G;
+        case OSXK_h : return VJKEY_H;
+        case OSXK_i : return VJKEY_I;
+        case OSXK_j : return VJKEY_J;
+        case OSXK_k : return VJKEY_K;
+        case OSXK_l : return VJKEY_L;
+        case OSXK_m : return VJKEY_M;
+        case OSXK_n : return VJKEY_N;
+        case OSXK_o : return VJKEY_O;
+        case OSXK_p : return VJKEY_P;
+        case OSXK_q : return VJKEY_Q;
+        case OSXK_r : return VJKEY_R;
+        case OSXK_s : return VJKEY_S;
+        case OSXK_t : return VJKEY_T;
+        case OSXK_u : return VJKEY_U;
+        case OSXK_v : return VJKEY_V;
+        case OSXK_w : return VJKEY_W;
+        case OSXK_x : return VJKEY_X;
+        case OSXK_y : return VJKEY_Y;
+        case OSXK_z : return VJKEY_Z;
+        case OSXK_Ecs   : return VJKEY_ESC;
+        default     : return 255;
    }
 
 }
@@ -241,69 +241,69 @@ int KeyboardOSX::osxKeyToKey(UInt32 osxKey)
 // Open the carbon window to sample from
 int KeyboardOSX::openTheWindow()
 {
-    Rect	     wRect;
+    Rect         wRect;
     EventTypeSpec    eventTypes[7];
     EventHandlerUPP  handlerUPP;
-    
+
     //Get the size of the screen from core graphics
     //I'll need to check to see how this works with multiple monitors
     CGRect bounds;
     bounds = CGDisplayBounds(kCGDirectMainDisplay);
-    
-    
+
+
     //set the window size and location with the height adjusted
     SetRect(&wRect, m_x , bounds.size.height - m_y - m_height,
                             m_x + m_width, bounds.size.height - m_y); /* left, top, right, bottom */
-    
-    
-    CreateNewWindow (	kDocumentWindowClass, 
+
+
+    CreateNewWindow (   kDocumentWindowClass,
                         kWindowStandardDocumentAttributes |
                         kWindowStandardHandlerAttribute,
-                        &wRect, 
+                        &wRect,
                         &mWindow );
-                        
+
     SetWindowTitleWithCFString (mWindow,
             CFStringCreateWithCString(NULL, mInstName.c_str(), kCFStringEncodingMacRoman) );
             // Set title
-    
+
     // Set up the events to listen for
     eventTypes[0].eventClass = kEventClassKeyboard;
     eventTypes[0].eventKind  = kEventRawKeyDown;
-    
+
     eventTypes[1].eventClass = kEventClassKeyboard;
     eventTypes[1].eventKind  = kEventRawKeyRepeat;
-    
+
     eventTypes[2].eventClass = kEventClassKeyboard;
     eventTypes[2].eventKind  = kEventRawKeyUp;
-    
+
     eventTypes[3].eventClass = kEventClassKeyboard;
     eventTypes[3].eventKind  = kEventRawKeyModifiersChanged;
-    
+
     eventTypes[4].eventClass = kEventClassMouse;
     eventTypes[4].eventKind  = kEventMouseDown;
-    
+
     eventTypes[5].eventClass = kEventClassMouse;
     eventTypes[5].eventKind  = kEventMouseUp;
-    
+
     eventTypes[6].eventClass = kEventClassMouse;
     eventTypes[6].eventKind  = kEventMouseMoved;
-    
-    
-    
-    
+
+
+
+
     handlerUPP = NewEventHandlerUPP(keyboardHandlerOSX);
-    
+
     InstallWindowEventHandler (mWindow, handlerUPP,  // Install handler
                                 7, eventTypes,
                                 this, NULL);
-    
+
     ShowWindow (mWindow);
-    
-    
+
+
     vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL)
     << "gadget::KeyboardOSX::openTheWindow() : done." << std::endl
     << vprDEBUG_FLUSH;
-    
+
     return 1;
 }
 
@@ -325,33 +325,33 @@ void KeyboardOSX::lockMouse()
     OSStatus   result;
     //Satus from core graphics calls
     CGEventErr err;
-    
+
     CGRect     bounds;
     CGPoint    point;
     Rect       windowRect;
-    
+
     //I think this will fail with multiple displays
-    
+
     //get the bounding rectangle for the window
-    result = GetWindowBounds (  mWindow, 
-                                kWindowContentRgn, 
+    result = GetWindowBounds (  mWindow,
+                                kWindowContentRgn,
                                 &windowRect );
     //Should make sure there is no error
-    
+
     //Get the size of the display
     //this is probably not necessary since core graphics and carbon
     //use the same coordinate system
     bounds = CGDisplayBounds(kCGDirectMainDisplay);
-    
+
     //Calculate the point in the middle of the window
-    point.x = bounds.origin.x + windowRect.left 
+    point.x = bounds.origin.x + windowRect.left
                 + (windowRect.right - windowRect.left)/2;
-    point.y = bounds.origin.y +  windowRect.top 
+    point.y = bounds.origin.y +  windowRect.top
                 + (windowRect.bottom - windowRect.top)/2;
     //Move the mouse to the middle of the window
     err = CGDisplayMoveCursorToPoint(kCGDirectMainDisplay, point);
     //Should make sure there is no error
-    
+
     //The cursor stays put as the mouse is moved
     err = CGAssociateMouseAndMouseCursorPosition(false);
     //Should make sure there is no error
@@ -359,36 +359,36 @@ void KeyboardOSX::lockMouse()
    vprDEBUG_CONT(gadgetDBG_INPUT_MGR,vprDBG_STATE_LVL)
       << "lock finished.\n" << vprDEBUG_FLUSH;
 }
- 
+
 // Called when locking ends
 void KeyboardOSX::unlockMouse()
 {
-    
+
     //Used when we want a graphics window to also handle input
     //OS X will do this differently
     //vpr::Guard<vpr::Mutex> xguard(mXfuncLock);
-    
+
     vprDEBUG(gadgetDBG_INPUT_MGR,vprDBG_STATE_LVL)
       << "gadget::KeyboardOSX: UN-LOCKING MOUSE..." << vprDEBUG_FLUSH;
-    
+
     //Status from core graphics calls
     CGEventErr err;
-    
+
     err = CGAssociateMouseAndMouseCursorPosition(true);
     //Should make sure there is no error
-   
+
     vprDEBUG_CONT(gadgetDBG_INPUT_MGR,vprDBG_STATE_LVL)
       << "un-lock finished.\n" << vprDEBUG_FLUSH;
 }
 
 pascal OSStatus KeyboardOSX::gotKeyEvent (  EventHandlerCallRef  nextHandler,
-                                            EventRef             theEvent, 
+                                            EventRef             theEvent,
                                             void*                userData)
 {
             //The type of event
             UInt32     eventClass;
             UInt32     eventKind;
-            int		vj_key;	// The key in vj space
+            int     vj_key; // The key in vj space
             //The modifier keys
             UInt32     modKeys;
             //The mouse button
@@ -397,28 +397,28 @@ pascal OSStatus KeyboardOSX::gotKeyEvent (  EventHandlerCallRef  nextHandler,
             OSStatus   result;
             //Status from core graphics calls
             //CGEventErr err;
-            
+
             Point      mousePos;
-            
+
             vpr::Guard<vpr::Mutex> guard(mKeysLock);
             // Lock access to the m_keys array for the duration of this function
 
             mHandleEventsHasBeenCalled = true;
-            
+
             eventClass = GetEventClass(theEvent);
             eventKind  = GetEventKind(theEvent);
-            
+
             if ( ( eventClass == kEventClassKeyboard && eventKind == kEventRawKeyDown) ||
                  ( eventClass == kEventClassKeyboard && eventKind == kEventRawKeyRepeat))
             {
                 UInt32 keyInt;
                 GetEventParameter (theEvent, kEventParamKeyCode, typeUInt32,
                                 NULL, sizeof(typeUInt32), NULL, &keyInt);
-                
+
                 vj_key = osxKeyToKey(keyInt);
                 m_realkeys[vj_key] = 1;
                 m_keys[vj_key] += 1;
-                
+
                 // -- Update lock state -- //
                 // Any[key == ESC]/unlock(ifneeded) -> Unlocked
                 // Unlocked[key!=lockKey]/lockMouse -> lock_keydown
@@ -488,20 +488,20 @@ pascal OSStatus KeyboardOSX::gotKeyEvent (  EventHandlerCallRef  nextHandler,
                     << " ==> " << xKeyToKey(key) << std::endl << vprDEBUG_FLUSH;
                 break;
                 */
-                
-                
-                
+
+
+
             }
-            
+
             if ( eventClass == kEventClassKeyboard && eventKind == kEventRawKeyUp )
             {
                 UInt32 keyInt;
                 GetEventParameter (theEvent, kEventParamKeyCode, typeUInt32,
                                 NULL, sizeof(typeUInt32), NULL, &keyInt);
-                
+
                 vj_key = osxKeyToKey(keyInt);
                 m_realkeys[vj_key] = 0;
-        
+
                 // -- Update lock state -- //
                 // lock_keyDown[key==storedKey]/unlockMouse -> unlocked
                 if((mLockState == Lock_KeyDown) && (vj_key == mLockStoredKey))
@@ -512,7 +512,7 @@ pascal OSStatus KeyboardOSX::gotKeyEvent (  EventHandlerCallRef  nextHandler,
                     << vprDEBUG_FLUSH;
                     unlockMouse();
                 }
-                
+
                 //What does this do?
                 /*
                 vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_HVERB_LVL)
@@ -520,16 +520,16 @@ pascal OSStatus KeyboardOSX::gotKeyEvent (  EventHandlerCallRef  nextHandler,
                     << " state:" << ((XKeyEvent*)&event)->state
                     << " ==> " << xKeyToKey(key) << std::endl << vprDEBUG_FLUSH;
                 */
-                
+
             }
-            
-            
+
+
             if ( eventClass == kEventClassKeyboard && eventKind == kEventRawKeyModifiersChanged)
             {
-                
+
                 GetEventParameter (theEvent, kEventParamKeyModifiers, typeUInt32,
                                 NULL, sizeof(typeUInt32), NULL, &modKeys);
-                
+
                 /* Juggler does not care about caps and command
                 if (modKeys & alphaLock)
                 {
@@ -552,10 +552,10 @@ pascal OSStatus KeyboardOSX::gotKeyEvent (  EventHandlerCallRef  nextHandler,
                 {
                     m_realkeys[VJKEY_SHIFT] = 0;
                 }
-                
+
                 if (modKeys & optionKey)
                 {
-                    
+
                     m_realkeys[VJKEY_ALT] = 1;
                     m_keys[VJKEY_ALT] += 1;
                 }
@@ -563,10 +563,10 @@ pascal OSStatus KeyboardOSX::gotKeyEvent (  EventHandlerCallRef  nextHandler,
                 {
                     m_realkeys[VJKEY_ALT] = 0;
                 }
-                
+
                 if (modKeys & controlKey)
                 {
-                    
+
                     m_realkeys[VJKEY_CTRL] = 1;
                     m_keys[VJKEY_CTRL] += 1;
                 }
@@ -574,7 +574,7 @@ pascal OSStatus KeyboardOSX::gotKeyEvent (  EventHandlerCallRef  nextHandler,
                 {
                     m_realkeys[VJKEY_CTRL] = 0;
                 }
-                
+
                 // If any mod keys are pressed lock the mouse
                 if ((modKeys & shiftKey) || (modKeys & controlKey) || (modKeys & optionKey) || (modKeys & shiftKey) )
                 {
@@ -587,7 +587,7 @@ pascal OSStatus KeyboardOSX::gotKeyEvent (  EventHandlerCallRef  nextHandler,
                         lockMouse();
                     }
                 }
-                
+
                 //Unlock mouse if lock key is not down
                 else
                 {
@@ -600,20 +600,20 @@ pascal OSStatus KeyboardOSX::gotKeyEvent (  EventHandlerCallRef  nextHandler,
                         unlockMouse();
                     }
                 }
-                
+
 
             }
-            
+
             if ( eventClass == kEventClassMouse && eventKind == kEventMouseDown)
             {
-                
+
                 //Allow the base handler to take care of most mouse events
                 result = CallNextEventHandler (nextHandler, theEvent);
-                
+
                 GetEventParameter (theEvent, kEventParamMouseButton, typeMouseButton,
                                 NULL, sizeof(typeMouseButton), NULL, &myButton);
-                
-                
+
+
                 switch ( myButton )
                 {
                     case kEventMouseButtonPrimary :
@@ -627,12 +627,12 @@ pascal OSStatus KeyboardOSX::gotKeyEvent (  EventHandlerCallRef  nextHandler,
                         break;
                 }
             }
-            
+
             if ( eventClass == kEventClassMouse && eventKind == kEventMouseUp)
             {
-                
+
                 result = CallNextEventHandler (nextHandler, theEvent);
-                
+
                 GetEventParameter (theEvent, kEventParamMouseButton, typeMouseButton,
                                 NULL, sizeof(typeMouseButton), NULL, &myButton);
 
@@ -648,19 +648,19 @@ pascal OSStatus KeyboardOSX::gotKeyEvent (  EventHandlerCallRef  nextHandler,
                         m_realkeys[VJMBUTTON3] = m_keys[VJMBUTTON3] = 0;
                         break;
                 }
-  
+
             }
 
             if ( eventClass == kEventClassMouse && eventKind == kEventMouseMoved)
             {
-                
+
                 result = CallNextEventHandler (nextHandler, theEvent);
-                
+
                 // Note even though 'kEventParamMouseDelta' is a carbon call
                 // it does not work on OS 9
                 GetEventParameter (theEvent, kEventParamMouseDelta, typeQDPoint,
                                 NULL, sizeof(typeQDPoint), NULL, &mousePos);
-                                                
+
                 // Update m_keys based on key pressed and store in the key array
                 if ( mousePos.h > 0 )
                 {
@@ -672,7 +672,7 @@ pascal OSStatus KeyboardOSX::gotKeyEvent (  EventHandlerCallRef  nextHandler,
                     m_keys[VJMOUSE_NEGX] = m_keys[VJMOUSE_NEGX] - mousePos.h;
                     // Negative movement in the x direction.
                 }
-    
+
                 if ( mousePos.v > 0 )
                 {
                     m_keys[VJMOUSE_POSY] = m_keys[VJMOUSE_POSY] + mousePos.v;
@@ -684,9 +684,9 @@ pascal OSStatus KeyboardOSX::gotKeyEvent (  EventHandlerCallRef  nextHandler,
                     // Negative movement in the y direction.
                 }
             }
-            
+
             return noErr;                                // Report success
-}  
+}
 
 
 
@@ -695,15 +695,14 @@ pascal OSStatus KeyboardOSX::gotKeyEvent (  EventHandlerCallRef  nextHandler,
 // registered to receive the event for its window
 
 pascal OSStatus keyboardHandlerOSX ( EventHandlerCallRef  nextHandler,
-                                     EventRef             theEvent, 
+                                     EventRef             theEvent,
                                      void*                userData)
 {
     KeyboardOSX * theWindowClass = (KeyboardOSX *) userData;
     pascal OSStatus stat;
     stat = theWindowClass->gotKeyEvent(nextHandler, theEvent, userData);
-        
+
     return stat;                                // Report success
 }
 
-}; // end namespace
-
+} // end namespace

@@ -86,6 +86,6 @@ private:
 
 };
 
-};
+} // End of gadget namespace
 
 #endif
