@@ -37,8 +37,8 @@
 #include <vpr/Util/Debug.h>
 
 #include <gadget/Util/Debug.h>
-#include <gadget/Devices/Tweek/TweekGadget.h>
-#include <gadget/Devices/Tweek/TweekDigitalSubjectImpl.h>
+#include <drivers/Open/Tweek/TweekGadget.h>
+#include <drivers/Open/Tweek/TweekDigitalSubjectImpl.h>
 
 
 namespace gadget

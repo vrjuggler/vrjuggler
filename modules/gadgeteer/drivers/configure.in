@@ -634,12 +634,12 @@ AC_CONFIG_FILES([
    Open/DTK/Makefile
    Open/LinuxJoydev/Makefile
    Open/Trackd/Makefile
+   Open/Tweek/Makefile
+   Open/Tweek/Makefile.inc
+   Open/Tweek/build.xml
    Open/VRPN/Makefile
    Polhemus/Makefile
    Polhemus/Fastrak/Makefile
-   Tweek/Makefile
-   Tweek/Makefile.inc
-   Tweek/build.xml
    VRCO/Makefile
    VRCO/TrackdAPI/Makefile
    VirtualTechnologies/Makefile
