@@ -142,7 +142,7 @@ void vjMatrix::getZXYEuler(float& zRot, float& xRot, float& yRot)
          // Get y Angle
       cos_y = mat[0][0];
       sin_y = mat[0][1];
-      z_angle = atan2(cos_z, sin_z);
+      y_angle = atan2(cos_y, sin_y);
    }
 
    xRot = VJ_RAD2DEG(x_angle);
