@@ -291,7 +291,9 @@ if ($#inputfiles < 0) {
   print " (files|directories) : Files or directories to search for input\n\n";
   exit (0);
 }
-    
+
+%class_paths = ();
+
 foreach $inputfile (@inputfiles) {
 
   $sdesc_marker=$SDESC_MARKER;
@@ -595,6 +597,11 @@ sub GENTEXT {
 	}
 
 	$str =~ s/$TO([^$TO$TC]*)$TC//;
+      }
+      # {path} was read.
+      elsif ( "$arg[0]" eq "path" ) {
+	my $path = $class_paths{"$cname"};
+	$str =~ s|$TO([^$TO$TC]*)$TC|$path|;
       }
       elsif ($arg[0] eq "name") {
         if ($curglob) {
@@ -933,7 +940,6 @@ sub GENTEXT {
  	    }
  	  }
         }
-
         elsif ($arg[1]=~/func|global|typedef|macro/){
 
           if ($arg[1] eq "func") { 
@@ -1327,6 +1333,11 @@ sub PROCINPUT  {
 
   local($filename, $modtime) = @_;
   local($block,$macdata,$temp,$temp2,%temp);
+
+  # Get the path leading up to the current file from $filename.
+  local $path = "$filename";
+  $path =~ s/^(\.\.\/)+//;
+  $path = "$`" if $path =~ /\/[^\/]+$/;
 
   # Get the file's extension from $filename.
   my $file_ext = "";
@@ -1916,6 +1927,10 @@ sub PROCCLASS {
       }
     }
   }
+
+  # Store the path leading up to the file where this class is defined.  We
+  # get $path as a 'local' variable from the calling function.
+  $class_paths{"$classname"} = "$path";
 
   if ($modtime>$modtime{$classname}) { $modtime{$classname}=$modtime; }
     
