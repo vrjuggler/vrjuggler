@@ -58,11 +58,6 @@ public:
 	val = (val >= initval)?
 	    val - initval
 	    :val + (maxval - initval);
-	/*	if (val >= initval)
-	    val -= initval;
-	else
-	    val += maxval-initval;
-	*/
     }
 
 
