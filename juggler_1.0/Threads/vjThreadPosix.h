@@ -293,7 +293,7 @@ private:
     void checkRegister(int status);
 
     // Static member variables and functions.
-    static hash_map<addr_t, thread_id_t, hash<addr_t>, eq_thread> mThreadHash;
+    static hash_map<addr_t, thread_id_t, hash<addr_t>, eq_thread> mPthreadHash;
 
     static thread_id_t			thread_count;
     static vjThreadTable<thread_id_t>	mThreadTable;

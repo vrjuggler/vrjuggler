@@ -17,7 +17,7 @@
 
 
 thread_id_t vjThreadPosix::thread_count = 1;
-hash_map<addr_t, thread_id_t, hash<addr_t>, eq_thread> vjThreadPosix::mThreadHash;
+hash_map<addr_t, thread_id_t, hash<addr_t>, eq_thread> vjThreadPosix::mPthreadHash;
 vjThreadTable<thread_id_t> vjThreadPosix::mThreadTable;
 
 typedef struct sched_param	sched_param_t;
@@ -79,7 +79,7 @@ vjThreadPosix::~vjThreadPosix (void) {
 
     mThreadTable.removeThread(gettid());
     me.obj = pthread_self();
-    mThreadHash.erase((addr_t) &me);
+    mPthreadHash.erase((addr_t) &me);
 
     status = 0;
     pthread_exit((void*) &status);
@@ -231,7 +231,7 @@ void
 vjThreadPosix::checkRegister (int status) {
     if ( status == 0 ) {
         mThread.id = thread_count;
-        mThreadHash[(addr_t) &mThread] = mThread.id;
+        mPthreadHash[(addr_t) &mThread] = mThread.id;
         registerThread(true);
         mThreadTable.addThread(this, mThread.id);
         thread_count++;
@@ -257,9 +257,9 @@ vjThreadPosix::gettid (void) {
     hash_map<addr_t, thread_id_t, hash<addr_t>, eq_thread>::iterator i;
 
     me.obj = pthread_self();
-    i = mThreadHash.find((addr_t) &me);
+    i = mPthreadHash.find((addr_t) &me);
 
-    if ( i == mThreadHash.end() ) {
+    if ( i == mPthreadHash.end() ) {
         return 0;		// There is no thread with ID 0
     } else {
         return (*i).second;
