@@ -1,5 +1,10 @@
 DATE        AUTHOR    CHANGE
 ----------- --------- ---------------------------------------------------------
+Jun-28-2001 patrick   The POSIX thread wrapper no longer calls pthread_exit(3)
+                      in its destructor.  For stack-allocated vjThread objects
+                      (using pthreads), this caused the wrong thread to exit
+                      when the object went out of scope.
+
 [Version 1.0.1 - 6.14.2001]====================================================
 Jun-13-2001 patrick   Added a script called juggler-config that users can run
                       to get compiler and linker options needed for building

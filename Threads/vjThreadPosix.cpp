@@ -134,7 +134,6 @@ vjThreadPosix::~vjThreadPosix (void) {
     delete mUserThreadFunctor;
 
     status = 0;
-    pthread_exit((void*) &status);
 }
 
 // ---------------------------------------------------------------------------
