@@ -71,7 +71,7 @@ public:
    InputManager();
    virtual ~InputManager();
 
-   friend VJ_API(std::ostream&) operator<<(std::ostream& out,
+   friend GAD_API(std::ostream&) operator<<(std::ostream& out,
                                            InputManager& iMgr);
 
  //---------------------------//
@@ -189,7 +189,7 @@ private:
 };
 
 // Write out the status of the input manager
-VJ_API(std::ostream&) operator<<(std::ostream& out, InputManager& iMgr);
+GAD_API(std::ostream&) operator<<(std::ostream& out, InputManager& iMgr);
 
 } // end namespace
 
