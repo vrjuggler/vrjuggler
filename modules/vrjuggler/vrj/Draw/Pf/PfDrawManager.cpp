@@ -522,7 +522,7 @@ void vjPfDrawManager::releaseDisplay(pfDisplay& disp)
    // Release all viewports
    for(std::vector<pfViewport>::iterator i=disp.viewports.begin(); i != disp.viewports.end(); i++)
    {
-      releaseViewport(*i);
+      releaseViewport(disp, *i);
    }
 
    // Release the pipe window
@@ -530,7 +530,7 @@ void vjPfDrawManager::releaseDisplay(pfDisplay& disp)
 }
 
 
-void vjPfDrawManager::releaseViewport(pfViewport& vp)
+void vjPfDrawManager::releaseViewport(pfDisplay& disp, pfViewport& vp)
 {
    std::vector<pfChannel*>::iterator chan_i;
 
@@ -562,8 +562,6 @@ void vjPfDrawManager::releaseViewport(pfViewport& vp)
 
             if(mSurfMasterChan != NULL)                  // Dettach from the channel
                chan->detach(mSurfMasterChan);
-
-            chan->setScene(NULL);                           // Unref the scene
          }
          else if(vp.viewport->isSimulator())    // SIMULATOR display
          {
@@ -585,11 +583,11 @@ void vjPfDrawManager::releaseViewport(pfViewport& vp)
 
             if(mSimMasterChan != NULL)                  // Dettach from the channel
                chan->detach(mSimMasterChan);
-
-            chan->setScene(NULL);                           // Unref the scene
          }
 
-         delete chan;      // Delete the channel
+         chan->setScene(NULL);
+         disp.pWin->removeChan(chan);     // Remove channel from pwin
+         pfDelete( chan);                     // Delete the channel
       }
    }
 }

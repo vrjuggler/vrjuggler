@@ -242,7 +242,7 @@ protected:
 
    // Helpers for releasing a display and the associated cruft
    void releaseDisplay(pfDisplay& disp);
-   void releaseViewport(pfViewport& vp);
+   void releaseViewport(pfDisplay& disp, pfViewport& vp);
    pfPipeWindow* allocatePipeWin(unsigned pipeNum);
    void releasePipeWin(pfPipeWindow* pipeWin, unsigned pipeNum);
 
