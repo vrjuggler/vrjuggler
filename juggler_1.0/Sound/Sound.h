@@ -22,7 +22,11 @@ public:
    // reutrns false if didn't load.
    virtual bool load( const char* const soundname )
    {
-      return false;
+      // be stupid and return true,
+      // this allows use of the Sound class to stub out sound.
+      // so... of course the sound loaded - this is a stub,
+      // it's always a success!
+      return true;
    }
    
    void setEngine( SoundEngine& se )
