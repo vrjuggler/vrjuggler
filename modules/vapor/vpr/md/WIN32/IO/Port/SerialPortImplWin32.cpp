@@ -14,11 +14,10 @@ namespace vpr{
 // Constructor.  This sets all the default values for the given port name.
 // ----------------------------------------------------------------------------
 SerialPortImplWin32::SerialPortImplWin32 (const std::string& port_name)
-    : Port(port_name), m_handle(NULL)
+    : m_name(port_name), m_handle(NULL)
 {
     openFlag = GENERIC_READ | GENERIC_WRITE;
-    pName = port_name.c_str();
-    blocking = true;
+    m_blocking = true;
     parityMark = false;
 }
 
@@ -37,7 +36,7 @@ SerialPortImplWin32::~SerialPortImplWin32 () {
 vpr::Status SerialPortImplWin32::open () {
     vpr::Status status;
     COMMTIMEOUTS gct;
-    m_handle = CreateFile( pName,
+    m_handle = CreateFile( m_name.c_str(),
                      openFlag,
                      0,    // comm devices must be opened w/exclusive-access
                      NULL, // no security attributes

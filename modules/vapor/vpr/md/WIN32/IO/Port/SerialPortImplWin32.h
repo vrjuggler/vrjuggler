@@ -8,15 +8,19 @@
 #include <string>
 #include <vector>
 
-#include <vpr/IO/Port/Port.h>
+#include <vpr/IO/IOSys.h>
 #include <vpr/IO/Port/SerialTypes.h>
+#include <vpr/Util/Status.h>
+#include <vpr/Util/Interval.h>
+#include <vpr/Util/Debug.h>
+
 
 namespace vpr {
 
 // ----------------------------------------------------------------------------
 //: vpr::SerialPort implementation for Win32.
 // ----------------------------------------------------------------------------
-class VPR_CLASS_API SerialPortImplWin32 : public Port {
+class VPR_CLASS_API SerialPortImplWin32 {
 public:
     // ------------------------------------------------------------------------
     //: Constructor.  This creates a file handle object connected to the given
@@ -40,47 +44,60 @@ public:
 
 
     // ========================================================================
-    // vpr::BlockIO overrides.
+    // vpr::BlockIO basics.
     // ========================================================================
 
-    // ------------------------------------------------------------------------
-    //: Set the open flags so that the serial port is opened in read-only
-    //+ mode.
-    //
-    //! PRE: None.
-    //! POST: The open flags are updated so that when the port is opened, it
-    //+       is opened in read-only mode.  If the port is already open, this
-    //+       has no effect.
-    // ------------------------------------------------------------------------
-    inline virtual void
+    /**
+     * Gets the name of this serial port.
+     *
+     * @pre None.
+     * @post
+     *
+     * @return An object containing the name of the serial port.
+     */
+    const std::string&
+    getName (void) {
+        return m_name;
+    }
+
+    /**
+     * Sets the open flags so that the serial port is opened in read-only
+     * mode.
+     *
+     * @pre None.
+     * @post The open flags are updated so that when the port is opened, it is
+     *       opened in read-only mode.  If the port is already open, this has
+     *       no effect.
+     */
+    inline void
     setOpenReadOnly (void) {
         openFlag = GENERIC_READ;
     }
 
-    // ------------------------------------------------------------------------
-    //: Set the open flags so that the serial port is opened in write-only
-    //: mode.
-    //
-    //! PRE: None.
-    //! POST: The open flags are updated so that when the port is opened, it
-    //+       is opened in write-only mode.  If the port is already open, this
-    //+       has no effect.
-    // ------------------------------------------------------------------------
-    inline virtual void
+    /**
+     * Sets the open flags so that the serial port is opened in write-only
+     * mode.
+     *
+     * @pre None.
+     * @post The open flags are updated so that when the port is opened, it is
+     *       opened in write-only mode.  If the port is already open, this has
+     *       no effect.
+     */
+    inline void
     setOpenWriteOnly (void) {
         openFlag = GENERIC_WRITE;
     }
 
-    // ------------------------------------------------------------------------
-    //: Set the open flags so that the serial port is opened in read/write
-    //+ mode.
-    //
-    //! PRE: None.
-    //! POST: The open flags are updated so that when the port is opened, it
-    //+       is opened in read/write mode.  If the port is already open, this
-    //+       has no effect.
-    // ------------------------------------------------------------------------
-    inline virtual void
+    /**
+     * Sets the open flags so that the serial port is opened in read/write
+     * mode.
+     *
+     * @pre None.
+     * @post The open flags are updated so that when the port is opened, it is
+     *       opened in read/write mode.  If the port is already open, this has
+     *       no effect.
+     */
+    inline void
     setOpenReadWrite (void) {
         openFlag = GENERIC_READ | GENERIC_WRITE;
     }
@@ -94,7 +111,7 @@ public:
     //+       is opened in blocking mode.  If the port is already open, this
     //+       has no effect.
     // ------------------------------------------------------------------------
-    inline virtual void
+    inline void
     setOpenBlocking (void) {
         std::cout << "'setOpenBlocking' not implemented for Win32" << std::endl;
     }
@@ -108,12 +125,10 @@ public:
     //+       is opened in non-blocking mode.  If the port is already open,
     //+       this has no effect.
     // ------------------------------------------------------------------------
-    inline virtual void
+    inline void
     setOpenNonBlocking (void) {
         std::cout << "'setOpenBlocking' not implemented for Win32" << std::endl;
     }
-
-
 
     // ------------------------------------------------------------------------
     //: Open the serial port and initialize its flags.
@@ -127,8 +142,7 @@ public:
     //! RETURNS: true  - The serial port was opened successfully.
     //! RETURNS: false - The serial port could not be opened
     // ------------------------------------------------------------------------
-    virtual vpr::Status open(void);
-
+    vpr::Status open(void);
 
     // ------------------------------------------------------------------------
     //: Close the serial port.
@@ -141,7 +155,7 @@ public:
     //! RETURNS: true  - The serial port was closed successfully.
     //! RETURNS: false - The serial port could not be closed for some reason.
     // ------------------------------------------------------------------------
-    inline virtual vpr::Status
+    inline vpr::Status
     close (void) {
         vpr::Status retval;
 
@@ -150,7 +164,6 @@ public:
         }
         return retval;
     }
-
 
     // ------------------------------------------------------------------------
     //: Reconfigure the serial port so that it is in blocking mode.
@@ -162,7 +175,7 @@ public:
     //! RETURNS: false - The blocking mode could not be changed for some
     //+                  reason.
     // ------------------------------------------------------------------------
-    inline virtual vpr::Status
+    inline vpr::Status
     enableBlocking (void) {
         vpr::Status status;
         status.setCode(vpr::Status::Failure);
@@ -179,7 +192,7 @@ public:
     //! RETURNS:  0 - The blocking mode was changed successfully.
     //! RETURNS: -1 - The blocking mode could not be changed for some reason.
     // ------------------------------------------------------------------------
-    inline virtual vpr::Status
+    inline vpr::Status
     enableNonBlocking (void) {
         vpr::Status status;
         status.setCode(vpr::Status::Failure);
@@ -187,6 +200,90 @@ public:
         return status;
     }
 
+    /**
+     * Get the current blocking state for the serial port.
+     *
+     * @pre m_blocking is set correctly
+     *
+     * @return true is returned if the port is in blocking mode.<br>
+     *         false is returned if the port is in non-blocking mode.
+     */
+    inline bool
+    getBlocking (void) const {
+        return m_blocking;
+    }
+
+    /**
+     * Gets the current non-blocking state for the serial port.
+     *
+     * @pre <code>m_blocking</code> is set correctly<br>
+     *
+     * @return <code>true</code> is returned if the port is in non-blocking
+     *         mode.   Otherwise, <code>false</code> is returned.
+     */
+    inline bool
+    getNonBlocking (void) const {
+        return ! m_blocking;
+    }
+
+    /**
+     * Returns the contained handle.
+     */
+    inline vpr::IOSys::Handle
+    getHandle (void) {
+#ifdef VPR_USE_NSPR
+       vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+           << "ERROR: Cannot get handle for Win32 file descriptor with NSPR!\n";
+       return vpr::IOSys::NullHandle;
+#else
+       return m_handle;
+#endif
+    }
+
+    /**
+     * Tests if the serial port is read-only.
+     *
+     * @pre The serial port is open.
+     * @post The access mode is tested for read-only mode, and the result is
+     *       returned to the caller.
+     *
+     * @return <code>true</code> is returned if the device is in read-only
+     *         mode; <code>false</code> otherwise.
+     */
+    inline bool
+    isReadOnly (void) {
+        return GENERIC_READ == openFlag;
+    }
+
+    /**
+     * Tests if the serial port is write-only.
+     *
+     * @pre The serial port is open.
+     * @post The access mode is tested for write-only mode, and the result is
+     *       returned to the caller.
+     *
+     * @return <code>true</code> is returned if the device is in write-only
+     *         mode; <code>false</code> otherwise.
+     */
+    inline bool
+    isWriteOnly (void) {
+        return GENERIC_WRITE == openFlag;
+    }
+
+    /**
+     * Tests if the serial port is read/write.
+     *
+     * @pre The serial port is open.
+     * @post The access mode is tested for read/write mode, and the result is
+     *       returned to the caller.
+     *
+     * @return <code>true</code> is returned if the device is in read/write
+     *         mode; <code>false</code> otherwise.
+     */
+    inline bool
+    isReadWrite (void) {
+        return (GENERIC_READ | GENERIC_WRITE) == openFlag;
+    }
 
     // ========================================================================
     // VPR serial port interface implementation.
@@ -202,8 +299,7 @@ public:
     //! RETURNS: A vpr::SerialTypes::UpdateActionOption value stating when
     //+          updates take effect.
     // ------------------------------------------------------------------------
-    SerialTypes::UpdateActionOption getUpdateAction(void);
-
+    vpr::SerialTypes::UpdateActionOption getUpdateAction(void);
 
     // ------------------------------------------------------------------------
     //: Change the current update action to take place as described by the
@@ -215,7 +311,7 @@ public:
     //
     //! ARGS: action - The new update action value.
     // ------------------------------------------------------------------------
-    void setUpdateAction (SerialTypes::UpdateActionOption action);
+    void setUpdateAction (vpr::SerialTypes::UpdateActionOption action);
 
     // ------------------------------------------------------------------------
     //: Query the serial port for the maximum buffer size.
@@ -767,78 +863,108 @@ public:
     // ------------------------------------------------------------------------
     vpr::Status sendBreak(const vpr::Int32 duration);
 
-    // ------------------------------------------------------------------------
-    //! Read up to the specified number of bytes from the serial port into the
-    //+ given buffer.
-    //
-    //! PRE: The port's file handle is valid, and the buffer is at least
-    //+      length bytes long.
-    //! POST: The given buffer has length bytes copied into it from the serial
-    //+       port, and the number of bytes read successfully is returned to
-    //+       the caller.
-    //
-    //! ARGS: buffer - A pointer to the buffer where the data read from the
-    //+                port is to be stored.
-    //! ARGS: length - The number of bytes to be read.
-    //
-    //! RETURNS: >-1 - The number of bytes successfully read from the serial
-    //+                port.
-    //! RETURNS:  -1 - An error occurred when reading.
-    // ------------------------------------------------------------------------
-    virtual vpr::Status read_i (void* buffer, const size_t length,
-                                ssize_t& bytes_read,
-                                const vpr::Interval timeout = vpr::Interval::NoTimeout);
+    /**
+     * Implementation of the <code>read</code> template method.  This reads at
+     * most the specified number of bytes from the serial port into the given
+     * buffer.
+     *
+     * @pre The port is open for reading, and the buffer is at least
+     *      <code>length</code> bytes long.
+     * @post The given buffer has length bytes copied into it from the port,
+     *       and the number of bytes read successfully is returned to the
+     *       caller via the <code>bytes_read</code> parameter.
+     *
+     * @param buffer     A pointer to the buffer where the port's buffer
+     *                   contents are to be stored.
+     * @param length     The number of bytes to be read.
+     * @param bytes_read The number of bytes read into the buffer.
+     * @param timeout    The maximum amount of time to wait for data to be
+     *                   available for reading.  This argument is optional and
+     *                   defaults to <code>vpr::Interval::NoTimeout</code>
+     *
+     * @return <code>vpr::Status::Success</code> is returned if the read
+     *         operation completed successfully.<br>
+     *         <code>vpr::Status::Success</code> is returned if the read
+     *         operation failed.<br>
+     *         <code>vpr::Status::InProgress</code> if the port is in
+     *         non-blocking mode, and the read operation is in progress.<br>
+     *         <code>vpr::Status::Timeout</code> is returned if the read
+     *         could not begin within the timeout interval.
+     */
+    vpr::Status read_i (void* buffer, const size_t length, ssize_t& bytes_read,
+                        const vpr::Interval timeout = vpr::Interval::NoTimeout);
 
-    // ------------------------------------------------------------------------
-    //: Read exactly the specified number of bytes from the serial port into
-    //+ the given buffer.
-    //
-    //! PRE: The port's file handle is valid, and the buffer is at least
-    //+      length bytes long.
-    //! POST: The given buffer has length bytes copied into it from the serial
-    //+       port, and the number of bytes read successfully is returned to
-    //+       the caller.
-    //
-    //! ARGS: buffer - A pointer to the buffer where the port's buffer
-    //+                contents are to be stored.
-    //! ARGS: length - The number of bytes to be read.
-    //
-    //! RETURNS: >-1 - The number of bytes successfully read from the serial
-    //+                port.
-    //! RETURNS:  -1 - An error occurred when reading.
-    // ------------------------------------------------------------------------
-    virtual vpr::Status readn_i (void* buffer, const size_t length,
-                                 ssize_t& bytes_read,
-                                 const vpr::Interval timeout = vpr::Interval::NoTimeout)
+    /**
+     * Implementation of the <code>readn</code> template method.  This reads
+     * exactly the specified number of bytes from the serial port into the
+     * given buffer.
+     *
+     * @pre The port is open for reading, and the buffer is at least
+     *      <code>length</code> bytes long.
+     * @post The given buffer has <code>length</code> bytes copied into
+     *       it from the port, and the number of bytes read successfully
+     *       is returned to the caller via the <code>bytes_read</code>
+     *       parameter.
+     *
+     * @param buffer     A pointer to the buffer where the ports's buffer
+     *                   contents are to be stored.
+     * @param length     The number of bytes to be read.
+     * @param bytes_read The number of bytes read into the buffer.
+     * @param timeout    The maximum amount of time to wait for data to be
+     *                   available for reading.  This argument is optional and
+     *                   defaults to <code>vpr::Interval::NoTimeout</code>
+     *
+     * @return vpr::Status::Success is returned if the read operation
+     *         completed successfully.<br>
+     *         vpr::Status::InProgress if the port is in non-blocking mode,
+     *         and the read operation is in progress.<br>
+     *         vpr::Status::Timeout is returned if the read could not begin
+     *         within the timeout interval.<br>
+     *         vpr::Status::Failure is returned if the read operation failed.
+     */
+    vpr::Status readn_i (void* buffer, const size_t length, ssize_t& bytes_read,
+                         const vpr::Interval timeout = vpr::Interval::NoTimeout)
     {
         // XXX: Fix me!!!
         return vpr::Status();
     }
 
-    // ------------------------------------------------------------------------
-    //: Write the buffer to the serial port.
-    //
-    //! PRE: The port's file handle is valid.
-    //! POST: The given buffer is written to the serial port, and the number
-    //+       of bytes written successfully is returned to the caller.
-    //
-    //! ARGS: buffer - A pointer to the buffer to be written.
-    //! ARGS: length - The length of the buffer.
-    //
-    //! RETURNS: >-1 - The number of bytes successfully written to the serail
-    //+                port.
-    //! RETURNS:  -1 - An error occurred when writing.
-    // ------------------------------------------------------------------------
-    virtual vpr::Status
+    /**
+     * Implementation of the <code>write</code> template method.  This writes
+     * the given buffer to the serial port.
+     *
+     * @pre The port is open for writing.
+     * @post The given buffer is written to the I/O port, and the number
+     *       of bytes written successfully is returned to the caller via the
+     *       <code>bytes_written</code> parameter.
+     *
+     * @param buffer        A pointer to the buffer to be written.
+     * @param length        The length of the buffer.
+     * @param bytes_written The number of bytes written to the port.
+     * @param timeout       The maximum amount of time to wait for data to be
+     *                      available for writing.  This argument is optional
+     *                      and defaults to vpr::Interval::NoTimeout.
+     *
+     * @return vpr::Status::Success is returned if the write operation
+     *         completed successfully.<br>
+     *         vpr::Status::InProgress is returned if the handle is in
+     *         non-blocking mode, and the write operation is in progress.<br>
+     *         vpr::Status::Timeout is returned if the write could not begin
+     *         within the timeout interval.<br>
+     *         vpr::Status::Failure is returned if the write operation failed.
+     */
+    vpr::Status
     write_i (const void* buffer, const size_t length, ssize_t& bytes_written,
              const vpr::Interval timeout = vpr::Interval::NoTimeout);
 
 
-    HANDLE m_handle; // handle to communication file
-    DWORD openFlag; //flag to specify how to open comm port
-    const char* pName; //name of communication device
-    bool blocking; //flag for blocking io
-    bool parityMark;  //flag for parity marking
+protected:
+    HANDLE m_handle;    /**< handle to communication file */
+    DWORD openFlag;     /**< flag to specify how to open comm port */
+    std::string m_name; /**< name of communication device */
+    bool m_open;
+    bool m_blocking;    /**< flag for blocking I/O */
+    bool parityMark;    /**< flag for parity marking */
 };
 
 
