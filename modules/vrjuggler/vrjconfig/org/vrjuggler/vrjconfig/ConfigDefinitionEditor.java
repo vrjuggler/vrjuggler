@@ -55,7 +55,7 @@ public class ConfigDefinitionEditor
       {
          e.printStackTrace();
       }
-     
+/*
       // Try to get icons for the toolbar buttons
       try
       {
@@ -67,6 +67,7 @@ public class ConfigDefinitionEditor
          // Ack! No icons. Use text labels instead
          mSaveBtn.setText("Save");
       }
+*/
    }
 
    /**
@@ -88,7 +89,7 @@ public class ConfigDefinitionEditor
       throws Exception
    {
       this.setLayout(mBaseLayout);
-      
+/*
       mToolbar.add(mSaveBtn);
       mSaveBtn.addActionListener(new ActionListener()
       {
@@ -106,12 +107,12 @@ public class ConfigDefinitionEditor
             }
          }
       });
-      
+*/
       mToolbarPanel.setLayout(new BorderLayout());
-
+/*
       mToolbar.setBorder(BorderFactory.createEtchedBorder());
       mToolbar.setFloatable(false);
-      
+ */     
       mTitleLbl.setBackground(UIManager.getColor("textHighlight"));
       mTitleLbl.setFont(new java.awt.Font("Serif", 1, 18));
       mTitleLbl.setForeground(Color.black);
@@ -121,7 +122,7 @@ public class ConfigDefinitionEditor
       mTitleLbl.setText("VRJConfig Config Definition Editor");
       
       mToolbarPanel.add(mTitleLbl, BorderLayout.NORTH);
-      mToolbarPanel.add(mToolbar, BorderLayout.CENTER);
+//      mToolbarPanel.add(mToolbar, BorderLayout.CENTER);
       
       this.add(mToolbarPanel,  BorderLayout.NORTH);
       this.add(mDefReposEditor,  BorderLayout.CENTER);
@@ -131,9 +132,10 @@ public class ConfigDefinitionEditor
    private BorderLayout mBaseLayout = new BorderLayout();
    private JPanel mToolbarPanel = new JPanel();
    private JLabel mTitleLbl = new JLabel();
-   private JToolBar mToolbar = new JToolBar();
-   private JButton mSaveBtn = new JButton();
-   private ConfigDefinitionRepositoryEditor mDefReposEditor = new ConfigDefinitionRepositoryEditor();
+//   private JToolBar mToolbar = new JToolBar();
+//   private JButton mSaveBtn = new JButton();
+   private ConfigDefinitionRepositoryEditor mDefReposEditor =
+      new ConfigDefinitionRepositoryEditor();
 
    /** A handle to the configuration broker. */
    private ConfigBroker mBroker;
