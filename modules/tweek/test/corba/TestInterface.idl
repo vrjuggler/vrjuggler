@@ -1,0 +1,7 @@
+#include <tweek/CORBA/TweekObserver.idl>
+
+
+interface TestInterface : TweekObserver
+{
+   void doSomething();
+};
