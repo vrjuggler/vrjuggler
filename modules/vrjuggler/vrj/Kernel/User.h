@@ -41,7 +41,7 @@ public:
    virtual bool config(vjConfigChunk* chunk);
 
    vjMatrix* getHeadPos()
-   { return mHead->GetData(); }
+   { return mHead->getData(); }
 
     vjTimeStamp* getHeadUpdateTime() {
 	return mHead->getUpdateTime();

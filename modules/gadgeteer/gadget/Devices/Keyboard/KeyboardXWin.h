@@ -47,50 +47,50 @@ public:
       m_keyboard_grabbed = -1;
       m_pointer_grabbed = -1;
    }
-   ~vjXWinKeyboard() { StopSampling();}
+   ~vjXWinKeyboard() { stopSampling();}
 
    virtual bool config(vjConfigChunk* c);
 
    /* Pure Virtuals required by vjInput */
-   int StartSampling();
-   int StopSampling();
-   int Sample() { return 1;}
-   void UpdateData();
+   int startSampling();
+   int stopSampling();
+   int sample() { return 1;}
+   void updateData();
 
-   char* GetDeviceName() { return "vjXwinKeyboard";}
+   char* getDeviceName() { return "vjXwinKeyboard";}
    static std::string getChunkType() { return std::string("Keyboard");}
 
    // returns the number of times the key was pressed during the
    // last frame, so you can put this in an if to check if was
    // pressed at all, or if you are doing processing based on this
    // catch the actual number..
-   int IsKeyPressed(int vjKey)
+   int isKeyPressed(int vjKey)
    {  return m_keys[vjKey];}
 
    virtual int keyPressed(int keyId)
-   { return IsKeyPressed(keyId); }
+   { return isKeyPressed(keyId); }
 
    virtual bool modifierOnly(int modKey)
-   { return OnlyModifier(modKey); }
+   { return onlyModifier(modKey); }
 
 private:
    /* Private functions for processing input data */
-   int OnlyModifier(int);
+   int onlyModifier(int);
 
    //: Update the keys.
-   void UpdKeys();
+   void updKeys();
 
    /* X-Windows utility functions */
    //: Convert XKey to vjKey
    //! NOTE: Keypad keys are transformed ONLY to number keys
-   int XKeyTovjKey(KeySym xKey);
-   int FilterEvent( XEvent* event, int want_exposes,
+   int xKeyTovjKey(KeySym xKey);
+   int filterEvent( XEvent* event, int want_exposes,
                     int width, int height);
-   char* CheckArgs(char* look_for);
-   void CheckGeometry();
-   Window CreateWindow (Window parent, unsigned int border, unsigned long
+   char* checkArgs(char* look_for);
+   void checkGeometry();
+   Window createWindow (Window parent, unsigned int border, unsigned long
                         fore, unsigned long back, unsigned long event_mask);
-   void SetHints(Window window, char*  window_name, char*  icon_name,
+   void setHints(Window window, char*  window_name, char*  icon_name,
                  char* class_name, char* class_type);
 
 

@@ -35,9 +35,9 @@ bool vjCyberGlove::config(vjConfigChunk *c)
     }
 
     // init glove proxy interface
-    int proxy_index = vjKernel::instance()->getInputManager()->GetProxyIndex(glove_pos_proxy);
+    int proxy_index = vjKernel::instance()->getInputManager()->getProxyIndex(glove_pos_proxy);
     if(proxy_index != -1)
-       mGlovePos[0] = vjKernel::instance()->getInputManager()->GetPosProxy(proxy_index);
+       mGlovePos[0] = vjKernel::instance()->getInputManager()->getPosProxy(proxy_index);
     else
        vjDEBUG(vjDBG_ALL,0) << "ERROR: vjCyberGlove::vjCyberGlove: Can't find posProxy." << endl << vjDEBUG_FLUSH << endl;
 
@@ -47,7 +47,7 @@ bool vjCyberGlove::config(vjConfigChunk *c)
 };
 
 int
-vjCyberGlove::StartSampling()
+vjCyberGlove::startSampling()
 {
    if (myThread == NULL)
    {
@@ -79,7 +79,7 @@ vjCyberGlove::StartSampling()
 void vjCyberGlove::controlLoop(void* nullParam)
 {
    // Open the port and run with it
-   if(mGlove->Open() == 0)
+   if(mGlove->open() == 0)
    {
       vjDEBUG(vjDBG_ALL,0) << "ERROR: Can't open Cyberglove or it is already opened." << vjDEBUG_FLUSH;
       return;
@@ -87,12 +87,12 @@ void vjCyberGlove::controlLoop(void* nullParam)
 
    // Spin in the sampling
    while(1)
- 	   Sample();
+ 	   sample();
 }
 
-int vjCyberGlove::Sample()
+int vjCyberGlove::sample()
 {
-   mGlove->Sample();       // Tell the glove to sample
+   mGlove->sample();       // Tell the glove to sample
 
    copyDataFromGlove();                   // Copy the data across
    mTheData[0][progress].calcXforms();    // Update the xform data
@@ -101,7 +101,7 @@ int vjCyberGlove::Sample()
    return 1;
 }
 
-void vjCyberGlove::UpdateData()
+void vjCyberGlove::updateData()
 {
 vjGuard<vjMutex> updateGuard(lock);
    // Copy the valid data to the current data so that both are valid
@@ -113,7 +113,7 @@ vjGuard<vjMutex> updateGuard(lock);
   return;
 }
 
-int vjCyberGlove::StopSampling()
+int vjCyberGlove::stopSampling()
 {
    if (myThread != NULL)
    {
@@ -122,7 +122,7 @@ int vjCyberGlove::StopSampling()
       myThread = NULL;
       sginap(1);
 
-      mGlove->Close();
+      mGlove->close();
       vjDEBUG(vjDBG_ALL,0) << "stopping vjCyberGlove.." << endl;
    }
    return 1;
@@ -130,7 +130,7 @@ int vjCyberGlove::StopSampling()
 
 vjCyberGlove::~vjCyberGlove ()
 {
-   StopSampling();      // Stop the glove
+   stopSampling();      // Stop the glove
    delete mGlove;       // Delete the glove
 }
 
@@ -138,7 +138,7 @@ vjCyberGlove::~vjCyberGlove ()
 
 void vjCyberGlove::copyDataFromGlove()
 {
-   CYBER_GLOVE_DATA* glove_data = mGlove->GetData();     // Get ptr to data
+   CYBER_GLOVE_DATA* glove_data = mGlove->getData();     // Get ptr to data
 
    for(int i=0;i<vjGloveData::NUM_COMPONENTS;i++)
       for(int j=0;j<vjGloveData::NUM_JOINTS;j++)

@@ -26,7 +26,7 @@ public:
    {
       vjDeviceInterface::refresh();
       if(mProxyIndex != -1)
-         mKeyProxy = vjKernel::instance()->getInputManager()->GetKeyboardProxy(mProxyIndex);
+         mKeyProxy = vjKernel::instance()->getInputManager()->getKeyboardProxy(mProxyIndex);
       else
          mKeyProxy = NULL;
    }

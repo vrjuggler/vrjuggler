@@ -35,10 +35,10 @@ public:
     *  pure virtual functions required from vjInput
     */
    //@{
-   int StartSampling();
-   int StopSampling();
-   int Sample();
-   void UpdateData();
+   int startSampling();
+   int stopSampling();
+   int sample();
+   void updateData();
    //@}
 
    /** @name vjInput virtual functions
@@ -47,7 +47,7 @@ public:
     *  override but are not required to
     */
    //@{
-   char* GetDeviceName() { return "vjBird";}
+   char* getDeviceName() { return "vjBird";}
    //@}
 
    /** @name vjPosition pure virtual functions
@@ -56,9 +56,9 @@ public:
     */
    //@{
    //old function
-   //void GetData(vjPOS_DATA* &data);
+   //void getData(vjPOS_DATA* &data);
    // XXX: Bad things live here
-   vjMatrix* GetPosData(int dev = 0); // 0 base
+   vjMatrix* getPosData(int dev = 0); // 0 base
    //@}
 
 
@@ -69,30 +69,30 @@ public:
     *  shouldn't be used by apps using configchunks.
     */
    //@{
-   void SetSync(int sync);
-   int  GetSync()
+   void setSync(int sync);
+   int  getSync()
    {return syncStyle;}
 
-   void SetBlocking(int blVal);
-   int  GetBlocking()
+   void setBlocking(int blVal);
+   int  getBlocking()
    { return blocking;}
 
-   void SetFilters(BIRD_FILT f);
-   int  GetFilters()
+   void setFilters(BIRD_FILT f);
+   int  getFilters()
    { return filter;}
 
-   void SetHemisphere(BIRD_HEMI h);
-   int  GetHemisphere()
+   void setHemisphere(BIRD_HEMI h);
+   int  getHemisphere()
    {return hemisphere;}
 
-   void SetReportRate(char rRate);
-   char GetReportRate()
+   void setReportRate(char rRate);
+   char getReportRate()
    {return repRate;}
    //@}
 
 private:
-   void Position_Correct(float&x,float&y,float&z);
-   void InitCorrectionTable();
+   void positionCorrect(float&x,float&y,float&z);
+   void initCorrectionTable();
    vjThread*   myThread;      // ptr to our thread object
    CalStruct   caltable;
    int  syncStyle, blocking;

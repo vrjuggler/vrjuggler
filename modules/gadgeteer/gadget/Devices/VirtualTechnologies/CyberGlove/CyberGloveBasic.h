@@ -70,13 +70,13 @@ public:
 
     //: Open the glove
     //! RETURNS: 0 - Already open
-    int Open();
+    int open();
 
-    int Close();
+    int close();
 
-    int Sample();
+    int sample();
 
-    CYBER_GLOVE_DATA* GetData();
+    CYBER_GLOVE_DATA* getData();
 
 
      /** An the digit transforms are a [5][3] array of matrix4x4's
@@ -84,12 +84,12 @@ public:
        * transform to successive joints.  Also used when calulating
        * the fingertip positions.
        */
-    matrix4x4** GetDigitXForms ();
+    matrix4x4** getDigitXForms ();
 
 
       /** returns the thumb roll (in radians).
        */
-    float GetThumbRoll ();
+    float getThumbRoll ();
 
      /** reads the actual surface object file (eg "hires-hand.surf")
       * Better be called before calling GetSurfaceModel...
@@ -99,14 +99,14 @@ public:
       * name is the filename of the surface file - usually
       * "lowres-hand.surf" or "hires-hand.surf"
       */
-    void ReadSurfaceModel (int resolution, char *dir, char *name);
+    void readSurfaceModel (int resolution, char *dir, char *name);
 
       /** returns a pointer to the surface model struct, defined in
        * vt_read_hand_model-types.h, used to draw a glove.
        * This struct basically contains a bunch of GL lists to
        * draw the hand.
        */
-    SurfaceModel GetSurfaceModel();
+    SurfaceModel getSurfaceModel();
 
 
 
@@ -120,12 +120,12 @@ public:
        * wand x y z az el roll as args... with a cleaner interface to
        * boot...
        */
-    volatile float *GetStateVec();
+    volatile float *getStateVec();
 
       /** gets unflexed abduction value of the thumb; used when
        * calculating thumbtip position.
        */
-    float GetThumbUnflexedAbduction();
+    float getThumbUnflexedAbduction();
 
       /** quick function to determine position of a finger
        * return values:
@@ -133,7 +133,7 @@ public:
        * 1 finger closed
        * 2 finger inbetween/relaxed (whatever isn't zero or one)
        */
-    int GetFingerState (int finger);
+    int getFingerState (int finger);
 
 
   private:

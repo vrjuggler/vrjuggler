@@ -72,19 +72,19 @@ class vjFlock : public vjPosition {
    virtual bool config(vjConfigChunk* c);
 
     //: begin sampling
-    int StartSampling();
+    int startSampling();
 	
     //: stop sampling
-    int StopSampling();
+    int stopSampling();
 	
     //: sample data
-    int Sample();
+    int sample();
 	
     //: update to the sampled data.
-    void UpdateData();
+    void updateData();
 	
     //: get the device name
-    char* GetDeviceName() { return "vjFlock"; }
+    char* getDeviceName() { return "vjFlock"; }
 	
     //: return what chunk type is associated with this class.
     static std::string getChunkType() { return std::string("Flock");}
@@ -95,7 +95,7 @@ class vjFlock : public vjPosition {
     //! NOTE: Clients of juggler should access tracker recievers as [0-n]
     //+  For example, if you have recievers 1,2, and 4 with transmitter on 3,
     //+  then you can access them, in order, as 0,1,2.
-    vjMatrix* GetPosData( int dev = 0); // 0 base
+    vjMatrix* getPosData( int dev = 0); // 0 base
 
     //: Get time of last update for this receiver
     //! ARGS: dev - is the reciever number
@@ -223,14 +223,14 @@ class vjFlock : public vjPosition {
 
 
 private:
-	void Position_Correct(float&x,float&y,float&z);
-	void InitCorrectionTable(const char*);
+    void positionCorrect(float&x,float&y,float&z);
+    void initCorrectionTable(const char*);
 
-   int getBirdIndex(int birdNum, int bufferIndex);
+    int getBirdIndex(int birdNum, int bufferIndex);
 
-	vjThread*   myThread;      // The thread doing the flock sampling
+    vjThread*   myThread;      // The thread doing the flock sampling
 	
-	aFlock mFlockOfBirds;
+    aFlock mFlockOfBirds;
 };
 
 #endif

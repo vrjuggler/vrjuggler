@@ -26,7 +26,7 @@ public:
    {
       vjDeviceInterface::refresh();
       if(mProxyIndex != -1)
-         mGestProxy = vjKernel::instance()->getInputManager()->GetGestureProxy(mProxyIndex);
+         mGestProxy = vjKernel::instance()->getInputManager()->getGestureProxy(mProxyIndex);
       else
          mGestProxy = NULL;
    }

@@ -21,22 +21,22 @@ public:
    virtual bool config(vjConfigChunk* chunk);
 
    //: Return analog data
-   virtual int GetAnalogData(int devNum=0)
+   virtual int getAnalogData(int devNum=0)
    {
       vjASSERT(devNum < mAnaData.size());    // Make sure we have enough space
       return mAnaData[devNum];
    }
 
    /* These functions don't do anything */
-   int StartSampling() { return 1; }
-   int StopSampling() { return 1; }
-   int Sample() { return 1; }
+   int startSampling() { return 1; }
+   int stopSampling() { return 1; }
+   int sample() { return 1; }
 
    //: Update the data
-   virtual void UpdateData();
+   virtual void updateData();
 
     //: Get the name of the device
-   char* GetDeviceName() { return "vjSimAnalog";}
+   char* getDeviceName() { return "vjSimAnalog";}
 
    static std::string getChunkType() { return std::string("SimAnalog");}
 

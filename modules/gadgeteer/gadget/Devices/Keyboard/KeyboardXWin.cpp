@@ -38,7 +38,7 @@ bool vjXWinKeyboard::config(vjConfigChunk *c)
     return true;
 }
 
-int vjXWinKeyboard::StartSampling()
+int vjXWinKeyboard::startSampling()
 {
 
    if (myThread == NULL)
@@ -73,7 +73,7 @@ int vjXWinKeyboard::StartSampling()
 
       if (i == nVisuals)
       {
-         cerr << "vjKeyboard::StartSampling() : find visual failed" << endl;
+         cerr << "vjKeyboard::startSampling() : find visual failed" << endl;
          return 0;
       }
 
@@ -83,15 +83,15 @@ int vjXWinKeyboard::StartSampling()
       m_swa.border_pixel = WhitePixel(m_display,m_screen);
       m_swa.event_mask = ExposureMask | StructureNotifyMask | KeyPressMask;
       m_swa.background_pixel = BlackPixel(m_display,m_screen);
-      CheckGeometry();
+      checkGeometry();
 
-      m_window = CreateWindow ( DefaultRootWindow(m_display) ,
+      m_window = createWindow ( DefaultRootWindow(m_display) ,
                                 1, BlackPixel(m_display,m_screen),
                                 WhitePixel(m_display,m_screen), ExposureMask |
                                 StructureNotifyMask |
                                 KeyPressMask | KeyReleaseMask | ButtonPressMask |
                                 ButtonReleaseMask | ButtonMotionMask | PointerMotionMask);
-      SetHints(m_window, instName , "VJm_keys" , "VJKeyboard2", "VJInputD" );
+      setHints(m_window, instName , "VJm_keys" , "VJKeyboard2", "VJInputD" );
       XSelectInput(m_display, m_window,
                    KeyPressMask | KeyReleaseMask | ButtonPressMask |
                    ButtonReleaseMask | ButtonMotionMask | PointerMotionMask);
@@ -101,7 +101,7 @@ int vjXWinKeyboard::StartSampling()
       XClearWindow(m_display,m_window);    // Try to clear the background
 
 
-      vjDEBUG(vjDBG_ALL,0) << "vjKeyboard::StartSampling() : ready to go.." << endl << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_ALL,0) << "vjKeyboard::startSampling() : ready to go.." << endl << vjDEBUG_FLUSH;
 
 
       myThread = (vjThread *) 1;
@@ -112,7 +112,7 @@ int vjXWinKeyboard::StartSampling()
       return 0; // already sampling
 }
 
-int vjXWinKeyboard::OnlyModifier(int mod)
+int vjXWinKeyboard::onlyModifier(int mod)
 {
   switch (mod) {
      case VJKEY_NONE:
@@ -129,13 +129,13 @@ int vjXWinKeyboard::OnlyModifier(int mod)
   }
 }
 
-void vjXWinKeyboard::UpdateData()
+void vjXWinKeyboard::updateData()
 {
   //int i;
-  UpdKeys();
+  updKeys();
 }
 
-void vjXWinKeyboard::UpdKeys()
+void vjXWinKeyboard::updKeys()
 {
    XEvent event;
    KeySym key;
@@ -157,8 +157,8 @@ void vjXWinKeyboard::UpdKeys()
       case KeyPress:
          // Convert the pressed key from the event to a VJ key.
          key = XLookupKeysym((XKeyEvent*)&event,0);
-         m_realkeys[XKeyTovjKey(key)] = 1;
-         m_keys[XKeyTovjKey(key)] += 1;
+         m_realkeys[xKeyTovjKey(key)] = 1;
+         m_keys[xKeyTovjKey(key)] += 1;
 
          // Grab the keyboard input so that holding down a key works even
          // if the window loses focus.  While the keyboard is grabbed,
@@ -170,7 +170,7 @@ void vjXWinKeyboard::UpdKeys()
 
          vjDEBUG(vjDBG_ALL,4) << "KeyPress:  " << hex << key
                     << " state:" << ((XKeyEvent*)&event)->state << " ==> "
-                    << XKeyTovjKey(key) << endl << vjDEBUG_FLUSH;
+                    << xKeyTovjKey(key) << endl << vjDEBUG_FLUSH;
          break;
 
       // A KeyRelease event occurred.  Flag the key that was released (as a
@@ -178,7 +178,7 @@ void vjXWinKeyboard::UpdKeys()
       case KeyRelease:
          // Convert the released key from the event to a VJ key.
          key = XLookupKeysym((XKeyEvent*)&event,0);
-         m_realkeys[XKeyTovjKey(key)] = 0;
+         m_realkeys[xKeyTovjKey(key)] = 0;
 
          // Ungrab the keyboard now that we're no longer holding down the key.
          XUngrabKeyboard(m_display, CurrentTime);
@@ -193,7 +193,7 @@ void vjXWinKeyboard::UpdKeys()
 
          vjDEBUG(vjDBG_ALL,4) << "KeyRelease:" << hex << key
                     << " state:" << ((XKeyEvent*)&event)->state << " ==> "
-                    << XKeyTovjKey(key) << endl << vjDEBUG_FLUSH;
+                    << xKeyTovjKey(key) << endl << vjDEBUG_FLUSH;
          break;
 
       // A MotionNotify event (mouse pointer movement) occurred.
@@ -292,7 +292,7 @@ void vjXWinKeyboard::UpdKeys()
    }
 }
 
-int vjXWinKeyboard::StopSampling()
+int vjXWinKeyboard::stopSampling()
 {
   if (myThread != NULL)
   {
@@ -309,7 +309,7 @@ int vjXWinKeyboard::StopSampling()
   return 1;
 }
 
-int vjXWinKeyboard::XKeyTovjKey(KeySym xKey)
+int vjXWinKeyboard::xKeyTovjKey(KeySym xKey)
 {
    switch (xKey)
    {
@@ -411,7 +411,7 @@ int vjXWinKeyboard::XKeyTovjKey(KeySym xKey)
 /*****************************************************************/
 /*****************************************************************/
 /* Sets basic window manager hints for a window. */
-void vjXWinKeyboard::SetHints(Window window,
+void vjXWinKeyboard::setHints(Window window,
     char*  window_name,
     char*  icon_name,
     char*  class_name,
@@ -474,7 +474,7 @@ void vjXWinKeyboard::SetHints(Window window,
 
 }
 
-Window vjXWinKeyboard::CreateWindow (Window parent, unsigned int border, unsigned long
+Window vjXWinKeyboard::createWindow (Window parent, unsigned int border, unsigned long
      fore, unsigned long back, unsigned long event_mask)
 {
   Window window;
@@ -497,13 +497,13 @@ Window vjXWinKeyboard::CreateWindow (Window parent, unsigned int border, unsigne
   return window;
 } /*CreateWindow*/
 
-void vjXWinKeyboard::CheckGeometry()
+void vjXWinKeyboard::checkGeometry()
 {
   char* geo_string;
   int status;
   int screen_width, screen_height;
 
-  geo_string = CheckArgs( "-geom" );
+  geo_string = checkArgs( "-geom" );
   if (geo_string != (char*) NULL) {
     status = XParseGeometry(geo_string,&m_x,&m_y,&m_width,&m_height);
     if (status & XNegative) {
@@ -517,7 +517,7 @@ void vjXWinKeyboard::CheckGeometry()
   }
 } /*CheckGeometry*/
 
-char* vjXWinKeyboard::CheckArgs(char* look_for)
+char* vjXWinKeyboard::checkArgs(char* look_for)
 {
   //Unused//int i, l;
 
@@ -538,7 +538,7 @@ char* vjXWinKeyboard::CheckArgs(char* look_for)
   return ((char*) NULL);
 } /*CheckArgs*/
 
-int vjXWinKeyboard::FilterEvent( XEvent* event, int want_exposes,
+int vjXWinKeyboard::filterEvent( XEvent* event, int want_exposes,
 		  int width, int height)
 {
     int status = 1;

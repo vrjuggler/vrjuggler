@@ -83,7 +83,7 @@ public:
    virtual bool config(vjConfigChunk* chunk)
    {return vjInput::config(chunk);}
 
-   char* GetDeviceName() { return "vjGlove"; }
+   char* getDeviceName() { return "vjGlove"; }
 
 public:  // ---- GLOVE INTERFACE ---- //
    //: Return the angle of the given joint.

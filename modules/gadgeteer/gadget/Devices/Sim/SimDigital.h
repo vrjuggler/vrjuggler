@@ -24,22 +24,22 @@ public:
    virtual bool config(vjConfigChunk* chunk);
 
    //: Return analog data
-   virtual int GetDigitalData(int devNum=0)
+   virtual int getDigitalData(int devNum=0)
    {
       vjASSERT(devNum < mDigitalData.size());    // Make sure we have enough space
       return mDigitalData[devNum];
    }
 
    /* These functions don't do anything */
-   int StartSampling() { return 1; }
-   int StopSampling() { return 1; }
-   int Sample() { return 1; }
+   int startSampling() { return 1; }
+   int stopSampling() { return 1; }
+   int sample() { return 1; }
 
    //: Update the data
-   virtual void UpdateData();
+   virtual void updateData();
 
    //: Get the name of the digital device
-   char* GetDeviceName() { return "vjSimDigital";}
+   char* getDeviceName() { return "vjSimDigital";}
    static std::string getChunkType() { return std::string("SimDigital");}
 
 private:

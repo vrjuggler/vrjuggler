@@ -170,7 +170,7 @@ CyberGloveBasic::vt_serial_open(char *devname, int baudrate)
       vt_fatal_error("");
     }
 
-  if ((portfd = open(devname, O_RDWR)) == -1)
+  if ((portfd = ::open(devname, O_RDWR)) == -1)
   {
     sprintf(failed_routine_name,"open(\"%s\",O_RDWR)",devname);
     vt_fatal_unix_error("vt_serial_open",failed_routine_name);
@@ -227,7 +227,7 @@ CyberGloveBasic::vt_serial_close(int portfd)
     returnval = vt_print_unix_error("vt_serial_close",failed_routine_name);
   }
 
-  if (close(portfd) == -1)
+  if (::close(portfd) == -1)
   {
     sprintf(failed_routine_name,"close(%d)",portfd);
     returnval = vt_print_unix_error("vt_serial_close",failed_routine_name);

@@ -40,7 +40,7 @@ vjPinchGlove::~vjPinchGlove ()
    delete mGlove;       // Delete the glove
 }
 
-int vjPinchGlove::StartSampling()
+int vjPinchGlove::startSampling()
 {
    if (myThread == NULL)
    {
@@ -76,10 +76,10 @@ int vjPinchGlove::StartSampling()
 void vjPinchGlove::controlLoop(void* nullParam)
 {
    while(1)
-	Sample();
+	sample();
 }
 
-int vjPinchGlove::Sample()
+int vjPinchGlove::sample()
 {
     // Tell the glove to resample
     mGlove->reSampleStringFromHardware();
@@ -95,7 +95,7 @@ int vjPinchGlove::Sample()
     return 1;
 }
 
-void vjPinchGlove::UpdateData()
+void vjPinchGlove::updateData()
 {
 vjGuard<vjMutex> updateGuard(lock);
 
@@ -110,7 +110,7 @@ vjGuard<vjMutex> updateGuard(lock);
     return;
 }
 
-int vjPinchGlove::StopSampling()
+int vjPinchGlove::stopSampling()
 {
    if (mControlThread != NULL)
    {

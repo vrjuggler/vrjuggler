@@ -27,7 +27,7 @@ public:
    {
       vjDeviceInterface::refresh();
       if(mProxyIndex != -1)
-         mDigProxy = vjKernel::instance()->getInputManager()->GetDigProxy(mProxyIndex);
+         mDigProxy = vjKernel::instance()->getInputManager()->getDigProxy(mProxyIndex);
       else
          mDigProxy = NULL;
    }

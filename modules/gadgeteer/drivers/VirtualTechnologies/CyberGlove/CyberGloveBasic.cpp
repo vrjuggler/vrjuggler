@@ -38,7 +38,7 @@ CyberGloveBasic::CyberGloveBasic (char* calFileDir, char *serport, int baud)
 
 CyberGloveBasic::~CyberGloveBasic ()
 {
-   Close();
+   close();
    if (needToClosePorts)
       vt_serial_close_ports();
    if (mCalFileDir != NULL)
@@ -47,7 +47,7 @@ CyberGloveBasic::~CyberGloveBasic ()
       delete mSerialPort;
 }
 
-int CyberGloveBasic::Open()
+int CyberGloveBasic::open()
 {
    AppDataStruct app;
    if (!mItsOpen)
@@ -65,7 +65,7 @@ int CyberGloveBasic::Open()
       return 0; // already sampling
 }
 
-int CyberGloveBasic::Close()
+int CyberGloveBasic::close()
 {
    if(mItsOpen)
    {
@@ -78,7 +78,7 @@ int CyberGloveBasic::Close()
 
 
 
-int CyberGloveBasic::Sample()
+int CyberGloveBasic::sample()
 {
    //struct timeval tv;
    //double start_time, stop_time;
@@ -121,13 +121,13 @@ int CyberGloveBasic::Sample()
 }
 
 
-CYBER_GLOVE_DATA* CyberGloveBasic::GetData()
+CYBER_GLOVE_DATA* CyberGloveBasic::getData()
 {
    return &theData;
 }
 
 
-//volatile float** CyberGloveBasic::GetData () {
+//volatile float** CyberGloveBasic::getData () {
 //	/* I always find multidimensional arrays confusing to pass
 //	 * and return.  For the record, the glove code defines the
 // 	 * type of joint angle as:
@@ -142,7 +142,7 @@ CYBER_GLOVE_DATA* CyberGloveBasic::GetData()
 //    };
 
 
-matrix4x4 ** CyberGloveBasic::GetDigitXForms ()
+matrix4x4 ** CyberGloveBasic::getDigitXForms ()
 {
    int i;
    for (i = 0; i < 5; i++)
@@ -150,26 +150,26 @@ matrix4x4 ** CyberGloveBasic::GetDigitXForms ()
       return xforms;	
 };
 
-float CyberGloveBasic::GetThumbRoll ()
+float CyberGloveBasic::getThumbRoll ()
 {
 	return (DEG2RAD)*vt_calc_thumb_roll(hand);
 };
 
-SurfaceModel CyberGloveBasic::GetSurfaceModel()
+SurfaceModel CyberGloveBasic::getSurfaceModel()
 {
 	return (hand->surface);
 };
 
-volatile float * CyberGloveBasic::GetStateVec()
+volatile float * CyberGloveBasic::getStateVec()
 {
 	return hand->state_vec;
 }
 
-float CyberGloveBasic::GetThumbUnflexedAbduction() {
+float CyberGloveBasic::getThumbUnflexedAbduction() {
  	return hand->unflexed_abduction;
 }
 
-int CyberGloveBasic::GetFingerState (int finger)
+int CyberGloveBasic::getFingerState (int finger)
 {
    /* a quick function to determine the position of a finger.
 	return values:
@@ -194,7 +194,7 @@ int CyberGloveBasic::GetFingerState (int finger)
 };
 
 
-void CyberGloveBasic::ReadSurfaceModel (int resolution, char *dir, char *name) {
+void CyberGloveBasic::readSurfaceModel (int resolution, char *dir, char *name) {
   char filename[256];
   sprintf (filename, "%s/%s", dir, name);
   if (!resolution)  // lowres

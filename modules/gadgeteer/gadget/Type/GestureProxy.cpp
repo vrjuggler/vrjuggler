@@ -12,7 +12,7 @@ bool vjGestureProxy::config(vjConfigChunk* chunk)
    std::string proxy_name = chunk->getProperty("name");
    std::string dev_name = chunk->getProperty("device");
 
-   int proxy_num = vjKernel::instance()->getInputManager()->AddGestureProxy(dev_name,unitNum,proxy_name,this);
+   int proxy_num = vjKernel::instance()->getInputManager()->addGestureProxy(dev_name,unitNum,proxy_name,this);
 
    if ( proxy_num != -1)
    {
