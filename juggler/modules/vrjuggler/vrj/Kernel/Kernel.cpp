@@ -45,6 +45,7 @@
 #include <vpr/Thread/Thread.h>
 #include <vpr/System.h>
 #include <vpr/Util/Version.h>
+#include <gadget/Util/Version.h>
 
 #include <gadget/InputManager.h>
 
@@ -604,6 +605,9 @@ Kernel::Kernel()
                            << std::endl << vprDEBUG_FLUSH;
    vprDEBUG(vprDBG_ALL, 0) << clrOutNORM(clrGREEN, "VPR: ")
                            << clrOutNORM(clrGREEN, vpr::getVersionString())
+                           << clrRESET << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(vprDBG_ALL, 0) << clrOutNORM(clrGREEN, "Gadgeteer: ")
+                           << clrOutNORM(clrGREEN, gadget::getVersionString())
                            << clrRESET << std::endl << vprDEBUG_FLUSH;
    vprDEBUG(vprDBG_ALL, 0) << std::string(strlen(VJ_VERSION) + 12, '=')
                            << std::endl << vprDEBUG_FLUSH;
