@@ -419,9 +419,6 @@ if test "x${_thread_pkg}" = "xPOSIX" ; then
     else
         AC_MSG_WARN(*** POSIX threads will not be used (no library found) ***)
     fi
-
-    dnl # Restore these in case any changes were made above.
-    LDFLAGS="${_vjsave_LDFLAGS}"
 dnl # We are using WIN32 threads.
 elif test "x${_thread_pkg}" = "xWIN32" ; then
     THREADS='WIN32'
