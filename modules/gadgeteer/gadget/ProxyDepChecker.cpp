@@ -34,7 +34,7 @@
 
 #include <gad/Type/AnalogProxy.h>
 #include <gad/Type/DigitalProxy.h>
-#include <gad/Type/PosProxy.h>
+#include <gad/Type/PositionProxy.h>
 #include <gad/Type/GloveProxy.h>
 #include <gad/Type/GestureProxy.h>
 #include <gad/Type/KeyboardProxy.h>
@@ -53,7 +53,7 @@ bool ProxyDepChecker::canHandle(ConfigChunk* chunk)
               (chunk_type == GestureProxy::getChunkType()) ||
               (chunk_type == GloveProxy::getChunkType()) ||
               (chunk_type == KeyboardProxy::getChunkType()) ||
-              (chunk_type == PosProxy::getChunkType()));
+              (chunk_type == PositionProxy::getChunkType()));
 
    return ret_val;
 }

@@ -36,7 +36,7 @@
 #include <gad/gadConfig.h>
 #include <gad/Type/Input.h>
 #include <gad/Type/Position.h>
-#include <gad/Type/PosInterface.h>
+#include <gad/Type/PositionInterface.h>
 
 namespace vrj
 {
@@ -79,14 +79,14 @@ public:
    //: Update the data
    virtual void updateData();
 
-   static std::string getChunkType() { return std::string("SimRelativePosition"); }
+   static std::string getChunkType() { return std::string( "SimRelativePosition" ); }
 
 private:
-   Matrix          mPos;                         //: The current position being simulated
-   PosInterface    mBaseFrame;                   //: The base frame of reference
-   PosInterface    mRelativePos;                 //: the relative position
+   Matrix            mPos;                   //: The current position being simulated
+   PositionInterface mBaseFrame;             //: The base frame of reference
+   PositionInterface mRelativePos;           //: the relative position
 
-   TimeStamp   mUpdateTime;                  //: Time of last update
+   TimeStamp         mUpdateTime;            //: Time of last update
 };
 
 };

@@ -58,7 +58,7 @@ SRCS		= AnalogProxy.cpp	\
                   Input.cpp		\
                   KeyboardProxy.cpp	\
                   Position.cpp		\
-                  PosProxy.cpp
+                  PositionProxy.cpp
 
 include $(MKPATH)/dpp.obj.mk
 

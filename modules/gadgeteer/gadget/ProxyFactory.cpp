@@ -34,7 +34,7 @@
 
 #include <gad/Type/AnalogProxy.h>
 #include <gad/Type/DigitalProxy.h>
-#include <gad/Type/PosProxy.h>
+#include <gad/Type/PositionProxy.h>
 #include <gad/Type/GloveProxy.h>
 #include <gad/Type/GestureProxy.h>
 #include <gad/Type/KeyboardProxy.h>
@@ -64,7 +64,7 @@ void ProxyFactory::loadKnownProxies()
 {
    ProxyConstructor<AnalogProxy>* analog_proxy = new ProxyConstructor<AnalogProxy>;
    ProxyConstructor<DigitalProxy>* digital_proxy = new ProxyConstructor<DigitalProxy>;
-   ProxyConstructor<PosProxy>* pos_proxy = new ProxyConstructor<PosProxy>;
+   ProxyConstructor<PositionProxy>* pos_proxy = new ProxyConstructor<PositionProxy>;
    ProxyConstructor<GloveProxy>* glove_proxy = new ProxyConstructor<GloveProxy>;
    ProxyConstructor<GestureProxy>* gesture_proxy = new ProxyConstructor<GestureProxy>;
    ProxyConstructor<KeyboardProxy>* keyboard_proxy = new ProxyConstructor<KeyboardProxy>;
