@@ -160,5 +160,26 @@ inline std::ostream& operator<<(std::ostream& out, const vpr::GUID& guid)
    return out;
 }
 
+// --- HASH Functions ---- //
+#if defined(HAVE_HASH_MAP) || defined(HAVE_HASH_MAP_H)
+
+#ifdef HAVE_HASH_MAP
+#   include <hash_map>
+#else
+#   include <hash_map.h>
+#endif
+
+template<>
+struct hash<vpr::GUID>
+{
+   vpr::Uint32 operator() (const vpr::GUID guid) const
+   {
+      return guid.m_guid.packed.l0 + guid.m_guid.packed.l1 + guid.m_guid.packed.l2 + guid.m_guid.packed.l3; 
+   }
+};
+
+#endif
+
+
 
 #endif /* _VPR_GUID_H_ */
