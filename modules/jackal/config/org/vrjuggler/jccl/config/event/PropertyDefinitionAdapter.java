@@ -52,5 +52,13 @@ public class PropertyDefinitionAdapter
 
    public void propertyValueDefinitionRemoved(PropertyDefinitionEvent evt) {}
 
+   public void enumAdded(PropertyDefinitionEvent evt) {}
+
+   public void enumRemoved(PropertyDefinitionEvent evt) {}
+
+   public void allowedTypeAdded(PropertyDefinitionEvent evt) {}
+
+   public void allowedTypeRemoved(PropertyDefinitionEvent evt) {}
+
    public void variableChanged(PropertyDefinitionEvent evt) {}
 }

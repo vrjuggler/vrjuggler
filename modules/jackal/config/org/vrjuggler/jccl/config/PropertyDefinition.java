@@ -48,13 +48,16 @@ public class PropertyDefinition
     * Creates a new PropertyDefinition initialized with the given values.
     */
    public PropertyDefinition(String name, String token, Class type,
-                             String help, List propValueDefs, boolean variable)
+                             String help, List propValueDefs, 
+                             Map enums, List allowedTypes, boolean variable)
    {
       mName = name;
       mToken = token;
       mType = type;
       mHelp = help;
       mPropValueDefs = propValueDefs;
+      mEnums = enums;
+      mAllowedTypes = allowedTypes;
       mVariable = variable;
    }
 
@@ -178,6 +181,108 @@ public class PropertyDefinition
    }
 
    /**
+    * Adds a new enumeration to this property definition.
+    *
+    * @param name       the name of the enumeration to add
+    * @param value      the value for the enumeration
+    *
+    * @throws IllegalArgumentException
+    *             if an enumeration with that name already exists
+    */
+   public synchronized void addEnum(String name, Object value)
+      throws IllegalArgumentException
+   {
+      if (mEnums.containsKey(name))
+      {
+         throw new IllegalArgumentException("Enumeration already exists: "+name);
+      }
+      mEnums.put(name, value);
+      fireEnumAdded(name);
+   }
+
+   /**
+    * Removes the given enumeration from this property definition. If the
+    * enumeration does not exist, this object is not changed.
+    */
+   public synchronized void removeEnum(String name)
+   {
+      if (mEnums.containsKey(name))
+      {
+         mEnums.remove(name);
+         fireEnumRemoved(name);
+      }
+   }
+
+   /**
+    * Gets a map of all the enumerations for this property definition.
+    */
+   public Map getEnums()
+   {
+      return mEnums;
+   }
+
+   /**
+    * Gets the number of enumerations for this property definition.
+    */
+   public synchronized int getEnumsCount()
+   {
+      return mEnums.size();
+   }
+
+   /**
+    * Gets the allowed type at the given index.
+    */
+   public synchronized String getAllowedType(int index)
+      throws ArrayIndexOutOfBoundsException
+   {
+      return (String)mAllowedTypes.get(index);
+   }
+
+   /**
+    * Adds a new allowed type to this property definition. If the type is
+    * already in this property definition, it is not added a second time.
+    *
+    * @param type       the token of the type to add
+    */
+   public synchronized void addAllowedType(String type)
+   {
+      if (! mAllowedTypes.contains(type))
+      {
+         mAllowedTypes.add(type);
+         fireAllowedTypeAdded(type);
+      }
+   }
+
+   /**
+    * Removes the given allowed type from this property definition. If the
+    * allowed type does not exist, this object is not changed.
+    */
+   public synchronized void removeAllowedType(String type)
+   {
+      if (mAllowedTypes.contains(type))
+      {
+         mAllowedTypes.remove(type);
+         fireAllowedTypeRemoved(type);
+      }
+   }
+
+   /**
+    * Gets a list of all the allowed types for this property definition.
+    */
+   public List getAllowedTypes()
+   {
+      return mAllowedTypes;
+   }
+
+   /**
+    * Gets the number of allowed types for this property definition.
+    */
+   public synchronized int getAllowedTypesCount()
+   {
+      return mAllowedTypes.size();
+   }
+
+   /**
     * Tests if this property definition supports a variable number of values.
     */
    public boolean isVariable()
@@ -191,7 +296,9 @@ public class PropertyDefinition
     */
    public synchronized void setVariable(boolean variable)
    {
+      boolean old_variable = mVariable;
       mVariable = variable;
+      fireVariableChanged(old_variable);
    }
    /**
     * Adds the given listener to be notified when this property definition
@@ -355,6 +462,87 @@ public class PropertyDefinition
    }
 
    /**
+    * Notifies listeners that an enumeration has been added to this definition.
+    */
+   protected void fireEnumAdded(String name)
+   {
+      PropertyDefinitionEvent evt = null;
+      Object[] listeners = listenerList.getListenerList();
+      for (int i=listeners.length-2; i>=0; i-=2)
+      {
+         if (listeners[i] == PropertyDefinitionListener.class)
+         {
+            if (evt == null)
+            {
+               evt = new PropertyDefinitionEvent(this, name);
+            }
+            ((PropertyDefinitionListener)listeners[i+1]).enumAdded(evt);
+         }
+      }
+   }
+
+   /**
+    * Notifies listeners that an enumeration has been removed to this definition.
+    */
+   protected void fireEnumRemoved(String name)
+   {
+      PropertyDefinitionEvent evt = null;
+      Object[] listeners = listenerList.getListenerList();
+      for (int i=listeners.length-2; i>=0; i-=2)
+      {
+         if (listeners[i] == PropertyDefinitionListener.class)
+         {
+            if (evt == null)
+            {
+               evt = new PropertyDefinitionEvent(this, name);
+            }
+            ((PropertyDefinitionListener)listeners[i+1]).enumRemoved(evt);
+         }
+      }
+   }
+
+   /**
+    * Notifies listeners that an allowed type has been added to this definition.
+    */
+   protected void fireAllowedTypeAdded(String type)
+   {
+      PropertyDefinitionEvent evt = null;
+      Object[] listeners = listenerList.getListenerList();
+      for (int i=listeners.length-2; i>=0; i-=2)
+      {
+         if (listeners[i] == PropertyDefinitionListener.class)
+         {
+            if (evt == null)
+            {
+               evt = new PropertyDefinitionEvent(this, type);
+            }
+            ((PropertyDefinitionListener)listeners[i+1]).allowedTypeAdded(evt);
+         }
+      }
+   }
+
+   /**
+    * Notifies listeners that an allowed type has been removed from this
+    * definition.
+    */
+   protected void fireAllowedTypeRemoved(String type)
+   {
+      PropertyDefinitionEvent evt = null;
+      Object[] listeners = listenerList.getListenerList();
+      for (int i=listeners.length-2; i>=0; i-=2)
+      {
+         if (listeners[i] == PropertyDefinitionListener.class)
+         {
+            if (evt == null)
+            {
+               evt = new PropertyDefinitionEvent(this, type);
+            }
+            ((PropertyDefinitionListener)listeners[i+1]).allowedTypeRemoved(evt);
+         }
+      }
+   }
+
+   /**
     * Notifies listeners that this definition's variable status has changed.
     */
    protected void fireVariableChanged(boolean old_variable)
@@ -391,6 +579,15 @@ public class PropertyDefinition
 
    /** A list of the property value definitions for this property definition. */
    private List mPropValueDefs;
+
+   /** A map of all the enumerations for this property definition. */
+   private Map mEnums;
+
+   /**
+    * A list of all the allowed types. This is only used if the value type is
+    * ChunkPointer.class.
+    */
+   private List mAllowedTypes;
 
    /**
     * A flag determining whether this property definition defines a property
