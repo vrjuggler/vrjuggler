@@ -86,6 +86,21 @@ rename(VecBase4f, 'VecBase4f')
 exclude(VecBase4f.getData)
 exclude(VecBase4f.mData)
 
+VecBase3i = VecBase('int 3')
+rename(VecBase3i, 'VecBase3i')
+exclude(VecBase3i.getData)
+exclude(VecBase3i.mData)
+
+VecBase2f = VecBase('float 2')
+rename(VecBase2f, 'VecBase2f')
+exclude(VecBase2f.getData)
+exclude(VecBase2f.mData)
+
+VecBase2i = VecBase('int 2')
+rename(VecBase2i, 'VecBase2i')
+exclude(VecBase2i.getData)
+exclude(VecBase2i.mData)
+
 Vec = Template('gmtl::Vec', 'gmtl/Vec.h')
 
 Vec3f = Vec('float 3')
