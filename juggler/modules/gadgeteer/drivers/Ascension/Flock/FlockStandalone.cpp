@@ -523,7 +523,7 @@ int FlockStandalone::getReading (const int& n, float& xPos, float& yPos,
 
             while ( ! i && c < 99999 ) {
                 c++;
-                _serial_port->readn(&group, 1, num_read);
+                _serial_port->readn(&buff[0], 1, num_read);
                 if ( (num_read == 1) /* && 
                      (buff[0] & 0x80) */)
                 {
