@@ -119,11 +119,6 @@ EXTRA_INCLUDES		= -I$(top_srcdir) @BOOST_INCLUDES@		\
                           -I$(JUGGLERROOT_ABS)/external/leach-uuid	\
                           -I$(JUGGLERROOT_ABS)/external/md5-c
 
-ifeq (@PLATFORM@, IRIX)
-    EXTRA_DEPEND_FLAGS	+= -I@BOOST_ROOT@/boost/compatibility/cpp_c_headers
-    EXTRA_INCLUDES	+= -I@BOOST_ROOT@/boost/compatibility/cpp_c_headers
-endif
-
 # -----------------------------------------------------------------------------
 # Makedepend commands
 # -----------------------------------------------------------------------------
