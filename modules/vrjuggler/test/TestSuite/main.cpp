@@ -34,84 +34,34 @@
 #include <vector>
 
 #include <cppunit/TestSuite.h>
-#include <cppunit/TextTestResult.h>
+#include <cppunit/TextTestRunner.h>
 
 #include <TestCases/Math/QuatSelfTest.h>
 //#include <TestCases/Pf/PfUtilTest.h> // needs performer linked in, doh!
 #include <vrj/Util/Debug.h>
 
 
-static void addNoninteractive (CppUnit::TestSuite* suite)
-{
-   std::vector<vrjTest::JugglerTest*> tests;
-
-   // Add new tests to this vector.
-   tests.push_back(new vrjTest::QuatSelfTest());
-   //tests.push_back(new vrjTest::PfUtilTest());
-   
-   for ( std::vector<vrjTest::JugglerTest*>::iterator i = tests.begin();
-         i != tests.end();
-         i++ )
-   {
-      (*i)->registerTests(suite);
-   }
-}
-
-static void addInteractive (CppUnit::TestSuite* suite)
-{
-}
-
-static void addMetrics (CppUnit::TestSuite* suite)
-{
-}
-
 int main (int ac, char **av)
 {
    vprDEBUG(0,0) << "Starting test\n" << vprDEBUG_FLUSH;       // Do this here to get init text out of the way
 
-   CppUnit::TestSuite suite;
+   CppUnit::TextTestRunner runner;
 
-   if ( ac > 1 && strcmp(av[1], "all") != 0 )
-   {
-      for ( int i = 1; i < ac; i++ )
-      {
-         // -------------------------------
-         // NON-INTERACTIVE
-         // -------------------------------
-         if ( strcmp(av[i], "noninteractive") == 0 )
-         {
-            addNoninteractive(&suite);
-         }
-         // ------------------------------
-         // METRICS
-         // ------------------------------
-         else if ( strcmp(av[i], "metrics") == 0 )
-         {
-            addMetrics(&suite);
-         }
-         // -------------------------------
-         // INTERACTIVE
-         // -------------------------------
-         else if ( strcmp(av[i], "interactive") == 0 )
-         {
-            addInteractive(&suite);
-         }
-         else
-         {
-            std::cerr << "WARNING: Unknown suite name " << av[i] << std::endl;
-         }
-      }
-   }
-   else
-   {
-      addNoninteractive(&suite);
-      addMetrics(&suite);
-      addInteractive(&suite);
-   }
+   //------------------------------------
+   //  noninteractive
+   //------------------------------------
+   // create non-interactive test suite
+   CppUnit::TestSuite* noninteractive_suite = new CppUnit::TestSuite("noninteractive");
 
-   CppUnit::TextTestResult result;
-   suite.run(&result);
-   result.print(std::cout);
+   // add tests to the suite
+   noninteractive_suite->addTest(vrjTest::QuatSelfTest::suite());
+//   noninteractive_suite->addTest(vrjTest::PfUtilTest::suite());
+
+   // Add the test suite to the runner
+   runner.addTest(noninteractive_suite);
+
+   // run all test suites
+   runner.run();
 
    return 0;
 }

@@ -10,7 +10,6 @@
 #include <vrj/Math/Math.h>
 #include <vrj/Math/Quat.h>
 
-#include <JugglerTest.h>
 
 /*****************************************************************
  tests out the functionality expected of vrj::Quat
@@ -19,17 +18,18 @@
 namespace vrjTest
 {
 
-class QuatSelfTest : public CppUnit::TestCase, public JugglerTest
+class QuatSelfTest : public CppUnit::TestCase
 {
 public:
+
+   QuatSelfTest (std::string name) : CppUnit::TestCase (name)
+   {;}
+
    QuatSelfTest() : CppUnit::TestCase ()
-   {
-   }
-   
+   {;}
    
    virtual ~QuatSelfTest()
-   {
-   }
+   {;}
 
    void identTest()
    {
@@ -388,9 +388,9 @@ public:
 
    //CPPUNIT_ASSERT( a != b.code() );
    
-   
-   void registerTests (CppUnit::TestSuite* suite)
+   static CppUnit::Test* suite()
    {
+      CppUnit::TestSuite* suite = new CppUnit::TestSuite ("QuatSelfTest");
       suite->addTest( new CppUnit::TestCaller<QuatSelfTest>("identity test", &QuatSelfTest::identTest));        
       suite->addTest( new CppUnit::TestCaller<QuatSelfTest>("xformVecTest", &QuatSelfTest::xformVecTest));        
       suite->addTest( new CppUnit::TestCaller<QuatSelfTest>("xformVecSweepTest", &QuatSelfTest::xformVecSweepTest));        
@@ -403,6 +403,8 @@ public:
       //suite->addTest( new CppUnit::TestCaller<QuatSelfTest>("vectorScaleTest", &QuatSelfTest::vectorScaleTest));
       //suite->addTest( new CppUnit::TestCaller<QuatSelfTest>("quatAdd", &QuatSelfTest::quatAdd));
       //suite->addTest( new CppUnit::TestCaller<QuatSelfTest>("pureQuatMultTest", &QuatSelfTest::pureQuatMultTest));
+
+      return suite;
    }
 };
 

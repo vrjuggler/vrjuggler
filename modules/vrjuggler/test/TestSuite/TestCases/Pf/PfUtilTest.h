@@ -1,6 +1,6 @@
 
-#ifndef PFUTILS_TESTS
-#define PFUTILS_TESTS
+#ifndef VRJ_PFUTILS_TESTS
+#define VRJ_PFUTILS_TESTS
 
 
 #include <iostream>
@@ -13,23 +13,22 @@
 #include <vrj/Math/Quat.h>
 #include <vrj/Draw/Pf/PfUtil.h>
 
-#include <JugglerTest.h>
-
 
 namespace vrjTest
 {
 
-class PfUtilTest : public CppUnit::TestCase, public JugglerTest
+class PfUtilTest : public CppUnit::TestCase
 {
 public:
-   PfUtilTest() : CppUnit::TestCase ()
-   {
-   }
+   PfUtilTest (std::string name) : CppUnit::TestCase (name)
+   {;}
    
+   PfUtilTest() : CppUnit::TestCase ()
+   {;}
    
    virtual ~PfUtilTest()
-   {
-   }
+   {;}
+
    void testMatrixConversion()
    {
          vrj::Matrix mat;
@@ -54,14 +53,16 @@ public:
          */
          assertTest( vj_mat.isEqual( mat ) && "test pf --> vj matrix conversion failed" );
    }     
-   void registerTests( CppUnit::TestSuite* suite )
+
+   static CppUnit::Test* suite()
    {
+      CppUnit::TestSuite* suite = new CppUnit::TestSuite ("PfUtilTest");
       suite->addTest( new CppUnit::TestCaller<PfUtilTest>( "test pf --> vj matrix conversion", &PfUtilTest::testMatrixConversion));
+
+      return suite;
    }
 };
 
 }
 
 #endif
-
-             
