@@ -61,8 +61,11 @@ class vjConfigManager
 public:
    struct vjPendingChunk
    {
+      vjPendingChunk() : mChunk(NULL), mType(0)
+      {;}
+
       enum { ADD=0, REMOVE=1};
-      int            mType;           // What type of chunk is it (ADD or REMOVE)
+      unsigned mType;           // What type of chunk is it (ADD or REMOVE)
       vjConfigChunk* mChunk;
    };
 
