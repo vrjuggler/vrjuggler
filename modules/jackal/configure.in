@@ -555,6 +555,7 @@ AC_OUTPUT(jccl-config
           Makefile.inc
           common.defs.mk
           make.defs.mk
+          config/Makefile
           jccl/Makefile
           jccl/Config/Makefile
           jccl/XMLUtil/Makefile
