@@ -41,6 +41,7 @@ namespace cluster
 {
    DeviceServer::DeviceServer(const std::string& name, gadget::Input* device) : deviceServerTriggerSema(0), deviceServerDoneSema(0)
    {
+      mId.generate();   // Generate a unique ID for this device
       mThreadActive = false;
       mName = name;
       mDevice = device;
@@ -74,18 +75,18 @@ namespace cluster
 
       //--send to all nodes in the map
       //WE MUST NEVER USE THE BASE CLASS's SEND()
-      for (std::map<cluster::ClusterNode*,vpr::GUID>::iterator i = mClients.begin();
+      for (std::vector<cluster::ClusterNode*>::iterator i = mClients.begin();
            i != mClients.end() ; i++)
       {
          //vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "Sending data to: " 
-         //   << (*i).first->getName() << std::endl << vprDEBUG_FLUSH;
-         (*i).first->lockSockWrite();
-         //vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "We have the lock for " << (*i).first->getName()
+         //   << (*i)->getName() << std::endl << vprDEBUG_FLUSH;
+         (*i)->lockSockWrite();
+         //vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "We have the lock for " << (*i)->getName()
          //   << std::endl << vprDEBUG_FLUSH;
 
          try
          {
-            mDataPacket->send((*i).first->getSockStream(), (*i).second, mDeviceData);
+            mDataPacket->send((*i)->getSockStream(), mId, mDeviceData);
          }
          catch(cluster::ClusterException cluster_exception)
          {
@@ -96,18 +97,18 @@ namespace cluster
                << std::endl << vprDEBUG_FLUSH;
 
             vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << 
-               "DeviceServer::send() We have lost our connection to: " << (*i).first->getName() << ":" << (*i).first->getPort()
+               "DeviceServer::send() We have lost our connection to: " << (*i)->getName() << ":" << (*i)->getPort()
                << std::endl << vprDEBUG_FLUSH;
             
-            (*i).first->setConnected(ClusterNode::DISCONNECTED);
-            (*i).first->unlockSockWrite();
-//            vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "Released the lock for " << (*i).first->getName() 
+            (*i)->setConnected(ClusterNode::DISCONNECTED);
+            (*i)->unlockSockWrite();
+//            vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "Released the lock for " << (*i)->getName() 
 //               << std::endl << vprDEBUG_FLUSH;
 
             debugDump(vprDBG_CONFIG_LVL);
          }
-         (*i).first->unlockSockWrite();
-//         vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "Released the lock for " << (*i).first->getName() 
+         (*i)->unlockSockWrite();
+//         vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "Released the lock for " << (*i)->getName() 
 //            << std::endl << vprDEBUG_FLUSH;
 
       }
@@ -125,13 +126,13 @@ namespace cluster
       mDevice->writeObject(mBufferObjectWriter);
    }
 
-   void DeviceServer::addClient(ClusterNode* new_client_node, vpr::GUID& id)
+   void DeviceServer::addClient(ClusterNode* new_client_node)
    {
       vprASSERT(0 == mClientsLock.test());
       vprASSERT(new_client_node != NULL && "You can not add a new client that is NULL");
       lockClients();
 
-      mClients[new_client_node] = id;
+      mClients.push_back(new_client_node);
       
       unlockClients();
    }
@@ -141,10 +142,10 @@ namespace cluster
       vprASSERT(0 == mClientsLock.test());
       lockClients();
    
-      for (std::map<cluster::ClusterNode*,vpr::GUID>::iterator i = mClients.begin() ; 
+      for (std::vector<cluster::ClusterNode*>::iterator i = mClients.begin() ; 
             i!= mClients.end() ; i++)
       {
-         if ((*i).first->getHostname() == host_name)
+         if ((*i)->getHostname() == host_name)
          {
             mClients.erase(i);
             unlockClients();
@@ -169,11 +170,11 @@ namespace cluster
          vpr::DebugOutputGuard dbg_output2(gadgetDBG_RIM,debug_level,
                            std::string("------------ Clients ------------\n"),
                            std::string("---------------------------------\n"));
-         for (std::map<cluster::ClusterNode*,vpr::GUID>::iterator i = mClients.begin() ; 
+         for (std::vector<cluster::ClusterNode*>::iterator i = mClients.begin() ; 
                i!= mClients.end() ; i++)
          {
-            vprDEBUG(gadgetDBG_RIM,debug_level) << "-------- " << (*i).first->getName() << " --------" << std::endl << vprDEBUG_FLUSH;
-            vprDEBUG(gadgetDBG_RIM,debug_level) << "       Hostname: " << (*i).first->getHostname() << std::endl << vprDEBUG_FLUSH;
+            vprDEBUG(gadgetDBG_RIM,debug_level) << "-------- " << (*i)->getName() << " --------" << std::endl << vprDEBUG_FLUSH;
+            vprDEBUG(gadgetDBG_RIM,debug_level) << "       Hostname: " << (*i)->getHostname() << std::endl << vprDEBUG_FLUSH;
             vprDEBUG(gadgetDBG_RIM,debug_level) << "----------------------------------" << std::endl << vprDEBUG_FLUSH;
          }
       }

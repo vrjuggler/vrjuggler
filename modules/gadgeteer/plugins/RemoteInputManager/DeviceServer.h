@@ -61,7 +61,7 @@ namespace cluster
       void send();
       void updateLocalData();
 
-      void addClient(ClusterNode* new_client_node, vpr::GUID& remote_id);
+      void addClient(ClusterNode* new_client_node);
       void removeClient(const std::string& host_name);
 
       void debugDump(int debug_level);
@@ -69,7 +69,7 @@ namespace cluster
       std::string getName() { return mName; }
       /** Locks the active list.
        *
-       *  This function blocks until it can lock the std::map of active
+       *  This function blocks until it can lock the std::vector of active
        *  ClusterNodes.
        *
        *  The caller of this method must call unlockActive() when it
@@ -80,13 +80,18 @@ namespace cluster
 
       /** Unlocks the active list.
        *
-       *  The method releases the lock on the active connections std::map.
+       *  The method releases the lock on the active connections std::vector.
        *
        *  The caller of this method must have previously locked the active
        *  list with lockActive().
        */
       void unlockClients()
       { mClientsLock.release(); }
+
+      vpr::GUID getId()
+      {
+         return mId;
+      }
 
       void start();
       void controlLoop(void* nullParam);
@@ -98,19 +103,20 @@ namespace cluster
       void shutdown();
 
    private:
-      std::string                                  mName;   /**< DeviceServer name */
-      std::map<cluster::ClusterNode*,vpr::GUID>  mClients;
-      vpr::Mutex                                   mClientsLock;   /**< Lock on active config list.*/   
+      std::string                         mName;   /**< DeviceServer name */
+      std::vector<cluster::ClusterNode*>  mClients;
+      vpr::Mutex                          mClientsLock;   /**< Lock on active config list.*/   
       
-      gadget::Input*                               mDevice;
-      DataPacket*                                  mDataPacket;
-      vpr::BufferObjectWriter*                           mBufferObjectWriter;
-      std::vector<vpr::Uint8>*                     mDeviceData;
+      gadget::Input*                      mDevice;
+      DataPacket*                         mDataPacket;
+      vpr::BufferObjectWriter*            mBufferObjectWriter;
+      std::vector<vpr::Uint8>*            mDeviceData;
 
-      vpr::Semaphore    deviceServerTriggerSema;  /**< Semaphore for draw trigger */
-      vpr::Semaphore    deviceServerDoneSema;     /**< Semaphore for drawing done */
-      vpr::Thread*                                 mControlThread;
-      bool                                         mThreadActive;
+      vpr::Semaphore                      deviceServerTriggerSema;/**< Semaphore for draw trigger */
+      vpr::Semaphore                      deviceServerDoneSema;   /**< Semaphore for drawing done */
+      vpr::Thread*                        mControlThread;
+      bool                                mThreadActive;
+      vpr::GUID                           mId;                    /**< GUID for shared device */
    };
 
 } // end namespace gadget
