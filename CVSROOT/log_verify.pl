@@ -131,6 +131,7 @@ elsif ( $junk eq "CLEAN" && validUser() )
 
    foreach $dir ( @dirs )
    {
+      chop($dir);
       cleanup_lockfiles("$dir");
    }
 
