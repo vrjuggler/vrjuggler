@@ -132,7 +132,7 @@ void fsPinchGlove::updateStringFromHardware()
 
 int fsPinchGlove::mConnectToHardware(const char* const ttyPort)
 {
-    struct termio data;
+    struct termios data;
     const int BUFFER_LEN = 100;
     char buf[BUFFER_LEN];
     int cnt;
@@ -152,17 +152,17 @@ int fsPinchGlove::mConnectToHardware(const char* const ttyPort)
 	} else
 		pinchfd = fileDescriptor;
 	
-    if (ioctl(pinchfd, TCSETAF, &data) < 0) 
+    if (tcsetattr(pinchfd, TCSAFLUSH, &data) < 0) 
     {
-    	cout<<"[pinch] TCSETAF failed\n"<<flush;
+    	cout<<"[pinch] tcsetattr failed\n"<<flush;
 		return 0;
 	}
 	
     usleep(1500);
 
-    if (ioctl(pinchfd, TCFLSH, 2) < 0)
+    if (tcflush(pinchfd, TCIOFLUSH) < 0)
 	{
-    	cout<<"[pinch] TCFLSH failed\n"<<flush;
+    	cout<<"[pinch] tcflush failed\n"<<flush;
 		return 0;
 	}
 	
@@ -225,10 +225,10 @@ int fsPinchGlove::mSendCommandToHardware(const char* const command, char *reply)
 
 /* Send the 2 byte command */
    write(pinchfd, &command[0], 1);
-   if (ioctl(pinchfd, TCFLSH, 1)<0) return 0;
+   if (tcflush(pinchfd, TCOFLUSH)<0) return 0;
     usleep(1500);
    write(pinchfd, &command[1], 1);
-   if (ioctl(pinchfd, TCFLSH, 1)<0) return 0;
+   if (tcflush(pinchfd, TCOFLUSH)<0) return 0;
     usleep(4500);
    
    return(mReadRecordsFromHardware(100,reply));
