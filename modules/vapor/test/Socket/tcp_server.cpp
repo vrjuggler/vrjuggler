@@ -34,6 +34,8 @@
 
 #include <vpr/vpr.h>
 #include <vpr/IO/Socket/SocketStream.h>
+#include <vpr/Util/Debug.h>
+#include <vpr/Util/Interval.h>
 
 
 int
@@ -64,14 +66,23 @@ main (int argc, char* argv[]) {
         // Loop forever handling all clients serially.
         while ( 1 ) {
             // Wait for an incoming connection.
-            status = sock.accept(client_sock);
+            status = sock.accept(client_sock,
+                                 vpr::Interval(60, vpr::Interval::SEC));
 
-            // Using the new socket, send the buffer to the client and close
-            // the socket.
-            status = client_sock.write(buffer, sizeof(buffer), bytes);
-//            status = client_sock.write(buffer, buffer.length(), bytes);
-            client_sock.close();
-        }
+            if ( status.success() ) {
+                // Using the new socket, send the buffer to the client and close
+                // the socket.
+                status = client_sock.write(buffer, sizeof(buffer), bytes);
+//                status = client_sock.write(buffer, buffer.length(), bytes);
+                client_sock.close();
+            }
+            else if ( status == vpr::Status::Timeout ) {
+                vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+                    << "No connections within timeout period!\n"
+                    << vprDEBUG_FLUSH;
+                break;
+            }
+        } 
 
         app_status = 0;
     }
