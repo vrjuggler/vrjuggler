@@ -135,7 +135,7 @@ fi
 major=`echo $ver_num | sed -e 's/^\([0-9][0-9]*\)\..*/\1/'`
 minor=`echo $ver_num | sed -e 's/^.*\.\([0-9][0-9]*\)\..*$/\1/'`
 patch=`echo $ver_num | sed -e 's/^.*\.\([0-9][0-9]*\)$/\1/'`
-number=`printf "%03d%03d%03d" $major $minor $patch`
+number=`printf "%03d%03d%03dul" $major $minor $patch | sed -e 's/^[0]*\([^0].*\)$/\1/'`
 
 # Create the temporary ouptut file.
 cat $input | sed -e "s/@VER_STRING@/\"$string\"/"	\
