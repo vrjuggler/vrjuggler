@@ -1,5 +1,7 @@
 DATE        AUTHOR    CHANGE
 ----------- --------- ---------------------------------------------------------
+Jun-11-2001 allenb    First pass at (re)configurable pfDrawManager
+                      Currently only allows run-time addition of windows. 
 May-21-2001 patrick   Initial attempt to support HP-UX 11.x.  A newer version
                       of Doozer++ is needed before the port can be completed.
 May-02-2001 allenb    Added new sync string descriptions to flock of birds
