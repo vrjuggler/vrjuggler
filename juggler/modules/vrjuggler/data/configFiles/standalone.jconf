@@ -3,7 +3,7 @@
 
 <configuration xmlns="http://www.vrjuggler.org/jccl/xsd/3.0/configuration"
                xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-               xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.0/configuration"
+               xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.0/configuration http://www.vrjuggler.org/jccl/xsd/3.0/configuration.xsd"
                name="Configuration">
    <elements>
       <event_window_proxy xmlns="" name="SimEventWindow Proxy" version="1">
