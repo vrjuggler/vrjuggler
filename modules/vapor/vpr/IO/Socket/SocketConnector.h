@@ -82,7 +82,7 @@ public:
    */
   Status complete (SocketStream &newStream,
                 InetAddr* remoteAddr = NULL,
-                vpr::Interval timeout = vpr::Interval::NoTimeout);
+                const vpr::Interval timeout = vpr::Interval::NoTimeout);
 
 protected:
   // Make sure we have opened the socket
