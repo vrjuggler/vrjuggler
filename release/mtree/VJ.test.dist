@@ -17,12 +17,12 @@
 	Mempool
 	..
 	Performance
-		analyzer
-		..
-		perfdatabuffer-test
-		..
-		timestamp-test
-		..
+	    analyzer
+	    ..
+	    perfdatabuffer-test
+	    ..
+	    timestamp-test
+	    ..
 	..
 	Quat
 	..
@@ -31,10 +31,10 @@
 	Win32k
 	..
 	input
-		cbird
-		..
-		fob
-		..
+	    cbird
+	    ..
+	    fob
+	    ..
 	..
 	testDynamicCastSTL
 	..
