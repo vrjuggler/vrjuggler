@@ -38,7 +38,7 @@
 int
 main (int argc, char* argv[]) {
     int status;
-    vpr::Uint16 port = 5432;   // Default listening port
+    vpr::Uint16 port = 15432;   // Default listening port
 
     // If a command-line argument was given, use it as the port value instead
     // of the default.
