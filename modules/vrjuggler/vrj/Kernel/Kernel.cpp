@@ -113,7 +113,7 @@ void Kernel::waitForKernelStop()
 {
    mExitWaitCondVar.acquire();
    {
-      while ( mExitFlag != false )
+      while ( mIsRunning || (!mExitFlag) )     // While still running OR not time to exit
       {
          mExitWaitCondVar.wait();
       }
@@ -142,7 +142,7 @@ void Kernel::controlLoop(void* nullParam)
    mPerfBuffer = environmentManager->getPerformanceMonitor()->getPerfDataBuffer ("Kernel Loop", 500, 8);
 
    // --- MAIN CONTROL LOOP -- //
-   while((!mExitFlag) || (mApp != NULL))     // While not exit OR app is non-null. (can't exit until app is closed)
+   while(! (mExitFlag && (mApp == NULL)))     // While not exit flag set and don't have app. (can't exit until app is closed)
    {
       // Iff we have an app and a draw manager
       if((mApp != NULL) && (mDrawManager != NULL))
