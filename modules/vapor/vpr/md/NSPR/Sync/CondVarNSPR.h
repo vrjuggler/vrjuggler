@@ -81,7 +81,7 @@ public:
     *              association with the condition variable in this class
     *              (optional).
     */
-   CondVarNSPR (MutexNSPR* mutex = NULL)
+   CondVarNSPR(MutexNSPR* mutex = NULL)
    {
       // If the caller did not specify a mutex variable to use with
       // the condition variable, use mDefaultMutex.
@@ -106,7 +106,7 @@ public:
     * @pre The condition variable is no longer in use.
     * @post The condition variable is destroyed.
     */
-   ~CondVarNSPR (void)
+   ~CondVarNSPR()
    {
       PR_DestroyCondVar(mCondVar);
    }
@@ -127,7 +127,7 @@ public:
     *         signaled.  vpr::ReturnStatus::Fail is returned if something
     *         went wrong in blocking on the condition.
     */
-   vpr::ReturnStatus wait (vpr::Interval timeToWait = vpr::Interval::NoTimeout)
+   vpr::ReturnStatus wait(vpr::Interval timeToWait = vpr::Interval::NoTimeout)
    {
       vpr::ReturnStatus status;
 
@@ -153,7 +153,7 @@ public:
     * @return vpr::ReturnStatus::Succeed is returned when the signal is sent
     *         successfully.  vpr::ReturnStatus::Fail is returned otherwise.
     */
-   vpr::ReturnStatus signal (void)
+   vpr::ReturnStatus signal()
    {
       vpr::ReturnStatus status;
 
@@ -180,7 +180,7 @@ public:
     *         is sent successfully.  vpr::ReturnStatus::Fail is returned
     *         otherwise.
     */
-   vpr::ReturnStatus broadcast (void)
+   vpr::ReturnStatus broadcast()
    {
       vpr::ReturnStatus status;
 
@@ -209,7 +209,7 @@ public:
     *         condition variable is acquired successfully.
     *         vpr::ReturnStatus::Fail is returned otherwise.
     */
-   vpr::ReturnStatus acquire (void)
+   vpr::ReturnStatus acquire()
    {
       return mCondMutex->acquire();
    }
@@ -228,7 +228,7 @@ public:
     *         vpr::ReturnStatus::Fail is returned if the lock is already held
     *         by another thread.
     */
-   vpr::ReturnStatus tryAcquire (void)
+   vpr::ReturnStatus tryAcquire()
    {
       return mCondMutex->tryAcquire();
    }
@@ -244,7 +244,7 @@ public:
     *         condition variable is released successfully.
     *         vpr::ReturnStatus::Fail is returned otherwise.
     */
-   vpr::ReturnStatus release (void)
+   vpr::ReturnStatus release()
    {
       return mCondMutex->release();
    }
@@ -262,7 +262,7 @@ public:
     *
     * @note NEVER call except to initialize explicitly.
     */
-   void setMutex (MutexNSPR* mutex)
+   void setMutex(MutexNSPR* mutex)
    {
       // NOT exactly correct, but just make sure not to leave it locked
       mutex->release();
@@ -270,10 +270,10 @@ public:
    }
 
 private:
-   PRCondVar*      mCondVar;   /**< Condition variable */
-   MutexNSPR*      mCondMutex; /**< Mutex for the condition variable */
+   PRCondVar* mCondVar;   /**< Condition variable */
+   MutexNSPR* mCondMutex; /**< Mutex for the condition variable */
 
-   MutexNSPR       mDefaultMutex;  /**< A default mutex variable */
+   MutexNSPR  mDefaultMutex;  /**< A default mutex variable */
 
    // = Prevent assignment and initialization.
    void operator= (const CondVarNSPR&)
@@ -281,7 +281,7 @@ private:
       /* Do nothing.*/ ;
    }
 
-   CondVarNSPR (const CondVarNSPR &c)
+   CondVarNSPR(const CondVarNSPR &c)
    {
       /* Do nothing.*/ ;
    }

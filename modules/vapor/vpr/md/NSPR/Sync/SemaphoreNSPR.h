@@ -69,7 +69,7 @@ public:
     * @param initialValue The initial number of resources controlled by the
     *                     semaphore.  If not specified, the default value is 1.
     */
-   SemaphoreNSPR (int initial_value = 1)
+   SemaphoreNSPR(int initial_value = 1)
    {
       mCondVar = new CondVar;
       PR_AtomicSet(&mValue, initial_value);
@@ -81,7 +81,7 @@ public:
     * @pre None.
     * @post The resources used by the semaphore variable are freed.
     */
-   ~SemaphoreNSPR (void)
+   ~SemaphoreNSPR()
    {
       delete mCondVar;
    }
@@ -98,7 +98,7 @@ public:
     * @return vpr::ReturnStatus::Succeed is returned if a resource lock is
     *         acquired.  vpr::ReturnStatus::Fail is returned otherwise.
     */
-   vpr::ReturnStatus acquire (void)
+   vpr::ReturnStatus acquire()
    {
       mCondVar->acquire();
       PR_AtomicDecrement(&mValue);
@@ -126,7 +126,7 @@ public:
     *
     * @note There is no special read semaphore for now.
     */
-   vpr::ReturnStatus acquireRead (void)
+   vpr::ReturnStatus acquireRead()
    {
       return this->acquire();
    }
@@ -145,7 +145,7 @@ public:
     *
     * @note There is no special write semaphore for now.
     */
-   vpr::ReturnStatus acquireWrite (void)
+   vpr::ReturnStatus acquireWrite()
    {
       return this->acquire();
    }
@@ -163,7 +163,7 @@ public:
     *         vpr::ReturnStatus::Fail is returned if no resource could be
     *         locked without blocking.
     */
-   vpr::ReturnStatus tryAcquire (void)
+   vpr::ReturnStatus tryAcquire()
    {
       vpr::ReturnStatus status(vpr::ReturnStatus::Fail);
 
@@ -188,7 +188,7 @@ public:
     *         acquired.  vpr::ReturnStatus::Fail is returned if no resource
     *         could be locked without blocking.
     */
-   vpr::ReturnStatus tryAcquireRead (void)
+   vpr::ReturnStatus tryAcquireRead()
    {
       return this->tryAcquire();
    }
@@ -206,7 +206,7 @@ public:
     *         acquired.  vpr::ReturnStatus::Fail is returned if no resource
     *         could be locked without blocking.
     */
-   vpr::ReturnStatus tryAcquireWrite (void)
+   vpr::ReturnStatus tryAcquireWrite()
    {
       return this->tryAcquire();
    }
@@ -222,7 +222,7 @@ public:
     *         unlocked successfully.  vpr::ReturnStatus::Fail is returned
     *         otherwise.
     */
-   vpr::ReturnStatus release (void)
+   vpr::ReturnStatus release()
    {
       vpr::ReturnStatus status;
 
@@ -249,7 +249,7 @@ public:
     * @note If processes are waiting on the semaphore, the results are
     *       undefined.
     */
-   vpr::ReturnStatus reset (int val)
+   vpr::ReturnStatus reset(int val)
    {
       vpr::ReturnStatus status;
 
@@ -273,8 +273,8 @@ public:
     *                It defaults to stderr if no descriptor is specified.
     * @param message Message printed out before the output is dumped.
     */
-   void dump (FILE* dest = stderr,
-              const char* message = "\n------ Semaphore Dump -----\n") const
+   void dump(FILE* dest = stderr,
+             const char* message = "\n------ Semaphore Dump -----\n") const
    {
       fprintf(dest, "%s", message);
       fprintf(dest, "Current semaphore value: %d", mValue);
@@ -290,7 +290,7 @@ protected:
       /* Do nothing. */ ;
    }
 
-   SemaphoreNSPR (const SemaphoreNSPR &)
+   SemaphoreNSPR(const SemaphoreNSPR &)
    {
       /* Do nothing. */ ;
    }
