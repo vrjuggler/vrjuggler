@@ -220,7 +220,7 @@ void vjGlDrawManager::addDisplay(vjDisplay* disp)
    {                                         // +1 because if pipeNum = 0, I still need size() == 1
       while(pipes.size() < (pipe_num+1))     // While we need more pipes
       {
-         vjGlPipe* new_pipe = new vjGlPipe(pipe_num, this);  // Create a new pipe to use
+         vjGlPipe* new_pipe = new vjGlPipe(pipes.size(), this);  // Create a new pipe to use
          pipes.push_back(new_pipe);                          // Add the pipe
          new_pipe->start();                                  // Start the pipe running
                                                              // NOTE: Run pipe even if now windows.  Then it waits for windows.
