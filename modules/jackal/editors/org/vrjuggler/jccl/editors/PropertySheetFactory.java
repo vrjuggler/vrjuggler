@@ -36,7 +36,6 @@ import java.awt.event.ActionListener;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Insets;
-//import java.awt.Graphics;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -46,7 +45,7 @@ import java.beans.*;
 import info.clearthought.layout.*;
 import org.vrjuggler.jccl.editors.*;
 import org.vrjuggler.jccl.config.*;
-//import com.sun.java.swing.plaf.windows.WindowsTreeUI;
+
 
 public class PropertySheetFactory extends PropertyComponent
 {
@@ -394,11 +393,6 @@ public class PropertySheetFactory extends PropertyComponent
       }
 
       elm.addProperty(propDef.getToken(), default_value, ctx);
-
-      //XXX: This should be detected through a listener in the Property sheet.
-      // We select 2 here because we want to add it to the top of the list.
-      //addNormalEditor(default_value, propDef, pvd.getLabel(), 2,
-      //                elm.getPropertyValueCount(propDef.getToken()) - 1);
    }
 
    private void addNewEmbeddedElement(ConfigContext ctx, ConfigElement elm,
@@ -442,10 +436,6 @@ public class PropertySheetFactory extends PropertyComponent
                                          chooser.getSelectedDefinition());
 
          elm.addProperty(propDef.getToken(), new_value, ctx);
-         // XXX: This should be detected through a listener in the Property
-         // sheet.  We select 2 here because we want to add it to the top of
-         // the list.
-         //addEmbeddedElement(new_value, propDef, 2);
       }
    }
 }
