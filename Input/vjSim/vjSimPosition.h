@@ -30,6 +30,12 @@ public:
       ROT_ROLL_CW = 11,
       NUM_POS_CONTROLS = 12
    };
+
+   // Const for coord system selection
+   enum {
+      LOCAL = 0,
+      GLOBAL = 1
+   };
 public:
    vjSimPosition(vjConfigChunk* chunk);
    ~vjSimPosition() {;}
@@ -73,6 +79,7 @@ private:
 
 
 private:
+   int            mCoordSystem;                 //: What coord system should I be in?
    vjMatrix       mPos;                         //: The current position being simulated
    vjKeyModPair   mSimKeys[NUM_POS_CONTROLS];   //: The keys to press for digital simulation
    float          mDTrans;                      //: Delta translation
