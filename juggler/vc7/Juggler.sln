@@ -35,13 +35,13 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Driver - Trackd API", "Gadg
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Driver - VRPN", "Gadgeteer\VRPN\VRPN.vcproj", "{2BB1C6DC-A6DB-42A3-A91A-DBD8BA7A843C}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ClusterJuggler Plug-in - Application Data Manager", "Gadgeteer\ApplicationDataManager\ApplicationDataManager.vcproj", "{2BB1C6DC-A6DB-42A3-A91A-DBD8BA7A843D}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Cluster Plug-in - Application Data Manager", "Gadgeteer\ApplicationDataManager\ApplicationDataManager.vcproj", "{2BB1C6DC-A6DB-42A3-A91A-DBD8BA7A843D}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ClusterJuggler Plug-in - Remote Input Manager", "Gadgeteer\RemoteInputManager\RemoteInputManager.vcproj", "{2BB1C6DC-A6DB-42A3-A91A-DBD8BA7A843E}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Cluster Plug-in - Remote Input Manager", "Gadgeteer\RemoteInputManager\RemoteInputManager.vcproj", "{2BB1C6DC-A6DB-42A3-A91A-DBD8BA7A843E}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ClusterJuggler Plug-in - Start Barrier", "Gadgeteer\StartBarrierPlugin\StartBarrierPlugin.vcproj", "{2BB1C6DC-A6DB-42A3-A91A-DBD8BA7A843F}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Cluster Plug-in - Start Barrier", "Gadgeteer\StartBarrierPlugin\StartBarrierPlugin.vcproj", "{2BB1C6DC-A6DB-42A3-A91A-DBD8BA7A843F}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ClusterJuggler Plug-in - Swap Lock TCP", "Gadgeteer\SwapLockTCPPlugin\SwapLockTCPPlugin.vcproj", "{2BB1C6DC-A6DB-42A3-A91A-DBD8BA7A8440}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Cluster Plug-in - Swap Lock TCP", "Gadgeteer\SwapLockTCPPlugin\SwapLockTCPPlugin.vcproj", "{2BB1C6DC-A6DB-42A3-A91A-DBD8BA7A8440}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "VR Juggler Performer Draw Manager", "VRJuggler\Performer_Draw_Manager\Performer_Draw_Manager.vcproj", "{3E0ED861-C434-40E0-8D76-E31D76EA185B}"
 EndProject
@@ -68,6 +68,8 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Driver - Direct Input Joystick", "Gadgeteer\DirectXJoystick\DirectXJoystick.vcproj", "{77A5242E-C68D-4101-A105-7D4FBD43F489}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "tweek_jni", "Tweek_Java\tweek_jni\tweek_jni.vcproj", "{448B9268-6ED3-4104-99BA-AF8C2B13C4D6}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Driver - 3Dconnexion SpaceBall", "Gadgeteer\SpaceBall\SpaceBall.vcproj", "{40450FA1-4F16-4498-AD30-7974FAF8D8C7}"
 EndProject
 Global
 	GlobalSection(SolutionConfiguration) = preSolution
@@ -167,6 +169,9 @@ Global
 		{6AED2E73-C633-439F-89C4-D97182EF0243}.1 = {4FC8DE94-8906-4B2D-8F1B-433ECED3C494}
 		{77A5242E-C68D-4101-A105-7D4FBD43F489}.0 = {5A96B2F8-7000-4988-AFD5-E85181B52BCF}
 		{77A5242E-C68D-4101-A105-7D4FBD43F489}.1 = {1AAD8712-09DC-4957-8594-AF5A49BAB4E1}
+		{40450FA1-4F16-4498-AD30-7974FAF8D8C7}.0 = {1AAD8712-09DC-4957-8594-AF5A49BAB4E1}
+		{40450FA1-4F16-4498-AD30-7974FAF8D8C7}.1 = {5A96B2F8-7000-4988-AFD5-E85181B52BCF}
+		{40450FA1-4F16-4498-AD30-7974FAF8D8C7}.2 = {00C860E8-6CC8-4638-B5D1-8E5C5A34C425}
 	EndGlobalSection
 	GlobalSection(ProjectConfiguration) = postSolution
 		{00C860E8-6CC8-4638-B5D1-8E5C5A34C425}.Debug.ActiveCfg = Debug|Win32
@@ -281,6 +286,10 @@ Global
 		{448B9268-6ED3-4104-99BA-AF8C2B13C4D6}.Debug.Build.0 = Release|Win32
 		{448B9268-6ED3-4104-99BA-AF8C2B13C4D6}.Release.ActiveCfg = Release|Win32
 		{448B9268-6ED3-4104-99BA-AF8C2B13C4D6}.Release.Build.0 = Release|Win32
+		{40450FA1-4F16-4498-AD30-7974FAF8D8C7}.Debug.ActiveCfg = Debug|Win32
+		{40450FA1-4F16-4498-AD30-7974FAF8D8C7}.Debug.Build.0 = Debug|Win32
+		{40450FA1-4F16-4498-AD30-7974FAF8D8C7}.Release.ActiveCfg = Release|Win32
+		{40450FA1-4F16-4498-AD30-7974FAF8D8C7}.Release.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionItems) = postSolution
 		Item:1 = ..\INSTALL.html
