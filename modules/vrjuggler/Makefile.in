@@ -919,6 +919,9 @@ ifeq (${BUILD_GUI}, Y)
 	@echo "------------------------------------------------"
 	@echo "Installing vjcontrol"
 	@echo "------------------------------------------------"
+	swingpath=`${scriptdir}/find-swing.pl` ;			\
+          ${INSTALL} -m ${_FILE_PERMS} -g ${_GROUP_NAME}		\
+          $$swingpath ${bindir}
 	${INSTALL} -m ${_FILE_PERMS} -g ${_GROUP_NAME}			\
           ${topdir}/GUI/VjControl.jar ${bindir}
 	${INSTALL} -m ${_EXEC_PERMS} -g ${_GROUP_NAME}			\
