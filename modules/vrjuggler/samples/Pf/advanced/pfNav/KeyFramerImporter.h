@@ -1,5 +1,5 @@
 #include <vrj/vrjConfig.h> // for DEG2RAD macro
-#include <fstream.h>        // for ifstream
+#include <fstream>        // for ifstream
 #include "KeyFramer.h"
 #include <vrj/Util/Debug.h>
 #include <vrj/Math/Math.h>
@@ -24,11 +24,7 @@ namespace kev
       {
          kf.clear();
 
-#ifdef WIN32
-         ifstream frames_file( filename, ios::in | ios::nocreate | ios::binary, filebuf::openprot );
-#else
-         ifstream frames_file( filename, ios::in | ios::nocreate, filebuf::openprot );
-#endif
+         std::ifstream frames_file( filename, std::ios::in );
 
          if (!frames_file.rdbuf()->is_open())
          {
