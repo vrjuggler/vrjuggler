@@ -196,6 +196,7 @@ The filters are applied in the order that they are specified in this configurati
       <allowedtype>PinchGlove</allowedtype>
       <allowedtype>DataGlove</allowedtype>
       <allowedtype>ThreeDMouse</allowedtype>
+      <allowedtype>Fastrack</allowedtype>
       <allowedtype>SimDigitalGlove</allowedtype>
       <allowedtype>TrackdController</allowedtype>
       <allowedtype>Intersense</allowedtype>
@@ -1219,6 +1220,7 @@ The filters are applied in the order that they are specified in this configurati
       <allowedtype>DummyPosition</allowedtype>
       <allowedtype>MotionStar</allowedtype>
       <allowedtype>TrackdSensor</allowedtype>
+      <allowedtype>Fastrack</allowedtype>
       <allowedtype>SimRelativePosition</allowedtype>
       <allowedtype>SimSetablePosition</allowedtype>
       <allowedtype>Intersense</allowedtype>
