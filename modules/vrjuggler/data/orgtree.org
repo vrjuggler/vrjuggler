@@ -6,7 +6,6 @@ Begin "Zelda"
         "Display Window"
     End
     Begin "Input"
-        "Input Manager"
         Begin "Proxies and Aliases"
             "Proxy Alias"
             "Position Proxy"
@@ -36,7 +35,7 @@ Begin "Zelda"
             "SimRelativePosition"
             "SimSetablePosition"
         End
-        Begin "Remote Input" 
+        Begin "Remote Input"
             "Remote Input Manager"
             "Remote Input Host Address"
         End
