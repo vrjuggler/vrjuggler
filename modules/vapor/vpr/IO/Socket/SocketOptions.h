@@ -46,7 +46,7 @@
 
 #include <vpr/IO/Socket/InetAddr.h>
 #include <vpr/IO/Socket/McastReq.h>
-#include <vpr/Util/Status.h>
+#include <vpr/Util/ReturnStatus.h>
 
 
 namespace vpr {
@@ -109,11 +109,11 @@ protected:
      * @param data   A data buffer that will be used to store the value of the
      *               given option.
      *
-     * @return vpr::Status::Success is returned if the value for the given
+     * @return vpr::ReturnStatus::Success is returned if the value for the given
      *         option was retrieved successfully.<br>
-     *         vpr::Status;:Failure is returned otherwise.
+     *         vpr::ReturnStatus;:Failure is returned otherwise.
      */
-    virtual vpr::Status getOption(const vpr::SocketOptions::Types option,
+    virtual vpr::ReturnStatus getOption(const vpr::SocketOptions::Types option,
                                   struct vpr::SocketOptions::Data& data) = 0;
 
     /**
@@ -124,7 +124,7 @@ protected:
      * @param data   A data buffer containing the value to be used in setting
      *               the socket option.
      */
-    virtual vpr::Status setOption(const vpr::SocketOptions::Types option,
+    virtual vpr::ReturnStatus setOption(const vpr::SocketOptions::Types option,
                                   const struct vpr::SocketOptions::Data& data) = 0;
 };
 

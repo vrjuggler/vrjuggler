@@ -178,11 +178,11 @@ public:
      *       port's flags are initaialized to 0.  The resulting status is
      *       returned to the caller.
      *
-     * @return vpr::Status::Success is returned if the serial port was opened
+     * @return vpr::ReturnStatus::Success is returned if the serial port was opened
      *         successfully.<br>
-     *         vpr::Status::Failure is returned otherwise.
+     *         vpr::ReturnStatus::Failure is returned otherwise.
      */
-    vpr::Status open(void);
+    vpr::ReturnStatus open(void);
 
     /**
      * Closes the serial port.
@@ -191,11 +191,11 @@ public:
      * @post An attempt is made to close the port.  The resulting status is
      *       returned to the caller.
      *
-     * @return vpr::Status::Success is returned if the serial port was closed
+     * @return vpr::ReturnStatus::Success is returned if the serial port was closed
      *         successfully.<br>
-     *         vpr::Status::Failure is returned otherwise.
+     *         vpr::ReturnStatus::Failure is returned otherwise.
      */
-    inline vpr::Status
+    inline vpr::ReturnStatus
     close (void) {
         return m_handle->close();
     }
@@ -206,10 +206,10 @@ public:
      * @pre The serial port is open.
      * @post Processes may block when accessing the port.
      *
-     * @return vpr::Status::Success is returned if the blocking mode was
-     *         changed successfully; vpr::Status::Failure otherwise.
+     * @return vpr::ReturnStatus::Success is returned if the blocking mode was
+     *         changed successfully; vpr::ReturnStatus::Failure otherwise.
      */
-    inline vpr::Status
+    inline vpr::ReturnStatus
     enableBlocking (void) {
        return m_handle->enableBlocking();
     }
@@ -220,10 +220,10 @@ public:
      * @pre The serial port is open.
      * @post Processes will not block when accessing the port.
      *
-     * @return vpr::Status::Success is returned if the blocking mode was
-     *         changed successfully; vpr::Status::Failure otherwise.
+     * @return vpr::ReturnStatus::Success is returned if the blocking mode was
+     *         changed successfully; vpr::ReturnStatus::Failure otherwise.
      */
-    inline vpr::Status
+    inline vpr::ReturnStatus
     enableNonBlocking (void) {
        return m_handle->enableNonBlocking();
     }
@@ -343,10 +343,10 @@ public:
      * @param size A reference to a vpr::Uint8 where the buffer size is
      *             stored for return to the caller.
      *
-     * @return vpr::Status::Success is returned if the buffer size was
-     *         retrieved successfully; vpr::Status::Failure otherwise.
+     * @return vpr::ReturnStatus::Success is returned if the buffer size was
+     *         retrieved successfully; vpr::ReturnStatus::Failure otherwise.
      */
-    Status getBufferSize(Uint16& size);
+    ReturnStatus getBufferSize(Uint16& size);
 
     /**
      * Attempts to change the buffer size to the given argument.
@@ -358,10 +358,10 @@ public:
      *
      * @param size The new size for the buffer.
      *
-     * @return vpr::Status::Success is returned if the buffer size was set
-     *         successfully; vpr::Status::Failure otherwise.
+     * @return vpr::ReturnStatus::Success is returned if the buffer size was set
+     *         successfully; vpr::ReturnStatus::Failure otherwise.
      */
-    Status setBufferSize(const Uint8 size);
+    ReturnStatus setBufferSize(const Uint8 size);
 
     /**
      * Gets the value of the timeout (in tenths of a second) to wait for data
@@ -374,13 +374,13 @@ public:
      * @param timeout A reference to a vpr::Uint8 to be used as storage for
      *                the timeout value.
      *
-     * @return vpr::Status::Success is returned if the timeout was requested
-     *         successfully; vpr::Status::Failure otherwise.
+     * @return vpr::ReturnStatus::Success is returned if the timeout was requested
+     *         successfully; vpr::ReturnStatus::Failure otherwise.
      *
      * @see Refer to page 353 of <I>Advanced Programming in the UNIX
      *      Environment</I> for more details.
      */
-    Status getTimeout(Uint8& timeout);
+    ReturnStatus getTimeout(Uint8& timeout);
 
     /**
      * Sets the value of the timeout to wait for data to arrive.  The value
@@ -393,13 +393,13 @@ public:
      * @param timeout_val The new timeout value measured in tenths of a
      *                    second.
      *
-     * @return vpr::Status::Success is returned if the timeout was set
-     *         successfully; vpr::Status::Failure otherwise.
+     * @return vpr::ReturnStatus::Success is returned if the timeout was set
+     *         successfully; vpr::ReturnStatus::Failure otherwise.
      *
      * @see Refer to page 353 of <I>Advanced Programming in the UNIX
      *      Environment</I> for more details.
      */
-    Status setTimeout(const Uint8 timeout);
+    ReturnStatus setTimeout(const Uint8 timeout);
 
     // ------------------------------------------------------------------------
     //: Get the character size (the bits per byte).
@@ -412,9 +412,9 @@ public:
     //+              object to be used as storage for the character size
     //+              value.
     //
-    //! RETURNS: A vpr::Status object describing the results of the operation.
+    //! RETURNS: A vpr::ReturnStatus object describing the results of the operation.
     // ------------------------------------------------------------------------
-    Status getCharacterSize(SerialTypes::CharacterSizeOption& size);
+    ReturnStatus getCharacterSize(SerialTypes::CharacterSizeOption& size);
 
     // ------------------------------------------------------------------------
     //: Set the current character size (the bits per byte) to the size in the
@@ -426,15 +426,15 @@ public:
     //
     //! ARGS: bpb - The new character size.
     //
-    //! RETURNS: A vpr::Status object describing the results of the operation.
+    //! RETURNS: A vpr::ReturnStatus object describing the results of the operation.
     // ------------------------------------------------------------------------
-    Status setCharacterSize(const SerialTypes::CharacterSizeOption bpb);
+    ReturnStatus setCharacterSize(const SerialTypes::CharacterSizeOption bpb);
 
     // ------------------------------------------------------------------------
     //: Get the current read state for the port.
     //
     //! PRE: The serial port is open.
-    //! POST: The read state (either enabled or disabled) is returne to the 
+    //! POST: The read state (either enabled or disabled) is returne to the
     //+       caller.
     //
     //! RETURNS: true  - Bytes can be read from the device.
@@ -448,9 +448,9 @@ public:
     //! PRE: The serial port is open.
     //! POST: An attempt is made to make the device readable.
     //
-    //! RETURNS: A vpr::Status object describing the results of the operation.
+    //! RETURNS: A vpr::ReturnStatus object describing the results of the operation.
     // ------------------------------------------------------------------------
-    Status enableRead(void);
+    ReturnStatus enableRead(void);
 
     // ------------------------------------------------------------------------
     //: Disable the receiver so that bytes cannot be read from the port.
@@ -458,9 +458,9 @@ public:
     //! PRE: The serial port is open.
     //! POST: An attempt is made to make the device unreadable.
     //
-    //! RETURNS: A vpr::Status object describing the results of the operation.
+    //! RETURNS: A vpr::ReturnStatus object describing the results of the operation.
     // ------------------------------------------------------------------------
-    Status disableRead(void);
+    ReturnStatus disableRead(void);
 
     // ------------------------------------------------------------------------
     //: Get the number of stop bits in use.  This will be either 1 or 2.
@@ -472,9 +472,9 @@ public:
     //! ARGS: num_bits - A reference to a vpr::Uint8 that will be used to
     //+                  store the number of stop bits.
     //
-    //! RETURNS: A vpr::Status object describing the results of the operation.
+    //! RETURNS: A vpr::ReturnStatus object describing the results of the operation.
     // ------------------------------------------------------------------------
-    Status getStopBits(Uint8& num_bits);
+    ReturnStatus getStopBits(Uint8& num_bits);
 
     // ------------------------------------------------------------------------
     //: Set the number of stop bits to use.  The value must be either 1 or 2.
@@ -485,9 +485,9 @@ public:
     //
     //! ARGS: num_bits - The number of stop bits to use.
     //
-    //! RETURNS: A vpr::Status object describing the results of the operation.
+    //! RETURNS: A vpr::ReturnStatus object describing the results of the operation.
     // ------------------------------------------------------------------------
-    Status setStopBits(const Uint8 num_bits);
+    ReturnStatus setStopBits(const Uint8 num_bits);
 
     // ------------------------------------------------------------------------
     //: Query the canonical input state of the serial port.  If canonical mode
@@ -513,9 +513,9 @@ public:
     //! PRE: The serial port is open.
     //! POST: Canonical input is enabled.
     //
-    //! RETURNS: A vpr::Status object describing the results of the operation.
+    //! RETURNS: A vpr::ReturnStatus object describing the results of the operation.
     // ------------------------------------------------------------------------
-    Status enableCanonicalInput(void);
+    ReturnStatus enableCanonicalInput(void);
 
     // ------------------------------------------------------------------------
     //: Disable canonical input.  See getCanonicalState() for more information
@@ -524,9 +524,9 @@ public:
     //! PRE: The serial port is open.
     //! POST: Canonical input is disabled.
     //
-    //! RETURNS: A vpr::Status object describing the results of the operation.
+    //! RETURNS: A vpr::ReturnStatus object describing the results of the operation.
     // ------------------------------------------------------------------------
-    Status disableCanonicalInput(void);
+    ReturnStatus disableCanonicalInput(void);
 
     // ------------------------------------------------------------------------
     //: Get the current state of ignoring bytes with framing errors (other
@@ -547,9 +547,9 @@ public:
     //! PRE: The serial port is open.
     //! POST: Erroneous byte ignoring is enabled.
     //
-    //! RETURNS: A vpr::Status object describing the results of the operation.
+    //! RETURNS: A vpr::ReturnStatus object describing the results of the operation.
     // ------------------------------------------------------------------------
-    Status enableBadByteIgnore(void);
+    ReturnStatus enableBadByteIgnore(void);
 
     // ------------------------------------------------------------------------
     //: Disable ignoring of received bytes with framing errors or parity
@@ -558,9 +558,9 @@ public:
     //! PRE: The serial port is open.
     //! POST: Erroneous byte ignoring is disabled.
     //
-    //! RETURNS: A vpr::Status object describing the results of the operation.
+    //! RETURNS: A vpr::ReturnStatus object describing the results of the operation.
     // ------------------------------------------------------------------------
-    Status disableBadByteIgnore(void);
+    ReturnStatus disableBadByteIgnore(void);
 
     // ------------------------------------------------------------------------
     //: Get the state of parity checking for input.
@@ -579,9 +579,9 @@ public:
     //! PRE: The serial port is open.
     //! POST: Input parity checking is enabled.
     //
-    //! RETURNS: A vpr::Status object describing the results of the operation.
+    //! RETURNS: A vpr::ReturnStatus object describing the results of the operation.
     // ------------------------------------------------------------------------
-    Status enableInputParityCheck(void);
+    ReturnStatus enableInputParityCheck(void);
 
     // ------------------------------------------------------------------------
     //: Disable input parity checking.
@@ -589,9 +589,9 @@ public:
     //! PRE: The serial port is open.
     //! POST: Input parity checking is disabled.
     //
-    //! RETURNS: A vpr::Status object describing the results of the operation.
+    //! RETURNS: A vpr::ReturnStatus object describing the results of the operation.
     // ------------------------------------------------------------------------
-    Status disableInputParityCheck(void);
+    ReturnStatus disableInputParityCheck(void);
 
     // ------------------------------------------------------------------------
     //: Get the current state of bit stripping.  When enabled, input bytes are
@@ -611,9 +611,9 @@ public:
     //! PRE: The serial port is open.
     //! POST: Input bit stripping is enabled.
     //
-    //! RETURNS: A vpr::Status object describing the results of the operation.
+    //! RETURNS: A vpr::ReturnStatus object describing the results of the operation.
     // ------------------------------------------------------------------------
-    Status enableBitStripping(void);
+    ReturnStatus enableBitStripping(void);
 
     // ------------------------------------------------------------------------
     //: Disable stripping of input bytes to seven bits.
@@ -621,9 +621,9 @@ public:
     //! PRE: The serial port is open.
     //! POST: Input bit stripping is disabled.
     //
-    //! RETURNS: A vpr::Status object describing the results of the operation.
+    //! RETURNS: A vpr::ReturnStatus object describing the results of the operation.
     // ------------------------------------------------------------------------
-    Status disableBitStripping(void);
+    ReturnStatus disableBitStripping(void);
 
     // ------------------------------------------------------------------------
     //: Get the state of start-stop input control.  When enabled, if the
@@ -649,9 +649,9 @@ public:
     //! PRE: The serial port is open.
     //! POST: Start-stop input control is enabled.
     //
-    //! RETURNS: A vpr::Status object describing the results of the operation.
+    //! RETURNS: A vpr::ReturnStatus object describing the results of the operation.
     // ------------------------------------------------------------------------
-    Status enableStartStopInput(void);
+    ReturnStatus enableStartStopInput(void);
 
     // ------------------------------------------------------------------------
     //: Disable start-stop input control.  See getStartStopInputState() for
@@ -660,9 +660,9 @@ public:
     //! PRE: The serial port is open.
     //! POST: Start-stop input control is disabled.
     //
-    //! RETURNS: A vpr::Status object describing the results of the operation.
+    //! RETURNS: A vpr::ReturnStatus object describing the results of the operation.
     // ------------------------------------------------------------------------
-    Status disableStartStopInput(void);
+    ReturnStatus disableStartStopInput(void);
 
     // ------------------------------------------------------------------------
     //: Get the state of start-stop output control.  When enabled, when the
@@ -686,9 +686,9 @@ public:
     //! PRE: The serial port is open.
     //! POST: Start-stop input control is ensabled.
     //
-    //! RETURNS: A vpr::Status object describing the results of the operation.
+    //! RETURNS: A vpr::ReturnStatus object describing the results of the operation.
     // ------------------------------------------------------------------------
-    Status enableStartStopOutput(void);
+    ReturnStatus enableStartStopOutput(void);
 
     // ------------------------------------------------------------------------
     //: Disable start-stop output control.  See getStartStopOutputState() for
@@ -697,9 +697,9 @@ public:
     //! PRE: The serial port is open.
     //! POST: Start-stop output control is disabled.
     //
-    //! RETURNS: A vpr::Status object describing the results of the operation.
+    //! RETURNS: A vpr::ReturnStatus object describing the results of the operation.
     // ------------------------------------------------------------------------
-    Status disableStartStopOutput(void);
+    ReturnStatus disableStartStopOutput(void);
 
     // ------------------------------------------------------------------------
     //: Get the current state of parity generation for outgoing bytes and
@@ -722,9 +722,9 @@ public:
     //! PRE: The serial port is open.
     //! POST: Parity generation and checking are enabled.
     //
-    //! RETURNS: A vpr::Status object describing the results of the operation.
+    //! RETURNS: A vpr::ReturnStatus object describing the results of the operation.
     // ------------------------------------------------------------------------
-    Status enableParityGeneration(void);
+    ReturnStatus enableParityGeneration(void);
 
     // ------------------------------------------------------------------------
     //: Disable parity generation for outgoing bytes and parity checking for
@@ -733,9 +733,9 @@ public:
     //! PRE: The serial port is open.
     //! POST: Parity generation and checking are disabled.
     //
-    //! RETURNS: A vpr::Status object describing the results of the operation.
+    //! RETURNS: A vpr::ReturnStatus object describing the results of the operation.
     // ------------------------------------------------------------------------
-    Status disableParityGeneration(void);
+    ReturnStatus disableParityGeneration(void);
 
     // ------------------------------------------------------------------------
     //: Enable marking of bytes with parity errors or framing errors (except
@@ -759,9 +759,9 @@ public:
     //! PRE: The serial port is open.
     //! POST: Parity error marking is enabled.
     //
-    //! RETURNS: A vpr::Status object describing the results of the operation.
+    //! RETURNS: A vpr::ReturnStatus object describing the results of the operation.
     // ------------------------------------------------------------------------
-    Status enableParityErrorMarking(void);
+    ReturnStatus enableParityErrorMarking(void);
 
     // ------------------------------------------------------------------------
     //: Disable parity error and framing error marking.
@@ -769,9 +769,9 @@ public:
     //! PRE: The serial port is open.
     //! POST: Parity error marking is disabled.
     //
-    //! RETURNS: A vpr::Status object describing the results of the operation.
+    //! RETURNS: A vpr::ReturnStatus object describing the results of the operation.
     // ------------------------------------------------------------------------
-    Status disableParityErrorMarking(void);
+    ReturnStatus disableParityErrorMarking(void);
 
     // ------------------------------------------------------------------------
     //: Get the current parity checking type (either odd or even).
@@ -790,9 +790,9 @@ public:
     //! PRE: The serial port is open.
     //! POST: Odd parity is enabled.
     //
-    //! RETURNS: A vpr::Status object describing the results of the operation.
+    //! RETURNS: A vpr::ReturnStatus object describing the results of the operation.
     // ------------------------------------------------------------------------
-    Status setOddParity(void);
+    ReturnStatus setOddParity(void);
 
     // ------------------------------------------------------------------------
     //: Enable even parity.
@@ -800,9 +800,9 @@ public:
     //! PRE: The serial port is open.
     //! POST: Even parity is enabled.
     //
-    //! RETURNS: A vpr::Status object describing the results of the operation.
+    //! RETURNS: A vpr::ReturnStatus object describing the results of the operation.
     // ------------------------------------------------------------------------
-    Status setEvenParity(void);
+    ReturnStatus setEvenParity(void);
 
     // ------------------------------------------------------------------------
     //: Get the current input baud rate.
@@ -814,9 +814,9 @@ public:
     //! ARGS: rate - A reference to a vpr::Uint32 to be used as storage for
     //+              the current input baud rate.
     //
-    //! RETURNS: A vpr::Status object describing the results of the operation.
+    //! RETURNS: A vpr::ReturnStatus object describing the results of the operation.
     // ------------------------------------------------------------------------
-    Status getInputBaudRate(Uint32& rate);
+    ReturnStatus getInputBaudRate(Uint32& rate);
 
     // ------------------------------------------------------------------------
     //: Set the current input baud rate.
@@ -826,9 +826,9 @@ public:
     //
     //! ARGS: rate - The new input baud rate.
     //
-    //! RETURNS: A vpr::Status object describing the results of the operation.
+    //! RETURNS: A vpr::ReturnStatus object describing the results of the operation.
     // ------------------------------------------------------------------------
-    Status setInputBaudRate(const Uint32 rate);
+    ReturnStatus setInputBaudRate(const Uint32 rate);
 
     // ------------------------------------------------------------------------
     //: Get the current output baud rate.
@@ -840,9 +840,9 @@ public:
     //! ARGS: rate - A reference to a vpr::Uint32 to be used as storage for
     //+              the current output baud rate.
     //
-    //! RETURNS: A vpr::Status object describing the results of the operation.
+    //! RETURNS: A vpr::ReturnStatus object describing the results of the operation.
     // ------------------------------------------------------------------------
-    Status getOutputBaudRate(Uint32& rate);
+    ReturnStatus getOutputBaudRate(Uint32& rate);
 
     // ------------------------------------------------------------------------
     //: Set the current output baud rate.
@@ -852,9 +852,9 @@ public:
     //
     //! ARGS: rate - The new output baud rate.
     //
-    //! RETURNS: A vpr::Status object describing the results of the operation.
+    //! RETURNS: A vpr::ReturnStatus object describing the results of the operation.
     // ------------------------------------------------------------------------
-    Status setOutputBaudRate(const Uint32 rate);
+    ReturnStatus setOutputBaudRate(const Uint32 rate);
 
     // ------------------------------------------------------------------------
     //: Wait for all output to be transmitted.
@@ -862,9 +862,9 @@ public:
     //! PRE: The serial port is open.
     //! POST: All output is transmitted.
     //
-    //! RETURNS: A vpr::Status object describing the results of the operation.
+    //! RETURNS: A vpr::ReturnStatus object describing the results of the operation.
     // ------------------------------------------------------------------------
-    Status drainOutput(void);
+    ReturnStatus drainOutput(void);
 
     // ------------------------------------------------------------------------
     //: Alter the input or output flow control.  Based on the
@@ -878,9 +878,9 @@ public:
     //
     //! ARGS: opt - The flow control change.
     //
-    //! RETURNS: A vpr::Status object describing the results of the operation.
+    //! RETURNS: A vpr::ReturnStatus object describing the results of the operation.
     // ------------------------------------------------------------------------
-    Status controlFlow(SerialTypes::FlowActionOption opt);
+    ReturnStatus controlFlow(SerialTypes::FlowActionOption opt);
 
     // ------------------------------------------------------------------------
     //: Discard either the input buffer (unread data received from the
@@ -894,9 +894,9 @@ public:
     //
     //! ARGS: queue - The queue (or queues) to be flushed.
     //
-    //! RETURNS: A vpr::Status object describing the results of the operation.
+    //! RETURNS: A vpr::ReturnStatus object describing the results of the operation.
     // ------------------------------------------------------------------------
-    Status flushQueue(SerialTypes::FlushQueueOption queue);
+    ReturnStatus flushQueue(SerialTypes::FlushQueueOption queue);
 
     // ------------------------------------------------------------------------
     //: Transmit a continuous stream of zero bits for the given duration.  If
@@ -911,9 +911,9 @@ public:
     //! ARGS: duration - The length of time to send a zero bit stream to the
     //+                  serial device.
     //
-    //! RETURNS: A vpr::Status object describing the results of the operation.
+    //! RETURNS: A vpr::ReturnStatus object describing the results of the operation.
     // ------------------------------------------------------------------------
-    Status sendBreak(const Int32 duration);
+    ReturnStatus sendBreak(const Int32 duration);
 
     /**
      * Implementation of the <code>read</code> template method.  This reads at
@@ -934,15 +934,15 @@ public:
      *                   available for reading.  This argument is optional and
      *                   defaults to vpr::Interval::NoTimeout.
      *
-     * @return vpr::Status::Success is returned if the read operation
+     * @return vpr::ReturnStatus::Success is returned if the read operation
      *         completed successfully.<br>
-     *         vpr::Status::WouldBlock if the port is in non-blocking mode,
+     *         vpr::ReturnStatus::WouldBlock if the port is in non-blocking mode,
      *         and there is no data to read.<br>
-     *         vpr::Status::Timeout is returned if the read could not begin
+     *         vpr::ReturnStatus::Timeout is returned if the read could not begin
      *         within the timeout interval.<br>
-     *         vpr::Status::Failure is returned if the read operation failed.
+     *         vpr::ReturnStatus::Failure is returned if the read operation failed.
      */
-    inline vpr::Status
+    inline vpr::ReturnStatus
     read_i (void* buffer, const vpr::Uint32 length, vpr::Uint32& bytes_read,
             const vpr::Interval timeout = vpr::Interval::NoTimeout)
     {
@@ -969,15 +969,15 @@ public:
      *                   available for reading.  This argument is optional and
      *                   defaults to vpr::Interval::NoTimeout.
      *
-     * @return vpr::Status::Success is returned if the read operation
+     * @return vpr::ReturnStatus::Success is returned if the read operation
      *         completed successfully.<br>
-     *         vpr::Status::WouldBlock if the port is in non-blocking mode,
+     *         vpr::ReturnStatus::WouldBlock if the port is in non-blocking mode,
      *         and there is no data to read.<br>
-     *         vpr::Status::Timeout is returned if the read could not begin
+     *         vpr::ReturnStatus::Timeout is returned if the read could not begin
      *         within the timeout interval.<br>
-     *         vpr::Status::Failure is returned if the read operation failed.
+     *         vpr::ReturnStatus::Failure is returned if the read operation failed.
      */
-    inline vpr::Status
+    inline vpr::ReturnStatus
     readn_i (void* buffer, const vpr::Uint32 length, vpr::Uint32& bytes_read,
              const vpr::Interval timeout = vpr::Interval::NoTimeout)
     {
@@ -1000,16 +1000,16 @@ public:
      *                      available for writing.  This argument is optional
      *                      and defaults to vpr::Interval::NoTimeout.
      *
-     * @return vpr::Status::Success is returned if the write operation
+     * @return vpr::ReturnStatus::Success is returned if the write operation
      *         completed successfully.<br>
-     *         vpr::Status::WouldBlock is returned if the handle is in
+     *         vpr::ReturnStatus::WouldBlock is returned if the handle is in
      *         non-blocking mode, and the write operation could not be
      *         completed.<br>
-     *         vpr::Status::Timeout is returned if the write could not begin
+     *         vpr::ReturnStatus::Timeout is returned if the write could not begin
      *         within the timeout interval.<br>
-     *         vpr::Status::Failure is returned if the write operation failed.
+     *         vpr::ReturnStatus::Failure is returned if the write operation failed.
      */
-    inline vpr::Status
+    inline vpr::ReturnStatus
     write_i (const void* buffer, const vpr::Uint32 length,
              vpr::Uint32& bytes_written,
              const vpr::Interval timeout = vpr::Interval::NoTimeout)
@@ -1041,16 +1041,16 @@ protected:
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    vpr::Status getAttrs(struct termios* term);
+    vpr::ReturnStatus getAttrs(struct termios* term);
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    vpr::Status setAttrs(struct termios* term, const char* err_msg,
+    vpr::ReturnStatus setAttrs(struct termios* term, const char* err_msg,
                          const bool print_sys_err = true);
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    vpr::Status setAttrs(struct termios* term, const std::string& err_msg,
+    vpr::ReturnStatus setAttrs(struct termios* term, const std::string& err_msg,
                          const bool print_sys_err = true);
 
     // ------------------------------------------------------------------------
@@ -1059,7 +1059,7 @@ protected:
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    vpr::Status setBit(const tcflag_t bit, _term_flag flag, const bool enable,
+    vpr::ReturnStatus setBit(const tcflag_t bit, _term_flag flag, const bool enable,
                        const std::string& err_msg,
                        const bool print_sys_err = true);
 

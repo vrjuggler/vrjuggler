@@ -66,14 +66,14 @@ namespace vpr {
 
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
-Status
+ReturnStatus
 SocketDatagramImplBSD::recvfrom (void* msg, const vpr::Uint32 length,
                                  const int flags, InetAddr& from,
                                  vpr::Uint32& bytes_read,
                                  const vpr::Interval timeout)
 {
     socklen_t fromlen;
-    Status retval;
+    ReturnStatus retval;
 
     retval = m_handle->isReadable(timeout);
 
@@ -90,14 +90,14 @@ SocketDatagramImplBSD::recvfrom (void* msg, const vpr::Uint32 length,
             bytes_read = 0;
 
             if ( errno == EAGAIN && getNonBlocking() ) {
-                retval.setCode(Status::WouldBlock);
+                retval.setCode(ReturnStatus::WouldBlock);
             }
             else {
                 fprintf(stderr,
                         "[vpr::SocketDatagramImplBSD] ERROR: Could not read from socket (%s:%hu): %s\n",
                         m_remote_addr.getAddressString().c_str(),
                         m_remote_addr.getPort(), strerror(errno));
-                retval.setCode(Status::Failure);
+                retval.setCode(ReturnStatus::Failure);
             }
         }
         else {
@@ -110,13 +110,13 @@ SocketDatagramImplBSD::recvfrom (void* msg, const vpr::Uint32 length,
 
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
-Status
+ReturnStatus
 SocketDatagramImplBSD::sendto (const void* msg, const vpr::Uint32 length,
                                const int flags, const InetAddr& to,
                                vpr::Uint32& bytes_sent,
                                const vpr::Interval timeout)
 {
-    Status retval;
+    ReturnStatus retval;
 
     retval = m_handle->isWriteable(timeout);
 
@@ -132,7 +132,7 @@ SocketDatagramImplBSD::sendto (const void* msg, const vpr::Uint32 length,
             bytes_sent = 0;
 
             if ( errno == EAGAIN && getNonBlocking() ) {
-                retval.setCode(Status::WouldBlock);
+                retval.setCode(ReturnStatus::WouldBlock);
             }
             else {
                 fprintf(stderr,
@@ -140,7 +140,7 @@ SocketDatagramImplBSD::sendto (const void* msg, const vpr::Uint32 length,
                         to.getAddressString().c_str(), to.getPort(),
                         m_remote_addr.getAddressString().c_str(),
                         m_remote_addr.getPort(), strerror(errno));
-                retval.setCode(Status::Failure);
+                retval.setCode(ReturnStatus::Failure);
             }
         }
         else {

@@ -39,8 +39,8 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef STATUS_VPR_ERROR_CODE
-#define STATUS_VPR_ERROR_CODE
+#ifndef RETURN_STATUS_VPR_ERROR_CODE
+#define RETURN_STATUS_VPR_ERROR_CODE
 
 #include <vpr/vprConfig.h>
 
@@ -53,7 +53,7 @@ namespace vpr
     *
     * @author Kevin Meinert
     */
-   class VPR_CLASS_API Status
+   class VPR_CLASS_API ReturnStatus
    {
    public:
       /// Possible status codes
@@ -66,8 +66,8 @@ namespace vpr
          InProgress        /**< Operation is still in progress */
       };
 
-      /// Default constructor.  vpr::Status:;Success is default
-      Status() : mStatus( Success )
+      /// Default constructor.  vpr::ReturnStatus:;Success is default
+      ReturnStatus() : mReturnStatus( Success )
       {
       }
 
@@ -75,11 +75,11 @@ namespace vpr
        * Copies the given object into this object.
        * RESULT: this = status
        *
-       * @param status The <code>vpr::Status</code> object to be copied.
+       * @param status The <code>vpr::ReturnStatus</code> object to be copied.
        */
-      void copy( const Status& status )
+      void copy( const ReturnStatus& status )
       {
-         mStatus = status.mStatus;
+         mReturnStatus = status.mReturnStatus;
       }
 
       /**
@@ -88,7 +88,7 @@ namespace vpr
        */
       void setCode( const Code& code )
       {
-         mStatus = code;
+         mReturnStatus = code;
       }
 
       /**
@@ -96,24 +96,24 @@ namespace vpr
        */
       const Code& code() const
       {
-         return mStatus;
+         return mReturnStatus;
       }
 
       /// copy constructor
-      Status( const Status& status )
+      ReturnStatus( const ReturnStatus& status )
       {
          this->copy( status );
       }
 
-      /// Status::Code constructor
-      Status( const Code& code )
+      /// ReturnStatus::Code constructor
+      ReturnStatus( const Code& code )
       {
          this->setCode( code );
       }
 
       //: operator=
       // RESULT: this = status
-      Status& operator=( const Status& status )
+      ReturnStatus& operator=( const ReturnStatus& status )
       {
          this->copy( status );
          return *this;
@@ -121,7 +121,7 @@ namespace vpr
 
       //: operator=
       // RESULT: this = status
-      Status& operator=( const Code& code )
+      ReturnStatus& operator=( const Code& code )
       {
          this->setCode( code );
          return *this;
@@ -129,41 +129,41 @@ namespace vpr
 
       //: operator==
       // RESULT: return true if equal, false if not
-      bool operator==( const Status& status ) const
+      bool operator==( const ReturnStatus& status ) const
       {
-         return status.mStatus == mStatus;
+         return status.mReturnStatus == mReturnStatus;
       }
 
       //: operator==
       // RESULT: return true if equal, false if not
       bool operator==( const Code& code ) const
       {
-         return code == mStatus;
+         return code == mReturnStatus;
       }
 
       //: operator!=
       // RESULT: return false if equal, true if not
-      bool operator!=( const Status& status ) const
+      bool operator!=( const ReturnStatus& status ) const
       {
-         return status.mStatus != mStatus;
+         return status.mReturnStatus != mReturnStatus;
       }
 
       //: operator!=
       // RESULT: return false if equal, true if not
       bool operator!=( const Code& code ) const
       {
-         return code != mStatus;
+         return code != mReturnStatus;
       }
 
    public:
-      bool success() const { return mStatus == Success; }
-      bool failure() const { return mStatus == Failure; }
-      bool wouldBlock() const { return mStatus == WouldBlock; }
-      bool inProgress() const { return mStatus == InProgress; }
-      bool timeout() const { return mStatus == Timeout; }
+      bool success() const { return mReturnStatus == Success; }
+      bool failure() const { return mReturnStatus == Failure; }
+      bool wouldBlock() const { return mReturnStatus == WouldBlock; }
+      bool inProgress() const { return mReturnStatus == InProgress; }
+      bool timeout() const { return mReturnStatus == Timeout; }
 
    private:
-      Status::Code mStatus;
+      ReturnStatus::Code mReturnStatus;
    };
 }; // namespace vpr
 

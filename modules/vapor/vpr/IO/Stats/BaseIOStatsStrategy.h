@@ -43,7 +43,7 @@
 #define BASEIOSTATS_H
 
 #include <vpr/vprConfig.h>
-#include <vpr/Util/Status.h>
+#include <vpr/Util/ReturnStatus.h>
 #include <vpr/Util/Interval.h>
 
 namespace vpr
@@ -53,7 +53,7 @@ class BlockIO;    // forward declare
 
 /**
  * Base interface for IO Stat collection
- * 
+ *
  * This is the interface that the BlockIO class expects to deal with.
  * We add on other stats features using mixins that are added by a template composition adapter
  */
@@ -73,28 +73,28 @@ public:
    enum { IS_NULL = 0 };
 
 public:
-   virtual void read_s(Status& status,
+   virtual void read_s(ReturnStatus& status,
                          void* buffer, const vpr::Uint32 length,
                           vpr::Uint32& bytes_read,
                           const vpr::Interval timeout = vpr::Interval::NoTimeout);
-   
-   virtual void readn_s(Status& status,
+
+   virtual void readn_s(ReturnStatus& status,
                           void* buffer, const vpr::Uint32 length,
                            vpr::Uint32& bytes_read,
                            const vpr::Interval timeout = vpr::Interval::NoTimeout);
 
-   virtual void write_s(Status& status,
+   virtual void write_s(ReturnStatus& status,
                           const void* buffer, const vpr::Uint32 length,
                            vpr::Uint32& bytes_written,
                            const vpr::Interval timeout = vpr::Interval::NoTimeout);
-      
+
 protected:
     vpr::BlockIO*   mRealObject;
 };
 
 /**
  * NULL strategy
- * 
+ *
  * NOTE: Must derive from BaseIOStatsStrategy because the compiler still expects that interface
  */
 class NullIOStatsStrategy : public BaseIOStatsStrategy

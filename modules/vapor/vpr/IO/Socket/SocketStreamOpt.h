@@ -47,7 +47,7 @@
 #include <vpr/vprTypes.h>
 #include <vpr/IO/Socket/SocketOptions.h>
 #include <vpr/IO/Socket/SocketIpOpt.h>
-#include <vpr/Util/Status.h>
+#include <vpr/Util/ReturnStatus.h>
 
 
 namespace vpr {
@@ -74,10 +74,10 @@ public:
     /**
      *
      */
-    inline vpr::Status
+    inline vpr::ReturnStatus
     getMaxSegmentSize (vpr::Int32& size) {
         vpr::SocketOptions::Data option;
-        vpr::Status retval;
+        vpr::ReturnStatus retval;
 
         retval = getOption(vpr::SocketOptions::MaxSegment, option);
 
@@ -91,7 +91,7 @@ public:
     /**
      *
      */
-    inline vpr::Status
+    inline vpr::ReturnStatus
     setMaxSegmentSize (const vpr::Int32 size) {
         vpr::SocketOptions::Data option;
         option.max_segment = size;
@@ -109,10 +109,10 @@ public:
      *                segements.  Otherwise, the Nagel alorithm is delaying
      *                the transmission.
      */
-    inline vpr::Status
+    inline vpr::ReturnStatus
     getNoDelay (bool& enabled) {
         vpr::SocketOptions::Data option;
-        vpr::Status retval;
+        vpr::ReturnStatus retval;
 
         retval = getOption(vpr::SocketOptions::NoDelay, option);
 
@@ -130,7 +130,7 @@ public:
      * @param enable_val The Boolean enable/disable state for no-delay on this
      *                   socket.
      */
-    inline vpr::Status
+    inline vpr::ReturnStatus
     setNoDelay (const bool enable_val) {
         vpr::SocketOptions::Data option;
         option.no_delay = enable_val;

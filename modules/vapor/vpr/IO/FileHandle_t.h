@@ -49,7 +49,7 @@
 
 #include <vpr/IO/BlockIO.h>
 #include <vpr/Util/Interval.h>
-#include <vpr/Util/Status.h>
+#include <vpr/Util/ReturnStatus.h>
 
 
 namespace vpr {
@@ -111,12 +111,12 @@ public:
      *       returned to the caller.  If opened successfully, this file is
      *       ready for use.
      *
-     * @return <code>vpr::Status::Success</code> is returned when the file was
+     * @return <code>vpr::ReturnStatus::Success</code> is returned when the file was
      *         opened successfully.<br>
-     *         <code>vpr::Status::Failure</code> is returned if the file could
+     *         <code>vpr::ReturnStatus::Failure</code> is returned if the file could
      *         not be opened for some reason.
      */
-    virtual Status
+    virtual ReturnStatus
     open (void) {
         return m_handle_impl.open();
     }
@@ -128,13 +128,13 @@ public:
      * @pre This file handle is open.
      * @post An attempt is made to close the file.  The resulting status is
      *       returned to the caller.
-     *      
-     * @return <code>vpr::Status::Success</code> is returned if the file was
+     *
+     * @return <code>vpr::ReturnStatus::Success</code> is returned if the file was
      *         closed successfully.<br>
-     *         <code>vpr::Status::Failure</code> is returned if the file could
+     *         <code>vpr::ReturnStatus::Failure</code> is returned if the file could
      *         not be closed.
      */
-    virtual Status
+    virtual ReturnStatus
     close (void) {
         return m_handle_impl.close();
     }
@@ -145,12 +145,12 @@ public:
      * @pre The file handle is open.
      * @post Processes may block when accessing the file.
      *
-     * @return <code>vpr::Status::Success</code> will be returned if the
+     * @return <code>vpr::ReturnStatus::Success</code> will be returned if the
      *         blocking mode was changed successfully.<br>
-     *         <code>vpr::Status::Failure</code> will be returned if the
+     *         <code>vpr::ReturnStatus::Failure</code> will be returned if the
      *         blocking mode could not be changed.
      */
-    virtual Status
+    virtual ReturnStatus
     enableBlocking (void) {
         return m_handle_impl.enableBlocking();
     }
@@ -161,12 +161,12 @@ public:
      * @pre The file handle is open.
      * @post Processes will not block when accessing the file.
      *
-     * @return <code>vpr::Status::Success</code> will be returned if the
+     * @return <code>vpr::ReturnStatus::Success</code> will be returned if the
      *         blocking mode was changed successfully.<br>
-     *         <code>vpr::Status::Failure</code> will be returned if the
+     *         <code>vpr::ReturnStatus::Failure</code> will be returned if the
      *         blocking mode could not be changed.
      */
-    virtual Status
+    virtual ReturnStatus
     enableNonBlocking (void) {
         return m_handle_impl.enableNonBlocking();
     }
@@ -266,11 +266,11 @@ public:
      * @pre The file handle is open.
      * @post The file handle's write mode is set to append.
      *
-     * @return <code>vpr::Status::Success</code> is returned if the write mode
+     * @return <code>vpr::ReturnStatus::Success</code> is returned if the write mode
      *         was changed successfully.<br>
-     *         <code>vpr::Status::Failure</code> is returned otherwise.
+     *         <code>vpr::ReturnStatus::Failure</code> is returned otherwise.
      */
-    inline Status
+    inline ReturnStatus
     enableAppend (void) {
         return m_handle_impl.enableAppend();
     }
@@ -282,11 +282,11 @@ public:
      * @post The file handle's write mode is set so that writes are
      *              appended.
      *
-     * @return <code>vpr::Status::Success</code> is returned if the write mode
+     * @return <code>vpr::ReturnStatus::Success</code> is returned if the write mode
      *         was changed successfully.
-     *         <code>vpr::Status::Failure</code> is returned otherwise.
+     *         <code>vpr::ReturnStatus::Failure</code> is returned otherwise.
      */
-    inline Status
+    inline ReturnStatus
     disableAppend (void) {
         return m_handle_impl.disableAppend();
     }
@@ -297,12 +297,12 @@ public:
     //! PRE: The file handle is open.
     //! POST: Writes are performed synchronously.
     //
-    //! RETURNS: vpr::Status::Success - The write mode was changed
+    //! RETURNS: vpr::ReturnStatus::Success - The write mode was changed
     //+                                 successfully.
-    //! RETURNS: vpr::Status::Failure - The write mode could not be changed
+    //! RETURNS: vpr::ReturnStatus::Failure - The write mode could not be changed
     //+                                 for some reason.
     // ------------------------------------------------------------------------
-    inline Status
+    inline ReturnStatus
     enableSynchronousWrite (void) {
         return m_handle_impl.enableSynchronousWrite();
     }
@@ -313,12 +313,12 @@ public:
     //! PRE: The file handle is open.
     //! POST: Writes are performed asynchronously.
     //
-    //! RETURNS: vpr::Status::Success - The write mode was changed
+    //! RETURNS: vpr::ReturnStatus::Success - The write mode was changed
     //+                                 successfully.
-    //! RETURNS: vpr::Status::Failure - The write mode could not be changed
+    //! RETURNS: vpr::ReturnStatus::Failure - The write mode could not be changed
     //+                                 for some reason.
     // ------------------------------------------------------------------------
-    inline Status
+    inline ReturnStatus
     enableAsynchronousWrite (void) {
         return m_handle_impl.enableAsynchronousWrite();
     }
@@ -389,13 +389,13 @@ protected:
     //+                    caller.  This argument is optional and defaults to
     //+                    vpr::Interval::NoTimeout.
     //
-    //! RETURNS: vpr::Status::Success    - The read operation completed
+    //! RETURNS: vpr::ReturnStatus::Success    - The read operation completed
     //+                                    successfully.
-    //! RETURNS: vpr::Status::Failure    - The read operation failed.
-    //! RETURNS: vpr::Status::WouldBlock - The handle is in non-blocking mode,
+    //! RETURNS: vpr::ReturnStatus::Failure    - The read operation failed.
+    //! RETURNS: vpr::ReturnStatus::WouldBlock - The handle is in non-blocking mode,
     //+                                    and there is no data to read.
     // ------------------------------------------------------------------------
-    virtual Status
+    virtual ReturnStatus
     read_i (void* buffer, const vpr::Uint32 length, vpr::Uint32& bytes_read,
             const vpr::Interval timeout = vpr::Interval::NoTimeout)
     {
@@ -422,11 +422,11 @@ protected:
     //+                    caller.  This argument is optional and defaults to
     //+                    vpr::Interval::NoTimeout.
     //
-    //! RETURNS: vpr::Status::Success - The read operation completed
+    //! RETURNS: vpr::ReturnStatus::Success - The read operation completed
     //+                                 successfully.
-    //! RETURNS: vpr::Status::Failure - The read operation failed.
+    //! RETURNS: vpr::ReturnStatus::Failure - The read operation failed.
     // ------------------------------------------------------------------------
-    virtual Status
+    virtual ReturnStatus
     readn_i (void* buffer, const vpr::Uint32 length, vpr::Uint32& bytes_read,
              const vpr::Interval timeout = vpr::Interval::NoTimeout)
     {
@@ -450,14 +450,14 @@ protected:
     //+                       caller.  This argument is optional and defaults to
     //+                       vpr::Interval::NoTimeout.
     //
-    //! RETURNS: vpr::Status::Success    - The write operation completed
+    //! RETURNS: vpr::ReturnStatus::Success    - The write operation completed
     //+                                    successfully.
-    //! RETURNS: vpr::Status::Failure    - The write operation failed.
-    //! RETURNS: vpr::Status::WouldBlock - The handle is in non-blocking mode,
+    //! RETURNS: vpr::ReturnStatus::Failure    - The write operation failed.
+    //! RETURNS: vpr::ReturnStatus::WouldBlock - The handle is in non-blocking mode,
     //+                                    and the write operation could not
     //+                                    be completed.
     // ------------------------------------------------------------------------
-    virtual Status
+    virtual ReturnStatus
     write_i (const void* buffer, const vpr::Uint32 length,
              vpr::Uint32& bytes_written,
              const vpr::Interval timeout = vpr::Interval::NoTimeout)

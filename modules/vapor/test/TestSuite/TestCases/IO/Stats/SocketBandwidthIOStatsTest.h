@@ -49,7 +49,7 @@ public:
 
    virtual void tearDown()
    {;}
-   
+
 
    // Based on: SocketConnectorAcceptor::Test Acceptor connector
    // This tests spawns off a thread that starts up an acceptor.
@@ -96,7 +96,7 @@ public:
        local_acceptor_addr.setAddress("localhost", mRendevousPort);
        vpr::SocketAcceptor acceptor;
        vpr::SocketStream* sock(NULL);
-       vpr::Status ret_val;
+       vpr::ReturnStatus ret_val;
        vpr::Uint32 bytes_written;
 
        // Open the acceptor
@@ -157,14 +157,14 @@ public:
            {
               std::cout << "SocketBWTest: Don't have BW Stats on stats. type is: " << typeid(stats).name() << std::endl;
            }
-   
+
            ret_val = sock->close();                                // Close the socket
            assertTestThread((ret_val.success()) && "Problem closing accepted socket");
        }
    }
    void testBandwidth_connector(void* arg)
    {
-      vpr::Status ret_val;
+      vpr::ReturnStatus ret_val;
       vpr::Uint32 bytes_read;
       vpr::InetAddr remote_addr;
       remote_addr.setAddress("localhost", mRendevousPort);

@@ -76,7 +76,7 @@ public:
    /**
     * @pre  read must have already occured
     */
-  virtual void read_s(Status& status,
+  virtual void read_s(ReturnStatus& status,
                void* buffer, const vpr::Uint32 length,
                vpr::Uint32& bytes_read,
                const vpr::Interval timeout = vpr::Interval::NoTimeout)
@@ -88,7 +88,7 @@ public:
    /**
     * @pre  read must have already occured
     */
-  virtual void readn_s(Status& status,
+  virtual void readn_s(ReturnStatus& status,
                 void* buffer, const vpr::Uint32 length,
                 vpr::Uint32& bytes_read,
                 const vpr::Interval timeout = vpr::Interval::NoTimeout)
@@ -100,7 +100,7 @@ public:
    /**
     * @pre  write must have already occured
     */
-  virtual void write_s(Status& status,
+  virtual void write_s(ReturnStatus& status,
                 const void* buffer, const vpr::Uint32 length,
                 vpr::Uint32& bytes_written,
                 const vpr::Interval timeout = vpr::Interval::NoTimeout)
@@ -110,7 +110,7 @@ public:
   }
 
 
-protected:   
+protected:
    void incrementBytesSent(vpr::Uint32 bytes);
    void incrementBytesRead(vpr::Uint32 bytes);
 
@@ -119,10 +119,10 @@ public:
       { return mSentBytes; }
    vpr::Uint32 getTotalBytesRead()
       { return mReadBytes; }
-   
-   double getAverageSendBW();         
+
+   double getAverageSendBW();
    double getAverageReadBW();
-   
+
    double getSTASendBW()
       { return mSTASendBW;}
    double getSTAReadBW()

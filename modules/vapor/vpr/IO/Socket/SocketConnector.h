@@ -47,7 +47,7 @@
 #include <vpr/IO/Socket/SocketStream.h>
 #include <vpr/IO/Selector.h>
 #include <vpr/Util/Assert.h>
-#include <vpr/Util/Status.h>
+#include <vpr/Util/ReturnStatus.h>
 #include <vpr/Util/Debug.h>
 
 
@@ -82,7 +82,7 @@ public:
    *       remoteAddr - The remote address to connect to
    *       timeout    - The num msecs to wait (0 - NonBlocking)
    */
-  inline vpr::Status connect (vpr::SocketStream& newStream,
+  inline vpr::ReturnStatus connect (vpr::SocketStream& newStream,
                               const vpr::InetAddr& remoteAddr,
                               vpr::Interval timeout = vpr::Interval::NoTimeout,
                               const vpr::InetAddr& localAddr = vpr::InetAddr::AnyAddr);
@@ -91,7 +91,7 @@ public:
    * Complete a non-blocking connection
    * Try to complete a non-blocking connection.
    */
-  inline vpr::Status complete (vpr::SocketStream &newStream,                               
+  inline vpr::ReturnStatus complete (vpr::SocketStream &newStream,
                                const vpr::Interval timeout = vpr::Interval::NoTimeout);
 
 protected:
@@ -99,7 +99,7 @@ protected:
   // If not, then open it with the given params
   bool checkOpen (SocketStream& newStream)
   {
-      vpr::Status status;
+      vpr::ReturnStatus status;
 
       if (!newStream.isOpen())
       {
@@ -123,21 +123,21 @@ protected:
                             const vpr::InetAddr& localAddr = vpr::InetAddr::AnyAddr);
 };
 
-inline vpr::Status SocketConnector::connect(SocketStream& newStream,
+inline vpr::ReturnStatus SocketConnector::connect(SocketStream& newStream,
                                             const vpr::InetAddr& remoteAddr,
                                             vpr::Interval timeout,
                                             const vpr::InetAddr& localAddr)
 {
-    vpr::Status ret_val;
+    vpr::ReturnStatus ret_val;
     //vpr::InetAddr remote_addr;
 
     // Open the socket
     if(!checkOpen(newStream))
-        return vpr::Status(vpr::Status::Failure);
+        return vpr::ReturnStatus(vpr::ReturnStatus::Failure);
 
     // Start the connection
     if(!connectStart(newStream, timeout, localAddr))
-        return vpr::Status(vpr::Status::Failure);
+        return vpr::ReturnStatus(vpr::ReturnStatus::Failure);
 
     newStream.setRemoteAddr(remoteAddr);
 
@@ -147,13 +147,13 @@ inline vpr::Status SocketConnector::connect(SocketStream& newStream,
     /*
     // If the connect call did not return success, it may be the result of
     // using non-blocking sockets.
-    if ( ! ret_val.success() ) 
+    if ( ! ret_val.success() )
     {
        // If connect() gave us a status saying that the connection is in
        // progress, try to complete the connection after the timeout period.
        // If there is no timeout period, simply return immediately.
-       if ( ret_val == vpr::Status::InProgress ||
-            ret_val == vpr::Status::WouldBlock )
+       if ( ret_val == vpr::ReturnStatus::InProgress ||
+            ret_val == vpr::ReturnStatus::WouldBlock )
        {
           if ( timeout != vpr::Interval::NoWait ) {
              ret_val = complete(newStream, &remote_addr, timeout);
@@ -185,19 +185,19 @@ inline vpr::Status SocketConnector::connect(SocketStream& newStream,
    * @param newStream  The connected stream.
    * @param remoteAddr returns the address of the remote connection.
    */
-inline vpr::Status SocketConnector::complete (SocketStream &newStream,                                              
+inline vpr::ReturnStatus SocketConnector::complete (SocketStream &newStream,
                                               const vpr::Interval timeout)
 {
-   vpr::Status status;
+   vpr::ReturnStatus status;
 
    if( newStream.isConnected() )
    {
       // XXX: Should this actually be a failure
-      return vpr::Status::Success;
+      return vpr::ReturnStatus::Success;
    }
 
    // If non-blocking, then we can only wait as long as the timeout
-   if ( newStream.getNonBlocking() ) 
+   if ( newStream.getNonBlocking() )
    {
       vpr::IOSys::Handle handle;
       vpr::Selector selector;
@@ -212,9 +212,9 @@ inline vpr::Status SocketConnector::complete (SocketStream &newStream,
 
       // If the selector told us that our handle is ready, we are successfully
       // connected.
-      if ( selector.getOut(handle) & (vpr::Selector::Read | vpr::Selector::Write) ) 
+      if ( selector.getOut(handle) & (vpr::Selector::Read | vpr::Selector::Write) )
       {
-         status = vpr::Status::Success;
+         status = vpr::ReturnStatus::Success;
 
          /*
          if ( remoteAddr != NULL ) {
@@ -225,7 +225,7 @@ inline vpr::Status SocketConnector::complete (SocketStream &newStream,
       // else Use the status from the selector
    }
    else     // Not a non-blocking socket
-   {      
+   {
       vprASSERT(false && "Should not call complete on a non-blocking socket");
       /*
       if ( remoteAddr != NULL ) {
@@ -249,7 +249,7 @@ inline bool SocketConnector::connectStart (SocketStream& newStream,
    // If timeout is 0, then we are non-blocking
    if(vpr::Interval::NoWait == timeout)
    {
-      newStream.enableNonBlocking();      
+      newStream.enableNonBlocking();
    }
 
   // Check to bind to local addr
@@ -257,7 +257,7 @@ inline bool SocketConnector::connectStart (SocketStream& newStream,
    {
       if(!newStream.setLocalAddr(localAddr).success())
          return false;
-      
+
       if(!newStream.bind().success())
         return false;
    }

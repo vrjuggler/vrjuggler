@@ -48,7 +48,7 @@
 #include <string>
 #include <vpr/IO/IOSys.h>
 #include <vpr/IO/SelectorBase.h>
-#include <vpr/Util/Status.h>
+#include <vpr/Util/ReturnStatus.h>
 #include <vpr/Util/Interval.h>
 
 
@@ -166,17 +166,17 @@ public:
     *                      <code>vpr::Interval::NoWait</code> effects a poll
     *                      on the registered handles and returns immediately.
     *
-    * @return <code>vpr::Status::Success</code> is returned if at least one
+    * @return <code>vpr::ReturnStatus::Success</code> is returned if at least one
     *         event was detected within the timeout interval.<br>
-    *         <code>vpr::Status::Timeout</code> is returned if no events were
+    *         <code>vpr::ReturnStatus::Timeout</code> is returned if no events were
     *         detected before the timeout expired or if
     *         <code>vpr::Interval::NoWait</code> was passed.  In this case,
     *         <code>numWithEvents</code> should be checked for a value
     *         greater than 0.<br>
-    *         <code>vpr::Status::Failure</code> is returned if the select
+    *         <code>vpr::ReturnStatus::Failure</code> is returned if the select
     *         failed.
     */
-   Status select(vpr::Uint16& numWithEvents,
+   ReturnStatus select(vpr::Uint16& numWithEvents,
                  const vpr::Interval timeout = vpr::Interval::NoTimeout)
    {
       return mSelectorImp.select(numWithEvents, timeout);

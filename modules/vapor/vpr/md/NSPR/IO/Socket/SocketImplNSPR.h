@@ -54,7 +54,7 @@
 #include <vpr/IO/Socket/SocketTypes.h>
 #include <vpr/IO/Socket/SocketOptions.h>
 #include <vpr/IO/IOSys.h>
-#include <vpr/Util/Status.h>
+#include <vpr/Util/ReturnStatus.h>
 
 #include <vpr/Util/Debug.h>
 
@@ -120,7 +120,7 @@ public:
     //     false - The socket could not be opened for some reason (an error
     //             message is printed explaining why).
     // ------------------------------------------------------------------------
-    vpr::Status open(void);
+    vpr::ReturnStatus open(void);
 
     // ------------------------------------------------------------------------
     //: Close the socket.
@@ -133,7 +133,7 @@ public:
     //! RETURNS: true  - The socket was closed successfully.
     //! RETURNS: false - The socket could not be closed for some reason.
     // ------------------------------------------------------------------------
-    vpr::Status close(void);
+    vpr::ReturnStatus close(void);
 
     /**
      * Gets the open state of this socket.
@@ -162,7 +162,7 @@ public:
     //             m_host_addr.  An error message is printed explaining what
     //             went wrong.
     // ------------------------------------------------------------------------
-    vpr::Status bind(void);
+    vpr::ReturnStatus bind(void);
 
     // ---------------------------------------
     //: Return the contained handle
@@ -183,11 +183,11 @@ public:
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    vpr::Status enableBlocking(void);
+    vpr::ReturnStatus enableBlocking(void);
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    vpr::Status enableNonBlocking(void);
+    vpr::ReturnStatus enableNonBlocking(void);
 
     /**
      * Gets the current blocking state for the socket.
@@ -232,7 +232,7 @@ public:
     //     false - The connect could not be made.  An error message is
     //             printed explaining what happened.
     // ------------------------------------------------------------------------
-    vpr::Status connect(const vpr::Interval timeout = vpr::Interval::NoTimeout);
+    vpr::ReturnStatus connect(const vpr::Interval timeout = vpr::Interval::NoTimeout);
 
     // ------------------------------------------------------------------
     //: Get the status of a possibly connected socket
@@ -284,14 +284,14 @@ public:
         return m_local_addr;
     }
 
-    Status setLocalAddr(const InetAddr& addr)
+    ReturnStatus setLocalAddr(const InetAddr& addr)
     {
-       Status status;
+       ReturnStatus status;
 
       if (m_bound)
        {
           vprDEBUG(0,0) << "SocketImplNSPR::setLocalAddr: Cant' set address of bound socket.\n" << vprDEBUG_FLUSH;
-          status.setCode(Status::Failure);
+          status.setCode(ReturnStatus::Failure);
        }
        else
           m_local_addr = addr;
@@ -306,14 +306,14 @@ public:
         return m_remote_addr;
     }
 
-    Status setRemoteAddr(const InetAddr& addr)
+    ReturnStatus setRemoteAddr(const InetAddr& addr)
     {
-       Status status;
+       ReturnStatus status;
 
        if (m_bound)
        {
            vprDEBUG(0,0) << "SocketImplNSPR::setRemoteAddr: Cant' set address of bound socket.\n" << vprDEBUG_FLUSH;
-           status.setCode(Status::Failure);
+           status.setCode(ReturnStatus::Failure);
        }
        else
           m_remote_addr = addr;
@@ -323,19 +323,19 @@ public:
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    vpr::Status read_i(void* buffer, const vpr::Uint32 length,
+    vpr::ReturnStatus read_i(void* buffer, const vpr::Uint32 length,
                        vpr::Uint32& bytes_read,
                        const vpr::Interval timeout = vpr::Interval::NoTimeout);
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    vpr::Status readn_i(void* buffer, const vpr::Uint32 length,
+    vpr::ReturnStatus readn_i(void* buffer, const vpr::Uint32 length,
                         vpr::Uint32& bytes_read,
                         const vpr::Interval timeout = vpr::Interval::NoTimeout);
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    vpr::Status write_i(const void* buffer, const vpr::Uint32 length,
+    vpr::ReturnStatus write_i(const void* buffer, const vpr::Uint32 length,
                         vpr::Uint32& bytes_written,
                         const vpr::Interval timeout = vpr::Interval::NoTimeout);
 
@@ -346,11 +346,11 @@ public:
      * @param data   A data buffer that will be used to store the value of the
      *               given option.
      *
-     * @return vpr::Status::Success is returned if the value for the given
+     * @return vpr::ReturnStatus::Success is returned if the value for the given
      *         option was retrieved successfully.<br>
-     *         vpr::Status;:Failure is returned otherwise.
+     *         vpr::ReturnStatus;:Failure is returned otherwise.
      */
-    vpr::Status getOption(const vpr::SocketOptions::Types option,
+    vpr::ReturnStatus getOption(const vpr::SocketOptions::Types option,
                           struct vpr::SocketOptions::Data& data);
 
     /**
@@ -361,7 +361,7 @@ public:
      * @param data   A data buffer containing the value to be used in setting
      *               the socket option.
      */
-    vpr::Status setOption(const vpr::SocketOptions::Types option,
+    vpr::ReturnStatus setOption(const vpr::SocketOptions::Types option,
                           const struct vpr::SocketOptions::Data& data);
 
 protected:

@@ -46,7 +46,7 @@
 
 #include <vpr/vprTypes.h>
 #include <vpr/IO/Socket/SocketOptions.h>
-#include <vpr/Util/Status.h>
+#include <vpr/Util/ReturnStatus.h>
 
 
 namespace vpr {
@@ -62,10 +62,10 @@ public:
     /**
      *
      */
-    inline vpr::Status
+    inline vpr::ReturnStatus
     getKeepAlive (bool& enabled) {
         vpr::SocketOptions::Data option;
-        vpr::Status retval;
+        vpr::ReturnStatus retval;
 
         retval = getOption(vpr::SocketOptions::KeepAlive, option);
 
@@ -79,7 +79,7 @@ public:
     /**
      *
      */
-    inline vpr::Status
+    inline vpr::ReturnStatus
     setKeepAlive (const bool enable_val) {
         vpr::SocketOptions::Data option;
         option.keep_alive = enable_val;
@@ -89,10 +89,10 @@ public:
     /**
      *
      */
-    inline vpr::Status
+    inline vpr::ReturnStatus
     getLingerOnClose (bool& enabled, int& linger_sec) {
         vpr::SocketOptions::Data opt;
-        vpr::Status retval;
+        vpr::ReturnStatus retval;
 
         retval = getOption(vpr::SocketOptions::Linger, opt);
 
@@ -107,7 +107,7 @@ public:
     /**
      *
      */
-    inline vpr::Status
+    inline vpr::ReturnStatus
     setLingerOnClose (const bool enable_val, const int linger_sec) {
         vpr::SocketOptions::Data opt;
 
@@ -120,10 +120,10 @@ public:
     /**
      *
      */
-    inline vpr::Status
+    inline vpr::ReturnStatus
     getRecvBufferSize (Int32& size) {
         vpr::SocketOptions::Data opt;
-        vpr::Status retval;
+        vpr::ReturnStatus retval;
 
         retval = getOption(vpr::SocketOptions::RecvBufferSize, opt);
 
@@ -140,7 +140,7 @@ public:
     /**
      *
      */
-    inline vpr::Status
+    inline vpr::ReturnStatus
     setRecvBufferSize (const Int32 size) {
         vpr::SocketOptions::Data opt;
 
@@ -152,10 +152,10 @@ public:
     /**
      *
      */
-    inline vpr::Status
+    inline vpr::ReturnStatus
     getSendBufferSize (int& size) {
         vpr::SocketOptions::Data opt;
-        vpr::Status retval;
+        vpr::ReturnStatus retval;
 
         retval = getOption(vpr::SocketOptions::SendBufferSize, opt);
 
@@ -172,7 +172,7 @@ public:
     /**
      *
      */
-    inline vpr::Status
+    inline vpr::ReturnStatus
     setSendBufferSize (const Int32 size) {
         vpr::SocketOptions::Data opt;
 
@@ -184,10 +184,10 @@ public:
     /**
      *
      */
-    inline vpr::Status
+    inline vpr::ReturnStatus
     getReuseAddr (bool& enabled) {
         vpr::SocketOptions::Data option;
-        vpr::Status retval;
+        vpr::ReturnStatus retval;
 
         retval = getOption(vpr::SocketOptions::ReuseAddr, option);
 
@@ -203,7 +203,7 @@ public:
      *
      * @pre The socket has been opened, but bind() has not been called.
      */
-    inline vpr::Status
+    inline vpr::ReturnStatus
     setReuseAddr (const bool enable_val) {
         vpr::SocketOptions::Data option;
         option.reuse_addr = enable_val;

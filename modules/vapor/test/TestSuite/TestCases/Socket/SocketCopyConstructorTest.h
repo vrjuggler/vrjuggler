@@ -131,7 +131,7 @@ public:
 
        if (result1 != false) {
          vpr::Uint32 bytes_read;
-         vpr::Status status = copy_connector->read (buffer, 40, bytes_read);
+         vpr::ReturnStatus status = copy_connector->read (buffer, 40, bytes_read);
          if (status.success())
             copy_connector->close();
        }
@@ -166,7 +166,7 @@ public:
       vpr::SocketStream child_socket;
       vpr::SocketStream* copy_acceptor(NULL);
       vpr::SocketStream* copy_child(NULL);
-      vpr::Status child_create_status;
+      vpr::ReturnStatus child_create_status;
 
       result = acceptor_socket.open().success();
       assertTestThread((result != false) && "Can not open acceptor socket");

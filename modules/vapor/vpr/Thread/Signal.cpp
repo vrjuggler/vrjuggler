@@ -50,13 +50,13 @@
 
 namespace vpr {
 
-vpr::Status
+vpr::ReturnStatus
 SignalSet::emptySet () {
-    vpr::Status status;
+    vpr::ReturnStatus status;
 
 #ifdef HAVE_SIGEMPTYSET
     if ( sigemptyset(&m_sigset) != 0 ) {
-        status.setCode(vpr::Status::Failure);
+        status.setCode(vpr::ReturnStatus::Failure);
     }
 #else
     m_sigset = 0;
@@ -65,13 +65,13 @@ SignalSet::emptySet () {
     return status;
 }
 
-vpr::Status
+vpr::ReturnStatus
 SignalSet::fillSet () {
-    vpr::Status status;
+    vpr::ReturnStatus status;
 
 #ifdef HAVE_SIGFILLSET
     if ( sigfillset(&m_sigset) != 0 ) {
-        status.setCode(vpr::Status::Failure);
+        status.setCode(vpr::ReturnStatus::Failure);
     }
 #else
     m_sigset = ~(sigset_t) 0;
@@ -80,15 +80,15 @@ SignalSet::fillSet () {
     return status;
 }
 
-vpr::Status
+vpr::ReturnStatus
 SignalSet::addSignal (const int sig_num) {
-    vpr::Status status;
+    vpr::ReturnStatus status;
 
     vprASSERT(sig_num >= 1 && "Invalid signal number");
 
 #ifdef HAVE_SIGADDSET
     if ( sigaddset(&m_sigset, sig_num) != 0 ) {
-        status.setCode(vpr::Status::Failure);
+        status.setCode(vpr::ReturnStatus::Failure);
     }
 #else
     m_sigset |= (1 << (sig_num - 1));
@@ -97,15 +97,15 @@ SignalSet::addSignal (const int sig_num) {
     return status;
 }
 
-vpr::Status
+vpr::ReturnStatus
 SignalSet::removeSignal (const int sig_num) {
-    vpr::Status status;
+    vpr::ReturnStatus status;
 
     vprASSERT(sig_num >= 1 && "Invalid signal number");
 
 #ifdef HAVE_SIGDELSET
     if ( sigdelset(&m_sigset, sig_num) != 0 ) {
-        status.setCode(vpr::Status::Failure);
+        status.setCode(vpr::ReturnStatus::Failure);
     }
 #else
     m_sigset &= ~(1 << (sig_num - 1)) ;
@@ -140,7 +140,7 @@ SignalAction::SignalAction (vpr::SignalHandler_t handler,
     }
 }
 
-vpr::Status
+vpr::ReturnStatus
 SigHandler::registerHandler (const int sig_num,
                              vpr::SignalHandler_t handler)
 {
@@ -148,14 +148,14 @@ SigHandler::registerHandler (const int sig_num,
     return registerHandler(sig_num, sa);
 }
 
-vpr::Status
+vpr::ReturnStatus
 SigHandler::registerHandler (const int sig_num,
                              vpr::SignalAction& action)
 {
-    vpr::Status status;
+    vpr::ReturnStatus status;
 
     if ( vpr::SigHandler::sigaction(sig_num, &action.m_sa) != 0 ) {
-        status.setCode(vpr::Status::Failure);
+        status.setCode(vpr::ReturnStatus::Failure);
     }
 
     return status;

@@ -68,13 +68,13 @@ namespace vpr {
 
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
-Status
+ReturnStatus
 SocketDatagramImplNSPR::recvfrom (void* msg, const vpr::Uint32 length,
                                   const int flags, InetAddr& from,
                                   vpr::Uint32& bytes_read,
                                   const vpr::Interval timeout)
 {
-    Status retval;
+    ReturnStatus retval;
     PRInt32 bytes;
 
     bytes = PR_RecvFrom(m_handle, msg, length, flags, from.getPRNetAddr(),
@@ -86,14 +86,14 @@ SocketDatagramImplNSPR::recvfrom (void* msg, const vpr::Uint32 length,
         bytes_read = 0;
 
         if ( err_code == PR_WOULD_BLOCK_ERROR ) {
-            retval.setCode(vpr::Status::WouldBlock);
+            retval.setCode(vpr::ReturnStatus::WouldBlock);
         }
         else if ( err_code == PR_IO_TIMEOUT_ERROR ) {
-            retval.setCode(Status::Timeout);
+            retval.setCode(ReturnStatus::Timeout);
         }
         else {
             NSPR_PrintError("SocketDatagramImplNSPR::recvfrom: Could not read from socket");
-            retval.setCode(Status::Failure);
+            retval.setCode(ReturnStatus::Failure);
         }
     }
     else {
@@ -105,13 +105,13 @@ SocketDatagramImplNSPR::recvfrom (void* msg, const vpr::Uint32 length,
 
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
-Status
+ReturnStatus
 SocketDatagramImplNSPR::sendto (const void* msg, const vpr::Uint32 length,
                                 const int flags, const InetAddr& to,
                                 vpr::Uint32& bytes_sent,
                                 const vpr::Interval timeout)
 {
-    Status retval;
+    ReturnStatus retval;
     PRInt32 bytes;
 
     bytes = PR_SendTo(m_handle, msg, length, flags, to.getPRNetAddr(),
@@ -123,14 +123,14 @@ SocketDatagramImplNSPR::sendto (const void* msg, const vpr::Uint32 length,
         bytes_sent = 0;
 
         if ( err_code == PR_WOULD_BLOCK_ERROR ) {
-            retval.setCode(vpr::Status::WouldBlock);
+            retval.setCode(vpr::ReturnStatus::WouldBlock);
         }
         else if ( err_code == PR_IO_TIMEOUT_ERROR ) {
-            retval.setCode(Status::Timeout);
+            retval.setCode(ReturnStatus::Timeout);
         }
         else {
             NSPR_PrintError("SocketDatagramImplNSPR::sendto: Could not send message");
-            retval.setCode(Status::Failure);
+            retval.setCode(ReturnStatus::Failure);
         }
     }
     else {

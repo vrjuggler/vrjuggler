@@ -48,7 +48,7 @@
 
 #include <vpr/IO/Socket/SocketTypes.h>
 #include <vpr/Util/Assert.h>
-#include <vpr/Util/Status.h>
+#include <vpr/Util/ReturnStatus.h>
 
 namespace vpr {
 
@@ -178,13 +178,13 @@ public:
      *                 address).
      * @param port    The port to associate with the IP address.
      *
-     * @return <code>vpr::Status::Success</code> is returned if the address
+     * @return <code>vpr::ReturnStatus::Success</code> is returned if the address
      *         was valid and the set operation succeeded.<br>
-     *         <code>vpr::Status::Failure</code> is returned if the address
+     *         <code>vpr::ReturnStatus::Failure</code> is returned if the address
      *         could not be looked up.
      */
-    vpr::Status setAddress (const std::string& addr)
-    {vprASSERT(false && "Implement me"); return vpr::Status(vpr::Status::Failure); }
+    vpr::ReturnStatus setAddress (const std::string& addr)
+    {vprASSERT(false && "Implement me"); return vpr::ReturnStatus(vpr::ReturnStatus::Failure); }
 
     /**
      * Set the address for this object using the given address and port
@@ -193,13 +193,13 @@ public:
      *
      * @param addr an address string in IP format or hostname formant
      *
-     * @return <code>vpr::Status::Success</code> is returned if the address was
+     * @return <code>vpr::ReturnStatus::Success</code> is returned if the address was
      *         valid and the set operation succeeded.<br>
-     *         <code>vpr::Status::Failure</code> is returned if the address
+     *         <code>vpr::ReturnStatus::Failure</code> is returned if the address
      *         could not be looked up.
      */
-    vpr::Status setAddress (const std::string& addr, const Uint16 port)
-    {vprASSERT(false && "Implement me"); return vpr::Status(vpr::Status::Failure); }
+    vpr::ReturnStatus setAddress (const std::string& addr, const Uint16 port)
+    {vprASSERT(false && "Implement me"); return vpr::ReturnStatus(vpr::ReturnStatus::Failure); }
 
     /**
      * Set the address for this object using the given address and port
@@ -211,8 +211,8 @@ public:
      * @param address A 32-bit integer IP address.
      * @param port    The port to associate with the IP address.
      */
-    vpr::Status setAddress (const vpr::Uint32 address, const vpr::Uint16 port)
-    {vprASSERT(false && "Implement me"); return vpr::Status(vpr::Status::Failure); }
+    vpr::ReturnStatus setAddress (const vpr::Uint32 address, const vpr::Uint16 port)
+    {vprASSERT(false && "Implement me"); return vpr::ReturnStatus(vpr::ReturnStatus::Failure); }
 
     /**
      * Overloaded assignment operator to ensure that assignments work

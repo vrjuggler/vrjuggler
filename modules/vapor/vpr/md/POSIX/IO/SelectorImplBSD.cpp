@@ -158,9 +158,9 @@ SelectorImplBSD::getOut (IOSys::Handle handle) {
 //! ARGS: numWithEvents - Upon completion, this holds the number of items that
 //+                       have events
 //! ARGS: timeout - The number of msecs to select for (0 - don't wait)
-Status
+ReturnStatus
 SelectorImplBSD::select (vpr::Uint16& numWithEvents, const vpr::Interval timeout) {
-   vpr::Status ret_val;
+   vpr::ReturnStatus ret_val;
    int result, last_fd;
    fd_set read_set, write_set, exception_set;
    std::vector<BSDPollDesc>::iterator i;
@@ -223,12 +223,12 @@ SelectorImplBSD::select (vpr::Uint16& numWithEvents, const vpr::Interval timeout
       fprintf(stderr, "SelectorImplBSD::select: Error selecting: %s\n",
               strerror(errno));
       numWithEvents = 0;
-      ret_val.setCode(Status::Failure);
+      ret_val.setCode(ReturnStatus::Failure);
    }
    // Timeout.
    else if ( 0 == result ) {
       numWithEvents = 0;
-      ret_val.setCode(Status::Timeout);
+      ret_val.setCode(ReturnStatus::Timeout);
    }
    // We got one!
    else {

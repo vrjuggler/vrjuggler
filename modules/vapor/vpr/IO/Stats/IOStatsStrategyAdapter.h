@@ -43,20 +43,20 @@
 #define BANDWIDTHSTATADAPTER_H
 
 #include <vpr/vprConfig.h>
-#include <vpr/Util/Status.h>
+#include <vpr/Util/ReturnStatus.h>
 
 namespace vpr
 {
 
 /**
  * This is a template adapter that combines two IO Stats strategies together into a single class
- * 
+ *
  * It multiply inherits a new class from the two classes to create a single new class
  *
  * It overrides the virtual functions read_i, readn_i, and write_i to create new functions that call
  * the parent functions in the order that they were specified as template parameters
- * 
- * It does this by over riding the virtual functions read_i, readn_i, and write_i. 
+ *
+ * It does this by over riding the virtual functions read_i, readn_i, and write_i.
  *
  * All types here must be based on the BaseIOStatsStrategy_i interface
  */
@@ -64,9 +64,9 @@ template < class BASE_ONE, class BASE_TWO >
 class IOStatsStrategyAdapter : public BASE_ONE, public BASE_TWO
 {
 public:
-    
-   
-   virtual void read_s(Status& status,
+
+
+   virtual void read_s(ReturnStatus& status,
                          void* buffer, const vpr::Uint32 length,
                           vpr::Uint32& bytes_read,
                           const vpr::Interval timeout = vpr::Interval::NoTimeout)
@@ -75,7 +75,7 @@ public:
       BASE_TWO::read_s(status, buffer, length, bytes_read, timeout);
    }
 
-   virtual void readn_s(Status& status,
+   virtual void readn_s(ReturnStatus& status,
                           void* buffer, const vpr::Uint32 length,
                            vpr::Uint32& bytes_read,
                            const vpr::Interval timeout = vpr::Interval::NoTimeout)
@@ -84,7 +84,7 @@ public:
       BASE_TWO::readn_s(status, buffer, length, bytes_read, timeout);
    }
 
-   virtual void write_s(Status& status,
+   virtual void write_s(ReturnStatus& status,
                           const void* buffer, const vpr::Uint32 length,
                            vpr::Uint32& bytes_written,
                            const vpr::Interval timeout = vpr::Interval::NoTimeout)
