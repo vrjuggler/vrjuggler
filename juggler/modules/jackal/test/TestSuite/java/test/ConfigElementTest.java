@@ -30,6 +30,8 @@ import org.vrjuggler.jccl.config.event.*;
                                            String.class,
                                            "Your name",
                                            prop_value_defs,
+                                           new TreeMap(),
+                                           new ArrayList(),
                                            false));
 
       prop_value_defs = new ArrayList();
@@ -39,6 +41,8 @@ import org.vrjuggler.jccl.config.event.*;
                                            Integer.class,
                                            "Your age",
                                            prop_value_defs,
+                                           new TreeMap(),
+                                           new ArrayList(),
                                            false));
 
       prop_value_defs = new ArrayList();
@@ -48,6 +52,8 @@ import org.vrjuggler.jccl.config.event.*;
                                            ConfigElement.class,
                                            "Your friends",
                                            prop_value_defs,
+                                           new TreeMap(),
+                                           new ArrayList(),
                                            true));
 
       List categories = new ArrayList();

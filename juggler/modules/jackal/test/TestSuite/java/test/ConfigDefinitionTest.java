@@ -30,6 +30,8 @@ import org.vrjuggler.jccl.config.event.*;
                                             String.class,
                                             "The first name of the person.",
                                             prop_value_defs,
+                                            new TreeMap(),
+                                            new ArrayList(),
                                             false);
 
       // The age property
@@ -40,6 +42,8 @@ import org.vrjuggler.jccl.config.event.*;
                                            Integer.class,
                                            "The age of the person.",
                                            prop_value_defs,
+                                           new TreeMap(),
+                                           new ArrayList(),
                                            false);
 
       // The friends property
@@ -50,6 +54,8 @@ import org.vrjuggler.jccl.config.event.*;
                                                ConfigElement.class,
                                                "The people that are friends of this person.",
                                                prop_value_defs,
+                                               new TreeMap(),
+                                               new ArrayList(),
                                                true);
    }
 
@@ -256,6 +262,8 @@ import org.vrjuggler.jccl.config.event.*;
                                                 String.class,
                                                 "The last name of this person.",
                                                 prop_value_defs,
+                                                new TreeMap(),
+                                                new ArrayList(),
                                                 false);
 
       // Add in the property

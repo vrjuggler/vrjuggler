@@ -25,6 +25,8 @@ import org.vrjuggler.jccl.config.event.*;
                                     Integer.class,
                                     "The age of a person.",
                                     prop_value_defs,
+                                    new TreeMap(),
+                                    new ArrayList(),
                                     false);
    }
 
@@ -194,6 +196,103 @@ import org.vrjuggler.jccl.config.event.*;
       assertTrue(l.fired);
    }
 
+   public void testAddEnum()
+   {
+      class Listener extends PropertyDefinitionAdapter
+      {
+         public void enumAdded(PropertyDefinitionEvent evt)
+         {
+            fired = true;
+         }
+
+         public boolean fired = false;
+      }
+
+      Listener l = new Listener();
+
+      PropertyDefinition def = makePropertyDef();
+      def.addPropertyDefinitionListener(l);
+      def.addEnum("Legal", new Integer(18));
+      // Make sure the enum was actually added
+      assertEquals(def.getEnums().get("Legal"), new Integer(18));
+
+      // Make sure an event was posted
+      assertTrue(l.fired);
+   }
+
+   public void testRemoveEnum()
+   {
+      class Listener extends PropertyDefinitionAdapter
+      {
+         public void enumRemoved(PropertyDefinitionEvent evt)
+         {
+            fired = true;
+         }
+
+         public boolean fired = false;
+      }
+
+      Listener l = new Listener();
+
+      PropertyDefinition def = makePropertyDef();
+      def.addPropertyDefinitionListener(l);
+      def.addEnum("Legal", new Integer(18));
+      def.removeEnum("Legal");
+      // Make sure the enum was actually removed
+      assertTrue(! def.getEnums().containsKey("Legal"));
+
+      // Make sure an event was posted
+      assertTrue(l.fired);
+   }
+
+   public void testAddAllowedType()
+   {
+      class Listener extends PropertyDefinitionAdapter
+      {
+         public void allowedTypeAdded(PropertyDefinitionEvent evt)
+         {
+            fired = true;
+         }
+
+         public boolean fired = false;
+      }
+
+      Listener l = new Listener();
+
+      PropertyDefinition def = makePropertyDef();
+      def.addPropertyDefinitionListener(l);
+      def.addAllowedType("stupid");
+      // Make sure the enum was actually added
+      assertTrue(def.getAllowedTypes().contains("stupid"));
+
+      // Make sure an event was posted
+      assertTrue(l.fired);
+   }
+
+   public void testRemoveAllowedType()
+   {
+      class Listener extends PropertyDefinitionAdapter
+      {
+         public void allowedTypeRemoved(PropertyDefinitionEvent evt)
+         {
+            fired = true;
+         }
+
+         public boolean fired = false;
+      }
+
+      Listener l = new Listener();
+
+      PropertyDefinition def = makePropertyDef();
+      def.addPropertyDefinitionListener(l);
+      def.addAllowedType("stupid");
+      def.removeAllowedType("stupid");
+      // Make sure the enum was actually added
+      assertTrue(! def.getAllowedTypes().contains("stupid"));
+
+      // Make sure an event was posted
+      assertTrue(l.fired);
+   }
    public void testSetVariable()
    {
       class Listener extends PropertyDefinitionAdapter

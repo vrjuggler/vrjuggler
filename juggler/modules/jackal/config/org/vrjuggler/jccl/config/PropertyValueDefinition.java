@@ -91,6 +91,33 @@ public class PropertyValueDefinition
       mDefaultValue = value;
    }
 
+   /**
+    * Tests if this property value definition is equal to the given one.
+    */
+   public boolean equals(Object obj)
+   {
+      if (obj instanceof PropertyValueDefinition)
+      {
+         PropertyValueDefinition d = (PropertyValueDefinition)obj;
+         if (mLabel.equals(d.mLabel))
+         {
+            if (mDefaultValue != null)
+            {
+               return mDefaultValue.equals(d.mDefaultValue);
+            }
+            else if (d.mDefaultValue != null)
+            {
+               return d.mDefaultValue.equals(mDefaultValue);
+            }
+            else
+            {
+               return true;
+            }
+         }
+      }
+      return false;
+   }
+
    /** The label used for this value. */
    private String mLabel;
 
