@@ -34,12 +34,14 @@
 #define _GADGET_DIRECTX_JOYSTICK_H_
 
 #include <gadget/Devices/DriverConfig.h>
+
 #include <vector>
+#include <utility>
+
 #include <gadget/Type/Input.h>
 #include <gadget/Type/Digital.h>
 #include <gadget/Type/Analog.h>
 #include <gadget/Type/InputMixer.h>
-#include <utility>
 #include <drivers/Microsoft/DirectXJoystick/DirectXJoystickStandalone.h>
 
 
