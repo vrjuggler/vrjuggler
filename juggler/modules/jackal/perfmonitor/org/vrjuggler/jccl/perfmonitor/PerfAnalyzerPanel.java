@@ -308,6 +308,7 @@ public class PerfAnalyzerPanel
         }
 
         public void addInitial (LabeledPerfDataCollector.IndexInfo ii) {
+	    System.out.println ("addInitial: " + ii.index);
 	    JLabel l;
 	    JButton b;
 	    Insets insets = new Insets (1,1,1,1);
@@ -330,14 +331,15 @@ public class PerfAnalyzerPanel
             b.addActionListener (PerfAnalyzerPanel.this);
             b.setMargin(insets);
             gblayout.setConstraints (b, gbc);
-            panel.add(b);
+//          panel.add(b);
+//  	    panel.revalidate();
 // 	    b = anomalies_buttons[j] = new AnomaliesButton (col, j);
 // 	    b.setEnabled(false);
 // 	    b.addActionListener (PerfAnalyzerPanel.this);
 // 	    b.setMargin(insets);
-// 	    gbc.gridwidth = gbc.REMAINDER;
-// 	    gblayout.setConstraints (b, gbc);
-// 	    panel.add(b);
+	    gbc.gridwidth = gbc.REMAINDER;
+	    gblayout.setConstraints (b, gbc);
+	    panel.add(b);
         }
 
 	public void update() {
@@ -347,6 +349,7 @@ public class PerfAnalyzerPanel
             int j = 0;
             while (i.hasNext()) {
                 LabeledPerfDataCollector.IndexInfo ii = (LabeledPerfDataCollector.IndexInfo)i.next();
+		System.out.println ("updating " + ii.index);
                 if (j < num) {
                     JLabel l = (JLabel)avg_labels.get(j);
                     l.setText (padFloat(ii.getAverage()/1000.0));
