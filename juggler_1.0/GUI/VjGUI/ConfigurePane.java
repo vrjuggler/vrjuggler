@@ -25,11 +25,14 @@ import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.tree.*;
 import javax.swing.event.*;
+
 import VjConfig.*;
 import VjGUI.*;
+import VjGUI.util.*;
 import VjGUI.configchunk.*;
 
-public class ConfigurePane extends JSplitPane implements MouseListener {
+public class ConfigurePane extends JSplitPane 
+    implements PlugPanel, MouseListener {
 
     ChunkDBPanel leftpanel, rightpanel;
 
@@ -78,6 +81,14 @@ public class ConfigurePane extends JSplitPane implements MouseListener {
     public void mouseExited(MouseEvent e) {}
     public void mousePressed(MouseEvent e) {}
     public void mouseReleased(MouseEvent e) {}
+
+
+
+    /********************** PlugPanel Stuff **************************/
+    public void destroy () {
+	leftpanel.destroy();
+	rightpanel.destroy();
+    }
 
 }
 

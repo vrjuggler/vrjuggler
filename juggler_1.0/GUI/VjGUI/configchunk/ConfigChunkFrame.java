@@ -36,9 +36,10 @@ import VjGUI.*;
 import VjGUI.util.*;
 
 public class ConfigChunkFrame extends JFrame 
-    implements ActionListener, WindowListener {
+    implements ChildFrame, ActionListener, WindowListener {
 
     ConfigChunk   chunk;
+    ConfigChunkDB chunkdb;
     Vector proppanels; // property description panels.
     JPanel properties;
     JButton cancelbutton;
@@ -55,10 +56,10 @@ public class ConfigChunkFrame extends JFrame
 
 
     public ConfigChunkFrame (JFrameParent par, 
-			     ConfigChunk ch) {
-	super("Edit " + ch.getDescName() + ": " + ch.getName());
+			     ConfigChunk _chunk, ConfigChunkDB _chunkdb) {
+	super("Edit " + _chunk.getDescName() + ": " + _chunk.getName());
 
-	Core.consoleTempMessage ("Opening ConfigChunk Window: " + ch.getName());
+	Core.consoleTempMessage ("Opening ConfigChunk Window: " + _chunk.getName());
 
 	//Point p = c.ui.getLocation();
 	//c.ui.waitdialog.setLocation(p.x + 100,p.y + 100);
@@ -70,7 +71,8 @@ public class ConfigChunkFrame extends JFrame
 	PropertyPanel t;
 
 	parent = par;
-	chunk = ch;
+	chunk = _chunk;
+	chunkdb = _chunkdb;
 	JPanel mainp = new JPanel();
 	mainp.setBorder (new EmptyBorder (5, 5, 0, 5));
 	mainp.setLayout (new BorderLayout (5,5));
@@ -158,13 +160,18 @@ public class ConfigChunkFrame extends JFrame
 
 
 
+    public ConfigChunkDB getChunkDB () {
+	return chunkdb;
+    }
+
+
     public ConfigChunk getOldValue() {
 	return chunk;
     }
 
 
 
-    public ConfigChunk getValue() {
+    public ConfigChunk getNewValue() {
 	/* returns a configchunk based on the values current 
 	 * in this window */
 	ConfigChunk c = ChunkFactory.createChunk (chunk.desc, namef.getText());
@@ -205,8 +212,35 @@ public class ConfigChunkFrame extends JFrame
     public void windowDeiconified(WindowEvent e) {}
     public void windowIconified(WindowEvent e) {}
     public void windowOpened(WindowEvent e) {}
+
+
+
+    /*************** ChildFrame Stuff ********************/
+    public void destroy () {
+	dispose();
+    }
+
+
+    public boolean matches (String cl, Object db, Object o) {
+	if (cl != null) {
+	    try {
+		if (!(Class.forName(cl).isInstance(this)))
+		    return false;
+	    }
+	    catch (Exception e) {
+		return false;
+	    }
+	}
+	if (chunkdb != db)
+	    return false;
+	return (o == null) || (o == chunk);
+    }
+
     
-    
+    public void updateUI () {
+	SwingUtilities.updateComponentTreeUI (this);
+    }
+
 }
 
 

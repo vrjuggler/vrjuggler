@@ -35,9 +35,10 @@ import javax.swing.text.html.*;
 import java.util.Enumeration;
 import VjGUI.Core;
 import VjGUI.util.JFrameParent;
+import VjGUI.util.ChildFrame;
 
-public class HTMLFrame extends JFrame implements HyperlinkListener,
-WindowListener {
+public class HTMLFrame extends JFrame 
+    implements ChildFrame, HyperlinkListener, WindowListener {
 
     JScrollPane sp;
     JEditorPane pane;
@@ -102,6 +103,33 @@ WindowListener {
     public void windowDeiconified(WindowEvent e) {}
     public void windowIconified(WindowEvent e) {}
     public void windowOpened(WindowEvent e) {}
+
+
+    /******************* ChildFrame Stuff **********************/
+    public void destroy () {
+	pane.removeHyperlinkListener (this);
+	dispose();
+    }
+
+
+    public boolean matches (String cl, Object db, Object o) {
+	if (cl != null) {
+	    try {
+		if (!(Class.forName(cl).isInstance(this)))
+		    return false;
+	    }
+	    catch (Exception e) {
+		return false;
+	    }
+	}
+	return false;
+    }
+
+
+    public void updateUI () {
+	SwingUtilities.updateComponentTreeUI (this);
+    }
+
 
 }
 

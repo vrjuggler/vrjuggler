@@ -32,10 +32,15 @@ package VjGUI;
 
 import java.io.*;
 import java.net.*;
+import java.util.Vector;
 import VjConfig.*;
 import VjGUI.*;
 
-public class NetControl implements Runnable {
+
+
+public class NetControl 
+    implements Runnable, ChunkDBListener {
+
 
     private String                   remote_name;
     private Socket                  sock;
@@ -45,28 +50,25 @@ public class NetControl implements Runnable {
     private boolean                 connected;
     private Thread                  thread;
 
+    private Vector                  netcontrol_targets;
+
+
 
     public NetControl() {
 	remote_name = new String ("localhost");
 	port = 4450;
 	connected = false;
+	netcontrol_targets = new Vector();
+	Core.gui_chunkdb.addChunkDBListener (this);
     }
 
-
-
-    public void setHost(String s) {
-	remote_name = s;
-    }
-
-
-    public void setPort (int i) {
-	port = i;
-    }
 
 
     public String getHost() {
 	return remote_name;
     }
+
+
 
     public int getPort() {
 	return port;
@@ -82,22 +84,23 @@ public class NetControl implements Runnable {
     }
 
 
+
+    public void setRemoteHost (String _remote_host, int _port) {
+	if (!connected) {
+	    remote_name = _remote_host;
+	    port = _port;
+	    NetControlEvent e = new NetControlEvent (this, NetControlEvent.ADDRESS,
+						     remote_name, port);
+	    notifyNetControlTargets (e);
+	}
+    }
+
+
+
     public boolean connect () {
-	return connect (remote_name, port);
-    }
-
-    public boolean connect (String connectsource) {
-	return connect (connectsource, port);
-    }
-
-
-
-    public boolean connect (String connectsource, int portnum) {
 	if (connected)
 	    return true;
-	port = portnum;
 	try {
-	    remote_name = new String (connectsource);
 	    //System.out.println ("Attempting to open socket to " 
 	    //			+ remote_name + ":" + port);
 	    sock = new Socket (remote_name, port);
@@ -105,13 +108,15 @@ public class NetControl implements Runnable {
 	    instream = 
 		new ConfigStreamTokenizer (new InputStreamReader(sock.getInputStream()));
 	    connected = true;
-	    Core.enableActiveDB();
+
+	    NetControlEvent e = new NetControlEvent (this, NetControlEvent.OPENED, remote_name, port);
+	    notifyNetControlTargets (e);
 	    thread = new Thread(this);
 	    thread.start();
 	    Core.consoleInfoMessage ("Net", "Connected to " + remote_name
 				     + ":" + port);
 
-	    Core.perf_collection.removeAllData();
+	    //Core.perf_collection.removeAllData();
 
 	    getChunkDescs();
 	    getChunks();
@@ -136,7 +141,8 @@ public class NetControl implements Runnable {
 	if (!connected)
 	    return true;
 	try {
-	    Core.disableActiveDB();
+	    NetControlEvent e = new NetControlEvent (this, NetControlEvent.CLOSED, remote_name, port);
+	    notifyNetControlTargets (e);
 	    connected = false;
 	    //thread.stop(); // deprecated
 	    out.close();
@@ -147,6 +153,26 @@ public class NetControl implements Runnable {
 	}
 	catch (IOException io) {
 	    return false;
+	}
+    }
+
+
+
+    protected void reconfigure(ConfigChunk ch) {
+	// called whenever vjcontrol_preferences changes
+	Property p;
+
+	if (ch == null)
+	    return;
+	if (ch.getDescToken().equalsIgnoreCase ("vjcontrol")) {
+	    try {
+		String new_host = ch.getPropertyFromToken("host").getValue(0).getString();
+		int new_port = ch.getPropertyFromToken("port").getValue(0).getInt();
+		setRemoteHost (new_host, new_port);
+	    }
+	    catch (Exception e) {
+		Core.consoleInfoMessage ("vjControl", "Old vjcontrol preferences file - please check preferences and re-save");
+	    }
 	}
     }
 
@@ -197,6 +223,8 @@ public class NetControl implements Runnable {
 
     }
 
+
+
     public boolean removeChunks (ConfigChunkDB db) {
 	if (!connected)
 	    return false;
@@ -212,6 +240,7 @@ public class NetControl implements Runnable {
     }
 
 
+
     public boolean removeChunk (ConfigChunk ch) {
 	if (!connected)
 	    return false;
@@ -225,6 +254,7 @@ public class NetControl implements Runnable {
 	    return false;
 	}
     }
+
 
 
     public boolean isConnected() {
@@ -409,6 +439,57 @@ public class NetControl implements Runnable {
 	}
     }
 
+
+
+    /******************** NetControl Target Stuff *********************/
+
+    public synchronized void addNetControlListener (NetControlListener l) {
+	synchronized (netcontrol_targets) {
+	    netcontrol_targets.addElement (l);
+	}
+    }
+
+
+    public void removeNetControlListener (NetControlListener l) {
+	synchronized (netcontrol_targets) {
+	    netcontrol_targets.removeElement (l);
+	}
+    }
+
+
+    protected void notifyNetControlTargets (NetControlEvent e) {
+	Vector l;
+	synchronized (netcontrol_targets) {
+	    l = (Vector) netcontrol_targets.clone();
+	}
+	for (int i = 0; i < l.size(); i++) {
+	    NetControlListener lis = (NetControlListener)l.elementAt (i);
+	    switch (e.event_type) {
+	    case e.OPENED:
+		lis.openedConnection (e);
+		break;
+	    case e.CLOSED:
+		lis.closedConnection (e);
+		break;
+	    case e.ADDRESS:
+		lis.addressChanged (e);
+		break;
+	    }
+	}
+    }
+
+
+
+    /****************** ChunkDBListener Stuff **********************/
+    //: Core only listens to ChunkDB events from the GUI chunkdb
+    public void addChunk (ChunkDBEvent e) {
+	reconfigure (e.getNewChunk());
+    }
+    public void removeChunk (ChunkDBEvent e) {;}
+    public void replaceChunk (ChunkDBEvent e) {
+	reconfigure (e.getNewChunk());
+    }
+    public void removeAllChunks (ChunkDBEvent e) {;}
 
 
 }

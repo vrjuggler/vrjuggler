@@ -20,11 +20,11 @@
 
 package VjGUI.util;
 
-import javax.swing.JFrame;
+import VjGUI.util.ChildFrame;
 
 public interface JFrameParent {
 
-    public void closedChild (JFrame frame, boolean ok);
+    public void closedChild (ChildFrame frame, boolean ok);
 
 }
 
