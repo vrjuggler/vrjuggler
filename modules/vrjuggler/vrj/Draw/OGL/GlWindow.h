@@ -121,9 +121,6 @@ public:
    // Set the view buffer for the window (issues glDrawBuffer command)
    void setViewBuffer(vrj::Viewport::View view);
 
-   //: Sets the projection matrix for this window to the one for simulator
-   void setCameraProjection(vrj::CameraProjection* camProj);
-
    //: Set the viewport in the GL window based on float values
    //! ARGS: xo,yo - origin
    //+       xSize,ySize - viewport size
