@@ -85,8 +85,8 @@ endif
 
 # Add extra linking options on Darwin/OS X.
 ifeq (@PLATFORM@, Darwin)
-LDOPTS+=       -compatibility_version $(SHLIB_MAJOR).$(SHLIB_MINOR)
-LDOPTS+=       -current_version $(SHLIB_MAJOR).$(SHLIB_MINOR).$(SHLIB_MICRO)
+LDOPTS+=	-compatibility_version $(SHLIB_MAJOR).$(SHLIB_MINOR)
+LDOPTS+=	-current_version $(SHLIB_MAJOR).$(SHLIB_MINOR).$(SHLIB_MICRO)
 endif
 
 STATICLIB_EXT=	@STATICLIB_EXT@
