@@ -262,8 +262,8 @@ inline void OsgApp::draw()
    gl_manager = GlDrawManager::instance();
 
    // Set the up the viewport (since OSG clears it out)
-   float vp_ox, vp_oy, vp_sx, vp_sy;         // The float vrj sizes of the view ports
-   unsigned w_ox, w_oy, w_width, w_height;   // Origin and size of the window
+   float vp_ox, vp_oy, vp_sx, vp_sy;   // The float vrj sizes of the view ports
+   int w_ox, w_oy, w_width, w_height;  // Origin and size of the window
    gl_manager->currentUserData()->getViewport()->getOriginAndSize(vp_ox, vp_oy, vp_sx, vp_sy);
    gl_manager->currentUserData()->getGlWindow()->getOriginSize(w_ox, w_oy, w_width, w_height);
 
