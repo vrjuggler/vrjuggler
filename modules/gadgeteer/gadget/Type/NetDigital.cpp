@@ -15,8 +15,8 @@ NetDigital::NetDigital(const std::string& src_device_name, Input* input_ptr, VJ_
 
   if(src_device_name.length() > 0){   // pointing to another device/proxy for data source
      mLocalSource.init(mDeviceName);
-     mSendBuffer = new char[5];            // 2 bytes of code/id, 2 bytes of data, 1 byte for semicolon
-     mNetworkShortDigitalValues.push_back(0);  // space for one data item
+     mSendBuffer.resize(5);            // 2 bytes of code/id, 2 bytes of data, 1 byte for semicolon
+     mNetworkShortDigitalValues.resize(1);  // space for one data item
   }
   else{                              // use ourself as source of digital data
      // find the number of devices
@@ -24,11 +24,11 @@ NetDigital::NetDigital(const std::string& src_device_name, Input* input_ptr, VJ_
      int num_elements = this->getDigitalDataBuffer().size();
      if (num_elements <= 0)
         num_elements = 1;
-     for(int i = 0; i < num_elements; i++)
-        mNetworkShortDigitalValues.push_back(0);
+
+     mNetworkShortDigitalValues.resize(num_elements);
 
      // allocate space for data
-     mSendBuffer = new char[3 + 2 * num_elements];  // 2 bytes of code/id, 2*n bytes of data, 1 byte for semicolon
+     mSendBuffer.resize(3 + sizeof(short) * num_elements);  // 2 bytes of code/id, 2*n bytes of data, 1 byte for semicolon
   }
 }
 
@@ -38,16 +38,17 @@ NetDigital::NetDigital(const std::string& src_device_name, Proxy* proxy_ptr, VJ_
    mRemoteId = rmt_device_id;
    mDeviceName = src_device_name;
    mLocalSource.init(mDeviceName);
-   mSendBuffer = new char[5];
-   mNetworkShortDigitalValues.push_back(0);  // a digital proxy only points to a single data item
+   mSendBuffer.resize(5);
+   mNetworkShortDigitalValues.resize(1);  // a digital proxy only points to a single data item
 }
 
 // constructor for a receiving NetInput
 NetDigital::NetDigital(jccl::ConfigChunkPtr chunk, VJ_NETID_TYPE local_device_id) : NetInput(chunk) {
    mLocalId = local_device_id;
    mRemoteId = 0;
-   mSendBuffer = NULL; // not used;
-   mNetworkShortDigitalValues.push_back(0);  // a digital proxy only points to a single data item
+   mSendBuffer.resize(1); // not used;
+   mNetworkShortDigitalValues.resize(1);  // a digital proxy only points to a single data item
+   mSendBuffer.resize(3 + sizeof(short) * mNetworkShortDigitalValues.size()); // buffer not used when receiving, but its size (5) is currently used to determine how much data to pull from the recv buffer
 }
 
 void NetDigital::updateFromLocalSource(){
@@ -73,16 +74,16 @@ void NetDigital::updateFromLocalSource(){
       mNetworkShortDigitalValues[k] = htons( (short)digital_data_sample[k].getDigital());           // convert to network format
    }
 
-   shortTo2Bytes(mSendBuffer, htons(mRemoteId));  // put the 2 byte id in the buffer
+   shortTo2Bytes((char*)(&(mSendBuffer[0])), htons(mRemoteId));  // put the 2 byte id in the buffer
 
    unsigned int j = 0;
    for( ; j < mNetworkShortDigitalValues.size(); j++){
       for(unsigned int i = 0; i < sizeof(short); i++)
-         mSendBuffer[2 + 2*j + i] = ((char*)(& (mNetworkShortDigitalValues[j]) ))[i];   // copy the number byte by byte
+         mSendBuffer[2 + sizeof(short)*j + i] = ((char*)(& (mNetworkShortDigitalValues[j]) ))[i];   // copy the number byte by byte
    }
 
    // mSendBuffer[4] = ';';                                             // terminate the message
-   mSendBuffer[2 + 2 * j] = ';';
+   mSendBuffer[2 + sizeof(short) * j] = ';';
 
 }
 
@@ -101,7 +102,7 @@ void NetDigital::updateFromRemoteSource(char* recv_buffer, int recv_buff_len){
    // get the data out of the buffer
    for(unsigned int k = 0; k < mNetworkShortDigitalValues.size(); k++){
       for(unsigned int i = 0; i < sizeof(short); i++)
-         ((char*)( &(mNetworkShortDigitalValues[k]) ))[i] = recv_buffer[2 + 2*k + i];
+         ((char*)( &(mNetworkShortDigitalValues[k]) ))[i] = recv_buffer[2 + sizeof(short)*k + i];
 
       // convert network data to local data
       // mDigitalData = (short) ntohs(mNetworkShortDigitalValue);
