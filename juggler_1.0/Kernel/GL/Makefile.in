@@ -36,12 +36,10 @@ vpath %.o ${OBJDIR}
 
 OGL_API		:= @OPENGL_API@
 
-ifeq ($(OGL_API),Y)
-    GL_SRCS 	:= vjGlDrawManager.cpp	\
+GL_SRCS 	:= vjGlDrawManager.cpp	\
                    vjGlPipe.cpp		\
                    vjGlWindow.cpp       \
-		   vjGlxWindow.cpp
-endif
+                   vjGlxWindow.cpp
 
 GL_OBJECTS	:= ${addprefix ${OBJDIR}/,${GL_SRCS:.cpp=.o}}
 DEPEND_FILES	:= ${GL_SRCS:.cpp=.d}

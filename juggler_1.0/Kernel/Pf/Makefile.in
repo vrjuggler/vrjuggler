@@ -36,10 +36,8 @@ vpath %.o ${OBJDIR}
 
 PF_API		:= @PERFORMER_API@
 
-ifeq ($(PF_API),Y)
-    PF_SRCS 	:= vjPfDrawManager.cpp	\
+PF_SRCS 	:= vjPfDrawManager.cpp	\
                    vjPfUtil.cpp
-endif
 
 PF_OBJECTS	:= ${addprefix ${OBJDIR}/,${PF_SRCS:.cpp=.o}}
 DEPEND_FILES	:= ${PF_SRCS:.cpp=.d}
