@@ -59,6 +59,8 @@ use File::Basename;
 use File::Copy;
 use Getopt::Long;
 
+sub generateFile($$);
+
 # Do this to include the path to the script in @INC.
 BEGIN {
     $path = (fileparse("$0"))[1];
@@ -88,6 +90,7 @@ USAGE_EOF
 
 # Initialize variables passed (by reference) to GetOptions();
 %VARS = ();
+@files = ();
 ($var_file, $startdir, $prefix) = ('', '', '');
 ($uname, $gname, $mode) = ('', '', '');
 
@@ -95,34 +98,60 @@ USAGE_EOF
 # is indexed by the tag name to be replaced (e.g., 'CXX').
 GetOptions("vars=s", \$var_file, "srcdir=s" => \$VARS{'srcdir'},
 	   "prefix=s" => \$prefix, "startdir=s" => \$startdir,
+	   'files=s' => \@files,
 	   "uname=s" => \$uname, "gname=s" => \$gname, "mode=s" => \$mode);
+
+die "ERROR: Cannot specify file and directory recursion together!\n"
+   if $#files != -1 && $startdir;
 
 # Import the extra settings for %VARS found in $var_file if it was given
 # on the command line.
 require "$var_file" if $var_file;
 
 umask(002);
-chdir("$startdir") or die "ERROR: Cannot chdir to $startdir: $!\n";
-
-my ($basedir, $dir);
-$basedir = cwd();
 
 # Defaults.
 my($uid, $gid, $mode_bits) = ($<, (getpwuid($<))[3], "0644") unless $Win32;
 
-if ( $uname ) {
-    my(@user_info) = getpwnam("$uname") or die "getpwnam($uname): $!\n";
-    $uid = $user_info[2];
+if ( $uname )
+{
+   my(@user_info) = getpwnam("$uname") or die "getpwnam($uname): $!\n";
+   $uid = $user_info[2];
 }
 
-if ( $gname && ! $Win32 ) {
-    my(@group_info) = getgrnam("$gname") or die "getgrnam($gname): $!\n";
-    $gid = $group_info[2];
+if ( $gname && ! $Win32 )
+{
+   my(@group_info) = getgrnam("$gname") or die "getgrnam($gname): $!\n";
+   $gid = $group_info[2];
 }
 
 $mode_bits = "$mode" if $mode;
 
-recurseDir(".", "$prefix");
+if ( $startdir )
+{
+   chdir("$startdir") or die "ERROR: Cannot chdir to $startdir: $!\n";
+   recurseDir(".", "$prefix");
+}
+else
+{
+   my $cwd = getcwd();
+   foreach ( @files )
+   {
+      my @full_path = split(/\//);
+      my $file      = pop(@full_path);
+      my $new_dir   = join("/", @full_path);
+
+      if ( chdir("$new_dir") )
+      {
+         generateFile("$file", "");
+         chdir("$cwd");
+      }
+      else
+      {
+         warn "WARNING: Could not chdir to $new_dir: $!\n";
+      }
+   }
+}
 
 exit 0;
 
@@ -131,46 +160,55 @@ exit 0;
 # makefile that will be installed.
 #
 # Syntax:
-#     recurseAction($curfile, $path);
+#     recurseAction($curfile, $curpath);
 #
 # Arguments:
 #     $curfile - The name of the current file in the recursion process.
-#     $path    - The current directory stack.
+#     $curpath - The current directory stack.
 # -----------------------------------------------------------------------------
-sub recurseAction {
-    my $curfile = shift;
-    my $path    = shift;
+sub recurseAction
+{
+   my $curfile = shift;
+   my $curpath = shift;
 
-    if ( "$curfile" eq "Makefile.in" ) {
-	my $outfile = "$prefix/$path/Makefile";
+   generateFile("$curfile", "$curpath") if "$curfile" eq "Makefile.in";
+}
 
-	print "Generating $outfile ...\n";
+sub generateFile ($$)
+{
+   my $infile  = shift;
+   my $curpath = shift;
 
-	my $infile = "Makefile.in";
+   my $outfile = "$prefix/$curpath/$infile";
+   $outfile    =~ s/\.in$//;
 
-	my $workfile;
+   print "Generating $outfile ...\n";
 
-	if ( $Win32 ) {
-	    $workfile = "C:/temp/Makefile.in";
-	} else {
-	    $workfile = "/tmp/Makefile.in";
-	}
+   my $workfile;
 
-	# Make a working copy of the input file to be safe.
-	copy("$infile", "$workfile") unless "$infile" eq "$workfile";
+   if ( $Win32 )
+   {
+      $workfile = "C:/temp/working.in-$$";
+   }
+   else
+   {
+      $workfile = "/tmp/working.in-$$";
+   }
 
-	# Replace the tags in $workfile with the values in %VARS.
-	next if replaceTags("$workfile", %VARS) < 0;
+   # Make a working copy of the input file to be safe.
+   copy("$infile", "$workfile") unless "$infile" eq "$workfile";
 
-	# Move $workfile to its final destination.
-	copy("$workfile", "$outfile");
+   # Replace the tags in $workfile with the values in %VARS.
+   next if replaceTags("$workfile", %VARS) < 0;
 
-        if ( ! $Win32 )
-        {
-           chown($uid, $gid, "$outfile") or die "chown: $!\n";
-        }
+   # Move $workfile to its final destination.
+   copy("$workfile", "$outfile");
 
-	chmod(oct($mode_bits), "$outfile") or die "chmod: $!\n";
-	unlink("$workfile");
-    }
+   if ( ! $Win32 )
+   {
+      chown($uid, $gid, "$outfile") or die "chown: $!\n";
+   }
+
+   chmod(oct($mode_bits), "$outfile") or die "chmod: $!\n";
+   unlink("$workfile");
 }
