@@ -347,8 +347,6 @@ Rectangle VNCInterface::merge(const Rectangle &r1, const Rectangle &r2)
 */
 void VNCInterface::copyRectToFramebuffer(char *buf, int x, int y, int w, int h)
 {
-   std::cout << "x:" << x << " y:" << y << " w:" << w << " h:" << h << std::endl;
-
    int bytes_per_pixel = (mPf.size / 8);
 
    // Find start of the target area in the frame buffer
