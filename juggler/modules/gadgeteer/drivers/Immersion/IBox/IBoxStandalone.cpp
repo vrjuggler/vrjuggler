@@ -43,12 +43,10 @@
 IboxStandalone::IboxStandalone()
 {
 	port = NULL;
-	mSlow_timeout = 3000; // Set to 3 seconds, 3000 Msecs
-	mFast_timeout = 100;	 // Set to 1 tenth of a second, 100 Msecs
 	overlap = 0;
 
-	fastTimeOut.set(mFast_timeout,vpr::Interval::Msec);
-	slowTimeOut.set(mSlow_timeout,vpr::Interval::Msec);
+	fastTimeOut.set(100, vpr::Interval::Msec);
+	slowTimeOut.set(3000, vpr::Interval::Msec);
 
 
 	/* Set all descr. strings to null strings */
