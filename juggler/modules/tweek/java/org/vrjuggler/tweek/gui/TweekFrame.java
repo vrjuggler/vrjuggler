@@ -390,6 +390,7 @@ public class TweekFrame
             try
             {
                UIManager.setLookAndFeel(new_laf);
+               this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
                SwingUtilities.updateComponentTreeUI(this);
 
                // Update all the loaded Beans.
@@ -407,6 +408,8 @@ public class TweekFrame
                      SwingUtilities.updateComponentTreeUI(cur_bean.getComponent());
                   }
                }
+
+               validate();
             }
             catch (Exception laf_e)
             {
@@ -419,6 +422,10 @@ public class TweekFrame
                                                 new_laf + "'",
                                              "Bad Look and Feel Setting",
                                              JOptionPane.ERROR_MESSAGE);
+            }
+            finally
+            {
+               this.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
             }
          }
 
