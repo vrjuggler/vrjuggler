@@ -319,8 +319,8 @@ public:
      *
      * @return vpr::Status::Success is returned if the read operation
      *         completed successfully.<br>
-     *         vpr::Status::InProgress if the device is in non-blocking mode,
-     *         and the read operation is in progress.<br>
+     *         vpr::Status::WouldBlock if the device is in non-blocking mode,
+     *         and there is no data to read.<br>
      *         vpr::Status::Timeout is returned if the read could not begin
      *         within the timeout interval.<br>
      *         vpr::Status::Failure is returned if the read operation failed.
@@ -355,8 +355,8 @@ public:
      *
      * @return vpr::Status::Success is returned if the read operation
      *         completed successfully.<br>
-     *         vpr::Status::InProgress if the device is in non-blocking mode,
-     *         and the read operation is in progress.<br>
+     *         vpr::Status::WouldBlock if the device is in non-blocking mode,
+     *         and there is no data to read.<br>
      *         vpr::Status::Timeout is returned if the read could not begin
      *         within the timeout interval.<br>
      *         vpr::Status::Failure is returned if the read operation failed.
@@ -388,8 +388,9 @@ public:
      *
      * @return vpr::Status::Success is returned if the write operation
      *         completed successfully.<br>
-     *         vpr::Status::InProgress is returned if the handle is in
-     *         non-blocking mode, and the write operation is in progress.<br>
+     *         vpr::Status::WouldBlock is returned if the handle is in
+     *         non-blocking mode, and the write operation could not be
+     *         completed.<br>
      *         vpr::Status::Timeout is returned if the write could not begin
      *         within the timeout interval.<br>
      *         vpr::Status::Failure is returned if the write operation failed.

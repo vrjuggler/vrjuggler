@@ -383,9 +383,8 @@ protected:
     //! RETURNS: vpr::Status::Success    - The read operation completed
     //+                                    successfully.
     //! RETURNS: vpr::Status::Failure    - The read operation failed.
-    //! RETURNS: vpr::Status::InProgress - The handle is in non-blocking mode,
-    //+                                    and the read operation is in
-    //+                                    progress.
+    //! RETURNS: vpr::Status::WouldBlock - The handle is in non-blocking mode,
+    //+                                    and there is no data to read.
     // ------------------------------------------------------------------------
     virtual Status
     read_i (void* buffer, const size_t length, ssize_t& bytes_read,
@@ -445,9 +444,9 @@ protected:
     //! RETURNS: vpr::Status::Success    - The write operation completed
     //+                                    successfully.
     //! RETURNS: vpr::Status::Failure    - The write operation failed.
-    //! RETURNS: vpr::Status::InProgress - The handle is in non-blocking mode,
-    //+                                    and the write operation is in
-    //+                                    progress.
+    //! RETURNS: vpr::Status::WouldBlock - The handle is in non-blocking mode,
+    //+                                    and the write operation could not
+    //+                                    be completed.
     // ------------------------------------------------------------------------
     virtual Status
     write_i (const void* buffer, const size_t length, ssize_t& bytes_written,

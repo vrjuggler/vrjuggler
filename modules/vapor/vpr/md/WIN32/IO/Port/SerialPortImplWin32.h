@@ -882,14 +882,13 @@ public:
      *                   available for reading.  This argument is optional and
      *                   defaults to <code>vpr::Interval::NoTimeout</code>
      *
-     * @return <code>vpr::Status::Success</code> is returned if the read
-     *         operation completed successfully.<br>
-     *         <code>vpr::Status::Success</code> is returned if the read
-     *         operation failed.<br>
-     *         <code>vpr::Status::InProgress</code> if the port is in
-     *         non-blocking mode, and the read operation is in progress.<br>
-     *         <code>vpr::Status::Timeout</code> is returned if the read
-     *         could not begin within the timeout interval.
+     * @return vpr::Status::Success is returned if the read operation
+     *         completed successfully.<br>
+     *         vpr::Status::WouldBlock if the port is in non-blocking mode,
+     *         and there is no data to read.<br>
+     *         vpr::Status::Timeout is returned if the read could not begin
+     *         within the timeout interval.<br>
+     *         vpr::Status::Failure is returned if the read operation failed.
      */
     vpr::Status read_i (void* buffer, const size_t length, ssize_t& bytes_read,
                         const vpr::Interval timeout = vpr::Interval::NoTimeout);
@@ -916,8 +915,8 @@ public:
      *
      * @return vpr::Status::Success is returned if the read operation
      *         completed successfully.<br>
-     *         vpr::Status::InProgress if the port is in non-blocking mode,
-     *         and the read operation is in progress.<br>
+     *         vpr::Status::WouldBlock if the port is in non-blocking mode,
+     *         and there is no data to read.<br>
      *         vpr::Status::Timeout is returned if the read could not begin
      *         within the timeout interval.<br>
      *         vpr::Status::Failure is returned if the read operation failed.
@@ -947,8 +946,9 @@ public:
      *
      * @return vpr::Status::Success is returned if the write operation
      *         completed successfully.<br>
-     *         vpr::Status::InProgress is returned if the handle is in
-     *         non-blocking mode, and the write operation is in progress.<br>
+     *         vpr::Status::WouldBlock is returned if the handle is in
+     *         non-blocking mode, and the write operation could not be
+     *         completed.<br>
      *         vpr::Status::Timeout is returned if the write could not begin
      *         within the timeout interval.<br>
      *         vpr::Status::Failure is returned if the write operation failed.
