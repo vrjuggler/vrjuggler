@@ -310,19 +310,19 @@ if test "$echo_libs" = "yes"; then
         fi
     fi
 
-    if test "x$print_all" = "xyes" ; then
-        tweek_libs_addtl="@tweek_libs_all@"
-    else
-        tweek_libs_addtl=''
-    fi
-
-    echo $ldflags $static_begin $tweek_libs $tweek_libs_addtl $static_end
+    echo $ldflags $static_begin $tweek_libs $static_end
 fi      
 
 if test "x$echo_extra_libs" = "xyes"; then
+    if test "x$print_all" = "xyes" ; then
+        tweek_extra_libs_addtl="@tweek_extra_libs_juggler@"
+    else
+        tweek_extra_libs_addtl=''
+    fi
+
     tweek_extra_ldflags="@tweek_extra_ldflags@"
     tweek_extra_libs="@tweek_extra_libs@"
-    echo $tweek_extra_ldflags $tweek_extra_libs
+    echo $tweek_extra_ldflags $tweek_extra_libs $tweek_extra_libs_addtl
 fi
 
 if test "x$echo_idl" != "x" ; then
