@@ -37,7 +37,7 @@ test: ${OBJECTS}
 matrix.o: matrix.cpp
 
 .cpp.o:
-	${COMPILE} -c -o $@ ${srcdir}/$<
+	${COMPILE} -c $<
 
 # -----------------------------------------------------------------------------
 # Clean-up.
