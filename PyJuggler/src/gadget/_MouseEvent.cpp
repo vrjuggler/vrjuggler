@@ -100,7 +100,7 @@ void _Export_MouseEvent()
             "state   -- The mask of mouse buttons and any modifiers being\n"
             "           pressed.  This should be constructed using the\n"
             "           bitwise OR of gadget.ModifierMask and\n"
-            "           gadget.ButtonMask values."
+            "           gadget.ButtonMask values.\n"
             "time    -- The time at which this event occurred.  This should\n"
             "           be as accurate as possible, preferrably acquired\n"
             "           from the operating system or windowing event system\n"
@@ -167,7 +167,7 @@ void _Export_MouseEvent()
              "Sets the type of this event.  This is needed because, while\n"
              "using an object reader to de-serialize a gadget.Event object,\n"
              "we cannot set the type during construction.  We must set the\n"
-             "event type after creating this event using the EventFactory."
+             "event type after creating this event using the EventFactory.\n"
              "Arguments:\n"
              "type -- A gadget.EventType object or a subclass thereof."
          )

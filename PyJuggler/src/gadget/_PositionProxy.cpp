@@ -181,7 +181,7 @@ void _Export_PositionProxy()
              "devPtr must be a valid device of type gadget.Digital\n"
              "Post-condition:\n"
              "The proxy now references the given device.  The device name we\n"
-             "are proxying is set to devPtr->getInstanceName()."
+             "are proxying is set to devPtr.getInstanceName().\n"
              "Arguments:\n"
              "devName -- The name of the device at which we are pointing.\n"
              "devPtr  -- Pointer to the device.  For gadget.Digital,\n"
@@ -212,7 +212,7 @@ void _Export_PositionProxy()
          )
         .def("getData", &gadget::PositionProxy::getData,
              (args("scaleFactor") = gadget::PositionUnitConversion::ConvertToFeet),
-             "getData(scaleFactor = 3.28) -> gmtl.Matrix44f object\n"
+             "getData(scaleFactor = gadget.PositionUnitConversion.ConvertToFeet) -> gmtl.Matrix44f object\n"
              "Gets the current positional data value from the device as a.\n"
              "matrix.  For example, getData(3.28) will return a matrix in\n"
              "feet.\n"

@@ -62,7 +62,7 @@ void _Export_PositionInterface()
          )
         .def("getData", &gadgetWrapper::PositionInterface::getData,
              (args("scaleFactor") = gadget::PositionUnitConversion::ConvertToFeet),
-             "getData(scaleFactor = 3.28) -> gmtl.Matrix44f object\n"
+             "getData(scaleFactor = gadget.PositionUnitConversion.ConvertToFeet) -> gmtl.Matrix44f object\n"
              "Gets the current positional data value from the device as a.\n"
              "matrix.  For example, getData(3.28) will return a matrix in\n"
              "feet.\n"

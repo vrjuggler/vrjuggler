@@ -103,7 +103,7 @@ void _Export_EventWindow()
              &pyj::gadget_EventWindow_Wrapper::default_config,
              "config(element) -> Boolean\n"
              "Configures this event window device.\n"
-             "Arguments:\n:"
+             "Arguments:\n"
              "element -- The config element for an event window device."
          )
         .def("getSyncTime", &gadget::EventWindow::getSyncTime,

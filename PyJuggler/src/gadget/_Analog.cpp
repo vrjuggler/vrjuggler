@@ -132,7 +132,7 @@ void _Export_Analog()
              "config(element) -> Boolean\n"
              "Reads the minimum and maximum value configuration information\n"
              "for this analog device.\n"
-             "Arguments:\n:"
+             "Arguments:\n"
              "element -- The config element for an analog device.  It must\n"
              "           derive from the base config element type\n"
              "           'analog_device'."

@@ -148,7 +148,7 @@ void _Export_KeyEvent()
              "Sets the type of this event.  This is needed because, while\n"
              "using an object reader to de-serialize a gadget.Event object,\n"
              "we cannot set the type during construction.  We must set the\n"
-             "event type after creating this event using the EventFactory."
+             "event type after creating this event using the EventFactory.\n"
              "Arguments:\n"
              "type -- A gadget.EventType object or a subclass thereof."
          )

@@ -191,7 +191,7 @@ void _Export_SpeechRecogDigitalProxy()
              "devPtr must be a valid device of type gadget.SpeechRecogDigital\n"
              "Post-condition:\n"
              "The proxy now references the given device.  The device name we\n"
-             "are proxying is set to devPtr->getInstanceName()."
+             "are proxying is set to devPtr.getInstanceName().\n"
              "Arguments:\n"
              "devName -- The name of the device at which we are pointing.\n"
              "devPtr  -- Pointer to the device.  For gadget.SpeechRecogDigital,\n"

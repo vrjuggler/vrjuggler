@@ -120,7 +120,7 @@ void _Export_Position()
              &pyj::gadget_Position_Wrapper::default_config,
              "config(element) -> Boolean\n"
              "Configures this positional device.\n"
-             "Arguments:\n:"
+             "Arguments:\n"
              "element -- The config element for a positional device.  It\n"
              "           must derive from the base config element type\n"
              "           'positional_device'."
@@ -156,7 +156,7 @@ void _Export_Position()
              "data does not need to transformed before being passed in.\n"
              "Post-condition:\n"
              "The given samples are added to the buffers, and the local\n"
-             "filters are run on the new samples."
+             "filters are run on the new samples.\n"
              "Arguments:\n"
              "sampleList -- The list of newly collected samples."
          )

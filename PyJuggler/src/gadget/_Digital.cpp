@@ -120,7 +120,7 @@ void _Export_Digital()
              &pyj::gadget_Digital_Wrapper::default_config,
              "config(element) -> Boolean\n"
              "Configures this digital device.\n"
-             "Arguments:\n:"
+             "Arguments:\n"
              "element -- The config element for a digital device.  It must\n"
              "           derive from the base config element type\n"
              "           'digital_device'."

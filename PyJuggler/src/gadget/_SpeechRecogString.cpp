@@ -84,7 +84,7 @@ void _Export_SpeechRecogString()
              &pyj::gadget_SpeechRecogString_Wrapper::default_config,
              "config(element) -> Boolean\n"
              "Configures this speech recognition device.\n"
-             "Arguments:\n:"
+             "Arguments:\n"
              "element -- The config element for a digital speech recognition\n"
              "           device.  It must derive from the base config\n"
              "           element type 'speech_recog_string_device'."
