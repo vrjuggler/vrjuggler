@@ -96,11 +96,17 @@ public class DisplayWindowStartDialog
          setupButtonPanel();
          addResources(ctx);
 
-         setSpinnerModel(mRedDepthSpinner, 1, 1, 8);
-         setSpinnerModel(mGreenDepthSpinner, 1, 1, 8);
-         setSpinnerModel(mBlueDepthSpinner, 1, 1, 8);
-         setSpinnerModel(mAlphaDepthSpinner, 1, 1, 8);
-         setSpinnerModel(mDepthBufferSpinner, 1, 1, 32);
+         setSpinnerModel(mRedDepthSpinner, 1, 0, 8);
+         setSpinnerModel(mGreenDepthSpinner, 1, 0, 8);
+         setSpinnerModel(mBlueDepthSpinner, 1, 0, 8);
+         setSpinnerModel(mAlphaDepthSpinner, 1, 0, 8);
+         setSpinnerModel(mNumAuxBufferSpinner, 1, 0, 16);
+         setSpinnerModel(mDepthBufferSpinner, 1, 0, 32);
+         setSpinnerModel(mStencilBufferSpinner, 1, 0, 32);
+         setSpinnerModel(mAccumRedDepthSpinner, 1, 0, 32);
+         setSpinnerModel(mAccumGreenDepthSpinner, 1, 0, 32);
+         setSpinnerModel(mAccumBlueDepthSpinner, 1, 0, 32);
+         setSpinnerModel(mAccumAlphaDepthSpinner, 1, 0, 32);
 
          mSleepTimeField.setValue(
             mWinElement.getProperty(SLEEP_TIME_PROPERTY, 0)
@@ -168,16 +174,30 @@ public class DisplayWindowStartDialog
 
          int val;
          val = ((Integer) fb_cfg.getProperty("red_size", 0)).intValue();
-         setSpinnerModel(mRedDepthSpinner, val, 1, 8);
+         setSpinnerModel(mRedDepthSpinner, val, 0, 8);
          val = ((Integer) fb_cfg.getProperty("green_size", 0)).intValue();
-         setSpinnerModel(mGreenDepthSpinner, val, 1, 8);
+         setSpinnerModel(mGreenDepthSpinner, val, 0, 8);
          val = ((Integer) fb_cfg.getProperty("blue_size", 0)).intValue();
-         setSpinnerModel(mBlueDepthSpinner, val, 1, 8);
+         setSpinnerModel(mBlueDepthSpinner, val, 0, 8);
          val = ((Integer) fb_cfg.getProperty("alpha_size", 0)).intValue();
-         setSpinnerModel(mAlphaDepthSpinner, val, 1, 8);
+         setSpinnerModel(mAlphaDepthSpinner, val, 0, 8);
+         val =
+            ((Integer) fb_cfg.getProperty("auxiliary_buffer_count", 0)).intValue();
+         setSpinnerModel(mNumAuxBufferSpinner, val, 0, 32);
          val =
             ((Integer) fb_cfg.getProperty("depth_buffer_size", 0)).intValue();
-         setSpinnerModel(mDepthBufferSpinner, val, 1, 32);
+         setSpinnerModel(mDepthBufferSpinner, val, 0, 32);
+         val =
+            ((Integer) fb_cfg.getProperty("stencil_buffer_size", 0)).intValue();
+         setSpinnerModel(mStencilBufferSpinner, val, 0, 32);
+         val = ((Integer) fb_cfg.getProperty("accum_red_size", 0)).intValue();
+         setSpinnerModel(mAccumRedDepthSpinner, val, 0, 8);
+         val = ((Integer) fb_cfg.getProperty("accum_green_size", 0)).intValue();
+         setSpinnerModel(mAccumGreenDepthSpinner, val, 0, 8);
+         val = ((Integer) fb_cfg.getProperty("accum_blue_size", 0)).intValue();
+         setSpinnerModel(mAccumBlueDepthSpinner, val, 0, 8);
+         val = ((Integer) fb_cfg.getProperty("accum_alpha_size", 0)).intValue();
+         setSpinnerModel(mAccumAlphaDepthSpinner, val, 0, 8);
 
          mVisualIdField.setText(
             ((Integer) fb_cfg.getProperty("visual_id", 0)).toString()
@@ -259,29 +279,59 @@ public class DisplayWindowStartDialog
       return Integer.valueOf(mVisualIdField.getText());
    }
 
-   public Integer getRedDepth()
+   public Integer getColorRedDepth()
    {
       return (Integer) mRedDepthSpinner.getModel().getValue();
    }
 
-   public Integer getGreenDepth()
+   public Integer getColorGreenDepth()
    {
       return (Integer) mGreenDepthSpinner.getModel().getValue();
    }
 
-   public Integer getBlueDepth()
+   public Integer getColorBlueDepth()
    {
       return (Integer) mBlueDepthSpinner.getModel().getValue();
    }
 
-   public Integer getAlphaDepth()
+   public Integer getColorAlphaDepth()
    {
       return (Integer) mAlphaDepthSpinner.getModel().getValue();
+   }
+
+   public Integer getAuxiliaryBufferCount()
+   {
+      return (Integer) mNumAuxBufferSpinner.getModel().getValue();
    }
 
    public Integer getDepthBufferSize()
    {
       return (Integer) mDepthBufferSpinner.getModel().getValue();
+   }
+
+   public Integer getStencilBufferSize()
+   {
+      return (Integer) mStencilBufferSpinner.getModel().getValue();
+   }
+
+   public Integer getAccumRedDepth()
+   {
+      return (Integer) mAccumRedDepthSpinner.getModel().getValue();
+   }
+
+   public Integer getAccumGreenDepth()
+   {
+      return (Integer) mAccumGreenDepthSpinner.getModel().getValue();
+   }
+
+   public Integer getAccumBlueDepth()
+   {
+      return (Integer) mAccumBlueDepthSpinner.getModel().getValue();
+   }
+
+   public Integer getAccumAlphaDepth()
+   {
+      return (Integer) mAccumAlphaDepthSpinner.getModel().getValue();
    }
 
    public Boolean getFSAAEnable()
@@ -473,9 +523,27 @@ public class DisplayWindowStartDialog
       mAlphaDepthLabel.setHorizontalAlignment(SwingConstants.TRAILING);
       mAlphaDepthLabel.setLabelFor(mAlphaDepthSpinner);
       mAlphaDepthLabel.setText("Alpha Depth");
+      mNumAuxBufferLabel.setHorizontalAlignment(SwingConstants.TRAILING);
+      mNumAuxBufferLabel.setLabelFor(mNumAuxBufferSpinner);
+      mNumAuxBufferLabel.setText("Number of Auxiliary Buffers");
       mDepthBufferLabel.setHorizontalAlignment(SwingConstants.TRAILING);
       mDepthBufferLabel.setLabelFor(mDepthBufferSpinner);
       mDepthBufferLabel.setText("Depth Buffer Size");
+      mStencilBufferLabel.setHorizontalAlignment(SwingConstants.TRAILING);
+      mStencilBufferLabel.setLabelFor(mStencilBufferSpinner);
+      mStencilBufferLabel.setText("Stencil Buffer Size");
+      mAccumRedDepthLabel.setHorizontalAlignment(SwingConstants.TRAILING);
+      mAccumRedDepthLabel.setLabelFor(mAccumRedDepthSpinner);
+      mAccumRedDepthLabel.setText("Accumulation Red Depth");
+      mAccumGreenDepthLabel.setHorizontalAlignment(SwingConstants.TRAILING);
+      mAccumGreenDepthLabel.setLabelFor(mAccumGreenDepthSpinner);
+      mAccumGreenDepthLabel.setText("Accumulation Green Depth");
+      mAccumBlueDepthLabel.setHorizontalAlignment(SwingConstants.TRAILING);
+      mAccumBlueDepthLabel.setLabelFor(mAccumBlueDepthSpinner);
+      mAccumBlueDepthLabel.setText("Accumulation Blue Depth");
+      mAccumAlphaDepthLabel.setHorizontalAlignment(SwingConstants.TRAILING);
+      mAccumAlphaDepthLabel.setLabelFor(mAccumAlphaDepthSpinner);
+      mAccumAlphaDepthLabel.setText("Accumulation Alpha Depth");
       mBorderCheckbox.setHorizontalTextPosition(SwingConstants.LEFT);
       mBorderCheckbox.setSelected(true);
       mBorderCheckbox.setText("Has border");
@@ -625,18 +693,78 @@ public class DisplayWindowStartDialog
                                     TableLayoutConstraints.CENTER)
       );
       mFBSettingsPanel.add(
-         mDepthBufferLabel,
+         mNumAuxBufferLabel,
          new TableLayoutConstraints(0, 5, 0, 5, TableLayoutConstraints.FULL,
                                     TableLayoutConstraints.CENTER)
       );
       mFBSettingsPanel.add(
-         mDepthBufferSpinner,
+         mNumAuxBufferSpinner,
          new TableLayoutConstraints(1, 5, 1, 5, TableLayoutConstraints.FULL,
                                     TableLayoutConstraints.CENTER)
       );
       mFBSettingsPanel.add(
+         mDepthBufferLabel,
+         new TableLayoutConstraints(0, 6, 0, 6, TableLayoutConstraints.FULL,
+                                    TableLayoutConstraints.CENTER)
+      );
+      mFBSettingsPanel.add(
+         mDepthBufferSpinner,
+         new TableLayoutConstraints(1, 6, 1, 6, TableLayoutConstraints.FULL,
+                                    TableLayoutConstraints.CENTER)
+      );
+      mFBSettingsPanel.add(
+         mStencilBufferLabel,
+         new TableLayoutConstraints(0, 7, 0, 7, TableLayoutConstraints.FULL,
+                                    TableLayoutConstraints.CENTER)
+      );
+      mFBSettingsPanel.add(
+         mStencilBufferSpinner,
+         new TableLayoutConstraints(1, 7, 1, 7, TableLayoutConstraints.FULL,
+                                    TableLayoutConstraints.CENTER)
+      );
+      mFBSettingsPanel.add(
+         mAccumRedDepthLabel,
+         new TableLayoutConstraints(0, 8, 0, 8, TableLayoutConstraints.FULL,
+                                    TableLayoutConstraints.CENTER)
+      );
+      mFBSettingsPanel.add(
+         mAccumRedDepthSpinner,
+         new TableLayoutConstraints(1, 8, 1, 8, TableLayoutConstraints.FULL,
+                                    TableLayoutConstraints.CENTER)
+      );
+      mFBSettingsPanel.add(
+         mAccumGreenDepthLabel,
+         new TableLayoutConstraints(0, 9, 0, 9, TableLayoutConstraints.FULL,
+                                    TableLayoutConstraints.CENTER)
+      );
+      mFBSettingsPanel.add(
+         mAccumGreenDepthSpinner,
+         new TableLayoutConstraints(1, 9, 1, 9, TableLayoutConstraints.FULL,
+                                    TableLayoutConstraints.CENTER)
+      );
+      mFBSettingsPanel.add(
+         mAccumBlueDepthLabel,
+         new TableLayoutConstraints(0, 10, 0, 10, TableLayoutConstraints.FULL,
+                                    TableLayoutConstraints.CENTER)
+      );
+      mFBSettingsPanel.add(
+         mAccumBlueDepthSpinner,
+         new TableLayoutConstraints(1, 10, 1, 10, TableLayoutConstraints.FULL,
+                                    TableLayoutConstraints.CENTER)
+      );
+      mFBSettingsPanel.add(
+         mAccumAlphaDepthLabel,
+         new TableLayoutConstraints(0, 11, 0, 11, TableLayoutConstraints.FULL,
+                                    TableLayoutConstraints.CENTER)
+      );
+      mFBSettingsPanel.add(
+         mAccumAlphaDepthSpinner,
+         new TableLayoutConstraints(1, 11, 1, 11, TableLayoutConstraints.FULL,
+                                    TableLayoutConstraints.CENTER)
+      );
+      mFBSettingsPanel.add(
          mFSAACheckbox,
-         new TableLayoutConstraints(0, 6, 1, 6, TableLayoutConstraints.LEFT,
+         new TableLayoutConstraints(0, 12, 1, 12, TableLayoutConstraints.LEFT,
                                     TableLayoutConstraints.CENTER)
       );
       mWindowPropsPanel.add(mBorderCheckbox,
@@ -789,8 +917,20 @@ public class DisplayWindowStartDialog
    private JSpinner mBlueDepthSpinner = new JSpinner();
    private JLabel mAlphaDepthLabel = new JLabel();
    private JSpinner mAlphaDepthSpinner = new JSpinner();
+   private JLabel mNumAuxBufferLabel = new JLabel();
+   private JSpinner mNumAuxBufferSpinner = new JSpinner();
    private JLabel mDepthBufferLabel = new JLabel();
    private JSpinner mDepthBufferSpinner = new JSpinner();
+   private JLabel mStencilBufferLabel = new JLabel();
+   private JSpinner mStencilBufferSpinner = new JSpinner();
+   private JLabel mAccumRedDepthLabel = new JLabel();
+   private JSpinner mAccumRedDepthSpinner = new JSpinner();
+   private JLabel mAccumGreenDepthLabel = new JLabel();
+   private JSpinner mAccumGreenDepthSpinner = new JSpinner();
+   private JLabel mAccumBlueDepthLabel = new JLabel();
+   private JSpinner mAccumBlueDepthSpinner = new JSpinner();
+   private JLabel mAccumAlphaDepthLabel = new JLabel();
+   private JSpinner mAccumAlphaDepthSpinner = new JSpinner();
    private JCheckBox mFSAACheckbox = new JCheckBox();
    private JPanel mWindowPropsPanel = new JPanel();
    private TableLayout mWindowPropsPanelLayout = null;
@@ -917,8 +1057,20 @@ public class DisplayWindowStartDialog
       mBlueDepthSpinner.setEnabled(enabled);
       mAlphaDepthLabel.setEnabled(enabled);
       mAlphaDepthSpinner.setEnabled(enabled);
+      mNumAuxBufferLabel.setEnabled(enabled);
+      mNumAuxBufferSpinner.setEnabled(enabled);
       mDepthBufferLabel.setEnabled(enabled);
       mDepthBufferSpinner.setEnabled(enabled);
+      mStencilBufferLabel.setEnabled(enabled);
+      mStencilBufferSpinner.setEnabled(enabled);
+      mAccumRedDepthLabel.setEnabled(enabled);
+      mAccumRedDepthSpinner.setEnabled(enabled);
+      mAccumGreenDepthLabel.setEnabled(enabled);
+      mAccumGreenDepthSpinner.setEnabled(enabled);
+      mAccumBlueDepthLabel.setEnabled(enabled);
+      mAccumBlueDepthSpinner.setEnabled(enabled);
+      mAccumAlphaDepthLabel.setEnabled(enabled);
+      mAccumAlphaDepthSpinner.setEnabled(enabled);
       mFSAACheckbox.setEnabled(enabled);
    }
 
