@@ -49,11 +49,12 @@ namespace vrj
    class Kernel;
    class DrawManager;
 
-/** Encapulates an actual Performer application.
+/**
+ * Encapulates an actual Performer application.
  *
  * This class defines the class that Performer application classes should be
- * derived from.  The interface given is the interface that the System expects
- * in order to interface with the application.
+ * derived from.  The interface defined by this class is what the Performer
+ * Draw Manager will use to interact with the user's application.
  */
 class VJ_CLASS_API PfApp : public App
 {
