@@ -16,7 +16,7 @@
          <value label="Height" defaultvalue="100"/>
       </property>
       <property valuetype="integer" variable="false" name="display_number">
-         <help>The number of the display on which the event window will be opened. (-1 for local)</help>
+         <help>The number of the display on which the input window will be opened. (-1 for local)</help>
          <value label="Display Number" defaultvalue="0"/>
       </property>
       <upgrade_transform>
