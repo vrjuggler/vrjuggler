@@ -39,19 +39,21 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-
-
-
-
 #include <vector>
 #include <string>
 #include <iostream>
 #include <stdio.h>// for FILE
 
-#include <AL/al.h>
-#include <AL/alc.h>
-#include <AL/alext.h>
-#include <AL/alut.h>
+#ifdef WIN32
+#  include <al.h>
+#  include <alc.h>
+#  include <alut.h>
+#else
+#  include <AL/al.h>
+#  include <AL/alc.h>
+#  include <AL/alext.h>
+#  include <AL/alut.h>
+#endif
 
 #include <gmtl/Math.h>
 #include <gmtl/Matrix.h>
