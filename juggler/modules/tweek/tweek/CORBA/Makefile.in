@@ -48,8 +48,8 @@ include @topdir@/make.defs.mk
 includedir		= @includedir@/tweek/CORBA
 srcdir			= @srcdir@
 top_srcdir		= @top_srcdir@
-CXX_IDL_OPTS		= -bcxx -Wbh=.h,s=.cpp -C$(srcdir)
-CXX_IDL_INCLUDES	= -I$(top_srcdir)
+CXX_IDL_OPTS		= @CXX_IDL_OPTS@ @CXX_IDL_GENDIR_OPT@$(srcdir)
+CXX_IDL_INCLUDES	= @CXX_IDL_INCFLAG@$(top_srcdir)
 EXTRA_INCLUDES		+= -I$(srcdir)
 EXTRA_SRCS_PATH		= $(srcdir)/../idl
 INSTALL			= @INSTALL@
