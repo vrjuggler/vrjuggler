@@ -161,6 +161,22 @@ Point2i = Point('int 2')
 rename(Point2i, 'Point2i')
 # =============================================================== gmtl::Point<>
 
+# gmtl::EulerAngle<> ==========================================================
+EulerAngle = Template('gmtl::EulerAngle', 'gmtl/EulerAngle.h')
+
+EulerAngleXYZf = EulerAngle('float gmtl::XYZ')
+rename(EulerAngleXYZf, 'EulerAngleXYZf')
+exclude(EulerAngleXYZf.getData)
+
+EulerAngleZYXf = EulerAngle('float gmtl::ZYX')
+rename(EulerAngleZYXf, 'EulerAngleZYXf')
+exclude(EulerAngleZYXf.getData)
+
+EulerAngleZXYf = EulerAngle('float gmtl::ZXY')
+rename(EulerAngleZXYf, 'EulerAngleZXYf')
+exclude(EulerAngleZXYf.getData)
+# ========================================================== gmtl::EulerAngle<>
+
 # General operations.
 set_policy(Function('gmtl::operator+=', 'gmtl-functions.h'),
            return_internal_reference())

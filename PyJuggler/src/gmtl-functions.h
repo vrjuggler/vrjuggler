@@ -35,6 +35,8 @@
 #include <gmtl/VecOps.h>
 #include <gmtl/Quat.h>
 #include <gmtl/QuatOps.h>
+#include <gmtl/EulerAngle.h>
+#include <gmtl/EulerAngleOps.h>
 
 namespace gmtl
 {
@@ -314,7 +316,24 @@ namespace gmtl
 
    template bool isEquiv(const gmtl::Quatf&, const gmtl::Quatf&, float);
    template bool isEquiv(const gmtl::Quatd&, const gmtl::Quatd&, double);
-// ===================================================== gmtl::gmtl::Quat<> functions
+// ===================================================== gmtl::Quat<> functions
+
+// gmtl::EulerAngle<> functions ===============================================
+   template bool operator==(const EulerAngleXYZf&, const EulerAngleXYZf&);
+   template bool operator==(const EulerAngleZXYf&, const EulerAngleZXYf&);
+   template bool operator==(const EulerAngleZYXf&, const EulerAngleZYXf&);
+
+   template bool operator!=(const EulerAngleXYZf&, const EulerAngleXYZf&);
+   template bool operator!=(const EulerAngleZXYf&, const EulerAngleZXYf&);
+   template bool operator!=(const EulerAngleZYXf&, const EulerAngleZYXf&);
+
+   template bool isEqual(const EulerAngleXYZf&, const EulerAngleXYZf&,
+                         const float&);
+   template bool isEqual(const EulerAngleZXYf&, const EulerAngleZXYf&,
+                         const float&);
+   template bool isEqual(const EulerAngleZYXf&, const EulerAngleZYXf&,
+                         const float&);
+// =============================================== gmtl::EulerAngle<> functions
 }
 
 #endif /* _PYJUGGLER_GMTL_FUNCTIONS_H_ */
