@@ -326,6 +326,11 @@ public class TweekFrame extends JFrame implements TreeModelRefreshListener,
     */
    private void fileQuitAction (ActionEvent e)
    {
+      if ( m_bean_container != null )
+      {
+         m_bean_container.fireFrameClosed();
+      }
+
       System.exit(0);
    }
 
