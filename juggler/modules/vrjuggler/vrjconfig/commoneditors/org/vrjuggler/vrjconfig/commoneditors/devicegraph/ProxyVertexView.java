@@ -114,8 +114,7 @@ public class ProxyVertexView
       private static final int PASTE_BUTTON_ROW = 3;
       private static final int FIRST_ALIAS_ROW  = PASTE_BUTTON_ROW + 1;
 
-      private static String IMG_ROOT =
-         "org/vrjuggler/vrjconfig/commoneditors/images";
+      private static String IMG_ROOT = EditorConstants.COMMON_IMG_ROOT;
 
       public ProxyVertexRenderer()
       {
