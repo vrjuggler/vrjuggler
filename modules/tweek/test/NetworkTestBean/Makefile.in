@@ -48,8 +48,7 @@ VPATH		= @srcdir@:@srcdir@/networktest:@srcdir@/tweek:$(TWEEK_BASE_DIR)/include/
 IDL_CXX_FILES	= SliderSubject.cpp SliderSubject.h		\
                   WhiteboardSubject.cpp WhiteboardSubject.h
 IDL_JAVA_FILES	= SliderSubject.java		\
-                  WhiteboardSubject.java	\
-                  Observer.java
+                  WhiteboardSubject.java
 
 OBJS		= SliderSubject.@OBJEXT@ SliderSubjectImpl.@OBJEXT@	\
                   WhiteboardSubject.@OBJEXT@ WhiteboardSubjectImpl.@OBJEXT@ \
@@ -58,10 +57,9 @@ CLASSES		= networktest/NetworkTest.class			\
                   networktest/SliderObserverImpl.class		\
                   networktest/SliderSubjectHolder.class		\
                   networktest/WhiteboardObserverImpl.class	\
-                  networktest/WhiteboardSubjectHolder.class	\
-                  tweek/ObserverHolder.class
+                  networktest/WhiteboardSubjectHolder.class
 
-NETWORK_TEST_CLASSES	= networktest/*.class tweek/*.class
+ALL_CLASSES	= networktest/*.class
 
 # -----------------------------------------------------------------------------
 # Application build targets.
@@ -87,7 +85,7 @@ server@EXEEXT@: $(OBJS)
 	$(LINK) @EXE_NAME_FLAG@ $(OBJS) $(BASIC_LIBS) $(EXTRA_LIBS)
 
 NetworkTestBean.jar: $(CLASSES)
-	$(JAR) cvfm $@ $(srcdir)/networktest.MF $(NETWORK_TEST_CLASSES)
+	$(JAR) cvfm $@ $(srcdir)/networktest.MF $(ALL_CLASSES)
 
 install:
 	cp NetworkTestBean.jar $(TWEEK_BASE_DIR)/bin/beans
@@ -123,9 +121,10 @@ WhiteboardSubject.java: WhiteboardSubject.idl
 clean:
 	rm -f Makedepend *.@OBJEXT@ networktest.ilk  so_locations *.?db	\
           core* $(addprefix $(srcdir)/, $(IDL_CXX_FILES))		\
-          $(addprefix $(srcdir)/networktest/, $(IDL_JAVA_FILES))
+          $(addprefix $(srcdir)/networktest/, $(IDL_JAVA_FILES))	\
+          $(ALL_CLASSES) tweek/*.class
 	rm -rf ii_files $(srcdir)/tweek
 
 clobber:
 	@$(MAKE) clean
-	rm -f server@EXEEXT@ 
+	rm -f server@EXEEXT@ NetworkTestBean.jar
