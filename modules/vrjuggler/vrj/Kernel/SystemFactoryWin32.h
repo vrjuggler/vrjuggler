@@ -50,13 +50,16 @@ class SystemFactoryWin32 : public SystemFactory
 {
 public:
 
-   // --- Singleton stuff --- //
 protected:
+   /** @name Singleton stuff 
+    * @{
+    */
    /// Constructor:  Hidden, so no instantiation is allowed
    SystemFactoryWin32()   // Do nothing, but hide
    {;}
 
    vprSingletonHeader(SystemFactoryWin32);
+   /** @} */
 };
 
 };

@@ -48,13 +48,16 @@ class SystemFactoryUNIX : public SystemFactory
 {
 public:
 
-      // --- Singleton stuff --- //
 protected:
+   /** @name Singleton stuff 
+    * @{
+    */
    /// Constructor:  Hidden, so no instantiation is allowed
    SystemFactoryUNIX()   // Do nothing, but hide
    {;}
 
    vprSingletonHeader(SystemFactoryUNIX);
+   /** @} */
 };
 
 };
