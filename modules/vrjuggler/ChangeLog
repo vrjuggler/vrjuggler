@@ -1,5 +1,8 @@
 DATE        AUTHOR    CHANGE
 ----------- --------- ---------------------------------------------------------
+Jun-19-2001 allenb    Performer now fully uses run-time reconfiguration at
+                      startup and allows for the addition of new display
+                      windows at run-time.
 Jun-11-2001 allenb    First pass at (re)configurable pfDrawManager
                       Currently only allows run-time addition of windows. 
 May-21-2001 patrick   Initial attempt to support HP-UX 11.x.  A newer version
