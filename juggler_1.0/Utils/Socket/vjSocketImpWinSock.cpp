@@ -243,7 +243,7 @@ vjSocketImpWinSock::recv (std::vector<char>& buffer, const size_t length,
 
     // If anything was read into temp_buf, copy it into buffer.
     if ( bytes > -1 ) {
-        for ( size_t i = 0; i < bytes; i++ ) {
+        for ( ssize_t i = 0; i < bytes; i++ ) {
             buffer[i] = temp_buf[i];
         }
     }

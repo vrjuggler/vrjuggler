@@ -153,7 +153,7 @@ vjSocketDatagramImpUNIX::recvfrom (std::vector<char>& msg, const size_t len,
 
     // If anything was read into temp_buf, copy it into msg.
     if ( bytes > -1 ) {
-        for ( size_t i = 0; i < bytes; i++ ) {
+        for ( ssize_t i = 0; i < bytes; i++ ) {
             msg[i] = temp_buf[i];
         }
     }
