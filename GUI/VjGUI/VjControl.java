@@ -72,6 +72,8 @@ public class VjControl {
 
 	String orgtreename = null;
 
+        boolean do_help = false;
+
 	Core.initialize();
 
 	/* do config stuff... 
@@ -102,16 +104,50 @@ public class VjControl {
 	    else if (args[i].equalsIgnoreCase("-noautoload")) {
 		autoload = false;
 	    }
+            else if (args[i].equalsIgnoreCase("-h")) {
+                do_help = true;
+            }
+            else if (args[i].equalsIgnoreCase("--help")) {
+                do_help = true;
+            }
 	    else if (hostset == false) {
 		new_host = args[i];
 		hostset = true;
 	    }
 	    else {
-		new_port = Integer.parseInt(args[i]);
+                try {
+                    new_port = Integer.parseInt(args[i]);
+                }
+                catch (Exception e) {
+                    System.out.println ("Error parsing command line.\n" +
+                                        "Assumed '" + args[i] + "' was a " +
+                                        "port number.");
+                    System.exit(1);
+                }
 	    }
 	    
 	}
      
+        if (do_help) {
+            System.out.println (
+                "VjControl 1.0\n" +
+                "Usage: vjcontrol [options] [host name] [port number]\n" +
+                "Options include:\n" +
+                "    -c file           load configuration file\n" +
+                "    -d file           load chunkdesc file\n" +
+                "    -p file           load performance data file\n" +
+                "    -o file           load configchunk organization tree\n" +
+                "    -h  (or --help)   display this help message\n" +
+                "    -noautoload       don't load files specified in\n" +
+                "                      VjControl preferences\n\n" +
+                "If host (and optionally port) are specified, VjControl\n" +
+                "will immediately attempt to open a connection to a \n" +
+                "VR Juggler application running on that host.\n"
+                );
+            System.exit(0);
+        }
+                
+
 
 	if (autoload) {
 	    for (i = 0; i < auto_descdbnames.size(); i++) {
