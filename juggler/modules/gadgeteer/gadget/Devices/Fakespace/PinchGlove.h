@@ -68,7 +68,8 @@ public:
    //  Returns -1 if function fails or if devNum is out of range.<BR>
    //  NOTE: If devNum is out of range, function will fail, possibly issueing 
    //  an error to a log or console - but will not ASSERT.<BR><BR>
-   //  
+   //  0 == open, 1 == contact.
+   //
    //  Use one of these indices to get the glove's digital data<BR>
    //  EX: int result = mGlove.getDigitalData( vjPinchGlove::LTHUMB );
    enum finger 
