@@ -103,7 +103,7 @@ void LibraryTest::loadCxxSymbolTest()
 {
    vpr::Library cxx_lib(mCxxModuleName);
    void* (*creator)();
-   TestInterface* test_obj;
+   TestInterface* test_obj(NULL);
 
    vpr::ReturnStatus status;
    status = cxx_lib.load();
@@ -114,7 +114,7 @@ void LibraryTest::loadCxxSymbolTest()
    CPPUNIT_ASSERT(NULL != creator && "Entry point lookup failed");
 
    void* object = (*creator)();
-   CPPUNIT_ASSERT(NULL != test_obj && "Object creation failed");
+   CPPUNIT_ASSERT(NULL != object && "Object creation failed");
 
    // Is there a way to test that this cast was successful?
    test_obj = static_cast<TestInterface*>(object);
