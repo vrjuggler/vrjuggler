@@ -44,7 +44,7 @@
 .SUFFIXES: .html .xml .pdf .tex .fo .txt
 
 # Software and stylesheet versions.
-DOCBOOK_XSL_VERSION?=	1.66.1
+DOCBOOK_XSL_VERSION?=	1.67.0
 XALAN_VERSION?=		2_5_2
 SAXON_VERSION?=		6.5.2
 FOP_VERSION?=		0.20.5
@@ -52,6 +52,7 @@ BATIK_VERSION?=		1.5.1
 
 # Installation paths.
 DOCBOOK_ROOT?=	/home/vr/Juggler/docbook
+BATIK_ROOT?=	$(DOCBOOK_ROOT)/batik-$(BATIK_VERSION)
 SGML_ROOT?=	/usr/share/sgml/docbook
 TEX_DIR?=	$(DOCBOOK_ROOT)/TeX
 TEX_BINDIR?=	$(TEX_DIR)/bin/i386-linux
@@ -69,7 +70,7 @@ PDFJADETEX?=	$(TEX_BINDIR)/pdfjadetex
 PDFLATEX?=	$(TEX_BINDIR)/pdflatex
 PDFTEX?=	$(TEX_BINDIR)/pdftex
 PDFXMLTEX?=	$(TEX_BINDIR)/pdfxmltex
-RASTERIZER?=	$(DOCBOOK_ROOT)/batik-$(BATIK_VERSION)/svgrasterizer
+RASTERIZER?=	BATIK_ROOT="$(BATIK_ROOT)" $(BATIK_ROOT)/svgrasterizer
 RM=		rm -f
 SAXON_DIR?=	$(DOCBOOK_ROOT)/saxon-$(SAXON_VERSION)
 SAXON?=		$(SAXON_DIR)/saxon.sh
@@ -155,6 +156,7 @@ pdf: $(LINK_DEPS) $(PDF_FILES)
 # and we do not necessarily know how to get to $(XSL_DIR) relative to the
 # current directory.  This hack with a symlink works around that problem.
 images:
+	-rm -f ./images
 	ln -s $(XSL_DIR)/images ./
 
 install-txt: $(TXT_FILES)
