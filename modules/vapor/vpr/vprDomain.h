@@ -53,12 +53,14 @@
 
 // This is the VPR I/O domain.  It defines all the platform-independent types
 // used for doing I/O (sockets and serial ports mostly) in VPR.
-#ifndef _IO_DOMAIN_DEFINED
 namespace vpr
 {
+   class BlockIO;
+
    template<class> class Selector_t;
    template<class> class SerialPort_t;
 
+   template<class> class BaseIOStatsStrategy;
    template<class BASE_ONE, class BASE_TWO> class IOStatsStrategyAdapter;
 
 #ifdef VPR_USE_NSPR
@@ -69,7 +71,7 @@ namespace vpr
       typedef class SocketImplNSPR           SocketImpl;
       typedef class SocketDatagramImplNSPR   SocketDatagramImpl;
       typedef class SocketStreamImplNSPR     SocketStreamImpl;
-      typedef class IOStatsStrategyAdapter<class BaseIOStatsStrategy, class BandwidthIOStatsStrategy>     SocketIOStatsStrategy;
+      typedef class IOStatsStrategyAdapter<class BaseIOStatsStrategy<BlockIO>, class BandwidthIOStatsStrategy>     SocketIOStatsStrategy;
    };
 
    typedef class InetAddrNSPR InetAddr;
@@ -92,7 +94,7 @@ namespace vpr
       typedef class SocketImplBSD           SocketImpl;
       typedef class SocketDatagramImplBSD   SocketDatagramImpl;
       typedef class SocketStreamImplBSD     SocketStreamImpl;
-      typedef IOStatsStrategyAdapter<class BaseIOStatsStrategy, class BandwidthIOStatsStrategy>     SocketIOStatsStrategy;
+      typedef IOStatsStrategyAdapter<class BaseIOStatsStrategy<BlockIO>, class BandwidthIOStatsStrategy>     SocketIOStatsStrategy;
    };
 
    typedef class InetAddrBSD InetAddr;
@@ -104,12 +106,10 @@ namespace vpr
 #endif /* ifdef VPR_USE_NSPR */
 
 }
-#endif /* ifdef _IO_DOMAIN_DEFINED */
 
 // This is the threading (and synchronization) domain.  It defins the types
 // used for platform-independent constructs for doing multi-threaded
 // programming.
-#ifndef _THREAD_DOMAIN_DEFINED
 namespace vpr
 {
 #ifdef VPR_USE_NSPR
@@ -152,7 +152,6 @@ namespace vpr
 
 #endif /* ifdef VPR_USE_NSPR */
 }
-#endif
 
 #ifndef VPR_IO_DOMAIN_INCLUDE
 #define VPR_IO_DOMAIN_INCLUDE VPR_DOMAIN_NONE
