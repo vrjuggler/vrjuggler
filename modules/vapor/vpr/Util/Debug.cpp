@@ -451,7 +451,58 @@ void Debug::debugDump()
 
 }
 
+DebugOutputGuard::DebugOutputGuard(const vpr::DebugCategory& cat,
+                                   const int level, std::string entryText,
+                                   std::string exitText, bool indent)
+   : mCat(cat), mLevel(level), mEntryText(entryText), mExitText(exitText),
+     mIndent(indent)
+{
+   if(mIndent)
+   {
+      vprDEBUG_BEGIN(mCat, mLevel) << mEntryText << vprDEBUG_FLUSH;
+   }
+   else
+   {
+      vprDEBUG(mCat, mLevel) << mEntryText << vprDEBUG_FLUSH;
+   }
+}
+   
+DebugOutputGuard::DebugOutputGuard(const vpr::DebugCategory& cat,
+                                   const int level, std::string entryText,
+                                   bool indent)
+   : mCat(cat), mLevel(level), mEntryText(entryText), mIndent(indent)
+{
+   if(mIndent)
+   {
+      vprDEBUG_BEGIN(mCat, mLevel) << mEntryText << vprDEBUG_FLUSH;
+   }
+   else
+   {
+      vprDEBUG(mCat, mLevel) << mEntryText << vprDEBUG_FLUSH;
+   }
+   mExitText = std::string("");
+}
 
+DebugOutputGuard::~DebugOutputGuard()
+{
+   if(mIndent)
+   {
+      if(mExitText == std::string(""))
+      {
+         vprDEBUG_DECREMENT_INDENT();
+      }
+      else
+      {     
+         vprDEBUG_END(mCat, mLevel) << mExitText << vprDEBUG_FLUSH;
+      }
+   }
+   else
+   {
+      if(mExitText != std::string(""))
+      {
+         vprDEBUG(mCat, mLevel) << mExitText << vprDEBUG_FLUSH;
+      }
+   }
+}
 
-
-}; // End of vpr namespace
+} // End of vpr namespace
