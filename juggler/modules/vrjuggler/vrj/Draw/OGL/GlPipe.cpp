@@ -236,10 +236,17 @@ void vjGlPipe::checkForNewWindows()
 
       for (unsigned int winNum=0; winNum<newWins.size(); winNum++)
       {
-         newWins[winNum]->open();
-         newWins[winNum]->makeCurrent();
-         vjDEBUG(vjDBG_DRAW_MGR,1) << "vjGlPipe::checkForNewWindows: Just opened window:\n" << newWins[winNum] << endl << vjDEBUG_FLUSH;
-         openWins.push_back(newWins[winNum]);
+          if (newWins[winNum]->open()) {
+              newWins[winNum]->makeCurrent();
+              vjDEBUG(vjDBG_DRAW_MGR,1) << "vjGlPipe::checkForNewWindows: Just opened window:\n" << newWins[winNum] << endl << vjDEBUG_FLUSH;
+              openWins.push_back(newWins[winNum]);
+          }
+          else {
+              vjDEBUG(vjDBG_ALL,0) << "vjGlPipe::checkForNewWindows: Failed to open window:\n" << newWins[winNum] << "\n" << vjDEBUG_FLUSH;
+              // BUG!!
+              // should we do something to tell the current config that it
+              // didn't get enabled properly?
+          }
       }
 
       newWins.erase(newWins.begin(), newWins.end());
