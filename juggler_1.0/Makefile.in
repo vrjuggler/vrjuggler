@@ -57,11 +57,9 @@
 # install-data    - Install only the Data directory.
 # install-gui     - Install only the configuration GUI.
 #
-# depend          - Recursively build the dependencies for the source files.
-# newdepend       - Recursively (and forcibly) rebuild the dependencies for
-#                   the source files.
-#
 # clean           - Clean up everything (uses common 'clean' target).
+# cleandepend     - Clean up the dependency files (uses common 'cleandepend'
+#                   target).
 # clobber         - Clean up everything and remove the directories containing
 #                   the compiled libraries and its object files.
 #
@@ -74,11 +72,13 @@
 
 default: debug
 
-# Define ${_LOCAL_CLEAN} to inform the shared clean target that there is a
-# '_clean' target to be run besides the standard 'clean' target.  This must
+# Define ${_LOCAL_CLEAN} and ${_LOCAL_CLEANDEP} to inform the shared 'clean'
+# and 'cleandepend' targets that there is a '_clean' target and a
+# '_cleandepend' target to be run besides the standard targets.  This must
 # be done before Makefile.base is inlcuded (which in turn includes vj.clean.mk)
 # so that the variable will be defined when parsing reaches the test for it.
 _LOCAL_CLEAN	= 1
+_LOCAL_CLEANDEP	= 1
 
 # Include common definitions.
 include @topdir@/Makefile.base
@@ -212,7 +212,6 @@ world:
 ifndef NO_CLEAN
 	@${MAKE} clobber
 endif
-	@${MAKE} depend
 	@${MAKE} _libs
 	@${MAKE} _check_gui
 	@echo "---------------------------------------------------------------"
@@ -235,7 +234,6 @@ world-all-abi:
 ifndef NO_CLEAN
 	@${MAKE} clobber
 endif
-	@${MAKE} depend
 	@abi_list='${ABI_LIST}' ;					\
           for abi in $$abi_list ; do					\
               echo "------------------------------------------------" ;	\
@@ -298,7 +296,6 @@ all-abi:
 
 # Things to do before the object files and library are built.
 beforebuild:
-	@${MAKE} depend
 
 # Things to do after the object files and library are built.
 afterbuild:
@@ -533,26 +530,6 @@ obj:
 	@echo "------------------------------------------------"
 	@echo "Object files built"
 	@echo "------------------------------------------------"
-
-# -----------------------
-# Dependency generation.
-# -----------------------
-depend: .depend_done
-
-newdepend:
-	@echo "------------------------------------------------"
-	@echo "Regenerating dependencies"
-	@echo "------------------------------------------------"
-	-@rm -f .depend_done
-	@${MAKE} RECTARGET="$@" recursive
-	@touch .depend_done
-
-.depend_done:
-	@echo "------------------------------------------------"
-	@echo "Generating dependencies"
-	@echo "------------------------------------------------"
-	@${MAKE} RECTARGET="depend" recursive
-	@touch .depend_done
 
 # -----------------------------------------------
 # Construct the static version of the libraries.
@@ -955,7 +932,9 @@ endif	# ifndef NO_JAVA_GUI
 
 # =============================================================================
 # Clean-up targets.  '_clean' removes all the files in the build directories.  
-# 'clobber' removes the ${_BUILDDIR_BASE} and ${_LIBDIR_NAME} directories.
+# '_cleandepend' removes all the dependency files (the .d makefiles) in the
+# build directories.  'clobber' removes the ${_BUILDDIR_BASE} and
+# ${_LIBDIR_NAME} directories.
 # =============================================================================
 _clean:
 	@echo "------------------------------------------------"
@@ -979,10 +958,17 @@ _clean:
 	@echo "Done with 'clean'"
 	@echo "------------------------------------------------"
 
+_cleandepend:
+	@echo "------------------------------------------------"
+	@echo "Cleaning up dependency files in the build tree"
+	@echo "------------------------------------------------"
+	@${MAKE} DO_CLEANDEPEND=1 RECTARGET="cleandepend" recursive
+	@echo "------------------------------------------------"
+	@echo "Done with 'cleandepend'"
+	@echo "------------------------------------------------"
+
 clobber:
-	@${MAKE} _clean
-	@${MAKE} cleandepend
-	@${MAKE} RECTARGET="cleandepend" recursive
+	@${MAKE} DO_CLEANDEPEND=1 _clean
 	@${MAKE} clean-links
 	@echo "------------------------------------------------"
 	@echo "Clobbering build directories"
