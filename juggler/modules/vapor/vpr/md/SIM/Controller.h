@@ -78,7 +78,10 @@ class VPR_CLASS_API Controller
 {
 public:
    /**
-    * Initializes the socket simulation.
+    * Initializes the socket simulation.  This should only be called when a
+    * thread-specific instance is needed.  Otherwise, use the static
+    * instance() method to get a thread-specific or global instance depending
+    * on what is available.
     *
     * @post An instance of the Sim Socket Manager is retrieved, and the
     *       simulation state is set to not started.
@@ -96,11 +99,22 @@ public:
       /* Do nothing. */ ;
    }
 
+   /**
+    * Set the instance to be returned in this thread to the given object
+    * pointer.  This should be done as the first step by all threads wishing to
+    * have a thread-specific instance of this singleton class.
+    */
    static void setInstance (Controller* c)
    {
       mInstance->setObject(c);
    }
 
+   /**
+    * Returns an instance of this thread-specific singleton class.  If a
+    * thread-specific instance was set by the currently active thread using
+    * setInstance(), that instance is returned.  If no instance is associated
+    * with the current thread, the primordial (global) instance is returned.
+    */
    static Controller* instance (void)
    {
       // WARNING! race condition possibility, creation of static vars
