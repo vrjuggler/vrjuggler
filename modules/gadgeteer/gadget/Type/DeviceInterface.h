@@ -61,7 +61,7 @@ class PositionProxy;
  */
 class GADGET_CLASS_API BaseDeviceInterface
 {
-protected:
+public:
    BaseDeviceInterface(const BaseDeviceInterface& other) {;}
 
 public:
@@ -113,7 +113,7 @@ private:    // Static information
 template<class PROXY_TYPE>
 class DeviceInterface : public BaseDeviceInterface
 {
-protected:
+public:
     DeviceInterface(DeviceInterface& other)
     {
         if(other->mTypeSpecificProxy != NULL)
