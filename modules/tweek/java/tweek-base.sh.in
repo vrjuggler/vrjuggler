@@ -59,12 +59,6 @@ if test ! -x "$JDK_HOME/bin/java" ; then
 # Otherwise, start up Tweek and exit with status 0.
 else
 
-   # Set these to the location where the JDOM and the Java ORB JAR files can
-   # be found.  If using the ORB distributed with the JDK, assign $ORB_JAR a
-   # null string.
-   : ${JDOM_JAR="@JDOM_JAR@"}
-   : ${ORB_JAR="@JAVA_ORB_JAR@"}
-
    # Java classpath separator character.
    JCPS="@JCPS@"
 
@@ -74,9 +68,14 @@ else
 
    # If using an ORB other than that distributed with the JDK, these must be
    # defined appropriately.
-   if test "x$ORB_JAR" != "x" ; then
-      ORBClass_PROP='-Dorg.omg.CORBA.ORBClass=@ORB_CLASS_PROP@'
-      ORBSingletonClass_PROP='-Dorg.omg.CORBA.ORBSingletonClass=@ORB_SINGLETON_CLASS_PROP@'
+   ORB_CLASS_PROP=@ORB_CLASS_PROP@
+   ORB_SINGLETON_CLASS_PROP=@ORB_SINGLETON_CLASS_PROP@
+   
+   if test "x$ORB_CLASS_PROP" != "x"; then
+      ORBClass_PROP="-Dorg.omg.CORBA.ORBClass=$ORB_CLASS_PROP"
+   fi
+   if test "x$ORB_SINGLETON_CLASS_PROP" != "x"; then
+      ORBSingletonClass_PROP="-Dorg.omg.CORBA.ORBSingletonClass=$ORB_SINGLETON_CLASS_PROP"
    fi
 
    $JDK_HOME/bin/java $ORBClass_PROP $ORBSingletonClass_PROP -Djava.security.policy="$TWEEK_BASE_DIR/bin/java.security.policy.txt" -DTWEEK_BASE_DIR="${TWEEK_BASE_DIR}" $EXTRA_JDK_ARGS org.vrjuggler.tweek.Tweek $*
