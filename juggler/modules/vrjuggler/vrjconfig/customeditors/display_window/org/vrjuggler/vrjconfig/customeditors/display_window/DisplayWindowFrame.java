@@ -38,6 +38,8 @@ import javax.swing.*;
 import org.vrjuggler.jccl.config.ConfigBrokerProxy;
 import org.vrjuggler.jccl.config.ConfigDefinition;
 import org.vrjuggler.jccl.config.ConfigElement;
+import org.vrjuggler.jccl.config.event.ConfigElementAdapter;
+import org.vrjuggler.jccl.config.event.ConfigElementEvent;
 
 import org.vrjuggler.vrjconfig.customeditors.display_window.placer.PlacerSelectionEvent;
 import org.vrjuggler.vrjconfig.customeditors.display_window.placer.PlacerSelectionListener;
@@ -86,6 +88,8 @@ public class DisplayWindowFrame
       mElement = elt;
       mResolution = resolution;
       mDesktopSize = desktopSize;
+
+      mElement.addConfigElementListener(new DisplayWindowFrame_this_configElementAdapter(this));
 
       try
       {
@@ -632,7 +636,7 @@ public class DisplayWindowFrame
       mSelectedViewport.setProperty("view", 0, new Integer(RIGHT_EYE));
    }
 
-   void viewporStereoItemSelected(ActionEvent e)
+   void viewportStereoItemSelected(ActionEvent e)
    {
       mSelectedViewport.setProperty("view", 0, new Integer(STEREO));
    }
@@ -705,6 +709,16 @@ public class DisplayWindowFrame
    {
       // XXX: Why do we have to do this?
       e.getInternalFrame().getGlassPane().setVisible(true);
+   }
+
+   void displayNameChanged(ConfigElementEvent e)
+   {
+      this.setTitle(mElement.getName());
+   }
+
+   void displayPropertyChanged(ConfigElementEvent e)
+   {
+      updateContextMenuItems();
    }
 }
 
@@ -891,7 +905,7 @@ class DisplayWindowFrame_mViewportStereoItem_actionAdapter
    }
    public void actionPerformed(ActionEvent e)
    {
-      adaptee.viewporStereoItemSelected(e);
+      adaptee.viewportStereoItemSelected(e);
    }
 }
 
@@ -949,5 +963,23 @@ class DisplayWindowFrame_mViewportPropsItem_actionAdapter implements java.awt.ev
    public void actionPerformed(ActionEvent e)
    {
       adaptee.viewportPropsSelected(e);
+   }
+}
+
+class DisplayWindowFrame_this_configElementAdapter extends ConfigElementAdapter
+{
+   private DisplayWindowFrame adaptee;
+
+   DisplayWindowFrame_this_configElementAdapter(DisplayWindowFrame adaptee)
+   {
+      this.adaptee = adaptee;
+   }
+   public void nameChanged(ConfigElementEvent e)
+   {
+      adaptee.displayNameChanged(e);
+   }
+   public void propertyValueChanged(ConfigElementEvent e)
+   {
+      adaptee.displayPropertyChanged(e);
    }
 }
