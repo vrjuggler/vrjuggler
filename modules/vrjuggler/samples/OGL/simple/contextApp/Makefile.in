@@ -35,7 +35,7 @@
 # This requires GNU make.
 # -----------------------------------------------------------------------------
 
-all: contextApp$(EXT_EXT)
+all: contextApp$(EXE_EXT)
 
 APP_NAME=	contextApp$(EXE_EXT)
 

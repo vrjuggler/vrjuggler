@@ -35,7 +35,7 @@
 # This requires GNU make.
 # -----------------------------------------------------------------------------
 
-all: combo$(EXT_EXT)
+all: combo$(EXE_EXT)
 
 APP_NAME=	combo$(EXE_EXT)
 
