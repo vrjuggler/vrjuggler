@@ -58,8 +58,11 @@ void TweekFrame::helpAbout()
 void TweekFrame::networkConnect()
 {
    orb_box = OrbConnectBox(self, None, True)
-   orb_box.show()
-   if orb_box.result() == QDialog.Accepted:
+   orb_box.hostLineEdit.setText(self.globalPrefs.corbaHost)
+   orb_box.portLineEdit.setText(self.globalPrefs.corbaPort)
+   orb_box.iiopVersionLineEdit.setText(self.globalPrefs.iiopVersion)
+   
+   if orb_box.exec_loop():       
       host = orb_box.hostLineEdit.text()
       port = orb_box.portLineEdit.text()
       iiop_ver = orb_box.iiopVersionLineEdit.text()
@@ -68,6 +71,31 @@ void TweekFrame::networkConnect()
 
 
 void TweekFrame::networkDisconnect()
+{
+
+}
+
+
+void TweekFrame::editGlobalPrefs()
+{
+   edit_box = GlobalPrefsDialog(self, None, True)
+
+   edit_box.userLevelComboBox.setCurrentItem(int(self.globalPrefs.userLevel) - 1)
+   edit_box.nsHostLineEdit.setText(self.globalPrefs.corbaHost)
+   edit_box.nsPortLineEdit.setText(self.globalPrefs.corbaPort)
+   edit_box.iiopVersionLineEdit.setText(self.globalPrefs.iiopVersion)
+
+   if edit_box.exec_loop():
+      self.globalPrefs.userLevel = str(edit_box.userLevelComboBox.currentItem() + 1)
+      self.globalPrefs.viewer    = edit_box.viewerComboBox.currentText()
+      self.globalPrefs.corbaHost = edit_box.nsHostLineEdit.getText()
+      self.globalPrefs.corbaPort = edit_box.nsPortLineEdit.getText()
+      self.globalPrefs.iiopVersion = edit_box.iiopVersionLineEdit.getText()
+      self.globalPrefs.save()
+}
+
+
+void TweekFrame::editModulePrefs()
 {
 
 }

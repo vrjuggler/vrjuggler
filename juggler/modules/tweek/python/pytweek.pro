@@ -5,17 +5,16 @@ unix {
 }
 FORMS	= tweekframe.ui \
 	aboutbox.ui \
-	orbconnectbox.ui
+	orbconnectbox.ui \
+	globalprefsdialog.ui
 IMAGES	= images/filenew \
 	images/fileopen \
 	images/filesave \
-	images/print \
 	images/undo \
 	images/redo \
 	images/editcut \
 	images/editcopy \
 	images/editpaste \
-	images/searchfind \
 	images/tweek-icon.png \
 	images/tweek3d.png
 TEMPLATE	=app
