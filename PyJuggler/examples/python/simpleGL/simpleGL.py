@@ -29,17 +29,22 @@
 
 import sys
 from OpenGL.GL import *
-import PyJuggler
 
-class SimplGlApp(PyJuggler.GlApp):
-   mButton0 = PyJuggler.DigitalInterface()
-   mButton1 = PyJuggler.DigitalInterface()
-   mButton2 = PyJuggler.DigitalInterface()
-   mWand    = PyJuggler.PositionInterface()
-   mHead    = PyJuggler.PositionInterface()
+# XXX: I think it would be better if the modules existed in the PyJuggler
+# namespace, but I don't know how to set that up.
+#from PyJuggler import *
+import gadget
+import vrj
+
+class SimplGlApp(vrj.GlApp):
+   mButton0 = gadget.DigitalInterface()
+   mButton1 = gadget.DigitalInterface()
+   mButton2 = gadget.DigitalInterface()
+   mWand    = gadget.PositionInterface()
+   mHead    = gadget.PositionInterface()
 
    def __init__(self):
-      PyJuggler.GlApp.__init__(self)
+      vrj.GlApp.__init__(self)
 
    def init(self):
       self.mButton0.init("VJButton0")
@@ -52,7 +57,7 @@ class SimplGlApp(PyJuggler.GlApp):
       self.initGLState()
 
    def preFrame(self):
-      if self.mButton0.getData() == PyJuggler.DigitalState.ON:
+      if self.mButton0.getData() == gadget.Digital.State.ON:
          print "Button 0 is pressed!"
 
    def bufferPreDraw(self):
@@ -60,6 +65,7 @@ class SimplGlApp(PyJuggler.GlApp):
       glClear(GL_COLOR_BUFFER_BIT)
 
    def draw(self):
+#      wand_offset = self.mWand.getData()
       glClear(GL_DEPTH_BUFFER_BIT)
       glPushMatrix()
       glTranslatef(0.0, 6.0, 0.0)
@@ -137,7 +143,7 @@ class SimplGlApp(PyJuggler.GlApp):
       glShadeModel(GL_SMOOTH)
 
 app    = SimplGlApp()
-kernel = PyJuggler.Kernel.instance()
+kernel = vrj.Kernel.instance()
 
 for arg in sys.argv[1:]:
    kernel.loadConfigFile(arg)
