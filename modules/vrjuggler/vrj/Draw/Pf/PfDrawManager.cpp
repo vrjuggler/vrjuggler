@@ -1263,7 +1263,7 @@ void PfPipeSwapFunc(pfPipe *p, pfPipeWindow *pw)
 
     // Barrier for Cluster
     //vprDEBUG(vprDBG_ALL,1) <<  "BARRIER: Going to sleep for: " << num << std::endl << vprDEBUG_FLUSH;
-    gadget::InputManager::instance()->getRemoteInputManager()->createBarrier();
+//    gadget::InputManager::instance()->getRemoteInputManager()->createBarrier();
     //vprDEBUG(vprDBG_ALL,1) <<  "BARRIER: IS DONE" << std::endl << vprDEBUG_FLUSH;
 
     pw->swapBuffers();
