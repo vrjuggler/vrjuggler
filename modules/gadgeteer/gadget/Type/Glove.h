@@ -125,11 +125,11 @@ public:
    virtual vpr::ReturnStatus readObject(vpr::ObjectReader* reader);
  
    /** Utility function to generate GloveData from DigitalData */
-   std::vector<GloveData> getGloveDataFromDigitalData(const std::vector<DigitalData> &digitalData);
+   std::vector<GloveData> getGloveDataFromDigitalData(const std::vector<DigitalData>& digitalData);
 
 protected:
-   Glove(const gadget::Glove& g):vpr::SerializableObject(){;}
-   void operator=(const gadget::Glove& g){;}
+   Glove(const gadget::Glove& g) : vpr::SerializableObject(g) {;}
+   void operator=(const gadget::Glove&) {;}
 
    SampleBuffer_t  mGloveSamples;   /**< Glove samples */
    GloveData       mDefaultValue;   /**< Default glove data to return */

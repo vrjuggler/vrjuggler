@@ -82,9 +82,10 @@ public:
    virtual ~AbstractNetworkManager();
 
 private:
-   AbstractNetworkManager(const AbstractNetworkManager& anm) : jccl::ConfigElementHandler()
+   AbstractNetworkManager(const AbstractNetworkManager& anm)
+      : jccl::ConfigElementHandler(anm)
    {;}
-   void operator=(const AbstractNetworkManager& anm)
+   void operator=(const AbstractNetworkManager&)
    {;}
 public:
 

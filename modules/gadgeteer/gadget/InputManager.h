@@ -85,7 +85,7 @@ protected:
       /* Do nothing. */ ;
    }
 
-   void operator=(const gadget::InputManager& k)
+   void operator=(const gadget::InputManager&)
    {
       /* Do nothing. */ ;
    }

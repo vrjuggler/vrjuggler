@@ -50,9 +50,9 @@ private:
    /**
     * Hide copy constructor and assignment operator.
     */
-   Connector( const Connector& c )
+   Connector(const Connector&)
    {;}
-   void operator=( const Connector& c )
+   void operator=(const Connector&)
    {;}
 public:
    Connector()

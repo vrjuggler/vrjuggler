@@ -151,8 +151,11 @@ protected:
    void setMax(float mAx);
 
    // gadget::SampleBuffer<T> is not copyable, so neither are we.
-   Analog(const gadget::Analog& d) : vpr::SerializableObject() {;}
-   void operator=(const gadget::Analog& d) {;}
+   Analog(const gadget::Analog& d)
+      : vpr::SerializableObject(d)
+   {;}
+
+   void operator=(const gadget::Analog&) {;}
 
 private:
    float mMin, mMax;
