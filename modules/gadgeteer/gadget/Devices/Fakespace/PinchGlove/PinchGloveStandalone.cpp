@@ -82,7 +82,7 @@ vpr::ReturnStatus PinchGloveStandalone::connectToHardware()
    else
    {
       std::cout<<"[PinchGloveStandalone] Port ("<< mPortName <<") open success\n"<<std::flush;
-      mPort->setBufferSize(1);
+      mPort->setMinInputSize(1);
       mPort->setOutputBaudRate(mBaudRate); // Put me before input to be safe
       mPort->setInputBaudRate(mBaudRate);
       mPort->setCharacterSize(vpr::SerialTypes::CS_BITS_8);
