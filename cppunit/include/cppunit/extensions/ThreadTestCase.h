@@ -12,7 +12,7 @@
 
 namespace CppUnit {
 
-class ThreadTestCase : public TestCase 
+class ThreadTestCase : public TestCase
 {
 protected:
    struct assertData
@@ -35,11 +35,11 @@ public:
       /* Do nothing. */ ;
    }
 
-   virtual ~ThreadTestCase () 
+   virtual ~ThreadTestCase ()
    {
       /* Do nothing. */ ;
    }
-   
+
    void assertThreadImplementation (bool condition,
                                     std::string conditionExpression,
                                     CppUnit::SourceLine sourceLine)
@@ -53,16 +53,16 @@ public:
          info.source_line = sourceLine;
          mAssertions.push_back(info);
       }
-   
+
    }
 
 
    // Reset the assertion info
    void threadAssertReset()
-   {   
+   {
    vpr::Guard<vpr::Mutex> assert_guard(mAssertionMutex);
 
-      mAssertions.clear();      // Clear the assertions    
+      mAssertions.clear();      // Clear the assertions
    }
 
    // Check the assertions and throw them if need be
@@ -73,8 +73,8 @@ public:
       for(unsigned i=0;i<mAssertions.size();i++)
       {
          assertData info = mAssertions[i];
-         CppUnit::Asserter::failIf(false, info.cond_exp, info.source_line);
-      }    
+         CppUnit::Asserter::failIf(true, info.cond_exp, info.source_line);
+      }
    }
 
 
