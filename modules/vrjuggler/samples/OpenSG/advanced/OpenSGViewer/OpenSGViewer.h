@@ -96,7 +96,7 @@ public:
     virtual void initScene();
 
     /** Return the scene root for this application */
-    virtual OSG::NodePtr getSceneRoot()
+    virtual OSG::NodePtr getScene()
     { return mSceneRoot; }
 
     /** Return the root of the firtual world */

@@ -79,7 +79,7 @@ public:
    virtual void initScene();
 
    /** Returns the scene root for this application. */
-   virtual OSG::NodePtr getSceneRoot()
+   virtual OSG::NodePtr getScene()
    {  return mRootNode; }
 
    void initRenderer();
