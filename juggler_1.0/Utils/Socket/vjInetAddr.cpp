@@ -32,14 +32,18 @@
 
 #include <stdio.h>
 
-#if defined __WIN32__ || defined WIN32 || defined _Windows || defined _WIN32
-typedef unsigned int u_int32_t;
-#else
+#if ! defined(__WIN32__) && ! defined(WIN32) && ! defined(_Windows) && \
+    ! defined(_WIN32)
 #include <sys/types.h>
 #include <sys/socket.h>
 #endif
 
 #include <Utils/Socket/vjInetAddr.h>
+
+// _WINSOCKAPI_ is defined in winsock2.h which is included by vjInetAdr.h.
+#if (defined(__sun__) && ! defined(u_int32_t)) || defined(_WINSOCKAPI_)
+typedef unsigned int u_int32_t;
+#endif
 
 
 // ----------------------------------------------------------------------------
