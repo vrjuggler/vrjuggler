@@ -189,6 +189,20 @@ Getting the Source Code and the Dependencies
    2.3, required for the Tweek C++ API.
 
 
+ The following are fully optional packages that are primarily of interest
+ only to people doing development on the Juggler Suite itself:
+
+
+*  JUnit (http://www.junit.org/): A unit testing framework for Java.
+
+*  CppUnit (http://cppunit.sourceforge.net/): A unit testing framework for
+   C++. The Juggler C++ test suties make use of extensions to CppUnit. An
+   extended version of the CppUnit source that includes these extensions can
+   be acquired from the Juggler CVS repository in the module cppunit. Refer
+   to the section called "How to Get the Juggler Suite from CVS"
+   for instructions about accessing the Juggler CVS repository.
+
+
  The third-party dependencies must be downloaded from the sites listed above
  and installed manually. You may also have to compile one or more of the
  packages if binary distributions are not available. Which packages you
@@ -544,5 +558,4 @@ Note
 
   --with-cxx-orb-bin=<OMNIORB_PATH>/bin/i586_linux_2.0_glibc --with-cxx-orb-
   lib=<OMNIORB_PATH>/lib/i586_linux_2.0_glibc
-
 
