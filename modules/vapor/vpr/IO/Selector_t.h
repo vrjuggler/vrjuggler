@@ -174,6 +174,7 @@ public:
     *         greater than 0.<br>
     *         <code>vpr::ReturnStatus::Fail</code> is returned if the select
     *         failed.
+    * @note Socket should always be readable if it is not connected.
     */
    const ReturnStatus select(vpr::Uint16& numWithEvents,
                  const vpr::Interval& timeout = vpr::Interval::NoTimeout)
