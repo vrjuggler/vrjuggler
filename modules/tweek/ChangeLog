@@ -1,5 +1,7 @@
 DATE       AUTHOR      CHANGE
 ---------- ----------- --------------------------------------------------------
+2005-03-06 patrickh    Removed the Tweek WizardBuilder Bean from the mix.
+                       NEW VERSION 0.92.5
 2005-02-11 patrickh    Added the capability for Beans to notify the Tweek Java
                        GUI about undo/redo operations and cut/copy/paste
                        operations that they perform themselves.
