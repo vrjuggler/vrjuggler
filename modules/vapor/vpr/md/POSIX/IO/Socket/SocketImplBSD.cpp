@@ -142,6 +142,13 @@ SocketImplBSD::open () {
 
         m_handle->m_fdesc = sock;
         m_open = true;
+
+        // Since socket(2) cannot open a socket in non-blocking mode, we call
+        // enableNonBlocking() now if the socket is to be opened in
+        // non-blocking mode.
+        if ( ! m_open_blocking ) {
+            retval = enableNonBlocking();
+        }
     }
 
     return retval;
@@ -245,13 +252,19 @@ SocketImplBSD::connect (vpr::Interval timeout) {
     // If connect(2) failed, print an error message explaining why and return
     // error status.
     if ( status == -1 ) {
-        if ( errno == EINPROGRESS ) {
-            retval.setCode(Status::InProgress);
+        // If this is a non-blocking connection, return vpr::Status::InProgress
+        // to indicate that the connection will complete later.  I'm not sure
+        // if it's safe to set m_connected and m_blocking_fixed at this
+        // point, but they have to be set sometime.
+        if ( errno == EINPROGRESS && ! m_blocking ) {
+            retval.setCode(vpr::Status::InProgress);
+            m_connected      = true;
+            m_blocking_fixed = true;
         }
         else {
             fprintf(stderr, "[vpr::SocketImplBSD] Error connecting to %s: %s\n",
                     m_remote_addr.getAddressString().c_str(), strerror(errno));
-            retval.setCode(Status::Failure);
+            retval.setCode(vpr::Status::Failure);
         }
     }
     // Otherwise, return success.
