@@ -114,9 +114,10 @@ endif
 # Version information.
 BRANCH		= HEAD
 CANON_NAME	= Kenny
-VER_ARGS	= -f $(VJROOT_ABS)/VERSION -b $(BRANCH)			\
-                  -i $(VJROOT_ABS)/vrj/vrjParam.h.in -o vrj/vrjParam.h	\
-                  -d "`date '+%b %e, %Y %H:%M:%S'`" -n "$(CANON_NAME)"
+VER_ARGS	= -f $(VJROOT_ABS)/VERSION -s @VPR_SUBSYSTEM@		\
+                  -b $(BRANCH) -n "$(CANON_NAME)" -o vrj/vrjParam.h	\
+                  -i $(VJROOT_ABS)/vrj/vrjParam.h.in			\
+                  -d "`date '+%b %e, %Y %H:%M:%S'`"
 
 ifdef VERSION
     VER_ARGS	+= -v $(VERSION)
