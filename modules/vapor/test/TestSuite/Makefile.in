@@ -32,10 +32,12 @@ INCLUDES	= @INCLUDES@ -I$(topdir) -I$(VPR_BASE_DIR)/include	\
 OPTIMIZER	= @DBG_FLAGS@
 INSTALL		= @INSTALL@
 LD		= @LD@
-LDFLAGS		= @LDFLAGS@ -L/usr/lib$(LIBBITSUF) -L/usr/lib		\
+LDFLAGS		= @LDFLAGS@ -L/usr/lib$(LIBBITSUF) 		\
                   -L$(VPR_BASE_DIR)/lib$(LIBBITSUF)
 LIBBITSUF	= @LIBBITSUF@
+
 LIBS		= @LIBS@ $(VPR_LIBS)
+
 OBJEXT		= @OBJEXT@
 OBJ_NAME_FLAG	= @OBJ_NAME_FLAG@
 OS_TYPE		= @OS_TYPE@
@@ -43,7 +45,7 @@ LINK		= $(CXX) $(CPPFLAGS) $(CXXFLAGS) @EXTRA_LINK_FLAGS@	\
                   $(EXTRA_FLAGS)
 
 VPR_LIBS	= @APP_VPR_LIBS_BEGIN@ @APP_VPR_LIBS_BASIC@ @APP_VPR_LIBS_END@ @APP_LIBS_BASIC@
-EXTRA_LIBS	= @APP_EXTRA_LIBS_BEGIN@ @APP_EXTRA_LIBS_BASIC@ @APP_EXTRA_LIBS_END@
+EXTRA_LIBS	= @APP_EXTRA_LIBS_BEGIN@ @APP_EXTRA_LIBS_BASIC@ @APP_EXTRA_LIBS_END@ -lm
 
 # -----------------------------------------------------------------------------
 # Compiler command lines.
@@ -59,6 +61,7 @@ CPPUNIT_SRCS = TestCase.cpp \
                TestResult.cpp \
                TestFailure.cpp \
                TestSuite.cpp
+
 RUNNER_SRCS = main.cpp
 SRCS	:= $(TEST_SRCS) $(CPPUNIT_TEXTUI_SRCS) $(CPPUNIT_SRCS) $(RUNNER_SRCS)
 
