@@ -48,7 +48,7 @@ top_srcdir=	@top_srcdir@
 
 # Extra compiler and linker options needed only by this file.
 DBG_FLAGS=	-D_DEBUG @DBG_FLAGS@
-OPT_FLAGS=	-D_OPT @OPT_FLAGS@
+OPT_FLAGS=	-D_OPT -DNDEBUG @OPT_FLAGS@
 
 HAVE_TWEEK_CXX=	@HAVE_TWEEK_CXX@
 

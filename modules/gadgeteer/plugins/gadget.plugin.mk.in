@@ -128,7 +128,7 @@ else
    BUILD_TYPE_EXT=	
    DEBUG_APP=		FALSE
    OPTIM_APP=		TRUE
-   EXTRA_DEFS+=		-D_OPT
+   EXTRA_DEFS+=		-D_OPT -DNDEBUG
 endif
 
 DSO_PLUGIN_DEPS=	$(shell gadgeteer-config --libs)		\
