@@ -60,18 +60,21 @@ namespace vpr {
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
 Status
-SocketDatagramImplNSPR::recvfrom (void* msg, const size_t length,
+SocketDatagramImplNSPR::recvfrom (void* msg, const vpr::Uint32 length,
                                   const int flags, InetAddr& from,
-                                  ssize_t& bytes_read,
+                                  vpr::Uint32& bytes_read,
                                   const vpr::Interval timeout)
 {
     Status retval;
+    PRInt32 bytes;
 
-    bytes_read = PR_RecvFrom(m_handle, msg, length, flags, from.getPRNetAddr(),
-                             NSPR_getInterval(timeout) );
+    bytes = PR_RecvFrom(m_handle, msg, length, flags, from.getPRNetAddr(),
+                        NSPR_getInterval(timeout));
 
-    if ( bytes_read == -1 ) {
+    if ( bytes == -1 ) {
         PRErrorCode err_code = PR_GetError();
+
+        bytes_read = 0;
 
         if ( err_code == PR_WOULD_BLOCK_ERROR ) {
             retval.setCode(vpr::Status::WouldBlock);
@@ -84,6 +87,9 @@ SocketDatagramImplNSPR::recvfrom (void* msg, const size_t length,
             retval.setCode(Status::Failure);
         }
     }
+    else {
+        bytes_read = bytes;
+    }
 
     return retval;
 }
@@ -91,18 +97,21 @@ SocketDatagramImplNSPR::recvfrom (void* msg, const size_t length,
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
 Status
-SocketDatagramImplNSPR::sendto (const void* msg, const size_t length,
+SocketDatagramImplNSPR::sendto (const void* msg, const vpr::Uint32 length,
                                 const int flags, const InetAddr& to,
-                                ssize_t& bytes_sent,
+                                vpr::Uint32& bytes_sent,
                                 const vpr::Interval timeout)
 {
     Status retval;
+    PRInt32 bytes;
 
-    bytes_sent = PR_SendTo(m_handle, msg, length, flags, to.getPRNetAddr(),
-                           NSPR_getInterval(timeout));
+    bytes = PR_SendTo(m_handle, msg, length, flags, to.getPRNetAddr(),
+                      NSPR_getInterval(timeout));
 
     if ( bytes_sent == -1 ) {
         PRErrorCode err_code = PR_GetError();
+
+        bytes_sent = 0;
 
         if ( err_code == PR_WOULD_BLOCK_ERROR ) {
             retval.setCode(vpr::Status::WouldBlock);
@@ -114,6 +123,9 @@ SocketDatagramImplNSPR::sendto (const void* msg, const size_t length,
             NSPR_PrintError("SocketDatagramImplNSPR::sendto: Could not send message");
             retval.setCode(Status::Failure);
         }
+    }
+    else {
+        bytes_sent = bytes;
     }
 
     return retval;

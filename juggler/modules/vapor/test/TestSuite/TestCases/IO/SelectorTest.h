@@ -98,7 +98,7 @@ public:
       vpr::Selector selector;
       //vpr::SocketStream* sock(NULL);
       Status ret_val;
-      ssize_t bytes_written;
+      vpr::Uint32 bytes_written;
       vpr::Uint16 num_events = 0;
 
       // make lots of acceptors, set their addresses, and open them... saving each handle in a std::map
@@ -182,7 +182,7 @@ public:
       Status ret_val;
       vpr::InetAddr remote_addr;
       vpr::SocketConnector connector;           // Connect to acceptor
-      ssize_t bytes_read;
+      vpr::Uint32 bytes_read;
 
       // WAIT for READY
       mCondVar.acquire();
@@ -343,7 +343,7 @@ public:
                num_found += 1;
 
                std::string data;
-               int bytes_read;
+               vpr::Uint32 bytes_read;
                ret_val = socks[s_idx].read(data, mMessageLen, bytes_read);
                assertTestThread(ret_val.success() && "Problems reading data");
                assertTestThread((bytes_read == mMessageLen) && "Data recieved is of wrong length");
@@ -377,7 +377,7 @@ public:
    {
       unsigned i,j;
       Status ret_val;
-      ssize_t bytes_written;
+      vpr::Uint32 bytes_written;
       vpr::InetAddr remote_addr;
       vpr::SocketConnector connector;           // Connect to acceptor
       std::vector<vpr::SocketStream> sockets(mNumRendevousPorts);       // Initialize with the number of sockets needed

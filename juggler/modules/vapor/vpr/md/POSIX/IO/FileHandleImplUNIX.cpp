@@ -376,18 +376,23 @@ FileHandleImplUNIX::enableAsynchronousWrite () {
 // bufer.
 // ----------------------------------------------------------------------------
 Status
-FileHandleImplUNIX::read_i (void* buffer, const size_t length,
-                            ssize_t& bytes_read, const vpr::Interval timeout)
+FileHandleImplUNIX::read_i (void* buffer, const vpr::Uint32 length,
+                            vpr::Uint32& bytes_read,
+        		    const vpr::Interval timeout)
 {
     Status status;
 
     status = isReadable(timeout);
 
     if ( status.success() ) {
-        bytes_read = ::read(m_fdesc, buffer, length);
+        ssize_t bytes;
+
+        bytes = ::read(m_fdesc, buffer, length);
 
         // Something went wrong while attempting to read from the file.
-        if ( bytes_read < 0 ) {
+        if ( bytes < 0 ) {
+            bytes_read = 0;
+
             if ( errno == EAGAIN && ! m_blocking ) {
                 status.setCode(vpr::Status::WouldBlock);
             }
@@ -403,11 +408,15 @@ FileHandleImplUNIX::read_i (void* buffer, const size_t length,
         }
         // If 0 bytes were read or an error was returned, we print an error
         // message.
-        else if ( bytes_read == 0 && errno != 0 ) {
+        else if ( bytes == 0 && errno != 0 ) {
+            bytes_read = 0;
 //        errno != ENOENT
             vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
                 << "[vpr::FileHandleImplUNIX] Nothing read from " << m_name
                 << ": " << strerror(errno) << std::endl << vprDEBUG_FLUSH;
+        }
+        else {
+            bytes_read = bytes;
         }
     }
 
@@ -420,10 +429,12 @@ FileHandleImplUNIX::read_i (void* buffer, const size_t length,
 // _Effective TCP/IP Programming_ by Jon D. Snader.
 // ----------------------------------------------------------------------------
 Status
-FileHandleImplUNIX::readn_i (void* buffer, const size_t length,
-                             ssize_t& bytes_read, const vpr::Interval timeout)
+FileHandleImplUNIX::readn_i (void* buffer, const vpr::Uint32 length,
+                             vpr::Uint32& bytes_read,
+                             const vpr::Interval timeout)
 {
     size_t count;
+    ssize_t bytes;
     Status status;
 
     if(vpr::Interval::NoTimeout != timeout)
@@ -432,10 +443,10 @@ FileHandleImplUNIX::readn_i (void* buffer, const size_t length,
     count = length;
 
     while ( count > 0 ) {
-        bytes_read = ::read(m_fdesc, buffer, length);
+        bytes = ::read(m_fdesc, buffer, length);
 
         // Read error.
-        if ( bytes_read < 0 ) {
+        if ( bytes < 0 ) {
             // Restart the read process if we were interrupted by the OS.
             if ( errno == EINTR ) {
                 continue;
@@ -447,14 +458,16 @@ FileHandleImplUNIX::readn_i (void* buffer, const size_t length,
             }
         }
         // May have read EOF, so return bytes read so far.
-        else if ( bytes_read == 0 ) {
-            bytes_read = length - count;
+        else if ( bytes == 0 ) {
+            bytes = length - count;
         }
         else {
-            buffer = (void*) ((char*) buffer + bytes_read);
-            count  -= bytes_read;
+            buffer = (void*) ((char*) buffer + bytes);
+            count  -= bytes;
         }
     }
+
+    bytes_read = bytes;
 
     return status;
 }
@@ -463,8 +476,8 @@ FileHandleImplUNIX::readn_i (void* buffer, const size_t length,
 // Write the buffer to the file handle.
 // ----------------------------------------------------------------------------
 Status
-FileHandleImplUNIX::write_i (const void* buffer, const size_t length,
-                             ssize_t& bytes_written,
+FileHandleImplUNIX::write_i (const void* buffer, const vpr::Uint32 length,
+                             vpr::Uint32& bytes_written,
                              const vpr::Interval timeout)
 {
     Status status;
@@ -472,9 +485,13 @@ FileHandleImplUNIX::write_i (const void* buffer, const size_t length,
     status = isWriteable(timeout);
 
     if ( status.success() ) {
-        bytes_written = ::write(m_fdesc, buffer, length);
+        ssize_t bytes;
 
-        if ( bytes_written <= 0 ) {
+        bytes = ::write(m_fdesc, buffer, length);
+
+        if ( bytes <= 0 ) {
+            bytes_written = 0;
+
             if ( errno == EAGAIN && ! m_blocking ) {
                 status.setCode(vpr::Status::WouldBlock);
             }
@@ -484,6 +501,9 @@ FileHandleImplUNIX::write_i (const void* buffer, const size_t length,
                     << ": " << strerror(errno) << std::endl << vprDEBUG_FLUSH;
                 status.setCode(Status::Failure);
             }
+        }
+        else {
+            bytes_written = bytes;
         }
     }
 

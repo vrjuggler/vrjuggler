@@ -236,7 +236,7 @@ public:
      *         could not begin within the timeout interval.
      */
     Status
-    read (void* buffer, const size_t length, ssize_t& bytes_read,
+    read (void* buffer, const vpr::Uint32 length, vpr::Uint32& bytes_read,
           const vpr::Interval timeout = vpr::Interval::NoTimeout)
     {
         return this->read_s(buffer, length, bytes_read, timeout);
@@ -271,7 +271,8 @@ public:
      *         could not begin within the timeout interval.
      */
     Status
-    read (std::string& buffer, const size_t length, ssize_t& bytes_read,
+    read (std::string& buffer, const vpr::Uint32 length,
+          vpr::Uint32& bytes_read,
           const vpr::Interval timeout = vpr::Interval::NoTimeout)
     {
        Status status;
@@ -314,8 +315,8 @@ public:
      *         could not begin within the timeout interval.
      */
     Status
-    read (std::vector<vpr::Uint8>& buffer, const size_t length,
-          ssize_t& bytes_read,
+    read (std::vector<vpr::Uint8>& buffer, const vpr::Uint32 length,
+          vpr::Uint32& bytes_read,
           const vpr::Interval timeout = vpr::Interval::NoTimeout)
     {
        Status status;
@@ -362,7 +363,7 @@ public:
      *         operation failed.
      */
     Status
-    readn (void* buffer, const size_t length, ssize_t& bytes_read,
+    readn (void* buffer, const vpr::Uint32 length, vpr::Uint32& bytes_read,
            const vpr::Interval timeout = vpr::Interval::NoTimeout)
     {
         return this->readn_s(buffer, length, bytes_read, timeout);
@@ -394,7 +395,8 @@ public:
      *         device is in non-blocking mode, and there is no data to read.
      */
     Status
-    readn (std::string& buffer, const size_t length, ssize_t& bytes_read,
+    readn (std::string& buffer, const vpr::Uint32 length,
+           vpr::Uint32& bytes_read,
            const vpr::Interval timeout = vpr::Interval::NoTimeout)
     {
        Status status;
@@ -442,8 +444,8 @@ public:
      *         could not begin within the timeout interval.
      */
     Status
-    readn (std::vector<vpr::Uint8>& buffer, const size_t length,
-           ssize_t& bytes_read,
+    readn (std::vector<vpr::Uint8>& buffer, const vpr::Uint32 length,
+           vpr::Uint32& bytes_read,
            const vpr::Interval timeout = vpr::Interval::NoTimeout)
     {
         Status status;
@@ -489,7 +491,8 @@ public:
      *         could not begin within the timeout interval.
      */
     Status
-    write (const void* buffer, const size_t length, ssize_t& bytes_written,
+    write (const void* buffer, const vpr::Uint32 length,
+           vpr::Uint32& bytes_written,
            const vpr::Interval timeout = vpr::Interval::NoTimeout)
     {
         return this->write_s(buffer, length, bytes_written,timeout);
@@ -523,8 +526,8 @@ public:
      *         could not begin within the timeout interval.
      */
     Status
-    write (const std::string& buffer, const size_t length,
-           ssize_t& bytes_written,
+    write (const std::string& buffer, const vpr::Uint32 length,
+           vpr::Uint32& bytes_written,
            const vpr::Interval timeout = vpr::Interval::NoTimeout)
     {
        vprASSERT( length <= buffer.size() && "length was bigger than the data given" );
@@ -559,8 +562,8 @@ public:
      *         could not begin within the timeout interval.
      */
     Status
-    write (const std::vector<vpr::Uint8>& buffer, const size_t length,
-           ssize_t& bytes_written,
+    write (const std::vector<vpr::Uint8>& buffer, const vpr::Uint32 length,
+           vpr::Uint32& bytes_written,
            const vpr::Interval timeout = vpr::Interval::NoTimeout)
     {
         vprASSERT( length <= buffer.size() && "length was bigger than the data given" );
@@ -663,8 +666,8 @@ protected:
     /**
      * read strategy
      */
-    virtual Status read_s(void* buffer, const size_t length,
-                          ssize_t& bytes_read,
+    virtual Status read_s(void* buffer, const vpr::Uint32 length,
+                          vpr::Uint32& bytes_read,
                           const vpr::Interval timeout = vpr::Interval::NoTimeout)
     {
        Status status;
@@ -680,8 +683,8 @@ protected:
     /**
      * read strategy
      */
-    virtual Status readn_s(void* buffer, const size_t length,
-                           ssize_t& bytes_read,
+    virtual Status readn_s(void* buffer, const vpr::Uint32 length,
+                           vpr::Uint32& bytes_read,
                            const vpr::Interval timeout = vpr::Interval::NoTimeout)
     {
        Status status;
@@ -697,8 +700,8 @@ protected:
     /**
      * write strategy
      */
-    virtual Status write_s(const void* buffer, const size_t length,
-                           ssize_t& bytes_written,
+    virtual Status write_s(const void* buffer, const vpr::Uint32 length,
+                           vpr::Uint32& bytes_written,
                            const vpr::Interval timeout = vpr::Interval::NoTimeout)
     {
        Status status;
@@ -739,8 +742,8 @@ protected:
      *         within the timeout interval.<br>
      *         vpr::Status::Failure is returned if the read operation failed.
      */
-    virtual Status read_i(void* buffer, const size_t length,
-                          ssize_t& bytes_read,
+    virtual Status read_i(void* buffer, const vpr::Uint32 length,
+                          vpr::Uint32& bytes_read,
                           const vpr::Interval timeout = vpr::Interval::NoTimeout) = 0;
 
     /**
@@ -772,8 +775,8 @@ protected:
      *         vpr::Status::Timeout is returned if the read
      *         could not begin within the timeoBaseIOStatsStrategyut interval.
      */
-    virtual Status readn_i(void* buffer, const size_t length,
-                           ssize_t& bytes_read,
+    virtual Status readn_i(void* buffer, const vpr::Uint32 length,
+                           vpr::Uint32& bytes_read,
                            const vpr::Interval timeout = vpr::Interval::NoTimeout) = 0;
 
     /**
@@ -801,8 +804,8 @@ protected:
      *         within the timeout interval.<br>
      *         vpr::Status::Failure is returned if the write operation failed.
      */
-    virtual Status write_i(const void* buffer, const size_t length,
-                           ssize_t& bytes_written,
+    virtual Status write_i(const void* buffer, const vpr::Uint32 length,
+                           vpr::Uint32& bytes_written,
                            const vpr::Interval timeout = vpr::Interval::NoTimeout) = 0;
 
    // Friends

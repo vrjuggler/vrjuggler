@@ -387,7 +387,7 @@ protected:
     //+                                    and there is no data to read.
     // ------------------------------------------------------------------------
     virtual Status
-    read_i (void* buffer, const size_t length, ssize_t& bytes_read,
+    read_i (void* buffer, const vpr::Uint32 length, vpr::Uint32& bytes_read,
             const vpr::Interval timeout = vpr::Interval::NoTimeout)
     {
         return m_handle_impl.read_i(buffer, length, bytes_read, timeout);
@@ -418,7 +418,7 @@ protected:
     //! RETURNS: vpr::Status::Failure - The read operation failed.
     // ------------------------------------------------------------------------
     virtual Status
-    readn_i (void* buffer, const size_t length, ssize_t& bytes_read,
+    readn_i (void* buffer, const vpr::Uint32 length, vpr::Uint32& bytes_read,
              const vpr::Interval timeout = vpr::Interval::NoTimeout)
     {
         return m_handle_impl.readn_i(buffer, length, bytes_read, timeout);
@@ -449,7 +449,8 @@ protected:
     //+                                    be completed.
     // ------------------------------------------------------------------------
     virtual Status
-    write_i (const void* buffer, const size_t length, ssize_t& bytes_written,
+    write_i (const void* buffer, const vpr::Uint32 length,
+             vpr::Uint32& bytes_written,
              const vpr::Interval timeout = vpr::Interval::NoTimeout)
     {
         return m_handle_impl.write_i(buffer, length, bytes_written, timeout);

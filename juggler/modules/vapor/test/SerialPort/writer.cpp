@@ -49,7 +49,7 @@ main (int argc, char* argv[]) {
 
     if ( write_port->open().success() ) {
         char* buffer = "This is a test...\n";
-        ssize_t bytes;
+        vpr::Uint32 bytes;
 
         std::cout << "Port opened\n";
         write_port->setUpdateAction(vpr::SerialTypes::NOW);

@@ -58,9 +58,10 @@ namespace vpr {
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
 Status
-SocketDatagramImplBSD::recvfrom (void* msg, const size_t length,
+SocketDatagramImplBSD::recvfrom (void* msg, const vpr::Uint32 length,
                                  const int flags, InetAddr& from,
-                                 ssize_t& bytes_read, const vpr::Interval timeout)
+                                 vpr::Uint32& bytes_read,
+                                 const vpr::Interval timeout)
 {
     socklen_t fromlen;
     Status retval;
@@ -68,13 +69,17 @@ SocketDatagramImplBSD::recvfrom (void* msg, const size_t length,
     retval = m_handle->isReadable(timeout);
 
     if ( retval.success() ) {
+        ssize_t bytes;
+
         m_blocking_fixed = true;
 
         fromlen    = from.size();
-        bytes_read = ::recvfrom(m_handle->m_fdesc, msg, length, flags,
-                                (struct sockaddr*) &from.m_addr, &fromlen);
+        bytes = ::recvfrom(m_handle->m_fdesc, msg, length, flags,
+                           (struct sockaddr*) &from.m_addr, &fromlen);
 
         if ( bytes_read == -1 ) {
+            bytes_read = 0;
+
             if ( errno == EAGAIN && getNonBlocking() ) {
                 retval.setCode(Status::WouldBlock);
             }
@@ -86,6 +91,9 @@ SocketDatagramImplBSD::recvfrom (void* msg, const size_t length,
                 retval.setCode(Status::Failure);
             }
         }
+        else {
+            bytes_read = bytes;
+        }
     }
 
     return retval;
@@ -94,21 +102,26 @@ SocketDatagramImplBSD::recvfrom (void* msg, const size_t length,
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
 Status
-SocketDatagramImplBSD::sendto (const void* msg, const size_t length,
+SocketDatagramImplBSD::sendto (const void* msg, const vpr::Uint32 length,
                                const int flags, const InetAddr& to,
-                               ssize_t& bytes_sent, const vpr::Interval timeout)
+                               vpr::Uint32& bytes_sent,
+                               const vpr::Interval timeout)
 {
     Status retval;
 
     retval = m_handle->isWriteable(timeout);
 
     if ( retval.success() ) {
+        ssize_t bytes;
+
         m_blocking_fixed = true;
 
-        bytes_sent = ::sendto(m_handle->m_fdesc, msg, length, flags,
-                              (struct sockaddr*) &to.m_addr, to.size());
+        bytes = ::sendto(m_handle->m_fdesc, msg, length, flags,
+                         (struct sockaddr*) &to.m_addr, to.size());
 
-        if ( bytes_sent == -1 ) {
+        if ( bytes == -1 ) {
+            bytes_sent = 0;
+
             if ( errno == EAGAIN && getNonBlocking() ) {
                 retval.setCode(Status::WouldBlock);
             }
@@ -120,6 +133,9 @@ SocketDatagramImplBSD::sendto (const void* msg, const size_t length,
                         m_remote_addr.getPort(), strerror(errno));
                 retval.setCode(Status::Failure);
             }
+        }
+        else {
+            bytes_sent = bytes;
         }
     }
 
