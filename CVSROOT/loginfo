@@ -17,4 +17,9 @@
 #
 # For example:
 #DEFAULT		(echo ""; who am i; echo %s; date; cat) >> $CVSROOT/CVSROOT/commitlog
+
+# The following line is experiemental
+# The problem seems to be that pserver is run as root
+# and root does not have a path set on the machine
+# NOTE: BIG security hole lives here as well.  We should find a way to fix.
 ALL	/usr/sbin/Mail -s "[CVS Log: JugglerRepos] %s" allenb@vrac.iastate.edu
