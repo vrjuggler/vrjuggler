@@ -189,7 +189,8 @@ CyberGloveBasic::vt_serial_open(char *devname, int baudrate)
   /* The following state sets a read timeout of 0.10 secs */
 
   temp_termio = termiotemplate;
-  temp_termio.c_cflag |= baud_from_int(baudrate);
+  cfsetospeed(&temp_termio, baud_from_int(baudrate));
+  cfsetispeed(&temp_termio, baud_from_int(baudrate));
   temp_termio.c_cc[VMIN] = 0;	/* incoming char buffer size */
   temp_termio.c_cc[VTIME] = 1;	/* timeout (in tenths of a second) */
 

@@ -31,26 +31,6 @@
  * -----------------------------------------------------------------
  */
 
-
-
-/*
-    struct termio {
-	tcflag_t    c_iflag;     // input modes
-	tcflag_t    c_oflag;     // output modes
-	tcflag_t    c_cflag;     // control modes
-	tcflag_t    c_lflag;     // local modes
-	speed_t     c_ospeed;    // output speed
-	speed_t     c_ispeed;    // input speed; not supported
-	char        c_line;      // line discipline
-	cc_t        c_cc[NCCS];  // control chars
-    }
-*/
-
-
-// look into this, it may be a KLUDGE!!!
-// it allows this driver to work under 6.5 (6.2 worked fine)
-#define _OLD_TERMIOS
-
 #include <iostream.h>      // for cout
 #include <fstream.h>       // for ifstream
 #include <string.h>
@@ -604,12 +584,6 @@ int aFlock::open_port( const char* const serialPort,
 			const int& baud,
 			int& portId )
 {
-    // A visual flag to tell if _OLD_TERMIOS was used.
-    // with - 48
-    // without - 40
-    // ... of course these may change in the future ...
-    cout<<"  ** termios struct size = "<<sizeof(termios)<<"\n"<<flush;
-
     ///////////////////////////////////////////////////////////////////
     // Open and close the port to reset the tracker, then
     // Open the port
@@ -663,31 +637,24 @@ int aFlock::open_port( const char* const serialPort,
 	case 4800: magicBaudRate = B4800; break;
 	case 9600: magicBaudRate = B9600; break;
 	case 19200: magicBaudRate = B19200; break;
-	default: case 38400: magicBaudRate = B38400; break;
 	
-	#ifndef _OLD_TERMIOS
+#ifndef _POSIX_SOURCE
 	case 57600: magicBaudRate = B57600; break;
 	case 76800: magicBaudRate = B76800; break;
 	case 115200: magicBaudRate = B115200; break;
-	#endif
+#endif
+
+        case 38400:
+        default:
+          magicBaudRate = B38400;
+          break;
     }
 
-    // set the baud rate flag
-    termIoPort.c_cflag = (magicBaudRate | CS8 | CLOCAL | CREAD);
+    termIoPort.c_cflag = CS8 | CLOCAL | CREAD;
 
-    #ifndef _OLD_TERMIOS
-	// new items in the new "termio" structure:
-	termIoPort.c_ospeed = baud;
-	termIoPort.c_ispeed = baud;
-	termIoPort.c_line = LDISC1; // or LDISC0 ???
-    #endif
-
-
-    // why are we setting the  "control-character array"
-    //  to 0's and 1's ???
-    // shouldn't this array be set already by default?
-    // NOTE: with c_line=LDISC1, we get 7-15 also.
-    //       with c_line=LDISC0, we only get 0-6 (like below)
+    // Set the baud rate flag.
+    cfsetospeed(&termIoPort, magicBaudRate);
+    cfsetispeed(&termIoPort, magicBaudRate);
 
     // make sure we're not going off the end
     assert( NCCS >= 16 );
