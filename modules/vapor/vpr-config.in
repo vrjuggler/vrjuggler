@@ -157,22 +157,32 @@ GetOptions('help|?' => \$script_help, 'min' => \$print_min,
 
 usage(0) if $script_help;
 
-# Construct the (potentially complex) strings that may be printed.
-my $cxxflags      = make_CXXFLAGS("$cxxflags_arg");
-my $includes      = make_INCLUDES("$cxxflags");
-my $ldflags       = make_LDFLAGS("$libs_arg", $echo_static, $echo_profiled,
-                                 $use_linker);
-my $extra_ldflags = make_EXTRA_LDFLAGS("$extra_libs_arg", $use_linker);
-
-# Finally, print out the requested information.
+# Print out the requested information.
 print "$prefix\n" if $ECHO_PREFIX;
 print "$exec_prefix\n" if $ECHO_EXEC_PREFIX;
 print "@SUBSYSTEM@\n" if $echo_subsystem;
 print "@MAJOR_VERSION@.@MINOR_VERSION@.@MICRO_VERSION@\n" if $echo_version;
-print "$cxxflags\n" if $ECHO_CXXFLAGS;
-print "$includes\n" if $echo_includes;
-print "$ldflags\n" if $ECHO_LIBS;
-print "$extra_ldflags\n" if $ECHO_EXTRA_LIBS;
+
+if ( $ECHO_CXXFLAGS || $echo_includes )
+{
+   my $cxxflags = make_CXXFLAGS("$cxxflags_arg");
+   my $includes = make_INCLUDES("$cxxflags");
+   print "$cxxflags\n" if $ECHO_CXXFLAGS;
+   print "$includes\n" if $echo_includes;
+}
+
+if ( $ECHO_LIBS )
+{
+   my $ldflags = make_LDFLAGS("$libs_arg", $echo_static, $echo_profiled,
+                              $use_linker);
+   print "$ldflags\n";
+}
+
+if ( $ECHO_EXTRA_LIBS )
+{
+   my $extra_ldflags = make_EXTRA_LDFLAGS("$extra_libs_arg", $use_linker);
+   print "$extra_ldflags\n";
+}
 
 exit(0);
 
