@@ -77,11 +77,11 @@ public class ConnectionDialog extends JDialog
       // Set defaults for the Naming Service host and the port number.
       GlobalPreferencesService prefs =
          (GlobalPreferencesService) BeanRegistry.instance().getBean("GlobalPreferences");
-      m_ns_host_field.setText(prefs.getDefaultCorbaHost());
-      m_ns_port_field.setText(String.valueOf(prefs.getDefaultCorbaPort()));
+      mNSHostField.setText(prefs.getDefaultCorbaHost());
+      mNSPortField.setText(String.valueOf(prefs.getDefaultCorbaPort()));
 
       // Add an input validator for the port number field.
-      m_ns_port_field.setInputVerifier(new InputVerifier()
+      mNSPortField.setInputVerifier(new InputVerifier()
          {
             public boolean verify(JComponent input)
             {
@@ -143,23 +143,23 @@ public class ConnectionDialog extends JDialog
    {
       mNSConnectBorder = new TitledBorder(new EtchedBorder(EtchedBorder.RAISED,Color.white,new Color(142, 142, 142)),"Naming Service Connection");
       mSubjectMgrBorder = new TitledBorder(new EtchedBorder(EtchedBorder.RAISED,Color.white,new Color(142, 142, 142)),"Subject Manager Choice");
-      mNSConnectPanel.setLayout(gridBagLayout1);
+      mNSConnectPanel.setLayout(mNSConnectLayout);
       mNSConnectPanel.setBorder(mNSConnectBorder);
       mNSConnectPanel.setMinimumSize(new Dimension(450, 150));
       mNSConnectPanel.setPreferredSize(new Dimension(450, 155));
 
-      m_ns_host_label.setHorizontalAlignment(SwingConstants.TRAILING);
-      m_ns_host_label.setText("Naming Service Host");
-      m_ns_host_field.setMinimumSize(new Dimension(80, 17));
-      m_ns_host_field.setPreferredSize(new Dimension(180, 17));
-      m_ns_host_field.addActionListener(new java.awt.event.ActionListener()
+      mNSHostLabel.setHorizontalAlignment(SwingConstants.TRAILING);
+      mNSHostLabel.setText("Naming Service Host");
+      mNSHostField.setMinimumSize(new Dimension(80, 17));
+      mNSHostField.setPreferredSize(new Dimension(180, 17));
+      mNSHostField.addActionListener(new java.awt.event.ActionListener()
       {
          public void actionPerformed(ActionEvent e)
          {
             validateNetworkAddress(e);
          }
       });
-      m_ns_port_field.addActionListener(new java.awt.event.ActionListener()
+      mNSPortField.addActionListener(new java.awt.event.ActionListener()
       {
          public void actionPerformed(ActionEvent e)
          {
@@ -180,38 +180,38 @@ public class ConnectionDialog extends JDialog
             namingServiceConnectAction(e);
          }
       });
-      m_ok_button.setEnabled(false);
+      mOkayButton.setEnabled(false);
       mSubjectMgrList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-      m_button_panel.setMinimumSize(new Dimension(450, 33));
-      m_button_panel.setPreferredSize(new Dimension(450, 33));
+      mButtonPanel.setMinimumSize(new Dimension(450, 33));
+      mButtonPanel.setPreferredSize(new Dimension(450, 33));
       mSubjectMgrListPane.setMinimumSize(new Dimension(100, 90));
       mSubjectMgrListPane.setPreferredSize(new Dimension(180, 90));
       mSubjectMgrInfo.setMinimumSize(new Dimension(100, 90));
       mSubjectMgrInfo.setPreferredSize(new Dimension(180, 90));
-      m_ns_port_label.setHorizontalAlignment(SwingConstants.TRAILING);
-      m_naming_label.setHorizontalAlignment(SwingConstants.TRAILING);
-      mNSConnectPanel.add(m_ns_host_label,         new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0
+      mNSPortLabel.setHorizontalAlignment(SwingConstants.TRAILING);
+      mNamingContextLabel.setHorizontalAlignment(SwingConstants.TRAILING);
+      mNSConnectPanel.add(mNSHostLabel,         new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0
             ,GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(0, 0, 0, 2), 47, 18));
-      mNSConnectPanel.add(m_ns_host_field,       new GridBagConstraints(1, 0, 1, 1, 1.0, 0.0
+      mNSConnectPanel.add(mNSHostField,       new GridBagConstraints(1, 0, 1, 1, 1.0, 0.0
             ,GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 14, 6));
 
-      m_ns_port_label.setText("Naming Service Port");
-      m_ns_port_field.setMinimumSize(new Dimension(50, 17));
-      m_ns_port_field.setPreferredSize(new Dimension(50, 17));
-      mNSConnectPanel.add(m_ns_port_label,    new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0
+      mNSPortLabel.setText("Naming Service Port");
+      mNSPortField.setMinimumSize(new Dimension(50, 17));
+      mNSPortField.setPreferredSize(new Dimension(50, 17));
+      mNSConnectPanel.add(mNSPortLabel,    new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0
             ,GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(0, 0, 0, 2), 51, 18));
-      mNSConnectPanel.add(m_ns_port_field,            new GridBagConstraints(1, 1, 1, 1, 1.0, 0.0
+      mNSConnectPanel.add(mNSPortField,            new GridBagConstraints(1, 1, 1, 1, 1.0, 0.0
             ,GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 10, 6));
 
-      m_naming_label.setText("Naming Subcontext");
-      m_naming_field.setMinimumSize(new Dimension(80, 17));
-      m_naming_field.setPreferredSize(new Dimension(150, 17));
+      mNamingContextLabel.setText("Naming Subcontext");
+      mNamingContextField.setMinimumSize(new Dimension(80, 17));
+      mNamingContextField.setPreferredSize(new Dimension(150, 17));
 
 
-      m_ok_button.setText("OK");
-      m_ok_button.setMnemonic('O');
-      m_ok_button.setSelected(true);
-      m_ok_button.addActionListener(new ActionListener()
+      mOkayButton.setText("OK");
+      mOkayButton.setMnemonic('O');
+      mOkayButton.setSelected(true);
+      mOkayButton.addActionListener(new ActionListener()
       {
          public void actionPerformed (ActionEvent e)
          {
@@ -219,9 +219,9 @@ public class ConnectionDialog extends JDialog
          }
       });
 
-      m_cancel_button.setText("Cancel");
-      m_cancel_button.setMnemonic('C');
-      m_cancel_button.addActionListener(new ActionListener()
+      mCancelButton.setText("Cancel");
+      mCancelButton.setMnemonic('C');
+      mCancelButton.addActionListener(new ActionListener()
       {
          public void actionPerformed (ActionEvent e)
          {
@@ -231,16 +231,16 @@ public class ConnectionDialog extends JDialog
 
       this.getContentPane().add(mNSConnectPanel,  BorderLayout.NORTH);
 
-      mNSConnectPanel.add(m_naming_label,   new GridBagConstraints(0, 2, 1, 1, 0.0, 0.0
+      mNSConnectPanel.add(mNamingContextLabel,   new GridBagConstraints(0, 2, 1, 1, 0.0, 0.0
             ,GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 0, 0, 2), 56, 18));
-      mNSConnectPanel.add(m_naming_field,    new GridBagConstraints(1, 2, 1, 1, 1.0, 0.0
+      mNSConnectPanel.add(mNamingContextField,    new GridBagConstraints(1, 2, 1, 1, 1.0, 0.0
             ,GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 44, 6));
       mNSConnectPanel.add(mNSConnectButton,          new GridBagConstraints(0, 3, 2, 1, 0.0, 0.0
             ,GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(5, 0, 2, 0), 45, 5));
 
-      this.getContentPane().add(m_button_panel, BorderLayout.SOUTH);
-      m_button_panel.add(m_ok_button, null);
-      m_button_panel.add(m_cancel_button, null);
+      this.getContentPane().add(mButtonPanel, BorderLayout.SOUTH);
+      mButtonPanel.add(mOkayButton, null);
+      mButtonPanel.add(mCancelButton, null);
       this.getContentPane().add(mSubjectMgrPanel, BorderLayout.CENTER);
       mSubjectMgrPanel.add(mSubjectMgrSplitPane,  BorderLayout.CENTER);
       mSubjectMgrSplitPane.add(mSubjectMgrListPane, JSplitPane.LEFT);
@@ -325,9 +325,9 @@ public class ConnectionDialog extends JDialog
     */
    private void commitConnectInfo()
    {
-      nameServiceHost  = m_ns_host_field.getText();
-      nameServicePort  = Integer.parseInt(m_ns_port_field.getText());
-      namingSubcontext = m_naming_field.getText();
+      nameServiceHost  = mNSHostField.getText();
+      nameServicePort  = Integer.parseInt(mNSPortField.getText());
+      namingSubcontext = mNamingContextField.getText();
    }
 
    private void okButtonAction (ActionEvent e)
@@ -369,8 +369,8 @@ public class ConnectionDialog extends JDialog
     */
    private void validateNetworkAddress(ActionEvent e)
    {
-      if ( ! m_ns_host_field.getText().equals("") &&
-           ! m_ns_port_field.getText().equals("") )
+      if ( ! mNSHostField.getText().equals("") &&
+           ! mNSPortField.getText().equals("") )
       {
          mNSConnectButton.setEnabled(true);
       }
@@ -422,12 +422,12 @@ public class ConnectionDialog extends JDialog
          // No selection.
          if ( -1 == index )
          {
-            m_ok_button.setEnabled(false);
+            mOkayButton.setEnabled(false);
          }
          // New selection.
          else
          {
-            m_ok_button.setEnabled(true);
+            mOkayButton.setEnabled(true);
 
             SubjectManagerWrapper mgr_wrapper =
                (SubjectManagerWrapper) mSubjectMgrList.getModel().getElementAt(index);
@@ -460,17 +460,15 @@ public class ConnectionDialog extends JDialog
    private tweek.SubjectManager mSubjectManager = null;
 
    // GUI elements for the Naming Service connection panel.
-   private TitledBorder mNSConnectBorder;
-   private JPanel       mNSConnectPanel = new JPanel();
-
-   private JLabel     m_ns_host_label  = new JLabel();
-   private JTextField m_ns_host_field  = new JTextField();
-
-   private JLabel     m_ns_port_label  = new JLabel();
-   private JTextField m_ns_port_field  = new JTextField();
-
-   private JLabel     m_naming_label  = new JLabel();
-   private JTextField m_naming_field  = new JTextField();
+   private TitledBorder  mNSConnectBorder;
+   private JPanel        mNSConnectPanel     = new JPanel();
+   private GridBagLayout mNSConnectLayout    = new GridBagLayout();
+   private JLabel        mNSHostLabel        = new JLabel();
+   private JTextField    mNSHostField        = new JTextField();
+   private JLabel        mNSPortLabel        = new JLabel();
+   private JTextField    mNSPortField        = new JTextField();
+   private JLabel        mNamingContextLabel = new JLabel();
+   private JTextField    mNamingContextField = new JTextField();
 
    // GUI elements for the Subject Manager panel.
    private TitledBorder mSubjectMgrBorder;
@@ -483,8 +481,7 @@ public class ConnectionDialog extends JDialog
    private JButton      mNSConnectButton     = new JButton();
 
    // GUI elements for the OK/Cancel button panel.
-   private JPanel  m_button_panel  = new JPanel();
-   private JButton m_ok_button     = new JButton();
-   private JButton m_cancel_button = new JButton();
-   private GridBagLayout gridBagLayout1 = new GridBagLayout();
+   private JPanel  mButtonPanel  = new JPanel();
+   private JButton mOkayButton   = new JButton();
+   private JButton mCancelButton = new JButton();
 }
