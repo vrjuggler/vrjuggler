@@ -81,7 +81,7 @@ SRCS		= vjAPI.cpp			\
 ifeq (@OS_TYPE@, Win32)
     SRCS	+= vjWin32SystemFactory.cpp
 else
-    ifeq (@OS_TYPE@, Darwin)
+    ifeq (@PLATFORM@, MacOSX)
     	SRCS    += vjOSXSystemFactory.cpp
     else
     	SRCS	+= vjSGISystemFactory.cpp
