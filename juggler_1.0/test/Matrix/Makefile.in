@@ -3,6 +3,8 @@
 # $Id$
 # -----------------------------------------------------------------------------
 
+.SUFFIXES: .cpp
+
 srcdir		= @srcdir@
 
 COMPILE		= @CXX@ @DEFS@ ${VJ_INCLUDES} @CPPFLAGS@ @CXXFLAGS@ -g
@@ -19,6 +21,7 @@ VPATH		= @srcdir@
 # use -L/usr/lib64.
 EXTRA_LIBS	= @TEST_EXTRA_LIBS_BASIC@
 
+OBJECTS		= matrix.o
 MATRIX_PROGS	= test
 
 # -----------------------------------------------------------------------------
@@ -28,14 +31,13 @@ default: all
 
 all: ${MATRIX_PROGS}
 
-test: matrix.o
-	${COMPILE} -o $@ matrix.o ${VJ_LIBS} ${EXTRA_LIBS}
+test: ${OBJECTS}
+	${COMPILE} -o $@ ${OBJECTS} ${VJ_LIBS} ${EXTRA_LIBS}
 
-matrix.o:
-	${COMPILE} -c -o $@ ${srcdir}/matrix.cpp
+matrix.o: matrix.cpp
 
 .cpp.o:
-	${COMPILE} -c -o $@ $<
+	${COMPILE} -c -o $@ ${srcdir}/$<
 
 # -----------------------------------------------------------------------------
 # Clean-up.
