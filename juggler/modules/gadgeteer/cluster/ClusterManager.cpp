@@ -396,6 +396,8 @@ namespace cluster
          }
       case POST_CLUSTER_CONFIG:
          {
+            //XXX: Might want to output that we are going
+            //     into a waiting state for the cluster
             if (jccl::ConfigManager::instance()->isPendingStale())
             {
                // Check if this is hostname
@@ -403,7 +405,7 @@ namespace cluster
                {
                   //Wait for all to get here
                   mStatus = WAITING;
-                  vprDEBUG(gadgetDBG_RIM,vprDBG_STATE_LVL) << clrOutBOLD(clrCYAN,"[Start Barrier] ")
+                  vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << clrOutBOLD(clrCYAN,"[Start Barrier] ")
                      << "Changing state to WAITING, because I am the server and I am waiting for my clients." << std::endl << vprDEBUG_FLUSH;
                }
                else
@@ -423,7 +425,7 @@ namespace cluster
                      StartBlock temp_start_block(0);
                      temp_start_block.send(barrierMachine->getSockStream());
                      mStatus = WAITING;
-                     vprDEBUG(gadgetDBG_RIM,vprDBG_STATE_LVL) << clrOutBOLD(clrCYAN,"[Start Barrier] ")
+                     vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << clrOutBOLD(clrCYAN,"[Start Barrier] ")
                         << "Changing State to WAITING, because I am the slave and I have sent my start block" << std::endl << vprDEBUG_FLUSH;
                   }
                   // Else I am waiting to connect to the server

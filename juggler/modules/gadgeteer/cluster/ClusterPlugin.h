@@ -48,7 +48,7 @@ public:
    ClusterPlugin();
    virtual ~ClusterPlugin();
    
-   void load();
+   virtual void load();
    void setActive(bool active);
    bool isActive();
 
