@@ -41,6 +41,7 @@
 
 #include <vpr/vprConfig.h>
 
+#include <fstream>
 #include <boost/concept_check.hpp>
 
 #include <vpr/Sync/Mutex.h>
@@ -80,7 +81,7 @@ vprREGISTER_DBG_CATEGORY(vprDBG_VPR, DBG_VPR, "VPR:");
 vprSingletonImpWithInitFunc(Debug, init);
 
 Debug::Debug()
-   : mFile(NULL)
+   : mFile(&std::cout)
 {
    indentLevel = 0;     // Initialy don't indent
    debugLevel = 2;      // Should actually try to read env variable
@@ -131,18 +132,24 @@ Debug::Debug()
 
 void Debug::setOutputFile(const std::string& filename)
 {
-   if(filename == "")
+   if ( mFile != NULL && mFile != &std::cout )
    {
-      // if no filename is given then use NULL
+      ((std::ofstream*) mFile)->close();
+      delete mFile;
       mFile = NULL;
+   }
+
+   if(filename.length() == 0)
+   {
+      // if no filename is given then use std::cout.
+      mFile = &std::cout;
    }
    else
    {
       // if a filename is given then we should write everything to that file.
-      mFile = new std::fstream;
-      mFile->open(filename.c_str(), std::ios_base::out );
+      mFile = new std::ofstream;
+      ((std::ofstream*) mFile)->open(filename.c_str(), std::ios_base::out);
    }
-   
 }
 
 void Debug::init()
@@ -206,25 +213,12 @@ std::ostream& Debug::getStream(const vpr::DebugCategory& cat, const int level,
    // new line used)
    if(show_thread_info)
    {
-      if(mFile==NULL)
-      {
-         std::cout << "[" << vpr::Thread::self() << "] " << (*mCategories.find(cat.mGuid)).second.mPrefix;
-      }
-      else 
-      {
-         (*mFile) << "[" << vpr::Thread::self() << "] " << (*mCategories.find(cat.mGuid)).second.mPrefix;
-      }
+      *mFile << "[" << vpr::Thread::self() << "] "
+              << (*mCategories.find(cat.mGuid)).second.mPrefix;
    }
    else if(use_indent)
    {
-      if(mFile==NULL)
-      {
-         std::cout << "                  ";
-      }
-      else
-      {
-         (*mFile) << "                  ";
-      }
+      *mFile << "                  ";
    }
 
       // Insert the correct number of tabs into the stream for indenting
@@ -232,14 +226,7 @@ std::ostream& Debug::getStream(const vpr::DebugCategory& cat, const int level,
    {
       for(int i=0;i<indentLevel;i++)
       {
-         if(mFile==NULL)
-         {
-            std::cout << "\t";
-         }
-         else
-         {
-            *mFile << "\t";
-         }
+         *mFile << "\t";
       }
 
       /* For debugging indentation
@@ -280,14 +267,7 @@ std::ostream& Debug::getStream(const vpr::DebugCategory& cat, const int level,
 
       for ( int i = 0; i < (column * column_width); ++i )
       {
-         if(mFile==NULL)
-         {
-            std::cout << "\t";
-         }
-         else
-         {
-            *mFile << "\t";
-         }
+         *mFile << "\t";
       }
 
    }
@@ -297,14 +277,7 @@ std::ostream& Debug::getStream(const vpr::DebugCategory& cat, const int level,
       indentLevel += indentChange;
    }
 
-   if(mFile == NULL)
-   {
-      return std::cout;
-   }
-   else
-   {
-      return *mFile;
-   }
+   return *mFile;
 }
 
 void Debug::addCategory(const vpr::DebugCategory& catId)
