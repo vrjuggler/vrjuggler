@@ -865,7 +865,7 @@ case $SUBSYSTEM in
         static_end="-B dynamic"
         vpr_ldflags_compiler="-L\${prefix}/lib\${LIBBITSUF}"
         vpr_ldflags_linker="$vpr_ldflags_compiler"
-        vpr_extra_ldflags_compiler="$EXTRA_LDFLAGS -l$boost_fs_name"
+        vpr_extra_ldflags_compiler="$EXTRA_LDFLAGS $CPPDOM_LIBS -l$boost_fs_name"
         vpr_extra_ldflags_linker="$vpr_extra_ldflags_compiler"
         vpr_libs='-lvpr'
         vpr_prof_libs='-lvpr_p'
