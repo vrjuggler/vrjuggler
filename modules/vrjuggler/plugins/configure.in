@@ -267,3 +267,14 @@ AC_CONFIG_FILES([
    ])
 
 AC_OUTPUT
+
+cat <<BUILD_INFO
+
+ GNU make is required to build the Juggler Suite.
+ On your system, GNU make is the command $GMAKE.
+ To build and install everything into $prefix,
+ run the following:
+
+    $GMAKE build install
+
+BUILD_INFO
