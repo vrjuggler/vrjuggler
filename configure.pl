@@ -741,7 +741,7 @@ sub parseOutput ($$)
          my $i;
          for ( $i = 0; $i <= $#param_list; $i++ )
          {
-            if ( $param_list[$i] =~ /(--with\S+)\s/ )
+            if ( $param_list[$i] =~ /(--with\S+)/ )
             {
                my $param = "$1";
 
