@@ -288,6 +288,11 @@ case $target_os in
         ;;
     dnl # HP PA-RISC machine running HP-UX 10.20.
     hpux10.20)
+        dnl # If no ABI has been set yet, default to HP PA-RISC.
+        if test "$ABI" = "" ; then
+            VJ_ABI_CFG('HP', 'PA-RISC')
+        fi
+
         AR='ar'
         ARFLAGS='r'
         CFLAGS="-Aa $CFLAGS"
@@ -310,13 +315,17 @@ case $target_os in
         AC_DEFINE(_INCLUDE_TERMIO,)
         AC_DEFINE(_CMA_NOWRAPPERS_,)
         AC_DEFINE(notdef,)
-        ABI='HP'
-        ISA='PA-RISC'
         ABI_LIST='HP'
         PLATFORM='HP'
         ;;
     dnl # DEC Alpha running Digital UNIX 4.0.
     osf4.0)
+        dnl # If no ABI has been set yet, default to ALPHA (whatever that
+        dnl # means).
+        if test "$ABI" = "" ; then
+            VJ_ABI_CFG('ALPHA')
+        fi
+
         AR='ar -r'
         INCLUDES="$INCLUDES -I/usr/include"
         LD='${CXX} -shared'
@@ -325,15 +334,17 @@ case $target_os in
         SHAREDLIB_EXT='so'
 
         AC_DEFINE(VJ_OS_DUX,)
-        ABI='ALPHA'
-        ISA=""
         ABI_LIST='ALPHA'
-        LIBBITSUF=''
-        _EXTRA_FLAGS=''
         PLATFORM='alpha-osf'
         ;;
     dnl # A machine running FreeBSD.  Currently only i386 is known to compile.
     freebsd*)
+        dnl # If no ABI has been set yet, default to ELF with whatever the
+        dnl # target CPU architecture is.
+        if test "$ABI" = "" ; then
+            VJ_ABI_CFG('ELF', "$target_cpu", '', '-elf')
+        fi
+
         AR='ar -r'
         INCLUDES="$INCLUDES -I/usr/include"
         LD='${CXX} -shared'
@@ -342,15 +353,17 @@ case $target_os in
         SHAREDLIB_EXT='so'
 
         AC_DEFINE(VJ_OS_FreeBSD,)
-        ABI='ELF'
-        ISA="$target_cpu"
         ABI_LIST='ELF'
-        LIBBITSUF=''
-        _EXTRA_FLAGS='-elf'
         PLATFORM='FreeBSD'
         ;;
     dnl # A machine running Linux.  Currently only i386 is known to work.
     linux*)
+        dnl # If no ABI has been set yet, default to ELF with whatever the
+        dnl # target CPU architecture is.
+        if test "$ABI" = "" ; then
+            VJ_ABI_CFG('ELF', "$target_cpu")
+        fi
+
         AR='ar -r'
         INCLUDES="$INCLUDES -I/usr/include"
         LD='${CXX} -shared'
@@ -366,16 +379,18 @@ case $target_os in
         fi
 
         AC_DEFINE(VJ_OS_Linux,)
-        ABI='ELF'
-        ISA="$target_cpu"
         ABI_LIST='ELF'
-        LIBBITSUF=''
-        _EXTRA_FLAGS=''
         PLATFORM='Linux'
         ;;
     dnl # A machine running Solaris (aka SunOS).  Currently only i386 is
     dnl # known to work.
     solaris*)
+        dnl # If no ABI has been set yet, default to ELF with whatever the
+        dnl # target CPU architecture is.
+        if test "$ABI" = "" ; then
+            VJ_ABI_CFG('ELF', "$target_cpu")
+        fi
+
         AR='ar -r'
         LD='${CXX} -G'
         LDOPTS=''
@@ -389,15 +404,17 @@ case $target_os in
         fi
 
         AC_DEFINE(VJ_OS_Solaris,)
-        ABI='ELF'
-        ISA="$target_cpu"
         ABI_LIST='ELF'
-        LIBBITSUF=''
-        _EXTRA_FLAGS=''
         PLATFORM='Solaris'
         ;;
     dnl # Unkown operating system (to config.guess).
     unknown)
+        dnl # If no ABI has been set yet, default to the target OS (which
+        dnl # will be 'unknown') with whatever the target CPU architecture is.
+        if test "$ABI" = "" ; then
+            VJ_ABI_CFG("$target_os", "$target_cpu")
+        fi
+
         AC_DEFINE(VJ_OS_GENERIC,)
         PLATFORM='UNKNOWN'
         ;;
