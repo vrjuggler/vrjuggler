@@ -76,10 +76,6 @@ BOOST_INCLUDES=		@BOOST_INCLUDES@
 CPPDOM_ROOT=		@CPPDOM_ROOT@
 GMTL_ROOT=		@GMTL_ROOT@
 
-# NOTE: There are no spaces between the commas in the $(subst) function call
-# because that introduces whitespace into the resulting string.
-BOOST_INCLUDE_DIR=	$(subst $(BOOST_ROOT),,$(BOOST_INCLUDES))
-
 AUDIERE_ROOT=		@AUDIERE_ROOT@
 CPPUNIT_ROOT=		@CPPUNIT_ROOT@
 CXX_ORB_NAME=		@CXX_ORB_NAME@
@@ -92,6 +88,9 @@ OMNIORB_CMDS=		@OMNIORB_CMDS@
 PYTHON_DIR=		@PYTHON_DIR@
 PYTHON_PKG_DIR=		$(PYTHON_DIR)/site-packages
 
+# NOTE: There are no spaces between the commas in the $(subst) function call
+# because that introduces whitespace into the resulting string.
+#BOOST_INCLUDE_DIR=	$(subst $(BOOST_ROOT),,$(BOOST_INCLUDES))
 CXX_ORB_BIN_PATH=	$(subst $(CXX_ORB_ROOT),,$(CXX_ORB_BIN_DIR))
 CXX_ORB_LIB_PATH=	$(subst $(CXX_ORB_ROOT),,$(CXX_ORB_LIB_DIR))
 
@@ -107,10 +106,10 @@ prof-dso links:
           done
 
 links-boost:
-	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/$(BOOST_INCLUDE_DIR)
+	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/include
 	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/lib
-	-$(RM_LN) $(instlinks)/$(BOOST_INCLUDE_DIR)/boost
-	$(LN_S) $(BOOST_INCLUDES)/boost $(instlinks)/$(BOOST_INCLUDE_DIR)/boost
+	-$(RM_LN) $(instlinks)/include/boost
+	$(LN_S) $(BOOST_INCLUDES)/boost $(instlinks)/include
 	$(INSTALL) -l $(BOOST_ROOT)/lib/libboost* $(instlinks)/lib
 
 links-cppdom:
@@ -197,11 +196,11 @@ install-deps:
           done
 
 install-boost:
-	$(SHELL) $(MKINSTALLDIRS) $(deps_prefix)/$(BOOST_INCLUDE_DIR)/boost
+	$(SHELL) $(MKINSTALLDIRS) $(deps_prefix)/include/boost
 	$(SHELL) $(MKINSTALLDIRS) $(deps_prefix)/lib
 	$(PERL) $(scriptdir)/install-dir.pl -m $(FILE_PERMS)		\
           $(GROUP_OPT_UNIX) -e .h,.hpp -i $(BOOST_INCLUDES)/boost	\
-          -o $(deps_prefix)/$(BOOST_INCLUDE_DIR)/boost
+          -o $(deps_prefix)/include/boost
 	$(INSTALL) -L $(GROUP_OPT_UNIX) -m $(FILE_PERMS)		\
           $(BOOST_ROOT)/lib/libboost*.a $(deps_prefix)/lib
 	$(INSTALL) -L $(GROUP_OPT_UNIX) -m $(EXEC_PERMS)		\
