@@ -124,7 +124,9 @@ void KeyboardXWin::controlLoop(void* nullParam)
       openTheWindow();
 
    // Sync up with window
+   //mXfuncLock.acquire();
    XSync(m_display,0);
+   //mXfuncLock.release();
 
    // If we have initial locked, then we need to lock the system
    if(mLockState == Lock_LockKey)      // Means that we are in the initially locked state
@@ -147,8 +149,10 @@ void KeyboardXWin::controlLoop(void* nullParam)
    // Exit, cleanup code
    if(mWeOwnTheWindow)
    {
+      //mXfuncLock.acquire();
       XDestroyWindow(m_display,m_window);
       XCloseDisplay((::Display*) m_display);
+      //mXfuncLock.release();
    }
 }
 
@@ -229,7 +233,8 @@ void KeyboardXWin::HandleEvents()
 {
    XEvent event;
    KeySym key;
-   int    vj_key;    // The key in vj space
+   int    vj_key;          // The key in vj space
+   bool have_more_events;  // Used by the while loop below
 
    // XXX: Need to add to mask to get more events for subclasses
    const long event_mask = (KeyPressMask | KeyReleaseMask | ButtonPressMask |
@@ -240,7 +245,9 @@ void KeyboardXWin::HandleEvents()
    mKeysLock.release();
 
    // Wait until we actually have some events -- THIS BLOCKS for an event
+   //mXfuncLock.acquire();
    XWindowEvent(m_display, m_window, event_mask, &event);
+   //mXfuncLock.release();
 
 // GUARD m_keys for duration of loop
 // Doing it here gives makes sure that we process all events and don't get only part of them for an update
@@ -378,8 +385,10 @@ vpr::Guard<vpr::Mutex> guard(mKeysLock);      // Lock access to the m_keys array
                {
                   vjDEBUG(vjDBG_ALL,vjDBG_HVERB_LVL) << "CORRECTING: x:" << std::setw(6) << dx << "  y:" << std::setw(6) << dy << std::endl << vjDEBUG_FLUSH;
 
+                  //mXfuncLock.acquire();
                   XWarpPointer(m_display, None, m_window, 0,0, 0,0,
                                win_center_x, win_center_y);
+                  //mXfuncLock.release();
                }
             }
 
@@ -439,8 +448,11 @@ vpr::Guard<vpr::Mutex> guard(mKeysLock);      // Lock access to the m_keys array
       // Let any other event watchers process their events
       this->processEvent(event);
 
+      //mXfuncLock.acquire();
+      have_more_events = XCheckWindowEvent(m_display, m_window, event_mask, &event);
+      //mXfuncLock.release();
    }
-   while ( XCheckWindowEvent(m_display, m_window, event_mask, &event) );
+   while ( have_more_events );
 
 }
 
@@ -559,6 +571,8 @@ int KeyboardXWin::xKeyToKey(KeySym xKey)
 // Open the X window to sample from
 int KeyboardXWin::openTheWindow()
 {
+//vpr::Guard<vpr::Mutex> xguard(mXfuncLock);
+
    int i;
 
    m_display = XOpenDisplay(mXDisplayString.c_str());    // Open display on given XDisplay
@@ -738,6 +752,8 @@ Window KeyboardXWin::createWindow (Window parent, unsigned int border, unsigned 
 // - Recenter the mouse
 void KeyboardXWin::lockMouse()
 {
+//vpr::Guard<vpr::Mutex> xguard(mXfuncLock);
+
    vjDEBUG(vjDBG_INPUT_MGR,vjDBG_STATE_LVL) << "vrj::KeyboardXWin: LOCKING MOUSE..." << vjDEBUG_FLUSH;
 
    // Center the mouse
@@ -770,6 +786,8 @@ void KeyboardXWin::lockMouse()
 // Called when locking ends
 void KeyboardXWin::unlockMouse()
 {
+//vpr::Guard<vpr::Mutex> xguard(mXfuncLock);
+
    vjDEBUG(vjDBG_INPUT_MGR,vjDBG_STATE_LVL) << "vrj::KeyboardXWin: UN-LOCKING MOUSE..." << vjDEBUG_FLUSH;
 
    // Un-grab the keyboard now
