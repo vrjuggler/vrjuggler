@@ -60,6 +60,7 @@ import org.vrjuggler.jccl.config.event.*;
       categories.add("VRAC");
       mDef = new ConfigDefinition("Person",
                                   "person",
+                                  "",
                                   1,
                                   "A person",
                                   categories,

@@ -71,6 +71,7 @@ import org.vrjuggler.jccl.config.event.*;
 
       return new ConfigDefinition("Person",
                                   "person",
+                                  "",
                                   1,
                                   "A person on the VR Juggler team.",
                                   categories,

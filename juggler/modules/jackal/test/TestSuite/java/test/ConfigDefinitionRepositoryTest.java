@@ -24,6 +24,7 @@ import org.vrjuggler.jccl.config.event.*;
    {
       return new ConfigDefinition(name,
                                   name.toLowerCase(),
+                                  "",
                                   version,
                                   "Some Help",
                                   new ArrayList(),
