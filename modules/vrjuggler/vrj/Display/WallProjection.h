@@ -39,6 +39,7 @@
 //#include <Input/vjPosition/vjPosition.h>
 //#include <Math/vjCoord.h>
 
+
 class vjMatrix;
 
 //-----------------------------------------------------------------
@@ -69,10 +70,8 @@ public:
       mOriginToBottom = toBottom;
    }
 
-   virtual void config(vjConfigChunk* chunk)
-   {
-      vjProjection::config(chunk);        // Call base class config first
-   }
+   //: Configure the projection using the chunk given
+   virtual void config(vjConfigChunk* chunk);
 
    //: Recalculate the projection matrix
    //! PRE: WallRotation matrix must be set correctly

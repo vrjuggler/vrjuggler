@@ -1,5 +1,19 @@
 DATE        AUTHOR    CHANGE
 ----------- --------- ---------------------------------------------------------
+Apr-03-2001 allenb    Refactored the vjDisplayManager to support viewports within
+                      display windows. This removes the old surface and simulator
+                      display classes and replaces them with new viewport based
+                      equivalents.
+                      This change also updates the vjGlDrawManager
+                      to support the new viewport abilities.  The pfDrawManager
+                      however does not work yet.
+                      This also changes the display configuration chunks and
+                      (unfortunately) completely breaks backwards compatibility
+                      with display configuration chunks.
+Apr-03-2001 allenb    Added vjGlApp::bufferPreDraw method to the vjGlApp
+                      interface.  This was needed because of the new viewport
+                      rendering abilities.  All applications must now execute
+                      glClear's ONLY within bufferPreDraw().
 Mar-28-2001 kevn      vjQuat interface is more fully featured, and now 
                       contains documentation.  Added tan and atan to vjSystem
 Feb-17-2001 patrick   Added support for NSPR as an operating system

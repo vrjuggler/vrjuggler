@@ -95,9 +95,19 @@ public:
    //! POST: User application has executed any commands that need
    //+   to only be executed once per context, per frame
    //! NOTE: This function can be used for things that need to happen
-   //+       every frame, but only once per context.
+   //+       every frame, but only once per context
    //+  <br> Ex: Dynamically Create display lists
    virtual void contextPreDraw()
+   {;}
+
+   //: Function that is called upon entry into a buffer of a gl context
+   //! PRE: The ogl context has been set to the context for drawing
+   //! POST: User application has executed any commands that need
+   //+   to only be executed once per context, per buffer, per frame
+   //! NOTE: This function is designed to be used when you want to do something
+   //+       only once per buffer (ie.once for left buffer, once for right buffer)
+   //+  <br> Ex: glClear's need to be done in this method
+   virtual void bufferPreDraw()
    {;}
 
    //: Function that is called at the beginning of the drawing of each pipe

@@ -112,6 +112,13 @@ public:
    //: Sets the projection matrix for this window to the one for simulator
    void setCameraProjection(vjCameraProjection* camProj);
 
+   //: Set the viewport in the GL window based on float values
+   //! ARGS: xo,yo - origin
+   //+       xSize,ySize - viewport size
+   //! NOTE: The xo,yo values must be in the range [0.0,1.0]
+   //+       Where lowerleft is 0,0 and upper right is 1,1
+   void setViewport(float xo, float yo, float xSize, float ySize);
+
    //: Updates the viewport and does any viewport cleaning
    void updateViewport();
 
