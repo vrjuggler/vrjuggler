@@ -209,6 +209,20 @@ public:
     virtual bool enableNonBlocking(void) = 0;
 
     // ------------------------------------------------------------------------
+    //: Get the current blocking state for the I/O device.
+    //
+    //! PRE: m_blocking is set correctly to 
+    //! POST: 
+    //
+    //! RETURNS: true  - The device is in blocking mode.
+    //! RETURNS: false - The device is in non-blocking mode.
+    // ------------------------------------------------------------------------
+    inline bool
+    getBlocking (void) const {
+        return m_blocking;
+    }
+
+    // ------------------------------------------------------------------------
     //: Read at most the specified number of bytes from the I/O device into
     //+ the given buffer.
     //
