@@ -95,7 +95,7 @@ public:      // Non-virtual functions
       //if (arenaForMemPools == NULL)
       //  init();	// Make sure that we are initialized already.
 
-      return malloc(sizeof(MemPoolWin32));   
+      return malloc(sizeof(vjMemPoolWin32));   
    }
 
    void operator delete(void* ptr)
