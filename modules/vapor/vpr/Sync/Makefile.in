@@ -49,15 +49,14 @@ SUBOBJDIR	= $(VPR_LIBRARY)
 VPRROOT		= $(top_srcdir)
 VPR_SRCDIR	= @VPR_SRCDIR@/Sync
 
-SRCS		=
+SRCS		= CondGeneric.cpp
 
 ifneq (@SUBSYSTEM@, SPROC)
 SRCS		+= Barrier.cpp
 endif
 
 ifneq (@SUBSYSTEM@, NSPR)
-SRCS		+= CondGeneric.cpp	\
-                   RWMutex.cpp
+SRCS		+= RWMutex.cpp
 endif
 
 include $(MKPATH)/dpp.obj.mk

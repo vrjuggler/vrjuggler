@@ -35,6 +35,10 @@
 
 #include <vprConfig.h>
 
+#ifdef VPR_OS_Win32
+#   include <process.h>
+#endif
+
 #include <sys/types.h>
 
 #ifdef HAVE_UNISTD_H
