@@ -1407,6 +1407,7 @@ class GuiFrontEnd:
       printStatus = self.printMessage
 
       required, optional, options = getDefaultVars()
+      self.mOptions   = options
       self.mTkOptions = {}
 
       # Make a StringVar dictionary.
@@ -1708,7 +1709,7 @@ class GuiFrontEnd:
          os.environ[k] = self.mTkOptions[k].get()
 
       if True:#self.validateOptions():
-         postProcessOptions()
+         postProcessOptions(self.mOptions)
          self.__writeCacheFile()
 
          self.BuildThread = threading.Thread(None, self.runVisualStudio,
