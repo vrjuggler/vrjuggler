@@ -59,6 +59,12 @@ sub groupLibdirArgs($);
 
 usage(1) if $#ARGV == -1;
 
+# ================ CHANGE THIS FOR YOUR LOCAL INSTALLATION ====================
+my $cxx_orb_root    = qq(@tweek_cxx_orb_root@);
+my $cxx_orb_bindir  = qq(@tweek_cxx_orb_bindir@);
+my $cxx_orb_ldflags = qq(@tweek_cxx_orb_ldflags@);
+# ================ CHANGE THIS FOR YOUR LOCAL INSTALLATION ====================
+
 my $tweek_default_abi = qq(@ABI@);
 my $tweek_default_isa = qq(@ISA@);
 my $tweek_n32_flags   = qq(@tweek_n32_flags@);
@@ -177,7 +183,7 @@ if ( $idl_arg =~ /^j/i )
 # C++ IDL compiler.
 elsif ( $idl_arg =~ /^c/i )
 {
-   $idl = qq(@CXX_IDL@);
+   $idl = "$cxx_orb_bindir/" . qq(@CXX_IDL_CMD@);
 }
 # Unknown IDL compiler.
 elsif ( "$idl_arg" ne '' )
