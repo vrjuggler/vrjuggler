@@ -43,8 +43,6 @@
 #include <cluster/Packets/Header.h>                                                       
 #include <cluster/Packets/Packet.h>
 
-//#define RIM_PACKET_HEAD_SIZE 8
-
 namespace cluster
 {
 
@@ -52,46 +50,64 @@ class GADGET_CLASS_API SyncAck : public Packet
 {
 public:
    /**
-    * packet_head: Given a packet that has been parsed, and found to be a device request
-    * stream: A socket that the connection is on
-    * 
-    * Create a deviceRequest packet
+    * Create a AyncAck packet
+    *   
+    * @param packet_head -Header which has already been received and 
+    *                     determined to be for a SyncAck.
+    * @param stream -A SocketStream that we will use to receive the packet data.
     */
    SyncAck(Header* packet_head, vpr::SocketStream* stream);
 
    /**
-    * Given a sender ID(self) and a requested device name
+    * Create a ApplicationDataAck packet to acknowledge a ApplicationDataRequest.
     *
-    * Create a device request to be sent
+    * @param host_name -The hostname of the node acknowledging the SyncRequest.
+    * @param port -The port of the node acknowledging the SyncRequest.
+    * @param ack -Boolean determining if this is a positive(ACK) or a negative(NACK) responce.
     */
-   SyncAck(std::string& host_name, vpr::Uint16& port, std::string& manager_id, bool ack);
+   SyncAck(const std::string& host_name, const vpr::Uint16& port, const bool ack);
 
-   
    /**
-    * Helper for the above creation of a device request to be sent
+    * Serializes member variables into a data stream.
     */
    void serialize();
 
    /**
-    * After reading in the remaining bytes from the socket, create a new parse the data
+    * Parses the data stream into the local member variables.
     */
    void parse();
    
+   /**
+    * Print the data to the screen in a readable form.
+    */
    virtual void printData(int debug_level);
+   
+   /**
+    * Return the type of this packet.
+    */
    static vpr::Uint16 getBaseType()
    {
        return(Header::RIM_SYNC_ACK);
    }
    
+   /**
+    * Returns the hostname of the node acknowledging the SyncRequest.
+    */
    std::string getHostname() { return mHostname; }
+   
+   /**
+    * Returns the port of the node acknowledging the SyncRequest.
+    */
    vpr::Uint16 getPort() { return mPort; }
-   std::string getManagerId() { return mManagerId; }
+   
+   /**
+    * Returns a boolean determining if this is a positive(ACK) or a negative(NACK) responce.
+    */
    bool getAck() { return mAck; }
 private:
-   std::string mHostname;
-   vpr::Uint16 mPort;
-   std::string mManagerId;
-   bool        mAck;
+   std::string mHostname;  /**< Hostname of the node acknowledging the SyncRequest. */
+   vpr::Uint16 mPort;      /**< Listening port of the node acknowledging the SyncRequest. */
+   bool        mAck;       /**< Boolean determining if this is a positive(ACK) or a negative(NACK) responce. */
 };
 }
 

@@ -45,11 +45,6 @@
 #include <gadget/Util/Debug.h>
 #include <cluster/Packets/Header.h>                                                       
 #include <cluster/Packets/Packet.h>
-#include <cluster/ClusterNetwork/ClusterNode.h>
-#include <cluster/ClusterNetwork/ClusterNetwork.h>
-#include <cluster/ClusterManager.h>
-                                                                                                          
-//#define RIM_PACKET_HEAD_SIZE 8
 
 namespace cluster
 {
@@ -58,64 +53,61 @@ class GADGET_CLASS_API StartBlock : public Packet
 {
 public:
    /**
-    * packet_head: Given a packet that has been parsed, and found to be a device request
-    * stream: A socket that the connection is on
-    * 
-    * Create a deviceRequest packet
+    * Create a StartBlock packet
+    *   
+    * @param packet_head -Header which has already been received and 
+    *                     determined to be for a StartBlock.
+    * @param stream -A SocketStream that we will use to receive the packet data.
     */
    StartBlock(Header* packet_head, vpr::SocketStream* stream)
    {
-      // -Copy over pointer to header
-      // -Continue reading packet from socket
-
-      mHeader = packet_head;
-      
+      // Receive the data needed for this packet from the given SocketStream.
       recv(packet_head,stream);
+      
+      // Parse the new data into member variables.
       parse();
    }
 
-
    /**
-    * Given a sStarter ID(self) and a requested device name
+    * Create a StartBlock packet to signal that the local node is ready to start.
     *
-    * Create a device request to be sent
+    * @param plugin_guid -GUID of the ClusterPlugin that should handle this packet.
+    * @param frame_number -The current number of frames that have been drawn.
     */
    StartBlock(const vpr::GUID& plugin_id, const vpr::Uint32& frame_number)
    {
-      // Given the input, create the packet and then serialize the packet(which includes the header)
-      // - Set member variables
-      // - Create the correct packet header
-      // - Serialize the packet
-
+      // Set the local member variables using the given values.
       mPluginId = plugin_id;
    
-      // Header vars (Create Header)
+      // Create a Header for this packet with the correect type and size.
       mHeader = new Header(Header::RIM_PACKET,
                                        Header::RIM_START_BLOCK,
                                        Header::RIM_PACKET_HEAD_SIZE
                                        +16/*Plugin GUID*/
                                        ,frame_number);
+      // Serialize the given data.
       serialize();
    }
 
    
    /**
-    * Helper for the above creation of a device request to be sent
+    * Serializes member variables into a data stream.
     */
    void serialize()
    {
+      // Clear the data stream.
       mPacketWriter->getData()->clear();
       mPacketWriter->setCurPos(0);
 
+      // Serialize the header.
+      mHeader->serializeHeader();
+      
       // Serialize the Plugin ID
       mPluginId.writeObject(mPacketWriter);
-
-      // Create the header information
-      mHeader->serializeHeader();
    }
 
    /**
-    * After reading in the remaining bytes from the socket, create a new parse the data
+    * Parses the data stream into the local member variables.
     */
    void parse()
    {
@@ -123,6 +115,9 @@ public:
       mPluginId.readObject(mPacketReader);
    }
    
+   /**
+    * Print the data to the screen in a readable form.
+    */
    virtual void printData(int debug_level)
    {
       vprDEBUG_BEGIN(gadgetDBG_RIM,vprDBG_CONFIG_LVL) 
@@ -138,6 +133,10 @@ public:
          <<  clrOutBOLD(clrYELLOW,"=======================\n") << vprDEBUG_FLUSH;
          
    }
+   
+   /**
+    * Return the type of this packet.
+    */
    static vpr::Uint16 getBaseType()
    {
        return(Header::RIM_START_BLOCK);

@@ -30,15 +30,9 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-//#include <gadget/gadgetConfig.h>
 #include <boost/concept_check.hpp>
 
 #include <gadget/Util/Debug.h>
-
-#include <gadget/InputManager.h>
-#include <gadget/Type/Input.h>
-#include <cluster/ClusterNetwork/ClusterNode.h>
-#include <jccl/RTRC/ConfigManager.h>
 
 #include <cluster/Packets/DeviceRequest.h>
 
@@ -46,46 +40,44 @@ namespace cluster
 {
    DeviceRequest::DeviceRequest(Header* packet_head, vpr::SocketStream* stream)
    {
+      // Receive the data needed for this packet from the given SocketStream.
       recv(packet_head,stream);
+      
+      // Parse the new data into member variables.
       parse();
    }
-   DeviceRequest::DeviceRequest(const std::string& device_name, const vpr::GUID& plugin_guid)
-   {
-      // Given the input, create the packet and then serialize the packet(which includes the header)
-      // - Set member variables
-      // - Create the correct packet header
-      // - Serialize the packet
 
-      // Device Request Vars
+   DeviceRequest::DeviceRequest(const vpr::GUID& plugin_guid, const std::string& device_name)
+   {
+      // Set the local member variables using the given values.
       mDeviceName = device_name;
       mPluginId = plugin_guid;
       
-      // Header vars (Create Header)
+      // Create a Header for this packet with the correect type and size.
       mHeader = new Header(Header::RIM_PACKET,
                                       Header::RIM_DEVICE_REQ,
                                       Header::RIM_PACKET_HEAD_SIZE 
                                        + 16 /*Plugin GUID*/
                                        + 2 /*Size mDeviceName*/
                                        + mDeviceName.size(),
-                                      0);
+                                      0/*Field not curently used*/);
+      // Serialize the given data.
       serialize();
    }
+
    void DeviceRequest::serialize()
    {
-      // - Clear
-      // - Write Header
-      // - Write data
-      
+      // Clear the data stream.
       mPacketWriter->getData()->clear();
       mPacketWriter->setCurPos(0);
 
-      // Create the header information
+      // Serialize the header.
       mHeader->serializeHeader();
       
-      // Serialize plugin GUID
+      // Serialize plugin GUID.
       mPluginId.writeObject(mPacketWriter);
 
-      // Device Name
+      // Serialize the name of the requested device.
       mPacketWriter->writeString(mDeviceName);
    }
    void DeviceRequest::parse()
@@ -93,7 +85,7 @@ namespace cluster
       // De-Serialize plugin GUID
       mPluginId.readObject(mPacketReader);
 
-      // De-Serialize Device Name
+      // De-Serialize the name of the requested device.
       mDeviceName = mPacketReader->readString();
    }
    
@@ -113,14 +105,5 @@ namespace cluster
 
       vprDEBUG_END(gadgetDBG_RIM,debug_level) 
          <<  clrOutBOLD(clrYELLOW,"====================================\n") << vprDEBUG_FLUSH;
-
-   /*   Packet::printData();
-      vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) 
-      << clrOutBOLD(clrCYAN,"\n==== Device Request Packet Data ====")
-      << "\nSender ID:    " << mSenderId
-      << "\nDevice Name: " << mDeviceName << std::endl
-      << vprDEBUG_FLUSH;      
-   */
-   }
-
+   }                                                                                          
 }   // end namespace gadget

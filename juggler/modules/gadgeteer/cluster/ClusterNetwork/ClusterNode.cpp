@@ -193,8 +193,7 @@ namespace cluster
       // case they for some reason want to re-connect back to us. This should be taken care 
       // of in configuration but in all reality the remote machine does not have to have the 
       // machine specific chunk for this machine
-      ConnectionRequest request(ClusterNetwork::instance()->getLocalHostname(),0/*Might be needed, look above*/, 
-                                   std::string("We do not use the managerID anymore"));
+      ConnectionRequest request(ClusterNetwork::instance()->getLocalHostname(),0/*Might be needed, look above*/);
       
       send(&request);
       

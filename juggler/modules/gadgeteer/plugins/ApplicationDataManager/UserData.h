@@ -48,7 +48,33 @@
 
 namespace cluster
 {
+/* 
+- If MyType all ready derives from vpr::SerializableObject you can use the following:
 
+               cluster::UserData<MyType> mMyData;
+
+- Otherwise you can use the SerializableObjectMixing and templete specializations to
+  add the readObject() and writeObject() functions to use for your datatype.
+
+         cluster::UserData<vpr::SerializableObjectMixin<MyType> > mMyData;
+         
+         template<class MyType> 
+         vpr::ReturnStatus 
+         vpr::SerializableObjectMixin<MyType>::writeObject(vpr::ObjectWriter* writer) 2 
+         {
+            writer->writeUint16(something); 
+            writer->writeBool(drawBool); 
+         }
+          
+         template<class MyType> 
+         vpr::ReturnStatus
+         vpr::SerializableObjectMixin<MyType>::readObject(vpr::ObjectReader* reader)3 
+         { 
+            something = reader->readUint16();
+            drawBool = reader->readBool(); 
+         }
+- For more detailed documentation refer to the VR Juggler documentation at http://www.vrjuggler.org/
+*/
 template<class BASE>
 class AppDataMixin : public BASE, public ApplicationData
 {
