@@ -47,15 +47,14 @@ namespace gadget
 
 bool PinchGlove::config(jccl::ConfigChunkPtr c)
 {
-   if ( ! (Input::config(c) /*&& Glove::config(c)*/ ) )
-   {
-      return false;
-   }
+   mPort     = c->getProperty<std::string>("port");
+   mInstName = c->getFullName();
+   mBaudRate = c->getProperty<int>("baud");
 
    vprASSERT(mThread == NULL);      // This should have been set by Input(c)
 
    mGlove = new PinchGloveStandalone();
-
+   
    return true;
 }
 
@@ -67,49 +66,37 @@ PinchGlove::~PinchGlove ()
 
 int PinchGlove::startSampling()
 {
-   vprDEBUG(gadgetDBG_INPUT_MGR, 0) << "[Pinch] Begin sampling\n"
+   vprDEBUG(gadgetDBG_INPUT_MGR, 0) << "[PinchGlove] Begin sampling\n"
                                     << vprDEBUG_FLUSH;
+   mGlove->setBaudRate(mBaudRate);
+   mGlove->setPort(mPort);
 
    if ( mThread == NULL )
    {
       int maxAttempts=0;
-      bool result = false;
-      while ( result == false && maxAttempts < 5 )
+      vprDEBUG(gadgetDBG_INPUT_MGR, 0) << "[PinchGlove] Connecting to "
+                                    << mPort << " at "
+                                    << mBaudRate << "...\n"
+                                    << vprDEBUG_FLUSH;
+      while ( mGlove->connectToHardware() != vpr::ReturnStatus::Succeed )
       {
-         vprDEBUG(gadgetDBG_INPUT_MGR, 0) << "[Pinch] Connecting to "
-                                          << mPort << " at "
-                                          << mBaudRate << "...\n"
-                                          << vprDEBUG_FLUSH;
-         result = mGlove->connectToHardware( mPort , mBaudRate);
-         if ( result == false )
+         vprDEBUG(gadgetDBG_INPUT_MGR,0)
+            << "[PinchGlove] ERROR: Can't open port or port is already opened."
+            << vprDEBUG_FLUSH;
+         vpr::System::msleep(100);
+         maxAttempts++;
+         if (maxAttempts==5)
          {
-            vprDEBUG(gadgetDBG_INPUT_MGR,0)
-               << "[Pinch] ERROR: Can't open or it is already opened."
-               << vprDEBUG_FLUSH;
-            vpr::System::usleep(14500);
-            maxAttempts++;
+            return(vpr::ReturnStatus::Fail);
          }
       }
 
       vprDEBUG(gadgetDBG_INPUT_MGR,0)
-         << "[Pinch] Successfully connected, Now sampling pinch data."
+         << "[PinchGlove] Successfully connected, Now sampling pinch data."
          << vprDEBUG_FLUSH;
 
-/* Don't need anymore because SampleBuffers are smarter
-
-      DigitalData temp;
-      temp=0;
-      for (int i=0;i<10;i++)
-      {
-          mDigitalData.push_back(temp);
-      }
-      mDigitalSamples.lock();
-      mDigitalSamples.addSample(mDigitalData);
-      mDigitalSamples.unlock();
-      */
-
       // Create a new thread to handle the control
-      vprDEBUG(gadgetDBG_INPUT_MGR, 0) << "[Pinch] Spawning control thread\n"
+      vprDEBUG(gadgetDBG_INPUT_MGR, 0) << "[PinchGlove] Spawning control thread\n"
                                        << vprDEBUG_FLUSH;
       vpr::ThreadMemberFunctor<PinchGlove>* memberFunctor =
          new vpr::ThreadMemberFunctor<PinchGlove>(this, &PinchGlove::controlLoop, NULL);
@@ -122,7 +109,7 @@ int PinchGlove::startSampling()
       }
       else
       {
-         vprDEBUG(gadgetDBG_INPUT_MGR,1) << "[Pinch] PinchGlove is active "
+         vprDEBUG(gadgetDBG_INPUT_MGR,1) << "[PinchGlove] PinchGlove is active "
                                          << std::endl << vprDEBUG_FLUSH;
          mActive = true;
          return 1;
@@ -134,7 +121,7 @@ int PinchGlove::startSampling()
 
 void PinchGlove::controlLoop(void* nullParam)
 {
-   vprDEBUG(gadgetDBG_INPUT_MGR, 0) << "[Pinch] Entered control thread\n"
+   vprDEBUG(gadgetDBG_INPUT_MGR, 0) << "[PinchGlove] Entered control thread\n"
                                     << vprDEBUG_FLUSH;
 
    while ( 1 )
@@ -145,34 +132,30 @@ void PinchGlove::controlLoop(void* nullParam)
 
 int PinchGlove::sample()
 {
-   // Tell the glove to resample
+   // Tell the glove to sample
 
-   ///Get data from hardware
+   // Get data from hardware
    std::string gesture;
    mGlove->updateStringFromHardware();
    mGlove->getSampledString( gesture );
 
-   unsigned char character[2];
-   int number;
+   unsigned char ch;
+   int num;
    int i;
    for ( i=0;i<11;i++ )
    {
 
       if ( i<5 )
       {
-         character[0]=gesture[i];
-         //character[1]='\0';
-         //number = atoi(character);
-         number = character[0] - '0';
-         mDigitalData[i]=number;
+         ch=gesture[i];
+         num = ch - '0';
+         mDigitalData[i]=num;
       }
       else if ( i>5 )
       {
-         character[0]=gesture[i];
-         //character[1]='\0';
-         //number = atoi(character);
-         number = character[0] - '0';
-         mDigitalData[i-1]=number;
+         ch=gesture[i];
+         num = ch - '0';
+         mDigitalData[i-1]=num;
       }
    }
 
@@ -208,11 +191,8 @@ int PinchGlove::stopSampling()
       mThread->kill();
       delete mThread;
       mThread = NULL;
-      vpr::System::usleep(100);
-
-      // XXX: there is no "close"
-      //mGlove->Close();
-      vprDEBUG(gadgetDBG_INPUT_MGR,1) << "[Pinch] stopping PinchGlove.."
+      
+      vprDEBUG(gadgetDBG_INPUT_MGR,1) << "[PinchGlove] stopping PinchGlove.."
                                       << std::endl << vprDEBUG_FLUSH;
    }
    return 1;
