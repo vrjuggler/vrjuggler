@@ -448,8 +448,8 @@ void PfDrawManager::addDisplay(Display* disp)
                jccl::ConfigChunkPtr sim_chunk =
                   vp_chunk->getProperty<jccl::ConfigChunkPtr>("simPlugIn");
 
-               vprDEBUG(vrjDBG_DISP_MGR, vprDBG_CONFIG_LVL)
-                  << "SimViewport::config() creating simulator of type '"
+               vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CONFIG_LVL)
+                  << "PfDrawManager::addDisplay() creating simulator of type '"
                   << sim_chunk->getDescToken() << "'\n" << vprDEBUG_FLUSH;
 
                DrawSimInterface* new_sim_i =
