@@ -327,12 +327,9 @@ public:
        memset( &buffer[0], '\0', buffer.size() );
        status = this->read( &buffer[0], buffer.size(), bytes_read, timeout);
 
-       // size it down if needed, if (bytes_read==length),
-       // then resize does nothing...
-       if (bytes_read >= 0)
-       {
-          buffer.resize( bytes_read );
-       }
+       // size it down if needed, if (bytes_read==length), then resize does
+       // nothing...
+       buffer.resize( bytes_read );
 
        return status;
     }
@@ -406,11 +403,7 @@ public:
        buffer.resize( length );
        memset( &buffer[0], '\0', buffer.size() );
        status = this->readn( &buffer[0], buffer.size(), bytes_read, timeout);
-
-       // If anything was read into temp_buf, copy it into buffer.
-       if ( bytes_read >= 0 ) {
-           buffer.resize( bytes_read );
-       }
+       buffer.resize( bytes_read );
 
        return status;
     }
@@ -455,11 +448,7 @@ public:
         buffer.resize( length );
         memset( &buffer[0], '\0', buffer.size() );
         status = this->readn( &buffer[0], buffer.size(), bytes_read, timeout );
-
-        // If anything was read into temp_buf, copy it into buffer.
-        if ( bytes_read >= 0 ) {
-           buffer.resize(bytes_read);
-        }
+        buffer.resize(bytes_read);
 
         return status;
     }
