@@ -102,17 +102,6 @@ namespace gmtl
    template gmtl::Matrix44f& invert(gmtl::Matrix44f&);
    template gmtl::Matrix33f& invert(gmtl::Matrix33f&);
 
-   template gmtl::Matrix44f operator*(const gmtl::Matrix44f&,
-                                      const gmtl::Matrix44f&);
-   template gmtl::Matrix33f operator*(const gmtl::Matrix33f&,
-                                      const gmtl::Matrix33f&);
-
-   template bool operator==(const gmtl::Matrix44f&, const gmtl::Matrix44f&);
-   template bool operator==(const gmtl::Matrix33f&, const gmtl::Matrix33f&);
-
-   template bool operator!=(const gmtl::Matrix44f&, const gmtl::Matrix44f&);
-   template bool operator!=(const gmtl::Matrix33f&, const gmtl::Matrix33f&);
-
    template bool isEqual(const gmtl::Matrix44f&, const gmtl::Matrix44f&,
                          const float&);
    template bool isEqual(const gmtl::Matrix33f&, const gmtl::Matrix33f&,
@@ -122,46 +111,6 @@ namespace gmtl
 // gmtl::Vec<> functions ======================================================
    typedef gmtl::VecBase<float, 3> VecBase3f;
    typedef gmtl::VecBase<float, 4> VecBase4f;
-
-   template Vec3f operator-(const VecBase3f&);
-   template Vec4f operator-(const VecBase4f&);
-
-   template VecBase3f& operator+=(VecBase3f&, const VecBase3f&);
-   template VecBase4f& operator+=(VecBase4f&, const VecBase4f&);
-
-   template VecBase3f operator+(const VecBase3f&, const VecBase3f&);
-   template VecBase4f operator+(const VecBase4f&, const VecBase4f&);
-
-   template VecBase3f& operator-=(VecBase3f&, const VecBase3f&);
-   template VecBase4f& operator-=(VecBase4f&, const VecBase4f&);
-
-   template Vec3f operator-(const VecBase3f&, const VecBase3f&);
-   template Vec4f operator-(const VecBase4f&, const VecBase4f&);
-
-   template VecBase3f& operator*=(VecBase3f&, const int&);
-   template VecBase3f& operator*=(VecBase3f&, const float&);
-   template VecBase4f& operator*=(VecBase4f&, const int&);
-   template VecBase4f& operator*=(VecBase4f&, const float&);
-
-   template VecBase3f operator*(const VecBase3f&, const int&);
-   template VecBase3f operator*(const VecBase3f&, const float&);
-   template VecBase4f operator*(const VecBase4f&, const int&);
-   template VecBase4f operator*(const VecBase4f&, const float&);
-
-   template VecBase3f operator*(const int&, const VecBase3f&);
-   template VecBase3f operator*(const float&, const VecBase3f&);
-   template VecBase4f operator*(const int&, const VecBase4f&);
-   template VecBase4f operator*(const float&, const VecBase4f&);
-
-   template VecBase3f& operator/=(VecBase3f&, const int&);
-   template VecBase3f& operator/=(VecBase3f&, const float&);
-   template VecBase4f& operator/=(VecBase4f&, const int&);
-   template VecBase4f& operator/=(VecBase4f&, const float&);
-
-   template VecBase3f operator/(const VecBase3f&, const int&);
-   template VecBase3f operator/(const VecBase3f&, const float&);
-   template VecBase4f operator/(const VecBase4f&, const int&);
-   template VecBase4f operator/(const VecBase4f&, const float&);
 
    template float dot(const gmtl::Vec3f&, const gmtl::Vec3f&);
    template float dot(const gmtl::Vec4f&, const gmtl::Vec4f&);
@@ -190,12 +139,6 @@ namespace gmtl
    template VecBase4f& lerp(VecBase4f&, const float&, const VecBase4f&,
                             const VecBase4f&);
 
-   template bool operator==(const gmtl::VecBase3f&, const gmtl::VecBase3f&);
-   template bool operator==(const gmtl::VecBase4f&, const gmtl::VecBase4f&);
-
-   template bool operator!=(const gmtl::VecBase3f&, const gmtl::VecBase3f&);
-   template bool operator!=(const gmtl::VecBase4f&, const gmtl::VecBase4f&);
-
    template bool isEqual(const gmtl::VecBase3f&, const gmtl::VecBase3f&,
                          const float&);
    template bool isEqual(const gmtl::VecBase4f&, const gmtl::VecBase4f&,
@@ -208,66 +151,27 @@ namespace gmtl
    template gmtl::Quatd& mult(gmtl::Quatd&, const gmtl::Quatd&,
                               const gmtl::Quatd&);
 
-   template gmtl::Quatf operator*(const gmtl::Quatf&, const gmtl::Quatf&);
-   template gmtl::Quatd operator*(const gmtl::Quatd&, const gmtl::Quatd&);
-
-   template gmtl::Quatf& operator*=(gmtl::Quatf&, const gmtl::Quatf&);
-   template gmtl::Quatd& operator*=(gmtl::Quatd&, const gmtl::Quatd&);
-
    template gmtl::Quatf& mult(gmtl::Quatf&, const gmtl::Quatf&, float);
    template gmtl::Quatd& mult(gmtl::Quatd&, const gmtl::Quatd&, double);
-
-   template gmtl::Quatf operator*(const gmtl::Quatf&, float);
-   template gmtl::Quatd operator*(const gmtl::Quatd&, double);
-
-   template gmtl::Quatf& operator*=(gmtl::Quatf&, float);
-   template gmtl::Quatd& operator*=(gmtl::Quatd&, double);
 
    template gmtl::Quatf& negate(gmtl::Quatf&);
    template gmtl::Quatd& negate(gmtl::Quatd&);
 
-   template gmtl::Quatf operator-(const gmtl::Quatf&);
-   template gmtl::Quatd operator-(const gmtl::Quatd&);
-
    template gmtl::Quatf& div(gmtl::Quatf&, const gmtl::Quatf&, gmtl::Quatf);
    template gmtl::Quatd& div(gmtl::Quatd&, const gmtl::Quatd&, gmtl::Quatd);
 
-   template gmtl::Quatf operator/(const gmtl::Quatf&, gmtl::Quatf);
-   template gmtl::Quatd operator/(const gmtl::Quatd&, gmtl::Quatd);
-
-   template gmtl::Quatf& operator/=(gmtl::Quatf&, const gmtl::Quatf&);
-   template gmtl::Quatd& operator/=(gmtl::Quatd&, const gmtl::Quatd&);
-
    template gmtl::Quatf& div(gmtl::Quatf&, const gmtl::Quatf&, float);
    template gmtl::Quatd& div(gmtl::Quatd&, const gmtl::Quatd&, double);
-
-   template gmtl::Quatf operator/(const gmtl::Quatf&, float);
-   template gmtl::Quatd operator/(const gmtl::Quatd&, double);
-
-//   template gmtl::Quatf& operator/=(const gmtl::Quatf&, float);
-//   template gmtl::Quatd& operator/=(const gmtl::Quatd&, double);
 
    template gmtl::Quatf& add(gmtl::Quatf&, const gmtl::Quatf&,
                              const gmtl::Quatf&);
    template gmtl::Quatd& add(gmtl::Quatd&, const gmtl::Quatd&,
                              const gmtl::Quatd&);
 
-   template gmtl::Quatf operator+(const gmtl::Quatf&, const gmtl::Quatf&);
-   template gmtl::Quatd operator+(const gmtl::Quatd&, const gmtl::Quatd&);
-
-   template gmtl::Quatf& operator+=(gmtl::Quatf&, const gmtl::Quatf&);
-   template gmtl::Quatd& operator+=(gmtl::Quatd&, const gmtl::Quatd&);
-
    template gmtl::Quatf& sub(gmtl::Quatf&, const gmtl::Quatf&,
                              const gmtl::Quatf&);
    template gmtl::Quatd& sub(gmtl::Quatd&, const gmtl::Quatd&,
                              const gmtl::Quatd&);
-
-   template gmtl::Quatf operator-(const gmtl::Quatf&, const gmtl::Quatf&);
-   template gmtl::Quatd operator-(const gmtl::Quatd&, const gmtl::Quatd&);
-
-   template gmtl::Quatf& operator-=(gmtl::Quatf&, const gmtl::Quatf&);
-   template gmtl::Quatd& operator-=(gmtl::Quatd&, const gmtl::Quatd&);
 
    template float dot(const gmtl::Quatf&, const gmtl::Quatf&);
    template double dot(const gmtl::Quatd&, const gmtl::Quatd&);
@@ -309,12 +213,6 @@ namespace gmtl
    template Quatf& lerp(Quatf&, const float, const Quatf&, const Quatf&);
    template Quatd& lerp(Quatd&, const double, const Quatd&, const Quatd&);
 
-   template bool operator==(const gmtl::Quatf&, const gmtl::Quatf&);
-   template bool operator==(const gmtl::Quatd&, const gmtl::Quatd&);
-
-   template bool operator!=(const gmtl::Quatf&, const gmtl::Quatf&);
-   template bool operator!=(const gmtl::Quatd&, const gmtl::Quatd&);
-
    template bool isEqual(const gmtl::Quatf&, const gmtl::Quatf&, float);
    template bool isEqual(const gmtl::Quatd&, const gmtl::Quatd&, double);
 
@@ -323,14 +221,6 @@ namespace gmtl
 // ===================================================== gmtl::Quat<> functions
 
 // gmtl::EulerAngle<> functions ===============================================
-   template bool operator==(const EulerAngleXYZf&, const EulerAngleXYZf&);
-   template bool operator==(const EulerAngleZXYf&, const EulerAngleZXYf&);
-   template bool operator==(const EulerAngleZYXf&, const EulerAngleZYXf&);
-
-   template bool operator!=(const EulerAngleXYZf&, const EulerAngleXYZf&);
-   template bool operator!=(const EulerAngleZXYf&, const EulerAngleZXYf&);
-   template bool operator!=(const EulerAngleZYXf&, const EulerAngleZYXf&);
-
    template bool isEqual(const EulerAngleXYZf&, const EulerAngleXYZf&,
                          const float&);
    template bool isEqual(const EulerAngleZXYf&, const EulerAngleZXYf&,
@@ -340,12 +230,6 @@ namespace gmtl
 // =============================================== gmtl::EulerAngle<> functions
 
 // gmtl::AxisAngle<> functions ================================================
-   template bool operator==(const AxisAnglef&, const AxisAnglef&);
-   template bool operator==(const AxisAngled&, const AxisAngled&);
-
-   template bool operator!=(const AxisAnglef&, const AxisAnglef&);
-   template bool operator!=(const AxisAngled&, const AxisAngled&);
-
    template bool isEqual(const AxisAnglef&, const AxisAnglef&, const float&);
    template bool isEqual(const AxisAngled&, const AxisAngled&, const double&);
 // ================================================ gmtl::AxisAngle<> functions
