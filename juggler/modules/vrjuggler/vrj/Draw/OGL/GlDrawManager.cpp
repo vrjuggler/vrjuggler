@@ -162,15 +162,13 @@ void vjGlDrawManager::addDisplay(vjDisplay* disp)
 
    //	-- Create a window for new display
    //	-- Store the window in the wins vector
-   vjGlWindow* new_win;
-   new_win = vjKernel::instance()->getSysFactory()->getGLWindow();   // Create gl window
+   vjGlWindow* new_win = vjKernel::instance()->getSysFactory()->getGLWindow();   // Create gl window
    new_win->config(disp);                                            // Configure it
    wins.push_back(new_win);                                          // Add to our local window list
 
    // -- Create any needed Pipes & Start them
    int pipe_num = new_win->getDisplay()->getPipe();    // Find pipe to add it too
    vjASSERT(pipe_num >= 0);                            // ASSERT: pipeNum := [0...n]
-
    if(pipes.size() < (pipe_num+1))           // ASSERT: Max index of pipes is < our pipe
    {                                         // +1 because if pipeNum = 0, I still need size() == 1
       while(pipes.size() < (pipe_num+1))     // While we need more pipes
