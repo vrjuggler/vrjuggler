@@ -54,11 +54,11 @@ SUBDIR		= OSG		\
                   OpenSG
 
 # Subdirectories to compile.
-ifeq (@OPENGL_API@, Y)
+ifeq ($(GL_API), Y)
     SUBDIR	+= OGL
 endif
 
-ifeq (@PERFORMER_API@, Y)
+ifeq ($(PF_API), Y)
     SUBDIR	+= Pf
 endif
 
