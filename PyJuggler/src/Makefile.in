@@ -114,7 +114,11 @@ USE_OBJCOPY=		@USE_OBJCOPY@
 PYSTE_FILES=	vpr.pyste	\
 		jccl.pyste	\
 		gadget.pyste	\
-		vrj.pyste
+		__vrj.pyste
+
+ifeq (@HAVE_OSG@, Y)
+PYSTE_FILES+=	__osgapp.pyste
+endif
 
 MODS=		$(addprefix mods/, $(PYSTE_FILES:.pyste=$(PYMOD_EXT)))
 
@@ -161,22 +165,24 @@ VRJ_SRCS= \
 	vrj/_SimViewport.cpp		\
 	vrj/_User.cpp			\
 	vrj/_Viewport.cpp		\
-	vrj/vrj.cpp
+	vrj/__vrj.cpp
 
 # Add the Open Scene Graph build bits if OSG is available.
 ifeq (@HAVE_OSG@, Y)
-   DEFS+=		-DPYJUGGLER_HAVE_OSG
    INCLUDES+=		@OSG_INCLUDES@
-   VJ_EXTRA_LIBS+=	@OSG_LDFLAGS@ @OSG_LIBS@
-   VRJ_SRCS+=		vrj/_OsgApp.cpp
+   OSG_EXTRA_LIBS=	@OSG_LDFLAGS@ @OSG_LIBS@
+   OSGAPP_SRCS=		osgapp/_OsgApp.cpp	\
+			osgapp/__osgapp.cpp
 endif
 
 VPR_OBJS=	$(addprefix $(OBJDIR)/, $(VPR_SRCS:.cpp=.$(OBJEXT)))
 JCCL_OBJS=	$(addprefix $(OBJDIR)/, $(JCCL_SRCS:.cpp=.$(OBJEXT)))
 GADGET_OBJS=	$(addprefix $(OBJDIR)/, $(GADGET_SRCS:.cpp=.$(OBJEXT)))
 VRJ_OBJS=	$(addprefix $(OBJDIR)/, $(VRJ_SRCS:.cpp=.$(OBJEXT)))
+OSGAPP_OBJS=	$(addprefix $(OBJDIR)/, $(OSGAPP_SRCS:.cpp=.$(OBJEXT)))
 
-OBJS=		$(VPR_OBJS) $(JCCL_OBJS) $(GADGET_OBJS) $(VRJ_OBJS)
+OBJS=		$(VPR_OBJS) $(JCCL_OBJS) $(GADGET_OBJS) $(VRJ_OBJS)	\
+		$(OSGAPP_SRCS)
 
 vpath %.cpp $(srcdir)
 vpath %.pyste $(srcdir)/../pyste
@@ -196,6 +202,7 @@ beforebuild:
 	@$(MKINSTALLDIRS) $(OBJDIR)/jccl
 	@$(MKINSTALLDIRS) $(OBJDIR)/gadget
 	@$(MKINSTALLDIRS) $(OBJDIR)/vrj
+	@$(MKINSTALLDIRS) $(OBJDIR)/osgapp
 	@$(MKINSTALLDIRS) mods
 
 optim:
@@ -213,6 +220,7 @@ modules: $(MODS)
 install:
 	$(MKINSTALLDIRS) $(PYTHON_PACKAGES)
 	cp $(top_srcdir)/dist/__init__.py $(PYTHON_PACKAGES)
+	cp $(top_srcdir)/dist/vrj.py $(PYTHON_PACKAGES)
 	cp -p $(MODS) $(PYTHON_PACKAGES)
 
 # Rule for generating a .cpp file from a .pyste file.
@@ -240,9 +248,13 @@ mods/gadget$(PYMOD_EXT): $(GADGET_OBJS)
 	$(CXX_PLUGIN) $(DYLIB_NAME_FLAG) $(GADGET_OBJS) $(LDFLAGS)	\
           $(GADGET_LIBS) $(GADGET_EXTRA_LIBS)
 
-mods/vrj$(PYMOD_EXT): $(VRJ_OBJS)
+mods/__vrj$(PYMOD_EXT): $(VRJ_OBJS)
 	$(CXX_PLUGIN) $(DYLIB_NAME_FLAG) $(VRJ_OBJS) $(PYJUTIL_LIB)	\
           $(LDFLAGS) $(VJ_LIBS) $(VJ_EXTRA_LIBS)
+
+mods/__osgapp$(PYMOD_EXT): $(OSGAPP_OBJS)
+	$(CXX_PLUGIN) $(DYLIB_NAME_FLAG) $(OSGAPP_OBJS) $(PYJUTIL_LIB)	\
+          $(LDFLAGS) $(VJ_LIBS) $(VJ_EXTRA_LIBS) $(OSG_EXTRA_LIBS)
 
 clean:
 	rm -rf $(OBJDIR_DBG)
