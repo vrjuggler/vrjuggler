@@ -37,7 +37,7 @@
 
 #include <tweek/CORBA/SubjectImpl.h>
 
-#include <corba_perf_mon/PerformanceMonitorSubject.h>
+#include <PerformanceMonitorSubject.h>
 
 namespace vrj
 {
