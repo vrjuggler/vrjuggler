@@ -18,22 +18,30 @@ public:
 
    void setPosition(CORBA::Float xPos, CORBA::Float yPos, CORBA::Float zPos)
    {
+      /*
       gmtl::Matrix44f temp_pos = mNavigater->getCurPos();
       gmtl::setTrans(temp_pos, gmtl::Vec3f(xPos, yPos, zPos));
       mNavigater->setCurPos(temp_pos);
+      */
    }
 
    void getPosition(CORBA::Float& xPos, CORBA::Float& yPos, CORBA::Float& zPos)
    {
+      /*
       gmtl::Vec3f pos = gmtl::makeTrans<gmtl::Vec3f>(mNavigater->getCurPos());
       xPos = pos[0];
       yPos = pos[1];
       zPos = pos[2];
+      */
+      xPos = 0;
+      yPos = 0;
+      zPos = 0;
    }
 
    void getOrientation(CORBA::Float& pitch, CORBA::Float& heading,
                        CORBA::Float& roll)
    {
+      /*
       gmtl::Matrix44f pos = mNavigater->getCurPos();
       gmtl::EulerAngleXYZf euler;
       gmtl::set(euler,pos);
@@ -43,15 +51,21 @@ public:
       //pitch = gmtl::makeXRot(pos);
       //heading = gmtl::makeYRot(pos);
       //roll = gmtl::makeZRot(pos);
+      */
+      pitch = 0;
+      heading = 0;
+      roll = 0;
    }
 
    void setOrientation(CORBA::Float pitch, CORBA::Float heading,
                        CORBA::Float roll)
    {
+      /*
       gmtl::EulerAngleXYZf euler( pitch, heading, roll );
       gmtl::Matrix44f pos = mNavigater->getCurPos();
       gmtl::setRot(pos, euler);
       mNavigater->setCurPos(pos);
+      */
    }
 
    void setVelocity(CORBA::Float xDelta, CORBA::Float yDelta,

@@ -139,6 +139,8 @@ public:
    //  while (drawing)
    //  {
    //        preFrame();
+   //       <Application Data Syncronization>
+   //        latePreFrame();
    //       draw();
    //        intraFrame();     // Drawing is happening while here
    //       sync();
@@ -153,6 +155,9 @@ public:
    // called once before every frame.
    virtual void preFrame();
 
+   // Function called after ApplicationData syncronization but before draw()
+   virtual void latePreFrame();
+   
    //: Function called after drawing has been triggered but BEFORE it completes<BR><BR>
    //
    // called once during each frame
