@@ -222,6 +222,18 @@ sub configureModule ($)
    my $module_name = shift;
 
    my $cwd = getcwd();
+   my $safe_cwd;
+
+   if ( $Win32 )
+   {
+      $safe_cwd = `cygpath -w $cwd`;
+      chomp($safe_cwd);
+      $safe_cwd =~ s/\\/\//g;
+   }
+   else
+   {
+      $safe_cwd = "$cwd";
+   }
 
    die "ERROR: No module $module_name defined\n"
       unless defined($MODULES{"$module_name"});
@@ -260,7 +272,7 @@ sub configureModule ($)
          {
             if ( "${$$modref{'env'}}{$_}" eq "instlinks" )
             {
-               $ENV{"$_"} = "$cwd/instlinks";
+               $ENV{"$_"} = "$safe_cwd/instlinks";
             }
             else
             {
@@ -351,8 +363,11 @@ sub generateMakefile (;$)
       # to /'s just to be safe.
       my $win_pwd = `cygpath -w $ENV{'PWD'}`;
       my $win_cwd = `cygpath -w $cwd`;
-      $win_pwd    =~ s/\\/\//g;
-      $win_cwd    =~ s/\\/\//g;
+      chomp($win_pwd);
+      chomp($win_cwd);
+
+      $win_pwd =~ s/\\/\//g;
+      $win_cwd =~ s/\\/\//g;
 
       $input_file =~ s/\@JUGGLERROOT_ABS\@/$win_pwd/g;
       $input_file =~ s/\@topdir\@/$win_cwd/g;
