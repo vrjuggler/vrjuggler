@@ -122,7 +122,6 @@ private:
     */
    static void threadedSampleFunction(void* classPointer);
 
-   int           mDigitalData;
    vpr::Thread*  mSampleThread;
    bool          mRunning;
 
