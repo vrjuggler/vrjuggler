@@ -39,7 +39,7 @@ dnl # The default is /usr/java or what the user has defined in his or her
 dnl # $JDK_HOME environment variable.  ${_JDK_HOME_ALT_LIST} must be a
 dnl # colon-separated list of bin directories that could contain javac(1)
 dnl # and the other JDK utilities.
-if test ! -z "$JAVA_HOME" ; then
+if test "x$JAVA_HOME" != "x" ; then
     _JDK_HOME_ALT_LIST="/usr/local/java/bin"
 else
     _JDK_HOME_ALT_LIST="${JAVA_HOME}/bin:/usr/local/java/bin"
@@ -490,7 +490,7 @@ _PERL_PATH='/usr/local/bin /usr/bin'
 
 dnl # If ${_user_perl_path} has a value, prepend that on ${_PERL_PATH} so that
 dnl # it will be checked before the standard places.
-if test ! -z "${_user_perl_path}" ; then
+if test "x${_user_perl_path}" != "x" ; then
     _PERL_PATH="${_user_perl_path} ${_PERL_PATH}"
 fi
 
@@ -532,7 +532,7 @@ if test "x${_thread_pkg}" = "xPOSIX" ; then
 
     dnl # On HP-UX 10.20, the pthreads library is in the cma library rather
     dnl # than pthreads, so test for that if $THREADS was not set above.
-    if test -z "$THREADS" ; then
+    if test "x$THREADS" = "x" ; then
         AC_CHECK_LIB(cma, pthread_create,
             AC_CHECK_HEADER(pthread.h,
                 [ THREADS='POSIX'; LIBS="$LIBS -lcma"; ],
@@ -540,7 +540,7 @@ if test "x${_thread_pkg}" = "xPOSIX" ; then
     fi
 
     dnl # On FreeBSD, the pthreads stuff is in libc_r.
-    if test -z "$THREADS" ; then
+    if test "x$THREADS" = "x" ; then
         _vjsave_CFLAGS="$CFLAGS"
         CFLAGS="$CFLAGS -pthread"
 
@@ -631,7 +631,7 @@ elif test "$THREADS" = "SGI_IPC" ; then
 
     SYNC_SYS='SGI_IPC'
     SHMEM_SYS='SGI_IPC'
-elif test -z "$THREADS" ; then
+elif test "x$THREADS" = "x" ; then
     AC_MSG_ERROR(No threading package defined!)
 fi
 
@@ -717,7 +717,7 @@ if test "x${_enable_gl_api}" = "xyes" ; then
 
     dnl # If OpenGL API files were added, define this extra stuff that is
     dnl # used in some Makefiles.
-    if test ! -z "$OPENGL_API" ; then
+    if test "x$OPENGL_API" != "x" ; then
         if test "x" == "x$x_libraries" ; then
             _x_lib_path=''
         else
@@ -793,7 +793,7 @@ if test "x${_enable_pf_api}" = "xyes" ; then
 
     dnl # No Performer API files were added, so restore $INCLUDES and $LDFLAGS
     dnl # so that no OpenGL stuff in included in them.
-    if test -z "$PERFORMER_API" ; then
+    if test "x$PERFORMER_API" = "x" ; then
         INCLUDES="${_vjsave_INCLUDES}"
         LDFLAGS="${_vjsave_LDFLAGS}"
     fi
