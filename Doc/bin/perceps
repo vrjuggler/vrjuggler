@@ -1185,6 +1185,8 @@ sub GENTEXT {
               (($arg[1] eq "pure") && $mname && $ispure{$mloc,$mnm})  ||
 	      ( ("$arg[1]" eq "membervar") &&
 		getMemberVars("$cname", "$arg[2]") ) ||
+	      ( ("$arg[1]" eq "constructor") &&
+		getConstructors("$cname", "$arg[2]") ) ||
 	      ( ("$arg[1]" eq "mconstructor") && $mnm &&
 		isconstructor("$cname", "$mnm") ) ||
 	      ( ("$arg[1]" eq "mpublic") && $mname &&
@@ -3026,6 +3028,42 @@ sub isconstructor ($$) {
   } else {
     return 0;
   }
+}
+
+sub getConstructors ($;$) {
+  my $class_name = shift;
+  my $type = shift || 'member';
+
+  my $neg = 0;
+
+  if ( $type =~ /^!\s*(\S\w+)$/ ) {
+    $neg = 1;
+    $type = "$1";
+  }
+
+  my(@members) = ();
+
+  if ( $neg ) {
+    if ( "$type" eq "private" ) {
+      @members = GETMEMBERS("$class_name", 'public', 0);
+    } elsif ( "$type" eq "protected" ) {
+      @members = GETMEMBERS("$class_name", 'public', 0);
+      push(@members, GETMEMBERS("$class_name", 'private', 0));
+    } else {
+      @members = GETMEMBERS("$class_name", 'private', 0);
+    }
+  } else {
+    @members = GETMEMBERS("$class_name", "$type", 0);
+  }
+
+  my(@constructors) = ();
+
+  foreach ( @members ) {
+    my $member = (split($;, "$_"))[1];
+    push(@constructors, "$_") if isconstructor("$class_name", "$member");
+  }
+
+  return @constructors;
 }
 
 sub ispublic ($$) {
