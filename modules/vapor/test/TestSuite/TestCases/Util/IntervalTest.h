@@ -30,13 +30,13 @@ public:
    void construction()
    {
       vpr::Interval val1(21,vpr::Interval::Sec);
-      assertTest(val1.sec() == 21);
+      assertLongsEqual(val1.sec(), 21);
 
       vpr::Interval val2(21,vpr::Interval::Msec);
-      assertTest(val2.msec() == 21);
+      assertLongsEqual(val2.msec(), 21);
 
       vpr::Interval val3(21,vpr::Interval::Usec);
-      assertTest(val3.usec() == 21);
+      assertLongsEqual(val3.usec(), 21);
    }
 
    void testSet()
@@ -44,13 +44,13 @@ public:
       vpr::Interval val;
 
       val.set(21,vpr::Interval::Sec);
-      assertTest(val.sec() == 21);
+      assertLongsEqual(val.sec(), 21);
 
       val.set(21,vpr::Interval::Msec);
-      assertTest(val.msec() == 21);
+      assertLongsEqual(val.msec(), 21);
 
       val.set(21,vpr::Interval::Usec);
-      assertTest(val.usec() == 21);
+      assertLongsEqual(val.usec(), 21);
    }
 
    void testSetf()
@@ -58,13 +58,13 @@ public:
       vpr::Interval val;
 
       val.setf(12.75f, vpr::Interval::Sec);
-      assertTest(val.msec() == 12750);
+      assertLongsEqual(val.msec(), 12750);
 
       val.setf(12.75f, vpr::Interval::Msec);
-      assertTest(val.usec() == 12750);
+      assertLongsEqual(val.usec(), 12750);
 
       val.setf(12.75f, vpr::Interval::Usec);
-      assertTest(val.usec() == 12);
+      assertLongsEqual(val.usec(), 12);
    }
 
    void testSec()
@@ -72,9 +72,9 @@ public:
       vpr::Interval val;
 
       val.sec(21);
-      assertTest(val.sec() == 21);
-      assertTest(val.msec() == 21000);
-      assertTest(val.usec() == 21000000);
+      assertLongsEqual(val.sec(), 21);
+      assertLongsEqual(val.msec(), 21000);
+      assertLongsEqual(val.usec(), 21000000);
    }
 
    void testSecf()
@@ -87,9 +87,9 @@ public:
       //float val_msec = val.msecf();
       //float val_usec = val.usecf();
 
-      assertTest(val.secf()  == 12.345678f);
-      assertTest(val.msecf() == 12345.678f);
-      assertTest(val.usecf() == 12345678.0f);
+      assertDoublesEqual(val.secf() , 12.345678f, 0.000001f);
+      assertDoublesEqual(val.msecf(), 12345.678f, 0.001f);
+      assertDoublesEqual(val.usecf(), 12345678.0f, 1.0f);
    }
 
    void testMsec()
@@ -97,9 +97,9 @@ public:
       vpr::Interval val;
 
       val.msec(12345);
-      assertTest(val.sec()  == 12);
-      assertTest(val.msec() == 12345);
-      assertTest(val.usec() == 12345000);
+      assertLongsEqual(val.sec() , 12);
+      assertLongsEqual(val.msec(), 12345);
+      assertLongsEqual(val.usec(), 12345000);
    }
 
    void testMsecf()
@@ -112,9 +112,9 @@ public:
       //float val_msec = val.msecf();
       //float val_usec = val.usecf();
 
-      assertTest(val.secf()  == 12.345678f);
-      assertTest(val.msecf() == 12345.678f);
-      assertTest(val.usecf() == 12345678.0f);
+      assertDoublesEqual(val.secf() , 12.345678f, 0.00001f);
+      assertDoublesEqual(val.msecf(), 12345.678f, 0.001f);
+      assertDoublesEqual(val.usecf(), 12345678.0f, 1.0f);
    }
 
    void testUsec()
@@ -122,9 +122,9 @@ public:
       vpr::Interval val;
 
       val.usecf(1234567);
-      assertTest(val.sec()  == 1);
-      assertTest(val.msec() == 1234);
-      assertTest(val.usec() == 1234567);
+      assertLongsEqual(val.sec() , 1);
+      assertLongsEqual(val.msec(), 1234);
+      assertLongsEqual(val.usec(), 1234567);
    }
 
    void testUsecf()
@@ -137,11 +137,9 @@ public:
       //float val_msec = val.msecf();
       //float val_usec = val.usecf();
 
-
-      assertTest(val.secf()  == 12.345678f);
-      assertTest(val.msecf() == 12345.678f);
-      assertTest(val.usecf() == 12345678.0f);
-      //assertTest(false && "Got here");
+      assertDoublesEqual(val.secf() , 12.345678f, 0.000001f);
+      assertDoublesEqual(val.msecf(), 12345.678f, 0.001f);
+      assertDoublesEqual(val.usecf(), 12345678.0f, 1.0f);
    }
 
 
