@@ -424,6 +424,12 @@ public class DisplayWindowEditorPanel
          elt.setProperty("stereo", 0, dlg.inStereo());
          elt.setProperty("border", 0, dlg.hasBorder());
 
+         elt.setProperty(EditorConstants.lockKeyProperty, 0, dlg.getLockKey());
+         elt.setProperty(EditorConstants.startLockedProperty, 0,
+                         dlg.shouldStartLocked());
+         elt.setProperty(EditorConstants.sleepTimeProperty, 0,
+                         dlg.getSleepTime());
+
          addDisplay(elt);
       }
    }
