@@ -16,7 +16,7 @@
 #ifndef _VJ_ENVIRONMENT_MANAGER_H_
 #define _VJ_ENVIRONMENT_MANAGER_H_
 
-#include "vjNetworkConnect.h"
+#include <Environment/vjNetworkConnect.h>
 
 
 
