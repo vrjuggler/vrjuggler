@@ -34,7 +34,7 @@
 #include <jccl/jcclConfig.h>
 #include <jccl/Config/ConfigChunk.h>
 #include <jccl/Config/ParseUtil.h>
-#include <vpr/Util/Debug.h>
+#include <jccl/Util/Debug.h>
 #include <vpr/Util/Assert.h>
 #include <jccl/Config/ChunkFactory.h>
 #include <jccl/Config/ChunkDesc.h>
@@ -464,7 +464,7 @@ const VarValue& ConfigChunk::getProperty (const std::string& property_token, int
 
     Property *p = getPropertyPtrFromToken (property_token);
     if (!p) {
-        vprDEBUG(vprDBG_CONFIG,2) << "getProperty(\"" << property_token.c_str() << "\") in chunk \""
+        vprDEBUG(jcclDBG_CONFIG,2) << "getProperty(\"" << property_token.c_str() << "\") in chunk \""
                                 << getProperty("Name") << "\" - no such property; returning T_INVALID\n" << vprDEBUG_FLUSH;
         return VarValue::getInvalidInstance();
     }

@@ -561,6 +561,7 @@ AC_OUTPUT(Makefile
           jccl/JackalServer/Makefile
           jccl/Performance/Makefile
           jccl/ConfigManager/Makefile
+          jccl/Util/Makefile
           VjControl/Makefile
           samples/Makefile
           samples/vjcontrol/Makefile

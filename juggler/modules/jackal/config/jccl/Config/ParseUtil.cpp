@@ -34,7 +34,7 @@
 #include <jccl/jcclConfig.h>
 #include <ctype.h>
 #include <jccl/Config/ParseUtil.h>
-#include <vpr/Util/Debug.h>
+#include <jccl/Util/Debug.h>
 #include <jccl/Config/ConfigTokens.h>
 
 namespace jccl {
@@ -441,7 +441,7 @@ const std::string findFileUsingPathVar (std::ifstream& in, const std::string& fi
             full_path += "/";
             full_path += file_name;
             
-            vprDEBUG(vprDBG_CONFIG, vprDBG_STATE_LVL)
+            vprDEBUG(jcclDBG_CONFIG, vprDBG_STATE_LVL)
                 << "ConfigChunkDB::load(): opening file " << full_path
                 << "\n" << vprDEBUG_FLUSH;
             

@@ -63,21 +63,21 @@ DepChecker* DependencyManager::findDepChecker(ConfigChunk* chunk)
 
 void DependencyManager::debugDump()
 {
-   //vprDEBUG_BEGIN(vprDBG_KERNEL, vprDBG_CONFIG_LVL) << "DepChecker::debugDump\n" << vprDEBUG_FLUSH;
-   vprDEBUG_NEXT(vprDBG_KERNEL,vprDBG_STATE_LVL) << "----- Current dependency checkers -----\n" << vprDEBUG_FLUSH;
-   vprDEBUG_NEXT(vprDBG_KERNEL,vprDBG_STATE_LVL) << "num checkers:" << mDepCheckers.size() << "\n" << vprDEBUG_FLUSH;
-   vprDEBUG_NEXT(vprDBG_KERNEL,vprDBG_STATE_LVL) << "-1: Checker: default   type: default checker  recog: all (this is a fallback)\n" << vprDEBUG_FLUSH;
+   //vprDEBUG_BEGIN(jcclDBG_RECONFIGURATION, jcclDBG_CONFIG_LVL) << "DepChecker::debugDump\n" << vprDEBUG_FLUSH;
+   vprDEBUG_NEXT(jcclDBG_RECONFIGURATION,vprDBG_STATE_LVL) << "----- Current dependency checkers -----\n" << vprDEBUG_FLUSH;
+   vprDEBUG_NEXT(jcclDBG_RECONFIGURATION,vprDBG_STATE_LVL) << "num checkers:" << mDepCheckers.size() << "\n" << vprDEBUG_FLUSH;
+   vprDEBUG_NEXT(jcclDBG_RECONFIGURATION,vprDBG_STATE_LVL) << "-1: Checker: default   type: default checker  recog: all (this is a fallback)\n" << vprDEBUG_FLUSH;
 
    for(unsigned int cNum=0;cNum<mDepCheckers.size();cNum++)
    {
       DepChecker* checker = mDepCheckers[cNum];
-      vprDEBUG_NEXT(vprDBG_KERNEL,vprDBG_STATE_LVL)
+      vprDEBUG_NEXT(jcclDBG_RECONFIGURATION,vprDBG_STATE_LVL)
                  << cNum << ": Checker:" << (void*)checker
                  << "   type:" << typeid(*checker).name()
                  << "   recog:" << checker->getCheckerName().c_str() << "\n" << vprDEBUG_FLUSH;
    }
 
-   vprDEBUG_END(vprDBG_KERNEL,vprDBG_STATE_LVL) << "---------------------\n" << vprDEBUG_FLUSH;
+   vprDEBUG_END(jcclDBG_RECONFIGURATION,vprDBG_STATE_LVL) << "---------------------\n" << vprDEBUG_FLUSH;
 }
 
 }; // namespace jccl

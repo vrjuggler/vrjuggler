@@ -1,3 +1,18 @@
 DATE        AUTHOR    CHANGE
 ----------- --------- ---------------------------------------------------------
+Oct-12-2001 cjust     Updated to Allen's improved vprDebug registration
+	              code.
+Oct-09-2001 cjust     Optimized VjConfig.ValType to reduce number of 
+	              objects instatiated by configuration code.
+Oct-05-2001 cjust     Replaced several explicit "parent" notifications in
+	              VjControl with ActionEvent interfaces.  Cleaned up
+		      message handling between the Performance module and
+		      its related GUI components.
+Sep-25-2001 cjust     Added various sample VjControl extensions.
+Sep-20-2001 cjust     Refactored ConfigurationControl to provide a default
+	              dynamic reconfiguration capability.  This should be
+	              sufficient for most applications which wish to use
+	              Jackal-based dynamic reconfiguration.
+Sep-10-2001 cjust     Restructuring of Jackal source code & build system.
 Aug-31-2001 cjust     Created the new "Jackal" module.
+	

@@ -44,7 +44,7 @@
 #include <jccl/Config/ChunkFactory.h>
 #include <jccl/Config/ParseUtil.h>
 #include <jccl/XMLUtil/XercesXMLParserPool.h>
-#include <vpr/Util/Debug.h>
+#include <jccl/Util/Debug.h>
 
 
 
@@ -284,7 +284,7 @@ bool XMLConfigIOHandler::parseTextValues (Property* p, int& startval, char* text
     }
 
     if (!retval) {
-        vprDEBUG(vprDBG_CONFIG,0) << clrOutNORM(clrRED, "ERROR:") << 
+        vprDEBUG(jcclDBG_CONFIG,0) << clrOutNORM(clrRED, "ERROR:") << 
             "XMLConfigIOHandler: failed tryAssign of '" << ch << 
             "' to property '" << p->getToken() << "'.\n" <<
             vprDEBUG_FLUSH;
@@ -316,7 +316,7 @@ bool XMLConfigIOHandler::buildProperty (ConfigChunk* ch, const DOM_Node& doc, bo
                         if (ch2)
                             p->setValue (ch2, valindex++);
                         else {
-                            vprDEBUG(vprDBG_CONFIG,0) << 
+                            vprDEBUG(jcclDBG_CONFIG,0) << 
                                 clrOutNORM(clrRED, "ERROR:") << 
                                 "Reading embedded chunk failed: " << 
                                 ch->getDescToken() << "->" << name << 
@@ -330,7 +330,7 @@ bool XMLConfigIOHandler::buildProperty (ConfigChunk* ch, const DOM_Node& doc, bo
                     case DOM_Node::COMMENT_NODE:
                         break;
                     default:
-                        vprDEBUG(vprDBG_CONFIG,2) << "XMLConfigIOHandler::"
+                        vprDEBUG(jcclDBG_CONFIG,2) << "XMLConfigIOHandler::"
                             "buildProperty: Unexpected DOM_Node.\n" << 
                             vprDEBUG_FLUSH;
                         retval = false;
@@ -343,7 +343,7 @@ bool XMLConfigIOHandler::buildProperty (ConfigChunk* ch, const DOM_Node& doc, bo
                         retval = parseTextValues (p, valindex, child.getNodeValue().transcode());
                         break;
                     default:
-                        vprDEBUG(vprDBG_CONFIG,2) << "Warning: XMLConfigIOHandler::buildProperty(): Unexpected XML Node.\n" << vprDEBUG_FLUSH;
+                        vprDEBUG(jcclDBG_CONFIG,2) << "Warning: XMLConfigIOHandler::buildProperty(): Unexpected XML Node.\n" << vprDEBUG_FLUSH;
                         break;
                     }
                 }
@@ -352,7 +352,7 @@ bool XMLConfigIOHandler::buildProperty (ConfigChunk* ch, const DOM_Node& doc, bo
         }
         else {
             retval = false;
-            vprDEBUG(vprDBG_CONFIG,0) << clrOutNORM(clrRED, "ERROR:")
+            vprDEBUG(jcclDBG_CONFIG,0) << clrOutNORM(clrRED, "ERROR:")
                                     << " Property doesn't exist: '" 
                                     << ch->getDescToken() << "->"
                                     << name << "'.\n" << vprDEBUG_FLUSH;
@@ -366,7 +366,7 @@ bool XMLConfigIOHandler::buildProperty (ConfigChunk* ch, const DOM_Node& doc, bo
         }
         else {
             retval = false;
-            vprDEBUG(vprDBG_CONFIG,0) << clrOutNORM(clrRED, "ERROR:")
+            vprDEBUG(jcclDBG_CONFIG,0) << clrOutNORM(clrRED, "ERROR:")
                                     << " Property doesn't exist: '" 
                                     << ch->getDescToken() << "->"
                                     << name << "'.\n" << vprDEBUG_FLUSH;
@@ -378,7 +378,7 @@ bool XMLConfigIOHandler::buildProperty (ConfigChunk* ch, const DOM_Node& doc, bo
     case DOM_Node::COMMENT_NODE:
         break;
     default:
-        vprDEBUG(vprDBG_CONFIG,2) << "XMLConfigIOHandler::buildProperty:"
+        vprDEBUG(jcclDBG_CONFIG,2) << "XMLConfigIOHandler::buildProperty:"
             " Unexpected DOM_Node.\n" << vprDEBUG_FLUSH;
     }
 
@@ -435,7 +435,7 @@ ConfigChunk* XMLConfigIOHandler::buildConfigChunk (const DOM_Node& doc, bool use
     case DOM_Node::COMMENT_NODE:
         break;
     default:
-        vprDEBUG(vprDBG_CONFIG,2) << "Warning: XMLConfigIOHandler::build"
+        vprDEBUG(jcclDBG_CONFIG,2) << "Warning: XMLConfigIOHandler::build"
             "ConfigChunk: Unexpected DOM_Node.\n" << vprDEBUG_FLUSH;
     }
     delete[] name;
@@ -443,7 +443,7 @@ ConfigChunk* XMLConfigIOHandler::buildConfigChunk (const DOM_Node& doc, bool use
         // in the event of a failure, we completely skip the chunk. 
         // don't risk actually sending on some mangled thing.
         if (ch) {
-            vprDEBUG(vprDBG_CONFIG,5) << "Rejecting ConfigChunk due to errors:\n"
+            vprDEBUG(jcclDBG_CONFIG,5) << "Rejecting ConfigChunk due to errors:\n"
                                     << *ch << vprDEBUG_FLUSH;
             // delete ch;
             ch = 0;
@@ -511,7 +511,7 @@ bool XMLConfigIOHandler::buildChunkDB (ConfigChunkDB& db, const DOM_Node& doc) {
         break;
     default:
         retval = false;
-        vprDEBUG(vprDBG_CONFIG,2) << "Warning: XMLConfigIOHandler::build"
+        vprDEBUG(jcclDBG_CONFIG,2) << "Warning: XMLConfigIOHandler::build"
             "ConfigChunkDB: Unexpected DOM_Node.\n" << vprDEBUG_FLUSH;
     }
     delete[] name;
@@ -725,7 +725,7 @@ bool XMLConfigIOHandler::buildChunkDescDB (ChunkDescDB& db, const DOM_Node& doc)
         break;
     default:
         retval = false;
-        vprDEBUG(vprDBG_CONFIG,2) << "Warning: XMLConfigIOHandler::build"
+        vprDEBUG(jcclDBG_CONFIG,2) << "Warning: XMLConfigIOHandler::build"
             "ChunkDescDB: Unexpected DOM_Node.\n" << vprDEBUG_FLUSH;
     }
     delete[] name;
@@ -796,7 +796,7 @@ ChunkDesc* XMLConfigIOHandler::buildChunkDesc (const DOM_Node& doc) {
         // it's just white space & crap like that.
         break;
     default:
-        vprDEBUG(vprDBG_CONFIG,2) << "Warning: XMLConfigIOHandler::build"
+        vprDEBUG(jcclDBG_CONFIG,2) << "Warning: XMLConfigIOHandler::build"
             "ConfigChunk: Unexpected DOM_Node.\n" << vprDEBUG_FLUSH;
     }
     delete[] name;
@@ -804,7 +804,7 @@ ChunkDesc* XMLConfigIOHandler::buildChunkDesc (const DOM_Node& doc) {
         // in the event of a failure, we completely skip the chunk. 
         // don't risk actually sending on some mangled thing.
         if (desc) {
-            vprDEBUG(vprDBG_CONFIG,5) << "Rejecting ChunkDesc due to errors:\n"
+            vprDEBUG(jcclDBG_CONFIG,5) << "Rejecting ChunkDesc due to errors:\n"
                                     << *desc << vprDEBUG_FLUSH;
             // delete desc;
             desc = 0;
@@ -851,7 +851,7 @@ bool XMLConfigIOHandler::parseChunkDescChildElement (ChunkDesc& desc, DOM_Node d
                         p->setNumAllowed (atoi(child_value));
                 }
                 else {
-                    vprDEBUG(vprDBG_CONFIG,2) << "Warning: XMLConfigIOHandler"
+                    vprDEBUG(jcclDBG_CONFIG,2) << "Warning: XMLConfigIOHandler"
                         "::parseChunkDescChildElement: Unidentified "
                         "attribute '" << child_name << "=\"" << child_value <<
                         "\"'.\n" << vprDEBUG_FLUSH;
@@ -877,7 +877,7 @@ bool XMLConfigIOHandler::parseChunkDescChildElement (ChunkDesc& desc, DOM_Node d
             if (retval)
                 desc.add (p);
             else {
-                vprDEBUG(vprDBG_CONFIG,5) << "Rejecting PropertyDesc in " <<
+                vprDEBUG(jcclDBG_CONFIG,5) << "Rejecting PropertyDesc in " <<
                     desc.getToken() << " due to errors:" << *p << 
                     std::endl << vprDEBUG_FLUSH;
                 delete p;
@@ -898,7 +898,7 @@ bool XMLConfigIOHandler::parseChunkDescChildElement (ChunkDesc& desc, DOM_Node d
                 case DOM_Node::PROCESSING_INSTRUCTION_NODE:
                     break;
                 default:
-                    vprDEBUG(vprDBG_CONFIG,2) << "XMLConfigIOHandler::"
+                    vprDEBUG(jcclDBG_CONFIG,2) << "XMLConfigIOHandler::"
                         "parseChunkDescChildElement: Unexpected DOM_Node.\n"<< 
                         vprDEBUG_FLUSH;
                 }
@@ -924,21 +924,21 @@ bool XMLConfigIOHandler::parseChunkDescChildElement (ChunkDesc& desc, DOM_Node d
                     // it's just white space & crap like that.
                     break;
                 default:
-                    vprDEBUG(vprDBG_CONFIG,2) << 
+                    vprDEBUG(jcclDBG_CONFIG,2) << 
                         "Warning: XMLConfigIOHandler:"
                         "parsing ChunkDesc defaults value: "
                         "Unexpected DOM Node.\n" << vprDEBUG_FLUSH;
                 }
                 child = child.getNextSibling();
             }
-            vprDEBUG(vprDBG_CONFIG,2) << 
+            vprDEBUG(jcclDBG_CONFIG,2) << 
                 "Warning: XMLConfigIOHandler: parsing ChunkDesc Defaults: "
                 "No argument for <Defaults> tag.\n" << vprDEBUG_FLUSH;
         finished:
             ;
         }
         else {
-            vprDEBUG(vprDBG_CONFIG,2) << "Warning: XMLConfigIOHandler"
+            vprDEBUG(jcclDBG_CONFIG,2) << "Warning: XMLConfigIOHandler"
                 "::parsing ChunkDesc: Unidentified Element '" <<
                 name << "'.\n" << vprDEBUG_FLUSH;
             //retval = false;
@@ -951,7 +951,7 @@ bool XMLConfigIOHandler::parseChunkDescChildElement (ChunkDesc& desc, DOM_Node d
         // it's just white space & crap like that.
         break;
     default:
-        vprDEBUG(vprDBG_CONFIG,2) << "Warning: XMLConfigIOHandler::"
+        vprDEBUG(jcclDBG_CONFIG,2) << "Warning: XMLConfigIOHandler::"
             "parseChunkDescChildElement: "
             "Unexpected DOM Node.\n" << vprDEBUG_FLUSH;
         break;
@@ -988,7 +988,7 @@ bool XMLConfigIOHandler::parsePropertyDescChildElement (PropertyDesc &p, DOM_Nod
                 if (!vjstrcasecmp (child_name, "name"))
                     p.appendValueLabel (child_value);
                 else {
-                    vprDEBUG(vprDBG_CONFIG,2) << "Warning: XMLConfigIOHandler"
+                    vprDEBUG(jcclDBG_CONFIG,2) << "Warning: XMLConfigIOHandler"
                         ": Parsing ValueLabel: Unidentified "
                         "attribute '" << child_name << "=\"" << child_value <<
                         "\"'.\n" << vprDEBUG_FLUSH;
@@ -1010,7 +1010,7 @@ bool XMLConfigIOHandler::parsePropertyDescChildElement (PropertyDesc &p, DOM_Nod
                 else if (!vjstrcasecmp (child_name, "value"))
                     enum_value = child.getNodeValue().transcode();
                 else {
-                    vprDEBUG(vprDBG_CONFIG,2) << "Warning: XMLConfigIOHandler"
+                    vprDEBUG(jcclDBG_CONFIG,2) << "Warning: XMLConfigIOHandler"
                         ": Parsing Enumeration: Unidentified "
                         "attribute '" << child_name << "=\"" << child_value <<
                         "\"'.\n" << vprDEBUG_FLUSH;
@@ -1041,7 +1041,7 @@ bool XMLConfigIOHandler::parsePropertyDescChildElement (PropertyDesc &p, DOM_Nod
                 case DOM_Node::PROCESSING_INSTRUCTION_NODE:
                     break;
                 default:
-                    vprDEBUG(vprDBG_CONFIG,2) << "XMLConfigIOHandler: "
+                    vprDEBUG(jcclDBG_CONFIG,2) << "XMLConfigIOHandler: "
                         "parsing PropertyDesc Help: Unexpected DOM_Node.\n" << 
                         vprDEBUG_FLUSH;
                 }
@@ -1051,7 +1051,7 @@ bool XMLConfigIOHandler::parsePropertyDescChildElement (PropertyDesc &p, DOM_Nod
             p.setHelp (h);
         }
         else {
-            vprDEBUG(vprDBG_CONFIG,2) << "Warning: XMLConfigIOHandler"
+            vprDEBUG(jcclDBG_CONFIG,2) << "Warning: XMLConfigIOHandler"
                 ": parsing PropertyDesc: Unidentified Element '" <<
                 name << "'.\n" << vprDEBUG_FLUSH;
             //retval = false;
@@ -1064,7 +1064,7 @@ bool XMLConfigIOHandler::parsePropertyDescChildElement (PropertyDesc &p, DOM_Nod
         // it's just white space & crap like that.
         break;
     default:
-        vprDEBUG(vprDBG_CONFIG,2) << "Warning: XMLConfigIOHandler::"
+        vprDEBUG(jcclDBG_CONFIG,2) << "Warning: XMLConfigIOHandler::"
             "parsePropertyDescChildElement: "
             "Unexpected DOM Node.\n" << vprDEBUG_FLUSH;
         break;
@@ -1104,7 +1104,7 @@ char* XMLConfigIOHandler::stringTokenizer (char* newstring, char*& tmp) {
     }
     end = strchr (begin+1, '"');
     if (!end) {
-        vprDEBUG(vprDBG_CONFIG,2) << "Warning: XMLConfigIOHandler: " <<
+        vprDEBUG(jcclDBG_CONFIG,2) << "Warning: XMLConfigIOHandler: " <<
             "Unterminated string '" << begin+1 << "'.\n" <<
             vprDEBUG_FLUSH;
         return 0;

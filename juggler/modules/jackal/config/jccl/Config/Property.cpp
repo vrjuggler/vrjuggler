@@ -39,7 +39,7 @@
 #include <jccl/Config/EnumEntry.h>
 #include <jccl/Config/ParseUtil.h>
 #include <jccl/Config/ConfigTokens.h>
-#include <vpr/Util/Debug.h>
+#include <jccl/Util/Debug.h>
 #include <vpr/Util/Assert.h>
 
 namespace jccl {
@@ -383,14 +383,14 @@ bool Property::tryAssign (int index, const char* val) {
     case T_INT:
         i = strtol (val, &endval, 0);
         if (*endval != '\0')
-            vprDEBUG (vprDBG_CONFIG, 0) << clrOutNORM(clrYELLOW, "WARNING:") << " Parser expected int, got '"
+            vprDEBUG (jcclDBG_CONFIG, 0) << clrOutNORM(clrYELLOW, "WARNING:") << " Parser expected int, got '"
                   << val << "'\n" << vprDEBUG_FLUSH;
         setValue (i, index);
         return true;
     case T_FLOAT:
         f = (float)strtod (val, &endval);
         if (*endval != '\0')
-            vprDEBUG (vprDBG_CONFIG, 0) << clrOutNORM(clrYELLOW, "WARNING:") << " Parser expected float, got '"
+            vprDEBUG (jcclDBG_CONFIG, 0) << clrOutNORM(clrYELLOW, "WARNING:") << " Parser expected float, got '"
                                       << val << "'\n" << vprDEBUG_FLUSH;
         setValue (f, index);
         return true;
@@ -404,7 +404,7 @@ bool Property::tryAssign (int index, const char* val) {
             b = strtol (val, &endval, 0);
             if (endval != '\0') {
                 b = false;
-                vprDEBUG (vprDBG_CONFIG,0) << clrOutNORM(clrYELLOW, "WARNING:") << " Parser expected bool, got '"
+                vprDEBUG (jcclDBG_CONFIG,0) << clrOutNORM(clrYELLOW, "WARNING:") << " Parser expected bool, got '"
                                          << val << "'\n" << vprDEBUG_FLUSH;
             }
         }

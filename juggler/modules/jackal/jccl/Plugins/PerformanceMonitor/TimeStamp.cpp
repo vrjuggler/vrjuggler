@@ -58,7 +58,7 @@
 
 #include <sys/syssgi.h>
 #include <sys/errno.h>
-#include <vpr/Util/Debug.h>
+#include <jccl/Util/Debug.h>
 
 namespace jccl {
 
@@ -94,7 +94,7 @@ void TimeStampSGI::initialize() {
     else
 	initval = *(unsigned int*)iotimer_addr;
 
-    vprDEBUG(vprDBG_PERFORMANCE,3) << "TimeStamp system initialized.\n"
+    vprDEBUG(jcclDBG_PERFORMANCE,3) << "TimeStamp system initialized.\n"
 	       << vprDEBUG_FLUSH;
 }
 
