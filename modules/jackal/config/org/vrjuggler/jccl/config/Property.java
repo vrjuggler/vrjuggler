@@ -385,8 +385,8 @@ public class Property
          else
          {
             s.append('"');
-            //s.append(XMLConfigIOHandler.escapeString(desc.getEnumString(v)));
-            s.append(XMLConfigIOHandler.escapeString(v.toString()));
+            s.append(XMLConfigIOHandler.escapeString(desc.getEnumString(v)));
+            //s.append(XMLConfigIOHandler.escapeString(v.toString()));
             s.append("\" ");
          }
       }
