@@ -45,10 +45,9 @@ install-books:
 	@if test ! -d $(book_distdir) ; then	\
             mkdir -p $(book_distdir) ;		\
         fi
-	@for book in $(PDF_BOOKS) ; do		\
-            echo "$$book --> $(book_distdir)" ;	\
-            umask 002 ;				\
-            cp $$book $(book_distdir) ;		\
+	@for book in $(PDF_BOOKS) ; do			\
+            echo "$$book --> $(book_distdir)" ;		\
+            install -m 664 $$book $(book_distdir) ;	\
         done
 
 %.pdf: %.html
