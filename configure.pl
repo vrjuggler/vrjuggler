@@ -224,8 +224,20 @@ sub configureModule ($)
       mkpath("$mod_path", 1, 0755) unless -d "$mod_path";
       chdir("$mod_path")
          or warn "WARNING: Could not chdir to $mod_path\n";
-      print "Running $cwd/$base_dir/$mod_path/configure @ARGV\n";
-      system("$cwd/$base_dir/$mod_path/configure @ARGV 2>&1") == 0
+
+      my $src_root;
+
+      if ( $base_dir =~ /^\// )
+      {
+         $src_root = "$base_dir";
+      }
+      else
+      {
+         $src_root = "$cwd/$base_dir";
+      }
+
+      print "Running $src_root/$mod_path/configure @ARGV\n";
+      system("$src_root/$mod_path/configure @ARGV 2>&1") == 0
          or die "Configuration of $module_name in $ENV{'PWD'} failed\n";
 
       foreach ( keys(%{$$modref{'env'}}) )
