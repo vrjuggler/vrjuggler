@@ -36,6 +36,7 @@
 #include <string.h>
 #include <winsock2.h>
 
+#include <vpr/Util/Status.h>
 #include <vpr/md/WIN32/IO/Socket/SocketStreamImplWinSock.h>
 
 
@@ -65,12 +66,7 @@ SocketStreamImplWinSock::SocketStreamImplWinSock (const InetAddr& local_addr,
                                                   const InetAddr& remote_addr)
     : SocketImplWinSock(local_addr, remote_addr, SocketTypes::STREAM)
 {
-        local_addr.getAddressString().c_str(),
-        m_local_addr.getAddressString().c_str());
-        m_local_addr.getPort());
-        remote_addr.getAddressString().c_str(),
-        m_remote_addr.getAddressString().c_str());
-        m_remote_addr.getPort());
+    /* Do nothing. */ ;
 }
 
 // ----------------------------------------------------------------------------
