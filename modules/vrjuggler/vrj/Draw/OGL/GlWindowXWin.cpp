@@ -32,10 +32,11 @@
 
 #include <vrj/vrjConfig.h>
 
+#include <iomanip>
+#include <vector>
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
 #include <GL/glx.h>
-#include <vector>
 
 #include <vpr/vpr.h>
 #include <jccl/Config/ConfigElement.h>
@@ -511,60 +512,47 @@ void GlWindowXWin::checkEvents()
    // Using 1 here requests the *largest* available size for each of these
    // buffers.  Refer to the glXChooseVisual() manual page for more details.
    int visual_id(-1);
-   int red_size(1), green_size(1), blue_size(1), alpha_size(1), db_size(1);
+   int red_size(1), green_size(1), blue_size(1), alpha_size(1), db_size(1),
+       accum_red_size(1), accum_green_size(1), accum_blue_size(1),
+       accum_alpha_size(1), stencil_size(1);
+   // glXChooseVisual() will return the visual with the smallest number of
+   // auxiliary buffers that meets or exceeds the requested count.
+   int num_aux_bufs(0);
    bool want_fsaa(false);
 
    jccl::ConfigElementPtr gl_fb_elt = mVrjDisplay->getGlFrameBufferConfig();
 
    if ( gl_fb_elt.get() != NULL )
    {
-      visual_id  = gl_fb_elt->getProperty<int>("visual_id");
-      red_size   = gl_fb_elt->getProperty<int>("red_size");
-      green_size = gl_fb_elt->getProperty<int>("green_size");
-      blue_size  = gl_fb_elt->getProperty<int>("blue_size");
-      alpha_size = gl_fb_elt->getProperty<int>("alpha_size");
-      db_size    = gl_fb_elt->getProperty<int>("depth_buffer_size");
-      want_fsaa  = gl_fb_elt->getProperty<bool>("fsaa_enable");
-
-      if ( red_size < 0 )
+      if ( gl_fb_elt->getVersion() < 2 )
       {
          vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_WARNING_LVL)
-            << "WARNING: Red channel size was negative, set to: " << red_size
-            << ".  Setting to 1.\n" << vprDEBUG_FLUSH;
-         red_size = 1;
+            << clrOutBOLD(clrYELLOW, "WARNING:") << " Display window '"
+            << mVrjDisplay->getName() << "'" << std::endl;
+         vprDEBUG_NEXTnl(vrjDBG_DRAW_MGR, vprDBG_WARNING_LVL)
+            << "has an out of date OpenGL frame buffer configuration."
+            << std::endl;
+         vprDEBUG_NEXTnl(vrjDBG_DRAW_MGR, vprDBG_WARNING_LVL)
+            << "Expected version 2 but found version "
+            << gl_fb_elt->getVersion() << ".\n";
+         vprDEBUG_NEXTnl(vrjDBG_DRAW_MGR, vprDBG_WARNING_LVL)
+            << "Default values will be used for some frame buffer settings.\n"
+            << vprDEBUG_FLUSH;
       }
 
-      if ( green_size < 0 )
-      {
-         vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_WARNING_LVL)
-            << "WARNING: Green channel size was negative, set to: "
-            << green_size << ".  Setting to 1.\n" << vprDEBUG_FLUSH;
-         green_size = 1;
-      }
-
-      if ( blue_size < 0 )
-      {
-         vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_WARNING_LVL)
-            << "WARNING: Blue channel size was negative, set to: " << blue_size
-            << ".  Setting to 1.\n" << vprDEBUG_FLUSH;
-         blue_size = 1;
-      }
-
-      if ( alpha_size < 0 )
-      {
-         vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_WARNING_LVL)
-            << "WARNING: Alpha channel size was negative, set to: "
-            << alpha_size << ".  Setting to 1.\n" << vprDEBUG_FLUSH;
-         alpha_size = 1;
-      }
-
-      if ( db_size < 0 )
-      {
-         vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_WARNING_LVL)
-            << "WARNING: Depth buffer size was negative, set to: " << db_size
-            << ".  Setting to 1.\n" << vprDEBUG_FLUSH;
-         db_size = 1;
-      }
+      visual_id        = gl_fb_elt->getProperty<int>("visual_id");
+      red_size         = gl_fb_elt->getProperty<int>("red_size");
+      green_size       = gl_fb_elt->getProperty<int>("green_size");
+      blue_size        = gl_fb_elt->getProperty<int>("blue_size");
+      alpha_size       = gl_fb_elt->getProperty<int>("alpha_size");
+      num_aux_bufs     = gl_fb_elt->getProperty<int>("auxiliary_buffer_count");
+      db_size          = gl_fb_elt->getProperty<int>("depth_buffer_size");
+      stencil_size     = gl_fb_elt->getProperty<int>("stencil_buffer_size");
+      accum_red_size   = gl_fb_elt->getProperty<int>("accum_red_size");
+      accum_green_size = gl_fb_elt->getProperty<int>("accum_green_size");
+      accum_blue_size  = gl_fb_elt->getProperty<int>("accum_blue_size");
+      accum_alpha_size = gl_fb_elt->getProperty<int>("accum_alpha_size");
+      want_fsaa        = gl_fb_elt->getProperty<bool>("fsaa_enable");
    }
 
    if ( visual_id != -1 )
@@ -612,10 +600,160 @@ void GlWindowXWin::checkEvents()
    }
    else
    {
+      if ( red_size < 0 )
+      {
+         vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_WARNING_LVL)
+            << clrOutBOLD(clrYELLOW, "WARNING:")
+            << " Color buffer red channel size was negative ("
+            << red_size << ").  Setting to 1.\n" << vprDEBUG_FLUSH;
+         red_size = 1;
+      }
+
+      if ( green_size < 0 )
+      {
+         vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_WARNING_LVL)
+            << clrOutBOLD(clrYELLOW, "WARNING:")
+            << " Color buffer green channel size was negative ("
+            << green_size << ").  Setting to 1.\n" << vprDEBUG_FLUSH;
+         green_size = 1;
+      }
+
+      if ( blue_size < 0 )
+      {
+         vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_WARNING_LVL)
+            << clrOutBOLD(clrYELLOW, "WARNING:")
+            << " Color buffer blue channel size was negative ("
+            << blue_size << ").  Setting to 1.\n" << vprDEBUG_FLUSH;
+         blue_size = 1;
+      }
+
+      if ( alpha_size < 0 )
+      {
+         vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_WARNING_LVL)
+            << clrOutBOLD(clrYELLOW, "WARNING:")
+            << " Color buffer alpha channel size was negative ("
+            << alpha_size << ").  Setting to 1.\n" << vprDEBUG_FLUSH;
+         alpha_size = 1;
+      }
+
+      if ( num_aux_bufs < 0 )
+      {
+         vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_WARNING_LVL)
+            << clrOutBOLD(clrYELLOW, "WARNING:")
+            << " Auxiliary buffer count was negative (" << num_aux_bufs
+            << ").  Setting to 0.\n" << vprDEBUG_FLUSH;
+         num_aux_bufs = 0;
+      }
+
+      if ( db_size < 0 )
+      {
+         vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_WARNING_LVL)
+            << clrOutBOLD(clrYELLOW, "WARNING:")
+            << " Depth buffer size was negative (" << db_size
+            << ").  Setting to 1.\n" << vprDEBUG_FLUSH;
+         db_size = 1;
+      }
+
+      if ( stencil_size < 0 )
+      {
+         vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_WARNING_LVL)
+            << clrOutBOLD(clrYELLOW, "WARNING:")
+            << " Stencil buffer size was negative (" << stencil_size
+            << ").  Setting to 1.\n" << vprDEBUG_FLUSH;
+         stencil_size = 1;
+      }
+
+      if ( accum_red_size < 0 )
+      {
+         vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_WARNING_LVL)
+            << clrOutBOLD(clrYELLOW, "WARNING:")
+            << " Accumulation buffer red channel size was negative ("
+            << accum_red_size << ").  Setting to 1.\n" << vprDEBUG_FLUSH;
+         accum_red_size = 1;
+      }
+
+      if ( accum_green_size < 0 )
+      {
+         vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_WARNING_LVL)
+            << clrOutBOLD(clrYELLOW, "WARNING:")
+            << " Accumulation buffer green channel size was negative ("
+            << accum_green_size << ").  Setting to 1.\n" << vprDEBUG_FLUSH;
+         accum_green_size = 1;
+      }
+
+      if ( accum_blue_size < 0 )
+      {
+         vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_WARNING_LVL)
+            << clrOutBOLD(clrYELLOW, "WARNING:")
+            << " Accumulation buffer blue channel size was negative ("
+            << accum_blue_size << ").  Setting to 1.\n" << vprDEBUG_FLUSH;
+         accum_blue_size = 1;
+      }
+
+      if ( accum_alpha_size < 0 )
+      {
+         vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_WARNING_LVL)
+            << clrOutBOLD(clrYELLOW, "WARNING:")
+            << " Accumulation buffer alpha channel size was negative ("
+            << accum_alpha_size << ").  Setting to 1.\n" << vprDEBUG_FLUSH;
+         accum_alpha_size = 1;
+      }
+
+      const unsigned int indent_level(2);
+      const std::string indent_text(indent_level, ' ');
+      const int pad_width_dot(40 - indent_level);
       vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CONFIG_LVL)
-         << "Frame buffer visual settings for " << mVrjDisplay->getName()
-         << ": R:" << red_size << " G:" << green_size << " B:" << blue_size
-         << " A:" << alpha_size << " DB:" << db_size << std::endl
+         << "OpenGL visual request settings for " << mVrjDisplay->getName()
+         << ":\n";
+      vprDEBUG_NEXTnl(vrjDBG_DRAW_MGR, vprDBG_CONFIG_LVL)
+         << std::setiosflags(std::ios::left) << std::setfill('.')
+         << indent_text << std::setw(pad_width_dot)
+         << "Color buffer red size " << " " << red_size << std::endl;
+      vprDEBUG_NEXTnl(vrjDBG_DRAW_MGR, vprDBG_CONFIG_LVL)
+         << std::setiosflags(std::ios::left) << std::setfill('.')
+         << indent_text << std::setw(pad_width_dot)
+         << "Color buffer green size " << " " << green_size << std::endl;
+      vprDEBUG_NEXTnl(vrjDBG_DRAW_MGR, vprDBG_CONFIG_LVL)
+         << std::setiosflags(std::ios::left) << std::setfill('.')
+         << indent_text << std::setw(pad_width_dot)
+         << "Color buffer blue size " << " " << blue_size << std::endl;
+      vprDEBUG_NEXTnl(vrjDBG_DRAW_MGR, vprDBG_CONFIG_LVL)
+         << std::setiosflags(std::ios::left) << std::setfill('.')
+         << indent_text << std::setw(pad_width_dot)
+         << "Color buffer alpha size " << " " << alpha_size << std::endl;
+      vprDEBUG_NEXTnl(vrjDBG_DRAW_MGR, vprDBG_CONFIG_LVL)
+         << std::setiosflags(std::ios::left) << std::setfill('.')
+         << indent_text << std::setw(pad_width_dot)
+         << "Auxiliary buffer count " << " " << num_aux_bufs << std::endl;
+      vprDEBUG_NEXTnl(vrjDBG_DRAW_MGR, vprDBG_CONFIG_LVL)
+         << std::setiosflags(std::ios::left) << std::setfill('.')
+         << indent_text << std::setw(pad_width_dot)
+         << "Depth buffer size " << " " << db_size << std::endl;
+      vprDEBUG_NEXTnl(vrjDBG_DRAW_MGR, vprDBG_CONFIG_LVL)
+         << std::setiosflags(std::ios::left) << std::setfill('.')
+         << indent_text << std::setw(pad_width_dot)
+         << "Stencil buffer size " << " " << stencil_size << std::endl;
+      vprDEBUG_NEXTnl(vrjDBG_DRAW_MGR, vprDBG_CONFIG_LVL)
+         << std::setiosflags(std::ios::left) << std::setfill('.')
+         << indent_text << std::setw(pad_width_dot)
+         << "Accumulation buffer red size " << " " << accum_red_size
+         << std::endl;
+      vprDEBUG_NEXTnl(vrjDBG_DRAW_MGR, vprDBG_CONFIG_LVL)
+         << std::setiosflags(std::ios::left) << std::setfill('.')
+         << indent_text << std::setw(pad_width_dot)
+         << "Accumulation buffer green size " << " " << accum_green_size
+         << std::endl;
+      vprDEBUG_NEXTnl(vrjDBG_DRAW_MGR, vprDBG_CONFIG_LVL)
+         << std::setiosflags(std::ios::left) << std::setfill('.')
+         << indent_text << std::setw(pad_width_dot)
+         << "Accumulation buffer blue size " << " " << accum_blue_size
+         << std::endl;
+      vprDEBUG_NEXTnl(vrjDBG_DRAW_MGR, vprDBG_CONFIG_LVL)
+         << std::setiosflags(std::ios::left) << std::setfill('.')
+         << indent_text << std::setw(pad_width_dot)
+         << "Accumulation buffer alpha size " << " " << accum_alpha_size
+         << std::endl;
+      vprDEBUG_CONTnl(vrjDBG_DRAW_MGR, vprDBG_CONFIG_LVL)
          << vprDEBUG_FLUSH;
 
       // Notes on viattrib:  by using 1 for GLX_RED_SIZE et.al. we ask
@@ -634,6 +772,25 @@ void GlWindowXWin::checkEvents()
       // vector *before* the attribute is actually added.
       const unsigned int alpha_attrib_index = viattrib.size();
       viattrib.push_back(GLX_ALPHA_SIZE); viattrib.push_back(alpha_size);
+
+      viattrib.push_back(GLX_AUX_BUFFERS); viattrib.push_back(num_aux_bufs);
+      viattrib.push_back(GLX_STENCIL_SIZE); viattrib.push_back(stencil_size);
+
+      const unsigned int accum_red_attrib_index = viattrib.size();
+      viattrib.push_back(GLX_ACCUM_RED_SIZE);
+      viattrib.push_back(accum_red_size);
+
+      const unsigned int accum_green_attrib_index = viattrib.size();
+      viattrib.push_back(GLX_ACCUM_GREEN_SIZE);
+      viattrib.push_back(accum_green_size);
+
+      const unsigned int accum_blue_attrib_index = viattrib.size();
+      viattrib.push_back(GLX_ACCUM_BLUE_SIZE);
+      viattrib.push_back(accum_blue_size);
+
+      const unsigned int accum_alpha_attrib_index = viattrib.size();
+      viattrib.push_back(GLX_ACCUM_ALPHA_SIZE);
+      viattrib.push_back(accum_alpha_size);
 
       // Enable full-screen anti-aliasing if it is available and it was
       // requested.
@@ -688,8 +845,10 @@ void GlWindowXWin::checkEvents()
       if ( mVrjDisplay->isStereoRequested() )
       {
          vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CRITICAL_LVL)
-            << "WARNING: Display process for '" << mXDisplayName
-            << "' couldn't get display in stereo - trying mono.\n"
+            << "WARNING: Could not get an OpenGL visual for '" << mXDisplayName
+            << "'\n";
+         vprDEBUG_NEXTnl(vrjDBG_DRAW_MGR, vprDBG_CRITICAL_LVL)
+            << "with stereo rendering enabled; trying without.\n"
             << vprDEBUG_FLUSH;
          mInStereo = false;
 
@@ -703,10 +862,38 @@ void GlWindowXWin::checkEvents()
       }
 
       // If we reached this point, we still do not have a usable GLX visual.
+      // Disabling the accumulation buffer settings may give us something
+      // usable.
+      if ( accum_red_size > 0 || accum_green_size > 0 ||
+           accum_blue_size > 0 || accum_alpha_size > 0 )
+      {
+         vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CRITICAL_LVL)
+            << "WARNING: Could not get an OpenGL visual for '" << mXDisplayName
+            << "'\n";
+         vprDEBUG_NEXTnl(vrjDBG_DRAW_MGR, vprDBG_CRITICAL_LVL)
+            << "with accumulation buffer settings; trying without.\n"
+            << vprDEBUG_FLUSH;
+
+         viattrib[accum_red_attrib_index + 1]   = 0;
+         viattrib[accum_blue_attrib_index + 1]  = 0;
+         viattrib[accum_green_attrib_index + 1] = 0;
+         viattrib[accum_alpha_attrib_index + 1] = 0;
+
+         // XXX: If this fails, should we restore the accumulation buffer
+         // settings?
+         if ( (vi = glXChooseVisual(display, screen, &viattrib[0])) != NULL )
+         {
+            return vi;
+         }
+      }
+
+      // If we reached this point, we still do not have a usable GLX visual.
       // Disabling the alpha channel may give us something usable.
       vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CRITICAL_LVL)
-         << "WARNING: Display process for '" << mXDisplayName
-         << "' couldn't get display with alpha channel - trying without.\n"
+         << "WARNING: Could not get an OpenGL visual for '" << mXDisplayName
+         << "'\n";
+      vprDEBUG_NEXTnl(vrjDBG_DRAW_MGR, vprDBG_CRITICAL_LVL)
+         << "with a color buffer alpha channel; trying without.\n"
          << vprDEBUG_FLUSH;
 
       // There are two values in viattrib related to the alpha channel.
