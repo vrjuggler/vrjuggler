@@ -56,7 +56,7 @@ public:
    ChunkDesc ();
 
    /** Construct a chunk desc using the node given */
-   ChunkDesc(cppdom::XMLNodePtr node);
+   ChunkDesc(cppdom::NodePtr node);
 
    /** Copy Constructor */
    ChunkDesc (const ChunkDesc& desc);
@@ -134,9 +134,9 @@ public:
    /** Set the node.
    * Do any specialized processing necessary
    */
-   void setNode(cppdom::XMLNodePtr node)
+   void setNode(cppdom::NodePtr node)
    { mNode = node; }
-   cppdom::XMLNodePtr getNode()
+   cppdom::NodePtr getNode()
    { return mNode; }
 
    /** Writes self to the given output stream */
@@ -145,7 +145,7 @@ public:
 
 protected:
    bool               mIsValid;   /**< Validation flag */
-   cppdom::XMLNodePtr  mNode;      /**< The xml node for this chunk desc */
+   cppdom::NodePtr  mNode;      /**< The xml node for this chunk desc */
 };
 
 } // End of jccl namespace

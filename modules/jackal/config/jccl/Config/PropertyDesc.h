@@ -57,7 +57,7 @@ public:
    PropertyDesc();
 
    /** Constructor from XML node. */
-   PropertyDesc(cppdom::XMLNodePtr node);
+   PropertyDesc(cppdom::NodePtr node);
 
    /** Copy Constructor. */
    PropertyDesc(const PropertyDesc& d);
@@ -164,14 +164,14 @@ public:
    /** Get the XML node pointer.
    * Users should not use this directly.
    */
-   cppdom::XMLNodePtr getNode()
+   cppdom::NodePtr getNode()
    {
       return mNode;
    }
 
 protected:
    bool                 mIsValid;   /**< Validation flag */
-   cppdom::XMLNodePtr   mNode;      /**< The xml node for this chunk desc */
+   cppdom::NodePtr   mNode;      /**< The xml node for this chunk desc */
 };
 
 } // End of jccl namespace

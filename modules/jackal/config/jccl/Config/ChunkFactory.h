@@ -83,22 +83,22 @@ public:
    ConfigChunkPtr createChunk (ChunkDescPtr d);
 
    /** Get the global XML context that we are using system-wide */
-   cppdom::XMLContextPtr getXMLContext()
+   cppdom::ContextPtr getXMLContext()
    {
       vprASSERT(mGlobalContext.get() != NULL);
       return mGlobalContext;
    }
 
    /** Creates a new (empty) XML node using global context */
-   cppdom::XMLNodePtr createXMLNode()
+   cppdom::NodePtr createXMLNode()
    {
-      return cppdom::XMLNodePtr(new cppdom::XMLNode(getXMLContext()));
+      return cppdom::NodePtr(new cppdom::Node(getXMLContext()));
    }
 
    /** Creates a new (empty) XML document using global context */
-   cppdom::XMLDocumentPtr createXMLDocument()
+   cppdom::DocumentPtr createXMLDocument()
    {
-      return cppdom::XMLDocumentPtr(new cppdom::XMLDocument(getXMLContext()));
+      return cppdom::DocumentPtr(new cppdom::Document(getXMLContext()));
    }
 
 protected:
@@ -109,7 +109,7 @@ private:
    ChunkFactory ();
 
    ChunkDescDB             mDescDB;
-   cppdom::XMLContextPtr    mGlobalContext;      /**< The global context to use for jccl */
+   cppdom::ContextPtr    mGlobalContext;      /**< The global context to use for jccl */
    bool                    mLoadedDefaultDescs; /**< Flag to signal if default descs have been loaded */
 
    vprSingletonHeader(ChunkFactory);
