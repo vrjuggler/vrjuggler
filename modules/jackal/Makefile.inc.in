@@ -87,7 +87,7 @@ JACKAL_LIB_DYNAMIC	= $(JACKAL_LIBRARY).$(DYNAMICLIB_EXT)
 # Version information.
 BRANCH		= HEAD
 CANON_NAME	= Kenny
-VER_ARGS	= -f $(JACKALROOT_ABS)/VERSION -b $(BRANCH)	\
+VER_ARGS	= -f $(JACKALROOT_ABS)/VERSION -s @SUBSYSTEM@ -b $(BRANCH)	\
                   -i $(JACKALROOT_ABS)/jccl/jcclParam.h.in -o jccl/jcclParam.h		\
                   -d "`date '+%b %e, %Y %H:%M:%S'`" -n "$(CANON_NAME)"
 
