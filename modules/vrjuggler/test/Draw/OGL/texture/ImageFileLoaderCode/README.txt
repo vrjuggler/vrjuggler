@@ -6,7 +6,7 @@ Code Origin: http://www.bigfoot.com/~KevinMeinert/html/software/index.html
 Author:      Kevin Meinert, kevinmeinert@bigfoot.com
 
 Notes: 
-These file loaders are not used by the VRJuggler Texture application example,
+These file loaders are not used by the VR Juggler Texture application example,
 but are included for your benefit, and so that the Image and Texture classes 
 will be more useful to you.  For example, without this loader, you'd have 
 to write your own, or hack another one and probably spend a few hours 
