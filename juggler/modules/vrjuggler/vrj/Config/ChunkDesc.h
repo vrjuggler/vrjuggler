@@ -32,98 +32,108 @@
 #include <Config/vjPropertyDesc.h>
 
 
+//-----------------------------------------------------------------
+//:Defines name and properties for a kind of vjConfigChunk
+//
+// Primarily, it is a name and a list of vjPropertyDescs.
+// vjChunkDescs will probably only need to be used by the 
+// vjChunkDescDB, vjChunkFactory, and the GUI.
+//-----------------------------------------------------------------
 
-/** A vjChunkDesc contains a description of a single type of ConfigChunk.
- *  Primarily, it is a name and a list of vjPropertyDescs.
- *  vjChunkDescs will probably only need to be used by the vjChunkDescDB,
- *  the ConfigChunkDB, and the GUI.
- */
+
 class vjChunkDesc {
 
 public:
-  /** Name of the vjChunkDesc.  This will be the type of the ConfigChunks
-   *  created using it.
-   */
-  char *name;
-  char *token;
-  char *help;
-  /** Vector of properties.
-   */
-  vector<vjPropertyDesc*> plist;
 
-  vjChunkDesc& operator= (const vjChunkDesc& other) {
-    if (name)
-      delete name;
-    if (help)
-	delete help;
-    if (token)
-	delete token;
-    for (int i = 0; i < plist.size(); i++)
-      delete plist[i];
+    //:Identifer for this vjChunkDesc - no spaces allowed
+    char *token;
 
-    name = new char[strlen (other.name)+1];
-    strcpy (name, other.name);
-    token = new char[strlen (other.token)+1];
-    strcpy (token, other.token);
-    help = new char[strlen(other.help)+1];
-    strcpy (help, other.help);
-    plist = other.plist;
+    //:A longer, friendlier name (for use in GUI displays, etc.)
+    char *name;
 
-    return *this;
+    //:A help string of help text
+    char *help;
 
-  }
-
-  /// Creates an empty, unnamed vjChunkDesc.
-  vjChunkDesc ();
-
-  // Deletes self & associated memory.
-  ~vjChunkDesc ();
-
-  /// Sets the name of self.
-  bool setName (char *n) {
-    if (name)
-      delete name;
-    name = new char[strlen(n)+1];
-    if (!name)
-      return false;
-    strcpy (name, n);
-    return true;
-  }
-
-  bool setToken (char *n) {
-    if (token)
-      delete token;
-    token = new char[strlen(n)+1];
-    if (!token)
-      return false;
-    strcpy (token, n);
-    return true;
-  }
-  bool setHelp (char *n) {
-    if (help)
-      delete help;
-    help = new char[strlen(n)+1];
-    if (!help)
-      return false;
-    strcpy (help, n);
-    return true;
-  }
-
-  /// Adds a vjPropertyDesc to self.
-  bool add (vjPropertyDesc *pd);
-
-  /// Removes named vjPropertyDesc from self.
-  bool remove (char *n);
+    //:Container for this vjChunkDesc's vjPropertyDescs
+    vector<vjPropertyDesc*> plist;
 
 
-  /// returns the vjPropertyDesc of the named property, or NULL.
-  vjPropertyDesc *getPropertyDesc (char *name);
+    //:Constructor
+    //!POST: Self is created with name and token "Unnamed",
+    //+      and with only a single vjPropertyDesc ("Name")
+    vjChunkDesc ();
 
-  ///
-  friend ostream& operator << (ostream& out, vjChunkDesc& self);
-  ///
-  friend istream& operator >> (istream& in, vjChunkDesc& self);
 
+    //:Desctructor
+    //!POST: Destroys self and frees all allocated memory.
+    ~vjChunkDesc ();
+
+
+    //:Assignment operator
+    //!POST: self copies the value of other
+    //!ARGS: other - a vjChunkDesc
+    //!RETURNS: self
+    vjChunkDesc& operator= (const vjChunkDesc& other);
+
+
+
+    //:Sets the user-friendly name of self
+    //!ARGS: _name - a non-NULL string. Whitespace is allowed.
+    //!RETURNS: True - success
+    //!RETURNS: False - failure (probably memory-allocation)
+    //!NOTE: self makes a copy of the argument string
+    bool setName (char *_name);
+
+
+
+    //:Sets the token identifier of self
+    //!ARGS: _token - a non-NULL string. Whitespace is not allowed.
+    //!RETURNS: True - success
+    //!RETURNS: False - failure (probably memory-allocation)
+    //!NOTE: self makes a copy of the argument string
+    bool setToken (char *_token);
+
+
+
+    //:Sets the help string for self
+    //!ARGS: _help - a non-NULL string. Whitespace is allowed.
+    //!RETURNS: True - success
+    //!RETURNS: False - failure (probably memory-allocation)
+    //!NOTE: self makes a copy of the argument string
+    bool setHelp (char *_help);
+
+
+
+    //:Adds a vjPropertyDesc to self.
+    //!NOTE: Any vjPropertyDesc previously in self with the
+    //+      same token as pd is removed.
+    void add (vjPropertyDesc *pd);
+
+
+
+    //:Removes named vjPropertyDesc from self.
+    //!ARGS: _token - token to search for
+    //!RETURNS: true - a vjPropertyDesc with that token was found
+    //+         and removed.
+    //!RETURNS: false - no such vjPropertyDesc was found.
+    bool remove (char *_token);
+
+
+    //:Gets a vjPropertyDesc from self with matching token
+    //!ARGS: _token - non-NULL token for the desired vjPropertyDesc
+    //!RETURNS: pdesc - Pointer to propertydesc in self with
+    //+         matching token
+    //!RETURNS: NULL - if no match is found
+    vjPropertyDesc *getPropertyDesc (char *_token);
+
+
+
+    //: Writes self to the given output stream
+    friend ostream& operator << (ostream& out, vjChunkDesc& self);
+
+
+    //: Reads self's value from the given input stream
+    friend istream& operator >> (istream& in, vjChunkDesc& self);
 
 };
 

@@ -19,11 +19,13 @@ vjChunkDescDB::~vjChunkDescDB() {
 }
 
 
-vjChunkDesc* vjChunkDescDB::getChunkDesc (char *name) {
-  for (int i = 0; i < descs.size(); i++)
-    if (!strcasecmp (descs[i]->token, name))
-      return descs[i];
-  return NULL;
+vjChunkDesc* vjChunkDescDB::getChunkDesc (char *_token) {
+    if (!_token)
+	return NULL;
+    for (int i = 0; i < descs.size(); i++)
+	if (!strcasecmp (descs[i]->token, _token))
+	    return descs[i];
+    return NULL;
 }
 
 

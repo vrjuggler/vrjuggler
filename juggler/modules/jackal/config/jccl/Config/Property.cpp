@@ -6,9 +6,9 @@
 #include <vjConfig.h>
 #include <Config/vjProperty.h>
 #include <Config/vjConfigChunk.h>
+#include <Config/vjChunkFactory.h>
 
-
-vjProperty::vjProperty (vjPropertyDesc *pd, vjChunkDescDB *_descdb):value() {
+vjProperty::vjProperty (vjPropertyDesc *pd):value() {
     int j;
     vjVarValue *v;
 
@@ -16,27 +16,26 @@ vjProperty::vjProperty (vjPropertyDesc *pd, vjChunkDescDB *_descdb):value() {
     name = pd->token;
     num = pd->num;
     type = pd->type;
-    descdb = _descdb;
+    embeddesc = NULL;
 
     if (type == T_EMBEDDEDCHUNK) {
 	vjEnumEntry *e = description->getEnumEntryAt (0);
 	if (e) 
-	    embeddesc = descdb->getChunkDesc (e->getName());
-	if (!embeddesc)
-	    embeddesc = new vjChunkDesc();
+	    embeddesc = vjChunkFactory::getChunkDesc (e->getName());
     }
 
-  /* the idea here is that if num == -1 we can add values to a property,
-   * e.g. add another active wall.
-   * otherwise we can just set the extant values.
-   */
-  if (num != -1) {
-    /* we're filling the vector with num copies of a default vjVarValue */
-    for (j = 0; j < num; j++ ) {
-      v = createVarValue (j);
-      value.push_back(v);
+    /* the idea here is that if num == -1 we can add values to 
+     * a property, e.g. add another active wall.
+     * otherwise we can just set the extant values.
+     */
+    if (num != -1) {
+	/* we're filling the vector with num copies of a 
+	 * default vjVarValue */
+	for (j = 0; j < num; j++ ) {
+	    v = createVarValue (j);
+	    value.push_back(v);
+	}
     }
-  }
 }
 
 
@@ -46,7 +45,7 @@ vjVarValue *vjProperty::createVarValue (int i) {
     if (i == -1)
 	i = value.size();
     if (type == T_EMBEDDEDCHUNK) {
-	vjConfigChunk *ch = new vjConfigChunk (embeddesc, descdb);
+	vjConfigChunk *ch = vjChunkFactory::createChunk (embeddesc);
 	if (description->valuelabels.size() > i)
 	    ch->setProperty ("Name", description->valuelabels[i]->getName());
 	else {
@@ -61,10 +60,10 @@ vjVarValue *vjProperty::createVarValue (int i) {
 
 
 vjProperty::~vjProperty () {
-  int i;
+    int i;
 
-  for (i = 0; i < value.size(); i++)
-    delete (value)[i];
+    for (i = 0; i < value.size(); i++)
+	delete (value)[i];
 }
 
 
@@ -97,34 +96,34 @@ vjProperty& vjProperty::operator= (vjProperty& p) {
 
 bool vjProperty::applyUnits (CfgUnit u) {
 
-  if (type == T_DISTANCE) {
-    for (int j = 0; j < value.size(); j++)
-      setValue( toFeet (getValue(j), u), j);
-    return true;
-  }
-  else {
-    cerr << "Units may only be applied to Distance values." <<endl;
-    return false;
-  }
+    if (type == T_DISTANCE) {
+	for (int j = 0; j < value.size(); j++)
+	    setValue( toFeet (getValue(j), u), j);
+	return true;
+    }
+    else {
+	cerr << "Units may only be applied to Distance values." <<endl;
+	return false;
+    }
 }
 
 
 
 vjEnumEntry* vjProperty::getEnumEntry (char *n) {
-  for (int i = 0; i < description->enumv.size(); i++)
-    if (!strcasecmp (n, description->enumv[i]->getName()))
-      return description->enumv[i];
-  return NULL;
+    for (int i = 0; i < description->enumv.size(); i++)
+	if (!strcasecmp (n, description->enumv[i]->getName()))
+	    return description->enumv[i];
+    return NULL;
 }
 
 
 
 vjEnumEntry* vjProperty::getEnumEntry (int val) {
-  // gets an enumentry based on the value, instead of the name
-  for (int i = 0; i < description->enumv.size(); i++)
-    if (val == description->enumv[i]->getVal())
-      return description->enumv[i];
-  return NULL;
+    // gets an enumentry based on the value, instead of the name
+    for (int i = 0; i < description->enumv.size(); i++)
+	if (val == description->enumv[i]->getVal())
+	    return description->enumv[i];
+    return NULL;
 }
 
 
@@ -199,40 +198,36 @@ bool vjProperty::preSet (int ind) {
 
 
 bool vjProperty::setValue (int val, int ind ) {
-
-  if (!preSet(ind))
-    return false;
-  *((value)[ind]) = val;
-  return true;
+    if (!preSet(ind))
+	return false;
+    *((value)[ind]) = val;
+    return true;
 }
 
 
 
 bool vjProperty::setValue (float val, int ind ) {
-
-  if (!preSet(ind))
-    return false;
-  *((value)[ind]) = val;
-  return true;
+    if (!preSet(ind))
+	return false;
+    *((value)[ind]) = val;
+    return true;
 }
 
 
 
 bool vjProperty::setValue (char* val, int ind) {
-
-  if (!preSet(ind))
-    return false;
-  *((value)[ind]) = val;
-  return true;
+    if (!preSet(ind))
+	return false;
+    *((value)[ind]) = val;
+    return true;
 }
 
 
 
 bool vjProperty::setValue (vjConfigChunk* val, int ind) {
-
-  if (!preSet(ind))
-    return false;
-  *((value)[ind]) = val;
-  return true;
+    if (!preSet(ind))
+	return false;
+    *((value)[ind]) = val;
+    return true;
 }
 

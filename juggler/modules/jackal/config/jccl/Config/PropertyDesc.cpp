@@ -70,7 +70,7 @@ ostream& operator << (ostream& out, vjPropertyDesc& self) {
     /* print enumeration only if we have values. */
     if (self.enumv.size() > 0) {
 	vjEnumEntry *e;
-	out << " { ";
+	out << " vj_enumeration { ";
 	for (int i = 0; i < self.enumv.size(); i++) {
 	    e = self.enumv[i];
 	    out << '"' << e->getName();
@@ -109,7 +109,7 @@ istream& operator >> (istream& in, vjPropertyDesc& self) {
     self.type = readType(in);
     in >> self.num;
     readString (in,str,512);
-    cout << "read propertydesc name " << str << endl;
+
     if (self.name)
 	delete self.name;
     self.name = strdup (str);
