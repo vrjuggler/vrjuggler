@@ -30,6 +30,13 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
+#include <jccl/jcclConfig.h>
+
+#include <stdlib.h>
+#include <vpr/vpr.h>
+#include <vpr/Util/Debug.h>
+
+#include <jccl/RTRC/RTRCInterfaceSubjectImpl.h>
 #include <jccl/RTRC/RTRCInterface.h>
 
 namespace jccl
@@ -168,4 +175,4 @@ void RTRCInterface::disable()
 
 }
 
-};
+}
