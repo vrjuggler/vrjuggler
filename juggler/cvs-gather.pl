@@ -24,7 +24,7 @@
 #
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
-# cvs-gather.pl,v 1.21 2002/08/16 21:17:57 patrickh Exp
+# cvs-gather.pl,v 1.23 2002/09/23 15:42:27 patrickh Exp
 
 use 5.005;
 
@@ -49,7 +49,7 @@ sub expandWildcards($$$$$);
 sub doOverride($$);
 sub overrideValue($$$);
 sub checkoutModules($);
-sub updateModule($$$$);
+sub updateModule($$$$$$);
 sub checkoutModule($$$$$$$);
 sub runCvsCommand($);
 sub modifyCvsEntries($$);
@@ -60,7 +60,7 @@ sub nextSpinnerFrame($);
 # *********************************************************************
 # Here is the version for this script!
 
-my $VERSION = '0.1.6';
+my $VERSION = '0.1.7';
 # *********************************************************************
 
 my $cfg_file      = '';
@@ -692,7 +692,9 @@ sub checkoutModules ($)
                     -d "$$mod_ref{$mod_name}{'Path'}/$install_name") ||
                  -d "$$mod_ref{$mod_name}{'Path'}/$cvs_module_name" )
             {
-               updateModule("$mod_name", $$mod_ref{"$mod_name"}{'Path'},
+               updateModule("$mod_name", $$mod_ref{"$mod_name"}{'Tag'},
+                            $$mod_ref{"$mod_name"}{'Date'},
+                            $$mod_ref{"$mod_name"}{'Path'},
                             "$cvs_module_name", "$install_name");
             }
             else
@@ -719,9 +721,11 @@ sub checkoutModules ($)
    }
 }
 
-sub updateModule ($$$$)
+sub updateModule ($$$$$$)
 {
    my $name         = shift;
+   my $tag          = shift;
+   my $date         = shift;
    my $path         = shift;
    my $cvs_module   = shift;
    my $install_name = shift;
@@ -737,7 +741,12 @@ sub updateModule ($$$$)
 
    if ( chdir("$module") )
    {
-      $status = runCvsCommand('cvs update');
+      my $cmd_line = "cvs update ";
+
+      $cmd_line .= "-r $tag " if $tag;
+      $cmd_line .= "-D \"$date\" " if $date;
+
+      $status = runCvsCommand("$cmd_line");
    }
    else
    {
