@@ -68,6 +68,7 @@ private:
     vjChunkDesc* desc;
     std::vector<vjProperty*> props;       // Stores the set of properties
     vjVarValue type_as_varvalue;
+    unsigned int validation;  // flag for testing validity of self
 
 public:
 
@@ -97,6 +98,14 @@ public:
 
     vjConfigChunk (vjConfigChunk& c);
 
+
+    #ifdef VJ_DEBUG
+    inline void assertValid () const;
+    #else
+    inline void assertValid () const {
+        ;
+    }
+    #endif
 
     //: Associates the description d with this Chunk
     //!NOTE:  When this function is called, any previous properties etc.

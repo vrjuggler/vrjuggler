@@ -87,6 +87,7 @@ private:
     std::string  strval;
     bool         boolval;
     vjConfigChunk *embeddedchunkval;
+    unsigned int validation;
 
     static vjVarValue* invalid_instance;
     static const std::string using_invalid_msg;
@@ -132,6 +133,15 @@ public:
 
     //: Destroys self and all associated memory.
     ~vjVarValue();
+
+
+    #ifdef VJ_DEBUG
+    inline void assertValid () const;
+    #else
+    inline void assertValid () const {
+        ;
+    }
+    #endif
 
 
 

@@ -51,6 +51,8 @@ const std::string vjVarValue::using_invalid_msg = "Casting from T_INVALID VarVal
 
 
 vjVarValue::vjVarValue (const vjVarValue &v):strval("") {
+    validation = 1;
+
     intval = 0;
     floatval = 0.0;
     embeddedchunkval = NULL;
@@ -60,6 +62,8 @@ vjVarValue::vjVarValue (const vjVarValue &v):strval("") {
 
 
 vjVarValue::vjVarValue (vjConfigChunk* ch):strval("") {
+    validation = 1;
+
     intval = 0;
     floatval = 0.0;
     embeddedchunkval = NULL;
@@ -71,6 +75,8 @@ vjVarValue::vjVarValue (vjConfigChunk* ch):strval("") {
 
 
 vjVarValue::vjVarValue ( VarType t ):strval("") {
+    validation = 1;
+
     type = t;
     intval = 0;
     floatval = 0.0;
@@ -81,13 +87,25 @@ vjVarValue::vjVarValue ( VarType t ):strval("") {
 
 
 vjVarValue::~vjVarValue() {
-    if (embeddedchunkval)
-	delete embeddedchunkval;
+    validation = 0;
+
+//     if (embeddedchunkval)
+// 	delete embeddedchunkval;
 }
+
+
+#ifdef VJ_DEBUG
+void vjVarValue::assertValid () const {
+    assert (validation == 1 && "Trying to use deleted vjVarValue");
+}
+#endif
 
 
 
 vjVarValue& vjVarValue::operator= (const vjVarValue &v) {
+    assertValid();
+    v.assertValid();
+
     if (&v == this)
 	return *this;
 
@@ -112,6 +130,9 @@ vjVarValue& vjVarValue::operator= (const vjVarValue &v) {
 
 //: Equality Operator
 bool vjVarValue::operator == (const vjVarValue& v) const {
+    assertValid();
+    v.assertValid();
+
     if (type != v.type)
         return false;
     switch (type) {
@@ -142,6 +163,8 @@ bool vjVarValue::operator == (const vjVarValue& v) const {
 
 
 vjVarValue::operator int() const {
+    assertValid();
+
     switch (type) {
     case T_INT:
 	return intval;
@@ -163,6 +186,8 @@ vjVarValue::operator int() const {
 
 
 vjVarValue::operator vjConfigChunk*() const {
+    assertValid();
+
     switch (type) {
     case T_EMBEDDEDCHUNK:
 	// we need to make a copy because if the value is deleted, it deletes
@@ -185,6 +210,8 @@ vjVarValue::operator vjConfigChunk*() const {
 
 
 vjVarValue::operator bool() const {
+    assertValid();
+
     if ((type == T_BOOL))
 	return boolval;
     switch (type) {
@@ -208,6 +235,8 @@ vjVarValue::operator bool() const {
 
 
 vjVarValue::operator float () const {
+    assertValid();
+
     switch (type) {
     case T_FLOAT:
 	return floatval;
@@ -228,6 +257,8 @@ vjVarValue::operator float () const {
 
 
 char* vjVarValue::cstring () const {
+    assertValid();
+
     switch (type) {
     case T_STRING:
     case T_CHUNK:
@@ -245,6 +276,8 @@ char* vjVarValue::cstring () const {
 
 
 vjVarValue::operator std::string () const {
+    assertValid();
+
     switch (type) {
     case T_STRING:
     case T_CHUNK:
@@ -262,6 +295,8 @@ vjVarValue::operator std::string () const {
 
 
 vjVarValue &vjVarValue::operator = (int i) {
+    assertValid();
+
     switch (type) {
     case T_INT:
 	intval = i;
@@ -281,6 +316,8 @@ vjVarValue &vjVarValue::operator = (int i) {
 
 
 vjVarValue& vjVarValue::operator = (bool i) {
+    assertValid();
+
     switch (type) {
     case T_INT:
 	intval = (int)i;
@@ -297,6 +334,8 @@ vjVarValue& vjVarValue::operator = (bool i) {
 
 
 vjVarValue &vjVarValue::operator = (float i) {
+    assertValid();
+
     switch (type) {
     case T_FLOAT:
     case T_DISTANCE:
@@ -311,12 +350,16 @@ vjVarValue &vjVarValue::operator = (float i) {
 
 
 vjVarValue &vjVarValue::operator = (const std::string& s) {
+    assertValid();
+
     return *this = s.c_str();
 }
 
 
 
 vjVarValue &vjVarValue::operator = (const char *val) {
+    assertValid();
+
     bool err = false;
     char* endval;
     int i;
@@ -371,6 +414,8 @@ vjVarValue &vjVarValue::operator = (const char *val) {
 
 
 vjVarValue &vjVarValue::operator = (vjConfigChunk *s) {
+    assertValid();
+
     switch (type) {
     case T_EMBEDDEDCHUNK:
 	if (embeddedchunkval)
@@ -389,6 +434,8 @@ vjVarValue &vjVarValue::operator = (vjConfigChunk *s) {
 
 
 std::ostream& operator << (std::ostream& out, const vjVarValue& v) {
+    v.assertValid();
+
     //      vjDEBUG(vjDBG_ERROR,0) << "in << func" << vjDEBUG_FLUSH;
 
     switch (v.type) {
