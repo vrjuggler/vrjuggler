@@ -1550,6 +1550,16 @@ AC_CHECK_FUNC([sched_yield], [AC_DEFINE(HAVE_SCHED_YIELD)],
                     AC_DEFINE(HAVE_SCHED_YIELD) ])])
 LIBS="${_vjsave_LIBS}"
 
+_net_libs=''
+
+_vjsave_LIBS="$LIBS"
+AC_CHECK_LIB([socket], [listen], [_net_libs='-lsocket'])
+LIBS="${_vjsave_LIBS}"
+
+_vjsave_LIBS="$LIBS"
+AC_CHECK_LIB([nsl], [gethostbyname], [_net_libs="${_net_libs} -lnsl"])
+LIBS="${_vjsave_LIBS}"
+
 dnl # In a Win32 environment with MS Visual C++ as the compiler, these math
 dnl # functions are not in any special library.  Test for them normally.
 if test "$OS_TYPE" = "Win32" -a "x${_use_gcc}" != "xyes" ; then
@@ -1649,6 +1659,8 @@ fi
 if test "$ac_cv_CC_accepts_pthread" = "yes" ; then
     LDFLAGS="$LDFLAGS -pthread"
 fi
+
+LIBS="$LIBS ${_net_libs}"
 
 dnl # If we are using pthreads, add the library containing the pthread calls to
 dnl # $LIBS.  This must be done here because the $APP_VJ_LIBS* stuff below
