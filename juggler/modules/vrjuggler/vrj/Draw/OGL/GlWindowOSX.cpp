@@ -48,9 +48,10 @@ namespace vrj
 
 AGLContext GlWindowOSX::aglShareContext = NULL;
 
-GlWindowOSX::GlWindowOSX():GlWindow()
+GlWindowOSX::GlWindowOSX()
+   : GlWindow()
+   , gadget::EventWindowOSX()
 {
-    gadget::EventWindowOSX::EventWindowOSX();
 }
 
 GlWindowOSX::~GlWindowOSX() {
