@@ -94,16 +94,16 @@ public:
     bool updateData();
 
 //TODO: Functions are Tracker specific and require an assert of isActive
-    int& rBaudRate() {return mBaudRate;}
-    int BaudRate() {return mBaudRate;}
-
-    int& rPort() {return mPort;}
-    int Port() {return mPort;}
-
-    std::string setPortName(const std::string& portname) {
-       mPortName = portname;
-       return mPortName;
-    }
+    
+    void setPortName(const std::string& portname)
+    { mPortName = portname; }
+    void setBaudRate(const int& baud_rate)
+    { mBaudRate = baud_rate; }
+    
+    const std::string setPortName()
+    { return mPortName; }
+    const int setBaudRate()
+    { return mBaudRate; }
 
     int& rNumStations() {return mNumStations;}
     int NumStations() {return mNumStations;}

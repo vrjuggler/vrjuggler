@@ -47,10 +47,8 @@ namespace gadget
 
 bool PinchGlove::config(jccl::ConfigChunkPtr c)
 {
-   mPort     = c->getProperty<std::string>("port");
-   mInstName = c->getFullName();
+   mPortName = c->getProperty<std::string>("port");
    mBaudRate = c->getProperty<int>("baud");
-
    vprASSERT(mThread == NULL);      // This should have been set by Input(c)
 
    mGlove = new PinchGloveStandalone();
@@ -68,14 +66,14 @@ int PinchGlove::startSampling()
 {
    vprDEBUG(gadgetDBG_INPUT_MGR, 0) << "[PinchGlove] Begin sampling\n"
                                     << vprDEBUG_FLUSH;
+   mGlove->setPort(mPortName);
    mGlove->setBaudRate(mBaudRate);
-   mGlove->setPort(mPort);
-
+   
    if ( mThread == NULL )
    {
       int maxAttempts=0;
       vprDEBUG(gadgetDBG_INPUT_MGR, 0) << "[PinchGlove] Connecting to "
-                                    << mPort << " at "
+                                    << mPortName << " at "
                                     << mBaudRate << "...\n"
                                     << vprDEBUG_FLUSH;
       while ( mGlove->connectToHardware() != vpr::ReturnStatus::Succeed )

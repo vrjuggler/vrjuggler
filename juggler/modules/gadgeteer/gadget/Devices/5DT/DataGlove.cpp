@@ -46,9 +46,13 @@ bool DataGlove::config(jccl::ConfigChunkPtr c)
 {
    if(! (Input::config(c) /*&& Glove::config(c)*/ ))
       return false;
-    vprASSERT(mThread == NULL);      // This should have been set by Input(c)
-    mGlove = new DataGloveStandalone();
-    return true;
+   
+   mPortName = c->getProperty<std::string>("port");
+   mBaudRate = c->getProperty<int>("baud");
+
+   vprASSERT(mThread == NULL);      // This should have been set by Input(c)
+   mGlove = new DataGloveStandalone();
+   return true;
 }
 
 DataGlove::~DataGlove ()
@@ -68,10 +72,10 @@ int DataGlove::startSampling()
       while (result == false && maxAttempts < 5)
       {
          vprDEBUG(gadgetDBG_INPUT_MGR, 0) << "[dataglove] Connecting to "
-                                          << mPort << " at "
+                                          << mPortName << " at "
                                           << mBaudRate << "...\n"
                                           << vprDEBUG_FLUSH;
-         result = mGlove->connectToHardware( mPort , mBaudRate);
+         result = mGlove->connectToHardware( mPortName , mBaudRate);
          if (result == false)
          {
             vprDEBUG(gadgetDBG_INPUT_MGR,0)

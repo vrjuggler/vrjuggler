@@ -95,6 +95,8 @@ protected:
    Hand left, right;
    std::vector<DigitalData> mDigitalData;  /**< Digitals for each finger.
                                                 Doesn't store time correctly */
+   std::string    mPortName;
+   int            mBaudRate;
 };
 
 
