@@ -45,25 +45,14 @@ vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
                               std::string("----------- exit: configuring digital proxy -----------\n"));
 
    vprASSERT(chunk->getDescToken() == "DigProxy");
-   
-   bool base_config = Proxy::config(chunk);
-   if(!base_config)
+
+   if( ! Proxy::config(chunk) )
+   {
       return false;
-
-
-   // if we are going to be receiving remote data, we need to connect to the remote device through a NetInput
-   std::string location = chunk->getProperty<std::string>("location");
-   if(location.size() > 0)
-   {
-      mDeviceName = chunk->getFullName();
-      mDeviceName += "_NET_";
-      m_unitNum = 0;
    }
-   else  // normal local devices
-   {
-      m_unitNum = chunk->getProperty<int>("unit");
-      mDeviceName = chunk->getProperty<std::string>("device");
-   }
+
+   m_unitNum = chunk->getProperty<int>("unit");
+   mDeviceName = chunk->getProperty<std::string>("device");
 
    refresh();
    return true;

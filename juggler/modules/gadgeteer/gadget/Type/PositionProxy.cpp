@@ -57,60 +57,48 @@ vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
       std::string("------------------ Position PROXY config() -----------------\n"),
       std::string("\n"));
    vprASSERT(chunk->getDescToken() == "PosProxy");
-   bool base_config = Proxy::config(chunk);
-   if(!base_config)
+
+   if ( ! Proxy::config(chunk) )
+   {
       return false;
-
-
-   // if we are going to be receiving remote data, we need to connect to a vjNetInput
-   std::string location = chunk->getProperty<std::string>("location");
-   if(location.size() > 0)
-   {
-      mDeviceName = chunk->getFullName();
-      mDeviceName += "_NET_";   // input device we'll point to
-      mUnitNum = 0;
-      //setTransform(0,0,0, 0,0,0 );
    }
-   else
-   {
-      mUnitNum = chunk->getProperty<int>("unit");
-      mDeviceName = chunk->getProperty<std::string>("device");
 
-      // --- Configure filters --- //
-      unsigned num_filters = chunk->getNum("position_filters");
-   
-      vprDEBUG_OutputGuard(vprDBG_ALL, 0,
-                           std::string("PositionProxy::config: ") +
-                              chunk->getName() + std::string(":") +
-                              chunk->getDescToken() + std::string("\n"),
-                           std::string("PositionProxy::config: done.\n") );
-   
-      vprDEBUG( vprDBG_ALL, 0) << "Num filters: " << num_filters << std::endl << vprDEBUG_FLUSH;
-   
-      jccl::ConfigChunkPtr cur_filter;
-      PositionFilter* new_filter(NULL);
-   
-      for(unsigned i=0;i<num_filters;++i)
+   mUnitNum = chunk->getProperty<int>("unit");
+   mDeviceName = chunk->getProperty<std::string>("device");
+
+   // --- Configure filters --- //
+   unsigned num_filters = chunk->getNum("position_filters");
+
+   vprDEBUG_OutputGuard(vprDBG_ALL, 0,
+                        std::string("PositionProxy::config: ") +
+                           chunk->getName() + std::string(":") +
+                           chunk->getDescToken() + std::string("\n"),
+                        std::string("PositionProxy::config: done.\n") );
+
+   vprDEBUG( vprDBG_ALL, 0) << "Num filters: " << num_filters << std::endl << vprDEBUG_FLUSH;
+
+   jccl::ConfigChunkPtr cur_filter;
+   PositionFilter* new_filter(NULL);
+
+   for(unsigned i=0;i<num_filters;++i)
+   {
+      cur_filter = chunk->getProperty<jccl::ConfigChunkPtr>("position_filters",i);
+      vprASSERT(cur_filter.get() != NULL);
+
+      std::string filter_chunk_desc = cur_filter->getDescToken();
+      vprDEBUG( vprDBG_ALL, 0) << "   Filter [" << i << "]: Type:" << filter_chunk_desc << std::endl << vprDEBUG_FLUSH;
+
+      new_filter = PositionFilterFactory::instance()->createObject(filter_chunk_desc);
+      if(new_filter != NULL)
       {
-         cur_filter = chunk->getProperty<jccl::ConfigChunkPtr>("position_filters",i);
-         vprASSERT(cur_filter.get() != NULL);
-   
-         std::string filter_chunk_desc = cur_filter->getDescToken();
-         vprDEBUG( vprDBG_ALL, 0) << "   Filter [" << i << "]: Type:" << filter_chunk_desc << std::endl << vprDEBUG_FLUSH;
-   
-         new_filter = PositionFilterFactory::instance()->createObject(filter_chunk_desc);
-         if(new_filter != NULL)
-         {
-            new_filter->config(cur_filter);
-            mPositionFilters.push_back(new_filter);
-         }
-         else
-         {
-            vprDEBUG( vprDBG_ALL, 0) << "   NULL Filter!!!" << std::endl << vprDEBUG_FLUSH;
-         }
-      }  // if have filters
-   
-   }
+         new_filter->config(cur_filter);
+         mPositionFilters.push_back(new_filter);
+      }
+      else
+      {
+         vprDEBUG( vprDBG_ALL, 0) << "   NULL Filter!!!" << std::endl << vprDEBUG_FLUSH;
+      }
+   }  // if have filters
 
    // --- SETUP PROXY with INPUT MGR ---- //
    refresh();
@@ -118,7 +106,7 @@ vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
    return true;
 }
 
-// Deprecated, don't use   
+// Deprecated, don't use
 gmtl::Matrix44f PositionProxy::getData(float scaleFactor)
 {
    gmtl::Matrix44f ret_mat;
@@ -139,7 +127,7 @@ gmtl::Matrix44f PositionProxy::getData(float scaleFactor)
    else  // Convert using scale factor
    {
       ret_mat = mPositionData.getPosition();
-      gmtl::Vec3f trans;                               
+      gmtl::Vec3f trans;
       gmtl::setTrans(trans, ret_mat);           // Get the translational vector
       trans *= scaleFactor;                     // Scale the translation and set the value again
       gmtl::setTrans(ret_mat, trans);
