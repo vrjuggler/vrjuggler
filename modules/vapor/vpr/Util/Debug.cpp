@@ -177,7 +177,7 @@ std::ostream& Debug::getStream(const vpr::DebugCategory& cat, const int level, c
          std::cout << "\t";
       }
 
-      ///* For debugging indentation
+      /* For debugging indentation
       // Output the indent level that we are going to of coming from
       if(getLevel() >= 7)
       {
@@ -200,7 +200,7 @@ std::ostream& Debug::getStream(const vpr::DebugCategory& cat, const int level, c
             std::cout << "< ";
          }
       }
-      //*/
+      */
    }
 
    // If we have thread local stuff to do
