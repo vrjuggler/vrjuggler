@@ -821,7 +821,9 @@ def installTweekJava(prefix):
       shutil.copy2(os.path.join(srcdir, 'idl.bat'), destdir)
 
       # Install JDOM.
-      srcdir = os.path.join(gJugglerDir, 'external', 'jdom')
+      srcdir = os.path.join(gJugglerDir, 'external', 'jdom', 'lib')
+      installDir(srcdir, destdir, ['.jar'])
+      srcdir = os.path.join(gJugglerDir, 'external', 'jdom', 'build')
       installDir(srcdir, destdir, ['.jar'])
 
       # Install various look and feel implementations.
