@@ -462,10 +462,8 @@ namespace gadget
       vprASSERT(object_reader != NULL && "Object Reader does not exist!!!");
       
          //Read the device data from the packet
-      //std::cout << "SENDING A DELTA OF: " << *delta << std::endl;
       virtual_device->readObject(object_reader, delta);
-      //std::cout << "SENDING A DELTA OF: " << *delta << std::endl;
-
+      
       vprDEBUG_END(gadgetDBG_RIM,vprDBG_VERB_LVL) <<  clrOutBOLD(clrCYAN,"[Parse Packet]RECEIVEING A DEVICE DATA PACKET\n") << vprDEBUG_FLUSH;
       return true;
    }
@@ -639,7 +637,7 @@ namespace gadget
       vprDEBUG_BEGIN(gadgetDBG_RIM,vprDBG_CRITICAL_LVL) <<  clrOutBOLD(clrCYAN,"[Create Packet]CREATING HANDSHAKE\n") << vprDEBUG_FLUSH;
       vprDEBUG(gadgetDBG_RIM,vprDBG_CRITICAL_LVL) <<  "Host: " << host << "\n" << vprDEBUG_FLUSH;
       vprDEBUG(gadgetDBG_RIM,vprDBG_CRITICAL_LVL) <<  "Port: " << port << "\n" << vprDEBUG_FLUSH;
-      //std::cout << "CREATING HANDSHAKE" << std::endl;
+      
       /////////////////
       // CREATE BODY //
       /////////////////
@@ -709,7 +707,7 @@ namespace gadget
       ///////////////////////////////////////////////////////////////////////
 
       vprDEBUG_BEGIN(gadgetDBG_RIM,vprDBG_CONFIG_LVL) <<  clrOutBOLD(clrCYAN,"[Parse Packet]RECEIVING HANDSHAKE\n") << vprDEBUG_FLUSH;
-      //std::cout << "RECEIVING HANDSHAKE" << std::endl;
+      
 
       std::vector<vpr::Uint8> packet_head(100);
 
@@ -728,20 +726,6 @@ namespace gadget
 
       }
       
-      //vpr::ReturnStatus status = newStream->recvn(packet_head,8,bytes_read);
-      
-      //if (status == vpr::ReturnStatus::WouldBlock)
-      //{
-         //vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) <<  clrOutNORM(clrRED,"[PACKET]WouldBlock\n") << vprDEBUG_FLUSH;
-         //vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) <<  "[PACKET]WouldBlock\n" << vprDEBUG_FLUSH;
-         //vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) <<  "[PACKET]BEFORE READ\n" << vprDEBUG_FLUSH;
-         //status = newStream->recvn(packet_head,8,bytes_read);
-         //vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) <<  "[PACKET]BEFORE READ\n" << vprDEBUG_FLUSH;
-      //}
-      
-      //std::cout << (int)status.failure() << (int)status.inProgress() << (int)status.success()
-      //            << (int)status.timeout() << (int)status.wouldBlock() << std::endl;
-
       vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) <<  "[PACKET]HANDSHAKE READ SUCCESSFUL\n" 
          << "  READ NUM BYTES: " << bytes_read << "\n" << vprDEBUG_FLUSH;
       vpr::ObjectReader* head_reader = new vpr::ObjectReader(&packet_head);
