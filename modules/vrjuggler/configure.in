@@ -114,6 +114,12 @@ AC_ARG_WITH(threads,
                           Define threading implementation [default=IRIX_SPROC]],
             _thread_pkg="$withval", _thread_pkg='IRIX_SPROC')
 
+dnl # Build the DTK wrapper using the DTK installation found at the given
+dnl # path.  There is default path.
+AC_ARG_WITH(dtk,
+            [  --with-dtk=<PATH>       DTK installation],
+            _with_dtk="$withval", _with_dtk='no')
+
 dnl # Use AudioWorks (which can be found at the given path) in the sound
 dnl # wrapper.
 dnl # The default is to use it with the path being /usr.
@@ -519,6 +525,74 @@ if test "x${_enable_pf_api}" = "xyes" ; then
         AC_MSG_WARN(*** Performer API will not be used (files not found) ***))
 fi
 
+dnl # ----
+dnl # DTK
+dnl # ----
+if test "x${_with_dtk}" != "xno" -a "x$THREAD_SYS" = "xPOSIX" ; then
+    dnl # Try to find dtk-config unless the user has already set a value for
+    dnl # $DTK_CONFIG in their environment.
+    if test "x$DTK_CONFIG" = "x" ; then
+        AC_PATH_PROG(DTK_CONFIG, dtk-config, no, "${_with_dtk}/bin")
+    fi
+
+    dnl $ If dtk-config was not found, we cannot proceed with the DTK checks.
+    if test "x$DTK_CONFIG" = "xno" ; then
+        AC_MSG_WARN(*** Cannot build DTK wrapper without dtk-config ***)
+    dnl $ If dtk-config was found, $DTK_CONFIG has the path to it, so we can
+    dnl # set things up to compile with DTK.
+    else
+        AC_LANG_SAVE
+        AC_LANG_CPLUSPLUS
+
+        _vjsave_CXXFLAGS="$CXXFLAGS"
+        _vjsave_CPPFLAGS="$CPPFLAGS"
+        _vjsave_LDFLAGS="$LDFLAGS"
+        _vjsave_LIBS="$LIBS"
+
+        dnl # Based on the default ABI, tell $DTK_CONFIG 
+        if test "x$ABI" = "xN32" ; then
+            bits='n32'
+        elif test "x$ABI" = "x64" ; then
+            bits='64'
+        fi
+
+        DTK_ROOT=`$DTK_CONFIG --root`
+        CXXFLAGS="$CXXFLAGS `$DTK_CONFIG --cflags $bits`"
+        CPPFLAGS="$CPPFLAGS `$DTK_CONFIG --include`"
+        LDFLAGS="$LDFLAGS -L`$DTK_CONFIG --lib-dir $bits`"
+        LIBS="$LIBS -ldtk"
+
+        HAVE_DTK='N'
+
+        dnl # Determine if the installed DTK library is usable.
+        AC_CACHE_CHECK(for dtkMath_matrixPrint in -ldtk,
+            ac_cv_dtkMath_matrixPrint_in_dtk,
+            AC_TRY_LINK([
+#include <dtk.h>
+void dtkMath_matrixPrint(FILE *file, dtkMath_matrix* m); ],
+                        [ dtkMath_matrixPrint(0, 0); ],
+                        [ ac_cv_dtkMath_matrixPrint_in_dtk='yes'
+                          rm -rf ./ii_files ],
+                        ac_cv_dtkMath_matrixPrint_in_dtk='no'))
+
+        if test "x$ac_cv_dtkMath_matrixPrint_in_dtk" = "xyes" ; then
+            HAVE_DTK='Y'
+            AC_DEFINE(VJ_HAVE_DTK)
+            DTK_INCLUDES=`$DTK_CONFIG --include`
+            DTK_LDFLAGS=`$DTK_CONFIG --libs $bits`
+        else
+            AC_MSG_WARN(*** Cannot find DTK ***)
+        fi
+
+        CXXFLAGS="${_vjsave_CXXFLAGS}"
+        CPPFLAGS="${_vjsave_CPPFLAGS}"
+        LDFLAGS="${_vjsave_LDFLAGS}"
+        LIBS="${_vjsave_LIBS}"
+
+        AC_LANG_RESTORE
+    fi
+fi
+
 dnl # -----------
 dnl # AudioWorks
 dnl # -----------
@@ -743,6 +817,10 @@ if test "x$PF_INCLUDES" != "x" ; then
     INCLUDES="$INCLUDES $PF_INCLUDES"
 fi
 
+if test "x$DTK_INCLUDES" != "x" ; then
+    INCLUDES="$INCLUDES $DTK_INCLUDES"
+fi
+
 dnl # For use in linking applications.
 EXTRA_LINK_FLAGS=''
 
@@ -908,7 +986,7 @@ if test "$OS_TYPE" = "UNIX" ; then
     APP_VJ_LIBS_GL="-lJuggler_ogl"
     APP_VJ_LIBS_PF="-lJuggler_pf"
     APP_VJ_LIBS_UTILS="-lJuggler_utils"
-    APP_EXTRA_LIBS_BASIC="$LDFLAGS $LIBS"
+    APP_EXTRA_LIBS_BASIC="$LDFLAGS $LIBS $DTK_LDFLAGS"
 
     if test "x$OGL_LDFLAGS" != "x" ; then
         APP_EXTRA_LIBS_GL="-L$OGLROOT/lib$LIBBITSUF $LIBOPENGL"
@@ -973,6 +1051,8 @@ AC_SUBST(BUILD_GUI)
 
 AC_SUBST(OPENGL_API)
 AC_SUBST(PERFORMER_API)
+AC_SUBST(DTK_CONFIG)
+AC_SUBST(HAVE_DTK)
 
 AC_SUBST(SEMAPHORE_SYS)
 AC_SUBST(SHMEM_SYS)
@@ -1113,6 +1193,7 @@ AC_OUTPUT(Makefile
           Input/InputManager/Makefile
           Input/Multi/Makefile
           Input/ibox/Makefile
+          Input/vjDTK/Makefile
           Input/vjGesture/Makefile
           Input/vjGlove/Makefile
           Input/vjInput/Makefile
