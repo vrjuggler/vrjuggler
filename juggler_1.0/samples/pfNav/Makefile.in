@@ -93,7 +93,7 @@ DEPEND_FILES	= $(PFNAV_OBJECTS:.@OBJ_FILE_SUFFIX@=.d)		\
 #
 # where file1 is the value in $* and file1.d is $@.  It handles output from
 # the C and C++ compilers which prints only the object file to be created ($*).
-_CC_SED_EXP	= '\''s/\($*\)\.@OBJ_FILE_SUFFIX@[ :]*/\/\1.@OBJ_FILE_SUFFIX@ $@: /g'\''
+_CC_SED_EXP	= '\''s/\($*\)\.@OBJ_FILE_SUFFIX@[ :]*/.\/\1.@OBJ_FILE_SUFFIX@ $@: /g'\''
 
 %.d: %.cpp
 	@echo "Updating dependency file $@ ..."
