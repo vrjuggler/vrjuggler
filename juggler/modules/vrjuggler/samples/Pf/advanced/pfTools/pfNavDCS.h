@@ -41,6 +41,7 @@
 #include <vrj/Kernel/Kernel.h>
 #include <vrj/Util/Debug.h>
 #include <vrj/Draw/Pf/PfUtil.h>
+#include <gadget/Type/PositionInterface.h>
 
 #include <navigator.h>
 
