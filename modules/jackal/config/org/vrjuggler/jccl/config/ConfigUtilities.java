@@ -63,6 +63,29 @@ public class ConfigUtilities
    }
 
    /**
+    * Looks through the given list of ChunkDescs and finds the ones that have
+    * the given name.
+    *
+    * @param descs      the list of ChunkDescs to search through
+    * @param name       the name for which to match ChunkDescs
+    *
+    * @return  a list of the ChunkDescs that match
+    */
+   public static List getDescsWithName(List descs, String name)
+   {
+      List results = new ArrayList();
+      for (Iterator itr = descs.iterator(); itr.hasNext(); )
+      {
+         ChunkDesc desc = (ChunkDesc)itr.next();
+         if (desc.getName().equals(name))
+         {
+            results.add(desc);
+         }
+      }
+      return results;
+   }
+
+   /**
     * Looks through the given list of ConfigChunks and finds the ones that have
     * the given name.
     *
