@@ -103,7 +103,8 @@
       <chapter>
          <title>Building from Source</title>
          <para>There are a few different ways to build the modules related to the VR Juggler project. This chapter explains all the ins and outs of getting the VR Juggler source code and compiling everything, including the documentation you are reading right now.</para>
-         <section id="required-tools-sect">
+         <para>In general, readers should refer to the file <filename>INSTALL.html</filename> found in the top-level VR Juggler source directory and to <ulink url="http://www.vrjuggler.org/twiki_public/bin/view/Juggler/BuildingFromCvs">the build-from-CVS public Wiki page</ulink>. These have the most up-to-date information. In this part of the book, we cover more general topics that are not likely to change frequently. All developers of VR Juggler should nonetheless read this and the following chapters carefully to understand the build process as a whole.</para>
+         <section id="required.tools.sect">
             <title>Required Tools and Utilities for Building VR Juggler from Source</title>
             <para>This section lists the comprehensive set of software tools that we require when compiling VR Juggler from its source. If you are reading a printed version of this file, please check the website to ensure that you have the latest information. There have been several instances where bugs in third party software caused problems with compiling VR Juggler and running VR Juggler applications.</para>
             <table>
@@ -422,17 +423,22 @@
          <section>
             <title>Win32 Compiling and Development Issues</title>
             <para>When VR Juggler was first ported to the Win32 environment in late 1997, a Microsoft Visual C++ project file was used for compiling the libraries. Development on the GNU Autoconf-based build system on UNIX platforms began in mid-1998, and it was quickly realized that having two separate methods for compiling would complicate matters. To simplify our work, the build system used for compiling VR Juggler is thus the same on UNIX and Win32 platforms. Only the Autoconf-based system is supported, thus providing the same build environment on all platforms.</para>
-            <para>Since the UNIX and Win32 environments have many striking differences, special information must be provided for using the VR Juggler build system on Windows-based platforms. This document provides all the information necessary for getting set up in a Win32 environment prior to compiling and installing VR Juggler for developmental use. This is intended primarily for developers who wish to work with the VR Juggler source and (hopefully) submit work to the VR Juggler team. Users who are doing application development on a Win32 platform may want to read it too so that they may get a better understanding of what is available as part of the Win32 support.</para>
+            <para>Because the UNIX and Win32 environments have many striking differences, special information must be provided for using the VR Juggler build system on Windows-based platforms. This document provides all the information necessary for getting set up in a Win32 environment prior to compiling and installing VR Juggler for developmental use. This is intended primarily for developers who wish to work with the VR Juggler source and (hopefully) submit work to the VR Juggler team. Users who are doing application development on a Win32 platform may want to read it too so that they may get a better understanding of what is available as part of the Win32 support.</para>
             <section>
                <title>Necessary Tools</title>
-               <para>Developers should refer to the Win32 section of the <ulink url="http://www.vrjuggler.org/html/download/">download page</ulink> for the list of packages that must be installed. The <literal>juggler-tools</literal> package is especially important. It contains exactly the utilities used for compiling Juggler (aside from Visual C++ of course) including some modified versions of programs. Of note, the version of <command>make</command> included is what comes with the Bamboo Win32 tools. It is a modified version of GNU make that will run in a DOS shell and can handle DOS-style paths. Also, <command>makedepend</command> has been modified to output UNIX-safe paths and to know about the <varname>INCLUDE</varname> environment variable used by Visual C++.</para>
+               <para>Developers should refer to the Win32 section of the <ulink url="http://www.vrjuggler.org/html/download/">download page</ulink> for the list of packages that must be installed. The <literal>juggler-tools</literal> package is especially important. It contains exactly the utilities used for compiling VR Juggler (aside from Visual C++, of course) including some modified versions of programs. Of note, the bundled version of <command>makedepend</command> has been modified to output UNIX-safe paths and to know about the <varname>INCLUDE</varname> environment variable used by Visual C++.</para>
                <para>In addition to what is listed on the download page, the following packages are needed for Win32 development of Juggler (but not for application development):</para>
                <itemizedlist>
                   <listitem>
-                     <para><ulink url="http://sources.redhat.com/cygwin/download.html">Cygwin</ulink> 1.1.8 or newer. With the newer versions of Cygwin, the tools work better in the Win32 environment, and many pre-compiled packages are available including CVS, Perl, Autoconf, and Automake. It is strongly recommended that the Cygwin versions of all these utilities be used.</para>
+                     <para><ulink url="http://sources.redhat.com/cygwin/download.html">Cygwin</ulink> 1.3 or newer. With Cygwin version 1.1 and newer, the tools work better in the Win32 environment than older releases, and many pre-compiled packages are available including CVS, Perl, Autoconf, and Automake. It is strongly recommended that the Cygwin versions of all these utilities be used.</para>
                   </listitem>
                   <listitem>
-                     <para><ulink url="ftp://ftp.gnu.org/gnu/autoconf/">GNU Autoconf</ulink> version 2.13 and <ulink url="ftp://ftp.gnu.org/gnu/automake/">GNU Automake</ulink> version 1.4. Versions beyond these are not currently supported on any platform. This is needed to compile a new configure script after modifying <filename>configure.in</filename> and to update <filename>vjDefines.h.in</filename> when necessary. Note that these tools can only be run from a BASH shell (included with the Cygwin package). Autoconf and Automake can be compiled and installed on a Win32 platform without modification using the Cygwin tools.</para>
+                     <para><ulink url="ftp://ftp.gnu.org/gnu/autoconf/">GNU Autoconf</ulink> version 2.13 and <ulink url="ftp://ftp.gnu.org/gnu/automake/">GNU Automake</ulink> version 1.4. Versions beyond these are not currently supported on any platform. This is needed to compile a new configure script after modifying <filename>configure.in</filename> and to update <filename>vrjDefines.h.in</filename> when necessary. Note that these tools can only be run from a BASH shell (included with the Cygwin package). Autoconf and Automake can be compiled and installed on a Win32 platform without modification using the Cygwin tools.</para>
+                     <note>
+                        <para>Recent releases of Cygwin include both Autoconf 2.13 and 2.5x as well as Automake 1.4 and 1.5. There have been problems observed with the <command>aclocal</command> distributed with Automake 1.5, and as of this writing, the Automake 1.4 version is required to run <command>autogen.sh</command>. This can be accomplished as follows:</para>
+                        <screen>% ACLOCAL=/usr/autotool/stable/bin/aclocal ./autogen.sh</screen>
+                        <para>The above temporarily assigns a value to the <varname>$ACLOCAL</varname> environment variable that is then used by <command>autogen.sh</command>.</para>
+                     </note>
                   </listitem>
                </itemizedlist>
             </section>
@@ -443,13 +449,13 @@
                   <varlistentry>
                      <term>%PATH%</term>
                      <listitem>
-                        <para>All users must have the <filename>juggler-tools</filename> directory in their path. If the Cygwin utilities are installed, it is especially important that <filename>juggler-tools</filename> be listed <emphasis>before</emphasis> the Cygwin bin directory so that the supported utilities are found first. Unfortunately, when running a BASH shell, the Cygwin path is always first, but in the BASH environment, this is acceptable. The ordering is far more important for DOS shells. Besides <filename>juggler-tools</filename>, the directory containing the Visual C++ executables must also be in the path. The configure script needs this so that it can find <command>CL.EXE</command> when it is setting up the C and C++ compilers.</para>
+                        <para>All users must have the <filename>juggler-tools</filename> directory in their path. Besides <filename>juggler-tools</filename>, the directory containing the Visual C++ executables must also be in the path. The configure script needs this so that it can find <command>CL.EXE</command> when it is setting up the C and C++ compilers.</para>
                      </listitem>
                   </varlistentry>
                   <varlistentry>
                      <term>%INCLUDE%</term>
                      <listitem>
-                        <para>This should also be set for all users. It provides paths to the Visual C++ include directories that <command>CL.EXE</command> needs when compiling. On Windows NT, it is set only for the user who installed Visual C++. Be sure to change this to be included in <emphasis>all</emphasis> users' environments. Alternatively, it can be set using the <command>VCVARS32.BAT</command> batch file on a per-shell basis, but users will see much better results if it is set in the general environment. In particular, a BASH shell does not get the environment changes made by the batch file. The batch file also uses <quote>8.3</quote> names which may confuse the Cygwin tools.</para>
+                        <para>This should also be set for all users. It provides paths to the Visual C++ include directories that <command>CL.EXE</command> needs when compiling. On Windows NT, it is set only for the user who installed Visual C++. Be sure to change this to be included in <emphasis>all</emphasis> users' environments. Alternatively, it can be set using the <command>VSVARS32.BAT</command> batch file on a per-shell basis, but users will see much better results if it is set in the general environment. In particular, a BASH shell does not get the environment changes made by the batch file. The batch file also uses <quote>8.3</quote> names which may confuse the Cygwin tools.</para>
                      </listitem>
                   </varlistentry>
                   <varlistentry>
@@ -474,7 +480,7 @@
                <screen>&gt; ./configure [options]</screen>
                <para>Instead, it must be run as:</para>
                <screen>&gt; sh ./configure [options]</screen>
-               <para>As with the UNIX environment, it can be run from a separate build directory. Refer to <xref linkend="configure-script-chapter"/> for more information (specifically, <xref linkend="configure-script-usage-sect"/>). Options with paths should use <filename>/</filename>'s for the path separator rather than <filename>\</filename>'s. They should also be enclosed in double quotes (<quote>path/to/something</quote>) in case the path includes one or more spaces.</para>
+               <para>As with the UNIX environment, it can be run from a separate build directory. Refer to <xref linkend="configure.script.chapter"/> for more information (specifically, <xref linkend="configure-script-usage-sect"/>). Options with paths should use <filename>/</filename>'s for the path separator rather than <filename>\</filename>'s. They should also be enclosed in double quotes (<quote>path/to/something</quote>) in case the path includes one or more spaces.</para>
                <para>Once configuration has completed, compiling can be done in either a DOS shell or a BASH shell using the version of GNU make in <filename>juggler-tools</filename>. <emphasis>The Cygwin B20.1 version will not work in a DOS shell.</emphasis> This is when it is especially important to have the <filename>juggler-tools</filename> directory before the Cygwin directory in the user's path.</para>
                <para>Beyond this, everything (aside from the problems listed in the next section) will be the same as in a UNIX environment.</para>
             </section>
@@ -483,34 +489,28 @@
                <para>Listed here are things to keep in mind when working in a Win32 environment. It is not as stable as its UNIX counterpart due, for the most part, to reasons beyond the control of this project. Please read this in full before reporting problems with the Win32 build.</para>
                <itemizedlist>
                   <listitem>
-                     <para>In versions of Cygwin prior to 1.1, the UNIX utilities will appear to become blocked or may die with an error saying that they cannot fork. This may have been due to a race condition in the old Cygwin code. Typically, it happens when one or more BASH shells are open while a build is happening in a DOS shell. Closing one or more (sometimes all) of the BASH shells usually fixes the problem. It is strongly recommended that developers update to <ulink url="http://sources.redhat.com/cygwin/download.html">Cygwin 1.1.8</ulink> and to the <ulink url="http://www.vrjuggler.org/pub//juggler-tools-1.1.zip">latest <filename>juggler-tools</filename> package</ulink>.</para>
+                     <para>In versions of Cygwin prior to 1.1, the UNIX utilities will appear to become blocked or may die with an error saying that they cannot fork. This may have been due to a race condition in the old Cygwin code. Typically, it happens when one or more BASH shells are open while a build is happening in a DOS shell. Closing one or more (sometimes all) of the BASH shells usually fixes the problem. It is strongly recommended that developers update to <ulink url="http://sources.redhat.com/cygwin/download.html">Cygwin 1.3</ulink> and to the <ulink url="http://www.vrjuggler.org/pub//juggler-tools-1.1.zip">latest <filename>juggler-tools</filename> package</ulink>.</para>
                   </listitem>
                   <listitem>
-                     <para>The <quote>developer installation</quote> does not work in any Win32 file system. It relies heavily on symbolic links which, while common on UNIX file systems, have no meaning in a Win32 environment. Because of this, VR Juggler must be fully installed after it has been compiled (refer to <xref linkend="install-vrj-chapter"/> for more information on this process). Once that is done, <varname>$VJ_BASE_DIR</varname> can be set to point to the installation directory and development can continue in the build tree.</para>
+                     <para>The <quote>developer installation</quote> is not fully functional on any Win32 file system. Because of this, VR Juggler must be fully installed after it has been compiled (refer to <xref linkend="install-vrj-chapter"/> for more information on this process). Once that is done, <varname>$VJ_BASE_DIR</varname> can be set to point to the installation directory and applications can be compiled in that tree.</para>
                   </listitem>
                   <listitem>
-                     <para>The configure script assumes that the compiler knows how to find the OpenGL libraries and headers. In VR Juggler 1.0, no check is made to verify that the OpenGL libraries are available. This has been corrected in VR Juggler 1.1 and beyond.</para>
+                     <para>Dependencies must be generated differently than on UNIX-based platforms. The Visual C++ compiler does not output the dependencies of a given source file in the same manner as all UNIX C and C++ compilers supported by the VR Juggler build system. Because of this, <command>makedepend</command> is used. It may not handle all the <symbol>#ifdef</symbol>'s properly and report non-fatal warnings. These can be ignored typically, especially if it is trying to find some file that is clearly UNIX-specific (e.g., <filename>pthread.h</filename>). The version of <command>makedepend</command> in <filename>juggler-tools</filename> has been modified to output UNIX-style (and UNIX-safe) paths, but it is possible that not all situations have been considered. If it is clear that <command>makedepend</command> is not handling a path properly, please <ulink url="http://www.vrjuggler.org/html/bugs/bugs.html">report the problem</ulink>.</para>
                   </listitem>
                   <listitem>
-                     <para>Dependencies must be generated differently than on UNIX-based platforms. The Visual C++ compiler does not output the dependencies of a given source file in the same manner as all UNIX C and C++ compilers supported by the Juggler build system. Because of this, <command>makedepend</command> is used. It may not handle all the <symbol>#ifdef</symbol>'s properly and report non-fatal warnings. These can be ignored typically, especially if it is trying to find some file that is clearly UNIX-specific (e.g., <filename>pthread.h</filename>). The version of <command>makedepend</command> in <filename>juggler-tools</filename> has been modified to output UNIX-style (and UNIX-safe) paths, but it is possible that not all situations have been considered. If it is clear that <command>makedepend</command> is not handling a path properly, please <ulink url="http://www.vrjuggler.org/html/bugs/bugs.html">report the problem</ulink>.</para>
-                  </listitem>
-                  <listitem>
-                     <para>A configure script generated in a Win32 environment will not work in a UNIX environment. The <quote><literal>^M</literal> problem</quote> causes the shell to fail when trying to run the script. A configure script generated in a UNIX environment will however work in a Win32 environment because <command>sh</command> can handle both UNIX- and DOS-style newlines.</para>
-                  </listitem>
-                  <listitem>
-                     <para>The application makefiles (<emphasis>not</emphasis> the library makefiles) all use the <varname>$(VAR_NAME)</varname> syntax for referencing variables. This is so that the makefiles will work with <command>nmake</command>. These are intended to be usable with all version of <command>make</command> (or as many as is feasibly possible), so they deviate from the style used in other makefiles to accommodate this particular version of <command>make</command>.</para>
+                     <para>A configure script generated in a Win32 environment will not work in a UNIX environment. The <quote><literal>^M</literal> problem</quote> causes the shell to report parse errors when trying to run the script. A configure script generated in a UNIX environment will however work in a Win32 environment because <command>sh</command> can handle both UNIX- and DOS-style newlines.</para>
                   </listitem>
                </itemizedlist>
             </section>
          </section>
       </chapter>
-      <chapter id="configure-script-chapter">
+      <chapter id="configure.script.chapter">
          <title>Using the VR Juggler Configure Script</title>
          <para>The VR Juggler project uses the autoconf utility to stay portable across platforms. This means you will have to <quote>configure</quote> the project before compiling it. To make sense of this documentation, please understand the concepts listed in <xref linkend="intro-req-reading"/>. Posting about these subjects to the mailing list will probably be ignored.</para>
          <para>In this chapter, the following conventions are used for text formatting and naming:</para>
          <itemizedlist>
             <listitem>
-               <para>Program, file and directory names are represented <filename>this way</filename>.</para>
+               <para>Program, file, and directory names are represented <filename>this way</filename>.</para>
             </listitem>
             <listitem>
                <para>Commands that are intended to be run by the user are written in <command>this style</command>.</para>
@@ -531,14 +531,16 @@
             <screen>% ./autogen.sh</screen>
             <para>This must be executed in the top-level Juggler source directory.</para>
             <para>Once the <literal>configure</literal> script is generated, it can be invoked by typing:</para>
-            <screen>% ./configure</screen>
-            <para>To get a list of all the available options, do:</para>
-            <screen>% ./configure --help</screen>
+            <screen>% ./configure.pl</screen>
+            <para>To get a list of all available options for <command>configure.pl</command>, do:</para>
+            <screen>% ./configure.pl --help</screen>
+            <para>To get a list of all available options for the multitude of Autoconf-generated configure scripts, run:</para>
+            <screen>% ./configure.pl --all-help</screen>
          </section>
          <section id="autoconf-autoheader-sect">
             <title>Autoconf and Autoheader</title>
-            <para>VR Juggler uses tools from the GNU Autoconf package for automatically generating its configure script and its template configuration header file (<filename>vjDefines.h</filename>). The command <command>autoconf</command> is used to <quote>compile</quote> the file <filename>configure.in</filename> in the top-level directory into the configure script, aptly named <filename>configure</filename>. <command>autoheader</command> reads <emphasis>both</emphasis> <filename>configure.in</filename> and <filename>acconfig.h</filename> to generate the template file <filename>vjDefines.h.in</filename> which the configure script later uses to generate <filename>vjDefines.h</filename>.</para>
-            <para>It is important that the generated files remain synchronized with their templates for proper compiling of the library. To facilitate this, revision numbers of <filename>configure.in</filename> and <filename>acconfig.h</filename> are available at the tops of the files, and these can be compared against the revision number of <filename>configure</filename> and <filename>vjDefines.h.in</filename>. If the numbers do not match, it is best to run <command>autoconf</command> and/or <command>autoheader</command> to get everything up to date. Typically, <command>autoconf</command> needs to be used far more frequently than <command>autoheader</command>, but there are times when changes made only to <filename>configure.in</filename> require that both be run. It hurts nothing to run both whenever <filename>configure.in</filename> is updated.</para>
+            <para>VR Juggler uses tools from the GNU Autoconf package for automatically generating its configure script and its template configuration header file (<filename>vrjDefines.h</filename>). The command <command>autoconf</command> is used to <quote>compile</quote> the file <filename>configure.in</filename> in the top-level directory into the configure script, aptly named <filename>configure</filename>. <command>autoheader</command> reads <emphasis>both</emphasis> <filename>configure.in</filename> and <filename>acconfig.h</filename> to generate the template file <filename>vrjDefines.h.in</filename> which the configure script later uses to generate <filename>vrjDefines.h</filename>.</para>
+            <para>It is important that the generated files remain synchronized with their templates for proper compiling of the library. To facilitate this, revision numbers of <filename>configure.in</filename> and <filename>acconfig.h</filename> are available at the tops of the files, and these can be compared against the revision number of <filename>configure</filename> and <filename>vrjDefines.h.in</filename>. If the numbers do not match, it is best to run <command>autoconf</command> and/or <command>autoheader</command> to get everything up to date. Typically, <command>autoconf</command> needs to be used far more frequently than <command>autoheader</command>, but there are times when changes made only to <filename>configure.in</filename> require that both be run. It hurts nothing to run both whenever <filename>configure.in</filename> is updated.</para>
             <para>Note that it is possible to use a configure script generated on a UNIX platform in a Win32 environment. The version of <command>sh.exe</command> distributed in <filename>juggler-tools.zip</filename> handles the UNIX newline characters. It is, however, not possible to use a configure script generated in a Win32 environment on a UNIX platform. The <literal>^M</literal> characters confuse the shell and cause the script to fail immediately.</para>
          </section>
          <section id="configure-script-usage-sect">
@@ -549,15 +551,15 @@
                <para>In a Win32 environment, some variables have to be defined for the Microsoft Visual C++ compiler to work properly. These are mentioned on the <ulink url="http://www.vrjuggler.org/html/download/">Download page</ulink>. Refer to that document to ensure that the environment is set up right for building and installing.</para>
             </section>
             <section>
-               <title>Quick Start</title>
-               <para>The easiest way to configure Juggler is to run <command>configure</command> with no options in the top-level source directory. Doing this will root compiling in this directory. This will use all the default values for the host platform with the script doing its best to make the right choices. In some cases, however, this may not be sufficient.</para>
+               <title>Overview</title>
+               <para>The easiest way to configure VR Juggler is to run <command>configure.pl</command> with no options in the top-level source directory. Doing so will root compiling in that directory. This will use all the default values for the host platform with the script doing its best to make the right choices. In some cases, however, this may not be sufficient.</para>
                <para>Possible situations that may cause <command>configure</command> to report a fatal error or a warning about a feature being disabled include the following:</para>
                <itemizedlist>
                   <listitem>
                      <para>The version of <command>sh</command> available does not support the features being used in <command>configure</command>. In this case, the configure script will exit with an error status. To get around this, invoke <command>ksh</command>, <command>bash</command>, or <command>zsh</command> on <command>configure</command> (in that order as available). These shells have newer features and fully support <command>sh</command> syntax. (In particular, this is known to be a problem with <filename>/bin/sh</filename> on Solaris 7 and possibly Solaris 8.)</para>
                   </listitem>
                   <listitem>
-                     <para>A <quote>modern</quote> C++ compiler was not found. <emphasis>This is a fatal error.</emphasis> VR Juggler uses many features of the latest C++ standard, and a C++ compiler supporting these features is absolutely required. To use an alternate C++ compiler, specify a value for the environment variable <varname>CXX</varname>.</para>
+                     <para>A <quote>modern</quote> C++ compiler was not found. <emphasis>This is a fatal error.</emphasis> VR Juggler uses many features of the latest C++ standard, and a C++ compiler supporting these features is absolutely required. To use an alternate C++ compiler, specify a value for the environment variable <varname>CXX</varname>. Refer to <xref linkend="required.tools.sect"/> for compiler requirements.</para>
                   </listitem>
                   <listitem>
                      <para>The OpenGL libraries and/or header files were not found. <emphasis>This is a fatal error.</emphasis> To remedy this problem, use the <option>--with-oglroot</option> option to <command>configure</command> to specify the root directory containing the OpenGL installation.</para>
@@ -566,10 +568,10 @@
                      <para>The OpenGL Performer libraries and/or header files were not found. This is not a fatal error and simply causes the Performer API to be disabled for that build. If Performer is available, use the <option>--with-pfroot</option> option to <command>configure</command> to specify the root directory containing the Performer installation. It may also be necessary to use the <option>--with-pfver</option> option if OpenGL Performer 2.4 is not the version installed.</para>
                   </listitem>
                   <listitem>
-                     <para>A version of Perl greater than or equal to 5.004 was not found. <emphasis>This will cause compiling of <command>vjcontrol</command> and installation of the library to fail.</emphasis> To provide a valid Perl binary for use by the makefiles, use the <option>--with-perl</option> option to <command>configure</command>. The path given should be the full path up to but <emphasis>not</emphasis> including the <command>perl</command> binary itself. For example, if a <command>perl5</command> binary were in <filename>/usr/unsupported/bin</filename>, give this directory as the argument to <option>--with-perl</option>. In a Win32 environment, use <filename>/</filename>'s as the path separator rather than <filename>\</filename>'s.</para>
+                     <para>A version of Perl greater than or equal to 5.004 was not found. <emphasis>This will cause installations to fail.</emphasis> To provide a valid Perl binary for use by the makefiles, use the <option>--with-perl</option> option to <command>configure</command>. The path given should be the full path up to but <emphasis>not</emphasis> including the <command>perl</command> binary itself. For example, if a <command>perl5</command> binary were in <filename>/usr/unsupported/bin</filename>, give this directory as the argument to <option>--with-perl</option>. In a Win32 environment, use <filename>/</filename>'s as the path separator rather than <filename>\</filename>'s.</para>
                   </listitem>
                   <listitem>
-                     <para>No Java compiler was found. This disables the compilation of <command>vjcontrol</command>. There are three ways to fix this with all giving the same results:</para>
+                     <para>No Java compiler was found. This disables the compilation of VrjConfig. There are three ways to fix this, with all giving the same results:</para>
                      <orderedlist>
                         <listitem>
                            <para>Set the environment variable <varname>JDK_HOME</varname> to the Java installation directory (e.g., <filename>/usr/local/java</filename> which contains a <filename>bin</filename> subdirectory with all the JDK utilities).</para>
@@ -589,7 +591,10 @@
             </section>
             <section>
                <title>Options</title>
-               <para>The following is a list of the current Juggler-specific options that can be invoked at configuration time as of Revision 1.273.2.3 of <filename>configure.in</filename> (the revision number can be found at the top of the <filename>configure.in</filename> file and at the top of the configure script). The output for all options is generated by doing <command>configure --help</command>.</para>
+               <note>
+                  <para>This has not been updated for VR Juggler 1.1/2.0. Some of the options described below are accurate, but many are not. Until such time as this section is updated, it is best to read the output of running <command>configure.pl</command> with the <option>--all-help</option> option.</para>
+               </note>
+               <para>The following is a list of the current VR Juggler-specific options that can be invoked at configuration time as of Revision 1.273.2.3 of <filename>configure.in</filename> (the revision number can be found at the top of the <filename>configure.in</filename> file and at the top of the configure script). The output for all options is generated by doing <command>configure --help</command>.</para>
                <variablelist>
                   <varlistentry>
                      <term>--with-cc</term>
@@ -760,33 +765,33 @@
             </section>
             <section>
                <title>Regenerating Files</title>
-               <para>After running <command>configure</command>, one of the generated files is a shell script called <filename>config.status</filename>. This script can be used to regenerate all the output files from their respective <filename>.in</filename> files without going through the entire configuration process again. This is useful, for example, when only a <filename>Makefile.in</filename> file changes without an update in the configure script. In general, when any <filename>.in</filename> file (other than <filename>configure.in</filename>) changes, <command>config.status</command> can be used to quickly incorporate the template file changes into the generated files.</para>
-            </section>
-            <section>
-               <title>When to Run <command>configure</command> Again</title>
-               <para>The configure script should always be run after it is regenerated from <filename>configure.in</filename>. Thus, whenever <command>autoconf</command> is run (see <xref linkend="autoconf-autoheader-sect"/> for more information), the script itself should be run again to ensure that the latest build environment is available.</para>
+               <para>The <command>configure.pl</command> script provides a method for regenerating files without running the individual configure scripts again. Simply execute the following:</para>
+               <screen>% ./configure.pl --regen</screen>
+               <para>This can be used to regenerate all the output files from their respective <filename>.in</filename> files without going through the entire configuration process again. This is useful, for example, when only a <filename>Makefile.in</filename> file changes without an update in the configure script. In general, when any <filename>.in</filename> file (other than <filename>configure.in</filename>) changes, the above method can be used to quickly incorporate the template file changes into the generated files.</para>
+               <para>Users who want to do a fresh configuration can run the script <command>reconfig</command>. It removes all cached data from any previous configuration processes and runs <command>configure.pl</command> with the same arguments it was given originally.</para>
             </section>
             <section>
                <title>Advanced Use</title>
-               <para>The VR Juggler configure script has been designed to work in a multi-platform environment. It allows Juggler to be built for multiple platforms using the same source tree (distributed with NFS for example) with all versions co-existing safely.</para>
+               <para>The VR Juggler configure script has been designed to work in a multi-platform environment. It allows VR Juggler to be built for multiple platforms using the same source tree (distributed with NFS for example) with all versions co-existing safely.</para>
                <para>To take advantage of this feature, make a directory somewhere for building the library. This directory can go anywhere, but the typical location is a subdirectory of the top-level Juggler source tree. (Note that on a Win32 platform, this directory MUST be a subdirectory of the Juggler source tree.) It can also be called whatever seems appropriate. A common name is <literal><filename></filename>build</literal>, and alternate options are <filename>build-PLATFORM</filename> where <filename>PLATFORM</filename> is the name of the platform on which VR Juggler is being built. Multiple build directories can exist side by side. They fully separate all parts of the compile process and can be removed safely at the root. After making the directory, <command>cd</command> into it and run the configure script from it. For example, if a directory called <filename>build</filename> has been created as a subdirectory of <filename>juggler</filename>, do the following:</para>
-               <screen>cd build ../configure [options]</screen>
+               <screen>% cd build
+% ../configure.pl [options]</screen>
                <para>This will run the configure script as normal but will create a full, unique build environment as a subdirectory of <filename>build</filename>.</para>
-               <para>So the question becomes <quote>To <filename>build</filename> or not to <filename>build</filename>?</quote> There are advantages to running <command>configure</command> from the top-level directory, and there are disadvantages to that method. A benefit of the simpler method is that it provides a quick start to building with no in-depth knowledge of the Juggler build system necessary. It has a <quote>familiar feel</quote> compared to other projects that use Autoconf-generated scripts for configuration. The main disadvantage of this method is that the generated files are <quote>next to</quote> the template files. As a developer, this can and has caused confusion about which file to modify. For example, it is very easy to forget that a quick modification to a <filename>Makefile</filename> will be destroyed when <command>configure</command> is run again if that change is not also made in the corresponding <filename>Makefile.in</filename>. It is also easy to want to check in a generated file when only the templates should be in the CVS repository.</para>
-               <para>Similarly, there are advantages and disadvantages to creating a separate build environment. As mentioned above, building can be done for multiple operating systems using the same source tree. (This is how the NSPR API is currently built using their configure script.) In addition to building for multiple operating systems, it is possible to easily build multiple configurations from the same source tree. This is extremely useful for building different threading models and different ABI/ISA combinations to test changes in a single source tree. Also mentioned above, the entire build environment can be removed from the root. This is because all aspects of the build are separated from the source tree so that object files, makefiles, dependency files, etc. do not pollute the source tree. On the other hand, this is not a typical use of a configure script (though it is a documented method of configuration in the Autoconf documentation) and is thus not familiar to users. It can also result in complicated paths depending on where the build environment is rooted and how the path to <command>configure</command> is specified.</para>
+               <para>So the question becomes <quote>To <filename>build</filename> or not to <filename>build</filename>?</quote> There are advantages to running <command>configure.pl</command> from the top-level directory, and there are disadvantages to that method. A benefit of the simpler method is that it provides a quick start to building with no in-depth knowledge of the Juggler build system necessary. It has a <quote>familiar feel</quote> compared to other projects that use Autoconf-generated scripts for configuration. The main disadvantage of this method is that the generated files are <quote>next to</quote> the template files. As a developer, this can and has caused confusion about which file to modify. For example, it is very easy to forget that a quick modification to a <filename>Makefile</filename> will be destroyed when <command>configure.pl</command> is run again if that change is not also made in the corresponding <filename>Makefile.in</filename>. It is also easy to want to check in a generated file when only the templates should be in the CVS repository.</para>
+               <para>Similarly, there are advantages and disadvantages to creating a separate build environment. As mentioned above, building can be done for multiple operating systems using the same source tree. (This is how the NSPR API is currently built using their configure script.) In addition to building for multiple operating systems, it is possible to easily build multiple configurations from the same source tree. This is extremely useful for building different threading models and different ABI/ISA combinations to test changes in a single source tree. Also mentioned above, the entire build environment can be removed from the root. This is because all aspects of the build are separated from the source tree so that object files, makefiles, dependency files, etc. do not pollute the source tree. On the other hand, this is not a typical use of a configure script (though it is a documented method of configuration in the Autoconf documentation) and is thus not familiar to users. It can also result in complicated paths depending on where the build environment is rooted and how the path to <command>configure.pl</command> is specified.</para>
             </section>
          </section>
          <section>
             <title>Debugging Configuration Errors</title>
-            <para>When <command>configure</command> runs, a file called <filename>config.log</filename> is constantly updated in the working directory. When something goes wrong with the configuration process, the first thing to do is refer to the bottom of this file to see what was happening at the time of the error and why that step failed. Debugging the actual script is more difficult. Interested readers should refer to <xref linkend="build-system-extend-chapter"/> for more information on this particular topic.</para>
+            <para>When Autoconf-generated <command>configure</command> scripts run, a file called <filename>config.log</filename> is constantly updated in the working directory. When something goes wrong with the configuration process, the first thing to do is refer to the bottom of this file to see what was happening at the time of the error and why that step failed. Debugging the actual script is more difficult. Interested readers should refer to <xref linkend="build-system-extend-chapter"/> for more information on this particular topic.</para>
          </section>
          <section>
             <title>Template (<filename>.in</filename>) Files</title>
             <variablelist>
                <varlistentry>
-                  <term>vjDefines.h.in</term>
+                  <term>vrjDefines.h.in</term>
                   <listitem>
-                     <para>This file is the template for <filename>vjDefines.h</filename> (the equivalent of <filename>config.h</filename>) which is generated by <command> configure</command>. It provides definitions for various system-specific features that are available. <filename>vjDefines.h</filename> is included by <filename>vjConfig.h</filename> and should not be included by any source file directly. This file is generated by <command>autoheader</command> from <filename>configure.in</filename> and <filename>acconfig.h</filename> (<xref linkend="autoconf-autoheader-sect"/>) and is the only <filename>.in</filename> file that does not use the <command>configure</command> substitution strings (<varname>@VAR_NAME@</varname>). If modifications are necessary, they should be made to <filename>acconfig.h</filename>.</para>
+                     <para>This file is the template for <filename>vrjDefines.h</filename> (the equivalent of <filename>config.h</filename>) which is generated by <command> configure</command>. It provides definitions for various system-specific features that are available. <filename>vrjDefines.h</filename> is included by <filename>vrjConfig.h</filename> and should not be included by any source file directly. This file is generated by <command>autoheader</command> from <filename>configure.in</filename> and <filename>acconfig.h</filename> (<xref linkend="autoconf-autoheader-sect"/>) and is the only <filename>.in</filename> file that does not use the <command>configure</command> substitution strings (<varname>@VAR_NAME@</varname>). If modifications are necessary, they should be made to <filename>acconfig.h</filename>.</para>
                   </listitem>
                </varlistentry>
                <varlistentry>
@@ -834,7 +839,7 @@
 Copyright (C) 1988, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 2000
         Free Software Foundation, Inc.
 ...</screen>
-            <para>The emphasized text is the version information. For best results, this should be one of the version numbers listed in <xref linkend="required-tools-sect"/>.</para>
+            <para>The emphasized text is the version information. For best results, this should be one of the version numbers listed in <xref linkend="required.tools.sect"/>.</para>
             <para>Most, if not all, versions of make (not just GNU make) use the following syntax for execution:</para>
             <cmdsynopsis>
                <command>make</command>
@@ -1755,7 +1760,7 @@ Copyright (C) 1988, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 2000
    </part>
    <part>
       <title>Appendices</title>
-      <appendix>
+      <appendix id="coding.standard.appendix">
          <title>Coding Standard</title>
          <para>The coding standard for VR Juggler 2.0 and the Juggler Suite is available in the <ulink url="http://www.vrjuggler.org/twiki_public/bin/view/Juggler/VrJugglerCppCodingStandard">public Wiki</ulink>. It covers C++ primarily, but its principles can be applied to similar languages such as Java and Perl.</para>
       </appendix>
