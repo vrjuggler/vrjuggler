@@ -1,18 +1,20 @@
 #include <iostream.h>
 #include <Input/InputManager/vjInputManager.h>
+#include <Input/ibox/hci.h>
 #include <Input/ibox/ibox.h>
 #include <Input/vjPosition/vjFlock.h>
+#include <Input/vjInput/vjIbox.h>
 #include <SharedMem/vjMemPool.h>
 
 int main()
 {
    vjMemPool* shared_pool = new vjSharedPool(1024*1024);
    vjMatrix pos_data;
-   InputManager* input_manager = new(shared_pool) vjInputManager ;
+   vjInputManager* input_manager = new(shared_pool) vjInputManager ;
 
       // --- Create Dummy -- //
-   cout << "\nCreating myDummy: C2DummyPosition w/X=5.0" << endl;
-   C2DummyPosition* myDummy = new(shared_pool) C2DummyPosition;
+   cout << "\nCreating myDummy: vjDummyPosition w/X=5.0" << endl;
+   vjDummyPosition* myDummy = new(shared_pool) vjDummyPosition;
    myDummy->SetX(5.0);
 
       // -- Get default pos data -- //
@@ -52,7 +54,7 @@ int main()
    cin.get();
 
 #ifdef TRACKERS
-   C2Flock* aFlock = new (shared_pool) C2Flock;
+   vjFlock* aFlock = new (shared_pool) vjFlock;
    aFlock->StartSampling();
    devNum = input_manager->FAddDevice(aFlock);
    input_manager->SetPosProxy(1,devNum,0);
@@ -61,7 +63,7 @@ int main()
    cout << "Trackers set up.. " << endl;
    //sleep(5);
 
-   C2POS_DATA *data1,*data2,*data0;
+   vjPOS_DATA *data1,*data2,*data0;
 
    for (int i = 0; i < 5; i++)
    {
@@ -80,7 +82,7 @@ int main()
    aFlock->StopSampling();
 #endif
    
-   IBox *myibox = new (shared_pool) IBox;
+   vjIBox *myibox = new (shared_pool) vjIBox;
    myibox->StartSampling();
    cout << "ibox is: " << myibox->GetDeviceName();
    C2Dinput_manageritalProxy dp1(myibox,0);
