@@ -126,9 +126,9 @@
 #   define VJ_EXPORT(__type)      __type
 #   define VJ_EXPORT_CLASS
 #   define VJ_EXPORT_DATA(__type) __type
-#   define VJ_IMPORT(__type)      extern __type
-#   define VJ_IMPORT_DATA(__type) extern __type
+#   define VJ_IMPORT(__type)      __type
 #   define VJ_IMPORT_CLASS
+#   define VJ_IMPORT_DATA(__type) __type
 
 #   define VJ_EXTERN(__type)         extern __type
 #   define VJ_IMPLEMENT(__type)      __type
