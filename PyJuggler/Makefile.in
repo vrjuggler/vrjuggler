@@ -55,6 +55,7 @@ recursive:
 
 all debug optim:
 	$(MAKE) RECTARGET="$@" recursive
+	$(MAKE) prefix="$(topdir)" RECTARGET="install" recursive
 
 # XXX: The chmod thing at the end is pretty lame.
 install:
@@ -63,6 +64,9 @@ install:
 	$(PERL) $(scriptdir)/install-dir.pl -o $(projdatadir)/examples	\
           -i $(top_srcdir)/examples -v "$(topdir)/VARS.pl"
 	-chmod $(EXEC_PERMS) $(projdatadir)/examples/python/simpleGL/simpleGL.py
+
+cleandepend:
+	$(MAKE) DO_CLEANDEPEND=1 RECTARGET="$@" recursive
 
 clean clobber:
 	$(MAKE) RECTARGET="$@" recursive

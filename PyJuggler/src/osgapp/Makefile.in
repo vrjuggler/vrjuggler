@@ -25,28 +25,19 @@
 #
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
-include @topdir@/src/common.mk
+srcdir=		@srcdir@
 
-DIRS=	vpr jccl gadget vrj
+VJ_LIBS=	$(shell vrjuggler-config --libs)
+VJ_EXTRA_LIBS=	$(shell vrjuggler-config --extra-libs)
+OSG_EXTRA_LIBS=	@OSG_LDFLAGS@ @OSG_LIBS@
 
-ifeq (@HAVE_OSG@, Y)
-DIRS+=	osgapp
-endif
+EXTRA_CXXFLAGS=	$(shell vrjuggler-config --cxxflags)
+EXTRA_INCLUDES=	@OSG_INCLUDES@
+EXTRA_LDFLAGS=	$(PYJUTIL_LIB) $(VJ_LIBS) $(VJ_EXTRA_LIBS) $(OSG_EXTRA_LIBS)
+MOD_NAME=	__osgapp
 
-all clean cleandepend clobber debug optim:
-	@for d in $(DIRS) ; do			\
-            echo "===> $$d" ;			\
-            $(MAKE) -C $$d $@ || exit 1;	\
-            echo "<=== $$d" ;			\
-          done
+SRCS= \
+	_OsgApp.cpp	\
+	__osgapp.cpp
 
-install:
-	$(MKINSTALLDIRS) $(PYTHON_PACKAGES)
-	@for d in $(DIRS) ; do			\
-            echo "===> $$d" ;			\
-            $(MAKE) -C $$d $@ || exit 1;	\
-            echo "<=== $$d" ;			\
-          done
-	cp $(top_srcdir)/dist/__init__.py $(PYTHON_PACKAGES)
-	cp $(top_srcdir)/dist/vrj.py $(PYTHON_PACKAGES)
-
+include ../common-targets.mk

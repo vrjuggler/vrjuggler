@@ -25,28 +25,26 @@
 #
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
-include @topdir@/src/common.mk
+srcdir=		@srcdir@
 
-DIRS=	vpr jccl gadget vrj
+VJ_LIBS=	$(shell vrjuggler-config --libs)
+VJ_EXTRA_LIBS=	$(shell vrjuggler-config --extra-libs)
 
-ifeq (@HAVE_OSG@, Y)
-DIRS+=	osgapp
-endif
+EXTRA_CXXFLAGS=	$(shell vrjuggler-config --cxxflags)
+EXTRA_LDFLAGS=	$(PYJUTIL_LIB) $(VJ_LIBS) $(VJ_EXTRA_LIBS)
+MOD_NAME=	__vrj
 
-all clean cleandepend clobber debug optim:
-	@for d in $(DIRS) ; do			\
-            echo "===> $$d" ;			\
-            $(MAKE) -C $$d $@ || exit 1;	\
-            echo "<=== $$d" ;			\
-          done
+SRCS= \
+	_App.cpp		\
+	_CameraProjection.cpp	\
+	_Display.cpp		\
+	_Frustum.cpp		\
+	_GlApp.cpp		\
+	_Kernel.cpp		\
+	_Projection.cpp		\
+	_SimViewport.cpp	\
+	_User.cpp		\
+	_Viewport.cpp		\
+	__vrj.cpp
 
-install:
-	$(MKINSTALLDIRS) $(PYTHON_PACKAGES)
-	@for d in $(DIRS) ; do			\
-            echo "===> $$d" ;			\
-            $(MAKE) -C $$d $@ || exit 1;	\
-            echo "<=== $$d" ;			\
-          done
-	cp $(top_srcdir)/dist/__init__.py $(PYTHON_PACKAGES)
-	cp $(top_srcdir)/dist/vrj.py $(PYTHON_PACKAGES)
-
+include ../common-targets.mk

@@ -454,6 +454,13 @@ AC_CONFIG_FILES([Makefile
                  VARS.pl
                  pyjutil/Makefile
                  src/Makefile
+                 src/common.mk
+                 src/common-targets.mk
+                 src/gadget/Makefile
+                 src/jccl/Makefile
+                 src/osgapp/Makefile
+                 src/vpr/Makefile
+                 src/vrj/Makefile
                  examples/Makefile
                  examples/cxx/Makefile
                  examples/cxx/PyAppLoader/Makefile

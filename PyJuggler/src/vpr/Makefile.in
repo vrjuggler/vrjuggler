@@ -25,28 +25,19 @@
 #
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
-include @topdir@/src/common.mk
+srcdir=		@srcdir@
 
-DIRS=	vpr jccl gadget vrj
+VPR_LIBS=	$(shell vpr-config --libs)
+VPR_EXTRA_LIBS=	$(shell vpr-config --extra-libs)
 
-ifeq (@HAVE_OSG@, Y)
-DIRS+=	osgapp
-endif
+EXTRA_CXXFLAGS=	$(shell vpr-config --cxxflags)
+EXTRA_LDFLAGS=	$(VPR_LIBS) $(VPR_EXTRA_LIBS)
+MOD_NAME=	vpr
 
-all clean cleandepend clobber debug optim:
-	@for d in $(DIRS) ; do			\
-            echo "===> $$d" ;			\
-            $(MAKE) -C $$d $@ || exit 1;	\
-            echo "<=== $$d" ;			\
-          done
+SRCS= \
+	_GUID.cpp		\
+	_Interval.cpp		\
+	_ReturnStatus.cpp	\
+	vpr.cpp
 
-install:
-	$(MKINSTALLDIRS) $(PYTHON_PACKAGES)
-	@for d in $(DIRS) ; do			\
-            echo "===> $$d" ;			\
-            $(MAKE) -C $$d $@ || exit 1;	\
-            echo "<=== $$d" ;			\
-          done
-	cp $(top_srcdir)/dist/__init__.py $(PYTHON_PACKAGES)
-	cp $(top_srcdir)/dist/vrj.py $(PYTHON_PACKAGES)
-
+include ../common-targets.mk

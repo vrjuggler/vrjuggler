@@ -25,28 +25,12 @@
 #
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
-include @topdir@/src/common.mk
+prefix=		@prefix@
+scriptdir=	$(top_srcdir)/release/scripts
+top_srcdir=	@top_srcdir@
 
-DIRS=	vpr jccl gadget vrj
+MKINSTALLDIRS=		$(scriptdir)/mkinstalldirs
+PYTHON_VERSION=		@PYTHON_VERSION@
+PYTHON_PACKAGES=	$(prefix)/lib/python$(PYTHON_VERSION)/site-packages/PyJuggler
 
-ifeq (@HAVE_OSG@, Y)
-DIRS+=	osgapp
-endif
-
-all clean cleandepend clobber debug optim:
-	@for d in $(DIRS) ; do			\
-            echo "===> $$d" ;			\
-            $(MAKE) -C $$d $@ || exit 1;	\
-            echo "<=== $$d" ;			\
-          done
-
-install:
-	$(MKINSTALLDIRS) $(PYTHON_PACKAGES)
-	@for d in $(DIRS) ; do			\
-            echo "===> $$d" ;			\
-            $(MAKE) -C $$d $@ || exit 1;	\
-            echo "<=== $$d" ;			\
-          done
-	cp $(top_srcdir)/dist/__init__.py $(PYTHON_PACKAGES)
-	cp $(top_srcdir)/dist/vrj.py $(PYTHON_PACKAGES)
-
+@SET_MAKE@
