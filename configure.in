@@ -117,11 +117,12 @@ dnl #     N32_M4     - On IRIX, use N32 mips4 binaries
 dnl #     64_M3      - On IRIX, use 64-bit mips3 binaries
 dnl #     64_M4      - On IRIX, use 64-bit mips4 binaries
 dnl #     HP         - On HP-UX, use HP PA-RISC binaries
+dnl #     HP64       - On HP-UX, use 64-bit HP PA-RISC binaries
 dnl #     ALPHA      - On an Alpha running Digital UNIX, use COFF binaries
 dnl #     ELF_i386   - On an i386 OS (e.g., Linux/i386), use ELF binaries
 dnl #     WIN32_i386 - On an i386 Win32 OS, Linux), use Win32 binaries
 AC_ARG_WITH(abi,
-            [  --with-abi=<N32_M3|N32_M4|64_M3|64_M4|HP|ALPHA|ELF_i386|WIN32_i386>
+            [  --with-abi=<N32_M3|N32_M4|64_M3|64_M4|HP|HP64|ALPHA|ELF_i386|WIN32_i386>
                           Define the Application Binary Interface to use],
             _abi_type="$withval")
 
@@ -299,10 +300,13 @@ case "x${_abi_type}" in
         VJ_ABI_CFG('N32', 'mips4', '32', '-n32 -mips4')
         ;;
     xHP)
-        VJ_ABI_CFG(HP, PA-RISC)
+        VJ_ABI_CFG('HP', 'PA-RISC')
+        ;;
+    xHP64)
+        VJ_ABI_CFG('HP64', 'PA-RISC', '/pa20_64', '+DD64')
         ;;
     xALPHA)
-        VJ_ABI_CFG(ALPHA)
+        VJ_ABI_CFG('ALPHA')
         ;;
     xELF_i386)
         VJ_ABI_CFG('ELF', 'i386')
@@ -2022,6 +2026,28 @@ if test "x$PLATFORM" = "xIRIX" ; then
     ..
 ..
 END_IRIX_DIST
+dnl # On HP-UX, the lib directory needs a 64-bit subdirectory.
+elif test "x$PLATFORM" = "xHP" ; then
+    cat >>${_lib_file} <<END_HP_DIST
+.
+    lib
+	$ISA
+	    debug
+	    ..
+	    opt
+	    ..
+	..
+	pa20_64
+	    $ISA
+		debug
+		..
+		opt
+		..
+	    ..
+	..
+    ..
+..
+END_HP_DIST
 dnl # If a value for $ISA has been set (which is the case for some platforms),
 dnl # create a subdirectory in lib for that value.
 elif test "x$ISA" != "x" ; then

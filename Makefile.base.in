@@ -246,6 +246,14 @@ ifdef vjABI
         ABI	= ELF
         ISA	= i386
     endif
+    ifeq (${vjABI}, HP)
+        ABI	= HP
+        ISA	= PA-RISC
+    endif
+    ifeq (${vjABI}, HP64)
+        ABI	= HP64
+        ISA	= PA-RISC
+    endif
 else
     ABI		= @ABI@
     ISA		= @ISA@
@@ -267,6 +275,12 @@ ifeq (${ABI}, 64)
     CXXFLAGS	+= -64
     LDOPTS	+= -64
     LIBBITSUF	= 64
+endif
+ifeq (${ABI}, HP64)
+    CFLAGS	+= +DD64
+    CXXFLAGS	+= +DD64
+    LDOPTS	+= +DD64
+    LIBBITSUF	= /pa20_64
 endif
 ifeq (${ABI}, ELF)
     LIBBITSUF	=

@@ -1,5 +1,8 @@
 DATE        AUTHOR    CHANGE
 ----------- --------- ---------------------------------------------------------
+Dec-20-2001 patrickh  We can build 64-bit HP-UX binaries now (partially
+                      submitted by Daniel Heath <DHeath@fueltechnv.com>).
+
 [Version 1.0.3 - 11.26.2001]===================================================
 Nov-16-2001 allenb    Fixed memory bug in aMotionStar.
 Nov-15-2001 cjust     Resolved VjControl problems with Java 1.4 caused by

@@ -845,14 +845,15 @@ ifneq (@OS_TYPE@, Win32)
 	@echo "------------------------------------------------"
 	${SHELL} ${scriptdir}/mkinstalldirs ${instlinks}
 	${SHELL} ${scriptdir}/mkinstalldirs ${instlinks}/include
+	${SHELL} ${scriptdir}/mkinstalldirs ${instlinks}/${_LIBDIR_NAME}
 	cd ${instlinks}/include &&					\
           dir_list='${SUBDIRS}' ;					\
             for dir in $$dir_list ; do					\
                 rm -f ./$$dir ;						\
                 ln -s ${VJROOT_ABS}/$$dir ./$$dir ;			\
             done
-	cd ${instlinks} && rm -f ./${_LIBDIR_NAME} &&			\
-          ln -s ${_LIBDIR_BASE} ./${_LIBDIR_NAME}
+	cd ${instlinks}/${_LIBDIR_NAME} && rm -f ./* &&			\
+          ln -s ${_LIBDIR_BASE}/* ./
 	cd ${instlinks} && rm -rf ./${VJ_SHARE_DIR} &&			\
           ${SHELL} ${scriptdir}/mkinstalldirs ./${VJ_SHARE_DIR}
 	cd ${instlinks}/${VJ_SHARE_DIR} && rm -f ./Data &&		\
