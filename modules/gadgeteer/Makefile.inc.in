@@ -253,6 +253,7 @@ post-install:
 	@$(MAKE) install-test
 	@$(MAKE) install-tools
 	@$(MAKE) install-data
+	@$(MAKE) install-m4
 	$(INSTALL) -m $(EXEC_PERMS) $(GROUP_OPT_UNIX)			\
           $(topdir)/gadgeteer-config $(bindir)
 
@@ -300,6 +301,14 @@ install-tools:
 	@echo "Installing tools"
 	@echo "------------------------------------------------"
 	@echo " doing nothing... "
+
+install-m4:
+	@echo "------------------------------------------------"
+	@echo "Installing Autoconf m4 macros"
+	@echo "------------------------------------------------"
+	$(SHELL) $(MKINSTALLDIRS) $(datadir)/aclocal
+	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
+          $(JUGGLERROOT_ABS)/macros/gadget.m4 $(datadir)/aclocal
 
 # =============================================================================
 # Clean-up targets.  '_clean' removes all the files in the build directories.  

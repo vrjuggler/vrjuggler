@@ -287,6 +287,7 @@ pre-install:
 post-install:
 	@$(MAKE) install-tweek-gui
 	@$(MAKE) install-test
+	@$(MAKE) install-m4
 	$(INSTALL) -m $(EXEC_PERMS) $(GROUP_OPT_UNIX)			\
           $(topdir)/tweek-config $(bindir)
 
@@ -329,6 +330,14 @@ install-test:
 	$(PERL) $(scriptdir)/makefiles-gen.pl --mode="$(FILE_PERMS)"	\
           --prefix="$(projdatadir)/test" --vars="$(topdir)/VARS.pl"	\
           --startdir="$(top_srcdir)/test" $(_GROUP_OPT_PL) --srcdir="."
+
+install-m4:
+	@echo "------------------------------------------------"
+	@echo "Installing Autoconf m4 macros"
+	@echo "------------------------------------------------"
+	$(SHELL) $(MKINSTALLDIRS) $(datadir)/aclocal
+	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
+          $(JUGGLERROOT_ABS)/macros/tweek.m4 $(datadir)/aclocal
 
 # =============================================================================
 # Clean-up targets.  '_clobber' removes the developer installation links.
