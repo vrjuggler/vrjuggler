@@ -14,7 +14,7 @@ For all versions:
 Released: October 16, 2001
 
     Required application and configuration changes for upgrading from all
-    versions previous releases (including 1.1.x up through 1.1.90):
+    previous versions (including 1.1.x up through 1.1.90):
         * The script juggler-config is now called vrjuggler-config.
         * vjDEBUG has been replaced with vprDEBUG.  The levels and
           categories are now prefixed with "vrj" instead of "vj".  The
@@ -23,8 +23,8 @@ Released: October 16, 2001
  Version: 1.1.90 (dev build)
 Released: September 21, 2001
 
-    Required application changes for upgrading from all versions previous
-    releases (including 1.1.x up through 1.1.89):
+    Required application changes for upgrading from all previous versions
+    (including 1.1.x up through 1.1.89):
         * The directory structure for the source tree has been completely
           reorganized.  All source and header files are now rooted in the
           vrj directory.  The Kernel directory has been separated into
