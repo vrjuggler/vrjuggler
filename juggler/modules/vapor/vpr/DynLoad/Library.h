@@ -54,6 +54,14 @@ namespace vpr
    typedef LibraryNSPR Library;
 }
 
+#elif defined(VPR_OS_Darwin)
+#include <vpr/md/DARWIN/DynLoad/LibraryDYLD.h>
+
+namespace vpr
+{
+   typedef LibraryDYLD Library;
+}
+
 #else
 #include <vpr/md/POSIX/DynLoad/LibraryUNIX.h>
 

@@ -57,7 +57,9 @@ INSTALL=	@INSTALL@
 SUBOBJDIR=	$(VPR_LIBRARY)
 
 ifneq (@SUBSYSTEM@, NSPR)
+ifneq (@PLATFORM@, Darwin)
    SRCS=	LibraryUNIX.cpp
+endif
 endif
 
 include $(MKPATH)/dpp.obj.mk
