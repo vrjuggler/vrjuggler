@@ -128,7 +128,8 @@ void vjGlPipe::renderWindow(vjGlWindow* win)
    vjGlDrawManager::instance()->currentContext() = win->getId();     // Set TSS data of context id
    vjDEBUG(1) << "vjGlPipe::renderWindow: Set context to: " << vjGlDrawManager::instance()->currentContext() << endl << vjDEBUG_FLUSH;
 
-   win->makeCurrent();
+   win->makeCurrent();                       // Set correct context
+   theApp->contextPreDraw();                 // Do any context pre-drawing
 
    if (!win->getDisplay()->isSimulator())      // NON-SIMULATOR
    {
