@@ -52,8 +52,8 @@ SRCS		= SimAnalog.cpp			\
                   SimInput.cpp			\
                   SimPosition.cpp		\
                   SimRelativePosition.cpp
-#                  SimDigitalGlove.cpp		\
-#                  SimGloveGesture.cpp \
+                  SimDigitalGlove.cpp		\
+                  SimGloveGesture.cpp \
 
 include $(MKPATH)/dpp.obj.mk
 
