@@ -32,17 +32,28 @@
 #
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
-# Shell script for running Tweek under jdk 1.2 using the 'java' command.
+# Shell script for running Tweek under JDK 1.x using the 'java' command.
 
+# We have to have $VJ_BASE_DIR set.
 if test "x$VJ_BASE_DIR" = "x" ; then
     echo "FATAL ERROR: VJ_BASE_DIR environment variable not set!"
     exit 1
 fi
 
+# If $TWEEK_BASE_DIR is not set, fall back on the value of $VJ_BASE_DIR.  This
+# is a reasonable default.
 if test "x$TWEEK_BASE_DIR" = "x" ; then
     echo "WARNING: Setting TWEEK_BASE_DIR to $VJ_BASE_DIR"
     TWEEK_BASE_DIR="$VJ_BASE_DIR"
     export TWEEK_BASE_DIR
+fi
+
+# If $JCCL_DEFINITION_PATH is not set, use the standard location for .jdef
+# files used by VR Juggler.
+if test "x$JCCL_DEFINITION_PATH" = "x" ; then
+    echo "WARNING: Setting JCCL_DEFINITION_PATH to $VJ_BASE_DIR/share/vrjuggler/data/definitions"
+    JCCL_DEFINITION_PATH="$VJ_BASE_DIR/share/vrjuggler/data/definitions"
+    export JCCL_DEFINITION_PATH
 fi
 
 EXTRA_JDK_ARGS="-DVJ_BASE_DIR=${VJ_BASE_DIR} -DJCCL_DEFINITION_PATH=${JCCL_DEFINITION_PATH}"
