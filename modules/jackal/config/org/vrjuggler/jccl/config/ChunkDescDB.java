@@ -77,16 +77,6 @@ public class ChunkDescDB
       return name;
    }
 
-   public final void setInputFile(File file)
-   {
-      inputFile = file;
-   }
-
-   public final File getInputFile()
-   {
-      return inputFile;
-   }
-
    /**
     * Builds the database using the given DOM node. If the node's type is
     * &lt;ChunkDescDB&gt;, the children are examined for ChunkDescs. ChunkDescs
@@ -114,22 +104,7 @@ public class ChunkDescDB
    public void build(Document document)
       throws IOException
    {
-      this.inputFile = null;
       loadChunkDescs(document.getRootElement());
-   }
-
-   /**
-    * Builds the database using the default input file. If the file contains an
-    * XML document with the root type being &lt;ChunkDescDB&gt;, the children
-    * are examined for ChunkDescs. ChunkDescs found in the node's tree are added
-    * to this ChunkDescDB.
-    *
-    * @throws IOException  if there is an error while building the database
-    */
-   public void build()
-      throws IOException
-   {
-      build(inputFile);
    }
 
    /**
@@ -145,25 +120,9 @@ public class ChunkDescDB
    public void build(File file)
       throws IOException
    {
-      if ( file != inputFile )
+      if ( null != file || ! file.canRead() )
       {
-         inputFile = file;
-      }
-
-      if ( null != inputFile || ! inputFile.canRead() )
-      {
-         // build the XML stream into a DOM tree
-         try
-         {
-            SAXBuilder builder = new SAXBuilder();
-            Document doc       = builder.build(file);
-
-            loadChunkDescs(doc.getRootElement());
-         }
-         catch (JDOMException e)
-         {
-            throw new IOException(e.getMessage());
-         }
+         build(new BufferedInputStream(new FileInputStream(file)));
       }
       else
       {
@@ -184,8 +143,6 @@ public class ChunkDescDB
    public void build(InputStream stream)
       throws IOException
    {
-      this.inputFile = null;
-
       // build the XML stream into a DOM tree
       try
       {
@@ -537,22 +494,11 @@ public class ChunkDescDB
       return outputter.outputString(doc);
    }
 
-   public void write()
-      throws IOException
-   {
-      write(inputFile);
-   }
-
    public void write(File file)
       throws IOException
    {
       Document doc = new Document();
       this.makeDocument(doc);
-
-      if ( inputFile != file )
-      {
-         inputFile = file;
-      }
 
       XMLOutputter outputter = new XMLOutputter("  ", true);
       FileWriter writer      = new FileWriter(file);
@@ -788,8 +734,6 @@ public class ChunkDescDB
     * The name of this ChunkDescDB.
     */
    private String name = "Unnamed";
-
-   private File inputFile = null;
 
    private List targets = new ArrayList();
    private List descs   = new ArrayList();
