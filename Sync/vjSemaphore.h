@@ -1,7 +1,7 @@
 /*
- *  File:       $RCSfile$
+ *  File:	    $RCSfile$
  *  Date modified:  $Date$
- *  Version:       $Revision$
+ *  Version	    $Revision$
  *
  *
  *                                VR Juggler
