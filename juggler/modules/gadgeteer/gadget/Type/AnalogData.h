@@ -45,41 +45,39 @@ class GADGET_CLASS_API AnalogData: public InputData {
 public:
 
     /** Constructor. */
-    AnalogData (): InputData() {
-        mAnalogData = 0.0f;
-    }
+    AnalogData (): InputData()
+    { mAnalogData = 0.0f; }
 
 
-    float getAnalogData () {
-        return mAnalogData;
-    }
+    float getAnalogData ()
+    { return mAnalogData; }
 
 
-    void setAnalogData (float f) {
-        mAnalogData = f;
-    }
+    void setAnalogData (float f)
+    { mAnalogData = f; }
 
 
-    AnalogData& operator= (const AnalogData& pd) {
+    AnalogData& operator= (const AnalogData& pd)
+    {
         InputData::copy (pd);
         mAnalogData = pd.mAnalogData;
         return *this;
     }
 
 
-    AnalogData& operator= (float f) {
+    AnalogData& operator= (float f)
+    {
         mAnalogData = f;
         return *this;
     }
 
-    operator float() const {
-        return mAnalogData;
-    }
+    /*
+    operator float() const
+    { return mAnalogData; }
+    */
 
 protected:
-
     float mAnalogData;
-
 
 }; // class AnalogData
 
