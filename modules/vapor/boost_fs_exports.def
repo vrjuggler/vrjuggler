@@ -1,0 +1,5 @@
+LIBRARY VPR
+
+EXPORTS
+   ?exists@filesystem@boost@@YA_NABVpath@12@@Z
+   ??0path@filesystem@boost@@QAE@ABV?$basic_string@DU?$char_traits@D@std@@V?$allocator@D@2@@std@@@Z
