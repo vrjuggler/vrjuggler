@@ -719,6 +719,25 @@ vpr::ReturnStatus SerialPortImplWin32::controlFlow(SerialTypes::FlowActionOption
    return s;
 }
 
+bool SerialPortImplWin32::getHardwareFlowControlState ()
+{
+   return false;
+}
+
+vpr::ReturnStatus SerialPortImplWin32::enableHardwareFlowControl ()
+{
+   vpr::ReturnStatus status;
+
+   return status;
+}
+
+vpr::ReturnStatus SerialPortImplWin32::disableHardwareFlowControl ()
+{
+   vpr::ReturnStatus status;
+
+   return status;
+}
+
 vpr::ReturnStatus SerialPortImplWin32::flushQueue(vpr::SerialTypes::FlushQueueOption queue)
 {
    vpr::ReturnStatus s;

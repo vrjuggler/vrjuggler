@@ -43,7 +43,8 @@
 #define _VPR_SERIAL_PORT_T_H_
 
 
-namespace vpr {
+namespace vpr
+{
 
 /**
  * Cross-platform serial port interface.
@@ -1008,6 +1009,53 @@ public:
       return mSioImpl.controlFlow(opt);
    }
 
+   /**
+    * Returns the current enable state of hardware flow control.
+    *
+    * @pre This serial port is open.
+    *
+    * @return true is returned if hardware flow control is enabled.
+    *         false is returned otherwise.
+    *
+    * @see controlFlow
+    */
+   bool getHardwareFlowControlState (void)
+   {
+      return mSioImpl.getHardwareFlowControlState();
+   }
+
+   /**
+    * Attempts to enable "hardware" flow control.  While some documents
+    * recommend the use of hardware flow control over the use of software
+    * flow control, not all platforms implement hardware flow control.  Hence,
+    * this may have no effect depending on the operating system.
+    *
+    * @return A vpr::ReturnStatus object describing the results of the
+    *         operation.
+    *
+    * @see controlFlow
+    */
+   vpr::ReturnStatus enableHardwareFlowControl (void)
+   {
+      return mSioImpl.enableHardwareFlowControl();
+   }
+
+   /**
+    * Attempts to disable "hardware" flow control.  While some documents
+    * recommend the use of hardware flow control over the use of software
+    * flow control, not all platforms implement hardware flow control.  Hence,
+    * this may have no effect depending on the operating system.
+    *
+    * @return A vpr::ReturnStatus object describing the results of the
+    *         operation.
+    *
+    * @see controlFlow
+    */
+   vpr::ReturnStatus disableHardwareFlowControl (void)
+   {
+      return mSioImpl.disableHardwareFlowControl();
+   }
+
    // ------------------------------------------------------------------------
    //: Discard either the input buffer (unread data received from the
    //+ terminal device) or the output buffer (data written but not yet
@@ -1156,7 +1204,7 @@ protected:
    RealSerialPortImpl mSioImpl;
 };
 
-}; // End of vpr namespace
+} // End of vpr namespace
 
 
 #endif  /* _VPR_SERIAL_PORT_T_H_ */
