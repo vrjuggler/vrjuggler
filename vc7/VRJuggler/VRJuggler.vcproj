@@ -38,7 +38,7 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="sonix_d.lib gadget_d.lib jccl_d.lib vpr_d.lib cppdom_d.lib libnspr4.lib libplc4.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/vrj_d.dll"
-				Version="1.1.154"
+				Version="1.1.155"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="&quot;$(NSPR_ROOT)\lib&quot;;&quot;$(CPPDOM_ROOT)\lib&quot;;&quot;$(BOOST_ROOT)\lib&quot;;..\VPR\DebugDLL;..\JCCL\DebugDLL;..\Gadgeteer\DebugDLL;..\Sonix\DebugDLL"
 				GenerateDebugInformation="TRUE"
@@ -91,7 +91,7 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="sonix.lib gadget.lib jccl.lib vpr.lib cppdom.lib libnspr4.lib libplc4.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/vrj.dll"
-				Version="1.1.154"
+				Version="1.1.155"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="&quot;$(NSPR_ROOT)\lib&quot;;&quot;$(CPPDOM_ROOT)\lib&quot;;&quot;$(BOOST_ROOT)\lib&quot;;..\VPR\ReleaseDLL;..\JCCL\ReleaseDLL;..\Gadgeteer\ReleaseDLL;..\Sonix\ReleaseDLL"
 				GenerateDebugInformation="FALSE"
@@ -140,6 +140,9 @@
 			</File>
 			<File
 				RelativePath="..\..\modules\vrjuggler\vrj\Kernel\Kernel.cpp">
+			</File>
+			<File
+				RelativePath="..\..\modules\vrjuggler\vrj\Performance\PerformanceMediator.cpp">
 			</File>
 			<File
 				RelativePath="..\..\modules\vrjuggler\vrj\Display\Projection.cpp">
@@ -207,6 +210,15 @@
 			</File>
 			<File
 				RelativePath="..\..\modules\vrjuggler\vrj\Test\Message.h">
+			</File>
+			<File
+				RelativePath="..\..\modules\vrjuggler\vrj\Performance\PerfPlugin.h">
+			</File>
+			<File
+				RelativePath="..\..\modules\vrjuggler\vrj\Performance\PerformanceMediator.h">
+			</File>
+			<File
+				RelativePath="..\..\modules\vrjuggler\vrj\Performance\PluginConfig.h">
 			</File>
 			<File
 				RelativePath="..\..\modules\vrjuggler\vrj\Display\Projection.h">
