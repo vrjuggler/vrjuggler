@@ -56,9 +56,11 @@ top_srcdir	= @top_srcdir@
 INSTALL		= @INSTALL@
 SUBOBJDIR	= $(VPR_LIBRARY)
 
-SRCS		= CondVarGeneric.cpp
+SRCS		=
 
-ifneq (@SUBSYSTEM@, SPROC)
+ifeq (@SUBSYSTEM@, SPROC)
+SRCS		+= CondVarGeneric.cpp
+else
 SRCS		+= Barrier.cpp
 endif
 
