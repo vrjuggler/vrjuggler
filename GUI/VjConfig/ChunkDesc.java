@@ -9,33 +9,38 @@ import VjConfig.PropertyDesc;
 
 public class ChunkDesc {
 
-  public Vector props;
-  public  String name;
-  public String token;
-  public String help;
-
-  public ChunkDesc (String n) {
-    props = new Vector();
-    addNameProperty();
-    name = n;
-    token = n;
-    help = "";
-  }
+    public Vector props;
+    public  String name;
+    public String token;
+    public String help;
 
 
+    public ChunkDesc (String n) {
+	props = new Vector();
+	addNameProperty();
+	name = n;
+	token = n;
+	help = "";
+    }
 
-  public ChunkDesc () {
-    props = new Vector();
-    addNameProperty();
-    name = "";
-    token = "";
-    help = "";
-  }
+
+    public ChunkDesc () {
+	props = new Vector();
+	addNameProperty();
+	name = "";
+	token = "";
+	help = "";
+    }
 
 
 
     public String getName () {
 	return name;
+    }
+
+
+    public String getToken () {
+	return token;
     }
 
 

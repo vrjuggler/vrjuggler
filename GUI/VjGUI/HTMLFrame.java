@@ -8,26 +8,32 @@ package VjGUI;
 
 import java.net.*;
 import java.io.*;
+import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.text.*;
 import javax.swing.text.html.*;
 import java.util.Enumeration;
 import VjGUI.Core;
+import VjGUI.util.JFrameParent;
 
-public class HTMLFrame extends JFrame implements HyperlinkListener {
+public class HTMLFrame extends JFrame implements HyperlinkListener,
+WindowListener {
 
     JScrollPane sp;
     JEditorPane pane;
+    JFrameParent parent;
 
-    public HTMLFrame (String s, URL url) {
+    public HTMLFrame (JFrameParent _parent, String s, URL url) {
 	super ();
+	parent = _parent;
 	pane = new JEditorPane();
 	sp = new JScrollPane (pane);
 	getContentPane().add(sp);
 	pane.setEditable (false);
 	
 	pane.addHyperlinkListener (this);
+	addWindowListener (this);
 
 	setSize (450, 350);
 	setURL (url);
@@ -67,4 +73,19 @@ public class HTMLFrame extends JFrame implements HyperlinkListener {
 	}
     }
 
+
+    /* WindowListener Stuff */
+    public void windowActivated(WindowEvent e) {}
+    public void windowClosed(WindowEvent e) {
+	parent.closedChild (this, true);
+    }
+    public void windowClosing(WindowEvent e) {}
+    public void windowDeactivated(WindowEvent e) {}
+    public void windowDeiconified(WindowEvent e) {}
+    public void windowIconified(WindowEvent e) {}
+    public void windowOpened(WindowEvent e) {}
+
 }
+
+
+
