@@ -40,9 +40,15 @@ interface EditorConstants
 
    static final String IMAGE_BASE = RESOURCE_BASE + "/images";
 
-   static final String INPUT_AREA_TYPE = "input_area";
+   static final String ALIAS_TYPE = "alias";
+
+   static final String ANALOG_PROXY_TYPE = "analog_proxy";
+
+   static final String DIGITAL_PROXY_TYPE = "digital_proxy";
 
    static final String DISPLAY_WINDOW_TYPE = "display_window";
+
+   static final String INPUT_AREA_TYPE = "input_area";
 
    static final String SIMULATOR_VIEWPORT_TYPE = "simulator_viewport";
 
@@ -56,6 +62,8 @@ interface EditorConstants
 
    static final String OPENGL_FRAME_BUFFER_TYPE = "opengl_frame_buffer_config";
 
+   static final String POSITION_PROXY_TYPE = "position_proxy";
+
    static final String PROXY_TYPE = "proxy";
 
    static final String SIM_ANALOG_DEVICE_TYPE = "simulated_analog_device";
@@ -66,16 +74,21 @@ interface EditorConstants
 
    static final String DEVICE_PROPERTY = "device";
 
+   static final String KEYBOARD_MOUSE_PROXY_PTR_PROPERTY =
+      "keyboard_mouse_proxy";
+
    static final String KEYBOARD_MOUSE_PTR_PROPERTY =
       "keyboard_mouse_device_name";
 
    static final String LOCK_KEY_PROPERTY = "lock_key";
 
+   static final String ORIGIN_PROPERTY = "origin";
+
+   static final String PROXY_PROPERTY = "proxy";
+
    static final String START_LOCKED_PROPERTY = "start_locked";
 
    static final String SLEEP_TIME_PROPERTY = "sleep_time";
-
-   static final String ORIGIN_PROPERTY = "origin";
 
    static final String SIZE_PROPERTY = "size";
 }

@@ -497,7 +497,7 @@ public class DisplayWindowEditorPanel
       JInternalFrame new_frame = new DisplayWindowFrame(elt.getName(),
                                                         getResolution(),
                                                         desktop_size, mContext,
-                                                        elt);
+                                                        elt, mSimEditor);
 
       // Attempt to set an icon for the newly created frame.
       try
@@ -568,7 +568,7 @@ public class DisplayWindowEditorPanel
       JInternalFrame new_frame = new InputWindowFrame(elt.getName(),
                                                       getResolution(),
                                                       desktop_size, mContext,
-                                                      elt);
+                                                      elt, mSimEditor);
 
       // Attempt to set an icon for the newly created frame.
       try
