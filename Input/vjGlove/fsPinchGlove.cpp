@@ -68,8 +68,6 @@
 #include <sys/file.h>
 #endif
 
-
-
 #include "fsPinchGlove.h"
 
 const std::string fsPinchGlove::mOpenHandString = "00000.00000";
@@ -158,7 +156,7 @@ int fsPinchGlove::mConnectToHardware(const char* const ttyPort)
 		return 0;
 	}
 	
-    usleep(1500);
+    usleep(150000);
 
     if (tcflush(pinchfd, TCIOFLUSH) < 0)
 	{
@@ -166,7 +164,7 @@ int fsPinchGlove::mConnectToHardware(const char* const ttyPort)
 		return 0;
 	}
 	
-    usleep(1500);
+    usleep(150000);
 
     /* Turn time stamps on */
     mSendCommandToHardware("T1", buf);
@@ -214,22 +212,22 @@ int fsPinchGlove::mSendCommandToHardware(const char* const command, char *reply)
       first = 0;
       /* Make sure we flush the receive buffer on the glove end */
       write(pinchfd, "*", 1);
-      usleep(4500);
+      usleep(450000);
       if (!read(pinchfd, buf, 3)) {
          write(pinchfd, "*", 1);
-         usleep(4500);
+         usleep(450000);
          read(pinchfd, buf, 3);
       }
-      usleep(2500);
+      usleep(250000);
    }
 
 /* Send the 2 byte command */
    write(pinchfd, &command[0], 1);
    if (tcflush(pinchfd, TCOFLUSH)<0) return 0;
-    usleep(1500);
+    usleep(150000);
    write(pinchfd, &command[1], 1);
    if (tcflush(pinchfd, TCOFLUSH)<0) return 0;
-    usleep(4500);
+    usleep(450000);
    
    return(mReadRecordsFromHardware(100,reply));
 }
