@@ -593,9 +593,18 @@ if test "x$OS_TYPE" = "xWin32" ; then
     SAFE_VPRROOT_ABS=`unix2dos -p "$VPRROOT_ABS"`
     VPR_SRCDIR=`unix2dos "$VPR_SRCDIR"`
 
-    DEPEND_EXTRAS=`unix2dos "$DEPEND_EXTRAS"`
-    INCLUDES=`unix2dos "$INCLUDES"`
-    LIBS=`unix2dos "$LIBS"`
+    if test "x$DEPEND_EXTRAS" != "x" ; then
+        DEPEND_EXTRAS=`unix2dos "$DEPEND_EXTRAS"`
+    fi
+
+    if test "x$INCLUDES" != "x" ; then
+        INCLUDES=`unix2dos "$INCLUDES"`
+    fi
+
+    if test "x$LIBS" != "x" ; then
+        LIBS=`unix2dos "$LIBS"`
+    fi
+
     MTREE_CMD=`unix2dos "$MTREE_CMD"`
 
     JDK_HOME=`unix2dos -p "$JDK_HOME"`
