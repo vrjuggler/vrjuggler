@@ -14,23 +14,23 @@
          <value label="ID" defaultvalue="-1"/>
       </property>
       <property valuetype="integer" variable="false" name="red_size">
-         <help>The number of bits to use per pixel for the red channel.  A value of 0 indicates that the smallest available size should be used.  Values greater than 0 indicate that the largest available size greater than or equal to the given value should be used.</help>
+         <help>The minimum number of bits to use per pixel for the red channel.  A value of 0 indicates that the smallest available size should be used.  Values greater than 0 indicate that the largest available size greater than or equal to the given value should be used.</help>
          <value label="Red Channel Size" defaultvalue="1"/>
       </property>
       <property valuetype="integer" variable="false" name="green_size">
-         <help>The number of bits to use per pixel for the green channel.  A value of 0 indicates that the smallest available size should be used.  Values greater than 0 indicate that the largest available size greater than or equal to the given value should be used.</help>
+         <help>The minimum number of bits to use per pixel for the green channel.  A value of 0 indicates that the smallest available size should be used.  Values greater than 0 indicate that the largest available size greater than or equal to the given value should be used.</help>
          <value label="Green Channel Size" defaultvalue="1"/>
       </property>
       <property valuetype="integer" variable="false" name="blue_size">
-         <help>The number of bits to use per pixel for the blue channel.  A value of 0 indicates that the smallest available size should be used.  Values greater than 0 indicate that the largest available size greater than or equal to the given value should be used.</help>
+         <help>The minimum number of bits to use per pixel for the blue channel.  A value of 0 indicates that the smallest available size should be used.  Values greater than 0 indicate that the largest available size greater than or equal to the given value should be used.</help>
          <value label="Blue Channel Size" defaultvalue="1"/>
       </property>
       <property valuetype="integer" variable="false" name="alpha_size">
-         <help>The number of bits to use per pixel for the alpha channel.  A value of 0 indicates that the smallest available size should be used.  Values greater than 0 indicate that the largest available size greater than or equal to the given value should be used.</help>
+         <help>The minimum number of bits to use per pixel for the alpha channel.  A value of 0 indicates that the smallest available size should be used.  Values greater than 0 indicate that the largest available size greater than or equal to the given value should be used.</help>
          <value label="Alpha Channel Size" defaultvalue="1"/>
       </property>
       <property valuetype="integer" variable="false" name="depth_buffer_size">
-         <help>The size of the depth buffer.  A value of 0 indicates that the smallest available size should be used.  Values greater than 0 indicate that the largest available size greater than or equal to the given value should be used.</help>
+         <help>The minimum size of the depth buffer.  A value of 0 indicates that the smallest available size should be used.  Values greater than 0 indicate that the largest available size greater than or equal to the given value should be used.</help>
          <value label="Depth Buffer Size" defaultvalue="1"/>
       </property>
       <property valuetype="boolean" variable="false" name="fsaa_enable">
