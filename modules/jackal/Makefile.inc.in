@@ -384,9 +384,6 @@ endif	# ifdef NO_JAVA_GUI
 # Clean-up targets.  '_clean' removes all the files in the build directories.  
 # '_clobber' removes the $(BUILDDIR_BASE) and $(LIBDIR_NAME) directories.
 # =============================================================================
-_clean:
-	@$(MAKE) -C VjControl clean
-
 CLOBBER_DIRS	+= $(BUILDDIR_BASE) $(LIBDIR_NAME)
 
 _clobber:
@@ -396,13 +393,15 @@ _clobber:
 # Define $(_LOCAL_CLEAN) and $(_LOCAL_CLOBBER) to inform the shared 'clean'
 # and 'clobber' targets that there is a '_clean' target and a '_clobber'
 # target to be run besides the standard targets.
-_LOCAL_CLEAN	= 1
 _LOCAL_CLOBBER	= 1
 
 EXTRA_OBJ_TARGETS = build-java
 
+# Make sure we build java targets serially because javac is stupid and may try
+# to write to the same files at the same time while building different sources.
+MAKE_FLAGS += -j 1
 build-java:
-	$(MAKE) RECTARGET=java recursive
+	$(MAKE) $(MAKEFLAGS) RECTARGET=java recursive
 
 include $(MKPATH)/dpp.libs.mk
 include $(MKPATH)/dpp.clean.mk
