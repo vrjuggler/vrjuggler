@@ -359,7 +359,7 @@ bool ConfigChunkDB::save (const std::string& file_name) const
 
 bool ConfigChunkDB::isEmpty() const
 {
-   return(chunks.size() == 0);
+   return chunks.empty();
 }
 
 void ConfigChunkDB::removeAll()
