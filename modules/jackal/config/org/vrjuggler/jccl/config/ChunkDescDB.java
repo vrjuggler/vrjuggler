@@ -224,6 +224,25 @@ public class ChunkDescDB
       return descs;
    }
 
+   /**
+    * Tests if the given ChunkDesc is contained in this database.
+    *
+    * @param desc    the desc to test for
+    *
+    * @return  true if the desc is in the database, false otherwise
+    */
+   public boolean contains(ChunkDesc desc)
+   {
+      for (Iterator itr = descs.iterator(); itr.hasNext(); )
+      {
+         if (itr.next() == descs)
+         {
+            return true;
+         }
+      }
+      return false;
+   }
+
    public void fireDescDBUpdate (String origName, ChunkDesc updatedDesc)
    {
       notifyDescDBTargets(new DescDBEvent(this, DescDBEvent.REPLACE, origName,
