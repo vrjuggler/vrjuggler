@@ -43,17 +43,17 @@ import org.omg.CosNaming.*;
 
 public class CorbaService
 {
-   public CorbaService (String init_host, int init_port)
+   public CorbaService (String _host, int _port)
    {
-      initHost = init_host;
-      initPort = init_port;
+      host = _host;
+      port = _port;
    }
 
    public void init (String[] args) throws SystemException
    {
       Properties props = new Properties();
-      props.put("org.omg.CORBA.ORBInitialHost", initHost);
-      props.put("org.omg.CORBA.ORBInitialPort", String.valueOf(initPort));
+      props.put("org.omg.CORBA.ORBInitialHost", host);
+      props.put("org.omg.CORBA.ORBInitialPort", String.valueOf(port));
 
       m_orb = ORB.init(args, props);
 
@@ -70,14 +70,14 @@ public class CorbaService
       }
    }
 
-   public String getInitHost ()
+   public String getHost ()
    {
-      return initHost;
+      return host;
    }
 
-   public int getInitPort ()
+   public int getPort ()
    {
-      return initPort;
+      return port;
    }
 
    public org.omg.CORBA.Object getReference (String id, String kind)
@@ -94,8 +94,8 @@ public class CorbaService
       return ref;
    }
 
-   private String initHost = null;
-   private int    initPort = 0;
+   private String host = null;
+   private int    port = 0;
 
    private ORB           m_orb         = null;
    private NamingContext namingContext = null;
