@@ -47,7 +47,7 @@ sub usage($);
 sub make_CXXFLAGS($;$);
 sub make_INCLUDES($);
 sub make_LDFLAGS($;$$$);
-sub make_EXTRA_LDFLAGS($;$$);
+sub make_EXTRA_LDFLAGS($;$$$);
 sub handleOptArg($$);
 sub stripDuplicateArgs($);
 
@@ -173,7 +173,7 @@ if ( $ECHO_LIBS )
 if ( $ECHO_EXTRA_LIBS )
 {
    my $extra_ldflags = make_EXTRA_LDFLAGS("$extra_libs_arg", $use_linker,
-                                          $print_min);
+                                          $echo_static, $print_min);
    print "$extra_ldflags\n";
 }
 
@@ -318,10 +318,11 @@ sub make_LDFLAGS ($;$$$)
    return "$full_ldflags";
 }
 
-sub make_EXTRA_LDFLAGS ($;$$)
+sub make_EXTRA_LDFLAGS ($;$$$)
 {
    my $extra_libs_arg = shift;
    my $use_linker     = shift || 0;
+   my $use_static     = shift || 0;
    my $print_min      = shift || 0;
 
    my $dep_libs       = '';
@@ -330,15 +331,16 @@ sub make_EXTRA_LDFLAGS ($;$$)
    unless ( $print_min )
    {
       my @dep_scripts = qw(@gadget_dep_scripts@);
-      my $extra_arg = ($use_linker ? '--linker' : '');
+      my $linker_arg  = ($use_linker ? '--linker' : '');
+      my $static_arg  = ($use_static ? '--static' : '');
 
       foreach ( @dep_scripts )
       {
-         my $cur_dep_libs = `$_ --min --libs $extra_libs_arg $extra_arg`;
+         my $cur_dep_libs = `$_ --min --libs $extra_libs_arg $linker_arg $static_arg`;
          chomp($cur_dep_libs);
          $dep_libs .= " $cur_dep_libs";
 
-         my $cur_dep_extra_libs = `$_ --min --extra-libs $extra_libs_arg $extra_arg`;
+         my $cur_dep_extra_libs = `$_ --min --extra-libs $extra_libs_arg $linker_arg $static_arg`;
          chomp($cur_dep_extra_libs);
          $dep_extra_libs .= " $cur_dep_extra_libs";
       }
