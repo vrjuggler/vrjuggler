@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from $Revision$ of $RCSfile$
+// Generated from Revision: 1.68 of RCSfile: class_cs.tmpl,v
 using System;
 using System.Runtime.InteropServices;
 using System.Reflection;
@@ -99,6 +99,7 @@ public class Position
 
    // Operator overloads.
 
+   // Converter operators.
 
    // Start of non-virtual methods.
    [DllImport("gadget_bridge", CharSet = CharSet.Ansi)]
@@ -126,7 +127,7 @@ public class Position
 
    // Start of virtual methods.
    // Delegate for the config() callback.
-   public delegate bool configDelegate_boost_shared_ptr_jccl__ConfigElement(jccl.ConfigElement p0);
+   public delegate bool configDelegate_boost_shared_ptr_jccl__ConfigElement([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(jccl.ConfigElementMarshaler))] jccl.ConfigElement p0);
    protected configDelegate_boost_shared_ptr_jccl__ConfigElement m_configDelegate_boost_shared_ptr_jccl__ConfigElement;
 
    [DllImport("gadget_bridge", CharSet = CharSet.Ansi)]
