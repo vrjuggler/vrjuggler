@@ -155,24 +155,7 @@ public class PropertyPanel extends JPanel implements ActionListener, VarValuePan
 		ch.setName (((DescEnum)pr.desc.valuelabels.elementAt(valindex)).str);
 	    else
 		ch.setName (pr.desc.name + " " + valindex);
-	    boolean useminipanel = true;
-	    if (ch.desc.props.size() > 4)
-		useminipanel = false;
-	    PropertyDesc pd;
-	    int nvals = 0;
-	    for (int i = 0; i < ch.desc.props.size(); i++) {
-		pd = (PropertyDesc)ch.desc.props.elementAt(i);
-		if (pd.num == -1)
-		    useminipanel = false;
-		else
-		    nvals += pd.num;
-	    }
-	    if (nvals > 4)
-		useminipanel = false;
-	    // basically, if the chunk has more than 3 values, or has a var
-	    // args thing anywhere, we can't use the minipanel.  
-	    // Actually, that should be 3 _values_ - change later.
-	    if (useminipanel)
+	    if (useMiniPanel (ch))
 		return new VarValueMiniChunkPanel (this, pr, ch);
 	    else
 		return new VarValueBigChunkPanel (this, pr, ch);
@@ -180,6 +163,32 @@ public class PropertyPanel extends JPanel implements ActionListener, VarValuePan
 	else
 	    return new VarValueStandardPanel(this, pr.desc);
     }
+
+
+
+    // helper function for makeVarValuePanel. returns true if we
+    // should use the VarValueMiniPanel to handle this embedded
+    // chunk, and false if we should give it a separate frame.
+    private boolean useMiniPanel (ConfigChunk ch) {
+        boolean useminipanel = true;
+        int maxwidth = 4;
+
+        if (ch.desc.props.size() > maxwidth)
+            return false;
+
+        PropertyDesc pd;
+        int nvals = 0;
+        for (int i = 0; i < ch.desc.props.size(); i++) {
+            pd = (PropertyDesc)ch.desc.props.elementAt(i);
+            if (pd.num == -1)
+                return false;
+            if (pd.valtype.equals(ValType.t_embeddedchunk))
+                return false;
+            nvals += pd.num;
+        }
+        return (nvals <= maxwidth);
+    }
+
 
 
     public void removePanel (VarValuePanel p) {
