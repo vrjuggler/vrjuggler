@@ -294,6 +294,11 @@ public class ConfigModule extends DefaultCoreModule {
     
 
 
+    public boolean isActive (ConfigChunkDB db) {
+        return (db == active_chunkdb);
+    }
+
+
     protected String createUniqueChunkDBName (String base) {
 	// returns a string, starting with base, which doesn't
 	// conflict with names of any dbs in chunkdbs.
@@ -463,6 +468,11 @@ public class ConfigModule extends DefaultCoreModule {
 	descdbs.remove (db);
     }
 
+
+
+    public boolean isActive (ChunkDescDB db) {
+        return (db == active_descdb);
+    }
 
 
     protected String createUniqueDescDBName (String base) {

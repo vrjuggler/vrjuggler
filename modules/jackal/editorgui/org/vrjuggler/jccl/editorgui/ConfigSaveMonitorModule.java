@@ -131,7 +131,9 @@ public class ConfigSaveMonitorModule
         // look for unsaved ConfigChunkDBs
         ConfigChunkDB[] chunkdbs = config_module.getChunkDBs();
         for (int i = 0; i < chunkdbs.length; i++) {
-            if (chunkdbs[i].need_to_save) {
+            if (!config_module.isActive(chunkdbs[i]) && 
+                chunkdbs[i].need_to_save) {
+
                 int result = 
                     JOptionPane.showConfirmDialog (ui_module, "Save changes to " + 
                                                    chunkdbs[i].getName() + "?", 
@@ -154,7 +156,9 @@ public class ConfigSaveMonitorModule
         // look for unsaved ChunkDescDBs
         ChunkDescDB[] descdbs = config_module.getDescDBs();
         for (int i = 0; i < descdbs.length; i++) {
-            if (descdbs[i].need_to_save) {
+            if (descdbs[i].need_to_save &&
+                !config_module.isActive(descdbs[i])) {
+
                 int result 
                     = JOptionPane.showConfirmDialog (ui_module, 
                                                      "Save changes to " + 
@@ -188,7 +192,7 @@ public class ConfigSaveMonitorModule
 
     public void removeChunkDB (ConfigModuleEvent e) {
         ConfigChunkDB db = e.getChunkDB();
-        if (db.need_to_save) {
+        if (db.need_to_save  && !config_module.isActive(db)) {
             int result = 
                 JOptionPane.showConfirmDialog (ui_module, "Save changes to " + 
                                                db.getName() + "?", 
@@ -214,7 +218,7 @@ public class ConfigSaveMonitorModule
 
     public void removeDescDB (ConfigModuleEvent e) {
         ChunkDescDB db = e.getDescDB();
-        if (db.need_to_save) {
+        if (db.need_to_save && !config_module.isActive(db)) {
             int result = JOptionPane.showConfirmDialog (ui_module, "Save changes to " + db.getName() + "?", "Save file?", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE/*, Core.save_icn*/);
             if (result == JOptionPane.YES_OPTION) {
                 File f = db.file;
