@@ -92,6 +92,8 @@ public:
    bool checkTime();
 
    bool verifyProxy( std::string proxyName, std::string deviceName );
+   bool verifyViewport( vrj::Viewport* viewport, jccl::ConfigChunkPtr viewportChunk);
+   bool verifyAllViewports( vrj::Display* display, jccl::ConfigChunkPtr viewportChunk);
 
    vrj::Display* getDisplay( std::string name );
    bool verifyDisplayFile( std::string filename );
