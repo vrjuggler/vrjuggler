@@ -472,10 +472,7 @@ void Kernel::startDrawManager(bool newMgr)
    {
       mDrawManager->setDisplayManager(mDisplayManager);
       //mDrawManager->configProcessPending(environmentManager->getConfigManager());           // See if there are any config chunks for us
-      jccl::ConfigManager* cfg_mgr = environmentManager->getConfigManager();
-      cfg_mgr->lockPending();
-      mDrawManager->configProcessPending(cfg_mgr);
-      cfg_mgr->unlockPending();
+      environmentManager->getConfigManager()->refreshPendingList();
    }
    mDrawManager->setApp(mApp);
 
