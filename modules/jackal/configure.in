@@ -320,8 +320,8 @@ DPP_INSTALLER(vrjuggler, 0644, 0755, 0755)
 
 # Add these C++ options when compiling with G++.
 if test "x$GXX" = "xyes" ; then
-#    CXXFLAGS="-fhonor-std -Wall -Werror-implicit-function-declaration $CXXFLAGS"
-    CXXFLAGS="-Wall -Werror-implicit-function-declaration $CXXFLAGS"
+#   CXXFLAGS="-fhonor-std -Wall $CXXFLAGS"
+   CXXFLAGS="-Wall $CXXFLAGS"
 fi
 
 if test "x$CPPDOM_INCLUDES" != "x" ; then
