@@ -68,9 +68,8 @@
 class pfBasicConfigNavApp : public simplePfNavApp
 {
 public:
-   pfBasicConfigNavApp( )
+   pfBasicConfigNavApp( ) : mCurrentConfig()
    {
-     mCurrentConfig = NULL;
    }
 
 public:     // RECONFIG STUFF
