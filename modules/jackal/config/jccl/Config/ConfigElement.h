@@ -143,6 +143,11 @@ public:
     */
    std::string getFullName() const;
 
+   /**
+    * Returns the version number of the definition used by this ConfigElement.
+    */
+   unsigned int getVersion() const;
+
    /** Returns the string that identifies self's ConfigDefinition. */
    std::string getID() const;
 
