@@ -85,7 +85,8 @@ bool IntersenseAPIStandalone::updateData()
    return false;
 }
 
-int IntersenseAPIStandalone::buttonState(const int& i, const int& f)
+int IntersenseAPIStandalone::buttonState(const unsigned int i,
+                                         const unsigned int f)
 {
    if(f < MAX_NUM_BUTTONS && i < mNumStations)
    {
@@ -95,7 +96,8 @@ int IntersenseAPIStandalone::buttonState(const int& i, const int& f)
 }
 
 
-int IntersenseAPIStandalone::analogData(const int& i, const int& j)
+int IntersenseAPIStandalone::analogData(const unsigned int i,
+                                        const unsigned int j)
 {
    if(j < MAX_ANALOG_CHANNELS && i < mNumStations)
    {

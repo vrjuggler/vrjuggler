@@ -88,7 +88,7 @@ public:
    { mPort = port; }
    void setBaudRate(const int& baud_rate)
    { mBaudRate = baud_rate; }
-   void setNumStations(int num)
+   void setNumStations(unsigned int num)
    { mNumStations = num; }
    void setVerbose(bool verb)
    { mVerbose = verb; }
@@ -97,7 +97,7 @@ public:
    { return mPort; }
    int getBaudRate()
    { return mBaudRate; }
-   int getNumStations() 
+   unsigned int getNumStations() 
    { return mNumStations; }
    bool getVerbose() 
    { return mVerbose; }
@@ -363,9 +363,9 @@ public:
    float wQuat( const int& i ) 
    { return mData.Station[i].Orientation[3]; }
 
-   int buttonState(const int& i, const int &f);
+   int buttonState(const unsigned int i, const unsigned int f);
 
-   int analogData(const int& i, const int& j);
+   int analogData(const unsigned int i, const unsigned int j);
 
    bool isActive() 
    { return mActive; }
@@ -375,9 +375,9 @@ private:
 private:
    bool                 mActive;
    int                  mBaudRate; 
-   int                  mCurrentStation; //0-3 for current 9/2000 IS900
+   unsigned int         mCurrentStation; //0-3 for current 9/2000 IS900
    ISD_TRACKER_HANDLE   mHandle;    /**< The handle used to communicate with the Intersense tracker.*/
-   int                  mNumStations;
+   unsigned int         mNumStations;
    std::string          mPort;
    bool                 mVerbose;
    //char*                script;
