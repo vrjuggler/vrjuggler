@@ -18,12 +18,12 @@ xmlupdate.py
    file.config.new.
 
    It is strongly recommended that the newly generated file be loaded with
-   VjControl.  As of this writing (June 9. 2002), the JCCL C++ code does
+   VRJConfig.  As of this writing (June 9. 2002), the JCCL C++ code does
    not support evaluating symbolic enumeration strings.  In other words,
    strings such as MOUSE_NEGX that may appear as property values have no
    meaning.  The procedure to work around this is as follows:
 
-      1. Open the new file with VjControl.
+      1. Open the new file with VRJConfig.
       2. Double-click on each chunk.
       3. Press the "OK" button.
       4. Save the file.
