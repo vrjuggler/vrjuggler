@@ -322,7 +322,7 @@ if test "x${_enable_osg_api}" = "xyes" ; then
     LIBS="${_vjsave_LIBS}"
 fi
 
-DPP_HAVE_CPPUNIT
+DPP_HAVE_CPPUNIT([1.9.10])
 
 # -----------------------------------------------------------------------------
 # Checks for header files.
