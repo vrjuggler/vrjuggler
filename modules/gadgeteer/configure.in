@@ -437,7 +437,7 @@ UNIX_GADGETROOT_ABS="$GADGETROOT_ABS"
 # $APP_EXTRA_LIBS must list all the libraries need to link a VR Juggler-based
 # application.
 if test "x$OS_TYPE" = "xWin32" ; then
-    APP_EXTRA_LIBS="$LDFLAGS $JCCL_LIBS_LD_MIN $JCCL_EXTRA_LIBS_LD_MIN $VPR_LIBS_LD_MIN $LIBS $VPR_EXTRA_LIBS_LD_MIN"
+    APP_EXTRA_LIBS="$LDFLAGS $JCCL_LIBS_LD_MIN $JCCL_EXTRA_LIBS_LD_MIN $VPR_LIBS_LD_MIN $LIBS $VPR_EXTRA_LIBS_LD_MIN comctl32.lib gdi32.lib user32.lib"
     APP_EXTRA_PROF_LIBS="$APP_EXTRA_LIBS"
 else
     APP_EXTRA_LIBS="$LDFLAGS $JCCL_LIBS_CC_MIN $JCCL_EXTRA_LIBS_CC_MIN $VPR_LIBS_CC_MIN $LIBS $DTK_LDFLAGS $VPR_EXTRA_LIBS_CC_MIN"
@@ -530,7 +530,7 @@ case $OS_TYPE in
         gadget_ldflags_linker="/libpath:\$prefix/lib/debug "
         gadget_libs='gadget.lib'
         gadget_prof_libs='gadget.lib'
-        gadget_extra_libs="$LDFLAGS $LIBS $DTK_LDFLAGS"
+        gadget_extra_libs="$LDFLAGS $LIBS $DTK_LDFLAGS comctl32.lib gdi32.lib user32.lib"
 
         Gadgeteer_lib='gadget.lib'
         ;;
