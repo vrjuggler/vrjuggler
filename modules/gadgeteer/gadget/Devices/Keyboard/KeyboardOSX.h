@@ -151,6 +151,9 @@ protected:
       delete this;
    }
 
+protected:
+    int attachEvents(WindowRef aWindow);
+
 private:
    /** @name Private functions for processing input data */
    //@{
@@ -167,6 +170,7 @@ private:
 
    /** Opens the carbon window to get events from. */
    int openTheWindow();
+   
 
    /** Performs anything that must be done when state switches. */
    void lockMouse();

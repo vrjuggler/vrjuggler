@@ -95,7 +95,7 @@ int KeyboardOSX::startSampling()
         vprASSERT(false);
     }
 
-
+    std::cout << "Start sampleing in Keyboard Window" << std::endl;
     openTheWindow();
     mAmSampling = true;
 
@@ -248,8 +248,6 @@ int KeyboardOSX::osxKeyToKey(UInt32 osxKey)
 int KeyboardOSX::openTheWindow()
 {
     Rect         wRect;
-    EventTypeSpec    eventTypes[8];  //Remember to pass the size when registering ther handler
-    EventHandlerUPP  handlerUPP;
 
     //Get the size of the screen from core graphics
     //I'll need to check to see how this works with multiple monitors
@@ -271,6 +269,23 @@ int KeyboardOSX::openTheWindow()
     SetWindowTitleWithCFString (mWindow,
             CFStringCreateWithCString(NULL, mInstName.c_str(), kCFStringEncodingMacRoman) );
             // Set title
+
+    attachEvents(mWindow);
+
+    ShowWindow (mWindow);
+
+
+    vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL)
+    << "gadget::KeyboardOSX::openTheWindow() : done." << std::endl
+    << vprDEBUG_FLUSH;
+
+    return 1;
+}
+
+int KeyboardOSX::attachEvents(WindowRef aWindow)
+{
+    EventTypeSpec    eventTypes[8];  //Remember to pass the size when registering ther handler
+    EventHandlerUPP  handlerUPP;
 
     // Set up the events to listen for
     eventTypes[0].eventClass = kEventClassKeyboard;
@@ -298,20 +313,11 @@ int KeyboardOSX::openTheWindow()
     eventTypes[7].eventKind  = kEventMouseDragged;
 
 
-
-
     handlerUPP = NewEventHandlerUPP(keyboardHandlerOSX);
 
-    InstallWindowEventHandler (mWindow, handlerUPP,  // Install handler
+    InstallWindowEventHandler (aWindow, handlerUPP,  // Install handler
                                 8, eventTypes,
                                 this, NULL);
-
-    ShowWindow (mWindow);
-
-
-    vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL)
-    << "gadget::KeyboardOSX::openTheWindow() : done." << std::endl
-    << vprDEBUG_FLUSH;
 
     return 1;
 }
