@@ -20,17 +20,16 @@ include ${MKPATH}/vj.compile.mk
 include ${MKPATH}/vj.dep.mk
 include ${MKPATH}/vj.install.mk
 
-#--- Search path -------
+# Search path for source code and object files.
 vpath
 vpath %.c @srcdir@
 vpath %.cpp @srcdir@
 vpath %.o ${OBJDIR}
-#------------------------
 
 DEPEND_SRCS	:= vjBird.cpp		\
                    vjDummyPosition.cpp	\
                    vjFlock.cpp		\
-                   vjPosition.cpp		\
+                   vjPosition.cpp	\
                    logiclass.cpp
 
 VJPOS_OBJECTS	:= $(addprefix $(OBJDIR)/,$(DEPEND_SRCS:.cpp=.o))
