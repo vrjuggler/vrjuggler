@@ -1,5 +1,9 @@
 DATE        AUTHOR    CHANGE
 ----------- --------- ---------------------------------------------------------
+Jul-11-2002 patrickh  Updated the Polhemus Fastrack driver to use VPR serial
+                      ports, VPR threads, GMTL, Gadgeteer sample buffers, and
+                      the new JCCL config chunk API.  These changes have not
+                      been tested with a real device yet.
 Jul-05-2002 subatomic KeyboardWin32 now works with grabbing input
                       focus when in a "locked" state. It supports the mouse 
                       warp feature, and can capture kb/m when cursor is
