@@ -75,6 +75,7 @@ BOOST_ROOT=		@BOOST_ROOT@
 BOOST_INCLUDES=		@BOOST_INCLUDES@
 CPPDOM_ROOT=		@CPPDOM_ROOT@
 GMTL_ROOT=		@GMTL_ROOT@
+GMTL_INC_DIR=		@GMTL_INC_DIR@
 
 AUDIERE_ROOT=		@AUDIERE_ROOT@
 CPPUNIT_ROOT=		@CPPUNIT_ROOT@
@@ -160,7 +161,7 @@ links-cppdom:
 links-gmtl:
 	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/include
 	-$(RM_LN) $(instlinks)/include/gmtl
-	$(LN_S) $(GMTL_ROOT)/include/gmtl $(instlinks)/include/gmtl
+	$(LN_S) $(GMTL_INC_DIR)/gmtl $(instlinks)/include/gmtl
 
 links-audiere:
 	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/include
@@ -281,7 +282,7 @@ install-cppdom:
 install-gmtl:
 	$(SHELL) $(MKINSTALLDIRS) $(deps_prefix)/include/gmtl
 	$(PERL) $(scriptdir)/install-dir.pl -m $(FILE_PERMS)		\
-          $(GROUP_OPT_UNIX) -e .h -i $(GMTL_ROOT)/include/gmtl		\
+          $(GROUP_OPT_UNIX) -e .h -i $(GMTL_INC_DIR)/gmtl		\
           -o $(deps_prefix)/include/gmtl
 
 install-audiere:
