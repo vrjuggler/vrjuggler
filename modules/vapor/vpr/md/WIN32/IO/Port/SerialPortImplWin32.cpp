@@ -160,7 +160,7 @@ void SerialPortImplWin32::setUpdateAction (SerialTypes::UpdateActionOption actio
 // ----------------------------------------------------------------------------
 // Query the serial port for the maximum buffer size.
 // ----------------------------------------------------------------------------
-vpr::ReturnStatus SerialPortImplWin32::getBufferSize(vpr::Uint16 &size)
+vpr::ReturnStatus SerialPortImplWin32::getMinInputSize(vpr::Uint16 &size)
 {
    vpr::ReturnStatus s;
    COMMPROP lpCommProp;
@@ -180,7 +180,7 @@ vpr::ReturnStatus SerialPortImplWin32::getBufferSize(vpr::Uint16 &size)
 // ----------------------------------------------------------------------------
 // Attempt to change the buffer size to the given argument.
 // ----------------------------------------------------------------------------
-vpr::ReturnStatus SerialPortImplWin32::setBufferSize(const vpr::Uint8 size)
+vpr::ReturnStatus SerialPortImplWin32::setMinInputSize(const vpr::Uint8 size)
 {
    ReturnStatus s;
    if ( !SetupComm(mHandle, (int)size, (int)size) )

@@ -336,7 +336,7 @@ public:
     * @return vpr::ReturnStatus::Succeed is returned if the buffer size was
     *         retrieved successfully; vpr::ReturnStatus::Fail otherwise.
     */
-   vpr::ReturnStatus getBufferSize(vpr::Uint16& size);
+   vpr::ReturnStatus getMinInputSize(vpr::Uint16& size);
 
    /**
     * Attempts to change the buffer size to the given argument.
@@ -351,7 +351,7 @@ public:
     * @return vpr::ReturnStatus::Succeed is returned if the buffer size was set
     *         successfully; vpr::ReturnStatus::Fail otherwise.
     */
-   vpr::ReturnStatus setBufferSize(const vpr::Uint8 size);
+   vpr::ReturnStatus setMinInputSize(const vpr::Uint8 size);
 
    /**
     * Gets the value of the timeout (in tenths of a second) to wait for data
@@ -528,7 +528,7 @@ public:
     * assembled into lines.  Otherwise, read requests are satisfied directly
     * from the input queue, and a read will not return until the buffer is
     * at its minimum capacity or the timeout has expired.  See
-    * getBufferSize() and getTimeout() for more information.
+    * getMinInputSize() and getTimeout() for more information.
     *
     * @pre The serial port is open.
     * @post The current state of canonical input is returnd to the caller.
