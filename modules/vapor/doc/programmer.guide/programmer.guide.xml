@@ -2714,22 +2714,32 @@ private:
       looks to see if it had been profiled before and if so adds another
       sample to that profile otherwise it is added to the tree . Upon the
       completion of the function the destructor asks the Profile Manager to
-      stop profiling. If you were just sampling part of the code you can ask
-      the Profile Manager to stop profiling.</para>
+      stop profiling.</para>
 
-      <para>Along with being able to keep track of the named profiles, you can
-      also keep a specified number of samples so you can keep more than just
-      the last sample you obtained. There are also two macros provided for
-      ease of use and to minimize the intrusiveness of the API. These are the
+      <para>Along with being able to keep track of the named profiles, there
+      is an ability to keep a specified number of samples so the Profile
+      Manager will keep more than just the last sample obtained. There are
+      also two macros provided for ease of use and to minimize the
+      intrusiveness of the API. These are the
       <methodname>VPR_PROFILE_GUARD(name)</methodname> and
       <methodname>VPR_PROFILE_GUARD_HISTORY(name, queue_size)</methodname>
       macros. These can be simply added at the top of functions that are to be
-      profiled. Also, these macros give you the ability at compile time to
-      disable all profiling by way of the variable
+      profiled. Also, these macros give the ability at compile time to disable
+      all profiling by way of the variable
       <varname>VPR_DISABLE_PROFILE</varname>. All of the profiling data is
       obtained by using the <classname>vpr::Interval</classname> class to
       measure the time spent in a particular piece of code using the highest
       precision timer available to the VPR.</para>
+
+      <para>Calls may be made to
+      <methodname>vpr::ProfileManager::startProfile("name")</methodname> and
+      to <methodname>vpr::ProfileManager::stopProfile()</methodname> so that
+      just a certain part of the code may be profiled. A name needs to be
+      specified when a profile is started but when
+      <methodname>vpr::ProfileManager::stopProfile()</methodname> is called it
+      simply stops the last profile that was started. Starts and stops can be
+      nested within a function or even a program as long as their is a
+      corresponding start with every stop.</para>
 
       <para>An iterator class is provided to allow the user to use the
       captured data for statistic calculations, overloaded output stream
