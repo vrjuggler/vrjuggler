@@ -43,7 +43,7 @@ fi
 # If $TWEEK_BASE_DIR is not set, fall back on the value of $VJ_BASE_DIR.  This
 # is a reasonable default.
 if test "x$TWEEK_BASE_DIR" = "x" ; then
-    echo "WARNING: Setting TWEEK_BASE_DIR to $VJ_BASE_DIR"
+    echo "NOTE: Setting TWEEK_BASE_DIR to $VJ_BASE_DIR"
     TWEEK_BASE_DIR="$VJ_BASE_DIR"
     export TWEEK_BASE_DIR
 fi
@@ -51,7 +51,7 @@ fi
 # If $JCCL_DEFINITION_PATH is not set, use the standard location for .jdef
 # files used by VR Juggler.
 if test "x$JCCL_DEFINITION_PATH" = "x" ; then
-    echo "WARNING: Setting JCCL_DEFINITION_PATH to $VJ_BASE_DIR/share/vrjuggler/data/definitions"
+    echo "NOTE: Setting JCCL_DEFINITION_PATH to $VJ_BASE_DIR/share/vrjuggler/data/definitions"
     JCCL_DEFINITION_PATH="$VJ_BASE_DIR/share/vrjuggler/data/definitions"
     export JCCL_DEFINITION_PATH
 fi
