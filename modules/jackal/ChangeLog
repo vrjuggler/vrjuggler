@@ -1,5 +1,7 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Oct-24-2002 nonchocoboy VRJConfig now supports ability to choose embedded
+                        chunks for propertys that contain ConfigChunk pointers.
 Oct-10-2002 nonchocoboy JCCL C++ config code loads in included files relative
                         to the file that included it.
 Sep-29-2002 nonchocoboy Build and install the ConfigUpdater tool.
