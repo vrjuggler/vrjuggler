@@ -1234,7 +1234,8 @@ def installVRJConfig(prefix):
 
       # Install dependencies.
       dep_jars = [
-         r'jgraph\jgraphpad.jar',
+         r'jgraph\lib\jgraph.jar',
+         r'jgraph\lib\jgraphaddons.jar',
       ]
 
       srcroot = os.path.join(gJugglerDir, 'external')
