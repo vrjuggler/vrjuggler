@@ -33,9 +33,10 @@
 #include <vrj/Kernel/User.h>
 #include <vrj/Kernel/App.h>
 #include <vrj/Display/SimViewport.h>
+#include <vrj/Display/Viewport.h>
 #include <vrj/Draw/OGL/GlApp.h>
 #include <vrj/Display/Projection.h>
-#include <vrj/Display/Viewport.h>
+#include <vrj/Display/CameraProjection.h>
 #include <vrj/Kernel/Kernel.h>
 #include <vrj/Display/Display.h>
 #include <pyjutil/InterpreterGuard.h>
@@ -108,6 +109,9 @@ struct vrj_User_Wrapper: vrj::User
 
 struct vrj_Viewport_Wrapper: vrj::Viewport
 {
+    vrj_Viewport_Wrapper(PyObject* self_, const vrj::Viewport & p0):
+        vrj::Viewport(p0), self(self_) {}
+
     vrj_Viewport_Wrapper(PyObject* self_):
         vrj::Viewport(), self(self_) {}
 
@@ -121,6 +125,33 @@ struct vrj_Viewport_Wrapper: vrj::Viewport
 
     void updateProjections(const float p0) {
         call_method< void >(self, "updateProjections", p0);
+    }
+
+    PyObject* self;
+};
+
+struct vrj_CameraProjection_Wrapper: vrj::CameraProjection
+{
+    vrj_CameraProjection_Wrapper(PyObject* self_, const vrj::CameraProjection & p0):
+        vrj::CameraProjection(p0), self(self_) {}
+
+    vrj_CameraProjection_Wrapper(PyObject* self_):
+        vrj::CameraProjection(), self(self_) {}
+
+    void config(boost::shared_ptr<jccl::ConfigChunk> p0) {
+        call_method< void >(self, "config", p0);
+    }
+
+    void default_config(boost::shared_ptr<jccl::ConfigChunk> p0) {
+        vrj::CameraProjection::config(p0);
+    }
+
+    void calcViewMatrix(gmtl::Matrix<float,4,4> & p0, const float p1) {
+        call_method< void >(self, "calcViewMatrix", p0, p1);
+    }
+
+    void default_calcViewMatrix(gmtl::Matrix<float,4,4> & p0, const float p1) {
+        vrj::CameraProjection::calcViewMatrix(p0, p1);
     }
 
     PyObject* self;
@@ -165,6 +196,9 @@ void vrj_Kernel_waitForKernelStop(vrj::Kernel* kernel)
 
 struct vrj_SimViewport_Wrapper: vrj::SimViewport
 {
+    vrj_SimViewport_Wrapper(PyObject* self_, const vrj::SimViewport & p0):
+        vrj::SimViewport(p0), self(self_) {}
+
     vrj_SimViewport_Wrapper(PyObject* self_):
         vrj::SimViewport(), self(self_) {}
 
@@ -672,7 +706,6 @@ BOOST_PYTHON_MODULE(vrj)
         .def("getViewport", &vrj::Projection::getViewport, return_internal_reference< 1 >())
         .def("getFrustumApexAndCorners", &vrj::Projection::getFrustumApexAndCorners)
         .def("getViewMatrix", &vrj::Projection::getViewMatrix, return_value_policy< copy_const_reference >())
-        .def("calcViewMatrix", &vrj_Projection_Wrapper::calcViewMatrix)
         .def("getFrustum", &vrj::Projection::getFrustum)
         .def("setNearFar", &vrj::Projection::setNearFar)
         .staticmethod("setNearFar")
@@ -734,6 +767,14 @@ BOOST_PYTHON_MODULE(vrj)
 
     delete vrj_Viewport_scope;
 
+    class_< vrj::CameraProjection, bases< vrj::Projection > , vrj_CameraProjection_Wrapper >("CameraProjection", init<  >())
+        .def(init< const vrj::CameraProjection & >())
+        .def_readwrite("mVertFOV", &vrj::CameraProjection::mVertFOV)
+        .def("setVerticalFOV", &vrj::CameraProjection::setVerticalFOV)
+        .def("config", &vrj::CameraProjection::config, &vrj_CameraProjection_Wrapper::default_config)
+        .def("calcViewMatrix", &vrj::CameraProjection::calcViewMatrix, &vrj_CameraProjection_Wrapper::default_calcViewMatrix)
+    ;
+
     class_< vrj::Kernel, boost::noncopyable, vrj_Kernel_Wrapper >("Kernel", no_init)
         .def("start", &vrj::Kernel::start)
         .def("stop", &vrj::Kernel::stop)
@@ -752,7 +793,7 @@ BOOST_PYTHON_MODULE(vrj)
         .def("configProcessPending", &vrj::Kernel::configProcessPending, &vrj_Kernel_Wrapper::default_configProcessPending)
     ;
 
-    class_< vrj::SimViewport, boost::noncopyable, bases< vrj::Viewport > , vrj_SimViewport_Wrapper >("SimViewport", init<  >())
+    class_< vrj::SimViewport, bases< vrj::Viewport > , vrj_SimViewport_Wrapper >("SimViewport", init<  >())
         .def("getDrawSimInterface", &vrj::SimViewport::getDrawSimInterface, return_internal_reference< 1 >())
         .def("config", &vrj::SimViewport::config, &vrj_SimViewport_Wrapper::default_config)
         .def("updateProjections", &vrj::SimViewport::updateProjections, &vrj_SimViewport_Wrapper::default_updateProjections)

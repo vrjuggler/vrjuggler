@@ -53,6 +53,10 @@ Projection = Class('vrj::Projection', 'vrj/Display/Projection.h')
 set_policy(Projection.getViewport, return_internal_reference())
 exclude(Projection.outStream)
 
+CameraProjection = Class('vrj::CameraProjection',
+                         'vrj/Display/CameraProjection.h')
+exclude(CameraProjection.outStream)
+
 Viewport = Class('vrj::Viewport', 'vrj/Display/Viewport.h')
 set_policy(Viewport.getUser, return_internal_reference())
 set_policy(Viewport.getDisplay, return_internal_reference())
