@@ -28,10 +28,13 @@
 #ifndef _PYJUGGLER_GMTL_FUNCTIONS_H_
 #define _PYJUGGLER_GMTL_FUNCTIONS_H_
 
+#include <gmtl/Math.h>
 #include <gmtl/Matrix.h>
 #include <gmtl/MatrixOps.h>
 #include <gmtl/Vec.h>
 #include <gmtl/VecOps.h>
+#include <gmtl/Quat.h>
+#include <gmtl/QuatOps.h>
 
 namespace gmtl
 {
@@ -184,11 +187,134 @@ namespace gmtl
    template bool operator!=(const gmtl::VecBase3f&, const gmtl::VecBase3f&);
    template bool operator!=(const gmtl::VecBase4f&, const gmtl::VecBase4f&);
 
-   template bool isEqual(const gmtl::VecBase4f&, const gmtl::VecBase4f&,
-                         const float&);
    template bool isEqual(const gmtl::VecBase3f&, const gmtl::VecBase3f&,
                          const float&);
+   template bool isEqual(const gmtl::VecBase4f&, const gmtl::VecBase4f&,
+                         const float&);
 // ====================================================== gmtl::Vec<> functions
+
+// gmtl::Quat<> functions =====================================================
+   template gmtl::Quatf& mult(gmtl::Quatf&, const gmtl::Quatf&,
+                              const gmtl::Quatf&);
+   template gmtl::Quatd& mult(gmtl::Quatd&, const gmtl::Quatd&,
+                              const gmtl::Quatd&);
+
+   template gmtl::Quatf operator*(const gmtl::Quatf&, const gmtl::Quatf&);
+   template gmtl::Quatd operator*(const gmtl::Quatd&, const gmtl::Quatd&);
+
+   template gmtl::Quatf& operator*=(gmtl::Quatf&, const gmtl::Quatf&);
+   template gmtl::Quatd& operator*=(gmtl::Quatd&, const gmtl::Quatd&);
+
+   template gmtl::Quatf& mult(gmtl::Quatf&, const gmtl::Quatf&, float);
+   template gmtl::Quatd& mult(gmtl::Quatd&, const gmtl::Quatd&, double);
+
+   template gmtl::Quatf operator*(const gmtl::Quatf&, float);
+   template gmtl::Quatd operator*(const gmtl::Quatd&, double);
+
+   template gmtl::Quatf& operator*=(gmtl::Quatf&, float);
+   template gmtl::Quatd& operator*=(gmtl::Quatd&, double);
+
+   template gmtl::Quatf& negate(gmtl::Quatf&);
+   template gmtl::Quatd& negate(gmtl::Quatd&);
+
+   template gmtl::Quatf operator-(const gmtl::Quatf&);
+   template gmtl::Quatd operator-(const gmtl::Quatd&);
+
+   template gmtl::Quatf& div(gmtl::Quatf&, const gmtl::Quatf&, gmtl::Quatf);
+   template gmtl::Quatd& div(gmtl::Quatd&, const gmtl::Quatd&, gmtl::Quatd);
+
+   template gmtl::Quatf operator/(const gmtl::Quatf&, gmtl::Quatf);
+   template gmtl::Quatd operator/(const gmtl::Quatd&, gmtl::Quatd);
+
+   template gmtl::Quatf& operator/=(gmtl::Quatf&, const gmtl::Quatf&);
+   template gmtl::Quatd& operator/=(gmtl::Quatd&, const gmtl::Quatd&);
+
+   template gmtl::Quatf& div(gmtl::Quatf&, const gmtl::Quatf&, float);
+   template gmtl::Quatd& div(gmtl::Quatd&, const gmtl::Quatd&, double);
+
+   template gmtl::Quatf operator/(const gmtl::Quatf&, float);
+   template gmtl::Quatd operator/(const gmtl::Quatd&, double);
+
+//   template gmtl::Quatf& operator/=(const gmtl::Quatf&, float);
+//   template gmtl::Quatd& operator/=(const gmtl::Quatd&, double);
+
+   template gmtl::Quatf& add(gmtl::Quatf&, const gmtl::Quatf&,
+                             const gmtl::Quatf&);
+   template gmtl::Quatd& add(gmtl::Quatd&, const gmtl::Quatd&,
+                             const gmtl::Quatd&);
+
+   template gmtl::Quatf operator+(const gmtl::Quatf&, const gmtl::Quatf&);
+   template gmtl::Quatd operator+(const gmtl::Quatd&, const gmtl::Quatd&);
+
+   template gmtl::Quatf& operator+=(gmtl::Quatf&, const gmtl::Quatf&);
+   template gmtl::Quatd& operator+=(gmtl::Quatd&, const gmtl::Quatd&);
+
+   template gmtl::Quatf& sub(gmtl::Quatf&, const gmtl::Quatf&,
+                             const gmtl::Quatf&);
+   template gmtl::Quatd& sub(gmtl::Quatd&, const gmtl::Quatd&,
+                             const gmtl::Quatd&);
+
+   template gmtl::Quatf operator-(const gmtl::Quatf&, const gmtl::Quatf&);
+   template gmtl::Quatd operator-(const gmtl::Quatd&, const gmtl::Quatd&);
+
+   template gmtl::Quatf& operator-=(gmtl::Quatf&, const gmtl::Quatf&);
+   template gmtl::Quatd& operator-=(gmtl::Quatd&, const gmtl::Quatd&);
+
+   template float dot(const gmtl::Quatf&, const gmtl::Quatf&);
+   template double dot(const gmtl::Quatd&, const gmtl::Quatd&);
+
+   template float lengthSquared(const gmtl::Quatf&);
+   template double lengthSquared(const gmtl::Quatd&);
+
+   template float length(const gmtl::Quatf&);
+   template double length(const gmtl::Quatd&);
+
+   // XXX: These are commented out because the gmtl::normalize() for
+   // quaternions has different return semantics than that of the version used
+   // for vectors.
+//   template gmtl::Quatf& normalize(gmtl::Quatf&);
+//   template gmtl::Quatd& normalize(gmtl::Quatd&);
+
+   template bool isNormalized(const gmtl::Quatf&, const float);
+   template bool isNormalized(const gmtl::Quatd&, const double);
+
+   template gmtl::Quatf& conj(gmtl::Quatf&);
+   template gmtl::Quatd& conj(gmtl::Quatd&);
+
+   template gmtl::Quatf& invert(gmtl::Quatf&);
+   template gmtl::Quatd& invert(gmtl::Quatd&);
+
+   template gmtl::Quatf& exp(gmtl::Quatf&);
+   template gmtl::Quatd& exp(gmtl::Quatd&);
+
+   template gmtl::Quatf& log(gmtl::Quatf&);
+   template gmtl::Quatd& log(gmtl::Quatd&);
+
+   template void squad(gmtl::Quatf&, float, const Quatf&, const Quatf&,
+                       const Quatf&, const Quatf&);
+   template void squad(gmtl::Quatd&, double, const Quatd&, const Quatd&,
+                       const Quatd&, const Quatd&);
+
+   template Quatf& slerp(Quatf&, const float, const Quatf&, const Quatf&,
+                         bool);
+   template Quatd& slerp(Quatd&, const double, const Quatd&, const Quatd&,
+                         bool);
+
+   template Quatf& lerp(Quatf&, const float, const Quatf&, const Quatf&);
+   template Quatd& lerp(Quatd&, const double, const Quatd&, const Quatd&);
+
+   template bool operator==(const gmtl::Quatf&, const gmtl::Quatf&);
+   template bool operator==(const gmtl::Quatd&, const gmtl::Quatd&);
+
+   template bool operator!=(const gmtl::Quatf&, const gmtl::Quatf&);
+   template bool operator!=(const gmtl::Quatd&, const gmtl::Quatd&);
+
+   template bool isEqual(const gmtl::Quatf&, const gmtl::Quatf&, float);
+   template bool isEqual(const gmtl::Quatd&, const gmtl::Quatd&, double);
+
+   template bool isEquiv(const gmtl::Quatf&, const gmtl::Quatf&, float);
+   template bool isEquiv(const gmtl::Quatd&, const gmtl::Quatd&, double);
+// ===================================================== gmtl::gmtl::Quat<> functions
 }
 
 #endif /* _PYJUGGLER_GMTL_FUNCTIONS_H_ */

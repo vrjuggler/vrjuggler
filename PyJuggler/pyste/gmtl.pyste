@@ -44,8 +44,8 @@ set_policy(Matrix_identity, return_internal_reference())
 Matrix_zero = Function('gmtl::zero', 'gmtl-functions.h')
 set_policy(Matrix_zero, return_internal_reference())
 
-Matrix_mult = Function('gmtl::mult', 'gmtl-functions.h')
-set_policy(Matrix_mult, return_internal_reference())
+set_policy(Function('gmtl::mult', 'gmtl-functions.h'),
+           return_internal_reference())
 
 Matrix_sub = Function('gmtl::sub', 'gmtl-functions.h')
 set_policy(Matrix_sub, return_internal_reference())
@@ -113,9 +113,36 @@ set_policy(Function('gmtl::lerp', 'gmtl-functions.h'),
 
 # gmtl::Quat<> ================================================================
 Quat = Template('gmtl::Quat', 'gmtl/Quat.h')
+
 Quatf = Quat('float')
 rename(Quatf, 'Quatf')
 exclude(Quatf.getData)
+
+# Similar to the above where it is necessary to expose gmtl::Matrix33f and
+# gmtl::Vec4f, we need another instance of gmtl::Quat<T> so that the function
+# overloading will work correctly.  Blah...
+Quatd = Quat('double')
+rename(Quatd, 'Quatd')
+exclude(Quatd.getData)
+
+set_policy(Function('gmtl::negate', 'gmtl-functions.h'),
+           return_internal_reference())
+set_policy(Function('gmtl::div', 'gmtl-functions.h'),
+           return_internal_reference())
+set_policy(Function('gmtl::conj', 'gmtl-functions.h'),
+           return_internal_reference())
+set_policy(Function('gmtl::invert', 'gmtl-functions.h'),
+           return_internal_reference())
+set_policy(Function('gmtl::exp', 'gmtl-functions.h'),
+           return_internal_reference())
+set_policy(Function('gmtl::log', 'gmtl-functions.h'),
+           return_internal_reference())
+set_policy(Function('gmtl::squad', 'gmtl-functions.h'),
+           return_internal_reference())
+set_policy(Function('gmtl::slerp', 'gmtl-functions.h'),
+           return_internal_reference())
+
+Function('gmtl::isEquiv', 'gmtl-functions.h')
 # ================================================================ gmtl::Quat<>
 
 # gmtl::Point<> ===============================================================
