@@ -45,7 +45,7 @@
 int main(int argc, char* argv[])
 {
    vrj::Kernel* kernel = vrj::Kernel::instance();           // Get the kernel
-   wandApp* application = new wandApp(kernel);       // Instantiate an instance of the app
+   vrjTest::wandApp* application = new vrjTest::wandApp(kernel);       // Instantiate an instance of the app
 
    if (argc <= 1)
    {
