@@ -98,7 +98,7 @@ public:
     * @postconditions if it is, then the loaded sound is triggered.  if it isn't then nothing happens.
     * @semantics Triggers a sound
     */
-   virtual void trigger( const std::string& alias, const unsigned int& looping = 0);
+   virtual void trigger( const std::string& alias, const int& looping = 0);
 
    /*
     * when sound is already playing then you call trigger,
@@ -116,9 +116,16 @@ public:
     * when listener moves...
     * or is the sound positional - changes volume as listener nears or retreats..
     */
-   virtual void setAmbient( const std::string& alias, bool setting = false )
-   {
-   }
+   virtual void setAmbient( const std::string& alias, bool setting = false );
+
+   /** 1 is no change.  2 is really high, 0 is really low. */
+   void setPitchBend( const std::string& alias, float amount );
+
+   /** 0 - 1. */
+   void setVolume( const std::string& alias, float amount );
+
+   /** 1 is no change.  0 is total cutoff. */
+   void setCutoff( const std::string& alias, float amount );
 
    /**
      * is the sound currently playing?
@@ -130,6 +137,19 @@ public:
     * @input alias of the sound to be stopped
     */
    virtual void stop( const std::string& alias );
+
+   /**
+    * pause the sound, use unpause to return playback where you left off...
+    */
+   virtual void pause( const std::string& alias );
+
+   /**
+    * resume playback from a paused state.  does nothing if sound was not paused.
+    */
+   virtual void unpause( const std::string& alias );
+
+   /** if the sound is paused, then return true. */
+   virtual bool isPaused( const std::string& alias );
 
    /**
     * set sound's 3D position 
