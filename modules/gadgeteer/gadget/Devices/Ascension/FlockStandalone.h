@@ -20,36 +20,25 @@ typedef struct {
 enum BIRD_HEMI  {FRONT_HEM, AFT_HEM, UPPER_HEM, LOWER_HEM, LEFT_HEM, RIGHT_HEM};
 enum BIRD_FILT  {AC_NARROW, AC_WIDE, DC_FILTER};
 
-//----------------------------------------------------------------------------
 //: class for running a Flock of Birds.
-//
-//  aFlock is a positional device driver for the Flock of Birds, the config
-//  chunk in the constructor should set up all the settings, for these to be
-//  changed the Flock has to be deleted and a new instance created with an
-//  updated configchunk.
-//  <br>
-//  Note: Some functions still remain for changing the options of
-//    the flock when its not in Sampling mode, but in order to stay
-//    consistent with the vjInput/vjPosition functionality these
-//    are only left for building apps without vjConfigChunks
-//---------------------------------------------------------------------------
+//  aFlock is a positional device driver for the Flock of Birds <br>
 //!PUBLIC_API
 class aFlock
 {
 public:
 	//: Configure Constructor
-	// Give:
-	//   port - such as "/dev/ttyd3"
-	//   baud - such as 38400, 19200, 9600, 14400, etc...
-	//   sync - sync type.
-	//   block - blocking
-	//   numBrds - number of birds in flock,
-	//   transmit - transmitter unit number,
-	//   hemi - hemisphere to track from,
-	//   filt - filtering type,
-	//   report -
-	//   calfile - a calibration file, if "", then use none.
-	// 
+	// Give:                                                 <BR>
+	//   port - such as "/dev/ttyd3"                         <BR>
+	//   baud - such as 38400, 19200, 9600, 14400, etc...    <BR>
+	//   sync - sync type.                                   <BR>
+	//   block - blocking                                    <BR>
+	//   numBrds - number of birds in flock,                 <BR>
+	//   transmit - transmitter unit number,                 <BR>
+	//   hemi - hemisphere to track from,                    <BR>
+	//   filt - filtering type,                              <BR>
+	//   report -                                            <BR>
+	//   calfile - a calibration file, if "", then use none. <BR>
+	//                                                       <BR>
 	// Result: configures internal data members, 
 	//         doesn't actually talk to the FOB yet.
 	aFlock(const char* const port = "/dev/ttyd3", 
@@ -62,52 +51,147 @@ public:
 		const BIRD_FILT& filt = AC_NARROW, 
 		const char& report = 'R', 
 		const char* const calfile = "");
+	
+	
+	//: Destructor
 	~aFlock();
 
 	
-	int	    StartSampling();
-	int	    StopSampling();
-	int	    Sample();
-	void	    UpdateData();
+	//: call this to connect to the flock device.
+	//  NOTE: flock.isActive() must be false to use this function
+	int	    start();
 	
-	vjMatrix&   GetMatrix( int dev = 0 );
+	//: stop the flock
+	int	    stop();
+	
+	//: call this repeatedly to update the data from the birds.
+	//  NOTE: flock.isActive() must be true to use this function
+	int	    sample();
 		
-	void	    SetPort( const char* const serialPort );
-	const char* const GetPort();
+		
+	//: set the port to use
+	//  this will be a string in the form of the native OS descriptor <BR>
+	//  ex: unix - "/dev/ttyd3", win32 - "COM3" <BR>
+	//  NOTE: flock.isActive() must be false to use this function
+	void	    setPort( const char* const serialPort );
 	
-	void	    SetBaudRate( const int& baud );
-	inline int  GetBaudRate() { return _baud;}
+	//: get the port used
+	//  this will be a string in the form of the native OS descriptor <BR>
+	//  ex: unix - "/dev/ttyd3", win32 - "COM3"
+	const char* const getPort();
+	
+	
+	//: set the baud rate
+	//  this is generally 38400, consult flock manual for other rates. <BR>
+	//  NOTE: flock.isActive() must be false to use this function
+	void	    setBaudRate( const int& baud );
+	
+	//: get the baud rate
+	//  this is generally 38400, consult flock manual for other rates. <BR>
+	inline int  getBaudRate() { return _baud;}
    
-	void	    SetTransmitter( const int& Transmit );
-	inline int  GetTransmitter() { return _xmitterUnitNumber; }
+	//: Set the unit number of the transmitter
+	//  give - an integer that is the same as the dip switch 
+	//         setting on the transmitter box (for the unit number) <BR>
+	//  NOTE: flock.isActive() must be false to use this function
+	void	    setTransmitter( const int& Transmit );
+	
+	//: Get the unit number of the transmitter
+	//  returns - an integer that is the same as the dip switch 
+	//         setting on the transmitter box (for the unit number) <BR>
+	inline int  getTransmitter() { return _xmitterUnitNumber; }
 
-	void	    SetNumBirds( const int& n );
-	inline int  GetNumBirds() { return _numBirds; }
 
-	void	    SetSync( const int& sync );
-	inline int  GetSync() {return _syncStyle; }
+	//: Set the number of birds to use in the flock.
+	//  give - an integer number not more than the number of 
+	//         birds attached to the system <BR>
+	//  NOTE: flock.isActive() must be false to use this function
+	void	    setNumBirds( const int& n );
+	
+	//: Get the number of birds to use in the flock.
+	//  returns - an integer number not more than the number of 
+	//         birds attached to the system <BR>
+	inline int  getNumBirds() { return _numBirds; }
 
-	void	    SetBlocking( const int& blVal );
-	inline int  GetBlocking() { return _blocking; }
 
-	void	    SetFilters( const BIRD_FILT& f );
-	inline int  GetFilters() { return _filter; }
+	//: set the video sync type
+	//  this option allows the Flock to syncronize its pulses with 
+	//  your video display.  This will eliminate most flicker caused 
+	//  by the magnetic distortion. <BR>
+	//  - Refer to your flock manual for what number to use.
+	//  NOTE: flock.isActive() must be false to use this function
+	void	    setSync( const int& sync );
+	
+	//: Get the video sync type
+	//  this option allows the Flock to syncronize its pulses with 
+	//  your video display.  This will eliminate most flicker caused 
+	//  by the magnetic distortion. <BR>
+	//  - Refer to your flock manual for what the return number means
+	inline int  getSync() {return _syncStyle; }
 
-	void	    SetHemisphere( const BIRD_HEMI& h );
-	inline int  GetHemisphere() {return _hemisphere; }
 
-	void	    SetReportRate( const char& rRate );
-        inline char GetReportRate() {return _reportRate; }
+	//: Set blocking of flock
+	//  see flock manual for details.
+	//  NOTE: flock.isActive() must be false to use this function
+	void	    setBlocking( const int& blVal );
+	
+	//: Get blocking flock's blocking type
+	//  see flock manual for details.
+	inline int  getBlocking() { return _blocking; }
 
+
+	//: Set the type of filtering that the flock uses
+	//  NOTE: flock.isActive() must be false to use this function
+	void	    setFilters( const BIRD_FILT& f );
+	
+	//: Set the type of filtering that the flock uses
+	inline int  getFilters() { return _filter; }
+
+
+	//: Set the hemisphere that the transmitter transmits from.
+	//  NOTE: flock.isActive() must be false to use this function
+	void	    setHemisphere( const BIRD_HEMI& h );
+	
+	//: Set the hemisphere that the transmitter transmits from.
+	inline int  getHemisphere() {return _hemisphere; }
+
+
+	//: Set the report rate that the flock uses
+	//  NOTE: flock.isActive() must be false to use this function
+	void	    setReportRate( const char& rRate );
+        
+	//: Set the report rate that the flock uses
+	inline char getReportRate() {return _reportRate; }
+
+
+	float&	    xPos();
+	float&	    yPos();
+	float&	    zPos();
+	float&	    zRot();
+	float&	    yRot();
+	float&	    xRot();
+
+// Private methods
 private:
-	void        Position_Correct( float& x, float& y, float& z );
-	void        InitCorrectionTable( const char* const );
+	//: with the calibration table info, correct a given position
+	//  give - a position in x, y, z euclidian coordinates
+	//  returns - a corrected position in x, y, z euclidian coordinates
+	void        positionCorrect( float& x, float& y, float& z );
+	
+	//: init the correction table from a file
+	//  give - a file name of the calibration file.
+	//  result - initializes the correction table with the file's info
+	void        initCorrectionTable( const char* const );
+
+// Private data members
+private:
 	CalStruct   caltable;
 	char        _reportRate;
 	BIRD_HEMI   _hemisphere;
 	BIRD_FILT   _filter;
 	
 	std::string _port;
+	int	    _portId;
 	int	    _baud;
 	int	    _syncStyle;
 	int	    _blocking;
@@ -116,28 +200,43 @@ private:
 	std::string _calibrationFileName;
 	bool	    _usingCorrectionTable;
 	
-	vjMatrix* theData;
+	//    x,y,z,        r,y,p
+	float _position[3], _orientation[3];
 	
 	bool _active;
 	
-// bird declarations.
+	int _current, _valid, _progress;
+	
+// static bird functions.
 private:	
-	int   getReading(int i, vjMatrix* data, int port);
-	float rawToFloat(char& r1, char& r2);
-	void  pickBird(int sensor, int port_id);
-	int   open_port(char* serialPort, int baud);
-	void  set_blocking(int port, int blocking);
-	void  set_sync(int port, int sync);
-	void  set_hemisphere(int port, BIRD_HEMI hem, int transmitter, int numbirds);
-	void  set_rep_and_stream(int port, char repRate);
-	void  set_pos_angles(int port, int transmitter, int numbirds);
-	void  set_filter(int port, BIRD_FILT filter);
-	void  set_transmitter(int port, int transmitter);
-	void  set_autoconfig(int port, int numbirds);
-	void  set_group(int port);
+	//: get a reading
+	//  give - n:    the bird unit number  <BR>
+	//  give - port: the flock port number <BR>
+	//  give - xyz positions               <BR>
+	//  give - zyx rotations
+	static int   getReading( const int& n, const int& port, 
+				float& xPos, float& yPos, float& zPos, 
+				float& zRot, float& yRot, float& xRot );
+	static float rawToFloat(char& r1, char& r2);
+	static void  pickBird(const int& sensor, const int& port_id);
+	static int   open_port(const char* const serialPort, const int& baud, int& port_id );
+	static void  set_blocking(const int& port, const int& blocking);
+	static void  set_sync(const int& port, const int& sync);
+	static void  set_hemisphere(const int& port, const BIRD_HEMI& hem, const int& transmitter, const int& numbirds);
+	static void  set_rep_and_stream(const int& port, const char& repRate);
+	static void  set_pos_angles(const int& port, const int& transmitter, const int& numbirds);
+	static void  set_filter(const int& port, const BIRD_FILT& filter);
+	static void  set_transmitter(const int& port, const int& transmitter);
+	static void  set_autoconfig(const int& port, const int& numbirds);
+	static void  set_group(const int& port);
 };
 
-
+inline float& aFlock::xPos()  { return _position[0]; }
+inline float& aFlock::yPos()  { return _position[1]; }
+inline float& aFlock::zPos()  { return _position[2]; }
+inline float& aFlock::zRot()  { return _orientation[0]; }
+inline float& aFlock::yRot()  { return _orientation[1]; }
+inline float& aFlock::xRot()  { return _orientation[2]; }
 
 
 #endif
