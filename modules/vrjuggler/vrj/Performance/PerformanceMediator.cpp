@@ -131,6 +131,19 @@ namespace vrj
          return;
       }
 
+      const std::string no_perf_plugin("NO_PERF_PLUGIN");
+      std::string junk;
+
+      // If the user has the environment variable NO_PERF_PLUGIN set (to any
+      // value), do not attempt to load the plug-in.
+      if ( vpr::System::getenv(no_perf_plugin, junk).success() )
+      {
+         vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
+            << "Remote performance visualization plug-in loading disabled "
+            << "via NO_PERF_PLUGIN." << std::endl << vprDEBUG_FLUSH;
+         return;
+      }
+
 #if defined(_ABIN32)
       const std::string bit_suffix("32");
 #elif defined(_ABI64)
