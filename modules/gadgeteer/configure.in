@@ -596,7 +596,7 @@ if test "x$OS_TYPE" = "xUNIX" ; then
         X_LDFLAGS="-L$x_libraries"
     fi
 
-    APP_EXTRA_LIBS_X11="$X_LDFLAGS -lX11 -lXext"
+    APP_EXTRA_LIBS_X11="$X_LDFLAGS -lX11"
 elif test "x$OS_TYPE" = "xWin32" ; then
     DSO_DRIVER_DEPS="-libpath:\$(LIBDIR) gadget.lib $DYLIB_DEPS"
     TWEEK_DRIVER_DEPS="$TWEEK_LIBS_LD_MIN $TWEEK_EXTRA_LIBS_LD_MIN"
