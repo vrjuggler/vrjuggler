@@ -115,10 +115,21 @@ AC_ARG_WITH(python-orb,
                             omniORBpy],
             python_orb_name="$withval", python_orb_name='omniORBpy')
 
+AC_ARG_WITH(python-orb-root,
+            [  --with-python-orb-root=<PATH>                           [default=/usr]
+                          Root directory of Python ORB
+                          installation],
+            python_orb_root="$withval", python_orb_root='/usr')
+
 AC_ARG_WITH(python-orb-bin,
             [  --with-python-orb-bin=<PATH>                            [default=/usr/bin]
                           Path to Python ORB executables],
             python_orb_bin_dir="$withval", python_orb_bin_dir='none')
+
+AC_ARG_WITH(python-orb-lib,
+            [  --with-python-orb-lib=<PATH>                            [default=/usr/lib/pythonX.Y/site-packages]
+                          Path to Python ORB package],
+            python_orb_lib_dir="$withval", python_orb_lib_dir='none')
 
 AC_ARG_WITH(java-orb,
             [  --with-java-orb=<NAME>  Name of Java ORB to use         [default=JDK]
@@ -450,8 +461,8 @@ elif test "x$PYUIC" = "xno" ; then
    BUILD_PYTHON_IDL='Y'
    BUILD_PYTHON_GUI='N'
 else
-   BUILD_PYTHON_IDL=''
-   BUILD_PYTHON_GUI=''
+   BUILD_PYTHON_IDL='Y'
+   BUILD_PYTHON_GUI='Y'
 fi
 
 # -----------------------------------------------------------------------------
@@ -686,6 +697,92 @@ setup_omniORB_python ( )
    fi
 }
 
+setup_fnorb ( )
+{
+   if test "x$python_orb_bin_dir" = "xnone" ; then
+      FNORB_BIN_DIR="$python_orb_root/bin"
+   else
+      FNORB_BIN_DIR="$python_orb_bin_dir"
+   fi
+
+   if test "x$python_orb_lib_dir" = "xnone" ; then
+      FNORB_LIB_DIR="$python_orb_root/lib/python$PYTHON_VER/site-packages"
+   else
+      FNORB_LIB_DIR="$python_orb_lib_dir"
+   fi
+
+   if test "x$OS_TYPE" = "xWin32" ; then
+      FNORB_BIN_DIR_UNIX=`unixpath "$FNORB_BIN_DIR"`
+      fnidl_search_path="${FNORB_BIN_DIR_UNIX}:${PATH}"
+   else
+      fnidl_search_path="${FNORB_BIN_DIR}:${PATH}"
+   fi
+
+   AC_PATH_PROG(PYTHON_IDL, fnidl, no, [$fnidl_search_path])
+   
+   if test "x$PYTHON_IDL" = "xno" ; then
+      AC_MSG_WARN([*** $python_orb_name required for Tweek Python API ***])
+      BUILD_PYTHON_IDL='N'
+      BUILD_PYTHON_GUI='N'
+   else
+      fnidl_works='N'
+      AC_MSG_CHECKING([for $PYTHON_IDL usability])
+      if ! (eval $PYTHON_IDL --help >/dev/null 2>&1) 2>&1 ; then
+         PYTHON_IDL="PYTHONPATH=$FNORB_LIB_DIR $PYTHON_IDL"
+
+         if ! (eval $PYTHON_IDL --help >/dev/null 2>&1) 2>&1 ; then
+            AC_MSG_RESULT([no])
+            AC_MSG_WARN([*** $python_orb_name required for Tweek Python API ***])
+         else
+            AC_MSG_RESULT([yes])
+            fnidl_works='Y'
+         fi
+      else
+         AC_MSG_RESULT([yes])
+         fnidl_works='Y'
+      fi
+
+      if test "x$fnidl_works" = "xY" ; then
+         PYTHON_ORB_MODULE='Fnorb.orb'
+         PYTHON_IDL_OPTS='--poa-skel'
+         PYTHON_IDL_GENDIR_OPT='--directory='
+         PYTHON_IDL_INCFLAG='-I'
+         BUILD_PYTHON_IDL='Y'
+      fi
+   fi
+}
+
+setup_PyORBit ( )
+{
+   min_pyorbit_version='2.0.0'
+   AC_MSG_CHECKING([for PyORBit version >= $min_pyorbit_version])
+
+   # First test to see if PyORBit is even available.
+   if ! (eval "$PYTHON -c \"import ORBit, CORBA\"" >/dev/null 2>&1) 2>&1 ; then
+      # PyORBit is not available, so we won't try to build the PyQt GUI.
+      AC_MSG_RESULT([no])
+      AC_MSG_WARN([*** PyORBit is required for Tweek Python API ***])
+      BUILD_PYTHON_GUI='N'
+
+   # If PyORBit is available, then we can test its version.
+   else
+      # The Python code here causes frustrating sh syntactic issues relating
+      # to when strings are resolved.
+#      pyorbit_version=`$PYTHON -c '"import ORBit; print '.'.join([str(x) for x in ORBit.__version__])"'`
+      pyorbit_version=`$PYTHON -c "import ORBit; print ORBit.__version__" | sed -e 's/, /./g' -e 's/(\(.*\))/\1/'`
+      DPP_VERSION_CHECK([$pyorbit_version], [$min_pyorbit_version],
+                        [AC_MSG_RESULT([yes])],
+                        [AC_MSG_RESULT([no])
+                         BUILD_PYTHON_GUI='N'])
+
+      PYTHON_ORB_MODULE='ORBit'
+   fi
+
+   # This is always going to be 'N' because PyORBit performs IDL compilation
+   # dynamically.  In other words, there is nothing to build.
+   BUILD_PYTHON_IDL='N'
+}
+
 # omniORB requires pthreads, and that conflicts with IRIX SPROC threads.
 if test "x$VPR_SUBSYSTEM" = "xSPROC" ; then
    case $cxx_orb_name in
@@ -812,8 +909,14 @@ if test "x$BUILD_PYTHON_IDL" != "xN" ; then
    AC_MSG_RESULT([$PYTHON_VER])
 
    case $python_orb_name in
-      omniORBpy)
+      Fnorb|fnorb)
+         setup_fnorb
+         ;;
+      omniORBpy|omniorbpy)
          setup_omniORB_python
+         ;;
+      PyORBit|pyorbit)
+         setup_PyORBit
          ;;
       *)
          AC_MSG_ERROR([Unsupported Python ORB $python_orb_name!])
