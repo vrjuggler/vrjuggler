@@ -38,9 +38,8 @@
 #include <vector>
 
 #include <vpr/Util/Singleton.h>
-
-//#include <vrj/Kernel/SystemFactory.h>
 #include <vpr/Sync/CondVar.h>
+#include <jccl/RTRC/ConfigElementHandler.h>
 
 #include <gadget/Type/DigitalInterface.h>
 
@@ -61,6 +60,7 @@ namespace vpr
 
 namespace vrj
 {
+
 class DisplayManager;
 class DrawManager;
 class SoundManager;
@@ -68,63 +68,69 @@ class User;
 class App;
 
 
-/** Main control class for all vj applications.
+/**
+ * Main control class for all vj applications.
  *
- * Takes care of all initialization and object creation
- * for the system.
- * This class is the only class that MUST be instantiated
- * for all applications.
+ * Takes care of all initialization and object creation for the system.
+ * This class is the only class that MUST be instantiated for all application
+ * objects.
  */
 class VJ_CLASS_API Kernel : public jccl::ConfigElementHandler
 {
 public:
 
-   /** Start the Kernel running
-    * Spawn kernel thread
-    */
+   /** Starts the Kernel running by spawning the kernel thread. */
    int start();
 
-   /** Stop the kernel control loop
-   * If there is an application set, then it will be closed first
-   * @post The kernel exits and the Juggler system shuts down
-   */
+   /**
+    * Stops the kernel control loop.
+    * If there is an application set, then it will be closed first.
+    * @post The kernel exits and the VR Juggler system shuts down.
+    */
    void stop();
 
-   /** Return status of kernel */
+   /** Returns the status of kernel. */
    bool isRunning() const
-   { return mIsRunning; }
+   {
+      return mIsRunning;
+   }
 
-   /** Blocks until the kernel exits */
+   /** Blocks until the kernel exits. */
    void waitForKernelStop();
 
-   /** Load initial configuration data for the managers
-   * @post InputManager, DisplayManager, and kernel
-   *       Config files loaded and handed to configAdd
-   */
+   /**
+    * Loads initial configuration data for the managers.
+    * @post Input Manager, Display Manager, and kernel configuration files
+    *       are loaded and handed to configAdd().
+    */
    void initConfig();
 
-   /** The Kernel loop */
+   /** The Kernel loop. */
    void controlLoop(void* nullParam);
 
-   /** Set the application object for the Kernel to deal with
-   *  If there is another app active, it has to stop that
-   *  application first then restart all API specific Managers.
-   * @param newApp - If NULL, stops current application
-   */
+   /**
+    * Sets the application object for the Kernel to deal with.
+    * If there is another app active, it has to stop that application first
+    * then restart all API-specific Managers.
+    *
+    * @param newApp If NULL, stops current application.
+    */
    void setApplication(vrj::App* newApp);
 
-   /** Load configuration data for Kernel
-   * @post Config data has been read into initial buffer
-   */
+   /**
+    * Loads configuration data for Kernel.
+    * @post Config data has been read into initial buffer.
+    */
    void loadConfigFile(const char* filename)
    {
       std::string filename_str = std::string(filename);
       loadConfigFile(filename_str);
    }
 
-   /** Load configuration data for Kernel
-   * @post Config data has been read into initial buffer
-   */
+   /**
+    * Loads configuration data for Kernel.
+    * @post Config data has been read into initial buffer.
+    */
    void loadConfigFile(std::string filename);
 
    /**
@@ -141,23 +147,12 @@ public:
 
 
 protected:  // -- CONFIG ELEMENT HANDLER
-   /** Can the handler handle the given element?
-    * @return true - Can handle it
-    *          false - Can't handle it
+   /**
+    * Can the handler handle the given element?
+    * @return true if we can handle the element; false otherwise.
     */
    virtual bool configCanHandle(jccl::ConfigElementPtr element);
 
-   /** Process any pending reconfiguration that we can deal with
-   *
-   *  Process pending reconfiguration of the kernel and
-   *  it's dependant managers (basically all of them
-   *  that don't have a control thread)
-   *
-   *     // It just calls process pending for dependant processes
-   *     virtual int configProcessPending(bool lockIt = true);
-   */
-
-protected:  // -- CONFIG ELEMENT HANDLER
    /**
     * Adds the element to the configuration.
     * @pre    configCanHandle(element) == true.
@@ -183,60 +178,71 @@ protected:  // Local config functions
    bool removeUser(jccl::ConfigElementPtr element);
 
 protected:
-   /** Updates any data that needs updated once a frame (Trackers, etc.)
-    * @post All tracker data is ready for next frame
+   /**
+    * Updates any data that needs updated once a frame (Trackers, etc.).
+    * @post All tracker data is ready for next frame.
     */
    void updateFrameData();
 
-   /** Checks to see if there is reconfiguration to be done
-    * @post Any reconfiguration needed has been completed
-    * @note Can only be called by the kernel thread
+   /**
+    * Checks to see if there is reconfiguration to be done.
+    * @post Any reconfiguration needed has been completed.
+    * @note Can only be called by the kernel thread.
     */
    void checkForReconfig();
 
-   /** Changes the application in use
-    * If there is another app active, it has to stop that
-    *  application first then restart all API specific Managers.
-    * @param   newApp - If NULL, stops current application
-    * @note    This can only be called from the kernel thread
+   /**
+    * Changes the application in use.
+    * If there is another application object active, it has to stop that
+    * application first then restart all API-specific Managers.
+    * @param   newApp - If NULL, stops current application.
+    * @note    This can only be called from the kernel thread.
     */
    void changeApplication(vrj::App* newApp);
 
-   /** Initialize the signal buttons for the kernel */
+   /** Initializes the signal buttons for the kernel. */
    void initSignalButtons();
 
-   /** Check the signal buttons to see if anything has been triggered */
+   /** Checks the signal buttons to see if anything has been triggered. */
    void checkSignalButtons();
 
 protected:      // --- DRAW MGR ROUTINES --- //
-   /** Starts the draw manager running
-   * Calls the app callbacks for the draw manager
-   * param newMgr - Is this a new manager, or the same one
-   */
+   /**
+    * Starts the draw manager running.
+    * Calls the app callbacks for the Draw Manager.
+    * param newMgr Is this a new manager or the same one.
+    */
    void startDrawManager(bool newMgr);
 
-   /** Stop the draw manager and close it's resources, then delete it
-   * @post draw mgr resources are closed
-   *       draw mgr is deleted, display manger set to NULL draw mgr
-   */
+   /**
+    * Stops the Draw Manager, closes its resources, and deletes it.
+    * @post The Draw Manager's resources are closed, the Draw Manager is
+    *       deleted, and the Display Manger set to have a NULL Draw Manager
+    *       instance.
+    */
    void stopDrawManager();
 
 public:      // Global "get" interface
 
-   /** Get the Input Manager. */
+   /** Gets the Input Manager. */
    gadget::InputManager* getInputManager();
 
-   /** Get the user associated with given name.
+   /**
+    * Gets the user associated with given name.
     * @return NULL if not found.
     */
    vrj::User* getUser(const std::string& userName);
 
-   /** Get a list of the users back. */
+   /** Returns a list of the users. */
    std::vector<vrj::User*> getUsers()
-   { return mUsers; }
+   {
+      return mUsers;
+   }
 
    const vpr::BaseThread* getThread()
-   { return mControlThread; }
+   {
+      return mControlThread;
+   }
 
 protected:
    vrj::App*      mApp;                         /**< The current active app object */
@@ -248,24 +254,28 @@ protected:
    vpr::BaseThread*   mControlThread;           /**< The thread in control of me */
    vpr::CondVar       mExitWaitCondVar;         /**< Cond var for waiting for exit */
 
-   /// Factories and Managers
+   /** @name Factories and Managers */
+   //@{
    gadget::InputManager*      mInputManager;          /**< The input manager for the system  */
    DrawManager*               mDrawManager;           /**< The Draw Manager we are currently using */
    SoundManager*              mSoundManager;          /**< The Audio Manager we are currently using  */
    DisplayManager*            mDisplayManager;        /**< The Display Manager we are currently using */
    cluster::ClusterManager*   mClusterManager;        /**< The Cluster Manager for the system*/
+   //@}
 
-   /// Multi-user information
-   std::vector<vrj::User*>   mUsers;         /**< A list of user objects in system */
+   /** @name Multi-user information */
+   //@{
+   std::vector<vrj::User*>   mUsers;    /**< A list of user objects in system */
+   //@}
 
-   // Control "signals" from input interfaces
+   /** Control "signals" from input interfaces. */
    gadget::DigitalInterface   mStopKernelSignalButton;
 
    // ----------------------- //
    // --- SINGLETON STUFF --- //
    // ----------------------- //
 protected:
-   /** Constructor:  Hidden, so no instantiation is allowed. */
+   /** Constructor: Hidden, so no instantiation is allowed. */
    Kernel();
 
    Kernel(const vrj::Kernel& k) : jccl::ConfigElementHandler() {;}
