@@ -80,7 +80,7 @@
 				AdditionalIncludeDirectories=".;&quot;$(NSPR_ROOT)/include/nspr&quot;;&quot;$(VJ_BASE_DIR)/include&quot;;&quot;C:/Program Files/Silicon Graphics/OpenGL Performer/Include&quot;;&quot;C:/Program Files/Silicon Graphics/OpenGL Performer/Include/Performer&quot;"
 				PreprocessorDefinitions="_OPT,_CONSOLE"
 				StringPooling="TRUE"
-				RuntimeLibrary="4"
+				RuntimeLibrary="2"
 				EnableFunctionLevelLinking="TRUE"
 				UsePrecompiledHeader="2"
 				PrecompiledHeaderFile=".\Release/simplePf.pch"
