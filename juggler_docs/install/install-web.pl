@@ -28,7 +28,7 @@
 #     install-dir.pl -s <source directory> -t <destination directory>
 #                   [-u <user name> -g <group name> -m <mode>]
 #                    -i <dir ignore>,<dir ignore>
-#                    -c <css header> -f <html footer>
+#                    -c <css header> -e <html header> -f <html footer>
 #                    -h <HTML install path> -w <web subst file>
 #                    -a (force all)
 #                    -z generate Zscript
@@ -57,17 +57,18 @@ use InstallOps;
 # Ensure that there are four command-line arguments.  If not, exit with
 # error status.
 if ( $#ARGV < 3 ) {
-    warn "Usage: $0 -s <source directory> -t <target directory> -i<ignore dir>,<ignore dir>,.. -c <css header> -f <html footer> -h <HTML install path> -w <web_subst file> -a (force all) -z <name of script file to output>\n";
+    warn "Usage: $0 -s <source directory> -t <target directory> -i<ignore dir>,<ignore dir>,.. -c <css header> -e <html header> -f <html footer> -h <HTML install path> -w <web_subst file> -a (force all) -z <name of script file to output>\n";
     exit 1;
 }
 
 # Get the -i and -o options and store their values in $opt_i and $opt_o
 # respectively.
-getopt('s:t:i:c:f:w:h:z:');
+getopt('s:t:i:c:e:f:w:h:z:');
 
 my $src_dir = "$opt_s";
 my $dest_dir = "$opt_t";
 my $css_filename = "$opt_c";
+my $html_header_filename = "$opt_e";
 my $html_footer_filename = "$opt_f";
 my $html_install_prefix = "$opt_h";
 my $web_subst_file = "$opt_w";
@@ -84,6 +85,7 @@ print "---------- WebInstall Options -----------\n";
 print "         Source dir: $src_dir\n";
 print "           Dest dir: $dest_dir\n";
 print "           CSS file: $css_filename\n";
+print "        HTML Header: $html_header_filename\n";
 print "        HTML footer: $html_footer_filename\n";
 print "HTML install prefix: $html_install_prefix\n";
 print "     Web Subst file: $web_subst_file\n\n";
@@ -122,7 +124,7 @@ mkpath("$dest_dir", 0, 0755); # Make sure that $dest_dir exists
 
 # Initialize Filters
 initWebSubstTags();
-initHtmlFilter($css_filename, $html_footer_filename);
+initHtmlFilter($css_filename, $html_header_filename, $html_footer_filename);
 
 # Save this for later
 # Unless it stars with a / and ends with a /
@@ -141,6 +143,7 @@ exit 0;
 #----------------------------------------------------------------------#
 
 $css_header="";
+$html_header="";
 $html_footer="";
 
 # Fills the %web_subst hash with tags to use
@@ -174,13 +177,16 @@ sub initWebSubstTags()
 #  Initialize the HTML filter that we will use
 #
 # syntax:
-#     initHtmlFilter($css_header_file_name, $footer_file_name)
+#     initHtmlFilter($css_header_file_name, $header_file_name, $footer_file_name)
 # args:
 #     css_header_file_name: The name of the file with the css information to copy
+#     header_file_name: The name of the file with the header information to copy
+#     footer_file_name: The name of the file with the footer information to copy
 #
 sub initHtmlFilter($$)
 {
    my $css_header_file_name = shift;
+   my $header_file_name = shift;
    my $footer_file_name = shift;
 
    #### --- GET CSS HEADER --- ###
@@ -197,6 +203,21 @@ sub initHtmlFilter($$)
 
    print "CSS Header: $css_header_file_name\n------- begin --------\n", $css_header, "\n------- end ----------\n";
 
+   #### --- GET HTML HEADER --- ####
+   if(!open(HTML_HEADER, "$header_file_name"))
+   {
+      warn "WARNING: Cannot read HTML Header info from $header_file_name: $!\n";
+      warn "WARNING: Did you specify a file?????\n;";
+      return -1;
+   }
+
+   while(<HTML_HEADER>)
+   {
+      $html_header .= $_;
+   }
+
+   print "HTML Header: $header_file_name\n------- begin --------\n", $html_header, "\n------- end ----------\n";
+
    #### --- GET HTML FOOTER --- ####
    if(!open(HTML_FOOTER, "$footer_file_name"))
    {
@@ -211,6 +232,8 @@ sub initHtmlFilter($$)
    }
 
    print "HTML Footer: $footer_file_name\n------- begin --------\n", $html_footer, "\n------- end ----------\n";
+   
+   
 
 }
 
@@ -231,6 +254,7 @@ sub htmlFilter($)
    my $html_comment_end = " -->";
    my $body_tag_end = "<\/body>";
    my $ignore_web_filter_str = 'install-web ignore';
+   my $ignore_css_str = 'install-web no-css';
    my $ignore_header_str = 'install-web no-header';
    my $ignore_footer_str = 'install-web no-footer';
 
@@ -259,10 +283,24 @@ sub htmlFilter($)
       return 1;
    }
 
+   # ----------- HEADER INSERT ----------- #
+   # Insert header
+   # Look for <BODY> and put it right after that
+   if($file_contents =~ m/$ignore_header_str/is)  ### Check for IGNORE HEADER ####
+   {
+      print "ignoring header... ";
+   }
+   else
+   {
+      $file_contents =~ s/($head_tag_end)/\n$html_header\n$1\n/is;
+   }
+   
+   
+   
    # ----------- CSS HEADER INSERT ----------- #
    # if there is </head> then insert before it
    # if not, then look for <html> and insert after it with <head>...</head> around it
-   if($file_contents =~ m/$ignore_header_str/is)  ### Check for IGNORE HEADER ####
+   if($file_contents =~ m/$ignore_css_str/is)  ### Check for IGNORE HEADER ####
    {
       print "ignoring header... ";
    }
@@ -287,10 +325,12 @@ sub htmlFilter($)
    #         root directory of the web install
    $file_contents =~ s/<link(.*?)stylesheet(.*?)href(.*?)\"/$&$html_install_prefix/gis;
 
+   
+
    # ----------- FOOTER INSERT ----------- #
    # Insert footer
    # Look for </BODY> and put it right before that
-   if($file_contents =~ m/$ignore_header_str/is)  ### Check for IGNORE FOOTER ####
+   if($file_contents =~ m/$ignore_footer_str/is)  ### Check for IGNORE FOOTER ####
    {
       print "ignoring footer... ";
    }
@@ -553,6 +593,7 @@ sub create_script($)
    print OUTFILE "my \$src_dir = \"$src_dir\";\n";
    print OUTFILE "my \$dest_dir = \"$dest_dir\";\n";
    print OUTFILE "my \$css_filename = \"$css_filename\";\n";
+   print OUTFILE "my \$html_header_filename = \"$html_header_filename\";\n";
    print OUTFILE "my \$html_footer_filename = \"$html_footer_filename\";\n";
    print OUTFILE "my \$html_install_prefix = \"$html_install_prefix\";\n";
    print OUTFILE "my \$web_subst_file = \"$web_subst_file\";\n";
@@ -563,6 +604,7 @@ sub create_script($)
    print OUTFILE "\$command .= \" -t \$dest_dir\";\n";
    print OUTFILE "\$command .= \" -i $opt_i\";\n";
    print OUTFILE "\$command .= \" -c \$css_filename\";\n";
+   print OUTFILE "\$command .= \" -f \$html_header_filename\";\n";
    print OUTFILE "\$command .= \" -f \$html_footer_filename\";\n";
    print OUTFILE "\$command .= \" -h \$html_install_prefix\";\n";
    print OUTFILE "\$command .= \" -w \$web_subst_file\";\n";

@@ -48,6 +48,7 @@ $web_subst{"JUGGLER_USER_COMMUNITY"} = 'html/contact.info/usercommunity.html';
 
 # the href address to mail the Juggler list.
 $alias_subst{"JUGGLER_MAILING_LIST"} = 'mailto:vrjuggler-contact@vrjuggler.org';
+$alias_subst{"JUGGLER_DEV_MAILING_LIST"} = 'mailto:vrjuggler-contact@vrjuggler.org';
 
 # An alias for a New Window.
 # when you click, should bring content up in a completely new window.
