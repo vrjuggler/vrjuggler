@@ -45,6 +45,8 @@
 #include <IO/Socket/SocketTypes.h>
 #include <IO/Socket/SocketIpOpt.h>
 
+#include <Utils/Debug.h>
+
 namespace vpr {
 
 class SocketImpNSPR : public BlockIO, public SocketIpOpt
@@ -89,6 +91,7 @@ public:
         if(status == PR_SUCCESS)
         {
            m_open = false;
+           m_bound = false;
            retval = true;
         }
         return retval;
@@ -112,6 +115,12 @@ public:
     // ------------------------------------------------------------------------
     inline virtual bool
     enableBlocking (void) {
+       if(m_bound)
+       {
+           vprDEBUG(0,0) << "NSPRSocketImpl::enableBlocking: Can't enable blocking after socket is bound\n" << vprDEBUG_FLUSH;
+           return false;
+       }
+        
        PRStatus status;
        PRSocketOptionData option_data;
        option_data.option = PR_SockOpt_Nonblocking;
@@ -132,6 +141,12 @@ public:
     // ------------------------------------------------------------------------
     inline virtual bool
     enableNonBlocking (void) {
+        if(m_bound)
+        {
+            vprDEBUG(0,0) << "NSPRSocketImpl::enableBlocking: Can't diable blocking after socket is bound\n" << vprDEBUG_FLUSH;
+            return false;
+        }
+
         PRStatus status;
        PRSocketOptionData option_data;
        option_data.option = PR_SockOpt_Nonblocking;
@@ -180,9 +195,10 @@ public:
     // -----------------------------------------------------------------
     bool isConnected()
     {
-        if(isOpen())        // If it is not open, then it can't be connected
+        if(m_open && m_bound )        // If it is not open, then it can't be connected
         {
-            if(PR_Available(m_handle) == 0)
+            int num_avail = PR_Available(m_handle);
+            if(num_avail == 0)
             {
                 PRPollDesc poll_desc;
                 poll_desc.fd = m_handle;
@@ -222,8 +238,11 @@ public:
 
     bool setLocalAddr(const InetAddr& addr)
     {
-      if (this->m_open)
-       { return false; }
+      if (m_bound)
+       {
+          vprDEBUG(0,0) << "SocketImpNSPR::setLocalAddr: Cant' set address of bound socket.\n" << vprDEBUG_FLUSH;
+          return false;
+       }
        else
           m_local_addr = addr;
 
@@ -239,8 +258,11 @@ public:
 
     bool setRemoteAddr(const InetAddr& addr)
     {
-       if (this->m_open)
-       { return false; }
+       if (m_bound)
+       { 
+           vprDEBUG(0,0) << "SocketImpNSPR::setRemoteAddr: Cant' set address of bound socket.\n" << vprDEBUG_FLUSH;
+           return false;
+       }
        else
           m_remote_addr = addr;
 
@@ -271,6 +293,19 @@ protected:
     // ------------------------------------------------------------------------
     SocketImpNSPR(const InetAddr& local_addr, const InetAddr& remote_addr,
                  const SocketTypes::Type sock_type);
+
+    // ------------------------------------------------------------------------
+    // Copy constructor.
+    // XXX: We need to have a reference count here
+    // ------------------------------------------------------------------------
+    SocketImpNSPR (const SocketImpNSPR& sock) : BlockIO(sock)
+    {
+        m_local_addr      = sock.m_local_addr;
+        m_remote_addr     = sock.m_remote_addr;
+        m_handle          = sock.m_handle;
+        m_bound           = sock.m_bound;
+        m_type            = sock.m_type;
+    }
 
     // ------------------------------------------------------------------------
     // Destructor.  This currently does nothing.
@@ -319,6 +354,7 @@ protected:
     InetAddr          m_local_addr;  //: The local site's address structure
     InetAddr          m_remote_addr; //: The remote site's address structure
     SocketTypes::Type m_type;        //:
+    bool              m_bound;      //: Is the socket bound to a port yet (connect and bind do this)
 };
 
 }; // End of vpr namespace

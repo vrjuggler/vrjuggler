@@ -77,6 +77,12 @@ SocketStreamImpNSPR::listen (const int backlog)
     bool retval;
     PRStatus status;
 
+    if(!m_bound)        // To listen, we must be bound
+    {
+        vprDEBUG(0,0) << "SocketStreamImpNSPR::listen: Trying to listen on an unbound socket.\n" << vprDEBUG_FLUSH;
+        return false;
+    }
+
     // Put the socket into listning mode.  If that fails, print an error and
     // return error status.
     status = PR_Listen(m_handle, backlog);
@@ -95,9 +101,15 @@ SocketStreamImpNSPR::listen (const int backlog)
 // ----------------------------------------------------------------------------
 SocketStreamImpNSPR*
 SocketStreamImpNSPR::accept () {
-    PRFileDesc* accept_sock;
+    PRFileDesc* accept_sock(NULL);
     InetAddr addr;
-    SocketStreamImpNSPR* new_sock;
+    SocketStreamImpNSPR* new_sock(NULL);
+
+    if(!m_bound)        // To listen, we must be bound
+    {
+        vprDEBUG(0,0) << "SocketStreamImpNSPR::accept: Trying to accept on an unbound socket.\n" << vprDEBUG_FLUSH;
+        return false;
+    }
 
     // Accept an incoming connection request.
     vprASSERT(m_handle != NULL);
@@ -135,6 +147,10 @@ SocketStreamImpNSPR::SocketStreamImpNSPR (PRFileDesc* sock,
 
     // Copy the given vpr::InetAddr to the new object's member variable.
     m_remote_addr = remote_addr;
+
+    // The socket is open and bound (since it was created and is connected)
+    m_open = true;
+    m_bound = true;
 }
 
 }; // End of vpr namespace
