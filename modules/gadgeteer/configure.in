@@ -573,10 +573,11 @@ AC_OUTPUT(gadgeteer-config
           gadget/Devices/Open/Makefile
           gadget/Devices/Open/DTK/Makefile
           gadget/Devices/Open/Trackd/Makefile
-          gadget/Devices/Open/TrackdAPI/Makefile
           gadget/Devices/Polhemus/Makefile
           gadget/Devices/Polhemus/Fastrack/Makefile
           gadget/Devices/Sim/Makefile
+          gadget/Devices/VRCO/Makefile
+          gadget/Devices/VRCO/TrackdAPI/Makefile
           gadget/Devices/VirtualTechnologies/Makefile
           gadget/Devices/VirtualTechnologies/CyberGlove/Makefile
           gadget/RemoteInputManager/Makefile
