@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.15 of RCSfile: class_cxx_adapter.tmpl,v
+// Generated from Revision: 1.17 of RCSfile: class_cxx_adapter.tmpl,v
 
 
 #ifndef __GADGET_INPUT_ADAPTER__
@@ -51,9 +51,9 @@ public:
    /// Override for virtual function gadget::Input::config.
    virtual bool config(boost::shared_ptr<jccl::ConfigElement> p0)
    {
-      holder_p0_gadget_Input_config__boost_shared_ptr_jccl__ConfigElement* h_p0 = new holder_p0_gadget_Input_config__boost_shared_ptr_jccl__ConfigElement; h_p0->mPtr = p0;
+      holder_p0_gadget_Input_config__boost_shared_ptr_jccl__ConfigElement* h_p0 = new holder_p0_gadget_Input_config__boost_shared_ptr_jccl__ConfigElement;
+      h_p0->mPtr = p0;
       bool result = config_callback_boost_shared_ptr_jccl__ConfigElement(h_p0);
-      ;
       return result;
    }
 

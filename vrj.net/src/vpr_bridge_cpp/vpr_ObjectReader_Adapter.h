@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.15 of RCSfile: class_cxx_adapter.tmpl,v
+// Generated from Revision: 1.17 of RCSfile: class_cxx_adapter.tmpl,v
 
 
 #ifndef __VPR_OBJECTREADER_ADAPTER__
@@ -253,7 +253,8 @@ public:
    {
       char* marshal_p0 = (char*) malloc(sizeof(char) * 256);
       readString_callback_std_basic_string_char_std__char_traits_char__std__allocator_char__(&marshal_p0);
-      p0 = marshal_p0; free(marshal_p0);
+      p0 = marshal_p0;
+      free(marshal_p0);
    }
 
    typedef void (*readBool_callback_bool_t)(bool&);

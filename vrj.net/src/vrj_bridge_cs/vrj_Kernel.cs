@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from $Revision$ of $RCSfile$
+// Generated from Revision: 1.73 of RCSfile: class_cs.tmpl,v
 using System;
 using System.Runtime.InteropServices;
 using System.Reflection;
@@ -128,11 +128,11 @@ public sealed class Kernel
 
    [DllImport("vrj_bridge", CharSet = CharSet.Ansi)]
    private extern static void vrj_Kernel_loadConfigFile__char1(IntPtr obj,
-	ref sbyte p0);
+	sbyte p0);
 
-   public  void loadConfigFile(ref sbyte p0)
+   public  void loadConfigFile(sbyte p0)
    {
-      vrj_Kernel_loadConfigFile__char1(mRawObject, ref p0);
+      vrj_Kernel_loadConfigFile__char1(mRawObject, p0);
    }
 
 

@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.60 of RCSfile: class_cxx.tmpl,v
+// Generated from Revision: 1.62 of RCSfile: class_cxx.tmpl,v
 
 
 
@@ -44,18 +44,16 @@ extern "C"
    // Constructor wrapper.
    SHARPPY_API vpr::ReturnStatus* vpr_ReturnStatus_ReturnStatus__vpr_ReturnStatus(const vpr::ReturnStatus* p0)
    {
-      const vpr::ReturnStatus& marshal_p0 = *p0; // Pre-call marshaling for p0
+      const vpr::ReturnStatus& marshal_p0 = *p0;
       vpr::ReturnStatus* obj = new vpr::ReturnStatus(marshal_p0);
-      ; // Post-call marshaling for p0
       return obj;
    }
 
    // Constructor wrapper.
    SHARPPY_API vpr::ReturnStatus* vpr_ReturnStatus_ReturnStatus__vpr_ReturnStatus_Code(const vpr::ReturnStatus::Code* p0)
    {
-      const vpr::ReturnStatus::Code& marshal_p0 = *p0; // Pre-call marshaling for p0
+      const vpr::ReturnStatus::Code& marshal_p0 = *p0;
       vpr::ReturnStatus* obj = new vpr::ReturnStatus(marshal_p0);
-      ; // Post-call marshaling for p0
       return obj;
    }
 

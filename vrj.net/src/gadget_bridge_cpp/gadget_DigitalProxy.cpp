@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.60 of RCSfile: class_cxx.tmpl,v
+// Generated from Revision: 1.62 of RCSfile: class_cxx.tmpl,v
 
 
 
@@ -37,9 +37,8 @@ extern "C"
    // Constructor wrapper.
    SHARPPY_API gadget::DigitalProxy* gadget_DigitalProxy_DigitalProxy__gadget_DigitalProxy(const gadget::DigitalProxy* p0)
    {
-      const gadget::DigitalProxy& marshal_p0 = *p0; // Pre-call marshaling for p0
+      const gadget::DigitalProxy& marshal_p0 = *p0;
       gadget::DigitalProxy* obj = new gadget::DigitalProxy(marshal_p0);
-      ; // Post-call marshaling for p0
       return obj;
    }
 

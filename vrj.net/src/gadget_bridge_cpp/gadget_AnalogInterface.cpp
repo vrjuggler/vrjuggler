@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.60 of RCSfile: class_cxx.tmpl,v
+// Generated from Revision: 1.62 of RCSfile: class_cxx.tmpl,v
 
 
 
@@ -50,10 +50,9 @@ extern "C"
    // Constructor wrapper.
    SHARPPY_API gadget_AnalogInterface_Holder* gadget_DeviceInterface_gadget_AnalogProxy__DeviceInterface__gadget_AnalogInterface(const gadget::AnalogInterface* p0)
    {
-      const gadget::AnalogInterface& marshal_p0 = *p0; // Pre-call marshaling for p0
+      const gadget::AnalogInterface& marshal_p0 = *p0;
       gadget_AnalogInterface_Holder* obj = new gadget_AnalogInterface_Holder;
       obj->mPtr = gadget::AnalogInterface(marshal_p0);
-      ; // Post-call marshaling for p0
       return obj;
    }
 

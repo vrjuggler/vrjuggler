@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.73 of RCSfile: class_cs.tmpl,v
+// Generated from Revision: 1.74 of RCSfile: class_cs.tmpl,v
 using System;
 using System.Runtime.InteropServices;
 using System.Reflection;
@@ -139,12 +139,12 @@ public class Analog
 
    [DllImport("gadget_bridge", CharSet = CharSet.Ansi)]
    private extern static void gadget_Analog_normalizeMinToMax__float_float2(IntPtr obj,
-	ref float p0,
+	float p0,
 	ref float p1);
 
-   protected  void normalizeMinToMax(ref float p0, ref float p1)
+   protected  void normalizeMinToMax(float p0, ref float p1)
    {
-      gadget_Analog_normalizeMinToMax__float_float2(mRawObject, ref p0, ref p1);
+      gadget_Analog_normalizeMinToMax__float_float2(mRawObject, p0, ref p1);
    }
 
 

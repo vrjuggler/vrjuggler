@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.60 of RCSfile: class_cxx.tmpl,v
+// Generated from Revision: 1.62 of RCSfile: class_cxx.tmpl,v
 
 
 
@@ -38,7 +38,7 @@ extern "C"
    // Constructor wrapper.
    SHARPPY_API vrj_SoundManager_Adapter* vrj_SoundManager_SoundManager__vrj_SoundManager(const vrj::SoundManager* p0, vrj_SoundManager_Adapter::configAdd_callback_boost_shared_ptr_jccl__ConfigElement_t cb0, vrj_SoundManager_Adapter::configRemove_callback_boost_shared_ptr_jccl__ConfigElement_t cb1, vrj_SoundManager_Adapter::configCanHandle_callback_boost_shared_ptr_jccl__ConfigElement_t cb2, vrj_SoundManager_Adapter::update_callback_t cb3, vrj_SoundManager_Adapter::sync_callback_t cb4, vrj_SoundManager_Adapter::configProcessPending_callback_t cb5)
    {
-      const vrj::SoundManager& marshal_p0 = *p0; // Pre-call marshaling for p0
+      const vrj::SoundManager& marshal_p0 = *p0;
       vrj_SoundManager_Adapter* obj = new vrj_SoundManager_Adapter(marshal_p0);
       obj->configAdd_callback_boost_shared_ptr_jccl__ConfigElement = cb0;
       obj->configRemove_callback_boost_shared_ptr_jccl__ConfigElement = cb1;
@@ -46,7 +46,6 @@ extern "C"
       obj->update_callback = cb3;
       obj->sync_callback = cb4;
       obj->configProcessPending_callback = cb5;
-      ; // Post-call marshaling for p0
       return obj;
    }
 

@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.60 of RCSfile: class_cxx.tmpl,v
+// Generated from Revision: 1.62 of RCSfile: class_cxx.tmpl,v
 
 
 
@@ -76,7 +76,7 @@ extern "C"
 
 
    // Wrapper for non-virtual method gadget::Analog::normalizeMinToMax()
-   SHARPPY_API void gadget_Analog_normalizeMinToMax__float_float2(gadget_Analog_Adapter* self_, const float& p0, float& p1)
+   SHARPPY_API void gadget_Analog_normalizeMinToMax__float_float2(gadget_Analog_Adapter* self_, const float p0, float& p1)
    {
       self_->normalizeMinToMax(p0, p1);
    }

@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.15 of RCSfile: class_cxx_adapter.tmpl,v 
+// Generated from Revision: 1.17 of RCSfile: class_cxx_adapter.tmpl,v
 
 
 #ifndef __VRJ_SOUNDMANAGER_ADAPTER__
@@ -65,9 +65,9 @@ public:
    /// Override for virtual function vrj::SoundManager::configAdd.
    virtual bool configAdd(boost::shared_ptr<jccl::ConfigElement> p0)
    {
-      holder_p0_vrj_SoundManager_configAdd__boost_shared_ptr_jccl__ConfigElement* h_p0 = new holder_p0_vrj_SoundManager_configAdd__boost_shared_ptr_jccl__ConfigElement; h_p0->mPtr = p0;
+      holder_p0_vrj_SoundManager_configAdd__boost_shared_ptr_jccl__ConfigElement* h_p0 = new holder_p0_vrj_SoundManager_configAdd__boost_shared_ptr_jccl__ConfigElement;
+      h_p0->mPtr = p0;
       bool result = configAdd_callback_boost_shared_ptr_jccl__ConfigElement(h_p0);
-      ;
       return result;
    }
 
@@ -78,9 +78,9 @@ public:
    /// Override for virtual function vrj::SoundManager::configRemove.
    virtual bool configRemove(boost::shared_ptr<jccl::ConfigElement> p0)
    {
-      holder_p0_vrj_SoundManager_configRemove__boost_shared_ptr_jccl__ConfigElement* h_p0 = new holder_p0_vrj_SoundManager_configRemove__boost_shared_ptr_jccl__ConfigElement; h_p0->mPtr = p0;
+      holder_p0_vrj_SoundManager_configRemove__boost_shared_ptr_jccl__ConfigElement* h_p0 = new holder_p0_vrj_SoundManager_configRemove__boost_shared_ptr_jccl__ConfigElement;
+      h_p0->mPtr = p0;
       bool result = configRemove_callback_boost_shared_ptr_jccl__ConfigElement(h_p0);
-      ;
       return result;
    }
 
@@ -91,9 +91,9 @@ public:
    /// Override for virtual function vrj::SoundManager::configCanHandle.
    virtual bool configCanHandle(boost::shared_ptr<jccl::ConfigElement> p0)
    {
-      holder_p0_vrj_SoundManager_configCanHandle__boost_shared_ptr_jccl__ConfigElement* h_p0 = new holder_p0_vrj_SoundManager_configCanHandle__boost_shared_ptr_jccl__ConfigElement; h_p0->mPtr = p0;
+      holder_p0_vrj_SoundManager_configCanHandle__boost_shared_ptr_jccl__ConfigElement* h_p0 = new holder_p0_vrj_SoundManager_configCanHandle__boost_shared_ptr_jccl__ConfigElement;
+      h_p0->mPtr = p0;
       bool result = configCanHandle_callback_boost_shared_ptr_jccl__ConfigElement(h_p0);
-      ;
       return result;
    }
 

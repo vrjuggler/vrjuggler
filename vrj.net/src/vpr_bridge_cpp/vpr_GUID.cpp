@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.60 of RCSfile: class_cxx.tmpl,v
+// Generated from Revision: 1.62 of RCSfile: class_cxx.tmpl,v
 
 
 
@@ -37,9 +37,8 @@ extern "C"
    // Constructor wrapper.
    SHARPPY_API vpr::GUID* vpr_GUID_GUID__vpr_GUID_GenerateTag(const vpr::GUID::GenerateTag* p0)
    {
-      const vpr::GUID::GenerateTag& marshal_p0 = *p0; // Pre-call marshaling for p0
+      const vpr::GUID::GenerateTag& marshal_p0 = *p0;
       vpr::GUID* obj = new vpr::GUID(marshal_p0);
-      ; // Post-call marshaling for p0
       return obj;
    }
 
@@ -53,9 +52,8 @@ extern "C"
    // Constructor wrapper.
    SHARPPY_API vpr::GUID* vpr_GUID_GUID__vpr_GUID_StdGUID(const vpr::GUID::StdGUID* p0)
    {
-      const vpr::GUID::StdGUID& marshal_p0 = *p0; // Pre-call marshaling for p0
+      const vpr::GUID::StdGUID& marshal_p0 = *p0;
       vpr::GUID* obj = new vpr::GUID(marshal_p0);
-      ; // Post-call marshaling for p0
       return obj;
    }
 
@@ -69,18 +67,16 @@ extern "C"
    // Constructor wrapper.
    SHARPPY_API vpr::GUID* vpr_GUID_GUID__vpr_GUID_std_basic_string_char_std__char_traits_char__std__allocator_char__(const vpr::GUID* p0, const char* p1)
    {
-      const vpr::GUID& marshal_p0 = *p0; // Pre-call marshaling for p0
+      const vpr::GUID& marshal_p0 = *p0;
       vpr::GUID* obj = new vpr::GUID(marshal_p0, p1);
-      ; // Post-call marshaling for p0
       return obj;
    }
 
    // Constructor wrapper.
    SHARPPY_API vpr::GUID* vpr_GUID_GUID__vpr_GUID(const vpr::GUID* p0)
    {
-      const vpr::GUID& marshal_p0 = *p0; // Pre-call marshaling for p0
+      const vpr::GUID& marshal_p0 = *p0;
       vpr::GUID* obj = new vpr::GUID(marshal_p0);
-      ; // Post-call marshaling for p0
       return obj;
    }
 
@@ -190,9 +186,8 @@ extern "C"
    // Constructor wrapper.
    SHARPPY_API vpr::GUID::GenerateTag* vpr_GUID_GenerateTag_GenerateTag__vpr_GUID_GenerateTag(const vpr::GUID::GenerateTag* p0)
    {
-      const vpr::GUID::GenerateTag& marshal_p0 = *p0; // Pre-call marshaling for p0
+      const vpr::GUID::GenerateTag& marshal_p0 = *p0;
       vpr::GUID::GenerateTag* obj = new vpr::GUID::GenerateTag(marshal_p0);
-      ; // Post-call marshaling for p0
       return obj;
    }
 
@@ -217,9 +212,8 @@ extern "C"
    // Constructor wrapper.
    SHARPPY_API vpr::GUID::StdGUID* vpr_GUID_StdGUID_StdGUID__vpr_GUID_StdGUID(const vpr::GUID::StdGUID* p0)
    {
-      const vpr::GUID::StdGUID& marshal_p0 = *p0; // Pre-call marshaling for p0
+      const vpr::GUID::StdGUID& marshal_p0 = *p0;
       vpr::GUID::StdGUID* obj = new vpr::GUID::StdGUID(marshal_p0);
-      ; // Post-call marshaling for p0
       return obj;
    }
 
@@ -244,9 +238,8 @@ extern "C"
    // Constructor wrapper.
    SHARPPY_API vpr::GUID::hash* vpr_GUID_hash_hash__vpr_GUID_hash(const vpr::GUID::hash* p0)
    {
-      const vpr::GUID::hash& marshal_p0 = *p0; // Pre-call marshaling for p0
+      const vpr::GUID::hash& marshal_p0 = *p0;
       vpr::GUID::hash* obj = new vpr::GUID::hash(marshal_p0);
-      ; // Post-call marshaling for p0
       return obj;
    }
 
