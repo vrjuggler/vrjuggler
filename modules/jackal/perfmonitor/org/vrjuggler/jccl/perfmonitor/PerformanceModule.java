@@ -158,6 +158,7 @@ public class PerformanceModule extends DefaultCoreModule {
 
 
     public PerfDataCollector addCollector (PerfDataCollector pdc) {
+	System.out.println ("Added collector: " + pdc.getName());
         synchronized (collectors) {
             collectors.add (pdc);
         }
@@ -174,22 +175,24 @@ public class PerformanceModule extends DefaultCoreModule {
 	Document doc;
 	DocumentBuilderFactory factory = 
 	    DocumentBuilderFactory.newInstance();
-
+	System.out.println ("read xml stream");
 	// build the XML stream into a DOM tree
 	try {
 	    DocumentBuilder builder = factory.newDocumentBuilder();
 	    doc = builder.parse (instream);
 	    interpretXMLCommands (doc);
-	    //buildChunkDB (db, doc, iostatus);
 	}
-	catch (javax.xml.parsers.ParserConfigurationException e1) {
-	    //iostatus.addFailure (e1);
-	}
-	catch (org.xml.sax.SAXException e2) {
-	    //iostatus.addFailure (e2);
-	}
-	catch (IOException e3) {
-	    //iostatus.addFailure (e3);
+//  	catch (javax.xml.parsers.ParserConfigurationException e1) {
+//  	    //iostatus.addFailure (e1);
+//  	}
+//  	catch (org.xml.sax.SAXException e2) {
+//  	    //iostatus.addFailure (e2);
+//  	}
+//  	catch (IOException e3) {
+//  	    //iostatus.addFailure (e3);
+//  	}
+	catch (Exception ex) {
+	    ex.printStackTrace();
 	}
     }
 
@@ -202,6 +205,8 @@ public class PerformanceModule extends DefaultCoreModule {
         boolean retval = true;
         Node child;
 
+	System.out.println ("interpretXMLCommands");
+
         switch (doc.getNodeType()) {
         case Node.DOCUMENT_NODE:
         case Node.DOCUMENT_FRAGMENT_NODE:
@@ -212,7 +217,14 @@ public class PerformanceModule extends DefaultCoreModule {
             }
             break;
         case Node.ELEMENT_NODE:
-            if (name.equalsIgnoreCase ("protocol")) {
+	    if (name.equalsIgnoreCase ("jcclstream")) {
+		child = doc.getFirstChild();
+		while (child != null) {
+		    interpretXMLCommands (child);
+		    child = child.getNextSibling();
+		}
+	    }
+            else if (name.equalsIgnoreCase ("protocol")) {
 		// should check to verify it's jccl_protocol...
 		child = doc.getFirstChild();
 		while (child != null) {
@@ -223,23 +235,29 @@ public class PerformanceModule extends DefaultCoreModule {
 	    else if (name.equals ("labeledbuffer")) {
                 attributes = doc.getAttributes();
                 attrcount = attributes.getLength();
-		String buffername;
+		String buffername = null;
                 for (i = 0; i < attrcount; i++) {
                     child = attributes.item(i);
                     if (child.getNodeName().equals ("name")) {
 			buffername = child.getNodeValue();
 		    }
                 }
-		PerfDataCollector pdc = getCollector (name);
-		if (pdc == null) {
-		    pdc = new LabeledPerfDataCollector (name, max_samples);
-		    addCollector (pdc);
-		}
-		if (pdc instanceof LabeledPerfDataCollector) {
-		    ((LabeledPerfDataCollector)pdc).interpretXMLData (doc);
+		if (buffername != null) {
+		    PerfDataCollector pdc = getCollector (buffername);
+		    if (pdc == null) {
+			pdc = new LabeledPerfDataCollector (buffername, 
+							    max_samples);
+			addCollector (pdc);
+		    }
+		    if (pdc instanceof LabeledPerfDataCollector) {
+			((LabeledPerfDataCollector)pdc).interpretXMLData (doc);
+		    }
+		    else {
+			System.out.println ("perfdatacollector type mismatch");
+		    }
 		}
 		else {
-		    System.out.println ("perfdatacollector type mismatch");
+		    System.out.println ("buffername wasn't specified...");
 		}
 		
 	    }
