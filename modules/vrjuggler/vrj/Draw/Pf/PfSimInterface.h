@@ -42,7 +42,8 @@
 
 namespace vrj
 {
-   /**
+   /** \class PfSimInterface PfSimInterface.h vrj/Draw/Pf/PfSimInterface.h
+    *
     * Interface for objects that wish to perform simulator function with an
     * OpenGL application.
     */

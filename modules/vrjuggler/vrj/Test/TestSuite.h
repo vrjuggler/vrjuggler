@@ -44,11 +44,9 @@ namespace test
 
 {
 
-/**
-*
-*
-* 
-*/
+/** \class TestSuite TestSuite.h vrj/Test/TestSuite.h
+ *
+ */
 class TestSuite
 {
 

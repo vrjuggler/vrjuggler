@@ -49,7 +49,10 @@
 namespace vrj
 {
 
-/** Draw a basic ellipsoid head. */ 
+/** \class GlDrawEllipsoidHeadFunctor GlDrawHeadFunctors.h vrj/Draw/OGL/GlDrawHeadFunctors.h
+ *
+ * Draw a basic ellipsoid head.
+ */ 
 class GlDrawEllipsoidHeadFunctor : public GlDrawObjectFunctor
 {
 public:

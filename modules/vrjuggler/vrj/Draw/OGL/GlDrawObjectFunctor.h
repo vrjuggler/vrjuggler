@@ -41,10 +41,11 @@ namespace vrj
 
 class User;
 
-/**
+/** \class GlDrawObjectFunctor GlDrawObjectFunctor.h vrj/Draw/OGL/GlDrawObjectFunctor.h
+ *
  * Base interface for an object drawing functor.
  * 
- * Any GL draw objects should be derived from this class.
+ * Any OpenGL draw objects should be derived from this class.
  * This is used for drawing things such as wands and gloves.
  */
 class GlDrawObjectFunctor
@@ -61,9 +62,9 @@ public:
    virtual void draw(vrj::User* user) = 0;
 };
 
-/**
- * Base class for glove drawing.
- * Adds a function for setting glove parameters.
+/** \class GlDrawGloveObjectFunctor GlDrawObjectFunctor.h vrj/Draw/OGL/GlDrawObjectFunctor.h
+ *
+ * Base class for glove drawing.  Adds a function for setting glove parameters.
  */
 class GlDrawGloveObjectFunctor : public GlDrawObjectFunctor
 {

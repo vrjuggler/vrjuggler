@@ -46,7 +46,8 @@ class DrawManager;
 class Kernel;
 class SoundManager;
 
-/**
+/** \class App App.h vrj/Kernel/App.h
+ *
  * Encapsulates the actual application.
  *
  * This defines the base class for all graphics API-specific application

@@ -51,22 +51,25 @@ namespace vrj {
 namespace test
 {
 
-/**
-* This is the exception that is thrown when a test fails.
-*
-* It contains enough information to give a description of
-* what failed and to track this a little bit.
-*
-* These are collected to track the failed tests.
-* 
-*/
+/** \class TestFailure TestFailure.h vrj/Test/TestFailure.h
+ * 
+ * This is the exception that is thrown when a test fails.
+ *
+ * It contains enough information to give a description of
+ * what failed and to track this a little bit.
+ *
+ * These are collected to track the failed tests.
+ */
 class TestFailure : public std::exception
 {
 public:
    TestFailure(Test* failedTest, vrj::test::Message message, 
-               const std::string& fileName, int lineNumber) throw()
-      : mFailedTest(failedTest), mMessage(message), 
-        mFileName(fileName), mLineNumber(lineNumber)
+               const std::string& fileName, int lineNumber)
+      throw()
+      : mFailedTest(failedTest)
+      , mMessage(message)
+      , mFileName(fileName)
+      , mLineNumber(lineNumber)
    {
 
    }
@@ -75,19 +78,29 @@ public:
    {;}
 
    Test* getFailedTest()
-   { return mFailedTest; }
+   {
+      return mFailedTest;
+   }
 
    std::string getFailedTestName()
-   { return mFailedTest->getName(); }
+   {
+      return mFailedTest->getName();
+   }
 
    vrj::test::Message getMessage() const
-   { return mMessage; }
+   {
+      return mMessage;
+   }
    
    std::string getFileName() const
-   { return mFileName; }
+   {
+      return mFileName;
+   }
 
    int getLineNumber() const
-   { return mLineNumber; }
+   {
+      return mLineNumber;
+   }
 
    std::string getFullDescription()
    {
@@ -112,5 +125,5 @@ protected:
 
 } }
 
-#endif
 
+#endif

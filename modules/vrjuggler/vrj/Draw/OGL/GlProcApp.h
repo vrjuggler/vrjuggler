@@ -41,7 +41,10 @@ using namespace vrj;    // Use vrj namespace for simplicity
 namespace vrj
 {
 
-/** Class to wrap a bunch of callback method for a GL app. */
+/** \class GlProcAppWrapper GlProcApp.h vrj/Draw/OGL/GlProcApp.h
+ *
+ * Class to wrap a bunch of callback method for an OpenGL app.
+ */
 class GlProcAppWrapper : public vrj::GlApp
 {
 public:
@@ -50,58 +53,88 @@ public:
 public:
    GlProcAppWrapper()      
    {;}
+
    virtual ~GlProcAppWrapper()
    {;}
 
 public:  //** Getters and setters for the callback methods */
    void setDrawMethod(callback_t f)
-   { mDrawMethod = f; }
+   {
+      mDrawMethod = f;
+   }
+
    void setContextInitMethod(callback_t f)
-   { mContextInit = f; }
+   {
+      mContextInit = f;
+   }
+
    void setBufferPredrawMethod(callback_t f)
-   { mBufferPredrawMethod = f; }
+   {
+      mBufferPredrawMethod = f;
+   }
+
    void setPreFrameMethod(callback_t f)
-   { mPreframeMethod = f; }
+   {
+      mPreframeMethod = f;
+   }
+
    void setPostFrameMethod(callback_t f)
-   { mPostframeMethod = f; }
+   {
+      mPostframeMethod = f;
+   }
+
    void setIntraFrameMethod(callback_t f)
-   { mIntraframeMethod = f; }
+   {
+      mIntraframeMethod = f;
+   }
 
 public:
    virtual void draw()
    {
       if (!mDrawMethod.empty())
-      {  mDrawMethod(); }
+      {
+         mDrawMethod();
+      }
    }
 
    virtual void contextInit()
    {
       if (!mContextInit.empty())
-      {  mContextInit(); }
+      {
+         mContextInit();
+      }
    }
 
    virtual void bufferPreDraw()
    {
       if (!mBufferPredrawMethod.empty())
-      {  mBufferPredrawMethod(); }
+      {
+         mBufferPredrawMethod();
+      }
    }
 
    virtual void preFrame()
    {
       if (!mPreframeMethod.empty())
-      {  mPreframeMethod(); }
+      {
+         mPreframeMethod();
+      }
    }
 
    virtual void intraFrame()
    {
       if (!mIntraframeMethod.empty())
-      {  mIntraframeMethod(); }
+      {
+         mIntraframeMethod();
+      }
    }
 
    virtual void postFrame()
    {
       if (!mPostframeMethod.empty())
-      {  mPostframeMethod(); }
+      {
+         mPostframeMethod();
+      }
    }
 
 protected:
@@ -115,7 +148,9 @@ protected:
 
 }
 
-/** Set of procedures for wrapping an application using a procedural interface */
+/**
+ * Set of procedures for wrapping an application using a procedural interface.
+ */
 namespace
 {
    vrj::GlProcAppWrapper proc_app_singleton;    /** The singleton application to use */
@@ -163,7 +198,9 @@ namespace vrj
       if (argc <= 1)
       {
          std::cout << "\n\n";
-         std::cout << "Usage: " << argv[0] << " vjconfigfile[0] vjconfigfile[1] ... vjconfigfile[n]" << std::endl;
+         std::cout << "Usage: " << argv[0]
+                   << " vjconfigfile[0] vjconfigfile[1] ... vjconfigfile[n]"
+                   << std::endl;
          exit(1);
       }
 
@@ -193,4 +230,3 @@ namespace vrj
 
 
 #endif
-

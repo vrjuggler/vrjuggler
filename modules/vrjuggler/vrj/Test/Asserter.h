@@ -43,20 +43,25 @@ namespace test
 
 namespace  Asserter
 {
-   /** Throw failure exception with given message and line number info
-   */
-   void fail( vrj::test::Test* test, vrj::test::Message message, std::string filename, int linenum )
+   /** Throw failure exception with given message and line number info. */
+   void fail(vrj::test::Test* test, vrj::test::Message message,
+             const std::string& filename, const int linenum)
    {
-      throw vrj::test::TestFailure(test, message, filename, linenum);                
+      throw vrj::test::TestFailure(test, message, filename, linenum);
    }
 
-   /** Throws an exception with given message and line information
-   * if shouldFail == true
-   */
-   void failIf( bool shouldFail, vrj::test::Test* test, vrj::test::Message message, std::string filename, int linenum )
+   /**
+    * Throws an exception with given message and line information.
+    * if shouldFail == true.
+    */
+   void failIf(const bool shouldFail, vrj::test::Test* test,
+               vrj::test::Message message, const std::string& filename,
+               const int linenum)
    {
       if( shouldFail )
-         fail(test,message,filename,linenum);
+      {
+         fail(test, message, filename, linenum);
+      }
    }
 }
 

@@ -45,6 +45,10 @@
 namespace vrj
 {
 
+/** \class SimViewport SimViewport.h vrj/Display/SimViewport.h
+ *
+ * Simulator viewport.
+ */
 class VJ_CLASS_API SimViewport : public Viewport
 {
 public:

@@ -44,7 +44,8 @@ namespace vrj
 
 class Matrix;
 
-/**
+/** \class TrackedSurfaceProjection TrackedSurfaceProjection.h vrj/Display/TrackedSurfaceProjection.h
+ *
  * Wall-specific class for viewport definitions.
  *
  * This class behaves the same as the SurfaceProjection class except that it is
@@ -54,27 +55,35 @@ class Matrix;
 class TrackedSurfaceProjection : public SurfaceProjection
 {
 public:
-
    /**
     * Constructs a Tracked wall projection.
     *
-    * @param tracker_name Name of the tracker tracking the screen.
+    * @param llCorner    Lower left corner.
+    * @param lrCorner    Lower right corner.
+    * @param urCorner    Upper right corner.
+    * @param ulCorner    Upper left corner.
+    * @param trackerName Name of the tracker tracking the screen.
     */
-   TrackedSurfaceProjection(gmtl::Point3f llCorner, gmtl::Point3f lrCorner,
-                    gmtl::Point3f urCorner, gmtl::Point3f ulCorner,std::string trackerName):
-                    SurfaceProjection(llCorner,lrCorner,urCorner,ulCorner)
+   TrackedSurfaceProjection(const gmtl::Point3f& llCorner,
+                            const gmtl::Point3f& lrCorner,
+                            const gmtl::Point3f& urCorner,
+                            const gmtl::Point3f& ulCorner,
+                            const std::string& trackerName)
+      : SurfaceProjection(llCorner, lrCorner, urCorner, ulCorner)
+      , mOriginalLLCorner(llCorner)
+      , mOriginalLRCorner(lrCorner)
+      , mOriginalURCorner(urCorner)
+      , mOriginalULCorner(ulCorner)
    {
-      mOrigionalLLCorner=llCorner;
-      mOrigionalLRCorner=lrCorner;
-      mOrigionalURCorner=urCorner;
-      mOrigionalULCorner=ulCorner;
-
       //XXX: Watch for timing problems here if trakcer is not inited first.
       //     It shoulbe be though from dependency checking
       mTracker.init(trackerName);              // Intialize the tracker
    }
 
-   virtual ~TrackedSurfaceProjection() {}
+   virtual ~TrackedSurfaceProjection()
+   {
+      /* Do nothing. */ ;
+   }
 
    virtual void config(jccl::ConfigElementPtr element)
    {
@@ -83,31 +92,42 @@ public:
 
    /**
     * Recalculate the projection matrix.
-    * @pre eyePos is scaled by position factor.
-    * @pre scaleFactor is the scale current used
-    * @post frustum has been recomputed for given eyePos.
+    *
+    * @pre \p eyePos is scaled by position factor.  \p scaleFactor is the
+    *      scale currently used.
+    * @post Frustum has been recomputed for given \p eyePos.
     */
-   virtual void calcViewMatrix(gmtl::Matrix44f& eyePos, const float scaleFactor);
+   virtual void calcViewMatrix(gmtl::Matrix44f& eyePos,
+                               const float scaleFactor);
 
-   /** Update the parameters of the tracked surface */
+   /** Update the parameters of the tracked surface. */
    void updateSurfaceParams(const float scaleFactor);
 
    std::ostream& outStream(std::ostream& out,
                            const unsigned int indentLevel = 0);
 
 private:
-   /** Tracker connected to the surface.
-   * The surface coordinate system is relative to this tracker
-   * base_M_surfacetrans
-   */
+   /**
+    * Tracker connected to the surface.
+    * The surface coordinate system is relative to this tracker
+    * base_M_surfacetrans.
+    */
    gadget::PositionInterface    mTracker;
 
-   /** Original surface coordinates.
-   * TrackedSurfaceProjections keep these so they can rotate
-   * them and feed them into the SurfaceProjection calculations
-   */
-   gmtl::Point3f mOrigionalLLCorner, mOrigionalLRCorner, mOrigionalURCorner, mOrigionalULCorner;
+   /**
+    * Original surface coordinates.
+    * TrackedSurfaceProjections keep these so they can rotate them and feed
+    * them into the SurfaceProjection calculations.
+    */
+   //@{
+   gmtl::Point3f mOriginalLLCorner;
+   gmtl::Point3f mOriginalLRCorner;
+   gmtl::Point3f mOriginalURCorner;
+   gmtl::Point3f mOriginalULCorner;
+   //@}
 };
 
-};
+}
+
+
 #endif

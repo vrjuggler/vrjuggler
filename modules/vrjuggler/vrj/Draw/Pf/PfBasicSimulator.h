@@ -47,7 +47,9 @@
 
 namespace vrj
 {
-/**
+
+/** \class PfBasicSimulator PfBasicSimulator.h vrj/Draw/Pf/PfBasicSimulator.h
+ *
  * Interface for objects that wish to perform simulator function with an
  * OpenGL application.
  */
@@ -58,11 +60,12 @@ public:
 
    virtual ~PfBasicSimulator() {}
 
-   /*
-   * Configure the basic simulator config
-   * @pre element is a valid configuration element.
-   * @post It should be configured
-   */
+   /**
+    * Configures the basic simulator config
+    *
+    * @pre element is a valid configuration element.
+    * @post It should be configured
+    */
    virtual bool config(jccl::ConfigElementPtr element);
 
    static std::string getElementType()
@@ -82,28 +85,39 @@ public:
    virtual void setKeyboardMouse(gadget::KeyboardMouseInterface kmInterface);
 
 public:
-   gmtl::Matrix44f getCameraPos()
-   { return mCameraPos; }
+   const gmtl::Matrix44f& getCameraPos()
+   {
+      return mCameraPos;
+   }
 
-   gmtl::Matrix44f getHeadPos()
-   { return mHeadPos; }
+   const gmtl::Matrix44f& getHeadPos()
+   {
+      return mHeadPos;
+   }
 
-   gmtl::Matrix44f getWandPos()
-   { return mWandPos; }
+   const gmtl::Matrix44f& getWandPos()
+   {
+      return mWandPos;
+   }
 
    virtual void updateProjectionData(const float positionScale,
-                                     Projection* leftProj, Projection* rightProj);
+                                     Projection* leftProj,
+                                     Projection* rightProj);
 
-   /**  Update internal simulator data */
+   /** Update internal simulator data. */
    void updateInternalData(float positionScale);
 
 public:  // Sim Drawing parameters
 /*
    bool shouldDrawProjections()
-   { return mDrawProjections; }
+   {
+      return mDrawProjections;
+   }
 
-   gmtl::Vec3f getSurfaceColor()
-   { return mSurfaceColor; }
+   const gmtl::Vec3f& getSurfaceColor()
+   {
+      return mSurfaceColor;
+   }
 */
    virtual void updateSimulatorSceneGraph();
    bool configPerformerAPI(jccl::ConfigElementPtr element);
@@ -112,9 +126,11 @@ public:  // Sim Drawing parameters
 protected:
    SimViewport*   mSimViewport;
 
-   // Drawing attributes
+   /** @name Drawing attributes */
+   //@{
    bool           mDrawProjections;       /**< Should we draw projections */
    gmtl::Vec3f    mSurfaceColor;   /**< Color to draw surfaces */
+   //@}
 
    gadget::PositionInterface mCamera; /**< Proxy interfaces to devices needed */
    gadget::PositionInterface mWand;
@@ -133,10 +149,9 @@ protected:
    std::string       mHeadModel;    /**< The head model file path */
    std::string       mWandModel;    /**< The wand model file path */
    //@}
-
 };
 
 }
 
-#endif
 
+#endif

@@ -51,7 +51,8 @@
 namespace vrj
 {
 
-/**
+/** \class OsgApp OsgApp.h vrj/Draw/OSG/OsgApp.h
+ *
  * Encapulates an Open Scene Graph (OSG) application.  This defines the base
  * class from which OSG-based application classes should be derived.  It makes
  * use of the OpenGL Draw Manager.

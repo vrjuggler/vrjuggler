@@ -69,9 +69,9 @@ void PfDrawFunc(pfChannel *chan, void* chandata,bool left_eye, bool right_eye,
                 bool stereo, bool simulator);
 void PfAppFunc(pfChannel *chan, void* chandata);
 
-/**
- * Concrete singleton class for API-specific Draw Manager for OpenGL Performer.
+/** \class PfDrawManager PfDrawManager.h vrj/Draw/Pf/PfDrawmanager.h
  *
+ * Concrete singleton class for API-specific Draw Manager for OpenGL Performer.
  * Responsible for all Performer rendering and windowing.
  */
 class VJ_CLASS_API PfDrawManager : public DrawManager
@@ -112,14 +112,18 @@ protected:
 
    struct pfDisplay_disp : public std::unary_function<pfDisplay,Display*>
    {
-     Display* operator()(const pfDisplay disp) const { return disp.disp; }
+      Display* operator()(const pfDisplay disp) const
+      {
+         return disp.disp;
+      }
    };
 
    /*
    struct findPfDispChan : unary_function<pfDisp, bool>
    {
       findPfDispChan(pfChannel* chan) : mChan(chan) {;}
-      bool operator()(pfDisp disp) {
+      bool operator()(pfDisp disp)
+      {
          return ((disp.chans[0] == mChan) || (disp.chans[1] == mChan));
       }
       pfChannel* mChan;                // Channel to find
@@ -127,7 +131,8 @@ protected:
    */
 
 
-   // Helper functions that keep track of the PfInputHandlers.
+   /** @name Helper functions that keep track of the PfInputHandlers */
+   //@{
 public:
    /** Adds a PfInputHandler to the map. */
    static void addPfInputHandler(WINKEY win, PfInputHandler* pf_handler);
@@ -140,6 +145,7 @@ public:
 
 protected:
    static std::map< WINKEY, PfInputHandler* > mPfInputMap; /**< Map of all PfInputHandlers */
+   //@}
 
 public:
    /**
@@ -325,7 +331,8 @@ protected:
    // --- Config Data --- //
    unsigned int mNumPipes;    /**< The number of Performer pipes */
 
-   // --- Performer State --- //
+   /** @name Performer State */
+   //@{
    PfApp*                  mApp;              /**< The user application. */
    std::vector<pfDisplay>  mDisplays;         /**< All Performer displays. */
    std::vector<PfInputHandler*> mPfInputHandlers; /**< Input Handlers for all Performer windows. */
@@ -334,6 +341,7 @@ protected:
    std::vector<pfChannel*> mSimChannels;        /**< List of sim displays. */
    pfChannel*              mSurfMasterChan;  /**< Master channel. */
    pfChannel*              mSimMasterChan;   /**< Master channel for simulators. */
+   //@}
 
    std::vector<pfPipe*>    mPipes;       /**< Performer pipes we have opened. */
    std::vector<std::string> mPipeStrs;   /**< The X11 names of the pipes. */

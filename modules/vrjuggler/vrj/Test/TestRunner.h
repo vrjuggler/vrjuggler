@@ -50,29 +50,33 @@ namespace vrj {
 namespace test
 {
 
-/**
-*
-* Groups tests together and is also in charge of running
-* them and capturing a list of any failures that occur.
-*/
+/** \class TestRunner TestRunner.h vrj/Test/TestRunner.h
+ *
+ * Groups tests together and is also in charge of running
+ * them and capturing a list of any failures that occur.
+ */
 class TestRunner
 {
 public:
    enum State
-   { Uninitialized,
-     Processing,
-     DoneProcessing
+   {
+      Uninitialized,
+      Processing,
+      DoneProcessing
    };
 
 public:
    TestRunner()
-      : mApp(NULL), mCurState(Uninitialized), mCurTestIndex(-1)
+      : mApp(NULL)
+      , mCurState(Uninitialized)
+      , mCurTestIndex(-1)
    {;}
 
-   /** Initialize the test suite.
-   * Must be called before running the tests and
-   * after all tests have been added.
-   */
+   /**
+    * Initializes the test suite.
+    * Must be called before running the tests and after all tests have been
+    * added.
+    */
    void initialize(vrj::App* app)
    {
       mApp = app;
@@ -90,9 +94,10 @@ public:
       mCurState = Processing;
    }
 
-   /** Progresses the state of testing 
-   * Called at the end of preFrame by apps that want to run tests.
-   */
+   /**
+    * Progresses the state of testing.
+    * Called at the end of preFrame by apps that want to run tests.
+    */
    void processTests()
    {
       vprASSERT(NULL != mApp);
@@ -149,15 +154,16 @@ public:
       mTests.push_back(test);
    }
 
-   /** Are the tests done processing
-   * @return true - There is no more processing to do
-   */
+   /**
+    * Are the tests done processing?
+    * @return true if there is no more processing to do.
+    */
    State getState()
-   { return mCurState; }
-      
+   {
+      return mCurState;
+   }
 
-
-   /** Print out the test failures */
+   /** Prints out the test failures. */
    void printFailures()
    {
       if(mTestFailures.empty())
@@ -186,5 +192,5 @@ protected:
 
 } }
 
-#endif
 
+#endif

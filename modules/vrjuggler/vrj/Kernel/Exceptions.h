@@ -40,7 +40,8 @@
 namespace vrj
 {
 
-/**
+/** \class ManagerException Exceptions.h vrj/Kernel/Exceptions.h
+ *
  * General exception type for managers held by vrj::Kernel.
  */
 class ManagerException : public std::exception
@@ -65,7 +66,8 @@ protected:
    std::string mMessage;
 };
 
-/**
+/** \class DrawMgrException Exceptions.h vrj/Kernel/Exceptions.h
+ *
  * Exception type to be used by Draw Managers.
  */
 class DrawMgrException : public ManagerException
