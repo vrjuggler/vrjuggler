@@ -1,0 +1,84 @@
+<HTML>
+<HEAD>
+<TITLE>Sim Digital</TITLE>
+</HEAD>
+
+<BODY BGCOLOR="#ffffcc">
+
+<H2>Sim Digital Chunk</H2>
+
+<TABLE BORDER="1">
+  <TR>
+    <TD ALIGN="RIGHT">
+      <B>Sim Digital</B>
+    </TD>
+    <TD>
+      Chunk token: ``<TT>SimDigital</TT>''<BR>
+      Defines a simulated digital device.  It uses a user-specified keyboard
+      proxy to accomplish this simulation.
+    </TD>
+  </TR>
+  <TR>
+    <TD ALIGN="RIGHT">
+      <B>Keyboard Proxy</B>
+    </TD>
+    <TD>
+      Property token: ``<TT>keyboardProxy</TT>''<BR>
+      Sets the proxy pointing to the keyboard to use for the simulation.  The
+      proxy must point to a KeyboardProxy chunk.  More chunk types can be
+      added through the chunk description file (<TT>chunksDesc</TT>).
+    </TD>
+  </TR>
+  <TR>
+    <TD ALIGN="RIGHT">
+      <B>Modifier Keys</B>
+    </TD>
+    <TD>
+      Property token: ``<TT>modKeys</TT>''<BR>
+      Lists the modifier keys that may be used together with normal keyboard
+      keys and mouse buttons when increasing the value returned by the
+      digital device.  The modifier keys must be chosen from a predefined set
+      of keys that are treated as modifiers.  The current modifier keys are:
+
+      <UL>
+	<LI>NONE (<I>no modifier</I>)
+	<LI>SHIFT (<I>the &lt;SHIFT&gt; key</I>)
+	<LI>CTRL (<I>the &lt;CTRL&gt; or &lt;CONTROL&gt; key</I>)
+	<LI>ALT (<I>the &lt;ALT&gt; or &lt;META&gt; key</I>)
+      </UL>
+
+      These keys and their values have special significance to VR Juggler and
+      should not be altered.
+    </TD>
+  </TR>
+  <TR>
+    <TD ALIGN="RIGHT">
+      <B>Keys</B>
+    </TD>
+    <TD>
+      Property token: ``<TT>keys</TT>''<BR>
+      The list of keyboard keys, mouse movement directions and mouse buttons
+      that can be used for increasing the value returned by the simulated
+      digital device.  All standard keys (except the F1-F12 keys), modifier
+      keys (listed above), cursor movement keys, mouse movement directions
+      and mouse buttons (for a three-button mouse) are available for use.
+      Each key can be assigned to a particular aspect of the simulation, and
+      modifiers can be used to allow the same keys (say those on the number
+      pad) to be used for different aspects of simulation.
+    </TD>
+  </TR>
+</TABLE>
+
+<H3>Sim Digital chunk definition</H3>
+
+<PRE>
+chunk SimDigital "SimDigital" "Simulated digital device.  Gets input from keyboard proxy."
+  Name String 1 "Name" "Unique name of an instance of this chunk type"
+  keyboardProxy Chunk 1 "keyboardProxy" vj_enumeration { "KeyboardProxy" } "The keyboard to use for event input."
+  modKeys Int -1 "modKeys" vj_enumeration { "NONE=0" "SHIFT=5" "CTRL=6" "ALT=7" } "The modifier keys to use for increasing analog value."
+  keys Int -1 "keys" vj_enumeration { "KEY_NONE=0" "KEY_UP=1" "KEY_DOWN=2" "KEY_LEFT=3" "KEY_RIGHT=4" "KEY_CTRL=5" "KEY_SHIFT=6" "KEY_ALT=7" "KEY_1=8" "KEY_2=9" "KEY_3=10" "KEY_4=11" "KEY_5=12" "KEY_6=13" "KEY_7=14" "KEY_8=15" "KEY_9=16" "KEY_0=17" "KEY_A=18" "KEY_B=19" "KEY_C=20" "KEY_D=21" "KEY_E=22" "KEY_F=23" "KEY_G=24" "KEY_H=25" "KEY_I=26" "KEY_J=27" "KEY_K=28" "KEY_L=29" "KEY_M=30" "KEY_N=31" "KEY_O=32" "KEY_P=33" "KEY_Q=34" "KEY_R=35" "KEY_S=36" "KEY_T=37" "KEY_U=38" "KEY_V=39" "KEY_W=40" "KEY_X=41" "KEY_Y=42" "KEY_Z=43" "KEY_ESC=44" "MOUSE_POSX=45" "MOUSE_NEGX=46" "MOUSE_POSY=47" "MOUSE_NEGY=48" "MOUSE_BUT1=49" "MOUSE_BUT2=50" "MOUSE_BUT3=51" } "The keys to press for increasing analog value."
+  end
+</PRE>
+
+</BODY>
+</HTML>
