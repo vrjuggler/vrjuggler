@@ -500,7 +500,9 @@ void SubsynthSoundImplementation::bind( const std::string& alias )
          bool result = false;
          result = mBindLookup[alias].inst->getOutput( "mono audio", output );
          if (result == false) { std::cout<<"[snx]Subsynth| ERORR: couldn't get inst out-term"<<std::endl; return; }
-         mMixer->getInput( alias, input );
+         if (mMixer->isInput( alias ))
+            mMixer->removeInput( alias );
+         input = mMixer->createInput( alias );
          
          syn::Terminal::connect( input, output );
          this->reschedule();
