@@ -39,6 +39,7 @@
 #include <GL/gl.h>
 
 #include <Kernel/vjDisplay.h>
+class vjProjection;
 
 //-------------------------------------------------------
 //: Represent cross-platform interface to OpenGL windows
@@ -92,6 +93,9 @@ public:
    virtual void checkEvents() {;}
 
 public:
+   //: Sets the projection matrix for this window to proj
+   void setProjection(vjProjection* proj);
+
    //: Sets the projection matrix for this window to draw the left eye frame
    // If the window is in stereo, it changes to the left buffer
    void setLeftEyeProjection();
@@ -99,6 +103,9 @@ public:
    //: Sets the projection matrix for this window to draw the right eye frame
    // If the window is in stereo, it changes to the right buffer
    void setRightEyeProjection();
+
+   // Set the view buffer for the window (issues glDrawBuffer command)
+   void setViewBuffer(vjDisplay::DisplayView view);
 
    //: Sets the projection matrix for this window to the one for simulator
    void setCameraProjection();
