@@ -45,14 +45,9 @@ INSTALL_FILES=
 JAVA_IDL_OPTS=		@JAVA_IDL_OPTS@ @JAVA_IDL_GENDIR_OPT@$(srcdir)
 JAVA_IDL_INCLUDES=	@JAVA_IDL_INCFLAG@$(top_srcdir)
 
-# XXX: This is a hack until the $(JCCL_JARS) stuff does not need
-# $(JCCL_BASE_DIR).
-JCCL_BASE_DIR?=	$(topdir)/../../instlinks
-
 TWEEK_JARS	= @TWEEK_JARS@
 TWEEK_EXT_JARS	= @TWEEK_EXT_JARS@
-#JCCL_JARS	= @JCCL_JARS@
-JCCL_JARS	= $(JCCL_BASE_DIR)/bin/beans/jccl_config.jar$(JCPS)$(JCCL_BASE_DIR)/bin/beans/jccl_editors.jar
+JCCL_JARS	= @JCCL_JARS@
 CLASSPATH	= $(JCCL_JARS)$(JCPS)$(TWEEK_EXT_JARS)$(JCPS)$(TWEEK_JARS)
 
 VRJCONFIG_PKG		= org.vrjuggler.vrjconfig
