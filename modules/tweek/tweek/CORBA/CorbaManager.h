@@ -52,7 +52,7 @@
 namespace tweek
 {
 
-class CorbaManager
+class TWEEK_CLASS_API CorbaManager
 {
 public:
    /**

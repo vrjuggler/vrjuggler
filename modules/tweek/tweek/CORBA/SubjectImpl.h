@@ -18,8 +18,8 @@ namespace tweek
  * interface).  Methods here should be invoked only via a reference to an
  * Subject object (Subject_ptr, Subject_var).
  */
-class SubjectImpl : public POA_tweek::Subject,
-                    public PortableServer::RefCountServantBase
+class TWEEK_CLASS_API SubjectImpl : public POA_tweek::Subject,
+                                    public PortableServer::RefCountServantBase
 {
 public:
    SubjectImpl ()
