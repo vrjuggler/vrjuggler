@@ -232,7 +232,10 @@ namespace vpr {
       void enableThreadLocalSettings()
       { mUseThreadLocal = true;}
       void disableThreadLocalSettings()
-      { mUseThreadLocal = false;}
+      { 
+         mUseThreadLocal = false;
+         std::cout << clrRESET;     // Reset colors
+      }
 
       // Thread local settings: Columns and color
       void pushThreadLocalColumn(int column);
