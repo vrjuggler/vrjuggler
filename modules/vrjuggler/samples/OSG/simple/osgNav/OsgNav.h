@@ -47,14 +47,17 @@
 #include <gadget/Type/DigitalInterface.h>
 
 //OSG  includes
+#include <osg/Math>
 #include <osg/Geode>
 #include <osg/GeoSet>
 #include <osg/Material>
 #include <osg/Vec3>
 #include <osg/Matrix>
 #include <osg/Transform>
+#include <osg/MatrixTransform>
 
 #include <osgUtil/SceneView>
+#include <osgUtil/Optimizer>
 #include <osgUtil/DisplayListVisitor>
 
 #include <osgDB/ReadFile>
@@ -179,9 +182,9 @@ private:
 
    osg::Group* mRootNode;
    osg::Group* mNoNav;
-   osg::Transform* mNavTrans;
-   osg::Transform* mModelTrans;
-   osg::Transform* mModelBaseXform;
+   osg::MatrixTransform* mNavTrans;
+   osg::MatrixTransform* mModelTrans;
+   osg::MatrixTransform* mModelBaseXform;
 
    osg::Node* mModel;
 
