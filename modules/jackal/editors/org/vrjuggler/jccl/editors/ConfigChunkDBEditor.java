@@ -1014,11 +1014,50 @@ public class ConfigChunkDBEditor
          DefaultMutableTreeNode node = model.getNodeFor(prop_desc);
          DefaultMutableTreeNode parent_node = (DefaultMutableTreeNode)node.getParent();
          ConfigChunk parent_chunk = (ConfigChunk)parent_node.getUserObject();
+         int insert_idx = parent_chunk.getNumPropertyValues(prop_desc.getToken());
+
+         // Create the new property value
+         Object new_value = null;
+
+         // If the property holds embedded chunks, ask the user which type to add
+         if (prop_desc.getValType() == ValType.EMBEDDEDCHUNK)
+         {
+            // Pick which type of embedded chunk to add
+            List allowed_types = prop_desc.getAllowedTypes();
+            String new_type = (String)allowed_types.get(0);
+            if (allowed_types.size() > 1)
+            {
+               // Ask the user to choose a type
+               ChunkDescChooser chooser = new ChunkDescChooser();
+               List all_descs = broker.getDescs(context);
+               List descs = new ArrayList();
+               for (Iterator itr = allowed_types.iterator(); itr.hasNext(); )
+               {
+                  descs.addAll(ConfigUtilities.getDescsWithToken(all_descs, (String)itr.next()));
+//                  descs.add(ChunkFactory.getChunkDescByToken((String)itr.next()));
+               }
+               chooser.setDescs(descs);
+               int result = chooser.showDialog(this);
+
+               // If the user did not cancel their choice, make a new ConfigChunk for
+               // the chose ChunkDesc
+               if (result == ChunkDescChooser.APPROVE_OPTION)
+               {
+                  new_type = chooser.getSelectedChunkDesc().getToken();
+               }
+            }
+            
+            // Create the chunk
+            new_value = ChunkFactory.createConfigChunk(new_type);
+         }
+         // Otherwise, just use the default value for the property
+         else
+         {
+            new_value = prop_desc.getDefaultValue(insert_idx);
+         }
 
          // Append a new value into the property
-         int insert_idx = parent_chunk.getNumPropertyValues(prop_desc.getToken());
-         Object default_value = prop_desc.getDefaultValue(insert_idx);
-         parent_chunk.setProperty(prop_desc.getToken(), insert_idx, default_value);
+         parent_chunk.setProperty(prop_desc.getToken(), insert_idx, new_value);
       }
       else if (cmd.equals(REMOVE_VALUE_ACTION))
       {
