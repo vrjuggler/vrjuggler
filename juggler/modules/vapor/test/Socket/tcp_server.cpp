@@ -56,6 +56,8 @@ main (int argc, char* argv[]) {
         char buffer[] = "Hello there!";
 //        std::string buffer = "Hello there!";
 
+        sock.setReuseAddr(true);
+
         // Loop forever handling all clients serially.
         while ( 1 ) {
             // Wait for an incoming connection.
