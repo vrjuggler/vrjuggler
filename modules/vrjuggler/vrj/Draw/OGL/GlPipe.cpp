@@ -83,13 +83,13 @@ int GlPipe::start()
 void GlPipe::triggerRender()
 {
    //vprASSERT(mThreadRunning == true);      // We must be running
-   while(!mThreadRunning)
+   while (!mThreadRunning)
    {
       vprDEBUG(vrjDBG_DRAW_MGR,vprDBG_HVERB_LVL) << "Waiting in for thread to start triggerRender.\n" << vprDEBUG_FLUSH;
       vpr::Thread::yield();
    }
 
-   renderTriggerSema.release();
+   mRenderTriggerSema.release();
 }
 
 /**
@@ -100,21 +100,21 @@ void GlPipe::completeRender()
 {
    vprASSERT(mThreadRunning == true);      // We must be running
 
-   renderCompleteSema.acquire();
+   mRenderCompleteSema.acquire();
 }
 
 /** Triggers swapping of all pipe's windows. */
 void GlPipe::triggerSwap()
 {
    vprASSERT(mThreadRunning == true);
-   swapTriggerSema.release();
+   mSwapTriggerSema.release();
 }
 
 /** Blocks until swapping of the windows is completed. */
 void GlPipe::completeSwap()
 {
    vprASSERT(mThreadRunning == true);
-   swapCompleteSema.acquire();
+   mSwapCompleteSema.acquire();
 }
 
 
@@ -162,7 +162,7 @@ void GlPipe::controlLoop(void* nullParam)
    boost::ignore_unused_variable_warning(nullParam);
    mThreadRunning = true;     // We are running so set flag
    // Loop until flag set
-   while (!controlExit)
+   while (!mControlExit)
    {
       checkForWindowsToClose();  // Checks for closing windows
       checkForNewWindows();      // Checks for new windows to open
@@ -171,37 +171,40 @@ void GlPipe::controlLoop(void* nullParam)
       // XXX: This may have to be here because of need to get open window event (Win32)
       // otherwise I would like to move it to being after the swap to get better performance
       {
-         for(unsigned int winId=0;winId<mOpenWins.size();winId++)
+         for (unsigned int winId=0;winId<mOpenWins.size();winId++)
+         {
             mOpenWins[winId]->checkEvents();
+         }
       }
 
       // --- RENDER the windows ---- //
       {
-         renderTriggerSema.acquire();
+         mRenderTriggerSema.acquire();
 
-         GlApp* the_app = glManager->getApp();
+         GlApp* the_app = mGlDrawManager->getApp();
 
          // --- pipe PRE-draw function ---- //
          the_app->pipePreDraw();      // Can't get a context since I may not be guaranteed a window
 
          // Render the windows
-         for (unsigned int winId=0;winId < mOpenWins.size();winId++) {
+         for (unsigned int winId = 0 ; winId < mOpenWins.size() ; winId++)
+         {
             renderWindow(mOpenWins[winId]);
          }
-         renderCompleteSema.release();
+         mRenderCompleteSema.release();
       }
 
       // ----- SWAP the windows ------ //
       {
-         swapTriggerSema.acquire();
+         mSwapTriggerSema.acquire();
 
          // Swap all the windows
-         for(unsigned int winId=0;winId < mOpenWins.size();winId++)
+         for (unsigned int winId = 0 ; winId < mOpenWins.size() ; winId++)
          {
             swapWindowBuffers(mOpenWins[winId]);
          }
 
-         swapCompleteSema.release();
+         mSwapCompleteSema.release();
       }
    }
 
@@ -216,24 +219,29 @@ void GlPipe::controlLoop(void* nullParam)
  */
 void GlPipe::checkForWindowsToClose()
 {
-   if(mClosingWins.size() > 0)   // If there are windows to close
+   if (mClosingWins.size() > 0)   // If there are windows to close
    {
       vpr::Guard<vpr::Mutex> guardClosing(mClosingWinLock);
       vpr::Guard<vpr::Mutex> guardNew(mNewWinLock);
       vpr::Guard<vpr::Mutex> guardOpen(mOpenWinLock);
 
-      for(unsigned int i=0;i<mClosingWins.size();i++)
+      for (unsigned int i=0;i<mClosingWins.size();i++)
       {
          GlWindow* win = mClosingWins[i];
+        
+         vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CONFIG_LVL)
+            << "[vrj::GlPipe::checkForNewWindows()] Just closed window: "
+            << mClosingWins[i]->getDisplay()->getName() << std::endl
+            << *(mClosingWins[i]) << std::endl << vprDEBUG_FLUSH;
 
          // Call contextClose
-         GlApp* the_app = glManager->getApp();               // Get application for easy access
+         GlApp* the_app = mGlDrawManager->getApp();               // Get application for easy access
          //Display* the_display = win->getDisplay();         // Get the display for easy access
-         glManager->setCurrentContext(win->getId());        // Set TS data of context id
-         glManager->currentUserData()->setUser(NULL);       // Set user data
-         glManager->currentUserData()->setProjection(NULL);
-         glManager->currentUserData()->setViewport(NULL);   // Set vp data
-         glManager->currentUserData()->setGlWindow(win);    // Set the gl window
+         mGlDrawManager->setCurrentContext(win->getId());        // Set TS data of context id
+         mGlDrawManager->currentUserData()->setUser(NULL);       // Set user data
+         mGlDrawManager->currentUserData()->setProjection(NULL);
+         mGlDrawManager->currentUserData()->setViewport(NULL);   // Set vp data
+         mGlDrawManager->currentUserData()->setGlWindow(win);    // Set the gl window
 
          win->makeCurrent();              // Make the context current
          the_app->contextClose();          // Call context close function
@@ -277,7 +285,9 @@ void GlPipe::checkForNewWindows()
                  << *(mNewWins[winNum]) << std::endl << vprDEBUG_FLUSH;
               mNewWins[winNum]->finishSetup();        // Complete any window open stuff
               mOpenWins.push_back(mNewWins[winNum]);
-          } else {
+          }
+          else
+          {
               vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
                  << clrOutBOLD(clrRED,"ERROR:")
                  << " vrj::GlPipe::checkForNewWindows(): Failed to open window: "
@@ -301,7 +311,7 @@ void GlPipe::renderWindow(GlWindow* win)
    float vp_ox, vp_oy, vp_sx, vp_sy;            // Viewport origin and size
    Viewport::View  view;                      // The view for the active viewport
 
-   GlApp* the_app = glManager->getApp();       // Get application for easy access
+   GlApp* the_app = mGlDrawManager->getApp();       // Get application for easy access
    Display* the_display = win->getDisplay();   // Get the display for easy access
 
    // Update the projections for the display using the current app's scale factor
@@ -309,7 +319,7 @@ void GlPipe::renderWindow(GlWindow* win)
    float scale_factor = the_app->getDrawScaleFactor();
    the_display->updateProjections(scale_factor);
 
-   glManager->setCurrentContext(win->getId());     // Set TSS data of context id
+   mGlDrawManager->setCurrentContext(win->getId());     // Set TSS data of context id
 
    vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_HVERB_LVL)
       << "[vrj::GlPipe::renderWindow()] Set context to: "
@@ -320,27 +330,27 @@ void GlPipe::renderWindow(GlWindow* win)
    win->makeCurrent();
 
    // VIEWPORT cleaning
-   if(win->hasDirtyViewport())
+   if (win->hasDirtyViewport())
    {
       win->updateViewport();
    }
 
    // CONTEXT INIT(): Check if we need to call contextInit()
    // - Must call when context is new OR application is new
-   if(win->hasDirtyContext())
+   if (win->hasDirtyContext())
    {
          // Have dirty context
-      glManager->currentUserData()->setUser(NULL);         // Set user data
-      glManager->currentUserData()->setProjection(NULL);
-      glManager->currentUserData()->setViewport(NULL);     // Set vp data
-      glManager->currentUserData()->setGlWindow(win);      // Set the gl window
+      mGlDrawManager->currentUserData()->setUser(NULL);         // Set user data
+      mGlDrawManager->currentUserData()->setProjection(NULL);
+      mGlDrawManager->currentUserData()->setViewport(NULL);     // Set vp data
+      mGlDrawManager->currentUserData()->setGlWindow(win);      // Set the gl window
 
       the_app->contextInit();              // Call context init function
       win->setDirtyContext(false);        // All clean now
    }
 
    // BUFFER PRE DRAW: Check if we need to clear stereo buffers
-   if(win->isStereo())
+   if (win->isStereo())
    {
       win->setViewBuffer(Viewport::RIGHT_EYE);
       the_app->bufferPreDraw();
@@ -357,12 +367,12 @@ void GlPipe::renderWindow(GlWindow* win)
    // --- FOR EACH VIEWPORT -- //
    Viewport* viewport = NULL;
    unsigned num_vps = the_display->getNumViewports();
-   for(unsigned vp_num=0; vp_num < num_vps; vp_num++)
+   for (unsigned vp_num=0; vp_num < num_vps; vp_num++)
    {
       viewport = the_display->getViewport(vp_num);
 
       // Should viewport be rendered???
-      if(viewport->isActive())
+      if (viewport->isActive())
       {
          view = viewport->getView();
 
@@ -371,9 +381,9 @@ void GlPipe::renderWindow(GlWindow* win)
          win->setViewport(vp_ox, vp_oy, vp_sx, vp_sy);
 
          // Set user information
-         glManager->currentUserData()->setUser(viewport->getUser());       // Set user data
-         glManager->currentUserData()->setViewport(viewport);              // Set the viewport
-         glManager->currentUserData()->setGlWindow(win);                   // Set the gl window
+         mGlDrawManager->currentUserData()->setUser(viewport->getUser());       // Set user data
+         mGlDrawManager->currentUserData()->setViewport(viewport);              // Set the viewport
+         mGlDrawManager->currentUserData()->setGlWindow(win);                   // Set the gl window
 
          // ---- SURFACE & Simulator --- //
          // if (viewport->isSurface())
@@ -381,25 +391,25 @@ void GlPipe::renderWindow(GlWindow* win)
             SimViewport*      sim_vp(NULL);
             GlSimInterface*   draw_sim_i(NULL);
 
-            if(viewport->isSimulator())
+            if (viewport->isSimulator())
             {
                sim_vp = dynamic_cast<SimViewport*>(viewport);
                vprASSERT(NULL != sim_vp);
-               if(NULL != sim_vp)
+               if (NULL != sim_vp)
                {
                   draw_sim_i = dynamic_cast<GlSimInterface*>(sim_vp->getDrawSimInterface());
                }
             }
 
-            if((Viewport::STEREO == view) || (Viewport::LEFT_EYE == view))      // LEFT EYE
+            if ((Viewport::STEREO == view) || (Viewport::LEFT_EYE == view))      // LEFT EYE
             {
                win->setViewBuffer(Viewport::LEFT_EYE);
                win->setProjection(viewport->getLeftProj());
-               glManager->currentUserData()->setProjection(viewport->getLeftProj());
+               mGlDrawManager->currentUserData()->setProjection(viewport->getLeftProj());
 
                the_app->draw();
 
-               if(NULL != draw_sim_i)
+               if (NULL != draw_sim_i)
                {
                   draw_sim_i->draw(scale_factor);
                }
@@ -408,11 +418,11 @@ void GlPipe::renderWindow(GlWindow* win)
             {
                win->setViewBuffer(Viewport::RIGHT_EYE);
                win->setProjection(viewport->getRightProj());
-               glManager->currentUserData()->setProjection(viewport->getRightProj());
+               mGlDrawManager->currentUserData()->setProjection(viewport->getRightProj());
 
                the_app->draw();
 
-               if(NULL != draw_sim_i)
+               if (NULL != draw_sim_i)
                {
                   draw_sim_i->draw(scale_factor);
                }
