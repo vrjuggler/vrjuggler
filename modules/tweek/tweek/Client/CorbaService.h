@@ -121,8 +121,11 @@ public:
    }
 
    /**
-    * Retrieves a reference to all the CORBA objects that implement the
-    * tweek::SubjectManager interface.
+    * Retrieves a reference to all the valid CORBA objects that implement the
+    * tweek::SubjectManager interface.  When the references are added to the
+    * list, it is guaranteed to have only valid tweek::SubjectManager
+    * references.  However, due to the nature of CORBA references, they may
+    * become invalid at any time thereafter.
     *
     * @return A list containing zero or more tweek::SubjectManager references.
     *
@@ -182,8 +185,11 @@ private:
    /**
     * Resolves all the CORBA objects implementing tweek::SubjectManager in
     * bindingList and stores the resulting tweek.SubjectManager object(s) in
-    * mgrList.  If bindingList contains no such objects, mgrList will not be
-    * modified.
+    * mgrList.  Only valid references are stored in mgrList.  If bindingList
+    * contains no such objects, mgrList will not be modified.
+    *
+    * @post mgrList is populated with all valid (i.e., extant)
+    *       tweek::SubjectManager references.
     */
    void addSubjectManagers(const CosNaming::BindingList& bindingList,
                            std::list<tweek::SubjectManager_var>& mgrList);
