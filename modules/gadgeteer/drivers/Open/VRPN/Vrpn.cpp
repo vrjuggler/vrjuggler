@@ -55,12 +55,7 @@
 //    note there are no handedness changes in position proxy.
 //======================================================
 
-#include <gadget/gadgetConfig.h>
-#include <jccl/Config/ConfigChunk.h>
-
-#include <vpr/Util/Debug.h>
-
-#include <gadget/Devices/Open/VRPN/Vrpn.h>
+#include <gadget/Devices/DriverConfig.h>
 
 #include <gmtl/Matrix.h>
 #include <gmtl/Vec.h>
@@ -70,10 +65,23 @@
 #include <gmtl/Quat.h>
 #include <gmtl/AxisAngle.h>
 
+#include <vpr/vpr.h>
+#include <vpr/Util/Debug.h>
+#include <jccl/Config/ConfigChunk.h>
+#include <gadget/InputManager.h>
+#include <gadget/Type/DeviceConstructor.h>
+
+#include <gadget/Devices/Open/VRPN/Vrpn.h>
+
 #define VRPN_DEBUG 0
 				// 1 == reporting
 				// 2 == misc
 
+
+void initDevice(gadget::InputManager* inputMgr)
+{
+   new gadget::DeviceConstructor<gadget::Vrpn>(inputMgr);
+}
 
 namespace gadget
 {
