@@ -30,74 +30,41 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _GADGET_USDIGITAL_SERIAL_ENCODER_H
-#define _GADGET_USDIGITAL_SERIAL_ENCODER_H
-
-#include <gadget/Devices/DriverConfig.h>
-#include <vpr/Thread/Thread.h>
-#include <vpr/Sync/Guard.h>
-
-#include <gadget/Type/Input.h>
-#include <gadget/Type/Position.h>
-#include <gadget/Type/DeviceConstructor.h>
-#include <jccl/Config/ConfigElementPtr.h>
-
-#include <gadget/Type/PositionInterface.h>
-#include <gadget/Type/InputMixer.h>
+#include <boost/concept_check.hpp>
+#include <gadget/Type/Position/PositionUnitConversion.h>
 
 #include "SerialEncoderStandalone.h"
-#include "SEIBus.h"
 
-namespace gadget
+SerialEncoderStandalone::SerialEncoderStandalone()   
+   :mPortStr("/dev/ttyS0")
+   ,mBaudRate(38400)
 {
-   class InputManager;
+   /* Do nothing. */
 }
 
-extern "C" GADGET_DRIVER_API(void) initDevice(gadget::InputManager* inputMgr);
-
-class SerialEncoder:public gadget::InputMixer<gadget::Input,gadget::Position>
+bool SerialEncoderStandalone::initializeDevice()
 {
-public:
-   SerialEncoder();
-   virtual ~SerialEncoder();
+   return mBus.initializeSEI(mPortStr.c_str());
+}
 
-   static std::string getElementType()
-   {
-      return std::string("serial_encoder");
-   }
+gmtl::Matrix44f SerialEncoderStandalone::getSample()
+{
+   unsigned int tiltDevice=1;
+   unsigned int heightDevice=2;
 
-   bool config(jccl::ConfigElementPtr e);
+   static float tableRotation=0;
+   mBus.ED2GetPosition1(tiltDevice,tableRotation);
+   gmtl::EulerAngleXYZf eulerRot(gmtl::Math::deg2Rad(tableRotation),0,0);
+   gmtl::Matrix44f rotation;
+   gmtl::setRot(rotation,eulerRot);
 
-   bool startSampling();
-   bool sample();
-   bool stopSampling();
+   float tableHeight=0;
+   mBus.ED2GetPosition1(heightDevice,tableHeight);
+   tableHeight=tableHeight/gadget::PositionUnitConversion::ConvertToInches;
+   gmtl::Vec3f vecTrans;
+   vecTrans[1]+=tableHeight;
+   gmtl::Matrix44f translation;
+   gmtl::setTrans(translation,vecTrans);
 
-   void updateData()
-   {
-      swapPositionBuffers();
-   }
-
-   void threadedSampleFunction(void* classPointer);
-
-   void operator delete(void* p)
-   {
-      ::operator delete(p);
-   }
-
-protected:
-   virtual void destroy()
-   {
-      delete this;
-   }
-
-private:
-   vpr::ThreadMemberFunctor<SerialEncoder>* mThreadFunctor;
-   vpr::Thread* mSampleThread;
-   bool  mExitFlag;
-   std::string mPortStr;
-   long mBaudRate;
-   SerialEncoderStandalone* mSerialEncoder;
-};
-
-#endif
-
+   return translation*rotation;
+}
