@@ -81,9 +81,12 @@ public:
       VPR_UNJOINABLE_THREAD  /**< The thread cannot be attached with join() */
    };
 
-   BaseThread()
-      :  mThreadId(0)
-   {;}
+   // XXX: Should mThreadId be initialized to -1 to indicate that a thread is
+   // initially invalid?
+   BaseThread() : mThreadId(0)
+   {
+      ;
+   }
 
    virtual ~BaseThread()
    {
