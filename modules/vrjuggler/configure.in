@@ -53,10 +53,10 @@ dnl # ------------------------------------------------------ #
 
 dnl # Enable debugging.  Possible values are "yes" or "no".  "yes" is set
 dnl # with --enable-debug and "no" is set with --disable-debug.
-dnl # The default is "no".
+dnl # The default is "yes".
 AC_ARG_ENABLE(debug,
-              [  --enable-debug          enable debugging [default=no]],
-              enable_debug="$enableval", enable_debug="no")
+              [  --enable-debug          enable debugging [default=yes]],
+              enable_debug="$enableval", enable_debug="yes")
 
 dnl # Enable binary format.  Possible values are "N32", "32" or "64".
 dnl # The default is "N32".
