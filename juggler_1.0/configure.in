@@ -40,7 +40,7 @@
 AC_REVISION($Revision$)
 AC_INIT(vjConfig.h)
 AC_CONFIG_HEADER(vjDefines.h)
-DPP_PREREQ(1.3.9)
+DPP_PREREQ(1.3.10)
 DPP_INIT
 
 # Generate the reconfig script first so that it's easy to run configure again
@@ -759,6 +759,8 @@ elif test "x$OS_TYPE" = "xWin32" -a "x$USE_GCC" != "xyes" ; then
     CFLAGS="$CFLAGS /W3 /GR /GX /EHc /QIfdiv /QI0f"
     CXXFLAGS="$CXXFLAGS /W3 /GR /GX /EHc /QIfdiv /QI0f"
     EXTRA_LINK_FLAGS="$EXTRA_LINK_FLAGS /MTd"
+    DBG_FLAGS="$DBG_FLAGS /MTd"
+    OPT_FLAGS="$OPT_FLAGS /MT"
 fi
 
 DPP_SYSTEM_SUBST
