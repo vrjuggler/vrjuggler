@@ -201,9 +201,9 @@ public abstract class GraphHelpers
     *                   attribute map will be stored by this function
     *
     * @throws IllegalArgumentException
-    *   thrown when the type of <code>devElt</code> is unknown to this method
-    *   and the device graph cell creator registry, thus preventing correct
-    *   creation of a <code>DefaultGraphCell</code> instance.
+    *   thrown when the graph cell cannot be created due to one of two
+    *   causes: there is no creator known for the config definition of
+    *   <code>devElt</code> or the registered creator failed
     *
     * @see #registerGraphCellCreator(ConfigDefinition,DeviceGraphCellCreator)
     */
@@ -430,7 +430,8 @@ public abstract class GraphHelpers
                }
             }
 
-            DeviceInfo.addArtificialUnits(unit_map, unit_type, proxy_count);
+            DefaultUnitPropertyHandler.addArtificialUnits(unit_map, unit_type,
+                                                          proxy_count);
          }
       }
 
