@@ -113,7 +113,7 @@ public:
    static vpr::Uint64 Ntohll(vpr::Uint64 conversion)
    {
       vpr::Uint64 ret_val;
-      if (isLittleEndian()
+      if (isLittleEndian())
       {
          *((vpr::Uint32*)(&ret_val) + 1) = SystemNSPR::Ntohl(*((vpr::Uint32*)(&conversion)));
          *( ((vpr::Uint32*)(&ret_val))) = SystemNSPR::Ntohl( *( ((vpr::Uint32*)(&conversion))+1) );
