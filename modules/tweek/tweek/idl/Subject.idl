@@ -36,7 +36,6 @@
 
 #ifndef _TWEEK_SUBJECT_IDL_
 #define _TWEEK_SUBJECT_IDL_
-#define _TWEEK_SUBJECT_IDL_
 
 #include <tweek/idl/Observer.idl>
 
