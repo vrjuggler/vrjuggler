@@ -217,7 +217,7 @@ if test "x$VJ_AVATAR_ROOT" != "xnone" ; then
    pyj_save_LDFLAGS="$LDFLAGS"
    pyj_save_LIBS="$LIBS"
 
-   CPPFLAGS="$CPPFLAGS -I$VJ_AVATAR_ROOT/include"
+   CPPFLAGS="$CPPFLAGS -I$VJ_AVATAR_ROOT/include $VRJ_INCLUDES"
    LDFLAGS="$LDFLAGS -L$VJ_AVATAR_ROOT/lib"
    LIBS="$LIBS -lavatar -lcal3d $VRJ_LIBS_CC $VRJ_EXTRA_LIBS_CC"
 
