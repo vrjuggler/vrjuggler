@@ -37,13 +37,13 @@ all: ${PROGS}
 # aFlock test driver
 # ----------------
 aFlockTest: aFlockTest.o aFlock.o
-	CC -o $@ aFlockTest.o aFlock.o 
+	CC -mips3 -n32 -o $@ aFlockTest.o aFlock.o 
 
 aFlockTest.o: aFlockTest.cpp
-	CC -I../.. namespaces=ON bool=ON -woff 3303 -c -o $@ aFlockTest.cpp
+	CC -mips3 -n32 -I../.. namespaces=ON bool=ON -woff 3303 -c -o $@ aFlockTest.cpp
 
 aFlock.o: ../../Input/vjPosition/aFlock.cpp
-	CC namespaces=ON bool=ON -woff 3303 -c -o $@ ../../Input/vjPosition/aFlock.cpp
+	CC -mips3 -n32 namespaces=ON bool=ON -woff 3303 -c -o $@ ../../Input/vjPosition/aFlock.cpp
 
 # ----------------
 # vjFlock test driver
