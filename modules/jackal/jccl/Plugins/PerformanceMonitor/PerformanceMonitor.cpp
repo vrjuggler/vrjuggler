@@ -49,9 +49,7 @@ namespace jccl {
 
 PerformanceMonitor::PerformanceMonitor():
                           perf_buffers(),
-                          perf_buffers_mutex(),
-                          connections(),
-                          connections_mutex() {
+                          perf_buffers_mutex() {
 
     perf_refresh_time = 500;
 
@@ -71,32 +69,18 @@ PerformanceMonitor::~PerformanceMonitor() {
 /*virtual*/ void PerformanceMonitor::addConnect (Connect* con) {
     vprASSERT (con != NULL);
 
-    connections_mutex.acquire();
-    connections.push_back (con);
     if (con->getName() == perf_target_name)
         setPerformanceTarget (con);
-    connections_mutex.release();
 }
 
 
 /*virtual*/ void PerformanceMonitor::removeConnect (Connect* con) {
     vprASSERT (con != NULL);
 
-    connections_mutex.acquire();
-
-    std::vector<Connect*>::iterator i;
-    for (i = connections.begin(); i != connections.end(); i++) {
-        if (con == *i) {
-            connections.erase (i);
-            delete con;
-            break;
-        }
-    }
-
     if (con == perf_target)
         setPerformanceTarget (NULL);
-    connections_mutex.release();
 }
+
 
 
 PerfDataBuffer*  PerformanceMonitor::getPerfDataBuffer (const std::string& _name, 
@@ -143,10 +127,8 @@ void PerformanceMonitor::releasePerfDataBuffer (PerfDataBuffer *b) {
 }
 
 
+    //---------------------- ConfigChunkHandler Stuff ----------------------
 
-//: ConfigChunkHandler stuff
-//! PRE: configCanHandle(chunk) == true
-//! RETURNS: success
 bool PerformanceMonitor::configAdd(ConfigChunk* chunk) {
 
     std::string s = chunk->getType();
@@ -154,31 +136,32 @@ bool PerformanceMonitor::configAdd(ConfigChunk* chunk) {
         current_perf_config = new ConfigChunk (*chunk);
 
         perf_target_name = (std::string)chunk->getProperty ("PerformanceTarget");
-        connections_mutex.acquire();
 
-        Connect* new_perf_target = getConnect(perf_target_name);
-        if (new_perf_target != perf_target)
-            setPerformanceTarget (new_perf_target);
+        if (!perf_target || !vjstrcasecmp (perf_target->getName(), perf_target_name)) {
+            std::vector<Connect*>& connections = JackalServer::instance()->getConnections();
+            for (unsigned int i = 0; i < connections.size(); i++)
+                if (s == connections[i]->getName()) {
+                    setPerformanceTarget (connections[i]);
+                    break;
+                }
+            JackalServer::instance()->releaseConnections();
+        }
         else {
-            // setPerformanceTarget above will activatePerfBuffers,
-            // but we want to make suer that happens regardless to get
-            // any changes to the individual buffer states.
+            // just activate buffers to pick up changes to individual
+            // buffer activation states.
             perf_buffers_mutex.acquire();
             activatePerfBuffers();
             perf_buffers_mutex.release();
         }
-        connections_mutex.release();
 
         return true;
     }
+
     return false;
 }
 
 
 
-//: Remove the chunk from the current configuration
-//! PRE: configCanHandle(chunk) == true
-//!RETURNS: success
 bool PerformanceMonitor::configRemove(ConfigChunk* chunk) {
 
     std::string s = chunk->getType();
@@ -198,9 +181,6 @@ bool PerformanceMonitor::configRemove(ConfigChunk* chunk) {
 
 
 
-//: Can the handler handle the given chunk?
-//! RETURNS: true - Can handle it
-//+          false - Can't handle it
 bool PerformanceMonitor::configCanHandle(ConfigChunk* chunk) {
     std::string s = chunk->getType();
     return (!vjstrcasecmp (s, "PerfMeasure"));
@@ -213,27 +193,17 @@ bool PerformanceMonitor::configCanHandle(ConfigChunk* chunk) {
 
 
 
-void PerformanceMonitor::setPerformanceTarget (Connect* con) {
-    //std::cout << "setting performance target" << std::endl;
-    if (con == perf_target)
-        return;
-    perf_buffers_mutex.acquire();
-    deactivatePerfBuffers();
-    perf_target = con;
-    activatePerfBuffers();
-    perf_buffers_mutex.release();
-}
-
-
-    /* connections needs to be locked */
-    Connect* PerformanceMonitor::getConnect (const std::string& s) {
-        vprASSERT (connections_mutex.test() == 1 && "Must be locked");
-
-        for (unsigned int i = 0; i < connections.size(); i++)
-            if (s == connections[i]->getName())
-                return connections[i];
-        return NULL;
+    void PerformanceMonitor::setPerformanceTarget (Connect* con) {
+        //std::cout << "setting performance target" << std::endl;
+        if (con == perf_target)
+            return;
+        perf_buffers_mutex.acquire();
+        deactivatePerfBuffers();
+        perf_target = con;
+        activatePerfBuffers();
+        perf_buffers_mutex.release();
     }
+
 
 
     void PerformanceMonitor::deactivatePerfBuffers () {
