@@ -28,10 +28,14 @@ import VjGUI.Core;
 import VjGUI.util.*;
 import VjPerf.GenericGraphPanel;
 
-public class GenericGraphFrame extends JFrame implements WindowListener {
+public class GenericGraphFrame extends JFrame 
+    implements ChildFrame, WindowListener {
 
-    JFrameParent parent;
-    GenericGraphPanel panel;
+
+    protected JFrameParent parent;
+    protected GenericGraphPanel panel;
+
+
 
     public GenericGraphFrame (GenericGraphPanel _panel, String title, JFrameParent _parent) {
 	super (title);
@@ -50,9 +54,13 @@ public class GenericGraphFrame extends JFrame implements WindowListener {
 
     }
 
+
+
     public void refresh() {
 	panel.refresh();
     }
+
+
 
     /* WindowListener Stuff */
     public void windowActivated(WindowEvent e) {}
@@ -64,5 +72,32 @@ public class GenericGraphFrame extends JFrame implements WindowListener {
     public void windowDeiconified(WindowEvent e) {}
     public void windowIconified(WindowEvent e) {}
     public void windowOpened(WindowEvent e) {}
+
+
+    /***************** ChildFrame Stuff ********************/
+
+    public void destroy () {
+	dispose();
+    }
+
+
+    public boolean matches (String cl, Object db, Object o) {
+	if (cl != null) {
+	    try {
+		if (!(Class.forName(cl).isInstance(this)))
+		    return false;
+	    }
+	    catch (Exception e) {
+		return false;
+	    }
+	}
+	return false;
+    }
+
+
+    public void updateUI () {
+	SwingUtilities.updateComponentTreeUI (this);
+    }
+
 
 }

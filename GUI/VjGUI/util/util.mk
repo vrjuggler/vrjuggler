@@ -18,6 +18,7 @@ VJGUIUTIL_SOURCES = VjGUI/util/FloatTextField.java	\
 		    VjGUI/util/LinkedList.java          \
 		    VjGUI/util/ListIterator.java        \
 		    VjGUI/util/ListElem.java		\
-		    VjGUI/util/PlugPanel.java
+		    VjGUI/util/PlugPanel.java		\
+		    VjGUI/util/ChildFrame.java
 
 VJGUIUTIL_OBJS = ${VJGUIUTIL_SOURCES:.java=.class}
