@@ -17,4 +17,4 @@
 #
 # For example:
 #DEFAULT		(echo ""; who am i; echo %s; date; cat) >> $CVSROOT/CVSROOT/commitlog
-#ALL	Mail -s "CVS: %s" juggler-bugs@icemt.iastate.edu
+ALL	Mail -s "[CVS Log: JugglerRepos] %s" allenb@vrac.iastate.edu
