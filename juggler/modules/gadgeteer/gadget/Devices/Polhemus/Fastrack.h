@@ -41,15 +41,16 @@
 #ifndef _GADGET_FASTRACK_
 #define _GADGET_FASTRACK_
 
-#include <vjConfig.h>
+#include <vrj/vrjConfig.h>
 
 #include <iostream>
-#include <string.h>
+#include <string>
+#include <gmtl/Matrix.h>
 
 #include <vpr/vpr.h>
 #include <vpr/Thread/Thread.h>
+#include <jccl/Config/ConfigChunk.h>
 
-#include <vrj/Math/vjMatrix.h>
 #include <gadget/Type/Digital.h>
 #include <gadget/Type/Position.h>
 
@@ -70,7 +71,7 @@ public:
    }// return what chunk type is associated with this class.
 public:
    /// gadget::Input pure virtual functions
-   virtual bool config( vjConfigChunk *fastrackChunk);
+   virtual bool config( jccl::ConfigChunkPtr fastrackChunk);
    virtual int startSampling();                 // start a new thread
    virtual int sample();                        // read data from the fastrack
    virtual void updateData();                   // swap the data and vjInput::tri-buffered indicies
@@ -83,15 +84,18 @@ public:
    //:vjDigital pure virtual function
    virtual int getDigitalData(int station = 0);
    //:vjPosition pure virtual function
-   virtual vrj::Matrix* getPosData(int station = 0);
+   virtual gmtl::Matrix44f getPosData(int station = 0);
 private:
    static void threadedSampleFunction(void* classPointer);
-   int buttonState[3];                   // only one button on station 0
-   float trackersPosition[4][3][3];      // 4 stations, 3 coordinates, 3 buffers
-   float trackersOrientation[4][3][3];   // 4 stations, 3 orientations, 3 buffers
-   vpr::Thread *sampleThread;
 
-   char *configFile;
+   int mButtonState;                   /**< only one button on station 0 */
+   float mTrackersPosition[4][3];      /**< 4 stations, 3 coordinates */
+   float mTrackersOrientation[4][3];   /**< 4 stations, 3 orientations */
+   vpr::Thread* mSampleThread;
+
+   char* mConfigFile;
+
+   FastrackStandalone mFastrackDev;
 };
 
 } // End of gadget namespace

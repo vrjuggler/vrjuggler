@@ -30,64 +30,227 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
+#include <gadget/gadgetConfig.h>
+
+#include <string>
+#include <string.h>
+#include <unistd.h>
+#include <vpr/vpr.h>
+#include <vpr/System.h>
+#include <vpr/Util/Assert.h>
+
 #include <gadget/Devices/Polhemus/FastrackStandalone.h>
 
-void trackerFinish()
+vpr::ReturnStatus FastrackStandalone::open()
 {
-   pid_t pid;
+   vpr::ReturnStatus status;
 
-   pid = ReadPid;
-   ReadPid = 0;
-   write(trackerfd, "c",1);
-   sleep(1);
-   tcflush(trackerfd, TCIFLUSH);
-   close(trackerfd);
-   if ( pid )
+   mSerialPort = new vpr::SerialPort(std::string(mConf.port));
+   mSerialPort->setOpenNonBlocking();
+   mSerialPort->setOpenReadWrite();
+
+   status = mSerialPort->open();
+
+   if ( status.success() )
    {
-      kill(pid, SIGKILL);
+      vpr::Uint32 baud;
+
+      mSerialPort->clearAll();
+
+      if ( mConf.found & (1 << BAUD) )
+      {
+         baud = mConf.baud;
+         baud = mConf.baud;
+      }
+      else
+      {
+         baud = 9600;
+      }
+
+      mSerialPort->setOutputBaudRate(baud);
+      mSerialPort->setInputBaudRate(baud);
+
+//      tcsetattr(mTrackerFD, TCSAFLUSH, &tc);
+//      fcntl(mTrackerFD, F_SETFL, 0);
+   }
+
+   return status;
+}
+
+void FastrackStandalone::trackerFinish()
+{
+   vpr::Uint32 bytes_written;
+   mSerialPort->write("c", 1, bytes_written);
+   vpr::System::sleep(1);
+
+   mSerialPort->flushQueue(vpr::SerialTypes::INPUT_QUEUE);
+   mSerialPort->close();
+
+   if ( NULL != mReadThread )
+   {
+      mReadThread->kill();
    }
 }
 
-static int Read(int fd, unsigned char *buf, int len)
+int FastrackStandalone::Read(int len)
 {
+   vpr::Uint32 bytes_read;
+   vpr::ReturnStatus status;
+
    int nread;
    int rem = len;
-   char *cp = (char *)buf;
+   char *cp = (char *) mTrackerBuf;
    for ( ;; )
    {
-      if ( (nread = read(fd, cp, rem)) <= 0 )
+      status = mSerialPort->read(cp, rem, bytes_read);
+
+      if ( bytes_read <= 0 || status.failure() )
+      {
          return len - rem;
-      if ( (rem -= nread) == 0 ) return len;
+      }
+      if ( (rem -= nread) == 0 )
+      {
+         return len;
+      }
+
       cp += nread;
    }
 }
 
 
-static void readloop(void *unused)
+void FastrackStandalone::readloop(void *unused)
 {
+   vpr::Uint32 bytes_written;
+   vpr::Uint32 sleep_time(10000000/mConf.baud);
+
    sigignore(SIGINT);
    for ( ;; )
    {
-      if ( DoFlush )
+      if ( mDoFlush )
       {
-         write(trackerfd, "c", 1);
-         usleep(10000000/conf.baud);
-         tcflush(trackerfd, TCIFLUSH);
-         usleep(10000000/conf.baud);
-         write(trackerfd, "C", 1);
+         mSerialPort->write("c", 1, bytes_written);
+         vpr::System::usleep(sleep_time);
+         mSerialPort->flushQueue(vpr::SerialTypes::INPUT_QUEUE);
+         vpr::System::usleep(sleep_time);
+         mSerialPort->write("C", 1, bytes_written);
       }
-      Read(trackerfd, (unsigned char *)TrackerBuf, conf.len);
-      DoFlush = 0;
-      if ( getppid() == 1 )
-      {
-         trackerFinish();
-         _exit(0);
-      }
+
+      this->Read(mConf.len);
+      mDoFlush = false;
+//      if ( getppid() == 1 )
+//      {
+//         trackerFinish();
+//         _exit(0);
+//      }
    }
 }
 
-void trackerInit(char *configfile)
+vpr::ReturnStatus FastrackStandalone::trackerInit()
 {
+   vprASSERT(mSerialPort->isOpen() && "Port must be open before initializing");
+   vpr::Uint32 bytes_written;
+
+//   static struct termios tc;
+   char buf[256];
+   char c;
+
+   mSerialPort->write("uf", 3, bytes_written); // unites: cm, mode binaire
+
+   for ( unsigned int station = 0; station < NSTATION; ++station )
+   {
+      struct perstation *psp = &(mConf.perstation[station]);
+      int len;
+      c = '1' + station;
+
+      mSerialPort->write("e", 1, bytes_written);
+      mSerialPort->write(&c, 1, bytes_written);
+      mSerialPort->write(",",1, bytes_written);
+      mSerialPort->write(&mConf.button,1, bytes_written);
+      mSerialPort->write("\r",1, bytes_written);
+      mSerialPort->write("l",1, bytes_written);
+      mSerialPort->write(&c, 1, bytes_written);
+
+      if ( mConf.found&(1<<(REC+station)) )
+      {
+         if ( psp->rec == 0 )
+         {
+            mSerialPort->write(",0\r", 3, bytes_written);
+         }
+         else
+         {
+            mSerialPort->write(",1\rO", 4, bytes_written);
+            mSerialPort->write(&c, 1, bytes_written);
+
+            if ( psp->rec & (1<<Pos) )
+            {
+               mSerialPort->write(",2", 2, bytes_written);
+            }
+            if ( psp->rec & (1<<Ang) )
+            {
+               mSerialPort->write(",4", 2, bytes_written);
+            }
+            if ( psp->rec & (1<<Quat) )
+            {
+               mSerialPort->write(",11", 3, bytes_written);
+            }
+            if ( psp->rec & (1<<But) )
+            {
+               mSerialPort->write(",16", 3, bytes_written);
+            }
+            mSerialPort->write(",1\r", 3, bytes_written);
+         }
+      }
+
+      if ( mConf.found & (1<<(TIP+station)) )
+      {
+         len = sprintf(buf, "N%c,%.2f,%.2f,%.2f\r", c,
+                       psp->tip[0], psp->tip[1], psp->tip[2]);
+         mSerialPort->write(buf, len, bytes_written);
+      }
+
+      if ( mConf.found & (1<<(INC+station)) )
+      {
+         len = sprintf(buf, "I%c,%.2f\r", c, psp->inc);
+         mSerialPort->write(buf, len, bytes_written);
+      }
+      if ( mConf.found & (1<<(HEM+station)) )
+      {
+         len = sprintf(buf, "H%c,%.2f,%.2f,%.2f\r", c,
+                       psp->hem[0], psp->hem[1], psp->hem[2]);
+         mSerialPort->write(buf, len, bytes_written);
+      }
+      if ( mConf.found & (1<<(TMF+station)) )
+      {
+         len = sprintf(buf, "r%c,%.2f,%.2f,%.2f\r", c,
+                       psp->tmf[0],
+                       psp->tmf[1],
+                       psp->tmf[2]);
+         mSerialPort->write(buf, len, bytes_written);
+      }
+      if ( mConf.found & (1<<(ARF+station)) )
+      {
+         len = sprintf(buf, "A%c,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f\r",
+                       c,
+                       psp->arf[0], psp->arf[1], psp->arf[2], psp->arf[3],
+                       psp->arf[4], psp->arf[5], psp->arf[6], psp->arf[7],
+                       psp->arf[8]);
+         mSerialPort->write(buf, len, bytes_written);
+      }
+   }
+   /*
+   if (mConf.cont == 'C')
+   {
+      ReadPid = sproc(readloop, PR_SALL);
+      if (ReadPid == -1)
+      {
+         perror("Can't creat read process");
+         exit(1);
+      }
+   }
+   */
+   mSerialPort->write(&mConf.cont, 1, bytes_written);
+
+   return vpr::ReturnStatus();
 }
 
 static int littlendian(unsigned char *src)
@@ -95,48 +258,64 @@ static int littlendian(unsigned char *src)
    return(src[3]<<24)|(src[2]<<16)|(src[1]<<8)|src[0];
 }
 
-static void checkchild()
+void FastrackStandalone::checkchild()
 {
-   if ( ReadPid )
+   // XXX: This is commented out because I do not know how useful it is.
+/*
+   if ( NULL != mReadThread )
    {
-      if ( waitpid(ReadPid, 0, WNOHANG) == 0 )
+      if ( waitpid(mReadPid, 0, WNOHANG) == 0 )
       {
          return;
       }
       else
       {
-         kill(ReadPid, 9);
+         mReadThread->kill(9);
       }
    }
-   ReadPid = sproc(readloop, PR_SALL);
-}
-
-void getTrackerBuf()
-{
-   if ( (conf.cont != 'C') && (conf.button == '0') )
+   vpr::ThreadMemberFunctor<FastrackStandalone>* read_func =
+      new vpr::ThreadMemberFunctor<FastrackStandalone>(this,
+                                                       &FastrackStandalone::readloop,
+                                                       NULL);
+   mReadThread = new vpr::Thread(read_func);
+*/
+   if ( NULL == mReadThread )
    {
-      write(trackerfd, "P", 1);
+      vpr::ThreadMemberFunctor<FastrackStandalone>* read_func =
+         new vpr::ThreadMemberFunctor<FastrackStandalone>(this,
+                                                          &FastrackStandalone::readloop,
+                                                          NULL);
+      mReadThread = new vpr::Thread(read_func);
    }
-   Read(trackerfd, (unsigned char *)TrackerBuf, conf.len);
 }
 
-void
-getTrackerInfo(struct perstation *psp, unsigned char c)
+void FastrackStandalone::getTrackerBuf()
+{
+   if ( (mConf.cont != 'C') && (mConf.button == '0') )
+   {
+      vpr::Uint32 bytes_written;
+      mSerialPort->write("P", 1, bytes_written);
+   }
+
+   this->Read(mConf.len);
+}
+
+void FastrackStandalone::getTrackerInfo(struct perstation* psp, unsigned char c)
 {
    unsigned char *cp;
    retry:
    getTrackerBuf();
-   cp = (unsigned char *)TrackerBuf + psp->begin;
+   cp = (unsigned char *)mTrackerBuf + psp->begin;
    if ( cp[0] != '0' || cp[1] != c )
    {
-      if ( conf.cont != 'C' )
+      if ( mConf.cont != 'C' )
       {
-         tcflush(trackerfd, TCIFLUSH);
+         mSerialPort->flushQueue(vpr::SerialTypes::INPUT_QUEUE);
       }
       else
       {
-         DoFlush = 1;
-         while ( DoFlush )
+         mDoFlush = true;
+         while ( mDoFlush )
          {
             checkchild();
          }
@@ -145,8 +324,8 @@ getTrackerInfo(struct perstation *psp, unsigned char c)
    }
 }
 
-int
-getCoords(unsigned int stations, float *vecXYZ, float *vecAER)
+int FastrackStandalone::getCoords(unsigned int stations, float *vecXYZ,
+                                  float *vecAER)
 {
    unsigned char *cp;
    int i, station, button = 0;
@@ -156,25 +335,29 @@ getCoords(unsigned int stations, float *vecXYZ, float *vecAER)
    for ( station = 0; station < NSTATION; ++station, ++c )
    {
       if ( (stations&(1<<station)) == 0 ) continue;
-      psp  = &conf.perstation[station];
+      psp  = &mConf.perstation[station];
       if ( psp->rec )
       {
-         cp = (unsigned char *)TrackerBuf + psp->begin;
+         cp = (unsigned char *)mTrackerBuf + psp->begin;
          if ( cp[0] != '0' || cp[1] != c )
          {
-            if ( conf.cont != 'C' )
-               tcflush(trackerfd, TCIFLUSH);
+            if ( mConf.cont != 'C' )
+            {
+               mSerialPort->flushQueue(vpr::SerialTypes::INPUT_QUEUE);
+            }
             else
             {
-               DoFlush = 1;
-               while ( DoFlush )
+               mDoFlush = true;
+               while ( mDoFlush )
+               {
                   checkchild();
+               }
             }
             getTrackerBuf();
          }
          if ( psp->rec & (1<<Pos) )
          {
-            cp = (unsigned char *)TrackerBuf + psp->posoff;
+            cp = (unsigned char *)mTrackerBuf + psp->posoff;
             for ( i = 0; i < 3; ++i )
             {
                *(int *)(vecXYZ+i) = littlendian(cp);
@@ -188,7 +371,7 @@ getCoords(unsigned int stations, float *vecXYZ, float *vecAER)
          vecXYZ += 3;
          if ( psp->rec & (1<<Ang) )
          {
-            cp = (unsigned char *)TrackerBuf + psp->angoff;
+            cp = (unsigned char *)mTrackerBuf + psp->angoff;
             for ( i = 0; i < 3; ++i )
             {
                *(int *)(vecAER+i) = littlendian(cp);
@@ -196,17 +379,21 @@ getCoords(unsigned int stations, float *vecXYZ, float *vecAER)
             }
          }
          else
+         {
             memset((void *)vecAER, 0, 3*sizeof (float));
+         }
+
          vecAER += 3;
          if ( psp->rec & (1<<But) )
-            button = TrackerBuf[psp->butoff] - '0';
+         {
+            button = mTrackerBuf[psp->butoff] - '0';
+         }
       }
    }
    return button;
 }
 
-void
-getNewCoords(unsigned int station, float *vecXYZ, float *vecAER)
+void FastrackStandalone::getNewCoords(unsigned int station, float *vecXYZ, float *vecAER)
 {
    unsigned char *cp;
    int i;
@@ -216,12 +403,12 @@ getNewCoords(unsigned int station, float *vecXYZ, float *vecAER)
 
    if ( (unsigned)(--station) >= 4 ) return;
    c = '1'+station;
-   psp  = &conf.perstation[station];
+   psp  = &mConf.perstation[station];
    if ( (psp->rec & ((1<<Pos)|(1<<Ang))) == 0 ) return;
    getTrackerInfo(psp, c);
    if ( psp->rec & (1<<Pos) )
    {
-      cp = (unsigned char *)TrackerBuf + psp->posoff;
+      cp = (unsigned char *)mTrackerBuf + psp->posoff;
       for ( i = 0; i < 3; ++i )
       {
          *(int *)(vecXYZ+i) = littlendian(cp);
@@ -230,7 +417,7 @@ getNewCoords(unsigned int station, float *vecXYZ, float *vecAER)
    }
    if ( psp->rec & (1<<Ang) )
    {
-      cp = (unsigned char *)TrackerBuf + psp->angoff;
+      cp = (unsigned char *)mTrackerBuf + psp->angoff;
       for ( i = 0; i < 3; ++i )
       {
          *(int *)(vecAER+i) = littlendian(cp);
@@ -239,18 +426,17 @@ getNewCoords(unsigned int station, float *vecXYZ, float *vecAER)
    }
 }
 
-int
-getNewButtonStatus(unsigned int station)
+int FastrackStandalone::getNewButtonStatus(unsigned int station)
 {
    struct perstation *psp;
    char c;
 
    if ( (unsigned)(--station) >= 4 ) return 0;
    c = '1'+station;
-   psp = &conf.perstation[station];
+   psp = &mConf.perstation[station];
    if ( psp->rec & (1<<But) == 0 ) return 0;
    getTrackerInfo(psp, c);
-   return TrackerBuf[psp->butoff] - '0';
+   return mTrackerBuf[psp->butoff] - '0';
 }
 
 #ifdef TEST
