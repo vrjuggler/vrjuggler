@@ -48,9 +48,9 @@ void outputPendingItemState(int debugLevel, std::string chunkName, std::string c
 
 
 
-int ConfigChunkHandler::configProcessPending(bool lockIt)
+int ConfigChunkHandler::configProcessPending(ConfigManager* cfg_mgr)
 {
-   ConfigManager*     cfg_mgr = ConfigManager::instance();
+    //ConfigManager*     cfg_mgr = ConfigManager::instance();
    DependencyManager* dep_mgr = DependencyManager::instance();
 
    bool     scan_for_lost_dependants(false);       // Do we need to scan for un-filled dependencies
@@ -62,9 +62,9 @@ int ConfigChunkHandler::configProcessPending(bool lockIt)
    vprDEBUG_BEGIN(vprDBG_ALL,vprDBG_STATE_LVL) << typeid(*this).name() << "::configProcessPending: Entering: "
                               << num_pending_before << " items pending.\n" << vprDEBUG_FLUSH;
 
-   if(lockIt)
-      cfg_mgr->lockPending();     // We need to lock the pending first
-   {
+//    if(lockIt)
+//       cfg_mgr->lockPending();     // We need to lock the pending first
+//    {
       std::list<ConfigManager::PendingChunk>::iterator current, end, remove_me;
       current = cfg_mgr->getPendingBegin();
       end = cfg_mgr->getPendingEnd();
@@ -159,9 +159,9 @@ int ConfigChunkHandler::configProcessPending(bool lockIt)
 
       }        // END: while(current != end)
 
-   }
-   if(lockIt)
-      cfg_mgr->unlockPending();   // Unlock it
+//    }
+//    if(lockIt)
+//       cfg_mgr->unlockPending();   // Unlock it
 
    num_pending_after = cfg_mgr->getNumPending();
 
