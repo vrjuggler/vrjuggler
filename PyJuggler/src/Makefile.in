@@ -33,7 +33,7 @@ top_srcdir=	@top_srcdir@
 CXX=		@CXX@
 CXXFLAGS=	$(shell vrjuggler-config --cxxflags) @PYTHON_INCLUDES@	\
 		-I$(srcdir)
-INCLUDES=	$(shell vrjuggler-config --includes)
+INCLUDES=	$(shell vrjuggler-config --includes) -I$(srcdir)
 LIBS=		$(shell vrjuggler-config --libs)
 EXTRA_LIBS=	$(shell vrjuggler-config --extra-libs)
 PYTHON=		@PYTHON@
