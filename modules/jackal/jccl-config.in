@@ -285,21 +285,9 @@ sub make_CXXFLAGS ($;$)
       $jccl_extra_cxxflags = "$jccl_extra_cxxflags $JCCL_ABI_FLAGS $JCCL_ISA_FLAGS";
    }
 
-   my $jccl_extra_includes     = '';
-   my $jccl_extra_include_dirs = qq(@jccl_extra_include_dirs@);
-
-   if ( "$jccl_extra_include_dirs" ne "" )
-   {
-      my $dir;
-      foreach $dir ( split(/\s+/, "$jccl_extra_include_dirs") )
-      {
-        $jccl_extra_includes .= " -I@includedir@/$dir";
-      }
-   }
-
    my $cxxflags = qq(@jccl_cxxflags@ $dep_cxxflags $jccl_extra_cxxflags ) .
-                  qq(-I@includedir@ $jccl_extra_includes);
-   $cxxflags .= " -I$deps_dir" if $deps_dir;
+                  qq(-I@includedir@);
+   $cxxflags .= " -I$deps_dir/include" if $deps_dir;
 
    # Strip out extra whitespace.
    $cxxflags =~ s/\s{2,}/ /g;
