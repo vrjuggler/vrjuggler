@@ -447,7 +447,10 @@ int OpenALSoundImplementation::startAPI()
       // make context active...
       alcMakeContextCurrent( mContextId );
       
-      vprDEBUG(snxDBG, vprDBG_CONFIG_LVL) << clrOutNORM(clrYELLOW, "OpenAL| NOTICE:") << " OpenAL API started: [dev=" << (int)mDev << ",ctx=" << (int)mContextId << "]\n" << vprDEBUG_FLUSH;
+      vprDEBUG(snxDBG, vprDBG_CONFIG_LVL)
+         << clrOutNORM(clrYELLOW, "OpenAL| NOTICE:")
+         << " OpenAL API started: [dev=0x" << std::hex << mDev
+         << ",ctx=0x" << mContextId << std::dec << "]\n" << vprDEBUG_FLUSH;
    }
    else
    {
@@ -473,7 +476,11 @@ void OpenALSoundImplementation::shutdownAPI()
 {
    if (this->isStarted() == false)
    {
-      vprDEBUG(snxDBG, vprDBG_CONFIG_LVL) << clrOutNORM(clrYELLOW, "OpenAL| WARNING:") << "API not started, nothing to shutdown [dev=" << (int)mDev << ",ctx=" << (int)mContextId << "]\n" << vprDEBUG_FLUSH;
+      vprDEBUG(snxDBG, vprDBG_CONFIG_LVL)
+         << clrOutNORM(clrYELLOW, "OpenAL| WARNING:")
+         << "API not started, nothing to shutdown [dev=0x" << std::hex
+         << mDev << ",ctx0x=" << mContextId << std::dec << "]\n"
+         << vprDEBUG_FLUSH;
       return;
    }
    
@@ -492,7 +499,10 @@ void OpenALSoundImplementation::shutdownAPI()
    mContextId = NULL;
    mDev = NULL;
 
-   vprDEBUG(snxDBG, vprDBG_CONFIG_LVL) << clrOutNORM(clrYELLOW, "OpenAL| NOTICE:") << " OpenAL API closed: [dev=" << (int)mDev << ",ctx=" << (int)mContextId << "]\n" << vprDEBUG_FLUSH;
+   vprDEBUG(snxDBG, vprDBG_CONFIG_LVL)
+      << clrOutNORM(clrYELLOW, "OpenAL| NOTICE:")
+      << " OpenAL API closed: [dev=0x" << std::hex << mDev << ",ctx=0x"
+      << mContextId << std::dec << "]\n" << vprDEBUG_FLUSH;
 }   
 
 /**
