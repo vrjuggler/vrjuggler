@@ -49,13 +49,13 @@ include @topdir@/make.defs.mk
 # -----------------------------------------------------------------------------
 # Base variables needed by all test suite makefiles.
 # -----------------------------------------------------------------------------
-test_topdir=    @topdir@/test/TestSuite
-VJ_BASE_DIR?=   @APP_BASE_DIR@
-CPP_UNIT=       @CPPUNIT_ROOT@
+test_topdir=	@topdir@/test/TestSuite
+VJ_BASE_DIR?=	@APP_BASE_DIR@
+CPP_UNIT=	@CPPUNIT_ROOT@
 
 # -----------------------------------------------------------------------------
 # Override settings for variables read from make.defs.mk.
 # -----------------------------------------------------------------------------
-EXTRA_CFLAGS=   @APP_EXTRA_CFLAGS@
-EXTRA_CXXFLAGS= @APP_EXTRA_CFLAGS@
-EXTRA_INCLUDES= -I$(VJ_BASE_DIR)/include -I$(srcdir) -I$(CPP_UNIT)/include
+EXTRA_CFLAGS=	@APP_EXTRA_CFLAGS@
+EXTRA_CXXFLAGS=	@APP_EXTRA_CFLAGS@
+EXTRA_INCLUDES=	-I$(VJ_BASE_DIR)/include -I$(srcdir) -I$(CPP_UNIT)/include
