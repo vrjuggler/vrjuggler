@@ -44,6 +44,7 @@ topdir=			@topdir@
 instlinks=		$(topdir)/instlinks
 releasedir=		@JUGGLERROOT_ABS@/release
 scriptdir=		$(releasedir)/scripts
+srcdir=			@srcdir@
 top_srcdir=		@top_srcdir@
 DPP_SCRIPTDIR=		@JUGGLERROOT_ABS@/Doozer++/scripts
 
@@ -409,6 +410,9 @@ ifneq ($(OMNI_PYTHON_DIR),)
 endif
 ifeq ($(USE_OMNIPYTHON), Y)
 	$(SHELL) $(MKINSTALLDIRS) $(deps_prefix)/lib/$(OMNI_PYTHON_DIR)/lib-dynload
+	mv $(deps_prefix)/bin/omniidl $(deps_prefix)/bin/omniidl.py
+	$(INSTALL) $(GROUP_OPT_UNIX) -m $(EXEC_PERMS)			\
+          $(srcdir)/omniidl.sh $(deps_prefix)/bin/omniidl
 	$(INSTALL) $(GROUP_OPT_UNIX) -m $(EXEC_PERMS) $(OMNIPYTHON)	\
           $(deps_prefix)/bin
 	-$(INSTALL) $(GROUP_OPT_UNIX) -m $(FILE_PERMS)			\
