@@ -5,6 +5,10 @@
 #include <Threads/vjThread.h>
 #include <Sync/vjGuard.h>
 #include <Kernel/vjDebug.h>
+
+#include <Kernel/vjSurfaceDisplay.h>
+#include <Kernel/vjSimDisplay.h>
+
 #include <GL/gl.h>
 
 
@@ -107,9 +111,10 @@ void vjGlPipe::checkForNewWindows()
 
          // Opened new window, call init function for the context
          vjGlDrawManager* dMgr = vjGlDrawManager::instance();
+         vjDisplay* theDisplay = newWins[winNum]->getDisplay();   // Get the display for easy access
          dMgr->setCurrentContext(newWins[winNum]->getId());
-         dMgr->currentUserData()->setUser(newWins[winNum]->getDisplay()->mUser);         // Set user data
-         dMgr->currentUserData()->setProjection(newWins[winNum]->getDisplay()->leftProj);
+         dMgr->currentUserData()->setUser(theDisplay->getUser());         // Set user data
+         dMgr->currentUserData()->setProjection(NULL);
 
          theApp->contextInit();              // Call context init function
       }
@@ -131,35 +136,39 @@ void vjGlPipe::renderWindow(vjGlWindow* win)
    win->makeCurrent();                       // Set correct context
    theApp->contextPreDraw();                 // Do any context pre-drawing
 
-   if (!theDisplay->isSimulator())      // NON-SIMULATOR
+   if (theDisplay->isSurface())        // Surface display
    {
-      win->setLeftEye();
+      vjSurfaceDisplay* surface_disp = dynamic_cast<vjSurfaceDisplay*>(theDisplay);
+
+      win->setLeftEyeProjection();
       glManager->drawObjects();
-      glManager->currentUserData()->setUser(theDisplay->mUser);         // Set user data
-      glManager->currentUserData()->setProjection(theDisplay->leftProj);
+      glManager->currentUserData()->setUser(surface_disp->getUser());         // Set user data
+      glManager->currentUserData()->setProjection(surface_disp->getLeftProj());
 
       theApp->draw();
 
       if (win->isStereo())
       {
-         win->setRightEye();
+         win->setRightEyeProjection();
          glManager->drawObjects();
-         glManager->currentUserData()->setUser(theDisplay->mUser);         // Set user data
-         glManager->currentUserData()->setProjection(theDisplay->rightProj);
+         glManager->currentUserData()->setUser(surface_disp->getUser());         // Set user data
+         glManager->currentUserData()->setProjection(surface_disp->getRightProj());
 
          theApp->draw();
       }
    }
-   else                                   // SIMULATOR
+   else if(theDisplay->isSimulator())                                  // SIMULATOR
    {
-      win->setCameraEye();
+      vjSimDisplay* sim_disp = dynamic_cast<vjSimDisplay*>(theDisplay);
+
+      win->setCameraProjection();
       glManager->drawObjects();
-      glManager->currentUserData()->setUser(theDisplay->mUser);         // Set user data
-      glManager->currentUserData()->setProjection(theDisplay->cameraProj);
+      glManager->currentUserData()->setUser(sim_disp->getUser());         // Set user data
+      glManager->currentUserData()->setProjection(sim_disp->getCameraProj());
 
       theApp->draw();
 
-      glManager->drawSimulator(win->getDisplay()->mSim);
+      glManager->drawSimulator(sim_disp);
    }
 
    glFlush();              // Flush the OpenGL commands

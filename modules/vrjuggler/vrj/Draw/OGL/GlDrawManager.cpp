@@ -3,7 +3,11 @@
 #include <Threads/vjThread.h>
 #include <Kernel/vjDisplayManager.h>
 #include <Kernel/vjKernel.h>
-#include <Kernel/vjSimulator.h>
+
+#include <Kernel/vjDisplay.h>
+#include <Kernel/vjSimDisplay.h>
+#include <Kernel/vjSurfaceDisplay.h>
+
 #include <Kernel/GL/vjGlApp.h>
 #include <Input/vjGlove/vjGlove.h>
 #include <Input/InputManager/vjGloveProxy.h>
@@ -112,7 +116,7 @@ void vjGlDrawManager::initDrawing()
    // Create Pipes & Add all windows to the correct pipe
    for(int winId=0;winId<wins.size();winId++)   // For each window we created
    {
-      int pipeNum = wins[winId]->getDisplay()->pipe();  // Find pipe to add it too
+      int pipeNum = wins[winId]->getDisplay()->getPipe();  // Find pipe to add it too
                                                         // ASSERT: pipeNum := [0...n]
 
       if(pipes.size() < (pipeNum+1))            // ASSERT: Max index of pipes is < our pipe
@@ -183,9 +187,57 @@ void vjGlDrawManager::drawObjects()
    // Draw any other object that need to be seen
 }
 
+
+void vjGlDrawManager::drawProjections()
+{
+   std::vector<vjDisplay*> disps = displayManager->getDisplays();
+
+   vjVec3 apex, ur, lr, ul, ll;
+   vjProjection* proj(NULL);
+
+   for(int i=0;i<disps.size();i++)
+   {
+      if(disps[i]->isSurface())
+      {
+         if(disps[i]->isSurface())
+         {
+            vjSurfaceDisplay* surf_disp = dynamic_cast<vjSurfaceDisplay*>(disps[i]);
+            vjASSERT(surf_disp != NULL);
+            proj = surf_disp->getLeftProj();
+         }
+         else if (disps[i]->isSimulator())
+         {
+            vjSimDisplay* sim_disp = dynamic_cast<vjSimDisplay*>(disps[i]);
+            vjASSERT(sim_disp != NULL);
+            proj = sim_disp->getCameraProj();
+         }
+
+         // Create color values that are unique
+         // Basically count in binary (skipping 0), and use the first 3 digits.  That will give six colors
+         int red_on = (i & 0x001); int green_on = (i & 0x010); int blue_on = (i & 0x100);
+
+         float red(0.0f), green(0.0f), blue(0.0f);
+         if(red_on) red = 1.0f;
+         if(green_on) green = 1.0f;
+         if(blue_on) blue = 1.0f;
+
+         if((!red_on) && (!blue_on) && (!green_on))      // Case of 0's (black is bad)
+            red = blue = green = 0.75f;
+
+         // Draw the thingy
+         proj->getFrustumApexAndCorners(apex, ur, lr, ul, ll);
+         glPushMatrix();
+            glColor3f(red, green, blue);
+            drawLine(apex, ur); drawLine(apex, lr); drawLine(apex, ul); drawLine(apex, ll);
+            drawLine(ur, lr); drawLine(lr, ll); drawLine(ll, ul); drawLine(ul, ur);
+         glPopMatrix();
+      }
+   }
+}
+
 //: Draw a simulator using OpenGL commands
 //! NOTE: This is called internally by the library
-void vjGlDrawManager::drawSimulator(vjSimulator* sim)
+void vjGlDrawManager::drawSimulator(vjSimDisplay* sim)
 {
    const float head_radius(0.75);
    const float eye_vertical(0.22);
@@ -229,11 +281,18 @@ void vjGlDrawManager::drawSimulator(vjSimulator* sim)
 	//-----------------------------------------------------
 	
       // Draw a cave-like outline
-       glPushMatrix();
-	  glColor3f(1.0f, 1.0f, 1.0f);
-	  glTranslatef(0.0f, 5.0f, 0.0f);      // Center it on 0,0,0
-	  drawWireCube(10.0f);
-       glPopMatrix();
+   glPushAttrib( GL_ENABLE_BIT | GL_LIGHTING_BIT );
+   glDisable(GL_LIGHTING);
+   glPushMatrix();
+      glPushMatrix();
+         glColor3f(1.0f, 1.0f, 1.0f);
+	      glTranslatef(0.0f, 5.0f, 0.0f);      // Center it on 0,0,0
+	      drawWireCube(10.0f);
+      glPopMatrix();
+      drawProjections();
+   glPopMatrix();
+   glPopAttrib();
+
 
 	  // Draw the user's head
        glPushMatrix();
