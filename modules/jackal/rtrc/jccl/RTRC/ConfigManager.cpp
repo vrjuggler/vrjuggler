@@ -32,6 +32,8 @@
 
 #include <jccl/jcclConfig.h>
 
+#include <boost/filesystem/path.hpp>
+
 #include <vpr/vpr.h>
 #include <vpr/System.h>
 #include <vpr/IO/Socket/InetAddr.h>
@@ -44,6 +46,8 @@
 #include <jccl/RTRC/RemoteReconfig.h>
 #include <jccl/RTRC/ConfigManager.h>
 
+
+namespace fs = boost::filesystem;
 
 namespace jccl
 {
@@ -110,14 +114,6 @@ void ConfigManager::loadRemoteReconfig()
 {
    vprASSERT(NULL == mReconfigIf && "RTRC interface object already instantiated.");
 
-#if defined(VPR_OS_Win32)
-   const std::string plugin_ext("dll");
-#elif defined(VPR_OS_Darwin)
-   const std::string plugin_ext("dylib");
-#else
-   const std::string plugin_ext("so");
-#endif
-
    const std::string jccl_base_dir("JCCL_BASE_DIR");
    const std::string vj_base_dir("VJ_BASE_DIR");
    std::string base_dir;
@@ -138,14 +134,10 @@ void ConfigManager::loadRemoteReconfig()
    const std::string bit_suffix("");
 #endif
 
-   std::vector<std::string> search_path(1);
-#ifdef VPR_OS_Win32
-   search_path[0] = base_dir + std::string("\\lib") + 
-                    std::string("\\jccl\\plugins");
-#else
-   search_path[0] = base_dir + std::string("/lib") + bit_suffix +
-                    std::string("/jccl/plugins");
-#endif
+   std::vector<fs::path> search_path(1);
+   search_path[0] = fs::path(base_dir, fs::native) /
+                       (std::string("lib") + bit_suffix) /
+                       std::string("jccl") / std::string("plugins");
 
    // In the long run, we may not want to hard-code the base name of the
    // plug-in we load.  If we ever reach a point where we have multiple ways
