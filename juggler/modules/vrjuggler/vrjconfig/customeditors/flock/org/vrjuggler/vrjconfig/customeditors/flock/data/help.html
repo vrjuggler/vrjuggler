@@ -1,0 +1,87 @@
+<!-- *********** <auto-copyright.pl BEGIN do not edit this line> *********** -->
+<!--
+ VR Juggler is (C) Copyright 1998-2005 by Iowa State University
+
+ Original Authors:
+   Allen Bierbaum, Christopher Just,
+   Patrick Hartling, Kevin Meinert,
+   Carolina Cruz-Neira, Albert Baker
+
+ This library is free software; you can redistribute it and/or
+ modify it under the terms of the GNU Library General Public
+ License as published by the Free Software Foundation; either
+ version 2 of the License, or (at your option) any later version.
+
+ This library is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ Library General Public License for more details.
+
+ You should have received a copy of the GNU Library General Public
+ License along with this library; if not, write to the
+ Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+ Boston, MA 02111-1307, USA.
+
+ =================================================================
+ File:          $RCSfile$
+ Date modified: $Date$
+ Version:       $Revision$
+ =================================================================
+ -->
+<!-- ************ <auto-copyright.pl END do not edit this line> ************ -->
+
+<html>
+<head>
+<title>Flock of Birds Custom Editor for VRJConfig</title>
+</head>
+
+<body>
+   <h2>Flock of Birds configuration steps:</h2>
+
+   <ol>
+      <li>
+         Set the serial port to which the Flock of Birds is connected.
+      </li>
+      <li>
+         Set the baud for the serial port.
+      </li>
+      <li>
+         Set the hemisphere of the transmitter within which the user(s) will
+         be operating.
+      </li>
+      <li>
+         Set the Fast Bird Bus (FBB) address of the master bird.  This is
+         determined by the DIP switch settings on the birds.  With EPROM
+         version 3.67 or newer, this value will be detected automatically by
+         the device driver.  Otherwise, it must be set correctly here.
+      </li>
+      <li>
+         Set the addressing mode.  This will depend on the type of Flock
+         hardware being used.  With EPROM verrsion 3.67 or newer, this value
+         will be detected automatically by the device driver.  Otherwise, it
+         must be set correctly here.
+      </li>
+      <li>
+         Set the filter.  This value is currently <i>ignored</i> by the device
+         driver.
+      </li>
+      <li>
+         Set the physical units of the data returned by the sensors.
+         Currently, the Flock of Birds tracking system <i>only</i> returns
+         inches, but the device driver always reinterprets this as
+         <b>Feet</b>.  Therefore, <b>Feet</b> must be chosen.
+      </li>
+      <li>
+         Configure the position and orientation of the MotionStar Wireless
+         transmitter (the large black box) relative to the VR Juggler
+         coordinate frame.  This process configures what is known as a
+         "position transform filter."  The panels titled "Orientation" and
+         "Position" present an easy way to perform this task.
+
+         <p>
+            Configuring the position filter involves ...
+         </p>
+      </li>
+   </ol>
+</body>
+</html>
