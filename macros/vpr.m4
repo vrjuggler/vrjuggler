@@ -98,8 +98,10 @@ AC_DEFUN(VPR_PATH,
     else
         VPR_CXXFLAGS=`$VPR_CONFIG $vpr_config_args --cxxflags $ABI`
         VPR_EXTRA_LIBS=`$VPR_CONFIG $vpr_config_args --extra-libs $ABI`
-        VPR_LIBS="`$VPR_CONFIG $vpr_config_args --libs $ABI` $VPR_EXTRA_LIBS"
-        VPR_LIBS_STATIC="`$VPR_CONFIG $vpr_config_args --libs $ABI --static` $VPR_EXTRA_LIBS"
+        VPR_LIBS_LD="`$VPR_CONFIG $vpr_config_args --libs $ABI --linker` $VPR_EXTRA_LIBS"
+        VPR_LIBS_STATIC_LD="`$VPR_CONFIG $vpr_config_args --libs $ABI --linker --static` $VPR_EXTRA_LIBS"
+        VPR_LIBS_CC="`$VPR_CONFIG $vpr_config_args --libs $ABI` $VPR_EXTRA_LIBS"
+        VPR_LIBS_STATIC_CC="`$VPR_CONFIG $vpr_config_args --libs $ABI --static` $VPR_EXTRA_LIBS"
         VPR_VERSION=`$VPR_CONFIG --version`
         DPP_VERSION_CHECK_MSG(VPR, $VPR_VERSION, $min_vpr_version,
                               vpr_cv_vpr_version, $2, $3)
@@ -119,6 +121,8 @@ AC_DEFUN(VPR_PATH,
     fi
 
     AC_SUBST(VPR_CXXFLAGS)
-    AC_SUBST(VPR_LIBS)
-    AC_SUBST(VPR_LIBS_STATIC)
+    AC_SUBST(VPR_LIBS_LD)
+    AC_SUBST(VPR_LIBS_STATIC_LD)
+    AC_SUBST(VPR_LIBS_CC)
+    AC_SUBST(VPR_LIBS_STATIC_CC)
 ])
