@@ -24,9 +24,11 @@ class vjBird : public vjPosition
 public:
    /** @name Construction/Destruction */
    //@{
-   vjBird(vjConfigChunk *c);
+   vjBird();
    ~vjBird();
    //@}
+
+   virtual bool config(vjConfigChunk* c);
 
    /** @name vjInput pure virtual functions
     *
@@ -45,7 +47,7 @@ public:
     *  override but are not required to
     */
    //@{
-   char* GetDeviceName() { return "vjFlock";}
+   char* GetDeviceName() { return "vjBird";}
    //@}
 
    /** @name vjPosition pure virtual functions

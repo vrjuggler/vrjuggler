@@ -1,8 +1,10 @@
 #include <Input/vjSim/vjSimAnalog.h>
 
-vjSimAnalog::vjSimAnalog(vjConfigChunk* chunk)
-   : vjSimInput(chunk), vjAnalog(chunk), vjInput(chunk)
+bool vjSimAnalog::config(vjConfigChunk* chunk)
 {
+   if((!vjAnalog::config(chunk)) || (!vjSimInput::config(chunk)))
+      return false;
+
    // Get keyboard pairs
    int num_keys_up = chunk->getNum("keysUp");
    int num_mods_up = chunk->getNum("modKeysUp");
@@ -28,6 +30,8 @@ vjSimAnalog::vjSimAnalog(vjConfigChunk* chunk)
 
    mAnaData = vector<int>(num_pairs,0);      // Initialize to all zeros
    mAnaStep = chunk->getProperty("anastep");
+
+   return true;
 }
 
 void vjSimAnalog::UpdateData()

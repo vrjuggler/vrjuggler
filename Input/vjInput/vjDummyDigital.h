@@ -17,6 +17,7 @@
 #include <Input/vjInput/vjInput.h>
 
 //: A dummy Digital device for Digital proxies to default to.
+//!PUBLIC_API
 class vjDummyDigital : public vjDigital
 {
 public:

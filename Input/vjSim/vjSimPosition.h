@@ -11,6 +11,7 @@
 // Simulates a positional device from a keyboard device.
 //
 // This class should not be used directly by the user.
+//!PUBLIC_API
 class vjSimPosition : virtual public vjPosition, public vjSimInput
 {
 public:
@@ -37,8 +38,10 @@ public:
       GLOBAL = 1
    };
 public:
-   vjSimPosition(vjConfigChunk* chunk);
+   vjSimPosition() {;}
    ~vjSimPosition() {;}
+
+   virtual bool config(vjConfigChunk* chunk);
 
    //: Return position data
    vjMatrix* GetPosData(int devNum=0)
@@ -57,6 +60,8 @@ public:
 
    //: Get the name of the digital device
    char* GetDeviceName() { return "vjSimPosition";}
+
+   static string getChunkType() { return string("SimPosition"); }
 
 private:
    //: Move forward (-z) the given amount on position data n

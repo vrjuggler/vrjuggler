@@ -20,20 +20,28 @@ static void set_transmitter(int port, int transmitter);
 static void set_autoconfig(int port, int transmitter);
 static void set_group(int port);
 
-vjBird::vjBird(vjConfigChunk *c) : vjPosition(c), vjInput(c)
+vjBird::vjBird()
 {
-  port_id = -1;
-  active = 0;
-  syncStyle = 1;
+   syncStyle = 1;
   blocking = 0;
   //theTransmitter = 3;
   hemisphere = LOWER_HEM;
   repRate = 'Q';
   baudRate = 38400;
+
+  deviceAbilities = deviceAbilities | DEVICE_POSITION;
+}
+
+bool vjBird::config(vjConfigChunk *c)
+{
+   if(!vjPosition::config(c))
+      return false;
+
   strncpy(sPort,"/dev/ttyd3", 30);
   InitCorrectionTable();
-  deviceAbilities = deviceAbilities & DEVICE_POSITION;
   theData = (vjMatrix*)allocate(3*sizeof(vjMatrix));
+
+  return true;
 }
 
 vjBird::~vjBird()

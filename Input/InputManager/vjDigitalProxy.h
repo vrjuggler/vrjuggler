@@ -10,6 +10,7 @@
 #include <vjConfig.h>
 #include <assert.h>
 #include <Input/vjInput/vjDigital.h>
+#include <Input/InputManager/vjProxy.h>
 
 //--------------------------------------------------------------------------
 //: A proxy class to digital devices, used by the vjInputManager.
@@ -18,17 +19,17 @@
 //  the inputgroup can therefore keep an array of these around and
 //  treat them as digital devices which only return a single
 //  subDevice's amount of data.  (one int)
+//!PUBLIC_API
 //--------------------------------------------------------------------------
-class vjDigitalProxy : public vjMemory
+class vjDigitalProxy : public vjMemory, public vjProxy
 {
 
 public:
    /** @name Construction/Destruction */
    //@{
-   vjDigitalProxy(vjDigital* digPtr, int unitNum) {
-      assert( digPtr->FDeviceSupport(DEVICE_DIGITAL) );
-      m_digPtr = digPtr;
-      m_unitNum = unitNum;
+   vjDigitalProxy() {
+      m_digPtr = NULL;
+      m_unitNum = -1;
    }
 
    ~vjDigitalProxy() {}
@@ -100,6 +101,10 @@ public:
    {
       return m_unitNum;
    }
+
+   static string getChunkType() { return "DigProxy"; }
+
+   bool config(vjConfigChunk* chunk);
 
 private:
    vjDigital*  m_digPtr;      //: Pointer to the digital device

@@ -11,14 +11,15 @@
 //: Abstract base class for all glove gesture recognition
 //
 //
+//!PUBLIC_API
 class vjGloveGesture : virtual public vjGesture
 {
 public:
-   vjGloveGesture(vjConfigChunk* c) : vjGesture(c)
-   {;}
-
    vjGloveGesture()
    {;}
+
+   virtual bool config(vjConfigChunk* c)
+   { return vjGesture::config(c);}
 
 public:
    //: Get a gesture name

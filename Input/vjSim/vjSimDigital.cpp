@@ -1,8 +1,10 @@
 #include <Input/vjSim/vjSimDigital.h>
 
-vjSimDigital::vjSimDigital(vjConfigChunk* chunk)
-   : vjSimInput(chunk), vjDigital(chunk), vjInput(chunk)
+bool vjSimDigital::config(vjConfigChunk* chunk)
 {
+   if((!vjDigital::config(chunk)) || (!vjSimInput::config(chunk)))
+      return false;
+
    // Get keyboard pairs
    int num_keys = chunk->getNum("keys");
    int num_mods = chunk->getNum("modKeys");
@@ -19,6 +21,8 @@ vjSimDigital::vjSimDigital(vjConfigChunk* chunk)
    }
 
    mDigitalData = vector<int>(num_pairs,0);      // Initialize to all zeros
+
+   return true;
 }
 
 // Updates the state of the digital data vector <br>

@@ -6,24 +6,26 @@
 #include <Threads/vjThread.h>
 #include <Kernel/vjDebug.h>
 
-/**********************************************************
-  vjIBox::vjIBox(vjConfigChunk *c)
-
-  IBox Constructor, to be called from vjInputManager
-
-*********************************************** ahimberg */
-vjIBox::vjIBox(vjConfigChunk *c) : vjAnalog(c), vjDigital(c), vjInput(c)
+//: Config function
+// Configures the ibox
+bool vjIBox::config(vjConfigChunk *c)
 {
-  cerr << "	vjIBox::vjIbox(vjConfigChunk*)" << endl;
+  if( (!vjAnalog::config(c)) || (!vjDigital::config(c)))
+     return false;
+
+  vjDEBUG(1) << "	vjIBox::config:" << endl << vjDEBUG_FLUSH;
   port_id = c->getProperty("portNum");
 
-  active = 0;
-  baudRate = c->getProperty("baud");
+  // Done in vjInput
+  //active = 0;
+  //baudRate = c->getProperty("baud");
 
-  vjDEBUG(5) << "   Creating an IBox.. params: " << endl
+  vjDEBUG(1) << "   Creating an IBox.. params: " << endl
              << "	   portnum: " << port_id << endl
              << "        baud   : " << baudRate << endl
              << "   instanceName: " << instName << endl << endl << vjDEBUG_FLUSH;
+
+  return true;
 }
 
 /**********************************************************

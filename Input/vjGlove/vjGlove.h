@@ -26,6 +26,7 @@
 //
 // NOTE: More docs needed here
 //
+//!PUBLIC_API
 class vjGloveData
 {
 public:
@@ -72,12 +73,15 @@ public:
 // Description:
 //
 //-------------------------------------------------------------------------
+//!PUBLIC_API
 class vjGlove : virtual public vjInput
 {
 public:
    vjGlove();
 
-   vjGlove(vjConfigChunk* chunk);
+   // Let constructor take care of device abilities and init
+   virtual bool config(vjConfigChunk* chunk)
+   {return vjInput::config(chunk);}
 
    char* GetDeviceName() { return "vjGlove"; }
 

@@ -10,6 +10,7 @@
 #include <vjConfig.h>
 #include <assert.h>
 #include <Input/vjInput/vjAnalog.h>
+#include <Input/InputManager/vjProxy.h>
 
 //: A proxy class to analog devices, used by the vjInputManager.
 //
@@ -20,50 +21,54 @@
 //
 // See also: vjAnalog
 //
-class vjAnalogProxy : public vjMemory {
+//!PUBLIC_API
+class vjAnalogProxy : public vjMemory, public vjProxy
+{
 
-  public:
+public:
    //: Constructor
-    vjAnalogProxy(vjAnalog* anaPtr, int d) {
-        vjASSERT( anaPtr->FDeviceSupport(DEVICE_ANALOG) );
-	      m_anaPtr = anaPtr;
-	      m_unitNum = d;
-    }
+   vjAnalogProxy() : m_anaPtr(NULL), m_unitNum(-1), m_data(-1)
+   {;}
 
-    ~vjAnalogProxy() {    }
+   ~vjAnalogProxy() {}
 
-    //: Set the proxy to point to the given analog device
-    //! PRE: anaPtr must be a valid analog device
-    //+      subNum must be a valid subNum for the device
-    //! POST: The proxy now references the analog device
-    //! ARGS: anaPtr - Pointer to the analog device
-    //! ARGS: subNum - The subunit number of the analog device
-    void Set(vjAnalog* anaPtr, int subNum)
-    {
-       assert( anaPtr->FDeviceSupport(DEVICE_ANALOG) );
-       m_anaPtr = anaPtr;
-       m_unitNum = subNum;
-    }
+   //: Set the proxy to point to the given analog device
+   //! PRE: anaPtr must be a valid analog device
+   //+      subNum must be a valid subNum for the device
+   //! POST: The proxy now references the analog device
+   //! ARGS: anaPtr - Pointer to the analog device
+   //! ARGS: subNum - The subunit number of the analog device
+   void Set(vjAnalog* anaPtr, int subNum)
+   {
+      assert( anaPtr->FDeviceSupport(DEVICE_ANALOG) );
+      m_anaPtr = anaPtr;
+      m_unitNum = subNum;
+   }
 
-    //: Update the cached data copy from the device
-    void UpdateData()
-    { m_data = m_anaPtr->GetAnalogData(m_unitNum); }
+   //: Update the cached data copy from the device
+   void UpdateData()
+   { m_data = m_anaPtr->GetAnalogData(m_unitNum);}
 
-    //: Get the current analog data value
-    //! RETURNS: The analog data from the device
-    int GetData()
-    { return m_data; }
+   //: Get the current analog data value
+   //! RETURNS: The analog data from the device
+   int GetData()
+   { return m_data;}
 
-    vjAnalog* GetAnalogPtr()
-    { return m_anaPtr; }
+   vjAnalog* GetAnalogPtr()
+   { return m_anaPtr;}
 
-    int GetUnit()
-    { return m_unitNum; }
+   int GetUnit()
+   { return m_unitNum;}
 
-  private:
-    vjAnalog*   m_anaPtr;
-    int	       m_unitNum;
-    int	       m_data;
+   static string getChunkType() { return "AnaProxy";}
+
+   bool config(vjConfigChunk* chunk);
+
+
+private:
+   vjAnalog*   m_anaPtr;
+   int         m_unitNum;
+   int         m_data;
 };
 
 #endif

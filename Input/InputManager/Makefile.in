@@ -28,7 +28,15 @@ vpath %.o ${OBJDIR}
 
 DEPEND_SRCS	:= vjInputManager.cpp		\
                    vjDeviceInterface.cpp	\
-                   vjPosInterface.cpp
+                   vjPosInterface.cpp		\
+		   vjPosProxy.cpp		\
+                   vjProxyFactory.cpp		\
+		   vjDeviceFactory.cpp		\
+		   vjAnalogProxy.cpp		\
+		   vjDigitalProxy.cpp		\
+		   vjGestureProxy.cpp		\
+		   vjGloveProxy.cpp		\
+		   vjKeyboardProxy.cpp
 
 INPUT_MGR_OBJECTS := $(addprefix $(OBJDIR)/,$(DEPEND_SRCS:.cpp=.o))
 

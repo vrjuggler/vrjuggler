@@ -2,10 +2,11 @@
 
 // Configure the keyboard interface
 // Grabs it out of the given config chunk
-vjSimInput::vjSimInput(vjConfigChunk* chunk)
+bool vjSimInput::config(vjConfigChunk* chunk)
 {
    string keyboardName = (char*)chunk->getProperty("keyboardProxy");    // Get the event source
    mKeyboard.init(keyboardName);
+   return true;
 }
 
 int vjSimInput::checkKeyPair(vjKeyModPair& pair)

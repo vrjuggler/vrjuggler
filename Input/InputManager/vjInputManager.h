@@ -22,6 +22,7 @@
 #endif
 
 #include <Kernel/vjDebug.h>
+#include <Kernel/vjConfigChunkHandler.h>
 
 // Proxies
 #include <Input/InputManager/vjPosProxy.h>
@@ -51,7 +52,8 @@
 //  set up by configChunks and should be accessed by number, rather than name.
 //  (for speed)
 //-------------------------------------------------------------------------------
-class vjInputManager : public vjMemory
+//!PUBLIC_API
+class vjInputManager : public vjMemory, public vjConfigChunkHandler
 {
 public:
    vjInputManager();
@@ -64,7 +66,40 @@ public:
    //  and all of the proxies.
    void DumpStatus();
 
-   int FNewInput(vjConfigChunkDB *cdb);
+ //---------------------------//
+ //      CONFIG               //
+ //---------------------------//
+   //: Initial configuration for InputManager
+   //! PRE: MUST be called before any config is added to input manager
+   void ConfigureInitial(vjConfigChunkDB* cdb);
+
+   //: Add the chunk to the configuration
+   //! PRE: configCanHandle(chunk) == true
+   //! RETURNS: success
+   bool configAdd(vjConfigChunk* chunk);
+
+   //: Remove the chunk from the current configuration
+   //! PRE: configCanHandle(chunk) == true
+   //!RETURNS: success
+   bool configRemove(vjConfigChunk* chunk)
+   { return true;}
+
+   //: Can the handler handle the given chunk?
+   //! RETURNS: true - Can handle it
+   //+          false - Can't handle it
+   bool configCanHandle(vjConfigChunk* chunk);
+
+   //: Load the device for the given chunk
+   //!RETURNS: true - Device was configured and added
+   bool ConfigureDevice(vjConfigChunk* chunk);
+
+   //: Load the Proxy for the given chunk
+   //!RETURNS: true - Proxy was configured and added
+   bool ConfigureProxy(vjConfigChunk* chunk);
+
+   //-------------------//
+   //     PROXIES       //
+   //-------------------//
 
    //: Function to get an index to the proxy/alias given in str
    //! RETURNS: -1 - Not Found
@@ -77,7 +112,6 @@ public:
     *  devices, that is functions that do not take a Config structure.
     *  These functions should primarily be used by the vjInputManager itself.
     *************************************************************************/
-
    //: Add a device to vjInputManager.
    //
    // Add the devPtr to the device Array, devPtr should
@@ -141,10 +175,12 @@ public:
       return m_posProxyVector[posProxyIndex];
    }
 
-   //: Add a pos proxy.
-   // A pos proxy to the dev and subNum is created
-   // retVal = index of new proxy
-   int AddPosProxy(int DevNum, int subNum);
+   //: Add the pos proxy
+   //! POST: pos proxy has been added
+   //+   proxy alias has been set
+   //! RETURNS: -1: failure, >0: proxy_num
+   int AddPosProxy(string devName, int subNum, string proxyName, vjPosProxy* posProxy);
+
 
    //: Turn the position proxy at index ProxyNum to point back
    // to the default dummy proxy. <br>
@@ -175,13 +211,12 @@ public:
    }
 
 
-   //: Adds a new digital proxy to the proxy vector
-   // device at devNum in the device array, with subNumber <br>
-   // <br>
-   //! MODIFIES: self <br>
-   //! POST: m_digProxyVector' contains new Proxy at DevNum/subNum
-   //       return = vector index of new proxy
-   int AddDigProxy(int DevNum, int subNum);
+   //: Add the digital proxy
+   //! POST: dig proxy has been added
+   //+   proxy alias has been set
+   //! RETURNS: -1: failure, >0: proxy_num
+   int AddDigProxy(string devName, int subNum, string proxyName, vjDigitalProxy* digitalProxy);
+
 
 
    //: Turn the digital proxy at index ProxyNum to point back
@@ -219,13 +254,11 @@ public:
    }
 
 
-   //: Adds a new analog proxy to the proxy vector
-   // device at devNum in the device array, with subNumber<br>
-   // <br>
-   //! MODIFIES: self<br>
-   //! POST: m_anaProxyVector' = contains new Proxy at DevNum/subNum
-   //       return = vector index of new proxy
-   int AddAnaProxy(int DevNum, int subNum);
+   //: Add the analog proxy
+   //! POST: analog proxy has been added
+   //+   proxy alias has been set
+   //! RETURNS: -1: failure, >0: proxy_num
+   int AddAnaProxy(string devName, int subNum, string proxyName, vjAnalogProxy* anaProxy);
 
 
    //: Turn the analog proxy at index ProxyNum to point back
@@ -260,10 +293,11 @@ public:
       return m_gloveProxyVector[gloveProxyIndex];
    }
 
-   //: Add a Glove proxy.
-   // A glove proxy to the dev and subNum is created
-   //! RETURNS: = index of new glove proxy
-   int AddGloveProxy(int DevNum, int subNum);
+   //: Add the glove proxy
+   //! POST: glove proxy has been added
+   //+   proxy alias has been set
+   //! RETURNS: -1: failure, >0: proxy_num
+   int AddGloveProxy(string devName, int subNum, string proxyName, vjGloveProxy* gloveProxy);
 
    //: Turn the glove proxy at index ProxyNum to point back
    // to the default dummy glove proxy. <br>
@@ -296,10 +330,11 @@ public:
       return m_keyboardProxyVector[keyboardProxyIndex];
    }
 
-   //: Add a keyboard proxy.
-   // A keyboard proxy to the dev is created
-   //! RETURNS: = index of new keyboard proxy
-   int AddKeyboardProxy(int DevNum);
+   //: Add the keyboard proxy
+   //! POST: keyboard proxy has been added
+   //+   proxy alias has been set
+   //! RETURNS: -1: failure, >0: proxy_num
+   int AddKeyboardProxy(string devName, int subNum, string proxyName, vjKeyboardProxy* kbProxy);
 
    //: Turn the keyboard proxy at index ProxyNum to point back
    // to the default dummy keyboard proxy. <br>
@@ -327,10 +362,11 @@ public:
       return m_gestureProxyVector[gestureProxyIndex];
    }
 
-   //: Add a gesture proxy.
-   // A gesture proxy to the dev is created
-   //! RETURNS: = index of new gesture proxy
-   int AddGestureProxy(int DevNum);
+   //: Add the gesture proxy
+   //! POST: gesture proxy has been added
+   //+   proxy alias has been set
+   //! RETURNS: -1: failure, >0: proxy_num
+   int AddGestureProxy(string devName, int subNum, string proxyName, vjGestureProxy* gestureProxy);
 
    //: Turn the gesture proxy at index ProxyNum to point back
    // to the default dummy gesture proxy. <br>
@@ -363,34 +399,10 @@ protected:
    map<string, int>    proxyAliases;      // List of alias indices for proxies
 
 private:
-   /// @name Private functions for vjInputManager configuration from a ChunkDB
-   //@{
-   void ConfigureInputManager(vjConfigChunkDB* cdb);
-#ifndef WIN32
-   void ConfigureFlock(vjConfigChunkDB* cdb);
-   void ConfigureDummyPos(vjConfigChunkDB* cdb);
-   void ConfigureIbox(vjConfigChunkDB* cdb);
-   void ConfigureCyberGlove(vjConfigChunkDB *cdb);
-   void Configure3DMouse(vjConfigChunkDB *cdb);
-#endif
-   void ConfigureKeyboard(vjConfigChunkDB* cdb);
+   //: Function to configure the proxy Alias array
+   bool ConfigureProxyAlias(vjConfigChunk* chunk);
 
-   void ConfigureSimAnalog(vjConfigChunkDB* cdb);
-   void ConfigureSimDigital(vjConfigChunkDB* cdb);
-   void ConfigureSimPosition(vjConfigChunkDB* cdb);
-   void ConfigureSimGloveGesture(vjConfigChunkDB* cdb);
-
-   void ConfigurePosProxy(vjConfigChunkDB* cdb);
-   void ConfigureDigProxy(vjConfigChunkDB* cdb);
-   void ConfigureAnaProxy(vjConfigChunkDB* cdb);
-   void ConfigureGloveProxy(vjConfigChunkDB* cdb);
-   void ConfigureKeyboardProxy(vjConfigChunkDB* cdb);
-   void ConfigureGestureProxy(vjConfigChunkDB* cdb);
-
-   //@}
-
-   /// Function to configure the proxy Alias array
-   void ConfigureProxyAliases(vjConfigChunkDB* cdb);
+   //: Add a proxy alias
    void AddProxyAlias(string str, int proxyIndex);
 };
 

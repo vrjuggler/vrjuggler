@@ -11,12 +11,15 @@
 // This class simulates a gesture input device
 //
 // By default the glove is in gesture 0
+//!PUBLIC_API
 class vjSimGloveGesture
    : virtual public vjGloveGesture, virtual public vjGlove, public vjSimInput
 {
 public:
    //: Construct a vjSimGloveGesture
-   vjSimGloveGesture(vjConfigChunk* chunk);
+   vjSimGloveGesture() {;}
+
+   virtual bool config(vjConfigChunk* chunk);
 
    //: Get the current gesture.
    //! RETURNS: id of current gesture
@@ -35,6 +38,7 @@ public:
 
    //: Return our name
    char* GetDeviceName() { return "vjSimGloveGesture"; }
+   static string getChunkType() { return string("SimGloveGesture");}
 
    /*** These are not supported in sim ***/
    void saveTrainedFile(string fileName) { ;}

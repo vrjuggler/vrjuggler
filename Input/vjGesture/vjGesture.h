@@ -17,17 +17,18 @@
 // string representation of the current gesture.
 //
 //-------------------------------------------------------------------------
+//!PUBLIC_API
 class vjGesture : virtual public vjInput
 {
 public:
-   vjGesture(vjConfigChunk* c) : vjInput(c)
-   {deviceAbilities = deviceAbilities | DEVICE_GESTURE;}
-
    vjGesture()
    {deviceAbilities = deviceAbilities | DEVICE_GESTURE;}
 
    ~vjGesture()
    {;}
+
+   virtual bool config(vjConfigChunk* c)
+   { return vjInput::config(c);}
 
 
 public:  // **** GET GESTURES **** //
