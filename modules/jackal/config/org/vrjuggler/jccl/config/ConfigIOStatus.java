@@ -79,28 +79,43 @@ public class ConfigIOStatus {
         messages.add (msg);
     }
 
-    public String toString () {
-        StringBuffer s = new StringBuffer();
+    public int size() {
+        return messages.size();
+    }
+
+    public Object get (int i) {
+        return messages.get(i);
+    }
+
+    public String getSummary () {
         switch (status) {
         case SUCCESS:
-            s.append ("Completed succesfully.\n");
-            break;
+            return "Loaded succesfully.";
         case WARNINGS:
-            s.append ("Completed with ");
+            StringBuffer s = new StringBuffer();
+            s.append ("Loaded with ");
             s.append (num_warnings);
-            s.append ((num_errors == 1)?" warning.\n":" warnings.\n");
-            break;
+            s.append ((num_warnings == 1)?" warning.\n":" warnings.");
+            return new String(s);
         case ERRORS:
-            s.append ("Completed with ");
-            s.append (num_errors);
-            s.append ((num_errors == 1)?" error, ":" errors, ");
-            s.append (num_warnings);
-            s.append ((num_errors == 1)?" warning.\n":" warnings.\n");
-            break;
+            StringBuffer s2 = new StringBuffer();
+            s2.append ("Loaded with ");
+            s2.append (num_errors);
+            s2.append ((num_errors == 1)?" error, ":" errors, ");
+            s2.append (num_warnings);
+            s2.append ((num_warnings == 1)?" warning.\n":" warnings.");
+            return new String(s2);
         case FAILURE:
-            s.append ("Failed.\n");
-            break;
+        default:
+            return "Load failed.";
         }
+    }
+
+    public String toString () {
+        StringBuffer s = new StringBuffer();
+        s.append (getSummary());
+        s.append ("\n");
+
         for (int i = 0; i < messages.size(); i++) {
             Object o = messages.get(i);
             s.append (o.toString());

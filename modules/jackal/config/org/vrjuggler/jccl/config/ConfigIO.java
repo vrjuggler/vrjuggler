@@ -155,7 +155,8 @@ public class ConfigIO {
      *  @returns true - success
      *  @returns false - on any parsing error.
      */
-    public static void readConfigChunkDB (File file, ConfigChunkDB db, int handler_type) throws IOException, ConfigParserException {
+    public static ConfigIOStatus readConfigChunkDB (File file, ConfigChunkDB db, int handler_type) {
+        ConfigIOStatus iostatus = new ConfigIOStatus();
         ConfigIOHandler handler = null;
         if (handler_type == DEFAULT || handler_type == GUESS) {
             try {
@@ -167,19 +168,25 @@ public class ConfigIO {
                     handler = getHandler (STANDARD);
             }
             catch (FileNotFoundException e) {
-                throw e;
+                iostatus.addFailure (e);
+                return iostatus;
             }
             catch (IOException e) {
-                throw new ConfigParserException ("Couldn't determine file format.");
+                iostatus.addFailure ("Couldn't determine file format.\n");
+                iostatus.addFailure (e);
+                return iostatus;
             }
 
         }
         else
             handler = getHandler (handler_type);
-        if (handler == null)
-            throw new ConfigParserException ("Can't get protocol handler.");
 
-        handler.readConfigChunkDB (file, db);
+        if (handler == null)
+            iostatus.addFailure ("Can't get protocol handler for ConfigIO.\n");
+        else
+            handler.readConfigChunkDB (file, db, iostatus);
+
+        return iostatus;
     }
 
 
@@ -187,7 +194,8 @@ public class ConfigIO {
     /** Reads a ConfigChunkDB from input into db.
      *  @return true if succesful, false on error.
      */
-    public static void readConfigChunkDB (InputStream input, ConfigChunkDB db, int handler_type) throws IOException, ConfigParserException {
+    public static ConfigIOStatus readConfigChunkDB (InputStream input, ConfigChunkDB db, int handler_type) {
+        ConfigIOStatus iostatus = new ConfigIOStatus();
         ConfigIOHandler handler = null;
         if (handler_type == GUESS) {
             if (!input.markSupported())
@@ -202,15 +210,20 @@ public class ConfigIO {
                 input.reset();
             }
             catch (IOException e) {
-                throw new ConfigParserException ("Couldn't determine file format.");
+                iostatus.addFailure ("Couldn't determine file format.\n");
+                iostatus.addFailure (e);
+                return iostatus;
             }
         }
         else
             handler = getHandler (handler_type);
-        if (handler == null)
-            throw new ConfigParserException ("Can't get protocol handler.");
 
-        handler.readConfigChunkDB (input, db);
+        if (handler == null)
+            iostatus.addFailure ("Can't get protocol handler for ConfigIO.\n");
+        else
+            handler.readConfigChunkDB (input, db, iostatus);
+
+        return iostatus;
     }
 
 
@@ -244,7 +257,8 @@ public class ConfigIO {
      *  @returns true - success
      *  @returns false - on any parsing error.
      */
-    public static void readChunkDescDB (File file, ChunkDescDB db, int handler_type) throws IOException, ConfigParserException {
+    public static ConfigIOStatus readChunkDescDB (File file, ChunkDescDB db, int handler_type) {
+        ConfigIOStatus iostatus = new ConfigIOStatus();
         ConfigIOHandler handler = null;
         if (handler_type == DEFAULT || handler_type == GUESS) {
             try {
@@ -256,18 +270,23 @@ public class ConfigIO {
                     handler = getHandler (STANDARD);
             }
             catch (FileNotFoundException e) {
-                throw e;
+                iostatus.addFailure (e);
+                return iostatus;
             }
             catch (IOException e) {
-                throw new ConfigParserException ("Couldn't determine file format.");
+                iostatus.addFailure ("Couldn't determine file format.\n");
+                iostatus.addFailure (e);
+                return iostatus;
             }
         }
         else
             handler = getHandler (handler_type);
         if (handler == null)
-            throw new ConfigParserException ("Can't get protocol handler.");
+            iostatus.addFailure ("Couldn't get protocol handler.");
+        else
+            handler.readChunkDescDB (file, db, iostatus);
 
-        handler.readChunkDescDB (file, db);
+        return iostatus;
     }
 
 
@@ -275,7 +294,8 @@ public class ConfigIO {
     /** Reads a ChunkDescDB from input into db.
      *  @return true if succesful, false on error.
      */
-    public static void readChunkDescDB (InputStream input, ChunkDescDB db, int handler_type) throws IOException, ConfigParserException {
+    public static ConfigIOStatus readChunkDescDB (InputStream input, ChunkDescDB db, int handler_type) {
+        ConfigIOStatus iostatus = new ConfigIOStatus();
         ConfigIOHandler handler = null;
         if (handler_type == GUESS) {
             if (!input.markSupported())
@@ -290,15 +310,20 @@ public class ConfigIO {
                 input.reset();
             }
             catch (IOException e) {
-                throw new ConfigParserException ("Couldn't determine file format.");
+                iostatus.addFailure ("Couldn't determine file format.\n");
+                iostatus.addFailure (e);
+                return iostatus;
             }
         }
         else
             handler = getHandler (handler_type);
-        if (handler == null)
-            throw new ConfigParserException ("Can't get protocol handler.");
 
-        handler.readChunkDescDB (input, db);
+        if (handler == null)
+            iostatus.addFailure ("Couldn't get protocol handler.");
+        else
+            handler.readChunkDescDB (input, db, iostatus);
+
+        return iostatus;
     }
 
 
