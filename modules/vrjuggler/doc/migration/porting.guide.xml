@@ -145,8 +145,8 @@ class myApplication : public vrj::GlApp</programlisting>
                <programlisting>app: $(OBJECTS)
 	$(LINK) app $(OBJECTS) \
            `$(VJ_BASE_DIR)/bin/vrjuggler-config --libs` \
-           `$(VJ_BASE_DIR)/bin/vrjuggler-config --extra-libs --all`</programlisting>
-               <para>The most important aspect of the above is the use of the <command>vrjuggler-config</command> script. The <option>--libs</option> argument prints out the basic VR Juggler libraries including paths. The combination of <option>--extra-libs</option> and <option>--all</option> prints out all the dependencies of VR Juggler.</para>
+           `$(VJ_BASE_DIR)/bin/vrjuggler-config --extra-libs`</programlisting>
+               <para>The most important aspect of the above is the use of the <command>vrjuggler-config</command> script. The <option>--libs</option> argument prints out the basic VR Juggler libraries including paths. The option <option>--extra-libs</option> prints out all the dependencies of VR Juggler.</para>
                <para>For Win32 users, we have not yet developed a similar solution that will work with the Visual C++ command <command>nmake</command>. The above will work using GNU make in a Cygwin environment.</para>
             </listitem>
             <listitem>
