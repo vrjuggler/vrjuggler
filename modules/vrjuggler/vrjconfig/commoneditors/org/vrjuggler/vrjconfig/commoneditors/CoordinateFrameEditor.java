@@ -84,30 +84,30 @@ public class CoordinateFrameEditor
       mTrackerAnglesLabel.setText("<html>" + coord_name + " Angles (" +
                                   rot_type + ")</html>");
 
-      mCoordFrames[0]  = new CoordFrame(0.0, 0.0, 0.0);
-      mCoordFrames[1]  = new CoordFrame(90.0, 0.0, 0.0);
-      mCoordFrames[2]  = new CoordFrame(180.0, 0.0, 0.0);
-      mCoordFrames[3]  = new CoordFrame(180.0, 0.0, -90.0);
-      mCoordFrames[4]  = new CoordFrame(180.0, 0.0, 90.0);
-      mCoordFrames[5]  = new CoordFrame(0.0, 180.0, 0.0);
-      mCoordFrames[6]  = new CoordFrame(180.0, -90.0, 0.0);
-      mCoordFrames[7]  = new CoordFrame(0.0, 0.0, 90.0);
-      mCoordFrames[8]  = new CoordFrame(0.0, 0.0, 180.0);
-      mCoordFrames[9]  = new CoordFrame(0.0, 0.0, -90.0);
-      mCoordFrames[10] = new CoordFrame(90.0, 0.0, 90.0);
-      mCoordFrames[11] = new CoordFrame(90.0, 0.0, 180.0);
-      mCoordFrames[12] = new CoordFrame(90.0, 0.0, -90.0);
-      mCoordFrames[13] = new CoordFrame(90.0, 90.0, 0.0);
-      mCoordFrames[14] = new CoordFrame(-180.0, 90.0, 0.0);
-      mCoordFrames[15] = new CoordFrame(-90.0, 90.0, 0.0);
-      mCoordFrames[16] = new CoordFrame(0.0, 90.0, 0.0);
-      mCoordFrames[17] = new CoordFrame(-90.0, 0.0, 180.0);
-      mCoordFrames[18] = new CoordFrame(-90.0, 0.0, -90.0);
-      mCoordFrames[19] = new CoordFrame(-90.0, 0.0, 0.0);
-      mCoordFrames[20] = new CoordFrame(-90.0, 0.0, 90.0);
-      mCoordFrames[21] = new CoordFrame(90.0, -90.0, 0.0);
-      mCoordFrames[22] = new CoordFrame(0.0, -90.0, 0.0);
-      mCoordFrames[23] = new CoordFrame(-90.0, -90.0, 0.0);
+      mCoordFrames[0]  = new CoordFrame(0.0f, 0.0f, 0.0f);
+      mCoordFrames[1]  = new CoordFrame(90.0f, 0.0f, 0.0f);
+      mCoordFrames[2]  = new CoordFrame(180.0f, 0.0f, 0.0f);
+      mCoordFrames[3]  = new CoordFrame(180.0f, 0.0f, -90.0f);
+      mCoordFrames[4]  = new CoordFrame(180.0f, 0.0f, 90.0f);
+      mCoordFrames[5]  = new CoordFrame(0.0f, 180.0f, 0.0f);
+      mCoordFrames[6]  = new CoordFrame(180.0f, -90.0f, 0.0f);
+      mCoordFrames[7]  = new CoordFrame(0.0f, 0.0f, 90.0f);
+      mCoordFrames[8]  = new CoordFrame(0.0f, 0.0f, 180.0f);
+      mCoordFrames[9]  = new CoordFrame(0.0f, 0.0f, -90.0f);
+      mCoordFrames[10] = new CoordFrame(90.0f, 0.0f, 90.0f);
+      mCoordFrames[11] = new CoordFrame(90.0f, 0.0f, 180.0f);
+      mCoordFrames[12] = new CoordFrame(90.0f, 0.0f, -90.0f);
+      mCoordFrames[13] = new CoordFrame(90.0f, 90.0f, 0.0f);
+      mCoordFrames[14] = new CoordFrame(-180.0f, 90.0f, 0.0f);
+      mCoordFrames[15] = new CoordFrame(-90.0f, 90.0f, 0.0f);
+      mCoordFrames[16] = new CoordFrame(0.0f, 90.0f, 0.0f);
+      mCoordFrames[17] = new CoordFrame(-90.0f, 0.0f, 180.0f);
+      mCoordFrames[18] = new CoordFrame(-90.0f, 0.0f, -90.0f);
+      mCoordFrames[19] = new CoordFrame(-90.0f, 0.0f, 0.0f);
+      mCoordFrames[20] = new CoordFrame(-90.0f, 0.0f, 90.0f);
+      mCoordFrames[21] = new CoordFrame(90.0f, -90.0f, 0.0f);
+      mCoordFrames[22] = new CoordFrame(0.0f, -90.0f, 0.0f);
+      mCoordFrames[23] = new CoordFrame(-90.0f, -90.0f, 0.0f);
 
       // Create the renderers for mVrjCoordChooser and mTrackerCoordChooser.
       CoordFrameRenderer r0 = new CoordFrameRenderer(mCoordFrames);
@@ -210,7 +210,6 @@ public class CoordinateFrameEditor
 
       // Using the object returned by source.getValue() seems to be safe
       // because every change in the spinner's value creates a new object.
-      // NOTE: The object returned is of type Double rather than Float.
       mElement.setProperty("pre_rotation", value_index, source.getValue());
    }
 
@@ -235,13 +234,13 @@ public class CoordinateFrameEditor
          prop = EditorConstants.post_rotation_prop;
       }
 
-      double x_rot = ((Number) elt.getProperty(prop, 0)).doubleValue();
-      double y_rot = ((Number) elt.getProperty(prop, 1)).doubleValue();
-      double z_rot = ((Number) elt.getProperty(prop, 2)).doubleValue();
+      float x_rot = ((Number) elt.getProperty(prop, 0)).floatValue();
+      float y_rot = ((Number) elt.getProperty(prop, 1)).floatValue();
+      float z_rot = ((Number) elt.getProperty(prop, 2)).floatValue();
 
-      mTrackerXRotSpinner.setValue(new Double(x_rot));
-      mTrackerYRotSpinner.setValue(new Double(y_rot));
-      mTrackerZRotSpinner.setValue(new Double(z_rot));
+      mTrackerXRotSpinner.setValue(new Float(x_rot));
+      mTrackerYRotSpinner.setValue(new Float(y_rot));
+      mTrackerZRotSpinner.setValue(new Float(z_rot));
 
       // This is slow, but I don't think that there is a better way to do
       // it.
@@ -301,28 +300,28 @@ public class CoordinateFrameEditor
       mTrackerListeners.remove(TransformChangeListener.class, l);
    }
 
-   public double getJugglerXRot()
+   public float getJugglerXRot()
    {
       return mCoordFrames[mVrjCoordChooser.getSelectedIndex()].getXRot();
    }
 
-   public double getJugglerYRot()
+   public float getJugglerYRot()
    {
       return mCoordFrames[mVrjCoordChooser.getSelectedIndex()].getYRot();
    }
 
-   public double getJugglerZRot()
+   public float getJugglerZRot()
    {
       return mCoordFrames[mVrjCoordChooser.getSelectedIndex()].getZRot();
    }
 
-   public double getTrackerXRot()
+   public float getTrackerXRot()
    {
-      double x_rot;
+      float x_rot;
 
       if ( mTrackerManualRotButton.isSelected() )
       {
-         x_rot = ((Double) mTrackerXRotSpinner.getValue()).doubleValue();
+         x_rot = ((Number) mTrackerXRotSpinner.getValue()).floatValue();
       }
       else
       {
@@ -332,13 +331,13 @@ public class CoordinateFrameEditor
       return x_rot;
    }
 
-   public double getTrackerYRot()
+   public float getTrackerYRot()
    {
-      double y_rot;
+      float y_rot;
 
       if ( mTrackerManualRotButton.isSelected() )
       {
-         y_rot = ((Double) mTrackerYRotSpinner.getValue()).doubleValue();
+         y_rot = ((Number) mTrackerYRotSpinner.getValue()).floatValue();
       }
       else
       {
@@ -348,13 +347,13 @@ public class CoordinateFrameEditor
       return y_rot;
    }
 
-   public double getTrackerZRot()
+   public float getTrackerZRot()
    {
-      double z_rot;
+      float z_rot;
 
       if ( mTrackerManualRotButton.isSelected() )
       {
-         z_rot = ((Double) mTrackerZRotSpinner.getValue()).doubleValue();
+         z_rot = ((Number) mTrackerZRotSpinner.getValue()).floatValue();
       }
       else
       {
@@ -365,7 +364,7 @@ public class CoordinateFrameEditor
    }
 
    protected void fireTransformChanged(EventListenerList listenerList,
-                                       double xRot, double yRot, double zRot)
+                                       float xRot, float yRot, float zRot)
    {
       TransformChangeEvent change_event = null;
       Object[] listeners = listenerList.getListenerList();
@@ -575,9 +574,9 @@ public class CoordinateFrameEditor
    void mTrackerCoordChooser_valueChanged(ListSelectionEvent listSelectionEvent)
    {
       CoordFrame cf = mCoordFrames[mTrackerCoordChooser.getSelectedIndex()];
-      mTrackerXRotSpinner.getModel().setValue(new Double(cf.getXRot()));
-      mTrackerYRotSpinner.getModel().setValue(new Double(cf.getYRot()));
-      mTrackerZRotSpinner.getModel().setValue(new Double(cf.getZRot()));
+      mTrackerXRotSpinner.getModel().setValue(new Float(cf.getXRot()));
+      mTrackerYRotSpinner.getModel().setValue(new Float(cf.getYRot()));
+      mTrackerZRotSpinner.getModel().setValue(new Float(cf.getZRot()));
 
       fireTransformChanged(mTrackerListeners, cf.getXRot(), cf.getYRot(),
                            cf.getZRot());
@@ -658,12 +657,12 @@ class CoordinateFrameEditor_mVrjCoordAdvButton_actionAdapter
 
 class CoordFrame
 {
-   CoordFrame(double xRot, double yRot, double zRot)
+   CoordFrame(float xRot, float yRot, float zRot)
    {
       this(xRot, yRot, zRot, null);
    }
 
-   CoordFrame(double xRot, double yRot, double zRot, ImageIcon icon)
+   CoordFrame(float xRot, float yRot, float zRot, ImageIcon icon)
    {
       this.xRot = xRot;
       this.yRot = yRot;
@@ -671,17 +670,17 @@ class CoordFrame
       this.icon = icon;
    }
 
-   public double getXRot()
+   public float getXRot()
    {
       return xRot;
    }
 
-   public double getYRot()
+   public float getYRot()
    {
       return yRot;
    }
 
-   public double getZRot()
+   public float getZRot()
    {
       return zRot;
    }
@@ -703,9 +702,9 @@ class CoordFrame
              "Z: " + getZRot() + "\u00B0";
    }
 
-   private double xRot;
-   private double yRot;
-   private double zRot;
+   private float xRot;
+   private float yRot;
+   private float zRot;
    private ImageIcon icon;
 }
 
