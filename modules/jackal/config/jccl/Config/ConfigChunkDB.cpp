@@ -297,10 +297,11 @@ std::istream& operator>>(std::istream& in, ConfigChunkDB& self)
 
 bool ConfigChunkDB::load(const std::string& filename, const std::string& parentfile)
 {
-   mFileName = demangleFileName(filename, parentfile);
+   vprDEBUG_OutputGuard(jcclDBG_CONFIG, vprDBG_CONFIG_LVL,
+                        std::string("Loading config file")+filename+std::string("\n"),
+                        std::string("\n"));
 
-   vprDEBUG(jcclDBG_CONFIG,3) << "ConfigChunkDB::load(): opening file "
-                              << mFileName.c_str() << " -- " << vprDEBUG_FLUSH;
+   mFileName = demangleFileName(filename, parentfile);
 
    cppdom::XMLDocumentPtr chunk_db_doc = ChunkFactory::instance()->createXMLDocument();
    bool status(false);
@@ -317,14 +318,24 @@ bool ConfigChunkDB::load(const std::string& filename, const std::string& parentf
       for (cppdom::XMLNodeList::iterator itr = pi_list.begin(); itr != pi_list.end(); ++itr)
       {
          cppdom::XMLNodePtr pi = *itr;
+         // A desc DB has been included
          if (pi->getName() == include_desc_INSTRUCTION)
          {
+            // Get the path to the included file relative to the current file
             std::string desc_filename = pi->getAttribute(file_TOKEN).template getValue<std::string>();
+            desc_filename = demangleFileName(desc_filename, mFileName);
+
+            // Load the file
             ChunkFactory::instance()->loadDescs(desc_filename, filename);
          }
+         // A chunk DB has been included
          else if (pi->getName() == include_INSTRUCTION)
          {
+            // Get the path to the included file relative to the current file
             std::string chunk_filename = pi->getAttribute(file_TOKEN).template getValue<std::string>();
+            chunk_filename = demangleFileName(chunk_filename, mFileName);
+
+            // Load the file
             load(chunk_filename, filename);
          }
       }
