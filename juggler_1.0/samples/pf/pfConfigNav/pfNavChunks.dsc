@@ -5,6 +5,7 @@ chunk pf_basic_nav_app "Basic nav app" "A basic performer navigation application
   Sound EmbeddedChunk -1 "Sounds" vj_enumeration { "Sound" } "specify a sound here.  usually used "
   Model EmbeddedChunk -1 "Models" vj_enumeration { "Model" } ""
   bounding_size Float 1 "Bounding Sphere size" ""
+  icon_view_offset Float 3 "Icon model offset" vj_valuelabels { "X" "y" "z" } "Amount to tranlate the application scene graph for displaying the icon (in pf coords, model coords)"
   end
 chunk Model "Model" ""
   Name String 1 "Name" "Unique name of an instance of this chunk type"
