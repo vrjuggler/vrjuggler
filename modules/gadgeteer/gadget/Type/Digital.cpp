@@ -41,7 +41,7 @@ namespace gadget
 
 vpr::ReturnStatus Digital::writeObject(vpr::ObjectWriter* writer)
 {
-   writer->beginTag(Digital::getBaseType());
+   writer->beginTag(Digital::getInputTypeName());
    //std::cout << "[Remote Input Manager] In Digital write" << std::endl;
    SampleBuffer_t::buffer_t& stable_buffer = mDigitalSamples.stableBuffer();
    writer->beginAttribute(gadget::tokens::DataTypeAttrib);
@@ -86,7 +86,7 @@ vpr::ReturnStatus Digital::readObject(vpr::ObjectReader* reader)
    vpr::Uint64 delta = reader->getAttrib<vpr::Uint64>("rim.timestamp.delta");
 
       // ASSERT if this data is really not Digital Data
-   reader->beginTag(Digital::getBaseType());
+   reader->beginTag(Digital::getInputTypeName());
    reader->beginAttribute(gadget::tokens::DataTypeAttrib);
       vpr::Uint16 temp = reader->readUint16();
    reader->endAttribute();

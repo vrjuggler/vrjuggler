@@ -129,7 +129,7 @@ public:
 
    const SampleBuffer_t::buffer_t& getAnalogDataBuffer();
 
-   virtual std::string getBaseType();
+   virtual std::string getInputTypeName();
 
 protected:
    /**

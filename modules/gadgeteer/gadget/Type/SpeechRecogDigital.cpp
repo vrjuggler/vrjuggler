@@ -41,7 +41,7 @@ namespace gadget
 
 vpr::ReturnStatus SpeechRecogDigital::writeObject(vpr::ObjectWriter* writer)
 {
-   writer->beginTag(SpeechRecogDigital::getBaseType());
+   writer->beginTag(SpeechRecogDigital::getInputTypeName());
    //std::cout << "[Remote Input Manager] In Digital write" << std::endl;
    SampleBuffer_t::buffer_t& stable_buffer = mDigitalSamples.stableBuffer();
    writer->beginAttribute(gadget::tokens::DataTypeAttrib);
@@ -86,7 +86,7 @@ vpr::ReturnStatus SpeechRecogDigital::readObject(vpr::ObjectReader* reader)
    vpr::Uint64 delta = reader->getAttrib<vpr::Uint64>("rim.timestamp.delta");
 
       // ASSERT if this data is really not Digital Data
-   reader->beginTag(SpeechRecogDigital::getBaseType());
+   reader->beginTag(SpeechRecogDigital::getInputTypeName());
    reader->beginAttribute(gadget::tokens::DataTypeAttrib);
       vpr::Uint16 temp = reader->readUint16();
    reader->endAttribute();

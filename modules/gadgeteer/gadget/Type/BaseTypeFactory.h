@@ -71,7 +71,7 @@ public:
    }
 
    /** Gets the name of the type of element we can create. */
-   virtual std::string getBaseType()
+   virtual std::string getInputTypeName()
    {
       return std::string("BaseConstructor: Invalid type");
    }
@@ -168,8 +168,8 @@ public:
       //}
    }
 
-   virtual std::string getBaseType()
-    { return DEV::getBaseType(); }
+   virtual std::string getInputTypeName()
+    { return DEV::getInputTypeName(); }
 
    /**
     * Invokes the global scope delete operator.  This is required for proper

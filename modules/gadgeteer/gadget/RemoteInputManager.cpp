@@ -140,10 +140,10 @@ namespace gadget
                      temp_device_server->addClient(node);
 
                      // Create a responce ACK
-                     std::string temp_string = temp_input_device->getBaseType();
+                     std::string temp_string = temp_input_device->getInputTypeName();
                      vpr::GUID   temp_guid   = temp_device_server->getId();
                      cluster::DeviceAck* temp_ack =
-                        new cluster::DeviceAck(mHandlerGUID, temp_guid, 
+                        new cluster::DeviceAck(mHandlerGUID, temp_guid,
                                                device_name, temp_string, true);
                      node->send(temp_ack);
                   }
@@ -166,7 +166,7 @@ namespace gadget
                   std::string temp_string = "";
                   vpr::GUID empty_id;
                   cluster::DeviceAck* temp_ack =
-                     new cluster::DeviceAck(mHandlerGUID, empty_id, device_name, 
+                     new cluster::DeviceAck(mHandlerGUID, empty_id, device_name,
                                             temp_string/*BaseType*/, false);
                   node->send(temp_ack);
                }
@@ -459,7 +459,7 @@ namespace gadget
       //      std::cout << "Number Device Servers: " << mDeviceServers.size() << " Number Virtual Devices" << mVirtualDevices.size() << std::endl;
 
       vpr::Guard<vpr::Mutex> guard(mDeviceServersLock);
-      
+
       // Start sending data from all device servers.
       for ( unsigned int i=0; i<mDeviceServers.size(); i++ )
       {
@@ -642,7 +642,7 @@ namespace gadget
    void RemoteInputManager::removePendingDeviceRequest(std::string device_name)
    {
       vpr::Guard<vpr::Mutex> guard(mPendingDeviceRequestsLock);
-      
+
       std::map<cluster::DeviceRequest*, Node*>::iterator begin = mPendingDeviceRequests.begin();
       std::map<cluster::DeviceRequest*, Node*>::iterator end = mPendingDeviceRequests.end();
       std::map<cluster::DeviceRequest*, Node*>::iterator i;
