@@ -38,7 +38,7 @@
 #include <gadget/Type/Input.h>
 #include <gadget/Type/Position.h>
 #include <gadget/Type/InputMixer.h>
-#include <gadget/Devices/Open/Trackd/TrackdSensorStandalone.h>
+#include <gadget/Devices/VRCO/Trackd/TrackdSensorStandalone.h>
 
 #include <trackdAPI.h>
 #include <gmtl/Matrix.h>

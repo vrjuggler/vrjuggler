@@ -31,7 +31,7 @@
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # -----------------------------------------------------------------------------
-# Makefile.in for gadgeteer/gadget/Devices/Open/TrackdAPI.  It requires GNU
+# Makefile.in for gadgeteer/gadget/Devices/VRCO/TrackdAPI.  It requires GNU
 # make.
 #
 # Generated for use on @PLATFORM@

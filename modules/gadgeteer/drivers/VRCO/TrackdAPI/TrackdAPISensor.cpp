@@ -31,7 +31,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include <gadget/gadgetConfig.h>
-#include <gadget/Devices/Open/TrackdAPI/TrackdAPISensor.h>
+#include <gadget/Devices/VRCO/TrackdAPI/TrackdAPISensor.h>
 #include <jccl/Config/ConfigChunk.h>
 
 #include <vpr/Util/Debug.h>
