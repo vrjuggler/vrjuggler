@@ -1,0 +1,11 @@
+DATE        AUTHOR      CHANGE
+----------- ----------- -------------------------------------------------------
+Apr-11-2003 patrickh    Moved the individual modules into the PyJuggler
+                        namespace.  Now we have PyJuggler.vpr, PyJuggler.vrj,
+                        and so on.
+                        NEW VERSION: 0.3
+Apr-11-2003 patrickh    Removed PyJuggler.cpp because the individual modules
+                        (gmtl.cpp, vpr.cpp, gadget.cpp, jccl.cpp, vrj.cpp) seem
+                        to be as stable sa the old monolithic module.
+                        NEW VERSION: 0.2
+Apr-11-2003 patrickh    ChangeLog started
