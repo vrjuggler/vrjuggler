@@ -86,7 +86,7 @@ public class BeanInstantiationCommunicator
       for ( int i = 0; i < listeners.size(); i++ )
       {
          l = (BeanInstantiationListener) listeners.elementAt(i);
-         l.beanInstantiation(e);
+         l.beanInstantiated(e);
       }
    }
 

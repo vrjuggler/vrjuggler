@@ -141,7 +141,7 @@ public class TweekCore
     * Called by the BeanInstantiationCommunicator singleton whenever a new bean
     * is instantiated.
     */
-   public void beanInstantiation( BeanInstantiationEvent evt )
+   public void beanInstantiated (BeanInstantiationEvent evt)
    {
       // If the bean created is a viewer bean, initialize it with tweek
       Object bean = evt.getBean();
