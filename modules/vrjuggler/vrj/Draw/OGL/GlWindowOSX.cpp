@@ -691,7 +691,7 @@ GLenum GlWindowOSX::aglReportError () {
 
 /* For keyboard input */
 
-int GlWindowOSX::startSampling()
+bool GlWindowOSX::startSampling()
 {
     if(mAmSampling == true)
     {
@@ -700,8 +700,8 @@ int GlWindowOSX::startSampling()
             << "vrj::GlWindowOSX: startSampling called, when already sampling.\n"
             << vprDEBUG_FLUSH;
         vprASSERT(false);
+        return false;
     }
-
 
     //openTheWindow();
 
@@ -713,7 +713,7 @@ int GlWindowOSX::startSampling()
 
     mAmSampling = true;
 
-    return 1;
+    return true;
 }
 
 }

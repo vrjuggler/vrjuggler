@@ -109,8 +109,7 @@ public:
     * Override the version from gadget::EventWindowOSX so we can do our
     * own thing here.
     */
-   int startSampling();
-   //int stopSampling();
+   bool startSampling();
    //@}
 
    void configWindow(Display* _display);
@@ -154,6 +153,6 @@ private:
     static AGLContext       aglShareContext;
 };
 
-};
+}
 
 #endif
