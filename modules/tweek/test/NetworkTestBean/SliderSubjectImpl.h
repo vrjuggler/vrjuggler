@@ -57,13 +57,14 @@ class SliderSubjectImpl : public POA_networktest::SliderSubject,
                           public tweek::SubjectImpl
 {
 public:
-   SliderSubjectImpl (void)
-      : tweek::SubjectImpl(), mValue(0)
+   SliderSubjectImpl()
+      : tweek::SubjectImpl()
+      , mValue(0)
    {
       /* Do nothing. */ ;
    }
 
-   virtual ~SliderSubjectImpl (void)
+   virtual ~SliderSubjectImpl()
    {
       /* Do nothing. */ ;
    }
@@ -71,12 +72,12 @@ public:
    /**
     * Sets this subject's internal value.
     */
-   virtual void setValue(long value);
+   virtual void setValue(CORBA::Long value) throw(CORBA::SystemException);
 
    /**
     * Returns this subject's internal value.
     */
-   virtual long getValue(void);
+   virtual CORBA::Long getValue() throw(CORBA::SystemException);
 
    /**
     * This overriding method is needed so that the correct type is returned
@@ -85,13 +86,13 @@ public:
     *
     * XXX: It may be possible to remove this requirement in the future.
     */
-   networktest::SliderSubject_ptr _this (void)
+   networktest::SliderSubject_ptr _this()
    {
       return POA_networktest::SliderSubject::_this();
    }
 
 private:
-   long mValue;   /**< Our value */
+   CORBA::Long mValue;   /**< Our value */
 };
 
 } // End of networktest namespace
