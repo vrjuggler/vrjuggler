@@ -2,9 +2,7 @@
 #define __gluquat__
 
 
-#if defined (WIN32)
-#include <windows.h>
-#endif
+#include <vjConfig.h>
 
 #include <GL/gl.h>
 #include <GL/glu.h>
