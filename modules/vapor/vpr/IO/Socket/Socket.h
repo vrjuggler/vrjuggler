@@ -416,7 +416,9 @@ public:
     }
 
     /**
+     * Enable reuse of the address that will be bound by this socket.
      *
+     * PRE: The socket has been opened, but bind() has not been called.
      */
     inline int
     setReuseAddr (const bool enable_val) {
