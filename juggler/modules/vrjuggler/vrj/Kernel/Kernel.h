@@ -77,121 +77,144 @@ class VJ_CLASS_API Kernel : public jccl::ConfigChunkHandler
 {
 public:
 
-   //: Start the Kernel running
-   // Spawn kernel thread
+   /** Start the Kernel running
+    * Spawn kernel thread
+    */
    int start();
 
-   //: Load initial configuration data for the managers
-   //! POST: InputManager, DisplayManager, and kernel
-   //+       Config files loaded and handed to configAdd
+   /** Stop the kernel control loop
+   * If there is an application set, then it will be closed first
+   * @post The kernel exits and the Juggler system shuts down
+   */
+   void stop();
+
+   /** Load initial configuration data for the managers
+   * @post InputManager, DisplayManager, and kernel
+   *       Config files loaded and handed to configAdd
+   */
    void initConfig();
 
-   //: The Kernel loop
+   /** The Kernel loop */
    void controlLoop(void* nullParam);
 
-   // Set the application object for the Kernel to deal with
-   //  If there is another app active, it has to stop that
-   //  application first then restart all API specific Managers.
-   //! ARGS: _app - If NULL, stops current application
+   /** Set the application object for the Kernel to deal with
+   *  If there is another app active, it has to stop that
+   *  application first then restart all API specific Managers.
+   * @param _app - If NULL, stops current application
+   */
    void setApplication(vrj::App* _app);
-
-   //: Load configuration data for Kernel
-   //! POST: Config data has been read into initial buffer
+   
+   /** Load configuration data for Kernel
+   * @post Config data has been read into initial buffer
+   */
    void loadConfigFile(const char* filename)
    {
       std::string filename_str = std::string(filename);
       loadConfigFile(filename_str);
    }
 
-   //: Load configuration data for Kernel
-   //! POST: Config data has been read into initial buffer
+   /** Load configuration data for Kernel
+   * @post Config data has been read into initial buffer
+   */
    void loadConfigFile(std::string filename);
 
-   //: Load a chunk description file
-   //! POST: The chunk factory can now manage chunks with the given types
+   /** Load a chunk description file
+   * @post The chunk factory can now manage chunks with the given types
+   */
    void loadChunkDescFile(std::string filename);
 
 
 protected:  // -- CHUNK HANDLER
-   //: Can the handler handle the given chunk?
-   //! RETURNS: true - Can handle it
-   //+          false - Can't handle it
+   /** Can the handler handle the given chunk?
+   * @return true - Can handle it
+   *          false - Can't handle it
+   */
    virtual bool configCanHandle(jccl::ConfigChunkPtr chunk);
 
-   //: Process any pending reconfiguration that we can deal with
-   //
-   //  Process pending reconfiguration of the kernel and
-   //  it's dependant managers (basically all of them
-   //  that don't have a control thread)
-   //
-//     // It just calls process pending for dependant processes
-//     virtual int configProcessPending(bool lockIt = true);
+   /** Process any pending reconfiguration that we can deal with
+   *
+   *  Process pending reconfiguration of the kernel and
+   *  it's dependant managers (basically all of them
+   *  that don't have a control thread)
+   *
+   *     // It just calls process pending for dependant processes
+   *     virtual int configProcessPending(bool lockIt = true);
+   */
 
 protected:  // -- CHUNK HANDLER
-   //: Add the chunk to the configuration
-   //! PRE: configCanHandle(chunk) == true
-   //! RETURNS: success
+   /** Add the chunk to the configuration
+   * @pre    configCanHandle(chunk) == true
+   * @return success
+   */
    virtual bool configAdd(jccl::ConfigChunkPtr chunk);
 
-   //: Remove the chunk from the current configuration
-   //! PRE: configCanHandle(chunk) == true
-   //!RETURNS: success
+   /** Remove the chunk from the current configuration
+   * @pre    configCanHandle(chunk) == true
+   * @return success
+   */
    virtual bool configRemove(jccl::ConfigChunkPtr chunk);
 
 protected:  // Local config functions
-   //: Add a User to the system
+   /** Add a User to the system */
    bool addUser(jccl::ConfigChunkPtr chunk);
 
-   //: Remove a User from the system
-   //! NOTE: Currently not implemented
+   /** Remove a User from the system
+   * @note Currently not implemented
+   */
    bool removeUser(jccl::ConfigChunkPtr chunk);
 
 protected:
-   //: Updates any data that needs updated once a frame (Trackers, etc.)
-   //! POST: All tracker data is ready for next frame
+   /** Updates any data that needs updated once a frame (Trackers, etc.)
+    * @post All tracker data is ready for next frame
+    */
    void updateFrameData();
 
-   //: Checks to see if there is reconfiguration to be done
-   //! POST: Any reconfiguration needed has been completed
-   //! NOTE: Can only be called by the kernel thread
+   /** Checks to see if there is reconfiguration to be done
+    * @post Any reconfiguration needed has been completed
+    * @note Can only be called by the kernel thread
+    */
    void checkForReconfig();
 
-   // Changes the application in use
-   //  If there is another app active, it has to stop that
-   //  application first then restart all API specific Managers.
-   //! ARGS: _app - If NULL, stops current application
-   //! NOTE: This can only be called from the kernel thread
+   /** Changes the application in use
+    * If there is another app active, it has to stop that
+    *  application first then restart all API specific Managers.
+    * @param   _app - If NULL, stops current application
+    * @note    This can only be called from the kernel thread
+    */
    void changeApplication(vrj::App* _app);
 
 protected:      // --- DRAW MGR ROUTINES --- //
-   // Starts the draw manager running
-   // Calls the app callbacks for the draw manager
-   //! ARGS: newMgr - Is this a new manager, or the same one
+   /** Starts the draw manager running
+   * Calls the app callbacks for the draw manager
+   * param newMgr - Is this a new manager, or the same one
+   */
    void startDrawManager(bool newMgr);
 
-   // Stop the draw manager and close it's resources, then delete it
-   //! POST: draw mgr resources are closed
-   //+       draw mgr is deleted, display manger set to NULL draw mgr
+   /** Stop the draw manager and close it's resources, then delete it
+   * @post draw mgr resources are closed
+   *       draw mgr is deleted, display manger set to NULL draw mgr
+   */
    void stopDrawManager();
 
 public:      // Global "get" interface
 
-      //: Get the system Factory
+   /** Get the system Factory */
    vrj::SystemFactory* getSysFactory()
    { return mSysFactory; }
 
-   //: Get the input manager
+   /** Get the input manager */
    gadget::InputManager* getInputManager();
 
-    //: Get the Environment Manager
+   /** Get the Environment Manager */
    vrj::EnvironmentManager* getEnvironmentManager()
     { return environmentManager; }
 
-   //: Get the user associated with given name
-   //! RETURNS: NULL - Not found
+   /** Get the user associated with given name
+   * return NULL - Not found
+   */
    vrj::User*  getUser(std::string userName);
 
-   //: Get a list of the users back
+   /** Get a list of the users back */
    std::vector<vrj::User*> getUsers()
    { return mUsers; }
 
@@ -199,26 +222,27 @@ public:      // Global "get" interface
    { return mControlThread; }
 
 protected:
-   vrj::App*      mApp;                        //: The app object
-   vrj::App*      mNewApp;                      //: New application to set
-   bool        mNewAppSet;                   //: Flag to notify that a new application should be set
+   vrj::App*      mApp;                         /**< The current active app object */
+   vrj::App*      mNewApp;                      /**< New application to set */
+   bool           mNewAppSet;                   /**< Flag to notify that a new application should be set */
 
-   vpr::BaseThread*   mControlThread;             //: The thread in control of me.
+   bool               mExitFlag;                /**< Set true when the kernel should exit */
+   vpr::BaseThread*   mControlThread;           /**< The thread in control of me */
 
    /// Factories and Managers
-   vrj::SystemFactory*        mSysFactory;            //: The current System factory
-   gadget::InputManager*      mInputManager;          //: The input manager for the system
-   DrawManager*               mDrawManager;           //: The Draw Manager we are currently using
-   SoundManager*              mSoundManager;          //: The Audio Manager we are currently using
-   DisplayManager*            mDisplayManager;        //: The Display Manager we are currently using
-   EnvironmentManager*        environmentManager;     //: The Environment Manager object
+   vrj::SystemFactory*        mSysFactory;            /**< The current System factory */
+   gadget::InputManager*      mInputManager;          /**< The input manager for the system  */
+   DrawManager*               mDrawManager;           /**< The Draw Manager we are currently using */
+   SoundManager*              mSoundManager;          /**< The Audio Manager we are currently using  */
+   DisplayManager*            mDisplayManager;        /**< The Display Manager we are currently using */
+   EnvironmentManager*        environmentManager;     /**< The Environment Manager object  */
 
    /// Performance information
-   jccl::PerfDataBuffer* perfBuffer;          //: store perfdata for kernel main
-   bool              performanceEnabled;
+   jccl::PerfDataBuffer*   mPerfBuffer;          /** store perfdata for kernel main */
+   //bool                  performanceEnabled;
 
    /// Multi-user information
-   std::vector<vrj::User*>   mUsers;         //: A list of user objects in system
+   std::vector<vrj::User*>   mUsers;         /** A list of user objects in system */
 
    // ----------------------- //
    // --- SINGLETON STUFF --- //
