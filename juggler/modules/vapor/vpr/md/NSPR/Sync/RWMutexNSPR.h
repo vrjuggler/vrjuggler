@@ -146,15 +146,6 @@ public:
     }
 */
 
-   /**
-    * Dumps the mutex debug stuff and current state.
-    */
-   void dump(FILE* dest = stderr,
-             const char* message = "\n------ Mutex Dump -----\n") const
-   {
-//        stateLock.dump();
-   }
-
 protected:
    int numWaitingReaders;    /**<  Number of waiting readers. */
    int numWaitingWriters;    /**<  Number of waiting writers. */

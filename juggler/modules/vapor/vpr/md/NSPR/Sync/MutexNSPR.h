@@ -247,26 +247,6 @@ public:
       return mLocked;
    }
 
-   /**
-    * Dumps the mutex debug stuff and current state.
-    *
-    * @pre None.
-    * @post All important data and debugging information related to the
-    *       mutex are dumped to the specified file descriptor (or to stderr
-    *       if none is given).
-    *
-    * @param dest    File descriptor to which the output will be written.
-    *                It defaults to stderr if no descriptor is specified.
-    * @param message Message printed out before the output is dumped.
-    */
-   void dump(FILE* dest = stderr,
-             const char* message = "\n------ Mutex Dump -----\n") const
-   {
-      fprintf(dest, "%s", message);
-      fprintf(dest, "This is not currently implemented ...\n");
-      // More needed ...
-   }
-
    // Allow the vpr::CondNSPR class to access the private and protected
    // members of this class.  Specifically, direct access is needed to the
    // mutex variable.

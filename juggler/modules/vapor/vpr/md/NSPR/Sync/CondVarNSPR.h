@@ -269,19 +269,6 @@ public:
       mCondMutex = mutex;
    }
 
-   /**
-    * Prints out information about the condition variable to stderr.
-    *
-    * @pre None.
-    * @post All important data and debugging information related to the
-    *       condition variable and its mutex are dumped to stderr.
-    */
-   void dump (void) const
-   {
-      std::cerr << "------------- vpr::CondVarNSPR::Dump ---------\n"
-                << "Not Implemented yet.\n";
-   }
-
 private:
    PRCondVar*      mCondVar;   /**< Condition variable */
    MutexNSPR*      mCondMutex; /**< Mutex for the condition variable */
