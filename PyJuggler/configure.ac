@@ -232,10 +232,12 @@ boost_ver_exp=`echo $BOOST_VERSION | sed -e 's/\./ /g'`
 boost_major_ver=`echo $boost_ver_exp | awk '{ print $1 }' -`
 boost_minor_ver=`echo $boost_ver_exp | awk '{ print $2 }' -`
 
-if test $boost_minor_ver -ge 31; then
-   boost_debug_suffix='-d'
-else
-   boost_debug_suffix='_debug'
+if test "x$bp_libname" = "x" ; then
+   if test $boost_minor_ver -ge 31; then
+      boost_debug_suffix='-d'
+   else
+      boost_debug_suffix='_debug'
+   fi
 fi
 
 boost_ver_str=`echo $BOOST_VERSION | sed -e 's/\./_/g'`
@@ -275,11 +277,17 @@ if test "x$bp_libname" = "x" ; then
          threading='-mt'
       fi
 
-      BOOST_PYTHON_LIB="boost_python-$toolset$threading-$boost_ver_str"
+      BASE_BP_LIBNAME="boost_python-$toolset$threading"
+      BPL_VER_SUFFIX="-$boost_ver_str"
+      BOOST_PYTHON_LIB="$BASE_BP_LIBNAME$BPL_VER_SUFFIX"
    else
-      BOOST_PYTHON_LIB="boost_python"
+      BASE_BP_LIBNAME="boost_python"
+      BPL_VER_SUFFIX=""
+      BOOST_PYTHON_LIB="$BASE_BP_LIBNAME"
    fi
 else
+   BASE_BP_LIBNAME="$bp_libname"
+   BPL_VER_SUFFIX=""
    BOOST_PYTHON_LIB="$bp_libname"
 fi
 
@@ -335,11 +343,11 @@ if test "x$ac_cv_boost__python__handle_in_boost_python" = "xyes" ; then
    if test "x$OS_TYPE" = "xWin32" ; then
       bpl_dir="/libpath:$PYTHON_ROOT/libs /libpath:$BOOST_PYTHON_DIR/lib"
       BOOST_PYTHON_LDFLAGS_OPT="$bpl_dir $BOOST_PYTHON_LIB.lib"
-      BOOST_PYTHON_LDFLAGS_DBG="$bpl_dir $BOOST_PYTHON_LIB$boost_debug_suffix.lib"
+      BOOST_PYTHON_LDFLAGS_DBG="$bpl_dir $BASE_BP_LIBNAME$boost_debug_suffix$BPL_VER_SUFFIX.lib"
    else
       bpl_dir="-L$BOOST_PYTHON_DIR/lib"
       BOOST_PYTHON_LDFLAGS_OPT="$bpl_dir -l$BOOST_PYTHON_LIB"
-      BOOST_PYTHON_LDFLAGS_DBG="$bpl_dir -l$BOOST_PYTHON_LIB$boost_debug_suffix"
+      BOOST_PYTHON_LDFLAGS_DBG="$bpl_dir -l$BASE_BP_LIBNAME$boost_debug_suffix$BPL_VER_SUFFIX"
    fi
 else
    AC_MSG_ERROR([*** Boost.Python v2 is required for PyJuggler ***])
