@@ -664,6 +664,19 @@ struct vrj_GlApp_Wrapper: vrj::GlApp
     PyObject* self;
 };
 
+inline tuple vrj_Display_getOriginAndSize_wrapper(vrj::Display* disp)
+{
+   int xo, yo, xs, ys;
+   disp->getOriginAndSize(xo, yo, xs, ys);
+   return make_tuple(xo, yo, xs, ys);
+}
+
+inline tuple vrj_Viewport_getOriginAndSize_wrapper(vrj::Viewport* vp)
+{
+   float xo, yo, xs, ys;
+   vp->getOriginAndSize(xo, yo, xs, ys);
+   return make_tuple(xo, yo, xs, ys);
+}
 
 
 }// namespace 
@@ -685,7 +698,7 @@ BOOST_PYTHON_MODULE(vrj)
         .def("getName", &vrj::Display::getName)
         .def("shouldDrawBorder", &vrj::Display::shouldDrawBorder)
         .def("setOriginAndSize", &vrj::Display::setOriginAndSize)
-        .def("getOriginAndSize", &vrj::Display::getOriginAndSize)
+        .def("getOriginAndSize", vrj_Display_getOriginAndSize_wrapper)
         .def("setPipe", &vrj::Display::setPipe)
         .def("getPipe", &vrj::Display::getPipe)
         .def("inStereo", &vrj::Display::inStereo)
@@ -739,7 +752,7 @@ BOOST_PYTHON_MODULE(vrj)
         .def("inStereo", &vrj::Viewport::inStereo)
         .def("getView", &vrj::Viewport::getView)
         .def("setOriginAndSize", &vrj::Viewport::setOriginAndSize)
-        .def("getOriginAndSize", &vrj::Viewport::getOriginAndSize)
+        .def("getOriginAndSize", vrj_Viewport_getOriginAndSize_wrapper)
         .def("getConfigChunk", &vrj::Viewport::getConfigChunk)
         .def("getUser", &vrj::Viewport::getUser, return_internal_reference< 1 >())
         .def("setDisplay", &vrj::Viewport::setDisplay)
