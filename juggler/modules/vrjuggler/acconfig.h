@@ -130,10 +130,11 @@
 #undef socklen_t
 
 /*
- * Define to `unsigned int' if the u_int type is not available.  On Windows
- * when using Visual C++, define to UINT.
+ * Define to `unsigned int' if the u_int and/or u_int32_t types are not
+ * available.  On Windows when using Visual C++, define to UINT.
  */
 #undef u_int
+#undef u_int32_t
 
 /*
  * Define to the sizeof a memory address if the type caddr_t is not available.

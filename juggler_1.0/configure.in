@@ -40,7 +40,7 @@ dnl # -------------------------------------------------------------------------
 AC_REVISION($Revision$)
 AC_INIT(vjConfig.h)
 AC_CONFIG_HEADER(vjDefines.h)
-DPP_PREREQ(1.0)
+DPP_PREREQ(1.2)
 DPP_INIT
 
 dnl # -------------------------------------------------------------------------
@@ -152,6 +152,10 @@ dnl # This ensures that $OBJEXT and $EXEEXT are set properly.
 if test "x$target_os" = "xcygwin" -a "x$USE_GCC" != "xyes" ; then
     CC='cl'
 fi
+
+dnl # For now, we have to set the optimization level to 1 until we verify
+dnl # that the GL Draw Manager is working with level 2.
+OPT_LEVEL='1'
 
 DPP_SYSTEM_SETUP
 
@@ -455,24 +459,14 @@ if test "x$THREADS" = "xPOSIX" ; then
 
     dnl # This step and the following addition to $LIBS are necessary for
     dnl # properly testing for working POSIX semaphores.
-    if test "x$CC_ACCEPTS_PTHREAD" = "xyes" ; then
-        LDFLAGS="$LDFLAGS -pthread"
-    elif test "x$CC_ACCEPTS_PTHREADS" = "xyes" ; then
-        LDFLAGS="$LDFLAGS -pthreads"
-    fi
-
+    LDFLAGS="$LDFLAGS $PTHREAD_ARG"
     LIBS="$LIBS $PTHREAD_LIB"
 
     dnl # If we have sem_init(3), we can use POSIX semaphores.  If not, exit
     dnl # with a fatal error.  If we are using POSIX threads, we need to have
     dnl # working POSIX semaphores too.
-    AC_CHECK_FUNC(sem_init,
-        [ SEMAPHORE_SYS='POSIX' ; AC_DEFINE(VJ_POSIX_SEMAPHORES,) ],
-        AC_CHECK_LIB(posix4, sem_init,
-            [ _sem_lib='-lposix4' SEMAPHORE_SYS='POSIX' ;
-              AC_DEFINE(VJ_POSIX_SEMAPHORES,)
-            ],
-            AC_MSG_ERROR(*** POSIX semaphores are required for POSIX threads ***)))
+    DPP_GET_POSIX_SEMAPHORE_LIB([ SEMAPHORE_SYS='POSIX' ; AC_DEFINE(VJ_POSIX_SEMAPHORES,) ],
+        AC_MSG_ERROR(*** POSIX semaphores are required for POSIX threads ***))
 
     CFLAGS="${_vjsave_CFLAGS}"
     LIBS="${_vjsave_LIBS}"
@@ -774,12 +768,12 @@ fi
 
 dnl # Do the same if we are using POSIX semaphores.
 if test "x$SEMAPHORE_SYS" = "xPOSIX" ; then
-    LIBS="$LIBS ${_sem_lib}"
+    LIBS="$LIBS $SEM_LIB"
 fi
 
 dnl # And do the same again if sched_yield(3) is in a special library (that
-dnl # is not the same as ${_sem_lib}).
-if test "x${_sched_lib}" = "x" -a "x${_sem_lib}" != "x${_sched_lib}" ; then
+dnl # is not the same as $SEM_LIB).
+if test "x${_sched_lib}" = "x" -a "x$SEM_LIB" != "x${_sched_lib}" ; then
     LIBS="$LIBS ${_sched_lib}"
 fi
 
@@ -789,7 +783,7 @@ if test "x$PLATFORM" = "xHP" ; then
     _aCC_ROOT="/opt/aCC"
     DEPEND_EXTRAS="$DEPEND_EXTRAS -I${_aCC_ROOT} -I${_aCC_ROOT}/include -I${_aCC_ROOT}/include/iostream"
 elif test "x$OS_TYPE" = "xWin32" ; then
-    DEPEND_EXTRAS="$DEPEND_EXTRAS -D_WIN32 -D_M_IX86 -D__cplusplus"
+    DEPEND_EXTRAS="$DEPEND_EXTRAS -D__cplusplus"
 fi
 
 dnl # $srcdir is the root directory of the juggler source tree.  To get a
