@@ -29,7 +29,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-package org.vrjuggler.jccl.vjcontrol.ui.Widgets;
+package org.vrjuggler.jccl.vjcontrol.ui.widgets;
 
 import java.awt.Component;
 import java.io.IOException;
