@@ -56,7 +56,7 @@ public:
     //! POST: None.
     // ------------------------------------------------------------------------
     SocketDatagramImpBSD (void)
-        : SocketImpBSD()
+        : SocketImpBSD(SocketTypes::DATAGRAM)
     {
         /* Do nothing. */ ;
     }
@@ -78,7 +78,9 @@ public:
     // ------------------------------------------------------------------------
     // Copy constructor.
     // ------------------------------------------------------------------------
-    SocketDatagramImpBSD (const SocketDatagramImpBSD& sock) {
+    SocketDatagramImpBSD (const SocketDatagramImpBSD& sock)
+        : SocketImpBSD(SocketTypes::DATAGRAM)
+    {
         m_local_addr      = sock.m_local_addr;
         m_remote_addr     = sock.m_remote_addr;
         m_handle          = new FileHandleUNIX(sock.m_handle->getName());

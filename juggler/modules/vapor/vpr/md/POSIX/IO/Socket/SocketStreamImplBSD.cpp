@@ -116,7 +116,7 @@ SocketStreamImpBSD::accept () {
 // ----------------------------------------------------------------------------
 SocketStreamImpBSD::SocketStreamImpBSD (const int sock,
                                         const InetAddr& remote_addr)
-    : SocketImpBSD()
+    : SocketImpBSD(SocketTypes::STREAM)
 {
     m_handle          = new FileHandleUNIX(remote_addr.getAddressString());
     m_handle->m_fdesc = sock;

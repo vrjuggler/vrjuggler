@@ -171,7 +171,7 @@ public:
 
     bool setLocalAddr(const InetAddr& addr)
     {
-      if (this->m_open)
+      if (this->m_connected)
        { return false; }
        else
           m_local_addr = addr;
@@ -188,7 +188,7 @@ public:
 
     bool setRemoteAddr(const InetAddr& addr)
     {
-       if (this->m_open)
+       if (this->m_connected)
        { return false; }
        else
           m_remote_addr = addr;
@@ -205,10 +205,11 @@ protected:
     // POST: The member variables are initialized accordingly to reasonable
     //       defaults.
     // ------------------------------------------------------------------------
-    SocketImpBSD (void)
-        : BlockIO(std::string("INADDR_ANY")), m_handle(NULL)
+    SocketImpBSD (const SocketTypes::Type sock_type)
+        : BlockIO(std::string("INADDR_ANY")), m_connected(false),
+          m_handle(NULL), m_type(sock_type)
     {
-        /* Do nothing. */ ;
+        m_handle = new FileHandleUNIX("INADDR_ANY");
     }
 
     // ------------------------------------------------------------------------
@@ -224,8 +225,8 @@ protected:
     // ------------------------------------------------------------------------
     SocketImpBSD (const InetAddr& local_addr, const InetAddr& remote_addr,
                   const SocketTypes::Type sock_type)
-        : BlockIO(std::string("INADDR_ANY")), m_handle(NULL),
-          m_local_addr(local_addr), m_remote_addr(remote_addr),
+        : BlockIO(std::string("INADDR_ANY")), m_connected(false),
+          m_handle(NULL), m_local_addr(local_addr), m_remote_addr(remote_addr),
           m_type(sock_type)
     {
         m_handle = new FileHandleUNIX(m_name);
@@ -272,6 +273,7 @@ protected:
     virtual bool setOption(const SocketOptions::Types option,
                            const struct SocketOptions::Data& data);
 
+    bool              m_connected;
     FileHandleUNIX*   m_handle;      //:
     InetAddr          m_local_addr;  //: The local site's address structure
     InetAddr          m_remote_addr; //: The remote site's address structure
