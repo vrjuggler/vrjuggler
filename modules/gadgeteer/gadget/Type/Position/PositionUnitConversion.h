@@ -35,12 +35,15 @@
 
 namespace gadget
 {
+   /**
+    * Constant values for converting from meters to the given units.
+    */
    namespace PositionUnitConversion
    {
-   const float ConvertToFeet = 0.3048;
-   const float ConvertToInches = 0.0254;
+   const float ConvertToFeet = 3.28f;  /**< Conversion from meters to feet. */
+   const float ConvertToInches = 39.37f; /**< Conversion from meters to inches. */
    const float ConvertToMeters = 1.0f;
-   const float ConvertToCentimeters = 0.01f;
+   const float ConvertToCentimeters = 100.0f;
    }
 }
 
