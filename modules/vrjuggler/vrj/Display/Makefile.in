@@ -47,10 +47,12 @@ top_srcdir	= @top_srcdir@
 INSTALL		= @INSTALL@
 SUBOBJDIR	= $(VJ_LIBRARY)
 
-SRCS		= Display.cpp			\
+SRCS		= CameraProjection.cpp \
+           Display.cpp			\
                   DisplayManager.cpp		\
                   Frustum.cpp			\
                   Projection.cpp		\
+                  SimViewport.cpp \
                   SurfaceViewport.cpp		\
                   TrackedWallProjection.cpp	\
                   Viewport.cpp			\

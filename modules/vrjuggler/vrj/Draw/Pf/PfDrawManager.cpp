@@ -63,6 +63,8 @@
 
 #include <jccl/Config/ConfigChunk.h>
 
+#include <gmtl/Output.h>
+
 namespace vrj
 {
 

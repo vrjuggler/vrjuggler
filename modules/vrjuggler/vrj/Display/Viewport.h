@@ -36,19 +36,16 @@
 #include <vrj/vrjConfig.h>
 
 #include <gmtl/Vec.h>
-#include <vrj/Kernel/User.h>
 #include <jccl/PerfMonitor/LabeledPerfDataBuffer.h>
 #include <jccl/Config/ConfigChunkPtr.h>
-#include <vrj/Kernel/Kernel.h>
 #include <jccl/PerfMonitor/PerformanceMonitor.h>
-#include <vrj/Display/Display.h>
-#include <vrj/Display/Projection.h>
 
 namespace vrj
 {
 
 class Display;
 class Projection;
+class User;
 
 /**
  * Base class for window viewports.  Base class for all viewport data.
@@ -71,13 +68,8 @@ public:
    virtual ~Viewport()
    {;}
 
-
-   void recordLatency (int trackertimeindex, int currenttimeindex) {
-      vpr::Interval it = mUser->getHeadUpdateTime();
-      mLatencyMeasure.set (jcclPERF_ALL, "Head tracking timestamp (ignore)",
-                           it);
-      mLatencyMeasure.set (jcclPERF_ALL, "tracking latency");
-   }
+   // XXX: Hack, should be removed
+   void recordLatency (int trackertimeindex, int currenttimeindex);
 
    /** Type of viewport */
    enum Type
