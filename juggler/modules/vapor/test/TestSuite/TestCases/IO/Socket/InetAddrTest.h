@@ -40,17 +40,17 @@ public:
       vpr::InetAddr addr2(21);
       vpr::InetAddr addr3(80);
 
-      //assertTest(addr1 != addr2);
-      //assertTest(addr1 == addr3);
+      assertTest(addr1 != addr2);
+      assertTest(addr1 == addr3);
 
       addr1.setAddressValue(23);
       addr3.setAddressValue(23);
 
-      //assertTest(addr1 == addr3);
+      assertTest(addr1 == addr3);
 
       addr3.setAddressValue(17);
 
-      //assertTest(addr1 != addr3);
+      assertTest(addr1 != addr3);
    }
 
    void testSets()
