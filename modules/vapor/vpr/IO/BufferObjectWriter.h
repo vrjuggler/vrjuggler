@@ -85,19 +85,27 @@ public:
    /** Starts a new section/element of name tagName.
    */
    virtual vpr::ReturnStatus beginTag(std::string tagName)
-   {;}
+   {
+      return vpr::ReturnStatus::Succeed;
+   }
    
    /** Ends the most recently named tag. */
    virtual vpr::ReturnStatus endTag()
-   {;}
+   {
+      return vpr::ReturnStatus::Succeed;
+   }
 
    /** Starts an attribute of the name attributeName */
    virtual vpr::ReturnStatus beginAttribute(std::string attributeName)
-   {;}
+   {
+      return vpr::ReturnStatus::Succeed;
+   }
 
    /** Ends the most recently named attribute */
    virtual vpr::ReturnStatus endAttribute()
-   {;}
+   {
+      return vpr::ReturnStatus::Succeed;
+   }
    //@}
 
    virtual vpr::ReturnStatus writeUint8(vpr::Uint8 val);
