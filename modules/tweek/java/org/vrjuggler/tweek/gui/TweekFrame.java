@@ -275,7 +275,8 @@ public class TweekFrame extends JFrame implements BeanFocusChangeListener,
 
       mContentPane = (JPanel) this.getContentPane();
       mContentPane.setLayout(mContentPaneLayout);
-      this.setSize(new Dimension(1024, 768));
+      this.setSize(new Dimension(prefs.getWindowWidth(),
+                                 prefs.getWindowHeight()));
       this.setTitle("Tweek JavaBean Loader");
 
       // Define the Connect option in the Network menu.
