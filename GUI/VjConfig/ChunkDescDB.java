@@ -7,21 +7,24 @@ import java.io.*;
 
 public class ChunkDescDB extends Vector {
 
-  public String name;
-  public String directory;
-
-  public ChunkDescDB () {
-  }
+    public String name;
+    public File file;
 
 
-  public void setName(String _name) {
-    name = _name;
-  }
+    public ChunkDescDB () {
+	name = "Unnamed";
+	file = new File ("");
+    }
 
 
-  public void setDirectory (String _dir) {
-    directory = _dir;
-  }
+    public void setName(String _name) {
+	name = _name;
+    }
+
+
+    public void setFile (File _file) {
+	file = _file;
+    }
 
 
   public ChunkDescDB diff (ChunkDescDB d) {
