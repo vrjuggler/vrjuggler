@@ -63,9 +63,9 @@ namespace SocketTypes {
         DATAGRAM, /**< Datagram socket */
         RAW       /**< Raw socket */
     };
-};
+}
 
-};
+}
 
 
 #endif  /* _VPR_SOCKET_TYPES_H_ */
