@@ -21,8 +21,8 @@ dnl Boston, MA 02111-1307, USA.
 dnl
 dnl -----------------------------------------------------------------
 dnl File:          java.m4,v
-dnl Date modified: 2005/01/08 22:44:39
-dnl Version:       1.52
+dnl Date modified: 2005/03/20 17:17:12
+dnl Version:       1.53
 dnl -----------------------------------------------------------------
 dnl ************** <auto-copyright.pl END do not edit this line> **************
 
@@ -58,7 +58,7 @@ dnl     JNI_LIB  - The library which needs to be statically linked for JNI.
 dnl     JCPS     - Java classpath separator character (: on UNIX, ; on Win32).
 dnl ===========================================================================
 
-dnl java.m4,v 1.52 2005/01/08 22:44:39 patrickh Exp
+dnl java.m4,v 1.53 2005/03/20 17:17:12 patrickh Exp
 
 dnl ---------------------------------------------------------------------------
 dnl Find the path to the Java installation.  Substition is performed on the
@@ -190,11 +190,11 @@ dnl ---------------------------------------------------------------------------
 dnl Verify that the available JDK is at least the required version.
 dnl
 dnl Usage:
-dnl     DPP_JDK_VERSION(jdk-home, version, [, action-if-found [, action-if-not-found ]])
+dnl     DPP_JDK_VERSION(jdk-home, required-version, [, action-if-found [, action-if-not-found ]])
 dnl
 dnl Arguments:
 dnl     jdk-home            - JDK installation directory.
-dnl     version             - The minimum required JDK version.
+dnl     required-version    - The minimum required JDK version.
 dnl     action-if-found     - The action to take if the JNI libraries are
 dnl                           found.
 dnl     action-if-not-found - The action to take if the JNI libraries are not
@@ -211,8 +211,7 @@ AC_DEFUN([DPP_JDK_VERSION],
       dpp_jdk_ver=`echo $dpp_jdk_ver_line | sed -e 's/^.*"[^0-9]*\([0-9][.0-9]*\).*"$/\1/'`
       changequote([, ])
 
-      DPP_VERSION_CHECK_MSG([JDK], [$dpp_jdk_ver], $2,
-                            [dpp_cv_JDK_version_okay], $3, $4)
+      DPP_VERSION_CHECK_MSG_NO_CACHE([JDK], [$dpp_jdk_ver], [$2], [$3], [$4])
    fi
 ])
 
