@@ -112,7 +112,6 @@ DPP_WITH_GCC(no)
 AC_CANONICAL_SYSTEM
 DPP_SYSTEM_SETUP
 
-
 # -----------------------------------------------------------------------------
 # Checks for programs.
 # -----------------------------------------------------------------------------
@@ -288,6 +287,7 @@ dnl                 SOUND_SUBSYSTEMS="$withval", SOUND_SUBSYSTEMS=$1)
 
               
 dnl does the user want openal?
+OPENAL_API='N'
 AC_ARG_ENABLE(openal,
               [  --enable-openal   Make OpenAL subsystem available at runtime [default=$1]],
               OPENAL_ENABLED="$enableval", OPENAL_ENABLED=$1)
@@ -305,6 +305,7 @@ if test "x$OPENAL_ENABLED" = "xyes" ; then
 fi
 
 dnl does the user want AW?
+AUDIOWORKS_API='N'
 AC_ARG_ENABLE(audioworks,
               [  --enable-audioworks   Make AudioWorks subsystem available at runtime [default=$1]],
               AUDIOWORKS_ENABLED="$enableval", AUDIOWORKS_ENABLED=$1)
@@ -347,9 +348,11 @@ else
    snx_ldflags_compiler="-L\$prefix/lib$LIBBITSUF"
    snx_ldflags_linker="$snx_ldflags_compiler"
    snx_lib='-lsonix'
-   snx_libs='-lsonix'
+   snx_libs="-lsonix"
    sample_application_libs="-L\$(SNX_BASE_DIR)/lib$LIBBITSUF -lsonix $LIBS -lm"
 fi
+
+sample_application_libs="$APP_LINKALL_ON $sample_application_libs $APP_LINKALL_OFF"
 
 if test "x$PLATFORM" = "xIRIX" -a "x$USE_GCC" != "xyes" ; then
     snx_n32_flags='-n32'
@@ -364,6 +367,32 @@ snx_extra_include_dirs=''
 snx_extra_ldflags="$APP_EXTRA_LIBS_BEGIN"
 #snx_extra_libs="$LDFLAGS $VPR_LIBS_CC_MIN $LIBS $APP_EXTRA_LIBS_END"
 snx_extra_libs="$LDFLAGS $LIBS $APP_EXTRA_LIBS_END"
+
+
+# -----------------------------------------------------------------------------
+# figure out what the flags are to link all symbols
+# only needed until sonix can load plugins dynamically ala dlopen
+# -----------------------------------------------------------------------------
+if test "x$OS_TYPE" = "xUNIX" ; then
+   if test "x$PLATFORM" = "xIRIX" -a "x$GXX" != "xyes" ; then
+      APP_LINKALL_ON='-all'
+      APP_LINKALL_OFF=''
+   elif test "x$GXX" = "xyes" -a "x$PLATFORM" != "xDarwin" ; then
+      if test "x$PLATFORM" = "xIRIX" ; then
+          APP_LINKALL_ON='-Wl,-all'
+          APP_LINKALL_OFF=''
+      else
+          APP_LINKALL_ON='-Wl,--whole-archive'
+          APP_LINKALL_OFF='-Wl,--no-whole-archive'
+      fi
+   fi
+elif test "$OS_TYPE" = "Win32" ; then
+   APP_LINKALL_ON=''
+   APP_LINKALL_OFF=''
+fi
+
+AC_SUBST(APP_LINKALL_ON)
+AC_SUBST(APP_LINKALL_OFF)
 
 
 AC_SUBST(static_begin)
