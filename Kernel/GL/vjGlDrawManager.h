@@ -22,12 +22,13 @@ class vjGlApp;
 #include <Kernel/GL/vjGlWindow.h>
 #include <Kernel/GL/vjGlPipe.h>
 #include <Threads/vjTSObjectProxy.h>
+#include <Kernel/GL/vjGlUserData.h>
 
 class vjConfigChunkDB;
 class vjSimulator;
 class vjGloveProxy;
 
-#include <Sync/vjCond.h>
+//#include <Sync/vjCond.h>
 #include <Sync/vjSemaphore.h>
 
 //-----------------------------------------------
@@ -38,6 +39,7 @@ class vjGloveProxy;
 // @author Allen Bierbaum
 //  Date: 1-7-98
 //------------------------------------------------
+//! PUBLIC_API:
 class vjGlDrawManager : public vjDrawManager
 {
 public:
@@ -107,6 +109,25 @@ protected:     // --- Geom helpers --- //
 
    GLUquadricObj* mQuadObj;
 
+public:
+   //: Get ptr to the current user data
+   // Should be used in the draw function
+   //! NOTE: This user data is valid ONLY
+   //+ in contextInit() and draw()
+   vjGlUserData* currentUserData()
+   { return &(*mUserData); }
+
+   //: Returns a unique identifier for the current context
+   //! NOTE: This id is ONLY valid in
+   //+ contextInit() and draw()
+   int getCurrentContext()
+   { return (*mContextId); }
+
+protected:
+   void setCurrentContext(int val)
+   { (*mContextId) = val; }
+
+
 protected:
    // --- Config Data --- //
    int      numPipes;     //: The number of pipes in the system
@@ -115,18 +136,14 @@ protected:
    vjGlApp*             app;           //: The OpenGL application
    vector<vjGlWindow*>  wins;          //: A list of the windows in the system
    vector<vjGlPipe*>    pipes;         //: A list of the pipes in the system
-   vjTSObjectProxy<int> mContextId;    //: TS Data for context id
+
+   // --- Helper field data --- //
+   vjTSObjectProxy<int>             mContextId;    //: TS Data for context id
+   vjTSObjectProxy<vjGlUserData>    mUserData;     //: User data for draw func
 
    // --- MP Stuff -- //
-   // vjCond     syncCond;       //: Condition var for syncing
-   // bool       triggerRender;  //: Are we able to render
-
    vjSemaphore    drawTriggerSema;  // Semaphore for draw trigger
    vjSemaphore    drawDoneSema;     // Semaphore for drawing done
-
-protected:
-   int& currentContext()
-   { return (*mContextId); }
 
    // --- Singleton Stuff --- //
 public:
