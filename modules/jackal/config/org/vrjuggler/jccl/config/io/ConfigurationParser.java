@@ -35,6 +35,8 @@ import java.io.*;
 import java.util.*;
 import org.jdom.*;
 
+import org.vrjuggler.tweek.services.EnvironmentService;
+import org.vrjuggler.tweek.services.EnvironmentServiceProxy;
 import org.vrjuggler.jccl.config.*;
 
 /**
@@ -98,15 +100,17 @@ public class ConfigurationParser
       }
 
       // Get the configuration definition lookup path
-/*
       List path = parseDefinitionPath(root.getChild(DEFINITION_PATH, CFG_NS));
-      for (Iterator itr = path.iterator(); itr.hasNext(); )
+      if ( null != path )
       {
-         // Add the configuration definition lookup path
-         String dir = (String)itr.next();
-         config.addDefinitionPath(dir);
+         for (Iterator itr = path.iterator(); itr.hasNext(); )
+         {
+            // Add the configuration definition lookup path
+            String dir = (String)itr.next();
+            config.addDefinitionPath(dir);
+            scanDefinitionDir(dir);
+         }
       }
-*/
 
       // Get the list of elements in this configuration
       List config_elts = parseElements(root.getChild(ELEMENTS, CFG_NS)/*, path*/);
@@ -143,6 +147,62 @@ public class ConfigurationParser
       }
 
       return path;
+   }
+
+   private void scanDefinitionDir(String dirName)
+   {
+      String dir_name = dirName;
+
+      try
+      {
+         dir_name = (new EnvironmentServiceProxy()).expandEnvVars(dirName);
+      }
+      catch(RuntimeException ex)
+      {
+         System.err.println("WARNING: Failed to load Tweek Environment Service: " +
+                            ex.getMessage());
+      }
+
+      File dir = new File(dir_name);
+      FilenameFilter filter = new DefinitionFilenameFilter();
+
+      if ( dir.exists() && dir.isDirectory() && dir.canRead() )
+      {
+         File[] def_files = dir.listFiles(filter);
+
+         for ( int i = 0; i < def_files.length; ++i )
+         {
+            try
+            {
+               ConfigDefinitionReader reader =
+                  new ConfigDefinitionReader(def_files[i]);
+               List defs = reader.readDefinition();
+               for (Iterator def_itr = defs.iterator(); def_itr.hasNext(); )
+               {
+                  ConfigDefinition def = (ConfigDefinition)def_itr.next();
+                  mDefinitionRepos.add(def);
+               }
+            }
+            catch (ParseException pe)
+            {
+               System.err.println(
+                  "Caught a parse exception while trying to load\n" +
+                     def_files[i].getAbsolutePath() + "\n" +
+                     pe.getMessage() + "\n" +
+                     "The contents of this file will not be available!"
+               );
+            }
+            catch (IOException ioe)
+            {
+               System.err.println(
+                  "Caught an I/O exception while trying to load\n" +
+                     def_files[i].getAbsolutePath() + "\n" +
+                     ioe.getMessage() + "\n" +
+                     "The contents of this file will not be available!"
+               );
+            }
+         }
+      }
    }
 
    /**
