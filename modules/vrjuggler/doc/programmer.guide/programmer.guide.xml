@@ -1726,7 +1726,7 @@ gmtl::xform(result_vec, xform_mat, vec1);</programlisting>
           <informalequation>
             <mediaobject>
               <imageobject>
-                <imagedata fileref="eq_v_eq_m_v.png" format="PNG" />
+                <imagedata fileref="figures/eq_v_eq_m_v.png" format="PNG" />
               </imageobject>
 
               <textobject>
@@ -2156,7 +2156,7 @@ if ( mat1 != mat2 )
           <para>The transpose operation works conceptually as <inlineequation>
               <inlinemediaobject>
                 <imageobject>
-                  <imagedata fileref="eq_m1_eq_tr_m2.png" format="PNG" />
+                  <imagedata fileref="figures/eq_m1_eq_tr_m2.png" format="PNG" />
                 </imageobject>
 
                 <textobject>
@@ -2193,7 +2193,8 @@ gmtl::transpose(mat1, mat2);</programlisting>
           <para>The inverse operation works conceptually as <inlineequation>
               <inlinemediaobject>
                 <imageobject>
-                  <imagedata fileref="eq_m1_eq_inv_m2.png" format="PNG" />
+                  <imagedata fileref="figures/eq_m1_eq_inv_m2.png"
+                             format="PNG" />
                 </imageobject>
 
                 <textobject>
@@ -2346,7 +2347,7 @@ gmtl::postMult(mat1, mat2);</programlisting>
           <para>Conceptually, the operation is <inlineequation>
               <inlinemediaobject>
                 <imageobject>
-                  <imagedata fileref="eq_m1_eq_m1_m2.png" format="PNG" />
+                  <imagedata fileref="figures/eq_m1_eq_m1_m2.png" format="PNG" />
                 </imageobject>
 
                 <textobject>
@@ -2380,7 +2381,7 @@ gmtl::preMult(mat1, mat2);</programlisting>
           <para>Here, the conceptual operation is <inlineequation>
               <inlinemediaobject>
                 <imageobject>
-                  <imagedata fileref="eq_m1_eq_m2_m1.png" format="PNG" />
+                  <imagedata fileref="figures/eq_m1_eq_m2_m1.png" format="PNG" />
                 </imageobject>
 
                 <textobject>
