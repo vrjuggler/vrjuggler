@@ -35,7 +35,7 @@ vjPerfDataBuffer::~vjPerfDataBuffer () {
 //+       writing available data when requested.
 void vjPerfDataBuffer::activate() {
     active = 1;
-    vjDEBUG(0) << "Performance Buffer " << name << " activated.\n" 
+    vjDEBUG(2) << "Performance Buffer " << name << " activated.\n" 
 	       << vjDEBUG_FLUSH;
 }
 
@@ -54,7 +54,7 @@ void vjPerfDataBuffer::deactivate() {
     read_begin = 0;
     write_pos = 1;
     lost = 0;
-    vjDEBUG(0) << "Performance Buffer " << name << " deactivated.\n" 
+    vjDEBUG(2) << "Performance Buffer " << name << " deactivated.\n" 
 	       << vjDEBUG_FLUSH;
 
 }
