@@ -102,6 +102,7 @@ private:
    // exported public symbols.  This causes problems because copying
    // vpr::Mutex objects is not allowed.
    TweekPositionSubjectImpl(const TweekPositionSubjectImpl& subj)
+      : POA_gadget::TweekPositionSubject(subj), tweek::SubjectImpl(subj)
    {
       /* Do nothing. */ ;
    }

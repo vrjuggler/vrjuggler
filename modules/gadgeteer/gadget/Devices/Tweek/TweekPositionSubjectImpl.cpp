@@ -32,6 +32,7 @@
 
 #include <gadget/gadgetConfig.h>
 
+#include <boost/concept_check.hpp> /* To silence a warning in getOrientation() */
 #include <gmtl/Vec.h>
 #include <gmtl/EulerAngle.h>
 #include <gmtl/Generate.h>
@@ -113,6 +114,10 @@ void TweekPositionSubjectImpl::getOrientation(CORBA::Float& xOrient,
                                               CORBA::Float& yOrient,
                                               CORBA::Float& zOrient)
 {
+   // XXX: Remove these once this method is implemented.
+   boost::ignore_unused_variable_warning(xOrient);
+   boost::ignore_unused_variable_warning(yOrient);
+   boost::ignore_unused_variable_warning(zOrient);
    vpr::Guard<vpr::Mutex> guard(mMatrixLock);
 }
 
