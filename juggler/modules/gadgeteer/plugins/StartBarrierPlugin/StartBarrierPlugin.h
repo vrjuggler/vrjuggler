@@ -33,7 +33,7 @@
 #ifndef _CLUSTER_START_BARRIER_PLUGIN_H
 #define _CLUSTER_START_BARRIER_PLUGIN_H
 
-#include <cluster/Plugins/PluginConfig.h>
+#include <cluster/PluginConfig.h>
 
 #include <vpr/Util/Singleton.h>
 
