@@ -138,35 +138,35 @@ int GloveData::calcXforms()
    // THUMB
    // INDEX
    gmtl::setRot(xforms[INDEX][DIJ], angles[INDEX][DIJ],xAxis);
-   gmtl::preMult(xforms[INDEX][DIJ], gmtl::makeTrans<gmtl::Matrix44f>(dims[INDEX][DIJ]));
+   gmtl::preMult(xforms[INDEX][DIJ], gmtl::makeTrans<gmtl::Matrix44f, 3>(dims[INDEX][DIJ]));
    gmtl::setRot(xforms[INDEX][PIJ], angles[INDEX][PIJ],xAxis);
-   gmtl::preMult(xforms[INDEX][PIJ], gmtl::makeTrans<gmtl::Matrix44f>(dims[INDEX][PIJ]));
+   gmtl::preMult(xforms[INDEX][PIJ], gmtl::makeTrans<gmtl::Matrix44f, 3>(dims[INDEX][PIJ]));
    gmtl::setRot(xforms[INDEX][MPJ], angles[INDEX][MPJ],xAxis);
-   gmtl::preMult(xforms[INDEX][MPJ], gmtl::makeTrans<gmtl::Matrix44f>(dims[INDEX][MPJ]));
+   gmtl::preMult(xforms[INDEX][MPJ], gmtl::makeTrans<gmtl::Matrix44f, 3>(dims[INDEX][MPJ]));
 
    // MIDDLE
    gmtl::setRot(xforms[MIDDLE][DIJ], angles[MIDDLE][DIJ],xAxis);
-   gmtl::preMult(xforms[MIDDLE][DIJ], gmtl::makeTrans<gmtl::Matrix44f>(dims[MIDDLE][DIJ]));
+   gmtl::preMult(xforms[MIDDLE][DIJ], gmtl::makeTrans<gmtl::Matrix44f, 3>(dims[MIDDLE][DIJ]));
    gmtl::setRot(xforms[MIDDLE][PIJ], angles[MIDDLE][PIJ],xAxis);
-   gmtl::preMult(xforms[MIDDLE][PIJ], gmtl::makeTrans<gmtl::Matrix44f>(dims[MIDDLE][PIJ]));
+   gmtl::preMult(xforms[MIDDLE][PIJ], gmtl::makeTrans<gmtl::Matrix44f, 3>(dims[MIDDLE][PIJ]));
    gmtl::setRot(xforms[MIDDLE][MPJ], angles[MIDDLE][MPJ],xAxis);
-   gmtl::preMult(xforms[MIDDLE][MPJ], gmtl::makeTrans<gmtl::Matrix44f>(dims[MIDDLE][MPJ]));
+   gmtl::preMult(xforms[MIDDLE][MPJ], gmtl::makeTrans<gmtl::Matrix44f, 3>(dims[MIDDLE][MPJ]));
 
    // RING
    gmtl::setRot(xforms[RING][DIJ], angles[RING][DIJ],xAxis);
-   gmtl::preMult(xforms[RING][DIJ], gmtl::makeTrans<gmtl::Matrix44f>(dims[RING][DIJ]));
+   gmtl::preMult(xforms[RING][DIJ], gmtl::makeTrans<gmtl::Matrix44f, 3>(dims[RING][DIJ]));
    gmtl::setRot(xforms[RING][PIJ], angles[RING][PIJ],xAxis);
-   gmtl::preMult(xforms[RING][PIJ], gmtl::makeTrans<gmtl::Matrix44f>(dims[RING][PIJ]));
+   gmtl::preMult(xforms[RING][PIJ], gmtl::makeTrans<gmtl::Matrix44f, 3>(dims[RING][PIJ]));
    gmtl::setRot(xforms[RING][MPJ], angles[RING][MPJ],xAxis);
-   gmtl::preMult(xforms[RING][MPJ], gmtl::makeTrans<gmtl::Matrix44f>(dims[RING][MPJ]));
+   gmtl::preMult(xforms[RING][MPJ], gmtl::makeTrans<gmtl::Matrix44f, 3>(dims[RING][MPJ]));
 
    // PINKY
    gmtl::setRot(xforms[PINKY][DIJ], angles[PINKY][DIJ],xAxis);
-   gmtl::preMult(xforms[PINKY][DIJ], gmtl::makeTrans<gmtl::Matrix44f>(dims[PINKY][DIJ]));
+   gmtl::preMult(xforms[PINKY][DIJ], gmtl::makeTrans<gmtl::Matrix44f, 3>(dims[PINKY][DIJ]));
    gmtl::setRot(xforms[PINKY][PIJ], angles[PINKY][PIJ],xAxis);
-   gmtl::preMult(xforms[PINKY][PIJ], gmtl::makeTrans<gmtl::Matrix44f>(dims[PINKY][PIJ]));
+   gmtl::preMult(xforms[PINKY][PIJ], gmtl::makeTrans<gmtl::Matrix44f, 3>(dims[PINKY][PIJ]));
    gmtl::setRot(xforms[PINKY][MPJ], angles[PINKY][MPJ],xAxis);
-   gmtl::preMult(xforms[PINKY][MPJ], gmtl::makeTrans<gmtl::Matrix44f>(dims[PINKY][MPJ]));
+   gmtl::preMult(xforms[PINKY][MPJ], gmtl::makeTrans<gmtl::Matrix44f, 3>(dims[PINKY][MPJ]));
 
    // WRIST
 
