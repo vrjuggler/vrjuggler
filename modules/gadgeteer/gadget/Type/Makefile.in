@@ -54,8 +54,8 @@ SRCS		= AnalogProxy.cpp			\
                   Input.cpp				\
                   KeyboardProxy.cpp			\
                   LinearSigmoidPositionFilter.cpp	\
+                  NetDigital.cpp                        \
                   NetInput.cpp				\
-                  NetDigitalData.cpp                    \
                   NetPositionData.cpp                   \
                   Position.cpp				\
                   PositionProxy.cpp			\

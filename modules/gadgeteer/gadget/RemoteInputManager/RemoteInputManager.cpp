@@ -637,6 +637,7 @@ bool RemoteInputManager::configConnection(jccl::ConfigChunkPtr chunk){
    if(makeConnection( connection_alias, connection_hostname, connection_port))
      return true;
    else{
+     return true;  // XXX for now, don't retry connections -- hosts need to be started in correct order
       //if((getConnectionByHostAndPort(connection_name) != NULL )    // check if we have connection already
       if((getConnectionByHostAndPort(connection_hostname, connection_port) != NULL )    // check if we have connection already
          || (getConnectionByAliasName(connection_alias) != NULL)   // check if we have connection already

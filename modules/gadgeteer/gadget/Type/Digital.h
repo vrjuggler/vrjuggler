@@ -112,7 +112,7 @@ public:
          }
          else
          {
-            vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_LVL) << "Warning: Digital::getDigitalData: Requested devNum is not in the range available.  May have configuration error\n" << vprDEBUG_FLUSH;
+            vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_LVL) << "Warning: Digital::getDigitalData: Requested devNum " << devNum << " is not in the range available.  May have configuration error\n" << vprDEBUG_FLUSH;
          }
          return mDefaultValue;
       }
