@@ -33,13 +33,7 @@ public:
    }
 
    /** Just outputs some debug info at each level */
-   void OutputDebug()
-   {
-      vprDEBUG(vprDBG_ALL,0) << " Test output for vprDBG_ALL \n" << vprDEBUG_FLUSH;
-      vprDEBUG(vprDBG_ERROR,0) << " Test output for vprDBG_ERROR \n" << vprDEBUG_FLUSH;
-      vprDEBUG(vprDBG_SIM,0) << " Test output for vprDBG_SIM \n" << vprDEBUG_FLUSH;
-      vprDEBUG(vprDBG_VPR,0) << " Test output for vprDBG_VPR \n" << vprDEBUG_FLUSH;
-   }
+   void OutputDebug();
       
    static CppUnit::Test* suite()
    {
