@@ -38,13 +38,13 @@ information for a particular component of Juggler.  These components
 can be things like display windows, input device drivers, the Juggler
 performance measurement system, and so on.  To give you a better feel
 for the concept, here's a list of some of the kinds of 
-chunks used by Juggler beta1:
+chunks used by Juggler 1.0:
 
 <ul>
 <li><b>Sim Display</b> - Simulator-mode display window
 <li><b>Surface Display</b> - Projection surface display window
-<li><b>IBox</b> - Config for Ibox driver
-<li><b>Flock</b> - Config for Flock of Birds tracking system driver
+<li><b>IBox</b> - Config for Immersive Ibox driver
+<li><b>Flock</b> - Config for Ascension Flock of Birds tracking system driver
 <li><b>Position Proxy</b> - Proxy for a positional device (e.g. the Flock)
 <li><b>Performer API</b> - Setup info for Iris Performer-based apps
 </ul>
@@ -110,7 +110,7 @@ a "Surface Display" Chunk that's different from a "Position Proxy" Chunk?
 For every kind of ConfigChunk there's an object called a <i>ChunkDesc</i> - 
 short for "Chunk Description".  ChunkDescs live in ChunkDesc files - and
 where are they?  The primary Juggler ChunkDesc file is 
-<tt>$VJ_BASE_DIR/Data/chunksDesc</tt> - it defines all the different kinds 
+<tt>$VJ_BASE_DIR/share/Data/chunksDesc</tt> - it defines all the different kinds 
 of chunks that Juggler beta1 knows about and needs.  When a Juggler
 program starts up, one of the first things it does - even before it reads
 its config files - is to read the primary chunksDesc file.
