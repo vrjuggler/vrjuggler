@@ -370,17 +370,18 @@ ifeq ($(BUILD_VJCONTROL), Y)
 	@echo "------------------------------------------------"
 ifeq (@OS_TYPE@, UNIX)
 	@sed -e 's,#JCCL_SHARE_DIR#,$(JCCL_SHARE_DIR),g'		\
-          $(JCCLROOT_ABS)/VjControl/vjcontrol.sh > vjcontrol
+          $(JCCLROOT_ABS)/vjcontrol/vjcontrol.sh > vjcontrol.sh
 	$(INSTALL) -m $(EXEC_PERMS) $(GROUP_OPT_UNIX)			\
-          vjcontrol $(bindir)/vjcontrol && rm -f vjcontrol
+          vjcontrol.sh $(bindir)/vjcontrol && rm -f vjcontrol.sh
 else
 	@sed -e 's,#JCCL_SHARE_DIR#,$(JCCL_SHARE_DIR),g'		\
-          $(JCCLROOT_ABS)/VjControl/vjcontrol.bat > vjcontrol.bat
+          $(JCCLROOT_ABS)/vjcontrol/vjcontrol.bat > vjcontrol.bat
 	$(INSTALL) -m $(EXEC_PERMS) $(GROUP_OPT_UNIX) 			\
           vjcontrol.bat $(bindir)/vjcontrol.bat && rm -f vjcontrol.bat
 endif	# if OS_TYPE == UNIX
-	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
-          $(topdir)/VjControl/VjControl.jar $(bindir)
+	for dir in $(SUBDIR); do \
+            $(MAKE) -C $$dir java-install ; \
+          done
 endif	# if $(BUILD_VJCONTROL) == Y
 endif	# ifdef NO_JAVA_GUI
 
