@@ -112,7 +112,7 @@
  //+  For example, if you have recievers 1,2, and 4 with transmitter on 3,
  //+  then you can access them, in order, as 0,1,2.
  // ------------------------------------------------------------------------
- vjMatrix* vjTrackdSensor::getPosData(int dev = 0)
+ vjMatrix* vjTrackdSensor::getPosData(int dev)
  {
     vjASSERT((unsigned)dev < mCurSensorValues.size() && "getPosData() index out of range");
     return &(mCurSensorValues[dev]);
