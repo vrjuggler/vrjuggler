@@ -70,7 +70,7 @@ bool GlWindowWin32::open()
    {
       return false;
    }
-
+   
    if ( mWindowIsOpen )
    {
       return true;
@@ -114,8 +114,8 @@ bool GlWindowWin32::open()
    // If window was not created, quit
    if ( NULL == mWinHandle )
    {
-      doInternalError("Could not create EventWindowWin32!");
-      return 0;
+      doInternalError("Could not create GlWindowWin32!");
+      return false;
    }
 
    // Attach a pointer to the device for use from the WNDPROC
@@ -125,7 +125,7 @@ bool GlWindowWin32::open()
    mDeviceContext = GetDC(mWinHandle);            // Store the device context
    if ( false == setPixelFormat(mDeviceContext) ) // Select the pixel format
    {
-      return 0;
+      return false;
    }
 
    // Create the rendering context and make it current
@@ -141,19 +141,10 @@ bool GlWindowWin32::open()
    UpdateWindow(mWinHandle);             // Tell the window to paint
    mWindowIsOpen = true;
 
-   // ----------- Event window device starting -------------- //
-   /*
-   gadget::InputAreaWin32::InputAreaRegistry::InputAreaInfo input_area_info;
-   input_area_info.mDisplayName = mWindowName;
-   input_area_info.mInputArea = this;
-
-   gadget::InputAreaWin32::InputAreaRegistry::instance()->addInputArea(mWindowName, input_area_info);
-   */
-
    // If mHideMouse is true we must pass false to ShowCursor
    ShowCursor(! mHideMouse);
 
-   return 1;
+   return true;
 }
 
 /**
@@ -201,25 +192,28 @@ void GlWindowWin32::checkEvents()
    vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_HVERB_LVL)
       << "[vrj::GlWindowWin32::checkEvents()]"
       << std::endl << vprDEBUG_FLUSH;
-   if (true == mIsEventSource)
-   {
-      handleEvents();
-   }
-   else
-   {
-      // not an event source, so pump our own events
-      MSG win_message;
-      while ( PeekMessage(&win_message, NULL, 0, 0, PM_REMOVE) )
-      {
-         // Test if quit
-         if (win_message.message == WM_QUIT)
-         {
-            break;
-         }
 
-         TranslateMessage(&win_message);     // Translate the accelerator keys
-         DispatchMessage(&win_message);      // Send to the WinProc
+	MSG win_message;
+
+	// Try to find messages.
+   while ( PeekMessage(&win_message, NULL, 0, 0, PM_REMOVE) )
+   {
+      // Test if quit.
+      if (win_message.message == WM_QUIT)
+      {
+         break;
       }
+
+      TranslateMessage(&win_message);     // Translate the accelerator keys
+		
+		// If we have a valid KeyboardMouseDevice, process
+		// all keyboard/mouse events
+		if ( NULL != mKeyboardMouseDevice )
+		{
+			updKeys( win_message );
+		}
+
+      DispatchMessage(&win_message);      // Send to the WinProc
    }
 }
 
@@ -234,7 +228,7 @@ void GlWindowWin32::configWindow(vrj::Display* disp)
       DisplayManager::instance()->getDisplaySystemElement();
    jccl::ConfigElementPtr display_elt = disp->getConfigElement();
 
-   // Get the lock and KeyboardMouseDevice information.
+   // Get the lock KeyboardMouseDevice information.
    gadget::InputArea::config(display_elt);
 
    mWindowName = disp->getName();
@@ -256,8 +250,8 @@ void GlWindowWin32::configWindow(vrj::Display* disp)
       << mXDisplayName << std::endl << vprDEBUG_FLUSH;
 }
 
-// WindowProcedure to deal with the events generated.
-// Called only for the window that we are controlling
+// WindowProcedure to deal with the generated messages.
+// Called only for the window that we are controlling.
 LRESULT GlWindowWin32::handleEvent(HWND hWnd, UINT message, WPARAM wParam,
                                    LPARAM lParam)
 {
@@ -471,7 +465,7 @@ bool GlWindowWin32::setPixelFormat(HDC hDC)
    return true;
 }
 
-// the user has changed the size of the window
+// The user has changed the size of the window
 void GlWindowWin32::sizeChanged(long width, long height)
 {
    // Make sure we don't have window of 1 size (divide by zero would follow).
@@ -496,8 +490,10 @@ LRESULT CALLBACK GlWindowWin32::WndProc(HWND hWnd, UINT message,
                                         WPARAM wParam, LPARAM lParam)
 {
    GlWindowWin32* glWin = getGlWin(hWnd);
-
-   if ( glWin != NULL )       // Message for one of ours
+	
+	// If we can find a GLWindowWin32, make sure that
+	// it handles the event.
+   if ( glWin != NULL )
    {
       return glWin->handleEvent(hWnd, message, wParam, lParam);
    }
@@ -508,6 +504,7 @@ LRESULT CALLBACK GlWindowWin32::WndProc(HWND hWnd, UINT message,
          << std::endl << vprDEBUG_FLUSH;
 
       return DefWindowProc(hWnd, message, wParam, lParam);
+
    }
 }
 
@@ -577,7 +574,7 @@ bool GlWindowWin32::registerWindowClass()
 void GlWindowWin32::addWindow(HWND handle, GlWindowWin32* glWin)
 {
    vprASSERT(glWin != NULL);
-
+   
    if ( mGlWinMap.find(handle) == mGlWinMap.end() )     // Not already there
    {
       mGlWinMap[handle] = glWin;
@@ -594,13 +591,13 @@ GlWindowWin32* GlWindowWin32::getGlWin(HWND handle)
    std::map<HWND, GlWindowWin32*>::iterator glWinIter;
 
    glWinIter = mGlWinMap.find(handle);
-   if ( glWinIter == mGlWinMap.end() )     // Not found
+   if ( glWinIter == mGlWinMap.end() ) // Not found
    {
       return NULL;
    }
    else
    {
-      return(*glWinIter).second;                 // Return the found window
+      return(*glWinIter).second;			// Return the found window
    }
 }
 
