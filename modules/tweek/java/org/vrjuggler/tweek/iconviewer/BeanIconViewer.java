@@ -41,8 +41,7 @@ import java.awt.event.*;
 import java.util.Iterator;
 import java.util.Stack;
 import javax.swing.*;
-import javax.swing.event.TreeModelEvent;
-import javax.swing.event.TreeModelListener;
+import javax.swing.event.*;
 import javax.swing.tree.*;
 import javax.swing.border.*;
 import org.vrjuggler.tweek.beans.*;
@@ -57,7 +56,7 @@ import org.vrjuggler.tweek.beans.loader.BeanJarClassLoader;
  */
 public class BeanIconViewer
    extends DefaultBeanModelViewer
-   implements BeanRegistrationListener
+   implements BeanRegistrationListener, InternalFrameListener
 {
    public BeanIconViewer ()
    {
@@ -108,6 +107,98 @@ public class BeanIconViewer
       }
    }
 
+   /**
+    * Implementation of InternalFrameListener interface.  If the newly
+    * activated internal frame contains a Panel Bean, a BeanFocusChangeEvent
+    * is fired to indicate that the Bean has been focused.
+    *
+    * @post mCurPanel is set to the newly selected icon panel.
+    */
+   public void internalFrameActivated (InternalFrameEvent e)
+   {
+      activateFrame((InternalBeanFrame) e.getInternalFrame());
+   }
+
+   /**
+    * Implementation of InternalFrameListener interface.  If the newly
+    * closed internal frame contains a Panel Bean, a BeanFocusChangeEvent
+    * is fired to indicate that the Bean has been unfocused.
+    *
+    * @post mCurPanel is set to null.
+    */
+   public void internalFrameClosed (InternalFrameEvent e)
+   {
+      deactivateFrame((InternalBeanFrame) e.getInternalFrame());
+   }
+
+   /**
+    * Implementation of InternalFrameListener interface.  This does nothing.
+    */
+   public void internalFrameClosing (InternalFrameEvent e)
+   {
+   }
+
+   public void internalFrameDeiconified (InternalFrameEvent e)
+   {
+   }
+
+   public void internalFrameIconified (InternalFrameEvent e)
+   {
+   }
+
+   /**
+    * Implementation of InternalFrameListener interface.  If the newly
+    * deactivated internal frame contains a Panel Bean, a BeanFocusChangeEvent
+    * is fired to indicate that the Bean has been unfocused.
+    *
+    * @post mCurPanel is set to null.
+    */
+   public void internalFrameDeactivated (InternalFrameEvent e)
+   {
+      deactivateFrame((InternalBeanFrame) e.getInternalFrame());
+   }
+
+   /**
+    * Implementation of InternalFrameListener interface.  This does nothing.
+    */
+   public void internalFrameOpened (InternalFrameEvent e)
+   {
+   }
+
+   /**
+    * Helper for activating an InternalBeanFrame object.
+    *
+    * @post mCurPanel is set to null.
+    */
+   private void activateFrame (InternalBeanFrame frame)
+   {
+      BeanIconPanel icon_panel = frame.getIconPanel();
+
+      if ( icon_panel.getBean() != null )
+      {
+         this.fireBeanFocusEvent(icon_panel.getBean());
+      }
+
+      mCurPanel = icon_panel;
+   }
+
+   /**
+    * Helper for deactivating the active InternalBeanFrame object.
+    *
+    * @post mCurPanel is set to null.
+    */
+   private void deactivateFrame (InternalBeanFrame frame)
+   {
+      BeanIconPanel icon_panel = frame.getIconPanel();
+
+      if ( icon_panel.getBean() != null )
+      {
+         this.fireBeanUnfocusEvent(icon_panel.getBean());
+      }
+
+//      mCurPanel = null;
+   }
+
    // =========================================================================
    // Private methods.
    // =========================================================================
@@ -137,16 +228,16 @@ public class BeanIconViewer
    private void refreshDataModel ()
    {
       DefaultMutableTreeNode root = (DefaultMutableTreeNode) mModel.getRoot();
-      mHomePanel.removeAll();
+      mHomePanel.getComponent().removeAll();
       handleChildren(root, mHomePanel);
-      mHomePanel.doLayout();
-      mHomePanel.repaint();
+      mHomePanel.getComponent().doLayout();
+      mHomePanel.getComponent().repaint();
    }
 
    private void jbInit () throws Exception
    {
-      mHomePanel.setName("Home");
-      mHomePanel.setBackground(Color.white);
+      mHomePanel.getComponent().setName("Home");
+      mHomePanel.getComponent().setBackground(Color.white);
 
       viewer.setLayout(mIconPanelLayout);
 
@@ -246,22 +337,19 @@ public class BeanIconViewer
       viewer.add(mNavBar,  BorderLayout.NORTH);
 
       viewer.add(mViewContainer,  BorderLayout.CENTER);
-      mViewContainer.getViewport().add(mCurPanel, null);
+      mViewContainer.getViewport().add(mCurPanel.getComponent(), null);
    }
 
-   private void addInternalFrame (JComponent panel)
+   /**
+    * Adds the given BeanIconPanel object as an internal frame for the
+    * multi-window view.
+    */
+   private void addInternalFrame (BeanIconPanel panel)
    {
-      JInternalFrame frame = new JInternalFrame();
+      InternalBeanFrame frame = new InternalBeanFrame();
+      frame.addInternalFrameListener(this);
+      frame.setIconPanel(panel);
       mDesktopPane.add(frame);
-      frame.getContentPane().setLayout(new BorderLayout());
-      frame.getContentPane().add(new JScrollPane(panel), null);
-      frame.setTitle(panel.getName());
-      frame.setRequestFocusEnabled(true);
-      frame.setClosable(true);
-      frame.setIconifiable(true);
-      frame.setResizable(true);
-      frame.pack();
-      frame.setBackground(Color.white);
       frame.setVisible(true);
    }
 
@@ -281,7 +369,9 @@ public class BeanIconViewer
    }
 
    /**
-    * Handles the case when the backward navigation button is clicked.
+    * Handles the case when the backward navigation button is clicked.  This
+    * may go from a Bean icon panel to a folder icon panel, but it will never
+    * go from a Bean icon panel to a Bean icon panel.
     */
    private void backClicked ()
    {
@@ -290,15 +380,14 @@ public class BeanIconViewer
          mForwButton.setEnabled(true);
       }
 
-      swapPanel(mBackStack, mForwStack);
-
-      if ( mLastPanel != null )
+      // Signal listeners that the currently visible Bean is losing focus.
+      if ( mCurPanel.getBean() != null )
       {
-         fireBeanUnfocusEvent(mLastPanel);
-
-         // XXX: Not exactly what we want...
-         mLastPanel = null;
+         fireBeanUnfocusEvent(mCurPanel.getBean());
       }
+
+      // Change the current panel to the one at the top of the back stack.
+      swapCurPanel(mBackStack, mForwStack);
 
       if ( mBackStack.empty() )
       {
@@ -307,7 +396,9 @@ public class BeanIconViewer
    }
 
    /**
-    * Handles the case when the forward navigation button is clicked.
+    * Handles the case when the forward navigation button is clicked.  This
+    * may go from a folder icon panel to a Bean icon panel, but it will never
+    * go from a Bean icon panel to a Bean icon panel.
     */
    private void forwClicked ()
    {
@@ -316,14 +407,13 @@ public class BeanIconViewer
          mBackButton.setEnabled(true);
       }
 
-      swapPanel(mForwStack, mBackStack);
+      // Change the current panel to the next panel in the forward stack.
+      swapCurPanel(mForwStack, mBackStack);
 
-      if ( mLastPanel != null )
+      // Signal listeners that a new Bean is getting focus.
+      if ( mCurPanel.getBean() != null )
       {
-         fireBeanUnfocusEvent(mLastPanel);
-
-         // XXX: Not exactly what we want...
-         mLastPanel = null;
+         fireBeanFocusEvent(mCurPanel.getBean());
       }
 
       if ( mForwStack.empty() )
@@ -336,13 +426,13 @@ public class BeanIconViewer
     * Moves the current panel to the top of toStack and sets the current
     * panel to the top of fromStack.
     */
-   private void swapPanel (Stack fromStack, Stack toStack)
+   private void swapCurPanel (Stack fromStack, Stack toStack)
    {
       toStack.push(mCurPanel);
-      mViewContainer.getViewport().remove(mCurPanel);
-      mCurPanel = (JComponent) fromStack.pop();
+      mViewContainer.getViewport().remove(mCurPanel.getComponent());
+      mCurPanel = (BeanIconPanel) fromStack.pop();
 
-      mViewContainer.getViewport().add(mCurPanel, null);
+      mViewContainer.getViewport().add(mCurPanel.getComponent(), null);
       mViewContainer.repaint();
    }
 
@@ -356,7 +446,7 @@ public class BeanIconViewer
       if ( e.getStateChange() == ItemEvent.DESELECTED )
       {
          mViewContainer.getViewport().remove(mDesktopPane);
-         mViewContainer.getViewport().add(mCurPanel, null);
+         mViewContainer.getViewport().add(mCurPanel.getComponent(), null);
          mHomeButton.setEnabled(true);
          mBackButton.setEnabled(false);
          mForwButton.setEnabled(false);
@@ -368,7 +458,7 @@ public class BeanIconViewer
       }
       else
       {
-         mViewContainer.getViewport().remove(mCurPanel);
+         mViewContainer.getViewport().remove(mCurPanel.getComponent());
          mViewContainer.getViewport().add(mDesktopPane, null);
          mHomeButton.setEnabled(false);
          mBackButton.setEnabled(false);
@@ -380,7 +470,7 @@ public class BeanIconViewer
 
          while ( i.hasNext() )
          {
-            addInternalFrame((JComponent) i.next());
+            addInternalFrame((BeanIconPanel) i.next());
          }
 
          addInternalFrame(mCurPanel);
@@ -395,7 +485,7 @@ public class BeanIconViewer
     *
     * @post The view container is refreshed.
     */
-   private void pushCurrentBack (JComponent newComponent)
+   private void pushCurrentBack (BeanIconPanel newComponent)
    {
       if ( mBackStack.empty() )
       {
@@ -409,9 +499,9 @@ public class BeanIconViewer
       mForwStack.clear();
       mForwButton.setEnabled(false);
 
-      mViewContainer.getViewport().remove(mCurPanel);
+      mViewContainer.getViewport().remove(mCurPanel.getComponent());
       mCurPanel = newComponent;
-      mViewContainer.getViewport().add(mCurPanel, null);
+      mViewContainer.getViewport().add(mCurPanel.getComponent(), null);
       mViewContainer.repaint();
    }
 
@@ -424,15 +514,14 @@ public class BeanIconViewer
       {
          DefaultMutableTreeNode child_data_node =
             (DefaultMutableTreeNode) parentDataNode.getChildAt(i);
+         BeanIconPanel child_panel = new BeanIconPanel(child_data_node);
 
          if ( child_data_node.isLeaf() )
          {
-            addPanelIcon((PanelBean) child_data_node.getUserObject(),
-                         parentPanel);
+            addPanelIcon(child_panel, parentPanel);
          }
          else
          {
-            BeanIconPanel child_panel = new BeanIconPanel(child_data_node);
             DefaultMutableTreeNode child_node = new DefaultMutableTreeNode(parentPanel);
             addFolderIcon(child_panel, parentPanel);
             handleChildren(child_data_node, child_panel);
@@ -468,8 +557,10 @@ public class BeanIconViewer
    /**
     * Adds a panel (leaf) icon to the given parent panel.
     */
-   private void addPanelIcon (PanelBean panel, BeanIconPanel panelParent)
+   private void addPanelIcon (BeanIconPanel childPanel,
+                              BeanIconPanel panelParent)
    {
+      PanelBean panel = childPanel.getBean();
       JButton panel_icon = new JButton(panel.toString());
 
       if ( panel.getIcon() == null )
@@ -499,15 +590,15 @@ public class BeanIconViewer
          panel_icon.setToolTipText(panel.toString());
       }
 
-      panel_icon.addMouseListener(new IconMouseListener(panel));
+      panel_icon.addMouseListener(new IconMouseListener(childPanel));
       panelParent.addIcon(panel_icon);
    }
 
    private class IconMouseListener implements MouseListener
    {
-      public IconMouseListener (PanelBean p)
+      public IconMouseListener (BeanIconPanel p)
       {
-         mBeanPanel = p;
+         mIconPanel = p;
       }
 
       public void mouseClicked (MouseEvent e)
@@ -517,29 +608,39 @@ public class BeanIconViewer
 
          try
          {
-            if ( ! mBeanPanel.isInstantiated() )
+            // Get the Panel Bean associated with the icon that was clicked.
+            PanelBean bean_panel = mIconPanel.getBean();
+
+            // If the Bean has not been instantiated, do so now.  (This is the
+            // last possible moment when instantiation can occur.)
+            if ( ! bean_panel.isInstantiated() )
             {
-               mBeanPanel.instantiate();
+               bean_panel.instantiate();
             }
 
-            JComponent bean = mBeanPanel.getComponent();
-            bean.setName(mBeanPanel.toString());
+            // Retrieve the GUI component from the Panel Bean.
+            JComponent bean = bean_panel.getComponent();
+            bean.setName(bean_panel.toString());
 
-            if ( mLastPanel != null )
+            // If the currently visible panel has a Bean, it is going out of
+            // focus now.
+            if ( null != mCurPanel && mCurPanel.getBean() != null )
             {
-               fireBeanUnfocusEvent(mLastPanel);
+               fireBeanUnfocusEvent(mCurPanel.getBean());
             }
 
-            fireBeanFocusEvent(mBeanPanel);
-            mLastPanel = mBeanPanel;
+            // The clicked icon's Bean is getting focus.
+            fireBeanFocusEvent(bean_panel);
 
             if ( mMultiWin )
             {
-               addInternalFrame(bean);
+               addInternalFrame(mIconPanel);
             }
             else
             {
-               pushCurrentBack(bean);
+               // This has the side effect of making mIconPanel visible and
+               // setting mIconPanel to be the current panel.
+               pushCurrentBack(mIconPanel);
             }
          }
          catch (org.vrjuggler.tweek.beans.loader.BeanInstantiationException inst_ex)
@@ -566,7 +667,7 @@ public class BeanIconViewer
       {
       }
 
-      private PanelBean mBeanPanel = null;
+      private BeanIconPanel mIconPanel = null;
    }
 
    private class FolderMouseListener implements MouseListener
@@ -578,10 +679,9 @@ public class BeanIconViewer
 
       public void mouseClicked (MouseEvent e)
       {
-         if ( mLastPanel != null )
+         if ( mCurPanel.getBean() != null )
          {
-            fireBeanUnfocusEvent(mLastPanel);
-            mLastPanel = null;
+            fireBeanUnfocusEvent(mCurPanel.getBean());
          }
 
          if ( mMultiWin )
@@ -590,6 +690,7 @@ public class BeanIconViewer
          }
          else
          {
+            // This has the side effect of making mPanel visible.
             pushCurrentBack(mPanel);
          }
       }
@@ -628,8 +729,7 @@ public class BeanIconViewer
    private JScrollPane mViewContainer = new JScrollPane();
 
    private BeanIconPanel mHomePanel = null;
-   private JComponent    mCurPanel  = null;
-   private PanelBean     mLastPanel = null;
+   private BeanIconPanel mCurPanel  = null;
 
    private JDesktopPane mDesktopPane = new JDesktopPane();
    private boolean      mMultiWin    = false;
