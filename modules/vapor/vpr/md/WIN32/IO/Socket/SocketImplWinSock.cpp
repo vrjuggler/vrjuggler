@@ -216,7 +216,7 @@ SocketImpWinSock::SocketImpWinSock (const InetAddr& local_addr,
                                     const InetAddr& remote_addr,
                                     const SocketTypes::Type type)
     : BlockIO(std::string("INADDR_ANY")), m_sockfd(-1),
-      m_local_addr(local_addr), m_remote_addr(remote_addr)
+      m_local_addr(local_addr), m_remote_addr(remote_addr), m_type(type)
 {
     init();
 }
