@@ -391,6 +391,7 @@ if test "x${_idl_java}" = "xno" ; then
 
    app_jacorb_dir='$(TWEEK_BASE_DIR)/bin'
    APP_JAVA_IDL="JACORB_PATH=\"$app_jacorb_dir\" \"$app_jacorb_dir/idl\""
+   APP_JAVA_IDL_INST="JACORB_PATH=\"\$(TWEEK_BASE_DIR)/bin\" \"\$(TWEEK_BASE_DIR)/bin/idl\""
 
    config_jacorb_dir='\$(TWEEK_BASE_DIR)/bin'
    config_java_idl="JACORB_PATH=\"$config_jacorb_dir\" \"$config_jacorb_dir/idl\""
@@ -403,6 +404,7 @@ else
       if test -x "${_idl_java}" ; then
           JAVA_IDL="${_idl_java}"
           APP_JAVA_IDL="$JAVA_IDL"
+          APP_JAVA_IDL_INST="$JAVA_IDL"
           AC_MSG_RESULT(yes)
       else
           AC_MSG_RESULT(no)
@@ -660,6 +662,7 @@ AC_SUBST(ORB_SINGLETON_CLASS_PROP)
 AC_SUBST(config_java_idl)
 
 AC_SUBST(APP_JAVA_IDL)
+AC_SUBST(APP_JAVA_IDL_INST)
 AC_SUBST(APP_BASE_DIR)
 AC_SUBST(APP_BASE_DIR_INST)
 AC_SUBST(APP_EXTRA_FLAGS)
@@ -725,7 +728,8 @@ AC_OUTPUT(tweek-config
           test/corba/Makefile
           mtree/TWEEK.include.dist
           mtree/TWEEK.install.dist
-          mtree/TWEEK.test.dist,
+          mtree/TWEEK.test.dist
+          VARS.pl,
    [ sed -e 's/^\(%.*\)/#\1/g' tweek-config > tweek-config.tmp
      mv tweek-config.tmp tweek-config
      chmod a+x tweek-config ])
