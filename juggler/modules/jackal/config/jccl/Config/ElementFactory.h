@@ -71,38 +71,22 @@ namespace jccl
          return &mRepository;
       }
 
-      ConfigDefinitionPtr getConfigDefinition(const std::string& token, unsigned int version)
-      {
-         return mRepository.get(token, version);
-      }
+      ConfigDefinitionPtr getConfigDefinition(const std::string& token, unsigned int version);
 
-      /** Creates a Element using the named definition. */
-      ConfigElementPtr createElement(const std::string& defToken, unsigned int version)
-      {
-         return createElement(mRepository.get(defToken, version));
-      }
+      /** Creates an Element using the named definition. */
+      ConfigElementPtr createElement(const std::string& defToken, unsigned int version);
 
       /** Creates an element using the given definition. */
       ConfigElementPtr createElement(ConfigDefinitionPtr d);
 
       /** Get the global XML context that we are using system-wide. */
-      cppdom::ContextPtr getXMLContext()
-      {
-         vprASSERT(mGlobalContext.get() != NULL);
-         return mGlobalContext;
-      }
+      cppdom::ContextPtr getXMLContext();
 
-      /** Creates a new (empty) XML node using global context */
-      cppdom::NodePtr createXMLNode()
-      {
-         return cppdom::NodePtr(new cppdom::Node(getXMLContext()));
-      }
+      /** Creates a new (empty) XML node using global context. */
+      cppdom::NodePtr createXMLNode();
 
-      /** Creates a new (empty) XML document using global context */
-      cppdom::DocumentPtr createXMLDocument()
-      {
-         return cppdom::DocumentPtr(new cppdom::Document(getXMLContext()));
-      }
+      /** Creates a new (empty) XML document using global context. */
+      cppdom::DocumentPtr createXMLDocument();
 
    private:
       ElementFactory();
