@@ -5925,8 +5925,9 @@ void MPApp::draw()
           asynchronously to the rendering process by using
           <methodname>intraFrame()</methodname>. Recall from <xref
           linkend="section.app.intraFrame" /> (in <xref
-          linkend="frame.functions.section" />) that <methodname>intraFrame()</methodname>
-          is invoked in parallel to the execution of <methodname>draw()</methodname>.</para>
+          linkend="section.app.frame.functions" />) that
+          <methodname>intraFrame()</methodname> is invoked in parallel to the
+          execution of <methodname>draw()</methodname>.</para>
         </section>
       </section>
 
@@ -6921,9 +6922,11 @@ public:
       <glossentry id="gloss.app.object">
         <glossterm>application object</glossterm>
 
-        <glosssee>An instance of a C++ class that is given to the VR Juggler
-        kernel for execution. Such objects contain the visuals and the
-        interactions that make up a virtual world.</glosssee>
+        <glossdef>
+          <para>An instance of a C++ class that is given to the VR Juggler
+          kernel for execution. Such objects contain the visuals and the
+          interactions that make up a virtual world.</para>
+        </glossdef>
       </glossentry>
     </glossdiv>
 
@@ -6933,24 +6936,30 @@ public:
       <glossentry id="gloss.callback">
         <glossterm>callback</glossterm>
 
-        <glosssee>In the C programming language, a function pointer that is
-        invoked to <quote>call back</quote> to some other code. Usually, a
-        function pointer is passed as an argument to some function that stores
-        the pointer for later use.</glosssee>
+        <glossdef>
+          <para>In the C programming language, a function pointer that is
+          invoked to <quote>call back</quote> to some other code. Usually, a
+          function pointer is passed as an argument to some function that
+          stores the pointer for later use.</para>
+        </glossdef>
       </glossentry>
 
       <glossentry id="gloss.csdata">
         <glossterm>context-specific data</glossterm>
 
-        <glosssee>In OpenGL terms, some information that is associated with a
-        specific OpenGL context.</glosssee>
+        <glossdef>
+          <para>In OpenGL terms, some information that is associated with a
+          specific OpenGL context.</para>
+        </glossdef>
       </glossentry>
 
       <glossentry id="gloss.critical.section">
         <glossterm>critical section</glossterm>
 
-        <glosssee>In multi-threaded programming, a block of code that reads
-        from or writes to data that is shared across multiple threads.</glosssee>
+        <glossdef>
+          <para>In multi-threaded programming, a block of code that reads from
+          or writes to data that is shared across multiple threads.</para>
+        </glossdef>
       </glossentry>
     </glossdiv>
 
@@ -6960,16 +6969,20 @@ public:
       <glossentry id="gloss.daemon">
         <glossterm>daemon</glossterm>
 
-        <glosssee>In UNIX-based operating systems, a background process that
-        performs some job continuously while the computer is running. For
-        example, a web server runs a daemon (often called <command>httpd</command>)
-        that manages incoming HTTP requests.</glosssee>
+        <glossdef>
+          <para>In UNIX-based operating systems, a background process that
+          performs some job continuously while the computer is running. For
+          example, a web server runs a daemon (often called
+          <command>httpd</command>) that manages incoming HTTP requests.</para>
+        </glossdef>
       </glossentry>
 
       <glossentry id="gloss.display.context">
         <glossterm>display context</glossterm>
 
-        <glosssee>The location to which OpenGL rendering commands draw.</glosssee>
+        <glossdef>
+          <para>The location to which OpenGL rendering commands draw.</para>
+        </glossdef>
       </glossentry>
     </glossdiv>
 
@@ -6979,13 +6992,14 @@ public:
       <glossentry id="gloss.frame">
         <glossterm>frame</glossterm>
 
-        <glosssee>In computer graphics terms, one iteration of a rendering
-        loop. In VR Juggler, a frame is one complete pass through an
-        application object&#39;s methods, beginning with
-        <methodname>vrj::App::preFrame()</methodname> and ending with
-        <methodname>vrj::App::postFrame()</methodname>. Methods called in
-        between include <methodname>vrj::App::intraFrame()</methodname> and
-        methods that are specific to a given graphics API.</glosssee>
+        <glossdef>
+          <para>In computer graphics terms, one iteration of a rendering loop.
+          In VR Juggler, a frame is one complete pass through an application
+          object&#39;s methods, beginning with <methodname>vrj::App::preFrame()</methodname>
+          and ending with <methodname>vrj::App::postFrame()</methodname>.
+          Methods called in between include <methodname>vrj::App::intraFrame()</methodname>
+          and methods that are specific to a given graphics API.</para>
+        </glossdef>
       </glossentry>
     </glossdiv>
 
@@ -6995,8 +7009,10 @@ public:
       <glossentry id="gloss.interface">
         <glossterm>interface</glossterm>
 
-        <glosssee>An interface is a collection of operations used to specify a
-        service of a class or a component.</glosssee>
+        <glossdef>
+          <para>An interface is a collection of operations used to specify a
+          service of a class or a component.</para>
+        </glossdef>
       </glossentry>
     </glossdiv>
 
@@ -7006,7 +7022,9 @@ public:
       <glossentry id="gloss.opengl.rendering.context">
         <glossterm>OpenGL rendering context</glossterm>
 
-        <glosssee>An OpenGL state machine associated with a display window.</glosssee>
+        <glossdef>
+          <para>An OpenGL state machine associated with a display window.</para>
+        </glossdef>
       </glossentry>
     </glossdiv>
 
@@ -7016,7 +7034,9 @@ public:
       <glossentry id="gloss.proxy">
         <glossterm>proxy</glossterm>
 
-        <glosssee>An intermediary that passes information between two parties.</glosssee>
+        <glossdef>
+          <para>An intermediary that passes information between two parties.</para>
+        </glossdef>
       </glossentry>
     </glossdiv>
 
@@ -7026,10 +7046,13 @@ public:
       <glossentry id="gloss.smart.pointer">
         <glossterm>smart pointer</glossterm>
 
-        <glosssee>In C++ terminology, a smart pointer is a pointer-like object
-        where the pointer dereference operators (-&#62; and *) are overloaded
-        to perform special functionality. This takes advantage of C++ operator
-        overloading to hide extra processing steps behind a familiar syntax.</glosssee>
+        <glossdef>
+          <para>In C++ terminology, a smart pointer is a pointer-like object
+          where the pointer dereference operators (-&#62; and *) are
+          overloaded to perform special functionality. This takes advantage of
+          C++ operator overloading to hide extra processing steps behind a
+          familiar syntax.</para>
+        </glossdef>
       </glossentry>
     </glossdiv>
 
@@ -7039,22 +7062,26 @@ public:
       <glossentry id="gloss.thread.of.control">
         <glossterm>thread of control</glossterm>
 
-        <glosssee>In a multi-threaded application, a single sequence of
-        execution. Each thread in a multi-threaded application has its own
-        thread of control that can execute in parallel with the other threads
-        of control.</glosssee>
+        <glossdef>
+          <para>In a multi-threaded application, a single sequence of
+          execution. Each thread in a multi-threaded application has its own
+          thread of control that can execute in parallel with the other
+          threads of control.</para>
+        </glossdef>
       </glossentry>
 
       <glossentry id="gloss.triple.buffering">
         <glossterm>triple buffering</glossterm>
 
-        <glosssee>An extension to double buffering that uses three data
-        buffers instead of two. Triple buffering minimizes the time that two
-        threads have to wait to access shared data. At most, one thread will
-        wait while another thread copies no more than four bytes of data. That
-        is, regardless of the size of a single data buffer, the amount of
-        memory copied to swap buffers is no more than four bytes (the size of
-        a 32-bit memory address).</glosssee>
+        <glossdef>
+          <para>An extension to double buffering that uses three data buffers
+          instead of two. Triple buffering minimizes the time that two threads
+          have to wait to access shared data. At most, one thread will wait
+          while another thread copies no more than four bytes of data. That
+          is, regardless of the size of a single data buffer, the amount of
+          memory copied to swap buffers is no more than four bytes (the size
+          of a 32-bit memory address).</para>
+        </glossdef>
       </glossentry>
     </glossdiv>
 
@@ -7064,10 +7091,12 @@ public:
       <glossentry id="gloss.virtual.platform">
         <glossterm>virtual platform</glossterm>
 
-        <glosssee>An abstraction of the operating system and hardware (both
-        the computer architecture and the input devices) that comprise a VR
-        system. A virtual platform provides a cross-platform and cross-VR
-        system layer upon which portable VR applications can be written.</glosssee>
+        <glossdef>
+          <para>An abstraction of the operating system and hardware (both the
+          computer architecture and the input devices) that comprise a VR
+          system. A virtual platform provides a cross-platform and cross-VR
+          system layer upon which portable VR applications can be written.</para>
+        </glossdef>
       </glossentry>
     </glossdiv>
   </glossary>
