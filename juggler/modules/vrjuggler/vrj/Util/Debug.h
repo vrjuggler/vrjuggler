@@ -192,7 +192,7 @@ const std::string vjDBG_CONFIGstr("DBG_CONFIGDB");
 //-----------------------------------------
 class VJ_CLASS_API vjDebug
 {
-private:
+protected:
    // Set default values
    // Set up default categories
    // Get debug config from environment
