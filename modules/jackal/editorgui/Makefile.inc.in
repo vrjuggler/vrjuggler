@@ -59,7 +59,11 @@ java-install:
 	@$(MAKE) editorgui-install
 
 links:
+ifndef NO_JAVA
+ifeq ($(BUILD_JAVA), Y)
 	cd $(instlinks)/bin && \
 		for jar in $(JARS); do \
 			$(RM_LN) $$jar && $(LN_S) $(topdir)/editorgui/$$jar ./$$jar; \
 		done
+endif
+endif
