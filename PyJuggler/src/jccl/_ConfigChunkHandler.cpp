@@ -28,7 +28,6 @@
 // Includes ====================================================================
 #include <boost/python.hpp>
 #include <jccl/RTRC/ConfigChunkHandler.h>
-#include <jccl/Config/ConfigChunk.h>
 
 // Using =======================================================================
 using namespace boost::python;
@@ -112,42 +111,9 @@ struct jccl_ConfigChunkHandler_Wrapper: jccl::ConfigChunkHandler
 
 
 // Module ======================================================================
-BOOST_PYTHON_MODULE(jccl)
+void _Export_ConfigChunkHandler()
 {
-    scope* jccl_ConfigChunk_scope = new scope(
-    class_< jccl::ConfigChunk >("ConfigChunk", init<  >())
-        .def(init< boost::shared_ptr<jccl::ChunkDesc> >())
-        .def(init< const jccl::ConfigChunk & >())
-        .def("isValid", &jccl::ConfigChunk::isValid)
-        .def("assertValid", &jccl::ConfigChunk::assertValid)
-        .def("initFromNode", &jccl::ConfigChunk::initFromNode)
-        .def("getChildChunk", &jccl::ConfigChunk::getChildChunk)
-        .def("getNum", &jccl::ConfigChunk::getNum)
-        .def("getName", &jccl::ConfigChunk::getName)
-        .def("getFullName", &jccl::ConfigChunk::getFullName)
-        .def("getDescToken", &jccl::ConfigChunk::getDescToken)
-        .def("setProperty", (bool (jccl::ConfigChunk::*)(const std::basic_string<char,std::char_traits<char>,std::allocator<char> > &, const int, bool) )&jccl::ConfigChunk::setProperty)
-        .def("setProperty", (bool (jccl::ConfigChunk::*)(const std::basic_string<char,std::char_traits<char>,std::allocator<char> > &, int, boost::shared_ptr<jccl::ConfigChunk>) )&jccl::ConfigChunk::setProperty)
-        .def("getChunkPtrDependencies", &jccl::ConfigChunk::getChunkPtrDependencies)
-        .def("getEmbeddedChunks", &jccl::ConfigChunk::getEmbeddedChunks)
-        .def("setDesc", &jccl::ConfigChunk::setDesc)
-        .def("getNode", &jccl::ConfigChunk::getNode)
-        .def(self_ns::str(self))
-        .def( self == self )
-        .def( self != self )
-        .def( self < self )
-    );
-    // Temporary code for smart pointers
-    objects::class_value_wrapper< 
-      boost::shared_ptr< jccl::ConfigChunk >, objects::make_ptr_instance< 
-        jccl::ConfigChunk, objects::pointer_holder< 
-          boost::shared_ptr< jccl::ConfigChunk >, jccl::ConfigChunk >
-      >
-    >();
-    delete jccl_ConfigChunk_scope;
-
     class_< jccl::ConfigChunkHandler, boost::noncopyable, jccl_ConfigChunkHandler_Wrapper >("ConfigChunkHandler", init<  >())
         .def("configProcessPending", &jccl::ConfigChunkHandler::configProcessPending, &jccl_ConfigChunkHandler_Wrapper::default_configProcessPending)
     ;
-
 }

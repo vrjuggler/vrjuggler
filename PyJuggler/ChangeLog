@@ -1,5 +1,10 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Jul-09-2003 patrickh    Reorganized the way the modules are exposed to Python
+                        so that the code can be loaded from a single DSO/DLL.
+                        This is being done to fix runtime loader problems on
+                        Windows.
+                        NEW VERSION: 0.7.1
 Jun-30-2003 patrickh    Separated the source for the vpr, gadget, and vrj
                         modules into multiple .cpp files.
 Jun-26-2003 patrickh    Removed the vjAvatar bindings.  They now live along
