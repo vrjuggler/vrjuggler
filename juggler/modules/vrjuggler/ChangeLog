@@ -1,5 +1,7 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Dec-22-2004 allenb      Make Kernel::getThread() return a vpr::Thread*.
+                        NEW VERSION: 1.1.165
 Dec-20-2004 dshipton    OpenSG's callback for getSceneRoot has been changed to
                         getScene() to be in sync with Pf and OSG.
 Dec-01-2004 patrickh    Updated to require Gadgeteer 0.21.0.
