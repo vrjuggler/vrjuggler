@@ -232,6 +232,7 @@ AC_DEFUN(TWEEK_PATH_JAVA,
    TWEEK_JAVA_IDL_GENDIR_OPT=''
    TWEEK_JAVA_IDL_INCFLAG=''
    TWEEK_JARS=''
+   TWEEK_EXT_JARS=''
 
    if test "x$TWEEK_CONFIG" = "xno" ; then
       ifelse([$3], , :, [$3])
@@ -253,6 +254,7 @@ AC_DEFUN(TWEEK_PATH_JAVA,
             TWEEK_JAVA_IDL_GENDIR_OPT="`$TWEEK_CONFIG $tweek_config_args --idlgendir java`"
             TWEEK_JAVA_IDL_INCFLAG="`$TWEEK_CONFIG $tweek_config_args --idlincflag java`"
             TWEEK_JARS="`$TWEEK_CONFIG $tweek_config_args --jars`"
+            TWEEK_EXT_JARS="`$TWEEK_CONFIG $tweek_config_args --ext-jars`"
 
             ifelse([$2], , :, [$2])
          fi
@@ -267,6 +269,7 @@ AC_DEFUN(TWEEK_PATH_JAVA,
    AC_SUBST([TWEEK_JAVA_IDL_GENDIR_OPT])
    AC_SUBST([TWEEK_JAVA_IDL_INCFLAG])
    AC_SUBST([TWEEK_JARS])
+   AC_SUBST([TWEEK_EXT_JARS])
 ])
 
 dnl ---------------------------------------------------------------------------
