@@ -535,7 +535,7 @@ case $OS_TYPE in
         vrj_lib='-lvrj'
         vrj_prof_lib='-lvrj_p'
         vrj_ogl_lib='-lvrj_ogl'
-        vrj_ogl_prof_lib='-lJvrj_ogl_p'
+        vrj_ogl_prof_lib='-lvrj_ogl_p'
 
         if test "x$PERFORMER_API" = "xY" ; then
             vrj_pf_lib='-lvrj_pf'
