@@ -14,8 +14,10 @@ import java.beans.PropertyEditorManager;
 import javax.swing.*;
 import javax.swing.border.*;
 import org.vrjuggler.jccl.config.*;
+import org.vrjuggler.jccl.config.event.*;
 
 public class PropertyEditorPanel extends PropertyComponent 
+                                 implements ConfigElementListener
 {   
    public PropertyEditorPanel(Object value, PropertyDefinition prop_def, ConfigElement elm, 
                               int prop_num, Color color)
@@ -27,6 +29,8 @@ public class PropertyEditorPanel extends PropertyComponent
       mColor = color;
 
       fillEditorComponent(value, prop_def);
+     
+      mConfigElement.addConfigElementListener(this);
       
       this.setLayout(new BorderLayout());
       this.add(mEditorComponent, BorderLayout.CENTER);
@@ -39,6 +43,31 @@ public class PropertyEditorPanel extends PropertyComponent
       this.repaint();
       updateMyRow();
    }
+
+   public void nameChanged(ConfigElementEvent evt)
+   {;}
+   public void propertyValueChanged(ConfigElementEvent evt)
+   {
+      if(evt.getProperty().equals(mPropName))
+      {
+         mEditor.setValue(mConfigElement.getProperty(mPropName, mPropNum));
+
+         if (mEditorComponent instanceof JComboBox)
+         {
+            JComboBox combo = (JComboBox)mEditorComponent;
+            combo.setSelectedItem(mEditor.getAsText());
+         }
+         else if (mEditorComponent instanceof JTextField)
+         {
+            JTextField txt_field = (JTextField)mEditorComponent;
+            txt_field.setText(mEditor.getAsText());
+         }
+      }
+   }
+   public void propertyValueAdded(ConfigElementEvent evt)
+   {;}
+   public void propertyValueRemoved(ConfigElementEvent evt)
+   {;}
    
    /**
     * When it has been requested to stop editing the cell, validate that the
@@ -61,7 +90,12 @@ public class PropertyEditorPanel extends PropertyComponent
             JTextField txt_field = (JTextField)mEditorComponent;
             mEditor.setAsText(txt_field.getText());
          }
-         mConfigElement.setProperty(mPropName, mPropNum, mEditor.getValue());
+        
+         ConfigElementPropertyEdit new_edit = mConfigElement.setProperty(mPropName, mPropNum, mEditor.getValue());
+         System.out.println("Adding: " + new_edit);
+         ConfigUndoManager.instance().addEdit(new_edit);
+         
+      
          //return super.stopCellEditing();
          return true;
       }
@@ -183,7 +217,7 @@ public class PropertyEditorPanel extends PropertyComponent
       return moreBtn;
    }
 
-      /**
+   /**
     * Gets the component to edits the given value.
     */
    public void fillEditorComponent(Object value, PropertyDefinition prop_def)
