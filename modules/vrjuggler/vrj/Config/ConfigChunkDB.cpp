@@ -35,6 +35,7 @@
 //
 // Author: Christopher Just
 
+#include <vjConfig.h>
 
 #include <Config/vjConfigChunkDB.h>
 #include <Config/vjChunkFactory.h>
@@ -458,12 +459,20 @@ bool vjConfigChunkDB::load (const std::string& filename, const std::string& pare
             std::string::size_type cur_pos = 0, old_pos = 0;
             std::string full_path;
 
+// Define the separator character for the elements of $VJ_CFG_PATH.  On Win32,
+// we use ";", and on everything else, we use ":".
+#ifdef VJ_OS_Win32
+            char elem_sep[] = ";";
+#else
+            char elem_sep[] = ":";
+#endif
+
             while ( ! found ) {
                 // Clear the flags on in so that we can try opening a new file.
                 in.clear();
 
-                // Find the next occurrence of a ':' path separator.
-                cur_pos = cfg_path.find(":", old_pos);
+                // Find the next occurrence of an element separator.
+                cur_pos = cfg_path.find(elem_sep, old_pos);
 
                 // If cur_pos is greater than the length of the path, there
                 // are no more :'s in the path.
