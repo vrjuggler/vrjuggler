@@ -1,6 +1,7 @@
 
 #ifndef _VJ_THREAD_H_
 #define _VJ_THREAD_H_
+#pragma once
 
 #include <config.h>
 #include <unistd.h>
@@ -9,26 +10,25 @@
 // Typedefs to help with cross-platform abilities
 typedef void (*THREAD_FUNC)(void *);
 
+#include <Threads/vjBaseThread.h>
+
+
 #ifdef VJ_SGI_IPC    // ---- SGI IPC Barrier ------ //
     typedef struct cancel_state	cancel_state_t;
 
 #   include <Threads/vjThreadSGI.h>
 #   include <Threads/vjThreadKeySGI.h>
 
-    typedef class vjThreadSGI	vjThreadId;
+    typedef class vjThreadSGI	vjThread;
     typedef class vjThreadKeySGI	vjKeyId;
-
-    // This is used for making calls to static class member functions.
-    typedef class vjThreadSGI	ThreadClass;
 #else
 #ifdef WIN32
 #   include <windows.h>
 #   include <process.h>
 #   include <Threads/vjThreadWin32.h>
 #   include <Threads/vjThreadKeyWin32.h>
-    typedef vjThreadWin32 vjThreadId;
+    typedef vjThreadWin32 vjThread;
 	typedef vjThreadKeyWin32 vjKeyId;
-	typedef vjThreadWin32 ThreadClass;
 #else
 #ifdef VJ_USE_PTHREADS
     typedef int		cancel_state_t;
@@ -37,68 +37,21 @@ typedef void (*THREAD_FUNC)(void *);
 #   include <Threads/vjThreadPosix.h>
 #   include <Threads/vjThreadKeyPosix.h>
 
-    typedef class vjThreadPosix		vjThreadId;
+    typedef class vjThreadPosix		vjThread;
     typedef class vjThreadKeyPosix	vjKeyId;
-
-    // This is used for making calls to static class member functions.
-    typedef class vjThreadPosix		ThreadClass;
 #else
 #   include <Threads/vjThreadFunctor.h>
 #endif	/* VJ_USE_PTHREADS */
 #endif	/* WIN32 */
 #endif	/* VJ_SGI_IPC */
 
-
-#define THREAD_BOUND               0x00000001
-#define THREAD_NEW_LWP             0x00000002
-#define THREAD_DETACHED            0x00000040
-#define THREAD_SUSPENDED           0x00000080
-#define THREAD_DAEMON              0x00000100
-#define THREAD_JOINABLE            0x00010000
-#define THREAD_SCHED_FIFO          0x00020000
-#define THREAD_SCHED_RR            0x00040000
-#define THREAD_SCHED_DEFAULT       0x00080000
-#if 1
-#   define THREAD_SCOPE_SYSTEM        0x00100000
-#else
-#   define THR_SCOPE_SYSTEM        THR_BOUND
-#endif /* ACE_HAS_IRIX62_THREADS */
-#define THREAD_SCOPE_PROCESS       0x00200000
-#define THREAD_INHERIT_SCHED       0x00400000
-#define THREAD_EXPLICIT_SCHED      0x00800000
-#define THREAD_USE_AFX             0x01000000
-
-
-//// These are the various states a thread managed by the
-//// <Thread_Manager> can be in.
-//enum ThreadState
-//{
-//  THREAD_IDLE,
-//  // Uninitialized.
-//
-//  THREAD_SPAWNED,
-//  // Created but not yet running.
-//
-//  THREAD_RUNNING,
-//  // Thread is active (naturally, we don't know if it's actually
-//  // *running* because we aren't the scheduler...).
-//
-//  THREAD_SUSPENDED,
-//  // Thread is suspended.
-//
-//  THREAD_CANCELLED,
-//  // Thread has been cancelled (which is an indiction that it needs to
-//  // terminate...).
-//
-//  THREAD_TERMINATED
-//  // Thread has shutdown, but the slot in the thread manager hasn't
-//  // been reclaimed yet.
-//};
+   // Other thread related classes //
+#include <Threads/vjThreadManager.h>
 
 
 //: Thread "handle" manager class.  All thread handles must pass through here
 //+ in order for operations to be performed on them.
-
+/*
 class vjThread {
 public:
     // ------------------------------------------------------------------------
@@ -647,5 +600,6 @@ private:
         ;
     }
 };
+*/
 
 #endif	/* _VJ_THREAD_H_ */

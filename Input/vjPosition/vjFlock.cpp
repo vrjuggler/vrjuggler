@@ -29,7 +29,7 @@ vjFlock::vjFlock(vjConfigChunk *c) : vjPosition(c), vjInput(c)
   vjDEBUG(0) << "	 vjFlock::vjFlock(vjConfigChunk*)" << endl << vjDEBUG_FLUSH;
   port_id = -1;
   active = 0;
-  myThreadID = NULL;
+  myThread = NULL;
 
   syncStyle = static_cast<int>(c->getProperty("sync"));//1;
   blocking = static_cast<int>(c->getProperty("blocking"));//0;
@@ -76,7 +76,7 @@ vjFlock::vjFlock(int sync, int block, int numBrds, int transmit,
   hemisphere = hemi;
   repRate = report;
 
-  myThreadID = NULL;
+  myThread = NULL;
 
   InitCorrectionTable(calfile);
 }
@@ -119,7 +119,7 @@ static void SampleBirds(void* pointer)
 
 int vjFlock::StartSampling()
 {
-   if (myThreadID == NULL)
+   if (myThread == NULL)
    {
       //int i;
 
@@ -153,9 +153,9 @@ int vjFlock::StartSampling()
 
       vjFlock* devicePtr = this;
 
-      myThreadID = vjThread::spawn(SampleBirds, (void*) devicePtr, 0);
+      myThread = new vjThread(SampleBirds, (void*) devicePtr, 0);
 
-      if ( myThreadID == NULL ) {
+      if ( myThread == NULL ) {
         return 0;	// Fail
       } else {
         return 1;
@@ -237,10 +237,11 @@ int vjFlock::Sample()
 
 int vjFlock::StopSampling()
 {
-   if (myThreadID != NULL)
+   if (myThread != NULL)
    {
-      vjThread::kill(myThreadID,SIGKILL);
-      myThreadID = NULL;
+      myThread->kill();
+      delete myThread;
+      myThread = NULL;
 
       sginap(1);
       char   bird_command[4];
