@@ -40,8 +40,6 @@ package org.vrjuggler.tweek.beans;
 /**
  * Interface for objects interested in being informed when a JavaBean is
  * instantiated.
- *
- * @since 1.0
  */
 public interface BeanInstantiationListener extends java.util.EventListener
 {

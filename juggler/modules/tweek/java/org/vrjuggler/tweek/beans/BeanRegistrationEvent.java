@@ -43,7 +43,7 @@ import java.util.EventObject;
  *
  * @see BeanRegistry
  *
- * @since 1.0
+ * @since 0.1.0
  */
 public class BeanRegistrationEvent
    extends EventObject

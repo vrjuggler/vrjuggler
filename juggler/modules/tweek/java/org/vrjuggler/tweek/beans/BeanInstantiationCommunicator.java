@@ -44,8 +44,6 @@ import java.util.Vector;
  * instantiated JavaBeans and the existing objects that wish to listen
  * for BeanInstantationEvents.
  *
- * @since 1.0
- *
  * @see org.vrjuggler.tweek.beans.BeanInstantiationEvent
  * @see org.vrjuggler.tweek.beans.BeanInstantiationListener
  */

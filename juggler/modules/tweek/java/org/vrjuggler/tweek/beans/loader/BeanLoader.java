@@ -47,9 +47,6 @@ import java.util.jar.JarEntry;
 
 /**
  * This class provides a simple interface to loading JavaBeans from JAR files.
- *
- * @version $Revision$
- * @since 1.0
  */
 public class BeanLoader
 {

@@ -40,12 +40,14 @@ import java.util.Vector;
 
 
 /**
- * @since 1.0
+ * Default implementation of the <code>BeanModelViewer</code> interface
+ * from which authors of Viewer Beans may derive their custom implementations.
  */
 public abstract class DefaultBeanModelViewer implements BeanModelViewer
 {
    /**
-    *
+    * Sets the Bean model to the given value and initializes the Viewer user
+    * interface by invoking <code>initGUI()</code>.
     */
    public final void init (BeanTreeModel model)
    {

@@ -40,7 +40,12 @@ import java.util.EventObject;
 
 
 /**
- * @since 1.0
+ * Event type associated with run-time changes in the user "level," a
+ * concept that is supposed to indicate the level of expertise of the user.
+ *
+ * @see UserLevelChangeListener
+ *
+ * @since 0.0.4
  */
 public class UserLevelChangeEvent extends EventObject
 {

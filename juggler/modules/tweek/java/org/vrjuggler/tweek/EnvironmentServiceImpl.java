@@ -46,7 +46,7 @@ import org.vrjuggler.tweek.services.EnvironmentService;
  * The Environment Service Bean. This service will expand environment variables
  * in a string.
  *
- * @since 1.0
+ * @since 0.15.0
  */
 class EnvironmentServiceImpl
    extends ServiceBean

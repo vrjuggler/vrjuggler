@@ -38,7 +38,23 @@ package org.vrjuggler.tweek.beans;
 
 
 /**
- * @since 1.0
+ * Implementation of <code>TweekBean</code> that is for Service Beans.  A
+ * Service Bean is one where the accessing code has full access to the
+ * interface of the Bean, but the implementation is loaded dynamically.
+ *
+ * <p>
+ * Examples of Service Beans that come with the Tweek Java GUI are the
+ * Environment Service and the Global Preferences Service.  Both of these
+ * Beans are accessed indirectly through proxy types.  This approach hides
+ * the details of looking up the Service Bean in the Bean Registry while
+ * still giving access to the full Service Bean interface.
+ * </p>
+ *
+ * @see org.vrjuggler.tweek.services.EnvironmentService
+ * @see org.vrjuggler.tweek.services.EnvironmentServiceProxy
+ * @see org.vrjuggler.tweek.services.GlobalPreferencesService
+ * @see org.vrjuggler.tweek.services.GlobalPreferencesServiceProxy
+ * @see BeanRegistry
  */
 public class ServiceBean extends TweekBean
 {

@@ -47,8 +47,6 @@ import org.vrjuggler.tweek.beans.PanelBean;
 /**
  * Container for a collection of icons representing Beans or other
  * BeanIconPanel instances with more Beans.
- *
- * @since 1.0
  */
 public class BeanIconPanel
 {

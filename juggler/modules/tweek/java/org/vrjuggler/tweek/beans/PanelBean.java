@@ -43,13 +43,12 @@ import org.vrjuggler.tweek.beans.loader.*;
 
 
 /**
- * Simple container for putting GUI component JavaBeans into a BeanViewer.  The
- * contained Beans can be displayed when the corresponding item in the viewer
- * is selected.  Within the viewer, the description can be shown to give users
- * a recognizable name for the encapsulated Bean.
+ * Simple container for putting GUI component JavaBeans into a Viewer Bean.
+ * The contained Beans can be displayed when the corresponding item in the
+ * viewer is selected.  Within the viewer, the description can be shown to
+ * give users a recognizable name for the encapsulated Bean.
  *
- * @version $Revision$
- * @since 1.0
+ * @see ViewerBean
  */
 public class PanelBean extends TweekBean
 {

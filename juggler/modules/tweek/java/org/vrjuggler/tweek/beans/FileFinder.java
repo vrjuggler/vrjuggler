@@ -45,11 +45,8 @@ import java.io.FilenameFilter;
 /**
  * Very simple class used to find files with the given extension in the given
  * path.  This is intended for use with files that contain JavaBeans or
- * "pointers" to JavaBeans--hence its inclusion in the
- * org.vrjuggler.tweek.beans package.
- *
- * @version $Revision$
- * @since 1.0
+ * "pointers" to JavaBeans&mdash;hence its inclusion in the
+ * <code>org.vrjuggler.tweek.beans</code> package.
  */
 public class FileFinder
 {

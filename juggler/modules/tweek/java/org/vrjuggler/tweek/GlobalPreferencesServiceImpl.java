@@ -54,7 +54,7 @@ import org.vrjuggler.tweek.beans.*;
  * This class provides access to the global preferences for the entire base
  * system.  Access is granted through a singleton interface.
  *
- * @since 1.0
+ * @since 0.15.0
  */
 class GlobalPreferencesServiceImpl
    extends ServiceBean

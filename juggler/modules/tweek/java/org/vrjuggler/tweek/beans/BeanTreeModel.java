@@ -49,8 +49,6 @@ import javax.swing.tree.*;
  * "path" to the individual Panel Beans.  Viewer Beans use this data model to
  * complete the Model View design pattern, and thus the Viewer Beans may
  * provide any representation they wish of the data contained herein.
- *
- * @since 1.0
  */
 public class BeanTreeModel
    extends DefaultTreeModel
