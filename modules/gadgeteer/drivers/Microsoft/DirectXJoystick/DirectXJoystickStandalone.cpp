@@ -281,8 +281,8 @@ BOOL DirectXJoystickStandalone::enumerateAxes(const DIDEVICEOBJECTINSTANCE* doi)
    DIPROPRANGE diprg;
    diprg.diph.dwSize       = sizeof(DIPROPRANGE);
    diprg.diph.dwHeaderSize = sizeof(DIPROPHEADER);
-   diprg.diph.dwHow        = DIPH_BYOFFSET;
-   diprg.diph.dwObj        = doi->dwOfs; // Specify the enumerated axis
+   diprg.diph.dwHow        = DIPH_BYID;
+   diprg.diph.dwObj        = doi->dwType;
    diprg.lMin              = getAxisMin();
    diprg.lMax              = getAxisMax();
 
