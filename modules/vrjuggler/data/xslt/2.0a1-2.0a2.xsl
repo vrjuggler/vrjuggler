@@ -74,6 +74,9 @@
   <!-- Rename Keyboard elements to EventWindow. -->
   <xsl:template match="Keyboard">
     <xsl:element name="EventWindow">
+      <xsl:attribute name="name">
+        <xsl:value-of select="@name"/>
+      </xsl:attribute>
       <xsl:value-of select="$newline"/>
       <xsl:for-each select="./*">
         <xsl:copy-of select="."/>
@@ -86,6 +89,9 @@
   <!-- Rename KeyboardProxy elements to EventWindowProxy. -->
   <xsl:template match="KeyboardProxy">
     <xsl:element name="EventWindowProxy">
+      <xsl:attribute name="name">
+        <xsl:value-of select="@name"/>
+      </xsl:attribute>
       <xsl:value-of select="$newline"/>
       <xsl:for-each select="./*">
         <xsl:copy-of select="."/>
@@ -101,6 +107,9 @@
   -->
   <xsl:template match="displayWindow">
     <xsl:element name="displayWindow">
+      <xsl:attribute name="name">
+        <xsl:value-of select="@name"/>
+      </xsl:attribute>
       <xsl:value-of select="$newline"/>
 
       <!--
@@ -176,6 +185,9 @@
   -->
   <xsl:template match="simViewport">
     <xsl:element name="simViewport">
+      <xsl:attribute name="name">
+        <xsl:value-of select="@name"/>
+      </xsl:attribute>
       <xsl:value-of select="$newline"/>
 
       <!-- Copy what does not need to be moved into default_simulator -->
@@ -261,6 +273,9 @@
           existing element.  Tricky, huh?  :)
         -->
         <xsl:element name="{name()}">
+          <xsl:attribute name="name">
+            <xsl:value-of select="@name"/>
+          </xsl:attribute>
           <xsl:value-of select="$newline"/>
 
           <!-- Now iterate over the properties, looking for keyboardProxy. -->
