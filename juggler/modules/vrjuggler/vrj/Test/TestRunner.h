@@ -112,16 +112,18 @@ public:
       }
    }
 
+   void addTest(Test* test)
+   {
+      mTests.push_back(test);
+   }
+
    /** Are the tests done processing
    * @return true - There is no more processing to do
    */
    State getState()
    { return mCurState; }
       
-   void addTest(Test* test)
-   {
-      mTests.push_back(test);
-   }
+
 
    /** Print out the test failures */
    void printFailures()
