@@ -129,59 +129,69 @@ AC_DEFUN(TWEEK_PATH_CXX,
 [
    AC_REQUIRE([_TWEEK_PATH_SETUP])
 
+   TWEEK_CXXFLAGS=""
+   TWEEK_CXXFLAGS_ALL=""
+   TWEEK_LIBS_LD=""
+   TWEEK_LIBS_LD_ALL=""
+   TWEEK_LIBS_STATIC_LD=""
+   TWEEK_LIBS_STATIC_LD_ALL=""
+   TWEEK_LIBS_CC=""
+   TWEEK_LIBS_CC_ALL=""
+   TWEEK_LIBS_STATIC_CC=""
+   TWEEK_LIBS_STATIC_CC_ALL=""
+   TWEEK_CXX_IDL=""
+   TWEEK_CXX_IDL_OPTS=""
+   TWEEK_CXX_IDL_GENDIR_OPT=""
+   TWEEK_CXX_IDL_INCFLAG=""
+
    if test "x$TWEEK_CONFIG" = "xno" ; then
-      TWEEK_CXXFLAGS=""
-      TWEEK_CXXFLAGS_ALL=""
-      TWEEK_LIBS_LD=""
-      TWEEK_LIBS_LD_ALL=""
-      TWEEK_LIBS_STATIC_LD=""
-      TWEEK_LIBS_STATIC_LD_ALL=""
-      TWEEK_LIBS_CC=""
-      TWEEK_LIBS_CC_ALL=""
-      TWEEK_LIBS_STATIC_CC=""
-      TWEEK_LIBS_STATIC_CC_ALL=""
-      TWEEK_CXX_IDL=""
-      TWEEK_CXX_IDL_OPTS=""
-      TWEEK_CXX_IDL_GENDIR_OPT=""
-      TWEEK_CXX_IDL_INCFLAG=""
       ifelse([$3], , :, [$3])
    else
-      if test "x$TWEEK_VERSION" = "x" ; then
-         _TWEEK_VERSION_CHECK($1, $2, $3)
-      fi
+      AC_MSG_CHECKING([whether Tweek C++ API is available])
+      has_cxx=`$TWEEK_CONFIG --too-much-pressure`
 
-      TWEEK_CXXFLAGS=`$TWEEK_CONFIG $tweek_config_args --cxxflags $ABI`
-      TWEEK_CXXFLAGS_ALL=`$TWEEK_CONFIG $tweek_config_args --cxxflags $ABI --all`
-      TWEEK_EXTRA_LIBS_CC=`$TWEEK_CONFIG $tweek_config_args --extra-libs $ABI`
-      TWEEK_EXTRA_LIBS_LD=`$TWEEK_CONFIG $tweek_config_args --extra-libs $ABI --linker`
-      TWEEK_LIBS_LD="`$TWEEK_CONFIG $tweek_config_args --libs $ABI --linker` $TWEEK_EXTRA_LIBS_LD"
-      TWEEK_LIBS_LD_ALL="`$TWEEK_CONFIG $tweek_config_args --libs $ABI --linker --all` $TWEEK_EXTRA_LIBS_LD"
-      TWEEK_LIBS_STATIC_LD="`$TWEEK_CONFIG $tweek_config_args --libs $ABI --linker --static` $TWEEK_EXTRA_LIBS_LD"
-      TWEEK_LIBS_STATIC_LD_ALL="`$TWEEK_CONFIG $tweek_config_args --libs $ABI --linker --static --all` $TWEEK_EXTRA_LIBS_LD"
-      TWEEK_LIBS_CC="`$TWEEK_CONFIG $tweek_config_args --libs $ABI` $TWEEK_EXTRA_LIBS_CC"
-      TWEEK_LIBS_CC_ALL="`$TWEEK_CONFIG $tweek_config_args --libs $ABI --all` $TWEEK_EXTRA_LIBS_CC"
-      TWEEK_LIBS_STATIC_CC="`$TWEEK_CONFIG $tweek_config_args --libs $ABI --static` $TWEEK_EXTRA_LIBS_CC"
-      TWEEK_LIBS_STATIC_CC_ALL="`$TWEEK_CONFIG $tweek_config_args --libs $ABI --static --all` $TWEEK_EXTRA_LIBS_CC"
-      TWEEK_CXX_IDL="`$TWEEK_CONFIG $tweek_config_args --idl cxx`"
-      TWEEK_CXX_IDL_OPTS="`$TWEEK_CONFIG $tweek_config_args --idlflags cxx`"
-      TWEEK_CXX_IDL_GENDIR_OPT="`$TWEEK_CONFIG $tweek_config_args --idlgendir cxx`"
-      TWEEK_CXX_IDL_INCFLAG="`$TWEEK_CONFIG $tweek_config_args --idlincflag cxx`"
+      if test "x$has_cxx" = "xY" ; then
+         AC_MSG_RESULT([yes])
+         if test "x$TWEEK_VERSION" = "x" ; then
+            _TWEEK_VERSION_CHECK($1, $2, $3)
+         fi
+
+         TWEEK_CXXFLAGS=`$TWEEK_CONFIG $tweek_config_args --cxxflags $ABI`
+         TWEEK_CXXFLAGS_ALL=`$TWEEK_CONFIG $tweek_config_args --cxxflags $ABI --all`
+         TWEEK_EXTRA_LIBS_CC=`$TWEEK_CONFIG $tweek_config_args --extra-libs $ABI`
+         TWEEK_EXTRA_LIBS_LD=`$TWEEK_CONFIG $tweek_config_args --extra-libs $ABI --linker`
+         TWEEK_LIBS_LD="`$TWEEK_CONFIG $tweek_config_args --libs $ABI --linker` $TWEEK_EXTRA_LIBS_LD"
+         TWEEK_LIBS_LD_ALL="`$TWEEK_CONFIG $tweek_config_args --libs $ABI --linker --all` $TWEEK_EXTRA_LIBS_LD"
+         TWEEK_LIBS_STATIC_LD="`$TWEEK_CONFIG $tweek_config_args --libs $ABI --linker --static` $TWEEK_EXTRA_LIBS_LD"
+         TWEEK_LIBS_STATIC_LD_ALL="`$TWEEK_CONFIG $tweek_config_args --libs $ABI --linker --static --all` $TWEEK_EXTRA_LIBS_LD"
+         TWEEK_LIBS_CC="`$TWEEK_CONFIG $tweek_config_args --libs $ABI` $TWEEK_EXTRA_LIBS_CC"
+         TWEEK_LIBS_CC_ALL="`$TWEEK_CONFIG $tweek_config_args --libs $ABI --all` $TWEEK_EXTRA_LIBS_CC"
+         TWEEK_LIBS_STATIC_CC="`$TWEEK_CONFIG $tweek_config_args --libs $ABI --static` $TWEEK_EXTRA_LIBS_CC"
+         TWEEK_LIBS_STATIC_CC_ALL="`$TWEEK_CONFIG $tweek_config_args --libs $ABI --static --all` $TWEEK_EXTRA_LIBS_CC"
+         TWEEK_CXX_IDL="`$TWEEK_CONFIG $tweek_config_args --idl cxx`"
+         TWEEK_CXX_IDL_OPTS="`$TWEEK_CONFIG $tweek_config_args --idlflags cxx`"
+         TWEEK_CXX_IDL_GENDIR_OPT="`$TWEEK_CONFIG $tweek_config_args --idlgendir cxx`"
+         TWEEK_CXX_IDL_INCFLAG="`$TWEEK_CONFIG $tweek_config_args --idlincflag cxx`"
+      else
+         AC_MSG_RESULT([no])
+         ifelse([$3], , :, [$3])
+      fi
    fi
 
-   AC_SUBST(TWEEK_CXXFLAGS)
-   AC_SUBST(TWEEK_CXXFLAGS_ALL)
-   AC_SUBST(TWEEK_LIBS_LD)
-   AC_SUBST(TWEEK_LIBS_LD_ALL)
-   AC_SUBST(TWEEK_LIBS_STATIC_LD)
-   AC_SUBST(TWEEK_LIBS_STATIC_LD_ALL)
-   AC_SUBST(TWEEK_LIBS_CC)
-   AC_SUBST(TWEEK_LIBS_CC_ALL)
-   AC_SUBST(TWEEK_LIBS_STATIC_CC)
-   AC_SUBST(TWEEK_LIBS_STATIC_CC_ALL)
-   AC_SUBST(TWEEK_CXX_IDL)
-   AC_SUBST(TWEEK_CXX_IDL_OPTS)
-   AC_SUBST(TWEEK_CXX_IDL_GENDIR_OPT)
-   AC_SUBST(TWEEK_CXX_IDL_INCFLAG)
+   AC_SUBST([TWEEK_CXXFLAGS])
+   AC_SUBST([TWEEK_CXXFLAGS_ALL])
+   AC_SUBST([TWEEK_LIBS_LD])
+   AC_SUBST([TWEEK_LIBS_LD_ALL])
+   AC_SUBST([TWEEK_LIBS_STATIC_LD])
+   AC_SUBST([TWEEK_LIBS_STATIC_LD_ALL])
+   AC_SUBST([TWEEK_LIBS_CC])
+   AC_SUBST([TWEEK_LIBS_CC_ALL])
+   AC_SUBST([TWEEK_LIBS_STATIC_CC])
+   AC_SUBST([TWEEK_LIBS_STATIC_CC_ALL])
+   AC_SUBST([TWEEK_CXX_IDL])
+   AC_SUBST([TWEEK_CXX_IDL_OPTS])
+   AC_SUBST([TWEEK_CXX_IDL_GENDIR_OPT])
+   AC_SUBST([TWEEK_CXX_IDL_INCFLAG])
 ])
 
 dnl ---------------------------------------------------------------------------
@@ -197,30 +207,40 @@ AC_DEFUN(TWEEK_PATH_JAVA,
 [
    AC_REQUIRE([_TWEEK_PATH_SETUP])
 
+   TWEEK_JAVA_IDL=''
+   TWEEK_JAVA_IDL_OPTS=''
+   TWEEK_JAVA_IDL_GENDIR_OPT=''
+   TWEEK_JAVA_IDL_INCFLAG=''
+   TWEEK_JARS=''
+
    if test "x$TWEEK_CONFIG" = "xno" ; then
-      TWEEK_JAVA_IDL=''
-      TWEEK_JAVA_IDL_OPTS=''
-      TWEEK_JAVA_IDL_GENDIR_OPT=''
-      TWEEK_JAVA_IDL_INCFLAG=''
-      TWEEK_JARS=''
       ifelse([$3], , :, [$3])
    else
-      if test "x$TWEEK_VERSION" = "x" ; then
-         _TWEEK_VERSION_CHECK($1, $2, $3)
-      fi
+      AC_MSG_CHECKING([whether Tweek Java API is available])
+      has_java=`$TWEEK_CONFIG --is-jittery`
 
-      TWEEK_JAVA_IDL="`$TWEEK_CONFIG $tweek_config_args --idl java`"
-      TWEEK_JAVA_IDL_OPTS="`$TWEEK_CONFIG $tweek_config_args --idlflags java`"
-      TWEEK_JAVA_IDL_GENDIR_OPT="`$TWEEK_CONFIG $tweek_config_args --idlgendir java`"
-      TWEEK_JAVA_IDL_INCFLAG="`$TWEEK_CONFIG $tweek_config_args --idlincflag java`"
-      TWEEK_JARS="`$TWEEK_CONFIG $tweek_config_args --jars`"
+      if test "x$has_java" = "xY" ; then
+         AC_MSG_RESULT([yes])
+         if test "x$TWEEK_VERSION" = "x" ; then
+            _TWEEK_VERSION_CHECK($1, $2, $3)
+         fi
+
+         TWEEK_JAVA_IDL="`$TWEEK_CONFIG $tweek_config_args --idl java`"
+         TWEEK_JAVA_IDL_OPTS="`$TWEEK_CONFIG $tweek_config_args --idlflags java`"
+         TWEEK_JAVA_IDL_GENDIR_OPT="`$TWEEK_CONFIG $tweek_config_args --idlgendir java`"
+         TWEEK_JAVA_IDL_INCFLAG="`$TWEEK_CONFIG $tweek_config_args --idlincflag java`"
+         TWEEK_JARS="`$TWEEK_CONFIG $tweek_config_args --jars`"
+      else
+         AC_MSG_RESULT([no])
+         ifelse([$3], , :, [$3])
+      fi
    fi
 
-   AC_SUBST(TWEEK_JAVA_IDL)
-   AC_SUBST(TWEEK_JAVA_IDL_OPTS)
-   AC_SUBST(TWEEK_JAVA_IDL_GENDIR_OPT)
-   AC_SUBST(TWEEK_JAVA_IDL_INCFLAG)
-   AC_SUBST(TWEEK_JARS)
+   AC_SUBST([TWEEK_JAVA_IDL])
+   AC_SUBST([TWEEK_JAVA_IDL_OPTS])
+   AC_SUBST([TWEEK_JAVA_IDL_GENDIR_OPT])
+   AC_SUBST([TWEEK_JAVA_IDL_INCFLAG])
+   AC_SUBST([TWEEK_JARS])
 ])
 
 dnl ---------------------------------------------------------------------------
@@ -249,6 +269,9 @@ dnl     TWEEK_JARS
 dnl ---------------------------------------------------------------------------
 AC_DEFUN(TWEEK_PATH,
 [
-   TWEEK_PATH_CXX($1, $2, $3, $4)
-   TWEEK_PATH_JAVA($1, $2, $3, $4)
+   TWEEK_PATH_CXX($1, [tweek_have_cxx='yes'], $3, $4)
+
+   if test "x$tweek_have_cxx" = "xyes" ; then
+      TWEEK_PATH_JAVA($1, $2, $3, $4)
+   fi
 ])
