@@ -59,10 +59,6 @@ SRCS=		Analog.cpp			\
 		DeviceInterface.cpp		\
 		Digital.cpp			\
 		DigitalProxy.cpp		\
-		SpeechRecogString.cpp		\
-		SpeechRecogStringProxy.cpp	\
-		SpeechRecogDigital.cpp		\
-		SpeechRecogDigitalProxy.cpp	\
 		EventWindow.cpp			\
 		EventWindowProxy.cpp		\
 		GestureProxy.cpp		\
@@ -72,7 +68,11 @@ SRCS=		Analog.cpp			\
 		GloveProxy.cpp			\
 		Input.cpp			\
 		Position.cpp			\
-		PositionProxy.cpp
+		PositionProxy.cpp		\
+		SpeechRecogDigital.cpp		\
+		SpeechRecogDigitalProxy.cpp	\
+		SpeechRecogString.cpp		\
+		SpeechRecogStringProxy.cpp
 
 include $(MKPATH)/dpp.obj-subdir.mk
 
