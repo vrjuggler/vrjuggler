@@ -19,9 +19,6 @@ WORKDIR		= ${topdir}/Input
 # '_clean' target to be run besides the standard 'clean' target.
 _LOCAL_CLEAN	= 1
 
-# Include the recursive target code.
-include ${MKPATH}/vj.rec.mk
-
 # Prefix for recursive stuff.
 DIRPRFX		= Input/
 
@@ -29,6 +26,9 @@ DIRPRFX		= Input/
 SUBDIRS		= vjGlove vjInput vjPosition \
 		  InputManager ibox vjKeyboard \
 		  vjSim vjGesture
+
+# Include the recursive target code.
+include ${MKPATH}/vj.rec.mk
 
 # -----------------------------------------------------------------------------
 # Library targets.
