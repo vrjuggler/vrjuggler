@@ -115,9 +115,12 @@ bool vjPfDrawManager::configDisplaySystem(vjConfigChunk* chunk)
       {
 	 char env_var[] = "DISPLAY";
          char* display_env = getenv(env_var);
-         char* xpipe_name  = new char[strlen(display_env)+1];
-         strcpy(xpipe_name, display_env);
-         mPipeStrs[i] = xpipe_name;
+         if ( NULL != display_env )
+         {
+            char* xpipe_name = new char[strlen(display_env)+1];
+            strcpy(xpipe_name, display_env);
+            mPipeStrs[i] = xpipe_name;
+         }
       }
       vjDEBUG(vjDBG_DRAW_MGR,vjDBG_CONFIG_LVL) << "Pipe:" << i << ": "
                                                << mPipeStrs[i] << std::endl
