@@ -116,3 +116,101 @@ AC_DEFUN(VJ_COMPILER_SETUP,
     # newer C++ features that we need.
     DPP_CXX_TEMPLATES(AC_MSG_ERROR(*** The library requires C++ template support ***))
 ])
+
+dnl ---------------------------------------------------------------------------
+dnl Usage:
+dnl     VJ_MTREE_GEN(file-prefix, path, platform [, ISA])
+dnl ---------------------------------------------------------------------------
+AC_DEFUN(VJ_MTREE_LIB_GEN,
+[
+    mtree_path=`echo $2 | sed -e 's|/| |g'`
+
+    dnl Ensure that the release directory exists since configure would not
+    dnl create it otherwise.
+    for dir in $mtree_path ; do
+        full_path="${full_path}${dir}/"
+        if test ! -d "$full_path" ; then
+            mkdir "$full_path"
+        fi
+    done
+
+    dnl Create the VJ.lib.dist file in release/mtree.  This is generated from
+    dnl scratch since it cannot be generalized into a template using our
+    dnl library directory scheme.  The only time this file needs to be
+    dnl generated is when configure is run, so it is not set up to be one of
+    dnl the commands that config.status can execute.
+    _lib_file="$2/$1.lib.dist"
+    _set_line="/set type=dir mode=$DIR_PERMS uname=$OWNER_NAME gname=$GROUP_NAME"
+
+    dnl Ensure that the file exists and has zero length.  Then write out the
+    dnl /set line which is going to be there no matter what.
+    echo "creating ${_lib_file}"
+    echo >${_lib_file}
+    echo "${_set_line}" >>${_lib_file}
+    echo "" >>${_lib_file}
+
+    dnl On IRIX, it's easy to compile for different ABI/ISA combinations, so
+    dnl we just make cases for all -n32/-64/-mips3/-mips4 settings.
+    if test "x$3" = "xIRIX" ; then
+        cat >>${_lib_file} <<END_IRIX_DIST
+.
+    lib32
+        mips3
+            debug
+            ..
+            opt
+            ..
+        ..
+        mips4
+            debug
+            ..
+            opt
+            ..
+        ..
+    ..
+    lib64
+        mips3
+            debug
+            ..
+            opt
+            ..
+        ..
+        mips4
+            debug
+            ..
+            opt
+            ..
+        ..
+    ..
+..
+END_IRIX_DIST
+    dnl If a value for $4 has been given (which is the case for some
+    dnl platforms), create a subdirectory in lib for that value.
+    elif test "x$4" != "x" ; then
+        cat >>${_lib_file} <<END_ISA_DIST
+.
+    lib
+        $4
+            debug
+            ..
+            opt
+            ..
+        ..
+    ..
+..
+END_ISA_DIST
+    dnl In all other cases, just make a simple directory tree for debugging and
+    dnl optimized libraries.
+    else
+        cat >>${_lib_file} <<END_DIST
+.
+    lib
+        debug
+        ..
+        opt
+        ..
+    ..
+..
+END_DIST
+    fi
+])
