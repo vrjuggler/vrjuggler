@@ -119,7 +119,6 @@ public:
    virtual int suspend()
    {return -1;}
 
-
    // -----------------------------------------------------------------------
    //: Get this thread's priority.
    //
@@ -146,6 +145,41 @@ public:
    // -----------------------------------------------------------------------
    virtual int setPrio(int prio)
    { return -1;}
+
+   // -----------------------------------------------------------------------
+   //: Set the CPU affinity for this thread (the CPU on which this thread
+   //+ will exclusively run).
+   //
+   //! PRE: The thread must have been set to be a system-scope thread.
+   //! POST: The CPU affinity is set or an error status is returned.
+   //
+   //! ARGS: cpu - The CPU on which this thread will run exclusively.
+   //
+   //! RETURNS:  0 - Successful completion
+   //! RETURNS: -1 - Error
+   // -----------------------------------------------------------------------
+   virtual int setRunOn (int cpu) {
+      return -1;
+   }
+
+   // -----------------------------------------------------------------------
+   //: Get the CPU affinity for this thread (the CPU on which this thread
+   //+ exclusively runs).
+   //
+   //! PRE: The thread must have been set to be a system-scope thread, and
+   //+      a previous affinity must have been set using setRunOn().
+   //! POST: The CPU affinity for this thread is stored in the cur_cpu
+   //+       pointer.
+   //
+   //! ARGS: cur_cpu - The CPU affinity for this thread (set by a previous
+   //+                 call to setRunOn().
+   //
+   //! RETURNS:  0 - Successful completion
+   //! RETURNS: -1 - Error
+   // -----------------------------------------------------------------------
+   virtual int getRunOn (int* cur_cpu) {
+      return -1;
+   }
 
    // -----------------------------------------------------------------------
    //: Yield execution of the calling thread to allow a different blocked
