@@ -35,9 +35,22 @@
 #include <jccl/Config/ConfigChunk.h>
 #include <vrj/Display/Viewport.h>
 #include <vrj/Kernel/Kernel.h>
+#include <vrj/Kernel/User.h>
+#include <vrj/Display/Display.h>
+#include <vrj/Display/Projection.h>
 
 namespace vrj
 {
+
+
+void Viewport::recordLatency (int trackertimeindex, int currenttimeindex) 
+{
+   vpr::Interval it = mUser->getHeadUpdateTime();
+   mLatencyMeasure.set (jcclPERF_ALL, "Head tracking timestamp (ignore)",
+                        it);
+   mLatencyMeasure.set (jcclPERF_ALL, "tracking latency");
+}
+
 
 void Viewport::config(jccl::ConfigChunkPtr chunk)
 {

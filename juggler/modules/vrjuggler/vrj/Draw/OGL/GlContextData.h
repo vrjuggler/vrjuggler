@@ -36,6 +36,7 @@
 
 #include <vrj/vrjConfig.h>
 #include <vrj/Draw/OGL/GlDrawManager.h>
+#include <vrj/Util/Debug.h>
 
 namespace vrj
 {

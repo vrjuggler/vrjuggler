@@ -39,6 +39,7 @@
 //#include <vrj/Math/Coord.h>
 #include <gmtl/Vec.h>
 #include <jccl/Config/ConfigChunk.h>
+#include <vrj/Kernel/User.h>
 
 #include <gmtl/Matrix.h>
 #include <gmtl/MatrixOps.h>
