@@ -177,7 +177,7 @@ SelectorImpBSD::select (vpr::Uint16& numWithEvents, vpr::Uint16 timeout) {
 
    // Call select(2) - If timeout == 0, then make sure we pass 0.
    result = ::select(mPollDescs.size(), &read_set, &write_set, &exception_set,
-                     &timeout_obj);
+                     (timeout > 0) ? &timeout_obj : NULL);
 
    // D'oh!
    if ( -1 == result ) {
