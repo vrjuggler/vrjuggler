@@ -35,6 +35,6 @@ void vjTrackedWallProjection::updateWallParams()
 ostream& vjTrackedWallProjection::outStream(ostream& out)
 {
    out << "vjTrackedWallProjection:\n";
-   out << "Pos Proxy: " << mTracker.getProxyName() << endl;
+   out << "Pos Proxy: " << mTracker.getProxyName().c_str() << endl;
    return vjWallProjection::outStream(out);
 }
