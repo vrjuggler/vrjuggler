@@ -65,11 +65,14 @@ bool EventWindowXWin::config(jccl::ConfigElementPtr e)
 
    if(e->getVersion() < required_definition_ver)
    {
-      vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL) << clrOutBOLD(clrRED, "ERROR")
-            << " [gadget::EventWindowXWin::config()] Element named '" << e->getName() << "'" << std::endl << vprDEBUG_FLUSH;
+      vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
+         << clrOutBOLD(clrRED, "ERROR")
+         << ": [gadget::EventWindowXWin::config()] Element named '"
+         << e->getName() << "'" << std::endl << vprDEBUG_FLUSH;
       vprDEBUG_NEXT(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
-            << "is version [" << e->getVersion() << "], but we require at least version ["
-            << required_definition_ver << "]. Ignoring...\n" << vprDEBUG_FLUSH;
+         << "is version " << e->getVersion()
+         << ", but we require at least version " << required_definition_ver
+         << ". Ignoring.\n" << vprDEBUG_FLUSH;
       return false;
    }
 
@@ -98,8 +101,10 @@ bool EventWindowXWin::config(jccl::ConfigElementPtr e)
       bool found_window = WindowRegistry::instance()->getWindow(mRemoteDisplayName, remote_win_info);
       if(!found_window)
       {
-         vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_WARNING_LVL) << "WARNING: Could not find remote window named: ["
-                           << mRemoteDisplayName << "]. Failed to create EventWindowX.\n" << vprDEBUG_FLUSH;
+         vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_WARNING_LVL)
+            << "WARNING: Could not find remote window named: '"
+            << mRemoteDisplayName << "'. Failed to create EventWindowX.\n"
+            << vprDEBUG_FLUSH;
          return false;
       }
       else
@@ -242,8 +247,8 @@ bool EventWindowXWin::startSampling()
    if(mThread != NULL)
    {
       vprDEBUG(vprDBG_ERROR,vprDBG_CRITICAL_LVL)
-         << clrOutNORM(clrRED,"ERROR:")
-         << "gadget::EventWindowXWin: startSampling called, when already sampling.\n"
+         << clrOutNORM(clrRED,"ERROR")
+         << ": gadget::EventWindowXWin: startSampling called, when already sampling.\n"
          << vprDEBUG_FLUSH;
       vprASSERT(false);
    }
@@ -498,11 +503,15 @@ vpr::Guard<vpr::Mutex> guard(mKeysLock);      // Lock access to the mKeys array 
                mPrevX = win_center_x;     // Must do this so if state changes, we have accurate dx,dy next time
                mPrevY = win_center_y;
 
-               // Warp back to center, IF we are not there already
-               // This prevents us from sending an event based on our XWarp event
+               // Warp back to center, IF we are not there already.
+               // This prevents us from sending an event based on our XWarp
+               // event.
                if((dx != 0) || (dy != 0))
                {
-                  vprDEBUG(vprDBG_ALL,vprDBG_HVERB_LVL) << "CORRECTING: x:" << std::setw(6) << dx << "  y:" << std::setw(6) << dy << std::endl << vprDEBUG_FLUSH;
+                  vprDEBUG(vprDBG_ALL,vprDBG_HVERB_LVL)
+                     << "CORRECTING: x:" << std::setw(6) << dx
+                     << "  y:" << std::setw(6) << dy << std::endl
+                     << vprDEBUG_FLUSH;
 
                   XWarpPointer(mDisplay, None, mWindow, 0,0, 0,0,
                                win_center_x, win_center_y);
@@ -939,9 +948,9 @@ int EventWindowXWin::openTheWindow()
       if (NULL == mDisplay)
       {
          vprDEBUG(vprDBG_ERROR,vprDBG_CRITICAL_LVL)
-            <<  clrOutNORM(clrRED,"ERROR:")
-            << "gadget::EventWindow::StartSampling() : failed to open display" << mXDisplayString
-            << std::endl << vprDEBUG_FLUSH;
+            <<  clrOutNORM(clrRED,"ERROR")
+            << ": [gadget::EventWindow::openTheWindow()] failed to open display"
+            << mXDisplayString << std::endl << vprDEBUG_FLUSH;
          return 0;
       }
 
@@ -976,9 +985,10 @@ int EventWindowXWin::openTheWindow()
       }
       // If we didn't get a matching visual, we're in trouble.
       else {
-         vprDEBUG(vprDBG_ERROR,vprDBG_CRITICAL_LVL) <<  clrOutNORM(clrRED,"ERROR:")
-                     << "gadget::EventWindow::startSampling() : find visual failed"
-                     << std::endl << vprDEBUG_FLUSH;
+         vprDEBUG(vprDBG_ERROR,vprDBG_CRITICAL_LVL)
+            <<  clrOutNORM(clrRED,"ERROR")
+            << ": [gadget::EventWindow::openTheWindow()] find visual failed"
+            << std::endl << vprDEBUG_FLUSH;
          return 0;
       }
 
@@ -1009,7 +1019,7 @@ int EventWindowXWin::openTheWindow()
    //   createEmptyCursor(mDisplay, mWindow);
 
       vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL)
-         << "gadget::EventWindowXWin::openTheWindow() : done." << std::endl
+         << "[gadget::EventWindowXWin::openTheWindow()] done." << std::endl
          << vprDEBUG_FLUSH;
 
       XFree(vis_infos);
@@ -1022,9 +1032,10 @@ int EventWindowXWin::openTheWindow()
       mDisplay = XOpenDisplay(mRemoteWinInfo.displayName.c_str());   // Open display on the remote server
       if (NULL == mDisplay)
       {
-         vprDEBUG(vprDBG_ERROR,vprDBG_CRITICAL_LVL) <<  clrOutNORM(clrRED,"ERROR:")
-            << "gadget::EventWindowXWin::open() : failed to open display: [" << mRemoteWinInfo.displayName
-            << std::endl << vprDEBUG_FLUSH;
+         vprDEBUG(vprDBG_ERROR,vprDBG_CRITICAL_LVL)
+            <<  clrOutNORM(clrRED,"ERROR")
+            << ": [gadget::EventWindowXWin::open()] failed to open display "
+            << mRemoteWinInfo.displayName << std::endl << vprDEBUG_FLUSH;
          return 0;
       }
 
@@ -1216,12 +1227,15 @@ bool EventWindowXWin::WindowRegistry::addWindow(std::string name, EventWindowXWi
    window_map_t::iterator found_window = mWindowMap.find(name);
    if(found_window != mWindowMap.end())
    {
-      vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_WARNING_LVL) << "Warning: Attempted to add x event source twice. named: [" << name << "]. Ignoring second.\n" << vprDEBUG_FLUSH;
+      vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_WARNING_LVL)
+         << "Warning: Attempted to add x event source twice. named '"
+         << name << "'. Ignoring second.\n" << vprDEBUG_FLUSH;
       return false;
    }
    else
    {
-      vprDEBUG(gadgetDBG_INPUT_MGR,0) << "Adding X window: " << name << std::endl << vprDEBUG_FLUSH;
+      vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL)
+         << "Adding X window: '" << name << "'" << std::endl << vprDEBUG_FLUSH;
       mWindowMap[name] = winInfo;
       return true;
    }
@@ -1233,12 +1247,14 @@ void EventWindowXWin::WindowRegistry::removeWindow(std::string name)
    unsigned num_erased = mWindowMap.erase(name);
    if(0 == num_erased)
    {
-      vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_WARNING_LVL) << "Warning: Attempted to remove x event source not found. named: [" << name << "]. \n" << vprDEBUG_FLUSH;
+      vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_WARNING_LVL)
+         << "Warning: Attempted to remove x event source not found. named '"
+         << name << "'. \n" << vprDEBUG_FLUSH;
    }
-
 }
 
-bool EventWindowXWin::WindowRegistry::getWindow(std::string name, WindowInfo& winInfo)
+bool EventWindowXWin::WindowRegistry::getWindow(std::string name,
+                                                WindowInfo& winInfo)
 {
    window_map_t::iterator found_window = mWindowMap.find(name);
    if(found_window != mWindowMap.end())
@@ -1247,7 +1263,9 @@ bool EventWindowXWin::WindowRegistry::getWindow(std::string name, WindowInfo& wi
       return true;
    }
    else
-   { return false; }
+   {
+      return false; 
+   }
 }
 
 } // end namespace
