@@ -35,6 +35,7 @@
 
 #include <iostream>
 #include <iomanip>
+#include <GL/gl.h>
 
 #include <vpr/Util/StatCollector.h>
 #include <vrj/Draw/OGL/GlApp.h>
