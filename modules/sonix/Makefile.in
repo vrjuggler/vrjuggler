@@ -334,7 +334,7 @@ include $(MKPATH)/dpp.subdir.mk
 # Clean-up.
 # -----------------------------------------------------------------------------
 include $(MKPATH)/dpp.clean.mk
-CLEAN_DIRS      += $(BUILDDIR_BASE) $(LIBDIR_NAME) $(instlinks)
+CLEAN_DIRS      += $(BUILDDIR_BASE) $(LIBDIR_NAME)
 CLOBBER_DIRS    += $(BUILDDIR_BASE) $(LIBDIR_NAME)
 
 
