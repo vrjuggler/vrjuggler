@@ -76,12 +76,13 @@ public class MotionStarEditorPanel
       // because every change in the spinner's value creates a new object.
       if ( source == mReportRateSpinner )
       {
-         mElement.setProperty("report_rate", 0, source.getValue());
+         mElement.setProperty("report_rate", 0, source.getValue(), mContext);
       }
       else if ( source == mMeasurementRateSpinner )
       {
          // NOTE: The object returned is of type Double rather than Float.
-         mElement.setProperty("measurement_rate", 0, source.getValue());
+         mElement.setProperty("measurement_rate", 0, source.getValue(),
+                              mContext);
       }
    }
 

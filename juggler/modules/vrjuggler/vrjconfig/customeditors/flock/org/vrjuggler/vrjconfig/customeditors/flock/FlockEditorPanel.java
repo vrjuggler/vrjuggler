@@ -315,12 +315,12 @@ public class FlockEditorPanel
 
    void mPortEditor_actionPerformed(ActionEvent actionEvent)
    {
-      mElement.setProperty("port", 0, mPortEditor.getPort());
+      mElement.setProperty("port", 0, mPortEditor.getPort(), mContext);
    }
 
    void mBaudEditor_actionPerformed(ActionEvent actionEvent)
    {
-      mElement.setProperty("baud", 0, mBaudEditor.getSelectedItem());
+      mElement.setProperty("baud", 0, mBaudEditor.getSelectedItem(), mContext);
    }
 }
 
