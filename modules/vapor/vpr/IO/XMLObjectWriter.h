@@ -46,6 +46,7 @@
 #include <vector>
 
 #include <vpr/IO/ObjectWriter.h>
+#include <vpr/Util/Assert.h>
 #include <cppdom/cppdom.h>
 #include <string>
 #include <sstream>
@@ -74,7 +75,7 @@ public:
    }
 
    /** Get the data buffer.
-   * Return the data buffer representation of the current object tree 
+   * Return the data buffer representation of the current object tree
    */
    std::vector<vpr::Uint8> getData();
 
@@ -86,7 +87,7 @@ public:
    /** Starts a new section/element of name tagName.
    */
    virtual vpr::ReturnStatus beginTag(std::string tagName);
-   
+
    /** Ends the most recently named tag. */
    virtual vpr::ReturnStatus endTag();
 
@@ -107,7 +108,7 @@ public:
    virtual vpr::ReturnStatus writeBool(bool val);
 
 protected:
-   enum CurTarget 
+   enum CurTarget
    { AttribTarget, /**< We are currently targetting an attribute */
      CdataTarget /**< We are currently targetting cdata */
     };
@@ -119,7 +120,7 @@ protected:
        std::ostringstream oss;
        oss << val;
        if(AttribTarget == mCurTarget)
-       { 
+       {
           if(!mCurAttribData.empty())  // Add spacing
           { mCurAttribData += ' '; }
           mCurAttribData += oss.str();
@@ -128,7 +129,7 @@ protected:
           //          << "new attrib data:" << mCurAttribData << std::endl;
        }
        else
-       { 
+       {
           if(!mCurCData.empty())  // Add spacing
           { mCurCData += ' '; }
           mCurCData += oss.str();
@@ -169,7 +170,7 @@ inline std::vector<vpr::Uint8> XMLObjectWriter::getData()
 inline vpr::ReturnStatus XMLObjectWriter::beginTag(std::string tagName)
 {
    cppdom::NodePtr new_node;
-   
+
    if(mCurNode == NULL)    // First node created, so initialize everything
    {
       cppdom::ContextPtr cxt(new cppdom::Context);
@@ -196,7 +197,7 @@ inline vpr::ReturnStatus XMLObjectWriter::beginTag(std::string tagName)
    return vpr::ReturnStatus::Succeed;
 }
 
-/** Ends the most recently named tag. 
+/** Ends the most recently named tag.
 * Close off the current node and set current to it's parent.
 */
 inline vpr::ReturnStatus XMLObjectWriter::endTag()
@@ -214,7 +215,7 @@ inline vpr::ReturnStatus XMLObjectWriter::endTag()
    cppdom::Node* cur_parent = mCurNode->getParent();     // Get cur node's parent node
    mCurNode = cur_parent;                                // Set to new current node
 
-   // If it had some cdata, then get it to initialize the current cdata 
+   // If it had some cdata, then get it to initialize the current cdata
    // so we can write more data to it
    if(NULL != mCurNode)
    {
@@ -248,7 +249,7 @@ inline vpr::ReturnStatus XMLObjectWriter::endAttribute()
    mCurAttribData.clear();
 
    mCurTarget = CdataTarget;
-   
+
    return vpr::ReturnStatus::Succeed;
 }
 //@}
@@ -290,17 +291,17 @@ inline vpr::ReturnStatus XMLObjectWriter::writeDouble(double val)
 inline vpr::ReturnStatus XMLObjectWriter::writeString(std::string val)
 {
    if(AttribTarget == mCurTarget)
-   { 
-      vprASSERT(mCurAttribData.empty() && "Can't add string to non-empty attribute");    
+   {
+      vprASSERT(mCurAttribData.empty() && "Can't add string to non-empty attribute");
       mCurAttribData = val;
    }
    else
-   { 
+   {
       if(!mCurCData.empty())  // Add spacing
          mCurCData += ' ';
       mCurCData += '"' + val + '"';    // Add string in quotes
    }
-   
+
    return vpr::ReturnStatus::Succeed;
 }
 

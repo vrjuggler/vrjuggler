@@ -43,7 +43,7 @@
 #define _VPR_SERIALIZABLE_OBJ_H
 
 #include <vpr/vprConfig.h>
-#include <vpr/System.h>
+//#include <vpr/System.h>
 
 #include <vector>
 
@@ -62,9 +62,9 @@ public:
    * POST: All object data is written to the writer
    */
    virtual vpr::ReturnStatus writeObject(ObjectWriter* writer) = 0;
-private:      
+private:
 
-   /** @link dependency 
+   /** @link dependency
     * @stereotype use*/
    /*#  ObjectWriter lnkObjectWriter; */
 };
@@ -77,9 +77,9 @@ public:
    * POST: All object data is read from the reader
    */
    virtual vpr::ReturnStatus readObject(ObjectReader* reader) = 0;
-private:      
+private:
 
-   /** @link dependency 
+   /** @link dependency
     * @stereotype use*/
    /*#  ObjectReader lnkObjectReader; */
 };
