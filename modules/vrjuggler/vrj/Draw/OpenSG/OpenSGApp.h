@@ -75,10 +75,12 @@ public:
    struct context_data
    {
       context_data()
-        : mRenderAction(NULL),
-          mContextThreadInitialized(false),
-          mOsgThread(NULL)
-      {;}
+        : mRenderAction(NULL)
+        , mContextThreadInitialized(false)
+        , mOsgThread(NULL)
+      {
+         ;
+      }
 
       osg::RenderAction*         mRenderAction;    /**< The render action for the scene */
       osg::PassiveWindowPtr      mWin;             /**< passive window to render with (the context) */
@@ -93,29 +95,33 @@ public:
 public:
    OpenSGApp(vrj::Kernel* kern)
       : GlApp(kern)
-   {;}
-   
+   {
+      ;
+   }
+
    virtual ~OpenSGApp()
-   {;}
-   
+   {
+      ;
+   }
+
    /**
     * Scene initialization function.
     * User code for initializing the OpenSG scene should be placed here.
     */
    virtual void initScene() = 0;
-   
+
    /**
     * Get the OpenSG Scene root.
     * @return NodePtr to the root of the scene to render.
     */
    virtual osg::NodePtr getScene() = 0;
-   
+
    /**
     * Initializes OpenSG for drawing.
     * If overridden, the overriding method MUST call this method.
     */
    virtual void init();
-   
+
    /**
     * Initializes OpenSG.
     * Make sure to call initScene if you override this function.
@@ -129,7 +135,7 @@ public:
     * method.
     */
    virtual void exit();
-   
+
    /**
     * OpenGL Drawing functions.
     * If user code overrides these functions, the overriding functions MUST
@@ -141,7 +147,7 @@ public:
    virtual void contextPostDraw();
    virtual void draw();
    //@}
-   
+
    /**
     * Called once per frame, per buffer (basically context).
     * This is needed so that we can use subviewports.
@@ -218,7 +224,8 @@ inline void OpenSGApp::contextInit()
       c_data->mContextThreadInitialized = true;
 
       char thread_name_buffer[255];
-      sprintf(thread_name_buffer, "vprThread:%d", vpr::Thread::self()->getTID());
+      sprintf(thread_name_buffer, "vprThread:%d",
+              vpr::Thread::self()->getTID());
       c_data->mOsgThread = osg::ExternalThread::get(thread_name_buffer);
       if(!(c_data->mOsgThread->isInitialized()))
       {
@@ -241,7 +248,7 @@ inline void OpenSGApp::contextInit()
       c_data->mViewport->setCamera(c_data->mCamera);
       c_data->mViewport->setBackground(c_data->mBackground);
    osg::endEditCP  (c_data->mViewport);
-   
+
    // Setup the Window
    osg::beginEditCP(c_data->mWin);
       c_data->mWin->addPort(c_data->mViewport);
@@ -284,7 +291,8 @@ inline void OpenSGApp::draw()
 
    context_data* c_data = &(*mContextData);
 
-   vrj::GlDrawManager* drawMan = dynamic_cast<vrj::GlDrawManager*> ( this->getDrawManager() );
+   vrj::GlDrawManager* drawMan =
+      dynamic_cast<vrj::GlDrawManager*>(this->getDrawManager());
    vprASSERT(drawMan != NULL);
    vrj::GlUserData* userData = drawMan->currentUserData();
 
@@ -296,9 +304,13 @@ inline void OpenSGApp::draw()
    osg::Matrix frustum_matrix, view_xform_mat;
    view_xform_mat.setValue(vj_proj_view_mat);
 
-   osg::MatrixFrustum(frustum_matrix, vrj_frustum[vrj::Frustum::VJ_LEFT], vrj_frustum[vrj::Frustum::VJ_RIGHT],
-                                      vrj_frustum[vrj::Frustum::VJ_BOTTOM], vrj_frustum[vrj::Frustum::VJ_TOP],
-                                      vrj_frustum[vrj::Frustum::VJ_NEAR], vrj_frustum[vrj::Frustum::VJ_FAR]);
+   osg::MatrixFrustum(frustum_matrix,
+                      vrj_frustum[vrj::Frustum::VJ_LEFT],
+                      vrj_frustum[vrj::Frustum::VJ_RIGHT],
+                      vrj_frustum[vrj::Frustum::VJ_BOTTOM],
+                      vrj_frustum[vrj::Frustum::VJ_TOP],
+                      vrj_frustum[vrj::Frustum::VJ_NEAR],
+                      vrj_frustum[vrj::Frustum::VJ_FAR]);
 
    osg::Matrix full_view_matrix = frustum_matrix;
    full_view_matrix.mult(view_xform_mat);   // Compute complete projection matrix
@@ -336,19 +348,20 @@ inline void OpenSGApp::draw()
       c_data->mViewport->setRoot(root_node);
    osg::endEditCP  (c_data->mViewport);
 
-   // --- Trigger the draw --- //  
+   // --- Trigger the draw --- //
 
-   // Push the matrix so that drawing after this is not affected by the scene graph
+   // Push the matrix so that drawing after this is not affected by the scene
+   // graph.
    glMatrixMode(GL_PROJECTION);
    glPushMatrix();
    glMatrixMode(GL_MODELVIEW);
-   glPushMatrix();   
+   glPushMatrix();
       c_data->mWin->render(c_data->mRenderAction);
    glPopMatrix();
    glMatrixMode(GL_PROJECTION);
    glPopMatrix();
    glMatrixMode(GL_MODELVIEW);
-   
+
    FINFO(("Frame done on Window %lx.\n", c_data->mWin.getCPtr() ));
 }
 
