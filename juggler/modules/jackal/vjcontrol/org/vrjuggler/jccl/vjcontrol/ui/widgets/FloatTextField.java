@@ -45,6 +45,9 @@ import java.awt.event.*;
  */
 public class FloatTextField extends JTextField {
 
+    public FloatTextField () {
+        super ();
+    }
     public FloatTextField (int i) {
 	super(i);
     }

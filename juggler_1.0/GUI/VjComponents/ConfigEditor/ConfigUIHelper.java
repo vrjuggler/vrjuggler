@@ -218,8 +218,9 @@ public class ConfigUIHelper
 
 	// initial helpdesc menu stuff...
         JMenuItem newmenu;
-        for (int i = 0; i < config_module.descdb.size(); i++) {
-            ChunkDesc d = (ChunkDesc)config_module.descdb.elementAt(i);
+        int i, n = config_module.descdb.size();
+        for (i = 0; i < n; i++) {
+            ChunkDesc d = config_module.descdb.get(i);
             newmenu = menubar.addMenuItem ("Help/Chunk-Specific Help/" + d.getName());
             newmenu.addActionListener(this);
         }
@@ -328,7 +329,7 @@ public class ConfigUIHelper
             return;
         GenericEditorFrame f = (GenericEditorFrame)getChildFrameMatching("VjComponents.ConfigEditor.chunkdesc.ChunkDescPanel", db, desc);
         if (f == null) {
-            ChunkDescPanel p = new ChunkDescPanel (desc, db, editable);
+            ChunkDescPanel p = new ChunkDescPanel (desc, db, this, editable);
             if (p != null) {
                 f = new GenericEditorFrame (this, p);
                 addChildFrame (f);

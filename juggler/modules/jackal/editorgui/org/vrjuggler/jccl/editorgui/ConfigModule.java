@@ -37,7 +37,7 @@ package VjComponents.ConfigEditor;
 
 import java.lang.String;
 import java.lang.StringBuffer;
-import java.util.Vector;
+import java.util.*;
 import java.io.*;
 import javax.swing.*;
 
@@ -144,14 +144,14 @@ public class ConfigModule extends DefaultCoreModule {
      *  whew!
      */ 
     public boolean configure (ConfigChunk ch) {
-        Vector descdbnames = new Vector();
-        Vector chunkdbnames = new Vector();
-        Vector auto_descdbnames = new Vector();
-        Vector auto_chunkdbnames = new Vector();
+        List descdbnames = new ArrayList();
+        List chunkdbnames = new ArrayList();
+        List auto_descdbnames = new ArrayList();
+        List auto_chunkdbnames = new ArrayList();
         boolean autoload = true;
         String lastdname = "";
         String lastfname = "";
-        int i, j;
+        int i, j, m, n;
         ConfigChunk chunk;
         Property p;
         String s;
@@ -163,38 +163,41 @@ public class ConfigModule extends DefaultCoreModule {
 	for (i = 0; i < args.length; i++) {
 	    if (args[i].startsWith ("-d")) {
                 if (args[i].length() == 2)
-                    descdbnames.addElement (args[++i]);
+                    descdbnames.add (args[++i]);
                 else
-                    descdbnames.addElement (args[i].substring(2));
+                    descdbnames.add (args[i].substring(2));
 	    }
             else if (args[i].endsWith(".desc") || args[i].endsWith(".DESC"))
-                descdbnames.addElement (args[i]);
+                descdbnames.add (args[i]);
 	    else if (args[i].startsWith ("-c")) {
                 if (args[i].length() == 2)
-                    chunkdbnames.addElement (args[++i]);
+                    chunkdbnames.add (args[++i]);
                 else
-                    chunkdbnames.addElement (args[i].substring(2));
+                    chunkdbnames.add (args[i].substring(2));
 	    }
             else if (args[i].endsWith(".config") || args[i].endsWith(".CONFIG"))
-                chunkdbnames.addElement (args[i]);
+                chunkdbnames.add (args[i]);
 	    else if (args[i].equalsIgnoreCase ("-noautoload")) {
 		autoload = false;
 	    }
         }
 
         // get autoload info from vjc's basic configchunk
-	Vector v = Core.gui_chunkdb.getOfDescToken ("vjcontrol");
-        for (i = 0; i < v.size(); i++) {
-            chunk = (ConfigChunk)v.elementAt(i);
+	List v = Core.vjcontrol_chunkdb.getOfDescToken ("vjcontrol");
+        n = v.size();
+        for (i = 0; i < n; i++) {
+            chunk = (ConfigChunk)v.get(i);
             p = chunk.getPropertyFromToken ("descfiles");
-            for (j = 0; j < p.getNum(); j++) {
+            m = p.getNum();
+            for (j = 0; j < m; j++) {
                 s = p.getValue(j).getString();
-                auto_descdbnames.addElement (s);
+                auto_descdbnames.add (s);
             }
             p = chunk.getPropertyFromToken ("chunkfiles");
-            for (j = 0; j < p.getNum(); j++) {
+            m = p.getNum();
+            for (j = 0; j < m; j++) {
                 s = p.getValue(j).getString();
-                auto_chunkdbnames.addElement (s);
+                auto_chunkdbnames.add (s);
             }
         }
 
@@ -203,23 +206,27 @@ public class ConfigModule extends DefaultCoreModule {
         // autoload initial files
 
 	if (autoload) {
-	    for (i = 0; i < auto_descdbnames.size(); i++) {
-		lastdname = (String)auto_descdbnames.elementAt(i);
+            n = auto_descdbnames.size();
+	    for (i = 0; i < n; i++) {
+		lastdname = (String)auto_descdbnames.get(i);
 		loadNewDescDBFile (lastdname);
 	    }
 	}
-	for (i = 0; i < descdbnames.size(); i++) {
-	    lastdname = (String)descdbnames.elementAt(i);
+        n = descdbnames.size();
+	for (i = 0; i < n; i++) {
+	    lastdname = (String)descdbnames.get(i);
 	    loadNewDescDBFile (lastdname);
 	}
 	if (autoload) {
-	    for (i = 0; i < auto_chunkdbnames.size(); i++) {
-		lastfname = (String)auto_chunkdbnames.elementAt(i);
+            n = auto_chunkdbnames.size();
+	    for (i = 0; i < n; i++) {
+		lastfname = (String)auto_chunkdbnames.get(i);
 		loadNewChunkDBFile (lastfname);
 	    }
 	}
-	for (i = 0; i < chunkdbnames.size(); i++) {
-	    lastfname = (String)chunkdbnames.elementAt(i);
+        n = chunkdbnames.size();
+	for (i = 0; i < n; i++) {
+	    lastfname = (String)chunkdbnames.get(i);
 	    loadNewChunkDBFile (lastfname);
 	}
 
@@ -247,7 +254,7 @@ public class ConfigModule extends DefaultCoreModule {
      */
     public String addChunkDB (ConfigChunkDB _chunkdb) {
 	_chunkdb.setName (createUniqueChunkDBName (_chunkdb.name));
-	chunkdbs.addElement (_chunkdb);
+	chunkdbs.add (_chunkdb);
 	notifyConfigModuleTargets (ADD_CHUNKDB, _chunkdb, null);
 	return _chunkdb.name;
     }
@@ -259,7 +266,7 @@ public class ConfigModule extends DefaultCoreModule {
         if (db == null)
             return;
 	notifyConfigModuleTargets (REMOVE_CHUNKDB, db, null);
-	chunkdbs.removeElement (db);
+	chunkdbs.remove (db);
     }
 
 
@@ -278,7 +285,7 @@ public class ConfigModule extends DefaultCoreModule {
     public ConfigChunkDB getChunkDB (String name) {
 	ConfigChunkDB db;
 	for (int i = 0; i < chunkdbs.size(); i++) {
-	    db = (ConfigChunkDB)chunkdbs.elementAt(i);
+	    db = (ConfigChunkDB)chunkdbs.get(i);
 	    if (db.getName().equalsIgnoreCase(name))
 		return db;
 	}
@@ -309,11 +316,13 @@ public class ConfigModule extends DefaultCoreModule {
 	/* finds a chunk whose name is a prefix of name */
 	ConfigChunk ch;
 	ConfigChunkDB db;
-	int i, j;
-	for (i = 0; i < chunkdbs.size(); i++) {
-	    db = (ConfigChunkDB)chunkdbs.elementAt(i);
-	    for (j = 0; j < db.size(); j++) {
-		ch = (ConfigChunk)db.elementAt(j);
+	int i, j, n, m;
+        n = chunkdbs.size();
+	for (i = 0; i < n; i++) {
+	    db = (ConfigChunkDB)chunkdbs.get(i);
+            m = db.size();
+	    for (j = 0; j < m; j++) {
+		ch = db.get(j);
 		if (name.startsWith (ch.getName()))
 		    return ch;
 	    }
@@ -403,7 +412,7 @@ public class ConfigModule extends DefaultCoreModule {
         int n = chunkdbs.size();
         String[] names = new String[n];
         for (int i = 0; i < n; i++)
-            names[i] = ((ConfigChunkDB)chunkdbs.elementAt(i)).getName();
+            names[i] = ((ConfigChunkDB)chunkdbs.get(i)).getName();
         return names;
     }
 
@@ -418,7 +427,7 @@ public class ConfigModule extends DefaultCoreModule {
         int n = chunkdbs.size();
         ConfigChunkDB[] dbs = new ConfigChunkDB[n];
         for (int i = 0; i < n; i++)
-            dbs[i] = (ConfigChunkDB)chunkdbs.elementAt(i);
+            dbs[i] = (ConfigChunkDB)chunkdbs.get(i);
         return dbs;
     }
 
@@ -438,7 +447,7 @@ public class ConfigModule extends DefaultCoreModule {
      */
     public String addDescDB (ChunkDescDB _descdb) {
 	_descdb.setName(createUniqueDescDBName (_descdb.name));
-	descdbs.addElement( _descdb);
+	descdbs.add ( _descdb);
 	descdb.addAll (_descdb);
 	notifyConfigModuleTargets (ADD_DESCDB, null, _descdb);
 	return _descdb.name;
@@ -451,7 +460,7 @@ public class ConfigModule extends DefaultCoreModule {
 	if (db == null || db.name.equalsIgnoreCase ("No Selection") || db == descdb)
 	    return;
 	notifyConfigModuleTargets (REMOVE_DESCDB, null, db);
-	descdbs.removeElement (db);
+	descdbs.remove (db);
     }
 
 
@@ -485,7 +494,7 @@ public class ConfigModule extends DefaultCoreModule {
     public ChunkDescDB getChunkDescDB (String name) {
 	ChunkDescDB db;
 	for (int i = 0; i < descdbs.size(); i++) {
-	    db = (ChunkDescDB)descdbs.elementAt(i);
+	    db = (ChunkDescDB)descdbs.get(i);
 	    if (db.name.equalsIgnoreCase(name))
 		return db;
 	}
@@ -559,7 +568,7 @@ public class ConfigModule extends DefaultCoreModule {
         int n = descdb.size();
         String[] names = new String[n];
         for (int i = 0; i < n; i++)
-            names[i] = ((ChunkDesc)descdb.elementAt(i)).getName();
+            names[i] = descdb.get(i).getName();
         return names;
     }
 
@@ -569,7 +578,7 @@ public class ConfigModule extends DefaultCoreModule {
         int n = descdbs.size();
         String[] names = new String[n];
         for (int i = 0; i < n; i++)
-            names[i] = ((ChunkDescDB)descdbs.elementAt(i)).getName();
+            names[i] = ((ChunkDescDB)descdbs.get(i)).getName();
         return names;
     }
 
@@ -584,7 +593,7 @@ public class ConfigModule extends DefaultCoreModule {
         int n = descdbs.size();
         ChunkDescDB[] dbs = new ChunkDescDB[n];
         for (int i = 0; i < n; i++)
-            dbs[i] = (ChunkDescDB)descdbs.elementAt(i);
+            dbs[i] = (ChunkDescDB)descdbs.get(i);
         return dbs;
     }
 
@@ -603,13 +612,13 @@ public class ConfigModule extends DefaultCoreModule {
 
     public synchronized void addConfigModuleListener (ConfigModuleListener l) {
 	synchronized (configmodule_targets) {
-	    configmodule_targets.addElement (l);
+	    configmodule_targets.add (l);
 	}
     }
 
     public void removeConfigModuleListener (ConfigModuleListener l) {
 	synchronized (configmodule_targets) {
-	    configmodule_targets.removeElement (l);
+	    configmodule_targets.remove (l);
 	}
     }
 
@@ -662,9 +671,9 @@ public class ConfigModule extends DefaultCoreModule {
 	    chunkdb.setName(f.getName());
 	    chunkdb.setFile(f);
 	    chunkdb.read(st);
-	    Vector v = chunkdb.getOfDescToken("vjIncludeFile");
+	    List v = chunkdb.getOfDescToken("vjIncludeFile");
 	    for (int i = 0; i < v.size(); i++)
-		retval = retval && loadChunkDBFileInto(chunkdb, ((ConfigChunk)v.elementAt(i)).getName());
+		retval = retval && loadChunkDBFileInto(chunkdb, ((ConfigChunk)v.get(i)).getName());
             chunkdb.need_to_save = true;
 	    return retval;
 	}
@@ -691,20 +700,18 @@ public class ConfigModule extends DefaultCoreModule {
 
 	Core.consoleInfoMessage (component_name, "Loading ChunkDB: " + f);
 	try {
-	    FileReader r = new FileReader (f);
-	    ConfigStreamTokenizer st = new ConfigStreamTokenizer(r);
 	    ConfigChunkDB chunkdb = new ConfigChunkDB();
 	    chunkdb.setName(f.getName());
 	    chunkdb.setFile(f);
-	    chunkdb.read(st);
+            ConfigIO.readConfigChunkDB (f, chunkdb, ConfigIO.GUESS);
             addChunkDB (chunkdb);
 
             chunkdb.need_to_save = false;
 	    
 	    // load included files...
-	    Vector v = chunkdb.getOfDescToken("vjIncludeFile");
+	    List v = chunkdb.getOfDescToken("vjIncludeFile");
 	    for (int i = 0; i < v.size(); i++)
-		loadNewChunkDBFile(((ConfigChunk)v.elementAt(i)).getName());
+		loadNewChunkDBFile(((ConfigChunk)v.get(i)).getName());
 
 	    return chunkdb.name;
 	}
@@ -722,7 +729,7 @@ public class ConfigModule extends DefaultCoreModule {
 
 	try {
 	    DataOutputStream out = new DataOutputStream(new FileOutputStream(f));
-	    out.writeBytes(db.fileRep());
+            ConfigIO.writeConfigChunkDB (out, db, ConfigIO.DEFAULT);
 	    Core.consoleInfoMessage (component_name, "Saved ChunkDB file: " + f);
             db.need_to_save = false;
 	    /* do some fixing up if the name changed */
@@ -755,12 +762,10 @@ public class ConfigModule extends DefaultCoreModule {
 	Core.consoleInfoMessage (component_name, 
 				 "Loading Descriptions file: " + f);
 	try {
-	    ConfigStreamTokenizer st = 
-                new ConfigStreamTokenizer(new FileReader(f));
 	    ChunkDescDB descdb = new ChunkDescDB();
 	    descdb.setName(f.getName());
 	    descdb.setFile (f);
-	    descdb.read(st);
+            ConfigIO.readChunkDescDB (f, descdb, ConfigIO.GUESS);
             descdb.need_to_save = false;
             addDescDB (descdb);
 	    return descdb.name;
@@ -779,13 +784,17 @@ public class ConfigModule extends DefaultCoreModule {
 	try {
 	    DataOutputStream out = 
 		new DataOutputStream(new FileOutputStream(f));
-	    out.writeBytes(db.fileRep());
-            db.need_to_save = false;
-	    Core.consoleInfoMessage (component_name, 
-				     "Saved ChunkDesc File: " + f);
-	    /* do some fixing up if the name changed */
-	    db.setFile (f);
-            renameDescDB (db, f.getName());
+            if (ConfigIO.writeChunkDescDB (out, db, ConfigIO.DEFAULT)) {
+                db.need_to_save = false;
+                Core.consoleInfoMessage (component_name, 
+                                         "Saved ChunkDesc File: " + f);
+                /* do some fixing up if the name changed */
+                db.setFile (f);
+                renameDescDB (db, f.getName());
+            }
+            else {
+                Core.consoleErrorMessage (component_name, "Save failed: " +f);
+            }
             return db.name;
 	}
 	catch (IOException e) {

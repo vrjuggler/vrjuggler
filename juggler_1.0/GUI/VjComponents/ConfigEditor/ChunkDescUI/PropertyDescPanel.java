@@ -52,7 +52,7 @@ public class PropertyDescPanel extends JPanel
     implements ItemListener, MouseListener, ActionListener {
     
     Vector                newenum;
-    Vector                newvalues;
+    Vector                newvalues; // list of string
     ChunkDescPanel        parent;
     PropertyDesc          desc;
     JTextField             namefield;
@@ -65,7 +65,7 @@ public class PropertyDescPanel extends JPanel
     JButton                valuelabelsbutton;
     GridBagLayout         gblayout;
     DescEnumFrame         enumsframe;
-    DescEnumFrame         valuesframe;
+    ValueLabelFrame         valuesframe;
     boolean               selected;
   
     static AbstractBorder select_border=null;
@@ -85,8 +85,8 @@ public class PropertyDescPanel extends JPanel
 	    pd.num = -1;
 	else
 	    pd.num = Integer.parseInt(numfield.getText());
-	pd.enums = newenum;
-	pd.valuelabels = newvalues;
+	pd.setEnumerations (newenum);
+	pd.setValueLabels (newvalues);
 
 	if (pd.name == null || pd.name.equals(""))
 	    pd.name = pd.token;
@@ -116,10 +116,14 @@ public class PropertyDescPanel extends JPanel
 
 	int i;
 	init (d, p, editable);
-	for (i = 0; i < d.enums.size(); i++)
-	    newenum.addElement(new DescEnum((DescEnum)d.enums.elementAt(i)));
-	for (i = 0; i < d.valuelabels.size(); i++) 
-	    newvalues.addElement(new DescEnum((DescEnum)d.valuelabels.elementAt(i)));
+        // for safety's sake we copy all the descenums, just so that we
+        // don't accidentally modify the old PropertyDesc.
+        DescEnum[] e = d.getEnumerations();
+	for (i = 0; i < e.length; i++)
+	    newenum.add(new DescEnum(e[i]));
+        String[] s = d.getValueLabels();
+	for (i = 0; i < s.length; i++) 
+	    newvalues.add(s[i]);
     }
 
 
@@ -285,16 +289,14 @@ public class PropertyDescPanel extends JPanel
 	if (e.getSource() == valuelabelsbutton) {
 	    if ((valuesframe == null) || valuesframe.closed) {
 		if (varbox.isSelected()) {
-		    valuesframe = new DescEnumFrame (this, newvalues,
+		    valuesframe = new ValueLabelFrame (this, newvalues,
 						     namefield.getText(),
-						     new ValType ("string"),
 						     true, 1
 						     );
 		}
 		else {
-		    valuesframe = new DescEnumFrame (this, newvalues,
+		    valuesframe = new ValueLabelFrame (this, newvalues,
 						     namefield.getText(),
-						     new ValType ("string"),
 						     false, Integer.parseInt(numfield.getText())
 						     );
 		}

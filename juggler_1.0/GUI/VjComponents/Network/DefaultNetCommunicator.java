@@ -34,8 +34,8 @@
 package VjComponents.Network;
 
 import java.io.IOException;
+import java.io.InputStream;
 
-import VjConfig.ConfigStreamTokenizer;
 import VjComponents.Network.NetworkModule;
 import VjControl.DefaultVjComponent;
 
@@ -44,7 +44,7 @@ import VjControl.DefaultVjComponent;
  *  Communications modules can be added to NetworkModule by creating
  *  new objects which implement the NetCommunicator interface.
  */
-public class DefaultNetCommunicator 
+public abstract class DefaultNetCommunicator 
     extends DefaultVjComponent
     implements NetCommunicator {
 
@@ -96,9 +96,11 @@ public class DefaultNetCommunicator
      *  readStream (and anything called by it) can safely throw
      *  IOExceptions, and in case of EOF etc. this is encouraged.
      */
-    public boolean readStream (ConfigStreamTokenizer instream, String id)
+    public boolean readStream (InputStream instream, String id)
         throws IOException {
         return false;
     }
 
+
+    public abstract boolean requestUpdate ();
 }

@@ -76,7 +76,7 @@ public class ChunkOrgTree {
 
     public ChunkOrgTree () {
 	root = new OrgTreeElem ("Root");
-	root.children.addElement (new OrgTreeElem ("*"));
+	root.children.add (new OrgTreeElem ("*"));
 	listeners = new Vector();
 	name = "orgtree.org";
 	file = new File("orgtree.org");

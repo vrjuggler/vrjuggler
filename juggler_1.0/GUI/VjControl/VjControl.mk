@@ -31,8 +31,8 @@
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # -----------------------------------------------------------------------------
-# This include file <VjControl.mk> defines the list of .java files that are built
-# into Java bytecode with javac.
+# This include file <VjControl.mk> defines the list of .java files that 
+# are built into Java bytecode with javac.
 # -----------------------------------------------------------------------------
 # Variables defined here are:
 #
@@ -40,18 +40,20 @@
 # VJCONTROL_OBJS    - The list of .class files that will be created.
 # -----------------------------------------------------------------------------
 
-VJCONTROL_SOURCES = VjControl/ComponentFactory.java  		\
-                    VjControl/ComponentFactoryEvent.java 	\
-                    VjControl/ComponentFactoryListener.java	\
-                    VjControl/Core.java				\
-                    VjControl/CoreModule.java			\
-                    VjControl/DefaultCoreModule.java		\
-                    VjControl/DefaultVjComponent.java		\
-                    VjControl/FileControl.java			\
-                    VjControl/LogMessageEvent.java		\
-                    VjControl/LogMessageListener.java		\
-                    VjControl/SuffixFilter.java			\
-                    VjControl/VjClassLoader.java		\
-                    VjControl/VjComponent.java	
+VJCONTROL_SOURCES = \
+        VjControl/ComponentFactory.java         \
+        VjControl/ComponentFactoryEvent.java    \
+        VjControl/ComponentFactoryListener.java \
+        VjControl/Core.java                     \
+        VjControl/CoreModule.java               \
+        VjControl/DefaultCoreModule.java        \
+        VjControl/DefaultVjComponent.java       \
+        VjControl/FileControl.java              \
+        VjControl/LogMessageEvent.java          \
+        VjControl/LogMessageListener.java       \
+        VjControl/SuffixFilter.java             \
+        VjControl/VjClassLoader.java            \
+        VjControl/VjComponent.java              \
+        VjControl/UserProfile.java
 
 VJCONTROL_OBJS = $(VJCONTROL_SOURCES:.java=.class)

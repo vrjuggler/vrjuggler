@@ -67,39 +67,6 @@ public class DescEnumElemPanel extends JPanel implements MouseListener {
     boolean selected;
 
 
-    /* I'm going to let the parent frame deal with building the actual desc
-     * enum & catch any possible numberformat exceptions.  we'll just return
-     * bits and pieces.
-     */
-    public String getName() {
-	// order is important cuz bools use namef for label & namechoice 
-	// for value
-	if (namef != null)
-	    return namef.getText();
-	else
-	    return (String)(namechoice.getSelectedItem());
-    }
-
-
-
-    public String getVal () {
-	if (namechoice != null)
-	    return (String)namechoice.getSelectedItem();
-	else if (valf != null)
-	    return valf.getText();
-	else
-	    return namef.getText();
-    }
-    
-
-    private void addLabel (String s) {
-	/* just a convenience used below */
-	JLabel l = new JLabel (s);
-	l.addMouseListener(this);
-	add (l);
-    }
-
-
     public DescEnumElemPanel (ValType t) {
 	super();
 	init (t);
@@ -115,23 +82,13 @@ public class DescEnumElemPanel extends JPanel implements MouseListener {
 	    namef.setText (e.str);
 	if (namechoice != null) {
 	    if (t.equals(ValType.t_chunk) || t.equals (ValType.t_embeddedchunk)) {
-		String s = null;
-                ConfigModule config_module = (ConfigModule)Core.getModule ("Config Module");
-                if (config_module == null)
-                    Core.consoleErrorMessage ("UI", "DescEnumElemPanel expected Config Module to exist.");
-                s = Core.descdb.getNameFromToken (e.str);
-// 		for (int j = 0; j < Core.descdbs.size(); j++) {
-// 		    s = ((ChunkDescDB)Core.descdbs.elementAt(j)).getNameFromToken (e.str);
-// 		    if (s != null)
-// 			break;
-// 		}
+                String s = ChunkFactory.getNameFromToken (e.str);
 		if (s == null) 
 		    s = "";
-		//System.out.println ("setting active to: " + s);
 		namechoice.setSelectedItem (s);
 	    }
 	    else if (t.equals(ValType.t_bool)) 
-		namechoice.setSelectedItem (e.val.getBool()?"True":"False");
+		namechoice.setSelectedItem (e.val.getBoolean()?"True":"False");
 	    else
 		namechoice.setSelectedItem(e.str);
 	}
@@ -163,19 +120,15 @@ public class DescEnumElemPanel extends JPanel implements MouseListener {
 	valf = null;
 	namef = null;
 
-        ConfigModule config_module = (ConfigModule)Core.getModule ("Config Module");
-        if (config_module == null)
-            Core.consoleErrorMessage ("UI", "DescEnumElemPanel expected Config Module to exist.");
-
 	/* next bit is specific on valtype of the propertydesc */
 	if (t.equals(ValType.t_chunk)) {
 	    addLabel ("Accept chunks of type: ");
-	    namechoice = new JComboBox (config_module.getDescNames());
+	    namechoice = new JComboBox (ChunkFactory.getDescNames());
             add (namechoice);
 	}
 	else if (t.equals(ValType.t_embeddedchunk)) {
 	    addLabel ("Embedded chunk type: ");
-	    namechoice = new JComboBox (config_module.getDescNames());
+	    namechoice = new JComboBox (ChunkFactory.getDescNames());
 	    add (namechoice);
 	}
 	else if (t.equals(ValType.t_bool)) {
@@ -210,17 +163,53 @@ public class DescEnumElemPanel extends JPanel implements MouseListener {
     }
 
 
-    public void setSelected(boolean v) {
-	selected = v;
-	if (selected)
-	    super.setBorder(select_border);
+    /* I'm going to let the parent frame deal with building the actual desc
+     * enum & catch any possible numberformat exceptions.  we'll just return
+     * bits and pieces.
+     */
+    public String getName() {
+	// order is important cuz bools use namef for label & namechoice 
+	// for value
+	if (namef != null)
+	    return namef.getText();
 	else
-	    super.setBorder(unselect_border);
-	repaint();
+	    return (String)(namechoice.getSelectedItem());
     }
 
-    public void toggleSelected() {
-	setSelected (!selected);
+
+
+    public String getVal () {
+	if (namechoice != null)
+	    return (String)namechoice.getSelectedItem();
+	else if (valf != null)
+	    return valf.getText();
+	else
+	    return namef.getText();
+    }
+    
+
+    private void addLabel (String s) {
+	/* just a convenience used below */
+	JLabel l = new JLabel (s);
+	l.addMouseListener(this);
+	add (l);
+    }
+
+
+
+//      private void setSelected(boolean v) {
+//  	selected = v;
+//  	if (selected)
+//  	    super.setBorder(select_border);
+//  	else
+//  	    super.setBorder(unselect_border);
+//  	repaint();
+//      }
+
+    private void toggleSelected() {
+	selected = !selected;
+        super.setBorder(selected?select_border:unselect_border);
+        repaint();
     }
 
     public boolean getSelected() {

@@ -36,7 +36,7 @@ package VjComponents.UI;
 import java.io.*;
 import java.awt.event.*;
 import javax.swing.JMenuItem;
-import java.util.Vector;
+import java.util.*;
 
 import VjComponents.UI.*;
 import VjComponents.UI.Widgets.EasyMenuBar;
@@ -184,18 +184,18 @@ public class VjcPrefsModule
     public void actionPerformed (ActionEvent e) {
         Object o = e.getSource();
         if (o == editgprefs_mi) {
- 	    Vector v = Core.gui_chunkdb.getOfDescToken ("vjcontrol");
+ 	    List v = Core.vjcontrol_chunkdb.getOfDescToken ("vjcontrol");
  	    if (v.size() >= 1) {
-                ConfigChunk chunk = (ConfigChunk)v.elementAt(0);
-                confighelper_module.openChunkFrame (Core.gui_chunkdb, chunk);
+                ConfigChunk chunk = (ConfigChunk)v.get(0);
+                confighelper_module.openChunkFrame (Core.vjcontrol_chunkdb, chunk);
             }
         }
         else if (o == saveprefs_mi) {
             try {
-                DataOutputStream out = new DataOutputStream(new FileOutputStream(Core.gui_chunkdb.file));
-                out.writeBytes(Core.gui_chunkdb.fileRep());
-                Core.consoleInfoMessage (component_name, "Saved VjControl preferences: " + Core.gui_chunkdb.file);
-                Core.gui_chunkdb.need_to_save = false;
+                DataOutputStream out = new DataOutputStream(new FileOutputStream(Core.vjcontrol_chunkdb.file));
+                out.writeBytes(Core.vjcontrol_chunkdb.fileRep());
+                Core.consoleInfoMessage (component_name, "Saved VjControl preferences: " + Core.vjcontrol_chunkdb.file);
+                Core.vjcontrol_chunkdb.need_to_save = false;
                 /* do some fixing up if the name changed */
             }
             catch (IOException x) {

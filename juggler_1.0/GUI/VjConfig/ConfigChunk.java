@@ -34,7 +34,8 @@
 
 package VjConfig;
 
-import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 import java.io.DataInputStream;
 import java.io.IOException;
 import VjConfig.ConfigStreamTokenizer;
@@ -42,49 +43,86 @@ import VjConfig.ChunkDesc;
 
 
 
+/** A ConfigChunk is a logical collection of configuration information.
+ *  A vjConfigChunk stores a number of vjPropertys that describe
+ *  the configuration of a particular component of the system.
+ *  It has an associated vjChunkDesc which describes its type
+ *  and the vjPropertys that belong to it.
+ *
+ *  @see ChunkDesc
+ *  @author Christopher Just
+ *  @version $Revision$
+ */
 public class ConfigChunk {
 
-    public Vector    props;
-    public String    name;
-    public ChunkDesc desc;
+    protected ArrayList props;
+    protected String    name;
+    protected ChunkDesc desc;
 
     public final static String embedded_separator = "->";
 
 
-    public ConfigChunk (ConfigChunk c) {
-	desc = c.desc;
-	name = c.name;
-	props = new Vector();
-	for (int i = 0; i < c.props.size(); i++)
-	    props.addElement (new Property ((Property)c.props.elementAt(i)));
-        //validateEmbeddedChunkNames(); -- shoulda already been done to c.
+    public ConfigChunk (ConfigChunk ch) {
+        init (null, ch);
     }
-
-
-
     public ConfigChunk (ChunkDesc d) {
-	desc = d;
-	name = "";
-	props = new Vector();
-	/* we start at one here cuz we don't include name, which is always
-	 * the first element in a propertydesc
-	 */
-	for (int i = 1; i < d.props.size(); i++)
-	    props.addElement (new Property((PropertyDesc)d.props.elementAt(i)));
-        validateEmbeddedChunkNames();
+        init (d, d.getDefaultChunk());
+    }
+    public ConfigChunk (ChunkDesc d, boolean use_defaults) {
+        init (d, use_defaults?d.getDefaultChunk():null);
     }
 
-
-
-    public ConfigChunk (ChunkDesc d, String n) {
-	desc = d;
-	name = n;
-	props = new Vector();
-	for (int i = 1; i < d.props.size(); i++)
-	    props.addElement (new Property((PropertyDesc)d.props.elementAt(i)));
-        validateEmbeddedChunkNames();
+    /** Initializes a new ConfigChunk - utility for Constructor methods.
+     *  If ch is non-null, self's value is copied from ch.  Otherwise it's
+     *  built up from the ChunkDesc d.
+     *  At least one of the arguments must be non-null.
+     */
+    private void init (ChunkDesc d, ConfigChunk ch) {
+        props = new ArrayList();
+        int i, n;
+        if (ch != null) {
+            desc = ch.desc;
+            name = ch.name;
+            n = ch.props.size();
+            for (i = 0; i < n; i++)
+                props.add (new Property ((Property)ch.props.get(i)));
+            //validateEmbeddedChunkNames(); -- shoulda already been done to c.
+        }
+        else {
+            desc = d;
+            name = "";
+            /* we start at one here cuz we don't include name, which is always
+             * the first element in a propertydesc
+             */
+            n = d.propertyDescsSize();
+            for (i = 1; i < n; i++)
+                props.add (new Property(d.getPropertyDesc(i)));
+            validateEmbeddedChunkNames();
+        }
     }
 
+    /** Applies a new ChunkDesc to self, attempting to preserve its values.
+     *  THIS IS VERY DANGEROUS.  It is designed for, and should only be used
+     *  by, the ChunkDesc editor panel to update a defaults chunk.
+     */
+    public void applyNewDesc (ChunkDesc d) {
+        PropertyDesc pd;
+        Property p;
+        desc = d;
+        ArrayList newprops = new ArrayList();
+        int i, n = desc.propertyDescsSize();
+        for (i = 1; i <n; i++) {
+            pd = desc.getPropertyDesc(i);
+            p = getPropertyFromToken (pd.getToken());
+            if (p != null) {
+                p.applyNewDesc (pd);
+                newprops.add(p);
+            }
+            else
+                newprops.add (new Property(pd));
+        }
+        props = newprops;
+    }
 
 
     public final String getName() {
@@ -97,6 +135,9 @@ public class ConfigChunk {
         //validateEmbeddedChunkNames();
     }
 
+    public final void setFullName (String s) {
+        name = s;
+    }
 
     //-------- Stuff for dealing with embedded chunk names ---------------
 
@@ -119,7 +160,7 @@ public class ConfigChunk {
         int i, k;
         ConfigChunk ch;
         for (i = 0; i < props.size(); i++) {
-            p = (Property)props.elementAt(i);
+            p = (Property)props.get(i);
             if (p.valtype.equals(ValType.t_embeddedchunk)) {
                 for (k = 0; k < p.getNum(); k++) {
                     ch = p.getValue(k).getEmbeddedChunk();
@@ -185,19 +226,23 @@ public class ConfigChunk {
             return _name.substring (0, i+embedded_separator.length()) + _last;
     }
 
+
     public final void setLastNameComponent (String last) {
         name = ConfigChunk.setLastNameComponent (name, last);
         validateEmbeddedChunkNames();
     }
+
 
     public static final String getFirstNameComponent (String _name) {
         int i = _name.indexOf (embedded_separator);
         return (i < 0)?"":_name.substring(0, i);
     }
 
+
     public final String getFirstNameComponent() {
         return ConfigChunk.getFirstNameComponent (name);
     }
+
 
     /* Returns everything after the first divider in a name.
      * If there is no separator, returns name.
@@ -207,33 +252,45 @@ public class ConfigChunk {
         return (i < 0)?_name:_name.substring(i+embedded_separator.length());
     }
 
+
     public final String getNameRemainder() {
         return ConfigChunk.getNameRemainder (name);
     }
+
 
     public final static boolean hasSeparator (String _name) {
         return (_name.indexOf(embedded_separator) >= 0);
     }
 
-    public final String getDescName() {
-	return desc.name;
+
+    public final ChunkDesc getDesc() {
+        return desc;
     }
 
+    public final String getDescName() {
+	return desc.getName();
+    }
+
+
     public final String getDescToken() {
-	return desc.token;
+	return desc.getToken();
+    }
+
+    public final String getDescHelp() {
+        return desc.getHelp();
     }
 
 
     /** This is helpful for the GUI. */
-    public Vector getEmbeddedChunks () {
-        Vector v = new Vector();
+    public List getEmbeddedChunks () {
+        ArrayList v = new ArrayList();
         Property p;
         int i, j;
         for (i = 0; i < props.size(); i++) {
-            p = (Property)props.elementAt(i);
+            p = (Property)props.get(i);
             if (p.valtype.equals (ValType.t_embeddedchunk)) {
                 for (j = 0; j < p.getNum(); j++) {
-                    v.addElement (p.getValue(j).getEmbeddedChunk());
+                    v.add (p.getValue(j).getEmbeddedChunk());
                 }
             }
         }
@@ -252,7 +309,7 @@ public class ConfigChunk {
 
 	/* This next part is O(n^2) <sigh> */
 	for (int i = 0; i < props.size(); i++) {
-	    p1 = (Property) props.elementAt(i);
+	    p1 = (Property) props.get(i);
 	    p2 = c.getProperty(p1.token);
 	    if (!p1.equals(p2))
 		return false;
@@ -261,12 +318,21 @@ public class ConfigChunk {
     }
 
 
+    public int getPropertiesSize() {
+        return props.size();
+    }
+
+
+    public Property getProperty (int i) {
+        return (Property)props.get(i);
+    }
+
 
     public Property getProperty(String n) {
 	Property p;
 	for (int i = 0; i < props.size(); i++) {
-	    p = (Property)props.elementAt(i);
-	    if (p.name.equalsIgnoreCase(n))
+	    p = (Property)props.get(i);
+	    if (p.getName().equalsIgnoreCase(n))
 		return p;
 	}
 	return null;
@@ -274,20 +340,40 @@ public class ConfigChunk {
 
 
 
-    public void setPropertyFromToken (String tok, VarValue val, int i) {
+    public boolean setPropertyFromToken (String tok, VarValue val, int i) {
 	// sets the ith value in property tok to val
 	Property p = getPropertyFromToken (tok);
-	if (p != null)
+	if (p != null) {
 	    p.setValue (val, i);
+            return true;
+        }
+        else {
+            return false;
+        }
     }
 
 
+    public boolean setProperty (Property p) {
+        // replaces a property with p's token w/ p itself.
+        int i, n = props.size();
+        Property p2;
+        for (i = 0; i < n; i++) {
+            p2 = (Property)props.get(i);
+            if (p2.token.equalsIgnoreCase (p.token)) {
+                props.set (i, p);
+                return true;
+            }
+        }
+        return false;
+    }
 
-    public Property getPropertyFromToken(String n) {
+
+    public Property getPropertyFromToken(String _token) {
 	Property p;
-	for (int i = 0; i < props.size(); i++) {
-	    p = (Property)props.elementAt(i);
-	    if (p.desc.token.equalsIgnoreCase(n))
+        int i, n = props.size();
+	for (i = 0; i < n; i++) {
+	    p = (Property)props.get(i);
+	    if (p.desc.token.equalsIgnoreCase(_token))
 		return p;
 	}
 	return null;
@@ -304,27 +390,27 @@ public class ConfigChunk {
 
 
     /** Returns a vector of ConfigChunk names this chunk depends on */
-    public Vector getDependencyNames() {
+    public List getDependencyNames() {
 	int j, k;
 	ConfigChunk ch2;
 	Property p;
 	String s;
 	VarValue val;
-        Vector results = new Vector();
+        ArrayList results = new ArrayList();
 
 	for (j = 0; j < props.size(); j++) {
-	    p = (Property)props.elementAt(j);
+	    p = (Property)props.get(j);
 	    if (p.valtype.equals (ValType.t_chunk)) {
 		for (k = 0; k < p.vals.size(); k++) {
-		    s = ((VarValue)p.vals.elementAt(k)).getString();
+		    s = ((VarValue)p.vals.get(k)).getString();
                     if (!s.equals(""))
-                        results.addElement (s);
+                        results.add (s);
                 }
 	    }
 	    else if (p.valtype.equals (ValType.t_embeddedchunk)) {
 		for (k = 0; k < p.vals.size(); k++) {
-		    ch2 = ((VarValue)p.vals.elementAt(k)).getEmbeddedChunk();
-                    Vector results2 = ch2.getDependencyNames();
+		    ch2 = ((VarValue)p.vals.get(k)).getEmbeddedChunk();
+                    List results2 = ch2.getDependencyNames();
                     results.addAll (results2);
 		}
 	    }
@@ -390,14 +476,35 @@ public class ConfigChunk {
 	String s = pad + desc.token + "\n";
 	s += pad + "  Name \"" + name + "\"\n";
 	for (int i = 0; i < props.size(); i++)
-	    s += ((Property)props.elementAt(i)).toString(pad + "  ") + "\n";
+	    s += ((Property)props.get(i)).toString(pad + "  ") + "\n";
 	s += pad + "  end\n";
 	return s;
     }
 
 
+    public String xmlRep () {
+        return xmlRep ("");
+    }
+
+    public String xmlRep (String pad) {
+        StringBuffer s = new StringBuffer (256);
+        s.append(pad);
+        s.append('<');
+        s.append(XMLConfigIOHandler.escapeString(desc.token));
+        s.append(" name=\"");
+        s.append(XMLConfigIOHandler.escapeString(name));
+        s.append("\">\n");
+
+        // careful - rem that name isn't a property in this implementation.
+        for (int i = 0; i < props.size(); i++)
+            s.append (((Property)props.get(i)).xmlRep(pad + "  "));
+        s.append(pad);
+        s.append("</");
+        s.append(XMLConfigIOHandler.escapeString(desc.token));
+        s.append(">\n");
+        return s.toString();
+    }
+
+
 }
-
-
-
 

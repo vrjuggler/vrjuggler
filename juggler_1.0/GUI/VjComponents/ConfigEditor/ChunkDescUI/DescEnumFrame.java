@@ -38,31 +38,36 @@ import javax.swing.*;
 import javax.swing.border.*;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.Vector;
+import java.util.*;
 
 import VjControl.Core;
 import VjComponents.ConfigEditor.*;
 import VjConfig.*;
-//import VjGUI.components.coremodules.ConfigModule;
 
-
+/** Frame for editing Enumerations or ValueLabels.
+ *  DescEnumFrame uses the List _data which is passed to it from the parent;
+ *  when the frame's OK button is pressed it modifies the List object.
+ *
+ *  @author Christopher Just
+ *  @version $Revision$
+ */
 public class DescEnumFrame extends JFrame 
     implements ActionListener, 
                WindowListener {
 
-    ValType pdtype; // current type of the associated propertydescpanel
-    JPanel panel;
-    JPanel sppanel;  /* sppanel is the panel inside the scrollpane...*/
-    JButton insertbutton;
-    JButton removebutton;
-    JButton okbutton;
-    JButton cancelbutton;
-    Vector elempanels; // vector of DescEnumElemPanels
-    Vector data;  // vector of DescEnum
+    protected ValType pdtype; // current type of the associated propertydescpanel
+    protected JPanel panel;
+    protected JPanel sppanel;  /* sppanel is the panel inside the scrollpane...*/
+    protected JButton insertbutton;
+    protected JButton removebutton;
+    protected JButton okbutton;
+    protected JButton cancelbutton;
+    protected java.util.List elempanels; // List of DescEnumElemPanels
+    protected java.util.List data;  // List of DescEnum
     public boolean closed;
-    JPanel buttonspanel;
-    boolean varnumbers;
-    int numvals;
+    protected JPanel buttonspanel;
+    protected boolean varnumbers;
+    protected int numvals;
 
 
     /* 
@@ -70,7 +75,7 @@ public class DescEnumFrame extends JFrame
      * ARGS: _numval - # of values to show (only matters if varnumbers false)
      */
     public DescEnumFrame (PropertyDescPanel p,
-			  Vector _data,
+			  java.util.List _data,
 			  String pdn,
 			  ValType pdt,
 			  boolean _varnumbers,
@@ -82,14 +87,12 @@ public class DescEnumFrame extends JFrame
 	pdtype = pdt;
 
 	buttonspanel = new JPanel();
-	//buttonspanel.setLayout (new GridLayout (1, 4));
-	//buttonspanel.setLayout (new BoxLayout (buttonspanel, BoxLayout.X_AXIS));
 
 	data = _data;
 	varnumbers = _varnumbers;
 	numvals = _numval;
 
-	elempanels = new Vector();
+	elempanels = new ArrayList();
 	panel = new JPanel(new BorderLayout (10,2));
 	panel.setBorder (new EmptyBorder (10, 5, 5, 5));
 	getContentPane().add(panel);
@@ -136,7 +139,7 @@ public class DescEnumFrame extends JFrame
 
 
 
-    public void setFrameSize() {
+    private void setFrameSize() {
 	Dimension d = sppanel.getPreferredSize();
 	Dimension d2 = buttonspanel.getPreferredSize();
 	d.width = Math.max (d.width+42, d2.width +20);
@@ -161,22 +164,25 @@ public class DescEnumFrame extends JFrame
 
 
     private int makeItems() {
-	/* fills up the scrollpane with all the items in enums, which is a vector
-	 * of DescEnum
+	/* fills up the scrollpane with all the items in enums, 
+         * which is a list of DescEnum
 	 */
 	int i;
-	int ypos = 0;
+        int n = data.size();
+        if (!varnumbers)
+            n = Math.min(n, numvals);
+	//int ypos = 0;
 	DescEnumElemPanel p;
-	for (i = 0; (i < data.size()) && (varnumbers || (i < numvals)); i++) {
-	    p = new DescEnumElemPanel((DescEnum)data.elementAt(i),
+	for (i = 0; i < n; i++) {
+	    p = new DescEnumElemPanel((DescEnum)data.get(i),
 				      pdtype);
-	    elempanels.addElement(p);
+	    elempanels.add (p);
 	    sppanel.add(p);
 	}
 	if (!varnumbers) {
 	    for (; i < numvals; i++) {
 		p = new DescEnumElemPanel(pdtype);
-		elempanels.addElement(p);
+		elempanels.add (p);
 		sppanel.add(p);
 	    }
 	}
@@ -193,7 +199,7 @@ public class DescEnumFrame extends JFrame
 	String s = null;
 	if (e.getSource() == insertbutton) {
 	    p = new DescEnumElemPanel(pdtype);
-	    elempanels.addElement(p);
+	    elempanels.add (p);
 	    sppanel.add(p);
 
 	    if (elempanels.size() == 1) { // make sure panel wide enough
@@ -204,20 +210,19 @@ public class DescEnumFrame extends JFrame
 		d.width = Math.min (d.width, Core.screenWidth);
 		setSize (d);
 	    }
-	    //setFrameSize();
 	    validate();
 	}
 	else if (e.getSource() == removebutton) {
 	    for (int i = 0; i < elempanels.size(); ) {
-		p = (DescEnumElemPanel)elempanels.elementAt(i);
+		p = (DescEnumElemPanel)elempanels.get(i);
 		if (p.getSelected()) {
 		    sppanel.remove(p);
-		    elempanels.removeElementAt(i);
+		    elempanels.remove(i);
 		}
 		else
 		    i++;
 	    }
-	    // validate & repaint needed to get everything repositioned & redrawn
+	    // validate & repaint both needed
 	    validate();
 	    sppanel.repaint (sppanel.getBounds());
 	}
@@ -226,38 +231,32 @@ public class DescEnumFrame extends JFrame
 	}
 	else if (e.getSource() == okbutton) {
 	    unused = 0;
-	    data.removeAllElements();
+	    data.clear();
 	    VarValue val;
 	    
-	    if (pdtype.equals (ValType.t_embeddedchunk) || pdtype.equals (ValType.t_chunk))
+	    if (pdtype.equals (ValType.t_embeddedchunk) || 
+                pdtype.equals (ValType.t_chunk))
 		val = new VarValue(new ValType(ValType.t_string));
 	    else
 		val = new VarValue (pdtype);
 
 	    for (int i = 0; i < elempanels.size(); i++) {
-		p = (DescEnumElemPanel)elempanels.elementAt(i);
+		p = (DescEnumElemPanel)elempanels.get(i);
 
 		s = p.getName();
 		val.set (p.getVal());
-		//System.out.println ("name is " + s + " and val is " + val.toString());
 
 		if (s == null || s.equals (""))
 		    continue; 
 
-		if (pdtype.equals (ValType.t_chunk) || pdtype.equals (ValType.t_embeddedchunk)) {
-                    ConfigModule config_module = (ConfigModule)Core.getModule ("Config Module");
-                    if (config_module == null)
-                        Core.consoleErrorMessage ("UI", "DescEnumFrame expected Config Module to exist.");
+		if (pdtype.equals (ValType.t_chunk) || 
+                    pdtype.equals (ValType.t_embeddedchunk)) {
                     String s2 = Core.descdb.getTokenFromName(p.getName());
           
-// 		    for (j = 0; j < Core.descdbs.size(); j++) {
-// 			String s2 = ((ChunkDescDB)Core.descdbs.elementAt(j)).getTokenFromName (p.getName());
-			if (s2 != null) {
-			    s = s2;
-			    val.set(s2);
-// 			    break;
-			}
-// 		    }
+                    if (s2 != null) {
+                        s = s2;
+                        val.set(s2);
+                    }
 		}
 
 		if (pdtype.equals (ValType.t_int) || pdtype.equals (ValType.t_float)) {
@@ -268,11 +267,13 @@ public class DescEnumFrame extends JFrame
 			unused = (unused > val.getInt())?(unused):(val.getInt()+1);
 		}
 
-		if (pdtype.equals (ValType.t_string) || pdtype.equals (ValType.t_chunk) || pdtype.equals (ValType.t_embeddedchunk))
+		if (pdtype.equals (ValType.t_string) || 
+                    pdtype.equals (ValType.t_chunk) || 
+                    pdtype.equals (ValType.t_embeddedchunk))
 		    if (p.getVal().equals(""))
 			val.set (s);
 
-		data.addElement (new DescEnum (s, val));
+		data.add (new DescEnum (s, val));
 		
 	    }
 	    closeFrame();

@@ -31,30 +31,58 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 
-/* 
- *
- * Author: Christopher Just
- *
- */
-
 package VjConfig;
 
 import java.util.StringTokenizer;
-import java.util.Vector;
+import java.util.*;
 import VjConfig.ValType;
 import VjConfig.DescEnum;
 import java.io.*;
 
-public class PropertyDesc {
+/** Individual PropertyDesc of a ChunkDesc.
+ *  The PropertyDesc represents a single property, with its own name and type
+ *  and with one or more values.  The PropertyDesc can include help text,
+ *  individual labels for each value of the Property, and an enumeration of
+ *  possible values.
+ *
+ *  Note that PropertyDesc doesn't have any inherent synchronization; anyone
+ *  modifying a PropertyDesc needs to guarantee that no one else is looking
+ *  at it at the same time.
+ *
+ *  @author Christopher Just
+ *  @version $Revision$
+ */
+public class PropertyDesc implements Cloneable {
 
     public String name;
     public String token;
     public String help;
-    public Vector enums;
-    public Vector valuelabels;
     public int num;
     public ValType valtype;
+    private int enumval; // for assigning numeric defaults to enum entries
 
+    // items for assisting in GUI displays of chunks.
+
+    /** User level - 0 for beginner, 1 for expert.  default = 0. */
+    private int user_level;
+
+    /** Contains a fixed set of possible values with string labels. */
+    protected ArrayList enums;
+
+    /** Assigns an individual label to each value of a property. */
+    protected ArrayList valuelabels;
+
+
+    public Object clone () throws CloneNotSupportedException {
+        PropertyDesc p = (PropertyDesc)super.clone();
+        p.valuelabels = (ArrayList)valuelabels.clone(); // safe; it's a list of strings
+        p.enums = new ArrayList();
+        int i, n = enums.size();
+        for (i = 0; i < n; i++) {
+            p.enums.add (((DescEnum)enums.get(i)).clone());
+        }
+        return p;
+    }
 
 
     public PropertyDesc () {
@@ -62,10 +90,12 @@ public class PropertyDesc {
 	name = "";
 	token = "";
 	help = "";
-	enums = new Vector();
-	valuelabels = new Vector();
+	enums = new ArrayList();
+	valuelabels = new ArrayList();
 	num = 1;
 	valtype = new ValType ("int");
+        enumval = 0;
+        user_level = 0;
     }
 
 
@@ -81,6 +111,7 @@ public class PropertyDesc {
 	 */
 
 	try {
+            user_level = 0;
 	    st.nextToken();
 	    token = st.sval;
 	    st.nextToken();
@@ -89,6 +120,10 @@ public class PropertyDesc {
 	    num = Integer.parseInt(st.sval);
 	    st.nextToken();
 	    name = st.sval;
+            enumval = 0;
+
+            enums = new ArrayList();
+            valuelabels = new ArrayList();
 
 	    //System.out.println ("reading property desc: " + name + " " + token);
 
@@ -106,19 +141,17 @@ public class PropertyDesc {
 		if (st.ttype != '{') {
 		    System.err.println ("Error: parsing " + token + " expected '{' after vj_valuelabels" );
 		}
-		valuelabels = parseEnumerations (st, new ValType("string"));
+		parseValueLabels (st);
 	    }
 	    else
-		valuelabels = new Vector();
+		valuelabels = new ArrayList();
 
 	    if ((st.ttype == StreamTokenizer.TT_WORD) 
 		&& st.sval.equalsIgnoreCase ("vj_enumeration"))
 		st.nextToken();
 	    if (st.ttype == '{') {
-		enums = parseEnumerations (st, valtype);
+		parseEnumerations (st, valtype);
 	    }
-	    else
-		enums = new Vector();
 
 	    help = st.sval;
 	    
@@ -135,8 +168,127 @@ public class PropertyDesc {
 
 
 
+    public void setName (String _name) {
+        name = _name;
+    }
+
+    public String getName () {
+        return name;
+    }
+
+    public void setToken (String _token) {
+        token = _token;
+    }
+
+    public String getToken () {
+        return token;
+    }
+
+    public void setHelp (String _help) {
+        help = _help;
+    }
+
+    public String getHelp () {
+        return help;
+    }
+
+    public void setValType (ValType t) {
+        valtype = t;
+    }
+
+    public ValType getValType () {
+        return valtype;
+    }
+
+    public void setNumValues (int n) {
+        num = n;
+    }
+
+    public int getNumValues () {
+        return num;
+    }
+
+    public void setUserLevel (int level) {
+        user_level = level;
+    }
+
+    public int getUserLevel () {
+        return user_level;
+    }
+
+    public void appendValueLabel (String label) {
+        valuelabels.add (label);
+    }
+
+    public int getValueLabelsSize () {
+        return valuelabels.size();
+    }
+
+    public String getValueLabel (int i) {
+        if (i < valuelabels.size())
+            return (String)valuelabels.get(i);
+        else
+            return "";
+    }
+
+    public String[] getValueLabels () {
+        String[] e = new String[valuelabels.size()];
+        return (String[])valuelabels.toArray(e);
+    }
+
+    /* c had better be a collection of String, or things will get
+     * real ugly real fast.
+     */
+    public void setValueLabels (Collection c) {
+        valuelabels.clear();
+        valuelabels.addAll (c);
+    }
+
+    public void appendEnumeration (String label, String value) {
+        DescEnum d;
+        VarValue v;
+        if (value == "") {
+            /* no explicit value */
+            if (valtype.equals (ValType.t_string) || 
+                valtype.equals (ValType.t_chunk) ||
+                valtype.equals (ValType.t_embeddedchunk))
+                //d = new DescEnum (label, label);
+                v = new VarValue(label);
+            else
+                //d = new DescEnum (label, enumval++);
+                v = new VarValue(enumval++);
+        }
+        else {
+            v = new VarValue(valtype);
+            v.set (value);
+            /* explicit value */
+//              VarValue val = new VarValue(valtype);
+//              val.set (value);
+//              d = new DescEnum (label, val);
+        }
+        enums.add (new DescEnum (label, v));
+    }
+
+
+    /* c had better be a collection of DescEnums, or things will get
+     * real ugly real fast.
+     */
+    public void setEnumerations (Collection c) {
+        enums.clear();
+        enums.addAll (c);
+    }
+
+    public DescEnum[] getEnumerations () {
+        DescEnum[] e = new DescEnum[enums.size()];
+        return (DescEnum[])enums.toArray(e);
+    }
+
+    public int getEnumerationsSize() {
+        return enums.size();
+    }
+
     public DescEnum getEnumAtIndex (int ind) {
-	return (DescEnum)enums.elementAt(ind);
+	return (DescEnum)enums.get(ind);
     }
 
 
@@ -165,8 +317,8 @@ public class PropertyDesc {
 	 */
 	for (int i = 0; i <enums.size(); i++) {
 	    try {
-		e1 = (DescEnum)enums.elementAt(i);
-		e2 = (DescEnum)d.enums.elementAt(i);
+		e1 = (DescEnum)enums.get(i);
+		e2 = (DescEnum)d.enums.get(i);
 		if (!e1.equals(e2))
 		    return false;
 	    }
@@ -189,8 +341,7 @@ public class PropertyDesc {
 	    DescEnum e;
 	    s += " vj_valuelabels { ";
 	    for (int i = 0; i < valuelabels.size(); i++) {
-		e = (DescEnum) valuelabels.elementAt(i);
-		s += "\"" + e.str + "\" ";
+		s += "\"" + (String)valuelabels.get(i) + "\" ";
 	    }
 	    s += "}";
 	}
@@ -200,7 +351,7 @@ public class PropertyDesc {
 	    DescEnum e;
 	    s += " vj_enumeration { ";
 	    for (int i = 0; i < enums.size(); i++) {
-		e = (DescEnum) enums.elementAt(i);
+		e = (DescEnum) enums.get(i);
 		if (valtype.equals(ValType.t_string) || 
 		    valtype.equals(ValType.t_chunk) ||
 		    valtype.equals(ValType.t_embeddedchunk))
@@ -216,13 +367,77 @@ public class PropertyDesc {
 
 
 
+    public String xmlRep (String pad) {
+        int i, n;
+        DescEnum e;
+        String newpad = pad + pad;
+        // string buffer is a lot more painful code-wise but noticeably 
+        // faster.
+        StringBuffer retval = new StringBuffer (256);
+        retval.append(pad);
+        retval.append("<PropertyDesc token=\"");
+        retval.append(XMLConfigIOHandler.escapeString(token));
+        retval.append("\" name=\"");
+        retval.append(XMLConfigIOHandler.escapeString(name));
+        if (user_level != 0) {
+            retval.append("\" userlevel=\"expert");
+        }
+        retval.append("\" type=\"");
+        retval.append(valtype.toString());
+        retval.append("\" num=\"");
+        if (num == -1)
+            retval.append ("variable\">\n");
+        else {
+            retval.append (num);
+            retval.append ("\">\n");
+        }
+        if (!help.equals ("")) {
+            retval.append(newpad);
+            retval.append("<help>");
+            retval.append(XMLConfigIOHandler.escapeString(help));
+            retval.append("</help>\n");
+        }
+        n = valuelabels.size();
+        if (n > 0) {
+            for (i = 0; i < n; i++) {
+                retval.append(newpad);
+                retval.append("<label name=\"");
+                retval.append(XMLConfigIOHandler.escapeString((String)valuelabels.get(i)));
+                retval.append("\"/>\n");
+            }
+        }
+        n = enums.size();
+        if (n > 0) {
+            for (i = 0; i < n; i++) {
+                e = (DescEnum)enums.get(i);
+                retval.append(newpad);
+                retval.append("<enumeration name=\"");
+                retval.append(XMLConfigIOHandler.escapeString(e.str));
+		if (valtype.equals(ValType.t_string) || 
+		    valtype.equals(ValType.t_chunk) ||
+		    valtype.equals(ValType.t_embeddedchunk))
+                    retval.append("\"/>\n");
+                else {
+                    retval.append("\" value=\"");
+                    retval.append(XMLConfigIOHandler.escapeString(e.val.toString()));
+                    retval.append("\"/>\n");
+                }
+            }
+        }
+        retval.append(pad);
+        retval.append("</PropertyDesc>\n");
+        return retval.toString();
+    }
+
+
+
     public VarValue getEnumValue(String val) {
 	/* returns the value associated with this enum el */
 	DescEnum t;
  	VarValue v;
 	
 	for (int i = 0; i < enums.size(); i++) {
-	    t = (DescEnum)enums.elementAt(i);
+	    t = (DescEnum)enums.get(i);
 	    if (t.str.equalsIgnoreCase(val)) {
 		v = new VarValue(t.val);
 		return v;
@@ -235,7 +450,6 @@ public class PropertyDesc {
 
 
 
-
     public String getEnumString(VarValue val) {
 	/* does the reverse mapping of getEnumVal - maps a value 
 	 * back to the name of the enum entry 
@@ -243,7 +457,7 @@ public class PropertyDesc {
 	DescEnum t;
 
 	for (int i = 0; i < enums.size(); i++) {
-	    t = (DescEnum)enums.elementAt(i);
+	    t = (DescEnum)enums.get(i);
 	    if (t.val.equals(val)) {
 		return t.str;
 	    }
@@ -253,20 +467,16 @@ public class PropertyDesc {
 
 
 
-
-
-    private Vector parseEnumerations (ConfigStreamTokenizer st,
-				      ValType vt) {
+    private void parseEnumerations (ConfigStreamTokenizer st, ValType vt) {
 	/* Parses a list of enumerations or valuelabels from
 	 * st.  We assume that the opening '{' has already
 	 * been read, and we go until we read and consume the
 	 * closing '}'
 	 */
 	DescEnum d;
+        String name, val;
 
 	try {
-	    Vector v = new Vector();
-
 	    /* we've got an enumeration to parse */
 	    st.nextToken();
 	    int j, enumval = 0;
@@ -278,34 +488,54 @@ public class PropertyDesc {
 		if (st == null) System.err.println ("foo");
 		k++;
 		j = st.sval.indexOf('=');
-		if (j == -1) {
-		    /* no explicit value */
-		    if (vt.equals (ValType.t_string) || vt.equals (ValType.t_chunk)
-			|| vt.equals (ValType.t_embeddedchunk))
-			d = new DescEnum (st.sval, st.sval);
-		    else
-			d = new DescEnum (st.sval, enumval++);
-		    v.addElement (new DescEnum(d));
-		}
-		else {
-		    /* explicit value */
-		    VarValue val = new VarValue(vt);
-		    String n = st.sval.substring(0,j);
-		    val.set (st.sval.substring(j+1));
-		    d = new DescEnum (n, val);
-		    v.addElement (d);
-		}
+                if (j == -1) {
+                    name = st.sval;
+                    val = "";
+                }
+                else {
+                    name = st.sval.substring(0,j);
+                    val = st.sval.substring(j+1);
+                }
+                appendEnumeration (name, val);
 		st.nextToken();
 	    }
 	    st.nextToken();
-	    return v;
 	}
 	catch (IOException e) {
 	    System.err.println ("error in ParseEnumerations");
 	    System.err.println (e);
 	}
+    }
 
-	return new Vector(); // if we had an exception
+
+    private void parseValueLabels (ConfigStreamTokenizer st) {
+	/* Parses a list of valuelabels from
+	 * st.  We assume that the opening '{' has already
+	 * been read, and we go until we read and consume the
+	 * closing '}'
+	 */
+	DescEnum d;
+        ArrayList v = new ArrayList();
+
+	try {
+	    /* we've got an enumeration to parse */
+	    st.nextToken();
+	    int j, enumval = 0;
+	    float enumfloatval = 0.0f;
+	    int k=0;
+	    while (st.ttype != '}') {
+		if (st == null) 
+                    System.err.println ("foo");
+                String n = st.sval;
+                appendValueLabel (n);
+		st.nextToken();
+	    }
+	    st.nextToken();
+	}
+	catch (IOException e) {
+	    System.err.println ("error in ParseValueLabels");
+	    System.err.println (e);
+	}
     }
 
 

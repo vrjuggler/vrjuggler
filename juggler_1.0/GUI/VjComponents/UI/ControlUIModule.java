@@ -40,6 +40,7 @@ import java.net.*;
 import javax.swing.*;
 import javax.swing.event.*;
 import java.util.Vector;
+import java.util.List;
 import java.util.HashMap;
 
 import VjComponents.UI.*;
@@ -224,11 +225,11 @@ public class ControlUIModule
 	// --------------------- FINAL WIN STUFF -----------------
 
 	addWindowListener (this);
-	setSize(750,550);
+	setSize(950,700);
 
 	//show();
 
-	Core.gui_chunkdb.addChunkDBListener (this);
+	Core.vjcontrol_chunkdb.addChunkDBListener (this);
 	Core.addLogMessageListener (this);
 
         icon_factory.registerIcon ("new file", 0,
@@ -299,9 +300,9 @@ public class ControlUIModule
         component_name = ch.getName();
 
         // also, let's set ourselves up with the global prefs.  oh yeah...
-	Vector v = Core.gui_chunkdb.getOfDescToken ("vjcontrol");
+	List v = Core.vjcontrol_chunkdb.getOfDescToken ("vjcontrol");
         if (v.size() > 0) {
-            ConfigChunk chunk = (ConfigChunk)v.elementAt(0);
+            ConfigChunk chunk = (ConfigChunk)v.get(0);
             reconfigure (chunk);
         }
 
@@ -327,7 +328,7 @@ public class ControlUIModule
             else if (Core.component_factory.classSupportsInterface (classname, "VjComponents.UI.PlugPanel")) {
                 PlugPanel pp = (PlugPanel) Core.component_factory.createComponent(classname);
                 if (pp.configure(ch)) {
-                    child_panels.addElement (pp);
+                    child_panels.add (pp);
                     if (panel_container != null)
                         panel_container.insertPanel(pp);
                     Core.registerComponent (pp);
@@ -346,7 +347,7 @@ public class ControlUIModule
                     panel_container = pc;
                     int n = child_panels.size();
                     for (int i = 0; i < n; i++) {
-                        PlugPanel pp = (PlugPanel)child_panels.elementAt(i);
+                        PlugPanel pp = (PlugPanel)child_panels.get(i);
                         pc.insertPanel (pp);
                     }
                     main_panel.add ((Component)panel_container, "Center");
@@ -378,7 +379,7 @@ public class ControlUIModule
     public void destroy () {
         // should remove children here
 
-	Core.gui_chunkdb.removeChunkDBListener (this);
+	Core.vjcontrol_chunkdb.removeChunkDBListener (this);
 	Core.removeLogMessageListener (this);
         dispose();
     }
@@ -405,20 +406,21 @@ public class ControlUIModule
     /** Adds a child frame (e.g. a ConfigChunkFrame or HTMLFrame).
      */
     public void addChildFrame (ChildFrame f) {
-	child_frames.addElement(f);
+	child_frames.add(f);
     }
 
     public void removeChildFrame (ChildFrame f) {
-	child_frames.removeElement (f);
+	child_frames.remove (f);
 	f.destroy();
     }
 
     public void removeChildFramesMatching (String cl, Object db, Object o) {
 	ChildFrame f;
-	for (int i = 0; i < child_frames.size(); ) {
-	    f = (ChildFrame)child_frames.elementAt(i);
+        int i, n = child_frames.size();
+	for (i = 0; i < n; ) {
+	    f = (ChildFrame)child_frames.get(i);
 	    if (f.matches (cl, db, o)) {
-		child_frames.removeElementAt(i);
+		child_frames.remove(i);
 		f.destroy();
 	    }
 	    else
@@ -428,8 +430,9 @@ public class ControlUIModule
 
     public ChildFrame getChildFrameMatching (String cl, Object db, Object o) {
 	ChildFrame f;
-	for (int i = 0; i < child_frames.size(); i++) {
-	    f = (ChildFrame)child_frames.elementAt(i);
+        int i, n = child_frames.size();
+	for (i = 0; i < n; i++) {
+	    f = (ChildFrame)child_frames.get(i);
 	    if (f.matches (cl, db, o))
 		return f;
 	}
@@ -500,7 +503,7 @@ public class ControlUIModule
 	URL url = ClassLoader.getSystemResource (s);
 	HTMLFrame help_frame = new HTMLFrame (this, "VjControl Help", url);
         help_frame.setContentsURL (ClassLoader.getSystemResource ("VjFiles/VjControlIndex.html"));
-	child_frames.addElement (help_frame);
+	child_frames.add (help_frame);
 	help_frame.show();
     }
     
@@ -510,7 +513,7 @@ public class ControlUIModule
      */
     public void closeChild (ChildFrame frame) {
 	if (frame instanceof HTMLFrame) {
-	    child_frames.removeElement (frame);
+	    child_frames.remove (frame);
 	    frame.destroy();
 	}
     }
@@ -749,7 +752,7 @@ public class ControlUIModule
 
     //------------------------- ChunkDBListener stuff ------------------------
 
-    /** Listening to GUI chunkdb. */
+    /** Listening to Core.vjcontrol_chunkdb. */
     public void addChunk (ChunkDBEvent e) {
 	reconfigure (e.getNewChunk());
     }

@@ -34,6 +34,18 @@ package VjConfig;
 
 import VjConfig.DescDBEvent;
 
+/** Listener for ChunkDescDB modification events.
+ *  By registering as a DescDBListener, an object can receive events
+ *  whenever the DescDB is modified.
+ *  <p>
+ *  DescDBEvents may be sent by any thread; a listener intending
+ *  to update GUI components based on the event must use 
+ *  SwingUtilities.invokeLater or something similar to ensure correct
+ *  synchronization.
+ *
+ *  @author Christopher Just
+ *  @version $Revision$
+ */
 public interface DescDBListener extends java.util.EventListener {
 
     public abstract void addDesc (DescDBEvent e);

@@ -34,7 +34,7 @@
 
 package VjConfig;
 
-import java.util.Vector;
+import java.util.*;
 import java.io.StreamTokenizer;
 import java.util.NoSuchElementException;
 import java.io.IOException;
@@ -43,37 +43,69 @@ import VjConfig.ChunkFactory;
 
 public class Property {
 
-    public String name;
-    public String token;
-    private int num;
-    public PropertyDesc desc;
-    ValType valtype;
-    public Vector vals;
-    public ChunkDesc embeddesc; // used only for t_embeddedchunk
+    protected String token;
+    protected int num;
+    protected PropertyDesc desc;
+    protected ValType valtype;
+    protected List vals;
+    protected ChunkDesc embeddesc; // used only for t_embeddedchunk
+
+
+    /** Attempts to apply a new PropertyDesc while preserving values.
+     *  THIS IS DANGEROUS and should only be called by 
+     *  ConfigChunk.applyNewDesc().
+     */
+    public void applyNewDesc (PropertyDesc _desc) {
+        desc = _desc;
+        token = desc.getToken();
+        num = desc.getNumValues();
+        if (!valtype.equals(desc.getValType())) {
+            vals.clear();
+            valtype = desc.getValType();
+        }
+	if (valtype.equals (ValType.t_embeddedchunk)) {
+	    ChunkDesc newembeddesc = ChunkFactory.getChunkDescByToken(desc.getEnumAtIndex(0).str);
+	    if (newembeddesc == null) {
+		System.err.println ("Big Messup in Property Constructor!!!");
+		embeddesc = new ChunkDesc ();
+	    }
+            if (newembeddesc != embeddesc) {
+                vals.clear();
+                embeddesc = newembeddesc;
+            }
+	}
+	else {
+	    embeddesc = null;
+	}
+        if (num != -1) {
+            while (vals.size() > num)
+                vals.remove(vals.size()-1);
+            while (vals.size() < num)
+                vals.add (createVarValue(vals.size()));
+        }
+    }
 
 
     public Property (Property p) {
-	name = p.name;
 	token = p.token;
 	num = p.num;
 	desc = p.desc;
 	embeddesc = p.embeddesc;
 	valtype = new ValType (p.valtype);
-	vals = new Vector();
-	for (int i = 0; i < p.vals.size(); i++)
-	    vals.addElement (new VarValue ((VarValue)p.vals.elementAt(i)));
+	vals = new ArrayList();
+        int i, n = p.vals.size();
+	for (i = 0; i < n; i++)
+	    vals.add (new VarValue ((VarValue)p.vals.get(i)));
     }
 
 
 
     public Property (PropertyDesc d) {
-	
 	desc = d;
-	name = d.name;
-	token = d.token;
-	valtype = d.valtype;
-	num = d.num;
-	vals = new Vector();
+	token = desc.getToken();
+	valtype = desc.getValType();
+	num = desc.getNumValues();
+	vals = new ArrayList();
 	if (valtype.equals (ValType.t_embeddedchunk)) {
 	    embeddesc = ChunkFactory.getChunkDescByToken(d.getEnumAtIndex(0).str);
 	    if (embeddesc == null) {
@@ -85,7 +117,7 @@ public class Property {
 	    embeddesc = null;
 	}
 	for (int i = 0; i < num; i++)
-	    vals.addElement (createVarValue(i));
+	    vals.add (createVarValue(i));
 
     }
 
@@ -97,8 +129,8 @@ public class Property {
 	    i = vals.size();
 	if (valtype.equals (ValType.t_embeddedchunk)) {
 	    ConfigChunk ch = ChunkFactory.createChunk (embeddesc);
-	    if (desc.valuelabels.size() > i)
-		ch.setName (((DescEnum)desc.valuelabels.elementAt(i)).str);
+	    if (i < desc.getValueLabelsSize())
+		ch.setName (desc.getValueLabel(i));
 	    else
 		ch.setName (desc.name + " " + i);
 	    return new VarValue (ch);
@@ -109,26 +141,64 @@ public class Property {
 
 
     public final String getName () {
-	return desc.name;
+	return desc.getName();
     }
 
     public final String getToken () {
-	return desc.token;
+	return token;
+    }
+
+
+    public final PropertyDesc getDesc () {
+        return desc;
+    }
+
+
+    public void clearValues () {
+        if (num == -1)
+            vals.clear();
+    }
+
+
+    public void setValue (String s, int ind) {
+	if (ind < 0)
+	    return;
+	if (num == -1) {
+	    while (ind >= vals.size())
+		vals.add (createVarValue(-1));
+	}
+	else if (ind >= num)
+	    return;
+	((VarValue)vals.get(ind)).set(s);
+    }
+
+    public void setValue (boolean s, int ind) {
+	if (ind < 0)
+	    return;
+	if (num == -1) {
+	    while (ind >= vals.size())
+		vals.add (createVarValue(-1));
+	}
+	else if (ind >= num)
+	    return;
+	((VarValue)vals.get(ind)).set(s);
     }
 
 
     public void setValue (VarValue s, int v) {
-	if (!valtype.equals (s.getValType()))
-	    return;
+ 	if (!valtype.equals (s.getValType())) {
+            System.out.println ("Property.setValue() - type mismatch");
+ 	    return;
+        }
 	if (v < 0)
 	    return;
 	if (num == -1) {
 	    while (v >= vals.size())
-		vals.addElement (createVarValue(-1));
+		vals.add (createVarValue(-1));
 	}
 	else if (v >= num)
 	    return;
-	((VarValue)vals.elementAt(v)).set(s);
+	((VarValue)vals.get(v)).set(s);
     }
 
 
@@ -136,7 +206,7 @@ public class Property {
     public VarValue getValue (int i) {
 	if (i < 0 || i >= vals.size())
 	    return null;
-	return (VarValue)vals.elementAt(i);
+	return (VarValue)vals.get(i);
     }
 
 
@@ -146,6 +216,14 @@ public class Property {
     }
 
 
+    public final boolean hasFixedNumberOfValues () {
+        return num != -1;
+    }
+
+
+    public final ChunkDesc getEmbeddedDesc () {
+        return embeddesc;
+    }
 
     public boolean equals (Property p) {
 	/* note - this does a total value comparison, not just checking names
@@ -156,19 +234,18 @@ public class Property {
 
         if (p == null)
             return false;
-	if (!name.equals(p.name))
-	    return false;
 	if (num != p.num)
 	    return false;
-	if (!desc.name.equals(p.desc.name))
+	if (!desc.getToken().equals(p.desc.getToken()))
 	    return false;
 	if (!valtype.equals(p.valtype))
 	    return false;
 	if (vals.size() != p.vals.size())
 	    return false;
-	for (int i = 0; i < vals.size(); i++) {
-	    v1 = (VarValue)vals.elementAt(i);
-	    v2 = (VarValue)p.vals.elementAt(i);
+        int i, n = vals.size();
+	for (i = 0; i < n; i++) {
+	    v1 = (VarValue)vals.get(i);
+	    v2 = (VarValue)p.vals.get(i);
 	    if (!v1.equals(v2))
 		return false;
 	}
@@ -181,7 +258,7 @@ public class Property {
 	VarValue v;
 	String s = pad + desc.token + " { ";
 	for (int i = 0; i < vals.size(); i++) {
-	    v = (VarValue)vals.elementAt(i);
+	    v = (VarValue)vals.get(i);
 
 	    if (valtype.equals (ValType.t_embeddedchunk)) {
 		s += "\n" + v.getEmbeddedChunk().toString(pad + "    ");
@@ -196,6 +273,31 @@ public class Property {
 	return s;
     }
 
+    public String xmlRep (String pad) {
+        VarValue v;
+        StringBuffer s = new StringBuffer (128);
+        s.append(pad);
+        s.append('<');
+        s.append(XMLConfigIOHandler.escapeString(desc.token));
+        s.append('>');
+        int i, n = vals.size();
+        for (i = 0; i < n; i++) {
+            v = (VarValue)vals.get(i);
+            if (valtype.equals (ValType.t_embeddedchunk)) {
+                s.append('\n');
+                s.append(v.getEmbeddedChunk().xmlRep (pad + "    "));
+            }
+            else {
+                s.append('"');
+                s.append(XMLConfigIOHandler.escapeString(desc.getEnumString(v)));
+                s.append("\" ");
+            }
+        }
+        s.append("</");
+        s.append(XMLConfigIOHandler.escapeString(desc.token));
+        s.append(">\n");
+        return s.toString();
+    }
 
 
     public boolean read (ConfigStreamTokenizer st) throws IOException {
@@ -210,9 +312,9 @@ public class Property {
 	    
 	    if (st.ttype == '{') {
 		/* multiple entries */
-		vals.removeAllElements();
+		vals.clear();
 		while ((v = buildVarValue (st)) != null) 
-		    vals.addElement(v);
+		    vals.add(v);
 		if (st.ttype != '}') {
 		    System.out.println ("ERROR: expected '}'");
 		}
@@ -220,13 +322,13 @@ public class Property {
 	    else {
 		/* one entry */
 		v = buildVarValue(st);
-		vals.removeAllElements();
-		vals.addElement(v);
+		vals.clear();
+		vals.add (v);
 	    }
 	    if (num != -1) {
 		/* are we a proper # of values? */
 		while (vals.size() < num)
-		    vals.addElement (new VarValue(valtype));
+		    vals.add (new VarValue(valtype));
 	    }
 	    return true;
 	}
@@ -270,23 +372,6 @@ public class Property {
 	    return v;
 	}
     }
-
-
-
-//     public boolean containsValue (String s) {
-// 	int i;
-// 	String s2;
-
-// 	if (!valtype.equals(ValType.t_string)) {
-// 	    for (i = 0; i < vals.size(); i++) {
-// 		s2 = ((VarValue)vals.elementAt(i)).getString();
-// 		if (s2.equalsIgnoreCase(s))
-// 		    return true;
-// 	    }
-// 	}
-// 	return false;
-//     }
-
 
 
 }

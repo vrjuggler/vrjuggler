@@ -33,7 +33,8 @@
 
 package VjControl;
 
-import java.util.Vector;
+import java.util.List;
+import java.util.ArrayList;
 import java.io.*;
 import java.net.URL;
 import VjControl.*;
@@ -61,13 +62,13 @@ public class Init {
 	configurationSanityCheck();
 
         /* load extensions... */
-        Vector extension_dirs = new Vector();
-        extension_dirs.addElement ("$VJ_BASE_DIR/bin/VjControl.jar");
+        ArrayList extension_dirs = new ArrayList();
+        extension_dirs.add ("$VJ_BASE_DIR/bin/VjControl.jar");
 
         /* we'll look thru the command line for extension .jars */
  	for (int i = 0; i < args.length; i++) {
             if (args[i].equalsIgnoreCase ("-j")) {
-                extension_dirs.addElement (args[++i]);
+                extension_dirs.add (args[++i]);
             }
         }
 
@@ -87,8 +88,8 @@ public class Init {
      */
     protected static void configurationSanityCheck() {
 	ConfigChunk ch;
-	Vector v = Core.gui_chunkdb.getOfDescToken ("vjcontrol");
-	if (v.size() == 0 || ((ch = (ConfigChunk)v.elementAt(0)) == null)) {
+	List v = Core.vjcontrol_chunkdb.getOfDescToken ("vjcontrol");
+	if (v.size() == 0) {
 	    System.err.println ("didn't get chunk");
 	    ch = ChunkFactory.createChunkWithDescToken ("vjcontrol");
             ch.setName ("VjControl global preferences");
@@ -98,7 +99,7 @@ public class Init {
 	    ch.setPropertyFromToken ("name", new VarValue ("VjControl Config"), 0);
 	    ch.setPropertyFromToken ("host", new VarValue ("localhost"), 0);
 	    ch.setPropertyFromToken ("port", new VarValue (4450), 0);
-	    Core.gui_chunkdb.add (ch);
+	    Core.vjcontrol_chunkdb.add (ch);
 	}
     }
 
@@ -108,11 +109,12 @@ public class Init {
      *  This also ensures that contents.config for VjControl.jar itself
      *  is parsed.
      */
-    protected static void loadExtensions (Vector extension_dirs) {
+    protected static void loadExtensions (ArrayList extension_dirs) {
         // loads whatever .jar file extensions it can find
 
-        for (int i = 0; i < extension_dirs.size(); i++) {
-            String ext_dir = (String)extension_dirs.elementAt(i);
+        int n = extension_dirs.size();
+        for (int i = 0; i < n; i++) {
+            String ext_dir = (String)extension_dirs.get(i);
             String[] ext_jars = Core.file.getFileNames (ext_dir, "jar");
             
             if (ext_jars != null) {
@@ -137,30 +139,27 @@ public class Init {
 
 	URL descurl = ClassLoader.getSystemResource ("VjFiles/vjcontrol.dsc");
 	try {
-	    inr = new InputStreamReader (descurl.openStream());
-	    Core.descdb.read (new ConfigStreamTokenizer (inr));
+            ConfigIO.readChunkDescDB (descurl.openStream(), Core.descdb, ConfigIO.GUESS);
 	}
 	catch (IOException e2) {
-	    Core.consoleErrorMessage ("FileControl","Couldn't load " +descurl
+	    Core.consoleErrorMessage ("Init", "Couldn't load " + descurl
 				      + "- vjcontrol.jar may be corrupt");
 	}
 		
         f1 = new File (Core.file.mangleFileName ("$HOME/.vjconfig/vjcontrol.cfg"));
-        Core.gui_chunkdb.setName (f1.getName());
-        Core.gui_chunkdb.setFile (f1);
+        Core.vjcontrol_chunkdb.setName (f1.getName());
+        Core.vjcontrol_chunkdb.setFile (f1);
 
 	try {
-	    r = new FileReader (f1);
-	    Core.gui_chunkdb.read (new ConfigStreamTokenizer (r));
+            ConfigIO.readConfigChunkDB (f1, Core.vjcontrol_chunkdb, ConfigIO.GUESS);
 	}
 	catch (FileNotFoundException e2) {
 	    try {
 		f2 = new File (Core.file.mangleFileName ("$VJ_BASE_DIR/Data/vjcontrol.cfg"));
-		r = new FileReader (f2);
-		Core.gui_chunkdb.read (new ConfigStreamTokenizer (r));
+                ConfigIO.readConfigChunkDB (f2, Core.vjcontrol_chunkdb, ConfigIO.GUESS);
 	    }
 	    catch (FileNotFoundException e3) {
-		Core.consoleErrorMessage ("FileControl","Couldn't load " + f1);
+		Core.consoleErrorMessage ("Init","Couldn't load " + f1);
 		return;
 	    }
 	}

@@ -339,7 +339,8 @@ JScrollPane sp;
             if (p != null) {
                 //container_panel.add ((JComponent)p);
                 //add ((JComponent)p, "Center");
-                setRightComponent ((JComponent)p);
+                p.initUIComponent();
+                setRightComponent (p.getUIComponent());
                 validate();
                 repaint();
             }

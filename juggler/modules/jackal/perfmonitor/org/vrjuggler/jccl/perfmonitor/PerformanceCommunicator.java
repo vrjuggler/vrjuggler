@@ -23,9 +23,9 @@
  * Boston, MA 02111-1307, USA.
  *
  * -----------------------------------------------------------------
- * File:          $$
- * Date modified: $$
- * Version:       $$
+ * File:          $RCSfile$
+ * Date modified: $Date$
+ * Version:       $Revision$
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
@@ -124,12 +124,16 @@ public class PerformanceCommunicator
     /** Reads a command stream from the network.  
      *  Returns control when it reaches the end of a single command.
      */
-    public boolean readStream (ConfigStreamTokenizer instream, String id) 
+    public boolean readStream (InputStream instream, String id) 
     throws IOException {
-        perf_module.readStream (instream, id);
+        ConfigStreamTokenizer in = new ConfigStreamTokenizer (new InputStreamReader (instream));
+        perf_module.readStream (in, id);
         return true;
     }
 
 
+    public boolean requestUpdate () {
+        return true;
+    }
 
 }

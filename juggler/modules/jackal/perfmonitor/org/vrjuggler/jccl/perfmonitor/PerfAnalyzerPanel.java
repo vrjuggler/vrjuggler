@@ -208,6 +208,7 @@ public class PerfAnalyzerPanel extends JPanel implements PlugPanel, ActionListen
     JPanel data_panel;
     GridBagLayout gblayout;
     GridBagConstraints gbc;
+    boolean initialized;
 
     JScrollPane display_pane;
     JTextArea text_area;
@@ -247,58 +248,59 @@ public class PerfAnalyzerPanel extends JPanel implements PlugPanel, ActionListen
 	doanomaly = true;
 	anomalycutoff = 1.0f;
 
-	setLayout (new BorderLayout (5, 5));
-	setBorder (new EmptyBorder (5,5,5,5));
+        initialized = false;
 
-	data_panel = new JPanel();
-	data_panel.setLayout (gblayout = new GridBagLayout());
-	gbc = new GridBagConstraints();
-	gbc.insets = new Insets (0, 4, 0, 4);
-	gbc.fill = gbc.HORIZONTAL;
+//  	setLayout (new BorderLayout (5, 5));
+//  	setBorder (new EmptyBorder (5,5,5,5));
 
+//  	data_panel = new JPanel();
+//  	data_panel.setLayout (gblayout = new GridBagLayout());
+//  	gbc = new GridBagConstraints();
+//  	gbc.insets = new Insets (0, 4, 0, 4);
+//  	gbc.fill = gbc.HORIZONTAL;
 
-	JPanel epanel = new JPanel ();
-	epanel.setLayout (new GridLayout (10, 1, 2, 0));
-	add (epanel, "East");
+//  	JPanel epanel = new JPanel ();
+//  	epanel.setLayout (new GridLayout (10, 1, 2, 0));
+//  	add (epanel, "East");
 
-	load_button = new JButton ("Load");
-	epanel.add (load_button);
-	load_button.addActionListener (this);
+//  	load_button = new JButton ("Load");
+//  	epanel.add (load_button);
+//  	load_button.addActionListener (this);
 
-	epanel.add (savecontents_button = new JButton ("Save Data"));
-	savecontents_button.addActionListener (this);
+//  	epanel.add (savecontents_button = new JButton ("Save Data"));
+//  	savecontents_button.addActionListener (this);
 
-//  	print_button = new JButton ("Print");
-//  	print_button.addActionListener (this);
-//  	epanel.add (print_button);
+//  //  	print_button = new JButton ("Print");
+//  //  	print_button.addActionListener (this);
+//  //  	epanel.add (print_button);
 
-	print_all_button = new JButton ("Print");
-	print_all_button.addActionListener (this);
-	epanel.add (print_all_button);
+//  	print_all_button = new JButton ("Print");
+//  	print_all_button.addActionListener (this);
+//  	epanel.add (print_all_button);
        
 
-	JPanel npanel = new JPanel ();
-	npanel.setLayout (new BoxLayout (npanel, BoxLayout.Y_AXIS));
-	add (npanel, "North");
-	JPanel ntoppanel = new JPanel();
-	ntoppanel.setLayout (new BoxLayout (ntoppanel, BoxLayout.X_AXIS));
-	npanel.add (ntoppanel);
+//  	JPanel npanel = new JPanel ();
+//  	npanel.setLayout (new BoxLayout (npanel, BoxLayout.Y_AXIS));
+//  	add (npanel, "North");
+//  	JPanel ntoppanel = new JPanel();
+//  	ntoppanel.setLayout (new BoxLayout (ntoppanel, BoxLayout.X_AXIS));
+//  	npanel.add (ntoppanel);
 
-	ntoppanel.add (new JLabel ("Maximum stored samples"));
-	ntoppanel.add (max_samples_box = new JComboBox());
-	max_samples_box.addItem ("100");
-	max_samples_box.addItem ("500");
-	max_samples_box.addItem ("1000");
-	max_samples_box.addItem ("5000");
-	max_samples_box.addItem ("<Infinite>");
-	max_samples_box.setSelectedIndex(1);
-	max_samples_box.addActionListener (this);
+//  	ntoppanel.add (new JLabel ("Maximum stored samples"));
+//  	ntoppanel.add (max_samples_box = new JComboBox());
+//  	max_samples_box.addItem ("100");
+//  	max_samples_box.addItem ("500");
+//  	max_samples_box.addItem ("1000");
+//  	max_samples_box.addItem ("5000");
+//  	max_samples_box.addItem ("<Infinite>");
+//  	max_samples_box.setSelectedIndex(1);
+//  	max_samples_box.addActionListener (this);
 
-	display_pane = new JScrollPane (data_panel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+//  	display_pane = new JScrollPane (data_panel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 
-	//setCurrentCollector (null);
+//  	//setCurrentCollector (null);
 
-	add (display_pane, "Center");
+//  	add (display_pane, "Center");
 
     }
 
@@ -446,25 +448,29 @@ public class PerfAnalyzerPanel extends JPanel implements PlugPanel, ActionListen
 
 
     public void refreshDisplay() {
-	for (int i = 0; i < child_frames.size(); i++)
-	    ((GenericGraphFrame)child_frames.elementAt(i)).refresh();
-	refreshDataPanel();
+        if (initialized) {
+            for (int i = 0; i < child_frames.size(); i++)
+                ((GenericGraphFrame)child_frames.elementAt(i)).refresh();
+            refreshDataPanel();
+        }
     }
 
 
 
     public void removeAllData() {
-	for (int i = 0; i < child_frames.size(); i++)
-	    ((GenericGraphFrame)child_frames.elementAt(i)).dispose();
-	child_frames.removeAllElements();
-	refreshDataPanel();
+        if (initialized) {
+            for (int i = 0; i < child_frames.size(); i++)
+                ((GenericGraphFrame)child_frames.elementAt(i)).dispose();
+            child_frames.removeAllElements();
+            refreshDataPanel();
+        }
     }
 
 
 
-    public void refresh() {
-	refreshDisplay();
-    }
+//      public void refresh() {
+//  	refreshDisplay();
+//      }
 
 
 
@@ -504,7 +510,7 @@ public class PerfAnalyzerPanel extends JPanel implements PlugPanel, ActionListen
             return false;
         }
         perf_filter = new SuffixFilter ("Perf Data Files (*.perf)", ".perf");
-        ui_module.getEasyFileDialog().addFilter (perf_filter, "ConfigChunkDB");
+        ui_module.getEasyFileDialog().addFilter (perf_filter, "PerfData");
 
 
         refreshDisplay();
@@ -525,6 +531,70 @@ public class PerfAnalyzerPanel extends JPanel implements PlugPanel, ActionListen
 
     public boolean removeConfig (String name) {
         return false;
+    }
+
+    public JComponent getUIComponent () {
+        return this;
+    }
+
+    public boolean initUIComponent() {
+        if (!initialized) {
+            setLayout (new BorderLayout (5, 5));
+            setBorder (new EmptyBorder (5,5,5,5));
+
+            data_panel = new JPanel();
+            data_panel.setLayout (gblayout = new GridBagLayout());
+            gbc = new GridBagConstraints();
+            gbc.insets = new Insets (0, 4, 0, 4);
+            gbc.fill = gbc.HORIZONTAL;
+            
+
+            JPanel epanel = new JPanel ();
+            epanel.setLayout (new GridLayout (10, 1, 2, 0));
+            add (epanel, "East");
+
+            load_button = new JButton ("Load");
+            epanel.add (load_button);
+            load_button.addActionListener (this);
+
+            epanel.add (savecontents_button = new JButton ("Save Data"));
+            savecontents_button.addActionListener (this);
+
+            //  	print_button = new JButton ("Print");
+            //  	print_button.addActionListener (this);
+            //  	epanel.add (print_button);
+
+            print_all_button = new JButton ("Print");
+            print_all_button.addActionListener (this);
+            epanel.add (print_all_button);
+       
+
+            JPanel npanel = new JPanel ();
+            npanel.setLayout (new BoxLayout (npanel, BoxLayout.Y_AXIS));
+            add (npanel, "North");
+            JPanel ntoppanel = new JPanel();
+            ntoppanel.setLayout (new BoxLayout (ntoppanel, BoxLayout.X_AXIS));
+            npanel.add (ntoppanel);
+            
+            ntoppanel.add (new JLabel ("Maximum stored samples"));
+            ntoppanel.add (max_samples_box = new JComboBox());
+            max_samples_box.addItem ("100");
+            max_samples_box.addItem ("500");
+            max_samples_box.addItem ("1000");
+            max_samples_box.addItem ("5000");
+            max_samples_box.addItem ("<Infinite>");
+            max_samples_box.setSelectedIndex(1);
+            max_samples_box.addActionListener (this);
+
+            display_pane = new JScrollPane (data_panel, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+            
+            //setCurrentCollector (null);
+            
+            add (display_pane, "Center");
+
+            initialized = true;
+        }
+        return true;
     }
 
 

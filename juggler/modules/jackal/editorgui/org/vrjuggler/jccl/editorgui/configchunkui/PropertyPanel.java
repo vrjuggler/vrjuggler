@@ -36,7 +36,7 @@ package VjComponents.ConfigEditor.ConfigChunkUI;
 
 import java.awt.*;
 import java.awt.event.*;
-import java.util.Vector;
+import java.util.*;
 import javax.swing.*;
 import javax.swing.border.*;
 
@@ -56,9 +56,9 @@ public class PropertyPanel extends JPanel implements ActionListener, VarValuePan
     protected static AbstractBorder border=null;
     public Property prop;
     public JPanel parent;
-    Vector valuepanels;  // vector of VarValuePanel
-    JPanel centerpanel, eastpanel;
-    JButton addbutton;
+    private java.util.List valuepanels;  // vector of VarValuePanel
+    private JPanel centerpanel, eastpanel;
+    private JButton addbutton;
     protected static String valuelabelpad = "          ";
 
     protected GridBagLayout eastpanellayout;
@@ -74,7 +74,7 @@ public class PropertyPanel extends JPanel implements ActionListener, VarValuePan
 
 	prop = pr;
 	parent = par;
-	int i;
+	int i, n;
 	String label;
 	int newlen;
 
@@ -86,11 +86,11 @@ public class PropertyPanel extends JPanel implements ActionListener, VarValuePan
 	JPanel westpanel = new JPanel();
 	westpanel.setLayout (new BoxLayout (westpanel, BoxLayout.Y_AXIS));
 
-	JLabel l1 = new JLabel (pr.name, JLabel.LEFT);
+	JLabel l1 = new JLabel (pr.getName(), JLabel.LEFT);
 	//l1.setFont (core.ui.windowfontbold);
 	westpanel.add (l1);
 
-	if (pr.desc.num == -1) {
+	if (!pr.hasFixedNumberOfValues()) {
 	    addbutton = new JButton ("Add Value");
 	    westpanel.add(addbutton);
 	    addbutton.addActionListener(this);
@@ -98,13 +98,14 @@ public class PropertyPanel extends JPanel implements ActionListener, VarValuePan
 	add (westpanel, "West");
 
 	/* add help message, if there is one */
-	if (!pr.desc.help.equals("")) {
+        String h = pr.getDesc().getHelp();
+	if (!h.equals("")) {
 	    
 	    JTextField helparea;
-	    if (pr.desc.help.length() < 50)
-		helparea = new JTextField(pr.desc.help, 10);
-	    else
-		helparea = new JTextField(pr.desc.help,10);
+//  	    if (h.length() < 50)
+//  		helparea = new JTextField(h, 10);
+//  	    else
+            helparea = new JTextField(h,10);
 	    helparea.setEditable(false);
 	    add(helparea, "South");
 	}
@@ -118,9 +119,10 @@ public class PropertyPanel extends JPanel implements ActionListener, VarValuePan
 	c.fill = GridBagConstraints.BOTH;
 	c.weightx = 1.0;
 	JLabel lj;
-        for (i = 0; i < pr.vals.size(); i++) {
-	    if (pr.desc.valuelabels.size() > i)
-		lj = new JLabel (valuelabelpad + ((DescEnum)pr.desc.valuelabels.elementAt(i)).str);
+        n = pr.getNum();
+        for (i = 0; i < n; i++) {
+	    if (pr.getDesc().getValueLabelsSize() > i)
+		lj = new JLabel (valuelabelpad + pr.getDesc().getValueLabel(i));
 	    else
 		lj = new JLabel (valuelabelpad);
 	    c.gridwidth = GridBagConstraints.RELATIVE;
@@ -132,8 +134,8 @@ public class PropertyPanel extends JPanel implements ActionListener, VarValuePan
 
 	    VarValuePanel p;
 	    p = makeVarValuePanel (pr, i);
-	    p.setValue((VarValue)pr.vals.elementAt(i));
-	    valuepanels.addElement(p);
+	    p.setValue(pr.getValue(i));
+	    valuepanels.add(p);
 	    eastpanellayout.setConstraints(p, c);
 	    eastpanel.add (p);
 	}
@@ -145,24 +147,25 @@ public class PropertyPanel extends JPanel implements ActionListener, VarValuePan
 
 
     private VarValuePanel makeVarValuePanel (Property pr, int valindex) {
-	if (pr.desc.valtype.equals (ValType.t_embeddedchunk)) {
+	if (pr.getDesc().getValType().equals (ValType.t_embeddedchunk)) {
 	    ConfigChunk ch;
-	    if (valindex < pr.vals.size())
-		ch = ((VarValue)pr.vals.elementAt(valindex)).getEmbeddedChunk();
+            PropertyDesc d = pr.getDesc();
+	    if (valindex < pr.getNum())
+		ch = pr.getValue(valindex).getEmbeddedChunk();
 	    else {
-		ch = ChunkFactory.createChunk (pr.embeddesc);
-                if (pr.desc.valuelabels.size() > valindex)
-                    ch.setName (((DescEnum)pr.desc.valuelabels.elementAt(valindex)).str);
+		ch = ChunkFactory.createChunk (pr.getEmbeddedDesc());
+                if (valindex < d.getValueLabelsSize())
+                    ch.setName (d.getValueLabel (valindex));
                 else
-                    ch.setName (pr.desc.name + " " + valindex);
+                    ch.setName (d.getName() + " " + valindex);
             }
 	    if (useMiniPanel (ch))
-		return new VarValueMiniChunkPanel (this, pr, ch);
+		return new VarValueMiniChunkPanel (this, !pr.hasFixedNumberOfValues(), ch);
 	    else
 		return new VarValueBigChunkPanel (this, pr, ch);
 	}
 	else
-	    return new VarValueStandardPanel(this, pr.desc);
+	    return new VarValueStandardPanel(this, pr.getDesc());
     }
 
 
@@ -174,18 +177,17 @@ public class PropertyPanel extends JPanel implements ActionListener, VarValuePan
         boolean useminipanel = true;
         int maxwidth = 4;
 
-        if (ch.desc.props.size() > maxwidth)
+        PropertyDesc[] props = ch.getDesc().getPropertyDescs();
+        if (props.length > maxwidth)
             return false;
 
-        PropertyDesc pd;
         int nvals = 0;
-        for (int i = 0; i < ch.desc.props.size(); i++) {
-            pd = (PropertyDesc)ch.desc.props.elementAt(i);
-            if (pd.num == -1)
+        for (int i = 0; i < props.length; i++) {
+            if (props[i].num == -1)
                 return false;
-            if (pd.valtype.equals(ValType.t_embeddedchunk))
+            if (props[i].valtype.equals(ValType.t_embeddedchunk))
                 return false;
-            nvals += pd.num;
+            nvals += props[i].num;
         }
         return (nvals <= maxwidth);
     }
@@ -193,7 +195,7 @@ public class PropertyPanel extends JPanel implements ActionListener, VarValuePan
 
 
     public void removePanel (VarValuePanel p) {
-	valuepanels.removeElement(p);
+	valuepanels.remove(p);
 	// annoying but true: we need to remove p and the label component left of it
 	Component comps[] = eastpanel.getComponents();
 	for (int i = 0; i < comps.length; i++) {
@@ -211,10 +213,12 @@ public class PropertyPanel extends JPanel implements ActionListener, VarValuePan
 
 
     public Property getValue() {
-	Property p = new Property (prop.desc);
-	p.vals.removeAllElements();
-	for (int i = 0; i < valuepanels.size(); i++) {
-	    p.vals.addElement (((VarValuePanel)valuepanels.elementAt(i)).getValue());
+	Property p = new Property (prop);
+	//p.vals.removeAllElements();
+        p.clearValues(); // only affects if var # of values allowed.
+        int i, n = valuepanels.size();
+	for (i = 0; i < n; i++) {
+	    p.setValue (((VarValuePanel)valuepanels.get(i)).getValue(), i);
 	}
 	return p;
     }
@@ -227,8 +231,8 @@ public class PropertyPanel extends JPanel implements ActionListener, VarValuePan
 	    JLabel lj;
 
 	    i = valuepanels.size();
-	    if (prop.desc.valuelabels.size() > i)
-		lj = new JLabel (valuelabelpad + ((DescEnum)prop.desc.valuelabels.elementAt(i)).str);
+	    if (i < prop.getDesc().getValueLabelsSize())
+		lj = new JLabel (valuelabelpad + prop.getDesc().getValueLabel(i));
 	    else
 		lj = new JLabel (valuelabelpad);
 	    lj.setBackground (Color.green);
@@ -240,7 +244,7 @@ public class PropertyPanel extends JPanel implements ActionListener, VarValuePan
 	    c.gridwidth = GridBagConstraints.REMAINDER;
 
 	    VarValuePanel p = makeVarValuePanel(prop, i);
-	    valuepanels.addElement(p);
+	    valuepanels.add(p);
 	    //c.gridwidth = GridBagConstraints.REMAINDER;
 	    eastpanellayout.setConstraints(p,c);
 	    eastpanel.add (p);

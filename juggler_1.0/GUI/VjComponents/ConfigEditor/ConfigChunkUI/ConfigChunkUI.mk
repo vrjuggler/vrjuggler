@@ -40,10 +40,11 @@
 # CONFIGCHUNKUI_OBJS    - The list of .class files that will be created.
 # -----------------------------------------------------------------------------
 
-CONFIGCHUNKUI_SOURCES = VjComponents/ConfigEditor/ConfigChunkUI/ListBoxModel.java \
-                   VjComponents/ConfigEditor/ConfigChunkUI/PropertyPanel.java \
-                VjComponents/ConfigEditor/ConfigChunkUI/VarValueStandardPanel.java \
-                VjComponents/ConfigEditor/ConfigChunkUI/VarValueMiniChunkPanel.java \
-                VjComponents/ConfigEditor/ConfigChunkUI/VarValueBigChunkPanel.java
+CONFIGCHUNKUI_SOURCES = \
+        VjComponents/ConfigEditor/ConfigChunkUI/ListBoxModel.java \
+        VjComponents/ConfigEditor/ConfigChunkUI/PropertyPanel.java \
+        VjComponents/ConfigEditor/ConfigChunkUI/VarValueStandardPanel.java \
+        VjComponents/ConfigEditor/ConfigChunkUI/VarValueMiniChunkPanel.java \
+        VjComponents/ConfigEditor/ConfigChunkUI/VarValueBigChunkPanel.java
 
 CONFIGCHUNKUI_OBJS = $(CONFIGCHUNKUI_SOURCES:.java=.class)

@@ -55,7 +55,7 @@ public class DefaultConfigChunkPanel extends JPanel
     ConfigChunk   chunk;
     ConfigChunkDB chunkdb;
     Vector proppanels; // property description panels.
-    JPanel properties;
+    Box properties_panel;
     JButton cancelbutton;
     JButton okbutton;
     JButton applybutton;
@@ -100,16 +100,15 @@ public class DefaultConfigChunkPanel extends JPanel
 
 	add(northpanel, "North");
 	
-	properties = new JPanel ();
-	properties.setLayout (new BoxLayout (properties, BoxLayout.Y_AXIS));
+	properties_panel = Box.createVerticalBox();
 
-	sp = new JScrollPane(properties, JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
+	sp = new JScrollPane(properties_panel, 
+                             JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
 			     JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 	sp.getVerticalScrollBar().setUnitIncrement(40);
 	sp.getHorizontalScrollBar().setUnitIncrement(40);
 
-	add(sp,"Center");
-	
+	add(sp,"Center");	
 
     }
 
@@ -127,24 +126,29 @@ public class DefaultConfigChunkPanel extends JPanel
 	chunk = _chunk;
 	chunkdb = _chunkdb;
 
-        System.out.println ("editing chunk: " + _chunk.toString());
+        //System.out.println ("editing chunk: " + _chunk.toString());
 
         // double check this to make sure i'm not leaving anything
         // dangling.
-        proppanels.removeAllElements();
-        properties.removeAll();
+        proppanels.clear();
+        properties_panel.removeAll();
 
         if (chunk != null) {
             namef.setText (chunk.getLastNameComponent());
-            helpfield.setText (chunk.desc.help);
+            helpfield.setText (chunk.getDescHelp());
 
             // make property panels
             PropertyPanel t;
-            for (int i = 0; i < chunk.props.size(); i++) {
-                t = new PropertyPanel ((Property)chunk.props.elementAt(i), 
-                                       this);
-                proppanels.addElement(t);
-                properties.add(t);
+            Property p;
+            int i, n = chunk.getPropertiesSize();
+            for (i = 0; i < n; i++) {
+                p = chunk.getProperty (i);
+                if (Core.user_profile.accepts (p.getDesc().getUserLevel())) {
+                    t = new PropertyPanel (chunk.getProperty(i), 
+                                           this);
+                    proppanels.add(t);
+                    properties_panel.add(t);
+                }
             }
         }
 
@@ -207,11 +211,14 @@ public class DefaultConfigChunkPanel extends JPanel
 	 * in this window */
         String name = chunk.getName();
         name = ConfigChunk.setLastNameComponent (name, namef.getText());
-	ConfigChunk c = ChunkFactory.createChunk (chunk.desc, name);
-	c.props.removeAllElements();
-	for (int i = 0; i < chunk.props.size(); i++) {
-	    c.props.addElement (((PropertyPanel)proppanels.elementAt(i)).getValue());
-	}
+	ConfigChunk c = new ConfigChunk (chunk);
+        c.setFullName (name);
+        int i, n = proppanels.size();
+        Property p;
+        for (i = 0; i < n; i++) {
+            p = ((PropertyPanel)proppanels.get(i)).getValue();
+            c.setProperty (p);
+        }
         c.validateEmbeddedChunkNames();
 	return c;
     }
@@ -238,7 +245,7 @@ public class DefaultConfigChunkPanel extends JPanel
     public void showHelp () {
         ConfigUIHelper uihelper_module = (ConfigUIHelper)Core.getModule ("ConfigUIHelper Module");
         if (uihelper_module != null) 
-            uihelper_module.loadDescHelp (chunk.desc.getToken());
+            uihelper_module.loadDescHelp (chunk.getDescToken());
         else
             Core.consoleErrorMessage ("DefaultConfigChunkPanel",
                                       "Couldn't load help: ConfigUI Helper doesn't exist.");
@@ -264,7 +271,4 @@ public class DefaultConfigChunkPanel extends JPanel
 
 
 }
-
-
-
 

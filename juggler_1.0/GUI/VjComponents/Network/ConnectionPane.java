@@ -61,6 +61,7 @@ public class ConnectionPane extends JPanel
     protected ConfigChunk component_chunk;
     protected NetworkModule network_module;
     protected ControlUIModule ui_module;
+    protected boolean ui_initialized;
 
     public ConnectionPane () {
 	super(new GridLayout (2, 1, 10, 10));
@@ -71,34 +72,7 @@ public class ConnectionPane extends JPanel
         ui_module = null;
         network_module = null;
 
-	JPanel p1, p2;
-	
-	/*    GridLayout l = new GridLayout(2,1);
-	      l.setVgap(10);
-	      l.setHgap(10);
-	      setLayout (l);
-	*/
-
-	p1 = new JPanel();
-	p2 = new JPanel();
-	p1.add (new JLabel("Host Name:"));
-        hostfield = new JTextField (30);
-	p1.add(hostfield);
-	p1.add (new JLabel("Port:"));
-        portfield = new JTextField (5);
-	p1.add(portfield);
-	connect_button = new JButton("Connect");
-	connect_button.addActionListener(this);
-	p2.add(connect_button);
-	disconnect_button = new JButton ("Disconnect");
-	disconnect_button.addActionListener(this);
-	p2.add (disconnect_button);
-	add(p1);
-	add(p2);
-
-	connect_button.setToolTipText ("Connect or reconnect to remote host");
-	disconnect_button.setToolTipText ("Disconnect from remote host");
-
+        ui_initialized = false;
     }
 
 
@@ -122,8 +96,7 @@ public class ConnectionPane extends JPanel
             network_module.disconnect();
         }
         else if (e.getSource() == updateactive_mi) {
-            //network_module.getChunks();
-            System.out.println ("how did this ever work?");
+            network_module.requestUpdates();
         }
     }  // actionPerformed()
 
@@ -180,14 +153,9 @@ public class ConnectionPane extends JPanel
             return false;
         }
 
-	network_module.addNetControlListener (this);
-
         updateactive_mi = 
             ui_module.addMenuItem ("File/Update Active Configuration");
         updateactive_mi.addActionListener (this);
-
-        hostfield.setText (network_module.getHost());
-        portfield.setText (Integer.toString(network_module.getPort()));
 
         return true;
     }
@@ -207,8 +175,53 @@ public class ConnectionPane extends JPanel
         return false;
     }
 
+    public JComponent getUIComponent() {
+        return this;
+    }
+
+    public boolean initUIComponent() {
+        if (!ui_initialized) {
+            JPanel p1, p2;
+	
+            /*    GridLayout l = new GridLayout(2,1);
+                  l.setVgap(10);
+                  l.setHgap(10);
+                  setLayout (l);
+            */
+
+            p1 = new JPanel();
+            p2 = new JPanel();
+            p1.add (new JLabel("Host Name:"));
+            hostfield = new JTextField (30);
+            p1.add(hostfield);
+            p1.add (new JLabel("Port:"));
+            portfield = new JTextField (5);
+            p1.add(portfield);
+            connect_button = new JButton("Connect");
+            connect_button.addActionListener(this);
+            p2.add(connect_button);
+            disconnect_button = new JButton ("Disconnect");
+            disconnect_button.addActionListener(this);
+            p2.add (disconnect_button);
+            add(p1);
+            add(p2);
+            
+            connect_button.setToolTipText ("Connect or reconnect to remote host");
+            disconnect_button.setToolTipText ("Disconnect from remote host");
+            
+            hostfield.setText (network_module.getHost());
+            portfield.setText (Integer.toString(network_module.getPort()));
+
+            network_module.addNetControlListener (this);
+
+            ui_initialized = true;
+        }
+        return ui_initialized;
+    }
+
     public void destroy () {
-        network_module.removeNetControlListener(this);
+        if (ui_initialized)
+            network_module.removeNetControlListener(this);
     }
 
     public void rebuildDisplay () {

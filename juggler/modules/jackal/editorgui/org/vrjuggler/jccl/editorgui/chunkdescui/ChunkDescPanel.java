@@ -44,6 +44,8 @@ import VjConfig.*;
 import VjControl.Core;
 import VjComponents.UI.Widgets.*;
 import VjComponents.UI.EditorPanel;
+import VjComponents.ConfigEditor.*;
+import VjComponents.ConfigEditor.ConfigChunkUI.*;
 
 /** A panel for viewing/editing a single ChunkDesc
  *
@@ -54,7 +56,8 @@ public class ChunkDescPanel
     extends JPanel
     implements EditorPanel,
                ActionListener,
-               DescDBListener { 
+               DescDBListener,
+               ChildFrameParent { 
 
     ChunkDesc desc;
     ChunkDescDB descdb;
@@ -65,12 +68,17 @@ public class ChunkDescPanel
     JTextField helpfield;
     JButton removebutton;
     JButton insertbutton;
+    JButton edit_defaults_button;
+    JButton clear_defaults_button;
     boolean editable;
     JPanel mainpanel, buttonspanel;
-
+    ConfigChunk new_default_chunk;
+    ConfigUIHelper confighelper_module; //needed to edit default values
+    GenericEditorFrame default_chunk_frame;
 
     public ChunkDescPanel (ChunkDesc _desc,
 			   ChunkDescDB _descdb,
+                           ConfigUIHelper _confighelper_module,
 			   boolean _editable) {
 
 	JScrollPane sp;
@@ -79,7 +87,10 @@ public class ChunkDescPanel
 	editable = _editable;
 	desc = _desc;
 	descdb = _descdb;
+        confighelper_module = _confighelper_module;
 	proppanels = new Vector();
+        new_default_chunk = desc.getDefaultChunk();
+        default_chunk_frame = null;
 	
 	//setFont(core.ui.windowfont);
 	
@@ -146,13 +157,12 @@ public class ChunkDescPanel
 	properties.setLayout (new BoxLayout (properties, BoxLayout.Y_AXIS));
 
 	// make property description panels
-	PropertyDesc prop;
-	for (int i = 0; i < desc.props.size(); i++) {
-	    prop = (PropertyDesc)desc.props.elementAt(i);
+        PropertyDesc[] props = desc.getPropertyDescs();
+	for (int i = 0; i < props.length; i++) {
 	    t = new PropertyDescPanel (this, 
-				       !prop.name.equalsIgnoreCase("name") && editable,
-				       prop);
-	    proppanels.addElement(t);
+				       !props[i].name.equalsIgnoreCase("name") && editable,
+				       props[i]);
+	    proppanels.add(t);
 	    properties.add(t);
 	}
 
@@ -160,12 +170,19 @@ public class ChunkDescPanel
 
 	if (editable) {
 	    buttonspanel = new JPanel();
-	    insertbutton = new JButton ("Insert");
+	    insertbutton = new JButton ("Insert Property");
 	    insertbutton.addActionListener (this);
 	    buttonspanel.add (insertbutton);
-	    removebutton = new JButton ("Remove");
+	    removebutton = new JButton ("Remove Property");
 	    removebutton.addActionListener (this);
 	    buttonspanel.add (removebutton);
+            edit_defaults_button = new JButton ("Edit Default Values");
+            edit_defaults_button.addActionListener (this);
+            buttonspanel.add (edit_defaults_button);
+            clear_defaults_button = new JButton ("Clear Default Values");
+            clear_defaults_button.addActionListener (this);
+            buttonspanel.add (clear_defaults_button);
+
             gbc.weighty = 0;
             gbc.fill = gbc.HORIZONTAL;
             gbc.gridwidth = 1;
@@ -194,7 +211,8 @@ public class ChunkDescPanel
 
 
     public void actionPerformed (ActionEvent e) {
-	if (e.getSource() == removebutton) {
+        Object source = e.getSource();
+	if (source == removebutton) {
 	    for (int i = 0; i < proppanels.size(); ) {
 		PropertyDescPanel p = 
 		    (PropertyDescPanel)proppanels.elementAt(i);
@@ -210,13 +228,41 @@ public class ChunkDescPanel
             validate();
 	    repaint();
 	}
-	if (e.getSource() == insertbutton) {
+	else if (source == insertbutton) {
 	    PropertyDescPanel t = new PropertyDescPanel (this, true);
 	    proppanels.addElement(t);
 	    properties.add(t); 
 	    //setReasonableSize();
 	    validate();
 	}
+        else if (source == clear_defaults_button) {
+            new_default_chunk = null;
+        }
+        else if (source == edit_defaults_button) {
+            if (default_chunk_frame == null) {
+                ConfigChunkPanel p;
+                ChunkDesc new_desc = getNewValue();
+//                  if (new_desc.equals (desc))
+//                      new_desc = desc;
+                if (new_default_chunk == null)
+                    new_default_chunk = new ConfigChunk (new_desc);
+                else
+                    new_default_chunk.applyNewDesc(new_desc);
+                if (new_desc.equals(desc)) {
+                    p = confighelper_module.configchunkpanel_factory.createConfigChunkPanel (new_default_chunk.getDescToken());
+                }
+                else {
+                    // we're bypassing configuihelper's panel factory cuz it
+                    // isn't safe to try to use a specific panel in this 
+                    // case... since we're editing 
+                    p = new DefaultConfigChunkPanel();
+                }
+                p.setChunk (new_default_chunk, null);
+                default_chunk_frame = new GenericEditorFrame (this, p);
+            }
+            else
+                default_chunk_frame.show();
+        }
     }
 
 
@@ -243,13 +289,16 @@ public class ChunkDescPanel
 	    d.name = d.token;
 
 	/* start at one to skip instance name field which is already there */
-	for (int i = 1; i < proppanels.size(); i++) {
+        int n = proppanels.size();
+	for (int i = 1; i < n; i++) {
 	    PropertyDesc p = 
-		((PropertyDescPanel)proppanels.elementAt(i)).getPropertyDesc();
+		((PropertyDescPanel)proppanels.get(i)).getPropertyDesc();
 	    if (p != null)
-		d.props.addElement(p);
+		d.addPropertyDesc(p);
 	}
-	
+        if (new_default_chunk != null)
+            new_default_chunk.applyNewDesc (d);
+        d.setDefaultChunk (new_default_chunk);
 	return d;
     }
     
@@ -295,6 +344,8 @@ public class ChunkDescPanel
         for (int i = 0; i < n; i++) {
 	    ((PropertyDescPanel)proppanels.elementAt(i)).closeFrames();
 	}
+        if (default_chunk_frame != null)
+            default_chunk_frame.destroy();
     }
 
 
@@ -335,6 +386,26 @@ public class ChunkDescPanel
             desc = e.getNewDesc();
     }
     public void removeAllDescs (DescDBEvent e) {;}
+
+
+    //------------------ ChildFrameParent stuff ------------------------
+
+    public void closeChild (ChildFrame frame) {
+        if (frame == default_chunk_frame) {
+            default_chunk_frame.destroy();
+            //default_chunk_frame.dispose();
+            default_chunk_frame = null;
+        }
+    }
+
+
+    public void applyChild (ChildFrame frame) {
+        if (frame == default_chunk_frame) {
+            ConfigChunkPanel p = (ConfigChunkPanel)default_chunk_frame.getEditorPanel();
+            new_default_chunk = p.getNewValue();
+        }
+    }
+
 
 }
 

@@ -84,10 +84,8 @@ public class VarValueBigChunkPanel
 	editbutton = new JButton ("Edit Chunk");
 	editbutton.addActionListener (this);
 	add (editbutton);
-	
-		   
 
-	if (prop.desc.num == -1) {
+	if (!prop.hasFixedNumberOfValues()) {
 	    /* then it's a variable # of values */
 	    removebutton = new JButton("Remove");
 	    Insets in = new Insets (0,0,0,0);

@@ -38,12 +38,15 @@ package VjControl;
 import java.lang.String;
 import java.lang.StringBuffer;
 import java.util.Vector;
+import java.util.ArrayList;
+import java.util.List;
 
 import VjConfig.*;
 import VjControl.LogMessageListener;
 import VjControl.LogMessageEvent;
 import VjControl.CoreModule;
 import VjControl.VjComponent;
+import VjControl.UserProfile;
 
 
 /** Static owner-of-all-vjcontrol-objects.
@@ -86,7 +89,7 @@ public class Core
      *  packages, I can't actually do that.  <sigh>
      */
     static public ChunkDescDB descdb;
-    static public ConfigChunkDB gui_chunkdb;
+    static public ConfigChunkDB vjcontrol_chunkdb;
     static public ConfigChunkDB default_chunkdb;
 
     // private data
@@ -94,10 +97,10 @@ public class Core
     static protected String component_name;
 
     /** Contains all CoreModules added to self */
-    static private Vector modules;
+    static private List modules;
 
-    static private Vector pending_chunks;
-    static private Vector registered_components;
+    static private List pending_chunks;
+    static private List registered_components;
 
     static private String[] command_line;
 
@@ -105,7 +108,7 @@ public class Core
     static private Core instance;
 
     /* logmessage stuff */
-    static private Vector logmessage_targets;
+    static private List logmessage_targets;
     static protected boolean no_logmessage_targets;
     static final private boolean info_msg_to_stdout = true;
     static final private boolean error_msg_to_stdout = true;
@@ -116,7 +119,10 @@ public class Core
     static public int    screenWidth;
     static public int    screenHeight;
     static public boolean window_pos_kludge;
-
+    //static public int    user_level;
+    //static final public int USER_BEGINNER = 0;
+    //static final public int USER_EXPERT = 1;
+    static public UserProfile user_profile;
 
     static public FileControl file;
 
@@ -141,8 +147,10 @@ public class Core
 	window_pos_kludge = false;
 	screenWidth = 800;
 	screenHeight = 600;
+        //user_level = USER_BEGINNER;
+        user_profile = new UserProfile();
 
-	logmessage_targets = new Vector();
+	logmessage_targets = new ArrayList();
         no_logmessage_targets = true;
 
         command_line = new String[0];
@@ -152,9 +160,9 @@ public class Core
 	default_chunkdb = new ConfigChunkDB();
 	ChunkFactory.setDefaultChunkDB (default_chunkdb);
 	ChunkFactory.setChunkDescDB (descdb);
-	gui_chunkdb = new ConfigChunkDB ();
+	vjcontrol_chunkdb = new ConfigChunkDB ();
 
-	gui_chunkdb.addChunkDBListener (instance);
+	vjcontrol_chunkdb.addChunkDBListener (instance);
 
         registerComponent (instance);
 
@@ -166,7 +174,7 @@ public class Core
     static public CoreModule getModule (String name) {
         CoreModule c;
         for (int i = 0; i < modules.size(); i++) {
-            c = (CoreModule)modules.elementAt (i);
+            c = (CoreModule)modules.get (i);
             if (c.getComponentName().equalsIgnoreCase (name))
                 return c;
         }
@@ -187,6 +195,8 @@ public class Core
 	    return;
 
 	try {
+            user_profile.setFromConfigChunk (ch);
+
 	    //window_pos_kludge = ch.getPropertyFromToken("windowposkludge").getValue(0).getBool();
 
 	    screenWidth = ch.getPropertyFromToken("windowsize").getValue(0).getInt();
@@ -219,7 +229,7 @@ public class Core
      *  (dependency-satisfying) chunk.
      */
     static public void addPendingChunk (ConfigChunk ch) {
-        pending_chunks.addElement (ch);
+        pending_chunks.add (ch);
         //System.out.println ("addPendingChunk:\n" + ch.toString());
         for (;;) 
             if (!configProcessPending())
@@ -228,13 +238,13 @@ public class Core
 
 
     /** Processes the pending ConfigChunk list.  Util for addPendingChunk(). */
-    static protected boolean configProcessPending () {
+    static private boolean configProcessPending () {
         boolean retval = false;
         for (int i = 0; i < pending_chunks.size(); i++) {
-            ConfigChunk ch = (ConfigChunk)pending_chunks.elementAt(i);
+            ConfigChunk ch = (ConfigChunk)pending_chunks.get(i);
             if (checkDependencies (ch)) {
                 retval = addComponentConfig (ch);
-                pending_chunks.removeElementAt(i);
+                pending_chunks.remove(i);
                 if (retval) 
                     Core.consoleInfoMessage (component_name, "Add Component: " 
                                              + ch.getName());
@@ -254,7 +264,7 @@ public class Core
      *  components that are children of Core directly.  addComponentConfig
      *  calls Core.addConfig when necessary.
      */
-    static public boolean addComponentConfig (ConfigChunk ch) {
+    static private boolean addComponentConfig (ConfigChunk ch) {
         try {
             Property p = ch.getPropertyFromToken ("parentcomp");
             String parentname = p.getValue(0).getString();
@@ -279,15 +289,15 @@ public class Core
 
 
     /** true if dependencies are satisfied */
-    static public boolean checkDependencies (ConfigChunk ch) {
+    static private boolean checkDependencies (ConfigChunk ch) {
 
         String cn = ch.getValueFromToken ("classname", 0).getString();
         if (!component_factory.isRegistered (cn))
             return false;
 
-        Vector v = ch.getDependencyNames();
+        List v = ch.getDependencyNames();
         for (int i = 0; i < v.size(); i++) {
-            String s = (String)v.elementAt(i);
+            String s = (String)v.get(i);
             if (getComponentFromRegistry(s) == null) {
                 return false;
             }
@@ -297,13 +307,13 @@ public class Core
 
 
     static public void registerComponent (VjComponent vjc) {
-        registered_components.addElement (vjc);
+        registered_components.add (vjc);
     }
 
 
     static public VjComponent getComponentFromRegistry (String name) {
         for (int i = 0; i < registered_components.size(); i++) {
-            VjComponent vjc = (VjComponent)registered_components.elementAt(i);
+            VjComponent vjc = (VjComponent)registered_components.get(i);
             if (vjc.getComponentName().equalsIgnoreCase (name))
                 return vjc;
         }
@@ -373,28 +383,59 @@ public class Core
 
     static public synchronized void addLogMessageListener (LogMessageListener l) {
 	synchronized (logmessage_targets) {
-	    logmessage_targets.addElement (l);
+	    logmessage_targets.add (l);
+            no_logmessage_targets = false;
 	}
-        no_logmessage_targets = false;
     }
 
     static public void removeLogMessageListener (LogMessageListener l) {
 	synchronized (logmessage_targets) {
-	    logmessage_targets.removeElement (l);
+	    logmessage_targets.remove (logmessage_targets.indexOf(l));
             if (logmessage_targets.size() == 0)
                 no_logmessage_targets = true;
 	}
     }
 
+    /** Used to ensure that logMessageListeners are notified by the AWT thread.
+     */
+    static protected class doNotifyLogMessageTargets implements Runnable {
+        private LogMessageEvent event;
+        private LogMessageListener[] targets;
+        public doNotifyLogMessageTargets (LogMessageEvent e, LogMessageListener[] t) {
+            event = e;
+            targets = t;
+        }
+
+        public void run () {
+            for (int i = 0; i < targets.length; i++) {
+                targets[i].logMessage (event);
+            }
+        }
+    };
+
+
     static protected void notifyLogMessageTargets (LogMessageEvent e) {
-	Vector l;
-	synchronized (logmessage_targets) {
-	    l = (Vector) logmessage_targets.clone();
-	}
-	for (int i = 0; i < l.size(); i++) {
-	    LogMessageListener lis = (LogMessageListener)l.elementAt (i);
-	    lis.logMessage (e);
-	}
+        if (!no_logmessage_targets) {
+            // get array so we don't hold the lock for too long.
+            LogMessageListener[] l;
+            synchronized (logmessage_targets) {
+                l = new LogMessageListener[logmessage_targets.size()];
+                l = (LogMessageListener[])logmessage_targets.toArray(l);
+            }
+            if (javax.swing.SwingUtilities.isEventDispatchThread()) {
+                for (int i = 0; i < l.length; i++) {
+                    l[i].logMessage (e);
+                }
+            }
+            else {
+                try {
+                    javax.swing.SwingUtilities.invokeAndWait (new
+                        doNotifyLogMessageTargets (e, l));
+                }
+                catch (Exception ex) {
+                }
+            }
+        }
     }
 
 
@@ -437,7 +478,7 @@ public class Core
             String classname = ch.getValueFromToken ("classname", 0).getString();
             VjComponent vjc = component_factory.createComponent(classname);
             if (vjc.configure(ch)) {
-                modules.addElement (vjc);
+                modules.add (vjc);
                 registerComponent (vjc);
                 return true;
             }
@@ -462,7 +503,7 @@ public class Core
      */
     public void destroy () {
         for (int i = 0; i < modules.size(); i++) {
-            CoreModule cm = (CoreModule)modules.elementAt(i);
+            CoreModule cm = (CoreModule)modules.get(i);
             cm.destroy();
         }
         System.exit(0);

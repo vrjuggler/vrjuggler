@@ -34,7 +34,14 @@ package VjControl;
 
 import java.util.EventListener;
 
-/** Listen for log message events - status and error messages, etc. */
+/** Listen for log message events - status and error messages, etc.
+ *  These messages can be used for logging, status bars, etc.
+ *  <p>
+ *  LogMessageEvents are always sent by the AWT event dispatch thread.
+ *
+ *  @author Christopher Just
+ *  @version $Revision$
+ */ 
 public interface LogMessageListener extends EventListener {
 
     public abstract void logMessage (LogMessageEvent e);

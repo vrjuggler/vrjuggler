@@ -34,7 +34,7 @@
 package VjComponents.ConfigEditor;
 
 import java.awt.event.*;
-import java.util.Vector;
+import java.util.*;
 import java.io.IOException;
 
 import VjControl.Core;
@@ -43,14 +43,14 @@ import VjConfig.ConfigStreamTokenizer;
 public class OrgTreeElem {
 
     String label;     // label for this node
-    Vector children;  // mixed vec. of Strings (chunkdescnames)
+    List children;  // mixed vec. of Strings (chunkdescnames)
                       // and OrgTreeElems
 
 
 
     public OrgTreeElem (String _label){
         label = _label;
-	children = new Vector();
+	children = new ArrayList();
     }
 
 
@@ -60,7 +60,7 @@ public class OrgTreeElem {
         OrgTreeElem ch;
 
 	label = "";
-	children.removeAllElements();
+	children.clear();
 
         try {
             st.nextToken();
@@ -84,10 +84,10 @@ public class OrgTreeElem {
                     st.pushBack();
                     ch = new OrgTreeElem("");
                     ch.read(st);
-                    children.addElement(ch);
+                    children.add(ch);
                 }
                 else
-                    children.addElement(st.sval);
+                    children.add(st.sval);
             }
             return true;
         }
@@ -105,7 +105,7 @@ public class OrgTreeElem {
         String newpad = pad + "    ";
         String s = pad + "Begin \"" + label + "\"\n";
         for (i = 0; i < children.size(); i++) {
-            o = children.elementAt(i);
+            o = children.get(i);
             if (o instanceof String)
                 s += newpad + "\"" + (String)o + "\"\n";
             else if (o instanceof OrgTreeElem)

@@ -50,6 +50,7 @@ package VjComponents.ConfigEditor.ConfigChunkUI;
 
 import java.awt.*;
 import java.util.Vector;
+import java.util.List;
 import java.awt.event.*;
 import javax.swing.*;
 
@@ -82,17 +83,18 @@ public class VarValueStandardPanel extends VarValuePanel implements ActionListen
 	    ConfigChunk ch;
 	    String s;
 
-	    choice = new JComboBox(generateChunkSelectionList(desc.enums ));
+	    choice = new JComboBox(generateChunkSelectionList(desc.getEnumerations()));
 	    choice.setSelectedItem ("<No Selection>");
 	    add (choice, "Center");
 	}
-	else if (desc.enums.size() > 0) {
+	else if (desc.getEnumerationsSize() > 0) {
 	    /* just present the enumeration names as choices */
 	    choice = new JComboBox();
 	    ListBoxModel bm = new ListBoxModel();
 	    //bm.addObject ("<No Selection>"); may not be safe for enums
-	    for (i = 0; i < desc.enums.size(); i++)
-		bm.addObject(((DescEnum)desc.enums.elementAt(i)).str);
+            DescEnum[] e = desc.getEnumerations();
+	    for (i = 0; i < e.length; i++)
+		bm.addObject(e[i].str);
 	    choice.setModel(bm);
 	    choice.setSelectedItem ("<No Selection>");
 	    add(choice, "Center");
@@ -127,11 +129,11 @@ public class VarValueStandardPanel extends VarValuePanel implements ActionListen
 
 
     /** Utility for generateChunkSelectionList(). */
-    private void addEmbeddedChunks (ListBoxModel bm, ConfigChunk ch, Vector chunktypes) {
-        Vector v = ch.getEmbeddedChunks();
+    private void addEmbeddedChunks (ListBoxModel bm, ConfigChunk ch, DescEnum[] chunktypes) {
+        List v = ch.getEmbeddedChunks();
         ConfigChunk ch2;
         for (int i = 0; i < v.size(); i++) {
-            ch2 = (ConfigChunk)v.elementAt(i);
+            ch2 = (ConfigChunk)v.get(i);
             if (matchesTypes (ch2, chunktypes))
                 bm.addObject (ch2.getName());
             addEmbeddedChunks (bm, ch2, chunktypes);
@@ -139,7 +141,7 @@ public class VarValueStandardPanel extends VarValuePanel implements ActionListen
     }
 
 
-    private ListBoxModel generateChunkSelectionList( Vector chunktypes) {
+    private ListBoxModel generateChunkSelectionList( DescEnum[] chunktypes) {
         int i,j;
         Vector v;
         ListBoxModel bm = new ListBoxModel();
@@ -156,7 +158,7 @@ public class VarValueStandardPanel extends VarValuePanel implements ActionListen
         for (i = 0; i < config_module.chunkdbs.size(); i++) {
             db = (ConfigChunkDB)config_module.chunkdbs.elementAt(i);
             for (j = 0; j < db.size(); j++) {
-                ch = (ConfigChunk)db.elementAt(j);
+                ch = db.get(j);
                 if (matchesTypes(ch, chunktypes))
                     bm.addObject (db.getName() + ": " + ch.getName());
                 addEmbeddedChunks (bm, ch, chunktypes);
@@ -167,13 +169,12 @@ public class VarValueStandardPanel extends VarValuePanel implements ActionListen
 
 
     /** Utility for generateChunkSelectionList(). */
-    private boolean matchesTypes (ConfigChunk ch, Vector chunktypes) {
+    private boolean matchesTypes (ConfigChunk ch, DescEnum[] chunktypes) {
         int k;
-        int max = chunktypes.size();
-        if (max == 0)
+        if (chunktypes == null)
             return true;
-        for (k = 0; k < max; k++) {
-            if (ch.getDescToken().equalsIgnoreCase (((DescEnum)chunktypes.elementAt(k)).str)) {
+        for (k = 0; k < chunktypes.length; k++) {
+            if (ch.getDescToken().equalsIgnoreCase (chunktypes[k].str)) {
                 return true;
             }
         }
