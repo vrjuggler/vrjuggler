@@ -133,7 +133,7 @@ bool XMLConfigCommunicator::interpretDOM_Node (Connect* con, DOM_Node& doc) {
     
     switch (doc.getNodeType()) {
     case DOM_Node::DOCUMENT_NODE:
-        cout << "document node..." << endl;
+        //cout << "document node..." << endl;
         child = doc.getFirstChild();
         while (child != 0) {
             retval = retval && (interpretDOM_Node(con, child));
@@ -141,7 +141,7 @@ bool XMLConfigCommunicator::interpretDOM_Node (Connect* con, DOM_Node& doc) {
         }
         break;
     case DOM_Node::ELEMENT_NODE:
-        cout << "command is '" << name << "'." << endl;
+        //cout << "command is '" << name << "'." << endl;
         if (!strcasecmp (name, "apply_chunks")) {
             // we've received a set of configchunks to apply.
             newchunkdb.erase();
@@ -191,7 +191,7 @@ bool XMLConfigCommunicator::interpretDOM_Node (Connect* con, DOM_Node& doc) {
         }
         break; // ELEMENT_NODE
     default:
-        cout << "confused" << endl;
+        //cout << "confused" << endl;
         break;
     }
     return retval;
