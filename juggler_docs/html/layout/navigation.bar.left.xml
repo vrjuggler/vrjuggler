@@ -12,7 +12,7 @@ Builder: JExplorerBuilder V 1. 0. 7
     < item title="News" link="${NEWS}/index.html"  info="The latest Juggler news" image="Newspaper.gif" >
     < item title="FAQ" link="${MISC}/faq.html"  info="Frequently Asked Questions" image="Leaf.gif" >
 
-    < folder title="Books" ref=1 info="Online documentation.   What does each manual say?  What manual do I need?" link="${MISC}/documentation.html" rlink="${ROOT}/books.html" rtarget="${NEW_WINDOW}" image="Book_Closed.gif" >
+    < folder title="Documentation" ref=1 info="Online documentation.  What does each manual say? What manual do I need?" link="${MISC}/documentation.html" rlink="${ROOT}/books.html" rtarget="${NEW_WINDOW}" image="Book_Closed.gif" >
     <!-- install-web include books-include.xml -->
     </folder>
 
