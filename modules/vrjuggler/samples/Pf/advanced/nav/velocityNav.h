@@ -162,7 +162,7 @@ private:
    int         mTimeHack;
 };
 
-velocityNav::velocityNav() :
+inline velocityNav::velocityNav() :
    mVelocity( 0.0f, 0.0f , 0.0f ),
    mVelocityFromGravityAccumulator(0.0f,0.0f,0.0f),
    mMaxVelocity( 2500.0f ),
@@ -202,7 +202,7 @@ velocityNav::velocityNav() :
 
 
 // Set the action buttons that can be used
-void velocityNav::setActionButtons(std::vector<std::string> action_btn_names)
+inline void velocityNav::setActionButtons(std::vector<std::string> action_btn_names)
 {
    // Make sure list is long enough
    while(action_btn_names.size() > mActionButtons.size())
@@ -218,14 +218,14 @@ void velocityNav::setActionButtons(std::vector<std::string> action_btn_names)
 }
 
 // Set the name of the pos device that is used in navigation
-void velocityNav::setNavPosControl(std::string wand_dev)
+inline void velocityNav::setNavPosControl(std::string wand_dev)
 {
    vprDEBUG(vprDBG_ALL,0) << clrOutNORM(clrGREEN,"Setting Nav Pos Control: ")
                         << wand_dev.c_str() << std::endl << vprDEBUG_FLUSH;
    mNavWand.init(wand_dev);
 }
 
-void velocityNav::updateInteraction()
+inline void velocityNav::updateInteraction()
 {
    // If we are not supposed to be active, then don't run
    if(!this->isActive())
@@ -288,7 +288,7 @@ void velocityNav::updateInteraction()
                             << std::endl << vprDEBUG_FLUSH;
 }
 
-void velocityNav::update()
+inline void velocityNav::update()
 {
    stopWatch.stop();
    stopWatch.start();
@@ -405,7 +405,7 @@ void velocityNav::update()
    //vprDEBUG_END(vprDBG_ALL,0) << "---------------------\n" << vprDEBUG_FLUSH;
 }
 
-void velocityNav::scaled_rotate(vrj::Matrix rot_mat)
+inline void velocityNav::scaled_rotate(vrj::Matrix rot_mat)
 {
    //: Confused by quaternions???
    //  All this does is scale the angle of rotation back by about %4
@@ -440,7 +440,7 @@ void velocityNav::scaled_rotate(vrj::Matrix rot_mat)
 // accel = velocity per second
 // TODO: hook this up to the vel accumulator...,
 //        and get rid of mVelocity weirdness.
-void velocityNav::accelerate(const vrj::Vec3& accel)
+inline void velocityNav::accelerate(const vrj::Vec3& accel)
 {
    if(mVelocity.length() < mMaxVelocity)
    {
@@ -449,18 +449,18 @@ void velocityNav::accelerate(const vrj::Vec3& accel)
 }
 
 
-void velocityNav::stop()
+inline void velocityNav::stop()
 {
    this->setDamping( 0.0f );
 }
 
-void velocityNav::setDamping( const float& damping )
+inline void velocityNav::setDamping( const float& damping )
 {
    mDamping = damping;
    //cout<<"Setting damping coef to: "<<mDamping<<"\n"<<flush;
 }
 
-void velocityNav::reset()
+inline void velocityNav::reset()
 {
    mVelocity.set( 0,0,0 );
    mVelocityFromGravityAccumulator.set( 0,0,0 );
