@@ -66,8 +66,9 @@ void vjPosProxy::setTransform( float xoff, float yoff, float zoff,    // Transla
 void vjPosProxy::set(vjPosition* posPtr, int unitNum)
 {
    vjASSERT( posPtr->fDeviceSupport(DEVICE_POSITION) );
-   vjDEBUG(vjDBG_INPUT_MGR,1) << "posPtr: " << posPtr << endl
-              << "unit  : " << unitNum << endl << endl << vjDEBUG_FLUSH;
+   vjDEBUG(vjDBG_INPUT_MGR,1) << "posPtr: " << posPtr << std::endl
+              << "unit  : " << unitNum << std::endl << std::endl
+              << vjDEBUG_FLUSH;
    mPosPtr = posPtr;
    mUnitNum = unitNum;
 }
@@ -84,7 +85,8 @@ bool vjPosProxy::config(vjConfigChunk* chunk)
 
    if (true == (bool)chunk->getProperty("etrans") )
    {
-      vjDEBUG_NEXT(vjDBG_INPUT_MGR,3) << "Position Transform enabled..." << endl << vjDEBUG_FLUSH;
+      vjDEBUG_NEXT(vjDBG_INPUT_MGR,3) << "Position Transform enabled..."
+                                      << std::endl << vjDEBUG_FLUSH;
       setTransform
       ( chunk->getProperty("translate",0) , // xtrans
         chunk->getProperty("translate",1) , // ytrans
@@ -92,7 +94,9 @@ bool vjPosProxy::config(vjConfigChunk* chunk)
         chunk->getProperty("rotate",0) , // xrot
         chunk->getProperty("rotate",1) , // yrot
         chunk->getProperty("rotate",2) );// zrot
-      vjDEBUG_NEXT(vjDBG_INPUT_MGR,4) << "Transform Matrix: " << endl << getTransform() << endl << vjDEBUG_FLUSH;
+      vjDEBUG_NEXT(vjDBG_INPUT_MGR,4) << "Transform Matrix: " << std::endl
+                                      << getTransform() << std::endl
+                                      << vjDEBUG_FLUSH;
    }
 
    // Setup filter method
@@ -100,7 +104,8 @@ bool vjPosProxy::config(vjConfigChunk* chunk)
    // in future, there should be a filter factory
    if(true == (bool)chunk->getProperty("useFilter"))
    {
-      vjDEBUG_NEXT(vjDBG_INPUT_MGR,3) << "Using filter: Linear sigmoid." << endl << vjDEBUG_FLUSH;
+      vjDEBUG_NEXT(vjDBG_INPUT_MGR,3) << "Using filter: Linear sigmoid."
+                                      << std::endl << vjDEBUG_FLUSH;
       vjLinearSigmoidPosFilter* sig_filter;
       sig_filter = new vjLinearSigmoidPosFilter();
 
@@ -115,7 +120,8 @@ bool vjPosProxy::config(vjConfigChunk* chunk)
    }
    else
    {
-      vjDEBUG_NEXT(vjDBG_INPUT_MGR,3) << "NOT USING FILTER." << endl << vjDEBUG_FLUSH;
+      vjDEBUG_NEXT(vjDBG_INPUT_MGR,3) << "NOT USING FILTER." << std::endl
+                                      << vjDEBUG_FLUSH;
    }
 
    // --- SETUP PROXY with INPUT MGR ---- //
@@ -124,13 +130,15 @@ bool vjPosProxy::config(vjConfigChunk* chunk)
 
    if ( proxy_num != -1)
    {
-      vjDEBUG_END(vjDBG_INPUT_MGR,3) << "   PosProxy config()'ed" << endl << vjDEBUG_FLUSH;
+      vjDEBUG_END(vjDBG_INPUT_MGR,3) << "   PosProxy config()'ed" << std::endl
+                                     << vjDEBUG_FLUSH;
       return true;
    }
    else
    {
-      vjDEBUG_END(vjDBG_INPUT_MGR,0) << "   PosProxy config() failed" << endl << vjDEBUG_FLUSH;
-      vjDEBUG_END(vjDBG_INPUT_MGR,3) << endl << vjDEBUG_FLUSH;
+      vjDEBUG_END(vjDBG_INPUT_MGR,0) << "   PosProxy config() failed"
+                                     << std::endl << vjDEBUG_FLUSH;
+      vjDEBUG_END(vjDBG_INPUT_MGR,3) << std::endl << vjDEBUG_FLUSH;
       return false;
    }
 }

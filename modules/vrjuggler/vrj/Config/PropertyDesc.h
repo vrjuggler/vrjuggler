@@ -137,13 +137,13 @@ public:
     //: Writes a vjPropertyDesc to the given ostream
     //!NOTE: output format is:
     //+      name typename num token { enum1 enum2=42 } "help string"
-    friend ostream& operator << (ostream& out, vjPropertyDesc& self);
+    friend std::ostream& operator << (std::ostream& out, vjPropertyDesc& self);
 
 
 
     //: Reads a vjPropertyDesc from the named istream
     //!NOTE: format is the same as that written out by <<
-    friend istream& operator >> (istream& in, vjPropertyDesc& self);
+    friend std::istream& operator >> (std::istream& in, vjPropertyDesc& self);
 
 
     vjPropertyDesc& operator= (vjPropertyDesc& pd);

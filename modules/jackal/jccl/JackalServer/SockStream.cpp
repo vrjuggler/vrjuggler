@@ -31,29 +31,30 @@
  * -----------------------------------------------------------------
  */
 
-#include <Environment/vjSockStream.h>
+#include <vjConfig.h>
 
-#ifdef WIN32
+#ifdef VJ_OS_Win32
 #include <winsock2.h>
 #else
 #include <sys/types.h>
 #include <sys/socket.h>
 #endif
 
+#include <Environment/vjSockStream.h>
+
+
 const size_t sockstreambuf::BUFSIZE = 128;
 
 
-sockstreambuf::sockstreambuf (int _sock): streambuf() {
+sockstreambuf::sockstreambuf (int _sock): std::streambuf() {
     sock = _sock;
     buf = new char[2*BUFSIZE +2];  //allocate a buffer
     setg (buf, buf, buf);            //set the get area
     setp (buf+BUFSIZE, buf+2*BUFSIZE);          //set the put area
-
-
 }
 
 
-sockstreambuf::sockstreambuf (): streambuf() {
+sockstreambuf::sockstreambuf (): std::streambuf() {
     sock = -1;
     buf = new char[2*BUFSIZE +2];  //allocate a buffer
     setg (buf, buf, buf);            //set the get area
@@ -63,7 +64,7 @@ sockstreambuf::sockstreambuf (): streambuf() {
 
 
 int sockstreambuf::overflow (int c) {
-    //cout << "overflow: pbase is " << (int)pbase() << " and msg size is " << (int)(pptr()-pbase()) << endl;
+    //std::cout << "overflow: pbase is " << (int)pbase() << " and msg size is " << (int)(pptr()-pbase()) << std::endl;
     
     send (sock, pbase(), pptr()-pbase(), 0);
     setp (buf+BUFSIZE, buf+2*BUFSIZE);          //set the put area
@@ -76,7 +77,7 @@ int sockstreambuf::overflow (int c) {
 
 int sockstreambuf::underflow () {
     char c;
-    //cout << "underflow: gptr is " << (int)gptr() << " and egptr is " << (int)egptr() << endl;
+    //std::cout << "underflow: gptr is " << (int)gptr() << " and egptr is " << (int)egptr() << std::endl;
     if (gptr() < egptr()) {
         // does underflow ever actually get called under this circumstance?
         // there's already a character to read...
@@ -100,7 +101,7 @@ int sockstreambuf::underflow () {
 
 
 int sockstreambuf::sync() {
-    //cout << "sync was called!" << endl;
+    //std::cout << "sync was called!" << std::endl;
     overflow();
     return 0;
     //return streambuf::sync();

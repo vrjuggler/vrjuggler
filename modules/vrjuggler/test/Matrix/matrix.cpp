@@ -31,7 +31,7 @@
  * -----------------------------------------------------------------
  */
 
-#include <iostream.h>
+#include <iostream>
 #include <Math/vjMatrix.h>
 #include <Math/vjVec3.h>
 
@@ -39,7 +39,7 @@ bool testMakeXYZ(float x, float y, float z);
 bool testMakeZYX(float z, float y, float x);
 bool compareMats(vjMatrix mat1, vjMatrix mat2, vjMatrix& difMat);
 
-#define testIt(test_desc, test_case) cout << test_desc; if((test_case)) { cout << "\t [ok]\n"; } else { cout << "\t [FAILED]\n";}
+#define testIt(test_desc, test_case) std::cout << test_desc; if((test_case)) { std::cout << "\t [ok]\n"; } else { std::cout << "\t [FAILED]\n";}
 
 int main(void)
 {
@@ -54,53 +54,53 @@ int main(void)
    long x;
 
    // ---- Test Matrix set ---- //
-   cout << "\n---- Testing Set Matrix ---" << endl;
+   std::cout << "\n---- Testing Set Matrix ---" << std::endl;
 
    testMat.set(0.0f, 0.1f, 0.2f, 0.3f,
                1.0f, 1.1f, 1.2f, 1.3f,
                2.0f, 2.1f, 2.2f, 2.3f,
                3.0f, 3.1f, 3.2f, 3.3f);
 
-   cout << "Command issued:"
-        << "testMat.set(0.0f, 0.1f, 0.2f, 0.3f," << endl
-        << "      1.0f, 1.1f, 1.2f, 1.3f," << endl
-        << "       2.0f, 2.1f, 2.2f, 2.3f," << endl
-        << "       3.0f, 3.1f, 3.2f, 3.3f);" << endl;
+   std::cout << "Command issued:"
+             << "testMat.set(0.0f, 0.1f, 0.2f, 0.3f," << std::endl
+             << "      1.0f, 1.1f, 1.2f, 1.3f," << std::endl
+             << "       2.0f, 2.1f, 2.2f, 2.3f," << std::endl
+             << "       3.0f, 3.1f, 3.2f, 3.3f);" << std::endl;
 
-   cout << "Matrix:" << endl << testMat << endl;
+   std::cout << "Matrix:" << std::endl << testMat << std::endl;
 
    // --- Test Inverstion --- //
-   cout << "\n---- Test Matrix inverse ---" << endl;
+   std::cout << "\n---- Test Matrix inverse ---" << std::endl;
    testMat.set(-0.7f, 0.1f,  0.0f, 2.3f,
                -0.1f, -0.7f, 0.0f, 5.0f,
                 0.0f, 0.0f,  1.0f, 0.0f,
                 0.0f, 0.0f,  0.0f, 2.0f);
-   cout << "Orig Mat:" << endl << testMat << endl;
+   std::cout << "Orig Mat:" << std::endl << testMat << std::endl;
    testMat.invert(testMat);
-   cout << "Inverted Mat:" << endl << testMat << endl;
+   std::cout << "Inverted Mat:" << std::endl << testMat << std::endl;
 
    // ---- Test Mult --- //
-   cout << "\n---- Test Matrix multiply ---" << endl;
+   std::cout << "\n---- Test Matrix multiply ---" << std::endl;
    testMat2.set(9.7f, 0.1f,  -1.2f, 2.3f,
                2.1f, -0.7f, 0.75f, 5.0f,
                 0.3f, 4.0f,  1.0f, -3.5f,
                 2.0f, -3.0f,  7.9f, 2.0f);
-   cout << "m1:" << endl << testMat << endl;
-   cout << "m2:" << endl << testMat2 << endl;
+   std::cout << "m1:" << std::endl << testMat << std::endl;
+   std::cout << "m2:" << std::endl << testMat2 << std::endl;
    testMat.mult(testMat, testMat2);
-   cout << "result:" << endl << testMat << endl;
+   std::cout << "result:" << std::endl << testMat << std::endl;
 
    // ---- Test post mult ---- //
-   cout << "\n---- Test Post Matrix multiply ---" << endl;
+   std::cout << "\n---- Test Post Matrix multiply ---" << std::endl;
    testMat2.set(2.34f, 0.7f,  -3.4f, 1.89f,
                4.1f, -0.7f, 0.05f, 5.0f,
                 2.7f, 2.3f,  1.0f, -8.0f,
                 8.6f, -2.0f,  1.9f, 5.6f);
-   cout << "m1:" << endl << testMat << endl;
-   cout << "m2:" << endl << testMat2 << endl;
+   std::cout << "m1:" << std::endl << testMat << std::endl;
+   std::cout << "m2:" << std::endl << testMat2 << std::endl;
    testMat.postMult(testMat2);
-   cout << "testMat.postMult(testMat2)" << endl;
-   cout << "result:" << endl << testMat << endl;
+   std::cout << "testMat.postMult(testMat2)" << std::endl;
+   std::cout << "result:" << std::endl << testMat << std::endl;
 
 
    // ----- Test Mat*Vec ----- //
@@ -108,10 +108,10 @@ int main(void)
    // ----- Test Make Euler ---- //
 
    // ----- Test Make XYZ ----- //
-   cout << "\n----  Test makeXYZ ---" << endl;
+   std::cout << "\n----  Test makeXYZ ---" << std::endl;
    testMat.makeXYZEuler(-90, -180, 0);
-   cout << "Command issued:" << " makeXYZEuler(-90, -180, 0)" << endl;
-   cout << "Result:" << endl << testMat << endl;
+   std::cout << "Command issued:" << " makeXYZEuler(-90, -180, 0)" << std::endl;
+   std::cout << "Result:" << std::endl << testMat << std::endl;
 
 
    // --------------------------------------- //
@@ -119,45 +119,41 @@ int main(void)
    vjMatrix XYZMat;
 
    XYZMat.makeXYZEuler(0, 90, 90);
-   cout << "makeXYZEuler(0, 90, 90):" << endl
-   << XYZMat << endl;
+   std::cout << "makeXYZEuler(0, 90, 90):" << std::endl << XYZMat << std::endl;
    XYZMat.getXYZEuler(x_deg, y_deg, z_deg);
-   cout << "getXYZ:" << x_deg << ", " << y_deg << ", " << z_deg << "\n\n\n";
+   std::cout << "getXYZ:" << x_deg << ", " << y_deg << ", " << z_deg << "\n\n\n";
 
    // --------------------------------------- //
 
 
    XYZMat.makeXYZEuler(10, 0, 0);
-   cout << "makeXYZEuler(10, 0, 0):" << endl
-   << XYZMat << endl;
+   std::cout << "makeXYZEuler(10, 0, 0):" << std::endl << XYZMat << std::endl;
    XYZMat.getXYZEuler(x_deg, y_deg, z_deg);
-   cout << "getXYZ:" << x_deg << ", " << y_deg << ", " << z_deg << "\n\n\n";
+   std::cout << "getXYZ:" << x_deg << ", " << y_deg << ", " << z_deg << "\n\n\n";
 
    // --------------------------------------- //
 
 
    XYZMat.makeXYZEuler(0, 45, 0);
-   cout << "makeXYZEuler(0, 45, 0):" << endl
-   << XYZMat << endl;
+   std::cout << "makeXYZEuler(0, 45, 0):" << std::endl << XYZMat << std::endl;
    XYZMat.getXYZEuler(x_deg, y_deg, z_deg);
-   cout << "getXYZ:" << x_deg << ", " << y_deg << ", " << z_deg << "\n\n\n";
+   std::cout << "getXYZ:" << x_deg << ", " << y_deg << ", " << z_deg << "\n\n\n";
 
    // --------------------------------------- //
 
 
    XYZMat.makeXYZEuler(45, -30, 0);
-   cout << "makeXYZEuler(45, -30, 0):" << endl
-   << XYZMat << endl;
+   std::cout << "makeXYZEuler(45, -30, 0):" << std::endl << XYZMat << std::endl;
    XYZMat.getXYZEuler(x_deg, y_deg, z_deg);
-   cout << "getXYZ:" << x_deg << ", " << y_deg << ", " << z_deg << "\n\n\n";
+   std::cout << "getXYZ:" << x_deg << ", " << y_deg << ", " << z_deg << "\n\n\n";
 
    // --------------------------------------- //
 
     XYZMat.makeXYZEuler(-20, 0, -80);
-   cout << "makeXYZEuler(-20, 0, -80):" << endl
-   << XYZMat << endl;
+   std::cout << "makeXYZEuler(-20, 0, -80):" << std::endl << XYZMat
+             << std::endl;
    XYZMat.getXYZEuler(x_deg, y_deg, z_deg);
-   cout << "getXYZ:" << x_deg << ", " << y_deg << ", " << z_deg << "\n\n\n";
+   std::cout << "getXYZ:" << x_deg << ", " << y_deg << ", " << z_deg << "\n\n\n";
 
    // --------------------------------------- //
    testIt("testMakeXYZ(175, -20, 35): ",(testMakeXYZ(175,-20,35)));
@@ -165,7 +161,7 @@ int main(void)
    testIt("testMakeXYZ(0, 90, 90)",(testMakeXYZ(0, 90, 90)));
 
    // ------------ Test random XYZ values ----------------- //
-   cout << "Random XYZ Eulers: " << endl;
+   std::cout << "Random XYZ Eulers: " << std::endl;
    tests_pass = false;
 
    for(x=0;x<50;x++)
@@ -178,13 +174,13 @@ int main(void)
       { tests_pass = false; }
    }
    if(tests_pass)
-   { cout << "\t[ok]\n"; }
+   { std::cout << "\t[ok]\n"; }
    else
-   { cout << "\t[FAILED]\n"; }
+   { std::cout << "\t[FAILED]\n"; }
 
 
    // -------------------------------------------
-   cout << "\nRandom ZYX Eulers:" << endl;
+   std::cout << "\nRandom ZYX Eulers:" << std::endl;
    tests_pass = false;
    for(x=0;x<50;x++)
    {
@@ -196,25 +192,28 @@ int main(void)
       { tests_pass = false; }
    }
    if(tests_pass)
-   { cout << "\t[ok]\n"; }
+   { std::cout << "\t[ok]\n"; }
    else
-   { cout << "\t[FAILED]\n"; }
+   { std::cout << "\t[FAILED]\n"; }
 
 
    // --------------------------------------- //
    // --- Test serial of transforms --------- //
    // --------------------------------------- //
    XYZMat.makeIdent();
-   cout << "Testing serial transforms around x_axis from identity:" << endl << XYZMat << endl;
+   std::cout << "Testing serial transforms around x_axis from identity:"
+             << std::endl << XYZMat << std::endl;
 
    for(x=0;x<(60*60*60*2);x++)
    {
       XYZMat.getXYZEuler(x_deg, y_deg, z_deg);
-      cout << "getXYZ:iter:" << x << " : xEuler:" << x_deg << ", yEuler:" << y_deg << ", zEuler:" << z_deg
-           << "\t\tXRot:" << XYZMat.getXRot() << "  YRot:" << XYZMat.getYRot() << "  ZRot:" << XYZMat.getZRot() << "\r" << flush;
+      std::cout << "getXYZ:iter:" << x << " : xEuler:" << x_deg << ", yEuler:"
+                << y_deg << ", zEuler:" << z_deg << "\t\tXRot:"
+                << XYZMat.getXRot() << "  YRot:" << XYZMat.getYRot()
+                << "  ZRot:" << XYZMat.getZRot() << "\r" << std::flush;
       XYZMat.preRot(0.005f, x_axis, XYZMat);
    }
-   cout << endl << endl;
+   std::cout << std::endl << std::endl;
 
    // --------------------------------------- //
    // ---- Create transform matrix ---------- //
@@ -225,12 +224,12 @@ int main(void)
    //rotMat.makeDirCos(vjVec3(1,0,0), vjVec3(0,0,-1), vjVec3(0,1,0));
    rotMat.makeZYXEuler(0,0,90);
 
-   cout << "--- The rotMat ----\n" << rotMat << endl;
+   std::cout << "--- The rotMat ----\n" << rotMat << std::endl;
 
    vjMatrix transRotMat;               // Need the transpose for Eulers
    transRotMat.transpose(rotMat);
 
-   cout << "---- The transpose rotMat ----\n" << transRotMat << endl;
+   std::cout << "---- The transpose rotMat ----\n" << transRotMat << std::endl;
 
    // ------------------------------------- //
    // ----  Test transform tracker axis --- //
@@ -240,24 +239,24 @@ int main(void)
    tracker_y_axis.set(0.0, 1.0, 0.0);
    tracker_z_axis.set(0.0, 0.0, 1.0);
 
-   cout << "\n--------- Tracker axis transforms -------\n";
+   std::cout << "\n--------- Tracker axis transforms -------\n";
 
    temp_axis.xformVec(transRotMat, tracker_x_axis);
-   cout << "X Axis:"
-        << "\t   orig:" << tracker_x_axis
-        << "\txformed:" << temp_axis << endl;
+   std::cout << "X Axis:"
+             << "\t   orig:" << tracker_x_axis
+             << "\txformed:" << temp_axis << std::endl;
 
    temp_axis.xformVec(transRotMat, tracker_y_axis);
-   cout << "Y Axis:"
-        << "\t   orig:" << tracker_y_axis
-        << "\txformed:" << temp_axis << endl;
+   std::cout << "Y Axis:"
+             << "\t   orig:" << tracker_y_axis
+             << "\txformed:" << temp_axis << std::endl;
 
    temp_axis.xformVec(transRotMat, tracker_z_axis);
-   cout << "Z Axis:"
-        << "\t   orig:" << tracker_z_axis
-        << "\txformed:" << temp_axis << endl;
+   std::cout << "Z Axis:"
+             << "\t   orig:" << tracker_z_axis
+             << "\txformed:" << temp_axis << std::endl;
 
-   cout << "\n\n\n";
+   std::cout << "\n\n\n";
 
    // ----------------------------------------- //
    // ------ Test Or tranformation ------------ //
@@ -272,60 +271,61 @@ int main(void)
    wTt = rotMat;     // Set the World to tracker coord system rotation matrix
 
    tTr.makeZYXEuler(0.0, 90.0, 0.0f);            // Ry(90)
-   cout << "\n-------- Test tracker Or transform ----------------\n"
-        << "tracker XYZ: 0.0, 90.0, 0.0" << endl;
+   std::cout << "\n-------- Test tracker Or transform ----------------\n"
+             << "tracker XYZ: 0.0, 90.0, 0.0" << std::endl;
 
    new_dir.xformVec(tTr, tracker_base_dir);      // Rotate the base
-   cout << " tracker rot (tTr):\n" << tTr << endl;
-   cout << "   Base Tracker dir: " << tracker_base_dir << endl;
-   cout << "Xformed Tracker dir (in T): " << new_dir << endl;
+   std::cout << " tracker rot (tTr):\n" << tTr << std::endl;
+   std::cout << "   Base Tracker dir: " << tracker_base_dir << std::endl;
+   std::cout << "Xformed Tracker dir (in T): " << new_dir << std::endl;
 
-   cout << "\nTest system transform\n";
+   std::cout << "\nTest system transform\n";
 
      // --- Test World (c2) coord system rotations --- //
-   cout << "wTt:\n" << wTt << endl;
-   cout << "tTr:\n" << tTr << endl;
+   std::cout << "wTt:\n" << wTt << std::endl;
+   std::cout << "tTr:\n" << tTr << std::endl;
 
    wTr.mult(wTt, tTr);     // Compute the world to reciever transform
 
-   cout << "wTr rotation\n" << wTr << endl;
+   std::cout << "wTr rotation\n" << wTr << std::endl;
    new_dir.xformVec(wTr, tracker_base_dir);           // Rotate the base into the C2 coord system
-   cout << "\nBase tracker dir: " << tracker_base_dir << endl;
-   cout << "  Xformed tracker dir (in W): " << new_dir << endl;
+   std::cout << "\nBase tracker dir: " << tracker_base_dir << std::endl;
+   std::cout << "  Xformed tracker dir (in W): " << new_dir << std::endl;
 
       // --- Get reciever orientation --- //
    float rot_z, rot_y, rot_x;
    wTr.getZYXEuler(rot_z, rot_y, rot_x);
 
-   cout << "\n\nGet ZYX Euler: z:" << rot_z << "\ty:" << rot_y << "\tx:" << rot_x << endl;
+   std::cout << "\n\nGet ZYX Euler: z:" << rot_z << "\ty:" << rot_y << "\tx:"
+             << rot_x << std::endl;
 
    vjMatrix test_mat;
    test_mat.makeZYXEuler(rot_z, rot_y, rot_x);
 
-   cout << "Test extraction of same matrix: ";
+   std::cout << "Test extraction of same matrix: ";
    if(compareMats(test_mat, wTr, diff_mat) == true)
    {
-      cout << " Same.";
+      std::cout << " Same.";
    }
    else
    {
-      cout << "Different: \n" << diff_mat << endl;
+      std::cout << "Different: \n" << diff_mat << std::endl;
    }
-   cout << endl;
+   std::cout << std::endl;
 
 
    vjMatrix known_mat;
    known_mat.makeZYXEuler(90, 0, 90);
-   cout << "Test against known matrix: ";
+   std::cout << "Test against known matrix: ";
 
    if(compareMats(known_mat, wTr, diff_mat))
    {
-      cout << " Same.";
+      std::cout << " Same.";
    } else {
-      cout << "Different: \n" << diff_mat;
+      std::cout << "Different: \n" << diff_mat;
    }
 
-   cout << endl << endl;
+   std::cout << std::endl << std::endl;
 
 
 
@@ -334,20 +334,20 @@ int main(void)
    // ---------------------------------- //
    vjVec3   original_pt, transformed_pt;
 
-   cout << "\n---- Test pt conversion ----\n";
+   std::cout << "\n---- Test pt conversion ----\n";
 
    original_pt.set(0.0f, 1.0f, -1.0f);       // This pt is in the tracker coord system
-   cout << "orig: " << original_pt << endl;
+   std::cout << "orig: " << original_pt << std::endl;
 
    transformed_pt.xformFull(wTt, original_pt);
-   cout << "new pt:" << transformed_pt << endl;
+   std::cout << "new pt:" << transformed_pt << std::endl;
 
    // ------------------------------------------ //
 
    vjMatrix dir_cos_test;
    dir_cos_test.makeDirCos(vjVec3(0,1,0), vjVec3(-1,0,0), vjVec3(0,0,1));
-   cout << "\nmakeDirCos(vjVec3(0,1,0), vjVec3(-1,0,0), vjVec3(0,0,1))" << endl
-        << dir_cos_test << endl;
+   std::cout << "\nmakeDirCos(vjVec3(0,1,0), vjVec3(-1,0,0), vjVec3(0,0,1))"
+             << std::endl << dir_cos_test << std::endl;
 
    // -----------------------------------
    // Test get?Rot funcs
@@ -357,14 +357,15 @@ int main(void)
 
    testMat2.makeRot(-56.0,vjVec3(0,1,0));
    testIt("getYRot..",((testMat2.getXRot() == 0.0f) && (testMat2.getYRot() == -56.0f) && (testMat2.getZRot() == 0.0f)));
-   cout << "x: " << testMat2.getXRot() << ", y:" << testMat2.getYRot() << ", z:" << testMat2.getZRot() << endl;
+   std::cout << "x: " << testMat2.getXRot() << ", y:" << testMat2.getYRot()
+             << ", z:" << testMat2.getZRot() << std::endl;
 
    testMat2.makeRot(78.0, vjVec3(0,0,1));
    testIt("getZRot..",((testMat2.getXRot() == 0.0f) && (testMat2.getYRot() == 0.0f) && (testMat2.getZRot() == 78.0f)));
    /*
-   cout << "roll  only: " << "y:" << testMat2.getYaw()
-                             << " p:" << testMat2.getPitch()
-                             << " r:" << testMat2.getRoll() << endl;
+   std::cout << "roll  only: " << "y:" << testMat2.getYaw()
+                               << " p:" << testMat2.getPitch()
+                               << " r:" << testMat2.getRoll() << std::endl;
    */
    // ------------------------------------
    // ---- Test axis constraints ---------
@@ -373,70 +374,71 @@ int main(void)
    {
       float pitch(0),yaw(0),roll(0);
 
-      cout << "contrainMat: makeXYZEuler(2.0,67.0,-76.0)\n";
+      std::cout << "contrainMat: makeXYZEuler(2.0,67.0,-76.0)\n";
       testMat.makeXYZEuler(2.0,67.0,-76.0);
-      cout << "Original Matrix: " << "x:" << testMat.getXRot()
-                             << " y:" << testMat.getYRot()
-                             << " z:" << testMat.getZRot() << endl;
+      std::cout << "Original Matrix: " << "x:" << testMat.getXRot()
+                                       << " y:" << testMat.getYRot()
+                                       << " z:" << testMat.getZRot()
+                                       << std::endl;
 
       testMat.constrainRotAxis(true,false,false,testMat2);
-      cout << "x rot only: " << "x:" << testMat2.getXRot()
-                             << " y:" << testMat2.getYRot()
-                             << " z:" << testMat2.getZRot() << endl;
+      std::cout << "x rot only: " << "x:" << testMat2.getXRot()
+                                  << " y:" << testMat2.getYRot()
+                                  << " z:" << testMat2.getZRot() << std::endl;
 
       testMat.constrainRotAxis(false,true,false,testMat2);
-      cout << "y rot only: " << "x:" << testMat2.getXRot()
-                             << " y:" << testMat2.getYRot()
-                             << " z:" << testMat2.getZRot() << endl;
+      std::cout << "y rot only: " << "x:" << testMat2.getXRot()
+                                  << " y:" << testMat2.getYRot()
+                                  << " z:" << testMat2.getZRot() << std::endl;
       testMat.constrainRotAxis(false,false,true,testMat2);
-      cout << "z rot only: " << "x:" << testMat2.getXRot()
-                             << " y:" << testMat2.getYRot()
-                             << " z:" << testMat2.getZRot() << endl;
+      std::cout << "z rot only: " << "x:" << testMat2.getXRot()
+                                  << " y:" << testMat2.getYRot()
+                                  << " z:" << testMat2.getZRot() << std::endl;
 
       testMat.constrainRotAxis(true,true,false,testMat2);
-      cout << "x and y rot: " << "x:" << testMat2.getXRot()
-                             << " y:" << testMat2.getYRot()
-                             << " z:" << testMat2.getZRot() << endl;
+      std::cout << "x and y rot: " << "x:" << testMat2.getXRot()
+                                   << " y:" << testMat2.getYRot()
+                                   << " z:" << testMat2.getZRot() << std::endl;
 
       testMat.constrainRotAxis(true,false,true,testMat2);
-      cout << "x and z rot: " << "x:" << testMat2.getXRot()
-                             << " y:" << testMat2.getYRot()
-                             << " z:" << testMat2.getZRot() << endl;
+      std::cout << "x and z rot: " << "x:" << testMat2.getXRot()
+                                   << " y:" << testMat2.getYRot()
+                                   << " z:" << testMat2.getZRot() << std::endl;
       testMat.constrainRotAxis(false,true,true,testMat2);
-      cout << "y and z rot: " << "x:" << testMat2.getXRot()
-                             << " y:" << testMat2.getYRot()
-                             << " z:" << testMat2.getZRot() << endl;
+      std::cout << "y and z rot: " << "x:" << testMat2.getXRot()
+                                   << " y:" << testMat2.getYRot()
+                                   << " z:" << testMat2.getZRot() << std::endl;
 
       // Kevin's original
 
-      cout << "Kevin's original version." << endl;
+      std::cout << "Kevin's original version." << std::endl;
       testMat._kevn_constrainRotAxis(true,false,false,testMat2);
-      cout << "x rot only: " << "x:" << testMat2.getXRot()
-                             << " y:" << testMat2.getYRot()
-                             << " z:" << testMat2.getZRot() << endl;
+      std::cout << "x rot only: " << "x:" << testMat2.getXRot()
+                                  << " y:" << testMat2.getYRot()
+                                  << " z:" << testMat2.getZRot() << std::endl;
 
       testMat._kevn_constrainRotAxis(false,true,false,testMat2);
-      cout << "y rot only: " << "x:" << testMat2.getXRot()
-                             << " y:" << testMat2.getYRot()
-                             << " z:" << testMat2.getZRot() << endl;
+      std::cout << "y rot only: " << "x:" << testMat2.getXRot()
+                                  << " y:" << testMat2.getYRot()
+                                  << " z:" << testMat2.getZRot() << std::endl;
       testMat._kevn_constrainRotAxis(false,false,true,testMat2);
-      cout << "z rot only: " << "x:" << testMat2.getXRot()
-                             << " y:" << testMat2.getYRot()
-                             << " z:" << testMat2.getZRot() << endl;
+      std::cout << "z rot only: " << "x:" << testMat2.getXRot()
+                                  << " y:" << testMat2.getYRot()
+                                  << " z:" << testMat2.getZRot() << std::endl;
 
       testMat._kevn_constrainRotAxis(true,true,false,testMat2);
-      cout << "x and y rot: " << "x:" << testMat2.getXRot()
-                             << " y:" << testMat2.getYRot()
-                             << " z:" << testMat2.getZRot() << endl;
+      std::cout << "x and y rot: " << "x:" << testMat2.getXRot()
+                                   << " y:" << testMat2.getYRot()
+                                   << " z:" << testMat2.getZRot() << std::endl;
 
       testMat._kevn_constrainRotAxis(true,false,true,testMat2);
-      cout << "x and z rot: " << "x:" << testMat2.getXRot()
-                             << " y:" << testMat2.getYRot()
-                             << " z:" << testMat2.getZRot() << endl;
+      std::cout << "x and z rot: " << "x:" << testMat2.getXRot()
+                                   << " y:" << testMat2.getYRot()
+                                   << " z:" << testMat2.getZRot() << std::endl;
       testMat._kevn_constrainRotAxis(false,true,true,testMat2);
-      cout << "y and z rot: " << "x:" << testMat2.getXRot()
-                             << " y:" << testMat2.getYRot()
-                             << " z:" << testMat2.getZRot() << endl;
+      std::cout << "y and z rot: " << "x:" << testMat2.getXRot()
+                                   << " y:" << testMat2.getYRot()
+                                   << " z:" << testMat2.getZRot() << std::endl;
 
    }
 
@@ -462,9 +464,9 @@ bool testMakeXYZ(float x, float y, float z)
    }
    else
    {
-      cout << "testMakeXYZ failed on: XYZ: " << x << ", " << y << ", " << z
-           << "\tGot: " <<  x_deg << ", " << y_deg << ", " << z_deg << endl
-           << "diff: \n" << diff_mat << endl;
+      std::cout << "testMakeXYZ failed on: XYZ: " << x << ", " << y << ", "
+                << z << "\tGot: " <<  x_deg << ", " << y_deg << ", " << z_deg
+                << std::endl << "diff: \n" << diff_mat << std::endl;
       return false;
    }
 }
@@ -486,9 +488,9 @@ bool testMakeZYX(float z, float y, float x)
    }
    else
    {
-      cout << "testMakeZYX failed on: ZYX: " << z << ", " << y << ", " << x
-           << "\tGot: " <<  z_deg << ", " << y_deg << ", " << x_deg
-           << "diff: \n" << diff_mat << endl;
+      std::cout << "testMakeZYX failed on: ZYX: " << z << ", " << y << ", "
+                << x << "\tGot: " <<  z_deg << ", " << y_deg << ", " << x_deg
+                << "diff: \n" << diff_mat << std::endl;
       return false;
    }
 }
@@ -504,7 +506,7 @@ bool compareMats(vjMatrix mat1, vjMatrix mat2, vjMatrix& difMat)
    }
    else
    {
-      //cout << "\tDifferent.";
+      //std::cout << "\tDifferent.";
       vjMatrix diff_mat;
       diff_mat = mat1 - mat2;
 
@@ -519,16 +521,15 @@ bool compareMats(vjMatrix mat1, vjMatrix mat2, vjMatrix& difMat)
 
       if(i==16)
       {
-         //cout << "  Within tolerance of 1e-5.";
+         //std::cout << "  Within tolerance of 1e-5.";
          return true;
       }
       else
       {
-         //cout << "Matrices are diff by:\n" << diff_mat << endl;
+         //std::cout << "Matrices are diff by:\n" << diff_mat << std::endl;
          difMat = diff_mat;
          return false;
       }
 
    }
 }
-

@@ -709,7 +709,7 @@ int vjMatrix::invert(vjMatrix& _m)
 
                 if ( fabs( pivot) <= 1e-20)
                 {
-                        cerr << "*** pivot = %f in mat_inv. ***\n";
+                        std::cerr << "*** pivot = %f in mat_inv. ***\n";
                         //exit( 0);
          return -1;
                 }
@@ -752,13 +752,13 @@ int vjMatrix::invert(vjMatrix& _m)
 }
 
    // ---- FRIEND FUNCTIONS ---- //
-ostream& operator<<(ostream& out, vjMatrix& _mat)
+std::ostream& operator<<(std::ostream& out, vjMatrix& _mat)
 {
    for(int j=0;j<4;j++)
    {
       for(int i=0;i<4;i++)
          out << _mat.mat[i][j] << " ";
-      out << endl;
+      out << std::endl;
    }
 
    return out;

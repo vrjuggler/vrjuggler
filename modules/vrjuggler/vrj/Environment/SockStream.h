@@ -35,9 +35,9 @@
 #define _VJ_SOCKSTREAM_H_
 
 #include <vjConfig.h>
-//#include <iostream>
 
-class sockstreambuf:public streambuf {
+
+class sockstreambuf:public std::streambuf {
 public:
 
     int sock;

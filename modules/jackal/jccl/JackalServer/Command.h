@@ -47,7 +47,7 @@ class vjChunkDescDB;
 
 class vjCommand {
 public:
-    virtual void call (ostream& out) = 0;
+    virtual void call (std::ostream& out) = 0;
     void resetFireTime (vjTimeStamp& ts);
 
     int operator < (const vjCommand& cmd2);
@@ -62,7 +62,7 @@ class vjCommandRefresh: public vjCommand {
 public:
     vjCommandRefresh();
     
-    virtual void call (ostream& out);
+    virtual void call (std::ostream& out);
 };
 
 
@@ -75,7 +75,7 @@ private:
 public:
     vjCommandSendChunkDB (vjConfigChunkDB* _db, bool _all = false);
 
-    virtual void call (ostream& out);
+    virtual void call (std::ostream& out);
 
     virtual std::string getName();
 };
@@ -90,7 +90,7 @@ private:
 public:
     vjCommandSendDescDB (vjChunkDescDB* _db, bool _all = false);
     
-    virtual void call (ostream& out);
+    virtual void call (std::ostream& out);
 
     virtual std::string getName();
 };
@@ -103,7 +103,7 @@ public:
     
     vjCommandTimedUpdate (vjTimedUpdate* _tu, float _refresh_time);
     
-    virtual void call (ostream& out);
+    virtual void call (std::ostream& out);
 
     virtual std::string getName ();
 };

@@ -215,14 +215,14 @@ std::vector<vjVarValue*> vjConfigChunk::getAllProperties(const std::string& prop
 
 
 
-ostream& operator << (ostream& out, vjConfigChunk& self) {
+std::ostream& operator << (std::ostream& out, vjConfigChunk& self) {
     // outputting an uninitialized chunk would be a mistake...
     if (self.desc) {
-        out << self.desc->token.c_str() << endl;
+        out << self.desc->token.c_str() << std::endl;
         for (unsigned int i =0; i < self.props.size(); i++) {
-            out << "  " << *(self.props[i]) << endl;
+            out << "  " << *(self.props[i]) << std::endl;
         }
-        out << "  End" << endl;
+        out << "  End" << std::endl;
     }
     return out;
 }
@@ -290,7 +290,7 @@ bool vjConfigChunk::tryassign (vjProperty *p, int index, const char* val) {
         p->setValue (val, index);
         return true;
     case T_EMBEDDEDCHUNK:
-        cout << "NOT HANDLED HERE!" << endl;
+        std::cout << "NOT HANDLED HERE!" << std::endl;
         return false;
     default:
         return false;
@@ -300,7 +300,7 @@ bool vjConfigChunk::tryassign (vjProperty *p, int index, const char* val) {
 
 
 
-istream& operator >> (istream& in, vjConfigChunk& self) {
+std::istream& operator >> (std::istream& in, vjConfigChunk& self) {
     /* can't really use property >> because we don't know what
      * property to assign into.
      */
@@ -322,7 +322,7 @@ istream& operator >> (istream& in, vjConfigChunk& self) {
         // We have a string token; assumably a property name.
         if (!(p = self.getPropertyPtrFromToken (buf))) {
             vjDEBUG(vjDBG_ERROR,0) << "ERROR: Property '" << buf << "' is not found in"
-                                   << " Chunk " << self.desc->name.c_str() << endl << vjDEBUG_FLUSH;
+                                   << " Chunk " << self.desc->name.c_str() << std::endl << vjDEBUG_FLUSH;
             continue;
         }
         
@@ -350,19 +350,19 @@ istream& operator >> (istream& in, vjConfigChunk& self) {
                 else {
                     if (!self.tryassign (p, i++, buf))
                         vjDEBUG(vjDBG_ERROR,2) << "ERROR: Assigning to property "
-                                               << p->getName().c_str() << endl << vjDEBUG_FLUSH;
+                                               << p->getName().c_str() << std::endl << vjDEBUG_FLUSH;
                 }
             }
             
             if ((p->num != -1) && (p->num != i))
                 vjDEBUG(vjDBG_ERROR,1) << "ERROR: vjProperty " << p->getName().c_str() << " should have "
-                                       << p->num << " values; " << i << " found" << endl << vjDEBUG_FLUSH;
+                                       << p->num << " values; " << i << " found" << std::endl << vjDEBUG_FLUSH;
         }
         else {
             // we're just doing one value.
             if (!self.tryassign (p, 0, buf))
                 vjDEBUG(vjDBG_ERROR,1) << "ERROR: Assigning to property "
-                                       << p->getName().c_str() << endl << vjDEBUG_FLUSH;
+                                       << p->getName().c_str() << std::endl << vjDEBUG_FLUSH;
             //        self.getVJCFGToken (in,tok);
             //        if (tok.type == TK_Unit) {
             //       p->applyUnits (tok.unitval);
@@ -370,7 +370,7 @@ istream& operator >> (istream& in, vjConfigChunk& self) {
             //        }
             if (p->num > 1) {
                 vjDEBUG(vjDBG_ERROR,3) << "ERROR: Property " << p->getName().c_str()
-                                       << " expects " << p->num << " values." << endl << vjDEBUG_FLUSH;
+                                       << " expects " << p->num << " values." << std::endl << vjDEBUG_FLUSH;
             }
         }
     }

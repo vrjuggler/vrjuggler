@@ -151,7 +151,7 @@ vjVarValue::operator int() const {
 	return (int)floatval;
     case T_INVALID:
 	vjDEBUG(vjDBG_CONFIG,4) << using_invalid_msg.c_str() << 1 
-			       << endl << vjDEBUG_FLUSH;
+			        << std::endl << vjDEBUG_FLUSH;
 	return 0;
     default:
        vjDEBUG(vjDBG_ERROR,0) << "vjVarValue: type mismatch in cast to int.\n" 
@@ -174,7 +174,7 @@ vjVarValue::operator vjConfigChunk*() const {
         }
     case T_INVALID:
 	vjDEBUG(vjDBG_CONFIG,4) << using_invalid_msg.c_str() << 2 
-			       << endl << vjDEBUG_FLUSH;
+			        << std::endl << vjDEBUG_FLUSH;
 	return NULL;
     default:
 	vjDEBUG(vjDBG_ERROR,0) << "vjVarValue: type mismatch in cast to vjConfigChunk* - real type is " << typeString(type) << ".\n" << vjDEBUG_FLUSH;
@@ -196,7 +196,7 @@ vjVarValue::operator bool() const {
 	return (bool)floatval;
     case T_INVALID:
 	vjDEBUG(vjDBG_CONFIG,4) << using_invalid_msg.c_str() << 3 
-			       << endl << vjDEBUG_FLUSH;
+			        << std::endl << vjDEBUG_FLUSH;
 	return false;
     default:
        vjDEBUG(vjDBG_ERROR,0) << "vjVarValue: type mismatch in cast to bool.\n"
@@ -217,7 +217,7 @@ vjVarValue::operator float () const {
 	return (float)boolval;
     case T_INVALID:
 	vjDEBUG(vjDBG_CONFIG,4) <<  using_invalid_msg.c_str() << 4 
-			       << endl << vjDEBUG_FLUSH;
+			        << std::endl << vjDEBUG_FLUSH;
 	return 0.0f;
     default:
        vjDEBUG(vjDBG_ERROR,0) << "vjVarValue: type mismatch in cast to float.\n" << vjDEBUG_FLUSH;
@@ -234,7 +234,7 @@ char* vjVarValue::cstring () const {
 	return strdup (strval.c_str());
     case T_INVALID:
 	vjDEBUG(vjDBG_CONFIG,4) <<  using_invalid_msg.c_str() << 5 
-			       << endl << vjDEBUG_FLUSH;
+			        << std::endl << vjDEBUG_FLUSH;
 	return strdup("");
     default:
        vjDEBUG(vjDBG_ERROR,0) << "vjVarValue: type mismatch in cstring().\n" << vjDEBUG_FLUSH << vjDEBUG_FLUSH;
@@ -251,7 +251,7 @@ vjVarValue::operator std::string () const {
 	return strval;
     case T_INVALID:
 	vjDEBUG(vjDBG_CONFIG,4) <<  using_invalid_msg.c_str() << 6 
-			       << endl << vjDEBUG_FLUSH;
+			        << std::endl << vjDEBUG_FLUSH;
 	return (std::string)"";
     default:
        vjDEBUG(vjDBG_ERROR,0) << "vjVarValue: type mismatch in cast to std::string.\n" << vjDEBUG_FLUSH;
@@ -388,7 +388,7 @@ vjVarValue &vjVarValue::operator = (vjConfigChunk *s) {
 
 
 
-ostream& operator << (ostream& out, const vjVarValue& v) {
+std::ostream& operator << (std::ostream& out, const vjVarValue& v) {
     //      vjDEBUG(vjDBG_ERROR,0) << "in << func" <<flush;
 
     switch (v.type) {

@@ -232,7 +232,8 @@ vjMotionStar::stopSampling () {
          retval = 0;
       }
       else {
-         vjDEBUG(vjDBG_INPUT_MGR,1) << "Stopped.\n" << endl << vjDEBUG_FLUSH;
+         vjDEBUG(vjDBG_INPUT_MGR,1) << "Stopped.\n" << std::endl
+                                    << vjDEBUG_FLUSH;
          retval = 1;
       }
    }
@@ -250,7 +251,8 @@ vjMotionStar::stopSampling () {
 int
 vjMotionStar::sample () {
    if ( this->isActive() == false ) {
-       vjDEBUG(vjDBG_ALL,0) << "NOT ACTIVE IN SAMPLE" << endl << vjDEBUG_FLUSH;
+       vjDEBUG(vjDBG_ALL,0) << "NOT ACTIVE IN SAMPLE" << std::endl
+                            << vjDEBUG_FLUSH;
        return 0;
    }
 

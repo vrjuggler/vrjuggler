@@ -74,7 +74,9 @@ bool vjSimDigitalGlove::config( vjConfigChunk* chunk )
       std::string glove_pos_proxy = chunk->getProperty( "glovePos" );    // Get the name of the pos_proxy
       if (glove_pos_proxy == std::string(""))
       {
-         vjDEBUG( vjDBG_INPUT_MGR, 0 ) << "[ERROR]: vjSimPinchglove has no posProxy, config fails." << endl << vjDEBUG_FLUSH;
+         vjDEBUG( vjDBG_INPUT_MGR, 0 )
+            << "[ERROR]: vjSimPinchglove has no posProxy, config fails."
+            << std::endl << vjDEBUG_FLUSH;
          return false;
       }
 
@@ -83,7 +85,9 @@ bool vjSimDigitalGlove::config( vjConfigChunk* chunk )
       if (proxy_index != -1)
          mGlovePos[LEFT_INDEX] = vjKernel::instance()->getInputManager()->getPosProxy( proxy_index );
       else
-         vjDEBUG( vjDBG_INPUT_MGR, 0 ) << "[ERROR]: vjSimPinchglove::config(): Can't find posProxy, config fails." << endl << vjDEBUG_FLUSH << endl;
+         vjDEBUG( vjDBG_INPUT_MGR, 0 )
+            << "[ERROR]: vjSimPinchglove::config(): Can't find posProxy, config fails."
+            << std::endl << vjDEBUG_FLUSH << std::endl;
    }
       
     
@@ -94,7 +98,9 @@ bool vjSimDigitalGlove::config( vjConfigChunk* chunk )
       std::string glove_pos_proxy = chunk->getProperty( "rightGlovePos" );    // Get the name of the pos_proxy
       if (glove_pos_proxy == std::string(""))
       {
-         vjDEBUG( vjDBG_INPUT_MGR, 0 ) << "[ERROR]: vjSimPinchglove has no rightPosProxy, config fails." << endl << vjDEBUG_FLUSH;
+         vjDEBUG( vjDBG_INPUT_MGR, 0 )
+            << "[ERROR]: vjSimPinchglove has no rightPosProxy, config fails."
+            << std::endl << vjDEBUG_FLUSH;
          return false;
       }
 
@@ -103,7 +109,9 @@ bool vjSimDigitalGlove::config( vjConfigChunk* chunk )
       if (proxy_index != -1)
          mGlovePos[RIGHT_INDEX] = vjKernel::instance()->getInputManager()->getPosProxy( proxy_index );
       else
-         vjDEBUG( vjDBG_INPUT_MGR, 0 ) << "[ERROR]: vjSimPinchglove::config(): Can't find posProxy, config fails." << endl << vjDEBUG_FLUSH << endl;
+         vjDEBUG( vjDBG_INPUT_MGR, 0 )
+            << "[ERROR]: vjSimPinchglove::config(): Can't find posProxy, config fails."
+            << std::endl << vjDEBUG_FLUSH << std::endl;
    }
    
          
@@ -144,7 +152,7 @@ void vjSimDigitalGlove::updateData()
    // this function looks at mDigitalData, and sets angles in mTheData.  
    // This updates the writable buffer of mTheData (called progress)
    this->updateFingerAngles();
-	
+
    // Update the xform data for the writable buffer (called progress)
    mTheData[0][progress].calcXforms();
    mTheData[1][progress].calcXforms();
@@ -155,7 +163,7 @@ void vjSimDigitalGlove::updateData()
   
    //vjDEBUG(vjDBG_ALL,0)<<mTheData[0][current].outputAngles(cout);
    //vjDEBUG(vjDBG_ALL,0)<<mTheData[1][current].outputAngles(cout);
-	
+
    
    //TODO:  how does the angles get turned into a gesture ID????
    return;
@@ -264,7 +272,7 @@ void vjSimDigitalGlove::updateFingerAngles()
        mTheData[RIGHT_HAND][progress].angles[vjGloveData::WRIST][vjGloveData::PITCH] = mRightHand.pitch();
     }
     
-    //vjDEBUG(vjDBG_ALL,0)<<"out\n"<<flush; 
+    //vjDEBUG(vjDBG_ALL,0)<<"out\n"<<std::flush; 
 }
 
 /*
@@ -286,7 +294,9 @@ void vjSimDigitalGlove::loadTrainedFile(std::string fileName)
    }
    else
    {
-      vjDEBUG(vjDBG_INPUT_MGR,0) << "vjSimGloveGesture:: Can't load trained file: " << fileName.c_str() << endl << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_INPUT_MGR,0)
+         << "vjSimGloveGesture:: Can't load trained file: " << fileName.c_str()
+         << std::endl << vjDEBUG_FLUSH;
    }
 }
 */

@@ -38,7 +38,7 @@
 #include <vjConfig.h>
 #include <iostream>
 
-#ifndef WIN32
+#ifndef VJ_OS_Win32
 
 
 typedef int vjSocketIDPosix;
@@ -48,8 +48,8 @@ class vjSocketPosix {
 
 private:
 
-    ostream* out;
-    istream* in;
+    std::ostream* out;
+    std::istream* in;
     vjSocketIDPosix sockid;
 
 public:
@@ -74,11 +74,11 @@ public:
     // must be called after listen
     vjSocketPosix* accept ();
 
-    inline ostream* getOutputStream () {
+    inline std::ostream* getOutputStream () {
         return out;
     }
 
-    inline istream* getInputStream () {
+    inline std::istream* getInputStream () {
         return in;
     }
 
@@ -103,8 +103,8 @@ class vjSocketWin32 {
 
 private:
 
-    ostream* out;
-    istream* in;
+    std::ostream* out;
+    std::istream* in;
     vjSocketIDWin32 sockid;
 
 public:
@@ -127,11 +127,11 @@ public:
     vjSocketWin32* accept ();
 
 
-    inline ostream* getOutputStream () {
+    inline std::ostream* getOutputStream () {
         return out;
     }
 
-    inline istream* getInputStream () {
+    inline std::istream* getInputStream () {
         return in;
     }
 
@@ -142,7 +142,7 @@ typedef vjSocketWin32 vjSocket;
 typedef vjSocketIDWin32 vjSocketID;
 
 
-#endif //ifndef WIN32
+#endif //ifndef VJ_OS_Win32
 
 #endif
 

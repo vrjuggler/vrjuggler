@@ -248,12 +248,15 @@ int vjConfigChunkDB::dependencySort(vjConfigChunkDB* auxChunks)
 #ifdef VJ_DEBUG
     vjDEBUG_BEGIN(vjDBG_CONFIG,4) << "---- Dependencies -----------\n" << vjDEBUG_FLUSH;
     for (unsigned int i=0;i<chunks.size();i++) {
-        vjDEBUG(vjDBG_CONFIG,4) << "Chunk:" << chunks[i]->getProperty("name") << endl
-                                << "\tDepends on:\n" << vjDEBUG_FLUSH;
+        vjDEBUG(vjDBG_CONFIG,4) << "Chunk:" << chunks[i]->getProperty("name")
+                                << std::endl << "\tDepends on:\n"
+                                << vjDEBUG_FLUSH;
         std::vector<std::string> deps = chunks[i]->getChunkPtrDependencies();
         if (deps.size() > 0) {
             for (unsigned int j=0;j<deps.size();j++)
-                vjDEBUG(vjDBG_CONFIG,4) << "   " << j << ": " << deps[j].c_str() << endl << vjDEBUG_FLUSH;
+                vjDEBUG(vjDBG_CONFIG,4) << "   " << j << ": "
+                                        << deps[j].c_str() << std::endl
+                                        << vjDEBUG_FLUSH;
         } else {
             vjDEBUG(vjDBG_CONFIG,4) << "   Nothing.\n" << vjDEBUG_FLUSH;
         }
@@ -313,7 +316,9 @@ int vjConfigChunkDB::dependencySort(vjConfigChunkDB* auxChunks)
             std::vector<std::string> deps = src_chunks[i]->getChunkPtrDependencies();
             if (deps.size() > 0) {
                 for (unsigned int j=0;j<deps.size();j++)
-                    vjDEBUG(vjDBG_ERROR,0) << "\tdep " << j << ": " << deps[j].c_str() << endl << vjDEBUG_FLUSH;
+                    vjDEBUG(vjDBG_ERROR,0) << "\tdep " << j << ": "
+                                           << deps[j].c_str() << std::endl
+                                           << vjDEBUG_FLUSH;
             } else {
                 vjDEBUG(vjDBG_ERROR,0) << "Nothing.\n" << vjDEBUG_FLUSH;
             }
@@ -326,14 +331,14 @@ int vjConfigChunkDB::dependencySort(vjConfigChunkDB* auxChunks)
         // Print out sorted dependancies
 #ifdef VJ_DEBUG
 
-        vjDEBUG_BEGIN(vjDBG_CONFIG,4) << "---- After sort ----" << endl << vjDEBUG_FLUSH;
+        vjDEBUG_BEGIN(vjDBG_CONFIG,4) << "---- After sort ----" << std::endl << vjDEBUG_FLUSH;
         for (unsigned int i=0;i<chunks.size();i++) {
-            vjDEBUG(vjDBG_CONFIG,4) << "Chunk:" << chunks[i]->getProperty("name") << endl
+            vjDEBUG(vjDBG_CONFIG,4) << "Chunk:" << chunks[i]->getProperty("name") << std::endl
                                     << "\tDepends on:\n" << vjDEBUG_FLUSH;
             std::vector<std::string> deps = chunks[i]->getChunkPtrDependencies();
             if (deps.size() > 0) {
                 for (unsigned int j=0;j<deps.size();j++)
-                    vjDEBUG(vjDBG_CONFIG,4) << "   " << j << ": " << deps[j].c_str() << endl << vjDEBUG_FLUSH;
+                    vjDEBUG(vjDBG_CONFIG,4) << "   " << j << ": " << deps[j].c_str() << std::endl << vjDEBUG_FLUSH;
             } else {
                 vjDEBUG(vjDBG_CONFIG,4) << "   Nothing.\n" << vjDEBUG_FLUSH;
             }
@@ -349,17 +354,17 @@ int vjConfigChunkDB::dependencySort(vjConfigChunkDB* auxChunks)
 
 /* IO functions: */
 
-ostream& operator << (ostream& out, vjConfigChunkDB& self) {
+std::ostream& operator << (std::ostream& out, vjConfigChunkDB& self) {
     for (unsigned int i = 0; i < self.chunks.size(); i++) {
-        out << *(self.chunks[i]) << endl;
+        out << *(self.chunks[i]) << std::endl;
     }
-    out << "End" << endl;
+    out << "End" << std::endl;
     return out;
 }
 
 
 
-istream& operator >> (istream& in, vjConfigChunkDB& self) {
+std::istream& operator >> (std::istream& in, vjConfigChunkDB& self) {
 
     const int bufsize = 512;
     char str[bufsize];
@@ -374,19 +379,19 @@ istream& operator >> (istream& in, vjConfigChunkDB& self) {
         std::string newstr = str;
         ch = vjChunkFactory::instance()->createChunk (newstr);
         if (ch == NULL) {
-            vjDEBUG(vjDBG_ERROR,0) << "ERROR!: Unknown Chunk type: " << str << endl
+            vjDEBUG(vjDBG_ERROR,0) << "ERROR!: Unknown Chunk type: " << str << std::endl
                                    << vjDEBUG_FLUSH;
             // skip to end of chunk
             while (strcasecmp (str, "end")) {
                 if (0 == readString (in, str, bufsize))
                     break;
-                //cerr << "read " << str << endl;
+                //std::cerr << "read " << str << std::endl;
             }
         }
         else {
             in >> *ch;
 
-            //cerr << "read chunk: " << *ch << endl;
+            //std::cerr << "read chunk: " << *ch << std::endl;
             
             if (!vjstrcasecmp (ch->getType(), "vjIncludeFile")) {
                 // this is another one of those bits of code where we need to make some
@@ -411,7 +416,9 @@ istream& operator >> (istream& in, vjConfigChunkDB& self) {
         }
     } while (!in.eof());
 
-    vjDEBUG(vjDBG_CONFIG,3) << "vjConfigChunkDB::>> : Finished - " << self.chunks.size() << " chunks read." << endl << vjDEBUG_FLUSH;
+    vjDEBUG(vjDBG_CONFIG,3) << "vjConfigChunkDB::>> : Finished - "
+                            << self.chunks.size() << " chunks read."
+                            << std::endl << vjDEBUG_FLUSH;
     
     return in;
 }
@@ -424,14 +431,14 @@ istream& operator >> (istream& in, vjConfigChunkDB& self) {
 bool vjConfigChunkDB::load (const std::string& filename, const std::string& parentfile) {
     file_name = demangleFileName (filename, parentfile);
 
-    ifstream in(file_name.c_str());
+    std::ifstream in(file_name.c_str());
 
     vjDEBUG(vjDBG_CONFIG,3) << "vjConfigChunkDB::load(): opening file " << file_name.c_str() << " -- " << vjDEBUG_FLUSH;
 
 
     if (!in) {
         vjDEBUG(vjDBG_ALL,0) << "\nvjConfigChunkDB::load(): Unable to open file '"
-                             << file_name.c_str() << "'" << endl << vjDEBUG_FLUSH;
+                             << file_name.c_str() << "'" << std::endl << vjDEBUG_FLUSH;
         return false;
     }
     vjDEBUG(vjDBG_CONFIG,5) << " succeeded.\n" << vjDEBUG_FLUSH;
@@ -445,7 +452,7 @@ bool vjConfigChunkDB::load (const std::string& filename, const std::string& pare
 
 bool vjConfigChunkDB::save (const std::string& fname) {
 
-    ofstream out(fname.c_str());
+    std::ofstream out(fname.c_str());
     if (!out) {
         vjDEBUG(vjDBG_ERROR,1) << "ERROR: vjConfigChunkDB::save() - Unable to open file '"
                                << fname.c_str() << "'\n" << vjDEBUG_FLUSH;

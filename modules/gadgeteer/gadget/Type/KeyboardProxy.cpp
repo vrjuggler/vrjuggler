@@ -49,13 +49,15 @@ bool vjKeyboardProxy::config(vjConfigChunk* chunk)
 
    if ( proxy_num != -1)
    {
-      vjDEBUG_END(vjDBG_INPUT_MGR,3) << "   KeyboardProxy config()'ed" << endl << vjDEBUG_FLUSH;
+      vjDEBUG_END(vjDBG_INPUT_MGR,3) << "   KeyboardProxy config()'ed"
+                                     << std::endl << vjDEBUG_FLUSH;
       return true;
    }
    else
    {
-      vjDEBUG(vjDBG_INPUT_MGR,0) << "   KeyboardProxy config() failed" << endl << vjDEBUG_FLUSH;
-      vjDEBUG_END(vjDBG_INPUT_MGR,3) << endl << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_INPUT_MGR,0) << "   KeyboardProxy config() failed"
+                                 << std::endl << vjDEBUG_FLUSH;
+      vjDEBUG_END(vjDBG_INPUT_MGR,3) << std::endl << vjDEBUG_FLUSH;
       return false;
    }
 }

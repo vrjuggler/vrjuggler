@@ -34,6 +34,8 @@
 #ifndef _VJ_LINEAR_SIGMOID_POS_FILTER_H_
 #define _VJ_LINEAR_SIGMOID_POS_FILTER_H_
 
+#include <vjConfig.h>
+
 #include <Input/Filter/vjPosFilter.h>
 #include <Math/vjQuat.h>
 
@@ -116,7 +118,8 @@ vjMatrix vjLinearSigmoidPosFilter::getPos(const vjMatrix newPos)
    trans_diff = new_trans-last_returned_trans;
    dist = trans_diff.length();
 
-   vjDEBUG(vjDBG_ALL,2) << "sigmoid: dist: " << dist << endl << vjDEBUG_FLUSH;
+   vjDEBUG(vjDBG_ALL,2) << "sigmoid: dist: " << dist << std::endl
+                        << vjDEBUG_FLUSH;
 
    // Check max threshold
    if(dist > mMaxThreshold)
@@ -136,7 +139,8 @@ vjMatrix vjLinearSigmoidPosFilter::getPos(const vjMatrix newPos)
    }
    else
    {
-      vjDEBUG(vjDBG_ALL,2) << "sigmoid: scale_factor: " << scale_factor << endl << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_ALL,2) << "sigmoid: scale_factor: " << scale_factor
+                           << std::endl << vjDEBUG_FLUSH;
 
       vjASSERT((scale_factor > eps) && (scale_factor < (1.0f-eps)));
 

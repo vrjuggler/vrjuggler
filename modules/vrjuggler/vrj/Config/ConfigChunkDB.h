@@ -242,7 +242,7 @@ public:
     //! ARGS: out - an output stream
     //! ARGS: self - a ConfigChunkDB
     //! RETURNS: out
-    friend ostream& operator << (ostream& out, vjConfigChunkDB& self);
+    friend std::ostream& operator << (std::ostream& out, vjConfigChunkDB& self);
 
 
 
@@ -254,7 +254,7 @@ public:
     //! NOTE: Any ConfigChunks in self before the >> operation remain,
     //+       unless they have the same name as a newly read chunk
     //+       in which case they are replaced by the newer chunks.
-    friend istream& operator >> (istream& in, vjConfigChunkDB& self);
+    friend std::istream& operator >> (std::istream& in, vjConfigChunkDB& self);
 
 
 

@@ -57,7 +57,7 @@ CyberGloveBasic::CyberGloveBasic (char* calFileDir, char *serport, int baud)
 	   strcpy(mCalFileDir,calFileDir);
    }
    else
-      cerr << "Invalid calibration file specified" << endl;
+      std::cerr << "Invalid calibration file specified" << std::endl;
 
    if(serport != NULL)
    {
@@ -65,7 +65,7 @@ CyberGloveBasic::CyberGloveBasic (char* calFileDir, char *serport, int baud)
 	   strcpy(mSerialPort,serport);
    }
    else
-      cerr << "Invalid calibration file specified" << endl;
+      std::cerr << "Invalid calibration file specified" << std::endl;
 
    mBaudRate = baud;
 };
@@ -104,7 +104,7 @@ int CyberGloveBasic::close()
    if(mItsOpen)
    {
       vt_destroy_VirtualHand(hand);
-      cout << "Closing glove" << endl;
+      std::cout << "Closing glove" << std::endl;
    }
 
    return 1;
@@ -129,8 +129,8 @@ int CyberGloveBasic::sample()
       if (c == 60) {
          gettimeofday(&tv,0);
          stop_time = (double)tv.tv_sec+ (double)tv.tv_usec / 1000000.0;
-         cout << 1/((stop_time-start_time) / 60)
-              << "  " << endl;
+         std::cout << 1/((stop_time-start_time) / 60)
+                   << "  " << std::endl;
          c = 0;
       }*/
 

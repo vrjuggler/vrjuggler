@@ -33,6 +33,8 @@
 #ifndef _VJ_XWIN_KB_DEP_CHECKER_H_
 #define _VJ_XWIN_KB_DEP_CHECKER_H_
 
+#include <vjConfig.h>
+
 // Dependency checker includes
 #include <Kernel/vjDependencyManager.h>
 #include <Kernel/vjDepChecker.h>
@@ -84,11 +86,15 @@ public:
          vjDEBUG_CONT(vjDBG_ALL,dbg_lvl) << "passed.\n" << vjDEBUG_FLUSH;
 
 
-      vjDEBUG_NEXT(vjDBG_ALL,dbg_lvl) << "Extra Dependencies for: item: " << chunk->getProperty("name")
-                                      << " type: " << ((std::string)chunk->getType()).c_str() << endl
-                                      << "   Dependant upon displaySystemChunk in display Manager. (Needs it to find display strings)" << vjDEBUG_FLUSH;
+      vjDEBUG_NEXT(vjDBG_ALL,dbg_lvl) << "Extra Dependencies for: item: "
+                                      << chunk->getProperty("name")
+                                      << " type: "
+                                      << ((std::string)chunk->getType()).c_str()
+                                      << std::endl
+                                      << "   Dependant upon displaySystemChunk in display Manager. (Needs it to find display strings)"
+                                      << vjDEBUG_FLUSH;
 
-      vjDEBUG_NEXT_END(vjDBG_ALL,dbg_lvl) << endl << vjDEBUG_FLUSH;
+      vjDEBUG_NEXT_END(vjDBG_ALL,dbg_lvl) << std::endl << vjDEBUG_FLUSH;
    }
 };
 

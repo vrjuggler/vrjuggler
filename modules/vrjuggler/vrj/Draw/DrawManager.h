@@ -102,8 +102,8 @@ public:
    virtual void updateProjections()
    {;}
 
-   friend ostream& operator<<(ostream& out, vjDrawManager& drawMgr);
-   virtual void outStream(ostream& out)
+   friend std::ostream& operator<<(std::ostream& out, vjDrawManager& drawMgr);
+   virtual void outStream(std::ostream& out)
    { out << "vjDrawManager: outstream\n"; }  // Set a default
 
 protected:

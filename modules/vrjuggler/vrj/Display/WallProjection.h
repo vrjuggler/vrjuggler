@@ -85,7 +85,7 @@ public:
    //! NOTE: This function is called as part of calcViewMatrix
    virtual void calcViewFrustum(vjMatrix& eyePos);
 
-   ostream& outStream(ostream& out);
+   std::ostream& outStream(std::ostream& out);
 
 protected:
    // Rotation of the screen

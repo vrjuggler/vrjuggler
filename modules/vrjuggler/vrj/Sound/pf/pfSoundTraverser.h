@@ -34,7 +34,7 @@
 #ifndef _PERFORMER_JUGGLER_SOUND_REPLACE_TRAV_H_
 #define _PERFORMER_JUGGLER_SOUND_REPLACE_TRAV_H_
 
-#include <iostream.h>
+#include <iostream>
 #include <Performer/pr.h>
 #include <Performer/pf.h>
 #include <Performer/pfutil.h>
@@ -167,7 +167,7 @@ protected:
       }
       else
       {
-         //cout<<"Not a sound Node: "<<currentNode->getName()<<" classtype="<<currentNode->getClassType()<<"!="<<pfSoundNode::getClassType()<<"\n"<<flush;
+         //std::cout<<"Not a sound Node: "<<currentNode->getName()<<" classtype="<<currentNode->getClassType()<<"!="<<pfSoundNode::getClassType()<<"\n"<<std::flush;
       }
 
       return PFTRAV_CONT;      // Return continue
@@ -187,7 +187,7 @@ protected:
       }
       else
       {
-         //cout<<"Not a sound Node: "<<currentNode->getName()<<" classtype="<<currentNode->getClassType()<<"!="<<pfSoundNode::getClassType()<<"\n"<<flush;
+         //std::cout<<"Not a sound Node: "<<currentNode->getName()<<" classtype="<<currentNode->getClassType()<<"!="<<pfSoundNode::getClassType()<<"\n"<<std::flush;
       }
 
       return PFTRAV_CONT;      // Return continue
@@ -207,7 +207,7 @@ protected:
       }
       else
       {
-         //cout<<"Not a sound Node: "<<currentNode->getName()<<" classtype="<<currentNode->getClassType()<<"!="<<pfSoundNode::getClassType()<<"\n"<<flush;
+         //std::cout<<"Not a sound Node: "<<currentNode->getName()<<" classtype="<<currentNode->getClassType()<<"!="<<pfSoundNode::getClassType()<<"\n"<<std::flush;
       }
 
       return PFTRAV_CONT;      // Return continue
@@ -227,7 +227,7 @@ protected:
       }
       else
       {
-         //cout<<"Not a sound Node: "<<currentNode->getName()<<" classtype="<<currentNode->getClassType()<<"!="<<pfSoundNode::getClassType()<<"\n"<<flush;
+         //std::cout<<"Not a sound Node: "<<currentNode->getName()<<" classtype="<<currentNode->getClassType()<<"!="<<pfSoundNode::getClassType()<<"\n"<<std::flush;
       }
 
       return PFTRAV_CONT;      // Return continue

@@ -52,11 +52,13 @@ int main(int argc, char* argv[])
       // display some usage info (holding the user by the hand stuff)
       //  this will probably go away once the kernel becomes separate 
       //  and can load application plugins.
-      cout<<"\n"<<flush;
-      cout<<"\n"<<flush;
-      cout<<"Usage: "<<argv[0]<<" vjconfigfile[0] vjconfigfile[1] ... vjconfigfile[n]\n"<<flush;
-      cout<<"\n"<<flush;
-      cout<<"\n"<<flush;
+      std::cout<<"\n"<<std::flush;
+      std::cout<<"\n"<<std::flush;
+      std::cout<<"Usage: "<<argv[0]
+               <<" vjconfigfile[0] vjconfigfile[1] ... vjconfigfile[n]\n"
+               <<std::flush;
+      std::cout<<"\n"<<std::flush;
+      std::cout<<"\n"<<std::flush;
    }
    
    // Load any config files specified on the command line

@@ -123,8 +123,8 @@ class vjConnect {
 private:
 
 
-    ostream*     outstream;
-    istream*      instream;
+    std::ostream*     outstream;
+    std::istream*      instream;
     bool                    shutdown;        // set to stop procs
     std::string             name;
     std::string             filename;
@@ -160,7 +160,7 @@ private:
     void writeControlLoop (void* nullParam);
 
     //: utility for controlLoop()
-    bool readCommand (istream& fin);
+    bool readCommand (std::istream& fin);
 
 
 }; // end vjConnect

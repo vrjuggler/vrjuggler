@@ -37,10 +37,10 @@
 
 #include <vjConfig.h>
 
+#include <iostream>
 #include <math.h>
 #include <GL/gl.h>
 #include <GL/glu.h>
-#include <iostream.h>
 
 #include <Kernel/GL/vjGlApp.h>
 #include <Kernel/vjDebug.h>

@@ -53,8 +53,6 @@
 
 #include <Kernel/vjDebug.h>
 
-#include <fstream.h>
-
 // Helper to return the index for theData array
 // given the birdNum we are dealing with and the bufferIndex
 // to get
@@ -111,7 +109,8 @@ bool vjFlock::config(vjConfigChunk *c)
 {
    port_id = -1;
 
-   vjDEBUG(vjDBG_INPUT_MGR,3) << "	 vjFlock::vjFlock(vjConfigChunk*)" << endl << vjDEBUG_FLUSH;
+   vjDEBUG(vjDBG_INPUT_MGR,3) << "	 vjFlock::vjFlock(vjConfigChunk*)"
+                              << std::endl << vjDEBUG_FLUSH;
 
    // read in vjPosition's config stuff,
    // --> this will be the port and baud fields
@@ -135,21 +134,23 @@ bool vjFlock::config(vjConfigChunk *c)
    if ((r != 'Q') && (r != 'R') &&
        (r != 'S') && (r != 'T'))
    {
-      vjDEBUG(vjDBG_INPUT_MGR,1)  << "   illegal report rate from configChunk, defaulting to every other cycle (R)" << endl << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_INPUT_MGR,1)
+         << "   illegal report rate from configChunk, defaulting to every other cycle (R)"
+         << std::endl << vjDEBUG_FLUSH;
       mFlockOfBirds.setReportRate( 'R' );
    }
    else
       mFlockOfBirds.setReportRate( r );
 
    // output what was read.
-   vjDEBUG(vjDBG_INPUT_MGR,1) << "	  Flock Settings: " << endl
-      << "	        aFlock::getTransmitter(): " << mFlockOfBirds.getTransmitter() << endl
-      << "             aFlock::getNumBirds()      : " << mFlockOfBirds.getNumBirds() << endl
-      << "	        aFlock::getBaudRate()      : " << mFlockOfBirds.getBaudRate() << endl
-      << "	        deviceAbilities:" << deviceAbilities << endl
-      << "	        aFlock::getPort()         : " << mFlockOfBirds.getPort() << endl
-      << "		instance name : " << instName << endl
-      << endl << vjDEBUG_FLUSH;
+   vjDEBUG(vjDBG_INPUT_MGR,1) << "	  Flock Settings: " << std::endl
+      << "	        aFlock::getTransmitter(): " << mFlockOfBirds.getTransmitter() << std::endl
+      << "             aFlock::getNumBirds()      : " << mFlockOfBirds.getNumBirds() << std::endl
+      << "	        aFlock::getBaudRate()      : " << mFlockOfBirds.getBaudRate() << std::endl
+      << "	        deviceAbilities:" << deviceAbilities << std::endl
+      << "	        aFlock::getPort()         : " << mFlockOfBirds.getPort() << std::endl
+      << "		instance name : " << instName << std::endl
+      << std::endl << vjDEBUG_FLUSH;
 
    // init the correction table with the calibration file.
    mFlockOfBirds.initCorrectionTable( ((std::string)c->getProperty("calfile")).c_str() );
@@ -168,7 +169,8 @@ vjFlock::~vjFlock()
 
 static void sampleBirds(void* pointer)
 {
-   vjDEBUG(vjDBG_INPUT_MGR,3) << "vjFlock: Spawned SampleBirds starting" << endl << vjDEBUG_FLUSH;
+   vjDEBUG(vjDBG_INPUT_MGR,3) << "vjFlock: Spawned SampleBirds starting"
+                              << std::endl << vjDEBUG_FLUSH;
 
    vjFlock* devPointer = (vjFlock*) pointer;
    for (;;)
@@ -182,7 +184,8 @@ int vjFlock::startSampling()
    // make sure birds aren't already started
    if (this->isActive() == true)
    {
-      vjDEBUG(vjDBG_INPUT_MGR,2)  << "vjFlock was already started." << endl << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_INPUT_MGR,2) << "vjFlock was already started."
+                                 << std::endl << vjDEBUG_FLUSH;
       return 0;
    }
 
@@ -207,11 +210,13 @@ int vjFlock::startSampling()
       //sanity check.. make sure birds actually started
       if (this->isActive() == false)
       {
-         vjDEBUG(vjDBG_INPUT_MGR,0)  << "vjFlock failed to start.." << endl << vjDEBUG_FLUSH;
+         vjDEBUG(vjDBG_INPUT_MGR,0) << "vjFlock failed to start.."
+                                    << std::endl << vjDEBUG_FLUSH;
          return 0;
       }
 
-      vjDEBUG(vjDBG_INPUT_MGR,1)  << "vjFlock ready to go.." << endl << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_INPUT_MGR,1) << "vjFlock ready to go.." << std::endl
+                                 << vjDEBUG_FLUSH;
 
       vjFlock* devicePtr = this;
 
@@ -259,7 +264,7 @@ int vjFlock::sample()
 
 
       //if (i==1)
-         //vjDEBUG(vjDBG_ALL,2) << "Flock: bird1:    orig:" << vjCoord(theData[index]).pos << endl << vjDEBUG_FLUSH;
+         //vjDEBUG(vjDBG_ALL,2) << "Flock: bird1:    orig:" << vjCoord(theData[index]).pos << std::endl << vjDEBUG_FLUSH;
 
       // Transforms between the cord frames
       // See transform documentation and VR System pg 146
@@ -274,7 +279,7 @@ int vjFlock::sample()
 
 
       //if (i == 1)
-         //vjDEBUG(vjDBG_ALL,2) << "Flock: bird1: xformed:" << vjCoord(theData[index]).pos << endl << vjDEBUG_FLUSH;
+         //vjDEBUG(vjDBG_ALL,2) << "Flock: bird1: xformed:" << vjCoord(theData[index]).pos << std::endl << vjDEBUG_FLUSH;
    }
 
    // Locks and then swaps the indices
@@ -303,11 +308,12 @@ int vjFlock::stopSampling()
       // sanity check: did the flock actually stop?
       if (this->isActive() == true)
       {
-         vjDEBUG(vjDBG_INPUT_MGR,0) << "Flock didn't stop." << endl << vjDEBUG_FLUSH;
+         vjDEBUG(vjDBG_INPUT_MGR,0) << "Flock didn't stop." << std::endl
+                                    << vjDEBUG_FLUSH;
          return 0;
       }
 
-      vjDEBUG(vjDBG_INPUT_MGR,1) << "stopped." << endl << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_INPUT_MGR,1) << "stopped." << std::endl << vjDEBUG_FLUSH;
    }
 
    return 1;

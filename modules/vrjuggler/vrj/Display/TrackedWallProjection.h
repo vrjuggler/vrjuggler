@@ -100,7 +100,7 @@ public:
 
    void updateWallParams();
 
-   ostream& outStream(ostream& out);
+   std::ostream& outStream(std::ostream& out);
 
 private:
    // ---- Original parameters ------/

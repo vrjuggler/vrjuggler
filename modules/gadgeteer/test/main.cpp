@@ -31,7 +31,7 @@
  * -----------------------------------------------------------------
  */
 
-#include <iostream.h>
+#include <iostream>
 
 #include <SharedMem/vjMemPool.h>
 #include <Config/vjChunkDescDB.h>
@@ -53,32 +53,33 @@ int main()
    vjChunkFactory::setChunkDescDB(&desc);
 
    if(!load_worked)
-      cerr << "Could not load chunkDesc's\n" << flush;
+      std::cerr << "Could not load chunkDesc's\n" << std::flush;
 
-   cout << desc << "\n----------------------------------------" << endl;
+   std::cout << desc << "\n----------------------------------------"
+             << std::endl;
 
    // -- Load config -- //
    vjConfigChunkDB *chunkdb = new vjConfigChunkDB();
    load_worked = chunkdb->load(CONFIG_LOCATION);
    if(!load_worked)
-      cerr << "Could not load config file\n" << flush;
+      std::cerr << "Could not load config file\n" << std::flush;
 
-   cout << "Printing Chunk DB:" << endl;
-   cout << (*chunkdb);
-   cout << "endochunks" << endl;
+   std::cout << "Printing Chunk DB:" << std::endl;
+   std::cout << (*chunkdb);
+   std::cout << "endochunks" << std::endl;
 
    vjInputManager *input_manager = new(shared_pool)vjInputManager;
-   cout << "vjInputManager created" << endl;
+   std::cout << "vjInputManager created" << std::endl;
 
    // --- configure the input manager -- //
    input_manager->configureInitial(chunkdb);
-   cout << "new devices have been added.." << endl << endl;
+   std::cout << "new devices have been added..\n\n";
 
-   cout << input_manager << endl;
+   std::cout << input_manager << std::endl;
 
-   cout << "Sleeping..." << flush;
+   std::cout << "Sleeping..." << std::flush;
    sleep(2);
-   cout << "awake." << endl << flush;
+   std::cout << "awake." << std::endl << std::flush;
 
       // get the indices for the devices
    int head_index = input_manager->getProxyIndex("VJHead");
@@ -87,24 +88,24 @@ int main()
    for (int l = 0; l <30; l++)
    {
       sleep (1);
-      cout << "Updating All Data .. " << endl;
+      std::cout << "Updating All Data .. " << std::endl;
       input_manager->updateAllData();
 
 
       vjMatrix* pd_head = input_manager->getPosProxy(head_index)->getData();
       vjMatrix* pd_wand = input_manager->getPosProxy(wand_index)->getData();
 
-      cout << "-------------------------------------\n";
-      cout << "head:\n" << *pd_head << endl;
+      std::cout << "-------------------------------------\n";
+      std::cout << "head:\n" << *pd_head << std::endl;
       vjCoord head_coord(*pd_head);
-      cout << "\tpos:" << head_coord.pos << endl;
-      cout << "\tor:" << head_coord.orient << endl;
+      std::cout << "\tpos:" << head_coord.pos << std::endl;
+      std::cout << "\tor:" << head_coord.orient << std::endl;
 
-      cout << "wand:\n" << *pd_wand << endl << flush;
+      std::cout << "wand:\n" << *pd_wand << std::endl << std::flush;
       vjCoord wand_coord(*pd_wand);
-      cout << "\tpos:" << wand_coord.pos << endl;
-      cout << "\tor:" << wand_coord.orient << endl;
-      cout << "-------------------------------------\n\n";
+      std::cout << "\tpos:" << wand_coord.pos << std::endl;
+      std::cout << "\tor:" << wand_coord.orient << std::endl;
+      std::cout << "-------------------------------------\n\n";
    }
 
 

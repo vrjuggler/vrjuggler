@@ -546,9 +546,9 @@ inline void Scene::init()
     glBindTextureEXT(GL_TEXTURE_2D, _woodBitmapBindId);
 #endif
     this->_renderTexture(woodBitmap);
-    cout<<"Loaded wood texture.\n"<<flush;
+    std::cout<<"Loaded wood texture.\n"<<std::flush;
     
-    #ifdef GL_VERSION_1_1
+#ifdef GL_VERSION_1_1
     glGenTextures(1, &_rainbowBitmapBindId);
     glBindTexture(GL_TEXTURE_2D, _rainbowBitmapBindId);
 #else
@@ -556,7 +556,7 @@ inline void Scene::init()
     glBindTextureEXT(GL_TEXTURE_2D, _rainbowBitmapBindId);
 #endif
     this->_renderTexture(rainbowBitmap);
-    cout<<"Loaded rainbow texture.\n"<<flush;
+    std::cout<<"Loaded rainbow texture.\n"<<std::flush;
     
-    cout<<"Initialized scene.\n"<<flush;
+    std::cout<<"Initialized scene.\n"<<std::flush;
 }

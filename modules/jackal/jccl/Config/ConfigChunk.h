@@ -129,7 +129,7 @@ public:
     //!RETURNS: out - the output stream
     //!ARGS: out - a valid ostream.
     //!ARGS: self - a valid vjConfigChunk
-    friend ostream& operator << (ostream& out, vjConfigChunk& self);
+    friend std::ostream& operator << (std::ostream& out, vjConfigChunk& self);
 
 
 
@@ -139,7 +139,7 @@ public:
     //!RETURNS: in - the input stream
     //!ARGS: in - a valid input stream
     //!ARGS: self - a valid vjConfigChunk
-    friend istream& operator >> (istream& in, vjConfigChunk& self);
+    friend std::istream& operator >> (std::istream& in, vjConfigChunk& self);
 
 
 

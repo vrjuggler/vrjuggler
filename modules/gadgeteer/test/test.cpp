@@ -32,7 +32,7 @@
  */
 
 #include "InputGroup.h"
-#include <iostream.h>
+#include <iostream>
 
 int main()
 {
@@ -44,22 +44,22 @@ int main()
   myDummy->SetX(5.0);
   
   ig->FGetPosData(data,0);
-  cout  << "  x:" << data->x 
-	<< "  y:" << data->y 
-	<< "  z:" << data->z << endl;
+  std::cout  << "  x:" << data->x 
+             << "  y:" << data->y 
+             << "  z:" << data->z << std::endl;
 
   int devNum = ig->FAddDevice(myDummy);
   ig->SetPosProxy(0,devNum,0);
   
   ig->FGetPosData(data,0);
-  cout  << "  x:" << data->x 
-	<< "  y:" << data->y 
-	<< "  z:" << data->z << endl;
-  cout << "\ntype something: " << flush ;
-  cin.get();
+  std::cout  << "  x:" << data->x 
+             << "  y:" << data->y 
+             << "  z:" << data->z << std::endl;
+  std::cout << "\ntype something: " << std::flush;
+  std::cin.get();
 
   delete ig;
   delete anSgiPool;
 
   return 0;
-} 
+}

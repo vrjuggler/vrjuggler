@@ -89,7 +89,8 @@ void vjGlDrawManager::start()
 
    control_thread = new vjThread(memberFunctor, 0);
 
-   vjDEBUG(vjDBG_DRAW_MGR,1) << "vjGlDrawManager started. thread: " << control_thread << endl << vjDEBUG_FLUSH;
+   vjDEBUG(vjDBG_DRAW_MGR,1) << "vjGlDrawManager started. thread: "
+                             << control_thread << std::endl << vjDEBUG_FLUSH;
 }
 
 
@@ -139,7 +140,9 @@ void vjGlDrawManager::main(void* nullParam)
 
 void vjGlDrawManager::drawAllPipes()
 {
-   vjDEBUG_BEGIN(vjDBG_DRAW_MGR,vjDBG_HVERB_LVL) << "vjGLDrawManager::drawAllPipes: " << endl << flush << vjDEBUG_FLUSH;
+   vjDEBUG_BEGIN(vjDBG_DRAW_MGR,vjDBG_HVERB_LVL)
+      << "vjGLDrawManager::drawAllPipes: " << std::endl << std::flush
+      << vjDEBUG_FLUSH;
    unsigned int pipeNum;
 
    // RENDER
@@ -161,7 +164,9 @@ void vjGlDrawManager::drawAllPipes()
       pipes[pipeNum]->completeSwap();
 
 
-   vjDEBUG_END(vjDBG_DRAW_MGR,vjDBG_HVERB_LVL) << "vjGLDrawManager::drawAllPipes: Done" << endl << flush << vjDEBUG_FLUSH;
+   vjDEBUG_END(vjDBG_DRAW_MGR,vjDBG_HVERB_LVL)
+      << "vjGLDrawManager::drawAllPipes: Done" << std::endl << std::flush
+      << vjDEBUG_FLUSH;
 }
 
 //: Initialize the drawing API (if not already running)
@@ -181,7 +186,8 @@ void vjGlDrawManager::initAPI()
 //+    Window list is correct      <br>
 void vjGlDrawManager::initDrawing()
 {
-   vjDEBUG(vjDBG_DRAW_MGR,3) << "vjGlDrawManager::initDrawing: Entering." << endl << vjDEBUG_FLUSH;
+   vjDEBUG(vjDBG_DRAW_MGR,3) << "vjGlDrawManager::initDrawing: Entering."
+                             << std::endl << vjDEBUG_FLUSH;
 }
 
 
@@ -196,7 +202,8 @@ void vjGlDrawManager::addDisplay(vjDisplay* disp)
 {
    vjASSERT(disp != NULL);    // Can't add a null display
 
-   vjDEBUG(vjDBG_DRAW_MGR,3) << "vjGlDrawManager:addDisplay: " << disp << endl << vjDEBUG_FLUSH;
+   vjDEBUG(vjDBG_DRAW_MGR,3) << "vjGlDrawManager:addDisplay: " << disp
+                             << std::endl << vjDEBUG_FLUSH;
 
    // -- Create a window for new display
    // -- Store the window in the wins vector
@@ -518,19 +525,21 @@ void vjGlDrawManager::drawSimulator(vjSimDisplay* sim)
 }
 
     /// dumps the object's internal state
-void vjGlDrawManager::outStream(ostream& out)
+void vjGlDrawManager::outStream(std::ostream& out)
 {
     out     << clrSetNORM(clrGREEN)
-            << "========== vjGlDrawManager: " << (void*)this << " =========" << clrRESET << endl
-            << clrOutNORM(clrCYAN,"\tapp:") << (void*)mApp << endl
-            << clrOutNORM(clrCYAN,"\tWins:") << mWins.size() << endl << flush;
+            << "========== vjGlDrawManager: " << (void*)this << " ========="
+            << clrRESET << std::endl
+            << clrOutNORM(clrCYAN,"\tapp:") << (void*)mApp << std::endl
+            << clrOutNORM(clrCYAN,"\tWins:") << mWins.size() << std::endl
+            << std::flush;
 
     for(unsigned int i = 0; i < mWins.size(); i++)
     {
        vjASSERT(mWins[i] != NULL);
-       out << clrOutNORM(clrCYAN,"\tvjGlWindow:\n") << mWins[i] << endl;
+       out << clrOutNORM(clrCYAN,"\tvjGlWindow:\n") << mWins[i] << std::endl;
     }
-    out << "=======================================" << endl;
+    out << "=======================================" << std::endl;
 }
 
 void vjGlDrawManager::initQuadObj()

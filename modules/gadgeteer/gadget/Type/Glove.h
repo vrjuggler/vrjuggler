@@ -82,8 +82,8 @@ public:
 
 public:  // --- I/O Functions --- //
    //: Output the angles
-   ostream& outputAngles(ostream& out) const;
-   istream& inputAngles(istream& in);
+   std::ostream& outputAngles(std::ostream& out) const;
+   std::istream& inputAngles(std::istream& in);
 
 public:
    float     angles[NUM_COMPONENTS][NUM_JOINTS];

@@ -107,7 +107,7 @@ public:
 
     float usecs();
 
-    friend ostream& operator << (ostream& out, vjTimeStampSGI& ts);
+    friend std::ostream& operator << (std::ostream& out, vjTimeStampSGI& ts);
 
     //: returns resolution of timer in microseconds
     float getResolution();

@@ -37,7 +37,7 @@
 #include <Kernel/vjFrustum.h>
 
 // ---- FRIEND FUNCTIONS ---- //
-ostream& operator<<(ostream& out, vjFrustum& _frust)
+std::ostream& operator<<(std::ostream& out, vjFrustum& _frust)
 {
     out << "l: " << _frust[vjFrustum::VJ_LEFT]
 	<< "r: " << _frust[vjFrustum::VJ_RIGHT]
@@ -45,7 +45,7 @@ ostream& operator<<(ostream& out, vjFrustum& _frust)
 	<< "t: " << _frust[vjFrustum::VJ_TOP]
 	<< "n: " << _frust[vjFrustum::VJ_NEAR]
 	<< "f: " << _frust[vjFrustum::VJ_FAR];
-    out << endl;
+    out << std::endl;
 
     return out;	
 }

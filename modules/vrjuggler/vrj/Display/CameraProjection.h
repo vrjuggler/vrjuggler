@@ -60,7 +60,7 @@ public:
       mFrustum.set(-0.6f, 0.6f, -0.6f, 0.6f, mNearDist, mFarDist);
    }
 
-   virtual ostream& outStream(ostream& out)
+   virtual std::ostream& outStream(std::ostream& out)
    {
       out << "vjCameraProjection:\n";
       return out;

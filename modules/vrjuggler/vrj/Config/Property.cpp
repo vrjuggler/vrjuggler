@@ -169,7 +169,7 @@ vjEnumEntry* vjProperty::getEnumEntryWithValue (int val) const {
 
 
 
-ostream& operator << (ostream &out, vjProperty& p) {
+std::ostream& operator << (std::ostream &out, vjProperty& p) {
     out << p.getToken().c_str() << " { ";
     for (unsigned int i = 0; i < p.value.size(); i++) {
         vjVarValue *v = ((p.value))[i];
