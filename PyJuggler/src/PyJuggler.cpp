@@ -50,19 +50,6 @@ using namespace boost::python;
 namespace
 {
 
-vrj::Kernel* getKernel()
-{
-   return vrj::Kernel::instance();
-}
-
-struct KernelWrap
-{
-   vrj::Kernel* getInstance()
-   {
-      return vrj::Kernel::instance();
-   }
-};
-
 struct AppWrap : public vrj::App
 {
    AppWrap(PyObject* self) : mSelf(self)
@@ -392,13 +379,6 @@ BOOST_PYTHON_FUNCTION_OVERLOADS(deg2Rad_overloads,
 
 BOOST_PYTHON_MODULE(PyJuggler)
 {
-   // XXX: This kind of sucks.
-   class_<KernelWrap>("KernelWrap")
-      .def("getInstance", &KernelWrap::getInstance,
-           return_internal_reference<>())
-   ;
-//   def("getKernel", getKernel, return_internal_reference<>());
-
    class_<vrj::Kernel, boost::noncopyable>("Kernel", no_init)
       .def("start", &vrj::Kernel::start)
       .def("setApplication", &vrj::Kernel::setApplication)
@@ -409,6 +389,9 @@ BOOST_PYTHON_MODULE(PyJuggler)
       .def("loadChunkDescFile", &vrj::Kernel::loadChunkDescFile)
       .def("waitForKernelStop", &vrj::Kernel::waitForKernelStop)
       .def("getUser", &vrj::Kernel::getUser, return_internal_reference<>())
+      .def("instance", &vrj::Kernel::instance,
+           return_value_policy<reference_existing_object>())
+      .staticmethod("instance")
    ;
 
    class_<vrj::App, AppWrap, boost::noncopyable>("App", init<>())
