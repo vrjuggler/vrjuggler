@@ -53,8 +53,6 @@ namespace gadget
 {
 
 // Initialize the singleton ptr
-//vjDeviceFactory* DeviceFactory::mInstance = NULL;
-//vjSingletonImp( DeviceFactory ); //kevin
 vprSingletonImpWithInitFunc( BaseTypeFactory, hackLoadKnownDevices );
 
 /**
@@ -146,14 +144,6 @@ void BaseTypeFactory::registerNetDevice(BaseTypeConstructorBase* constructor)
 {
    vprASSERT(constructor != NULL);
    mConstructors.push_back(constructor);     // Add the constructor to the list
-   //vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CONFIG_LVL)
-   //   << "gadget::DeviceFactory: Registered: "
-   //   << std::setiosflags(std::ios::right) << std::setw(25)
-   //   << std::setfill(' ') << constructor->getElementType()
-   //   << std::setiosflags(std::ios::right)
-      //<< "   :" << (void*)constructor
-   //   << "  type: " << typeid(*constructor).name() << std::endl
-   //   << vprDEBUG_FLUSH;
 }
 
 // Simply query all device constructors registered looking
@@ -177,11 +167,6 @@ Input* BaseTypeFactory::loadNetDevice(std::string base_type)
 
    Input* new_dev;
    BaseTypeConstructorBase* constructor = mConstructors[index];
-
-   //vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL)
-   //   << "gadget::BaseType::loadDevice: Loading device: "
-   //   << element->getID() << "  with: " << typeid(*constructor).name()
-   //   << std::endl << vprDEBUG_FLUSH;
 
    new_dev = constructor->createNetDevice(base_type);
    if(new_dev!=NULL)
