@@ -130,8 +130,7 @@ protected:
    }
 
 private:
-   TrackerReader*              mTrackerReader;   /**< The tracker sensor to read data from */
-   std::vector<PositionData>   mCurSensorValues; /**< The current (up-to-date) values */
+   TrackerReader* mTrackerReader;   /**< The tracker sensor to read data from */
 };
 
 } // End of gadget namespace
