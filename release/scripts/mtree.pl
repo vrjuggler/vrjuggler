@@ -94,23 +94,26 @@ my($space_count, $exit_status) = (0, 0);
 # If -c was given, print out the directory tree specification rooted at the
 # current directory or at the directory given with -p if that argument was
 # passed as well.
-if ( $opts{'c'} ) {
-    if ( $opts{'p'} ) {
-	chdir("$opts{'p'}") or die "$0: $opts{'p'}: $!\n";
-    }
+if ( $opts{'c'} )
+{
+   if ( $opts{'p'} )
+   {
+      chdir("$opts{'p'}") or die "$0: $opts{'p'}: $!\n";
+   }
 
-    print "#           user: ", (getpwuid($<))[0], "\n";
-    print "#        machine: ", hostname(), "\n";
-    print "#           tree: ", cwd(), "\n";
-    print "#           date: ", ctime(), "\n";
+   print "#           user: ", (getpwuid($<))[0], "\n";
+   print "#        machine: ", hostname(), "\n";
+   print "#           tree: ", cwd(), "\n";
+   print "#           date: ", ctime(), "\n";
 
-    printTree(".");
+   printTree(".");
 }
 # Otherwise, parse the specification file and compare it against the tree
 # rooted at the current directory or at the directory given with the -p option
 # if that argument was passed.
-else {
-    parseSpecFile();
+else
+{
+   parseSpecFile();
 }
 
 # $exit_status may have been modified if parseSpecFile() was run.
@@ -131,13 +134,14 @@ exit $exit_status;
 # ARGS: $msg  - The error message to print.
 #       $path - The path to which the error corresponds.  Optional.
 # -----------------------------------------------------------------------------
-sub nonfatalError ($;$) {
-    my $msg = shift;
-    my $path = shift || "";
+sub nonfatalError($;$)
+{
+   my $msg = shift;
+   my $path = shift || "";
 
-    print STDERR "$0: ";
-    print STDERR "$path: " if $path;
-    print STDERR "$msg\n";
+   print STDERR "$0: ";
+   print STDERR "$path: " if $path;
+   print STDERR "$msg\n";
 }
 
 # -----------------------------------------------------------------------------
@@ -152,12 +156,13 @@ sub nonfatalError ($;$) {
 # ARGS: $msg  - The error message to print.
 #       $path - The path to which the error corresponds.  Optional.
 # -----------------------------------------------------------------------------
-sub fatalError ($;$) {
-    my $msg = shift;
-    my $path = shift || "";
+sub fatalError($;$)
+{
+   my $msg = shift;
+   my $path = shift || "";
 
-    nonfatalError("$msg", "$path");
-    exit 1;
+   nonfatalError("$msg", "$path");
+   exit 1;
 }
 
 # -----------------------------------------------------------------------------
@@ -168,8 +173,9 @@ sub fatalError ($;$) {
 #
 # RETURNS: A scalar string containing the current path in @dirstack.
 # -----------------------------------------------------------------------------
-sub getCurPath () {
-    return join("/", @dirstack);
+sub getCurPath()
+{
+   return join("/", @dirstack);
 }
 
 # -----------------------------------------------------------------------------
@@ -179,10 +185,12 @@ sub getCurPath () {
 # PRE: None.
 # POST: The current directory stack is printed to STDOUT.
 # -----------------------------------------------------------------------------
-sub printDirStack () {
-    foreach ( @dirstack ) {
-	print "$_/";
-    }
+sub printDirStack()
+{
+   foreach ( @dirstack )
+   {
+      print "$_/";
+   }
 }
 
 # -----------------------------------------------------------------------------
@@ -196,8 +204,9 @@ sub printDirStack () {
 # RETURNS: The top element of the stack passed if the stack is not empty.
 #          undef is returned if the stack is empty.
 # -----------------------------------------------------------------------------
-sub top (@) {
-    return ( $#_ >= 0 ) ? $_[$#_] : undef;
+sub top(@)
+{
+   return ( $#_ >= 0 ) ? $_[$#_] : undef;
 }
 
 # -----------------------------------------------------------------------------
@@ -214,26 +223,27 @@ sub top (@) {
 # RETURNS: A hash containing the stat() information for the named file or
 #          directory.
 # -----------------------------------------------------------------------------
-sub getStats ($) {
-    my $filename = shift;
+sub getStats($)
+{
+   my $filename = shift;
 
-    my(%info) = ();
-    my(@fileinfo) = stat("$filename");
+   my(%info) = ();
+   my(@fileinfo) = stat("$filename");
 
-    # This is a (terrible?) hack to get the file permissions unmangled.
-    $fileinfo[2] = sprintf("%o", $fileinfo[2]);
-    $fileinfo[2] =~ s/^\d+(\d{4})$/\1/;
+   # This is a (terrible?) hack to get the file permissions unmangled.
+   $fileinfo[2] = sprintf("%o", $fileinfo[2]);
+   $fileinfo[2] =~ s/^\d+(\d{4})$/\1/;
 
-    $info{'name'}  = "$filename";
-    $info{'mode'}  = "$fileinfo[2]";
-    $info{'nlink'} = "$fileinfo[3]";
-    $info{'uid'}   = "$fileinfo[4]";
-    $info{'gid'}   = "$fileinfo[5]";
-    $info{'size'}  = "$fileinfo[7]";
-    $info{'time'}  = "$fileinfo[9]";
-    $info{'type'}  = getType("$filename");
+   $info{'name'}  = "$filename";
+   $info{'mode'}  = "$fileinfo[2]";
+   $info{'nlink'} = "$fileinfo[3]";
+   $info{'uid'}   = "$fileinfo[4]";
+   $info{'gid'}   = "$fileinfo[5]";
+   $info{'size'}  = "$fileinfo[7]";
+   $info{'time'}  = "$fileinfo[9]";
+   $info{'type'}  = getType("$filename");
 
-    return %info;
+   return %info;
 }
 
 # -----------------------------------------------------------------------------
@@ -246,179 +256,211 @@ sub getStats ($) {
 # ARGS: $cur_dir - The base directory of the tree to print.  If no name is
 #                  passed, it defaults to the current directory.
 # -----------------------------------------------------------------------------
-sub printTree (;$) {
-    my $cur_dir = shift || ".";
+sub printTree(;$)
+{
+   my $cur_dir = shift || ".";
 
-    print "\n" unless $opts{'d'};
+   print "\n" unless $opts{'d'};
 
-    chdir("$cur_dir") or fatalError("$!", getCurPath());
-    push(@dirstack, "$cur_dir");
+   chdir("$cur_dir") or fatalError("$!", getCurPath());
+   push(@dirstack, "$cur_dir");
 
-    opendir(DIR, ".") or fatalError("$!", getCurPath());
-    my(@files) = readdir(DIR);
-    closedir(DIR);
+   opendir(DIR, ".") or fatalError("$!", getCurPath());
+   my(@files) = readdir(DIR);
+   closedir(DIR);
 
-    my $file;
-    my(@contents, $i) = ((), 0);
+   my $file;
+   my(@contents, $i) = ((), 0);
 
-    # Get the stat() info for all the files/directories read.
-    foreach $file ( @files ) {
-	# If -d was specified, we skip everything that is not a directory.
-	# This saves a lot of time later.
-	next if $opts{'d'} && ! -d "$file";
+   # Get the stat() info for all the files/directories read.
+   foreach $file ( @files )
+   {
+      # If -d was specified, we skip everything that is not a directory.
+      # This saves a lot of time later.
+      next if $opts{'d'} && ! -d "$file";
 
-	my %file_info = getStats("$file");
+      my %file_info = getStats("$file");
 
-	# Store a reference to the hash in @contents.  This keeps everything
-	# ordered as it was read from the directory.
-	$contents[$i++] = \%file_info;
+      # Store a reference to the hash in @contents.  This keeps everything
+      # ordered as it was read from the directory.
+      $contents[$i++] = \%file_info;
 
-	if ( "$file" eq "." ) {
-	    # This is the starting directory if $cur_dir is '.'.
-	    if ( "$cur_dir" eq "." ) {
-		%SET_DEFAULTS = %file_info;
-		delete($SET_DEFAULTS{'name'});
-		delete($SET_DEFAULTS{'type'});
-	    }
+      if ( "$file" eq "." )
+      {
+         # This is the starting directory if $cur_dir is '.'.
+         if ( "$cur_dir" eq "." )
+         {
+            %SET_DEFAULTS = %file_info;
+            delete($SET_DEFAULTS{'name'});
+            delete($SET_DEFAULTS{'type'});
+         }
 
-	    foreach ( keys(%SET_DEFAULTS) ) {
-		if ( "$SET_DEFAULTS{$_}" ne "$file_info{$_}" ) {
-		    $SET_DEFAULTS{$_} = "$file_info{$_}";
-		}
-	    }
-	}
-    }
+         foreach ( keys(%SET_DEFAULTS) )
+         {
+            if ( "$SET_DEFAULTS{$_}" ne "$file_info{$_}" )
+            {
+               $SET_DEFAULTS{$_} = "$file_info{$_}";
+            }
+         }
+      }
+   }
 
-    my(%cur_defaults) = ();
-    my(%max_hash) = ();
-    my(%counts) = ();
-    my($key, $value);
+   my(%cur_defaults) = ();
+   my(%max_hash) = ();
+   my(%counts) = ();
+   my($key, $value);
 
-    foreach ( @contents ) {
-	while ( ($key, $value) = each(%$_) ) {
-	    next if "$key" eq "name" || "$key" eq "size" ||
-		    "$key" eq "time" || "$key" eq "type";
+   foreach ( @contents )
+   {
+      while ( ($key, $value) = each(%$_) )
+      {
+         next if "$key" eq "name" || "$key" eq "size" ||
+                 "$key" eq "time" || "$key" eq "type";
 
-	    $counts{"$key"}{"$value"}++;
-	}
-    }
+         $counts{"$key"}{"$value"}++;
+      }
+   }
 
-    foreach $key ( keys(%counts) ) {
-	foreach $value ( keys(%{$counts{"$key"}}) ) {
-	    if ( $counts{"$key"}{"$value"} > $max_hash{"$key"} ) {
-		$max_hash{"$key"} = $counts{"$key"}{"$value"};
-		$cur_defaults{"$key"} = $value;
-	    }
-	}
-    }
+   foreach $key ( keys(%counts) )
+   {
+      foreach $value ( keys(%{$counts{"$key"}}) ) {
+         if ( $counts{"$key"}{"$value"} > $max_hash{"$key"} )
+         {
+            $max_hash{"$key"} = $counts{"$key"}{"$value"};
+            $cur_defaults{"$key"} = $value;
+         }
+      }
+   }
 
-    my(@dirs) = ();
+   my(@dirs) = ();
 
-    foreach $file ( @contents ) {
-	print "# ", getCurPath(), "\n" if "$$file{'name'}" eq "." && ! $opts{'n'};
+   foreach $file ( @contents )
+   {
+      print "# ", getCurPath(), "\n" if "$$file{'name'}" eq "." && ! $opts{'n'};
 
-	if ( "$$file{'type'}" eq 'dir' && "$$file{'name'}" !~ /^\.\.?$/ ) {
-	    push(@dirs, $file);
-	} else {
-	    my $name = "$$file{'name'}";
-	    next if "$name" eq "..";
+      if ( "$$file{'type'}" eq 'dir' && "$$file{'name'}" !~ /^\.\.?$/ )
+      {
+         push(@dirs, $file);
+      }
+      else
+      {
+         my $name = "$$file{'name'}";
+         next if "$name" eq "..";
 
-	    # If this is the '.' directory, then we may need to print out a
-	    # new batch of settings if anything is different between the
-	    # base default values (%SET_DEFAULTS) and the defaults for this
-	    # directory (%cur_defaults).
-	    if ( "$name" eq "." && checkPrint(%SET_DEFAULTS, %cur_defaults) ) {
-		%SET_DEFAULTS = %cur_defaults;
+         # If this is the '.' directory, then we may need to print out a
+         # new batch of settings if anything is different between the
+         # base default values (%SET_DEFAULTS) and the defaults for this
+         # directory (%cur_defaults).
+         if ( "$name" eq "." && checkPrint(%SET_DEFAULTS, %cur_defaults) )
+         {
+            %SET_DEFAULTS = %cur_defaults;
 
-		# Only print the type as a directory if -d was given on the
-		# command line.  In this case, only directories will be in
-		# @contents, so this check is safe.
-		if ( $opts{'d'} ) {
-		    print "/set type=dir ";
-		} else {
-		    print "/set type=file ";
-		}
+            # Only print the type as a directory if -d was given on the
+            # command line.  In this case, only directories will be in
+            # @contents, so this check is safe.
+            if ( $opts{'d'} )
+            {
+               print "/set type=dir ";
+            }
+            else
+            {
+               print "/set type=file ";
+            }
 
-		foreach ( keys(%SET_DEFAULTS) ) {
-		    print "$_=$SET_DEFAULTS{$_} ";
-		}
+            foreach ( keys(%SET_DEFAULTS) )
+            {
+               print "$_=$SET_DEFAULTS{$_} ";
+            }
 
-		print "\n";
-	    }
+            print "\n";
+         }
 
-	    my $output = "";
+         my $output = "";
 
-	    if ( "$$file{'type'}" eq 'dir' ) {
-		my $dirname = top(@dirstack);
+         if ( "$$file{'type'}" eq 'dir' )
+         {
+            my $dirname = top(@dirstack);
 
-		if ( length($dirname) >= 16 ) {
-		    print " " x $space_count, "$dirname \\\n";
-		    $output = " " x (16 + $space_count);
-		} else {
-		    $output .= " " x $space_count . "$dirname" .
-			       " " x (16 - length($dirname));
-		}
-	    } else {
-		if ( length($name) >= 12 ) {
-		    print " " x ($space_count + 4), "$name \\\n";
-		    $output = " " x (16 + $space_count);
-		} else {
-		    $output .= " " x ($space_count + 4) . "$name" .
-			       " " x (12 - length($name));
-		}
-	    }
+            if ( length($dirname) >= 16 )
+            {
+               print " " x $space_count, "$dirname \\\n";
+               $output = " " x (16 + $space_count);
+            }
+            else
+            {
+               $output .= " " x $space_count . "$dirname" .
+                          " " x (16 - length($dirname));
+            }
+         }
+         else
+         {
+            if ( length($name) >= 12 )
+            {
+               print " " x ($space_count + 4), "$name \\\n";
+               $output = " " x (16 + $space_count);
+            }
+            else
+            {
+               $output .= " " x ($space_count + 4) . "$name" .
+                          " " x (12 - length($name));
+            }
+         }
 
-	    $output .= "type=$$file{'type'} "
-		unless "$$file{'type'}" eq 'file' || $opts{'d'};
+         $output .= "type=$$file{'type'} "
+            unless "$$file{'type'}" eq 'file' || $opts{'d'};
 
-	    $output .= "uid=$$file{'uid'} "
-		unless $cur_defaults{'uid'} eq $$file{'uid'};
+         $output .= "uid=$$file{'uid'} "
+            unless $cur_defaults{'uid'} eq $$file{'uid'};
 
-	    $output .= "gid=$$file{'gid'} "
-		unless $cur_defaults{'gid'} eq $$file{'gid'};
+         $output .= "gid=$$file{'gid'} "
+            unless $cur_defaults{'gid'} eq $$file{'gid'};
 
-	    $output .= "mode=$$file{'mode'} "
-		unless $cur_defaults{'mode'} eq $$file{'mode'};
+         $output .= "mode=$$file{'mode'} "
+            unless $cur_defaults{'mode'} eq $$file{'mode'};
 
-	    $output .= "nlink=$$file{'nlink'} "
-		unless $cur_defaults{'nlink'} eq $$file{'nlink'};
+         $output .= "nlink=$$file{'nlink'} "
+            unless $cur_defaults{'nlink'} eq $$file{'nlink'};
 
-	    # These two are always printed.
-	    $output .= "size=$$file{'size'} time=$$file{'time'}";
+         # These two are always printed.
+         $output .= "size=$$file{'size'} time=$$file{'time'}";
 
-	    if ( length("$output") >= 70 ) {
-		$output =~ s/^(\s*)(\S.+)$/\2/;
-		my(@lines) = wrap(70, "$1", " " x (16 + $space_count),
-				  "$output");
+         if ( length("$output") >= 70 )
+         {
+            $output =~ s/^(\s*)(\S.+)$/\2/;
+            my(@lines) = wrap(70, "$1", " " x (16 + $space_count), "$output");
 
-		my $i;
-		for ( $i = 0; $i < $#lines - 1; $i++ ) {
-		    print "$lines[$i] \\\n";
-		}
+            my $i;
+            for ( $i = 0; $i < $#lines - 1; $i++ )
+            {
+               print "$lines[$i] \\\n";
+            }
 
-		print "$lines[$#lines]\n";
-	    } else {
-		print "$output\n";
-	    }
-	}
-    }
+            print "$lines[$#lines]\n";
+         }
+         else
+         {
+            print "$output\n";
+         }
+      }
+   }
 
-    foreach ( @dirs ) {
-	$space_count += 4 if $opts{'i'};
-	printTree("$$_{'name'}");
+   foreach ( @dirs )
+   {
+      $space_count += 4 if $opts{'i'};
+      printTree("$$_{'name'}");
 
-	print " " x $space_count, "# ", getCurPath(), "\n" if ! $opts{'n'};
-	print " " x $space_count, "..\n";
-	print "\n" unless $opts{'d'};
+      print " " x $space_count, "# ", getCurPath(), "\n" if ! $opts{'n'};
+      print " " x $space_count, "..\n";
+      print "\n" unless $opts{'d'};
 
-	chdir("..");
-	pop(@dirstack);
-	$space_count -= 4 if $opts{'i'};
-    }
+      chdir("..");
+      pop(@dirstack);
+      $space_count -= 4 if $opts{'i'};
+   }
 
-    # This is always the LAST thing printed (i.e., after every tree has been
-    # traversed).
-    print "..\n" if top(@dirstack) eq ".";
+   # This is always the LAST thing printed (i.e., after every tree has been
+   # traversed).
+   print "..\n" if top(@dirstack) eq ".";
 }
 
 # -----------------------------------------------------------------------------
@@ -437,20 +479,23 @@ sub printTree (;$) {
 # RETURNS: 0 - There are no differences between the two hashes.
 #          1 - At least one difference between the two hashes.
 # -----------------------------------------------------------------------------
-sub checkPrint (%%) {
-    my (%base, %local) = @_;
+sub checkPrint(%%)
+{
+   my (%base, %local) = @_;
 
-    my $diff_count = 0;
+   my $diff_count = 0;
 
-    foreach ( keys(%base) ) {
-	return 1 if "$base{$_}" ne "$local{$_}";
-    }
+   foreach ( keys(%base) )
+   {
+      return 1 if "$base{$_}" ne "$local{$_}";
+   }
 
-    foreach ( keys(%local) ) {
-	return 1 if "$base{$_}" ne "$local{$_}";
-    }
+   foreach ( keys(%local) )
+   {
+      return 1 if "$base{$_}" ne "$local{$_}";
+   }
 
-    return 0;
+   return 0;
 }
 
 # -----------------------------------------------------------------------------
@@ -465,89 +510,105 @@ sub checkPrint (%%) {
 #       specification.  Otherwise, any differences between the specification
 #       file and the tree are printed to STDOUT with no update.
 # -----------------------------------------------------------------------------
-sub parseSpecFile () {
-    # If -f was given on the command line, read the specification file from
-    # the file named with that argument.
-    if ( $opts{'f'} ) {
-	open(DISTFILE, "$opts{'f'}")
-	    or fatalError("Cannot open $opts{'f'}: $!");
-    }
-    # Otherwise, read it from STDIN.
-    else {
-	open(DISTFILE, "-");
-    }
+sub parseSpecFile()
+{
+   # If -f was given on the command line, read the specification file from
+   # the file named with that argument.
+   if ( $opts{'f'} )
+   {
+      open(DISTFILE, "$opts{'f'}") or fatalError("Cannot open $opts{'f'}: $!");
+   }
+   # Otherwise, read it from STDIN.
+   else
+   {
+      open(DISTFILE, "-");
+   }
 
-    # If -p was given on the command line, start the tree check from that
-    # directory (assuming that it exists).
-    if ( $opts{'p'} ) {
-	chdir("$opts{'p'}") or die "$0: $opts{'p'}: $!\n";
-    }
+   # If -p was given on the command line, start the tree check from that
+   # directory (assuming that it exists).
+   if ( $opts{'p'} )
+   {
+      chdir("$opts{'p'}") or die "$0: $opts{'p'}: $!\n";
+   }
 
-    my $line;
-    while ( $line = <DISTFILE> ) {
-	$line =~ s/#.*$//;		# Strip out comments
+   my $line;
+   while ( $line = <DISTFILE> )
+   {
+      $line =~ s/#.*$//;                # Strip out comments
 
-	next if $line =~ /^$/;		# Skip blank lines
+      next if $line =~ /^$/;            # Skip blank lines
 
-	# Join lines ending in '\'.
-	if ( $line =~ /^(.*)\\\s*$/ ) {
-	    my $new_line = "$1";
+      # Join lines ending in '\'.
+      if ( $line =~ /^(.*)\\\s*$/ )
+      {
+         my $new_line = "$1";
 
-	    while ( $line = <DISTFILE> ) {
-		if ( $line =~ /^(.*)\\\s*$/ ) {
-		    $new_line .= "$1";
-		} else {
-		    $new_line .= "$line";
-		    last;
-		}
-	    }
+         while ( $line = <DISTFILE> )
+         {
+            if ( $line =~ /^(.*)\\\s*$/ )
+            {
+               $new_line .= "$1";
+            }
+            else
+            {
+               $new_line .= "$line";
+               last;
+            }
+         }
 
-	    $line = "$new_line";
-	}
+         $line = "$new_line";
+      }
 
-	# '/set ...' line.
-	if ( $line =~ /^\/set\s+(\S.+)$/ ) {
-	    foreach ( split(/\s+/, "$1") ) {
-		my($keyword, $value) = split(/=/, "$_");
-		checkKeyVal("$keyword", "$value");
-		$KEYWORDS{"$keyword"} = "$value";
-	    }
-	}
-	# '/unset ...' line.
-	elsif ( $line =~ /^\/unset\s+(\S.+)$/ ) {
-	    foreach ( split(/\s+/, "$1") ) {
-		delete($KEYWORDS{"$_"});
-	    }
-	}
-	# '..' directory change line.
-	elsif ( $line =~ /^\s*\.\.\s*$/ ) {
-	    pop(@dirstack);
-	    chdir("..");
-	}
-	# Named file or directory (possibly with options) line.
-	elsif ( $line =~ /^\s*(\S+)\s*(\S.+)?$/ ) {
-	    my $filename = "$1";
+      # '/set ...' line.
+      if ( $line =~ /^\/set\s+(\S.+)$/ )
+      {
+         foreach ( split(/\s+/, "$1") )
+         {
+            my($keyword, $value) = split(/=/, "$_");
+            checkKeyVal("$keyword", "$value");
+            $KEYWORDS{"$keyword"} = "$value";
+         }
+      }
+      # '/unset ...' line.
+      elsif ( $line =~ /^\/unset\s+(\S.+)$/ )
+      {
+         foreach ( split(/\s+/, "$1") )
+         {
+            delete($KEYWORDS{"$_"});
+         }
+      }
+      # '..' directory change line.
+      elsif ( $line =~ /^\s*\.\.\s*$/ )
+      {
+         pop(@dirstack);
+         chdir("..");
+      }
+      # Named file or directory (possibly with options) line.
+      elsif ( $line =~ /^\s*(\S+)\s*(\S.+)?$/ )
+      {
+         my $filename = "$1";
 
-	    my(%TEMP) = ();
+         my(%TEMP) = ();
 
-	    if ( $2 ) {
-		foreach ( split(/\s+/, "$2") ) {
-		    my($keyword, $value) = split(/=/, "$_");
-		    checkKeyVal("$keyword", "$value");
-		    $TEMP{"$keyword"} = "$value";
-		}
-	    }
+         if ( $2 )
+         {
+            foreach ( split(/\s+/, "$2") )
+            {
+               my($keyword, $value) = split(/=/, "$_");
+               checkKeyVal("$keyword", "$value");
+               $TEMP{"$keyword"} = "$value";
+            }
+         }
 
-	    processFile("$filename", "$TEMP{'ignore'}", "$TEMP{'nochange'}",
-			"$TEMP{'cksum'}", "$TEMP{'gid'}", "$TEMP{'gname'}",
-			"$TEMP{'md5digest'}", "$TEMP{'mode'}",
-			"$TEMP{'nlink'}", "$TEMP{'uid'}", "$TEMP{'uname'}",
-			"$TEMP{'size'}", "$TEMP{'link'}", "$TEMP{'time'}",
-			"$TEMP{'type'}");
-	}
-    }
+         processFile("$filename", "$TEMP{'ignore'}", "$TEMP{'nochange'}",
+                     "$TEMP{'cksum'}", "$TEMP{'gid'}", "$TEMP{'gname'}",
+                     "$TEMP{'md5digest'}", "$TEMP{'mode'}", "$TEMP{'nlink'}",
+                     "$TEMP{'uid'}", "$TEMP{'uname'}", "$TEMP{'size'}",
+                     "$TEMP{'link'}", "$TEMP{'time'}", "$TEMP{'type'}");
+      }
+   }
 
-    close(DISTFILE) or nonfatalError("Cannot close input file: $!");
+   close(DISTFILE) or nonfatalError("Cannot close input file: $!");
 }
 
 # -----------------------------------------------------------------------------
@@ -578,168 +639,205 @@ sub parseSpecFile () {
 #       $time      - The expected modification time.
 #       $type      - The expected file type.
 # -----------------------------------------------------------------------------
-sub processFile ($$$$$$$$$$$$$$$) {
-    my $name      = shift;
-    my $ignore    = $_[0] || $KEYWORDS{'ignore'};
-    my $nochange  = $_[1] || $KEYWORDS{'nochange'};
-    my $cksum     = $_[2] || $KEYWORDS{'cksum'};
-    my $gid       = $_[3] || $KEYWORDS{'gid'};
-    my $gname     = $_[4] || $KEYWORDS{'gname'};
-    my $md5digest = $_[5] || $KEYWORDS{'md5digest'};
-    my $mode      = $_[6] || $KEYWORDS{'mode'};
-    my $nlink     = $_[7] || $KEYWORDS{'nlink'};
-    my $uid       = $_[8] || $KEYWORDS{'uid'};
-    my $uname     = $_[9] || $KEYWORDS{'uname'};
-    my $size      = $_[10] || $KEYWORDS{'size'};
-    my $link      = $_[11] || $KEYWORDS{'link'};
-    my $time      = $_[12] || $KEYWORDS{'time'};
-    my $type      = $_[13] || $KEYWORDS{'type'};
+sub processFile($$$$$$$$$$$$$$$)
+{
+   my $name      = shift;
+   my $ignore    = $_[0] || $KEYWORDS{'ignore'};
+   my $nochange  = $_[1] || $KEYWORDS{'nochange'};
+   my $cksum     = $_[2] || $KEYWORDS{'cksum'};
+   my $gid       = $_[3] || $KEYWORDS{'gid'};
+   my $gname     = $_[4] || $KEYWORDS{'gname'};
+   my $md5digest = $_[5] || $KEYWORDS{'md5digest'};
+   my $mode      = $_[6] || $KEYWORDS{'mode'};
+   my $nlink     = $_[7] || $KEYWORDS{'nlink'};
+   my $uid       = $_[8] || $KEYWORDS{'uid'};
+   my $uname     = $_[9] || $KEYWORDS{'uname'};
+   my $size      = $_[10] || $KEYWORDS{'size'};
+   my $link      = $_[11] || $KEYWORDS{'link'};
+   my $time      = $_[12] || $KEYWORDS{'time'};
+   my $type      = $_[13] || $KEYWORDS{'type'};
 
-    if ( ! $Win32 ) {
-	$uname = getpwuid($<) if ! $uname;
+   if ( ! $Win32 )
+   {
+      $uname = getpwuid($<) if ! $uname;
 
-	if ( $uname && ! $uid ) {
-	    my(@user_info) = getpwnam("$uname") or die "getpwnam($uname): $!\n";
-	    $uid = $user_info[2];
-	}
+      if ( $uname && ! $uid )
+      {
+         my(@user_info) = getpwnam("$uname") or die "getpwnam($uname): $!\n";
+         $uid = $user_info[2];
+      }
 
-	if ( $gname && ! $gid ) {
-	    my(@group_info) = getgrnam("$gname") or die "getgrnam($gname): $!\n";
-	    $gid = $group_info[2];
-	}
-    }
+      if ( $gname && ! $gid )
+      {
+         my(@group_info) = getgrnam("$gname") or die "getgrnam($gname): $!\n";
+         $gid = $group_info[2];
+      }
+   }
 
-    SWITCH: {
-	if ( "$type" eq 'dir' ) {
-            # XXX: This is kind of a hack to deal with Perl thinking that a
-            # symlink pointing to a directory is actually a directory.
-            if ( -l "$name" ) {
-                warn "WARNING: Symlink exists where directory expected (",
-                     printDirStack(), ") -- removing link\n";
-                unlink("$name");
+   SWITCH:
+   {
+      if ( "$type" eq 'dir' )
+      {
+         # XXX: This is kind of a hack to deal with Perl thinking that a
+         # symlink pointing to a directory is actually a directory.
+         if ( -l "$name" )
+         {
+            warn "WARNING: Symlink exists where directory expected (",
+                 printDirStack(), ") -- removing link\n";
+            unlink("$name");
+         }
+
+         if ( ! -d "$name" )
+         {
+            print "missing: ";
+            printDirStack();
+            print "$name";
+
+            $exit_status = 2 if $opts{'u'};
+
+            if ( $opts{'U'} || $opts{'u'} ) {
+               mkdir("$name", 0755) or die "ERROR: Cannot mkdir $name: $!\n";
+               chmod(oct($mode), "$name") if $mode;
+               chown($uid, $gid, "$name");
+               print " (created)\n";
             }
+            else
+            {
+               print "\n";
+               return;
+            }
+         }
 
-	    if ( ! -d "$name" ) {
-		print "missing: ";
-		printDirStack();
-		print "$name";
+         last SWITCH;
+      }
 
-		$exit_status = 2 if $opts{'u'};
+      # If -d was given on the command line and execution reaches this
+      # point, the type of $name is not a directory, so it should be
+      # ignored.
+      return if $opts{'d'};
 
-		if ( $opts{'U'} || $opts{'u'} ) {
-		    mkdir("$name", 0755) or
-			die "ERROR: Cannot mkdir $name: $!\n";
-		    chmod(oct($mode), "$name") if $mode;
-		    chown($uid, $gid, "$name");
-		    print " (created)\n";
-		} else {
-		    print "\n";
-		    return;
-		}
-	    }
+      if ( "$type" eq 'file' )
+      {
+         if ( ! -f "$name" )
+         {
+            print "missing: ";
+            printDirStack();
+            print "$name ";
+         }
 
-	    last SWITCH;
-	}
+         last SWITCH;
+      }
 
-	# If -d was given on the command line and execution reaches this
-	# point, the type of $name is not a directory, so it should be
-	# ignored.
-	return if $opts{'d'};
+      if ( "$type" eq 'link' )
+      {
+         if ( ! -l "$name" )
+         {
+            print "missing: ";
+            printDirStack();
+            print "$name ";
+         }
 
-	if ( "$type" eq 'file' ) {
-	    if ( ! -f "$name" ) {
-		print "missing: ";
-		printDirStack();
-		print "$name ";
-	    }
+         last SWITCH;
+      }
+   } # SWITCH
 
-	    last SWITCH;
-	}
+   # The file in question now exists.  If we are not ignoring other
+   # attributes, check its other expected settings.
+   if ( ! $nochange )
+   {
+      my(%STATS) = getStats("$name");
+      local $name_printed = 0;
 
-	if ( "$type" eq 'link' ) {
-	    if ( ! -l "$name" ) {
-		print "missing: ";
-		printDirStack();
-		print "$name ";
-	    }
+      if ( "$type" ne "" && ! checkType("$name", "$type") )
+      {
+         printName("$name");
+         print "type ($type, ", getType("$name"), ")\n";
+      }
 
-	    last SWITCH;
-	}
-    } # SWITCH
+      if ( "$mode" ne "" && $STATS{'mode'} != $mode )
+      {
+         printName("$name");
+         print "permissions ($mode, $STATS{'mode'}";
 
-    # The file in question now exists.  If we are not ignoring other
-    # attributes, check its other expected settings.
-    if ( ! $nochange ) {
-	my(%STATS) = getStats("$name");
-	local $name_printed = 0;
+         if ( $opts{'U'} || $opts{'u'} )
+         {
+            if ( ! chmod(oct($mode), "$name") )
+            {
+               warn "\nWARNING: Cannot set $name to mode $mode: $!\n";
+            }
+            else
+            {
+               print ", modified)\n";
+               $STATS{'mode'} = $mode;
+            }
+         }
+         else
+         {
+            print ")\n";
+         }
 
-	if ( "$type" ne "" && ! checkType("$name", "$type") ) {
-	    printName("$name");
-	    print "type ($type, ", getType("$name"), ")\n";
-	}
+         $exit_status = 2 if $opts{'u'};
+      }
 
-	if ( "$mode" ne "" && $STATS{'mode'} != $mode ) {
-	    printName("$name");
-	    print "permissions ($mode, $STATS{'mode'}";
+      if ( $uid && $uid != $STATS{'uid'} )
+      {
+         printName("$name");
+         print "uid ($uid, $STATS{'uid'}";
 
-	    if ( $opts{'U'} || $opts{'u'} ) {
-		if ( ! chmod(oct($mode), "$name") ) {
-		    warn "\nWARNING: Cannot set $name to mode $mode: $!\n";
-		} else {
-		    print ", modified)\n";
-		    $STATS{'mode'} = $mode;
-		}
-	    } else {
-		print ")\n";
-	    }
+         if ( $opts{'U'} || $opts{'u'} )
+         {
+            if ( ! chown($uid, $STATS{'gid'}, "$name") )
+            {
+               warn "\nWARNING: Cannot set $name owner to $uid: $!\n";
+            }
+            else
+            {
+               print ", modified)\n";
+               $STATS{'uid'} = $uid;
+            }
+         }
+         else
+         {
+            print ")\n";
+         }
 
-	    $exit_status = 2 if $opts{'u'};
-	}
+         $exit_status = 2 if $opts{'u'};
+      }
 
-	if ( $uid && $uid != $STATS{'uid'} ) {
-	    printName("$name");
-	    print "uid ($uid, $STATS{'uid'}";
+      if ( $gid && $gid != $STATS{'gid'} )
+      {
+         printName("$name");
+         print "gid ($gid, $STATS{'gid'}";
 
-	    if ( $opts{'U'} || $opts{'u'} ) {
-		if ( ! chown($uid, $STATS{'gid'}, "$name") ) {
-		    warn "\nWARNING: Cannot set $name owner to $uid: $!\n";
-		} else {
-		    print ", modified)\n";
-		    $STATS{'uid'} = $uid;
-		}
-	    } else {
-		print ")\n";
-	    }
+         if ( $opts{'U'} || $opts{'u'} )
+         {
+            if ( ! chown($STATS{'uid'}, $gid, "$name") )
+            {
+               warn "\nWARNING: Cannot set $name group to $gid: $!\n";
+            }
+            else
+            {
+               print ", modified)\n";
+               $STATS{'gid'} = $gid;
+            }
+         }
+         else
+         {
+            print ")\n";
+         }
 
-	    $exit_status = 2 if $opts{'u'};
-	}
+         $exit_status = 2 if $opts{'u'};
+      }
+   }
 
-	if ( $gid && $gid != $STATS{'gid'} ) {
-	    printName("$name");
-	    print "gid ($gid, $STATS{'gid'}";
-
-	    if ( $opts{'U'} || $opts{'u'} ) {
-		if ( ! chown($STATS{'uid'}, $gid, "$name") ) {
-		    warn "\nWARNING: Cannot set $name group to $gid: $!\n";
-		} else {
-		    print ", modified)\n";
-		    $STATS{'gid'} = $gid;
-		}
-	    } else {
-		print ")\n";
-	    }
-
-	    $exit_status = 2 if $opts{'u'};
-	}
-    }
-
-    # If this file is a directory and we are not ignoring the file heirarchy
-    # below it, push it onto @dirstack and continue processing from within
-    # the directory.
-    if ( "$type" eq 'dir' && ! $ignore ) {
-	push(@dirstack, "$name");
-	chdir("$name");
-    }
+   # If this file is a directory and we are not ignoring the file heirarchy
+   # below it, push it onto @dirstack and continue processing from within
+   # the directory.
+   if ( "$type" eq 'dir' && ! $ignore )
+   {
+      push(@dirstack, "$name");
+      chdir("$name");
+   }
 }
 
 # -----------------------------------------------------------------------------
@@ -756,24 +854,28 @@ sub processFile ($$$$$$$$$$$$$$$) {
 #
 # RETURNS: 1 - The keyword and value are valid.
 # -----------------------------------------------------------------------------
-sub checkKeyVal ($$) {
-    my($keyword, $value) = @_;
-    my $err = "";
+sub checkKeyVal($$)
+{
+   my($keyword, $value) = @_;
+   my $err = "";
 
-    # Check group name.
-    if ( "$keyword" eq "gname" && ! $Win32 ) {
-	$err = "No such group '$value'" if getgrnam("$value") eq undef;
-    }
-    # Check user name.
-    elsif ( "$keyword" eq "uname" && ! $Win32 ) {
-	$err = "No such user '$value'" if getpwnam("$value") eq undef;
-    }
+   # Check group name.
+   if ( "$keyword" eq "gname" && ! $Win32 ) {
+      $err = "No such group '$value'" if getgrnam("$value") eq undef;
+   }
+   # Check user name.
+   elsif ( "$keyword" eq "uname" && ! $Win32 ) {
+      $err = "No such user '$value'" if getpwnam("$value") eq undef;
+   }
 
-    if ( $err ) {
-	die "$0: line $.: $err\n";
-    } else {
-	return 1;
-    }
+   if ( $err )
+   {
+      die "$0: line $.: $err\n";
+   }
+   else
+   {
+      return 1;
+   }
 }
 
 # -----------------------------------------------------------------------------
@@ -787,16 +889,20 @@ sub checkKeyVal ($$) {
 #
 # ARGS: $name - The name of the file to print.
 # -----------------------------------------------------------------------------
-sub printName ($) {
-    my $name = shift;
+sub printName($)
+{
+   my $name = shift;
 
-    if ( ! $name_printed ) {
-	print "$name:", " " x (7 - length("$name"));
-	print "\n        " if length("$name") >= 8;
-	$name_printed = 1;
-    } else {
-	print " " x 8;
-    }
+   if ( ! $name_printed )
+   {
+      print "$name:", " " x (7 - length("$name"));
+      print "\n        " if length("$name") >= 8;
+      $name_printed = 1;
+   }
+   else
+   {
+      print " " x 8;
+   }
 }
 
 # -----------------------------------------------------------------------------
@@ -809,42 +915,50 @@ sub printName ($) {
 #
 # RETURNS: The type of the given file.
 # -----------------------------------------------------------------------------
-sub getType ($) {
-    my $name = shift;
+sub getType($)
+{
+   my $name = shift;
 
-    my $type = "";
+   my $type = "";
 
-    # This is a directory (type => 'dir').
-    if ( -d "$name" ) {
-	$type = 'dir';
-    }
-    # This is an ordinary file (type => 'file').
-    elsif ( -f "$name" ) {
-	$type = 'file';
-    }
-    # This is a block device (type => 'block').
-    elsif ( -b "$name" ) {
-	$type = 'block';
-    }
-    # This is a character device (type => 'char').
-    elsif ( -c "$name" ) {
-	$type = 'char';
-    }
-    # This is a named pipe/FIFO (type => 'fifo').
-    elsif ( -p "$name" ) {
-	$type = 'fifo';
-    }
-    # This is a socket (type => 'socket').
-    elsif ( -S "$name" ) {
-	$type = 'socket';
-    }
-    # This is a symbolic link (type => 'link').  This is last because
-    # $name might be a symbolic link to one of the above.
-    elsif ( -l "$name" ) {
-	$type = 'link'
-    }
+   # This is a directory (type => 'dir').
+   if ( -d "$name" )
+   {
+      $type = 'dir';
+   }
+   # This is an ordinary file (type => 'file').
+   elsif ( -f "$name" )
+   {
+      $type = 'file';
+   }
+   # This is a block device (type => 'block').
+   elsif ( -b "$name" )
+   {
+      $type = 'block';
+   }
+   # This is a character device (type => 'char').
+   elsif ( -c "$name" )
+   {
+      $type = 'char';
+   }
+   # This is a named pipe/FIFO (type => 'fifo').
+   elsif ( -p "$name" )
+   {
+      $type = 'fifo';
+   }
+   # This is a socket (type => 'socket').
+   elsif ( -S "$name" )
+   {
+      $type = 'socket';
+   }
+   # This is a symbolic link (type => 'link').  This is last because
+   # $name might be a symbolic link to one of the above.
+   elsif ( -l "$name" )
+   {
+      $type = 'link'
+   }
 
-    return "$type";
+   return "$type";
 }
 
 # -----------------------------------------------------------------------------
@@ -860,48 +974,57 @@ sub getType ($) {
 # RETURNS: 0 - The given type does not match the actual type of the file.
 #          1 - The given type matches the actual type.
 # -----------------------------------------------------------------------------
-sub checkType ($$) {
-    my $name = shift;
-    my $type = shift;
+sub checkType($$)
+{
+   my $name = shift;
+   my $type = shift;
 
-    if ( "$type" eq getType("$name") ) {
-	return 1;
-    } else {
-	return 0;
-    }
+   if ( "$type" eq getType("$name") )
+   {
+      return 1;
+   }
+   else
+   {
+      return 0;
+   }
 }
 
 # -----------------------------------------------------------------------------
 # Wrap the text in the given array of lines to fit within the specified
 # column width.
 # -----------------------------------------------------------------------------
-sub wrap ($$$@) {
-    my($columns, $init_tab, $sub_tab, @text) = @_;
+sub wrap($$$@)
+{
+   my($columns, $init_tab, $sub_tab, @text) = @_;
 
-    my(@ret_val);
-    my $text = expand(join(" ", @text));
+   my(@ret_val);
+   my $text = expand(join(" ", @text));
 
-    my $lead = "$init_tab";
-    my $lead_len = $columns - length(expand("$lead")) - 1;
+   my $lead = "$init_tab";
+   my $lead_len = $columns - length(expand("$lead")) - 1;
 
-    $text =~ s/^\s+//;
+   $text =~ s/^\s+//;
 
-    while ( length("$text") > $lead_len ) {
-	# Remove up to a line length of things that aren't new lines and tabs.
-	if ( $text =~ s/^([^\n]{0,$lead_len})(\s|\Z(?!\n))// ) {
-	    my($l, $r) = ($1, $2);
-	    $l =~ s/\s+$//;
-	    push(@ret_val, unexpand($lead . $l), "\n");
-	} elsif ( $text =~ s/^([^\n]{$lead_len})// ) {
-	    push(@ret_val, unexpand($lead . $1), "\n");
-	}
+   while ( length("$text") > $lead_len )
+   {
+      # Remove up to a line length of things that aren't new lines and tabs.
+      if ( $text =~ s/^([^\n]{0,$lead_len})(\s|\Z(?!\n))// )
+      {
+         my($l, $r) = ($1, $2);
+         $l =~ s/\s+$//;
+         push(@ret_val, unexpand($lead . $l), "\n");
+      }
+      elsif ( $text =~ s/^([^\n]{$lead_len})// )
+      {
+         push(@ret_val, unexpand($lead . $1), "\n");
+      }
 
-	# Recompute the leader.
-	$lead = "$sub_tab";
-	$lead_len = $columns - length(expand("$lead")) - 1;
-	$text =~ s/^\s+//;
-    }
+      # Recompute the leader.
+      $lead = "$sub_tab";
+      $lead_len = $columns - length(expand("$lead")) - 1;
+      $text =~ s/^\s+//;
+   }
 
-    push(@ret_val, "$lead" . "$text") if "$text" ne "";
-    return @ret_val;
+   push(@ret_val, "$lead" . "$text") if "$text" ne "";
+   return @ret_val;
 }
