@@ -728,6 +728,11 @@ void aMotionStar::setReportRate (unsigned char n) { reportRate = n; }
 void
 aMotionStar::setAddress (const char* n) {
   if ( n != NULL ) {
+    // Free the old memory before duplicating the new address string.
+    if ( address != NULL ) {
+      free(address);
+    }
+
     address = strdup(n);
   }
 }
