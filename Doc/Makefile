@@ -3,7 +3,7 @@ PERCEPS= $(PERCEPS_DIR)/bin/perceps
 TEMPLATES= ./templates
 SRCDIR = ..
 SRC = $(SRCDIR)/Sync $(SRCDIR)/Config $(SRCDIR)/Input $(SRCDIR)/Kernel	\
-      $(SRCDIR)/SharedMem $(SRCDIR)/Threads $(SRCDIR)/Environment
+      $(SRCDIR)/SharedMem $(SRCDIR)/Threads $(SRCDIR)/Environment $(SRCDIR)/Math
 SRC_EX = ExampleClass.h ExampleClass.C
 OUT= ./src_html
 OUT_EX = ./ex_html
