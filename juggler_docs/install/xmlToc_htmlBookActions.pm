@@ -22,12 +22,17 @@ require Exporter;
 @EXPORT = qw(useme pushFolder_action popFolder_action pushFont_action
              popFont_action item_action defaults_action treecontrol_action);
 
+# Prototypes.
+sub number($$$$);
+
 my(%book) = ();
 
 $book{'title'}      = '';
 $book{'files'}      = [];
 $book{'chapters'}   = [];
 $book{'appendices'} = [];
+
+my $new_page_str = '<!--NewPage-->';
 
 sub useme () {
     xmlToc::setAction("folder", \&xmlToc_htmlBookActions::pushFolder_action);
@@ -86,9 +91,11 @@ sub popFolder_action ($$$$$) {
         # already have been processed and stored in the book's chapters array
         # by processFile().
         if ( $#{$book{'chapters'}} > -1 ) {
+            my $chapter_count = 1;
+
             foreach ( @{$book{'chapters'}} ) {
-                print 'c';
-                $$xmlToc_data_out .= "$_";
+                $$xmlToc_data_out .= number(\$chapter_count, "$_", 'Chapter',
+                                            'h1');
             }
         }
 
@@ -96,11 +103,13 @@ sub popFolder_action ($$$$$) {
         # append them.  The files will already have been processed and
         # stored in the book's appendices array by processFile().
         if ( $#{$book{'appendices'}} > -1 ) {
-            $$xmlToc_data_out .= "<!--NewPage-->\n<H1>Appendices</H1>\n\n";
+            $$xmlToc_data_out .= "$new_page_str\n<H1>Appendices</H1>\n\n";
+
+            my $appendix_count = 1;
 
             foreach ( @{$book{'appendices'}} ) {
-                print '@';
-                $$xmlToc_data_out .= "$_";
+                $$xmlToc_data_out .= number(\$appendix_count, "$_", 'Appendix',
+                                            'h1');
             }
         }
     }
@@ -262,6 +271,37 @@ sub filterHTML ($) {
         #
         ############### end of search and replace (tags and includes) #########
     }
+}
+
+sub number ($$$$) {
+    my $count_ref    = shift;
+    my $input_text   = shift;
+    my $section_name = shift;
+    my $section_tag  = shift;
+
+    my $numbered_text = '';
+
+    # Use the first letter of the section name for status output.
+    $section_name =~ /^(\w)/;
+    my $output_char = "$1";
+
+    # If this section contains the text indicating the started of a new
+    # section, insert "Chapter X:" before the title of the section where X is
+    # the current value of $$count_ref.  This is accomplished by looping over
+    # the input text and inserting numbers before each title.  The new text is
+    # reconstructed in the $numbered_text variable.
+    while ( $input_text =~ /(<${section_tag}.*?>)(<[^h].+?>\s*)*?(.*?)(<\/${section_tag}>)/is ) {
+        $numbered_text .= "$`$1$2$section_name $$count_ref: $3$4";
+        $input_text = $';
+        $$count_ref++;
+        print "$output_char";
+    }
+
+    # Append whatever was left after the last successful match.  If there was
+    # no match, this just puts the full input text in $numbered_text.
+    $numbered_text .= "$input_text";
+
+    return "$numbered_text";
 }
 
 1;
