@@ -48,7 +48,7 @@ usage()
     cat <<EOF
 Usage: gadgeteer-config [OPTIONS] [LIBRARIES]
 Options:
-        [--basedir]           Use \$GAD_BASE_DIR when printing paths
+        [--basedir]           Use \$GADGET_BASE_DIR when printing paths
         [--prefix[=DIR]]      Print the installation prefix or set an
                               alternate prefix to use when printing paths
         [--exec-prefix[=DIR]] Print the executable prefix or set an alternate
@@ -60,7 +60,7 @@ Options:
         [--subsystem]         Print the OS abstraction layer being used
 
 Libraries (prints the linker options for one or more of these libraries):
-        gad
+        gadget
 EOF
 
     exit $1
@@ -99,7 +99,7 @@ while test $# -gt 0; do
             echo_exec_prefix=yes
             ;;
         --version)
-            echo @VRJ_MAJOR_VERSION@.@VRJ_MINOR_VERSION@.@VRJ_MICRO_VERSION@
+            echo @MAJOR_VERSION@.@MINOR_VERSION@.@MICRO_VERSION@
             ;;
         --cxxflags)
             echo_cxxflags=yes
@@ -132,7 +132,7 @@ fi
 
 if test "$echo_prefix" = "yes"; then
     if test "$use_base_dir" = "yes"; then
-        echo $GAD_BASE_DIR
+        echo $GADGET_BASE_DIR
     else
         echo $prefix
     fi
@@ -140,7 +140,7 @@ fi
 
 if test "$echo_exec_prefix" = "yes"; then
     if test "$use_base_dir" = "yes"; then
-        echo $GAD_BASE_DIR
+        echo $GADGET_BASE_DIR
     else
         echo $exec_prefix
     fi
@@ -148,7 +148,7 @@ fi
 
 if test "$echo_cxxflags" = "yes"; then
     if test "$use_base_dir" = "yes"; then
-        echo @CXXFLAGS@ -I$GAD_BASE_DIR/include $subsystem_cxxflags
+        echo @CXXFLAGS@ -I$GADGET_BASE_DIR/include $subsystem_cxxflags
     else
         echo @CXXFLAGS@ -I@includedir@ $subsystem_cxxflags
     fi
@@ -161,7 +161,7 @@ fi
 
 if test "$echo_libs" = "yes"; then
     if test "$use_base_dir" = "yes"; then
-        ldflags="-L$GAD_BASE_DIR/lib@LIBBITSUF@"
+        ldflags="-L$GADGET_BASE_DIR/lib@LIBBITSUF@"
     else
         ldflags="@gad_ldflags@"
     fi
