@@ -8,7 +8,6 @@
 #               Jesse Coats, Patrick Hartling, Andrew Himberger, 
 #               Chris Johanson, Christopher Just,
 #               Kevin Meinert, Ben Thompson
-#
 # 
 
 ------------------
