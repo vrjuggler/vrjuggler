@@ -77,7 +77,15 @@ bool SimInput::config(jccl::ConfigElementPtr element)
 
 int SimInput::checkKeyPair(KeyModPair& pair)
 {
-   if (pair.mModifier == -1)      // ANY modifier
+   // If the modifier is any
+   //   - Then check to see if the key is pressed.
+   // Else
+   //   - The modifier and the key must be pressed.
+   
+   // NOTE: If the modifier is NONE, then if any modifier
+   //       is pressed we will return 0;
+
+   if (pair.mModifier == -1)
    {
       return mEventWin->keyPressed(pair.mKey);
    }
@@ -85,15 +93,10 @@ int SimInput::checkKeyPair(KeyModPair& pair)
    {
       return mEventWin->keyPressed(pair.mKey);
    }
-   else                 // Mod not pressed
+   else
    {
       return 0;
    }
-}
-
-int SimInput::checkKey(gadget::Keys keyId)
-{
-   return mEventWin->keyPressed(keyId);
 }
 
 } // End of gadget namespace
