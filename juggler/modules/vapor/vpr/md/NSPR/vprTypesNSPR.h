@@ -30,8 +30,8 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _VPR_TYPES_H_
-#define _VPR_TYPES_H_
+#ifndef _VPR_TYPES_NSPR_H_
+#define _VPR_TYPES_NSPR_H_
 
 #include <prtypes.h>
 
