@@ -162,6 +162,9 @@ public:
 
    bool operator !=(const Interval& r) const
    { return ! (*this == r); }
+
+   bool operator <(const Interval& r) const
+   { return (mUsecs < r.mUsecs); }
    
    Interval operator +(const Interval& r) const
    { return Interval(vpr::Uint32(mUsecs+r.mUsecs), Interval::Usec); }
