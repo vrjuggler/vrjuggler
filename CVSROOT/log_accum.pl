@@ -71,9 +71,8 @@ use vars qw/*name *dir *prune/;
 *dir    = *File::Find::dir;
 *prune  = *File::Find::prune;
 
-sub print_exit_message {
-    print "** NOTE: Add entry to ChangeLog for major changes **\n";
-}
+sub wanted;
+sub doexec ($@);
 
 sub cleanup_lockfiles {
     my $base_dir = (split(/\s/, "$ARGV[0]"))[0];
@@ -92,8 +91,6 @@ sub wanted {
         ||
         -d _
     ) &&
-    (-M _ > 0.08) &&
-    ($uid == $<) &&
     handle();
 }
 
@@ -122,6 +119,10 @@ sub doexec {
     system @cmd;
     chdir $File::Find::dir;
     return !$?;
+}
+
+sub print_exit_message {
+    print "** NOTE: Add entry to ChangeLog for major changes **\n";
 }
 
 # Remove the temporary files.
