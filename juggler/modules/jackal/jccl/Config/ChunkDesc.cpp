@@ -265,7 +265,7 @@ bool vjChunkDesc::operator== (const vjChunkDesc& d) {
     if (plist.size() != d.plist.size())
         return false;
     for (unsigned int i = 0; i < plist.size(); i++)
-        if ((*plist[i]) != (*plist[i]))
+        if ((*plist[i]) != (*d.plist[i]))
             return false;
     return true;
 }
