@@ -154,17 +154,16 @@ InetAddrBSD::getAddressString (void) const {
         Uint32 value;
     } addr;
 
-    // XXX: This isn't working quite right on little endian systems...
     addr.value = m_addr.sin_addr.s_addr;
 
     // I don't know why Win32 has this stupid _snprintf() function.  Maybe I
     // am missing something because I'm not a Windows programmer...
 #ifdef WIN32
-    _snprintf(ip_addr, sizeof(ip_addr), "%u.%u.%u.%u", addr.c[0], addr.c[1],
-              addr.c[2], addr.c[3]);
+    _snprintf(ip_addr, sizeof(ip_addr), "%u.%u.%u.%u", (Uint8) addr.c[0],
+              (Uint8) addr.c[1], (Uint8) addr.c[2], (Uint8) addr.c[3]);
 #else
-    snprintf(ip_addr, sizeof(ip_addr), "%u.%u.%u.%u", addr.c[0], addr.c[1],
-             addr.c[2], addr.c[3]);
+    snprintf(ip_addr, sizeof(ip_addr), "%u.%u.%u.%u", (Uint8) addr.c[0],
+             (Uint8) addr.c[1], (Uint8) addr.c[2], (Uint8) addr.c[3]);
 #endif
     ip_str = ip_addr;
 
