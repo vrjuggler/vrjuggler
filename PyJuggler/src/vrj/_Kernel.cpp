@@ -9,6 +9,7 @@
 // Boost Includes ==============================================================
 #include <boost/python.hpp>
 #include <boost/cstdint.hpp>
+#include <boost/python/suite/indexing/vector_indexing_suite.hpp>
 
 // Includes ====================================================================
 #include <vrj/Kernel/Kernel.h>
@@ -184,8 +185,8 @@ void _Export_Kernel()
              "name -- The name of the user to be returned."
          )
         .def("getUsers", &vrj::Kernel::getUsers,
-             "getUsers() -> list of vrj.User objects\n"
-             "Returns a list of all the users."
+             "getUsers() -> vrj.UserVec object (indexable container)\n"
+             "Returns an indexable container of all the users."
          )
         .def("instance", &vrj::Kernel::instance,
              return_value_policy< reference_existing_object >(),
@@ -193,6 +194,12 @@ void _Export_Kernel()
              "Returns the singleton VR Juggler kernel reference."
          )
         .staticmethod("instance")
+    ;
+
+    class_< std::vector<vrj::User*> >("UserVec",
+        "An indexable container of vrj.User objects."
+        )
+        .def(vector_indexing_suite< std::vector<vrj::User*> >())
     ;
 
 }

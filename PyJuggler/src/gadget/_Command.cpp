@@ -9,6 +9,7 @@
 // Includes ====================================================================
 #include <boost/python.hpp>
 #include <boost/cstdint.hpp>
+#include <boost/python/suite/indexing/vector_indexing_suite.hpp>
 
 // Includes ====================================================================
 #include <vpr/IO/ObjectReader.h>
@@ -119,7 +120,8 @@ void _Export_Command()
              "Post-condition:\n"
              "The given samples are added to the buffers.\n"
              "Arguments:\n"
-             "sampleList -- The list of newly collected samples."
+             "sampleList -- The list of newly collected samples as a\n"
+             "              gadget.CommandDataVec object."
          )
         .def("swapCommandBuffers",
              &gadget::Command::swapCommandBuffers,
@@ -136,6 +138,12 @@ void _Export_Command()
              "getCommandDataBuffer() -> list of lists of CommandData objects\n"
              "Returns the current stable sample buffers for this device."
          )
+    ;
+
+    class_< std::vector<gadget::CommandData> >("CommandDataVec",
+        "An indexable container of gadget.DigitalData objects."
+        )
+        .def(vector_indexing_suite< std::vector<gadget::CommandData> >())
     ;
 
 }

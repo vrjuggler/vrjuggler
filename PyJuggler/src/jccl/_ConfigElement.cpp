@@ -6,9 +6,14 @@
 // Date modified: $Date$
 // Version:       $Revision$
 
-// Includes ====================================================================
+// Boost Includes ==============================================================
 #include <boost/python.hpp>
+#include <boost/cstdint.hpp>
+#include <boost/python/suite/indexing/vector_indexing_suite.hpp>
+
+// Includes ====================================================================
 #include <jccl/Config/ConfigElement.h>
+#include <container_conversions.h>
 
 // Using =======================================================================
 using namespace boost::python;
@@ -193,19 +198,20 @@ void _Export_ConfigElement()
              (bool (*)(jccl::ConfigElement*, const std::string&, const int, std::string))pyj::ConfigElement_setProperty)
         .def("getElementPtrDependencies",
              &jccl::ConfigElement::getElementPtrDependencies,
-             "getElementPtrDependencies() -> string list\n"
-             "Returns a list of self's dependencies.\n"
-             "Dependencies are any config element objects by an \"Element\n"
-             "Pointer\" proeprty of self (or any element embedded in self).\n"
+             "getElementPtrDependencies() -> jccl.StringVec (indexable container)\n"
+             "Returns an indexable container of self's dependencies as string\n"
+             "objects.  Dependencies are any config element objects named by\n"
+             "an \"Element Pointer\" proeprty of self (or any element\n"
+             "embedded in self).\n\n"
              "Returns:\n"
-             "A list of the names of all config elements referenced by self,\n"
-             "which can be used for dependency checking."
+             "A jccl.StringVec that contains the names of all config elements\n"
+             "referenced by self, which can be used for dependency checking."
          )
         .def("getChildElements", &jccl::ConfigElement::getChildElements,
-             "getChildElements() -> ConfigElement list\n"
-             "Returns a list of self's child (embedded) elements.\n"
+             "getChildElements() -> ConfigElement tuple\n"
+             "Returns a tuple of self's child (embedded) elements.\n\n"
              "Returns:\n"
-             "A list of ConfigElement objects that are the config elements\n"
+             "A tuple of ConfigElement objects that are the config elements\n"
              "embedded in self."
          )
         .def("setDefinition", &jccl::ConfigElement::setDefinition,
@@ -223,4 +229,12 @@ void _Export_ConfigElement()
     );
     register_ptr_to_python< boost::shared_ptr< jccl::ConfigElement > >();
     delete jccl_ConfigElement_scope;
+
+    class_< std::vector<std::string> >("StringVec",
+        "An indexable container of string objects."
+        )
+        .def(vector_indexing_suite< std::vector<std::string> >())
+    ;
+
+    pyj::std_vector_copyable_to_tuple<jccl::ConfigElementPtr>();
 }

@@ -9,6 +9,7 @@
 // Boost Includes ==============================================================
 #include <boost/python.hpp>
 #include <boost/cstdint.hpp>
+#include <boost/python/suite/indexing/vector_indexing_suite.hpp>
 
 // Includes ====================================================================
 #include <vpr/IO/ObjectReader.h>
@@ -159,7 +160,8 @@ void _Export_Analog()
              "The given samples are added to the buffers and the local\n"
              "filters are run on the new samples."
              "Arguments:\n"
-             "sampleList -- The list of newly collected samples."
+             "sampleList -- The list of newly collected samples as a\n"
+             "              gadget.AnalogDataVec object."
          )
         .def("swapAnalogBuffers", &gadget::Analog::swapAnalogBuffers,
              "swapAnalogBuffers()\n"
@@ -174,6 +176,12 @@ void _Export_Analog()
              "getAnalogDataBuffer() -> list of lists of AnalogData objects\n"
              "Returns the current stable sample buffers for this device."
          )
+    ;
+
+    class_< std::vector<gadget::AnalogData> >("AnalogDataVec",
+        "An indexable container of gadget.AnalogData objects."
+        )
+        .def(vector_indexing_suite< std::vector<gadget::AnalogData> >())
     ;
 
 }

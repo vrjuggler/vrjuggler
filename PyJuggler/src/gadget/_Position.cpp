@@ -9,6 +9,7 @@
 // Boost Includes ==============================================================
 #include <boost/python.hpp>
 #include <boost/cstdint.hpp>
+#include <boost/python/suite/indexing/vector_indexing_suite.hpp>
 
 // Includes ====================================================================
 #include <vpr/IO/ObjectReader.h>
@@ -158,7 +159,8 @@ void _Export_Position()
              "The given samples are added to the buffers, and the local\n"
              "filters are run on the new samples.\n"
              "Arguments:\n"
-             "sampleList -- The list of newly collected samples."
+             "sampleList -- The list of newly collected samples as a\n"
+             "              gadget.PositionDataVec object."
          )
         .def("swapPositionBuffers", &gadget::Position::swapPositionBuffers,
              "swapDigitalBuffers()\n"
@@ -173,6 +175,12 @@ void _Export_Position()
              "getPositionDataBuffer() -> list of lists of DigitalData objects\n"
              "Returns the current stable sample buffers for this device."
          )
+    ;
+
+    class_< std::vector<gadget::PositionData> >("PositionDataVec",
+        "An indexable container of gadget.PositionData objects."
+        )
+        .def(vector_indexing_suite< std::vector<gadget::PositionData> >())
     ;
 
 }

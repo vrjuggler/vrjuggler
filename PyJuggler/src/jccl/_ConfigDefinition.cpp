@@ -6,8 +6,12 @@
 // Date modified: $Date$
 // Version:       $Revision$
 
-// Includes ====================================================================
+// Boost Includes ==============================================================
 #include <boost/python.hpp>
+#include <boost/cstdint.hpp>
+#include <boost/python/suite/indexing/vector_indexing_suite.hpp>
+
+// Includes ====================================================================
 #include <jccl/Config/ConfigDefinition.h>
 
 // Using =======================================================================
@@ -70,8 +74,9 @@ void _Export_ConfigDefinition()
        )
       .def("getAllPropertyDefinitions",
           &jccl::ConfigDefinition::getAllPropertyDefinitions,
-          "getAllPropertyDefinitions() -> list of PropertyDefinition objects\n"
-          "Gets a list of all the PropertyDefinition objects from self."
+          "getAllPropertyDefinitions() -> jccl.PropertyDefinitionVec (indexable container)\n"
+          "Gets an indexable container of all the PropertyDefinition objects\n"
+          "from self."
        )
       .def(self_ns::str(self))
       .def( self == self )
@@ -79,4 +84,10 @@ void _Export_ConfigDefinition()
    );
    register_ptr_to_python< boost::shared_ptr< jccl::ConfigDefinition > >();
    delete jccl_ConfigDefinition_scope;
+
+   class_< std::vector<jccl::PropertyDefinition> >("PropertyDefinitionVec",
+       "An indexable container of jccl.PropertyDefinition objects"
+       )
+       .def(vector_indexing_suite< std::vector<jccl::PropertyDefinition> >())
+   ;
 }

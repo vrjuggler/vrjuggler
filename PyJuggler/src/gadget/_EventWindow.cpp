@@ -14,6 +14,7 @@
 #include <vpr/IO/ObjectReader.h>
 #include <vpr/IO/ObjectWriter.h>
 #include <gadget/Type/EventWindow.h>
+#include <container_conversions.h>
 
 // Using =======================================================================
 using namespace boost::python;
@@ -151,7 +152,7 @@ void _Export_EventWindow()
              "A string that is the symbolic name of the given key."
          )
         .def("getEventQueue", &gadget::EventWindow::getEventQueue,
-             "getEventQueue() -> list of gadget.Event objects\n"
+             "getEventQueue() -> tuple of gadget.Event objects\n"
              "Returns a copy of the current queue of events for this window."
          )
         .def("addEvent", &gadget::EventWindow::addEvent,
@@ -162,4 +163,5 @@ void _Export_EventWindow()
          )
     ;
 
+    pyj::std_vector_copyable_to_tuple<gadget::EventPtr>();
 }
