@@ -1116,10 +1116,10 @@ protected:
                             const bool print_sys_err = true);
 
    /** Helper for setting line status flags */
-   vpr::ReturnStatus setLineFlag(Uint8 flag, bool val);
+   vpr::ReturnStatus setLineFlag(Uint16 flag, bool val);
 
    /** Helper for getting lines status flags */
-   bool getLineFlag(Uint8 flag) const;
+   bool getLineFlag(Uint16 flag) const;
 
    /**
     * Converts a termios baud rate to its corresponding integer value.
