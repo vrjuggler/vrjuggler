@@ -149,22 +149,59 @@ float vjGlove::getGloveAngle(vjGloveData::vjGloveComponent component,
 
 //: This returns a vector ponting "out" of the component
 // Can be used for selection, etc.
+// Use getGlovePos to get the transformation matrix
 vjVec3 vjGlove::getGloveVector(vjGloveData::vjGloveComponent component, int devNum)
 {
-   return vjVec3(1.0,0.0,0.0);
+   // Take a normalized ray up default (yAxis), and transform by finger tip rot matrix
+   // ret_val = wTt yAxis
+   vjVec3 y_axis(0.0f, 1.0f, 0.0f);
+   vjVec3 ret_val(0.0f, 0.0f, 0.0f);
+
+   ret_val.xformVec(getGlovePos(component, devNum), y_axis);      // Compute the vector direction
+   return ret_val;
 }
 
-// For now we will not return anything valid
+// Calculated from the matrices in xforms
+// <sub>world</sub><b>T</b><sub>tip</sub> = <sub>world</sub><b>T</b><sub>base</sub> <sub>base</sub><b>T</b><sub>dij</sub> <sub>dij</sub><b>T</b><sub>tip</sub>
+//  i.e. wTt = wTb bTd dTt
 vjMatrix vjGlove::getGlovePos(vjGloveData::vjGloveComponent component, int devNum)
 {
    if(mGlovePos[devNum] != NULL)
    {
-      if(component == vjGloveData::WRIST)    // Return base position
+      vjMatrix ret_val;       // The returned matrix.
+      vjMatrix baseTdij;      // Transform from base to dig coord system
+      vjMatrix dijTtip;       // Transform to the tip of the finger
+
+      switch(component)
       {
-         return *(mGlovePos[devNum]->GetData());
+      case vjGloveData::WRIST:
+         baseTdij.makeIdent();      // No transform
+         dijTtip.makeIdent();       // No transform
+         break;
+      case vjGloveData::INDEX:
+      case vjGloveData::MIDDLE:
+      case vjGloveData::RING:
+      case vjGloveData::PINKY:
+      case vjGloveData::THUMB:
+         dijTtip.makeTrans(mTheData[devNum][current].dims[component][vjGloveData::DIJ+1][VJ_X],
+                           mTheData[devNum][current].dims[component][vjGloveData::DIJ+1][VJ_Y],
+                           mTheData[devNum][current].dims[component][vjGloveData::DIJ+1][VJ_Z]);
+         baseTdij = mTheData[devNum][current].xforms[component][vjGloveData::MPJ];            // baseTmpj
+         baseTdij.postMult(mTheData[devNum][current].xforms[component][vjGloveData::PIJ]);    // mpjTpij
+         baseTdij.postMult(mTheData[devNum][current].xforms[component][vjGloveData::DIJ]);    // pijTdij
+         break;
+
+      default:
+         vjASSERT(false);
+         break;
       }
-      else
-         return vjMatrix();
+
+      // Compute return value: retVal = TIPw = wTb bTd dTt
+      ret_val = *(mGlovePos[devNum]->GetData());      // wTb
+      ret_val.postMult(baseTdij);                     // bTd
+      ret_val.postMult(dijTtip);                      // dTt
+
+      return ret_val;
    }
    else
    {
