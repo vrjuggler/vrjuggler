@@ -148,6 +148,7 @@ void Kernel::controlLoop(void* nullParam)
       // It is currently being registered as a ConfigChunkHandler in
       // the ClusterManager constructor
       cluster::ClusterNetwork::instance()->updateNewConnections();
+      cluster::ClusterManager::instance()->sendRequests();
 
       bool cluster = !(cluster::ClusterManager::instance()->isClusterActive() &&
                        !cluster::ClusterManager::instance()->isClusterReady());
