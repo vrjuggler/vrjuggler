@@ -88,6 +88,25 @@ class SerializableObject : public WriteableObject, public ReadableObject
 {
 };
 
+/** Mixin to add serializable capabilities to an existing object.
+* 
+* Users can add Serializable capabilities by just defining two methods.
+*
+* ex: SerializableObjectMixin<MyType>  mMySerializableObj;
+*
+* Then somewhere...
+*    vpr::ReturnStatus vpr::SerializableObjectMixin<MyType>::writeObject(ObjectWriter* writer)
+*    { ... };
+*    vpr::ReturnStatus vpr::SerializableObjectMixin<MyType>::readObject(ObjectReader* writer)
+*    { ... };
+*/
+template<class BASE>
+class SerializableObjectMixin : public SerializableObject, public BASE
+{
+public:   
+   virtual vpr::ReturnStatus writeObject(ObjectWriter* writer);
+   virtual vpr::ReturnStatus readObject(ObjectReader* reader);
+};
 } // namespace vpr
 
 #endif

@@ -148,7 +148,8 @@ void Kernel::controlLoop(void* nullParam)
       // It is currently being registered as a ConfigChunkHandler in
       // the ClusterManager constructor
       cluster::ClusterNetwork::instance()->updateNewConnections();
-      
+      mClusterManager->updateStatus();
+
       // Iff we have an app and a draw manager
       if((mApp != NULL) && (mDrawManager != NULL))
       {
