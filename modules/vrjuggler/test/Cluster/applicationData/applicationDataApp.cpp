@@ -234,13 +234,11 @@ void applicationDataApp::drawNetwork()
 
    glLineWidth(3.0f);
 	
-   cluster::ClusterNetwork* network = cluster::ClusterNetwork::instance();
+   cluster::ClusterNetwork* network = cluster::ClusterManager::instance()->getNetwork();
 	
-   network->lockClusterNodes();
-
-   std::vector<cluster::ClusterNode*>::iterator begin = network->getClusterNodesBegin();
-   std::vector<cluster::ClusterNode*>::iterator end = network->getClusterNodesEnd();
-   std::vector<cluster::ClusterNode*>::iterator i;
+   std::vector<gadget::Node*>::iterator begin = network->getNodesBegin();
+   std::vector<gadget::Node*>::iterator end = network->getNodesEnd();
+   std::vector<gadget::Node*>::iterator i;
     
 			// Draw the local machine
    glColor3f(0.75f, 0.75f, 0.0f);
@@ -248,7 +246,7 @@ void applicationDataApp::drawNetwork()
 		
    for (i = begin ; i != end ; i++)
    {
-      glRotatef(360/network->getNumClusterNodes(), 0.0, 1.0, 0.0);
+      glRotatef(360/network->getNumNodes(), 0.0, 1.0, 0.0);
       if ( (*i)->isConnected() )
       {
          glColor3f(0.0f, 1.0f, 0.0f);
@@ -267,9 +265,6 @@ void applicationDataApp::drawNetwork()
       glPopMatrix();
    }
 
-   network->unlockClusterNodes();
-	
-	
    glLineWidth(1.0f);
    glPopMatrix();      
 }
