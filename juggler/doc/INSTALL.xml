@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?xml-stylesheet href="../../../../../../../../home/users/patrick/src/Juggler/docs/stylesheet/docbook_ab.css" type="text/css"?>
+<?xml-stylesheet href="http://www.vrjuggler.org/docbook_ab.css" type="text/css"?>
 <?morphon-document-settings
   morphon.document.settings.whitespaces.amount="3"
   morphon.document.settings.print.fixed.attributes="true"
@@ -35,6 +35,10 @@
             <para>The above will be required any time a Perl script fails with an error similar to the following:</para>
             <screen>Perl 5.005 required--this is only version 5.00404, stopped at ./configure.pl line 35.
 BEGIN failed--compilation aborted at ./configure.pl line 35.</screen>
+            <para>Furthermore, it is highly recommended that the <option>--with-perl</option> argument be passed to <command>configure.pl</command>. This argument gives all the Autoconf-based configure scripts a hint about where the preferred version of Perl lives. If using <filename>/usr/freeware/bin/perl</filename> to run <command>configure.pl</command>, we recommend that the <command>configure.pl</command> command line appear similar to the following:</para>
+            <screen>/usr/freeware/bin/perl configure.pl --with-perl=/usr/freeware/bin</screen>
+            <para>Note that the value given to <option>--with-perl</option> is the <emphasis>directory</emphasis> where the <command>perl</command> executable can be found. The configure scripts will add this directory to the front of the search path when trying to find a suitable <command>perl</command> executable. Once it is found, all the Perl scripts used for configuration, compilation, and installation will use that executable.</para>
+            <para>To simplify command execution somewhat, it can help to have <filename>/usr/freeware/bin</filename> (or whatever path is appropriate) in your path before <filename>/bin</filename> or <filename>/usr/bin</filename> or any of the other myriad directories where Perl might exist on IRIX. In such a situation, none of the above extra steps should be necessary. The correct version of Perl will be found simply by virtue of it being early in your path.</para>
          </section>
          <section>
             <title>MIPSpro Compiler Version</title>
