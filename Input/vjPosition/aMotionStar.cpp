@@ -61,6 +61,13 @@ const unsigned char SENSOR_PRESENT      = 0x04;
 const unsigned char TRANSMITTER_PRESENT = 0x02;
 const unsigned char TRANSMITTER_RUNNING = 0x01;
 
+const unsigned char SUDDEN_OUTPUT_CHANGE   = 0x20;
+const unsigned char XYZ_REFERENCE          = 0x10;
+const unsigned char APPEND_BUTTON_DATA     = 0x08;
+const unsigned char AC_NARROW_NOT_CHFILTER = 0x04;
+const unsigned char AC_WIDE_NOT_CHFILTER   = 0x02;
+const unsigned char DC_FILTER              = 0x01;
+
 // ----------------------------------------------------------------------------
 // Convert the given Flock data format into a human-readable string that
 // names the format.
@@ -588,10 +595,13 @@ aMotionStar::sample () {
                                 sizeof(rec_ptr->data_info) + rec_data_size;
 
                 // If the most significant bit is set in address, then there
-                // is also button data for this record.  We always ignore that
-                // information, but it's important for getting the proper size
-                // of this data block.
+                // is also button data for this record.
                 if ( rec_ptr->address & 0x80 ) {
+                    // Copy the button data into the current bird's info block.
+                    m_birds[bird]->buttons[0] = rec_ptr->button_data[0];
+                    m_birds[bird]->buttons[1] = rec_ptr->button_data[1];
+
+                    // Increment the pointer to account for the button data.
                     base_ptr += sizeof(rec_ptr->button_data);
                 }
             }
@@ -1280,6 +1290,7 @@ aMotionStar::configureBirds () {
                 m_birds[bird]->hemisphere  = m_hemisphere;
 
                 // Fill in the bird_status struct.
+                bird_status->setup      |= FLOCK::APPEND_BUTTON_DATA;
                 bird_status->dataFormat = format;
                 bird_status->reportRate = m_report_rate;
                 bird_status->hemisphere = m_hemisphere;

@@ -91,6 +91,14 @@ extern const unsigned char SENSOR_PRESENT;
 extern const unsigned char TRANSMITTER_PRESENT;
 extern const unsigned char TRANSMITTER_RUNNING;
 
+// Constants indicating the bit to set when defining the individual bird setup.
+extern const unsigned char SUDDEN_OUTPUT_CHANGE;
+extern const unsigned char XYZ_REFERENCE;
+extern const unsigned char APPEND_BUTTON_DATA;
+extern const unsigned char AC_NARROW_NOT_CHFILTER;
+extern const unsigned char AC_WIDE_NOT_CHFILTER;
+extern const unsigned char DC_FILTER;
+
 // ----------------------------------------------------------------------------
 //: Convert the given Flock data format into a human-readable string that
 //+ names the format.
@@ -154,6 +162,7 @@ struct Device {
     FLOCK::hemisphere   hemisphere;   //:
     unsigned char       address;      //: FBB address of this device
     FLOCK::data_block   data;         //: Data read from this device
+    unsigned char       buttons[2];   //: Bird button data
 
     unsigned char       addr;
 };
