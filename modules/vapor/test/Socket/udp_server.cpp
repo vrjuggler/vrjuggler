@@ -37,25 +37,32 @@
 
 int
 main (int argc, char* argv[]) {
-    vpr::Uint16 port = 5432;
+    vpr::Uint16 port = 5432;   // Default listening port
 
+    // If a command-line argument was given, use it as the port value instead
+    // of the default.
     if ( argc == 2 ) {
         port = (unsigned short) atoi(argv[1]);
     }
 
+    // Create a datagram socket that will be bound to port.
     vpr::SocketDatagram sock(vpr::InetAddr(port), vpr::InetAddr::AnyAddr);
     int status;
 
+    // Bind the socket to the port.
     if ( sock.open() && sock.bind() ) {
         char recv_buf[32];
         char send_buf[] = "Hello there!";
         ssize_t bytes;
 
+        // Loop forever reading messages from clients.
         while ( 1 ) {
             vpr::InetAddr addr;
 
+            // Read a message from a client.
             bytes = sock.recvfrom(recv_buf, sizeof(recv_buf), 0, addr);
 
+            // If we read anything, print it and send a response.
             if ( bytes != -1 ) {
                 std::cout << "Read '" << recv_buf << "' (" << bytes
                           << " bytes) from " << addr.getAddressString()

@@ -38,26 +38,33 @@ int
 main (int argc, char* argv[]) {
     vpr::SocketStream* sock;
 
+    // If we got one argument, it is of the form <address>:<port>.
     if ( argc == 2 ) {
         sock = new vpr::SocketStream(vpr::InetAddr::AnyAddr,
 	                             vpr::InetAddr(argv[1]));
     }
+    // If we got two arguments, they are <address> and <port>.
     else if ( argc == 3 ) {
         sock = new vpr::SocketStream(vpr::InetAddr::AnyAddr,
                                      vpr::InetAddr(argv[1], atoi(argv[2])));
     }
     else {
+        fprintf(stderr, "Usage: %s <address>:<port>\n", argv[0]);
+        fprintf(stderr, "       %s <address> <port>\n", argv[0]);
         return 1;
     }
 
     if ( sock->open() ) {
         char buffer[40];
 
+        // Connect to the server.
         if ( sock->connect() ) {
             ssize_t bytes;
 
+            // Read from teh server.
             bytes = sock->read(buffer, 40);
 
+            // If we read anything, print it.
             if ( bytes > 0 ) {
                 printf("Read %d bytes from server\n", bytes);
                 printf("    Got '%s'\n", buffer);

@@ -36,22 +36,29 @@
 
 int
 main (int argc, char* argv[]) {
-    vpr::Uint16 port = 5432;
+    vpr::Uint16 port = 5432;    // Default listening port
 
+    // If we got an argument, it names a different value for the port.
     if ( argc == 2 ) {
         port = (unsigned short) atoi(argv[1]);
     }
 
+    // Create an acceptor socket that listens on port.
     vpr::SocketStream sock(vpr::InetAddr(port), vpr::InetAddr::AnyAddr);
     int status;
 
+    // Open in server mode.
     if ( sock.openServer() ) {
         vpr::SocketStream* client_sock;
         char buffer[] = "Hello there!";
 //        std::string buffer = "Hello there!";
 
+        // Loop forever handling all clients serially.
         while ( 1 ) {
+            // Wait for an incoming connection.
             client_sock = sock.accept();
+
+            // Using the new socket, send the buffer to the client.
             client_sock->write(buffer, sizeof(buffer));
 //            client_sock->write(buffer);
             delete client_sock;
