@@ -417,15 +417,10 @@ public class ConfigChunkDB
     */
    public ConfigChunk get(String name)
    {
-      ConfigChunk ch;
-      Iterator i = chunks.iterator();
-      while (i.hasNext())
+      List matches = ConfigUtilities.getChunksWithName(getAll(), name);
+      if (matches.size() > 0)
       {
-         ch = (ConfigChunk)i.next();
-         if ( ch.getName().equals(name) )
-         {
-            return ch;
-         }
+         return (ConfigChunk)matches.get(0);
       }
       return null;
    }
@@ -454,27 +449,6 @@ public class ConfigChunkDB
       {
          ch = (ConfigChunk)i.next();
          if ( ch.getDescName().equals(typename) )
-         {
-            v.add (ch);
-         }
-      }
-      return v;
-   }
-
-   /** Gets all ConfigChunks using a particular ChunkDesc.
-    *  @param typename A ChunkDesc name.
-    *  @return A vector of all ConfigChunks in self using the named ChunkDesc.
-    *          This may be an empty Vector, but is never null.
-    */
-   public List getOfDescToken(String typename)
-   {
-      List v = new ArrayList();
-      ConfigChunk ch;
-      Iterator i = chunks.iterator();
-      while (i.hasNext())
-      {
-         ch = (ConfigChunk)i.next();
-         if ( ch.getDescToken().equals(typename) )
          {
             v.add (ch);
          }

@@ -100,7 +100,7 @@ public class ChunkFactory
       // XXX: What is this??
       if (default_chunkdb != null)
       {
-         List v = default_chunkdb.getOfDescToken(s);
+         List v = ConfigUtilities.getChunksWithDescToken(default_chunkdb.getAll(), s);
          if (!v.isEmpty())
          {
             //System.out.println ("creating chunk from default");
