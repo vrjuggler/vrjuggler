@@ -100,6 +100,11 @@ AC_ARG_WITH(cxx, [  --with-cxx=<PATH>       Alternate C++ compiler ],
             _alt_cxx="$withval", _alt_cxx='none')
 
 
+# Build sonix implementations as dynamic plugins
+AC_ARG_ENABLE(plugins,
+              [  --enable-plugins        Build sonix plugins dynamically [default=no]],
+              [BUILD_PLUGINS="$enableval"], [BUILD_PLUGINS='yes'])
+
 
 # Force the use of GCC as the compiler.
 # NOTE: This is not fully implemented yet for any platform, but it is
@@ -125,6 +130,8 @@ VJ_PROG_CXX_PROF_FLAG(yes)
 DPP_CXX_NAMESPACE([AC_MSG_ERROR([*** Sonix requires C++ namespace support ***])])
 DPP_CXX_TEMPLATES([AC_MSG_ERROR([*** Sonix requires C++ template support ***])])
 DPP_CXX_INLINE([AC_MSG_ERROR([*** Sonix requires C++ inline support ***])])
+
+AC_CHECK_PROG([MTREE_CMD], [mtree], [mtree], [\$(PERL) \$(scriptdir)/mtree.pl])
 
 # -----------------------------------------------------------------------------
 # Checks for libraries.
@@ -232,6 +239,11 @@ else
     SAFE_SNXROOT_ABS="$SNXROOT_ABS"
 fi
 
+# Check if the plugins should be compiled as separate plugin files
+STATIC_PLUGINS=Y
+if test "x$BUILD_PLUGINS" = "xyes"; then
+   STATIC_PLUGINS=N
+fi
 
 dnl Define the root directory for the OpenAL installation.
 dnl sound_subsystem_default="None"
@@ -413,6 +425,7 @@ AC_SUBST(snx_dep_scripts)
 AC_SUBST(AUDIOWORKS_API)
 AC_SUBST(OPENAL_API)
 AC_SUBST(SUBSYNTH_API)
+AC_SUBST(STATIC_PLUGINS)
 AC_SUBST(SAFE_SNXROOT_ABS)
 AC_SUBST(SAFE_JUGGLERROOT_ABS)
 
@@ -432,8 +445,14 @@ AC_SUBST(topdir)
 AC_SUBST(RM_LN)
 AC_SUBST(EXTRA_LINK_FLAGS)
 
+VJ_MTREE_LIB_GEN(SNX, mtree, $PLATFORM, $ISA)
+
 AC_OUTPUT(
           snx/Makefile
+          snx/plugins/Makefile
+          snx/plugins/AudioWorks/Makefile
+          snx/plugins/OpenAL/Makefile
+          snx/plugins/Subsynth/Makefile
           samples/Makefile
           samples/opengl/Makefile
           test/Makefile
@@ -442,6 +461,8 @@ AC_OUTPUT(
           Makefile 
           common.defs.mk
           make.defs.mk
+          mtree/SNX.include.dist
+          mtree/SNX.install.dist
           sonix-config,
           [chmod a+x sonix-config])
 

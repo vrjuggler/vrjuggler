@@ -1,0 +1,205 @@
+# ***************** <SNX heading BEGIN do not edit this line> *****************
+#
+# sonix
+#
+# Original Authors:
+#   Kevin Meinert, Carolina Cruz-Neira
+#
+# -----------------------------------------------------------------
+# File:          $RCSfile$
+# Date modified: $Date$
+# Version:       $Revision$
+# -----------------------------------------------------------------
+#
+# ****************** <SNX heading END do not edit this line> ******************
+# ************** <auto-copyright.pl BEGIN do not edit this line> **************
+#
+# VR Juggler is (C) Copyright 1998, 1999, 2000, 2001 by Iowa State University
+#
+# Original Authors:
+#   Allen Bierbaum, Christopher Just,
+#   Patrick Hartling, Kevin Meinert,
+#   Carolina Cruz-Neira, Albert Baker
+#
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Library General Public
+# License as published by the Free Software Foundation; either
+# version 2 of the License, or (at your option) any later version.
+#
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Library General Public License for more details.
+#
+# You should have received a copy of the GNU Library General Public
+# License along with this library; if not, write to the
+# Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+# Boston, MA 02111-1307, USA.
+#
+# *************** <auto-copyright.pl END do not edit this line> ***************
+
+default: debug
+
+# This is a hack to deal with GNU make's ignorance about defined targets.
+# Without this, the 'default' set in dpp.subdir.mk becomes the default
+# target, and that's not what we want.
+DEFAULT_SET	= 1
+SRC_MKFILES	= Makefile
+
+SUBDIR =
+ifeq (@OPENAL_API@, Y)
+	SUBDIR	+= OpenAL
+endif
+ifeq (@SUBSYNTH_API@, Y)
+	SUBDIR	+= Subsynth
+endif
+ifeq (@AUDIOWORKS_API@, Y)
+	SUBDIR	+= AudioWorks
+endif
+
+include @topdir@/make.defs.mk
+
+BUILD_PROF_C	= @BUILD_PROF_C@
+BUILD_PROF_CXX	= @BUILD_PROF_CXX@
+
+# If we can build both C and C++ profiled objects, we will build profiled
+# libraries.
+ifeq ($(BUILD_PROF_C), Y)
+ifeq ($(BUILD_PROF_CXX), Y)
+    BUILD_PROF_LIBS	= 1
+endif
+endif
+
+includedir		= @includedir@
+instlinks		= $(topdir)/install-clone
+plugindir		= $(projdatadir)/plugins
+
+# Extra compiler and linker options needed only by this file.
+DBG_FLAGS	= -D_DEBUG @DBG_FLAGS@
+OPT_FLAGS	= -D_OPT @OPT_FLAGS@
+
+STATICLIB_EXT	= @STATICLIB_EXT@
+DYNAMICLIB_EXT	= @DYNAMICLIB_EXT@
+
+AUDIOWORKS_LIB_DYNAMIC	= $(AUDIOWORKS_LIBRARY).$(DYNAMICLIB_EXT)
+OPENAL_LIB_DYNAMIC	= $(OPENAL_LIBRARY).$(DYNAMICLIB_EXT)
+SUBSYNTH_LIB_DYNAMIC	= $(SUBSYNTH_LIBRARY).$(DYNAMICLIB_EXT)
+DYLIB_DEPS_SNX		= @DYLIB_DEPS@
+DYLIB_PROF_DEPS_SNX	= @DYLIB_PROF_DEPS@
+
+# setup the list of libs to be built...
+LIBS=
+
+ifeq (@STATIC_PLUGINS@, N)
+ifeq (@AUDIOWORKS_API@, Y)
+	LIBS	+= $(AUDIOWORKS_LIBRARY)
+endif
+ifeq (@OPENAL_API@, Y)
+	LIBS	+= $(OPENAL_LIBRARY)
+endif
+ifeq (@SUBSYNTH_API@, Y)
+	LIBS	+= $(SUBSYNTH_LIBRARY)
+endif
+endif
+
+DYNAMIC_LIBS	= $(LIBS)
+
+# needed for compiling the DSO
+EXTRA_LIBS      = @LIBS@ -lm
+
+OBJDIR_NAME	?= obj
+BUILDDIR	= $(topdir)/$(OBJDIR_NAME)/$(PLATFORM)/$(ABI)/$(ISA)
+DBG_BUILDDIR	= $(BUILDDIR)/debug
+OPT_BUILDDIR	= $(BUILDDIR)/opt
+PROF_BUILDDIR	= $(BUILDDIR)/profiled
+
+LIBDIR		= $(topdir)/lib$(LIBBITSUF)/$(ISA)
+DBG_LIBDIR	= $(LIBDIR)/debug
+OPT_LIBDIR	= $(LIBDIR)/opt
+PROF_LIBDIR	= $(LIBDIR)/profiled
+
+dbg:
+	@for dir in $(SUBDIR); do				\
+		$(MAKE) -C $$dir $@ ;				\
+	done
+	@$(MAKE) LIBDIR=$(DBG_LIBDIR) OBJDIR=$(DBG_BUILDDIR) libs
+opt:
+	@for dir in $(SUBDIR); do				\
+		$(MAKE) -C $$dir $@ ;				\
+	done
+	@$(MAKE) LIBDIR=$(OPT_LIBDIR) OBJDIR=$(OPT_BUILDDIR) libs
+
+prof:
+	@for dir in $(SUBDIR); do				\
+		$(MAKE) -C $$dir $@ ;				\
+	done
+	@$(MAKE) LIBDIR=$(PROF_LIBDIR) OBJDIR=$(PROF_BUILDDIR) libs
+
+# Builds all the plugins that have been configured
+libs:
+	@for lib in $(DYNAMIC_LIBS); do				\
+		$(MAKE) OBJDIR=$(OBJDIR)/$$lib $(LIBDIR)/$$lib.$(DYNAMICLIB_EXT) ;	\
+	done
+
+# ------------------------------------------------
+# Construct the dynamic version of the libraries.
+# ------------------------------------------------
+$(LIBDIR)/$(AUDIOWORKS_LIB_DYNAMIC) $(LIBDIR)/$(OPENAL_LIB_DYNAMIC) $(LIBDIR)/$(SUBSYNTH_LIBRARY): $(OBJDIR)/*.$(OBJEXT)
+	@echo "------------------------------------------------"
+	@echo "Creating $@"
+	@echo "------------------------------------------------"
+	@$(SHELL) $(MKINSTALLDIRS) $(LIBDIR)
+	$(LD) $(LDOPTS) $(DYLIB_NAME_FLAG) $(OBJDIR)/*.$(OBJEXT) \
+		$(DYLIB_DEPS_SNX)
+	cd $(LIBDIR_BASE) && $(RM_LN) $(@F) && $(LN_S) $@ ./
+	@echo "------------------------------------------------"
+	@echo "$@ done"
+	@echo "------------------------------------------------"
+
+
+# =============================================================================
+# Library targets.
+# =============================================================================
+
+# =============================================================================
+# Make links for developer use that provide the needed functionality for
+# the $SNX_BASE_DIR environment variable to be used when needed.  $SNX_BASE_DIR
+# should be set to $(instlinks).
+# =============================================================================
+install:
+	@echo "------------------------------------------------"
+	@echo "Installing plugins"
+	@echo "------------------------------------------------"
+ifeq ($(BUILD_TYPE), dbg)
+	@for lib in $(DYNAMIC_LIBS) ; do				\
+		$(INSTALL) -m $(EXEC_PERMS) $(GROUP_OPT_UNIX)	\
+			$(EXTRA_INSTALL_ARGS)			\
+			$(DBG_LIBDIR)/$$lib.$(DYNAMICLIB_EXT)	\
+			$(plugindir)/$$lib.$(DYNAMICLIB_EXT) ; \
+	done
+endif
+ifeq ($(BUILD_TYPE), opt)
+	@for lib in $(DYNAMIC_LIBS) ; do				\
+		$(INSTALL) -m $(EXEC_PERMS) $(GROUP_OPT_UNIX)	\
+			$(EXTRA_INSTALL_ARGS)			\
+			$(OPT_LIBDIR)/$$lib.$(DYNAMICLIB_EXT)	\
+			$(plugindir)/$$lib.$(DYNAMICLIB_EXT) ; \
+	done
+endif
+ifeq ($(BUILD_TYPE), prof)
+	@for lib in $(DYNAMIC_LIBS) ; do				\
+		$(INSTALL) -m $(EXEC_PERMS) $(GROUP_OPT_UNIX)	\
+			$(EXTRA_INSTALL_ARGS)			\
+			$(PROF_LIBDIR)/$$lib.$(DYNAMICLIB_EXT)	\
+			$(plugindir)/$$lib.$(DYNAMICLIB_EXT) ; \
+	done
+endif
+
+include $(MKPATH)/dpp.subdir.mk
+
+# -----------------------------------------------------------------------------
+# Clean-up.
+# -----------------------------------------------------------------------------
+include $(MKPATH)/dpp.clean.mk
+CLEAN_DIRS      += $(BUILDDIR_BASE) $(LIBDIR_NAME) $(instlinks)
+CLOBBER_DIRS    += $(BUILDDIR_BASE) $(LIBDIR_NAME)

@@ -71,7 +71,6 @@ OPT_FLAGS	= -D_OPT @OPT_FLAGS@
 STATICLIB_EXT	= @STATICLIB_EXT@
 DYNAMICLIB_EXT	= @DYNAMICLIB_EXT@
 
-SNX_LIBRARY           = @LIB_PREFIX@sonix
 SNX_LIB_STATIC        = $(SNX_LIBRARY).$(STATICLIB_EXT)
 SNX_LIB_DYNAMIC       = $(SNX_LIBRARY).$(DYNAMICLIB_EXT)
 SNX_PROF_LIB_STATIC	= $(SNX_LIBRARY)$(PROFLIB_EXT).$(STATICLIB_EXT)
@@ -155,7 +154,6 @@ $(LIBDIR)/$(SNX_PROF_LIB_DYNAMIC): $(OBJDIR)/*.$(OBJEXT)
 # Library targets.
 # =============================================================================
 
-
 # libs.mk calls these two...
 BEFOREBUILD	= beforebuild
 AFTERBUILD	= afterbuild
@@ -235,17 +233,11 @@ hier:
 	@echo "Making hierarchy"
 	@echo "------------------------------------------------"
 	$(SHELL) $(MKINSTALLDIRS) $(prefix)
-	$(SHELL) $(MKINSTALLDIRS) $(bindir)
-	$(SHELL) $(MKINSTALLDIRS) $(includedir)/snx
-	$(SHELL) $(MKINSTALLDIRS) $(projdatadir)/src
-	$(SHELL) $(MKINSTALLDIRS) $(projdatadir)/data
-	@for lib in $(ABI_LIST) ; do					\
-            $(MAKE) dppABI=$$lib hier-abi ;   \
-          done
+	$(MTREE_CMD) -Ude -f $(mtreedir)/SNX.install.dist -p $(prefix)
+	$(SHELL) $(MKINSTALLDIRS) $(projdatadir)
+	$(MTREE_CMD) -Ude -f $(mtreedir)/SNX.include.dist -p $(prefix)
+	$(MTREE_CMD) -Ude -f $(mtreedir)/SNX.lib.dist -p $(prefix)
 
-hier-abi:
-	$(SHELL) $(MKINSTALLDIRS) $(prefix)/$(LIBDIR_NAME)/$(ISA)/$(DBG_DIR)
-	$(SHELL) $(MKINSTALLDIRS) $(prefix)/$(LIBDIR_NAME)/$(ISA)/$(OPT_DIR)
 
 # Steps to take after the installation process is complete.  This target is
 # independent of the current ABI.

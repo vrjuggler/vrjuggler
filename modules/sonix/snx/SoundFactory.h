@@ -66,7 +66,6 @@ public:
    SoundFactory() : snx::Singleton<SoundFactory>()
    {
       std::vector<std::string> search_paths;
-      search_paths.push_back( "${SNX_BASE_DIR}/lib/modules/sonix" );
       search_paths.push_back( "${SNX_BASE_DIR}/share/sonix/plugins" );
       search_paths.push_back( "${HOME}/.sonix/plugins" );
 
@@ -88,26 +87,19 @@ public:
 
    bool isPlugin( std::string filename )
    {
-      if (filename.find( ".snx" ) != std::string::npos)
-      {
-         xdl::Library lib;
-         if (lib.open( filename.c_str(), xdl::NOW ) == false) return false;
-         if (lib.lookup( "newPlugin" ) == NULL) return false;
-         if (lib.lookup( "deletePlugin" ) == NULL) return false;
-         if (lib.lookup( "getVersion" ) == NULL) return false;
-         if (lib.lookup( "getName" ) == NULL) return false;
+      xdl::Library lib;
+      if (lib.open( filename.c_str(), xdl::NOW ) == false) return false;
+      if (lib.lookup( "newPlugin" ) == NULL) return false;
+      if (lib.lookup( "deletePlugin" ) == NULL) return false;
+      if (lib.lookup( "getVersion" ) == NULL) return false;
+      if (lib.lookup( "getName" ) == NULL) return false;
 
-         // @todo give sonix an internal version number string!
-         //getVersionFunc getVersion = (getVersionFunc)lib.lookup( "getVersion" );
-         //if (getVersion != NULL && getVersion() != snx::version) return false;
+      // @todo give sonix an internal version number string!
+      //getVersionFunc getVersion = (getVersionFunc)lib.lookup( "getVersion" );
+      //if (getVersion != NULL && getVersion() != snx::version) return false;
 
-         lib.close();
-         return true;
-      }
-      else
-      {
-         return false;
-      }
+      lib.close();
+      return true;
    }
 
    void filterOutPluginFileNames( std::vector<std::string> srclist,
