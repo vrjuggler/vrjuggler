@@ -106,6 +106,19 @@ public class TweekCore
       // will need to be updated.
       setLookAndFeel(global_prefs);
 
+      // Register the command-line arguments with the Environment Service (if
+      // it is available).
+      try
+      {
+         EnvironmentService service = new EnvironmentServiceProxy();
+         service.setCommandLineArgs(new_args);
+      }
+      catch(RuntimeException e)
+      {
+         // Use System.err here because the GUI has not been displayed yet.
+         System.err.println("WARNING: Failed to register command-line arguments");
+      }
+      
       // Loop over all the known Bean directories to search for and load any
       // Beans that are found.  This must occur after the global preferences
       // have been loaded so that the user can enable or disable lazy Panel
@@ -125,18 +138,7 @@ public class TweekCore
          }
       }
 
-      // Register the command-line arguments with the Environment Service (if
-      // it is available).
-      try
-      {
-         EnvironmentService service = new EnvironmentServiceProxy();
-         service.setCommandLineArgs(new_args);
-      }
-      catch(RuntimeException e)
-      {
-         // Use System.err here because the GUI has not been displayed yet.
-         System.err.println("WARNING: Failed to register command-line arguments");
-      }
+
 
       m_gui = new TweekFrame(mMsgDocument);
 
