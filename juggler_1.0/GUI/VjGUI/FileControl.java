@@ -1,5 +1,12 @@
+/*
+ * FileControl.java
+ *
+ * Handles all file access for the config editor
+ *
+ * Author: Christopher Just
+ *
+ */
 
-/* simple local file access for the config editor */
 
 package VjGUI;
 
@@ -15,46 +22,75 @@ import VjGUI.CfgFileRequester;
 
 public class FileControl {
 
-  String homedir;
-  String basedir;
-  String userchunkdescdbname;
-  String userconfigchunkdbname;
-  String baseconfigchunkdbname;
-  String basechunkdescdbname;
-  ClientGlobals core;
-
-  public FileControl (ClientGlobals c) {
-    core = c;
-    java.util.Properties p = System.getProperties();
-    homedir = p.getProperty ("user.home", "");
-  }
-
-
-
-  public boolean getBaseDir() {
-    basedir = null;
-    try {
-      String s = homedir + "/.vjconfig/basedir";
-      System.out.println ("trying to load " + s);
-      FileReader r = new FileReader (s);
-      StreamTokenizer st = new ConfigStreamTokenizer(r);
-      st.wordChars('/','/');
-      st.nextToken();
-      basedir = st.sval;
-      return (basedir != null);
+    final static String basedir_varname = "VJ_BASE_DIR";
+    
+    String fileseparator;
+    String homedir;
+    String basedir;
+    String userchunkdescdbname;
+    String userconfigchunkdbname;
+    String baseconfigchunkdbname;
+    String basechunkdescdbname;
+    ClientGlobals core;
+    
+    public FileControl (ClientGlobals c) {
+	core = c;
+	java.util.Properties p = System.getProperties();
+	fileseparator = p.getProperty("file.separator", "/");
+	homedir = p.getProperty ("user.home", "");
+	if (!homedir.endsWith(fileseparator))
+	    homedir = homedir + fileseparator;
+	System.out.println ("home directory is '" + homedir + "'");
+	getBaseDir();
     }
-    catch (FileNotFoundException e) {
-      System.err.println ("Couldn't find file !/.vjconfig/basedir");
-      return false;
-    }
-    catch (Exception e) {
-      System.err.println ("Couldn't determine configfile base dir");
-      return false;
-    }
-  }
 
 
-//---------------------- GLOBAL ChunkDescDB ----------------------------------
+    public boolean getBaseDir() {
+	// this version of getBaseDir tries to get the base dir
+	// from an environment variable (basedir_name)
+	//basedir = System.getenv (basedir_varname);
+	basedir = System.getProperty (basedir_varname);
+	if (basedir == null) {
+	    basedir = "";
+	    System.err.println ("Couldn't find $" + basedir_varname
+				+ " variable.");
+	    return false;
+	}
+	else {
+	    if (basedir.endsWith (fileseparator))
+		basedir = basedir + fileseparator;
+	    return true;
+	}
+    }
+
+
+//   public boolean getBaseDir() {
+//     // the version of basedir tries to get the base dir from
+//     // a file called .vjconfig/basedir in the user's home 
+//     // directory.
+//     basedir = null;
+//     try {
+//       String s = homedir + "/.vjconfig/basedir";
+//       System.out.println ("trying to load " + s);
+//       FileReader r = new FileReader (s);
+//       StreamTokenizer st = new ConfigStreamTokenizer(r);
+//       st.wordChars('/','/');
+//       st.nextToken();
+//       basedir = st.sval;
+//       return (basedir != null);
+//     }
+//     catch (FileNotFoundException e) {
+//       System.err.println ("Couldn't find file !/.vjconfig/basedir");
+//       return false;
+//     }
+//     catch (Exception e) {
+//       System.err.println ("Couldn't determine configfile base dir");
+//       return false;
+//     }
+//   }
+
+
+//----------------- GLOBAL ChunkDescDB -------------------------
 
 
   public boolean loadBaseChunkDescDB () {
@@ -69,10 +105,10 @@ public class FileControl {
 	  fname = fd.getFile();
       }
       else {
-	  if (!getBaseDir())
-	      return false;
-	  fname = basedir + "/chunksDesc";
+	  fname = basedir + "Data/chunksDesc";
       }
+      if (fname == null)
+	  return false;
 
     try {
       FileReader r = new FileReader(fname);
@@ -111,11 +147,11 @@ public class FileControl {
 
 
   public boolean saveBaseChunkDescDB () {
-    if (!getBaseDir())
-      return false;
     String name = basedir + "/chunksDesc";
     return saveBaseChunkDescDB(name);
   }
+
+
 
   public boolean saveBaseChunkDescDB (String name) {
     try {
@@ -132,22 +168,25 @@ public class FileControl {
 
 
 
-//---------------------- USER ChunkDescDB ------------------------------------
+//---------------------- USER ChunkDescDB ----------------------
 
 
 
 
   public boolean loadUserChunkDescDB () {
-      FileDialog fd = new FileDialog ( core.ui, 
-				       "Load User ChunkDesc File...", 
-				       FileDialog.LOAD);
-      fd.show();
-      String fname = fd.getFile();
-      if ((fname == null) || fname.equals(""))
-	  return false;
-
-    //String fname = homedir + "/.C2config/chunksDesc";    
-    return loadUserChunkDescDB (fname);
+      String fname = null;
+      if (core.noautoload) {
+	  FileDialog fd = new FileDialog ( core.ui, 
+					   "Load User ChunkDesc File...", 
+					   FileDialog.LOAD);
+	  fd.show();
+	  fname = fd.getFile();
+	  if ((fname == null) || fname.equals(""))
+	      return false;
+      }
+      else
+	  fname = homedir + ".vjconfig/chunksDesc";    
+      return loadUserChunkDescDB (fname);
   }
 
 
@@ -201,62 +240,60 @@ public class FileControl {
 
 
 
-  public boolean saveUserChunkDescDB (String name) {
-    userchunkdescdbname = name;
-    try {
-      if ((basechunkdescdbname != null) && !basechunkdescdbname.equals("")) {
-	FileReader r = new FileReader(basechunkdescdbname);
-	ConfigStreamTokenizer st = new ConfigStreamTokenizer(r);
-	ChunkDescDB base = new ChunkDescDB();
-	base.read(st);
-	ChunkDescDB diff = base.diff(core.descs);
-	DataOutputStream out = 
-	  new DataOutputStream(new FileOutputStream(userchunkdescdbname));
-	out.writeBytes(diff.fileRep());
-	return true;
-      }
-      else {
-	DataOutputStream out = 
-	  new DataOutputStream(new FileOutputStream(userchunkdescdbname));
-	out.writeBytes(core.descs.fileRep());
-	return true;
-      }
+    public boolean saveUserChunkDescDB (String name) {
+	userchunkdescdbname = name;
+	try {
+	    if ((basechunkdescdbname != null) && !basechunkdescdbname.equals("")) {
+		FileReader r = new FileReader(basechunkdescdbname);
+		ConfigStreamTokenizer st = new ConfigStreamTokenizer(r);
+		ChunkDescDB base = new ChunkDescDB();
+		base.read(st);
+		ChunkDescDB diff = base.diff(core.descs);
+		DataOutputStream out = 
+		    new DataOutputStream(new FileOutputStream(userchunkdescdbname));
+		out.writeBytes(diff.fileRep());
+		return true;
+	    }
+	    else {
+		DataOutputStream out = 
+		    new DataOutputStream(new FileOutputStream(userchunkdescdbname));
+		out.writeBytes(core.descs.fileRep());
+		return true;
+	    }
+	}
+	catch (IOException e) {
+	    System.err.println ("IOerror saving file " + userchunkdescdbname);
+	    return false;
+	}
     }
-    catch (IOException e) {
-      System.err.println ("IOerror saving file " + userchunkdescdbname);
-      return false;
+    
+
+
+
+
+//------------------- Global ConfigChunk ------------------------
+
+
+    public boolean loadBaseConfigChunkDB () {
+	String fname = basedir + "Data/C2config";
+	
+	try {
+	    FileReader r = new FileReader(fname);
+	    ConfigStreamTokenizer st = new ConfigStreamTokenizer(r);
+	    core.chunks.read(st);
+	    baseconfigchunkdbname = fname;
+	    core.ui.update();
+	    return true;
+	}
+	catch (FileNotFoundException e) {
+	    System.err.println ("Couldn't open file " + fname);
+	    return false;
+	}
+	catch (IOException e) {
+	    System.err.println ("Error reading chunks from " + fname);
+	    return false;
+	}
     }
-  }
-
-
-
-
-
-//------------------------- Global ConfigChunk ----------------------------
-
-
-  public boolean loadBaseConfigChunkDB () {
-    if (!getBaseDir())
-      return false;
-    String fname = basedir + "/C2config";
-
-    try {
-      FileReader r = new FileReader(fname);
-      ConfigStreamTokenizer st = new ConfigStreamTokenizer(r);
-      core.chunks.read(st);
-      baseconfigchunkdbname = fname;
-      core.ui.update();
-      return true;
-    }
-    catch (FileNotFoundException e) {
-      System.err.println ("Couldn't open file " + fname);
-      return false;
-    }
-    catch (IOException e) {
-      System.err.println ("Error reading chunks from " + fname);
-      return false;
-    }
-  }
 
 
 
@@ -328,9 +365,7 @@ public class FileControl {
 
 
   public boolean saveBaseConfigChunkDB () {
-     if (!getBaseDir())
-       return false;
-     String name = basedir + "/C2Config";
+     String name = basedir + "Data/C2Config";
      return saveBaseConfigChunkDB(name);
   }
 

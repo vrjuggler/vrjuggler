@@ -1,3 +1,8 @@
+/*
+ * ConfigChunkDBPanel.java
+ *
+ * Author: Christopher Just
+ */
 
 package VjGUI;
 
@@ -11,17 +16,17 @@ import VjGUI.ConfigChunkFrame;
 import VjGUI.AppCore;
 
 public class ConfigChunkDBPanel extends MainWindowPanel 
-implements ActionListener, ItemListener {
+    implements ActionListener, ItemListener {
 
-  ClientGlobals core;
-  List list;
-  Button savebutton, loadbutton, removebutton, insertbutton, clearbutton;
-  Vector chunkframes; // vector storing all the ChunkDescPanels...
-  Choice insertchoice;
-  Menu filemenu, networkmenu;
-  Panel buttonspanel;
-  String nullchoice;
-  Label helplabel;
+    ClientGlobals core;
+    List list;
+    Button savebutton, loadbutton, removebutton, insertbutton, clearbutton;
+    Vector chunkframes; // vector storing all the ChunkDescPanels...
+    Choice insertchoice;
+    Menu filemenu, networkmenu;
+    Panel buttonspanel;
+    String nullchoice;
+    Label helplabel;
 
 
 
@@ -38,7 +43,8 @@ implements ActionListener, ItemListener {
 
 	setLayout (new BorderLayout());
 
-	add (new Label ("Available ConfigChunks:", Label.LEFT), "North");
+	add (new Label ("Available ConfigChunks:", Label.LEFT), 
+	     "North");
 
 	/*************** Center Panel ****************/
 	list = new List (10, false);

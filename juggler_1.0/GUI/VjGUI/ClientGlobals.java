@@ -24,14 +24,28 @@ public class ClientGlobals {
     public boolean        multilevelchunkdescenabled;
     public boolean        chunkdescusestandardfilereq;
 
+    public int            mode;          // FILE_EDITOR or APP_GUI
+    public static int     FILE_EDITOR = 1;
+    public static int     APP_GUI = 2;
+
+    public boolean        noautoload;
+    /* if true, the gui won't try to automatically load base & user
+     * chunkdesc & config files.
+     */
+
     public ClientGlobals (boolean l) {
+	noautoload = false;
 	multilevelconfigenabled = false;
 	multilevelchunkdescenabled = false;
-	chunkdescusestandardfilereq = true;
+	chunkdescusestandardfilereq = false;
+	mode = APP_GUI;
     }
 
     public boolean isConnected() {
-	return net.isConnected();
+	if (mode == APP_GUI)
+	    return net.isConnected();
+	else
+	    return false;
     }
 
 }
