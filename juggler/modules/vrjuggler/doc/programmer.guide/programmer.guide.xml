@@ -310,8 +310,8 @@
         <function>main()</function> function. That <function>main()</function>
         function in turn calls library functions when needed. (This is the
         model followed by software packages such as the
-        <trademark>CAVElibs</trademark> and the Diverse Toolkit.) The library
-        in this model only executes code when directed to do so by the
+        <productname>CAVElibs</productname> and the Diverse Toolkit.) The
+        library in this model only executes code when directed to do so by the
         application. As a result, the application developer is responsible for
         coordinating the execution of the different VR system components. This
         can lead to complex applications.</para>
@@ -2877,8 +2877,7 @@ vj_mat = vrj::GetVjMatrix(pf_mat);</programlisting>
         begin with high-level descriptions of both and then move on to their
         use in VR Juggler application objects.</para>
 
-        <para>
-        <classname>gadget::DeviceInterface&lt;T&gt;</classname><indexterm>
+        <para><classname>gadget::DeviceInterface&lt;T&gt;</classname><indexterm>
             <primary>classes</primary>
 
             <secondary>gadget::DeviceInterface&lt;T&gt;</secondary>
@@ -3804,7 +3803,7 @@ private:
       topics such as how to write cluster-capable applications and how to add
       sound to VR Juggler applications. This part concludes with chapters
       providing tips on porting applications written using other toolkits such
-      as GLUT and the CAVElibs™.</para>
+      as GLUT and the <productname>CAVElibs</productname>.</para>
     </partintro>
 
     <chapter id="chapter.writing.apps">
@@ -7772,35 +7771,35 @@ private:
       </section>
     </chapter>
 
-    <chapter id="chapter.porting.CAVElib">
+    <chapter id="chapter.porting.CAVElibs">
       <title>Porting to VR Juggler from the
-      <trademark>CAVElib</trademark></title>
+      <productname>CAVElibs</productname></title>
 
       <indexterm>
         <primary>porting applications from</primary>
 
-        <secondary><trademark>CAVElib</trademark></secondary>
+        <secondary><productname>CAVElibs</productname></secondary>
       </indexterm>
 
       <indexterm>
-        <primary><trademark>CAVElib</trademark></primary>
+        <primary><productname>CAVElibs</productname></primary>
 
         <secondary>porting to VR Juggler</secondary>
       </indexterm>
 
       <para>In this chapter, we give some methods for porting an application
-      written with the <trademark>CAVElib</trademark> software to VR Juggler.
-      We explain the process for an OpenGL application. Throughout, we compare
-      and contrast the techniques used by VR Juggler and the
-      <trademark>CAVElib</trademark> software, and we translate concepts
-      familiar to <trademark>CAVElib</trademark> programmers into VR Juggler
-      terms.</para>
+      written with the <productname>CAVElibs</productname> software to VR
+      Juggler. We explain the process for an OpenGL application. Throughout,
+      we compare and contrast the techniques used by VR Juggler and the
+      <productname>CAVElibs</productname> software, and we translate concepts
+      familiar to <productname>CAVElibs</productname> programmers into VR
+      Juggler terms.</para>
 
       <section>
         <title>The Initialize, Draw, and Frame Routines</title>
 
-        <para>In the <trademark>CAVElib</trademark>, the initialize, draw, and
-        frame routines are known as <glossterm
+        <para>In the <productname>CAVElibs</productname>, the initialize,
+        draw, and frame routines are known as <glossterm
         linkend="gloss.callback">callbacks</glossterm> implemented with C
         function pointers. In VR juggler, the equivalent routines are
         <quote>called back</quote> using an application object. An application
@@ -7808,10 +7807,10 @@ private:
         functionality of the application within a single C++ object.</para>
 
         <section>
-          <title>In <trademark>CAVElib</trademark></title>
+          <title>In <productname>CAVElibs</productname></title>
 
           <para>The following lists the draw, frame, and initialize routines
-          used in the <trademark>CAVElib</trademark> software.</para>
+          used in the <productname>CAVElibs</productname> software.</para>
 
           <itemizedlist>
             <listitem>
@@ -7921,10 +7920,10 @@ private:
 
         <para>Getting input from the hardware devices is conceptually the
         same, but the implementations are quite different between the
-        <trademark>CAVElib</trademark> software and VR Juggler.</para>
+        <productname>CAVElibs</productname> software and VR Juggler.</para>
 
         <section>
-          <title>In <trademark>CAVElib</trademark></title>
+          <title>In <productname>CAVElibs</productname></title>
 
           <para>To get tracking information, the following functions are
           used:</para>
@@ -8011,13 +8010,13 @@ private:
         <title>Configuration</title>
 
         <para>Configuration of VR Juggler and the
-        <trademark>CAVElib</trademark> software is very different. The
+        <productname>CAVElibs</productname> software is very different. The
         differences are too numerous to list here, but we give a brief
         overview and a pointer to the documentation that explains
         configuration of VR Juggler.</para>
 
         <section>
-          <title>In <trademark>CAVElib</trademark></title>
+          <title>In <productname>CAVElibs</productname></title>
 
           <para>All configurable parameters go in a single file called
           <filename>.caverc</filename>. The configuration mechanism is
@@ -8030,10 +8029,11 @@ private:
           <title>In VR Juggler</title>
 
           <para>Configuration of VR Juggler is much more powerful and flexible
-          than what is used by the <trademark>CAVElib</trademark> software. As
-          a result, it is also more complex. All configurable parameters could
-          be in one or more files with any names desired. VR Juggler comes
-          with example configuration files that may be found in the directory
+          than what is used by the <productname>CAVElibs</productname>
+          software. As a result, it is also more complex. All configurable
+          parameters could be in one or more files with any names desired. VR
+          Juggler comes with example configuration files that may be found in
+          the directory
           <filename>$VJ_BASE_DIR/share/vrjuggler/data/configFiles</filename>.</para>
 
           <para>The VR Juggler configuration system is completely extensible
@@ -8054,8 +8054,8 @@ private:
         <section>
           <title>Shared Memory</title>
 
-          <para>Unlike the <trademark>CAVElib</trademark> software, VR Juggler
-          does not have to manage shared memory with other VR Juggler
+          <para>Unlike the <productname>CAVElibs</productname> software, VR
+          Juggler does not have to manage shared memory with other VR Juggler
           instances. Thus, when writing a VR Juggler application, memory can
           be created as in a normal, single-threaded C or C++
           application.</para>
@@ -8066,8 +8066,8 @@ private:
 
           <para>As a result of the shared memory model described above, VR
           Juggler has different requirements for context-specific data than
-          the <trademark>CAVElib</trademark> software. Information such as
-          display lists and texture objects must be managed using
+          the <productname>CAVElibs</productname> software. Information such
+          as display lists and texture objects must be managed using
           context-specific data. A <glossterm
           linkend="gloss.display.context">display context</glossterm> is the
           location to which OpenGL rendering commands draw. Compiled OpenGL
@@ -8088,10 +8088,10 @@ private:
 
         <para>This final section is the heart of the porting discussion. We
         present some source code as a means to illustrate how
-        <trademark>CAVElib</trademark> concepts map to VR Juggler.</para>
+        <productname>CAVElibs</productname> concepts map to VR Juggler.</para>
 
         <section>
-          <title>The Form of a Basic <trademark>CAVElib</trademark>
+          <title>The Form of a Basic <productname>CAVElibs</productname>
           Program</title>
 
           <programlisting linenumbering="numbered">void app_shared_init();
