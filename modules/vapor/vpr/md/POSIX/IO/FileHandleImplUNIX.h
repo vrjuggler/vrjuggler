@@ -497,7 +497,27 @@ public:
     */
    vpr::ReturnStatus write_i(const void* buffer, const vpr::Uint32 length,
                              vpr::Uint32& bytes_written,
-                              const vpr::Interval timeout = vpr::Interval::NoTimeout);
+                             const vpr::Interval timeout = vpr::Interval::NoTimeout);
+
+   /**
+    * Returns the number of bytes available for reading in the receive
+    * buffer.
+    *
+    * @return A value greater than 0 is returned if there are bytes to be
+    *         read.  If there is nothing to read or an error occurred, 0 is
+    *         returned.
+    */
+   vpr::Uint32 availableBytes (void)
+   {
+      int result;
+
+      if ( ioctl(m_fdesc, FIONREAD, &result) < 0 )
+      {
+         result = 0;
+      }
+
+      return result;
+   }
 
 protected:
    // Friends.
@@ -554,4 +574,4 @@ protected:
 } // End of vpr namespace
 
 
-#endif	/* _VPR_FILE_HANDLE_IMPL_UNIX_H_ */
+#endif  /* _VPR_FILE_HANDLE_IMPL_UNIX_H_ */

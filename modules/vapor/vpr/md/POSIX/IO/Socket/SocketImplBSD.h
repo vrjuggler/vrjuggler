@@ -430,6 +430,11 @@ public:
       return m_handle->write_i(buffer, length, bytes_written, timeout);
    }
 
+   vpr::Uint32 availableBytes (void)
+   {
+      return m_handle->availableBytes();
+   }
+
    /**
     * Retrieves the value for the given option as set on the socket.
     *
