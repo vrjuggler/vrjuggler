@@ -86,10 +86,34 @@ public class ProxyEditorUI
    implements EditorConstants
             , GraphSelectionListener
 {
+   /**
+    * Creates a new user interface wrapper around device/proxy graph editor
+    * instance that allows editing of all known types of device and proxy
+    * config elements.
+    */
    public ProxyEditorUI()
    {
+      this(null);
+   }
+
+   /**
+    * Creates a new user interface wrapper around device/proxy graph editor
+    * instance that allows editing of only the given config element types.
+    * If <code>allowedTypes</code> is null, then the editor will allow editing
+    * of all known types of device and proxy config elements.
+    *
+    * @param allowedTypes       a list of <code>ConfigDefinition</code>
+    *                           objects that identifies which types of device
+    *                           and proxy config elements will be edited by
+    *                           this editor instance or null to indicate that
+    *                           all device and proxy elements will be edited
+    */
+   public ProxyEditorUI(List allowedTypes)
+   {
+      deviceProxyEditor = new DeviceProxyGraphEditor(allowedTypes);
       deviceProxyEditor.getGraph().setPortsVisible(true);
       deviceProxyEditor.getGraph().setMarqueeHandler(mMarqueeHandler);
+
       mEditorPane = new JScrollPane(deviceProxyEditor);
 
       JGraphLayoutRegistry reg =
@@ -188,9 +212,7 @@ public class ProxyEditorUI
     * Initializes the contained <code>DeviceProxyGraphEditor</code> instance
     * using the given configuration information.  If <code>proxyElt</code> is
     * null, the device/proxy graph editor is initialized to edit <i>all</i>
-    * device and proxy elements in the given context.  If necessary, this
-    * method can be bypassed by getting the <code>DeviceProxyGraphEditor</code>
-    * reference and invoking one of its <code>setConfig()</code> methods.
+    * device and proxy elements in the given context.
     *
     * @param ctx        the context containing the given config element and
     *                   any devices to which that config element may refer
@@ -199,44 +221,11 @@ public class ProxyEditorUI
     *                   <code>EditorConstants.PROXY_TYPE</code>) or null to
     *                   indicate that all devices and proxies should be
     *                   edited
-    *
-    * @see #getDeviceProxyEditor()
     */
    public void setConfig(ConfigContext ctx, ConfigElement proxyElt)
    {
       mContext = ctx;
-
-      if ( null == proxyElt )
-      {
-         deviceProxyEditor.setConfig(ctx);
-      }
-      else
-      {
-         deviceProxyEditor.setConfig(ctx, proxyElt);
-      }
-
-      ConfigBroker broker = new ConfigBrokerProxy();
-      List all_defs = broker.getRepository().getAllLatest();
-      List allowed_types = deviceProxyEditor.getAllowedTypes();
-
-      for ( Iterator d = all_defs.iterator(); d.hasNext(); )
-      {
-         ConfigDefinition def = (ConfigDefinition) d.next();
-
-         if ( ! def.isAbstract() )
-         {
-            for ( Iterator t = allowed_types.iterator(); t.hasNext(); )
-            {
-               ConfigDefinition allowed_type = (ConfigDefinition) t.next();
-
-               if ( def.isOfType(allowed_type.getToken()) )
-               {
-                  mAllowedDefs.add(def);
-                  break;
-               }
-            }
-         }
-      }
+      deviceProxyEditor.setConfig(ctx, proxyElt);
    }
 
    /**
@@ -257,7 +246,6 @@ public class ProxyEditorUI
       mLayoutCfgButton.removeActionListener(mLayoutBtnCfgAdapter);
       mLayoutChooser.removeActionListener(mLayoutChooserAdapter);
       mContext = null;
-      mAllowedDefs = null;
       mMarqueeHandler = null;
       mAddAdapter = null;
       mRemoveAdapter = null;
@@ -360,7 +348,6 @@ public class ProxyEditorUI
    }
 
    private ConfigContext mContext = null;
-   private List mAllowedDefs = new ArrayList();
    private MarqueeHandler mMarqueeHandler = new MarqueeHandler();
 
    private ProxyEditorUI_mAddButton_actionAdapter mAddAdapter =
@@ -392,8 +379,7 @@ public class ProxyEditorUI
    private JButton mLayoutButton = new JButton();
    private JComboBox mLayoutChooser = null;
    private JButton mLayoutCfgButton = new JButton();
-   private DeviceProxyGraphEditor deviceProxyEditor =
-      new DeviceProxyGraphEditor();
+   private DeviceProxyGraphEditor deviceProxyEditor = null;
    private JScrollPane mEditorPane = null;
 
    private class MarqueeHandler
@@ -723,7 +709,7 @@ public class ProxyEditorUI
    void mAddButton_actionPerformed(ActionEvent actionEvent)
    {
       ConfigDefinitionChooser chooser = new ConfigDefinitionChooser();
-      chooser.setDefinitions(mAllowedDefs);
+      chooser.setDefinitions(deviceProxyEditor.getAllowedTypes());
 
       Window parent = (Window) SwingUtilities.getAncestorOfClass(Window.class,
                                                                  this);
