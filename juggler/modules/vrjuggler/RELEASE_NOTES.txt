@@ -22,7 +22,8 @@ Released: October 11, 2002
         * Gadgeteer loads device drivers on demand now.  An InputManager
           chunk must be added to tell the Input Manager what driver(s) to
           load at runtime.  For example, to load the Flock of Birds driver
-          and the Immersion IBox driver on a UNIX system, add the following:
+          and the Immersion IBox driver on a UNIX system, add the following
+          to the appropriate configuration file:
 
              <InputManager name="Input Manager">
                <driver>${VJ_BASE_DIR}/lib/gadgeteer/drivers/libFlock.so</driver>
