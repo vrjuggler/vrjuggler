@@ -1086,8 +1086,6 @@ case $OS_TYPE in
 esac
 
 tweek_cxx_orb_root="$cxx_orb_root"
-tweek_cxx_orb_bindir=`echo $CXX_ORB_BIN_DIR | sed -e "s|$cxx_orb_root/\(.*\)|\1|"`
-tweek_cxx_orb_libdir=`echo $CXX_ORB_LIB_DIR | sed -e "s|$cxx_orb_root/\(.*\)|\1|"`
 tweek_extra_ldflags="$EXTRA_LDFLAGS"
 
 if test "x$PLATFORM" = "xIRIX" -a "x$USE_GCC" != "xyes" ; then
@@ -1179,8 +1177,6 @@ AC_SUBST(DYLIB_PROF_DEPS)
 AC_SUBST(static_begin)
 AC_SUBST(static_end)
 AC_SUBST(tweek_cxx_orb_root)
-AC_SUBST(tweek_cxx_orb_bindir)
-AC_SUBST(tweek_cxx_orb_libdir)
 AC_SUBST(tweek_dep_scripts)
 AC_SUBST(tweek_cxxflags)
 AC_SUBST(tweek_ldflags_compiler)

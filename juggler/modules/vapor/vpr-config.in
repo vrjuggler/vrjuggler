@@ -345,7 +345,7 @@ sub make_EXTRA_LDFLAGS ($;$)
 
    my $extra_ldflags = ($use_linker ? qq(@vpr_extra_ldflags_linker@)
                                     : qq(@vpr_extra_ldflags_compiler@));
-   $extra_ldflags    = "-L$deps_dir/lib $extra_ldflags" if $deps_dir;
+   $extra_ldflags    = "-L$deps_dir/lib$LIBBITSUF $extra_ldflags" if $deps_dir;
 
    my $full_extra_ldflags = qq($extra_ldflags @vpr_extra_libs@ ) .
                             "$my_subsystem_libs";
