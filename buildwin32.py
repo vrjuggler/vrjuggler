@@ -489,6 +489,7 @@ def doInstall(prefix):
    installGadgeteerPlugins(prefix)
    installVRJuggler(prefix)
    installVRJConfig(prefix)
+   installMsvcRT(prefix)
 
 def mkinstalldirs(dir):
 #   print "Checking for", dir
@@ -866,7 +867,6 @@ def installGadgeteerDrivers(prefix):
    # Only attempt to install the TweekGadget Java bits if TweekGadget.jar was
    # built.
    jar_file = os.path.join(srcroot, 'TweekGadget_Java', 'TweekGadget.jar')
-   print jar_file
 
    if os.path.exists(jar_file):
       destdir = os.path.join(prefix, 'bin', 'beans')
@@ -988,6 +988,23 @@ def installVRJConfig(prefix):
          shutil.copy2(os.path.join(srcroot, j), destdir)
    else:
       print "VRJConfig not build.  Skipping."
+
+def installMsvcRT(prefix):
+   print "Installing MSVC runtime DLLs"
+
+   try:
+      srcroot = os.environ['SystemRoot']
+      destdir = os.path.join(prefix, 'lib')
+
+      # Get *every* MSVC runtime DLL.  This list could be shortened at some
+      # point if anyone cares to try.
+      dlls = glob.glob(os.path.join(srcroot, 'System32', 'msvc*.dll'))
+
+      for d in dlls:
+         shutil.copy2(d, destdir)
+   except KeyError, ex:
+      print "WARNING: Could not install MSVC runtime DLLs"
+      print ex
 
 def doDependencyInstall(prefix):
    makeTree(prefix)
