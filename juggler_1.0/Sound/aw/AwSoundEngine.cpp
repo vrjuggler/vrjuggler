@@ -48,7 +48,7 @@ AwSoundEngine::~AwSoundEngine() {}
 
 void AwSoundEngine::init()
 {
-   vjDEBUG(vjDBG_ALL,vjDBG_CONFIG_LVL) << clrOutNORM(clrGREEN,"==============================================================")  << "\n" << vjDEBUG_FLUSH;
+   vjDEBUG_BEGIN(vjDBG_ALL,vjDBG_CONFIG_LVL) << clrOutNORM(clrGREEN,"==============================================================")  << "\n" << vjDEBUG_FLUSH;
    vjDEBUG(vjDBG_ALL,vjDBG_CONFIG_LVL) << clrOutNORM(clrGREEN,"Juggler is starting Audioworks:")  << "\n" << vjDEBUG_FLUSH;
 
    std::string tmpFile = "/var/tmp/";
@@ -66,13 +66,20 @@ void AwSoundEngine::init()
    std::string commandRm = "rm ";
    commandRm += tmpFile;
 
-   vjDEBUG(vjDBG_ALL,vjDBG_STATE_LVL) << clrOutNORM(clrYELLOW,"Attempting to delete: ") << commandRm.c_str() << "\n" << vjDEBUG_FLUSH;
+   // removing old single adf file.
+   vjDEBUG(vjDBG_ALL,vjDBG_STATE_LVL) << "Attempting to delete: " << commandRm.c_str() << "\n" << vjDEBUG_FLUSH;
    unlink(tmpFile.c_str());
+
+   // creating single adf file from many, using the perl script.
+   vjDEBUG(vjDBG_ALL,vjDBG_STATE_LVL) << "Creating single adf file from many, using the perl script.\n" << vjDEBUG_FLUSH;
+   vjDEBUG(vjDBG_ALL,vjDBG_STATE_LVL) << "Using command: " << command.c_str() << "\n" << vjDEBUG_FLUSH;
+   system( command.c_str() );
+   vjDEBUG(vjDBG_ALL,vjDBG_STATE_LVL) << "Done with command\n" << vjDEBUG_FLUSH;
 
    mInitialized = false;  //set it to true at the end of this func...
 
    // initialize the AudioWorks system
-   vjDEBUG(vjDBG_ALL,vjDBG_CONFIG_LVL) << clrOutNORM(clrYELLOW,"initialize the AudioWorks system\n") << vjDEBUG_FLUSH;
+   vjDEBUG(vjDBG_ALL,vjDBG_CONFIG_LVL) << "** initialize the AudioWorks system\n" << vjDEBUG_FLUSH;
 
    vjDEBUG(vjDBG_ALL,vjDBG_STATE_LVL) << "awOpenAWD\n" << vjDEBUG_FLUSH;
    awOpenAWD("");
@@ -136,7 +143,7 @@ void AwSoundEngine::init()
    this->setPosition( mPosition );
 
    mInitialized = true;
-   vjDEBUG(vjDBG_ALL,vjDBG_CONFIG_LVL) << clrOutNORM(clrGREEN,"==============================================================")  << "\n" << vjDEBUG_FLUSH;
+   vjDEBUG_END(vjDBG_ALL,vjDBG_CONFIG_LVL) << clrOutNORM(clrGREEN,"==============================================================")  << "\n" << vjDEBUG_FLUSH;
 }
 
 // lookup a filename, given the sound's alias.
