@@ -482,10 +482,17 @@ vpr::ReturnStatus FileHandleImplUNIX::readn_i(void* buffer,
             return status;
          }
       }
-      // May have read EOF, so return bytes read so far (possibly less than
-      // buffer_size).
+      // We have read EOF, so there is nothing more to read.  At this point,
+      // bytes_read contains an accurate count of the bytes read so far
+      // (posisbly less than buffer_size).
       else if ( bytes == 0 )
       {
+         vprDEBUG(vprDBG_ALL, vprDBG_HVERB_LVL)
+            << "[vpr::FileHandleImplUNIX::readn_i()] Read EOF with "
+            << bytes_left << " bytes left to read from file handle "
+            << mFdesc << " and " << bytes_read << " bytes read in total."
+            << std::endl << vprDEBUG_FLUSH;
+
          return status;
       }
       else
