@@ -12,10 +12,10 @@ mantra until you believe.
 <br><li>File names of loaded chunkorgtrees are not stored correctly,
 resulting in weird defaults for the org tree save file requester.
 
-<br><li>When dynamically reconfiguring a Juggler app, do not remove the 
-EM Connect ConfigChunk representing the connection between vjcontrol and
-the app.  This will cause the app to freeze (vjConnect suicide bug).
-Instead, use the <TT>Disconnect</TT> button in the Connections panel.
+<br><li>If you remove the ConfigChunk that represents the connection
+to the GUI, the GUI won't notice that the connection has been closed,
+even though it has. (new improved non-fatal vjConnect suicide bug).
+Using the ``Disconnect'' button is preferred.
 
 <br><li>vjcontrol doesn't warn you if you modify a file and then close it
 without saving.
@@ -24,6 +24,10 @@ without saving.
 ChunkDescs) in the Description pane are ignored by the Configure pane.
 If you modify a descriptions file in any significant way, you should save,
 quit VjControl, and then restart to modify the chunks.
+
+<br><li>Default chunk files are only loaded at vjcontrol startup.  If you edit
+the chunk files or change the file names in preferences, these won't take effect
+until you restart vjcontrol.
 
 <br><li>Strings can't contain quotes (parsing bug).
 
