@@ -87,10 +87,10 @@ links:
 	cd $(instlinks) && rm -f ./$(LIBDIR_NAME) &&                    \
       	  ln -s $(LIBDIR_BASE) ./$(LIBDIR_NAME)
 	cd $(instlinks) && rm -rf ./share &&                  \
-       	  $(SHELL) $(MKINSTALLDIRS) ./share
-	cd $(instlinks)/share && rm -f ./samples &&                          \
-          ln -s $(ROOT_ABS)/samples ./samples
-	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/bin
+       	  $(SHELL) $(MKINSTALLDIRS) ./share/AudioJuggler && \
+           ln -s $(ROOT_ABS)/data ./share/AudioJuggler/data
+	cd $(instlinks)/share/AudioJuggler &&                          \
+          ln -s $(ROOT_ABS)/samples ./src
 	@echo "\n\n"
 	@echo "---------------------------------------------------------------"
 	@echo 'You should now set $$AJ_BASE_DIR to:'
@@ -135,6 +135,8 @@ hier:
 	$(SHELL) $(MKINSTALLDIRS) $(bindir)
 	$(SHELL) $(MKINSTALLDIRS) $(includedir)/aj
 	$(SHELL) $(MKINSTALLDIRS) $(datadir)/samples
+	$(SHELL) $(MKINSTALLDIRS) $(includedir)/share/AudioJuggler/data
+	$(SHELL) $(MKINSTALLDIRS) $(includedir)/share/AudioJuggler/src
 	@for lib in $(ABI_LIST) ; do					\
             $(MAKE) dppABI=$$lib hier-abi ;   \
           done
