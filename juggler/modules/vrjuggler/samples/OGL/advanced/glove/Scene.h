@@ -23,7 +23,7 @@ public:
 		    const float& _depth, 
 		    const bool& highlighted );
     void drawTable();  
-    
+    void renderWoodTexture();
     
     
 //:  Scene components: table, floor, and some objects.    
@@ -43,6 +43,7 @@ private:
 		    const float& _height,
 		    const float& _depth, 
 		    const bool& highlighted );
+    void _renderWoodTexture();
     
     // these hold the display list IDs
     int _tableList;
@@ -55,6 +56,7 @@ private:
     int _coneHlList;
     int _cubeHlList;
     int _sphereHlList; 
+    unsigned int _woodBitmapBindId;
     
     char woodBitmap[16*3]; 
 };
@@ -68,7 +70,23 @@ inline Scene::Scene() : _tableList(0),
 		    _sphereList(0), 
 		    _sphereHlList(0)
 {
+    // RED channel
+    woodBitmap[0] = 80;woodBitmap[3] = 0;woodBitmap[6] = 80;woodBitmap[9] = 80;
+    woodBitmap[12] = 80;woodBitmap[15] = 0;woodBitmap[18] = 80;woodBitmap[21] = 80;
+    woodBitmap[24] = 0;woodBitmap[27] = 80;woodBitmap[30] = 80;woodBitmap[33] = 0;
+    woodBitmap[36] = 0;woodBitmap[39] = 80;woodBitmap[42] = 80;woodBitmap[45] = 80;
     
+    // GREEN channel
+    woodBitmap[1] = 60;woodBitmap[4] = 0;woodBitmap[7] = 60;woodBitmap[10] = 60;
+    woodBitmap[13] = 60;woodBitmap[16] = 0;woodBitmap[19] = 60;woodBitmap[22] = 60;
+    woodBitmap[25] = 0;woodBitmap[28] = 60;woodBitmap[31] = 60;woodBitmap[34] = 0;
+    woodBitmap[37] = 0;woodBitmap[40] = 60;woodBitmap[43] = 60;woodBitmap[46] = 60;
+    
+    // BLUE channel
+    woodBitmap[2] = 0;woodBitmap[5] = 0;woodBitmap[8] = 0;woodBitmap[11] = 0;
+    woodBitmap[14] = 0;woodBitmap[17] = 0;woodBitmap[20] = 0;woodBitmap[23] = 0;
+    woodBitmap[26] = 0;woodBitmap[29] = 0;woodBitmap[32] = 0;woodBitmap[35] = 0;
+    woodBitmap[38] = 0;woodBitmap[41] = 0;woodBitmap[44] = 0;woodBitmap[47] = 0;
 }
 
 inline Scene::~Scene()
@@ -81,6 +99,12 @@ inline Scene::~Scene()
     glDeleteLists(_cubeHlList, 1);
     glDeleteLists(_sphereList, 1);
     glDeleteLists(_sphereHlList, 1);
+    
+    #ifdef GL_VERSION_1_1
+    glDeleteTextures(1, &_woodBitmapBindId);
+    #else
+    glDeleteTexturesEXT(1, &_woodBitmapBindId);
+    #endif
 }
 
 inline void Scene::drawFloor()
@@ -232,63 +256,81 @@ inline void Scene::_drawCube( const float& _width,
     
     // cube top
   glBegin(GL_TRIANGLE_STRIP);
+     glTexCoord2f( 0.0f, 0.0f );
      glNormal3f( -0.75f, 0.75f, 0.75f );
      glVertex3f( -width, height,  depth );
      
+     glTexCoord2f( 0.0f, 1.0f );
      glNormal3f(  0.75f, 0.75f, 0.75f );
      glVertex3f(  width, height,  depth );
      
+     glTexCoord2f( 1.0f, 0.0f );
      glNormal3f( -0.75f, 0.75f, -0.75f );
      glVertex3f( -width, height, -depth );
      
+     glTexCoord2f( 1.0f, 1.0f );
      glNormal3f(  0.75f, 0.75f, -0.75f );
      glVertex3f(  width, height, -depth );
   glEnd();
     
     // cube bottom
   glBegin(GL_TRIANGLE_STRIP);
+     glTexCoord2f( 0.0f, 0.0f );
      glNormal3f(  0.75f, -0.75f, 0.75f );
      glVertex3f(  width, -height,  depth );
      
+     glTexCoord2f( 0.0f, 1.0f );
      glNormal3f( -0.75f, -0.75f, 0.75f );
      glVertex3f( -width, -height,  depth );
      
+     glTexCoord2f( 1.0f, 0.0f );
      glNormal3f(  0.75f, -0.75f, -0.75f );
      glVertex3f(  width, -height, -depth );
      
+     glTexCoord2f( 1.0f, 1.0f );
      glNormal3f( -0.75f, -0.75f, -0.75f );
      glVertex3f( -width, -height, -depth );
   glEnd();
   
     // cube sides
   glBegin(GL_TRIANGLE_STRIP);
+     glTexCoord2f( 0.0f, 0.0f );
      glNormal3f( -0.75f, 0.75f, 0.75f );
      glVertex3f( -width, height,  depth );
      
+     glTexCoord2f( 0.0f, 1.0f );
      glNormal3f( -0.75f, -0.75f, 0.75f );
      glVertex3f( -width, -height, depth );
      
+     glTexCoord2f( 1.0f, 0.0f );
      glNormal3f( 0.75f, 0.75f, 0.75f );
      glVertex3f( width, height,  depth );
      
+     glTexCoord2f( 1.0f, 1.0f );
      glNormal3f( 0.75f, -0.75f, 0.75f );
      glVertex3f( width, -height, depth );
      
+     glTexCoord2f( 1.0f, 0.0f );
      glNormal3f( 0.75f, 0.75f, -0.75f );
      glVertex3f( width, height,  -depth );
      
+     glTexCoord2f( 1.0f, 1.0f );
      glNormal3f( 0.75f, -0.75f, -0.75f );
      glVertex3f( width, -height, -depth );
      
+     glTexCoord2f( 1.0f, 0.0f );
      glNormal3f( -0.75f, 0.75f, -0.75f );
      glVertex3f( -width, height,  -depth );
      
+     glTexCoord2f( 1.0f, 1.0f );
      glNormal3f( -0.75f, -0.75f, -0.75f );
      glVertex3f( -width, -height, -depth );
      
+     glTexCoord2f( 1.0f, 0.0f );
      glNormal3f( -0.75f, 0.75f, 0.75f );
      glVertex3f( -width, height,  depth );
      
+     glTexCoord2f( 1.0f, 1.0f );
      glNormal3f( -0.75f, -0.75f, 0.75f );
      glVertex3f( -width, -height, depth );
   glEnd();
@@ -336,6 +378,46 @@ inline void Scene::_drawTable()
     glPopMatrix();
 }
 
+inline void Scene::renderWoodTexture()
+{
+    #ifdef GL_VERSION_1_1
+    glBindTexture(GL_TEXTURE_2D, _woodBitmapBindId);
+    #else
+    glBindTextureEXT(GL_TEXTURE_2D, _woodBitmapBindId);
+    #endif
+}
+inline void Scene::_renderWoodTexture()
+{
+    glEnable(GL_TEXTURE_2D);
+    
+    //make sure the alignment matches the pixel size in bytes
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+    
+    const int mipmapLevelOfDetail = 0;
+    const int channels = 3;
+    const int width = 4;
+    const int height = 4;
+    const int bordersize = 0;
+    const int format = GL_RGB;
+    const int type = GL_UNSIGNED_BYTE;
+    glTexImage2D(GL_TEXTURE_2D, mipmapLevelOfDetail, 
+				channels, width, 
+				height, bordersize, format, 
+				type, woodBitmap);
+    
+    // set the filtering for the texture...
+    // use mipmap filtering if making mipmaps.
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    
+    //Set blending model
+    glTexEnvi(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
+
+    //set repeat or clamp mode
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+}
+
 inline void Scene::init()
 {
     _tableList = glGenLists(1);
@@ -380,4 +462,14 @@ inline void Scene::init()
     glNewList(_sphereHlList, GL_COMPILE);
 	this->_drawSphere( 1.0f, 1.0f, 1.0f, true);
     glEndList();
+    
+    
+#ifdef GL_VERSION_1_1
+    glGenTextures(1, &_woodBitmapBindId);
+    glBindTexture(GL_TEXTURE_2D, _woodBitmapBindId);
+#else
+    glGenTexturesEXT(1, &_woodBitmapBindId);
+    glBindTextureEXT(GL_TEXTURE_2D, _woodBitmapBindId);
+#endif
+    this->_renderWoodTexture();
 }
