@@ -95,15 +95,15 @@ public class ChunkDescDB extends Vector {
 
 
 
-  public ChunkDesc get (String tok) {
-    for (int i = 0; i < size(); i++) {
-      if (((ChunkDesc)elementAt(i)).token.equalsIgnoreCase(tok)) {
-	return (ChunkDesc)elementAt(i);
-      }
+    public ChunkDesc get (String tok) {
+	for (int i = 0; i < size(); i++) {
+	    if (((ChunkDesc)elementAt(i)).token.equalsIgnoreCase(tok)) {
+		return (ChunkDesc)elementAt(i);
+	    }
+	}
+	return null;
     }
-    return null;
-  }
-
+    
 
 
     public ChunkDesc getByName (String tok) {
