@@ -82,8 +82,7 @@ SUBDIR=		TestCases
 # -----------------------------------------------------------------------------
 # Linking stuff.
 # -----------------------------------------------------------------------------
-BASIC_LIBS=	@APP_BASIC_LIBS_BEGIN@ @APP_BASIC_LIBS@		\
-		@APP_BASIC_EXT_LIBS@ @APP_BASIC_LIBS_END@	\
+BASIC_LIBS=	@APP_BASIC_LIBS@ @APP_BASIC_EXT_LIBS@		\
 		$(NULL)
 EXTRA_LIBS=	@APP_EXTRA_LIBS_BEGIN@ @APP_EXTRA_LIBS@		\
 		@APP_EXTRA_LIBS_END@				\
