@@ -229,13 +229,33 @@ void ConfigManager::refreshPendingList()
 
 static const int pending_repeat_limit = 3;    // Must be one or greater.  1 means only allow one time of no changes
 
-// Do we need to check the pending list
-// CONCURRENCY: concurrent
-// The routine counts the number of pending elements each time it is called.
-// if it goes pending_repeat_limit calls without changing size, then it returns
-// false until mLastPendingSize changes
+/**
+ * This routine counts the number of pending elements each time it is called.
+ * if it goes pending_repeat_limit calls without changing size, then it returns
+ * false until mLastPendingSize changes.
+ *
+ * CONCURRENCY: concurrent
+ */
 bool ConfigManager::pendingNeedsChecked()
 {
+   // - Lock PendingCountMutex
+   // - If the size of the pending list has changed
+   //   - Reset the pending check count to allow reconfig
+   //   - Record the new size to check against next time
+   //   - Set return value to true
+   // - Else if the pending check count is less the limit
+   //   - Increment the pendling check count (decrease the
+   //     number of remaining iterations)
+   //   - Set the return value to true
+   // - Else if the pending check count equals the limit
+   //   - Increment the pendling check count (needed to 
+   //     push count over limit)
+   //   - Print the list of stale configuration elements
+   //   - Set the return value to false
+   // - Else
+   //   - Set the return value to false
+   // - Unlock PendingCountMutex
+   
    std::list<PendingElement>::size_type cur_pending_size(0);
    bool ret_val = false;
 
@@ -245,51 +265,46 @@ bool ConfigManager::pendingNeedsChecked()
    if ( cur_pending_size != mLastPendingSize )
    {
       ret_val = true;                           // Flag it for a check
-      mPendingCheckCount = 0;                     // Reset the counter
+      mPendingCheckCount = 0;                   // Reset the counter
       mLastPendingSize = cur_pending_size;      // Keep track of size
    }
    else if ( mPendingCheckCount < pending_repeat_limit )
    {
-      // allowed in at least once [1...pending_repeat_limit]
-      mPendingCheckCount++;   // Increment it
+      mPendingCheckCount++;
+      ret_val = true;
+   }
+   else if( mPendingCheckCount == pending_repeat_limit )
+   {
+      mPendingCheckCount++;
+      
+      vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+         << "ConfigManager::pendingNeedsChecked: Pending list is now\n"
+         << vprDEBUG_FLUSH;
+      vprDEBUG_NEXT(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+         << clrOutNORM(clrGREEN,"STALE: ")
+         << cur_pending_size << " items still in the pending list\n"
+         << vprDEBUG_FLUSH;
 
-      if ( mPendingCheckCount < pending_repeat_limit )
+      if ( cur_pending_size > 0 )
       {
-         ret_val = true;        // Repeats still allowed
-      }
-      else
-      {
-         vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
-            << "ConfigManager::pendingNeedsChecked: Pending list is now\n"
+         vprDEBUG_NEXT(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+            << "NOTE: These items have been specified in the configuration\n"
             << vprDEBUG_FLUSH;
          vprDEBUG_NEXT(vprDBG_ALL, vprDBG_CRITICAL_LVL)
-            << clrOutNORM(clrGREEN,"STALE: ")
-            << cur_pending_size << " items still in the pending list\n"
+            << "      but have not been loaded.\n" << vprDEBUG_FLUSH;
+         vprDEBUG_NEXT(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+            << "      This may be a problem in the configuration OR\n"
             << vprDEBUG_FLUSH;
-
-         if ( cur_pending_size > 0 )
-         {
-            vprDEBUG_NEXT(vprDBG_ALL, vprDBG_CRITICAL_LVL)
-               << "NOTE: These items have been specified in the configuration\n"
-               << vprDEBUG_FLUSH;
-            vprDEBUG_NEXT(vprDBG_ALL, vprDBG_CRITICAL_LVL)
-               << "      but have not been loaded.\n" << vprDEBUG_FLUSH;
-            vprDEBUG_NEXT(vprDBG_ALL, vprDBG_CRITICAL_LVL)
-               << "      This may be a problem in the configuration OR\n"
-               << vprDEBUG_FLUSH;
-            vprDEBUG_NEXT(vprDBG_ALL, vprDBG_CRITICAL_LVL)
-               << "      it may be waiting for more configuration information.\n"
-               << vprDEBUG_FLUSH;
-         }
-
-         //vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << vprDEBUG_FLUSH;
-
-         lockPending();
-         debugDumpPending(vprDBG_CRITICAL_LVL); // Output the stale pending list
-         unlockPending();
-
-         ret_val = false;
+         vprDEBUG_NEXT(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+            << "      it may be waiting for more configuration information.\n"
+            << vprDEBUG_FLUSH;
       }
+
+      lockPending();
+      debugDumpPending(vprDBG_CRITICAL_LVL); // Output the stale pending list
+      unlockPending();
+
+      ret_val = false;
    }
    else
    {
