@@ -182,11 +182,18 @@ public class WizardViewerBean
 
       // Enter the next step
       currentStep = nextStep;
-      currentStep.onEntering();
-      // TODO: don't assume the step is a pane
-      WizardPane pane = (WizardPane)nextStep;
-      this.add(pane.getGUI(), BorderLayout.CENTER);
-      currentStep.onEntered();
+
+      // Only enter the next step if there actually is one. We need this test
+      // for the case where we're leaving the last step from the user clicking
+      // the Finish button and visit(null) is called.
+      if (currentStep != null)
+      {
+         currentStep.onEntering();
+         // TODO: don't assume the step is a pane
+         WizardPane pane = (WizardPane)nextStep;
+         this.add(pane.getGUI(), BorderLayout.CENTER);
+         currentStep.onEntered();
+      }
 
       return true;
    }
@@ -385,6 +392,7 @@ public class WizardViewerBean
       {
          public void actionPerformed(ActionEvent e)
          {
+            visit(null);
             fireWizardFinished();
          }
       });
