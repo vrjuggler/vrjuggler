@@ -40,6 +40,7 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.util.*;
 import java.io.File;
+import javax.swing.tree.*;
 
 import VjComponents.PerfMonitor.*;
 import VjControl.*;
@@ -89,18 +90,6 @@ public class PerfAnalyzerPanel
             index_info = _ii;
         }
     }
-
-    private String padFloat (double f) {
-	// reformats f to a string w/ 3 places after decimal
-	String s = Double.toString(f);
-	if (s.indexOf('E') != -1)
-	    return s;
-	int i = s.lastIndexOf('.');
-	if ((i >= 0) && (i+5 < s.length()))
-	    s = s.substring (0, i + 5);
-	return s;
-    }
-
 
     protected interface DataPanelElem 
         extends ActionListener {
@@ -242,6 +231,7 @@ public class PerfAnalyzerPanel
 	public java.util.List graph_buttons;      // list of LabeledPanelButton
 	public java.util.List anomalies_buttons;  // list of LabeledPanelButton
         public JPanel panel;
+	public DefaultMutableTreeNode root;
 
         public LabeledDataPanelElem (LabeledPerfDataCollector _col) {
             col = _col;
@@ -249,6 +239,8 @@ public class PerfAnalyzerPanel
             avg_labels = new ArrayList();
             graph_buttons = new ArrayList();
             anomalies_buttons = new ArrayList();
+	    root = new DefaultMutableTreeNode();
+	    root.setUserObject (new TreeElem ("Root", null));
         }
 
 	public void initialize (JPanel _panel, 
@@ -289,6 +281,45 @@ public class PerfAnalyzerPanel
         public void destroy () {
             col.removeActionListener (this);
         }
+
+	protected class TreeElem {
+	    public String sublabel;
+	    public LabeledPerfDataCollector.IndexInfo ii; // null for folders
+	    public JComponent component;
+	    public TreeElem (String _sublabel, LabeledPerfDataCollector.IndexInfo _ii) {
+		sublabel = sublabel;
+		ii = _ii;
+		component = new JLabel (sublabel);
+	    }
+	}
+
+	public void addToTree (LabeledPerfDataCollector.IndexInfo ii) {
+	    MutableTreeNode node = root;
+	    MutableTreeNode new_node;
+	    int i, j, n;  // i = index into ii.label_components
+	    i = 0;
+	    // first, find the parent
+	    for (i = 0; i < ii.label_components.size() - 1; i++) {
+		new_node = null;
+		for (j = 0; j < node.getChildCount(); j++) {
+		    DefaultMutableTreeNode mtn = (DefaultMutableTreeNode)node.getChildAt(j);
+		    if (((TreeElem)mtn.getUserObject()).sublabel.equals((String)ii.label_components.get(i))) {
+			new_node = mtn;
+		    }
+		}
+		if (new_node == null) {
+		    // didn't find it, create folder node
+		    new_node = new DefaultMutableTreeNode();
+		    new_node.setUserObject (new TreeElem ((String)ii.label_components.get(i), null));
+		    node.insert (new_node, node.getChildCount());
+		}
+		node = new_node;
+	    }
+	    // add ii as a child node of node.
+	    new_node = new DefaultMutableTreeNode();
+	    new_node.setUserObject (new TreeElem ((String)ii.label_components.get(ii.label_components.size()-1), ii));
+	    node.insert (new_node, node.getChildCount());
+	}
 
         public void addInitial (LabeledPerfDataCollector.IndexInfo ii) {
 	    System.out.println ("addInitial: " + ii.index);
@@ -410,6 +441,18 @@ public class PerfAnalyzerPanel
 
         ui_initialized = false;
 
+    }
+
+    /** Utility method for various printing routines. */
+    private String padFloat (double f) {
+	// reformats f to a string w/ 3 places after decimal
+	String s = Double.toString(f);
+	if (s.indexOf('E') != -1)
+	    return s;
+	int i = s.lastIndexOf('.');
+	if ((i >= 0) && (i+5 < s.length()))
+	    s = s.substring (0, i + 5);
+	return s;
     }
 
 
@@ -720,6 +763,3 @@ public class PerfAnalyzerPanel
     }
 
 }
-
-
-
