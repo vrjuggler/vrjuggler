@@ -99,9 +99,9 @@ namespace vpr
       memset(buffer, '\0', sizeof(buffer));
       sprintf(buffer, "%u.%u.%u.%u", addr.bytes[0], addr.bytes[1],
               addr.bytes[2], addr.bytes[3]);
-      std::string result = buffer;
+      //std::string result = buffer;
 
-      return result;
+      return std::string(buffer);
    }
 
 } // End of vpr namespace
