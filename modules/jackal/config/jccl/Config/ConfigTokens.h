@@ -40,15 +40,6 @@
 namespace jccl
 {
 
-/**********************************************************
-typedef enum { T_INT, T_FLOAT, T_BOOL, T_STRING, T_DISTANCE,
-           T_CHUNK, T_EMBEDDEDCHUNK, T_INVALID } VarType;
-
-Had to rename T_INVALID due to a conflict of names with some
-Mac OS X variables.  This could be avoided, but just changing
-it here is much much easier.  Places which used T_INVALID have
-also been changed to VJ_T_INVALID.
-************************************************************/
 typedef enum
 {
    T_INT,
@@ -60,33 +51,6 @@ typedef enum
    T_EMBEDDEDCHUNK,
    VJ_T_INVALID
 } VarType;
-
-typedef enum
-{
-   U_Feet,
-   U_Inches,
-   U_Meters,
-   U_Centimeters,
-   U_BadUnit
-}
-CfgUnit;
-
-// ---------- TOKENS ---------------- //
-/* Old unused tokens
-
-const char end_TOKEN[] = "end";
-const char vj_valuelabels_TOKEN[] = "vj_valuelabels";
-const std::string true_TOKEN("true");
-const std::string false_TOKEN("false");
-const char vj_enumeration_TOKEN[] = "vj_enumeration";
-
-// socket communication tokens
-const char get_TOKEN[] = "get";
-const char descriptions_TOKEN[] = "descriptions";
-const char all_TOKEN[] = "all";
-const char remove_TOKEN[] = "remove";
-const char chunks_TOKEN[] = "chunks";
-*/
 
 // Types
 const std::string int_TOKEN("int");
