@@ -17,7 +17,7 @@ bool vjSimGloveGesture::config(vjConfigChunk* chunk)
    mSimKeys = readKeyList(key_list);
 
    // Get sample filename
-   std::string sample_file = (char*)chunk->getProperty("trainedFilename");
+   std::string sample_file = chunk->getProperty("trainedFilename");
    loadTrainedFile(sample_file);
 
    // Trim the lengths
@@ -29,7 +29,7 @@ bool vjSimGloveGesture::config(vjConfigChunk* chunk)
    }
 
    // Find pos proxy
-   std::string glove_pos_proxy = (char*)chunk->getProperty("glovePos");    // Get the name of the pos_proxy
+   std::string glove_pos_proxy = chunk->getProperty("glovePos");    // Get the name of the pos_proxy
    if(glove_pos_proxy == std::string(""))
    {
       vjDEBUG(0) << "ERROR: vjSimGloveGesture has no posProxy." << endl << vjDEBUG_FLUSH;

@@ -50,6 +50,10 @@ public:
       return &mPos;
    }
 
+    vjTimeStamp* getPosUpdateTime (int devNum = 0) {
+	return &mUpdateTime;
+    }
+
    /* These functions don't do anything */
    int StartSampling() { return 1; }
    int StopSampling() { return 1; }
@@ -90,6 +94,8 @@ private:
    vjKeyModPair   mSimKeys[NUM_POS_CONTROLS];   //: The keys to press for digital simulation
    float          mDTrans;                      //: Delta translation
    float          mDRot;                        //: Delta rotation
+
+    vjTimeStamp   mUpdateTime;                  //: Time of last update
 };
 
 #endif
