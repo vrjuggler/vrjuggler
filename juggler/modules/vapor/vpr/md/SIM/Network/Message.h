@@ -80,17 +80,17 @@ public:
     * Creates a new message by copying the given buffer into freshly allocated
     * memory.
     */
-   Message (const void* msg, const vpr::Uint32 msg_size)
+   Message(const void* msg, const vpr::Uint32 msg_size)
       : mSrcSock(NULL), mDestSock(NULL)
    {
-      vpr::Uint8* start = (vpr::Uint8*)msg;
+      vpr::Uint8* start = (vpr::Uint8*) msg;
       mMsg = MessageDataPtr( new MessageDataType(start, start+msg_size));
       //mMsg = malloc(msg_size);
       //memcpy(mMsg, msg, msg_size);
    }
 
    /** Creates message by copying shared pointer to data buffer */
-   Message (MessageDataPtr msgData)
+   Message(MessageDataPtr msgData)
       : mSrcSock(NULL), mDestSock(NULL)
    {
       mMsg = msgData;
@@ -102,47 +102,47 @@ public:
     * instead we just make a copy of the shared_ptr to the message body and share
     * it with the other message
     */
-   Message (const Message& msg);
+   Message(const Message& msg);
 
    /**
     * Releases the memory allocated for the contained message body.
     */
-   ~Message (void)
+   ~Message()
    {
       // Releases automatically based on shared_ptr semantics
    }
 
-   void setStartOnWireTime (const vpr::Interval& time)
+   void setStartOnWireTime(const vpr::Interval& time)
    {
       mStartOnWire = time;
    }
 
-   const vpr::Interval& whenStartOnWire (void) const
+   const vpr::Interval& whenStartOnWire() const
    {
       return mStartOnWire;
    }
 
-   void setFullyOnWireTime (const vpr::Interval& time)
+   void setFullyOnWireTime(const vpr::Interval& time)
    {
       mFullyOnWire = time;
    }
 
-   const vpr::Interval& whenFullyOnWire (void) const
+   const vpr::Interval& whenFullyOnWire() const
    {
       return mFullyOnWire;
    }
 
-   void setArrivesFullyTime (const vpr::Interval& time)
+   void setArrivesFullyTime(const vpr::Interval& time)
    {
       mArrivesFully = time;
    }
 
-   const vpr::Interval& whenArrivesFully (void) const
+   const vpr::Interval& whenArrivesFully() const
    {
       return mArrivesFully;
    }
 
-   void* getBody (void) const
+   void* getBody() const
    {
       return (void*)&((*mMsg)[0]);
    }
@@ -153,7 +153,7 @@ public:
       return mMsg;
    }
 
-   vpr::Uint32 getSize (void) const
+   vpr::Uint32 getSize() const
    {
       return mMsg->size();
    }
@@ -185,8 +185,8 @@ public:
     * @post A new path is assigned for this message, and the pointer to the
     *       next hop is set to the beginning of the given path.
     */
-   void setPath (NetworkGraph::VertexListPtr path,
-                 const vpr::SocketImplSIM* source, vpr::SocketImplSIM* dest)
+   void setPath(NetworkGraph::VertexListPtr path,
+                const vpr::SocketImplSIM* source, vpr::SocketImplSIM* dest)
    {
       mMsgPath  = path;
       mNextHop  = mMsgPath->begin();
@@ -199,17 +199,17 @@ public:
    /**
     * Returns a constant reference to the path that this message will follow.
     */
-   const NetworkGraph::VertexListPtr& getPath (void) const
+   const NetworkGraph::VertexListPtr& getPath() const
    {
       return mMsgPath;
    }
 
-   const vpr::SocketImplSIM* getSourceSocket (void) const
+   const vpr::SocketImplSIM* getSourceSocket() const
    {
       return mSrcSock;
    }
 
-   vpr::SocketImplSIM* getDestinationSocket (void) const
+   vpr::SocketImplSIM* getDestinationSocket() const
    {
       return mDestSock;
    }
@@ -218,7 +218,7 @@ public:
     * Retrieves the next hop (network graph vertex) in the path of this
     * message and returns it to the caller via the by-reference parameter.
     */
-   const NetworkGraph::net_vertex_t& getNextHop (void) const
+   const NetworkGraph::net_vertex_t& getNextHop() const
    {
       vprASSERT(mMsgPath->end() != mNextHop && "Requesting hop past end of path");
       return *mNextHop;
@@ -228,7 +228,7 @@ public:
     * Increment the pointer to the next hop in this message's path as it moves
     * towards its destination.
     */
-   void incNextHop (bool& end_of_path)
+   void incNextHop(bool& end_of_path)
    {
       ++mNextHop;
       end_of_path = (mMsgPath->end() == mNextHop);

@@ -51,7 +51,7 @@ namespace sim
 {
 
 
-Message::Message (const Message& msg)
+Message::Message(const Message& msg)
    : mStartOnWire(msg.mStartOnWire),
      mFullyOnWire(msg.mFullyOnWire), mArrivesFully(msg.mArrivesFully),
      mMsgPath(msg.mMsgPath), mNextHop(msg.mNextHop), mSrcSock(msg.mSrcSock),
@@ -72,7 +72,7 @@ Message::Message (const Message& msg)
    */
 }
 
-vpr::Uint32 Message::resize (const vpr::Uint32 bytes_read)
+vpr::Uint32 Message::resize(const vpr::Uint32 bytes_read)
 {
    vpr::Uint32 resize_amount;
 
