@@ -1,5 +1,6 @@
-/*
- * VR Juggler is (C) Copyright 1998, 1999, 2000 by Iowa State University
+/*************** <auto-copyright.pl BEGIN do not edit this line> **************
+ *
+ * VR Juggler is (C) Copyright 1998-2002 by Iowa State University
  *
  * Original Authors:
  *   Allen Bierbaum, Christopher Just,
@@ -26,7 +27,9 @@
  * Date modified: $Date$
  * Version:       $Revision$
  * -----------------------------------------------------------------
- */
+ *
+ *************** <auto-copyright.pl END do not edit this line> ***************/
+
 package org.vrjuggler.jccl.vjcontrol;
 
 import java.beans.Beans;
