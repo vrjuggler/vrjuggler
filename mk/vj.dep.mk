@@ -34,28 +34,36 @@ ifdef DO_CLEANDEPEND
     CLEAN_FILES	+= ${DEPEND_FILES}
 endif
 
-# This expression reformats the output from the dependency text to be of the
+# These expressions reformat the output from the dependency text to be of the
 # form:
 #
 #     ${OBJDIR}/file1.o file1.d : ...
 #
-# where file1 is the value in $* and file1.d is $@.
-_SED_EXP	= '\''s/\($*\)\.${OBJ_FILE_SUFFIX}[ :]*/$${OBJDIR}\/\1.${OBJ_FILE_SUFFIX} $@ : /g'\''
+# where file1 is the value in $* and file1.d is $@.  The first handles output
+# from the C and C++ compilers which prints only the object file to be
+# created ($*).  The second handles output from makedepend(1) which includes
+# the path leading to the source file in the object file name.
+_CC_SED_EXP	= '\''s/\($*\)\.${OBJ_FILE_SUFFIX}[ :]*/$${OBJDIR}\/\1.${OBJ_FILE_SUFFIX} $@: /g'\''
+_MKDEP_SED_EXP	= '\''s/.*\($*\)\.${OBJ_FILE_SUFFIX}[ :]*/$${OBJDIR}\/\1.${OBJ_FILE_SUFFIX} $@: /g'\''
 
 %.d: %.c
 	@echo "Updating dependency file $@ ..."
 ifeq (${CC}, cl)
-	@touch $@
+	@${SHELL} -ec 'makedepend -f- -o.${OBJ_FILE_SUFFIX}		\
+                       ${DEPENDFLAGS} -- ${DEPEND_EXTRAS} -- $< |	\
+                       sed ${_MKDEP_SED_EXP} > $@ ; [ -s $@ ] || rm -f $@'
 else
 	@${SHELL} -ec '${C_COMPILE} ${DEP_GEN_FLAG} $< |		\
-                       sed ${_SED_EXP} > $@ ; [ -s $@ ] || rm -f $@'
+                       sed ${_CC_SED_EXP} > $@ ; [ -s $@ ] || rm -f $@'
 endif
 
 %.d: %.cpp
 	@echo "Updating dependency file $@ ..."
 ifeq (${CC}, cl)
-	@touch $@
+	@${SHELL} -ec 'makedepend -f- -o.${OBJ_FILE_SUFFIX}		\
+                       ${DEPENDFLAGS} -- ${DEPEND_EXTRAS} -- $< |	\
+                       sed ${_MKDEP_SED_EXP} > $@ ; [ -s $@ ] || rm -f $@'
 else
 	@${SHELL} -ec '${CXX_COMPILE} ${DEP_GEN_FLAG} $< |		\
-                        sed ${_SED_EXP} > $@ ; [ -s $@ ] || rm -f $@'
+                       sed ${_CC_SED_EXP} > $@ ; [ -s $@ ] || rm -f $@'
 endif
