@@ -199,7 +199,9 @@ namespace cluster
       vpr::InetAddr local;
       vpr::InetAddr::getLocalHost(local);
          
-      ConnectionRequest request(local.getHostname(),0/*Might be needed, look above*/);
+      std::string local_host_name;
+      local.getHostname(local_host_name);
+      ConnectionRequest request(local_host_name,0/*Might be needed, look above*/);
 
       send(&request);
       

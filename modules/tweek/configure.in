@@ -464,7 +464,7 @@ fi
 # -----------------------------------------------------------------------------
 # Checks for libraries.
 # -----------------------------------------------------------------------------
-VPR_PATH([0.23.2], , [AC_MSG_ERROR([*** VPR required for Tweek C++ API ***])])
+VPR_PATH([0.36.0], , [AC_MSG_ERROR([*** VPR required for Tweek C++ API ***])])
 VPR_SUBSYSTEM=`$VPR_CONFIG --subsystem`
 
 # Find omniORB.  This one is a beast.

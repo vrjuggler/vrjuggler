@@ -80,10 +80,12 @@ namespace cluster
       // Get the localhost name.
       vpr::InetAddr::getLocalHost(local);
 
+      std::string hostname;
+      test.getHostname(hostname);
       vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
          << "===== Test Hostname =====" << std::endl << vprDEBUG_FLUSH;
       vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
-         << test.getHostname() << std::endl << vprDEBUG_FLUSH;
+         << hostname << std::endl << vprDEBUG_FLUSH;
       vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
          << test.getAddressString() << std::endl << vprDEBUG_FLUSH;
 
@@ -167,8 +169,10 @@ namespace cluster
          // Get the localhost name.
          vpr::InetAddr local;
          vpr::InetAddr::getLocalHost(local);
+         std::string local_host_name;
 
-         ConnectionAck* responce_packet = new ConnectionAck(local.getHostname(),
+         local.getHostname(local_host_name);
+         ConnectionAck* responce_packet = new ConnectionAck(local_host_name,
                                                             mListenAddr.getPort(),true);
 
          // Try to send a responce packet
@@ -483,7 +487,8 @@ namespace cluster
             // Optimize new socket for low latency communication
             client_sock->setNoDelay(true);
 
-            std::string remote_host_name = client_sock->getRemoteAddr().getHostname();
+            std::string remote_host_name;
+            client_sock->getRemoteAddr().getHostname(remote_host_name);
 
             vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
                << clrOutBOLD(clrMAGENTA,"[ClusterNetwork]")
