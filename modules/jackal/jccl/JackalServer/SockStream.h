@@ -51,7 +51,9 @@ public:
     sockstreambuf ();
 
 
-    virtual int doallocate () {}
+    virtual int doallocate () {
+        return 0;
+    }
 
 
     virtual int overflow (int c=EOF);
