@@ -106,50 +106,53 @@ void SimPosition::updateData()
       // NOTE: Could have implemented using side effects of assignment
       //       and used less lines, but this is more explicit
 
-   //Get the current time in seconds and use it to find the elapsed seconds
-   //from the elapsed frame.
-   vpr::Interval delta_time(vpr::Interval::now() - mPos.getTime());
-
-   //Modify the distance and rotation amount by the time factor
-   float delta_val = delta_time.secf();
-
    amt = checkKeyPair(mSimKeys[FORWARD]);
    if(amt > 0.0f)
-      moveFor( 1 * amt * delta_val);
+      moveFor( amt );
+
    amt = checkKeyPair(mSimKeys[BACK]);
    if(amt > 0.0f)
-      moveFor( -1 * amt * delta_val);
+      moveFor( -amt );
+
    amt = checkKeyPair(mSimKeys[LEFT]);
    if(amt > 0.0f)
-      moveLeft( 1 * amt * delta_val);
+      moveLeft( amt );
+
    amt = checkKeyPair(mSimKeys[RIGHT]);
    if(amt > 0.0f)
-      moveLeft( -1 * amt * delta_val);
+      moveLeft( -amt );
+
    amt = checkKeyPair(mSimKeys[UP]);
    if(amt > 0.0f)
-      moveUp ( 1 * amt * delta_val);
+      moveUp ( amt );
+
    amt = checkKeyPair(mSimKeys[DOWN]);
    if(amt > 0.0f)
-      moveUp (-1 * amt * delta_val);
+      moveUp ( -amt );
 
    amt = checkKeyPair(mSimKeys[ROTR]);
    if(amt > 0.0f)
-      rotLeft( -1 * amt * delta_val);
+      rotLeft( -amt );
+
    amt = checkKeyPair(mSimKeys[ROTL]);
    if(amt > 0.0f)
-      rotLeft( 1  * amt * delta_val);
+      rotLeft( amt );
+
    amt = checkKeyPair(mSimKeys[ROTU]);
    if(amt > 0.0f)
-      rotUp( 1 * amt * delta_val);
+      rotUp( amt );
+
    amt = checkKeyPair(mSimKeys[ROTD]);
    if(amt > 0.0f)
-      rotUp( -1 * amt * delta_val);
+      rotUp( -amt );
+
    amt = checkKeyPair(mSimKeys[ROT_ROLL_CCW]);
    if(amt > 0.0f)
-      rotRollCCW( 1 * amt * delta_val);
+      rotRollCCW( amt );
+
    amt = checkKeyPair(mSimKeys[ROT_ROLL_CW]);
    if(amt > 0.0f)
-      rotRollCCW( -1 * amt * delta_val);
+      rotRollCCW( -amt );
 
    // Debug output
    //vjCoord pos_data(mPos);
