@@ -10,7 +10,6 @@
 
 #include <IO/Socket/Socket.h>
 #include <IO/Socket/SocketStream.h>
-//#include <IO/Socket/SocketDatagram.h>
 #include <IO/Socket/InetAddr.h>
 
 #include <Threads/Thread.h>
@@ -57,6 +56,33 @@ public:
    {
    }
 
+   void openCloseTest()
+   {  
+      bool openSuccess=false;
+      bool closeSuccess=false;
+      bool bindSuccess=false;
+      
+      vpr::Uint16 port=5432;
+      vpr::SocketStream*	sock;
+      sock = new vpr::SocketStream(vpr::InetAddr("localhost",port), vpr::InetAddr::AnyAddr);	
+      openSuccess=sock->open();
+      if (openSuccess)
+         bindSuccess=(sock->bind());
+      closeSuccess=sock->close();
+      assertTest( openSuccess && "Socket can not be opened!");
+      assertTest( bindSuccess && "Socket can not be bound!");
+      assertTest( closeSuccess && "Socket can not be closed!");
+      delete sock;
+   }
+   
+/*   void ReuseAddr()
+   {
+      sock = new vpr::SocketStream(vpr::InetAddr::AnyAddr, vpr::InetAddr::AnyAddr);
+      sock->setReuse(true);
+      openSuccess=sock->open();
+//      
+   }
+*/   
    void testTcpConnection()
    {
       mServerCheck=0;
@@ -79,7 +105,7 @@ public:
       sleep(1);
 
       //Stop the master server thread 
-      serverThread->kill();
+//      serverThread->kill();
       //	assertTest(mClientCounter==mNumClient && "Not all client are connect");
 	   assertTest(mOpenServerSuccess ==-1 && "Open server failed");
       assertTest(mServerCheck==0 && "Not all connections are correct.");
@@ -103,6 +129,7 @@ public:
 
       vpr::SocketStream*	sock;
       sock = new vpr::SocketStream(vpr::InetAddr(port), vpr::InetAddr::AnyAddr);	
+//      sock->setReuseAddr(true);
       if ( sock->openServer() ) {
          vpr::SocketStream* client_sock;
          thread_args_t* tArgs;
@@ -111,6 +138,7 @@ public:
 
          while ( num<mNumSServer) {
             client_sock = sock->accept();
+//            client_sock->setReuseAddr(true);
             tArgs = new thread_args_t;
             tArgs->mSock=client_sock;
 
@@ -125,6 +153,8 @@ public:
       else {
          mOpenServerSuccess = 1;
       }
+      sock->close();
+      delete sock;
    }
    
    //function for creating client threads
@@ -132,8 +162,7 @@ public:
    {
       vpr::SocketStream*	sock;
 
-      sock = new vpr::SocketStream(vpr::InetAddr("localhost"), vpr::InetAddr("localhost", 5432));
-
+      sock = new vpr::SocketStream(vpr::InetAddr::AnyAddr, vpr::InetAddr("localhost", 5432));
       if ( sock->open() ) {
          char buffer1[40];
 //         char buffer2[] = "What's up?";
@@ -142,12 +171,12 @@ public:
             bytes = sock->read(buffer1, 40);
 //            sock->write(buffer2, sizeof(buffer2));
             sock->write(buffer1, bytes);
-            sock->close();
             mItemProtectionMutex.acquire();
             mClientCounter++;
             mItemProtectionMutex.release();
          }
       }
+      sock->close();
       delete sock;
    }
    
@@ -178,6 +207,7 @@ public:
    static Test* suite()
    {
       TestSuite *test_suite = new TestSuite ("SocketTest");
+      test_suite->addTest( new TestCaller<SocketTest>("Open/CloseTest", &SocketTest::openCloseTest));
       test_suite->addTest( new TestCaller<SocketTest>("testTcpConnection", &SocketTest::testTcpConnection));
       return test_suite;
    }
