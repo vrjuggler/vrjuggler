@@ -1,22 +1,50 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/loose.dtd">
+
 <html>
 
 <title>Working with Config Files</title>
 
 <body bgcolor="#ffffcc">
-<h2><img src="juggler.gif"></img>Working with Config Files</h2>
 
-You can load and edit VR Juggler Config Files by clicking on the 
-"Configure" tab of the main window.  This displays a panel that
-is divided into two similar parts.  The idea is that you can
+<!--NewPage-->
+<h1><img src="juggler.gif" width="29" height="33"></img>Working with configuration files</h1>
+
+Clicking on vjcontrol's "Configure" tab lets you view and edit VR
+Juggler config files.  The display consists of two similar
+panels, side by side.  The idea is that you can
 view one file on each side, making it easy to compare two files
 and to copy Chunks back and forth between them.
 
 <p>
+<img src="./gfx/ChunkDBPanel1.png" alt="VjControl ChunkDB Panel"></img>
+
+<p>
 At the top of each panel is a ComboBox that lets you choose which of the
 loaded config files to display.  The selected file will appear in a
-tree format in the middle of the panel.  Click on a Chunk in the tree
-to select it.  You can double-click
-on a chunk to view or edit it.
+tree format in the middle of the panel.
+
+<p>
+Chunks in the display are organized by type and by broader categories.
+The specific organization of the tree is determined by vjcontrol's current
+ChunkOrgTree.  See "<a href="OrgTreePanel.html">Editing the Chunk Organization
+Tree</a>" for more information.
+
+<p>
+You can click on a Chunk in the tree
+to select it.  Double-clicking on a Chunk brings up a window that
+lets you view or edit the Chunk.  Right-clicking on a Chunk brings 
+up a small menu that lets you view help information on that 
+Chunk (if available) or remove it from the file:
+
+<p>
+<img alt="Context menu picture" src="./gfx/ChunkDBPanel2.png"></img>
+<p>
+  Also, right-clicking
+on folders that represent Chunk types brings up a small menu letting
+you insert new Chunks.
+<p>
+<img alt="Context Menu Pic" src="./gfx/ChunkDBPanel3.png"></img>
+
 
 <p>
 There are eight buttons along the side of each panel:
@@ -42,40 +70,71 @@ by the Insert Type combo box at the bottom of the panel.
 </ul>
 
 <hr>
-<h3> The ConfigChunk Editing Window</h3>
+<h2> The ConfigChunk editing window</h2>
 
 Double-click on one of the ConfigChunks in the tree to open the
 ConfigChunk editing window.  This window displays the values for all 
-the Chunk's properties, and lets you modify these values.  Properties
-that allow a variable number of values will include an <b>Add Value</b> button
-next to the Property name, and a <b>Remove</b> button next to each value.
+the Chunk's properties, and lets you modify these values.
+
 <p>
-Click the <b>OK</b> button to exit the window, or <b>Cancel</b> to close
+<img alt="ConfigChunk Editing Window Picture" src="./gfx/ChunkDBFrame1.png"></img>
+<p>
+
+Some properties in a Chunk allow a variable number of values.  These 
+include an <tt>Add Value</tt> button next to the property name,
+and a <tt>Remove</tt> button next to each value:
+<p>
+<img alt="ConfigChunk Editing Window Picture" src="./gfx/ChunkDBFrame2.png"></img>
+<p>
+<img alt="ConfigChunk Editing Window Picture" src="./gfx/ChunkDBFrame3.png"></img>
+<p>
+<p>
+Click the <TT>OK</TT> button to exit the window, or <TT>Cancel</TT> to close
 the window without saving the changes you've made.
 
 <br><br>
 
 <hr>
-<h3>Including other Config Files</h3>
+<h2>Including other configuration files</h2>
 
-VR Juggler config files can include references to other config files.  If a config file with
-includes is loaded by a Juggler app, all the files it includes are loaded first (so a chunk
-in the file can replace a chunk in an included file with the same name).
+VR Juggler includes the idea of an "Include File" chunk, which has
+one property: the pathname of a Juggler config file.  When 
+a Juggler app loads a file with an "Include File" chunk, it will also
+load the file named in that chunk.  This means that it is possible
+to make a config file that's just a list of other config files to
+be loaded.
+
 <p>
-If a config file with includes is loaded into vjcontrol, the included files are automatically
-loaded, though each file is viewed separately.
+Similarly, there are "Include Description File" chunks which will cause
+Juggler to automatically load a ChunkDesc file.  This is particularly 
+useful for config files which contain application-specific kinds of
+ConfigChunks.
+
 <p>
-To include a file, simply add an "Include File" chunk to the config file.  The name of the 
-"Include File" chunk is the complete path name of the file to load.  You can use the strings
-"$HOME" and "$VJ_BASE_DIR" at the start of the name to refer to your home directory and the
-Juggler install directory, respectively.
+If a config file with includes is loaded into vjcontrol, the included 
+files are automatically loaded, though each file is viewed separately.
+
 <p>
-Note that path names should be absolute paths (paths starting with "/" or "$HOME" or "$VJ_BASE_DIR").
-Relative path names should be relative to the file including them, but this may not work
-correctly in Juggler Beta1
+To include a file, simply add an "Include File" (or "Include Descriptions 
+File") chunk to the config file.  The name of the "Include File" chunk is 
+the path name of the file to load.  You can use the strings
+"<TT>$HOME</TT>" and "<TT>$VJ_BASE_DIR</TT>" at the start of the name to 
+refer to your home directory and the Juggler install directory, 
+respectively.
+
+<p>
+Relative path names in includes (e.g. paths that don't start with "/" or 
+"C:" etc.) are relative to the location of the file containing the "Include
+File" chunk.  For example,
+if the config file "/home/vr/vjconfig/c2.config" includes the file
+"C2/displays.config", Juggler will try to load a file named
+"/home/vr/vjconfig/C2/displays.config".
 
 <br><br>
+
 </body>
+
+
 </html>
 
 

@@ -1,12 +1,16 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/loose.dtd">
+
 <html>
 
 <title>Description of Config File format</title>
 
 <body bgcolor="#ffffcc">
-<h2><img src="juggler.gif"></img>
-File Format for VR Juggler Config Files</H2>
 
-<h3>Overview</h3>
+<!--NewPage-->
+<h1><img src="juggler.gif" width="29" height="33"></img>
+File Format for VR Juggler Config Files</h1>
+
+<h2>Overview</h2>
 
 The config files used by VR Juggler and the VjControl program are ASCII
 text files based around the idea of "ConfigChunks" - logical groupings of
@@ -58,9 +62,8 @@ line gives the token for one of the properties followed by a list of
 values (the type and allowed number of values are also defined in the
 ChunkDesc).
 
-<h3>Reference</h3>
 
-<h4>General Rules</h4>
+<h2>General Rules</h2>
 <ol>
 <li>Config files are generally non-case-sensitive.  For example, 
 "end", "End", and "eND" are all valid ways to end a chunk or a file.
@@ -81,7 +84,7 @@ so it is possible for parts of a line to be broken up for greater
 readability.
 </ol>
 
-<h4>Config Files</h4>
+<h2>Config Files</h2>
 The general format of a config file is:
 
 <pre>
@@ -102,7 +105,7 @@ Note that the vjcontrol program does not preserve comments in the files
 that it loads and saves, so this is mostly useful as a quick hack or as
 a debugging feature.
 
-<h4>ConfigChunks</h4>
+<h2>ConfigChunks</h2>
 
 The basic format of a ConfigChunk is:
 
@@ -127,7 +130,7 @@ description.  Those that are omitted will be filled in with default values
 (0, 0.0, false, "").  Omitted properties that allow variable numbers of
 values will start out with no values at all.
 
-<h4>Property Lines</h4>
+<h3>Property Lines</h3>
 The format for any property line is this:
 <pre>
   <i>token</i> { <i>value1</i> <i>value2</i> ... }
@@ -144,13 +147,13 @@ represented as quoted text strings.  Boolean values are represented as
 the strings "True" and "False" (case is irrelevant, and quotes unneccessary).
 <p>
 
-<h4>Properties with Enumerations</h4>
+<h3>Properties with Enumerations</h3>
 Some Properties are defined to have a set of named values.  If this is
 the case, the values in the property line can be either names defined in
 the enumeration or actual values (the example below of an int Property 
 with an enumeration includes one value of each type).
 
-<h4>Example Property Lines</h4>
+<h3>Example Property Lines</h3>
 <pre>
      stringproperty { "a string value" "a second string value" }
      intproperty { 42 }
@@ -160,3 +163,7 @@ with an enumeration includes one value of each type).
 </pre>
 
 
+
+</body>
+
+</html>
