@@ -30,6 +30,8 @@
 #
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
+.NOTPARALLEL: Makefile
+
 default: debug ;
 
 srcdir=		@srcdir@
@@ -65,6 +67,7 @@ Makefile.in: ;
 Makefile.inc.in: ;
 make.defs.mk.in: ;
 $(M4_DEPS): ;
+$(srcdir)/VERSION: ;
 
 configure: configure.in $(M4_DEPS)
 	cd $(srcdir) && ./autogen.sh
