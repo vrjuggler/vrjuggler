@@ -167,7 +167,7 @@ int main(void)
    cout << "Random XYZ Eulers: " << endl;
    tests_pass = false;
 
-   for(int x=0;x<50;x++)
+   for(long x=0;x<50;x++)
    {
       int xRot = (rand()%360)-180;
       int yRot = (rand()%360)-180;
@@ -203,15 +203,17 @@ int main(void)
    // --------------------------------------- //
    // --- Test serial of transforms --------- //
    // --------------------------------------- //
-   XYZMat.makeXYZEuler(-20.0f, 10.0f, 11.0f);
-   cout << "makeXYZEuler(-20.0f, 10.0f, 11.0f):" << endl << XYZMat << endl;
+   XYZMat.makeIdent();
+   cout << "Testing serial transforms around x_axis from identity:" << endl << XYZMat << endl;
 
-   for(x=0;x<50;x++)
+   for(x=0;x<(60*60*60*2);x++)
    {
       XYZMat.getXYZEuler(x_deg, y_deg, z_deg);
-      cout << "getXYZ:" << x_deg << ", " << y_deg << ", " << z_deg << "\n\n\n";
-      XYZMat.preRot(1.0f, x_axis, XYZMat);
+      cout << "getXYZ:iter:" << x << " : xEuler:" << x_deg << ", yEuler:" << y_deg << ", zEuler:" << z_deg
+           << "\t\tXRot:" << XYZMat.getXRot() << "  YRot:" << XYZMat.getYRot() << "  ZRot:" << XYZMat.getZRot() << "\r" << flush;
+      XYZMat.preRot(0.005f, x_axis, XYZMat);
    }
+   cout << endl << endl;
 
    // --------------------------------------- //
    // ---- Create transform matrix ---------- //
@@ -354,7 +356,7 @@ int main(void)
 
    testMat2.makeRot(-56.0,vjVec3(0,1,0));
    testIt("getYRot..",((testMat2.getXRot() == 0.0f) && (testMat2.getYRot() == -56.0f) && (testMat2.getZRot() == 0.0f)));
-   //cout << "x: " << testMat2.getXRot() << ", y:" << testMat2.getYRot() << ", z:" << testMat2.getZRot() << endl;
+   cout << "x: " << testMat2.getXRot() << ", y:" << testMat2.getYRot() << ", z:" << testMat2.getZRot() << endl;
 
    testMat2.makeRot(78.0, vjVec3(0,0,1));
    testIt("getZRot..",((testMat2.getXRot() == 0.0f) && (testMat2.getYRot() == 0.0f) && (testMat2.getZRot() == 78.0f)));
@@ -370,8 +372,8 @@ int main(void)
    {
       float pitch(0),yaw(0),roll(0);
 
-      cout << "contrainMat: makeXYZEuler(47.0,67.0,-76.0)\n";
-      testMat.makeXYZEuler(47.0,67.0,-76.0);
+      cout << "contrainMat: makeXYZEuler(2.0,67.0,-76.0)\n";
+      testMat.makeXYZEuler(2.0,67.0,-76.0);
       cout << "Original Matrix: " << "x:" << testMat.getXRot()
                              << " y:" << testMat.getYRot()
                              << " z:" << testMat.getZRot() << endl;
@@ -404,24 +406,37 @@ int main(void)
                              << " y:" << testMat2.getYRot()
                              << " z:" << testMat2.getZRot() << endl;
 
+      // Kevin's original
 
-
-      // Kevin original
-      /*
+      cout << "Kevin's original version." << endl;
       testMat._kevn_constrainRotAxis(true,false,false,testMat2);
-      cout << "pitch  only: " << "y:" << testMat2.getYaw()
-                             << " p:" << testMat2.getPitch()
-                             << " r:" << testMat2.getRoll() << endl;
+      cout << "x rot only: " << "x:" << testMat2.getXRot()
+                             << " y:" << testMat2.getYRot()
+                             << " z:" << testMat2.getZRot() << endl;
 
       testMat._kevn_constrainRotAxis(false,true,false,testMat2);
-      cout << "yaw only: " << "y:" << testMat2.getYaw()
-                             << " p:" << testMat2.getPitch()
-                             << " r:" << testMat2.getRoll() << endl;
+      cout << "y rot only: " << "x:" << testMat2.getXRot()
+                             << " y:" << testMat2.getYRot()
+                             << " z:" << testMat2.getZRot() << endl;
       testMat._kevn_constrainRotAxis(false,false,true,testMat2);
-      cout << "roll  only: " << "y:" << testMat2.getYaw()
-                             << " p:" << testMat2.getPitch()
-                             << " r:" << testMat2.getRoll() << endl;
-      */
+      cout << "z rot only: " << "x:" << testMat2.getXRot()
+                             << " y:" << testMat2.getYRot()
+                             << " z:" << testMat2.getZRot() << endl;
+
+      testMat._kevn_constrainRotAxis(true,true,false,testMat2);
+      cout << "x and y rot: " << "x:" << testMat2.getXRot()
+                             << " y:" << testMat2.getYRot()
+                             << " z:" << testMat2.getZRot() << endl;
+
+      testMat._kevn_constrainRotAxis(true,false,true,testMat2);
+      cout << "x and z rot: " << "x:" << testMat2.getXRot()
+                             << " y:" << testMat2.getYRot()
+                             << " z:" << testMat2.getZRot() << endl;
+      testMat._kevn_constrainRotAxis(false,true,true,testMat2);
+      cout << "y and z rot: " << "x:" << testMat2.getXRot()
+                             << " y:" << testMat2.getYRot()
+                             << " z:" << testMat2.getZRot() << endl;
+
    }
 
 
