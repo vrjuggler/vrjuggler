@@ -32,7 +32,7 @@
 #
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
-require 5.004;
+require 5.005;
 
 use strict 'vars';
 use vars qw($base_dir $module $CONFIG_ARGS $PATH_ARGS $HOST_ARGS $FEATURE_ARGS
