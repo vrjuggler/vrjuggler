@@ -70,9 +70,9 @@
 # C_COMPILE      - Command for compiling C code.
 # CXX_COMPILE    - Command for compiling C++ code.
 #
-# ABI            - Application Binary Interface type (on IRIX).  This may be
-#                  used for other binary types when supported by the operating
-#                  system (e.g., "ELF" or "AOUT").
+# ABI            - Application Binary Interface type.  This may be used for
+#                  other binary types when supported by the operating
+#                  system (e.g., "ELF", "N32" or "64").
 # LIBBITSUF      - Suffix for the library path used by the linker on IRIX
 #                  only.  For o32 binaries, it will be blank.  For n32
 #                  binaries, it will be 32.  For 64-bit binaries, it will be
@@ -160,32 +160,28 @@ CXX_COMPILE	= ${CXX} ${DEFS} ${INCLUDES} ${CPPFLAGS} ${CXXFLAGS}
 # -----------------------------------------------------------------------------
 ifdef vjABI
     ifeq (${vjABI}, O32)
-        ABI		= O32
-        ISA		= mips2
+        ABI	= O32
+        ISA	= mips2
     endif
     ifeq (${vjABI}, N32_M3)
-        ABI		= N32
-        ISA		= mips3
+        ABI	= N32
+        ISA	= mips3
     endif
     ifeq (${vjABI}, N32_M4)
-        ABI		= N32
-        ISA		= mips4
+        ABI	= N32
+        ISA	= mips4
     endif
     ifeq (${vjABI}, 64_M3)
-        ABI		= 64
-        ISA		= mips3
+        ABI	= 64
+        ISA	= mips3
     endif
     ifeq (${vjABI}, 64_M4)
-        ABI		= 64
-        ISA		= mips4
-    endif
-    ifeq (${vjABI}, AOUT_i386)
-        ABI		= AOUT
-        ISA		= i386
+        ABI	= 64
+        ISA	= mips4
     endif
     ifeq (${vjABI}, ELF_i386)
-        ABI		= ELF
-        ISA		= i386
+        ABI	= ELF
+        ISA	= i386
     endif
 else
     ABI		= @ABI@
@@ -215,12 +211,6 @@ ifeq (${ABI}, 64)
     CXXFLAGS	+= -64
     LDOPTS	+= -64
     LIBBITSUF	= 64
-endif
-ifeq (${ABI}, AOUT)
-    CFLAGS	+= -aout
-    CXXFLAGS	+= -aout
-    LDOPTS	+= -aout
-    LIBBITSUF	=
 endif
 ifeq (${ABI}, ELF)
     LIBBITSUF	=
