@@ -44,6 +44,7 @@ DRIVERS+=	Ascension/MotionStar
 DRIVERS+=	Fakespace/PinchGlove
 DRIVERS+=	Immersion/IBox
 DRIVERS+=	Intersense/IS900
+DRIVERS+=	Intersense/IntersenseAPI
 DRIVERS+=	Logitech/ThreeDMouse
 #DRIVERS+=	Open/DTK
 DRIVERS+=	Open/Trackd
