@@ -37,9 +37,9 @@ void SystemTest::LongConversions ()
    CPPUNIT_ASSERT(0x12345678 == vpr::System::Ntohl(vpr::System::Htonl(0x12345678)));
 }
 
-void SystemTest::LongLongConversions ()
+void SystemTest::LongLongConversions()
 {
-   vpr::Uint64 start_val(0xDEAD1234BEEF5678);
+   vpr::Uint64 start_val(0xDEAD1234BEEF5678ll);
    vpr::Uint64 net_val;
    vpr::Uint64 new_val;
 
@@ -47,8 +47,8 @@ void SystemTest::LongLongConversions ()
    new_val = vpr::System::Ntohll(net_val);
    CPPUNIT_ASSERT(new_val == start_val);
 
-   CPPUNIT_ASSERT(0xFACE1234CAFE5678 == vpr::System::Ntohll(vpr::System::Htonll(0xFACE1234CAFE5678)));
-   CPPUNIT_ASSERT(0xADB0BD0DEC211975 == vpr::System::Ntohll(vpr::System::Htonll(0xADB0BD0DEC211975)));
+   CPPUNIT_ASSERT(0xFACE1234CAFE5678ll == vpr::System::Ntohll(vpr::System::Htonll(0xFACE1234CAFE5678ll)));
+   CPPUNIT_ASSERT(0xADB0BD0DEC211975ll == vpr::System::Ntohll(vpr::System::Htonll(0xADB0BD0DEC211975ll)));
 }
 
 void SystemTest::GetSetEnvTest()

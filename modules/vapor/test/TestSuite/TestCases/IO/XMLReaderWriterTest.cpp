@@ -15,7 +15,7 @@ void XMLReaderWriterTest::testBasicWriteRead()
    const vpr::Uint8  data_uint8(21);
    const vpr::Uint16 data_uint16(1221);
    const vpr::Uint32 data_uint32(12211975);
-   const vpr::Uint64 data_uint64(122119757911221);
+   const vpr::Uint64 data_uint64(122119757911221ll);
    const float       data_float(1221.75f);
    const double      data_double(1.2211975);
    const std::string data_string1("test string1");
