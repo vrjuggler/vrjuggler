@@ -49,14 +49,13 @@ INSTALL=	@INSTALL@
 INSTALL_FILES=	
 
 ifeq (@HAVE_DTK@, Y)
+C_AFTERBUILD=	driver-dso
 SRCS=		DTK.cpp			\
 		DTKMemorySegment.cpp
-else
-SRCS=
-C_AFTERBUILD=
 endif
 
 include $(MKPATH)/dpp.obj.mk
+include @topdir@/gadget/Devices/driver.defs.mk
 
 # -----------------------------------------------------------------------------
 # Include dependencies generated automatically.

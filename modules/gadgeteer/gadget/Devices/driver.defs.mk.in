@@ -40,8 +40,6 @@
 #
 # =============================================================================
 
-include @topdir@/make.defs.mk
-
 # -----------------------------------------------------------------------------
 # Override settings in make.defs.mk.
 # -----------------------------------------------------------------------------
@@ -51,7 +49,6 @@ EXTRA_DEFS=	-D_GADGET_DRIVER_BUILD_
 # Common code for driver DSOs.
 # -----------------------------------------------------------------------------
 SUBOBJDIR=	$(DRIVER_NAME)
-C_AFTERBUILD=	driver-dso
 
 DRIVER_DSO=	@LIB_PREFIX@$(DRIVER_NAME).$(DYNAMICLIB_EXT)
 DYLIB_DEPS=	@DSO_DRIVER_DEPS@ $(EXTRA_DSO_DRIVER_DEPS)
