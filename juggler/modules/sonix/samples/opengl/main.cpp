@@ -335,7 +335,7 @@ static void OnApplicationInit()
 }
 
 
-void main(int argc, char* argv[])
+int main(int argc, char* argv[])
 {
     // Initialize the application
     // initialize the state of your app here if needed...
@@ -388,5 +388,7 @@ void main(int argc, char* argv[])
     // start the application loop, your callbacks will now be called
     // time for glut to sit and spin.
     ::glutMainLoop();
+    
+    return 1;
 }
 
