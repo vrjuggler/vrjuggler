@@ -47,6 +47,118 @@
          <value label="Barrier Master" />
          <allowed_type>machine_specific</allowed_type>
       </property>
-      <upgrade_transform />
+      <upgrade_transform>
+         <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+                         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                         xmlns:jconf="http://www.vrjuggler.org/jccl/xsd/3.0/configuration">
+           
+            <xsl:output method="xml" version="1.0" encoding="UTF-8" indent="yes"/>
+            <xsl:variable name="jconf">http://www.vrjuggler.org/jccl/xsd/3.0/configuration</xsl:variable>
+           
+            <xsl:template match="/">
+                <xsl:apply-templates />
+            </xsl:template>
+           
+            <xsl:template match="jconf:cluster_manager">
+               <xsl:element namespace="{$jconf}" name="cluster_manager">
+                  <xsl:attribute name="name">
+                     <xsl:value-of select="@name"/>
+                  </xsl:attribute>
+                  <xsl:attribute name="version">2</xsl:attribute>
+                  <xsl:if test="count(./jconf:plugin) &gt; 0">
+                     <xsl:element namespace="{$jconf}" name="plugin_path">
+                        <xsl:call-template name="get-path">
+                           <xsl:with-param name="original" select="./jconf:plugin"/>
+                           <xsl:with-param name="path_sep"><xsl:text>/</xsl:text></xsl:with-param>
+                        </xsl:call-template>
+                     </xsl:element>
+                  </xsl:if>
+                  <xsl:apply-templates select="./*"/>
+               </xsl:element>
+            </xsl:template>
+
+            <xsl:template match="jconf:plugin">
+               <xsl:variable name="no_ext">
+                  <xsl:choose>
+                     <xsl:when test="contains(., '.dll')">
+                        <xsl:value-of select="substring-before(., '.dll')"/>
+                     </xsl:when>
+                     <xsl:when test="contains(., '.dylib')">
+                        <xsl:value-of select="substring-before(., '.dylib')"/>
+                     </xsl:when>
+                     <xsl:otherwise>
+                        <xsl:value-of select="substring-before(., '.so')"/>
+                     </xsl:otherwise>
+                  </xsl:choose>
+               </xsl:variable>
+
+               <xsl:variable name="plugin_name">
+                  <xsl:call-template name="strip-path">
+                     <xsl:with-param name="original" select="$no_ext"/>
+                     <xsl:with-param name="path_sep"><xsl:text>/</xsl:text></xsl:with-param>
+                  </xsl:call-template>
+               </xsl:variable>
+
+               <xsl:element namespace="{$jconf}" name="plugin">
+                  <xsl:choose>
+                     <xsl:when test="starts-with($plugin_name, 'lib')">
+                        <xsl:value-of select="substring-after($plugin_name, 'lib')"/>
+                     </xsl:when>
+                     <xsl:otherwise>
+                        <xsl:value-of select="$plugin_name"/>
+                     </xsl:otherwise>
+                  </xsl:choose>
+               </xsl:element>
+            </xsl:template>
+
+            <xsl:template match="jconf:cluster_nodes">
+               <xsl:element namespace="{$jconf}" name="cluster_node">
+                  <xsl:value-of select="."/>
+               </xsl:element>
+            </xsl:template>
+
+            <xsl:template match="jconf:barrier_master">
+               <xsl:copy-of select="."/>
+            </xsl:template>
+
+            <xsl:template name="get-path">
+               <xsl:param name="original"/>
+               <xsl:param name="path_sep"/>
+               <xsl:variable name="plugin_name">
+                  <xsl:call-template name="strip-path">
+                     <xsl:with-param name="original" select="$original"/>
+                     <xsl:with-param name="path_sep" select="$path_sep"/>
+                  </xsl:call-template>
+               </xsl:variable>
+               <xsl:value-of select="substring-before($original, $plugin_name)"/>
+            </xsl:template>
+
+            <xsl:template name="strip-path">
+               <xsl:param name="original"/>
+               <xsl:param name="path_sep"/>
+               <xsl:variable name="last">
+                  <xsl:choose>
+                     <xsl:when test="contains($original, $path_sep)">
+                        <xsl:choose>
+                           <xsl:when test="contains(substring-after($original, $path_sep), $path_sep)">
+                              <xsl:call-template name="strip-path">
+                                 <xsl:with-param name="original"><xsl:value-of select="substring-after($original, $path_sep)"/></xsl:with-param>
+                                 <xsl:with-param name="path_sep"><xsl:value-of select="$path_sep"/></xsl:with-param>
+                              </xsl:call-template>
+                           </xsl:when>
+                           <xsl:otherwise>
+                              <xsl:value-of select="substring-after($original, $path_sep)"/>
+                           </xsl:otherwise>
+                        </xsl:choose>
+                     </xsl:when>
+                     <xsl:otherwise>
+                        <xsl:text></xsl:text>
+                     </xsl:otherwise>
+                  </xsl:choose>
+               </xsl:variable>
+               <xsl:value-of select="$last"/>
+            </xsl:template>
+         </xsl:stylesheet>
+      </upgrade_transform>
    </definition_version>
 </definition>
