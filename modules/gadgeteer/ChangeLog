@@ -1,5 +1,8 @@
 DATE        AUTHOR    CHANGE
 ----------- --------- ---------------------------------------------------------
+Nov-01-2002 patrickh  Added a driver that allows Tweek Subjects to act as
+                      input devices for Gadgeteer.
+		      NEW VERSION: 0.6.3
 Oct-30-2002 allenb    Added a new interface to PosProxy for specifying what
                       units to return position data in.  This also completes
 		      the change over to using positional filters and

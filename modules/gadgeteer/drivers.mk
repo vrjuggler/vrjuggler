@@ -48,5 +48,6 @@ DRIVERS+=	Logitech/ThreeDMouse
 #DRIVERS+=	Open/DTK
 DRIVERS+=	Open/Trackd
 DRIVERS+=	Polhemus/Fastrack
+DRIVERS+=	Tweek
 #DRIVERS+=	VRCO/TrackdAPI
 DRIVERS+=	VirtualTechnologies/CyberGlove
