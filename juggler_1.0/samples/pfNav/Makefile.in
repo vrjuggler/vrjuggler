@@ -1,12 +1,8 @@
 # -----------------------------------------------------------------------------
-# Makefile.in for juggler/samples/pfNav
+# Makefile.in for juggler/samples/pfNav.  It requires GNU make.
 # $Id$
 #
 # Generated for use on @PLATFORM@
-# -----------------------------------------------------------------------------
-# IMPORTANT NOTE FOR IRIX USERS:
-#     This application will not compile using the basic IRIX 6.x make(1).  Use
-#     either pmake(1) or gmake(1).
 # -----------------------------------------------------------------------------
 
 .SUFFIXES: .cpp .@OBJ_FILE_SUFFIX@
@@ -18,10 +14,11 @@ COMPILE		= @CXX@ @DEFS@ $(VJ_INCLUDES) @CPPFLAGS@ @CXXFLAGS@ @DBG_FLAGS@ $(EXTRA
 LINK		= @CXX@ @CPPFLAGS@ @CXXFLAGS@ @EXTRA_LINK_FLAGS@ $(EXTRA_FLAGS)
 VJ_INCLUDES	= @INCLUDES@ -I$(VJ_BASE_DIR)/include			\
                   -I$(VJ_BASE_DIR)/include/Math -I$(srcdir)		\
-                  -I$(srcdir)/../nav -I$(srcdir)/../pfTools \
+                  -I$(srcdir)/../nav -I$(srcdir)/../pfTools 		\
                   -I$(srcdir)/../../Sound/
 VJ_LIBS		= @TEST_VJ_LIBS_BASIC@ @TEST_VJ_LIBS_GL@ @TEST_VJ_LIBS_PF@ @TEST_LIBS_BASIC@
-VPATH		= @srcdir@:@srcdir@/../nav:@srcdir@/../pfTools
+
+vpath %.cpp @srcdir@ @srcdir@/../nav @srcdir@/../pfTools
 
 # This test program requires the following libraries to be linked:
 #
@@ -47,7 +44,7 @@ PFNAV_OBJECTS		= fileIO.@OBJ_FILE_SUFFIX@		\
 
 PF_BASIC_CONFIG_NAV_OBJECTS	= fileIO.@OBJ_FILE_SUFFIX@		\
                   		pfFileIO.@OBJ_FILE_SUFFIX@		\
-                  		pfBasicConfigNav.@OBJ_FILE_SUFFIX@			\
+                  		pfBasicConfigNav.@OBJ_FILE_SUFFIX@	\
                   		pfTerryCollide.@OBJ_FILE_SUFFIX@	\
                   		pfTerryPogoCollide.@OBJ_FILE_SUFFIX@	\
                   		pfTerryBoxCollide.@OBJ_FILE_SUFFIX@	\
@@ -73,8 +70,30 @@ pfBasicConfigNav: $(PF_BASIC_CONFIG_NAV_OBJECTS)
 # Clean-up.
 # -----------------------------------------------------------------------------
 clean:
-	rm -f Makedepend pfNav pfBasicConfigNav pfNav.exe pfNav.ilk \
-	$(PFNAV_OBJECTS) $(PF_BASIC_CONFIG_NAV_OBJECTS) \
-	*core	\
-	so_locations *.?db
+	rm -f Makedepend pfNav pfBasicConfigNav pfNav.exe pfNav.ilk	\
+          $(PFNAV_OBJECTS) $(PF_BASIC_CONFIG_NAV_OBJECTS) *core		\
+          so_locations *.?db *.d
 	rm -rf ./ii_files
+
+# -----------------------------------------------------------------------------
+# Dependency stuff.
+# -----------------------------------------------------------------------------
+DEP_GEN_FLAG	= @DEP_GEN_FLAG@
+DEPEND_FILES	= $(PFNAV_OBJECTS:.@OBJ_FILE_SUFFIX@=.d)		\
+                  $(PF_BASIC_CONFIG_NAV_OBJECTS:.@OBJ_FILE_SUFFIX@=.d)
+
+# This expression reformats the output from the dependency text to be of the
+# form:
+#
+#     file1.o file1.d : ...
+#
+# where file1 is the value in $* and file1.d is $@.  It handles output from
+# the C and C++ compilers which prints only the object file to be created ($*).
+_CC_SED_EXP	= '\''s/\($*\)\.@OBJ_FILE_SUFFIX@[ :]*/\/\1.@OBJ_FILE_SUFFIX@ $@: /g'\''
+
+%.d: %.cpp
+	@echo "Updating dependency file $@ ..."
+	@$(SHELL) -ec '$(COMPILE) $(DEP_GEN_FLAG) $< |			\
+                       sed $(_CC_SED_EXP) > $@ ; [ -s $@ ] || rm -f $@'
+
+include $(DEPEND_FILES)
