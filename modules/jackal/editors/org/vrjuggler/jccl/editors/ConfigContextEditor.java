@@ -38,21 +38,7 @@ public class ConfigContextEditor
          {
             public void valueChanged(TreeSelectionEvent evt)
             {
-               DefaultMutableTreeNode node =
-                  (DefaultMutableTreeNode)mElementTree.getLastSelectedPathComponent();
-               if(null == node)
-               {
-                  return;
-               }
-               Object value = node.getUserObject();
-               if (value == null || !(value instanceof ConfigElement))
-               {
-                  return;
-               }
-
-               ConfigElement elt = (ConfigElement)value;
-               mElementPropSheet.setElement(elt);
-              
+               // Remove all old custom editors.
                if (mCustomEditors != null)
                {
                   for(Iterator itr = mCustomEditors.iterator() ; itr.hasNext() ; )
@@ -63,6 +49,29 @@ public class ConfigContextEditor
                   mCustomEditors = null;
                }
 
+               // Get teh selected node.
+               DefaultMutableTreeNode node =
+                  (DefaultMutableTreeNode)mElementTree.getLastSelectedPathComponent();
+               if(null == node)
+               {
+                  mElementPropSheet.setElement((ConfigElement)null);
+                  return;
+               }
+
+               // Get the value of the UserObject attached to the node.
+               Object value = node.getUserObject();
+               if (value == null || !(value instanceof ConfigElement))
+               {
+                  System.out.println("Selecting a node that is not a ConfigElement");
+                  return;
+               }
+
+               // Inform the PropertySheet of the newly selected ConfigElement.
+               ConfigElement elt = (ConfigElement)value;
+               mElementPropSheet.setElement(elt);
+
+
+               // Load all supported custom editors.
                mCustomEditors = CustomEditorRegistry.findEditors(elt.getDefinition().getToken());
     
                if (mCustomEditors != null)

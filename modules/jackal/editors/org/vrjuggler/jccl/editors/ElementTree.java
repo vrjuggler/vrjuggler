@@ -82,8 +82,18 @@ class ConfigElementSelection implements ClipboardOwner, Transferable
 /**
  * Returns a component used to edit the name of the ConfigElement in the JTree.
  */
-class AronsEditor implements TreeCellEditor
+class ElementNameEditor implements TreeCellEditor
 {
+   /**
+    * Constructor that takes a reference to the JTree that we will be editing.
+    * This is required so that we can determine if the selected node is
+    * editable.
+    */
+   public ElementNameEditor(JTree tree)
+   {
+      mTree = tree;
+   }
+   
    /**
     * Returns a component that will be used to edit the name of the
     * ConfigElement.
@@ -145,7 +155,7 @@ class AronsEditor implements TreeCellEditor
    }
    public boolean isCellEditable(EventObject evt)
    {
-      TreePath current_selection = ((JTree)evt.getSource()).getSelectionPath();
+      TreePath current_selection = mTree.getSelectionPath();
       if (current_selection != null) 
       {
          DefaultMutableTreeNode current_node = (DefaultMutableTreeNode)
@@ -202,7 +212,7 @@ class ElementTree extends JTree implements DragGestureListener,
       setEditable(true);
      
       //setCellEditor(new DefaultTreeCellEditor(this, new DefaultTreeCellRenderer()));
-      setCellEditor(new DefaultTreeCellEditor(this, new DefaultTreeCellRenderer(), new AronsEditor()));
+      setCellEditor(new DefaultTreeCellEditor(this, new DefaultTreeCellRenderer(), new ElementNameEditor(this)));
 
       
       DragSource dragSource = DragSource.getDefaultDragSource();
@@ -221,27 +231,48 @@ class ElementTree extends JTree implements DragGestureListener,
             DnDConstants.ACTION_COPY_OR_MOVE, // actions
             this); // drag gesture recognizer
 
+      // Load the icons for the popup menu.
+      ClassLoader loader = getClass().getClassLoader();
+      ImageIcon cut_icon = new ImageIcon(loader.getResource("org/vrjuggler/jccl/editors/images/Cut16.gif"));
+      ImageIcon copy_icon = new ImageIcon(loader.getResource("org/vrjuggler/jccl/editors/images/Copy16.gif"));
+      ImageIcon paste_icon = new ImageIcon(loader.getResource("org/vrjuggler/jccl/editors/images/Paste16.gif"));
+      ImageIcon remove_icon = new ImageIcon(loader.getResource("org/vrjuggler/jccl/editors/images/Delete16.gif"));
+      
       // Set up the pop up menu
       popup = new JPopupMenu();
-      mi = new JMenuItem("Remove");
+      mi = new JMenuItem("Delete", remove_icon);
       mi.addActionListener(this);
-      mi.setActionCommand("remove");
+      mi.setActionCommand("delete");
+      mi.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_DELETE, 0));
+      popup.add(mi);
+      
+      mi = new JMenuItem("Rename");
+      mi.addActionListener(this);
+      mi.setActionCommand("rename");
       popup.add(mi);
 
-      mi = new JMenuItem("Copy");
+      popup.addSeparator();
+
+      mi = new JMenuItem("Cut", cut_icon);
+      mi.addActionListener(this);
+      mi.setActionCommand("cut");
+      mi.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_CUT, InputEvent.CTRL_MASK));
+      popup.add(mi);
+      
+      mi = new JMenuItem("Copy", copy_icon);
       mi.addActionListener(this);
       mi.setActionCommand("copy");
-      popup.add(mi);    
+      mi.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_COPY, InputEvent.CTRL_MASK));
+      popup.add(mi);
 
-      mi = new JMenuItem("Paste");
+      mi = new JMenuItem("Paste", paste_icon);
       mi.addActionListener(this);
       mi.setActionCommand("paste");
-      popup.add(mi);  
+      mi.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_PASTE, InputEvent.CTRL_MASK));
+      popup.add(mi);
 
       popup.setOpaque(true);
       popup.setLightWeightPopupEnabled(true);
-
-
 
       // Add mouse listener to get the popup menu events.
       addMouseListener(
@@ -270,7 +301,7 @@ class ElementTree extends JTree implements DragGestureListener,
             } 
          });
       
-      // Add key listener to catch the shortcuts for copy/paste
+      // Add key listener to catch the shortcuts for cut/copy/paste/delete
       addKeyListener(
             new KeyAdapter()
             {
@@ -286,17 +317,27 @@ class ElementTree extends JTree implements DragGestureListener,
                      System.out.println("We have a paste.");
                      actionPerformed(new ActionEvent(this, 0, "paste"));
                   }
+                  if(e.getKeyCode() == KeyEvent.VK_X && e.getModifiers() == ActionEvent.CTRL_MASK)
+                  {
+                     System.out.println("We have a cut.");
+                     actionPerformed(new ActionEvent(this, 0, "cut"));
+                  }
+                  if(e.getKeyCode() == KeyEvent.VK_DELETE && e.getModifiers() == 0)
+                  {
+                     System.out.println("We have a delete.");
+                     actionPerformed(new ActionEvent(this, 0, "delete"));
+                  }
                }
             });
    }
 
    /**
-    * Catch all mouse events for the pop up menu.
+    * Catch all events for the pop-up menu events.
     */
    public void actionPerformed(ActionEvent ae) 
    {
       // If the user selcted the remove menu item.
-      if(ae.getActionCommand().equals("remove")) 
+      if(ae.getActionCommand().equals("delete")) 
       {
          // Get the currently selected ConfigElement.
          TreePath path = this.getLeadSelectionPath();
@@ -316,6 +357,14 @@ class ElementTree extends JTree implements DragGestureListener,
          }
       }
 
+      // Start editing the currently selected ConfigElement if we want to rename it.
+      if(ae.getActionCommand().equals("rename"))
+      {
+         // Get the currently selected ConfigElement.
+         TreePath path = this.getLeadSelectionPath();
+         startEditingAtPath(path);
+      }
+
       // If the user selected the copy action.
       if(ae.getActionCommand().equals("copy")) 
       {
@@ -331,6 +380,17 @@ class ElementTree extends JTree implements DragGestureListener,
             // TODO: Change owner of clipboard.
             clipboard.setContents(selection, selection);
          }
+      }
+
+      // If the user selects the cut operation we should first copy it into the
+      // clipboard and then delete it from the active context.
+      if(ae.getActionCommand().equals("cut"))
+      {
+         ActionEvent evt;
+         evt = new ActionEvent(this, -1, "copy");
+         actionPerformed(evt);
+         evt = new ActionEvent(this, -1, "delete");
+         actionPerformed(evt);
       }
 
       // If the user selected the paste action.
