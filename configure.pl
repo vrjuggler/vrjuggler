@@ -83,13 +83,8 @@ GetOptions('help|?' => \$script_help, 'cfg=s' => \$cfg, 'module=s' => \$module,
            'regen' => \$regen, 'modlist' => \$mod_list)
    or pod2usage(2);
 
-# Print the help output and exit if --help was on the command line or if no
-# arguments were passed.
-if ( $#save_argv == -1 || $script_help )
-{
-   pod2usage(1);
-}
-
+# Print the help output and exit if --help was on the command line.
+pod2usage(1) if $script_help;
 pod2usage(-exitstatus => 0, -verbose => 2) if $manual;
 
 die "ERROR: No configuration given\n" unless $cfg;
