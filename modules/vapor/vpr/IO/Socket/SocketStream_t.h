@@ -186,27 +186,27 @@ public:
     *         <code>vpr::ReturnStatus::Fail</code> is returned if the server
     *         socket could not be set up.
     */
-   vpr::ReturnStatus openServer (const bool reuse_addr = true,
-                                 const int backlog = 5)
+   vpr::ReturnStatus openServer(const bool reuse_addr = true,
+                                const int backlog = 5)
    {
       vpr::ReturnStatus status;
 
       // First, open the socket.
-      status = open();
+      status = this->open();
 
       if ( status.success() )
       {
-         status = setReuseAddr(reuse_addr);
+         status = this->setReuseAddr(reuse_addr);
 
          if ( status.success() )
          {
-            status = bind();
+            status = this->bind();
 
             // If that succeeded, bind to the internal address.
             if ( status.success() )
             {
                // Finally, if that succeeded, go into listening mode.
-               status = listen(backlog);
+               status = this->listen(backlog);
             }
          }
       }
