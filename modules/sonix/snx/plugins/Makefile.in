@@ -210,7 +210,8 @@ install:
 	@echo "------------------------------------------------"
 ifneq ($(DYNAMIC_LIBS), )
 ifeq ($(BUILD_TYPE), dbg)
-	@for lib in $(DYNAMIC_LIBS) ; do				\
+	@for lib in $(DYNAMIC_LIBS) ; do			\
+		@echo $$lib.$(DYNAMICLIB_EXT) => $(plugindir)/$$lib.$(DYNAMICLIB_EXT) \
 		$(INSTALL) -m $(EXEC_PERMS) $(GROUP_OPT_UNIX)	\
 			$(EXTRA_INSTALL_ARGS)			\
 			$(DBG_LIBDIR)/$$lib.$(DYNAMICLIB_EXT)	\
@@ -218,7 +219,8 @@ ifeq ($(BUILD_TYPE), dbg)
 	done
 endif
 ifeq ($(BUILD_TYPE), opt)
-	@for lib in $(DYNAMIC_LIBS) ; do				\
+	@for lib in $(DYNAMIC_LIBS) ; do			\
+		@echo $$lib.$(DYNAMICLIB_EXT) => $(plugindir)/$$lib.$(DYNAMICLIB_EXT) \
 		$(INSTALL) -m $(EXEC_PERMS) $(GROUP_OPT_UNIX)	\
 			$(EXTRA_INSTALL_ARGS)			\
 			$(OPT_LIBDIR)/$$lib.$(DYNAMICLIB_EXT)	\
@@ -226,10 +228,22 @@ ifeq ($(BUILD_TYPE), opt)
 	done
 endif
 ifeq ($(BUILD_TYPE), prof)
-	@for lib in $(DYNAMIC_LIBS) ; do				\
+	@for lib in $(DYNAMIC_LIBS) ; do			\
+		@echo $$lib.$(DYNAMICLIB_EXT) => $(plugindir)/$$lib.$(DYNAMICLIB_EXT) \
 		$(INSTALL) -m $(EXEC_PERMS) $(GROUP_OPT_UNIX)	\
 			$(EXTRA_INSTALL_ARGS)			\
 			$(PROF_LIBDIR)/$$lib.$(DYNAMICLIB_EXT)	\
+			$(plugindir)/$$lib.$(DYNAMICLIB_EXT) ; \
+	done
+endif
+# If there is no build type defined, assume this is a release install and
+# install the optimized plugins.
+ifeq ($(BUILD_TYPE), )
+	@for lib in $(DYNAMIC_LIBS) ; do			\
+		@echo $$lib.$(DYNAMICLIB_EXT) => $(plugindir)/$$lib.$(DYNAMICLIB_EXT) \
+		$(INSTALL) -m $(EXEC_PERMS) $(GROUP_OPT_UNIX)	\
+			$(EXTRA_INSTALL_ARGS)			\
+			$(OPT_LIBDIR)/$$lib.$(DYNAMICLIB_EXT)	\
 			$(plugindir)/$$lib.$(DYNAMICLIB_EXT) ; \
 	done
 endif
