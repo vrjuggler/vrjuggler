@@ -35,7 +35,8 @@
 %{
 %}
 
-gad_libs="@gad_libs@"
+gadget_extra_cxxflags="@gadget_extra_cxxflags@"
+gadget_libs="@gadget_libs@"
 
 gadget_default_abi="@ABI@"
 gadget_default_isa="@ISA@"
@@ -60,11 +61,17 @@ fi
 
 prefix=@prefix@
 exec_prefix=@exec_prefix@
-exec_prefix_set=no
+prefix_set='no'
+exec_prefix_set='no'
+print_all='no'
 use_linker='no'
 
 usage()
 {
+    if test "x$2" != "x" ; then
+       echo "Unrecognized option '$2'"
+    fi
+
     cat <<EOF
 Usage: gadgeteer-config [OPTIONS] [LIBRARIES]
 Options:
@@ -74,13 +81,16 @@ Options:
         [--exec-prefix[=DIR]]   Print the executable prefix or set an alternate
                                 executable prefix to use when printing paths
         [--version]             Print the installed Gadgeteer's version number
-        [--cxxflags [N32|64]]   Print the flags for the C++ compiler
-        [--libs [N32|64]]       Print the basic Gadgeteer libraries
+        [--cxxflags [N32|64]]   Print the Gadgeteer-specific flags for the C++
+                                compiler
+        [--libs [N32|64]]       Print the basic Gadgeteer-specific libraries
         [--extra-libs [N32|64]] Print the extra linker options needed for
                                 making an executable
-        [--subsystem]           Print the OS abstraction layer being used
-Libraries (prints the linker options for one or more of these libraries):
-        gadget
+        [--all]                 Print all the flags used for compiling or
+                                linking (depending on other options)
+        [--linker]              Print libraries as direct arguments to the
+                                linker rather than to the compiler
+        [--subsystem]           Print the VPR OS abstraction layer being used
 EOF
 
     exit $1
@@ -90,8 +100,6 @@ if test $# -eq 0; then
     usage 1 1>&2
 fi
 
-lib_gad=no
-
 while test $# -gt 0; do
     case "$1" in
         -*=*) optarg=`echo "$1" | sed 's/[-_a-zA-Z0-9]*=//'` ;;
@@ -99,11 +107,16 @@ while test $# -gt 0; do
     esac
 
     case $1 in
+        --all)
+            print_all='yes'
+            ;;
         --basedir)
             use_base_dir=yes
             ;;
         --prefix=*)
             prefix=$optarg
+            prefix_set='yes'
+
             if test $exec_prefix_set = no ; then
                 exec_prefix=$optarg
             fi
@@ -142,6 +155,9 @@ while test $# -gt 0; do
                     fi
                     ;;
             esac
+            ;;
+        --subsystem)
+            echo @VPR_SUBSYSTEM@
             ;;
         --libs)
             echo_libs=yes
@@ -189,14 +205,14 @@ while test $# -gt 0; do
             esac
             ;;
         --linker)
-            use_linker=yes
+            use_linker='yes'
             ;;
         --static)
             echo_static=yes
             ;;
-        gad)
-            lib_gad_all=yes
-            ;;
+#        gad)
+#            lib_gad_all=yes
+#            ;;
         *)
             usage 1 1>&2
             ;;
@@ -204,32 +220,38 @@ while test $# -gt 0; do
     shift
 done
 
-if test "x$lib_gad_all" = "x" ; then
-    lib_gad_all=yes
+# If we are using $GADGET_BASE_DIR, overwrite $prefix and $exec_prefix unless
+# they were set explicitly on the command line.
+if test "$use_base_dir" = "yes" ; then
+    if test "$prefix_set" = "no" ; then
+        prefix="$GADGET_BASE_DIR"
+    fi
+
+    if test "$exec_prefix_set" = "no" ; then
+        exec_prefix="$GADGET_BASE_DIR"
+    fi
 fi
 
 if test "$echo_prefix" = "yes"; then
-    if test "$use_base_dir" = "yes"; then
-        echo $GADGET_BASE_DIR
-    else
-        echo $prefix
-    fi
+    echo $prefix
 fi
 
 if test "$echo_exec_prefix" = "yes"; then
-    if test "$use_base_dir" = "yes"; then
-        echo $GADGET_BASE_DIR
-    else
-        echo $exec_prefix
-    fi
+    echo $exec_prefix
 fi
 
+#if test "x$lib_gad_all" = "x" ; then
+#    lib_gad_all=yes
+#fi
+
 if test "$echo_cxxflags" = "yes"; then
-    if test "$use_base_dir" = "yes"; then
-        echo @CXXFLAGS@ $gadget_extra_cxxflags -I$GADGET_BASE_DIR/include
+    if test "x$print_all" = "xyes" ; then
+        gadget_cxxflags_addtl="@gadget_cxxflags_all@"
     else
-        echo @CXXFLAGS@ $gadget_extra_cxxflags -I@includedir@
+        gadget_cxxflags_addtl=''
     fi
+
+    echo @gadget_cxxflags@ $gadget_cxxflags_addtl $gadget_extra_cxxflags -I$prefix/include $gadget_extra_includes
 fi
 
 if test "$echo_static" = "yes" ; then
@@ -248,21 +270,27 @@ if test "$echo_libs" = "yes"; then
         fi
     fi
 
-    if test "x$lib_gad_all" = "xyes" ; then
-        gad_libs="@gad_libs@"
-    else
-        if test "x$lib_gad" = "xyes" ; then
-            gad_libs="$gad_lib"
-        fi
-    fi
+#    if test "x$lib_gad_all" = "xyes" ; then
+#        gadget_libs="@gadget_libs@"
+#    else
+#        if test "x$lib_gad" = "xyes" ; then
+#            gadget_libs="$gad_lib"
+#        fi
+#    fi
 
-    echo $ldflags $static_begin $gad_libs $static_end
+    echo $ldflags $static_begin $gadget_libs $static_end
 fi      
 
 if test "x$echo_extra_libs" = "xyes"; then
-    gad_extra_ldflags="@gad_extra_ldflags@"
-    gad_extra_libs="@gad_extra_libs@"
-    echo $gad_extra_ldflags $gad_extra_libs
+    if test "x$print_all" = "xyes" ; then
+        gadget_extra_libs_addtl="@gadget_extra_libs_juggler@"
+    else
+        gadget_extra_libs_addtl=''
+    fi
+
+    gadget_extra_ldflags="@gadget_extra_ldflags@"
+    gadget_extra_libs="@gadget_extra_libs@"
+    echo $gadget_extra_ldflags $gadget_extra_libs $gadget_extra_libs_addtl
 fi
 
 exit 0
