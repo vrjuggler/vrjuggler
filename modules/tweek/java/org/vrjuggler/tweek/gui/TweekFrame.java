@@ -159,6 +159,14 @@ public class TweekFrame extends JFrame implements TreeModelRefreshListener,
       {
          m_status_msg_button.setIcon(m_bulb_on_icon);
       }
+
+      // If the user's skill level is below intermediate, give them a hint that
+      // there is a message printed in the message panel.  They may not have
+      // noticed the icon change made above.
+      if ( GlobalPreferencesService.instance().getUserLevel() <= 5 )
+      {
+         m_status_msg_label.setText("New message in message panel ");
+      }
    }
 
    // =========================================================================
@@ -314,6 +322,7 @@ public class TweekFrame extends JFrame implements TreeModelRefreshListener,
       m_status_bar.setBorder(BorderFactory.createLoweredBevelBorder());
       m_progress_bar.setMinimumSize(new Dimension(100, 14));
       m_status_msg_button.setMinimumSize(new Dimension(24, 24));
+      m_status_msg_button.setToolTipText("Expand or collapse the message panel");
 
       String bulb_on_icon_name  = "org/vrjuggler/tweek/bulb-on-small.gif";
       String bulb_off_icon_name = "org/vrjuggler/tweek/bulb-off-small.gif";
@@ -597,6 +606,10 @@ public class TweekFrame extends JFrame implements TreeModelRefreshListener,
          m_main_panel.resetToPreferredSizes();
          MessagePanel.instance().clear();
          m_msg_panel_expanded = false;
+
+         // The message panel has been cleared now, so we can clear any message
+         // that may have been printed in the status bar regarding that panel.
+         m_status_msg_label.setText("");
 
          if ( m_status_msg_button.getIcon() == null )
          {
