@@ -12,12 +12,29 @@ namespace tweek
 {
 
 /**
- * Gets the root context for the CORBA Naming Service.
+ * Gets the root context for the CORBA Naming Service using the ORB's "resolve
+ * initial references" capabilities and therefore requires that the reference
+ * be accessible to the ORB through appropriate means.
+ *
+ * @param orb The reference to the ORB in this memory space.
+ *
+ * @pre  The Naming Service reference is available through the ORB's "resolve
+ *       initial referneces" feature.
+ * @post The root context is retrieved through the given ORB pointer.
+ */
+CosNaming::NamingContext_var getRootNamingContextByInitRef(CORBA::ORB_ptr orb);
+
+/**
+ * Gets the root context for the CORBA Naming Service using the given URI.
+ *
+ * @param orb            The reference to the ORB in this memory space.
+ * @param nameServiceURI The URI to be used for looking up the Naming Service
+ *                       reference.  This can be a corbaname or a corbaloc URI.
  *
  * @post The root context is retrieved through the given ORB pointer.
  */
-CosNaming::NamingContext_var getRootNamingContext(CORBA::ORB_ptr orb,
-                                                  const std::string& refName);
+CosNaming::NamingContext_var getRootNamingContextByURI(CORBA::ORB_ptr orb,
+                                                       const std::string& nameServiceURI);
 
 /**
  * Binds a local Naming Context for this memory space.
