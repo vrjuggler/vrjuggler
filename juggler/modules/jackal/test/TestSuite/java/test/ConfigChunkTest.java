@@ -29,7 +29,8 @@ import org.vrjuggler.jccl.config.*;
 
    public void testConstructor()
    {
-      assertTrue(false);
+      ConfigChunk c = new ConfigChunk(mDesc);
+      assertEquals(c.getDesc(), mDesc);
    }
 
    public void testGetName()
