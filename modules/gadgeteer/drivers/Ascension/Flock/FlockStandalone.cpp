@@ -1506,8 +1506,10 @@ vpr::Uint8 FlockStandalone::queryPositionScaleFactor()
       scale_factor = (resp[1] == 0 ? 36 : 72);
    }
 
-   std::cout << "Scaling factor is " << (unsigned int) scale_factor <<
-      std::endl;
+   vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_LVL)
+      << "Scaling factor from the Flock is " << (unsigned int) scale_factor
+      << std::endl << vprDEBUG_FLUSH;
+
    return scale_factor;
 }
 
