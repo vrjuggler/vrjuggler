@@ -188,5 +188,9 @@ public class ConfigElementFactory
       throw new IllegalArgumentException("Invalid config definition: " + token);
    }
 
+   /**
+    * The list of configuration definitions from which this factory can create
+    * new configuration elements.
+    */
    private List mConfigDefs;
 }
