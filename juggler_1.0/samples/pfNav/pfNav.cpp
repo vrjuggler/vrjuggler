@@ -57,69 +57,84 @@ bool initSoundEngine( const std::string& arg, SoundEngine* &engine )
    {
       soundConfigFile = "sound.dat";
    }
-   
+
    else if (arg == "aw")
    {
       soundConfigFile = "sound.adf";
    }
-   
+
    else if (arg == "nosound")
    {
       soundConfigFile = "sound.dat";
-   }   
+   }
    else
    {
       engine = NULL;
       cout<<"[soundengine] Invalid option\n"<<flush;
-         
+
       return false; //user didn't specify an option
    }
-   
+
    std::string soundConfigFileWithPath;
    if (fileIO::fileExistsResolvePath( soundConfigFile, soundConfigFileWithPath ))
    {
       engine = SoundFactory::newEngine( arg, soundConfigFileWithPath.c_str() );
-      
+
       if ( engine == NULL)
       {
          cout<<"[soundengine] NULL engine\n"<<flush;
          return false;
-      }      
+      }
    }
-      
+
    else
    {
       cout<<"[soundengine] Couldn't find "<<soundConfigFile<<"\n"<<flush;
       engine = NULL;
       return false;
-   }    
-   
+   }
+
    cout<<"[soundengine] Good engine\n"<<flush;
    return true; //user specified an option
 }
+
+
 #endif
+
+// The app class we want to use
+// We are required to have a default constructor
+// so create a new class whose constructor configures the simplePfNavApp
+//
+class myPfNavApp : public simplePfNavApp
+{
+public:
+   myPfNavApp()
+   {
+   ;
+   }
+};
 
 void main(int argc, char* argv[])
 {
    vjKernel* kernel = vjKernel::instance(); // Declare a new Kernel
-   simplePfNavApp* application = new simplePfNavApp(kernel);  // Delcare an instance of my application
+   simplePfNavApp* application = new simplePfNavApp();  // Delcare an instance of my application
 
    std::string file_path( "" );
    const float dcs_scale( 1.0f );
    const vjVec3 dcs_trans( 0.0f, 0.0f, 0.0f );
    const vjVec3 initial_pos( 0.0f, 0.0f, 0.0f );
-    
+
    if (argc < 2)
    {
       usage( argv );
       cout<<"\n\n[ERROR!!!] you must supply at least a model database (then config files)\n\n"<<flush;
       return;
    }
-   
-   int a = 1; // it's here so i can add in the sound 
+
+   int a = 1; // it's here so i can add in the sound
               // stuff until we have a complex pfNav :)
-   
-   #ifdef USESOUND
+
+#ifdef USESOUND
    cout<<"[soundengine] Kevin's Sound Stuff is enabled!  1st arg needs to be the engine\n"<<flush;
    if (initSoundEngine( argv[a], gSoundEngine ))
    {
@@ -130,8 +145,8 @@ void main(int argc, char* argv[])
       // then this will definately work.
       initSoundEngine( "nosound", gSoundEngine );
    }
-   #endif
-   
+#endif
+
    if (argc < a)
    {
       usage( argv );
@@ -141,18 +156,18 @@ void main(int argc, char* argv[])
 
    std::string model_filename = argv[a];
    ++a;
-   
+
    if (argc < a)
    {
       cout<<"\n\n[ERROR!!!] you must supply config files after the model file...\n\n"<<flush;
       return;
    }
 
-    for ( int i = a; i < argc; i++ ) 
+    for ( int i = a; i < argc; i++ )
    {
      kernel->loadConfigFile(argv[i]);
    }
-   
+
     kernel->start();
 
     // Configure that application
