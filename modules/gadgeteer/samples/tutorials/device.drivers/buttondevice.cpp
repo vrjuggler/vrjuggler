@@ -50,17 +50,17 @@
 using namespace gadget;
 
 /** The device driver class. */
-class MyButtonDevice : public InputMixer<Input, Digital>
+class ButtonDevice : public InputMixer<Input, Digital>
 {
 public:
-   MyButtonDevice()
+   ButtonDevice()
       : mSampleThread(NULL)
       , mRunning(false)
    {
       /* Do nothing. */ ;
    }
 
-   virtual ~MyButtonDevice()
+   virtual ~ButtonDevice()
    {
       if ( mRunning )
       {
@@ -116,11 +116,11 @@ extern "C" GADGET_DRIVER_EXPORT(vpr::Uint32) getGadgeteerVersion()
 /** Entry point function for the device driver plug-in. */
 extern "C" GADGET_DRIVER_EXPORT(void) initDevice(InputManager* inputMgr)
 {
-   new DeviceConstructor<MyButtonDevice>(inputMgr);
+   new DeviceConstructor<ButtonDevice>(inputMgr);
 }
 
 /** Returns a string that matches this device's configuration element type. */
-std::string MyButtonDevice::getElementType()
+std::string ButtonDevice::getElementType()
 {
    return std::string("button_device");
 }
@@ -128,7 +128,7 @@ std::string MyButtonDevice::getElementType()
 //: When the system detects a configuration change for your driver, it will
 //  pass the new jccl::ConfigElement into this function.  See the documentation
 //  on config elements, for information on how to access them.
-bool MyButtonDevice::config(jccl::ConfigElementPtr e)
+bool ButtonDevice::config(jccl::ConfigElementPtr e)
 {
   if (!Digital::config(e))
   {
@@ -141,7 +141,7 @@ bool MyButtonDevice::config(jccl::ConfigElementPtr e)
   return true;
 }
 
-void MyButtonDevice::updateData()
+void ButtonDevice::updateData()
 {
    if ( mRunning )
    {
@@ -150,9 +150,9 @@ void MyButtonDevice::updateData()
 }
 
 /**
- * Spanws the sample thread, which calls MyButtonDevice::sample() repeatedly.
+ * Spanws the sample thread, which calls ButtonDevice::sample() repeatedly.
  */
-bool MyButtonDevice::startSampling()
+bool ButtonDevice::startSampling()
 {
    mRunning = true;
    mSampleThread = new vpr::Thread(threadedSampleFunction, (void*) this);
@@ -172,7 +172,7 @@ bool MyButtonDevice::startSampling()
  * Records (or samples) the current data.  This is called repeatedly by the
  * sample thread created by startSampling().
  */
-bool MyButtonDevice::sample()
+bool ButtonDevice::sample()
 {
    bool status(false);
 
@@ -192,7 +192,7 @@ bool MyButtonDevice::sample()
 }
 
 /** Kills the sample thread. */
-bool MyButtonDevice::stopSampling()
+bool ButtonDevice::stopSampling()
 {
    mRunning = false;
 
@@ -208,12 +208,12 @@ bool MyButtonDevice::stopSampling()
 
 /**
  * Our sampling function that is executed by the spawned sample thread.
- * This function is declared as a static member of MyButtonDevice.  It simply
- * calls MyButtonDevice::sample() over and over.
+ * This function is declared as a static member of ButtonDevice.  It simply
+ * calls ButtonDevice::sample() over and over.
  */
-void MyButtonDevice::threadedSampleFunction(void* classPointer)
+void ButtonDevice::threadedSampleFunction(void* classPointer)
 {
-   MyButtonDevice* this_ptr = static_cast<MyButtonDevice*>( classPointer );
+   ButtonDevice* this_ptr = static_cast<ButtonDevice*>( classPointer );
 
    // spin until someone kills "mSampleThread"
    while ( this_ptr->mRunning )
