@@ -46,7 +46,6 @@ srcdir		= @srcdir@
 top_srcdir	= @top_srcdir@
 INSTALL		= @INSTALL@
 SUBOBJDIR	= $(PF_LIBRARY)
-VJROOT		= $(top_srcdir)
 VJ_SRCDIR	= @VJ_SRCDIR@/Sound/pf
 
 ## Linux Performer must have the -O flag to compile ##
