@@ -52,6 +52,7 @@
 #include <vpr/IO/IOSys.h>
 #include <vpr/md/POSIX/IO/FileHandleImplUNIX.h>
 #include <vpr/Util/Debug.h>
+#include <vpr/Util/Assert.h>
 
 
 namespace vpr
@@ -70,7 +71,7 @@ public:
     * port name and sets the update action to happen immediately.
     *
     * @pre None.
-    * @post mHandle is allocated and connected to port_name, and the update
+    * @post mHandle->getHandle() is allocated and connected to port_name, and the update
     *       action is set to vpr::SerialTypes::NOW.
     *
     * @param port_name The name of the serial port that will be accessed.
@@ -81,7 +82,7 @@ public:
     * Destructor.  If the file handle is non-NULL, its memory is released.
     *
     * @pre None.
-    * @post If mHandle is non-NULL, its memory is released.
+    * @post If mHandle->getHandle() is non-NULL, its memory is released.
     */
    ~SerialPortImplTermios(void);
 
@@ -199,6 +200,7 @@ public:
     */
    vpr::ReturnStatus close (void)
    {
+      vprASSERT(mHandle->getHandle() != -1 && "The port may not be open");
       return mHandle->close();
    }
 
@@ -213,6 +215,7 @@ public:
     */
    vpr::ReturnStatus enableBlocking (void)
    {
+      vprASSERT(mHandle->getHandle() != -1 && "The port may not be open");
       return mHandle->enableBlocking();
    }
 
@@ -227,6 +230,7 @@ public:
     */
    vpr::ReturnStatus enableNonBlocking (void)
    {
+      vprASSERT(mHandle->getHandle() != -1 && "The port may not be open");
       return mHandle->enableNonBlocking();
    }
 
@@ -276,6 +280,7 @@ public:
     */
    bool isReadOnly (void)
    {
+      vprASSERT(mHandle->getHandle() != -1 && "The port may not be open");
       return mHandle->isReadOnly();
    }
 
@@ -291,6 +296,7 @@ public:
     */
    bool isWriteOnly (void)
    {
+      vprASSERT(mHandle->getHandle() != -1 && "The port may not be open");
       return mHandle->isWriteOnly();
    }
 
@@ -306,6 +312,7 @@ public:
     */
    bool isReadWrite (void)
    {
+      vprASSERT(mHandle->getHandle() != -1 && "The port may not be open");
       return mHandle->isReadWrite();
    }
 
@@ -1013,6 +1020,7 @@ public:
                              vpr::Uint32& bytes_read,
                              const vpr::Interval timeout = vpr::Interval::NoTimeout)
    {
+      vprASSERT(mHandle->getHandle() != -1 && "The port may not be open");
       return mHandle->read_i(buffer, length, bytes_read, timeout);
    }
 
@@ -1048,6 +1056,7 @@ public:
                               vpr::Uint32& bytes_read,
                               const vpr::Interval timeout = vpr::Interval::NoTimeout)
    {
+      vprASSERT(mHandle->getHandle() != -1 && "The port may not be open");
       return mHandle->readn_i(buffer, length, bytes_read, timeout);
    }
 
@@ -1081,6 +1090,7 @@ public:
                               vpr::Uint32& bytes_written,
                               const vpr::Interval timeout = vpr::Interval::NoTimeout)
    {
+      vprASSERT(mHandle->getHandle() != -1 && "The port may not be open");
       return mHandle->write_i(buffer, length, bytes_written, timeout);
    }
 
