@@ -55,6 +55,7 @@ class PfApp;
 class Projection;
 class SimViewport;
 class Viewport;
+class PfInputHandler;
 
     // Performer Config function called in draw proc after window is set up
 void PFconfigPWin(pfPipeWindow* pWin);
@@ -118,6 +119,21 @@ protected:
       pfChannel* mChan;                // Channel to find
    };
    */
+
+
+   // Helper functions that keep track of the PfInputHandlers.
+public:
+   /** Adds a PfInputHandler to the map. */
+   static void addPfInputHandler(::Window win, PfInputHandler* pf_handler);
+
+   /** Removes a PfInputHandler from the map. */
+   static void removePfInputHandler(::Window win);
+
+   /** Gets the PfInputHandler we are dealing with. */
+   static PfInputHandler* getPfInputHandler(::Window win);
+
+protected:
+   static std::map< ::Window, PfInputHandler* > mPfInputMap; /**< Map of all PfInputHandlers */   
 
 public:
    /**
@@ -306,7 +322,8 @@ protected:
    // --- Performer State --- //
    PfApp*                  mApp;              /**< The user application. */
    std::vector<pfDisplay>  mDisplays;         /**< All Performer displays. */
-
+   std::vector<PfInputHandler*> mPfInputHandlers; /**< Input Handlers for all Performer windows. */
+   
    std::vector<pfChannel*> mSurfChannels;
    std::vector<pfChannel*> mSimChannels;        /**< List of sim displays. */
    pfChannel*              mSurfMasterChan;  /**< Master channel. */
@@ -357,7 +374,7 @@ protected:
       , mRootWithSim(NULL)
    {;}
 
-   virtual ~PfDrawManager() {}
+   virtual ~PfDrawManager();
 
    vprSingletonHeader(PfDrawManager);
 };
