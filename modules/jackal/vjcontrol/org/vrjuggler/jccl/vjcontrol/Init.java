@@ -41,7 +41,7 @@ import org.vrjuggler.jccl.vjcontrol.*;
 /** Main executable for VjControl.
  *  This class includes main() for VjControl, and is responsible for initial
  *  startup, configuration, and loading initial components .jars.
- * 
+ *
  *  @version $Revision$
  */
 public class Init {
@@ -116,7 +116,7 @@ public class Init {
         for (int i = 0; i < n; i++) {
             String ext_dir = (String)extension_dirs.get(i);
             String[] ext_jars = Core.file.getFileNames (ext_dir, "jar");
-            
+
             if (ext_jars != null) {
                 for (int j = 0; j < ext_jars.length; j++) {
                     Core.component_factory.registerJarURL ("file:" + ext_jars[j]);
@@ -161,7 +161,7 @@ public class Init {
 
         iostatus = ConfigIO.readConfigChunkDB (f1, Core.vjcontrol_chunkdb);
         if (iostatus.getStatus() == iostatus.FAILURE) {
-            f2 = new File (Core.file.mangleFileName ("$VJ_SHARE_DIR/Data/vjcontrol.cfg"));
+            f2 = new File (Core.file.mangleFileName ("$VJ_SHARE_DIR/data/vjcontrol.cfg"));
             iostatus = ConfigIO.readConfigChunkDB (f2, Core.vjcontrol_chunkdb);
             Core.consoleInfoMessage ("Init", iostatus.toString());
             if (iostatus.getStatus() == iostatus.FAILURE) {
