@@ -334,44 +334,14 @@ public:
       return mLocalAddr;
    }
 
-   vpr::ReturnStatus setLocalAddr( const vpr::InetAddr& addr )
-   {
-     vpr::ReturnStatus status;
-
-     if ( mBound == true )
-     {
-        vprASSERT(false && "Can't change address of a bound socket");
-        status.setCode(vpr::ReturnStatus::Fail);
-     }
-     else
-     {
-        mLocalAddr = addr;
-     }
-
-     return status;
-   }
+   vpr::ReturnStatus setLocalAddr(const vpr::InetAddr& addr);
 
    const vpr::InetAddr& getRemoteAddr( void ) const
    {
       return mRemoteAddr;
    }
 
-   vpr::ReturnStatus setRemoteAddr( const vpr::InetAddr& addr )
-   {
-      vpr::ReturnStatus status;
-
-      // If we are connected, we cannot change our remote address.
-      if (mConnected)
-      {
-         status.setCode(vpr::ReturnStatus::Fail);
-      }
-      else
-      {
-         mRemoteAddr = addr;
-      }
-
-      return status;
-   }
+   vpr::ReturnStatus setRemoteAddr(const vpr::InetAddr& addr);
 
    /**
     * Returns the number of bytes currently available for reading.
