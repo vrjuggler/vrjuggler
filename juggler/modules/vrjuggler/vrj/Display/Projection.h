@@ -21,7 +21,7 @@ class vjProjection
 {
 public:
    enum
-   {LEFT = 1, RIGHT = 2, FRONT, FLOOR, BACK, CEILING, USER};
+   {LEFT = 1, RIGHT = 2, FRONT, FLOOR, BACK, CEILING, USER, SIM};
 
 public:
    vjProjection()
