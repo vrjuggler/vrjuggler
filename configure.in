@@ -358,7 +358,7 @@ case $host_os in
         OPT_FLAGS='-O2'
         SHAREDLIB_EXT='so'
 
-        dnl # We have to use POSIX threads on Linux.
+        dnl # We have to use POSIX threads on Solaris.
         if test "x${_thread_pkg}" != "xPOSIX" ; then
             AC_MSG_WARN(*** POSIX threads must be used on $host ***)
             _thread_pkg='POSIX'
