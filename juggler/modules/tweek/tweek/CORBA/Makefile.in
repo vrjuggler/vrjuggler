@@ -62,6 +62,7 @@ IDL_CXX_FILES=	SubjectManager.cpp SubjectManager.h		\
 
 SRCS=		BeanDeliverySubject.cpp		\
 		BeanDeliverySubjectImpl.cpp	\
+		CorbaHelpers.cpp		\
 		CorbaManager.cpp		\
 		Observer.cpp			\
 		SubjectManager.cpp		\
