@@ -86,23 +86,11 @@ namespace vpr
 
 
 // --- HASH Functions ---- //
-#ifdef VPR_HASH_MAP_INCLUDE
-
-#  include VPR_HASH_MAP_INCLUDE
-
-#if defined(__GNUC__) && __GNUC__ == 3 && __GNUC_MINOR__ >= 1
-namespace __gnu_cxx
-#else
-namespace std
-#endif
+namespace vpr
 {
+
 /// Nice little helper class for hashing a vpr::Uint64.
-template<>
-#ifdef VPR_OS_Win32
-struct _Hash<vpr::Uint64>
-#else
-struct hash<vpr::Uint64>
-#endif
+struct Unit64Hash
 {
    union Uint64_val
    {
@@ -122,9 +110,7 @@ struct hash<vpr::Uint64>
    }
 };
 
-} // End of std namespace
-
-#endif   /* ifdef VPR_HASH_MAP_INCLUDE */
+} // End of vpr namespace
 
 // XXX: The following is a hack to deal with GCC 3.0.1 on IRIX not knowing how
 // to deal with an unsigned long long being passed to operator<<.  This code
