@@ -24,7 +24,6 @@ Doozer      // Get Doozer for makefiles
    CVSROOT: :pserver:anonymous@cvs.doozer.sourceforge.net:/cvsroot/doozer;
    Module: Doozer;
    Tag: RELENG_2_0_0_RELEASE;
-   Date: 07/01/2003 03:30:56 UTC;
    Path: external;
 }; 
 
