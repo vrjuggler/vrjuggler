@@ -83,7 +83,7 @@ InputManager::InputManager()
 *********************************************** ahimberg */
 InputManager::~InputManager()
 {
-   for (tDevTableType::iterator a = mDevTable.begin(); a != mDevTable.end(); a++)    // Stop all devices
+   for (tDevTableType::iterator a = mDevTable.begin(); a != mDevTable.end(); ++a)    // Stop all devices
    {
       if ((*a).second != NULL)
       {
@@ -93,7 +93,9 @@ InputManager::~InputManager()
    }
 
    // Delete all the proxies
-   for(std::map<std::string, Proxy*>::iterator j = mProxyTable.begin(); j != mProxyTable.end(); j++)
+   for ( std::map<std::string, Proxy*>::iterator j = mProxyTable.begin();
+         j != mProxyTable.end();
+         ++j )
    {
       delete (*j).second;
    }
@@ -156,11 +158,17 @@ vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
       ret_val = false;
    }
    else if(DeviceFactory::instance()->recognizeDevice(element))
+   {
       ret_val = configureDevice(element);
+   }
    else if(ProxyFactory::instance()->recognizeProxy(element))
+   {
       ret_val = configureProxy(element);
+   }
    else if(recognizeProxyAlias(element))
+   {
       ret_val = configureProxyAlias(element);
+   }
    else if(element->getID() == std::string("display_system"))
    {
       // XXX: Put signal here to tell draw manager to lookup new stuff
@@ -335,11 +343,17 @@ vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
       ret_val = false;
    }
    else if(DeviceFactory::instance()->recognizeDevice(element))
+   {
       ret_val = removeDevice(element);
+   }
    else if(recognizeProxyAlias(element))
+   {
       ret_val = removeProxyAlias(element);
+   }
    else if(ProxyFactory::instance()->recognizeProxy(element))
+   {
       ret_val = removeProxy(element);
+   }
    else if(element->getID() == std::string("display_system"))
    {
       mDisplaySystemElement.reset();  // Keep track of the display system element
@@ -347,7 +361,9 @@ vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
                                        // This tell processPending to remove it to the active config
    }
    else
+   {
       ret_val = false;
+   }
 
    if(ret_val)
    {
@@ -385,7 +401,7 @@ jccl::ConfigElementPtr InputManager::getDisplaySystemElement()
       cfg_mgr->lockActive();
       {
          std::vector<jccl::ConfigElementPtr>::iterator i;
-         for(i=cfg_mgr->getActiveBegin(); i != cfg_mgr->getActiveEnd();++i)
+         for( i = cfg_mgr->getActiveBegin(); i != cfg_mgr->getActiveEnd(); ++i)
          {
             if((*i)->getID() == std::string("display_system"))
             {
@@ -444,7 +460,7 @@ bool InputManager::configureProxy(jccl::ConfigElementPtr element)
    std::string proxy_name = element->getFullName();
 
 vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
-                                 std::string("vjInputManager::configureProxy: Named: ") + proxy_name + std::string("\n"),
+                                 std::string("gadget::InputManager::configureProxy: Named: ") + proxy_name + std::string("\n"),
                                  std::string("done configuring proxy\n"));
 
    Proxy* new_proxy;
@@ -456,7 +472,10 @@ vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
    // Check for success
    if(NULL == new_proxy)
    {
-      vprDEBUG(vprDBG_ERROR,vprDBG_CRITICAL_LVL) << clrOutNORM(clrRED,"ERROR:") << "vjInputManager::configureProxy: Proxy construction failed:" << proxy_name.c_str() << std::endl << vprDEBUG_FLUSH;
+      vprDEBUG(vprDBG_ERROR,vprDBG_CRITICAL_LVL)
+         << clrOutNORM(clrRED,"ERROR:")
+         << " gadget::InputManager::configureProxy: Proxy construction failed:"
+         << proxy_name << std::endl << vprDEBUG_FLUSH;
       return false;
    }
    vprASSERT(proxy_name == new_proxy->getName());
@@ -489,39 +508,54 @@ bool InputManager::removeDevice(jccl::ConfigElementPtr element)
 *********************************************** ahimberg */
 GADGET_IMPLEMENT(std::ostream&) operator<<(std::ostream& out, InputManager& iMgr)
 {
-  out << "\n=============== InputManager Status: ===============================" << std::endl;
+   out << "\n========== InputManager Status ==========" << std::endl;
+   out << "Devices:\n";
 
-  out << "Devices:\n";
+   // Dump DEVICES
+   for ( InputManager::tDevTableType::iterator i = iMgr.mDevTable.begin();
+         i != iMgr.mDevTable.end();
+         ++i)
+   {
+      if ((*i).second != NULL)
+      {
+         out << std::setw(2) << std::setfill(' ') << i->first << ":"
+             << "  name:" << std::setw(30) << std::setfill(' ') << i->second->getInstanceName()
+             << "  type:" << std::setw(12) << std::setfill(' ') << typeid(*(i->second)).name()
+             << std::endl;
+      }
+   }
 
-  for (InputManager::tDevTableType::iterator i = iMgr.mDevTable.begin(); i != iMgr.mDevTable.end(); i++)      // Dump DEVICES
-     if ((*i).second != NULL)
-       out << std::setw(2) << std::setfill(' ') << i->first << ":"
-           << "  name:" << std::setw(30) << std::setfill(' ') << i->second->getInstanceName()
-           << "  type:" << std::setw(12) << std::setfill(' ') << typeid(*(i->second)).name()
-           << std::endl;
+   out << "\nProxies:\n";
+   for (std::map<std::string, Proxy*>::iterator i_p = iMgr.mProxyTable.begin();
+        i_p != iMgr.mProxyTable.end();
+        ++i_p)
+   {
+      out << (*i_p).second->getName() << "   Proxies:";
+      if(NULL != ((*i_p).second->getProxiedInputDevice()))
+      {
+         out << ((*i_p).second->getProxiedInputDevice())->getInstanceName();
+      }
+      else
+      {
+         out << "None (internal dummy)";
+      }
+      out << std::endl;
+   }
+ 
+   out << std::endl;
 
-  out << "\nProxies:\n";
-  for (std::map<std::string, Proxy*>::iterator i_p = iMgr.mProxyTable.begin();
-       i_p != iMgr.mProxyTable.end(); i_p++)
-  {
-    out << (*i_p).second->getName()
-        << "   Proxies:";
-    if(NULL != ((*i_p).second->getProxiedInputDevice()))
-       out << ((*i_p).second->getProxiedInputDevice())->getInstanceName();
-    else
-       out << "None (internal dummy)";
-    out << std::endl;
-  }
+   // Dump Alias list
+   out << "Alias List:" << std::endl;
+   for ( std::map<std::string, std::string>::iterator cur_alias = iMgr.mProxyAliases.begin();
+         cur_alias != iMgr.mProxyAliases.end();
+         ++cur_alias )
+   {
+      out << "    " << (*cur_alias).first.c_str() << "  proxy: "
+          << (*cur_alias).second << std::endl;
+   }
 
-  out << std::endl;
-
-      // Dump Alias list
-  out << "Alias List:" << std::endl;
-  for(std::map<std::string, std::string>::iterator cur_alias = iMgr.mProxyAliases.begin(); cur_alias != iMgr.mProxyAliases.end(); cur_alias++)
-     out << "    " << (*cur_alias).first.c_str() << "  proxy:" << (*cur_alias).second << std::endl;
-
-  out << "=============== InputManager Status =========================" << std::endl;
-  return out;
+   out << "========== InputManager Status ==========" << std::endl;
+   return out;
 }
 
 /**********************************************************
@@ -560,20 +594,25 @@ bool InputManager::addRemoteDevice(Input* devPtr, const std::string& device_name
 *********************************************** ahimberg */
 void InputManager::updateAllData()
 {
-   for (tDevTableType::iterator i = mDevTable.begin(); i != mDevTable.end(); i++)      // all DEVICES
+   for (tDevTableType::iterator i = mDevTable.begin(); i != mDevTable.end(); ++i)      // all DEVICES
    {
       if ((*i).second != NULL)
-      {  i->second->updateData(); }
+      {
+         i->second->updateData();
+      }
    }
 
    // Update Logger - Done here so that device can be "rewritten" by logger
    //                 before rim or proxies get their hands on the data
    if(mInputLogger.get() != NULL)
-   {  mInputLogger->process(); }
+   {
+      mInputLogger->process();
+   }
 
    // Update proxies MIGHT NOT NEED
    for (std::map<std::string, Proxy*>::iterator i_p = mProxyTable.begin();
-       i_p != mProxyTable.end(); i_p++)
+        i_p != mProxyTable.end();
+        ++i_p)
    {
       (*i_p).second->updateData();
    }
@@ -601,9 +640,13 @@ DeviceFactory* InputManager::getDeviceFactory()
 // Remove the device that is pointed to by devPtr
 bool InputManager::removeDevice(const Input* devPtr)
 {
-   for (tDevTableType::iterator i = mDevTable.begin(); i != mDevTable.end(); i++)      // all DEVICES
-     if ((*i).second == devPtr)
+   for (tDevTableType::iterator i = mDevTable.begin(); i != mDevTable.end(); ++i)      // all DEVICES
+   {
+      if ((*i).second == devPtr)
+      {
          return removeDevice((*i).first);
+      }
+   }
 
    return false;
 }
@@ -621,19 +664,24 @@ bool InputManager::removeDevice(const std::string& instName)
    tDevTableType::iterator dev_found;
    dev_found = mDevTable.find(instName);
    if(dev_found == mDevTable.end())
+   {
       return false;
+   }
 
    Input* dev_ptr = dev_found->second;
 
    if(NULL == dev_ptr)
+   {
       return false;
+   }
 
    // Find any proxies connected to the device
    // Stupify any proxies connected to device
    // NOTE: Could just remove it and then refresh all, but this is a little safer
    //       since we explicitly stupify the one that we don't want anymore
-   for (std::map<std::string, Proxy*>::iterator i_p = mProxyTable.begin();
-       i_p != mProxyTable.end(); i_p++)
+   for ( std::map<std::string, Proxy*>::iterator i_p = mProxyTable.begin();
+        i_p != mProxyTable.end();
+        ++i_p )
    {
       if((*i_p).second->getProxiedInputDevice() == dev_ptr)
       {
@@ -675,7 +723,7 @@ bool recognizeProxyAlias(jccl::ConfigElementPtr element)
 bool InputManager::configureProxyAlias(jccl::ConfigElementPtr element)
 {
 vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
-                           std::string("vjInputManager::Configuring proxy alias\n"),
+                           std::string("gadget::InputManager: Configuring proxy alias\n"),
                            std::string("...done configuring alias.\n"));
 
    vprASSERT(element->getID() == "alias");
@@ -699,7 +747,7 @@ vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
 bool InputManager::removeProxyAlias(jccl::ConfigElementPtr element)
 {
 vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
-                        std::string("vjInputManager::RemoveProxyAlias\n"),
+                        std::string("gadget::InputManager::removeProxyAlias\n"),
                         std::string("...done removing alias.\n"));
 
    vprASSERT(element->getID() == "alias");
@@ -712,7 +760,7 @@ vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
    {
       vprDEBUG(vprDBG_ERROR,vprDBG_CRITICAL_LVL)
          << clrOutNORM(clrRED,"ERROR:")
-         << "vjInputManager::RemoveProxyAlias: Alias: " << alias_name.c_str()
+         << "gadget::InputManager::RemoveProxyAlias: Alias: " << alias_name
          << "  cannot find proxy: " << proxy_name.c_str() << std::endl
          << vprDEBUG_FLUSH;
       return false;
@@ -795,10 +843,12 @@ Proxy* InputManager::getProxy(const std::string& proxyName)
 void InputManager::refreshAllProxies()
 {
    vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL)
-      << "vjInputManager::refreshAppProxies: Refreshing all....\n"
+      << "gadget::InputManager::refreshAppProxies: Refreshing all...\n"
       << vprDEBUG_FLUSH;
 
-   for(std::map<std::string, Proxy*>::iterator i = mProxyTable.begin(); i != mProxyTable.end(); i++)
+   for ( std::map<std::string, Proxy*>::iterator i = mProxyTable.begin();
+         i != mProxyTable.end();
+         ++i )
    {
       (*i).second->refresh();
    }
@@ -807,13 +857,13 @@ void InputManager::refreshAllProxies()
 bool InputManager::removeProxy(const std::string& proxyName)
 {
 vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
-                  std::string("vjInputManager::removeProxy\n"),
+                  std::string("gadget::InputManager::removeProxy\n"),
                   std::string("\n"));
    if(mProxyTable.end() == mProxyTable.find(proxyName))
    {
       vprDEBUG(vprDBG_ERROR,vprDBG_CRITICAL_LVL)
          << clrOutNORM(clrRED,"ERROR:")
-         << "vjInputManager::removeProxy: proxy: " << proxyName.c_str()
+         << "gadget::InputManager::removeProxy: proxy: " << proxyName
          << "  cannot find proxy: " << proxyName.c_str() << std::endl
          << vprDEBUG_FLUSH;
       return false;
