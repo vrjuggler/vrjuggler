@@ -145,7 +145,6 @@ SUBDIR=	5DT/DataGlove			\
 	Open/DTK			\
 	Open/LinuxJoydev		\
 	Open/Trackd			\
-	Open/Tweek			\
 	Open/VRPN			\
 	Polhemus/Fastrak		\
 	VRCO/TrackdAPI			\
