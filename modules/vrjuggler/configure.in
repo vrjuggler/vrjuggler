@@ -376,19 +376,20 @@ case $target_os in
         dnl # $ABI.
         if test "$ABI" = "64" ; then
             DSOREGFILE='/usr/lib64/so_locations'
-            OPT_FLAGS='-O2 -OPT:Olimit=0'
+            OPT_FLAGS='-O1 -OPT:Olimit=0'
         elif test "$ABI" = "N32" ; then
             DSOREGFILE='/usr/lib32/so_locations'
-            OPT_FLAGS='-O2 -OPT:Olimit=0'
+            OPT_FLAGS='-O1 -OPT:Olimit=0'
         fi
 
         AR='${CXX}'
         ARFLAGS='-LANG:std -J6 -ar -WR,-v -o'
-        CXXFLAGS="$CXXFLAGS -LANG:std"
+        CFLAGS="$CFLAGS -ansi"
+        CXXFLAGS="$CXXFLAGS -ansi -LANG:std"
         DBG_FLAGS="-g -gslim"
         LD='${CXX} -shared'
         _LD_REGOPTS='-check_registry ${DSOREGFILE}'
-        LDOPTS="$LDOPTS -LANG:std -all ${_LD_REGOPTS} -elf -rdata_shared"
+        LDOPTS="$LDOPTS -ansi -LANG:std -all ${_LD_REGOPTS} -elf -rdata_shared"
         SHAREDLIB_EXT='so'
 
         DSOVERSION='sgi4.0'
