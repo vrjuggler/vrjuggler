@@ -1,18 +1,23 @@
+#ifndef _SERIAL_PORT_IMPL_WIN32_H_
+#define _SERIAL_PORT_IMPL_WIN32_H_
+
+#include <vpr/vprConfig.h>
+
 #include <windows.h>
 #include <iostream.h>
 #include <stdio.h>
 #include <string>
 #include <vector>
 
-#include <IO/Port/Port.h>
-#include <IO/Port/SerialTypes.h>
+#include <vpr/IO/Port/Port.h>
+#include <vpr/IO/Port/SerialTypes.h>
 
-namespace vpr{
+namespace vpr {
 
 // ----------------------------------------------------------------------------
 //: vpr::SerialPort implementation for Win32.
 // ----------------------------------------------------------------------------
-class SerialPortImpWin32 : public Port {
+class SerialPortImplWin32 : public Port {
 public:
     // ------------------------------------------------------------------------
     //: Constructor.  This creates a file handle object connected to the given
@@ -24,18 +29,18 @@ public:
     //
     //! ARGS: port_name - The name of the serial port that will be accessed.
     // ------------------------------------------------------------------------
-    SerialPortImpWin32(const std::string& port_name);
+    SerialPortImplWin32(const std::string& port_name);
 
-	   // ------------------------------------------------------------------------
+    // ------------------------------------------------------------------------
     //: Destructor.  If the file handle is non-NULL, its memory is released.
     //
     //! PRE: None.
     //! POST: If m_handle is non-NULL, its memory is released.
     // ------------------------------------------------------------------------
-    virtual ~SerialPortImpWin32(void);
+    virtual ~SerialPortImplWin32(void);
 
 
-	// ========================================================================
+    // ========================================================================
     // vpr::BlockIO overrides.
     // ========================================================================
 
@@ -53,7 +58,7 @@ public:
         openFlag = GENERIC_READ;
     }
 
-	// ------------------------------------------------------------------------
+    // ------------------------------------------------------------------------
     //: Set the open flags so that the serial port is opened in write-only
     //: mode.
     //
@@ -148,7 +153,7 @@ public:
     }
 
 
-	// ------------------------------------------------------------------------
+    // ------------------------------------------------------------------------
     //: Reconfigure the serial port so that it is in blocking mode.
     //
     //! PRE: The serial port is open.
@@ -166,7 +171,7 @@ public:
 		return status;
     }
 
-	    // ------------------------------------------------------------------------
+    // ------------------------------------------------------------------------
     //: Reconfigure the serial port so that it is in non-blocking mode.
     //
     //! PRE: The serial port is open.
@@ -184,7 +189,7 @@ public:
     }
 
 
-	// ========================================================================
+    // ========================================================================
     // VPR serial port interface implementation.
     // ========================================================================
 
@@ -239,7 +244,7 @@ public:
     // ------------------------------------------------------------------------
     Status setBufferSize(const Uint8 size);
 
-	    // ------------------------------------------------------------------------
+    // ------------------------------------------------------------------------
     //: Get the value of the timeout (in tenths of a second) to wait for data
     //+ to arrive.  This is only applicable in non-canonical mode.
     //
@@ -467,7 +472,7 @@ public:
     // ------------------------------------------------------------------------
     Status disableBitStripping(void);
 
-	    // ------------------------------------------------------------------------
+    // ------------------------------------------------------------------------
     //: Get the state of start-stop input control.  When enabled, if the
     //+ terminal driver sees that the receive buffer is getting full, a STOP
     //+ command is sent to the serial device.  The device should respond by
@@ -616,7 +621,7 @@ public:
     // ------------------------------------------------------------------------
     Status disableParityErrorMarking(void);
 
-	// ------------------------------------------------------------------------
+    // ------------------------------------------------------------------------
     //: Get the current parity checking type (either odd or even).
     //
     //! PRE: The serial port is open.
@@ -627,7 +632,7 @@ public:
     // ------------------------------------------------------------------------
     SerialTypes::ParityType getParity(void);
 	
-	// ------------------------------------------------------------------------
+    // ------------------------------------------------------------------------
     //: Enable odd parity.
     //
     //! PRE: The serial port is open.
@@ -647,7 +652,7 @@ public:
     // ------------------------------------------------------------------------
     Status setEvenParity(void);
 
-	// ------------------------------------------------------------------------
+    // ------------------------------------------------------------------------
     //: Get the current input baud rate.
     //
     //! PRE: The serial port is open.
@@ -836,3 +841,5 @@ protected:
 
 
 };
+
+#endif	/* _SERIAL_PORT_IMPL_WIN32_H_ */

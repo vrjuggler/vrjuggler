@@ -52,7 +52,8 @@ VPR_SRCDIR	= @VPR_SRCDIR@/vpr/md/WIN32/IO
 # Prefix for recursive stuff.
 DIRPRFX		= vpr/md/WIN32/IO/
 
-SUBDIR		= Socket
+SUBDIR		= Port		\
+                  Socket
 
 ifeq (@SUBSYSTEM@, WIN32)
 #SRCS		=
