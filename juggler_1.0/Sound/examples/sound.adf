@@ -1,0 +1,139 @@
+// Vega Application Definition File
+
+system {
+	awnotify	warn;
+	awmpmode	off;
+	imgcpu	-1;
+	imgpri	33;
+}
+
+
+path {
+	pathname	"./";
+}
+
+
+awEngine Default {
+	index	1;
+	indexValue	0;
+	hd	off	4	1;
+	access	1;
+	awdhost	tunes.vrac.iastate.edu;
+	volume	1;
+	headroom	6;
+	workspace	"";
+	engdop	0;
+	engattn	0;
+	mindist	1;
+}
+
+
+awChannel Default {
+	model	2;
+	outputFrontLeft	1;
+	outputFrontRight	2;
+	outputRearLeft	3;
+	outputRearRight	4;
+	voices	16;
+	engine	Default;
+}
+
+// this *has* to be here, and *has* to be called you
+// the juggler soundengine depends on it.
+observer you {
+	awstate	on;
+	tether	0	0;
+	position	0	0	0;
+	euler	0	0	0;
+	modelflags	0x2F;
+	splmin	40;
+	splmax	200;
+	awChannel	Default;
+	env	Default;
+	scene	main;
+}
+
+
+scene main {
+	sound	sound3;
+   sound	sound2;
+   sound	sound1;
+}
+
+
+env Default {
+	sos	330;
+}
+
+
+//player pendulumplayer {
+//	awstate	on;
+//	position	0	0	0;
+//	euler	0	0	0;
+//	csref	2;
+//	plyrref	pendulumplayer;
+//	sound	testSound;
+//}
+
+
+awSound sound3 {
+	awstate	off;
+	wave	testSound.aiff;
+	position	0	0	0	0	0	0;
+	spl	154.97;
+	pitchbend	1;
+	lopass	22050;
+	splhi	197.35;
+	pitchbendhi	1;
+	lopasshi	22050;
+	expunge	0;
+	priority	2;
+	doppler	0;
+	propagation	2;
+	absorption	2;
+	attenuation	2;
+	wcmap	2;
+}
+
+awSound sound2 {
+	awstate	off;
+	wave	testSound.aiff;
+	position	0	0	0	0	0	0;
+	spl	154.97;
+	pitchbend	1;
+	lopass	22050;
+	splhi	197.35;
+	pitchbendhi	1;
+	lopasshi	22050;
+	expunge	0;
+	priority	2;
+	doppler	0;
+	propagation	2;
+	absorption	2;
+	attenuation	2;
+	wcmap	2;
+}
+
+awSound sound1 {
+	awstate	off;
+	wave	testSound.aiff;
+	position	0	0	0	0	0	0;
+	spl	154.97;
+	pitchbend	1;
+	lopass	22050;
+	splhi	197.35;
+	pitchbendhi	1;
+	lopasshi	22050;
+	expunge	0;
+	priority	2;
+	doppler	0;
+	propagation	2;
+	absorption	2;
+	attenuation	2;
+	wcmap	2;
+}
+
+adfstate {
+	module	AudioWorks2	1.3;
+}
+
