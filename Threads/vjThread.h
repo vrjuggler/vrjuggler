@@ -32,9 +32,7 @@ typedef void (*THREAD_FUNC)(void *);
 #ifdef VJ_USE_PTHREADS
     typedef int		cancel_state_t;
 
-#   ifndef VJ_OS_SGI
-#       define _POSIX_C_SOURCE 2
-#   endif
+#   define _POSIX_C_SOURCE VJ_POSIX_C_SOURCE
 
 #   include <Threads/vjThreadPosix.h>
 #   include <Threads/vjThreadKeyPosix.h>
