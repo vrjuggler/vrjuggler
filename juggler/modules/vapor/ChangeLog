@@ -1,5 +1,7 @@
 DATE       AUTHOR   CHANGE
 ---------- -------- -----------------------------------------------------------
+2001-11-15 allenb   Added valid() test function to thread functors.  The code
+                    now tries to test for valid functors at thread creation.
 2001-11-13 allenb   Changed the debug GUID category registrators to allow only
                     one registration of the GUIDs.  This means that the 
                     registration macro should only be used from .cpp files now
