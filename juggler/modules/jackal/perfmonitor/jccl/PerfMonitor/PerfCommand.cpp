@@ -37,127 +37,131 @@
 #include <jccl/Config/ConfigChunkDB.h>
 #include <jccl/Config/ChunkDescDB.h>
 #include <jccl/Config/ConfigIO.h>
+#include <jccl/Performance/PerfDataBuffer.h>
 
 namespace jccl {
 
-// generic Command
 
-void Command::resetFireTime (TimeStamp& ts) {
-    next_fire_time = ts.usecs()/1000 + refresh_time;
-}
+    // generic Command
+
+    Command::Command () {
+        ;
+    }
 
 
-int Command::operator < (const Command& cmd2) const {
-    // used in priority queue
-    // true if self should be called _after_ cmd2
-    return (next_fire_time < cmd2.next_fire_time);
-}
+    // Periodic Command
+
+    PeriodicCommand::PeriodicCommand (float _rt): refresh_time (_rt) {
+        next_fire_time = 0.0f;
+    }
+
+    void PeriodicCommand::resetFireTime (TimeStamp& ts) {
+        next_fire_time = ts.usecs()/1000 + refresh_time;
+    }
+
+
+    int PeriodicCommand::operator < (const PeriodicCommand& cmd2) const {
+        // used in priority queue in connects.
+        // true if self should be called _after_ cmd2
+        return (next_fire_time < cmd2.next_fire_time);
+    }
     
 
 
 
-// CommandRefresh
+    // CommandRefresh
 
-/*static*/ const std::string CommandRefresh::command_name ("Refresh Command");
-
-
-CommandRefresh::CommandRefresh() {
-    next_fire_time = refresh_time = 0.0;
-}
-
-    
-/*virtual*/ void CommandRefresh::call (std::ostream& out) const {
-    out << "<protocol handler=\"xml_config\">\n"
-        "<refresh_all/>\n"
-        "</protocol>\n" << std::flush;
-}
+    /*static*/ const std::string CommandRefresh::protocol_name ("xml_config");
 
 
-/*virtual*/ const std::string& CommandRefresh::getName () const {
-    return command_name;
-}
-
-
-
-// CommandSendChunkDB
-
-/*static*/ const std::string CommandSendChunkDB::command_name ("Send ChunkDB Command");
-
-
-CommandSendChunkDB::CommandSendChunkDB (ConfigChunkDB* _db, bool _all) {
-    db = _db;
-    all = _all;
-}
-
-
-/*virtual*/ void CommandSendChunkDB::call (std::ostream& out) const {
-    out << "<protocol handler=\"xml_config\">\n";
-    if (all)
-        out << "<apply_chunks all=\"true\">\n";
-    else
-        out << "<apply_chunks>\n";
-    ConfigIO::instance()->writeConfigChunkDB (out, *db, "xml_config");
-    out << "</apply_chunks>\n</protocol>\n" << std::flush;
-}
-
-
-/*virtual*/ const std::string& CommandSendChunkDB::getName () const {
-    return command_name;
-}
-
-
-
-//CommandSendDescDB
-
-/*static*/ const std::string CommandSendDescDB::command_name ("Send DescDB Command");
-
-
-CommandSendDescDB::CommandSendDescDB (ChunkDescDB* _db, bool _all) {
-    db = _db;
-    all = _all;
-}
+    CommandRefresh::CommandRefresh() {
+        ;
+    }
 
     
-/*virtual*/ void CommandSendDescDB::call (std::ostream& out) const {
-
-    out << "<protocol handler=\"xml_config\">\n";
-    if (all)
-        out << "<apply_descs all=\"true\">\n";
-    else
-        out << "<apply_descs>\n";
-    ConfigIO::instance()->writeChunkDescDB (out, *db, "xml_config");
-    out << "</apply_descs>\n</protocol>\n" << std::flush;
-}
+    /*virtual*/ void CommandRefresh::call (std::ostream& out) const {
+        out << "<refresh_all/>\n";
+    }
 
 
-/*virtual*/ const std::string& CommandSendDescDB::getName () const {
-    return command_name;
-}
+    /*virtual*/ const std::string& CommandRefresh::getProtocolName () const {
+        return protocol_name;
+    }
 
 
 
-// CommandTimedUpdate
+    // CommandSendChunkDB
 
-/*static*/ const std::string CommandTimedUpdate::command_name ("Timed Update Command");
+    /*static*/ const std::string CommandSendChunkDB::protocol_name ("xml_config");
 
 
-CommandTimedUpdate::CommandTimedUpdate (TimedUpdate* _tu, float _refresh_time) {
-    timed_update = _tu;
-    refresh_time = _refresh_time;
-    next_fire_time = 0;
-}
+    CommandSendChunkDB::CommandSendChunkDB (ConfigChunkDB* _db, bool _all) {
+        db = _db;
+        all = _all;
+    }
+
+
+    /*virtual*/ void CommandSendChunkDB::call (std::ostream& out) const {
+        if (all)
+            out << "<apply_chunks all=\"true\">\n";
+        else
+            out << "<apply_chunks>\n";
+        ConfigIO::instance()->writeConfigChunkDB (out, *db, "xml_config");
+        out << "</apply_chunks>\n";
+    }
+
+
+    /*virtual*/ const std::string& CommandSendChunkDB::getProtocolName () const {
+        return protocol_name;
+    }
+
+
+
+    //CommandSendDescDB
+    
+    /*static*/ const std::string CommandSendDescDB::protocol_name ("xml_config");
+
+
+    CommandSendDescDB::CommandSendDescDB (ChunkDescDB* _db, bool _all) {
+        db = _db;
+        all = _all;
+    }
 
     
-/*virtual*/ void CommandTimedUpdate::call (std::ostream& out) const {
-    out << "<protocol handler=\"" << timed_update->getProtocolHandlerName()
-        << "\">\n";
-    timed_update->write (out);
-    out << "</protocol>\n" << std::flush;
-}
+    /*virtual*/ void CommandSendDescDB::call (std::ostream& out) const {
+        if (all)
+            out << "<apply_descs all=\"true\">\n";
+        else
+            out << "<apply_descs>\n";
+        ConfigIO::instance()->writeChunkDescDB (out, *db, "xml_config");
+        out << "</apply_descs>\n";
+    }
 
 
-/*virtual*/ const std::string& CommandTimedUpdate::getName () const {
-    return command_name;
-}
+    /*virtual*/ const std::string& CommandSendDescDB::getProtocolName () const {
+        return protocol_name;
+    }
 
+
+
+    // CommandWritePerfData
+
+    /*static*/ const std::string CommandWritePerfData::protocol_name ("vjc_performance");
+    
+
+    CommandWritePerfData::CommandWritePerfData (PerfDataBuffer* _perf_buffer, 
+                                                float _refresh_time) :PeriodicCommand (_refresh_time) {
+        perf_buffer = _perf_buffer;
+    }
+
+    
+    /*virtual*/ void CommandWritePerfData::call (std::ostream& out) const {
+    perf_buffer->write (out);
+    }
+
+
+    /*virtual*/ const std::string& CommandWritePerfData::getProtocolName () const {
+        return protocol_name;
+    }
+    
 };

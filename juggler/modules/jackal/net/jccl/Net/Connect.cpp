@@ -240,7 +240,7 @@ void Connect::sendDisconnect () {
 //  }
 
 
-void Connect::sendCommand (Command* cmd) {
+void Connect::addCommand (Command* cmd) {
     vprASSERT (cmd != 0);
 
     if (mode != VJC_INPUT) {
@@ -253,33 +253,30 @@ void Connect::sendCommand (Command* cmd) {
 
 //! ARGS: _tu - a TimedUpdate*
 //! ARGS: _refresh_time - time between refreshes, in milliseconds
-void Connect::addTimedUpdate (TimedUpdate* _tu, float _refresh_time) {
+void Connect::addPeriodicCommand (PeriodicCommand* pc) {
     if (mode != VJC_INPUT) {
         commands_mutex.acquire();
-        timed_commands.push (new CommandTimedUpdate (_tu, _refresh_time));
+        periodic_commands.push (pc);
         commands_mutex.release();
     }
 }
 
 
 
-void Connect::removeTimedUpdate (TimedUpdate* _tu) {
+void Connect::removePeriodicCommand (PeriodicCommand* pc1) {
     // this better not be called often - it's gotta be nlogn or something.
     // still, there'll probably never be more than a couple dozen
-    // items in the timed_commands queue anyway.
-    std::priority_queue<Command*, std::vector<Command*>, CommandPtrCmp> newq;
-    CommandTimedUpdate* ctu2;
-    Command* ctu1;
+    // items in the periodic_commands queue anyway.
+    std::priority_queue<PeriodicCommand*, std::vector<PeriodicCommand*>, CommandPtrCmp> newq;
+    PeriodicCommand* pc2;
     commands_mutex.acquire();
-    while (!timed_commands.empty()) {
-        ctu1 = timed_commands.top();
-        ctu2 = dynamic_cast<CommandTimedUpdate*>(ctu1);
-        timed_commands.pop();
-        if (ctu2 && (ctu2->timed_update == _tu))
-            continue;
-        newq.push (ctu1);
+    while (!periodic_commands.empty()) {
+        pc2 = periodic_commands.top();
+        periodic_commands.pop();
+        if (pc1 != pc2)
+            newq.push (pc2);
     }
-    timed_commands = newq;
+    periodic_commands = newq;
     commands_mutex.release();
 }
 
@@ -310,6 +307,7 @@ void Connect::readControlLoop(void* nullParam) {
 void Connect::writeControlLoop(void* nullParam) {
     /* this probably needs considerable revision */
     Command*  cmd;
+    PeriodicCommand* pcmd;
     write_alive = true;
 
 //              *outstream << "another test : ( \n" << flush;
@@ -332,24 +330,30 @@ void Connect::writeControlLoop(void* nullParam) {
         while (!commands.empty()) {
             cmd = commands.front();
             commands.pop();
-            vprDEBUG (vprDBG_ENV_MGR, 5) << "calling EM command "
-                                       << cmd->getName().c_str()
+            vprDEBUG (vprDBG_ENV_MGR, 5) << "calling EM command; protocol="
+                                       << cmd->getProtocolName().c_str()
                                        <<vprDEBUG_FLUSH;
+            *outstream << "<protocol handler=\"" << cmd->getProtocolName()
+                       << "\">\n";
             cmd->call (*outstream);
+            *outstream << "</protocol>\n" << std::flush;
             vprDEBUG (vprDBG_ENV_MGR, 5) << " -- done.\n" << vprDEBUG_FLUSH;
             delete cmd;
         }
 
         current_time.set();
 
-        while (!timed_commands.empty()) {
-            cmd = timed_commands.top();
-            if (current_time.usecs() < (cmd->next_fire_time * 1000))
+        while (!periodic_commands.empty()) {
+            pcmd = periodic_commands.top();
+            if (current_time.usecs() < (pcmd->next_fire_time * 1000))
                 break;
-            timed_commands.pop();
-            cmd->call (*outstream);
-            cmd->resetFireTime (current_time);
-            timed_commands.push (cmd);
+            periodic_commands.pop();
+            *outstream << "<protocol handler=\"" << pcmd->getProtocolName()
+                       << "\">\n";
+            pcmd->call (*outstream);
+            *outstream << "</protocol>\n" << std::flush;
+            pcmd->resetFireTime (current_time);
+            periodic_commands.push (pcmd);
         }
 
         commands_mutex.release();
