@@ -45,6 +45,29 @@
 namespace vrjTest
 {
 
+// Function called after tracker update but before start of drawing.
+// Called once before every frame.  Do calculations and state modifications
+// here.
+void wandApp::preFrame()
+{
+   // Put your pre frame computations here.
+
+   /*
+   std::cout  << "Wand Buttons:"
+              << " 0:" << mButton0->getData()
+              << " 1:" << mButton1->getData()
+              << " 2:" << mButton2->getData()
+              << " 3:" << mButton3->getData()
+              << " 4:" << mButton4->getData()
+              << " 5:" << mButton5->getData() << std::endl;
+   */
+
+   if(mButton0->getData() == gadget::Digital::ON)
+   {
+      mSound.trigger();
+   }
+}
+
 void wandApp::bufferPreDraw()
 {
    glClearColor(0.0, 0.0, 0.0, 0.0);
@@ -77,10 +100,7 @@ void wandApp::myDraw()
          float wand_color[3];
          wand_color[0] = wand_color[1] = wand_color[2] = 0.0f;
          if(mButton0->getData() == gadget::Digital::ON)
-         {
             wand_color[0] += 0.5f;
-            mSound.trigger();
-         }
          if(mButton1->getData() == gadget::Digital::ON)
             wand_color[1] += 0.5f;
          if(mButton2->getData() == gadget::Digital::ON)
