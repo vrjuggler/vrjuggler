@@ -83,7 +83,7 @@ AC_ARG_WITH(java3d,
 # Specify where JOGL is located
 AC_ARG_WITH(jogl,
             [  --with-jogl=<PATH>      Path to JOGL JAR file(s) ],
-            JOGL_JARS="$withval", JOGL_JARS='none')
+            JOGL_JARS="$withval", JOGL_JARS='')
 
 # -------------------------------------------- #
 # --with-pkg[=arg] and --without-pkg arguments #
