@@ -125,8 +125,14 @@ cd "$srcdir"
 GADGETROOT_ABS=`pwd`
 
 cd "$GADGETROOT_ABS/../.."
-JUGGLERROOT_ABS=`pwd`
+UNIX_JUGGLERROOT_ABS=`pwd`
 cd "$topdir"
+
+if test "x$CYGPATH" != "xno" ; then
+   JUGGLERROOT_ABS=`cygpath -w "$UNIX_JUGGLERROOT_ABS" | sed -e 's/\\\\/\\//g'`
+else
+   JUGGLERROOT_ABS="$UNIX_JUGGLER_ROOT"
+fi
 
 # -----------------------------------------------------------------------------
 # Checks for programs.
@@ -345,7 +351,6 @@ fi
 # Define the base path to the source directory using $(GADGETROOT_ABS) as an
 # alternative to using $(srcdir).
 UNIX_GADGETROOT_ABS="$GADGETROOT_ABS"
-UNIX_JUGGLERROOT_ABS="$JUGGLERROOT_ABS"
 
 # $APP_EXTRA_LIBS must list all the libraries need to link a VR Juggler-based
 # application.
