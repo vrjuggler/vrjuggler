@@ -39,91 +39,60 @@ namespace cluster
 {
    SyncRequest::SyncRequest(Header* packet_head, vpr::SocketStream* stream)
    {
+      // Receive the data needed for this packet from the given SocketStream.
       recv(packet_head,stream);
+
+      // Parse the new data into member variables.
       parse();
    }
-   SyncRequest::SyncRequest(std::string& host_name, vpr::Uint16& port, std::string& manager_id)
+
+   SyncRequest::SyncRequest(std::string& host_name, vpr::Uint16& port)
    {
       // Given the input, create the packet and then serialize the packet(which includes the header)
       // - Set member variables
       // - Create the correct packet header
       // - Serialize the packet
 
-      // Device Request Vars
+      // Set the local member variables using the given values.
       mHostname = host_name;
       mPort = port;
-      mManagerId = manager_id;
       
-      // string -> string.size()
-      // Uint8 -> 1
-      // Uint16 -> 2
-      // Uint32 -> 4
-      
-      // 2 + mHostname.size() + 2 + 2 + mMacnagerId.size()
-
-      
-      // Header vars (Create Header)
+      // Create a Header for this packet with the correect type and size.
       mHeader = new Header(Header::RIM_PACKET,
                                       Header::RIM_SYNC_REQ,
                                       Header::RIM_PACKET_HEAD_SIZE 
                                       + 2 /*mHostname.size()*/
                                       + mHostname.size()
                                       + 2 /*mPort*/
-                                      + 2 /*mManager.size()*/
-                                      + mManagerId.size(),0);
+                                      ,0/*Field not curently used*/);
+      // Serialize the given data.
       serialize();
    }
    void SyncRequest::serialize()
    {
-      // - Clear
-      // - Write Header
-      // - Write data
-      
+      // Clear the data stream.
       mPacketWriter->getData()->clear();
       mPacketWriter->setCurPos(0);
-
-      // Create the header information
+      
+      // Serialize the header.
       mHeader->serializeHeader();
       
-      // =============== Packet Specific =================
-      //
-         
-         // Host Name
-//      mPacketWriter->writeUint16(mHostname.size());
+      // Serialize the hostname of the requesting node.
       mPacketWriter->writeString(mHostname);
                
-         // Port
-      mPacketWriter->writeUint16(mPort);
-         
-         // ManagerID
-//      mPacketWriter->writeUint16(mManagerId.size());
-      mPacketWriter->writeString(mManagerId);
-         
-      //
-      // =============== Packet Specific =================
+      // Serialize the listening port of the requesting node.
+      mPacketWriter->writeUint16(mPort);         
    }
+
    void SyncRequest::parse()
    {
-      // =============== Packet Specific =================
-      //
-
-         // Host Name
-//      vpr::Uint16 temp_string_len = mPacketReader->readUint16();
-//      mHostname = mPacketReader->readString(temp_string_len);
+      // De-Serialize the hostname of the requesting node.
       mHostname = mPacketReader->readString();
          
-         // Port
+      // De-Serialize the listening port of the requesting node.
       mPort = mPacketReader->readUint16();
-
-         // Manager ID
-//      temp_string_len = mPacketReader->readUint16();
-//      mManagerId = mPacketReader->readString(temp_string_len);
-      mManagerId = mPacketReader->readString();
-
-
-      //
-      // =============== Packet Specific =================
    }
+
    void SyncRequest::printData(int debug_level)
    {
       vprDEBUG_BEGIN(gadgetDBG_RIM,debug_level) 
@@ -137,12 +106,8 @@ namespace cluster
       vprDEBUG(gadgetDBG_RIM,debug_level) 
          << clrOutBOLD(clrYELLOW, "Port:         ") << mPort
          << std::endl << vprDEBUG_FLUSH;
-      vprDEBUG(gadgetDBG_RIM,debug_level) 
-         << clrOutBOLD(clrYELLOW, "Manager ID:   ") << mManagerId
-         << std::endl << vprDEBUG_FLUSH;
 
       vprDEBUG_END(gadgetDBG_RIM,debug_level) 
          <<  clrOutBOLD(clrYELLOW,"========================================\n") << vprDEBUG_FLUSH;
    }
-
 }   // end namespace gadget

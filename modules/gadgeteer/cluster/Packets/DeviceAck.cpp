@@ -30,34 +30,27 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-//#include <gadget/gadgetConfig.h>
-#include <cluster/Packets/DeviceAck.h>
-#include <cluster/ClusterNetwork/ClusterNetwork.h>
-#include <cluster/ClusterNetwork/ClusterNode.h>
-#include <gadget/InputManager.h>
-#include <jccl/RTRC/ConfigManager.h>
 #include <gadget/Util/Debug.h>
+
+#include <cluster/Packets/DeviceAck.h>
+
+#include <cluster/ClusterNetwork/ClusterNetwork.h>
 
 namespace cluster
 {
    DeviceAck::DeviceAck(Header* packet_head, vpr::SocketStream* stream)
    {
+      // Receive the data needed for this packet from the given SocketStream.
       recv(packet_head,stream);
+      
+      // Parse the new data into member variables.
       parse();
    }
    DeviceAck::DeviceAck(const vpr::GUID& plugin_id, const vpr::GUID& id, 
                         const std::string& device_name, 
                         const std::string& device_base_type, bool ack)
    {
-      // Given the input, create the packet and then serialize the packet(which includes the header)
-      // - Set member variables
-      // - Create the correct packet header
-      // - Serialize the packet
-
-      // =============== Packet Specific =================
-      //
-
-      // Device Request Vars
+      // Set the local member variables using the given values.
       mPluginId = plugin_id;
       mId = id;
       mDeviceName = device_name;
@@ -65,14 +58,7 @@ namespace cluster
       mAck = ack;
       mHostname = ClusterNetwork::instance()->getLocalHostname();
       
-      // string -> string.size()
-      // Uint8 -> 1
-      // Uint16 -> 2
-      // Uint32 -> 4
-
-      // 2 + 2 + 2 + mDeviceName.size() + 2 + mDeviceBaseType() + 1
-
-      // Header vars (Create Header)
+      // Create a Header for this packet with the correect type and size.
       mHeader = new Header(Header::RIM_PACKET,
                                       Header::RIM_DEVICE_ACK,
                                       Header::RIM_PACKET_HEAD_SIZE 
@@ -81,76 +67,59 @@ namespace cluster
                                       + 2 /*value of size*/+ mDeviceName.size() /*length of mDeviceName*/
                                       + 2 /*value of size*/+ mDeviceBaseType.size() /*length of mDeviceBaseType*/
                                       + 2 /*value of size*/+ mHostname.size() /*length of mDeviceBaseType*/
-                                      + 1 /*mAck*/,0);                      
-      //
-      // =============== Packet Specific =================
-
+                                      + 1 /*mAck*/,
+                                      0/*Field not curently used*/);                      
+      // Serialize the given data.
       serialize();
    }
+
    void DeviceAck::serialize()
    {
-      // - Clear
-      // - Write Header
-      // - Write data
-      
+      // Clear the data stream.
       mPacketWriter->getData()->clear();
       mPacketWriter->setCurPos(0);
 
-      // Create the header information
+      // Serialize the header.
       mHeader->serializeHeader();
-      
-      // =============== Packet Specific =================
-      //
       
       // Serialize plugin GUID
       mPluginId.writeObject(mPacketWriter);
       
-      // mId
+      // Serialize Device GUID
       mId.writeObject(mPacketWriter);
       
-         // Device Name
+      // Serialize the Device Name
       mPacketWriter->writeString(mDeviceName);
       
-         // Base Type
+      // Serialize the Base Type of the acknowledged device
       mPacketWriter->writeString(mDeviceBaseType);
 
-         // Hostname of the machine that the device on
+      // Serialize the hostname of the acknowledging node
       mPacketWriter->writeString(mHostname);
 
-         // Ack
+      // Serialize the Ack boolean
       mPacketWriter->writeBool(mAck);
-
-      
-
-      //
-      // =============== Packet Specific =================
    }
+
    void DeviceAck::parse()
    {
-      // =============== Packet Specific =================
-      //
-      
       // De-Serialize plugin GUID
       mPluginId.readObject(mPacketReader);
 
-      // mId
+      // De-Serialize Device GUID
       mId.readObject(mPacketReader);
          
-      // Device Name
+      // De-Serialize the Device Name
       mDeviceName = mPacketReader->readString();
 
-         // Base Type
+      // De-Serialize the Base Type of the acknowledged device
       mDeviceBaseType = mPacketReader->readString();
 
-         // Hostname of the machine that the device on
+      // De-Serialize the hostname of the acknowledging node
       mHostname = mPacketReader->readString();
 
-         // Ack
+      // De-Serialize the Ack boolean
       mAck = mPacketReader->readBool();
-
-
-      //
-      // =============== Packet Specific =================
    }
 
    void DeviceAck::printData(int debug_level)
@@ -181,20 +150,5 @@ namespace cluster
 
       vprDEBUG_END(gadgetDBG_RIM,debug_level) 
          <<  clrOutBOLD(clrYELLOW,"================================\n") << vprDEBUG_FLUSH;
-      
-      /*
-      // =============== Packet Specific =================
-      //                                                
-      vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) 
-      << clrOutBOLD(clrCYAN,"\n==== Device Ack Packet Data ====")
-      << "\nDevice ID: " << mDeviceId
-      << "\nDevice Name:      " << mDeviceName
-      << "\nDevice Base Type: " << mDeviceBaseType 
-      << "\nAck or Nack:      " << (mAck ? "Ack" : "Nack")  << std::endl
-      << vprDEBUG_FLUSH;      
-      //
-      // =============== Packet Specific =================
-      */
    }
-
 }   // end namespace gadget

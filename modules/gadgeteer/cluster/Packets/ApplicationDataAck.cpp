@@ -30,9 +30,8 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-//#include <gadget/gadgetConfig.h>
 #include <boost/concept_check.hpp>
-#include <cluster/ClusterNetwork/ClusterNode.h>
+
 #include <gadget/Util/Debug.h>
 #include <cluster/Packets/ApplicationDataAck.h>
 
@@ -40,89 +39,60 @@ namespace cluster
 {
    ApplicationDataAck::ApplicationDataAck(Header* packet_head, vpr::SocketStream* stream)
    {
+      // Receive the data needed for this packet from the given SocketStream.
       recv(packet_head,stream);
+      
+      // Parse the new data into member variables.
       parse();
    }
    ApplicationDataAck::ApplicationDataAck(const vpr::GUID& plugin_guid, 
                                           const vpr::GUID& id, 
                                           const bool ack)
    {
-      // Given the input, create the packet and then serialize the packet(which includes the header)
-      // - Set member variables
-      // - Create the correct packet header
-      // - Serialize the packet
-
-      // =============== Packet Specific =================
-      //
-
-      // Device Request Vars
+      // Set the local member variables using the given values.
       mPluginId = plugin_guid;
       mId = id;
       mAck = ack;
       
-      // string -> string.size()
-      // Uint8 -> 1
-      // Uint16 -> 2
-      // Uint32 -> 4
-
-      // 2 + 2 + 2 + mDeviceName.size() + 2 + mDeviceBaseType() + 1
-
-      // Header vars (Create Header)
+      // Create a Header for this packet with the correect type and size.
       mHeader = new Header(Header::RIM_PACKET,
                                       Header::RIM_APPDATA_ACK,
                                       Header::RIM_PACKET_HEAD_SIZE 
                                       + 16/*Plugin GUID*/
                                       + 16/*Object GUID*/
                                       + 1 /*mAck*/,
-                                      0);                      
-      //
-      // =============== Packet Specific =================
-
+                                      0/*Field not curently used*/);
+      // Serialize the given data.
       serialize();
    }
    void ApplicationDataAck::serialize()
    {
-      // - Clear
-      // - Write Header
-      // - Write data
-      
+      // Clear the data stream.
       mPacketWriter->getData()->clear();
       mPacketWriter->setCurPos(0);
 
-      // Create the header information
+      // Serialize the header.
       mHeader->serializeHeader();
-      
-      // =============== Packet Specific =================
-      //
       
       // Serialize plugin GUID
       mPluginId.writeObject(mPacketWriter);
 
-      // Serialize object GUID
+      // Serialize ApplicationData object GUID
       mId.writeObject(mPacketWriter);
 
-      // Ack
+      // Serialize the Ack boolean
       mPacketWriter->writeBool(mAck);
-
-      //
-      // =============== Packet Specific =================
    }
    void ApplicationDataAck::parse()
    {
-      // =============== Packet Specific =================
-      //
-      
       // De-Serialize plugin GUID
       mPluginId.readObject(mPacketReader);
       
-      // De-Serialize object GUID
+      // De-Serialize ApplicationData object GUID
       mId.readObject(mPacketReader);
 
-      // Ack
+      // De-Serialize the Ack boolean
       mAck = mPacketReader->readBool();
-
-      //
-      // =============== Packet Specific =================
    }
 
    void ApplicationDataAck::printData(int debug_level)

@@ -43,8 +43,6 @@
 #include <cluster/Packets/Header.h>                                                       
 #include <cluster/Packets/Packet.h>
 
-//#define RIM_PACKET_HEAD_SIZE 8
-
 namespace cluster
 {
 
@@ -52,44 +50,57 @@ class GADGET_CLASS_API SyncRequest : public Packet
 {
 public:
    /**
-    * packet_head: Given a packet that has been parsed, and found to be a device request
-    * stream: A socket that the connection is on
-    * 
-    * Create a deviceRequest packet
+    * Create a SyncRequest packet
+    *   
+    * @param packet_head -Header which has already been received and 
+    *                     determined to be for a SyncRequest.
+    * @param stream -A SocketStream that we will use to receive the packet data.
     */
    SyncRequest(Header* packet_head, vpr::SocketStream* stream);
 
    /**
-    * Given a sender ID(self) and a requested device name
+    * Create a SyncRequest packet to request syncronization
     *
-    * Create a device request to be sent
+    * @param host_name -Hostname of the node requesting syncronization.
+    * @param port -Listening port of the requesting machine.
     */
-   SyncRequest(std::string& host_name, vpr::Uint16& port, std::string& manager_id);
+   SyncRequest(std::string& host_name, vpr::Uint16& port);
 
-   
    /**
-    * Helper for the above creation of a device request to be sent
+    * Serializes member variables into a data stream.
     */
    void serialize();
 
    /**
-    * After reading in the remaining bytes from the socket, create a new parse the data
+    * Parses the data stream into the local member variables.
     */
    void parse();
    
+   /**
+    * Print the data to the screen in a readable form.
+    */
    virtual void printData(int debug_level);
+
+   /**
+    * Return the type of this packet.
+    */
    static vpr::Uint16 getBaseType()
    {
        return(Header::RIM_SYNC_REQ);
    }
    
+   /**
+    * Return the hostname of the node requesting syncronization.
+    */
    std::string getHostname() { return mHostname; }
+
+   /**
+    * Return the listening port of the requesting machine.
+    */
    vpr::Uint16 getPort() { return mPort; }
-   std::string getManagerId() { return mManagerId; }
 private:
-   std::string mHostname;
-   vpr::Uint16 mPort;
-   std::string mManagerId;
+   std::string mHostname;  /**< Hostname of the node requesting syncronization. */
+   vpr::Uint16 mPort;      /**< Listening port of the requesting machine. */
 };
 }
 
