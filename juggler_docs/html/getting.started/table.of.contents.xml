@@ -6,7 +6,7 @@ Builder: JExplorerBuilder V 1. 0. 7
 			< rootfolder title="Getting Started Guide" 
 				expand 
 				link="index.html"
-				info="Stuff"
+				info="Learn how to install VR Juggler, set it up, and run sample applications on your system"
 				target="Body" 
 				image="Book_Closed.gif" 
 				imagetwo="Book_Open.gif">
