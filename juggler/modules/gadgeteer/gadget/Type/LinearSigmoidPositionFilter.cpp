@@ -83,8 +83,8 @@ gmtl::Matrix44f LinearSigmoidPositionFilter::getPos(const gmtl::Matrix44f newPos
    trans_diff = new_trans-last_returned_trans;
    dist = gmtl::length(trans_diff);
 
-   vprDEBUG(vprDBG_ALL,2) << "sigmoid: dist: " << dist << std::endl
-                        << vprDEBUG_FLUSH;
+   vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
+      << "sigmoid: dist: " << dist << std::endl << vprDEBUG_FLUSH;
 
    // Check max threshold
    if(dist > mMaxThreshold)
@@ -104,8 +104,9 @@ gmtl::Matrix44f LinearSigmoidPositionFilter::getPos(const gmtl::Matrix44f newPos
    }
    else
    {
-      vprDEBUG(vprDBG_ALL,2) << "sigmoid: scale_factor: " << scale_factor
-                           << std::endl << vprDEBUG_FLUSH;
+      vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
+         << "sigmoid: scale_factor: " << scale_factor << std::endl
+         << vprDEBUG_FLUSH;
 
       vprASSERT((scale_factor > eps) && (scale_factor < (1.0f-eps)));
 
@@ -115,10 +116,11 @@ gmtl::Matrix44f LinearSigmoidPositionFilter::getPos(const gmtl::Matrix44f newPos
       ret_trans = last_returned_trans + (trans_diff * scale_factor);
 
       /*
-      vprDEBUG(vprDBG_ALL,2) << "\tret_trans = last_returned_trans + (trans_diff * scale_factor) -->"
-                           << ret_trans << " = " << last_returned_trans << " + (" << trans_diff
-                           << " * " << scale_factor << " )\n" << vprDEBUG_FLUSH;
-                           */
+      vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
+         << "\tret_trans = last_returned_trans + (trans_diff * scale_factor) -->"
+         << ret_trans << " = " << last_returned_trans << " + (" << trans_diff
+         << " * " << scale_factor << " )\n" << vprDEBUG_FLUSH;
+      */
 
       // Compute scaled rotation
       gmtl::Quatf source_rot, goal_rot, slerp_rot;

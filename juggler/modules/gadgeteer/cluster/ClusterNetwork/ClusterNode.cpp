@@ -65,7 +65,7 @@ namespace cluster
       mPendingConnectionRequest = false;
       mUpdated = false;
       mRunning = false;
-      
+
       mConnected = DISCONNECTED;
 
       mName = std::string("None Given");
@@ -73,26 +73,26 @@ namespace cluster
       mPort = 0;
       mRemoteManagerId = vpr::GUID("None Given"); // set the id of the other computer's remote manager
       mSockStream = NULL;
-      
+
       start();
    }
-   ClusterNode::ClusterNode(const std::string& name, const std::string& host_name, 
-                            const vpr::Uint16& port, const std::string& manager_id, 
+   ClusterNode::ClusterNode(const std::string& name, const std::string& host_name,
+                            const vpr::Uint16& port, const std::string& manager_id,
                             vpr::SocketStream* socket_stream) : mUpdateTriggerSema(0), mClusterNodeDoneSema(0)
    {
       mThreadActive = false;
       mUpdated = false;
       mPendingConnectionRequest = false;
       mRunning = false;
-      
+
       mConnected = DISCONNECTED;
-      
+
       mName = name;
       mHostname = host_name;
       mPort = port;
       mRemoteManagerId = vpr::GUID(manager_id); // set the id of the other computer's remote manager
       mSockStream = socket_stream;
-      
+
       start();
    }
 
@@ -131,7 +131,7 @@ namespace cluster
          delete mSockStream;
          mSockStream == NULL;
       }*/
-     
+
          // If ClusterNode is already connected
       // XXX: FIX THIS, it should not return SUCCESS or WOULDBLOCK
       if (isConnected())
@@ -143,17 +143,17 @@ namespace cluster
       {
          vprDEBUG(gadgetDBG_RIM,vprDBG_VERB_LVL)
             << clrOutBOLD(clrBLUE,"[ClusterNode::attemptConnect]")
-            << " Pending Connection Request!" << std::endl << vprDEBUG_FLUSH;      
+            << " Pending Connection Request!" << std::endl << vprDEBUG_FLUSH;
 
          return(vpr::ReturnStatus::InProgress);
       }
-      
+
       vpr::SocketStream* sock_stream;
       vpr::InetAddr inet_addr;
-      
+
       //vprDEBUG(gadgetDBG_RIM,vprDBG_VERB_LVL)
       //   << clrOutBOLD(clrBLUE,"[ClusterNode::attemptConnect]")
-      //   << " HostName: " << mHostname << ":" << mPort << std::endl << vprDEBUG_FLUSH;      
+      //   << " HostName: " << mHostname << ":" << mPort << std::endl << vprDEBUG_FLUSH;
 
          // Set the address that we want to connect to
       if ( !inet_addr.setAddress(mHostname, mPort).success() )
@@ -165,7 +165,7 @@ namespace cluster
       }
          // Create a new socket stream to this address
       sock_stream = new vpr::SocketStream(vpr::InetAddr::AnyAddr, inet_addr);
-      
+
 
          // If we can successfully open the socket and connect to the server
       if ( sock_stream->open().success() && sock_stream->connect().success() )
@@ -182,31 +182,31 @@ namespace cluster
          delete sock_stream;
 //         vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
 //            << clrOutBOLD(clrBLUE,"[ClusterNode::attemptConnect]")
-//            << clrSetNORM(clrRED) << "ERROR: Could not connect to device server: " 
+//            << clrSetNORM(clrRED) << "ERROR: Could not connect to device server: "
 //            << mHostname <<" : "<< mPort << "\n" << clrRESET << vprDEBUG_FLUSH;
          return vpr::ReturnStatus::Fail;
       }
 
       ////////////////////////////////////////////////////
 
-      // We might want to send the listen port on this machine to the remote machine just in 
-      // case they for some reason want to re-connect back to us. This should be taken care 
-      // of in configuration but in all reality the remote machine does not have to have the 
+      // We might want to send the listen port on this machine to the remote machine just in
+      // case they for some reason want to re-connect back to us. This should be taken care
+      // of in configuration but in all reality the remote machine does not have to have the
       // machine specific chunk for this machine
       ConnectionRequest request(ClusterNetwork::instance()->getLocalHostname(),0/*Might be needed, look above*/);
-      
+
       send(&request);
-      
+
       Packet* temp_packet = PacketFactory::instance()->recvPacket(mSockStream);
 
       //vprASSERT(temp_packet->getBaseType() == cluster::Header::RIM_CONNECTION_ACK && "We must be receiving a ConnectionAck here");
-      
+
       vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
          << "We have a responce" << std::endl << vprDEBUG_FLUSH;
 
       temp_packet->printData(vprDBG_CONFIG_LVL);
       ClusterManager::instance()->handlePacket(temp_packet,this);
-      
+
       delete temp_packet;
       if (getConnected() == NEWCONNECTION)
       {
@@ -215,18 +215,18 @@ namespace cluster
          temp = cluster_delta.getClusterDelta(getSockStream());
          mDelta = temp.getBaseVal();
       }
-      
+
       return(vpr::ReturnStatus::Succeed);
    }
-   
+
    void ClusterNode::debugDump(int debug_level)
    {
-      
+
       vpr::DebugOutputGuard dbg_output(gadgetDBG_RIM,debug_level,
                                  std::string("-------------- ClusterNode --------------\n"),
                                  std::string("-----------------------------------------\n"));
 
-      vprDEBUG(gadgetDBG_RIM,debug_level) << "Node Name: " << mName << std::endl << vprDEBUG_FLUSH; 
+      vprDEBUG(gadgetDBG_RIM,debug_level) << "Node Name: " << mName << std::endl << vprDEBUG_FLUSH;
       vprDEBUG(gadgetDBG_RIM,debug_level) << "Hostname:  " << mHostname << std::endl << vprDEBUG_FLUSH;
       vprDEBUG(gadgetDBG_RIM,debug_level) << "Port:      " << mPort << std::endl << vprDEBUG_FLUSH;
       vprDEBUG(gadgetDBG_RIM,debug_level) << "ManagerID: " << mRemoteManagerId << std::endl << vprDEBUG_FLUSH;
@@ -265,7 +265,7 @@ namespace cluster
          vprDEBUG(gadgetDBG_RIM,debug_level) << "        STA read: " << bw_interface->readStats().getSTA()/1024.0f << " k/s" << vprDEBUG_FLUSH;
          vprDEBUG(gadgetDBG_RIM,debug_level) << "       Inst read: " << bw_interface->readStats().getInstAverage()/1024.0f << " k/s" << vprDEBUG_FLUSH;
          vprDEBUG(gadgetDBG_RIM,debug_level) << "    Max STA read: " << bw_interface->readStats().getMaxSTA()/1024.0f << " k/s" << vprDEBUG_FLUSH;
-                   
+
       }
       else
       {
@@ -273,7 +273,7 @@ namespace cluster
       }
 
    }
-   
+
    void ClusterNode::setConnected(int connect)
    {
       // - If we are disconnecting
@@ -316,7 +316,7 @@ namespace cluster
 
       //debugDump(vprDBG_CONFIG_LVL);
       if (mSockStream == NULL)
-      { 
+      {
          // Do Nothing
          setConnected(DISCONNECTED);
          setUpdated(false);
@@ -331,30 +331,30 @@ namespace cluster
       }
       catch(cluster::ClusterException cluster_exception)
       {
-         vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "ClusterNode::update() Caught an exception!" 
+         vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "ClusterNode::update() Caught an exception!"
             << std::endl << vprDEBUG_FLUSH;
          vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << clrSetBOLD(clrRED)
             << cluster_exception.getMessage() << clrRESET
             << std::endl << vprDEBUG_FLUSH;
-         vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << 
+         vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) <<
             "ClusterNode::update() We have lost our connection to: " << getName() << ":" << getPort()
             << std::endl << vprDEBUG_FLUSH;
 
          setConnected(DISCONNECTED);
          setUpdated(true);
          debugDump(vprDBG_CONFIG_LVL);
-                    
+
          // Clean up after oursleves
          if (temp_packet != NULL)
          {
             delete temp_packet;
          }
          return;
-      }  
+      }
 
       // Print Packet Information
       temp_packet->printData(vprDBG_CONFIG_LVL);
-      
+
       ClusterManager::instance()->handlePacket(temp_packet,this);
 
       delete temp_packet;
@@ -374,7 +374,7 @@ namespace cluster
          mUpdateTriggerSema.acquire();
          {
             //vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << getName() << "Dropping into UserData() " << std::endl << vprDEBUG_FLUSH;
-            
+
             setUpdated(false);
             while (!isUpdated())
             {
@@ -385,24 +385,25 @@ namespace cluster
          mClusterNodeDoneSema.release();
       }
    }
-   
+
    /** Starts the control loop. */
    void ClusterNode::start()
    {
       // --- Setup Multi-Process stuff --- //
       // Create a new thread to handle the control
-      
+
       vpr::ThreadMemberFunctor<ClusterNode>* memberFunctor =
          new vpr::ThreadMemberFunctor<ClusterNode>(this, &ClusterNode::controlLoop, NULL);
-   
+
       mControlThread = new vpr::Thread(memberFunctor);
-   
+
       if (mControlThread->valid())
       {
          mThreadActive = true;
       }
-      vprDEBUG(gadgetDBG_RIM,1) << "ClusterNode " << getName() << " started. thread: "
-                                << mControlThread << std::endl << vprDEBUG_FLUSH;
+      vprDEBUG(gadgetDBG_RIM, vprDBG_CONFIG_LVL)
+         << "ClusterNode " << getName() << " started. thread: "
+         << mControlThread << std::endl << vprDEBUG_FLUSH;
    }
 
    void ClusterNode::signalUpdate()
@@ -414,8 +415,8 @@ namespace cluster
       }
       //vprDEBUG(gadgetDBG_RIM,/*vprDBG_HVERB_LVL*/1) << getName() << "Signaling UserData\n" << vprDEBUG_FLUSH;
       mUpdateTriggerSema.release();
-   }  
-   
+   }
+
    /**
     * Blocks until the end of the frame.
     * @post The frame has been drawn.
@@ -429,26 +430,26 @@ namespace cluster
    vpr::ReturnStatus ClusterNode::send(Packet* out_packet)
    {
       vpr::Guard<vpr::Mutex> guard(mSockWriteLock);
-      
+
       // -Send header data
       // -Send packet data
 
       if (mSockStream == NULL)
       {
-         vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << clrSetBOLD(clrRED) 
+         vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << clrSetBOLD(clrRED)
             << "ERROR: SocketSteam is NULL\n" << clrRESET << vprDEBUG_FLUSH;
          throw cluster::ClusterException("ClusterNode::send() - SocketStream is NULL!");
       }
-      
+
       Header* mHeader = out_packet->getHeader();
 
       if (mHeader == NULL)
       {
-         vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << clrSetBOLD(clrRED) 
+         vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << clrSetBOLD(clrRED)
             << "ERROR: Packet Header is NULL\n" << clrRESET << vprDEBUG_FLUSH;
          throw cluster::ClusterException("ClusterNode::send() - Packet Header is NULL!");
       }
-      
+
       if (!mHeader->send(mSockStream).success())
       {
          mSockStream->close();
@@ -456,11 +457,11 @@ namespace cluster
          mSockStream = NULL;
          throw cluster::ClusterException("Packet::recv() - Sending Header Data failed!");
       }
-      
+
       vpr::Uint32 bytes_written;
 
       std::vector<vpr::Uint8>* mData = out_packet->getData();
-      
+
       if(mHeader->getPacketLength() != Header::RIM_PACKET_HEAD_SIZE)
       {
          vpr::ReturnStatus status = mSockStream->send(*mData,mHeader->getPacketLength()-Header::RIM_PACKET_HEAD_SIZE,bytes_written);
@@ -471,13 +472,13 @@ namespace cluster
             mSockStream = NULL;
             throw cluster::ClusterException("Packet::recv() - Sending Packet Data failed!!");
          }
-         return(status);   
+         return(status);
       }
       else  //We might just want to send the header (ex. END_BLOCK)
       {
          return(vpr::ReturnStatus::Succeed);
       }
-      
+
       /*if (bytes_written != mPacketLength)
       {
          std::cout << "Something is seriously wrong here!" << std::endl;

@@ -235,25 +235,25 @@ int MotionStar::stopSampling()
    // If the sampling thread was started, stop it and the device.
    else if ( mMyThread != NULL )
    {
-      vprDEBUG(gadgetDBG_INPUT_MGR, 1) << "Stopping the MotionStar thread ...\n"
-                                       << vprDEBUG_FLUSH;
+      vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CONFIG_LVL)
+         << "Stopping the MotionStar thread ...\n" << vprDEBUG_FLUSH;
       mMyThread->kill();
       delete mMyThread;
       mMyThread = NULL;
 
-      vprDEBUG(gadgetDBG_INPUT_MGR, 1) << "  Stopping the MotionStar ...\n"
-                                       << vprDEBUG_FLUSH;
+      vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CONFIG_LVL)
+         << "  Stopping the MotionStar ...\n" << vprDEBUG_FLUSH;
 
       try
       {
          mMotionStar.stop();
-         vprDEBUG(gadgetDBG_INPUT_MGR, 1) << "MotionStar server shut down.\n"
-                                          << vprDEBUG_FLUSH;
+         vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CONFIG_LVL)
+            << "MotionStar server shut down.\n" << vprDEBUG_FLUSH;
          retval = 1;
       }
       catch (mstar::CommandException ex)
       {
-         vprDEBUG(gadgetDBG_INPUT_MGR, 1)
+         vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CONFIG_LVL)
             << "MotionStar server did not shut down.\n" << vprDEBUG_FLUSH;
          retval = 0;
       }
@@ -389,7 +389,7 @@ int MotionStar::sample()
          }
 
          // Add the current data as a sample
-         addPositionSample(cur_samples);         
+         addPositionSample(cur_samples);
 
          retval = 1;
       }
@@ -434,7 +434,7 @@ void MotionStar::setAddressName(const char* n)
    // If the device active, we cannot change the server address.
    if ( isActive() )
    {
-      vprDEBUG(gadgetDBG_INPUT_MGR, 2)
+      vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_WARNING_LVL)
          << "gadget::MotionStar: Cannot change server address while active\n"
          << vprDEBUG_FLUSH;
    } else
@@ -451,7 +451,7 @@ void MotionStar::setServerPort(const unsigned short port)
    // If the device active, we cannot change the server port.
    if ( isActive() )
    {
-      vprDEBUG(gadgetDBG_INPUT_MGR, 2)
+      vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_WARNING_LVL)
          << "gadget::MotionStar: Cannot change server port while active\n"
          << vprDEBUG_FLUSH;
    }
@@ -468,7 +468,7 @@ void MotionStar::setServerPort(const unsigned short port)
             setProtocol(BIRDNET::TCP);
             break;
          default:
-            vprDEBUG(gadgetDBG_INPUT_MGR, 1)
+            vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CONFIG_LVL)
                << "MotionStar: Unexpected port number " << port << " given!\n"
                << "            Defaulting to TCP port.\n" << vprDEBUG_FLUSH;
             mMotionStar.setProtocol(BIRDNET::TCP);
@@ -485,7 +485,7 @@ void MotionStar::setProtocol(const enum BIRDNET::protocol proto)
    // If the device active, we cannot change the transmission protocol.
    if ( isActive() )
    {
-      vprDEBUG(gadgetDBG_INPUT_MGR, 2)
+      vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_WARNING_LVL)
          << "gadget::MotionStar: Cannot change transmission protocol while active\n"
          << vprDEBUG_FLUSH;
    }
@@ -503,7 +503,7 @@ void MotionStar::setMasterStatus(const bool master)
    // If the device active, we cannot change the master status.
    if ( isActive() )
    {
-      vprDEBUG(gadgetDBG_INPUT_MGR, 2)
+      vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_WARNING_LVL)
          << "gadget::MotionStar: Cannot change master status while active\n"
          << vprDEBUG_FLUSH;
    }
@@ -521,7 +521,7 @@ void MotionStar::setHemisphere(const unsigned char hemisphere)
    // If the device active, we cannot change the hemisphere.
    if ( isActive() )
    {
-      vprDEBUG(gadgetDBG_INPUT_MGR, 2)
+      vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_WARNING_LVL)
          << "gadget::MotionStar: Cannot change hemisphere while active\n"
          << vprDEBUG_FLUSH;
    }
@@ -548,7 +548,7 @@ void MotionStar::setHemisphere(const unsigned char hemisphere)
             mMotionStar.setHemisphere(FLOCK::RIGHT_HEMISPHERE);
             break;
          default:
-            vprDEBUG(gadgetDBG_INPUT_MGR, 1)
+            vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CONFIG_LVL)
                << "gadget::MotionStar: Unknown hemisphere " << hemisphere
                << " given!\n              Defaulting to front hemisphere.\n"
                << vprDEBUG_FLUSH;
@@ -566,7 +566,7 @@ void MotionStar::setBirdFormat(const unsigned int format)
    // If the device active, we cannot change the bird format.
    if ( isActive() )
    {
-      vprDEBUG(gadgetDBG_INPUT_MGR, 2)
+      vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_WARNING_LVL)
          << "gadget::MotionStar: Cannot change format while active\n"
          << vprDEBUG_FLUSH;
    }
@@ -593,7 +593,7 @@ void MotionStar::setBirdFormat(const unsigned int format)
             mMotionStar.setBirdFormat(FLOCK::POSITION_MATRIX);
             break;
          case 6:
-            vprDEBUG(gadgetDBG_INPUT_MGR, 1)
+            vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CONFIG_LVL)
                << "gadget::MotionStar: Invalid bird format 6 given!\n"
                << "                    Defaulting to position/angles.\n"
                << vprDEBUG_FLUSH;
@@ -606,7 +606,7 @@ void MotionStar::setBirdFormat(const unsigned int format)
             mMotionStar.setBirdFormat(FLOCK::POSITION_QUATERNION);
             break;
          default:
-            vprDEBUG(gadgetDBG_INPUT_MGR, 1)
+            vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CONFIG_LVL)
                << "gadget::MotionStar: Unexpected bird format " << format
                << " given!\n"
                << "                    Defaulting to position/angles.\n"
@@ -625,7 +625,7 @@ void MotionStar::setNumBirds(unsigned int i)
    // If the device active, we cannot change the number of birds.
    if ( isActive() )
    {
-      vprDEBUG(gadgetDBG_INPUT_MGR, 2)
+      vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_WARNING_LVL)
          << "gadget::MotionStar: Cannot change number of birds while active\n"
          << vprDEBUG_FLUSH;
    }
@@ -643,7 +643,7 @@ void MotionStar::setRunMode(const unsigned int mode)
    // If the device active, we cannot change the run mode.
    if ( isActive() )
    {
-      vprDEBUG(gadgetDBG_INPUT_MGR, 2)
+      vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_WARNING_LVL)
          << "gadget::MotionStar: Cannot change run mode while active\n"
          << vprDEBUG_FLUSH;
    }
@@ -660,7 +660,7 @@ void MotionStar::setRunMode(const unsigned int mode)
                mMotionStar.setRunMode(BIRDNET::SINGLE_SHOT);
                break;
             default:
-               vprDEBUG(gadgetDBG_INPUT_MGR, 1)
+               vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CONFIG_LVL)
                   << "gadget::MotionStar: Unexpected run mode " << mode
                   << " given!\n"
                   << "                    Defaulting to continuous.\n"
@@ -686,7 +686,7 @@ void MotionStar::setReportRate(const unsigned char rate)
    // If the device active, we cannot change the report rate.
    if (isActive())
    {
-      vprDEBUG(gadgetDBG_INPUT_MGR, 2)
+      vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_WARNING_LVL)
          << "gadget::MotionStar: Cannot change bird report rate while active\n"
          << vprDEBUG_FLUSH;
    }
@@ -704,7 +704,7 @@ void MotionStar::setMeasurementRate(const double rate)
    // If the device active, we cannot change the measurement rate.
    if (isActive())
    {
-      vprDEBUG(gadgetDBG_INPUT_MGR, 2)
+      vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_WARNING_LVL)
          << "gadget::MotionStar: Cannot change chassis measurement rate while active\n"
          << vprDEBUG_FLUSH;
    }

@@ -62,7 +62,7 @@ bool PinchGlove::config(jccl::ConfigChunkPtr c)
    vprASSERT(mThread == NULL);      // This should have been set by Input(c)
 
    mGlove = new PinchGloveStandalone();
-   
+
    return true;
 }
 
@@ -78,7 +78,7 @@ int PinchGlove::startSampling()
                                     << vprDEBUG_FLUSH;
    mGlove->setPort(mPortName);
    mGlove->setBaudRate(mBaudRate);
-   
+
    if ( mThread == NULL )
    {
       int maxAttempts=0;
@@ -94,14 +94,14 @@ int PinchGlove::startSampling()
          if (maxAttempts==5)
          {
             vprDEBUG(gadgetDBG_INPUT_MGR,0)
-               << "[PinchGlove] Could not connect to PinchGlove on port " 
+               << "[PinchGlove] Could not connect to PinchGlove on port "
                << mPortName << std::endl << vprDEBUG_FLUSH;
             return(vpr::ReturnStatus::Fail);
          }
       }
 
       vprDEBUG(gadgetDBG_INPUT_MGR,0)
-         << "[PinchGlove] Successfully connected to Fakespace Hardware on " 
+         << "[PinchGlove] Successfully connected to Fakespace Hardware on "
          << mPortName << std::endl << vprDEBUG_FLUSH;
 
       // Create a new thread to handle the control
@@ -118,8 +118,9 @@ int PinchGlove::startSampling()
       }
       else
       {
-         vprDEBUG(gadgetDBG_INPUT_MGR,1) << "[PinchGlove] PinchGlove is active "
-                                         << std::endl << vprDEBUG_FLUSH;
+         vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CONFIG_LVL)
+            << "[PinchGlove] PinchGlove is active " << std::endl
+            << vprDEBUG_FLUSH;
          mActive = true;
          return 1;
       }
@@ -171,7 +172,7 @@ int PinchGlove::sample()
    //std::cout << std::endl;
 
    addDigitalSample(mDigitalData);
-      
+
    /////////////////////////////
    // Add Finger Angles LATER //
    // updateFingerAngles();   //
@@ -200,9 +201,9 @@ int PinchGlove::stopSampling()
       mThread->kill();
       delete mThread;
       mThread = NULL;
-      
-      vprDEBUG(gadgetDBG_INPUT_MGR,1) << "[PinchGlove] stopping PinchGlove.."
-                                      << std::endl << vprDEBUG_FLUSH;
+
+      vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CONFIG_LVL)
+         << "[PinchGlove] stopping PinchGlove.." << std::endl << vprDEBUG_FLUSH;
    }
    return 1;
 }

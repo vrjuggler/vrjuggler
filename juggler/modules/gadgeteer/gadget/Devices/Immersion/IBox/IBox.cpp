@@ -77,7 +77,7 @@ bool IBox::config(jccl::ConfigChunkPtr c)
    mPortName = c->getProperty<std::string>("port");
    mBaudRate = c->getProperty<int>("baud");
 
-   vprDEBUG(gadgetDBG_INPUT_MGR,1)
+   vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CONFIG_LVL)
       << "   Creating an IBox.. params: " << std::endl
       << "    portnum: " << mPortName << std::endl
       << "        baud   : " << mBaudRate << std::endl
@@ -118,12 +118,12 @@ int IBox::startSampling()
       if (result == vpr::ReturnStatus::Succeed)
       {
          mActive = true;
-         vprDEBUG(gadgetDBG_INPUT_MGR,1) << "     Connected to IBox.\n"
-                                         << std::flush << vprDEBUG_FLUSH;
+         vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CONFIG_LVL)
+            << "     Connected to IBox.\n" << std::flush << vprDEBUG_FLUSH;
       } else
       {
          mActive = false;
-         vprDEBUG(gadgetDBG_INPUT_MGR,0)
+         vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
             << "   FAILED TO CONNECT to the Ibox named " << mInstName
             << std::endl << "     Ibox settings were: " << std::endl
             << "      port : " << mPortName << std::endl
