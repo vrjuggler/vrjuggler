@@ -253,23 +253,21 @@ void navigator::setRotAxis(bool allowX, bool allowY, bool allowZ)
 
 // HELPER
 // returns true if the action state is true
-bool navigator::checkForAction(std::vector<vjDigitalInterface*> btns, std::vector<navigator::ActionState> state_combo)
+bool navigator::checkForAction( std::vector<vjDigitalInterface*> btns, std::vector<navigator::ActionState> state_combo)
 {
-   bool ret_val;
-
-   ret_val = true;
+   bool ret_val( true );
 
    // Check state of all the required combos
-   for(unsigned int i=0;i<state_combo.size();i++)
+   for (unsigned int i=0;i<state_combo.size();i++)
    {
       if(state_combo[i] == navigator::ON)
       {
-         if(!(*btns[i])->getData())
+         if (!(*btns[i])->getData())
          { ret_val = false; }          // We need it on, and it is off
       }
-      else if(state_combo[i] == navigator::OFF)
+      else if (state_combo[i] == navigator::OFF)
       {
-         if((*btns[i])->getData())
+         if ((*btns[i])->getData())
          { ret_val = false; }          // We need it off, and it is on
       }
    }
