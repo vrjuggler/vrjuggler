@@ -81,7 +81,7 @@ class VJ_CLASS_API App : public jccl::ConfigChunkHandler
 {
 public:
    /** Constructor
-    * @param kern - The Kernel that is active.  
+    * @param kern - The Kernel that is active.
     *    So application has easy access to kernel
     */
    App(Kernel* kern);
@@ -119,12 +119,12 @@ public:
     */
    virtual void preFrame()
    {;}
-   
+
    /** Function called <b>during</b> the application's drawing time
     */
    virtual void intraFrame()
    {;}
-   
+
    /** Function called before updating trackers but after the frame is complete
     */
    virtual void postFrame()
@@ -165,6 +165,20 @@ public:
          this->focusChanged();
       }
    }
+
+   /** Return scale scale factor to get from Juggler units (meters) to application units.
+   * Internally VR Juggler stores and processes all position values
+   * in meters.  The scale factor returned by this method is
+   * used by VR Juggler to scale the OpenGL drawing state from meters to
+   * whatever local units the application wants to use
+   *
+   * Example: to use feet as local app unit, return 3.28;
+   */
+   virtual float getDrawScaleFactor()
+   {
+      return gadget::PositionUnitConversion::ConvertToFeet;
+   }
+
 
 public:  // --- DEfault config handlers: (inherited from jccl::ConfigChunkHandler) --- //
    // Default to not handling anything
