@@ -110,6 +110,9 @@ int main(int argc, char* argv[])
             // then we are good to go.
             if ( ! CORBA::is_nil(subj) )
             {
+               StringObserverImpl* string_observer;
+               PortableServer::ObjectId_var observer_id;
+
                try
                {
                   // Attempt to narrow subj to the more specific reference type
@@ -127,13 +130,11 @@ int main(int argc, char* argv[])
                   delete cur_value;
 
                   // Create our Observer servant.
-                  StringObserverImpl* string_observer =
-                     new StringObserverImpl(string_subj);
+                  string_observer = new StringObserverImpl(string_subj);
 
                   // Register the newly created servant with our ORB's POA.
-                  PortableServer::ObjectId_var observer_id =
-                     corba_service.registerObject(string_observer,
-                                                   "StringObserver");
+                  observer_id = corba_service.registerObject(string_observer,
+                                                             "StringObserver");
 
                   // This could be done in the StringObserverImpl constructor,
                   // but we do it here in this example just to make it clear
@@ -159,14 +160,26 @@ int main(int argc, char* argv[])
                   }
 
                   // We're done, so now we have to clean up after ourselves.
+                  // The order of operations here is important.
+                  string_observer->detach();
                   corba_service.unregisterObject(observer_id);
-
-                  // XXX: This causes a bus error.  Why?
                   delete string_observer;
                }
                // XXX: Make this more specific.
                catch (...)
                {
+                  vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+                     << "Caught an unknown exception during object interaction!\n"
+                     << vprDEBUG_FLUSH;
+
+                  // If the observer was constructed, then we need to do the
+                  // shutdown clean-up stuff.
+                  if ( NULL != string_observer )
+                  {
+                     string_observer->detach();
+                     corba_service.unregisterObject(observer_id);
+                     delete string_observer;
+                  }
                }
             }
          }
