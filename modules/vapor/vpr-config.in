@@ -251,12 +251,12 @@ sub make_CXXFLAGS ($)
    my $vpr_extra_include_dirs     = qq(@vpr_extra_include_dirs@);
    my $vpr_extra_includes         = '';
 
-   if ( "$vpr_extra_include_dirs" ne "" )
+   if ( "$vpr_extra_include_dirs" ne "" && "$deps_dir" ne "" )
    {
       my $dir;
       foreach $dir ( split(/\s+/, "$vpr_extra_include_dirs") )
       {
-         $vpr_extra_includes .= qq( -I@includedir@/$dir);
+         $vpr_extra_includes .= qq( -I$deps_dir/include/$dir);
       }
    }
 
