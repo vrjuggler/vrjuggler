@@ -78,7 +78,16 @@ namespace cluster
 
    bool ClusterManager::isClusterReady()
    {
-      if (!mClusterReady)
+      // -If the cluster is active and not ready
+      //   -If a StartBarrier ConfigChunk does not exist
+      //    -Warn the user and set cluster ready
+      //   -Get new value of mClusterReady from asking all plugins
+      // -Return the new mClusterReady
+
+      vpr::Guard<vpr::Mutex> ready_guard(mClusterReadyLock);
+      vpr::Guard<vpr::Mutex> active_guard(mClusterActiveLock);
+
+      if (mClusterActive && !mClusterReady)
       {
          if (!jccl::ConfigManager::instance()->isChunkTypeInActiveList("StartBarrierPlugin") &&
              !jccl::ConfigManager::instance()->isChunkTypeInPendingList("StartBarrierPlugin"))
@@ -89,12 +98,32 @@ namespace cluster
             << clrOutBOLD(clrRED, "time you should add a StartBarrierPlugin configuration chunk.")
             << std::endl << vprDEBUG_FLUSH;
 
-            vpr::Guard<vpr::Mutex> guard(mClusterReadyLock);
+            std::cout << "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX DONE - ERROR XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX" << std::endl;
+
             mClusterReady = true;
          }
       }
-      vpr::Guard<vpr::Mutex> guard(mClusterReadyLock);
-      return mClusterReady;
+      // Lock it here so that we can avoid confusion in pluginsReady()
+      vpr::Guard<vpr::Mutex> guard(mPluginsLock);
+      return(mClusterReady && pluginsReady());
+   }
+
+   bool ClusterManager::pluginsReady()
+   {
+      // Plugins are already locked since we only call this method from 
+      // isClusterReady which is only called by StartBarrierPlugin::postPostFrame 
+      // which has already locked the list of plugins.
+
+      //vpr::Guard<vpr::Mutex> guard(mPluginsLock);
+
+      for (std::list<ClusterPlugin*>::iterator i = mPlugins.begin();
+           i != mPlugins.end() ; i++)
+      {
+         if (!(*i)->isPluginReady())
+            return false;
+      }
+
+      return true;
    }
    
    void ClusterManager::recoverFromLostNode(ClusterNode* lost_node)

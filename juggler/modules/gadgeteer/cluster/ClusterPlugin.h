@@ -79,7 +79,11 @@ public:
    virtual void preDraw() = 0;
    virtual void postPostFrame() = 0;
    virtual std::string getManagerName() = 0;
-   
+   virtual bool isPluginReady()
+   {
+      return true;
+   }
+
    virtual bool createBarrier()
    {
       return false;

@@ -54,7 +54,8 @@
 namespace cluster
 {
    static vpr::Uint8 SYNC_SIGNAL = 'G';
-   static const vpr::Interval read_timeout(5,vpr::Interval::Sec);
+   static const vpr::Interval read_timeout(10,vpr::Interval::Usec);
+   
    void ClusterBarrierTCP::AddBarrierSlave(vpr::SocketStream* sock_stream)
    {
       vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "ClusterBarrierTCP: Adding Barrier Slave\n"<< vprDEBUG_FLUSH;
@@ -83,37 +84,42 @@ namespace cluster
          // If we can successfully open the socket and connect to the server
       mSyncServer->open();
       mSyncServer->enableBlocking();
-
-      while (!mSyncServer->connect().success())
-      {
-         std::cout << clrSetBOLD(clrMAGENTA) << "[Remote Input Manager]"
-         << " Waiting for Sync Server: " << mHostname << ":" << mTCPport
-         << "["/* << gadget::spiner() */<< "]" << "\r" << clrRESET;
-      }
-      vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "ClusterBarrierTCP: Successfully connected to sync server: " 
-         << mHostname <<":"<< mTCPport << "\n"<< vprDEBUG_FLUSH;
       
-      // Send request
-      // Wait for responce
-      // return result
-
-      std::string local_host_name = ClusterNetwork::instance()->getLocalHostname();
-      std::string temp_manager_id = std::string("ManagerID");
-
-      SyncRequest sync_request(local_host_name, mTCPport, temp_manager_id);
-      sync_request.send(mSyncServer);
-
-      Packet* packet = PacketFactory::instance()->recvPacket(mSyncServer);
-      SyncAck* ack_packet = static_cast<SyncAck*>(packet);
-
-      if (ack_packet->getAck())
-      {
-         // add to list
-         // respond true
-         SwapLockPlugin::instance()->setActive(true);
-         return(vpr::ReturnStatus::Succeed);
+      //while (!mSyncServer->connect().success())
+      //{
+      //   std::cout << clrSetBOLD(clrMAGENTA) << "[Remote Input Manager]"
+      //   << " Waiting for Sync Server: " << mHostname << ":" << mTCPport
+      //   << "["/* << gadget::spiner() */<< "]" << "\r" << clrRESET;
+      //}
+      if (mSyncServer->connect().success())
+      {   
+         vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "ClusterBarrierTCP: Successfully connected to sync server: " 
+            << mHostname <<":"<< mTCPport << "\n"<< vprDEBUG_FLUSH;
+         
+         // Send request
+         // Wait for responce
+         // return result
+   
+         std::string local_host_name = ClusterNetwork::instance()->getLocalHostname();
+         std::string temp_manager_id = std::string("ManagerID");
+   
+         SyncRequest sync_request(local_host_name, mTCPport, temp_manager_id);
+         sync_request.send(mSyncServer);
+   
+         Packet* packet = PacketFactory::instance()->recvPacket(mSyncServer);
+         SyncAck* ack_packet = static_cast<SyncAck*>(packet);
+   
+         if (ack_packet->getAck())
+         {
+            // add to list
+            // respond true
+            SwapLockPlugin::instance()->setActive(true);
+            return(vpr::ReturnStatus::Succeed);
+         }
       }
-
+      // Free unused memory since we could not connect
+      delete mSyncServer;
+      mSyncServer = NULL;
       return(vpr::ReturnStatus::Fail);
    }
 
@@ -127,7 +133,8 @@ namespace cluster
       for (std::vector<vpr::SocketStream*>::iterator i = this->mSyncClients.begin();
         i < this->mSyncClients.end();i++)
       {
-         (*i)->send(&SYNC_SIGNAL , 1, bytes_read);
+         (*i)->send(&SYNC_SIGNAL , 1, bytes_read, vpr::Interval::NoWait);
+         vpr::SocketStream temp;
       }
 
    }
@@ -164,7 +171,7 @@ namespace cluster
       vprASSERT(mActive==true && "Barrier is not active!");
 
       vpr::Uint32 bytes_read;
-      mSyncServer->send(&SYNC_SIGNAL , 1, bytes_read);
+      mSyncServer->send(&SYNC_SIGNAL , 1, bytes_read, vpr::Interval::NoWait);
    }
    void ClusterBarrierTCP::SlaveReceive()
    {

@@ -483,7 +483,6 @@ namespace cluster
       //                           1. Send DeviceReq                              //
       //////////////////////////////////////////////////////////////////////////////
 
-
       ClusterNetwork::instance()->lockClusterNodes();
 
       sendDeviceRequests();      
@@ -598,13 +597,13 @@ namespace cluster
       return(mPendingDeviceRequests.size());
    }
 
-/*
+
    bool RemoteInputManager::isPluginReady()
    {
       vpr::Guard<vpr::Mutex> guard(mPendingDeviceRequestsLock);
       return(0 == mPendingDeviceRequests.size());
    }
-*/
+
    vpr::ReturnStatus RemoteInputManager::createPendingConfigRemove(std::string device_name)
    {
       jccl::ConfigManager* cfg_mgr = jccl::ConfigManager::instance();
