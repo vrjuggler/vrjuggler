@@ -68,15 +68,6 @@ public:
    //: Draw all the ogl pipes/windows
    void drawAllPipes();
 
-   //: Draw any objects that the manager needs to display
-   // i.e. Gloves, etc
-   void drawObjects();
-   void drawProjections();
-
-   //: Draw a simulator using OpenGL commands
-   //! NOTE: This is called internally by the library
-   void drawSimulator(vjSimDisplay* sim);
-
    //: Set the app the draw should interact with.
    virtual void setApp(vjApp* _app);
 
@@ -86,6 +77,18 @@ public:
    void setDisplayManager(vjDisplayManager* _dispMgr);
 
    void debugDump();
+
+public:  // Drawing functions used by library
+   //: Draw any objects that the manager needs to display
+   // i.e. Gloves, etc
+   void drawObjects();
+
+   //: Draw projections in Opengl
+   void drawProjections(vjSimDisplay* sim);
+
+   //: Draw a simulator using OpenGL commands
+   //! NOTE: This is called internally by the library
+   void drawSimulator(vjSimDisplay* sim);
 
 protected:     // --- Geom helpers --- //
    void initQuadObj();

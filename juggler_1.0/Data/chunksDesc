@@ -175,5 +175,8 @@ chunk simDisplay "simDisplay" "This is a surface that images are projected on."
   cameraPos Chunk 1 "cameraPos" vj_enumeration { "PosProxy" "proxyAlias" } "This is the pos proxy that controls the sim view"
   user Chunk 1 "user" vj_enumeration { "JugglerUser" } "This is the user that the window is drawing for."
   wandPos Chunk 1 "wandPos" vj_enumeration { "proxyAlias" "PosProxy" } "The wand pos proxy to use in the simulator."
+  active Bool 1 "active" "Is the window active?"
+  drawProjections Bool 1 "drawProjections" "Should projections be drawn in the simulator?"
+  surfaceColor Float 3 "surfaceColor" vj_valuelabels { "red" "green" "blue" } "What color should the surfaces be?"
   end
 End

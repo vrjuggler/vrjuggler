@@ -103,7 +103,7 @@ void vjGlDrawManager::initDrawing()
    //  For each display:
    //	-- Create a window for it
    //	-- Store the window in the wins vector
-   std::vector<vjDisplay*> displays = displayManager->getDisplays();
+   std::vector<vjDisplay*> displays = displayManager->getActiveDisplays();
    for (std::vector<vjDisplay*>::iterator dispIter = displays.begin();
        dispIter != displays.end(); dispIter++)
    {
@@ -188,9 +188,23 @@ void vjGlDrawManager::drawObjects()
 }
 
 
-void vjGlDrawManager::drawProjections()
+// Draw the projections
+//!POST: Draws the projections
+//+      If withApex, then it draws the frustums with different colors
+//+      If !withApex, then just draws the surfaces in all white
+void vjGlDrawManager::drawProjections(vjSimDisplay* sim)
 {
-   std::vector<vjDisplay*> disps = displayManager->getDisplays();
+   const float ALPHA_VALUE(0.25f);
+   /*
+   static float ALPHA_VALUE(0.0f);
+   ALPHA_VALUE += 0.001f;
+   if(ALPHA_VALUE > 1.0f)
+      ALPHA_VALUE = 0.0f;
+
+   vjDEBUG(0) << "ALPHA_VALUE: " << ALPHA_VALUE << endl << vjDEBUG_FLUSH;
+   */
+
+   std::vector<vjDisplay*> disps = displayManager->getAllDisplays();
 
    vjVec3 apex, ur, lr, ul, ll;
    vjProjection* proj(NULL);
@@ -214,12 +228,12 @@ void vjGlDrawManager::drawProjections()
 
          // Create color values that are unique
          // Basically count in binary (skipping 0), and use the first 3 digits.  That will give six colors
-         int red_on = (i & 0x001); int green_on = (i & 0x010); int blue_on = (i & 0x100);
+         int red_on = (i & 0x1); int green_on = ((i >> 1) & 0x1); int blue_on = ((i >> 2) & 0x1);
 
          float red(0.0f), green(0.0f), blue(0.0f);
-         if(red_on) red = 1.0f;
-         if(green_on) green = 1.0f;
-         if(blue_on) blue = 1.0f;
+         if(red_on > 0) red = 1.0f;
+         if(green_on > 0) green = 1.0f;
+         if(blue_on > 0) blue = 1.0f;
 
          if((!red_on) && (!blue_on) && (!green_on))      // Case of 0's (black is bad)
             red = blue = green = 0.75f;
@@ -227,9 +241,23 @@ void vjGlDrawManager::drawProjections()
          // Draw the thingy
          proj->getFrustumApexAndCorners(apex, ur, lr, ul, ll);
          glPushMatrix();
-            glColor3f(red, green, blue);
-            drawLine(apex, ur); drawLine(apex, lr); drawLine(apex, ul); drawLine(apex, ll);
+            if(sim->shouldDrawProjections())
+            {
+               glColor4f(red, green, blue, ALPHA_VALUE);
+               drawLine(apex, ur); drawLine(apex, lr); drawLine(apex, ul); drawLine(apex, ll);
+            }
+            else
+               glColor4f(sim->getSurfaceColor()[0], sim->getSurfaceColor()[1],
+                         sim->getSurfaceColor()[2], ALPHA_VALUE);
             drawLine(ur, lr); drawLine(lr, ll); drawLine(ll, ul); drawLine(ul, ur);
+            glPushAttrib(GL_ENABLE_BIT | GL_COLOR_BUFFER_BIT);
+               glEnable(GL_BLEND);
+               glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+               glBegin(GL_TRIANGLES);
+                  glVertex3fv(ll.vec); glVertex3fv(lr.vec); glVertex3fv(ur.vec);
+                  glVertex3fv(ur.vec); glVertex3fv(ul.vec); glVertex3fv(ll.vec);
+               glEnd();
+            glPopAttrib();
          glPopMatrix();
       }
    }
@@ -245,80 +273,55 @@ void vjGlDrawManager::drawSimulator(vjSimDisplay* sim)
    const float interoccular(0.27);
    const float eye_radius(0.08f);
 
-    //glPushAttrib( GL_ENABLE_BIT | GL_LIGHTING_BIT );
+   //glPushAttrib( GL_ENABLE_BIT | GL_LIGHTING_BIT );
    {
-	//-----------------set up materials....
-	float mat_ambient[] = {0.1, 0.1, 0.1, 1.0};
-	float mat_shininess[] = {50.0};
-	float mat_diffuse[] = {.7, .7, .7, 1.0};
-	float mat_specular[] = {1.0, 1.0, 1.0, 1.0};
-	//-----------------Call Materials.....
-	glMaterialfv(GL_FRONT, GL_AMBIENT, mat_ambient);
-	glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
-	glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
-	glMaterialfv(GL_FRONT, GL_DIFFUSE, mat_diffuse);
-	//----------------Enable Materials.....
-	glColorMaterial(GL_FRONT_AND_BACK, GL_DIFFUSE);
-	glEnable(GL_COLOR_MATERIAL);
+   	//-----------------set up materials....
+   	float mat_ambient[] = {0.1, 0.1, 0.1, 1.0};
+   	float mat_shininess[] = {50.0};
+   	float mat_diffuse[] = {.7, .7, .7, 1.0};
+   	float mat_specular[] = {1.0, 1.0, 1.0, 1.0};
+   	//-----------------Call Materials.....
+   	glMaterialfv(GL_FRONT, GL_AMBIENT, mat_ambient);
+   	glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
+   	glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
+   	glMaterialfv(GL_FRONT, GL_DIFFUSE, mat_diffuse);
+   	//----------------Enable Materials.....
+   	glColorMaterial(GL_FRONT_AND_BACK, GL_DIFFUSE);
+   	glEnable(GL_COLOR_MATERIAL);
 	
-	//-----------------set up a light....
-	/*
-   GLfloat light_ambient[] = { 0.1f,  0.1f,  0.1f,  1.0f};
-	GLfloat light_diffuse[] = { 0.8f,  0.8f,  0.8f,  1.0f};
-	GLfloat light_specular[] = { 1.0f,  1.0f,  1.0f,  1.0f};
-	GLfloat light_position[] = {0.0f, 0.75f, 0.75f, 0.0f};
-   */
-	//-----------------Call the light....
-	/*
-   glLightfv(GL_LIGHT7, GL_AMBIENT,  light_ambient);
-	glLightfv(GL_LIGHT7, GL_DIFFUSE,  light_diffuse);
-	glLightfv(GL_LIGHT7, GL_SPECULAR,  light_specular);
-	glLightfv(GL_LIGHT7, GL_POSITION,  light_position);
-
-	glEnable(GL_LIGHTING);
-	glEnable(GL_LIGHT7);
-   */
-	//-----------------------------------------------------
-	
-      // Draw a cave-like outline
-   glPushAttrib( GL_ENABLE_BIT | GL_LIGHTING_BIT );
-   glDisable(GL_LIGHTING);
-   glPushMatrix();
+     // Draw the user's head
       glPushMatrix();
-         glColor3f(1.0f, 1.0f, 1.0f);
-	      glTranslatef(0.0f, 5.0f, 0.0f);      // Center it on 0,0,0
-	      drawWireCube(10.0f);
+	      glMultMatrixf(sim->getHeadPos().getFloatPtr());
+	      glColor3f(1.0f, 0.0f, 0.0f);
+	      drawSphere(head_radius, 10, 10);             // Head
+	      glPushMatrix();
+	         glColor3f(0.0f, 0.0f, 1.0f);
+	         glTranslatef(0.0f, eye_vertical, -eye_horizontal);
+	         glPushMatrix();                     // Right eye
+		         glTranslatef((interoccular/2.0f), 0.0f, 0.0f);
+		         drawSphere(eye_radius, 5, 5);
+	         glPopMatrix();
+	         glPushMatrix();                     // Left eye
+		         glTranslatef(-(interoccular/2.0f), 0.0f, 0.0f);
+		         drawSphere(eye_radius, 5, 5);
+	         glPopMatrix();
+	      glPopMatrix();
       glPopMatrix();
-      drawProjections();
-   glPopMatrix();
-   glPopAttrib();
 
+	   // Draw the wand
+      glPushMatrix();
+	      glMultMatrixf(sim->getWandPos().getFloatPtr());
+	      glColor3f(0.0f, 1.0f, 0.0f);
+	      drawCone(0.2, 0.6f, 6, 1);
+      glPopMatrix();
 
-	  // Draw the user's head
-       glPushMatrix();
-	  glMultMatrixf(sim->getHeadPos().getFloatPtr());
-	  glColor3f(1.0f, 0.0f, 0.0f);
-	  drawSphere(head_radius, 10, 10);             // Head
-	  glPushMatrix();
-	     glColor3f(0.0f, 0.0f, 1.0f);
-	     glTranslatef(0.0f, eye_vertical, -eye_horizontal);
-	     glPushMatrix();                     // Right eye
-		glTranslatef((interoccular/2.0f), 0.0f, 0.0f);
-		drawSphere(eye_radius, 5, 5);
-	     glPopMatrix();
-	     glPushMatrix();                     // Left eye
-		glTranslatef(-(interoccular/2.0f), 0.0f, 0.0f);
-		drawSphere(eye_radius, 5, 5);
-	     glPopMatrix();
-	  glPopMatrix();
-       glPopMatrix();
-
-	  // Draw the wand
-       glPushMatrix();
-	  glMultMatrixf(sim->getWandPos().getFloatPtr());
-	  glColor3f(1.0f, 0.0f, 1.0f);
-	  drawCone(0.2, 0.6f, 6, 1);
-       glPopMatrix();
+       // Draw a The display surfaces
+      glPushAttrib( GL_ENABLE_BIT | GL_LIGHTING_BIT );
+      glDisable(GL_LIGHTING);
+      glPushMatrix();
+         drawProjections(sim);
+      glPopMatrix();
+      glPopAttrib();
    }
    //glPopAttrib();
 }
