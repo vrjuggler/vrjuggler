@@ -89,12 +89,14 @@ protected:
   // If not, then open it with the given params
   bool checkOpen (SocketStream& newStream)
   {
+      vpr::Status status;
+
       if (!newStream.isOpen())
       {
-          newStream.open();
+          status = newStream.open();
       }
 
-      return true;
+      return status.success();
   }
 
 
