@@ -53,12 +53,12 @@
 /* Data Types */
 /*------------*/
 
-/* Use ibox2_result as if it were an enumerated type.  Compare variables of
- *   this type to the string constants declared below.  An ibox2_result is
+/* Use ibox_result as if it were an enumerated type.  Compare variables of
+ *   this type to the string constants declared below.  An ibox_result is
  *   actually a string, so it can be directly printed as well.
  */
 
-typedef const char*   ibox2_result;
+typedef const char*   ibox_result;
 
 /* Result Codes for which there are error handlers
  */
@@ -151,7 +151,7 @@ typedef struct
 #define INSERT_MARKER   0xD2
 
 
-class ibox2{
+class IboxStandalone{
 public:
 
 /**
@@ -168,18 +168,18 @@ public:
      *       all product info arrays are cleared to 0 and all error handlers
      *       are set to NULL, and port is set to NULL.
      */
-    ibox2();
+    IboxStandalone();
 
     /**
      * Destructor. Deletes the port object.
      *
      * @post The Serial Port port is deleted.
      */
-    ~ibox2();
+    ~IboxStandalone();
 
-    // ----------------------------------------------------------------------------
+    // ------------------------------------------------------------------------
     // Setup & configuration of Immersion Interface Box
-    // ----------------------------------------------------------------------------
+    // ------------------------------------------------------------------------
 
 
     /**
@@ -199,7 +199,7 @@ public:
      *         NO_HCI if the ibox could not successfully synchronize. <br>
      *         CANT_OPEN_PORT if connecting to the serial port was unsuccessful.
      */
-    ibox2_result    connect(const std::string& port_name, long int baud);
+    ibox_result    connect(const std::string& port_name, long int baud);
 
     /**
      * ibox_fancy_connect() establishes communication with its corresponding
@@ -224,7 +224,7 @@ public:
      *         NO_HCI if the ibox could not successfully synchronize. <br>
      *         CANT_OPEN_PORT if connecting to the serial port was unsuccessful.
      */
-    ibox2_result    fancy_connect(const std::string& port_name, long int baud
+    ibox_result    fancy_connect(const std::string& port_name, long int baud
                         , void (*installer_fun)());
 
 
@@ -239,7 +239,7 @@ public:
      * @return NO_PACKET_YET if a packet was not sent by the ibox; return SUCCESS
      *         otherwise.
      */
-    ibox2_result    wait_update(int timer_flag, int num_analogs
+    ibox_result    wait_update(int timer_flag, int num_analogs
                         ,int num_encoders);
 
     /**
@@ -292,7 +292,7 @@ public:
      * @return TIMED_OUT if cmnd isn't satisfied in time or if the read failed<br>
      *         SUCCESS if a string was read into a member character array successfully
      */
-    ibox2_result    string_cmd(byte cmnd);
+    ibox_result    string_cmd(byte cmnd);
 
 
     /**
@@ -309,7 +309,7 @@ public:
      *         ibox. <br>
      *         SUCCESS if serial_number is filled and ibox sent password back to caller.
      */
-    ibox2_result    passwd_cmd(byte cmnd);
+    ibox_result    passwd_cmd(byte cmnd);
 
     /**
      * hci_insert_marker() inserts a place marker packet into the HCI stream and
@@ -335,7 +335,7 @@ public:
      * @return TIMED_OUT if bytes could not be written to block. <br>
      *         SUCCESSS if data was successfully written at block.
      */
-    ibox2_result    get_params(byte *block, int *block_size);
+    ibox_result    get_params(byte *block, int *block_size);
 
     /**
      * set_params() changes main parameter block on HCI.
@@ -351,7 +351,7 @@ public:
      *         ibox. <br>
      *         SUCCESS if serial_number is filled and ibox sent password back to caller.
      */
-    ibox2_result    set_params(byte *block, int block_size);
+    ibox_result    set_params(byte *block, int block_size);
 
     /**
      * get_home_ref() gets home reference offsets from HCI, waits for response.
@@ -362,7 +362,7 @@ public:
      * @returns SUCCESS if the offset was successfully recieved. <br>
      *          TIMED_OUT if the offset was unsuccessfully aquired.
      */
-    ibox2_result    get_home_ref();
+    ibox_result    get_home_ref();
 
     /**
      * set_home_ref() defines a new set of home references for the HCI encoders.
@@ -377,7 +377,7 @@ public:
      *         ibox. <br>
      *         SUCCESS if the home position was successfully changed.
      */
-    ibox2_result    set_home_ref(int *homeref);
+    ibox_result    set_home_ref(int *homeref);
 
     /**
      * go_home_pos() sets HCI encoders to home position, waits for response.
@@ -388,7 +388,7 @@ public:
      * @return SUCCESS if the offset was successfully recieved. <br>
      *          TIMED_OUT if the offset was unsuccessfully aquired.
      */
-    ibox2_result    go_home_pos();
+    ibox_result    go_home_pos();
 
     /**
      * set_home_pos() defines a new home position for the HCI encoders.
@@ -403,7 +403,7 @@ public:
      *         ibox. <br>
      *         SUCCESS if the home position was successfully changed.
      */
-    ibox2_result    set_home_pos(int *homepos);
+    ibox_result    set_home_pos(int *homepos);
 
     /**
      * get_maxes() asks HCI for max field values, waits for response
@@ -416,7 +416,7 @@ public:
      *         ibox. <br>
      *         SUCCESS if the max field values were successfully retrieved.
      */
-    ibox2_result    get_maxes();
+    ibox_result    get_maxes();
 
     /**
      * factory_settings() restores all factory settings
@@ -429,7 +429,7 @@ public:
      *         ibox. <br>
      *         SUCCESS if the factory settings were successfully restored.
      */
-    ibox2_result    factory_settings();
+    ibox_result    factory_settings();
 
     /**
      * report_motion() sends a motion-sensitive cmd and immediately exits.
@@ -470,7 +470,7 @@ public:
      * @return TIMED_OUT if port timed out before a complete packet was recieved. <br>
      *         SUCCESS otherwise.
      */
-    ibox2_result    wait_packet();
+    ibox_result    wait_packet();
 
     /**
      * check_packet() checks for a complete packet and parses it if it's ready.
@@ -482,7 +482,7 @@ public:
      *         last timeout was started. <br>
      *         SUCCESS otherwise.
      */
-    ibox2_result    check_packet();
+    ibox_result    check_packet();
 
     /**
      * check_motion() checks for a complete packet and parses it if it's ready.
@@ -499,7 +499,7 @@ public:
      *         TIMED_OUT if a packet hasn't been recieved yet. <br>
      *         SUCCESS otherwise.
      */
-    ibox2_result    check_motion();
+    ibox_result    check_motion();
 
     /**
      * build_packet() reads chars from serial buffer into the packet array.
@@ -530,7 +530,7 @@ public:
      *         NO_PACKET_YET if the packet is not complete. <br>
      *         SUCCESS otherwise.
      */
-    ibox2_result    parse_packet();
+    ibox_result    parse_packet();
 
     /**
      * parse_cfg_packet() parses a packet for a special configuration command.
@@ -541,7 +541,7 @@ public:
      * @return BAD_PACKET if the command was not parsed successfully. <br>
      *         SUCCESS if the command was parsed successfully.
      */
-    ibox2_result    parse_cfg_packet();
+    ibox_result    parse_cfg_packet();
 
     /**
      * packet_size() returns the # of data bytes that FOLLOW a given cmd byte.
@@ -573,7 +573,7 @@ public:
      * @return TIMED_OUT if the string could not be read from the port. <br>
      *         SUCCESS if the read was successful.
      */
-    ibox2_result    read_string(char *str);
+    ibox_result    read_string(char *str);
 
     /**
      * read_block() reads a block of binary data from the serial port
@@ -589,7 +589,7 @@ public:
      * @return TIMED_OUT if the read operation times out.
      *         SUCCESS if the store to memory is successful.
      */
-    ibox2_result    read_block(byte *block, int *num_bytes);
+    ibox_result    read_block(byte *block, int *num_bytes);
 
     /**
      * invalidate_fields() sets all hci _updated fields to zero.
@@ -636,7 +636,7 @@ public:
      *         NO_PACKET_YET if condition is NO_PACKET_YET. <br>
      *         Else it returns a pointer to the handler funciton for a given condition.
      */
-    ibox2_result    error(ibox2_result condition);
+    ibox_result    error(ibox_result condition);
 
 
 
@@ -728,15 +728,15 @@ private:
     int     end();
 
 /* Handlers for errors */
-    ibox2_result      (*BAD_PORT_handler)();
-    ibox2_result      (*CANT_OPEN_handler)();
-    ibox2_result      (*NO_HCI_handler)();
-    ibox2_result      (*CANT_BEGIN_handler)();
-    ibox2_result      (*TIMED_OUT_handler)();
-    ibox2_result      (*BAD_PACKET_handler)();
-    ibox2_result      (*BAD_PASSWORD_handler)();
-    ibox2_result      (*BAD_VERSION_handler)();
-    ibox2_result      (*BAD_FORMAT_handler)();
+    ibox_result      (*BAD_PORT_handler)();
+    ibox_result      (*CANT_OPEN_handler)();
+    ibox_result      (*NO_HCI_handler)();
+    ibox_result      (*CANT_BEGIN_handler)();
+    ibox_result      (*TIMED_OUT_handler)();
+    ibox_result      (*BAD_PACKET_handler)();
+    ibox_result      (*BAD_PASSWORD_handler)();
+    ibox_result      (*BAD_VERSION_handler)();
+    ibox_result      (*BAD_FORMAT_handler)();
 
 /* Handler to use for an error if everything above is NULL
          * The simplest way to get diagnostic reporting is to
@@ -746,7 +746,7 @@ private:
          * the appropriate o.s. calls in the function pointed to by
          * this handler pointer.
          */
-    ibox2_result      (*default_handler)();
+    ibox_result      (*default_handler)();
 
 public:
 /* constants */

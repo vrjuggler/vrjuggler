@@ -89,7 +89,7 @@ IBox::~IBox()
 *********************************************** ahimberg */
 int IBox::startSampling()
 {
-   ibox2_result result;
+   ibox_result result;
 
    if (mThread == NULL)
    {
@@ -156,7 +156,7 @@ int IBox::sample()
 {
    //struct timeval tv;
    // double start_time, stop_time;
-   ibox2_result result;
+   ibox_result result;
    //int tmp;
    //static int c = 0;
    IboxData cur_reading;
