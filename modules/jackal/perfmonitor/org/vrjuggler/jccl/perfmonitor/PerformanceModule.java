@@ -49,9 +49,8 @@ import VjConfig.ConfigChunk;
 import VjControl.*;
 
 
-/** Core Module for storing VR Juggler performance data
+/** Core Module for storing VR Juggler performance data.
  * 
- *  @author Christopher Just
  *  @version $Revision$
  */
 public class PerformanceModule extends DefaultCoreModule {
@@ -107,21 +106,6 @@ public class PerformanceModule extends DefaultCoreModule {
     }
 
 
-//      public boolean addConfig (ConfigChunk ch) {
-//          return false;
-//      }
-
-
-//      public boolean removeConfig (String name) {
-//          return false;
-//      }
-
-
-//      public void destroy () {
-//          ;
-//      }
-
-
     public synchronized void write (DataOutputStream out) throws IOException {
 	for (int i = 0; i < collectors.size(); i++) {
 	    PerfDataCollector col = (PerfDataCollector)collectors.get(i);
@@ -173,13 +157,12 @@ public class PerformanceModule extends DefaultCoreModule {
     }
 
 
-    public PerfDataCollector addNumberedCollector (String _name, int _num) {
-	PerfDataCollector p = new NumberedPerfDataCollector (_name, _num, max_samples);
+    public PerfDataCollector addCollector (PerfDataCollector pdc) {
         synchronized (collectors) {
-            collectors.add (p);
+            collectors.add (pdc);
         }
-        notifyPerformanceModuleListenersAdd (p);
-	return p;
+        notifyPerformanceModuleListenersAdd (pdc);
+	return pdc;
     }
 
 
@@ -247,10 +230,17 @@ public class PerformanceModule extends DefaultCoreModule {
 			buffername = child.getNodeValue();
 		    }
                 }
-//  		LabeledPerfDataCollector c = getCollector (name);
-//  		if (c == null)
-//  		    c = addCollector (name, num);   
-//  		c.read (st);
+		PerfDataCollector pdc = getCollector (name);
+		if (pdc == null) {
+		    pdc = new LabeledPerfDataCollector (name, max_samples);
+		    addCollector (pdc);
+		}
+		if (pdc instanceof LabeledPerfDataCollector) {
+		    ((LabeledPerfDataCollector)pdc).interpretXMLData (doc);
+		}
+		else {
+		    System.out.println ("perfdatacollector type mismatch");
+		}
 		
 	    }
         case Node.COMMENT_NODE:
@@ -297,8 +287,10 @@ public class PerformanceModule extends DefaultCoreModule {
                     //System.out.println ("read perf info for " + name + "\nnum is " + num);
                 
                     p = getCollector (name);
-                    if (p == null)
-                        p = addNumberedCollector (name, num); 
+                    if (p == null) {
+			p = new NumberedPerfDataCollector (name, num, max_samples);
+			addCollector (p);
+		    }
                     if (p instanceof NumberedPerfDataCollector) {
                         ((NumberedPerfDataCollector)p).read (st);
                     }
