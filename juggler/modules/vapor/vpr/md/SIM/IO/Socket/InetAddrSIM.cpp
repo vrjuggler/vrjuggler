@@ -70,6 +70,7 @@ namespace vpr
       mAddress = vpr::sim::DNS::instance()->lookupAddress( host_addr );
       setPort( port );
       setFamily( vpr::SocketTypes::INET );
+      setDebugData();
 
       return vpr::ReturnStatus();
    }
@@ -80,6 +81,7 @@ namespace vpr
       mAddress = vpr::sim::DNS::instance()->lookupAddress( address );
       setPort( port );
       setFamily( vpr::SocketTypes::INET );
+      setDebugData();
       return vpr::ReturnStatus();
    }
 

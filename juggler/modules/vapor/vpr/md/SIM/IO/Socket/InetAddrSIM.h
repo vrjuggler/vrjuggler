@@ -96,6 +96,7 @@ public:
       this->copy( InetAddrSIM::AnyAddr );
       setAddress(0x7F000001, port);   // 127.0.0.1:port
       setFamily( vpr::SocketTypes::INET );
+      setDebugData();
    }
 
    /**
@@ -111,6 +112,7 @@ public:
       setAddressValue( address );
       setPort( port );
       setFamily( vpr::SocketTypes::INET );
+      setDebugData();
       return vpr::ReturnStatus();
    }
 
@@ -126,6 +128,7 @@ public:
    InetAddrSIM( const InetAddrSIM& addr )
    {
       copy( addr );
+      setDebugData();
    }
 
    /**
@@ -185,6 +188,7 @@ public:
    void setPort( const vpr::Uint32 port )
    {
       mPort = port;
+      setDebugData();
    }
 
    /**
@@ -299,6 +303,7 @@ protected:
       mPort = addr.mPort;
       mAddress = addr.mAddress;
       mFamily = addr.mFamily;
+      setDebugData();
    }
 
    bool equals( const InetAddrSIM& addr ) const
@@ -306,9 +311,21 @@ protected:
       return (mPort == addr.mPort && mAddress == addr.mAddress);
    }
 
+   void setDebugData()
+   {
+#ifdef _DEBUG
+      m_debugStringAddress = getAddressString();
+#endif
+
+   }
+
    vpr::Uint32 mPort;
    vpr::Uint32 mAddress;
    vpr::SocketTypes::Domain mFamily;
+
+#ifdef _DEBUG
+   std::string m_debugStringAddress;
+#endif
 };
 
 } // End of vpr namespace
