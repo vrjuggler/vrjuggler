@@ -1,5 +1,9 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Nov-17-2003 patrickh    The factory function for remote run-time
+                        reconfiguration plug-ins now take a parameter that is
+                        of type jccl::ConfigManager*.
+                        NEW VERSION: 0.15.0
 Nov-09-2003 patrickh    Refactored the CORBA-based remote run-time
                         reconfiguration code so that it can be loaded at
                         run-time as a plug-in.
