@@ -81,8 +81,26 @@ namespace jcclTest
 
       void testEqual()
       {
+         // start fresh and new (and shiny!!!)
+         jccl::ChunkFactory::instance()->getChunkDescDB()->removeAll();
+         
+         std::string file_path( TESTFILES_PATH );
+         jccl::ChunkFactory::instance()->loadDescs( file_path + "ChunkDescTest/ChunkDescTest.desc" );
+         jccl::ChunkDescPtr desc = jccl::ChunkFactory::instance()->getChunkDesc( "config-chuck-the-beaver" );
+         
+         jccl::ChunkDesc receiving;
+         
+         CPPUNIT_ASSERT( desc->getName() != receiving.getName() );
+         CPPUNIT_ASSERT( desc->getToken() != receiving.getToken() );
+         CPPUNIT_ASSERT( desc->getHelp() != receiving.getHelp() );
+         
+         receiving = (*desc);
+
+         CPPUNIT_ASSERT( desc->getName() == receiving.getName() );
+         CPPUNIT_ASSERT( desc->getToken() == receiving.getToken() );
+         CPPUNIT_ASSERT( desc->getHelp() == receiving.getHelp() );
       }
-      
+
       void testCopyConstr()
       {
       }
