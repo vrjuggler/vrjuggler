@@ -6,14 +6,24 @@
 
 <h1>Configuring VR Juggler Applications</h1>
 
+<p>
+VR Juggler applications are configured by using ConfigChunks.  These Chunks
+can be specified in a configuration file which the application reads at
+startup, or they can be added to a running application using the VjControl
+tool.
+</p>
+
+<p>
 This page documents particular kinds of ConfigChunks, and how they
 can be used with Juggler applications.  This includes adding 
 and configuring input devices, controlling displays, and setting up the VR
   Juggler simulator mode. 
+</p>
 
 <p>
 The Chunks in the listing below have been divided into general categories.
 Each Chunk name is a hyperlink to a detailed description.
+</p>
 
 <p>
 For many chunks,
@@ -24,6 +34,7 @@ wouldn't make sense to have multiple definitions.  Singleton Chunks
 are noted in the descriptions.  If a Juggler configuration does contain
 multiple instances of a singleton Chunk - multiple EnvironmentManager Chunks,
 for example - the most recently read Chunk will supercede older ConfigChunks.
+</p>
 
 
 <h2>Display Chunks</h2>
@@ -64,7 +75,8 @@ the ConfigChunks for the input devices supported by VR Juggler.
 
 <ul>
 
-<p><li><dl>
+<li>
+<dl>
 <dt><a href="DescHelp/InputManager.html">Input Manager</a>
 <dd>This singleton chunk specifies some useful default values
 for the input devices, such as a default position and orientation
@@ -72,6 +84,7 @@ of positional devices.
 </dl>
 
 <p><li><h3>Input Devices</h3>
+</p>
 
 <dl>
 <dt><a href="DescHelp/Flock.html">Flock of Birds</a>
@@ -90,15 +103,18 @@ and can also have a positional device attached to it.
 <dt><a href="DescHelp/Keyboard.html">Keyboard Input Window</a>
 <dd>This device opens a window on a display which accepts keypresses
 and mouse movement information.  It is usually used to provide input
-for the simulated devices described below.</a>
+for the simulated devices described below.
 
 </dl>
 
 <p><li><h3>Simulator Devices</h3>
+</p>
 
+<p>
 VR Juggler provides a complete set of simulated input devices for use in
 testing applications.  The simulated devices generally attach to a Keyboard
 Input Window.  The mapping of keypresses to actions is completely configurable.
+</p>
 
 <dl>
 <dt><a href="DescHelp/SimDigital.html">Digital Simulator</a>
@@ -129,6 +145,7 @@ position and orientation.
 </dl>
 
 <p><li><h3>Proxies and Proxy Aliases</h3>
+</p>
 
 Proxies are the mechanism for making access to input devices generic.
 A Configuration file should include a proxy for every possible input
@@ -163,14 +180,14 @@ proxies.
 
 </ul>
 
-<p><h2>Environment Manager</h2>
+<h2>Environment Manager</h2>
 
-<p>
 The Environment Manager(EM) is the part of VR Juggler that controls communications
 with the GUI program, vjcontrol.  It also controls Juggler's performance
 monitoring capabilities.
 
 <dl>
+
 <dt><a href="DescHelp/EnvironmentManager.html">Environment Manager</a>
 <dd>The Environment Manager chunk, a singleton, allows the user to 
 configure the network setup of a Juggler app (whether to accept connections
@@ -189,7 +206,9 @@ performance data.
 
 </dl>
 
-<h2>Miscellaneous</h2>
+
+<p><h2>Miscellaneous</h2>
+</p>
 
 <dl>
 <dt><a href="DescHelp/JugglerUser.html">Juggler User</a>
@@ -205,10 +224,15 @@ Performer-based
 Juggler applications.  If you aren't using Performer, you don't need to
 worry about this one.
 
-<dt><a href="DescHelp/vjIncludeFile.html">File Include</a>
+<dt><a href="DescHelp/vjIncludeFile.html">Config File Include</a>
 <dd>This is kind of a meta-chunk.  The File Include chunk gives the name
 of an additional config file which should be loaded whenever this chunk
 is encountered.
+
+<dt><a href="DescHelp/vjIncludeDescFile.html">Chunkdesc File Include</a>
+<dd>This is kind of a meta-chunk.  The File Include chunk gives the name
+of an additional chunk descriptions file which should be loaded whenever 
+this chunk is encountered.
 
 </dl>
 
