@@ -1556,6 +1556,26 @@ The filters are applied in the order that they are specified in this configurati
       <item label="Machine" defaultvalue="" />
       <allowedtype>MachineSpecific</allowedtype>
     </PropertyDesc>
+    <PropertyDesc token="slave_one" name="slave_one" type="bool" variable="0">
+      <help>Should we syncronize with slave #1?</help>
+      <item label="Slave One" defaultvalue="0" />
+    </PropertyDesc>
+    <PropertyDesc token="slave_two" name="slave_two" type="bool" variable="0">
+      <help>Should we syncronize with slave #2?</help>
+      <item label="Slave Two" defaultvalue="0" />
+    </PropertyDesc>
+    <PropertyDesc token="slave_three" name="slave_three" type="bool" variable="0">
+      <help>Should we syncronize with slave #3?</help>
+      <item label="Slave Three" defaultvalue="0" />
+    </PropertyDesc>
+    <PropertyDesc token="slave_four" name="slave_four" type="bool" variable="0">
+      <help>Should we syncronize with slave #4?</help>
+      <item label="Slave Four" defaultvalue="0" />
+    </PropertyDesc>
+    <PropertyDesc token="slave_five" name="slave_five" type="bool" variable="0">
+      <help>Should we syncronize with slave #5?</help>
+      <item label="Slave Five" defaultvalue="0" />
+    </PropertyDesc>
   </ChunkDesc>
   <ChunkDesc token="TrackdAPIController" name="TrackdAPIController" version="1.0">
     <category>Devices</category>
