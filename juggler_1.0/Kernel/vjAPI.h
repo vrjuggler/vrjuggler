@@ -1,8 +1,8 @@
 #ifndef _VJ_API_
 #define _VJ_API_
+#pragma once
 
 #include <vjConfig.h>
-#include <iostream.h>
 
 //---------------------------------------------------------
 // vjAPI: Encapulates interfaces to graphics APIs.

@@ -84,7 +84,7 @@ public:
    // Add the devPtr to the device Array, devPtr should
    //      * not already be in the array.  Returns -1 on failure
    //
-   // modifies: self
+   //! MODIFIES: self
    //! POST: m_devVector' = m_devVector \/ devPtr
    //+       return = devNum (position in the array)
    //                or -1 for fail
@@ -94,8 +94,8 @@ public:
    // Remove the device at position devNum from the
    // device Array.  Returns true on success.
    //
-   // modifies: self
-   // post: m_devVector[devNum]' = NULL
+   //! MODIFIES: self
+   //! POST: m_devVector[devNum]' = NULL
    int RemoveDevice(int devNum);
 
    int RemoveDevice(char* instName);
@@ -103,15 +103,16 @@ public:
    //: Update the Data in all the devices.
    //
    // Call UpdateData() on all the devices in the devArray
+   // Also updates all proxies.
    //
-   // modifies: instances pointed to by devArray
+   //! MODIFIES: instances pointed to by devArray
    void UpdateAllData();
 
    //: Get the device number from its Instance Name.
    //
    //  Find the devNum of the device whose name is instName
    //
-   //  returns -1 if fails
+   //! RETURNS: -1 if fails
    int FindDeviceNum(const char* instName);
 
    //: Get a pointer to the instance at devNum.
@@ -129,8 +130,8 @@ public:
    //: Set the index ProxyNum in the posProxy array to proxy
    // device at devNum in the device array, with subNumber <br>
    // <br>
-   // modifies: self <br>
-   // post: m_posProxyArray[proxyNum]' = new Proxy at DevNum/subNum
+   //! MODIFIES: self <br>
+   //! POST: m_posProxyArray[proxyNum]' = new Proxy at DevNum/subNum
    //       return = 0 for fail, other for success
    int SetPosProxy(int ProxyNum, int DevNum, int subNum);
 
@@ -149,8 +150,8 @@ public:
    //: Turn the position proxy at index ProxyNum to point back
    // to the default dummy proxy. <br>
    // <br>
-   // modifies: self <br>
-   // postA:  m_posProxyArray[proxyNum]' = m_dummyPos
+   //! MODIFIES: self <br>
+   //! POST:  m_posProxyArray[proxyNum]' = m_dummyPos
    void StupifyPos(int ProxyNum);
 
 
@@ -178,8 +179,8 @@ public:
    //: Adds a new digital proxy to the proxy vector
    // device at devNum in the device array, with subNumber <br>
    // <br>
-   // modifies: self <br>
-   // post: m_digProxyVector' contains new Proxy at DevNum/subNum
+   //! MODIFIES: self <br>
+   //! POST: m_digProxyVector' contains new Proxy at DevNum/subNum
    //       return = vector index of new proxy
    int AddDigProxy(int DevNum, int subNum);
 
@@ -187,15 +188,15 @@ public:
    //: Turn the digital proxy at index ProxyNum to point back
    // to the default dummy proxy.<br>
    // <br>
-   // modifies: self<br>
-   // postA:  m_digProxyArray[proxyNum]' = m_dummyDig
+   //! MODIFIES: self<br>
+   //! POST:  m_digProxyArray[proxyNum]' = m_dummyDig
    void StupifyDig(int ProxyNum);
 
 
    //: Get the digital data at digital Proxy d
    //
-   // postA: return = integer for the digital data returned
-   int GetDigData(int d);
+   //! POST: return = integer for the digital data returned
+   //int GetDigData(int d);
 
 
    /**************************************************************
@@ -222,8 +223,8 @@ public:
    //: Adds a new analog proxy to the proxy vector
    // device at devNum in the device array, with subNumber<br>
    // <br>
-   // modifies: self<br>
-   // post: m_anaProxyVector' = contains new Proxy at DevNum/subNum
+   //! MODIFIES: self<br>
+   //! POST: m_anaProxyVector' = contains new Proxy at DevNum/subNum
    //       return = vector index of new proxy
    int AddAnaProxy(int DevNum, int subNum);
 
@@ -231,14 +232,14 @@ public:
    //: Turn the analog proxy at index ProxyNum to point back
    // to the default dummy proxy.<br>
    //<br>
-   // modifies: self<br>
-   // postA:  m_anaProxyArray[proxyNum]' = m_dummyAna
+   //!MODIFIES: self<br>
+   //!POST:  m_anaProxyArray[proxyNum]' = m_dummyAna
    void StupifyAna(int ProxyNum);
 
    //: Get the analog data at analog Proxy d
    //
-   // postA: return = integer version of the analog data at proxy d
-   int GetAnaData(int d);
+   //!POST: return = integer version of the analog data at proxy d
+   //int GetAnaData(int d);
 
 
    /**************************************************************
@@ -248,8 +249,8 @@ public:
    //: Set the index ProxyNum in the gloveProxy array to proxy
    // device at devNum in the device array, with subNumber <br>
    // <br>
-   // modifies: self <br>
-   // post: m_gloveProxyArray[proxyNum]' = new Proxy at DevNum/subNum
+   //!MODIFIES: self <br>
+   //!POST: m_gloveProxyArray[proxyNum]' = new Proxy at DevNum/subNum
    //       return = 0 for fail, other for success
    int SetGloveProxy(int ProxyNum, int DevNum, int subNum);
 
@@ -268,8 +269,8 @@ public:
    //: Turn the glove proxy at index ProxyNum to point back
    // to the default dummy glove proxy. <br>
    // <br>
-   // modifies: self <br>
-   // postA:  m_gloveProxyArray[proxyNum]' = m_dummyGlove
+   //!MODIFIES: self <br>
+   //!POST:  m_gloveProxyArray[proxyNum]' = m_dummyGlove
    void StupifyGlove(int ProxyNum);
 
    //: Find out how many glove proxies are in the system currently

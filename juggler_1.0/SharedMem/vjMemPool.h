@@ -1,8 +1,8 @@
 #ifndef _MemPool_h_
 #define _MemPool_h_
+#pragma once
 
 #include <vjConfig.h>
-#include <iostream.h>
 #include <stdlib.h>
 
 //: Shared memory pool.
@@ -17,7 +17,7 @@
 //
 class vjMemPool {
 
-public:    
+public:
     // ---> This is a prototype for what all derived constructors should take as params
     // vjMemPool(size_t initialSize,  int numProcs, char* staticTempName) {
     virtual ~vjMemPool() {;}     	
@@ -26,7 +26,7 @@ public:
     virtual void* allocate(size_t size) = 0;
     virtual void  deallocate(void* ptr) = 0;
     virtual void* reallocate(void *ptr, size_t new_sz) = 0;
-    
+
 };
 
 #ifdef VJ_SGI_IPC

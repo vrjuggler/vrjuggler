@@ -1,8 +1,8 @@
 #ifndef _VJ_MATRIX_
 #define _VJ_MATRIX_
+#pragma once
 
 #include <vjConfig.h>
-#include <iostream.h>
 #include <math.h>
 #include <string.h>
 

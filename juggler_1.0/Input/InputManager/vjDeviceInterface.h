@@ -3,13 +3,13 @@
 
 //: Base class for simplified interfaces
 //
-// It provides an easier interface to proxy objects from
-// within user applications.
+// Interfaces provide an easier way to access proxy objects from
+// within user applications. <br> <br>
 //
 // Users can simply declare a local interface variable and use it
 // as a smart_ptr for the proxy
 //
-//! NOTE: The init function should be called in the init function of the user 
+//! NOTE: The init function should be called in the init function of the user
 //+         application
 
 #include <mstring.h>
@@ -21,13 +21,15 @@ public:
    {;}
 
    //: Initialize the object
-   //  Set the object to reference the proxy named proxyName
+   //! ARGS: proxyName - String name of the proxy to connect to
    void init(string proxyName);
 
+   //: Return the index of the proxy
    int getProxyIndex()
    {  return mProxyIndex; }
+
 protected:
-   int mProxyIndex;        // The index of the proxy
+   int mProxyIndex;        //: The index of the proxy
 };
 
 #endif

@@ -1,6 +1,5 @@
+#include <vjConfig.h>
 #include <Input/vjSim/vjSimGloveGesture.h>
-#include <iostream.h>
-#include <fstream.h>
 
 //: Construct the vjSimGloveGesture
 // -Set the keyboard key pairs <b>

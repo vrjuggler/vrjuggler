@@ -1,7 +1,4 @@
 #include <vjConfig.h>
-#include <iostream.h>
-#include <iomanip.h>
-#include <assert.h>
 
 #include <Input/InputManager/vjInputManager.h>
 #include <Kernel/vjDebug.h>
@@ -454,11 +451,12 @@ void vjInputManager::StupifyDig(int ProxyNum)
   Get the digital data at Digital Proxy #d
 
 *********************************************** ahimberg */
+/*
 int vjInputManager::GetDigData(int d)
 {
    return m_digProxyVector[d]->GetData();
 }
-
+*/
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * *
   * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -514,10 +512,12 @@ void vjInputManager::StupifyAna(int ProxyNum)
   Get the analog data at Analog Proxy #d
 
 *********************************************** ahimberg */	
+/*
 int vjInputManager::GetAnaData(int d)
 {
    return m_anaProxyVector[d]->GetData();
 }
+*/
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * *
   * * * * * * * * * * * * * * * * * * * * * * * * * * * *

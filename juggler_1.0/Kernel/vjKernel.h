@@ -3,7 +3,6 @@
 #pragma once
 
 #include <vjConfig.h>
-#include <iostream.h>
 #include <mstring.h>
 #include <Kernel/vjApp.h>
 #include <Kernel/vjSystemFactory.h>

@@ -1,5 +1,6 @@
 #ifndef _VJ_CONFIG_H_
 #define _VJ_CONFIG_H_
+#pragma once
 
 /*
  * ----------------------------------------------------------------------------
@@ -17,5 +18,12 @@
 #include <vjDefines.h>
 #endif	/* HAVE_CONFIG_H */
 
+/* Common includes */
+/* Put here for pre-compiled headers */
+#ifdef __cplusplus
+#include <iostream.h>
+#include <iomanip.h>
+#include <fstream.h>
+#endif
 
 #endif	/* _VJ_CONFIG_H_ */

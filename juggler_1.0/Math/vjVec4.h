@@ -1,8 +1,8 @@
 #ifndef _VJ_VEC4_
 #define _VJ_VEC4_
+#pragma once
 
 #include <vjConfig.h>
-#include <iostream.h>
 #include <math.h>
 
 #include <Math/vjMatrix.h>
@@ -19,7 +19,7 @@ class vjVec4
 {
 public:
    // Constructor
-   vjVec4(float _x, float _y, float _z, float _w) 
+   vjVec4(float _x, float _y, float _z, float _w)
    { set(_x, _y, _z, _w);}
    vjVec4() {};
 
@@ -29,20 +29,20 @@ public:
       vec[0] = _x;
       vec[1] = _y;
       vec[2] = _z;
-      vec[3] = _w; 
+      vec[3] = _w;
    }
 
 public:
    //: Are we equal
-   int equal(const vjVec4&  _v) const { 
-      return (vec[0] == _v[0] && 
+   int equal(const vjVec4&  _v) const {
+      return (vec[0] == _v[0] &&
               vec[1] == _v[1] &&
               vec[2] == _v[2] &&
               vec[3] == _v[3]);
    }
 
    float dot(const vjVec4&  _v) const {
-      return (vec[0] * _v[0] + 
+      return (vec[0] * _v[0] +
               vec[1] * _v[1] +
               vec[2] * _v[2]);
    }
@@ -54,7 +54,7 @@ public:
       vec[0] = vec[0] / len;
       vec[1] = vec[1] / len;
       vec[2] = vec[2] / len;
-      vec[3] = vec[3] / len;  
+      vec[3] = vec[3] / len;
    }
 
    float length() const
@@ -78,8 +78,8 @@ public:
    const float&  operator [](int i) const { return vec[i];}
 
    int operator ==(const vjVec4& _v) const {
-      return (vec[0] == _v[0] && 
-              vec[1] == _v[1] && 
+      return (vec[0] == _v[0] &&
+              vec[1] == _v[1] &&
               vec[2] == _v[2] &&
               vec[3] == _v[3]);
    }
@@ -111,30 +111,30 @@ public:
 public:
    //: Assignment Operators
    vjVec4&  operator =(const vjVec4& _v) {
-      vec[0] = _v[0]; vec[1] = _v[1]; 
-      vec[2] = _v[2]; vec[3] = _v[3]; 
+      vec[0] = _v[0]; vec[1] = _v[1];
+      vec[2] = _v[2]; vec[3] = _v[3];
       return *this;
    }
 
    vjVec4& operator *=(float _s) {
-      vec[0] *= _s; vec[1] *= _s; 
+      vec[0] *= _s; vec[1] *= _s;
       vec[2] *= _s; vec[3] *= _s;
       return *this;
    }
 
    vjVec4& operator /=(float _s) {
-      _s = 1.0/_s; 
+      _s = 1.0/_s;
       return *this *= _s;
    }
 
    vjVec4& operator +=(const vjVec4& _v) {
-      vec[0] += _v[0]; vec[1] += _v[1]; 
+      vec[0] += _v[0]; vec[1] += _v[1];
       vec[2] += _v[2]; vec[3] += _v[3];
       return *this;
    }
 
    vjVec4& operator -=(const vjVec4& _v) {
-      vec[0] -= _v[0]; vec[1] -= _v[1]; 
+      vec[0] -= _v[0]; vec[1] -= _v[1];
       vec[2] -= _v[2]; vec[3] -= _v[3];
       return *this;
    }

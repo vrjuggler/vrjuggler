@@ -12,9 +12,9 @@
 
 #ifndef _THREAD_KEY_SGI_H_
 #define _THREAD_KEY_SGI_H_
+#pragma once
 
 #include <vjConfig.h>
-#include <iostream.h>
 #include <sys/types.h>
 
 #include <Threads/vjThreadFunctor.h>
