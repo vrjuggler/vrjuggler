@@ -67,12 +67,13 @@ typedef struct {
 class vjGlxWindow: public vjGlWindow
 {
 public:
-   vjGlxWindow();
+    vjGlxWindow();
+    ~vjGlxWindow();
 
-   void swapBuffers();
-   int open();
-   int close();
-   bool makeCurrent();
+    void swapBuffers();
+    int open();
+    int close();
+    bool makeCurrent();
 
    void config(vjDisplay* _display);
 

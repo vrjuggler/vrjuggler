@@ -53,9 +53,18 @@ vjGlxWindow::vjGlxWindow() {
    glx_context = NULL;
 }
 
+
+
+vjGlxWindow::~vjGlxWindow() {
+    close();
+}
+
+
+
 void vjGlxWindow::swapBuffers() {
    glXSwapBuffers (x_display,  x_window);
 }
+
 
 
 int vjGlxWindow::open() {
@@ -90,7 +99,7 @@ int vjGlxWindow::open() {
     // get an XVisualInfo*, which we'll need below
     if ((visual_info = GetGlxVisInfo (x_display, screen)) == NULL) {
         vjDEBUG(vjDBG_ERROR,0) << "ERROR: vjGlxWindow: glXChooseVisual failed\n" << vjDEBUG_FLUSH;
-        return false;
+        goto OPEN_FAIL;
     }
 
     // window attributes.
@@ -99,7 +108,7 @@ int vjGlxWindow::open() {
                                               visual_info->visual,
                                               AllocNone)) == 0) {
         vjDEBUG(vjDBG_ERROR,0) << "ERROR: vjGlxWindow: XCreateColorMap failed on '" << display_name << "'.\n" << vjDEBUG_FLUSH;
-        return false;
+        goto OPEN_FAIL;
     }
 
     w_attrib.event_mask = ExposureMask | StructureNotifyMask
@@ -119,7 +128,7 @@ int vjGlxWindow::open() {
         == 0)
         {
             vjDEBUG(vjDBG_DRAW_MGR,0) << "ERROR: vjGlxWindow: Couldn't create window for " << display_name << endl << vjDEBUG_FLUSH;
-            return false;
+            goto OPEN_FAIL;
         }
 
     /***************** Set Window Name/Class/Size/Pos *********************/
@@ -196,14 +205,14 @@ int vjGlxWindow::open() {
     glx_context = glXCreateContext (x_display,visual_info, NULL, True);
     if (NULL == glx_context) {
         vjDEBUG(vjDBG_ERROR,0) << "ERROR: Couldn't create GlxContext for '" << display_name << "'\n" << vjDEBUG_FLUSH;
-        return false;
+        goto OPEN_FAIL;
     }
 
-    vjASSERT(NULL != glx_context);
-    if (!glXMakeCurrent ( x_display, x_window, glx_context  )) {
-        vjDEBUG(vjDBG_ERROR,0) << "ERROR: Couldn't set GlxContext for '" << display_name << "'\n" << vjDEBUG_FLUSH;
-        return false;
-    }
+//     vjASSERT(NULL != glx_context);
+//     if (!glXMakeCurrent ( x_display, x_window, glx_context  )) {
+//         vjDEBUG(vjDBG_ERROR,0) << "ERROR: Couldn't set GlxContext for '" << display_name << "'\n" << vjDEBUG_FLUSH;
+//         return false;
+//     }
 
     /* allen found a hint online that if we have the controlling process
      * "disown" the gl context we just created, we could then have another
@@ -214,12 +223,14 @@ int vjGlxWindow::open() {
 
     window_is_open = 1;
 
-    /*
-      glEnable (GL_DEPTH_TEST);
-      glClearDepth (1.0);
-      glFlush();
-    */
     return true;
+
+ OPEN_FAIL:
+    // close() is coincidentally safe to call on a partially-opened
+    // vjGlxWindow, and will deallocate all the stuff we might have
+    // allocated above.
+    close(); 
+    return false;
 }
 
 
@@ -227,10 +238,8 @@ int vjGlxWindow::open() {
 //: Closes the window given
 //! NOTE: this function mucks with the current rendering context */
 int vjGlxWindow::close() {
-    if (!window_is_open)
-        return true;
-
-    window_is_open = false;
+//     if (!window_is_open)
+//         return true;
 
    if (glx_context)
    {
@@ -256,6 +265,7 @@ int vjGlxWindow::close() {
       x_display = NULL;
    }
 
+   window_is_open = false;
    return true;
 
 } /* close() */
