@@ -107,7 +107,7 @@ static void
 swap_bytes_half_word(void *halfword)
 {
   unsigned char temp, *byte = (unsigned char*)halfword;
-  
+
   temp = byte[0];
   byte[0] = byte[1];
   byte[1] = temp;
@@ -150,7 +150,7 @@ baud_from_int(int baudrate)
 }
 
 int
-vjCyberGlove::vt_serial_open(char *devname, int baudrate)
+CyberGloveBasic::vt_serial_open(char *devname, int baudrate)
 {
   struct termio temp_termio;
   int portfd;
@@ -213,7 +213,7 @@ vjCyberGlove::vt_serial_open(char *devname, int baudrate)
 }
 
 int
-vjCyberGlove::vt_serial_close(int portfd)
+CyberGloveBasic::vt_serial_close(int portfd)
 {
   int returnval = Ok;
 
@@ -232,13 +232,13 @@ vjCyberGlove::vt_serial_close(int portfd)
     sprintf(failed_routine_name,"close(%d)",portfd);
     returnval = vt_print_unix_error("vt_serial_close",failed_routine_name);
   }
-    
+
   return (returnval);
 }
 
 
 void
-vjCyberGlove::vt_serial_close_ports(void)
+CyberGloveBasic::vt_serial_close_ports(void)
 {
   int i;
 
@@ -254,7 +254,7 @@ vjCyberGlove::vt_serial_close_ports(void)
 
 
 int
-vjCyberGlove::vt_serial_flush_in(int portfd)
+CyberGloveBasic::vt_serial_flush_in(int portfd)
 {
   /* flush the input buffer immediately without waiting for more input */
   if (ioctl(portfd, TCFLSH, TCIFLUSH) == -1)
@@ -267,7 +267,7 @@ vjCyberGlove::vt_serial_flush_in(int portfd)
 
 
 int
-vjCyberGlove::vt_serial_clear_to_terminator(int portfd, int terminator)
+CyberGloveBasic::vt_serial_clear_to_terminator(int portfd, int terminator)
 {
   int returnval;
   char buffer[1];
@@ -321,7 +321,7 @@ timed_read(int filedescr, void *buffer, unsigned int numbytes)
 }
 
 int
-vjCyberGlove::vt_serial_read_byte(int portfd)
+CyberGloveBasic::vt_serial_read_byte(int portfd)
 {
   unsigned char charbuf;
   int num_bytes_read;
@@ -335,7 +335,7 @@ vjCyberGlove::vt_serial_read_byte(int portfd)
 }
 
 int
-vjCyberGlove::vt_serial_read_ushort(int portfd)
+CyberGloveBasic::vt_serial_read_ushort(int portfd)
 {
   unsigned short *ushortbuf;
   char buffer[2];
@@ -360,10 +360,10 @@ vjCyberGlove::vt_serial_read_ushort(int portfd)
 }
 
 int
-vjCyberGlove::vt_serial_read_bytes(int portfd, unsigned char *buffer, int numbytes)
+CyberGloveBasic::vt_serial_read_bytes(int portfd, unsigned char *buffer, int numbytes)
 {
   int num_bytes_read,returnval;
-  
+
   for (num_bytes_read = 0; num_bytes_read < numbytes; num_bytes_read++)
     if ((returnval = read(portfd,&buffer[num_bytes_read],1)) < 1)
       break;
@@ -383,7 +383,7 @@ vjCyberGlove::vt_serial_read_bytes(int portfd, unsigned char *buffer, int numbyt
 }
 
 int
-vjCyberGlove::vt_serial_read_shorts(int portfd, void *buffer, int num_shorts)
+CyberGloveBasic::vt_serial_read_shorts(int portfd, void *buffer, int num_shorts)
 {
   int num_bytes_read,returnval, numbytes = num_shorts*sizeof(short);
 
@@ -416,10 +416,10 @@ vjCyberGlove::vt_serial_read_shorts(int portfd, void *buffer, int num_shorts)
 }
 
 int
-vjCyberGlove::vt_serial_read_longs(int portfd, void *buffer, int num_longs)
+CyberGloveBasic::vt_serial_read_longs(int portfd, void *buffer, int num_longs)
 {
   int num_bytes_read,returnval, numbytes = num_longs*sizeof(long);
-  
+
   for (num_bytes_read = 0; num_bytes_read < numbytes; num_bytes_read++)
     if ((returnval = read(portfd,&((char *)buffer)[num_bytes_read],1)) < 1)
       break;
@@ -446,10 +446,10 @@ vjCyberGlove::vt_serial_read_longs(int portfd, void *buffer, int num_longs)
 }
 
 int
-vjCyberGlove::vt_serial_read_string(int portfd, char *buffer, int length)
+CyberGloveBasic::vt_serial_read_string(int portfd, char *buffer, int length)
 {
   int num_bytes_read,returnval;
-  
+
   /* NOTE: buffer must be at least length+1 bytes long */
   /* We stop when we hit a string terminator or we've read */
   /* length chars or we timeout or there is a read error */
@@ -479,7 +479,7 @@ vjCyberGlove::vt_serial_read_string(int portfd, char *buffer, int length)
 }
 
 char *
-vjCyberGlove::vt_serial_read_line(int portfd, char *buffer, int length)
+CyberGloveBasic::vt_serial_read_line(int portfd, char *buffer, int length)
 {
   int ch, index = 0;
 
@@ -504,7 +504,7 @@ vjCyberGlove::vt_serial_read_line(int portfd, char *buffer, int length)
 }
 
 int
-vjCyberGlove::vt_serial_write_byte(int portfd, char ch)
+CyberGloveBasic::vt_serial_write_byte(int portfd, char ch)
 {
   int num_bytes_written;
 
@@ -524,7 +524,7 @@ vjCyberGlove::vt_serial_write_byte(int portfd, char ch)
 
 
 int
-vjCyberGlove::vt_serial_write_bytes(int portfd, unsigned char buffer[], int numbytes)
+CyberGloveBasic::vt_serial_write_bytes(int portfd, unsigned char buffer[], int numbytes)
 {
   int num_bytes_written;
 
@@ -544,7 +544,7 @@ vjCyberGlove::vt_serial_write_bytes(int portfd, unsigned char buffer[], int numb
 
 
 int
-vjCyberGlove::vt_serial_write_shorts(int portfd, void *buffer, int num_shorts)
+CyberGloveBasic::vt_serial_write_shorts(int portfd, void *buffer, int num_shorts)
 {
   int num_bytes_written, numbytes = num_shorts*sizeof(short);
 #ifndef IS_LITTLE_ENDIAN
@@ -571,7 +571,7 @@ vjCyberGlove::vt_serial_write_shorts(int portfd, void *buffer, int num_shorts)
 
 
 int
-vjCyberGlove::vt_serial_write_string(int portfd, char string[])
+CyberGloveBasic::vt_serial_write_string(int portfd, char string[])
 {
   int numbytes,num_bytes_written;
 
