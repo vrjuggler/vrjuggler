@@ -73,7 +73,6 @@ namespace vpr {
  * Example:
  *    (Insert Example here)
  *
- * @authorAllen Bierbaum
  * @date 1-29-97
  */
 class VPR_CLASS_API CondVarGeneric

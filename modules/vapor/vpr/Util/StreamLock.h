@@ -56,8 +56,6 @@ namespace vpr {
  * using a mutex.<br>
  * <br>
  * EX: cout << vpr::StreamLock(mutex) << "Hello world" << flush << vpr::StreamUnLock(mutex);
- *
- * @author Allen Bierbaum
  */
 class StreamLock
 {
@@ -79,8 +77,6 @@ private:
  * constructed using a mutex <br>
  * <br>
  * EX: cout << vpr::StreamLock(mutex) << "Hello world" << flush << vpr::StreamUnLock(mutex);
- *
- * @author Allen Bierbaum
  */
 class StreamUnLock
 {

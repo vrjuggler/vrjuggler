@@ -52,8 +52,6 @@ namespace vpr {
 /**
  * Guard wrapper.
  *
- * @author Allen Bierbaum
- *
  * @date 1-31-97
  */
 template <class LOCK>

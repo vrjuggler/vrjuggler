@@ -64,8 +64,6 @@ namespace vpr {
  * events occur that the user is interested in.
  *
  * Implementation site of the vpr::Selector_t bridge.
- *
- * @author Patrick Hartling
  */
 class SelectorImplBSD : public SelectorBase
 {

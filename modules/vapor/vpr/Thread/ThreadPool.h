@@ -52,8 +52,6 @@ namespace vpr {
 
 /**
  * Helper class for vpr::ThreadPool
- *
- * @author Allen Bierbaum
  */
 class OneThread
 {
@@ -81,9 +79,7 @@ std::ostream& operator<< (std::ostream&, vpr::OneThread&);
  *   |-Need a function to block until all work is done that has started <br>
  *   |-Just repetiviely add work to the process <br>
  *
- * @author Allen Bierbaum
- *
- * Date: 2-5-97
+ * @date 2-5-97
  */
 class ThreadPool
 {
