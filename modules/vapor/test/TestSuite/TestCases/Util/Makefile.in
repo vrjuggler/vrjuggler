@@ -46,9 +46,10 @@ include @topdir@/test/TestSuite/test.defs.mk
 srcdir		= @srcdir@
 top_srcdir	= @top_srcdir@
 
-SRCS		= GUIDTest.cpp		\
-                  IntervalTest.cpp	\
-                  ReturnStatusTest.cpp
+SRCS		= AttribMapTest.cpp \
+           GUIDTest.cpp		\
+           IntervalTest.cpp	\
+           ReturnStatusTest.cpp
 
 include $(MKPATH)/dpp.obj.mk
 
