@@ -64,7 +64,7 @@ public class PrefsDialog extends JDialog
       beanViewer         = mPrefs.getBeanViewer();
       windowWidth        = mPrefs.getWindowWidth();
       windowHeight       = mPrefs.getWindowHeight();
-      chooserStartDir    = mPrefs.getChooserStartDir();
+      chooserStartDir    = mPrefs.getRawChooserStartDir();
       defaultCorbaHost   = mPrefs.getDefaultCorbaHost();
       defaultCorbaPort   = mPrefs.getDefaultCorbaPort();
       defaultIiopVersion = mPrefs.getDefaultIiopVersion();

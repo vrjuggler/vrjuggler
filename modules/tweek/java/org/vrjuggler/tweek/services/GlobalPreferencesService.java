@@ -109,15 +109,21 @@ public interface GlobalPreferencesService
    public void setChooserStartDir(String d);
 
    /**
-    * Returns the user's current preferred starting directory.  This may be
-    * one of the default list, or it may be a user-defined setting.  The path
-    * itself is returned as the actual preferred path rather than the
-    * internal preference setting.
+    * Returns the user's current preferred starting directory for file
+    * choosers.  The string returned is the actual preferred path rather than
+    * the internal preference setting.
     *
     * @return A string that represents a path on the local system.  This can
     *         be passed directly to the java.io.File constructor, for example.
     */
    public String getChooserStartDir();
+
+   /**
+    * Returns the "raw" version of the user's current preferred starting
+    * directory for file choosers.  This may be one of the default list, or it
+    * may be a user-defined string (an actual path).
+    */
+   public String getRawChooserStartDir();
 
    /**
     * Sets the user's preference for lazy Panel Bean instantiation.  This

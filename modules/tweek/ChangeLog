@@ -1,5 +1,9 @@
 DATE       AUTHOR      CHANGE
 ---------- ----------- --------------------------------------------------------
+2003-11-07 patrickh    The editor for the global preferences of the Java GUI
+                       now saves the correct value for the user's preferred
+                       starting directory for file choosers.
+                       NEW VERSION: 0.16.2
 2003-11-07 patrickh    org.vrjuggler.tweek.net.corba.CorbaService.init() now
                        passes all CORBA-related exceptions through to the
                        caller.
