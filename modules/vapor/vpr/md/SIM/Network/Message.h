@@ -209,7 +209,7 @@ public:
       return mSrcSock;
    }
 
-   const vpr::SocketImplSIM* getDestinationSocket (void) const
+   vpr::SocketImplSIM* getDestinationSocket (void) const
    {
       return mDestSock;
    }

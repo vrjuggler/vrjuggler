@@ -48,6 +48,7 @@
 
 #include <vpr/md/SIM/Network/Message.h>
 #include <vpr/md/SIM/Network/MessagePtr.h>
+#include <vpr/md/SIM/IO/Socket/SocketImplSIM.h>
 #include <vpr/md/SIM/Controller.h>
 
 
@@ -208,10 +209,7 @@ void Controller::moveMessage (vpr::sim::MessagePtr msg,
    // End of the path--we have reached our destination.
    else
    {
-      vpr::sim::NetworkNode next_hop_prop;
-
-      next_hop_prop = mGraph.getNodeProperty(next_hop);
-      next_hop_prop.deliverMessage(msg);
+      msg->getDestinationSocket()->addArrivedMessage(msg);
 
       // The above should be the last use of the memory held by msg, so the
       // should get deleted when the value of msg changes.

@@ -171,32 +171,6 @@ vpr::ReturnStatus NetworkNode::removeSocket (const vpr::SocketImplSIM* sock)
    return status;
 }
 
-void NetworkNode::deliverMessage (vpr::sim::MessagePtr msg)
-{
-//   vpr::sim::MessagePtr msg_copy(new vpr::sim::Message(*msg));
-
-   const vpr::SocketImplSIM* dest_sock = msg->getDestinationSocket();
-
-   vprDEBUG(vprDBG_ALL, vprDBG_HVERB_LVL)
-      << "NetworkNode::deliverMessage() [" << mIpStr
-      << "]: Delivering message to socket (" << dest_sock
-      << ") with local address " << dest_sock->getLocalAddr() << "\n"
-      << vprDEBUG_FLUSH;
-
-   // Pass message to the destination socket.
-   switch (dest_sock->getType())
-   {
-      case vpr::SocketTypes::DATAGRAM:
-         vprASSERT(mDgramSocketMap.count(dest_sock->getLocalAddr().getPort()) > 0 && "Message delivered to wrong node");
-         mDgramSocketMap[dest_sock->getLocalAddr().getPort()]->addArrivedMessage(msg);
-         break;
-      case vpr::SocketTypes::STREAM:
-         vprASSERT(mStreamSocketMap.count(dest_sock->getLocalAddr().getPort()) > 0 && "Message delivered to wrong node");
-         mStreamSocketMap[dest_sock->getLocalAddr().getPort()]->addArrivedMessage(msg);
-         break;
-   }
-}
-
 } // End of sim namespace
 
 } // End of vpr namespace
