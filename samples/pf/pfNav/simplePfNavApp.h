@@ -191,7 +191,7 @@ public:
       }
 
       pfNavDCS::init();
-      if(mUseStats)
+      if(mUseStats && haveFocus())
          mStats.preForkInit();
 
       pjSoundReplaceTrav::preForkInit();
@@ -218,7 +218,7 @@ public:
    // Called immediately before draw (pfFrame())
    virtual void appChanFunc(pfChannel* chan)
    {
-      if(mUseStats)
+      if(mUseStats && haveFocus())
          mStats.appChanFunc(chan);
    }
 
@@ -228,7 +228,7 @@ public:
    {
       //pfDisable( PFEN_TEXTURE );
       //pfOverride(PFSTATE_ENTEXTURE, PF_OFF);
-      if(mUseStats)
+      if(mUseStats && haveFocus())
          mStats.preDrawChan(chan,chandata);
    }
 
@@ -247,7 +247,7 @@ public:
          }
       }
 
-      if(mUseStats)
+      if(mUseStats && haveFocus())
          mStats.preFrame();
    }
 
@@ -393,7 +393,7 @@ void simplePfNavApp::initializeModels()
    pfFileIO::addFilePath( mFilePath );
    vjDEBUG( vjDBG_ALL, 0 ) << clrOutNORM(clrCYAN,"setFilePath: ") << mFilePath <<"\n"<<vjDEBUG_FLUSH;
 
-      
+
    // ----------- DESTROY OLD -------- //
    // REMOVE old Models
    if(mConfiguredCollideModels != NULL)
