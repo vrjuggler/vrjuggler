@@ -45,7 +45,7 @@ includedir	= @includedir@/gadget/Devices/Logitech
 srcdir		= @srcdir@
 top_srcdir	= @top_srcdir@
 INSTALL		= @INSTALL@
-SUBOBJDIR	= $(GAD_LIBRARY)
+SUBOBJDIR	= $(GADGET_LIBRARY)
 
 SRCS		=
 
