@@ -32,4 +32,4 @@ $(NAME).pdf: $(NAME).xml $(NAME).fo $(IMAGES)
 CLOBBER_FILES=	$(IMAGES)
 
 include ../version.mk
-include ../../../../docs/docbook.mk
+include ../../../../doc/docbook.mk

@@ -23,4 +23,4 @@ book.html: book.xml
 book.pdf: book.xml book.fo
 
 #include ../version.mk
-include ../../../../docs/docbook.mk
+include ../../../../doc/docbook.mk

@@ -1,7 +1,7 @@
 # $Id$
 
 NAME =  programmer.guide
-MK_PATH=../../../../docs/
+MK_PATH=../../../../doc/
 default: html pdf
 
 docs: html chunk-html pdf

@@ -18,4 +18,4 @@ instdir=	gadgeteer/0.1/programmer.reference
 
 prefix=		$(webroot)/$(instdir)
 
-include ../../../docs/doxygen.mk
+include ../../../doc/doxygen.mk

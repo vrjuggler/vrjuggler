@@ -19,4 +19,4 @@ instdir=	vrjuggler/$(PROJECT_NUMBER)/programmer.reference
 prefix=		$(webroot)/$(instdir)
 
 include ../version.mk
-include ../../../../docs/doxygen.mk
+include ../../../../doc/doxygen.mk

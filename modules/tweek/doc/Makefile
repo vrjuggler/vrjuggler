@@ -18,4 +18,4 @@ instdir=	tweek/1.0/programmer.reference.cxx
 
 prefix=		$(webroot)/$(instdir)
 
-include ../../../docs/doxygen.mk
+include ../../../doc/doxygen.mk

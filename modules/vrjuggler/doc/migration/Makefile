@@ -23,4 +23,4 @@ $(NAME).html: $(NAME).xml
 $(NAME).pdf: $(NAME).xml $(NAME).fo
 
 include ../version.mk
-include ../../../../docs/docbook.mk
+include ../../../../doc/docbook.mk
