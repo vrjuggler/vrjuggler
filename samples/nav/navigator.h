@@ -31,9 +31,9 @@
  * -----------------------------------------------------------------
  */
 
-#include <vjVec3.h>
-#include <vjMatrix.h>
-#include <vjCoord.h>
+#include <Math/vjVec3.h>
+#include <Math/vjMatrix.h>
+#include <Math/vjCoord.h>
 #include <collider.h>
 #include <vector>
 #include <Input/InputManager/vjDigitalInterface.h>

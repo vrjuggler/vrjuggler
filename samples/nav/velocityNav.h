@@ -33,7 +33,7 @@
 #ifndef _VELOCITY_NAV_H
 #define _VELOCITY_NAV_H
 
-#include <vjQuat.h>
+#include <Math/vjQuat.h>
 #include <navigator.h>
 #include <collider.h>
 #include <vector>
