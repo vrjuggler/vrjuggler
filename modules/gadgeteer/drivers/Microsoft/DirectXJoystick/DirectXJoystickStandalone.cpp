@@ -38,6 +38,7 @@
 
 #include <dinput.h>
 #include <stdlib.h>
+#include <math.h>
 #include <malloc.h>
 #include <memory.h>
 #include <tchar.h>
@@ -265,6 +266,39 @@ const std::string& DirectXJoystickStandalone::getProductName() const
    return mProductName;
 }
 
+LONG DirectXJoystickStandalone::getAxisValue(const unsigned int axisIndex)
+{
+   if ( axisIndex < mCapabilities.dwAxes )
+   {
+      return *(mAxisValueMap[axisIndex]);
+   }
+   else
+   {
+      // Map the given axis index to the range [0,3] so that we can use
+      // the result as the index into mJsData.rgdwPOV.
+      const unsigned int pov_index((axisIndex - mCapabilities.dwAxes) / 2);
+      const DWORD pov_value(mJsData.rgdwPOV[pov_index]);
+
+      // The hat is centered.
+      if ( (LOWORD(pov_value) == 0xffff) )
+      {
+         return (getAxisMax() + getAxisMin()) / 2;
+      }
+      else
+      {
+         const float pi = 3.14159265358979323846f;
+         const float pov_rads((pov_value / 100.0) * pi / 180.0f);
+
+         // We treat an even-numbered axis index as an X axis request.
+         // An odd-numbered axis index then a Y axis request.
+         const bool x_axis((axisIndex % 2) == 0);
+
+         return (x_axis ? getAxisMax() * sinf(pov_rads)
+                        : getAxisMax() * cosf(pov_rads));
+      }
+   }
+}
+
 BOOL DirectXJoystickStandalone::enumerateJoysticks(const DIDEVICEINSTANCE* dInstance)
 {
    // Obtain an interface to the enumerated joystick.
@@ -290,7 +324,7 @@ BOOL DirectXJoystickStandalone::enumerateAxes(const DIDEVICEOBJECTINSTANCE* doi)
    // back values that I would not expect in certain cases.  In other words,
    // the object instance number does not correlate with the memory ordering
    // in DIJOYSTATE.
-   static int axis_index(getNumAxes() - 1);
+   static int axis_index(mCapabilities.dwAxes - 1);
    assert(axis_index >= 0 && "axis_index went negative!");
 
    // For each axis enumrated, this function will set
@@ -368,12 +402,6 @@ BOOL DirectXJoystickStandalone::enumerateAxes(const DIDEVICEOBJECTINSTANCE* doi)
          }
 #ifdef _DEBUG
          std::cout << "Object for slider" << std::endl;
-#endif
-      }
-      else if ( doi->guidType == GUID_POV )
-      {
-#ifdef _DEBUG
-         std::cout << "Object for POV" << std::endl;
 #endif
       }
 
