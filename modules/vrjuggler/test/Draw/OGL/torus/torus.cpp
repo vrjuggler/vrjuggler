@@ -50,7 +50,7 @@ int main(int argc, char* argv[])
    vrj::Projection::setNearFar(0.01f, 10000.0f);
    
    vrj::Kernel* kernel = vrj::Kernel::instance();  // Get the kernel
-   torusApp* application = new torusApp(kernel);   // Declare an instance of the app
+   vrjTest::torusApp* application = new vrjTest::torusApp(kernel);   // Declare an instance of the app
 
    if (argc <= 1)
    {
@@ -78,15 +78,14 @@ int main(int argc, char* argv[])
 
    kernel->setApplication(application);         // Set application
 
+   /*
    while(1)
-   {   /*
-      vpr::System::sleep(2);
-      kernel->stopApplication();
-      vpr::System::sleep(2);
-      kernel->setApplication(application);
-      */
+   {  
       vpr::Thread::yield();
    }
+   */
+
+   kernel->waitForKernelStop();
 
    return 1;
 }

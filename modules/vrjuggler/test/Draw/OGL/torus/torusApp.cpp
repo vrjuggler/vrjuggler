@@ -41,6 +41,8 @@
 
 #include <torusApp.h>
 
+namespace vrjTest
+{
 
 static void doughnut(GLfloat r, GLfloat R, GLint nsides, GLint rings);
 
@@ -164,3 +166,5 @@ doughnut(GLfloat r, GLfloat R, GLint nsides, GLint rings)
     sinTheta = sinTheta1;
   }
 }
+
+}; // namespace vrjTest
