@@ -1,8 +1,27 @@
-default: all
+default: kevin
 
 include @topdir@/make.defs.mk
 
 SRCS = main.cpp ajOpenALSoundImplementation.cpp ajSoundFactory.cpp
+
+
+# ABI            - Application Binary Interface type.  This may be used for
+#                  other binary types when supported by the operating system
+#                  (e.g., "ELF", "N32" or "64").
+# ABI_LIST       - List of all possible ABI/ISA combinations that can be built
+#                  on the target system.
+# ISA            - Instruction Set Architecture.  This may be used for other
+#                  binary types when supported by the operating system (e.g.,
+#                  "mips3" or "i386").
+# LIBBITSUF      - Suffix for the library path used by the linker on IRIX
+#                  only.  For n32 binaries, it will be 32.  For 64-bit
+#                  binaries, it will be 64.
+# PLATFORM       - The operating system abbreviation on which the library is
+#                  being built.
+#
+# DYNAMICLIB_EXT - File extension for dynamic libraries.
+# STATICLIB_EXT  - File extension for shared libraries.
+
 
 includedir	= @includedir@/aj
 srcdir		= @srcdir@
@@ -19,5 +38,5 @@ LIBS = @AL_LDFLAGS@ @LIBOPENAL@ -lm
 
 include $(MKPATH)/dpp.obj.mk
 
-all: ${OBJECTS}
+kevin: ${OBJECTS}
 	${CXX} ${CXXFLAGS} ${OBJECTS} ${LIBS}

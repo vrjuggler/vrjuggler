@@ -5,6 +5,7 @@
 #include <string>
 #include "ajSoundImplementation.h"
 #include "ajSoundInfo.h"
+#include "ajSoundAPIInfo.h"
 class ajStubSoundImplementation : public ajSoundImplementation
 {
 public:
@@ -43,39 +44,6 @@ public:
    }
 
    /**
-    * take a time step of [timeElapsed] seconds.
-    * @semantics call once per sound frame (doesn't have to be same as your graphics frame)
-    * @input time elapsed since last frame
-    */
-   virtual void step( const float & timeElapsed )
-   {
-      ajSoundImplementation::step( timeElapsed );
-      // do nothing
-   }
-
-
-  /**
-    * associate a name (alias) to the description
-    * @preconditions provide an alias and a SoundInfo which describes the sound
-    * @postconditions alias will point to loaded sound data
-    * @semantics associate an alias to sound data.  later this alias can be used to operate on this sound data.
-    */
-   virtual void associate( const std::string& alias, const ajSoundInfo& description )
-   {
-      ajSoundImplementation::associate( alias, description );
-      // do nothing
-   }
-
-   /**
-    * remove alias->sounddata association 
-    */
-   virtual void remove( const std::string alias )
-   {
-      ajSoundImplementation::remove( alias );
-      // do nothing
-   }
-
-   /**
     * set sound's 3D position 
     */
    virtual void setPosition( const std::string& alias, float x, float y, float z )
@@ -96,17 +64,17 @@ public:
    /**
     * set the position of the listener
     */
-   virtual void setListenerPosition( const float& x, const float& y, const float& z )
+   virtual void setListenerPosition( const vjMatrix& mat )
    {
-      ajSoundImplementation::setListenerPosition( x, y, z );
+      ajSoundImplementation::setListenerPosition( mat );
    }
 
    /**
     * get the position of the listener
     */
-   virtual void getListenerPosition( float& x, float& y, float& z )
+   virtual void getListenerPosition( vjMatrix& mat ) const
    {
-      ajSoundImplementation::getListenerPosition( x, y, z );
+      ajSoundImplementation::getListenerPosition( mat );
    }
    
    /**
@@ -117,15 +85,6 @@ public:
    virtual void startAPI()
    {
    }
-
-   /**
-     * query whether the API has been started or not
-     * @semantics return true if api has been started, false otherwise.
-     */
-   virtual bool isStarted() const
-   {
-      return true;
-   }   
    
    /**
     * kill the sound API, deallocating any sounds, etc...
@@ -135,6 +94,39 @@ public:
    virtual void shutdownAPI()
    {
    }   
+
+   /**
+     * query whether the API has been started or not
+     * @semantics return true if api has been started, false otherwise.
+     */
+   virtual bool isStarted() const
+   {
+      return true;
+   }
+
+   /**
+     * configure/reconfigure a sound
+     * configure: associate a name (alias) to the description if not already done
+     * reconfigure: change properties of the sound to the descriptino provided.
+     * @preconditions provide an alias and a SoundInfo which describes the sound
+     * @postconditions alias will point to loaded sound data
+     * @semantics associate an alias to sound data.  later this alias can be used to operate on this sound data.
+     */
+   virtual void configure( const std::string& alias, const ajSoundInfo& description )
+   {
+      ajSoundImplementation::configure( alias, description );
+      // do nothing
+   }
+
+   /**
+     * remove a configured sound, any future reference to the alias will not
+     * cause an error, but will not result in a rendered sound
+     */
+   virtual void remove( const std::string alias )
+   {
+      ajSoundImplementation::remove( alias );
+      // do nothing
+   }
 
    /**
     * clear all associate()tions.
@@ -175,10 +167,24 @@ public:
    virtual void unbind( const std::string& alias )
    {
    }
-   
+
+   /**
+    * take a time step of [timeElapsed] seconds.
+    * @semantics call once per sound frame (doesn't have to be same as your graphics frame)
+    * @input time elapsed since last frame
+    */
+   virtual void step( const float & timeElapsed )
+   {
+      ajSoundImplementation::step( timeElapsed );
+      // do nothing
+   }
+
 private:  
 
    /** @link dependency */
    /*#  ajSoundInfo lnkSoundInfo; */
+
+   /** @link dependency */
+   /*#  ajSoundAPIInfo lnkajSoundAPIInfo; */
 };
 #endif //AJSTUBSOUNDIMPLEMENTATION_H

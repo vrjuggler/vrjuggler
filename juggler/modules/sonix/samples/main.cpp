@@ -1,9 +1,9 @@
 #include <iostream>
 
-#include "ajSoundInfo.h"
-#include "AudioJuggler.h"    // interface
-#include "CFileIO.h"
-#include "unistd.h"
+#include <unistd.h>
+#include "aj/ajSoundInfo.h"
+#include "aj/AudioJuggler.h"    // interface
+#include "aj/CFileIO.h"
 
 int main( int argc, char* argv[] )
 {

@@ -10,7 +10,6 @@ DPP_STD_CPP(yes)
 # Define the binary format.
 DPP_ABI_SETUP
 
-
 DPP_BASIC_PROGS($PLATFORM, $OS_TYPE)
 
 DPP_SYSTEM_SUBST
@@ -189,6 +188,7 @@ fi
 
 
 DPP_HAVE_OPENAL( /usr/local, AC_MSG_RESULT(+ Found openal), AC_MSG_ERROR(*** project requires openal type configure --help for options***) )
+dnl DPP_HAVE_VRJUGGLER( /usr, AC_MSG_RESULT(+ Found vrjuggler), AC_MSG_ERROR(*** project requires vrjuggler type configure --help for options***) )
 
 DPP_SUBST
 DPP_GET_SRCDIR_ABSOLUTE

@@ -5,6 +5,7 @@
 #include <string>
 #include <map>
 #include "ajSoundInfo.h"
+#include "ajSoundAPIInfo.h"
 
 class ajSoundImplementation
 {
@@ -56,9 +57,24 @@ public:
       this->lookup( alias ).repeat_countdown = repeat;
    }
 
-   ajSoundInfo& lookup( const std::string& alias )
+   /**
+    * when sound is already playing then you call trigger,
+    * does the sound restart from beginning?
+    * (if a tree falls and no one is around to hear it, does it make sound?)
+    */
+   virtual void setRetriggerable( const std::string& alias, bool onOff )
    {
-      return mSounds[alias];
+      // todo, maybe set a flag within ajSoundInfo?
+   }
+
+   /**
+    * ambient or positional sound.
+    * is the sound ambient - attached to the listener, doesn't change volume
+    * when listener moves...
+    * or is the sound positional - changes volume as listener nears or retreats..
+    */
+   void setAmbient( const std::string& alias, bool setting = false )
+   {
    }
 
    /**
@@ -74,41 +90,33 @@ public:
    }
 
    /**
-    * @semantics call once per sound frame (doesn't have to be same as your graphics frame)
-    * @input time elapsed since last frame
+    * pause the sound, use unpause to return playback where you left off...
     */
-   virtual void step( const float& timeElapsed )
+   virtual void pause( const std::string& alias )
    {
-      assert( this->isStarted() == true && "must call startAPI prior to this function" );
-      
-   }   
-
-
-   /**
-    * associate a name (alias) to the description
-    * @preconditions provide an alias and a SoundInfo which describes the sound
-    * @postconditions alias will point to loaded sound data
-    * @semantics associate an alias to sound data.  later this alias can be used to operate on this sound data.
-    */
-   virtual void associate( const std::string& alias, const ajSoundInfo& description )
-   {
-      mSounds[alias] = description;
-      if (this->isStarted())
-      {
-         this->bind( alias );
-      }
+      this->stop( alias );
    }
 
    /**
-    * remove alias->sounddata association 
+    * resume playback from a paused state.  does nothing if sound was not paused.
     */
-   virtual void remove( const std::string alias )
+   virtual void unpause( const std::string& alias )
    {
-      if (this->isStarted())
-      {
-         this->unbind( alias );
-      }
-      mSounds.erase( alias );
+      this->play( alias, 1 );
+   }
+
+   /**
+    * mute, sound continues to play, but you can't hear it...
+    */
+   virtual void mute( const std::string& alias )
+   {
+   }
+
+   /**
+    * unmute, let the muted-playing sound be heard again
+    */
+   virtual void unmute( const std::string& alias )
+   {
    }
 
    /**
@@ -139,7 +147,7 @@ public:
    /**
     * set the position of the listener
     */
-   virtual void setListenerPosition( const float& x, const float& y, const float& z )
+   virtual void setListenerPosition( const vjMatrix& mat )
    {
       assert( this->isStarted() == true && "must call startAPI prior to this function" );
       
@@ -151,7 +159,7 @@ public:
    /**
     * get the position of the listener
     */
-   virtual void getListenerPosition( float& x, float& y, float& z )
+   virtual void getListenerPosition( vjMatrix& mat ) const
    {
       assert( this->isStarted() == true && "must call startAPI prior to this function" );
       
@@ -179,6 +187,54 @@ public:
     * @semantics this function could be called any time, the function could be called multiple times, so it should be smart.
     */
    virtual void shutdownAPI() {}
+
+   /*
+    * configure/reconfigure the sound API global settings
+    */
+   virtual void configure( const ajSoundAPIInfo& sai )
+   {
+      mSoundAPIInfo = sai;
+   }
+
+   /**
+     * configure/reconfigure a sound
+     * configure: associate a name (alias) to the description if not already done
+     * reconfigure: change properties of the sound to the descriptino provided.
+     * @preconditions provide an alias and a SoundInfo which describes the sound
+     * @postconditions alias will point to loaded sound data
+     * @semantics associate an alias to sound data.  later this alias can be used to operate on this sound data.
+     */
+   virtual void configure( const std::string& alias, const ajSoundInfo& description )
+   {
+      mSounds[alias] = description;
+      if (this->isStarted())
+      {
+         this->bind( alias );
+      }
+   }
+
+   /**
+    * remove a configured sound, any future reference to the alias will not
+    * cause an error, but will not result in a rendered sound
+    */
+   virtual void remove(const std::string alias)
+   {
+      if (this->isStarted())
+      {
+         this->unbind( alias );
+      }
+      mSounds.erase( alias );
+   }
+
+   /**
+    * @semantics call once per sound frame (doesn't have to be same as your graphics frame)
+    * @input time elapsed since last frame
+    */
+   virtual void step( const float& timeElapsed )
+   {
+      assert( this->isStarted() == true && "must call startAPI prior to this function" );
+      
+   }   
 
    /**
     * clear all associate()tions.
@@ -213,7 +269,13 @@ public:
     */
    virtual void unbind( const std::string& alias ) = 0;
 
+   ajSoundInfo& lookup( const std::string& alias )
+   {
+      return mSounds[alias];
+   }
+
 protected:
+   ajSoundAPIInfo mSoundAPIInfo;
    std::map<std::string, ajSoundInfo> mSounds;
 
 private:
