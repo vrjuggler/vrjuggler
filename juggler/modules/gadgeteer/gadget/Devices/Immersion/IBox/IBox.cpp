@@ -38,6 +38,22 @@
 #include <gadget/Util/Debug.h>
 #include <jccl/Config/ConfigChunk.h>
 
+/**********************************************************
+  void sampleBox(void*)
+
+  The spawned thread just loops from here
+
+*********************************************** ahimberg */
+static void sampleBox(void* pointer)
+{
+   gadget::IBox* devPointer = (gadget::IBox*) pointer;
+
+   for (;;)
+   {
+     devPointer->sample();
+   }
+}
+
 namespace gadget
 {
 
@@ -112,10 +128,7 @@ int IBox::startSampling()
       }
       mPhysicalIbox.std_cmd(0,4,0);
 
-
-      IBox* devicePtr = this;
-      void sampleBox(void*);
-      mThread = new vpr::Thread(sampleBox, (void*)devicePtr);
+      mThread = new vpr::Thread(sampleBox, (void*) this);
       if (!mThread->valid())
          return 0; //fail
       else
@@ -125,21 +138,6 @@ int IBox::startSampling()
    }
    else
       return 0; // already sampling
-}
-
-/**********************************************************
-  void sampleBox(void*)
-
-  The spawned thread just loops from here
-
-*********************************************** ahimberg */
-void sampleBox(void* pointer)
-{
-   IBox* devPointer = (IBox*) pointer;
-
-   for (;;)
-     devPointer->sample();
-
 }
 
 /**********************************************************
