@@ -49,3 +49,8 @@ h6, h6style
 {
 color: rgb(60, 0, 0);
 }
+TT, tt
+{
+font-family: monospace,monospaced,courier,default,serif;
+color: rgb(0, 0, 40);
+}
