@@ -132,7 +132,9 @@ public class NewClusterFilePanel extends JPanel
 
    private void browse()
    {
-      int result = mFileChooser.showSaveDialog(this);
+      int result =
+         mFileChooser.showSaveDialog(SwingUtilities.getAncestorOfClass(Frame.class,
+                                                                       this));
       if (JFileChooser.APPROVE_OPTION == result)
       {
          String filename = mFileChooser.getSelectedFile().getAbsolutePath();
