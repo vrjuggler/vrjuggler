@@ -41,9 +41,9 @@
 
 #include <vpr/vprConfig.h>
 
+#include <vpr/Util/Assert.h>
 #include <vpr/Util/Debug.h>
 #include <vpr/md/SIM/Network/Message.h>
-#include <vpr/md/SIM/Network/MessagePtr.h>
 #include <vpr/md/SIM/Network/NetworkLine.h>
 
 

@@ -51,6 +51,7 @@
 #include <string.h>
 #include <vpr/vpr.h>
 #include <vpr/Util/Interval.h>
+#include <vpr/Util/Assert.h>
 
 #include <vpr/md/SIM/Network/NetworkGraph.h>
 
@@ -191,6 +192,8 @@ public:
       mNextHop  = mMsgPath->begin();
       mSrcSock  = source;
       mDestSock = dest;
+
+      vprASSERT(mNextHop != mMsgPath->end() && "Path must have at least one value");
    }
 
    /**
@@ -214,20 +217,24 @@ public:
    /**
     * Retrieves the next hop (network graph vertex) in the path of this
     * message and returns it to the caller via the by-reference parameter.
-    * The pointer to the next hop is incremented as a side effect of this call
-    * if the parameter increment_next_hop is true.
+    */
+   const NetworkGraph::net_vertex_t& getNextHop (void) const
+   {
+      return *mNextHop;
+   }
+
+   /**
+    * Increment the pointer to the next hop in this message's path as it moves
+    * towards its destination.
     *
     * @post The pointer to the next hop in the path is incremented if
     *       increment_next_hop is true.
-    *
-    * @param hop                Storage for the vertex that is the next hop in
-    *                           this message's path.
-    * @param increment_next_hop A Boolean value stating whether to increment
-    *                           the pointer to the next hop in this message's
-    *                           path.  It is optional, and it defaults to true.
     */
-   vpr::ReturnStatus getNextHop(NetworkGraph::net_vertex_t& hop,
-                                const bool increment_next_hop = true);
+   void incNextHop (bool& end_of_path)
+   {
+      ++mNextHop;
+      end_of_path = (mMsgPath->end() == mNextHop);
+   }
 
 private:
    MessageDataPtr   mMsg;    /**< The body of the message */

@@ -483,18 +483,17 @@ namespace sim
          << msg->getDestinationSocket()->getLocalAddr() << "\n"
          << vprDEBUG_FLUSH;
 
-      NetworkGraph::net_vertex_t first_hop, second_hop;
-      vpr::ReturnStatus status;
-      NetworkGraph::net_edge_t first_edge;
-      bool found;
+      NetworkGraph::net_vertex_t first_hop(msg->getNextHop());
 
-      status = msg->getNextHop(first_hop, true);
-      vprASSERT(status.success() && "Could not get first node in message's path");
+      bool end_of_path;
+      msg->incNextHop(end_of_path);
 
-      status = msg->getNextHop(second_hop, false);
-
-      if ( status.success() )
+      if ( ! end_of_path )
       {
+         NetworkGraph::net_vertex_t second_hop(msg->getNextHop());
+         NetworkGraph::net_edge_t first_edge;
+         bool found;
+
          boost::tie(first_edge, found) = vpr::sim::Controller::instance()->getNetworkGraph().getEdge(first_hop, second_hop);
 
          if ( found )
