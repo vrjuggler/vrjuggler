@@ -61,7 +61,4 @@ EXTRA_LIBS+=		@APP_BASIC_LIBS_BEGIN@ @APP_BASIC_LIBS@		\
 			$(NULL)
 
 include $(DZR_BASE_DIR)/mk/dzr.basicapp.mk
-include $(DZR_BASE_DIR)/ext/vpr/dzr.vpr.mk
-include $(DZR_BASE_DIR)/ext/jccl/dzr.jccl.mk
-include $(DZR_BASE_DIR)/ext/gadgeteer/dzr.gadgeteer.mk
 include $(DZR_BASE_DIR)/ext/vrjuggler/dzr.vrjuggler.mk

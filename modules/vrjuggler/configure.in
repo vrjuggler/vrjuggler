@@ -414,12 +414,8 @@ elif test "x$OS_TYPE" = "xWin32" ; then
 fi
 
 VJ_APP_CXXFLAGS='$(VRJ_CXX_FLAGS)'
-VJ_APP_EXTRA_LIBS='$(VRJ_EXTRA_LIBS_MIN) $(GADGET_LIBS_MIN) $(JCCL_LIBS_MIN) $(VPR_LIBS_MIN) $(GADGET_EXTRA_LIBS_MIN) $(JCCL_EXTRA_LIBS_MIN) $(VPR_EXTRA_LIBS_MIN)'
-
-if test "x$SONIX_SOUNDMANAGER" != "xno" ; then
-   VJ_APP_CXXFLAGS="\$(SNX_CXX_FLAGS_MIN) $VJ_APP_CXXFLAGS"
-   VJ_APP_EXTRA_LIBS="\$(SNX_LIBS_MIN) \$(SNX_EXTRA_LIBS_MIN) $VJ_APP_EXTRA_LIBS"
-fi
+VJ_APP_EXTRA_LIBS='$(VRJ_EXTRA_LIBS_STATIC)'
+VJ_APP_EXTRA_LIBS_INST='$(VRJ_EXTRA_LIBS)'
 
 # Variables set in Makefiles found in the application trees.  All variables
 # listed are for use only in the Makefile.in's found in that tree unless
@@ -605,6 +601,7 @@ AC_SUBST(DYLIB_DEPS_VJ)
 AC_SUBST(DYLIB_DEPS_GL)
 AC_SUBST(DYLIB_DEPS_PF)
 
+AC_SUBST(VJ_APP_EXTRA_LIBS_INST)
 AC_SUBST(APP_EXTRA_LIBS_OSG)
 
 AC_SUBST(vrj_dep_scripts)
