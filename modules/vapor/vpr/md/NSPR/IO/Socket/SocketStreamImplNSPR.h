@@ -116,7 +116,7 @@ public:
     //     This is a blocking call and will block until a connection is
     //     established.
     // ------------------------------------------------------------------------
-    virtual Status accept(SocketStreamImplNSPR& sock);
+    virtual Status accept(SocketStreamImplNSPR& sock, const vpr::Interval timeout = vpr::Interval::NoTimeout);
 
 protected:
     // ------------------------------------------------------------------------

@@ -136,7 +136,7 @@ public:
     //     false - The connect could not be made.  An error message is
     //             printed explaining what happened.
     // ------------------------------------------------------------------------
-    virtual Status connect(void);
+    virtual Status connect(const vpr::Interval timeout = vpr::Interval::NoTimeout);
 
     // ------------------------------------------------------------------
     //: Get the status of a possibly connected socket
@@ -160,7 +160,7 @@ public:
                 if(poll_desc.out_flags & PR_POLL_READ)
                     return false;                           // Opened, but not connected
             }
-            
+
             return true;        // Either have data, or are waiting for it
         }
         else
@@ -215,7 +215,7 @@ public:
        Status status;
 
        if (m_bound)
-       { 
+       {
            vprDEBUG(0,0) << "SocketImplNSPR::setRemoteAddr: Cant' set address of bound socket.\n" << vprDEBUG_FLUSH;
            status.setCode(Status::Failure);
        }
@@ -275,12 +275,13 @@ protected:
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
     virtual Status
-    read_i (void* buffer, const size_t length, ssize_t& bytes_read)
+    read_i (void* buffer, const size_t length,
+            ssize_t& bytes_read, const vpr::Interval timeout = vpr::Interval::NoTimeout)
     {
         Status retval;
 
         bytes_read = PR_Recv(m_handle, buffer, length, 0,
-                             PR_INTERVAL_NO_TIMEOUT);
+                             NSPR_getInterval(timeout) );
 
         // -1 indicates failure which includes PR_WOULD_BLOCK_ERROR.
         if ( bytes_read == -1 ) {
@@ -293,11 +294,13 @@ protected:
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
     virtual Status
-    readn_i (void* buffer, const size_t length, ssize_t& bytes_read) {
+    readn_i (void* buffer, const size_t length,
+             ssize_t& bytes_read, const vpr::Interval timeout = vpr::Interval::NoTimeout)
+    {
         Status retval;
 
         bytes_read = PR_Recv(m_handle, buffer, length, 0,
-                             PR_INTERVAL_NO_TIMEOUT);
+                             NSPR_getInterval(timeout) );
 
         // -1 indicates failure which includes PR_WOULD_BLOCK_ERROR.
         if ( bytes_read == -1 ) {
@@ -310,11 +313,13 @@ protected:
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
     virtual Status
-    write_i (const void* buffer, const size_t length, ssize_t& bytes_written) {
+    write_i (const void* buffer, const size_t length,
+             ssize_t& bytes_written, const vpr::Interval timeout = vpr::Interval::NoTimeout)
+    {
         Status retval;
 
         bytes_written = PR_Send(m_handle, buffer, length, 0,
-                                PR_INTERVAL_NO_TIMEOUT);
+                                NSPR_getInterval(timeout) );
 
         if ( bytes_written == -1 ) {
             retval.setCode(Status::Failure);

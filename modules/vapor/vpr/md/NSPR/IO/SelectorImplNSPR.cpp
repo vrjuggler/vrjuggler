@@ -38,7 +38,7 @@
 
 namespace vpr {
 
-   
+
 //: Add the given handle to the selector
 //! PRE: handle is a valid handle
 //! POST: handle is added to the handle set, and initialized to a mask of no-events
@@ -55,7 +55,7 @@ bool SelectorImplNSPR::addHandle(IOSys::Handle handle)
    new_desc.out_flags = 0;
 
    mPollDescs.push_back(new_desc);
-   
+
    return true;
 }
 
@@ -65,7 +65,7 @@ bool SelectorImplNSPR::addHandle(IOSys::Handle handle)
 bool SelectorImplNSPR::removeHandle(IOSys::Handle handle)
 {
    std::vector<PRPollDesc>::iterator i = getHandle(handle);
-   
+
    if(mPollDescs.end() == i)
    {
       return false;
@@ -81,14 +81,14 @@ bool SelectorImplNSPR::removeHandle(IOSys::Handle handle)
 bool SelectorImplNSPR::setIn(IOSys::Handle handle, vpr::Uint16 mask)
 {
    std::vector<PRPollDesc>::iterator i = getHandle(handle);
-   
+
    if(mPollDescs.end() == i)
    {
       return false;
    }
 
    (*i).in_flags = convertMaskVprToNspr(mask);
-   
+
    return true;
 }
 
@@ -96,7 +96,7 @@ bool SelectorImplNSPR::setIn(IOSys::Handle handle, vpr::Uint16 mask)
 vpr::Uint16 SelectorImplNSPR::getIn(IOSys::Handle handle)
 {
    std::vector<PRPollDesc>::iterator i = getHandle(handle);
-   
+
    if(mPollDescs.end() == i)
    {
       // XXX: This is VERY bad thing to do.  Need to have an error code instead
@@ -110,27 +110,27 @@ vpr::Uint16 SelectorImplNSPR::getIn(IOSys::Handle handle)
 vpr::Uint16 SelectorImplNSPR::getOut(IOSys::Handle handle)
 {
    std::vector<PRPollDesc>::iterator i = getHandle(handle);
-   
+
    if(mPollDescs.end() == i)
    {
       // XXX: This is VERY bad thing to do.  Need to have an error code instead
       return 0;
    }
 
-   return convertMaskNsprToVpr((*i).out_flags);   
+   return convertMaskNsprToVpr((*i).out_flags);
 }
 
 //: Select
 //! ARGS: numWithEvents - Upon completion, this holds the number of items that have events
 //! ARGS: timeout - The number of msecs to select for (0 - don't wait)
-Status SelectorImplNSPR::select(vpr::Uint16& numWithEvents, vpr::Uint16 timeout)
+Status SelectorImplNSPR::select(vpr::Uint16& numWithEvents,  const vpr::Interval timeout)
 {
    vpr::Status ret_val;
 
    PRInt32 result;
 
    // Call poll - If timeout == 0, then make sure we pass 0
-   result = PR_Poll(&(mPollDescs[0]), mPollDescs.size(), ( (timeout > 0) ? (PR_MillisecondsToInterval(timeout)) : 0));
+   result = PR_Poll(&(mPollDescs[0]), mPollDescs.size(), NSPR_getInterval(timeout) );
 
    if( -1 == result)
    {
@@ -144,9 +144,9 @@ Status SelectorImplNSPR::select(vpr::Uint16& numWithEvents, vpr::Uint16 timeout)
       ret_val.setCode(Status::Timeout);
    }
    //else                    // Got some
-      
+
    numWithEvents = result;
-   return ret_val;   
+   return ret_val;
 }
 
 // Get the index of the handle given

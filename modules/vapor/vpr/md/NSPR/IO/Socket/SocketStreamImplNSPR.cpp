@@ -106,7 +106,7 @@ SocketStreamImplNSPR::listen (const int backlog)
 // Accept an incoming connection request.
 // ----------------------------------------------------------------------------
 Status
-SocketStreamImplNSPR::accept (SocketStreamImplNSPR& sock) {
+SocketStreamImplNSPR::accept (SocketStreamImplNSPR& sock, vpr::Interval timeout) {
     Status retval;
     InetAddr addr;
 
@@ -122,7 +122,7 @@ SocketStreamImplNSPR::accept (SocketStreamImplNSPR& sock) {
        // Accept an incoming connection request.
        vprASSERT(m_handle != NULL);
        accept_sock = PR_Accept(m_handle, addr.getPRNetAddr(),
-                               PR_INTERVAL_NO_TIMEOUT);
+                               NSPR_getInterval(timeout) );
 
        if (NULL == accept_sock) {
           if ( PR_GetError() == PR_WOULD_BLOCK_ERROR ) {
