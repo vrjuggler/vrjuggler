@@ -124,8 +124,7 @@ namespace snx
          sonix::instance()->setRetriggerable( mAlias, onOff );
       }
 
-      /**
-       * ambient or positional sound.
+      /** ambient or positional sound.
        * is the sound ambient - attached to the listener, doesn't change volume
        * when listener moves...
        * or is the sound positional - changes volume as listener nears or retreats..
@@ -134,7 +133,19 @@ namespace snx
       {
          sonix::instance()->setAmbient( mAlias, setting );
       }
+      
+      /** is the sound ambient? */
+      virtual bool isAmbient()
+      {
+         return sonix::instance()->isAmbient( mAlias );
+      }
 
+      /** alters the frequency of the sample, 0 is no change. */
+      virtual void setPitchBend( float amount )
+      {
+         sonix::instance()->setPitchBend( mAlias, amount );
+      }
+      
       /**stop the sound.
        * @semantics stop the sound
        * @input
