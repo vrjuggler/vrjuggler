@@ -40,30 +40,10 @@ bool vjGloveProxy::config(vjConfigChunk* chunk)
    vjDEBUG_BEGIN(vjDBG_INPUT_MGR,3) << "------------------ GLOVE PROXY config() -----------------\n" << vjDEBUG_FLUSH;
    vjASSERT(((std::string)chunk->getType()) == "GloveProxy");
 
-   int unitNum = chunk->getProperty("unit");
-   std::string proxy_name = chunk->getProperty("name");
-   std::string dev_name = chunk->getProperty("device");
+   mUnitNum = chunk->getProperty("unit");
+   mDeviceName = chunk->getProperty("device");
 
-   vjInput* input_dev = vjKernel::instance()->getInputManager()->getDevice(dev_name);
-   if(NULL == input_dev)       // Not found, ERROR
-   {
-      vjDEBUG(vjDBG_INPUT_MGR, vjDBG_CONFIG_LVL) << "vjGloveProxy::config: Could not find device: " << dev_name << std::endl << vjDEBUG_FLUSH;
-      return false;
-   }
-
-   vjGlove* glove_dev = dynamic_cast<vjGlove*>(input_dev);
-   if(NULL == glove_dev)
-   {
-      vjDEBUG(vjDBG_INPUT_MGR, vjDBG_CRITICAL_LVL) << "vjGloveProxy::config: Device was of wrong type: " << dev_name
-                                               << " type:" << typeid(input_dev).name() << std::endl << vjDEBUG_FLUSH;
-      return false;
-   }
-
-   vjDEBUG_CONT(vjDBG_INPUT_MGR,vjDBG_STATE_LVL) << "   attaching to device named: " << dev_name.c_str() << std::endl << vjDEBUG_FLUSH;
-   vjDEBUG_CONT(vjDBG_INPUT_MGR,vjDBG_STATE_LVL) << "   at unit number: " << unitNum << std::endl << vjDEBUG_FLUSH;
-   vjDEBUG_END(vjDBG_INPUT_MGR, vjDBG_STATE_LVL) << "   GloveProxy config()'ed" << std::endl << vjDEBUG_FLUSH;
-
-   set(glove_dev,unitNum);    // Set the proxy
+   refresh();
 
    return true;
 }

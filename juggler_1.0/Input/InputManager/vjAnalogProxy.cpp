@@ -40,30 +40,10 @@ bool vjAnalogProxy::config(vjConfigChunk* chunk)
    vjDEBUG_BEGIN(vjDBG_INPUT_MGR,vjDBG_STATE_LVL) << "----------- configuring ANALOG PROXY -----------------\n" << vjDEBUG_FLUSH;
    vjASSERT(((std::string)chunk->getType()) == "AnaProxy");
 
-   int unitNum = chunk->getProperty("unit");
-   std::string proxy_name = chunk->getProperty("name");
-   std::string dev_name = chunk->getProperty("device");
+   m_unitNum = chunk->getProperty("unit");
+   mDeviceName = chunk->getProperty("device");
 
-   vjInput* input_dev = vjKernel::instance()->getInputManager()->getDevice(dev_name);
-   if(NULL == input_dev)       // Not found, ERROR
-   {
-      vjDEBUG(vjDBG_INPUT_MGR, vjDBG_CONFIG_LVL) << "vjAnalogProxy::config: Could not find device: " << dev_name << std::endl << vjDEBUG_FLUSH;
-      return false;
-   }
-
-   vjAnalog* ana_dev = dynamic_cast<vjAnalog*>(input_dev);
-   if(NULL == ana_dev)
-   {
-      vjDEBUG(vjDBG_INPUT_MGR, vjDBG_CRITICAL_LVL) << "vjAnalogProxy::config: Device was of wrong type: " << dev_name
-                                               << " type:" << typeid(input_dev).name() << std::endl << vjDEBUG_FLUSH;
-      return false;
-   }
-
-   vjDEBUG_CONT(vjDBG_INPUT_MGR,vjDBG_STATE_LVL) << "   attaching to device named: " << dev_name.c_str() << std::endl << vjDEBUG_FLUSH;
-   vjDEBUG_CONT(vjDBG_INPUT_MGR,vjDBG_STATE_LVL) << "   at unit number: " << unitNum << std::endl << vjDEBUG_FLUSH;
-   vjDEBUG_END(vjDBG_INPUT_MGR, vjDBG_STATE_LVL) << "   AnaProxy config()'ed" << std::endl << vjDEBUG_FLUSH;
-
-   set(ana_dev,unitNum);    // Set the proxy
+   refresh();     // Refresh the device now that we have something to point at
 
    return true;
 }

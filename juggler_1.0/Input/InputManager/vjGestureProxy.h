@@ -57,27 +57,15 @@
 //
 // See also: vjGesture
 //!PUBLIC_API:
-class vjGestureProxy : public vjProxy
+class vjGestureProxy : public vjTypedProxy<vjGesture>
 {
 public:
    //: Construct the proxy to point to the given gesture device.
    vjGestureProxy()
-   { mGesturePtr = NULL; }
+   { ;}
 
    virtual ~vjGestureProxy()
    {}
-
-   //: Set the gloveProxy to point to another device and subUnit number.
-   //! PRE: gesturePtr must point to a valid gesture device
-   //! POST: this now proxies the given gesture device
-   void set(vjGesture* gesturePtr)
-   {
-      //vjASSERT( gesturePtr->fDeviceSupport(DEVICE_GESTURE) );
-      mGesturePtr = gesturePtr;
-      stupify(false);
-
-      vjDEBUG(vjDBG_INPUT_MGR, vjDBG_VERB_LVL) << "gesturePtr: " << gesturePtr << std::endl << vjDEBUG_FLUSH;
-   }
 
    //: Get the current gesture.
    //! RETURNS: id of current gesture
@@ -88,7 +76,7 @@ public:
       if(mStupified)
          return defaultGesture;
       else
-         return mGesturePtr->getGesture();
+         return mTypedDevice->getGesture();
    }
 
    //: Return the identifier of the string gesture.
@@ -100,7 +88,7 @@ public:
       if(mStupified)
          return defaultGestureIndex;
       else
-         return mGesturePtr->getGestureIndex(name);
+         return mTypedDevice->getGestureIndex(name);
    }
 
    //: Get a gesture name
@@ -111,7 +99,7 @@ public:
       if(mStupified)
          return std::string("");
       else
-         return mGesturePtr->getGestureString(gestureId);
+         return mTypedDevice->getGestureString(gestureId);
    }
 
    //: Returns a pointer to the device held by this proxy.
@@ -120,7 +108,7 @@ public:
       if(mStupified)
          return NULL;
       else
-         return mGesturePtr;
+         return mTypedDevice;
    }
 
    static std::string getChunkType() { return "GestureProxy"; }
@@ -129,14 +117,13 @@ public:
 
    virtual vjInput* getProxiedInputDevice()
    {
-      vjInput* ret_val = dynamic_cast<vjInput*>(mGesturePtr);
+      if(NULL == mTypedDevice)
+         return NULL;
+
+      vjInput* ret_val = dynamic_cast<vjInput*>(mTypedDevice);
       vjASSERT(ret_val != NULL);
       return ret_val;
    }
-
-private:
-   //: Pointer to the gesture device we are proxying.
-   vjGesture* mGesturePtr;
 };
 
 #endif

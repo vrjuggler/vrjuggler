@@ -121,7 +121,11 @@ public:
    //! MODIFIES: instances pointed to by devArray
    void updateAllData();
 
-private:
+public:
+   // Return a vjInput ptr to a deviced named
+   //!RETURN: NULL - Not found
+   vjInput* getDevice(std::string deviceName);
+
    //: Add a device to vjInputManager.
    //
    // Add the devPtr to the device Array, devPtr should
@@ -131,7 +135,9 @@ private:
    //! POST: m_devVector' = m_devVector \/ devPtr
    //+       return = devNum (position in the array)
    //                or -1 for fail
-   int addDevice(vjInput* devPtr);
+   bool addDevice(vjInput* devPtr);
+
+private:
 
    //: Remove a device from the vjInputManager.
    // Remove the device at position devNum from the
@@ -141,6 +147,7 @@ private:
    //! POST: m_devVector[devNum]' = NULL
    bool removeDevice(int devNum);
    bool removeDevice(char* instName);
+   bool removeDevice(vjInput* devPtr);
 
    //: Get the device number from its Instance Name.
    //
@@ -155,10 +162,6 @@ private:
    //!POST: return = m_devVector[devNum]  (this can be NULL)
    vjInput* getDevice(unsigned int devNum);
 
-public:
-   // Return a vjInput ptr to a deviced named
-   //!RETURN: NULL - Not found
-   vjInput* getDevice(std::string deviceName);
 
 
    /*********************************************************
@@ -173,6 +176,9 @@ public:
    //: Get a proxy for the given proxy name (or alias)
    //! RETURNS: NULL - Not found
    vjProxy* getProxy(std::string proxyName);
+
+   // Refresh all the proxies to have then update what device they are pointing at
+   void refreshAllProxies();
 
 protected:
    std::vector<vjInput*>                  m_devVector;

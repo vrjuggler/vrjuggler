@@ -58,10 +58,10 @@
 // See also: vjPosition
 //------------------------------------------------------------------------
 //!PUBLIC_API:
-class vjPosProxy : public vjProxy
+class vjPosProxy : public vjTypedProxy<vjPosition>
 {
 public:
-   vjPosProxy() : mPosPtr(NULL), mUnitNum(-1), mETrans(false), mFilter(NULL)
+   vjPosProxy() :  mUnitNum(-1), mETrans(false), mFilter(NULL)
    {;}
 
    virtual ~vjPosProxy() {}
@@ -69,16 +69,19 @@ public:
    //: Update the proxy's copy of the data
    // Copy the device data to local storage, and transform it if necessary
    virtual void updateData() {
-      mPosData = *(mPosPtr->getPosData(mUnitNum));
-      mPosUpdateTime = *(mPosPtr->getPosUpdateTime(mUnitNum));
-
-      if(mETrans)
-         transformData();
-
-      // Filter the data if there is an active filters
-      if(mFilter != NULL)
+      if(!mStupified)
       {
-         mPosData = mFilter->getPos(mPosData);
+         mPosData = *(mTypedDevice->getPosData(mUnitNum));
+         mPosUpdateTime = *(mTypedDevice->getPosUpdateTime(mUnitNum));
+
+         if(mETrans)
+            transformData();
+
+         // Filter the data if there is an active filters
+         if(mFilter != NULL)
+         {
+            mPosData = mFilter->getPos(mPosData);
+         }
       }
    }
 
@@ -97,9 +100,6 @@ public:
    void setTransform( float xoff, float yoff, float zoff,    // Translate
                       float xrot, float yrot, float zrot);   // Rotate
 
-   //: Set the vjPosProxy to now point to another device and subDevicenumber
-   void set(vjPosition* posPtr, int unitNum);
-
    //: Get the data
    vjMatrix* getData()
    {
@@ -115,7 +115,12 @@ public:
 
    //: Return the vjPosition pointer held by this proxy
    vjPosition* getPositionPtr()
-   { return mPosPtr; }
+   {
+      if(!mStupified)
+         return mTypedDevice;
+      else
+         return NULL;
+   }
 
    //: Get the transform being using by this proxy
    vjMatrix& getTransform()
@@ -136,7 +141,10 @@ public:
 
    virtual vjInput* getProxiedInputDevice()
    {
-      vjInput* ret_val = dynamic_cast<vjInput*>(mPosPtr);
+      if(NULL == mTypedDevice)
+         return NULL;
+
+      vjInput* ret_val = dynamic_cast<vjInput*>(mTypedDevice);
       vjASSERT(ret_val != NULL);
       return ret_val;
    }
@@ -145,7 +153,6 @@ private:
    vjMatrix       mPosData;
    vjTimeStamp    mPosUpdateTime;
    vjMatrix       mMatrixTransform;        // reciever_t_modifiedReciever
-   vjPosition*    mPosPtr;                 // Ptr to the position device
    int            mUnitNum;
    bool           mETrans;                // Are transformation enabled;
    vjPosFilter*   mFilter;                // A possible position filter to use

@@ -40,21 +40,19 @@
 
 //: Proxy class to vjKeyboard based devices.
 //!PUBLIC_API:
-class vjKeyboardProxy : public vjProxy
+class vjKeyboardProxy : public vjTypedProxy<vjKeyboard>
 {
 public:
    vjKeyboardProxy()
-   { mKeyboard = NULL; }
-
-   void set(vjKeyboard* keyboard)
-   {
-      //vjASSERT(keyboard->fDeviceSupport(DEVICE_KEYBOARD));
-      mKeyboard = keyboard;
-      stupify(false);
-   }
+   { ; }
 
    vjKeyboard* getKeyboardPtr()
-   { return mKeyboard; }
+   {
+      if(mStupified)
+         return NULL;
+      else
+         return mTypedDevice;
+   }
 
    //: Determine if the modifier key is pressed exclusively.
    //! PRE: modKey is a valid modifier identifier
@@ -64,7 +62,7 @@ public:
       if(mStupified)
          return false;
       else
-         return mKeyboard->modifierOnly(modKey);
+         return mTypedDevice->modifierOnly(modKey);
    }
 
    int keyPressed(int keyId)
@@ -72,7 +70,7 @@ public:
       if(mStupified)
          return 0;
       else
-         return mKeyboard->keyPressed(keyId);
+         return mTypedDevice->keyPressed(keyId);
    }
 
    static std::string getChunkType() { return "KeyboardProxy"; }
@@ -81,14 +79,14 @@ public:
 
    virtual vjInput* getProxiedInputDevice()
    {
-      vjInput* ret_val = dynamic_cast<vjInput*>(mKeyboard);
+      if(NULL == mTypedDevice)
+         return NULL;
+
+      vjInput* ret_val = dynamic_cast<vjInput*>(mTypedDevice);
       vjASSERT(ret_val != NULL);
       return ret_val;
    }
 
-private:
-  //: Pointer to the real keyboard.
-  vjKeyboard* mKeyboard;
 };
 
 

@@ -40,6 +40,7 @@
 #include <Input/InputManager/vjGloveProxy.h>
 #include <Input/InputManager/vjGestureProxy.h>
 #include <Input/InputManager/vjKeyboardProxy.h>
+#include <Input/InputManager/vjProxyDepChecker.h>
 
 #include <typeinfo>
 
@@ -65,6 +66,8 @@ void vjProxyFactory::loadKnownProxies()
    vjProxyConstructor<vjGloveProxy>* glove_proxy = new vjProxyConstructor<vjGloveProxy>;
    vjProxyConstructor<vjGestureProxy>* gesture_proxy = new vjProxyConstructor<vjGestureProxy>;
    vjProxyConstructor<vjKeyboardProxy>* keyboard_proxy = new vjProxyConstructor<vjKeyboardProxy>;
+
+   vjDependencyManager::instance()->registerChecker(new vjProxyDepChecker());
 }
 
 void vjProxyFactory::registerProxy(vjProxyConstructorBase* constructor)

@@ -61,17 +61,6 @@ void vjPosProxy::setTransform( float xoff, float yoff, float zoff,    // Transla
    mMatrixTransform.mult(trans_mat, rot_mat);
 }
 
-//: Set the vjPosProxy to now point to another device and subDevicenumber
-void vjPosProxy::set(vjPosition* posPtr, int unitNum)
-{
-   //vjASSERT( posPtr->fDeviceSupport(DEVICE_POSITION) );
-   vjDEBUG(vjDBG_INPUT_MGR, vjDBG_VERB_LVL) << "posPtr: " << posPtr << std::endl
-              << "unit  : " << unitNum << std::endl << std::endl
-              << vjDEBUG_FLUSH;
-   mPosPtr = posPtr;
-   mUnitNum = unitNum;
-   stupify(false);
-}
 
 
 bool vjPosProxy::config(vjConfigChunk* chunk)
@@ -79,9 +68,8 @@ bool vjPosProxy::config(vjConfigChunk* chunk)
    vjDEBUG_BEGIN(vjDBG_INPUT_MGR,3) << "------------------ POS PROXY config() -----------------\n" << vjDEBUG_FLUSH;
    vjASSERT(((std::string)chunk->getType()) == "PosProxy");
 
-   int unit_num = chunk->getProperty("unit");
-   std::string proxy_name = chunk->getProperty("name");
-   std::string dev_name = chunk->getProperty("device");
+   mUnitNum = chunk->getProperty("unit");
+   mDeviceName = chunk->getProperty("device");
 
    if (true == (bool)chunk->getProperty("etrans") )
    {
@@ -125,26 +113,7 @@ bool vjPosProxy::config(vjConfigChunk* chunk)
    }
 
    // --- SETUP PROXY with INPUT MGR ---- //
-   vjInput* input_dev = vjKernel::instance()->getInputManager()->getDevice(dev_name);
-   if(NULL == input_dev)       // Not found, ERROR
-   {
-      vjDEBUG(vjDBG_INPUT_MGR, vjDBG_CONFIG_LVL) << "vjPosProxy::config: Could not find device: " << dev_name << std::endl << vjDEBUG_FLUSH;
-      return false;
-   }
-
-   vjPosition* pos_dev = dynamic_cast<vjPosition*>(input_dev);
-   if(NULL == pos_dev)
-   {
-      vjDEBUG(vjDBG_INPUT_MGR, vjDBG_CRITICAL_LVL) << "vjPosProxy::config: Device was of wrong type: " << dev_name
-                                               << " type:" << typeid(input_dev).name() << std::endl << vjDEBUG_FLUSH;
-      return false;
-   }
-
-   vjDEBUG_CONT(vjDBG_INPUT_MGR,vjDBG_STATE_LVL) << "   attaching to device named: " << dev_name.c_str() << std::endl << vjDEBUG_FLUSH;
-   vjDEBUG_CONT(vjDBG_INPUT_MGR,vjDBG_STATE_LVL) << "   at unit number: " << unit_num << std::endl << vjDEBUG_FLUSH;
-   vjDEBUG_END(vjDBG_INPUT_MGR, vjDBG_STATE_LVL) << "   PosProxy config()'ed" << std::endl << vjDEBUG_FLUSH;
-
-   set(pos_dev,unit_num);    // Set the proxy
+   refresh();
 
    return true;
 }

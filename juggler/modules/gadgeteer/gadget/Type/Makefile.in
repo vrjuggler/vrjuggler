@@ -58,6 +58,7 @@ SRCS		= vjAnalogProxy.cpp	\
                   vjInputManager.cpp	\
                   vjKeyboardProxy.cpp	\
                   vjPosProxy.cpp	\
+				  vjProxyDepChecker.cpp \
                   vjProxyFactory.cpp
 
 include $(MKPATH)/dpp.obj.mk

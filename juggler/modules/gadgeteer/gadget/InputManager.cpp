@@ -178,9 +178,9 @@ bool vjInputManager::configureDevice(vjConfigChunk* chunk)
 
    if ((new_device != NULL) && (new_device->startSampling()))
    {
-      int dev_index = addDevice(new_device);
+      addDevice(new_device);
       ret_val = true;
-      vjDEBUG(vjDBG_INPUT_MGR,vjDBG_STATE_LVL) << "   Successfully added dev: " << dev_name.c_str() << "  at index:" << dev_index << std::endl << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_INPUT_MGR,vjDBG_STATE_LVL) << "   Successfully added dev: " << dev_name.c_str() << std::endl << vjDEBUG_FLUSH;
    }
    else
    {
@@ -259,9 +259,12 @@ std::ostream& operator<<(std::ostream& out, vjInputManager& iMgr)
        i_p != iMgr.mProxyTable.end(); i_p++)
   {
     out << (*i_p).second->getName()
-        << "   Proxies:"
-        << ((*i_p).second->getProxiedInputDevice())->getInstanceName()
-        << std::endl;
+        << "   Proxies:";
+    if(NULL != ((*i_p).second->getProxiedInputDevice()))
+       out << ((*i_p).second->getProxiedInputDevice())->getInstanceName();
+    else
+       out << "None (internal dummy)";
+    out << std::endl;
   }
 
   out << std::endl;
@@ -282,10 +285,13 @@ std::ostream& operator<<(std::ostream& out, vjInputManager& iMgr)
   where the device was placed
 
 *********************************************** ahimberg */
-int vjInputManager::addDevice(vjInput* devPtr)
+bool vjInputManager::addDevice(vjInput* devPtr)
 {
    m_devVector.push_back(devPtr);
-   return (m_devVector.size()-1);   // ASSERT: This is the index we placed
+
+   refreshAllProxies();
+
+   return true;
 }
 
 
@@ -359,6 +365,11 @@ vjInput* vjInputManager::getDevice(std::string deviceName)
    return ret_dev;
 }
 
+bool vjInputManager::removeDevice(vjInput* devPtr)
+{
+   std::cout << "Not implemented" << std::endl;
+   return false;
+}
 
 /**********************************************************
   vjInputManager::removeDevice(int devNum)
@@ -388,6 +399,9 @@ bool vjInputManager::removeDevice(int devNum)
    m_devVector[devNum]->stopSampling();
    delete m_devVector[devNum];
    m_devVector[devNum] = NULL;
+
+   // Refresh the proxies
+   refreshAllProxies();
 
    return 1;
 }
@@ -528,4 +542,16 @@ vjProxy* vjInputManager::getProxy(std::string proxyName)
    }
 
    return false;
+}
+
+ // Refresh all the proxies to have then update what device they are pointing at
+void vjInputManager::refreshAllProxies()
+{
+   vjDEBUG(vjDBG_INPUT_MGR, vjDBG_STATE_LVL) << "vjInputManager::refreshAppProxies: Refreshing all....\n" << vjDEBUG_FLUSH;
+
+   for(std::map<std::string, vjProxy*>::iterator i = mProxyTable.begin(); i != mProxyTable.end(); i++)
+   {
+      (*i).second->refresh();
+   }
+
 }
