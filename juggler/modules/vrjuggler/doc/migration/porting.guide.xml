@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?xml-stylesheet href="../../../../../../../../home/users/patrick/src/Juggler/docs/stylesheet/docbook_ab.css" type="text/css"?>
+<?xml-stylesheet href="../../../../../../../../../../../home/users/patrick/src/Juggler/docs/stylesheet/docbook_ab.css" type="text/css"?>
 <?morphon-document-settings
   morphon.document.settings.whitespaces.amount="3"
   morphon.document.settings.print.fixed.attributes="true"
@@ -31,6 +31,10 @@
             <para>VR Juggler now has a common module called VPR (VR Juggler Portable Runtime) that captures all platform-specific system abstractions. This includes programming constructs such as threads and semaphores and system access methods such as serial ports and sockets. This common abstraction makes it possible for VR Juggler code to run on all supported platforms with little or no platform-specific code.</para>
          </listitem>
          <listitem>
+            <para>Removal of <filename>Juggler_utils</filename> library</para>
+            <para>As a result of the separation of VR Juggler into multiple subsystems, the need for the standalone <filename>Juggler_utils</filename> library dwindled. In VR Juggler 1.0 and early versions of VR Juggler 1.1, this library contained a lot of standalone <quote>utility</quote> code that was needed by the other VR Juggler libraries. The separation into subsystems resulted in most of the utility code migrating to the VR Juggler Portable Runtime. The library was eventually removed when it was deemed unnecessary.</para>
+         </listitem>
+         <listitem>
             <para>New math library</para>
             <para>VR Juggler 1.1 introduces the use of a new common math library called GMTL.</para>
          </listitem>
@@ -41,7 +45,7 @@
       <para>If you've looked at the new VR Juggler 1.1, you'll notice that much has changed since 1.0. Of particular note is the directory structure. In the source code, you'll see many standalone modules where before they were mixed. The installation of Juggler has more directories in the <filename>include</filename> directory (<filename>vrj</filename>, <filename>snx</filename>, <filename>plx</filename>, <filename>vpr</filename>, <filename>gadget</filename>, and <filename>jccl</filename>). Below is a step-by-step list of the things you will need to port and how to do it.</para>
       <section>
          <title>Modules and Namespaces</title>
-         <para>In VR Juggler 1.0, every object that was part of the Juggler API started withthe prefix "vj". Since Juggler 1.1 has been broken up into distinct functional modules, there needed to be a way to differentiate between their respective objects. All of the classes and objects that used to start with "vj" now instead have a namespace designating which module they belong to.</para>
+         <para>In VR Juggler 1.0, every object that was part of the Juggler API started with the prefix "vj". Since Juggler 1.1 has been broken up into distinct functional modules, there needed to be a way to differentiate between their respective objects. All of the classes and objects that used to start with "vj" now instead have a namespace designating which module they belong to.</para>
          <para>But what exactly is a namespace? In short, it's a mechanism in C++ that defines a new scope and helps to avoid naming collisions. For instance, you could define two classes both called "Foo", put them in different namespaces, and use them both in the same program. Say you have them in namespaces spaceOne and spaceTwo. Then you could reference the different classes with "spaceOne::Foo" and "spaceTwo::Foo".</para>
          <para>For the purposes of Juggler 1.1, namespaces are used as a way to make it clear which module an object belongs to. As stated before, these modules are roughly defined along the lines of their functionality:</para>
          <para>Vapor (namespace vpr): system-level functionality and utilities</para>
@@ -138,7 +142,7 @@ class myApplication : public vrj::GlApp</programlisting>
       </section>
       <section>
          <title>Application Drawing Pipeline</title>
-         <para>To allow the user more control over the synchronizationof applications, we have introduced the bufferPreDraw function in these derived application classes: vrj::GlApp, vrj::OpenSGApp, and vrj::OsgApp. This function is executed once per graphics buffer each frame. For instance, if you are running in stereo, you have buffers for both the right and lefy eyes. You also have multiple buffers when rendering to multiple windows or surface displays. </para>
+         <para>To allow the user more control over the synchronization of applications, we have introduced the bufferPreDraw function in these derived application classes: vrj::GlApp, vrj::OpenSGApp, and vrj::OsgApp. This function is executed once per graphics buffer each frame. For instance, if you are running in stereo, you have buffers for both the right and left eyes. You also have multiple buffers when rendering to multiple windows or surface displays. </para>
          <para>In your VR Juggler 1.0 OpenGL applications, you most likely had the draw function clear the graphics window and render the scene. The code was probably similar to this:</para>
          <programlisting>// my VR Juggler 1.0 OpenGL application object
 class myApplication : public vjGlApp
