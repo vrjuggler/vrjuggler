@@ -40,6 +40,8 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.border.*;
+import org.vrjuggler.tweek.beans.BeanRegistry;
+import org.vrjuggler.tweek.services.GlobalPreferencesService;
 
 
 /**
@@ -106,6 +108,9 @@ public class ConnectionDialog extends JDialog
 
    private void jbInit() throws Exception
    {
+      GlobalPreferencesService prefs =
+         (GlobalPreferencesService) BeanRegistry.instance().getBean("GlobalPreferences");
+
       m_main_panel.setLayout(m_main_layout);
       m_main_panel.setMinimumSize(new Dimension(375, 130));
       m_main_panel.setPreferredSize(new Dimension(375, 130));
@@ -116,7 +121,7 @@ public class ConnectionDialog extends JDialog
       m_ns_host_field.setMinimumSize(new Dimension(80, 17));
       m_ns_host_field.setPreferredSize(new Dimension(225, 17));
       m_ns_host_panel.setLayout(m_ns_host_layout);
-      m_ns_port_field.setText("2809");
+      m_ns_port_field.setText(String.valueOf(prefs.getDefaultCorbaPort()));
       m_ns_host_panel.add(m_ns_host_label, null);
       m_ns_host_panel.add(m_ns_host_field, null);
 
