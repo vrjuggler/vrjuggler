@@ -756,7 +756,6 @@ AC_OUTPUT(Makefile
           make.defs.mk
           vrj/Makefile
           vrj/Makefile.inc
-          vrj/Config/Makefile
           vrj/Display/Makefile
           vrj/Draw/Makefile
           vrj/Draw/OGL/Makefile
@@ -779,7 +778,6 @@ AC_OUTPUT(Makefile
           vrj/Input/Type/Makefile
           vrj/Kernel/Makefile
           vrj/Math/Makefile
-          vrj/Performance/Makefile
           vrj/Sound/Makefile
           vrj/Sound/pf/Makefile
           vrj/Util/Makefile
