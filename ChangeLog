@@ -1,1 +1,13 @@
-crap
+DATE        AUTHOR    CHANGE
+----------- --------- ---------------------------------------------------------
+
+==[ 0.1.97 ]=========================
+Jul-13-2000 allenb    Initial ChangeLog file started
+Jul-11-2000 allenb    Rewrote the way that threads call self()
+                      Rewrote thread specific data
+                      Threads are now much faster (~10x)
+==[ 0.1.96 ]=========================
+Bug fixes for OpenGL
+
+==[ 0.1.95 ]=========================
+
