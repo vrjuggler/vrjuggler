@@ -54,7 +54,7 @@ AC_COPYRIGHT([VR Juggler is (C) Copyright 1998-2003 by Iowa State University])
 AC_CONFIG_SRCDIR([vpr/vprConfig.h])
 AC_REVISION($Revision$)
 AC_CONFIG_AUX_DIR([../../share/config])
-DPP_PREREQ([1.5.1])
+DPP_PREREQ([1.99.14])
 DPP_INIT
 
 # Generate the reconfig script first so that it's easy to run configure again
@@ -146,10 +146,7 @@ AC_ARG_WITH(cppdom,
 # -----------------------------------------------------------------------------
 # System-dependent stuff.
 # -----------------------------------------------------------------------------
- 
-# We use AC_CANONICAL SYSTEM so that we can find out information about the
-# build, target and host platforms rather than only the host.
-AC_CANONICAL_SYSTEM
+AC_CANONICAL_TARGET
 
 # These are used on all platforms.
 AC_DEFINE_UNQUOTED([VPR_OS_RELEASE], ["$OS_REL_STR"],
