@@ -393,22 +393,14 @@ private:
    struct staticWrapper
    {
       staticWrapper() : mStaticsInitialized(1221), mThreadIdKey(NULL)
-      {
-         ;
-      }
+      {;}
 
-      unsigned       mStaticsInitialized;    // Just a debug helper to try
-                                             // to find times when people
-                                             // call us before the statics
-                                             // are created
-      ThreadKeyPosix mThreadIdKey;           // Key for the id of the local
-                                             // thread
+      unsigned       mStaticsInitialized;    // Just a debug helper to help find when called before initialized
+      ThreadKeyPosix mThreadIdKey;           // Key for the id of the local thread
    };
 
    static ThreadKeyPosix& threadIdKey()
-   {
-      return statics.mThreadIdKey;
-   }
+   {  return statics.mThreadIdKey;  }
 
    static staticWrapper statics;
 };
