@@ -35,7 +35,7 @@ import java.util.Vector;
 import java.util.List;
 
 import org.vrjuggler.jccl.config.ConfigChunkDB;
-import org.vrjuggler.jccl.vrjuggler.Core;
+import org.vrjuggler.jccl.vjcontrol.Core;
 
 
 /** Creates trees for the ChunkDBPanel.
