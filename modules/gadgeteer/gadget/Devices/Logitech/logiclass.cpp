@@ -31,7 +31,7 @@
 
 int vjThreeDMouse::StartSampling()
 {
-  if (myThreadID == 0) {
+  if (myThreadID == NULL) {
    //int i;
    current = 0; valid = 1; progress = 2;
    OpenMouse(sPort);
@@ -78,7 +78,7 @@ int vjThreeDMouse::StopSampling()
   if (myThread != NULL) {
     myThread->kill();
 
-    myThreadID = 0;
+    myThreadID = NULL;
 //    sginap(1);
     cout << "stopping the vjThreeDMouse.." << endl;
    }
