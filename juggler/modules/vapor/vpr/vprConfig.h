@@ -65,11 +65,6 @@
 
 #include <windows.h>
 
-#ifndef HAVE_STRCASECMP
-#define strcasecmp _stricmp
-#endif
-
-
 /* extern HINSTANCE g_hInst = NULL; */
 #endif   /* WIN32 */
 
@@ -80,20 +75,11 @@
 #include <iostream>
 #include <iomanip>
 #include <fstream>
-#include <vector>
-#include <map>
-#include <string>
-#include <algorithm>
-#include <math.h>
 
 #endif   /* __cplusplus */
 
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>
-#endif
-
-#ifdef HAVE_STRINGS_H
-#include <strings.h>
 #endif
 
 #include <Utils/Status.h> // for return values, error status.
