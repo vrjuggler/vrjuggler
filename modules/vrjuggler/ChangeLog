@@ -1,5 +1,7 @@
 DATE        AUTHOR    CHANGE
 ----------- --------- ---------------------------------------------------------
+Oct-11-2001 allenb    Added fix for synchronization errors when reading input
+                      from a GlWindowXwin as a keyboard device.
 Sep-21-2001 patrick   Complete restructuring of the VR Juggler source tree.
                       Headers are now rooted in a vrj directory (to match the
                       namespace), and all file names have had the "vj" prefix
