@@ -34,10 +34,6 @@
 
 #include <vector>
 #include <boost/concept_check.hpp>
-#include <gmtl/Matrix.h>
-#include <gmtl/Vec.h>
-#include <gmtl/MatrixOps.h>
-#include <gmtl/Generate.h>
 
 #include <jccl/Config/ConfigElement.h>
 #include <gadget/Type/DeviceConstructor.h>
@@ -93,29 +89,24 @@ void MotionStar::controlLoop(void* nullParam)
 // Public methods.
 // ============================================================================
 
-// ----------------------------------------------------------------------------
 // Constructor.  This invokes the MotionStarStandalone constructor and
 // initializes member variables.
-// ----------------------------------------------------------------------------
 MotionStar::MotionStar(const char* address, const unsigned short port,
                        const BIRDNET::protocol proto, const bool master,
                        const FLOCK::hemisphere hemisphere,
                        const FLOCK::data_format bird_format,
                        const BIRDNET::run_mode run_mode,
                        const unsigned char report_rate,
-                       const double measurement_rate,
-                       const unsigned int birds_required)
-   : mMyThread(NULL),
-     mMotionStar(address, port, proto, master, hemisphere, bird_format,
-                 run_mode, report_rate, measurement_rate, birds_required)
+                       const double measurement_rate)
+   : mMyThread(NULL)
+   , mMotionStar(address, port, proto, master, hemisphere, bird_format,
+                 run_mode, report_rate, measurement_rate)
 
 {
     ;
 }
 
-// ----------------------------------------------------------------------------
 // Destructor.  Sampling is stopped, and the data pool is deallocated.
-// ----------------------------------------------------------------------------
 MotionStar::~MotionStar()
 {
    stopSampling();
@@ -126,9 +117,7 @@ std::string MotionStar::getElementType()
    return "motion_star";
 }
 
-// ----------------------------------------------------------------------------
 // Configure the MotionStar with the given config element.
-// ----------------------------------------------------------------------------
 bool MotionStar::config(jccl::ConfigElementPtr e)
 {
    bool retval(false);
@@ -139,101 +128,120 @@ bool MotionStar::config(jccl::ConfigElementPtr e)
          << "MotionStar::config(jccl::ConfigElementPtr)\n"
          << vprDEBUG_FLUSH;
 
-      // Configure mMotionStar with the config info.
-      const unsigned num_filters = e->getNum("position_filters");
+      const unsigned int cur_version(2);
 
-      // Sanity check.  There has to be at least one position filter
-      // configured.
-      if ( num_filters == 0 )
+      if ( e->getVersion() < cur_version )
       {
          vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
             << clrOutBOLD(clrRED, "ERROR")
-            << ": [MotionStar::config(jccl::ConfigElementPtr)] No position filters configured in "
-            << e->getName() << std::endl << vprDEBUG_FLUSH;
+            << " [gadget::MotionStar::config()] Element named '"
+            << e->getName() << "'" << std::endl << vprDEBUG_FLUSH;
+         vprDEBUG_NEXT(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
+            << "is version " << e->getVersion()
+            << ", but we require at least version " << cur_version
+            << std::endl << vprDEBUG_FLUSH;
+         vprDEBUG_NEXT(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
+            << "Ignoring this element and moving on." << std::endl
+            << vprDEBUG_FLUSH;
          retval = false;
       }
       else
       {
-         BIRDNET::units expected_units;
+         // Configure mMotionStar with the config info.
+         const unsigned num_filters = e->getNum("position_filters");
 
-         // Find the first position_transform_filter instance and get its
-         // device_units property value.  This will tell us what units we're
-         // expecting from the hardware.
-         const std::string filter_type("position_transform_filter");
-         for ( unsigned i = 0; i < num_filters; ++i )
+         // Sanity check.  There has to be at least one position filter
+         // configured.
+         if ( num_filters == 0 )
          {
-            jccl::ConfigElementPtr pos_elt =
-               e->getProperty<jccl::ConfigElementPtr>("position_filters", i);
-
-            if ( pos_elt->getID() == filter_type )
-            {
-               const float unit_conv = pos_elt->getProperty<float>("device_units");
-
-               vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_VERB_LVL)
-                  << "MotionStar::config(): Read " << unit_conv
-                  << " as the conversion from device units to meters.\n"
-                  << vprDEBUG_FLUSH;
-
-               // Inches.  This is the most likely configuration as of this
-               // writing.
-               if ( unit_conv == 0.0254f )
-               {
-                  expected_units = BIRDNET::INCHES;
-               }
-               // Feet.
-               else if ( unit_conv == 0.3048f )
-               {
-                  expected_units = BIRDNET::FEET;
-               }
-               // Meters.
-               else if ( unit_conv == 1.0f )
-               {
-                  expected_units = BIRDNET::METERS;
-               }
-               // Unexpected value.
-               else
-               {
-                  vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
-                     << clrOutBOLD(clrRED, "ERROR")
-                     << ": [MotionStar::config(jccl::ConfigElementPtr)] "
-                     << "Unsupported device unit value " << unit_conv
-                     << " in " << pos_elt->getFullName() << std::endl
-                     << vprDEBUG_FLUSH;
-                  vprDEBUG_NEXT(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
-                     << "Check your configuration for errors.\n"
-                     << vprDEBUG_FLUSH;
-
-                  // Break out of this method early because the
-                  // configuration element we were given is bad.
-                  return false;
-               }
-
-               // We're done checking for unit conversion values.
-               break;
-            }
+            vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
+               << clrOutBOLD(clrRED, "ERROR")
+               << ": [MotionStar::config(jccl::ConfigElementPtr)] No position "
+               << "filters configured in " << e->getName() << std::endl
+               << vprDEBUG_FLUSH;
+            retval = false;
          }
+         else
+         {
+            BIRDNET::units expected_units;
 
-         mMotionStar.setExpectedUnits(expected_units);
+            // Find the first position_transform_filter instance and get its
+            // device_units property value.  This will tell us what units we're
+            // expecting from the hardware.
+            const std::string filter_type("position_transform_filter");
+            for ( unsigned i = 0; i < num_filters; ++i )
+            {
+               jccl::ConfigElementPtr pos_elt =
+                  e->getProperty<jccl::ConfigElementPtr>("position_filters", i);
 
-         setAddressName(e->getProperty<std::string>("address").c_str());
-         setServerPort((unsigned short) e->getProperty<int>("server_port"));
-         setMasterStatus(e->getProperty<bool>("server_type"));
-         setHemisphere((unsigned char) e->getProperty<int>("hemisphere"));
-         setNumBirds((unsigned int) e->getProperty<int>("number_of_birds"));
-         setBirdFormat((unsigned int) e->getProperty<int>("data_format"));
-         setRunMode((unsigned int) e->getProperty<int>("mode"));
-         setReportRate((unsigned char) e->getProperty<int>("report_rate"));
-         setMeasurementRate(e->getProperty<float>("measurement_rate"));
-         retval = true;
+               if ( pos_elt->getID() == filter_type )
+               {
+                  const float unit_conv =
+                     pos_elt->getProperty<float>("device_units");
+
+                  vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_VERB_LVL)
+                     << "[gadget::MotionStar::config()] Read " << unit_conv
+                     << " as the conversion from device units to meters.\n"
+                     << vprDEBUG_FLUSH;
+
+                  // Inches.  This is the most likely configuration as of this
+                  // writing.
+                  if ( unit_conv == 0.0254f )
+                  {
+                     expected_units = BIRDNET::INCHES;
+                  }
+                  // Feet.
+                  else if ( unit_conv == 0.3048f )
+                  {
+                     expected_units = BIRDNET::FEET;
+                  }
+                  // Meters.
+                  else if ( unit_conv == 1.0f )
+                  {
+                     expected_units = BIRDNET::METERS;
+                  }
+                  // Unexpected value.
+                  else
+                  {
+                     vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
+                        << "[MotionStar::config(jccl::ConfigElementPtr)] "
+                        << clrOutBOLD(clrRED, "ERROR")
+                        << ": Unsupported device unit value " << unit_conv
+                        << " in " << pos_elt->getFullName() << std::endl
+                        << vprDEBUG_FLUSH;
+                     vprDEBUG_NEXT(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
+                        << "Check your configuration for errors.\n"
+                        << vprDEBUG_FLUSH;
+
+                     // Break out of this method early because the
+                     // configuration element we were given is bad.
+                     return false;
+                  }
+
+                  // We're done checking for unit conversion values.
+                  break;
+               }
+            }
+
+            mMotionStar.setExpectedUnits(expected_units);
+
+            setAddressName(e->getProperty<std::string>("address").c_str());
+            setServerPort((unsigned short) e->getProperty<int>("server_port"));
+            setMasterStatus(e->getProperty<bool>("is_master"));
+            setHemisphere((unsigned char) e->getProperty<int>("hemisphere"));
+            setBirdFormat((unsigned int) e->getProperty<int>("data_format"));
+            setRunMode((unsigned int) e->getProperty<int>("mode"));
+            setReportRate((unsigned char) e->getProperty<int>("report_rate"));
+            setMeasurementRate(e->getProperty<float>("measurement_rate"));
+            retval = true;
+         }
       }
    }
 
    return retval;
 }
 
-// ----------------------------------------------------------------------------
 // Begin sampling.
-// ----------------------------------------------------------------------------
 bool MotionStar::startSampling()
 {
    bool retval(false);     // Initialize to error status
@@ -313,9 +321,7 @@ bool MotionStar::startSampling()
    return retval;
 }
 
-// ----------------------------------------------------------------------------
 // Stop sampling.
-// ----------------------------------------------------------------------------
 bool MotionStar::stopSampling()
 {
    bool retval;
@@ -361,13 +367,11 @@ bool MotionStar::stopSampling()
    return retval;
 }
 
-// ----------------------------------------------------------------------------
 // Sample data.
-// ----------------------------------------------------------------------------
 bool MotionStar::sample()
 {
    bool retval;
-   std::vector< gadget::PositionData > cur_samples(mMotionStar.getNumBirds());
+   std::vector< gadget::PositionData > cur_samples(mMotionStar.getNumSensors());
 
    retval = false;
 
@@ -380,13 +384,6 @@ bool MotionStar::sample()
    }
    else
    {
-      gmtl::Matrix44f trans_mat, rot_mat;
-      float quat[4], angles[3];
-      FLOCK::data_format format;
-
-      // Transforms between the cord frames
-      gmtl::Matrix44f transmitter_T_receiver;
-
       try
       {
          mMotionStar.sample();
@@ -399,94 +396,11 @@ bool MotionStar::sample()
          }
 
          // For each bird
-         for ( unsigned int i = 0; i < mMotionStar.getNumBirds(); ++i )
+         for ( unsigned int i = 0; i < mMotionStar.getNumSensors(); ++i )
          {
             // Get the index to the current read buffer
             cur_samples[i].setTime( cur_samples[0].getTime() );
-            gmtl::identity(transmitter_T_receiver);
-
-            format = mMotionStar.getBirdDataFormat(i);
-            gmtl::EulerAngleZYXf euler;
-
-            switch (format)
-            {
-               case FLOCK::NO_BIRD_DATA:
-               case FLOCK::INVALID:
-                  break;
-               case FLOCK::POSITION:
-                  gmtl::setTrans(transmitter_T_receiver,
-                                 gmtl::Vec3f(mMotionStar.getXPos(i),
-                                             mMotionStar.getYPos(i),
-                                             mMotionStar.getZPos(i)));
-                  break;
-               case FLOCK::ANGLES:
-                  euler.set(gmtl::Math::deg2Rad(mMotionStar.getZRot(i)),
-                            gmtl::Math::deg2Rad(mMotionStar.getYRot(i)),
-                            gmtl::Math::deg2Rad(mMotionStar.getXRot(i)));
-                  gmtl::setRot(transmitter_T_receiver, euler);
-                  break;
-               case FLOCK::MATRIX:
-                  mMotionStar.getMatrixAngles(i, angles);
-
-                  euler.set(gmtl::Math::deg2Rad(angles[0]),
-                            gmtl::Math::deg2Rad(angles[1]),
-                            gmtl::Math::deg2Rad(angles[2]));
-                  gmtl::setRot(transmitter_T_receiver, euler);
-
-                  break;
-               case FLOCK::POSITION_ANGLES:
-                  gmtl::setTrans(trans_mat,
-                                 gmtl::Vec3f(mMotionStar.getXPos(i),
-                                             mMotionStar.getYPos(i),
-                                             mMotionStar.getZPos(i)));
-
-                  euler.set(gmtl::Math::deg2Rad(mMotionStar.getZRot(i)),
-                            gmtl::Math::deg2Rad(mMotionStar.getYRot(i)),
-                            gmtl::Math::deg2Rad(mMotionStar.getXRot(i)));
-                  gmtl::setRot(rot_mat, euler);
-                  transmitter_T_receiver = (trans_mat * rot_mat);
-                  break;
-               case FLOCK::POSITION_MATRIX:
-                  gmtl::setTrans(trans_mat,
-                                 gmtl::Vec3f(mMotionStar.getXPos(i),
-                                             mMotionStar.getYPos(i),
-                                             mMotionStar.getZPos(i)));
-
-                  mMotionStar.getMatrixAngles(i, angles);
-
-                  euler.set(gmtl::Math::deg2Rad(angles[2]),
-                            gmtl::Math::deg2Rad(angles[1]),
-                            gmtl::Math::deg2Rad(angles[0]));
-                  gmtl::setRot(rot_mat, euler);
-                  transmitter_T_receiver = trans_mat * rot_mat;
-                  break;
-               case FLOCK::QUATERNION:
-                  mMotionStar.getQuaternion(i, quat);
-                  gmtl::set(transmitter_T_receiver,
-                            gmtl::Quatf(quat[1], quat[2], quat[3], quat[0]));
-                  break;
-               case FLOCK::POSITION_QUATERNION:
-                  gmtl::setTrans(trans_mat,
-                                 gmtl::Vec3f(mMotionStar.getXPos(i),
-                                             mMotionStar.getYPos(i),
-                                             mMotionStar.getZPos(i)));
-
-                  mMotionStar.getQuaternion(i, quat);
-                  gmtl::set(rot_mat,
-                            gmtl::Quatf(quat[1], quat[2], quat[3], quat[0]));
-
-                  transmitter_T_receiver = trans_mat * rot_mat;
-                  break;
-               case FLOCK::FEEDTHROUGH_DATA:
-                  vprASSERT(false && "We don't handle feedthrough data");
-                  break;
-               default:
-                  vprASSERT(false && "Unknown data-type");
-                  break;
-            }
-
-            // Store corrected xform back into data.
-            cur_samples[i].mPosData = transmitter_T_receiver;
+            cur_samples[i].mPosData = mMotionStar.getDeviceData(i);
          }
 
          // Add the current data as a sample
@@ -506,9 +420,7 @@ bool MotionStar::sample()
    return retval;
 }
 
-// ----------------------------------------------------------------------------
 // Update to the sampled data.
-// ----------------------------------------------------------------------------
 void MotionStar::updateData()
 {
    // If the device is not active, we cannot update the data.
@@ -528,9 +440,7 @@ void MotionStar::updateData()
 }
 
 
-// ----------------------------------------------------------------------------
 // Set the address (either IP address or hostname) for the server.
-// ----------------------------------------------------------------------------
 void MotionStar::setAddressName(const char* n)
 {
    // If the device active, we cannot change the server address.
@@ -545,9 +455,7 @@ void MotionStar::setAddressName(const char* n)
    }
 }
 
-// ----------------------------------------------------------------------------
 // Set the port on the server to which we connect.
-// ----------------------------------------------------------------------------
 void MotionStar::setServerPort(const unsigned short port)
 {
    // If the device active, we cannot change the server port.
@@ -579,9 +487,6 @@ void MotionStar::setServerPort(const unsigned short port)
    }
 }
 
-// ----------------------------------------------------------------------------
-//
-// ----------------------------------------------------------------------------
 void MotionStar::setProtocol(const enum BIRDNET::protocol proto)
 {
    // If the device active, we cannot change the transmission protocol.
@@ -597,9 +502,6 @@ void MotionStar::setProtocol(const enum BIRDNET::protocol proto)
    }
 }
 
-// ----------------------------------------------------------------------------
-//
-// ----------------------------------------------------------------------------
 void MotionStar::setMasterStatus(const bool master)
 {
    // If the device active, we cannot change the master status.
@@ -615,9 +517,7 @@ void MotionStar::setMasterStatus(const bool master)
    }
 }
 
-// ----------------------------------------------------------------------------
 // Change the hemisphere of the transmitter.
-// ----------------------------------------------------------------------------
 void MotionStar::setHemisphere(const unsigned char hemisphere)
 {
    // If the device active, we cannot change the hemisphere.
@@ -660,9 +560,7 @@ void MotionStar::setHemisphere(const unsigned char hemisphere)
    }
 }
 
-// ----------------------------------------------------------------------------
 // Set the bird format to the given value.
-// ----------------------------------------------------------------------------
 void MotionStar::setBirdFormat(const unsigned int format)
 {
    // If the device active, we cannot change the bird format.
@@ -719,27 +617,7 @@ void MotionStar::setBirdFormat(const unsigned int format)
    }
 }
 
-// ----------------------------------------------------------------------------
-// Set the number of birds connected to the flock.
-// ----------------------------------------------------------------------------
-void MotionStar::setNumBirds(unsigned int i)
-{
-   // If the device active, we cannot change the number of birds.
-   if ( isActive() )
-   {
-      vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_WARNING_LVL)
-         << "gadget::MotionStar: Cannot change number of birds while active\n"
-         << vprDEBUG_FLUSH;
-   }
-   else
-   {
-      mMotionStar.setNumBirds(i);
-   }
-}
-
-// ----------------------------------------------------------------------------
 // Set the run mode for the device.
-// ----------------------------------------------------------------------------
 void MotionStar::setRunMode(const unsigned int mode)
 {
    // If the device active, we cannot change the run mode.
@@ -780,9 +658,7 @@ void MotionStar::setRunMode(const unsigned int mode)
    }
 }
 
-// ----------------------------------------------------------------------------
 // Set the report rate for the device.
-// ----------------------------------------------------------------------------
 void MotionStar::setReportRate(const unsigned char rate)
 {
    // If the device active, we cannot change the report rate.
@@ -798,9 +674,7 @@ void MotionStar::setReportRate(const unsigned char rate)
    }
 }
 
-// ----------------------------------------------------------------------------
 // Set the measurement rate for the chassis.
-// ----------------------------------------------------------------------------
 void MotionStar::setMeasurementRate(const double rate)
 {
    // If the device active, we cannot change the measurement rate.
@@ -820,9 +694,7 @@ void MotionStar::setMeasurementRate(const double rate)
 // Private methods.
 // ============================================================================
 
-// ----------------------------------------------------------------------------
 // Unimplemented!
-// ----------------------------------------------------------------------------
 void MotionStar::positionCorrect(float& x, float& y, float& z)
 {
    boost::ignore_unused_variable_warning(x);
@@ -832,9 +704,7 @@ void MotionStar::positionCorrect(float& x, float& y, float& z)
    // XXX Implement me!
 }
 
-// ----------------------------------------------------------------------------
 // Unimplemented!
-// ----------------------------------------------------------------------------
 void MotionStar::initCorrectionTable(const char* table_file)
 {
    boost::ignore_unused_variable_warning(table_file);
