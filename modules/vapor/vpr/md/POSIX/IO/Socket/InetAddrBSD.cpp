@@ -289,7 +289,7 @@ vpr::ReturnStatus InetAddrBSD::getHostname(std::string& hostname) const
       const char* error_str = hstrerror(h_errno);
       vprDEBUG(vprDBG_VPR, vprDBG_CRITICAL_LVL) 
          << "[InetAddrBSD::getHostname()] ERROR: " << error_str
-         << vprDEBUG_FLUSH;
+         << std::endl << vprDEBUG_FLUSH;
    }
    else
    {
