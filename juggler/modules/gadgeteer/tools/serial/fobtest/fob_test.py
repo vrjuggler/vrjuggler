@@ -8,6 +8,8 @@
 import serial
 import sys
 import getopt
+import Command
+import FOB
 
 def scan():
     """scan for available ports. return a list of tuples (num, name)"""
@@ -27,53 +29,53 @@ def usage():
           echo - Take line of input, send to bird and then read it back
           host_data_read - Perform the host data read bird test.
    --set_rts=<new val>
+   --info=basic - Print basic information about the flock
     """
 
-def openBirdConnection():
-    """ Returns an open bird connection """
-    fob = serial.Serial()
-    fob.port = 0
-    fob.baudrate = 38400;
+def printBasicFlockInfo():
+    " Print basic flock information "
+    print "Getting basic flock info:"
     
-    # Standard bird settings: Page 20 FOB manual
-    fob.bytesize = serial.EIGHTBITS
-    fob.parity = serial.PARITY_NONE
-    fob.stopbits = serial.STOPBITS_ONE
-    fob.timeout = 3
-    
-    # Open the port and get started
+    fob = FOB.Flock()
     fob.open()
-    fob.setRTS(0)            # Don't reset the bird
-                    
-    print "Opened port: %s"% (fob,)
-    return fob
+    
+    sw_ver = fob.getSoftwareRevision()
+        
+    print "  Software revision: ", sw_ver
+
 
 def test_output():
     print "---- Testing output -----"
     print "Reading 10 OK samples"
+    fob = FOB.Flock()    
+    port = fob.port
     
-    fob = openBirdConnection()
+    port.flushInput()
+    port.flushOutput()
     
     for i in xrange(10):
-        rstr = fob.read(4)
+        rstr = port.read(4)
         print "%s: %s"%(i,rstr)
     
-    fob.close()
+    port.close()
     
 def test_echo():
     print """---- Testing echo -----
 Read and echo data. 'q' to quit."""
     
-    fob = openBirdConnection()
+    fob = FOB.Flock()    
+    port = fob.port
+    port.flushInput()
+    port.flushOutput()
     
     raw_str = raw_input("> ")
     while(raw_str != 'q'):
-        fob.write(raw_str)
-        rstr = fob.read(len(raw_str))
+        port.write(raw_str)
+        rstr = port.read(len(raw_str))
         print rstr
         raw_str = raw_input("> ")
         
-    fob.close()
+    port.close()
     
     
 def test_host_data_read():
@@ -108,7 +110,7 @@ def set_rts(arg):
 def main():
     try:
         opts, args = getopt.getopt(sys.argv[1:], "h", 
-                                   ["test=", "help", "set_rts="])
+                                   ["test=", "help", "set_rts=", "info="])
     except getopt.GetoptError:
         # print help information and exit:
         usage()
@@ -132,6 +134,11 @@ def main():
                 set_rts(0)
             else:
                 set_rts(1)
+        if o in ("--info",):
+            if "basic" == a:
+                printBasicFlockInfo()
+            else:
+                printBasicFlockInfo()
 
 if __name__=='__main__':
     #print "Found ports:"
