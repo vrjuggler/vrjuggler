@@ -31,7 +31,8 @@
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # -----------------------------------------------------------------------------
-# Makefile.in for juggler/Input/Multi.  It requires GNU make.
+# Makefile.in for vrjuggler/vrj/Input/Devices/Open/Trackd.  It requires GNU
+# make.
 #
 # Generated for use on @PLATFORM@
 # -----------------------------------------------------------------------------
@@ -41,7 +42,7 @@ default: all
 # Include common definitions.
 include @topdir@/make.defs.mk
 
-includedir	= @includedir@/Input/Multi
+includedir	= @includedir@/vrj/Input/Devices/Open/Trackd
 srcdir		= @srcdir@
 top_srcdir	= @top_srcdir@
 INSTALL		= @INSTALL@
