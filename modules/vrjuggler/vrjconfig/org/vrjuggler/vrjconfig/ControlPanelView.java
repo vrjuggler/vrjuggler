@@ -43,6 +43,8 @@ import javax.swing.*;
 import org.vrjuggler.jccl.config.*;
 import org.vrjuggler.tweek.beans.BeanRegistry;
 import org.vrjuggler.tweek.beans.loader.BeanJarClassLoader;
+import org.vrjuggler.tweek.services.GlobalPreferencesService;
+import org.vrjuggler.tweek.services.GlobalPreferencesServiceProxy;
 import org.vrjuggler.vrjconfig.ui.*;
 import org.vrjuggler.jccl.editors.*;
 
@@ -61,6 +63,34 @@ public class ControlPanelView
       catch(Exception e)
       {
          e.printStackTrace();
+      }
+
+      try
+      {
+         GlobalPreferencesService prefs = new GlobalPreferencesServiceProxy();
+
+         // Using the global user preferences from Tweek, set the start
+         // directory for fileChooser.
+         String start_dir = prefs.getChooserStartDir();
+         System.out.println("Opening in " + start_dir);
+
+         File f;
+
+         if ( start_dir.equals(GlobalPreferencesService.CWD_START) )
+         {
+            f = new File(System.getProperty("user.dir"));
+         }
+         else
+         {
+            f = new File(System.getProperty("user.home"));
+         }
+
+         fileChooser.setCurrentDirectory(f);
+      }
+      catch(RuntimeException ex)
+      {
+         System.err.println("ControlPanelView(): WARNING: Failed to set file chooser start directory: " +
+                            ex.getMessage());
       }
 
       // Add forward and back buttons to the toolbar

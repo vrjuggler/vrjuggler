@@ -39,6 +39,8 @@ import java.util.Stack;
 import javax.swing.*;
 import org.vrjuggler.tweek.services.EnvironmentService;
 import org.vrjuggler.tweek.services.EnvironmentServiceProxy;
+import org.vrjuggler.tweek.services.GlobalPreferencesServiceProxy;
+import org.vrjuggler.tweek.services.GlobalPreferencesService;
 import org.vrjuggler.jccl.config.*;
 import org.vrjuggler.vrjconfig.PopupButton;
 import org.vrjuggler.vrjconfig.VrjConfigConstants;
@@ -89,6 +91,34 @@ public class ConfigToolbar
          redoBtn.setText("Redo");
          expandBtn.setText("Expand");
          expandBtn.setText("RTRC");
+      }
+
+      try
+      {
+         GlobalPreferencesService prefs = new GlobalPreferencesServiceProxy();
+
+         // Using the global user preferences from Tweek, set the start
+         // directory for fileChooser.
+         String start_dir = prefs.getChooserStartDir();
+         System.out.println("Opening in " + start_dir);
+
+         File f;
+
+         if ( start_dir.equals(GlobalPreferencesService.CWD_START) )
+         {
+            f = new File(System.getProperty("user.dir"));
+         }
+         else
+         {
+            f = new File(mEnvService.getUserHome());
+         }
+
+         fileChooser.setCurrentDirectory(f);
+      }
+      catch(RuntimeException ex)
+      {
+         System.err.println("ConfigToolbar(): WARNING: Failed to set file chooser start directory: " +
+                            ex.getMessage());
       }
    }
 
@@ -175,7 +205,7 @@ public class ConfigToolbar
     */
    public boolean doNew()
    {
-      NewConfigDialog new_dlg = new NewConfigDialog();
+      NewConfigDialog new_dlg = new NewConfigDialog(fileChooser.getCurrentDirectory());
       int option = new_dlg.showDialog(this);
       if (option == NewConfigDialog.APPROVE_OPTION)
       {
