@@ -32,6 +32,13 @@
       <property valuetype="string" variable="true" name="plugin">
          <help>The names of the cluster plugins to load.</help>
          <value label="Plugin" defaultvalue=""/>
+         <enumeration editable="true">
+            <enum label="ApplicationDataManager" value="ApplicationDataManager"/>
+            <enum label="RIMPlugin" value="RIMPlugin"/>
+            <enum label="StartBarrierPlugin" value="StartBarrierPlugin"/>
+            <enum label="SwapLockTCPPlugin" value="SwapLockTCPPlugin"/>
+            <enum label="SwapLockWiredPlugin" value="SwapLockWiredPlugin"/>
+         </enumeration>
       </property>
       <property valuetype="configelementpointer" variable="true" name="cluster_node">
          <help>The list of all active nodes in the cluster.</help>
