@@ -4,6 +4,9 @@
 
 #include <Kernel/GL/vjGlDrawManager.h>
 
+//! NOTE: This class for internal use only
+// This class is needed as a base class for vjGlContextData
+// because of dificulties making friends with a template.
 class vjGlContextDataBase
 {
 protected:
@@ -28,7 +31,7 @@ protected:
 //+ constructor used to initialize all of the copies of the data.
 //-----------------------------------------------------------------------
 template<class ContextDataType = int>
-class vjGlContextData : public vjGlContextDataBase
+class vjGlContextData : private vjGlContextDataBase
 {
 public:
    vjGlContextData()

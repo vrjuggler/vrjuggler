@@ -106,9 +106,12 @@ void vjGlPipe::checkForNewWindows()
       {
          newWins[winNum]->open();
          newWins[winNum]->makeCurrent();
-         theApp->contextInit();              // Call context init function
          vjDEBUG(2) << "vjGlPipe::checkForNewWindows: Just opened window:\n" << *(newWins[winNum]) << endl << vjDEBUG_FLUSH;
          openWins.push_back(newWins[winNum]);
+
+         // Opened new window, call init function for the context
+         vjGlDrawManager::instance()->currentContext() = newWins[winNum]->getId();
+         theApp->contextInit();              // Call context init function
       }
 
       newWins.erase(newWins.begin(), newWins.end());
@@ -121,7 +124,6 @@ void vjGlPipe::checkForNewWindows()
 void vjGlPipe::renderWindow(vjGlWindow* win)
 {
    vjGlApp* theApp = glManager->getApp();       // Get application for easy access
-   //theApp->setContextId(win->getId());          // Set the context id for application
    vjGlDrawManager::instance()->currentContext() = win->getId();
    vjDEBUG(1) << "vjGlPipe::renderWindow: Set context to: " << vjGlDrawManager::instance()->currentContext() << endl << vjDEBUG_FLUSH;
 
