@@ -30,58 +30,48 @@
 #
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
-default: debug
+default: debug ;
 
-bindir=		@bindir@
-datadir=	@datadir@
-exec_prefix=	@exec_prefix@
-libdir=		@libdir@
-libexecdir=	@libexecdir@
-prefix=		@prefix@
-releasedir=	$(JUGGLERROOT_ABS)/release
-sbindir=	@sbindir@
-scriptdir=	$(releasedir)/scripts
 srcdir=		@srcdir@
-sysconfdir=	@sysconfdir@
-topdir=		@topdir@
+top_srcdir=	@top_srcdir@
 
-MAKEFLAGS+=	--no-print-directory
-JUGGLERROOT_ABS=@JUGGLERROOT_ABS@
+CONFIGURE_ARGS=	@CONFIGURE_ARGS@
+CFG_SHELL=	@CFG_SHELL@
 
-#@SET_MAKE@
+CONFIGURE_ARGS=	@CONFIGURE_ARGS@
+CFG_SHELL=	@CFG_SHELL@
 
-DIRS=		@JUGGLER_PROJECTS@
+DPP_CFG_DIR=	$(top_srcdir)/Doozer++/config
+DPP_PKG_DIR=	$(top_srcdir)/Doozer++/config/pkgs
+VJ_M4_DIR=	$(top_srcdir)/macros
+EXT_M4_DIR=	$(top_srcdir)/external/macros
 
-debug dbg dbg-dso optim opt opt-dso profiled prof prof-dso release	\
-world install-debug install-optim install-profiled links clean-links:
-	$(MAKE) GLOBAL_BUILD=1 RECTARGET="$@"				\
-          instlinks="$(topdir)/instlinks" recursive
+DPP_CFG_DEPS=	abi.m4 basic_progs.m4 cplusplus.m4 gcc.m4 general.m4	\
+		install.m4 java.m4 linker.m4 perl.m4 pthreads.m4 sys.m4 win32.m4
+VJ_M4_DEPS=	vpr.m4 vrj-helpers.m4
 
-build buildworld:
-	$(MAKE) GLOBAL_BUILD=1 RECTARGET="buildworld"			\
-          instlinks="$(topdir)/instlinks" recursive
+M4_DEPS=	$(addprefix $(DPP_CFG_DIR)/, $(DPP_CFG_DEPS))		\
+		$(addprefix $(VJ_M4_DIR)/, $(VJ_M4_DEPS))
 
-install installworld:
-	$(MAKE) GLOBAL_BUILD=1 RECTARGET="installworld" recursive
+vpath configure $(srcdir)
+vpath %.ac $(srcdir)
+vpath %.in $(srcdir)
 
-install-deps:
-	$(MAKE) -C external $@
+# These are necessary to deal with the last-resort rule at the end of the file.
+Makefile.pre: ;
+configure.in: ;
+Makefile.in: ;
+Makefile.inc.in: ;
+make.defs.mk.in: ;
+$(M4_DEPS): ;
 
-regen:
-	@for dir in $(DIRS) ; do		\
-            (cd $$dir && ./config.status) ;	\
-          done
+configure: configure.in $(M4_DEPS)
+	cd $(srcdir) && ./autogen.sh
 
-clobber:
-	$(MAKE) GLOBAL_BUILD=1 RECTARGET="$@" recursive
-	rm -rf instlinks
+config.status: configure ;
 
-clean cleandepend:
-	$(MAKE) GLOBAL_BUILD=1 RECTARGET="$@" recursive
+Makefile: configure config.status Makefile.in Makefile.inc.in make.defs.mk.in
+	$(CFG_SHELL) $(srcdir)/configure $(CONFIGURE_ARGS)
 
-recursive:
-	@for dir in $(DIRS) ; do \
-            echo "=====> $$dir" ; \
-            PATH="$(topdir)/instlinks/bin":$$PATH $(MAKE) -C $$dir -f Makefile.pre $(RECTARGET) || exit 1; \
-            echo "<===== $$dir" ; \
-          done
+%:: Makefile
+	@$(MAKE) -f Makefile $@

@@ -223,11 +223,6 @@ BASE_APP_LINK_FLAGS="$STDFLAGS $BASE_APP_LINK_FLAGS"
 DEPEND_FLAGS="$VPR_INCLUDES_MIN"
 jccl_cxxflags="$STD_FLAGS"
 
-# List the scripts jccl-config will call to get flags.  This should be in the
-# order used for linking.  That means the dependencies are satisfied right to
-# left.
-jccl_dep_scripts='vpr-config'
-
 if test "x$PLATFORM" = "xIRIX" -a "x$USE_GCC" = "xno" ; then
 #    CFLAGS="$CFLAGS -woff 1685,515,608,658,799,803,852,1048,1233,1499"
 #    CXXFLAGS="$CXXFLAGS -woff 3322,1388 -w2"
@@ -405,7 +400,6 @@ AC_SUBST(APP_EXTRA_LIBS)
 
 AC_SUBST(static_begin)
 AC_SUBST(static_end)
-AC_SUBST(jccl_dep_scripts)
 AC_SUBST(jccl_cxxflags)
 AC_SUBST(jccl_ldflags_compiler)
 AC_SUBST(jccl_ldflags_linker)

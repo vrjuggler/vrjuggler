@@ -189,8 +189,7 @@ JCCL_PATH_CXX([$vrj_min_jccl_ver], ,
               [AC_MSG_ERROR(*** JCCL C++ API required for VR Juggler ***)])
 GADGETEER_PATH([0.21.0], ,
                [AC_MSG_ERROR(*** Gadgeteer required for VR Juggler ***)])
-SNX_PATH([0.5.0], [vrj_sonix_config='sonix-config'],
-         [AC_MSG_ERROR(*** Sonix required for VR Juggler ***)])
+SNX_PATH([0.5.0], , [AC_MSG_ERROR(*** Sonix required for VR Juggler ***)])
 
 VRJ_USE_X11="$GADGET_USE_X11"
 if test "x$VRJ_USE_X11" = "xyes" ; then
@@ -370,11 +369,6 @@ CXXFLAGS="$CXXFLAGS $VPR_CXXFLAGS_MIN $JCCL_CXXFLAGS_MIN $GADGET_CXXFLAGS_MIN $S
 BASE_APP_LINK_FLAGS="$STDFLAGS $BASE_APP_LINK_FLAGS"
 DEPEND_FLAGS="$VPR_INCLUDES_MIN $JCCL_INCLUDES_MIN $GADGET_INCLUDES_MIN $SNX_INCLUDES_MIN $GMTL_INCLUDES"
 vrj_cxxflags="$STDFLAGS"
-
-# List the scripts vrjuggler-config will call to get flags.  This should be
-# in the order used for linking.  That means the dependencies are satisfied
-# right to left.
-vrj_dep_scripts="$vrj_sonix_config gadgeteer-config jccl-config vpr-config"
 
 # Compiler-specific settings when GCC is not being used.
 if test "x$USE_GCC" != "xyes" ; then
@@ -702,7 +696,6 @@ AC_SUBST(APP_EXTRA_LIBS_GL)
 AC_SUBST(APP_EXTRA_LIBS_OSG)
 AC_SUBST(APP_EXTRA_LIBS_PF)
 
-AC_SUBST(vrj_dep_scripts)
 AC_SUBST(vrj_cxxflags)
 AC_SUBST(vrj_extra_cxxflags)
 AC_SUBST(vrj_ldflags_compiler)

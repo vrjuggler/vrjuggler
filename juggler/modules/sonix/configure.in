@@ -165,11 +165,6 @@ BASE_APP_LINK_FLAGS="$STDFLAGS $BASE_APP_LINK_FLAGS"
 DEPEND_FLAGS="$VPR_INCLUDES_MIN $GMTL_INCLUDES"
 snx_cxxflags="$STDFLAGS"
 
-# List the scripts sonix-config will call to get flags.  This should be in the
-# order used for linking.  That means the dependencies are satisfied right to
-# left.
-snx_dep_scripts="vpr-config"
-
 if test "x$PLATFORM" = "xIRIX" -a "x$USE_GCC" != "xyes" ; then
 #   CFLAGS="$CFLAGS -woff 1685,515,608,658,799,803,852,1048,1233,1499"
    CXXFLAGS="$CXXFLAGS -w2"
@@ -318,7 +313,6 @@ AC_SUBST(DYLIB_PROF_DEPS)
 
 AC_SUBST(static_begin)
 AC_SUBST(static_end)
-AC_SUBST(snx_dep_scripts)
 AC_SUBST(snx_cxxflags)
 AC_SUBST(snx_extra_cxxflags)
 AC_SUBST(snx_ldflags_compiler)

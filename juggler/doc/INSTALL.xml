@@ -352,20 +352,41 @@ cvs -z3 -d :pserver:anonymous@cvs.sourceforge.net:/cvsroot/vrjuggler co juggler<
       to the rest of this document.</para>
 
       <section id="config.vrjuggler.section">
-        <title>Configuring VR Juggler</title>
+        <title>Configuring the Juggler Build</title>
 
-        <para>Every time you update the source code acquired from CVS, it is
-        recommended that you run <command>autogen.sh</command>. This script is
-        found in the top-level <filename>juggler</filename> directory, and it
-        is run as follows:</para>
+        <para>We now explain the process by which the Juggler build is
+        configured. The Juggler Suite makes use of the well-known, widely used
+        GNU tools Autoconf and GNU Make. We provide a wrapper script written
+        in Perl called <command>configure.pl</command> that gets the process
+        started.</para>
 
-        <screen>./autogen.sh</screen>
+        <para>The Juggler build is highly automated. The trickiest part is
+        telling the build where to find the third-party dependencies. This
+        part can be simplified, however, by installing the third-party
+        dependencies in the default location where the search will be
+        performed. In most cases, this is <filename>/usr/local</filename>, but
+        in others it is <filename>/usr</filename>. The default search location
+        is determined by whether the dependency is considered to be a
+        fundamental part of the operating system installation (such as OpenGL)
+        or if it is an <quote>add-on</quote> package (such as Boost, GMTL,
+        CppDOM, or omniORB).</para>
 
-        <para>This <command>autogen.sh</command> script must be run from the
-        directory where it exists. Do not try to run it from a build directory
-        or any other place in the Juggler source tree. The same holds for the
-        individual <command>autogen.sh</command> scripts in the various
-        modules, should you need to run one individually.</para>
+        <sidebar>
+          <para>The distinction between <filename>/usr/local</filename> and
+          <filename>/usr</filename> is complicated by the fact that most Linux
+          distributions have <emphasis>everything</emphasis> installed in
+          <filename>/usr</filename>. While Linux may be popular, it should not
+          (yet) be considered a model example of how to do things. In
+          traditional UN*X distributions (BSD and System V),
+          <filename>/usr</filename> is only used for the fundamental operating
+          system pieces; <filename>/usr/local</filename> is used for extra
+          bits. The Juggler build is based on these assumptions. Furthermore,
+          most open source software packages (e.g., Boost, omniORB, Perl,
+          Python) default to installing themselves in
+          <filename>/usr/local</filename>, which suggests that the authors of
+          those tools generally expect their software to be in
+          <filename>/usr/local</filename>.</para>
+        </sidebar>
 
         <section id="using.configure.pl">
           <title>Using <command>configure.pl</command></title>
@@ -385,7 +406,22 @@ cvs -z3 -d :pserver:anonymous@cvs.sourceforge.net:/cvsroot/vrjuggler co juggler<
 
           <screen>./configure.pl --all-help</screen>
 
-          <para><command>configure.pl</command> can run in a different
+          <para><important>
+              <para>In order for this to work, the configure script for each
+              of the Juggler modules must be generated. This can be done
+              manually by running <command>autogen.sh</command> in the
+              top-level <filename>juggler</filename> directory. It use is
+              simple:</para>
+
+              <screen>./autogen.sh</screen>
+
+              <para>This <command>autogen.sh</command> script must be run from
+              the directory where it exists. Do not try to run it from a build
+              directory or any other place in the Juggler source tree. The
+              same holds for the individual <command>autogen.sh</command>
+              scripts in the various modules, should you need to run one
+              individually.</para>
+            </important><command>configure.pl</command> can run in a unique
           <quote>build</quote> directory or in the directory where it resides.
           Here is how we (the Juggler Team) have been using it:</para>
 
@@ -419,7 +455,7 @@ cvs -z3 -d :pserver:anonymous@cvs.sourceforge.net:/cvsroot/vrjuggler co juggler<
               <important>
                 <para>You will probably have to specify the paths to your
                 local CppDOM, GMTL, and Boost installations using the options
-                <option>--with-cppdom</option>, <option>--with-gmtl</option>
+                <option>--with-cppdom</option>, <option>--with-gmtl</option>,
                 and <option>--with-boost</option> unless they are installed in
                 the default location (<filename>/usr/local</filename>). By
                 default, Boost 1.31 installs its header files in a
