@@ -52,12 +52,6 @@ public class PropertySheet extends PropertyComponent
 {
    public PropertySheet()
    {
-      PropertyEditorPanelManager.registerEditor(Boolean.class, BooleanEditorPanel.class);
-      PropertyEditorPanelManager.registerEditor(String.class, StringEditorPanel.class);
-      PropertyEditorPanelManager.registerEditor(Integer.class, IntegerEditorPanel.class);
-      PropertyEditorPanelManager.registerEditor(Float.class, FloatEditorPanel.class);
-      PropertyEditorPanelManager.registerEditor(ConfigElementPointer.class, StringEditorPanel.class);
-            
       // Register the editors.
       PropertyEditorManager.registerEditor(Boolean.class, BooleanEditor.class);
       PropertyEditorManager.registerEditor(String.class, StringEditor.class);
@@ -80,7 +74,6 @@ public class PropertySheet extends PropertyComponent
       }
       
       init();
-      //addHeadings(); 
       int row = 1;
 
       // Loop over all properties.
@@ -121,7 +114,6 @@ public class PropertySheet extends PropertyComponent
       mConfigElement = elm;
       mColor = color;
       init();
-      //addHeadings(); 
       int row = 1;
 
       // Loop over all properties.
@@ -175,21 +167,6 @@ public class PropertySheet extends PropertyComponent
       this.setLayout(new TableLayout(size)); 
    }
    
-   private void addHeadings()
-   {
-      JLabel name_label = new JLabel("Name");
-      //name_label.setBorder(BorderFactory.createLineBorder(Color.black));
-      name_label.setBorder(BorderFactory.createEtchedBorder());
-      name_label.setOpaque(true);
-      
-      JLabel value_label = new JLabel("Value");
-      value_label.setBorder(BorderFactory.createEtchedBorder());
-      value_label.setOpaque(true);
-      
-      add(name_label, "0, 0, F, F");
-      add(value_label, "1, 0, F, F");
-   }
-  
    // This is the special case where we actually have a Variable list of values.
    public PropertySheet(ConfigElement elm, PropertyDefinition prop_def, Color color)
    {
@@ -204,10 +181,6 @@ public class PropertySheet extends PropertyComponent
       int row = 1;
       int list_number = 0;
       
-      if(prop_def.getType() != ConfigElement.class)
-      {
-         //addHeadings();       
-      }
       // Insert Add Icon
       ClassLoader loader = getClass().getClassLoader();
       mAddIcon = new ImageIcon(loader.getResource("org/vrjuggler/jccl/editors/images/New16.gif"));
@@ -229,15 +202,12 @@ public class PropertySheet extends PropertyComponent
          {
             public void actionPerformed(ActionEvent evt)
             {
-               //XXX: This should add a new variable list value not an embedded
-               //list.
                if(ConfigElement.class == temp_prop_def.getType())
                {
                   addNewEmbeddedElement(temp_elm, temp_prop_def);
                }
                else
                {
-                  System.out.println("Var List...");
                   addNewNormalEditor(temp_elm, temp_prop_def);
                }
             }
@@ -304,13 +274,11 @@ public class PropertySheet extends PropertyComponent
          {
             public void actionPerformed(ActionEvent evt)
             {
-               System.out.println("1");
                PropertyComponent temp = (PropertyComponent)((Component)evt.getSource()).getParent();
                mConfigElement.removeProperty(temp_string, temp_value);
                
                if(temp.getLayout() instanceof TableLayout)
                {
-                  System.out.println("2");
                   TableLayout tl = (TableLayout)temp.getLayout();
                   // Get the row that this panel is in.
                   TableLayoutConstraints tlc = tl.getConstraints((Component)evt.getSource());
@@ -348,33 +316,22 @@ public class PropertySheet extends PropertyComponent
    
    private void addNormalEditor(Object value, PropertyDefinition prop_def, String label, int row, int list_num)
    {
-      //XXX: Editors might change.
-      PropertyEditorPanel editor = PropertyEditorPanelManager.findEditor(value.getClass());
+      PropertyEditorPanel editor = new PropertyEditorPanel(value, prop_def, mConfigElement, list_num, mColor);
       
-      if(null != editor)
-      {
-         ((TableLayout)this.getLayout()).insertRow(row, TableLayout.PREFERRED);
+      ((TableLayout)this.getLayout()).insertRow(row, TableLayout.PREFERRED);
+   
+      // Add both columns to this row.
+      TableLayoutConstraints c = new TableLayoutConstraints(1, row, 1, row, TableLayout.FULL, TableLayout.FULL);
+      this.add(editor, c);
+      this.add(new JLabel(label), "0," + Integer.toString(row) + ",F,F");
       
-         // Add both columns to this row.
-         TableLayoutConstraints c = new TableLayoutConstraints(1, row, 1, row, TableLayout.FULL, TableLayout.FULL);
-         this.add(editor, c);
-         this.add(new JLabel(label), "0," + Integer.toString(row) + ",F,F");
-         
-         // Make sure to set the properties after adding it to the correct panel.
-         editor.set(value, prop_def, mConfigElement, list_num);
+      addDeleteButton(prop_def, value, row);
 
-         addDeleteButton(prop_def, value, row);
-
-         //We must refresh things in the following order:
-         // 1) This control.
-         // 2) All contained containers recursively.
-         this.refresh();
-         editor.refresh();
-      }
-      else
-      {
-         System.out.println("Could not find an editor for class: " + value.getClass().toString());
-      }
+      //We must refresh things in the following order:
+      // 1) This control.
+      // 2) All contained containers recursively.
+      this.refresh();
+      editor.refresh();
    }
    
    private void addEmbeddedElement(Object value, PropertyDefinition prop_def, int row)
