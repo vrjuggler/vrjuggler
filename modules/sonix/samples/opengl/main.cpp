@@ -142,7 +142,7 @@ static void OnIdle()
    // tell glut to call redisplay (which then calls OnRedisplay)
    glutPostRedisplay();
    
-   sonix::instance()->step( stopWatch.timeInstant() );
+   sonix::instance()->step( stopWatch.timeDelta() );
    stopWatch.pulse();
 }
 
