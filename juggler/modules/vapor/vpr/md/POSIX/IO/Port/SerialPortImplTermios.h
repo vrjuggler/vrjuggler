@@ -491,38 +491,38 @@ public:
    vpr::ReturnStatus disableRead(void);
    
    /**
-    * Gets the current CLOCAL state for the port.
+    * Get the local attach state.  That is, test if the device is attached       
+    * locally.       
     *
-    * @pre This serial port is open.
-    * @post The CLOCAL state (either enabled or disabled) is returned to the
-    *       caller.
-    *
-    * @return true is returned if CLOCAL is ON.  false is
-    *         returned otherwise.
+    * @pre The serial port is open.       
+    * @post The local attach state is returned to the caller.       
+    * @return true  - The device is attached locally.
+    *         false - The device is not attached locally, and opening the       
+    *                 device will usually block until there is a response.
     */
-   bool getLocalState(void);
+   bool getLocalAttachState(void);
 
    /**
-    * Enables CLOCAL.
+    * Mark the device as locally attached.
     *
     * @pre This serial port is open.
-    * @post An attempt is made to enable CLOCAL.
+    * @post The device has its local attachment state enabled.       
     *
     * @return A vpr::ReturnStatus object describing the results of the
     *         operation.
     */
-   vpr::ReturnStatus enableLocal(void);
+   vpr::ReturnStatus enableLocalAttach(void);
 
    /**
-    * Disables CLOCAL.
+    * Mark the device as not locally attached.       
     *
     * @pre This serial port is open.
-    * @post An attempt is made to disable CLOCAL.
+    * @post The device has its local attachment state disabled.       
     *
     * @return A vpr::ReturnStatus object describing the results of the
     *         operation.
     */
-   vpr::ReturnStatus disableLocal(void);
+   vpr::ReturnStatus disableLocalAttach(void);
 
    /**
     * Gets the number of stop bits in use.  This will be either 1 or 2.

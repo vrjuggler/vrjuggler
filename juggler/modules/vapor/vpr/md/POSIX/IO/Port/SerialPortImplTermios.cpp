@@ -95,31 +95,6 @@ vpr::ReturnStatus SerialPortImplTermios::open ()
               "[vpr::SerialPortImplTermios] Could not open serial port %s: %s\n",
               getName().c_str(), strerror(errno));
    }
-#ifdef VPR_OS_IRIX
-   // Otherwise, initialize the serial port's flags.--enable-subsystem=<SPROC|POSIX|NSPR>
-   else
-   {
-       struct termios term;
-
-       if ( getAttrs(&term).success() )
-       {
-          // Initialize all the flags to 0.
-          term.c_iflag = term.c_oflag = term.c_cflag = term.c_lflag = 0;
-
-          // Initialize the minimum buffer size to 1 and the timeout to 0.
-          term.c_cc[VMIN]  = 1;
-          term.c_cc[VTIME] = 0;
-
-          // If we cannot set the initialized attribute flags on the port,
-          // then we are not considered open.
-          if ( ! setAttrs(&term, "Could not initialize flags").success() )
-          {
-             status.setCode(ReturnStatus::Fail);
-          }
-       }
-   }
-#endif
-
    return status;
 }
 
@@ -157,10 +132,16 @@ vpr::SerialTypes::UpdateActionOption SerialPortImplTermios::getUpdateAction ()
 
 vpr::ReturnStatus SerialPortImplTermios::clearAll ()
 {
+<<<<<<< SerialPortImplTermios.cpp
+    struct termios term;
+    vpr::ReturnStatus retval;
+    if ( (retval = getAttrs(&term)).success() )
+=======
     std::cout << "Clear ALL" << std::endl;
     struct termios term;
     vpr::ReturnStatus retval;
     if ( (retval = getAttrs(&term)).success() )
+>>>>>>> 1.46
     {
         std::string msg;
         term.c_cflag = 0;
@@ -364,30 +345,32 @@ vpr::ReturnStatus SerialPortImplTermios::disableRead ()
                  "Could not disable reading");
 }
 
+
+
 // ----------------------------------------------------------------------------
-// Get the current CLOCAL state for the port.
+// Get the current CLOCAL state, if the device is locally attached.
 // ----------------------------------------------------------------------------
-bool SerialPortImplTermios::getLocalState ()
+bool SerialPortImplTermios::getLocalAttachState ()
 {
    return getBit(CLOCAL, SerialPortImplTermios::CFLAG);
 }
 
 // ----------------------------------------------------------------------------
-// Enable CLOCAL
+// Enable CLOCAL, that is the device is locally attached
 // ----------------------------------------------------------------------------
-vpr::ReturnStatus SerialPortImplTermios::enableLocal ()
+vpr::ReturnStatus SerialPortImplTermios::enableLocalAttach ()
 {
    return setBit(CLOCAL, SerialPortImplTermios::CFLAG, true,
-                 "Could not enable local");
+                 "Could not enable local attachment");
 }
 
 // ----------------------------------------------------------------------------
-// Disable CLOCAL
+// Disable CLOCAL, that is the device is not locally attached
 // ----------------------------------------------------------------------------
-vpr::ReturnStatus SerialPortImplTermios::disableLocal ()
+vpr::ReturnStatus SerialPortImplTermios::disableLocalAttach ()
 {
    return setBit(CLOCAL, SerialPortImplTermios::CFLAG, false,
-                 "Could not disable local");
+                 "Could not disable local attachment");
 }
 
 // ----------------------------------------------------------------------------
