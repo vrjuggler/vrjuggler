@@ -63,16 +63,11 @@ vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
    return true;
 }
 
-
-
 void SpeechRecogDigitalProxy::updateData()
 {
-
    if (!isStupified())
    {
-      int old_state = mData.getDigital();
       mData = mTypedDevice->getDigitalData(mUnitNum);
-      int new_state = mData.getDigital();
    }
 }
 
