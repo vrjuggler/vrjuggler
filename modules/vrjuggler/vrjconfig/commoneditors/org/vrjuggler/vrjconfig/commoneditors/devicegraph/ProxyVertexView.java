@@ -36,7 +36,7 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.Frame;
+import java.awt.Window;
 import java.awt.datatransfer.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -477,9 +477,9 @@ public class ProxyVertexView
             {
                public void actionPerformed(ActionEvent evt)
                {
-                  Frame parent =
-                     (Frame) SwingUtilities.getAncestorOfClass(Frame.class,
-                                                               ProxyVertexRenderer.this);
+                  Window parent =
+                     (Window) SwingUtilities.getAncestorOfClass(Window.class,
+                                                                ProxyVertexRenderer.this);
                   // Open up an input dialog to modify the alias' name.
                   String new_name =
                      JOptionPane.showInputDialog(parent,

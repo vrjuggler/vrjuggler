@@ -33,8 +33,8 @@
 package org.vrjuggler.vrjconfig.commoneditors;
 
 import java.awt.Dimension;
-import java.awt.Frame;
 import java.awt.GridLayout;
+import java.awt.Window;
 import java.util.Iterator;
 import java.util.List;
 import javax.swing.*;
@@ -74,8 +74,8 @@ public class PositionProxyEditor
       {
          // Pop up a warning message saying that the config element is
          // missing information.
-         Frame parent =
-            (Frame) SwingUtilities.getAncestorOfClass(Frame.class, this);
+         Window parent =
+            (Window) SwingUtilities.getAncestorOfClass(Window.class, this);
          JOptionPane.showMessageDialog(parent,
                                        "WARNING: Config element '" +
                                           elt.getName() +

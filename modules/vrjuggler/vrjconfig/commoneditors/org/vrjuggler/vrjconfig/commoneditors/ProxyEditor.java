@@ -251,8 +251,8 @@ public class ProxyEditor
 
    void mProxyAddButton_actionPerformed(ActionEvent actionEvent)
    {
-      Frame parent =
-         (Frame) SwingUtilities.getAncestorOfClass(Frame.class, this);
+      Window parent =
+         (Window) SwingUtilities.getAncestorOfClass(Window.class, this);
 
       String alias_name =
          JOptionPane.showInputDialog(parent,
