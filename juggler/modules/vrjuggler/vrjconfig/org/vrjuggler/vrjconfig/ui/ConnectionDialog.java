@@ -54,10 +54,9 @@ import org.vrjuggler.jccl.rtrc.RTRCDataSourceBrokerProxy;
  */
 public class ConnectionDialog extends JDialog
 {
-   public ConnectionDialog(String title)
+   public ConnectionDialog(Frame owner, String title)
    {
-      // super(owner, title);
-      setTitle(title);
+      super(owner, title);
 
       enableEvents(AWTEvent.WINDOW_EVENT_MASK);
 
@@ -76,13 +75,13 @@ public class ConnectionDialog extends JDialog
       GlobalPreferencesService prefs =
          (GlobalPreferencesService) BeanRegistry.instance().getBean("GlobalPreferences");
 
-
       addDataSources();
 
       this.setModal(true);
       this.pack();
+      this.setLocationRelativeTo(owner);
    }
-   
+
    private void addDataSources()
    {
       // Create a new list model for the fresh list of Subject Managers.
@@ -102,7 +101,7 @@ public class ConnectionDialog extends JDialog
       mSubjectMgrList.setModel(mgr_list_model);
    }
 
-   public int getStatus ()
+   public int getStatus()
    {
       return status;
    }
@@ -177,7 +176,6 @@ public class ConnectionDialog extends JDialog
    private void okButtonAction(ActionEvent e)
    {
       status = OK_OPTION;
-      //commit();
       dispose();
    }
 
