@@ -28,6 +28,10 @@
  * -----------------------------------------------------------------
  */
 
+#ifndef _VJ_SOUND_HANDLE_H_
+#define _VJ_SOUND_HANDLE_H_
+
+
 //: handle to a sound
 //  This class may be used in future versions of juggler, for now ignore it.
 //!PUBLIC_API:
@@ -55,3 +59,6 @@ private:
 	int mIdentifier;
    std::string mName;
 };
+
+
+#endif
