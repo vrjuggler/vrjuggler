@@ -73,13 +73,17 @@ public class LabeledPerfDataCollector implements PerfDataCollector {
     protected class DataLine {
 	List samples;  // list of DataElems
 	boolean cutoff;     // true if there was lost data at end of line.
+        double total;
 
 	public DataLine () {
 	    samples = new ArrayList();
+            cutoff = false;
+            total = 0.0;
 	}
 
 	public void addSample (IndexInfo index_info, double stamp, double delta) {
 	    samples.add (new DataElem (index_info, stamp, delta));
+            total += delta;
 	}
 
 	public void setCutoff (boolean _cutoff) {
@@ -97,17 +101,21 @@ public class LabeledPerfDataCollector implements PerfDataCollector {
 	double total_times;
 	public String category;
 	public String index;
+        protected double max_time;
 
 	public IndexInfo (String _category, String _index) {
 	    category = _category;
 	    index = _index;
 	    num_samples = 0;
 	    total_times = 0.0;
+            max_time = 0.0;
 	}
 
 	public void addSample (double sample_time) {
 	    num_samples++;
 	    total_times = total_times + sample_time;
+            if (sample_time > max_time)
+                max_time = sample_time;
 	}
 
 	public void removeSample (double sample_time) {
@@ -118,6 +126,10 @@ public class LabeledPerfDataCollector implements PerfDataCollector {
 	public double getAverage () {
 	    return total_times/num_samples;
 	}
+
+        public double getMaximum () {
+            return max_time;
+        }
     }
 
     // stores all performance data coming from a particular buffer
@@ -312,24 +324,38 @@ public class LabeledPerfDataCollector implements PerfDataCollector {
 	notifyActionListenersUpdate();
     }
 
-      public void refreshMaxValues () {
-//  	DataLine dl;
-//  	int i;
-//  	for (i = 0; i < num; i++)
-//  	    maxvals[i] = 0.0;
-//  	maxlinetotal = 0.0;
-//  	ListIterator li = datalines.listIterator(0);
-//  	while (li.hasNext()) {
-//  	    dl = (DataLine)li.next();
-//  	    for (i = 0; i < num; i++)
-//  		if (!Double.isNaN(dl.diffs[i]))
-//  		    maxvals[i] = Math.max(maxvals[i], dl.diffs[i]);
-//  	    if (!Double.isNaN(dl.linetotal))
-//  		maxlinetotal = Math.max (maxlinetotal, dl.linetotal);
-//  	}
-//  //  	for (i = 0; i < num; i++) 
-//  //  	    System.out.println ("max " + i + " is " + maxvals[i]);
-      }
+
+
+    /** Recalculate the 'max' value stored for each label.
+     *  (The max value can become outdated when old DataLines are 
+     *  purged from the collector to reduce memory usage).
+     */
+    public void refreshMaxValues () {
+        IndexInfo ii;
+        DataLine dl;
+        DataElem de;
+        Iterator ii_it, dl_it, de_it;
+
+        // zero out old values.
+        ii_it = indexIterator();
+        while (ii_it.hasNext()) {
+            ii = (IndexInfo)ii_it.next();
+            ii.max_time = 0.0;
+        }
+
+        // calc new value.
+        dl_it = datalines.iterator();
+        while (dl_it.hasNext()) {
+            dl = (DataLine)dl_it.next();
+            de_it = dl.iterator();
+            while (de_it.hasNext()) {
+                de = (DataElem)de_it.next();
+                if (de.index_info.max_time < de.delta)
+                    de.index_info.max_time = de.delta;
+            }
+        }
+    }
+
 
     public double getMaxValue () {
 //  	double maxval = 0.0;

@@ -97,10 +97,14 @@ public class LabeledSummaryGraphPanel
 	public void refigureMax() {
 	    col.refreshMaxValues();
 	    maxval = 0.0;
-//  	    for (int i = 0; i < num; i++)
-//  		if (phase_active[i])
-//  		    maxval += col.getMaxValueForPhase(i);
-//  	    maxval = Math.ceil(maxval/10000) * 10000;
+            LabeledPerfDataCollector.IndexInfo ii;
+            Iterator it = col.indexIterator();
+            while (it.hasNext()) {
+                ii = (LabeledPerfDataCollector.IndexInfo)it.next();
+                //if (phase_active[i])
+                    maxval =+ ii.getMaximum();
+            }
+  	    maxval = Math.ceil(maxval/10000) * 10000;
 	    newmaxval = maxval;
 	}
 
