@@ -47,7 +47,10 @@
 
 #include <vpr/Util/FileUtils.h>
 
-#include <snx/dirlist.h>
+#include <boost/filesystem/exception.hpp>
+#include <boost/filesystem/operations.hpp>
+
+#include <vpr/DynLoad/LibraryFinder.h>
 #include <snx/PluginAPI.h>
 #include <snx/Util/Debug.h>
 #include "snx/ISoundImplementation.h"
@@ -79,10 +82,17 @@ SoundFactory::SoundFactory()
    snx_lib_dir += std::string("/opt");
 #endif
 
+#if defined(VPR_OS_Win32)
+         const std::string driver_ext("dll");
+#elif defined(VPR_OS_Darwin)
+         const std::string driver_ext("dylib");
+#else
+         const std::string driver_ext("so");
+#endif
+
    search_paths.push_back(snx_lib_dir);
    search_paths.push_back( "${HOME}/.sonix/plugins" );
 
-   std::vector<std::string> filelist;
    for (unsigned int x = 0; x < search_paths.size(); ++x)
    {
       search_paths[x] = vpr::replaceEnvVars(search_paths[x]);
@@ -90,59 +100,58 @@ SoundFactory::SoundFactory()
                                           << search_paths[x] << std::endl
                                           << vprDEBUG_FLUSH;
 
-      if (xdl::isDir(search_paths[x].c_str()))
+      boost::filesystem::path dirPath(search_paths[x]);
+      if (boost::filesystem::exists(dirPath))
       {
-         xdl::dirlist( search_paths[x].c_str(), filelist );
-         this->filterOutPluginFileNames( search_paths[x].c_str(), filelist, filelist );
-         this->loadPlugins( search_paths[x], filelist );
+         vpr::LibraryFinder finder(search_paths[x], driver_ext);
+         vpr::LibraryFinder::LibraryList libs = finder.getLibraries();
+         this->loadPlugins( libs );
          
 #ifdef SNX_DEBUG
          vprDEBUG(snxDBG, vprDBG_CONFIG_LVL) << "filelist:\n" << vprDEBUG_FLUSH;
-         for ( unsigned int i = 0; i < filelist.size(); ++i )
+         for ( unsigned int i = 0; i < libs.size(); ++i )
          {
-            vprDEBUG(snxDBG, vprDBG_CONFIG_LVL) << "\t" << filelist[i]
+                vprDEBUG(snxDBG, vprDBG_CONFIG_LVL) << "\t" << libs[i]
                                                 << std::endl << vprDEBUG_FLUSH;
          }
 #endif
       }
+      else
+      {
+        vprDEBUG(snxDBG, vprDBG_STATE_LVL) << "The directory does not exist: '" << search_paths[x]
+                                                        << "'\n"
+                                                        << vprDEBUG_FLUSH;
+      }
    }
 }
 
-void SoundFactory::errorOutput(std::string filename, const char* test)
+void SoundFactory::errorOutput(vpr::LibraryPtr lib, const char* test)
 {
    vprDEBUG(snxDBG, vprDBG_WARNING_LVL)
-      << "ERROR: Plugin '" << filename << "' does not export symbol '"
+      << "ERROR: Plugin '" << lib->getName() << "' does not export symbol '"
       << test << "'\n" << vprDEBUG_FLUSH;
 }
 
-bool SoundFactory::isPlugin(std::string filename)
+bool SoundFactory::isPlugin(vpr::LibraryPtr lib)
 {  
-   xdl::Library lib;
-   if (lib.open( filename.c_str(), xdl::NOW ) == false)
+   if (lib->findSymbol( "newPlugin" ) == NULL)
    {
-      vprDEBUG(snxDBG, vprDBG_WARNING_LVL)
-         << clrOutBOLD(clrYELLOW, "WARNING:") << " Plugin '" << filename
-         << "' has invalid name.\n" << vprDEBUG_FLUSH;
-      return false;
-   }
-   if (lib.lookup( "newPlugin" ) == NULL)
-   {
-      errorOutput(filename, "newPlugin");
+      errorOutput(lib, "newPlugin");
       return false;
    }  
-   if (lib.lookup( "deletePlugin" ) == NULL)
+   if (lib->findSymbol( "deletePlugin" ) == NULL)
    {
-      errorOutput(filename, "deletePlugin");
+      errorOutput(lib, "deletePlugin");
       return false;
    }
-   if (lib.lookup( "getVersion" ) == NULL)
+   if (lib->findSymbol( "getVersion" ) == NULL)
    {
-      errorOutput(filename, "getVersion");
+      errorOutput(lib, "getVersion");
       return false;
    }
-   if (lib.lookup( "getName" ) == NULL)
+   if (lib->findSymbol( "getName" ) == NULL)
    {
-      errorOutput(filename, "getName");
+      errorOutput(lib, "getName");
       return false;
    }
    
@@ -150,76 +159,67 @@ bool SoundFactory::isPlugin(std::string filename)
    // @todo give sonix an internal version number string!
    //getVersionFunc getVersion = (getVersionFunc)lib.lookup( "getVersion" );
    //if (getVersion != NULL && getVersion() != snx::version) return false;
-
-   lib.close();
-   vprDEBUG(snxDBG, vprDBG_CONFIG_STATUS_LVL) << "Plugin '" << filename
+   vprDEBUG(snxDBG, vprDBG_CONFIG_STATUS_LVL) << "Plugin '" << lib->getName()
                                               << "' is a valid Sonix plugin.\n"
                                               << vprDEBUG_FLUSH;
    return true;
 }
 
-void SoundFactory::filterOutPluginFileNames(const char* dir,
-                                            std::vector<std::string> srclist,
-                                            std::vector<std::string>& destlist)
+void SoundFactory::loadPlugins( vpr::LibraryFinder::LibraryList libs )
 {
-   destlist.clear();
-   std::string temp;
-   
-   vpr::DebugOutputGuard output(snxDBG, vprDBG_STATE_LVL,
-                                std::string("Filtering plug-ins from ") +
-                                std::string(dir) + std::string("\n"),
-                                std::string("Done filtering directory.\n"));
-
-   for (unsigned int x = 0; x < srclist.size(); ++x)
+   for (unsigned int x = 0; x < libs.size(); ++x)
    {
-      if(srclist[x] != "." && srclist[x] != "..")
-      {
-         vprDEBUG(snxDBG, vprDBG_STATE_LVL)
-            << "Checking '" << srclist[x] << "'\n" << vprDEBUG_FLUSH;
-
-         temp = dir + std::string("/") + srclist[x];
-         if (this->isPlugin( temp/*srclist[x]*/ ))
-         {
-            destlist.push_back( srclist[x] );
-         }
-      }
-   }
-}
-
-void SoundFactory::loadPlugins(std::string prefix,
-                               std::vector<std::string> filelist)
-{
-   unloadPlugins();
-   mPlugins.clear();
-   mPlugins.resize( filelist.size() );
-   for (unsigned int x = 0; x < filelist.size(); ++x)
-   {
-      std::string full_path = prefix + std::string( "/" ) + filelist[x];
-      
       // open the library
-      mPlugins[x].open( full_path.c_str(), xdl::NOW );
-
-      // get the name..
-      getNameFunc getName = (getNameFunc)mPlugins[x].lookup( "getName" );
-      std::string name;
-      if (getName != NULL)
-      {
-         name = getName();
-         vprDEBUG(snxDBG, vprDBG_STATE_LVL) << "Got plug-in '" << name
-                                            << "'--registering\n"
-                                            << vprDEBUG_FLUSH;
-
-         // create the implementation
-         newPluginFunc newPlugin = (newPluginFunc)mPlugins[x].lookup( "newPlugin" );
-         ISoundImplementation* si = NULL;
-         if (newPlugin != NULL)
-         {
-            si = newPlugin();
-            if (NULL != si)
+      vpr::ReturnStatus didLoad = libs[x]->load();
+        
+      if (didLoad == vpr::ReturnStatus::Succeed)
+      {  
+        //If the plug-in implements the nessiasry interface
+        if ( this->isPlugin(libs[x]) )
+        {
+            // get the name..
+            getNameFunc getName = (getNameFunc)libs[x]->findSymbol( "getName" );
+            std::string name;
+            if (getName != NULL)
             {
-               this->reg( name, si );
+                name = getName();
+                
+                // Check to see it plug-in is already registered
+                int pluginsWithName =  mRegisteredImplementations.count(name);
+                if ( pluginsWithName < 1 )
+                {
+                    // Keep track of the plug-ins we actual use
+                    mPlugins.push_back(libs[x]);
+                    
+                    vprDEBUG(snxDBG, vprDBG_STATE_LVL) << "Got plug-in '" << name
+                                                        << "'--registering\n"
+                                                        << vprDEBUG_FLUSH;
+            
+                    // create the implementation
+                    newPluginFunc newPlugin = (newPluginFunc)libs[x]->findSymbol( "newPlugin" );
+                    ISoundImplementation* si = NULL;
+                    if (newPlugin != NULL)
+                    {
+                        si = newPlugin();
+                        if (NULL != si)
+                        {
+                            this->reg( name, si );
+                        }
+                    }
+                }
+                else
+                {
+                    //Plug in was already registered so we can unload it
+                    libs[x]->unload();
+                }
             }
-         }
+        }
+      }
+      else
+      {
+        //Lib failed to load
+        vprDEBUG(snxDBG, vprDBG_WARNING_LVL)
+            << "ERROR: Plugin '" << libs[x]->getName() << "' Failed to load\n" << vprDEBUG_FLUSH;
       }
    }
 }
@@ -229,7 +229,7 @@ void SoundFactory::unloadPlugins()
    for (unsigned int x = 0; x < mPlugins.size(); ++x)
    {
       // get the name..
-      getNameFunc getName = (getNameFunc)mPlugins[x].lookup( "getName" );
+      getNameFunc getName = (getNameFunc)mPlugins[x]->findSymbol( "getName" );
       std::string name;
       ISoundImplementation* impl = NULL;
       if (getName != NULL)
@@ -242,12 +242,14 @@ void SoundFactory::unloadPlugins()
       }
 
       // delete the memory using the delete func that comes with the library...
-      deletePluginFunc deletePlugin = (deletePluginFunc)mPlugins[x].lookup( "deletePlugin" );
+      deletePluginFunc deletePlugin = (deletePluginFunc)mPlugins[x]->findSymbol("deletePlugin" );
       if (NULL != deletePlugin && NULL != impl)
+      {
          deletePlugin( impl );
+      }
       
       // close the library
-      mPlugins[x].close();
+      mPlugins[x]->unload();
    }
    mPlugins.clear();
 }
