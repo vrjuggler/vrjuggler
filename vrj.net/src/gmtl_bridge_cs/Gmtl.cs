@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.2 of RCSfile: free_function_cs.tmpl,v
+// Generated from Revision: 1.1 of RCSfile: free_types_cs.tmpl,v
 using System;
 using System.Runtime.InteropServices;
 
@@ -36,9 +36,7 @@ public sealed abstract class Gmtl
 {
    public enum PlaneSide
    {
-      ON_PLANE,
-      POS_SIDE,
-      NEG_SIDE
+      NEG_SIDE = 2, POS_SIDE = 1, ON_PLANE = 0
    }
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
@@ -152,13 +150,13 @@ public sealed abstract class Gmtl
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
    [return : MarshalAs(UnmanagedType.CustomMarshaler,
                        MarshalTypeRef = typeof(gmtl.Point3iMarshaler))]
-   private extern static gmtl.Point3i gmtl_center__gmtl_Tri_int(ref int p0);
+   private extern static gmtl.Point3i gmtl_center__gmtl_Trii([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.TriiMarshaler))] gmtl.Trii p0);
 
-   public static gmtl.Point3i center(ref int p0)
+   public static gmtl.Point3i center(gmtl.Trii p0)
    {
       
       gmtl.Point3i result;
-      result = gmtl_center__gmtl_Tri_int(ref p0);
+      result = gmtl_center__gmtl_Trii(p0);
       
       return result;
    }
@@ -253,14 +251,14 @@ public sealed abstract class Gmtl
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
    private extern static double gmtl_distance__gmtl_LineSegd_gmtl_Point3d([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.LineSegdMarshaler))] gmtl.LineSegd p0,
-	ref int p1);
+	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.Point3dMarshaler))] gmtl.Point3d p1);
 
-   public static double distance(gmtl.LineSegd p0, ref int p1)
+   public static double distance(gmtl.LineSegd p0, gmtl.Point3d p1)
    {
       
       
       double result;
-      result = gmtl_distance__gmtl_LineSegd_gmtl_Point3d(p0, ref p1);
+      result = gmtl_distance__gmtl_LineSegd_gmtl_Point3d(p0, p1);
       
       
       return result;
@@ -268,14 +266,14 @@ public sealed abstract class Gmtl
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
    private extern static float gmtl_distance__gmtl_LineSegf_gmtl_Point3f([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.LineSegfMarshaler))] gmtl.LineSegf p0,
-	ref int p1);
+	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.Point3fMarshaler))] gmtl.Point3f p1);
 
-   public static float distance(gmtl.LineSegf p0, ref int p1)
+   public static float distance(gmtl.LineSegf p0, gmtl.Point3f p1)
    {
       
       
       float result;
-      result = gmtl_distance__gmtl_LineSegf_gmtl_Point3f(p0, ref p1);
+      result = gmtl_distance__gmtl_LineSegf_gmtl_Point3f(p0, p1);
       
       
       return result;
@@ -283,14 +281,14 @@ public sealed abstract class Gmtl
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
    private extern static double gmtl_distance__gmtl_Planed_gmtl_Point3d([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.PlanedMarshaler))] gmtl.Planed p0,
-	ref int p1);
+	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.Point3dMarshaler))] gmtl.Point3d p1);
 
-   public static double distance(gmtl.Planed p0, ref int p1)
+   public static double distance(gmtl.Planed p0, gmtl.Point3d p1)
    {
       
       
       double result;
-      result = gmtl_distance__gmtl_Planed_gmtl_Point3d(p0, ref p1);
+      result = gmtl_distance__gmtl_Planed_gmtl_Point3d(p0, p1);
       
       
       return result;
@@ -298,14 +296,14 @@ public sealed abstract class Gmtl
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
    private extern static float gmtl_distance__gmtl_Planef_gmtl_Point3f([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.PlanefMarshaler))] gmtl.Planef p0,
-	ref int p1);
+	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.Point3fMarshaler))] gmtl.Point3f p1);
 
-   public static float distance(gmtl.Planef p0, ref int p1)
+   public static float distance(gmtl.Planef p0, gmtl.Point3f p1)
    {
       
       
       float result;
-      result = gmtl_distance__gmtl_Planef_gmtl_Point3f(p0, ref p1);
+      result = gmtl_distance__gmtl_Planef_gmtl_Point3f(p0, p1);
       
       
       return result;
@@ -313,14 +311,14 @@ public sealed abstract class Gmtl
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
    private extern static double gmtl_distanceSquared__gmtl_LineSegd_gmtl_Point3d([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.LineSegdMarshaler))] gmtl.LineSegd p0,
-	ref int p1);
+	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.Point3dMarshaler))] gmtl.Point3d p1);
 
-   public static double distanceSquared(gmtl.LineSegd p0, ref int p1)
+   public static double distanceSquared(gmtl.LineSegd p0, gmtl.Point3d p1)
    {
       
       
       double result;
-      result = gmtl_distanceSquared__gmtl_LineSegd_gmtl_Point3d(p0, ref p1);
+      result = gmtl_distanceSquared__gmtl_LineSegd_gmtl_Point3d(p0, p1);
       
       
       return result;
@@ -328,14 +326,14 @@ public sealed abstract class Gmtl
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
    private extern static float gmtl_distanceSquared__gmtl_LineSegf_gmtl_Point3f([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.LineSegfMarshaler))] gmtl.LineSegf p0,
-	ref int p1);
+	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.Point3fMarshaler))] gmtl.Point3f p1);
 
-   public static float distanceSquared(gmtl.LineSegf p0, ref int p1)
+   public static float distanceSquared(gmtl.LineSegf p0, gmtl.Point3f p1)
    {
       
       
       float result;
-      result = gmtl_distanceSquared__gmtl_LineSegf_gmtl_Point3f(p0, ref p1);
+      result = gmtl_distanceSquared__gmtl_LineSegf_gmtl_Point3f(p0, p1);
       
       
       return result;
@@ -535,14 +533,14 @@ public sealed abstract class Gmtl
    [return : MarshalAs(UnmanagedType.CustomMarshaler,
                        MarshalTypeRef = typeof(gmtl.Point3dMarshaler))]
    private extern static gmtl.Point3d gmtl_findNearestPt__gmtl_LineSegd_gmtl_Point3d([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.LineSegdMarshaler))] gmtl.LineSegd p0,
-	ref int p1);
+	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.Point3dMarshaler))] gmtl.Point3d p1);
 
-   public static gmtl.Point3d findNearestPt(gmtl.LineSegd p0, ref int p1)
+   public static gmtl.Point3d findNearestPt(gmtl.LineSegd p0, gmtl.Point3d p1)
    {
       
       
       gmtl.Point3d result;
-      result = gmtl_findNearestPt__gmtl_LineSegd_gmtl_Point3d(p0, ref p1);
+      result = gmtl_findNearestPt__gmtl_LineSegd_gmtl_Point3d(p0, p1);
       
       
       return result;
@@ -552,14 +550,14 @@ public sealed abstract class Gmtl
    [return : MarshalAs(UnmanagedType.CustomMarshaler,
                        MarshalTypeRef = typeof(gmtl.Point3fMarshaler))]
    private extern static gmtl.Point3f gmtl_findNearestPt__gmtl_LineSegf_gmtl_Point3f([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.LineSegfMarshaler))] gmtl.LineSegf p0,
-	ref int p1);
+	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.Point3fMarshaler))] gmtl.Point3f p1);
 
-   public static gmtl.Point3f findNearestPt(gmtl.LineSegf p0, ref int p1)
+   public static gmtl.Point3f findNearestPt(gmtl.LineSegf p0, gmtl.Point3f p1)
    {
       
       
       gmtl.Point3f result;
-      result = gmtl_findNearestPt__gmtl_LineSegf_gmtl_Point3f(p0, ref p1);
+      result = gmtl_findNearestPt__gmtl_LineSegf_gmtl_Point3f(p0, p1);
       
       
       return result;
@@ -567,16 +565,16 @@ public sealed abstract class Gmtl
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
    private extern static float gmtl_findNearestPt__gmtl_Planef_gmtl_Point3f_gmtl_Point3f([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.PlanefMarshaler))] gmtl.Planef p0,
-	ref int p1,
-	ref int p2);
+	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.Point3fMarshaler))] gmtl.Point3f p1,
+	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.Point3fMarshaler))] gmtl.Point3f p2);
 
-   public static float findNearestPt(gmtl.Planef p0, ref int p1, ref int p2)
+   public static float findNearestPt(gmtl.Planef p0, gmtl.Point3f p1, gmtl.Point3f p2)
    {
       
       
       
       float result;
-      result = gmtl_findNearestPt__gmtl_Planef_gmtl_Point3f_gmtl_Point3f(p0, ref p1, ref p2);
+      result = gmtl_findNearestPt__gmtl_Planef_gmtl_Point3f_gmtl_Point3f(p0, p1, p2);
       
       
       
@@ -585,16 +583,16 @@ public sealed abstract class Gmtl
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
    private extern static double gmtl_findNearestPt__gmtl_Planed_gmtl_Point3d_gmtl_Point3d([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.PlanedMarshaler))] gmtl.Planed p0,
-	ref int p1,
-	ref int p2);
+	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.Point3dMarshaler))] gmtl.Point3d p1,
+	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.Point3dMarshaler))] gmtl.Point3d p2);
 
-   public static double findNearestPt(gmtl.Planed p0, ref int p1, ref int p2)
+   public static double findNearestPt(gmtl.Planed p0, gmtl.Point3d p1, gmtl.Point3d p2)
    {
       
       
       
       double result;
-      result = gmtl_findNearestPt__gmtl_Planed_gmtl_Point3d_gmtl_Point3d(p0, ref p1, ref p2);
+      result = gmtl_findNearestPt__gmtl_Planed_gmtl_Point3d_gmtl_Point3d(p0, p1, p2);
       
       
       
@@ -2565,14 +2563,14 @@ public sealed abstract class Gmtl
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
    private extern static PlaneSide gmtl_whichSide__gmtl_Planed_gmtl_Point3d([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.PlanedMarshaler))] gmtl.Planed p0,
-	ref int p1);
+	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.Point3dMarshaler))] gmtl.Point3d p1);
 
-   public static PlaneSide whichSide(gmtl.Planed p0, ref int p1)
+   public static PlaneSide whichSide(gmtl.Planed p0, gmtl.Point3d p1)
    {
       
       
       PlaneSide result;
-      result = gmtl_whichSide__gmtl_Planed_gmtl_Point3d(p0, ref p1);
+      result = gmtl_whichSide__gmtl_Planed_gmtl_Point3d(p0, p1);
       
       
       return result;
@@ -2580,14 +2578,14 @@ public sealed abstract class Gmtl
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
    private extern static PlaneSide gmtl_whichSide__gmtl_Planef_gmtl_Point3f([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.PlanefMarshaler))] gmtl.Planef p0,
-	ref int p1);
+	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.Point3fMarshaler))] gmtl.Point3f p1);
 
-   public static PlaneSide whichSide(gmtl.Planef p0, ref int p1)
+   public static PlaneSide whichSide(gmtl.Planef p0, gmtl.Point3f p1)
    {
       
       
       PlaneSide result;
-      result = gmtl_whichSide__gmtl_Planef_gmtl_Point3f(p0, ref p1);
+      result = gmtl_whichSide__gmtl_Planef_gmtl_Point3f(p0, p1);
       
       
       return result;
@@ -2595,16 +2593,16 @@ public sealed abstract class Gmtl
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
    private extern static PlaneSide gmtl_whichSide__gmtl_Planef_gmtl_Point3f_float([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.PlanefMarshaler))] gmtl.Planef p0,
-	ref int p1,
+	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.Point3fMarshaler))] gmtl.Point3f p1,
 	ref float p2);
 
-   public static PlaneSide whichSide(gmtl.Planef p0, ref int p1, ref float p2)
+   public static PlaneSide whichSide(gmtl.Planef p0, gmtl.Point3f p1, ref float p2)
    {
       
       
       
       PlaneSide result;
-      result = gmtl_whichSide__gmtl_Planef_gmtl_Point3f_float(p0, ref p1, ref p2);
+      result = gmtl_whichSide__gmtl_Planef_gmtl_Point3f_float(p0, p1, ref p2);
       
       
       
@@ -2613,16 +2611,16 @@ public sealed abstract class Gmtl
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
    private extern static PlaneSide gmtl_whichSide__gmtl_Planed_gmtl_Point3d_double([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.PlanedMarshaler))] gmtl.Planed p0,
-	ref int p1,
+	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.Point3dMarshaler))] gmtl.Point3d p1,
 	ref double p2);
 
-   public static PlaneSide whichSide(gmtl.Planed p0, ref int p1, ref double p2)
+   public static PlaneSide whichSide(gmtl.Planed p0, gmtl.Point3d p1, ref double p2)
    {
       
       
       
       PlaneSide result;
-      result = gmtl_whichSide__gmtl_Planed_gmtl_Point3d_double(p0, ref p1, ref p2);
+      result = gmtl_whichSide__gmtl_Planed_gmtl_Point3d_double(p0, p1, ref p2);
       
       
       

@@ -63,14 +63,14 @@ public sealed class Spheref
    }
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr gmtl_Sphere_float__Sphere__gmtl_Point3f_float(ref int p0,
+   private extern static IntPtr gmtl_Sphere_float__Sphere__gmtl_Point3f_float([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.Point3fMarshaler))] gmtl.Point3f p0,
 	ref float p1);
 
-   public Spheref(ref int p0, ref float p1)
+   public Spheref(gmtl.Point3f p0, ref float p1)
    {
       
       
-      mRawObject   = gmtl_Sphere_float__Sphere__gmtl_Point3f_float(ref p0, ref p1);
+      mRawObject   = gmtl_Sphere_float__Sphere__gmtl_Point3f_float(p0, ref p1);
       mWeOwnMemory = true;
       
       
@@ -137,12 +137,12 @@ public sealed class Spheref
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
    private extern static void gmtl_Sphere_float__setCenter__gmtl_Point3f(IntPtr obj,
-	ref int p0);
+	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.Point3fMarshaler))] gmtl.Point3f p0);
 
-   public  void setCenter(ref int p0)
+   public  void setCenter(gmtl.Point3f p0)
    {
       
-      gmtl_Sphere_float__setCenter__gmtl_Point3f(mRawObject, ref p0);
+      gmtl_Sphere_float__setCenter__gmtl_Point3f(mRawObject, p0);
       
    }
 

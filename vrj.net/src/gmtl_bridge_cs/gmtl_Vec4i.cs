@@ -69,13 +69,13 @@ public sealed class Vec4i
    }
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr gmtl_Vec_int_4__Vec__gmtl_VecBase_int_4(ref int p0);
+   private extern static IntPtr gmtl_Vec_int_4__Vec__gmtl_VecBase_int_4([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.VecBase_int_4Marshaler))] gmtl.VecBase_int_4 p0);
 
-   public Vec4i(ref int p0)
+   public Vec4i(gmtl.VecBase_int_4 p0)
       : base(new NoInitTag())   // Do not initialize mRawObject in base class
    {
       
-      mRawObject   = gmtl_Vec_int_4__Vec__gmtl_VecBase_int_4(ref p0);
+      mRawObject   = gmtl_Vec_int_4__Vec__gmtl_VecBase_int_4(p0);
       mWeOwnMemory = true;
       
    }

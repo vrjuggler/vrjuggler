@@ -63,14 +63,14 @@ public sealed class AABoxd
    }
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr gmtl_AABox_double__AABox__gmtl_Point_double_3_gmtl_Point_double_3(ref int p0,
-	ref int p1);
+   private extern static IntPtr gmtl_AABox_double__AABox__gmtl_Point3d_gmtl_Point3d([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.Point3dMarshaler))] gmtl.Point3d p0,
+	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.Point3dMarshaler))] gmtl.Point3d p1);
 
-   public AABoxd(ref int p0, ref int p1)
+   public AABoxd(gmtl.Point3d p0, gmtl.Point3d p1)
    {
       
       
-      mRawObject   = gmtl_AABox_double__AABox__gmtl_Point_double_3_gmtl_Point_double_3(ref p0, ref p1);
+      mRawObject   = gmtl_AABox_double__AABox__gmtl_Point3d_gmtl_Point3d(p0, p1);
       mWeOwnMemory = true;
       
       
@@ -148,24 +148,24 @@ public sealed class AABoxd
    }
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
-   private extern static void gmtl_AABox_double__setMin__gmtl_Point_double_3(IntPtr obj,
-	ref int p0);
+   private extern static void gmtl_AABox_double__setMin__gmtl_Point3d(IntPtr obj,
+	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.Point3dMarshaler))] gmtl.Point3d p0);
 
-   public  void setMin(ref int p0)
+   public  void setMin(gmtl.Point3d p0)
    {
       
-      gmtl_AABox_double__setMin__gmtl_Point_double_3(mRawObject, ref p0);
+      gmtl_AABox_double__setMin__gmtl_Point3d(mRawObject, p0);
       
    }
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
-   private extern static void gmtl_AABox_double__setMax__gmtl_Point_double_3(IntPtr obj,
-	ref int p0);
+   private extern static void gmtl_AABox_double__setMax__gmtl_Point3d(IntPtr obj,
+	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.Point3dMarshaler))] gmtl.Point3d p0);
 
-   public  void setMax(ref int p0)
+   public  void setMax(gmtl.Point3d p0)
    {
       
-      gmtl_AABox_double__setMax__gmtl_Point_double_3(mRawObject, ref p0);
+      gmtl_AABox_double__setMax__gmtl_Point3d(mRawObject, p0);
       
    }
 

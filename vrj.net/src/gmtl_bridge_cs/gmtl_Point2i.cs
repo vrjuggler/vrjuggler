@@ -57,25 +57,25 @@ public sealed class Point2i
    }
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr gmtl_Point_int_2__Point__gmtl_Point2i(ref int p0);
+   private extern static IntPtr gmtl_Point_int_2__Point__gmtl_Point2i([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.Point2iMarshaler))] gmtl.Point2i p0);
 
-   public Point2i(ref int p0)
+   public Point2i(gmtl.Point2i p0)
       : base(new NoInitTag())   // Do not initialize mRawObject in base class
    {
       
-      mRawObject   = gmtl_Point_int_2__Point__gmtl_Point2i(ref p0);
+      mRawObject   = gmtl_Point_int_2__Point__gmtl_Point2i(p0);
       mWeOwnMemory = true;
       
    }
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr gmtl_Point_int_2__Point__gmtl_VecBase_int_2(ref int p0);
+   private extern static IntPtr gmtl_Point_int_2__Point__gmtl_VecBase_int_2([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.VecBase_int_2Marshaler))] gmtl.VecBase_int_2 p0);
 
-   public Point2i(ref int p0)
+   public Point2i(gmtl.VecBase_int_2 p0)
       : base(new NoInitTag())   // Do not initialize mRawObject in base class
    {
       
-      mRawObject   = gmtl_Point_int_2__Point__gmtl_VecBase_int_2(ref p0);
+      mRawObject   = gmtl_Point_int_2__Point__gmtl_VecBase_int_2(p0);
       mWeOwnMemory = true;
       
    }

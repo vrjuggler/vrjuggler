@@ -63,12 +63,12 @@ public class VecBase_int_4
    }
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr gmtl_VecBase_int_4__VecBase__gmtl_VecBase_int_4(ref int p0);
+   private extern static IntPtr gmtl_VecBase_int_4__VecBase__gmtl_VecBase_int_4([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.VecBase_int_4Marshaler))] gmtl.VecBase_int_4 p0);
 
-   public VecBase_int_4(ref int p0)
+   public VecBase_int_4(gmtl.VecBase_int_4 p0)
    {
       
-      mRawObject   = gmtl_VecBase_int_4__VecBase__gmtl_VecBase_int_4(ref p0);
+      mRawObject   = gmtl_VecBase_int_4__VecBase__gmtl_VecBase_int_4(p0);
       mWeOwnMemory = true;
       
    }

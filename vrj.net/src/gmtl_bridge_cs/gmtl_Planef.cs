@@ -63,16 +63,16 @@ public sealed class Planef
    }
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr gmtl_Plane_float__Plane__gmtl_Point3f_gmtl_Point3f_gmtl_Point3f(ref int p0,
-	ref int p1,
-	ref int p2);
+   private extern static IntPtr gmtl_Plane_float__Plane__gmtl_Point3f_gmtl_Point3f_gmtl_Point3f([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.Point3fMarshaler))] gmtl.Point3f p0,
+	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.Point3fMarshaler))] gmtl.Point3f p1,
+	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.Point3fMarshaler))] gmtl.Point3f p2);
 
-   public Planef(ref int p0, ref int p1, ref int p2)
+   public Planef(gmtl.Point3f p0, gmtl.Point3f p1, gmtl.Point3f p2)
    {
       
       
       
-      mRawObject   = gmtl_Plane_float__Plane__gmtl_Point3f_gmtl_Point3f_gmtl_Point3f(ref p0, ref p1, ref p2);
+      mRawObject   = gmtl_Plane_float__Plane__gmtl_Point3f_gmtl_Point3f_gmtl_Point3f(p0, p1, p2);
       mWeOwnMemory = true;
       
       
@@ -81,13 +81,13 @@ public sealed class Planef
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
    private extern static IntPtr gmtl_Plane_float__Plane__gmtl_Vec3f_gmtl_Point3f([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.Vec3fMarshaler))] gmtl.Vec3f p0,
-	ref int p1);
+	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.Point3fMarshaler))] gmtl.Point3f p1);
 
-   public Planef(gmtl.Vec3f p0, ref int p1)
+   public Planef(gmtl.Vec3f p0, gmtl.Point3f p1)
    {
       
       
-      mRawObject   = gmtl_Plane_float__Plane__gmtl_Vec3f_gmtl_Point3f(p0, ref p1);
+      mRawObject   = gmtl_Plane_float__Plane__gmtl_Vec3f_gmtl_Point3f(p0, p1);
       mWeOwnMemory = true;
       
       

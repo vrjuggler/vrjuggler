@@ -63,16 +63,16 @@ public sealed class Trif
    }
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr gmtl_Tri_float__Tri__gmtl_Point3f_gmtl_Point3f_gmtl_Point3f(ref int p0,
-	ref int p1,
-	ref int p2);
+   private extern static IntPtr gmtl_Tri_float__Tri__gmtl_Point3f_gmtl_Point3f_gmtl_Point3f([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.Point3fMarshaler))] gmtl.Point3f p0,
+	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.Point3fMarshaler))] gmtl.Point3f p1,
+	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.Point3fMarshaler))] gmtl.Point3f p2);
 
-   public Trif(ref int p0, ref int p1, ref int p2)
+   public Trif(gmtl.Point3f p0, gmtl.Point3f p1, gmtl.Point3f p2)
    {
       
       
       
-      mRawObject   = gmtl_Tri_float__Tri__gmtl_Point3f_gmtl_Point3f_gmtl_Point3f(ref p0, ref p1, ref p2);
+      mRawObject   = gmtl_Tri_float__Tri__gmtl_Point3f_gmtl_Point3f_gmtl_Point3f(p0, p1, p2);
       mWeOwnMemory = true;
       
       
@@ -145,16 +145,16 @@ public sealed class Trif
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
    private extern static void gmtl_Tri_float__set__gmtl_Point3f_gmtl_Point3f_gmtl_Point3f(IntPtr obj,
-	ref int p0,
-	ref int p1,
-	ref int p2);
+	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.Point3fMarshaler))] gmtl.Point3f p0,
+	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.Point3fMarshaler))] gmtl.Point3f p1,
+	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.Point3fMarshaler))] gmtl.Point3f p2);
 
-   public  void set(ref int p0, ref int p1, ref int p2)
+   public  void set(gmtl.Point3f p0, gmtl.Point3f p1, gmtl.Point3f p2)
    {
       
       
       
-      gmtl_Tri_float__set__gmtl_Point3f_gmtl_Point3f_gmtl_Point3f(mRawObject, ref p0, ref p1, ref p2);
+      gmtl_Tri_float__set__gmtl_Point3f_gmtl_Point3f_gmtl_Point3f(mRawObject, p0, p1, p2);
       
       
       

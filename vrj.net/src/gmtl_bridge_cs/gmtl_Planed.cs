@@ -63,16 +63,16 @@ public sealed class Planed
    }
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr gmtl_Plane_double__Plane__gmtl_Point_double_3_gmtl_Point_double_3_gmtl_Point_double_3(ref int p0,
-	ref int p1,
-	ref int p2);
+   private extern static IntPtr gmtl_Plane_double__Plane__gmtl_Point3d_gmtl_Point3d_gmtl_Point3d([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.Point3dMarshaler))] gmtl.Point3d p0,
+	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.Point3dMarshaler))] gmtl.Point3d p1,
+	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.Point3dMarshaler))] gmtl.Point3d p2);
 
-   public Planed(ref int p0, ref int p1, ref int p2)
+   public Planed(gmtl.Point3d p0, gmtl.Point3d p1, gmtl.Point3d p2)
    {
       
       
       
-      mRawObject   = gmtl_Plane_double__Plane__gmtl_Point_double_3_gmtl_Point_double_3_gmtl_Point_double_3(ref p0, ref p1, ref p2);
+      mRawObject   = gmtl_Plane_double__Plane__gmtl_Point3d_gmtl_Point3d_gmtl_Point3d(p0, p1, p2);
       mWeOwnMemory = true;
       
       
@@ -80,14 +80,14 @@ public sealed class Planed
    }
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr gmtl_Plane_double__Plane__gmtl_Vec3d_gmtl_Point_double_3([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.Vec3dMarshaler))] gmtl.Vec3d p0,
-	ref int p1);
+   private extern static IntPtr gmtl_Plane_double__Plane__gmtl_Vec3d_gmtl_Point3d([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.Vec3dMarshaler))] gmtl.Vec3d p0,
+	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.Point3dMarshaler))] gmtl.Point3d p1);
 
-   public Planed(gmtl.Vec3d p0, ref int p1)
+   public Planed(gmtl.Vec3d p0, gmtl.Point3d p1)
    {
       
       
-      mRawObject   = gmtl_Plane_double__Plane__gmtl_Vec3d_gmtl_Point_double_3(p0, ref p1);
+      mRawObject   = gmtl_Plane_double__Plane__gmtl_Vec3d_gmtl_Point3d(p0, p1);
       mWeOwnMemory = true;
       
       

@@ -63,14 +63,14 @@ public class Rayd
    }
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr gmtl_Ray_double__Ray__gmtl_Point_double_3_gmtl_Vec3d(ref int p0,
+   private extern static IntPtr gmtl_Ray_double__Ray__gmtl_Point3d_gmtl_Vec3d([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.Point3dMarshaler))] gmtl.Point3d p0,
 	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.Vec3dMarshaler))] gmtl.Vec3d p1);
 
-   public Rayd(ref int p0, gmtl.Vec3d p1)
+   public Rayd(gmtl.Point3d p0, gmtl.Vec3d p1)
    {
       
       
-      mRawObject   = gmtl_Ray_double__Ray__gmtl_Point_double_3_gmtl_Vec3d(ref p0, p1);
+      mRawObject   = gmtl_Ray_double__Ray__gmtl_Point3d_gmtl_Vec3d(p0, p1);
       mWeOwnMemory = true;
       
       
@@ -126,13 +126,13 @@ public class Rayd
    }
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
-   private extern static void gmtl_Ray_double__setOrigin__gmtl_Point_double_3(IntPtr obj,
-	ref int p0);
+   private extern static void gmtl_Ray_double__setOrigin__gmtl_Point3d(IntPtr obj,
+	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.Point3dMarshaler))] gmtl.Point3d p0);
 
-   public  void setOrigin(ref int p0)
+   public  void setOrigin(gmtl.Point3d p0)
    {
       
-      gmtl_Ray_double__setOrigin__gmtl_Point_double_3(mRawObject, ref p0);
+      gmtl_Ray_double__setOrigin__gmtl_Point3d(mRawObject, p0);
       
    }
 
@@ -160,9 +160,6 @@ public class Rayd
    }
 
    // End of non-virtual methods.
-
-   // Start of virtual methods.
-   // End of virtual methods.
 
 
 } // class gmtl.Rayd

@@ -63,16 +63,16 @@ public sealed class Trid
    }
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr gmtl_Tri_double__Tri__gmtl_Point_double_3_gmtl_Point_double_3_gmtl_Point_double_3(ref int p0,
-	ref int p1,
-	ref int p2);
+   private extern static IntPtr gmtl_Tri_double__Tri__gmtl_Point3d_gmtl_Point3d_gmtl_Point3d([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.Point3dMarshaler))] gmtl.Point3d p0,
+	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.Point3dMarshaler))] gmtl.Point3d p1,
+	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.Point3dMarshaler))] gmtl.Point3d p2);
 
-   public Trid(ref int p0, ref int p1, ref int p2)
+   public Trid(gmtl.Point3d p0, gmtl.Point3d p1, gmtl.Point3d p2)
    {
       
       
       
-      mRawObject   = gmtl_Tri_double__Tri__gmtl_Point_double_3_gmtl_Point_double_3_gmtl_Point_double_3(ref p0, ref p1, ref p2);
+      mRawObject   = gmtl_Tri_double__Tri__gmtl_Point3d_gmtl_Point3d_gmtl_Point3d(p0, p1, p2);
       mWeOwnMemory = true;
       
       
@@ -144,17 +144,17 @@ public sealed class Trid
    }
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
-   private extern static void gmtl_Tri_double__set__gmtl_Point_double_3_gmtl_Point_double_3_gmtl_Point_double_3(IntPtr obj,
-	ref int p0,
-	ref int p1,
-	ref int p2);
+   private extern static void gmtl_Tri_double__set__gmtl_Point3d_gmtl_Point3d_gmtl_Point3d(IntPtr obj,
+	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.Point3dMarshaler))] gmtl.Point3d p0,
+	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.Point3dMarshaler))] gmtl.Point3d p1,
+	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.Point3dMarshaler))] gmtl.Point3d p2);
 
-   public  void set(ref int p0, ref int p1, ref int p2)
+   public  void set(gmtl.Point3d p0, gmtl.Point3d p1, gmtl.Point3d p2)
    {
       
       
       
-      gmtl_Tri_double__set__gmtl_Point_double_3_gmtl_Point_double_3_gmtl_Point_double_3(mRawObject, ref p0, ref p1, ref p2);
+      gmtl_Tri_double__set__gmtl_Point3d_gmtl_Point3d_gmtl_Point3d(mRawObject, p0, p1, p2);
       
       
       

@@ -57,13 +57,13 @@ public sealed class Point2d
    }
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr gmtl_Point_double_2__Point__gmtl_Point2d(ref int p0);
+   private extern static IntPtr gmtl_Point_double_2__Point__gmtl_Point2d([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.Point2dMarshaler))] gmtl.Point2d p0);
 
-   public Point2d(ref int p0)
+   public Point2d(gmtl.Point2d p0)
       : base(new NoInitTag())   // Do not initialize mRawObject in base class
    {
       
-      mRawObject   = gmtl_Point_double_2__Point__gmtl_Point2d(ref p0);
+      mRawObject   = gmtl_Point_double_2__Point__gmtl_Point2d(p0);
       mWeOwnMemory = true;
       
    }

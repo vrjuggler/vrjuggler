@@ -63,14 +63,14 @@ public sealed class AABoxf
    }
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
-   private extern static IntPtr gmtl_AABox_float__AABox__gmtl_Point3f_gmtl_Point3f(ref int p0,
-	ref int p1);
+   private extern static IntPtr gmtl_AABox_float__AABox__gmtl_Point3f_gmtl_Point3f([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.Point3fMarshaler))] gmtl.Point3f p0,
+	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.Point3fMarshaler))] gmtl.Point3f p1);
 
-   public AABoxf(ref int p0, ref int p1)
+   public AABoxf(gmtl.Point3f p0, gmtl.Point3f p1)
    {
       
       
-      mRawObject   = gmtl_AABox_float__AABox__gmtl_Point3f_gmtl_Point3f(ref p0, ref p1);
+      mRawObject   = gmtl_AABox_float__AABox__gmtl_Point3f_gmtl_Point3f(p0, p1);
       mWeOwnMemory = true;
       
       
@@ -149,23 +149,23 @@ public sealed class AABoxf
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
    private extern static void gmtl_AABox_float__setMin__gmtl_Point3f(IntPtr obj,
-	ref int p0);
+	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.Point3fMarshaler))] gmtl.Point3f p0);
 
-   public  void setMin(ref int p0)
+   public  void setMin(gmtl.Point3f p0)
    {
       
-      gmtl_AABox_float__setMin__gmtl_Point3f(mRawObject, ref p0);
+      gmtl_AABox_float__setMin__gmtl_Point3f(mRawObject, p0);
       
    }
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
    private extern static void gmtl_AABox_float__setMax__gmtl_Point3f(IntPtr obj,
-	ref int p0);
+	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.Point3fMarshaler))] gmtl.Point3f p0);
 
-   public  void setMax(ref int p0)
+   public  void setMax(gmtl.Point3f p0)
    {
       
-      gmtl_AABox_float__setMax__gmtl_Point3f(mRawObject, ref p0);
+      gmtl_AABox_float__setMax__gmtl_Point3f(mRawObject, p0);
       
    }
 
