@@ -38,6 +38,8 @@ package org.vrjuggler.tweek.net.corba;
 
 import java.util.Properties;
 import org.omg.CORBA.*;
+import org.omg.PortableServer.*;
+import org.omg.PortableServer.POAPackage.*;
 import org.omg.CosNaming.*;
 import org.omg.CosNaming.NamingContextPackage.*;
 
@@ -62,7 +64,23 @@ public class CorbaService
 
    public void init (String[] args) throws SystemException
    {
-      m_orb = ORB.init(args, null);
+      m_orb      = ORB.init(args, null);
+
+      try
+      {
+         m_root_poa = (POA) m_orb.resolve_initial_references("RootPOA");
+         m_root_poa.the_POAManager().activate();
+      }
+      catch (org.omg.CORBA.ORBPackage.InvalidName name_ex)
+      {
+         System.err.println("ERROR: Could not get RootPOA: " +
+                            name_ex.getMessage());
+      }
+      catch (org.omg.PortableServer.POAManagerPackage.AdapterInactive ex)
+      {
+         System.err.println("ERROR: Could not activate RootPOA: " +
+                            ex.getMessage());
+      }
 
       try
       {
@@ -83,7 +101,7 @@ public class CorbaService
          }
          else
          {
-            System.out.println("Failed to get root naming context!");
+            System.err.println("Failed to get root naming context!");
          }
       }
       catch (UserException user_ex)
@@ -138,6 +156,21 @@ public class CorbaService
       return mgr;
    }
 
+   public void registerObject (Servant servant, String name)
+   {
+      // Get object reference from the servant.
+      try
+      {
+         org.omg.CORBA.Object ref = m_root_poa.servant_to_reference(servant);
+      }
+      catch (ServantNotActive ex)
+      {
+      }
+      catch (WrongPolicy ex)
+      {
+      }
+   }
+
    private String nameServiceHost = null;
    private int    nameServicePort = 2809;
    private String nameServiceURI  = null;
@@ -145,6 +178,7 @@ public class CorbaService
    private String namingSubcontext = null;
 
    private ORB           m_orb        = null;
+   private POA           m_root_poa   = null;
    private NamingContext rootContext  = null;
    private NamingContext localContext = null;
 }
