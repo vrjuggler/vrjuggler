@@ -33,6 +33,7 @@
 // VR Juggler
 #include <Kernel/vjKernel.h>     // vr juggler kernel
 #include <Kernel/vjProjection.h> // for setNearFar
+#include <VPR/vjSystem.h>
 
 // the application
 #include <application.h>         // the application
