@@ -265,7 +265,7 @@ bool Debug::isCategoryAllowed(const vpr::DebugCategory& catId)
       cat = mCategories.find(catId.mGuid);
    }
 
-   vprASSERT(cat != mCategories.end() && "Auto-register failed");    // ASSERT: We have a valid category
+   vprASSERT(cat != mCategories.end() /* && "Auto-register failed" */);    // ASSERT: We have a valid category
 
    Debug::category_map_t::iterator cat_all = mCategories.find(vprDBG_ALL.mGuid);
    vprASSERT(cat_all != mCategories.end());    // ASSERT: We have a valid category
