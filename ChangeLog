@@ -1,5 +1,8 @@
 DATE        AUTHOR    CHANGE
 ----------- --------- ---------------------------------------------------------
+Jul-04-2002 patrickh  Fixed compile errors on Solaris 8.
+
+[Version 1.0.5 - 7.1.2002]=====================================================
 Jul-01-2002 patrickh  Added a workaround for a bug in OSG 0.8.45 that causes
                       problems with stereo rendering.  This change was
                       submitted by Aaron Bryden <abryden@vrac.iastate.edu>.
