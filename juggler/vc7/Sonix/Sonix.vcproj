@@ -125,7 +125,13 @@
 				RelativePath="..\..\modules\sonix\snx\SoundFactory.cpp">
 			</File>
 			<File
+				RelativePath="..\..\modules\sonix\snx\SoundHandle.cpp">
+			</File>
+			<File
 				RelativePath="..\..\modules\sonix\snx\SoundImplementation.cpp">
+			</File>
+			<File
+				RelativePath="..\..\modules\sonix\snx\StubSoundImplementation.cpp">
 			</File>
 			<File
 				RelativePath="..\..\modules\sonix\snx\Util\Version.cpp">
