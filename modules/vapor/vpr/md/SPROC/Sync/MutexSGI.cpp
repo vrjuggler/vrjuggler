@@ -44,5 +44,5 @@
 #include <vpr/Sync/Mutex.h>
 #include <vpr/md/SPROC/Sync/MutexSGI.h>
 
-vpr::MemPoolSGI* vpr::MutexSGI::mutexPool = NULL;
-int* vpr::MutexSGI::attachedCounter       = NULL;
+vpr::MemPoolSGI* vpr::MutexSGI::mMutexPool = NULL;
+int* vpr::MutexSGI::mAttachedCounter       = NULL;
