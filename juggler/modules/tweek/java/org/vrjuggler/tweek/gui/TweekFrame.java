@@ -139,15 +139,56 @@ public class TweekFrame extends JFrame implements BeanFocusChangeListener,
       this.setVisible(true);
    }
 
+   /**
+    * Handles a BeanFocusChangeEvent.  The change in Bean focus gives us the
+    * opportunity to manipulate context-specific (Bean-specific) information.
+    * This includes context-specific file loading.  When a new Bean is focuesd,
+    * it is queried to determine if it implements
+    * org.vrjuggler.tweek.beans.FileLoader.  If so, the Open item in the File
+    * menu is enabled, and the newly focused Bean is set up to receive open
+    * requests from the GUI.
+    */
    public void beanFocusChanged (BeanFocusChangeEvent e)
    {
       if ( e.getFocusType() == BeanFocusChangeEvent.BEAN_FOCUSED )
       {
-         System.out.println("Bean " + e.getBean() + " focused!");
+         MessagePanel.instance().printStatus("Bean " + e.getBean() +
+                                             " focused!\n");
+
+         Object panel_bean = e.getBean().getBean();
+
+         // If the Panel Bean supports file opening, enable mMenuFileOpen and
+         // set the Bean as the current file loader.  If and when the user
+         // selects the Open item in the File menu, panel_bean will be informed
+         // of the open request via the FileLoader interface.
+         if ( panel_bean instanceof FileLoader )
+         {
+            FileLoader loader = (FileLoader) panel_bean;
+            mMenuFileOpen.setText("Open " + loader.getFileType() + " ...");
+            mMenuFileClose.setText("Close " + loader.getFileType() + " ...");
+            mMenuFileOpen.setEnabled(true);
+
+            if ( loader.getOpenFileCount() > 0 )
+            {
+               mMenuFileClose.setEnabled(true);
+            }
+
+            mFileLoader = loader;
+         }
+         // This new Bean can't open files, we we make sure to disable the
+         // Open menu item.
+         else
+         {
+            disableFileHandlingItems();
+         }
       }
       else if ( e.getFocusType() == BeanFocusChangeEvent.BEAN_UNFOCUSED )
       {
-         System.out.println("Bean " + e.getBean() + " unfocused!");
+         MessagePanel.instance().printStatus("Bean " + e.getBean() +
+                                             " unfocused!\n");
+
+         // Disable the Open menu item in the File menu just to be safe.
+         disableFileHandlingItems();
       }
    }
 
@@ -289,17 +330,28 @@ public class TweekFrame extends JFrame implements BeanFocusChangeListener,
          });
 
       mMenuFileOpen.setText("Open ...");
+      mMenuFileOpen.setEnabled(false);
       mMenuFileOpen.setMnemonic('O');
-      mMenuFileOpen.setAccelerator(javax.swing.KeyStroke.getKeyStroke(79, KeyEvent.CTRL_MASK, false));
-/*
-      mMenuFileOpen.addActionListener(new ActionListener ()
+      mMenuFileOpen.setAccelerator(javax.swing.KeyStroke.getKeyStroke(79, java.awt.event.KeyEvent.CTRL_MASK, false));
+      mMenuFileOpen.addActionListener(new java.awt.event.ActionListener()
+      {
+         public void actionPerformed(ActionEvent e)
          {
-            public void actionPerformed(ActionEvent e)
-            {
-               fileOpenAction(e);
-            }
-         });
-*/
+            fileOpenAction(e);
+         }
+      });
+
+      mMenuFileClose.setEnabled(false);
+      mMenuFileClose.setMnemonic('C');
+      mMenuFileClose.setText("Close ...");
+      mMenuFileClose.setAccelerator(javax.swing.KeyStroke.getKeyStroke(87, java.awt.event.KeyEvent.CTRL_MASK, false));
+      mMenuFileClose.addActionListener(new java.awt.event.ActionListener()
+      {
+         public void actionPerformed(ActionEvent e)
+         {
+            fileCloseAction(e);
+         }
+      });
 
       // Define the Quit option in the File menu.
       mMenuFileQuit.setText("Quit");
@@ -318,6 +370,7 @@ public class TweekFrame extends JFrame implements BeanFocusChangeListener,
       mMenuFile.setText("File");
       mMenuFile.setMnemonic('F');
       mMenuFile.add(mMenuFileOpen);
+      mMenuFile.add(mMenuFileClose);
       mMenuFile.addSeparator();
       mMenuFile.add(mMenuFileQuit);
 
@@ -434,6 +487,38 @@ public class TweekFrame extends JFrame implements BeanFocusChangeListener,
    // ========================================================================
    // Private methods.
    // ========================================================================
+
+   /**
+    * File | Open action performed.
+    */
+   private void fileOpenAction (ActionEvent e)
+   {
+      if ( mFileLoader.openRequested() )
+      {
+         mMenuFileClose.setEnabled(true);
+
+         if ( ! mFileLoader.canOpenMultiple() )
+         {
+            mMenuFileOpen.setEnabled(false);
+         }
+      }
+   }
+
+   /**
+    * File | Close action performed.
+    */
+   private void fileCloseAction (ActionEvent e)
+   {
+      if ( mFileLoader.closeRequested() )
+      {
+         mMenuFileOpen.setEnabled(true);
+
+         if ( mFileLoader.getOpenFileCount() == 0 )
+         {
+            mMenuFileClose.setEnabled(false);
+         }
+      }
+   }
 
    /**
     * File | Quit action performed.
@@ -681,6 +766,20 @@ public class TweekFrame extends JFrame implements BeanFocusChangeListener,
       }
    }
 
+   /**
+    * Disables the menu items in the File menu related to handling of data
+    * files.  This effectively resets the menu items to their state before any
+    * Beans were loaded in the GUI.
+    */
+   private void disableFileHandlingItems ()
+   {
+      mFileLoader = null;
+      mMenuFileOpen.setText("Open ...");
+      mMenuFileOpen.setEnabled(false);
+      mMenuFileClose.setText("Close ...");
+      mMenuFileClose.setEnabled(false);
+   }
+
    // ========================================================================
    // Private data members.
    // ========================================================================
@@ -707,6 +806,7 @@ public class TweekFrame extends JFrame implements BeanFocusChangeListener,
    private JMenuBar mMenuBar              = new JMenuBar();
    private JMenu mMenuFile                = new JMenu();
    private JMenuItem mMenuFileOpen        = new JMenuItem();
+   private JMenuItem mMenuFileClose       = new JMenuItem();
    private JMenuItem mMenuFileQuit        = new JMenuItem();
    private JMenu mMenuNetwork             = new JMenu();
    private JMenuItem mMenuNetConnect      = new JMenuItem();
@@ -722,5 +822,6 @@ public class TweekFrame extends JFrame implements BeanFocusChangeListener,
    // Networking stuff.
    private Vector mORBs = new Vector();
 
+   private FileLoader      mFileLoader      = null;
    private BeanPrefsDialog mBeanPrefsDialog = null;
 }

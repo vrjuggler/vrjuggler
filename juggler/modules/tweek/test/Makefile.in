@@ -45,7 +45,7 @@
 # -----------------------------------------------------------------------------
 default: all
 
-SUBDIRS	= corba NetworkTestBean TestBean
+SUBDIRS	= corba FileOpenTestBean NetworkTestBean PrefsTestBean TestBean
 
 all: $(SUBDIRS)
 
