@@ -349,37 +349,6 @@ The filters are applied in the order that they are specified in this configurati
       <allowedtype>surfaceViewport</allowedtype>
     </PropertyDesc>
   </ChunkDesc>
-  <ChunkDesc token="FileConnect" name="EM Connection" version="1.0">
-    <category>Generic</category>
-    <help>A file for outputing Environment Manager data</help>
-    <PropertyDesc token="FileName" name="Filename" type="string" variable="0">
-      <help>The name of the file to dump output to.</help>
-      <item label="Filename" defaultvalue="/var/tmp/out.perf" />
-    </PropertyDesc>
-    <PropertyDesc token="Enabled" name="Enabled" type="bool" variable="0">
-      <help>Should file be opened &amp; used?</help>
-      <item label="Enabled" defaultvalue="0" />
-    </PropertyDesc>
-    <PropertyDesc token="Mode" name="File Mode" type="int" variable="0">
-      <help>Is the file readable, writeable, or interactive (e.g. socket or pipe)</help>
-      <item label="File Mode" defaultvalue="2" />
-      <enumeration name="Interactive" value="0" />
-      <enumeration name="Input" value="1" />
-      <enumeration name="Output" value="2" />
-    </PropertyDesc>
-  </ChunkDesc>
-  <ChunkDesc token="EnvironmentManager" name="Environment Manager" version="1.0">
-    <category>Generic</category>
-    <help>Application-side of connection to vjcontrol GUI</help>
-    <PropertyDesc token="Port" name="Port" type="int" variable="0">
-      <help>Networking port to listen on</help>
-      <item label="Port" defaultvalue="4450" />
-    </PropertyDesc>
-    <PropertyDesc token="AcceptConnections" name="Accept Connections" type="bool" variable="0">
-      <help>Whether or not we should accept connections from vjcontrol clients</help>
-      <item label="Accept Connections" defaultvalue="1" />
-    </PropertyDesc>
-  </ChunkDesc>
   <ChunkDesc token="EventWindow" name="Event Window" version="1.0">
     <category>Devices</category>
     <help>Configures a window that accepts keyboard and mouse events as input.</help>
@@ -1174,44 +1143,6 @@ The filters are applied in the order that they are specified in this configurati
     <PropertyDesc name="Full-Screen Anti-Aliasing" token="fsaaEnable" type="bool" variable="0">
       <item label="Enable FSAA" defaultvalue="0" />
       <help>Toggles the use of full-screen anti-aliasing.  This may not be available with all OpenGL implementations.</help>
-    </PropertyDesc>
-  </ChunkDesc>
-  <ChunkDesc token="PerfTestActive" name="PerfTestActive" version="1.0">
-    <category>Performance</category>
-    <help>inner chunk for Performance Testing</help>
-    <PropertyDesc token="Prefix" name="Prefix" type="string" variable="0">
-      <item label="Prefix" defaultvalue="" />
-    </PropertyDesc>
-    <PropertyDesc token="Enabled" name="Enabled" type="bool" variable="0">
-      <item label="Enabled" defaultvalue="0" />
-    </PropertyDesc>
-  </ChunkDesc>
-  <ChunkDesc token="PerfData" name="Performance Data Display" version="1.0">
-    <category>Performance</category>
-    <help>Information for displaying data from perfbuffers with a matching name</help>
-    <PropertyDesc token="labels" name="Labels" type="string" variable="1">
-      <help>Labels for Perf Buffer phases</help>
-      <item label="Labels" defaultvalue="" />
-    </PropertyDesc>
-  </ChunkDesc>
-  <ChunkDesc token="PerfMeasure" name="Performance Measurements" version="1.0">
-    <category>Performance</category>
-    <help>Controls performance monitoring of Juggler library</help>
-    <PropertyDesc token="PerformanceTarget" name="Performance Target" type="chunk" variable="0">
-      <help>File or network connection that performance data should be sent to.</help>
-      <item label="Performance Target" defaultvalue="" />
-      <allowedtype>FileConnect</allowedtype>
-      <allowedtype>NetworkConnect</allowedtype>
-    </PropertyDesc>
-    <PropertyDesc token="TimingTests" name="Timing Tests" type="embeddedchunk" variable="1">
-      <help>Turn on/off Juggler internal timing tests</help>
-      <item label="Timing Tests" />
-      <allowedtype>PerfTestActive</allowedtype>
-    </PropertyDesc>
-    <PropertyDesc token="PerfCategories" name="Performance Measurement Categories" type="embeddedchunk" variable="1">
-      <help>Turn on/off Juggler timing measurements by category name</help>
-      <item label="Performance Measurement Categories" />
-      <allowedtype>PerfTestActive</allowedtype>
     </PropertyDesc>
   </ChunkDesc>
   <ChunkDesc token="PinchGlove" name="PinchGlove" version="1.0">
