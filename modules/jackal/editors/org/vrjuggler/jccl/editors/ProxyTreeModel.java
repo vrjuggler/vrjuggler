@@ -395,7 +395,6 @@ public class ProxyTreeModel extends DefaultTreeModel implements ConfigListener, 
     * by calling a helper method, elementChanged.
     *
     * @see ConfigElementListener
-    * @see #elementChanged
     */
    public void nameChanged(ConfigElementEvent evt)
    {
