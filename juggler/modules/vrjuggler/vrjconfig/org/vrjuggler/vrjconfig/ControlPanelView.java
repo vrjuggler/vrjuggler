@@ -180,6 +180,7 @@ public class ControlPanelView
       model.add("A n a l o g",            new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/images/analog_devices64.png")));
       model.add("D i g i t a l",          new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/images/digital_devices64.png")));
       model.add("P o s i t i o n a l",    new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/images/positional_devices64.png")));
+      model.add("G l o v e",              new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/images/glove_devices64.png")));
       control.setModel(model);
       control.setTitle("Choose a device type");
    }
