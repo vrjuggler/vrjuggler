@@ -182,6 +182,8 @@ class PyOsgNav(vrj.OsgApp):
    def getScene(self):
       return self.mRootNode
 
+   # XXX: Not currently working because Boost.Python does not seem to know
+   # about PyOSG.osgUtil.SceneView.
    def configSceneView(self, newSceneViewer):
       newSceneVeiwer.setDefaults()
       newSceneViewer.setBackgroundColor(osg.Vec4(0.0, 0.0, 0.0, 0.0))
