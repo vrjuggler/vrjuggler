@@ -1,3 +1,4 @@
+#include <config.h>
 #include <Threads/vjThread.h>
 #include <Threads/vjBaseThread.h>
 #include <Threads/vjThreadManager.h>
