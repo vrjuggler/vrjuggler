@@ -97,6 +97,9 @@ Debug::Debug()
       std::cout << "VPR_DEBUG_NFY_LEVEL: Defaults to " << debugLevel
                 << std::endl << std::flush;
    }
+   std::cout << "--------------------------------------------------------" << std::endl;
+   std::cout << "For more or less debug output change VPR_DEBUG_NFY_LEVEL" << std::endl;
+   std::cout << "--------------------------------------------------------" << std::endl;
 
    char* debug_enable = getenv("VPR_DEBUG_ENABLE");
    if(debug_enable != NULL)
