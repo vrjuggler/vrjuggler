@@ -38,6 +38,8 @@
 
 #include <md/NSPR/SocketImpNSPR.h>
 
+#include <prio.h>
+
 namespace vpr {
 
 class SocketStreamImpNSPR : public SocketImpNSPR {

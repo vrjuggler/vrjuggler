@@ -33,6 +33,8 @@
 #ifndef _VPR_INET_ADDR_BASE_H_
 #define _VPR_INET_ADDR_BASE_H_
 
+#include <vprConfig.h>
+
 #include <IO/Socket/SocketTypes.h>
 #include <Utils/Assert.h>
 

@@ -52,7 +52,9 @@ VPR_SRCDIR	= @VPR_SRCDIR@/md/NSPR
 ifeq (@SUBSYSTEM@, NSPR)
 SRCS		= RWMutexNSPR.cpp	\
           ThreadNSPR.cpp \
-          InetAddrNSPR.cpp
+          InetAddrNSPR.cpp \
+					SocketImpNSPR.cpp \
+ 					SocketStreamImpNSPR.cpp
 endif
 
 include $(MKPATH)/dpp.obj.mk
