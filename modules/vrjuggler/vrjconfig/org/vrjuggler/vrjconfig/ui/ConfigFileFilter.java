@@ -13,6 +13,10 @@ public class ConfigFileFilter extends FileFilter
     */
    public boolean accept(File f)
    {
+      if(f.isDirectory())
+      {
+         return true;
+      }
       String ext = null;
       String s = f.getName();
       int i = s.lastIndexOf('.');
