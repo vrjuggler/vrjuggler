@@ -119,7 +119,7 @@ protected:
 
       char chunk_desc_file[250];
       strcpy(chunk_desc_file, vj_base_dir);
-      strcat(chunk_desc_file, "/Data/chunksDesc");
+      strcat(chunk_desc_file, "/share/Data/chunksDesc");
       vjDEBUG(vjDBG_ALL,vjDBG_CONFIG_LVL) << "Loading chunk desc file: ["
                            << chunk_desc_file << "]\n" << vjDEBUG_FLUSH;
 

@@ -771,8 +771,9 @@ links:
             done
 	cd ${instlinks} && rm -f ./${_LIBDIR_NAME} &&			\
           ln -s ${_LIBDIR_BASE} ./${_LIBDIR_NAME}
-	cd ${instlinks} && rm -f ./Data && ln -s ${VJROOT_ABS}/Data ./Data
-	cd ${instlinks} && rm -f ./samples &&				\
+	cd ${instlinks} && rm -rf ./share && mkdir ./share
+	cd ${instlinks}/share && rm -f ./Data && ln -s ${VJROOT_ABS}/Data ./Data
+	cd ${instlinks}/share && rm -f ./samples &&			\
           ln -s ${VJROOT_ABS}/samples ./samples
 	cd ${instlinks}/include && rm -f ./vjConfig.h &&		\
           ${LN_S} ${VJROOT_ABS}/vjConfig.h ./vjConfig.h
@@ -827,12 +828,12 @@ hier:
 	@echo "------------------------------------------------"
 	${SHELL} ${scriptdir}/mkinstalldirs ${prefix}
 	${MTREE_CMD} -Ude -f ${mtreedir}/VJ.install.dist -p ${prefix}
-	${MTREE_CMD} -Ude -f ${mtreedir}/VJ.data.dist -p ${prefix}
+	${MTREE_CMD} -Ude -f ${mtreedir}/VJ.data.dist -p ${datadir}
 	${MTREE_CMD} -Ude -f ${mtreedir}/VJ.include.dist -p ${prefix}
 	${MTREE_CMD} -Ude -f ${mtreedir}/VJ.lib.dist -p ${prefix}
-	${MTREE_CMD} -Ude -f ${mtreedir}/VJ.samples.dist -p ${prefix}
-	${MTREE_CMD} -Ude -f ${mtreedir}/VJ.test.dist -p ${prefix}
-	${MTREE_CMD} -Ude -f ${mtreedir}/VJ.tools.dist -p ${prefix}
+	${MTREE_CMD} -Ude -f ${mtreedir}/VJ.samples.dist -p ${datadir}
+	${MTREE_CMD} -Ude -f ${mtreedir}/VJ.test.dist -p ${datadir}
+	${MTREE_CMD} -Ude -f ${mtreedir}/VJ.tools.dist -p ${datadir}
 
 # Steps to take after the installation process is complete.  This target is
 # independent of the current ABI.
@@ -1167,36 +1168,36 @@ install-samples:
 	@echo "------------------------------------------------"
 	@echo "Installing sample applications"
 	@echo "------------------------------------------------"
-	${MTREE_CMD} -Ude -f ${mtreedir}/VJ.samples.dist -p ${prefix}
+	${MTREE_CMD} -Ude -f ${mtreedir}/VJ.samples.dist -p ${datadir}
 	${PERL} ${scriptdir}/install-src.pl -i ${top_srcdir}/samples	\
-          -m ${FILE_PERMS} ${_GROUP_OPT_UNIX} -o ${prefix}/samples
+          -m ${FILE_PERMS} ${_GROUP_OPT_UNIX} -o ${datadir}/samples
 	${PERL} ${scriptdir}/makefiles-gen.pl				\
           --vars="${topdir}/VARS.pl" --startdir="${top_srcdir}/samples"	\
           --mode="${FILE_PERMS}" ${_GROUP_OPT_PL} --srcdir="."		\
-          --prefix="${prefix}/samples"
+          --prefix="${datadir}/samples"
 
 # Install the test programs.
 install-test:
 	@echo "------------------------------------------------"
 	@echo "Installing test programs"
 	@echo "------------------------------------------------"
-	${MTREE_CMD} -Ude -f ${mtreedir}/VJ.test.dist -p ${prefix}
+	${MTREE_CMD} -Ude -f ${mtreedir}/VJ.test.dist -p ${datadir}
 	${PERL} ${scriptdir}/install-src.pl -i ${top_srcdir}/test	\
           -m ${FILE_PERMS} ${_GROUP_OPT_UNIX} -o ${prefix}/test
-	${PERL} ${scriptdir}/makefiles-gen.pl --prefix="${prefix}/test"	\
-          --vars="${topdir}/VARS.pl" --startdir="${top_srcdir}/test"	\
-          --mode="${FILE_PERMS}" ${_GROUP_OPT_PL} --srcdir="."
+	${PERL} ${scriptdir}/makefiles-gen.pl --mode="${FILE_PERMS}"	\
+          --prefix="${datadir}/test" --vars="${topdir}/VARS.pl"		\
+          --startdir="${top_srcdir}/test" ${_GROUP_OPT_PL} --srcdir="."
 
 # Install the user tools code.
 install-tools:
 	@echo "------------------------------------------------"
 	@echo "Installing user tools"
 	@echo "------------------------------------------------"
-	${MTREE_CMD} -Ude -f ${mtreedir}/VJ.tools.dist -p ${prefix}
+	${MTREE_CMD} -Ude -f ${mtreedir}/VJ.tools.dist -p ${datadir}
 	${PERL} ${scriptdir}/install-src.pl -i ${top_srcdir}/tools	\
-          -m ${FILE_PERMS} ${_GROUP_OPT_UNIX} -o ${prefix}/tools
+          -m ${FILE_PERMS} ${_GROUP_OPT_UNIX} -o ${datadir}/tools
 	${PERL} ${scriptdir}/makefiles-gen.pl				\
-          --prefix="${prefix}/tools" --vars="${topdir}/VARS.pl"		\
+          --prefix="${datadir}/tools" --vars="${topdir}/VARS.pl"	\
           --startdir="${top_srcdir}/tools" --mode="${FILE_PERMS}"	\
           ${_GROUP_OPT_PL} --srcdir="."
 	${INSTALL} -m ${EXEC_PERMS} ${_GROUP_OPT_UNIX}			\
@@ -1207,9 +1208,9 @@ install-data:
 	@echo "------------------------------------------------"
 	@echo "Installing standard data files"
 	@echo "------------------------------------------------"
-	${MTREE_CMD} -Ude -f ${mtreedir}/VJ.data.dist -p ${prefix}
+	${MTREE_CMD} -Ude -f ${mtreedir}/VJ.data.dist -p ${datadir}
 	${PERL} ${scriptdir}/install-dir.pl -i ${top_srcdir}/Data	\
-          -m ${FILE_PERMS} ${_GROUP_OPT_UNIX} -o ${prefix}/Data
+          -m ${FILE_PERMS} ${_GROUP_OPT_UNIX} -o ${datadir}/Data
 
 # Install the Java-based config editor if possible.
 install-gui:
