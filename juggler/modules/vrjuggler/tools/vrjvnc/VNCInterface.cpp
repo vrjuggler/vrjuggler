@@ -331,19 +331,22 @@ Rectangle VNCInterface::merge(const Rectangle &r1, const Rectangle &r2)
 
 void VNCInterface::copyRectToFramebuffer(char *buf, int x, int y, int w, int h)
 {
-   int bpp = mPf.size / 8;
-   char *fbptr = mFramebuffer + (y * mWidth + x) * bpp;
+   int bytes_per_pixel = mPf.size / 8;
+
+   // Find start of the target area in the frame buffer
+   char *fbptr = mFramebuffer + (y * mWidth + x) * bytes_per_pixel;
 
    // Copy the contents of the rectangle buffer
+   // - Copy one horizontal line at a time
    while (h > 0)
    {
       // Copy memory
-      memcpy(fbptr, buf, w * bpp);
+      memcpy(fbptr, buf, w * bytes_per_pixel);
 
       // Update buffer positions
-      fbptr += mWidth * bpp;
-      buf   += w * bpp;
-      h     -= 1;
+      fbptr += mWidth * bytes_per_pixel;     // Add size of fb line to get to next line in rect
+      buf   += w * bytes_per_pixel;          // Get to next start line in src
+      h     -= 1;                            // Decrement line (height) count
    }
 }
 
@@ -656,9 +659,9 @@ void VNCInterface::handleVNCFramebufferUpdate()
    readData((char *) &fu + 1, sz_rfbFramebufferUpdateMsg - 1);
    int num_rectangles = Swap16IfLE(fu.nRects);
 
-   vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL)
+   vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
       << "fu.nRects == " << fu.nRects << std::endl << vprDEBUG_FLUSH;
-   vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL)
+   vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
       << "num_rectangles == " << num_rectangles << std::endl << vprDEBUG_FLUSH;
 
    // Read the rectangles and update the framebuffer

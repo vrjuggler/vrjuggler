@@ -44,6 +44,8 @@
 #include <gadget/Type/KeyboardInterface.h>
 #include <vector>
 
+#include <vpr/Util/StatCollector.h>
+
 #include <VNCInterface.h>
 
 
@@ -78,6 +80,10 @@ public:
     */
    void draw();
 
+   /** Print texture upload stats
+   */
+   void printStats();
+
 protected:     // Helpers
    /** Current state of selection */
    enum Selection
@@ -101,6 +107,8 @@ protected:     // Helpers
    void drawSphere(float radius, gmtl::Point3f offset, int parts=4);
 
    void drawBox(const gmtl::AABoxf& box);
+
+   void drawCylinder(const gmtl::AABoxf& cyBox, unsigned majorAxis, unsigned slices=5);
 
    inline void setColorIfState(gmtl::Vec3f true_color, gmtl::Vec3f false_color, Selection state1, Selection state2)
    {
@@ -187,6 +195,11 @@ private:
 
    // Debugging stuff
    GLUquadric*   mSphereQuad;       /**< Sphere rep for draw "points" */
+   GLUquadric*   mCylinderQuad;     /**< Quad for the border cylinders */
+
+   // Stat collection
+   vpr::StatCollector<double,true>     mTextureUploadRate;     /**< Texture upload stats/time in MBs */
+   vpr::StatCollector<double,false>    mTextureUpdateCount;    /**< Texture upload counts in MB */
 };
 
 }
