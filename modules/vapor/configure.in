@@ -518,81 +518,20 @@ VPR_SRCDIR='$(VPRROOT_ABS)'
 UNIX_VPRROOT_ABS="$VPRROOT_ABS"
 UNIX_JUGGLERROOT_ABS="$JUGGLERROOT_ABS"
 
-# Variables set in Makefiles found in the application trees.  All variables
-# listed are for use only in the Makefile.in's found in that tree unless
-# otherwise noted.  They are used in the following way:
-#
-#     * APP_EXTRA_FLAGS: Extra flags for the compiler and linker.
-#     * APP_VPR_LIBS_BASIC: The basic VPR library.
-#     * APP_VPR_LIBS_BASIC_INST: Same as the above but is for installed
-#       Makefiles.
-#     * APP_LIBS_BASIC: The _most basic_ basic libraries needed for compiling
-#       (e.g., -lpthread).
-#     * APP_EXTRA_LIBS_BEGIN: Options used at the beginning of the list of
-#       extra libraries.
-#     * APP_EXTRA_LIBS_END: Options used at the end of the list of extra
-#       libraries.
-#     * APP_EXTRA_LIBS_BASIC: A basic set of extra libraries and linker flags
-#       needed for compiling.  These are put after those listed in the previous
-#       variables in the compile line.
-#
+# Put together the basic information needed to compile VPR applications.
+if test "x$OS_TYPE" = "xWin32" ; then
+    APP_EXTRA_LIBS="$LDFLAGS $LIBS $NSPR_LIB comctl32.lib user32.lib gdi32.lib ws2_32.lib"
+else
+    APP_EXTRA_LIBS="$LDFLAGS $PTHREAD_ARG $LIBS $NSPR_LDFLAGS $NSPR_LIB $PTHREAD_LIB $SEM_LIB $SOCKET_LIB"
+fi
+
+VJ_APP_COMPILER($CC, $CFLAGS, $CXX, $CXXFLAGS, $DBG_FLAGS, $OPT_FLAGS,
+                VPR_BASE_DIR, $DEFS, $INCLUDES, ${_EXTRA_FLAGS})
+VJ_APP_LINKER($CXX, $EXTRA_LINK_FLAGS, $LDOPTS_DBG, $LDOPTS_OPT, VPR_BASE_DIR,
+              vpr, $APP_EXTRA_LIBS)
+
 APP_BASE_DIR='$(topdir)/instlinks'
 APP_BASE_DIR_INST='$(VPR_BASE_DIR)'
-APP_EXTRA_FLAGS="${_EXTRA_FLAGS} $X_INCLUDES"
-
-if test "$OS_TYPE" = "UNIX" ; then
-    if test "$PLATFORM" = "IRIX" ; then
-        APP_VPR_LIBS_BEGIN="-B static -L\$(VPR_BASE_DIR)/lib${LIBBITSUF}"
-        APP_VPR_LIBS_END=''
-        APP_VPR_LIBS_BASIC='-lvpr'
-
-        APP_VPR_LIBS_BEGIN_INST="-B dynamic -L\$(VPR_BASE_DIR)/lib${LIBBITSUF}"
-        APP_VPR_LIBS_END_INST="-Wl,-rpath,\$(VPR_BASE_DIR)/lib$LIBBITSUF"
-        APP_VPR_LIBS_BASIC_INST='-lvpr'
-
-        APP_EXTRA_LIBS_BEGIN='-B dynamic'
-        APP_EXTRA_LIBS_END="$NSPR_LDFLAGS $NSPR_LIB $PTHREAD_LIB $SEM_LIB $SOCKET_LIB"
-    elif test "x$GXX" = "xyes" -a "x$PLATFORM" != "xDarwin" ; then
-        APP_VPR_LIBS_BEGIN="-Wl,-Bstatic -L\$(VPR_BASE_DIR)/lib${LIBBITSUF}"
-        APP_VPR_LIBS_END=''
-        APP_VPR_LIBS_BASIC='-lvpr'
-
-        APP_VPR_LIBS_BEGIN_INST="-Wl,-Bdynamic -L\$(VPR_BASE_DIR)/lib${LIBBITSUF}"
-        APP_VPR_LIBS_END_INST="-Wl,-rpath,\$(VPR_BASE_DIR)/lib$LIBBITSUF"
-        APP_VPR_LIBS_BASIC_INST="$APP_VPR_LIBS_BASIC"
-
-        APP_EXTRA_LIBS_BEGIN='-Wl,-Bdynamic'
-        APP_EXTRA_LIBS_END="$NSPR_LDFLAGS $NSPR_LIB $PTHREAD_LIB $SEM_LIB $SOCKET_LIB"
-    else
-        # For now, we are disabling static linking for the sample applications
-        # when compiled in a developer's build tree.  This is only the csae on
-        # non-IRIX platforms.
-        APP_VPR_LIBS_BEGIN="-L\$(VPR_BASE_DIR)/lib${LIBBITSUF}"
-        APP_VPR_LIBS_END=''
-        APP_VPR_LIBS_BASIC='-lvpr'
-
-        APP_VPR_LIBS_BEGIN_INST="$APP_VPR_LIBS_BEGIN"
-        APP_VPR_LIBS_END_INST="$APP_VPR_LIBS_END"
-        APP_VPR_LIBS_BASIC_INST="$APP_VPR_LIBS_BASIC"
-
-        APP_EXTRA_LIBS_END="$NSPR_LDFLAGS $NSPR_LIB $PTHREAD_LIB $SEM_LIB $SOCKET_LIB"
-    fi
-
-    APP_EXTRA_LIBS_BASIC="$LDFLAGS $PTHREAD_ARG $LIBS"
-
-    DYLIB_DEPS="$NSPR_LDFLAGS $NSPR_LIB"
-elif test "$OS_TYPE" = "Win32" ; then
-    APP_VPR_LIBS_BEGIN="/link /libpath:\$(VPR_BASE_DIR)/lib/debug $NSPR_LDFLAGS"
-    APP_VPR_LIBS_END=''
-    APP_VPR_LIBS_BASIC='vpr.lib'
-    APP_VPR_LIBS_BEGIN_INST="$APP_VPR_LIBS_BEGIN"
-    APP_VPR_LIBS_END_INST="$APP_VPR_LIBS_END"
-    APP_VPR_LIBS_BASIC_INST="$APP_VPR_LIBS_BASIC"
-    APP_LIBS_BASIC="$NSPR_LIB comctl32.lib user32.lib gdi32.lib ws2_32.lib"
-    APP_EXTRA_LIBS_BASIC="$LDFLAGS $LIBS"
-
-    DYLIB_DEPS="$NSPR_LDFLAGS $NSPR_LIB ws2_32.lib"
-fi
 
 # Translate paths from UNIX-style to Win32.
 if test "x$OS_TYPE" = "xWin32" ; then
@@ -615,10 +554,17 @@ if test "x$OS_TYPE" = "xWin32" ; then
     LN_S='cp'
     MTREE_CMD=`unix2dos "$MTREE_CMD"`
 
-    APP_EXTRA_LIBS_BASIC=`unix2dos "$APP_EXTRA_LIBS_BASIC"`
+    APP_EXTRA_LIBS=`unix2dos "$APP_EXTRA_LIBS"`
 else
     SAFE_VPRROOT_ABS="$VPRROOT_ABS"
     SAFE_JUGGLERROOT_ABS="$JUGGLERROOT_ABS"
+fi
+
+# Dependencies for dynamic/shared libraries.
+if test "x$OS_TYPE" = "xWin32" ; then
+    DYLIB_DEPS="$NSPR_LDFLAGS $NSPR_LIB ws2_32.lib"
+else
+    DYLIB_DEPS="$NSPR_LDFLAGS $NSPR_LIB"
 fi
 
 # Information needed to generate vpr-config.
@@ -707,17 +653,6 @@ AC_SUBST(SOCKET_ABS)
 
 AC_SUBST(APP_BASE_DIR)
 AC_SUBST(APP_BASE_DIR_INST)
-AC_SUBST(APP_EXTRA_FLAGS)
-AC_SUBST(APP_VPR_LIBS_BEGIN)
-AC_SUBST(APP_VPR_LIBS_END)
-AC_SUBST(APP_VPR_LIBS_BASIC)
-AC_SUBST(APP_VPR_LIBS_BEGIN_INST)
-AC_SUBST(APP_VPR_LIBS_END_INST)
-AC_SUBST(APP_VPR_LIBS_BASIC_INST)
-AC_SUBST(APP_LIBS_BASIC)
-AC_SUBST(APP_EXTRA_LIBS_BEGIN)
-AC_SUBST(APP_EXTRA_LIBS_END)
-AC_SUBST(APP_EXTRA_LIBS_BASIC)
 
 AC_SUBST(DYLIB_DEPS)
 
