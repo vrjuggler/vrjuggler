@@ -61,9 +61,21 @@ bool InputLogger::config( jccl::ConfigChunkPtr chunk)
    mStartStopButton.init(start_name);
    mStampButton.init(stamp_name);
 
-   vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_WARNING_LVL) << "\n--- LOGGER: Configured ---\n" << vprDEBUG_FLUSH;
-   vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_WARNING_LVL) << "StartStop: " << start_name << std::endl
-                                                     << "Stamp: " << stamp_name << std::endl << vprDEBUG_FLUSH;
+   int max_frame_rate = chunk->getProperty<int>("max_framerate");
+
+   if(-1 != max_frame_rate)   // If we are supposed to limit frame rate
+   {
+      mLimitFrameRate = true;
+
+      mPrevFrameTimestamp.setNow();             // Initialize value
+      mMinFrameTime.set( (1000/max_frame_rate), vpr::Interval::Msec);
+   }
+
+   vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CONFIG_LVL) << "\n--- LOGGER: Configured ---\n" << vprDEBUG_FLUSH;
+   vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CONFIG_LVL) << "StartStop: " << start_name << std::endl
+                                                     << "Stamp: " << stamp_name << std::endl 
+                                                     << "Max framerate: " << max_frame_rate << std::endl
+                                                     << "Min frametime: " << mMinFrameTime.msec() << "ms" << std::endl << vprDEBUG_FLUSH;
 
    return true;
 }
@@ -110,6 +122,9 @@ void InputLogger::process()
       if(Recording == mCurState)
       {
          addRecordingSample();
+
+         if(mLimitFrameRate)
+         {  limitFramerate(); }
       }
       else if(Playing == mCurState)
       {
@@ -401,6 +416,23 @@ void InputLogger::playNextSample()
    }
    
 }
+
+void InputLogger::limitFramerate()
+{
+   vprASSERT(mLimitFrameRate);
+
+   vpr::Interval cur_frame_time = vpr::Interval::now() - mPrevFrameTimestamp;
+   if(cur_frame_time < mMinFrameTime)
+   {
+      vpr::Interval sleep_time = (mMinFrameTime - cur_frame_time);
+      std::cout << "Sleeping: " << sleep_time.msec() << "ms\n";
+      vprASSERT(sleep_time.msec() > 0);
+      vpr::System::msleep(sleep_time.msec());                     // Sleep
+   }
+   
+   mPrevFrameTimestamp.setNow();
+}
+
 
 } // namespace gadget
 
