@@ -134,7 +134,7 @@ fi
 # integer.
 major=`echo $ver_num | sed -e 's/^\([0-9][0-9]*\)\..*/\1/'`
 minor=`echo $ver_num | sed -e 's/^.*\.\([0-9][0-9]*\)\..*$/\1/'`
-patch=`echo $ver_num | sed -e 's/^.*\.\([0-9][0-9]*\)$/\1/'`
+patch=`echo $ver_num | sed -e 's/^.*\.\([0-9][0-9]*\)-.*$/\1/'`
 number=`printf "%03d%03d%03d\n" $major $minor $patch | sed -e 's/^[0]*\([^0].*\)$/\1/'`
 
 # Create the temporary ouptut file.
