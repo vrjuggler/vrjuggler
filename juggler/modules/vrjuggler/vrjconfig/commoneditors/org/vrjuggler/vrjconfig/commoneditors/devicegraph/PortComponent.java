@@ -144,9 +144,6 @@ public class PortComponent
     * Sets the port to be used by this component.  The port's attributes are
     * modified to use absolute positioning.  If the caller were to revert back
     * to relative positioning, the results would be undesirable.
-    *
-    * @param renderer   the component acting as the renderer for the vertex
-    *                   that has our port as a child
     */
    public void setPort(DefaultPort port)
    {
