@@ -36,7 +36,7 @@ template <class value_type>
 class vjGuardedQueue
 {
 public:
-   vjGuardQueue()
+   vjGuardedQueue()
    {;}
 
    ~vjGuardedQueue()
