@@ -29,6 +29,7 @@ StreamStop = 0x3F
 ExamineParam = {
    "BirdStatus" : (0x0,2),
    "SoftwareRevision" : (0x01,2),
+   "BirdErrorCode" : (0x10,1),
    "ModelIdentification" : (0xF,10),
    "AddressingMode" : (0x13,1),
    "FbbAddress" : (0x15,1),
