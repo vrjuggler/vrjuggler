@@ -31,6 +31,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include <vrj/vrjConfig.h>
+#include <boost/concept_check.hpp>
 #include <jccl/Config/ConfigElement.h>
 #include <jccl/RTRC/ConfigManager.h>
 #include <vrj/Display/Display.h>
@@ -297,6 +298,7 @@ int DisplayManager::closeDisplay(Display* disp, bool notifyDrawMgr)
    mInactiveDisplays.erase( std::remove(mInactiveDisplays.begin(), mInactiveDisplays.end(), disp),
                             mInactiveDisplays.end());
    vprASSERT(num_before_close == (1+mActiveDisplays.size() + mInactiveDisplays.size()));
+   boost::ignore_unused_variable_warning(num_before_close);
 
    // Delete the object
    // XXX: Memory leak.  Can't delete display here because the draw manager
