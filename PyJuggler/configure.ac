@@ -1,6 +1,6 @@
 # ************** <auto-copyright.pl BEGIN do not edit this line> **************
 #
-# PyJuggler is (C) Copyright 2002, 2003 by Patrick Hartling
+# PyJuggler is (C) Copyright 2002-2004 by Patrick Hartling
 #
 # This library is free software; you can redistribute it and/or
 # modify it under the terms of the GNU Library General Public
@@ -27,7 +27,7 @@
 
 AC_INIT([PyJuggler], [0.8], [vrjuggler-devel@lists.sourceforge.net])
 AC_PREREQ([2.53])
-AC_COPYRIGHT([PyJuggler is (C) Copyright 2002, 2003 by Patrick Hartling])
+AC_COPYRIGHT([PyJuggler is (C) Copyright 2002-2004 by Patrick Hartling])
 AC_REVISION([$Revision$])
 AC_CONFIG_SRCDIR([src/gadgeteer-wrappers.h])
 AC_CONFIG_AUX_DIR([Doozer++/scripts])
