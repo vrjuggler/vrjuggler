@@ -19,11 +19,14 @@ public:
    {;}
 
    //: Construct from a matrix
+   //! ARGS: mat - A matrix to construct the coord from
+   //! POST: this is constrcuted with pos and orientation
+   //+       specified by the matrix.
    vjCoord(vjMatrix mat);
 
 public:
-   vjVec3   pos;        // The position    - XYZ position
-   vjVec3   orient;     // The orientation - XYZ Euler angles
+   vjVec3   pos;        //: The position    - XYZ position
+   vjVec3   orient;     //: The orientation - XYZ Euler angles
 };
 
 #endif
