@@ -46,7 +46,8 @@ class StringData : public InputData
 {
    // Hack around a GCC 3.3 bug on Mac OS X 10.3 that shows up with
    // boost::is_polymorphic.
-#if defined(__MACH__) && defined(__APPLE_CC__) && __APPLE_CC__ <= 1666
+#if defined(__MACH__) && defined(__APPLE_CC__) && defined(__GNUC__) && \
+    __GNUC__ == 3 && __GNUC_MINOR__ == 3
    bool dummy_;
 #endif
 
