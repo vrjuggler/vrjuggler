@@ -326,7 +326,7 @@ sub make_CXXFLAGS ($;$)
       my $dir;
       foreach $dir ( split(/\s+/, "$tweek_extra_include_dirs") )
       {
-         $tweek_extra_includes .= " -I@includedir@/$dir";
+         $tweek_extra_includes .= qq( -I@includedir@/$dir);
       }
    }
 
@@ -383,7 +383,7 @@ sub make_LDFLAGS ($;$$)
    $ldflags .= ($use_linker ? qq( @tweek_ldflags_linker@)
                             : qq( @tweek_ldflags_compiler@));
 
-   my $full_ldflags = "$ldflags $static_begin @tweek_libs@ $static_end";
+   my $full_ldflags = qq($ldflags $static_begin @tweek_libs@ $static_end);
    $full_ldflags    =~ s/\s{2,}/ /g;
 
    return "$full_ldflags";
@@ -414,7 +414,7 @@ sub make_EXTRA_LDFLAGS ($;$$)
    my $tweek_extra_libs_addtl = ($print_all ? qq(@tweek_extra_libs_juggler@)
                                             : '');
 
-   my $full_extra_ldflags = "$extra_ldflags @tweek_extra_libs@ " .
+   my $full_extra_ldflags = qq($extra_ldflags @tweek_extra_libs@ ) .
                             "$tweek_extra_libs_addtl";
    $full_extra_ldflags    =~ s/\s{2,}/ /g;
 
