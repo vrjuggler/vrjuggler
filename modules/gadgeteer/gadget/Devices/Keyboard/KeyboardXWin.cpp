@@ -87,9 +87,12 @@ bool vjXWinKeyboard::config(vjConfigChunk *c)
                << m_mouse_sensitivity << endl << vjDEBUG_FLUSH;
     vjDEBUG_END(vjDBG_INPUT_MGR, vjDBG_STATE_LVL) << endl << vjDEBUG_FLUSH;
 
-    // Note: that in IRIX, usleep of 0 does not yield.
     mSleepTimeMS = c->getProperty("sleep_time");
-    
+
+    // HACK: Use a default time until config file has defaults
+    if(mSleepTimeMS == 0)
+       mSleepTimeMS = 50;
+
     return true;
 }
 
@@ -121,26 +124,17 @@ void vjXWinKeyboard::controlLoop(void* nullParam)
       sample();
       long usleep_time; // to be set...
 
-      //KEVIN:
-      // IRIX usleep HACK!
-      // from the IRIX usleep man page:
-      // "...The seconds argument must be less than 1,000,000.  
-      //     If the value of seconds is 0, the call has no effect...."
-      //
-      // So... make usleep_time at least 1;
-      // NOTE: I could have put this into the config() function, 
-      //       so it didn't happen each frame, but then we'd be 
-      //       doing a usleep( 1000 ), not a 1.
+      // HACK: usleep(0) does not do anything
       if (1 > usleep_time)
       {
          usleep_time = 1;
       }
-      
+
       else
       {
          usleep_time = mSleepTimeMS*1000;
       }
-      
+
       usleep( usleep_time );
       //vjDEBUG(vjDBG_ALL,0) << "xwinKeyboard: loop\n" << vjDEBUG_FLUSH;
    }
