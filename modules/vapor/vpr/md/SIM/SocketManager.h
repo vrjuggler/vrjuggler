@@ -159,7 +159,7 @@ public:
 
    /**
     * Sets a socket s to listen for connections.
-    * 
+    *
     * @pre The listen call applies only to sockets of type SOCK_STREAM.
     *
     * @return true for success, false for error
@@ -169,7 +169,7 @@ public:
 
 // extra stuff...
 public:
-      
+
 
    void findRoute(vpr::SocketImplSIM* src_sock, vpr::SocketImplSIM* dest_sock);
 
@@ -210,7 +210,7 @@ protected:  // -- Internal helpers -- //
     * This is basically the opposite of assignToNode (and unbind if you will)
     */
    vpr::ReturnStatus unassignFromNode (vpr::SocketImplSIM* handle);
-   
+
    /** Make sure that the local data structures know about the node at the given address
    * @pre addr is a valid address in the network
    * @return success  completed successfully
@@ -229,6 +229,10 @@ protected:
    std::map<vpr::InetAddrSIM, std::pair<vpr::SocketStreamImplSIM*, int> > mListenerList;
    vpr::Mutex mListenerListMutex;
 
+
+   // List of the nodes in the system indexed by IP address
+   // NOTE: Local host will have two mappings
+   // (one for the "localhost" address and one for the node's real address)
    typedef std::map<vpr::Uint32, vpr::sim::NetworkNodePtr> node_map_t;
    node_map_t     mNetworkNodes;    /**< The nodes in the managed network */
    vpr::Mutex     mNetworkNodesMutex;
