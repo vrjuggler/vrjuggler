@@ -93,12 +93,24 @@ if ( $use_gcc !~ /^y/i && $vpr_default_isa =~ /^mips[34]/ )
 
 # Set up variables used to determine what the real prefix is.  This is
 # important when this script has been installed.
-$Win32    = (defined($ENV{'OS'}) && "$ENV{'OS'}" eq "Win32");
-$PATH_SEP = ($Win32 ? "\\" : "/");
+$Win32 = (defined($ENV{'OS'}) && "$ENV{'OS'}" =~ /^win/i);
 
+# Get the directory where this script is located.
 my $base_dir = (fileparse("$0"))[1];
-$base_dir    =~ s|$PATH_SEP$||o;       # Strip off the trailing slash
-$base_dir    =~ s|${PATH_SEP}bin$||io; # If the path ends in "/bin", strip it
+
+# If we are on Windows and $base_dir contains \'s, set $PATH_SEP to \.
+# Otherwise, we use / for the path separator.
+$PATH_SEP = (($Win32 && $base_dir =~ /\\/) ? "\\" : "/");
+
+$base_dir =~ s|$PATH_SEP$||o;       # Strip off the trailing slash
+$base_dir =~ s|${PATH_SEP}bin$||io; # If the path ends in "/bin", strip it
+
+# If we are on Windows, make sure that $base_dir is a full DOS path.
+if ( $Win32  && $base_dir !~ /^[A-Za-z]:/ )
+{
+   chomp($base_dir = `cygpath -w $base_dir`);
+   $base_dir =~ s|\\|/|g;   # We want / as the path separator
+}
 
 # $exec_prefix may refer to $prefix, so it must be set after $prefix is
 # defined.
