@@ -8,11 +8,16 @@
 #include <Threads/Thread.h>
 #include <Threads/ThreadFunctor.h>
 #include <Threads/TSTable.h>
+#include <Threads/TSObject.h>
+#include <Threads/TSObjectProxy.h>
+#include <Threads/ThreadManager.h>
 #include <Sync/Mutex.h>
 
 #include <vector>
 
 #define ThreadTest_INC_COUNT 5000
+
+//namespace vprTest{
 
 class ThreadTest : public TestCase
 {
@@ -36,12 +41,20 @@ public:
    {
    }
 
-   void testThreadCreation()
+   // =========================================================================
+   // thread CreateJoin test
+   // =========================================================================
+   void testCreateJoin()
    {
       // Spawn off a bunch of threads (m)
       // Have each one increment counter n times
       // join all threads
       // Make sure counter is of valid value
+      
+      
+      //std::cout<<"]==================================================\n"<<std::flush; 
+      //std::cout<<" Thread CreateJoin: \n"<<std::flush; 
+      
       const int num_threads(10);
       std::vector<vpr::ThreadMemberFunctor<ThreadTest>*> functors(num_threads);
       std::vector<vpr::Thread*> threads(num_threads);
@@ -64,6 +77,8 @@ public:
 
       assertLongsEqual((num_threads*ThreadTest_INC_COUNT), mCounter);
       //assert(mCounter == (num_threads*50000));
+      
+      std::cout << " done\n" << std::flush;
    }
 
    void incCounter(void* arg)
@@ -74,16 +89,98 @@ public:
          {
             long temp_counter = mCounter;
             mCounter = 0;
-            //PR_Sleep(PR_MicrosecondsToInterval(20));    // Sleep for 10 micro seconds
-            //PR_Sleep(200);
+            vpr::System::msleep(20);    // Sleep for 20 micro seconds
             mCounter = temp_counter + 1;
          }
          mItemProtectionMutex->release();
          //gfx::Thread::yield();
       }
    }
+   
+   // =========================================================================
+   // thread SuspendResume test
+   // =========================================================================
+   void counter1Func(void* arg)
+   {
+      for(int i=0;i<10000;i++)
+      {
+         vpr::System::msleep(10);    // Sleep for 20 micro seconds
+         mCounterMutex.acquire();
+         {
+            long temp_counter = mCounter;
+            mCounter = 0;
+            vpr::System::msleep(10);    // Sleep for 20 micro seconds
+            mCounter = temp_counter + 1;
+         }
+         mCounterMutex.release();
+      }         
+   } 
+     
+   long sampleCompare(int num)
+   {
+      long sampleValue1=0;
+      long sampleValue2=0;
+      
+      if (num==1) {
+         mCounterMutex.acquire();
+            sampleValue1=mCounter;
+         mCounterMutex.release();
+      }
+      else {
+         mCounter1Mutex.acquire();
+            sampleValue1=mCounter1;
+         mCounter1Mutex.release();
+      }
+      
+      vpr::System::msleep(500 );      
+      
+      if (num==1) {
+         mCounterMutex.acquire();
+            sampleValue2=mCounter;
+         mCounterMutex.release();
+      }
+      else {
+         mCounter1Mutex.acquire();
+            sampleValue2=mCounter1;
+         mCounter1Mutex.release();
+      }
+      
+      return sampleValue2-sampleValue1;
+   }
 
-   // --------------------------------------------------------------------------- //
+   
+   void testSuspendResume()
+   {
+      //std::cout<<"]==================================================\n"<<std::flush; 
+      //std::cout<<" Thread SuspendResume: \n"<<std::flush;
+      
+      mCounter=0;
+      
+      // spawn an counter thread
+      vpr::ThreadMemberFunctor<ThreadTest> counter_functor( this, &ThreadTest::counter1Func );
+      vpr::Thread counter_thread( & counter_functor);
+      
+      vpr::System::msleep(100 );
+      
+      assertTest(sampleCompare(1)!=0 && "Counter doesn't work");
+      
+      counter_thread.suspend();
+      vpr::System::msleep(100);
+        
+      assertTest(sampleCompare(1)==0 && "thread can not be suspended");
+      
+      counter_thread.resume();
+      vpr::System::msleep(100);
+      
+      assertTest(sampleCompare(1)!=0 && "thread can not be resumed");
+      
+      counter_thread.kill();
+      std::cout << " done\n" << std::flush;
+   }
+
+   // =========================================================================
+   // interactive test
+   // =========================================================================
    void interactiveTestCPUGrind()
    {
       // Spawn off user specified number of threads
@@ -187,7 +284,9 @@ public:
    static Test* suite()
    {
       TestSuite *test_suite = new TestSuite ("ThreadTest");
-      test_suite->addTest( new TestCaller<ThreadTest>("testThreadCreation", &ThreadTest::testThreadCreation));
+      test_suite->addTest( new TestCaller<ThreadTest>("testCreateJoin", &ThreadTest::testCreateJoin));
+      test_suite->addTest( new TestCaller<ThreadTest>("testSuspendResume", &ThreadTest::testSuspendResume));
+//      test_suite->addTest( new TestCaller<ThreadTest>("testPriority", &ThreadTest::testPriority));
       test_suite->addTest( new TestCaller<ThreadTest>("testThreadStackSize", &ThreadTest::testThreadStackSize));
       return test_suite;
    }
@@ -201,12 +300,14 @@ public:
 
 protected:
    vpr::Mutex*   mItemProtectionMutex;         // Protect an exclusive item
-   long           mCounter;                     // A counter that we will use for now
+   long           mCounter;                    // A counter that we will use for now
+   vpr::Mutex     mCounterMutex;
+   long           mCounter1;                   // A nother counter
+   vpr::Mutex     mCounter1Mutex;
+   long           mNumRecursions;              // Number of recursions to go
+   long           mStackSpaceConsumed;         // Amount of stack space that we have used
 
-   long           mNumRecursions;               // Number of recursions to go
-   long           mStackSpaceConsumed;          // Amount of stack space that we have used
-
-   bool           mStopGrindingCPU;             // Flag to tell the test to stop grinding the CPU
+   bool           mStopGrindingCPU;            // Flag to tell the test to stop grinding the CPU
 };
 
-
+//};
