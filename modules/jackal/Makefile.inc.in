@@ -50,6 +50,8 @@ top_srcdir	= @top_srcdir@
 DBG_FLAGS	= -D_DEBUG @DBG_FLAGS@
 OPT_FLAGS	= -D_OPT @OPT_FLAGS@
 
+JAXP_JAR		= @JAXP_JAR@
+
 # =============================================================================
 # Build and installation directory naming and ownership information.
 # =============================================================================
@@ -180,31 +182,29 @@ else
               $(LN_S) $(LIBDIR_BASE)/$$lib* ./ ;			\
           done
 endif
-	cd $(instlinks) && rm -rf ./$(JCCL_SHARE_DIR) &&		\
-          $(SHELL) $(MKINSTALLDIRS) ./$(JCCL_SHARE_DIR)
-	cd $(instlinks)/$(JCCL_SHARE_DIR) && rm -f ./data &&		\
-          ln -s $(JCCLROOT_ABS)/data ./data
-	cd $(instlinks)/$(JCCL_SHARE_DIR) && rm -f ./samples &&		\
-          ln -s $(JCCLROOT_ABS)/samples ./samples
-ifndef NO_JAVA_GUI
-ifeq ($(BUILD_VJCONTROL), Y)
-	cd $(instlinks)/bin && $(RM_LN) ./VjControl.jar &&		\
-          $(LN_S) $(topdir)/VjControl/VjControl.jar ./
-	cd $(instlinks)/bin && $(RM_LN) ./vjcontrol &&			\
-          sed -e 's,#JCCL_SHARE_DIR#,$(JCCL_SHARE_DIR),g'		\
-              $(JCCLROOT_ABS)/VjControl/vjcontrol.sh > vjcontrol &&	\
-          chmod $(EXEC_PERMS) vjcontrol
-	cd $(instlinks)/bin && $(RM_LN) ./ConfigUpdater.jar &&		\
-          $(LN_S) $(topdir)/tools/ConfigUpdater/ConfigUpdater.jar ./
-	cd $(instlinks)/bin && $(RM_LN) ./cfgupdater &&			\
-          sed -e 's,#JCCL_SHARE_DIR#,$(JCCL_SHARE_DIR),g'		\
-            $(JCCLROOT_ABS)/tools/ConfigUpdater/cfgupdater.sh > cfgupdater && \
-          chmod $(EXEC_PERMS) cfgupdater
-endif
-endif
-	$(PERL) $(scriptdir)/incvt.pl -i $(topdir)/config.status	\
-            -t $(JCCLROOT_ABS)/jccl-config.in -p 'use_base_dir=yes'	\
-            -v $(JCCLROOT_ABS)/VERSION -o $(instlinks)/bin/jccl-config -x
+	cd $(instlinks)/bin && \
+		for jar in `echo "$(JAXP_JAR)" | sed -e 's/$(JCPS)/ /g'`; do \
+			$(RM_LN) ./`basename $$jar` && $(LN_S) $$jar ./; \
+		done
+#	cd $(instlinks) && rm -rf ./$(JCCL_SHARE_DIR) &&		\
+#          $(SHELL) $(MKINSTALLDIRS) ./$(JCCL_SHARE_DIR)
+#	cd $(instlinks)/$(JCCL_SHARE_DIR) && rm -f ./data &&		\
+#          ln -s $(JCCLROOT_ABS)/data ./data
+#	cd $(instlinks)/$(JCCL_SHARE_DIR) && rm -f ./samples &&		\
+#          ln -s $(JCCLROOT_ABS)/samples ./samples
+#ifndef NO_JAVA_GUI
+#ifeq ($(BUILD_VJCONTROL), Y)
+#	cd $(instlinks)/bin && $(RM_LN) ./ConfigUpdater.jar &&		\
+#          $(LN_S) $(topdir)/tools/ConfigUpdater/ConfigUpdater.jar ./
+#	cd $(instlinks)/bin && $(RM_LN) ./cfgupdater &&			\
+#          sed -e 's,#JCCL_SHARE_DIR#,$(JCCL_SHARE_DIR),g'		\
+#            $(JCCLROOT_ABS)/tools/ConfigUpdater/cfgupdater.sh > cfgupdater && \
+#          chmod $(EXEC_PERMS) cfgupdater
+#endif
+#endif
+#	$(PERL) $(scriptdir)/incvt.pl -i $(topdir)/config.status	\
+#            -t $(JCCLROOT_ABS)/jccl-config.in -p 'use_base_dir=yes'	\
+#            -v $(JCCLROOT_ABS)/VERSION -o $(instlinks)/bin/jccl-config -x
 	@echo "\n\n"
 	@echo "---------------------------------------------------------------"
 	@echo 'You should now set $$JCCL_BASE_DIR to:'
