@@ -38,13 +38,15 @@
 
 namespace vpr {
 
-//-----------------------------------------------------------------
-//: Base Thread Specific object.
-//
-// Used so that we can have an array of heterogenous TS objects.
-// (ie. We get some type safety)
-// Also defines some members that all TS Objects need.
-//-----------------------------------------------------------------
+/**
+ * Base Thread Specific object.
+ *
+ * Used so that we can have an array of heterogenous TS objects.
+ * (ie. We get some type safety)
+ * Also defines some members that all TS Objects need.
+ *
+ * @author Allen Bierbaum
+ */
 class TSBaseObject
 {
 public:

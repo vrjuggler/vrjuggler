@@ -43,13 +43,15 @@
 
 namespace vpr {
 
-//-----------------------------------------------------------------
-//: This class is the actual TS Table.
-//
-// This class maintains a table that has ptrs to all the TS data
-// in the system for a specific thread.
-// Only the owning thread may actually access the table
-//-----------------------------------------------------------------
+/**
+ * This class is the actual TS Table.
+ *
+ * This class maintains a table that has ptrs to all the TS data
+ * in the system for a specific thread.
+ * Only the owning thread may actually access the table
+ *
+ * @author Allen Bierbaum
+ */
 class VPR_CLASS_API TSTable
 {
 public:

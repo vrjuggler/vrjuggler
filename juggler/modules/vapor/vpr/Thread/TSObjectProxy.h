@@ -43,18 +43,18 @@
 
 namespace vpr {
 
-//-----------------------------------------------------------------
-//: This is a smart pointer to a thread specific object.
-//
-//  This allows users to have an object that has a seperate copy
-// for each thread.
-//
-//! NOTE: The object used for type T must have a default constructor
-//+       This class creates each instance of the real objects
-//+       using this default constructor.
-//-----------------------------------------------------------------
-//! PUBLIC_API:
-
+/**
+ * This is a smart pointer to a thread specific object.
+ *
+ * This allows users to have an object that has a seperate copy
+ * for each thread.
+ *
+ * NOTE: The object used for type T must have a default constructor
+ *       This class creates each instance of the real objects
+ *       using this default constructor.
+ *
+ * @author Allen Bierbaum
+ */
 template <class T>
 class TSObjectProxy
 {
