@@ -67,7 +67,7 @@ bool DigitalProxy::config(jccl::ConfigChunkPtr chunk)
 void DigitalProxy::updateData()
 {
 
-   if (!mStupified)
+   if (!isStupified())
    {
       int old_state = m_data.getDigital();
       m_data = mTypedDevice->getDigitalData(m_unitNum);

@@ -87,7 +87,7 @@ public:
    {
       const int defaultDigital(Digital::OFF);
 
-      if(mStupified)
+      if(isStupified())
          return defaultDigital;
       else
          return m_data.getDigital();
@@ -102,7 +102,7 @@ public:
 
    Digital* getDigitalPtr()
    {
-      if(mStupified)
+      if(isStupified())
          return NULL;
       else
          return mTypedDevice;
@@ -119,7 +119,7 @@ public:
 
    virtual Input* getProxiedInputDevice()
    {
-      if(NULL == mTypedDevice)
+      if((NULL == mTypedDevice) || (mStupified))
          return NULL;
 
       Input* ret_val = dynamic_cast<Input*>(mTypedDevice);
