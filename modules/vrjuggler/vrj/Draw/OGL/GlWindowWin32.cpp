@@ -123,7 +123,6 @@ int GlWindowWin32::open()
    SetWindowLong(mWinHandle, GWL_USERDATA, (LPARAM) this);
 
    // We have a valid window, so... Create the context
-   //case WM_CREATE:
    mDeviceContext = GetDC(mWinHandle);            // Store the device context
    if ( false == setPixelFormat(mDeviceContext) ) // Select the pixel format
    {
@@ -162,11 +161,6 @@ void GlWindowWin32::becomeEventWindowDevice()
    // Set the parameters that we will need to get events
    gadget::EventWindowWin32::m_hWnd = mWinHandle;
 
-   // Start up the device
-   /*   Do it in out check event function
-   gadget::EventWindowWin32::startSampling();
-   */
-
    gadget::Input* dev_ptr = dynamic_cast<gadget::Input*>(this);
    vprASSERT( dev_ptr != NULL );
 
@@ -197,11 +191,6 @@ void GlWindowWin32::removeEventWindowDevice()
  */
 int GlWindowWin32::close()
 {
-   //vprASSERT( !mXfuncLock.test() && "Attempting to close a display window that is locked" );
-   // Assert that we have not impllemented correct shutdown for the case that we
-   // are an event window as well
-   //vprASSERT(!mAreEventSource  && "Need to implement win32 window close with gadget::EventWindow");
-
    // if not open, then don't bother.
    if ( !window_is_open )
    {
@@ -292,7 +281,7 @@ void GlWindowWin32::configWindow(vrj::Display* disp)
    mXDisplayName = disp_sys_elt->getProperty<std::string>("x11_pipes", mPipe);
    if (mXDisplayName == neg_one_STRING)    // Use display env
    {
-       const std::string DISPLAY_str("DISPLAY");    // DISPLAY_str[] = "DISPLAY";
+       const std::string DISPLAY_str("DISPLAY");
        const char* d = getenv(DISPLAY_str.c_str());
        if (NULL != d)
        {
@@ -605,9 +594,6 @@ bool GlWindowWin32::registerWindowClass()
    }
 }
 
-//----------------------//
-//      WinList         //
-//----------------------//
 void GlWindowWin32::addWindow(HWND handle, GlWindowWin32* glWin)
 {
    vprASSERT(glWin != NULL);
@@ -616,8 +602,6 @@ void GlWindowWin32::addWindow(HWND handle, GlWindowWin32* glWin)
    {
       mGlWinMap[handle] = glWin;
    }
-   //else
-   // vprASSERT(false);
 }
 
 void GlWindowWin32::removeWindow(HWND handle)
