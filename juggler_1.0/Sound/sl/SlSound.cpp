@@ -35,7 +35,7 @@
 #include <assert.h>
 #include <stdio.h>
 #include <string>
-#include "sl.h"                     // the SL library
+#include <sl.h>                     // the SL library
 #include <Sound/vjSoundEngine.h>    // engine baseclass
 #include <Sound/sl/SlSoundEngine.h> // my engine
 #include <Sound/vjSound.h>          // bass class...

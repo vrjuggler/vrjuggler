@@ -147,7 +147,7 @@ long long vjTimeStampSGI::maxval;
 /*
  * gettimeofday version
  */
-#include "Performance/vjTimeStampPosix.h"
+#include <Performance/vjTimeStampPosix.h>
 
 vjTimeStampPosix& vjTimeStampPosix::operator= (const vjTimeStampPosix& t2) {
     val = t2.val;
@@ -160,12 +160,3 @@ float vjTimeStampPosix::initval = 0.0;
 #elif VJ_PERFORMANCE == VJ_PERF_NONE
 // nothing to do here
 #endif // VJ_PERF_NONE
-
-
-
-
-
-
-
-
-

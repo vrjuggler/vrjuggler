@@ -37,7 +37,7 @@
 #include <assert.h>
 #include <stdio.h>
 #include <string>
-#include "sl.h"
+#include <sl.h>
 #include <Sound/sl/SlSoundEngine.h>
 
 #include <Sound/vjSound.h> // base class...

@@ -170,7 +170,7 @@ const std::string vjDBG_CONFIGstr("DBG_CONFIGDB");
 #endif
 
 
-#include "vjAssert.h"
+#include <Kernel/vjAssert.h>
 
 
 //------------------------------------------
