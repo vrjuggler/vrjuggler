@@ -153,7 +153,7 @@ void Flock::controlLoop(void* nullParam)
 
 int Flock::startSampling()
 {
-   // make sure birds aren't already started
+      // make sure birds aren't already started
    if (this->isActive() == true)
    {
       vprDEBUG(gadgetDBG_INPUT_MGR,2) << "gadget::Flock was already started."
@@ -245,7 +245,7 @@ int Flock::sample()
                                                mFlockOfBirds.yPos( i+1 ),
                                                mFlockOfBirds.zPos( i+1 ));
       */
-      gmtl::identity(transmitter_T_reciever);
+  /*    gmtl::identity(transmitter_T_reciever);
       gmtl::EulerAngleZYXf euler( gmtl::Math::deg2Rad(mFlockOfBirds.zRot( i+1 )),
                                   gmtl::Math::deg2Rad(mFlockOfBirds.yRot( i+1 )),
                                   gmtl::Math::deg2Rad(mFlockOfBirds.xRot( i+1 )) );
@@ -253,6 +253,15 @@ int Flock::sample()
       gmtl::setTrans( transmitter_T_reciever, gmtl::Vec3f( mFlockOfBirds.xPos( i+1 ),
                                                            mFlockOfBirds.yPos( i+1 ),
                                                            mFlockOfBirds.zPos( i+1 )) );
+     */ 
+      gmtl::identity(transmitter_T_reciever);
+      gmtl::EulerAngleZYXf euler( gmtl::Math::deg2Rad(mFlockOfBirds.zRot( i )),
+                                  gmtl::Math::deg2Rad(mFlockOfBirds.yRot( i )),
+                                  gmtl::Math::deg2Rad(mFlockOfBirds.xRot( i )) );
+      gmtl::setRot( transmitter_T_reciever, euler );
+      gmtl::setTrans( transmitter_T_reciever, gmtl::Vec3f( mFlockOfBirds.xPos( i ),
+                                                           mFlockOfBirds.yPos( i ),
+                                                           mFlockOfBirds.zPos( i )) );
 
       //if (i==1)
          //vprDEBUG(vprDBG_ALL,2) << "Flock: bird1:    orig:" << Coord(theData[index]).pos << std::endl << vprDEBUG_FLUSH;
