@@ -42,6 +42,9 @@
 # Generated for use on @PLATFORM@
 # ------------------------------------------------------------------------------
 
+$VARS{'ABI'}              = '@ABI@';
+$VARS{'ISA'}              = '@ISA@';
+
 # Compiler information.
 $VARS{'APP_CC'}           = '@APP_CC@';
 $VARS{'APP_CXX'}          = '@APP_CXX@';
