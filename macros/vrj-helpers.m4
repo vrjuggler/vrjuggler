@@ -231,8 +231,8 @@ AC_DEFUN(VJ_APP_COMPILER,
 
     APP_CFLAGS="$2"
     APP_CXXFLAGS="$4"
-    APP_DEBUG_FLAGS="$5"
-    APP_OPTIM_FLAGS="$6"
+    APP_DEBUG_CFLAGS="$5"
+    APP_OPTIM_CFLAGS="$6"
     APP_DEFS="$8"
     APP_INCLUDES=ifelse([$7], , "$9", "-I\$($7)/include $9")
     APP_EXTRA_FLAGS="$10"
@@ -241,11 +241,11 @@ AC_DEFUN(VJ_APP_COMPILER,
     AC_SUBST(APP_CFLAGS)
     AC_SUBST(APP_CXX)
     AC_SUBST(APP_CXXFLAGS)
-    AC_SUBST(APP_DEBUG_FLAGS)
-    AC_SUBST(APP_OPTIM_FLAGS)
+    AC_SUBST(APP_DEBUG_CFLAGS)
+    AC_SUBST(APP_OPTIM_CFLAGS)
     AC_SUBST(APP_DEFS)
     AC_SUBST(APP_INCLUDES)
-    AC_SUBST(APP_EXTRA_FLAGS)
+    AC_SUBST(APP_EXTRA_CFLAGS)
 ])
 
 dnl ---------------------------------------------------------------------------
@@ -263,7 +263,7 @@ dnl       needed for compiling.  These are put after those listed in the
 dnl       previous variables in the compile line.
 dnl
 dnl Usage
-dnl     VJ_APP_LINKER(linker, link-flags, base-dir-name, basic-libs, extra-libs)
+dnl     VJ_APP_LINKER(linker, link-flags, debug-flags, optimization-flags, base-dir-name, basic-libs, extra-libs)
 dnl ---------------------------------------------------------------------------
 AC_DEFUN(VJ_APP_LINKER,
 [
@@ -271,25 +271,25 @@ AC_DEFUN(VJ_APP_LINKER,
         APP_LINK="$1"
         APP_LINK_FLAGS="$2"
 
-        for lib in $4 ; do
+        for lib in $6 ; do
             APP_BASIC_LIBS="$APP_BASIC_LIBS -l$lib"
         done
 
-        APP_EXTRA_LIBS="$5"
+        APP_EXTRA_LIBS="$7"
 
         if test "$PLATFORM" = "IRIX" ; then
-            APP_BASIC_LIBS_BEGIN="-B static -L\$($3)/lib$LIBBITSUF"
+            APP_BASIC_LIBS_BEGIN="-B static -L\$($5)/lib$LIBBITSUF"
             APP_BASIC_LIBS_END='-B dynamic'
-            APP_BASIC_LIBS_BEGIN_INST="-B dynamic -L\$($3)/lib$LIBBITSUF"
-            APP_BASIC_LIBS_END_INST="-Wl,-rpath,\$($3)/lib$LIBBITSUF"
+            APP_BASIC_LIBS_BEGIN_INST="-B dynamic -L\$($5)/lib$LIBBITSUF"
+            APP_BASIC_LIBS_END_INST="-Wl,-rpath,\$($5)/lib$LIBBITSUF"
 
             APP_EXTRA_LIBS_BEGIN='-B dynamic'
             APP_EXTRA_LIBS_END=''
         elif test "x$GXX" = "xyes" -a "x$PLATFORM" != "xDarwin" ; then
-            APP_BASIC_LIBS_BEGIN="-Wl,-Bstatic -L\$($3)/lib$LIBBITSUF"
+            APP_BASIC_LIBS_BEGIN="-Wl,-Bstatic -L\$($5)/lib$LIBBITSUF"
             APP_BASIC_LIBS_END="-Wl,-Bdynamic"
-            APP_BASIC_LIBS_BEGIN_INST="-Wl,-Bdynamic -L\$($3)/lib$LIBBITSUF"
-            APP_BASIC_LIBS_END_INST="-Wl,-rpath,\$($3)/lib$LIBBITSUF"
+            APP_BASIC_LIBS_BEGIN_INST="-Wl,-Bdynamic -L\$($5)/lib$LIBBITSUF"
+            APP_BASIC_LIBS_END_INST="-Wl,-rpath,\$($5)/lib$LIBBITSUF"
 
             APP_EXTRA_LIBS_BEGIN='-Wl,-Bdynamic'
             APP_EXTRA_LIBS_END=''
@@ -297,7 +297,7 @@ AC_DEFUN(VJ_APP_LINKER,
             # For now, we are disabling static linking for the sample
             # applications when compiled in a developer's build tree.  This
             # is only the case on non-IRIX platforms and non-GCC compilers.
-            APP_BASIC_LIBS_BEGIN="-L\$($3)/lib$LIBBITSUF"
+            APP_BASIC_LIBS_BEGIN="-L\$($5)/lib$LIBBITSUF"
             APP_BASIC_LIBS_BEGIN_INST="$APP_BASIC_LIBS_BEGIN"
         fi
     elif test "$OS_TYPE" = "Win32" ; then
@@ -309,17 +309,23 @@ AC_DEFUN(VJ_APP_LINKER,
 
         APP_LINK_FLAGS="$2"
 
-        for lib in $4 ; do
+        for lib in $6 ; do
             APP_BASIC_LIBS="$APP_BASIC_LIBS ${lib}.lib"
         done
 
-        APP_BASIC_LIBS_BEGIN="-libpath:\$($3)/lib/debug"
+        APP_BASIC_LIBS_BEGIN="-libpath:\$($5)/lib/debug"
         APP_BASIC_LIBS_BEGIN_INST="$APP_BASIC_LIBS_BEGIN"
 
-        APP_EXTRA_LIBS="$5"
+        APP_EXTRA_LIBS="$7"
     fi
 
+    APP_DEBUG_LFLAGS="$3"
+    APP_OPTIM_LFLAGS="$4"
+
     AC_SUBST(APP_LINK)
+    AC_SUBST(APP_DEBUG_LFLAGS)
+    AC_SUBST(APP_OPTIM_LFLAGS)
+    AC_SUBST(APP_EXTRA_LFLAGS)
     AC_SUBST(APP_LINK_FLAGS)
     AC_SUBST(APP_BASIC_LIBS_BEGIN)
     AC_SUBST(APP_BASIC_LIBS_END)
