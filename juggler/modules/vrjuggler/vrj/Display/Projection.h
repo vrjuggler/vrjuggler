@@ -32,7 +32,9 @@
 //: Pure virtual base class for viewport definitions.
 //
 //	Responsible for storing and computing projection
-//  information.
+//  information based upon an eye positions
+// This class is an abstract base class for other classes
+//  that actually compute the projections.
 //
 // @author Allen Bierbaum
 //  Date: 9-8-97

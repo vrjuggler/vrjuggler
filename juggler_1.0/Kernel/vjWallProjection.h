@@ -23,8 +23,8 @@
 
 #include <vjConfig.h>
 #include <Kernel/vjProjection.h>
-#include <Input/vjPosition/vjPosition.h>
-#include <Math/vjCoord.h>
+//#include <Input/vjPosition/vjPosition.h>
+//#include <Math/vjCoord.h>
 
 class vjMatrix;
 
@@ -32,7 +32,9 @@ class vjMatrix;
 //: Wall specific class for viewport definitions.
 //
 //	 Responsible for storing and computing projection
-//  information of Wall specific projections.
+//  information of a surface specified.
+//
+// XXX: This should be renamed vjSurfaceProjection
 //
 // @author Allen Bierbaum
 //  Date: 10-5-97
@@ -65,7 +67,7 @@ public:
 
    ostream& outStream(ostream& out);
 
-private:
+protected:
    // Rotation of the screen
    vjMatrix   mWallRotationMatrix;
 

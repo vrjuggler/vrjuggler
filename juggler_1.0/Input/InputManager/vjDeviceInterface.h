@@ -55,6 +55,10 @@ public:
    int getProxyIndex()
    {  return mProxyIndex; }
 
+   //: Return the name of the proxy
+   std::string getProxyName()
+   { return mProxyName; }
+
 protected:
    int         mProxyIndex;         //: The index of the proxy
    std::string mProxyName;          //: The name of the proxy (or alias) we are looking at
