@@ -732,7 +732,7 @@ public class ConfigModule extends DefaultCoreModule {
             // decide wether to revert to saved or not.
 
             boolean should_revert = false;
-            if (chunkdb.need_to_save && java.beans.Beans.isGuiAvailable()) {
+            if (java.beans.Beans.isGuiAvailable()) {
                 int result = 
                     JOptionPane.showConfirmDialog (
                         null, "Do you want to revert to the saved '" + 
