@@ -65,7 +65,7 @@ public:
             << "Can not register ApplicationData with non existent ApplicationDataManager. "
             << std::endl << vprDEBUG_FLUSH;
          vprDEBUG(gadgetDBG_RIM,vprDBG_WARNING_LVL)
-            << "In order to syncronize ApplicationData across a cluster you must load the ApplicationDataManager ClusterPlugin."
+            << "In order to synchronize ApplicationData across a cluster you must load the ApplicationDataManager ClusterPlugin."
             << std::endl << vprDEBUG_FLUSH;
          // If we are not using the cluster, then we want the data to be local,
          // even if the hostnames do not match. This will allow us to run the
