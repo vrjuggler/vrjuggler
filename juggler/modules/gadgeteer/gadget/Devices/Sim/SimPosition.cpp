@@ -51,15 +51,19 @@ bool SimPosition::config(jccl::ConfigChunkPtr chunk)
    if(! (Input::config(chunk) && Position::config(chunk) && SimInput::config(chunk) ))
       return false;
 
-   mDTrans = chunk->getProperty("dtrans");
-   mDRot   = chunk->getProperty("drot");
+   mDTrans = chunk->getProperty<float>("dtrans");
+   mDRot   = chunk->getProperty<float>("drot");
 
-   mTransCoordSystem = chunk->getProperty("transCoordSystem");
-   mRotCoordSystem = chunk->getProperty("rotCoordSystem");
+   mTransCoordSystem = chunk->getProperty<int>("transCoordSystem");
+   mRotCoordSystem = chunk->getProperty<int>("rotCoordSystem");
 
-   std::vector<jccl::VarValue*> key_list = chunk->getAllProperties("keyPairs");
+   std::vector<jccl::ConfigChunkPtr> key_list;
+   int key_count = chunk->getNum("keyPairs");
+   for ( int i = 0; i < key_count; ++i )
+   {
+      key_list.push_back(chunk->getProperty<jccl::ConfigChunkPtr>("keyPairs", i));
+   }
    std::vector<KeyModPair> key_pairs = readKeyList(key_list);
-
 
    // Create keypairs
    vprASSERT(key_pairs.size() == NUM_POS_CONTROLS);
@@ -69,12 +73,12 @@ bool SimPosition::config(jccl::ConfigChunkPtr chunk)
    }
 
    // Set initial position
-   float x_pos = chunk->getProperty("initialPos",0);
-   float y_pos = chunk->getProperty("initialPos",1);
-   float z_pos = chunk->getProperty("initialPos",2);
-   float x_rot = chunk->getProperty("initialRot",0);
-   float y_rot = chunk->getProperty("initialRot",1);
-   float z_rot = chunk->getProperty("initialRot",2);
+   float x_pos = chunk->getProperty<float>("initialPos",0);
+   float y_pos = chunk->getProperty<float>("initialPos",1);
+   float z_pos = chunk->getProperty<float>("initialPos",2);
+   float x_rot = chunk->getProperty<float>("initialRot",0);
+   float y_rot = chunk->getProperty<float>("initialRot",1);
+   float z_rot = chunk->getProperty<float>("initialRot",2);
 
    gmtl::identity( *(mPos.getPosition()) );
 

@@ -229,8 +229,7 @@ Input* DeviceFactory::loadDevice(jccl::ConfigChunkPtr chunk)
 
    vprDEBUG(gadgetDBG_INPUT_MGR,3)
       << "gadget::DeviceFactory::loadDevice: Loading device: "
-      << chunk->getType() << "  with: " << typeid(*constructor).name()
-     
+      << chunk->getDescToken() << "  with: " << typeid(*constructor).name()
       << std::endl << vprDEBUG_FLUSH;
 
    new_dev = constructor->createDevice(chunk);
@@ -240,7 +239,7 @@ Input* DeviceFactory::loadDevice(jccl::ConfigChunkPtr chunk)
 int DeviceFactory::findConstructor(jccl::ConfigChunkPtr chunk)
 {
    std::string chunk_type;
-   chunk_type = (std::string)chunk->getType();
+   chunk_type = chunk->getDescToken();
 
    for(unsigned int i=0;i<mConstructors.size();i++)
    {

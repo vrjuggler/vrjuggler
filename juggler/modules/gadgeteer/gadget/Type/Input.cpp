@@ -66,9 +66,9 @@ bool Input::config( jccl::ConfigChunkPtr c)
      return true;
   }
 
-  mPort = (std::string) c->getProperty("port");
-  mInstName = (std::string)c->getProperty("name");
-  mBaudRate = c->getProperty("baud");
+  mPort     = c->getProperty<std::string>("port");
+  mInstName = c->getFullName();
+  mBaudRate = c->getProperty<int>("baud");
 
   return true;
 }

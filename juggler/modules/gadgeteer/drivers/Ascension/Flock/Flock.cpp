@@ -118,15 +118,15 @@ bool Flock::config(jccl::ConfigChunkPtr c)
    mFlockOfBirds.setBaudRate( Input::getBaudRate() );
 
    // set mFlockOfBirds with the config info.
-   mFlockOfBirds.setSync( static_cast<int>(c->getProperty("sync")) );
-   mFlockOfBirds.setBlocking( static_cast<int>(c->getProperty("blocking")) );
-   mFlockOfBirds.setNumBirds( static_cast<int>(c->getProperty("num")) );
-   mFlockOfBirds.setTransmitter( static_cast<int>(c->getProperty("transmitter")) );
-   mFlockOfBirds.setHemisphere( (BIRD_HEMI)(static_cast<int>(c->getProperty("hemi"))) ); //LOWER_HEMI
-   mFlockOfBirds.setFilterType( (BIRD_FILT)(static_cast<int>(c->getProperty("filt"))) ); //
+   mFlockOfBirds.setSync( c->getProperty<int>("sync") );
+   mFlockOfBirds.setBlocking( c->getProperty<int>("blocking") );
+   mFlockOfBirds.setNumBirds( c->getProperty<int>("num") );
+   mFlockOfBirds.setTransmitter( c->getProperty<int>("transmitter") );
+   mFlockOfBirds.setHemisphere( (BIRD_HEMI) c->getProperty<int>("hemi") ); //LOWER_HEMI
+   mFlockOfBirds.setFilterType( (BIRD_FILT) c->getProperty<int>("filt") ); //
 
    // sanity check the report rate
-   char r = static_cast<std::string>(c->getProperty("report")).c_str()[0];
+   char r = c->getProperty<std::string>("report").c_str()[0];
    if ((r != 'Q') && (r != 'R') &&
        (r != 'S') && (r != 'T'))
    {
@@ -149,7 +149,7 @@ bool Flock::config(jccl::ConfigChunkPtr c)
       << std::endl << vprDEBUG_FLUSH;
 
    // init the correction table with the calibration file.
-   char* calfile = c->getProperty("calfile").cstring();
+   std::string calfile = c->getProperty<std::string>("calfile");
    mFlockOfBirds.initCorrectionTable(vpr::replaceEnvVars(calfile).c_str());
 
    return true;

@@ -122,7 +122,7 @@ Proxy* ProxyFactory::loadProxy(jccl::ConfigChunkPtr chunk)
 
    vprDEBUG(gadgetDBG_INPUT_MGR,3)
       << "vjProxyFactory::loadProxy: Loading proxy: "
-      << chunk->getType() << "  with: "
+      << chunk->getDescToken() << "  with: "
       << typeid(*constructor).name() << std::endl << vprDEBUG_FLUSH;
    new_dev = constructor->createProxy(chunk);
    return new_dev;
@@ -131,7 +131,7 @@ Proxy* ProxyFactory::loadProxy(jccl::ConfigChunkPtr chunk)
 int ProxyFactory::findConstructor(jccl::ConfigChunkPtr chunk)
 {
    std::string chunk_type;
-   chunk_type = (std::string)chunk->getType();
+   chunk_type = chunk->getDescToken();
    for(unsigned i=0;i<mConstructors.size();i++)
    {
       if(mConstructors[i]->getChunkType() == chunk_type)

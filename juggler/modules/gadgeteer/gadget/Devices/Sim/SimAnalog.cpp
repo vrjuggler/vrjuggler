@@ -55,8 +55,21 @@ bool SimAnalog::config(jccl::ConfigChunkPtr chunk)
    if(! (Input::config(chunk) && Analog::config(chunk) && SimInput::config(chunk)))
       return false;
 
-   std::vector<jccl::VarValue*> key_inc_list = chunk->getAllProperties("keyPairsInc");
-   std::vector<jccl::VarValue*> key_dec_list = chunk->getAllProperties("keyPairsDec");
+   std::vector<jccl::ConfigChunkPtr> key_inc_list, key_dec_list;
+
+   int key_count = chunk->getNum("keyPairsInc");
+
+   for ( int i = 0; i < key_count; ++i )
+   {
+      key_inc_list.push_back(chunk->getProperty<jccl::ConfigChunkPtr>("keyPairsInc", i));
+   }
+
+   key_count = chunk->getNum("keyPairsDec");
+
+   for ( int i = 0; i < key_count; ++i )
+   {
+      key_dec_list.push_back(chunk->getProperty<jccl::ConfigChunkPtr>("keyPairsDec", i));
+   }
 
    mSimKeysUp = readKeyList(key_inc_list);
    mSimKeysDown = readKeyList(key_dec_list);
@@ -64,7 +77,7 @@ bool SimAnalog::config(jccl::ConfigChunkPtr chunk)
    int num_pairs = mSimKeysUp.size();
 
    mAnaData = std::vector<AnalogData>( num_pairs ); // Initialize to all zeros
-   mAnaStep = chunk->getProperty( "anastep" );
+   mAnaStep = chunk->getProperty<float>( "anastep" );
 
    return true;
 }

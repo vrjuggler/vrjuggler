@@ -67,7 +67,7 @@ public:
     */
    virtual bool config(jccl::ConfigChunkPtr chunk)
    {
-      mName = (std::string)chunk->getProperty("name");
+      mName = chunk->getFullName();
       return true;
    }
 

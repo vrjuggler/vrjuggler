@@ -44,8 +44,8 @@ bool SimRelativePosition::config(jccl::ConfigChunkPtr chunk)
       return false;
 
    // Initialize the positional devices
-   std::string base_frame_proxy = chunk->getProperty("base_frame_proxy");
-   std::string relative_pos_proxy = chunk->getProperty("relative_proxy");
+   std::string base_frame_proxy = chunk->getProperty<std::string>("base_frame_proxy");
+   std::string relative_pos_proxy = chunk->getProperty<std::string>("relative_proxy");
 
    mBaseFrame.init(base_frame_proxy);
    mRelativePos.init(relative_pos_proxy);

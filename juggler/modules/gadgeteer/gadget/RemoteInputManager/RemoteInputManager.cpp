@@ -743,12 +743,12 @@ bool RemoteInputManager::config(jccl::ConfigChunkPtr chunk)
 
    // vprDEBUG(gadgetDBG_INPUT_MGR,vprDBG_CRITICAL_LVL)
    //    << "RemoteInputManager:config" << std::endl << vprDEBUG_FLUSH;
-   mListenPort = (int)chunk->getProperty("listen_port");
+   mListenPort = chunk->getProperty<int>("listen_port");
 
    // int num_connections = chunk->getProperty("num_connections");
-   mInstanceName = (std::string) chunk->getProperty("Name");
+   mInstanceName = chunk->getFullName();
 
-   std::string forcedHostname = (std::string) chunk->getProperty("forced_hostname");
+   std::string forcedHostname = chunk->getProperty<std::string>("forced_hostname");
 
    if ( forcedHostname.size() > 0 )
    {
@@ -759,7 +759,7 @@ bool RemoteInputManager::config(jccl::ConfigChunkPtr chunk)
    /*
    for(int i = 0; i < num_connections; i++)
    {
-      std::string connection_name = (std::string)chunk->getProperty( "connections" , i);
+      std::string connection_name = chunk->getProperty<std::string>( "connections" , i);
       makeConnection( connection_name );
    }
    */
@@ -779,9 +779,9 @@ bool RemoteInputManager::configFromLocalConnection(jccl::ConfigChunkPtr chunk)
       << "configFromLocalConnection" << std::endl << vprDEBUG_FLUSH;
 
    // strip the port from the chunk name
-   // std::string connection_name = (std::string)chunk->getProperty("hostname_n_port");
-   std::string connection_name = (std::string)chunk->getProperty("hostname");
-   int connection_port = chunk->getProperty("port");
+   // std::string connection_name = chunk->getProperty<std::string>("hostname_n_port");
+   std::string connection_name = chunk->getProperty<std::string>("hostname");
+   int connection_port = chunk->getProperty<int>("port");
 
    //R std::string::size_type found_pos = connection_name.find(":");
    //R if(found_pos == std::string::npos){ // colon not found
@@ -797,7 +797,7 @@ bool RemoteInputManager::configFromLocalConnection(jccl::ConfigChunkPtr chunk)
    //R mListenPort = atoi(port.c_str());
    mListenPort = connection_port;
 
-   std::string connection_alias = (std::string) chunk->getProperty("Name");
+   std::string connection_alias = chunk->getName();
    mInstanceName = connection_alias;
 
    // finish initializing RemoteInputManager and listen for connections.
@@ -809,8 +809,8 @@ bool RemoteInputManager::configFromLocalConnection(jccl::ConfigChunkPtr chunk)
 //
 bool RemoteInputManager::configConnection(jccl::ConfigChunkPtr chunk)
 {
-   std::string connection_hostname = (std::string)chunk->getProperty("hostname");
-   int connection_port = chunk->getProperty("port");
+   std::string connection_hostname = chunk->getProperty<std::string>("hostname");
+   int connection_port = chunk->getProperty<int>("port");
    // std::string connection_name = connection_host + connection_port;
    // std::string connection_ip = getIpFromHostname(connect_name);
    //int connection_port_int = atoi(connection_port.c_str());
@@ -846,7 +846,7 @@ bool RemoteInputManager::configConnection(jccl::ConfigChunkPtr chunk)
       }
    }
 
-   std::string connection_alias = (std::string) chunk->getProperty("Name");
+   std::string connection_alias = chunk->getName();
 
    // vprDEBUG(gadgetDBG_INPUT_MGR,vprDBG_CRITICAL_LVL) << "RemoteInputManager:config: trying to connect to:" << connection_name << std::endl << vprDEBUG_FLUSH;
 
@@ -1101,7 +1101,7 @@ bool RemoteInputManager::configureTransmittingNetInput(std::string device_name, 
 
 bool RemoteInputManager::configureReceivingNetInput(jccl::ConfigChunkPtr chunk, NetConnection* net_connection)
 {
-   std::string device_name = chunk->getProperty("name");
+   std::string device_name = chunk->getFullName();
 
    // check if we are already receiving this device's data.
    NetInput* net_input = net_connection->findReceivingNetInput(device_name);
