@@ -80,7 +80,7 @@ public:
             << clrOutNORM(clrRED,"ERROR:")
             << "vjSimViewport:: Fatal Error: Camera not found named: "
             << camera_proxy_str.c_str() << vprDEBUG_FLUSH;
-         exit(1);
+         vprASSERT(false);
       }
 
       // Get drawing parameters

@@ -91,6 +91,14 @@ int Kernel::start()
 
    return 1;
 }
+   
+// Set the stop flag
+// NOTE: The kernel should not actually stop until the application has been close (ie. mApp is NULL)
+void Kernel::stop()
+{
+   mExitFlag = true;
+   setApplication(NULL);      // Set NULL application so that the app gets closed
+}
 
 /// The Kernel loop
 void Kernel::controlLoop(void* nullParam)
@@ -109,32 +117,31 @@ void Kernel::controlLoop(void* nullParam)
    initConfig();
 
    // setup performance buffer
-   perfBuffer = environmentManager->getPerformanceMonitor()->getPerfDataBuffer ("Kernel Loop", 500, 8);
+   mPerfBuffer = environmentManager->getPerformanceMonitor()->getPerfDataBuffer ("Kernel Loop", 500, 8);
 
-   //while(!Exit)
-   while (1)
+   // --- MAIN CONTROL LOOP -- //
+   while((!mExitFlag) || (mApp != NULL))     // While not exit OR app is non-null. (can't exit until app is closed)
    {
       // Iff we have an app and a draw manager
       if((mApp != NULL) && (mDrawManager != NULL))
       {
             vprDEBUG(vrjDBG_KERNEL,5) << "vjKernel::controlLoop: mApp->preFrame()\n" << vprDEBUG_FLUSH;
          mApp->preFrame();         // PREFRAME: Do Any application pre-draw stuff
-            perfBuffer->set (0);
+            mPerfBuffer->set (0);
             vprDEBUG(vrjDBG_KERNEL,5) << "vjKernel::controlLoop: drawManager->draw()\n" << vprDEBUG_FLUSH;
          mDrawManager->draw();    // DRAW: Trigger the beginning of frame drawing
          mSoundManager->update();
-            perfBuffer->set (1);
+            mPerfBuffer->set (1);
             vprDEBUG(vrjDBG_KERNEL,5) << "vjKernel::controlLoop: mApp->intraFrame()\n" << vprDEBUG_FLUSH;
          mApp->intraFrame();        // INTRA FRAME: Do computations that can be done while drawing.  This should be for next frame.
-         //vjSystem::usleep(15000);              // Generate a wait in critical section
-            perfBuffer->set (2);
+            mPerfBuffer->set (2);
             vprDEBUG(vrjDBG_KERNEL,5) << "vjKernel::controlLoop: drawManager->sync()\n" << vprDEBUG_FLUSH;
          mSoundManager->sync();
          mDrawManager->sync();    // SYNC: Block until drawing is done
-            perfBuffer->set (3);
+            mPerfBuffer->set (3);
             vprDEBUG(vrjDBG_KERNEL,5) << "vjKernel::controlLoop: mApp->postFrame()\n" << vprDEBUG_FLUSH;
          mApp->postFrame();        // POST FRAME: Do processing after drawing is complete
-            perfBuffer->set (4);
+            mPerfBuffer->set (4);
       }
       else
       {
@@ -143,17 +150,17 @@ void Kernel::controlLoop(void* nullParam)
          vpr::Thread::yield();   // Give up CPU
       }
 
-      //vjSystem::usleep(10000);
-      checkForReconfig();        // Check for any reconfiguration that needs done
+      // --- Stop for reconfiguration -- //
+      checkForReconfig();        // Check for any reconfiguration that needs done (system or application)
 
-      perfBuffer->set(5);
+      mPerfBuffer->set(5);
 
          vprDEBUG(vrjDBG_KERNEL,5) << "vjKernel::controlLoop: Update Trackers\n" << vprDEBUG_FLUSH;
       getInputManager()->updateAllData();    // Update the trackers
-         perfBuffer->set(6);
+         mPerfBuffer->set(6);
          vprDEBUG(vrjDBG_KERNEL,5) << "vjKernel::controlLoop: Update Projections\n" << vprDEBUG_FLUSH;
       updateFrameData();         // Update the projections, etc.
-         perfBuffer->set(7);
+         mPerfBuffer->set(7);
    }
 }
 
@@ -165,8 +172,6 @@ void Kernel::setApplication(App* _app)
    mNewApp = _app;
    mNewAppSet = true;
 }
-
-
 
 //: Checks to see if there is reconfiguration to be done
 //! POST: Any reconfiguration needed has been completed
@@ -226,9 +231,11 @@ void Kernel::changeApplication(App* _app)
    jccl::ConfigManager* cfg_mgr = environmentManager->getConfigManager();
 
    // EXIT Previous application
-   if(mApp != NULL) {
-       cfg_mgr->removeConfigChunkHandler (mApp);
+   if(mApp != NULL) 
+   {
+      cfg_mgr->removeConfigChunkHandler (mApp);
       mApp->exit();
+      mApp = NULL;      // ASSERT: We have no handles to the application any more (ie. the app could be deleted)
    }
 
    // SET NEW APPLICATION
@@ -459,8 +466,6 @@ void Kernel::loadChunkDescFile(std::string filename)
    jccl::ChunkFactory::instance()->loadDescs(filename);
 }
 
-
-
 // This starts up the draw manager given
 //!POST: All processes and data should have been created by draw manager
 void Kernel::startDrawManager(bool newMgr)
@@ -516,18 +521,19 @@ User* Kernel::getUser(std::string userName)
 
 Kernel::Kernel()
 {
-   mApp = NULL;
-   mNewApp = NULL;
-   mNewAppSet = false;
+   mApp        = NULL;
+   mNewApp     = NULL;
+   mNewAppSet  = false;
+   mExitFlag      = false;
    mControlThread = NULL;
-   mSysFactory = NULL;
-   mInputManager = NULL;
-   mDrawManager = NULL;
-   mSoundManager = NULL;
+   mSysFactory    = NULL;
+   mInputManager  = NULL;
+   mDrawManager   = NULL;
+   mSoundManager  = NULL;
    mDisplayManager = NULL;
 
    environmentManager = NULL;
-   perfBuffer = NULL;
+   mPerfBuffer = NULL;
 
    //mInitialChunkDB = NULL;
    //mChunkDB = NULL;
