@@ -40,7 +40,7 @@
 AC_REVISION($Revision$)
 AC_INIT(vjConfig.h)
 AC_CONFIG_HEADER(vjDefines.h)
-DPP_PREREQ(1.3.10)
+DPP_PREREQ(1.4)
 DPP_INIT
 
 # Generate the reconfig script first so that it's easy to run configure again
@@ -255,7 +255,7 @@ case $target_os in
             SUBSYSTEM='NSPR' 
         fi
 
-        AC_DEFINE(VJ_OS_MACOSX,)
+        AC_DEFINE(VJ_OS_Darwin,)
         AC_DEFINE(_BSD_TYPES,) 
         ;;
     # Unkown operating system (to config.guess).
@@ -859,7 +859,7 @@ if test "$OS_TYPE" = "UNIX" ; then
     APP_VJ_LIBS_UTILS="-lJuggler_utils"
 
     if test "x$OGL_LDFLAGS" != "x" ; then
-        if test "x$PLATFORM" = "xMacOSX" ; then
+        if test "x$PLATFORM" = "xDarwin" ; then
             APP_EXTRA_LIBS_GL="$OGL_LDFLAGS -framework AGL -framework DrawSprocket -framework Carbon -framework ApplicationServices"
         else
             APP_EXTRA_LIBS_GL="-L$OGLROOT/lib$LIBBITSUF $LIBOPENGL"

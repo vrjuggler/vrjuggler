@@ -285,7 +285,7 @@ AC_DEFUN(VJ_APP_LINKER,
 
             APP_EXTRA_LIBS_BEGIN='-B dynamic'
             APP_EXTRA_LIBS_END=''
-        elif test "x$GXX" = "xyes" -a "x$PLATFORM" != "xMacOSX" ; then
+        elif test "x$GXX" = "xyes" -a "x$PLATFORM" != "xDarwin" ; then
             APP_BASIC_LIBS_BEGIN="-Wl,-Bstatic -L\$($3)/lib$LIBBITSUF"
             APP_BASIC_LIBS_END="-Wl,-Bdynamic"
             APP_BASIC_LIBS_BEGIN_INST="-Wl,-Bdynamic -L\$($3)/lib$LIBBITSUF"
