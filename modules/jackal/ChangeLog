@@ -1,5 +1,8 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Nov-19-2004 patrickh    Restored the ability for .jconf files to extend the
+                        .jdef file search path.
+                        NEW VERSION: 0.23.2
 Nov-17-2004 patrickh    Fixed config file lookup problems that showed up under
                         very specific circumstances.
                         NEW VERSION: 0.23.1
