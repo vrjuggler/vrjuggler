@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.69 of RCSfile: class_cs.tmpl,v
+// Generated from Revision: 1.73 of RCSfile: class_cs.tmpl,v
 using System;
 using System.Runtime.InteropServices;
 using System.Reflection;
@@ -105,46 +105,50 @@ public sealed class AnalogProxy
    [DllImport("gadget_bridge", CharSet = CharSet.Ansi)]
    [return : MarshalAs(UnmanagedType.CustomMarshaler,
                        MarshalTypeRef = typeof(vpr.IntervalMarshaler))]
-   private extern static vpr.Interval gadget_AnalogProxy_getTimeStamp__(IntPtr obj);
+   private extern static vpr.Interval gadget_AnalogProxy_getTimeStamp__0(IntPtr obj);
 
    public  vpr.Interval getTimeStamp()
    {
       vpr.Interval result;
-      result = gadget_AnalogProxy_getTimeStamp__(mRawObject);
+      result = gadget_AnalogProxy_getTimeStamp__0(mRawObject);
       return result;
    }
 
+
    [DllImport("gadget_bridge", CharSet = CharSet.Ansi)]
-   private extern static float gadget_AnalogProxy_getData__(IntPtr obj);
+   private extern static float gadget_AnalogProxy_getData__0(IntPtr obj);
 
    public  float getData()
    {
       float result;
-      result = gadget_AnalogProxy_getData__(mRawObject);
+      result = gadget_AnalogProxy_getData__0(mRawObject);
       return result;
    }
+
 
    [DllImport("gadget_bridge", CharSet = CharSet.Ansi)]
    [return : MarshalAs(UnmanagedType.CustomMarshaler,
                        MarshalTypeRef = typeof(gadget.AnalogMarshaler))]
-   private extern static gadget.Analog gadget_AnalogProxy_getAnalogPtr__(IntPtr obj);
+   private extern static gadget.Analog gadget_AnalogProxy_getAnalogPtr__0(IntPtr obj);
 
    public  gadget.Analog getAnalogPtr()
    {
       gadget.Analog result;
-      result = gadget_AnalogProxy_getAnalogPtr__(mRawObject);
+      result = gadget_AnalogProxy_getAnalogPtr__0(mRawObject);
       return result;
    }
 
+
    [DllImport("gadget_bridge", CharSet = CharSet.Ansi)]
-   private extern static int gadget_AnalogProxy_getUnit__(IntPtr obj);
+   private extern static int gadget_AnalogProxy_getUnit__0(IntPtr obj);
 
    public  int getUnit()
    {
       int result;
-      result = gadget_AnalogProxy_getUnit__(mRawObject);
+      result = gadget_AnalogProxy_getUnit__0(mRawObject);
       return result;
    }
+
 
    // End of non-virtual methods.
 
@@ -153,48 +157,52 @@ public sealed class AnalogProxy
 
    // Start of virtual methods.
    [DllImport("gadget_bridge", CharSet = CharSet.Ansi)]
-   private extern static void gadget_AnalogProxy_updateData__(IntPtr obj);
+   private extern static void gadget_AnalogProxy_updateData__0(IntPtr obj);
 
    public override void updateData()
    {
-      gadget_AnalogProxy_updateData__(mRawObject);
+      gadget_AnalogProxy_updateData__0(mRawObject);
    }
 
+
    [DllImport("gadget_bridge", CharSet = CharSet.Ansi)]
-   private extern static bool gadget_AnalogProxy_config__boost_shared_ptr_jccl__ConfigElement(IntPtr obj,
+   private extern static bool gadget_AnalogProxy_config__boost_shared_ptr_jccl__ConfigElement1(IntPtr obj,
 	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(jccl.ConfigElementMarshaler))] jccl.ConfigElement p0);
 
    public override bool config(jccl.ConfigElement p0)
    {
       bool result;
-      result = gadget_AnalogProxy_config__boost_shared_ptr_jccl__ConfigElement(mRawObject, p0);
+      result = gadget_AnalogProxy_config__boost_shared_ptr_jccl__ConfigElement1(mRawObject, p0);
       return result;
    }
+
 
    [DllImport("gadget_bridge", CharSet = CharSet.Ansi)]
    [return : MarshalAs(UnmanagedType.CustomMarshaler,
                        MarshalTypeRef = typeof(gadget.InputMarshaler))]
-   private extern static gadget.Input gadget_AnalogProxy_getProxiedInputDevice__(IntPtr obj);
+   private extern static gadget.Input gadget_AnalogProxy_getProxiedInputDevice__0(IntPtr obj);
 
    public override gadget.Input getProxiedInputDevice()
    {
       gadget.Input result;
-      result = gadget_AnalogProxy_getProxiedInputDevice__(mRawObject);
+      result = gadget_AnalogProxy_getProxiedInputDevice__0(mRawObject);
       return result;
    }
+
 
    // End of virtual methods.
 
    // Start of static methods.
    [DllImport("gadget_bridge", CharSet = CharSet.Ansi)]
-   private extern static string gadget_AnalogProxy_getElementType__();
+   private extern static string gadget_AnalogProxy_getElementType__0();
 
    public new static string getElementType()
    {
       string result;
-      result = gadget_AnalogProxy_getElementType__();
+      result = gadget_AnalogProxy_getElementType__0();
       return result;
    }
+
 
    // End of static methods.
 

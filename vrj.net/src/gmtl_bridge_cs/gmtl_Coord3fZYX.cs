@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.70 of RCSfile: class_cs.tmpl,v
+// Generated from Revision: 1.73 of RCSfile: class_cs.tmpl,v
 using System;
 using System.Runtime.InteropServices;
 using System.Reflection;
@@ -161,50 +161,54 @@ public sealed class Coord3fZYX
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
    [return : MarshalAs(UnmanagedType.CustomMarshaler,
                        MarshalTypeRef = typeof(gmtl.Vec3fMarshaler))]
-   private extern static gmtl.Vec3f gmtl_Coord_gmtl_Vec_float_3__gmtl_EulerAngle_float_gmtl_ZYX____getPos__(IntPtr obj);
+   private extern static gmtl.Vec3f gmtl_Coord_gmtl_Vec_float_3__gmtl_EulerAngle_float_gmtl_ZYX____getPos__0(IntPtr obj);
 
    public  gmtl.Vec3f getPos()
    {
       gmtl.Vec3f result;
-      result = gmtl_Coord_gmtl_Vec_float_3__gmtl_EulerAngle_float_gmtl_ZYX____getPos__(mRawObject);
+      result = gmtl_Coord_gmtl_Vec_float_3__gmtl_EulerAngle_float_gmtl_ZYX____getPos__0(mRawObject);
       return result;
    }
+
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
    [return : MarshalAs(UnmanagedType.CustomMarshaler,
                        MarshalTypeRef = typeof(gmtl.EulerAngleZYXfMarshaler))]
-   private extern static gmtl.EulerAngleZYXf gmtl_Coord_gmtl_Vec_float_3__gmtl_EulerAngle_float_gmtl_ZYX____getRot__(IntPtr obj);
+   private extern static gmtl.EulerAngleZYXf gmtl_Coord_gmtl_Vec_float_3__gmtl_EulerAngle_float_gmtl_ZYX____getRot__0(IntPtr obj);
 
    public  gmtl.EulerAngleZYXf getRot()
    {
       gmtl.EulerAngleZYXf result;
-      result = gmtl_Coord_gmtl_Vec_float_3__gmtl_EulerAngle_float_gmtl_ZYX____getRot__(mRawObject);
+      result = gmtl_Coord_gmtl_Vec_float_3__gmtl_EulerAngle_float_gmtl_ZYX____getRot__0(mRawObject);
       return result;
    }
+
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
    [return : MarshalAs(UnmanagedType.CustomMarshaler,
                        MarshalTypeRef = typeof(gmtl.Vec3fMarshaler))]
-   private extern static gmtl.Vec3f gmtl_Coord_gmtl_Vec_float_3__gmtl_EulerAngle_float_gmtl_ZYX____pos__(IntPtr obj);
+   private extern static gmtl.Vec3f gmtl_Coord_gmtl_Vec_float_3__gmtl_EulerAngle_float_gmtl_ZYX____pos__0(IntPtr obj);
 
    public  gmtl.Vec3f pos()
    {
       gmtl.Vec3f result;
-      result = gmtl_Coord_gmtl_Vec_float_3__gmtl_EulerAngle_float_gmtl_ZYX____pos__(mRawObject);
+      result = gmtl_Coord_gmtl_Vec_float_3__gmtl_EulerAngle_float_gmtl_ZYX____pos__0(mRawObject);
       return result;
    }
+
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
    [return : MarshalAs(UnmanagedType.CustomMarshaler,
                        MarshalTypeRef = typeof(gmtl.EulerAngleZYXfMarshaler))]
-   private extern static gmtl.EulerAngleZYXf gmtl_Coord_gmtl_Vec_float_3__gmtl_EulerAngle_float_gmtl_ZYX____rot__(IntPtr obj);
+   private extern static gmtl.EulerAngleZYXf gmtl_Coord_gmtl_Vec_float_3__gmtl_EulerAngle_float_gmtl_ZYX____rot__0(IntPtr obj);
 
    public  gmtl.EulerAngleZYXf rot()
    {
       gmtl.EulerAngleZYXf result;
-      result = gmtl_Coord_gmtl_Vec_float_3__gmtl_EulerAngle_float_gmtl_ZYX____rot__(mRawObject);
+      result = gmtl_Coord_gmtl_Vec_float_3__gmtl_EulerAngle_float_gmtl_ZYX____rot__0(mRawObject);
       return result;
    }
+
 
    // End of non-virtual methods.
 

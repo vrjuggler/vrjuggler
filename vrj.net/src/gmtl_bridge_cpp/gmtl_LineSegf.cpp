@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.58 of RCSfile: class_cxx.tmpl,v
+// Generated from Revision: 1.60 of RCSfile: class_cxx.tmpl,v
 
 
 
@@ -88,17 +88,12 @@ extern "C"
    }
 
    // Wrapper for non-virtual method gmtl::LineSeg<float>::getLength()
-   SHARPPY_API float gmtl_LineSeg_float__getLength__(gmtl::LineSegf* self_)
+   SHARPPY_API float gmtl_LineSeg_float__getLength__0(gmtl::LineSegf* self_)
    {
       float result;
       result = self_->getLength();
-
       return result;
    }
-
-
-
-
 
 
 } // extern "C" for gmtl::LineSegf

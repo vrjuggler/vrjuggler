@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.58 of RCSfile: class_cxx.tmpl,v
+// Generated from Revision: 1.60 of RCSfile: class_cxx.tmpl,v
 
 
 
@@ -56,23 +56,19 @@ extern "C"
    }
 
    // Wrapper for non-virtual method gadget::PositionData::getPosition()
-   SHARPPY_API gmtl::Matrix44f* gadget_PositionData_getPosition__(gadget::PositionData* self_)
+   SHARPPY_API gmtl::Matrix44f* gadget_PositionData_getPosition__0(gadget::PositionData* self_)
    {
       gmtl::Matrix44f* result;
       result = new gmtl::Matrix44f(self_->getPosition());
-
       return result;
    }
 
+
    // Wrapper for non-virtual method gadget::PositionData::setPosition()
-   SHARPPY_API void gadget_PositionData_setPosition__gmtl_Matrix44f(gadget::PositionData* self_, gmtl::Matrix44f p0)
+   SHARPPY_API void gadget_PositionData_setPosition__gmtl_Matrix44f1(gadget::PositionData* self_, gmtl::Matrix44f p0)
    {
       self_->setPosition(p0);
    }
-
-
-
-
 
 
 } // extern "C" for gadget::PositionData

@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.66 of RCSfile: class_cs.tmpl,v
+// Generated from Revision: 1.73 of RCSfile: class_cs.tmpl,v
 using System;
 using System.Runtime.InteropServices;
 using System.Reflection;
@@ -166,84 +166,90 @@ public sealed class ReturnStatus
 
    // Start of non-virtual methods.
    [DllImport("vpr_bridge", CharSet = CharSet.Ansi)]
-   private extern static void vpr_ReturnStatus_copy__vpr_ReturnStatus(IntPtr obj,
+   private extern static void vpr_ReturnStatus_copy__vpr_ReturnStatus1(IntPtr obj,
 	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(vpr.ReturnStatusMarshaler))] vpr.ReturnStatus p0);
 
    public  void copy(vpr.ReturnStatus p0)
    {
-      
-      vpr_ReturnStatus_copy__vpr_ReturnStatus(mRawObject, p0);
-      
+      vpr_ReturnStatus_copy__vpr_ReturnStatus1(mRawObject, p0);
    }
 
+
    [DllImport("vpr_bridge", CharSet = CharSet.Ansi)]
-   private extern static void vpr_ReturnStatus_setCode__vpr_ReturnStatus_Code(IntPtr obj,
+   private extern static void vpr_ReturnStatus_setCode__vpr_ReturnStatus_Code1(IntPtr obj,
 	vpr.ReturnStatus.Code p0);
 
    public  void setCode(vpr.ReturnStatus.Code p0)
    {
-      vpr_ReturnStatus_setCode__vpr_ReturnStatus_Code(mRawObject, p0);
+      vpr_ReturnStatus_setCode__vpr_ReturnStatus_Code1(mRawObject, p0);
    }
 
+
    [DllImport("vpr_bridge", CharSet = CharSet.Ansi)]
-   private extern static vpr.ReturnStatus.Code vpr_ReturnStatus_code__(IntPtr obj);
+   private extern static vpr.ReturnStatus.Code vpr_ReturnStatus_code__0(IntPtr obj);
 
    public  vpr.ReturnStatus.Code code()
    {
       vpr.ReturnStatus.Code result;
-      result = vpr_ReturnStatus_code__(mRawObject);
+      result = vpr_ReturnStatus_code__0(mRawObject);
       return result;
    }
 
+
    [DllImport("vpr_bridge", CharSet = CharSet.Ansi)]
-   private extern static bool vpr_ReturnStatus_success__(IntPtr obj);
+   private extern static bool vpr_ReturnStatus_success__0(IntPtr obj);
 
    public  bool success()
    {
       bool result;
-      result = vpr_ReturnStatus_success__(mRawObject);
+      result = vpr_ReturnStatus_success__0(mRawObject);
       return result;
    }
 
+
    [DllImport("vpr_bridge", CharSet = CharSet.Ansi)]
-   private extern static bool vpr_ReturnStatus_failure__(IntPtr obj);
+   private extern static bool vpr_ReturnStatus_failure__0(IntPtr obj);
 
    public  bool failure()
    {
       bool result;
-      result = vpr_ReturnStatus_failure__(mRawObject);
+      result = vpr_ReturnStatus_failure__0(mRawObject);
       return result;
    }
 
+
    [DllImport("vpr_bridge", CharSet = CharSet.Ansi)]
-   private extern static bool vpr_ReturnStatus_wouldBlock__(IntPtr obj);
+   private extern static bool vpr_ReturnStatus_wouldBlock__0(IntPtr obj);
 
    public  bool wouldBlock()
    {
       bool result;
-      result = vpr_ReturnStatus_wouldBlock__(mRawObject);
+      result = vpr_ReturnStatus_wouldBlock__0(mRawObject);
       return result;
    }
 
+
    [DllImport("vpr_bridge", CharSet = CharSet.Ansi)]
-   private extern static bool vpr_ReturnStatus_inProgress__(IntPtr obj);
+   private extern static bool vpr_ReturnStatus_inProgress__0(IntPtr obj);
 
    public  bool inProgress()
    {
       bool result;
-      result = vpr_ReturnStatus_inProgress__(mRawObject);
+      result = vpr_ReturnStatus_inProgress__0(mRawObject);
       return result;
    }
 
+
    [DllImport("vpr_bridge", CharSet = CharSet.Ansi)]
-   private extern static bool vpr_ReturnStatus_timeout__(IntPtr obj);
+   private extern static bool vpr_ReturnStatus_timeout__0(IntPtr obj);
 
    public  bool timeout()
    {
       bool result;
-      result = vpr_ReturnStatus_timeout__(mRawObject);
+      result = vpr_ReturnStatus_timeout__0(mRawObject);
       return result;
    }
+
 
    // End of non-virtual methods.
 

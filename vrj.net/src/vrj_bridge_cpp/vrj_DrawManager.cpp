@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.58 of RCSfile: class_cxx.tmpl,v
+// Generated from Revision: 1.60 of RCSfile: class_cxx.tmpl,v
 
 
 
@@ -58,51 +58,53 @@ extern "C"
       delete self_;
    }
 
-
    // Wrapper for virtual method vrj::DrawManager::draw()
-   SHARPPY_API void vrj_DrawManager_draw__(vrj_DrawManager_Adapter* self_)
+   SHARPPY_API void vrj_DrawManager_draw__0(vrj_DrawManager_Adapter* self_)
    {
       self_->draw();
    }
 
+
    // Wrapper for virtual method vrj::DrawManager::sync()
-   SHARPPY_API void vrj_DrawManager_sync__(vrj_DrawManager_Adapter* self_)
+   SHARPPY_API void vrj_DrawManager_sync__0(vrj_DrawManager_Adapter* self_)
    {
       self_->sync();
    }
 
+
    // Wrapper for virtual method vrj::DrawManager::setApp()
-   SHARPPY_API void vrj_DrawManager_setApp__vrj_App(vrj_DrawManager_Adapter* self_, vrj::App* p0)
+   SHARPPY_API void vrj_DrawManager_setApp__vrj_App1(vrj_DrawManager_Adapter* self_, vrj::App* p0)
    {
       self_->setApp(p0);
    }
 
+
    // Wrapper for virtual method vrj::DrawManager::initAPI()
-   SHARPPY_API void vrj_DrawManager_initAPI__(vrj_DrawManager_Adapter* self_)
+   SHARPPY_API void vrj_DrawManager_initAPI__0(vrj_DrawManager_Adapter* self_)
    {
       self_->initAPI();
    }
 
+
    // Wrapper for virtual method vrj::DrawManager::addDisplay()
-   SHARPPY_API void vrj_DrawManager_addDisplay__vrj_Display(vrj_DrawManager_Adapter* self_, vrj::Display* p0)
+   SHARPPY_API void vrj_DrawManager_addDisplay__vrj_Display1(vrj_DrawManager_Adapter* self_, vrj::Display* p0)
    {
       self_->addDisplay(p0);
    }
 
+
    // Wrapper for virtual method vrj::DrawManager::removeDisplay()
-   SHARPPY_API void vrj_DrawManager_removeDisplay__vrj_Display(vrj_DrawManager_Adapter* self_, vrj::Display* p0)
+   SHARPPY_API void vrj_DrawManager_removeDisplay__vrj_Display1(vrj_DrawManager_Adapter* self_, vrj::Display* p0)
    {
       self_->removeDisplay(p0);
    }
 
+
    // Wrapper for virtual method vrj::DrawManager::closeAPI()
-   SHARPPY_API void vrj_DrawManager_closeAPI__(vrj_DrawManager_Adapter* self_)
+   SHARPPY_API void vrj_DrawManager_closeAPI__0(vrj_DrawManager_Adapter* self_)
    {
       self_->closeAPI();
    }
-
-
-
 
 
 } // extern "C" for vrj::DrawManager

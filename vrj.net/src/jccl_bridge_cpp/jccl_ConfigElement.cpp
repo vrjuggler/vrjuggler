@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from $Revision$ of $RCSfile$
+// Generated from Revision: 1.60 of RCSfile: class_cxx.tmpl,v
 
 
 
@@ -68,137 +68,132 @@ extern "C"
    }
 
    // Wrapper for non-virtual method jccl::ConfigElement::isValid()
-   SHARPPY_API bool jccl_ConfigElement_isValid__(jccl_ConfigElement_Holder* self_)
+   SHARPPY_API bool jccl_ConfigElement_isValid__0(jccl_ConfigElement_Holder* self_)
    {
       bool result;
       result = self_->mPtr->isValid();
-
       return result;
    }
 
+
    // Wrapper for non-virtual method jccl::ConfigElement::assertValid()
-   SHARPPY_API void jccl_ConfigElement_assertValid__(jccl_ConfigElement_Holder* self_)
+   SHARPPY_API void jccl_ConfigElement_assertValid__0(jccl_ConfigElement_Holder* self_)
    {
       self_->mPtr->assertValid();
    }
 
+
    // Wrapper for non-virtual method jccl::ConfigElement::getChildElement()
-   SHARPPY_API boost::shared_ptr<jccl::ConfigElement>* jccl_ConfigElement_getChildElement__std_basic_string_char_std__char_traits_char__std__allocator_char__(jccl_ConfigElement_Holder* self_, const char* p0)
+   SHARPPY_API boost::shared_ptr<jccl::ConfigElement>* jccl_ConfigElement_getChildElement__std_basic_string_char_std__char_traits_char__std__allocator_char__1(jccl_ConfigElement_Holder* self_, const char* p0)
    {
       boost::shared_ptr<jccl::ConfigElement>* result;
       result = new boost::shared_ptr<jccl::ConfigElement>(self_->mPtr->getChildElement(p0));
-
       return result;
    }
 
+
    // Wrapper for non-virtual method jccl::ConfigElement::getNum()
-   SHARPPY_API int jccl_ConfigElement_getNum__std_basic_string_char_std__char_traits_char__std__allocator_char__(jccl_ConfigElement_Holder* self_, const char* p0)
+   SHARPPY_API int jccl_ConfigElement_getNum__std_basic_string_char_std__char_traits_char__std__allocator_char__1(jccl_ConfigElement_Holder* self_, const char* p0)
    {
       int result;
       result = self_->mPtr->getNum(p0);
-
       return result;
    }
+
 
    // Wrapper for non-virtual method jccl::ConfigElement::getName()
-   SHARPPY_API char* jccl_ConfigElement_getName__(jccl_ConfigElement_Holder* self_)
+   SHARPPY_API char* jccl_ConfigElement_getName__0(jccl_ConfigElement_Holder* self_)
    {
-      char* result;
       std::basic_string<char,std::char_traits<char>,std::allocator<char> > temp_result;
+      char* result;
       temp_result = self_->mPtr->getName();
       result = strdup(temp_result.c_str());
-
       return result;
    }
+
 
    // Wrapper for non-virtual method jccl::ConfigElement::getFullName()
-   SHARPPY_API char* jccl_ConfigElement_getFullName__(jccl_ConfigElement_Holder* self_)
+   SHARPPY_API char* jccl_ConfigElement_getFullName__0(jccl_ConfigElement_Holder* self_)
    {
-      char* result;
       std::basic_string<char,std::char_traits<char>,std::allocator<char> > temp_result;
+      char* result;
       temp_result = self_->mPtr->getFullName();
       result = strdup(temp_result.c_str());
-
       return result;
    }
 
+
    // Wrapper for non-virtual method jccl::ConfigElement::getVersion()
-   SHARPPY_API unsigned int jccl_ConfigElement_getVersion__(jccl_ConfigElement_Holder* self_)
+   SHARPPY_API unsigned int jccl_ConfigElement_getVersion__0(jccl_ConfigElement_Holder* self_)
    {
       unsigned int result;
       result = self_->mPtr->getVersion();
-
       return result;
    }
+
 
    // Wrapper for non-virtual method jccl::ConfigElement::getID()
-   SHARPPY_API char* jccl_ConfigElement_getID__(jccl_ConfigElement_Holder* self_)
+   SHARPPY_API char* jccl_ConfigElement_getID__0(jccl_ConfigElement_Holder* self_)
    {
-      char* result;
       std::basic_string<char,std::char_traits<char>,std::allocator<char> > temp_result;
+      char* result;
       temp_result = self_->mPtr->getID();
       result = strdup(temp_result.c_str());
-
       return result;
    }
 
+
    // Wrapper for non-virtual method jccl::ConfigElement::setProperty()
-   SHARPPY_API bool jccl_ConfigElement_setProperty__std_basic_string_char_std__char_traits_char__std__allocator_char___int_bool(jccl_ConfigElement_Holder* self_, const char* p0, const int p1, bool p2)
+   SHARPPY_API bool jccl_ConfigElement_setProperty__std_basic_string_char_std__char_traits_char__std__allocator_char___int_bool3(jccl_ConfigElement_Holder* self_, const char* p0, const int p1, bool p2)
    {
       bool result;
       result = self_->mPtr->setProperty(p0, p1, p2);
-
       return result;
    }
 
+
    // Wrapper for non-virtual method jccl::ConfigElement::setProperty()
-   SHARPPY_API bool jccl_ConfigElement_setProperty__std_basic_string_char_std__char_traits_char__std__allocator_char___int_boost_shared_ptr_jccl__ConfigElement(jccl_ConfigElement_Holder* self_, const char* p0, const int p1, boost::shared_ptr<jccl::ConfigElement> p2)
+   SHARPPY_API bool jccl_ConfigElement_setProperty__std_basic_string_char_std__char_traits_char__std__allocator_char___int_boost_shared_ptr_jccl__ConfigElement3(jccl_ConfigElement_Holder* self_, const char* p0, const int p1, boost::shared_ptr<jccl::ConfigElement> p2)
    {
       bool result;
       result = self_->mPtr->setProperty(p0, p1, p2);
-
       return result;
    }
+
 
    // Wrapper for non-virtual method jccl::ConfigElement::setDefinition()
-   SHARPPY_API void jccl_ConfigElement_setDefinition__boost_shared_ptr_jccl__ConfigDefinition(jccl_ConfigElement_Holder* self_, boost::shared_ptr<jccl::ConfigDefinition> p0)
+   SHARPPY_API void jccl_ConfigElement_setDefinition__boost_shared_ptr_jccl__ConfigDefinition1(jccl_ConfigElement_Holder* self_, boost::shared_ptr<jccl::ConfigDefinition> p0)
    {
       self_->mPtr->setDefinition(p0);
    }
 
 
-
-
    // Wrapper for non-virtual method jccl::ConfigElement::operator ==()
-   SHARPPY_API bool jccl_ConfigElement_equal__jccl_ConfigElement(jccl_ConfigElement_Holder* self_, const jccl::ConfigElement* p0)
+   SHARPPY_API bool jccl_ConfigElement_equal__jccl_ConfigElement1(jccl_ConfigElement_Holder* self_, const jccl::ConfigElement* p0)
    {
-      const jccl::ConfigElement& marshal_p0 = *p0; // Pre-call marshaling for p0
+      const jccl::ConfigElement& marshal_p0 = *p0;
       bool result;
       result = self_->mPtr->operator==(marshal_p0);
-
-      ; // Post-call marshaling for p0
       return result;
    }
+
 
    // Wrapper for non-virtual method jccl::ConfigElement::operator !=()
-   SHARPPY_API bool jccl_ConfigElement_not_equal__jccl_ConfigElement(jccl_ConfigElement_Holder* self_, const jccl::ConfigElement* p0)
+   SHARPPY_API bool jccl_ConfigElement_not_equal__jccl_ConfigElement1(jccl_ConfigElement_Holder* self_, const jccl::ConfigElement* p0)
    {
-      const jccl::ConfigElement& marshal_p0 = *p0; // Pre-call marshaling for p0
+      const jccl::ConfigElement& marshal_p0 = *p0;
       bool result;
       result = self_->mPtr->operator!=(marshal_p0);
-
-      ; // Post-call marshaling for p0
       return result;
    }
 
+
    // Wrapper for non-virtual method jccl::ConfigElement::operator <()
-   SHARPPY_API bool jccl_ConfigElement_less_than__jccl_ConfigElement(jccl_ConfigElement_Holder* self_, const jccl::ConfigElement* p0)
+   SHARPPY_API bool jccl_ConfigElement_less_than__jccl_ConfigElement1(jccl_ConfigElement_Holder* self_, const jccl::ConfigElement* p0)
    {
-      const jccl::ConfigElement& marshal_p0 = *p0; // Pre-call marshaling for p0
+      const jccl::ConfigElement& marshal_p0 = *p0;
       bool result;
       result = self_->mPtr->operator<(marshal_p0);
-
-      ; // Post-call marshaling for p0
       return result;
    }
 

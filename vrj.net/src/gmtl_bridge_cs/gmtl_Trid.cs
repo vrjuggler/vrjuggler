@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.70 of RCSfile: class_cs.tmpl,v
+// Generated from Revision: 1.73 of RCSfile: class_cs.tmpl,v
 using System;
 using System.Runtime.InteropServices;
 using System.Reflection;
@@ -119,46 +119,43 @@ public sealed class Trid
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
    [return : MarshalAs(UnmanagedType.CustomMarshaler,
                        MarshalTypeRef = typeof(gmtl.Vec3dMarshaler))]
-   private extern static gmtl.Vec3d gmtl_Tri_double__edge__int(IntPtr obj,
+   private extern static gmtl.Vec3d gmtl_Tri_double__edge__int1(IntPtr obj,
 	int p0);
 
    public  gmtl.Vec3d edge(int p0)
    {
       gmtl.Vec3d result;
-      result = gmtl_Tri_double__edge__int(mRawObject, p0);
+      result = gmtl_Tri_double__edge__int1(mRawObject, p0);
       return result;
    }
+
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
    [return : MarshalAs(UnmanagedType.CustomMarshaler,
                        MarshalTypeRef = typeof(gmtl.Vec3dMarshaler))]
-   private extern static gmtl.Vec3d gmtl_Tri_double__edge__int_int(IntPtr obj,
+   private extern static gmtl.Vec3d gmtl_Tri_double__edge__int_int2(IntPtr obj,
 	int p0,
 	int p1);
 
    public  gmtl.Vec3d edge(int p0, int p1)
    {
       gmtl.Vec3d result;
-      result = gmtl_Tri_double__edge__int_int(mRawObject, p0, p1);
+      result = gmtl_Tri_double__edge__int_int2(mRawObject, p0, p1);
       return result;
    }
 
+
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
-   private extern static void gmtl_Tri_double__set__gmtl_Point3d_gmtl_Point3d_gmtl_Point3d(IntPtr obj,
+   private extern static void gmtl_Tri_double__set__gmtl_Point3d_gmtl_Point3d_gmtl_Point3d3(IntPtr obj,
 	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.Point3dMarshaler))] gmtl.Point3d p0,
 	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.Point3dMarshaler))] gmtl.Point3d p1,
 	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.Point3dMarshaler))] gmtl.Point3d p2);
 
    public  void set(gmtl.Point3d p0, gmtl.Point3d p1, gmtl.Point3d p2)
    {
-      
-      
-      
-      gmtl_Tri_double__set__gmtl_Point3d_gmtl_Point3d_gmtl_Point3d(mRawObject, p0, p1, p2);
-      
-      
-      
+      gmtl_Tri_double__set__gmtl_Point3d_gmtl_Point3d_gmtl_Point3d3(mRawObject, p0, p1, p2);
    }
+
 
    // End of non-virtual methods.
 

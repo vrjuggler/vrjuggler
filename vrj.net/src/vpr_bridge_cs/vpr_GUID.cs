@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.69 of RCSfile: class_cs.tmpl,v
+// Generated from Revision: 1.73 of RCSfile: class_cs.tmpl,v
 using System;
 using System.Runtime.InteropServices;
 using System.Reflection;
@@ -203,34 +203,35 @@ public sealed class GUID
 
    // Start of non-virtual methods.
    [DllImport("vpr_bridge", CharSet = CharSet.Ansi)]
-   private extern static string vpr_GUID_toString__(IntPtr obj);
+   private extern static string vpr_GUID_toString__0(IntPtr obj);
 
    public  string toString()
    {
       string result;
-      result = vpr_GUID_toString__(mRawObject);
+      result = vpr_GUID_toString__0(mRawObject);
       return result;
    }
 
+
    [DllImport("vpr_bridge", CharSet = CharSet.Ansi)]
-   private extern static void vpr_GUID_generate__(IntPtr obj);
+   private extern static void vpr_GUID_generate__0(IntPtr obj);
 
    public  void generate()
    {
-      vpr_GUID_generate__(mRawObject);
+      vpr_GUID_generate__0(mRawObject);
    }
 
+
    [DllImport("vpr_bridge", CharSet = CharSet.Ansi)]
-   private extern static void vpr_GUID_generate__vpr_GUID_std_basic_string_char_std__char_traits_char__std__allocator_char__(IntPtr obj,
+   private extern static void vpr_GUID_generate__vpr_GUID_std_basic_string_char_std__char_traits_char__std__allocator_char__2(IntPtr obj,
 	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(vpr.GUIDMarshaler))] vpr.GUID p0,
 	string p1);
 
    public  void generate(vpr.GUID p0, string p1)
    {
-      
-      vpr_GUID_generate__vpr_GUID_std_basic_string_char_std__char_traits_char__std__allocator_char__(mRawObject, p0, p1);
-      
+      vpr_GUID_generate__vpr_GUID_std_basic_string_char_std__char_traits_char__std__allocator_char__2(mRawObject, p0, p1);
    }
+
 
    // End of non-virtual methods.
 
@@ -241,32 +242,30 @@ public sealed class GUID
    [DllImport("vpr_bridge", CharSet = CharSet.Ansi)]
    [return : MarshalAs(UnmanagedType.CustomMarshaler,
                        MarshalTypeRef = typeof(vpr.ReturnStatusMarshaler))]
-   private extern static vpr.ReturnStatus vpr_GUID_writeObject__vpr_ObjectWriter(IntPtr obj,
+   private extern static vpr.ReturnStatus vpr_GUID_writeObject__vpr_ObjectWriter1(IntPtr obj,
 	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(vpr.ObjectWriterMarshaler))] vpr.ObjectWriter p0);
 
    public  vpr.ReturnStatus writeObject(vpr.ObjectWriter p0)
    {
-      
       vpr.ReturnStatus result;
-      result = vpr_GUID_writeObject__vpr_ObjectWriter(mRawObject, p0);
-      
+      result = vpr_GUID_writeObject__vpr_ObjectWriter1(mRawObject, p0);
       return result;
    }
+
 
    [DllImport("vpr_bridge", CharSet = CharSet.Ansi)]
    [return : MarshalAs(UnmanagedType.CustomMarshaler,
                        MarshalTypeRef = typeof(vpr.ReturnStatusMarshaler))]
-   private extern static vpr.ReturnStatus vpr_GUID_readObject__vpr_ObjectReader(IntPtr obj,
+   private extern static vpr.ReturnStatus vpr_GUID_readObject__vpr_ObjectReader1(IntPtr obj,
 	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(vpr.ObjectReaderMarshaler))] vpr.ObjectReader p0);
 
    public  vpr.ReturnStatus readObject(vpr.ObjectReader p0)
    {
-      
       vpr.ReturnStatus result;
-      result = vpr_GUID_readObject__vpr_ObjectReader(mRawObject, p0);
-      
+      result = vpr_GUID_readObject__vpr_ObjectReader1(mRawObject, p0);
       return result;
    }
+
 
    // End of virtual methods.
 

@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.58 of RCSfile: class_cxx.tmpl,v
+// Generated from Revision: 1.60 of RCSfile: class_cxx.tmpl,v
 
 
 
@@ -90,50 +90,47 @@ extern "C"
    }
 
    // Wrapper for non-virtual method vpr::GUID::toString()
-   SHARPPY_API char* vpr_GUID_toString__(vpr::GUID* self_)
+   SHARPPY_API char* vpr_GUID_toString__0(vpr::GUID* self_)
    {
-      char* result;
       std::basic_string<char,std::char_traits<char>,std::allocator<char> > temp_result;
+      char* result;
       temp_result = self_->toString();
       result = strdup(temp_result.c_str());
-
       return result;
    }
 
+
    // Wrapper for non-virtual method vpr::GUID::generate()
-   SHARPPY_API void vpr_GUID_generate__(vpr::GUID* self_)
+   SHARPPY_API void vpr_GUID_generate__0(vpr::GUID* self_)
    {
       self_->generate();
    }
 
-   // Wrapper for non-virtual method vpr::GUID::generate()
-   SHARPPY_API void vpr_GUID_generate__vpr_GUID_std_basic_string_char_std__char_traits_char__std__allocator_char__(vpr::GUID* self_, const vpr::GUID* p0, const char* p1)
-   {
-      const vpr::GUID& marshal_p0 = *p0; // Pre-call marshaling for p0
-      self_->generate(marshal_p0, p1);
-      ; // Post-call marshaling for p0
-   }
 
+   // Wrapper for non-virtual method vpr::GUID::generate()
+   SHARPPY_API void vpr_GUID_generate__vpr_GUID_std_basic_string_char_std__char_traits_char__std__allocator_char__2(vpr::GUID* self_, const vpr::GUID* p0, const char* p1)
+   {
+      const vpr::GUID& marshal_p0 = *p0;
+      self_->generate(marshal_p0, p1);
+   }
 
 
    // Wrapper for virtual method vpr::GUID::writeObject()
-   SHARPPY_API vpr::ReturnStatus* vpr_GUID_writeObject__vpr_ObjectWriter(vpr::GUID* self_, vpr::ObjectWriter* p0)
+   SHARPPY_API vpr::ReturnStatus* vpr_GUID_writeObject__vpr_ObjectWriter1(vpr::GUID* self_, vpr::ObjectWriter* p0)
    {
       vpr::ReturnStatus* result;
       result = new vpr::ReturnStatus(self_->writeObject(p0));
-
       return result;
    }
 
+
    // Wrapper for virtual method vpr::GUID::readObject()
-   SHARPPY_API vpr::ReturnStatus* vpr_GUID_readObject__vpr_ObjectReader(vpr::GUID* self_, vpr::ObjectReader* p0)
+   SHARPPY_API vpr::ReturnStatus* vpr_GUID_readObject__vpr_ObjectReader1(vpr::GUID* self_, vpr::ObjectReader* p0)
    {
       vpr::ReturnStatus* result;
       result = new vpr::ReturnStatus(self_->readObject(p0));
-
       return result;
    }
-
 
 
    // Wrapper for reading static data member vpr::GUID::generateTag
@@ -156,35 +153,31 @@ extern "C"
 
 
    // Wrapper for non-virtual method vpr::GUID::operator ==()
-   SHARPPY_API bool vpr_GUID_equal__vpr_GUID(vpr::GUID* self_, const vpr::GUID* p0)
+   SHARPPY_API bool vpr_GUID_equal__vpr_GUID1(vpr::GUID* self_, const vpr::GUID* p0)
    {
-      const vpr::GUID& marshal_p0 = *p0; // Pre-call marshaling for p0
+      const vpr::GUID& marshal_p0 = *p0;
       bool result;
       result = self_->operator==(marshal_p0);
-
-      ; // Post-call marshaling for p0
       return result;
    }
+
 
    // Wrapper for non-virtual method vpr::GUID::operator !=()
-   SHARPPY_API bool vpr_GUID_not_equal__vpr_GUID(vpr::GUID* self_, const vpr::GUID* p0)
+   SHARPPY_API bool vpr_GUID_not_equal__vpr_GUID1(vpr::GUID* self_, const vpr::GUID* p0)
    {
-      const vpr::GUID& marshal_p0 = *p0; // Pre-call marshaling for p0
+      const vpr::GUID& marshal_p0 = *p0;
       bool result;
       result = self_->operator!=(marshal_p0);
-
-      ; // Post-call marshaling for p0
       return result;
    }
 
+
    // Wrapper for non-virtual method vpr::GUID::operator <()
-   SHARPPY_API bool vpr_GUID_less_than__vpr_GUID(vpr::GUID* self_, const vpr::GUID* p0)
+   SHARPPY_API bool vpr_GUID_less_than__vpr_GUID1(vpr::GUID* self_, const vpr::GUID* p0)
    {
-      const vpr::GUID& marshal_p0 = *p0; // Pre-call marshaling for p0
+      const vpr::GUID& marshal_p0 = *p0;
       bool result;
       result = self_->operator<(marshal_p0);
-
-      ; // Post-call marshaling for p0
       return result;
    }
 
@@ -215,11 +208,6 @@ extern "C"
       delete self_;
    }
 
-
-
-
-
-
 } // extern "C" for vpr::GUID::GenerateTag
 
 
@@ -247,11 +235,6 @@ extern "C"
       delete self_;
    }
 
-
-
-
-
-
 } // extern "C" for vpr::GUID::StdGUID
 
 
@@ -278,11 +261,6 @@ extern "C"
    {
       delete self_;
    }
-
-
-
-
-
 
 } // extern "C" for vpr::GUID::hash
 

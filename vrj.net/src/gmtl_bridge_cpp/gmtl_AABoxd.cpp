@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.58 of RCSfile: class_cxx.tmpl,v
+// Generated from Revision: 1.60 of RCSfile: class_cxx.tmpl,v
 
 
 
@@ -75,57 +75,53 @@ extern "C"
    }
 
    // Wrapper for non-virtual method gmtl::AABox<double>::getMin()
-   SHARPPY_API const gmtl::Point3d* gmtl_AABox_double__getMin__(gmtl::AABoxd* self_)
+   SHARPPY_API const gmtl::Point3d* gmtl_AABox_double__getMin__0(gmtl::AABoxd* self_)
    {
       const gmtl::Point3d* result;
       result = new const gmtl::Point3d(self_->getMin());
-
       return result;
    }
 
+
    // Wrapper for non-virtual method gmtl::AABox<double>::getMax()
-   SHARPPY_API const gmtl::Point3d* gmtl_AABox_double__getMax__(gmtl::AABoxd* self_)
+   SHARPPY_API const gmtl::Point3d* gmtl_AABox_double__getMax__0(gmtl::AABoxd* self_)
    {
       const gmtl::Point3d* result;
       result = new const gmtl::Point3d(self_->getMax());
-
       return result;
    }
 
+
    // Wrapper for non-virtual method gmtl::AABox<double>::isEmpty()
-   SHARPPY_API bool gmtl_AABox_double__isEmpty__(gmtl::AABoxd* self_)
+   SHARPPY_API bool gmtl_AABox_double__isEmpty__0(gmtl::AABoxd* self_)
    {
       bool result;
       result = self_->isEmpty();
-
       return result;
    }
 
+
    // Wrapper for non-virtual method gmtl::AABox<double>::setMin()
-   SHARPPY_API void gmtl_AABox_double__setMin__gmtl_Point3d(gmtl::AABoxd* self_, const gmtl::Point3d* p0)
+   SHARPPY_API void gmtl_AABox_double__setMin__gmtl_Point3d1(gmtl::AABoxd* self_, const gmtl::Point3d* p0)
    {
-      const gmtl::Point3d& marshal_p0 = *p0; // Pre-call marshaling for p0
+      const gmtl::Point3d& marshal_p0 = *p0;
       self_->setMin(marshal_p0);
-      ; // Post-call marshaling for p0
    }
+
 
    // Wrapper for non-virtual method gmtl::AABox<double>::setMax()
-   SHARPPY_API void gmtl_AABox_double__setMax__gmtl_Point3d(gmtl::AABoxd* self_, const gmtl::Point3d* p0)
+   SHARPPY_API void gmtl_AABox_double__setMax__gmtl_Point3d1(gmtl::AABoxd* self_, const gmtl::Point3d* p0)
    {
-      const gmtl::Point3d& marshal_p0 = *p0; // Pre-call marshaling for p0
+      const gmtl::Point3d& marshal_p0 = *p0;
       self_->setMax(marshal_p0);
-      ; // Post-call marshaling for p0
    }
 
+
    // Wrapper for non-virtual method gmtl::AABox<double>::setEmpty()
-   SHARPPY_API void gmtl_AABox_double__setEmpty__bool(gmtl::AABoxd* self_, bool p0)
+   SHARPPY_API void gmtl_AABox_double__setEmpty__bool1(gmtl::AABoxd* self_, bool p0)
    {
       self_->setEmpty(p0);
    }
-
-
-
-
 
 
 } // extern "C" for gmtl::AABoxd

@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from $Revision$ of $RCSfile$
+// Generated from Revision: 1.60 of RCSfile: class_cxx.tmpl,v
 
 
 
@@ -40,17 +40,13 @@ extern "C"
       delete self_;
    }
 
-
    // Wrapper for virtual method vpr::WriteableObject::writeObject()
-   SHARPPY_API vpr::ReturnStatus* vpr_WriteableObject_writeObject__vpr_ObjectWriter(vpr_WriteableObject_Adapter* self_, vpr::ObjectWriter* p0)
+   SHARPPY_API vpr::ReturnStatus* vpr_WriteableObject_writeObject__vpr_ObjectWriter1(vpr_WriteableObject_Adapter* self_, vpr::ObjectWriter* p0)
    {
       vpr::ReturnStatus* result;
       result = new vpr::ReturnStatus(self_->writeObject(p0));
-
       return result;
    }
-
-
 
 
 } // extern "C" for vpr::WriteableObject

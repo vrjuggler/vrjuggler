@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.66 of RCSfile: class_cs.tmpl,v
+// Generated from Revision: 1.73 of RCSfile: class_cs.tmpl,v
 using System;
 using System.Runtime.InteropServices;
 using System.Reflection;
@@ -112,7 +112,7 @@ public sealed class Quatf
 
    // Start of non-virtual methods.
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
-   private extern static void gmtl_Quat_float__set__float_float_float_float(IntPtr obj,
+   private extern static void gmtl_Quat_float__set__float_float_float_float4(IntPtr obj,
 	float p0,
 	float p1,
 	float p2,
@@ -120,11 +120,12 @@ public sealed class Quatf
 
    public  void set(float p0, float p1, float p2, float p3)
    {
-      gmtl_Quat_float__set__float_float_float_float(mRawObject, p0, p1, p2, p3);
+      gmtl_Quat_float__set__float_float_float_float4(mRawObject, p0, p1, p2, p3);
    }
 
+
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
-   private extern static void gmtl_Quat_float__get__float_float_float_float(IntPtr obj,
+   private extern static void gmtl_Quat_float__get__float_float_float_float4(IntPtr obj,
 	ref float p0,
 	ref float p1,
 	ref float p2,
@@ -132,26 +133,20 @@ public sealed class Quatf
 
    public  void get(ref float p0, ref float p1, ref float p2, ref float p3)
    {
-      
-      
-      
-      
-      gmtl_Quat_float__get__float_float_float_float(mRawObject, ref p0, ref p1, ref p2, ref p3);
-      
-      
-      
-      
+      gmtl_Quat_float__get__float_float_float_float4(mRawObject, ref p0, ref p1, ref p2, ref p3);
    }
 
+
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
-   private extern static float gmtl_Quat_float__getData__(IntPtr obj);
+   private extern static float gmtl_Quat_float__getData__0(IntPtr obj);
 
    public  float getData()
    {
       float result;
-      result = gmtl_Quat_float__getData__(mRawObject);
+      result = gmtl_Quat_float__getData__0(mRawObject);
       return result;
    }
+
 
    // End of non-virtual methods.
 

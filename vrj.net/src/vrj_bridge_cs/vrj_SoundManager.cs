@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.69 of RCSfile: class_cs.tmpl,v
+// Generated from Revision: 1.73 of RCSfile: class_cs.tmpl,v
 using System;
 using System.Runtime.InteropServices;
 using System.Reflection;
@@ -119,61 +119,66 @@ public class SoundManager
 
    // Start of virtual methods.
    [DllImport("vrj_bridge", CharSet = CharSet.Ansi)]
-   private extern static bool vrj_SoundManager_configAdd__boost_shared_ptr_jccl__ConfigElement(IntPtr obj,
+   private extern static bool vrj_SoundManager_configAdd__boost_shared_ptr_jccl__ConfigElement1(IntPtr obj,
 	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(jccl.ConfigElementMarshaler))] jccl.ConfigElement p0);
 
    public override bool configAdd(jccl.ConfigElement p0)
    {
       bool result;
-      result = vrj_SoundManager_configAdd__boost_shared_ptr_jccl__ConfigElement(mRawObject, p0);
+      result = vrj_SoundManager_configAdd__boost_shared_ptr_jccl__ConfigElement1(mRawObject, p0);
       return result;
    }
 
+
    [DllImport("vrj_bridge", CharSet = CharSet.Ansi)]
-   private extern static bool vrj_SoundManager_configRemove__boost_shared_ptr_jccl__ConfigElement(IntPtr obj,
+   private extern static bool vrj_SoundManager_configRemove__boost_shared_ptr_jccl__ConfigElement1(IntPtr obj,
 	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(jccl.ConfigElementMarshaler))] jccl.ConfigElement p0);
 
    public override bool configRemove(jccl.ConfigElement p0)
    {
       bool result;
-      result = vrj_SoundManager_configRemove__boost_shared_ptr_jccl__ConfigElement(mRawObject, p0);
+      result = vrj_SoundManager_configRemove__boost_shared_ptr_jccl__ConfigElement1(mRawObject, p0);
       return result;
    }
 
+
    [DllImport("vrj_bridge", CharSet = CharSet.Ansi)]
-   private extern static bool vrj_SoundManager_configCanHandle__boost_shared_ptr_jccl__ConfigElement(IntPtr obj,
+   private extern static bool vrj_SoundManager_configCanHandle__boost_shared_ptr_jccl__ConfigElement1(IntPtr obj,
 	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(jccl.ConfigElementMarshaler))] jccl.ConfigElement p0);
 
    public override bool configCanHandle(jccl.ConfigElement p0)
    {
       bool result;
-      result = vrj_SoundManager_configCanHandle__boost_shared_ptr_jccl__ConfigElement(mRawObject, p0);
+      result = vrj_SoundManager_configCanHandle__boost_shared_ptr_jccl__ConfigElement1(mRawObject, p0);
       return result;
    }
+
 
    // Delegate for the update() callback.
    public delegate void updateDelegate();
    protected updateDelegate m_updateDelegate;
 
    [DllImport("vrj_bridge", CharSet = CharSet.Ansi)]
-   private extern static void vrj_SoundManager_update__(IntPtr obj);
+   private extern static void vrj_SoundManager_update__0(IntPtr obj);
 
    public virtual void update()
    {
-      vrj_SoundManager_update__(mRawObject);
+      vrj_SoundManager_update__0(mRawObject);
    }
+
 
    // Delegate for the sync() callback.
    public delegate void syncDelegate();
    protected syncDelegate m_syncDelegate;
 
    [DllImport("vrj_bridge", CharSet = CharSet.Ansi)]
-   private extern static void vrj_SoundManager_sync__(IntPtr obj);
+   private extern static void vrj_SoundManager_sync__0(IntPtr obj);
 
    public virtual void sync()
    {
-      vrj_SoundManager_sync__(mRawObject);
+      vrj_SoundManager_sync__0(mRawObject);
    }
+
 
    // End of virtual methods.
 

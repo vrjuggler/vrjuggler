@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.68 of RCSfile: class_cs.tmpl,v
+// Generated from Revision: 1.73 of RCSfile: class_cs.tmpl,v
 using System;
 using System.Runtime.InteropServices;
 using System.Reflection;
@@ -107,19 +107,21 @@ public abstract class ConfigElementHandler
 
    public abstract bool configCanHandle(jccl.ConfigElement p0);
 
+
    // Delegate for the configProcessPending() callback.
    public delegate int configProcessPendingDelegate();
    protected configProcessPendingDelegate m_configProcessPendingDelegate;
 
    [DllImport("jccl_bridge", CharSet = CharSet.Ansi)]
-   private extern static int jccl_ConfigElementHandler_configProcessPending__(IntPtr obj);
+   private extern static int jccl_ConfigElementHandler_configProcessPending__0(IntPtr obj);
 
    public virtual int configProcessPending()
    {
       int result;
-      result = jccl_ConfigElementHandler_configProcessPending__(mRawObject);
+      result = jccl_ConfigElementHandler_configProcessPending__0(mRawObject);
       return result;
    }
+
 
    // Delegate for the configAdd() callback.
    public delegate bool configAddDelegate_boost_shared_ptr_jccl__ConfigElement([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(jccl.ConfigElementMarshaler))] jccl.ConfigElement p0);
@@ -127,11 +129,13 @@ public abstract class ConfigElementHandler
 
    public abstract bool configAdd(jccl.ConfigElement p0);
 
+
    // Delegate for the configRemove() callback.
    public delegate bool configRemoveDelegate_boost_shared_ptr_jccl__ConfigElement([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(jccl.ConfigElementMarshaler))] jccl.ConfigElement p0);
    protected configRemoveDelegate_boost_shared_ptr_jccl__ConfigElement m_configRemoveDelegate_boost_shared_ptr_jccl__ConfigElement;
 
    public abstract bool configRemove(jccl.ConfigElement p0);
+
 
    // End of virtual methods.
 
@@ -156,35 +160,35 @@ public class ConfigElementHandlerMarshaler : ICustomMarshaler
       }
 
       [DllImport("jccl_bridge", CharSet = CharSet.Ansi)]
-      private extern static bool jccl_ConfigElementHandler_configCanHandle__boost_shared_ptr_jccl__ConfigElement(IntPtr obj,
+      private extern static bool jccl_ConfigElementHandler_configCanHandle__boost_shared_ptr_jccl__ConfigElement1(IntPtr obj,
 	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(jccl.ConfigElementMarshaler))] jccl.ConfigElement p0);
 
       public override bool configCanHandle(jccl.ConfigElement p0)
       {
          bool result;
-         result = jccl_ConfigElementHandler_configCanHandle__boost_shared_ptr_jccl__ConfigElement(mRawObject, p0);
+         result = jccl_ConfigElementHandler_configCanHandle__boost_shared_ptr_jccl__ConfigElement1(mRawObject, p0);
          return result;
       }
 
       [DllImport("jccl_bridge", CharSet = CharSet.Ansi)]
-      private extern static bool jccl_ConfigElementHandler_configAdd__boost_shared_ptr_jccl__ConfigElement(IntPtr obj,
+      private extern static bool jccl_ConfigElementHandler_configAdd__boost_shared_ptr_jccl__ConfigElement1(IntPtr obj,
 	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(jccl.ConfigElementMarshaler))] jccl.ConfigElement p0);
 
       public override bool configAdd(jccl.ConfigElement p0)
       {
          bool result;
-         result = jccl_ConfigElementHandler_configAdd__boost_shared_ptr_jccl__ConfigElement(mRawObject, p0);
+         result = jccl_ConfigElementHandler_configAdd__boost_shared_ptr_jccl__ConfigElement1(mRawObject, p0);
          return result;
       }
 
       [DllImport("jccl_bridge", CharSet = CharSet.Ansi)]
-      private extern static bool jccl_ConfigElementHandler_configRemove__boost_shared_ptr_jccl__ConfigElement(IntPtr obj,
+      private extern static bool jccl_ConfigElementHandler_configRemove__boost_shared_ptr_jccl__ConfigElement1(IntPtr obj,
 	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(jccl.ConfigElementMarshaler))] jccl.ConfigElement p0);
 
       public override bool configRemove(jccl.ConfigElement p0)
       {
          bool result;
-         result = jccl_ConfigElementHandler_configRemove__boost_shared_ptr_jccl__ConfigElement(mRawObject, p0);
+         result = jccl_ConfigElementHandler_configRemove__boost_shared_ptr_jccl__ConfigElement1(mRawObject, p0);
          return result;
       }
 

@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from $Revision$ of $RCSfile$
+// Generated from Revision: 1.73 of RCSfile: class_cs.tmpl,v
 using System;
 using System.Runtime.InteropServices;
 using System.Reflection;
@@ -92,28 +92,31 @@ public class PositionData
 
    // Operator overloads.
 
+   // Converter operators.
 
    // Start of non-virtual methods.
    [DllImport("gadget_bridge", CharSet = CharSet.Ansi)]
    [return : MarshalAs(UnmanagedType.CustomMarshaler,
                        MarshalTypeRef = typeof(gmtl.Matrix44fMarshaler))]
-   private extern static gmtl.Matrix44f gadget_PositionData_getPosition__(IntPtr obj);
+   private extern static gmtl.Matrix44f gadget_PositionData_getPosition__0(IntPtr obj);
 
    public  gmtl.Matrix44f getPosition()
    {
       gmtl.Matrix44f result;
-      result = gadget_PositionData_getPosition__(mRawObject);
+      result = gadget_PositionData_getPosition__0(mRawObject);
       return result;
    }
 
+
    [DllImport("gadget_bridge", CharSet = CharSet.Ansi)]
-   private extern static void gadget_PositionData_setPosition__gmtl_Matrix44f(IntPtr obj,
+   private extern static void gadget_PositionData_setPosition__gmtl_Matrix44f1(IntPtr obj,
 	gmtl.Matrix44f p0);
 
    public  void setPosition(gmtl.Matrix44f p0)
    {
-      gadget_PositionData_setPosition__gmtl_Matrix44f(mRawObject, p0);
+      gadget_PositionData_setPosition__gmtl_Matrix44f1(mRawObject, p0);
    }
+
 
    // End of non-virtual methods.
 

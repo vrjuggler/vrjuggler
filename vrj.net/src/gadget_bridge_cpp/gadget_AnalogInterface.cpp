@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.56 of RCSfile: class_cxx.tmpl,v
+// Generated from Revision: 1.60 of RCSfile: class_cxx.tmpl,v
 
 
 
@@ -71,23 +71,19 @@ extern "C"
    }
 
    // Wrapper for non-virtual method gadget::DeviceInterface<gadget::AnalogProxy>::getProxy()
-   SHARPPY_API gadget::AnalogProxy* gadget_DeviceInterface_gadget_AnalogProxy__getProxy__(gadget_AnalogInterface_Holder* self_)
+   SHARPPY_API gadget::AnalogProxy* gadget_DeviceInterface_gadget_AnalogProxy__getProxy__0(gadget_AnalogInterface_Holder* self_)
    {
       gadget::AnalogProxy* result;
       result = self_->mPtr.getProxy();
-
       return result;
    }
 
 
-
    // Wrapper for virtual method gadget::DeviceInterface<gadget::AnalogProxy>::refresh()
-   SHARPPY_API void gadget_DeviceInterface_gadget_AnalogProxy__refresh__(gadget_AnalogInterface_Holder* self_)
+   SHARPPY_API void gadget_DeviceInterface_gadget_AnalogProxy__refresh__0(gadget_AnalogInterface_Holder* self_)
    {
       self_->mPtr.refresh();
    }
-
-
 
 
 } // extern "C" for gadget::AnalogInterface

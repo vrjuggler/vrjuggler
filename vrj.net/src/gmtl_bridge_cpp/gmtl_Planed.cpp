@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.58 of RCSfile: class_cxx.tmpl,v
+// Generated from Revision: 1.60 of RCSfile: class_cxx.tmpl,v
 
 
 
@@ -100,40 +100,36 @@ extern "C"
    }
 
    // Wrapper for non-virtual method gmtl::Plane<double>::getNormal()
-   SHARPPY_API const gmtl::Vec3d* gmtl_Plane_double__getNormal__(gmtl::Planed* self_)
+   SHARPPY_API const gmtl::Vec3d* gmtl_Plane_double__getNormal__0(gmtl::Planed* self_)
    {
       const gmtl::Vec3d* result;
       result = new const gmtl::Vec3d(self_->getNormal());
-
       return result;
    }
 
+
    // Wrapper for non-virtual method gmtl::Plane<double>::setNormal()
-   SHARPPY_API void gmtl_Plane_double__setNormal__gmtl_Vec3d(gmtl::Planed* self_, const gmtl::Vec3d* p0)
+   SHARPPY_API void gmtl_Plane_double__setNormal__gmtl_Vec3d1(gmtl::Planed* self_, const gmtl::Vec3d* p0)
    {
-      const gmtl::Vec3d& marshal_p0 = *p0; // Pre-call marshaling for p0
+      const gmtl::Vec3d& marshal_p0 = *p0;
       self_->setNormal(marshal_p0);
-      ; // Post-call marshaling for p0
    }
 
+
    // Wrapper for non-virtual method gmtl::Plane<double>::getOffset()
-   SHARPPY_API  double gmtl_Plane_double__getOffset__(gmtl::Planed* self_)
+   SHARPPY_API  double gmtl_Plane_double__getOffset__0(gmtl::Planed* self_)
    {
        double result;
       result = self_->getOffset();
-
       return result;
    }
 
+
    // Wrapper for non-virtual method gmtl::Plane<double>::setOffset()
-   SHARPPY_API void gmtl_Plane_double__setOffset__double(gmtl::Planed* self_, const double& p0)
+   SHARPPY_API void gmtl_Plane_double__setOffset__double1(gmtl::Planed* self_, const double& p0)
    {
       self_->setOffset(p0);
    }
-
-
-
-
 
 
 } // extern "C" for gmtl::Planed

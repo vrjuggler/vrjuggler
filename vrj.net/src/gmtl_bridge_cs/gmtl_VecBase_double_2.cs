@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.70 of RCSfile: class_cs.tmpl,v
+// Generated from Revision: 1.73 of RCSfile: class_cs.tmpl,v
 using System;
 using System.Runtime.InteropServices;
 using System.Reflection;
@@ -151,62 +151,50 @@ public class VecBase_double_2
 
    // Start of non-virtual methods.
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
-   private extern static void gmtl_VecBase_double_2__set__double(IntPtr obj,
+   private extern static void gmtl_VecBase_double_2__set__double1(IntPtr obj,
 	ref double p0);
 
    public  void set(ref double p0)
    {
-      
-      gmtl_VecBase_double_2__set__double(mRawObject, ref p0);
-      
+      gmtl_VecBase_double_2__set__double1(mRawObject, ref p0);
    }
 
 /*
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
-   private extern static void gmtl_VecBase_double_2__set__double(IntPtr obj,
+   private extern static void gmtl_VecBase_double_2__set__double1(IntPtr obj,
 	ref double p0);
 
    public  void set(ref double p0)
    {
-      
-      gmtl_VecBase_double_2__set__double(mRawObject, ref p0);
-      
+      gmtl_VecBase_double_2__set__double1(mRawObject, ref p0);
    }
 */
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
-   private extern static void gmtl_VecBase_double_2__set__double_double(IntPtr obj,
+   private extern static void gmtl_VecBase_double_2__set__double_double2(IntPtr obj,
 	ref double p0,
 	ref double p1);
 
    public  void set(ref double p0, ref double p1)
    {
-      
-      
-      gmtl_VecBase_double_2__set__double_double(mRawObject, ref p0, ref p1);
-      
-      
+      gmtl_VecBase_double_2__set__double_double2(mRawObject, ref p0, ref p1);
    }
 
+
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
-   private extern static void gmtl_VecBase_double_2__set__double_double_double(IntPtr obj,
+   private extern static void gmtl_VecBase_double_2__set__double_double_double3(IntPtr obj,
 	ref double p0,
 	ref double p1,
 	ref double p2);
 
    public  void set(ref double p0, ref double p1, ref double p2)
    {
-      
-      
-      
-      gmtl_VecBase_double_2__set__double_double_double(mRawObject, ref p0, ref p1, ref p2);
-      
-      
-      
+      gmtl_VecBase_double_2__set__double_double_double3(mRawObject, ref p0, ref p1, ref p2);
    }
 
+
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
-   private extern static void gmtl_VecBase_double_2__set__double_double_double_double(IntPtr obj,
+   private extern static void gmtl_VecBase_double_2__set__double_double_double_double4(IntPtr obj,
 	ref double p0,
 	ref double p1,
 	ref double p2,
@@ -214,35 +202,28 @@ public class VecBase_double_2
 
    public  void set(ref double p0, ref double p1, ref double p2, ref double p3)
    {
-      
-      
-      
-      
-      gmtl_VecBase_double_2__set__double_double_double_double(mRawObject, ref p0, ref p1, ref p2, ref p3);
-      
-      
-      
-      
+      gmtl_VecBase_double_2__set__double_double_double_double4(mRawObject, ref p0, ref p1, ref p2, ref p3);
    }
 
+
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
-   private extern static double gmtl_VecBase_double_2__getData__(IntPtr obj);
+   private extern static double gmtl_VecBase_double_2__getData__0(IntPtr obj);
 
    public  double getData()
    {
       double result;
-      result = gmtl_VecBase_double_2__getData__(mRawObject);
+      result = gmtl_VecBase_double_2__getData__0(mRawObject);
       return result;
    }
 
 /*
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
-   private extern static double gmtl_VecBase_double_2__getData__(IntPtr obj);
+   private extern static double gmtl_VecBase_double_2__getData__0(IntPtr obj);
 
    public  double getData()
    {
       double result;
-      result = gmtl_VecBase_double_2__getData__(mRawObject);
+      result = gmtl_VecBase_double_2__getData__0(mRawObject);
       return result;
    }
 */

@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.65 of RCSfile: class_cs.tmpl,v
+// Generated from Revision: 1.73 of RCSfile: class_cs.tmpl,v
 using System;
 using System.Runtime.InteropServices;
 using System.Reflection;
@@ -161,89 +161,97 @@ public abstract class GlApp
 
    public abstract void draw();
 
+
    // Delegate for the contextInit() callback.
    public delegate void contextInitDelegate();
    protected contextInitDelegate m_contextInitDelegate;
 
    [DllImport("vrj_bridge", CharSet = CharSet.Ansi)]
-   private extern static void vrj_GlApp_contextInit__(IntPtr obj);
+   private extern static void vrj_GlApp_contextInit__0(IntPtr obj);
 
    public virtual void contextInit()
    {
-      vrj_GlApp_contextInit__(mRawObject);
+      vrj_GlApp_contextInit__0(mRawObject);
    }
+
 
    // Delegate for the contextClose() callback.
    public delegate void contextCloseDelegate();
    protected contextCloseDelegate m_contextCloseDelegate;
 
    [DllImport("vrj_bridge", CharSet = CharSet.Ansi)]
-   private extern static void vrj_GlApp_contextClose__(IntPtr obj);
+   private extern static void vrj_GlApp_contextClose__0(IntPtr obj);
 
    public virtual void contextClose()
    {
-      vrj_GlApp_contextClose__(mRawObject);
+      vrj_GlApp_contextClose__0(mRawObject);
    }
+
 
    // Delegate for the contextPreDraw() callback.
    public delegate void contextPreDrawDelegate();
    protected contextPreDrawDelegate m_contextPreDrawDelegate;
 
    [DllImport("vrj_bridge", CharSet = CharSet.Ansi)]
-   private extern static void vrj_GlApp_contextPreDraw__(IntPtr obj);
+   private extern static void vrj_GlApp_contextPreDraw__0(IntPtr obj);
 
    public virtual void contextPreDraw()
    {
-      vrj_GlApp_contextPreDraw__(mRawObject);
+      vrj_GlApp_contextPreDraw__0(mRawObject);
    }
+
 
    // Delegate for the contextPostDraw() callback.
    public delegate void contextPostDrawDelegate();
    protected contextPostDrawDelegate m_contextPostDrawDelegate;
 
    [DllImport("vrj_bridge", CharSet = CharSet.Ansi)]
-   private extern static void vrj_GlApp_contextPostDraw__(IntPtr obj);
+   private extern static void vrj_GlApp_contextPostDraw__0(IntPtr obj);
 
    public virtual void contextPostDraw()
    {
-      vrj_GlApp_contextPostDraw__(mRawObject);
+      vrj_GlApp_contextPostDraw__0(mRawObject);
    }
+
 
    // Delegate for the bufferPreDraw() callback.
    public delegate void bufferPreDrawDelegate();
    protected bufferPreDrawDelegate m_bufferPreDrawDelegate;
 
    [DllImport("vrj_bridge", CharSet = CharSet.Ansi)]
-   private extern static void vrj_GlApp_bufferPreDraw__(IntPtr obj);
+   private extern static void vrj_GlApp_bufferPreDraw__0(IntPtr obj);
 
    public virtual void bufferPreDraw()
    {
-      vrj_GlApp_bufferPreDraw__(mRawObject);
+      vrj_GlApp_bufferPreDraw__0(mRawObject);
    }
+
 
    // Delegate for the pipePreDraw() callback.
    public delegate void pipePreDrawDelegate();
    protected pipePreDrawDelegate m_pipePreDrawDelegate;
 
    [DllImport("vrj_bridge", CharSet = CharSet.Ansi)]
-   private extern static void vrj_GlApp_pipePreDraw__(IntPtr obj);
+   private extern static void vrj_GlApp_pipePreDraw__0(IntPtr obj);
 
    public virtual void pipePreDraw()
    {
-      vrj_GlApp_pipePreDraw__(mRawObject);
+      vrj_GlApp_pipePreDraw__0(mRawObject);
    }
+
 
    [DllImport("vrj_bridge", CharSet = CharSet.Ansi)]
    [return : MarshalAs(UnmanagedType.CustomMarshaler,
                        MarshalTypeRef = typeof(vrj.DrawManagerMarshaler))]
-   private extern static vrj.DrawManager vrj_GlApp_getDrawManager__(IntPtr obj);
+   private extern static vrj.DrawManager vrj_GlApp_getDrawManager__0(IntPtr obj);
 
    public override vrj.DrawManager getDrawManager()
    {
       vrj.DrawManager result;
-      result = vrj_GlApp_getDrawManager__(mRawObject);
+      result = vrj_GlApp_getDrawManager__0(mRawObject);
       return result;
    }
+
 
    // End of virtual methods.
 
@@ -268,11 +276,11 @@ public class GlAppMarshaler : ICustomMarshaler
       }
 
       [DllImport("vrj_bridge", CharSet = CharSet.Ansi)]
-      private extern static void vrj_GlApp_draw__(IntPtr obj);
+      private extern static void vrj_GlApp_draw__0(IntPtr obj);
 
       public override void draw()
       {
-         vrj_GlApp_draw__(mRawObject);
+         vrj_GlApp_draw__0(mRawObject);
       }
 
    }

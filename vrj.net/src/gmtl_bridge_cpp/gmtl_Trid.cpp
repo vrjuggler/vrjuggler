@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.58 of RCSfile: class_cxx.tmpl,v
+// Generated from Revision: 1.60 of RCSfile: class_cxx.tmpl,v
 
 
 
@@ -81,38 +81,31 @@ extern "C"
    }
 
    // Wrapper for non-virtual method gmtl::Tri<double>::edge()
-   SHARPPY_API gmtl::Vec3d* gmtl_Tri_double__edge__int(gmtl::Trid* self_, int p0)
+   SHARPPY_API gmtl::Vec3d* gmtl_Tri_double__edge__int1(gmtl::Trid* self_, int p0)
    {
       gmtl::Vec3d* result;
       result = new gmtl::Vec3d(self_->edge(p0));
-
       return result;
    }
 
+
    // Wrapper for non-virtual method gmtl::Tri<double>::edge()
-   SHARPPY_API gmtl::Vec3d* gmtl_Tri_double__edge__int_int(gmtl::Trid* self_, int p0, int p1)
+   SHARPPY_API gmtl::Vec3d* gmtl_Tri_double__edge__int_int2(gmtl::Trid* self_, int p0, int p1)
    {
       gmtl::Vec3d* result;
       result = new gmtl::Vec3d(self_->edge(p0, p1));
-
       return result;
    }
 
+
    // Wrapper for non-virtual method gmtl::Tri<double>::set()
-   SHARPPY_API void gmtl_Tri_double__set__gmtl_Point3d_gmtl_Point3d_gmtl_Point3d(gmtl::Trid* self_, const gmtl::Point3d* p0, const gmtl::Point3d* p1, const gmtl::Point3d* p2)
+   SHARPPY_API void gmtl_Tri_double__set__gmtl_Point3d_gmtl_Point3d_gmtl_Point3d3(gmtl::Trid* self_, const gmtl::Point3d* p0, const gmtl::Point3d* p1, const gmtl::Point3d* p2)
    {
-      const gmtl::Point3d& marshal_p0 = *p0; // Pre-call marshaling for p0
-      const gmtl::Point3d& marshal_p1 = *p1; // Pre-call marshaling for p1
-      const gmtl::Point3d& marshal_p2 = *p2; // Pre-call marshaling for p2
+      const gmtl::Point3d& marshal_p0 = *p0;
+      const gmtl::Point3d& marshal_p1 = *p1;
+      const gmtl::Point3d& marshal_p2 = *p2;
       self_->set(marshal_p0, marshal_p1, marshal_p2);
-      ; // Post-call marshaling for p0
-      ; // Post-call marshaling for p1
-      ; // Post-call marshaling for p2
    }
-
-
-
-
 
 
 } // extern "C" for gmtl::Trid

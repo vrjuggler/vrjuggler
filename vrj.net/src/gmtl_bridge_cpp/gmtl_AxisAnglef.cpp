@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.58 of RCSfile: class_cxx.tmpl,v
+// Generated from Revision: 1.60 of RCSfile: class_cxx.tmpl,v
 
 
 
@@ -78,54 +78,51 @@ extern "C"
    }
 
    // Wrapper for non-virtual method gmtl::AxisAngle<float>::set()
-   SHARPPY_API void gmtl_AxisAngle_float__set__float_float_float_float(gmtl::AxisAnglef* self_, const float& p0, const float& p1, const float& p2, const float& p3)
+   SHARPPY_API void gmtl_AxisAngle_float__set__float_float_float_float4(gmtl::AxisAnglef* self_, const float& p0, const float& p1, const float& p2, const float& p3)
    {
       self_->set(p0, p1, p2, p3);
    }
 
+
    // Wrapper for non-virtual method gmtl::AxisAngle<float>::set()
-   SHARPPY_API void gmtl_AxisAngle_float__set__float_gmtl_Vec3f(gmtl::AxisAnglef* self_, const float& p0, const gmtl::Vec3f* p1)
+   SHARPPY_API void gmtl_AxisAngle_float__set__float_gmtl_Vec3f2(gmtl::AxisAnglef* self_, const float& p0, const gmtl::Vec3f* p1)
    {
-      const gmtl::Vec3f& marshal_p1 = *p1; // Pre-call marshaling for p1
+      const gmtl::Vec3f& marshal_p1 = *p1;
       self_->set(p0, marshal_p1);
-      ; // Post-call marshaling for p1
    }
+
 
    // Wrapper for non-virtual method gmtl::AxisAngle<float>::setAxis()
-   SHARPPY_API void gmtl_AxisAngle_float__setAxis__gmtl_Vec3f(gmtl::AxisAnglef* self_, const gmtl::Vec3f* p0)
+   SHARPPY_API void gmtl_AxisAngle_float__setAxis__gmtl_Vec3f1(gmtl::AxisAnglef* self_, const gmtl::Vec3f* p0)
    {
-      const gmtl::Vec3f& marshal_p0 = *p0; // Pre-call marshaling for p0
+      const gmtl::Vec3f& marshal_p0 = *p0;
       self_->setAxis(marshal_p0);
-      ; // Post-call marshaling for p0
    }
 
+
    // Wrapper for non-virtual method gmtl::AxisAngle<float>::setAngle()
-   SHARPPY_API void gmtl_AxisAngle_float__setAngle__float(gmtl::AxisAnglef* self_, const float& p0)
+   SHARPPY_API void gmtl_AxisAngle_float__setAngle__float1(gmtl::AxisAnglef* self_, const float& p0)
    {
       self_->setAngle(p0);
    }
 
+
    // Wrapper for non-virtual method gmtl::AxisAngle<float>::getAxis()
-   SHARPPY_API gmtl::Vec3f* gmtl_AxisAngle_float__getAxis__(gmtl::AxisAnglef* self_)
+   SHARPPY_API gmtl::Vec3f* gmtl_AxisAngle_float__getAxis__0(gmtl::AxisAnglef* self_)
    {
       gmtl::Vec3f* result;
       result = new gmtl::Vec3f(self_->getAxis());
-
       return result;
    }
 
+
    // Wrapper for non-virtual method gmtl::AxisAngle<float>::getAngle()
-   SHARPPY_API  float gmtl_AxisAngle_float__getAngle__(gmtl::AxisAnglef* self_)
+   SHARPPY_API  float gmtl_AxisAngle_float__getAngle__0(gmtl::AxisAnglef* self_)
    {
        float result;
       result = self_->getAngle();
-
       return result;
    }
-
-
-
-
 
 
 } // extern "C" for gmtl::AxisAnglef

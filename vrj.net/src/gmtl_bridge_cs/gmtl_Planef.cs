@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.70 of RCSfile: class_cs.tmpl,v
+// Generated from Revision: 1.73 of RCSfile: class_cs.tmpl,v
 using System;
 using System.Runtime.InteropServices;
 using System.Reflection;
@@ -147,46 +147,46 @@ public sealed class Planef
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
    [return : MarshalAs(UnmanagedType.CustomMarshaler,
                        MarshalTypeRef = typeof(gmtl.Vec3fMarshaler))]
-   private extern static gmtl.Vec3f gmtl_Plane_float__getNormal__(IntPtr obj);
+   private extern static gmtl.Vec3f gmtl_Plane_float__getNormal__0(IntPtr obj);
 
    public  gmtl.Vec3f getNormal()
    {
       gmtl.Vec3f result;
-      result = gmtl_Plane_float__getNormal__(mRawObject);
+      result = gmtl_Plane_float__getNormal__0(mRawObject);
       return result;
    }
 
+
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
-   private extern static void gmtl_Plane_float__setNormal__gmtl_Vec3f(IntPtr obj,
+   private extern static void gmtl_Plane_float__setNormal__gmtl_Vec3f1(IntPtr obj,
 	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.Vec3fMarshaler))] gmtl.Vec3f p0);
 
    public  void setNormal(gmtl.Vec3f p0)
    {
-      
-      gmtl_Plane_float__setNormal__gmtl_Vec3f(mRawObject, p0);
-      
+      gmtl_Plane_float__setNormal__gmtl_Vec3f1(mRawObject, p0);
    }
 
+
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
-   private extern static float gmtl_Plane_float__getOffset__(IntPtr obj);
+   private extern static float gmtl_Plane_float__getOffset__0(IntPtr obj);
 
    public  float getOffset()
    {
       float result;
-      result = gmtl_Plane_float__getOffset__(mRawObject);
+      result = gmtl_Plane_float__getOffset__0(mRawObject);
       return result;
    }
 
+
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
-   private extern static void gmtl_Plane_float__setOffset__float(IntPtr obj,
+   private extern static void gmtl_Plane_float__setOffset__float1(IntPtr obj,
 	ref float p0);
 
    public  void setOffset(ref float p0)
    {
-      
-      gmtl_Plane_float__setOffset__float(mRawObject, ref p0);
-      
+      gmtl_Plane_float__setOffset__float1(mRawObject, ref p0);
    }
+
 
    // End of non-virtual methods.
 

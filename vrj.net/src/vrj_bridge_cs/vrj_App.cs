@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.65 of RCSfile: class_cs.tmpl,v
+// Generated from Revision: 1.73 of RCSfile: class_cs.tmpl,v
 using System;
 using System.Runtime.InteropServices;
 using System.Reflection;
@@ -152,23 +152,25 @@ public abstract class App
 
    // Start of non-virtual methods.
    [DllImport("vrj_bridge", CharSet = CharSet.Ansi)]
-   private extern static bool vrj_App_haveFocus__(IntPtr obj);
+   private extern static bool vrj_App_haveFocus__0(IntPtr obj);
 
    public  bool haveFocus()
    {
       bool result;
-      result = vrj_App_haveFocus__(mRawObject);
+      result = vrj_App_haveFocus__0(mRawObject);
       return result;
    }
 
+
    [DllImport("vrj_bridge", CharSet = CharSet.Ansi)]
-   private extern static void vrj_App_setFocus__bool(IntPtr obj,
+   private extern static void vrj_App_setFocus__bool1(IntPtr obj,
 	bool p0);
 
    public  void setFocus(bool p0)
    {
-      vrj_App_setFocus__bool(mRawObject, p0);
+      vrj_App_setFocus__bool1(mRawObject, p0);
    }
+
 
    // End of non-virtual methods.
 
@@ -178,169 +180,183 @@ public abstract class App
    protected initDelegate m_initDelegate;
 
    [DllImport("vrj_bridge", CharSet = CharSet.Ansi)]
-   private extern static void vrj_App_init__(IntPtr obj);
+   private extern static void vrj_App_init__0(IntPtr obj);
 
    public virtual void init()
    {
-      vrj_App_init__(mRawObject);
+      vrj_App_init__0(mRawObject);
    }
+
 
    // Delegate for the apiInit() callback.
    public delegate void apiInitDelegate();
    protected apiInitDelegate m_apiInitDelegate;
 
    [DllImport("vrj_bridge", CharSet = CharSet.Ansi)]
-   private extern static void vrj_App_apiInit__(IntPtr obj);
+   private extern static void vrj_App_apiInit__0(IntPtr obj);
 
    public virtual void apiInit()
    {
-      vrj_App_apiInit__(mRawObject);
+      vrj_App_apiInit__0(mRawObject);
    }
+
 
    // Delegate for the exit() callback.
    public delegate void exitDelegate();
    protected exitDelegate m_exitDelegate;
 
    [DllImport("vrj_bridge", CharSet = CharSet.Ansi)]
-   private extern static void vrj_App_exit__(IntPtr obj);
+   private extern static void vrj_App_exit__0(IntPtr obj);
 
    public virtual void exit()
    {
-      vrj_App_exit__(mRawObject);
+      vrj_App_exit__0(mRawObject);
    }
+
 
    // Delegate for the preFrame() callback.
    public delegate void preFrameDelegate();
    protected preFrameDelegate m_preFrameDelegate;
 
    [DllImport("vrj_bridge", CharSet = CharSet.Ansi)]
-   private extern static void vrj_App_preFrame__(IntPtr obj);
+   private extern static void vrj_App_preFrame__0(IntPtr obj);
 
    public virtual void preFrame()
    {
-      vrj_App_preFrame__(mRawObject);
+      vrj_App_preFrame__0(mRawObject);
    }
+
 
    // Delegate for the latePreFrame() callback.
    public delegate void latePreFrameDelegate();
    protected latePreFrameDelegate m_latePreFrameDelegate;
 
    [DllImport("vrj_bridge", CharSet = CharSet.Ansi)]
-   private extern static void vrj_App_latePreFrame__(IntPtr obj);
+   private extern static void vrj_App_latePreFrame__0(IntPtr obj);
 
    public virtual void latePreFrame()
    {
-      vrj_App_latePreFrame__(mRawObject);
+      vrj_App_latePreFrame__0(mRawObject);
    }
+
 
    // Delegate for the intraFrame() callback.
    public delegate void intraFrameDelegate();
    protected intraFrameDelegate m_intraFrameDelegate;
 
    [DllImport("vrj_bridge", CharSet = CharSet.Ansi)]
-   private extern static void vrj_App_intraFrame__(IntPtr obj);
+   private extern static void vrj_App_intraFrame__0(IntPtr obj);
 
    public virtual void intraFrame()
    {
-      vrj_App_intraFrame__(mRawObject);
+      vrj_App_intraFrame__0(mRawObject);
    }
+
 
    // Delegate for the postFrame() callback.
    public delegate void postFrameDelegate();
    protected postFrameDelegate m_postFrameDelegate;
 
    [DllImport("vrj_bridge", CharSet = CharSet.Ansi)]
-   private extern static void vrj_App_postFrame__(IntPtr obj);
+   private extern static void vrj_App_postFrame__0(IntPtr obj);
 
    public virtual void postFrame()
    {
-      vrj_App_postFrame__(mRawObject);
+      vrj_App_postFrame__0(mRawObject);
    }
+
 
    // Delegate for the reset() callback.
    public delegate void resetDelegate();
    protected resetDelegate m_resetDelegate;
 
    [DllImport("vrj_bridge", CharSet = CharSet.Ansi)]
-   private extern static void vrj_App_reset__(IntPtr obj);
+   private extern static void vrj_App_reset__0(IntPtr obj);
 
    public virtual void reset()
    {
-      vrj_App_reset__(mRawObject);
+      vrj_App_reset__0(mRawObject);
    }
+
 
    // Delegate for the focusChanged() callback.
    public delegate void focusChangedDelegate();
    protected focusChangedDelegate m_focusChangedDelegate;
 
    [DllImport("vrj_bridge", CharSet = CharSet.Ansi)]
-   private extern static void vrj_App_focusChanged__(IntPtr obj);
+   private extern static void vrj_App_focusChanged__0(IntPtr obj);
 
    public virtual void focusChanged()
    {
-      vrj_App_focusChanged__(mRawObject);
+      vrj_App_focusChanged__0(mRawObject);
    }
+
 
    // Delegate for the getDrawScaleFactor() callback.
    public delegate float getDrawScaleFactorDelegate();
    protected getDrawScaleFactorDelegate m_getDrawScaleFactorDelegate;
 
    [DllImport("vrj_bridge", CharSet = CharSet.Ansi)]
-   private extern static float vrj_App_getDrawScaleFactor__(IntPtr obj);
+   private extern static float vrj_App_getDrawScaleFactor__0(IntPtr obj);
 
    public virtual float getDrawScaleFactor()
    {
       float result;
-      result = vrj_App_getDrawScaleFactor__(mRawObject);
+      result = vrj_App_getDrawScaleFactor__0(mRawObject);
       return result;
    }
 
+
    [DllImport("vrj_bridge", CharSet = CharSet.Ansi)]
-   private extern static bool vrj_App_configCanHandle__boost_shared_ptr_jccl__ConfigElement(IntPtr obj,
+   private extern static bool vrj_App_configCanHandle__boost_shared_ptr_jccl__ConfigElement1(IntPtr obj,
 	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(jccl.ConfigElementMarshaler))] jccl.ConfigElement p0);
 
    public override bool configCanHandle(jccl.ConfigElement p0)
    {
       bool result;
-      result = vrj_App_configCanHandle__boost_shared_ptr_jccl__ConfigElement(mRawObject, p0);
+      result = vrj_App_configCanHandle__boost_shared_ptr_jccl__ConfigElement1(mRawObject, p0);
       return result;
    }
+
 
    // Delegate for the depSatisfied() callback.
    public delegate bool depSatisfiedDelegate();
    protected depSatisfiedDelegate m_depSatisfiedDelegate;
 
    [DllImport("vrj_bridge", CharSet = CharSet.Ansi)]
-   private extern static bool vrj_App_depSatisfied__(IntPtr obj);
+   private extern static bool vrj_App_depSatisfied__0(IntPtr obj);
 
    public virtual bool depSatisfied()
    {
       bool result;
-      result = vrj_App_depSatisfied__(mRawObject);
+      result = vrj_App_depSatisfied__0(mRawObject);
       return result;
    }
 
+
    [DllImport("vrj_bridge", CharSet = CharSet.Ansi)]
-   private extern static bool vrj_App_configAdd__boost_shared_ptr_jccl__ConfigElement(IntPtr obj,
+   private extern static bool vrj_App_configAdd__boost_shared_ptr_jccl__ConfigElement1(IntPtr obj,
 	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(jccl.ConfigElementMarshaler))] jccl.ConfigElement p0);
 
    public override bool configAdd(jccl.ConfigElement p0)
    {
       bool result;
-      result = vrj_App_configAdd__boost_shared_ptr_jccl__ConfigElement(mRawObject, p0);
+      result = vrj_App_configAdd__boost_shared_ptr_jccl__ConfigElement1(mRawObject, p0);
       return result;
    }
 
+
    [DllImport("vrj_bridge", CharSet = CharSet.Ansi)]
-   private extern static bool vrj_App_configRemove__boost_shared_ptr_jccl__ConfigElement(IntPtr obj,
+   private extern static bool vrj_App_configRemove__boost_shared_ptr_jccl__ConfigElement1(IntPtr obj,
 	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(jccl.ConfigElementMarshaler))] jccl.ConfigElement p0);
 
    public override bool configRemove(jccl.ConfigElement p0)
    {
       bool result;
-      result = vrj_App_configRemove__boost_shared_ptr_jccl__ConfigElement(mRawObject, p0);
+      result = vrj_App_configRemove__boost_shared_ptr_jccl__ConfigElement1(mRawObject, p0);
       return result;
    }
+
 
    // Delegate for the getDrawManager() callback.
    protected IntPtr getDrawManagerAdapter()
@@ -352,6 +368,7 @@ public abstract class App
    protected getDrawManagerDelegate m_getDrawManagerDelegate;
 
    public abstract vrj.DrawManager getDrawManager();
+
 
    // Delegate for the getSoundManager() callback.
    protected IntPtr getSoundManagerAdapter()
@@ -365,14 +382,15 @@ public abstract class App
    [DllImport("vrj_bridge", CharSet = CharSet.Ansi)]
    [return : MarshalAs(UnmanagedType.CustomMarshaler,
                        MarshalTypeRef = typeof(vrj.SoundManagerMarshaler))]
-   private extern static vrj.SoundManager vrj_App_getSoundManager__(IntPtr obj);
+   private extern static vrj.SoundManager vrj_App_getSoundManager__0(IntPtr obj);
 
    public virtual vrj.SoundManager getSoundManager()
    {
       vrj.SoundManager result;
-      result = vrj_App_getSoundManager__(mRawObject);
+      result = vrj_App_getSoundManager__0(mRawObject);
       return result;
    }
+
 
    // End of virtual methods.
 
@@ -399,12 +417,12 @@ public class AppMarshaler : ICustomMarshaler
       [DllImport("vrj_bridge", CharSet = CharSet.Ansi)]
       [return : MarshalAs(UnmanagedType.CustomMarshaler,
                           MarshalTypeRef = typeof(vrj.DrawManagerMarshaler))]
-      private extern static vrj.DrawManager vrj_App_getDrawManager__(IntPtr obj);
+      private extern static vrj.DrawManager vrj_App_getDrawManager__0(IntPtr obj);
 
       public override vrj.DrawManager getDrawManager()
       {
          vrj.DrawManager result;
-         result = vrj_App_getDrawManager__(mRawObject);
+         result = vrj_App_getDrawManager__0(mRawObject);
          return result;
       }
 

@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.56 of RCSfile: class_cxx.tmpl,v
+// Generated from Revision: 1.60 of RCSfile: class_cxx.tmpl,v
 
 
 
@@ -47,64 +47,59 @@ extern "C"
    }
 
    // Wrapper for non-virtual method vrj::User::getId()
-   SHARPPY_API int vrj_User_getId__(vrj::User* self_)
+   SHARPPY_API int vrj_User_getId__0(vrj::User* self_)
    {
       int result;
       result = self_->getId();
-
       return result;
    }
+
 
    // Wrapper for non-virtual method vrj::User::getName()
-   SHARPPY_API char* vrj_User_getName__(vrj::User* self_)
+   SHARPPY_API char* vrj_User_getName__0(vrj::User* self_)
    {
-      char* result;
       std::basic_string<char,std::char_traits<char>,std::allocator<char> > temp_result;
+      char* result;
       temp_result = self_->getName();
       result = strdup(temp_result.c_str());
-
       return result;
    }
 
+
    // Wrapper for non-virtual method vrj::User::getHeadPosProxy()
-   SHARPPY_API gadget::PositionProxy* vrj_User_getHeadPosProxy__(vrj::User* self_)
+   SHARPPY_API gadget::PositionProxy* vrj_User_getHeadPosProxy__0(vrj::User* self_)
    {
       gadget::PositionProxy* result;
       result = self_->getHeadPosProxy();
-
       return result;
    }
 
+
    // Wrapper for non-virtual method vrj::User::getHeadUpdateTime()
-   SHARPPY_API vpr::Interval* vrj_User_getHeadUpdateTime__(vrj::User* self_)
+   SHARPPY_API vpr::Interval* vrj_User_getHeadUpdateTime__0(vrj::User* self_)
    {
       vpr::Interval* result;
       result = new vpr::Interval(self_->getHeadUpdateTime());
-
       return result;
    }
 
+
    // Wrapper for non-virtual method vrj::User::getInterocularDistance()
-   SHARPPY_API float vrj_User_getInterocularDistance__(vrj::User* self_)
+   SHARPPY_API float vrj_User_getInterocularDistance__0(vrj::User* self_)
    {
       float result;
       result = self_->getInterocularDistance();
-
       return result;
    }
-
 
 
    // Wrapper for virtual method vrj::User::config()
-   SHARPPY_API bool vrj_User_config__boost_shared_ptr_jccl__ConfigElement(vrj::User* self_, boost::shared_ptr<jccl::ConfigElement> p0)
+   SHARPPY_API bool vrj_User_config__boost_shared_ptr_jccl__ConfigElement1(vrj::User* self_, boost::shared_ptr<jccl::ConfigElement> p0)
    {
       bool result;
       result = self_->config(p0);
-
       return result;
    }
-
-
 
 
 } // extern "C" for vrj::User

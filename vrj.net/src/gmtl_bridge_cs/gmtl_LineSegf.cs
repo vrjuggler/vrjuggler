@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.70 of RCSfile: class_cs.tmpl,v
+// Generated from Revision: 1.73 of RCSfile: class_cs.tmpl,v
 using System;
 using System.Runtime.InteropServices;
 using System.Reflection;
@@ -126,14 +126,15 @@ public sealed class LineSegf
 
    // Start of non-virtual methods.
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
-   private extern static float gmtl_LineSeg_float__getLength__(IntPtr obj);
+   private extern static float gmtl_LineSeg_float__getLength__0(IntPtr obj);
 
    public  float getLength()
    {
       float result;
-      result = gmtl_LineSeg_float__getLength__(mRawObject);
+      result = gmtl_LineSeg_float__getLength__0(mRawObject);
       return result;
    }
+
 
    // End of non-virtual methods.
 

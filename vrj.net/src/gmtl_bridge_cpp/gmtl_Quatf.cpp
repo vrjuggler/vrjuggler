@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from $Revision$ of $RCSfile$
+// Generated from Revision: 1.60 of RCSfile: class_cxx.tmpl,v
 
 
 
@@ -66,28 +66,26 @@ extern "C"
    }
 
    // Wrapper for non-virtual method gmtl::Quat<float>::set()
-   SHARPPY_API void gmtl_Quat_float__set__float_float_float_float(gmtl::Quatf* self_, const float p0, const float p1, const float p2, const float p3)
+   SHARPPY_API void gmtl_Quat_float__set__float_float_float_float4(gmtl::Quatf* self_, const float p0, const float p1, const float p2, const float p3)
    {
       self_->set(p0, p1, p2, p3);
    }
 
+
    // Wrapper for non-virtual method gmtl::Quat<float>::get()
-   SHARPPY_API void gmtl_Quat_float__get__float_float_float_float(gmtl::Quatf* self_, float& p0, float& p1, float& p2, float& p3)
+   SHARPPY_API void gmtl_Quat_float__get__float_float_float_float4(gmtl::Quatf* self_, float& p0, float& p1, float& p2, float& p3)
    {
       self_->get(p0, p1, p2, p3);
    }
 
+
    // Wrapper for non-virtual method gmtl::Quat<float>::getData()
-   SHARPPY_API const float* gmtl_Quat_float__getData__(gmtl::Quatf* self_)
+   SHARPPY_API const float* gmtl_Quat_float__getData__0(gmtl::Quatf* self_)
    {
       const float* result;
       result = self_->getData();
-
       return result;
    }
-
-
-
 
 
 } // extern "C" for gmtl::Quatf

@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.70 of RCSfile: class_cs.tmpl,v
+// Generated from Revision: 1.73 of RCSfile: class_cs.tmpl,v
 using System;
 using System.Runtime.InteropServices;
 using System.Reflection;
@@ -112,7 +112,7 @@ public sealed class Quatd
 
    // Start of non-virtual methods.
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
-   private extern static void gmtl_Quat_double__set__double_double_double_double(IntPtr obj,
+   private extern static void gmtl_Quat_double__set__double_double_double_double4(IntPtr obj,
 	double p0,
 	double p1,
 	double p2,
@@ -120,11 +120,12 @@ public sealed class Quatd
 
    public  void set(double p0, double p1, double p2, double p3)
    {
-      gmtl_Quat_double__set__double_double_double_double(mRawObject, p0, p1, p2, p3);
+      gmtl_Quat_double__set__double_double_double_double4(mRawObject, p0, p1, p2, p3);
    }
 
+
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
-   private extern static void gmtl_Quat_double__get__double_double_double_double(IntPtr obj,
+   private extern static void gmtl_Quat_double__get__double_double_double_double4(IntPtr obj,
 	ref double p0,
 	ref double p1,
 	ref double p2,
@@ -132,26 +133,20 @@ public sealed class Quatd
 
    public  void get(ref double p0, ref double p1, ref double p2, ref double p3)
    {
-      
-      
-      
-      
-      gmtl_Quat_double__get__double_double_double_double(mRawObject, ref p0, ref p1, ref p2, ref p3);
-      
-      
-      
-      
+      gmtl_Quat_double__get__double_double_double_double4(mRawObject, ref p0, ref p1, ref p2, ref p3);
    }
 
+
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
-   private extern static double gmtl_Quat_double__getData__(IntPtr obj);
+   private extern static double gmtl_Quat_double__getData__0(IntPtr obj);
 
    public  double getData()
    {
       double result;
-      result = gmtl_Quat_double__getData__(mRawObject);
+      result = gmtl_Quat_double__getData__0(mRawObject);
       return result;
    }
+
 
    // End of non-virtual methods.
 

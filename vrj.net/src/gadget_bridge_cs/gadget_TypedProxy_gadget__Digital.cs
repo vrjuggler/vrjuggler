@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.65 of RCSfile: class_cs.tmpl,v
+// Generated from Revision: 1.73 of RCSfile: class_cs.tmpl,v
 using System;
 using System.Runtime.InteropServices;
 using System.Reflection;
@@ -97,28 +97,30 @@ public abstract class TypedProxy_gadget__Digital
 
    // Start of virtual methods.
    [DllImport("gadget_bridge", CharSet = CharSet.Ansi)]
-   private extern static bool gadget_TypedProxy_gadget_Digital__refresh__(IntPtr obj);
+   private extern static bool gadget_TypedProxy_gadget_Digital__refresh__0(IntPtr obj);
 
    public override bool refresh()
    {
       bool result;
-      result = gadget_TypedProxy_gadget_Digital__refresh__(mRawObject);
+      result = gadget_TypedProxy_gadget_Digital__refresh__0(mRawObject);
       return result;
    }
+
 
    // Delegate for the getDeviceName() callback.
    public delegate string getDeviceNameDelegate();
    protected getDeviceNameDelegate m_getDeviceNameDelegate;
 
    [DllImport("gadget_bridge", CharSet = CharSet.Ansi)]
-   private extern static string gadget_TypedProxy_gadget_Digital__getDeviceName__(IntPtr obj);
+   private extern static string gadget_TypedProxy_gadget_Digital__getDeviceName__0(IntPtr obj);
 
    public virtual string getDeviceName()
    {
       string result;
-      result = gadget_TypedProxy_gadget_Digital__getDeviceName__(mRawObject);
+      result = gadget_TypedProxy_gadget_Digital__getDeviceName__0(mRawObject);
       return result;
    }
+
 
    // End of virtual methods.
 
@@ -145,12 +147,12 @@ public class TypedProxy_gadget__DigitalMarshaler : ICustomMarshaler
       [DllImport("gadget_bridge", CharSet = CharSet.Ansi)]
       [return : MarshalAs(UnmanagedType.CustomMarshaler,
                           MarshalTypeRef = typeof(gadget.InputMarshaler))]
-      private extern static gadget.Input gadget_Proxy_getProxiedInputDevice__(IntPtr obj);
+      private extern static gadget.Input gadget_Proxy_getProxiedInputDevice__0(IntPtr obj);
 
       public override gadget.Input getProxiedInputDevice()
       {
          gadget.Input result;
-         result = gadget_Proxy_getProxiedInputDevice__(mRawObject);
+         result = gadget_Proxy_getProxiedInputDevice__0(mRawObject);
          return result;
       }
 

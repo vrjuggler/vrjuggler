@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from $Revision$ of $RCSfile$
+// Generated from Revision: 1.60 of RCSfile: class_cxx.tmpl,v
 
 
 
@@ -53,83 +53,88 @@ extern "C"
    }
 
    // Wrapper for non-virtual method gadget::Proxy::getName()
-   SHARPPY_API char* gadget_Proxy_getName__(gadget_Proxy_Adapter* self_)
+   SHARPPY_API char* gadget_Proxy_getName__0(gadget_Proxy_Adapter* self_)
    {
-      char* result;
       std::basic_string<char,std::char_traits<char>,std::allocator<char> > temp_result;
+      char* result;
       temp_result = self_->getName();
       result = strdup(temp_result.c_str());
-
       return result;
    }
 
+
    // Wrapper for non-virtual method gadget::Proxy::setName()
-   SHARPPY_API void gadget_Proxy_setName__std_basic_string_char_std__char_traits_char__std__allocator_char__(gadget_Proxy_Adapter* self_, char* p0)
+   SHARPPY_API void gadget_Proxy_setName__std_basic_string_char_std__char_traits_char__std__allocator_char__1(gadget_Proxy_Adapter* self_, char* p0)
    {
       self_->setName(p0);
    }
 
+
    // Wrapper for non-virtual method gadget::Proxy::stupify()
-   SHARPPY_API void gadget_Proxy_stupify__bool(gadget_Proxy_Adapter* self_, bool p0)
+   SHARPPY_API void gadget_Proxy_stupify__bool0(gadget_Proxy_Adapter* self_)
+   {
+      self_->stupify();
+   }
+
+   // Wrapper for non-virtual method gadget::Proxy::stupify()
+   SHARPPY_API void gadget_Proxy_stupify__bool1(gadget_Proxy_Adapter* self_, bool p0)
    {
       self_->stupify(p0);
    }
 
 
    // Wrapper for virtual method gadget::Proxy::config()
-   SHARPPY_API bool gadget_Proxy_config__boost_shared_ptr_jccl__ConfigElement(gadget_Proxy_Adapter* self_, boost::shared_ptr<jccl::ConfigElement> p0)
+   SHARPPY_API bool gadget_Proxy_config__boost_shared_ptr_jccl__ConfigElement1(gadget_Proxy_Adapter* self_, boost::shared_ptr<jccl::ConfigElement> p0)
    {
       bool result;
       result = self_->gadget::Proxy::config(p0);
-
       return result;
    }
 
+
    // Wrapper for virtual method gadget::Proxy::refresh()
-   SHARPPY_API bool gadget_Proxy_refresh__(gadget_Proxy_Adapter* self_)
+   SHARPPY_API bool gadget_Proxy_refresh__0(gadget_Proxy_Adapter* self_)
    {
       bool result;
       result = self_->refresh();
-
       return result;
    }
 
+
    // Wrapper for virtual method gadget::Proxy::updateData()
-   SHARPPY_API void gadget_Proxy_updateData__(gadget_Proxy_Adapter* self_)
+   SHARPPY_API void gadget_Proxy_updateData__0(gadget_Proxy_Adapter* self_)
    {
       self_->gadget::Proxy::updateData();
    }
 
+
    // Wrapper for virtual method gadget::Proxy::getProxiedInputDevice()
-   SHARPPY_API gadget::Input* gadget_Proxy_getProxiedInputDevice__(gadget_Proxy_Adapter* self_)
+   SHARPPY_API gadget::Input* gadget_Proxy_getProxiedInputDevice__0(gadget_Proxy_Adapter* self_)
    {
       gadget::Input* result;
       result = self_->getProxiedInputDevice();
-
       return result;
    }
 
+
    // Wrapper for virtual method gadget::Proxy::isStupified()
-   SHARPPY_API bool gadget_Proxy_isStupified__(gadget_Proxy_Adapter* self_)
+   SHARPPY_API bool gadget_Proxy_isStupified__0(gadget_Proxy_Adapter* self_)
    {
       bool result;
       result = self_->gadget::Proxy::isStupified();
-
       return result;
    }
 
 
    // Wrapper for static method gadget::Proxy::getElementType()
-   SHARPPY_API char* gadget_Proxy_getElementType__()
+   SHARPPY_API char* gadget_Proxy_getElementType__0()
    {
-      char* result;
       std::basic_string<char,std::char_traits<char>,std::allocator<char> > temp_result;
+      char* result;
       temp_result = gadget::Proxy::getElementType();
       result = strdup(temp_result.c_str());
-
       return result;
    }
-
 
 
 } // extern "C" for gadget::Proxy

@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.56 of RCSfile: class_cxx.tmpl,v
+// Generated from Revision: 1.60 of RCSfile: class_cxx.tmpl,v
 
 
 
@@ -71,23 +71,19 @@ extern "C"
    }
 
    // Wrapper for non-virtual method gadget::DeviceInterface<gadget::PositionProxy>::getProxy()
-   SHARPPY_API gadget::PositionProxy* gadget_DeviceInterface_gadget_PositionProxy__getProxy__(gadget_PositionInterface_Holder* self_)
+   SHARPPY_API gadget::PositionProxy* gadget_DeviceInterface_gadget_PositionProxy__getProxy__0(gadget_PositionInterface_Holder* self_)
    {
       gadget::PositionProxy* result;
       result = self_->mPtr.getProxy();
-
       return result;
    }
 
 
-
    // Wrapper for virtual method gadget::DeviceInterface<gadget::PositionProxy>::refresh()
-   SHARPPY_API void gadget_DeviceInterface_gadget_PositionProxy__refresh__(gadget_PositionInterface_Holder* self_)
+   SHARPPY_API void gadget_DeviceInterface_gadget_PositionProxy__refresh__0(gadget_PositionInterface_Holder* self_)
    {
       self_->mPtr.refresh();
    }
-
-
 
 
 } // extern "C" for gadget::PositionInterface

@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from $Revision$ of $RCSfile$
+// Generated from Revision: 1.60 of RCSfile: class_cxx.tmpl,v
 
 
 
@@ -52,60 +52,65 @@ extern "C"
    }
 
    // Wrapper for non-virtual method gadget::Digital::getDigitalData()
-   SHARPPY_API const gadget::DigitalData* gadget_Digital_getDigitalData__int(gadget_Digital_Adapter* self_, int p0)
+   SHARPPY_API const gadget::DigitalData* gadget_Digital_getDigitalData__int0(gadget_Digital_Adapter* self_)
    {
       const gadget::DigitalData* result;
-      result = new const gadget::DigitalData(self_->getDigitalData(p0));
-
+      result = new const gadget::DigitalData(self_->getDigitalData());
       return result;
    }
 
+   // Wrapper for non-virtual method gadget::Digital::getDigitalData()
+   SHARPPY_API const gadget::DigitalData* gadget_Digital_getDigitalData__int1(gadget_Digital_Adapter* self_, int p0)
+   {
+      const gadget::DigitalData* result;
+      result = new const gadget::DigitalData(self_->getDigitalData(p0));
+      return result;
+   }
+
+
    // Wrapper for non-virtual method gadget::Digital::swapDigitalBuffers()
-   SHARPPY_API void gadget_Digital_swapDigitalBuffers__(gadget_Digital_Adapter* self_)
+   SHARPPY_API void gadget_Digital_swapDigitalBuffers__0(gadget_Digital_Adapter* self_)
    {
       self_->swapDigitalBuffers();
    }
 
 
    // Wrapper for virtual method gadget::Digital::config()
-   SHARPPY_API bool gadget_Digital_config__boost_shared_ptr_jccl__ConfigElement(gadget_Digital_Adapter* self_, boost::shared_ptr<jccl::ConfigElement> p0)
+   SHARPPY_API bool gadget_Digital_config__boost_shared_ptr_jccl__ConfigElement1(gadget_Digital_Adapter* self_, boost::shared_ptr<jccl::ConfigElement> p0)
    {
       bool result;
       result = self_->gadget::Digital::config(p0);
-
       return result;
    }
+
 
    // Wrapper for virtual method gadget::Digital::getBaseType()
-   SHARPPY_API char* gadget_Digital_getBaseType__(gadget_Digital_Adapter* self_)
+   SHARPPY_API char* gadget_Digital_getBaseType__0(gadget_Digital_Adapter* self_)
    {
-      char* result;
       std::basic_string<char,std::char_traits<char>,std::allocator<char> > temp_result;
+      char* result;
       temp_result = self_->gadget::Digital::getBaseType();
       result = strdup(temp_result.c_str());
-
       return result;
    }
 
+
    // Wrapper for virtual method gadget::Digital::writeObject()
-   SHARPPY_API vpr::ReturnStatus* gadget_Digital_writeObject__vpr_ObjectWriter(gadget_Digital_Adapter* self_, vpr::ObjectWriter* p0)
+   SHARPPY_API vpr::ReturnStatus* gadget_Digital_writeObject__vpr_ObjectWriter1(gadget_Digital_Adapter* self_, vpr::ObjectWriter* p0)
    {
       vpr::ReturnStatus* result;
       result = new vpr::ReturnStatus(self_->gadget::Digital::writeObject(p0));
-
       return result;
    }
 
+
    // Wrapper for virtual method gadget::Digital::readObject()
-   SHARPPY_API vpr::ReturnStatus* gadget_Digital_readObject__vpr_ObjectReader(gadget_Digital_Adapter* self_, vpr::ObjectReader* p0)
+   SHARPPY_API vpr::ReturnStatus* gadget_Digital_readObject__vpr_ObjectReader1(gadget_Digital_Adapter* self_, vpr::ObjectReader* p0)
    {
       vpr::ReturnStatus* result;
       result = new vpr::ReturnStatus(self_->gadget::Digital::readObject(p0));
-
       return result;
    }
-
-
 
 
 } // extern "C" for gadget::Digital

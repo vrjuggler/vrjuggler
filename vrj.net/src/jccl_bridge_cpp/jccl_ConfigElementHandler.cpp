@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from $Revision$ of $RCSfile$
+// Generated from Revision: 1.60 of RCSfile: class_cxx.tmpl,v
 
 
 
@@ -51,44 +51,40 @@ extern "C"
       delete self_;
    }
 
-
    // Wrapper for virtual method jccl::ConfigElementHandler::configCanHandle()
-   SHARPPY_API bool jccl_ConfigElementHandler_configCanHandle__boost_shared_ptr_jccl__ConfigElement(jccl_ConfigElementHandler_Adapter* self_, boost::shared_ptr<jccl::ConfigElement> p0)
+   SHARPPY_API bool jccl_ConfigElementHandler_configCanHandle__boost_shared_ptr_jccl__ConfigElement1(jccl_ConfigElementHandler_Adapter* self_, boost::shared_ptr<jccl::ConfigElement> p0)
    {
       bool result;
       result = self_->configCanHandle(p0);
-
       return result;
    }
 
+
    // Wrapper for virtual method jccl::ConfigElementHandler::configProcessPending()
-   SHARPPY_API int jccl_ConfigElementHandler_configProcessPending__(jccl_ConfigElementHandler_Adapter* self_)
+   SHARPPY_API int jccl_ConfigElementHandler_configProcessPending__0(jccl_ConfigElementHandler_Adapter* self_)
    {
       int result;
       result = self_->jccl::ConfigElementHandler::configProcessPending();
-
       return result;
    }
 
+
    // Wrapper for virtual method jccl::ConfigElementHandler::configAdd()
-   SHARPPY_API bool jccl_ConfigElementHandler_configAdd__boost_shared_ptr_jccl__ConfigElement(jccl_ConfigElementHandler_Adapter* self_, boost::shared_ptr<jccl::ConfigElement> p0)
+   SHARPPY_API bool jccl_ConfigElementHandler_configAdd__boost_shared_ptr_jccl__ConfigElement1(jccl_ConfigElementHandler_Adapter* self_, boost::shared_ptr<jccl::ConfigElement> p0)
    {
       bool result;
       result = self_->configAdd(p0);
-
       return result;
    }
 
+
    // Wrapper for virtual method jccl::ConfigElementHandler::configRemove()
-   SHARPPY_API bool jccl_ConfigElementHandler_configRemove__boost_shared_ptr_jccl__ConfigElement(jccl_ConfigElementHandler_Adapter* self_, boost::shared_ptr<jccl::ConfigElement> p0)
+   SHARPPY_API bool jccl_ConfigElementHandler_configRemove__boost_shared_ptr_jccl__ConfigElement1(jccl_ConfigElementHandler_Adapter* self_, boost::shared_ptr<jccl::ConfigElement> p0)
    {
       bool result;
       result = self_->configRemove(p0);
-
       return result;
    }
-
-
 
 
 } // extern "C" for jccl::ConfigElementHandler

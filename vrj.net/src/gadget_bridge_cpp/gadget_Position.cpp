@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from $Revision$ of $RCSfile$
+// Generated from Revision: 1.60 of RCSfile: class_cxx.tmpl,v
 
 
 
@@ -52,60 +52,65 @@ extern "C"
    }
 
    // Wrapper for non-virtual method gadget::Position::getPositionData()
-   SHARPPY_API gadget::PositionData* gadget_Position_getPositionData__int(gadget_Position_Adapter* self_, int p0)
+   SHARPPY_API gadget::PositionData* gadget_Position_getPositionData__int0(gadget_Position_Adapter* self_)
    {
       gadget::PositionData* result;
-      result = new gadget::PositionData(self_->getPositionData(p0));
-
+      result = new gadget::PositionData(self_->getPositionData());
       return result;
    }
 
+   // Wrapper for non-virtual method gadget::Position::getPositionData()
+   SHARPPY_API gadget::PositionData* gadget_Position_getPositionData__int1(gadget_Position_Adapter* self_, int p0)
+   {
+      gadget::PositionData* result;
+      result = new gadget::PositionData(self_->getPositionData(p0));
+      return result;
+   }
+
+
    // Wrapper for non-virtual method gadget::Position::swapPositionBuffers()
-   SHARPPY_API void gadget_Position_swapPositionBuffers__(gadget_Position_Adapter* self_)
+   SHARPPY_API void gadget_Position_swapPositionBuffers__0(gadget_Position_Adapter* self_)
    {
       self_->swapPositionBuffers();
    }
 
 
    // Wrapper for virtual method gadget::Position::config()
-   SHARPPY_API bool gadget_Position_config__boost_shared_ptr_jccl__ConfigElement(gadget_Position_Adapter* self_, boost::shared_ptr<jccl::ConfigElement> p0)
+   SHARPPY_API bool gadget_Position_config__boost_shared_ptr_jccl__ConfigElement1(gadget_Position_Adapter* self_, boost::shared_ptr<jccl::ConfigElement> p0)
    {
       bool result;
       result = self_->gadget::Position::config(p0);
-
       return result;
    }
+
 
    // Wrapper for virtual method gadget::Position::getBaseType()
-   SHARPPY_API char* gadget_Position_getBaseType__(gadget_Position_Adapter* self_)
+   SHARPPY_API char* gadget_Position_getBaseType__0(gadget_Position_Adapter* self_)
    {
-      char* result;
       std::basic_string<char,std::char_traits<char>,std::allocator<char> > temp_result;
+      char* result;
       temp_result = self_->gadget::Position::getBaseType();
       result = strdup(temp_result.c_str());
-
       return result;
    }
 
+
    // Wrapper for virtual method gadget::Position::writeObject()
-   SHARPPY_API vpr::ReturnStatus* gadget_Position_writeObject__vpr_ObjectWriter(gadget_Position_Adapter* self_, vpr::ObjectWriter* p0)
+   SHARPPY_API vpr::ReturnStatus* gadget_Position_writeObject__vpr_ObjectWriter1(gadget_Position_Adapter* self_, vpr::ObjectWriter* p0)
    {
       vpr::ReturnStatus* result;
       result = new vpr::ReturnStatus(self_->gadget::Position::writeObject(p0));
-
       return result;
    }
 
+
    // Wrapper for virtual method gadget::Position::readObject()
-   SHARPPY_API vpr::ReturnStatus* gadget_Position_readObject__vpr_ObjectReader(gadget_Position_Adapter* self_, vpr::ObjectReader* p0)
+   SHARPPY_API vpr::ReturnStatus* gadget_Position_readObject__vpr_ObjectReader1(gadget_Position_Adapter* self_, vpr::ObjectReader* p0)
    {
       vpr::ReturnStatus* result;
       result = new vpr::ReturnStatus(self_->gadget::Position::readObject(p0));
-
       return result;
    }
-
-
 
 
 } // extern "C" for gadget::Position

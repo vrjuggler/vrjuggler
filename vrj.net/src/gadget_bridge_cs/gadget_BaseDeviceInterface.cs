@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.69 of RCSfile: class_cs.tmpl,v
+// Generated from Revision: 1.73 of RCSfile: class_cs.tmpl,v
 using System;
 using System.Runtime.InteropServices;
 using System.Reflection;
@@ -109,33 +109,36 @@ public class BaseDeviceInterface
 
    // Start of non-virtual methods.
    [DllImport("gadget_bridge", CharSet = CharSet.Ansi)]
-   private extern static void gadget_BaseDeviceInterface_init__std_basic_string_char_std__char_traits_char__std__allocator_char__(IntPtr obj,
+   private extern static void gadget_BaseDeviceInterface_init__std_basic_string_char_std__char_traits_char__std__allocator_char__1(IntPtr obj,
 	string p0);
 
    public  void init(string p0)
    {
-      gadget_BaseDeviceInterface_init__std_basic_string_char_std__char_traits_char__std__allocator_char__(mRawObject, p0);
+      gadget_BaseDeviceInterface_init__std_basic_string_char_std__char_traits_char__std__allocator_char__1(mRawObject, p0);
    }
 
+
    [DllImport("gadget_bridge", CharSet = CharSet.Ansi)]
-   private extern static string gadget_BaseDeviceInterface_getProxyName__(IntPtr obj);
+   private extern static string gadget_BaseDeviceInterface_getProxyName__0(IntPtr obj);
 
    public  string getProxyName()
    {
       string result;
-      result = gadget_BaseDeviceInterface_getProxyName__(mRawObject);
+      result = gadget_BaseDeviceInterface_getProxyName__0(mRawObject);
       return result;
    }
 
+
    [DllImport("gadget_bridge", CharSet = CharSet.Ansi)]
-   private extern static bool gadget_BaseDeviceInterface_isConnected__(IntPtr obj);
+   private extern static bool gadget_BaseDeviceInterface_isConnected__0(IntPtr obj);
 
    public  bool isConnected()
    {
       bool result;
-      result = gadget_BaseDeviceInterface_isConnected__(mRawObject);
+      result = gadget_BaseDeviceInterface_isConnected__0(mRawObject);
       return result;
    }
+
 
    // End of non-virtual methods.
 
@@ -145,23 +148,25 @@ public class BaseDeviceInterface
    protected refreshDelegate m_refreshDelegate;
 
    [DllImport("gadget_bridge", CharSet = CharSet.Ansi)]
-   private extern static void gadget_BaseDeviceInterface_refresh__(IntPtr obj);
+   private extern static void gadget_BaseDeviceInterface_refresh__0(IntPtr obj);
 
    public virtual void refresh()
    {
-      gadget_BaseDeviceInterface_refresh__(mRawObject);
+      gadget_BaseDeviceInterface_refresh__0(mRawObject);
    }
+
 
    // End of virtual methods.
 
    // Start of static methods.
    [DllImport("gadget_bridge", CharSet = CharSet.Ansi)]
-   private extern static void gadget_BaseDeviceInterface_refreshAllDevices__();
+   private extern static void gadget_BaseDeviceInterface_refreshAllDevices__0();
 
    public static void refreshAllDevices()
    {
-      gadget_BaseDeviceInterface_refreshAllDevices__();
+      gadget_BaseDeviceInterface_refreshAllDevices__0();
    }
+
 
    // End of static methods.
 

@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.58 of RCSfile: class_cxx.tmpl,v
+// Generated from Revision: 1.60 of RCSfile: class_cxx.tmpl,v
 
 
 
@@ -94,44 +94,39 @@ extern "C"
    }
 
    // Wrapper for non-virtual method gmtl::Coord<gmtl::Vec<float,4>,gmtl::EulerAngle<float,gmtl::XYZ> >::getPos()
-   SHARPPY_API const gmtl::Vec4f* gmtl_Coord_gmtl_Vec_float_4__gmtl_EulerAngle_float_gmtl_XYZ____getPos__(gmtl::Coord4fXYZ* self_)
+   SHARPPY_API const gmtl::Vec4f* gmtl_Coord_gmtl_Vec_float_4__gmtl_EulerAngle_float_gmtl_XYZ____getPos__0(gmtl::Coord4fXYZ* self_)
    {
       const gmtl::Vec4f* result;
       result = new const gmtl::Vec4f(self_->getPos());
-
       return result;
    }
 
+
    // Wrapper for non-virtual method gmtl::Coord<gmtl::Vec<float,4>,gmtl::EulerAngle<float,gmtl::XYZ> >::getRot()
-   SHARPPY_API const gmtl::EulerAngleXYZf* gmtl_Coord_gmtl_Vec_float_4__gmtl_EulerAngle_float_gmtl_XYZ____getRot__(gmtl::Coord4fXYZ* self_)
+   SHARPPY_API const gmtl::EulerAngleXYZf* gmtl_Coord_gmtl_Vec_float_4__gmtl_EulerAngle_float_gmtl_XYZ____getRot__0(gmtl::Coord4fXYZ* self_)
    {
       const gmtl::EulerAngleXYZf* result;
       result = new const gmtl::EulerAngleXYZf(self_->getRot());
-
       return result;
    }
 
+
    // Wrapper for non-virtual method gmtl::Coord<gmtl::Vec<float,4>,gmtl::EulerAngle<float,gmtl::XYZ> >::pos()
-   SHARPPY_API gmtl::Vec4f* gmtl_Coord_gmtl_Vec_float_4__gmtl_EulerAngle_float_gmtl_XYZ____pos__(gmtl::Coord4fXYZ* self_)
+   SHARPPY_API gmtl::Vec4f* gmtl_Coord_gmtl_Vec_float_4__gmtl_EulerAngle_float_gmtl_XYZ____pos__0(gmtl::Coord4fXYZ* self_)
    {
       gmtl::Vec4f* result;
       result = new gmtl::Vec4f(self_->pos());
-
       return result;
    }
 
+
    // Wrapper for non-virtual method gmtl::Coord<gmtl::Vec<float,4>,gmtl::EulerAngle<float,gmtl::XYZ> >::rot()
-   SHARPPY_API gmtl::EulerAngleXYZf* gmtl_Coord_gmtl_Vec_float_4__gmtl_EulerAngle_float_gmtl_XYZ____rot__(gmtl::Coord4fXYZ* self_)
+   SHARPPY_API gmtl::EulerAngleXYZf* gmtl_Coord_gmtl_Vec_float_4__gmtl_EulerAngle_float_gmtl_XYZ____rot__0(gmtl::Coord4fXYZ* self_)
    {
       gmtl::EulerAngleXYZf* result;
       result = new gmtl::EulerAngleXYZf(self_->rot());
-
       return result;
    }
-
-
-
-
 
 
 } // extern "C" for gmtl::Coord4fXYZ

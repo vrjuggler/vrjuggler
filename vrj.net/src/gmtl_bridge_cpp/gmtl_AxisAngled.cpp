@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.58 of RCSfile: class_cxx.tmpl,v
+// Generated from Revision: 1.60 of RCSfile: class_cxx.tmpl,v
 
 
 
@@ -78,54 +78,51 @@ extern "C"
    }
 
    // Wrapper for non-virtual method gmtl::AxisAngle<double>::set()
-   SHARPPY_API void gmtl_AxisAngle_double__set__double_double_double_double(gmtl::AxisAngled* self_, const double& p0, const double& p1, const double& p2, const double& p3)
+   SHARPPY_API void gmtl_AxisAngle_double__set__double_double_double_double4(gmtl::AxisAngled* self_, const double& p0, const double& p1, const double& p2, const double& p3)
    {
       self_->set(p0, p1, p2, p3);
    }
 
+
    // Wrapper for non-virtual method gmtl::AxisAngle<double>::set()
-   SHARPPY_API void gmtl_AxisAngle_double__set__double_gmtl_Vec3d(gmtl::AxisAngled* self_, const double& p0, const gmtl::Vec3d* p1)
+   SHARPPY_API void gmtl_AxisAngle_double__set__double_gmtl_Vec3d2(gmtl::AxisAngled* self_, const double& p0, const gmtl::Vec3d* p1)
    {
-      const gmtl::Vec3d& marshal_p1 = *p1; // Pre-call marshaling for p1
+      const gmtl::Vec3d& marshal_p1 = *p1;
       self_->set(p0, marshal_p1);
-      ; // Post-call marshaling for p1
    }
+
 
    // Wrapper for non-virtual method gmtl::AxisAngle<double>::setAxis()
-   SHARPPY_API void gmtl_AxisAngle_double__setAxis__gmtl_Vec3d(gmtl::AxisAngled* self_, const gmtl::Vec3d* p0)
+   SHARPPY_API void gmtl_AxisAngle_double__setAxis__gmtl_Vec3d1(gmtl::AxisAngled* self_, const gmtl::Vec3d* p0)
    {
-      const gmtl::Vec3d& marshal_p0 = *p0; // Pre-call marshaling for p0
+      const gmtl::Vec3d& marshal_p0 = *p0;
       self_->setAxis(marshal_p0);
-      ; // Post-call marshaling for p0
    }
 
+
    // Wrapper for non-virtual method gmtl::AxisAngle<double>::setAngle()
-   SHARPPY_API void gmtl_AxisAngle_double__setAngle__double(gmtl::AxisAngled* self_, const double& p0)
+   SHARPPY_API void gmtl_AxisAngle_double__setAngle__double1(gmtl::AxisAngled* self_, const double& p0)
    {
       self_->setAngle(p0);
    }
 
+
    // Wrapper for non-virtual method gmtl::AxisAngle<double>::getAxis()
-   SHARPPY_API gmtl::Vec3d* gmtl_AxisAngle_double__getAxis__(gmtl::AxisAngled* self_)
+   SHARPPY_API gmtl::Vec3d* gmtl_AxisAngle_double__getAxis__0(gmtl::AxisAngled* self_)
    {
       gmtl::Vec3d* result;
       result = new gmtl::Vec3d(self_->getAxis());
-
       return result;
    }
 
+
    // Wrapper for non-virtual method gmtl::AxisAngle<double>::getAngle()
-   SHARPPY_API  double gmtl_AxisAngle_double__getAngle__(gmtl::AxisAngled* self_)
+   SHARPPY_API  double gmtl_AxisAngle_double__getAngle__0(gmtl::AxisAngled* self_)
    {
        double result;
       result = self_->getAngle();
-
       return result;
    }
-
-
-
-
 
 
 } // extern "C" for gmtl::AxisAngled

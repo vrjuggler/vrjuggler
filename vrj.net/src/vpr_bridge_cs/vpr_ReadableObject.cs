@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.65 of RCSfile: class_cs.tmpl,v
+// Generated from Revision: 1.73 of RCSfile: class_cs.tmpl,v
 using System;
 using System.Runtime.InteropServices;
 using System.Reflection;
@@ -67,15 +67,13 @@ public class ReadableObjectMarshaler : ICustomMarshaler
       [DllImport("vpr_bridge", CharSet = CharSet.Ansi)]
       [return : MarshalAs(UnmanagedType.CustomMarshaler,
                           MarshalTypeRef = typeof(vpr.ReturnStatusMarshaler))]
-      private extern static vpr.ReturnStatus vpr_ReadableObject_readObject__vpr_ObjectReader(IntPtr obj,
+      private extern static vpr.ReturnStatus vpr_ReadableObject_readObject__vpr_ObjectReader1(IntPtr obj,
 	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(vpr.ObjectReaderMarshaler))] vpr.ObjectReader p0);
 
       public vpr.ReturnStatus readObject(vpr.ObjectReader p0)
       {
-         
          vpr.ReturnStatus result;
-         result = vpr_ReadableObject_readObject__vpr_ObjectReader(mRawObject, p0);
-         
+         result = vpr_ReadableObject_readObject__vpr_ObjectReader1(mRawObject, p0);
          return result;
       }
 

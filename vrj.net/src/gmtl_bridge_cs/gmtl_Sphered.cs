@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.70 of RCSfile: class_cs.tmpl,v
+// Generated from Revision: 1.73 of RCSfile: class_cs.tmpl,v
 using System;
 using System.Runtime.InteropServices;
 using System.Reflection;
@@ -116,46 +116,46 @@ public sealed class Sphered
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
    [return : MarshalAs(UnmanagedType.CustomMarshaler,
                        MarshalTypeRef = typeof(gmtl.Point3dMarshaler))]
-   private extern static gmtl.Point3d gmtl_Sphere_double__getCenter__(IntPtr obj);
+   private extern static gmtl.Point3d gmtl_Sphere_double__getCenter__0(IntPtr obj);
 
    public  gmtl.Point3d getCenter()
    {
       gmtl.Point3d result;
-      result = gmtl_Sphere_double__getCenter__(mRawObject);
+      result = gmtl_Sphere_double__getCenter__0(mRawObject);
       return result;
    }
 
+
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
-   private extern static double gmtl_Sphere_double__getRadius__(IntPtr obj);
+   private extern static double gmtl_Sphere_double__getRadius__0(IntPtr obj);
 
    public  double getRadius()
    {
       double result;
-      result = gmtl_Sphere_double__getRadius__(mRawObject);
+      result = gmtl_Sphere_double__getRadius__0(mRawObject);
       return result;
    }
 
+
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
-   private extern static void gmtl_Sphere_double__setCenter__gmtl_Point3d(IntPtr obj,
+   private extern static void gmtl_Sphere_double__setCenter__gmtl_Point3d1(IntPtr obj,
 	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.Point3dMarshaler))] gmtl.Point3d p0);
 
    public  void setCenter(gmtl.Point3d p0)
    {
-      
-      gmtl_Sphere_double__setCenter__gmtl_Point3d(mRawObject, p0);
-      
+      gmtl_Sphere_double__setCenter__gmtl_Point3d1(mRawObject, p0);
    }
 
+
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
-   private extern static void gmtl_Sphere_double__setRadius__double(IntPtr obj,
+   private extern static void gmtl_Sphere_double__setRadius__double1(IntPtr obj,
 	ref double p0);
 
    public  void setRadius(ref double p0)
    {
-      
-      gmtl_Sphere_double__setRadius__double(mRawObject, ref p0);
-      
+      gmtl_Sphere_double__setRadius__double1(mRawObject, ref p0);
    }
+
 
    // End of non-virtual methods.
 

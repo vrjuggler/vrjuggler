@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.66 of RCSfile: class_cs.tmpl,v
+// Generated from Revision: 1.73 of RCSfile: class_cs.tmpl,v
 using System;
 using System.Runtime.InteropServices;
 using System.Reflection;
@@ -214,231 +214,255 @@ public sealed class Interval
 
    // Start of non-virtual methods.
    [DllImport("vpr_bridge", CharSet = CharSet.Ansi)]
-   private extern static void vpr_Interval_set__long_long_unsigned_int_vpr_Interval_Unit(IntPtr obj,
+   private extern static void vpr_Interval_set__long_long_unsigned_int_vpr_Interval_Unit2(IntPtr obj,
 	ulong p0,
 	vpr.Interval.Unit p1);
 
    public  void set(ulong p0, vpr.Interval.Unit p1)
    {
-      vpr_Interval_set__long_long_unsigned_int_vpr_Interval_Unit(mRawObject, p0, p1);
+      vpr_Interval_set__long_long_unsigned_int_vpr_Interval_Unit2(mRawObject, p0, p1);
    }
 
+
    [DllImport("vpr_bridge", CharSet = CharSet.Ansi)]
-   private extern static void vpr_Interval_setf__float_vpr_Interval_Unit(IntPtr obj,
+   private extern static void vpr_Interval_setf__float_vpr_Interval_Unit2(IntPtr obj,
 	float p0,
 	vpr.Interval.Unit p1);
 
    public  void setf(float p0, vpr.Interval.Unit p1)
    {
-      vpr_Interval_setf__float_vpr_Interval_Unit(mRawObject, p0, p1);
+      vpr_Interval_setf__float_vpr_Interval_Unit2(mRawObject, p0, p1);
    }
 
+
    [DllImport("vpr_bridge", CharSet = CharSet.Ansi)]
-   private extern static void vpr_Interval_setd__double_vpr_Interval_Unit(IntPtr obj,
+   private extern static void vpr_Interval_setd__double_vpr_Interval_Unit2(IntPtr obj,
 	double p0,
 	vpr.Interval.Unit p1);
 
    public  void setd(double p0, vpr.Interval.Unit p1)
    {
-      vpr_Interval_setd__double_vpr_Interval_Unit(mRawObject, p0, p1);
+      vpr_Interval_setd__double_vpr_Interval_Unit2(mRawObject, p0, p1);
    }
 
+
    [DllImport("vpr_bridge", CharSet = CharSet.Ansi)]
-   private extern static void vpr_Interval_setNow__(IntPtr obj);
+   private extern static void vpr_Interval_setNow__0(IntPtr obj);
 
    public  void setNow()
    {
-      vpr_Interval_setNow__(mRawObject);
+      vpr_Interval_setNow__0(mRawObject);
    }
 
+
    [DllImport("vpr_bridge", CharSet = CharSet.Ansi)]
-   private extern static void vpr_Interval_setNowReal__(IntPtr obj);
+   private extern static void vpr_Interval_setNowReal__0(IntPtr obj);
 
    public  void setNowReal()
    {
-      vpr_Interval_setNowReal__(mRawObject);
+      vpr_Interval_setNowReal__0(mRawObject);
    }
 
+
    [DllImport("vpr_bridge", CharSet = CharSet.Ansi)]
-   private extern static void vpr_Interval_sec__long_long_unsigned_int(IntPtr obj,
+   private extern static void vpr_Interval_sec__long_long_unsigned_int1(IntPtr obj,
 	ulong p0);
 
    public  void sec(ulong p0)
    {
-      vpr_Interval_sec__long_long_unsigned_int(mRawObject, p0);
+      vpr_Interval_sec__long_long_unsigned_int1(mRawObject, p0);
    }
 
+
    [DllImport("vpr_bridge", CharSet = CharSet.Ansi)]
-   private extern static ulong vpr_Interval_sec__(IntPtr obj);
+   private extern static ulong vpr_Interval_sec__0(IntPtr obj);
 
    public  ulong sec()
    {
       ulong result;
-      result = vpr_Interval_sec__(mRawObject);
+      result = vpr_Interval_sec__0(mRawObject);
       return result;
    }
 
+
    [DllImport("vpr_bridge", CharSet = CharSet.Ansi)]
-   private extern static void vpr_Interval_secf__float(IntPtr obj,
+   private extern static void vpr_Interval_secf__float1(IntPtr obj,
 	float p0);
 
    public  void secf(float p0)
    {
-      vpr_Interval_secf__float(mRawObject, p0);
+      vpr_Interval_secf__float1(mRawObject, p0);
    }
 
+
    [DllImport("vpr_bridge", CharSet = CharSet.Ansi)]
-   private extern static float vpr_Interval_secf__(IntPtr obj);
+   private extern static float vpr_Interval_secf__0(IntPtr obj);
 
    public  float secf()
    {
       float result;
-      result = vpr_Interval_secf__(mRawObject);
+      result = vpr_Interval_secf__0(mRawObject);
       return result;
    }
 
+
    [DllImport("vpr_bridge", CharSet = CharSet.Ansi)]
-   private extern static void vpr_Interval_secd__double(IntPtr obj,
+   private extern static void vpr_Interval_secd__double1(IntPtr obj,
 	double p0);
 
    public  void secd(double p0)
    {
-      vpr_Interval_secd__double(mRawObject, p0);
+      vpr_Interval_secd__double1(mRawObject, p0);
    }
 
+
    [DllImport("vpr_bridge", CharSet = CharSet.Ansi)]
-   private extern static double vpr_Interval_secd__(IntPtr obj);
+   private extern static double vpr_Interval_secd__0(IntPtr obj);
 
    public  double secd()
    {
       double result;
-      result = vpr_Interval_secd__(mRawObject);
+      result = vpr_Interval_secd__0(mRawObject);
       return result;
    }
 
+
    [DllImport("vpr_bridge", CharSet = CharSet.Ansi)]
-   private extern static void vpr_Interval_msec__long_long_unsigned_int(IntPtr obj,
+   private extern static void vpr_Interval_msec__long_long_unsigned_int1(IntPtr obj,
 	ulong p0);
 
    public  void msec(ulong p0)
    {
-      vpr_Interval_msec__long_long_unsigned_int(mRawObject, p0);
+      vpr_Interval_msec__long_long_unsigned_int1(mRawObject, p0);
    }
 
+
    [DllImport("vpr_bridge", CharSet = CharSet.Ansi)]
-   private extern static ulong vpr_Interval_msec__(IntPtr obj);
+   private extern static ulong vpr_Interval_msec__0(IntPtr obj);
 
    public  ulong msec()
    {
       ulong result;
-      result = vpr_Interval_msec__(mRawObject);
+      result = vpr_Interval_msec__0(mRawObject);
       return result;
    }
 
+
    [DllImport("vpr_bridge", CharSet = CharSet.Ansi)]
-   private extern static void vpr_Interval_msecf__float(IntPtr obj,
+   private extern static void vpr_Interval_msecf__float1(IntPtr obj,
 	float p0);
 
    public  void msecf(float p0)
    {
-      vpr_Interval_msecf__float(mRawObject, p0);
+      vpr_Interval_msecf__float1(mRawObject, p0);
    }
 
+
    [DllImport("vpr_bridge", CharSet = CharSet.Ansi)]
-   private extern static float vpr_Interval_msecf__(IntPtr obj);
+   private extern static float vpr_Interval_msecf__0(IntPtr obj);
 
    public  float msecf()
    {
       float result;
-      result = vpr_Interval_msecf__(mRawObject);
+      result = vpr_Interval_msecf__0(mRawObject);
       return result;
    }
 
+
    [DllImport("vpr_bridge", CharSet = CharSet.Ansi)]
-   private extern static void vpr_Interval_msecd__double(IntPtr obj,
+   private extern static void vpr_Interval_msecd__double1(IntPtr obj,
 	double p0);
 
    public  void msecd(double p0)
    {
-      vpr_Interval_msecd__double(mRawObject, p0);
+      vpr_Interval_msecd__double1(mRawObject, p0);
    }
 
+
    [DllImport("vpr_bridge", CharSet = CharSet.Ansi)]
-   private extern static double vpr_Interval_msecd__(IntPtr obj);
+   private extern static double vpr_Interval_msecd__0(IntPtr obj);
 
    public  double msecd()
    {
       double result;
-      result = vpr_Interval_msecd__(mRawObject);
+      result = vpr_Interval_msecd__0(mRawObject);
       return result;
    }
 
+
    [DllImport("vpr_bridge", CharSet = CharSet.Ansi)]
-   private extern static void vpr_Interval_usec__long_long_unsigned_int(IntPtr obj,
+   private extern static void vpr_Interval_usec__long_long_unsigned_int1(IntPtr obj,
 	ulong p0);
 
    public  void usec(ulong p0)
    {
-      vpr_Interval_usec__long_long_unsigned_int(mRawObject, p0);
+      vpr_Interval_usec__long_long_unsigned_int1(mRawObject, p0);
    }
 
+
    [DllImport("vpr_bridge", CharSet = CharSet.Ansi)]
-   private extern static ulong vpr_Interval_usec__(IntPtr obj);
+   private extern static ulong vpr_Interval_usec__0(IntPtr obj);
 
    public  ulong usec()
    {
       ulong result;
-      result = vpr_Interval_usec__(mRawObject);
+      result = vpr_Interval_usec__0(mRawObject);
       return result;
    }
 
+
    [DllImport("vpr_bridge", CharSet = CharSet.Ansi)]
-   private extern static void vpr_Interval_usecf__float(IntPtr obj,
+   private extern static void vpr_Interval_usecf__float1(IntPtr obj,
 	float p0);
 
    public  void usecf(float p0)
    {
-      vpr_Interval_usecf__float(mRawObject, p0);
+      vpr_Interval_usecf__float1(mRawObject, p0);
    }
 
+
    [DllImport("vpr_bridge", CharSet = CharSet.Ansi)]
-   private extern static float vpr_Interval_usecf__(IntPtr obj);
+   private extern static float vpr_Interval_usecf__0(IntPtr obj);
 
    public  float usecf()
    {
       float result;
-      result = vpr_Interval_usecf__(mRawObject);
+      result = vpr_Interval_usecf__0(mRawObject);
       return result;
    }
 
+
    [DllImport("vpr_bridge", CharSet = CharSet.Ansi)]
-   private extern static void vpr_Interval_usecd__double(IntPtr obj,
+   private extern static void vpr_Interval_usecd__double1(IntPtr obj,
 	double p0);
 
    public  void usecd(double p0)
    {
-      vpr_Interval_usecd__double(mRawObject, p0);
+      vpr_Interval_usecd__double1(mRawObject, p0);
    }
 
+
    [DllImport("vpr_bridge", CharSet = CharSet.Ansi)]
-   private extern static double vpr_Interval_usecd__(IntPtr obj);
+   private extern static double vpr_Interval_usecd__0(IntPtr obj);
 
    public  double usecd()
    {
       double result;
-      result = vpr_Interval_usecd__(mRawObject);
+      result = vpr_Interval_usecd__0(mRawObject);
       return result;
    }
 
+
    [DllImport("vpr_bridge", CharSet = CharSet.Ansi)]
-   private extern static ulong vpr_Interval_getBaseVal__(IntPtr obj);
+   private extern static ulong vpr_Interval_getBaseVal__0(IntPtr obj);
 
    public  ulong getBaseVal()
    {
       ulong result;
-      result = vpr_Interval_getBaseVal__(mRawObject);
+      result = vpr_Interval_getBaseVal__0(mRawObject);
       return result;
    }
+
 
    // End of non-virtual methods.
 
@@ -449,14 +473,15 @@ public sealed class Interval
    [DllImport("vpr_bridge", CharSet = CharSet.Ansi)]
    [return : MarshalAs(UnmanagedType.CustomMarshaler,
                        MarshalTypeRef = typeof(vpr.IntervalMarshaler))]
-   private extern static vpr.Interval vpr_Interval_now__();
+   private extern static vpr.Interval vpr_Interval_now__0();
 
    public static vpr.Interval now()
    {
       vpr.Interval result;
-      result = vpr_Interval_now__();
+      result = vpr_Interval_now__0();
       return result;
    }
+
 
    // End of static methods.
 

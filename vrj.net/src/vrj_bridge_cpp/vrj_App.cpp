@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from $Revision$ of $RCSfile$
+// Generated from Revision: 1.60 of RCSfile: class_cxx.tmpl,v
 
 
 
@@ -89,139 +89,145 @@ extern "C"
    }
 
    // Wrapper for non-virtual method vrj::App::haveFocus()
-   SHARPPY_API bool vrj_App_haveFocus__(vrj_App_Adapter* self_)
+   SHARPPY_API bool vrj_App_haveFocus__0(vrj_App_Adapter* self_)
    {
       bool result;
       result = self_->haveFocus();
-
       return result;
    }
 
+
    // Wrapper for non-virtual method vrj::App::setFocus()
-   SHARPPY_API void vrj_App_setFocus__bool(vrj_App_Adapter* self_, bool p0)
+   SHARPPY_API void vrj_App_setFocus__bool1(vrj_App_Adapter* self_, bool p0)
    {
       self_->setFocus(p0);
    }
 
 
    // Wrapper for virtual method vrj::App::init()
-   SHARPPY_API void vrj_App_init__(vrj_App_Adapter* self_)
+   SHARPPY_API void vrj_App_init__0(vrj_App_Adapter* self_)
    {
       self_->vrj::App::init();
    }
 
+
    // Wrapper for virtual method vrj::App::apiInit()
-   SHARPPY_API void vrj_App_apiInit__(vrj_App_Adapter* self_)
+   SHARPPY_API void vrj_App_apiInit__0(vrj_App_Adapter* self_)
    {
       self_->vrj::App::apiInit();
    }
 
+
    // Wrapper for virtual method vrj::App::exit()
-   SHARPPY_API void vrj_App_exit__(vrj_App_Adapter* self_)
+   SHARPPY_API void vrj_App_exit__0(vrj_App_Adapter* self_)
    {
       self_->vrj::App::exit();
    }
 
+
    // Wrapper for virtual method vrj::App::preFrame()
-   SHARPPY_API void vrj_App_preFrame__(vrj_App_Adapter* self_)
+   SHARPPY_API void vrj_App_preFrame__0(vrj_App_Adapter* self_)
    {
       self_->vrj::App::preFrame();
    }
 
+
    // Wrapper for virtual method vrj::App::latePreFrame()
-   SHARPPY_API void vrj_App_latePreFrame__(vrj_App_Adapter* self_)
+   SHARPPY_API void vrj_App_latePreFrame__0(vrj_App_Adapter* self_)
    {
       self_->vrj::App::latePreFrame();
    }
 
+
    // Wrapper for virtual method vrj::App::intraFrame()
-   SHARPPY_API void vrj_App_intraFrame__(vrj_App_Adapter* self_)
+   SHARPPY_API void vrj_App_intraFrame__0(vrj_App_Adapter* self_)
    {
       self_->vrj::App::intraFrame();
    }
 
+
    // Wrapper for virtual method vrj::App::postFrame()
-   SHARPPY_API void vrj_App_postFrame__(vrj_App_Adapter* self_)
+   SHARPPY_API void vrj_App_postFrame__0(vrj_App_Adapter* self_)
    {
       self_->vrj::App::postFrame();
    }
 
+
    // Wrapper for virtual method vrj::App::reset()
-   SHARPPY_API void vrj_App_reset__(vrj_App_Adapter* self_)
+   SHARPPY_API void vrj_App_reset__0(vrj_App_Adapter* self_)
    {
       self_->vrj::App::reset();
    }
 
+
    // Wrapper for virtual method vrj::App::focusChanged()
-   SHARPPY_API void vrj_App_focusChanged__(vrj_App_Adapter* self_)
+   SHARPPY_API void vrj_App_focusChanged__0(vrj_App_Adapter* self_)
    {
       self_->vrj::App::focusChanged();
    }
 
+
    // Wrapper for virtual method vrj::App::getDrawScaleFactor()
-   SHARPPY_API float vrj_App_getDrawScaleFactor__(vrj_App_Adapter* self_)
+   SHARPPY_API float vrj_App_getDrawScaleFactor__0(vrj_App_Adapter* self_)
    {
       float result;
       result = self_->vrj::App::getDrawScaleFactor();
-
       return result;
    }
 
+
    // Wrapper for virtual method vrj::App::configCanHandle()
-   SHARPPY_API bool vrj_App_configCanHandle__boost_shared_ptr_jccl__ConfigElement(vrj_App_Adapter* self_, boost::shared_ptr<jccl::ConfigElement> p0)
+   SHARPPY_API bool vrj_App_configCanHandle__boost_shared_ptr_jccl__ConfigElement1(vrj_App_Adapter* self_, boost::shared_ptr<jccl::ConfigElement> p0)
    {
       bool result;
       result = self_->vrj::App::configCanHandle(p0);
-
       return result;
    }
 
+
    // Wrapper for virtual method vrj::App::depSatisfied()
-   SHARPPY_API bool vrj_App_depSatisfied__(vrj_App_Adapter* self_)
+   SHARPPY_API bool vrj_App_depSatisfied__0(vrj_App_Adapter* self_)
    {
       bool result;
       result = self_->vrj::App::depSatisfied();
-
       return result;
    }
 
+
    // Wrapper for virtual method vrj::App::configAdd()
-   SHARPPY_API bool vrj_App_configAdd__boost_shared_ptr_jccl__ConfigElement(vrj_App_Adapter* self_, boost::shared_ptr<jccl::ConfigElement> p0)
+   SHARPPY_API bool vrj_App_configAdd__boost_shared_ptr_jccl__ConfigElement1(vrj_App_Adapter* self_, boost::shared_ptr<jccl::ConfigElement> p0)
    {
       bool result;
       result = self_->configAdd_wrapper(p0);
-
       return result;
    }
 
+
    // Wrapper for virtual method vrj::App::configRemove()
-   SHARPPY_API bool vrj_App_configRemove__boost_shared_ptr_jccl__ConfigElement(vrj_App_Adapter* self_, boost::shared_ptr<jccl::ConfigElement> p0)
+   SHARPPY_API bool vrj_App_configRemove__boost_shared_ptr_jccl__ConfigElement1(vrj_App_Adapter* self_, boost::shared_ptr<jccl::ConfigElement> p0)
    {
       bool result;
       result = self_->configRemove_wrapper(p0);
-
       return result;
    }
 
+
    // Wrapper for virtual method vrj::App::getDrawManager()
-   SHARPPY_API vrj::DrawManager* vrj_App_getDrawManager__(vrj_App_Adapter* self_)
+   SHARPPY_API vrj::DrawManager* vrj_App_getDrawManager__0(vrj_App_Adapter* self_)
    {
       vrj::DrawManager* result;
       result = self_->getDrawManager();
-
       return result;
    }
 
+
    // Wrapper for virtual method vrj::App::getSoundManager()
-   SHARPPY_API vrj::SoundManager* vrj_App_getSoundManager__(vrj_App_Adapter* self_)
+   SHARPPY_API vrj::SoundManager* vrj_App_getSoundManager__0(vrj_App_Adapter* self_)
    {
       vrj::SoundManager* result;
       result = self_->vrj::App::getSoundManager();
-
       return result;
    }
-
-
 
 
 } // extern "C" for vrj::App

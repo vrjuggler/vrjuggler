@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from $Revision$ of $RCSfile$
+// Generated from Revision: 1.73 of RCSfile: class_cs.tmpl,v
 using System;
 using System.Runtime.InteropServices;
 using System.Reflection;
@@ -102,26 +102,29 @@ public class DigitalData
 
    // Operator overloads.
 
+   // Converter operators.
 
    // Start of non-virtual methods.
    [DllImport("gadget_bridge", CharSet = CharSet.Ansi)]
-   private extern static int gadget_DigitalData_getDigital__(IntPtr obj);
+   private extern static int gadget_DigitalData_getDigital__0(IntPtr obj);
 
    public  int getDigital()
    {
       int result;
-      result = gadget_DigitalData_getDigital__(mRawObject);
+      result = gadget_DigitalData_getDigital__0(mRawObject);
       return result;
    }
 
+
    [DllImport("gadget_bridge", CharSet = CharSet.Ansi)]
-   private extern static void gadget_DigitalData_setDigital__int(IntPtr obj,
+   private extern static void gadget_DigitalData_setDigital__int1(IntPtr obj,
 	int p0);
 
    public  void setDigital(int p0)
    {
-      gadget_DigitalData_setDigital__int(mRawObject, p0);
+      gadget_DigitalData_setDigital__int1(mRawObject, p0);
    }
+
 
    // End of non-virtual methods.
 

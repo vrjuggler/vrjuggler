@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from $Revision$ of $RCSfile$
+// Generated from Revision: 1.73 of RCSfile: class_cs.tmpl,v
 using System;
 using System.Runtime.InteropServices;
 using System.Reflection;
@@ -96,38 +96,40 @@ public class InputData
 
    // Operator overloads.
 
+   // Converter operators.
 
    // Start of non-virtual methods.
    [DllImport("gadget_bridge", CharSet = CharSet.Ansi)]
-   private extern static void gadget_InputData_setTime__(IntPtr obj);
+   private extern static void gadget_InputData_setTime__0(IntPtr obj);
 
    public  void setTime()
    {
-      gadget_InputData_setTime__(mRawObject);
+      gadget_InputData_setTime__0(mRawObject);
    }
 
+
    [DllImport("gadget_bridge", CharSet = CharSet.Ansi)]
-   private extern static void gadget_InputData_setTime__vpr_Interval(IntPtr obj,
+   private extern static void gadget_InputData_setTime__vpr_Interval1(IntPtr obj,
 	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(vpr.IntervalMarshaler))] vpr.Interval p0);
 
    public  void setTime(vpr.Interval p0)
    {
-      
-      gadget_InputData_setTime__vpr_Interval(mRawObject, p0);
-      
+      gadget_InputData_setTime__vpr_Interval1(mRawObject, p0);
    }
+
 
    [DllImport("gadget_bridge", CharSet = CharSet.Ansi)]
    [return : MarshalAs(UnmanagedType.CustomMarshaler,
                        MarshalTypeRef = typeof(vpr.IntervalMarshaler))]
-   private extern static vpr.Interval gadget_InputData_getTime__(IntPtr obj);
+   private extern static vpr.Interval gadget_InputData_getTime__0(IntPtr obj);
 
    public  vpr.Interval getTime()
    {
       vpr.Interval result;
-      result = gadget_InputData_getTime__(mRawObject);
+      result = gadget_InputData_getTime__0(mRawObject);
       return result;
    }
+
 
    // End of non-virtual methods.
 

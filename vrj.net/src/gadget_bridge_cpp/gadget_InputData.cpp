@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.58 of RCSfile: class_cxx.tmpl,v
+// Generated from Revision: 1.60 of RCSfile: class_cxx.tmpl,v
 
 
 
@@ -56,31 +56,27 @@ extern "C"
    }
 
    // Wrapper for non-virtual method gadget::InputData::setTime()
-   SHARPPY_API void gadget_InputData_setTime__(gadget::InputData* self_)
+   SHARPPY_API void gadget_InputData_setTime__0(gadget::InputData* self_)
    {
       self_->setTime();
    }
 
+
    // Wrapper for non-virtual method gadget::InputData::setTime()
-   SHARPPY_API void gadget_InputData_setTime__vpr_Interval(gadget::InputData* self_, const vpr::Interval* p0)
+   SHARPPY_API void gadget_InputData_setTime__vpr_Interval1(gadget::InputData* self_, const vpr::Interval* p0)
    {
-      const vpr::Interval& marshal_p0 = *p0; // Pre-call marshaling for p0
+      const vpr::Interval& marshal_p0 = *p0;
       self_->setTime(marshal_p0);
-      ; // Post-call marshaling for p0
    }
 
+
    // Wrapper for non-virtual method gadget::InputData::getTime()
-   SHARPPY_API vpr::Interval* gadget_InputData_getTime__(gadget::InputData* self_)
+   SHARPPY_API vpr::Interval* gadget_InputData_getTime__0(gadget::InputData* self_)
    {
       vpr::Interval* result;
       result = new vpr::Interval(self_->getTime());
-
       return result;
    }
-
-
-
-
 
 
 } // extern "C" for gadget::InputData

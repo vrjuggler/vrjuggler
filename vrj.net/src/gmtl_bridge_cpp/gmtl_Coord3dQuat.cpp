@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.58 of RCSfile: class_cxx.tmpl,v
+// Generated from Revision: 1.60 of RCSfile: class_cxx.tmpl,v
 
 
 
@@ -94,44 +94,39 @@ extern "C"
    }
 
    // Wrapper for non-virtual method gmtl::Coord<gmtl::Vec<double,3>,gmtl::Quat<double> >::getPos()
-   SHARPPY_API const gmtl::Vec3d* gmtl_Coord_gmtl_Vec_double_3__gmtl_Quat_double____getPos__(gmtl::Coord3dQuat* self_)
+   SHARPPY_API const gmtl::Vec3d* gmtl_Coord_gmtl_Vec_double_3__gmtl_Quat_double____getPos__0(gmtl::Coord3dQuat* self_)
    {
       const gmtl::Vec3d* result;
       result = new const gmtl::Vec3d(self_->getPos());
-
       return result;
    }
 
+
    // Wrapper for non-virtual method gmtl::Coord<gmtl::Vec<double,3>,gmtl::Quat<double> >::getRot()
-   SHARPPY_API const gmtl::Quatd* gmtl_Coord_gmtl_Vec_double_3__gmtl_Quat_double____getRot__(gmtl::Coord3dQuat* self_)
+   SHARPPY_API const gmtl::Quatd* gmtl_Coord_gmtl_Vec_double_3__gmtl_Quat_double____getRot__0(gmtl::Coord3dQuat* self_)
    {
       const gmtl::Quatd* result;
       result = new const gmtl::Quatd(self_->getRot());
-
       return result;
    }
 
+
    // Wrapper for non-virtual method gmtl::Coord<gmtl::Vec<double,3>,gmtl::Quat<double> >::pos()
-   SHARPPY_API gmtl::Vec3d* gmtl_Coord_gmtl_Vec_double_3__gmtl_Quat_double____pos__(gmtl::Coord3dQuat* self_)
+   SHARPPY_API gmtl::Vec3d* gmtl_Coord_gmtl_Vec_double_3__gmtl_Quat_double____pos__0(gmtl::Coord3dQuat* self_)
    {
       gmtl::Vec3d* result;
       result = new gmtl::Vec3d(self_->pos());
-
       return result;
    }
 
+
    // Wrapper for non-virtual method gmtl::Coord<gmtl::Vec<double,3>,gmtl::Quat<double> >::rot()
-   SHARPPY_API gmtl::Quatd* gmtl_Coord_gmtl_Vec_double_3__gmtl_Quat_double____rot__(gmtl::Coord3dQuat* self_)
+   SHARPPY_API gmtl::Quatd* gmtl_Coord_gmtl_Vec_double_3__gmtl_Quat_double____rot__0(gmtl::Coord3dQuat* self_)
    {
       gmtl::Quatd* result;
       result = new gmtl::Quatd(self_->rot());
-
       return result;
    }
-
-
-
-
 
 
 } // extern "C" for gmtl::Coord3dQuat

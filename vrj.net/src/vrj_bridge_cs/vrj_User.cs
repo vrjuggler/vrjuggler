@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.67 of RCSfile: class_cs.tmpl,v
+// Generated from Revision: 1.73 of RCSfile: class_cs.tmpl,v
 using System;
 using System.Runtime.InteropServices;
 using System.Reflection;
@@ -95,58 +95,63 @@ public sealed class User
 
    // Start of non-virtual methods.
    [DllImport("vrj_bridge", CharSet = CharSet.Ansi)]
-   private extern static int vrj_User_getId__(IntPtr obj);
+   private extern static int vrj_User_getId__0(IntPtr obj);
 
    public  int getId()
    {
       int result;
-      result = vrj_User_getId__(mRawObject);
+      result = vrj_User_getId__0(mRawObject);
       return result;
    }
 
+
    [DllImport("vrj_bridge", CharSet = CharSet.Ansi)]
-   private extern static string vrj_User_getName__(IntPtr obj);
+   private extern static string vrj_User_getName__0(IntPtr obj);
 
    public  string getName()
    {
       string result;
-      result = vrj_User_getName__(mRawObject);
+      result = vrj_User_getName__0(mRawObject);
       return result;
    }
+
 
    [DllImport("vrj_bridge", CharSet = CharSet.Ansi)]
    [return : MarshalAs(UnmanagedType.CustomMarshaler,
                        MarshalTypeRef = typeof(gadget.PositionProxyMarshaler))]
-   private extern static gadget.PositionProxy vrj_User_getHeadPosProxy__(IntPtr obj);
+   private extern static gadget.PositionProxy vrj_User_getHeadPosProxy__0(IntPtr obj);
 
    public  gadget.PositionProxy getHeadPosProxy()
    {
       gadget.PositionProxy result;
-      result = vrj_User_getHeadPosProxy__(mRawObject);
+      result = vrj_User_getHeadPosProxy__0(mRawObject);
       return result;
    }
+
 
    [DllImport("vrj_bridge", CharSet = CharSet.Ansi)]
    [return : MarshalAs(UnmanagedType.CustomMarshaler,
                        MarshalTypeRef = typeof(vpr.IntervalMarshaler))]
-   private extern static vpr.Interval vrj_User_getHeadUpdateTime__(IntPtr obj);
+   private extern static vpr.Interval vrj_User_getHeadUpdateTime__0(IntPtr obj);
 
    public  vpr.Interval getHeadUpdateTime()
    {
       vpr.Interval result;
-      result = vrj_User_getHeadUpdateTime__(mRawObject);
+      result = vrj_User_getHeadUpdateTime__0(mRawObject);
       return result;
    }
 
+
    [DllImport("vrj_bridge", CharSet = CharSet.Ansi)]
-   private extern static float vrj_User_getInterocularDistance__(IntPtr obj);
+   private extern static float vrj_User_getInterocularDistance__0(IntPtr obj);
 
    public  float getInterocularDistance()
    {
       float result;
-      result = vrj_User_getInterocularDistance__(mRawObject);
+      result = vrj_User_getInterocularDistance__0(mRawObject);
       return result;
    }
+
 
    // End of non-virtual methods.
 
@@ -155,15 +160,16 @@ public sealed class User
 
    // Start of virtual methods.
    [DllImport("vrj_bridge", CharSet = CharSet.Ansi)]
-   private extern static bool vrj_User_config__boost_shared_ptr_jccl__ConfigElement(IntPtr obj,
+   private extern static bool vrj_User_config__boost_shared_ptr_jccl__ConfigElement1(IntPtr obj,
 	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(jccl.ConfigElementMarshaler))] jccl.ConfigElement p0);
 
    public  bool config(jccl.ConfigElement p0)
    {
       bool result;
-      result = vrj_User_config__boost_shared_ptr_jccl__ConfigElement(mRawObject, p0);
+      result = vrj_User_config__boost_shared_ptr_jccl__ConfigElement1(mRawObject, p0);
       return result;
    }
+
 
    // End of virtual methods.
 

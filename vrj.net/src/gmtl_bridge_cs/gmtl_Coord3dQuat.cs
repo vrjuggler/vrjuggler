@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.70 of RCSfile: class_cs.tmpl,v
+// Generated from Revision: 1.73 of RCSfile: class_cs.tmpl,v
 using System;
 using System.Runtime.InteropServices;
 using System.Reflection;
@@ -161,50 +161,54 @@ public sealed class Coord3dQuat
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
    [return : MarshalAs(UnmanagedType.CustomMarshaler,
                        MarshalTypeRef = typeof(gmtl.Vec3dMarshaler))]
-   private extern static gmtl.Vec3d gmtl_Coord_gmtl_Vec_double_3__gmtl_Quat_double____getPos__(IntPtr obj);
+   private extern static gmtl.Vec3d gmtl_Coord_gmtl_Vec_double_3__gmtl_Quat_double____getPos__0(IntPtr obj);
 
    public  gmtl.Vec3d getPos()
    {
       gmtl.Vec3d result;
-      result = gmtl_Coord_gmtl_Vec_double_3__gmtl_Quat_double____getPos__(mRawObject);
+      result = gmtl_Coord_gmtl_Vec_double_3__gmtl_Quat_double____getPos__0(mRawObject);
       return result;
    }
+
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
    [return : MarshalAs(UnmanagedType.CustomMarshaler,
                        MarshalTypeRef = typeof(gmtl.QuatdMarshaler))]
-   private extern static gmtl.Quatd gmtl_Coord_gmtl_Vec_double_3__gmtl_Quat_double____getRot__(IntPtr obj);
+   private extern static gmtl.Quatd gmtl_Coord_gmtl_Vec_double_3__gmtl_Quat_double____getRot__0(IntPtr obj);
 
    public  gmtl.Quatd getRot()
    {
       gmtl.Quatd result;
-      result = gmtl_Coord_gmtl_Vec_double_3__gmtl_Quat_double____getRot__(mRawObject);
+      result = gmtl_Coord_gmtl_Vec_double_3__gmtl_Quat_double____getRot__0(mRawObject);
       return result;
    }
+
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
    [return : MarshalAs(UnmanagedType.CustomMarshaler,
                        MarshalTypeRef = typeof(gmtl.Vec3dMarshaler))]
-   private extern static gmtl.Vec3d gmtl_Coord_gmtl_Vec_double_3__gmtl_Quat_double____pos__(IntPtr obj);
+   private extern static gmtl.Vec3d gmtl_Coord_gmtl_Vec_double_3__gmtl_Quat_double____pos__0(IntPtr obj);
 
    public  gmtl.Vec3d pos()
    {
       gmtl.Vec3d result;
-      result = gmtl_Coord_gmtl_Vec_double_3__gmtl_Quat_double____pos__(mRawObject);
+      result = gmtl_Coord_gmtl_Vec_double_3__gmtl_Quat_double____pos__0(mRawObject);
       return result;
    }
+
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
    [return : MarshalAs(UnmanagedType.CustomMarshaler,
                        MarshalTypeRef = typeof(gmtl.QuatdMarshaler))]
-   private extern static gmtl.Quatd gmtl_Coord_gmtl_Vec_double_3__gmtl_Quat_double____rot__(IntPtr obj);
+   private extern static gmtl.Quatd gmtl_Coord_gmtl_Vec_double_3__gmtl_Quat_double____rot__0(IntPtr obj);
 
    public  gmtl.Quatd rot()
    {
       gmtl.Quatd result;
-      result = gmtl_Coord_gmtl_Vec_double_3__gmtl_Quat_double____rot__(mRawObject);
+      result = gmtl_Coord_gmtl_Vec_double_3__gmtl_Quat_double____rot__0(mRawObject);
       return result;
    }
+
 
    // End of non-virtual methods.
 

@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.58 of RCSfile: class_cxx.tmpl,v
+// Generated from Revision: 1.60 of RCSfile: class_cxx.tmpl,v
 
 
 
@@ -35,137 +35,134 @@
 extern "C"
 {
    // Wrapper for non-virtual method gadget::InputManager::getDisplaySystemElement()
-   SHARPPY_API boost::shared_ptr<jccl::ConfigElement>* gadget_InputManager_getDisplaySystemElement__(gadget::InputManager* self_)
+   SHARPPY_API boost::shared_ptr<jccl::ConfigElement>* gadget_InputManager_getDisplaySystemElement__0(gadget::InputManager* self_)
    {
       boost::shared_ptr<jccl::ConfigElement>* result;
       result = new boost::shared_ptr<jccl::ConfigElement>(self_->getDisplaySystemElement());
-
       return result;
    }
 
+
    // Wrapper for non-virtual method gadget::InputManager::configureDevice()
-   SHARPPY_API bool gadget_InputManager_configureDevice__boost_shared_ptr_jccl__ConfigElement(gadget::InputManager* self_, boost::shared_ptr<jccl::ConfigElement> p0)
+   SHARPPY_API bool gadget_InputManager_configureDevice__boost_shared_ptr_jccl__ConfigElement1(gadget::InputManager* self_, boost::shared_ptr<jccl::ConfigElement> p0)
    {
       bool result;
       result = self_->configureDevice(p0);
-
       return result;
    }
 
+
    // Wrapper for non-virtual method gadget::InputManager::updateAllData()
-   SHARPPY_API void gadget_InputManager_updateAllData__(gadget::InputManager* self_)
+   SHARPPY_API void gadget_InputManager_updateAllData__0(gadget::InputManager* self_)
    {
       self_->updateAllData();
    }
 
+
    // Wrapper for non-virtual method gadget::InputManager::getDevice()
-   SHARPPY_API gadget::Input* gadget_InputManager_getDevice__std_basic_string_char_std__char_traits_char__std__allocator_char__(gadget::InputManager* self_, const char* p0)
+   SHARPPY_API gadget::Input* gadget_InputManager_getDevice__std_basic_string_char_std__char_traits_char__std__allocator_char__1(gadget::InputManager* self_, const char* p0)
    {
       gadget::Input* result;
       result = self_->getDevice(p0);
-
       return result;
    }
 
+
    // Wrapper for non-virtual method gadget::InputManager::addDevice()
-   SHARPPY_API bool gadget_InputManager_addDevice__gadget_Input(gadget::InputManager* self_, gadget::Input* p0)
+   SHARPPY_API bool gadget_InputManager_addDevice__gadget_Input1(gadget::InputManager* self_, gadget::Input* p0)
    {
       bool result;
       result = self_->addDevice(p0);
-
       return result;
    }
 
+
    // Wrapper for non-virtual method gadget::InputManager::addRemoteDevice()
-   SHARPPY_API bool gadget_InputManager_addRemoteDevice__gadget_Input_std_basic_string_char_std__char_traits_char__std__allocator_char__(gadget::InputManager* self_, gadget::Input* p0, const char* p1)
+   SHARPPY_API bool gadget_InputManager_addRemoteDevice__gadget_Input_std_basic_string_char_std__char_traits_char__std__allocator_char__2(gadget::InputManager* self_, gadget::Input* p0, const char* p1)
    {
       bool result;
       result = self_->addRemoteDevice(p0, p1);
-
       return result;
    }
 
+
    // Wrapper for non-virtual method gadget::InputManager::removeDevice()
-   SHARPPY_API bool gadget_InputManager_removeDevice__std_basic_string_char_std__char_traits_char__std__allocator_char__(gadget::InputManager* self_, const char* p0)
+   SHARPPY_API bool gadget_InputManager_removeDevice__std_basic_string_char_std__char_traits_char__std__allocator_char__1(gadget::InputManager* self_, const char* p0)
    {
       bool result;
       result = self_->removeDevice(p0);
-
       return result;
    }
 
+
    // Wrapper for non-virtual method gadget::InputManager::removeDevice()
-   SHARPPY_API bool gadget_InputManager_removeDevice__gadget_Input(gadget::InputManager* self_, const gadget::Input* p0)
+   SHARPPY_API bool gadget_InputManager_removeDevice__gadget_Input1(gadget::InputManager* self_, const gadget::Input* p0)
    {
       bool result;
       result = self_->removeDevice(p0);
-
       return result;
    }
+
 
    // Wrapper for non-virtual method gadget::InputManager::addProxy()
-   SHARPPY_API bool gadget_InputManager_addProxy__gadget_Proxy(gadget::InputManager* self_, gadget::Proxy* p0)
+   SHARPPY_API bool gadget_InputManager_addProxy__gadget_Proxy1(gadget::InputManager* self_, gadget::Proxy* p0)
    {
       bool result;
       result = self_->addProxy(p0);
-
       return result;
    }
 
+
    // Wrapper for non-virtual method gadget::InputManager::getProxy()
-   SHARPPY_API gadget::Proxy* gadget_InputManager_getProxy__std_basic_string_char_std__char_traits_char__std__allocator_char__(gadget::InputManager* self_, const char* p0)
+   SHARPPY_API gadget::Proxy* gadget_InputManager_getProxy__std_basic_string_char_std__char_traits_char__std__allocator_char__1(gadget::InputManager* self_, const char* p0)
    {
       gadget::Proxy* result;
       result = self_->getProxy(p0);
-
       return result;
    }
 
+
    // Wrapper for non-virtual method gadget::InputManager::refreshAllProxies()
-   SHARPPY_API void gadget_InputManager_refreshAllProxies__(gadget::InputManager* self_)
+   SHARPPY_API void gadget_InputManager_refreshAllProxies__0(gadget::InputManager* self_)
    {
       self_->refreshAllProxies();
    }
 
 
-
    // Wrapper for virtual method gadget::InputManager::configAdd()
-   SHARPPY_API bool gadget_InputManager_configAdd__boost_shared_ptr_jccl__ConfigElement(gadget::InputManager* self_, boost::shared_ptr<jccl::ConfigElement> p0)
+   SHARPPY_API bool gadget_InputManager_configAdd__boost_shared_ptr_jccl__ConfigElement1(gadget::InputManager* self_, boost::shared_ptr<jccl::ConfigElement> p0)
    {
       bool result;
       result = self_->configAdd(p0);
-
       return result;
    }
 
+
    // Wrapper for virtual method gadget::InputManager::configRemove()
-   SHARPPY_API bool gadget_InputManager_configRemove__boost_shared_ptr_jccl__ConfigElement(gadget::InputManager* self_, boost::shared_ptr<jccl::ConfigElement> p0)
+   SHARPPY_API bool gadget_InputManager_configRemove__boost_shared_ptr_jccl__ConfigElement1(gadget::InputManager* self_, boost::shared_ptr<jccl::ConfigElement> p0)
    {
       bool result;
       result = self_->configRemove(p0);
-
       return result;
    }
 
+
    // Wrapper for virtual method gadget::InputManager::configCanHandle()
-   SHARPPY_API bool gadget_InputManager_configCanHandle__boost_shared_ptr_jccl__ConfigElement(gadget::InputManager* self_, boost::shared_ptr<jccl::ConfigElement> p0)
+   SHARPPY_API bool gadget_InputManager_configCanHandle__boost_shared_ptr_jccl__ConfigElement1(gadget::InputManager* self_, boost::shared_ptr<jccl::ConfigElement> p0)
    {
       bool result;
       result = self_->configCanHandle(p0);
-
       return result;
    }
 
 
    // Wrapper for static method gadget::InputManager::instance()
-   SHARPPY_API gadget::InputManager* gadget_InputManager_instance__()
+   SHARPPY_API gadget::InputManager* gadget_InputManager_instance__0()
    {
       gadget::InputManager* result;
       result = gadget::InputManager::instance();
-
       return result;
    }
-
 
 
 } // extern "C" for gadget::InputManager

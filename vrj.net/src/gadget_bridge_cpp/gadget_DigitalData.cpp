@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.58 of RCSfile: class_cxx.tmpl,v
+// Generated from Revision: 1.60 of RCSfile: class_cxx.tmpl,v
 
 
 
@@ -63,23 +63,19 @@ extern "C"
    }
 
    // Wrapper for non-virtual method gadget::DigitalData::getDigital()
-   SHARPPY_API int gadget_DigitalData_getDigital__(gadget::DigitalData* self_)
+   SHARPPY_API int gadget_DigitalData_getDigital__0(gadget::DigitalData* self_)
    {
       int result;
       result = self_->getDigital();
-
       return result;
    }
 
+
    // Wrapper for non-virtual method gadget::DigitalData::setDigital()
-   SHARPPY_API void gadget_DigitalData_setDigital__int(gadget::DigitalData* self_, const int p0)
+   SHARPPY_API void gadget_DigitalData_setDigital__int1(gadget::DigitalData* self_, const int p0)
    {
       self_->setDigital(p0);
    }
-
-
-
-
 
 
 } // extern "C" for gadget::DigitalData

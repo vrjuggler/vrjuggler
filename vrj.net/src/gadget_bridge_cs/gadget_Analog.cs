@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.68 of RCSfile: class_cs.tmpl,v
+// Generated from Revision: 1.73 of RCSfile: class_cs.tmpl,v
 using System;
 using System.Runtime.InteropServices;
 using System.Reflection;
@@ -105,75 +105,90 @@ public class Analog
    [DllImport("gadget_bridge", CharSet = CharSet.Ansi)]
    [return : MarshalAs(UnmanagedType.CustomMarshaler,
                        MarshalTypeRef = typeof(gadget.AnalogDataMarshaler))]
-   private extern static gadget.AnalogData gadget_Analog_getAnalogData__int(IntPtr obj,
+   private extern static gadget.AnalogData gadget_Analog_getAnalogData__int0(IntPtr obj);
+
+   public  gadget.AnalogData getAnalogData()
+   {
+      gadget.AnalogData result;
+      result = gadget_Analog_getAnalogData__int0(mRawObject);
+      return result;
+   }
+
+   [DllImport("gadget_bridge", CharSet = CharSet.Ansi)]
+   [return : MarshalAs(UnmanagedType.CustomMarshaler,
+                       MarshalTypeRef = typeof(gadget.AnalogDataMarshaler))]
+   private extern static gadget.AnalogData gadget_Analog_getAnalogData__int1(IntPtr obj,
 	int p0);
 
    public  gadget.AnalogData getAnalogData(int p0)
    {
       gadget.AnalogData result;
-      result = gadget_Analog_getAnalogData__int(mRawObject, p0);
+      result = gadget_Analog_getAnalogData__int1(mRawObject, p0);
       return result;
    }
 
+
    [DllImport("gadget_bridge", CharSet = CharSet.Ansi)]
-   private extern static void gadget_Analog_swapAnalogBuffers__(IntPtr obj);
+   private extern static void gadget_Analog_swapAnalogBuffers__0(IntPtr obj);
 
    public  void swapAnalogBuffers()
    {
-      gadget_Analog_swapAnalogBuffers__(mRawObject);
+      gadget_Analog_swapAnalogBuffers__0(mRawObject);
    }
 
+
    [DllImport("gadget_bridge", CharSet = CharSet.Ansi)]
-   private extern static void gadget_Analog_normalizeMinToMax__float_float(IntPtr obj,
+   private extern static void gadget_Analog_normalizeMinToMax__float_float2(IntPtr obj,
 	ref float p0,
 	ref float p1);
 
    protected  void normalizeMinToMax(ref float p0, ref float p1)
    {
-      
-      
-      gadget_Analog_normalizeMinToMax__float_float(mRawObject, ref p0, ref p1);
-      
-      
+      gadget_Analog_normalizeMinToMax__float_float2(mRawObject, ref p0, ref p1);
    }
 
+
    [DllImport("gadget_bridge", CharSet = CharSet.Ansi)]
-   private extern static float gadget_Analog_getMin__(IntPtr obj);
+   private extern static float gadget_Analog_getMin__0(IntPtr obj);
 
    protected  float getMin()
    {
       float result;
-      result = gadget_Analog_getMin__(mRawObject);
+      result = gadget_Analog_getMin__0(mRawObject);
       return result;
    }
 
+
    [DllImport("gadget_bridge", CharSet = CharSet.Ansi)]
-   private extern static float gadget_Analog_getMax__(IntPtr obj);
+   private extern static float gadget_Analog_getMax__0(IntPtr obj);
 
    protected  float getMax()
    {
       float result;
-      result = gadget_Analog_getMax__(mRawObject);
+      result = gadget_Analog_getMax__0(mRawObject);
       return result;
    }
 
+
    [DllImport("gadget_bridge", CharSet = CharSet.Ansi)]
-   private extern static void gadget_Analog_setMin__float(IntPtr obj,
+   private extern static void gadget_Analog_setMin__float1(IntPtr obj,
 	float p0);
 
    protected  void setMin(float p0)
    {
-      gadget_Analog_setMin__float(mRawObject, p0);
+      gadget_Analog_setMin__float1(mRawObject, p0);
    }
 
+
    [DllImport("gadget_bridge", CharSet = CharSet.Ansi)]
-   private extern static void gadget_Analog_setMax__float(IntPtr obj,
+   private extern static void gadget_Analog_setMax__float1(IntPtr obj,
 	float p0);
 
    protected  void setMax(float p0)
    {
-      gadget_Analog_setMax__float(mRawObject, p0);
+      gadget_Analog_setMax__float1(mRawObject, p0);
    }
+
 
    // End of non-virtual methods.
 
@@ -190,17 +205,16 @@ public class Analog
    [DllImport("gadget_bridge", CharSet = CharSet.Ansi)]
    [return : MarshalAs(UnmanagedType.CustomMarshaler,
                        MarshalTypeRef = typeof(vpr.ReturnStatusMarshaler))]
-   private extern static vpr.ReturnStatus gadget_Analog_writeObject__vpr_ObjectWriter(IntPtr obj,
+   private extern static vpr.ReturnStatus gadget_Analog_writeObject__vpr_ObjectWriter1(IntPtr obj,
 	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(vpr.ObjectWriterMarshaler))] vpr.ObjectWriter p0);
 
    public virtual vpr.ReturnStatus writeObject(vpr.ObjectWriter p0)
    {
-      
       vpr.ReturnStatus result;
-      result = gadget_Analog_writeObject__vpr_ObjectWriter(mRawObject, p0);
-      
+      result = gadget_Analog_writeObject__vpr_ObjectWriter1(mRawObject, p0);
       return result;
    }
+
 
    // Delegate for the readObject() callback.
    protected IntPtr readObjectAdapter(vpr.ObjectReader p0)
@@ -214,46 +228,47 @@ public class Analog
    [DllImport("gadget_bridge", CharSet = CharSet.Ansi)]
    [return : MarshalAs(UnmanagedType.CustomMarshaler,
                        MarshalTypeRef = typeof(vpr.ReturnStatusMarshaler))]
-   private extern static vpr.ReturnStatus gadget_Analog_readObject__vpr_ObjectReader(IntPtr obj,
+   private extern static vpr.ReturnStatus gadget_Analog_readObject__vpr_ObjectReader1(IntPtr obj,
 	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(vpr.ObjectReaderMarshaler))] vpr.ObjectReader p0);
 
    public virtual vpr.ReturnStatus readObject(vpr.ObjectReader p0)
    {
-      
       vpr.ReturnStatus result;
-      result = gadget_Analog_readObject__vpr_ObjectReader(mRawObject, p0);
-      
+      result = gadget_Analog_readObject__vpr_ObjectReader1(mRawObject, p0);
       return result;
    }
+
 
    // Delegate for the config() callback.
    public delegate bool configDelegate_boost_shared_ptr_jccl__ConfigElement([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(jccl.ConfigElementMarshaler))] jccl.ConfigElement p0);
    protected configDelegate_boost_shared_ptr_jccl__ConfigElement m_configDelegate_boost_shared_ptr_jccl__ConfigElement;
 
    [DllImport("gadget_bridge", CharSet = CharSet.Ansi)]
-   private extern static bool gadget_Analog_config__boost_shared_ptr_jccl__ConfigElement(IntPtr obj,
+   private extern static bool gadget_Analog_config__boost_shared_ptr_jccl__ConfigElement1(IntPtr obj,
 	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(jccl.ConfigElementMarshaler))] jccl.ConfigElement p0);
 
    public virtual bool config(jccl.ConfigElement p0)
    {
       bool result;
-      result = gadget_Analog_config__boost_shared_ptr_jccl__ConfigElement(mRawObject, p0);
+      result = gadget_Analog_config__boost_shared_ptr_jccl__ConfigElement1(mRawObject, p0);
       return result;
    }
+
 
    // Delegate for the getBaseType() callback.
    public delegate string getBaseTypeDelegate();
    protected getBaseTypeDelegate m_getBaseTypeDelegate;
 
    [DllImport("gadget_bridge", CharSet = CharSet.Ansi)]
-   private extern static string gadget_Analog_getBaseType__(IntPtr obj);
+   private extern static string gadget_Analog_getBaseType__0(IntPtr obj);
 
    public virtual string getBaseType()
    {
       string result;
-      result = gadget_Analog_getBaseType__(mRawObject);
+      result = gadget_Analog_getBaseType__0(mRawObject);
       return result;
    }
+
 
    // End of virtual methods.
 

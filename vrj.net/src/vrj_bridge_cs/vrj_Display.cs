@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from $Revision$ of $RCSfile$
+// Generated from Revision: 1.73 of RCSfile: class_cs.tmpl,v
 using System;
 using System.Runtime.InteropServices;
 using System.Reflection;
@@ -107,73 +107,92 @@ public sealed class Display
 
    // Start of non-virtual methods.
    [DllImport("vrj_bridge", CharSet = CharSet.Ansi)]
-   private extern static void vrj_Display_configDisplayWindow__boost_shared_ptr_jccl__ConfigElement(IntPtr obj,
+   private extern static void vrj_Display_configDisplayWindow__boost_shared_ptr_jccl__ConfigElement1(IntPtr obj,
 	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(jccl.ConfigElementMarshaler))] jccl.ConfigElement p0);
 
    public  void configDisplayWindow(jccl.ConfigElement p0)
    {
-      vrj_Display_configDisplayWindow__boost_shared_ptr_jccl__ConfigElement(mRawObject, p0);
+      vrj_Display_configDisplayWindow__boost_shared_ptr_jccl__ConfigElement1(mRawObject, p0);
    }
 
+
    [DllImport("vrj_bridge", CharSet = CharSet.Ansi)]
-   private extern static void vrj_Display_configViewports__boost_shared_ptr_jccl__ConfigElement(IntPtr obj,
+   private extern static void vrj_Display_configViewports__boost_shared_ptr_jccl__ConfigElement1(IntPtr obj,
 	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(jccl.ConfigElementMarshaler))] jccl.ConfigElement p0);
 
    public  void configViewports(jccl.ConfigElement p0)
    {
-      vrj_Display_configViewports__boost_shared_ptr_jccl__ConfigElement(mRawObject, p0);
+      vrj_Display_configViewports__boost_shared_ptr_jccl__ConfigElement1(mRawObject, p0);
    }
 
+
    [DllImport("vrj_bridge", CharSet = CharSet.Ansi)]
-   private extern static void vrj_Display_updateProjections__float(IntPtr obj,
+   private extern static void vrj_Display_updateProjections__float1(IntPtr obj,
 	float p0);
 
    public  void updateProjections(float p0)
    {
-      vrj_Display_updateProjections__float(mRawObject, p0);
+      vrj_Display_updateProjections__float1(mRawObject, p0);
    }
 
+
    [DllImport("vrj_bridge", CharSet = CharSet.Ansi)]
-   private extern static bool vrj_Display_isActive__(IntPtr obj);
+   private extern static bool vrj_Display_isActive__0(IntPtr obj);
 
    public  bool isActive()
    {
       bool result;
-      result = vrj_Display_isActive__(mRawObject);
+      result = vrj_Display_isActive__0(mRawObject);
       return result;
    }
 
+
    [DllImport("vrj_bridge", CharSet = CharSet.Ansi)]
-   private extern static void vrj_Display_setName__std_basic_string_char_std__char_traits_char__std__allocator_char__(IntPtr obj,
+   private extern static void vrj_Display_setName__std_basic_string_char_std__char_traits_char__std__allocator_char__1(IntPtr obj,
 	string p0);
 
    public  void setName(string p0)
    {
-      vrj_Display_setName__std_basic_string_char_std__char_traits_char__std__allocator_char__(mRawObject, p0);
+      vrj_Display_setName__std_basic_string_char_std__char_traits_char__std__allocator_char__1(mRawObject, p0);
    }
 
+
    [DllImport("vrj_bridge", CharSet = CharSet.Ansi)]
-   private extern static string vrj_Display_getName__(IntPtr obj);
+   private extern static string vrj_Display_getName__0(IntPtr obj);
 
    public  string getName()
    {
       string result;
-      result = vrj_Display_getName__(mRawObject);
+      result = vrj_Display_getName__0(mRawObject);
       return result;
    }
 
+
    [DllImport("vrj_bridge", CharSet = CharSet.Ansi)]
-   private extern static bool vrj_Display_shouldDrawBorder__(IntPtr obj);
+   private extern static bool vrj_Display_shouldDrawBorder__0(IntPtr obj);
 
    public  bool shouldDrawBorder()
    {
       bool result;
-      result = vrj_Display_shouldDrawBorder__(mRawObject);
+      result = vrj_Display_shouldDrawBorder__0(mRawObject);
       return result;
    }
 
+
    [DllImport("vrj_bridge", CharSet = CharSet.Ansi)]
-   private extern static void vrj_Display_setOriginAndSize__int_int_int_int_bool(IntPtr obj,
+   private extern static void vrj_Display_setOriginAndSize__int_int_int_int_bool4(IntPtr obj,
+	int p0,
+	int p1,
+	int p2,
+	int p3);
+
+   public  void setOriginAndSize(int p0, int p1, int p2, int p3)
+   {
+      vrj_Display_setOriginAndSize__int_int_int_int_bool4(mRawObject, p0, p1, p2, p3);
+   }
+
+   [DllImport("vrj_bridge", CharSet = CharSet.Ansi)]
+   private extern static void vrj_Display_setOriginAndSize__int_int_int_int_bool5(IntPtr obj,
 	int p0,
 	int p1,
 	int p2,
@@ -182,11 +201,12 @@ public sealed class Display
 
    public  void setOriginAndSize(int p0, int p1, int p2, int p3, bool p4)
    {
-      vrj_Display_setOriginAndSize__int_int_int_int_bool(mRawObject, p0, p1, p2, p3, p4);
+      vrj_Display_setOriginAndSize__int_int_int_int_bool5(mRawObject, p0, p1, p2, p3, p4);
    }
 
+
    [DllImport("vrj_bridge", CharSet = CharSet.Ansi)]
-   private extern static void vrj_Display_getOriginAndSize__int_int_int_int(IntPtr obj,
+   private extern static void vrj_Display_getOriginAndSize__int_int_int_int4(IntPtr obj,
 	ref int p0,
 	ref int p1,
 	ref int p2,
@@ -194,79 +214,78 @@ public sealed class Display
 
    public  void getOriginAndSize(ref int p0, ref int p1, ref int p2, ref int p3)
    {
-      
-      
-      
-      
-      vrj_Display_getOriginAndSize__int_int_int_int(mRawObject, ref p0, ref p1, ref p2, ref p3);
-      
-      
-      
-      
+      vrj_Display_getOriginAndSize__int_int_int_int4(mRawObject, ref p0, ref p1, ref p2, ref p3);
    }
 
+
    [DllImport("vrj_bridge", CharSet = CharSet.Ansi)]
-   private extern static void vrj_Display_setPipe__int(IntPtr obj,
+   private extern static void vrj_Display_setPipe__int1(IntPtr obj,
 	int p0);
 
    public  void setPipe(int p0)
    {
-      vrj_Display_setPipe__int(mRawObject, p0);
+      vrj_Display_setPipe__int1(mRawObject, p0);
    }
 
+
    [DllImport("vrj_bridge", CharSet = CharSet.Ansi)]
-   private extern static int vrj_Display_getPipe__(IntPtr obj);
+   private extern static int vrj_Display_getPipe__0(IntPtr obj);
 
    public  int getPipe()
    {
       int result;
-      result = vrj_Display_getPipe__(mRawObject);
+      result = vrj_Display_getPipe__0(mRawObject);
       return result;
    }
 
+
    [DllImport("vrj_bridge", CharSet = CharSet.Ansi)]
-   private extern static bool vrj_Display_isStereoRequested__(IntPtr obj);
+   private extern static bool vrj_Display_isStereoRequested__0(IntPtr obj);
 
    public  bool isStereoRequested()
    {
       bool result;
-      result = vrj_Display_isStereoRequested__(mRawObject);
+      result = vrj_Display_isStereoRequested__0(mRawObject);
       return result;
    }
+
 
    [DllImport("vrj_bridge", CharSet = CharSet.Ansi)]
    [return : MarshalAs(UnmanagedType.CustomMarshaler,
                        MarshalTypeRef = typeof(jccl.ConfigElementMarshaler))]
-   private extern static jccl.ConfigElement vrj_Display_getConfigElement__(IntPtr obj);
+   private extern static jccl.ConfigElement vrj_Display_getConfigElement__0(IntPtr obj);
 
    public  jccl.ConfigElement getConfigElement()
    {
       jccl.ConfigElement result;
-      result = vrj_Display_getConfigElement__(mRawObject);
+      result = vrj_Display_getConfigElement__0(mRawObject);
       return result;
    }
+
 
    [DllImport("vrj_bridge", CharSet = CharSet.Ansi)]
    [return : MarshalAs(UnmanagedType.CustomMarshaler,
                        MarshalTypeRef = typeof(jccl.ConfigElementMarshaler))]
-   private extern static jccl.ConfigElement vrj_Display_getGlFrameBufferConfig__(IntPtr obj);
+   private extern static jccl.ConfigElement vrj_Display_getGlFrameBufferConfig__0(IntPtr obj);
 
    public  jccl.ConfigElement getGlFrameBufferConfig()
    {
       jccl.ConfigElement result;
-      result = vrj_Display_getGlFrameBufferConfig__(mRawObject);
+      result = vrj_Display_getGlFrameBufferConfig__0(mRawObject);
       return result;
    }
 
+
    [DllImport("vrj_bridge", CharSet = CharSet.Ansi)]
-   private extern static uint vrj_Display_getNumViewports__(IntPtr obj);
+   private extern static uint vrj_Display_getNumViewports__0(IntPtr obj);
 
    public  uint getNumViewports()
    {
       uint result;
-      result = vrj_Display_getNumViewports__(mRawObject);
+      result = vrj_Display_getNumViewports__0(mRawObject);
       return result;
    }
+
 
    // End of non-virtual methods.
 
@@ -275,13 +294,14 @@ public sealed class Display
 
    // Start of virtual methods.
    [DllImport("vrj_bridge", CharSet = CharSet.Ansi)]
-   private extern static void vrj_Display_config__boost_shared_ptr_jccl__ConfigElement(IntPtr obj,
+   private extern static void vrj_Display_config__boost_shared_ptr_jccl__ConfigElement1(IntPtr obj,
 	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(jccl.ConfigElementMarshaler))] jccl.ConfigElement p0);
 
    public  void config(jccl.ConfigElement p0)
    {
-      vrj_Display_config__boost_shared_ptr_jccl__ConfigElement(mRawObject, p0);
+      vrj_Display_config__boost_shared_ptr_jccl__ConfigElement1(mRawObject, p0);
    }
+
 
    // End of virtual methods.
 

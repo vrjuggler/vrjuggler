@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.70 of RCSfile: class_cs.tmpl,v
+// Generated from Revision: 1.73 of RCSfile: class_cs.tmpl,v
 using System;
 using System.Runtime.InteropServices;
 using System.Reflection;
@@ -147,52 +147,57 @@ public sealed class ConfigDefinition
 
    // Start of non-virtual methods.
    [DllImport("jccl_bridge", CharSet = CharSet.Ansi)]
-   private extern static void jccl_ConfigDefinition_assertValid__(IntPtr obj);
+   private extern static void jccl_ConfigDefinition_assertValid__0(IntPtr obj);
 
    public  void assertValid()
    {
-      jccl_ConfigDefinition_assertValid__(mRawObject);
+      jccl_ConfigDefinition_assertValid__0(mRawObject);
    }
 
+
    [DllImport("jccl_bridge", CharSet = CharSet.Ansi)]
-   private extern static string jccl_ConfigDefinition_getName__(IntPtr obj);
+   private extern static string jccl_ConfigDefinition_getName__0(IntPtr obj);
 
    public  string getName()
    {
       string result;
-      result = jccl_ConfigDefinition_getName__(mRawObject);
+      result = jccl_ConfigDefinition_getName__0(mRawObject);
       return result;
    }
 
+
    [DllImport("jccl_bridge", CharSet = CharSet.Ansi)]
-   private extern static string jccl_ConfigDefinition_getToken__(IntPtr obj);
+   private extern static string jccl_ConfigDefinition_getToken__0(IntPtr obj);
 
    public  string getToken()
    {
       string result;
-      result = jccl_ConfigDefinition_getToken__(mRawObject);
+      result = jccl_ConfigDefinition_getToken__0(mRawObject);
       return result;
    }
 
+
    [DllImport("jccl_bridge", CharSet = CharSet.Ansi)]
-   private extern static uint jccl_ConfigDefinition_getVersion__(IntPtr obj);
+   private extern static uint jccl_ConfigDefinition_getVersion__0(IntPtr obj);
 
    public  uint getVersion()
    {
       uint result;
-      result = jccl_ConfigDefinition_getVersion__(mRawObject);
+      result = jccl_ConfigDefinition_getVersion__0(mRawObject);
       return result;
    }
 
+
    [DllImport("jccl_bridge", CharSet = CharSet.Ansi)]
-   private extern static string jccl_ConfigDefinition_getHelp__(IntPtr obj);
+   private extern static string jccl_ConfigDefinition_getHelp__0(IntPtr obj);
 
    public  string getHelp()
    {
       string result;
-      result = jccl_ConfigDefinition_getHelp__(mRawObject);
+      result = jccl_ConfigDefinition_getHelp__0(mRawObject);
       return result;
    }
+
 
    // End of non-virtual methods.
 

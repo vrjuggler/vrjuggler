@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.70 of RCSfile: class_cs.tmpl,v
+// Generated from Revision: 1.73 of RCSfile: class_cs.tmpl,v
 using System;
 using System.Runtime.InteropServices;
 using System.Reflection;
@@ -116,48 +116,48 @@ public class Rayd
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
    [return : MarshalAs(UnmanagedType.CustomMarshaler,
                        MarshalTypeRef = typeof(gmtl.Point3dMarshaler))]
-   private extern static gmtl.Point3d gmtl_Ray_double__getOrigin__(IntPtr obj);
+   private extern static gmtl.Point3d gmtl_Ray_double__getOrigin__0(IntPtr obj);
 
    public  gmtl.Point3d getOrigin()
    {
       gmtl.Point3d result;
-      result = gmtl_Ray_double__getOrigin__(mRawObject);
+      result = gmtl_Ray_double__getOrigin__0(mRawObject);
       return result;
    }
 
+
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
-   private extern static void gmtl_Ray_double__setOrigin__gmtl_Point3d(IntPtr obj,
+   private extern static void gmtl_Ray_double__setOrigin__gmtl_Point3d1(IntPtr obj,
 	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.Point3dMarshaler))] gmtl.Point3d p0);
 
    public  void setOrigin(gmtl.Point3d p0)
    {
-      
-      gmtl_Ray_double__setOrigin__gmtl_Point3d(mRawObject, p0);
-      
+      gmtl_Ray_double__setOrigin__gmtl_Point3d1(mRawObject, p0);
    }
+
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
    [return : MarshalAs(UnmanagedType.CustomMarshaler,
                        MarshalTypeRef = typeof(gmtl.Vec3dMarshaler))]
-   private extern static gmtl.Vec3d gmtl_Ray_double__getDir__(IntPtr obj);
+   private extern static gmtl.Vec3d gmtl_Ray_double__getDir__0(IntPtr obj);
 
    public  gmtl.Vec3d getDir()
    {
       gmtl.Vec3d result;
-      result = gmtl_Ray_double__getDir__(mRawObject);
+      result = gmtl_Ray_double__getDir__0(mRawObject);
       return result;
    }
 
+
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
-   private extern static void gmtl_Ray_double__setDir__gmtl_Vec3d(IntPtr obj,
+   private extern static void gmtl_Ray_double__setDir__gmtl_Vec3d1(IntPtr obj,
 	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.Vec3dMarshaler))] gmtl.Vec3d p0);
 
    public  void setDir(gmtl.Vec3d p0)
    {
-      
-      gmtl_Ray_double__setDir__gmtl_Vec3d(mRawObject, p0);
-      
+      gmtl_Ray_double__setDir__gmtl_Vec3d1(mRawObject, p0);
    }
+
 
    // End of non-virtual methods.
 

@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from $Revision$ of $RCSfile$
+// Generated from Revision: 1.60 of RCSfile: class_cxx.tmpl,v
 
 
 
@@ -54,28 +54,24 @@ extern "C"
       delete self_;
    }
 
-
    // Wrapper for virtual method gadget::TypedProxy<gadget::Digital>::refresh()
-   SHARPPY_API bool gadget_TypedProxy_gadget_Digital__refresh__(gadget_TypedProxy_gadget__Digital_Adapter* self_)
+   SHARPPY_API bool gadget_TypedProxy_gadget_Digital__refresh__0(gadget_TypedProxy_gadget__Digital_Adapter* self_)
    {
       bool result;
       result = self_->gadget::TypedProxy<gadget::Digital>::refresh();
-
       return result;
    }
+
 
    // Wrapper for virtual method gadget::TypedProxy<gadget::Digital>::getDeviceName()
-   SHARPPY_API char* gadget_TypedProxy_gadget_Digital__getDeviceName__(gadget_TypedProxy_gadget__Digital_Adapter* self_)
+   SHARPPY_API char* gadget_TypedProxy_gadget_Digital__getDeviceName__0(gadget_TypedProxy_gadget__Digital_Adapter* self_)
    {
-      char* result;
       std::basic_string<char,std::char_traits<char>,std::allocator<char> > temp_result;
+      char* result;
       temp_result = self_->gadget::TypedProxy<gadget::Digital>::getDeviceName();
       result = strdup(temp_result.c_str());
-
       return result;
    }
-
-
 
 
 } // extern "C" for gadget::TypedProxy<gadget::Digital>

@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from $Revision$ of $RCSfile$
+// Generated from Revision: 1.73 of RCSfile: class_cs.tmpl,v
 using System;
 using System.Runtime.InteropServices;
 using System.Reflection;
@@ -102,26 +102,29 @@ public class AnalogData
 
    // Operator overloads.
 
+   // Converter operators.
 
    // Start of non-virtual methods.
    [DllImport("gadget_bridge", CharSet = CharSet.Ansi)]
-   private extern static float gadget_AnalogData_getAnalog__(IntPtr obj);
+   private extern static float gadget_AnalogData_getAnalog__0(IntPtr obj);
 
    public  float getAnalog()
    {
       float result;
-      result = gadget_AnalogData_getAnalog__(mRawObject);
+      result = gadget_AnalogData_getAnalog__0(mRawObject);
       return result;
    }
 
+
    [DllImport("gadget_bridge", CharSet = CharSet.Ansi)]
-   private extern static void gadget_AnalogData_setAnalog__float(IntPtr obj,
+   private extern static void gadget_AnalogData_setAnalog__float1(IntPtr obj,
 	float p0);
 
    public  void setAnalog(float p0)
    {
-      gadget_AnalogData_setAnalog__float(mRawObject, p0);
+      gadget_AnalogData_setAnalog__float1(mRawObject, p0);
    }
+
 
    // End of non-virtual methods.
 

@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.58 of RCSfile: class_cxx.tmpl,v
+// Generated from Revision: 1.60 of RCSfile: class_cxx.tmpl,v
 
 
 
@@ -63,23 +63,19 @@ extern "C"
    }
 
    // Wrapper for non-virtual method gadget::AnalogData::getAnalog()
-   SHARPPY_API float gadget_AnalogData_getAnalog__(gadget::AnalogData* self_)
+   SHARPPY_API float gadget_AnalogData_getAnalog__0(gadget::AnalogData* self_)
    {
       float result;
       result = self_->getAnalog();
-
       return result;
    }
 
+
    // Wrapper for non-virtual method gadget::AnalogData::setAnalog()
-   SHARPPY_API void gadget_AnalogData_setAnalog__float(gadget::AnalogData* self_, const float p0)
+   SHARPPY_API void gadget_AnalogData_setAnalog__float1(gadget::AnalogData* self_, const float p0)
    {
       self_->setAnalog(p0);
    }
-
-
-
-
 
 
 } // extern "C" for gadget::AnalogData

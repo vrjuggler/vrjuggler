@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.58 of RCSfile: class_cxx.tmpl,v
+// Generated from Revision: 1.60 of RCSfile: class_cxx.tmpl,v
 
 
 
@@ -68,48 +68,45 @@ extern "C"
       delete self_;
    }
 
-
    // Wrapper for virtual method vrj::SoundManager::configAdd()
-   SHARPPY_API bool vrj_SoundManager_configAdd__boost_shared_ptr_jccl__ConfigElement(vrj_SoundManager_Adapter* self_, boost::shared_ptr<jccl::ConfigElement> p0)
+   SHARPPY_API bool vrj_SoundManager_configAdd__boost_shared_ptr_jccl__ConfigElement1(vrj_SoundManager_Adapter* self_, boost::shared_ptr<jccl::ConfigElement> p0)
    {
       bool result;
       result = self_->vrj::SoundManager::configAdd(p0);
-
       return result;
    }
 
+
    // Wrapper for virtual method vrj::SoundManager::configRemove()
-   SHARPPY_API bool vrj_SoundManager_configRemove__boost_shared_ptr_jccl__ConfigElement(vrj_SoundManager_Adapter* self_, boost::shared_ptr<jccl::ConfigElement> p0)
+   SHARPPY_API bool vrj_SoundManager_configRemove__boost_shared_ptr_jccl__ConfigElement1(vrj_SoundManager_Adapter* self_, boost::shared_ptr<jccl::ConfigElement> p0)
    {
       bool result;
       result = self_->vrj::SoundManager::configRemove(p0);
-
       return result;
    }
 
+
    // Wrapper for virtual method vrj::SoundManager::configCanHandle()
-   SHARPPY_API bool vrj_SoundManager_configCanHandle__boost_shared_ptr_jccl__ConfigElement(vrj_SoundManager_Adapter* self_, boost::shared_ptr<jccl::ConfigElement> p0)
+   SHARPPY_API bool vrj_SoundManager_configCanHandle__boost_shared_ptr_jccl__ConfigElement1(vrj_SoundManager_Adapter* self_, boost::shared_ptr<jccl::ConfigElement> p0)
    {
       bool result;
       result = self_->vrj::SoundManager::configCanHandle(p0);
-
       return result;
    }
 
+
    // Wrapper for virtual method vrj::SoundManager::update()
-   SHARPPY_API void vrj_SoundManager_update__(vrj_SoundManager_Adapter* self_)
+   SHARPPY_API void vrj_SoundManager_update__0(vrj_SoundManager_Adapter* self_)
    {
       self_->vrj::SoundManager::update();
    }
 
+
    // Wrapper for virtual method vrj::SoundManager::sync()
-   SHARPPY_API void vrj_SoundManager_sync__(vrj_SoundManager_Adapter* self_)
+   SHARPPY_API void vrj_SoundManager_sync__0(vrj_SoundManager_Adapter* self_)
    {
       self_->vrj::SoundManager::sync();
    }
-
-
-
 
 
 } // extern "C" for vrj::SoundManager

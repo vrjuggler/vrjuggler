@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.58 of RCSfile: class_cxx.tmpl,v
+// Generated from Revision: 1.60 of RCSfile: class_cxx.tmpl,v
 
 
 
@@ -72,40 +72,36 @@ extern "C"
    }
 
    // Wrapper for non-virtual method gmtl::Sphere<double>::getCenter()
-   SHARPPY_API const gmtl::Point3d* gmtl_Sphere_double__getCenter__(gmtl::Sphered* self_)
+   SHARPPY_API const gmtl::Point3d* gmtl_Sphere_double__getCenter__0(gmtl::Sphered* self_)
    {
       const gmtl::Point3d* result;
       result = new const gmtl::Point3d(self_->getCenter());
-
       return result;
    }
 
+
    // Wrapper for non-virtual method gmtl::Sphere<double>::getRadius()
-   SHARPPY_API  double gmtl_Sphere_double__getRadius__(gmtl::Sphered* self_)
+   SHARPPY_API  double gmtl_Sphere_double__getRadius__0(gmtl::Sphered* self_)
    {
        double result;
       result = self_->getRadius();
-
       return result;
    }
 
+
    // Wrapper for non-virtual method gmtl::Sphere<double>::setCenter()
-   SHARPPY_API void gmtl_Sphere_double__setCenter__gmtl_Point3d(gmtl::Sphered* self_, const gmtl::Point3d* p0)
+   SHARPPY_API void gmtl_Sphere_double__setCenter__gmtl_Point3d1(gmtl::Sphered* self_, const gmtl::Point3d* p0)
    {
-      const gmtl::Point3d& marshal_p0 = *p0; // Pre-call marshaling for p0
+      const gmtl::Point3d& marshal_p0 = *p0;
       self_->setCenter(marshal_p0);
-      ; // Post-call marshaling for p0
    }
 
+
    // Wrapper for non-virtual method gmtl::Sphere<double>::setRadius()
-   SHARPPY_API void gmtl_Sphere_double__setRadius__double(gmtl::Sphered* self_, const double& p0)
+   SHARPPY_API void gmtl_Sphere_double__setRadius__double1(gmtl::Sphered* self_, const double& p0)
    {
       self_->setRadius(p0);
    }
-
-
-
-
 
 
 } // extern "C" for gmtl::Sphered

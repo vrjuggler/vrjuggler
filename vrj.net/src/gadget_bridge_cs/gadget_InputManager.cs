@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.69 of RCSfile: class_cs.tmpl,v
+// Generated from Revision: 1.73 of RCSfile: class_cs.tmpl,v
 using System;
 using System.Runtime.InteropServices;
 using System.Reflection;
@@ -70,131 +70,134 @@ public sealed class InputManager
    [DllImport("gadget_bridge", CharSet = CharSet.Ansi)]
    [return : MarshalAs(UnmanagedType.CustomMarshaler,
                        MarshalTypeRef = typeof(jccl.ConfigElementMarshaler))]
-   private extern static jccl.ConfigElement gadget_InputManager_getDisplaySystemElement__(IntPtr obj);
+   private extern static jccl.ConfigElement gadget_InputManager_getDisplaySystemElement__0(IntPtr obj);
 
    public  jccl.ConfigElement getDisplaySystemElement()
    {
       jccl.ConfigElement result;
-      result = gadget_InputManager_getDisplaySystemElement__(mRawObject);
+      result = gadget_InputManager_getDisplaySystemElement__0(mRawObject);
       return result;
    }
 
+
    [DllImport("gadget_bridge", CharSet = CharSet.Ansi)]
-   private extern static bool gadget_InputManager_configureDevice__boost_shared_ptr_jccl__ConfigElement(IntPtr obj,
+   private extern static bool gadget_InputManager_configureDevice__boost_shared_ptr_jccl__ConfigElement1(IntPtr obj,
 	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(jccl.ConfigElementMarshaler))] jccl.ConfigElement p0);
 
    public  bool configureDevice(jccl.ConfigElement p0)
    {
       bool result;
-      result = gadget_InputManager_configureDevice__boost_shared_ptr_jccl__ConfigElement(mRawObject, p0);
+      result = gadget_InputManager_configureDevice__boost_shared_ptr_jccl__ConfigElement1(mRawObject, p0);
       return result;
    }
 
+
    [DllImport("gadget_bridge", CharSet = CharSet.Ansi)]
-   private extern static void gadget_InputManager_updateAllData__(IntPtr obj);
+   private extern static void gadget_InputManager_updateAllData__0(IntPtr obj);
 
    public  void updateAllData()
    {
-      gadget_InputManager_updateAllData__(mRawObject);
+      gadget_InputManager_updateAllData__0(mRawObject);
    }
+
 
    [DllImport("gadget_bridge", CharSet = CharSet.Ansi)]
    [return : MarshalAs(UnmanagedType.CustomMarshaler,
                        MarshalTypeRef = typeof(gadget.InputMarshaler))]
-   private extern static gadget.Input gadget_InputManager_getDevice__std_basic_string_char_std__char_traits_char__std__allocator_char__(IntPtr obj,
+   private extern static gadget.Input gadget_InputManager_getDevice__std_basic_string_char_std__char_traits_char__std__allocator_char__1(IntPtr obj,
 	string p0);
 
    public  gadget.Input getDevice(string p0)
    {
       gadget.Input result;
-      result = gadget_InputManager_getDevice__std_basic_string_char_std__char_traits_char__std__allocator_char__(mRawObject, p0);
+      result = gadget_InputManager_getDevice__std_basic_string_char_std__char_traits_char__std__allocator_char__1(mRawObject, p0);
       return result;
    }
 
+
    [DllImport("gadget_bridge", CharSet = CharSet.Ansi)]
-   private extern static bool gadget_InputManager_addDevice__gadget_Input(IntPtr obj,
+   private extern static bool gadget_InputManager_addDevice__gadget_Input1(IntPtr obj,
 	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gadget.InputMarshaler))] gadget.Input p0);
 
    public  bool addDevice(gadget.Input p0)
    {
-      
       bool result;
-      result = gadget_InputManager_addDevice__gadget_Input(mRawObject, p0);
-      
+      result = gadget_InputManager_addDevice__gadget_Input1(mRawObject, p0);
       return result;
    }
 
+
    [DllImport("gadget_bridge", CharSet = CharSet.Ansi)]
-   private extern static bool gadget_InputManager_addRemoteDevice__gadget_Input_std_basic_string_char_std__char_traits_char__std__allocator_char__(IntPtr obj,
+   private extern static bool gadget_InputManager_addRemoteDevice__gadget_Input_std_basic_string_char_std__char_traits_char__std__allocator_char__2(IntPtr obj,
 	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gadget.InputMarshaler))] gadget.Input p0,
 	string p1);
 
    public  bool addRemoteDevice(gadget.Input p0, string p1)
    {
-      
       bool result;
-      result = gadget_InputManager_addRemoteDevice__gadget_Input_std_basic_string_char_std__char_traits_char__std__allocator_char__(mRawObject, p0, p1);
-      
+      result = gadget_InputManager_addRemoteDevice__gadget_Input_std_basic_string_char_std__char_traits_char__std__allocator_char__2(mRawObject, p0, p1);
       return result;
    }
 
+
    [DllImport("gadget_bridge", CharSet = CharSet.Ansi)]
-   private extern static bool gadget_InputManager_removeDevice__std_basic_string_char_std__char_traits_char__std__allocator_char__(IntPtr obj,
+   private extern static bool gadget_InputManager_removeDevice__std_basic_string_char_std__char_traits_char__std__allocator_char__1(IntPtr obj,
 	string p0);
 
    public  bool removeDevice(string p0)
    {
       bool result;
-      result = gadget_InputManager_removeDevice__std_basic_string_char_std__char_traits_char__std__allocator_char__(mRawObject, p0);
+      result = gadget_InputManager_removeDevice__std_basic_string_char_std__char_traits_char__std__allocator_char__1(mRawObject, p0);
       return result;
    }
 
+
    [DllImport("gadget_bridge", CharSet = CharSet.Ansi)]
-   private extern static bool gadget_InputManager_removeDevice__gadget_Input(IntPtr obj,
+   private extern static bool gadget_InputManager_removeDevice__gadget_Input1(IntPtr obj,
 	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gadget.InputMarshaler))] gadget.Input p0);
 
    public  bool removeDevice(gadget.Input p0)
    {
-      
       bool result;
-      result = gadget_InputManager_removeDevice__gadget_Input(mRawObject, p0);
-      
+      result = gadget_InputManager_removeDevice__gadget_Input1(mRawObject, p0);
       return result;
    }
 
+
    [DllImport("gadget_bridge", CharSet = CharSet.Ansi)]
-   private extern static bool gadget_InputManager_addProxy__gadget_Proxy(IntPtr obj,
+   private extern static bool gadget_InputManager_addProxy__gadget_Proxy1(IntPtr obj,
 	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gadget.ProxyMarshaler))] gadget.Proxy p0);
 
    public  bool addProxy(gadget.Proxy p0)
    {
-      
       bool result;
-      result = gadget_InputManager_addProxy__gadget_Proxy(mRawObject, p0);
-      
+      result = gadget_InputManager_addProxy__gadget_Proxy1(mRawObject, p0);
       return result;
    }
+
 
    [DllImport("gadget_bridge", CharSet = CharSet.Ansi)]
    [return : MarshalAs(UnmanagedType.CustomMarshaler,
                        MarshalTypeRef = typeof(gadget.ProxyMarshaler))]
-   private extern static gadget.Proxy gadget_InputManager_getProxy__std_basic_string_char_std__char_traits_char__std__allocator_char__(IntPtr obj,
+   private extern static gadget.Proxy gadget_InputManager_getProxy__std_basic_string_char_std__char_traits_char__std__allocator_char__1(IntPtr obj,
 	string p0);
 
    public  gadget.Proxy getProxy(string p0)
    {
       gadget.Proxy result;
-      result = gadget_InputManager_getProxy__std_basic_string_char_std__char_traits_char__std__allocator_char__(mRawObject, p0);
+      result = gadget_InputManager_getProxy__std_basic_string_char_std__char_traits_char__std__allocator_char__1(mRawObject, p0);
       return result;
    }
 
+
    [DllImport("gadget_bridge", CharSet = CharSet.Ansi)]
-   private extern static void gadget_InputManager_refreshAllProxies__(IntPtr obj);
+   private extern static void gadget_InputManager_refreshAllProxies__0(IntPtr obj);
 
    public  void refreshAllProxies()
    {
-      gadget_InputManager_refreshAllProxies__(mRawObject);
+      gadget_InputManager_refreshAllProxies__0(mRawObject);
    }
+
 
    // End of non-virtual methods.
 
@@ -203,37 +206,40 @@ public sealed class InputManager
 
    // Start of virtual methods.
    [DllImport("gadget_bridge", CharSet = CharSet.Ansi)]
-   private extern static bool gadget_InputManager_configAdd__boost_shared_ptr_jccl__ConfigElement(IntPtr obj,
+   private extern static bool gadget_InputManager_configAdd__boost_shared_ptr_jccl__ConfigElement1(IntPtr obj,
 	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(jccl.ConfigElementMarshaler))] jccl.ConfigElement p0);
 
    public override bool configAdd(jccl.ConfigElement p0)
    {
       bool result;
-      result = gadget_InputManager_configAdd__boost_shared_ptr_jccl__ConfigElement(mRawObject, p0);
+      result = gadget_InputManager_configAdd__boost_shared_ptr_jccl__ConfigElement1(mRawObject, p0);
       return result;
    }
 
+
    [DllImport("gadget_bridge", CharSet = CharSet.Ansi)]
-   private extern static bool gadget_InputManager_configRemove__boost_shared_ptr_jccl__ConfigElement(IntPtr obj,
+   private extern static bool gadget_InputManager_configRemove__boost_shared_ptr_jccl__ConfigElement1(IntPtr obj,
 	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(jccl.ConfigElementMarshaler))] jccl.ConfigElement p0);
 
    public override bool configRemove(jccl.ConfigElement p0)
    {
       bool result;
-      result = gadget_InputManager_configRemove__boost_shared_ptr_jccl__ConfigElement(mRawObject, p0);
+      result = gadget_InputManager_configRemove__boost_shared_ptr_jccl__ConfigElement1(mRawObject, p0);
       return result;
    }
 
+
    [DllImport("gadget_bridge", CharSet = CharSet.Ansi)]
-   private extern static bool gadget_InputManager_configCanHandle__boost_shared_ptr_jccl__ConfigElement(IntPtr obj,
+   private extern static bool gadget_InputManager_configCanHandle__boost_shared_ptr_jccl__ConfigElement1(IntPtr obj,
 	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(jccl.ConfigElementMarshaler))] jccl.ConfigElement p0);
 
    public override bool configCanHandle(jccl.ConfigElement p0)
    {
       bool result;
-      result = gadget_InputManager_configCanHandle__boost_shared_ptr_jccl__ConfigElement(mRawObject, p0);
+      result = gadget_InputManager_configCanHandle__boost_shared_ptr_jccl__ConfigElement1(mRawObject, p0);
       return result;
    }
+
 
    // End of virtual methods.
 
@@ -241,14 +247,15 @@ public sealed class InputManager
    [DllImport("gadget_bridge", CharSet = CharSet.Ansi)]
    [return : MarshalAs(UnmanagedType.CustomMarshaler,
                        MarshalTypeRef = typeof(gadget.InputManagerMarshaler))]
-   private extern static gadget.InputManager gadget_InputManager_instance__();
+   private extern static gadget.InputManager gadget_InputManager_instance__0();
 
    public static gadget.InputManager instance()
    {
       gadget.InputManager result;
-      result = gadget_InputManager_instance__();
+      result = gadget_InputManager_instance__0();
       return result;
    }
+
 
    // End of static methods.
 

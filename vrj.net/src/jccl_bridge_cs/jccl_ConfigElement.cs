@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.70 of RCSfile: class_cs.tmpl,v
+// Generated from Revision: 1.73 of RCSfile: class_cs.tmpl,v
 using System;
 using System.Runtime.InteropServices;
 using System.Reflection;
@@ -157,89 +157,97 @@ public sealed class ConfigElement
 
    // Start of non-virtual methods.
    [DllImport("jccl_bridge", CharSet = CharSet.Ansi)]
-   private extern static bool jccl_ConfigElement_isValid__(IntPtr obj);
+   private extern static bool jccl_ConfigElement_isValid__0(IntPtr obj);
 
    public  bool isValid()
    {
       bool result;
-      result = jccl_ConfigElement_isValid__(mRawObject);
+      result = jccl_ConfigElement_isValid__0(mRawObject);
       return result;
    }
 
+
    [DllImport("jccl_bridge", CharSet = CharSet.Ansi)]
-   private extern static void jccl_ConfigElement_assertValid__(IntPtr obj);
+   private extern static void jccl_ConfigElement_assertValid__0(IntPtr obj);
 
    public  void assertValid()
    {
-      jccl_ConfigElement_assertValid__(mRawObject);
+      jccl_ConfigElement_assertValid__0(mRawObject);
    }
+
 
    [DllImport("jccl_bridge", CharSet = CharSet.Ansi)]
    [return : MarshalAs(UnmanagedType.CustomMarshaler,
                        MarshalTypeRef = typeof(jccl.ConfigElementMarshaler))]
-   private extern static jccl.ConfigElement jccl_ConfigElement_getChildElement__std_basic_string_char_std__char_traits_char__std__allocator_char__(IntPtr obj,
+   private extern static jccl.ConfigElement jccl_ConfigElement_getChildElement__std_basic_string_char_std__char_traits_char__std__allocator_char__1(IntPtr obj,
 	string p0);
 
    public  jccl.ConfigElement getChildElement(string p0)
    {
       jccl.ConfigElement result;
-      result = jccl_ConfigElement_getChildElement__std_basic_string_char_std__char_traits_char__std__allocator_char__(mRawObject, p0);
+      result = jccl_ConfigElement_getChildElement__std_basic_string_char_std__char_traits_char__std__allocator_char__1(mRawObject, p0);
       return result;
    }
 
+
    [DllImport("jccl_bridge", CharSet = CharSet.Ansi)]
-   private extern static int jccl_ConfigElement_getNum__std_basic_string_char_std__char_traits_char__std__allocator_char__(IntPtr obj,
+   private extern static int jccl_ConfigElement_getNum__std_basic_string_char_std__char_traits_char__std__allocator_char__1(IntPtr obj,
 	string p0);
 
    public  int getNum(string p0)
    {
       int result;
-      result = jccl_ConfigElement_getNum__std_basic_string_char_std__char_traits_char__std__allocator_char__(mRawObject, p0);
+      result = jccl_ConfigElement_getNum__std_basic_string_char_std__char_traits_char__std__allocator_char__1(mRawObject, p0);
       return result;
    }
 
+
    [DllImport("jccl_bridge", CharSet = CharSet.Ansi)]
-   private extern static string jccl_ConfigElement_getName__(IntPtr obj);
+   private extern static string jccl_ConfigElement_getName__0(IntPtr obj);
 
    public  string getName()
    {
       string result;
-      result = jccl_ConfigElement_getName__(mRawObject);
+      result = jccl_ConfigElement_getName__0(mRawObject);
       return result;
    }
 
+
    [DllImport("jccl_bridge", CharSet = CharSet.Ansi)]
-   private extern static string jccl_ConfigElement_getFullName__(IntPtr obj);
+   private extern static string jccl_ConfigElement_getFullName__0(IntPtr obj);
 
    public  string getFullName()
    {
       string result;
-      result = jccl_ConfigElement_getFullName__(mRawObject);
+      result = jccl_ConfigElement_getFullName__0(mRawObject);
       return result;
    }
 
+
    [DllImport("jccl_bridge", CharSet = CharSet.Ansi)]
-   private extern static uint jccl_ConfigElement_getVersion__(IntPtr obj);
+   private extern static uint jccl_ConfigElement_getVersion__0(IntPtr obj);
 
    public  uint getVersion()
    {
       uint result;
-      result = jccl_ConfigElement_getVersion__(mRawObject);
+      result = jccl_ConfigElement_getVersion__0(mRawObject);
       return result;
    }
 
+
    [DllImport("jccl_bridge", CharSet = CharSet.Ansi)]
-   private extern static string jccl_ConfigElement_getID__(IntPtr obj);
+   private extern static string jccl_ConfigElement_getID__0(IntPtr obj);
 
    public  string getID()
    {
       string result;
-      result = jccl_ConfigElement_getID__(mRawObject);
+      result = jccl_ConfigElement_getID__0(mRawObject);
       return result;
    }
 
+
    [DllImport("jccl_bridge", CharSet = CharSet.Ansi)]
-   private extern static bool jccl_ConfigElement_setProperty__std_basic_string_char_std__char_traits_char__std__allocator_char___int_bool(IntPtr obj,
+   private extern static bool jccl_ConfigElement_setProperty__std_basic_string_char_std__char_traits_char__std__allocator_char___int_bool3(IntPtr obj,
 	string p0,
 	int p1,
 	bool p2);
@@ -247,12 +255,13 @@ public sealed class ConfigElement
    public  bool setProperty(string p0, int p1, bool p2)
    {
       bool result;
-      result = jccl_ConfigElement_setProperty__std_basic_string_char_std__char_traits_char__std__allocator_char___int_bool(mRawObject, p0, p1, p2);
+      result = jccl_ConfigElement_setProperty__std_basic_string_char_std__char_traits_char__std__allocator_char___int_bool3(mRawObject, p0, p1, p2);
       return result;
    }
 
+
    [DllImport("jccl_bridge", CharSet = CharSet.Ansi)]
-   private extern static bool jccl_ConfigElement_setProperty__std_basic_string_char_std__char_traits_char__std__allocator_char___int_boost_shared_ptr_jccl__ConfigElement(IntPtr obj,
+   private extern static bool jccl_ConfigElement_setProperty__std_basic_string_char_std__char_traits_char__std__allocator_char___int_boost_shared_ptr_jccl__ConfigElement3(IntPtr obj,
 	string p0,
 	int p1,
 	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(jccl.ConfigElementMarshaler))] jccl.ConfigElement p2);
@@ -260,18 +269,20 @@ public sealed class ConfigElement
    public  bool setProperty(string p0, int p1, jccl.ConfigElement p2)
    {
       bool result;
-      result = jccl_ConfigElement_setProperty__std_basic_string_char_std__char_traits_char__std__allocator_char___int_boost_shared_ptr_jccl__ConfigElement(mRawObject, p0, p1, p2);
+      result = jccl_ConfigElement_setProperty__std_basic_string_char_std__char_traits_char__std__allocator_char___int_boost_shared_ptr_jccl__ConfigElement3(mRawObject, p0, p1, p2);
       return result;
    }
 
+
    [DllImport("jccl_bridge", CharSet = CharSet.Ansi)]
-   private extern static void jccl_ConfigElement_setDefinition__boost_shared_ptr_jccl__ConfigDefinition(IntPtr obj,
+   private extern static void jccl_ConfigElement_setDefinition__boost_shared_ptr_jccl__ConfigDefinition1(IntPtr obj,
 	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(jccl.ConfigDefinitionMarshaler))] jccl.ConfigDefinition p0);
 
    public  void setDefinition(jccl.ConfigDefinition p0)
    {
-      jccl_ConfigElement_setDefinition__boost_shared_ptr_jccl__ConfigDefinition(mRawObject, p0);
+      jccl_ConfigElement_setDefinition__boost_shared_ptr_jccl__ConfigDefinition1(mRawObject, p0);
    }
+
 
    // End of non-virtual methods.
 

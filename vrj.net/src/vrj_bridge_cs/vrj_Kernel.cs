@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.67 of RCSfile: class_cs.tmpl,v
+// Generated from $Revision$ of $RCSfile$
 using System;
 using System.Runtime.InteropServices;
 using System.Reflection;
@@ -68,113 +68,120 @@ public sealed class Kernel
 
    // Start of non-virtual methods.
    [DllImport("vrj_bridge", CharSet = CharSet.Ansi)]
-   private extern static int vrj_Kernel_start__(IntPtr obj);
+   private extern static int vrj_Kernel_start__0(IntPtr obj);
 
    public  int start()
    {
       int result;
-      result = vrj_Kernel_start__(mRawObject);
+      result = vrj_Kernel_start__0(mRawObject);
       return result;
    }
 
+
    [DllImport("vrj_bridge", CharSet = CharSet.Ansi)]
-   private extern static void vrj_Kernel_stop__(IntPtr obj);
+   private extern static void vrj_Kernel_stop__0(IntPtr obj);
 
    public  void stop()
    {
-      vrj_Kernel_stop__(mRawObject);
+      vrj_Kernel_stop__0(mRawObject);
    }
 
+
    [DllImport("vrj_bridge", CharSet = CharSet.Ansi)]
-   private extern static bool vrj_Kernel_isRunning__(IntPtr obj);
+   private extern static bool vrj_Kernel_isRunning__0(IntPtr obj);
 
    public  bool isRunning()
    {
       bool result;
-      result = vrj_Kernel_isRunning__(mRawObject);
+      result = vrj_Kernel_isRunning__0(mRawObject);
       return result;
    }
 
+
    [DllImport("vrj_bridge", CharSet = CharSet.Ansi)]
-   private extern static void vrj_Kernel_waitForKernelStop__(IntPtr obj);
+   private extern static void vrj_Kernel_waitForKernelStop__0(IntPtr obj);
 
    public  void waitForKernelStop()
    {
-      vrj_Kernel_waitForKernelStop__(mRawObject);
+      vrj_Kernel_waitForKernelStop__0(mRawObject);
    }
 
+
    [DllImport("vrj_bridge", CharSet = CharSet.Ansi)]
-   private extern static void vrj_Kernel_initConfig__(IntPtr obj);
+   private extern static void vrj_Kernel_initConfig__0(IntPtr obj);
 
    public  void initConfig()
    {
-      vrj_Kernel_initConfig__(mRawObject);
+      vrj_Kernel_initConfig__0(mRawObject);
    }
 
+
    [DllImport("vrj_bridge", CharSet = CharSet.Ansi)]
-   private extern static void vrj_Kernel_setApplication__vrj_App(IntPtr obj,
+   private extern static void vrj_Kernel_setApplication__vrj_App1(IntPtr obj,
 	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(vrj.AppMarshaler))] vrj.App p0);
 
    public  void setApplication(vrj.App p0)
    {
-      
-      vrj_Kernel_setApplication__vrj_App(mRawObject, p0);
-      
+      vrj_Kernel_setApplication__vrj_App1(mRawObject, p0);
    }
 
+
    [DllImport("vrj_bridge", CharSet = CharSet.Ansi)]
-   private extern static void vrj_Kernel_loadConfigFile__char(IntPtr obj,
+   private extern static void vrj_Kernel_loadConfigFile__char1(IntPtr obj,
 	ref sbyte p0);
 
    public  void loadConfigFile(ref sbyte p0)
    {
-      
-      vrj_Kernel_loadConfigFile__char(mRawObject, ref p0);
-      
+      vrj_Kernel_loadConfigFile__char1(mRawObject, ref p0);
    }
 
+
    [DllImport("vrj_bridge", CharSet = CharSet.Ansi)]
-   private extern static void vrj_Kernel_loadConfigFile__std_basic_string_char_std__char_traits_char__std__allocator_char__(IntPtr obj,
+   private extern static void vrj_Kernel_loadConfigFile__std_basic_string_char_std__char_traits_char__std__allocator_char__1(IntPtr obj,
 	string p0);
 
    public  void loadConfigFile(string p0)
    {
-      vrj_Kernel_loadConfigFile__std_basic_string_char_std__char_traits_char__std__allocator_char__(mRawObject, p0);
+      vrj_Kernel_loadConfigFile__std_basic_string_char_std__char_traits_char__std__allocator_char__1(mRawObject, p0);
    }
 
+
    [DllImport("vrj_bridge", CharSet = CharSet.Ansi)]
-   private extern static void vrj_Kernel_scanForConfigDefinitions__std_basic_string_char_std__char_traits_char__std__allocator_char__(IntPtr obj,
+   private extern static void vrj_Kernel_scanForConfigDefinitions__std_basic_string_char_std__char_traits_char__std__allocator_char__1(IntPtr obj,
 	string p0);
 
    public  void scanForConfigDefinitions(string p0)
    {
-      vrj_Kernel_scanForConfigDefinitions__std_basic_string_char_std__char_traits_char__std__allocator_char__(mRawObject, p0);
+      vrj_Kernel_scanForConfigDefinitions__std_basic_string_char_std__char_traits_char__std__allocator_char__1(mRawObject, p0);
    }
+
 
    [DllImport("vrj_bridge", CharSet = CharSet.Ansi)]
    [return : MarshalAs(UnmanagedType.CustomMarshaler,
                        MarshalTypeRef = typeof(gadget.InputManagerMarshaler))]
-   private extern static gadget.InputManager vrj_Kernel_getInputManager__(IntPtr obj);
+   private extern static gadget.InputManager vrj_Kernel_getInputManager__0(IntPtr obj);
 
    public  gadget.InputManager getInputManager()
    {
       gadget.InputManager result;
-      result = vrj_Kernel_getInputManager__(mRawObject);
+      result = vrj_Kernel_getInputManager__0(mRawObject);
       return result;
    }
+
 
    [DllImport("vrj_bridge", CharSet = CharSet.Ansi)]
    [return : MarshalAs(UnmanagedType.CustomMarshaler,
                        MarshalTypeRef = typeof(vrj.UserMarshaler))]
-   private extern static vrj.User vrj_Kernel_getUser__std_basic_string_char_std__char_traits_char__std__allocator_char__(IntPtr obj,
+   private extern static vrj.User vrj_Kernel_getUser__std_basic_string_char_std__char_traits_char__std__allocator_char__1(IntPtr obj,
 	string p0);
 
    public  vrj.User getUser(string p0)
    {
       vrj.User result;
-      result = vrj_Kernel_getUser__std_basic_string_char_std__char_traits_char__std__allocator_char__(mRawObject, p0);
+      result = vrj_Kernel_getUser__std_basic_string_char_std__char_traits_char__std__allocator_char__1(mRawObject, p0);
       return result;
    }
+
 
    // End of non-virtual methods.
 
@@ -203,14 +210,15 @@ public sealed class Kernel
    [DllImport("vrj_bridge", CharSet = CharSet.Ansi)]
    [return : MarshalAs(UnmanagedType.CustomMarshaler,
                        MarshalTypeRef = typeof(vrj.KernelMarshaler))]
-   private extern static vrj.Kernel vrj_Kernel_instance__();
+   private extern static vrj.Kernel vrj_Kernel_instance__0();
 
    public static vrj.Kernel instance()
    {
       vrj.Kernel result;
-      result = vrj_Kernel_instance__();
+      result = vrj_Kernel_instance__0();
       return result;
    }
+
 
    // End of static methods.
 

@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.58 of RCSfile: class_cxx.tmpl,v
+// Generated from Revision: 1.60 of RCSfile: class_cxx.tmpl,v
 
 
 
@@ -76,42 +76,37 @@ extern "C"
    }
 
    // Wrapper for non-virtual method gmtl::Ray<float>::getOrigin()
-   SHARPPY_API const gmtl::Point3f* gmtl_Ray_float__getOrigin__(gmtl::Rayf* self_)
+   SHARPPY_API const gmtl::Point3f* gmtl_Ray_float__getOrigin__0(gmtl::Rayf* self_)
    {
       const gmtl::Point3f* result;
       result = new const gmtl::Point3f(self_->getOrigin());
-
       return result;
    }
 
+
    // Wrapper for non-virtual method gmtl::Ray<float>::setOrigin()
-   SHARPPY_API void gmtl_Ray_float__setOrigin__gmtl_Point3f(gmtl::Rayf* self_, const gmtl::Point3f* p0)
+   SHARPPY_API void gmtl_Ray_float__setOrigin__gmtl_Point3f1(gmtl::Rayf* self_, const gmtl::Point3f* p0)
    {
-      const gmtl::Point3f& marshal_p0 = *p0; // Pre-call marshaling for p0
+      const gmtl::Point3f& marshal_p0 = *p0;
       self_->setOrigin(marshal_p0);
-      ; // Post-call marshaling for p0
    }
 
+
    // Wrapper for non-virtual method gmtl::Ray<float>::getDir()
-   SHARPPY_API const gmtl::Vec3f* gmtl_Ray_float__getDir__(gmtl::Rayf* self_)
+   SHARPPY_API const gmtl::Vec3f* gmtl_Ray_float__getDir__0(gmtl::Rayf* self_)
    {
       const gmtl::Vec3f* result;
       result = new const gmtl::Vec3f(self_->getDir());
-
       return result;
    }
 
+
    // Wrapper for non-virtual method gmtl::Ray<float>::setDir()
-   SHARPPY_API void gmtl_Ray_float__setDir__gmtl_Vec3f(gmtl::Rayf* self_, const gmtl::Vec3f* p0)
+   SHARPPY_API void gmtl_Ray_float__setDir__gmtl_Vec3f1(gmtl::Rayf* self_, const gmtl::Vec3f* p0)
    {
-      const gmtl::Vec3f& marshal_p0 = *p0; // Pre-call marshaling for p0
+      const gmtl::Vec3f& marshal_p0 = *p0;
       self_->setDir(marshal_p0);
-      ; // Post-call marshaling for p0
    }
-
-
-
-
 
 
 } // extern "C" for gmtl::Rayf

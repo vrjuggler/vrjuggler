@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.58 of RCSfile: class_cxx.tmpl,v
+// Generated from Revision: 1.60 of RCSfile: class_cxx.tmpl,v
 
 
 
@@ -68,34 +68,29 @@ extern "C"
    }
 
    // Wrapper for non-virtual method gmtl::EulerAngle<float,gmtl::ZYX>::set()
-   SHARPPY_API void gmtl_EulerAngle_float_gmtl_ZYX__set__float_float_float(gmtl::EulerAngleZYXf* self_, const float& p0, const float& p1, const float& p2)
+   SHARPPY_API void gmtl_EulerAngle_float_gmtl_ZYX__set__float_float_float3(gmtl::EulerAngleZYXf* self_, const float& p0, const float& p1, const float& p2)
    {
       self_->set(p0, p1, p2);
    }
 
+
    // Wrapper for non-virtual method gmtl::EulerAngle<float,gmtl::ZYX>::getData()
-   SHARPPY_API float* gmtl_EulerAngle_float_gmtl_ZYX__getData__(gmtl::EulerAngleZYXf* self_)
+   SHARPPY_API float* gmtl_EulerAngle_float_gmtl_ZYX__getData__0(gmtl::EulerAngleZYXf* self_)
    {
       float* result;
       result = self_->getData();
-
       return result;
    }
 
 /*
    // Wrapper for non-virtual method gmtl::EulerAngle<float,gmtl::ZYX>::getData()
-   SHARPPY_API const float* gmtl_EulerAngle_float_gmtl_ZYX__getData__(gmtl::EulerAngleZYXf* self_)
+   SHARPPY_API const float* gmtl_EulerAngle_float_gmtl_ZYX__getData__0(gmtl::EulerAngleZYXf* self_)
    {
       const float* result;
       result = self_->getData();
-
       return result;
    }
 */
-
-
-
-
 
 } // extern "C" for gmtl::EulerAngleZYXf
 

@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.58 of RCSfile: class_cxx.tmpl,v
+// Generated from Revision: 1.60 of RCSfile: class_cxx.tmpl,v
 
 
 
@@ -77,61 +77,58 @@ extern "C"
       delete self_;
    }
 
+   // Wrapper for non-virtual method gmtl::VecBase<float,3>::set()
+   SHARPPY_API void gmtl_VecBase_float_3__set__float1(gmtl::VecBase<float,3>* self_, const float* p0)
+   {
+      self_->set(p0);
+   }
+
 /*
    // Wrapper for non-virtual method gmtl::VecBase<float,3>::set()
-   SHARPPY_API void gmtl_VecBase_float_3__set__float(gmtl::VecBase<float,3>* self_, const float* p0)
+   SHARPPY_API void gmtl_VecBase_float_3__set__float1(gmtl::VecBase<float,3>* self_, const float& p0)
    {
       self_->set(p0);
    }
 */
 
    // Wrapper for non-virtual method gmtl::VecBase<float,3>::set()
-   SHARPPY_API void gmtl_VecBase_float_3__set__float(gmtl::VecBase<float,3>* self_, const float& p0)
-   {
-      self_->set(p0);
-   }
-
-   // Wrapper for non-virtual method gmtl::VecBase<float,3>::set()
-   SHARPPY_API void gmtl_VecBase_float_3__set__float_float(gmtl::VecBase<float,3>* self_, const float& p0, const float& p1)
+   SHARPPY_API void gmtl_VecBase_float_3__set__float_float2(gmtl::VecBase<float,3>* self_, const float& p0, const float& p1)
    {
       self_->set(p0, p1);
    }
 
+
    // Wrapper for non-virtual method gmtl::VecBase<float,3>::set()
-   SHARPPY_API void gmtl_VecBase_float_3__set__float_float_float(gmtl::VecBase<float,3>* self_, const float& p0, const float& p1, const float& p2)
+   SHARPPY_API void gmtl_VecBase_float_3__set__float_float_float3(gmtl::VecBase<float,3>* self_, const float& p0, const float& p1, const float& p2)
    {
       self_->set(p0, p1, p2);
    }
 
+
    // Wrapper for non-virtual method gmtl::VecBase<float,3>::set()
-   SHARPPY_API void gmtl_VecBase_float_3__set__float_float_float_float(gmtl::VecBase<float,3>* self_, const float& p0, const float& p1, const float& p2, const float& p3)
+   SHARPPY_API void gmtl_VecBase_float_3__set__float_float_float_float4(gmtl::VecBase<float,3>* self_, const float& p0, const float& p1, const float& p2, const float& p3)
    {
       self_->set(p0, p1, p2, p3);
    }
 
+
    // Wrapper for non-virtual method gmtl::VecBase<float,3>::getData()
-   SHARPPY_API float* gmtl_VecBase_float_3__getData__(gmtl::VecBase<float,3>* self_)
+   SHARPPY_API float* gmtl_VecBase_float_3__getData__0(gmtl::VecBase<float,3>* self_)
    {
       float* result;
       result = self_->getData();
-
       return result;
    }
 
 /*
    // Wrapper for non-virtual method gmtl::VecBase<float,3>::getData()
-   SHARPPY_API const float* gmtl_VecBase_float_3__getData__(gmtl::VecBase<float,3>* self_)
+   SHARPPY_API const float* gmtl_VecBase_float_3__getData__0(gmtl::VecBase<float,3>* self_)
    {
       const float* result;
       result = self_->getData();
-
       return result;
    }
 */
-
-
-
-
 
 } // extern "C" for gmtl::VecBase<float,3>
 

@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.68 of RCSfile: class_cs.tmpl,v
+// Generated from Revision: 1.73 of RCSfile: class_cs.tmpl,v
 using System;
 using System.Runtime.InteropServices;
 using System.Reflection;
@@ -104,32 +104,43 @@ public abstract class Proxy
 
    // Start of non-virtual methods.
    [DllImport("gadget_bridge", CharSet = CharSet.Ansi)]
-   private extern static string gadget_Proxy_getName__(IntPtr obj);
+   private extern static string gadget_Proxy_getName__0(IntPtr obj);
 
    public  string getName()
    {
       string result;
-      result = gadget_Proxy_getName__(mRawObject);
+      result = gadget_Proxy_getName__0(mRawObject);
       return result;
    }
 
+
    [DllImport("gadget_bridge", CharSet = CharSet.Ansi)]
-   private extern static void gadget_Proxy_setName__std_basic_string_char_std__char_traits_char__std__allocator_char__(IntPtr obj,
+   private extern static void gadget_Proxy_setName__std_basic_string_char_std__char_traits_char__std__allocator_char__1(IntPtr obj,
 	string p0);
 
    public  void setName(string p0)
    {
-      gadget_Proxy_setName__std_basic_string_char_std__char_traits_char__std__allocator_char__(mRawObject, p0);
+      gadget_Proxy_setName__std_basic_string_char_std__char_traits_char__std__allocator_char__1(mRawObject, p0);
+   }
+
+
+   [DllImport("gadget_bridge", CharSet = CharSet.Ansi)]
+   private extern static void gadget_Proxy_stupify__bool0(IntPtr obj);
+
+   public  void stupify()
+   {
+      gadget_Proxy_stupify__bool0(mRawObject);
    }
 
    [DllImport("gadget_bridge", CharSet = CharSet.Ansi)]
-   private extern static void gadget_Proxy_stupify__bool(IntPtr obj,
+   private extern static void gadget_Proxy_stupify__bool1(IntPtr obj,
 	bool p0);
 
    public  void stupify(bool p0)
    {
-      gadget_Proxy_stupify__bool(mRawObject, p0);
+      gadget_Proxy_stupify__bool1(mRawObject, p0);
    }
+
 
    // End of non-virtual methods.
 
@@ -139,15 +150,16 @@ public abstract class Proxy
    protected configDelegate_boost_shared_ptr_jccl__ConfigElement m_configDelegate_boost_shared_ptr_jccl__ConfigElement;
 
    [DllImport("gadget_bridge", CharSet = CharSet.Ansi)]
-   private extern static bool gadget_Proxy_config__boost_shared_ptr_jccl__ConfigElement(IntPtr obj,
+   private extern static bool gadget_Proxy_config__boost_shared_ptr_jccl__ConfigElement1(IntPtr obj,
 	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(jccl.ConfigElementMarshaler))] jccl.ConfigElement p0);
 
    public virtual bool config(jccl.ConfigElement p0)
    {
       bool result;
-      result = gadget_Proxy_config__boost_shared_ptr_jccl__ConfigElement(mRawObject, p0);
+      result = gadget_Proxy_config__boost_shared_ptr_jccl__ConfigElement1(mRawObject, p0);
       return result;
    }
+
 
    // Delegate for the refresh() callback.
    public delegate bool refreshDelegate();
@@ -155,17 +167,19 @@ public abstract class Proxy
 
    public abstract bool refresh();
 
+
    // Delegate for the updateData() callback.
    public delegate void updateDataDelegate();
    protected updateDataDelegate m_updateDataDelegate;
 
    [DllImport("gadget_bridge", CharSet = CharSet.Ansi)]
-   private extern static void gadget_Proxy_updateData__(IntPtr obj);
+   private extern static void gadget_Proxy_updateData__0(IntPtr obj);
 
    public virtual void updateData()
    {
-      gadget_Proxy_updateData__(mRawObject);
+      gadget_Proxy_updateData__0(mRawObject);
    }
+
 
    // Delegate for the getProxiedInputDevice() callback.
    protected IntPtr getProxiedInputDeviceAdapter()
@@ -178,32 +192,35 @@ public abstract class Proxy
 
    public abstract gadget.Input getProxiedInputDevice();
 
+
    // Delegate for the isStupified() callback.
    public delegate bool isStupifiedDelegate();
    protected isStupifiedDelegate m_isStupifiedDelegate;
 
    [DllImport("gadget_bridge", CharSet = CharSet.Ansi)]
-   private extern static bool gadget_Proxy_isStupified__(IntPtr obj);
+   private extern static bool gadget_Proxy_isStupified__0(IntPtr obj);
 
    public virtual bool isStupified()
    {
       bool result;
-      result = gadget_Proxy_isStupified__(mRawObject);
+      result = gadget_Proxy_isStupified__0(mRawObject);
       return result;
    }
+
 
    // End of virtual methods.
 
    // Start of static methods.
    [DllImport("gadget_bridge", CharSet = CharSet.Ansi)]
-   private extern static string gadget_Proxy_getElementType__();
+   private extern static string gadget_Proxy_getElementType__0();
 
    public static string getElementType()
    {
       string result;
-      result = gadget_Proxy_getElementType__();
+      result = gadget_Proxy_getElementType__0();
       return result;
    }
+
 
    // End of static methods.
 
@@ -228,24 +245,24 @@ public class ProxyMarshaler : ICustomMarshaler
       }
 
       [DllImport("gadget_bridge", CharSet = CharSet.Ansi)]
-      private extern static bool gadget_Proxy_refresh__(IntPtr obj);
+      private extern static bool gadget_Proxy_refresh__0(IntPtr obj);
 
       public override bool refresh()
       {
          bool result;
-         result = gadget_Proxy_refresh__(mRawObject);
+         result = gadget_Proxy_refresh__0(mRawObject);
          return result;
       }
 
       [DllImport("gadget_bridge", CharSet = CharSet.Ansi)]
       [return : MarshalAs(UnmanagedType.CustomMarshaler,
                           MarshalTypeRef = typeof(gadget.InputMarshaler))]
-      private extern static gadget.Input gadget_Proxy_getProxiedInputDevice__(IntPtr obj);
+      private extern static gadget.Input gadget_Proxy_getProxiedInputDevice__0(IntPtr obj);
 
       public override gadget.Input getProxiedInputDevice()
       {
          gadget.Input result;
-         result = gadget_Proxy_getProxiedInputDevice__(mRawObject);
+         result = gadget_Proxy_getProxiedInputDevice__0(mRawObject);
          return result;
       }
 

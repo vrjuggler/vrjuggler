@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.58 of RCSfile: class_cxx.tmpl,v
+// Generated from Revision: 1.60 of RCSfile: class_cxx.tmpl,v
 
 
 
@@ -59,46 +59,44 @@ extern "C"
    }
 
    // Wrapper for non-virtual method gadget::BaseDeviceInterface::init()
-   SHARPPY_API void gadget_BaseDeviceInterface_init__std_basic_string_char_std__char_traits_char__std__allocator_char__(gadget_BaseDeviceInterface_Adapter* self_, const char* p0)
+   SHARPPY_API void gadget_BaseDeviceInterface_init__std_basic_string_char_std__char_traits_char__std__allocator_char__1(gadget_BaseDeviceInterface_Adapter* self_, const char* p0)
    {
       self_->init(p0);
    }
 
+
    // Wrapper for non-virtual method gadget::BaseDeviceInterface::getProxyName()
-   SHARPPY_API char* gadget_BaseDeviceInterface_getProxyName__(gadget_BaseDeviceInterface_Adapter* self_)
+   SHARPPY_API char* gadget_BaseDeviceInterface_getProxyName__0(gadget_BaseDeviceInterface_Adapter* self_)
    {
-      char* result;
       std::basic_string<char,std::char_traits<char>,std::allocator<char> > temp_result;
+      char* result;
       temp_result = self_->getProxyName();
       result = strdup(temp_result.c_str());
-
       return result;
    }
 
+
    // Wrapper for non-virtual method gadget::BaseDeviceInterface::isConnected()
-   SHARPPY_API bool gadget_BaseDeviceInterface_isConnected__(gadget_BaseDeviceInterface_Adapter* self_)
+   SHARPPY_API bool gadget_BaseDeviceInterface_isConnected__0(gadget_BaseDeviceInterface_Adapter* self_)
    {
       bool result;
       result = self_->isConnected();
-
       return result;
    }
 
 
    // Wrapper for virtual method gadget::BaseDeviceInterface::refresh()
-   SHARPPY_API void gadget_BaseDeviceInterface_refresh__(gadget_BaseDeviceInterface_Adapter* self_)
+   SHARPPY_API void gadget_BaseDeviceInterface_refresh__0(gadget_BaseDeviceInterface_Adapter* self_)
    {
       self_->gadget::BaseDeviceInterface::refresh();
    }
 
 
-
    // Wrapper for static method gadget::BaseDeviceInterface::refreshAllDevices()
-   SHARPPY_API void gadget_BaseDeviceInterface_refreshAllDevices__()
+   SHARPPY_API void gadget_BaseDeviceInterface_refreshAllDevices__0()
    {
       gadget::BaseDeviceInterface::refreshAllDevices();
    }
-
 
 
 } // extern "C" for gadget::BaseDeviceInterface

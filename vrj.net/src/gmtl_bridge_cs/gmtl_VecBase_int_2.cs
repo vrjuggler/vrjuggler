@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.70 of RCSfile: class_cs.tmpl,v
+// Generated from Revision: 1.73 of RCSfile: class_cs.tmpl,v
 using System;
 using System.Runtime.InteropServices;
 using System.Reflection;
@@ -151,62 +151,50 @@ public class VecBase_int_2
 
    // Start of non-virtual methods.
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
-   private extern static void gmtl_VecBase_int_2__set__int(IntPtr obj,
+   private extern static void gmtl_VecBase_int_2__set__int1(IntPtr obj,
 	ref int p0);
 
    public  void set(ref int p0)
    {
-      
-      gmtl_VecBase_int_2__set__int(mRawObject, ref p0);
-      
+      gmtl_VecBase_int_2__set__int1(mRawObject, ref p0);
    }
 
 /*
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
-   private extern static void gmtl_VecBase_int_2__set__int(IntPtr obj,
+   private extern static void gmtl_VecBase_int_2__set__int1(IntPtr obj,
 	ref int p0);
 
    public  void set(ref int p0)
    {
-      
-      gmtl_VecBase_int_2__set__int(mRawObject, ref p0);
-      
+      gmtl_VecBase_int_2__set__int1(mRawObject, ref p0);
    }
 */
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
-   private extern static void gmtl_VecBase_int_2__set__int_int(IntPtr obj,
+   private extern static void gmtl_VecBase_int_2__set__int_int2(IntPtr obj,
 	ref int p0,
 	ref int p1);
 
    public  void set(ref int p0, ref int p1)
    {
-      
-      
-      gmtl_VecBase_int_2__set__int_int(mRawObject, ref p0, ref p1);
-      
-      
+      gmtl_VecBase_int_2__set__int_int2(mRawObject, ref p0, ref p1);
    }
 
+
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
-   private extern static void gmtl_VecBase_int_2__set__int_int_int(IntPtr obj,
+   private extern static void gmtl_VecBase_int_2__set__int_int_int3(IntPtr obj,
 	ref int p0,
 	ref int p1,
 	ref int p2);
 
    public  void set(ref int p0, ref int p1, ref int p2)
    {
-      
-      
-      
-      gmtl_VecBase_int_2__set__int_int_int(mRawObject, ref p0, ref p1, ref p2);
-      
-      
-      
+      gmtl_VecBase_int_2__set__int_int_int3(mRawObject, ref p0, ref p1, ref p2);
    }
 
+
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
-   private extern static void gmtl_VecBase_int_2__set__int_int_int_int(IntPtr obj,
+   private extern static void gmtl_VecBase_int_2__set__int_int_int_int4(IntPtr obj,
 	ref int p0,
 	ref int p1,
 	ref int p2,
@@ -214,35 +202,28 @@ public class VecBase_int_2
 
    public  void set(ref int p0, ref int p1, ref int p2, ref int p3)
    {
-      
-      
-      
-      
-      gmtl_VecBase_int_2__set__int_int_int_int(mRawObject, ref p0, ref p1, ref p2, ref p3);
-      
-      
-      
-      
+      gmtl_VecBase_int_2__set__int_int_int_int4(mRawObject, ref p0, ref p1, ref p2, ref p3);
    }
 
+
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
-   private extern static int gmtl_VecBase_int_2__getData__(IntPtr obj);
+   private extern static int gmtl_VecBase_int_2__getData__0(IntPtr obj);
 
    public  int getData()
    {
       int result;
-      result = gmtl_VecBase_int_2__getData__(mRawObject);
+      result = gmtl_VecBase_int_2__getData__0(mRawObject);
       return result;
    }
 
 /*
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
-   private extern static int gmtl_VecBase_int_2__getData__(IntPtr obj);
+   private extern static int gmtl_VecBase_int_2__getData__0(IntPtr obj);
 
    public  int getData()
    {
       int result;
-      result = gmtl_VecBase_int_2__getData__(mRawObject);
+      result = gmtl_VecBase_int_2__getData__0(mRawObject);
       return result;
    }
 */

@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.69 of RCSfile: class_cs.tmpl,v
+// Generated from Revision: 1.73 of RCSfile: class_cs.tmpl,v
 using System;
 using System.Runtime.InteropServices;
 using System.Reflection;
@@ -105,37 +105,52 @@ public sealed class PositionProxy
    [DllImport("gadget_bridge", CharSet = CharSet.Ansi)]
    [return : MarshalAs(UnmanagedType.CustomMarshaler,
                        MarshalTypeRef = typeof(vpr.IntervalMarshaler))]
-   private extern static vpr.Interval gadget_PositionProxy_getTimeStamp__(IntPtr obj);
+   private extern static vpr.Interval gadget_PositionProxy_getTimeStamp__0(IntPtr obj);
 
    public  vpr.Interval getTimeStamp()
    {
       vpr.Interval result;
-      result = gadget_PositionProxy_getTimeStamp__(mRawObject);
+      result = gadget_PositionProxy_getTimeStamp__0(mRawObject);
+      return result;
+   }
+
+
+   [DllImport("gadget_bridge", CharSet = CharSet.Ansi)]
+   [return : MarshalAs(UnmanagedType.CustomMarshaler,
+                       MarshalTypeRef = typeof(gmtl.Matrix44fMarshaler))]
+   private extern static gmtl.Matrix44f gadget_PositionProxy_getData__float0(IntPtr obj);
+
+   public  gmtl.Matrix44f getData()
+   {
+      gmtl.Matrix44f result;
+      result = gadget_PositionProxy_getData__float0(mRawObject);
       return result;
    }
 
    [DllImport("gadget_bridge", CharSet = CharSet.Ansi)]
    [return : MarshalAs(UnmanagedType.CustomMarshaler,
                        MarshalTypeRef = typeof(gmtl.Matrix44fMarshaler))]
-   private extern static gmtl.Matrix44f gadget_PositionProxy_getData__float(IntPtr obj,
+   private extern static gmtl.Matrix44f gadget_PositionProxy_getData__float1(IntPtr obj,
 	float p0);
 
    public  gmtl.Matrix44f getData(float p0)
    {
       gmtl.Matrix44f result;
-      result = gadget_PositionProxy_getData__float(mRawObject, p0);
+      result = gadget_PositionProxy_getData__float1(mRawObject, p0);
       return result;
    }
 
+
    [DllImport("gadget_bridge", CharSet = CharSet.Ansi)]
-   private extern static int gadget_PositionProxy_getUnit__(IntPtr obj);
+   private extern static int gadget_PositionProxy_getUnit__0(IntPtr obj);
 
    public  int getUnit()
    {
       int result;
-      result = gadget_PositionProxy_getUnit__(mRawObject);
+      result = gadget_PositionProxy_getUnit__0(mRawObject);
       return result;
    }
+
 
    // End of non-virtual methods.
 
@@ -144,48 +159,52 @@ public sealed class PositionProxy
 
    // Start of virtual methods.
    [DllImport("gadget_bridge", CharSet = CharSet.Ansi)]
-   private extern static void gadget_PositionProxy_updateData__(IntPtr obj);
+   private extern static void gadget_PositionProxy_updateData__0(IntPtr obj);
 
    public override void updateData()
    {
-      gadget_PositionProxy_updateData__(mRawObject);
+      gadget_PositionProxy_updateData__0(mRawObject);
    }
 
+
    [DllImport("gadget_bridge", CharSet = CharSet.Ansi)]
-   private extern static bool gadget_PositionProxy_config__boost_shared_ptr_jccl__ConfigElement(IntPtr obj,
+   private extern static bool gadget_PositionProxy_config__boost_shared_ptr_jccl__ConfigElement1(IntPtr obj,
 	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(jccl.ConfigElementMarshaler))] jccl.ConfigElement p0);
 
    public override bool config(jccl.ConfigElement p0)
    {
       bool result;
-      result = gadget_PositionProxy_config__boost_shared_ptr_jccl__ConfigElement(mRawObject, p0);
+      result = gadget_PositionProxy_config__boost_shared_ptr_jccl__ConfigElement1(mRawObject, p0);
       return result;
    }
+
 
    [DllImport("gadget_bridge", CharSet = CharSet.Ansi)]
    [return : MarshalAs(UnmanagedType.CustomMarshaler,
                        MarshalTypeRef = typeof(gadget.InputMarshaler))]
-   private extern static gadget.Input gadget_PositionProxy_getProxiedInputDevice__(IntPtr obj);
+   private extern static gadget.Input gadget_PositionProxy_getProxiedInputDevice__0(IntPtr obj);
 
    public override gadget.Input getProxiedInputDevice()
    {
       gadget.Input result;
-      result = gadget_PositionProxy_getProxiedInputDevice__(mRawObject);
+      result = gadget_PositionProxy_getProxiedInputDevice__0(mRawObject);
       return result;
    }
+
 
    // End of virtual methods.
 
    // Start of static methods.
    [DllImport("gadget_bridge", CharSet = CharSet.Ansi)]
-   private extern static string gadget_PositionProxy_getElementType__();
+   private extern static string gadget_PositionProxy_getElementType__0();
 
    public new static string getElementType()
    {
       string result;
-      result = gadget_PositionProxy_getElementType__();
+      result = gadget_PositionProxy_getElementType__0();
       return result;
    }
+
 
    // End of static methods.
 

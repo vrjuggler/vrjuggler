@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.68 of RCSfile: class_cs.tmpl,v
+// Generated from Revision: 1.73 of RCSfile: class_cs.tmpl,v
 using System;
 using System.Runtime.InteropServices;
 using System.Reflection;
@@ -105,23 +105,37 @@ public class Position
    [DllImport("gadget_bridge", CharSet = CharSet.Ansi)]
    [return : MarshalAs(UnmanagedType.CustomMarshaler,
                        MarshalTypeRef = typeof(gadget.PositionDataMarshaler))]
-   private extern static gadget.PositionData gadget_Position_getPositionData__int(IntPtr obj,
+   private extern static gadget.PositionData gadget_Position_getPositionData__int0(IntPtr obj);
+
+   public  gadget.PositionData getPositionData()
+   {
+      gadget.PositionData result;
+      result = gadget_Position_getPositionData__int0(mRawObject);
+      return result;
+   }
+
+   [DllImport("gadget_bridge", CharSet = CharSet.Ansi)]
+   [return : MarshalAs(UnmanagedType.CustomMarshaler,
+                       MarshalTypeRef = typeof(gadget.PositionDataMarshaler))]
+   private extern static gadget.PositionData gadget_Position_getPositionData__int1(IntPtr obj,
 	int p0);
 
    public  gadget.PositionData getPositionData(int p0)
    {
       gadget.PositionData result;
-      result = gadget_Position_getPositionData__int(mRawObject, p0);
+      result = gadget_Position_getPositionData__int1(mRawObject, p0);
       return result;
    }
 
+
    [DllImport("gadget_bridge", CharSet = CharSet.Ansi)]
-   private extern static void gadget_Position_swapPositionBuffers__(IntPtr obj);
+   private extern static void gadget_Position_swapPositionBuffers__0(IntPtr obj);
 
    public  void swapPositionBuffers()
    {
-      gadget_Position_swapPositionBuffers__(mRawObject);
+      gadget_Position_swapPositionBuffers__0(mRawObject);
    }
+
 
    // End of non-virtual methods.
 
@@ -131,29 +145,31 @@ public class Position
    protected configDelegate_boost_shared_ptr_jccl__ConfigElement m_configDelegate_boost_shared_ptr_jccl__ConfigElement;
 
    [DllImport("gadget_bridge", CharSet = CharSet.Ansi)]
-   private extern static bool gadget_Position_config__boost_shared_ptr_jccl__ConfigElement(IntPtr obj,
+   private extern static bool gadget_Position_config__boost_shared_ptr_jccl__ConfigElement1(IntPtr obj,
 	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(jccl.ConfigElementMarshaler))] jccl.ConfigElement p0);
 
    public virtual bool config(jccl.ConfigElement p0)
    {
       bool result;
-      result = gadget_Position_config__boost_shared_ptr_jccl__ConfigElement(mRawObject, p0);
+      result = gadget_Position_config__boost_shared_ptr_jccl__ConfigElement1(mRawObject, p0);
       return result;
    }
+
 
    // Delegate for the getBaseType() callback.
    public delegate string getBaseTypeDelegate();
    protected getBaseTypeDelegate m_getBaseTypeDelegate;
 
    [DllImport("gadget_bridge", CharSet = CharSet.Ansi)]
-   private extern static string gadget_Position_getBaseType__(IntPtr obj);
+   private extern static string gadget_Position_getBaseType__0(IntPtr obj);
 
    public virtual string getBaseType()
    {
       string result;
-      result = gadget_Position_getBaseType__(mRawObject);
+      result = gadget_Position_getBaseType__0(mRawObject);
       return result;
    }
+
 
    // Delegate for the writeObject() callback.
    protected IntPtr writeObjectAdapter(vpr.ObjectWriter p0)
@@ -167,17 +183,16 @@ public class Position
    [DllImport("gadget_bridge", CharSet = CharSet.Ansi)]
    [return : MarshalAs(UnmanagedType.CustomMarshaler,
                        MarshalTypeRef = typeof(vpr.ReturnStatusMarshaler))]
-   private extern static vpr.ReturnStatus gadget_Position_writeObject__vpr_ObjectWriter(IntPtr obj,
+   private extern static vpr.ReturnStatus gadget_Position_writeObject__vpr_ObjectWriter1(IntPtr obj,
 	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(vpr.ObjectWriterMarshaler))] vpr.ObjectWriter p0);
 
    public virtual vpr.ReturnStatus writeObject(vpr.ObjectWriter p0)
    {
-      
       vpr.ReturnStatus result;
-      result = gadget_Position_writeObject__vpr_ObjectWriter(mRawObject, p0);
-      
+      result = gadget_Position_writeObject__vpr_ObjectWriter1(mRawObject, p0);
       return result;
    }
+
 
    // Delegate for the readObject() callback.
    protected IntPtr readObjectAdapter(vpr.ObjectReader p0)
@@ -191,17 +206,16 @@ public class Position
    [DllImport("gadget_bridge", CharSet = CharSet.Ansi)]
    [return : MarshalAs(UnmanagedType.CustomMarshaler,
                        MarshalTypeRef = typeof(vpr.ReturnStatusMarshaler))]
-   private extern static vpr.ReturnStatus gadget_Position_readObject__vpr_ObjectReader(IntPtr obj,
+   private extern static vpr.ReturnStatus gadget_Position_readObject__vpr_ObjectReader1(IntPtr obj,
 	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(vpr.ObjectReaderMarshaler))] vpr.ObjectReader p0);
 
    public virtual vpr.ReturnStatus readObject(vpr.ObjectReader p0)
    {
-      
       vpr.ReturnStatus result;
-      result = gadget_Position_readObject__vpr_ObjectReader(mRawObject, p0);
-      
+      result = gadget_Position_readObject__vpr_ObjectReader1(mRawObject, p0);
       return result;
    }
+
 
    // End of virtual methods.
 

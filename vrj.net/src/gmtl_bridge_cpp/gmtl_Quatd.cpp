@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.58 of RCSfile: class_cxx.tmpl,v
+// Generated from Revision: 1.60 of RCSfile: class_cxx.tmpl,v
 
 
 
@@ -66,29 +66,26 @@ extern "C"
    }
 
    // Wrapper for non-virtual method gmtl::Quat<double>::set()
-   SHARPPY_API void gmtl_Quat_double__set__double_double_double_double(gmtl::Quatd* self_, const double p0, const double p1, const double p2, const double p3)
+   SHARPPY_API void gmtl_Quat_double__set__double_double_double_double4(gmtl::Quatd* self_, const double p0, const double p1, const double p2, const double p3)
    {
       self_->set(p0, p1, p2, p3);
    }
 
+
    // Wrapper for non-virtual method gmtl::Quat<double>::get()
-   SHARPPY_API void gmtl_Quat_double__get__double_double_double_double(gmtl::Quatd* self_, double& p0, double& p1, double& p2, double& p3)
+   SHARPPY_API void gmtl_Quat_double__get__double_double_double_double4(gmtl::Quatd* self_, double& p0, double& p1, double& p2, double& p3)
    {
       self_->get(p0, p1, p2, p3);
    }
 
+
    // Wrapper for non-virtual method gmtl::Quat<double>::getData()
-   SHARPPY_API const double* gmtl_Quat_double__getData__(gmtl::Quatd* self_)
+   SHARPPY_API const double* gmtl_Quat_double__getData__0(gmtl::Quatd* self_)
    {
       const double* result;
       result = self_->getData();
-
       return result;
    }
-
-
-
-
 
 
 } // extern "C" for gmtl::Quatd

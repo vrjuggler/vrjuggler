@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.58 of RCSfile: class_cxx.tmpl,v
+// Generated from Revision: 1.60 of RCSfile: class_cxx.tmpl,v
 
 
 
@@ -41,125 +41,120 @@ extern "C"
    }
 
    // Wrapper for non-virtual method vpr::ObjectWriter::isBinary()
-   SHARPPY_API bool vpr_ObjectWriter_isBinary__(vpr_ObjectWriter_Adapter* self_)
+   SHARPPY_API bool vpr_ObjectWriter_isBinary__0(vpr_ObjectWriter_Adapter* self_)
    {
       bool result;
       result = self_->isBinary();
-
       return result;
    }
 
 
    // Wrapper for virtual method vpr::ObjectWriter::beginTag()
-   SHARPPY_API vpr::ReturnStatus* vpr_ObjectWriter_beginTag__std_basic_string_char_std__char_traits_char__std__allocator_char__(vpr_ObjectWriter_Adapter* self_, char* p0)
+   SHARPPY_API vpr::ReturnStatus* vpr_ObjectWriter_beginTag__std_basic_string_char_std__char_traits_char__std__allocator_char__1(vpr_ObjectWriter_Adapter* self_, char* p0)
    {
       vpr::ReturnStatus* result;
       result = new vpr::ReturnStatus(self_->beginTag(p0));
-
       return result;
    }
 
+
    // Wrapper for virtual method vpr::ObjectWriter::endTag()
-   SHARPPY_API vpr::ReturnStatus* vpr_ObjectWriter_endTag__(vpr_ObjectWriter_Adapter* self_)
+   SHARPPY_API vpr::ReturnStatus* vpr_ObjectWriter_endTag__0(vpr_ObjectWriter_Adapter* self_)
    {
       vpr::ReturnStatus* result;
       result = new vpr::ReturnStatus(self_->endTag());
-
       return result;
    }
 
+
    // Wrapper for virtual method vpr::ObjectWriter::beginAttribute()
-   SHARPPY_API vpr::ReturnStatus* vpr_ObjectWriter_beginAttribute__std_basic_string_char_std__char_traits_char__std__allocator_char__(vpr_ObjectWriter_Adapter* self_, char* p0)
+   SHARPPY_API vpr::ReturnStatus* vpr_ObjectWriter_beginAttribute__std_basic_string_char_std__char_traits_char__std__allocator_char__1(vpr_ObjectWriter_Adapter* self_, char* p0)
    {
       vpr::ReturnStatus* result;
       result = new vpr::ReturnStatus(self_->beginAttribute(p0));
-
       return result;
    }
 
+
    // Wrapper for virtual method vpr::ObjectWriter::endAttribute()
-   SHARPPY_API vpr::ReturnStatus* vpr_ObjectWriter_endAttribute__(vpr_ObjectWriter_Adapter* self_)
+   SHARPPY_API vpr::ReturnStatus* vpr_ObjectWriter_endAttribute__0(vpr_ObjectWriter_Adapter* self_)
    {
       vpr::ReturnStatus* result;
       result = new vpr::ReturnStatus(self_->endAttribute());
-
       return result;
    }
 
+
    // Wrapper for virtual method vpr::ObjectWriter::writeUint8()
-   SHARPPY_API vpr::ReturnStatus* vpr_ObjectWriter_writeUint8__unsigned_char(vpr_ObjectWriter_Adapter* self_, unsigned char p0)
+   SHARPPY_API vpr::ReturnStatus* vpr_ObjectWriter_writeUint8__unsigned_char1(vpr_ObjectWriter_Adapter* self_, unsigned char p0)
    {
       vpr::ReturnStatus* result;
       result = new vpr::ReturnStatus(self_->writeUint8(p0));
-
       return result;
    }
 
+
    // Wrapper for virtual method vpr::ObjectWriter::writeUint16()
-   SHARPPY_API vpr::ReturnStatus* vpr_ObjectWriter_writeUint16__short_unsigned_int(vpr_ObjectWriter_Adapter* self_, short unsigned int p0)
+   SHARPPY_API vpr::ReturnStatus* vpr_ObjectWriter_writeUint16__short_unsigned_int1(vpr_ObjectWriter_Adapter* self_, short unsigned int p0)
    {
       vpr::ReturnStatus* result;
       result = new vpr::ReturnStatus(self_->writeUint16(p0));
-
       return result;
    }
 
+
    // Wrapper for virtual method vpr::ObjectWriter::writeUint32()
-   SHARPPY_API vpr::ReturnStatus* vpr_ObjectWriter_writeUint32__unsigned_int(vpr_ObjectWriter_Adapter* self_, unsigned int p0)
+   SHARPPY_API vpr::ReturnStatus* vpr_ObjectWriter_writeUint32__unsigned_int1(vpr_ObjectWriter_Adapter* self_, unsigned int p0)
    {
       vpr::ReturnStatus* result;
       result = new vpr::ReturnStatus(self_->writeUint32(p0));
-
       return result;
    }
 
+
    // Wrapper for virtual method vpr::ObjectWriter::writeUint64()
-   SHARPPY_API vpr::ReturnStatus* vpr_ObjectWriter_writeUint64__long_long_unsigned_int(vpr_ObjectWriter_Adapter* self_, long long unsigned int p0)
+   SHARPPY_API vpr::ReturnStatus* vpr_ObjectWriter_writeUint64__long_long_unsigned_int1(vpr_ObjectWriter_Adapter* self_, long long unsigned int p0)
    {
       vpr::ReturnStatus* result;
       result = new vpr::ReturnStatus(self_->writeUint64(p0));
-
       return result;
    }
 
+
    // Wrapper for virtual method vpr::ObjectWriter::writeFloat()
-   SHARPPY_API vpr::ReturnStatus* vpr_ObjectWriter_writeFloat__float(vpr_ObjectWriter_Adapter* self_, float p0)
+   SHARPPY_API vpr::ReturnStatus* vpr_ObjectWriter_writeFloat__float1(vpr_ObjectWriter_Adapter* self_, float p0)
    {
       vpr::ReturnStatus* result;
       result = new vpr::ReturnStatus(self_->writeFloat(p0));
-
       return result;
    }
 
+
    // Wrapper for virtual method vpr::ObjectWriter::writeDouble()
-   SHARPPY_API vpr::ReturnStatus* vpr_ObjectWriter_writeDouble__double(vpr_ObjectWriter_Adapter* self_, double p0)
+   SHARPPY_API vpr::ReturnStatus* vpr_ObjectWriter_writeDouble__double1(vpr_ObjectWriter_Adapter* self_, double p0)
    {
       vpr::ReturnStatus* result;
       result = new vpr::ReturnStatus(self_->writeDouble(p0));
-
       return result;
    }
 
+
    // Wrapper for virtual method vpr::ObjectWriter::writeString()
-   SHARPPY_API vpr::ReturnStatus* vpr_ObjectWriter_writeString__std_basic_string_char_std__char_traits_char__std__allocator_char__(vpr_ObjectWriter_Adapter* self_, char* p0)
+   SHARPPY_API vpr::ReturnStatus* vpr_ObjectWriter_writeString__std_basic_string_char_std__char_traits_char__std__allocator_char__1(vpr_ObjectWriter_Adapter* self_, char* p0)
    {
       vpr::ReturnStatus* result;
       result = new vpr::ReturnStatus(self_->writeString(p0));
-
       return result;
    }
 
+
    // Wrapper for virtual method vpr::ObjectWriter::writeBool()
-   SHARPPY_API vpr::ReturnStatus* vpr_ObjectWriter_writeBool__bool(vpr_ObjectWriter_Adapter* self_, bool p0)
+   SHARPPY_API vpr::ReturnStatus* vpr_ObjectWriter_writeBool__bool1(vpr_ObjectWriter_Adapter* self_, bool p0)
    {
       vpr::ReturnStatus* result;
       result = new vpr::ReturnStatus(self_->writeBool(p0));
-
       return result;
    }
-
-
-
 
 
 } // extern "C" for vpr::ObjectWriter

@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from $Revision$ of $RCSfile$
+// Generated from Revision: 1.60 of RCSfile: class_cxx.tmpl,v
 
 
 
@@ -100,59 +100,62 @@ extern "C"
       delete self_;
    }
 
-
    // Wrapper for virtual method vrj::GlApp::draw()
-   SHARPPY_API void vrj_GlApp_draw__(vrj_GlApp_Adapter* self_)
+   SHARPPY_API void vrj_GlApp_draw__0(vrj_GlApp_Adapter* self_)
    {
       self_->draw();
    }
 
+
    // Wrapper for virtual method vrj::GlApp::contextInit()
-   SHARPPY_API void vrj_GlApp_contextInit__(vrj_GlApp_Adapter* self_)
+   SHARPPY_API void vrj_GlApp_contextInit__0(vrj_GlApp_Adapter* self_)
    {
       self_->vrj::GlApp::contextInit();
    }
 
+
    // Wrapper for virtual method vrj::GlApp::contextClose()
-   SHARPPY_API void vrj_GlApp_contextClose__(vrj_GlApp_Adapter* self_)
+   SHARPPY_API void vrj_GlApp_contextClose__0(vrj_GlApp_Adapter* self_)
    {
       self_->vrj::GlApp::contextClose();
    }
 
+
    // Wrapper for virtual method vrj::GlApp::contextPreDraw()
-   SHARPPY_API void vrj_GlApp_contextPreDraw__(vrj_GlApp_Adapter* self_)
+   SHARPPY_API void vrj_GlApp_contextPreDraw__0(vrj_GlApp_Adapter* self_)
    {
       self_->vrj::GlApp::contextPreDraw();
    }
 
+
    // Wrapper for virtual method vrj::GlApp::contextPostDraw()
-   SHARPPY_API void vrj_GlApp_contextPostDraw__(vrj_GlApp_Adapter* self_)
+   SHARPPY_API void vrj_GlApp_contextPostDraw__0(vrj_GlApp_Adapter* self_)
    {
       self_->vrj::GlApp::contextPostDraw();
    }
 
+
    // Wrapper for virtual method vrj::GlApp::bufferPreDraw()
-   SHARPPY_API void vrj_GlApp_bufferPreDraw__(vrj_GlApp_Adapter* self_)
+   SHARPPY_API void vrj_GlApp_bufferPreDraw__0(vrj_GlApp_Adapter* self_)
    {
       self_->vrj::GlApp::bufferPreDraw();
    }
 
+
    // Wrapper for virtual method vrj::GlApp::pipePreDraw()
-   SHARPPY_API void vrj_GlApp_pipePreDraw__(vrj_GlApp_Adapter* self_)
+   SHARPPY_API void vrj_GlApp_pipePreDraw__0(vrj_GlApp_Adapter* self_)
    {
       self_->vrj::GlApp::pipePreDraw();
    }
 
+
    // Wrapper for virtual method vrj::GlApp::getDrawManager()
-   SHARPPY_API vrj::DrawManager* vrj_GlApp_getDrawManager__(vrj_GlApp_Adapter* self_)
+   SHARPPY_API vrj::DrawManager* vrj_GlApp_getDrawManager__0(vrj_GlApp_Adapter* self_)
    {
       vrj::DrawManager* result;
       result = self_->vrj::GlApp::getDrawManager();
-
       return result;
    }
-
-
 
 
 } // extern "C" for vrj::GlApp

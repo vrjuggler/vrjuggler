@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.70 of RCSfile: class_cs.tmpl,v
+// Generated from Revision: 1.73 of RCSfile: class_cs.tmpl,v
 using System;
 using System.Runtime.InteropServices;
 using System.Reflection;
@@ -105,14 +105,15 @@ public sealed class AnalogInterface
    [DllImport("gadget_bridge", CharSet = CharSet.Ansi)]
    [return : MarshalAs(UnmanagedType.CustomMarshaler,
                        MarshalTypeRef = typeof(gadget.AnalogProxyMarshaler))]
-   private extern static gadget.AnalogProxy gadget_DeviceInterface_gadget_AnalogProxy__getProxy__(IntPtr obj);
+   private extern static gadget.AnalogProxy gadget_DeviceInterface_gadget_AnalogProxy__getProxy__0(IntPtr obj);
 
    public  gadget.AnalogProxy getProxy()
    {
       gadget.AnalogProxy result;
-      result = gadget_DeviceInterface_gadget_AnalogProxy__getProxy__(mRawObject);
+      result = gadget_DeviceInterface_gadget_AnalogProxy__getProxy__0(mRawObject);
       return result;
    }
+
 
    // End of non-virtual methods.
 
@@ -121,12 +122,13 @@ public sealed class AnalogInterface
 
    // Start of virtual methods.
    [DllImport("gadget_bridge", CharSet = CharSet.Ansi)]
-   private extern static void gadget_DeviceInterface_gadget_AnalogProxy__refresh__(IntPtr obj);
+   private extern static void gadget_DeviceInterface_gadget_AnalogProxy__refresh__0(IntPtr obj);
 
    public override void refresh()
    {
-      gadget_DeviceInterface_gadget_AnalogProxy__refresh__(mRawObject);
+      gadget_DeviceInterface_gadget_AnalogProxy__refresh__0(mRawObject);
    }
+
 
    // End of virtual methods.
 

@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.70 of RCSfile: class_cs.tmpl,v
+// Generated from Revision: 1.73 of RCSfile: class_cs.tmpl,v
 using System;
 using System.Runtime.InteropServices;
 using System.Reflection;
@@ -116,67 +116,69 @@ public sealed class AABoxf
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
    [return : MarshalAs(UnmanagedType.CustomMarshaler,
                        MarshalTypeRef = typeof(gmtl.Point3fMarshaler))]
-   private extern static gmtl.Point3f gmtl_AABox_float__getMin__(IntPtr obj);
+   private extern static gmtl.Point3f gmtl_AABox_float__getMin__0(IntPtr obj);
 
    public  gmtl.Point3f getMin()
    {
       gmtl.Point3f result;
-      result = gmtl_AABox_float__getMin__(mRawObject);
+      result = gmtl_AABox_float__getMin__0(mRawObject);
       return result;
    }
+
 
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
    [return : MarshalAs(UnmanagedType.CustomMarshaler,
                        MarshalTypeRef = typeof(gmtl.Point3fMarshaler))]
-   private extern static gmtl.Point3f gmtl_AABox_float__getMax__(IntPtr obj);
+   private extern static gmtl.Point3f gmtl_AABox_float__getMax__0(IntPtr obj);
 
    public  gmtl.Point3f getMax()
    {
       gmtl.Point3f result;
-      result = gmtl_AABox_float__getMax__(mRawObject);
+      result = gmtl_AABox_float__getMax__0(mRawObject);
       return result;
    }
 
+
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
-   private extern static bool gmtl_AABox_float__isEmpty__(IntPtr obj);
+   private extern static bool gmtl_AABox_float__isEmpty__0(IntPtr obj);
 
    public  bool isEmpty()
    {
       bool result;
-      result = gmtl_AABox_float__isEmpty__(mRawObject);
+      result = gmtl_AABox_float__isEmpty__0(mRawObject);
       return result;
    }
 
+
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
-   private extern static void gmtl_AABox_float__setMin__gmtl_Point3f(IntPtr obj,
+   private extern static void gmtl_AABox_float__setMin__gmtl_Point3f1(IntPtr obj,
 	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.Point3fMarshaler))] gmtl.Point3f p0);
 
    public  void setMin(gmtl.Point3f p0)
    {
-      
-      gmtl_AABox_float__setMin__gmtl_Point3f(mRawObject, p0);
-      
+      gmtl_AABox_float__setMin__gmtl_Point3f1(mRawObject, p0);
    }
 
+
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
-   private extern static void gmtl_AABox_float__setMax__gmtl_Point3f(IntPtr obj,
+   private extern static void gmtl_AABox_float__setMax__gmtl_Point3f1(IntPtr obj,
 	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.Point3fMarshaler))] gmtl.Point3f p0);
 
    public  void setMax(gmtl.Point3f p0)
    {
-      
-      gmtl_AABox_float__setMax__gmtl_Point3f(mRawObject, p0);
-      
+      gmtl_AABox_float__setMax__gmtl_Point3f1(mRawObject, p0);
    }
 
+
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
-   private extern static void gmtl_AABox_float__setEmpty__bool(IntPtr obj,
+   private extern static void gmtl_AABox_float__setEmpty__bool1(IntPtr obj,
 	bool p0);
 
    public  void setEmpty(bool p0)
    {
-      gmtl_AABox_float__setEmpty__bool(mRawObject, p0);
+      gmtl_AABox_float__setEmpty__bool1(mRawObject, p0);
    }
+
 
    // End of non-virtual methods.
 

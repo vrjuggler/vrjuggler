@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.70 of RCSfile: class_cs.tmpl,v
+// Generated from Revision: 1.73 of RCSfile: class_cs.tmpl,v
 using System;
 using System.Runtime.InteropServices;
 using System.Reflection;
@@ -116,46 +116,46 @@ public sealed class Spheref
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
    [return : MarshalAs(UnmanagedType.CustomMarshaler,
                        MarshalTypeRef = typeof(gmtl.Point3fMarshaler))]
-   private extern static gmtl.Point3f gmtl_Sphere_float__getCenter__(IntPtr obj);
+   private extern static gmtl.Point3f gmtl_Sphere_float__getCenter__0(IntPtr obj);
 
    public  gmtl.Point3f getCenter()
    {
       gmtl.Point3f result;
-      result = gmtl_Sphere_float__getCenter__(mRawObject);
+      result = gmtl_Sphere_float__getCenter__0(mRawObject);
       return result;
    }
 
+
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
-   private extern static float gmtl_Sphere_float__getRadius__(IntPtr obj);
+   private extern static float gmtl_Sphere_float__getRadius__0(IntPtr obj);
 
    public  float getRadius()
    {
       float result;
-      result = gmtl_Sphere_float__getRadius__(mRawObject);
+      result = gmtl_Sphere_float__getRadius__0(mRawObject);
       return result;
    }
 
+
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
-   private extern static void gmtl_Sphere_float__setCenter__gmtl_Point3f(IntPtr obj,
+   private extern static void gmtl_Sphere_float__setCenter__gmtl_Point3f1(IntPtr obj,
 	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gmtl.Point3fMarshaler))] gmtl.Point3f p0);
 
    public  void setCenter(gmtl.Point3f p0)
    {
-      
-      gmtl_Sphere_float__setCenter__gmtl_Point3f(mRawObject, p0);
-      
+      gmtl_Sphere_float__setCenter__gmtl_Point3f1(mRawObject, p0);
    }
 
+
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
-   private extern static void gmtl_Sphere_float__setRadius__float(IntPtr obj,
+   private extern static void gmtl_Sphere_float__setRadius__float1(IntPtr obj,
 	ref float p0);
 
    public  void setRadius(ref float p0)
    {
-      
-      gmtl_Sphere_float__setRadius__float(mRawObject, ref p0);
-      
+      gmtl_Sphere_float__setRadius__float1(mRawObject, ref p0);
    }
+
 
    // End of non-virtual methods.
 
