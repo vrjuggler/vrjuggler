@@ -41,7 +41,7 @@
 default: all
 
 # Include common definitions.
-include @topdir@/gadget/Devices/driver.defs.mk
+include @topdir@/make.defs.mk
 
 DRIVER_NAME=	IS900
 
@@ -49,10 +49,6 @@ srcdir=		@srcdir@
 top_srcdir=	@top_srcdir@
 INSTALL=	@INSTALL@
 INSTALL_FILES=
-
-# Disable the C/C++ afterbuild step.  It will be re-enabled if we can compile
-# the driver on the target platform.
-C_AFTERBUILD=
 
 ifneq (@PLATFORM@, FreeBSD)
 ifneq (@PLATFORM@, Darwin)
@@ -70,6 +66,7 @@ endif
 endif
 
 include $(MKPATH)/dpp.obj.mk
+include @topdir@/gadget/Devices/driver.defs.mk
 
 # -----------------------------------------------------------------------------
 # Include dependencies generated automatically.

@@ -40,7 +40,7 @@
 default: all
 
 # Include common definitions.
-include @topdir@/gadget/Devices/driver.defs.mk
+include @topdir@/make.defs.mk
 
 DRIVER_NAME=	PinchGlove
 
@@ -48,11 +48,13 @@ srcdir=		@srcdir@
 top_srcdir=	@top_srcdir@
 INSTALL=	@INSTALL@
 INSTALL_FILES=	
+C_AFTERBUILD=	driver-dso
 
 SRCS=		PinchGlove.cpp		\
 		PinchGloveStandalone.cpp
 
 include $(MKPATH)/dpp.obj.mk
+include @topdir@/gadget/Devices/driver.defs.mk
 
 # -----------------------------------------------------------------------------
 # Include dependencies generated automatically.

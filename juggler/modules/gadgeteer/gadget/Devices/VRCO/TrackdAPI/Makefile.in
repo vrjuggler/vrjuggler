@@ -40,7 +40,7 @@
 default: all
 
 # Include common definitions.
-include @topdir@/gadget/Devices/driver.defs.mk
+include @topdir@/make.defs.mk
 
 DRIVER_NAME=	TrackdAPI
 
@@ -48,6 +48,7 @@ srcdir=		@srcdir@
 top_srcdir=	@top_srcdir@
 INSTALL=	@INSTALL@
 INSTALL_FILES=
+C_AFTERBUILD=	driver-dso
 
 EXTRA_DSO_DRIVER_DEPS=	@TRACKD_API_LIB_FLAGS@
 
@@ -55,6 +56,7 @@ SRCS=		TrackdAPIController.cpp	\
 		TrackdAPISensor.cpp
 
 include $(MKPATH)/dpp.obj.mk
+include @topdir@/gadget/Devices/driver.defs.mk
 
 # -----------------------------------------------------------------------------
 # Include dependencies generated automatically.
