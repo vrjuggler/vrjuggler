@@ -256,6 +256,23 @@ public abstract class GraphHelpers
       }
       else if ( token.equals(VRPN_TYPE) )
       {
+         Integer b_count =
+            (Integer) devElt.getProperty(BUTTON_COUNT_PROPERTY, 0);
+         Integer t_count =
+            (Integer) devElt.getProperty(TRACKER_COUNT_PROPERTY, 0);
+
+         PropertyDefinition b_prop_def =
+            devElt.getDefinition().getPropertyDefinition(BUTTON_COUNT_PROPERTY);
+         PropertyDefinition t_prop_def =
+            devElt.getDefinition().getPropertyDefinition(TRACKER_COUNT_PROPERTY);
+
+         Map unit_map = new HashMap();
+         unit_map.put(UnitConstants.DIGITAL, b_prop_def);
+         unit_map.put(UnitConstants.POSITION, t_prop_def);
+         cell = createBaseDeviceCell(new DeviceInfo(devElt, context, unit_map),
+                                     attributes, x, y, false);
+         addDevicePorts(cell, UnitConstants.DIGITAL, b_count.intValue());
+         addDevicePorts(cell, UnitConstants.POSITION, t_count.intValue());
       }
       else
       {
