@@ -66,194 +66,207 @@ namespace vpr {
 
 typedef vpr::Uint32 thread_id_t;
 
-//: Threads implementation using POSIX threads (both Draft 4 and the "final"
-//+ draft of the standard are supported).
-//
-// Desc: <br>
-//   Functions by recieving a function in the constructor that is the function
-// to call when the new thread is created.  This function is stored internally
-// to the class, then the class is "boot-strapped" by spawning a call
-// to the startThread function with in turn will call the previously set thread
-// function
-//
-//!PUBLIC_API:
+/**
+ * Threads implementation using POSIX threads (both Draft 4 and the "final"
+ * draft of the standard are supported).
+ *
+ * Functions by recieving a function in the constructor that is the function
+ * to call when the new thread is created.  This function is stored internally
+ * to the class, then the class is "boot-strapped" by spawning a call to the
+ * startThread function with in turn will call the previously set thread
+ * function
+ *
+ * @author Patrick Hartling
+ * @author Allen Bierbaum
+ */
 class ThreadPosix : public BaseThread
 {
 public:  // ---- Thread CREATION and SPAWNING -----
-    // -----------------------------------------------------------------------
-    //: Spawning constructor.
-    //
-    // This will actually start a new thread that will execute the specified
-    // function.
-    // -----------------------------------------------------------------------
+    /**
+     * Spawning constructor.
+     *
+     * This will actually start a new thread that will execute the specified
+     * function.
+     */
     ThreadPosix(thread_func_t func, void* arg = 0,
                 VPRThreadPriority priority = VPR_PRIORITY_NORMAL,
                 VPRThreadScope scope = VPR_LOCAL_THREAD,
                 VPRThreadState state = VPR_JOINABLE_THREAD,
                 size_t stack_size = 0);
 
-    // -----------------------------------------------------------------------
-    //: Spawning constructor with arguments (functor version).
-    //
-    // This will start a new thread that will execute the specified function.
-    // -----------------------------------------------------------------------
+    /**
+     * Spawning constructor with arguments (functor version).
+     *
+     * This will start a new thread that will execute the specified function.
+     */
     ThreadPosix(BaseThreadFunctor* functorPtr,
                 VPRThreadPriority priority = VPR_PRIORITY_NORMAL,
                 VPRThreadScope scope = VPR_LOCAL_THREAD,
                 VPRThreadState state = VPR_JOINABLE_THREAD,
                 size_t stack_size = 0);
 
-    // -----------------------------------------------------------------------
-    //: Destructor.
-    //
-    //! PRE: None.
-    //! POST: This thread is removed from the thread table and from the local
-    //+       thread hash.
-    // -----------------------------------------------------------------------
+    /**
+     * Destructor.
+     *
+     * @pre None.
+     * @post This thread is removed from the thread table and from the local
+     *       thread hash.
+     */
     virtual ~ThreadPosix(void);
 
-    // -----------------------------------------------------------------------
-    //: Create a new thread that will execute functorPtr.
-    //
-    //! PRE: None.
-    //! POST: A thread (with any specified attributes) is created that begins
-    //+       executing func().  Depending on the scheduler, it may being
-    //+       execution immediately, or it may block for a short time before
-    //+       beginning execution.
-    //
-    //! ARGS: functorPtr - Function to be executed by the thread.
-    //! ARGS: priority - Priority of created thread (optional).
-    //! ARGS: scope
-    //! ARGS: state
-    //! ARGS: stack_size - Size for thread's stack (optional).
-    //
-    //! RETURNS: 0 - Successful thread creation
-    //! RETURNS: Nonzero - Error
-    //
-    //! NOTE: The pthreads implementation on HP-UX 10.20 does not allow the
-    //+       stack address to be changed.
-    // -----------------------------------------------------------------------
+    /**
+     * Creates a new thread that will execute functorPtr.
+     *
+     * @pre None.
+     * @post A thread (with any specified attributes) is created that begins
+     *       executing func().  Depending on the scheduler, it may being
+     *       execution immediately, or it may block for a short time before
+     *       beginning execution.
+     *
+     * @param functorPtr Function to be executed by the thread.
+     * @param priority   Priority of created thread (optional).
+     * @param scope      The scope of the new thread.  This argument is
+     *                   optional, and it defaults to
+     *                   vpr::Thread::VPR_GLOBAL_THREAD.
+     * @param state      The state of the new thread (joinable or unjoinable).
+     *                   This argument is optional, and it defaults to
+     *                   vpr::Thread::VPR_JOINABLE_THREAD.
+     * @param stack_size The stack size for the new thread.  This argument is
+     *                   optional, and it defaults to 0 (use the default stack
+     *                   size offered by the OS).
+     *
+     * @return A non-zero value is returned to indicate that the thread was
+     *         created successfully.  -1 is returned otherwise.
+     *
+     * @note The pthreads implementation on HP-UX 10.20 does not allow the
+     *       stack address to be changed.
+     */
     int spawn(BaseThreadFunctor* functorPtr,
               VPRThreadPriority priority = VPR_PRIORITY_NORMAL,
               VPRThreadScope scope = VPR_LOCAL_THREAD,
               VPRThreadState state = VPR_JOINABLE_THREAD,
               size_t stack_size = 0);
 
-    // Called by the spawn routine to start the user thread function
-    // PRE: Called ONLY by a new thread
-    // POST: The new thread will have started the user thread function
+    /**
+     * Called by the spawn routine to start the user thread function
+     *
+     * @pre Called ONLY by a new thread
+     * @post The new thread will have started the user thread function
+     */
     void startThread(void* null_param);
 
 private:
-   BaseThreadFunctor* mUserThreadFunctor;     // The functor to call when the thread starts
-   bool               mDeleteThreadFunctor;   //
+   BaseThreadFunctor* mUserThreadFunctor;     /**< The functor to call when
+                                                   the thread starts */
+   bool               mDeleteThreadFunctor;   /**< Flag stating whether to
+                                                   free the memory for the
+                                                   thread functor */
 
 public:  // ----- Various other thread functions ------
 
-    // -----------------------------------------------------------------------
-    //: Make the calling thread wait for the termination of this thread.
-    //
-    //! PRE: None.
-    //! POST: The caller blocks until this thread finishes its execution
-    //+       (i.e., calls the exit() method).  This routine may return
-    //+       immediately if this thread has already exited.
-    //
-    //! ARGS: status - Current state of the terminating thread when that
-    //+                thread calls the exit routine (optional).
-    //
-    //! RETURNS:  0 - Successful completion
-    //! RETURNS: -1 - Error
-    // -----------------------------------------------------------------------
+    /**
+     * Makes the calling thread wait for the termination of this thread.
+     *
+     * @pre None.
+     * @post The caller blocks until this thread finishes its execution
+     *       (i.e., calls the exit() method).  This routine may return
+     *       immediately if this thread has already exited.
+     *
+     * @param status Current state of the terminating thread when that
+     *               thread calls the exit routine (optional).
+     *
+     * @return 0 is returned if this thread is "joined" successfully.<br>
+     *         -1 is returned on an error condition.
+     */
     virtual int
     join (void** status = 0) {
         return pthread_join(mThread, status);
     }
 
-    // -----------------------------------------------------------------------
-    //: Resume the execution of a thread that was previously suspended using
-    //+ suspend().
-    //
-    //! PRE: This thread was previously suspended using the suspend() member
-    //+      function.
-    //! POST: This thread is sent the SIGCONT signal and is allowed to begin
-    //+       executing again.
-    //
-    //! RETURNS:  0 - Successful completion
-    //! RETURNS: -1 - Error
-    //
-    //! NOTE: This is not currently supported on HP-UX 10.20.
-    // -----------------------------------------------------------------------
+    /**
+     * Resumes the execution of a thread that was previously suspended using
+     * suspend().
+     *
+     * @pre This thread was previously suspended using the suspend() member
+     *      function.
+     * @post This thread is sent the SIGCONT signal and is allowed to begin
+     *       executing again.
+     *
+     * @return 0 is returned if this thread resumes execuation successfully.<br>
+     *         -1 is returned otherwise.
+     *
+     * @note This is not currently supported on HP-UX 10.20.
+     */
     virtual int
     resume (void) {
         return kill(SIGCONT);
     }
 
-    // -----------------------------------------------------------------------
-    //: Suspend the execution of this thread.
-    //
-    //! PRE: None.
-    //! POST: This thread is sent the SIGSTOP signal and is thus suspended
-    //+       from execution until the member function resume() is called.
-    //
-    //! RETURNS:  0 - Successful completion
-    //! RETURNS: -1 - Error
-    //
-    //! NOTE: This is not currently supported on HP-UX 10.20.
-    // -----------------------------------------------------------------------
+    /**
+     * Suspends the execution of this thread.
+     *
+     * @pre None.
+     * @post This thread is sent the SIGSTOP signal and is thus suspended
+     *       from execution until the member function resume() is called.
+     *
+     * @return 0 is returned if this thread is suspended successfully.<br>
+     *         -1 is returned otherwise.
+     *
+     * @note This is not currently supported on HP-UX 10.20.
+     */
     virtual int
     suspend (void) {
         return kill(SIGSTOP);
     }
 
-    // -----------------------------------------------------------------------
-    //: Get this thread's priority.
-    //
-    //! PRE: None.
-    //! POST: The priority of this thread is returned in the integer pointer
-    //+       variable.
-    //
-    //! ARGS: prio - Pointer to an int variable that will have the thread's
-    //+              priority stored in it.
-    //
-    //! RETURNS:  0 - Successful completion
-    //! RETURNS: -1 - Error
-    //
-    //! NOTE: This is only supported on systems that support thread priority
-    //+       scheduling in their pthreads implementation.
-    // -----------------------------------------------------------------------
+    /**
+     * Gets this thread's priority.
+     *
+     * @pre None.
+     * @post The priority of this thread is returned in the integer pointer
+     *       variable.
+     *
+     * @param prio Pointer to an int variable that will have the thread's
+     *             priority stored in it.
+     *
+     * @return 0 is returned if the priority was retrieved successfully.<br>
+     *         -1 is returned if the priority could not be read.
+     *
+     * @note This is only supported on systems that support thread priority
+     *       scheduling in their pthreads implementation.
+     */
     virtual int getPrio(VPRThreadPriority* prio);
 
-    // -----------------------------------------------------------------------
-    //: Set this thread's priority.
-    //
-    //! PRE: None.
-    //! POST: This thread has its priority set to the specified value.
-    //
-    //! ARGS: prio - The new priority for this thread.
-    //
-    //! RETURNS:  0 - Successful completion
-    //! RETURNS: -1 - Error
-    //
-    //! NOTE: This is only supported on systems that support thread priority
-    //+       scheduling in their pthreads implementation.
-    // -----------------------------------------------------------------------
+    /**
+     * Sets this thread's priority.
+     *
+     * @pre None.
+     * @post This thread has its priority set to the specified value.
+     *
+     * @param prio The new priority for this thread.
+     *
+     * @return 0 is returned if this thread's priority was set successfully.<br>
+     *         -1 is returned otherwise.
+     *
+     * NOTE: This is only supported on systems that support thread priority
+     *       scheduling in their pthreads implementation.
+     */
     virtual int setPrio(VPRThreadPriority prio);
 
-    // -----------------------------------------------------------------------
-    //: Set the CPU affinity for this thread (the CPU on which this thread
-    //+ will exclusively run).
-    //
-    //! PRE: The thread must have been set to be a system-scope thread.
-    //! POST: The CPU affinity is set or an error status is returned.
-    //
-    //! ARGS: cpu - The CPU on which this thread will run exclusively.
-    //
-    //! RETURNS:  0 - Successful completion
-    //! RETURNS: -1 - Error
-    //
-    //! NOTE: This is currently only available on IRIX 6.5 and is
-    //+       non-portable.
-    // -----------------------------------------------------------------------
+    /**
+     * Sets the CPU affinity for this thread (the CPU on which this thread
+     * will exclusively run).
+     *
+     * @pre The thread must have been set to be a system-scope thread.
+     * @post The CPU affinity is set or an error status is returned.
+     *
+     * @param cpu The CPU on which this thread will run exclusively.
+     *
+     * @return 0 is returned if the affinity is set successfully.<br>
+     *         -1 is returned otherwise.
+     *
+     * @note This is currently only available on IRIX 6.5 and is non-portable.
+     */
     virtual int
     setRunOn (int cpu) {
 #ifdef VPR_OS_IRIX
@@ -274,24 +287,24 @@ public:  // ----- Various other thread functions ------
 #endif
     }
 
-    // -----------------------------------------------------------------------
-    //: Get the CPU affinity for this thread (the CPU on which this thread
-    //+ exclusively runs).
-    //
-    //! PRE: The thread must have been set to be a system-scope thread, and
-    //+      a previous affinity must have been set using setRunOn().
-    //! POST: The CPU affinity for this thread is stored in the cur_cpu
-    //+       pointer.
-    //
-    //! ARGS: cur_cpu - The CPU affinity for this thread (set by a previous
-    //+                 call to setRunOn().
-    //
-    //! RETURNS:  0 - Successful completion
-    //! RETURNS: -1 - Error
-    //
-    //! NOTE: This is currently only available on IRIX 6.5 and is
-    //+       non-portable.
-    // -----------------------------------------------------------------------
+    /**
+     * Gets the CPU affinity for this thread (the CPU on which this thread
+     * exclusively runs).
+     *
+     * @pre The thread must have been set to be a system-scope thread, and
+     *      a previous affinity must have been set using setRunOn().
+     * @post The CPU affinity for this thread is stored in the cur_cpu
+     *       pointer.
+     *
+     * @param cur_cpu The CPU affinity for this thread (set by a previous
+     *                call to setRunOn().
+     *
+     * @return 0 is returned if the affinity is retrieved successfully.<br>
+     *         -1 is returned otherwise.
+     *
+     * @ntoe This is currently only available on IRIX 6.5 and is
+     *       non-portable.
+     */
     virtual int
     getRunOn (int* cur_cpu) {
 #ifdef VPR_OS_IRIX
@@ -312,21 +325,24 @@ public:  // ----- Various other thread functions ------
 #endif
     }
 
-    // -----------------------------------------------------------------------
-    //: Yield execution of the calling thread to allow a different blocked
-    //+ thread to execute.
-    //
-    //! PRE: None.
-    //! POST: The caller yields its execution control to another thread or
-    //+       process.
-    // -----------------------------------------------------------------------
+    /**
+     * Yields execution of the calling thread to allow a different blocked
+     * thread to execute.
+     *
+     * @pre None.
+     * @post The caller yields its execution control to another thread or
+     *       process.
+     */
     static void
     yield (void) {
         sched_yield();
     }
 
-    // -----------------------------------------------------------------------
-    // -----------------------------------------------------------------------
+    /**
+     * Causes the calling thread to sleep for the given number of microseconds.
+     *
+     * @param micro The number of microseconds to sleep.
+     */
     inline static int
     usleep (Uint32 micro) {
 #ifdef VPR_OS_Linux
@@ -337,33 +353,39 @@ public:  // ----- Various other thread functions ------
 #endif
     }
 
-    // -----------------------------------------------------------------------
-    // -----------------------------------------------------------------------
+    /**
+     * Causes the calling thread to sleep for the given number of milliseconds.
+     *
+     * @param milli The number of milliseconds to sleep.
+     */
     inline static int
     msleep (Uint32 milli) {
         return ThreadPosix::usleep(milli * 1000);
     }
 
-    // -----------------------------------------------------------------------
-    // -----------------------------------------------------------------------
+    /**
+     * Causes the calling thread to sleep for the given number of seconds.
+     *
+     * @param seconds The number of seconds to sleep.
+     */
     inline static int
     sleep (Uint32 seconds) {
         return ::sleep(seconds);
     }
 
-    // -----------------------------------------------------------------------
-    //: Send the specified signal to this thread (not necessarily SIGKILL).
-    //
-    //! PRE: None.
-    //! POST: This thread receives the specified signal.
-    //
-    //! ARGS: signum - The signal to send to the specified thread.
-    //
-    //! RETURNS:  0 - Successful completion
-    //! RETURNS: -1 - Error
-    //
-    //! NOTE: This is not currently supported on HP-UX 10.20.
-    // -----------------------------------------------------------------------
+    /**
+     * Sends the specified signal to this thread (not necessarily SIGKILL).
+     *
+     * @pre None.
+     * @post This thread receives the specified signal.
+     *
+     * @param signum The signal to send to the specified thread.
+     *
+     * @return 0 is returned if the signal was sent successfully.<br>
+     *         -1 is returned otherwise.
+     *
+     * @note This is not currently supported with Pthreads Draft 4.
+     */
     virtual int
     kill (int signum) {
 #ifdef _PTHREADS_DRAFT_4
@@ -376,37 +398,36 @@ public:  // ----- Various other thread functions ------
 #endif
     }
 
-    // -----------------------------------------------------------------------
-    //: Kill (cancel) this thread.
-    //
-    //! PRE: None.
-    //! POST: This thread is cancelled.  Depending on the cancellation
-    //+       attributes of the specified thread, it may terminate
-    //+       immediately, it may wait until a pre-defined cancel point to
-    //+       stop or it may ignore the cancel altogether.  Thus, immediate
-    //+       cancellation is not guaranteed.
-    //
-    //! NOTE: For the sake of clarity, it is probably better to use the
-    //+       cancel() routine instead of kill() because a two-argument
-    //+       version of kill() is also used for sending signals to threads.
-    //+       This kill() and cancel() do exactly the same thing.
-    // -----------------------------------------------------------------------
+    /**
+     * Kills (cancels) this thread.
+     *
+     * @pre None.
+     * @post This thread is cancelled.  Depending on the cancellation
+     *       attributes of the specified thread, it may terminate
+     *       immediately, it may wait until a pre-defined cancel point to
+     *       stop or it may ignore the cancel altogether.  Thus, immediate
+     *       cancellation is not guaranteed.
+     *
+     * @note For the sake of clarity, it is probably better to use the
+     *       cancel() routine instead of kill() because a two-argument
+     *       version of kill() is also used for sending signals to threads.
+     *       This kill() and cancel() do exactly the same thing.
+     */
     virtual void
     kill (void) {
         pthread_cancel(mThread);
     }
 
-    // -----------------------------------------------------------------------
-    //: Get a ptr to the thread we are in.
-    //
-    //! RETURNS: NULL - Thread is not in global table
-    //! RETURNS: NonNull - Ptr to the thread that we are running within
-    // -----------------------------------------------------------------------
+    /**
+     * Get a ptr to the thread we are in.
+     *
+     * @return NULL is returned if this thread is not in the global table.<br>
+     *         A non-NULL pointer is returned that points to the thread in
+     *         which we are currently running.
+     */
     static BaseThread* self(void);
 
-    // -----------------------------------------------------------------------
-    //: Provide a way of printing the process ID neatly.
-    // -----------------------------------------------------------------------
+    /// Provides a way of printing the process ID neatly.
     std::ostream&
     outStream (std::ostream& out) {
         out.setf(std::ios::right);
@@ -419,44 +440,39 @@ public:  // ----- Various other thread functions ------
 
 // All private member variables and functions.
 private:
-    pthread_t   mThread;        //: pthread_t data structure for this thread
-    int         mScope;         //: Scope (process or system) of this thread
+    pthread_t   mThread;        /**< pthread_t data structure for this thread */
+    int         mScope;         /**< Scope (process or system) of this thread */
 
     //void checkRegister(int status);
 
-    // -----------------------------------------------------------------------
-    // -----------------------------------------------------------------------
+    /// Converts a VPR thread priority to its Pthread equivalent.
     int vprThreadPriorityToPOSIX(const VPRThreadPriority priority);
 
-    // -----------------------------------------------------------------------
-    // -----------------------------------------------------------------------
+    /// Converts a VPR thread scope to its Pthread equivalent.
     int vprThreadScopeToPOSIX(const VPRThreadScope scope);
 
-    // -----------------------------------------------------------------------
-    // -----------------------------------------------------------------------
+    /// Converts a VPR thread state value to its Pthread equivalent.
     int vprThreadStateToPOSIX(const VPRThreadState state);
 
-    // -----------------------------------------------------------------------
-    // -----------------------------------------------------------------------
+    /// Converts a Pthread thread priority to its VPR equivalent.
     VPRThreadPriority posixThreadPriorityToVPR(const int priority);
 
-    // -----------------------------------------------------------------------
-    // -----------------------------------------------------------------------
+    /// Converts a Pthread thread scope to its VPR equivalent.
     VPRThreadScope posixThreadScopeToVPR(const int scope);
 
-    // -----------------------------------------------------------------------
-    // -----------------------------------------------------------------------
+    /// Converts a Pthread thread state value to its VPR equivalent.
     VPRThreadState posixThreadStateToVPR(const int state);
 
-    // -----------------------------------------------------------------------
-    //: Get a hash index for this thread.  This will always be a nonzero
-    //+ value.
-    //
-    //! PRE: None.
-    //! POST: The hash index for this thread is returned to the caller.
-    //
-    //! RETURNS: Nonzero - The hash index of this tread.
-    // -----------------------------------------------------------------------
+    /**
+     * Gets a hash index for this thread.  This will always be a non-zero
+     * value.
+     *
+     * @pre None.
+     * @post The hash index for this thread is returned to the caller.
+     *
+     * @return A non-zero value is returned giving the hash index of this
+     *         thread.
+     */
     inline thread_id_t
     hash (void) {
 #if defined(VPR_OS_IRIX)
@@ -467,18 +483,19 @@ private:
 #endif    /* VPR_OS_IRIX */
     }
 
-    // -----------------------------------------------------------------------
-    //: Get a hash index for the given thread.  This will always be a nonzero
-    //+ value.
-    //
-    //! PRE: None.
-    //! POST: The hash index for the given thread is returned to the caller.
-    //
-    //! ARGS: thread: A pthread_t structure whose hash index will be
-    //+       determined and returned.
-    //
-    //! RETURNS: Nonzero - The hash index of the given tread.
-    // -----------------------------------------------------------------------
+    /**
+     * Gets a hash index for the given thread.  This will always be a non-zero
+     * value.
+     *
+     * @pre None.
+     * @post The hash index for the given thread is returned to the caller.
+     *
+     * @param thread A pthread_t structure whose hash index will be
+     *               determined and returned.
+     *
+     * @return A non-zero value is returned giving the hash index of the given
+     *         thread.
+     */
     inline static thread_id_t
     hash (pthread_t thread) {
 #ifdef VPR_OS_IRIX
@@ -489,15 +506,16 @@ private:
 #endif
     }
 
-    // -----------------------------------------------------------------------
-    //: Get this thread's ID (i.e., its hash index for the thread table).  It
-    //+ will always be greater than 0.
-    //
-    //! PRE: None.
-    //! POST: The hash index ID for this thread is returned to the caller.
-    //
-    //! RETURNS: Nonzero - The hash index of this tread.
-    // -----------------------------------------------------------------------
+    /**
+     * Gets this thread's ID (i.e., its hash index for the thread table).  It
+     * will always be greater than 0.
+     *
+     * @pre None.
+     * @post The hash index ID for this thread is returned to the caller.
+     *
+     * @return A non-zero value is returned giving the hash index of this
+     *         thread.
+     */
     inline static thread_id_t
     gettid (void) {
         pthread_t me;
