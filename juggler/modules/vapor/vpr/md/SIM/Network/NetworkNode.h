@@ -48,6 +48,8 @@
 #include <map>
 #include <vpr/vpr.h>
 #include <vpr/Util/Assert.h>
+#include <vpr/Sync/Mutex.h>
+#include <vpr/Sync/Guard.h>
 #include <vpr/IO/Socket/SocketTypes.h>
 #include <boost/smart_ptr.hpp>
 
@@ -96,7 +98,7 @@ public:
     * use on the named port.
     */
    bool hasSocket(const vpr::Uint32 port,
-                  const vpr::SocketTypes::Type type) const;
+                  const vpr::SocketTypes::Type type);
 
    vpr::SocketImplSIM* getSocket(const vpr::Uint32 port,
                                  const vpr::SocketTypes::Type type);
@@ -151,6 +153,9 @@ private:
    typedef std::map<vpr::Uint32, vpr::SocketImplSIM*>  socket_map_t;
    socket_map_t mStreamSocketMap;   /**< Map of all the TCP type sockets on this node */
    socket_map_t mDgramSocketMap;    /**< Map of all the UDP type sockets on this node */
+
+   vpr::Mutex mStreamMapMutex;
+   vpr::Mutex mDgramMapMutex;
 };
 
 
