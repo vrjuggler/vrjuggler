@@ -40,6 +40,7 @@
 #include <vrj/Display/Projection.h>
 #include <jccl/Config/ConfigChunkPtr.h>
 
+#include <gmtl/Point.h>
 #include <gmtl/Vec.h>
 #include <gmtl/VecOps.h>
 
@@ -70,7 +71,8 @@ public:
 
    virtual void updateProjections();
 
-   void getCorners(gmtl::Vec3f& ll, gmtl::Vec3f& lr, gmtl::Vec3f& ur, gmtl::Vec3f& ul)
+   void getCorners(gmtl::Point3f& ll, gmtl::Point3f& lr, gmtl::Point3f& ur,
+                   gmtl::Point3f& ul)
    {
       ll = mLLCorner; lr = mLRCorner; ur = mURCorner; ul = mULCorner;
    }
@@ -110,7 +112,7 @@ protected:
 
 
 protected:
-   gmtl::Vec3f   mLLCorner, mLRCorner, mURCorner, mULCorner;  //: The corners in 3Space (for config)
+   gmtl::Point3f   mLLCorner, mLRCorner, mURCorner, mULCorner;  //: The corners in 3Space (for config)
    gmtl::Matrix44f mSurfaceRotation;                            //: surfMbase - rotation to base coordinate frame of the surface view plane
 
    // Deal with tracked surfaces (ie. HMD, movable walls, desks, etc)
@@ -120,7 +122,7 @@ protected:
 private:
          // These values are used to compute the coordinates of the view plane
          // in the transformed coord system of mSurfaceRotation
-   gmtl::Vec3f   mxLLCorner, mxLRCorner, mxURCorner, mxULCorner;    //: The corners transformed onto an x,y plane
+   gmtl::Point3f  mxLLCorner, mxLRCorner, mxURCorner, mxULCorner;    //: The corners transformed onto an x,y plane
 };
 
 };
