@@ -189,12 +189,33 @@ public:
         return m_local_addr;
     }
 
+    bool setLocalAddr(const InetAddr& addr)
+    {
+      if (this->m_open)
+       { return false; }
+       else
+          m_local_addr = addr;
+
+       return true;
+    }
+
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
     inline const InetAddr&
     getRemoteAddr (void) const {
         return m_remote_addr;
     }
+
+    bool setRemoteAddr(const InetAddr& addr)
+    {
+       if (this->m_open)
+       { return false; }
+       else
+          m_remote_addr = addr;
+
+       return true;
+    }
+
 
 protected:
     // ------------------------------------------------------------------------
