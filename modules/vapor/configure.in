@@ -375,6 +375,25 @@ if test "x$ac_cv_has_socklen_t" = "xno" ; then
     AC_DEFINE(socklen_t, int)
 fi
 
+# XXX: This is a hack to deal with sigset_t not being defined on IRIX when
+# -ansi is passed to the C compiler.
+vprsave_CFLAGS="$CFLAGS"
+CFLAGS=''
+
+# The following checks for availability of the sigset_t type.  Since it is
+# is included through signal.h, the usual AC_CHECK_TYPE method will not work.
+AC_CACHE_CHECK(for sigset_t, ac_cv_has_sigset_t,
+    AC_TRY_COMPILE([#include <signal.h> ],
+                   [ sigset_t var; ],
+                   ac_cv_has_sigset_t='yes',
+                   ac_cv_has_sigset_t='no'))
+
+CFLAGS="$vprsave_CFLAGS"
+
+if test "x$ac_cv_has_sigset_t" = "xno" ; then
+    AC_DEFINE(sigset_t, unsigned int)
+fi
+
 # The following checks for availability of the in_addr_t type.  Since it is
 # supposed to be defined in netinet/in.h, the usual AC_CHECK_TYPE method will
 # not work.
@@ -419,8 +438,9 @@ fi
 # -----------------------------------------------------------------------------
 AC_HEADER_STDC
 AC_HEADER_TIME
-AC_CHECK_HEADERS(bstring.h fcntl.h limits.h strings.h sys/file.h sys/ioctl.h \
-                 sys/time.h termios.h unistd.h sys/capability.h sys/stdsyms.h)
+AC_CHECK_HEADERS(bstring.h fcntl.h limits.h signal.h strings.h sys/file.h \
+                 sys/ioctl.h sys/time.h termios.h unistd.h sys/capability.h \
+                 sys/stdsyms.h)
 
 DPP_LANG_SAVE
 DPP_LANG_CPLUSPLUS
@@ -430,7 +450,8 @@ DPP_LANG_RESTORE
 # -----------------------------------------------------------------------------
 # Checks for library functions.
 # -----------------------------------------------------------------------------
-AC_CHECK_FUNCS(gettimeofday socket strerror)
+AC_CHECK_FUNCS(gettimeofday sigaction sigemptyset sigfillset sigaddset \
+               sigdelset sigismember socket strerror)
 
 _vpr_save_LIBS="$LIBS"
 AC_CHECK_FUNC(gethostbyname, SOCKET_LIB='',
