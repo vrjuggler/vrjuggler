@@ -252,7 +252,9 @@ public class FileControl {
 	JFileChooser chooser;
 
 	/* opens up a file requester... */
-	if (file.isDirectory())
+	if (file == null) 
+	    chooser = new JFileChooser();
+	else if (file.isDirectory())
 	    chooser = new JFileChooser(file);
 	else {
 	    //System.out.println ("File is " + file + "\n and parent is " + file.getParent());
@@ -416,6 +418,7 @@ public class FileControl {
 
 	    Core.perf_collection.removeAllData();
 	    Core.perf_collection.read (st, true);
+	    Core.perf_collection.file = f;
 	    return new String ("unnamed perf data file");
 	}
 	catch (FileNotFoundException e) {
@@ -425,6 +428,30 @@ public class FileControl {
 	catch (IOException e) {
 	    Core.consoleErrorMessage ("FileControl", "Loading error: " + e);
 	    return null;
+	}
+    }
+
+
+
+    public static String savePerfDataFile (VjPerf.PerfDataCollection col) {
+	File f = requestSaveFile (col.file);
+	if (f == null)
+	    return "";
+
+	try {
+	    DataOutputStream out = new DataOutputStream(new FileOutputStream(f));
+	    out.writeBytes ("VR Juggler FileConnect output gui_save\n");
+	    col.write(out);
+	    Core.consoleInfoMessage ("FileControl", "Saved PerfData file: " + f);
+	    col.file = f;
+	    /* do some fixing up if the name changed */
+	    //db.setFile (f);
+	    //return Core.renameChunkDB (db, f.getName());
+	    return f.getName();
+	}
+	catch (IOException e) {
+	    Core.consoleErrorMessage ("FileControl", "IOerror saving file " + f);
+	    return "";
 	}
     }
     
