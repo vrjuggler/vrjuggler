@@ -431,10 +431,17 @@ class ElementTree extends JTree implements DragGestureListener,
    {
       // Get the currently selected ConfigElement.
       TreePath path = this.getLeadSelectionPath();
+      
+      // Ensure that we have a valid selection path.
+      if (null == path)
+      {
+         return;
+      }
+      
       DefaultMutableTreeNode node = (DefaultMutableTreeNode)path.getLastPathComponent();
       Object temp = node.getUserObject();
 
-      //System.out.println("Action performed on a non ConfigElement node.");
+      // Make sure that we have a ConfigElement selected.
       if ( (temp instanceof ConfigElement) )
       {
          ConfigElement elm = (ConfigElement)temp;
