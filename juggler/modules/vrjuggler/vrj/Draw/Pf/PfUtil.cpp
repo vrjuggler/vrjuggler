@@ -45,10 +45,10 @@ namespace vrj
 gmtl::Matrix44f GetVjMatrix( const pfMatrix& perfMat )
 {
    gmtl::Matrix44f mat;
-   gmtl::Vec3f x_axis( 1,0,0 );
+   gmtl::Vec3f x_axis( 1.0f, 0.0f, 0.0f );
    mat.set( &(perfMat.mat[0][0]) );
-   gmtl::postMult(mat, gmtl::makeRot<gmtl::Matrix44f>(gmtl::deg2Rad(90), x_axis ));
-   gmtl::preMult(mat, gmtl::makeRot<gmtl::Matrix44f>(gmtl::deg2Rad(-90), x_axis ));
+   gmtl::postMult(mat, gmtl::makeRot<gmtl::Matrix44f>(gmtl::deg2Rad(90.0f), x_axis ));
+   gmtl::preMult(mat, gmtl::makeRot<gmtl::Matrix44f>(gmtl::deg2Rad(-90.0f), x_axis ));
 
    return mat;
 }
@@ -66,8 +66,8 @@ pfMatrix GetPfMatrix( const gmtl::Matrix44f& mat )
    float* floatPtr = const_cast<float *>( mat.mData );
    perf_mat.set( floatPtr );
 
-   perf_mat.preRot( -90, 1, 0, 0, perf_mat );
-   perf_mat.postRot( perf_mat, 90, 1, 0, 0 );
+   perf_mat.preRot( -90.0f, 1.0f, 0.0f, 0.0f, perf_mat );
+   perf_mat.postRot( perf_mat, 90.0f, 1.0f, 0.0f, 0.0f );
 
    return perf_mat;
 }
