@@ -63,7 +63,9 @@ void pfAppHandle::setScaleZeroToUnit(float percent)
 // Where percentage is the amount along the range
 void pfAppHandle::setScaleUnitToFull(float percent)
 {
-   //mAppXformDCS->setScale((percent*(1.0f-mUnitScaleFactor)) + mUnitScaleFactor);
+   float range = 1.0f-mUnitScaleFactor;
+   float new_scale = mUnitScaleFactor + (percent*range);
+   mAppXformDCS->setScale(new_scale);
 }
 
 // Set scale to the unit scale value
@@ -103,8 +105,9 @@ void pfSwitcherApp::registerApp(pfAppHandle appHandle)
 // Only consructs the parts that are not app specific
 void pfSwitcherApp::constructSceneGraphSkeleton()
 {
-   mRootNode      = new pfGroup;
-   mConstructDCS  = new pfDCS;
+   mRootNode         = new pfGroup;
+   mConstructDCS     = new pfDCS;
+   mConstructSwitch  = new pfSwitch;
 
    // ----- CONFIGURE CONSTRUCT MODEL ----- //
    // Load the construct model
@@ -118,11 +121,12 @@ void pfSwitcherApp::constructSceneGraphSkeleton()
       return;
    }
 
-   mRootNode->addChild(mConstructDCS);
+   mRootNode->addChild(mConstructSwitch);
+   mConstructSwitch->addChild(mConstructDCS);
    mConstructDCS->addChild(mConstructModel);
    mConstructDCS->setTrans(0.0f,0.0f,-1.0f);
 
-   // Add the sun to the root
+   // -- ADD SUN ---
    mSun = new pfLightSource;                 // Create the SUN
    mSun->setPos( 0.3f, 0.0f, 0.3f, 0.0f );
    mSun->setColor( PFLT_DIFFUSE,0.9f,0.9f,0.9f );
@@ -142,7 +146,18 @@ void pfSwitcherApp::removeAppGraph(pfAppHandle& handle)
    mRootNode->removeChild(handle.mAppSwitch);
 }
 
-      // ------ HELPERS ------ //
+// --------------------- //
+// ------ HELPERS ------ //
+// --------------------- //
+void pfSwitcherApp::switchConstructOn()
+{
+   mConstructSwitch->setVal(PFSWITCH_ON);
+}
+
+void pfSwitcherApp::switchConstructOff()
+{
+   mConstructSwitch->setVal(PFSWITCH_OFF);
+}
 
 // Is the application whose index is given active?
 // ie. Is it supposed to be updated by the callbacks
@@ -160,7 +175,7 @@ void pfSwitcherApp::setActiveApp(unsigned index)
    vjASSERT(index < mApps.size());
 
    vjDEBUG(vjDBG_ALL,0) << clrSetNORM(clrCYAN)
-                        << "pfSwitcher: Setting active app to: "
+                        << "pfSwitcher::setActiveApp Setting active app to: "
                         << mApps[index].mAppName << " idx:"
                         << index << endl << clrRESET << vjDEBUG_FLUSH;
 
@@ -169,7 +184,7 @@ void pfSwitcherApp::setActiveApp(unsigned index)
    if(mActiveApp != -1)
    {
       vjDEBUG(vjDBG_ALL,0) << clrSetNORM(clrCYAN)
-                        << "pfSwitcher: have old ap: "
+                        << "pfSwitcher::setActiveApp have old ap: "
                         << mApps[mActiveApp].mAppName << " idx:"
                         << mActiveApp << " Closing it.\n" << clrRESET << vjDEBUG_FLUSH;
       mApps[mActiveApp].switchOff();
@@ -217,17 +232,31 @@ void pfSwitcherApp::updateInteraction()
       // ------ STATE SWITCHING -------- //
    if(mCurState == RUN_SWITCHER)
    {
-      // RUN_SWITCHER [NextApp]/CHANGE_APP_OUT
-      if(next_btn)
+      if((next_btn) || (prev_btn))
       {
-         unsigned new_active = mActiveApp + 1;
-         if(new_active >= mApps.size())
+         // RUN_SWITCHER [NextApp]/CHANGE_APP_OUT
+         // RUN_SWITCHER [PrevApp]/CHANGE_APP_OUT
+         int new_active(mActiveApp);
+         if(next_btn)                        // nextApp
+            new_active += 1;
+         else if(prev_btn)                   // PrevApp
+            new_active -= 1;
+
+         // Correct for out of range values
+         if((unsigned)new_active >= mApps.size())
          { new_active = 0; }
+         else if(new_active < 0)
+         { new_active = (mApps.size()-1);}
+
          mAppToMakeActive = new_active;
          vjDEBUG(vjDBG_ALL,0) << clrOutBOLD(clrMAGENTA,"SELECTED New app: RUN_SWITCHER -> CHANGE_APP_OUT: ")
                               << "appToMakeCurrent:" << mApps[mAppToMakeActive].mAppName << " id:" << mAppToMakeActive << vjDEBUG_FLUSH;
-
          setState(CHANGE_APP_OUT);
+      }
+      else if(select_btn)
+      {
+         // RUN_SWITCHER [select_btn]/SWITCH_IN
+         setState(SWITCH_IN);
       }
    }
    else if(mCurState == CHANGE_APP_OUT)
@@ -259,15 +288,23 @@ void pfSwitcherApp::updateInteraction()
    }
    else if(mCurState == SWITCH_IN)
    {
-
+      // No keypress allowed
+      // Update the switch transition
+      updateSwitchTransIn();           // This may switch state to: RUN_APP
    }
    else if(mCurState == RUN_APP)
    {
-
+      // RUN_APP [select_btn]/SWITCH_OUT
+      if(select_btn)    // While in application, selected to come out
+      {
+         setState(SWITCH_OUT);
+      }
    }
    else if(mCurState == SWITCH_OUT)
    {
-
+      // No keypress allowed
+      // Update the switch transition
+      updateSwitchTransOut();          // This may switch state to: RUN_SWITCHER
    }
 
 }
@@ -307,10 +344,14 @@ void pfSwitcherApp::setState(SwitcherState newState)
    }
    else if(newState == RUN_APP)
    {
+      switchConstructOff();                     // Don't need to display construct any more
+      mApps[mActiveApp].mApp->setFocus(true);   // Give the application focus
       mCurState = newState;
    }
    else if(newState == SWITCH_OUT)
    {
+      switchConstructOn();                      // We need to display it again
+      mApps[mActiveApp].mApp->setFocus(false);  // It is losing focus
       mCurState = newState;
       initSwitchTransOut();
    }
@@ -326,24 +367,54 @@ void pfSwitcherApp::setState(SwitcherState newState)
 //       If transition is complete ==> RUN_APP state
 void pfSwitcherApp::updateSwitchTransIn()
 {
-   ;
+   // Update the percentage complete
+   mTransIn += (mClock.timeInstant/ mSwitchTransLength);
+   vjDEBUG(vjDBG_ALL,0) << "AppChangeIn: " << mTransIn << endl << vjDEBUG_FLUSH;
+
+   // If not complete, Update model based on that information
+   // Else if complete, Stop transition and change state ==> RUN_APP
+   if(mTransIn < 1.0f)  // NOT DONE
+   {
+      mApps[mActiveApp].setScaleUnitToFull(mTransIn);
+   }
+   else                 // DONE
+   {
+      mApps[mActiveApp].setFullScale();
+      setState(RUN_APP);
+   };
 }
 
 void pfSwitcherApp::initSwitchTransIn()
 {
-   ;
+   mTransIn = 0.0f;                                   // Initialize transtion value
+   mApps[mActiveApp].setScaleUnitToFull(mTransIn);    // Set the initial scale;
 }
 
 // Update transition for switching apps out
 // POST: Scene graph is modified for transition
-//       If transition is complete ==> RUN state
+//       If transition is complete ==> RUN_SWITCHER state
 void pfSwitcherApp::updateSwitchTransOut()
 {
-   ;
+   // Update the percentage of transition completed
+   mTransOut += (mClock.timeInstant/mSwitchTransLength);
+
+   // If not complete, Update model based on that information
+   // Else if complete, Stop transition and change state ==> RUN_SWITCHER
+   if(mTransOut < 1.0f) // NOT DONE
+   {
+      mApps[mActiveApp].setScaleUnitToFull(1.0f-mTransOut);
+   }
+   else                 // DONE
+   {
+      mApps[mActiveApp].setUnitScale();   // Verify that we are at unit scale
+      mApps[mActiveApp].mApp->reset();    // Reset the application that we just used
+      setState(RUN_SWITCHER);
+   };
 }
 void pfSwitcherApp::initSwitchTransOut()
 {
-   ;
+   mTransOut = 0.0f;                                        // Initialize tranition value
+   mApps[mActiveApp].setScaleUnitToFull(1.0f-mTransOut);    // Set the initial scale;
 }
 
 // Update transition for changing apps in
@@ -352,7 +423,7 @@ void pfSwitcherApp::initSwitchTransOut()
 void pfSwitcherApp::updateChangeAppTransIn()
 {
    // Update the percentage complete
-   mTransIn += (mClock.timeInstant/ mTransLength);
+   mTransIn += (mClock.timeInstant/ mChangeTransLength);
    vjDEBUG(vjDBG_ALL,0) << "AppTransIn: " << mTransIn << endl << vjDEBUG_FLUSH;
 
    // If not complete, Update model based on that information
@@ -380,7 +451,7 @@ void pfSwitcherApp::initChangeAppTransIn()
 void pfSwitcherApp::updateChangeAppTransOut()
 {
    // Update the percentage of transition completed
-   mTransOut += (mClock.timeInstant/mTransLength);
+   mTransOut += (mClock.timeInstant/mChangeTransLength);
 
    // If not complete, Update model based on that information
    // Else if complete, Stop transition and change state ==> CHANGE_APP
