@@ -30,6 +30,7 @@ vjConnect::vjConnect(int s, const std::string& _name,
     read_connect_thread = NULL;
     write_connect_thread = NULL;
     output.attach(fd);
+    read_die = write_die = false;
 
     // we need to add a chunk describing ourself
     // THIS IS A HUGE UGLY HACK! THERE SHOULD BE A CLEANER WAY FOR
@@ -57,6 +58,7 @@ vjConnect::vjConnect(vjConfigChunk* c): output() {
     //readable = c->getProperty ("Readable");
     mode = (vjConnectMode)(int)c->getProperty ("Mode");
 
+    read_die = write_die = false;
     read_connect_thread = NULL;
     write_connect_thread = NULL;
     switch (mode) {
@@ -84,16 +86,25 @@ vjConnect::vjConnect(vjConfigChunk* c): output() {
 
 
 vjConnect::~vjConnect() {
-    if (read_connect_thread) {
-        read_connect_thread->kill();
-	delete read_connect_thread;
-    }
-    if (write_connect_thread) {
-	write_connect_thread->kill();
-	delete write_connect_thread;
-    }
+    //cout << "deleting vjConnect..." << flush;
+//      if (read_connect_thread) {
+//          read_connect_thread->kill();
+//  	//delete read_connect_thread;
+//      }
+//      if (write_connect_thread) {
+//  	write_connect_thread->kill();
+//  	//delete write_connect_thread;
+//      }
 
-    close (fd);
+    //    close(fd);
+    stopProcess();
+    //close(fd);
+//      read_die = write_die = true;
+//      while (read_connect_thread || write_connect_thread)
+//  	usleep (10);
+
+    //close (fd);
+    //cout << "finished" << endl;
 }
 
 
@@ -104,7 +115,8 @@ bool vjConnect::startProcess() {
 
    bool success = true;
 
-   shutdown = false;
+   read_die = write_die = false;
+   //shutdown = false;
    // Create a new thread to handle the control
 
    if (mode == VJC_OUTPUT || mode == VJC_INTERACTIVE)
@@ -133,7 +145,13 @@ bool vjConnect::startProcess() {
 
 bool vjConnect::stopProcess() {
     // should use shutdown
-    shutdown = true;
+    read_die = write_die = true;
+    if (read_connect_thread)
+	read_connect_thread->kill();
+    while (write_connect_thread) {
+	cout << "waiting to die" << endl;
+	usleep(100);
+    }
     return true;
 }
 
@@ -192,17 +210,25 @@ void vjConnect::removeTimedUpdate (vjTimedUpdate* _tu) {
 
 //----------------- PRIVATE utility functions ---------------------------
 
+void sighandle (int i) {
+    cout << "foo" << endl;
+}
+
 void vjConnect::readControlLoop(void* nullParam) {
    vjDEBUG(vjDBG_ENV_MGR,2) << "vjConnect " << name
 			    << " started read control loop.\n"
 			    << vjDEBUG_FLUSH;
+   signal (SIGUSR1, sighandle);
    ifstream fin(fd);
-
-   while (!shutdown) {
-       if (fin.eof())
+   cout << "starting read control loop" << endl;
+   while (!read_die) {
+       if (!fin || fin.eof())
 	   break;
        readCommand (fin);
+       cout << "read returned" << endl;
    }
+   cout << "ending read control loop" << endl;
+   read_connect_thread = NULL;
 }
 
 
@@ -215,7 +241,7 @@ void vjConnect::writeControlLoop(void* nullParam) {
 			    << " started write control loop.\n"
 			    << vjDEBUG_FLUSH;
 
-   while (!shutdown) {
+   while (!write_die) {
        usleep (500000); // half a sec - find a better way to do this...
 
        commands_mutex.acquire();
@@ -244,7 +270,8 @@ void vjConnect::writeControlLoop(void* nullParam) {
        commands_mutex.release();
 
    } // end main loop
-
+   cout << "write control loop ending" << endl;
+   write_connect_thread = NULL;
 }
 
 

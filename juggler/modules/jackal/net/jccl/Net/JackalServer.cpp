@@ -21,7 +21,8 @@
 vjEnvironmentManager::vjEnvironmentManager():
                           connections(),
                           //updaters(),
-                          perf_buffers() {
+                          perf_buffers(),
+                          connections_mutex() {
 
     /* I want some hardcoded defaults, yes? */
     Port = 4450;
@@ -39,7 +40,9 @@ vjEnvironmentManager::vjEnvironmentManager():
 
 vjEnvironmentManager::~vjEnvironmentManager() {
     rejectConnections();
+    connections_mutex.acquire();
     killConnections();
+    connections_mutex.release();
 }
 
 
@@ -79,10 +82,11 @@ void vjEnvironmentManager::removePerfDataBuffer (vjPerfDataBuffer *b) {
 
 
 void vjEnvironmentManager::sendRefresh() {
+    connections_mutex.acquire();
     for (int i = 0; i < connections.size(); i++) {
 	connections[i]->sendRefresh();
     }
-
+    connections_mutex.release();
 }
 
 
@@ -105,6 +109,8 @@ bool vjEnvironmentManager::configAdd(vjConfigChunk* chunk) {
 	if ((newport != Port) || (configured_to_accept != isAccepting()))
 	    networkingchanged = true;
 	perf_target_name = (std::string)chunk->getProperty ("PerformanceTarget");
+	connections_mutex.acquire();
+	
 	vjConnect* new_perf_target = getConnect(perf_target_name);
 	if (new_perf_target != perf_target)
 	    setPerformanceTarget (NULL);
@@ -119,6 +125,7 @@ bool vjEnvironmentManager::configAdd(vjConfigChunk* chunk) {
 		killConnections();
 	}
 	setPerformanceTarget(getConnect(s));
+	connections_mutex.release();
 	
 	return true;
     }
@@ -139,10 +146,12 @@ bool vjEnvironmentManager::configAdd(vjConfigChunk* chunk) {
 				       << vjDEBUG_FLUSH;
 	    // it's new to us
 	    vjConnect* vn = new vjConnect (chunk);
+	    connections_mutex.acquire();
 	    connections.push_back (vn);
 	    vn->startProcess();
 	    if (!vjstrcasecmp (vn->getName(), perf_target_name))
 		setPerformanceTarget (vn);
+	    connections_mutex.release();
 	}
 	return true;
     }
@@ -174,7 +183,9 @@ bool vjEnvironmentManager::configRemove(vjConfigChunk* chunk) {
 			       chunk->getProperty ("Name"))) {
 		delete (current_perf_config);
 		current_perf_config = NULL;
+		connections_mutex.acquire();
 		deactivatePerfBuffers ();
+		connections_mutex.release();
 	    }
 	}
 	return true;
@@ -182,10 +193,12 @@ bool vjEnvironmentManager::configRemove(vjConfigChunk* chunk) {
     else if (!vjstrcasecmp (s, "FileConnect")) {
 	cout << "removing fileconnect named " << flush
 	     << chunk->getProperty ("Name") << endl;
+	connections_mutex.acquire();
  	vjConnect* c = getConnect (chunk->getProperty ("Name"));
  	if (c) {
  	    removeConnect (c);
  	}
+	connections_mutex.release();
 	cout << "done fileconnect remove" << endl;
 	return true;
     }
@@ -209,6 +222,7 @@ bool vjEnvironmentManager::configCanHandle(vjConfigChunk* chunk) {
 
 //-------------------- PRIVATE MEMBER FUNCTIONS -------------------------
 
+// should only be called when we own connections_mutex
 void vjEnvironmentManager::removeConnect (vjConnect* con) {
     if (!con)
 	return;
@@ -224,7 +238,7 @@ void vjEnvironmentManager::removeConnect (vjConnect* con) {
 }
 
 
-
+// should only be called when we own connections_mutex
 void vjEnvironmentManager::setPerformanceTarget (vjConnect* con) {
     if (con == perf_target)
 	return;
@@ -268,13 +282,16 @@ void vjEnvironmentManager::controlLoop (void* nullParam) {
 	char name[128];
 	sprintf (name, "Network Connect %d", servsock);
 	connection = new vjConnect (servsock, (std::string)name);
+	connections_mutex.acquire();
 	connections.push_back( connection );
 	connection->startProcess();
+	connections_mutex.release();
     }
 }
 
 
 
+// should only be called while we have the connections mutex...
 void vjEnvironmentManager::deactivatePerfBuffers () {
     std::vector<vjPerfDataBuffer*>::iterator i;
     for (i = perf_buffers.begin(); i != perf_buffers.end(); i++) {
@@ -285,17 +302,21 @@ void vjEnvironmentManager::deactivatePerfBuffers () {
 }
 
 
+// should only be called while we own connections_mutex
 void vjEnvironmentManager::activatePerfBuffers () {
     // activates all perf buffers configured to do so
     // this is still a bit on the big and bulky side.
 
+    if (perf_buffers.empty())
+	return;
+
+    //connections_mutex.acquire();
+
     if (perf_target == NULL || current_perf_config == NULL) {
+	//connections_mutex.release();
 	deactivatePerfBuffers();
 	return;
     }
-
-    if (perf_buffers.empty())
-	return;
 
     std::vector<vjVarValue*> v = current_perf_config->getAllProperties ("TimingTests");
     std::vector<vjPerfDataBuffer*>::const_iterator b;
@@ -325,6 +346,7 @@ void vjEnvironmentManager::activatePerfBuffers () {
     for (val = v.begin(); val != v.end(); val++) {
 	delete (*val);
     }
+    //connections_mutex.release();
 
 }
 
@@ -373,21 +395,22 @@ bool vjEnvironmentManager::rejectConnections () {
 	listen_thread = NULL;
 	close(listen_socket);
     }
-
-
     return 1;
 }
 
 
 
+// should only be called while we own connections_mutex
 void vjEnvironmentManager::killConnections() {
     int i;
 
+    //connections_mutex.acquire();
     for (i = 0; i < connections.size(); i++) {
 	connections[i]->stopProcess();
 	delete (connections[i]);
     }
     connections.erase (connections.begin(), connections.end());
+    //connections_mutex.release();
 }
 
 
