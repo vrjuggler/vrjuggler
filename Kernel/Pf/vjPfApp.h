@@ -4,15 +4,17 @@
 #include <config.h>
 #include <Performer/pf/pfScene.h>
 #include <Kernel/vjApp.h>
-#include <Kernel/vjKernel.h>
+//#include <Kernel/vjKernel.h>
+class vjKernel;
+#include <Kernel/Pf/vjPfDrawManager.h>
 
 //-------------------------------------------------------------
 //: Encapulates an actual Performer application.
 //
-//	This class defines the class that Performer 
-//  application classes should be derived from.  The interface 
+//	This class defines the class that Performer
+//  application classes should be derived from.  The interface
 //  given is the interface that the System expects in order to
-//  interface with the application.  
+//  interface with the application.
 //
 // @author Allen Bierbaum
 //  Date: 9-8-97
@@ -20,7 +22,7 @@
 class vjPfApp : public vjApp
 {
 public:
-   vjPfApp(vjKernel* kern) : vjApp(kern) 
+   vjPfApp(vjKernel* kern) : vjApp(kern)
    {
       api.setPerformer();  // Tell everyone that we are Performer
    }
@@ -57,6 +59,12 @@ public:
       chan->clear();       // Clear the channel
       pfDraw();            // Draw the channel
    }
+
+public:  // --- Factory functions --- //
+   //: Get the DrawManager to use
+   // Returns the ogl draw manager
+   virtual vjDrawManager*    getDrawManager()
+   { return vjPfDrawManager::instance(); }
 };
- 
+
 #endif

@@ -4,6 +4,8 @@
 #include <config.h>
 #include <Kernel/vjApp.h>
 
+#include <Kernel/GL/vjGlDrawManager.h>
+
 #include <Kernel/vjKernel.h>
 #include <vector.h>
 
@@ -43,6 +45,12 @@ public:
    //! POST: Application has completed in initialization the user wishes
    virtual void contextInit()
    {;}
+
+public:  // --- Factory functions --- //
+   //: Get the DrawManager to use
+   // Returns the ogl draw manager
+   virtual vjDrawManager*    getDrawManager()
+   { return vjGlDrawManager::instance(); }
 };
 
 

@@ -27,11 +27,10 @@ vpath %.o ${OBJDIR}
 #------------------------
 
 OGL_API		:= @OPENGL_API@
-OGL_SRCS 	:= vjGlAPIFactory.C	\
-                   vjGlDrawManager.C	\
+OGL_SRCS 	:= vjGlDrawManager.C	\
                    vjGlPipe.C		\
                    vjGlWindow.C
-DEPEND_SRCS	:= 
+DEPEND_SRCS	:=
 
 ifeq ($(OGL_API),Y)
     DEPEND_SRCS += $(OGL_SRCS)

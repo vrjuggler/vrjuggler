@@ -11,6 +11,7 @@
 #endif
 
 #include <Kernel/GL/vjGlPipe.h>
+#include <Kernel/GL/vjGlApp.h>
 #include <Threads/vjThread.h>
 #include <Sync/vjGuard.h>
 #include <Kernel/vjDebug.h>

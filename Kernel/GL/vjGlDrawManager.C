@@ -4,9 +4,18 @@
 #include <Kernel/vjDisplayManager.h>
 #include <Kernel/vjKernel.h>
 #include <Kernel/vjSimulator.h>
-
+#include <Kernel/GL/vjGlApp.h>
 
 vjGlDrawManager* vjGlDrawManager::_instance = NULL;
+
+
+//: Set the app the draw should interact with.
+void vjGlDrawManager::setApp(vjApp* _app)
+{ app = dynamic_cast<vjGlApp*>(_app);}
+
+//: Return the app we are rednering
+vjGlApp* vjGlDrawManager::getApp()
+{ return app; }
 
     /**
      * Function to config API specific stuff.
