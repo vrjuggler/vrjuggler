@@ -52,7 +52,8 @@ void PerformanceCategories::addCategory (const vpr::GUID& catId, const std::stri
    // the debug categories are fully initialized.
 //          std::cout << "Adding category named '" << name << "' at " << &catId 
 //              << ".\n";
-   mCategories.insert( std::pair<const vpr::GUID*,CategoryInfo>(&catId, CategoryInfo(name, false)));
+   mCategories.insert( std::pair<vpr::GUID, CategoryInfo>(catId,
+                                                          CategoryInfo(name, false)));
    //updateAllowedCategories();   
 }
 
@@ -97,7 +98,7 @@ bool PerformanceCategories::isCategoryActive (const vpr::GUID& category)
       return false;
    }
    
-   category_map_t::iterator cat = mCategories.find(&category);
+   category_map_t::iterator cat = mCategories.find(category);
    vprASSERT(cat != mCategories.end());  // cat is valid
    return (*cat).second.mActive;   
 }
