@@ -273,6 +273,13 @@ void vjMatrix::preTrans(float _x, float _y, float _z, vjMatrix&  _m)
     transMat.postMult(_m);
     *this = transMat;	
 }
+
+//: Pre translate a matrix
+//!POST: mat' = trans(_x,_y,_z) * _m
+void vjMatrix::preTrans(vjVec3& _trans, vjMatrix&  _m)
+{ preTrans(_trans.vec[0], _trans.vec[1], _trans.vec[2], _m); }
+
+
     /// mat = _m * trans(_x,_y,_z)
 void vjMatrix::postTrans(const vjMatrix&  _m, float _x, float _y, float _z)
 {
@@ -281,6 +288,10 @@ void vjMatrix::postTrans(const vjMatrix&  _m, float _x, float _y, float _z)
     transMat.preMult(_m);
     *this = transMat;
 }
+
+//!POST: mat' = _m * trans(_x,_y,_z)
+void vjMatrix::postTrans(const vjMatrix&  _m, vjVec3& _trans)
+{ postTrans(_m, _trans.vec[0], _trans.vec[1], _trans.vec[2]); }
 
 void vjMatrix::preRot(float _degrees, vjVec3& axis, vjMatrix&  _m)
 {
