@@ -46,6 +46,7 @@ import javax.swing.event.TreeModelListener;
 import javax.swing.tree.*;
 import javax.swing.border.*;
 import org.vrjuggler.tweek.beans.*;
+import org.vrjuggler.tweek.beans.loader.BeanJarClassLoader;
 
 
 /**
@@ -130,7 +131,7 @@ public class BeanIconViewer extends DefaultBeanModelViewer
 
       try
       {
-         m_home_button.setIcon(new ImageIcon(ClassLoader.getSystemResource(icon_name)));
+         m_home_button.setIcon(new ImageIcon(BeanJarClassLoader.instance().getResource(icon_name)));
       }
       catch (NullPointerException e)
       {
@@ -155,7 +156,7 @@ public class BeanIconViewer extends DefaultBeanModelViewer
 
       try
       {
-         m_back_button.setIcon(new ImageIcon(ClassLoader.getSystemResource(icon_name)));
+         m_back_button.setIcon(new ImageIcon(BeanJarClassLoader.instance().getResource(icon_name)));
       }
       catch (NullPointerException e)
       {
@@ -180,7 +181,7 @@ public class BeanIconViewer extends DefaultBeanModelViewer
 
       try
       {
-         m_forw_button.setIcon(new ImageIcon(ClassLoader.getSystemResource(icon_name)));
+         m_forw_button.setIcon(new ImageIcon(BeanJarClassLoader.instance().getResource(icon_name)));
       }
       catch (NullPointerException e)
       {
@@ -427,7 +428,7 @@ public class BeanIconViewer extends DefaultBeanModelViewer
 
       try
       {
-         folder_icon.setIcon(new ImageIcon(ClassLoader.getSystemResource(icon_name)));
+         folder_icon.setIcon(new ImageIcon(BeanJarClassLoader.instance().getResource(icon_name)));
       }
       catch (NullPointerException e)
       {
@@ -451,7 +452,7 @@ public class BeanIconViewer extends DefaultBeanModelViewer
 
          try
          {
-            panel_icon.setIcon(new ImageIcon(ClassLoader.getSystemResource(icon_name)));
+            panel_icon.setIcon(new ImageIcon(BeanJarClassLoader.instance().getResource(icon_name)));
          }
          catch (NullPointerException e)
          {
