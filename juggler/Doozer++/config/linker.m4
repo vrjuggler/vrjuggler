@@ -1,5 +1,5 @@
 dnl ************* <auto-copyright.pl BEGIN do not edit this line> *************
-dnl Doozer++ is (C) Copyright 2000-2004 by Iowa State University
+dnl Doozer++ is (C) Copyright 2000-2005 by Iowa State University
 dnl
 dnl Original Author:
 dnl   Patrick Hartling
@@ -21,8 +21,8 @@ dnl Boston, MA 02111-1307, USA.
 dnl
 dnl -----------------------------------------------------------------
 dnl File:          linker.m4,v
-dnl Date modified: 2004/07/02 11:35:54
-dnl Version:       1.9
+dnl Date modified: 2005/01/08 22:44:39
+dnl Version:       1.10
 dnl -----------------------------------------------------------------
 dnl ************** <auto-copyright.pl END do not edit this line> **************
 
@@ -43,7 +43,7 @@ dnl                            GNU ld (as determined by DPP_LINKER_IS_GNU_LD).
 dnl                            It will be set to "no" otherwise.
 dnl ===========================================================================
 
-dnl linker.m4,v 1.9 2004/07/02 11:35:54 patrickh Exp
+dnl linker.m4,v 1.10 2005/01/08 22:44:39 patrickh Exp
 
 dnl ---------------------------------------------------------------------------
 dnl Finds the platform-specific tool used for linking object files.  The

@@ -1,5 +1,5 @@
 dnl ************* <auto-copyright.pl BEGIN do not edit this line> *************
-dnl Doozer++ is (C) Copyright 2000-2004 by Iowa State University
+dnl Doozer++ is (C) Copyright 2000-2005 by Iowa State University
 dnl
 dnl Original Author:
 dnl   Patrick Hartling
@@ -28,8 +28,8 @@ dnl Boston, MA 02111-1307, USA.
 dnl
 dnl -----------------------------------------------------------------
 dnl File:          abi.m4,v
-dnl Date modified: 2004/07/02 11:35:54
-dnl Version:       1.16
+dnl Date modified: 2005/01/08 22:44:39
+dnl Version:       1.17
 dnl -----------------------------------------------------------------
 dnl ************** <auto-copyright.pl END do not edit this line> **************
 
@@ -74,7 +74,7 @@ dnl                    that Autconf performs.
 dnl     DPP_ABI_TYPE - The argument given to --with-abi.
 dnl ===========================================================================
 
-dnl abi.m4,v 1.16 2004/07/02 11:35:54 patrickh Exp
+dnl abi.m4,v 1.17 2005/01/08 22:44:39 patrickh Exp
 
 dnl ---------------------------------------------------------------------------
 dnl Define a macro DPP_ABI_CFG for setting up the configuration parameters
