@@ -96,7 +96,7 @@ SoundFactory::SoundFactory()
          << clrOutBOLD(clrYELLOW, "WARNING:")
          << " SNX_BASE_DIR environment variable not set!\n" << vprDEBUG_FLUSH;
       vprDEBUG_NEXT(snxDBG, vprDBG_WARNING_LVL)
-         << "Plug-in loading may fail.\n" << vprDEBUG_FLUSH;
+         << "Sonix plug-in loading may fail.\n" << vprDEBUG_FLUSH;
    }
 
 #if defined(_ABIN32)
