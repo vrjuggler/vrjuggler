@@ -102,14 +102,14 @@ public:
    const float& scalar() const;
 
    //: return the vector component
-   vjVec3 vector() const;
+   const vjVec3 vector() const;
 
    //: returns the quaternion's norm (dot product)
    // defined as sum of squares of all quat components
    float norm() const;
      
    //: returns the quaternion's magnitude (also called absolute)
-   // defined as the norm of all four quaternion components
+   // defined as the square root of the norm
    float length() const;
    
    //: set self to the complex conjugate of self.
@@ -197,6 +197,11 @@ public:
    void meanTangent( const vjQuat &q1, const vjQuat &q2, const vjQuat &q3 );
    
    //: spherical linear interpolation
+   // set self to the interpolated quat                             <BR>
+   // t: is the interpolation param between [0..1]                  <BR>
+   //!POST: if t == 0.0, then self is set to q1                     <BR>
+   //!POST: if 0 < t < 1, then self is set to interpolated result   <BR>
+   //!POST: if t == 1.0, then self is set to q2                     <BR>
    void slerp( float t, const vjQuat& q1, const vjQuat& q2 );
    
    
@@ -206,46 +211,46 @@ public:
    vjQuat operator*( const vjQuat& quat ) const;
    
    //: multiply by a pure quaternion (only vector, scalar component == 0)
-   //  returns a pure quaternion as temporary
+   //  returns a pure quaternion as temporary                       <BR>
    // NOTE: a pure quaternion is one with scalar component set to 0
 	//!PRE: give a pure quaternion for "pure_quat"
    //!POST: pure quaternion = self * pure_quat 
    vjVec3 operator*( const vjVec3& pure_quat ) const;
    
-   // mult by scalar 
-   // NOTE: less efficient, use mult() instead
+   //: mult by scalar 
+   // NOTE: less efficient (returns a copy), use mult() instead (faster)
 	vjQuat operator*( float s ) const;
    
-   // multiply by inverse quat.
+   //: multiply by inverse quat.
    // NOTE: less efficient, use div() instead
 	vjQuat operator/( const vjQuat& quat ) const;
    
-   // mult by inverse scalar.
+   //: mult by inverse scalar.
    //!POST: returns a temporary == self scaled by s
    vjQuat operator/( float s ) const;
 
-   // do an "add" of all quat components
+   //: do an "add" of all quat components
    // TODO: add description for what this means geometrically
    vjQuat operator+( const vjQuat& quat ) const;
    
-	// do a "subtract" of all quat components
+	//: do a "subtract" of all quat components
    // TODO: add description for what this means geometrically
    vjQuat operator-( const vjQuat& quat ) const;
    
 public:
-   // Assignment operator *=
+   //: Assignment operator *=
    vjQuat& operator*=( const vjQuat& quat );
 
-   // Assignment operator /=
+   //: Assignment operator /=
    vjQuat& operator/=( const vjQuat& quat );
    
-   // does self == quat?
-   // return true if self == quat
-   // return false if self != quat
+   //: does self == quat?
+   //  return true if self == quat                                 <BR>
+   //  return false if self != quat
    bool operator==( const vjQuat& quat );
    
-	// does self != quat?
-   // return true if self != quat
+	//: does self != quat?
+   // return true if self != quat                                  <BR>
    // return false if self == quat
    bool operator!=( const vjQuat& quat );
    
@@ -266,13 +271,13 @@ public:
    friend std::ostream& operator<<( std::ostream& out, const vjQuat& q );
    
    //: quaternion data access for external function use (like quat to matrix)
-   // non-const version
+   // non-const version                                           <BR>
    // use VJ_W, VJ_X, VJ_Y, or VJ_Z to access each component
    //
    float& operator[]( int x );
    
    //: quaternion data access for external function use (like quat to matrix)
-   // const version
+   // const version                                               <BR>
    // use VJ_W, VJ_X, VJ_Y, or VJ_Z to access each component
    //
    const float& operator[]( int x ) const;
@@ -291,7 +296,7 @@ private:
 inline const float& vjQuat::scalar() const { return vec[VJ_W]; }
 
 //: return the vector component
-inline vjVec3 vjQuat::vector() const { return vjVec3( vec[VJ_X], vec[VJ_Y], vec[VJ_Z] ); }
+inline const vjVec3 vjQuat::vector() const { return vjVec3( vec[VJ_X], vec[VJ_Y], vec[VJ_Z] ); }
 
 //: quaternion data access for external function use (like quat to matrix)
 // non-const version
