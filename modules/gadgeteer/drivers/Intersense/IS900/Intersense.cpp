@@ -42,13 +42,14 @@
 // Date: 4-22-99
 //===============================================================
 #include <vjConfig.h>
+
+#include <strstream>
+#include <fstream>
+
 #include <Input/vjPosition/vjIsense.h>
 #include <Math/vjCoord.h>
 #include <Math/vjQuat.h>
 #include <Kernel/vjDebug.h>
-
-#include <strstream.h>
-#include <fstream.h>
 
 // Helper to return the index for theData array
 // given the stationNum we are dealing with and the bufferIndex
@@ -89,8 +90,8 @@ bool vjIsense::config(vjConfigChunk *c)
 
 // load an init script for the tracker and then pass it to mTracker
     char* filename = c->getProperty("script").cstring();
-    strstream	script;
-    ifstream	scriptFile;
+    std::strstream	script;
+    std::ifstream	scriptFile;
     scriptFile.open(filename);
     script<<scriptFile.rdbuf();
     mTracker.setScript(script.str());
