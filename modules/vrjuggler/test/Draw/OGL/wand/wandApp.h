@@ -40,8 +40,8 @@
 
 #include <vrj/Draw/OGL/GlApp.h>
 
-#include <vrj/Input/Type/PosInterface.h>
-#include <vrj/Input/Type/DigitalInterface.h>
+#include <gadget/Type/PositionInterface.h>
+#include <gadget/Type/DigitalInterface.h>
 
 // Utility function to draw a cube
 void drawbox( GLdouble x0, GLdouble x1, GLdouble y0, GLdouble y1,
@@ -178,14 +178,14 @@ private:
    }
 
 public:
-   vrj::PosInterface    mWand;      // the Wand
-   vrj::PosInterface    mHead;      // the head
-   vrj::DigitalInterface   mButton0;
-   vrj::DigitalInterface   mButton1;
-   vrj::DigitalInterface   mButton2;
-   vrj::DigitalInterface   mButton3;
-   vrj::DigitalInterface   mButton4;
-   vrj::DigitalInterface   mButton5;
+   gadget::PositionInterface    mWand;      // the Wand
+   gadget::PositionInterface    mHead;      // the head
+   gadget::DigitalInterface     mButton0;
+   gadget::DigitalInterface     mButton1;
+   gadget::DigitalInterface     mButton2;
+   gadget::DigitalInterface     mButton3;
+   gadget::DigitalInterface     mButton4;
+   gadget::DigitalInterface     mButton5;
 };
 
 

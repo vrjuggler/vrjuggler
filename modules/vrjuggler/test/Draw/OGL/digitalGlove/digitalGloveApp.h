@@ -42,9 +42,9 @@
 #include <vrj/Draw/OGL/GlApp.h>
 #include <vrj/Math/Vec3.h>
 
-#include <vrj/Input/Type/PosInterface.h>
-#include <vrj/Input/Type/GloveInterface.h>
-#include <vrj/Input/Type/DigitalInterface.h>
+#include <gadget/Type/PositionInterface.h>
+#include <gadget/Type/GloveInterface.h>
+#include <gadget/Type/DigitalInterface.h>
 
 
 //----------------------------------------------------
@@ -153,19 +153,19 @@ protected:
    GLUquadricObj* mQuadObj;
 
 public:
-   vrj::GloveInterface    mGlove;      // the glove
+   gadget::GloveInterface    mGlove;      // the glove
 
    // for the glove fingers
-   vrj::DigitalInterface  mLeftThumb;
-   vrj::DigitalInterface  mLeftIndex;
-   vrj::DigitalInterface  mLeftMiddle;
-   vrj::DigitalInterface  mLeftRing;
-   vrj::DigitalInterface  mLeftPinky;
-   vrj::DigitalInterface  mRightThumb;
-   vrj::DigitalInterface  mRightIndex;
-   vrj::DigitalInterface  mRightMiddle;
-   vrj::DigitalInterface  mRightRing;
-   vrj::DigitalInterface  mRightPinky;
+   gadget::DigitalInterface  mLeftThumb;
+   gadget::DigitalInterface  mLeftIndex;
+   gadget::DigitalInterface  mLeftMiddle;
+   gadget::DigitalInterface  mLeftRing;
+   gadget::DigitalInterface  mLeftPinky;
+   gadget::DigitalInterface  mRightThumb;
+   gadget::DigitalInterface  mRightIndex;
+   gadget::DigitalInterface  mRightMiddle;
+   gadget::DigitalInterface  mRightRing;
+   gadget::DigitalInterface  mRightPinky;
 };
 
 

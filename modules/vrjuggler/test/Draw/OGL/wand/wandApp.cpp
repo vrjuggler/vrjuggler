@@ -74,17 +74,17 @@ void wandApp::myDraw()
          //glColor3f(1.0f, 0.0f, 1.0f);
          float wand_color[3];
          wand_color[0] = wand_color[1] = wand_color[2] = 0.0f;
-         if(mButton0->getData() == vrj::Digital::ON)
+         if(mButton0->getData() == gadget::Digital::ON)
             wand_color[0] += 0.5f;
-         if(mButton1->getData() == vrj::Digital::ON)
+         if(mButton1->getData() == gadget::Digital::ON)
             wand_color[1] += 0.5f;
-         if(mButton2->getData() == vrj::Digital::ON)
+         if(mButton2->getData() == gadget::Digital::ON)
             wand_color[2] += 0.5f;
-         if(mButton3->getData() == vrj::Digital::ON)
+         if(mButton3->getData() == gadget::Digital::ON)
             wand_color[0] += 0.5f;
-         if(mButton4->getData() == vrj::Digital::ON)
+         if(mButton4->getData() == gadget::Digital::ON)
             wand_color[1] += 0.5f;
-         if(mButton5->getData() == vrj::Digital::ON)
+         if(mButton5->getData() == gadget::Digital::ON)
             wand_color[2] += 0.5f;
          glColor3fv(wand_color);
          glScalef(0.25f, 0.25f, 0.25f);

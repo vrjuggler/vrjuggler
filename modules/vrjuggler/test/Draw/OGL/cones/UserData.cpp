@@ -128,21 +128,21 @@ UserData::updateNavigation (void) {
                               << vprDEBUG_FLUSH;
     }
 
-    if ( mIncVelocityButton->getData() == vrj::Digital::TOGGLE_ON ) {
+    if ( mIncVelocityButton->getData() == gadget::Digital::TOGGLE_ON ) {
         vprDEBUG(vprDBG_ALL, 2) << "-- Toggle ON --" << std::endl
                               << vprDEBUG_FLUSH;
     }
 
-    if(mIncVelocityButton->getData() == vrj::Digital::TOGGLE_OFF ) {
+    if(mIncVelocityButton->getData() == gadget::Digital::TOGGLE_OFF ) {
         vprDEBUG(vprDBG_ALL, 2) << "-- Toggle OFF --" << std::endl
                               << vprDEBUG_FLUSH;
     }
 
-    if ( mIncVelocityButton->getData() == vrj::Digital::ON ) {
+    if ( mIncVelocityButton->getData() == gadget::Digital::ON ) {
         vprDEBUG(vprDBG_ALL, 2) << "-- ON --" << std::endl << vprDEBUG_FLUSH;
     }
 
-    if ( mIncVelocityButton->getData() == vrj::Digital::OFF ) {
+    if ( mIncVelocityButton->getData() == gadget::Digital::OFF ) {
         vprDEBUG(vprDBG_ALL, 2) << "-- OFF --" << std::endl << vprDEBUG_FLUSH;
     }
 
