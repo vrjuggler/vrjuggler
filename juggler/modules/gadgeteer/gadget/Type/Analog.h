@@ -55,10 +55,11 @@ const unsigned short MSG_DATA_ANALOG = 421;
  * Analog is the base class that analog devices must derive from.
  * Analog inherits from Input, so it has pure virtual function
  * constraints from Input in the following functions: StartSampling,
- * StopSampling, Sample, and UpdateData. <br> <br>
+ * StopSampling, Sample, and UpdateData.
+ *
  * Analog adds one new pure virtual function, getAnalogData() for retreiving
- * the analog data, similar to the type specific get data methods in gadget::Position and
- * gadget::Digital.
+ * the analog data, similar to the type specific get data methods in
+ * gadget::Position and gadget::Digital.
  */
 class GADGET_CLASS_API Analog : public vpr::SerializableObject
 {
@@ -88,12 +89,11 @@ public:
 
    /**
     * Returns "analog data".
-    * Gee, that's ambiguous especially on a discrete system such as a digital
-    * computer....
     *
-    * @param devNum - Device unit number to access
     * @pre  Give the device number you wish to access.
     * @post Returns a value that ranges from 0.0f to 1.0f.
+    *
+    * @param devNum Device unit number to access
     *
     * @note For example, if you are sampling a potentiometer, and it returns
     *       reading from 0, 255.  This function will normalize those values
@@ -110,19 +110,22 @@ public:
     */
    AnalogData getAnalogData(int devNum = 0);
 
-   /** Helper method to add a sample to the sample buffers.
-   * This MUST be called by all analog devices to add a new sample.
-   * The data samples passed in will then be modified by any local filters.
-   * @post Sample is added to the buffers and the local filters are run on that sample.
-   */
+   /**
+    * Helper method to add a sample to the sample buffers.
+    * This MUST be called by all analog devices to add a new sample.
+    * The data samples passed in will then be modified by any local filters.
+    *
+    * @post Sample is added to the buffers and the local filters are run on
+    *       that sample.
+    */
    void addAnalogSample(const std::vector< AnalogData >& anaSample);
 
-   /** Swap the analog data buffers.
-    * @post If ready has values, then copy values from ready to stable
-    *        if not, then stable keeps its old values
+   /**
+    * Swaps the analog data buffers.
+    * @post If ready has values, then copy values from ready to stable.
+    *       If not, then stable keeps its old values.
     */
    void swapAnalogBuffers();
-
 
    const SampleBuffer_t::buffer_t& getAnalogDataBuffer();
 
