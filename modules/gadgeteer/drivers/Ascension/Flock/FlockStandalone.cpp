@@ -165,31 +165,14 @@ vpr::ReturnStatus FlockStandalone::open ()
    // - Open the port
    vprDEBUG_BEGIN(vprDBG_ALL,vprDBG_CONFIG_LVL) << "====== Opening fob serial port: " << mPort << " =====\n" << vprDEBUG_FLUSH;
 
-   mSerialPort->setOpenReadWrite();
-
-   //if (mSerialPort->open().success() )
-   if(1)
+   bool open_successfull(true);
+   unsigned attempt_num = 0;
+   const unsigned max_open_attempts(7);
+   // do-while(not successfull)
+   //if(1)
+   do
    {
-      // Reset the port by opening it and then closing it
-      /*
-      vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << "Resetting bird port:\n" << vprDEBUG_FLUSH;
-      vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_LVL) <<"   holding port open" << vprDEBUG_FLUSH;
-      for(unsigned i=0;i<5;++i)
-      {
-         vpr::System::msleep(40);
-         vprDEBUG_CONT(vprDBG_ALL, vprDBG_CONFIG_LVL) << "." << vprDEBUG_FLUSH;
-      }
-      vprDEBUG_CONT(vprDBG_ALL,vprDBG_CONFIG_LVL) << " ok\n" << vprDEBUG_FLUSH;
-
-      mSerialPort->close();
-      vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_LVL) <<"   holding port closed" << vprDEBUG_FLUSH;
-      for(unsigned i=0;i<5;++i)
-      {
-         vpr::System::msleep(40);
-         vprDEBUG_CONT(vprDBG_ALL, vprDBG_CONFIG_LVL) << "." << vprDEBUG_FLUSH;
-      }
-      vprDEBUG_CONT(vprDBG_ALL,vprDBG_CONFIG_LVL) << " ok\n" << vprDEBUG_FLUSH;
-      */
+      mSerialPort->setOpenReadWrite();
 
       // - Open the port for the last time
       //   - Set the port attributes to use
@@ -200,22 +183,22 @@ vpr::ReturnStatus FlockStandalone::open ()
 
          // Set the basic port attributes to use
          mSerialPort->setUpdateAction(vpr::SerialTypes::NOW);  // Changes apply immediately
-         ret_stat = mSerialPort->clearAll();
-         ret_stat = mSerialPort->setBlocking(true);              // Open in blocking mode
-         ret_stat = mSerialPort->setCanonicalInput(false);              // enable binary reading and timeouts
+         mSerialPort->clearAll();
+         mSerialPort->setBlocking(true);              // Open in blocking mode
+         mSerialPort->setCanonicalInput(false);              // enable binary reading and timeouts
 
-         ret_stat = mSerialPort->setTimeout(10);                       // Set to 1 inter-byte read second timeout
-         ret_stat = mSerialPort->setRead(true);                        // Allow reading from port
-         ret_stat = mSerialPort->setLocalAttach(true);                 // Say we are directly attached
-         ret_stat = mSerialPort->setBreakByteIgnore(true);             // Ignore terminal breaks
+         mSerialPort->setTimeout(10);                       // Set to 1 inter-byte read second timeout
+         mSerialPort->setRead(true);                        // Allow reading from port
+         mSerialPort->setLocalAttach(true);                 // Say we are directly attached
+         mSerialPort->setBreakByteIgnore(true);             // Ignore terminal breaks
 
-          vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_LVL) << "  Setting baud rate: " << mBaud << std::endl << vprDEBUG_FLUSH;
-         ret_stat = mSerialPort->setInputBaudRate(mBaud);
-         ret_stat = mSerialPort->setOutputBaudRate(mBaud);
+         vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_LVL) << "  Setting baud rate: " << mBaud << std::endl << vprDEBUG_FLUSH;         
+         mSerialPort->setInputBaudRate(mBaud);
+         mSerialPort->setOutputBaudRate(mBaud);
 
-         ret_stat = mSerialPort->setCharacterSize(vpr::SerialTypes::CS_BITS_8);
-         ret_stat = mSerialPort->setHardwareFlowControl(false);     // No hardware flow control
-         ret_stat = mSerialPort->setParityGeneration(false);        // No parity checking
+         mSerialPort->setCharacterSize(vpr::SerialTypes::CS_BITS_8);
+         mSerialPort->setHardwareFlowControl(false);     // No hardware flow control
+         mSerialPort->setParityGeneration(false);        // No parity checking
 
          // --- Reset the flock with RTS signal --- //
          // - When RTS signal is high, bird is put into reset mode
@@ -238,17 +221,35 @@ vpr::ReturnStatus FlockStandalone::open ()
          vprDEBUG_CONT(vprDBG_ALL,vprDBG_CONFIG_LVL) << " done.\n" << vprDEBUG_FLUSH;
 
          ret_stat = mSerialPort->flushQueue(vpr::SerialTypes::IO_QUEUES);
-         vprASSERT(ret_stat.success());
+         if(!ret_stat.success()) open_successfull = false;
 
          vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << "Port setup completed.\n" << vprDEBUG_FLUSH;
 
          mStatus = FlockStandalone::OPEN;
 
-         // Get the initial configuration from the flock
-         readInitialFlockConfiguration();
-         printFlockStatus();
+         try
+         {
+            if(open_successfull)    // Only try if we are successfull thus far
+            {
+               // Get the initial configuration from the flock
+               readInitialFlockConfiguration();
+            }
+         }
+         catch(Flock::CommandFailureException& cfe)
+         {
+            vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL) << "Flockstandalone::open: command exception: " << cfe.getMessage() << std::endl << vprDEBUG_FLUSH;
+            open_successfull = false;
+         }
 
-         return vpr::ReturnStatus::Succeed;
+         if(!open_successfull)
+         {
+            if (mSerialPort->isOpen())
+            {  mSerialPort->close(); }
+
+            vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_LVL) << "FlockStandalone::open: Failed to open successfully on attempt: "
+                                                    << attempt_num << ".  Trying again...\n" << vprDEBUG_FLUSH;
+            attempt_num++;
+         }
       }
       else
       {
@@ -256,11 +257,12 @@ vpr::ReturnStatus FlockStandalone::open ()
          return vpr::ReturnStatus::Fail;
       }
    }
-   else
-   {
-      vprDEBUG(vprDBG_ALL,vprDBG_CRITICAL_LVL) << "Failed to open port.\n" << vprDEBUG_FLUSH;
-      return vpr::ReturnStatus::Fail;
-   }
+   while((!open_successfull) && (attempt_num <max_open_attempts));
+
+   // Print the status information
+   printFlockStatus();
+
+   return vpr::ReturnStatus::Succeed;   
 }
 
 
@@ -310,7 +312,7 @@ vpr::ReturnStatus FlockStandalone::configure()
       {  transmitter_addr = mFlockUnits[mXmitterIndices[0]].mAddr; }
 
       vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << " [FlockStandalone] Setting transmitter to addr: "
-                                             << transmitter_addr << "\n" << vprDEBUG_FLUSH;
+                                             << int(transmitter_addr) << "\n" << vprDEBUG_FLUSH;
       sendNextTransmitterCmd(transmitter_addr, 0);
    }
 
@@ -838,7 +840,7 @@ void FlockStandalone::printFlockStatus()
    std::cout << " report rate:" << Flock::getReportRateString(mReportRate) << std::endl;
    std::cout << "        hemi:" << getHemiString(mHemisphere) << std::endl;
    std::cout << "      filter:" << getFiltString(mFilter) << std::endl;
-   std::cout << "        sync:" << mSyncStyle << std::endl;
+   std::cout << "        sync:" << int(mSyncStyle) << std::endl;
    std::cout << "       model:" << mModelId << std::endl;
    std::cout << "      sw ver:" << mSwRevision << std::endl;
    std::cout << "        port:" << mPort << std::endl;
