@@ -113,6 +113,11 @@ public class CorbaService
       }
    }
 
+   public String toString ()
+   {
+      return nameServiceHost + ":" + nameServicePort + "/" + namingSubcontext;
+   }
+
    public String getNameServiceURI ()
    {
       return nameServiceURI;
