@@ -220,15 +220,15 @@ istream& operator >> (istream& in, vjConfigChunkDB& self) {
 bool vjConfigChunkDB::load (char *fname) {
   ifstream in(fname);
 
-  vjDEBUG(4) << "vjConfigChunkDB::load(): opening file " << fname << endl;
+  vjDEBUG(4) << "vjConfigChunkDB::load(): opening file " << fname << endl << vjDEBUG_FLUSH;
 
   if (descs == NULL) {
-    vjDEBUG(1) << "ERROR: vjConfigChunkDB::load - no vjChunkDescDB" << endl;
+    vjDEBUG(1) << "ERROR: vjConfigChunkDB::load - no vjChunkDescDB" << endl << vjDEBUG_FLUSH;
     return false;
   }
   if (!in) {
     vjDEBUG(1) << "vjConfigChunkDB::load(): Unable to open file '" 
-	       << fname << "'" << endl;
+	       << fname << "'" << endl << vjDEBUG_FLUSH;
     return false;
   }
   in >> *this;
@@ -239,7 +239,7 @@ bool vjConfigChunkDB::save (char *fname) {
   ofstream out(fname);
   if (!out) {
     vjDEBUG(1) << "ERROR: vjConfigChunkDB::save() - Unable to open file '"
-	       << fname << "'" << endl;
+	       << fname << "'" << endl << vjDEBUG_FLUSH;
     return false;
   }
   out << *this;

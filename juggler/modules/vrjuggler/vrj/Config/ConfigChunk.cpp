@@ -224,7 +224,7 @@ istream& operator >> (istream& in, vjConfigChunk& self) {
   while (tok.type != TK_End) {
 
     if (tok.type != TK_String) {
-      vjDEBUG(3) << "ERROR: Unexpected Token #" << tok.type << endl;
+      vjDEBUG(3) << "ERROR: Unexpected Token #" << tok.type << endl << vjDEBUG_FLUSH;
       self.getToken(in,tok);
       continue;
     }
@@ -232,7 +232,7 @@ istream& operator >> (istream& in, vjConfigChunk& self) {
     // We have a string token; assumably a property name.
     if (!(p = self.getPropertyFromToken (tok.strval))) {
       vjDEBUG(3) << "ERROR: Property '" << tok.strval << "' is not found in"
-		 << " Chunk " << self.desc->name << endl;
+		 << " Chunk " << self.desc->name << endl << vjDEBUG_FLUSH;
       self.getToken(in,tok);
       continue;
     }
@@ -250,23 +250,23 @@ istream& operator >> (istream& in, vjConfigChunk& self) {
 	else {
 	  if (!self.tryassign (p, tok, i++))
 	    vjDEBUG(3) << "ERROR: Assigning to property " 
-		       << p->name << endl;
+		       << p->name << endl << vjDEBUG_FLUSH;
 	}
 	self.getToken (in, tok);
       }
       if ((p->num != -1) && (p->num != i))
 	vjDEBUG(3) << "ERROR: vjProperty " << p->name << " should have "
-		   << p->num << " values; " << i << " found" << endl;
+		   << p->num << " values; " << i << " found" << endl << vjDEBUG_FLUSH;
       if (tok.type != TK_CloseBracket)
 	vjDEBUG(3) << "ERROR: vjProperty " << p->name << ": '}' expected" 
-		   << endl;
+		   << endl << vjDEBUG_FLUSH;
       self.getToken (in,tok);
     }
     else {
       // we're just doing one value.
       if (!self.tryassign (p, tok, 0))
 	vjDEBUG(3) << "ERROR: Assigning to property "
-		   << p->name << endl;
+		   << p->name << endl << vjDEBUG_FLUSH;
       self.getToken (in,tok);
       if (tok.type == TK_Unit) {
 	p->applyUnits (tok.unitval);
@@ -274,7 +274,7 @@ istream& operator >> (istream& in, vjConfigChunk& self) {
       } 
       if (p->num > 1) {
 	vjDEBUG(3) << "ERROR: Property " << p->name
-		   << " expects " << p->num << " values." << endl;
+		   << " expects " << p->num << " values." << endl << vjDEBUG_FLUSH;
       }
     }
   }

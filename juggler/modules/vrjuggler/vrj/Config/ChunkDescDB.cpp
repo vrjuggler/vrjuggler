@@ -100,11 +100,11 @@ istream& operator >> (istream& in, vjChunkDescDB& self) {
       break;
     else {
       vjDEBUG(1) << "Unexpected symbol parsing vjChunkDescDB: '" 
-		 <<str <<"'"<< endl;
+		           << str <<"'"<< endl << vjDEBUG_FLUSH;
     }
   }
   vjDEBUG(4) << "vjChunkDescDB::>> : Finished - " << self.descs.size()
-       << " descriptions read." << endl;
+       << " descriptions read." << endl << vjDEBUG_FLUSH;
   return in;
 }
 
@@ -115,7 +115,7 @@ bool vjChunkDescDB::load (char *fname) {
 
   if (!in) {
     vjDEBUG(1) << "vjChunkDescDB::load(): Unable to open file '"
-	       << fname << "'" << endl;
+	       << fname << "'" << endl << vjDEBUG_FLUSH;
     return false;
   }
   in >> *this;
@@ -128,7 +128,7 @@ bool vjChunkDescDB::save (char *fname) {
   ofstream out(fname);
   if (!out) {
     vjDEBUG(1) << "vjChunkDescDB::save(): Unable to open file '"
-	       << fname << "'" << endl;
+	       << fname << "'" << endl << vjDEBUG_FLUSH;
     return false;
   }
   out << *this;

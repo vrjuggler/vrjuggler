@@ -26,9 +26,9 @@
 // ---------------------------------------------------------------------------
 vjThreadPool::vjThreadPool (int numToStartWith) : readyThreads(0) {
     DebugLock.acquire();
-      vjDEBUG(6) << "vjThreadPool::vjThreadPool: Entering.\n";
+      vjDEBUG(6) << "vjThreadPool::vjThreadPool: Entering.\n" << vjDEBUG_FLUSH;
       vjDEBUG(5) << "\tvjThreadPool::vjThreadPool: Number threads: "
-                 << numToStartWith << endl;
+                 << numToStartWith << endl << vjDEBUG_FLUSH;
     DebugLock.release();
 
     listHead = NULL;
@@ -57,10 +57,10 @@ void
 vjThreadPool::threadLoop(void* theThreadAsVoid) {
     DebugLock.acquire();
       vjDEBUG(6) << vjThread::self() << " vjThreadPool::threadLoop: Entering."
-                 << endl;
+                 << endl << vjDEBUG_FLUSH;
 //      vjDEBUG(5) << vjThread::self()
 //      << " vjThreadPool::threadLoop: theThreadAsVoid:"
-//      << theThreadAsVoid << endl;
+//      << theThreadAsVoid << endl << vjDEBUG_FLUSH;
     DebugLock.release();
 
     listLock.acquire();
@@ -157,7 +157,7 @@ vjThreadPool::addThread (void) {
     static int numTimes = 0;
     DebugLock.acquire();
       vjDEBUG(6) << vjThread::self() << " vjThreadPool::addThread: Entering: "
-                 << ++numTimes << endl;
+                 << ++numTimes << endl << vjDEBUG_FLUSH;
     DebugLock.release();
 
     vjGuard<vjMutex> guard(listLock);   // Protect the head
@@ -172,7 +172,7 @@ vjThreadPool::addThread (void) {
 
     DebugLock.acquire();
         vjDEBUG(5) << *(newThread->threadId)
-                   << " vjThreadPool::addThread: List at end\n";
+                   << " vjThreadPool::addThread: List at end\n" << vjDEBUG_FLUSH;
         printList();
     DebugLock.release();
 

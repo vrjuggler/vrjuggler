@@ -30,7 +30,7 @@ public:
             *attachedCounter = 0; 
         }
         *attachedCounter = *attachedCounter + 1;	    // Track how many mutexes are allocated
-        //vjDEBUG << " vjMutexSGI:: vjMutexSGI: attachedCounter: " << *attachedCounter << endl;
+        //vjDEBUG << " vjMutexSGI:: vjMutexSGI: attachedCounter: " << *attachedCounter << endl << vjDEBUG_FLUSH;
       
         // ----- Allocate the mutex ----- //
         mutex = usnewlock(mutexPool->getArena());
@@ -44,7 +44,7 @@ public:
         // ---- Deal with the pool --- //
         *attachedCounter = *attachedCounter - 1;	    // Track how many mutexes are allocated  
     
-        //vjDEBUG << " vjMutexSGI::~ vjMutexSGI: attachedCounter: " << *attachedCounter << endl;
+        //vjDEBUG << " vjMutexSGI::~ vjMutexSGI: attachedCounter: " << *attachedCounter << endl << vjDEBUG_FLUSH;
       
         if(*attachedCounter == 0)
         {

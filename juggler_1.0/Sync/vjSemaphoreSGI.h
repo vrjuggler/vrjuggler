@@ -31,7 +31,7 @@ public:
       *attachedCounter = *attachedCounter + 1;      // Track how many semaphores are allocated
 
       DebugLock.acquire();
-      //vjDEBUG << vjThread::self() << " vjSemaphoreSGI::vjSemaphoreSGI: attachedCounter: " << *attachedCounter << endl;
+      //vjDEBUG << vjThread::self() << " vjSemaphoreSGI::vjSemaphoreSGI: attachedCounter: " << *attachedCounter << endl << vjDEBUG_FLUSH;
       DebugLock.release();
 
       // ----- Allocate the semaphore ----- //
@@ -47,7 +47,7 @@ public:
       *attachedCounter = *attachedCounter - 1;     // Track how many Semaphore are allocated  
 
       DebugLock.acquire();
-      //vjDEBUG << vjThread::self() << " vjSemaphoreSGI::~vjSemaphoreSGI: attachedCounter: " << *attachedCounter << endl;
+      //vjDEBUG << vjThread::self() << " vjSemaphoreSGI::~vjSemaphoreSGI: attachedCounter: " << *attachedCounter << endl << vjDEBUG_FLUSH;
       DebugLock.release();
 
       if (*attachedCounter == 0)

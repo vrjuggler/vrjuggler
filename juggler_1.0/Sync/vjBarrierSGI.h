@@ -33,7 +33,7 @@ public:
          *attachedCounter = 0; 
       }
       *attachedCounter = *attachedCounter + 1;      // Track how many mutexes are allocated
-      //vjDEBUG << " vjBarrierSGI:: vjBarrierSGI: attachedCounter: " << *attachedCounter << endl;
+      //vjDEBUG << " vjBarrierSGI:: vjBarrierSGI: attachedCounter: " << *attachedCounter << endl << vjDEBUG_FLUSH;
 
       // ----- Allocate the mutex ----- //
       theBarrier = new_barrier(barrierPool->getArena()); 
@@ -47,7 +47,7 @@ public:
       // ---- Deal with the pool --- //
       *attachedCounter = *attachedCounter - 1;     // Track how many mutexes are allocated  
 
-      //vjDEBUG << " vjBarrierSGI::~ vjBarrierSGI: attachedCounter: " << *attachedCounter << endl;
+      //vjDEBUG << " vjBarrierSGI::~ vjBarrierSGI: attachedCounter: " << *attachedCounter << endl << vjDEBUG_FLUSH;
 
       if (*attachedCounter == 0)
       {
