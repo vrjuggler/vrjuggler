@@ -31,13 +31,15 @@
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # This file defines the specification for the base installation directory
-# tree for Jackal.
+# tree for JCCL.
 #
 # $Id$
 
 /set type=dir mode=@DIR_PERMS@ uname=@OWNER_NAME@ gname=@GROUP_NAME@
 .
     bin
+        beans
+        ..
     ..
     include
     ..

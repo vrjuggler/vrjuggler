@@ -61,7 +61,7 @@ BUILD_JAVA	= @BUILD_JAVA@
 perfmonitor-pkg-links:
 	@$(MAKE) instlinks="$(instlinks)" links
 
-#java-install:
+java-install:
 #	@$(MAKE) perfmonitor-install
 #
 links:
