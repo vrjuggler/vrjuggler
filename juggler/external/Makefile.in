@@ -179,7 +179,7 @@ links-cppunit:
           $(instlinks)/lib$(LIBBITSUF)
 
 links-nspr:
-	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/include/nspr
+	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/include
 	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/lib$(LIBBITSUF)
 	-$(RM_LN) $(instlinks)/include/nspr
 	$(LN_S) $(NSPR_INC_DIR) $(instlinks)/include/nspr
