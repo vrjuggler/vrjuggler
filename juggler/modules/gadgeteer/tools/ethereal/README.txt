@@ -32,8 +32,13 @@ Protocols
 
    Compatibility:
       The BIRDNET dissector has been tested most recently with Ethereal 
-      0.9.13 on Red Hat Linux 8.0.  It was originally written in May 2001
-      to work with Ethereal 0.8.18.  The original version for Ethereal 0.8
-      is not publicly available.
+      0.9.13 on Red Hat Linux 8.0 and IRIX 6.5.  It was originally written
+      in May 2001 to work with Ethereal 0.8.18.  The original version for
+      Ethereal 0.8 is not publicly available.
+
+   Limitations:
+      The dissector will not decode the data sampled from the MotionStar.
+      In other words, the position/angles/quaternion/matrix information
+      will not be shown in Ethereal.
 
 $Id$
