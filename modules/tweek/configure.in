@@ -392,7 +392,8 @@ int omni_main_i(int argc, char** const argv)
 
       DPP_LANG_RESTORE
 
-      AC_PATH_PROG(CXX_IDL, omniidl, no, [${OMNI_BIN_DIR}:$PATH])
+      omniidl_search_path=${OMNI_BIN_DIR}:${PATH}
+      AC_PATH_PROG(CXX_IDL, omniidl, no, [${omniidl_search_path}])
 
       if test "x$CXX_IDL" = "xno" ; then
          AC_MSG_WARN([*** $cxx_orb_name required for Tweek C++ API ***])
