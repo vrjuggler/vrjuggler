@@ -39,12 +39,17 @@
 
 #include <iostream.h>      // for cout
 #include <fstream.h>       // for ifstream
+#include <string.h>
 #include <fcntl.h>         // for open
 #include <termios.h>
 #include <unistd.h>        // for sleep, and ioctl
 #include <sys/types.h>     // for open
 #include <sys/stat.h>      // for open
 #include <assert.h>        // for assert
+
+#ifdef __sun__
+#include <sys/file.h>
+#endif
 
 #include <Input/vjPosition/aFlock.h>
 
