@@ -71,7 +71,7 @@ main (int argc, char* argv[]) {
 
         // Connect to the server.
         if ( sock->connect().success() ) {
-            vpr::Status status;
+            vpr::ReturnStatus status;
             vpr::Uint32 bytes;
 
             // Read from teh server.
@@ -91,7 +91,7 @@ main (int argc, char* argv[]) {
                     printf("What the ???\n");
                 }
             }
-            else if ( status == vpr::Status::Timeout ) {
+            else if ( status == vpr::ReturnStatus::Timeout ) {
                 vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
                     << "No resposne from server within timeout period!\n"
                     << vprDEBUG_FLUSH;
