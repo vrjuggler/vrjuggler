@@ -4,6 +4,7 @@
 
 #include <vjConfig.h>
 #include <Kernel/vjApp.h>
+class vjApp;
 #include <Kernel/vjSystemFactory.h>
 //#include <Kernel/vjAPIFactory.h>
 #include <Kernel/vjDisplayManager.h>

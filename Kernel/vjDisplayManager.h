@@ -69,16 +69,25 @@ public:     // --- Config stuff -- //
 
 private:
    //: Add a display to the current system
-   //! PRE: Draw manager is known
+   //! PRE: disp is a valid display
    //! POST: disp has been added to the list of displays
-   //+  (notifyDrawMgr == true) ==> Draw manager now has been given new window to display
-   virtual int addDisplay(vjDisplay* disp, bool notifyDrawMgr = true);
+   //+  (notifyDrawMgr == true) && (drawMgr != NULL) && (disp is active)
+   //+  ==> Draw manager now has been given new window to display
+   int addDisplay(vjDisplay* disp, bool notifyDrawMgr = true);
 
    //: Close the given display
-   //virtual int closeDisplay(int dispId);
+   //! PRE: disp is a display we know about
+   //! POST: disp has been removed from the list of displays
+   //+   (notifyDrawMgr == true) && (drawMgr != NULL) && (disp is active)
+   //+   ==> Draw manager has been told to clode the window for the display
+   int closeDisplay(vjDisplay* disp, bool notifyDrawMgr = true);
 
-   //: Get the display information for the display
-   //virtual vjDisplay* getDisplay(int dispId);
+   // Is the display a member of the display manager
+   bool isMemberDisplay(vjDisplay* disp);
+
+   //: Find a display given the display name
+   //! RETURNS: NULL - not found
+   vjDisplay* findDisplayNamed(std::string name);
 
 public:
    std::vector<vjDisplay*> mActiveDisplays;           //: List of currently active displays

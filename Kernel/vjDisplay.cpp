@@ -48,7 +48,7 @@ void vjDisplay::config(vjConfigChunk* chunk)
     setName(name);
     setPipe(pipe);
 
-    displayChunk = chunk;        // Save the chunk for later use
+    mDisplayChunk = chunk;        // Save the chunk for later use
 }
 
 // void vjDisplay::updateProjections()
@@ -89,14 +89,14 @@ void vjDisplay::config(vjConfigChunk* chunk)
     // ---- FRIEND FUNCTIONS ---- //
 ostream& operator<<(ostream& out,  vjDisplay& disp)
 {
-    out << "------- vjDisplay:" << (void*)(&disp) << " ------\n";
-    out << "\tOrigin:" << disp._xo << ", " << disp._yo << endl;
-    out << "\t  Size:" << disp._xs << ", " << disp._ys << endl;
-    out << "\t  Pipe:" << disp.mPipe << endl;
-    out << "\t  Stereo:" << disp.mStereo << endl;
-    out << "\t  Active:" << disp.mActive << endl;
-    out << "\t  User:" << disp.mUser->getName() << endl;
-    out << "---------------------------------------\n";
+    //out << "vjDisplay:" << (void*)(&disp)
+    out << setw(15) << disp.mName
+        << "  org:" << disp._xo << ", " << disp._yo
+        << "  sz:" << disp._xs << ", " << disp._ys
+        << "  p:" << disp.mPipe
+        << "  st:" << (disp.mStereo ? "Y" : "N")
+        << "  act:" << (disp.mActive ? "Y" : "N")
+        << "  usr:" << disp.mUser->getName();
 
     return out;	
 }

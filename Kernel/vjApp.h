@@ -2,12 +2,12 @@
 #define _VJ_APP_
 
 #include <vjConfig.h>
-#include <Kernel/vjAPI.h>
+//#include <Kernel/vjAPI.h>
 #include <Kernel/vjKernel.h>
 #include <Kernel/vjDebug.h>
 #include <Kernel/vjConfigChunkHandler.h>
-class vjKernel;
 class vjDrawManager;
+class vjKernel;
 
 //----------------------------------------------------------------
 //: Encapsulates the actually application.
@@ -79,7 +79,7 @@ public:
    {;}
 
 public:
-   vjAPI       api;        // Used to signal which API this application works with
+   //vjAPI       api;        // Used to signal which API this application works with
    vjKernel*   kernel;     // The library kernel (here for convienence)
 
 public:  // --- Factory functions --- //
