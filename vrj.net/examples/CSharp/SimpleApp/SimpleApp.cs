@@ -1,3 +1,4 @@
+#region License
 /*************** <auto-copyright.pl BEGIN do not edit this line> **************
  *
  * VR Juggler is (C) Copyright 1998-2002 by Iowa State University
@@ -29,6 +30,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
+#endregion License
 
 using System;
 using Tao.OpenGl;

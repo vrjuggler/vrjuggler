@@ -1,3 +1,4 @@
+#region License
 /*************** <auto-copyright.pl BEGIN do not edit this line> **************
  *
  * VRJ.NET is (C) Copyright 2004 by Patrick Hartling
@@ -24,6 +25,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
+#endregion License
 
 // Generated from Revision: 1.79 of RCSfile: class_cs.tmpl,v
 using System;
