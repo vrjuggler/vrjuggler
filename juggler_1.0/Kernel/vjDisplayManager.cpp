@@ -13,6 +13,12 @@ void vjDisplayManager::setDrawManager(vjDrawManager* drawMgr)
 void vjDisplayManager::setupHeadIndices()
 {
    mHeadInterface.init("VJHead");
+
+   if(mHeadInterface.getProxyIndex() == -1)
+   {
+      cerr << "Fatal Error: VJHead not found.\n";
+      exit(1);
+   }
    
    vjDEBUG(0) << "headIndex: " << mHeadInterface.getProxyIndex() << endl << vjDEBUG_FLUSH;
 }
