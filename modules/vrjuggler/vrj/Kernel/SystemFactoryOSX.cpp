@@ -86,7 +86,6 @@ SystemFactoryOSX::SystemFactoryOSX()
     vpr::ThreadMemberFunctor<SystemFactoryOSX>* memberFunctor = new vpr::ThreadMemberFunctor<SystemFactoryOSX>(this, &SystemFactoryOSX::CarbonApplicationThread, NULL);
     vpr::Thread* new_thread;
     new_thread = new vpr::Thread(memberFunctor);
-    new_thread->start();
 
     while(!InitComplete); //Spin here until the application is initialized!
     */

@@ -3336,8 +3336,7 @@ int main(int argc, char* argv[])
                   <para>This will be the same across all platforms. The thread creation code is then:</para>
                   <programlisting>vpr::Thread* thread;
 
-thread = new vpr::Thread(run);
-thread-&gt;start();</programlisting>
+thread = new vpr::Thread(run);</programlisting>
                   <para>At this point, a newly spawned thread is executing the code in <function>run()</function>. It is advisable to hang onto the variable <varname>thread</varname> so that the thread may be controlled as necessary.</para>
                   <para>That was pretty easy. What if you want to pass one or more arguments to <function>run()</function> so that its behavior can be modified based on some variables? Not surprisingly, that is fairly easy too. As mentioned above, if there is more than one argument to pass to the thread function, they will have to be collected into a <type>struct</type>, and pointer to that struct will have to be passed. A common way to do this is as follows: </para>
                   <programlisting>struct ThreadArgs
@@ -3359,7 +3358,6 @@ void someFunc()
    // Fill in the elements of args ...
 
    thread = new vpr::Thread(run, (void*) args);
-   thread-&gt;start();
 }</programlisting>
                   <para>When creating a single thread, this works beautifully. If multiple threads are needed, all taking the same type of argument, there must be a separate argument structure instance for each one. A bunch of pointers can be declared, or the same pointer can be reused over and over. The address passed to each thread will be unique either way. Using this method requires that the argument memory be released before the thread exits, of course.</para>
                </section>
@@ -3373,7 +3371,6 @@ void someFunc()
                   <programlisting>vpr::Thread* thread;
 
 thread = new vpr::Thread(run);
-thread-&gt;start();
 
 // Do other things while the thread is going ...
 
@@ -3526,8 +3523,7 @@ args = new thread_args_t();
 // Fill in the arguments to be passed to the thread...
 
 my_functor = new vpr::ThreadMemberFunctor&lt;MyObject&gt;(my_obj, &amp;MyObject::run, (void*) args);
-thread = new vpr::Thread(my_functor);
-thead-&gt;start();</programlisting>
+thread = new vpr::Thread(my_functor);</programlisting>
                   <para>The important thing to note in this example is that <classname>vpr::ThreadMemberFunctor</classname> is a template class. When creating the functor instance, the class must be specified as the template parameter. (If you do not understand this syntax, take a look at a C++ book that covers the current C++ standard.) Also note that when creating the new <classname>vpr::Thread</classname> object, the argument structure is not passed to the constructor. The argument to <methodname>run()</methodname> is packaged up with the function in the functor object <varname>my_functor</varname>. Once this code has executed, a new thread is spawned that will run the <methodname>run()</methodname> method given the provided argument structure.</para>
                   <para>The <classname>vpr::BaseThreadFunctor</classname> interface defines an extra method <methodname>setArg()</methodname><indexterm>
                         <primary>vpr::BaseThreadFunctor</primary>
@@ -3560,8 +3556,7 @@ args = new thread_args_t();
 // Fill in the arguments to be passed to the thread...
 
 my_functor = new vpr::ThreadNonMemberFunctor(run, (void*) args);
-thread = new vpr::Thread(my_functor);
-thread-&gt;start();</programlisting>
+thread = new vpr::Thread(my_functor);</programlisting>
                   <para>That is all there is to it. Programmers end up doing more work than if they had just passed the function pointer and the associated argument to the <classname>vpr::Thread</classname> constructor directly, but the <classname>vpr::Thread</classname> constructor is relieved of some work. (The reason for this is described below.) Thus, either way is equally efficient, and what you use is up to you.</para>
                </section>
                <section>

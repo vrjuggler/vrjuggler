@@ -115,7 +115,6 @@ void GlDrawManager::start()
    // XXX: Memory leak.
    // XXX: No way to stop this thread later.
    control_thread = new vpr::Thread(memberFunctor);
-   control_thread->start();
 
    vprDEBUG(vrjDBG_DRAW_MGR,1) << "vjGlDrawManager started. thread: "
                              << control_thread << std::endl << vprDEBUG_FLUSH;
