@@ -198,11 +198,72 @@ AC_DEFUN(VJ_COMPILER_SETUP,
     DPP_PROG_CXX([$CXX], , [AC_MSG_ERROR($CXX_ERR)])
     DPP_GET_EXT
 
+    # GCC is our compiler (g++ will compile the C++ code).
     if test "x$GXX" = "xyes" ; then
         # If we are using GCC as the compiler, we need to be using version
         # 3.0 or newer.
         DPP_GPLUSPLUS_VER(3.0,
                           [AC_MSG_ERROR([*** VR Juggler requires a modern G++ ***])])
+    fi
+
+    # The following sets up the warning levels for the compilers we support.
+    # The levels we want for C++ are as follows (in increasing order of
+    # noisiness):
+    #
+    #    0: Supress all warnings
+    #    1: Basic warnings such as unused/unreferenced variables,
+    #       uninitialziezd variables, initializer list disordering
+    #    2: Overloaded virtual functions, sign promotion, non-virtual
+    #       destructor
+    #    3: Private constructor(s) and destructor, inability to inline
+    #    4: Shadowing of methods, variables, etc.; unreachable code; ...
+    #    5: Recommendations from Scott Meyers, cast issues, etc.
+    if test "x$GXX" = "xyes" ; then
+        # Doozer++ gives us reasonable defaults for C code.
+
+        CXX_WARNS_LEVEL_0="-w"
+        CXX_WARNS_LEVEL_1="-Wall"
+        CXX_WARNS_LEVEL_2="$CXX_WARNS_LEVEL_1 -W -Woverloaded-virtual -Wsign-promo -Wnon-virtual-dtor"
+        CXX_WARNS_LEVEL_3="$CXX_WARNS_LEVEL_2 -Winline -Wctor-dtor-privacy"
+        CXX_WARNS_LEVEL_4="$CXX_WARNS_LEVEL_3 -Wshadow -Wunreachable-code"
+        CXX_WARNS_LEVEL_5="$CXX_WARNS_LEVEL_4 -Weffc++ -Wold-style-cast"
+    # MIPSpro is our compiler.  The warning levels go in reverse here be we
+    # disable fewer warnings at higher levels.
+    elif test "x$PLATFORM" = "xIRIX" -a "x$USE_GCC" != "xyes" ; then
+        C_WARNS_LEVEL_0='-woff all'
+        C_WARNS_LEVEL_1=''
+        C_WARNS_LEVEL_2=''
+        C_WARNS_LEVEL_3=''
+        C_WARNS_LEVEL_4=''
+        C_WARNS_LEVEL_5=''
+
+        # The warnings we care about:
+        #    1174: Unreferenced variable
+        #    1183: Unsigned int compared to 0
+        #    1552: Unused variable
+        #    1681: Virtual function overload
+        #    3303: Meaningless return type qualifier
+        CXX_WARNS_LEVEL_0='-woff all'
+        CXX_WARNS_LEVEL_1='-woff 1183,1681,3303'
+        CXX_WARNS_LEVEL_2='-woff 1183,3303'
+        CXX_WARNS_LEVEL_3='-woff 3303'
+        CXX_WARNS_LEVEL_4=''
+        CXX_WARNS_LEVEL_5=''
+    # Visual C++ is our compiler.
+    elif test "$OS_TYPE" = "Win32" -a "x$USE_GCC" != "xyes" ; then
+        C_WARNS_LEVEL_0='/w'
+        C_WARNS_LEVEL_1='/W1'
+        C_WARNS_LEVEL_2='/W2'
+        C_WARNS_LEVEL_3='/W3'
+        C_WARNS_LEVEL_4='/W4'
+        C_WARNS_LEVEL_5='/Wall'
+
+        CXX_WARNS_LEVEL_0='/w'
+        CXX_WARNS_LEVEL_1='/W1'
+        CXX_WARNS_LEVEL_2='/W2'
+        CXX_WARNS_LEVEL_3='/W3'
+        CXX_WARNS_LEVEL_4='/W4'
+        CXX_WARNS_LEVEL_5='/Wall'
     fi
 
     if test "x$GCC" = "xyes" ; then
