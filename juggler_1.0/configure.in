@@ -20,14 +20,12 @@ dnl # variables while the configure script runs.  Then, immediately before
 dnl # Makefile substitution is done, we can translate all the paths to
 dnl # DOS-style for use in the Makefiles.
 unix2dos ( ) {
-    dnl # The first expression changes a "//C" drive name to "C:".  The
-    dnl # second handles the slash-to-backslash conversion.  These both have
-    dnl # a pair of surrounding []'s because those symbols have special
-    dnl # meaning to m4(1).  Without them, the first pair of []'s in the
-    dnl # regular expression will be lost.
+    dnl # This expression changes a "//C" drive name to "C:".  It has a pair
+    dnl # of surrounding []'s because those symbols have special meaning to
+    dnl # m4(1).  Without them, the first pair of []'s in the regular
+    dnl # expression will be lost.
     _drive_exp=['s/^\/\/\([[:alpha:]]\)/\1:/']
-    _slash_exp=['s/\//\\/g']
-    _retval=`echo $1 | sed -e "${_drive_exp}" -e "${_slash_exp}"`
+    _retval=`echo $1 | sed -e "${_drive_exp}"`
 
     echo "${_retval}"
 }
