@@ -248,7 +248,7 @@ public class MotionStarEditorPanel
       mRealHardwarePanel.add(mServerPortEditor,
                              new GridBagConstraints(1, 1, 1, 1, 1.0, 1.0,
                                                     GridBagConstraints.WEST,
-                                                    GridBagConstraints.BOTH,
+                                                    GridBagConstraints.HORIZONTAL,
                                                     new Insets(0, 0, 0, 0),
                                                     0, 0));
       mRealHardwarePanel.add(mMasterLabel,
@@ -260,7 +260,7 @@ public class MotionStarEditorPanel
       mRealHardwarePanel.add(mMasterEditor,
                              new GridBagConstraints(1, 2, 1, 1, 1.0, 1.0,
                                                     GridBagConstraints.WEST,
-                                                    GridBagConstraints.BOTH,
+                                                    GridBagConstraints.HORIZONTAL,
                                                     new Insets(0, 0, 0, 0),
                                                     0, 0));
       mRealHardwarePanel.add(mHemisphereLabel,
@@ -272,7 +272,7 @@ public class MotionStarEditorPanel
       mRealHardwarePanel.add(mHemisphereEditor,
                              new GridBagConstraints(1, 3, 1, 1, 1.0, 1.0,
                                                     GridBagConstraints.WEST,
-                                                    GridBagConstraints.BOTH,
+                                                    GridBagConstraints.HORIZONTAL,
                                                     new Insets(0, 0, 0, 0),
                                                     0, 0));
       mRealHardwarePanel.add(mDataFormatLabel,
@@ -284,7 +284,7 @@ public class MotionStarEditorPanel
       mRealHardwarePanel.add(mDataFormatEditor,
                              new GridBagConstraints(1, 4, 1, 1, 1.0, 1.0,
                                                     GridBagConstraints.WEST,
-                                                    GridBagConstraints.BOTH,
+                                                    GridBagConstraints.HORIZONTAL,
                                                     new Insets(0, 0, 0, 0),
                                                     0, 0));
       mRealHardwarePanel.add(mModeLabel,
@@ -296,7 +296,7 @@ public class MotionStarEditorPanel
       mRealHardwarePanel.add(mModeEditor,
                              new GridBagConstraints(1, 5, 1, 1, 1.0, 1.0,
                                                     GridBagConstraints.WEST,
-                                                    GridBagConstraints.BOTH,
+                                                    GridBagConstraints.HORIZONTAL,
                                                     new Insets(0, 0, 0, 0),
                                                     0, 0));
       mRealHardwarePanel.add(mReportRateLabel,
@@ -332,7 +332,7 @@ public class MotionStarEditorPanel
       mRealHardwarePanel.add(mDeviceHostEditor,
                              new GridBagConstraints(1, 8, 1, 1, 1.0, 1.0,
                                                     GridBagConstraints.WEST,
-                                                    GridBagConstraints.BOTH,
+                                                    GridBagConstraints.HORIZONTAL,
                                                     new Insets(0, 0, 2, 0),
                                                     0, 0));
       mHardwarePanel.add(mRealHardwarePanel,
