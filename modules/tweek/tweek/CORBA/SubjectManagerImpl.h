@@ -8,6 +8,7 @@
 #include <vpr/Sync/Mutex.h>
 #include <vpr/Util/Singleton.h>
 
+#include <tweek/CORBA/Subject.h>
 #include <tweek/CORBA/SubjectManager.h>
 
 
