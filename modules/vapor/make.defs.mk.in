@@ -115,7 +115,7 @@ EXTRA_CXXFLAGS=		$(CXXFLAGS_DYNLIB)
 EXTRA_DEPEND_FLAGS=	-I$(VPRROOT_ABS) @BOOST_INCLUDES@
 EXTRA_DEFS+=		-D_VPR_BUILD_ -DCPPDOM_EXPORTS
 EXTRA_INCLUDES=		-I$(top_srcdir) @BOOST_INCLUDES@
-EXTRA_LDFLAGS=		@EXTRA_LINK_FLAGS@
+EXTRA_LDFLAGS=		@EXTRA_LDFLAGS@
 
 # -----------------------------------------------------------------------------
 # Makedepend commands.  Doozer++ uses $(MKDEP_C) and $(MKDEP_CXX).
