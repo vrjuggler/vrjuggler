@@ -27,6 +27,7 @@ Begin "Zelda"
             "PinchGlove"
             "MotionStar"
             "Isense"
+            "Fastrack"
         End
         Begin "Simulated Devices"
             "SimDigitalGlove"

@@ -56,6 +56,12 @@
 #include <Input/vjPosition/vjMotionStar.h>
 #include <Input/Multi/vjTrackdController.h>
 #include <Input/Multi/vjTrackdSensor.h>
+
+/* The Polhemus Fastrack driver only works with SPROC right now. */
+#ifdef VJ_IRIX_SPROC
+#   include <Input/vjPosition/vjFastrack.h>
+#endif
+
 #else
 #include <Input/vjKeyboard/vjKeyboardWin32.h>
 #endif
@@ -102,6 +108,10 @@ void vjDeviceFactory::hackLoadKnownDevices()
    vjDeviceConstructor<vjXWinKeyboard>* xwin_key = new vjDeviceConstructor<vjXWinKeyboard>;
    vjDependencyManager::instance()->registerChecker(new vjXWinKBDepChecker());
    vjDeviceConstructor<vjThreeDMouse>* threed_mouse = new vjDeviceConstructor<vjThreeDMouse>;
+
+#ifdef VJ_IRIX_SPROC
+   vjDeviceConstructor<vjFastrack>* fastrack = new vjDeviceConstructor<vjFastrack>;
+#endif
 
 #else
 
