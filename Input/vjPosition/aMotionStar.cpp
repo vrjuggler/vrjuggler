@@ -1826,12 +1826,12 @@ aMotionStar::getRsp (void* packet, const size_t packet_size) {
 // ----------------------------------------------------------------------------
 ssize_t
 aMotionStar::recvn (void* packet, const size_t packet_size, const int flags) {
-    size_t count;
+    size_t bytes_left;
     ssize_t bytes;
 
-    count = packet_size;
+    bytes_left = packet_size;
 
-    while ( count > 0 ) {
+    while ( bytes_left > 0 ) {
         bytes = ::recv(m_socket, packet, packet_size, flags);
 
         // Read error.
@@ -1843,20 +1843,21 @@ aMotionStar::recvn (void* packet, const size_t packet_size, const int flags) {
             // Otherwise, we have an error situation, so return the value
             // returned by recv(2).
             else  {
-                break;
+                return -1;
             }
         }
-        // May have read EOF, so return bytes read so far.
+        // May have read EOF, so return bytes read so far (possibly less than
+        // packet_size).
         else if ( bytes == 0 ) {
-            bytes = packet_size - count;
+            return packet_size - bytes_left;
         }
         else {
             packet = (void*) ((char*) packet + bytes);
-            count -= bytes;
+            bytes_left -= bytes;
         }
     }
 
-    return bytes;
+    return packet_size;
 }
 
 // ----------------------------------------------------------------------------
