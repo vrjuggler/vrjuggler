@@ -4,10 +4,6 @@
 #define AJSOUNDFACTORY_H
 #include <string>
 #include "ajSoundImplementation.h"
-#include "ajOpenALSoundImplementation.h"
-#include "ajAudioWorksSoundImplementation.h"
-#include "ajStubSoundImplementation.h"
-#include "ajSoundImplementation.h"
 
 class ajSoundFactory
 {
@@ -20,23 +16,8 @@ public:
     * @semantics factory function used to create an implementation of a sound API 
     */
    static void createImplementation( const std::string& apiName,
-                              ajSoundImplementation* &mImplementation )
-   {
-      if (apiName == "OpenAL")
-      {
-         mImplementation = new ajOpenALSoundImplementation;
-      }
-      else if (apiName == "Audioworks")
-      {
-         mImplementation = new ajAudioWorksSoundImplementation;
-      }
-      else
-      {
-         mImplementation = new ajStubSoundImplementation;
-      }
-   }
+                              ajSoundImplementation* &mImplementation );
 private:  
-
    /** @link dependency */
    /*#  ajSoundImplementation lnkSoundImplementation; */
 
