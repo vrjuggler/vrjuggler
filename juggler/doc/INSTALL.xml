@@ -121,7 +121,7 @@ cvs -z3 -d :pserver:anonymous@cvs.vrjuggler.sourceforge.net:/cvsroot/vrjuggler c
                </listitem>
                <listitem>
                   <para>Configure all the modules making up VR Juggler. This is when you must tell the module configure scripts where all the package dependencies are found. For this description, we will use the term <filename>&lt;JUGGLER PATH&gt;</filename> to refer to the base of the Juggler Project source tree and <filename>&lt;JDOMPATH&gt;</filename> to refer to the JDOM installation. Assume that both of these are absolute paths (e.g., <filename>&lt;JUGGLERPATH&gt;</filename> = <filename>/home/user1/Source/juggler</filename>).</para>
-                  <screen>../configure.pl --prefix=$HOME/vrjuggler-2.0 --with-cppdom=&lt;JUGGLERPATH&gt;/external/cppdom --with-jdom="&lt;JDOMPATH&gt;/build/jdom.jar:&lt;JDOMPATH&gt;/lib/xerces.jar"</screen>
+                  <screen>../configure.pl --prefix=$HOME/vrjuggler-2.0 --with-cppdomroot=&lt;JUGGLERPATH&gt;/external/cppdom --with-jdom="&lt;JDOMPATH&gt;/build/jdom.jar:&lt;JDOMPATH&gt;/lib/xerces.jar"</screen>
                </listitem>
                <listitem>
                   <para>Compile the source tree using GNU make.</para>
@@ -184,7 +184,7 @@ cd build.sonix</screen></para>
 cd build.jccl</screen></para>
                   </listitem>
                   <listitem>
-                     <para><screen>../configure.pl --module=JCCL --prefix=$HOME/jccl-inst --with-cppdom=&lt;JUGGLERPATH&gt;/external/cppdom --with-jdom="&lt;JDOMPATH&gt;/build/jdom.jar:&lt;JDOMPATH&gt;/lib/xerces.jar"</screen></para>
+                     <para><screen>../configure.pl --module=JCCL --prefix=$HOME/jccl-inst --with-cppdomroot=&lt;JUGGLERPATH&gt;/external/cppdom --with-jdom="&lt;JDOMPATH&gt;/build/jdom.jar:&lt;JDOMPATH&gt;/lib/xerces.jar"</screen></para>
                   </listitem>
                   <listitem>
                      <para><screen>gmake debug install</screen></para>
@@ -203,7 +203,7 @@ cd build.jccl</screen></para>
 cd build.gadgeteer</screen></para>
                   </listitem>
                   <listitem>
-                     <para><screen>../configure.pl --module=Gadgeteer --prefix=$HOME/gadgeteer-inst --with-cppdom=&lt;JUGGLERPATH&gt;/external/cppdom --with-jdom="&lt;JDOMPATH&gt;/build/jdom.jar:&lt;JDOM PATH&gt;/lib/xerces.jar"</screen></para>
+                     <para><screen>../configure.pl --module=Gadgeteer --prefix=$HOME/gadgeteer-inst --with-cppdomroot=&lt;JUGGLERPATH&gt;/external/cppdom --with-jdom="&lt;JDOMPATH&gt;/build/jdom.jar:&lt;JDOM PATH&gt;/lib/xerces.jar"</screen></para>
                   </listitem>
                   <listitem>
                      <para><screen>gmake debug install</screen></para>
