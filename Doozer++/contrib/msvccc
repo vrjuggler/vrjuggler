@@ -1,0 +1,219 @@
+#! /bin/sh
+
+if test $# = 0; then
+  if `cl.exe >/dev/null 2>&1`; then
+    echo "The Microsoft Visual C++ wrapper, version 0.1."
+    exit 0
+  else
+    echo "cl.exe: command not found" >&2
+    exit 127
+  fi
+fi
+
+case $1 in
+/LST:* )
+  outfile="`echo $1 | cut -c6-`"
+  rm -f $outfile
+  shift
+  for object
+  do
+    echo $object >>$outfile
+  done
+  exit 0
+  ;;
+esac
+
+# XXX debug
+echo >> msvc.txt
+date +%H:%M:%S >> msvc.txt
+echo "in: \"$@\"" >> msvc.txt
+
+options="/nologo"
+c_is_used=false
+next_is_object=false
+# FIXME: handle multiple sourcefiles. 20001009 mortene.
+basename_source=
+msvc_tool=
+save_lib="$LIB"
+
+for msvc_option in $@
+do
+  case $msvc_option in
+    # This need to be kept before the -L* match to avoid -LINK being
+    # interpreted as "link with library INK".
+  -lib | -LIB | /lib | /LIB)
+    # FIXME: assert msvc_tool="". 20001018 mortene.
+    msvc_tool=lib.exe
+    ;;
+
+  -link | -LINK)
+    msvc_tool=link.exe
+    ;;
+
+    # This need to be kept before the -D* match to avoid -DLL being
+    # interpreted as "set preprocessor define LL".
+  -dll | -DLL | /dll | /DLL)
+    # FIXME: assert that msvc_tool="". 20001018 mortene.
+    msvc_tool=link.exe
+    options="$options /dll"
+    ;;
+
+  *.la) # Libtool file
+    # FIXME: assert that $msvc_tool is lib.exe or link.exe. 20001024 mortene.
+
+    # FIXME: we just assume that all object files should be extracted from
+    # the library, in case we're making a DLL (passing the .lib-files to
+    # link.exe doesn't preserve the exported symbols). 20001024 mortene.
+
+    old_library=
+    eval `grep '^old_library=' $msvc_option`
+    full_libname=`dirname $msvc_option`
+    libpath=`CYGWIN= cygpath -w "$full_libname"`
+    # FIXME: hardcoding .libs here is not good. 20001024 mortene.
+    full_libname="${libpath}\\.libs\\$old_library" 
+    libobjects=
+    for i in `lib.exe /nologo /list $full_libname | tr [:space:] ' '`; do
+      libobjects="$libobjects $libpath\\$i"
+    done
+    options="$options $libobjects"
+    ;;
+
+  *.lst) # text file with object file names
+    # used for linking final dll (optimized substitute for the libtool method)
+    libpath=`dirname $msvc_option`
+    libobjects=
+    for obj in `cat $msvc_option`; do
+      libobjects="$libobjects $libpath\\$obj"
+    done
+    options="$options $libobjects"
+    ;;
+
+  -E) # Run preprocessor
+    options="$options /E"
+    ;;
+
+  -D*) # Preprocessor define.
+    options="$options /`echo $msvc_option | sed s%^.%%`"
+    ;;
+
+  -g) # Debug Symbols
+    options="$options /Zi"
+    ;;
+
+  -O | -O?) # Optimization
+    options="$options /Ogityb2 /Gs"
+    ;;
+
+  -c) # Compile objectfile
+    c_is_used=true
+    options="$options /c"
+    ;;
+
+  -m*) # Hardware
+    case $msvc_option in
+    -m386 | -mcpu=i386)
+      options="$options /G3"
+      ;;
+    -m486 | -mcpu=i486)
+      options="$options /G4"
+      ;;
+    -mpentium | -mcpu=pentium)
+      options="$options /G5"
+      ;;
+    -mpentiumpro | -mcpu=pentiumpro)
+      options="$options /G6"
+      ;;
+    *)
+      # don't pretend to handle options that can't be handled
+      echo "msvccc error: unknown option \"$msvc_option\"" >&2
+      exit 1
+      ;;
+    esac
+    ;;
+
+  -o) # Name object- or executable file
+    if $c_is_used; then
+      options="$options /Fo" # name object file
+    else
+      options="$options /Fe" # name executable file
+    fi
+    # FIXME: couldn't we just "shift in" the object file? 20001018 mortene.
+    next_is_object=true
+    ;;
+
+  *.c) # C file
+    basename_source=`basename $msvc_option`
+    sourcefile_name=`CYGWIN= cygpath -w $msvc_option`
+    options="$options /Tc$sourcefile_name" # force compilation as C
+    ;;
+
+  *.cpp | *.cxx | *.c++ | *.cc) # C++ file
+    basename_source=`basename $msvc_option`
+    sourcefile_name=`CYGWIN= cygpath -w $msvc_option`
+    options="$options /Tp$sourcefile_name" # force compilation as C++
+    ;;
+
+  -I*)
+    inc_path=`echo $msvc_option | sed 's%^..%%'`
+    options="$options /I`CYGWIN= cygpath -w $inc_path`"
+    ;;
+
+  -L*)
+    ld_path=`echo $msvc_option | sed 's%^..%%'`
+    ld_path=`CYGWIN= cygpath -w "$ld_path"`
+    if test x"$LIB" = x; then
+      LIB="$ld_path"
+    else
+      LIB="${ld_path}\;$LIB"
+    fi
+    ;;
+
+  -l*)
+    base_libname=`echo $msvc_option | sed 's%^..%%'`
+    options="$options $base_libname.lib"
+    ;;
+
+  /*) # Remaining options given in "MSVC++ format" are just passed on.
+    options="$options $msvc_option"
+    ;;
+
+  -*)
+    # Using a warning here and then continuing won't work, as the
+    # configure script will then for instance believe the compiler
+    # can handle "-g" and all other options which are tried.
+    echo "msvccc error: unknown option \"$msvc_option\"" >&2
+    exit 1
+    ;;
+
+  *) # Regular disk files (sourcecode files, object files, library files, ..)
+
+    # Follow file links as the MSVC++ tools doesn't grok them.
+    test -L $msvc_option && msvc_option=`CYGWIN= cygpath -w $msvc_option`
+
+    if $next_is_object; then
+      options="$options$msvc_option"
+      next_is_object=false
+    else
+      options="$options $msvc_option"
+    fi
+    ;;
+  esac
+done
+
+test -z "$msvc_tool" && msvc_tool=cl.exe
+
+# XXX debug
+echo "out: $msvc_tool $options" >> msvc.txt
+
+stdout=$$.out
+stderr=$$.err
+$msvc_tool $options >$stdout 2>$stderr
+exit_code=$?
+grep -v "^$basename_source\$" < $stdout
+grep -v "^$basename_source\$" >&2 < $stderr
+
+rm -f $stdout
+rm -f $stderr
+LIB="$save_lib"
+
+exit $exit_code
