@@ -89,8 +89,16 @@ typedef UINT u_int;
 //#include <Kernel/vjDebug.h>
 #endif
 
-
 /* --- Macros ---- */
+
+/*
+ * Define this macro to replace calls to sginap(2) if sginap(2) is not
+ * avialable.
+ */
+#ifndef HAVE_SGINAP
+#   define sginap(x) (usleep(x * 333333))
+#endif
+
 #define VJ_EPS 1e-8
 #define VJ_DEG2RAD(x) ((x)*M_PI/180.0)
 #define VJ_RAD2DEG(x) ((x)*180.0/M_PI)
