@@ -196,6 +196,9 @@ inline std::ostream& operator<<(std::ostream& out, const vpr::GUID& guid)
 #   include <hash_map.h>
 #endif
 
+namespace std
+{
+
 template<>
 struct hash<vpr::GUID>
 {
@@ -204,6 +207,8 @@ struct hash<vpr::GUID>
       return guid.m_guid.packed.l0 + guid.m_guid.packed.l1 + guid.m_guid.packed.l2 + guid.m_guid.packed.l3; 
    }
 };
+
+}
 
 #endif
 
