@@ -56,7 +56,9 @@ public class ConfigContextEditor
                {
                   // Empty the property sheet.
                   mElementPropSheet.removeAll();
-                  mElementPropSheet.refresh();
+                  mElementPropSheet.revalidate();
+                  mElementPropSheet.repaint();
+
                   return;
                }
 

@@ -51,7 +51,6 @@ public class ExpandablePanel extends PropertyComponent
 
       // Set the layout to use.
       setLayout (tableLayout);
-      
 
       //mExpandedIcon = (Icon)UIManager.get( "Tree.expandedIcon" );
       //mCollapsedIcon = (Icon)UIManager.get( "Tree.collapsedIcon" );
@@ -66,13 +65,7 @@ public class ExpandablePanel extends PropertyComponent
                {
                   TableLayoutConstraints c2 = new TableLayoutConstraints(1, 1, 4, 1, TableLayout.FULL, TableLayout.FULL);
                   add(mComponent, c2);
-                  
-                  // Refresh us.
-                  refresh();
-                  
-                  // Refresh our child.
-                  mComponent.refresh();
-                  
+
                   // We are now expanded.
                   mExpanded = true;
                   mExpandButton.setIcon(mExpandedIcon);
@@ -80,18 +73,14 @@ public class ExpandablePanel extends PropertyComponent
                else
                {
                   remove(mComponent);
-                  
-                  // Refresh ourselves.
-                  refresh();
-                  
+
                   // We are now collapsed.
                   mExpanded = false;
                   mExpandButton.setIcon(mCollapsedIcon);
                }
 
-               // We must update the height of our row.
-               updateMyRow();
-               refresh();
+               revalidate();
+               repaint();
             }
          });
       
@@ -113,13 +102,6 @@ public class ExpandablePanel extends PropertyComponent
       add(mTypeButton, ct);
    }
    
-   public void refresh()
-   {
-      updateMyRow();
-      super.refresh();
-      updateMyRow();
-   }
-
    protected   PropertyComponent mComponent     = null;
    private     Icon              mExpandedIcon  = null;
    private     Icon              mCollapsedIcon = null;   
