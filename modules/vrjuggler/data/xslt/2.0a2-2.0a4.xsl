@@ -2203,7 +2203,26 @@
       Copy everything that hasn't already been matched.
    -->
    <xsl:template match="*">
-      <xsl:copy-of select="." />
+      <xsl:message terminate="no">
+         <xsl:text>Updating unknown element type </xsl:text>
+         <xsl:value-of select="name(.)" />
+         <xsl:text> (this is fine for custom types)</xsl:text>
+         <xsl:value-of select="$newline"/>
+      </xsl:message>
+      <xsl:variable name="elt_name">
+         <xsl:value-of select="name(.)"/>
+      </xsl:variable>
+      <xsl:element name="{$elt_name}">
+         <xsl:attribute name="name">
+            <xsl:value-of select="@name"/>
+         </xsl:attribute>
+         <xsl:attribute name="version">
+            <xsl:text>1</xsl:text>
+         </xsl:attribute>
+         <xsl:value-of select="$newline"/>
+         <xsl:copy-of select="./*" />
+         <xsl:value-of select="$newline"/>
+      </xsl:element>
       <xsl:value-of select="$newline"/>
    </xsl:template>
 
