@@ -84,7 +84,7 @@
 # Base variables needed by all makefiles.
 # -----------------------------------------------------------------------------
 mtreedir	= $(topdir)/mtree
-releasedir	= @SAFE_JUGGLERROOT_ABS@/release
+releasedir	= $(JUGGLERROOT_ABS)/release
 scriptdir	= $(releasedir)/scripts
 topdir		= @topdir@
 MAKEFLAGS	+= --no-print-directory
@@ -93,8 +93,8 @@ MKDEPS_CXX	= @CXX@
 MKINSTALLDIRS	= $(scriptdir)/mkinstalldirs
 MKPATH		= $(JUGGLERROOT_ABS)/Doozer++/mk
 MTREE_CMD	= @MTREE_CMD@
-VPRROOT_ABS	= @SAFE_VPRROOT_ABS@
-JUGGLERROOT_ABS	= @SAFE_JUGGLERROOT_ABS@
+VPRROOT_ABS	= @VPRROOT_ABS@
+JUGGLERROOT_ABS	= @JUGGLERROOT_ABS@
 
 # -----------------------------------------------------------------------------
 # Extra information for the Doozer++ file common.defs.mk.
