@@ -231,6 +231,19 @@ public class ChunkDescDBEditor
    }
 
    /**
+    * Called by a ChunkDesc when it has added a category that it belongs to.
+    */
+   public void categoryAdded(ChunkDescEvent evt)
+   {
+      ChunkDesc src = (ChunkDesc)evt.getSource();
+      String category = (String)evt.getValue();
+
+      // Add the desc to the new category
+      DefaultMutableTreeNode categoryNode = getCategoryNode(category);
+      addDescTo(categoryNode, src);
+   }
+
+   /**
     * Called by a ChunkDesc when one of its properties has been modified.
     */
    public void propertyDescChanged(ChunkDescEvent evt)
