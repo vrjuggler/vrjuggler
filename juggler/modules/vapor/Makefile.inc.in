@@ -77,11 +77,7 @@ DYNAMICLIB_EXT	= @DYNAMICLIB_EXT@
 # Full list of the libraries to build.
 LIBS		= $(VPR_LIBRARY)
 STATIC_LIBS	= $(LIBS)
-
-# We cannot build dynamic libraries on Win32 yet.
-ifneq ($(OS_TYPE), Win32)
-    DYNAMIC_LIBS	= $(LIBS)
-endif
+DYNAMIC_LIBS	= $(LIBS)
 
 DYLIB_DEPS	= @DYLIB_DEPS@
 
@@ -139,7 +135,7 @@ $(LIBDIR)/$(VPR_LIB_DYNAMIC): $(OBJDIR)/*.$(OBJEXT)
 	@echo "Creating $@"
 	@echo "------------------------------------------------"
 	@$(SHELL) $(MKINSTALLDIRS) $(LIBDIR)
-	$(LD) $(LDOPTS) -o $@ $(OBJDIR)/*.$(OBJEXT) $(DYLIB_DEPS)
+	$(LD) $(LDOPTS) $(DYLIB_NAME_FLAG) $(OBJDIR)/*.$(OBJEXT) $(DYLIB_DEPS)
 	cd $(LIBDIR_BASE) && rm -f $(notdir $@) && $(LN_S) $@ ./
 	@echo "------------------------------------------------"
 	@echo "$@ done"
