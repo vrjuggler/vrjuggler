@@ -40,7 +40,12 @@ CPPUNIT_TEST_SUITE_REGISTRATION( SelectorTest );
 void SelectorTest::testAcceptorPoolSelection ()
 {
     threadAssertReset();
-    mRendevousPort = 30000 + (random() % 30000);     // Get a partially random port
+#ifdef VPR_OS_Win32
+	long rand_num(rand());
+#else
+	long rand_num(random());
+#endif
+    mRendevousPort = 30000 + (rand_num % 30000);     // Get a partially random port
 
     mNumRendevousPorts = 13;
     mNumIters = 50;
@@ -175,7 +180,12 @@ void SelectorTest::testAcceptorPoolSelection_connector( void* arg )
    // Connect randomly to the rendevous ports
    for(unsigned int i=0;i<mNumIters;i++)
    {
-      vpr::Uint16 port_num = mRendevousPort+(random() % mNumRendevousPorts);
+#ifdef VPR_OS_Win32
+      long rand_num(rand());
+#else
+      long rand_num(random());
+#endif
+      vpr::Uint16 port_num = mRendevousPort+(rand_num % mNumRendevousPorts);
       //std::cout << " p: " << port_num << std::flush;
       remote_addr.setAddress("localhost", port_num);
       vpr::SocketStream con_sock;
@@ -194,7 +204,12 @@ void SelectorTest::testAcceptorPoolSelection_connector( void* arg )
 void SelectorTest::testSendThenPoll ()
 {
     threadAssertReset();
-    mRendevousPort = 30000 + (random() % 30000);     // Get a partially random port
+#ifdef VPR_OS_Win32
+	long rand_num(rand());
+#else
+	long rand_num(random());
+#endif
+    mRendevousPort = 30000 + (rand_num % 30000);     // Get a partially random port
     mNumRendevousPorts = 37;
     mNumIters = 10;
     mMessageValue = std::string("The Data");
@@ -388,7 +403,12 @@ void SelectorTest::testSendThenPoll_connector (void* arg)
    // - Wait for recievers to say that it was good
    for(i=0;i<mNumIters;i++)
    {
-      vpr::Uint16 num_ports = (random() % mNumRendevousPorts);          // Select some number of ports to send to
+#ifdef VPR_OS_Win32
+      long rand_num(rand());
+#else
+      long rand_num(random());
+#endif
+      vpr::Uint16 num_ports = (rand_num % mNumRendevousPorts);          // Select some number of ports to send to
       if(num_ports == 0)
          num_ports = 1;                                                 // Make sure we always send some
 
