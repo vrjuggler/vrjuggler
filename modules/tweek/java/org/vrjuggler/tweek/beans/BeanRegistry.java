@@ -45,12 +45,12 @@ import java.util.Vector;
 public class BeanRegistry
 {
    /**
-    * This class is a singleton, use getInstance() instead.
+    * This class is a singleton, use instance() instead.
     */
-   protected BeanRegistry()
+   protected BeanRegistry ()
    {
-      beans = new HashMap();
-      listeners = new Vector();
+      mBeans = new HashMap();
+      mListeners = new Vector();
    }
 
    /**
@@ -65,7 +65,7 @@ public class BeanRegistry
     */
    public synchronized void registerBean( TweekBean bean )
    {
-      beans.put( bean.getName(), bean );
+      mBeans.put( bean.getName(), bean );
       fireBeanRegistrationEvent( bean );
    }
 
@@ -77,7 +77,7 @@ public class BeanRegistry
     */
    public synchronized void unregisterBean( String name )
    {
-      beans.remove( name );
+      mBeans.remove(name);
    }
 
    /**
@@ -89,9 +89,9 @@ public class BeanRegistry
     * @return  the bean registered with the given name if successful, null if
     *          there are no beans with the given name
     */
-   public synchronized TweekBean getBean( String name )
+   public synchronized TweekBean getBean (String name)
    {
-      return (TweekBean)beans.get( name );
+      return (TweekBean) mBeans.get(name);
    }
 
    /**
@@ -109,20 +109,25 @@ public class BeanRegistry
       Class testClass;
 
       // try to get the class object for the given className
-      try {
-         testClass = Class.forName( className );
-      } catch ( ClassNotFoundException cnfe ) {
+      try
+      {
+         testClass = Class.forName(className);
+      }
+      catch (ClassNotFoundException cnfe)
+      {
          cnfe.printStackTrace();
          return matches;
       }
 
       // Check each bean in the registry
-      Iterator beanItr = beans.values().iterator();
-      while ( beanItr.hasNext() ) {
+      Iterator beanItr = mBeans.values().iterator();
+      while ( beanItr.hasNext() )
+      {
          // Get the classes and interfaces of the bean and compare them to the
          // className argument to see if the bean derives/implements that class.
          TweekBean bean = (TweekBean)beanItr.next();
-         if ( testClass.isAssignableFrom( bean.getClass() ) ) {
+         if ( testClass.isAssignableFrom(bean.getClass()) )
+         {
             // We have a match! Remember the bean and move on
             matches.add( bean );
          }
@@ -136,9 +141,9 @@ public class BeanRegistry
     *
     * @param l    the object that wishes to listen to this registry
     */
-   public synchronized void addBeanRegistrationListener( BeanRegistrationListener l )
+   public synchronized void addBeanRegistrationListener (BeanRegistrationListener l)
    {
-      listeners.add( l );
+      mListeners.add(l);
    }
 
    /**
@@ -147,9 +152,9 @@ public class BeanRegistry
     *
     * @param l    the listener to remove from this object
     */
-   public synchronized void removeBeanRegistrationListener( BeanRegistrationListener l )
+   public synchronized void removeBeanRegistrationListener (BeanRegistrationListener l)
    {
-      listeners.remove( l );
+      mListeners.remove(l);
    }
 
    /**
@@ -166,7 +171,7 @@ public class BeanRegistry
 
       synchronized( this )
       {
-         listenersCopy = (Vector)listeners.clone();
+         listenersCopy = (Vector) mListeners.clone();
       }
 
       for ( Iterator itr = listenersCopy.iterator(); itr.hasNext(); )
@@ -180,14 +185,16 @@ public class BeanRegistry
     * Gets the singleton instance of this class. This implementation is thread
     * safe.
     */
-   public static BeanRegistry instance()
+   public static BeanRegistry instance ()
    {
-      synchronized( BeanRegistry.class ) {
-         if ( instance == null ) {
-            instance = new BeanRegistry();
+      synchronized (BeanRegistry.class)
+      {
+         if ( mInstance == null )
+         {
+            mInstance = new BeanRegistry();
          }
       }
-      return instance;
+      return mInstance;
    }
 
    /**
@@ -199,7 +206,7 @@ public class BeanRegistry
     * @supplierRole Singleton factory
     */
    /*# private BeanRegistry _beanRegistry; */
-   private static BeanRegistry instance = null;
+   private static BeanRegistry mInstance = null;
 
    /**
     * Maps a bean's name to the TweekBean implementation object.
@@ -207,10 +214,10 @@ public class BeanRegistry
     * @link aggregation
     * @associates <{TweekBean}>
     */
-   private Map beans;
+   private Map mBeans;
 
    /**
     * The list of listeners of bean registration events for this object.
     */
-   private Vector listeners;
+   private Vector mListeners;
 }
