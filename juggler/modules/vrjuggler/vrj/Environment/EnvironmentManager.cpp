@@ -32,7 +32,7 @@ vjEnvironmentManager::vjEnvironmentManager():
     perf_buffer_reader = new vjTuPerfBufReader(NULL, 500);
     updaters.push_back (perf_buffer_reader);
 
-    reconfigure();
+    //reconfigure();
 }
 
 
@@ -143,6 +143,11 @@ bool vjEnvironmentManager::isAccepting() {
 
 void vjEnvironmentManager::addPerfDataBuffer (vjPerfDataBuffer *v) {
     perf_buffer_reader->addBuffer(v);
+}
+
+
+void vjEnvironmentManager::removePerfDataBuffer (vjPerfDataBuffer *v) {
+    perf_buffer_reader->removeBuffer(v);
 }
 
 
