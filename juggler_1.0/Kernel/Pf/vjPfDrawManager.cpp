@@ -175,12 +175,20 @@ void vjPfDrawManager::draw()
 // XXX: Hack for now
 void vjPfDrawManager::callAppChanFuncs()
 {
-   for(unsigned int dispIndex=0;dispIndex<disps.size();dispIndex++)
+   for(unsigned int dispIndex=0;dispIndex<mSurfDisps.size();dispIndex++)
    {
-      if (disps[dispIndex].chans[pfDisp::LEFT] != NULL)
-         app->appChanFunc(disps[dispIndex].chans[pfDisp::LEFT]);
-      if (disps[dispIndex].chans[pfDisp::RIGHT] != NULL)
-         app->appChanFunc(disps[dispIndex].chans[pfDisp::RIGHT]);
+      if (mSurfDisps[dispIndex].chans[pfDisp::LEFT] != NULL)
+         app->appChanFunc(mSurfDisps[dispIndex].chans[pfDisp::LEFT]);
+      if (mSurfDisps[dispIndex].chans[pfDisp::RIGHT] != NULL)
+         app->appChanFunc(mSurfDisps[dispIndex].chans[pfDisp::RIGHT]);
+   }
+
+   for(unsigned int dispIndex=0;dispIndex<mSimDisps.size();dispIndex++)
+   {
+      if (mSimDisps[dispIndex].chans[pfDisp::LEFT] != NULL)
+         app->appChanFunc(mSimDisps[dispIndex].chans[pfDisp::LEFT]);
+      if (mSimDisps[dispIndex].chans[pfDisp::RIGHT] != NULL)
+         app->appChanFunc(mSimDisps[dispIndex].chans[pfDisp::RIGHT]);
    }
 }
 
@@ -277,7 +285,6 @@ void vjPfDrawManager::initDrawing()
       vjASSERT(NULL != tempPfDisp.pWin);
 
       tempPfDisp.disp->getOriginAndSize(xo, yo, xs, ys);
-      //tempPfDisp.pWin->setMode(PFWIN_ORIGIN_LL, PF_OFF);
       tempPfDisp.pWin->setOriginSize(xo, yo, xs, ys);
 
          // Setup window border
@@ -335,86 +342,106 @@ void vjPfDrawManager::initDrawing()
 
 
       // -- Add new pfDisp to disp Vector -- //
-      disps.push_back(tempPfDisp);      // This should make a COPY
+      // This should make a COPY
+      if(tempPfDisp.disp->isSimulator())
+         mSimDisps.push_back(tempPfDisp);
+      else
+         mSurfDisps.push_back(tempPfDisp);
 
       vjDEBUG_END(vjDBG_DRAW_MGR,vjDBG_STATE_LVL) << "---- Display Open (done) --------" << std::endl << vjDEBUG_FLUSH;
    }
 
-
-   // ----- SETUP MASTER CHANNEL ----- //
-   mMasterChan = disps[0].chans[pfDisp::LEFT];
-   vjASSERT(mMasterChan != NULL);
-
-   // Setup all Shared properties
-   initMasterChanAtrribs();
-
-   // ----- SETUP CHANNEL GROUP ---- //
-   unsigned dispIndex=0;
-   for (dispIndex=0; dispIndex<disps.size(); dispIndex++)
+   // ----- SETUP Surface MASTER CHANNEL ----- //
+   if(mSurfDisps.size() > 0)
    {
-      pfChannel *left_ch, *right_ch;
-      left_ch = disps[dispIndex].chans[pfDisp::LEFT];
-      right_ch = disps[dispIndex].chans[pfDisp::RIGHT];
+      mSurfMasterChan = mSurfDisps[0].chans[pfDisp::LEFT];
+      vjASSERT(mSurfMasterChan != NULL);
 
-      vjASSERT(NULL != left_ch);
+      mSurfMasterChan->setScene(mSceneRoot);       // Set the shared "normal" scene
 
-      if (dispIndex != 0)                    // XXX: Assumes that all displays will have a valid left channel
-         mMasterChan->attach(left_ch);
-      if(right_ch != NULL)
-         mMasterChan->attach(right_ch);
-   }
+      initChanGroupAttribs(mSurfMasterChan);       // Setup the channel group attribs
 
-   // --- Setup channel's scene --- //
-   // Channels that are drawing a simulator get a scene graph with
-   // the simulator stuff in it.
-   for(dispIndex=0;dispIndex<disps.size();dispIndex++)
-   {
-      if(disps[dispIndex].disp->isSimulator())
+            // Attach channel groups
+      for (unsigned dispIndex=0; dispIndex<mSurfDisps.size(); dispIndex++)
       {
-         if (disps[dispIndex].chans[pfDisp::LEFT] != NULL)
-            disps[dispIndex].chans[pfDisp::LEFT]->setScene(mRootWithSim);
-      } else {
-         if (disps[dispIndex].chans[pfDisp::LEFT] != NULL)
-            disps[dispIndex].chans[pfDisp::LEFT]->setScene(mSceneRoot);
-         if (disps[dispIndex].chans[pfDisp::RIGHT] != NULL)
-            disps[dispIndex].chans[pfDisp::RIGHT]->setScene(mSceneRoot);
+         pfChannel* left_ch = mSurfDisps[dispIndex].chans[pfDisp::LEFT];
+         pfChannel* right_ch = mSurfDisps[dispIndex].chans[pfDisp::RIGHT];
+         vjASSERT(NULL != left_ch);
+
+         if (dispIndex != 0)                    // XXX: Assumes that all displays will have a valid left channel
+            mSurfMasterChan->attach(left_ch);
+         if(right_ch != NULL)
+            mSurfMasterChan->attach(right_ch);
       }
    }
+   else
+      mSurfMasterChan = NULL;
 
-   vjASSERT(mSceneRoot != NULL);
+   // ----- SETUP Sim MASTER CHANNEL ----- //
+   if(mSimDisps.size() > 0)
+   {
+      mSimMasterChan = mSimDisps[0].chans[pfDisp::LEFT];
+      vjASSERT(mSimMasterChan != NULL);
+
+      mSimMasterChan->setScene(mRootWithSim);       // Set the shared "normal" scene
+      initChanGroupAttribs(mSimMasterChan);       // Setup the channel group attribs
+
+            // Attach channel groups
+      for (unsigned dispIndex=0; dispIndex<mSimDisps.size(); dispIndex++)
+      {
+         pfChannel* left_ch = mSimDisps[dispIndex].chans[pfDisp::LEFT];
+         pfChannel* right_ch = mSimDisps[dispIndex].chans[pfDisp::RIGHT];
+         vjASSERT(NULL != left_ch);
+
+         if (dispIndex != 0)                    // XXX: Assumes that all displays will have a valid left channel
+            mSimMasterChan->attach(left_ch);
+         if(right_ch != NULL)
+            mSimMasterChan->attach(right_ch);
+      }
+   }
+   else
+      mSimMasterChan = NULL;
+
+
+   vjASSERT(mSceneRoot != NULL && "We have a NULL root scene in vjPfDrawManager");
+   vjASSERT(mRootWithSim != NULL && "We have a NULL sim root scene in vjPfDrawManager");
 
    //pfFrame();
 
    // Dump the state
-   debugDump();
+   debugDump(vjDBG_CONFIG_LVL);
 
    vjDEBUG_END(vjDBG_DRAW_MGR,vjDBG_STATE_LVL) << "vjPfDrawManager::initDrawing: Exiting." << std::endl << vjDEBUG_FLUSH;
 }
 
 // Initialize the parameters of the master channel
 // Sets the attribs to share
-void vjPfDrawManager::initMasterChanAtrribs()
+void vjPfDrawManager::initChanGroupAttribs(pfChannel* masterChan)
 {
-   //mMasterChan->setNearFar(0.05, 10000.0f);      // XXX: Look here near far information
+   //masterChan->setNearFar(0.05, 10000.0f);      // XXX: Look here near far information
 
-   vjASSERT(mMasterChan != NULL);
-
-   mMasterChan->setShare(PFCHAN_NEARFAR | PFCHAN_EARTHSKY |
-                        PFCHAN_STRESS | PFCHAN_LOD | PFCHAN_SWAPBUFFERS |
-                        PFCHAN_APPFUNC | PFCHAN_CULLFUNC | PFCHAN_STATS_DRAWMODE );
+   vjASSERT(masterChan != NULL);
 
    /*
-   unsigned cur_share = mMasterChan->getShare();          // Get current setting, and OR the new stuff on
-   mMasterChan->setShare(cur_share | PFCHAN_NEARFAR | PFCHAN_EARTHSKY |
+   masterChan->setShare(PFCHAN_NEARFAR | PFCHAN_EARTHSKY |
                         PFCHAN_STRESS | PFCHAN_LOD | PFCHAN_SWAPBUFFERS |
-                        PFCHAN_APPFUNC | PFCHAN_CULLFUNC | PFCHAN_STATS_DRAWMODE );
-   */
+                        PFCHAN_APPFUNC | PFCHAN_SCENE | PFCHAN_CULLFUNC | PFCHAN_STATS_DRAWMODE );
+                        */
 
+   ///*
+   unsigned cur_share = masterChan->getShare();          // Get current setting, and OR the new stuff on
+   masterChan->setShare((cur_share | PFCHAN_NEARFAR | PFCHAN_EARTHSKY |
+                        PFCHAN_STRESS | PFCHAN_LOD | PFCHAN_SWAPBUFFERS |
+                        PFCHAN_APPFUNC | PFCHAN_SCENE | PFCHAN_CULLFUNC |
+                        PFCHAN_STATS_DRAWMODE)
+                        //& (~PFCHAN_SCENE)
+                        );
+   //*/
 
    /*
-   mMasterChan->setTravFunc(PFTRAV_APP, vjPfAppFunc);
+   masterChan->setTravFunc(PFTRAV_APP, vjPfAppFunc);
 
-   mMasterChan->setShare(PFCHAN_NEARFAR | PFCHAN_EARTHSKY |
+   masterChan->setShare(PFCHAN_NEARFAR | PFCHAN_EARTHSKY |
                         PFCHAN_STRESS | PFCHAN_SWAPBUFFERS |
                         PFCHAN_APPFUNC | PFCHAN_CULLFUNC );
    */
@@ -556,22 +583,25 @@ void vjPfDrawManager::updateProjections()
    // --- Update the channel projections --- //
    //for(each pfDisp)
    //    update Performer specific stuff.
-   for (std::vector<pfDisp>::iterator i = disps.begin(); i != disps.end(); i++)
+   for (std::vector<pfDisp>::iterator i = mSurfDisps.begin(); i != mSurfDisps.end(); i++)
    {
-      if((*i).disp->isSurface())    // SURFACE Display
-      {
-         vjSurfaceDisplay* surf_disp = dynamic_cast<vjSurfaceDisplay*>((*i).disp);
-         updatePfProjection((*i).chans[pfDisp::LEFT], surf_disp->getLeftProj(),false);
-         if(surf_disp->inStereo())
-            updatePfProjection((*i).chans[pfDisp::RIGHT], surf_disp->getRightProj(),false);
-      }
-      else                       // SIM DISPLAY
-      {
-         vjSimDisplay* sim_disp = dynamic_cast<vjSimDisplay*>((*i).disp);
-         updateSimulator(sim_disp);
-         updatePfProjection((*i).chans[pfDisp::LEFT], sim_disp->getCameraProj(), true);
-      }
+      vjSurfaceDisplay* surf_disp = dynamic_cast<vjSurfaceDisplay*>((*i).disp);
+      vjASSERT(surf_disp != NULL && "Could not cast supposedly surface display to vjSurfaceDisplay.");
+
+      updatePfProjection((*i).chans[pfDisp::LEFT], surf_disp->getLeftProj(),false);
+      if(surf_disp->inStereo())
+         updatePfProjection((*i).chans[pfDisp::RIGHT], surf_disp->getRightProj(),false);
    }
+
+   for(std::vector<pfDisp>::iterator i = mSimDisps.begin(); i != mSimDisps.end(); i++)
+   {
+      vjSimDisplay* sim_disp = dynamic_cast<vjSimDisplay*>((*i).disp);
+      vjASSERT(sim_disp != NULL && "Could not cast supposedly simulator display to vjSimDisplay.");
+
+      updateSimulator(sim_disp);
+      updatePfProjection((*i).chans[pfDisp::LEFT], sim_disp->getCameraProj(), true);
+   }
+
 }
 
 //! POST: chan has it's view matrix set to the Performer
@@ -624,58 +654,81 @@ void vjPfDrawManager::updatePfProjection(pfChannel* chan, vjProjection* proj, bo
 // NOTE: The "cool" STL functor search didn't work for some reason
 vjPfDrawManager::pfDisp* vjPfDrawManager::getPfDisp(pfChannel* chan)
 {
-   for(unsigned int i=0;i<disps.size();i++)
+   // Search surface displays
+   for(unsigned int i=0;i<mSurfDisps.size();i++)
    {
-      pfChannel* left_chan = disps[i].chans[pfDisp::LEFT];
-      pfChannel* right_chan = disps[i].chans[pfDisp::RIGHT];
+      pfChannel* left_chan = mSurfDisps[i].chans[pfDisp::LEFT];
+      pfChannel* right_chan = mSurfDisps[i].chans[pfDisp::RIGHT];
       if((chan == left_chan) || (chan == right_chan))
-         return &(disps[i]);
+         return &(mSurfDisps[i]);
+   }
+
+   // Search simulator displays
+   for(unsigned int i=0;i<mSimDisps.size();i++)
+   {
+      pfChannel* left_chan = mSimDisps[i].chans[pfDisp::LEFT];
+      pfChannel* right_chan = mSimDisps[i].chans[pfDisp::RIGHT];
+      if((chan == left_chan) || (chan == right_chan))
+         return &(mSimDisps[i]);
    }
 
    return NULL;
 }
 
-void vjPfDrawManager::debugDump()
+void vjPfDrawManager::debugDump(int debugLevel)
 {
-   vjDEBUG_BEGIN(vjDBG_DRAW_MGR,0) << "-- DEBUG DUMP --------- " << clrOutNORM(clrCYAN,"vjPfDrawManager:") << (void*)this << " ------------" << std::endl << vjDEBUG_FLUSH;
-   vjDEBUG(vjDBG_DRAW_MGR,0)       << "app:" << (void*)app << std::endl << vjDEBUG_FLUSH;
-   vjDEBUG(vjDBG_DRAW_MGR,0)       << "scene:" << (void*)mSceneRoot << std::endl << vjDEBUG_FLUSH;
-   vjDEBUG(vjDBG_DRAW_MGR,0)       << "sim scene:" << (void*)mRootWithSim << std::endl << vjDEBUG_FLUSH;
-   vjDEBUG(vjDBG_DRAW_MGR,0)       << "Disps:" << disps.size() << std::endl << vjDEBUG_FLUSH;
-
-   for (std::vector<pfDisp>::iterator i = disps.begin(); i != disps.end(); i++)
+   vjDEBUG_BEGIN(vjDBG_DRAW_MGR,debugLevel) << "-- DEBUG DUMP --------- " << clrOutNORM(clrCYAN,"vjPfDrawManager:") << (void*)this << " ------------" << std::endl << vjDEBUG_FLUSH;
+   vjDEBUG_NEXT(vjDBG_DRAW_MGR,debugLevel)       << "app:" << (void*)app << std::endl << vjDEBUG_FLUSH;
+   vjDEBUG_NEXT(vjDBG_DRAW_MGR,debugLevel)       << "scene:" << (void*)mSceneRoot << std::endl << vjDEBUG_FLUSH;
+   vjDEBUG_NEXT(vjDBG_DRAW_MGR,debugLevel)       << "sim scene:" << (void*)mRootWithSim << std::endl << vjDEBUG_FLUSH;
+   vjDEBUG_NEXT(vjDBG_DRAW_MGR,debugLevel)       << "Surf Disps:" << mSurfDisps.size() << std::endl << vjDEBUG_FLUSH;
+   for (std::vector<pfDisp>::iterator i = mSurfDisps.begin(); i != mSurfDisps.end(); i++)
    {
-      vjDEBUG_BEGIN(vjDBG_DRAW_MGR,0) << "Display:" << (void*)(i->disp)
-                                      << std::endl << vjDEBUG_FLUSH;
-      vjDEBUG(vjDBG_DRAW_MGR,0) << "pWin:" << (void*)(i->pWin) << std::endl
-                                << vjDEBUG_FLUSH;
-      vjDEBUG(vjDBG_DRAW_MGR,0) << "vis id:" << std::hex
-                                << i->pWin->getFBConfigId() << std::endl
-                                << vjDEBUG_FLUSH;
-      pfChannel* l_chan = (i->chans[pfDisp::LEFT]);
-      pfChannel* r_chan = (i->chans[pfDisp::RIGHT]);
-      unsigned lc_mask,rc_mask;
-      if(l_chan != NULL)
-         lc_mask = l_chan->getShare();
-      if(r_chan != NULL)
-         rc_mask = r_chan->getShare();
-      vjDEBUG_END(vjDBG_DRAW_MGR,0)  << "chans: L:" << (void*)l_chan
-                                     << "  shared: FOV:" << (lc_mask & PFCHAN_FOV)
-                                     << " Scene:" << (lc_mask & PFCHAN_SCENE)
-                                     << " AppFunc:" << (lc_mask & PFCHAN_APPFUNC)
-                                     << " SwapBuff:" << (lc_mask & PFCHAN_SWAPBUFFERS)
-                                     << " SwapBuff-HW:" << (lc_mask & PFCHAN_SWAPBUFFERS_HW)
-                                     << std::endl << vjDEBUG_FLUSH;
-      vjDEBUG_NEXT(vjDBG_DRAW_MGR,0) << "       R:" << (void*)r_chan
-                                     << "  shared: FOV:" << (rc_mask & PFCHAN_FOV)
-                                     << " Scene:" << (rc_mask & PFCHAN_SCENE)
-                                     << " AppFunc:" << (rc_mask & PFCHAN_APPFUNC)
-                                     << " SwapBuff:" << (rc_mask & PFCHAN_SWAPBUFFERS)
-                                     << " SwapBuff-HW:" << (rc_mask & PFCHAN_SWAPBUFFERS_HW)
-                                     << std::endl << vjDEBUG_FLUSH;
+      debugDumpPfDisp(&(*i),debugLevel);
    }
-   vjDEBUG_END(vjDBG_DRAW_MGR,0) << "-------- Dump end ----\n" << vjDEBUG_FLUSH;
+   vjDEBUG(vjDBG_DRAW_MGR,debugLevel)       << "Sim Disps:" << mSimDisps.size() << std::endl << vjDEBUG_FLUSH;
+   for (std::vector<pfDisp>::iterator i = mSimDisps.begin(); i != mSimDisps.end(); i++)
+   {
+      debugDumpPfDisp(&(*i),debugLevel);
+   }
+
+   vjDEBUG_END(vjDBG_DRAW_MGR,debugLevel) << "-------- Dump end ----\n" << vjDEBUG_FLUSH;
 }
+
+
+void vjPfDrawManager::debugDumpPfDisp(pfDisp* pf_disp, int debugLevel)
+{
+   vjDEBUG_BEGIN(vjDBG_DRAW_MGR,debugLevel) << "Display:" << (void*)(pf_disp->disp) << std::endl << vjDEBUG_FLUSH;
+   vjDEBUG_NEXT(vjDBG_DRAW_MGR,debugLevel)  << "pWin:" << (void*)(pf_disp->pWin) << std::endl << vjDEBUG_FLUSH;
+   vjDEBUG_NEXT(vjDBG_DRAW_MGR,debugLevel)  << "vis id:" << std::hex << pf_disp->pWin->getFBConfigId() << std::endl << vjDEBUG_FLUSH;
+
+   pfChannel* l_chan = (pf_disp->chans[pfDisp::LEFT]);
+   pfChannel* r_chan = (pf_disp->chans[pfDisp::RIGHT]);
+   unsigned lc_mask,rc_mask;
+   if (l_chan != NULL)
+      lc_mask = l_chan->getShare();
+   if (r_chan != NULL)
+      rc_mask = r_chan->getShare();
+
+   vjDEBUG_NEXT(vjDBG_DRAW_MGR,debugLevel)
+         << "chans: L:" << (void*)l_chan
+         << "  shared: FOV:" << (lc_mask & PFCHAN_FOV)
+         << " Scene:" << (lc_mask & PFCHAN_SCENE)
+         << " AppFunc:" << (lc_mask & PFCHAN_APPFUNC)
+         << " SwapBuff:" << (lc_mask & PFCHAN_SWAPBUFFERS)
+         << " SwapBuff-HW:" << (lc_mask & PFCHAN_SWAPBUFFERS_HW)
+         << std::endl << vjDEBUG_FLUSH;
+   vjDEBUG_NEXT(vjDBG_DRAW_MGR,debugLevel)
+         << "       R:" << (void*)r_chan
+         << "  shared: FOV:" << (rc_mask & PFCHAN_FOV)
+         << " Scene:" << (rc_mask & PFCHAN_SCENE)
+         << " AppFunc:" << (rc_mask & PFCHAN_APPFUNC)
+         << " SwapBuff:" << (rc_mask & PFCHAN_SWAPBUFFERS)
+         << " SwapBuff-HW:" << (rc_mask & PFCHAN_SWAPBUFFERS_HW)
+         << std::endl << vjDEBUG_FLUSH;
+   vjDEBUG_CONT_END(vjDBG_DRAW_MGR,debugLevel) << vjDEBUG_FLUSH;
+}
+
 
 
 // Config function called in draw proc after window is set up

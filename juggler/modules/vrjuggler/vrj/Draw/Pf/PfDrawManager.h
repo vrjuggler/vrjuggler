@@ -136,7 +136,7 @@ public:
    virtual void initDrawing();
 
    // Initialize the parameters of the master channel
-   void initMasterChanAtrribs();
+   void initChanGroupAttribs(pfChannel* masterChan);
 
    //: Callback when display is added to display manager
    virtual void addDisplay(vjDisplay* disp);
@@ -153,7 +153,9 @@ public:
    virtual void updateProjections();
 
    //: dumps the object's internal state
-   void debugDump();
+   void debugDump(int debugLevel);
+
+   void debugDumpPfDisp(pfDisp* pf_disp, int debugLevel);
 
    friend void vjPFconfigPWin(pfPipeWindow* pWin);
    friend void vjPfDrawFunc(pfChannel *chan, void* chandata,bool left_eye, bool right_eye, bool stereo, bool simulator);
@@ -226,13 +228,15 @@ protected:
    unsigned int mNumPipes;    // The number of Performer pipes
 
    // --- Performer State --- //
-   vjPfApp*             app;           // There User applications
-   pfChannel*           mMasterChan;   // Master channel
-   std::vector<pfDisp>  disps;         // List of displays with Performer data
-   std::vector<pfPipe*> pipes;         // Performer pipes we have opened
-   std::vector<char*>   mPipeStrs;     // The X-Strs of the pipes
-   pfScene*             mSceneRoot;    // Root of Performer tree to render
-   pfGroup*             mSceneGroup;   // The group node with only sceneRoot under it
+   vjPfApp*             app;              // There User applications
+   pfChannel*           mSurfMasterChan;  // Master channel
+   pfChannel*           mSimMasterChan;   // Master channel for simulators
+   std::vector<pfDisp>  mSurfDisps;       // Surface displays
+   std::vector<pfDisp>  mSimDisps;        // List of sim displays
+   std::vector<pfPipe*> pipes;            // Performer pipes we have opened
+   std::vector<char*>   mPipeStrs;        // The X-Strs of the pipes
+   pfScene*             mSceneRoot;       // Root of Performer tree to render
+   pfGroup*             mSceneGroup;      // The group node with only sceneRoot under it
 
    // ---- Simulator stuff --- //
    pfGroup*          mSimTree;      // The simulator scene graph
@@ -246,7 +250,8 @@ protected:
 protected:
 
    vjPfDrawManager() {
-      mMasterChan = NULL;
+      mSurfMasterChan = NULL;
+      mSimMasterChan = NULL;
       mSceneRoot    = NULL;
       mSceneGroup = NULL;
       mSimTree     = NULL;
