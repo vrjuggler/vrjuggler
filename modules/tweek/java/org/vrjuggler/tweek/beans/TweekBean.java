@@ -36,11 +36,14 @@
 
 package org.vrjuggler.tweek.beans;
 
+import java.util.List;
 import java.util.Vector;
 import org.vrjuggler.tweek.beans.loader.*;
 
 
 /**
+ * Abstract base class for all beans that wish to be loaded by Tweek.
+ *
  * @since 1.0
  */
 public abstract class TweekBean
@@ -52,21 +55,45 @@ public abstract class TweekBean
       return instantiated;
    }
 
-   public String getJarPath ()
+   /**
+    * Convenience method for getting the name of this bean.
+    *
+    * @return  the name of this bean
+    */
+   public String getName ()
    {
-      return jarPath;
+      return attrs.getName();
    }
 
-   protected TweekBean (String name)
+   /**
+    * Convenience method for getting the JAR URL string out of the
+    * BeanAttributes of this bean.
+    *
+    * @return  the URL string of the JAR
+    */
+   public String getJarURL ()
    {
-      m_bean_name = name;
+      return attrs.getJarURL();
    }
 
-   protected TweekBean (String name, String jar_path, Vector deps)
+   /**
+    * Gets the attributes of this bean.
+    *
+    * @return  the attributes that describe this bean
+    */
+   public BeanAttributes getAttributes()
    {
-      m_bean_name = name;
-      jarPath     = jar_path;
-      m_deps      = deps;
+      return attrs;
+   }
+
+   /**
+    * Creates a new TweekBean with the given attributes.
+    *
+    * @param attrs      the attributes to assign to this bean
+    */
+   protected TweekBean( BeanAttributes attrs )
+   {
+      this.attrs = attrs;
    }
 
    protected Object doInstantiation () throws BeanInstantiationException
@@ -77,28 +104,30 @@ public abstract class TweekBean
       try
       {
          String class_path = null;
+         List deps = attrs.getDependencies();
 
-         if ( m_deps.size() >= 1 )
+         // build up the class path for the dependencies
+         if ( deps.size() >= 1 )
          {
-            class_path = ((BeanDependency) m_deps.elementAt(0)).getPath();
+            class_path = ((BeanDependency) deps.get(0)).getPath();
 
-            for ( int i = 1; i < m_deps.size(); i++ )
+            for ( int i = 1; i < deps.size(); i++ )
             {
                class_path = class_path + ";" +
-                            ((BeanDependency) m_deps.elementAt(i)).getPath();
+                            ((BeanDependency) deps.get(i)).getPath();
             }
          }
 
-         Vector deps = new Vector();
-
-         for ( int i = 0; i < m_deps.size(); i++ )
+         // build up a list of the JAR files that the bean depends on
+         Vector depJarFiles = new Vector();
+         for ( int i = 0; i < deps.size(); i++ )
          {
-            deps.add(((BeanDependency) m_deps.elementAt(i)).getFile());
+            depJarFiles.add(((BeanDependency) deps.get(i)).getFile());
          }
 
-         bean_loader.loadBeanFromJar(jarPath, deps, class_path);
+         bean_loader.loadBeanFromJar(getJarURL(), depJarFiles, class_path);
          bean = bean_loader.instantiate(BeanJarClassLoader.instance(),
-                                        m_bean_name);
+                                        attrs.getEntry());
 
          instantiated = true;
 
@@ -116,9 +145,10 @@ public abstract class TweekBean
       return bean;
    }
 
-   protected String m_bean_name = null;
-   protected String jarPath     = null;
-   protected Vector m_deps      = null;
+   /**
+    * The common attributes to all Tweek Beans.
+    */
+   protected BeanAttributes attrs;
 
    protected boolean instantiated = false;
 }

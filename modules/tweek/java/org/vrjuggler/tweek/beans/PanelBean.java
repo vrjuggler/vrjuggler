@@ -55,36 +55,25 @@ import org.vrjuggler.tweek.beans.loader.*;
 public class PanelBean extends TweekBean
 {
    /**
-    * @param jar_file_url    The URL that can be used to get this Bean's
-    *                        containing JAR file.
-    * @param desc            A short description of this Bean suitable for use
-    *                        as an icon name for example.
+    * @param attrs           The common BeanAttributes for this bean.
     * @param icon_url        The URL that can be used to get this Bean's icon
     *                        (if it has one).
     * @param tool_tip        A tooltip for this Bean suitable for being
     *                        displayed in a Bean viewer of some sort.
-    * @param bean_entry_name The base name of the JAR entry that is this Bean.
-    *                        For example, "my/bean/GreenBean".
-    * @param dependencies    A Vector of BeanDependency objects giving all the
-    *                        dependencies of this Bean panel.
-    *
-    * @see org.vrjuggler.tweek.beans.BeanDependency
+    * 
+    * @see BeanAttributes
     */
-   public PanelBean (String jar_file_url, String desc, String icon_url,
-                     String tool_tip, String bean_entry_name,
-                     java.util.Vector dependencies)
-
+   public PanelBean( BeanAttributes attrs, String icon_url, String tool_tip )
    {
-      super(bean_entry_name, jar_file_url, dependencies);
+      super( attrs );
 
-      m_desc     = desc;
       m_icon_url = icon_url;
       toolTip    = tool_tip;
    }
 
    public String toString ()
    {
-      return m_desc;
+      return getName();
    }
 
    public JComponent getComponent ()
@@ -144,12 +133,11 @@ public class PanelBean extends TweekBean
       {
          throw new BeanInstantiationException("javax.swing.JComponent is " +
                                               "not a superclass of " +
-                                              m_bean_name.replace('/', '.'));
+                                              getName().replace('/', '.'));
       }
    }
 
    protected JComponent component = null;
-   protected String     m_desc    = null;
    protected String     toolTip   = null;
 
    protected String  m_icon_url = null;

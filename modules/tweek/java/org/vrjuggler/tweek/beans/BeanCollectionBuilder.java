@@ -201,13 +201,7 @@ public class BeanCollectionBuilder
     */
    protected void handleGuiPanel (Element bean, DefaultMutableTreeNode root)
    {
-      BeanAttributes attrs = new BeanAttributes();
-      attrs.parse(bean);
-
-      String name     = attrs.getName();
-      String jar_file = attrs.getJarFile();
-      String entry    = attrs.getEntry();
-      Vector deps     = attrs.getDependencies();
+      BeanAttributes attrs = BeanAttributes.parseXMLElement( bean );
 
       // The rest are specific to <guipanel>.
       String icon_path = null;
@@ -235,10 +229,10 @@ public class BeanCollectionBuilder
       }
 
       DefaultMutableTreeNode node = null;
-      System.out.println("Working on " + jar_file);
+      System.out.println("Working on " + attrs.getJarURL());
 
-      node = new DefaultMutableTreeNode(new PanelBean(jar_file, name, icon_path,
-                                                      tool_tip, entry, deps));
+      node = new DefaultMutableTreeNode(
+                  new PanelBean(attrs, icon_path, tool_tip) );
 
       for ( int j = 0; j < tree_path.size(); j++ )
       {
@@ -331,15 +325,8 @@ public class BeanCollectionBuilder
     */
    protected void handleService (Element service)
    {
-      BeanAttributes attrs = new BeanAttributes();
-      attrs.parse(service);
-
-      String name     = attrs.getName();
-      String jar_file = attrs.getJarFile();
-      String entry    = attrs.getEntry();
-      Vector deps     = attrs.getDependencies();
-
-      m_services.add(new ServiceBean(name, jar_file, entry, deps));
+      BeanAttributes attrs = BeanAttributes.parseXMLElement( service );
+      m_services.add( new ServiceBean(attrs) );
    }
 
    /**
@@ -347,31 +334,17 @@ public class BeanCollectionBuilder
     */
    protected void handleViewer (Element viewer)
    {
-      BeanAttributes attrs = new BeanAttributes();
-      attrs.parse(viewer);
-
-      String name     = attrs.getName();
-      String jar_file = attrs.getJarFile();
-      String entry    = attrs.getEntry();
-      Vector deps     = attrs.getDependencies();
-
-      m_viewers.add(new ViewerBean(name, jar_file, entry, deps));
+      BeanAttributes attrs = BeanAttributes.parseXMLElement( viewer );
+      m_viewers.add( new ViewerBean(attrs) );
    }
 
    /**
-    * Processes a <viewer></viewer> block of the beanlist document.
+    * Processes a <generic></generic> block of the beanlist document.
     */
    protected void handleGeneric (Element gen_bean)
    {
-      BeanAttributes attrs = new BeanAttributes();
-      attrs.parse(gen_bean);
-
-      String name     = attrs.getName();
-      String jar_file = attrs.getJarFile();
-      String entry    = attrs.getEntry();
-      Vector deps     = attrs.getDependencies();
-
-      m_generic_beans.add(new GenericBean(name, jar_file, entry, deps));
+      BeanAttributes attrs = BeanAttributes.parseXMLElement( gen_bean );
+      m_generic_beans.add( new GenericBean(attrs) );
    }
 
    /**
@@ -420,93 +393,6 @@ public class BeanCollectionBuilder
       }
 
       return new_name;
-   }
-
-   // =========================================================================
-   // Protected classes.
-   // =========================================================================
-
-   /**
-    * Simple class for parsing and collecting the common contents of <beanlist>
-    * document elements.  These include the Bean name, the Bean dependencies,
-    * and the file containing the Bean.
-    */
-   protected class BeanAttributes
-   {
-      /**
-       * Parse the given XML Element looking for the children <dependency />,
-       * <path />, and <file />.
-       */
-      public void parse (Element root)
-      {
-         name = root.getAttribute("name").getValue();
-
-         List children = root.getChildren();
-         Iterator i    = children.iterator();
-
-         while ( i.hasNext() )
-         {
-            Element e = (Element) i.next();
-
-            if ( e.getName().equals("dependency") )
-            {
-               String dep_file = null;
-
-               if ( e.getAttribute("file") != null )
-               {
-                  dep_file = e.getAttribute("file").getValue();
-               }
-
-               String dep_path = null;
-
-               if ( e.getAttribute("path") != null )
-               {
-                  dep_path = expandEnvVars(e.getAttribute("path").getValue());
-               }
-
-               dependencies.add(new BeanDependency(dep_file, dep_path));
-            }
-            else if ( e.getName().equals("file") )
-            {
-               jarFile = expandEnvVars(e.getAttribute("name").getValue());
-               entry   = e.getAttribute("entry").getValue();
-            }
-         }
-
-         if ( ! jarFile.startsWith("http://") && ! jarFile.startsWith("ftp://") )
-         {
-            // Prepend "file:" onto jar_file if it is not already present.
-            if ( ! jarFile.startsWith("file:") )
-            {
-               jarFile = "file:" + jarFile;
-            }
-         }
-      }
-
-      public String getName ()
-      {
-         return name;
-      }
-
-      public String getJarFile ()
-      {
-         return jarFile;
-      }
-
-      public String getEntry ()
-      {
-         return entry;
-      }
-
-      public Vector getDependencies ()
-      {
-         return dependencies;
-      }
-
-      private String name         = null;
-      private String jarFile      = null;
-      private String entry        = null;
-      private Vector dependencies = new Vector();
    }
 
    // =========================================================================
