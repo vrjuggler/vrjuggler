@@ -245,7 +245,7 @@ protected:
    cluster::ClusterManager*   mClusterManager;        /**< The Cluster Manager for the system*/
 
    /// Multi-user information
-   std::vector<vrj::User*>   mUsers;         /** A list of user objects in system */
+   std::vector<vrj::User*>   mUsers;         /**< A list of user objects in system */
 
    // Control "signals" from input interfaces
    gadget::DigitalInterface   mStopKernelSignalButton;
@@ -256,6 +256,9 @@ protected:
 protected:
    /** Constructor:  Hidden, so no instantiation is allowed. */
    Kernel();
+
+   Kernel(const vrj::Kernel& k) : jccl::ConfigChunkHandler() {;}
+   vrj::Kernel& operator=(const vrj::Kernel& k) {;}
 
    virtual ~Kernel()
    {;}
