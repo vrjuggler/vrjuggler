@@ -1,0 +1,34 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>VR Juggler startup</title>
+<link rel="stylesheet" type="text/css" href="../../../style/base_style.css">
+</head>
+
+<body>
+
+<h1>VR Juggler startup</h1>
+<h2>What does main look like?&nbsp;</h2>
+<h3>Get kernel handle</h3>
+<h3>Create app obj</h3>
+<h3>Give kernel config files</h3>
+<h3>Start kernel thread - Juggler now running</h3>
+<h3>Give the kernel an app to run&nbsp;</h3>
+Starts calling app methods<br>
+Diag: show call to method?&nbsp;
+<h2>No main() required</h2>
+<p>VR Juggler applications don't have a main. &nbsp;Instead the application is in an application object.</p>
+<h3>Well... actually they do</h3>
+<p>We only require a min to start the kernel.&nbsp; This does not have to be
+written by the user.&nbsp;</p>
+<p>It starts the kernel</p>
+<p>It can hand off the app obj</p>
+<p>Just need to tell the kernel what app to run</p>
+<p>dso's, config chunks, etc</p>
+
+</body>
+
+</html>

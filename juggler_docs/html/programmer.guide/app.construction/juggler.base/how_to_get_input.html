@@ -1,0 +1,40 @@
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=windows-1252">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+<meta name="ProgId" content="FrontPage.Editor.Document">
+<title>How to get input</title>
+<link rel="stylesheet" type="text/css" href="../../../../style/base_style.css">
+</head>
+
+<body>
+
+<h1>How to get input</h1>
+<h2>Use helper classes</h2>
+<p>VR Juggler maintains a set of named devices. &nbsp;Each of these devices is
+running in their own thread and is executing asynchronously from the rest of the
+system. &nbsp;Once each frame, the kernel updates a local copy of the input data
+for applications to use. &nbsp;To access the devices, applications must make use
+of a device handle to a named device.</p>
+<p>Every time an application receives device data, it must use this handle.
+&nbsp;As shown in { REF _Ref465158845 \h }Figure 7, the mWand data member is a
+device handle. &nbsp;It is initialized by passing the name of the device it
+references to the init() method. &nbsp;Then to use the device in an application,
+the getData() method is called which returns a reference to the type of data
+that the device supports. &nbsp;In this case, mWand-&gt;getData() returns a
+reference to a vjMatrix because the &quot;VJWand&quot; is a positional device.</p>
+<p>Because all devices are accessed through device handles, VR Juggler has
+flexibility in how the devices in the system are handled and how the device data
+is returned. &nbsp;The device a handle refers to can be changed at run-time.
+&nbsp;This change can occur without the application ever knowing it took place.</p>
+<h2>Tutorial: Application that receives and prints head &amp; wand location</h2>
+<p>[Code here]</p>
+<h3>How does an app get input&nbsp;</h3>
+<h3>Data members</h3>
+<h3>Member functions</h3>
+<p>preFrame, postFrame, intraFrame</p>
+
+</body>
+
+</html>
