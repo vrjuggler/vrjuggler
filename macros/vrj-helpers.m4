@@ -69,8 +69,10 @@ dnl     VJ_PROG_CXX_PROF_FLAG([prefer-gnu])
 dnl ---------------------------------------------------------------------------
 AC_DEFUN(VJ_PROG_CXX_PROF_FLAG,
 [
+    vrj_prefer_gnu_prof=$1
+
     if test "x$GXX" = "xyes" ; then
-        if test "x$1" = "xyes" ; then
+        if test "x$vrj_prefer_gnu_prof" = "xyes" ; then
             DPP_PROG_CXX_PROF_PG
 
             if test "x$CXX_PROF_FLAGS" = "x" ; then
