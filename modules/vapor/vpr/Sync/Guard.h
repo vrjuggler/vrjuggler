@@ -43,8 +43,6 @@
 #define _VPR_Guard_h_
 
 #include <vpr/vprConfig.h>
-//#include <vpr/Sync/Semaphore.h>
-//#include <vpr/Sync/Mutex.h>
 #include <vpr/Util/ReturnStatus.h>
 
 
