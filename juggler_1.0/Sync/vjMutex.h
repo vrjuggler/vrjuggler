@@ -17,7 +17,7 @@
 
 #ifdef VJ_SGI_IPC
 #   include <ulocks.h>
-#   include <Sync/vjMutexSGI.h>
+#   include <Sync/vjMutexSGI.h>    
     
     typedef  vjMutexSGI vjMutex;
 #else

@@ -152,7 +152,7 @@ public:
     // PURPOSE:
     //  Dump the mutex debug stuff and current state.
     //---------------------------------------------------------
-    void dump (FILE* dest = stderr, const char* message = "\n------ Mutex Dump -----\n") const
+    void dump (FILE* dest = stdout, const char* message = "\n------ Mutex Dump -----\n") const
     {
         usdumplock(mutex, dest, message);  
     }
