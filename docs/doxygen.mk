@@ -26,12 +26,12 @@ rtf:
 
 install-html:
 	if [ ! -d $(prefix) ]; then mkdir -p $(prefix); fi
-	mv $(HTML_OUTPUT_DIR)/* $(prefix)
+	cp -r $(HTML_OUTPUT_DIR)/* $(prefix)
 
 install-ps:
 	if [ ! -d $(prefix) ]; then mkdir -p $(prefix); fi
-	mv $(LATEX_OUTPUT_DIR)/refman.ps $(prefix)
+	cp $(LATEX_OUTPUT_DIR)/refman.ps $(prefix)
 
 install-pdf:
 	if [ ! -d $(prefix) ]; then mkdir -p $(prefix); fi
-	mv $(LATEX_OUTPUT_DIR)/refman.pdf $(prefix)
+	cp $(LATEX_OUTPUT_DIR)/refman.pdf $(prefix)
