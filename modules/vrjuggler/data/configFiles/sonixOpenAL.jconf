@@ -9,10 +9,11 @@
          <listener_position>0.0</listener_position>
          <file_search_path>.</file_search_path>
          <sound>
-            <sound name="bump" version="1">
+            <sound name="bump" version="2">
                <filename>${VJ_BASE_DIR}/share/vrjuggler/data/sounds/bump.wav</filename>
                <ambient>false</ambient>
                <retriggerable>false</retriggerable>
+               <streaming>true</streaming>
                <loop>1</loop>
                <pitch_bend>1.0</pitch_bend>
                <cutoff>1.0</cutoff>
@@ -23,10 +24,11 @@
             </sound>
          </sound>
          <sound>
-            <sound name="step" version="1">
+            <sound name="step" version="2">
                <filename>${VJ_BASE_DIR}/share/vrjuggler/data/sounds/footstep.wav</filename>
                <ambient>false</ambient>
                <retriggerable>false</retriggerable>
+               <streaming>true</streaming>
                <loop>1</loop>
                <pitch_bend>1.0</pitch_bend>
                <cutoff>1.0</cutoff>
@@ -37,10 +39,11 @@
             </sound>
          </sound>
          <sound>
-            <sound name="ambience" version="1">
+            <sound name="ambience" version="2">
                <filename>${VJ_BASE_DIR}/share/vrjuggler/data/sounds/ambience.wav</filename>
                <ambient>false</ambient>
                <retriggerable>false</retriggerable>
+               <streaming>true</streaming>
                <loop>1</loop>
                <pitch_bend>1.0</pitch_bend>
                <cutoff>1.0</cutoff>
@@ -51,10 +54,11 @@
             </sound>
          </sound>
          <sound>
-            <sound name="accel" version="1">
+            <sound name="accel" version="2">
                <filename>${VJ_BASE_DIR}/share/vrjuggler/data/sounds/accel.wav</filename>
                <ambient>false</ambient>
                <retriggerable>false</retriggerable>
+               <streaming>true</streaming>
                <loop>1</loop>
                <pitch_bend>1.0</pitch_bend>
                <cutoff>1.0</cutoff>
@@ -65,10 +69,11 @@
             </sound>
          </sound>
          <sound>
-            <sound name="land" version="1">
+            <sound name="land" version="2">
                <filename>${VJ_BASE_DIR}/share/vrjuggler/data/sounds/land.wav</filename>
                <ambient>false</ambient>
                <retriggerable>false</retriggerable>
+               <streaming>true</streaming>
                <loop>1</loop>
                <pitch_bend>1.0</pitch_bend>
                <cutoff>1.0</cutoff>
@@ -79,10 +84,11 @@
             </sound>
          </sound>
          <sound>
-            <sound name="stop" version="1">
+            <sound name="stop" version="2">
                <filename>${VJ_BASE_DIR}/share/vrjuggler/data/sounds/stop.wav</filename>
                <ambient>false</ambient>
                <retriggerable>false</retriggerable>
+               <streaming>true</streaming>
                <loop>1</loop>
                <pitch_bend>1.0</pitch_bend>
                <cutoff>1.0</cutoff>
