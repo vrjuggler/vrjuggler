@@ -55,7 +55,10 @@ import org.vrjuggler.jccl.config.*;
 import org.vrjuggler.jccl.editors.CustomEditor;
 import org.vrjuggler.jccl.editors.CustomEditorRegistry;
 import org.vrjuggler.jccl.editors.PropertyEditorPanel;
-import org.vrjuggler.jccl.editors.*;
+
+import org.vrjuggler.vrjconfig.commoneditors.ProxyTreeEditor;
+import org.vrjuggler.vrjconfig.commoneditors.proxytree.*;
+
 
 public class PinchGlovePanel extends JPanel implements CustomEditor
 {
@@ -223,7 +226,7 @@ public class PinchGlovePanel extends JPanel implements CustomEditor
       mCenterPanel.add(mBox,  BorderLayout.CENTER);
       mCenterPanel.add(mPinchGloveImageLbl,  BorderLayout.WEST);
 
-      ProxyEditor proxy_panel = new ProxyEditor(mProxyTree);
+      ProxyTreeEditor proxy_panel = new ProxyTreeEditor(mProxyTree);
 
       this.add(mCenterPanel, BorderLayout.CENTER);
       this.add(proxy_panel, BorderLayout.EAST);
