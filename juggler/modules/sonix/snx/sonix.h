@@ -55,7 +55,7 @@
 #include "snx/SoundImplementation.h"
 #include "snx/SoundAPIInfo.h"
 
-class sonix : public vpr::Singleton<sonix>
+class SNX_CLASS_API sonix : public vpr::Singleton<sonix>
 {
 protected:
    friend class vpr::Singleton<sonix>;
