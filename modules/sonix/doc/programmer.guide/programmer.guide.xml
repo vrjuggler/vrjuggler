@@ -50,39 +50,56 @@
    </section>
    <section>
       <title>Simple Minimalist Interface</title>
-      <para>In <xref linkend="simplesonixinterface"/> we see the API for sonix (see <xref linkend="completesonixinterface"/> for the complete software architechture). The main parts that a sound programmer will use is shown, namely the <classname>snx::SoundHandle</classname> class, and the <classname>sonix</classname> singleton class. The <classname>sonix</classname> singleton class is used to start, stop and reconfigure the sound system. The <classname>snx::SoundHandle</classname> class is used to manipulate individual sounds. Both classes must be used for any sound to be heard. <figure id="simplesonixinterface" xreflabel="simplesonixinterface">
-            <title>UML diagram of the sonix interface.</title>
-            <mediaobject>
-               <imageobject>
-                  <imagedata
-                    fileref = "simple.interface.uml.png"
-                    format  = "PNG"
-                  />
-               </imageobject>
-            </mediaobject>
-         </figure></para>
-      <para>To start the sonix system is easy (see <xref linkend="startupCode"/>). Basically the only call needed to start the system is <methodname>changeAPI()</methodname>. Currently only OpenAL and AudioWorks is supported by sonix, so you would pass one of these two strings to <methodname>changeAPI()</methodname>.<figure id="startupCode">
-            <title>Code to startup and initialize sonix to use the OpenAL audio subsystem</title>
-            <programlisting>sonix::instance()-&gt;changeAPI( "OpenAL" );</programlisting>
-         </figure></para>
-      <para><methodname></methodname>To setup a sound is also straight forward as seen in <xref linkend="soundHandleSetup"/>. Here we use a <classname>snx::SoundInfo</classname> to configure the sound object, which is accessed by a <classname>snx::SoundHandle</classname>. <figure id="soundHandleSetup">
-            <title>Code to setup a sonix sound</title>
-            <programlisting>snx::SoundInfo info;
+      <figure
+        id        = "simplesonixinterface"
+        xreflabel = "simplesonixinterface"
+      >
+         <title>UML diagram of the sonix interface.</title>
+         <mediaobject>
+            <imageobject>
+               <imagedata
+                 fileref = "simple.interface.uml.png"
+                 format  = "PNG"
+                 align   = "center"
+               />
+            </imageobject>
+         </mediaobject>
+      </figure>
+      <para>In <xref linkend="simplesonixinterface"/> we see the API for sonix (see <xref linkend="completesonixinterface"/> for the complete software architechture). The main parts that a sound programmer will use is shown, namely the <classname>snx::SoundHandle</classname> class, and the <classname>sonix</classname> singleton class. The <classname>sonix</classname> singleton class is used to start, stop and reconfigure the sound system. The <classname>snx::SoundHandle</classname> class is used to manipulate individual sounds. Both classes must be used for any sound to be heard. </para>
+      <para>To start the sonix system is easy (see <xref linkend="startupCode"/>). Basically the only call needed to start the system is <methodname>changeAPI()</methodname>. Currently only OpenAL and AudioWorks is supported by sonix, so you would pass one of these two strings to <methodname>changeAPI()</methodname>.</para>
+      <example
+        id = "startupCode"
+      >
+         <title>Code to startup and initialize sonix to use the OpenAL audio subsystem</title>
+         <programlisting>sonix::instance()-&gt;changeAPI( "OpenAL" );</programlisting>
+      </example>
+      <para>To setup a sound is also straight forward as seen in <xref linkend="soundHandleSetup"/>. Here we use a <classname>snx::SoundInfo</classname> to configure the sound object, which is accessed by a <classname>snx::SoundHandle</classname>. </para>
+      <example
+        id = "soundHandleSetup"
+      >
+         <title>Code to setup a sonix sound</title>
+         <programlisting>snx::SoundInfo info;
 info.filename = "crack.wav";
 info.datasource = snx::SoundInfo::FILESYTEM;
 
 snx::SoundHandle crack_sound( "crack" );
 crack_sound.configure( info );</programlisting>
-         </figure>To keep sonix running, you need to repeatedly call an update function called <methodname>step( float time )</methodname>. <varname>time</varname> is the amount of time since you last called <methodname>step()</methodname>, and <methodname>step()</methodname> should be called in your application's frame function (see ).<figure id="stepCode">
-            <title>Call sonix::step() in your frame function</title>
-            <programlisting>void frame()
+      </example>
+      <para>To keep sonix running, you need to repeatedly call an update function called <methodname>step( float time_delta )</methodname>. <varname>time_delta</varname> is the amount of time since you last called <methodname>step()</methodname>, and <methodname>step()</methodname> should be called in your application's frame function (see <xref linkend="stepCode"/>).</para>
+      <example
+        id = "stepCode"
+      >
+         <title>Call sonix::step() in your frame function</title>
+         <programlisting>void frame()
 {
    time_delta = getTimeChangeInSeconds(); // use a system call, or other API to get your time delta
    sonix::instance()-&gt;step( time_delta );
 }</programlisting>
-         </figure><figure>
-            <title>Example C++ program that uses sonix to play a sound using OpenAL</title>
-            <programlisting>
+      </example>
+      <para></para>
+      <example>
+         <title>Example C++ program that uses sonix to play a sound using OpenAL</title>
+         <programlisting>
 #include &lt;iostream&gt;
 #include &lt;string&gt;
 #include &lt;snx/sonix.h&gt;
@@ -127,15 +144,18 @@ int main( int argc, char* argv[] )
 
    return 1;
 }</programlisting>
-         </figure></para>
+      </example>
    </section>
    <section>
       <title>Reconfiguration</title>
       <para>Sonix is reconfigurable allowing audio APIs to be safely swapped out at runtime without the dependant systems noticing. Application using sonix expect to be completely portable. Changing sound APIs at run time can be useful so that the user can experiment with quality and latency differences of different hardware and sound APIs. </para>
       <para>If no audio API is available on a given platform, your calls to sonix simply get ignored. This gives the benefit that you need no special code in your application to enable or disable sound - it is handled by sonix. </para>
-      <para>Reconfiguration allows application code to not need to be aware when something changes. Everything is changable behind the scenes. See <xref linkend="reconfigCode"/> for an example of how to reconfigure sonix in C++. This probably makes more sense in a more complex application where there is some application logic that triggers sounds and does not want or need to know when a sound has changed state, or when the user has tried out a new audio API.<figure id="reconfigCode">
-            <title>How to reconfigure sonix at runtime</title>
-            <programlisting>   // start sonix using OpenAL
+      <para>Reconfiguration allows application code to not need to be aware when something changes. Everything is changable behind the scenes. See <xref linkend="reconfigCode"/> for an example of how to reconfigure sonix in C++. This probably makes more sense in a more complex application where there is some application logic that triggers sounds and does not want or need to know when a sound has changed state, or when the user has tried out a new audio API.</para>
+      <example
+        id = "reconfigCode"
+      >
+         <title>How to reconfigure sonix at runtime</title>
+         <programlisting>   // start sonix using OpenAL
    sonix::instance()-&gt;changeAPI( "OpenAL" );
       
    // fill out a description for the sound we want to play
@@ -163,7 +183,7 @@ int main( int argc, char* argv[] )
    sound_handle.trigger();
    sleep( 1 );
 </programlisting>
-         </figure></para>
+      </example>
    </section>
    <section>
       <title>Design and Implementation of Sonix</title>
@@ -201,6 +221,7 @@ int main( int argc, char* argv[] )
                   <imagedata
                     fileref = "sonix.system.view.png"
                     format  = "PNG"
+                    align   = "center"
                   />
                </imageobject>
             </mediaobject>
@@ -216,6 +237,7 @@ int main( int argc, char* argv[] )
                   <imagedata
                     fileref = "how.plugins.work.png"
                     format  = "PNG"
+                    align   = "center"
                   />
                </imageobject>
             </mediaobject>
