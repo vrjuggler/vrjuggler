@@ -25,7 +25,7 @@
 #include <Input/vjGlove/vt_glove-types.h>
 #include <Input/vjGlove/vt_error.h>
 
-#define delay(t) (sginap((long) (t*0.10))) /* t is in milliseconds */
+#define delay(t) (usleep(t*100)) /* t is in milliseconds */
 
 
 /*-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-*/
@@ -216,8 +216,8 @@ CyberGloveBasic::vt_unprocess_glove_angles(void)
   for (finger = THUMB; finger < FINGERS+1; finger++)
     for (joint = MCP; joint < JOINTS; joint++)
       raw_value[finger][joint] = mapping[finger][joint].offset -
-	                         mapping[finger][joint].gain *
-				   angle[finger][joint];
+                            mapping[finger][joint].gain *
+               angle[finger][joint];
 
   /* if we have a left handed glove negate abduction angles */
   if (!(current_glove_private->param_flags.word & CG_RIGHT_HAND_FLAG))
@@ -268,46 +268,46 @@ CyberGloveBasic::reply_tail_check(CbGlove glove)
     if ((lastbytes[i] = vt_serial_read_byte(portfd)) == -1)
       return (vt_print_error("reply_tail_check"));
 
-    if (i & 1)			/* i.e. if i is odd */
+    if (i & 1)       /* i.e. if i is odd */
     {
       switch (lastbytes[i])
       {
-      case 'e':	break; 		/* we dropped a byte somewhere */
+      case 'e':   break;      /* we dropped a byte somewhere */
       case 's':
-	sample_error = TRUE;
-	break;
+   sample_error = TRUE;
+   break;
       case 'g':
-	glove_error = TRUE;
-	break;
-      case CG_TERMINATOR:	/* should only find terminator on even i */
-	return (vt_set_error("reply_tail_check",CG_ERROR5));
+   glove_error = TRUE;
+   break;
+      case CG_TERMINATOR:  /* should only find terminator on even i */
+   return (vt_set_error("reply_tail_check",CG_ERROR5));
       default:
-	vt_serial_clear_to_terminator(portfd,CG_TERMINATOR);
-	return (vt_set_error("reply_tail_check",CG_ERROR5));
+   vt_serial_clear_to_terminator(portfd,CG_TERMINATOR);
+   return (vt_set_error("reply_tail_check",CG_ERROR5));
       }
     }
     else
       switch (lastbytes[i])
       {
-      case 'e':	break;
-      case 's':break;		/* we dropped a byte somewhere */
-      case 'g':break;		/* we dropped a byte somewhere */
+      case 'e':   break;
+      case 's':break;      /* we dropped a byte somewhere */
+      case 'g':break;      /* we dropped a byte somewhere */
       case CG_TERMINATOR:
-	if (sample_error && glove_error)
-	{
-	  private_data->param_flags.word &= ~CG_GLOVE_IN_FLAG;
-	  return (vt_set_error("reply_tail_check",CG_ERROR9));
-	}
-	else if (glove_error)
-	{
-	  private_data->param_flags.word &= ~CG_GLOVE_IN_FLAG;
-	  return (vt_set_error("reply_tail_check",CG_ERROR3));
-	}
-	else
-	  return (vt_set_error("reply_tail_check",CG_ERROR10));
+   if (sample_error && glove_error)
+   {
+     private_data->param_flags.word &= ~CG_GLOVE_IN_FLAG;
+     return (vt_set_error("reply_tail_check",CG_ERROR9));
+   }
+   else if (glove_error)
+   {
+     private_data->param_flags.word &= ~CG_GLOVE_IN_FLAG;
+     return (vt_set_error("reply_tail_check",CG_ERROR3));
+   }
+   else
+     return (vt_set_error("reply_tail_check",CG_ERROR10));
       default:
-	vt_serial_clear_to_terminator(portfd,CG_TERMINATOR);
-	return (vt_set_error("reply_tail_check",CG_ERROR5));
+   vt_serial_clear_to_terminator(portfd,CG_TERMINATOR);
+   return (vt_set_error("reply_tail_check",CG_ERROR5));
       }
   }
 
@@ -411,7 +411,7 @@ CyberGloveBasic::vt_read_glove_data(void)
     for (joint=0; joint < MAX_GROUP_VALUES; joint++)
     {
       if (sensor_mask & stencil)
-	current_glove->raw_value[finger][joint] = value[count++];
+   current_glove->raw_value[finger][joint] = value[count++];
       stencil <<= 1;
     }
 
@@ -551,8 +551,8 @@ CyberGloveBasic::enable_filter(CbGlove glove, void *address_arg1)
     return(vt_print_error("enable_filter"));
 
   private_data->param_flags.word = (enabled ?
-			    private_data->param_flags.word | CG_FILTER_FLAG :
-			    private_data->param_flags.word & ~CG_FILTER_FLAG);
+             private_data->param_flags.word | CG_FILTER_FLAG :
+             private_data->param_flags.word & ~CG_FILTER_FLAG);
   return (Ok);
 }
 
@@ -634,8 +634,8 @@ CyberGloveBasic::enable_switch_controls_light(CbGlove glove, void *address_arg1)
     return(vt_print_error("enable_switch_controls_light"));
 
   private_data->param_flags.word = (enabled ?
-			     private_data->param_flags.word | CG_SWITCH_FLAG :
-			     private_data->param_flags.word & ~CG_SWITCH_FLAG);
+              private_data->param_flags.word | CG_SWITCH_FLAG :
+              private_data->param_flags.word & ~CG_SWITCH_FLAG);
   return (Ok);
 }
 
@@ -834,7 +834,7 @@ CyberGloveBasic::vt_send_glove_command(int id, ...)
   if (current_glove->portfd == -1)
     return (Ok);
 
-  va_arg(address_arg1,int);		/* increment to first variable arg */
+  va_arg(address_arg1,int);      /* increment to first variable arg */
 
   if ((this->*command_function[id])(current_glove,address_arg1) < Ok)
     return (vt_print_error("vt_send_glove_command"));
@@ -1312,7 +1312,7 @@ CyberGloveBasic::vt_send_glove_query(int id, ...)
   if (current_glove->portfd == -1)
     return (Ok);
 
-  va_arg(address_arg1,int);		/* increment to first variable arg */
+  va_arg(address_arg1,int);      /* increment to first variable arg */
 
   if ((this->*query_function[id])(current_glove,address_arg1) < Ok)
     return (vt_print_error("vt_send_glove_query"));
@@ -1345,8 +1345,8 @@ CyberGloveBasic::vt_process_glove_data(void)
   for (finger = THUMB; finger < FINGERS+1; finger++)
     for (joint = MCP; joint < JOINTS; joint++)
       angle[finger][joint] = (raw_value[finger][joint] -
-			      mapping[finger][joint].offset) *
-				-mapping[finger][joint].gain;
+               mapping[finger][joint].offset) *
+            -mapping[finger][joint].gain;
 
   /*  kludge limiter for back of thumb rotation sensor  */
   if (angle[THUMB][MCP] > 0.5)
@@ -1360,7 +1360,7 @@ CyberGloveBasic::vt_process_glove_data(void)
     for (finger = INDEX; finger < FINGERS; finger++)
     {
       angle[finger][DIP] = -(angle[finger][PIP] * angle[finger][PIP] * 0.32 +
-			     angle[finger][PIP] * 0.17);
+              angle[finger][PIP] * 0.17);
     }
 
   /* if we have a left handed glove negate abduction angles */
@@ -1393,7 +1393,7 @@ CyberGloveBasic::abduct_18(void)
   raw_value = current_glove->raw_value;
 
   index_abduct = (raw_value[MIDDLE][ABDUCT] - mapping[MIDDLE][ABDUCT].offset) *
-		        mapping[INDEX][ABDUCT].gain;
+              mapping[INDEX][ABDUCT].gain;
   middle_abduct = -(angle[RING][ABDUCT] + index_abduct) *
                         mapping[MIDDLE][ABDUCT].gain;
 

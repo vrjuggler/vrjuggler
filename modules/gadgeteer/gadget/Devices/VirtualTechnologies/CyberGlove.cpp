@@ -43,7 +43,7 @@ bool vjCyberGlove::config(vjConfigChunk *c)
     if (home_dir != NULL)
     {
         mCalDir = new char [strlen(home_dir) + 1];
-	     strcpy(mCalDir,home_dir);
+        strcpy(mCalDir,home_dir);
     }
 
     std::string glove_pos_proxy = c->getProperty("glovePos");    // Get the name of the pos_proxy
@@ -106,7 +106,7 @@ void vjCyberGlove::controlLoop(void* nullParam)
 
    // Spin in the sampling
    while(1)
- 	   sample();
+      sample();
 }
 
 int vjCyberGlove::sample()
@@ -139,7 +139,7 @@ int vjCyberGlove::stopSampling()
       myThread->kill();
       delete myThread;
       myThread = NULL;
-      sginap(1);
+      usleep(100);
 
       mGlove->close();
       vjDEBUG(vjDBG_INPUT_MGR,1) << "stopping vjCyberGlove.." << endl;

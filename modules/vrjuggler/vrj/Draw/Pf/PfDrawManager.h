@@ -45,7 +45,7 @@ void vjPfDrawFunc(pfChannel *chan, void* chandata,bool left_eye, bool right_eye,
 //------------------------------------------------------------
 //: Concrete singleton class for API specific Draw Manager.
 //
-//	Responsible for all Performer rendering and windowing
+// Responsible for all Performer rendering and windowing
 //
 // @author Allen Bierbaum
 //  Date: 9-7-97
@@ -139,6 +139,25 @@ public:
    friend void vjPFconfigPWin(pfPipeWindow* pWin);
    friend void vjPfDrawFunc(pfChannel *chan, void* chandata,bool left_eye, bool right_eye, bool stereo, bool simulator);
 
+public: // Chunk handlers
+   //: Add the chunk to the configuration
+   //! PRE: configCanHandle(chunk) == true
+   //! RETURNS: success
+   virtual bool configAdd(vjConfigChunk* chunk)
+   { return false; }
+
+   //: Remove the chunk from the current configuration
+   //! PRE: configCanHandle(chunk) == true
+   //!RETURNS: success
+   virtual bool configRemove(vjConfigChunk* chunk)
+   { return false; }
+
+   //: Can the handler handle the given chunk?
+   //! RETURNS: true - Can handle it
+   //+          false - Can't handle it
+   virtual bool configCanHandle(vjConfigChunk* chunk)
+   { return false; }
+
 protected:
    //: Call all the application channel callbacks
    void callAppChanFuncs();
@@ -204,6 +223,8 @@ protected:
       mHeadDCS     = NULL;
       mWandDCS     = NULL;
    }
+
+   virtual ~vjPfDrawManager() {}
 
 private:
    static vjPfDrawManager* _instance;

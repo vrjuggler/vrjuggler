@@ -29,20 +29,20 @@ bool vjPinchGlove::mLookupInitialized = false;
 float vjPinchGlove::mOnLookupTable[4][11];
 float vjPinchGlove::mOffLookupTable[4][11];
 
-bool vjPinchGlove::config(vjConfigChunk *c)				
+bool vjPinchGlove::config(vjConfigChunk *c)           
 {
    if(!vjGlove::config(c))
       return false;
 
    // init the lookup table if it hasn't been
     if (vjPinchGlove::mLookupInitialized == false)
-    	vjPinchGlove::mInitLookupTable();
+      vjPinchGlove::mInitLookupTable();
 
     char* home_dir = c->getProperty("homedir");
     if (home_dir != NULL)
     {
         mCalDir = new char [strlen(home_dir) + 1];
-	     strcpy(mCalDir,home_dir);
+        strcpy(mCalDir,home_dir);
     }
 
     myThread = NULL;
@@ -95,7 +95,7 @@ int vjPinchGlove::startSampling()
 void vjPinchGlove::controlLoop(void* nullParam)
 {
    while(1)
-	sample();
+   sample();
 }
 
 int vjPinchGlove::sample()
@@ -136,7 +136,7 @@ int vjPinchGlove::stopSampling()
       mControlThread->kill();
       delete mControlThread;
       mControlThread = NULL;
-      sginap(1);
+      usleep(100);
 
       // XXX: there is no "close"
       //mGlove->Close();
@@ -222,106 +222,106 @@ void vjPinchGlove::copyDataFromGlove()
 
     // Right Pinky
     mTheData[progress][RIGHT_HAND].angles[vjGloveData::PINKY][vjGloveData::MPJ]
-	= (gesture[fsPinchGlove::RPINKY] == '1') ? mOnLookupTable[vjGloveData::MPJ][fsPinchGlove::RPINKY] : mOffLookupTable[vjGloveData::MPJ][fsPinchGlove::RPINKY];
+   = (gesture[fsPinchGlove::RPINKY] == '1') ? mOnLookupTable[vjGloveData::MPJ][fsPinchGlove::RPINKY] : mOffLookupTable[vjGloveData::MPJ][fsPinchGlove::RPINKY];
     mTheData[progress][RIGHT_HAND].angles[vjGloveData::PINKY][vjGloveData::PIJ]
-	= (gesture[fsPinchGlove::RPINKY] == '1') ? mOnLookupTable[vjGloveData::PIJ][fsPinchGlove::RPINKY] : mOffLookupTable[vjGloveData::PIJ][fsPinchGlove::RPINKY];
+   = (gesture[fsPinchGlove::RPINKY] == '1') ? mOnLookupTable[vjGloveData::PIJ][fsPinchGlove::RPINKY] : mOffLookupTable[vjGloveData::PIJ][fsPinchGlove::RPINKY];
     mTheData[progress][RIGHT_HAND].angles[vjGloveData::PINKY][vjGloveData::DIJ]
-	= (gesture[fsPinchGlove::RPINKY] == '1') ? mOnLookupTable[vjGloveData::DIJ][fsPinchGlove::RPINKY] : mOffLookupTable[vjGloveData::DIJ][fsPinchGlove::RPINKY];
+   = (gesture[fsPinchGlove::RPINKY] == '1') ? mOnLookupTable[vjGloveData::DIJ][fsPinchGlove::RPINKY] : mOffLookupTable[vjGloveData::DIJ][fsPinchGlove::RPINKY];
     mTheData[progress][RIGHT_HAND].angles[vjGloveData::PINKY][vjGloveData::ABDUCT]
-	= (gesture[fsPinchGlove::RPINKY] == '1') ? mOnLookupTable[vjGloveData::ABDUCT][fsPinchGlove::RPINKY] : mOffLookupTable[vjGloveData::ABDUCT][fsPinchGlove::RPINKY];
+   = (gesture[fsPinchGlove::RPINKY] == '1') ? mOnLookupTable[vjGloveData::ABDUCT][fsPinchGlove::RPINKY] : mOffLookupTable[vjGloveData::ABDUCT][fsPinchGlove::RPINKY];
 
 
     // Right Ring
     mTheData[progress][RIGHT_HAND].angles[vjGloveData::RING][vjGloveData::MPJ]
-	= (gesture[fsPinchGlove::RRING] == '1') ? mOnLookupTable[vjGloveData::MPJ][fsPinchGlove::RRING] : mOffLookupTable[vjGloveData::MPJ][fsPinchGlove::RRING];
+   = (gesture[fsPinchGlove::RRING] == '1') ? mOnLookupTable[vjGloveData::MPJ][fsPinchGlove::RRING] : mOffLookupTable[vjGloveData::MPJ][fsPinchGlove::RRING];
     mTheData[progress][RIGHT_HAND].angles[vjGloveData::RING][vjGloveData::PIJ]
-	= (gesture[fsPinchGlove::RRING] == '1') ? mOnLookupTable[vjGloveData::PIJ][fsPinchGlove::RRING] : mOffLookupTable[vjGloveData::PIJ][fsPinchGlove::RRING];
+   = (gesture[fsPinchGlove::RRING] == '1') ? mOnLookupTable[vjGloveData::PIJ][fsPinchGlove::RRING] : mOffLookupTable[vjGloveData::PIJ][fsPinchGlove::RRING];
     mTheData[progress][RIGHT_HAND].angles[vjGloveData::RING][vjGloveData::DIJ]
-	= (gesture[fsPinchGlove::RRING] == '1') ? mOnLookupTable[vjGloveData::DIJ][fsPinchGlove::RRING] : mOffLookupTable[vjGloveData::DIJ][fsPinchGlove::RRING];
+   = (gesture[fsPinchGlove::RRING] == '1') ? mOnLookupTable[vjGloveData::DIJ][fsPinchGlove::RRING] : mOffLookupTable[vjGloveData::DIJ][fsPinchGlove::RRING];
     mTheData[progress][RIGHT_HAND].angles[vjGloveData::PINKY][vjGloveData::ABDUCT]
-	= (gesture[fsPinchGlove::RRING] == '1') ? mOnLookupTable[vjGloveData::ABDUCT][fsPinchGlove::RRING] : mOffLookupTable[vjGloveData::ABDUCT][fsPinchGlove::RRING];
+   = (gesture[fsPinchGlove::RRING] == '1') ? mOnLookupTable[vjGloveData::ABDUCT][fsPinchGlove::RRING] : mOffLookupTable[vjGloveData::ABDUCT][fsPinchGlove::RRING];
 
 
     // Right Middle
     mTheData[progress][RIGHT_HAND].angles[vjGloveData::MIDDLE][vjGloveData::MPJ]
-	= (gesture[fsPinchGlove::RMIDDLE] == '1') ? mOnLookupTable[vjGloveData::MPJ][fsPinchGlove::RMIDDLE] : mOffLookupTable[vjGloveData::MPJ][fsPinchGlove::RMIDDLE];
+   = (gesture[fsPinchGlove::RMIDDLE] == '1') ? mOnLookupTable[vjGloveData::MPJ][fsPinchGlove::RMIDDLE] : mOffLookupTable[vjGloveData::MPJ][fsPinchGlove::RMIDDLE];
     mTheData[progress][RIGHT_HAND].angles[vjGloveData::MIDDLE][vjGloveData::PIJ]
-	= (gesture[fsPinchGlove::RMIDDLE] == '1') ? mOnLookupTable[vjGloveData::PIJ][fsPinchGlove::RMIDDLE] : mOffLookupTable[vjGloveData::PIJ][fsPinchGlove::RMIDDLE];
+   = (gesture[fsPinchGlove::RMIDDLE] == '1') ? mOnLookupTable[vjGloveData::PIJ][fsPinchGlove::RMIDDLE] : mOffLookupTable[vjGloveData::PIJ][fsPinchGlove::RMIDDLE];
     mTheData[progress][RIGHT_HAND].angles[vjGloveData::MIDDLE][vjGloveData::DIJ]
-	= (gesture[fsPinchGlove::RMIDDLE] == '1') ? mOnLookupTable[vjGloveData::DIJ][fsPinchGlove::RMIDDLE] : mOffLookupTable[vjGloveData::DIJ][fsPinchGlove::RMIDDLE];
+   = (gesture[fsPinchGlove::RMIDDLE] == '1') ? mOnLookupTable[vjGloveData::DIJ][fsPinchGlove::RMIDDLE] : mOffLookupTable[vjGloveData::DIJ][fsPinchGlove::RMIDDLE];
     mTheData[progress][RIGHT_HAND].angles[vjGloveData::PINKY][vjGloveData::ABDUCT]
-	= (gesture[fsPinchGlove::RMIDDLE] == '1') ? mOnLookupTable[vjGloveData::ABDUCT][fsPinchGlove::RMIDDLE] : mOffLookupTable[vjGloveData::ABDUCT][fsPinchGlove::RMIDDLE];
+   = (gesture[fsPinchGlove::RMIDDLE] == '1') ? mOnLookupTable[vjGloveData::ABDUCT][fsPinchGlove::RMIDDLE] : mOffLookupTable[vjGloveData::ABDUCT][fsPinchGlove::RMIDDLE];
 
     // Right Index
     mTheData[progress][RIGHT_HAND].angles[vjGloveData::INDEX][vjGloveData::MPJ]
-	= (gesture[fsPinchGlove::RINDEX] == '1') ? mOnLookupTable[vjGloveData::MPJ][fsPinchGlove::RINDEX] : mOffLookupTable[vjGloveData::MPJ][fsPinchGlove::RINDEX];
+   = (gesture[fsPinchGlove::RINDEX] == '1') ? mOnLookupTable[vjGloveData::MPJ][fsPinchGlove::RINDEX] : mOffLookupTable[vjGloveData::MPJ][fsPinchGlove::RINDEX];
     mTheData[progress][RIGHT_HAND].angles[vjGloveData::INDEX][vjGloveData::PIJ]
-	= (gesture[fsPinchGlove::RINDEX] == '1') ? mOnLookupTable[vjGloveData::PIJ][fsPinchGlove::RINDEX] : mOffLookupTable[vjGloveData::PIJ][fsPinchGlove::RINDEX];
+   = (gesture[fsPinchGlove::RINDEX] == '1') ? mOnLookupTable[vjGloveData::PIJ][fsPinchGlove::RINDEX] : mOffLookupTable[vjGloveData::PIJ][fsPinchGlove::RINDEX];
     mTheData[progress][RIGHT_HAND].angles[vjGloveData::INDEX][vjGloveData::DIJ]
-	= (gesture[fsPinchGlove::RINDEX] == '1') ? mOnLookupTable[vjGloveData::DIJ][fsPinchGlove::RINDEX] : mOffLookupTable[vjGloveData::DIJ][fsPinchGlove::RINDEX];
+   = (gesture[fsPinchGlove::RINDEX] == '1') ? mOnLookupTable[vjGloveData::DIJ][fsPinchGlove::RINDEX] : mOffLookupTable[vjGloveData::DIJ][fsPinchGlove::RINDEX];
     mTheData[progress][RIGHT_HAND].angles[vjGloveData::PINKY][vjGloveData::ABDUCT]
-	= (gesture[fsPinchGlove::RINDEX] == '1') ? mOnLookupTable[vjGloveData::ABDUCT][fsPinchGlove::RINDEX] : mOffLookupTable[vjGloveData::ABDUCT][fsPinchGlove::RINDEX];
+   = (gesture[fsPinchGlove::RINDEX] == '1') ? mOnLookupTable[vjGloveData::ABDUCT][fsPinchGlove::RINDEX] : mOffLookupTable[vjGloveData::ABDUCT][fsPinchGlove::RINDEX];
 
     // Right Thumb
     mTheData[progress][RIGHT_HAND].angles[vjGloveData::THUMB][vjGloveData::MPJ]
-	= (gesture[fsPinchGlove::RTHUMB] == '1') ? mOnLookupTable[vjGloveData::MPJ][fsPinchGlove::RTHUMB] : mOffLookupTable[vjGloveData::MPJ][fsPinchGlove::RTHUMB];
+   = (gesture[fsPinchGlove::RTHUMB] == '1') ? mOnLookupTable[vjGloveData::MPJ][fsPinchGlove::RTHUMB] : mOffLookupTable[vjGloveData::MPJ][fsPinchGlove::RTHUMB];
     mTheData[progress][RIGHT_HAND].angles[vjGloveData::THUMB][vjGloveData::PIJ]
-	= (gesture[fsPinchGlove::RTHUMB] == '1') ? mOnLookupTable[vjGloveData::PIJ][fsPinchGlove::RTHUMB] : mOffLookupTable[vjGloveData::PIJ][fsPinchGlove::RTHUMB];
+   = (gesture[fsPinchGlove::RTHUMB] == '1') ? mOnLookupTable[vjGloveData::PIJ][fsPinchGlove::RTHUMB] : mOffLookupTable[vjGloveData::PIJ][fsPinchGlove::RTHUMB];
     mTheData[progress][RIGHT_HAND].angles[vjGloveData::THUMB][vjGloveData::DIJ]
-	= (gesture[fsPinchGlove::RTHUMB] == '1') ? mOnLookupTable[vjGloveData::DIJ][fsPinchGlove::RTHUMB] : mOffLookupTable[vjGloveData::DIJ][fsPinchGlove::RTHUMB];
+   = (gesture[fsPinchGlove::RTHUMB] == '1') ? mOnLookupTable[vjGloveData::DIJ][fsPinchGlove::RTHUMB] : mOffLookupTable[vjGloveData::DIJ][fsPinchGlove::RTHUMB];
     mTheData[progress][RIGHT_HAND].angles[vjGloveData::PINKY][vjGloveData::ABDUCT]
-	= (gesture[fsPinchGlove::RTHUMB] == '1') ? mOnLookupTable[vjGloveData::ABDUCT][fsPinchGlove::RTHUMB] : mOffLookupTable[vjGloveData::ABDUCT][fsPinchGlove::RTHUMB];
+   = (gesture[fsPinchGlove::RTHUMB] == '1') ? mOnLookupTable[vjGloveData::ABDUCT][fsPinchGlove::RTHUMB] : mOffLookupTable[vjGloveData::ABDUCT][fsPinchGlove::RTHUMB];
 
 
     // Left Pinky
     mTheData[progress][LEFT_HAND].angles[vjGloveData::PINKY][vjGloveData::MPJ]
-	= (gesture[fsPinchGlove::LPINKY] == '1') ? mOnLookupTable[vjGloveData::MPJ][fsPinchGlove::LPINKY] : mOffLookupTable[vjGloveData::MPJ][fsPinchGlove::LPINKY];
+   = (gesture[fsPinchGlove::LPINKY] == '1') ? mOnLookupTable[vjGloveData::MPJ][fsPinchGlove::LPINKY] : mOffLookupTable[vjGloveData::MPJ][fsPinchGlove::LPINKY];
     mTheData[progress][LEFT_HAND].angles[vjGloveData::PINKY][vjGloveData::PIJ]
-	= (gesture[fsPinchGlove::LPINKY] == '1') ? mOnLookupTable[vjGloveData::PIJ][fsPinchGlove::LPINKY] : mOffLookupTable[vjGloveData::PIJ][fsPinchGlove::LPINKY];
+   = (gesture[fsPinchGlove::LPINKY] == '1') ? mOnLookupTable[vjGloveData::PIJ][fsPinchGlove::LPINKY] : mOffLookupTable[vjGloveData::PIJ][fsPinchGlove::LPINKY];
     mTheData[progress][LEFT_HAND].angles[vjGloveData::PINKY][vjGloveData::DIJ]
-	= (gesture[fsPinchGlove::LPINKY] == '1') ? mOnLookupTable[vjGloveData::DIJ][fsPinchGlove::LPINKY] : mOffLookupTable[vjGloveData::DIJ][fsPinchGlove::LPINKY];
+   = (gesture[fsPinchGlove::LPINKY] == '1') ? mOnLookupTable[vjGloveData::DIJ][fsPinchGlove::LPINKY] : mOffLookupTable[vjGloveData::DIJ][fsPinchGlove::LPINKY];
     mTheData[progress][LEFT_HAND].angles[vjGloveData::PINKY][vjGloveData::ABDUCT]
-	= (gesture[fsPinchGlove::LPINKY] == '1') ? mOnLookupTable[vjGloveData::ABDUCT][fsPinchGlove::LPINKY] : mOffLookupTable[vjGloveData::ABDUCT][fsPinchGlove::LPINKY];
+   = (gesture[fsPinchGlove::LPINKY] == '1') ? mOnLookupTable[vjGloveData::ABDUCT][fsPinchGlove::LPINKY] : mOffLookupTable[vjGloveData::ABDUCT][fsPinchGlove::LPINKY];
 
     // Left Ring
     mTheData[progress][LEFT_HAND].angles[vjGloveData::RING][vjGloveData::MPJ]
-	= (gesture[fsPinchGlove::LRING] == '1') ? mOnLookupTable[vjGloveData::MPJ][fsPinchGlove::LRING] : mOffLookupTable[vjGloveData::MPJ][fsPinchGlove::LRING];
+   = (gesture[fsPinchGlove::LRING] == '1') ? mOnLookupTable[vjGloveData::MPJ][fsPinchGlove::LRING] : mOffLookupTable[vjGloveData::MPJ][fsPinchGlove::LRING];
     mTheData[progress][LEFT_HAND].angles[vjGloveData::RING][vjGloveData::PIJ]
-	= (gesture[fsPinchGlove::LRING] == '1') ? mOnLookupTable[vjGloveData::PIJ][fsPinchGlove::LRING] : mOffLookupTable[vjGloveData::PIJ][fsPinchGlove::LRING];
+   = (gesture[fsPinchGlove::LRING] == '1') ? mOnLookupTable[vjGloveData::PIJ][fsPinchGlove::LRING] : mOffLookupTable[vjGloveData::PIJ][fsPinchGlove::LRING];
     mTheData[progress][LEFT_HAND].angles[vjGloveData::RING][vjGloveData::DIJ]
-	= (gesture[fsPinchGlove::LRING] == '1') ? mOnLookupTable[vjGloveData::DIJ][fsPinchGlove::LRING] : mOffLookupTable[vjGloveData::DIJ][fsPinchGlove::LRING];
+   = (gesture[fsPinchGlove::LRING] == '1') ? mOnLookupTable[vjGloveData::DIJ][fsPinchGlove::LRING] : mOffLookupTable[vjGloveData::DIJ][fsPinchGlove::LRING];
     mTheData[progress][LEFT_HAND].angles[vjGloveData::PINKY][vjGloveData::ABDUCT]
-	= (gesture[fsPinchGlove::LRING] == '1') ? mOnLookupTable[vjGloveData::ABDUCT][fsPinchGlove::LRING] : mOffLookupTable[vjGloveData::ABDUCT][fsPinchGlove::LRING];
+   = (gesture[fsPinchGlove::LRING] == '1') ? mOnLookupTable[vjGloveData::ABDUCT][fsPinchGlove::LRING] : mOffLookupTable[vjGloveData::ABDUCT][fsPinchGlove::LRING];
 
     // Left Middle
     mTheData[progress][LEFT_HAND].angles[vjGloveData::MIDDLE][vjGloveData::MPJ]
-	= (gesture[fsPinchGlove::LMIDDLE] == '1') ? mOnLookupTable[vjGloveData::MPJ][fsPinchGlove::LMIDDLE] : mOffLookupTable[vjGloveData::MPJ][fsPinchGlove::LMIDDLE];
+   = (gesture[fsPinchGlove::LMIDDLE] == '1') ? mOnLookupTable[vjGloveData::MPJ][fsPinchGlove::LMIDDLE] : mOffLookupTable[vjGloveData::MPJ][fsPinchGlove::LMIDDLE];
     mTheData[progress][LEFT_HAND].angles[vjGloveData::MIDDLE][vjGloveData::PIJ]
-	= (gesture[fsPinchGlove::LMIDDLE] == '1') ? mOnLookupTable[vjGloveData::PIJ][fsPinchGlove::LMIDDLE] : mOffLookupTable[vjGloveData::PIJ][fsPinchGlove::LMIDDLE];
+   = (gesture[fsPinchGlove::LMIDDLE] == '1') ? mOnLookupTable[vjGloveData::PIJ][fsPinchGlove::LMIDDLE] : mOffLookupTable[vjGloveData::PIJ][fsPinchGlove::LMIDDLE];
     mTheData[progress][LEFT_HAND].angles[vjGloveData::MIDDLE][vjGloveData::DIJ]
-	= (gesture[fsPinchGlove::LMIDDLE] == '1') ? mOnLookupTable[vjGloveData::DIJ][fsPinchGlove::LMIDDLE] : mOffLookupTable[vjGloveData::DIJ][fsPinchGlove::LMIDDLE];
+   = (gesture[fsPinchGlove::LMIDDLE] == '1') ? mOnLookupTable[vjGloveData::DIJ][fsPinchGlove::LMIDDLE] : mOffLookupTable[vjGloveData::DIJ][fsPinchGlove::LMIDDLE];
     mTheData[progress][LEFT_HAND].angles[vjGloveData::PINKY][vjGloveData::ABDUCT]
-	= (gesture[fsPinchGlove::LMIDDLE] == '1') ? mOnLookupTable[vjGloveData::ABDUCT][fsPinchGlove::LMIDDLE] : mOffLookupTable[vjGloveData::ABDUCT][fsPinchGlove::LMIDDLE];
+   = (gesture[fsPinchGlove::LMIDDLE] == '1') ? mOnLookupTable[vjGloveData::ABDUCT][fsPinchGlove::LMIDDLE] : mOffLookupTable[vjGloveData::ABDUCT][fsPinchGlove::LMIDDLE];
 
     // Left Index
     mTheData[progress][LEFT_HAND].angles[vjGloveData::INDEX][vjGloveData::MPJ]
-	= (gesture[fsPinchGlove::LINDEX] == '1') ? mOnLookupTable[vjGloveData::MPJ][fsPinchGlove::LINDEX] : mOffLookupTable[vjGloveData::MPJ][fsPinchGlove::LINDEX];
+   = (gesture[fsPinchGlove::LINDEX] == '1') ? mOnLookupTable[vjGloveData::MPJ][fsPinchGlove::LINDEX] : mOffLookupTable[vjGloveData::MPJ][fsPinchGlove::LINDEX];
     mTheData[progress][LEFT_HAND].angles[vjGloveData::INDEX][vjGloveData::PIJ]
-	= (gesture[fsPinchGlove::LINDEX] == '1') ? mOnLookupTable[vjGloveData::PIJ][fsPinchGlove::LINDEX] : mOffLookupTable[vjGloveData::PIJ][fsPinchGlove::LINDEX];
+   = (gesture[fsPinchGlove::LINDEX] == '1') ? mOnLookupTable[vjGloveData::PIJ][fsPinchGlove::LINDEX] : mOffLookupTable[vjGloveData::PIJ][fsPinchGlove::LINDEX];
     mTheData[progress][LEFT_HAND].angles[vjGloveData::INDEX][vjGloveData::DIJ]
-	= (gesture[fsPinchGlove::LINDEX] == '1') ? mOnLookupTable[vjGloveData::DIJ][fsPinchGlove::LINDEX] : mOffLookupTable[vjGloveData::DIJ][fsPinchGlove::LINDEX];
+   = (gesture[fsPinchGlove::LINDEX] == '1') ? mOnLookupTable[vjGloveData::DIJ][fsPinchGlove::LINDEX] : mOffLookupTable[vjGloveData::DIJ][fsPinchGlove::LINDEX];
     mTheData[progress][LEFT_HAND].angles[vjGloveData::PINKY][vjGloveData::ABDUCT]
-	= (gesture[fsPinchGlove::LINDEX] == '1') ? mOnLookupTable[vjGloveData::ABDUCT][fsPinchGlove::LINDEX] : mOffLookupTable[vjGloveData::ABDUCT][fsPinchGlove::LINDEX];
+   = (gesture[fsPinchGlove::LINDEX] == '1') ? mOnLookupTable[vjGloveData::ABDUCT][fsPinchGlove::LINDEX] : mOffLookupTable[vjGloveData::ABDUCT][fsPinchGlove::LINDEX];
 
     // Left Thumb
     mTheData[progress][LEFT_HAND].angles[vjGloveData::THUMB][vjGloveData::MPJ]
-	= (gesture[fsPinchGlove::LTHUMB] == '1') ? mOnLookupTable[vjGloveData::MPJ][fsPinchGlove::LTHUMB] : mOffLookupTable[vjGloveData::MPJ][fsPinchGlove::LTHUMB];
+   = (gesture[fsPinchGlove::LTHUMB] == '1') ? mOnLookupTable[vjGloveData::MPJ][fsPinchGlove::LTHUMB] : mOffLookupTable[vjGloveData::MPJ][fsPinchGlove::LTHUMB];
     mTheData[progress][LEFT_HAND].angles[vjGloveData::THUMB][vjGloveData::PIJ]
-	= (gesture[fsPinchGlove::LTHUMB] == '1') ? mOnLookupTable[vjGloveData::PIJ][fsPinchGlove::LTHUMB] : mOffLookupTable[vjGloveData::PIJ][fsPinchGlove::LTHUMB];
+   = (gesture[fsPinchGlove::LTHUMB] == '1') ? mOnLookupTable[vjGloveData::PIJ][fsPinchGlove::LTHUMB] : mOffLookupTable[vjGloveData::PIJ][fsPinchGlove::LTHUMB];
     mTheData[progress][LEFT_HAND].angles[vjGloveData::THUMB][vjGloveData::DIJ]
-	= (gesture[fsPinchGlove::LTHUMB] == '1') ? mOnLookupTable[vjGloveData::DIJ][fsPinchGlove::LTHUMB] : mOffLookupTable[vjGloveData::DIJ][fsPinchGlove::LTHUMB];
+   = (gesture[fsPinchGlove::LTHUMB] == '1') ? mOnLookupTable[vjGloveData::DIJ][fsPinchGlove::LTHUMB] : mOffLookupTable[vjGloveData::DIJ][fsPinchGlove::LTHUMB];
     mTheData[progress][LEFT_HAND].angles[vjGloveData::PINKY][vjGloveData::ABDUCT]
-	= (gesture[fsPinchGlove::LTHUMB] == '1') ? mOnLookupTable[vjGloveData::ABDUCT][fsPinchGlove::LTHUMB] : mOffLookupTable[vjGloveData::ABDUCT][fsPinchGlove::LTHUMB];
+   = (gesture[fsPinchGlove::LTHUMB] == '1') ? mOnLookupTable[vjGloveData::ABDUCT][fsPinchGlove::LTHUMB] : mOffLookupTable[vjGloveData::ABDUCT][fsPinchGlove::LTHUMB];
 
     // Left and Right Wrist
     mTheData[progress][RIGHT_HAND].angles[vjGloveData::WRIST][vjGloveData::YAW] = 0;

@@ -57,9 +57,28 @@ void vjConfigManager::removeChunkDB(vjConfigChunkDB* db)
 
 // Look for items in the active list that don't have their dependencies filled anymore
 //
-void scanForLostDependencies()
+//! POST: Any chunks in active with dependencies not filled are added to the 
+//+       the pending list. (A remove and an add are added to the pending)
+void vjConfigManager::scanForLostDependencies()
 {
+   vjASSERT(0 == mActiveLock.test());
 
+   vjDependencyManager* dep_mgr = vjDependencyManager::instance();
+
+   std::vector<vjConfigChunk*> chunks;
+
+   mActiveLock.acquire();
+      chunks = mActiveConfig.getChunks();   // Get a copy of the chunks
+   mActiveLock.release();
+
+   // Now test them
+   for(unsigned int i=0;i<chunks.size();i++)
+   {
+      if(!dep_mgr->depSatisfied(chunks[i]))      // We are not satisfied
+      {
+      }
+   }
+   
 }
 
 

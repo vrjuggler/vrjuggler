@@ -80,7 +80,7 @@ vjVarValue *vjProperty::createVarValue (int i) {
 
 
 vjProperty::~vjProperty () {
-    int i;
+    unsigned int i;
 
     for (i = 0; i < value.size(); i++)
    delete (value)[i];
@@ -95,7 +95,7 @@ vjProperty::vjProperty (const vjProperty& p):value() {
 
 
 vjProperty& vjProperty::operator= (const vjProperty& p) {
-    int i;
+    unsigned int i;
 
     if (&p == this)
    return *this;
@@ -120,7 +120,7 @@ bool vjProperty::operator== (const vjProperty& p) const {
    return false;
     if (value.size() != p.value.size())
    return false;
-    for (int i = 0; i < value.size(); i++)
+    for (unsigned int i = 0; i < value.size(); i++)
    if (*(value[i]) != *(p.value[i]))
        return false;
     return true;
@@ -131,7 +131,7 @@ bool vjProperty::operator== (const vjProperty& p) const {
 bool vjProperty::applyUnits (CfgUnit u) {
 
     if (type == T_DISTANCE) {
-   for (int j = 0; j < value.size(); j++)
+   for (unsigned int j = 0; j < value.size(); j++)
        setValue( toFeet (getValue(j), u), j);
    return true;
     }
@@ -155,7 +155,7 @@ vjEnumEntry* vjProperty::getEnumEntryWithValue (int val) const {
 
 ostream& operator << (ostream &out, vjProperty& p) {
     out << p.getToken().c_str() << " { ";
-    for (int i = 0; i < p.value.size(); i++) {
+    for (unsigned int i = 0; i < p.value.size(); i++) {
    vjVarValue *v = ((p.value))[i];
    
    if ((p.type == T_STRING) || (p.type == T_CHUNK)) {
