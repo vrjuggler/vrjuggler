@@ -30,7 +30,8 @@ public class EmbeddedElementPanel extends ExpandablePanel
       new_sheet.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createRaisedBevelBorder(),
                   BorderFactory.createLoweredBevelBorder()));
 
-      setBorder(BorderFactory.createEtchedBorder());
+      //setBorder(BorderFactory.createEtchedBorder());
+      setBorder(BorderFactory.createEmptyBorder(5,0,5,0));
 
       // Add title for the list.
       String title = elm.getName();
