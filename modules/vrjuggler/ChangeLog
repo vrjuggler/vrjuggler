@@ -1,5 +1,9 @@
 DATE        AUTHOR    CHANGE
 ----------- --------- ---------------------------------------------------------
+Feb-26-2002 istoynov  OpenSG application class added.  The OpenSG application
+            reiners   class currently factors out all the commonality for
+			allenb    OpenSG-based Juggler applications.
+			          contributors: Ivan Stoynov & Dirk Reiners
 Feb-22-2002 allenb    OpenSG app now uses MatrixCamera to render displays.
 Jan-31-2002 allenb    Added SignalButtons init and check functions to the
                       Kernel.  The only "signal" being checked currently
