@@ -14,8 +14,8 @@
       <tree path="/VRJConfig/" />
    </guipanel>
    <guipanel name="Config Definition Editor">
-      <file name="${JCCL_BASE_DIR}/share/jccl/beans/jccl_editors.jar"
-            class="org.vrjuggler.jccl.editors.ConfigDefinitionRepositoryEditor" />
+      <file name="${VJ_BASE_DIR}/share/vrjuggler/beans/VRJConfig.jar"
+            class="org.vrjuggler.vrjconfig.ConfigDefinitionEditor" />
       <dependencies>
          <bean>ConfigBroker</bean>
          <jar path="${JCCL_BASE_DIR}/share/jccl/beans">jccl_editors.jar</jar>
