@@ -331,7 +331,7 @@ public:
       bool closeSuccess( false );
       bool bindSuccess( false );
       
-      vpr::Uint16 port=5432;
+      vpr::Uint16 port=15432;
       vpr::SocketStream*	sock;
       sock = new vpr::SocketStream(vpr::InetAddr("localhost",port), vpr::InetAddr::AnyAddr);	
       openSuccess=sock->open();
@@ -785,7 +785,7 @@ public:
    //Function for master server thread
    void serverFunc(void* arg)
    {
-      vpr::Uint16 port=5432;
+      vpr::Uint16 port=15432;
       vpr::Uint16 num=0;
 
       std::vector<vpr::ThreadMemberFunctor<SocketTest>*> sServerFunctors(mNumSServer);
@@ -823,7 +823,7 @@ public:
    {
       vpr::SocketStream*	sock;
 
-      sock = new vpr::SocketStream(vpr::InetAddr::AnyAddr, vpr::InetAddr("localhost", 5432));
+      sock = new vpr::SocketStream(vpr::InetAddr::AnyAddr, vpr::InetAddr("localhost", 15432));
       if ( sock->open() ) {
          char buffer1[40];
 //         char buffer2[] = "What's up?";
