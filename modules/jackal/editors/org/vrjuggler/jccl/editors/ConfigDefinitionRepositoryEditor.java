@@ -186,7 +186,8 @@ public class ConfigDefinitionRepositoryEditor
       {
          if(mDefinitionChanged)
          {
-            int result = JOptionPane.showConfirmDialog(this,
+            int result = JOptionPane.showConfirmDialog(
+               SwingUtilities.getAncestorOfClass(Frame.class, this),
                "ConfigDefinition \"" + mDefEditor.getDefinition().getName() +
                "\" has changed. Do you want to save the changes?", "VRJConfig",
                JOptionPane.YES_NO_OPTION);

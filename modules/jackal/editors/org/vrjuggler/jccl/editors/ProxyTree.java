@@ -235,7 +235,7 @@ public class ProxyTree extends JTree implements ActionListener
             // Make sure this add goes through successfully
             if (! getBroker().add(model.getConfigContext(), element))
             {
-               JOptionPane.showMessageDialog(this,
+               JOptionPane.showMessageDialog(getParentFrame(),
                                              "There are no configuration files active.",
                                              "Error",
                                              JOptionPane.ERROR_MESSAGE);
@@ -260,7 +260,7 @@ public class ProxyTree extends JTree implements ActionListener
             // Make sure this add goes through successfully
             if (! getBroker().remove(model.getConfigContext(), element))
             {
-               JOptionPane.showMessageDialog(this,
+               JOptionPane.showMessageDialog(getParentFrame(),
                                              "There are no configuration files active.",
                                              "Error",
                                              JOptionPane.ERROR_MESSAGE);
@@ -364,6 +364,11 @@ public class ProxyTree extends JTree implements ActionListener
          }
       }
       return mBroker;
+   }
+
+   private java.awt.Container getParentFrame()
+   {
+      return SwingUtilities.getAncestorOfClass(java.awt.Frame.class, this);
    }
 
    /**
