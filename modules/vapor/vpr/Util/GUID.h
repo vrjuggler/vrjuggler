@@ -113,10 +113,10 @@ public:
 
 public:
    /**
-    * Generates empty guid
+    * Generates empty guid - Sets equal to GUID::NullGUID
     */
    GUID();
-
+      
    /**
     * Generates a GUID from the given struct.
     */
