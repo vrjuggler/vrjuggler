@@ -695,69 +695,6 @@ gadget::Keys EventWindowWin32::VKKeyToKey(int vkKey)
 /*****************************************************************/
 /*****************************************************************/
 
-//#ifdef DEBUG
-#define NEGADD1(x,y)  ((x < 0) ? x+1 : x)
-
-/****************************************************************************
- *                                                        *
- *  FUNCTION   : HandlePaint ( hwnd )                              *
- *                                                        *
- *  PURPOSE   : Handles the repainting of window client area.           *
- *            (Outputs the data current as of the last UpdateData call   *
- ****************************************************************************/
-VOID APIENTRY HandlePaint(HWND hwnd)
-{
-   HDC       hdc;
-   PAINTSTRUCT ps;
-   EventWindow* devPtr = (EventWindow*)GetWindowLong(hwnd,GWL_USERDATA);
-
-   if ( !devPtr )
-   {
-      return;
-   }
-
-   char ln1[255] = "line1";
-   char ln2[255] = "line2";
-   char ln3[255] = "line3";
-   char ln4[255] = "line4";
-   char ln5[255] = "line5";
-   char ln6[255] = "line6";
-   //vjgmtl::Matrix44f* McurrData = devPtr->GetPosData();
-
-   //vjCoord coord(*McurrData);
-   //ThreeDouble2String(ln1, coord.pos[0], coord.pos[1], coord.pos[2]);
-   //ThreeDouble2String(ln2, coord.orient[0], coord.orient[1], coord.orient[2]);
-
-   //vjMcurrData = devPtr->GetPosData(1);
-   //vjCoord coord2(*McurrData);
-   //ThreeDouble2String(ln3, coord2.pos[0], coord2.pos[1], coord2.pos[2]);
-   //ThreeDouble2String(ln4, coord2.orient[0], coord2.orient[1], coord2.orient[2]);
-
-   //wsprintf(ln5,"%li %d %d %d", devPtr->GetDigitalData(0), devPtr->GetDigitalData(1),devPtr->GetDigitalData(2),devPtr->GetDigitalData(3));
-   //wsprintf(ln6,"%li %d %d %d", devPtr->GetAnalogData(0), devPtr->GetAnalogData(1),devPtr->GetAnalogData(2),devPtr->GetAnalogData(3));
-
-   hdc = BeginPaint (hwnd, (LPPAINTSTRUCT)&ps);
-
-   TextOut(hdc,0 ,0, "Pos0:", 5);
-   TextOut(hdc,50,0,ln1, lstrlen(ln1));
-   TextOut(hdc,50,20,ln2, lstrlen(ln2));
-
-   /*
-   TextOut(hdc,0 ,40, "Pos1:", 5);
-   TextOut(hdc,50,40,ln3, lstrlen(ln3));
-   TextOut(hdc,50,60,ln4, lstrlen(ln4));
-
-   TextOut(hdc,0 ,90, "Digital:", 8);
-   TextOut(hdc,50,90,ln5, lstrlen(ln5));
-
-   TextOut(hdc,0 ,110, "Analog:", 7);
-   TextOut(hdc,50,110,ln6, lstrlen(ln6));
-   */
-
-   EndPaint(hwnd, (LPPAINTSTRUCT)&ps);
-}
-//#endif // DEBUG
-
 /****************************************************************************
  *                                                        *
  *  FUNCTION   : MenuWndProc (hWnd, message, wParam, lParam)            *
@@ -782,13 +719,6 @@ LONG APIENTRY MenuWndProc(HWND hWnd, UINT message, UINT wParam, LONG lParam)
             InvalidateRect(hWnd, NULL, TRUE);
          }
          break;
-
-//#ifdef DEBUG  // Show the pos/dig/analog data in the window in debug
-         // (really inefficient display code)
-      case WM_PAINT:
-         HandlePaint(hWnd);
-         break;
-//#endif
 
       case WM_DESTROY:
          PostQuitMessage(0);
