@@ -56,15 +56,13 @@ if test "x$JCCL_BASE_DIR" = "x" ; then
     export JCCL_BASE_DIR
 fi
 
-# If $JCCL_DEFINITION_PATH is not set, use the standard location for .jdef
-# files used by VR Juggler.
-if test "x$JCCL_DEFINITION_PATH" = "x" ; then
-    echo "NOTE: Setting JCCL_DEFINITION_PATH to $VJ_BASE_DIR/share/vrjuggler/data/definitions"
-    JCCL_DEFINITION_PATH="$VJ_BASE_DIR/share/vrjuggler/data/definitions"
-    export JCCL_DEFINITION_PATH
+# If $JCCL_DEFINITION_PATH is set, add that property definition argument.
+if test "x$JCCL_DEFINITION_PATH" != "x" ; then
+   jccl_def_arg="-DJCCL_DEFINITION_PATH=${JCCL_DEFINITION_PATH}"
+   export JCCL_DEFINITION_PATH
 fi
 
-EXTRA_JDK_ARGS="-DJCCL_BASE_DIR=${JCCL_BASE_DIR} -DVJ_BASE_DIR=${VJ_BASE_DIR} -DJCCL_DEFINITION_PATH=${JCCL_DEFINITION_PATH}"
+EXTRA_JDK_ARGS="-DJCCL_BASE_DIR=${JCCL_BASE_DIR} -DVJ_BASE_DIR=${VJ_BASE_DIR} $jccl_def_arg"
 
 APP_NAME='VRJConfig'
 
