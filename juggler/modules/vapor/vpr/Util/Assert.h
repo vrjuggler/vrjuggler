@@ -36,6 +36,7 @@
 #include <vprConfig.h>
 
 // -- ASSERT -- //
+#define VPR_DEBUG
 #ifdef VPR_DEBUG
 #   include <assert.h>
 #   define vprASSERT(val) assert((val))
