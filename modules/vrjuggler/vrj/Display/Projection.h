@@ -49,12 +49,11 @@ namespace vrj
    class Viewport;
 
 /** Pure virtual base class for viewport definitions.
-*
-* Responsible for storing and computing projection
-*  information based upon an eye positions
-* This class is an abstract base class for other classes
-*  that actually compute the projections.
-*/
+ *
+ * Responsible for storing and computing projection information based upon an
+ * eye positions.  This class is an abstract base class for other classes
+ * that actually compute the projections.
+ */
 class VJ_CLASS_API Projection
 {
 public:
@@ -73,7 +72,7 @@ public:
       mViewport = NULL;
    }
 
-   /** Configure the projection
+   /** Configures the projection.
    * Default implementation does nothing.
    */
    virtual void config(jccl::ConfigChunkPtr chunk)
@@ -92,7 +91,7 @@ public:
 
    virtual void calcViewMatrix(gmtl::Matrix44f& eyePos) = 0;
 
-   /** Helper to the frustum apex and corners in model coordinates
+   /** Helper to the frustum apex and corners in model coordinates.
    * @note This function is meant for debugging purposes
    * @post The given vars contain the values of the frustums
    * corners in model space.

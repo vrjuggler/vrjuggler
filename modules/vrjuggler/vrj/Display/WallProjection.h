@@ -42,17 +42,16 @@ namespace vrj
 
 class Matrix;
 
-//-----------------------------------------------------------------
-//: Wall specific class for viewport definitions.
-//
-//  Responsible for storing and computing projection
-//  information of a surface specified.
-//
-// XXX: This should be renamed SurfaceProjection
-//
-// @author Allen Bierbaum
-//  Date: 10-5-97
-//----------------------------------------------------------------
+/**
+ * Wall specific class for viewport definitions.
+ *
+ * Responsible for storing and computing projection information of a surface
+ * specified.
+ *
+ * XXX: This should be renamed SurfaceProjection
+ *
+ * @date 10-5-97
+ */
 class WallProjection : public Projection
 {
 public:
@@ -70,26 +69,30 @@ public:
       mOriginToBottom = toBottom;
    }
 
-   //: Configure the projection using the chunk given
+   /** Configures the projection using the chunk given. */
    virtual void config(jccl::ConfigChunkPtr chunk);
 
-   //: Recalculate the projection matrix
-   //! PRE: WallRotation matrix must be set correctly
-   //! PRE: mOrigin*'s must all be set correctly
-   //!POST: frustum has been recomputed for given eyePos
+   /**
+    * Recalculates the projection matrix.
+    * @pre WallRotation matrix must be set correctly.
+    *      mOrigin*'s must all be set correctly.
+    * @post frustum has been recomputed for given eyePos.
+    */
    virtual void calcViewMatrix(gmtl::Matrix44f& eyePos);
 
-   //: Calculate the frustum needed for the view matrix
-   //! NOTE: This function is called as part of calcViewMatrix
+   /**
+    * Calculates the frustum needed for the view matrix.
+    * @note This function is called as part of calcViewMatrix.
+    */
    virtual void calcViewFrustum(gmtl::Matrix44f& eyePos);
 
    std::ostream& outStream(std::ostream& out);
 
 protected:
-   // Rotation of the screen
+   /// Rotation of the screen
    gmtl::Matrix44f   mWallRotationMatrix;
 
-   // Screen configuration
+   /// Screen configuration
    float mOriginToScreen, mOriginToRight, mOriginToLeft, mOriginToTop, mOriginToBottom;
 };
 

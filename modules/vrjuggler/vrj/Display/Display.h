@@ -45,14 +45,12 @@ namespace vrj
    class Viewport;
 
 
-//---------------------------------------------------------------------
-//: Container class for viewports and window information.
-//
-// Stores location of window and viewports within the window.
-//
-// @author Allen Bierbaum
-//  Date: 3-5-2001
-//-----------------------------------------------------------------------
+/**
+ * Container class for viewports and window information.
+ * Stores location of window and viewports within the window.
+ *
+ * @date 3-5-2001
+ */
 class Display
 {
 public:
@@ -66,19 +64,22 @@ public:
    {;}
 
 public:
-      //: Takes a display chunk and configures the display based one it.
-      //! PRE: chunk is a valid chunk
-      //! POST: display is configured
-      //+       If there is an error is the specified config, we output error
-      //+       and "fix" the error.
-      //! NOTE: All derived display classes MUST call this function
-      //+       after doing local configuration.
+   /**
+    * Takes a display chunk and configures the display based one it.
+    * @pre chunk is a valid chunk.
+    * @post display is configured.
+    *        If there is an error is the specified config, we output error
+    *        and "fix" the error.
+    *
+    * @note All derived display classes MUST call this function
+    *        after doing local configuration.
+    */
    virtual void config(jccl::ConfigChunkPtr chunk);
 
    void configDisplayWindow(jccl::ConfigChunkPtr chunk);
    void configViewports(jccl::ConfigChunkPtr chunk);
 
-   //: Updates the projection data for each contained viewport
+   /** Updates the projection data for each contained viewport. */
    void updateProjections();
 
 public:
@@ -88,7 +89,7 @@ public:
    void setName(std::string name)
    { mName = name; }
 
-   //: Get the name of the display
+   /** Gets the name of this display. */
    std::string getName()
    { return mName;}
 
@@ -108,11 +109,13 @@ public:
    int getPipe()
    { return mPipe; }
 
-   //!NOTE: If we are in simulator, we can not be in stereo
+   /**
+    * @note If we are in simulator, we can not be in stereo.
+    */
    bool inStereo()
    { return mInStereo; }
 
-   //: Get the config chunk that configured this display window
+   /** Gets the config chunk that configured this display window. */
    jccl::ConfigChunkPtr getConfigChunk()
    { return mDisplayChunk; }
 
@@ -126,15 +129,15 @@ public:
    { return mViewports[vpNum]; }
 
 protected:
-   std::string    mName;                  //: Name of the window
-   int            _xo, _yo, _xs, _ys;     //: X and Y origin and size of the view
-   bool           mBorder;                //: Should we have a border
-   int            mPipe;                  //: Hardware pipe. Index of the rendering hardware
-   bool           mActive;                //: Is the display active or not
-   bool           mInStereo;              //: Is the window in stereo mode?
-   jccl::ConfigChunkPtr mDisplayChunk;       //: The chunk data for this display
+   std::string    mName;                /**< Name of the window */
+   int            _xo, _yo, _xs, _ys;   /**< X and Y origin and size of the view */
+   bool           mBorder;              /**< Should we have a border */
+   int            mPipe;                /**< Hardware pipe. Index of the rendering hardware */
+   bool           mActive;              /**< Is the display active or not? */
+   bool           mInStereo;            /**< Is the window in stereo mode? */
+   jccl::ConfigChunkPtr mDisplayChunk;  /**< The chunk data for this display */
 
-   std::vector<vrj::Viewport*>   mViewports;    //: Contained viewports
+   std::vector<vrj::Viewport*>   mViewports;    /**<  Contained viewports */
 };
 
 VJ_API(std::ostream&) operator<<(std::ostream& out, vrj::Display& disp);

@@ -43,24 +43,24 @@ namespace vrj
 
 class Matrix;
 
-//-----------------------------------------------------------------
-//: Wall specific class for viewport definitions.
-//
-//  This class behaves the same as the WallProjection class
-//  except that it is tracked.
-//
-//  This means that all parameters are relative to a tracked (moving)
-//  frame of reference.
-//
-// @author Allen Bierbaum
-//  Date: 10-5-97
-//----------------------------------------------------------------
+/**
+ * Wall-specific class for viewport definitions.
+ *
+ * This class behaves the same as the WallProjection class except that it is
+ * tracked.  This means that all parameters are relative to a tracked (moving)
+ * frame of reference.
+ *
+ * @date 10-5-97
+ */
 class TrackedWallProjection : public WallProjection
 {
 public:
 
-   //: Construct a Tracked wall projections
-   //!ARGS: tracker_name - Name of the tracker tracking the screen
+   /**
+    * Constructs a Tracked wall projection.
+    *
+    * @param tracker_name Name of the tracker tracking the screen.
+    */
    TrackedWallProjection(gmtl::Matrix44f surfaceRot, float toScr,
                     float toRight, float toLeft,
                     float toTop, float toBottom, std::string tracker_name)
@@ -86,8 +86,10 @@ public:
       Projection::config(chunk);        // Call base class config first
    }
 
-   //: Recalculate the projection matrix
-   //!POST: frustum has been recomputed for given eyePos
+   /**
+    * Recalculate the projection matrix.
+    * @post frustum has been recomputed for given eyePos.
+    */
    virtual void calcViewMatrix(gmtl::Matrix44f& eyePos)
    {
       updateWallParams();
@@ -105,7 +107,7 @@ public:
 
 private:
    // ---- Original parameters ------/
-   gmtl::Matrix44f   mWallRotationMatrix_bak;       // Rotation of the screen
+   gmtl::Matrix44f   mWallRotationMatrix_bak;    /**< Rotation of the screen */
    // Screen configuration
    float mOriginToScreen_bak, mOriginToRight_bak, mOriginToLeft_bak, mOriginToTop_bak, mOriginToBottom_bak;
 

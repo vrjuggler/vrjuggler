@@ -45,8 +45,9 @@
 namespace vrj
 {
 
-//: Projection class that simply takes a matrix for the camera position
-//
+/**
+ * Projection class that simply takes a matrix for the camera position.
+ */
 class CameraProjection : public Projection
 {
 public:

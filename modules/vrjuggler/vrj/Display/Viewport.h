@@ -50,16 +50,12 @@ namespace vrj
 class Display;
 class Projection;
 
-//---------------------------------------------------------------------
-//: Base class for window viewports
-//
-// Base class for all viewport data
-//
-// Stores projection data, viewport info, and relevant user
-//
-// @author Allen Bierbaum
-//  Date: 3-5-2001
-//-----------------------------------------------------------------------
+/**
+ * Base class for window viewports.  Base class for all viewport data.
+ * Stores projection data, viewport info, and relevant user.
+ *
+ * @date 3-5-2001
+ */
 class Viewport
 {
 public:
@@ -87,17 +83,22 @@ public:
    enum View { NONE=0, LEFT_EYE=1, RIGHT_EYE=2, STEREO=3 };      // For referring to which eye(s) to draw
 
 public:
-      //: Takes a viewport chunk and configures the display based one it.
-      //! PRE: chunk is a valid chunk
-      //! POST: viewport is configured
-      //+       If there is an error is the specified config, we output error
-      //+       and "fix" the error.
-      //! NOTE: All derived viewport classes MUST call this function
-      //+       after doing local configuration.
+   /**
+    * Takes a viewport chunk and configures the display based one it.
+    * @pre chunk is a valid chunk.
+    * @post viewport is configured.
+    *        If there is an error is the specified config, we output error
+    *        and "fix" the error.
+    *
+    * @note All derived viewport classes MUST call this function
+    *        after doing local configuration.
+    */
    virtual void config(jccl::ConfigChunkPtr chunk);
 
-   //: Updates the projection data for this display
-   // Uses the data for the head position for this window
+   /**
+    * Updates the projection data for this display.
+    * Uses the data for the head position for this window.
+    */
    virtual void updateProjections() = 0;
 
 public:
@@ -116,11 +117,13 @@ public:
     void setName(std::string name)
    { mName = name; }
 
-   //: Get the name of the display
+   /** Gets the name of this display. */
    std::string getName()
    { return mName;}
 
-   //!NOTE: If we are in simulator, we can not be in stereo
+   /**
+    * @note If we are in simulator, we can not be in stereo.
+    */
    bool inStereo()
    { return (mView == STEREO); }
 
@@ -135,11 +138,11 @@ public:
       xo = mXorigin; yo = mYorigin; xs = mXsize; ys = mYsize;
    }
 
-   //: Get the config chunk that configured this display
+   /** Gets the config chunk that configured this display. */
    jccl::ConfigChunkPtr getConfigChunk()
    { return mViewportChunk; }
 
-   //: Get the user associated with this display
+   /** Gets the user associated with this display. */
    User*  getUser()
    { return mUser;}
 

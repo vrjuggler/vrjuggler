@@ -62,7 +62,7 @@ public:
    {;}
 
 public:
-   //: Configure the simulator
+   /**  Configure the simulator */
    virtual void config(jccl::ConfigChunkPtr chunk)
    {
       vprASSERT(chunk.get() != NULL);
@@ -149,7 +149,7 @@ public:  // Sim Drawing parameters
    { return mSurfaceColor; }
 
 protected:
-    //: Update internal simulator data
+    /**  Update internal simulator data */
    void updateInternalData()
    {
       mHeadPos = *(mUser->getHeadPos());
@@ -161,13 +161,13 @@ protected:
 
 private:
    // Drawing attributes
-   bool   mDrawProjections;    //: Should we draw projections
-   gmtl::Vec3f   mSurfaceColor;       //: Color to draw surfaces
+   bool   mDrawProjections;       /**< Should we draw projections */
+   gmtl::Vec3f   mSurfaceColor;   /**< Color to draw surfaces */
 
-   gadget::PositionInterface mCamera;     // Prosy interfaces to devices needed
+   gadget::PositionInterface mCamera; /**< Proxy interfaces to devices needed */
    gadget::PositionInterface mWand;
 
-   gmtl::Matrix44f    mCameraPos;    // The data about the position of all this stuff
+   gmtl::Matrix44f    mCameraPos;    /**< The data about the position of all this stuff */
    gmtl::Matrix44f    mHeadPos;
    gmtl::Matrix44f    mWandPos;
 };
