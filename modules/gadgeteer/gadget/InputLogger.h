@@ -21,7 +21,7 @@ class InputLogger
 {
 public:
    InputLogger()
-      : mCurState(Inactive), mSleepFramesLeft(0)
+      : mCurState(Inactive), mSleepFramesLeft(0), mLimitFrameRate(false)
    {;}
 
    /** Destructor */
@@ -86,6 +86,12 @@ protected:
    void addRecordingSample();
 
    void playNextSample();
+
+   /** Limit the framerate to the speed configured.
+   * @pre mLimitFrameRate == true
+   * @post Method will sleep until enough time passed to slow to configured framerate
+   */
+   void limitFramerate();
    //@}
 
 
@@ -110,6 +116,10 @@ private:
 
    cppdom::NodePtr   mRootNode;           /**< Root node of the data */
    std::string       mRecordingFilename;  /**< Filename to use for the recording */
+   
+   bool              mLimitFrameRate;     /**< Flag. true - we should limit the framerate while logging */
+   vpr::Interval     mMinFrameTime;       /**< Minimum time we are to allow a frame to take */
+   vpr::Interval     mPrevFrameTimestamp; /**< Timestamp to use for calculating the current frame rate */
 
    cppdom::NodeListIterator   mNextSample_i;    /**< Iterator pointing to the next sample to play */
    cppdom::NodeListIterator   mEndSample_i;     /**< The end of the sample list to play */
