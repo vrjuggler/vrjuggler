@@ -440,6 +440,91 @@ AC_DEFUN(VJ_APP_LINKER,
 ])
 
 dnl ---------------------------------------------------------------------------
+dnl Set up variables for substituation in a makefile that will be used in
+dnl conjunction with Doozer (not Doozer++).
+dnl
+dnl Usage:
+dnl    VJ_APP_LINKER_DOOZER(linker, link-flags, debug-flags, optimization-flags, basic librar(y|ies), extra-libraries)
+dnl ---------------------------------------------------------------------------
+AC_DEFUN(VJ_APP_LINKER_DOOZER,
+[
+   APP_BASIC_LIBS_BEGIN='$(STATIC_ON) $(LINKALL_ON)'
+   APP_BASIC_LIBS=$5
+   APP_BASIC_LIBS_END='$(LINKALL_OFF) $(STATIC_OFF)'
+
+   dnl Values used for installation. 
+   APP_BASIC_LIBS_BEGIN_INST=''
+   APP_BASIC_LIBS_END_INST=''
+
+   APP_EXTRA_LIBS=$6
+
+   if test "x$OS_TYPE" = "xUNIX" ; then
+      APP_LINK=$1
+      APP_LINK_FLAGS=$2
+
+      if test "x$PLATFORM" = "xIRIX" -a "x$GXX" != "xyes" ; then
+         APP_LINKALL_ON='-all'
+         APP_LINKALL_OFF=''
+
+         APP_LINK_STATIC_ON='-B static'
+         APP_LINK_STATIC_OFF='-B dynamic'
+
+         APP_EXTRA_LIBS_BEGIN='-B dynamic'
+         APP_EXTRA_LIBS_END=''
+      elif test "x$GXX" = "xyes" -a "x$PLATFORM" != "xDarwin" ; then
+         if test "x$PLATFORM" = "xIRIX" ; then
+            APP_LINKALL_ON='-Wl,-all'
+            APP_LINKALL_OFF=''
+         else
+            APP_LINKALL_ON='-Wl,--whole-archive'
+            APP_LINKALL_OFF='-Wl,--no-whole-archive'
+         fi
+
+         APP_LINK_STATIC_ON='-Wl,-Bstatic'
+         APP_LINK_STATIC_OFF='-Wl,-Bdynamic'
+
+         APP_EXTRA_LIBS_BEGIN='-Wl,-Bdynamic'
+         APP_EXTRA_LIBS_END=''
+      fi
+   elif test "$OS_TYPE" = "Win32" ; then
+      APP_LINKALL_ON=''
+      APP_LINKALL_OFF=''
+
+      if test "x$DPP_USING_MSVCCC" = "xyes" ; then
+         APP_LINK='link'
+      else
+         APP_lINK=$1
+      fi
+
+      APP_LINK_FLAGS=$2
+   fi
+
+   APP_DEBUG_LFLAGS=$3
+   APP_OPTIM_LFLAGS=$4
+
+   AC_SUBST(APP_LINK)
+   AC_SUBST(APP_DEBUG_LFLAGS)
+   AC_SUBST(APP_OPTIM_LFLAGS)
+   AC_SUBST(APP_EXTRA_LFLAGS)
+   AC_SUBST(APP_LINK_FLAGS)
+   AC_SUBST(APP_LINKALL_ON)
+   AC_SUBST(APP_LINKALL_OFF)
+   AC_SUBST(APP_LINK_STATIC_ON)
+   AC_SUBST(APP_LINK_STATIC_OFF)
+   AC_SUBST(APP_BASIC_LIBS_BEGIN)
+   AC_SUBST(APP_BASIC_LIBS_END)
+   AC_SUBST(APP_BASIC_LIBS_BEGIN_INST)
+   AC_SUBST(APP_BASIC_LIBS_END_INST)
+   AC_SUBST(APP_BASIC_LIBS)
+   AC_SUBST(APP_BASIC_EXT_LIBS)
+   AC_SUBST(APP_EXTRA_LIBS_BEGIN)
+   AC_SUBST(APP_EXTRA_LIBS_END)
+   AC_SUBST(APP_EXTRA_LIBS_BEGIN_INST)
+   AC_SUBST(APP_EXTRA_LIBS_END_INST)
+   AC_SUBST(APP_EXTRA_LIBS)
+])
+
+dnl ---------------------------------------------------------------------------
 dnl Usage:
 dnl     VJ_VERSION_GROK(version-file)
 dnl ---------------------------------------------------------------------------
