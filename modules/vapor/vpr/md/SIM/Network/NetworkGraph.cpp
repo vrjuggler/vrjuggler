@@ -244,7 +244,6 @@ NetworkGraph::VertexListPtr NetworkGraph::getShortestPath (const NetworkGraph::n
    std::vector<int> dist(boost::num_vertices(mGraph));
    std::vector<net_vertex_t> pred(boost::num_vertices(mGraph));
    NetworkGraph::net_vertex_t p(dest), q;
-   std::stack<net_vertex_t> vstack;
    boost::property_map<net_graph_t, network_node_t>::const_type node_prop_map;
    boost::property_map<net_graph_t, boost::edge_weight_t>::const_type weight_map;
 
@@ -267,32 +266,29 @@ NetworkGraph::VertexListPtr NetworkGraph::getShortestPath (const NetworkGraph::n
                                   std::numeric_limits<int>::max(), 0,
                                   boost::default_dijkstra_visitor());
 
-   vstack.push(dest);
+   vlist->push_back(dest);
+
+   vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL)
+      << "Path (dest <-- src): " << node_prop_map[dest].getIpAddressString()
+      << vprDEBUG_FLUSH;
 
    // Put the vertices returned in the predecessor map into a stack so that
-   // the order that we can reverse the order and put them into vlist.
+   // we can reverse the order and put them into vlist.
    while ( (q = pred[p]) != p )
    {
-      vstack.push(q);
+      vprDEBUG_CONT(vprDBG_ALL, vprDBG_VERB_LVL)
+         << " <-- " << node_prop_map[q].getIpAddressString()
+         << vprDEBUG_FLUSH;
+
+      vlist->push_back(q);
       p = q;
    }
 
+   vprDEBUG_CONT_END(vprDBG_ALL, vprDBG_VERB_LVL) << "\n" << vprDEBUG_FLUSH;
    vprASSERT(p == src && "Destination is unreachable from source!");
 
-   vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL) << "Path (src --> dest): "
-                                         << vprDEBUG_FLUSH;
+   std::reverse(vlist->begin(), vlist->end());
 
-   while ( vstack.size() > 0 )
-   {
-      vprDEBUG_CONT(vprDBG_ALL, vprDBG_VERB_LVL)
-         << " --> " << node_prop_map[vstack.top()].getIpAddressString()
-         << vprDEBUG_FLUSH;
-
-      vlist->push_back(vstack.top());
-      vstack.pop();
-   }
-
-   vprDEBUG_CONT_END(vprDBG_ALL, vprDBG_VERB_LVL) << "\n" << vprDEBUG_FLUSH;
    return vlist;
 }
 

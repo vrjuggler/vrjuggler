@@ -110,7 +110,7 @@ void NetworkLine::calculateMessageEventTimes (vpr::sim::MessagePtr msg,
    // XXX: Syncronization issue here!!!!
 
    // Need to set the message's times for wire stuff...
-   if ( queue.size() > 0 )
+   if ( ! queue.empty() )
    {
       msg_queue_t::reverse_iterator last = queue.rbegin();
       vpr::sim::MessagePtr tail_msg      = (*last).second;
