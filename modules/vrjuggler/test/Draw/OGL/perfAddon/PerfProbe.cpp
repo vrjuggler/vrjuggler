@@ -33,7 +33,7 @@
 #include <vrj/vrjConfig.h>
 
 #include <GL/gl.h>
-#ifndef WIN32
+#if ! defined(WIN32) && ! defined(__sgi)
 #include <GL/glext.h>
 #endif
 #include <PerfProbe.h>
