@@ -100,7 +100,7 @@ SocketDatagramImplNSPR::sendto (const void* msg, const size_t length,
                            NSPR_getInterval(timeout));
 
     if ( bytes_sent == -1 ) {
-        PRErrorCode err_code;
+        PRErrorCode err_code = PR_GetError();
 
         if ( err_code == PR_WOULD_BLOCK_ERROR ) {
             retval.setCode(Status::InProgress);
