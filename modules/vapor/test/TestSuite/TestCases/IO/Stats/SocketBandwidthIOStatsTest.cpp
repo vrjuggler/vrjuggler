@@ -95,7 +95,7 @@ void SocketBandwidthIOStatsTest::testBandwidth_acceptor(void* arg)
       assertTestThread((ret_val.success()) && "Accepting socket failed");
 
       assertTestThread((sock->isOpen()) && "Accepted socket should be open");
-      assertTestThread((sock->isConnected()), "Accepted socket should be connected");
+      assertTestThread((sock->isConnected()) && "Accepted socket should be connected");
       for(int j=0;j<mNumItersB;j++)
       {
          ret_val = sock->write(mMessageValue, mMessageLen, bytes_written);      // Send a message
