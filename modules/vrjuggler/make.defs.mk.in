@@ -105,6 +105,12 @@ VJROOT_ABS=		@VJROOT_ABS@
 JUGGLERROOT_ABS=	@JUGGLERROOT_ABS@
 VJ_SHARE_DIR=		@VJ_SHARE_DIR@
 
+GL_API=			@OPENGL_API@
+
+ifndef NO_PERFORMER
+   PF_API=		@PERFORMER_API@
+endif
+
 # -----------------------------------------------------------------------------
 # Extra information for the Doozer++ file common.defs.mk.
 # -----------------------------------------------------------------------------
