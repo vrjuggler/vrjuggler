@@ -54,17 +54,19 @@ public class VarListPanel extends ExpandablePanel implements ConfigElementListen
     * Construct a panel to hold the sheet that actually contains the list of
     * properties.
     */
-   public VarListPanel(ConfigElement elm, PropertyDefinition prop_def, Color color)
+   public VarListPanel(ConfigContext ctx, ConfigElement elm, PropertyDefinition prop_def, Color color)
    {
       super(color);
 
       mConfigElement = elm;
+      mConfigContext = ctx;
    
       mConfigElement.addConfigElementListener(this);
             
       // Create the new property list which is actually just a variable list of
       // property values.
-      PropertySheet new_sheet = PropertySheetFactory.instance().makeVarSheet(mConfigElement, prop_def, getNextColor());
+      PropertySheet new_sheet 
+         = PropertySheetFactory.instance().makeVarSheet(mConfigElement, ctx, prop_def, getNextColor());
 
       mComponent = new_sheet;
       mPropDef = prop_def;
@@ -105,8 +107,8 @@ public class VarListPanel extends ExpandablePanel implements ConfigElementListen
       {
          // Use the PropertySheetFactory to add an aditional normal editor.
          String label = prop_def.getPropertyValueDefinition(0).getLabel();
-         PropertySheetFactory.instance().addNormalEditor((PropertySheet)mComponent, elm, 
-                                                         evt.getValue(), prop_def, label, 2,
+         PropertySheetFactory.instance().addNormalEditor((PropertySheet)mComponent, mConfigContext,
+                                                         elm, evt.getValue(), prop_def, label, 2,
                                                          elm.getPropertyValueCount(prop_def.getToken()) - 1);
       }
 
@@ -136,4 +138,5 @@ public class VarListPanel extends ExpandablePanel implements ConfigElementListen
 
    private PropertyDefinition   mPropDef = null;
    private ConfigElement        mConfigElement = null;
+   private ConfigContext        mConfigContext = null;
 }

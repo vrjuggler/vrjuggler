@@ -86,7 +86,7 @@ public class PropertySheetFactory extends PropertyComponent
    /*# private PropertySheetFactory _propertySheetFactory; */
    private static PropertySheetFactory mInstance = null;
 
-   public PropertySheet makeSheet(ConfigElement elm, Color color)
+   public PropertySheet makeSheet(ConfigContext ctx, ConfigElement elm, Color color)
    {
       PropertySheet sheet = new PropertySheet();
       
@@ -108,7 +108,7 @@ public class PropertySheetFactory extends PropertyComponent
          {
             System.out.println("Variable Property List.");
             
-            addVarList(sheet, elm, prop_def, row);
+            addVarList(sheet, ctx, elm, prop_def, row);
             ++row;
          }
          else
@@ -125,14 +125,14 @@ public class PropertySheetFactory extends PropertyComponent
             {
                // Normal Property.
                String label = prop_def.getPropertyValueDefinition(0).getLabel();
-               addNormalEditor(sheet, elm, value, prop_def, label, row, 0);
+               addNormalEditor(sheet, ctx, elm, value, prop_def, label, row, 0);
                ++row;
             }
          }
       }
       return sheet;
    }
-   public PropertySheet makeVarSheet(ConfigElement elm, PropertyDefinition prop_def, Color color)
+   public PropertySheet makeVarSheet(ConfigElement elm, ConfigContext ctx, PropertyDefinition prop_def, Color color)
    {
       PropertySheet sheet = new PropertySheet();
 
@@ -209,7 +209,7 @@ public class PropertySheetFactory extends PropertyComponent
                label = prop_def.getPropertyValueDefinition(list_number).getLabel();
             }
             
-            addNormalEditor(sheet, elm, value, prop_def, label, row, list_number);
+            addNormalEditor(sheet, ctx, elm, value, prop_def, label, row, list_number);
             ++list_number;
          }
          ++row;
@@ -272,10 +272,10 @@ public class PropertySheetFactory extends PropertyComponent
       sheet.add(remove_button, c4);
    }
    
-   private void addVarList(PropertySheet sheet, ConfigElement elm, PropertyDefinition prop_def, int row)
+   private void addVarList(PropertySheet sheet, ConfigContext ctx, ConfigElement elm, PropertyDefinition prop_def, int row)
    {
       // Use the same color for the list panel.
-      VarListPanel editor_list = new VarListPanel(elm, prop_def, sheet.getColor());
+      VarListPanel editor_list = new VarListPanel(ctx, elm, prop_def, sheet.getColor());
       
       ((TableLayout)sheet.getLayout()).insertRow(row, TableLayout.PREFERRED);
       
@@ -286,10 +286,11 @@ public class PropertySheetFactory extends PropertyComponent
       repaint();
    }
    
-   public void addNormalEditor(PropertySheet sheet, ConfigElement elm, Object value, 
-                                PropertyDefinition prop_def, String label, int row, int list_num)
+   public void addNormalEditor(PropertySheet sheet, ConfigContext ctx, ConfigElement elm,
+                               Object value, PropertyDefinition prop_def, String label,
+                               int row, int list_num)
    {
-      PropertyEditorPanel editor = new PropertyEditorPanel(value, prop_def, elm, list_num, sheet.getColor());
+      PropertyEditorPanel editor = new PropertyEditorPanel(ctx, value, prop_def, elm, list_num, sheet.getColor());
       
       ((TableLayout)sheet.getLayout()).insertRow(row, TableLayout.PREFERRED);
    
