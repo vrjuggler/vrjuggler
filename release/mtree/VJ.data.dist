@@ -1,0 +1,12 @@
+# This file defines the specification for the Data directory tree for the VR
+# Juggler installation.
+#
+# $Id$
+
+/set type=dir gname=c2dev mode=0775
+.
+    Data
+	models
+	..
+    ..
+..
