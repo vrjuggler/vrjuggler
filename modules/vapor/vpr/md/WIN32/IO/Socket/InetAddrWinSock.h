@@ -141,19 +141,6 @@ public:
     }
 
     // ------------------------------------------------------------------------
-    //: Construct a vpr::InetAddrWinSock object from a pointer to a sockaddr
-    //+ struct.
-    //
-    //! PRE: The given pointer points to a valid sockaddr struct.
-    //! POST: The memory pointed to by addr is copied into m_addr.
-    //
-    //! ARGS: addr - A pointer to a sockaddr struct
-    // ------------------------------------------------------------------------
-    InetAddrWinSock (const struct sockaddr* addr) {
-        memcpy((void*) &m_addr, (void*) addr, sizeof(m_addr));
-    }
-
-    // ------------------------------------------------------------------------
     //: Copy constructor.
     //
     //! PRE: None.
@@ -288,24 +275,6 @@ public:
     }
 
     // ------------------------------------------------------------------------
-    //: Copy the given array of bytes (an A record) into this structure's IP
-    //+ address value.  The record must be in network byte order.  This method
-    //+ is useful when working with host entries returned by gethostname(3).
-    //
-    //! PRE: The given array of bytes represents an A record in network byte
-    //+      order.
-    //! POST: The bytes are copied into this structure's IP address value.
-    //
-    //! ARGS: addr_value - The A record contianing an IP address in network
-    //+                    byte order.
-    // ------------------------------------------------------------------------
-    inline void
-    copyAddressValue (const char* addr_value) {
-        memcpy((void*) &m_addr.sin_addr.s_addr, (void*) addr_value,
-               sizeof(m_addr.sin_addr.s_addr));
-    }
-
-    // ------------------------------------------------------------------------
     //: Get the IP address associated with this structure as a human-readable
     //+ string.
     //
@@ -337,6 +306,94 @@ public:
     inline bool
     setAddress (const std::string& addr) {
         return lookupAddress(addr);
+    }
+
+    // ------------------------------------------------------------------------
+    //: Overloaded assignment operator to ensure that assignments work
+    //+ correctly.
+    //
+    //! PRE: None.
+    //! POST: A copy of the given vpr::InetAddrWinSock object is made in this
+    //+       object which is then returned to the caller.
+    //
+    //! ARGS: addr - The vpr::InetAddrWinSock object to be copied into this
+    //+              object.
+    //
+    //! RETURNS: A reference to this object.
+    // ------------------------------------------------------------------------
+    inline InetAddrWinSock&
+    operator= (const InetAddrWinSock& addr) {
+        copy(addr);
+        return *this;
+    }
+
+    // ------------------------------------------------------------------------
+    //: Overloaded equality operator.
+    // ------------------------------------------------------------------------
+    bool
+    operator== (const InetAddrWinSock& addr) {
+        return ((m_addr.sin_addr.s_addr == addr.m_addr.sin_addr.s_addr) &&
+                (m_addr.sin_port == addr.m_addr.sin_port) &&
+                (m_addr.sin_family == addr.m_addr.sin_family));
+    }
+
+    // ------------------------------------------------------------------------
+    //: Overloaded inequality operator.
+    // ------------------------------------------------------------------------
+    bool
+    operator!= (const InetAddrWinSock& addr) {
+        return ! (*this == addr);
+    }
+
+protected:
+    friend class SocketImpWinSock;
+    friend class SocketDatagramImpWinSock;
+    friend class SocketStreamImpWinSock;
+
+    // ------------------------------------------------------------------------
+    //: Construct a vpr::InetAddrWinSock object from a pointer to a sockaddr
+    //+ struct.
+    //
+    //! PRE: The given pointer points to a valid sockaddr struct.
+    //! POST: The memory pointed to by addr is copied into m_addr.
+    //
+    //! ARGS: addr - A pointer to a sockaddr struct
+    // ------------------------------------------------------------------------
+    InetAddrWinSock (const struct sockaddr* addr) {
+        memcpy((void*) &m_addr, (void*) addr, sizeof(m_addr));
+    }
+
+    // ------------------------------------------------------------------------
+    //: Make a copy of the given vpr::InetAddrWinSock object in this object.
+    //
+    //! PRE: None.
+    //! POST: The memory in m_addr is overwritten with that of the given
+    //+       object's m_addr structure.
+    //
+    //! ARGS: addr - The vpr::InetAddrWinSock object to be copied into this
+    //+              object.
+    // ------------------------------------------------------------------------
+    inline void
+    copy (const InetAddrWinSock& addr) {
+        memcpy((void*) &m_addr, (void*) &addr.m_addr, sizeof(m_addr));
+    }
+
+    // ------------------------------------------------------------------------
+    //: Copy the given array of bytes (an A record) into this structure's IP
+    //+ address value.  The record must be in network byte order.  This method
+    //+ is useful when working with host entries returned by gethostname(3).
+    //
+    //! PRE: The given array of bytes represents an A record in network byte
+    //+      order.
+    //! POST: The bytes are copied into this structure's IP address value.
+    //
+    //! ARGS: addr_value - The A record contianing an IP address in network
+    //+                    byte order.
+    // ------------------------------------------------------------------------
+    inline void
+    copyAddressValue (const char* addr_value) {
+        memcpy((void*) &m_addr.sin_addr.s_addr, (void*) addr_value,
+               sizeof(m_addr.sin_addr.s_addr));
     }
 
     // ------------------------------------------------------------------------
@@ -380,62 +437,6 @@ public:
     }
 
     // ------------------------------------------------------------------------
-    //: Overloaded assignment operator to ensure that assignments work
-    //+ correctly.
-    //
-    //! PRE: None.
-    //! POST: A copy of the given vpr::InetAddrWinSock object is made in this
-    //+       object which is then returned to the caller.
-    //
-    //! ARGS: addr - The vpr::InetAddrWinSock object to be copied into this
-    //+              object.
-    //
-    //! RETURNS: A reference to this object.
-    // ------------------------------------------------------------------------
-    inline InetAddrWinSock&
-    operator= (const InetAddrWinSock& addr) {
-        copy(addr);
-        return *this;
-    }
-
-    // ------------------------------------------------------------------------
-    //: Overloaded equality operator.
-    // ------------------------------------------------------------------------
-    bool
-    operator== (const InetAddrWinSock& addr) {
-        return ((m_addr.sin_addr.s_addr == addr.m_addr.sin_addr.s_addr) &&
-                (m_addr.sin_port == addr.m_addr.sin_port) &&
-                (m_addr.sin_family == addr.m_addr.sin_family));
-    }
-
-    // ------------------------------------------------------------------------
-    //: Overloaded inequality operator.
-    // ------------------------------------------------------------------------
-    bool
-    operator!= (const InetAddrWinSock& addr) {
-        return ! (*this == addr);
-    }
-
-//protected:
-    struct sockaddr_in m_addr;    //: The Ineternet address structure
-
-protected:
-    // ------------------------------------------------------------------------
-    //: Make a copy of the given vpr::InetAddrWinSock object in this object.
-    //
-    //! PRE: None.
-    //! POST: The memory in m_addr is overwritten with that of the given
-    //+       object's m_addr structure.
-    //
-    //! ARGS: addr - The vpr::InetAddrWinSock object to be copied into this
-    //+              object.
-    // ------------------------------------------------------------------------
-    inline void
-    copy (const InetAddrWinSock& addr) {
-        memcpy((void*) &m_addr, (void*) &addr.m_addr, sizeof(m_addr));
-    }
-
-    // ------------------------------------------------------------------------
     //: Look up the given address and store the value in m_addr.
     //
     //! PRE: None.
@@ -447,6 +448,8 @@ protected:
     //+                  is printed to stderr explaining what went wrong.
     // ------------------------------------------------------------------------
     bool lookupAddress(const std::string& addr);
+
+    struct sockaddr_in m_addr;    //: The Ineternet address structure
 };
 
 }; // End of vpr namespace
