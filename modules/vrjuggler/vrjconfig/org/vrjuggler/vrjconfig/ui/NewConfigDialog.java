@@ -57,7 +57,7 @@ public class NewConfigDialog
    public static final int CANCEL_OPTION = 1;
    public static final int ERROR_OPTION = -1;
 
-   public NewConfigDialog()
+   public NewConfigDialog(File chooserCurDir)
    {
       try
       {
@@ -67,6 +67,8 @@ public class NewConfigDialog
       {
          e.printStackTrace();
       }
+
+      fileChooser.setCurrentDirectory(chooserCurDir);
 
       // Try to get icons for the toolbar buttons
       try
@@ -95,7 +97,7 @@ public class NewConfigDialog
       includesList.getColumnModel().getColumn(0).setCellEditor(new FileCellEditor(fileChooser));
 
       // Default to the user's home dir
-      directoryTxt.setText(expandEnvVars("${HOME}"));
+      directoryTxt.setText(fileChooser.getCurrentDirectory().getAbsolutePath());
    }
 
    public int showDialog(Component parent)
