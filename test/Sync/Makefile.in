@@ -51,7 +51,7 @@ testCond: testCond.o
 testCond.o: testCond.cpp
 
 .cpp.o:
-	${COMPILE} -c ${srcdir}/$<
+	${COMPILE} -c $<
 
 # -----------------------------------------------------------------------------
 # Clean-up.
