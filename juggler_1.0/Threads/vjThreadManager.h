@@ -28,6 +28,8 @@
 #include <Sync/vjMutex.h>
 #include <Sync/vjGuard.h>
 
+#include <Kernel/vjDebug.h>
+
 //----------------------------------------------------
 //: Manager that maintains data about all threads.
 //

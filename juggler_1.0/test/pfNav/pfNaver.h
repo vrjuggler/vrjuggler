@@ -2,29 +2,32 @@
 #define _PF_NAVER_H_
 
 #include <Performer/pf/pfDCS.h>
+#include <Performer/pr/pfLinMath.h>
 
 #include <Kernel/vjKernel.h>
 #include <Math/vjCoord.h>
 #include <Input/InputManager/vjPosInterface.h>
 #include <Input/InputManager/vjDigitalInterface.h>
 #include <Kernel/vjDebug.h>
+#include <Kernel/Pf/vjPfUtil.h>
 
+#include <velocityNav.h>
 
 class pfNaver : public pfDCS
 {
 public:
    pfNaver();
 
-   float& transVelocity(void) { return mTransVelocity;}
-   float& rotVelocity(void) { return mRotVelocity;}
+   navigator* getNavigator()
+   { return &mVNav; }
 
 private:
-   float mTransVelocity;
-   float mRotVelocity;
+   velocityNav          mVNav;      // My navigator
 
    vjPosInterface       mWand;
    vjDigitalInterface   mButton0;
    vjDigitalInterface   mButton1;
+   vjDigitalInterface   mButton2;
 
    vjKernel* mKern;        // The Kernel
 
@@ -36,7 +39,7 @@ public:  // APP traversal
    // Required for Performer class
 public:
    static void init(void);
-   static pfType* getClassType(void){ return mClassType;};
+   static pfType* getClassType(void){ return mClassType;}
 private:
    static pfType* mClassType;
 };
@@ -46,14 +49,13 @@ private:
 pfNaver::pfNaver()
 {
    setType(mClassType);  // Set the type
-   mRotVelocity = 1.0f;
-   mTransVelocity = 0.1f;
    mKern = vjKernel::instance();    // Store the kernel
    mWand.init("VJWand");
    mButton0.init("VJButton0");
    mButton1.init("VJButton1");
+   mButton2.init("VJButton2");
+   mVNav.setRotAxis(false, true, false);
 }
-
 
 
 // app() - APP traversal function.  This overloads the standard pfNode
@@ -66,59 +68,41 @@ int pfNaver::app(pfTraverser *trav)
 {
    int button0_state = mButton0->getData();
    int button1_state = mButton1->getData();
+   int button2_state = mButton2->getData();
 
-   vjDEBUG(vjDBG_ALL, 2) << "b0: " << button0_state << "\t" << vjDEBUG_FLUSH;
-   vjDEBUG(vjDBG_ALL,2) << "b1: " << button1_state << endl << vjDEBUG_FLUSH;
+   vjMatrix* wand_mat = mWand->getData();
 
-   vjMatrix* wandMatrix;
-   wandMatrix = mWand->getData();
+   /*
+   vjDEBUG(vjDBG_ALL, 0) << "b0: " << button0_state
+                         << "b1: " << button1_state
+                         << "b2: " << button2_state
+                         << "\t" << vjDEBUG_FLUSH;
+                         */
 
-   vjCoord wand_coord(*wandMatrix);
-   vjDEBUG(vjDBG_ALL,2) << "Wand pos:" << wand_coord.pos << endl << vjDEBUG_FLUSH;
-   vjDEBUG(vjDBG_ALL,2) << "      or:" << wand_coord.orient << endl << vjDEBUG_FLUSH;
+   mVNav.update(*wand_mat, button0_state, button1_state);    // mat, trans, rot
 
-   if(1 == button0_state)   // Translation
-   {
-      vjVec3   forward(0.0, 0.0, -1.0f);     // -Z is forward in C2
-      forward.xformFull(*wandMatrix, forward);
+   if(1 == button0_state)     // Translate
+      mVNav.incTransVelocity();
+   else
+      mVNav.zeroTransVelocity();       // Set velocity to 0
 
-      pfMatrix xform;
-      //xform.makeTrans(forward[0], -forward[2], forward[1]);
-         // Since we are moving the model, we have to move it opposite
-         // To give the apperance of moving the user
-      xform.makeTrans(-forward[0], forward[2], -forward[1]);
-      //xform.makeTrans(0.0f, 0.2f, 0.0f);
+   // Set the DCS to the navigation matrix
+   vjMatrix cur_pos,world_pos;
+   cur_pos = mVNav.getCurPos();  // Invert because we want to move the world
+   cerr << "Set Pos: " << vjCoord(cur_pos).pos << endl;
+   world_pos.invert(cur_pos);
+   pfMatrix pf_world_pos;
+   pf_world_pos = vjGetPfMatrix(world_pos);
+   setMat(pf_world_pos);
 
-      pfMatrix curMat;
-      getMat(curMat);
-      curMat.postMult(xform);
-      setMat(curMat);
-   }
-
-
-   if(1 == button1_state)     // Rotation
-   {
-      cout << "Button 1 Pressed." << endl;
-
-      // Should really use quaternions,  For now we will use this
-      float x_rot, y_rot, z_rot;
-      wandMatrix->getXYZEuler(x_rot, y_rot, z_rot);
-
-      vjMatrix new_or;
-      new_or.makeXYZEuler(x_rot*0.25, y_rot*0.25, z_rot*0.25);    // Scale the rotation
-      new_or.invert(new_or);                                      // Invert the rotation
-
-      pfMatrix  new_pf_mat;
-      new_pf_mat = vjGetPfMatrix(new_or);       // Get the performer equivalent matrix
-
-      pfMatrix curMat;
-      getMat(curMat);
-      curMat.postMult(new_pf_mat);
-      setMat(curMat);
-   }
 
    return pfDCS::app(trav);        /* Finish by calling the parent class's app() */
 }
+
+
+
+
+
 
 
 //---------------------------------------------------------------------//

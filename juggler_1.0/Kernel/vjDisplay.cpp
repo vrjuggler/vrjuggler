@@ -19,8 +19,9 @@
 
 
 #include <vjConfig.h>
-#include <Kernel/vjDisplay.h>
 #include <Kernel/vjDebug.h>
+
+#include <Kernel/vjDisplay.h>
 #include <Kernel/vjKernel.h>
 
 
@@ -78,19 +79,23 @@ void vjDisplay::config(vjConfigChunk* chunk)
     // ---- FRIEND FUNCTIONS ---- //
 //! PRE: disp != NULL
 //+      disp->mUser != NULL
-ostream& operator<<(ostream& out,  vjDisplay* disp)
+ostream& vjDisplay::outStream(ostream& out)
 {
-   vjASSERT(disp != NULL);
-   vjASSERT(disp->mUser != NULL);
+   vjASSERT(mUser != NULL);
 
-    //out << "vjDisplay:" << (void*)(&disp)
-    out << setw(15) << disp->mName.c_str()
-        << "  org:" << disp->_xo << ", " << disp->_yo
-        << "  sz:" << disp->_xs << ", " << disp->_ys
-        << "  p:" << disp->mPipe
-        << "  view:" << ((disp->mView == vjDisplay::LEFT_EYE) ? "Left" : ((disp->mView==vjDisplay::RIGHT_EYE)?"Right" : "Stereo") )
-        << "  act:" << (disp->mActive ? "Y" : "N")
-        << "  usr:" << disp->mUser->getName().c_str();
+    out << setw(15) << mName.c_str()
+        << "  org:" << _xo << ", " << _yo
+        << "  sz:" << _xs << ", " << _ys
+        << "  p:" << mPipe
+        << "  view:" << ((mView == vjDisplay::LEFT_EYE) ? "Left" : ((mView==vjDisplay::RIGHT_EYE)?"Right" : "Stereo") )
+        << "  act:" << (mActive ? "Y" : "N")
+        << "  usr:" << mUser->getName().c_str();
 
     return out;	
+}
+
+
+ostream& operator<<(ostream& out,  vjDisplay& disp)
+{
+   return disp.outStream(out);
 }

@@ -175,7 +175,7 @@ public:
          default: return std::string("Unknown key");
       }
 
-      return std::string("n/a");
+      //return std::string("n/a");
    }
 };
 
