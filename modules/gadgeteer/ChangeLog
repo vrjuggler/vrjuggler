@@ -1,5 +1,9 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Apr-30-2003 patrickh    Refactored gadget::Event and subclasses to be less
+                        lame.  gadget::EventType now contains more specific
+                        values.
+                        NEW VERSION: 0.11.0
 Apr-29-2003 patrickh    Extended gadget::EventWndow so that it can act as an
                         event source.  At this time, only the X11 windows are
                         filling the event queue.

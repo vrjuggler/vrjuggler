@@ -44,6 +44,7 @@
 #include <gadget/Type/Input.h>
 #include <gadget/Type/EventWindow.h>
 #include <gadget/Type/InputMixer.h>
+#include <gadget/Type/EventWindow/Event.h>
 
 #include <jccl/Config/ConfigChunkPtr.h>
 
@@ -171,12 +172,15 @@ private:
     *
     * @post A new event (gadget::KeyEvent) is added to the event queue.
     *
-    * @param key        The key whose state changed.
-    * @param isKeyPress Flag stating whether this is a key press or a key
-    *                   release event.
+    * @param key   The key whose state changed.
+    * @param type  The type of key event (KeyPress or KeyRelease).
+    * @param state An integer value from the X Window System that gives the
+    *              current state of depressed keyboard modifiers in addition
+    *              to key.
+    * @param time  The time (in milliseconds) at which the event occurred.
     */
-   void addKeyEvent(gadget::Keys key, const bool& isKeyPress, const int& state,
-                    const Time& time);
+   void addKeyEvent(const gadget::Keys& key, const gadget::EventType& type,
+                    const int& state, const Time& time);
 
    /**
     * Adds a new mouse motion event to the event queue for this window.
@@ -185,7 +189,7 @@ private:
     *
     * @param event The X11 motion event object.
     */
-   void addMouseEvent(const XMotionEvent& event);
+   void addMouseMoveEvent(const XMotionEvent& event);
 
    /**
     * Adds a new mouse button press/release event to the event queue for this
@@ -193,11 +197,14 @@ private:
     *
     * @post A new event (gadget::MouseEvent) is added to the event queue.
     *
-    * @param event         The X11 button event object.
-    * @param isButotnPress Flag stating whether this is a button press or a
-    *                      button release event.
+    * @param button The button that triggered the event.
+    * @param event  The X11 button event object.
+    * @param type   The type of mouse button event (MouseButtonPress or
+    *               MouseButtonRelease).
     */
-   void addMouseEvent(const XButtonEvent& event, const bool& isButtonPress);
+   void addMouseButtonEvent(const gadget::Keys& button,
+                            const XButtonEvent& event,
+                            const gadget::EventType& type);
 
    /**
     * Constructs a windowing system-independent mask of modifier keys and

@@ -37,6 +37,17 @@
 namespace gadget
 {
 
+/// Possible event types.
+enum EventType
+{
+   NoEvent                 = 0,  /**< No event */
+   KeyPressEvent           = 1,  /**< Key press event */
+   KeyReleaseEvent         = 2,  /**< Key release event */
+   MouseButtonPressEvent   = 3,  /**< Mouse button press event */
+   MouseButtonReleaseEvent = 4,  /**< Mouse button release event */
+   MouseMoveEvent          = 5   /**< Mouse move event */
+};
+
 /**
  * Base event type that an event source may generate.  This class cannot be
  * instantiated directly, and instead, subclasses must be used.
@@ -44,19 +55,11 @@ namespace gadget
 class Event
 {
 public:
-   /// Possible event types.
-   enum Type
-   {
-      None       = 0,  /**< No event */
-      KeyEvent   = 1,  /**< Keyboard event */
-      MouseEvent = 2   /**< Mouse event */
-   };
-
    /**
     * Returns the type of this event.  This can be used for dynamic casting
     * to more specific event types.
     */
-   const Type& type() const
+   const EventType& type() const
    {
       return mType;
    }
@@ -84,12 +87,12 @@ protected:
     *             The time at which the event was processed is not an
     *             acceptable value.
     */
-   Event(const Type& type, const unsigned long& time)
+   Event(const EventType& type, const unsigned long& time)
       : mType(type), mTime(time)
    {
    }
 
-   Type          mType; /**< The event type. */
+   EventType     mType; /**< The event type. */
    unsigned long mTime; /**< Time at which the event occurred. */
 };
 

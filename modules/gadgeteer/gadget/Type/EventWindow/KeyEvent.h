@@ -67,34 +67,15 @@ public:
     *
     * @see gadget::ModifierMask
     */
-   KeyEvent(const gadget::Keys& key, const bool& isKeyPress, const int& mask,
-            const unsigned long& time)
-      : gadget::Event(Event::KeyEvent, time), mKey(key), mModifierMask(mask),
-        mIsKeyPress(isKeyPress)
+   KeyEvent(const gadget::EventType& type, const gadget::Keys& key,
+            const int& mask, const unsigned long& time)
+      : gadget::Event(type, time), mKey(key), mModifierMask(mask)
    {
    }
 
-   const gadget::Keys& key() const
+   const gadget::Keys& getKey() const
    {
       return mKey;
-   }
-
-   /**
-    * Indicates whether this is a key press (true) or key release (false)
-    * event.
-    */
-   const bool& isKeyPress() const
-   {
-      return mIsKeyPress;
-   }
-
-   /**
-    * Indicates whether this is a key release (true) or key press (false)
-    * event.
-    */
-   bool isKeyRelease() const
-   {
-      return ! mIsKeyPress;
    }
 
    /**
@@ -118,7 +99,6 @@ public:
 protected:
    gadget::Keys mKey;          /**< The actual key pressed. */
    int          mModifierMask; /**< The mask of any modifiers in addition to mKey. */
-   bool         mIsKeyPress;   /**< Flag indicating if this is a key press or release event. */
 };
 
 } // End of gadget namespace
