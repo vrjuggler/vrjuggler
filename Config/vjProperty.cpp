@@ -46,7 +46,7 @@ vjProperty::vjProperty (vjPropertyDesc *pd) {
     int j;
     vjVarValue *v;
 
-
+    validation = 1;
     description = pd;
     num = pd->getNumAllowed();
     type = pd->getType();
@@ -75,6 +75,8 @@ vjProperty::vjProperty (vjPropertyDesc *pd) {
 
 
 vjVarValue *vjProperty::createVarValue (int i) {
+    assertValid();
+
     // if i == -1, we're just tacking onto the end
     if (i == -1)
         i = value.size();
@@ -98,17 +100,29 @@ vjProperty::~vjProperty () {
 
     for (i = 0; i < value.size(); i++)
         delete (value)[i];
+    validation = 0;
 }
 
 
 
 vjProperty::vjProperty (const vjProperty& p):value() {
+    validation = 1;
     *this = p;
 }
 
 
 
+#ifdef VJ_DEBUG
+void vjProperty::assertValid () const {
+    assert (validation == 1 && "Trying to use deleted vjProperty");
+}
+#endif
+
+
+
 vjProperty& vjProperty::operator= (const vjProperty& p) {
+    assertValid();
+
     unsigned int i;
 
     if (&p == this)
@@ -132,28 +146,31 @@ vjProperty& vjProperty::operator= (const vjProperty& p) {
 
 
 bool vjProperty::operator== (const vjProperty& p) const {
+    assertValid();
+
     if (description != p.description)
-   return false;
+        return false;
     if (value.size() != p.value.size())
-   return false;
+        return false;
     for (unsigned int i = 0; i < value.size(); i++)
-   if (*(value[i]) != *(p.value[i]))
-       return false;
+        if (*(value[i]) != *(p.value[i]))
+            return false;
     return true;
 }
 
 
 
 bool vjProperty::applyUnits (CfgUnit u) {
+    assertValid();
 
     if (type == T_DISTANCE) {
-   for (unsigned int j = 0; j < value.size(); j++)
-       setValue( toFeet (getValue(j), u), j);
-   return true;
+        for (unsigned int j = 0; j < value.size(); j++)
+            setValue( toFeet (getValue(j), u), j);
+        return true;
     }
     else {
-   //cerr << "Units may only be applied to Distance values." <<endl;
-   return false;
+        //cerr << "Units may only be applied to Distance values." <<endl;
+        return false;
     }
 }
 
@@ -161,6 +178,8 @@ bool vjProperty::applyUnits (CfgUnit u) {
 
 
 vjEnumEntry* vjProperty::getEnumEntryWithValue (int val) const {
+    assertValid();
+
     // gets an enumentry based on the value, instead of the name
     vjVarValue v(T_INT);
     v = val;
@@ -170,6 +189,8 @@ vjEnumEntry* vjProperty::getEnumEntryWithValue (int val) const {
 
 
 std::ostream& operator << (std::ostream &out, vjProperty& p) {
+    p.assertValid();
+
     out << p.getToken().c_str() << " { ";
     for (unsigned int i = 0; i < p.value.size(); i++) {
         vjVarValue *v = ((p.value))[i];
@@ -201,6 +222,8 @@ std::ostream& operator << (std::ostream &out, vjProperty& p) {
 
 
 vjVarValue& vjProperty::getValue (unsigned int ind) {
+    assertValid();
+
     if (ind >= value.size()) {
         return vjVarValue::getInvalidInstance();
     }
@@ -210,22 +233,30 @@ vjVarValue& vjProperty::getValue (unsigned int ind) {
 
 
 int vjProperty::getNum () const {
+    assertValid();
+
     return value.size();
 }
 
 
 
 const std::string& vjProperty::getName () const {
+    assertValid();
+
     return description->getName();
 }
 
 
 const std::string& vjProperty::getToken () const {
+    assertValid();
+
     return description->getToken();
 }
 
 
 bool vjProperty::preSet (unsigned int ind) {
+    assertValid();
+
     unsigned int i;
     vjVarValue *v;
 
@@ -246,6 +277,8 @@ bool vjProperty::preSet (unsigned int ind) {
 
 
 bool vjProperty::setValue (int val, int ind ) {
+    assertValid();
+
     if (!preSet(ind))
         return false;
     *((value)[ind]) = val;
@@ -255,8 +288,10 @@ bool vjProperty::setValue (int val, int ind ) {
 
 
 bool vjProperty::setValue (float val, int ind ) {
+    assertValid();
+
     if (!preSet(ind))
-   return false;
+        return false;
     *((value)[ind]) = val;
     return true;
 }
@@ -264,8 +299,10 @@ bool vjProperty::setValue (float val, int ind ) {
 
 
 bool vjProperty::setValue (const std::string& val, int ind) {
+    assertValid();
+
     if (!preSet(ind))
-   return false;
+        return false;
     *((value)[ind]) = val;
     return true;
 }
@@ -273,18 +310,23 @@ bool vjProperty::setValue (const std::string& val, int ind) {
 
 
 bool vjProperty::setValue (vjConfigChunk* val, int ind) {
+    assertValid();
+
     if (!preSet(ind)) {
-   vjDEBUG(vjDBG_ERROR, 1) << "vjProperty::Preset failed!\n" << vjDEBUG_FLUSH;
-   return false;
+        vjDEBUG(vjDBG_ERROR, 1) << "vjProperty::Preset failed!\n" << vjDEBUG_FLUSH;
+        return false;
     }
     *(value[ind]) = val;
     return true;
 }
 
 
+
 bool vjProperty::setValue (vjVarValue& val, int ind) {
+    assertValid();
+
     if (!preSet (ind))
-   return false;
+        return false;
     *(value[ind]) = val;
     return true;
 }
