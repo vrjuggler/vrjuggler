@@ -481,6 +481,31 @@ public class ConfigModule extends DefaultCoreModule {
 
 
 
+    public ChunkDescDB getDescDB (File f) {
+        ChunkDescDB db;
+        File canonical, other, other_canonical;
+        try {
+            canonical = f.getCanonicalFile();
+        }
+        catch (IOException e1) {
+            canonical = f;
+        }
+	for (int i = 0; i < descdbs.size(); i++) {
+            db = (ChunkDescDB)descdbs.get(i);
+	    other = db.getFile();
+            try {
+                other_canonical = other.getCanonicalFile();
+            }
+            catch (IOException e2) {
+                other_canonical = other;
+            }
+            if (canonical.equals (other_canonical))
+                return db;
+	}
+	return null;
+    }
+
+
     public boolean isActive (ChunkDescDB db) {
         return (db == active_descdb);
     }
@@ -832,15 +857,53 @@ public class ConfigModule extends DefaultCoreModule {
         if (f == null)
             return null;
 
+        ChunkDescDB descdb;
+        boolean is_new_db = true;
+
+        // check if it's already loaded
+        descdb = getDescDB (f);
+        if (descdb == null) {
+            descdb = new ChunkDescDB();
+        }
+        else {
+            // if this file has already been loaded once, we need to
+            // decide wether to revert to saved or not.
+
+            boolean should_revert = false;
+            if (java.beans.Beans.isGuiAvailable()) {
+                int result = 
+                    JOptionPane.showConfirmDialog (
+                        null, "Do you want to revert to the saved '" + 
+                        descdb.getName() + "'?", 
+                        "Revert file?", 
+                        JOptionPane.YES_NO_OPTION, 
+                        JOptionPane.QUESTION_MESSAGE
+                        /*, Core.save_icn*/);
+                if (result == JOptionPane.YES_OPTION)
+                    should_revert = true;
+            }
+
+            if (should_revert) {
+                // get rid of old contents & load in new
+                descdb.clear();
+                is_new_db = false;
+            }
+            else {
+                // don't do anything; just return the found db
+                return descdb.getName();
+            }
+        }                
+
+
 	Core.consoleInfoMessage (component_name, 
 				 "Loading Descriptions file: " + f);
  	try {
-	    ChunkDescDB descdb = new ChunkDescDB();
 	    descdb.setName(f.getName());
 	    descdb.setFile (f);
             ConfigIO.readChunkDescDB (f, descdb, ConfigIO.GUESS);
             descdb.need_to_save = false;
-            addDescDB (descdb);
+            if (is_new_db)
+                addDescDB (descdb);
             return descdb.name;
 	}
 	catch (FileNotFoundException e) {
