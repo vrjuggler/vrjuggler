@@ -54,16 +54,16 @@ vjProperty::vjProperty (vjPropertyDesc *pd) {
 
     if (type == T_EMBEDDEDCHUNK) {
         vjEnumEntry *e = description->getEnumEntryAtIndex (0);
-        if (e) 
+        if (e)
             embeddesc = vjChunkFactory::instance()->getChunkDesc (e->getName());
     }
 
-    /* the idea here is that if num == -1 we can add values to 
+    /* the idea here is that if num == -1 we can add values to
      * a property, e.g. add another active wall.
      * otherwise we can just set the extant values.
      */
     if (num != -1) {
-        /* we're filling the vector with num copies of a 
+        /* we're filling the vector with num copies of a
          * default vjVarValue */
         for (j = 0; j < num; j++ ) {
             v = createVarValue (j);
@@ -92,14 +92,16 @@ vjVarValue *vjProperty::createVarValue (int i) {
     else
         return new vjVarValue (type);
 }
- 
+
 
 
 vjProperty::~vjProperty () {
     unsigned int i;
 
+    /* XXX
     for (i = 0; i < value.size(); i++)
         delete (value)[i];
+        */
     validation = 0;
 }
 
@@ -134,9 +136,13 @@ vjProperty& vjProperty::operator= (const vjProperty& p) {
     embeddesc = p.embeddesc;
     num = p.num;
 
+    /*  XXX
     for (i = 0; i < value.size(); i++)
         delete (value[i]);
-    value.erase (value.begin(), value.end());
+        */
+   // value.erase (value.begin(), value.end());
+    value.clear();
+
     for (i = 0; i < p.value.size(); i++) {
         value.push_back (new vjVarValue(*(p.value[i])));
     }
@@ -194,7 +200,7 @@ std::ostream& operator << (std::ostream &out, vjProperty& p) {
     out << p.getToken().c_str() << " { ";
     for (unsigned int i = 0; i < p.value.size(); i++) {
         vjVarValue *v = ((p.value))[i];
-        
+
         if ((p.type == T_STRING) || (p.type == T_CHUNK)) {
             out << '"' << *v << '"';
         }
