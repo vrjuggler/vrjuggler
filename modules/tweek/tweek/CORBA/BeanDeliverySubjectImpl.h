@@ -179,8 +179,6 @@ public:
     *
     * @pre A Bean has been marked as active.
     *
-    * @param beanName The name of the JavaBean to mark as active.
-    *
     * @see setActiveBean()
     */
    void removeActiveBean();
