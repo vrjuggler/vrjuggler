@@ -30,18 +30,6 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-//===============================================================
-// Flock (a Wrapper for FlockStandalone)
-//
-// Purpose:
-//      VR Juggler Ascention Flock of birds tracking class
-//
-// Author:
-// Kevin Meinert
-//
-// Last Modified: 4-22-99
-//===============================================================
-
 #ifndef _GADGET_ASCENSION_FLOCK_OF_BIRDS_H_
 #define _GADGET_ASCENSION_FLOCK_OF_BIRDS_H_
 
@@ -84,7 +72,6 @@ namespace gadget
  *
  * @see gadget::Position
  */
-
 //class Flock : public Input, public Position
 class Flock : public InputMixer<Input,Position>
 {
