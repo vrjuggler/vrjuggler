@@ -281,6 +281,7 @@ private:
    /** Perform anything that must be done when state switches. */
    void lockMouse();
    void unlockMouse();
+   void updateOriginAndSize(unsigned int width, unsigned int height);
 
 protected:
    void createEmptyCursor(Display* display, Window root);
