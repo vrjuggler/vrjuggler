@@ -82,4 +82,44 @@ namespace vpr {
 #endif
 
 
+
+// --- HASH Functions ---- //
+#if defined(HAVE_HASH_MAP) || defined(HAVE_HASH_MAP_H)
+
+#ifdef HAVE_HASH_MAP
+#   include <hash_map>
+#else
+#   include <hash_map.h>
+#endif
+
+namespace std
+{
+/// Nice little helper class for hashing a vpr::Uint64.
+template<>
+struct hash<vpr::Uint64>
+{
+   union Uint64_val
+   {
+      vpr::Uint64 full;
+      struct
+      {
+         vpr::Uint32 low32;
+         vpr::Uint32 high32;
+      } nested;
+   };
+
+   vpr::Uint32 operator() (vpr::Uint64 val) const
+   {
+      Uint64_val temp;
+      temp.full = val;
+      return temp.nested.low32 + temp.nested.high32;      
+   }
+};
+
+} // End of std namespace
+
+#endif
+
+
+
 #endif	/* _VPR_TYPES_H_ */
