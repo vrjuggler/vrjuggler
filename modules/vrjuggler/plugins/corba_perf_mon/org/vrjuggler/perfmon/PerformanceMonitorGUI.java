@@ -59,7 +59,7 @@ import java.util.*;
 import org.vrjuggler.jccl.config.io.*;
 
 public class PerformanceMonitorGUI extends JPanel
-   implements CommunicationListener, TweekFrameListener, ActionListener
+   implements CommunicationListener, TweekFrameListener
 {
    private PerformanceMonitorSubject mPerformanceMonitorSubject = null;
    private PerformanceMonitorObserverImpl mPerfMonObserver = null;
@@ -68,9 +68,8 @@ public class PerformanceMonitorGUI extends JPanel
    TimeSeries series = null;
    double lastValue = 100.0;
    JPanel jPanel1 = new JPanel();
-   JButton mAddBtn = new JButton( "Add New Data Item" );
 
-   Integer value = new Integer( 500 );
+   Integer value = new Integer( 1000 );
    Integer min = new Integer( 50 );
    Integer max = new Integer( 10000 );
    Integer step = new Integer( 50 );
@@ -83,14 +82,15 @@ public class PerformanceMonitorGUI extends JPanel
    {
       try
       {
-         this.series = new TimeSeries( "Random Data", Millisecond.class );
-         TimeSeriesCollection dataset = new TimeSeriesCollection( this.series );
+         //this.series = new TimeSeries( "Random Data", Millisecond.class );
+         //TimeSeriesCollection dataset = new TimeSeriesCollection( this.series );
+         TimeSeriesCollection dataset = new TimeSeriesCollection( );
          JFreeChart chart = createChart( dataset );
          mChartPanel = new ChartPanel( chart );
 
          jbInit();
-         mThread = new Thread( new Updater( series, mSpinnerModel ) );
-         mThread.start();
+         //mThread = new Thread( new Updater( series, mSpinnerModel ) );
+         //mThread.start();
 
          System.out.println("PerformanceMonitor started");
       }
@@ -104,29 +104,10 @@ public class PerformanceMonitorGUI extends JPanel
    {
        this.setLayout( borderLayout1 );
        mChartPanel.setPreferredSize( new java.awt.Dimension( 500, 270 ) );
-       mAddBtn.setActionCommand( "ADD_DATA" );
-       mAddBtn.addActionListener( this );
        this.add( mChartPanel, BorderLayout.CENTER );
        this.add( jPanel1, BorderLayout.SOUTH );
-       jPanel1.add( mAddBtn, null );
        jPanel1.add( mJSpinner, null );
   }
-
-  public void actionPerformed ( ActionEvent e )
-  {
-    if ( e.getActionCommand().equals( "ADD_DATA" ) )
-    {
-      double factor = 0.90 + 0.2 * Math.random();
-      this.lastValue = this.lastValue * factor;
-      Millisecond now = new Millisecond();
-      System.out.println( "Now = " + now.toString() );
-      this.series.add( new Millisecond(), this.lastValue );
-    }
-  }
-
-   void mAcceptButton_actionPerformed ( ActionEvent e )
-   {
-   }
 
    // To change the refresh rate of data
    void getSleepTime ()
@@ -139,7 +120,7 @@ public class PerformanceMonitorGUI extends JPanel
       JFreeChart result = ChartFactory.createTimeSeriesChart(
          "Performance Monitoring Statistics",
          "Time",
-         "Value",
+         "Sample",
          dataset,
          true,
          true,
@@ -149,7 +130,7 @@ public class PerformanceMonitorGUI extends JPanel
     axis.setAutoRange( true );
     axis.setFixedAutoRange( 60000.0 ); // 60 seconds
     axis = plot.getRangeAxis();
-    axis.setRange( 0.0, 200.0 );
+    axis.setRange( 0.0, 10.0 );
     return result;
    }
 
