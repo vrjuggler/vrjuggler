@@ -19,7 +19,7 @@ dnl     PF_INCLUDES - Extra include path for the Performer header directory.
 dnl     PF_LDFLAGS  - Extra linker flags for the Performer library directory.
 dnl ===========================================================================
 
-dnl performer.m4,v 1.2 2001/01/09 22:48:43 patrick Exp
+dnl performer.m4,v 1.3 2001/02/02 22:57:02 patrick Exp
 
 dnl ---------------------------------------------------------------------------
 dnl Determine if the target system has IRIS/OpenGL Performer installed.  This
@@ -120,7 +120,7 @@ AC_DEFUN(DPP_HAVE_PERFORMER,
     if test "x$dpp_have_performer" = "xyes" ; then
         LIBPERFORMER="-lpf$pf_ext -lpfdu$pf_ext -lpfui -lpfutil$pf_ext"
 
-        case $platform in
+        case $dpp_platform in
             dnl Under IRIX users will need -limage to load .flt files
             dnl referencing .sgi images.
             IRIX)
