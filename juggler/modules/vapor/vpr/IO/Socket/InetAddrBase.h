@@ -98,7 +98,7 @@ public:
     //+          protocol family.
     // ------------------------------------------------------------------------
     SocketTypes::Domain getFamily(void) const
-    { vprASSERT(false && "Implement me"); }
+    { vprASSERT(false && "Implement me");  return SocketTypes::LOCAL; }
 
     // ------------------------------------------------------------------------
     //: Set the protocol family of this address structure.
@@ -124,7 +124,7 @@ public:
     // ------------------------------------------------------------------------
     Uint16
     getPort (void) const
-    {vprASSERT(false && "Implement me");}
+    {vprASSERT(false && "Implement me"); return 0; }
 
     // ------------------------------------------------------------------------
     //: Set this address' port.  The given port must be in host byte order.
@@ -153,7 +153,7 @@ public:
     // ------------------------------------------------------------------------
     inline Uint32
     getAddressValue (void) const
-    {vprASSERT(false && "Implement me");}
+    {vprASSERT(false && "Implement me"); return 0;}
 
     // ------------------------------------------------------------------------
     //: Set this structure's IP address.  The given address must be in host
@@ -182,7 +182,7 @@ public:
     //+          in the human-readable "dotted-decimal" notation.
     // ------------------------------------------------------------------------
     std::string getAddressString(void) const
-    {vprASSERT(false && "Implement me");}
+    {vprASSERT(false && "Implement me"); return std::string("");}
 
     // ------------------------------------------------------------------------
     //
@@ -194,7 +194,7 @@ public:
     //             printed to stderr explaining what went wrong.
     // ------------------------------------------------------------------------
     bool setAddress (const std::string& addr)
-    {vprASSERT(false && "Implement me");}
+    {vprASSERT(false && "Implement me"); return false; }
 
     // ------------------------------------------------------------------------
     //: Overloaded assignment operator to ensure that assignments work
@@ -212,6 +212,8 @@ public:
     inline InetAddr&
     operator= (const InetAddr& addr)
     {vprASSERT(false && "Implement me");}
+
+    bool operator==(const InetAddr& addr)
     */
 };
 
