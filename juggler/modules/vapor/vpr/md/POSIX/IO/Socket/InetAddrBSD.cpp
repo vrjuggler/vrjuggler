@@ -53,6 +53,7 @@
 #include <boost/concept_check.hpp>
 
 #include <vpr/md/POSIX/IO/Socket/InetAddrBSD.h>
+#include <vpr/Util/Debug.h>
 
 #ifndef INADDR_NONE
 #  define INADDR_NONE 0xffffffff   /* -1 return */
@@ -285,6 +286,9 @@ std::string InetAddrBSD::getHostname() const
    if ( NULL == entry )
    {
       hostname = std::string("<hostname lookup failed>");
+      const char* error_str = hstrerror(h_errno);
+      vprDEBUG(vprDBG_VPR, vprDBG_CRITICAL_LVL) 
+      << "InetAddrBSD::getHostname() ERROR: " << error_str << vprDEBUG_FLUSH;
    }
    else
    {
