@@ -45,10 +45,12 @@ float Projection::mNearDist = 0.1f;
 float Projection::mFarDist = 10000.0f;
 
 
-//: Helper to the frustum apex and corners in model coordinates
-//!NOTE: The normal frustum is in camera (clip) coordinates
-//+      and the model is in model (eye) coordinates.
-//+      The matrix viewMat transforms from eye to clip
+/**
+ * Helper to the frustum apex and corners in model coordinates.
+ * @note The normal frustum is in camera (clip) coordinates
+ *       and the model is in model (eye) coordinates.
+ *       The matrix viewMat transforms from eye to clip.
+ */
 void Projection::getFrustumApexAndCorners(gmtl::Vec3f& apex,
                                           gmtl::Vec3f& ur, gmtl::Vec3f& lr,
                                           gmtl::Vec3f& ul, gmtl::Vec3f& ll)

@@ -38,14 +38,11 @@
 namespace vrj
 {
 
-//------------------------------
-//: A frustum object.
-//
-//  This is a frustum.
-//
-// @author Allen Bierbaum
-//  Date: 10-1-97
-//------------------------------
+/**
+ * A frustum object.  This is a frustum.
+ *
+ * @date 10-1-97
+ */
 class VJ_CLASS_API Frustum
 {
 public:
@@ -88,7 +85,7 @@ public:
    }
 
 public:
-   float frust[6];  //: Left, Right, Bottom, Top, Near, Far
+   float frust[6];  /**<  Left, Right, Bottom, Top, Near, Far */
 };
 
 

@@ -97,8 +97,10 @@ void DisplayManager::setDrawManager(DrawManager* drawMgr)
    }
 }
 
-//: Add the chunk to the configuration
-//! PRE: configCanHandle(chunk) == true
+/**
+ * Adds the chunk to the configuration.
+ * @pre configCanHandle(chunk) == true
+ */
 bool DisplayManager::configAdd(jccl::ConfigChunkPtr chunk)
 {
    vprASSERT(configCanHandle(chunk));
@@ -126,8 +128,10 @@ bool DisplayManager::configAdd(jccl::ConfigChunkPtr chunk)
    return false;
 }
 
-//: Remove the chunk from the current configuration
-//! PRE: configCanHandle(chunk) == true
+/**
+ * Removes the chunk from the current configuration.
+ * @pre configCanHandle(chunk) == true
+ */
 bool DisplayManager::configRemove(jccl::ConfigChunkPtr chunk)
 {
    vprASSERT(configCanHandle(chunk));
@@ -157,9 +161,11 @@ bool DisplayManager::configRemove(jccl::ConfigChunkPtr chunk)
 }
 
 
-//: Is it a display chunk?
-//! RETURNS: true - We have a display chunk
-//+          false - We don't
+/**
+ * Is it a display chunk?
+ *
+ * @return true if we have a display chunk; false if we don't.
+ */
 bool DisplayManager::configCanHandle(jccl::ConfigChunkPtr chunk)
 {
    return (    (chunk->getDescToken() == std::string("surfaceDisplay"))
@@ -172,11 +178,14 @@ bool DisplayManager::configCanHandle(jccl::ConfigChunkPtr chunk)
 
 
 
-//: Add the chunk to the configuration
-//! PRE: configCanHandle(chunk) == true
-//! POST: (display of same name already loaded) ==> old display closed, new one opened
-//+       (display is new) ==> (new display is added)
-//+       draw manager is notified of the display change
+/**
+ * Adds the chunk to the configuration.
+ *
+ * @pre configCanHandle(chunk) == true
+ * @post (display of same name already loaded) ==> old display closed, new one opened<br>
+ *       (display is new) ==> (new display is added)<br>
+ *       Draw Manager is notified of the display change.
+ */
 bool DisplayManager::configAddDisplay(jccl::ConfigChunkPtr chunk)
 {
    vprASSERT(configCanHandle(chunk));      // We must be able to handle it first of all
@@ -207,9 +216,12 @@ bool DisplayManager::configAddDisplay(jccl::ConfigChunkPtr chunk)
    return true;
 }
 
-//: Remove the chunk from the current configuration
-//! PRE: configCanHandle(chunk) == true
-//!RETURNS: success
+/**
+ * Removes the chunk from the current configuration.
+ *
+ * @pre configCanHandle(chunk) == true
+ * @return success
+ */
 bool DisplayManager::configRemoveDisplay(jccl::ConfigChunkPtr chunk)
 {
    vprASSERT(configCanHandle(chunk));      // We must be able to handle it first of all
@@ -255,11 +267,14 @@ int DisplayManager::addDisplay(Display* disp, bool notifyDrawMgr)
    return 1;
 }
 
-//: Close the given display
-//! PRE: disp is a display we know about
-//! POST: disp has been removed from the list of displays
-//+   (notifyDrawMgr == true) && (drawMgr != NULL) && (disp is active)
-//+   ==> Draw manager has been told to clode the window for the display
+/**
+ * Closes the given display.
+ *
+ * @pre disp is a display we know about.
+ * @post disp has been removed from the list of displays
+ *    (notifyDrawMgr == true) && (drawMgr != NULL) && (disp is active)
+ *    ==> Draw manager has been told to clode the window for the display
+ */
 int DisplayManager::closeDisplay(Display* disp, bool notifyDrawMgr)
 {
    vprASSERT(isMemberDisplay(disp));       // Make sure that display actually exists
@@ -305,8 +320,10 @@ bool DisplayManager::isMemberDisplay(Display* disp)
    return false;  // Didn't find any
 }
 
-//: Find a display given the display name
-//! RETURNS: NULL - not found
+/**
+ * Finds a display given the display name.
+ * @return NULL if nothing found
+ */
 Display* DisplayManager::findDisplayNamed(std::string name)
 {
    std::vector<Display*>::iterator i;

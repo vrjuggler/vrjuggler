@@ -48,9 +48,9 @@ namespace vrj
 {
 
 
-//: Defines a display surface an associated projections
-//
-//
+/**
+ * Defines a display surface an associated projections
+ */
 class SurfaceViewport : public Viewport
 {
 public:
@@ -60,13 +60,15 @@ public:
    virtual ~SurfaceViewport() {}
 
 public:
-   //: Takes a display chunk and configures the display based one it.
-   //! PRE: chunk is a valid chunk
-   //! POST: display is configured
-   //+       If there is an error is the specified config, we output error
-   //+       and "fix" the error.
-   //! NOTE: All derived display classes MUST call this function
-   //+       after doing local configuration.
+   /**
+    * Takes a display chunk and configures the display based one it.
+    * @pre chunk is a valid chunk.
+    * @post display is configured.
+    *        If there is an error is the specified config, we output error
+    *        and "fix" the error.
+    * @note All derived display classes MUST call this function
+    *        after doing local configuration.
+    */
    virtual void config(jccl::ConfigChunkPtr chunk);
 
    virtual void updateProjections();
@@ -96,7 +98,7 @@ protected:
 
    void calculateCornersInBaseFrame();
 
-   //: Check the pts to make sure they form a legal surface
+   /** Checks the pts to make sure they form a legal surface. */
    void assertPtsLegal()
    {
       gmtl::Vec3f norm1, norm2;
@@ -112,17 +114,17 @@ protected:
 
 
 protected:
-   gmtl::Point3f   mLLCorner, mLRCorner, mURCorner, mULCorner;  //: The corners in 3Space (for config)
-   gmtl::Matrix44f mSurfaceRotation;                            //: surfMbase - rotation to base coordinate frame of the surface view plane
+   gmtl::Point3f   mLLCorner, mLRCorner, mURCorner, mULCorner;  /**< The corners in 3Space (for config) */
+   gmtl::Matrix44f mSurfaceRotation;                            /**< surfMbase - rotation to base coordinate frame of the surface view plane */
 
    // Deal with tracked surfaces (ie. HMD, movable walls, desks, etc)
-   bool           mTracked;            // Is this surface tracked
-   std::string    mTrackerProxyName;   // If tracked, what is the name of the tracker
+   bool           mTracked;            /**< Is this surface tracked? */
+   std::string    mTrackerProxyName;   /**< If tracked, what is the name of the tracker */
 
 private:
          // These values are used to compute the coordinates of the view plane
          // in the transformed coord system of mSurfaceRotation
-   gmtl::Point3f  mxLLCorner, mxLRCorner, mxURCorner, mxULCorner;    //: The corners transformed onto an x,y plane
+   gmtl::Point3f  mxLLCorner, mxLRCorner, mxURCorner, mxULCorner;    /**< The corners transformed onto an x,y plane */
 };
 
 };
