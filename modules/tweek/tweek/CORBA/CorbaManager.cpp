@@ -223,12 +223,16 @@ vpr::ReturnStatus CorbaManager::createChildPOA (const std::string& local_id)
       m_root_poa->create_id_uniqueness_policy(PortableServer::MULTIPLE_ID);
    PortableServer::ServantRetentionPolicy_var retain_policy =
       m_root_poa->create_servant_retention_policy(PortableServer::RETAIN);
+   PortableServer::ThreadPolicy_var thread_policy =
+      m_root_poa->create_thread_policy(PortableServer::ORB_CTRL_MODEL);
 
-   policy_list.length(2);
+   policy_list.length(3);
    policy_list[0] =
       PortableServer::IdUniquenessPolicy::_duplicate(uniq_policy);
    policy_list[1] =
       PortableServer::ServantRetentionPolicy::_duplicate(retain_policy);
+   policy_list[2] =
+      PortableServer::ThreadPolicy::_duplicate(thread_policy);
 
    std::string poa_name = "tweek_" + local_id;
 
