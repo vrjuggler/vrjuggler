@@ -27,6 +27,8 @@ package org.vrjuggler.vrjconfig.ui;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.io.*;
+import java.util.Iterator;
 import javax.swing.*;
 import org.vrjuggler.tweek.beans.loader.BeanJarClassLoader;
 import org.vrjuggler.jccl.config.*;
@@ -53,6 +55,7 @@ public class ConfigToolbar
       try
       {
          ClassLoader loader = BeanJarClassLoader.instance();
+         newBtn.setIcon(new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/images/newchunk.gif")));
          openBtn.setIcon(new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/images/open.gif")));
          saveBtn.setIcon(new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/images/save.gif")));
          saveAsBtn.setIcon(new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/images/saveas.gif")));
@@ -62,49 +65,13 @@ public class ConfigToolbar
       catch (Exception e)
       {
          // Ack! No icons. Use text labels instead
+         newBtn.setText("New");
          openBtn.setText("Open");
          saveBtn.setText("Save");
          saveAsBtn.setText("Save As");
          saveAllBtn.setText("Save All");
          expandBtn.setText("Expand");
       }
-
-      // Get some of the icons we care about
-      ImageIcon newChunkIcon = null;
-      ImageIcon newDescIcon = null;
-      try
-      {
-         ClassLoader loader = BeanJarClassLoader.instance();
-         newChunkIcon = new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/images/newchunk.gif"));
-         newDescIcon = new ImageIcon(loader.getResource("org/vrjuggler/vrjconfig/images/newdesc.gif"));
-      }
-      catch (Exception e)
-      {
-         newChunkIcon = new ImageIcon();
-         newDescIcon = new ImageIcon();
-      }
-
-      // Setup the new popup button
-      JPopupMenu new_popup = new JPopupMenu();
-      JMenuItem chunk_menu_item = new JMenuItem("New Configuration", newChunkIcon);
-      JMenuItem desc_menu_item = new JMenuItem("New Config Format", newDescIcon);
-      chunk_menu_item.addActionListener(new ActionListener()
-      {
-         public void actionPerformed(ActionEvent evt)
-         {
-            fireAction("New ConfigDB");
-         }
-      });
-      desc_menu_item.addActionListener(new ActionListener()
-      {
-         public void actionPerformed(ActionEvent evt)
-         {
-            fireAction("New DescDB");
-         }
-      });
-      new_popup.add(chunk_menu_item);
-      new_popup.add(desc_menu_item);
-      newPopupBtn.setPopupMenu(new_popup);
    }
 
    public void addToToolbar(Component comp)
@@ -147,6 +114,86 @@ public class ConfigToolbar
             ((ActionListener)listeners[i+1]).actionPerformed(evt);
          }
       }
+   }
+
+   public boolean doNew()
+   {
+      fireAction("New");
+      return true;
+   }
+
+   /**
+    * Programmatically does an open action.
+    */
+   public boolean doOpen()
+   {
+      boolean success = false;
+      int result = fileChooser.showOpenDialog(this);
+      if (result == JFileChooser.APPROVE_OPTION)
+      {
+         try
+         {
+            File file = fileChooser.getSelectedFile();
+            ConfigBroker broker = new ConfigBrokerProxy();
+            String res_name = file.getAbsolutePath();
+
+            InputStream in = new BufferedInputStream(new FileInputStream(file));
+            broker.open(context, res_name, in);
+            context.add(res_name);
+            success = true;
+         }
+         catch (IOException ioe)
+         {
+            JOptionPane.showMessageDialog(this, ioe.getMessage(), "Error",
+                                          JOptionPane.ERROR_MESSAGE);
+            ioe.printStackTrace();
+         }
+      }
+
+      return success;
+   }
+
+   /**
+    * Programmatically execute a save action.
+    */
+   public boolean doSave()
+   {
+      boolean success = false;
+      try
+      {
+         ConfigBroker broker = new ConfigBrokerProxy();
+         for (Iterator itr = context.getResources().iterator(); itr.hasNext(); )
+         {
+            broker.save((String)itr.next());
+         }
+         success = true;
+      }
+      catch (IOException ioe)
+      {
+         JOptionPane.showMessageDialog(this, ioe.getMessage(), "Error",
+                                       JOptionPane.ERROR_MESSAGE);
+         ioe.printStackTrace();
+      }
+
+      return success;
+   }
+
+   /**
+    * Programmatically execute a save as action.
+    */
+   public boolean doSaveAs()
+   {
+      System.err.println("ConfigToolbar.doSaveAs(): not implemented");
+      return false;
+   }
+
+   /**
+    * Programmatically execute a close action.
+    */
+   public boolean doClose()
+   {
+      System.err.println("ConfigToolbar.doSaveAs(): not implemented");
+      return false;
    }
 
    protected void toggleContextEditor()
@@ -194,47 +241,59 @@ public class ConfigToolbar
       titleLbl.setText("VRJConfig");
       toolbar.setBorder(BorderFactory.createEtchedBorder());
       toolbar.setFloatable(false);
+      newBtn.setToolTipText("New Configuration");
+      newBtn.setActionCommand("New");
+      newBtn.setFocusPainted(false);
       openBtn.setToolTipText("Open Configuration");
       openBtn.setActionCommand("Open");
       openBtn.setFocusPainted(false);
       saveBtn.setToolTipText("Save Configuration");
       saveBtn.setActionCommand("Save");
       saveBtn.setFocusPainted(false);
+      saveAsBtn.setEnabled(false);
       saveAsBtn.setToolTipText("Save Configuration As");
       saveAsBtn.setActionCommand("SaveAs");
       saveAsBtn.setFocusPainted(false);
+      saveAllBtn.setEnabled(false);
       saveAllBtn.setToolTipText("Save All Open Configurations");
       saveAllBtn.setActionCommand("SaveAll");
       saveAllBtn.setFocusPainted(false);
       expandBtn.setToolTipText("Expand Toolbar");
       expandBtn.setActionCommand("Expand");
       expandBtn.setFocusPainted(false);
+      newBtn.addActionListener(new ActionListener()
+      {
+         public void actionPerformed(ActionEvent evt)
+         {
+            doNew();
+         }
+      });
       openBtn.addActionListener(new ActionListener()
       {
          public void actionPerformed(ActionEvent evt)
          {
-            fireAction("Open");
+            doOpen();
          }
       });
       saveBtn.addActionListener(new ActionListener()
       {
          public void actionPerformed(ActionEvent evt)
          {
-            fireAction("Save");
+            doSave();
          }
       });
       saveAsBtn.addActionListener(new ActionListener()
       {
          public void actionPerformed(ActionEvent evt)
          {
-            fireAction("SaveAs");
+            doSaveAs();
          }
       });
       saveAllBtn.addActionListener(new ActionListener()
       {
          public void actionPerformed(ActionEvent evt)
          {
-            fireAction("SaveAll");
+//            saveAll();
          }
       });
       expandBtn.addActionListener(new ActionListener()
@@ -246,7 +305,7 @@ public class ConfigToolbar
       });
       this.add(titleLbl, BorderLayout.NORTH);
       this.add(toolbar, BorderLayout.CENTER);
-      toolbar.add(newPopupBtn, null);
+      toolbar.add(newBtn, null);
       toolbar.add(openBtn, null);
       toolbar.add(saveBtn, null);
       toolbar.add(saveAsBtn, null);
@@ -257,13 +316,14 @@ public class ConfigToolbar
 
    // JBuilder GUI variables
    private JLabel titleLbl = new JLabel();
-   private PopupButton newPopupBtn = new PopupButton();
    private JToolBar toolbar = new JToolBar();
+   private JButton newBtn = new JButton();
    private JButton openBtn = new JButton();
    private JButton saveBtn = new JButton();
    private JButton saveAsBtn = new JButton();
    private JButton saveAllBtn = new JButton();
    private JToggleButton expandBtn = new JToggleButton();
+   private JFileChooser fileChooser = new JFileChooser();
 
    private ConfigContext context = new ConfigContext();
    private EditContextPopup contextEditor;
