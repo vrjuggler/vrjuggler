@@ -85,7 +85,7 @@ public:
      *
      * @param sock The source stream socket to be copied into this object.
      */
-    SocketStream_t (const vpr::SocketStream_t& sock)
+    SocketStream_t (const SocketStream_t& sock)
         : m_socket_stream_imp(sock.m_socket_stream_imp)
     {
         m_socket_imp = &m_socket_stream_imp;
@@ -144,7 +144,7 @@ public:
      *         this case.
      */
     inline vpr::Status
-    accept (vpr::SocketStream_t& sock,
+    accept (SocketStream_t& sock,
             const vpr::Interval timeout = vpr::Interval::NoTimeout)
     {
         return m_socket_stream_imp.accept(sock.m_socket_stream_imp, timeout);
