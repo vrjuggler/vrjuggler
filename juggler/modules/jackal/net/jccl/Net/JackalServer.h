@@ -35,9 +35,9 @@
 #define _JCCL_JACKAL_SERVER_H_
 
 #include <jccl/jcclConfig.h>
-//#include <Kernel/vjConfigChunkHandler.h>
-#include <vpr/Thread/Thread.h>
+#include <jccl/ConfigManager/ConfigChunkHandler.h>
 #include <jccl/JackalServer/Socket.h>
+#include <vpr/Thread/Thread.h>
 #include <vpr/Sync/Mutex.h>
 
 namespace jccl {
@@ -62,7 +62,7 @@ class ConfigChunkDB;
 // 
 //      Which means that its main duties are:
 //         - handle file and socket connections
-//         - handle vjPerfDataBuffers
+//         - handle PerfDataBuffers
 //
 // @author  Christopher Just
 //
@@ -132,8 +132,8 @@ public:
 
 private:
     std::string               perf_target_name;
-    std::vector<vjConnect*>   connections;
-    std::vector<vjPerfDataBuffer*> perf_buffers;
+    std::vector<Connect*>   connections;
+    std::vector<PerfDataBuffer*> perf_buffers;
     vpr::Thread*                 listen_thread;
     int                       Port;
     Socket*                 listen_socket;
