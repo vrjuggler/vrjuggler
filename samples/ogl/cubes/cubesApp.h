@@ -6,7 +6,7 @@
 #include <GL/glu.h>
 #include <iostream.h>
 
-#include <Kernel/vjGlApp.h>
+#include <Kernel/GL/vjGlApp.h>
 #include <Math/vjMatrix.h>
 #include <Math/vjVec3.h>
 #include <Math/vjQuat.h>
@@ -211,7 +211,7 @@ private:
    
          // -- Draw box on wand --- //
       
-      /*
+      
       vjMatrix* wandMatrix;
       vjMatrix* wandEndMatrix;
       wandMatrix = kernel->getInputManager()->GetPosData(wandIndex);
@@ -221,7 +221,7 @@ private:
          // cout << "wand:\n" << *wandMatrix << endl;
          glMultMatrixf(wandMatrix->getFloatPtr());
          glColor3f(1.0f, 0.0f, 1.0f);
-         glScalef(1.0f, 1.0f, 1.0f);
+         glScalef(0.25f, 0.25f, 0.25f);
          drawCube();
 
          glBegin(GL_LINES);
@@ -235,11 +235,11 @@ private:
          // cout << "End:\n" << *wandEndMatrix << endl;
          glMultMatrixf(wandEndMatrix->getFloatPtr());
          glColor3f(0.0f, 1.0f, 1.0f);
-         glScalef(0.5f, 0.5f, 0.5f);
+         glScalef(0.1f, 0.1f, 0.1f);
          drawCube();
 
       glPopMatrix();
-      */
+      
       
    }
    
