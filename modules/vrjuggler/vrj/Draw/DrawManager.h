@@ -35,10 +35,7 @@
 
 #include <vrj/vrjConfig.h>
 #include <iostream>
-//#include <jccl/Config/Configuration.h>
 #include <jccl/RTRC/ConfigElementHandler.h>
-
-
 namespace vrj
 {
 

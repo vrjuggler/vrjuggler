@@ -42,13 +42,10 @@
 #include <Performer/pf/pfChannel.h>
 
 #include <vrj/Draw/DrawManager.h>
-
 #include <vrj/Draw/Pf/PfUtil.h>
 #include <vpr/Util/Singleton.h>
 
 #include <boost/concept_check.hpp>
-
-
 namespace vrj
 {
 

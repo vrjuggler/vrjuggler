@@ -58,19 +58,6 @@
 #include <vrj/Draw/OGL/GlPipe.h>
 #include <vrj/Draw/OGL/GlUserData.h>
 
-/*
-namespace jccl
-{
-   class Configuration;
-}
-*/
-
-/*
-namespace gadget {
-   class GloveProxy;
-}
-*/
-
 namespace vrj
 {
    class GlApp;

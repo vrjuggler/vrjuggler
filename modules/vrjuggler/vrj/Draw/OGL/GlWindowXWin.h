@@ -53,12 +53,13 @@ class Display;
 /** this simple motif-esqe definition was taken from GLUT */
 typedef struct
 {
-#define MWM_HINTS_DECORATIONS   2
+#define MWM_HINTS_DECORATIONS 2
    long flags;
    long functions;
    long decorations;
    long input_mode;
-} MotifWmHints;
+} 
+MotifWmHints;
 
 
 /**

@@ -39,7 +39,6 @@
 #include <vrj/Display/Viewport.h>
 #include <vrj/Display/Projection.h>
 #include <jccl/Config/ConfigElementPtr.h>
-
 #include <gmtl/Point.h>
 #include <gmtl/Vec.h>
 #include <gmtl/VecOps.h>
