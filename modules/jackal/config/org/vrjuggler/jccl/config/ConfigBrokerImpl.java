@@ -34,7 +34,7 @@ package org.vrjuggler.jccl.config;
 import java.io.*;
 import java.util.*;
 import javax.swing.event.EventListenerList;
-import org.vrjuggler.tweek.services.EnvironmentService;
+import org.vrjuggler.tweek.services.EnvironmentServiceProxy;
 import org.vrjuggler.jccl.config.io.*;
 
 /**
@@ -551,7 +551,7 @@ public class ConfigBrokerImpl
       // Get the path from the environment
       String default_path = "${VJ_BASE_DIR}/share/vrjuggler/data/definitions";
       String path = System.getProperty("JCCL_DEFINITION_PATH", default_path);
-      path = EnvironmentService.expandEnvVars(path);
+      path = (new EnvironmentServiceProxy()).expandEnvVars(path);
 
       // Split the path on the path separator
       StringTokenizer tokenizer = new StringTokenizer(path, File.pathSeparator);
