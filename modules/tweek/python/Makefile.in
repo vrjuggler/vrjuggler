@@ -64,6 +64,7 @@ include $(MKPATH)/dpp.idl.mk
 # Extra targets.
 # -----------------------------------------------------------------------------
 beforebuild:
+	$(MKINSTALLDIRS) pytweek
 
 afterbuild:
 
