@@ -79,10 +79,6 @@ ifneq ($(TARGETS), )
           done
 endif
 
-links-cppdom:
-	cd $(instlinks)/include && $(RM_LN) ./cppdom &&			\
-          $(LN_S) $(EXTROOT_ABS)/cppdom/cppdom ./
-
 links-gmtl:
 	cd $(instlinks)/include && $(RM_LN) ./gmtl &&			\
           $(LN_S) $(EXTROOT_ABS)/GMTL/gmtl ./
@@ -107,9 +103,6 @@ endif
 
 install-init:
 	@$(MAKE) DIRS="init" generic-header-install
-
-install-cppdom:
-	@$(MAKE) DIRS="cppdom/cppdom" generic-header-install
 
 install-gmtl:
 	@$(MAKE) DIRS="GMTL/gmtl" generic-header-install
