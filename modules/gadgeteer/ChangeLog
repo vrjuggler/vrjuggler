@@ -1,5 +1,7 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Apr-29-2003 patrickh    Use gadget::Keys instead of int wherever possible.
+                        NEW VERSION: 0.10.1
 Apr-28-2003 patrickh    Renamed all keyboard-related classes to reflect that
                         they are window-based event sources.  For example,
                         gadget::Keyboard is now gadget::EventWindow.

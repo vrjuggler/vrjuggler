@@ -66,20 +66,28 @@ public:
     * @pre modKey is a valid modifier identifier
     * @return true if modKey is the only modifier pressed
     */
-   bool modifierOnly(int modKey)
+   bool modifierOnly(gadget::Keys modKey)
    {
-      if(isStupified() || (mTypedDevice == NULL))
+      if ( isStupified() || (mTypedDevice == NULL) )
+      {
          return false;
+      }
       else
+      {
          return mTypedDevice->modifierOnly(modKey);
+      }
    }
 
-   int keyPressed(int keyId)
+   int keyPressed(gadget::Keys keyId)
    {
-      if(isStupified() || (mTypedDevice == NULL))
+      if ( isStupified() || (mTypedDevice == NULL) )
+      {
          return 0;
+      }
       else
+      {
          return mTypedDevice->keyPressed(keyId);
+      }
    }
 
    static std::string getChunkType()
