@@ -37,6 +37,10 @@ OS_TYPE		= @OS_TYPE@
 
 USE_MAKEDEPEND	= @USE_MAKEDEPEND@
 
+ifeq (@PLATFORM@, IRIX)
+    INCLUDES	+= -I$(VPR_BASE_DIR)/include/boost/compatibility/cpp_c_headers
+endif
+
 LINK		= $(CXX) $(CPPFLAGS) $(CXXFLAGS) @EXTRA_LINK_FLAGS@	\
                   $(EXTRA_FLAGS)
 
