@@ -38,19 +38,22 @@
 
 namespace gadget
 {
-   DeviceServer::DeviceServer(const std::string& name, gadget::Input* device, const vpr::GUID& plugin_guid)
-         : deviceServerTriggerSema(0), deviceServerDoneSema(0)
+   DeviceServer::DeviceServer(const std::string& name, gadget::Input* device,
+                              const vpr::GUID& plugin_guid)
+      : deviceServerTriggerSema(0)
+      , deviceServerDoneSema(0)
    {
       vpr::GUID temp;
       temp.generate();
-      
+
       do
       {
          mId.generate();   // Generate a unique ID for this device
-         vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL) 
-            << "[DeviceServer] Invalid GUID, generating a new one." 
+         vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
+            << "[DeviceServer] Invalid GUID, generating a new one."
             << std::endl << vprDEBUG_FLUSH;
-      }while(temp == mId);
+      }
+      while(temp == mId);
 
       mThreadActive = false;
       mName = name;
@@ -62,6 +65,7 @@ namespace gadget
       mBufferObjectWriter = new vpr::BufferObjectWriter(mDeviceData);
       start();
    }
+
    DeviceServer::~DeviceServer()
    {
       shutdown();
@@ -72,7 +76,7 @@ namespace gadget
    }
 
    void DeviceServer::shutdown()
-   {     
+   {
       // TODO: Make the device server actually shutdown
       if ( mControlThread )
       {
@@ -82,24 +86,26 @@ namespace gadget
       }
    }
 
-
    void DeviceServer::send()
    {
       vpr::Guard<vpr::Mutex> guard(mClientsLock);
 
       //vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
       //   << clrOutBOLD(clrMAGENTA,"DeviceServer::send()")
-      //   << "Sending Device Data for: " << getName() << std::endl << vprDEBUG_FLUSH;
+      //   << "Sending Device Data for: " << getName() << std::endl
+      //   << vprDEBUG_FLUSH;
 
-      for (std::vector<gadget::Node*>::iterator i = mClients.begin();
-           i != mClients.end() ; i++)
+      for ( std::vector<gadget::Node*>::iterator i = mClients.begin();
+            i != mClients.end();
+            ++i )
       {
-         //vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "Sending data to: "
-         //   << (*i)->getName() << " trying to lock socket" << std::endl << vprDEBUG_FLUSH;
+         //vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
+         //   << "Sending data to: " << (*i)->getName()
+         //   << " trying to lock socket" << std::endl << vprDEBUG_FLUSH;
 
          try
          {
-            (*i)->send(mDataPacket);            
+            (*i)->send(mDataPacket);
          }
          catch( cluster::ClusterException cluster_exception )
          {
@@ -116,28 +122,33 @@ namespace gadget
 
             (*i)->setStatus( gadget::Node::DISCONNECTED );
             (*i)->shutdown();
-            
+
             debugDump( vprDBG_CONFIG_LVL );
          }
       }
       //vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
       //   << clrOutBOLD(clrMAGENTA,"DeviceServer::send()")
-      //   << "Done Sending Device Data for: " << getName() << std::endl << vprDEBUG_FLUSH;
+      //   << "Done Sending Device Data for: " << getName() << std::endl
+      //   << vprDEBUG_FLUSH;
    }
+
    void DeviceServer::updateLocalData()
    {
       // -BufferObjectWriter
       mBufferObjectWriter->getData()->clear();
       mBufferObjectWriter->setCurPos(0);
 
-      // This updates the mDeviceData which both mBufferedObjectReader and mDevicePacket point to
+      // This updates the mDeviceData which both mBufferedObjectReader and
+      // mDevicePacket point to.
       mDevice->writeObject(mBufferObjectWriter);
 
       // We must update the size of the actual data that we are going to send
-      mDataPacket->getHeader()->setPacketLength(cluster::Header::RIM_PACKET_HEAD_SIZE 
-                                       + 16 /*Plugin GUID*/
-                                       + 16 /*Plugin GUID*/
-                                       + mDeviceData->size());
+      mDataPacket->getHeader()->setPacketLength(
+         cluster::Header::RIM_PACKET_HEAD_SIZE
+            + 16 /*Plugin GUID*/
+            + 16 /*Plugin GUID*/
+            + mDeviceData->size()
+      );
 
       // We must serialize the header again so that we can reset the size.
       mDataPacket->getHeader()->serializeHeader();
@@ -145,7 +156,8 @@ namespace gadget
 
    void DeviceServer::addClient(gadget::Node* new_client_node)
    {
-      vprASSERT(new_client_node != NULL && "You can not add a new client that is NULL");
+      vprASSERT(new_client_node != NULL &&
+                "You can not add a new client that is NULL");
       vpr::Guard<vpr::Mutex> guard(mClientsLock);
 
       mClients.push_back(new_client_node);
@@ -166,26 +178,36 @@ namespace gadget
       }
    }
 
-   void DeviceServer::debugDump(int debug_level)
+   void DeviceServer::debugDump(int debugLevel)
    {
       vpr::Guard<vpr::Mutex> guard(mClientsLock);
 
-      vpr::DebugOutputGuard dbg_output(gadgetDBG_RIM,debug_level,
-                                 std::string("-------------- DeviceServer --------------\n"),
-                                 std::string("------------------------------------------\n"));
+      vpr::DebugOutputGuard dbg_output(
+         gadgetDBG_RIM, debugLevel,
+         "-------------- DeviceServer --------------\n",
+         "------------------------------------------\n"
+      );
 
-      vprDEBUG(gadgetDBG_RIM,debug_level) << "Name:     " << mName << std::endl << vprDEBUG_FLUSH;
+      vprDEBUG(gadgetDBG_RIM, debugLevel)
+         << "Name:     " << mName << std::endl << vprDEBUG_FLUSH;
 
       { // Used simply to make the following DebugOutputGuard go out of scope
-         vpr::DebugOutputGuard dbg_output2(gadgetDBG_RIM,debug_level,
+         vpr::DebugOutputGuard dbg_output2(gadgetDBG_RIM, debugLevel,
                            std::string("------------ Clients ------------\n"),
                            std::string("---------------------------------\n"));
-         for (std::vector<gadget::Node*>::iterator i = mClients.begin() ;
-               i!= mClients.end() ; i++)
+         for ( std::vector<gadget::Node*>::iterator i = mClients.begin();
+                i != mClients.end();
+                ++i )
          {
-            vprDEBUG(gadgetDBG_RIM,debug_level) << "-------- " << (*i)->getName() << " --------" << std::endl << vprDEBUG_FLUSH;
-            vprDEBUG(gadgetDBG_RIM,debug_level) << "       Hostname: " << (*i)->getHostname() << std::endl << vprDEBUG_FLUSH;
-            vprDEBUG(gadgetDBG_RIM,debug_level) << "----------------------------------" << std::endl << vprDEBUG_FLUSH;
+            vprDEBUG(gadgetDBG_RIM, debugLevel)
+               << "-------- " << (*i)->getName() << " --------" << std::endl
+               << vprDEBUG_FLUSH;
+            vprDEBUG(gadgetDBG_RIM, debugLevel)
+               << "       Hostname: " << (*i)->getHostname() << std::endl
+               << vprDEBUG_FLUSH;
+            vprDEBUG(gadgetDBG_RIM, debugLevel)
+               << "----------------------------------" << std::endl
+               << vprDEBUG_FLUSH;
          }
       }
    }
@@ -203,20 +225,28 @@ namespace gadget
       {
          // Wait for trigger
          deviceServerTriggerSema.acquire();
-         //vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "DeviceServer: " << getName() << " triggered\n" << vprDEBUG_FLUSH;
+         //vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
+         //   << "DeviceServer: " << getName() << " triggered\n"
+         //   << vprDEBUG_FLUSH;
 
-         //vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "Before Update Data\n" << vprDEBUG_FLUSH;
+         //vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
+         //   << "Before Update Data\n" << vprDEBUG_FLUSH;
          updateLocalData();
-         //vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "After Update Data\n" << vprDEBUG_FLUSH;
-         //vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "Before send Data\n" << vprDEBUG_FLUSH;
+         //vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
+         //   << "After Update Data\n" << vprDEBUG_FLUSH;
+         //vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
+         //   << "Before send Data\n" << vprDEBUG_FLUSH;
          send();
-         //vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "After Send Data\n" << vprDEBUG_FLUSH;
+         //vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
+         //   << "After Send Data\n" << vprDEBUG_FLUSH;
 
          // Signal Done Rendering
          deviceServerDoneSema.release();
-         //vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "DeviceServer synced\n" << vprDEBUG_FLUSH;
+         //vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
+         //   << "DeviceServer synced\n" << vprDEBUG_FLUSH;
       }
    }
+
    /** Starts the control loop. */
    void DeviceServer::start()
    {
@@ -224,7 +254,9 @@ namespace gadget
       // Create a new thread to handle the control
 
       vpr::ThreadMemberFunctor<DeviceServer>* memberFunctor =
-         new vpr::ThreadMemberFunctor<DeviceServer>(this, &DeviceServer::controlLoop, NULL);
+         new vpr::ThreadMemberFunctor<DeviceServer>(this,
+                                                    &DeviceServer::controlLoop,
+                                                    NULL);
 
       mControlThread = new vpr::Thread(memberFunctor);
 
@@ -241,12 +273,13 @@ namespace gadget
    {
       while(!mThreadActive)
       {
-         vprDEBUG(gadgetDBG_RIM,/*vprDBG_HVERB_LVL*/1) << "Waiting in for thread to start DeviceServer::go().\n" << vprDEBUG_FLUSH;
+         vprDEBUG(gadgetDBG_RIM,/*vprDBG_HVERB_LVL*/1)
+            << "Waiting in for thread to start DeviceServer::go().\n"
+            << vprDEBUG_FLUSH;
          vpr::Thread::yield();
       }
       deviceServerTriggerSema.release();
    }
-
 
    /**
     * Blocks until the end of the frame.
@@ -257,7 +290,4 @@ namespace gadget
       vprASSERT(mThreadActive == true);
       deviceServerDoneSema.acquire();
    }
-
-
-
 } // End of gadget namespace
