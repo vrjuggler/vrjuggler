@@ -1,3 +1,13 @@
+
+//////////////////////////////////////////////////////////////////////////////
+//
+//                          -=     renderTexture     =-
+//
+// Description: "OpenGL texture rendering code"
+// This code contributed from software located:
+// http://www.bigfoot.com/~KevinMeinert/html/software/index.html
+// -- Kevin Meinert, kevinmeinert@bigfoot.com
+//////////////////////////////////////////////////////////////////////////////
 #include "Texture.h"
 #include <GL/gl.h>
 #include "defines.h" // min
