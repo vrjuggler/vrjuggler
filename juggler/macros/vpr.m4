@@ -100,8 +100,12 @@ dnl                          test VPR program], , enable_vprtest=yes)
         VPR_INCLUDES=`$VPR_CONFIG $vpr_config_args --includes`
         VPR_LIBS_LD="`$VPR_CONFIG $vpr_config_args --libs $ABI --linker`"
         VPR_LIBS_CC="`$VPR_CONFIG $vpr_config_args --libs $ABI`"
+        VPR_PROF_LIBS_LD="`$VPR_CONFIG $vpr_config_args --libs $ABI --linker --profiled`"
+        VPR_PROF_LIBS_CC="`$VPR_CONFIG $vpr_config_args --libs $ABI --profiled`"
         VPR_LIBS_STATIC_LD="`$VPR_CONFIG $vpr_config_args --libs $ABI --linker --static`"
         VPR_LIBS_STATIC_CC="`$VPR_CONFIG $vpr_config_args --libs $ABI --static`"
+        VPR_PROF_LIBS_STATIC_LD="`$VPR_CONFIG $vpr_config_args --libs $ABI --linker --static --profiled`"
+        VPR_PROF_LIBS_STATIC_CC="`$VPR_CONFIG $vpr_config_args --libs $ABI --static --profiled`"
         VPR_EXTRA_LIBS_CC=`$VPR_CONFIG $vpr_config_args --extra-libs $ABI`
         VPR_EXTRA_LIBS_LD=`$VPR_CONFIG $vpr_config_args --extra-libs $ABI --linker`
 
@@ -109,8 +113,12 @@ dnl                          test VPR program], , enable_vprtest=yes)
         VPR_INCLUDES_MIN=`$VPR_CONFIG $vpr_config_args --includes --min`
         VPR_LIBS_LD_MIN="`$VPR_CONFIG $vpr_config_args --libs $ABI --linker --min`"
         VPR_LIBS_CC_MIN="`$VPR_CONFIG $vpr_config_args --libs $ABI --min`"
-        VPR_LIBS_STATIC_LD="`$VPR_CONFIG $vpr_config_args --libs $ABI --linker --static --min`"
+        VPR_PROF_LIBS_LD_MIN="`$VPR_CONFIG $vpr_config_args --libs $ABI --linker --min --profiled`"
+        VPR_PROF_LIBS_CC_MIN="`$VPR_CONFIG $vpr_config_args --libs $ABI --min --profiled`"
+        VPR_LIBS_STATIC_LD_MIN="`$VPR_CONFIG $vpr_config_args --libs $ABI --linker --static --min`"
         VPR_LIBS_STATIC_CC_MIN="`$VPR_CONFIG $vpr_config_args --libs $ABI --static --min`"
+        VPR_PROF_LIBS_STATIC_LD_MIN="`$VPR_CONFIG $vpr_config_args --libs $ABI --linker --static --min --profiled`"
+        VPR_PROF_LIBS_STATIC_CC_MIN="`$VPR_CONFIG $vpr_config_args --libs $ABI --static --min --profiled`"
         VPR_EXTRA_LIBS_CC_MIN=`$VPR_CONFIG $vpr_config_args --extra-libs $ABI --min`
         VPR_EXTRA_LIBS_LD_MIN=`$VPR_CONFIG $vpr_config_args --extra-libs $ABI --linker --min`
         VPR_VERSION=`$VPR_CONFIG --version`
@@ -131,19 +139,27 @@ dnl                          test VPR program], , enable_vprtest=yes)
         VPR_CXXFLAGS=''
         VPR_LIBS_LD=''
         VPR_LIBS_CC=''
+        VPR_PROF_LIBS_LD=''
+        VPR_PROF_LIBS_CC=''
         VPR_LIBS_STATIC_LD=''
         VPR_LIBS_STATIC_CC=''
+        VPR_PROF_LIBS_STATIC_LD=''
+        VPR_PROF_LIBS_STATIC_CC=''
         VPR_EXTRA_LIBS_CC=''
         VPR_EXTRA_LIBS_LD=''
 
-        VPR_CXXFLAGS_MIN''
-        VPR_INCLUDES_MIN''
-        VPR_LIBS_LD_MIN''
-        VPR_LIBS_CC_MIN''
-        VPR_LIBS_STATIC_LD_MIN''
-        VPR_LIBS_STATIC_CC_MIN''
-        VPR_EXTRA_LIBS_CC_MIN''
-        VPR_EXTRA_LIBS_LD_MIN''
+        VPR_CXXFLAGS_MIN=''
+        VPR_INCLUDES_MIN=''
+        VPR_LIBS_LD_MIN=''
+        VPR_LIBS_CC_MIN=''
+        VPR_PROF_LIBS_LD_MIN=''
+        VPR_PROF_LIBS_CC_MIN=''
+        VPR_LIBS_STATIC_LD_MIN=''
+        VPR_LIBS_STATIC_CC_MIN=''
+        VPR_PROF_LIBS_STATIC_LD_MIN=''
+        VPR_PROF_LIBS_STATIC_CC_MIN=''
+        VPR_EXTRA_LIBS_CC_MIN=''
+        VPR_EXTRA_LIBS_LD_MIN=''
         VPR_VERSION='-1'
         ifelse([$3], , :, [$3])
     fi
@@ -152,8 +168,12 @@ dnl                          test VPR program], , enable_vprtest=yes)
     AC_SUBST(VPR_INCLUDES)
     AC_SUBST(VPR_LIBS_LD)
     AC_SUBST(VPR_LIBS_CC)
+    AC_SUBST(VPR_PROF_LIBS_LD)
+    AC_SUBST(VPR_PROF_LIBS_CC)
     AC_SUBST(VPR_LIBS_STATIC_LD)
     AC_SUBST(VPR_LIBS_STATIC_CC)
+    AC_SUBST(VPR_PROF_LIBS_STATIC_LD)
+    AC_SUBST(VPR_PROF_LIBS_STATIC_CC)
     AC_SUBST(VPR_EXTRA_LIBS_CC)
     AC_SUBST(VPR_EXTRA_LIBS_LD)
     AC_SUBST(VPR_CXXFLAGS_MIN)
@@ -162,8 +182,12 @@ dnl                          test VPR program], , enable_vprtest=yes)
     AC_SUBST(VPR_INCLUDES_MIN)
     AC_SUBST(VPR_LIBS_LD_MIN)
     AC_SUBST(VPR_LIBS_CC_MIN)
+    AC_SUBST(VPR_PROF_LIBS_LD_MIN)
+    AC_SUBST(VPR_PROF_LIBS_CC_MIN)
     AC_SUBST(VPR_LIBS_STATIC_LD_MIN)
     AC_SUBST(VPR_LIBS_STATIC_CC_MIN)
+    AC_SUBST(VPR_PROF_LIBS_STATIC_LD_MIN)
+    AC_SUBST(VPR_PROF_LIBS_STATIC_CC_MIN)
     AC_SUBST(VPR_EXTRA_LIBS_CC_MIN)
     AC_SUBST(VPR_EXTRA_LIBS_LD_MIN)
     AC_SUBST(VPR_VERSION)
