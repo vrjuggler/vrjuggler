@@ -93,7 +93,7 @@ namespace vpr
          vpr::Uint32 value;
       } addr;
 
-      addr.value = mAddress;
+      addr.value = vpr::System::Ntohl(mAddress);
       memset(buffer, '\0', sizeof(buffer));
       sprintf(buffer, "%u.%u.%u.%u", addr.bytes[3], addr.bytes[2],
               addr.bytes[1], addr.bytes[0]);

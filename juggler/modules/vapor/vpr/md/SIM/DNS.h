@@ -67,28 +67,18 @@ namespace sim
          mDnsAddressLookup["localhost"] = 0x7F000001;
       }
 
-      // given an internet name, return the ip address
-      vpr::Uint32 lookupAddress( const std::string& name )
-      {
-         // if name is found in lookup, return the address
-         if (mDnsAddressLookup.count( name ) > 0)
-         {
-            return mDnsAddressLookup[name];
-         }
-         // if not found, then make an entry for the new address.
-         else
-         {
-            return mDnsAddressLookup[name] = mUniqueGenerator++;
-         }
-      }
-
+      /**
+       * Given an Internet name or dotted-decimal address, this returns the
+       * IP address in network byte order.
+       */
+      vpr::Uint32 lookupAddress(const std::string& addr);
 
    protected:
 
       // use this to look up an address from a name
       std::map< std::string, vpr::Uint32 > mDnsAddressLookup;
 
-      vpr::Uint32 mUniqueGenerator;   
+      vpr::Uint32 mUniqueGenerator;
    };
 
 } // sim namespace
