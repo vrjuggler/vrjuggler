@@ -66,8 +66,8 @@ vpr::ReturnStatus SocketImplSIM::close ()
    vpr::ReturnStatus status;
 
 
-   vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL) << "SocketImplSIM::close: Closing: " << mLocalAddr << std::endl << vprDEBUG_FLUSH;
-
+   vprDEBUG_BEGIN(vprDBG_ALL, vprDBG_STATE_LVL) << "SocketImplSIM::close: " << mLocalAddr << std::endl << vprDEBUG_FLUSH;
+      
    if ( mPeer != NULL )
    {
       // We tell our peer that we are disconnecting.  This is a little
@@ -86,6 +86,8 @@ vpr::ReturnStatus SocketImplSIM::close ()
    }
 
    mOpen  = false;
+
+   vprDEBUG_CONT_END(vprDBG_ALL, vprDBG_STATE_LVL) << "" << vprDEBUG_FLUSH;
 
    return status;
 }
