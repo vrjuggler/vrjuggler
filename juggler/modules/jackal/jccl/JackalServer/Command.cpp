@@ -2,7 +2,7 @@
 #include <Environment/vjCommand.h>
 #include <Environment/vjTimedUpdate.h>
 #include <Config/vjConfigChunkDB.h>
-
+#include <Config/vjChunkDescDB.h>
 
 void vjCommand::resetFireTime (vjTimeStamp& ts) {
     next_fire_time = ts.usecs()/1000 + refresh_time;
