@@ -1905,6 +1905,7 @@ AC_OUTPUT(Makefile
           Input/vjKeyboard/Makefile
           Input/vjPosition/Makefile
           Input/vjSim/Makefile
+	  Input/intersense/Makefile
           Kernel/Makefile
           Kernel/GL/Makefile
           Kernel/Pf/Makefile
