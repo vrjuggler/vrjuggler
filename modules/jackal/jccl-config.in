@@ -1,4 +1,4 @@
-#!/bin/sh
+#!@PERL@ -w
 
 # ************** <auto-copyright.pl BEGIN do not edit this line> **************
 #
@@ -32,247 +32,389 @@
 #
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
-%{
-%}
+use 5.004;
 
-jccl_extra_cxxflags="@jccl_extra_cxxflags@"
-jccl_libs="@jccl_libs@"
-jccl_lib="@jccl_lib@"
+use strict 'vars';
+use vars qw($ECHO_CXXFLAGS $ECHO_EXEC_PREFIX $ECHO_EXTRA_LIBS $ECHO_LIBS
+            $ECHO_PREFIX);
+use vars qw($exec_prefix $EXEC_PREFIX_SET $prefix $PREFIX_SET $LIBBITSUF
+            $JCCL_ABI_FLAGS $JCCL_ISA_FLAGS $Win32);
 
-jccl_extra_include_dirs="@jccl_extra_include_dirs@"
+use File::Basename;
+use Getopt::Long;
 
-jccl_default_abi="@ABI@"
-jccl_default_isa="@ISA@"
-jccl_n32_flags="@jccl_n32_flags@"
-jccl_64_flags="@jccl_64_flags@"
-LIBBITSUF='@LIBBITSUF@'
+sub usage($);
+sub make_CXXFLAGS($;$);
+sub make_INCLUDES($);
+sub make_LDFLAGS($;$$);
+sub make_EXTRA_LDFLAGS($;$$);
+sub handleOptArg($$);
+sub stripDuplicateArgs($);
 
-USE_GCC='@USE_GCC@'
+# TODO: Do not use @prefix@ if possible.  Make use of @LOCAL_BOOST@.
 
-if [ "x$jccl_default_abi" = "xN32" ]; then
-    jccl_abi_flags="$jccl_n32_flags"
-elif [ "x$jccl_default_abi" = "x64" ]; then
-    jccl_abi_flags="$jccl_64_flags"
-else
-    jccl_abi_flags=''
-fi
+usage(1) if $#ARGV == -1;
 
-if [ "x$USE_GCC" != "xyes" ]; then
-   if [ "x$jccl_default_isa" = "xmips3" -o "x$jccl_default_isa" = "xmips4" ]
-   then
-      jccl_isa_flags="-$jccl_default_isa"
-   fi
-fi
+my $jccl_default_abi = qq(@ABI@);
+my $jccl_default_isa = qq(@ISA@);
+my $jccl_n32_flags   = qq(@jccl_n32_flags@);
+my $jccl_64_flags    = qq(@jccl_64_flags@);
+$LIBBITSUF           = qq(@LIBBITSUF@);
 
-prefix=@prefix@
-exec_prefix=@exec_prefix@
-exec_prefix_set='no'
-print_all='no'
-use_linker='no'
+my $use_gcc = '@USE_GCC@';
 
-usage()
+$JCCL_ABI_FLAGS = '';
+
+if ( $jccl_default_abi =~ /n32/i )
 {
-    cat <<EOF
-Usage: jccl-config [OPTIONS] [LIBRARIES]
+   $JCCL_ABI_FLAGS = "$jccl_n32_flags";
+}
+elsif ( $jccl_default_abi =~ /64/ )
+{
+   $JCCL_ABI_FLAGS = "$jccl_64_flags";
+}
+
+$JCCL_ISA_FLAGS = '';
+
+# If we are not using GCC and a known ISA is defined, add define the ISA
+# argument for the compiler and linker.
+if ( $use_gcc !~ /^y/i && $jccl_default_isa =~ /^mips[34]/ )
+{
+   $JCCL_ISA_FLAGS = "-$jccl_default_isa";
+}
+
+# Set up variables used to determine what the real prefix is.  This is
+# important when this script has been installed.
+$Win32 = (defined($ENV{'OS'}) && $ENV{'OS'} =~ /^win/i);
+
+my $base_dir = '';
+
+# Get the directory where this script is located.
+if ( defined($ENV{'JCCL_BASE_DIR'}) )
+{
+   $base_dir = "$ENV{'JCCL_BASE_DIR'}";
+}
+else
+{
+   $base_dir = (fileparse("$0"))[1];
+
+   # If we are on Windows and $base_dir contains \'s, set $path_sep to \.
+   # Otherwise, we use / for the path separator.
+   my $path_sep = (($Win32 && $base_dir =~ /\\/) ? "\\" : "/");
+
+   $base_dir =~ s|$path_sep$||o;       # Strip off the trailing slash
+   $base_dir =~ s|${path_sep}bin$||io; # If the path ends in "/bin", strip it
+}
+
+# If we are on Windows, make sure that $base_dir is a full DOS path.
+if ( $Win32  && $base_dir !~ /^[A-Za-z]:/ )
+{
+   chomp($base_dir = `cygpath -w $base_dir`);
+   $base_dir =~ s|\\|/|g;   # We want / as the path separator
+}
+
+# $exec_prefix may refer to $prefix, so it must be set after $prefix is
+# defined.
+$prefix      = "$base_dir";
+$exec_prefix = qq(@exec_prefix@);
+
+$ECHO_PREFIX      = 0;
+$ECHO_EXEC_PREFIX = 0;
+$PREFIX_SET       = 0;
+$EXEC_PREFIX_SET  = 0;
+$ECHO_CXXFLAGS    = 0;
+$ECHO_LIBS        = 0;
+$ECHO_EXTRA_LIBS  = 0;
+
+my $script_help    = 0;
+my $print_all      = 0;
+my $echo_includes  = 0;
+my $echo_subsystem = 0;
+my $echo_version   = 0;
+my $echo_static    = 0;
+my $use_linker     = 0;
+
+my $cxxflags_arg   = '';
+my $libs_arg       = '';
+my $extra_libs_arg = '';
+
+GetOptions('help|?' => \$script_help, 'all' => \$print_all,
+           'version' => \$echo_version, 'subsystem' => \$echo_subsystem,
+           'prefix:s' => \&handleOptArg, 'exec-prefix:s' => \&handleOptArg,
+           'cxxflags:s' => \&handleOptArg, 'includes' => \$echo_includes,
+           'libs:s' => \&handleOptArg, 'extra-libs:s' => \&handleOptArg,
+           'linker' => \$use_linker, 'static' => \$echo_static);
+
+usage(0) if $script_help;
+
+# Construct the (potentially complex) strings that may be printed.
+my $cxxflags      = make_CXXFLAGS("$cxxflags_arg", $print_all);
+my $includes      = make_INCLUDES("$cxxflags");
+my $ldflags       = make_LDFLAGS("$libs_arg", $echo_static, $use_linker);
+my $extra_ldflags = make_EXTRA_LDFLAGS("$extra_libs_arg", $use_linker,
+                                       $print_all);
+
+# Finally, print out the requested information.
+print "$prefix\n" if $ECHO_PREFIX;
+print "$exec_prefix\n" if $ECHO_EXEC_PREFIX;
+print "@VPR_SUBSYSTEM@\n" if $echo_subsystem;
+print "@MAJOR_VERSION@.@MINOR_VERSION@.@MICRO_VERSION@\n" if $echo_version;
+print "$cxxflags\n" if $ECHO_CXXFLAGS;
+print "$includes\n" if $echo_includes;
+print "$ldflags\n" if $ECHO_LIBS;
+print "$extra_ldflags\n" if $ECHO_EXTRA_LIBS;
+
+exit(0);
+
+# =============================================================================
+# Subroutines follow.
+# =============================================================================
+
+sub usage ($)
+{
+    print <<EOF;
+Usage: $0 [OPTIONS] [LIBRARIES]
 Options:
-        [--basedir]             Use \$JCCL_BASE_DIR when printing paths
         [--prefix[=DIR]]        Print the installation prefix or set an
                                 alternate prefix to use when printing paths
         [--exec-prefix[=DIR]]   Print the executable prefix or set an
                                 alternate executable prefix to use when
                                 printing paths
-        [--version]             Print the installed JCCL's version number
-        [--cxxflags [N32|64]]   Print the JCCL-specific flags for the C++
+        [--version]             Print the installed Gadgeteer's version number
+        [--cxxflags [N32|64]]   Print the Gadgeteer-specific flags for the C++
                                 compiler
-        [--libs [N32|64]]       Print the basic JCCL-specific libraries
+        [--includes]            Print out only the header path extension
+                                arguments
+        [--libs [N32|64]]       Print the basic Gadgeteer-specific libraries
         [--extra-libs [N32|64]] Print the extra linker options needed for
                                 making an executable
         [--all]                 Print all the flags used for compiling or
                                 linking (depending on other options)
         [--linker]              Print libraries as direct arguments to the
                                 linker rather than to the compiler
-        [--subsystem]           Print the OS abstraction layer being used
+        [--subsystem]           Print the VPR OS abstraction layer being used
 EOF
 
-    exit $1
+    exit($_[0]);
 }
 
-if test $# -eq 0; then
-    usage 1 1>&2
-fi
+sub make_CXXFLAGS ($;$)
+{
+   my $cxxflags_arg = shift;
+   my $print_all    = shift || 0;
 
-while test $# -gt 0; do
-    case "$1" in
-        -*=*) optarg=`echo "$1" | sed 's/[-_a-zA-Z0-9]*=//'` ;;
-        *) optarg= ;;
-    esac
+   my $cxxflags = '';
 
-    case $1 in
-        --all)
-            print_all='yes'
-            ;;
-        --basedir)
-            use_base_dir=yes
-            ;;
-        --prefix=*)
-            prefix=$optarg
-            if test $exec_prefix_set = no ; then
-                exec_prefix=$optarg
-            fi
-            ;;
-        --prefix)
-            echo_prefix=yes
-            ;;
-        --exec-prefix=*)
-            exec_prefix=$optarg
-            exec_prefix_set=yes
-            ;;
-        --exec-prefix)
-            echo_exec_prefix=yes
-            ;;
-        --version)
-            echo @MAJOR_VERSION@.@MINOR_VERSION@.@MICRO_VERSION@
-            ;;
-        --cxxflags)
-            echo_cxxflags=yes
-            case $2 in
-                --*)
-                    # This is another option flag, so leave it alone.
-                    ;;
-                N32)
-                    jccl_extra_cxxflags="$jccl_extra_cxxflags $jccl_n32_flags $jccl_isa_flags"
-                    shift
-                    ;;
-                64)
-                    jccl_extra_cxxflags="$jccl_extra_cxxflags $jccl_64_flags $jccl_isa_flags"
-                    shift
-                    ;;
-                *)
-                    jccl_extra_cxxflags="$jccl_extra_cxxflags $jccl_abi_flags $jccl_isa_flags"
-                    if [ "x$2" != "x" ] ; then
-                        shift
-                    fi
-                    ;;
-            esac
-            ;;
-        --subsystem)
-            echo @SUBSYSTEM@
-            ;;
-        --libs)
-            echo_libs=yes
-            case $2 in
-                --*)
-                    # This is another option flag, so leave it alone.
-                    ;;
-                N32)
-                    ldflags="$jccl_n32_flags $jccl_isa_flags"
-                    LIBBITSUF='32'
-                    shift
-                    ;;
-                64)
-                    ldflags="$jccl_64_flags $jccl_isa_flags"
-                    LIBBITSUF='64'
-                    shift
-                    ;;
-                *)
-                    ldflags="$jccl_abi_flags $jccl_isa_flags"
-                    if [ "x$2" != "x" ] ; then
-                        shift
-                    fi
-                    ;;
-            esac
-            ;;
-        --extra-libs)
-            echo_extra_libs=yes
-            case $2 in
-                --*)
-                    # This is another option flag, so leave it alone.
-                    ;;
-                N32)
-                    LIBBITSUF='32'
-                    shift
-                    ;;
-                64)
-                    LIBBITSUF='64'
-                    shift
-                    ;;
-                *)
-                    if [ "x$2" != "x" ] ; then
-                        shift
-                    fi
-                    ;;
-            esac
-            ;;
-        --linker)
-            use_linker=yes
-            ;;
-        --static)
-            echo_static=yes
-            ;;
-        *)
-            usage 1 1>&2
-            ;;
-    esac
-    shift
-done
+   # Default setting from configure.
+   my $jccl_extra_cxxflags = qq(@jccl_extra_cxxflags@);
 
-if test "$echo_prefix" = "yes"; then
-    if test "$use_base_dir" = "yes"; then
-        echo $JCCL_BASE_DIR
-    else
-        echo $prefix
-    fi
-fi
+   if ( $cxxflags_arg =~ /n32/i )
+   {
+      $jccl_extra_cxxflags = "$jccl_extra_cxxflags $jccl_n32_flags $JCCL_ISA_FLAGS";
+   }
+   elsif ( $cxxflags_arg =~ /64/ )
+   {
+      $jccl_extra_cxxflags = "$jccl_extra_cxxflags $jccl_64_flags $JCCL_ISA_FLAGS";
+   }
+   elsif ( "$cxxflags_arg" eq '' )
+   {
+      $jccl_extra_cxxflags = "$jccl_extra_cxxflags $JCCL_ABI_FLAGS $JCCL_ISA_FLAGS";
+   }
 
-if test "$echo_exec_prefix" = "yes"; then
-    if test "$use_base_dir" = "yes"; then
-        echo $JCCL_BASE_DIR
-    else
-        echo $exec_prefix
-    fi
-fi
+   my $jccl_extra_includes     = '';
+   my $jccl_extra_include_dirs = qq(@jccl_extra_include_dirs@);
 
-if test "$echo_cxxflags" = "yes"; then
-    if test "x$print_all" = "xyes" ; then
-        jccl_cxxflags_addtl="@jccl_cxxflags_all@"
-    else
-        jccl_cxxflags_addtl=''
-    fi
+   if ( "$jccl_extra_include_dirs" ne "" )
+   {
+      my $dir;
+      foreach $dir ( split(/\s+/, "$jccl_extra_include_dirs") )
+      {
+        $jccl_extra_includes .= " -I@includedir@/$dir";
+      }
+   }
 
-    if test "$use_base_dir" = "yes"; then
-        echo @jccl_cxxflags@ $jccl_cxxflags_addtl $jccl_extra_cxxflags -I$JCCL_BASE_DIR/include
-    else
-        echo @jccl_cxxflags@ $jccl_cxxflags_addtl $jccl_extra_cxxflags -I@includedir@
-    fi
-fi
+   my $jccl_cxxflags_addtl = ($print_all ? qq(@jccl_cxxflags_all@) : '');
 
-if test "$echo_static" = "yes" ; then
-    static_begin='@static_begin@'
-    static_end='@static_end@'
-fi
+   $cxxflags =
+      qq(@jccl_cxxflags@ $jccl_cxxflags_addtl $jccl_extra_cxxflags ) .
+      qq(-I@includedir@ $jccl_extra_includes);
 
-if test "$echo_libs" = "yes"; then
-    if test "$use_base_dir" = "yes"; then
-        ldflags="$ldflags -L$JCCL_BASE_DIR/lib$LIBBITSUF"
-    else
-        if test "$use_linker" = "yes" ; then
-            ldflags="$ldflags @jccl_ldflags_linker@"
-        else
-            ldflags="$ldflags @jccl_ldflags_compiler@"
-        fi
-    fi
+   # Strip out extra whitespace.
+   $cxxflags =~ s/\s{2,}/ /g;
 
-    echo $ldflags $static_begin $jccl_libs $static_end 
-fi      
+   return stripDuplicateArgs("$cxxflags");
+}
 
-if test "x$echo_extra_libs" = "xyes"; then
-    if test "x$print_all" = "xyes" ; then
-        jccl_extra_libs_addtl="@jccl_extra_libs_juggler@"
-    else
-        jccl_extra_libs_addtl=''
-    fi
+sub make_INCLUDES ($)
+{
+   my(@compiler_flags) = split(/\s+/, "$_[0]");
+   return join(" ", grep(/^-I/, @compiler_flags));
+}
 
-    jccl_extra_ldflags="@jccl_extra_ldflags@"
-    jccl_extra_libs="@jccl_extra_libs@"
-    echo $jccl_extra_ldflags $jccl_extra_libs $jccl_extra_libs_addtl 
-fi
+sub make_LDFLAGS ($;$$)
+{
+   my $libs_arg     = shift;
+   my $echo_static  = shift || 0;  # Echo static linking flags
+   my $use_linker   = shift || 0;  # Use flags for direct use of the linker
+
+   my $static_begin = '';
+   my $static_end   = '';
+
+   if ( $echo_static )
+   {
+      $static_begin = qq(@static_begin@);
+      $static_end   = qq(@static_end@);
+   }
+
+   my $ldflags = '';
+
+   if ( $libs_arg =~ /n32/i )
+   {
+      $ldflags   = "$jccl_n32_flags $JCCL_ISA_FLAGS";
+      $LIBBITSUF = '32';
+   }
+   elsif ( $libs_arg =~ /64/ )
+   {
+      $ldflags   = "$jccl_64_flags $JCCL_ISA_FLAGS";
+      $LIBBITSUF = '64';
+   }
+   elsif ( "$libs_arg" eq '' )
+   {
+      $ldflags = "$JCCL_ABI_FLAGS $JCCL_ISA_FLAGS";
+   }
+
+   $ldflags .= ($use_linker ? qq( @jccl_ldflags_linker@)
+                            : qq( @jccl_ldflags_compiler@));
+
+   my $full_ldflags = qq($ldflags $static_begin @jccl_libs@ $static_end);
+   $full_ldflags    =~ s/\s{2,}/ /g;
+
+   return "$full_ldflags";
+}
+
+sub make_EXTRA_LDFLAGS ($;$$)
+{
+   my $extra_libs_arg = shift;
+   my $use_linker     = shift || 0;
+   my $print_all      = shift || 0;
+
+   if ( $extra_libs_arg =~ /n32/i )
+   {
+      $LIBBITSUF = '32';
+   }
+   elsif ( $extra_libs_arg =~ /64/ )
+   {
+      $LIBBITSUF = '64';
+   }
+
+   # XXX: Fix me!!!
+   my $extra_ldflags = qq(@jccl_extra_ldflags@);
+#   my $extra_ldflags = ($use_linker ? qq(@jccl_extra_ldflags_linker@)
+#                                    : qq(@jccl_extra_ldflags_compiler@));
+
+   # Add the full set of extra flags if the user specified --all on the
+   # command line.
+   my $jccl_extra_libs_addtl = ($print_all ? qq(@jccl_extra_libs_juggler@)
+                                           : '');
+
+   my $full_extra_ldflags = qq($extra_ldflags @jccl_extra_libs@ ) .
+                            "$jccl_extra_libs_addtl";
+   $full_extra_ldflags    =~ s/\s{2,}/ /g;
+
+   return "$full_extra_ldflags";
+}
+
+# Subroutine for handling command-line parameters that have an optional
+# argument.
+sub handleOptArg ($$)
+{
+   my $name  = shift;
+   my $value = shift || '';
+
+   SWITCH:
+   {
+      if ( "$name" eq "prefix" )
+      {
+         # If $value is defined, we set $prefix to its value.  The value of
+         # $prefix will not be printed in this case.
+         if ( $value )
+         {
+            $prefix      = "$value";
+            $ECHO_PREFIX = 0;
+            $PREFIX_SET  = 1;
+         }
+         # If $value is undefined, that means that --prefix was specified, but
+         # no value was given.  In that case, we just want to print the
+         # prefix.
+         else
+         {
+            $ECHO_PREFIX = 1;
+         }
+
+         last SWITCH;
+      }
+
+      if ( "$name" eq "exec-prefix" )
+      {
+         # If $value is defined, we set $exec_prefix to its value.  The value
+         # of $exec_prefix will not be printed in this case.
+         if ( $value )
+         {
+            $exec_prefix      = "$value";
+            $EXEC_PREFIX_SET  = 1;
+            $ECHO_EXEC_PREFIX = 0;
+         }
+         # If $value is undefined, that means that --exec-prefix was specified,
+         # but no value was given.  In that case, we just want to print the
+         # exec prefix.
+         else
+         {
+            $ECHO_EXEC_PREFIX = 1;
+         }
+
+         last SWITCH;
+      }
+
+      if ( "$name" eq "cxxflags" )
+      {
+         $ECHO_CXXFLAGS = 1;
+         $cxxflags_arg  = $value;
+         last SWITCH;
+      }
+
+      if ( "$name" eq "libs" )
+      {
+         $ECHO_LIBS = 1;
+         $libs_arg  = $value;
+         last SWITCH;
+      }
+
+      if ( "$name" eq "extra-libs" )
+      {
+         $ECHO_EXTRA_LIBS = 1;
+         $extra_libs_arg  = $value;
+         last SWITCH;
+      }
+   }
+}
+
+# This is a fairly brute-force method for removing duplicated arguments from
+# the given string.  It should not be used for argument lists such as those
+# passed to the linker where functionality can be turned on and off (for
+# example, the repeated use of -Wl,-Bstatic ... -Wl,-Bdynamic for selective
+# static linking).
+sub stripDuplicateArgs ($)
+{
+   my @arg_list   = split(/\s+/, "$_[0]");
+   my %known_args = ();
+   my @new_args   = ();
+
+   foreach ( @arg_list )
+   {
+      next if exists($known_args{"$_"});  # Skip previously seen arguments
+      $known_args{"$_"} = 1;              # Register this argument
+      push(@new_args, "$_");              # Add the argument to the new list
+   }
+
+   return join(" ", @new_args);
+}
