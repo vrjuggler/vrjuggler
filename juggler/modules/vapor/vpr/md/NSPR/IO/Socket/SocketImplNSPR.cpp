@@ -183,7 +183,7 @@ SocketImpNSPR::SocketImpNSPR (const InetAddr& local_addr,
 SocketImpBSD::~SocketImpBSD ()
 {
     if ( m_handle != NULL ) {
-       PRClose(m_handle);
+       // PRClose(m_handle);     // XXX: Let it dangle
        m_handle = NULL;
     }
 }
