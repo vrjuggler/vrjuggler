@@ -72,17 +72,17 @@ class aFlock
 {
 public:
 	//: Configure Constructor
-	//! ARGS: port - such as "/dev/ttyd3"                         <BR>
-	//! ARGS: baud - such as 38400, 19200, 9600, 14400, etc...    <BR>
-	//! ARGS: sync - sync type.                                   <BR>
-	//! ARGS: block - blocking                                    <BR>
-	//! ARGS: numBrds - number of birds in flock,                 <BR>
-	//! ARGS: transmit - transmitter unit number,                 <BR>
-	//! ARGS: hemi - hemisphere to track from,                    <BR>
-	//! ARGS: filt - filtering type,                              <BR>
-	//! ARGS: report - flock report rate.                         <BR>
-	//! ARGS: calfile - a calibration file, if "", then use none. <BR>
-	//                                                       <BR>
+	//! ARGS: port - such as "/dev/ttyd3"
+	//! ARGS: baud - such as 38400, 19200, 9600, 14400, etc...
+	//! ARGS: sync - sync type
+	//! ARGS: block - blocking
+	//! ARGS: numBrds - number of birds in flock (without transmitter)
+	//! ARGS: transmit - transmitter unit number
+	//! ARGS: hemi - hemisphere to track from
+	//! ARGS: filt - filtering type
+	//! ARGS: report - flock report rate
+	//! ARGS: calfile - a calibration file, if "", then use none
+	//
 	//! POST: configures internal data members,
 	//+         doesn't actually talk to the FOB yet.
 	aFlock(const char* const port = "/dev/ttyd3",
