@@ -1951,6 +1951,8 @@ AC_OUTPUT(Makefile
           test/Performance/analyzer/Makefile
           test/Performance/perfdatabuffer-test/Makefile 
           test/Quat/Makefile
+          test/SerialPort/Makefile 
+          test/Socket/Makefile 
           test/Sync/Makefile 
           test/input/Makefile
           test/testDynamicCastSTL/Makefile 

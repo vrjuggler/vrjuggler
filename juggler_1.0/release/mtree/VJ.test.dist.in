@@ -60,6 +60,10 @@
 	..
 	Quat
 	..
+	SerialPort
+	..
+	Socket
+	..
 	Sync
 	..
 	Win32k

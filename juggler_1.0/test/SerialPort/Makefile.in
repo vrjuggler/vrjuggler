@@ -31,38 +31,59 @@
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # -----------------------------------------------------------------------------
-# Makefile.in for juggler/test
+# Makefile.in for juggler/test/SerialPort
 #
 # Generated for use on @PLATFORM@
 # -----------------------------------------------------------------------------
 
+.SUFFIXES: .cpp .@OBJ_FILE_SUFFIX@
+
+srcdir		= @srcdir@
+
+EXTRA_FLAGS	= @APP_EXTRA_FLAGS@
+COMPILE		= @CXX@ @DEFS@ $(VJ_INCLUDES) @CPPFLAGS@ @CXXFLAGS@ @DBG_FLAGS@ $(EXTRA_FLAGS)
+LINK		= @CXX@ @CPPFLAGS@ @CXXFLAGS@ @EXTRA_LINK_FLAGS@ $(EXTRA_FLAGS)
+VJ_INCLUDES	= @INCLUDES@ -I$(VJ_BASE_DIR)/include -I$(srcdir)
+VJ_LIBS		= @APP_VJ_LIBS_BEGIN@ @APP_VJ_LIBS_UTILS@ @APP_VJ_LIBS_END@ @APP_LIBS_BASIC@
+VPATH		= @srcdir@
+
+# If the library uses POSIX threads, "-lpthread" must also be added to the
+# list of libraries.
+#
+# The proper library path must be specified depending on the Application
+# Binary Interface (ABI) used.  For o32 binaries, -L/usr/lib is the
+# appropriate path.  For n32 binaries, use -L/usr/lib32.  For 64-bit binaries,
+# use -L/usr/lib64.
+EXTRA_LIBS	= @APP_EXTRA_LIBS_BEGIN@ @APP_EXTRA_LIBS_BASIC@ @APP_EXTRA_LIBS_END@
+
+MATH_PROGS	= reader writer first second
+
 # -----------------------------------------------------------------------------
-# Build targets.
+# Targets.
 # -----------------------------------------------------------------------------
-default: TestSuite
+default: all
 
-SUBDIRS	= TestSuite	\
-          CfgTest	\
-          Math		\
-          Matrix	\
-          Performance	\
-          Quat		\
-          SerialPort	\
-          Socket	\
-          Sync		\
-          input		\
-          threads
+all: $(MATH_PROGS)
 
-all: $(SUBDIRS)
+reader: reader.@OBJ_FILE_SUFFIX@
+	$(LINK) -o $@ reader.@OBJ_FILE_SUFFIX@ $(VJ_LIBS) $(EXTRA_LIBS)
 
-$(SUBDIRS)::
-	cd $@ && $(MAKE) all
+writer: writer.@OBJ_FILE_SUFFIX@
+	$(LINK) -o $@ writer.@OBJ_FILE_SUFFIX@ $(VJ_LIBS) $(EXTRA_LIBS)
+
+first: first.@OBJ_FILE_SUFFIX@
+	$(LINK) -o $@ first.@OBJ_FILE_SUFFIX@ $(VJ_LIBS) $(EXTRA_LIBS)
+
+second: second.@OBJ_FILE_SUFFIX@
+	$(LINK) -o $@ second.@OBJ_FILE_SUFFIX@ $(VJ_LIBS) $(EXTRA_LIBS)
+
+.cpp.@OBJ_FILE_SUFFIX@:
+	$(COMPILE) @OBJ_NAME_FLAG@ -c $<
 
 # -----------------------------------------------------------------------------
 # Clean-up.
 # -----------------------------------------------------------------------------
 clean:
-	@for dir in $(SUBDIRS) ; do			\
-            echo "==> Cleaning in $$dir"       ;	\
-            cd $$dir && $(MAKE) clean && cd .. ;	\
-        done
+	rm -f Makedepend $(MATH_PROGS) *.exe *.ilk *.@OBJ_FILE_SUFFIX@	\
+          *core *.?db so_locations
+	rm -rf ./ii_files
