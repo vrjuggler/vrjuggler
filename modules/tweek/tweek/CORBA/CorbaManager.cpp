@@ -113,7 +113,7 @@ vpr::ReturnStatus CorbaManager::init (const std::string& local_id, int argc,
    return status;
 }
 
-vpr::ReturnStatus CorbaManager::registerSubjectManager (tweek::SubjectManagerImpl* mgr)
+vpr::ReturnStatus CorbaManager::createSubjectManager ()
 {
    vprASSERT(! CORBA::is_nil(m_root_context) && "No naming service available");
    vprASSERT(! CORBA::is_nil(m_local_context) && "No naming service available");
@@ -121,11 +121,14 @@ vpr::ReturnStatus CorbaManager::registerSubjectManager (tweek::SubjectManagerImp
 
    tweek::SubjectManager_ptr mgr_ptr;
 
+   vprASSERT(m_subj_mgr == NULL && "Subject Manager already exists for this CORBA Manager!");
+   m_subj_mgr = new SubjectManagerImpl(*this);
+
    // Try to activate the given servant with our child POA before anyone tries
    // to use it.
    try
    {
-      m_subj_mgr_id = m_child_poa->activate_object(mgr);
+      m_subj_mgr_id = m_child_poa->activate_object(m_subj_mgr);
    }
    // This will be raised if the IdUniqunessPolicy within our child POA is set
    // to UNIQUE_ID.
@@ -159,7 +162,7 @@ vpr::ReturnStatus CorbaManager::registerSubjectManager (tweek::SubjectManagerImp
          // This gives us our reference from the POA to the servant that was
          // registered above.  This does not perform object activation because
          // the object was activated above.
-         mgr_ptr = mgr->_this();
+         mgr_ptr = m_subj_mgr->_this();
 
          vprASSERT(! CORBA::is_nil(mgr_ptr) && "CORBA object not activated in POA");
 

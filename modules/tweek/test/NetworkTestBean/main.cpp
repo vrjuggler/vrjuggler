@@ -1,5 +1,4 @@
 #include <tweek/CORBA/CorbaManager.h>
-#include <tweek/CORBA/SubjectManagerImpl.h>
 #include <vpr/Thread/Thread.h>
 #include <vpr/Util/Debug.h>
 
@@ -19,7 +18,7 @@ int main (int argc, char* argv[])
 
          try
          {
-            status = mgr.registerSubjectManager(tweek::SubjectManagerImpl::instance());
+            status = mgr.createSubjectManager();
 
             if ( status.success() )
             {
@@ -30,12 +29,10 @@ int main (int argc, char* argv[])
 
                try
                {
-                  tweek::SubjectManagerImpl::instance()->registerSubject(mgr,
-                                                                         slider_subj,
-                                                                         "SliderSubject");
-                  tweek::SubjectManagerImpl::instance()->registerSubject(mgr,
-                                                                         whiteboard_subj,
-                                                                         "WhiteboardSubject");
+                  mgr.getSubjectManager()->registerSubject(slider_subj,
+                                                           "SliderSubject");
+                  mgr.getSubjectManager()->registerSubject(whiteboard_subj,
+                                                           "WhiteboardSubject");
                }
                catch (...)
                {
