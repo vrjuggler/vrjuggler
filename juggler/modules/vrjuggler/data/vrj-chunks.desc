@@ -215,9 +215,9 @@ The filters are applied in the order that they are specified in this configurati
       <item label="Keyboard Proxy" defaultvalue="" />
       <enumeration name="KeyboardProxy" />
     </PropertyDesc>
-    <PropertyDesc token="keyPairs" name="KeyPresses" type="embeddedchunk" variable="1">
-      <help>Keypresses to trigger multiple digital inputs</help>
-      <item label="Key Presses" />
+    <PropertyDesc token="keyPairs" name="Digital button keys" type="embeddedchunk" variable="1">
+      <help>Keypresses to trigger multiple digital inputs.  The number of the digital input corresponds to the index of the key press entry.</help>
+      <item label="Digital Button Key" />
       <enumeration name="KeyModPair" />
     </PropertyDesc>
   </ChunkDesc>
@@ -583,6 +583,20 @@ The filters are applied in the order that they are specified in this configurati
       <help>Points to the machine that the device is physically connected to.</help>
       <item label="Host Node" defaultvalue="" />
       <enumeration name="MachineSpecific" value="MachineSpecific" />
+    </PropertyDesc>
+  </ChunkDesc>
+  <ChunkDesc token="gadget_logger" name="Gadgeteer Logger">
+    <category>Gadgeteer/Logger</category>
+    <PropertyDesc name="Start Logging" token="start_digital" type="chunk" variable="0">
+      <enumeration name="DigProxy" value="" />
+      <enumeration name="proxyAlias" value="" />
+      <help>This is the digital device that when triggered causes the logging to start.</help>
+      <item label="Start Logging" defaultvalue="" />
+    </PropertyDesc>
+    <PropertyDesc name="Stamp Log" token="stamp_digital" type="chunk" variable="0">
+      <enumeration name="DigProxy" value="" />
+      <enumeration name="proxyAlias" value="" />
+      <item label="Stamp Log" defaultvalue="" />
     </PropertyDesc>
   </ChunkDesc>
   <ChunkDesc token="GestureProxy" name="Gesture Proxy">
