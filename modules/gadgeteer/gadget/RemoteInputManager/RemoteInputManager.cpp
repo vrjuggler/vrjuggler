@@ -479,11 +479,6 @@ namespace gadget
    {
       vprASSERT(chunk->getNum("host_chunk") > 0 && "This chunk does not have a host_chunk");
    
-      if (chunk->getDescToken() == std::string("Keyboard"))
-      {
-         // Do nothing so that the keyboard device just doesn't show up.
-         return true;
-      }
          // Get the name of the device
       std::string dev_name = chunk->getFullName();
       std::string host_chunk = chunk->getProperty<std::string>("host_chunk");

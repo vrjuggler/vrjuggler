@@ -201,7 +201,7 @@ int KeyboardXWin::onlyModifier(int mod)
      case VJKEY_CTRL:
         return (!m_curKeys[VJKEY_SHIFT] && m_curKeys[VJKEY_CTRL] && !m_curKeys[VJKEY_ALT]);
      case VJKEY_ALT:
-        return (!m_curKeys[VJKEY_SHIFT] && !m_keys[VJKEY_CTRL] && m_curKeys[VJKEY_ALT]);
+        return (!m_curKeys[VJKEY_SHIFT] && !m_curKeys[VJKEY_CTRL] && m_curKeys[VJKEY_ALT]);
      default:
        vprASSERT(false);
        return 0;

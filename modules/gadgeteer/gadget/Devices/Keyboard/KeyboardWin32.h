@@ -56,6 +56,8 @@
 #include <gadget/gadgetConfig.h>
 #include <gadget/Type/Input.h>
 #include <gadget/Type/Keyboard.h>
+#include <gadget/Type/InputMixer.h>
+
 #include <gadget/Util/Debug.h>
 #include <gadget/InputManager.h>
 
@@ -65,7 +67,7 @@
 namespace gadget
 {
 
-class GADGET_CLASS_API KeyboardWin32 : public Input, public Keyboard
+class GADGET_CLASS_API KeyboardWin32 : public InputMixer<Input,Keyboard>
 {
 public:
    // Enum to keep track of current lock state for state machine
@@ -148,7 +150,6 @@ protected:
    // NOTE: This driver does not use the normal triple buffering mechanism.
    // Instead, it just uses a modified double buffering system.
    int      m_keys[256];         // (0,*): The num key presses during an UpdateData (ie. How many keypress events)
-   int      m_curKeys[256];      // (0,*): Copy of m_keys that the user reads from between updates
    int      m_realkeys[256];     // (0,1): The real keyboard state, all events processed (ie. what is the key now)
 
    vpr::Mutex  mKeysLock;           // Must hold this lock when accessing m_keys

@@ -98,6 +98,8 @@ const int VJMBUTTON3   = LAST_KEY + 7;
 namespace gadget
 {
 
+   const unsigned short MSG_DATA_KEYBOARD = 420;
+
 /**
  * Keyboard is an abstract class for interfacing with keyboard (and other
  * keybased) devices.
@@ -116,6 +118,45 @@ public:
 
    virtual ~Keyboard() {;}
 
+   virtual std::string getBaseType()
+   {
+      return std::string("Keyboard");
+   }
+   
+   virtual vpr::ReturnStatus writeObject(vpr::ObjectWriter* writer)
+   {
+      //std::cout << "[Remote Input Manager] In Keyboard write" << std::endl;
+      writer->writeUint16(MSG_DATA_KEYBOARD);                               // Write out the data type so that we can assert if reading in wrong place
+      writer->writeUint16(256);
+      //std::cout << "Keys: " << std::flush;
+      for (unsigned i=0;i<256;i++)
+      {
+         //std::cout << " " << m_curKeys[i] << std::flush;
+         writer->writeUint16(m_curKeys[i]);
+      }
+      //std::cout << std::endl;
+      return vpr::ReturnStatus::Succeed;
+   }
+   
+   virtual vpr::ReturnStatus readObject(vpr::ObjectReader* reader, vpr::Uint64* delta)
+   {
+      //std::cout << "[Remote Input Manager] In Keyboard read" << std::endl;
+   
+      // ASSERT if this data is really not Digital Data
+      vpr::Uint16 temp = reader->readUint16();
+      vprASSERT(temp==MSG_DATA_KEYBOARD && "[Remote Input Manager]Not Digital Data");
+      unsigned numVectors = reader->readUint16();
+      //std::cout << "Keys: " << std::flush;
+      for (unsigned i=0;i<numVectors;i++)
+      {
+         m_curKeys[i] = reader->readUint16();
+         //std::cout << " " << m_curKeys[i] << std::flush;
+      }
+      //std::cout << std::endl;
+      return vpr::ReturnStatus::Succeed;
+   }                            
+
+
    virtual bool config(jccl::ConfigChunkPtr chunk)
    { return true; }
 
@@ -123,13 +164,32 @@ public:
     * Is the given key pressed?
     * @return The number of times the key was pressed since last update.
     */
-   virtual int keyPressed(int keyId) =0;
+   //virtual int keyPressed(int keyId) =0;
+   const int keyPressed(int keyId)
+   { return m_curKeys[keyId]; }
 
    /**
     * Checks for the given modifier key pressed only.
     * @return true if key pressed exclusively.
     */
-   virtual bool modifierOnly(int modKey) =0;
+   //virtual bool modifierOnly(int modKey) =0;
+   const bool modifierOnly(int modKey)
+   {
+      switch (modKey)
+      {
+          case VJKEY_NONE:
+              return (!m_curKeys[VJKEY_SHIFT] && !m_curKeys[VJKEY_CTRL] && !m_curKeys[VJKEY_ALT]);
+          case VJKEY_SHIFT:
+              return (m_curKeys[VJKEY_SHIFT] && !m_curKeys[VJKEY_CTRL] && !m_curKeys[VJKEY_ALT]);
+          case VJKEY_CTRL:
+              return (!m_curKeys[VJKEY_SHIFT] && m_curKeys[VJKEY_CTRL] && !m_curKeys[VJKEY_ALT]);
+          case VJKEY_ALT:
+              return (!m_curKeys[VJKEY_SHIFT] && !m_curKeys[VJKEY_CTRL] && m_curKeys[VJKEY_ALT]);
+          default:
+              vprASSERT(false);
+              return 0;
+      }
+   }
 
    std::string getKeyName(int keyId)
    {
@@ -192,6 +252,7 @@ public:
 
       //return std::string("n/a");
    }
+   int      m_curKeys[256];      // (0,*): Copy of m_keys that the user reads from between updates
 };
 
 
