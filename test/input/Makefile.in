@@ -10,11 +10,11 @@
 srcdir		= @srcdir@
 
 EXTRA_FLAGS	= @APP_EXTRA_FLAGS@
-COMPILE			= @CXX@ @DEFS@ $(VJ_INCLUDES) @CPPFLAGS@ @CXXFLAGS@ @DBG_FLAGS@ $(EXTRA_FLAGS)
-LINK				= @CXX@ @CPPFLAGS@ @CXXFLAGS@ @EXTRA_LINK_FLAGS@ $(EXTRA_FLAGS)
+COMPILE		= @CXX@ @DEFS@ $(VJ_INCLUDES) @CPPFLAGS@ @CXXFLAGS@ @DBG_FLAGS@ $(EXTRA_FLAGS)
+LINK		= @CXX@ @CPPFLAGS@ @CXXFLAGS@ @EXTRA_LINK_FLAGS@ $(EXTRA_FLAGS)
 VJ_INCLUDES	= @INCLUDES@ -I$(VJ_BASE_DIR)/include -I$(srcdir)
-VJ_LIBS			= @APP_VJ_LIBS_BASIC@ @APP_VJ_LIBS_GL@ @APP_LIBS_BASIC@
-VPATH				= @srcdir@:@srcdir@/../../Input/vjPosition
+VJ_LIBS		= @APP_VJ_LIBS_BASIC@ @APP_VJ_LIBS_GL@ @APP_LIBS_BASIC@
+VPATH		= @srcdir@:@srcdir@/../../Input/vjPosition
 
 # These test programs require the following libraries to be linked:
 #
@@ -51,7 +51,7 @@ vjFlockTest: vjFlockTest.@OBJ_FILE_SUFFIX@
 	$(LINK) -o $@ vjFlockTest.@OBJ_FILE_SUFFIX@ $(VJ_LIBS) $(EXTRA_LIBS)
 
 # ----------------
-# aFlock test driver
+# trackd test driver
 # ----------------
 dummyTrackd: dummyTrackd.@OBJ_FILE_SUFFIX@
 	$(LINK) -o $@ dummyTrackd.@OBJ_FILE_SUFFIX@ $(VJ_LIBS) $(EXTRA_LIBS)
