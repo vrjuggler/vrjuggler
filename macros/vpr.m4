@@ -98,11 +98,19 @@ dnl                          test VPR program], , enable_vprtest=yes)
     else
         VPR_CXXFLAGS=`$VPR_CONFIG $vpr_config_args --cxxflags $ABI`
         VPR_LIBS_LD="`$VPR_CONFIG $vpr_config_args --libs $ABI --linker`"
-        VPR_LIBS_STATIC_LD="`$VPR_CONFIG $vpr_config_args --libs $ABI --linker --static`"
         VPR_LIBS_CC="`$VPR_CONFIG $vpr_config_args --libs $ABI`"
+        VPR_LIBS_STATIC_LD="`$VPR_CONFIG $vpr_config_args --libs $ABI --linker --static`"
         VPR_LIBS_STATIC_CC="`$VPR_CONFIG $vpr_config_args --libs $ABI --static`"
         VPR_EXTRA_LIBS_CC=`$VPR_CONFIG $vpr_config_args --extra-libs $ABI`
         VPR_EXTRA_LIBS_LD=`$VPR_CONFIG $vpr_config_args --extra-libs $ABI --linker`
+
+        VPR_CXXFLAGS_MIN=`$VPR_CONFIG $vpr_config_args --cxxflags $ABI --min`
+        VPR_LIBS_LD_MIN="`$VPR_CONFIG $vpr_config_args --libs $ABI --linker --min`"
+        VPR_LIBS_CC_MIN="`$VPR_CONFIG $vpr_config_args --libs $ABI --min`"
+        VPR_LIBS_STATIC_LD="`$VPR_CONFIG $vpr_config_args --libs $ABI --linker --static --min`"
+        VPR_LIBS_STATIC_CC_MIN="`$VPR_CONFIG $vpr_config_args --libs $ABI --static --min`"
+        VPR_EXTRA_LIBS_CC_MIN=`$VPR_CONFIG $vpr_config_args --extra-libs $ABI --min`
+        VPR_EXTRA_LIBS_LD_MIN=`$VPR_CONFIG $vpr_config_args --extra-libs $ABI --linker --min`
         VPR_VERSION=`$VPR_CONFIG --version`
 
         AC_MSG_CHECKING([whether VPR version is >= $min_vpr_version])
@@ -117,23 +125,41 @@ dnl                          test VPR program], , enable_vprtest=yes)
             echo "*** your path, or set the VPR_CONFIG environment variable to the"
             echo "*** full path to vpr-config."
         fi
+
         VPR_CXXFLAGS=''
         VPR_LIBS_LD=''
-        VPR_LIBS_STATIC_LD=''
         VPR_LIBS_CC=''
+        VPR_LIBS_STATIC_LD=''
         VPR_LIBS_STATIC_CC=''
         VPR_EXTRA_LIBS_CC=''
         VPR_EXTRA_LIBS_LD=''
+
+        VPR_CXXFLAGS_MIN''
+        VPR_LIBS_LD_MIN''
+        VPR_LIBS_CC_MIN''
+        VPR_LIBS_STATIC_LD_MIN''
+        VPR_LIBS_STATIC_CC_MIN''
+        VPR_EXTRA_LIBS_CC_MIN''
+        VPR_EXTRA_LIBS_LD_MIN''
         VPR_VERSION='-1'
         ifelse([$3], , :, [$3])
     fi
 
     AC_SUBST(VPR_CXXFLAGS)
     AC_SUBST(VPR_LIBS_LD)
-    AC_SUBST(VPR_LIBS_STATIC_LD)
     AC_SUBST(VPR_LIBS_CC)
+    AC_SUBST(VPR_LIBS_STATIC_LD)
     AC_SUBST(VPR_LIBS_STATIC_CC)
     AC_SUBST(VPR_EXTRA_LIBS_CC)
     AC_SUBST(VPR_EXTRA_LIBS_LD)
+    AC_SUBST(VPR_CXXFLAGS_MIN)
+
+    AC_SUBST(VPR_CXXFLAGS_MIN)
+    AC_SUBST(VPR_LIBS_LD_MIN)
+    AC_SUBST(VPR_LIBS_CC_MIN)
+    AC_SUBST(VPR_LIBS_STATIC_LD_MIN)
+    AC_SUBST(VPR_LIBS_STATIC_CC_MIN)
+    AC_SUBST(VPR_EXTRA_LIBS_CC_MIN)
+    AC_SUBST(VPR_EXTRA_LIBS_LD_MIN)
     AC_SUBST(VPR_VERSION)
 ])
