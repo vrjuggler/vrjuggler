@@ -98,6 +98,17 @@ public class PerfAnalyzerPanel
 	}
     }
 
+    private class LabeledPanelButton extends JButton {
+        public LabeledPerfDataCollector collector;
+        public String index;
+
+        public LabeledPanelButton (LabeledPerfDataCollector _collector, 
+                                   String _index, String text) {
+            super (text);
+            collector = _collector;
+            index = _index;
+        }
+    }
 
     private String padFloat (double f) {
 	// reformats f to a string w/ 3 places after decimal
@@ -110,8 +121,23 @@ public class PerfAnalyzerPanel
 	return s;
     }
 
-    public class DataPanelElem 
-        implements ActionListener {
+
+    public interface DataPanelElem 
+        extends ActionListener {
+
+	public void initialize (JPanel panel, 
+			      GridBagLayout gblayout, GridBagConstraints gbc);
+
+        public void destroy ();
+
+	public void update();
+
+        public PerfDataCollector getPerfDataCollector();
+    }
+
+
+    public class NumberedDataPanelElem 
+        implements DataPanelElem {
 
 	public NumberedPerfDataCollector col;
 	public JLabel sep_label;
@@ -124,7 +150,7 @@ public class PerfAnalyzerPanel
 	public AnomaliesButton[] anomalies_buttons;
 	public int num;
 
-        public DataPanelElem (NumberedPerfDataCollector _col) {
+        public NumberedDataPanelElem (NumberedPerfDataCollector _col) {
             col = _col;
         }
 
@@ -203,6 +229,122 @@ public class PerfAnalyzerPanel
 		    ; // we should probably add something in this case...
 	    }
 	}
+
+
+        public PerfDataCollector getPerfDataCollector() {
+            return col;
+        }
+
+
+        public void actionPerformed (ActionEvent e) {
+            if (e.getActionCommand().equals ("Update")) {
+                update();
+            }
+        }
+
+    }
+
+
+
+    public class LabeledDataPanelElem 
+        implements DataPanelElem {
+
+	public LabeledPerfDataCollector col;
+	public JLabel sep_label;
+	public JLabel colname_label;
+	public CollectorSummaryButton colsummary_button;
+	public JLabel avgs_label;
+	public JLabel[] phase_labels;
+	public JLabel[] avg_labels;
+	public GraphButton[] graph_buttons;
+	public AnomaliesButton[] anomalies_buttons;
+	public int num;
+
+        public LabeledDataPanelElem (LabeledPerfDataCollector _col) {
+            col = _col;
+        }
+
+	public void initialize (JPanel panel, 
+			      GridBagLayout gblayout, GridBagConstraints gbc) {
+	    Insets insets = new Insets (1,1,1,1);
+	    num = col.getNumIndices();
+	    phase_labels = new JLabel[num];
+	    avg_labels = new JLabel[num];
+	    graph_buttons = new GraphButton[num];
+	    anomalies_buttons = new AnomaliesButton[num];
+
+	    col.generateAverages(preskip, postskip);
+	    gbc.gridwidth = gbc.REMAINDER;
+	    sep_label = new JLabel ("----------------------------------------------");
+	    gblayout.setConstraints (sep_label, gbc);
+	    panel.add (sep_label);
+
+	    colname_label = new JLabel (col.getName());
+	    gbc.gridwidth = 1;
+	    gblayout.setConstraints (colname_label, gbc);
+	    panel.add (colname_label);
+
+	    colsummary_button = new CollectorSummaryButton (col);
+	    colsummary_button.addActionListener (PerfAnalyzerPanel.this);
+	    gbc.gridwidth = gbc.REMAINDER;
+	    gblayout.setConstraints (colsummary_button, gbc);
+	    panel.add (colsummary_button);
+
+	    avgs_label = new JLabel ("Average times in milliseconds:");
+	    gblayout.setConstraints(avgs_label, gbc);
+	    panel.add (avgs_label);
+
+	    JLabel l;
+	    JButton b;
+// 	    for (int j = 0; j < num; j++) {
+// 		double avg = col.getAverageForPhase(j);
+// 		// this below will cause trouble
+// 		if (avg == 0.0)
+// 		    continue;
+// 		gbc.gridwidth = 1;
+// 		l = phase_labels[j] = new JLabel (j + ": " + col.getLabelForPhase(j));
+// 		gblayout.setConstraints (l, gbc);
+// 		panel.add(l);
+// 		l = avg_labels[j] = new JLabel (padFloat(avg/1000.0), JLabel.RIGHT);
+// 		gblayout.setConstraints (l, gbc);
+// 		panel.add(l);
+// 		b = graph_buttons[j] = new GraphButton (col, j);
+// 		b.addActionListener (PerfAnalyzerPanel.this);
+// 		b.setMargin(insets);
+// 		gblayout.setConstraints (b, gbc);
+// 		panel.add(b);
+// 		b = anomalies_buttons[j] = new AnomaliesButton (col, j);
+// 		b.setEnabled(false);
+// 		b.addActionListener (PerfAnalyzerPanel.this);
+// 		b.setMargin(insets);
+// 		gbc.gridwidth = gbc.REMAINDER;
+// 		gblayout.setConstraints (b, gbc);
+// 		panel.add(b);
+// 	    }
+
+            col.addActionListener (this);
+	}
+
+        public void destroy () {
+            col.removeActionListener (this);
+        }
+
+	public void update() {
+// 	    col.generateAverages(preskip, postskip);
+// 	    for (int i = 0; i < num; i++) {
+// 		double avg = col.getAverageForPhase(i);
+// 		if (avg_labels[i] != null)
+// 		    avg_labels[i].setText(padFloat(avg/1000.0));
+// 		else
+// 		    ; // we should probably add something in this case...
+// 	    }
+	}
+
+
+        public PerfDataCollector getPerfDataCollector() {
+            return col;
+        }
+
 
         public void actionPerformed (ActionEvent e) {
             if (e.getActionCommand().equals ("Update")) {
@@ -294,7 +436,7 @@ public class PerfAnalyzerPanel
 	DataPanelElem dpe;
 	for (int i = 0; i < datapanel_elems.size(); i++) {
 	    dpe = (DataPanelElem)datapanel_elems.elementAt(i);
-	    if (col == dpe.col)
+	    if (col == dpe.getPerfDataCollector())
 		return dpe;
 	}
 	return null;
@@ -303,12 +445,14 @@ public class PerfAnalyzerPanel
 
 
     public void addDataPanelElem (PerfDataCollector col) {
-        if (col instanceof NumberedPerfDataCollector) {
-            DataPanelElem dpe = new DataPanelElem ((NumberedPerfDataCollector)col);
-            datapanel_elems.add(dpe);
-            if (ui_initialized)
-                dpe.initialize (data_panel, gblayout, gbc);
-        }
+        DataPanelElem dpe;
+        if (col instanceof NumberedPerfDataCollector)
+            dpe = new NumberedDataPanelElem ((NumberedPerfDataCollector)col);
+        else
+            dpe = new LabeledDataPanelElem ((LabeledPerfDataCollector)col);
+        datapanel_elems.add(dpe);
+        if (ui_initialized)
+            dpe.initialize (data_panel, gblayout, gbc);
     }
 
 
