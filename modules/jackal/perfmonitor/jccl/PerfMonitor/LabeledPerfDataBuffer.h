@@ -38,6 +38,7 @@
 
 #include <jccl/jcclConfig.h>
 #include <jccl/Plugins/PerformanceMonitor/TimeStamp.h>
+#include <jccl/Plugins/PerformanceMonitor/PerformanceCategories.h>
 #include <vpr/Sync/Mutex.h>
 #include <vpr/Util/GUID.h>
 #include <jccl/Util/Debug.h>
@@ -85,43 +86,6 @@ class JCCL_CLASS_API LabeledPerfDataBuffer {
         }
     };
 
-    /** Singleton for data shared between all LabeledPerfDataBuffers. */
-    class LabeledPerfDataGlobal {
-    private:
-        bool active;
-
-        LabeledPerfDataGlobal() {
-            active = false;
-        }
-
-    public:
-
-        inline void activate () {
-            active = true;
-        }
-
-        inline void deactivate () {
-            active = false;
-        }
-
-        inline bool isActive () const {
-            return active;
-        }
-
-        /** Returns whether the given category is active.
-         *  @return True iff the category is active.
-         */
-        bool isCategoryActive (const vpr::GUID& category) {
-            if (!active)
-                return false;
-            // do something with categories
-            return true;
-        }
-
-        vprSingletonHeader (LabeledPerfDataGlobal);
-
-    };
-
 
     buf_entry*  buffer;
     int         numbufs;
@@ -162,17 +126,17 @@ public:
     }
 
 
-    inline static void activate() {
-        LabeledPerfDataGlobal::instance()->activate();
-    }
+//      inline static void activate() {
+//          LabeledPerfDataGlobal::instance()->activate();
+//      }
 
-    inline static void deactivate() {
-        LabeledPerfDataGlobal::instance()->activate();
-    }
+//      inline static void deactivate() {
+//          LabeledPerfDataGlobal::instance()->activate();
+//      }
 
-    inline static void isActive() {
-        LabeledPerfDataGlobal::instance()->isActive();
-    }
+//      inline static void isActive() {
+//          LabeledPerfDataGlobal::instance()->isActive();
+//      }
 
 
     /** Records a new data point.
