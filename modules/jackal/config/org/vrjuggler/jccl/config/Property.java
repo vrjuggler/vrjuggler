@@ -41,13 +41,59 @@ import java.io.IOException;
 import VjConfig.PropertyDesc;
 import VjConfig.ChunkFactory;
 
+/** A single property of a ConfigChunk.
+ *  A property can have 0 or more values, all of the same type.
+ *  Each property has an associated PropertyDesc which defines its
+ *  name, type, labels for individual values, etc.
+ *
+ *  @see PropertyDesc
+ *  @version $Revision$, $Date$
+ */
 public class Property {
 
-    protected int num;
     protected PropertyDesc desc;
-    protected ValType valtype;
+    protected int num;             // cached from desc
+    protected ValType valtype;     // cached from desc
     protected List vals;
     protected ChunkDesc embeddesc; // used only for t_embeddedchunk
+
+
+
+    /** Constructor. */
+    public Property (PropertyDesc d) {
+	desc = d;
+	valtype = desc.getValType();
+	num = desc.getNumValues();
+	vals = new ArrayList();
+	if (valtype == ValType.EMBEDDEDCHUNK) {
+	    embeddesc = ChunkFactory.getChunkDescByToken(d.getEnumAtIndex(0).str);
+	    if (embeddesc == null) {
+		System.err.println ("Big Messup in Property Constructor!!!");
+		embeddesc = new ChunkDesc ();
+	    }
+	}
+	else {
+	    embeddesc = null;
+	}
+	for (int i = 0; i < num; i++)
+	    appendVarValue();
+
+    }
+
+
+
+    /** Copy constructor. */
+    public Property (Property p) {
+	num = p.num;
+	desc = p.desc;
+	embeddesc = p.embeddesc;
+	valtype = p.valtype;
+	vals = new ArrayList();
+        int i, n = p.vals.size();
+	for (i = 0; i < n; i++)
+	    vals.add (new VarValue ((VarValue)p.vals.get(i)));
+    }
+
 
 
     /** Attempts to apply a new PropertyDesc while preserving values.
@@ -79,93 +125,89 @@ public class Property {
             while (vals.size() > num)
                 vals.remove(vals.size()-1);
             while (vals.size() < num)
-                vals.add (createVarValue(vals.size()));
+                appendVarValue();
         }
     }
 
 
-    public Property (Property p) {
-	num = p.num;
-	desc = p.desc;
-	embeddesc = p.embeddesc;
-	valtype = p.valtype;
-	vals = new ArrayList();
-        int i, n = p.vals.size();
-	for (i = 0; i < n; i++)
-	    vals.add (new VarValue ((VarValue)p.vals.get(i)));
-    }
 
-
-
-    public Property (PropertyDesc d) {
-	desc = d;
-	valtype = desc.getValType();
-	num = desc.getNumValues();
-	vals = new ArrayList();
-	if (valtype == ValType.EMBEDDEDCHUNK) {
-	    embeddesc = ChunkFactory.getChunkDescByToken(d.getEnumAtIndex(0).str);
-	    if (embeddesc == null) {
-		System.err.println ("Big Messup in Property Constructor!!!");
-		embeddesc = new ChunkDesc ();
-	    }
-	}
-	else {
-	    embeddesc = null;
-	}
-	for (int i = 0; i < num; i++)
-	    vals.add (createVarValue(i));
-
-    }
-
-
-
-    private VarValue createVarValue (int i) {
-	// if i == -1, we're just tacking onto the end
-	if (i == -1)
-	    i = vals.size();
+    /** Adds a single value to self. 
+     *  The new value is appended to the end of the values array.
+     *  If the new value is an embedded chunk, it is given a reasonable
+     *  instance name.
+     *  This is a utility function used by various other methods to 
+     *  create the values vector.  As such, it does not itself do error
+     *  checking on the value size or mutability.
+     */
+    private void appendVarValue () {
+        int i = vals.size();
 	if (valtype == ValType.EMBEDDEDCHUNK) {
 	    ConfigChunk ch = ChunkFactory.createChunk (embeddesc);
 	    if (i < desc.getValueLabelsSize())
 		ch.setName (desc.getValueLabel(i));
 	    else
 		ch.setName (desc.getName() + " " + i);
-	    return new VarValue (ch);
+	    vals.add (new VarValue (ch));
 	}
 	else
-	    return new VarValue (valtype);
+	    vals.add (new VarValue (valtype));
     }
 
 
+
+    /** Returns the name of this property.
+     *  (This is the same value as the name of self's PropertyDesc).
+     */
     public final String getName () {
 	return desc.getName();
     }
 
+
+
+    /** Returns the token of this property.
+     *  (This is the same value as the token of self's PropertyDesc).
+     */
     public final String getToken () {
 	return desc.getToken();
     }
 
+
+
+    /** Returns the type of values stored in self.
+     */
     public final ValType getValType () {
         return desc.getValType();
     }
 
 
+
+    /** Returns the ChunkDesc used to describe self.
+     */
     public final PropertyDesc getDesc () {
         return desc;
     }
 
 
+
+    /** Removes all values from self, if allowed.
+     *  Clearing values is only allowed if the property is specified to
+     *  have a variable number of values.  Otherwise this method is a
+     *  no-op.
+     */
     public void clearValues () {
         if (num == -1)
             vals.clear();
     }
 
 
+
+    /** Sets the ind'th value of self. */
     public void setValue (String s, int ind) {
 	if (ind < 0)
 	    return;
 	if (num == -1) {
 	    while (ind >= vals.size())
-		vals.add (createVarValue(-1));
+		appendVarValue();
 	}
 	else if (ind >= num)
 	    return;
@@ -177,7 +219,7 @@ public class Property {
 	    return;
 	if (num == -1) {
 	    while (ind >= vals.size())
-		vals.add (createVarValue(-1));
+		appendVarValue();
 	}
 	else if (ind >= num)
 	    return;
@@ -194,7 +236,7 @@ public class Property {
 	    return;
 	if (num == -1) {
 	    while (v >= vals.size())
-		vals.add (createVarValue(-1));
+		appendVarValue();
 	}
 	else if (v >= num)
 	    return;
@@ -203,6 +245,9 @@ public class Property {
 
 
 
+    /** Returns the ith value of self.
+     *  @return The ith value of self, or null if i is out of bounds.
+     */
     public VarValue getValue (int i) {
 	if (i < 0 || i >= vals.size())
 	    return null;
@@ -211,25 +256,42 @@ public class Property {
 
 
 
+    /** Returns the number of values contained in self.
+     */
     public final int getNum () {
 	return vals.size();
     }
 
 
+
+    /** Returns whether self has a variable number of values.
+     *  @return True iff values can be added to or removed from self.
+     */
     public final boolean getHasVariableNumberOfValues () {
         return desc.getHasVariableNumberOfValues ();
     }
 
 
+
+    /** Returns the ChunkDesc describing self's embedded chunk values.
+     *  @return The ChunkDesc used to describe self's embedded chunk values.
+     *          Returns null if self's type is not ValType.EMBEDDEDCHUNK, or
+     *          if the appropriate ChunkDesc could not be found.
+     */
     public final ChunkDesc getEmbeddedDesc () {
         return embeddesc;
     }
 
+
+    
+    /** Checks if two Properties are equal.
+     *  Note - this does a total value comparison, not just checking names
+     *  The exception to this is that right now I only check the name of the
+     *  chunkdesc
+     *  @return True iff self and p are equal - ie they use the same
+     *          PropertyDesc, contain equal values, etc.
+     */
     public boolean equals (Property p) {
-	/* note - this does a total value comparison, not just checking names
-	 * The exception to this is that right now I only check the name of the
-	 * chunkdesc
-	 */
 	VarValue v1,v2;
 
         if (p == null)
@@ -344,7 +406,7 @@ public class Property {
     }
 
 
-
+    /** Util for read. */
     private VarValue buildVarValue (ConfigStreamTokenizer st) {
 	/* here we build a token into an appopriate VarValue; includes
 	 * type resolution and enumeration lookup 
