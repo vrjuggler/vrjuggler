@@ -10,7 +10,7 @@ SHELL		= /bin/sh
 bindir		= @bindir@
 datadir		= @datadir@
 exec_prefix	= @exec_prefix@
-includedir	= @includedir@
+includedir	= @includedir@/Kernel/Pf
 libdir		= @libdir@
 libexecdir	= @libexecdir@
 prefix		= @prefix@
@@ -60,6 +60,10 @@ default: all
 
 all dbg opt dso ddso obj: ${PF_OBJECTS}
 
+
+install:
+	${top_srcdir}/mkinstalldirs ${includedir}
+	cp ${srcdir}/*.h ${includedir}
 
 depend: .depend_done
 
