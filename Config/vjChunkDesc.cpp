@@ -142,19 +142,19 @@ vjPropertyDesc* vjChunkDesc::getPropertyDesc (const std::string& _token) {
 
 bool vjChunkDesc::remove (const std::string& _token)
 {
-   std::vector<vjPropertyDesc*>::iterator begin = plist.begin();
-   while (begin != plist.end())
+   std::vector<vjPropertyDesc*>::iterator cur_desc = plist.begin();
+   while (cur_desc != plist.end())
    {
-      if (!vjstrcasecmp ((*begin)->getToken(), _token))
+      if (!vjstrcasecmp ((*cur_desc)->getToken(), _token))
       {
          /* XXX:
-         delete (*begin);
+         delete (*cur_desc);
+         *cur_desc = NULL;
          */
-         *begin = NULL;
-         plist.erase(begin);
+         cur_desc = plist.erase(cur_desc);
          return true;
       }
-      begin++;
+      cur_desc++;
    }
    return false;
 }
