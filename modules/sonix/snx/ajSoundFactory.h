@@ -3,15 +3,13 @@
 #ifndef AJSOUNDFACTORY_H
 #define AJSOUNDFACTORY_H
 #include <string>
-#include <vpr.h>
-#include <Utils/Singleton.h>
 #include "ajSoundImplementation.h"
 #include "ajOpenALSoundImplementation.h"
 #include "ajAudioWorksSoundImplementation.h"
 #include "ajStubSoundImplementation.h"
 #include "ajSoundImplementation.h"
 
-class ajSoundFactory : public vpr::Singleton<ajSoundFactory>
+class ajSoundFactory
 {
 public:
 
@@ -21,7 +19,7 @@ public:
     * @postconditions if apiName is not known, then a stub implementation is returned
     * @semantics factory function used to create an implementation of a sound API 
     */
-   void createImplementation( const std::string& apiName,
+   static void createImplementation( const std::string& apiName,
                               ajSoundImplementation* &mImplementation )
    {
       if (apiName == "OpenAL")

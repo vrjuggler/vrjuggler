@@ -118,7 +118,7 @@ public:
    virtual void changeAPI( const std::string& apiName )
    {
       ajSoundImplementation* oldImpl = mImplementation;
-      ajSoundFactory::instance()->createImplementation( apiName, mImplementation );
+      ajSoundFactory::createImplementation( apiName, mImplementation );
 
       mImplementation->copy( *oldImpl );
 
@@ -139,7 +139,7 @@ protected:
    {
       if (mImplementation == NULL)
       {
-         ajSoundFactory::instance()->createImplementation( "stub", mImplementation );
+         ajSoundFactory::createImplementation( "stub", mImplementation );
          mImplementation->startAPI();
       }
       return *mImplementation;

@@ -89,10 +89,11 @@ INCLUDES	= @INCLUDES@ -I$(topdir) $(EXTRA_INCLUDES)
 INSTALL		= @INSTALL@
 LIBS		= @LIBS@
 LN_S		= @LN_S@
-MKPATH		?=
+MKPATH		?= @srcdir_absolute@/Doozer++/mk
 OBJEXT		= @OBJEXT@
 OBJ_NAME_FLAG	= @OBJ_NAME_FLAG@
 OS_TYPE		= @OS_TYPE@
+MKINSTALLDIRS = @topdir@/hack
 
 # SGI-specific dynamic-shared-object information.
 DSOREGFILE	= @DSOREGFILE@

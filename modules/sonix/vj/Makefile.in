@@ -1,0 +1,4 @@
+default: all
+
+all:
+	echo "nothing to do"
