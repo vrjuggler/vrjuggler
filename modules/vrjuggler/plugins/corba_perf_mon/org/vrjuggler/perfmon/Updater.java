@@ -64,7 +64,7 @@ public class Updater implements Runnable
       SampleTimeMap[] value_map = mObserver.getValueMap();
       int length = Array.getLength(value_map);
       System.out.println("Received a samples list of length " + length);
-      for ( int i = 0; i < length; ++i )
+      for ( int i = 1; i < length; ++i )
       {
          System.out.println("Adding a new series for " + value_map[i].mName);
          TimeSeries s = new TimeSeries(value_map[i].mName, Millisecond.class);
@@ -83,7 +83,8 @@ public class Updater implements Runnable
 
          value_map = mObserver.getValueMap();
          length = Array.getLength(value_map);
-         for ( int i = 0; i < length; ++i )
+         // subtract one off length to account for taking out root node
+         for ( int i = 0; i < length-1; ++i )
          {
             mTimeSeriesCollection.getSeries(i).add( new Millisecond(), value_map[i].mSampleTime );
          }
