@@ -90,6 +90,28 @@ public class TweekFrame extends JFrame implements BeanFocusChangeListener,
       msgDocument.addMessageAdditionListener(this);
       mMsgDocument = msgDocument;
 
+      mBeanPrefsDialog =
+         new BeanPrefsDialog(this, "Bean-Specific Preferences Editor");
+
+      // Before we register ourselves as a listener for Bean instatiation
+      // events, query the list of existing Beans.  We need to make sure that
+      // we know about any existing Beans that implement the BeanPreferences
+      // interface.
+      List known_beans =
+         BeanRegistry.instance().getBeansOfType(TweekBean.class.getName());
+
+      Iterator i = known_beans.iterator();
+      TweekBean bean;
+
+      while ( i.hasNext() )
+      {
+         bean = (TweekBean) i.next();
+         if ( bean.getBean() instanceof BeanPreferences )
+         {
+            addPrefsBean((BeanPreferences) bean.getBean());
+         }
+      }
+
       BeanInstantiationCommunicator.instance().addBeanInstantiationListener(this);
    }
 
@@ -150,8 +172,7 @@ public class TweekFrame extends JFrame implements BeanFocusChangeListener,
             (GlobalPreferencesService)BeanRegistry.instance().getBean( "GlobalPreferences" );
          UIManager.setLookAndFeel(prefs.getLookAndFeel());
          SwingUtilities.updateComponentTreeUI(this);
-         mBeanPrefsDialog =
-            new BeanPrefsDialog(this, "Bean-Specific Preferences Editor");
+         mMenuPrefsBeanEdit.setEnabled(mBeanPrefsDialog.getPrefsBeanCount() > 0);
       }
       catch (Exception e)
       {
@@ -270,18 +291,7 @@ public class TweekFrame extends JFrame implements BeanFocusChangeListener,
 
       if ( new_bean instanceof BeanPreferences )
       {
-         try
-         {
-            ((BeanPreferences) new_bean).load();
-         }
-         catch (java.io.IOException io_ex)
-         {
-            mMsgDocument.printWarning("Failed to load preferences for " +
-                                      ((TweekBean) e.getBean()).getName() +
-                                      ": " + io_ex.getMessage());
-         }
-
-         mBeanPrefsDialog.addPrefsBean((BeanPreferences) new_bean);
+         addPrefsBean((BeanPreferences) new_bean);
          mMenuPrefsBeanEdit.setEnabled(true);
       }
    }
@@ -289,6 +299,29 @@ public class TweekFrame extends JFrame implements BeanFocusChangeListener,
    // =========================================================================
    // Private methods.
    // =========================================================================
+
+   /**
+    * Adds the given Bean to the collection of Beans that have editable
+    * preferences.
+    *
+    * @post The Bean's preferences are loaded, and it is added to the
+    *       collection in the Bean preferences editor dialog.
+    */
+   private void addPrefsBean(BeanPreferences bean)
+   {
+      try
+      {
+         bean.load();
+      }
+      catch (java.io.IOException io_ex)
+      {
+         mMsgDocument.printWarning("Failed to load preferences for " +
+                                   ((TweekBean) bean).getName() +
+                                   ": " + io_ex.getMessage());
+      }
+
+      mBeanPrefsDialog.addPrefsBean(bean);
+   }
 
    /**
     * Performes the real GUI intialization.  This method is needed for JBuilder
