@@ -23,8 +23,8 @@ public class ConfigurePane extends JSplitPane implements MouseListener {
 	setLeftComponent (leftpanel = new ChunkDBPanel(0));
 	setRightComponent (rightpanel = new ChunkDBPanel(1));
 
-	//leftpanel.setMinimumSize (new Dimension (20, 50));
-	//rightpanel.setMinimumSize (new Dimension (20, 50));
+	leftpanel.setMinimumSize (new Dimension (0, 50));
+	rightpanel.setMinimumSize (new Dimension (0, 50));
 	//setDividerLocation (.5);
 	
 	leftpanel.addMouseListener (leftpanel);
