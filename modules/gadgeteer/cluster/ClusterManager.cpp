@@ -32,6 +32,10 @@
 
 #include <gadget/gadgetConfig.h>
 
+#include <iomanip>
+#include <boost/filesystem/path.hpp>
+#include <boost/filesystem/exception.hpp>
+
 #include <vpr/vprTypes.h>
 #include <vpr/System.h>
 #include <vpr/DynLoad/LibraryLoader.h>
@@ -52,9 +56,6 @@
 #include <jccl/Config/ConfigDefinition.h>
 #include <jccl/RTRC/ConfigManager.h>
 #include <jccl/RTRC/DependencyManager.h>
-
-#include <boost/filesystem/path.hpp>
-#include <boost/filesystem/exception.hpp>
 
 
 namespace fs = boost::filesystem;

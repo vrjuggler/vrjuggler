@@ -32,6 +32,9 @@
 
 #include <gadget/gadgetConfig.h>
 
+#include <iomanip>
+#include <typeinfo>
+
 #include <gadget/Type/AnalogProxy.h>
 #include <gadget/Type/DigitalProxy.h>
 #include <gadget/Type/PositionProxy.h>
@@ -42,8 +45,6 @@
 #include <gadget/ProxyFactory.h>
 #include <gadget/Util/Debug.h>
 #include <jccl/Config/ConfigElement.h>
-
-#include <typeinfo>
 
 
 namespace gadget
