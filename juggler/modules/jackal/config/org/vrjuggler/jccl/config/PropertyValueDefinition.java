@@ -101,13 +101,9 @@ public class PropertyValueDefinition
          PropertyValueDefinition d = (PropertyValueDefinition)obj;
          if (mLabel.equals(d.mLabel))
          {
-            if (mDefaultValue != null)
+            if (mDefaultValue != null && d.mDefaultValue != null )
             {
                return mDefaultValue.equals(d.mDefaultValue);
-            }
-            else if (d.mDefaultValue != null)
-            {
-               return d.mDefaultValue.equals(mDefaultValue);
             }
             else
             {

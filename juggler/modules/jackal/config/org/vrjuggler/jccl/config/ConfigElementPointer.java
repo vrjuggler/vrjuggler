@@ -114,7 +114,14 @@ public class ConfigElementPointer
       if (obj instanceof ConfigElementPointer)
       {
          ConfigElementPointer p = (ConfigElementPointer)obj;
-         if (mTarget.equals(p.mTarget))
+         if(null != mTarget && null != p.mTarget)
+         {   
+            if (mTarget.equals(p.mTarget))
+            {
+               return true;
+            }
+         }
+         else
          {
             return true;
          }

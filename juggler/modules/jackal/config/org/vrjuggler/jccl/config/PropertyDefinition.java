@@ -269,7 +269,7 @@ public class PropertyDefinition
    public synchronized String getAllowedType(int index)
       throws ArrayIndexOutOfBoundsException
    {
-      return (String)mAllowedTypes.get(index);
+      return (String)getAllowedTypes().get(index);
    }
 
    /**
@@ -305,7 +305,20 @@ public class PropertyDefinition
     */
    public List getAllowedTypes()
    {
-      return mAllowedTypes;
+      ConfigDefinitionRepository repos = getBroker().getRepository();
+      List sub_defs = repos.getSubDefinitions(mAllowedTypes);
+      List result = new ArrayList();
+      result.addAll(sub_defs);
+      
+      for (Iterator itr = mAllowedTypes.iterator(); itr.hasNext(); )
+      {
+         String allowed_type = (String)itr.next();
+         if(!result.contains(allowed_type))
+         {
+            result.add(allowed_type);
+         }
+      }
+      return result;
    }
 
    /**
@@ -313,9 +326,28 @@ public class PropertyDefinition
     */
    public synchronized int getAllowedTypesCount()
    {
-      return mAllowedTypes.size();
+      return getAllowedTypes().size();
    }
 
+   private ConfigBroker mBroker = null;
+
+   /**
+    * Gets a handle to the configuration broker.
+    */
+   protected ConfigBroker getBroker()
+   {
+      if (mBroker == null)
+      {
+         synchronized (this)
+         {
+            if (mBroker == null)
+            {
+               mBroker = new ConfigBrokerProxy();
+            }
+         }
+      }
+      return mBroker;
+   }
    /**
     * Tests if this property definition supports a variable number of values.
     */

@@ -197,6 +197,41 @@ public class ConfigDefinitionRepository
       }
    }
 
+   public synchronized List getSubDefinitions(List tokens)
+   {
+      List result = new ArrayList();
+      
+      // We can start by adding the tokens for all listed items.
+      result.addAll(tokens);
+      
+      for (Iterator itr = tokens.iterator(); itr.hasNext(); )
+      {
+         String token = (String)itr.next();
+         ConfigDefinition def = get(token);
+         
+         // Test to make sure that the definition actually exists.
+         if(null == def)
+         {
+            System.out.println("Could not find definition: " + token);
+         }
+         else
+         {
+            List sub_defs = def.getSubDefinitions();
+            // For each sub definition we must check to make sure we do not already
+            // have it.
+            for (Iterator sub_itr = sub_defs.iterator(); sub_itr.hasNext(); )
+            {
+               ConfigDefinition sub_def = (ConfigDefinition)sub_itr.next();
+               if(!result.contains(sub_def.getToken()))
+               {
+                  result.add(sub_def.getToken());
+               }
+            }
+         }
+      }
+      return result;
+   }
+
    /**
     * A map of definition names to a map of definition versions to the
     * definitions themselves.
