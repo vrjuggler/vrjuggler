@@ -52,11 +52,11 @@ namespace vpr
     */
    long TSObjectProxyBase::generateNewTSKey()
    {
-      static vpr::Mutex mTSKeyMutex;
-      static long       mNextTSObjectKey(0);
+      static vpr::Mutex s_ts_key_mutex;
+      static long       s_next_ts_object_key(0);
 
-      Guard<Mutex> guard(mTSKeyMutex);
-      return mNextTSObjectKey++;
+      Guard<Mutex> guard(s_ts_key_mutex);
+      return s_next_ts_object_key++;
    }
 
 }
