@@ -297,6 +297,7 @@ pre-install:
 	$(MTREE_CMD) -Ude -f $(mtreedir)/GADGET.lib.dist -p $(prefix)
 
 # Do everything needed after installing the library binaries.
+# XXX: See Source Forge Bug #667204.
 post-install:
 	@$(MAKE) install-drivers
 	@$(MAKE) install-test
