@@ -58,16 +58,39 @@
    </xsl:variable>
 
    <xsl:template match="/">
+     <!-- Add the new version information. -->
+     <xsl:processing-instruction name="org-vrjuggler-jccl-settings">configuration.version="3.0"</xsl:processing-instruction>
+     <xsl:value-of select="$newline"/>
+
       <!-- Create the new XML tree. -->
       <xsl:element name="configuration">
-         <!-- Copy all attributes for the root node. -->
-         <xsl:for-each select="cfg:configuration/@*">
-            <xsl:copy />
-         </xsl:for-each>
+         <!-- Fill in the attributes for the root node. -->
+         <!--
+            XXX: A good default value for this would be the name of the file.
+            How do we get that from the XSLT processor?
+         -->
+         <xsl:attribute name="name">
+            <xsl:text>Configuration</xsl:text>
+         </xsl:attribute>
+         <xsl:attribute name="xsi:schemaLocation">
+            <xsl:text>http://www.vrjuggler.org/jccl/xsd/3.0/configuration http://www.vrjuggler.org/jccl/xsd/3.0/configuration</xsl:text>
+         </xsl:attribute>
+         <xsl:attribute name="xmlns:xsi">
+            <xsl:text>http://www.w3.org/2001/XMLSchema-instance</xsl:text>
+         </xsl:attribute>
+         <xsl:attribute name="xmlns">
+            <xsl:text>http://www.vrjuggler.org/jccl/xsd/3.0/configuration</xsl:text>
+         </xsl:attribute>
          <xsl:value-of select="$newline"/>
-         <xsl:for-each select="cfg:configuration/*">
-            <xsl:apply-templates select="."/>
-         </xsl:for-each>
+
+         <!-- Create the tree of elements. -->
+         <xsl:element name="elements">
+            <xsl:value-of select="$newline"/>
+            <xsl:for-each select="ConfigChunkDB/*">
+               <xsl:apply-templates select="."/>
+            </xsl:for-each>
+         </xsl:element>
+         <xsl:value-of select="$newline"/>
       </xsl:element>
 
       <xsl:message>
@@ -76,14 +99,6 @@
          <xsl:text>to verify the results and make any necessary changes.</xsl:text>
          <xsl:value-of select="$newline"/>
       </xsl:message>
-   </xsl:template>
-
-   <xsl:template match="cfg:configuration/cfg:elements">
-      <xsl:element name="elements">
-         <xsl:for-each select="./*">
-            <xsl:apply-templates select="."/>
-         </xsl:for-each>
-      </xsl:element>
    </xsl:template>
 
 
@@ -491,8 +506,10 @@
          <xsl:attribute name="version">
             <xsl:text>2</xsl:text>
          </xsl:attribute>
+         <xsl:value-of select="$newline"/>
          <xsl:apply-templates select="./*" />
       </xsl:element>
+      <xsl:value-of select="$newline"/>
    </xsl:template>
 
    <!-- displayWindow property "frameBufferConfig". -->
@@ -500,6 +517,7 @@
       <xsl:element name="frame_buffer_config">
          <xsl:apply-templates select="./*" />
       </xsl:element>
+      <xsl:value-of select="$newline"/>
    </xsl:template>
 
    <!-- displayWindow property "sim_viewports". -->
@@ -507,6 +525,7 @@
       <xsl:element name="simulator_viewports">
          <xsl:apply-templates select="./*" />
       </xsl:element>
+      <xsl:value-of select="$newline"/>
    </xsl:template>
 
 
@@ -1123,57 +1142,66 @@
          <xsl:attribute name="version">
             <xsl:text>1</xsl:text>
          </xsl:attribute>
+         <xsl:value-of select="$newline"/>
          <xsl:apply-templates select="./*" />
       </xsl:element>
+      <xsl:value-of select="$newline"/>
    </xsl:template>
 
    <!-- OpenGLFBConfig property "visualID". -->
    <xsl:template match="OpenGLFBConfig/visualID">
       <xsl:element name="visual_id">
-         <xsl:apply-templates select="./*" />
+         <xsl:value-of select="." />
       </xsl:element>
+      <xsl:value-of select="$newline"/>
    </xsl:template>
 
    <!-- OpenGLFBConfig property "redSize". -->
    <xsl:template match="OpenGLFBConfig/redSize">
       <xsl:element name="red_size">
-         <xsl:apply-templates select="./*" />
+         <xsl:value-of select="." />
       </xsl:element>
+      <xsl:value-of select="$newline"/>
    </xsl:template>
 
    <!-- OpenGLFBConfig property "greenSize". -->
    <xsl:template match="OpenGLFBConfig/greenSize">
       <xsl:element name="green_size">
-         <xsl:apply-templates select="./*" />
+         <xsl:value-of select="." />
       </xsl:element>
+      <xsl:value-of select="$newline"/>
    </xsl:template>
 
    <!-- OpenGLFBConfig property "blueSize". -->
    <xsl:template match="OpenGLFBConfig/blueSize">
       <xsl:element name="blue_size">
-         <xsl:apply-templates select="./*" />
+         <xsl:value-of select="." />
       </xsl:element>
+      <xsl:value-of select="$newline"/>
    </xsl:template>
 
    <!-- OpenGLFBConfig property "alphaSize". -->
    <xsl:template match="OpenGLFBConfig/alphaSize">
       <xsl:element name="alpha_size">
-         <xsl:apply-templates select="./*" />
+         <xsl:value-of select="." />
       </xsl:element>
+      <xsl:value-of select="$newline"/>
    </xsl:template>
 
    <!-- OpenGLFBConfig property "depthBufferSize". -->
    <xsl:template match="OpenGLFBConfig/depthBufferSize">
       <xsl:element name="depth_buffer_size">
-         <xsl:apply-templates select="./*" />
+         <xsl:value-of select="." />
       </xsl:element>
+      <xsl:value-of select="$newline"/>
    </xsl:template>
 
    <!-- OpenGLFBConfig property "fsaaEnable". -->
    <xsl:template match="OpenGLFBConfig/fsaaEnable">
       <xsl:element name="fsaa_enable">
-         <xsl:apply-templates select="./*" />
+         <xsl:value-of select="." />
       </xsl:element>
+      <xsl:value-of select="$newline"/>
    </xsl:template>
 
 
