@@ -205,7 +205,8 @@ vjOneThread* vjThreadPool::addThread (void)
 
     vjGuard<vjMutex> guard(listLock);   // Protect the head
 
-    vjOneThread* newThread = new (this->getMyMemPool()->allocate(sizeof(vjOneThread))) vjOneThread;    // Used placement new
+    //vjOneThread* newThread = new (this->getMyMemPool()->allocate(sizeof(vjOneThread))) vjOneThread;    // Used placement new
+    vjOneThread* newThread = new vjOneThread;
     newThread->next = NULL;
 
 //    vjThreadMemberFunctor<vjThreadPool>* memberFunctor = new vjThreadMemberFunctor<vjThreadPool>(this, vjThreadPool::threadLoop, (void*)newThread);
