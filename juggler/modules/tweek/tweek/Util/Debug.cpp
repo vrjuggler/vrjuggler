@@ -38,4 +38,4 @@
 
 #include <tweek/Util/Debug.h>
 
-vprREGISTER_DBG_CATEGORY(DBG_CORBA, tweekDBG_CORBA);
+vprREGISTER_DBG_CATEGORY(tweekDBG_CORBA, DBG_CORBA, "tweekCORBA:");
