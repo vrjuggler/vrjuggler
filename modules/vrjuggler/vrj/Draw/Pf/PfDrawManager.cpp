@@ -318,7 +318,7 @@ void PfDrawManager::addDisplay(Display* disp)
    vprDEBUG(vrjDBG_DRAW_MGR,vprDBG_VERB_LVL) << "\nPfDrawManager::addDisplay: Got Mono FB config\n" << vprDEBUG_FLUSH;
    for(j=0;j<mono_fb_config.size();j++)
    {
-      vprDEBUG_CONT(vrjDBG_DRAW_MGR,vprDBG_VERB_LVL) << "  " << mono_fb_config[i] << std::endl << vprDEBUG_FLUSH;
+      vprDEBUG_CONT(vrjDBG_DRAW_MGR,vprDBG_VERB_LVL) << "  " << mono_fb_config[j] << std::endl << vprDEBUG_FLUSH;
    }
    vprDEBUG_CONT(vrjDBG_DRAW_MGR,vprDBG_VERB_LVL) << std::endl << vprDEBUG_FLUSH;
 
