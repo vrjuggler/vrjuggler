@@ -49,17 +49,19 @@ MAKEFLAGS	+= --no-print-directory
 JUGGLERROOT_ABS	= @JUGGLERROOT_ABS@
 MKPATH		= $(JUGGLERROOT_ABS)/Doozer++/mk
 
-@SET_MAKE@
+#@SET_MAKE@
 
-SUBDIR		= modules/vapor @JUGGLER_PROJECTS@
+SUBDIR		= @JUGGLER_PROJECTS@
 
 build:
-	$(MAKE) GLOBAL_BUILD=1 RECTARGET="buildworld" recursive
+	$(MAKE) GLOBAL_BUILD=1 RECTARGET="buildworld"			\
+          instlinks="$(topdir)/instlinks" recursive
 
 install:
 	$(MAKE) GLOBAL_BUILD=1 RECTARGET="installworld" recursive
 
 clean cleandepend clobber:
 	$(MAKE) GLOBAL_BUILD=1 RECTARGET="$@" recursive
+	rm -rf instlinks
 
 include $(MKPATH)/dpp.subdir.mk
