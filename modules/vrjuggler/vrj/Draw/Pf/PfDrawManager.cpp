@@ -64,7 +64,7 @@ namespace vrj
 void PfDrawFuncStereoLeft(pfChannel *chan, void* chandata);
 void PfDrawFuncStereoRight(pfChannel *chan, void* chandata);
 void PfDrawFuncMonoBackbuffer(pfChannel *chan, void* chandata);
-void PfDrawFuncSimulator(pfChannel* chan, void* chandata);
+//void PfDrawFuncSimulator(pfChannel* chan, void* chandata);
 //void PfAppFunc(pfChannel *chan, void* chandata);
 
 //vjPfDrawManager* PfDrawManager::_instance = NULL;
@@ -408,14 +408,10 @@ void PfDrawManager::addDisplay(Display* disp)
          }
 
          // Set draw function
-         if(disp->inStereo() && (!viewport->isSimulator()))
+         if(disp->inStereo())
          {
             pf_viewport.chans[pfViewport::PRIMARY]->setTravFunc(PFTRAV_DRAW, PfDrawFuncStereoLeft);
             pf_viewport.chans[pfViewport::SECONDARY]->setTravFunc(PFTRAV_DRAW, PfDrawFuncStereoRight);
-         }
-         else if(viewport->isSimulator())
-         {
-            pf_viewport.chans[pfViewport::PRIMARY]->setTravFunc(PFTRAV_DRAW, PfDrawFuncSimulator);
          }
          else
          {
@@ -804,60 +800,55 @@ void PfDrawManager::updateProjections()
    //for(each pfDisp)
    //   for(each viewport)
    //       update Performer specific stuff.
-   for (unsigned disp_id=0;disp_id<mDisplays.size();disp_id++)
+   for (unsigned disp_id=0;disp_id<mDisplays.size();disp_id++)    // each display
    {
       pfDisplay* cur_disp = &(mDisplays[disp_id]);
 
       vprASSERT(cur_disp->disp != NULL);
-      for(unsigned vp=0;vp<cur_disp->viewports.size();vp++)
+      for(unsigned vp=0;vp<cur_disp->viewports.size();vp++)       // each viewport
       {
          pfViewport* pf_vp = &(cur_disp->viewports[vp]);
          vprASSERT(pf_vp != NULL);
          vprASSERT(pf_vp->viewport != NULL);
 
+         /*
          SurfaceViewport* surf_vp(NULL);
-         SimViewport* sim_vp(NULL);
+         */
+
+         Viewport* cur_vp(pf_vp->viewport);
          Viewport::View view;
 
-         // FIND Type of viewport and do stuff
-         switch(pf_vp->viewport->getType())
+         // --- All viewports --- //
+         //surf_vp = dynamic_cast<SurfaceViewport*>(pf_vp->viewport);
+         //vprASSERT(surf_vp != NULL && "Could not cast supposedly surface display to SurfaceDisplay.");
+         view = cur_vp->getView();
+
+         if(Viewport::LEFT_EYE == view)
          {
-            // Surface viewport
-         case Viewport::SURFACE:
-            surf_vp = dynamic_cast<SurfaceViewport*>(pf_vp->viewport);
-            vprASSERT(surf_vp != NULL && "Could not cast supposedly surface display to SurfaceDisplay.");
-            view = surf_vp->getView();
+            updatePfProjection(pf_vp->chans[pfViewport::PRIMARY], cur_vp->getLeftProj());
+         }
+         else if(Viewport::RIGHT_EYE == view)
+         {
+            updatePfProjection(pf_vp->chans[pfViewport::PRIMARY], cur_vp->getRightProj());
+         }
+         else if(Viewport::STEREO == view)
+         {
+            updatePfProjection(pf_vp->chans[pfViewport::PRIMARY], cur_vp->getLeftProj());
+            updatePfProjection(pf_vp->chans[pfViewport::SECONDARY], cur_vp->getRightProj());
+         }
+         else
+         {
+            vprASSERT(false && "vjPfDrawManager::updateProjections(): We don't have a valid display type, don't know what to do");
+         }
 
-            if(Viewport::LEFT_EYE == view)
-            {
-               updatePfProjection(pf_vp->chans[pfViewport::PRIMARY], surf_vp->getLeftProj(),false);
-            }
-            else if(Viewport::RIGHT_EYE == view)
-            {
-               updatePfProjection(pf_vp->chans[pfViewport::PRIMARY], surf_vp->getRightProj(),false);
-            }
-            else if(Viewport::STEREO == view)
-            {
-               updatePfProjection(pf_vp->chans[pfViewport::PRIMARY], surf_vp->getLeftProj(),false);
-               updatePfProjection(pf_vp->chans[pfViewport::SECONDARY], surf_vp->getRightProj(),false);
-            }
-            else
-            {
-               vprASSERT(false && "vjPfDrawManager::updateProjections(): We don't have a valid display type, don't know what to do");
-            }
-            break;
+        // Sim viewport
+        if(cur_vp->isSimulator())
+        {
+            SimViewport* sim_vp = dynamic_cast<SimViewport*>(pf_vp->viewport);
+            vprASSERT(sim_vp != NULL && "Could not cast supposedly simulator display to SimDisplay.");
 
-            // Sim viewport
-         case Viewport::SIM:
-               sim_vp = dynamic_cast<SimViewport*>(pf_vp->viewport);
-               vprASSERT(sim_vp != NULL && "Could not cast supposedly simulator display to SimDisplay.");
-
-               updateSimulator(sim_vp);
-               updatePfProjection(pf_vp->chans[pfViewport::PRIMARY], sim_vp->getCameraProj(), true);
-               break;
-         default:
-            vprASSERT(false && "Viewport type not found");
-            break;
+            updateSimulator(sim_vp);
+        //    updatePfProjection(pf_vp->chans[pfViewport::PRIMARY], sim_vp->getCameraProj(), true);
          }
 
       }
@@ -866,7 +857,7 @@ void PfDrawManager::updateProjections()
 
 //! POST: chan has it's view matrix set to the Performer
 //+        equivalent of proj's projection data.
-void PfDrawManager::updatePfProjection(pfChannel* chan, Projection* proj, bool simulator)
+void PfDrawManager::updatePfProjection(pfChannel* chan, Projection* proj)  //, bool simulator)
 {
    vprDEBUG_BEGIN(vrjDBG_DRAW_MGR,vprDBG_HVERB_LVL) << "vjPfDrawManager::updatePfProjection: Entering. viewMat:\n"
                     << proj->mViewMat << std::endl << vprDEBUG_FLUSH;
@@ -886,12 +877,15 @@ void PfDrawManager::updatePfProjection(pfChannel* chan, Projection* proj, bool s
 
    chan->setViewMat(pfViewMat);
 
+   /*
    if(!simulator)
    {
+   */
       chan->setAutoAspect(PFFRUST_CALC_NONE);         // No auto aspect
       chan->setNearFar(proj->mFrustum[Frustum::VJ_NEAR], proj->mFrustum[Frustum::VJ_FAR]);
       chan->makePersp(proj->mFrustum[Frustum::VJ_LEFT], proj->mFrustum[Frustum::VJ_RIGHT],
                       proj->mFrustum[Frustum::VJ_BOTTOM], proj->mFrustum[Frustum::VJ_TOP]);
+   /*
    } else {
       CameraProjection* cam_proj = dynamic_cast<CameraProjection*>(proj);
       vprASSERT(cam_proj != NULL && "Trying to use non-camera projection for simulator");
@@ -899,6 +893,7 @@ void PfDrawManager::updatePfProjection(pfChannel* chan, Projection* proj, bool s
       chan->setNearFar(proj->mFrustum[Frustum::VJ_NEAR], proj->mFrustum[Frustum::VJ_FAR]);
       chan->setFOV(0.0f, cam_proj->mVertFOV);
    }
+   */
 
    vprDEBUG(vrjDBG_DRAW_MGR,7) << "Frustum: l:" << proj->mFrustum[Frustum::VJ_LEFT]
               << "   r: " << proj->mFrustum[Frustum::VJ_RIGHT]
@@ -1040,14 +1035,14 @@ void PfAppFunc(pfChannel *chan, void* chandata)
 // - Sets up the correct OGL drawing buffer
 // - Calls the app draw chan function
 //template <bool left_eye, bool right_eye, bool stereo, bool simulator>
-void PfDrawFunc(pfChannel *chan, void* chandata,bool left_eye, bool right_eye, bool stereo, bool simulator)
+void PfDrawFunc(pfChannel *chan, void* chandata,bool left_eye, bool right_eye, bool stereo)  // , bool simulator)
 {
    vprDEBUG_BEGIN(vrjDBG_DRAW_MGR, vprDBG_VERB_LVL) << "--- PfDrawFunc: Enter ---.\n" << vprDEBUG_FLUSH;
    vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_VERB_LVL) << "chan: " << chan << std::endl << vprDEBUG_FLUSH;
 
       // Select correct buffer to draw to
       // If we are in stereo and not a simulator
-   if(stereo && !simulator)
+   if(stereo)
    {
       vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_VERB_LVL) << "vjPfDrawFunc: Drawing stereo win\n" << vprDEBUG_FLUSH;
       if(left_eye)
@@ -1109,11 +1104,13 @@ void PfDrawFuncMonoBackbuffer(pfChannel *chan, void* chandata)
    PfDrawFunc(chan,chandata,false,false,false,false);
 }
 
+/*
 void PfDrawFuncSimulator(pfChannel* chan, void* chandata)
 {
    vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_VERB_LVL) << "--- PfDrawFuncSimulator: Enter ---.\n" << vprDEBUG_FLUSH;
    vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_VERB_LVL) << "chan: " << chan << std::endl << vprDEBUG_FLUSH;
    PfDrawFunc(chan,chandata,false,false,false,true);
 }
+*/
 
 };
