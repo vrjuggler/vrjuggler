@@ -2,7 +2,9 @@
 <class>TweekFrame</class>
 <comment>Python:from aboutbox import AboutBox
 Python:from orbconnectbox import OrbConnectBox
-Python:from globalprefsdialog import GlobalPrefsDialog</comment>
+Python:from orbdisconnectbox import OrbDisconnectBox
+Python:from globalprefsdialog import GlobalPrefsDialog
+Python:from net import SubjectManagerWrapper</comment>
 <widget class="QMainWindow">
     <property name="name">
         <cstring>TweekFrame</cstring>
