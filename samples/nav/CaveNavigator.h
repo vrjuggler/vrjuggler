@@ -122,7 +122,7 @@ public:
             mVNav.setMode( velocityNav::FLY );
             break;
          case ON:
-            mVNav.setMode( velocityNav::GROUND );
+            mVNav.setMode( velocityNav::DRIVE );
             break;
       }
    }
