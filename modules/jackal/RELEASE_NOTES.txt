@@ -43,15 +43,12 @@ Released: May 23, 2002
     ----------------------------------
 
     If you have custom XML-based config files that you want to update to
-    the new changes, a Perl script is available that will do an adequate
-    job of updating.  Send requests to patrick@vrjuggler.org.
+    the new changes, a Python script is available under tools/xmlupdate
+    that will do the job.  Please refer to the README.txt in that
+    directory for details.  At this time, the script only updates config
+    chunk files, not chunk descriptions.
 
-    The script does not handle multiple child chunks, unfortunately.  In
-    particular, this is a problem for files containing surface displays and
-    multiple viewports.  Updating by hand is pretty straightforward after
-    running the Perl script.
-
-    Even after running the Perl script and making hand modifications, it
+    Even after running the Python script and making hand modifications, it
     is recommended that config files be loaded and saved with the new
     VjControl.  You'll need to open each chunk individually (including
     embedded chunks) and click the "OK" button to commit any in-memory

@@ -1,5 +1,8 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- --------------------------------------------------------
+Jun-09-2002 patrickh    Added a Python 2 script (xmlupdate.py) that can convert
+                        config files created prior to version 0.2.0 to the new
+                        format.
 Jun-04-2002 patrickh    The process of making symlinks to the contents of
                         juggler/external/cppdom during the build process and
                         of installing CppDOM has been moved over to the
