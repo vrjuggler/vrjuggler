@@ -1,5 +1,8 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+
+[2.0 Alpha 2 released - 7.1.2003]==============================================
+Jul-01-2003 aronb       NEW VERSION: 1.1.143
 Jun-25-2003 patrickh    Allow the use of X11 and GLX on Mac OS X instead of
                         Carbon and the OpenGL framework.
                         NEW VERSION: 1.1.142
