@@ -76,8 +76,6 @@
   <file path="org/vrjuggler/tweek/beans/PanelBean.java"/>
   <file path="org/vrjuggler/tweek/PrefsDialog.java"/>
   <file path="org/vrjuggler/tweek/beans/ServiceBean.java"/>
-  <file path="org/vrjuggler/tweek/beans/TreeModelRefreshEvent.java"/>
-  <file path="org/vrjuggler/tweek/beans/TreeModelRefreshListener.java"/>
   <file path="org/vrjuggler/tweek/Tweek.java"/>
   <file path="org/vrjuggler/tweek/beans/TweekBean.java"/>
   <file path="org/vrjuggler/tweek/TweekCore.java"/>
