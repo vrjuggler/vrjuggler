@@ -28,6 +28,7 @@ use File::stat;
 use InstallOps;
 use xmlToc;
 use xmlToc_htmlTocActions;
+use xmlToc_htmlBookActions;
 
 #---------------------------------
 # InstallWeb.pm member vars:
@@ -687,8 +688,26 @@ sub processIncludes($)
       # ----------- BOOK include ----------- #
       elsif ($include_statement =~ m/$include_book_command/)
       {
-         # TODO:
-         print "==========================\n======================\nImplementME!\n\n====================\n";
+         my $xml_data  = '';
+         my $html_data = '';
+
+         print "[including book: \"$expandvars_filename\" ";
+
+         if ( xmlToc::load(\$xml_data, "$expandvars_filename") ) {
+            # "1" - jit file links are absolute because xmlToc then uses the
+            #       path to  include the file
+            # "0" - all other links are http, since we want the final html
+            #       output
+            xmlFilter(\$xml_data, "", $use_http_paths,
+                      $use_abs_paths_within_jit);
+            xmlToc_htmlBookActions::useme();
+            xmlToc::traverse(\$html_data, "$xml_data");
+         }
+
+         $$contents_ref =~ s/${include_statement}/${html_data}/gis;
+         print "]";
+
+         $includes_existed = 1;
       }
       
       # ----------- text file include ----------- #
