@@ -29,23 +29,15 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-
-
-
-package VjComponents.ConfigEditor;
-
+package org.vrjuggler.jccl.editorgui;
 
 import javax.swing.*;
 import java.io.File;
 
-import VjConfig.*;
-import VjControl.*;
-import VjComponents.ConfigEditor.ConfigModuleListener;
-import VjComponents.ConfigEditor.ConfigModuleEvent;
-import VjComponents.ConfigEditor.ConfigModule;
-import VjComponents.UI.ControlUIModule;
-import VjComponents.UI.Widgets.*;
-
+import org.vrjuggler.jccl.config.*;
+import org.vrjuggler.jccl.vjcontrol.*;
+import org.vrjuggler.jccl.vjcontrol.ui.ControlUIModule;
+import org.vrjuggler.jccl.vjcontrol.ui.widgets.*;
 
 /** A module that warns if you close a config or desc file without saving.
  *  This module monitors the need_to_save flag of ConfigChunkDB files and

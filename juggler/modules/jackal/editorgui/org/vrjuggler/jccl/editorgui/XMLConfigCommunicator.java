@@ -29,9 +29,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-
-
-package VjComponents.ConfigEditor;
+package org.vrjuggler.jccl.editorgui;
 
 import java.io.*;
 import javax.xml.parsers.*;
@@ -39,12 +37,10 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.w3c.dom.*;
 
-import VjConfig.*;
-import VjComponents.Network.DefaultNetCommunicator;
-import VjControl.*;
-import VjComponents.ConfigEditor.ConfigModule;
-import VjComponents.Network.NetworkModule;
-
+import org.vrjuggler.jccl.config.*;
+import org.vrjuggler.jccl.net.DefaultNetCommunicator;
+import org.vrjuggler.jccl.net.NetworkModule;
+import org.vrjuggler.jccl.vjcontrol.*;
 
 /** NetworkModule Communicator for VR Juggler configuration commands.
  *  This Communicator reads and writes the standard configuration
@@ -59,8 +55,8 @@ import VjComponents.Network.NetworkModule;
  */
 public class XMLConfigCommunicator
     extends DefaultNetCommunicator
-    implements ConfigCommunicator {
-
+    implements ConfigCommunicator
+{
 
     protected NetworkModule nc;
     protected DataOutputStream outstream;
@@ -81,8 +77,6 @@ public class XMLConfigCommunicator
         connected = false;
         config_handler = null;
     }
-
-
 
     public void setConfiguration (ConfigChunk ch) throws VjComponentException {
         component_name = ch.getName();
@@ -105,7 +99,6 @@ public class XMLConfigCommunicator
         }
     }
 
-
     public void initialize () throws VjComponentException {
         if (config_module == null)
             throw new VjComponentException (component_name + ": Initialized with unmet dependencies.");
@@ -115,12 +108,10 @@ public class XMLConfigCommunicator
             throw new VjComponentException (component_name + ": Couldn't get XML IO Handler.");
     }
 
-
     public void destroy () {
         if (connected)
             shutdownConnection ();
     }
-
 
     public void setNetworkModule (NetworkModule _nc) {
         nc = _nc;
@@ -129,7 +120,6 @@ public class XMLConfigCommunicator
         if (nc.isConnected())
             initConnection ();
     }
-
 
     /** For a new connection, requests chunkdesc and chunkdbs */
     public void initConnection () {
@@ -148,19 +138,16 @@ public class XMLConfigCommunicator
         getChunks();
     }
 
-
     /** Called when a connection is broken or close. */
     public void shutdownConnection () {
         connected = false;
         config_module.shutdownConnection (this);
     }
 
-
     /** Returns true for all stream identifiers we think we understand. */
     public boolean acceptsStreamIdentifier (String id) {
         return id.equalsIgnoreCase ("xml_config");
     }
-
 
     /** Reads a command stream from the network.  
      *  Returns control when it reaches the end of a single command.
@@ -187,8 +174,6 @@ public class XMLConfigCommunicator
             throw e1;
         }
     }
-
-
 
     protected void parseCommands (Element node) throws Exception {
         Node child;
@@ -302,7 +287,6 @@ public class XMLConfigCommunicator
         }
     }
 
-
     //----------------------- Send Commands --------------------------
 
     public boolean getChunks () {
@@ -326,8 +310,6 @@ public class XMLConfigCommunicator
         }
     }
 
-
-
     public boolean sendChunk (ConfigChunk ch) {
 	if (!connected) {
             Core.consoleErrorMessage ("Net", "XMLConfigCommunicator send command requested, but no connection.");
@@ -349,7 +331,6 @@ public class XMLConfigCommunicator
         }
     }
 
-
     public boolean sendChunks (ConfigChunkDB db) {
         if (!connected) {
             Core.consoleErrorMessage ("Net", "XMLConfigCommunicator send command requested, but no connection.");
@@ -370,8 +351,6 @@ public class XMLConfigCommunicator
             }
         }
     }
-
-
 
     public boolean removeChunks (ConfigChunkDB db) {
         if (!connected) {
@@ -400,8 +379,6 @@ public class XMLConfigCommunicator
         }
     }
 
-
-
     public boolean removeChunk (ConfigChunk ch) {
         if (!connected) {
             Core.consoleErrorMessage ("Net", "XMLConfigCommunicator send command requested, but no connection.");
@@ -427,7 +404,6 @@ public class XMLConfigCommunicator
         }
     }
 
-
     public boolean getChunkDescs () {
 	/* the idea behind this function is to send a msg to the server
 	 * requesting all ChunkDescs, which we'll put into the DB.
@@ -450,8 +426,6 @@ public class XMLConfigCommunicator
             }
         }
     }
-
-
 
     public boolean sendChunkDesc (ChunkDesc d) {
 	/* sends a ChunkDesc to the server. */
@@ -480,8 +454,6 @@ public class XMLConfigCommunicator
         }
     }
 
-
-
     public boolean removeChunkDescs (String s) {
         if (!connected) {
             Core.consoleErrorMessage ("Net", "XMLConfigCommunicator send command requested, but no connection.");
@@ -508,10 +480,7 @@ public class XMLConfigCommunicator
         }
     }
 
-
     public boolean requestUpdate () {
         return getChunks();
     }
-
-
 }

@@ -29,16 +29,14 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-
-
-package VjComponents.ConfigEditor;
+package org.vrjuggler.jccl.editorgui;
 
 import java.awt.event.*;
-import java.util.*;
 import java.io.IOException;
+import java.util.*;
 
-import VjControl.Core;
-import VjConfig.ConfigStreamTokenizer;
+import org.vrjuggler.jccl.config.ConfigStreamTokenizer;
+import org.vrjuggler.jccl.vjcontrol.Core;
 
 public class OrgTreeElem {
 

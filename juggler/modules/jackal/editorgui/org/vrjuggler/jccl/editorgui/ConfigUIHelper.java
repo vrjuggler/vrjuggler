@@ -29,10 +29,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-
-
-package VjComponents.ConfigEditor;
-
+package org.vrjuggler.jccl.editorgui;
 
 import java.awt.event.*;
 import java.net.URL;
@@ -41,20 +38,13 @@ import javax.swing.event.*;
 import java.util.Vector;
 import java.util.HashMap;
 
-import VjComponents.UI.*;
-import VjComponents.UI.Widgets.ChildFrame;
-import VjComponents.UI.Widgets.GenericEditorFrame;
-import VjComponents.UI.Widgets.EasyMenuBar;
-import VjComponents.ConfigEditor.ChunkDescUI.ChunkDescPanel;
-import VjControl.*;
-import VjComponents.ConfigEditor.ConfigChunkPanel;
-import VjComponents.UI.EditorPanel;
-import VjComponents.ConfigEditor.ConfigModule;
-import VjComponents.ConfigEditor.ConfigModuleEvent;
-import VjComponents.ConfigEditor.ConfigModuleListener;
-import VjConfig.*;
-
-
+import org.vrjuggler.jccl.config.*;
+import org.vrjuggler.jccl.editorgui.chunkdescui.ChunkDescPanel;
+import org.vrjuggler.jccl.vjcontrol.*;
+import org.vrjuggler.jccl.vjcontrol.ui.*;
+import org.vrjuggler.jccl.vjcontrol.ui.widgets.ChildFrame;
+import org.vrjuggler.jccl.vjcontrol.ui.widgets.EasyMenuBar;
+import org.vrjuggler.jccl.vjcontrol.ui.widgets.GenericEditorFrame;
 
 /** Helper for dealing with ConfigChunk and ChunkDesc files.
  *  This provides a variety of services:
@@ -128,7 +118,7 @@ public class ConfigUIHelper
                     ch = default_panel_chunk;
                 String cn = ch.getValueFromToken ("ClassName", 0).getString();
                  if (cn == null)
-                     cn = "VjComponents.ConfigEditor.ConfigChunkUI.DefaultConfigChunkPanel";
+                     cn = "org.vrjuggler.jccl.editorgui.configchunkui.DefaultConfigChunkPanel";
                 p = (ConfigChunkPanel)Core.component_factory.createComponent(cn);
                 p.setConfiguration (ch);
                 p.initialize ();
@@ -300,7 +290,7 @@ public class ConfigUIHelper
     public VjComponent addConfig (ConfigChunk ch) throws VjComponentException {
 
         String classname = ch.getValueFromToken ("classname", 0).getString();
-        if (Core.component_factory.classSupportsInterface (classname, VjComponents.ConfigEditor.ConfigChunkPanel.class)) {
+        if (Core.component_factory.classSupportsInterface (classname, ConfigChunkPanel.class)) {
             return configchunkpanel_factory.addConfig (ch);
         }
         else {
@@ -317,7 +307,7 @@ public class ConfigUIHelper
     public void openChunkFrame (ConfigChunkDB chunkdb, ConfigChunk ch) {
 	if (ch == null)
 	    return;
-	GenericEditorFrame f = (GenericEditorFrame)getChildFrameMatching ("VjComponents.ConfigEditor.ConfigChunkPanel", chunkdb, ch);
+	GenericEditorFrame f = (GenericEditorFrame)getChildFrameMatching ("org.vrjuggler.jccl.editorgui.ConfigChunkPanel", chunkdb, ch);
 	if (f == null) {
             ConfigChunkPanel p = configchunkpanel_factory.createConfigChunkPanel (ch.getDescToken());
             if (p != null) {
@@ -338,7 +328,7 @@ public class ConfigUIHelper
     public void openDescFrame (ChunkDescDB db, ChunkDesc desc, boolean editable) {
         if (desc == null)
             return;
-        GenericEditorFrame f = (GenericEditorFrame)getChildFrameMatching("VjComponents.ConfigEditor.chunkdesc.ChunkDescPanel", db, desc);
+        GenericEditorFrame f = (GenericEditorFrame)getChildFrameMatching("org.vrjuggler.jccl.editorgui.chunkdescui.ChunkDescPanel", db, desc);
         if (f == null) {
             ChunkDescPanel p = new ChunkDescPanel (desc, db, this, editable);
             if (p != null) {

@@ -29,25 +29,19 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
+package org.vrjuggler.jccl.editorgui;
 
-
-package VjComponents.ConfigEditor;
-
-import java.io.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.*;
 import javax.swing.*;
 
-import VjControl.*;
-import VjControl.VjComponent;
-import VjConfig.*;
-import VjComponents.UI.*;
-import VjComponents.UI.PlugPanel;
-import VjComponents.UI.ControlUIModule;
+import org.vrjuggler.jccl.vjcontrol.*;
+import org.vrjuggler.jccl.config.*;
+import org.vrjuggler.jccl.vjcontrol.ui.*;
 
 /** PlugPanel for editing a pair of ConfigChunkDB files side-by-side.
  * 
- *  @author Christopher Just
  *  @version $Revision$
  */
 public class ConfigurePane extends JSplitPane 

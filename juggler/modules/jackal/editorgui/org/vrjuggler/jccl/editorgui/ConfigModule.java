@@ -29,22 +29,14 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
+package org.vrjuggler.jccl.editorgui;
 
-
-
-
-package VjComponents.ConfigEditor;
-
-import java.lang.String;
-import java.lang.StringBuffer;
-import java.util.*;
 import java.io.*;
+import java.util.*;
 import javax.swing.*;
 
-import VjConfig.*;
-import VjControl.*;
-import VjComponents.ConfigEditor.ConfigCommunicator;
-
+import org.vrjuggler.jccl.config.*;
+import org.vrjuggler.jccl.vjcontrol.*;
 
 /** VjControl core module for viewing/editing config & ChunkDesc files.
  *  This module stores a set of ConfigChunkDB objects and a set of
@@ -62,7 +54,6 @@ import VjComponents.ConfigEditor.ConfigCommunicator;
  *  is a file or network connection.
  *
  *  @version $Revision$
- *
  */
 public class ConfigModule extends DefaultCoreModule {
 

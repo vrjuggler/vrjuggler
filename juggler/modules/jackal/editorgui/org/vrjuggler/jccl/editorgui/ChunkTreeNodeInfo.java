@@ -29,11 +29,9 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
+package org.vrjuggler.jccl.editorgui;
 
-
-package VjComponents.ConfigEditor;
-
-import VjConfig.*;
+import org.vrjuggler.jccl.config.*;
 
 public class ChunkTreeNodeInfo {
 

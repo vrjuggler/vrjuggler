@@ -29,9 +29,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-
-
-package VjComponents.ConfigEditor;
+package org.vrjuggler.jccl.editorgui;
 
 import java.awt.*;
 import javax.swing.*;

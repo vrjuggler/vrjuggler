@@ -29,13 +29,11 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
+package org.vrjuggler.jccl.editorgui;
 
-
-package VjComponents.ConfigEditor;
-
-import VjConfig.ConfigChunk;
-import VjConfig.ConfigChunkDB;
-import VjComponents.UI.EditorPanel;
+import org.vrjuggler.jccl.config.ConfigChunk;
+import org.vrjuggler.jccl.config.ConfigChunkDB;
+import org.vrjuggler.jccl.vjcontrol.ui.EditorPanel;
 
 /** A VjComponent that displays and edits ConfigChunks.
  *  Interface for any panel that registers with the componentfactory as
@@ -43,7 +41,6 @@ import VjComponents.UI.EditorPanel;
  *  interface, the new display class must also be derived from JComponent,
  *  and must have a constructor that takes no arguments.
  *
- *  @author Christopher Just
  *  @version $Revision$
  */
 public interface ConfigChunkPanel extends EditorPanel { 

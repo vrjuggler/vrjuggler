@@ -29,19 +29,15 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-
-
-package VjComponents.ConfigEditor;
+package org.vrjuggler.jccl.editorgui;
 
 import java.io.*;
 
-import VjConfig.*;
-import VjComponents.Network.DefaultNetCommunicator;
-import VjControl.Core;
-import VjControl.VjComponent;
-import VjComponents.ConfigEditor.ConfigModule;
-import VjComponents.Network.NetworkModule;
-
+import org.vrjuggler.jccl.config.*;
+import org.vrjuggler.jccl.net.DefaultNetCommunicator;
+import org.vrjuggler.jccl.net.NetworkModule;
+import org.vrjuggler.jccl.vjcontrol.Core;
+import org.vrjuggler.jccl.vjcontrol.VjComponent;
 
 /** NetworkModule Communicator interface for VR Juggler configuration
  *  commands.  We've got two communications protocols (the old standard
