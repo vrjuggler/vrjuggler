@@ -15,10 +15,8 @@ Builder: JExplorerBuilder V 1. 0. 7
     < folder title="Manuals/Guides" ref=1 info="Online documentation.  Click this for an overview." link="${DOCUMENTATION}/index.html" rlink="${ROOT}/books.html" rtarget="${NEW_WINDOW}" image="Book_Closed.gif" >
       <!-- install-web include ${LAYOUT}/books-include.xml -->
     </folder>
-    <folder title="Publications" link="${PUBLICATIONS}/index.html"  info="Papers, Articles, and Press Releases" image="Leaf_Script2.gif" imagetwo="Leaf_Write.gif">
-           <!-- install-web include ${PUBLICATIONS}/toc.xml -->
-    </folder>
 
+    < item title="Publications" link="${PUBLICATIONS}/index.html" info="Papers, Articles, and Presentations" image="Leaf_Script2.gif" imagetwo="Leaf_Write.gif" >
     < item title="Gallery" link="${GALLERY}/index.html" target="Body" rtarget="NewWindow" info="Screenshots, success stories, and other fun stuff to look at." image="Kamera.gif" >
     < item title="User Community" link="contact.info/usercommunity.html"  info="Can't find it in the Books?  Reach out and ask someone." image="Chat.gif" >
     < item title="Download" link="download/index.html" info="Download VR Juggler library in source or binary form." image="Inbox.gif" >
