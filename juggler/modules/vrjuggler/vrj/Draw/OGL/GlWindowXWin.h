@@ -102,7 +102,7 @@ protected:
     * Called with any XEvents to process from X-win keyboard.
     * Called from seperate process (event window device update).
     */
-   virtual void processEvent(::XEvent event);
+   virtual void processEvent(XEvent event);
 
 private:
    ::Display*     mXDisplay;
