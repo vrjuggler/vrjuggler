@@ -192,6 +192,40 @@ AC_DEFUN(VJ_COMPILER_SETUP,
 
 dnl ---------------------------------------------------------------------------
 dnl Usage:
+dnl     VJ_STRIP_DUPLICATE_ARGS(variable, arg-list)
+dnl
+dnl Arguments:
+dnl     variable - The name of the variable that will contain the resulting
+dnl                stripped list of arguments.  This should NOT begin with a $
+dnl                (dollar sign) character.
+dnl     arg-list - The list of arguments from which duplicates will be removd.
+dnl ---------------------------------------------------------------------------
+AC_DEFUN([VJ_STRIP_DUPLICATE_ARGS],
+[
+   changequote(<<, >>)
+
+   $1=<<`echo $2 | awk '{
+   j = 0;
+   for ( i = 1; i <= NF; i++ )
+   {
+      if ( ! valid_list[$i] )
+      {
+         valid_list[$i] = 1;
+         arg_list[j] = $i;
+         j++;
+      }
+   }
+   result = arg_list[0]
+   for ( i = 1; i < j; i++ )
+      result = sprintf("%s %s", result, arg_list[i]);
+   print result
+}' -`>>
+
+   changequote([, ])
+])
+
+dnl ---------------------------------------------------------------------------
+dnl Usage:
 dnl     VJ_MTREE_GEN(file-prefix, path, platform [, ISA])
 dnl ---------------------------------------------------------------------------
 AC_DEFUN(VJ_MTREE_LIB_GEN,
