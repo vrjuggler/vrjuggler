@@ -7,6 +7,8 @@ SRCDIR = ..
 SRC = $(SRCDIR)/Sync $(SRCDIR)/Config $(SRCDIR)/Input $(SRCDIR)/Kernel	\
       $(SRCDIR)/SharedMem $(SRCDIR)/Threads $(SRCDIR)/Environment	\
       $(SRCDIR)/Math $(SRCDIR)/Performance
+#SRC = $(SRCDIR)/Config $(SRCDIR)/Math
+
 SRC_EX = ExampleClass.h ExampleClass.C
 OUT_INT = ./internal_doc
 OUT_PUB = ./public_doc
