@@ -36,6 +36,7 @@
 
 
 #include <jccl/Plugins/PerformanceMonitor/PerformanceMonitor.h>
+#include <jccl/Plugins/PerformanceMonitor/PerformanceCategories.h>
 #include <jccl/JackalServer/JackalServer.h>
 #include <jccl/JackalServer/Connect.h>
 #include <jccl/Plugins/PerformanceMonitor/PerfCommand.h>
@@ -215,7 +216,7 @@ bool PerformanceMonitor::configCanHandle(ConfigChunkPtr chunk) {
                 perf_target->removePeriodicCommand (i->command);
         }
 
-        LabeledPerfDataBuffer::deactivate();
+        PerformanceCategories::instance()->deactivate();
     }
 
 
@@ -261,7 +262,7 @@ bool PerformanceMonitor::configCanHandle(ConfigChunkPtr chunk) {
             delete (*val);
         }
 
-        LabeledPerfDataBuffer::activate();
+        PerformanceCategories::instance()->activate();
     }
 
 
