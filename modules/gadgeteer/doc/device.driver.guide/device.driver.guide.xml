@@ -7,7 +7,7 @@
 
     <subtitle>Device Driver Authoring Guide</subtitle>
 
-    <releaseinfo>Version 0.2</releaseinfo>
+    <releaseinfo>Version 0.3</releaseinfo>
 
     <pubdate>$Date$</pubdate>
   </bookinfo>
@@ -1051,48 +1051,48 @@ mThread = new vpr::Thread(functor);</programlisting>
           When this type is used with a special <quote>factory function</quote>
           called <function>initDevice()</function>, the driver can be used as
           a plug-in to the Input Manager. While there are some drivers that
-          cannot currently be loaded dynamically, we declare
-          <function>initDevice()</function> in <filename>ButtonDevice.h</filename>
-          as follows:</para>
+          cannot currently be loaded dynamically, for those that can, we
+          implement an <quote>entry point</quote> function named
+          <function>initDevice(). </function>Because we are dealing with C++
+          code, we must indicate to the compiler that this is a C function, so
+          no name mangling should occur when its symbol table entry is
+          created. We do this by wrapping the function body in an
+          <literal>extern &#34;C&#34;</literal> block. For cross-platform
+          plug-in capabilities, we use the <symbol>GADGET_DRIVER_EXPORT()</symbol>
+          macro. On Win32 systems, this will add the appropriate type
+          modifiers to declare <function>initDevice()</function> as a function
+          exported by the DLL that will be compiled. For other platforms, the
+          macro simply evaluates to the <type>void</type> type. (These details
+          are handled within the <filename>DriverConfig.h</filename> header.)</para>
 
-          <programlisting>#include &#60;gadget/Devices/DriverConfig.h&#62;
-
-namespace gadget
-{
-   class InputManager;
-}
-
-extern &#34;C&#34; GADGET_DRIVER_API(void) initDevice(gadget::InputManager* inputMgr);</programlisting>
-
-          <para>Because we are dealing with C++ code, we must indicate to the
-          compiler that this is a C function, so no name mangling should occur
-          when its symbol table entry is created. For cross-platform plug-in
-          capabilities, we use the <symbol>GADGET_DRIVER_API()</symbol> macro.
-          On Win32 systems, this will add the appropriate type modifiers to
-          declare <function>initDevice()</function> as a function exported by
-          the DLL that will be compiled. For other platforms, the macro simply
-          evaluates to the <type>void</type> type. (These details are handled
-          within the <filename>DriverConfig.h</filename> header.)</para>
-
-          <para>The implementation of <function>initDevice()</function> will
+          <para>With all of that, we can now write the body for
+          <function>initDevice()</function>. No declaration in a header file
+          is needed because this function will be looked up dynamically at run
+          time. The implementation of <function>initDevice()</function> will
           appear in <filename>ButtonDevice.cpp</filename> as follows:</para>
 
           <programlisting>#include &#60;gadget/Devices/DriverConfig.h&#62;
 #include &#60;gadget/Type/DeviceConstructor.h&#62;
 #include &#34;ButtonDevice.h&#34;
 
-void initDevice(gadget::InputManager* inputMgr)
+extern &#34;C&#34;
+{
+
+GADGET_DRIVER_EXPORT(void) initDevice(gadget::InputManager* inputMgr)
 {
    new gadget::DeviceConstructor&#60;ButtonDevice&#62;(inputMgr);
+}
+
 }</programlisting>
 
           <para>The new device driver can be compiled into a standalone
-          library (<filename></filename><filename>.so</filename>, or
-          <filename>.dll</filename> are the usual suffix choices for
+          library (<filename>.so</filename>, <filename>.dll</filename>, or
+          <filename>.dylib</filename> are the usual suffix choices for
           plug-ins). This library will act as the Input Manager plug-in. In
           this way, there is no need to modify the Gadgeteer source code to
           add a new driver. Thus, the driver code is collected into a cohesive
-          unit that can be distributed as a plug-in for Gadgeteer.</para>
+          unit that can be distributed as a plug-in (in other words, a
+          component) for Gadgeteer.</para>
 
           <para>Runtime driver registration depends on the Input Manager
           configuration. Assuming a UNIX-like environment, the Input Manager
@@ -1100,15 +1100,23 @@ void initDevice(gadget::InputManager* inputMgr)
           configuration file:</para>
 
           <programlisting>&#60;?xml version=&#34;1.0&#34; encoding=&#34;UTF-8&#34;?&#62;
-&#60;?org-vrjuggler-jccl-settings config.db.version=&#34;2.1&#34; ?&#62;
-&#60;ConfigChunkDB&#62;
-  &#60;InputManager name=&#34;Input Manager&#34;&#62;
-    &#60;driver&#62;${HOME}/ButtonDevice_drv.so&#60;/driver&#62;
-  &#60;/InputManager&#62;
-&#60;/ConfigChunkDB&#62;</programlisting>
+&#60;?org-vrjuggler-jccl-settings configuration.version=&#34;3.0&#34;?&#62;
+&#60;configuration
+  xmlns=&#34;http://www.vrjuggler.org/jccl/xsd/3.0/configuration&#34;
+  name=&#34;Configuration&#34;
+  xmlns:xsi=&#34;http://www.w3.org/2001/XMLSchema-instance&#34;
+  xsi:schemaLocation=&#34;http://www.vrjuggler.org/jccl/xsd/3.0/configuration http://www.vrjuggler.org/jccl/xsd/3.0/configuration.xsd&#34;&#62;
+   &#60;elements&#62;
+      &#60;input_manager name=&#34;Button Device Input Manager&#34; version=&#34;2&#34;&#62;
+         &#60;driver_path&#62;${HOME}&#60;/driver_path&#62;
+         &#60;driver&#62;ButtonDevice_drv&#60;/driver&#62;
+      &#60;/input_manager&#62;
+   &#60;/elements&#62;
+&#60;/configuration&#62;</programlisting>
 
-          <para>Here, the driver plug-in is named <filename>ButtonDevice_drv.so</filename>,
-          and it is found in the user&#39;s home directory.</para>
+          <para>Here, the driver plug-in is named <filename>ButtonDevice_drv.so</filename>
+          (or some other platform-specific name), and it is found in the
+          user&#39;s home directory.</para>
         </section>
       </section>
     </chapter>
@@ -1142,48 +1150,45 @@ void initDevice(gadget::InputManager* inputMgr)
         button device, the definition file will be the following:</para>
 
         <example id="MyButtonDevice.desc.example">
-          <title><filename>ButtonDevice.desc</filename>: Configuration
+          <title><filename>button_device.jdef</filename>: Configuration
           Definition File for Simple Button Device</title>
 
           <programlisting>&#60;?xml version=&#34;1.0&#34; encoding=&#34;UTF-8&#34;?&#62;
-&#60;?org-vrjuggler-jccl-settings desc.db.version=&#34;2.2&#34;?&#62;
-&#60;ChunkDescDB&#62;
-  &#60;ChunkDesc token=&#34;ButtonDevice&#34; name=&#34;My Button Device&#34;&#62;                <co
+&#60;?org-vrjuggler-jccl-settings definition.version=&#34;3.0&#34;?&#62;
+&#60;definition xmlns=&#34;http://www.vrjuggler.org/jccl/xsd/3.0/definition&#34;
+            xmlns:xsi=&#34;http://www.w3.org/2001/XMLSchema-instance&#34;
+            xsi:schemaLocation=&#34;http://www.vrjuggler.org/jccl/xsd/3.0/definition http://www.vrjuggler.org/jccl/xsd/3.0/definition.xsd&#34;
+            name=&#34;button_device&#34;&#62;                                    <co
 id="MyButtonDevice.desc.token.decl"
 linkends="MyButtonDevice.desc.token.decl.co" />
-    &#60;category&#62;Devices&#60;/category&#62;
-    &#60;help&#62;Configuration for simple one-button device.&#60;/help&#62;
-    &#60;PropertyDesc token=&#34;port&#34; name=&#34;Port&#34; type=&#34;string&#34; variable=&#34;0&#34;&#62;    <co
+   &#60;definition_version version=&#34;1&#34; label=&#34;My Button Device&#34;&#62;
+      &#60;help&#62;Configuration for simple one-button device.&#60;/help&#62;
+      &#60;parent&#62;digital_device&#60;/parent&#62;
+      &#60;category&#62;/Devices/Digital&#60;/category&#62;
+      &#60;property valuetype=&#34;string&#34; variable=&#34;false&#34; name=&#34;port&#34;&#62;     <co
 id="MyButtonDevice.desc.port.decl" linkends="MyButtonDevice.desc.port.decl.co" />
-      &#60;help&#62;Serial port to which this device is connected.&#60;/help&#62;
-      &#60;item label=&#34;Port&#34; defaultvalue=&#34;/dev/ttyd1&#34; /&#62;
-    &#60;/PropertyDesc&#62;
-    &#60;PropertyDesc token=&#34;baud&#34; name=&#34;Baud Rate&#34; type=&#34;int&#34; variable=&#34;0&#34;&#62;  <co
+         &#60;help&#62;Serial port to which this device is connected.&#60;/help&#62;
+         &#60;value label=&#34;Port&#34; defaultvalue=&#34;/dev/ttyd1&#34;/&#62;
+      &#60;/property&#62;
+      &#60;property valuetype=&#34;integer&#34; variable=&#34;false&#34; name=&#34;baud&#34;&#62;    <co
 id="MyButtonDevice.desc.baud.decl" linkends="MyButtonDevice.desc.baud.decl.co" />
-      &#60;help&#62;Serial port speed.&#60;/help&#62;
-      &#60;item label=&#34;Baud Rate&#34; defaultvalue=&#34;38400&#34; /&#62;
-    &#60;/PropertyDesc&#62;
-    &#60;PropertyDesc name=&#34;Host Node&#34; token=&#34;deviceHost&#34; type=&#34;chunk&#34;        <co
-id="MyButtonDevice.desc.hostelement.decl"
-linkends="MyButtonDevice.desc.hostelement.decl.co" />
-                  variable=&#34;0&#34;&#62;
-      &#60;help&#62;Points to the machine that the device is physically
-            connected to.&#60;/help&#62;
-      &#60;item label=&#34;Host Node&#34; defaultvalue=&#34;&#34; /&#62;
-      &#60;allowedtype&#62;MachineSpecific&#60;/allowedtype&#62;
-    &#60;/PropertyDesc&#62;
-  &#60;/ChunkDesc&#62;
-&#60;/ChunkDescDB&#62;</programlisting>
+         &#60;help&#62;Serial port speed.&#60;/help&#62;
+         &#60;value label=&#34;Baud&#34; defaultvalue=&#34;38400&#34;/&#62;
+      &#60;/property&#62;
+      &#60;upgrade_transform/&#62;
+   &#60;/definition_version&#62;
+&#60;/definition&#62;</programlisting>
 
           <calloutlist>
             <callout arearefs="MyButtonDevice.desc.token.decl"
             id="MyButtonDevice.desc.token.decl.co">
               <para>This begins the definition for our device type. The
-              <literal>token</literal> attribute must be named as a valid XML
-              tag because it will be used as such in a configuration file. The
-              <literal>name</literal> attribute is a free-form string that
-              will be presented to the user of VRJConfig, and as such, it
-              should be a meaningful identifier.</para>
+              <literal>name</literal> attribute must be named as a valid XML
+              tag because it will be used as such in a configuration file. A
+              free-form, human-friendly string may be specified in the
+              <literal>label</literal> attribute of the <sgmltag>definition_version</sgmltag>
+              element. This string will be presented to the user of VRJConfig,
+              and as such, it should be a meaningful identifier.</para>
             </callout>
 
             <callout arearefs="MyButtonDevice.desc.port.decl"
@@ -1193,41 +1198,38 @@ linkends="MyButtonDevice.desc.hostelement.decl.co" />
               connected. The serial port name will be interpreted as a string,
               and it has the default value of <quote>/dev/ttyd1</quote>. In
               the case of our simple button driver, there is no serial port,
-              but we include this property description to demonstrate how the
-              configuration definition works.</para>
+              but we include this property definition to demonstrate how the
+              whole configuration definition works.</para>
             </callout>
 
             <callout arearefs="MyButtonDevice.desc.baud.decl"
             id="MyButtonDevice.desc.baud.decl.co">
               <para>This declares the <quote>baud</quote> property that will
-              provide the baud rate for the serial port to which the hardware
-              is connected. The baud rate value will be interpreted as an
-              integer, and it has the default value of 38400 (kbps). In the
-              case of our simple button driver, there is no serial port, but
-              we include this property description to demonstrate how the
-              configuration definition works.</para>
-            </callout>
-
-            <callout arearefs="MyButtonDevice.desc.hostelement.decl"
-            id="MyButtonDevice.desc.hostelement.decl.co">
-              <para>Finally, we have the <quote>deviceHost</quote> property
-              that is used in conjunction with the Remote Input Manager. All
-              drivers that may be used with the Remote Input Manager must
-              define this property. Refer to the <emphasis>Cluster Juggler
-              Guide</emphasis> for more information about this property.</para>
+              provide the baud setting for the serial port to which the
+              hardware is connected. The baud value will be interpreted as an
+              integer, and it has the default value of 38400 (kilobits per
+              second). In the case of our simple button driver, there is no
+              serial port, but we include this property definition to
+              demonstrate how the whole configuration definition works.</para>
             </callout>
           </calloutlist>
         </example>
 
+        <note>
+          <para>In the above configuration definition, we do not declare a
+          <quote>device_host</quote> property, which is used in conjunction
+          with the Remote Input Manager. This is not necessary because we have
+          declared our parent type to be <quote>digital_device</quote>, and we
+          inherit its property definitions. All drivers that may be used with
+          the Remote Input Manager must have the <quote>device_host</quote>
+          property, and configuration definition inheritance ensures that this
+          will be the case. Refer to the <emphasis>Cluster Juggler Guide</emphasis>
+          for more information about this property.</para>
+        </note>
+
         <para>For a more complex device, a more complex configuration
         definition may be needed. Again, the VRJConfig configuration
         definition editor simplifies the creation of this definition.</para>
-
-        <note>
-          <para>If the new driver is for a positional device, its name must be
-          added to the enumeration in the <varname>PosProxy</varname>
-          configuration definition. VRJConfig aids this addition.</para>
-        </note>
 
         <para>Once the configuration definition is in place, a new
         configuration element can be created. Once again, VRJConfig makes the
@@ -1235,45 +1237,40 @@ linkends="MyButtonDevice.desc.hostelement.decl.co" />
         configures the one-button device we have been using thus far:</para>
 
         <example id="MyButtonDevice.config.example">
-          <title><filename>ButtonDevice.config</filename>: Configuration File
+          <title><filename>button_device.jconf</filename>: Configuration File
           for Simple Button Device</title>
 
           <programlisting>&#60;?xml version=&#34;1.0&#34; encoding=&#34;UTF-8&#34;?&#62;
-&#60;?org-vrjuggler-jccl-settings config.db.version=&#34;2.1&#34;?&#62;
-&#60;?org-vrjuggler-jccl-includedesc file=&#34;ButtonDevice.desc&#34;?&#62;   <co
-id="MyButtonDevice.config.desc.inc"
-linkends="MyButtonDevice.config.desc.inc.co" />
-&#60;ConfigChunkDB&#62;
-  &#60;InputManager name=&#34;Input Manager&#34;&#62;                         <co
+&#60;?org-vrjuggler-jccl-settings configuration.version=&#34;3.0&#34;?&#62;
+&#60;configuration xmlns=&#34;http://www.vrjuggler.org/jccl/xsd/3.0/configuration&#34;
+               name=&#34;Configuration&#34;
+               xmlns:xsi=&#34;http://www.w3.org/2001/XMLSchema-instance&#34;
+               xsi:schemaLocation=&#34;http://www.vrjuggler.org/jccl/xsd/3.0/configuration http://www.vrjuggler.org/jccl/xsd/3.0/configuration.xsd&#34;&#62;
+   &#60;elements&#62;
+      &#60;input_manager name=&#34;Button Device Input Manager&#34;
+                     version=&#34;2&#34;&#62;                             <co
 id="MyButtonDevice.config.InputManager"
 linkends="MyButtonDevice.config.driver.co" />
-    &#60;driver&#62;${HOME}/ButtonDevice_drv.so&#60;/driver&#62;              <co
-id="MyButtonDevice.config.driver" linkends="MyButtonDevice.config.driver.co" />
-  &#60;/InputManager&#62;
-  &#60;ButtonDevice name=&#34;Button Device&#34;&#62;                         <co
+         &#60;driver_path&#62;${HOME}&#60;/driver_path&#62;
+         &#60;driver&#62;ButtonDevice_drv&#60;/driver&#62;
+      &#60;/input_manager&#62;
+      &#60;button_device name=&#34;Button Device&#34; version=&#34;1&#34;&#62;        <co
 id="MyButtonDevice.config.ButtonDevice"
 linkends="MyButtonDevice.config.ButtonDevice.co" />
-    &#60;port&#62;/dev/ttyd4&#60;/port&#62;                                   <co
+         &#60;port&#62;/dev/ttyd4&#60;/port&#62;                              <co
 id="MyButtonDevice.config.port.value"
 linkends="MyButtonDevice.config.port.value.co" />
-    &#60;baud&#62;9600&#60;/baud&#62;                                         <co
+         &#60;baud&#62;9600&#60;/baud&#62;                                    <co
 id="MyButtonDevice.config.baud.value"
 linkends="MyButtonDevice.config.baud.value.co" />
-    &#60;deviceHost /&#62;                                            <co
+         &#60;device_host /&#62;                                      <co
 id="MyButtonDevice.config.hostelement.value"
 linkends="MyButtonDevice.config.hostelement.value.co" />
-  &#60;/ButtonDevice&#62;
-&#60;/ConfigChunkDB&#62;</programlisting>
+      &#60;/button_device&#62;
+   &#60;/elements&#62;
+&#60;/configuration&#62;</programlisting>
 
           <calloutlist>
-            <callout arearefs="MyButtonDevice.config.desc.inc"
-            id="MyButtonDevice.config.desc.inc.co">
-              <para>This processing directive tells the configuration file
-              handler to load the named file. Since no path is given, the
-              directory where <filename>ButtonDevice.config</filename> is
-              located is searched for <filename>ButtonDevice.desc</filename>.</para>
-            </callout>
-
             <callout
             arearefs="MyButtonDevice.config.InputManager MyButtonDevice.config.driver"
             id="MyButtonDevice.config.driver.co">
@@ -1287,10 +1284,11 @@ linkends="MyButtonDevice.config.hostelement.value.co" />
             id="MyButtonDevice.config.ButtonDevice.co">
               <para>Next, we have an instance of the configuration definition
               shown in <xref linkend="MyButtonDevice.desc.example" />. As
-              described above, <sgmltag>&#60;ButtonDevice&#62;</sgmltag> is
-              named based on the <literal>token</literal> attribute. The
-              <literal>name</literal> attribute here gives this instance a
-              unique name.</para>
+              described above, <sgmltag>&#60;button_device&#62;</sgmltag> is
+              named based on the <literal>name</literal> attribute of the
+              <sgmltag>definition</sgmltag> element in our configuration
+              definition file. The <literal>name</literal> attribute here
+              gives this <emphasis>instance</emphasis> a unique identifier.</para>
             </callout>
 
             <callout arearefs="MyButtonDevice.config.port.value"
@@ -1299,13 +1297,13 @@ linkends="MyButtonDevice.config.hostelement.value.co" />
               above, our simple button device does not actually use the serial
               port, but this demonstrates how the property value is used in a
               configuration file. If no value were given here, the default
-              value set in <filename>ButtonDevice.desc</filename> would be
+              value set in b<filename>utton_device.jdef</filename> would be
               used.</para>
             </callout>
 
             <callout arearefs="MyButtonDevice.config.baud.value"
             id="MyButtonDevice.config.baud.value.co">
-              <para>This provides a value for the serial port baud rate.
+              <para>This provides a value for the serial port baud setting.
               Again, this will not actually be used by our simple device, but
               we show it here to give a complete example.</para>
             </callout>
@@ -1313,7 +1311,7 @@ linkends="MyButtonDevice.config.hostelement.value.co" />
             <callout arearefs="MyButtonDevice.config.hostelement.value"
             id="MyButtonDevice.config.hostelement.value.co">
               <para>For our example, we will not fill in a value for
-              <literal>deviceHost</literal> because we are not dealing with
+              <literal>device_host</literal> because we are not dealing with
               the Remote Input Manager. Refer to the <emphasis>Cluster Juggler
               Guide</emphasis> for more information about this.</para>
             </callout>
@@ -1445,13 +1443,6 @@ linkends="MyButtonDevice.config.hostelement.value.co" />
 #include &#60;gadget/Type/InputMixer.h&#62;
 
 
-namespace gadget
-{
-   class InputManager;
-}
-
-extern &#34;C&#34; GADGET_DRIVER_API(void) initDevice(gadget::InputManager* inputMgr);
-
 class ButtonDevice
    : public gadget::InputMixer&#60;gadget::Input, gadget::Digital&#62;
 {
@@ -1527,9 +1518,14 @@ private:
 
 using namespace gadget;
 
-void initDevice(InputManager* inputMgr)
+extern &#34;C&#34;
+{
+
+GADGET_DRIVER_EXPORT(void) initDevice(InputManager* inputMgr)
 {
    new DeviceConstructor&#60;ButtonDevice&#62;(inputMgr);
+}
+
 }
 
 /** Returns a string that matches this device&#39;s configuration element type. */
