@@ -135,8 +135,12 @@ SocketImpBSD::open () {
     }
     // Otherwise, return success.
     else {
+        if ( m_handle == NULL ) {
+            m_handle = new FileHandleUNIX(m_remote_addr.getAddressString());
+        }
+
         m_handle->m_fdesc = sock;
-        retval = true;
+        m_open = retval = true;
     }
 
     if ( retval != 0 ) {
@@ -202,7 +206,7 @@ SocketImpBSD::connect () {
     }
     // Otherwise, return success.
     else {
-        retval = true;
+        m_connected = retval = true;
     }
 
     return retval;

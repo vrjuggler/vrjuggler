@@ -59,7 +59,7 @@ public:
     //       particular set to SOCK_STREAM.
     // ------------------------------------------------------------------------
     SocketStreamImpBSD (void)
-        : SocketImpBSD()
+        : SocketImpBSD(SocketTypes::STREAM)
     {
         /* Do nothing. */ ;
     }
@@ -76,7 +76,9 @@ public:
     // ------------------------------------------------------------------------
     // Copy constructor.
     // ------------------------------------------------------------------------
-    SocketStreamImpBSD (const SocketStreamImpBSD& sock) {
+    SocketStreamImpBSD (const SocketStreamImpBSD& sock)
+        : SocketImpBSD(SocketTypes::STREAM)
+    {
         m_local_addr      = sock.m_local_addr;
         m_remote_addr     = sock.m_remote_addr;
         m_handle          = new FileHandleUNIX(sock.m_handle->getName());
