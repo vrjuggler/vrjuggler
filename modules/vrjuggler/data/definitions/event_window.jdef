@@ -201,6 +201,34 @@
        <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:jconf="http://www.vrjuggler.org/jccl/xsd/3.0/configuration" version="1.0">
             <xsl:output method="xml" version="1.0" encoding="UTF-8" indent="yes"/>
             <xsl:variable name="jconf">http://www.vrjuggler.org/jccl/xsd/3.0/configuration</xsl:variable>
+
+            <xsl:template match="/">
+                <xsl:apply-templates/>
+            </xsl:template>
+           
+            <xsl:template match="jconf:event_window">
+               <xsl:element namespace="{$jconf}" name="event_window">
+                  <xsl:attribute name="name">
+                     <xsl:value-of select="@name"/>
+                  </xsl:attribute>
+                  <xsl:attribute name="version">2</xsl:attribute>
+                  <xsl:element namespace="{$jconf}" name="event_source_name"/>
+                  <xsl:copy-of select="./jconf:mouse_sensitivity"/>
+                  <xsl:copy-of select="./jconf:lock_key"/>
+                  <xsl:copy-of select="./jconf:start_locked"/>
+                  <xsl:copy-of select="./jconf:sleep_time"/>
+                  <xsl:copy-of select="./jconf:origin[1]"/>
+                  <xsl:copy-of select="./jconf:origin[2]"/>
+                  <xsl:element namespace="{$jconf}" name="size">
+                     <xsl:value-of select="./jconf:width"/>
+                  </xsl:element>
+                  <xsl:element namespace="{$jconf}" name="size">
+                     <xsl:value-of select="./jconf:height"/>
+                  </xsl:element>
+                  <xsl:copy-of select="./jconf:display_number"/>
+                  <xsl:copy-of select="./jconf:device_host"/>
+               </xsl:element>
+            </xsl:template>
          </xsl:stylesheet>
       </upgrade_transform>
    </definition_version>
