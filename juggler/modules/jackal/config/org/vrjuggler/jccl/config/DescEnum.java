@@ -29,58 +29,64 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-
-
-/* DescEnum -- an entry in the enum vector of a PropertyDesc */
-
 package VjConfig;
 
 import VjConfig.VarValue;
 
-public class DescEnum implements Cloneable {
+/** DescEnum -- an entry in the enum vector of a PropertyDesc */
+public class DescEnum
+   implements Cloneable
+{
+   public String str;
+   public VarValue val;
 
-    public String str;
-    public VarValue val;
+   public String toString()
+   {
+      if (val != null)
+      {
+         return new String(str + "=" + val);
+      }
+      else
+      {
+         return new String(str);
+      }
+   }
 
+   public Object clone()
+      throws CloneNotSupportedException
+   {
+      DescEnum e = (DescEnum)super.clone();
+      e.val = new VarValue(val);
+      return e;
+   }
 
+   public DescEnum(DescEnum other)
+   {
+      str = other.str;
+      val = new VarValue(other.val);
+   }
 
-    public String toString () {
-	if (val != null)
-	    return new String (str + "=" + val);
-	else 
-	    return new String (str);
-    }
+   public DescEnum(String s, VarValue v)
+   {
+      str = s;
+      val = new VarValue(v);
+      //System.out.println(toString());
+   }
 
-    public Object clone () throws CloneNotSupportedException {
-            DescEnum e = (DescEnum)super.clone();
-            e.val = new VarValue (val);
-            return e;
-    }
-
-    public DescEnum (DescEnum other) {
-	str = other.str;
-	val = new VarValue (other.val);
-    }
-
-
-
-    public DescEnum (String s, VarValue v) {
-	str = s;
-	val = new VarValue(v);
-	//System.out.println(toString());
-    }
-
-
-
-    public boolean equals (DescEnum d) {
-        if (d == null)
-            return false;
-	if (!str.equalsIgnoreCase(d.str))
-	    return false;
-	if (!val.equals(d.val))
-	    return false;
-	return true;
-    }
-
-    
+   public boolean equals(DescEnum d)
+   {
+      if (d == null)
+      {
+         return false;
+      }
+      if (!str.equalsIgnoreCase(d.str))
+      {
+         return false;
+      }
+      if (!val.equals(d.val))
+      {
+         return false;
+      }
+      return true;
+   }
 }
