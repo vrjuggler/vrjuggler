@@ -76,9 +76,9 @@ BEANS=	VRJConfig
 
 @SET_MAKE@
 
-all world release:
-	@$(MAKE) build
-	@$(MAKE) install
+all world world-all-abi release:
+	@$(MAKE) buildworld
+	@$(MAKE) installworld
 
 # -----------------------------------------------------------------------------
 # Uses ant to build the java classes and JARs
