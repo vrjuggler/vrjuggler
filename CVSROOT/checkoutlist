@@ -15,3 +15,5 @@ commit_prep.pl
 commitcheck
 log_accum.pl
 rcstemplate
+cmd.verify
+cmd.verify.pl
