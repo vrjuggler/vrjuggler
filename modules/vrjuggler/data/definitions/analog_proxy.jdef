@@ -15,6 +15,7 @@
          <allowed_type>ibox</allowed_type>
          <allowed_type>intersense</allowed_type>
          <allowed_type>intersens_api</allowed_type>
+         <allowed_type>linux_joydev</allowed_type>
          <allowed_type>pysim</allowed_type>
          <allowed_type>simulated_analog_device</allowed_type>
          <allowed_type>trackd_controller</allowed_type>
