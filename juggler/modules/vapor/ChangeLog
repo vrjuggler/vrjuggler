@@ -1,5 +1,7 @@
 DATE       AUTHOR   CHANGE
 ---------- -------- -----------------------------------------------------------
+2002-01-02 patrickh Rewrote the build system for the test suite so that it can
+                    use .cpp files instead of having everything in .h files.
 2002-01-02 allenb   vpr::Interval now uses a Uint64 value internally.  This 
                     eliminates the issue of wrapping that existed in the old
                     method.
