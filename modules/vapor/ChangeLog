@@ -1,5 +1,6 @@
 DATE       AUTHOR   CHANGE
 ---------- -------- -----------------------------------------------------------
+2001-07-21 allenb   Imported Boost 1.0.23.
 2001-07-20 patrick  The vpr::Socket connect() method now uses its timeout to
                     wait for the connection to complete on a non-blocking
                     socket.
