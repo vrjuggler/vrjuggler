@@ -158,6 +158,20 @@ vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
                mDeviceDrivers.push_back(driver_library);
                (*creator)(this);
             }
+            else
+            {
+               vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_WARNING_LVL)
+                  << clrOutNORM(clrYELLOW, "WARNING")
+                  << ": Failed to look up factory function in driver DSO '"
+                  << driver_dso << "'\n" << vprDEBUG_FLUSH;
+            }
+         }
+         else
+         {
+            vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_WARNING_LVL)
+               << clrOutNORM(clrYELLOW, "WARNING")
+               << ": Failed to load driver DSO '" << driver_dso << "'\n"
+               << vprDEBUG_FLUSH;
          }
       }
 
