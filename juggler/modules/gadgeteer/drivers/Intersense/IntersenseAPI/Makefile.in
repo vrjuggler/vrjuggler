@@ -50,15 +50,11 @@ INSTALL=	@INSTALL@
 INSTALL_FILES=	
 SUBOBJDIR=	$(DRIVER_NAME)
 
-ifneq (@PLATFORM@, Darwin)
-
 C_AFTERBUILD=	driver-dso
 
 SRCS=		isense.c 			\
 		IntersenseAPI.cpp		\
 		IntersenseAPIStandalone.cpp
-
-endif
 
 include $(MKPATH)/dpp.obj.mk
 include @topdir@/driver.defs.mk
