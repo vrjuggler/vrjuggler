@@ -39,6 +39,8 @@
 #include <jccl/Plugins/ConfigManager/ConfigChunkHandler.h>
 //#include <jccl/Config/ConfigChunkPtr.h>
 #include <jccl/Config/ConfigChunk.h>
+#include <jccl/Plugins/PerformanceMonitor/LabeledPerfDataBuffer.h>
+#include <vpr/Thread/TSObjectProxy.h>
 #include <vpr/Thread/Thread.h>
 #include <vpr/Sync/Mutex.h>
 #include <vpr/Util/Singleton.h>
@@ -53,8 +55,7 @@ namespace jccl {
 
     /** Jackal Performance-monitoring agent.
      *
-     *  @author Christopher Just
-     *  9-12-01
+     *  @version $Revision$, $Date$
      */
 class JCCL_CLASS_API PerformanceMonitor: public JackalControl, public ConfigChunkHandler {
 
@@ -64,7 +65,7 @@ public:
     PerformanceMonitor();
 
 
-
+    /** Destructor. */
     virtual ~PerformanceMonitor();
 
 
@@ -83,6 +84,10 @@ public:
     void releasePerfDataBuffer (PerfDataBuffer *v);
 
 
+    /** Get access to the thread-specific labeled buffers. */
+    inline LabeledPerfDataBuffer* getLabeledTSBuffer () {
+        return &(*mTSBuffers);
+    }
 
     //--------------- JackalControl Stuff -----------------------
 
@@ -114,6 +119,7 @@ private:
     ConfigChunkPtr            current_perf_config;
     vpr::Mutex                perf_buffers_mutex;
 
+    vpr::TSObjectProxy<LabeledPerfDataBuffer> mTSBuffers;
 
     void activatePerfBuffers();
     void deactivatePerfBuffers();
