@@ -48,9 +48,6 @@
 #                 build and install/release process.
 # topdir        - The top of the build tree.
 # GADROOT_ABS   - The absolute path to the root of the Gadgeteer source tree.
-# GAD_SHARE_DIR - The name of the directory where the Gadgeteer data files,
-#                 test programs, and sample apps are installed.  This is
-#                 only the name of the directory, not the full path to it.
 #
 # MKDEPS_CC     - Compiler for C dependencies.
 # MKDEPS_CXX    - Compiler for CXX dependencies.
@@ -98,14 +95,13 @@ MKPATH		= $(JUGGLERROOT_ABS)/Doozer++/mk
 MTREE_CMD	= @MTREE_CMD@
 GADROOT_ABS	= @GADROOT_ABS@
 JUGGLERROOT_ABS	= @JUGGLERROOT_ABS@
-GAD_SHARE_DIR	= @GAD_SHARE_DIR@
 
 # -----------------------------------------------------------------------------
 # Extra information for the Doozer++ file common.defs.mk.
 # -----------------------------------------------------------------------------
 EXTRA_CFLAGS		= $(CFLAGS_DYNLIB)
 EXTRA_CXXFLAGS		= $(CXXFLAGS_DYNLIB)
-EXTRA_DEFS		= -DGAD_SHARE_DIR=\"$(GAD_SHARE_DIR)\" -D_GAD_BUILD_
+EXTRA_DEFS		= -D_GAD_BUILD_
 EXTRA_DEPEND_FLAGS	= -I$(GADROOT_ABS)
 EXTRA_INCLUDES		= -I$(top_srcdir)
 
