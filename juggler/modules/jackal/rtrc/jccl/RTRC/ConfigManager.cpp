@@ -267,9 +267,9 @@ int ConfigManager::scanForLostDependencies()
    vprASSERT(0 == mActiveLock.test());
    // We can't hold the lock upon entry
 
-   vprDEBUG_BEGIN(vprDBG_ALL,vprDBG_CONFIG_LVL)
-      << "ConfigManager::scanForLostDependencies: Entered: \n"
-      << vprDEBUG_FLUSH;
+   vpr::DebugOutputGuard og(vprDBG_ALL, vprDBG_CONFIG_LVL,
+                            "ConfigManager::scanForLostDependencies()\n",
+                            "ConfigManager::scanForLostDependencies() done.\n");
 
    DependencyManager* dep_mgr = DependencyManager::instance();
    std::vector<ConfigChunkPtr> chunks;
@@ -288,7 +288,7 @@ int ConfigManager::scanForLostDependencies()
    {
       if ( !dep_mgr->isSatisfied(chunks[i]) )     // We are not satisfied
       {
-         vprDEBUG_NEXT(vprDBG_ALL,1)
+         vprDEBUG_NEXT(vprDBG_ALL, vprDBG_WARNING_LVL)
             << chunks[i]->getProperty<std::string>("name")
             << " type: " << chunks[i]->getDescToken()
             << " has lost dependencies.\n" << vprDEBUG_FLUSH;
@@ -309,10 +309,6 @@ int ConfigManager::scanForLostDependencies()
          addPending(pending);                   // Add the add item
       }
    }
-
-   vprDEBUG_END(vprDBG_ALL,1)
-      << "ConfigManager::scanForLostDependencies: Exiting: \n"
-      << vprDEBUG_FLUSH;
 
    return num_lost_deps;
 }
