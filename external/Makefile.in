@@ -80,8 +80,8 @@ ifneq ($(TARGETS), )
 endif
 
 links-boost:
-	cd $(instlinks)/include && $(RM_LN) ./boost &&			\
-          $(LN_S) $(EXTROOT_ABS)/boost/boost ./
+	cd $(instlinks)/include && rm -rf ./boost && mkdir boost &&	\
+          cd ./boost && $(LN_S) $(EXTROOT_ABS)/boost/boost/* ./
 
 links-cppdom:
 	cd $(instlinks)/include && $(RM_LN) ./cppdom &&			\
