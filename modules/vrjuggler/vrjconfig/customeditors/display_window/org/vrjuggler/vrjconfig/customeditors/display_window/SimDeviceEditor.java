@@ -36,10 +36,33 @@ import javax.swing.JComponent;
 import org.vrjuggler.jccl.config.ConfigContext;
 import org.vrjuggler.jccl.config.ConfigElement;
 
+import org.vrjuggler.vrjconfig.commoneditors.KeyboardEditorPanel;
 
+
+/**
+ * The interface that all simulated device type editors must implement.
+ * This is utilized by SimKeyboardEditorPanel.
+ */
 public interface SimDeviceEditor
 {
+   /**
+    * Provides the simulated device editor with a KeyboardEditorPanel
+    * instance that can be used for visualizing the keyboard/mouse bindings
+    * that provide the input to the simulated device whose config element is
+    * being edited.  The gven reference may be null, and editor implementations
+    * must be prepared for that case.
+    */
+   public void setKeyboardEditorPanel(KeyboardEditorPanel panel);
+
+   /**
+    * Sets up the configuration that the editor implementation will display
+    * and modify.
+    */
    public void setConfig(ConfigContext ctx, ConfigElement elt);
 
+   /**
+    * Returns the GUI component for this simulated device type editor
+    * implementation.
+    */
    public JComponent getEditor();
 }
