@@ -1,6 +1,9 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
-Dec-24-2002 patrickh    Updated to VPR 0.22.0.
+Jan-11-2003 patrickh    Added the ability to configure the frame buffers used
+                        in display windows.
+                        NEW VERSION: 1.1.132
+Jan-06-2003 patrickh    Updated to VPR 0.22.0.
                         NEW VERSION: 1.1.131
 Dec-24-2002 patrickh    Updated to VPR 0.21.0.
                         NEW VERSION: 1.1.130

@@ -345,8 +345,8 @@ void PfDrawManager::addDisplay(Display* disp)
    vprASSERT((true == mPfHasForked) && "Trying to add display when performer has not been initialized");
 
    // Get frame buffer config
-   std::vector<int> stereo_fb_config = getStereoFBConfig();
-   std::vector<int> mono_fb_config = getMonoFBConfig();
+   std::vector<int> stereo_fb_config = getStereoFBConfig(disp);
+   std::vector<int> mono_fb_config = getMonoFBConfig(disp);
 
    // ouput debug info about the frame buffer config recieved
    unsigned int i;
@@ -701,16 +701,12 @@ void PfDrawManager::initChanGroupAttribs(pfChannel* masterChan)
 
 
 /** Returns the needed mono frame buffer config. */
-std::vector<int> PfDrawManager::getMonoFBConfig()
+std::vector<int> PfDrawManager::getMonoFBConfig(vrj::Display* disp)
 {
    std::vector<int> mono_fb;
    mono_fb.push_back(PFFB_DOUBLEBUFFER);
    mono_fb.push_back(PFFB_RGBA);
-   mono_fb.push_back(PFFB_RED_SIZE); mono_fb.push_back(8);
-   mono_fb.push_back(PFFB_GREEN_SIZE); mono_fb.push_back(8);
-   mono_fb.push_back(PFFB_BLUE_SIZE); mono_fb.push_back(8);
-   mono_fb.push_back(PFFB_ALPHA_SIZE); mono_fb.push_back(8);
-   mono_fb.push_back(PFFB_DEPTH_SIZE); mono_fb.push_back(16);
+   configFrameBuffer(disp, mono_fb);
 
    // Add application requests
    std::vector<int> app_fb = app->getFrameBufferAttrs();
@@ -722,17 +718,13 @@ std::vector<int> PfDrawManager::getMonoFBConfig()
 }
 
 /** Returns the needed stereo frame buffer config. */
-std::vector<int> PfDrawManager::getStereoFBConfig()
+std::vector<int> PfDrawManager::getStereoFBConfig(vrj::Display* disp)
 {
    std::vector<int> stereo_fb;
    stereo_fb.push_back(PFFB_DOUBLEBUFFER);
    stereo_fb.push_back(PFFB_RGBA);
    stereo_fb.push_back(PFFB_STEREO);
-   stereo_fb.push_back(PFFB_RED_SIZE); stereo_fb.push_back(8);
-   stereo_fb.push_back(PFFB_GREEN_SIZE); stereo_fb.push_back(8);
-   stereo_fb.push_back(PFFB_BLUE_SIZE); stereo_fb.push_back(8);
-   stereo_fb.push_back(PFFB_ALPHA_SIZE); stereo_fb.push_back(8);
-   stereo_fb.push_back(PFFB_DEPTH_SIZE); stereo_fb.push_back(16);
+   configFrameBuffer(disp, stereo_fb);
 
    // Add application requests
    std::vector<int> app_fb = app->getFrameBufferAttrs();
@@ -740,6 +732,79 @@ std::vector<int> PfDrawManager::getStereoFBConfig()
 
    stereo_fb.push_back(None);
    return stereo_fb;
+}
+
+// XXX: It might be better if this returned a vector in the same way as
+// getMonoFBConfig() and getStereoFBConfig().  That vector could then be
+// merged with the stereo and mono vectors.  I didn't do this because I
+// did not want to mess with the order of the options.
+void PfDrawManager::configFrameBuffer(vrj::Display* disp,
+                                      std::vector<int>& attrs)
+{
+   int red_size(8), green_size(8), blue_size(8), alpha_size(8), db_size(16);
+
+   jccl::ConfigChunkPtr fb_chunk = disp->getGlFrameBufferConfig();
+
+   if ( fb_chunk.get() != NULL )
+   {
+      red_size   = fb_chunk->getProperty<int>("redSize");
+      green_size = fb_chunk->getProperty<int>("greenSize");
+      blue_size  = fb_chunk->getProperty<int>("blueSize");
+      alpha_size = fb_chunk->getProperty<int>("alphaSize");
+      db_size    = fb_chunk->getProperty<int>("depthBufferSize");
+
+      if ( red_size < 0 )
+      {
+         vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_WARNING_LVL)
+            << "WARNING: Red channel size was negative, set to: " << red_size
+            << ".  Setting to 1.\n" << vprDEBUG_FLUSH;
+         red_size = 1;
+      }
+
+      if ( green_size < 0 )
+      {
+         vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_WARNING_LVL)
+            << "WARNING: Green channel size was negative, set to: "
+            << green_size << ".  Setting to 1.\n" << vprDEBUG_FLUSH;
+         green_size = 1;
+      }
+
+      if ( blue_size < 0 )
+      {
+         vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_WARNING_LVL)
+            << "WARNING: Blue channel size was negative, set to: " << blue_size
+            << ".  Setting to 1.\n" << vprDEBUG_FLUSH;
+         blue_size = 1;
+      }
+
+      if ( alpha_size < 0 )
+      {
+         vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_WARNING_LVL)
+            << "WARNING: Alpha channel size was negative, set to: "
+            << alpha_size << ".  Setting to 1.\n" << vprDEBUG_FLUSH;
+         alpha_size = 1;
+      }
+
+      if ( db_size < 0 )
+      {
+         vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_WARNING_LVL)
+            << "WARNING: Depth buffer size was negative, set to: " << db_size
+            << ".  Setting to 1.\n" << vprDEBUG_FLUSH;
+         db_size = 1;
+      }
+   }
+
+   vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CONFIG_LVL)
+      << "Frame buffer visual settings for " << disp->getName()
+      << ": R:" << red_size << " G:" << green_size << " B:" << blue_size
+      << " A:" << alpha_size << " DB:" << db_size << std::endl
+      << vprDEBUG_FLUSH;
+
+   attrs.push_back(PFFB_RED_SIZE);   attrs.push_back(red_size);
+   attrs.push_back(PFFB_GREEN_SIZE); attrs.push_back(green_size);
+   attrs.push_back(PFFB_BLUE_SIZE);  attrs.push_back(blue_size);
+   attrs.push_back(PFFB_ALPHA_SIZE); attrs.push_back(alpha_size);
+   attrs.push_back(PFFB_DEPTH_SIZE); attrs.push_back(db_size);
 }
 
 void PfDrawManager::initLoaders()
@@ -1179,4 +1244,4 @@ void PfPipeSwapFunc(pfPipe *p, pfPipeWindow *pw)
     pw->swapBuffers();
 }
 
-};
+}
