@@ -93,7 +93,17 @@ void BaseDeviceInterface::addDevInterface(BaseDeviceInterface* dev)
 { mAllocatedDevices.push_back(dev); }
 
 void BaseDeviceInterface::removeDevInterface(BaseDeviceInterface* dev)
-{ mAllocatedDevices.push_back(dev); }
+{ 
+   std::vector<BaseDeviceInterface*>::iterator iter ;
+   for (iter = mAllocatedDevices.begin(); iter != mAllocatedDevices.end(); iter++)
+   {
+      if ( *iter == dev )
+      {
+         mAllocatedDevices.erase(iter);
+         return;   
+      }
+   }
+}
 
 void BaseDeviceInterface::refreshAllDevices()
 {
