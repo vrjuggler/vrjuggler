@@ -156,12 +156,14 @@ vpr::ReturnStatus FlockStandalone::open()
 
    // - Open and close the port to reset the tracker, then
    // - Open the port
-   vprDEBUG_BEGIN(vprDBG_ALL,vprDBG_CONFIG_LVL) << "====== Opening fob serial port: " << mPort << " =====\n" << vprDEBUG_FLUSH;
+   vprDEBUG_BEGIN(vprDBG_ALL,vprDBG_CONFIG_LVL)
+      << "====== Opening fob serial port: " << mPort << " =====\n"
+      << vprDEBUG_FLUSH;
 
    bool open_successfull;
    unsigned int attempt_num = 0;
    const unsigned max_open_attempts(7);
-   
+
    // Allocate the port if we need to
    if ( NULL == mSerialPort )
    {
@@ -172,7 +174,8 @@ vpr::ReturnStatus FlockStandalone::open()
       }
    }
 
-   // Initially open and close the port (this seems to help connections on some os's
+   // Initially open and close the port (this seems to help connections on
+   // some operating systems.
    mSerialPort->open();
    mSerialPort->setRequestToSend(true);
    vpr::System::msleep(200);
@@ -180,7 +183,8 @@ vpr::ReturnStatus FlockStandalone::open()
 
    // do: open port and try to read
    // while: not successful
-   // --> Repetitively try to open port and setup parameters until connection works correctly
+   // --> Repetitively try to open port and setup parameters until connection
+   //     works correctly
    do
    {
       open_successfull = true;
@@ -207,7 +211,7 @@ vpr::ReturnStatus FlockStandalone::open()
          mSerialPort->setBreakByteIgnore(true);             // Ignore terminal breaks
 
          vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_LVL)
-            << "  Setting baud rate: " << mBaud << std::endl << vprDEBUG_FLUSH;         
+            << "  Setting baud rate: " << mBaud << std::endl << vprDEBUG_FLUSH;
          mSerialPort->setInputBaudRate(mBaud);
          mSerialPort->setOutputBaudRate(mBaud);
 
@@ -255,7 +259,7 @@ vpr::ReturnStatus FlockStandalone::open()
          {
             try
             {
-               readInitialFlockConfiguration();    // Get the initial configuration from the flock            
+               readInitialFlockConfiguration();    // Get the initial configuration from the flock
             }
             catch(Flock::CommandFailureException& cfe)
             {
@@ -276,7 +280,7 @@ vpr::ReturnStatus FlockStandalone::open()
                mSerialPort->close();
             }
             delete mSerialPort;
-            
+
             mSerialPort = new vpr::SerialPort(mPort);
             if (!mSerialPort)
             {
@@ -301,7 +305,7 @@ vpr::ReturnStatus FlockStandalone::open()
    // Print the status information
    printFlockStatus();
 
-   return vpr::ReturnStatus::Succeed;   
+   return vpr::ReturnStatus::Succeed;
 }
 
 /** Configures the flock and gets it ready to go.
@@ -379,7 +383,7 @@ vpr::ReturnStatus FlockStandalone::configure()
          << "    mActiveUnitEndIndex: " << mActiveUnitEndIndex << std::endl
          << vprDEBUG_FLUSH;
       sendAutoconfigCmd(mActiveUnitEndIndex);    // Add one for flock stupidity
-      //checkError();      
+      //checkError();
    }
 
    vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL)
@@ -409,7 +413,7 @@ void FlockStandalone::sample()
    std::vector<vpr::Uint8> data_record;
    std::vector<vpr::Uint8> temp_data_record;    // Temp buffer for reading data
    vpr::Uint8 buffer;                           // Temporary single byte buffer
-            
+
    vpr::Uint32 bytes_read;
    vpr::Uint32 bytes_remaining;
    const vpr::Uint8 phase_mask(1<<7);     // Mask for finding phasing bit
@@ -422,7 +426,7 @@ void FlockStandalone::sample()
    const unsigned int data_record_size(mNumSensors*single_bird_data_size);    // Size of the data record to read
 
    bool sample_succeeded;        // Flag for success. When false, there was an error so repeat.
-   
+
    // counter to track the number of times a read doesn't complete in stream mode.  This counter is
    // used to intelligently back off the reporting rate if needed (baud rate not high enough is the normal cause)
    unsigned int num_stream_read_failures = 0;
@@ -433,7 +437,7 @@ void FlockStandalone::sample()
    {
       sample_succeeded = true;      // Default to success
       data_record.clear();
-      
+
       // - Get a data record in whatever way we should for this mode
       // - Take into account phasing bits
       // - Process the data record
@@ -443,20 +447,23 @@ void FlockStandalone::sample()
          if(FlockStandalone::RUNNING == mStatus)     // Must use point mode
          {
             sendCommand(Flock::Command::Point);       // Triggers a data record update
-      
+
             // Read the reply data record
             bytes_remaining = data_record_size;                     // How many bytes do we have left to read
             vpr::ReturnStatus read_ret(vpr::ReturnStatus::Succeed);
 
             while(bytes_remaining)        // While more left to read
             {
-               read_ret = mSerialPort->read(temp_data_record, bytes_remaining, bytes_read, mReadTimeout);
-               data_record.insert(data_record.end(), temp_data_record.begin(), temp_data_record.end());        // Append the temp data onto the end of the data record
+               read_ret = mSerialPort->read(temp_data_record, bytes_remaining,
+                                            bytes_read, mReadTimeout);
+               // Append the temp data onto the end of the data record
+               data_record.insert(data_record.end(), temp_data_record.begin(),
+                                  temp_data_record.end());
                bytes_remaining -= bytes_read;
                if(read_ret.inProgress() || read_ret.failure())    // If timeout or failed
                {
                   num_stream_read_failures++;
-                  throw Flock::CommandFailureException("Did not read full data record in point mode."); 
+                  throw Flock::CommandFailureException("Did not read full data record in point mode.");
                }
             }
             vprASSERT(data_record.size() == data_record_size);            // Assert: We actually read the number of bytes we set out too
@@ -467,20 +474,27 @@ void FlockStandalone::sample()
             // Check for read failure limit
             if (num_stream_read_failures > stream_read_failure_limit)
             {
-               vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL) << "FlockStandalone::sample: stream reading failure limit hit. Attempting to fix by decreasing report rate. (may need to increase baud rate).\n" << vprDEBUG_FLUSH;
+               vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
+                  << "[FlockStandalone::sample()] Stream reading failure "
+                  << "limit hit.  Attempting to fix by decreasing report "
+                  << "rate. (may need to increase baud setting.)\n"
+                  << vprDEBUG_FLUSH;
                Flock::ReportRate report_rate = getReportRate();
                if(Flock::Every32 != report_rate)
                {
-                  Flock::ReportRate new_rate = Flock::ReportRate((unsigned int)report_rate+1);
+                  Flock::ReportRate new_rate =
+                     Flock::ReportRate((unsigned int)report_rate+1);
                   setReportRate(new_rate);
                }
                else
                {
-                  vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL) << "FlockStandalone::sample: Report rate already at minimum.  Can't correct.\n" << vprDEBUG_FLUSH;
+                  vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
+                     << "[FlockStandalone::sample()] Report rate already at "
+                     << "minimum.  Can't correct.\n" << vprDEBUG_FLUSH;
                }
                num_stream_read_failures = 0;       // Reset the count
             }
-            
+
             // Read one byte at a time looking for phasing bit
             do
             {
@@ -491,36 +505,42 @@ void FlockStandalone::sample()
                }
             }
             while(!(phase_mask & buffer));
-      
+
             // Now read the rest of the record
             bytes_remaining = (data_record_size-1);                     // How many bytes do we have left to read
             vpr::ReturnStatus read_ret(vpr::ReturnStatus::Succeed);
-            
+
             while(bytes_remaining)        // While more left to read
             {
-               read_ret = mSerialPort->read(temp_data_record, bytes_remaining, bytes_read, mReadTimeout);
-               data_record.insert(data_record.end(), temp_data_record.begin(), temp_data_record.end());        // Append the temp data onto the end of the data record
+               read_ret = mSerialPort->read(temp_data_record, bytes_remaining,
+                                            bytes_read, mReadTimeout);
+               // Append the temp data onto the end of the data record
+               data_record.insert(data_record.end(), temp_data_record.begin(),
+                                  temp_data_record.end());
                bytes_remaining -= bytes_read;
                if(read_ret.inProgress() || read_ret.failure())    // If timeout or failed
                {
                   num_stream_read_failures++;
-                  throw Flock::CommandFailureException("Could not find entire streaming data record"); 
+                  throw Flock::CommandFailureException("Could not find entire streaming data record");
                }
             }
             data_record.insert(data_record.begin(), buffer);              // Add on the initial phase bit
-            
+
             vprASSERT(data_record.size() == data_record_size);            // Assert: We actually read the number of bytes we set out too
 
             // Make sure the only phase bits the record are at the beginning
             // of a sensor record.
             for(unsigned int b=0;b<data_record.size();++b)
-            {  
-               if((b%single_bird_data_size) && (phase_mask & data_record[b]))       // If it is not the start of a sensor record, and it has a phase bit
+            {
+               // If it is not the start of a sensor record, and it has a
+               // phase bit.
+               if((b%single_bird_data_size) && (phase_mask & data_record[b]))
                {
                   vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
-                     << "FlockStandalone::sample: data out of phase, attempting to correct.\n" 
+                     << "[FlockStandalone::sample()] data out of phase, "
+                     << "attempting to correct.\n"
                      << " byte: " << b << "  out of: " << data_record_size
-                     << "\n" << vprDEBUG_FLUSH;                  
+                     << "\n" << vprDEBUG_FLUSH;
                   sample_succeeded = false;
                   num_stream_read_failures++;
                   break;                           // We have a failure, so quite checking the bits
@@ -569,7 +589,7 @@ int FlockStandalone::close()
          vpr::System::msleep(500);
          sendCommand(Flock::Command::Sleep);    // Put the flock to sleep
       }
-      
+
       mSerialPort->close();
 
       // flock is not active now.
@@ -628,7 +648,6 @@ vpr::ReturnStatus FlockStandalone::stopStreaming()
    return vpr::ReturnStatus::Succeed;
 }
 
-
 /** Sets the port to use. */
 void FlockStandalone::setPort(const std::string& serialPort)
 {
@@ -660,7 +679,6 @@ void FlockStandalone::setBaudRate(const int& baud)
 
    mBaud = baud;
 }
-
 
 /** Sets the hemisphere that the transmitter transmits from. */
 void FlockStandalone::setHemisphere(const BIRD_HEMI& h)
@@ -694,8 +712,8 @@ void FlockStandalone::setReportRate(Flock::ReportRate rRate )
 {
    bool was_streaming(false);
    if (FlockStandalone::STREAMING == mStatus)
-   {  
-      was_streaming = true; 
+   {
+      was_streaming = true;
       stopStreaming();
    }
 
@@ -703,24 +721,24 @@ void FlockStandalone::setReportRate(Flock::ReportRate rRate )
    vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL)
       << " [FlockStandalone] report rate to: "
       << Flock::getReportRateString(mReportRate) << "\n" << vprDEBUG_FLUSH;
-      
+
    if(was_streaming)
    {
       startStreaming();
-   }  
+   }
 }
 
 void FlockStandalone::setOutputFormat(Flock::Output::Format format)
 {
    bool was_streaming(false);
    if (FlockStandalone::STREAMING == mStatus)
-   {  
-      was_streaming = true; 
+   {
+      was_streaming = true;
       stopStreaming();
    }
 
    mOutputFormat = format;
-   
+
    if (FlockStandalone::RUNNING == mStatus)
    {
       vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL)
@@ -805,7 +823,7 @@ void FlockStandalone::processDataRecord(std::vector<vpr::Uint8> dataRecord)
                << vprDEBUG_FLUSH;
          }
          vprASSERT(unit_addr <= mActiveUnitEndIndex);
-         sensor_number = mAddrToSensorIdMap[unit_addr]; 
+         sensor_number = mAddrToSensorIdMap[unit_addr];
          vprASSERT(sensor_number != -1 && "Got addr of unit we don't think has sensor");
       }
       mSensorData[(unsigned int)sensor_number] = sensor_mat;
@@ -845,7 +863,7 @@ gmtl::Matrix44f FlockStandalone::processSensorRecord(vpr::Uint8* buff)
       ret_mat.set( m11, m21, m31, 0.0f,
                    m12, m22, m32, 0.0f,
                    m13, m23, m33, 0.0f,
-                   0.0f, 0.0f, 0.0f, 1.0f);      
+                   0.0f, 0.0f, 0.0f, 1.0f);
       }
       break;
    case Flock::Output::Position:
@@ -884,7 +902,7 @@ gmtl::Matrix44f FlockStandalone::processSensorRecord(vpr::Uint8* buff)
       ret_mat.set( m11, m21, m31, x,
                    m12, m22, m32, y,
                    m13, m23, m33, z,
-                   0.0f, 0.0f, 0.0f, 1.0f);      
+                   0.0f, 0.0f, 0.0f, 1.0f);
       }
       break;
    case Flock::Output::PositionQuaternion:
@@ -917,8 +935,7 @@ float FlockStandalone::rawToFloat(const vpr::Uint8& MSchar,
    ival1 = MSchar & 0x7f;
    ival2 = LSchar & 0x7f;
    val = (ival1 << 9) | ival2<<2;
-   return ((float)val) / 32768.0f;  // 32768=0x7fff  
-   
+   return ((float)val) / 32768.0f;  // 32768=0x7fff
 
    /*  More slow and tedious way of doing the above.
    This is a more descriptive implementation as given pg.89 of Flock Manual
@@ -1111,7 +1128,6 @@ void FlockStandalone::printFlockStatus()
    std::copy(mAddrToSensorIdMap.begin(), mAddrToSensorIdMap.end(),
              std::ostream_iterator<int>(s_indices_oss, ","));
    std::cout << "Addr to sensor map: " << s_indices_oss.str() << std::endl;
-
 }
 
 unsigned int FlockStandalone::getMaxBirdAddr()
@@ -1194,7 +1210,6 @@ void FlockStandalone::sendHemisphereCmd(BIRD_HEMI hemi, bool sendToAll)
    {
       sendCommand(Flock::Command::Hemisphere, params);               // Send to all units
    }
-
 }
 
 void FlockStandalone::sendOutputFormatCmd(Flock::Output::Format format,
@@ -1409,7 +1424,7 @@ void FlockStandalone::getAttribute(vpr::Uint8 attrib, unsigned int respSize,
    }
 
    //vpr::System::msleep(500);
-   
+
    // Read response and then flush the port to make sure we don't leave
    // anything extra.
    mSerialPort->readn(respData, respSize, bytes_read);
@@ -1518,14 +1533,14 @@ void FlockStandalone::setErrorModeIgnore()
 {
    std::vector<vpr::Uint8> param(1);
    param[0] = 0x1;
-   setAttribute(Flock::Parameter::BirdErrorMask, param);   
+   setAttribute(Flock::Parameter::BirdErrorMask, param);
 }
 
 void FlockStandalone::setErrorModeStandard()
 {
    std::vector<vpr::Uint8> param(1);
    param[0] = 0x0;
-   setAttribute(Flock::Parameter::BirdErrorMask, param);      
+   setAttribute(Flock::Parameter::BirdErrorMask, param);
 }
 
 /* Check for error, if there are errors, print out error messages for all
@@ -1543,7 +1558,7 @@ void FlockStandalone::checkError()
          << "ERROR: [FlockStandalone] Bird error: [" << int(errs.first) << "] "
          << Flock::getErrorDescription(errs.first, errs.second) << std::endl
          << vprDEBUG_FLUSH;
-      
+
       prev_err = errs;
       have_error_to_throw = true;
       errs = queryExpandedErrorCode();
@@ -1599,7 +1614,7 @@ void FlockStandalone::readInitialFlockConfiguration()
          // Get the address of the master
          mMasterAddr = queryAddress();
       }
-      
+
       // Make initial guess at mode (finalize later after looking for erts)
       if(0 == mMasterAddr)
       {
@@ -1690,7 +1705,7 @@ void FlockStandalone::setupFlockUnitsDataStructure()
       mFlockUnits[0].mAccessible = true;
       mFlockUnits[0].mIsRunning = true;
       mFlockUnits[0].mHasSensor = true;
-      mFlockUnits[0].mTransmitterType = Transmitter::Standard;      
+      mFlockUnits[0].mTransmitterType = Transmitter::Standard;
    }
    else
    {
