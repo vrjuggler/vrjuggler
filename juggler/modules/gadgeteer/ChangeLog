@@ -1,5 +1,7 @@
 DATE        AUTHOR    CHANGE
 ----------- --------- ---------------------------------------------------------
+Sep-05-2002 aronb     Fixed the Intersense driver on Linux & IRIX
+                      Fixed the Flock Of Birds driver on both Linux and IRIX
 Aug-19-2002 allenb    Fixed debug output indentation bugs.
 Aug-13-2002 patrickh  The standalone MotionStar driver reports errors using
                       exceptions.
