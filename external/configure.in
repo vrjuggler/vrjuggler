@@ -71,6 +71,11 @@ AC_ARG_ENABLE([gmtl-install],
                           Disable installation of
                           juggler/external/GMTL],
               [install_gmtl="$enableval"], [install_gmtl='yes'])
+AC_ARG_ENABLE([doozer-install],
+              [  --disable-doozer-install
+                          Disable installation of
+                          juggler/external/Doozer],
+              [install_doozer="$enableval"], [install_doozer='yes'])
 
 AC_ARG_WITH([boostroot],
             [  --with-boostroot=<PATH> Boost installation directory],
@@ -86,6 +91,11 @@ AC_ARG_WITH([gmtl-prefix],
                           GMTL installation directory],
             [GMTL_ROOT="$withval"],
             [GMTL_ROOT="$JUGGLERROOT_ABS/external/GMTL"])
+AC_ARG_WITH([doozer-prefix],
+            [  --with-doozer-prefix=<PATH>
+                          Doozer installation directory],
+            [DOOZER_ROOT="$withval"],
+            [DOOZER_ROOT="$JUGGLERROOT_ABS/external/Doozer"])
 
 # -----------------------------------------------------------------------------
 # System-dependent stuff.
@@ -118,6 +128,10 @@ if test "x$GMTL_ROOT" != "x$JUGGLERROOT_ABS/external/GMTL" ; then
    install_gmtl='no'
 fi
 
+if test "x$DOOZER_ROOT" != "x$JUGGLERROOT_ABS/external/Doozer" ; then
+   install_doozer='no'
+fi
+
 TARGETS=''
 
 if test "x$install_boost" != "xno" ; then
@@ -130,6 +144,10 @@ fi
 
 if test "x$install_gmtl" != "xno" ; then
    TARGETS="$TARGETS gmtl"
+fi
+
+if test "x$install_doozer" != "xno" ; then
+   TARGETS="$TARGETS doozer"
 fi
 
 # -----------------------------------------------------------------------------
