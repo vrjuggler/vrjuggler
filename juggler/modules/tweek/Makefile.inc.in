@@ -195,8 +195,10 @@ ifneq (@OS_TYPE@, Win32)
 	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/include/tweek
 	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/$(LIBDIR_NAME)
 	@$(MAKE) -C tweek instlinks="$(instlinks)" links
-	cd $(instlinks)/$(LIBDIR_NAME) && rm -f ./* &&			\
-          $(LN_S) $(LIBDIR_BASE)/* ./
+	for lib in $(LIBS) ; do 					\
+            cd $(instlinks)/$(LIBDIR_NAME) && rm -f $$lib* &&		\
+              $(LN_S) $(LIBDIR_BASE)/$$lib* ./ ;			\
+          done
 	cd $(instlinks)/include/tweek && rm -f ./*.h &&			\
           $(LN_S) $(TWEEKROOT_ABS)/tweek/*.h ./
 	cd $(instlinks)/include/tweek && rm -f ./tweekDefines.h &&	\
