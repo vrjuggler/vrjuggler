@@ -14,7 +14,7 @@ class vjVec3
 {
 public:
    // Constructor
-   vjVec3(float _x, float _y, float _z) 
+   vjVec3(float _x, float _y, float _z)
    { set(_x, _y, _z);}
    vjVec3() {};
 
@@ -23,20 +23,20 @@ public:
    void set(float _x, float _y, float _z) {
       vec[0] = _x;
       vec[1] = _y;
-      vec[2] = _z; 
+      vec[2] = _z;
    }
 
 public:
    //: Are we equal
-   int equal(const vjVec3&  _v) const { 
-      return (vec[0] == _v[0] && 
+   int equal(const vjVec3&  _v) const {
+      return (vec[0] == _v[0] &&
               vec[1] == _v[1] &&
               vec[2] == _v[2]);
    }
 
    //: Compute dot product
    float dot(const vjVec3&  _v) const {
-      return (vec[0] * _v[0] + 
+      return (vec[0] * _v[0] +
               vec[1] * _v[1] +
               vec[2] * _v[2]);
    }
@@ -47,7 +47,7 @@ public:
       float len = length();
       vec[0] = vec[0] / len;
       vec[1] = vec[1] / len;
-      vec[2] = vec[2] / len;  
+      vec[2] = vec[2] / len;
    }
 
    //: Return vector's length
@@ -63,7 +63,7 @@ public:
    //: Calculate the cross product of me X _v
    const vjVec3 cross(const vjVec3&  _v)
    {
-      return vjVec3( ((vec[1]*_v.vec[2]) - (vec[2]*_v.vec[1])), 
+      return vjVec3( ((vec[1]*_v.vec[2]) - (vec[2]*_v.vec[1])),
                      ((vec[2]*_v.vec[0]) - (vec[0]*_v.vec[2])),
                      ((vec[0]*_v.vec[1]) - (vec[1]*_v.vec[0])));
    }
@@ -95,8 +95,8 @@ public:
    const float&  operator [](int i) const { return vec[i];}
 
    int operator ==(const vjVec3& _v) const {
-      return (vec[0] == _v[0] && 
-              vec[1] == _v[1] && 
+      return (vec[0] == _v[0] &&
+              vec[1] == _v[1] &&
               vec[2] == _v[2]);
    }
 
@@ -119,44 +119,44 @@ public:
       return vjVec3(vec[0]-_v[0], vec[1]-_v[1], vec[2]-_v[2]);
    }
 
-   friend inline vjVec3 operator *(float _s, const vjVec3&);
-   friend inline vjVec3 operator *(const vjVec3& _v, float _s);
-   friend inline vjVec3 operator /(const vjVec3& _v, float _s);
+   friend vjVec3 operator *(float _s, const vjVec3&);
+   friend vjVec3 operator *(const vjVec3& _v, float _s);
+   friend vjVec3 operator /(const vjVec3& _v, float _s);
 //    friend inline vjVec3 operator *(const vjVec3& _v, const vjMatrix& _m);
 
 public:
    //: Assignment Operators
    vjVec3&  operator =(const vjVec3& _v) {
-      vec[0] = _v[0]; 
+      vec[0] = _v[0];
       vec[1] = _v[1];
-      vec[2] = _v[2]; 
+      vec[2] = _v[2];
       return *this;
    }
 
    //: Multiply all elements by a constant
    vjVec3& operator *=(float _s) {
-      vec[0] *= _s; 
-      vec[1] *= _s; 
-      vec[2] *= _s; 
+      vec[0] *= _s;
+      vec[1] *= _s;
+      vec[2] *= _s;
       return *this;
    }
 
    //: Divide all elements by a constant
    vjVec3& operator /=(float _s) {
-      _s = 1.0/_s; 
+      _s = 1.0/_s;
       return *this *= _s;
    }
 
    vjVec3& operator +=(const vjVec3& _v) {
-      vec[0] += _v[0]; 
-      vec[1] += _v[1]; 
+      vec[0] += _v[0];
+      vec[1] += _v[1];
       vec[2] += _v[2];
       return *this;
    }
 
    vjVec3& operator -=(const vjVec3& _v) {
-      vec[0] -= _v[0]; 
-      vec[1] -= _v[1]; 
+      vec[0] -= _v[0];
+      vec[1] -= _v[1];
       vec[2] -= _v[2];
       return *this;
    }
@@ -166,9 +166,9 @@ public:
 };
 
 
-inline vjVec3 operator *(float _s, const vjVec3& _v);
-inline vjVec3 operator *(const vjVec3& _v, float _s);
-inline vjVec3 operator /(const vjVec3& _v, float _s);
+vjVec3 operator *(float _s, const vjVec3& _v);
+vjVec3 operator *(const vjVec3& _v, float _s);
+vjVec3 operator /(const vjVec3& _v, float _s);
 //inline vjVec3 operator *(const vjVec3& _v, const vjMatrix&  _m);
 ostream& operator<<(ostream& out, vjVec3& _v);
 
