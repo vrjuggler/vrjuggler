@@ -49,6 +49,7 @@ AwSoundEngine::~AwSoundEngine() {}
 
 void AwSoundEngine::init()
 {
+   vjDEBUG(vjDBG_ALL,vjDBG_CONFIG_LVL) << clrOutNORM(clrGREEN,"===============================")  << "\n" << vjDEBUG_FLUSH;
    vjDEBUG(vjDBG_ALL,vjDBG_CONFIG_LVL) << clrOutNORM(clrGREEN,"Juggler is starting Audioworks:")  << "\n" << vjDEBUG_FLUSH;
    
    std::string tmpFile = "/var/tmp/";
@@ -128,6 +129,7 @@ void AwSoundEngine::init()
    this->setPosition( mPosition );
    
    mInitialized = true;
+   vjDEBUG(vjDBG_ALL,vjDBG_CONFIG_LVL) << clrOutNORM(clrGREEN,"===============================")  << "\n" << vjDEBUG_FLUSH;
 }
 
 // lookup a filename, given the sound's alias.
