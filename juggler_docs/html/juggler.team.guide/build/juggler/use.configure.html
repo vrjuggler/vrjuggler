@@ -146,15 +146,15 @@
 
       <UL>
         <LI>
-	  The version of <TT>sh</TT> available does not support the features
-	  being used in <TT>configure</TT>.  In this case, the configure
-	  script will exit with an error status.  To get around this,
-	  invoke <TT>ksh</TT>, <TT>bash</TT> or <TT>zsh</TT> on
+          The version of <TT>sh</TT> available does not support the features
+          being used in <TT>configure</TT>.  In this case, the configure
+          script will exit with an error status.  To get around this,
+          invoke <TT>ksh</TT>, <TT>bash</TT> or <TT>zsh</TT> on
           <TT>configure</TT> (in that order as available).  These shells
-	  have newer features and fully support <TT>sh</TT> syntax.  (In
-	  particular, this is known to be a problem with <TT>/bin/sh</TT>
-	  on Solaris 7.)
-	</LI>
+          have newer features and fully support <TT>sh</TT> syntax.  (In
+          particular, this is known to be a problem with <TT>/bin/sh</TT>
+          on Solaris 7.)
+        </LI>
         <LI>
           A ``modern'' C++ compiler was not found.  <B>This is a fatal
           error.</B>  VR Juggler uses many features of the latest C++
@@ -178,11 +178,11 @@
         <LI>
           A version of Perl greater than or equal to 5.004 was not found.
           <B>This will cause compiling of <TT>vjcontrol</TT> and
-	  installation of the library to fail.</B>  To provide a valid Perl
-	  binary for use by the makefiles, use the <TT>--with-perl</TT>
-	  option to <TT>configure</TT>.  The path given should be the full
-	  path up to but <I>not</I> including the <TT>perl</TT> binary
-	  itself.  For example, if a <TT>perl5</TT> binary were in
+          installation of the library to fail.</B>  To provide a valid Perl
+          binary for use by the makefiles, use the <TT>--with-perl</TT>
+          option to <TT>configure</TT>.  The path given should be the full
+          path up to but <I>not</I> including the <TT>perl</TT> binary
+          itself.  For example, if a <TT>perl5</TT> binary were in
           <TT>/usr/unsupported/bin</TT>, give this directory as the argument
           to <TT>--with-perl</TT>.  In a Win32 environment, use <TT>/</TT>'s
           as the path separator rather than <TT>\</TT>'s.
@@ -233,10 +233,10 @@
         <DT><TT>--with-gcc</TT>
           <DD>Force the use of GCC as the compiler.  Currently as of
               Revision ${CONFIGURE_REV} of <TT>configure.in</TT>), use of
-	      this option is not fully implemented.  Its current state is
-	      for use only in a Win32 environment so that the Cygnus-Win32
-	      version of GCC can be used to compile Juggler instead of
-	      the Microsoft Visual C++ command-line compiler.
+              this option is not fully implemented.  Its current state is
+              for use only in a Win32 environment so that the Cygnus-Win32
+              version of GCC can be used to compile Juggler instead of
+              the Microsoft Visual C++ command-line compiler.
         <DT><TT>--with-abi=&lt;OPT&gt;</TT>
           <DD>Define the application binary interface (ABI) for which
               Juggler is compiled.  In some cases, the instruction set
@@ -337,8 +337,8 @@
               operating system.  Common values are <TT>/usr/local</TT>,
               <TT>/usr/X11R6</TT> and <TT>/opt/graphics/OpenGL</TT> (HP-UX
               10.20).  As of Revision ${CONFIGURE_REV} of
-	      <TT>configure.in</TT>, this option is not yet supported in a
-	      Win32 environment.  <I>The default path is <TT>/usr</TT>.</I>
+              <TT>configure.in</TT>, this option is not yet supported in a
+              Win32 environment.  <I>The default path is <TT>/usr</TT>.</I>
         <DT><TT>--with-perl=&lt;PATH&gt;</TT>
           <DD>Name the directory containing a Perl 5.004 or newer binary.
               A working Perl 5.004 or newer binary is necessary for a
@@ -347,8 +347,8 @@
               This path is the full path leading up to the binary
               (e.g., <TT>/usr/local/bin</TT>).  There is no default, but
               common values are hard-coded into the configure script.  They
-	      are <TT>/usr/bin</TT>, <TT>/usr/local/bin</TT> and
-	      <TT>C:/Perl/bin</TT>.  Note that in a Win32 environment,
+              are <TT>/usr/bin</TT>, <TT>/usr/local/bin</TT> and
+              <TT>C:/Perl/bin</TT>.  Note that in a Win32 environment,
               paths must be given using <TT>/</TT>'s as the path separator
               rather than <TT>\</TT>'s.
         <DT><TT>--with-install-group=&lt;NAME&gt;</TT>
