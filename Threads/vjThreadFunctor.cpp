@@ -8,7 +8,7 @@
  * ---------------------------------------------------------------------------
  */
 
-#include <config.h>
+#include <vjConfig.h>
 #include <Threads/vjThreadFunctor.h>
 #include <Threads/vjThreadManager.h>
 

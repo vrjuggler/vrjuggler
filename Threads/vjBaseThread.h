@@ -9,7 +9,7 @@
 //    - This is used as the base class for all thread classes.
 // --------------------------------------------------------------------------
 
-#include <config.h>
+#include <vjConfig.h>
 #include <iostream.h>
 #include <hash_map.h>
 #include <Threads/vjThreadFunctor.h>

@@ -9,7 +9,7 @@
 /*  --    Modified by Larry Edwards                         --  */
 /*  ==========================================================  */
 
-#include <config.h>
+#include <vjConfig.h>
 #include <stdio.h>
 
 #include <X11/Intrinsic.h>

@@ -16,7 +16,7 @@
 #ifndef _SEMAPHORE_POSIX_H_
 #define _SEMAPHORE_POSIX_H_
 
-#include <config.h>
+#include <vjConfig.h>
 #include <unistd.h>
 #include <limits.h>
 #include <semaphore.h>

@@ -2,7 +2,7 @@
 #define _VJ_DISPLAY_
 
 class vjProjection;
-#include <config.h>
+#include <vjConfig.h>
 #include <iostream.h>
 class vjDisplayManager;		    // Because prev include includes us
 

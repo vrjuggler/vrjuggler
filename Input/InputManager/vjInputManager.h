@@ -7,7 +7,7 @@
 #ifndef VJ_INPUT_MANAGER_H
 #define VJ_INPUT_MANAGER_H
 
-#include <config.h>
+#include <vjConfig.h>
 
 #ifdef VJ_OS_HPUX
 #   include <vector>

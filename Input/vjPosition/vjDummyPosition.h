@@ -3,7 +3,7 @@
 #ifndef _VJ_DUMMYTRACKER_H_
 #define _VJ_DUMMYTRACKER_H_
 
-#include <config.h>
+#include <vjConfig.h>
 #include <Input/vjPosition/vjPosition.h>
 
 //: Position derived class for impersonating a position device.

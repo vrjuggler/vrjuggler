@@ -1,7 +1,7 @@
 #ifndef _vjSemaphoreSGI_h_
 #define _vjSemaphoreSGI_h_
 
-#include <config.h>
+#include <vjConfig.h>
 #include <ulocks.h>
 #include <SharedMem/vjMemPool.h>
 #include <SharedMem/vjMemPoolSGI.h>

@@ -13,7 +13,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 
-#include <config.h>
+#include <vjConfig.h>
 #include <stdio.h>	 // for perror(3C)
 #include <sys/types.h>	 // for open(2)
 #include <sys/stat.h>	 // for open(2)

@@ -1,4 +1,4 @@
-#include <config.h>
+#include <vjConfig.h>
 #include <string.h>
 #include <Kernel/vjKernel.h>
 

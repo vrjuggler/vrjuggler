@@ -2,8 +2,8 @@
 #define _VJDebug_h_
 #pragma once
 
-// #define VJ_DEBUG  Defined in config.h
-#include <config.h>
+// #define VJ_DEBUG  Defined in vjConfig.h
+#include <vjConfig.h>
 #define LOCK_DEBUG_STREAM
 
 // --------------- //

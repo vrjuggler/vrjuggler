@@ -11,7 +11,7 @@
 #ifndef _vj_KEYBOARD_H_
 #define _vj_KEYBOARD_H_
 
-#include <config.h>
+#include <vjConfig.h>
 #include <windows.h>
 #include <commctrl.h>
 

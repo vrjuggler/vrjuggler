@@ -11,7 +11,7 @@
 /*  --  Copyright (C) 1987,88,89,90,91,92 Larry Edwards         --  */
 /*  ==============================================================  */
 
-#include <config.h>
+#include <vjConfig.h>
 #include <Input/vjGlove/vt_math3d.h>
 
 #ifndef NULL

@@ -19,7 +19,7 @@
 #ifndef _MUTEX_POSIX_H_
 #define _MUTEX_POSIX_H_
 
-#include <config.h>
+#include <vjConfig.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <pthread.h>

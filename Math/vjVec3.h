@@ -1,7 +1,7 @@
 #ifndef _VJ_VEC3_
 #define _VJ_VEC3_
 
-#include <config.h>
+#include <vjConfig.h>
 #include <iostream.h>
 #include <math.h>
 

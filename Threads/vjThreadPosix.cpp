@@ -6,7 +6,7 @@
  * ---------------------------------------------------------------------------
  */
 
-#include <config.h>
+#include <vjConfig.h>
 #include <iostream.h>
 #include <stdio.h>
 #include <sys/types.h>

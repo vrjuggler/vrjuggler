@@ -1,4 +1,4 @@
-#include <config.h>
+#include <vjConfig.h>
 
 #include <Sync/vjMutex.h>
 #include <Kernel/vjDebug.h>

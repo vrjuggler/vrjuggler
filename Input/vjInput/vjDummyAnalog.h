@@ -10,7 +10,7 @@
 #ifndef _VJ_DUMMYANALOG_H_
 #define _VJ_DUMMYANALOG_H_
 
-#include <config.h>
+#include <vjConfig.h>
 #include <Input/vjInput/vjAnalog.h>
 
 //: A dummy Analog device for Analog proxies to default to.

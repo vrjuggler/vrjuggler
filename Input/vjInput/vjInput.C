@@ -1,4 +1,4 @@
-#include <config.h>
+#include <vjConfig.h>
 #include <Input/vjInput/vjInput.h>
 
 vjInput::vjInput( vjConfigChunk *c)

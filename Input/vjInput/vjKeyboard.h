@@ -11,7 +11,7 @@
 #ifndef _VJ_KEYBOARD_H_
 #define _VJ_KEYBOARD_H_
 
-#include <config.h>
+#include <vjConfig.h>
 #include <X11/Xlib.h>
 #include <X11/Xutil.h>
 #include <X11/keysym.h>

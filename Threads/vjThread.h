@@ -2,7 +2,7 @@
 #define _VJ_THREAD_H_
 #pragma once
 
-#include <config.h>
+#include <vjConfig.h>
 #include <unistd.h>
 
 

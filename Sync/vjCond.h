@@ -1,7 +1,7 @@
 #ifndef _VJCond_h_
 #define _VJCond_h_
 
-#include <config.h>
+#include <vjConfig.h>
 
 #ifdef VJ_SGI_IPC
 #    include <ulocks.h>

@@ -1,4 +1,4 @@
-#include <config.h>
+#include <vjConfig.h>
 
 #include <SharedMem/vjMemPool.h>
 #include <SharedMem/vjMemPoolSGI.h>

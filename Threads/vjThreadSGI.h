@@ -4,7 +4,7 @@
 // NOTE: This file(vjThreadSGI.h) MUST be included by vjThread.h.
 // Not the other way around
 
-#include <config.h>
+#include <vjConfig.h>
 #include <iostream.h>
 #include <sys/resource.h>
 #include <sys/types.h>

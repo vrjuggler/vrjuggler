@@ -10,7 +10,7 @@
 // Date: 1-20-97
 //-----------------------------------------------
 
-#include <config.h>
+#include <vjConfig.h>
 #include <SharedMem/C2Memory.h>
 
 template <class T>

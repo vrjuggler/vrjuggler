@@ -13,7 +13,7 @@
 // Date: 1-21-97
 //-----------------------------------------------
 
-#include <config.h>
+#include <vjConfig.h>
 #include <iostream.h>
 
 class vjNullMutex

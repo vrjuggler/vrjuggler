@@ -2,7 +2,7 @@
 #define _VJ_THREAD_MANAGER_H_
 #pragma once
 
-#include <config.h>
+#include <vjConfig.h>
 #include <Threads/vjThread.h>
 #include <Threads/vjTSTable.h>
 #include <Sync/vjMutex.h>

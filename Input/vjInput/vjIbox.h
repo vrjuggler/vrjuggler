@@ -7,7 +7,7 @@
 #ifndef _VJ_IBOX_H_
 #define _VJ_IBOX_H_
 
-#include <config.h>
+#include <vjConfig.h>
 #include <Input/vjInput/vjInput.h>
 #include <Input/vjInput/vjDigital.h>
 #include <Input/vjInput/vjAnalog.h>

@@ -1,7 +1,7 @@
 #ifndef _VJSemaphore_h_
 #define _VJSemaphore_h_
 
-#include <config.h>
+#include <vjConfig.h>
 
 #ifdef VJ_SGI_IPC
 #   include <ulocks.h>

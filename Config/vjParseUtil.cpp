@@ -1,4 +1,4 @@
-#include <config.h>
+#include <vjConfig.h>
 #include <strings.h>
 #include <ctype.h>
 #include <Config/vjParseUtil.h>

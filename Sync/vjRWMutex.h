@@ -1,7 +1,7 @@
 #ifndef _VJRWMutex_h_
 #define _VJRWMutex_h_
 
-#include <config.h>
+#include <vjConfig.h>
 #include <Sync/vjSempahore.h>
 #include <Sync/vjCond.h>
 #include <Sync/vjMutex.h>

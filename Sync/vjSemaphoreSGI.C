@@ -1,4 +1,4 @@
-#include <config.h>
+#include <vjConfig.h>
 
 #include <Sync/vjSemaphore.h>
 #include <Sync/vjSemaphoreSGI.h>

@@ -1,5 +1,5 @@
 /* vjCyberGlove */
-#include <config.h>
+#include <vjConfig.h>
 #include <sys/time.h>
 
 // need stdio for sprintf

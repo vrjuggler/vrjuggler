@@ -13,7 +13,7 @@
 #ifndef _THREAD_KEY_POSIX_H_
 #define _THREAD_KEY_POSIX_H_
 
-#include <config.h>
+#include <vjConfig.h>
 #include <pthread.h>
 #include <sys/types.h>
 

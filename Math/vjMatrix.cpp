@@ -1,4 +1,4 @@
-#include <config.h>
+#include <vjConfig.h>
 #include <Math/vjMatrix.h>
 #include <Math/vjVec3.h>
 #include <Math/vjCoord.h>

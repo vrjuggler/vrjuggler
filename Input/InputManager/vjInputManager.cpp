@@ -1,4 +1,4 @@
-#include <config.h>
+#include <vjConfig.h>
 #include <iostream.h>
 #include <iomanip.h>
 #include <assert.h>

@@ -1,7 +1,7 @@
 #ifndef _VJ_PROJECTION_
 #define _VJ_PROJECTION_
 
-#include <config.h>
+#include <vjConfig.h>
 #include <Math/vjMatrix.h>
 #include <Kernel/vjFrustum.h>
 #include <Kernel/vjDebug.h>

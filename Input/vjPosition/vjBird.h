@@ -8,7 +8,7 @@
 #ifndef _VJ_BIRD_H_
 #define _VJ_BIRD_H_
 
-#include <config.h>
+#include <vjConfig.h>
 #include <Input/vjPosition/vjPosition.h>
 #include <Threads/vjThread.h>
 #include <Input/vjPosition/vjFlock.h>

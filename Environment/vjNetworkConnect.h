@@ -2,7 +2,7 @@
 #ifndef _VJ_NETWORK_CONNECT_
 #define _VJ_NETWORK_CONNECT_
 
-#include <config.h>
+#include <vjConfig.h>
 
 //#include <Kernel/vjKernel.h>
 #include <Threads/vjThread.h>
