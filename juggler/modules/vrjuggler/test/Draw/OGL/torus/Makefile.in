@@ -48,5 +48,6 @@ torusApp.o: torusApp.h
 # Clean-up.
 # -----------------------------------------------------------------------------
 clean:
-	rm -f Makedepend torus ${OBJECTS} *core so_locations vc60.*
+	rm -f Makedepend torus torus.exe torus.ilk ${OBJECTS} *core	\
+          so_locations *.?db
 	rm -rf ./ii_files

@@ -47,5 +47,6 @@ main.o simpleGloveApp.o: simpleGloveApp.h
 # Clean-up.
 # -----------------------------------------------------------------------------
 clean:
-	rm -f Makedepend simpleGlove ${OBJECTS} *core so_locations vc60.*
+	rm -f Makedepend simpleGlove simpleGlove.exe simpleGlove.ilk	\
+          ${OBJECTS} *core so_locations *.?db
 	rm -rf ./ii_files
