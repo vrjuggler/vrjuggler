@@ -103,21 +103,26 @@ public class VarListPanel
          return;
       }
 
-      System.out.println("Property value added...");
       PropertySheetFactory f = PropertySheetFactory.instance();
+
+      // Add 2 to the index to account for the way that the layout is done by
+      // PropertySheetFactory.  Row 0 is empty, and Row 1 contains the "New"
+      // button (yes, this class should probably not have to account for
+      // that...).
+      int row = evt.getIndex() + 2;
 
       if(ConfigElement.class == prop_def.getType())
       {
          // Use the PropertySheetFactory to add an additional embedded element.
          f.addEmbeddedElement((PropertySheet) mComponent, mConfigContext,
-                              elm, evt.getValue(), prop_def, 2);
+                              elm, evt.getValue(), prop_def, row);
       }
       else
       {
          // Use the PropertySheetFactory to add an aditional normal editor.
          String label = prop_def.getPropertyValueDefinition(0).getLabel();
          f.addNormalEditor((PropertySheet) mComponent, mConfigContext, elm,
-                           evt.getValue(), prop_def, label, 2,
+                           evt.getValue(), prop_def, label, row,
                            elm.getPropertyValueCount(prop_def.getToken()) - 1);
       }
 
@@ -139,9 +144,6 @@ public class VarListPanel
 
    public void propertyValueRemoved(ConfigElementEvent evt)
    {
-      System.out.println("[VarListPanel.propertyValueRemoved()] " +
-                         "Property value removed...");
-
       revalidate();
       repaint();
    }
