@@ -46,6 +46,7 @@
 #         --prefix=<Base directory where Makefile will go>
 #         --startdir=<Directory where search begins>
 #         --SUBDIRS=<Directories containing Makefile.in's>
+#         --PLATFORM=<Platform for which the Makefile is generated>
 #         --uname=<Owner's user name>
 #         --gname=<Group name>
 #         --mode=<Mode bits>
@@ -97,6 +98,7 @@ Usage:
         --TEST_EXTRA_LIBS_GL=<Extra OpenGL libraries needed for test code>
         --TEST_EXTRA_LIBS_PF=<Extra Performer libraries needed for test code>
         --SUBDIRS=<Directories containing Makefile.in's>
+        --PLATFORM=<Platform for which the Makefile is generated>
       [ --uname=<Owner's user name> --gname=<Group name> --mode=<Mode bits> ]
 USAGE_EOF
 }
@@ -107,8 +109,9 @@ GetOptions("CXX=s" => \$VARS{'CXX'}, "DEFS:s" => \$VARS{'DEFS'},
 	   "CPPFLAGS:s" => \$VARS{'CPPFLAGS'},
 	   "CXXFLAGS:s" => \$VARS{'CXXFLAGS'},
 	   "EXTRA_LINK_FLAGS:s" => \$VARS{'EXTRA_LINK_FLAGS'},
-	   "OBJ_NAME_FLAG:s" => \$VARS{'OBJ_NAME_FLAG'},
 	   "INCLUDES:s" => \$VARS{'INCLUDES'},
+	   "OBJ_NAME_FLAG:s" => \$VARS{'OBJ_NAME_FLAG'},
+	   "PLATFORM:s" => \$VARS{'PLATFORM'},
 	   "TEST_VJ_LIBS_BASIC=s" => \$VARS{'TEST_VJ_LIBS_BASIC'},
 	   "TEST_VJ_LIBS_GL=s" => \$VARS{'TEST_VJ_LIBS_GL'},
 	   "TEST_VJ_LIBS_PF=s" => \$VARS{'TEST_VJ_LIBS_PF'},
