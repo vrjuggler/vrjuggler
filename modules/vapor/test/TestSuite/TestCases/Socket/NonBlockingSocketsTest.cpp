@@ -156,7 +156,8 @@ void NonBlockingSocketTest::testNonBlockingTransfer_acceptor (void* arg)
    vpr::Uint32 bytes_written;
    vpr::SocketAcceptor acceptor;
    vpr::SocketStream client_sock;
-   vpr::InetAddr acceptor_addr(mAcceptorPort);
+   vpr::InetAddr acceptor_addr;
+   acceptor_addr.setPort(mAcceptorPort);
 
    status = acceptor.open(acceptor_addr);
    assertTestThread(status.success() && "Failed to open acceptor");
@@ -433,7 +434,8 @@ void NonBlockingSocketTest::testSendUDP ()
 void NonBlockingSocketTest::testSendUDP_receiver (void* arg)
 {
    vpr::ReturnStatus status;
-   vpr::InetAddr my_addr(mReceiverPort), from_addr;
+   vpr::InetAddr my_addr, from_addr;
+   my_addr.setPort(mReceiverPort);
    std::string data;
    vpr::Uint32 bytes_read;
    vpr::SocketDatagram recv_sock(my_addr, vpr::InetAddr::AnyAddr);
