@@ -236,7 +236,7 @@ Table of contents:
   Make sure you have your LD_LIBRARY_PATHs set...
   
   for Linux:
-  setenv LD_LIBRARY_PATH "$VPR_BASE_DIR"/lib:"$GADGET_BASE_DIR"/lib:"$JCCL_BASE_DIR"/lib:"$VJ_BASE_DIR"/lib:"$SNX_BASE_DIR"/lib
+  setenv LD_LIBRARY_PATH "$VPR_BASE_DIR"/lib:"$GADGET_BASE_DIR"/lib:"$JCCL_BASE_DIR"/lib:"$VJ_BASE_DIR"/lib:"$SNX_BASE_DIR"/lib:"$XERCESROOT"/lib:"$OALROOT"/lib
 
   for Irix:
-  setenv LD_LIBRARYN32_PATH "$VPR_BASE_DIR"/lib32:"$GADGET_BASE_DIR"/lib32:"$JCCL_BASE_DIR"/lib32:"$VJ_BASE_DIR"/lib32:"$SNX_BASE_DIR"/lib32
+  setenv LD_LIBRARYN32_PATH "$VPR_BASE_DIR"/lib32:"$GADGET_BASE_DIR"/lib32:"$JCCL_BASE_DIR"/lib32:"$VJ_BASE_DIR"/lib32:"$SNX_BASE_DIR"/lib32:"$XERCESROOT"/lib32:"$OALROOT"/lib32
