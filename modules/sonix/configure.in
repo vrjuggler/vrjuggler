@@ -190,14 +190,14 @@ DPP_INSTALLER(sonix, 0644, 0755, 0755)
 EXTRA_LINK_FLAGS=''
 
 if test "x$PLATFORM" = "xIRIX" -a "x$USE_GCC" != "xyes" ; then
-    CFLAGS="$CFLAGS -woff 1685,515,608,658,799,803,852,1048,1233,1499"
-    CXXFLAGS="$CXXFLAGS -woff 3322 -w2"
+#    CFLAGS="$CFLAGS -woff 1685,515,608,658,799,803,852,1048,1233,1499"
+    CXXFLAGS="$CXXFLAGS -w2"
     EXTRA_LINK_FLAGS="-all"
 elif test "x$OS_TYPE" = "xWin32" -a "x$USE_GCC" != "xyes" ; then
     vc_cflags='/QIfdiv /QI0f'
     vc_cxxflags='/GR /GX /EHc /QIfdiv /QI0f'
-    CFLAGS="$CFLAGS /W3 $vc_cflags"
-    CXXFLAGS="$CXXFLAGS /W3 $vc_cxxflags"
+    CFLAGS="$CFLAGS $vc_cflags"
+    CXXFLAGS="$CXXFLAGS $vc_cxxflags"
     EXTRA_LINK_FLAGS="$EXTRA_LINK_FLAGS /MTd"
     DBG_FLAGS="$DBG_FLAGS /MDd"
     OPT_FLAGS="$OPT_FLAGS /MD"
