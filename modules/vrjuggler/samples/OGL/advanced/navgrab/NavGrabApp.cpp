@@ -43,6 +43,7 @@
 #include <iostream>
 
 #include "NavGrabApp.h"
+//#include <TestCases/FailureTestCase.h>
 
 
 void NavGrabApp::init()
@@ -145,6 +146,17 @@ void NavGrabApp::preFrame()
       logger->play();
    }
 
+   // Test runner info
+   if(mFramesToSleep != 0)
+   {
+      mFramesToSleep--;
+      std::cout << "mFramesToSleep: " << mFramesToSleep << std::endl;
+   }
+   else if((NULL != mTestRunner) && (mTestRunner->getState() == vrj::test::TestRunner::Processing) )
+   {
+      mTestRunner->processTests();
+   }
+
 }
 
 void NavGrabApp::bufferPreDraw()
@@ -186,6 +198,23 @@ void NavGrabApp::dumpState()
       << "Cube -- min: " << mCube.getMin() << " ## max: " << mCube.getMax()
       << std::endl << vprDEBUG_FLUSH;
 }
+
+/** Initialize the test runner and the associated tests.
+* This also sets up the runner to start processing tests
+*/
+void NavGrabApp::initTesting()
+{
+   mTestRunner = new vrj::test::TestRunner;
+
+   /*
+   FailureTestCase* test;
+   vrj::test::TestCase* test_case = new FailureTestCase;
+   mTestRunner->addTest(new test_case);
+   */
+
+   mTestRunner->initialize(this);
+}
+
 
 void NavGrabApp::initShapes()
 {
@@ -350,3 +379,4 @@ void NavGrabApp::drawFloor()
       glPolygonMode(GL_FRONT, GL_FILL);
    glPopMatrix();
 }
+

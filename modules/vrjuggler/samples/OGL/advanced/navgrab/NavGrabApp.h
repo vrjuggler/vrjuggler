@@ -42,20 +42,24 @@
 #include <gadget/Type/DigitalInterface.h>
 #include <vrj/Draw/OGL/GlApp.h>
 
+#include <vrj/Test/TestRunner.h>
+
 
 class NavGrabApp : public vrj::GlApp
 {
 public:
    NavGrabApp()
       : vrj::GlApp(), mSphereQuad(NULL), mSphereIsect(false),
-        mSphereSelected(false), mCubeIsect(false), mCubeSelected(false)
+        mSphereSelected(false), mCubeIsect(false), mCubeSelected(false),
+        mFramesToSleep(25), mTestRunner(NULL)
    {
       initShapes();
    }
 
    NavGrabApp(vrj::Kernel* kern)
       : vrj::GlApp(kern), mSphereQuad(NULL), mSphereIsect(false),
-        mSphereSelected(false), mCubeIsect(false), mCubeSelected(false)
+        mSphereSelected(false), mCubeIsect(false), mCubeSelected(false),
+        mFramesToSleep(25), mTestRunner(NULL)
    {
       initShapes();
    }
@@ -78,6 +82,11 @@ public:
    virtual void reset();
 
    void dumpState();
+
+   /** Initialize the test runner and the associated tests.
+   * This also sets up the runner to start processing tests
+   */
+   void initTesting();
 
 private:
    void initShapes();
@@ -112,6 +121,9 @@ private:
    gmtl::AABoxf  mCube;
    bool          mCubeIsect;
    bool          mCubeSelected;
+
+   unsigned                mFramesToSleep;         /**< Number of frames to sleep at start up */
+   vrj::test::TestRunner*  mTestRunner;            /**< Test runner for this appliation */
 };
 
 
