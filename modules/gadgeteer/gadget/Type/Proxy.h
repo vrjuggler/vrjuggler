@@ -47,7 +47,6 @@ namespace gadget
 
    /**
     * Base class for all input proxies.
-    * @todo rename to InputProxy
     */
    class GADGET_CLASS_API Proxy
    {
@@ -122,9 +121,10 @@ namespace gadget
          return mStupified;
       }
 
-      /** Set the stupification state.
-      * @param newState - The new state of stupification
-      */
+      /**
+       * Sets the stupification state.
+       * @param newState The new state of stupification.
+       */
       void stupify(bool newState = true)
       {
          mStupified = newState;
@@ -140,7 +140,9 @@ namespace gadget
    class TypedProxy : public Proxy
    {
    public:
-      TypedProxy() : mDeviceName("Unknown"), mTypedDevice(NULL)
+      TypedProxy()
+         : mDeviceName("Unknown")
+         , mTypedDevice(NULL)
       {
          ;
       }
@@ -149,8 +151,9 @@ namespace gadget
        * Sets the proxy to point to the given type specific device.
        *
        * @pre devPtr must be a valid device of type DEV_TYPE.
-       * @post The proxy now references the given device.
-       * @post The device name we are proxying is set to devPtr->getInstanceName()
+       * @post The proxy now references the given device.  The device name we
+       *       are proxying is set to devPtr->getInstanceName()
+       *
        * @param devPtr Pointer to the device.
        */
       virtual void set(std::string devName, DEV_TYPE* devPtr)
