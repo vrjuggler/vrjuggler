@@ -66,6 +66,8 @@ SocketDatagramImplBSD::recvfrom (void* msg, const size_t length,
     retval = m_handle->isReadable(timeout);
 
     if ( retval.success() ) {
+        m_blocking_fixed = true;
+
         fromlen    = from.size();
         bytes_read = ::recvfrom(m_handle->m_fdesc, msg, length, flags,
                                 (struct sockaddr*) &from.m_addr, &fromlen);
@@ -99,6 +101,8 @@ SocketDatagramImplBSD::sendto (const void* msg, const size_t length,
     retval = m_handle->isWriteable(timeout);
 
     if ( retval.success() ) {
+        m_blocking_fixed = true;
+
         bytes_sent = ::sendto(m_handle->m_fdesc, msg, length, flags,
                               (struct sockaddr*) &to.m_addr, to.size());
 

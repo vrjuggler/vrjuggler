@@ -126,11 +126,7 @@ public:
     //! RETURNS: false - The blocking mode could not be changed for some
     //+                  reason.
     // ------------------------------------------------------------------------
-    virtual Status
-    enableBlocking (void) {
-        vprASSERT(m_open && "precondition says you must open() the socket first");
-        return m_handle->enableBlocking();
-    }
+    virtual Status enableBlocking(void);
 
     // ------------------------------------------------------------------------
     //: Reconfigure the socket so that it is in non-blocking mode.
@@ -142,11 +138,7 @@ public:
     //! RETURNS: false - The blocking mode could not be changed for some
     //+                  reason.
     // ------------------------------------------------------------------------
-    virtual Status
-    enableNonBlocking (void) {
-        vprASSERT(m_open && "precondition says you must open() the socket first");
-        return m_handle->enableNonBlocking();
-    }
+    virtual Status enableNonBlocking(void);
 
     // ========================================================================
     // vpr::SocketImp interface implementation.
@@ -218,7 +210,8 @@ protected:
     // ------------------------------------------------------------------------
     SocketImplBSD (const SocketTypes::Type sock_type)
         : BlockIO(std::string("INADDR_ANY")), m_bound(false),
-          m_connected(false), m_handle(NULL), m_type(sock_type)
+          m_connected(false), m_handle(NULL), m_type(sock_type),
+          m_blocking_fixed(false)
     {
         m_handle = new FileHandleImplUNIX("INADDR_ANY");
     }
@@ -238,7 +231,8 @@ protected:
                    const SocketTypes::Type sock_type)
         : BlockIO(std::string("INADDR_ANY")), m_bound(false),
           m_connected(false), m_handle(NULL), m_local_addr(local_addr),
-          m_remote_addr(remote_addr), m_type(sock_type)
+          m_remote_addr(remote_addr), m_type(sock_type),
+          m_blocking_fixed(false)
     {
         m_handle = new FileHandleImplUNIX(m_name);
     }
@@ -257,6 +251,7 @@ protected:
     read_i (void* buffer, const size_t length, ssize_t& bytes_read,
             const vpr::Interval timeout = vpr::Interval::NoTimeout)
     {
+        m_blocking_fixed = true;
         return m_handle->read(buffer, length, bytes_read, timeout);
     }
 
@@ -266,6 +261,7 @@ protected:
     readn_i (void* buffer, const size_t length, ssize_t& bytes_read,
              const vpr::Interval timeout = vpr::Interval::NoTimeout)
     {
+        m_blocking_fixed = true;
         return m_handle->readn(buffer, length, bytes_read, timeout);
     }
 
@@ -275,6 +271,7 @@ protected:
     write_i (const void* buffer, const size_t length, ssize_t& bytes_written,
              const vpr::Interval timeout = vpr::Interval::NoTimeout)
     {
+        m_blocking_fixed = true;
         return m_handle->write(buffer, length, bytes_written, timeout);
     }
 
@@ -296,6 +293,8 @@ protected:
     InetAddr            m_local_addr;  //: The local site's address structure
     InetAddr            m_remote_addr; //: The remote site's address structure
     SocketTypes::Type   m_type;        //:
+
+    bool                m_blocking_fixed;
 };
 
 }; // End of vpr namespace
