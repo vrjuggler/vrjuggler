@@ -166,6 +166,9 @@
 /* Define if you have the atan2f function.  */
 #undef HAVE_ATAN2F
 
+/* Define if you have the atan2f function.  */
+#undef HAVE_FABSF
+
 @BOTTOM@
 
 #endif	/* _VJ_DEFINES_H_ */
