@@ -45,15 +45,28 @@ public class JTreeTable
    /** A subclass of JTree. */
    protected TreeTableCellRenderer tree;
 
+   public JTreeTable()
+   {
+      this(new AbstractTreeTableModel("")
+      {
+         public Object getChild(Object parent, int idx)  { return null; }
+         public int getChildCount(Object node)           { return 0; }
+         public int getColumnCount()                     { return 0; }
+         public String getColumnName(int col)            { return ""; }
+         public Object getValueAt(Object node, int col)  { return null; }
+      });
+   }
+
    public JTreeTable(TreeTableModel treeTableModel)
    {
       super();
 
       // Create the tree. It will be used as a renderer and editor.
-      tree = new TreeTableCellRenderer(treeTableModel);
+      tree = new TreeTableCellRenderer();
 
-      // Install a tableModel representing the visible rows in the tree.
-      super.setModel(new TreeTableModelAdapter(treeTableModel, tree));
+      // Install the tree editor renderer and editor.
+      setDefaultRenderer(TreeTableModel.class, tree);
+      setDefaultEditor(TreeTableModel.class, new TreeTableCellEditor());
 
       // Force the JTable and JTree to share their row selection models.
       ListToTreeSelectionModelWrapper selectionWrapper = new
@@ -61,9 +74,8 @@ public class JTreeTable
       tree.setSelectionModel(selectionWrapper);
       setSelectionModel(selectionWrapper.getListSelectionModel());
 
-      // Install the tree editor renderer and editor.
-      setDefaultRenderer(TreeTableModel.class, tree);
-      setDefaultEditor(TreeTableModel.class, new TreeTableCellEditor());
+      // Set the model
+      setModel(treeTableModel);
 
       // No grid.
       setShowGrid(false);
@@ -78,6 +90,13 @@ public class JTreeTable
          // Metal looks better like this.
          setRowHeight(18);
       }
+   }
+
+   public void setModel(TreeTableModel treeTableModel)
+   {
+      tree.setModel(treeTableModel);
+      // Install a tableModel representing the visible rows in the tree.
+      super.setModel(new TreeTableModelAdapter(treeTableModel, tree));
    }
 
    /**
@@ -139,6 +158,11 @@ public class JTreeTable
    {
       /** Last table/tree row asked to renderer. */
       protected int visibleRow;
+
+      public TreeTableCellRenderer()
+      {
+         super();
+      }
 
       public TreeTableCellRenderer(TreeModel model)
       {
