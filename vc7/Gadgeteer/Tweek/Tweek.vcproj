@@ -18,6 +18,7 @@
 			CharacterSet="2">
 			<Tool
 				Name="VCCLCompilerTool"
+				AdditionalOptions="/Zm800"
 				Optimization="0"
 				AdditionalIncludeDirectories=".;&quot;$(NSPR_ROOT)\include&quot;;&quot;$(BOOST_INCLUDES)&quot;;&quot;$(CPPDOM_ROOT)\include&quot;;&quot;$(OMNIORB_ROOT)\include&quot;;..;..\..\..\modules\vapor;..\..\VPR;..\..\..\modules\jackal\common;..\..\..\modules\jackal\config;..\..\..\modules\jackal\rtrc;..\..\JCCL;..\..\..\modules\gadgeteer;..\..\..\modules\gadgeteer\drivers;..\..\..\external\GMTL;..\..\..\modules\tweek;..\..\Tweek_CXX;..\..\Tweek_CXX\tweek\CORBA"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_USRDLL;_GADGET_DRIVER_BUILD_;__NT__=1;__OSVERSION__=5;__WIN32__=1;__x86__=1"
@@ -35,10 +36,10 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="omniORB$(OMNIORB_VERSION)_rtd.lib omnithread30_rtd.lib omniDynamic$(OMNIORB_VERSION)_rtd.lib gadget_d.lib jccl_d.lib tweek_d.lib vpr_d.lib cppdom.lib libnspr4.lib libplc4.lib ws2_32.lib comctl32.lib gdi32.lib user32.lib $(NOINHERIT)"
+				AdditionalDependencies="omniORB$(OMNIORB_VERSION)_rtd.lib omnithread30_rtd.lib omniDynamic$(OMNIORB_VERSION)_rtd.lib gadget_d.lib jccl_d.lib tweek_d.lib vpr_d.lib libnspr4.lib libplc4.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/TweekGadget_drv_d.dll"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="&quot;$(NSPR_ROOT)\lib&quot;;&quot;$(BOOST_ROOT)\lib&quot;;&quot;$(CPPDOM_ROOT)\lib\DebugDLL&quot;;&quot;$(OMNIORB_ROOT)\lib\x86_win32&quot;;..\DebugDLL;..\..\Tweek_CXX\DebugDLL;..\..\JCCL\DebugDLL;..\..\VPR\DebugDLL"
+				AdditionalLibraryDirectories="&quot;$(NSPR_ROOT)\lib&quot;;&quot;$(BOOST_ROOT)\lib&quot;;&quot;$(OMNIORB_ROOT)\lib\x86_win32&quot;;..\DebugDLL;..\..\Tweek_CXX\DebugDLL;..\..\JCCL\DebugDLL;..\..\VPR\DebugDLL"
 				GenerateDebugInformation="TRUE"
 				ProgramDatabaseFile="$(OutDir)/TweekGadget_drv_d.pdb"
 				SubSystem="2"
@@ -92,10 +93,10 @@ $(OMNIORB_ROOT)\bin\x86_win32\omniidl -bcxx -Wbh=.h,s=.cpp -I..\..\..\modules\tw
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="omniORB$(OMNIORB_VERSION)_rt.lib omnithread30_rt.lib omniDynamic$(OMNIORB_VERSION)_rt.lib gadget.lib jccl.lib tweek.lib vpr.lib cppdom.lib libnspr4.lib ws2_32.lib comctl32.lib gdi32.lib user32.lib $(NOINHERIT)"
+				AdditionalDependencies="omniORB$(OMNIORB_VERSION)_rt.lib omnithread30_rt.lib omniDynamic$(OMNIORB_VERSION)_rt.lib gadget.lib jccl.lib tweek.lib vpr.lib libnspr4.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/TweekGadget_drv.dll"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="&quot;$(NSPR_ROOT)\lib&quot;;&quot;$(BOOST_ROOT)\lib&quot;;&quot;$(CPPDOM_ROOT)\lib\ReleaseDLL&quot;;&quot;$(OMNIORB_ROOT)\lib\x86_win32&quot;;..\ReleaseDLL;..\..\Tweek_CXX\ReleaseDLL;..\..\JCCL\ReleaseDLL;..\..\VPR\ReleaseDLL"
+				AdditionalLibraryDirectories="&quot;$(NSPR_ROOT)\lib&quot;;&quot;$(BOOST_ROOT)\lib&quot;;&quot;$(OMNIORB_ROOT)\lib\x86_win32&quot;;..\ReleaseDLL;..\..\Tweek_CXX\ReleaseDLL;..\..\JCCL\ReleaseDLL;..\..\VPR\ReleaseDLL"
 				GenerateDebugInformation="TRUE"
 				ProgramDatabaseFile="$(OutDir)/TweekGadget_drv.pdb"
 				SubSystem="2"

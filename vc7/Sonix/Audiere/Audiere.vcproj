@@ -35,7 +35,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="sonix_d.lib vpr_d.lib cppdom.lib  audiere.lib libnspr4.lib libplc4.lib ws2_32.lib comctl32.lib $(NOINHERIT)"
+				AdditionalDependencies="sonix_d.lib vpr_d.lib audiere.lib libnspr4.lib libplc4.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/Audiere.dll"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="&quot;$(AUDIERE_ROOT)\lib&quot;;&quot;$(NSPR_ROOT)\lib&quot;;&quot;$(BOOST_ROOT)\lib&quot;;&quot;$(CPPDOM_ROOT)\lib\DebugDLL&quot;;..\DebugDLL;..\..\Sonix\DebugDLL;..\..\VPR\DebugDLL"
@@ -87,7 +87,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="sonix.lib vpr.lib cppdom.lib audiere.lib libnspr4.lib libplc4.lib ws2_32.lib comctl32.lib $(NOINHERIT)"
+				AdditionalDependencies="sonix.lib vpr.lib audiere.lib libnspr4.lib libplc4.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/Audiere.dll"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="&quot;$(AUDIERE_ROOT)\lib&quot;;&quot;$(NSPR_ROOT)\lib&quot;;&quot;$(BOOST_ROOT)\lib&quot;;&quot;$(CPPDOM_ROOT)\lib\ReleaseDLL&quot;;..\ReleaseDLL;..\..\Sonix\ReleaseDLL;..\..\VPR\ReleaseDLL"
