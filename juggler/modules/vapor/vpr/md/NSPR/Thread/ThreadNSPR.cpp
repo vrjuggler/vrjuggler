@@ -41,6 +41,7 @@
 
 #include <vpr/vprConfig.h>
 
+#include <iomanip>
 #include <boost/concept_check.hpp>
 
 #include <vpr/Util/Assert.h>
@@ -193,6 +194,15 @@ Thread* ThreadNSPR::self (void)
    return my_thread;
 }
 
+std::ostream& Thread::outStream(std::ostream& out)
+{
+   out.setf(std::ios::right);
+   out << std::setw(7) << std::setfill('0') << getpid() << "/";
+   out.unsetf(std::ios::right);
+   BaseThread::outStream(out);
+   out << std::setfill(' ');
+   return out;
+}
 
 /**
  * Helper method Called by the spawn routine to start the user thread function.

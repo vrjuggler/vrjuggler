@@ -39,7 +39,6 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-
 #ifndef _VPR_THREAD_NSPR_H_
 #define _VPR_THREAD_NSPR_H_
 //#pragma once
@@ -275,15 +274,7 @@ public:
    /**
     * Provides a way of printing the process ID neatly.
     */
-   virtual std::ostream& outStream (std::ostream& out)
-   {
-      out.setf(std::ios::right);
-      out << std::setw(7) << std::setfill('0') << getpid() << "/";
-      out.unsetf(std::ios::right);
-      BaseThread::outStream(out);
-      out << std::setfill(' ');
-      return out;
-   }
+   virtual std::ostream& outStream(std::ostream& out);
 
 // All private member variables and functions.
 private:
