@@ -871,6 +871,20 @@ if test "$OS_TYPE" = "UNIX" ; then
 
         APP_EXTRA_LIBS_BEGIN='-B dynamic'
         APP_EXTRA_LIBS_END='-lm'
+    elif test "x$GXX" = "xyes" ; then
+        dnl # For now, we are disabling static linking for the sample
+        dnl # applications when compiled in a developer's build tree.  This
+        dnl # is only the case on non-IRIX platforms.
+        APP_VJ_LIBS_BEGIN="-Wl,-Bstatic -L\$(VJ_BASE_DIR)/lib${LIBBITSUF}"
+        APP_VJ_LIBS_END=''
+        APP_VJ_LIBS_BASIC='-lJuggler'
+
+        APP_VJ_LIBS_BEGIN_INST="-Wl,-Bdynamic -L\$(VJ_BASE_DIR)/lib${LIBBITSUF}"
+        APP_VJ_LIBS_END_INST="$APP_VJ_LIBS_END"
+        APP_VJ_LIBS_BASIC_INST="$APP_VJ_LIBS_BASIC"
+
+        APP_EXTRA_LIBS_BEGIN='-Wl,-Bdynamic'
+        APP_EXTRA_LIBS_END="-lm"
     else
         dnl # For now, we are disabling static linking for the sample
         dnl # applications when compiled in a developer's build tree.  This
@@ -884,11 +898,11 @@ if test "$OS_TYPE" = "UNIX" ; then
         APP_VJ_LIBS_BASIC_INST="$APP_VJ_LIBS_BASIC"
 
         APP_EXTRA_LIBS_END="-lm"
+    fi
 
-        dnl # FreeBSD apparently needs to use libcompat for linking now.
-        if test "x$PLATFORM" = "xFreeBSD" ; then
-            APP_EXTRA_LIBS_END="$APP_EXTRA_LIBS_END -lcompat"
-        fi
+    dnl # FreeBSD needs to use libcompat for linking.
+    if test "x$PLATFORM" = "xFreeBSD" ; then
+        APP_EXTRA_LIBS_END="$APP_EXTRA_LIBS_END -lcompat"
     fi
 
     APP_VJ_LIBS_GL="-lJuggler_ogl"
