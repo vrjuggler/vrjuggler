@@ -1,5 +1,8 @@
 DATE       AUTHOR   CHANGE
 ---------- -------- -----------------------------------------------------------
+2003-09-18 patrickh Refactored vpr::LibraryLoader to use Boost.Function as a
+                    callback mechanism for initializing DSOs.
+                    NEW VERSION: 0.28.0
 2003-09-18 allenb   Changed the std::string constructor in vpr::GUID to be
                     explicit.  This eliminates some autoconversion issues.
 2003-09-15 patrickh Dropped support for Draft 4 of the POSIX threads standard.

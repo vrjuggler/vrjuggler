@@ -58,6 +58,7 @@ SUBOBJDIR=	$(VPR_LIBRARY)
 
 SRCS=		DsoLoader.cpp		\
 		LibraryFinder.cpp	\
+		LibraryLoader.cpp	\
 		LoaderError.cpp
 
 include $(MKPATH)/dpp.obj.mk
