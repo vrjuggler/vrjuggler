@@ -177,10 +177,6 @@ void cubesApp::init()
 // here.
 void cubesApp::contextInit()
 {
-   // Create display list
-   vjASSERT(mDlData->firstTime == true);   // We should not have been here yet
-   mDlData->firstTime = false;
-
    // Generate some random lists.  NOTE: Needed for testing/debugging only!
    mDlDebugData->maxIndex = rand()%50;
    mDlDebugData->dlIndex = glGenLists(mDlDebugData->maxIndex);
