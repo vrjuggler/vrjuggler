@@ -41,7 +41,10 @@ APP_NAME=	wand@EXEEXT@
 
 # Basic options.
 srcdir=		@srcdir@
-SRCS=		main.cpp wandApp.cpp
+SRCS=		main.cpp wandApp.cpp Text.cpp PerfProbe.cpp
+
+EXTRA_INCLUDES = -I$(srcdir)/../perfAddon 
+EXTRA_PATH_FOR_SOURCES = $(srcdir)/../perfAddon
 
 include $(VJ_BASE_DIR)/share/vrjuggler/vrj.appdefs.mk
 include $(DZR_BASE_DIR)/ext/vrjuggler/dzr.vrjuggler.glapp.mk

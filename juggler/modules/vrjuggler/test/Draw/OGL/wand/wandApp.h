@@ -38,6 +38,8 @@
 #include <gmtl/Vec.h>
 #include <gmtl/Matrix.h>
 
+#include <PerfProbe.h>
+
 namespace vrjTest
 {
 
@@ -108,6 +110,8 @@ private:
    gadget::DigitalInterface     mButton5;
 
    std::vector<gmtl::Vec3f>     mHeadHistory;
+
+   PerfProbe                    mPerfProbe;     /**< Performance probe to use. */
 };
 
 }
