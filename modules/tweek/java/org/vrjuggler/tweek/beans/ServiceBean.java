@@ -44,11 +44,14 @@ package org.vrjuggler.tweek.beans;
  */
 public class ServiceBean extends TweekBean
 {
-   public ServiceBean (String service_name, String jar_path,
-                       String bean_entry_name, java.util.Vector deps)
+   /**
+    * Creates a new Service bean with the given common TweekBean attributes.
+    *
+    * @param attrs   the TweekBean attributes of this bean
+    */
+   public ServiceBean (BeanAttributes attrs)
    {
-      super(bean_entry_name, jar_path, deps);
-      serviceName = service_name;
+      super( attrs );
    }
 
    public void instantiate ()
@@ -66,11 +69,5 @@ public class ServiceBean extends TweekBean
       return service;
    }
 
-   public String getServiceName ()
-   {
-      return serviceName;
-   }
-
    protected Object service     = null;
-   protected String serviceName = null;
 }

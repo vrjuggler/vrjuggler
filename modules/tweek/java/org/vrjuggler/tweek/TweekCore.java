@@ -193,13 +193,13 @@ public class TweekCore
          try
          {
             service.instantiate();
-            ServiceRegistry.instance().registerService(service.getServiceName(),
+            ServiceRegistry.instance().registerService(service.getName(),
                                                        service.getService());
          }
          catch (BeanInstantiationException e)
          {
             System.err.println("WARNING: Failed to instantiate service '" +
-                               service.getServiceName() + "': " +
+                               service.getName() + "': " +
                                e.getMessage());
          }
       }
@@ -228,14 +228,15 @@ public class TweekCore
             BeanModelViewer bv = (BeanModelViewer) viewer.getViewer();
             bv.initDataModel(tree_model);
             bv.initGUI();
-            prefs.addBeanViewer(viewer.getViewerName());
-            ViewerRegistry.instance().registerViewer(viewer.getViewerName(),
+            prefs.addBeanViewer(viewer.getName());
+            ViewerRegistry.instance().registerViewer(viewer.getName(),
                                                      viewer.getViewer());
          }
          catch (BeanInstantiationException e)
          {
             System.err.println("WARNING: Failed to instantiate Bean viewer '" +
-                               viewer.getViewerName() + "': " + e.getMessage());
+                               viewer.getName() + "': " + e.getMessage());
+            e.printStackTrace();
          }
       }
    }

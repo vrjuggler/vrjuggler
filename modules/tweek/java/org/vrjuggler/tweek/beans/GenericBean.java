@@ -46,11 +46,15 @@ package org.vrjuggler.tweek.beans;
  */
 public class GenericBean extends TweekBean
 {
-   public GenericBean (String name, String jar_path, String bean_entry_name,
-                       java.util.Vector deps)
+   /**
+    * Creates a new Generic bean with the given name and common TweekBean
+    * attributes.
+    *
+    * @param attrs   the TweekBean attributes of this bean
+    */
+   public GenericBean( BeanAttributes attrs )
    {
-      super(bean_entry_name, jar_path, deps);
-      beanName = name;
+      super( attrs );
    }
 
    public void instantiate ()
@@ -64,11 +68,5 @@ public class GenericBean extends TweekBean
       return bean;
    }
 
-   public String getBeanName ()
-   {
-      return beanName;
-   }
-
    protected Object bean     = null;
-   protected String beanName = null;
 }
