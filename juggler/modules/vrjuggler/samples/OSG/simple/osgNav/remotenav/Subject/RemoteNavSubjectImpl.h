@@ -31,19 +31,19 @@ public:
       zPos = pos[2];
    }
 
-   void getOrientation(CORBA::Float& heading, CORBA::Float& pitch,
+   void getOrientation(CORBA::Float& pitch, CORBA::Float& heading,
                        CORBA::Float& roll)
    {
       gmtl::Matrix44f pos = mNavigater->getCurPos();
-      heading = gmtl::makeXRot(pos);
-      pitch = gmtl::makeYRot(pos);
+      pitch = gmtl::makeXRot(pos);
+      heading = gmtl::makeYRot(pos);
       roll = gmtl::makeZRot(pos);
    }
    
-   void setOrientation(CORBA::Float heading, CORBA::Float pitch,
+   void setOrientation(CORBA::Float pitch, CORBA::Float heading,
                        CORBA::Float roll)
    {
-      gmtl::EulerAngleXYZf euler( heading, pitch, roll );
+      gmtl::EulerAngleXYZf euler( pitch, heading, roll );
       gmtl::Matrix44f pos = mNavigater->getCurPos();
       gmtl::setRot(pos, euler);
       mNavigater->setCurPos(pos);
@@ -59,20 +59,21 @@ public:
       mNavigater->setVelocity(gmtl::Vec3f(xDelta, yDelta, zDelta));
    }
 
-   void setRotationalVelocity(CORBA::Float headingDelta,
-                              CORBA::Float pitchDelta, CORBA::Float rollDelta)
+   void setRotationalVelocity(CORBA::Float pitchDelta,
+                              CORBA::Float headingDelta, CORBA::Float rollDelta)
    {
       vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << "Getting Rotation Vel: " 
-                        << "X: " << headingDelta 
-                        << "Y: " << pitchDelta 
+                        << "X: " << pitchDelta 
+                        << "Y: " << headingDelta 
                         << "Z: " << rollDelta << std::endl << vprDEBUG_FLUSH;
-      gmtl::EulerAngleXYZf euler( headingDelta, pitchDelta, rollDelta );
+      gmtl::EulerAngleXYZf euler( pitchDelta, headingDelta, rollDelta );
       gmtl::Matrix44f real = gmtl::makeRot<gmtl::Matrix44f>( euler ); 
       mNavigater->setRotationalVelocity(real);
    }
 
    void setWalkMode(CORBA::Boolean walk)
    {
+      mNavigater->setWalkMode(walk);
    }
 
    vrj::RemoteNavSubject_ptr _this()

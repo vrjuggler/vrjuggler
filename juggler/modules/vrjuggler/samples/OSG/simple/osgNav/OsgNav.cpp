@@ -53,7 +53,12 @@ OsgNav::OsgNav(vrj::Kernel* kern, int& argc, char** argv) : vrj::OsgApp(kern)
    mNavTrans = new osg::MatrixTransform();
    mFileToLoad = std::string("");
    
-   //Initialize tweek with the regular MMAInterfaceSubject
+   // We need to create a new navigater before calling initTweek because we pass
+   // it to the RemoteNavSubjectImpl.
+   mNavigater = new OsgNavigater();
+   
+   //Initialize tweek, which registers a new RemoteNavSubjectImpl with the
+   //nameserver.
    initTweek( argc, argv );
 }
 
@@ -122,7 +127,10 @@ void OsgNav::bufferPreDraw()
 void OsgNav::myInit()
 {
 
-
+   //vpr::GUID new_guid("d6be4359-e8cf-41fc-a72b-a5b4f3f29aa2");
+   //std::string hostname = "crash";
+   //mMyData.init(new_guid, hostname);
+   
    mRootNode->addChild( mNoNav );
    mRootNode->addChild( mNavTrans );
 
@@ -173,7 +181,7 @@ void OsgNav::initTweek( int& argc, char* argv[] )
             if ( mCorbaManager.createSubjectManager().success() )
             {
                RemoteNavSubjectImpl* remote_nav_interface =
-                  new RemoteNavSubjectImpl(&(*mNavigater));
+                  new RemoteNavSubjectImpl(mNavigater);
 
                mCorbaManager.getSubjectManager()->addInfoItem("OsgNav","RemoteNav");
                try
