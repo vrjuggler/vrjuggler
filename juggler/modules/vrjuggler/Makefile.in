@@ -122,9 +122,12 @@ _OPT_BUILDDIR	= ${_BUILDDIR}/${_OPT_DIR}
 # Library build and installation directories.
 # --------------------------------------------
 
-# ${_install_libdir} is the base directory (minus any debugging or optimized
-# subdirectories) where the libraries will be installed.
-_install_libdir = ${libdir}${LIBBITSUF}/${ISA}
+# ${_install_libdir_abs} is the full path to the base directory (minus any
+# debugging or optimized subdirectories) where the libraries will be
+# installed.  ${_install_libdir_rel} is only the ${ISA} subdirectory of the
+# full path.
+_install_libdir_abs = ${libdir}${LIBBITSUF}/${ISA}
+_install_libdir_rel = ./${ISA}
 
 # ${_LIBDIR_NAME} is the name of the library directory including an ABI suffix
 # if applicable.
@@ -489,22 +492,22 @@ install-all: beforeinstall install-opt install-dso install-dbg		\
              install-ddso install-headers install-test install-data	\
              install-gui
 	@echo "------------------------------------------------"
-	@echo "Creating symlinks in ${_install_libdir}"
+	@echo "Creating symlinks in ${_install_libdir_abs}"
 	@echo "------------------------------------------------"
-	cd ${_install_libdir} && umask ${_UMASK} &&			\
+	cd ${_install_libdir_abs} && umask ${_UMASK} &&			\
           rm -f ${VJ_LIB_STATIC} && ln -s ${_DEFAULT_DIR}/${VJ_LIB_STATIC} ./
-	cd ${_install_libdir} && umask ${_UMASK} &&			\
+	cd ${_install_libdir_abs} && umask ${_UMASK} &&			\
           rm -f ${VJ_LIB_DYNAMIC} && ln -s ${_DEFAULT_DIR}/${VJ_LIB_DYNAMIC} ./
 ifeq (${GL_API}, Y)
-	cd ${_install_libdir} && umask ${_UMASK} &&			\
+	cd ${_install_libdir_abs} && umask ${_UMASK} &&			\
           rm -f ${GL_LIB_STATIC} && ln -s ${_DEFAULT_DIR}/${GL_LIB_STATIC} ./
-	cd ${_install_libdir} && umask ${_UMASK} &&			\
+	cd ${_install_libdir_abs} && umask ${_UMASK} &&			\
           rm -f ${GL_LIB_DYNAMIC} && ln -s ${_DEFAULT_DIR}/${GL_LIB_DYNAMIC} ./
 endif
 ifeq (${PF_API}, Y)
-	cd ${_install_libdir} && umask ${_UMASK} &&			\
+	cd ${_install_libdir_abs} && umask ${_UMASK} &&			\
           rm -f ${PF_LIB_STATIC} && ln -s ${_DEFAULT_DIR}/${PF_LIB_STATIC} ./
-	cd ${_install_libdir} && umask ${_UMASK} &&			\
+	cd ${_install_libdir_abs} && umask ${_UMASK} &&			\
           rm -f ${PF_LIB_DYNAMIC} && ln -s ${_DEFAULT_DIR}/${PF_LIB_DYNAMIC} ./
 endif
 	${MAKE} afterinstall
@@ -537,20 +540,20 @@ install-dbg: dbg
 	${MTREE_CMD} -Ude -p ${prefix}					\
           -f ${mtreedir_os}/VJ.lib${LIBBITSUF}${ISA}.dist
 	${INSTALL} -m ${_FILE_PERMS} -g ${_GROUP_NAME}			\
-          ${_DBG_LIBDIR}/${VJ_LIB_STATIC} ${_install_libdir}/${_DEBUG_DIR}/
+          ${_DBG_LIBDIR}/${VJ_LIB_STATIC} ${_install_libdir_abs}/${_DEBUG_DIR}/
 	cd ${libdir}${LIBBITSUF} && umask ${_UMASK} &&			\
-          ln -sf ${_install_libdir}/${_DEBUG_DIR}/${VJ_LIB_STATIC} ./
+          ln -sf ${_install_libdir_rel}/${_DEBUG_DIR}/${VJ_LIB_STATIC} ./
 ifeq (${GL_API}, Y)
 	${INSTALL} -m ${_FILE_PERMS} -g ${_GROUP_NAME}			\
-          ${_DBG_LIBDIR}/${GL_LIB_STATIC} ${_install_libdir}/${_DEBUG_DIR}/
+          ${_DBG_LIBDIR}/${GL_LIB_STATIC} ${_install_libdir_abs}/${_DEBUG_DIR}/
 	cd ${libdir}${LIBBITSUF} && umask ${_UMASK} &&			\
-          ln -sf ${_install_libdir}/${_DEBUG_DIR}/${GL_LIB_STATIC} ./
+          ln -sf ${_install_libdir_rel}/${_DEBUG_DIR}/${GL_LIB_STATIC} ./
 endif
 ifeq (${PF_API}, Y)
 	${INSTALL} -m ${_FILE_PERMS} -g ${_GROUP_NAME}			\
-          ${_DBG_LIBDIR}/${PF_LIB_STATIC} ${_install_libdir}/${_DEBUG_DIR}/
+          ${_DBG_LIBDIR}/${PF_LIB_STATIC} ${_install_libdir_abs}/${_DEBUG_DIR}/
 	cd ${libdir}${LIBBITSUF} && umask ${_UMASK} &&			\
-          ln -sf ${_install_libdir}/${_DEBUG_DIR}/${PF_LIB_STATIC} ./
+          ln -sf ${_install_libdir_rel}/${_DEBUG_DIR}/${PF_LIB_STATIC} ./
 endif
 
 # -------------------------------------------------------------
@@ -563,20 +566,20 @@ install-ddso: ddso
 	${MTREE_CMD} -Ude -p ${prefix}					\
           -f ${mtreedir_os}/VJ.lib${LIBBITSUF}${ISA}.dist
 	${INSTALL} -m ${_EXEC_PERMS} -g ${_GROUP_NAME}			\
-          ${_DBG_LIBDIR}/${VJ_LIB_DYNAMIC} ${_install_libdir}/${_DEBUG_DIR}/
+          ${_DBG_LIBDIR}/${VJ_LIB_DYNAMIC} ${_install_libdir_abs}/${_DEBUG_DIR}/
 	cd ${libdir}${LIBBITSUF} && umask ${_UMASK} &&			\
-          ln -sf ${_install_libdir}/${_DEBUG_DIR}/${VJ_LIB_DYNAMIC} ./
+          ln -sf ${_install_libdir_rel}/${_DEBUG_DIR}/${VJ_LIB_DYNAMIC} ./
 ifeq (${GL_API}, Y)
 	${INSTALL} -m ${_EXEC_PERMS} -g ${_GROUP_NAME}			\
-          ${_DBG_LIBDIR}/${GL_LIB_DYNAMIC} ${_install_libdir}/${_DEBUG_DIR}/
+          ${_DBG_LIBDIR}/${GL_LIB_DYNAMIC} ${_install_libdir_abs}/${_DEBUG_DIR}/
 	cd ${libdir}${LIBBITSUF} && umask ${_UMASK} &&			\
-          ln -sf ${_install_libdir}/${_DEBUG_DIR}/${GL_LIB_DYNAMIC} ./
+          ln -sf ${_install_libdir_rel}/${_DEBUG_DIR}/${GL_LIB_DYNAMIC} ./
 endif
 ifeq (${PF_API}, Y)
 	${INSTALL} -m ${_EXEC_PERMS} -g ${_GROUP_NAME}			\
-          ${_DBG_LIBDIR}/${PF_LIB_DYNAMIC} ${_install_libdir}/${_DEBUG_DIR}/
+          ${_DBG_LIBDIR}/${PF_LIB_DYNAMIC} ${_install_libdir_abs}/${_DEBUG_DIR}/
 	cd ${libdir}${LIBBITSUF} && umask ${_UMASK} &&			\
-          ln -sf ${_install_libdir}/${_DEBUG_DIR}/${PF_LIB_DYNAMIC} ./
+          ln -sf ${_install_libdir_rel}/${_DEBUG_DIR}/${PF_LIB_DYNAMIC} ./
 endif
 
 # ------------------------------------------------------------
@@ -589,20 +592,20 @@ install-opt: opt
 	${MTREE_CMD} -Ud -p ${prefix}					\
           -f ${mtreedir_os}/VJ.lib${LIBBITSUF}${ISA}.dist
 	${INSTALL} -m ${_FILE_PERMS} -g ${_GROUP_NAME}			\
-          ${_OPT_LIBDIR}/${VJ_LIB_STATIC} ${_install_libdir}/${_OPT_DIR}/
+          ${_OPT_LIBDIR}/${VJ_LIB_STATIC} ${_install_libdir_abs}/${_OPT_DIR}/
 	cd ${libdir}${LIBBITSUF} && umask ${_UMASK} &&			\
-          ln -sf ${_install_libdir}/${_OPT_DIR}/${VJ_LIB_STATIC} ./
+          ln -sf ${_install_libdir_rel}/${_OPT_DIR}/${VJ_LIB_STATIC} ./
 ifeq (${GL_API}, Y)
 	${INSTALL} -m ${_FILE_PERMS} -g ${_GROUP_NAME}			\
-          ${_OPT_LIBDIR}/${GL_LIB_STATIC} ${_install_libdir}/${_OPT_DIR}/
+          ${_OPT_LIBDIR}/${GL_LIB_STATIC} ${_install_libdir_abs}/${_OPT_DIR}/
 	cd ${libdir}${LIBBITSUF} && umask ${_UMASK} &&			\
-          ln -sf ${_install_libdir}/${_OPT_DIR}/${GL_LIB_STATIC} ./
+          ln -sf ${_install_libdir_rel}/${_OPT_DIR}/${GL_LIB_STATIC} ./
 endif
 ifeq (${PF_API}, Y)
 	${INSTALL} -m ${_FILE_PERMS} -g ${_GROUP_NAME}			\
-          ${_OPT_LIBDIR}/${PF_LIB_STATIC} ${_install_libdir}/${_OPT_DIR}/
+          ${_OPT_LIBDIR}/${PF_LIB_STATIC} ${_install_libdir_abs}/${_OPT_DIR}/
 	cd ${libdir}${LIBBITSUF} && umask ${_UMASK} &&			\
-          ln -sf ${_install_libdir}/${_OPT_DIR}/${PF_LIB_STATIC} ./
+          ln -sf ${_install_libdir_rel}/${_OPT_DIR}/${PF_LIB_STATIC} ./
 endif
 
 # -------------------------------------------------------------
@@ -615,20 +618,20 @@ install-dso: dso
 	${MTREE_CMD} -Ude -p ${prefix}					\
           -f ${mtreedir_os}/VJ.lib${LIBBITSUF}${ISA}.dist
 	${INSTALL} -m ${_EXEC_PERMS} -g ${_GROUP_NAME}			\
-          ${_OPT_LIBDIR}/${VJ_LIB_DYNAMIC} ${_install_libdir}/${_OPT_DIR}/
+          ${_OPT_LIBDIR}/${VJ_LIB_DYNAMIC} ${_install_libdir_abs}/${_OPT_DIR}/
 	cd ${libdir}${LIBBITSUF} && umask ${_UMASK} &&			\
-          ln -sf ${_install_libdir}/${_OPT_DIR}/${VJ_LIB_DYNAMIC} ./
+          ln -sf ${_install_libdir_rel}/${_OPT_DIR}/${VJ_LIB_DYNAMIC} ./
 ifeq (${GL_API}, Y)
 	${INSTALL} -m ${_EXEC_PERMS} -g ${_GROUP_NAME}			\
-          ${_OPT_LIBDIR}/${GL_LIB_DYNAMIC} ${_install_libdir}/${_OPT_DIR}/
+          ${_OPT_LIBDIR}/${GL_LIB_DYNAMIC} ${_install_libdir_abs}/${_OPT_DIR}/
 	cd ${libdir}${LIBBITSUF} && umask ${_UMASK} &&			\
-          ln -sf ${_install_libdir}/${_OPT_DIR}/${GL_LIB_DYNAMIC} ./
+          ln -sf ${_install_libdir_rel}/${_OPT_DIR}/${GL_LIB_DYNAMIC} ./
 endif
 ifeq (${PF_API}, Y)
 	${INSTALL} -m ${_EXEC_PERMS} -g ${_GROUP_NAME}			\
-          ${_OPT_LIBDIR}/${PF_LIB_DYNAMIC} ${_install_libdir}/${_OPT_DIR}/
+          ${_OPT_LIBDIR}/${PF_LIB_DYNAMIC} ${_install_libdir_abs}/${_OPT_DIR}/
 	cd ${libdir}${LIBBITSUF} && umask ${_UMASK} &&			\
-          ln -sf ${_install_libdir}/${_OPT_DIR}/${PF_LIB_DYNAMIC} ./
+          ln -sf ${_install_libdir_rel}/${_OPT_DIR}/${PF_LIB_DYNAMIC} ./
 endif
 
 # Install the header files.
