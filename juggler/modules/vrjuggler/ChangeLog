@@ -1,5 +1,6 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Jan-15-2003 allenb      Added vrj::test classes to vrjuggler.
 Jan-14-2003 patrickh    Added navgrab app under samples/OGL/advanced.
 Jan-11-2003 patrickh    Added full-screen anti-aliasing as a configurable
                         parameter for OpenGL displays using GLX.
