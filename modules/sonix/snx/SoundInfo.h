@@ -99,7 +99,7 @@ struct SoundInfo
    std::string filename;
    
    // this field is used when datasource != FILESYSTEM
-   std::vector< std::vector<char> > data; 
+   std::vector< std::vector<char> > data;
 
    vrj::Vec3 position;
    

@@ -227,7 +227,7 @@ private:
    
    struct AlSoundInfo
    {
-      AlSoundInfo() : data(), source( 0 ), buffer( 0 ) 
+      AlSoundInfo() : source( 0 ), buffer( 0 ), data()
       {
       }
 
