@@ -15,8 +15,9 @@
 class vjGloveGesture : virtual public vjGesture
 {
 public:
-   vjGloveGesture()
-   {;}
+   vjGloveGesture() {
+      mGloveProxy = NULL;
+   }
 
    virtual bool config(vjConfigChunk* c)
    { return vjGesture::config(c);}
