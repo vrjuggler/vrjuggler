@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?xml-stylesheet href="../../../../../../../../../../../home/users/patrick/src/Juggler/docs/stylesheet/docbook_ab.css" type="text/css"?>
+<?xml-stylesheet href="../../../../../../../../home/users/patrick/src/Juggler/docs/stylesheet/docbook_ab.css" type="text/css"?>
 <?morphon-document-settings
   morphon.document.settings.whitespaces.amount="3"
   morphon.document.settings.print.fixed.attributes="true"
@@ -71,6 +71,45 @@ class myApplication : public vrj::GlApp</programlisting>
          </orderedlist>
       </section>
       <section>
+         <title>Application Drawing Pipeline</title>
+         <para>To allow the user more control over the synchronizationof applications, we have introduced the bufferPreDraw function in these derived application classes: vrj::GlApp, vrj::OpenSGApp, and vrj::OsgApp. This function is executed once per graphics buffer each frame. For instance, if you are running in stereo, you have buffers for both the right and lefy eyes. You also have multiple buffers when rendering to multiple windows or surface displays. </para>
+         <para>In your VR Juggler 1.0 OpenGL applications, you most likely had the draw function clear the graphics window and render the scene. The code was probably similar to this:</para>
+         <programlisting>// my VR Juggler 1.0 OpenGL application object
+class myApplication : public vjGlApp
+{
+   ...
+   void draw()
+   {
+      //Clear the window
+      glClearColor(0.0, 0.0, 0.0, 0.0);
+      glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
+
+      //Render the scene
+      ...
+   }
+   ...
+};</programlisting>
+         <para>In the new version of Juggler, you will want to move the clear commands out of the draw function and into the bufferPreDraw function:</para>
+         <programlisting>// my VR Juggler 1.1 OpenGL application object
+class myApplication : public vrj::GlApp
+{
+   ...
+   void bufferPreDraw()
+   {
+      //Clear the window
+      glClearColor(0.0, 0.0, 0.0, 0.0);
+      glClear( GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT );
+   }
+
+   void draw()
+   {
+      //Render the scene
+      ...
+   }
+   ...
+};</programlisting>
+      </section>
+      <section>
          <title>Math Library</title>
          <orderedlist>
             <listitem>
@@ -131,23 +170,23 @@ float radians = gmtl::Math::deg2Rad( degrees );</programlisting>
                <programlisting>#include &lt;gmtl/somefile.h&gt;</programlisting>
             </listitem>
             <listitem>
-               <para>For more information, refer to the <ulink url="http://ggt.sf.net/">http://ggt.sf.net/</ulink> website. It has excellent online reference guide, and a programming guide that is more in depth than this short porting tutorial. If you don't have a web connection, see also the headers in the gmtl/ directory, it has all the docs in the headers. Typically the headers you'll use are these: <filename>gmtl/Vec.h</filename>, <filename>gmtl/Point.h</filename>, <filename>gmtl/Matrix.h</filename>, and <filename>gmtl/Quat.h</filename>.</para>
-            </listitem>
-            <listitem>
-               <para> Porting math code from the 1.0 Juggler math classes to GMTL can be a big task. In order to aid in quick migration from 1.0 to the most recent version of VR Juggler, we have provided several optional math classes that have the same syntax from Juggler 1.0. These include the vrj::Vec3, vrj::Matrix, and vrj::Quat classes (which act exactly as vjVec3, vjMatrix, and vjQuat do). The class header files are located in your Juggler source tree in modules/vrjuggler/deprecated/Math. The file names are Vec3.h, Matrix.h, and Quat.h.</para>
+               <para>In order to aid in quick migration from 1.0 to the most recent version of VR Juggler, we have provided several optional math classes that have the same syntax from Juggler 1.0. These include the vrj::Vec3, vrj::Matrix, and vrj::Quat classes (which act exactly as vjVec3, vjMatrix, and vjQuat do). The class header files are located in your Juggler source tree in modules/vrjuggler/deprecated/Math. The file names are Vec3.h, Matrix.h, and Quat.h.</para>
                <para>Using these helper classes makes porting your code much easier. Instead of having to convert all of your math code to GMTL, all you have to do is #include the header files and make namespace changes to all of your math code. For instance, if you have the following line of Juggler 1.0 code:</para>
                <para><programlisting>vjVec3 vec = v1.cross(v2);
 vjMatrix mat;
 mat.makeTrans(vec);
 vjQuat q;
 q.makeRot(q);</programlisting></para>
-               <para>Then it would change to this with the math helper classes:</para>
+               <para>The code ported with the math helper classes would look like this:</para>
                <para><programlisting>vrj::Vec3 vec = v1.cross(v2);
 vrj::Matrix mat;
 mat.makeTrans(vec);
 vrj::Quat q;
 q.makeRot(q);</programlisting></para>
-               <para>Note the only thing that changed is that the vrj:: namespace has replaced the old 'vj' prefix. It's also important to note that although GMTL uses radians for rotations, these math helper classes use degrees just as in Juggler 1.0. Every math function in these classes that was available in 1.0 is also available here.</para>
+               <para>Note the only thing that changed is the vrj:: namespace has replaced the old 'vj' prefix. It's also important to note that although GMTL uses radians for rotations, these math helper classes use degrees just as in Juggler 1.0. Every math function in these classes that was available in 1.0 is also available here.</para>
+            </listitem>
+            <listitem>
+               <para>For more information, refer to the <ulink url="http://ggt.sf.net/">http://ggt.sf.net/</ulink> website. It has excellent online reference guide, and a programming guide that is more in depth than this short porting tutorial. If you don't have a web connection, see also the headers in the gmtl/ directory, it has all the docs in the headers. Typically the headers you'll use are these: <filename>gmtl/Vec.h</filename>, <filename>gmtl/Point.h</filename>, <filename>gmtl/Matrix.h</filename>, and <filename>gmtl/Quat.h</filename>.</para>
             </listitem>
          </orderedlist>
       </section>
