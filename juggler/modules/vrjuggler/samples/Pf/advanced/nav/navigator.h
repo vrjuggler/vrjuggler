@@ -87,7 +87,7 @@ public:
    {
       mHomePos = pos;
       vrj::Vec3 hpos = mHomePos.getTrans();
-      vprDEBUG(vrjDBG_ALL,0) << clrOutNORM(clrCYAN,"navigator: HomePosition = ")
+      vprDEBUG(vprDBG_ALL,0) << clrOutNORM(clrCYAN,"navigator: HomePosition = ")
                            << hpos << std::endl << vprDEBUG_FLUSH;
     }
 
