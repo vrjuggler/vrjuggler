@@ -75,7 +75,7 @@ Table of contents:
             OpenGL 1.2 drivers
 
         * Win32
-            Microsoft Visual Studio 6.0 (SP3 or SP4)
+            Microsoft Visual Studio 6.0 (SP4 or SP5)
             Juggler Tools (http://www.vrjuggler.org/pub/juggler-tools-1.1.zip)
 
 ==============================================================================
