@@ -166,8 +166,8 @@ private:
 
 
 // Perf measurement internal to JCCL itself
-extern jccl::PerformanceCategory jcclPERF_JACKAL;
-extern jccl::PerformanceCategory jcclPERF_ALL;
+extern JCCL_DATA_API(jccl::PerformanceCategory) jcclPERF_JACKAL;
+extern JCCL_DATA_API(jccl::PerformanceCategory) jcclPERF_ALL;
 
 
 
