@@ -81,7 +81,6 @@ public:
    void lock()
    {
       mThreadVectorMutex.acquire();
-      mTSMutex.acquire();
    }
 
    //-----------------------------------------------------
@@ -90,7 +89,6 @@ public:
    //-----------------------------------------------------
    void unlock()
    {
-      mTSMutex.release();
       mThreadVectorMutex.release();
    }
 
@@ -100,56 +98,21 @@ public:
    void debugDump();
 
 private:
-   vjMutex                 mThreadVectorMutex;     //: Mutex to protect the threads vector
+   vjMutex                    mThreadVectorMutex;     //: Mutex to protect the threads vector
    std::vector<vjBaseThread*> mThreads;            //: List of all threads in system
 
-      /******** TS DATA **********/
-public:
-   //-----------------------------------------------------
-   //: Add an object to all the tables.
-   //
-   //! POST: The new object has been assigned to all
-   //+       tables in system.
-   //-----------------------------------------------------
-   long addTSObject(vjTSBaseObject* object);
-
-   //-----------------------------------------------------
-   //: Remove an object from all tables.
-   //
-   //! POST: The object of key is removed from all tables
-   //+       in system.
-   //-----------------------------------------------------
-   void removeTSObject(long key);
-
-   //-----------------------------------------------------
-   //: Return the table for the current thread.
-   //-----------------------------------------------------
-   vjTSTable* getCurrentTSTable();
-
-private:
-   //-----------------------------------------------------
-   //: Called when a thread has been added to the system.
-   //-----------------------------------------------------
-   void tsThreadAdded(vjBaseThread* thread);
-
-   //-----------------------------------------------------
-   //: Called when a thread has been removed from the
-   //+ system.
-   //-----------------------------------------------------
-   void tsThreadRemoved(vjBaseThread* thread);
-
-   //-----------------------------------------------------
-   //: Returns a newly generated TS key to use.
-   //-----------------------------------------------------
+public:    
+   //: Generate a unique key for Thread Specific data
+   // This value will be used locally by each thread in the system
    long generateNewTSKey()
-   { return mNextTSObjectKey++; }
+   {
+      vjGuard<vjMutex> guard(mTSKeyMutex);
+      return mNextTSObjectKey++;
+   }
 
 private:
-   vjMutex             mTSMutex;          //: Mutex to protect access to all TS stuff
-   std::vector<vjTSTable*> mTSTables;     //: The table of TSTables
-                                          // Not that the thread each have a cached copy of this as well
-   vjTSTable           mBaseTSTable;      //: This is the "good" copy of the table to use as source for copies
-   long                mNextTSObjectKey;  //: The next available object key
+   vjMutex     mTSKeyMutex;          //: Mutex to protect allocate of TS keys
+   long        mNextTSObjectKey;  //: The next available object key
 
 
    // ----------------------- //
