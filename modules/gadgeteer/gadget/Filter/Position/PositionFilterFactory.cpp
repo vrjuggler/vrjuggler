@@ -39,6 +39,6 @@
 namespace gadget
 {
 
-vprSingletonImp(PositionFilterFactory)
+vprSingletonImp(PositionFilterFactory);
 
 }

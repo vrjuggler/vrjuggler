@@ -62,7 +62,7 @@ namespace gadget
  *
  * @note Some functions still remain for changing the options of the
  *        MotionStar when its not in Sampling mode, but in order to stay
- *        consistent with the Input/vjPosition functionality these are only
+ *        consistent with the gadget::Position functionality these are only
  *        left for building apps without jccl::ConfigElement objects.
  * @note A note on reciever access:
  *   Clients of Juggler should access tracker recievers as [0-n].  For

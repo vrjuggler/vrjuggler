@@ -81,7 +81,9 @@ std::string TrackdSensor::getElementType()
     int shm_key = e->getProperty<int>("shared_memory_key");
     if(shm_key == 0)
     {
-       vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << "vjTrackdSensor::config: Bad shm_key sent: Had value of 0.\n" << vprDEBUG_FLUSH;
+       vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL)
+         << "gadget::TrackdSensor::config: Bad shm_key sent: Had value of 0.\n"
+         << vprDEBUG_FLUSH;
        return false;
     }
     mTrackdSensors = new TrackdSensorStandalone(shm_key);

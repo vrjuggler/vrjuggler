@@ -50,8 +50,6 @@ namespace gadget
 {
 
 // Initialize the singleton ptr
-//vjProxyFactory* ProxyFactory::mInstance = NULL;
-//vjSingletonImp( ProxyFactory ); // kevin
 vprSingletonImpWithInitFunc( ProxyFactory, loadKnownProxies );
 
 template <class PROXY>
@@ -118,7 +116,7 @@ Proxy* ProxyFactory::loadProxy(jccl::ConfigElementPtr element)
    ProxyConstructorBase* constructor = mConstructors[index];
 
    vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL)
-      << "vjProxyFactory::loadProxy: Loading proxy: "
+      << "[gadget::ProxyFactory::loadProxy] Loading proxy: "
       << element->getID() << "  with: "
       << typeid(*constructor).name() << std::endl << vprDEBUG_FLUSH;
    new_proxy = constructor->createProxy(element);

@@ -73,8 +73,6 @@ namespace gadget
 {
 
 // Initialize the singleton ptr
-//vjDeviceFactory* DeviceFactory::mInstance = NULL;
-//vjSingletonImp( DeviceFactory ); //kevin
 vprSingletonImpWithInitFunc(DeviceFactory, loadKnownDevices);
 
 /**
