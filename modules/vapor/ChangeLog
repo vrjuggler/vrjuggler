@@ -1,5 +1,8 @@
 DATE       AUTHOR   CHANGE
 ---------- -------- -----------------------------------------------------------
+2002-11-01 aronb    Fixed another nasty bug in vpr::FileHandleUNIX::readn()
+           patrickh that caused readn() to read the wrong buffer size.
+                    NEW VERSION: 0.19.4
 2002-10-29 patrickh Added new vpr::LibraryFinder which make use of the Boost
                     Filesystem Library to scan a directory to perform dynamic
                     library discovery.
