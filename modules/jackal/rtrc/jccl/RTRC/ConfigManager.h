@@ -53,11 +53,41 @@ namespace jccl {
 
     class ConfigChunkHandler;
 
-    /** Dynamic reconfiguration management plugin for Jackal.
-     *
-     *  Created: Jan-13-2000
-     *  @author Allen Bierbaum
-     */
+/** Dynamic reconfiguration management plugin for Jackal.
+ *  The ConfigManager provides a complete solution for configuring an
+ *  application via Jackal's ConfigChunk API.  The ConfigManager can
+ *  configure based on static configuration files, or dynamically
+ *  via a network interface to the VjControl front-end.
+ *
+ *  The ConfigManager can be used in a number of ways; it provides a
+ *  complete default solution to configuration, but also exposes
+ *  enough of its inner workings to allow applications to implement 
+ *  their own dynamic configuration algorithms.
+ *
+ *  The simplest way to use the ConfigManager is to create one or more
+ *  objects that implement the ConfigChunkHandler interface, and register
+ *  these using the ConfigManager::addConfigChunkHandler method.  
+ *
+ *  Requests to add ConfigChunks can be added via VjControl or by the
+ *  addPending*() methods of this class.  These requests are added to
+ *  the ConfigManager's "pending" list.  The ConfigManager also maintains
+ *  an "active" list, containing all the ConfigChunks that have been 
+ *  successfully configured.
+ *
+ *  Once ConfigChunkHandlers have been registered with the ConfigManager,
+ *  the application should periodically call 
+ *  ConfigManager::attemptReconfiguration.  This will try to match items 
+ *  in the pending list with ConfigChunkHandler objects that know how to
+ *  configure them.
+ *
+ *  For more advanced uses, ConfigManager provides accessor functions that
+ *  allow direct manipulation of the pending and active lists.  This 
+ *  allows an application to decide on its own when and how to process
+ *  requests in the pending list.  However, the attemptReconfiguration()
+ *  interface should be sufficient for almost all uses.
+ *
+ *  Created: Jan-13-2000
+ */
 
 class JCCL_CLASS_API ConfigManager: public JackalControl 
 {
@@ -75,9 +105,9 @@ public:
 
 public: // -- Query functions --- //
 
-    //: Is the chunk in the active configuration??
-    //! CONCURRENCY: concurrent
-    //! NOTE: This locks the active list to do processing
+    /** Checks if the named ConfigChunk is in the active configuration.
+     *  This locks the active list to do processing.
+     */
     bool isChunkInActiveList(std::string chunk_name);
 
 
@@ -86,9 +116,26 @@ public:   // ----- PENDING LIST ----- //
 
 
     /** Marks pending list as "not stale".
+     *  To minimize time spent on configuration calls, the Configuration
+     *  Manager will mark the pending list as "stale" if it does not
+     *  change for several consecutive calls of attemptReconfiguration.
      *  Call this method when something happens that might allow 
      *  items on a stale pending list to be processed (e.g. if a
      *  new Manager is added to the system).
+     *  <p>
+     *  For example, in VR Juggler, applications (which are 
+     *  ConfigChunkHandlers) can be explicitly changed via a vrj::Kernel
+     *  method.  When this happens, the VR Juggler kernel calls
+     *  refreshPendingList because the new application object may be able
+     *  to process ConfigChunks that the old one could not.
+     *  <p>
+     *  Generally, if an object is added to the system via 
+     *  ConfigChunkHandler's addConfig method, it is not necessary to
+     *  call this function explicitly; the ConfigManager will notice that
+     *  the pending and active lists have changed and will consider the
+     *  pending list to be fresh.
+     *
+     *  @see pendingNeedsChecked
      */
     void refreshPendingList ();
 
@@ -121,131 +168,169 @@ public:   // ----- PENDING LIST ----- //
     void removePending(std::list<PendingChunk>::iterator item);
 
 
-   //: Do we need to check the pending list
-   //! CONCURRENCY: concurrent
-   // Implements some logic that allows the pending list to become "stale"
-   // If the pending list has been check a bunch of times and has had no
-   // changes in size, then we start telling people not to check it because
-   bool pendingNeedsChecked();
+    /** Checks if we need to check the pending list.
+     *  Checks if the pending list is "fresh" or if it should be marked
+     *  as "stale".  If the pending list has been checked several times
+     *  without changing at all, we can assume that the chunks inside of
+     *  it cannot be processed by the application.
+     *  This is a utility function for attemptReconfiguration.
+     *  CONCURRENCY: concurrent.
+     */
+    bool pendingNeedsChecked();
 
 
-   //: Lock the pending list
-   // This function blocks until it can get a lock on the pending list
-   //! CONCURRENCY: gaurded
-   void lockPending()
-   { mPendingLock.acquire(); }
+    /** Locks the pending list.
+     *  This function blocks until it can lock the list of pending
+     *  configuration changes.
+     *  The caller of this method must call unlockPending() when it
+     *  is finished viewing/modifying the pending list.
+     */
+    void lockPending()
+    { mPendingLock.acquire(); }
 
 
-   //: Unlock the pending list
-   // Unlocks the mutex held on the pending list
-   //! CONCURRENCY: gaurded
-   void unlockPending()
-   { mPendingLock.release(); }
+    /** Unlocks the pending list.
+     *  Unlocks the mutex held on the pending list.
+     *  The caller of this method must first have called lockPending().
+     */
+    void unlockPending()
+    { mPendingLock.release(); }
 
 
-   //: Get the beginning of the pending list
-   //! PRE: Pending list must be locked
-   std::list<PendingChunk>::iterator getPendingBegin()
-   {
-      vprASSERT(1 == mPendingLock.test());     // ASSERT: We must have the lock
-      return mPendingConfig.begin();
-   }
+    /** Get an iterator to the beginning of the pending list.
+     *  The caller of this method must have locked the pending list.
+     */
+    std::list<PendingChunk>::iterator getPendingBegin()
+    {
+        vprASSERT(1 == mPendingLock.test());
+        return mPendingConfig.begin();
+    }
 
 
-   //: Get the end of the pending list
-   //! PRE: Pending list must be locked
-   std::list<PendingChunk>::iterator getPendingEnd()
-   {
-      vprASSERT(1 == mPendingLock.test());
-      return mPendingConfig.end();
-   }
+    /** Get an iterator to the end of the pending list.
+     *  The caller of this method must have locked the pending list.
+     */
+    std::list<PendingChunk>::iterator getPendingEnd()
+    {
+        vprASSERT(1 == mPendingLock.test());
+        return mPendingConfig.end();
+    }
 
 
-   //: Send a copy of the pending list to debug output
-   //! PRE: Pending must be locked
-   void debugDumpPending(int debug_level);
+    /** Print a copy of the pending list to vprDEBUG.
+     *  The caller of this method must have locked the pending list.
+     */
+    void debugDumpPending(int debug_level);
 
 
-   //: Get the size of the pending list
-   //! CONCURRENCY: concurrent
-   int getNumPending()
-   { return mPendingConfig.size(); }
+    /** Get the size of the pending list.
+     *  CONCURRENCY: concurrent
+     */
+    int getNumPending()
+    { return mPendingConfig.size(); }
 
 
 
 public:   // ----- ACTIVE LIST ----- //
 
-   //: Are there items in current   //! CONCURRENCY: concurrent
-   bool isActiveEmpty()
-   { return mActiveConfig.isEmpty(); }
+
+    /** Checks if active list is empty.
+     *  CONCURRENCY: concurrent
+     */
+    bool isActiveEmpty()
+    { return mActiveConfig.isEmpty(); }
 
 
-   //: Lock the current list
-   // This function blocks until it can get a lock on the current list
-   //! CONCURRENCY: gaurded
-   void lockActive()
-   { mActiveLock.acquire(); }
+
+    /** Locks the active list.
+     *  This function blocks until it can lock the list of active
+     *  ConfigChunks.
+     *  The caller of this method must call unlockActive() when it
+     *  is finished viewing/modifying the active list.
+     */
+    void lockActive()
+    { mActiveLock.acquire(); }
 
 
-   //: Unlock the current list
-   // Unlocks the mutex held on the current list
-   //! CONCURRENCY: gaurded
-   void unlockActive()
-   { mActiveLock.release(); }
+    /** Unlocks the active list.
+     *  The method releases the lock on the active configuration list.
+     *  The caller of this method must have previously locked the active
+     *  list with lockActive().
+     */
+    void unlockActive()
+    { mActiveLock.release(); }
 
 
-   //: Get the beginning of the current list
-   //! PRE: Pending list must be locked
-   ConfigChunkDB::iterator getActiveBegin()
-   {
-      vprASSERT(1 == mActiveLock.test());     // ASSERT: We must have the lock
-      return mActiveConfig.begin();
-   }
+    /** Get an iterator to the beginning of the active list.
+     *  The caller of this method must have locked the active list.
+     */
+    ConfigChunkDB::iterator getActiveBegin()
+    {
+        vprASSERT(1 == mActiveLock.test());
+        return mActiveConfig.begin();
+    }
 
 
-   //: Get the end of the pending list
-   //! PRE: Active list must be locked
-   ConfigChunkDB::iterator getActiveEnd()
-   {
-      vprASSERT(1 == mActiveLock.test());
-      return mActiveConfig.end();
-   }
+    /** Get an iterator to the end of the active list.
+     *  The caller of this method must have locked the active list.
+     */
+    ConfigChunkDB::iterator getActiveEnd()
+    {
+        vprASSERT(1 == mActiveLock.test());
+        return mActiveConfig.end();
+    }
 
 
-    //: Erase an item from the list
-    //! PRE: Active list must be locked && item must be in list
-    //! POST: list = old(list).erase(item) && item is invalid
+    /** Removes the named ConfigChunk from the active list.
+     *  The caller of this method must have locked the active list.
+     *  If no chunk with a matching name is found, this method has
+     *  no effect.
+     */
     void removeActive(const std::string& chunk_name);
 
 
-    //: Add an item to the active configuration
-    //! NOTE: This DOES NOT process the chunk
-    //+     it just places it into the active configuration list
-    //! PRE: Current list must NOT be locked
+    /** Adds a ConfigChunk to the active list.
+     *  This method locks the active list; therefore, the caller
+     *  MUST NOT have locked the list before calling it.
+     *  This does not process the ConfigChunk in anyway; it simply
+     *  appends it to the active list.  
+     *  If a chunk with the same name is already in the active list,
+     *  the old chunk is replaced by the new one.
+     *  <p>
+     *  This method is occasionally useful when an application wants
+     *  to add items to the active list that were not created via
+     *  the ConfigManager's dynamic reconfiguration ability.
+     *  For example, when Jackal's network server opens a new 
+     *  connection, it explicitly creates a ConfigChunk describing
+     *  that connection and adds it to the active list with this
+     *  method.
+     */
     void addActive (ConfigChunkPtr chunk);
 
 
-   //: Return ptr to the active config dhunk db
-   //! PRE: active must be locked
-   //! NOTE: The pointer is only valid until active is unlocked
-   //! CONCURRENCY: sequential
-   ConfigChunkDB* getActiveConfig()
-   {
-      vprASSERT(1 == mActiveLock.test());
-      return &mActiveConfig;
-   }
+    /** Get a pointer to the active list (as a ConfigChunkDB).
+     *  The caller of this method must have locked the active list.
+     *  The pointer returned is only valid until the list is unlocked.
+     *  CONCURRENCY: sequential
+     */
+    ConfigChunkDB* getActiveConfig()
+    {
+        vprASSERT(1 == mActiveLock.test());
+        return &mActiveConfig;
+    }
 
 
 public:
-   //: Scan the active list for items that don't have their dependencies filled
-   //! POST: Any chunks in active with dependencies not filled are added to the
-   //+       the pending list. (A remove and an add are added to the pending)
-   //+       The remove item configChunk* == active configChunk*
-   //+       The add item configChunk* points to a copy of the chunk
-   //! NOTE: We add an add after the removal to allow for the object
-   //+       to re-enter the system after its dependencies have been satisfied
-   //! RETURNS: The number of lost dependencies found
-   int scanForLostDependencies();
+    /** Scan the active list for items that don't have their dependencies 
+     *  filled.
+     *  Any chunks in the active list with dependencies not filled are
+     *  added to the pending list with a pair of entries - a remove and
+     *  an equivalent add.  This way, the object will be removed from the
+     *  system on the next check of the pending list, and will be re-added
+     *  if its dependencies are ever subsequently met.
+     *  @return The number of lost dependencies found
+     */
+    int scanForLostDependencies();
 
 
     //------------ Default DynamicReconfig Handling Stuff -------------------
