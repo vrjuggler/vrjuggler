@@ -480,26 +480,11 @@ DebugOutputGuard::DebugOutputGuard(const vpr::DebugCategory& cat,
    }
 }
    
-DebugOutputGuard::DebugOutputGuard(const vpr::DebugCategory& cat,
-                                   const int level, std::string entryText,
-                                   bool indent)
-   : mCat(cat), mLevel(level), mEntryText(entryText), mExitText(""),
-     mIndent(indent)
-{
-   if(mIndent)
-   {
-      vprDEBUG_BEGIN(mCat, mLevel) << mEntryText << vprDEBUG_FLUSH;
-   }
-   else
-   {
-      vprDEBUG(mCat, mLevel) << mEntryText << vprDEBUG_FLUSH;
-   }
-}
-
 DebugOutputGuard::~DebugOutputGuard()
 {
    if(mIndent)
    {
+      // Don't bother printing anything if mExitText is an empty string.
       if(mExitText == std::string(""))
       {
          vprDEBUG_DECREMENT_INDENT(mCat, mLevel);
@@ -511,6 +496,7 @@ DebugOutputGuard::~DebugOutputGuard()
    }
    else
    {
+      // Don't bother printing anything if mExitText is an empty string.
       if(mExitText != std::string(""))
       {
          vprDEBUG(mCat, mLevel) << mExitText << vprDEBUG_FLUSH;

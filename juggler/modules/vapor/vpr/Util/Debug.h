@@ -354,15 +354,16 @@ namespace vpr
       }
    };
 
-   /** Helper class that outputs debug information at creation and destruction of the object */
+   /**
+    * Helper class that outputs debug information at creation and destruction
+    * of the object.
+    */
    struct VPR_CLASS_API DebugOutputGuard
    {
       DebugOutputGuard(const vpr::DebugCategory& cat, const int level,
-                      std::string entryText, std::string exitText,
-                      bool indent = true);
-
-      DebugOutputGuard(const vpr::DebugCategory& cat, const int level, 
-                       std::string entryText, bool indent = true);
+                       std::string entryText,
+                       std::string exitText = std::string(""),
+                       bool indent = true);
 
       ~DebugOutputGuard();
 
