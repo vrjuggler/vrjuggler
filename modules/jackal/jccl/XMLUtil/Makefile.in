@@ -52,14 +52,14 @@ VJ_SRCDIR	= @VJ_SRCDIR@/Utils
 # Prefix for recursive stuff.
 DIRPRFX		= Utils/
 
-SRCS 		= vjDebug.cpp		\
-                  vjFileIO.cpp		\
-                  vjStreamLock.cpp	\
-		  vjXercesXMLParser.cpp	\
-		  vjXercesXMLParserPool.cpp	\
-		  vjXercesXMLError.cpp	\
-		  vjXercesStreamInputStream.cpp	\
-		  vjXercesStreamInputSource.cpp
+SRCS 		= vjDebug.cpp			\
+                  vjFileIO.cpp			\
+                  vjStreamLock.cpp		\
+                  vjXercesStreamInputSource.cpp	\
+                  vjXercesStreamInputStream.cpp	\
+                  vjXercesXMLError.cpp		\
+                  vjXercesXMLParser.cpp		\
+                  vjXercesXMLParserPool.cpp
 
 BEFOREBUILD	= beforebuild
 
