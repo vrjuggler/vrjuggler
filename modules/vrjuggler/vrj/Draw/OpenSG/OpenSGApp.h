@@ -101,7 +101,7 @@ public:
     * Get the OpenSG Scene root.
     * @return NodePtr to the root of the scene to render.
     */
-   virtual OSG::NodePtr getSceneRoot() = 0;
+   virtual OSG::NodePtr getScene() = 0;
    
    /**
     * Initializes OpenSG for drawing.
@@ -182,7 +182,7 @@ inline void OpenSGApp::apiInit()
                         "vrj::OpenSGApp::apiInit() exited.\n");
 
    this->initScene();
-   vprASSERT(getSceneRoot() != OSG::NullFC);
+   vprASSERT(getScene() != OSG::NullFC);
 }
 
 inline void OpenSGApp::exit()
@@ -305,7 +305,7 @@ inline void OpenSGApp::draw()
 
    // Setup the viewport
    OSG::beginEditCP(c_data->mViewport);
-      c_data->mViewport->setRoot(getSceneRoot());
+      c_data->mViewport->setRoot(getScene());
    OSG::endEditCP  (c_data->mViewport);
 
    // --- Trigger the draw --- //  
