@@ -62,7 +62,7 @@ vpr::ReturnStatus SocketDatagramImplSIM::recvfrom (void* msg,
    vpr::ReturnStatus status;
    vpr::Guard<vpr::Mutex> guard(mArrivedQueueMutex);
 
-   if ( mArrivedQueue.size() > 0 )
+   if ( ! mArrivedQueue.empty() )
    {
       vpr::sim::MessagePtr msg_ptr = mArrivedQueue[0];
       vpr::Uint32 msg_size, copy_len;
@@ -128,7 +128,7 @@ vpr::ReturnStatus SocketDatagramImplSIM::isReadReady (const vpr::Interval timeou
 
 //   if ( vpr::Interval::NoWait == timeout )
 //   {
-      if ( ! mOpen || mArrivedQueue.size() == 0 )
+      if ( ! mOpen || mArrivedQueue.empty() )
       {
          status.setCode(vpr::ReturnStatus::Fail);
       }

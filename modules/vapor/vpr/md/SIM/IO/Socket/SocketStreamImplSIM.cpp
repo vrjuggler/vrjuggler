@@ -63,7 +63,7 @@ vpr::ReturnStatus SocketStreamImplSIM::accept( SocketStreamImplSIM& client_sock,
 
    mConnectorQueueMutex.acquire();
 
-   if ( mConnectorQueue.size() > 0 )
+   if ( ! mConnectorQueue.empty() )
    {
       SocketStreamImplSIM* peer_ptr;
       SocketStreamImplSIM** peer_remote_ptr;
@@ -155,7 +155,7 @@ vpr::ReturnStatus SocketStreamImplSIM::isReadReady (const vpr::Interval timeout)
 
 //   if ( vpr::Interval::NoWait == timeout )
 //   {
-      if ( mOpen && NULL != mPeer && mArrivedQueue.size() > 0 )
+      if ( mOpen && NULL != mPeer && (! mArrivedQueue.empty()) )
       {
          status.setCode(vpr::ReturnStatus::Succeed);
       }
