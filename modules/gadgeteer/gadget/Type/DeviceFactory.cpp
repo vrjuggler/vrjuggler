@@ -42,6 +42,7 @@
 #include <Input/vjSim/vjSimGloveGesture.h>
 //#include <Input/vjSim/vjSimKeyboardDigital.h>
 #include <Input/vjSim/vjSimRelativePosition.h>
+#include <Input/vjSim/vjSimPinchGlove.h>
 
 // Physical devices
 #ifndef WIN32
@@ -81,6 +82,8 @@ void vjDeviceFactory::hackLoadKnownDevices()
    vjDeviceConstructor<vjSimGloveGesture>* sim_glove = new vjDeviceConstructor<vjSimGloveGesture>;
    //vjDeviceConstructor<vjSimKeyboardDigital>* sim_keyboard_digital = new vjDeviceConstructor<vjSimKeyboardDigital>;
    vjDeviceConstructor<vjSimRelativePosition>* sim_relative = new vjDeviceConstructor<vjSimRelativePosition>;
+   vjDeviceConstructor<vjSimPinchGlove>* simpinch_glove = new vjDeviceConstructor<vjSimPinchGlove>;
+   
 #ifndef WIN32
    vjDeviceConstructor<vjFlock>* flock = new vjDeviceConstructor<vjFlock>;
    vjDeviceConstructor<vjMotionStar>* MotionStar = new vjDeviceConstructor<vjMotionStar>;
