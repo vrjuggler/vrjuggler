@@ -7,11 +7,11 @@
  * by Greg Hjelstrom & Byon Garrabrant
  */
 
-#include <vpr/Util/Interval.h>
-#include <vpr/vprTypes.h>
-#include <vpr/vpr.h>
+#include <vpr/vprConfig.h>
 #include <deque>
 #include <map>
+#include <vpr/Util/Interval.h>
+#include <vpr/vprTypes.h>
 
 namespace vpr
 {
@@ -32,7 +32,7 @@ inline vpr::Interval profileGetTickRate(void)
 /**
  * A node in the Profile Hierarchy Tree
  */
-class	ProfileNode {
+class VPR_CLASS_API ProfileNode {
 
 public:
 
