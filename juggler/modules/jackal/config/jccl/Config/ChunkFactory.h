@@ -41,6 +41,8 @@ public:
     }
 
     static vjChunkDesc* getChunkDesc (const std::string& token) {
+	if (!descdb)
+	    return NULL;
 	return descdb->getChunkDesc (token);
     }
 
@@ -52,6 +54,9 @@ public:
     static vjConfigChunk* createChunk (const std::string& desctoken) {
 	vjConfigChunk* ch;
 	//cout << " createChunk with val " << flush << desctoken << endl;
+
+	if (!descdb)
+	    return NULL;
 
 	vjChunkDesc* desc = descdb->getChunkDesc (desctoken);
 	//cout <<" chunkdesc is " << flush << *desc << endl;
