@@ -10,6 +10,7 @@
 #include <boost/python.hpp>
 
 // Exports =====================================================================
+void _Export_InputManager();
 void _Export_AnalogData();
 void _Export_KeyEvent();
 void _Export_Position();
@@ -32,6 +33,7 @@ void _Export_MouseEvent();
 // Module ======================================================================
 BOOST_PYTHON_MODULE(gadget)
 {
+    _Export_InputManager();
     _Export_AnalogData();
     _Export_Event();
     _Export_KeyEvent();

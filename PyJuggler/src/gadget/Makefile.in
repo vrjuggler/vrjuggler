@@ -26,6 +26,7 @@ SRCS= \
 	_DigitalInterface.cpp			\
 	_DigitalProxy.cpp			\
 	_Event.cpp				\
+	_InputManager.cpp			\
 	_KeyEvent.cpp				\
 	_MouseEvent.cpp				\
 	_Position.cpp				\

@@ -6,6 +6,15 @@
 # Date modified: $Date$
 # Version:       $Revision$
 
+# The all-important Input Manager =============================================
+InputManager = Class('gadget::InputManager', 'gadget/InputManager.h')
+exclude(InputManager.getDeviceFactory)
+set_policy(InputManager.instance,
+           return_value_policy(reference_existing_object))
+set_policy(InputManager.getDevice, return_internal_reference())
+set_policy(InputManager.getProxy, return_internal_reference())
+# ============================================= The all-important Input Manager
+
 # Base input data types =======================================================
 Class('gadget::AnalogData', 'gadget/Type/AnalogData.h')
 Class('gadget::DigitalData', 'gadget/Type/DigitalData.h')
