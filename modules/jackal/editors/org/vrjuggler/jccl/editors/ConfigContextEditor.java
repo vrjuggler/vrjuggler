@@ -47,19 +47,27 @@ public class ConfigContextEditor
             ConfigElement elt = (ConfigElement)value;
             mElementPropSheet.setElement(elt);
          
-            if (mConfigElementCustomEditor != null)
+            if (mCustomEditors != null)
             {
-               mTabPane.remove(mTabPane.indexOfTab(mConfigElementCustomEditor.getTitle()));
-               mConfigElementCustomEditor = null;
+               for(Iterator itr = mCustomEditors.iterator() ; itr.hasNext() ; )
+               {
+                  CustomEditor editor = (CustomEditor)itr.next(); 
+                  mTabPane.remove(mTabPane.indexOfTab(editor.getTitle()));
+               }
+               mCustomEditors = null;
             }
 
-            mConfigElementCustomEditor = CustomEditorRegistry.findEditor(elt.getDefinition().getToken());
+            mCustomEditors = CustomEditorRegistry.findEditors(elt.getDefinition().getToken());
  
-            if (mConfigElementCustomEditor != null)
+            if (mCustomEditors != null)
             {
-               mConfigElementCustomEditor.setConfigElement(elt);
-               
-               mTabPane.add(mConfigElementCustomEditor.getPanel(), mConfigElementCustomEditor.getTitle());
+
+               for(Iterator itr = mCustomEditors.iterator() ; itr.hasNext() ; )
+               {
+                  CustomEditor editor = (CustomEditor)itr.next(); 
+                  editor.setConfigElement(elt);
+                  mTabPane.add(editor.getPanel(), editor.getTitle());
+               }
             } 
          }
       });
@@ -240,7 +248,7 @@ public class ConfigContextEditor
 
    // CustomEditor stuff
    private JScrollPane mCustomConfigElementEditorScrollPane = new JScrollPane();
-   private CustomEditor mConfigElementCustomEditor = null;
+   private java.util.List mCustomEditors = null;
    
    private ConfigElementPropertySheet mElementPropSheet = new ConfigElementPropertySheet();
    
