@@ -32,10 +32,13 @@
 
 package org.vrjuggler.vrjconfig.commoneditors.devicegraph;
 
+import java.awt.Container;
 import java.awt.Graphics;
+import java.awt.Point;
 import java.awt.geom.Point2D;
 import java.util.Hashtable;
 import javax.swing.JComponent;
+import javax.swing.SwingUtilities;
 
 import org.jgraph.JGraph;
 import org.jgraph.graph.AttributeMap;
@@ -72,9 +75,24 @@ public class PortComponent
 {
    public PortComponent(JGraph graph, DefaultPort port)
    {
+      this(graph, port, null);
+   }
+
+   /**
+    * Creates a new port component.
+    *
+    * @param graph      the graph containing the given port
+    * @param port       the port associated with this component
+    * @param renderer   the component acting as the renderer for the vertex
+    *                   that has <code>port</code> as a child
+    */
+   public PortComponent(JGraph graph, DefaultPort port,
+                        Container renderer)
+   {
       super();
       setGraph(graph);
       setPort(port);
+      setRootComponent(renderer);
 
       mNewPortOffset = port.getAttributes().createPoint(0.0, 0.0);
    }
@@ -83,7 +101,23 @@ public class PortComponent
    {
       AttributeMap map = this.port.getAttributes();
       Point2D cur_loc  = GraphConstants.getOffset(map);
-      mNewPortOffset.setLocation(x + width / 2.0, y + height / 2.0);
+
+      int new_x = x, new_y = y;
+
+      // As if things weren't already bad enough with this class, this is
+      // another huge hack.  This ensures that nesting of components does not
+      // screw up the calculation of the port offset.
+      if ( this.rootComponent != null &&
+           this.getParent() != this.rootComponent )
+      {
+         Point parent_point =
+            SwingUtilities.convertPoint(this.getParent(), x, y,
+                                        this.rootComponent);
+         new_x = parent_point.x;
+         new_y = parent_point.y;
+      }
+
+      mNewPortOffset.setLocation(new_x + width / 2.0, new_y + height / 2.0);
 
       // !!! Hack warning !!!
       // Posting an edit with the graph model for the port relocation causes
@@ -110,6 +144,9 @@ public class PortComponent
     * Sets the port to be used by this component.  The port's attributes are
     * modified to use absolute positioning.  If the caller were to revert back
     * to relative positioning, the results would be undesirable.
+    *
+    * @param renderer   the component acting as the renderer for the vertex
+    *                   that has our port as a child
     */
    public void setPort(DefaultPort port)
    {
@@ -130,6 +167,15 @@ public class PortComponent
    }
 
    /**
+    * Sets the root component containing this component.  This must be the
+    * renderer component for the vertex that contains our port as a child.
+    */
+   public void setRootComponent(Container renderer)
+   {
+      this.rootComponent = renderer;
+   }
+
+   /**
     * Paints this component as a simple circle.
     */
    public void paint(Graphics g)
@@ -139,8 +185,9 @@ public class PortComponent
       g.setColor(getForeground());
    }
 
-   private JGraph      graph = null;
-   private DefaultPort port  = null;
+   private JGraph      graph         = null;
+   private DefaultPort port          = null;
+   private Container   rootComponent = null;
 
    private Hashtable mEditTable     = new Hashtable();
    private Point2D   mNewPortOffset = null;
