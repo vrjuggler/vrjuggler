@@ -847,10 +847,10 @@ if test "$PLATFORM" = "SGI" ; then
     TEST_VJ_LIBS_BASIC_SUBST="-B dynamic -L$\${VJ_BASE_DIR}/lib\${LIBBITSUF} -lJuggler"
     TEST_LIBS_BASIC="-B dynamic -lm -lC"
 else
-    dnl # For now, we assume that a non-SGI compiler has the -static flag for
-    dnl # static linking.  This is probably going to be the case since almost
-    dnl # all other platforms will be using GCC.
-    TEST_VJ_LIBS_BASIC="-static -L\${VJ_BASE_DIR}/lib${LIBBITSUF} -lJuggler"
+    dnl # For now, we are disabling static linking for the sample applications
+    dnl # when compiled in a developer's build tree.  This is only the case
+    dnl # on non-SGI platforms.
+    TEST_VJ_LIBS_BASIC="-L\${VJ_BASE_DIR}/lib${LIBBITSUF} -lJuggler"
     TEST_VJ_LIBS_BASIC_SUBST="-L$\${VJ_BASE_DIR}/lib\${LIBBITSUF} -lJuggler"
     TEST_LIBS_BASIC="-lm"
 fi
