@@ -74,6 +74,14 @@ protected:
    static long generateNewTSKey();
 };
 
+/** @example "Example of using vpr::TSObjectProxy"
+ *
+ * \code
+ * vpr::TSObjectProxy<obj_type> var;
+ * (*var).method();
+ * \endcode
+ */
+
 /** \class TSObjectProxy TSObjectProxy.h vpr/Thread/TSObjectProxy.h
  *
  * This is a smart pointer to a thread-specific object.
@@ -86,13 +94,6 @@ protected:
  *       default constructor.
  *
  * Uses TSObject<T> internally to keep some type information.
- *
- * @example "Example of using vpr::TSObjectProxy"
- *
- * \code
- * vpr::TSObjectProxy<obj_type> var;
- * (*var).method();
- * \endcode
  */
 template<class T>
 class TSObjectProxy : public TSObjectProxyBase
