@@ -37,7 +37,7 @@ XALAN=		xalan.sh
 # use Xalan, change the value to 'update-xalan'.
 XSLT_TARGET=	update-xsltproc
 
-update-2.0-2.1:
+desc-update-2.0-2.1:
 	$(MAKE) XSL_FILE=desc_2.0-2.1.xsl $(XSLT_TARGET)
 
 # Generate $(OUTPUT_FILE) from $(INPUT_FILE) using xsltproc and $(XSL_FILE) for
