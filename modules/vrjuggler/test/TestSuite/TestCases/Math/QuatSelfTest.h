@@ -7,11 +7,11 @@
 #include <TestSuite.h>
 #include <TestCaller.h>
 
-#include <Math/vjMath.h>
-#include <Math/vjQuat.h>
+#include <vrj/Math/Math.h>
+#include <vrj/Math/Quat.h>
 
 /*****************************************************************
- tests out the functionality expected of vj::Quat
+ tests out the functionality expected of vrj::Quat
 *******************************************************************/
 
 namespace vrjTest
@@ -34,9 +34,9 @@ public:
       // the default identity is currently the multiplicative identity [1,0,0,0]
       // not the addition identity... [0,0,0,0]
       // consider allowing both kinds of identity to be made in the quat API...
-      Quat quat;
+      vrj::Quat quat;
       quat.makeIdent();
-      assertTest( quat == Quat::identity() );
+      assertTest( quat == vrj::Quat::identity() );
       assertTest( quat[VJ_W] == 1.0f && quat[VJ_X] == 0.0f && 
                   quat[VJ_Y] == 0.0f && quat[VJ_Z] == 0.0f );
    }
@@ -46,9 +46,9 @@ public:
       //std::cout<<"make sure that normalize doesn't change the rotation...\n"<<std::flush;
       //std::cout<<"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n"<<std::flush;
 
-      Quat q1, q2, q3, q4;
-      q1.makeRot( Math::deg2rad( 45.0f ), 0,1,0 );
-      q2.makeRot( Math::deg2rad( 90.0f ), 1,0,0 );
+      vrj::Quat q1, q2, q3, q4;
+      q1.makeRot( vrj::Math::deg2rad( 45.0f ), 0,1,0 );
+      q2.makeRot( vrj::Math::deg2rad( 90.0f ), 1,0,0 );
       q3 = q1; 
       q4 = q2;
       q3.normalize();
@@ -73,16 +73,16 @@ public:
    {
       //std::cout<<"xform vector by quat (sweep over range of rotations)\n"<<std::flush;
       //std::cout<<"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n"<<std::flush;
-      Quat q;
-      Vec3 v(0,0,1);
+      vrj::Quat q;
+      vrj::Vec3 v(0,0,1);
       q.makeIdent();
 
       //std::cout<<"Should go from 0,0,1 to 0,-1,0 to 0,0,-1 ....\n"<<std::flush;
       for (float x = 0; x <= 180.0f; x+=90)
       {
-         q.makeRot( Math::deg2rad( x ), 1,0,0 );
+         q.makeRot( vrj::Math::deg2rad( x ), 1,0,0 );
 
-         Vec3 result = q * v;
+         vrj::Vec3 result = q * v;
          if (x == 0)
             assertTest( result[0] < 0.001 && result[1] < 0.001 && result[2] > 0.999 );
          if (x == 90)
@@ -101,9 +101,9 @@ public:
 
       for (float i = -360; i <= 360; i+=20)
       {
-         Quat q, q2;
+         vrj::Quat q, q2;
          float rad, x, y, z;
-         q.makeRot( Math::deg2rad(i),1,0,0 );
+         q.makeRot( vrj::Math::deg2rad(i),1,0,0 );
          //std::cout<<i<<") "<<q<<" .. "<<q[VJ_W]<<" "<<q[VJ_X]<<" "<<q[VJ_Y]<<" "<<q[VJ_Z]<<" compare to: "<<std::flush;
 
          q.getRot( rad, x, y, z );
@@ -121,12 +121,12 @@ public:
 
          if (i >= 0.0f)
          {
-            float c = Math::abs( (float)((int)(Math::round(b))%360) );
-            float temp1 = Math::rad2deg(rad); temp1 = (float)((int)(Math::round(temp1))%360);
+            float c = vrj::Math::abs( (float)((int)(vrj::Math::round(b))%360) );
+            float temp1 = vrj::Math::rad2deg(rad); temp1 = (float)((int)(vrj::Math::round(temp1))%360);
             float temp2 = c + 0.5;
-            float temp3 = Math::rad2deg(rad); temp3 = (float)((int)(Math::round(temp3))%360);
+            float temp3 = vrj::Math::rad2deg(rad); temp3 = (float)((int)(vrj::Math::round(temp3))%360);
             float temp4 = c - 0.5;
-            //   std::cout<<temp1<<" "<<temp2<<" "<<temp3<<" "<<temp4<<" "<<Math::rad2deg(rad)<<" "<<b<<"\n"<<std::flush;
+            //   std::cout<<temp1<<" "<<temp2<<" "<<temp3<<" "<<temp4<<" "<<vrj::Math::rad2deg(rad)<<" "<<b<<"\n"<<std::flush;
 
             assertTest( temp1 <= temp2 && temp3 >= temp4 );     
          }    
@@ -141,18 +141,18 @@ public:
 
       for (float i = -360; i <= 360; i+=20)
       {
-         Quat q, q2;
+         vrj::Quat q, q2;
          float rad, x, y, z;
-         q.makeRot( Math::deg2rad(i),1,0,0 );
+         q.makeRot( vrj::Math::deg2rad(i),1,0,0 );
          q2.scaleAngle( q, 0.5 );
          q2.getRot( rad, x, y, z );
 
          // make i a positive by x*360, store in b.  needed so I can use the % operator with neg values..
-          //std::cout<<Math::rad2deg(rad)<<" "<<(0.5 * i)<<"\n"<<std::flush;
-          float half_quat_angle = Math::rad2deg(rad);
+          //std::cout<<vrj::Math::rad2deg(rad)<<" "<<(0.5 * i)<<"\n"<<std::flush;
+          float half_quat_angle = vrj::Math::rad2deg(rad);
           float half_original_angle = (0.5 * i);
-          half_quat_angle = Math::abs( half_quat_angle );
-          half_original_angle = Math::abs( half_original_angle );
+          half_quat_angle = vrj::Math::abs( half_quat_angle );
+          half_original_angle = vrj::Math::abs( half_original_angle );
 
           float tol = 0.1;
           assertTest( (half_original_angle <= (half_quat_angle + tol)) &&
@@ -167,9 +167,9 @@ public:
       //std::cout<<"Quat product: no rotation * rotation\n"<<std::flush;
       //std::cout<<"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n"<<std::flush;
 
-      Quat q1, q2, q3;
+      vrj::Quat q1, q2, q3;
       q1.makeRot( 0, 1,0,0 );
-      q2.makeRot( Math::deg2rad( 90.0f ), 1,0,0 );
+      q2.makeRot( vrj::Math::deg2rad( 90.0f ), 1,0,0 );
       //std::cout<<"[0 rotation] * [90deg about x] should be [90deg about x]\n"<<std::flush;
       //std::cout<<"q1:           "<<q1<<" .. "<<q1[VJ_W]<<" "<<q1[VJ_X]<<" "<<q1[VJ_Y]<<" "<<q1[VJ_Z]<<"\n"<<std::flush;
       //std::cout<<"q2:           "<<q2<<" .. "<<q2[VJ_W]<<" "<<q2[VJ_X]<<" "<<q2[VJ_Y]<<" "<<q2[VJ_Z]<<"\n"<<std::flush;
@@ -180,7 +180,7 @@ public:
       //std::cout<<"q3 = q1 * q2: "<<q3<<" .. "<<q3[VJ_W]<<" "<<q3[VJ_X]<<" "<<q3[VJ_Y]<<" "<<q3[VJ_Z]<<"\n"<<std::flush;
       //std::cout<<"\n"<<std::flush;
 
-      Vec3 v( 0,1,0 ), r;
+      vrj::Vec3 v( 0,1,0 ), r;
       r = q3 * v;
       //std::cout<<r<<"\n"<<std::flush;
       //std::cout<<"\n"<<std::flush;
@@ -193,9 +193,9 @@ public:
    {
       //std::cout<<"Quat product: rotation * rotation\n"<<std::flush;
       //std::cout<<"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n"<<std::flush;
-      Quat q1, q2, q3;
-      q1.makeRot( Math::deg2rad( 45.0f ), 0,1,0 );
-      q2.makeRot( Math::deg2rad( 90.0f ), 1,0,0 );
+      vrj::Quat q1, q2, q3;
+      q1.makeRot( vrj::Math::deg2rad( 45.0f ), 0,1,0 );
+      q2.makeRot( vrj::Math::deg2rad( 90.0f ), 1,0,0 );
       //std::cout<<"[45 about Y] * [90 about X] should be [90deg about .7,0,-.7]\n"<<std::flush;
       //std::cout<<"q1:           "<<q1<<" .. "<<q1[VJ_W]<<" "<<q1[VJ_X]<<" "<<q1[VJ_Y]<<" "<<q1[VJ_Z]<<"\n"<<std::flush;
       //std::cout<<"q2:           "<<q2<<" .. "<<q2[VJ_W]<<" "<<q2[VJ_X]<<" "<<q2[VJ_Y]<<" "<<q2[VJ_Z]<<"\n"<<std::flush;
@@ -207,7 +207,7 @@ public:
       //std::cout<<"q3 = q1 * q2: "<<q3<<" .. "<<q3[VJ_W]<<" "<<q3[VJ_X]<<" "<<q3[VJ_Y]<<" "<<q3[VJ_Z]<<"\n"<<std::flush;
       //std::cout<<"\n"<<std::flush;
 
-      Vec3 v( 0,1,0 ), r;
+      vrj::Vec3 v( 0,1,0 ), r;
       r = q3 * v;
       //std::cout<<r<<"\n"<<std::flush;
       //std::cout<<"\n"<<std::flush;
@@ -219,11 +219,11 @@ public:
    {
       //std::cout<<"xform vec by quat\n"<<std::flush;
       //std::cout<<"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n"<<std::flush;
-      Quat q1, q2;//, q3;
-      q1.makeRot( Math::deg2rad( 45.0f ), 0,-1,0 );
-      q2.makeRot( Math::deg2rad( 45.0f ), 1,0,0 );
+      vrj::Quat q1, q2;//, q3;
+      q1.makeRot( vrj::Math::deg2rad( 45.0f ), 0,-1,0 );
+      q2.makeRot( vrj::Math::deg2rad( 45.0f ), 1,0,0 );
 
-      Vec3 v( 0,1,0 ), r;
+      vrj::Vec3 v( 0,1,0 ), r;
 
       // (should not move)
       r = q1 * v;
@@ -245,7 +245,7 @@ public:
       std::cout<<"special cases\n"<<std::flush;
       std::cout<<"~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n"<<std::flush;
 
-      Quat q( 1, 0, -0.000313354, 0 );
+      vrj::Quat q( 1, 0, -0.000313354, 0 );
       float rad, x, y, z;
       q.getRot( rad, x, y, z );
 
@@ -253,16 +253,16 @@ public:
 
       // testing...
       double half_angle = 0.000626708 * 0.5f;
-      double sin_half_angle = Math::sin( half_angle );
-      double w = Math::cos( half_angle );
+      double sin_half_angle = vrj::Math::sin( half_angle );
+      double w = vrj::Math::cos( half_angle );
       std::cout<<half_angle<<" "<<sin_half_angle<<" "<<w<<"\n"<<std::flush;
 
 
-      //vjQuat qq( 0,0,0,0 );
+      //vrj::Quat qq( 0,0,0,0 );
 
       std::cout<<"make sure that makeRot(180,0,1,0) doesn't yield [0,0,0,0]\n"<<std::flush;
-      Quat qqq;
-      qqq.makeRot( Math::deg2rad( 180.0f ), 0, 1, 0 );
+      vrj::Quat qqq;
+      qqq.makeRot( vrj::Math::deg2rad( 180.0f ), 0, 1, 0 );
       std::cout<<"qqq: "<<qqq<<" .. "<<qqq[VJ_W]<<" "<<qqq[VJ_X]<<" "<<qqq[VJ_Y]<<" "<<qqq[VJ_Z]<<"\n"<<std::flush;
       assertTest( qqq[VJ_W] < VJ_QUAT_EPSILON && qqq[VJ_W] > -VJ_QUAT_EPSILON &&
               qqq[VJ_X] == 0.0f &&
@@ -286,8 +286,8 @@ public:
       // non normalized
       for (int x = 0; x < 360; ++x)
       {
-         Quat q, q2;
-         q.makeRot( Math::deg2rad( (float)x ), 0.7, 0, 0.7 );
+         vrj::Quat q, q2;
+         q.makeRot( vrj::Math::deg2rad( (float)x ), 0.7, 0, 0.7 );
          q2.mult( q, 0.5 );
 
          // no longer a valid rotation (non-unit length).  
@@ -297,15 +297,15 @@ public:
 
          float rad, i,j,k;
          q2.getRot( rad, i,j,k );
-         std::cout<<x<<") "<<Math::rad2deg( rad )<<" "<<i<<" "<<j<<" "<<k<<"\n"<<std::flush;
+         std::cout<<x<<") "<<vrj::Math::rad2deg( rad )<<" "<<i<<" "<<j<<" "<<k<<"\n"<<std::flush;
       }
 
       std::cout<<"If normalized, then the scaled quat is equal to the original."<<std::flush;
       // normalized.  
       for (int x = 0; x < 360; ++x)
       {
-         Quat q, q2;
-         q.makeRot( Math::deg2rad( (float)x ), 0.7, 0, 0.7 );
+         vrj::Quat q, q2;
+         q.makeRot( vrj::Math::deg2rad( (float)x ), 0.7, 0, 0.7 );
          q2.mult( q, 0.5 );
          q2.normalize();
 
@@ -323,9 +323,9 @@ public:
 
 
       {
-         Quat q, q1, q2;
-         q1.makeRot( Math::deg2rad( 90.0f ), 1, 0, 0 );
-         q2.makeRot( Math::deg2rad( 180.0f ), 1, 0, 0 );
+         vrj::Quat q, q1, q2;
+         q1.makeRot( vrj::Math::deg2rad( 90.0f ), 1, 0, 0 );
+         q2.makeRot( vrj::Math::deg2rad( 180.0f ), 1, 0, 0 );
 
          q.add( q1, q2 );
          q.normalize();
@@ -333,8 +333,8 @@ public:
          std::cout<<q<<"\n"<<std::flush;
       }
 
-      Quat q, q1;//, q2;
-      q1.makeRot( Math::deg2rad( 90.0f ), 1, 0, 0 );
+      vrj::Quat q, q1;//, q2;
+      q1.makeRot( vrj::Math::deg2rad( 90.0f ), 1, 0, 0 );
 
       q = q1 * q;
 
@@ -342,7 +342,7 @@ public:
    }
 
    // using a vector to increment rotation, much like angular velocity
-   // here angular velocity is defined as a Vec3 "w", using right hand rule
+   // here angular velocity is defined as a vrj::Vec3 "w", using right hand rule
    // things spin at |w| speed and on the w vector.
    //
    // just trying stuff out... TODO think of a good way to test this ability...
@@ -353,10 +353,10 @@ public:
 
       for (float x = 0; x < 100; ++x)
       {
-         Quat q1, q2, wq;
-         Vec3 w(0, x, 0); // angular velocity
+         vrj::Quat q1, q2, wq;
+         vrj::Vec3 w(0, x, 0); // angular velocity
          wq.makePure( w );
-         q1.makeRot( Math::deg2rad( 90.0f ), 0, 1, 0 );
+         q1.makeRot( vrj::Math::deg2rad( 90.0f ), 0, 1, 0 );
 
          q2 = wq * q1;
          //////q2.normalize();  // don't normalize, will not work!!!!!!!!!
@@ -364,18 +364,18 @@ public:
          std::cout<<"["<<q2<<"] == ["<<wq<<"] * ["<<q1<<"]\n"<<std::flush;
       }
 
-      Quat q1, wq;
-      Vec3 ww(0, 56, 0);
+      vrj::Quat q1, wq;
+      vrj::Vec3 ww(0, 56, 0);
       wq.makePure( ww );
-      q1.makeRot( Math::deg2rad( 90.0f ), 0, 1, 0 );
+      q1.makeRot( vrj::Math::deg2rad( 90.0f ), 0, 1, 0 );
 
       const float& w1( wq[VJ_W] );
       const float& w2( q1[VJ_W] );
-      Vec3 v1( wq[VJ_X], wq[VJ_Y], wq[VJ_Z] );
-      Vec3 v2( q1[VJ_X], q1[VJ_Y], q1[VJ_Z] );
+      vrj::Vec3 v1( wq[VJ_X], wq[VJ_Y], wq[VJ_Z] );
+      vrj::Vec3 v2( q1[VJ_X], q1[VJ_Y], q1[VJ_Z] );
 
       float w = w1 * w2 - v1.dot( v2 );
-      Vec3 v = (w1 * v2) + (w2 * v1) + v1.cross( v2 );
+      vrj::Vec3 v = (w1 * v2) + (w2 * v1) + v1.cross( v2 );
 
       std::cout<<"["<<w<<", "<<v[0]<<", "<<v[1]<<", "<<v[2]<<"] == ["<<wq<<"] * ["<<q1<<"]\n"<<std::flush;
       std::cout<<(w1 * v2)<<"  == (w1 * v2) \n"<<std::flush;
