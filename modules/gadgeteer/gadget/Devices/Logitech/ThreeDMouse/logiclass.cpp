@@ -175,7 +175,7 @@ int ThreeDMouse::logitechOpen (char* port_name)
 {
   int fd;
   struct termios t;
-  char data[DIAGNOSTIC_SIZE]; /* for diagnostics info */
+  unsigned char data[DIAGNOSTIC_SIZE]; /* for diagnostics info */
 
   /* open a serial port, read/write */
   if ((fd = open (port_name, O_RDWR)) < 0) {
@@ -362,7 +362,7 @@ void ThreeDMouse::cuResetControlUnit ()
 ///////////////////////////////////////////////////////////////////////////////
 // Retrieve diagnostics report
 ///////////////////////////////////////////////////////////////////////////////
-void ThreeDMouse::getDiagnostics ( char data[])
+void ThreeDMouse::getDiagnostics ( unsigned char data[])
 {
   ThreeDMouse::cuRequestDiagnostics (); /* command diagnostics */
   vpr::System::sleep(1);

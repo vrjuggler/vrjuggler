@@ -354,7 +354,7 @@ DigitalData* Intersense::getDigitalData( int d )
 
 AnalogData* Intersense::getAnalogData( int d )
 {
-    float newValue;
+//    float newValue;
     if(this->isActive() == false)
         return 0;
     return &(mInput[current].analog[d]);
