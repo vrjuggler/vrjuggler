@@ -105,14 +105,10 @@ public class PropertySheetFactory extends PropertyComponent
             prop_def_itr.hasNext(); )
       {
          PropertyDefinition prop_def = (PropertyDefinition)prop_def_itr.next();
-         System.out.println("Property: " + prop_def.getToken());
 
          if ( prop_def.isVariable() ||
               elm.getPropertyValueCount(prop_def.getToken()) > 1)
          {
-            System.out.println("[PropertySheetFactory.makeSheet()] " +
-                               "Variable Property List.");
-
             addVarList(sheet, ctx, elm, prop_def, row);
             ++row;
          }
@@ -142,9 +138,6 @@ public class PropertySheetFactory extends PropertyComponent
                                      PropertyDefinition propDef, Color color)
    {
       PropertySheet sheet = new PropertySheet();
-
-      System.out.println("[PropertySheetFactory.makeVarSheet()] " +
-                         "Variable Property List.");
 
       sheet.setConfigElement(elm);
       sheet.setColor(color);
