@@ -74,6 +74,10 @@ public class TweekFrame extends JFrame implements BeanFocusChangeListener,
    {
       enableEvents(AWTEvent.WINDOW_EVENT_MASK);
 
+      // Install extra look and feels.
+      UIManager.installLookAndFeel("Kunststoff",
+                                   com.incors.plaf.kunststoff.KunststoffLookAndFeel.class.getName());
+
       // This needs to be done as early as possible so that we receive events
       // that happen during initialization.
       msgDocument.addMessageAdditionListener(this);
