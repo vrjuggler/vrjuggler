@@ -53,9 +53,9 @@ public class ClientUI extends Frame
 	 */
 	activepanel = null;
 
-	//windowfont = new Font ("Courier", Font.PLAIN, 12);
-	windowfont = new Font ("Courier", Font.PLAIN, 16);
-       	windowfontbold = new Font ("Courier", Font.BOLD, 16);
+	windowfont = new Font ("Courier", Font.PLAIN, 12);
+	//windowfont = new Font ("Courier", Font.PLAIN, 16);
+       	windowfontbold = new Font ("Courier", Font.BOLD, 12);
 	setFont (windowfont);
 
 	/* we use this when we're opening a window that 
