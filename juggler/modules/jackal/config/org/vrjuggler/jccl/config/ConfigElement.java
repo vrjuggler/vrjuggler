@@ -230,6 +230,10 @@ public class ConfigElement implements ConfigElementPointerListener
       if (old_value instanceof ConfigElementPointer)
       {
          old_value = ((ConfigElementPointer)old_value).getTarget();
+         if (null == old_value)
+         {
+            old_value = "";
+         }
       }
       // Make sure that the value acually changed.
       if ( !old_value.equals(value) )
@@ -263,6 +267,10 @@ public class ConfigElement implements ConfigElementPointerListener
       {
          ConfigElementPointer cep = (ConfigElementPointer)old_value;
          old_value = cep.getTarget();
+         if (null == old_value)
+         {
+            old_value = "";
+         }
          cep.setTarget((String)value);
       }
       else
