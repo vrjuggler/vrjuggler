@@ -41,6 +41,7 @@
 #include <Kernel/Pf/vjPfUtil.h>
 #include <Sound/vjSound.h> //juggler sound
 #include <Performer/pf/pfDCS.h>
+#include <Performer/pf/pfTraverser.h>
 
 //: Performer-Juggler sound node.
 //  this node automatically updates the Sound's position information.
