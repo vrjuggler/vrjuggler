@@ -15,8 +15,6 @@ Add a page of development tools that are preferred by us.
 - slick edit
 - ???
 
-add ${} variables to <!-- install-web --> tags
-
 fix the minibrowser resize problem.
 
 //add alt text for when you have java disabled in browser.
