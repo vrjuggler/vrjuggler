@@ -60,6 +60,7 @@ public:
       mAppXformDCS = NULL;
       mAppSwitch = NULL;
       mUnitScaleFactor = 0.0f;
+      mBoundingSize = 0.0f;
    }
 
    // Constructs the scene graph
@@ -98,6 +99,7 @@ public:
    pfDCS*      mAppXformDCS;
    pfSwitch*   mAppSwitch;             // Switch to select active application
    float       mUnitScaleFactor;    // Scale factor needed to scale to unit cube
+   float       mBoundingSize;       // The size of a bounding volume (rad of a bound sphere)
    pfVec3      mUnitTrans;          // Amount to translate to get to unit cube
 };
 
@@ -216,13 +218,15 @@ private:
    //           /--- mSun
    //          /--- mConstructSwitch -- mConstructDCS - mConstructModel
    //  mRootNode
-   //          \---- mAppRoot(s) --- switch -- sclaeDCS -- model
+   //          \---- mAppGroupDCS --- mAppGroup --- mAppRoot    --- switch -- scaleDCS -- model
+   //                                          \--- mAppRoot(s) --- switch -- scaleDCS -- model
    //
    pfGroup*       mRootNode;              // Root node of the scene graph
    pfSwitch*      mConstructSwitch;       // Switch for turning on and off the construct
    pfDCS*         mConstructDCS;          // DCS to transform the construct model
    pfNode*        mConstructModel;
-   pfDCS*         mAppScalerDCS;          // DCS to scale active application
+   pfDCS*         mAppGroupDCS;           // DCS to scale active application
+   pfGroup*       mAppGroup;              // Group node to put all applications under (clipping happens here)
    pfLightSource* mSun;                   // Sun to light the environment
 
 public:
@@ -337,7 +341,8 @@ protected:
        mRootNode = NULL;
        mConstructModel = NULL;
        mHaveInitialized = false;
-       mAppScalerDCS = NULL;
+       mAppGroupDCS = NULL;
+       mAppGroup = NULL;
        mCurState = RUN_SWITCHER;
        mActiveApp = -1;
        mAppToMakeActive = -1;
