@@ -1,0 +1,23 @@
+DATE       AUTHOR   CHANGE
+---------- -------- -----------------------------------------------------------
+2001-06-21 browner  Added a wrapper around the serial device API on Win32.
+                    This completes what is needed to allow writing
+                    cross-platform serial device drivers.
+2001-06-20 patrick  Complete restructuring of the directory tree.  This
+                    included the removal of the SharedMem directory, the
+                    renaming of the directories Threads and Utils to Thread
+                    and Util respectively, and the requirement of prefixing
+                    all included VPR headers with "vpr/".  The module was also
+                    renamed from vpr to vapor.  While all revision history has
+                    been retained, no code checked out prior to the tag
+                    POST_DIRECTORY_RESTRUCTURE will compile.
+2001-05-22 patrick  Brought the termios wrapper up to speed with the changes
+                    made to the Bridge pattern implementation.  Templates are
+                    used now instead of pure virtual methods.
+2001-04-20 allenb   NSPR subsystem extended to wrap NSPR sockets.
+2001-04-19 patrick  Changed the socket classes using the Bridge pattern to use
+                    templates rather than pure virtual methods.  This was done
+                    to help with maintenance and with general performance.
+2001-04-17 patrick  Using the version of the VPR directory in the VR Juggler
+                    source tree as the basis, the code was broken into a
+                    separtely evolving module.
