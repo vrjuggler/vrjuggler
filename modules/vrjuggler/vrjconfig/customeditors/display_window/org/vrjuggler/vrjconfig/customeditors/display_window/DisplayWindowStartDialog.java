@@ -141,9 +141,10 @@ public class DisplayWindowStartDialog
       PropertyDefinition prop_def =
          winElt.getDefinition().getPropertyDefinition(KEYBOARD_MOUSE_PTR_PROPERTY);
       mKbdDevEditor = 
-         new PropertyEditorPanel(ctx,
-                                 winElt.getProperty(KEYBOARD_MOUSE_PTR_PROPERTY, 0),
-                                 prop_def, winElt, 0, Color.white);
+         new PropertyEditorPanel(
+            ctx, winElt.getProperty(KEYBOARD_MOUSE_PTR_PROPERTY, 0), prop_def,
+            winElt, 0, Color.white
+         );
 
       prop_def =
          winElt.getDefinition().getPropertyDefinition(LOCK_KEY_PROPERTY);
@@ -174,20 +175,31 @@ public class DisplayWindowStartDialog
          setSpinnerModel(mBlueDepthSpinner, val, 1, 8);
          val = ((Integer) fb_cfg.getProperty("alpha_size", 0)).intValue();
          setSpinnerModel(mAlphaDepthSpinner, val, 1, 8);
-         val = ((Integer) fb_cfg.getProperty("depth_buffer_size", 0)).intValue();
+         val =
+            ((Integer) fb_cfg.getProperty("depth_buffer_size", 0)).intValue();
          setSpinnerModel(mDepthBufferSpinner, val, 1, 32);
 
-         mVisualIdField.setText(((Integer) fb_cfg.getProperty("visual_id", 0)).toString());
-         mFSAACheckbox.setSelected(fb_cfg.getProperty("fsaa_enable", 0).equals(Boolean.TRUE));
+         mVisualIdField.setText(
+            ((Integer) fb_cfg.getProperty("visual_id", 0)).toString()
+         );
+         mFSAACheckbox.setSelected(
+            fb_cfg.getProperty("fsaa_enable", 0).equals(Boolean.TRUE)
+         );
 
          mPositionXField.setValue(winElt.getProperty(ORIGIN_PROPERTY, 0));
          mPositionYField.setValue(winElt.getProperty(ORIGIN_PROPERTY, 1));
          mWidthField.setValue(winElt.getProperty(SIZE_PROPERTY, 0));
          mHeightField.setValue(winElt.getProperty(SIZE_PROPERTY, 1));
 
-         mStereoCheckbox.setSelected(winElt.getProperty("stereo", 0).equals(Boolean.TRUE));
-         mBorderCheckbox.setSelected(winElt.getProperty("border", 0).equals(Boolean.TRUE));
-         mHideMouseCheckbox.setSelected(winElt.getProperty("hide_mouse", 0).equals(Boolean.TRUE));
+         mStereoCheckbox.setSelected(
+            winElt.getProperty("stereo", 0).equals(Boolean.TRUE)
+         );
+         mBorderCheckbox.setSelected(
+            winElt.getProperty("border", 0).equals(Boolean.TRUE)
+         );
+         mHideMouseCheckbox.setSelected(
+            winElt.getProperty("hide_mouse", 0).equals(Boolean.TRUE)
+         );
 
          mSleepTimeField.setValue(winElt.getProperty(SLEEP_TIME_PROPERTY, 0));
          Object start_locked = winElt.getProperty(START_LOCKED_PROPERTY, 0);
@@ -392,17 +404,23 @@ public class DisplayWindowStartDialog
       mWindowPropsPanelLayout = new TableLayout(window_props_size);
 
       mBoundsPanelBorder =
-         new TitledBorder(BorderFactory.createEtchedBorder(Color.white,
-                                                           new Color(161, 161, 161)),
-                                                           "Window Bounds");
+         new TitledBorder(
+            BorderFactory.createEtchedBorder(Color.white,
+                                             new Color(161, 161, 161)),
+            "Window Bounds"
+         );
       mFrameBufferPanelBorder =
-         new TitledBorder(BorderFactory.createEtchedBorder(Color.white,
-                                                           new Color(142, 142, 142)),
-                                                           "Visual Quality Settings");
+         new TitledBorder(
+            BorderFactory.createEtchedBorder(Color.white,
+                                             new Color(142, 142, 142)),
+            "Visual Quality Settings"
+         );
       mWindowPropsPanelBorder =
-         new TitledBorder(BorderFactory.createEtchedBorder(Color.white,
-                                                           new Color(142, 142, 142)),
-                                                           "Window Behavior Settings");
+         new TitledBorder(
+            BorderFactory.createEtchedBorder(Color.white,
+                                             new Color(142, 142, 142)),
+            "Window Behavior Settings"
+         );
       mFBSettingsPanelBorder =
          new EtchedBorder(EtchedBorder.RAISED, Color.white,
                           new Color(142, 142, 142));
@@ -480,14 +498,20 @@ public class DisplayWindowStartDialog
       mOkButton.setMnemonic('0');
       mOkButton.setSelected(false);
       mOkButton.setText("OK");
-      mOkButton.addActionListener(new DisplayWindowStartDialog_mOkButton_actionAdapter(this));
+      mOkButton.addActionListener(
+         new DisplayWindowStartDialog_mOkButton_actionAdapter(this)
+      );
       mCancelButton.setMnemonic('0');
       mCancelButton.setText("Cancel");
-      mCancelButton.addActionListener(new DisplayWindowStartDialog_mCancelButton_actionAdapter(this));
+      mCancelButton.addActionListener(
+         new DisplayWindowStartDialog_mCancelButton_actionAdapter(this)
+      );
       mHelpButton.setEnabled(false);
       mHelpButton.setMnemonic('0');
       mHelpButton.setText("Help");
-      mHelpButton.addActionListener(new DisplayWindowStartDialog_mHelpButton_actionAdapter(this));
+      mHelpButton.addActionListener(
+         new DisplayWindowStartDialog_mHelpButton_actionAdapter(this)
+      );
       mFSAACheckbox.setText("Enable full-screen anti-aliasing");
       mBoundsPanel.setLayout(mBoundsPanelLayout);
       mBoundsPanel.setBorder(mBoundsPanelBorder);
@@ -502,7 +526,9 @@ public class DisplayWindowStartDialog
       mVisualIdLabel.setText("Visual ID");
       mVisualIdField.setMinimumSize(new Dimension(19, 20));
       mVisualIdField.setPreferredSize(new Dimension(28, 20));
-      mVisualIdField.setToolTipText("Enter a GLX or WGL visual ID in hexadecimal notation or -1 to ignore");
+      mVisualIdField.setToolTipText(
+         "Enter a GLX or WGL visual ID in hexadecimal notation or -1 to ignore"
+      );
       mVisualIdField.setText("-1");
       mVisualIdField.addActionListener(
          new DisplayWindowStartDialog_mVisualIdField_actionAdapter(this)
@@ -511,20 +537,26 @@ public class DisplayWindowStartDialog
          new DisplayWindowStartDialog_mVisualIdField_focusAdapter(this)
       );
       this.getContentPane().add(mMainPanel, BorderLayout.CENTER);
-      mBoundsPanel.add(mSizeLabel, new TableLayoutConstraints(0, 0, 0, 0,
-                                                            TableLayout.RIGHT,
-                                                            TableLayout.CENTER));
-      mBoundsPanel.add(mSizePanel, new TableLayoutConstraints(1, 0, 1, 0,
-                                                            TableLayout.LEFT,
-                                                            TableLayout.CENTER));
-      mBoundsPanel.add(mPositionLabel,
-                       new TableLayoutConstraints(0, 1, 0, 1,
-                                                  TableLayout.RIGHT,
-                                                  TableLayout.CENTER));
-      mBoundsPanel.add(mPositionPanel,
-                       new TableLayoutConstraints(1, 1, 1, 1,
-                                                  TableLayout.LEFT,
-                                                  TableLayout.CENTER));
+      mBoundsPanel.add(
+         mSizeLabel,
+         new TableLayoutConstraints(0, 0, 0, 0, TableLayoutConstraints.RIGHT,
+                                    TableLayoutConstraints.CENTER)
+      );
+      mBoundsPanel.add(
+         mSizePanel,
+         new TableLayoutConstraints(1, 0, 1, 0, TableLayoutConstraints.LEFT,
+                                    TableLayoutConstraints.CENTER)
+      );
+      mBoundsPanel.add(
+         mPositionLabel,
+         new TableLayoutConstraints(0, 1, 0, 1, TableLayoutConstraints.RIGHT,
+                                    TableLayoutConstraints.CENTER)
+      );
+      mBoundsPanel.add(
+         mPositionPanel,
+         new TableLayoutConstraints(1, 1, 1, 1, TableLayoutConstraints.LEFT,
+                                    TableLayoutConstraints.CENTER)
+      );
       mPositionPanel.add(mPositionXField, null);
       mPositionPanel.add(mPositionXLabel, null);
       mPositionPanel.add(mPositionYField, null);
@@ -532,138 +564,161 @@ public class DisplayWindowStartDialog
       mSizePanel.add(mSizeXLabel, null);
       mSizePanel.add(mHeightField, null);
       mFrameBufferPanel.setPreferredSize(new Dimension(450, 200));
-      mFrameBufferPanel.add(mFBSettingsLabel,
-                            new TableLayoutConstraints(0, 0, 0, 0,
-                                                       TableLayout.LEFT,
-                                                       TableLayout.CENTER));
-      mFrameBufferPanel.add(mFBSettingsPanel,
-                            new TableLayoutConstraints(2, 0, 2, 0,
-                                                       TableLayout.FULL,
-                                                       TableLayout.FULL));
-      mFBSettingsPanel.add(mVisualIdLabel,
-                           new TableLayoutConstraints(0, 0, 0, 0,
-                                                      TableLayout.FULL,
-                                                      TableLayout.CENTER));
-      mFBSettingsPanel.add(mVisualIdField,
-                           new TableLayoutConstraints(1, 0, 1, 0,
-                                                      TableLayout.FULL,
-                                                      TableLayout.CENTER));
-      mFBSettingsPanel.add(mRedDepthLabel,
-                           new TableLayoutConstraints(0, 1, 0, 1,
-                                                      TableLayout.FULL,
-                                                      TableLayout.CENTER));
-      mFBSettingsPanel.add(mRedDepthSpinner,
-                           new TableLayoutConstraints(1, 1, 1, 1,
-                                                      TableLayout.FULL,
-                                                      TableLayout.CENTER));
-      mFBSettingsPanel.add(mGreenDepthLabel,
-                           new TableLayoutConstraints(0, 2, 0, 2,
-                                                      TableLayout.FULL,
-                                                      TableLayout.CENTER));
-      mFBSettingsPanel.add(mGreenDepthSpinner,
-                           new TableLayoutConstraints(1, 2, 1, 2,
-                                                      TableLayout.FULL,
-                                                      TableLayout.CENTER));
-      mFBSettingsPanel.add(mBlueDepthLabel,
-                           new TableLayoutConstraints(0, 3, 0, 3,
-                                                      TableLayout.FULL,
-                                                      TableLayout.CENTER));
-      mFBSettingsPanel.add(mBlueDepthSpinner,
-                           new TableLayoutConstraints(1, 3, 1, 3,
-                                                      TableLayout.FULL,
-                                                      TableLayout.CENTER));
-      mFBSettingsPanel.add(mAlphaDepthLabel,
-                           new TableLayoutConstraints(0, 4, 0, 4,
-                                                      TableLayout.FULL,
-                                                      TableLayout.CENTER));
-      mFBSettingsPanel.add(mAlphaDepthSpinner,
-                           new TableLayoutConstraints(1, 4, 1, 4,
-                                                      TableLayout.FULL,
-                                                      TableLayout.CENTER));
-      mFBSettingsPanel.add(mDepthBufferLabel,
-                           new TableLayoutConstraints(0, 5, 0, 5,
-                                                      TableLayout.FULL,
-                                                      TableLayout.CENTER));
-      mFBSettingsPanel.add(mDepthBufferSpinner,
-                           new TableLayoutConstraints(1, 5, 1, 5,
-                                                      TableLayout.FULL,
-                                                      TableLayout.CENTER));
-      mFBSettingsPanel.add(mFSAACheckbox,
-                           new TableLayoutConstraints(0, 6, 1, 6,
-                                                      TableLayout.LEFT,
-                                                      TableLayout.CENTER));
+      mFrameBufferPanel.add(
+         mFBSettingsLabel,
+         new TableLayoutConstraints(0, 0, 0, 0, TableLayoutConstraints.LEFT,
+                                    TableLayoutConstraints.CENTER)
+      );
+      mFrameBufferPanel.add(
+         mFBSettingsPanel,
+         new TableLayoutConstraints(2, 0, 2, 0, TableLayoutConstraints.FULL,
+                                    TableLayoutConstraints.FULL)
+      );
+      mFBSettingsPanel.add(
+         mVisualIdLabel,
+         new TableLayoutConstraints(0, 0, 0, 0, TableLayoutConstraints.FULL,
+                                    TableLayoutConstraints.CENTER)
+      );
+      mFBSettingsPanel.add(
+         mVisualIdField,
+         new TableLayoutConstraints(1, 0, 1, 0, TableLayoutConstraints.FULL,
+                                    TableLayoutConstraints.CENTER)
+      );
+      mFBSettingsPanel.add(
+         mRedDepthLabel,
+         new TableLayoutConstraints(0, 1, 0, 1, TableLayoutConstraints.FULL,
+                                    TableLayoutConstraints.CENTER)
+      );
+      mFBSettingsPanel.add(
+         mRedDepthSpinner,
+         new TableLayoutConstraints(1, 1, 1, 1, TableLayoutConstraints.FULL,
+                                    TableLayoutConstraints.CENTER)
+      );
+      mFBSettingsPanel.add(
+         mGreenDepthLabel,
+         new TableLayoutConstraints(0, 2, 0, 2, TableLayoutConstraints.FULL,
+                                    TableLayoutConstraints.CENTER)
+      );
+      mFBSettingsPanel.add(
+         mGreenDepthSpinner,
+         new TableLayoutConstraints(1, 2, 1, 2, TableLayoutConstraints.FULL,
+                                    TableLayoutConstraints.CENTER)
+      );
+      mFBSettingsPanel.add(
+         mBlueDepthLabel,
+         new TableLayoutConstraints(0, 3, 0, 3, TableLayoutConstraints.FULL,
+                                    TableLayoutConstraints.CENTER)
+      );
+      mFBSettingsPanel.add(
+         mBlueDepthSpinner,
+         new TableLayoutConstraints(1, 3, 1, 3, TableLayoutConstraints.FULL,
+                                    TableLayoutConstraints.CENTER)
+      );
+      mFBSettingsPanel.add(
+         mAlphaDepthLabel,
+         new TableLayoutConstraints(0, 4, 0, 4, TableLayoutConstraints.FULL,
+                                    TableLayoutConstraints.CENTER)
+      );
+      mFBSettingsPanel.add(
+         mAlphaDepthSpinner,
+         new TableLayoutConstraints(1, 4, 1, 4, TableLayoutConstraints.FULL,
+                                    TableLayoutConstraints.CENTER)
+      );
+      mFBSettingsPanel.add(
+         mDepthBufferLabel,
+         new TableLayoutConstraints(0, 5, 0, 5, TableLayoutConstraints.FULL,
+                                    TableLayoutConstraints.CENTER)
+      );
+      mFBSettingsPanel.add(
+         mDepthBufferSpinner,
+         new TableLayoutConstraints(1, 5, 1, 5, TableLayoutConstraints.FULL,
+                                    TableLayoutConstraints.CENTER)
+      );
+      mFBSettingsPanel.add(
+         mFSAACheckbox,
+         new TableLayoutConstraints(0, 6, 1, 6, TableLayoutConstraints.LEFT,
+                                    TableLayoutConstraints.CENTER)
+      );
       mWindowPropsPanel.add(mBorderCheckbox,
                      new TableLayoutConstraints(0, 0, 2, 0,
-                                                TableLayout.RIGHT,
-                                                TableLayout.CENTER));
+                                                TableLayoutConstraints.RIGHT,
+                                                TableLayoutConstraints.CENTER));
       mWindowPropsPanel.add(mStereoCheckbox,
                      new TableLayoutConstraints(0, 1, 2, 1,
-                                                TableLayout.RIGHT,
-                                                TableLayout.CENTER));
+                                                TableLayoutConstraints.RIGHT,
+                                                TableLayoutConstraints.CENTER));
       mWindowPropsPanel.add(mHideMouseCheckbox,
                      new TableLayoutConstraints(0, 2, 2, 2,
-                                                TableLayout.RIGHT,
-                                                TableLayout.CENTER));
-      mWindowPropsPanel.add(mKbdDevLabel,
-                            new TableLayoutConstraints(0, 3, 0, 3,
-                                                       TableLayoutConstraints.RIGHT,
-                                                       TableLayoutConstraints.CENTER));
-      mWindowPropsPanel.add(mKbdDevEditor,
-                            new TableLayoutConstraints(2, 3, 5, 3,
-                                                       TableLayoutConstraints.LEFT,
-                                                       TableLayoutConstraints.CENTER));
-      mWindowPropsPanel.add(mLockKeyLabel,
-                            new TableLayoutConstraints(0, 4, 0, 4,
-                                                       TableLayoutConstraints.RIGHT,
-                                                       TableLayoutConstraints.CENTER));
-      mWindowPropsPanel.add(mLockKeyEditor,
-                            new TableLayoutConstraints(2, 4, 5, 4,
-                                                       TableLayoutConstraints.LEFT,
-                                                       TableLayoutConstraints.CENTER));
-      mWindowPropsPanel.add(mStartLockedCB,
-                            new TableLayoutConstraints(0, 5, 2, 5,
-                                                       TableLayoutConstraints.RIGHT,
-                                                       TableLayoutConstraints.CENTER));
-      mWindowPropsPanel.add(mSleepTimeLabel,
-                            new TableLayoutConstraints(0, 6, 0, 6,
-                                                       TableLayoutConstraints.RIGHT,
-                                                       TableLayoutConstraints.CENTER));
-      mWindowPropsPanel.add(mSleepTimeField,
-                            new TableLayoutConstraints(2, 6, 3, 6,
-                                                       TableLayoutConstraints.FULL,
-                                                       TableLayoutConstraints.CENTER));
-      mWindowPropsPanel.add(mSleepMSLabel,
-                            new TableLayoutConstraints(5, 6, 5, 6,
-                                                       TableLayoutConstraints.LEFT,
-                                                       TableLayoutConstraints.CENTER));
+                                                TableLayoutConstraints.RIGHT,
+                                                TableLayoutConstraints.CENTER));
+      mWindowPropsPanel.add(
+         mKbdDevLabel,
+         new TableLayoutConstraints(0, 3, 0, 3, TableLayoutConstraints.RIGHT,
+                                    TableLayoutConstraints.CENTER)
+      );
+      mWindowPropsPanel.add(
+         mKbdDevEditor,
+         new TableLayoutConstraints(2, 3, 5, 3, TableLayoutConstraints.LEFT,
+                                    TableLayoutConstraints.CENTER)
+      );
+      mWindowPropsPanel.add(
+         mLockKeyLabel,
+         new TableLayoutConstraints(0, 4, 0, 4, TableLayoutConstraints.RIGHT,
+                                    TableLayoutConstraints.CENTER)
+      );
+      mWindowPropsPanel.add(
+         mLockKeyEditor,
+         new TableLayoutConstraints(2, 4, 5, 4, TableLayoutConstraints.LEFT,
+                                    TableLayoutConstraints.CENTER)
+      );
+      mWindowPropsPanel.add(
+         mStartLockedCB,
+         new TableLayoutConstraints(0, 5, 2, 5, TableLayoutConstraints.RIGHT,
+                                    TableLayoutConstraints.CENTER)
+      );
+      mWindowPropsPanel.add(
+         mSleepTimeLabel,
+         new TableLayoutConstraints(0, 6, 0, 6, TableLayoutConstraints.RIGHT,
+                                    TableLayoutConstraints.CENTER)
+      );
+      mWindowPropsPanel.add(
+         mSleepTimeField,
+         new TableLayoutConstraints(2, 6, 3, 6, TableLayoutConstraints.FULL,
+                                    TableLayoutConstraints.CENTER)
+      );
+      mWindowPropsPanel.add(
+         mSleepMSLabel,
+         new TableLayoutConstraints(5, 6, 5, 6, TableLayoutConstraints.LEFT,
+                                    TableLayoutConstraints.CENTER)
+      );
       mMainPanel.add(mResourceLabel,
                      new TableLayoutConstraints(1, 0, 1, 0,
-                                                TableLayout.RIGHT,
-                                                TableLayout.CENTER));
+                                                TableLayoutConstraints.RIGHT,
+                                                TableLayoutConstraints.CENTER));
       mMainPanel.add(mResourceChooser,
                      new TableLayoutConstraints(3, 0, 3, 0,
-                                                TableLayout.LEFT,
-                                                TableLayout.CENTER));
+                                                TableLayoutConstraints.LEFT,
+                                                TableLayoutConstraints.CENTER));
       mMainPanel.add(mNameLabel,
                      new TableLayoutConstraints(1, 1, 1, 1,
-                                                TableLayout.RIGHT,
-                                                TableLayout.CENTER));
+                                                TableLayoutConstraints.RIGHT,
+                                                TableLayoutConstraints.CENTER));
       mMainPanel.add(mNameField,
                      new TableLayoutConstraints(3, 1, 4, 1,
-                                                TableLayout.FULL,
-                                                TableLayout.CENTER));
+                                                TableLayoutConstraints.FULL,
+                                                TableLayoutConstraints.CENTER));
       mMainPanel.add(mBoundsPanel,
                      new TableLayoutConstraints(0, 2, 5, 2,
-                                                TableLayout.FULL,
-                                                TableLayout.FULL));
+                                                TableLayoutConstraints.FULL,
+                                                TableLayoutConstraints.FULL));
       mMainPanel.add(mFrameBufferPanel,
                      new TableLayoutConstraints(0, 3, 5, 3,
-                                                TableLayout.FULL,
-                                                TableLayout.FULL));
+                                                TableLayoutConstraints.FULL,
+                                                TableLayoutConstraints.FULL));
       mMainPanel.add(mWindowPropsPanel,
                      new TableLayoutConstraints(0, 4, 5, 4,
-                                                TableLayout.FULL,
-                                                TableLayout.FULL));
+                                                TableLayoutConstraints.FULL,
+                                                TableLayoutConstraints.FULL));
       this.getContentPane().add(mButtonPanel, BorderLayout.SOUTH);
    }
 
@@ -816,11 +871,11 @@ public class DisplayWindowStartDialog
            window_height + window_pos_y > mResolution.height )
       {
          int answer =
-            JOptionPane.showConfirmDialog(this,
-                                          "Do you want the window to open outside the managed area?",
-                                          "Display Window Outside Managed Area",
-                                          JOptionPane.YES_NO_OPTION,
-                                          JOptionPane.WARNING_MESSAGE);
+            JOptionPane.showConfirmDialog(
+               this, "Do you want the window to open outside the managed area?",
+               "Display Window Outside Managed Area",
+               JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE
+            );
 
          if ( answer == JOptionPane.YES_OPTION )
          {
