@@ -60,7 +60,7 @@ class GUIDFactory;
 class VPR_CLASS_API GUID : public vpr::SerializableObject
 {
 public:
-   /** Tag to the constructor to force generation: dso::GUID guid(dso::GUID::generate_tag);
+   /** Tag to the constructor to force generation: vpr::GUID guid(vpr::GUID::generate_tag);
 */
    class GenerateTag { };
    static GenerateTag generateTag;
