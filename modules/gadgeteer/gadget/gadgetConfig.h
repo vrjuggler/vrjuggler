@@ -146,4 +146,6 @@
 #   define GADGET_DATA_API(__type)	GADGET_IMPORT_DATA(__type)
 #endif
 
+// #define GADGET_USING_RIM_SYNC
+
 #endif   /* _GADGET_CONFIG_H_ */

@@ -18,6 +18,7 @@
 #include <gadget/RemoteInputManager/NetUtils.h>
 #include <gadget/Type/NetDigital.h>
 #include <gadget/Type/NetPosition.h>
+#include <gadget/RemoteInputManager/NetClockSync.h>
 
 
 namespace gadget{
@@ -56,6 +57,7 @@ protected:
     std::list<NetInput*> mReceivingInputs;     // devices/proxies that we receive from
     IdGenerator<VJ_NETID_TYPE> mLocalIdGen;        // keeps track of used/free network ids
     MsgPackage mMsgPackage;                      // used to package and send messages.    
+    NetClockSync mNetClockSync;
     
     vpr::Thread* mAcceptThread;
     vpr::InetAddr mListenAddr;
@@ -306,7 +308,7 @@ public:
    bool receiveHandshake(std::string& recievedHostname, int& receivedPort, std::string& received_manager_id, vpr::SocketStream* newStream);
 
    bool makeConnection(const std::string &connection_alias, const std::string &hostname, const int port);
-   bool addConnection(const std::string &connection_alias, const std::string& hostname, const int port, const std::string& manager_id, vpr::SocketStream* sock_stream);
+   NetConnection* addConnection(const std::string &connection_alias, const std::string& hostname, const int port, const std::string& manager_id, vpr::SocketStream* sock_stream);
         
 /*
    NetConnection* findConnection(const std::string& connection_name){
@@ -356,6 +358,7 @@ public:
    NetInput* findDeviceByLocalId(VJ_NETID_TYPE local_id);
 
    void resendRequestsForNackedDevices();
+   void updateManagerStatus();
 
 /*
    // XXX debug function

@@ -26,7 +26,10 @@ const unsigned short MAX_DEVICE_ID = 399;  // allows 400 devices per connection 
 const unsigned short MSG_DEVICE_REQ = 400;
 const unsigned short MSG_DEVICE_ACK = 401;
 const unsigned short MSG_DEVICE_NACK = 402;
+const unsigned short MSG_CLOCK_SRC = 403;
+const unsigned short MSG_CLOCK_SYNC = 404;
 const unsigned short MSG_END_BLOCK = 410;
+
 
 #ifndef ulong
 typedef unsigned long ulong;

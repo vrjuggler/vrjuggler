@@ -14,7 +14,7 @@ MsgPackage::MsgPackage(){
 
 // send contents of current package to the socket specified
 
-void MsgPackage::sendContents(vpr::SocketStream sock_stream) const{
+void MsgPackage::sendContents(vpr::SocketStream& sock_stream) const{
    if (mDataLength > 0)
       sendAtOnce(sock_stream, mBuffer, mDataLength);              
 }
@@ -23,7 +23,7 @@ void MsgPackage::sendContents(vpr::SocketStream sock_stream) const{
 // send contents of current package to the socket specified
 // and then clear the message
 
-void MsgPackage::sendAndClear(vpr::SocketStream sock_stream){
+void MsgPackage::sendAndClear(vpr::SocketStream& sock_stream){
    if (mDataLength > 0) {
       sendAtOnce(sock_stream, mBuffer, mDataLength);
    }
@@ -201,6 +201,69 @@ int MsgPackage::receiveDeviceAck(char* ptr, int len){
    return (4 + name_length + 1);  // sender id(2), receiver_id(2), name(n) semicolon(1)
 }
 
+// creates a clock sync message containing two times
+void MsgPackage::createClockSync(const float& time_a, const float& time_b, const bool clock_is_synced){
+   ushort code = MSG_CLOCK_SYNC;
+   code = htons(code);
+   ushortTo2Bytes(&(mBuffer[0]), code);
+   floatTo4Bytes(&(mBuffer[2]), vj_htonf(time_a) );
+   floatTo4Bytes(&(mBuffer[6]), vj_htonf(time_b) );
+   mBuffer[10] = (char) clock_is_synced;
+   mBuffer[11] = ';';
+   mDataLength = 12; // code(2) + float(4) + float(4) + clock_is_synced(1) + semicolon(1)
+   return;
+}
+
+// returns the number of bytes used from buffer (excluding the already read opcode)
+// A return value of zero means unable to process -- complete message not received yet.
+int MsgPackage::receiveClockSync(char* ptr, int len, float& time_a, float& time_b, bool& clock_is_synced){
+   if (len < 2 * sizeof(float) + 1)
+      return 0;  // only partial message received, wait for more data
+
+   bytes4ToFloat(time_a, ptr);
+   bytes4ToFloat(time_b, ptr + 4);
+   clock_is_synced = (bool) ptr[8];
+   return (4 + 4 + 1 + 1);  // float(4) + float(4) + clock_is_synced(1) + semicolon(1)
+}
+
+// creates a message with a Manager id, and whether we have it or not
+void MsgPackage::createClockSyncHaveSrc(const vpr::GUID& id, const bool clock_is_synced){
+   ushort code = MSG_CLOCK_SRC;
+   code = htons(code);
+   ushortTo2Bytes(&(mBuffer[0]), code);
+   std::string id_str(id.toString()); 
+
+   int i = 0;
+   for(; i < id_str.length(); i++)
+      mBuffer[2+i] = id_str[i]; 
+   
+   mBuffer[2 + i++] = (bool) clock_is_synced;
+   mBuffer[2 + i++] = ';';
+
+   mDataLength = 2 + i; // opcode(2) + vpr::GUID length + 1 + 1
+   return;
+}
+
+// returns the number of bytes used from buffer (excluding the already read opcode)
+// A return value of zero means unable to process -- complete message not received yet.
+int MsgPackage::receiveClockSyncHaveSrc(char* ptr, int len, vpr::GUID& id, bool& clock_is_synced){
+   if (len < vpr::GUID().toString().length() + 1)
+      return 0;  // only partial message received, wait for more data
+   
+   std::string id_str(vpr::GUID().toString());
+   int i = 0;
+   for( ; i < id_str.length(); i++)
+     id_str[i] = ptr[i];
+   id = vpr::GUID(id_str);
+
+   clock_is_synced = (bool) ptr[i++];
+
+   // i++; // trailing semicolon
+   // vprASSERT(i == id_str.length() + 1 + 1;
+ 
+   return (id_str.length() + 1 + 1);  // id_str(n) + bool(1)
+}
 
 
 }     // end namespace gadget
+
