@@ -1062,13 +1062,6 @@
       </xsl:element>
    </xsl:template>
 
-   <!-- InputManger property "dsoExtName". -->
-   <xsl:template match="InputManger/dso_file_extension">
-      <xsl:element name="dso_file_extension">
-         <xsl:value-of select="." />
-      </xsl:element>
-   </xsl:template>
-
 
 <!-- Intersense ============================================================ -->
    <!-- Rename Intersense to intersense. -->
