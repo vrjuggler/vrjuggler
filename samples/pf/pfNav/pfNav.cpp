@@ -56,6 +56,7 @@
 
 
 // nav includes
+#include <pfNavDCS.h>
 #include <velocityNav.h>
 #include <collider.h>
 #include <planeCollider.h>
@@ -81,15 +82,8 @@ public:
 
    virtual void init()
    {
-      vjDEBUG(vjDBG_ALL, 1) << "pfNavJugglerApplication::init\n" << vjDEBUG_FLUSH;
-      //vjProjection::setNearFar(0.5, 1000);
-      vjProjection::setNearFar( 0.4, 200000 );
-      
-      mWand.init( "VJWand" );
-      mHead.init( "VJHead" );
-      mActionButton.init( "VJButton0" );
-      mActionButton2.init( "VJButton1" );
-      mModeChangeButton.init( "VJButton3" );
+      vjDEBUG(vjDBG_ALL, 1) << "app::init\n" << vjDEBUG_FLUSH;
+      vjProjection::setNearFar(0.5, 200000);
 
       mStats.setToggleButton("VJButton5");
    }
@@ -105,7 +99,7 @@ public:
       vjDEBUG(vjDBG_ALL,1) << "pfNavJugglerApplication::preForkInit: Initializing new types.\n" << vjDEBUG_FLUSH;
 
       // Initialize loaders
-      pfdInitConverter("terrain.flt");
+      //pfdInitConverter("terrain.flt");
 
       mStats.preForkInit();
    }
@@ -132,19 +126,17 @@ public:
       vjDEBUG(vjDBG_ALL, 0) << "pfNavJugglerApplication::initScene\n" << vjDEBUG_FLUSH;
 
       // Allocate all the nodes needed
-      rootNode                = new pfGroup;          // Root of our graph
-      mNavigationDCS          = new pfDCS;      // DCS to navigate with
-      pfNode* world_model;
-      pfDCS*  collisionable_modelDcs = new pfDCS;
+      rootNode       = new pfGroup;          // Root of our graph
+      mNavDCS        = new pfNavDCS;      // DCS to navigate with
+      pfNode*  world_model;
+      pfDCS*   world_model_dcs = new pfDCS;
+      pfGroup* collidable_model_group = new pfGroup;
 
       // CONFIG PARAMS
-
       std::string    pf_file_path( "" );
       const float    world_dcs_scale( 1.0f );
-      const pfVec3   world_dcs_trans( 0.0f, 0.0f, -250.0f ); //PF coords
-      vjVec3         initial_nav_pos( 0.0f, 6.0f, 0.0f ); //OGL coords
-      bool           use_gravity( true );
-
+      const pfVec3   world_dcs_trans( 0.0f, 0.0f, -250.0f );   // PF coords
+      vjVec3         initial_nav_pos( 0.0f, 6.0f, 0.0f );      // OGL coords
 
       // Create the SUN
       sun1 = new pfLightSource;
@@ -164,33 +156,38 @@ public:
 
       // --- CONSTRUCT SCENE GRAPH --- //
       //                           /-- sun1
-      // rootNode -- mNavigationDCS -- collisionable_modelDcs -- world_model
+      // rootNode -- mNavDCS -- collidable_model_group -- world_model_dcs - world_model
       //                           \-- noncollisionable_modelDcs -- other_models
-      rootNode->addChild( mNavigationDCS );
-      collisionable_modelDcs->addChild( world_model);
-      collisionable_modelDcs->setScale( world_dcs_scale);
-      collisionable_modelDcs->setTrans( world_dcs_trans[0], world_dcs_trans[1], world_dcs_trans[2]);
-      mNavigationDCS->addChild( sun1 );
-      mNavigationDCS->addChild( collisionable_modelDcs );
+      rootNode->addChild( mNavDCS );
+      world_model_dcs->addChild( world_model);
+      world_model_dcs->setScale( world_dcs_scale);
+      world_model_dcs->setTrans( world_dcs_trans[0], world_dcs_trans[1], world_dcs_trans[2]);
+      collidable_model_group->addChild(world_model_dcs);
+      mNavDCS->addChild( sun1 );
+      mNavDCS->addChild( collidable_model_group );
 
       // Configure the Navigator DCS node:
       vjMatrix initial_nav;              // Initial navigation position
       initial_nav.setTrans(initial_nav_pos);
-      mNavigator.setCurPos(initial_nav);
-      if(use_gravity)
-         mNavigator.setMode(velocityNav::GROUND);
-      else
-         mNavigator.setMode(velocityNav::FLY);
+
+      mVecNavDrive = new velocityNav;
+      mVecNavDrive->setHomePosition(initial_nav);
+      mVecNavDrive->setCurPos(initial_nav);
+      mVecNavDrive->setMode(velocityNav::DRIVE);
+
+         //mVecNavDrive->setMode(velocityNav::FLY);
 
       // --- COLLISION DETECTORS --- //
       // Terrain collider
       //planeCollider* collide = new planeCollider;
-      pfPogoCollider*  ride_collide = new pfPogoCollider(collisionable_modelDcs);
-      mNavigator.addCollider(ride_collide);
+      pfPogoCollider*  ride_collide = new pfPogoCollider(collidable_model_group);
+      mVecNavDrive->addCollider(ride_collide);
 
       // Set the navigator's collider.
-      pfBoxCollider* correction_collide = new pfBoxCollider( collisionable_modelDcs );
-      mNavigator.addCollider( correction_collide );
+      pfBoxCollider* correction_collide = new pfBoxCollider( collidable_model_group );
+      mVecNavDrive->addCollider( correction_collide );
+
+      mNavDCS->setNavigator(mVecNavDrive);
 
       // load these files into perfly to see just what your scenegraph
       // looked like. . . . .useful for debugging.
@@ -221,15 +218,7 @@ public:
       mStats.preDrawChan(chan,chandata);
    }
 
-   // Update the navigation based on user input
-   virtual void updateNavigation()
-   {
-      mNavigator.updateInteraction();
 
-      // tell the navigator to update itself with any new instructions just given to it.
-      mNavigator.update();
-
-   }
 
    /// Function called after pfSync and before pfDraw
    virtual void preFrame()
@@ -237,16 +226,6 @@ public:
       // Keep time, for FPS measurments...
       stopWatch.stop();
       stopWatch.start();
-
-      // Do any NAVIGATION
-      updateNavigation();
-
-      // Set the navigation DCS to the new navigation matrix
-      vjMatrix cur_pos_inv, cur_pos;
-      cur_pos = mNavigator.getCurPos();
-      cur_pos_inv.invert(cur_pos);
-      pfMatrix mNavigator_pf = vjGetPfMatrix( cur_pos_inv );
-      mNavigationDCS->setMat( mNavigator_pf );
 
       // output the FPS so the team artist can get metrics on their model
       ++mStatusMessageEmitCount;
@@ -256,7 +235,7 @@ public:
          cout<<"FPS: "<<stopWatch.fpsAverage<<"\n"<<flush;
 
          // Output current position in environment
-         vjVec3 cur_pos = mNavigator.getCurPos().getTrans();
+         vjVec3 cur_pos = mVecNavDrive->getCurPos().getTrans();
          cout << "Cur pos:" << cur_pos << endl;
 
          mStatusMessageEmitCount = 0;
@@ -275,20 +254,14 @@ public:
       //vjDEBUG(vjDBG_ALL,1) << "pfNavJugglerApplication::intraFrame\n" << vjDEBUG_FLUSH;
    }
 
+
 public:
    // the sun
    pfLightSource* sun1;
 
    // navigation objects.
-   velocityNav    mNavigator;
-   pfDCS*         mNavigationDCS;
-
-   // juggler device interface objects
-   vjPosInterface          mWand;      // the Wand
-   vjPosInterface          mHead;      // the Head
-   vjDigitalInterface      mActionButton;
-   vjDigitalInterface      mActionButton2;
-   vjDigitalInterface      mModeChangeButton;
+   velocityNav*   mVecNavDrive;
+   pfNavDCS*      mNavDCS;
 
    // scene's root (as far as we're concerned here)
    pfGroup*   rootNode;
