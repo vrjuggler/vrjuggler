@@ -51,8 +51,7 @@ include @topdir@/make.defs.mk
 # Prefix for recursive stuff.
 DIRPRFX=	external/
 
-SUBDIR=		boost_fs	\
-		cppdom
+SUBDIR=		cppdom
 
 $(RECTARGET): recursive
 
