@@ -5,7 +5,7 @@ Builder: JExplorerBuilder V 1. 0. 7
     >
 < font face="Arial" style="Plain" size="${TREE_FONTSIZE}">
 < idefault title="Item" image="Folder_Closed.gif" target="Body" rtarget="NewWindow" imagetwo="" info="VR Juggler" link="" rlink="">
-< rootfolder title="VR Juggler" link="../index.html" info="Juggler Virtual Reality Platform" target="_top" image="Home.gif" imagetwo="Home.gif" >
+< rootfolder selectID="2" selectURL="${NEWS}/index.html" title="VR Juggler" link="../index.html" info="Juggler Virtual Reality Platform" target="_top" image="Home.gif" imagetwo="Home.gif" >
 
     < item title="Mission Statement" link="${MISC}/mission.statement.html"  info="VR Juggler Mission Statement: What is juggler's intent, how will it be used in the future." image="Speaker.gif" >
 
