@@ -16,14 +16,12 @@
 #include <Input/vjInput/vjKeyboard.h>
 
 //: A dummy device for the Keyboard proxies to connect to
+//!PUBLIC_API
 class vjDummyKeyboard : public vjKeyboard
 {
 public:
    vjDummyKeyboard() : vjKeyboard()
    { active = 1;}
-
-   vjDummyKeyboard(vjConfigChunk *chunk) : vjKeyboard(chunk)
-   { active = 1; }
 
    //: Is the given key pressed.
    //! RETURNS: The number of times the key was pressed since last update.

@@ -2,12 +2,12 @@
 #include <float.h>
 #include <Input/vjPosition/vjPosition.h>
 
-vjPosition::vjPosition(vjConfigChunk *c) : vjInput(c) , xformMat()
+// Set up the transformation information
+bool vjPosition::config(vjConfigChunk *c)
 {
   cerr << "    vjPosition::vjPosition(vjConfigChunk*)" << endl;
-  port_id = -1;
-  active = 0;
-  theData = NULL;
+  if(!vjInput::config(c))
+     return false;
 
   if ((c->getNum("translate") == 3) && (c->getNum("rotate") == 3))
   {
@@ -32,11 +32,10 @@ vjPosition::vjPosition(vjConfigChunk *c) : vjInput(c) , xformMat()
     xformMat.postMult(rotMat);         // xformMat = T*R
   }
 
-  deviceAbilities = deviceAbilities | DEVICE_POSITION;
-
+  return true;
 }
 
-vjPosition::vjPosition()
+vjPosition::vjPosition() : xformMat()
 {
   cerr << "    vjPosition::vjPosition()" << endl;
   deviceAbilities = deviceAbilities | DEVICE_POSITION;

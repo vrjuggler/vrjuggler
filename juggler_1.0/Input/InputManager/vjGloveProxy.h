@@ -12,14 +12,19 @@
 #include <assert.h>
 
 #include <Input/vjGlove/vjGlove.h>
+#include <Input/InputManager/vjProxy.h>
 
-class vjGloveProxy
+
+//!PUBLIC_API
+class vjGloveProxy : public vjProxy
 {
 public:
      //: Construct the proxy to point to the given glove device and sub-unit number.
-  vjGloveProxy(vjGlove* glovePtr, int unitNum)
+  vjGloveProxy()
   {
-     Set(glovePtr,unitNum);
+     //Set(glovePtr,unitNum);
+     mGlovePtr = NULL;
+     mUnitNum = -1;
      mVisible = true;
   }
 
@@ -69,6 +74,10 @@ public:
 
    bool isVisible()
    { return mVisible; }
+
+   static string getChunkType() { return "GloveProxy"; }
+
+   bool config(vjConfigChunk* chunk);
 
 private:
    //: Pointer to the glove device we are proxying.

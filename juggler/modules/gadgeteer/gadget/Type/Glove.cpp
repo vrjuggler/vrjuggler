@@ -131,14 +131,6 @@ vjGlove::vjGlove()
       mGlovePos[i] = NULL;
 }
 
-vjGlove::vjGlove(vjConfigChunk* chunk)
-   : vjInput(chunk)
-{
-   deviceAbilities = deviceAbilities | DEVICE_GLOVE;
-   for(int i=0;i<VJ_MAX_GLOVE_DEVS;i++)
-      mGlovePos[i] = NULL;
-}
-
 
 // Just get the data from the current vector entry
 float vjGlove::getGloveAngle(vjGloveData::vjGloveComponent component,

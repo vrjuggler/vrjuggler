@@ -10,17 +10,20 @@
 //
 // vjDummyPosition is a dummy positional device for holding semi-static
 // device data.
+//!PUBLIC_API
 class vjDummyPosition: public vjPosition {
 
   public:
 	/** @name Construction/Destruction */
 	//@{
-	vjDummyPosition(vjConfigChunk *c);
 	vjDummyPosition() : vjPosition()
    { active = 1;
 			    instName = NULL;}
 	~vjDummyPosition();
 	//@}
+
+   virtual bool config(vjConfigChunk *c);
+
 
 	/** @name vjInput pure virtual functions
 	 *
@@ -55,6 +58,8 @@ class vjDummyPosition: public vjPosition {
    {
       return mydata;
    }
+
+   static string getChunkType() { return string("DummyPosition");}
 
   private:
    vjMatrix mydata;     // Location data

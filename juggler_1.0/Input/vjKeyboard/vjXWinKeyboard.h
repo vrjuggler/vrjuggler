@@ -32,13 +32,14 @@ class vjXWinKeyboard : public vjKeyboard
 {
 public:
 
-   vjXWinKeyboard(vjConfigChunk *c);
    vjXWinKeyboard()
    {
-      myThread = NULL;
+      //myThread = NULL; -- Should be done in base constructore
       oldMouseX = 0; oldMouseY = 0;
    }
    ~vjXWinKeyboard() { StopSampling();}
+
+   virtual bool config(vjConfigChunk* c);
 
    /* Pure Virtuals required by vjInput */
    int StartSampling();
@@ -47,6 +48,7 @@ public:
    void UpdateData();
 
    char* GetDeviceName() { return "vjXwinKeyboard";}
+   static string getChunkType() { return string("Keyboard");}
 
    // returns the number of times the key was pressed during the
    // last frame, so you can put this in an if to check if was

@@ -12,6 +12,7 @@
 #include <assert.h>
 
 #include <Input/vjGesture/vjGesture.h>
+#include <Input/InputManager/vjProxy.h>
 
 //: Proxy to vjGesture object
 //
@@ -22,12 +23,13 @@
 // against the gestures they want to respond to.
 //
 // See also: vjGesture
-class vjGestureProxy
+//!PUBLIC_API
+class vjGestureProxy : public vjProxy
 {
 public:
    //: Construct the proxy to point to the given gesture device.
-   vjGestureProxy(vjGesture* gesturePtr)
-   { Set(gesturePtr); }
+   vjGestureProxy()
+   { mGesturePtr = NULL; }
 
    ~vjGestureProxy()
    {}
@@ -61,6 +63,10 @@ public:
    //: Returns a pointer to the device held by this proxy.
    vjGesture* getGesturePtr()
    { return mGesturePtr; }
+
+   static string getChunkType() { return "GestureProxy"; }
+
+   bool config(vjConfigChunk* chunk);
 
 private:
    //: Pointer to the gesture device we are proxying.

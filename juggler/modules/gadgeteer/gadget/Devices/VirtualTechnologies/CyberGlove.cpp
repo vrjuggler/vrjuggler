@@ -13,11 +13,10 @@
 #include <Kernel/vjKernel.h>
 
 
-vjCyberGlove::vjCyberGlove(vjConfigChunk *c)
-   : vjGlove(c), vjInput(c)
+bool vjCyberGlove::config(vjConfigChunk *c)
 {
-   // Init member vars
-   //myThread = NULL;
+   if(!vjGlove::config(c))
+      return false;
 
    vjASSERT(myThread == NULL);      // This should have been set by vjInput(c)
 
@@ -32,7 +31,7 @@ vjCyberGlove::vjCyberGlove(vjConfigChunk *c)
     if(glove_pos_proxy == string(""))
     {
        vjDEBUG(0) << "ERROR: vjCyberglove has no posProxy." << endl << vjDEBUG_FLUSH;
-       return;
+       return false;
     }
 
     // init glove proxy interface
@@ -43,6 +42,8 @@ vjCyberGlove::vjCyberGlove(vjConfigChunk *c)
        vjDEBUG(0) << "ERROR: vjCyberGlove::vjCyberGlove: Can't find posProxy." << endl << vjDEBUG_FLUSH << endl;
 
     mGlove = new CyberGloveBasic(mCalDir, sPort, baudRate);
+
+    return true;
 };
 
 int

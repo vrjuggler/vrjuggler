@@ -5,14 +5,22 @@
 #include <Input/vjGlove/vjGlove.h>
 #include <Input/vjGlove/CyberGloveBasic.h>
 
+//: Cyberglove dcevice
+//!PUBLIC_API
 class vjCyberGlove : virtual public vjGlove
 {
 public:
    //: Construct using chunk
-   vjCyberGlove(vjConfigChunk *c);
+   vjCyberGlove()
+   {
+      mGlove = NULL;
+      mCalDir = NULL;
+   }
 
    //: Destroy the glove
    ~vjCyberGlove ();
+
+   virtual bool config(vjConfigChunk* c);
 
    virtual char* GetDeviceName() { return "vjCyberGlove";}
 
@@ -20,6 +28,8 @@ public:
    virtual int StopSampling();
    virtual int Sample();
    virtual void UpdateData ();
+
+   static string getChunkType() { return string("CyberGlove");}
 
 protected:
 	//: The main control loop for the object

@@ -10,6 +10,7 @@
 //
 // It returns the data in it's default init.
 // i.e. 0 angles, and ident matrices
+//!PUBLIC_API
 class vjDummyGlove : public vjGlove
 {
 public:

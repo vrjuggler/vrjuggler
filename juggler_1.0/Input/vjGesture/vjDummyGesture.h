@@ -8,6 +8,7 @@
 //: A dummy gesture device for gesture devices
 //
 // See also: vjGesture
+//!PUBLIC_API
 class vjDummyGesture : public vjGesture
 {
 public:

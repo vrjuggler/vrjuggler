@@ -23,6 +23,7 @@
 //  vjAnalog.
 //
 // See also: vjInput
+//!PUBLIC_API
 //-----------------------------------------------------------------------------
 class vjDigital : virtual public vjInput
 {
@@ -35,10 +36,11 @@ public:
 
 public:
    /* Constructor/Destructors */
-   vjDigital(vjConfigChunk *c):vjInput(c) {
-      deviceAbilities = deviceAbilities | DEVICE_DIGITAL;}
    vjDigital() { deviceAbilities = deviceAbilities | DEVICE_DIGITAL;}
    ~vjDigital() {}
+
+   virtual bool config(vjConfigChunk* c)
+   { return vjInput::config(c); }
 
    /* Pure virtual functions required from vjInput */
    virtual int StartSampling() = 0;

@@ -6,9 +6,11 @@
 // -Load the sample file
 // -Trim the smallest so they are same length
 // -Find/Set pos proxy for glove
-vjSimGloveGesture::vjSimGloveGesture(vjConfigChunk* chunk)
-   :  vjInput(chunk), vjGlove(chunk), vjGesture(chunk), vjGloveGesture(chunk), vjSimInput(chunk)
+bool vjSimGloveGesture::config(vjConfigChunk* chunk)
 {
+   if((!vjGloveGesture::config(chunk)) || (!vjSimInput::config(chunk)))
+      return false;
+
    mCurGesture = 0;     // We are in no gesture yet
 
    // Get keyboard pairs
@@ -42,7 +44,7 @@ vjSimGloveGesture::vjSimGloveGesture(vjConfigChunk* chunk)
    if(glove_pos_proxy == string(""))
    {
       vjDEBUG(0) << "ERROR: vjSimGloveGesture has no posProxy." << endl << vjDEBUG_FLUSH;
-      return;
+      return false;
    }
    // init glove proxy interface
    int proxy_index = vjKernel::instance()->getInputManager()->GetProxyIndex(glove_pos_proxy);
@@ -53,6 +55,8 @@ vjSimGloveGesture::vjSimGloveGesture(vjConfigChunk* chunk)
 
    // Set the indexes to defaults
    resetIndexes();
+
+   return true;
 }
 
 //: Get the current gesture.

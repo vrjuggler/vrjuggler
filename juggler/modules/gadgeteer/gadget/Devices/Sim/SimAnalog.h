@@ -11,11 +11,14 @@
 // It allows any number of simulated analog devices to be created.
 //
 // This class should not be used directly by the user.
+//!PUBLIC_API
 class vjSimAnalog : virtual public vjAnalog, public vjSimInput
 {
 public:
-   vjSimAnalog(vjConfigChunk* chunk);
+   vjSimAnalog() {;}
    ~vjSimAnalog() {;}
+
+   virtual bool config(vjConfigChunk* chunk);
 
    //: Return analog data
    virtual int GetAnalogData(int devNum=0)
@@ -34,6 +37,8 @@ public:
 
     //: Get the name of the device
    char* GetDeviceName() { return "vjSimAnalog";}
+
+   static string getChunkType() { return string("SimAnalog");}
 
 private:
    vector<int>             mAnaData;      //: The analog data that we have

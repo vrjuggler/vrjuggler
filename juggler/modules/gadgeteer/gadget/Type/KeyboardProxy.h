@@ -2,14 +2,16 @@
 #define _VJ_KEYBOARD_PROXY_H_
 
 #include <vjConfig.h>
+#include <Input/InputManager/vjProxy.h>
 #include <Input/vjInput/vjKeyboard.h>
 
 //: Proxy class to vjKeyboard based devices.
-class vjKeyboardProxy
+//!PUBLIC_API
+class vjKeyboardProxy : public vjProxy
 {
 public:
-   vjKeyboardProxy(vjKeyboard* keyboard)
-   { Set(keyboard); }
+   vjKeyboardProxy()
+   { mKeyboard = NULL; }
 
    void Set(vjKeyboard* keyboard)
    {
@@ -28,6 +30,10 @@ public:
 
    int keyPressed(int keyId)
    { return mKeyboard->keyPressed(keyId); }
+
+   static string getChunkType() { return "KeyboardProxy"; }
+
+   bool config(vjConfigChunk* chunk);
 
 private:
   //: Pointer to the real keyboard.

@@ -31,15 +31,18 @@ typedef struct {
 //  vjPosition adds one new pure virtual function, GetPosData for retreiving
 //  the positional data, similar to the addition for vjAnalog and vjDigital.
 //-----------------------------------------------------------------------------------
+//!PUBLIC_API
 class vjPosition : virtual public vjInput {
     public:
 	/** @name Construction/Destruction
 	 */
 	//@{
-	vjPosition(vjConfigChunk *c);
 	vjPosition();
 	~vjPosition();
 	//@}
+
+   virtual bool config(vjConfigChunk *c);
+
 
 	/** @name vjInput pure virtual functions
 	 *

@@ -14,6 +14,7 @@
 #include <Input/vjInput/vjAnalog.h>
 
 //: A dummy Analog device for Analog proxies to default to.
+//!PUBLIC_API
 class vjDummyAnalog : public vjAnalog {
   public:
 	/** @name Construction/Destruction

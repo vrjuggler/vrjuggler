@@ -79,17 +79,10 @@ const unsigned int DEVICE_GROW2    = 128;
 //+       frame.  Because of this, threads should not be reading data while
 //+       it is being updated to the most recent copy.
 //-----------------------------------------------------------------------------
+//!PUBLIC_API
 class vjInput : public vjMemory
 {
 public:
-   //: vjConfigChunk constructor,
-   //
-   //  This baselevel constructor will fill the base datamembers
-   //  when found in the vjConfigChunk, such as serial port, instance name
-   //  and baud rate.
-   // Also, initializes myThread, active, and deviceAbilities to null values
-   vjInput(vjConfigChunk *c);
-
    //: Default Constructor
    //
    //  The default constructor is intended only for use by the DummyProxies
@@ -102,6 +95,13 @@ public:
    // Free the memory for the Instance Name and Serial Port strings if
    // allocated
    ~vjInput();
+
+   //: Config method
+   //
+   //  This baselevel config will fill the base datamembers
+   //  when found in the vjConfigChunk, such as serial port, instance name
+   //  and baud rate.
+   virtual bool config(vjConfigChunk *c);
 
    //: Sample the device
    //
@@ -134,6 +134,10 @@ public:
    //
    //  Returns the name identifying the TYPE of Input Device
    virtual char* GetDeviceName() { return "vjInputBase";}
+
+   //: Returns the string rep of the chunk type used to config this device
+   // Used by input manager to find chunks that construct devices
+   static string getChunkType() { return string("Undefined"); }
 
    /** @name Functions to remove (?)
      *
