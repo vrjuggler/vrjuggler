@@ -1,5 +1,7 @@
-gfxn1/GUIDTest/CreationOverhead                                                  0.97
+gfxn1/GUIDTest/CreationOverhead                                                  0.83
 gfxn1/Main/MetricTest                                                  1221.75
+gfxn1/Opt/GUIDTest/CreationOverhead                                                  0.83
+gfxn1/Opt/Main/MetricTest                                                  1221.75
 gfxn2/GUIDTest/CreationOverhead                                                  0.98
 gfxn2/Main/MetricTest                                                  1221.75
 gfxn3/GUIDTest/CreationOverhead                                                  0.97
