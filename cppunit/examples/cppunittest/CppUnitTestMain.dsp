@@ -58,7 +58,7 @@ LINK32=link.exe
 TargetPath=.\Release\CppUnitTestMain.exe
 SOURCE="$(InputPath)"
 PostBuild_Desc=Self test
-PostBuild_Cmds=$(TargetPath)
+PostBuild_Cmds="$(TargetPath)"
 # End Special Build Tool
 
 !ELSEIF  "$(CFG)" == "CppUnitTestMain - Win32 Debug"
@@ -89,7 +89,7 @@ LINK32=link.exe
 TargetPath=.\Debug\CppUnitTestMain.exe
 SOURCE="$(InputPath)"
 PostBuild_Desc=Self test
-PostBuild_Cmds=$(TargetPath)
+PostBuild_Cmds="$(TargetPath)"
 # End Special Build Tool
 
 !ELSEIF  "$(CFG)" == "CppUnitTestMain - Win32 Release DLL"
@@ -108,7 +108,7 @@ PostBuild_Cmds=$(TargetPath)
 # PROP Target_Dir ""
 # ADD BASE CPP /nologo /MD /W3 /GR /GX /O2 /I "../../include" /D "WIN32" /D "NDEBUG" /D "_CONSOLE" /D "_MBCS" /D "CPPUNIT_USE_TYPEINFO" /FD /c
 # SUBTRACT BASE CPP /YX /Yc /Yu
-# ADD CPP /nologo /MD /W3 /GR /GX /O2 /I "../../include" /D "NDEBUG" /D "WIN32" /D "_CONSOLE" /D "_MBCS" /D "CPPUNIT_DLL" /FD /c
+# ADD CPP /nologo /MD /W3 /GR /GX /Ox /Ot /Oa /Ow /Og /Oi /Op /Ob0 /I "../../include" /D "NDEBUG" /D "WIN32" /D "_CONSOLE" /D "_MBCS" /D "CPPUNIT_DLL" /FD /c
 # SUBTRACT CPP /YX /Yc /Yu
 # ADD BASE RSC /l 0x40c /d "NDEBUG"
 # ADD RSC /l 0x40c /d "NDEBUG"
@@ -482,7 +482,7 @@ InputPath=..\..\lib\cppunit_dll.dll
 InputName=cppunit_dll
 
 "$(IntDir)\$(InputName).dll" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
-	copy $(InputPath) $(IntDir)\$(InputName).dll
+	copy "$(InputPath)" "$(IntDir)\$(InputName).dll"
 
 # End Custom Build
 
@@ -517,7 +517,7 @@ InputPath=..\..\lib\cppunitd_dll.dll
 InputName=cppunitd_dll
 
 "$(IntDir)\$(InputName).dll" : $(SOURCE) "$(INTDIR)" "$(OUTDIR)"
-	copy $(InputPath) $(IntDir)\$(InputName).dll
+	copy "$(InputPath)" "$(IntDir)\$(InputName).dll"
 
 # End Custom Build
 
