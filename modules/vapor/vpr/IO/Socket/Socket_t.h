@@ -311,7 +311,7 @@ public:
     //+       socket, and the number of bytes read successfully is returned to
     //+       the caller.
     //
-    //! ARGS: buffer - A reference to the buffer (a std::vector<char> object)
+    //! ARGS: buffer - A reference to the buffer (a std::vector<vpr::Uint8> object)
     //+                where the socket's buffer contents are to be stored.
     //! ARGS: length - The number of bytes to be read.
     //
@@ -319,7 +319,7 @@ public:
     //! RETURNS:  -1 - An error occurred when reading.
     // ------------------------------------------------------------------------
     inline Status
-    recv (std::vector<char>& buffer, const size_t length, ssize_t& bytes_read)
+    recv (std::vector<vpr::Uint8>& buffer, const size_t length, ssize_t& bytes_read)
     {
        return read(buffer, length, bytes_read);
     }
@@ -378,7 +378,7 @@ public:
     //+       socket, and the number of bytes read successfully is returned to
     //+       the caller.
     //
-    //! ARGS: buffer - A reference to the buffer (a std::vector<char> object)
+    //! ARGS: buffer - A reference to the buffer (a std::vector<vpr::Uint8> object)
     //+                where the socket's buffer contents are to be stored.
     //! ARGS: length - The number of bytes to be read.
     //
@@ -386,7 +386,7 @@ public:
     //! RETURNS:  -1 - An error occurred when reading.
     // ------------------------------------------------------------------------
     inline Status
-    recvn (std::vector<char>& buffer, const size_t length, ssize_t& bytes_read)
+    recvn (std::vector<vpr::Uint8>& buffer, const size_t length, ssize_t& bytes_read)
     {
         return readn(buffer, length, bytes_read);
     }
@@ -438,7 +438,7 @@ public:
     //! POST: The given buffer is written to the socket, and the number of
     //+       bytes written successfully is returned to the caller.
     //
-    //! ARGS: buffer - A reference to the buffer (a std::vector<char> object)
+    //! ARGS: buffer - A reference to the buffer (a std::vector<vpr::Uint8> object)
     //+                to be written.
     //! ARGS: length - The length of the buffer.
     //
@@ -446,7 +446,7 @@ public:
     //! RETURNS:  -1 - An error occurred when writing.
     // ------------------------------------------------------------------------
     inline Status
-    send (const std::vector<char>& buffer, const size_t length,
+    send (const std::vector<vpr::Uint8>& buffer, const size_t length,
           ssize_t& bytes_written)
     {
        assert( length <= buffer.size() && "length was bigger than the data given" );
