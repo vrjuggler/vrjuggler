@@ -307,6 +307,11 @@ public class MultiUnitDeviceVertexView
          /* Do nothing. */ ;
       }
 
+      public void propertyValueOrderChanged(ConfigElementEvent evt)
+      {
+         /* Do nothing. */ ;
+      }
+
       public void propertyValueRemoved(ConfigElementEvent evt)
       {
          /* Do nothing. */ ;

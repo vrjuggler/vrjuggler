@@ -283,6 +283,10 @@ public class IntersenseModel implements ConfigListener, ConfigElementListener
    {
       elementChanged(evt);
    }
+   public void propertyValueOrderChanged(ConfigElementEvent evt)
+   {
+      elementChanged(evt);
+   }
    public void propertyValueAdded(ConfigElementEvent evt)
    {
       elementChanged(evt);

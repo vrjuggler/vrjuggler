@@ -258,6 +258,19 @@ public class DeviceInfo
    }
 
    /**
+    * Invoked when the property value order is chagned in our config element.
+    * The event is handed off to the device unit delegate for this instance if
+    * the device managed by this instance has a variable unit count.
+    */
+   public void propertyValueOrderChanged(ConfigElementEvent evt)
+   {
+      if ( hasVariableUnitCount() )
+      {
+         this.unitPropHandler.propertyValueOrderChanged(evt);
+      }
+   }
+
+   /**
     * Invoked when a property value is removed from our config element.  The
     * event is handed off to the device unit delegate for this instance if the
     * device managed by this instance has a variable unit count.

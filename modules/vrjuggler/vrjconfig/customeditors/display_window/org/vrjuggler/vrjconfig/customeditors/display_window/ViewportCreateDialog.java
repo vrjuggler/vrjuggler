@@ -85,6 +85,10 @@ public abstract class ViewportCreateDialog
       validateUserInput();
    }
 
+   public void propertyValueOrderChanged(ConfigElementEvent e)
+   {
+   }
+
    public void propertyValueAdded(ConfigElementEvent e)
    {
    }
