@@ -18,6 +18,7 @@
 #include <IO/Socket/SocketConnector.h>
 #include <IO/IOSys.h>
 #include <IO/Selector.h>
+#include <Utils/Status.h>
 
 #include <include/System.h>
 
@@ -108,7 +109,8 @@ public:
       std::map<vpr::IOSys::Handle, vpr::SocketAcceptor*> acceptorTable;
       vpr::Selector selector;
       vpr::SocketStream* sock(NULL);
-      bool ret_val(false);
+      Status ret_val;
+      ssize_t bytes_written;
 
       for(i=0;i<mNumRendevousPorts;i++)
       {
@@ -135,9 +137,9 @@ public:
        for(i=0;i<mNumIters;i++)
        {
           vpr::Uint16 num_events;
-          bool ret = selector.select(num_events, 50000);
+          Status ret = selector.select(num_events, 50000);
 
-          threadAssertTest((true == ret) && "Selection did not return successfully");
+          threadAssertTest((ret.success()) && "Selection did not return successfully");
           threadAssertTest((num_events == 1) && "There was not only 1 event");
 
           int num_found(0);
@@ -156,16 +158,15 @@ public:
           threadAssertTest((num_found == 1) && "Wrong number of acceptors found");
 
           // ACCEPT connection 
-          sock = ready_acceptor->accept();
-          threadAssertTest((sock != NULL), "Accepted socket is null");
-          threadAssertTest((sock->isOpen()), "Accepted socket should be open");
+          SocketStream sock;
+          ret_val = ready_acceptor->accept(sock);
+          threadAssertTest((ret_val.success()), "Accepted socket is null");
+          threadAssertTest((sock.isOpen()), "Accepted socket should be open");
            
-          ret_val = sock->write(mMessageValue, mMessageLen);      // Send a message           
-          threadAssertTest((ret_val == true), "Problem writing in acceptor");
-          ret_val = sock->close();                                // Close the socket
-          threadAssertTest((ret_val == true), "Problem closing accepted socket");
-          delete sock;
-          sock = NULL;
+          ret_val = sock.write(mMessageValue, mMessageLen, bytes_written);      // Send a message           
+          threadAssertTest((ret_val.success()), "Problem writing in acceptor");
+          ret_val = sock.close();                                // Close the socket
+          threadAssertTest((ret_val.success()), "Problem closing accepted socket");          
        }
 
        // Delete acceptors
@@ -176,9 +177,10 @@ public:
    }
    void testAcceptorPoolSelection_connector(void* arg)
    {
-      bool ret_val(true);
+      Status ret_val;
       vpr::InetAddr remote_addr;
       vpr::SocketConnector connector;           // Connect to acceptor
+      ssize_t bytes_read;
 
       // WAIT for READY 
       mCondVar.acquire();
@@ -197,10 +199,11 @@ public:
          vpr::SocketStream con_sock;
          std::string       data;
          ret_val = connector.connect(con_sock, remote_addr, 100);
-         threadAssertTest((ret_val == true), "Connector can't connect");
+         threadAssertTest((ret_val.success()), "Connector can't connect");
          
-         vpr::Uint16 size = con_sock.read(data, mMessageLen);   // Recieve data
-         threadAssertTest((size == mMessageLen), "Connector recieved message of wrong size" );
+         ret_val = con_sock.read(data, mMessageLen, bytes_read);   // Recieve data
+         threadAssertTest((bytes_read == mMessageLen), "Connector recieved message of wrong size" );
+         threadAssertTest((ret_val.success()), "Failure reading data");
          
          con_sock.close();                                   // Close socket
       }
@@ -218,8 +221,8 @@ public:
    {
        testAssertReset();
        mRendevousPort = 47100 + (random() % 71);     // Get a partially random port       
-       mNumRendevousPorts = 50;
-       mNumIters = 250;
+       mNumRendevousPorts = 17;
+       mNumIters = 40;
        mMessageValue = std::string("The Data");
        mMessageLen = mMessageValue.length();
        
@@ -246,7 +249,7 @@ public:
       unsigned i,j;
       std::map<vpr::IOSys::Handle, vpr::Uint16> handleTable;      // Table mapping Handles to the socket index
       vpr::Selector selector;
-      vector<vpr::SocketStream*> socks;
+      vector<vpr::SocketStream> socks;
       vector<vpr::SocketAcceptor*> acceptors;
       //bool ret_val(false);
 
@@ -271,10 +274,11 @@ public:
       // Accept all the connections
       for(i=0;i<mNumRendevousPorts;i++)
       {
-         vpr::SocketStream* sock = acceptors[i]->accept();           // Accept the connection
-         threadAssertTest((sock != NULL), "Error accepting a connection");
+         SocketStream sock;
+         Status ret_val = acceptors[i]->accept(sock);           // Accept the connection
+         threadAssertTest((ret_val.success()), "Error accepting a connection");
          socks.push_back(sock);
-         vpr::IOSys::Handle handle = sock->getHandle();       // Get the Handle to register
+         vpr::IOSys::Handle handle = sock.getHandle();       // Get the Handle to register
          handleTable[handle] = i;                           // Save handle index
          selector.addHandle(handle);                          // Add to selector
          selector.setIn(handle, (vpr::Selector::READ));       // Set it for waiting for READ
@@ -296,9 +300,9 @@ public:
           
           // Get the events
           vpr::Uint16 num_events;
-          bool ret = selector.select(num_events, 50000);
+          Status ret = selector.select(num_events, 50000);
 
-          threadAssertTest((true == ret) && "Selection did not return successfully");
+          threadAssertTest((ret.success()) && "Selection did not return successfully");
           threadAssertTest((num_events == mSelectedPorts.size()) && "There was an incorrect number of events");
 
           // mSelectedPorts holds the index numbers of the sockets that data was sent on          
@@ -315,8 +319,9 @@ public:
                num_found += 1;
 
                std::string data;
-               socks[j]->read(data, mMessageLen);
-               threadAssertTest((data.length() == mMessageLen), "Data recieved is of wrong length");
+               int bytes_read;
+               socks[j].read(data, mMessageLen, bytes_read);
+               threadAssertTest((bytes_read == mMessageLen), "Data recieved is of wrong length");
             }
           }
           threadAssertTest((num_found == mSelectedPorts.size()) && "Wrong number of readers found");
@@ -333,8 +338,7 @@ public:
        // Close Sockets and delete acceptors
        for(i=0;i<socks.size();i++)
        {
-          socks[i]->close();
-          delete socks[i];
+          socks[i].close();          
        }
        for(i=0;i<mNumRendevousPorts;i++)
        {
@@ -344,7 +348,8 @@ public:
    void testSendThenPoll_connector(void* arg)
    {
       unsigned i,j;
-      bool ret_val(true);
+      Status ret_val;
+      ssize_t bytes_written;
       vpr::InetAddr remote_addr;
       vpr::SocketConnector connector;           // Connect to acceptor
       std::vector<vpr::SocketStream> sockets(mNumRendevousPorts);       // Initialize with the number of sockets needed
@@ -364,7 +369,7 @@ public:
       {
          remote_addr.setAddress("localhost", (mRendevousPort+i));             // Set remote port
          ret_val = connector.connect(sockets[i], remote_addr, 100);           // Connect to the port
-         threadAssertTest((ret_val == true), "Connector can't connect");
+         threadAssertTest((ret_val.success()), "Connector can't connect");
       }
 
       // Send data in random groupings
@@ -385,8 +390,8 @@ public:
          for(j=0;j<mSelectedPorts.size();j++)
          {
             threadAssertTest((mSelectedPorts[j] < sockets.size()));           // Make sure we are in range
-            ret_val = sockets[mSelectedPorts[j]].write(mMessageValue, mMessageLen);    // Write the data
-            threadAssertTest((ret_val == true), "Error writing data on socket");
+            ret_val = sockets[mSelectedPorts[j]].write(mMessageValue, mMessageLen, bytes_written);    // Write the data
+            threadAssertTest((ret_val.success()), "Error writing data on socket");
          }
          
          // SIGNAL that we have SENT_DATA

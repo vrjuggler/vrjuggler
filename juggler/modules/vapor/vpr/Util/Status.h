@@ -8,7 +8,7 @@ namespace vpr
    public:
       enum Code
       {
-         Success, Failure, WouldBlock
+         Success, Failure, WouldBlock, Timeout
       };
          
       //: default constructor.  Success is default
@@ -94,9 +94,10 @@ namespace vpr
       }
       
    public:
-      bool success() { return mStatus == Success; }
-      bool failure() { return mStatus == Failure; }
-      bool wouldBlock() { return mStatus == WouldBlock; }
+      bool success() const { return mStatus == Success; }
+      bool failure() const { return mStatus == Failure; }
+      bool wouldBlock() const { return mStatus == WouldBlock; }
+      bool timeout() const { return mStatus == Timeout; }
       
    private:
       Status::Code mStatus;
