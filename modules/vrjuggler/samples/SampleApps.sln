@@ -21,6 +21,10 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "pfNav", "Pf\advanced\pfNav\
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "simplePf", "Pf\simple\simplePf\simplePf.vcproj", "{AE205DB7-5729-4A87-B906-53889787CE0C}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OpenSGNav", "OpenSG\simple\OpenSGNav\OpenSGNav.vcproj", "{04FF04CD-6A8C-401E-91A3-0E9BE5463A0C}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "osgNav", "OSG\simple\osgNav\osgNav.vcproj", "{8346115D-65A0-42F9-859F-77C649F8FD1C}"
+EndProject
 Global
 	GlobalSection(SolutionConfiguration) = preSolution
 		ConfigName.0 = Debug
@@ -73,6 +77,14 @@ Global
 		{AE205DB7-5729-4A87-B906-53889787CE0C}.Debug.Build.0 = Debug|Win32
 		{AE205DB7-5729-4A87-B906-53889787CE0C}.Release.ActiveCfg = Release|Win32
 		{AE205DB7-5729-4A87-B906-53889787CE0C}.Release.Build.0 = Release|Win32
+		{04FF04CD-6A8C-401E-91A3-0E9BE5463A0C}.Debug.ActiveCfg = Debug|Win32
+		{04FF04CD-6A8C-401E-91A3-0E9BE5463A0C}.Debug.Build.0 = Debug|Win32
+		{04FF04CD-6A8C-401E-91A3-0E9BE5463A0C}.Release.ActiveCfg = Release|Win32
+		{04FF04CD-6A8C-401E-91A3-0E9BE5463A0C}.Release.Build.0 = Release|Win32
+		{8346115D-65A0-42F9-859F-77C649F8FD1C}.Debug.ActiveCfg = Debug|Win32
+		{8346115D-65A0-42F9-859F-77C649F8FD1C}.Debug.Build.0 = Debug|Win32
+		{8346115D-65A0-42F9-859F-77C649F8FD1C}.Release.ActiveCfg = Release|Win32
+		{8346115D-65A0-42F9-859F-77C649F8FD1C}.Release.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 	EndGlobalSection
