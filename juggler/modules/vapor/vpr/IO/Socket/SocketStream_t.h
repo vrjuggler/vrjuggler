@@ -116,30 +116,35 @@ public:
     }
 
     // ------------------------------------------------------------------------
-    //: Accept an incoming connection request.
+    //: Accept an incoming connection request and return the connected socket
+    //+ to the caller in the given socket object reference.
     //
     //! PRE: The socket is open and is in a listening state.
-    //! POST: When a connection is established, a new Socket object will be
-    //+       created that can be used for further communication with the
-    //+       remote site.
+    //! POST:
     //
-    //! RETURNS: Non-NULL - A new vpr::SocketStream object that can be used to
-    //+                     communicate with the remote site.
-    //! RETURNS: NULL     - A socket could not be created to establish
-    //+                     communication with the remote site.  An error
-    //+                     message is printed explaining what went wrong.
+    //! ARGS: sock    - A reference to a vpr::SocketStream object that will
+    //+                 be used to return the connected socket created.
+    //! ARGS: timeout - The length of time to wait for the accept call to
+    //+                 return.
     //
-    //! NOTE: This is a blocking call and will block until a connection is
-    //+       established.
+    //! RETURNS: vpr::Status::Success    - The incoming request has been
+    //+                                    handled, and the given SocketStream
+    //+                                    object is a valid, connected
+    //+                                    socket.
+    //! RETURNS: vpr::Status;:WouldBlock - This is a non-blocking socket, and
+    //+                                    there are no waiting connection
+    //+                                    requests.
+    //! RETURNS: vpr::Status::Timeout    - No connection requests arrived
+    //+                                    within the given timeout period.
+    //! RETURNS: vpr::Status::Failure    - The accept failed.  The given
+    //+                                    SocketStream object is not
+    //+                                    modified.
     // ------------------------------------------------------------------------
     inline Status
-    accept (SocketStream_t& sock, const vpr::Interval timeout = vpr::Interval::NoTimeout) {
-        Status status;
-
-        status = m_socket_stream_imp.accept(sock.m_socket_stream_imp, timeout);
-        vprASSERT((! status.failure()) && "Impl:accept: failed.  This may be non-blocking accept");
-
-        return status;
+    accept (SocketStream_t& sock,
+            const vpr::Interval timeout = vpr::Interval::NoTimeout)
+    {
+        return m_socket_stream_imp.accept(sock.m_socket_stream_imp, timeout);
     }
 
     // ------------------------------------------------------------------------
