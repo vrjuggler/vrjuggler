@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?org-vrjuggler-jccl-settings definition.version="3.0"?>
+<definition xmlns="http://www.vrjuggler.org/jccl/xsd/3.0/definition"
+            xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+            xsi:schemaLocation="http://www.vrjuggler.org/jccl/xsd/3.0/definition http://www.vrjuggler.org/jccl/xsd/3.0/definition.xsd"
+            name="config_app">
+   <definition_version version="1" label="ConfigApp configuration">
+      <help>This is an application-specific configuration definition for use with the ConfigApp OpenGL sample application.</help>
+      <parent/>
+      <category>/Application</category>
+      <property valuetype="float" variable="false" name="lower_left_color">
+         <help>Specifies the RGB values for the lower left corner color.</help>
+         <value label="Red value" defaultvalue="1.0"/>
+         <value label="Green value" defaultvalue="0.0"/>
+         <value label="Blue value" defaultvalue="0.0"/>
+      </property>
+      <property valuetype="float" variable="false" name="lower_right_color">
+         <help>Specifies the RGB values for the lower right corner color.</help>
+         <value label="Red value" defaultvalue="1.0"/>
+         <value label="Green value" defaultvalue="0.0"/>
+         <value label="Blue value" defaultvalue="0.0"/>
+      </property>
+      <property valuetype="float" variable="false" name="upper_right_color">
+         <help>Specifies the RGB values for the upper right corner color.</help>
+         <value label="Red value" defaultvalue="1.0"/>
+         <value label="Green value" defaultvalue="0.0 "/>
+         <value label="Blue value" defaultvalue="0.0"/>
+      </property>
+      <property valuetype="float" variable="false" name="upper_left_color">
+         <help>Specifies the RGB values for the upper left corner color.</help>
+         <value label="Red value" defaultvalue="1.0"/>
+         <value label="Green value" defaultvalue="0.0 "/>
+         <value label="Blue value" defaultvalue="0.0"/>
+      </property>
+      <upgrade_transform/>
+   </definition_version>
+</definition>
