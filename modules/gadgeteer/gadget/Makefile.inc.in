@@ -31,8 +31,8 @@
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 links:
-	cd $(instlinks)/include/gad &&					\
+	cd $(instlinks)/include/gadget &&					\
           for dir in $(SUBDIR) ; do					\
               rm -f ./$$dir ;						\
-              ln -s $(GADROOT_ABS)/gad/$$dir ./$$dir ;			\
+              ln -s $(GADROOT_ABS)/gadget/$$dir ./$$dir ;			\
           done
