@@ -53,9 +53,12 @@ void SystemTest::GetSetEnvTest()
    const std::string env_name("VPR_ENV_TEST_PROP");
    const std::string set_value("Set");
    std::string result_value;
+   vpr::ReturnStatus status;
 
-   vpr::System::setenv(env_name, set_value);
-   vpr::System::getenv(env_name, result_value);
+   status = vpr::System::setenv(env_name, set_value);
+   CPPUNIT_ASSERT(status.success() && "setenv failed");
+   status = vpr::System::getenv(env_name, result_value);
+   CPPUNIT_ASSERT(status.success() && "getenv failed");
    CPPUNIT_ASSERT(set_value == result_value);
 }
 
