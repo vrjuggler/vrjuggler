@@ -38,44 +38,44 @@
 namespace jccl
 {
 
-ChunkFactory::ChunkFactory()
-{
-   // Create global context
-   mGlobalContext = cppdom::ContextPtr(new cppdom::Context);
-}
+   ChunkFactory::ChunkFactory()
+   {
+      // Create global context
+      mGlobalContext = cppdom::ContextPtr(new cppdom::Context);
+   }
 
-//: Adds descriptions in file 'file_name' to the factory
-bool ChunkFactory::loadDescs(const std::string& file_name,
-                             const std::string& parentFile)
-{
-   bool retval = mDescDB.load(demangleFileName(file_name, parentFile));
-   if ( retval )
+   //: Adds descriptions in file 'file_name' to the factory
+   bool ChunkFactory::loadDescs(const std::string& file_name,
+                                const std::string& parentFile)
    {
-      vprDEBUG(jcclDBG_CONFIG,vprDBG_CRITICAL_LVL)
-         << "Loaded ChunkDesc file: '" << file_name.c_str() << "'.\n"
-         << vprDEBUG_FLUSH;
+      bool retval = mDescDB.load(demangleFileName(file_name, parentFile));
+      if ( retval )
+      {
+         vprDEBUG(jcclDBG_CONFIG,vprDBG_CRITICAL_LVL)
+            << "Loaded ChunkDesc file: '" << file_name.c_str() << "'.\n"
+            << vprDEBUG_FLUSH;
+      }
+      else
+      {
+         vprDEBUG(vprDBG_ALL,vprDBG_CRITICAL_LVL)
+            << "Failed to load ChunkDesc file: '" << file_name.c_str()
+            << "'.\n" << vprDEBUG_FLUSH;
+      }
+      return retval;
    }
-   else
-   {
-      vprDEBUG(vprDBG_ALL,vprDBG_CRITICAL_LVL)
-         << "Failed to load ChunkDesc file: '" << file_name.c_str()
-         << "'.\n" << vprDEBUG_FLUSH;
-   }
-   return retval;
-}
 
-//: Creates a Chunk using the given description
-ConfigChunkPtr ChunkFactory::createChunk(ChunkDescPtr d)
-{
-   if ( d.get() != NULL )
+   //: Creates a Chunk using the given description
+   ConfigChunkPtr ChunkFactory::createChunk(ChunkDescPtr d)
    {
-      d->assertValid();
-      return ConfigChunkPtr(new ConfigChunk(d));
+      if ( d.get() != NULL )
+      {
+         d->assertValid();
+         return ConfigChunkPtr(new ConfigChunk(d));
+      }
+      else
+      {
+         return ConfigChunkPtr();
+      }
    }
-   else
-   {
-      return ConfigChunkPtr();
-   }
-}
 
 } // namespace jccl
