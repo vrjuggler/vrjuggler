@@ -14,6 +14,7 @@
 
 #include <TestCases/IO/Socket/InetAddrTest.h>
 #include <TestCases/IO/SelectorTest.h>
+#include <TestCases/IO/SerializableTest.h>
 
 #include <TestCases/IO/Stats/SocketBandwidthIOStatsTest.h>
 
@@ -142,6 +143,7 @@ int main (int ac, char **av)
 //   noninteractive_suite->addTest(vprTest::SocketCopyConstructorTest::suite());
    noninteractive_suite->addTest(vprTest::SocketConnectorAcceptorTest::suite());
    noninteractive_suite->addTest(vprTest::SelectorTest::suite());
+   noninteractive_suite->addTest(vprTest::SerializableTest::suite());
    //noninteractive_suite->addTest(vprTest::ThreadTest::suite());
 
    // Add the test suite to the runner
