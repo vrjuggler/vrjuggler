@@ -1848,6 +1848,7 @@ AC_OUTPUT(Makefile Makefile.base Config/Makefile Environment/Makefile
           release/mtree/VJ.data.dist release/mtree/VJ.include.dist
           release/mtree/VJ.install.dist release/mtree/VJ.samples.dist
           release/mtree/VJ.test.dist release/mtree/VJ.tools.dist
+          Utils/Makefile
           VARS.pl)
 
 cat <<BUILD_INFO
