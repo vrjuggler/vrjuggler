@@ -41,7 +41,10 @@
 namespace jccl 
 {
 
-/** */
+/** \class RemoteReconfig RemoteReconfig.h jccl/RTRC/RemoteReconfig.h
+ *
+ * Remote reconfiguration plug-in interface.
+ */
 class RemoteReconfig
 {
 public:

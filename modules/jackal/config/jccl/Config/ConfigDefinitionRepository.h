@@ -39,7 +39,8 @@
 
 namespace jccl
 {
-   /**
+   /** \class ConfigDefinitionRepository ConfigDefinitionRepository.h jccl/Config/ConfigDefinitionRepository.h
+    *
     * Stores a set of configuration definitions that can be retrieved by name.
     * Only the newest version of a given definition is available.
     */
@@ -55,7 +56,7 @@ namespace jccl
 
       /**
        * Gets the config definition for the given token.
-       * @returns NULL ptr if not found, else a shared ptr to the desc
+       * @returns NULL ptr if not found, else a shared ptr to the desc.
        */
       ConfigDefinitionPtr get(const std::string& token) const;
 

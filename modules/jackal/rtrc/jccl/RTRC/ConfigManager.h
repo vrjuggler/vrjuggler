@@ -56,7 +56,8 @@ namespace jccl
 class ConfigElementHandler;
 class RemoteReconfig;
 
-/**
+/** \class ConfigManager ConfigManager.h jccl/RTRC/ConfigManager.h
+ *
  * Dynamic reconfiguration management for JCCL.  The Config Manager provides
  * a complete solution for configuring an application via JCCL's ConfigElement
  * type.  The Config Manager can configure based on static configuration

@@ -41,6 +41,10 @@
 namespace jccl
 {
 
+/** \class ParseUtil ParseUtil.h jccl/Config/ParseUtil.h
+ *
+ * Utility functions for handling the parsing of input files.
+ */
 class JCCL_CLASS_API ParseUtil
 {
 public:

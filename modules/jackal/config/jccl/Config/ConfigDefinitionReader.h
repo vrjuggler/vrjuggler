@@ -42,7 +42,8 @@
 
 namespace jccl
 {
-   /**
+   /** \class ConfigDefinitionReader ConfigDefinitionReader.h jccl/Config/ConfigDefinitionReader.h
+    *
     * This object knows how to deserialize all versions of a configuration
     * definition from a stream.
     */
@@ -63,12 +64,12 @@ namespace jccl
        * Reads all versions of a configuration definition from the given input
        * stream.
        *
-       * @param in         the input stream from which to read definitions
+       * @param in the input stream from which to read definitions.
        *
-       * @return  a list of all the definitions found in the stream
+       * @return  a list of all the definitions found in the stream.
        *
        * @throws std::runtime_error
-       *             if there was a problem while reading the stream
+       *             if there was a problem while reading the stream.
        */
       std::vector<ConfigDefinitionPtr> read(std::istream& in)
          throw(std::runtime_error);
@@ -76,12 +77,12 @@ namespace jccl
       /**
        * Reads all versions of a configuration definition from the given file.
        *
-       * @param filename   the file from which to read definitions
+       * @param filename   the file from which to read definitions.
        *
-       * @return  a list of all the definitions found in the stream
+       * @return  a list of all the definitions found in the stream.
        *
        * @throws std::runtime_error
-       *             if there was a problem while reading from the file
+       *             if there was a problem while reading from the file.
        */
       std::vector<ConfigDefinitionPtr> read(const std::string& filename)
          throw(std::runtime_error);
@@ -92,7 +93,7 @@ namespace jccl
        * given document.
        *
        * @throws std::runtime_error
-       *             if the version cannot be determined
+       *             if the version cannot be determined.
        */
       std::string getFileFormatVersion(cppdom::DocumentPtr doc)
          throw(std::runtime_error);
