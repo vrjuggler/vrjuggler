@@ -60,6 +60,9 @@ vjInputManager::~vjInputManager()
    for (int m = 0; m < m_gloveProxyVector.size(); m++)  // Delete all glove proxies
       if (m_gloveProxyVector[m] != NULL)
          delete m_gloveProxyVector[m];
+   for (int n = 0; n < m_gestureProxyVector.size(); n++)  // Delete all gesture proxies
+      if (m_gestureProxyVector[n] != NULL)
+         delete m_gestureProxyVector[n];
 }
 
 
@@ -93,6 +96,9 @@ int vjInputManager::FNewInput(vjConfigChunkDB *cdb)
    ConfigureAnaProxy(cdb);
    ConfigureDigProxy(cdb);
    ConfigureKeyboardProxy(cdb);
+
+   ConfigureSimGloveGesture(cdb);
+   ConfigureGestureProxy(cdb);
 
 #ifndef WIN32
    ConfigureCyberGlove(cdb);     // Need other proxies set up
@@ -194,6 +200,17 @@ void vjInputManager::DumpStatus()
 	         << endl;
   }
 
+  for (i = 0; i < m_gestureProxyVector.size(); i++)                 // Dump Gesture Proxies
+  {
+     d = FindDeviceNum( (m_gestureProxyVector[i]->getGesturePtr())->GetInstanceName() );
+     if (d != -1)
+       cout << "  GestureProxy#" << setw(2) << i << ":"
+            << "   Proxies Device: "
+	         << setw(10)
+	         << (m_gestureProxyVector[i]->getGesturePtr())->GetInstanceName()
+	         << endl;
+  }
+
   cout << endl;
 
       // Dump Alias list
@@ -251,7 +268,7 @@ void vjInputManager::UpdateAllData()
   if the instance name is not in the device array returns -1
 
 *********************************************** ahimberg */
-int vjInputManager::FindDeviceNum(char* instName)
+int vjInputManager::FindDeviceNum(const char* instName)
 {
    for (int i = 0; i < m_devVector.size(); i++)
    {
@@ -560,7 +577,40 @@ int vjInputManager::AddKeyboardProxy(int DevNum)
 //: Make keyboard Proxy #ProxyNum point back to the dummyKeyboard
 void vjInputManager::StupifyKeyboard(int ProxyNum)
 {
-   m_gloveProxyVector[ProxyNum]->Set(&m_dummyGlove,0);
+   m_keyboardProxyVector[ProxyNum]->Set(&m_dummyKeyboard);
+}
+
+/* * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+  * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+		GESTURE PROXY FUNCTIONS
+* * * * * * * * * * * * * * * * * * * * * * * * * * * * *
+ * * * * * * * * * * * * * * * * * * * * * * * * * * * */
+//: Set the gesture proxy
+// Hook devNum to proxyNum
+int vjInputManager::SetGestureProxy(int ProxyNum, int DevNum)
+{
+   m_gestureProxyVector[ProxyNum]->Set(dynamic_cast<vjGesture*>(m_devVector[DevNum]));
+   return 1;
+}
+
+// Setup a new gesture proxy for device at DevNum
+//! RETURNS: = index of new gesture proxy
+int vjInputManager::AddGestureProxy(int DevNum)
+{
+   vjGestureProxy* new_gest_proxy = new vjGestureProxy(&m_dummyGesture);
+   new_gest_proxy->Set(dynamic_cast<vjGesture*>(m_devVector[DevNum]));
+   m_gestureProxyVector.push_back(new_gest_proxy);
+   return (m_gestureProxyVector.size() -1);
+}
+
+//: Turn the gesture proxy at index ProxyNum to point back
+// to the default dummy gesture proxy. <br>
+// <br>
+//! MODIFIES: self <br>
+//! POST:  m_gestureProxyArray[proxyNum]' = m_gestureKeyboard
+void vjInputManager::StupifyGesture(int ProxyNum)
+{
+   m_gestureProxyVector[ProxyNum]->Set(&m_dummyGesture);
 }
 
 /* * * * * * * * * * * * * * * * * * * * * * * * * * * * *
@@ -737,6 +787,41 @@ void vjInputManager::ConfigureKeyboard(vjConfigChunkDB *cdb)
    vjDEBUG_END(1) << vjDEBUG_FLUSH;
 }
 
+void vjInputManager::ConfigureSimGloveGesture(vjConfigChunkDB* cdb)
+{
+   vjDEBUG_BEGIN(1) << "vjInputManager::ConfigureSimGloveGesture" << endl << vjDEBUG_FLUSH;
+   vector<vjConfigChunk*> *vChunks;
+   vector<vjConfigChunk*>::iterator i;
+
+   vChunks = cdb->getMatching("SimGloveGesture");
+
+   for (i = vChunks->begin(); i != vChunks->end(); i++)
+   {
+      char* dev_name = (char*)(*i)->getProperty("name");
+      vjDEBUG(1) << "found a SimGloveGesture named: "
+                 << dev_name
+                 << endl << vjDEBUG_FLUSH;
+
+      vjSimGloveGesture* aSimGloveGesture = new (getMyMemPool()) vjSimGloveGesture (*i);
+
+      if (aSimGloveGesture->StartSampling())
+         FAddDevice(aSimGloveGesture);
+      else
+      {
+         vjDEBUG(0) << "ERROR: SimGloveGesture failed to start.. deleting instance" << endl << vjDEBUG_FLUSH;
+         delete aSimGloveGesture;
+      }
+   }
+   delete vChunks;
+
+   vjDEBUG_END(1) << vjDEBUG_FLUSH;
+}
+
+/******************************************************************
+*******************************************************************
+                     PROXIES
+*******************************************************************
+*******************************************************************/
 void vjInputManager::ConfigurePosProxy(vjConfigChunkDB *cdb)
 {
    vjDEBUG(2) << "   vjInputManager::ConfigurePosProxy" << endl << vjDEBUG_FLUSH;
@@ -858,7 +943,7 @@ void vjInputManager::ConfigureGloveProxy(vjConfigChunkDB* cdb)
    m_gloveProxyVector.push_back(new_glove_proxy);
    */
 
-   vjDEBUG(2) << "   vjInputManager::ConfigureGloveProxy" << endl << vjDEBUG_FLUSH;
+   vjDEBUG_BEGIN(1) << "vjInputManager::ConfigureGloveProxy" << endl << vjDEBUG_FLUSH;
    vector<vjConfigChunk*> *vChunks;
    vector<vjConfigChunk*>::iterator i;
    vChunks = cdb->getMatching("GloveProxy");
@@ -867,22 +952,29 @@ void vjInputManager::ConfigureGloveProxy(vjConfigChunkDB* cdb)
    {
       int unitNum = (*i)->getProperty("unit");
       string proxy_name = (char*)(*i)->getProperty("name");
+      string device_name = (char*)(*i)->getProperty("device");
 
-      vjDEBUG(3) << "	  found a gloveProxy : " << proxy_name << endl << vjDEBUG_FLUSH;
-      vjDEBUG(3) << "		attaching to device named: " << (char*) ( (*i)->getProperty("device") ) << endl << vjDEBUG_FLUSH;
-      vjDEBUG(3) << "		at unit number: " << unitNum << endl << vjDEBUG_FLUSH;
+      vjDEBUG_BEGIN(1) << "found a gloveProxy : " << proxy_name << endl << vjDEBUG_FLUSH;
+      vjDEBUG(1)       << "attaching to device named: " << device_name << endl << vjDEBUG_FLUSH;
+      vjDEBUG(1)       << "   at unit number: " << unitNum << endl << vjDEBUG_FLUSH;
 
-      int devNum = FindDeviceNum((*i)->getProperty("device"));
-      vjDEBUG(2) << "	Found the device at devNum: " << devNum << endl << vjDEBUG_FLUSH;
+      int devNum = FindDeviceNum(device_name.c_str());
+      vjDEBUG_END(1) << "Found the device at devNum: " << devNum << endl << vjDEBUG_FLUSH;
 
       if ( devNum != -1)
       {
          int proxy_num = AddGloveProxy(devNum, unitNum);
          AddProxyAlias(proxy_name, proxy_num);
-         vjDEBUG(2) << "	      GloveProxy is set" << endl << vjDEBUG_FLUSH;
+         vjDEBUG(1) << "GloveProxy is set" << endl << vjDEBUG_FLUSH;
+      }
+      else
+      {
+         vjDEBUG(0) << "ERROR: ConfigureGloveProxy:: Could not create proxy: " << proxy_name
+                    << "   Could not find device:" << device_name << endl << vjDEBUG_FLUSH;
       }
    }
    delete vChunks;
+   vjDEBUG_END(1) << endl << vjDEBUG_FLUSH;
 }
 
 void vjInputManager::ConfigureKeyboardProxy(vjConfigChunkDB* cdb)
@@ -895,9 +987,10 @@ void vjInputManager::ConfigureKeyboardProxy(vjConfigChunkDB* cdb)
    for (i = vChunks->begin(); i != vChunks->end(); i++)
    {
       string proxy_name = (char*)(*i)->getProperty("name");
+      string dev_name = (char*)(*i)->getProperty("device");
 
       vjDEBUG(1) << "found a keyboardProxy : " << proxy_name << endl << vjDEBUG_FLUSH;
-      vjDEBUG(1) << "   attaching to device named: " << (char*) ( (*i)->getProperty("device") ) << endl << vjDEBUG_FLUSH;
+      vjDEBUG(1) << "   attaching to device named: " << dev_name << endl << vjDEBUG_FLUSH;
 
       int devNum = FindDeviceNum((*i)->getProperty("device"));
       vjDEBUG(1) << "	Found the device at devNum: " << devNum << endl << vjDEBUG_FLUSH;
@@ -908,9 +1001,44 @@ void vjInputManager::ConfigureKeyboardProxy(vjConfigChunkDB* cdb)
          AddProxyAlias(proxy_name, proxy_num);
          vjDEBUG(1) << "KeyboardProxy is set" << endl << vjDEBUG_FLUSH;
       }
+      else
+         vjDEBUG(0) << "ERROR: ConfigureKeyboardProxy: Could not create proxy: " << proxy_name
+                     << "   Could not find device:" << dev_name << endl << vjDEBUG_FLUSH;
    }
    delete vChunks;
-   vjDEBUG_END(1) << vjDEBUG_FLUSH;
+   vjDEBUG_END(1) << endl << vjDEBUG_FLUSH;
+}
+
+void vjInputManager::ConfigureGestureProxy(vjConfigChunkDB* cdb)
+{
+   vjDEBUG_BEGIN(1) << "vjInputManager::ConfigureGestureProxy" << endl << vjDEBUG_FLUSH;
+   vector<vjConfigChunk*> *vChunks;
+   vector<vjConfigChunk*>::iterator i;
+   vChunks = cdb->getMatching("GestureProxy");
+
+   for (i = vChunks->begin(); i != vChunks->end(); i++)
+   {
+      string proxy_name = (char*)(*i)->getProperty("name");
+      string dev_name = (char*)(*i)->getProperty("device");
+
+      vjDEBUG(1) << "found a GestureProxy : " << proxy_name << endl << vjDEBUG_FLUSH;
+      vjDEBUG(1) << "   attaching to device named: " << dev_name.c_str() << endl << vjDEBUG_FLUSH;
+
+      int devNum = FindDeviceNum(dev_name.c_str());
+      vjDEBUG(1) << "	Found the device at devNum: " << devNum << endl << vjDEBUG_FLUSH;
+
+      if ( devNum != -1)
+      {
+         int proxy_num = AddGestureProxy(devNum);
+         AddProxyAlias(proxy_name, proxy_num);
+         vjDEBUG(1) << "GestureProxy is set" << endl << vjDEBUG_FLUSH;
+      }
+      else
+         vjDEBUG(0) << "ERROR: ConfigureGestureProxy: Could not create proxy: " << proxy_name
+                     << "   Could not find device:" << dev_name << endl << vjDEBUG_FLUSH;
+   }
+   delete vChunks;
+   vjDEBUG_END(1) << endl << vjDEBUG_FLUSH;
 }
 
 void vjInputManager::ConfigureInputManager(vjConfigChunkDB *cdb)
