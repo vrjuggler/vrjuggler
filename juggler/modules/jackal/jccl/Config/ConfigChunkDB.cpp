@@ -31,9 +31,6 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 
-// Implementation of jccl::ConfigChunk DB
-//
-// Author: Christopher Just
 
 #include <jccl/jcclConfig.h>
 
@@ -48,6 +45,7 @@
 #include <sys/types.h>
 
 namespace jccl {
+
    
 ConfigChunkDB::ConfigChunkDB (): chunks() {
     ;
@@ -56,13 +54,12 @@ ConfigChunkDB::ConfigChunkDB (): chunks() {
 
 
 ConfigChunkDB::~ConfigChunkDB () {
-    // if ConfigChunkDBs ever start doing memory management of their
-    // ConfigChunks, do it here.
+    // Any ConfigChunks where the only copy is owned by this db
+    // are automagically deleted here.
 }
 
 
 
-//: copy constructor
 ConfigChunkDB::ConfigChunkDB (ConfigChunkDB& db): chunks() {
     *this = db;
 }
@@ -94,14 +91,12 @@ ConfigChunkPtr ConfigChunkDB::getChunk (const std::string& name) const {
 
 
 
-// Return a copy of the chunks vector
 std::vector<ConfigChunkPtr> ConfigChunkDB::getChunks() const {
     return chunks;
 }
 
 
 
-// Add the given chunks to the end of the chunk list
 void ConfigChunkDB::addChunks(std::vector<ConfigChunkPtr> new_chunks) {
     // no! must make copies of all chunks. sigh...
     unsigned int i, size;
@@ -125,40 +120,11 @@ void ConfigChunkDB::addChunk(ConfigChunkPtr new_chunk) {
 
 
 
-
-// GetMatching: These functions return a vector of all chunks with a
-// property named by the first argument, and a value defined by the
-// second argument.  The returned vector may be empty.
-// NOTE:  The caller is responsible for delete()ing the vector, but not
-// its contents.
-std::vector<ConfigChunkPtr>* ConfigChunkDB::getMatching (const std::string& property, const std::string value) const {
+std::vector<ConfigChunkPtr>* ConfigChunkDB::getOfDescToken (const std::string& mytypename) const {
     std::vector<ConfigChunkPtr>* v = new std::vector<ConfigChunkPtr>;
-
+    
     for (unsigned int i = 0; i < chunks.size(); i++) {
-        if (!vjstrcasecmp (value, chunks[i]->getProperty(property)))
-            v->push_back(chunks[i]);
-    }
-    return v;
-}
-
-std::vector<ConfigChunkPtr>* ConfigChunkDB::getMatching (const std::string& property, int value) const {
-    int c;
-    std::vector<ConfigChunkPtr>* v = new std::vector<ConfigChunkPtr>;
-    for (unsigned int i = 0; i < chunks.size(); i++) {
-        c = chunks[i]->getProperty(property);
-        if (c == value)
-            v->push_back(chunks[i]);
-    }
-    return v;
-}
-
-
-std::vector<ConfigChunkPtr>* ConfigChunkDB::getMatching (const std::string& property, float value) const {
-    float c;
-    std::vector<ConfigChunkPtr>* v = new std::vector<ConfigChunkPtr>;
-    for (unsigned int i = 0; i < chunks.size(); i++) {
-        c = chunks[i]->getProperty(property);
-        if (c == value)
+        if (!vjstrcasecmp (mytypename, chunks[i]->getProperty("type")))
             v->push_back(chunks[i]);
     }
     return v;
@@ -167,63 +133,7 @@ std::vector<ConfigChunkPtr>* ConfigChunkDB::getMatching (const std::string& prop
 
 
 void ConfigChunkDB::clear () {
-    /* removes all chunks from self */
     chunks.clear();
-}
-
-
-
-// Removes (and frees all memory associated with) all chunks with a property
-// named by the first argument with a value defined by the second argument.
-int ConfigChunkDB::removeMatching (const std::string& property, int value) {
-    int i = 0;
-    int c;
-    iterator cur_chunk = chunks.begin();
-    while (cur_chunk != chunks.end()) {
-        c = (*cur_chunk)->getProperty(property);
-        if (c == value) {
-            cur_chunk = chunks.erase(cur_chunk);
-            i++;
-        }
-        else
-            cur_chunk++;
-    }
-    return i;
-}
-
-int ConfigChunkDB::removeMatching (const std::string& property, float value) {
-    int i = 0;
-    float c;
-
-    iterator cur_chunk = chunks.begin();
-    while (cur_chunk != chunks.end()) {
-        c = (*cur_chunk)->getProperty(property);
-        if (c == value) {
-            cur_chunk = chunks.erase(cur_chunk);
-            i++;
-        }
-        else
-            cur_chunk++;
-    }
-    return i;
-}
-
-int ConfigChunkDB::removeMatching (const std::string& property, const std::string& value) {
-
-    int i = 0;
-    iterator cur_chunk = chunks.begin();
-    while (cur_chunk != chunks.end()) {
-        VarValue v = ((*cur_chunk)->getProperty(property));
-        if (((v.getType() == T_STRING) || (v.getType() == T_STRING))
-            &&  (!vjstrcasecmp (value, (std::string)v))) {
-            cur_chunk = chunks.erase(cur_chunk);
-            i++;
-        }
-        else
-            cur_chunk++;
-    }
-
-    return i;
 }
 
 
@@ -474,14 +384,26 @@ bool ConfigChunkDB::isEmpty() const {
 
 
 void ConfigChunkDB::removeAll() {
-    // just an alias
     clear();
 }
 
 
 
 bool ConfigChunkDB::removeNamed (const std::string& name) {
-    return removeMatching ("Name", name);
+    iterator cur_chunk = chunks.begin();
+    while (cur_chunk != chunks.end()) {
+        VarValue v = ((*cur_chunk)->getProperty("Name"));
+        if ((v.getType() == T_STRING)
+            &&  (!vjstrcasecmp (name, (std::string)v))) {
+            cur_chunk = chunks.erase(cur_chunk);
+            return true;
+        }
+        else
+            cur_chunk++;
+    }
+
+    return false;
 }
+
 
 };
