@@ -400,7 +400,7 @@ ${VJ_LIB_DYNAMIC} ${PF_LIB_DYNAMIC} ${GL_LIB_DYNAMIC}:
 # This is a wrapper for the 'gui' target that checks for the mere existence
 # of the JAR file before compiling the GUI code.
 _check_gui:
-	@if [ ! -e ${topdir}/GUI/VjCfg.jar ] ; then	\
+	@if [ ! -e ${topdir}/GUI/VjControl.jar ] ; then	\
             ${MAKE} gui ;				\
         fi
 
@@ -443,8 +443,8 @@ links:
 	cd ${instlinks}/include && ln -sf ${VJROOT_ABS}/vjConfig.h ./vjConfig.h
 	cd ${instlinks}/include && ln -sf ${topdir}/vjDefines.h ./vjDefines.h
 	${scriptdir}/mkinstalldirs ${instlinks}/bin
-	cd ${instlinks}/bin && ln -sf ${topdir}/GUI/VjCfg.jar ./
-	cd ${instlinks}/bin && ln -sf ${VJROOT_ABS}/GUI/editconfig ./vjConfig
+	cd ${instlinks}/bin && ln -sf ${topdir}/GUI/VjControl.jar ./
+	cd ${instlinks}/bin && ln -sf ${VJROOT_ABS}/GUI/vjcontrol ./vjcontrol
 	@echo "\n\n"
 	@echo "---------------------------------------------------------------"
 	@echo 'You should now set $$VJ_BASE_DIR to:'
@@ -685,9 +685,9 @@ ifeq (${BUILD_GUI}, Y)
 	@echo "Installing vjConfig"
 	@echo "------------------------------------------------"
 	${INSTALL} -m ${_FILE_PERMS} -g ${_GROUP_NAME}			\
-          ${topdir}/GUI/VjCfg.jar ${bindir}
+          ${topdir}/GUI/VjControl.jar ${bindir}
 	${INSTALL} -m ${_EXEC_PERMS} -g ${_GROUP_NAME}			\
-          ${VJROOT_ABS}/GUI/editconfig ${bindir}/vjConfig
+          ${VJROOT_ABS}/GUI/vjcontrol ${bindir}/vjcontrol
 else
 	@echo "------------------------------------------------"
 	@echo "Skipping installation of vjConfig (not built)"
