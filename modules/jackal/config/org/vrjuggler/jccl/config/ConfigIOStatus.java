@@ -29,9 +29,6 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-
-
-
 package VjConfig;
 
 import java.util.List;
@@ -47,132 +44,148 @@ import java.util.ArrayList;
  *
  *  @version $Revision$
  */
-public class ConfigIOStatus {
+public class ConfigIOStatus
+{
+   List messages;  // either Strings or Throwables.
+   int status;
 
-    List messages;  // either Strings or Throwables.
-    int status;
+   int num_warnings;
+   int num_errors;
 
-    int num_warnings;
-    int num_errors;
-    
-    public static final int SUCCESS = 1;
-    public static final int WARNINGS = 2;
-    public static final int ERRORS = 3;   // loaded, but there were errors
-    public static final int FAILURE = 4;  // total failure; nothing loaded
+   public static final int SUCCESS = 1;
+   public static final int WARNINGS = 2;
+   public static final int ERRORS = 3;   // loaded, but there were errors
+   public static final int FAILURE = 4;  // total failure; nothing loaded
 
-    public ConfigIOStatus () {
-        messages = new ArrayList();
-        clear();
-    }
+   public ConfigIOStatus()
+   {
+      messages = new ArrayList();
+      clear();
+   }
 
-    /** Clears messages and resets status to "success". */
-    public void clear () {
-        messages.clear();
-        status = SUCCESS;
-        num_warnings = 0;
-        num_errors = 0;
-    }
+   /** Clears messages and resets status to "success". */
+   public void clear()
+   {
+      messages.clear();
+      status = SUCCESS;
+      num_warnings = 0;
+      num_errors = 0;
+   }
 
-    /** Convenience method to set the status.  When adding messages,
-     *  the overall severity can only get worse - ie we progress
-     *  from SUCCESS -> WARNINGS -> ERRORS -> FAILURE.
-     */
-    private void setStatus (int new_status) {
-        // wish i had an assert
+   /** Convenience method to set the status.  When adding messages,
+    *  the overall severity can only get worse - ie we progress
+    *  from SUCCESS -> WARNINGS -> ERRORS -> FAILURE.
+    */
+   private void setStatus(int new_status)
+   {
+      // wish i had an assert
 
-        // things can only go downhill from here
-        if (new_status > status)
-            status = new_status;
-    }
+      // things can only go downhill from here
+      if (new_status > status)
+      {
+         status = new_status;
+      }
+   }
 
-    public int getStatus () {
-        return status;
-    }
-    
-    public void addWarning (String msg) {
-        setStatus (WARNINGS);
-        messages.add (msg);
-        num_warnings++;
-    }
+   public int getStatus()
+   {
+      return status;
+   }
 
-    public void addError (String msg) {
-        setStatus (ERRORS);
-        messages.add (msg);
-        num_errors++;
-    }
+   public void addWarning(String msg)
+   {
+      setStatus (WARNINGS);
+      messages.add (msg);
+      num_warnings++;
+   }
 
-    public void addFailure (String msg) {
-        setStatus (FAILURE);
-        messages.add (msg);
-    }
+   public void addError(String msg)
+   {
+      setStatus (ERRORS);
+      messages.add (msg);
+      num_errors++;
+   }
 
-    public void addWarning (Throwable msg) {
-        setStatus (WARNINGS);
-        messages.add (msg);
-        num_warnings++;
-    }
+   public void addFailure(String msg)
+   {
+      setStatus (FAILURE);
+      messages.add (msg);
+   }
 
-    public void addError (Throwable msg) {
-        setStatus (ERRORS);
-        messages.add (msg);
-        num_errors++;
-    }
+   public void addWarning(Throwable msg)
+   {
+      setStatus (WARNINGS);
+      messages.add (msg);
+      num_warnings++;
+   }
 
-    public void addFailure (Throwable msg) {
-        setStatus (FAILURE);
-        messages.add (msg);
-    }
+   public void addError(Throwable msg)
+   {
+      setStatus (ERRORS);
+      messages.add (msg);
+      num_errors++;
+   }
 
-    /** Returns number of messages. */
-    public int size() {
-        return messages.size();
-    }
+   public void addFailure(Throwable msg)
+   {
+      setStatus (FAILURE);
+      messages.add (msg);
+   }
 
-    /** Returns ith message object.  Messages are either Strings or
-     *  Throwables.
-     */
-    public Object get (int i) {
-        return messages.get(i);
-    }
+   /** Returns number of messages. */
+   public int size()
+   {
+      return messages.size();
+   }
 
-    /** Provides a one-line summary of # of warnings, errors, etc. */
-    public String getSummary () {
-        switch (status) {
-        case SUCCESS:
-            return "Loaded succesfully.";
-        case WARNINGS:
-            StringBuffer s = new StringBuffer();
-            s.append ("Loaded with ");
-            s.append (num_warnings);
-            s.append ((num_warnings == 1)?" warning.":" warnings.");
-            return new String(s);
-        case ERRORS:
-            StringBuffer s2 = new StringBuffer();
-            s2.append ("Loaded with ");
-            s2.append (num_errors);
-            s2.append ((num_errors == 1)?" error, ":" errors, ");
-            s2.append (num_warnings);
-            s2.append ((num_warnings == 1)?" warning.":" warnings.");
-            return new String(s2);
-        case FAILURE:
-        default:
-            return "Load failed.";
-        }
-    }
+   /** Returns ith message object.  Messages are either Strings or
+    *  Throwables.
+    */
+   public Object get(int i)
+   {
+      return messages.get(i);
+   }
 
-    /** Creates a string containing the summary and all messages. */
-    public String toString () {
-        StringBuffer s = new StringBuffer();
-        s.append (getSummary());
-        s.append ("\n");
+   /** Provides a one-line summary of # of warnings, errors, etc. */
+   public String getSummary()
+   {
+      switch (status)
+      {
+      case SUCCESS:
+         return "Loaded succesfully.";
+      case WARNINGS:
+         StringBuffer s = new StringBuffer();
+         s.append("Loaded with ");
+         s.append(num_warnings);
+         s.append((num_warnings == 1) ? " warning." : " warnings.");
+         return new String(s);
+      case ERRORS:
+         StringBuffer s2 = new StringBuffer();
+         s2.append("Loaded with ");
+         s2.append(num_errors);
+         s2.append((num_errors == 1) ? " error, " : " errors, ");
+         s2.append(num_warnings);
+         s2.append((num_warnings == 1) ? " warning." : " warnings.");
+         return new String(s2);
+      case FAILURE:
+      default:
+         return "Load failed.";
+      }
+   }
 
-        for (int i = 0; i < messages.size(); i++) {
-            Object o = messages.get(i);
-            s.append (o.toString());
-        }
+   /** Creates a string containing the summary and all messages. */
+   public String toString()
+   {
+      StringBuffer s = new StringBuffer();
+      s.append(getSummary());
+      s.append("\n");
 
-        return new String(s);
-    }
+      for (int i = 0; i < messages.size(); i++)
+      {
+         Object o = messages.get(i);
+         s.append(o.toString());
+      }
 
+      return new String(s);
+   }
 }
-
