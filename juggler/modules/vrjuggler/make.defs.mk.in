@@ -138,8 +138,8 @@ endif
 # -----------------------------------------------------------------------------
 # Library names.
 # -----------------------------------------------------------------------------
-VJ_LIBRARY=	@LIB_PREFIX@Juggler
-GL_LIBRARY=	@LIB_PREFIX@Juggler_ogl
-PF_LIBRARY=	@LIB_PREFIX@Juggler_pf
+VJ_LIBRARY=	@LIB_PREFIX@vrj
+GL_LIBRARY=	@LIB_PREFIX@vrj_ogl
+PF_LIBRARY=	@LIB_PREFIX@vrj_pf
 
 include $(topdir)/common.defs.mk
