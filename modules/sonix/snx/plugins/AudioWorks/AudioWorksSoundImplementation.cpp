@@ -111,10 +111,8 @@ namespace snx
     */
    void AudioWorksSoundImplementation::trigger( const std::string & alias, const int & looping )
    {
-      std::cout<<"AWSoundImpl::trigger("<<alias<<", "<<looping<<")"<<std::endl;
       snx::SoundImplementation::trigger( alias, looping );
 
-      std::cout<<"Bindtable count: "<<mBindTable.count(alias)<<std::endl;
       if (mBindTable.count( alias ) > 0)
       {
          if (this->isPaused( alias ))
@@ -123,7 +121,6 @@ namespace snx
          }
          else
          {
-            std::cout<<"Triggering sound"<<std::endl;
             awProp(mBindTable[alias].mSound, AWSND_STATE, AW_ON);
             awProp(mBindTable[alias].mSound, AWSND_ENABLE, AW_ON);
             
