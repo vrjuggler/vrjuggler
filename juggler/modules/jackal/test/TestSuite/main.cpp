@@ -57,22 +57,13 @@ int main (int ac, char **av)
    // ------------------------------
    CppUnit::TestSuite* metrics_suite = new CppUnit::TestSuite("metrics");
 
-     metrics_suite->addTest(jcclTest::LabeledPerfDataBufferTest::metric_suite());
-//     metrics_suite->addTest(vprTest::GUIDTest::metric_suite());
-//     metrics_suite->addTest(vprTest::SocketBandwidthIOStatsTest::metric_suite());
-
+//     metrics_suite->addTest(jcclTest::LabeledPerfDataBufferTest::metric_suite());
    runner.addTest(metrics_suite);
-
-   //noninteractive_suite->addTest(metrics_suite);
-
 
    // -------------------------------
    // INTERACTIVE
    // -------------------------------
    CppUnit::TestSuite* interactive_suite = new CppUnit::TestSuite("interactive");
-
-//     interactive_suite->addTest(vprTest::ThreadTest::suite());
-
    runner.addTest(interactive_suite);
 
    // run all test suites
