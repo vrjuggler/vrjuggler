@@ -380,14 +380,7 @@ install-tools:
 
 # Install the standard data files.
 install-data:
-	@echo "------------------------------------------------"
-	@echo "Installing standard data files"
-	@echo "------------------------------------------------"
-	$(SHELL) $(MKINSTALLDIRS) $(projdatadir)
-	$(MTREE_CMD) -Ude -f $(mtreedir)/JCCL.data.dist -p $(projdatadir)
-	$(PERL) $(scriptdir)/install-dir.pl -i $(top_srcdir)/data	\
-          -m $(FILE_PERMS) $(GROUP_OPT_UNIX) -o $(projdatadir)/data	\
-          -v "$(topdir)/VARS.pl"
+	$(MAKE) -C data install
 
 # =============================================================================
 # Clean-up targets.  '_clean' removes all the files in the build directories.  

@@ -1,5 +1,7 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Nov-24-2004 patrickh    Sped up validation of .jdef and .jconf files.
+                        NEW VERSION: 0.23.3
 Nov-19-2004 patrickh    Restored the ability for .jconf files to extend the
                         .jdef file search path.
                         NEW VERSION: 0.23.2
