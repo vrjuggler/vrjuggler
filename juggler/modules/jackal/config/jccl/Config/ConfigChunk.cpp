@@ -1,6 +1,6 @@
 /*
- *  File:       $RCSfile$
- *  Date modified:  $Date$
+ *  File:          $RCSfile$
+ *  Date modified: $Date$
  *  Version:       $Revision$
  *
  *
