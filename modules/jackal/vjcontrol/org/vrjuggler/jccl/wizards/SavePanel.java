@@ -174,8 +174,8 @@ public class SavePanel
             // BUG BUG BUG BUG BUG BUG BUG BUG!!! CJ LOOK HERE!!!
             ConfigModule config_module;
             ControlUIModule ui_module;
-            ui_module = (ControlUIModule)Core.getComponentFromRegistry ("ControlUI Module");
-            config_module = (ConfigModule)Core.getComponentFromRegistry ("Config Module");
+            ui_module = (ControlUIModule)Core.getVjComponent ("ControlUI Module");
+            config_module = (ConfigModule)Core.getVjComponent ("Config Module");
             SuffixFilter chunkdb_filter = new SuffixFilter ("Config Files (*.config, *.cfg)", ".config");
             chunkdb_filter.addSuffix(".cfg");
             chunkdb_filter = (SuffixFilter)ui_module.getEasyFileDialog().addFilter (chunkdb_filter, "ConfigChunkDB");

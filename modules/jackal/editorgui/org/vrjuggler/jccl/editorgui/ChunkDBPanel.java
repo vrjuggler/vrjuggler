@@ -510,7 +510,7 @@ public class ChunkDBPanel
             VjComponent c;
             for (i = 0; i < n; i++) {
                 s = p.getValue(i).toString();
-                c = Core.getComponentFromRegistry(s);
+                c = Core.getVjComponent (s);
                 if (c != null) {
                     if (c instanceof ControlUIModule)
                         ui_module = (ControlUIModule)c;
