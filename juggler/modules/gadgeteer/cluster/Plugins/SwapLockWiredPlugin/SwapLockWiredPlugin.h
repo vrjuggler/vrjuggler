@@ -30,8 +30,8 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _CLUSTER_SWAP_LOCK_PLUGIN_H
-#define _CLUSTER_SWAP_LOCK_PLUGIN_H
+#ifndef _CLUSTER_SWAP_LOCK_WIRED_PLUGIN_H
+#define _CLUSTER_SWAP_LOCK_WIRED_PLUGIN_H
 
 #include <cluster/Plugins/PluginConfig.h>
 
@@ -54,16 +54,17 @@ extern "C" GADGET_CLUSTER_PLUGIN_API(cluster::ClusterPlugin*) initPlugin();
 
 namespace cluster
 {
-   class ClusterBarrier;
-
-class GADGET_CLUSTER_PLUGIN_CLASS_API SwapLockPlugin
+class GADGET_CLUSTER_PLUGIN_CLASS_API SwapLockWiredPlugin
    : public cluster::ClusterPlugin
 {
-   vprSingletonHeader( SwapLockPlugin );
-
+   vprSingletonHeader( SwapLockWiredPlugin );
+private:
+   SwapLockWiredPlugin() : mWire(-1), mPluginGUID("f4f31d1c-eb4f-41fa-94d4-bde783bf32d6"),
+      mIsMaster(false), mActive(false)
+   {;}
 public:
-   SwapLockPlugin();
-   virtual ~SwapLockPlugin();
+   virtual ~SwapLockWiredPlugin()
+   {;}
    
    /**
     * Get the GUID associated with this plugin.
@@ -76,17 +77,21 @@ public:
    /**
     * Handle a incoming packet.
     */
-   void handlePacket(Packet* packet, ClusterNode* node)
-   {
-      //packet->action(node);
-      // The SwapLockPlugin needs a lot of work currently.
-   }
+   virtual void handlePacket(Packet* packet, ClusterNode* node);
 
-
+   /**
+    * Virtual function that is unused by this plug since we are only 
+    * concerned with creating a SwapLock barrier.
+    */
    virtual void preDraw();
+   
+   /**
+    * Virtual function that is unused by this plug since we are only 
+    * concerned with creating a SwapLock barrier.
+    */
    virtual void postPostFrame();
    
-   /** Returns the status of SwapLockPlugin(Not Used)
+   /** Returns the status of SwapLockWiredPlugin(Not Used)
     *
     *  @return true If plugin is completly configured
     *               and has no pending tasks.
@@ -94,14 +99,19 @@ public:
     */
    virtual bool isPluginReady();
    
-   bool createBarrier();
+   /**
+    * Create a barrier that will be used to have SwapLock syncronization.
+    */
+   virtual bool createBarrier();  
 
+   /**
+    * Returns the name of this plugin.
+    */
    virtual std::string getPluginName()
    {
-      return(std::string("SwapLockPlugin"));
+      return(std::string("SwapLockWiredPlugin"));
    }
-//   bool recognizeSwapLockPluginConfig(jccl::ConfigChunkPtr chunk);
-   
+
    /** Add the pending chunk to the configuration.
     *  PRE: configCanHandle (chunk) == true.
     *  @return true iff chunk was successfully added to configuration.
@@ -122,33 +132,60 @@ public:
     *  @return true iff this handler can process chunk.
     */
    bool configCanHandle(jccl::ConfigChunkPtr chunk);
-
-   bool recognizeSwapLockPluginConfig(jccl::ConfigChunkPtr chunk);
-
-   void MasterSend();
-   void MasterReceive();
-   void SlaveSend();
-   void SlaveReceive();
-private:      
-   /**
-    * Returns the string representation of the chunk type used for the SwapLockPlugin
-    */   
-   static std::string getChunkType() { return std::string( "SwapLockPlugin" ); }
-
 private:
-   ClusterBarrier*   mBarrier;
-   int               mFrameNumber;
-   vpr::GUID         mPluginGUID;
+   /**
+    * Helper function that determaines if the given ConfigChunk is a SwapLockWiredPlugin.
+    */
+   bool recognizeSwapLockWiredPluginConfig(jccl::ConfigChunkPtr chunk);
+   
+   /**
+    * Returns the string representation of the chunk type used for the SwapLockWiredPlugin
+    */   
+   static std::string getChunkType() { return std::string( "SwapLockWiredPlugin" ); }
+   
+   vpr::ReturnStatus ConnectToWiredParallel();
+   vpr::ReturnStatus Init();
+   /**
+    * Start listening for incoming connection requests.
+    *
+    * Note: This will only be used by the barrier master.
+    */
+   bool startListening();
+   
+   /**
+    * Control loop that is run by mAcceptThread in order to accept incoming connection requests.
+    *
+    * Note: This will only be used by the barrier master.
+    */
+   void acceptLoop(void* nullParam);
+   
+   /**
+    * Sends the "complete" signal to all sync slaves.
+    */
+   void masterSend();
 
-   std::vector<std::string>      mSlaves;
-   std::vector<ClusterNode*>     mSlaveNodes;
-   bool                          mBarrierMaster;
-   std::string                   mBarrierMasterHostname;
-   ClusterNode*                  mMasterNode;
-   //bool                          mSwapLockActive;
+   /**
+    * Waits for "ready" signals from all sync slaves.
+    */
+   void masterReceive();
 
-   const vpr::Uint8 SYNC_SIGNAL;
-   const vpr::Interval read_timeout;
+   /**
+    * Sends "ready" signal to sync master.
+    */
+   void slaveSend();
+
+   /**
+    * Waits for "complete" signal from sync master.
+    */
+   void slaveReceive();
+private:
+   std::string                      mBarrierMasterHostname; /**< Hostname of the sync master. */
+
+   int                              mWire;
+   vpr::GUID                        mPluginGUID;         /**< GUID for this ClusterPlugin */
+
+   bool                             mIsMaster;           /**< Are we the sync master? */
+   bool                             mActive;             /**< Is the plugin ready to be used? */
 };
 
 } // end namespace
