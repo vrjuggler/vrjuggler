@@ -141,6 +141,18 @@
 
    <xsl:template match="jconf:display_window">
       <xsl:choose>
+         <xsl:when test="@version = '2'">
+            <xsl:call-template name="check-event-source">
+               <xsl:with-param name="display_window" select="."/>
+            </xsl:call-template>
+            <xsl:copy-of select="." />
+         </xsl:when>
+         <xsl:when test="@version = '3'">
+            <xsl:call-template name="check-event-source">
+               <xsl:with-param name="display_window" select="."/>
+            </xsl:call-template>
+            <xsl:copy-of select="." />
+         </xsl:when>
          <xsl:when test="@version = '4'">
             <xsl:message>
                <xsl:text>Found a display window (</xsl:text>
@@ -290,6 +302,7 @@
                      <xsl:with-param name="original" select="$dev_name" />
                      <xsl:with-param name="path_sep"><xsl:text>/</xsl:text></xsl:with-param>
                   </xsl:call-template>
+                  <xsl:text> KM Dev</xsl:text>
                </xsl:element>
             </xsl:when>
             <xsl:otherwise>
@@ -344,6 +357,50 @@
 
 
 <!-- Helpers =============================================================== -->
+   <!--
+      Identifies when a display_window is configured to act as an event
+      source.  If it is conifgured thusly, then a new keyboard_mouse_device
+      element is created to stand in for the formerly embedded event_window
+      config element.
+   -->
+   <xsl:template name="check-event-source">
+      <xsl:param name="display_window"/>
+      <xsl:variable name="is_event_source">
+         <xsl:value-of select="$display_window/jconf:act_as_event_source"/>
+      </xsl:variable>
+      <xsl:choose>
+         <xsl:when test="$is_event_source = 'true'">
+            <xsl:call-template name="create-km-dev">
+               <xsl:with-param name="event_window" select="$display_window/jconf:event_window_device/jconf:event_window"/>
+            </xsl:call-template>
+         </xsl:when>
+         <xsl:when test="$is_event_source = '1'">
+            <xsl:call-template name="create-km-dev">
+               <xsl:with-param name="event_window" select="$display_window/jconf:event_window_device/jconf:event_window"/>
+            </xsl:call-template>
+         </xsl:when>
+      </xsl:choose>
+   </xsl:template>
+
+   <!--
+      Creates a new keyboard_mouse_device config element from the given
+      event_window element.
+   -->
+   <xsl:template name="create-km-dev">
+      <xsl:param name="event_window"/>
+
+      <xsl:element name="keyboard_mouse_device">
+         <xsl:attribute name="name">
+            <xsl:value-of select="$event_window/@name"/><xsl:text> KM Dev</xsl:text>
+         </xsl:attribute>
+         <xsl:attribute name="version">
+            <xsl:text>1</xsl:text>
+         </xsl:attribute>
+         <xsl:copy-of select="$event_window/jconf:mouse_sensitivity"/>
+         <xsl:copy-of select="$event_window/jconf:device_host"/>
+      </xsl:element>
+   </xsl:template>
+
    <!--
       Returns the directory containing a file, given a full path to the file.
    -->
