@@ -91,7 +91,10 @@ void vjKernel::loadConfig()
    vjDEBUG(5) << "   vjKernel::loadConfig:\n";
    configDesc = new vjChunkDescDB;
    if (!configDesc->load("/home/users/allenb/Source/juggler/Data/chunksDesc"))
-      cerr << "vjKernel::loadConfig: Config Desc load failed.\n";
+   {
+      cerr << "vjKernel::loadConfig: Config Desc failed to load file: " << endl;
+      exit(1);
+   }
 
    char  configFile[250];
    char* homeDir = getenv("HOME");     // Get users home directory
@@ -100,11 +103,15 @@ void vjKernel::loadConfig()
    
    chunkDB = new vjConfigChunkDB(configDesc);
    if (!chunkDB->load(configFile))
-      cerr << "vjKernel::loadConfig: DB Load failed.\n";
+   {
+      cerr << "vjKernel::loadConfig: DB Load failed to load file: " << configFile << endl;
+      exit(1);
+   }
 
    vjDEBUG(2) << "------------  Config Chunks ----------";
    vjDEBUG(2) << (*chunkDB);
 
+   /*  XXX: I think this code was just here to display config data.  It didn't do anything??
    vjDEBUG(2) << "----- Displays -------";
    vector<vjConfigChunk*>* displayChunks;
    displayChunks = chunkDB->getMatching("display");
@@ -125,6 +132,7 @@ void vjKernel::loadConfig()
                   << (int)chunk->getProperty("size", 0) << " "
                   << (int)chunk->getProperty("size", 1) << endl;
    }
+   */
 }
 
 void vjKernel::setupInputManager()
