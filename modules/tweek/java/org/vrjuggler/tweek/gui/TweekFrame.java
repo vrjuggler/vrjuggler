@@ -580,35 +580,14 @@ public class TweekFrame extends JFrame implements BeanFocusChangeListener,
 
       if ( dialog.getStatus() == ConnectionDialog.OK_OPTION )
       {
-         if ( dialog.getNameServiceHost() != null )
+         CorbaService corba_service = dialog.getCorbaService();
+
+         if ( null != corba_service &&
+              null != corba_service.getSubjectManager() )
          {
-            CorbaService new_orb = new CorbaService(dialog.getNameServiceHost(),
-                                                    dialog.getNameServicePort(),
-                                                    dialog.getNamingSubcontext());
-
-            TweekBean service = BeanRegistry.instance().getBean( "Environment" );
-
-            try
-            {
-               if ( service != null )
-               {
-                  EnvironmentService env_service = (EnvironmentService) service;
-                  new_orb.init(env_service.getCommandLineArgs());
-               }
-               else
-               {
-                  new_orb.init(null);
-               }
-
-               mBeanContainer.fireConnectionEvent(new_orb);
-               mORBs.add(new_orb);
-               mMenuNetDisconnect.setEnabled(true);
-            }
-            catch (org.omg.CORBA.SystemException sys_ex)
-            {
-               sys_ex.getMessage();
-               sys_ex.printStackTrace();
-            }
+            mORBs.add(corba_service);
+            mBeanContainer.fireConnectionEvent(corba_service);
+            mMenuNetDisconnect.setEnabled(true);
          }
       }
    }

@@ -36,6 +36,8 @@
 
 package org.vrjuggler.tweek.net.corba;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 import org.omg.CORBA.*;
 import org.omg.PortableServer.*;
@@ -152,38 +154,108 @@ public class CorbaService
    }
 
    /**
-    * Retrieves a reference to the CORBA object known as the Subject Manager.
+    * Retrieves a reference to all the CORBA objects that implement the
+    * tweek.SubjectManager interface.
+    *
+    * @return A list containing zero or more tweek.SubjectManager objects.
+    *
+    * @note The implementation of this method is based on code found on page
+    *       806 of <i>Advanced CORBA Programming with C++</i>.
+    */
+   public List getSubjectManagerList()
+   {
+      ArrayList subj_mgrs = new ArrayList();
+      int data_size = 100;
+
+      BindingListHolder     list_holder = new BindingListHolder();
+      BindingIteratorHolder iter_holder = new BindingIteratorHolder();
+
+      // Get the list of objects (of any type) bound in localContext.
+      localContext.list(data_size, list_holder, iter_holder);
+
+      // Using the returned list of objects, populate subj_mgrs with any
+      // objects that implement the tweek.SubjectManager interface.
+      addSubjectManagers(list_holder.value, subj_mgrs);
+
+      if ( null != iter_holder.value )
+      {
+         BindingIterator iter = iter_holder.value;
+
+         while ( iter.next_n(data_size, list_holder) )
+         {
+            addSubjectManagers(list_holder.value, subj_mgrs);
+         }
+
+         iter.destroy();
+      }
+
+      return subj_mgrs;
+   }
+
+   /**
+    * Resolves all the CORBA objects implementing tweek.SubjectManager in
+    * bindingList and stores the resulting tweek.SubjectManager object(s) in
+    * mgrList.  If bindingList contains no such objects, mgrList will not be
+    * modified.
+    */
+   private void addSubjectManagers(Binding[] bindingList, List mgrList)
+   {
+      Binding binding;
+
+      for ( int i = 0; i < bindingList.length; ++i )
+      {
+         binding = bindingList[i];
+
+         // We do not care about anything that is a naming context.
+         if ( BindingType.ncontext != binding.binding_type )
+         {
+            // Furthermore, we only care about SubjectManager instances.
+            if ( binding.binding_name[0].id.startsWith("SubjectManager") )
+            {
+               NameComponent name_comp[] = binding.binding_name;
+
+               try
+               {
+                  org.omg.CORBA.Object ref = localContext.resolve(name_comp);
+                  tweek.SubjectManager mgr = tweek.SubjectManagerHelper.narrow(ref);
+                  mgrList.add(mgr);
+               }
+               catch (InvalidName e)
+               {
+                  e.printStackTrace();
+               }
+               catch (CannotProceed e)
+               {
+                  e.printStackTrace();
+               }
+               catch (NotFound e)
+               {
+                  e.printStackTrace();
+               }
+            }
+         }
+      }
+   }
+
+   /**
+    * Sets the Subject Manager reference that will be used with this CORBA
+    * service object.
+    */
+   public void setSubjectManager(tweek.SubjectManager mgr)
+   {
+      this.subjectManager = mgr;
+   }
+
+   /**
+    * Returns a reference to the CORBA object known as the Subject Manager.
     * Using this reference, the caller can request references to subjects
     * registered with the manager.
     *
-    * @return null if the Subject Manager reference cannot be retrieved.
+    * @return null if the Subject Manager reference has not been set yet.
     */
    public tweek.SubjectManager getSubjectManager ()
    {
-      tweek.SubjectManager mgr = null;
-
-      NameComponent[] name_comp = new NameComponent[1];
-      name_comp[0] = new NameComponent("SubjectManager", "Object");
-
-      try
-      {
-         org.omg.CORBA.Object ref = localContext.resolve(name_comp);
-         mgr = tweek.SubjectManagerHelper.narrow(ref);
-      }
-      catch (InvalidName e)
-      {
-         e.printStackTrace();
-      }
-      catch (CannotProceed e)
-      {
-         e.printStackTrace();
-      }
-      catch (NotFound e)
-      {
-         e.printStackTrace();
-      }
-
-      return mgr;
+      return this.subjectManager;
    }
 
    public byte[] registerObject (Servant servant, String name)
@@ -263,6 +335,8 @@ public class CorbaService
    private String nameServiceURI  = null;
 
    private String namingSubcontext = null;
+
+   private tweek.SubjectManager subjectManager = null;
 
    private ORB           mORB         = null;
    private POA           mRootPoa     = null;
