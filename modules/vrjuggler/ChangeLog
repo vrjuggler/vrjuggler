@@ -1,5 +1,7 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+[2.0 Beta 1 released - 12.24.2004]=============================================
+Dec-23-2004 patrickh    NEW VERSION: 1.1.166
 Dec-22-2004 allenb      Added proof of concept code showing graphical display
                         of performance data from the Kernel.
                         Added performance collection to the kernel loop.
