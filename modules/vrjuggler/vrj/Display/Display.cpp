@@ -63,15 +63,15 @@ void Display::configDisplayWindow(jccl::ConfigChunkPtr chunk)
    vprASSERT(chunk.get() != NULL);
 
    // -- Get config info from chunk -- //
-    int originX = chunk->getProperty<int>("origin", 0);
-    int originY = chunk->getProperty<int>("origin", 1);
-    int sizeX   = chunk->getProperty<int>("size", 0);
-    int sizeY   = chunk->getProperty<int>("size", 1);
-    std::string name  = chunk->getName();
-    mBorder     = chunk->getProperty<bool>("border");
-    int pipe    = chunk->getProperty<int>("pipe");
-    mActive     = chunk->getProperty<bool>("active");
-    mInStereo   = chunk->getProperty<bool>("stereo");
+   int originX      = chunk->getProperty<int>("origin", 0);
+   int originY      = chunk->getProperty<int>("origin", 1);
+   int sizeX        = chunk->getProperty<int>("size", 0);
+   int sizeY        = chunk->getProperty<int>("size", 1);
+   std::string name = chunk->getName();
+   mBorder          = chunk->getProperty<bool>("border");
+   int pipe         = chunk->getProperty<int>("pipe");
+   mActive          = chunk->getProperty<bool>("active");
+   mStereoRequested = chunk->getProperty<bool>("stereo");
 
    // -- Check for error in configuration -- //
    // NOTE: If there are errors, set them to some default value
@@ -178,6 +178,9 @@ std::ostream& operator<<(std::ostream& out, Display& disp)
        << "Size " << " " << disp._xs << "x" << disp._ys << std::endl;
    out << indent_text << std::setw(pad_width_dot)
        << "Pipe number " << " " << disp.mPipe << std::endl;
+   out << indent_text << std::setw(pad_width_dot)
+       << "Stereo requested " << " " << (disp.mStereoRequested ? "Yes" : "No")
+       << std::endl;
    out << indent_text << std::setw(pad_width_dot)
        << "Active " << " " << (disp.mActive ? "Yes" : "No") << std::endl;
 

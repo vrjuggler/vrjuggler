@@ -340,7 +340,7 @@ void PfDrawManager::addDisplay(Display* disp)
       pf_disp.pWin->setMode(PFWIN_NOBORDER, 1);          // Get rid of that border
 
    // Setup Frame Buffer config
-   if (disp->inStereo())                            // If we need stereo
+   if (disp->isStereoRequested())                     // If we need stereo
    {
       vprDEBUG(vrjDBG_DRAW_MGR,vprDBG_CONFIG_LVL) << "vjPfDrawManager::addDisplay: Configuring stereo window attribs.\n" << vprDEBUG_FLUSH;
       pf_disp.pWin->setFBConfigAttrs(&(stereo_fb_config[0]));     // Configure framebuffer for stereo
@@ -383,7 +383,7 @@ void PfDrawManager::addDisplay(Display* disp)
          pf_disp.pWin->addChan(pf_viewport.chans[pfViewport::PRIMARY]);
 
          // Secondary channel - (Right in stereo)
-         if(disp->inStereo())
+         if(disp->isStereoRequested())
          {
             pf_viewport.chans[pfViewport::SECONDARY] = new pfChannel(pipe);
             pf_viewport.chans[pfViewport::SECONDARY]->setViewport(vp_ox, vp_ox+vp_sx, vp_oy, vp_oy+vp_sy);
@@ -391,7 +391,7 @@ void PfDrawManager::addDisplay(Display* disp)
          }
 
          // Set draw function
-         if(disp->inStereo())
+         if(disp->isStereoRequested())
          {
             pf_viewport.chans[pfViewport::PRIMARY]->setTravFunc(PFTRAV_DRAW, PfDrawFuncStereoLeft);
             pf_viewport.chans[pfViewport::SECONDARY]->setTravFunc(PFTRAV_DRAW, PfDrawFuncStereoRight);

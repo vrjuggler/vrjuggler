@@ -403,7 +403,7 @@ bool GlWindowWin32::setPixelFormat(HDC hDC)
    /* Defaults. */
    pfd.dwFlags = PFD_SUPPORT_OPENGL | PFD_DRAW_TO_WINDOW | PFD_DOUBLEBUFFER;
 
-   if ( mVrjDisplay->inStereo() )
+   if ( mVrjDisplay->isStereoRequested() )
    {
       in_stereo = true;
       pfd.dwFlags |= PFD_STEREO;
@@ -494,7 +494,7 @@ bool GlWindowWin32::setPixelFormat(HDC hDC)
          format that doesn't have stereo even if it was requested
          so we need to make sure that if stereo was selected, we
          got it. */
-      if ( mVrjDisplay->inStereo() )
+      if ( mVrjDisplay->isStereoRequested() )
       {
          if ( !(mMatch->dwFlags & PFD_STEREO) )
          {
