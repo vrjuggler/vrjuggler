@@ -784,6 +784,11 @@ dnl # Checks for library functions.
 dnl # -------------------------------------------------------------------------
 AC_CHECK_FUNCS(gettimeofday socket strdup strerror strtod sginap)
 
+AC_CHECK_LIB(m, sinf, AC_DEFINE(HAVE_SINF))
+AC_CHECK_LIB(m, sqrtf, AC_DEFINE(HAVE_SQRTF))
+AC_CHECK_LIB(m, asinf, AC_DEFINE(HAVE_ASINF))
+AC_CHECK_LIB(m, atan2f, AC_DEFINE(HAVE_ATAN2F))
+
 dnl # All of the above function checks may not be necessary ...
 
 dnl # -------------------------------------------------------------------------
