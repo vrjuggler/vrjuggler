@@ -61,7 +61,7 @@
  * When it is necessary to add serialization capabilities to a third-party
  * type that does not derive from vpr::SerializableObject, the generic type
  * vpr::SerializableObjectMixin<T> must be used.  In this case, specializations
- * of the mmmber functions readObject() and writeObject() must be written.
+ * of the member functions readObject() and writeObject() must be written.
  *
  * For example, assume that MyType is defined in a third-party library as
  * follows:
@@ -214,7 +214,13 @@ public:
 
    /**
     * Returns whether this cluster node is responsible for updating
-    * this ApplicationData object.
+    * this application-specific shared data object.  This determination is
+    * based on which node was identified as the writer when init() was
+    * called.
+    *
+    * @pre init() has been invoked.
+    *
+    * @see init()
     */
    bool isLocal()
    {
