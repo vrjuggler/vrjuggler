@@ -208,17 +208,19 @@ public:
         return m_remote_addr;
     }
 
-    bool setRemoteAddr(const InetAddr& addr)
+    Status setRemoteAddr(const InetAddr& addr)
     {
+       Status status;
+
        if (m_bound)
        { 
            vprDEBUG(0,0) << "SocketImpNSPR::setRemoteAddr: Cant' set address of bound socket.\n" << vprDEBUG_FLUSH;
-           return false;
+           status.setCode(Status::Failure);
        }
        else
           m_remote_addr = addr;
 
-       return true;
+       return status;
     }
 
 protected:
