@@ -60,24 +60,29 @@ class GADGET_CLASS_API DigitalProxy : public TypedProxy<Digital>
 
 public:
    /** @name Construction/Destruction */
+   //@{
    DigitalProxy() 
       : mUnitNum(-1), mData(0)
    {;}
 
-   virtual ~DigitalProxy() {}
+   virtual ~DigitalProxy()
+   {;}
+   //@}
+
    virtual void updateData();
 
    /** Returns time of last update. */
    vpr::Interval getTimeStamp() const
-   {  return mData.getTime(); }
-
+   {
+      return mData.getTime();
+   }
 
    /**
     * Get the digital data.
-    * Digital::OFF - Button not pressed, and was not pressed last update either
-    * Digital::ON  - Button on, and was on last frame as well
-    * Digital::TOGGLE_ON - Button was off, now it is on
-    * Digital::TOGGLE_OFF - Button was on, now it is going off
+    * Digital::OFF: Button not pressed, and was not pressed last update either.<br>
+    * Digital::ON: Button on, and was on last frame as well.<br>
+    * Digital::TOGGLE_ON: Button was off, now it is on.<br>
+    * Digital::TOGGLE_OFF: Button was on, now it is going off.<br>
     *
     * The identifiers are defined so that a simple test for non-zero means the
     * button is pressed in some way.
@@ -91,24 +96,30 @@ public:
       const int defaultDigital(Digital::OFF);
 
       if(isStupified())
+      {
          return defaultDigital;
+      }
       else
+      {
          return mData.getDigital();
+      }
    }
 
-
-    DigitalData* getDigitalData ()
-    {
-        return &mData;
-    }
-
+   DigitalData* getDigitalData()
+   {
+      return &mData;
+   }
 
    Digital* getDigitalPtr()
    {
       if(isStupified())
+      {
          return NULL;
+      }
       else
+      {
          return mTypedDevice;
+      }
    }
 
    int getUnit() const
@@ -123,7 +134,9 @@ public:
    virtual Input* getProxiedInputDevice()
    {
       if((NULL == mTypedDevice) || (mStupified))
+      {
          return NULL;
+      }
 
       Input* ret_val = dynamic_cast<Input*>(mTypedDevice);
       vprASSERT((ret_val != NULL) && "Cross-cast in DigitalProxy failed");
@@ -131,14 +144,13 @@ public:
    }
 
 private:
-   int         mUnitNum;     /**<  The sub-unit of the device we are working with */
+   int mUnitNum;     /**<  The sub-unit of the device we are working with */
 
    /**
     * Copy of the digital data we are dealing with.
-    * @see GetData - for definition of values for the data item
+    * @see getData()
     */
-   DigitalData         mData;
-
+   DigitalData mData;
 };
 
 } // End of gadget namespace
