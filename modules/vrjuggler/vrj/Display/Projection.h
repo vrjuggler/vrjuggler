@@ -89,6 +89,10 @@ public:
    Viewport* getViewport()
    { return mViewport; }
 
+   /**
+   * @pre eyePos is scaled by position factor.
+   * @pre scaleFactor is the scale current used
+   */
    virtual void calcViewMatrix(gmtl::Matrix44f& eyePos, const float scaleFactor) = 0;
 
    /** Helper to the frustum apex and corners in model coordinates.

@@ -76,6 +76,8 @@ public:
     * Recalculates the projection matrix.
     * @pre WallRotation matrix must be set correctly.
     *      mOrigin*'s must all be set correctly.
+    * @pre eyePos is scaled by position factor.
+    * @pre scaleFactor is the scale current used
     * @post frustum has been recomputed for given eyePos.
     */
    virtual void calcViewMatrix(gmtl::Matrix44f& eyePos, const float scaleFactor);
