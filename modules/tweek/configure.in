@@ -803,7 +803,7 @@ esac
 
 # Check if we want to build the Tweek extensions
 BUILD_EXTENSIONS='N'
-if test "x$use_tweek_extensions" != "xno" ; then
+if test "x$use_tweek_extensions" != "xno" -a "x$BUILD_JAVA" = "xY" ; then
    BUILD_EXTENSIONS='Y'
 fi
 
