@@ -21,7 +21,7 @@
 #include <vpr/Util/Debug.h>
 #include <vpr/System.h>
 
-#define vprtest_RANDOM_SEED 1
+//#define vprtest_RANDOM_SEED 1
 
 //using namespace vpr;
 
