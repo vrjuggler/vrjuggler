@@ -147,12 +147,16 @@ AC_CHECK_FUNC([openpty], [UTIL_LIB=''],
     [AC_CHECK_LIB([util], [openpty], [UTIL_LIB='-lutil'])])
 LIBS="${_pyj_save_LIBS}"
 
-DPP_LANG_SAVE
-DPP_LANG_C
-
-PYTHON_INCLUDES="-I$PYTHON_ROOT/include/python$PYTHON_VERSION"
-PYTHON_LDFLAGS="-L$PYTHON_ROOT/lib/python$PYTHON_VERSION/config"
-PYTHON_LIB="python$PYTHON_VERSION"
+if test "x$OS_TYPE" = "xWin32" ; then
+   py_ver=`echo $PYTHON_VERSION | sed -e 's/\.//g'`
+   PYTHON_INCLUDES="-I$PYTHON_ROOT/include"
+   PYTHON_LDFLAGS="-L$PYTHON_ROOT/libs"
+   PYTHON_LIB="python$py_ver"
+else
+   PYTHON_INCLUDES="-I$PYTHON_ROOT/include/python$PYTHON_VERSION"
+   PYTHON_LDFLAGS="-L$PYTHON_ROOT/lib/python$PYTHON_VERSION/config"
+   PYTHON_LIB="python$PYTHON_VERSION"
+fi
 
 _pyj_save_CPPFLAGS="$CPPFLAGS"
 _pyj_save_LIBS="$LIBS"
@@ -167,11 +171,16 @@ fi
 
 LDFLAGS="$LDFLAGS $PYTHON_LDFLAGS"
 
+DPP_LANG_SAVE
+DPP_LANG_C
+
 AC_CHECK_LIB([$PYTHON_LIB], [Py_Initialize],
    [AC_CHECK_HEADER([Python.h], ,
       [AC_MSG_ERROR([*** Python is required for PyJuggler ***])])],
    [AC_MSG_ERROR([*** Python is required for PyJuggler ***])],
    [$UTIL_LIB $PYTHON_LIB_DEPS])
+
+DPP_LANG_RESTORE
 
 if test "x$OS_TYPE" = "xUNIX" ; then
    PYTHON_LIB="-l$PYTHON_LIB"
@@ -180,8 +189,6 @@ fi
 CPPFLAGS="${_pyj_save_CPPFLAGS}"
 LIBS="${_pyj_save_LIBS}"
 LDFLAGS="${_pyj_save_LDFLAGS}"
-
-DPP_LANG_RESTORE
 
 BOOST_PYTHON_LIB="boost_python.$DYNAMICLIB_EXT"
 
