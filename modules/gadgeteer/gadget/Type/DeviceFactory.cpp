@@ -53,8 +53,8 @@
 #      include <vrj/Input/Devices/Immersion/Ibox.h>
 #      include <vrj/Input/Devices/VirtualTechnologies/CyberGlove.h>
 #      include <vrj/Input/Devices/Fakespace/PinchGlove.h>
-#      include <vrj/Input/Devices/Keyboard/XWinKeyboard.h>
-#      include <vrj/Input/Devices/Keyboard/XWinKBDepChecker.h>
+#      include <vrj/Input/Devices/Keyboard/KeyboardXWin.h>
+#      include <vrj/Input/Devices/Keyboard/KeyboardDepCheckerXWin.h>
 #      include <vrj/Input/Devices/Open/Trackd/TrackdController.h>
 #      include <vrj/Input/Devices/Open/Trackd/TrackdSensor.h>
 #   endif
@@ -127,8 +127,8 @@ void DeviceFactory::hackLoadKnownDevices()
    DeviceConstructor<IBox>* ibox = new DeviceConstructor<IBox>;
    DeviceConstructor<PinchGlove>* pinch_glove = new DeviceConstructor<PinchGlove>;
    DeviceConstructor<CyberGlove>* cyber_glove = new DeviceConstructor<CyberGlove>;
-   DeviceConstructor<XWinKeyboard>* xwin_key = new DeviceConstructor<XWinKeyboard>;
-   DependencyManager::instance()->registerChecker(new XWinKBDepChecker());
+   DeviceConstructor<KeyboardXWin>* xwin_key = new DeviceConstructor<KeyboardXWin>;
+   DependencyManager::instance()->registerChecker(new KeyboardDepCheckerXWin());
    DeviceConstructor<ThreeDMouse>* threed_mouse = new DeviceConstructor<ThreeDMouse>;
    if( (NULL == trackd_sensor)      ||
        (NULL == trackd_controller)  ||

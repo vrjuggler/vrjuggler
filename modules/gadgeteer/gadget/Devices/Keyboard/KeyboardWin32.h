@@ -42,8 +42,8 @@
 // Allen Bierbaum:    v1.0 -  7-23-99 - Refactored to use new keyboard method
 ////////////////////////////////////////////////////////////////////////////
 
-#ifndef _vrj_KEYBOARD_H_
-#define _vrj_KEYBOARD_H_
+#ifndef _VRJ_KEYBOARD_WIN32_H_
+#define _VRJ_KEYBOARD_WIN32_H_
 
 #include <vrj/vjConfig.h>
 

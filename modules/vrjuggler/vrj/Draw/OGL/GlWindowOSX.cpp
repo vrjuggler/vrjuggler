@@ -41,23 +41,23 @@
 #include <vrj/Display/DisplayManager.h>
 #include <vrj/Config/ConfigChunk.h>
 
-#include <vrj/Draw/OGL/GlOSXWindow.h>
+#include <vrj/Draw/OGL/GlWindowOSX.h>
 
 namespace vrj
 {
    
-AGLContext GlOSXWindow::aglShareContext = NULL;
+AGLContext GlWindowOSX::aglShareContext = NULL;
 
-GlOSXWindow::GlOSXWindow():GlWindow() {
+GlWindowOSX::GlWindowOSX():GlWindow() {
 
 }
 
-GlOSXWindow::~GlOSXWindow() {
+GlWindowOSX::~GlWindowOSX() {
     close();
 }
 
-void GlOSXWindow::swapBuffers() {
-    vjDEBUG(vjDBG_INPUT_MGR,7) << "vjGlOSXWindow::swapBuffers()" << std::endl << vjDEBUG_FLUSH;
+void GlWindowOSX::swapBuffers() {
+    vjDEBUG(vjDBG_INPUT_MGR,7) << "vjGlWindowOSX::swapBuffers()" << std::endl << vjDEBUG_FLUSH;
     if(aglContext)
     {
         aglSwapBuffers (aglContext);
@@ -84,8 +84,8 @@ void GlOSXWindow::swapBuffers() {
     }
 }
 
-int GlOSXWindow::open() {
-    vjDEBUG(vjDBG_INPUT_MGR,2) << "vjGlOSXWindow::open()" << std::endl << vjDEBUG_FLUSH;
+int GlWindowOSX::open() {
+    vjDEBUG(vjDBG_INPUT_MGR,2) << "vjGlWindowOSX::open()" << std::endl << vjDEBUG_FLUSH;
     
     GDHandle hGDWindow;
 
@@ -96,7 +96,7 @@ int GlOSXWindow::open() {
     
     if (noErr != CreateNewWindow (kDocumentWindowClass, kWindowStandardDocumentAttributes | kWindowNoShadowAttribute | kWindowLiveResizeAttribute, &rectWin, &gpWindow))
     {
-        vjDEBUG(vjDBG_INPUT_MGR,0) << "vjGlOSXWindow::open()	Window failed to open!" << std::endl << vjDEBUG_FLUSH;
+        vjDEBUG(vjDBG_INPUT_MGR,0) << "vjGlWindowOSX::open()	Window failed to open!" << std::endl << vjDEBUG_FLUSH;
         return false;
     } 
     SetWindowTitleWithCFString(gpWindow,window_title);
@@ -122,7 +122,7 @@ int GlOSXWindow::open() {
     if (!aglContext)
     {
         DestroyGLFromWindow (&aglContext, &glInfo);
-        vjDEBUG(vjDBG_INPUT_MGR,0) << "vjGlOSXWindow::open()	Window could not create GL Context!" << std::endl << vjDEBUG_FLUSH;
+        vjDEBUG(vjDBG_INPUT_MGR,0) << "vjGlWindowOSX::open()	Window could not create GL Context!" << std::endl << vjDEBUG_FLUSH;
         return false;
     }
     Rect rectPort;
@@ -137,8 +137,8 @@ int GlOSXWindow::open() {
     return true;
 }
 
-int GlOSXWindow::close() {
-    vjDEBUG(vjDBG_INPUT_MGR,2) << "vjGlOSXWindow::close()" << std::endl << vjDEBUG_FLUSH;
+int GlWindowOSX::close() {
+    vjDEBUG(vjDBG_INPUT_MGR,2) << "vjGlWindowOSX::close()" << std::endl << vjDEBUG_FLUSH;
     if(!gpWindow) return false;
     
     DestroyGLFromWindow (&aglContext, &glInfo);
@@ -152,16 +152,16 @@ int GlOSXWindow::close() {
     return true;
 }
 
-bool GlOSXWindow::makeCurrent() {
-    vjDEBUG(vjDBG_INPUT_MGR,7) << "vjGlOSXWindow::makeCurrent()" << std::endl << vjDEBUG_FLUSH;
+bool GlWindowOSX::makeCurrent() {
+    vjDEBUG(vjDBG_INPUT_MGR,7) << "vjGlWindowOSX::makeCurrent()" << std::endl << vjDEBUG_FLUSH;
     if(!aglContext) return false;
     aglSetCurrentContext (aglContext);
     return true;
 }
 
-void GlOSXWindow::config(Display* _display)
+void GlWindowOSX::config(Display* _display)
 {
-   vjDEBUG(vjDBG_INPUT_MGR,0) << "vjGlOSXWindow::config(Display* _display)" << std::endl << vjDEBUG_FLUSH;
+   vjDEBUG(vjDBG_INPUT_MGR,0) << "vjGlWindowOSX::config(Display* _display)" << std::endl << vjDEBUG_FLUSH;
    
    GlWindow::config(_display);
 
@@ -177,7 +177,7 @@ void GlOSXWindow::config(Display* _display)
 
 
 /**** Static Helpers *****/
-/* static */ bool GlOSXWindow::createHardwareSwapGroup(std::vector<GlWindow*> wins)
+/* static */ bool GlWindowOSX::createHardwareSwapGroup(std::vector<GlWindow*> wins)
 {
    return true; // This is not supported, just stubbed out.
 }
@@ -202,7 +202,7 @@ void GlOSXWindow::config(Display* _display)
 // if fail to allocate: paglContext will be NULL
 // if error: will return error and paglContext will be NULL
 // ----------------------------------------------------------------------------
-OSStatus GlOSXWindow::BuildGLFromWindow (WindowPtr pWindow,
+OSStatus GlWindowOSX::BuildGLFromWindow (WindowPtr pWindow,
                                            AGLContext* paglContext,
                                            structGLWindowInfo* pcontextInfo)
 {
@@ -211,7 +211,7 @@ OSStatus GlOSXWindow::BuildGLFromWindow (WindowPtr pWindow,
    return BuildGLonWindow(pWindow, paglContext, pcontextInfo);
 }
 
-OSStatus GlOSXWindow::BuildGLonWindow (WindowPtr pWindow,
+OSStatus GlWindowOSX::BuildGLonWindow (WindowPtr pWindow,
                                          AGLContext* paglContext,
                                          structGLWindowInfo* pcontextInfo)
 {
@@ -304,7 +304,7 @@ OSStatus GlOSXWindow::BuildGLonWindow (WindowPtr pWindow,
 // Destroys context that waas allocated with BuildGLFromWindow
 // Ouputs: *paglContext should be NULL on exit
 // ----------------------------------------------------------------------------
-OSStatus GlOSXWindow::DestroyGLFromWindow (AGLContext* paglContext,
+OSStatus GlWindowOSX::DestroyGLFromWindow (AGLContext* paglContext,
                                              structGLWindowInfo* pcontextInfo)
 {
 	OSStatus err;
@@ -330,7 +330,7 @@ OSStatus GlOSXWindow::DestroyGLFromWindow (AGLContext* paglContext,
 	return err;
 }
 
-short GlOSXWindow::FindGDHandleFromWindow (WindowPtr pWindow,
+short GlWindowOSX::FindGDHandleFromWindow (WindowPtr pWindow,
                                              GDHandle* phgdOnThisDevice)
 {
    GrafPtr pgpSave;
@@ -402,7 +402,7 @@ short GlOSXWindow::FindGDHandleFromWindow (WindowPtr pWindow,
 //
 // Returns: true if renderer for the requested device complies, false otherwise
 // ----------------------------------------------------------------------------
-Boolean GlOSXWindow::CheckRenderer (GDHandle hGD, long* pVRAM,
+Boolean GlWindowOSX::CheckRenderer (GDHandle hGD, long* pVRAM,
                                       long* pTextureRAM,
                                       GLint* pDepthSizeSupport,
                                       Boolean fAccelMust)
@@ -491,7 +491,7 @@ Boolean GlOSXWindow::CheckRenderer (GDHandle hGD, long* pVRAM,
 // Returns: true if any renderer for on each device complies (not necessarily
 // the same renderer), false otherwise
 //-----------------------------------------------------------------------------
-Boolean GlOSXWindow::CheckAllDeviceRenderers (long* pVRAM, long* pTextureRAM,
+Boolean GlWindowOSX::CheckAllDeviceRenderers (long* pVRAM, long* pTextureRAM,
                                                 GLint* pDepthSizeSupport,
                                                 Boolean fAccelMust)
 {
@@ -577,7 +577,7 @@ Boolean GlOSXWindow::CheckAllDeviceRenderers (long* pVRAM, long* pTextureRAM,
    return false; //at least one device failed to have mins
 }
 
-void GlOSXWindow::ReportError (const char * strError)
+void GlWindowOSX::ReportError (const char * strError)
 {
    char errMsgCStr [256];
    Str255 strErr = "\0";
@@ -598,7 +598,7 @@ void GlOSXWindow::ReportError (const char * strError)
 #endif // kVerboseErrors
 }
 
-GLenum GlOSXWindow::aglReportError () {
+GLenum GlWindowOSX::aglReportError () {
    GLenum err = aglGetError();
    if (AGL_NO_ERROR != err)    
       ReportError ((char *)aglErrorString(err));

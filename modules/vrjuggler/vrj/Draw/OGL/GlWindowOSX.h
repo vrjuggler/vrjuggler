@@ -30,8 +30,8 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _VRJ_GLOSX_WIN_H
-#define _VRJ_GLOSX_WIN_H
+#ifndef _VRJ_GL_WIN_OSX_H_
+#define _VRJ_GL_WIN_OSX_H_
 
 #include <vrj/vjConfig.h>
 
@@ -82,17 +82,17 @@ namespace vrj
 {
    
 //------------------------------------
-//: A GLOSX specific glWindow
+//: A GL specific glWindow for OS X
 //------------------------------------
 // Has all information specific
-// to dealing with a GLOSX window
+// to dealing with a GL window
 // in OpenGL
 //------------------------------------
-class GlOSXWindow: public GlWindow
+class GlWindowOSX: public GlWindow
 {
 public:
-    GlOSXWindow();
-    ~GlOSXWindow();
+    GlWindowOSX();
+    ~GlWindowOSX();
 
     void swapBuffers();
     int open();

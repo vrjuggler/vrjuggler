@@ -30,8 +30,8 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _VRJ_OSX_KEYBOARD_H_
-#define _VRJ_OSX_KEYBOARD_H_
+#ifndef _VRJ_KEYBOARD_OSX_H_
+#define _VRJ_KEYBOARD_OSX_H_
 
 #include <vrj/vjConfig.h>
 
@@ -64,7 +64,7 @@ namespace vrj
 //
 // See also: Keyboard, KeyboardProxy
 //--------------------------------------------------------------
-class OSXKeyboard : public Input, public Keyboard
+class KeyboardOSX : public Input, public Keyboard
 {
 public:
    // Enum to keep track of current lock state for state machine
@@ -72,7 +72,7 @@ public:
    // Lock_LockKey - The mouse is locked due to lock toggle key press
    // Lock_LockKeyDown - The mouse is locked due to a key being held down
    enum lockState { Unlocked, Lock_LockKey, Lock_KeyDown};
-   OSXKeyboard()
+   KeyboardOSX()
    {
       mPrevX = 0; mPrevY = 0;
       mLockState = Unlocked;     // Initialize to unlocked.
@@ -80,7 +80,7 @@ public:
       mWeOwnTheWindow = true;
       OSXSystemFactory::instance();
    }
-   ~OSXKeyboard() { stopSampling();}
+   ~KeyboardOSX() { stopSampling();}
 
    virtual bool config(ConfigChunk* c);
 
