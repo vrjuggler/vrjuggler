@@ -40,7 +40,6 @@
 #include <tweek/tweekConfig.h>
 
 #include <stdlib.h>
-#include <string>
 #include <omnithread.h>
 #include <omniORB3/CORBA.h>
 #include <vpr/Thread/Thread.h>
@@ -88,6 +87,7 @@ private:
 
    CORBA::ORB_var m_orb;
    PortableServer::POA_var m_poa;
+   PortableServer::ObjectId_var m_subj_mgr_id;
    CosNaming::NamingContext_var m_root_context;
 };
 
