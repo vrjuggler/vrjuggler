@@ -43,9 +43,30 @@
 
 #include <vpr/md/POSIX/Sync/MutexPosix.h>
 
+namespace vpr
+{
+
+MutexPosix::MutexPosix()
+{
+   // Initialize the mutex.
+#ifndef _DEBUG
+   pthread_mutex_init(&mMutex, NULL);
+#else
+#ifdef VPR_OS_Linux
+   // If Linux and debug, then use error checking mutex
+   pthread_mutexattr_t mutex_attr;
+   pthread_mutexattr_init(&mutex_attr);
+   pthread_mutexattr_settype(&mutex_attr, PTHREAD_MUTEX_ERRORCHECK_NP);
+   pthread_mutex_init(&mMutex, &mutex_attr);
+   pthread_mutexattr_destroy(&mutex_attr);
+#else
+   pthread_mutex_init(&mMutex, NULL);
+#endif
+#endif
+}
 
 // Tests the current lock status.
-int vpr::MutexPosix::test () const
+int MutexPosix::test() const
 {
    int ret_val;
 
@@ -67,3 +88,5 @@ int vpr::MutexPosix::test () const
 
    return ret_val;
 }
+
+} // End of vpr namespace
