@@ -453,6 +453,17 @@ public class ConfigToolbar
 
       return false;
    }
+   
+   /**
+    * Programmatically execute a save action.
+    */
+   public boolean doSaveAll()
+   {
+      // Send a SaveAll action to all ConfigIFrames.
+      fireAction("SaveAll");
+      return true;
+   }
+
 
    /**
     * Programmatically execute a close action.
@@ -575,8 +586,7 @@ public class ConfigToolbar
       {
          public void actionPerformed(ActionEvent evt)
          {
-            // Send a SaveAll action to all ConfigIFrames.
-            fireAction("SaveAll");
+            doSaveAll();
          }
       });
       copyBtn.addActionListener(new ActionListener()
@@ -624,46 +634,57 @@ public class ConfigToolbar
     */
    public boolean doSaveAs()
    {
-       try
-       {
-          fileChooser.setDialogTitle("Save As...");
-          fileChooser.setDialogType(JFileChooser.SAVE_DIALOG);
+      try
+      {
+         fileChooser.setDialogTitle("Save As...");
+         fileChooser.setDialogType(JFileChooser.SAVE_DIALOG);
           
-          ConfigBroker broker = new ConfigBrokerProxy();
-          ArrayList removed_sources = new ArrayList();
-          ArrayList added_sources = new ArrayList();
-          for (Iterator itr = context.getResources().iterator(); itr.hasNext(); )
-          {
-             String old_name = (String)itr.next();
-             DataSource current_resource = broker.get( old_name );
-             if (! current_resource.isReadOnly())
-             {
-                ///Where is os.path.split when you need it?
-                String[] paths = old_name.split(File.separator);
-                int length = java.lang.reflect.Array.getLength(paths);
-                String title_name = paths[length - 1];
-                fileChooser.setDialogTitle(title_name + " -- Save As...");
-                int result = fileChooser.showSaveDialog(getParentFrame());
-                if (result == JFileChooser.APPROVE_OPTION)
-                {
-                   /// XXX:  This is kind of ghetto; the only way to "rename" a resource is to remove it
-                   ///       and then add it in again with a new name.
-                   String new_name = fileChooser.getSelectedFile().getAbsolutePath();
-                   ///       JFileChooser implements File Filters, but if the user types in a name, the JFile Chooser
-                   ///       does NOT automatically add the selected file extension to the name.  Go figure.
-                   if ( !new_name.matches(".*\\.jconf") )
-                   {
-                      new_name = new_name + ".jconf";
-                   }
-                   if (!old_name.equals(new_name))
-                   {
-                      /// We have to buffer the adds and removes to avoid ConcurrentModificationExceptions.
-                      removed_sources.add(old_name);
-                      added_sources.add(new_name);
+         ConfigBroker broker = new ConfigBrokerProxy();
+         ArrayList removed_sources = new ArrayList();
+         ArrayList added_sources = new ArrayList();
+         for (Iterator itr = context.getResources().iterator(); itr.hasNext(); )
+         {
+            String old_name = (String)itr.next();
+            DataSource current_resource = broker.get( old_name );
+            if (! current_resource.isReadOnly())
+            {
+               ///Where is os.path.split when you need it?
+               String[] paths = old_name.split(File.separator);
+               int length = java.lang.reflect.Array.getLength(paths);
+               String title_name = paths[length - 1];
+               fileChooser.setDialogTitle(title_name + " -- Save As...");
+               int result = fileChooser.showSaveDialog(getParentFrame());
+               if (result == JFileChooser.APPROVE_OPTION)
+               {
+                  /// XXX:  This is kind of ghetto; the only way to "rename" a resource is to remove it
+                  ///       and then add it in again with a new name.
+                  String new_name = fileChooser.getSelectedFile().getAbsolutePath();
+                  ///       JFileChooser implements File Filters, but if the user types in a name, the JFile Chooser
+                  ///       does NOT automatically add the selected file extension to the name.  Go figure.
+                  if ( !new_name.matches(".*\\.jconf") )
+                  {
+                     new_name = new_name + ".jconf";
+                  }
+                  if (!old_name.equals(new_name))
+                  {
+                     java.io.File file = new File(new_name);
+                     if (file.exists())
+                     {
+                        int result_existing = JOptionPane.showConfirmDialog(null, 
+                           "File already exists, do you want to overwrite it?", "File exists!", 
+                           JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+                        
+                        if(JOptionPane.YES_OPTION == result_existing)
+                        {
+                           file.delete();
+                           /// We have to buffer the adds and removes to avoid ConcurrentModificationExceptions.
+                           removed_sources.add(old_name);
+                           added_sources.add(new_name);
+                        }
+                     }
                    }
                 }
              }
-           
           }
           for (Iterator itr = removed_sources.iterator(); itr.hasNext(); )
           {
