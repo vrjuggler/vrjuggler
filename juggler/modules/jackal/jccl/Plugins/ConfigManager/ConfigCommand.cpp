@@ -77,7 +77,7 @@ namespace jccl {
             out << "<apply_chunks all=\"true\">\n";
         else
             out << "<apply_chunks>\n";
-        ConfigIO::instance()->writeConfigChunkDB (out, *db, "xml_config");
+        ConfigIO::instance()->writeConfigChunkDB (out, *db, ConfigIO::XML_HANDLER);
         out << "</apply_chunks>\n";
     }
 
@@ -104,7 +104,7 @@ namespace jccl {
             out << "<apply_descs all=\"true\">\n";
         else
             out << "<apply_descs>\n";
-        ConfigIO::instance()->writeChunkDescDB (out, *db, "xml_config");
+        ConfigIO::instance()->writeChunkDescDB (out, *db, ConfigIO::XML_HANDLER);
         out << "</apply_descs>\n";
     }
 

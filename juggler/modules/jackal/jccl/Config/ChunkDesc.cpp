@@ -177,7 +177,7 @@ void ChunkDesc::setDefaultChunk (DOM_Node* n) {
 ConfigChunkPtr ChunkDesc::getDefaultChunk() const {
     // thread safety???
     if ((default_chunk.get() == 0) && (default_node != 0)) {
-        XMLConfigIOHandler* handler = (XMLConfigIOHandler*)ConfigIO::instance()->getHandler("xml_config");
+        XMLConfigIOHandler* handler = (XMLConfigIOHandler*)ConfigIO::instance()->getHandler(ConfigIO::XML_HANDLER);
         ConfigChunkPtr ch = handler->buildConfigChunk (*default_node, false);
         if (ch.get()) {
             // this is a cheat.  and ugly cuz we have to get the real pointer,
