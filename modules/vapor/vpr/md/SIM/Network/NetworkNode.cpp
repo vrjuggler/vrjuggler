@@ -90,17 +90,20 @@ NetworkNode::NetworkNode (const vpr::Uint32 index, const vpr::Uint8 type,
 
 bool NetworkNode::hasSocket (const vpr::Uint32 port,
                              const vpr::SocketTypes::Type type)
-   const
 {
    bool result = false;
 
    switch (type)
    {
       case vpr::SocketTypes::DATAGRAM:
+         //mDgramMapMutex.acquire();
          result = (mDgramSocketMap.find(port) != mDgramSocketMap.end());
+         //mDgramMapMutex.release();
          break;
       case vpr::SocketTypes::STREAM:
+         //mStreamMapMutex.acquire();
          result = (mStreamSocketMap.find(port) != mStreamSocketMap.end());;
+         //mStreamMapMutex.release();
          break;
    }
 
@@ -115,10 +118,16 @@ vpr::SocketImplSIM* NetworkNode::getSocket(const vpr::Uint32 port,
    switch (type)
    {
       case vpr::SocketTypes::DATAGRAM:
-         return mDgramSocketMap[port];
+         {
+            //vpr::Guard<vpr::Mutex> guard(mDgramMapMutex);
+            return mDgramSocketMap[port];
+         }         
          break;
       case vpr::SocketTypes::STREAM:
-         return mStreamSocketMap[port];
+         {
+            //vpr::Guard<vpr::Mutex> guard(mStreamMapMutex);
+            return mStreamSocketMap[port];
+         }
          break;
    }
 
@@ -141,12 +150,18 @@ void NetworkNode::addSocket (vpr::SocketImplSIM* sock)
    switch (sock->getType())
    {
       case vpr::SocketTypes::DATAGRAM:
-         vprASSERT( dynamic_cast<vpr::SocketDatagramImplSIM*>(sock) != NULL);
-         mDgramSocketMap[port] = sock;
+         {
+            //vpr::Guard<vpr::Mutex> guard(mDgramMapMutex);
+            vprASSERT( dynamic_cast<vpr::SocketDatagramImplSIM*>(sock) != NULL);
+            mDgramSocketMap[port] = sock;
+         }
          break;
       case vpr::SocketTypes::STREAM:
-         vprASSERT( dynamic_cast<vpr::SocketStreamImplSIM*>(sock) != NULL);
-         mStreamSocketMap[port] = sock;
+         {
+            //vpr::Guard<vpr::Mutex> guard(mStreamMapMutex);
+            vprASSERT( dynamic_cast<vpr::SocketStreamImplSIM*>(sock) != NULL);
+            mStreamSocketMap[port] = sock;
+         }
          break;
    }
 }
@@ -170,27 +185,34 @@ vpr::ReturnStatus NetworkNode::removeSocket (const vpr::SocketImplSIM* sock)
    switch (sock->getType())
    {
       case vpr::SocketTypes::DATAGRAM:
-         i = mDgramSocketMap.find(port);
-
-         if ( i != mDgramSocketMap.end() )
          {
-            mDgramSocketMap.erase(i);
-            status.setCode(vpr::ReturnStatus::Succeed);
-            vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL) << "NetworkNode::removeSocket() [" << mIpStr
-                                                  << "]: Removed datagram socket\n" << vprDEBUG_FLUSH;
-            vprASSERT(!hasSocket(port, sock->getType()) && "Erasing did nothing");
+            //vpr::Guard<vpr::Mutex> guard(mDgramMapMutex);
+            i = mDgramSocketMap.find(port);
+
+            if ( i != mDgramSocketMap.end() )
+            {
+               mDgramSocketMap.erase(i);
+               status.setCode(vpr::ReturnStatus::Succeed);
+               vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL) << "NetworkNode::removeSocket() [" << mIpStr
+                                                     << "]: Removed datagram socket\n" << vprDEBUG_FLUSH;
+               vprASSERT(!hasSocket(port, sock->getType()) && "Erasing did nothing");
+            }
          }
          break;
       case vpr::SocketTypes::STREAM:
-         i = mStreamSocketMap.find(port);
-
-         if ( i != mStreamSocketMap.end() )
          {
-            mStreamSocketMap.erase(i);
-            status.setCode(vpr::ReturnStatus::Succeed);
-            vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL) << "NetworkNode::removeSocket() [" << mIpStr
-                                                  << "]: Removed stream socket\n" << vprDEBUG_FLUSH;
-            vprASSERT(!hasSocket(port, sock->getType()) && "Erasing did nothing");
+            //vpr::Guard<vpr::Mutex> guard(mStreamMapMutex);
+         
+            i = mStreamSocketMap.find(port);
+   
+            if ( i != mStreamSocketMap.end() )
+            {
+               mStreamSocketMap.erase(i);
+               status.setCode(vpr::ReturnStatus::Succeed);
+               vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL) << "NetworkNode::removeSocket() [" << mIpStr
+                                                     << "]: Removed stream socket\n" << vprDEBUG_FLUSH;
+               vprASSERT(!hasSocket(port, sock->getType()) && "Erasing did nothing");
+            }
          }
          break;
    }
@@ -201,6 +223,8 @@ vpr::ReturnStatus NetworkNode::removeSocket (const vpr::SocketImplSIM* sock)
 /** Get an unused TCP port number */
 vpr::Uint32 NetworkNode::getUnassignedTcpPortNumber()
 {
+//vpr::Guard<vpr::Mutex> guard(mStreamMapMutex);
+
    vpr::Uint32 ret_val(1);
    bool        found_one(false);
    for(socket_map_t::iterator i = mStreamSocketMap.begin();
@@ -227,9 +251,11 @@ vpr::Uint32 NetworkNode::getUnassignedTcpPortNumber()
    return ret_val;
 }
 
-/** Get an unused TCP port number */
+/** Get an unused UDP port number */
 vpr::Uint32 NetworkNode::getUnassignedUdpPortNumber()
 {
+//vpr::Guard<vpr::Mutex> guard(mDgramMapMutex);
+
    vpr::Uint32 ret_val(1);
    bool        found_one(false);
    for(socket_map_t::iterator i = mDgramSocketMap.begin();
