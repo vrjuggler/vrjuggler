@@ -82,9 +82,9 @@ Builder: JExplorerBuilder V 1. 0. 7
 					<!-- TODO: under construction, add more content! -->
 				</folder>
 			</folder>
-					 < item title="Converting CAVElib to Juggler" 
+					 < item title="Porting from CAVElib" 
 						link="app.construction/cave-to-juggler.html" 
-						info="Converting CAVElib to Juggler" 
+						info="Converting a CAVElib application to a VR Juggler application" 
 						image="Leaf.gif" >
 
 </rootfolder>
