@@ -61,7 +61,7 @@
           The high-level glue between C++ and Python code. PyJuggler requires
           Boost.Python v2 or newer. The version of Boost.Python used should
           come from the Boost same version against which VR Juggler was
-          compiled. As of this writing, that is Boost 1.30.0.</para>
+          compiled. As of this writing, that is Boost 1.31.0.</para>
         </listitem>
 
         <listitem>
@@ -112,7 +112,7 @@
       it, and modify it (keeping in mind the requirements of the license, of
       course). For the most part, the PyJuggler source code is pretty dull;
       the interesting aspect is what developers can do to write VR Juggler
-      application objects in Python. As such, the source is provided primiarly
+      application objects in Python. As such, the source is provided primarily
       so that people can compile it for their local hardware and operating
       system. Some pre-compiled binary versions will exist, but the
       requirements of those binaries may not satisfy every single user&#39;s
@@ -206,11 +206,18 @@
       execute this application, the following will work in a UNIX-based
       environment:</para>
 
-      <screen>% ./simpleGL.py $VJ_BASE_DIR/share/vrjuggler/data/configFiles/standalone.config</screen>
+      <screen>% ./simpleGL.py standalone.jconf</screen>
 
       <para>For a DOS/Win32 environment, the command is similar:</para>
 
-      <screen>&#62; python simpleGL.py %VJ_BASE_DIR%/share/vrjuggler/data/configFiles/standalone.config</screen>
+      <screen>&#62; python simpleGL.py standalone.jconf</screen>
+
+      <note>
+        <para>For VR Juggler 2.0 Alpha 4 and beyond, the full path to the
+        configuration files does not have to be specified, so it is omitted in
+        the above examples. The file <filename>standalone.jconf</filename> can
+        be found in the directory <filename>$VJ_BASE_DIR/share/vrjuggler/data/configFiles</filename>.</para>
+      </note>
 
       <para>This opens a single graphics window showing the default VR Juggler
       simulator environment and a gray box. Clicking button 1 on the mouse
