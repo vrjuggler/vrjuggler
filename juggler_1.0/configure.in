@@ -1002,7 +1002,7 @@ case $SUBSYSTEM in
         subsystem_libs="$SEM_LIB $SOCKET_LIB"
         static_begin="-B static"
         static_end="-B dynamic"
-        vrj_ldflags="$EXTRA_LDFLAGS -L\$prefix/lib$LIBBITSUF"
+        vrj_ldflags="-L\$prefix/lib$LIBBITSUF"
         vrj_libs='-lJuggler -lJuggler_utils -lJuggler_ogl'
         ;;
     POSIX)
@@ -1018,7 +1018,7 @@ case $SUBSYSTEM in
             static_end="-B dynamic"
         fi
 
-        vrj_ldflags="$EXTRA_LDFLAGS -L\$prefix/lib$LIBBITSUF"
+        vrj_ldflags="-L\$prefix/lib$LIBBITSUF"
         vrj_libs='-lJuggler -lJuggler_utils -lJuggler_ogl'
         ;;
     NSPR)
@@ -1034,7 +1034,7 @@ case $SUBSYSTEM in
             static_end="-B dynamic"
         fi
 
-        vrj_ldflags="$EXTRA_LDFLAGS -L\$prefix/lib$LIBBITSUF"
+        vrj_ldflags="-L\$prefix/lib$LIBBITSUF"
         vrj_libs='-lJuggler -lJuggler_utils -lJuggler_ogl'
         ;;
     WIN32)
