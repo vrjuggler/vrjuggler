@@ -251,6 +251,7 @@ public class LabeledSummaryGraphPanel
 	    index_info = _ii;
 	    color = _color;
 	    checkbox = new JCheckBox (index_info.index, _active);
+	    checkbox.setBackground (color);
 	}
 	public JCheckBox getCheckBox () {
 	    return checkbox;
