@@ -31,6 +31,9 @@
 # sysconfdir    - System configuration directory (usually $(prefix)/etc).
 # topdir        - The top of the build tree.
 #
+# AR              - Path to ar(1) (or equivalent program).
+# ARFLAGS         - Flags for $(AR).
+# AR_NAME_FLAG  - flag to name your archive file...
 # CC            - Path to C compiler.
 # CXX           - Path to C++ compiler.
 # CPP           - Command for invoking the C preprocessor.
@@ -47,12 +50,20 @@
 #                 necessary in $(CFLAGS) or $(CXXFLAGS).
 # INCLUDES      - Additions to the include path (-I/path/to/include).
 # LIBS          - Extra external libraries needed at link time.
+# LD
+# LDFLAGS
+# LDOPTS
+# LDOPTS_DBG
+# LDOPTS_OPT
 # LN_S          - Working 'ln -s' command.
 # MKPATH        - Path to shared dpp.*.mk file directory.
 # OBJEXT        - Suffix for object file names (e.g., "o" or "obj").
 # OBJ_NAME_FLAG - Flag passed to the compiler to name an object file.
 # OBJDIR        - Path to the directory where the object files will be built.
 # OS_TYPE       - Type of the target operating system (UNIX or Win32).
+# PERL            - Path to Perl 5 binary.
+# RANLIB          - Path to ranlib(1) binary if it is available. ':'
+#                   otherwise.
 #
 # C_COMPILE     - Command for compiling C code.
 # CXX_COMPILE   - Command for compiling C++ code.
@@ -89,6 +100,9 @@ sbindir		= @sbindir@
 sysconfdir	= @sysconfdir@
 topdir		= @topdir@
 
+AR              = @AR@ $(DPP_EXTRA_ARFLAGS) $(EXTRA_ARFLAGS) $(ARFLAGS)
+ARFLAGS         = @ARFLAGS@
+AR_NAME_FLAG    = @AR_NAME_FLAG@
 CC		= @CC@
 CXX		= @CXX@
 CPP		= @CPP@
@@ -102,12 +116,20 @@ DEPEND_FLAGS	= @DEPEND_FLAGS@ @INCLUDES@ -I$(topdir) $(EXTRA_DEPEND_FLAGS)
 DEPEND_EXTRAS	= @DEPEND_EXTRAS@ $(DEFS)
 INCLUDES	= @INCLUDES@ -I$(topdir) $(EXTRA_INCLUDES)
 INSTALL		= @INSTALL@
-LIBS		= @LIBS@
+LIBS		= @LIBS@  # doozer also uses LIBS for the .a and .so target names...
 LN_S		= @LN_S@
+LD              = @LD@ $(DPP_EXTRA_LDFLAGS) $(EXTRA_LDFLAGS)
+LDFLAGS         = @LDFLAGS@ -L/usr/lib$(LIBBITSUF) -L/usr/lib
+LDOPTS          = @LDOPTS@ $(DPP_EXTRA_LDOPTS) $(EXTRA_LDOPTS)          \
+                  $(DSOVERSIONOPTS)
+LDOPTS_DBG      = @LDOPTS_DBG@ $(EXTRA_LDOPTS_DBG)
+LDOPTS_OPT      = @LDOPTS_OPT@ $(EXTRA_LDOPTS_OPT)
 MKPATH		?= @srcdir_absolute@/Doozer++/mk
 OBJEXT		= @OBJEXT@
 OBJ_NAME_FLAG	= @OBJ_NAME_FLAG@
 OS_TYPE		= @OS_TYPE@
+PERL            = @PERL@
+RANLIB          = @RANLIB@
 MKINSTALLDIRS = @srcdir_absolute@/mkinstalldirs
 
 # SGI-specific dynamic-shared-object information.
@@ -118,7 +140,7 @@ DSOVERSIONOPTS	= @DSOVERSIONOPTS@
 # binary format crap.
 ABI = @ABI@
 ABI_LIST = @ABI_LIST@   
-ISA = @ISA@ 
+ISA = @ISA@
 LIBBITSUF = @LIBBITSUF@
 
 # extensions
@@ -140,11 +162,77 @@ endif
 C_COMPILE	= $(CC) $(DEFS) $(INCLUDES) $(CPPFLAGS) $(CFLAGS)
 CXX_COMPILE	= $(CXX) $(DEFS) $(INCLUDES) $(CPPFLAGS) $(CXXFLAGS)
 
+# -----------------------------------------------------------------------------
+# Platform- and binary-specific options.  The assignments preceding the
+# ifeq ... endif blocks are the default values.  Depending on the value of
+# $(ABI), further settings may be made to allow for building with multiple
+# ABIs.
+# -----------------------------------------------------------------------------
+ifdef dppABI
+    ifeq ($(dppABI), N32_M3)
+        ABI     = N32
+        ISA     = mips3
+    endif
+    ifeq ($(dppABI), N32_M4)
+        ABI     = N32
+        ISA     = mips4
+    endif
+    ifeq ($(dppABI), 64_M3)
+        ABI     = 64
+        ISA     = mips3
+    endif
+    ifeq ($(dppABI), 64_M4)
+        ABI     = 64
+        ISA     = mips4
+    endif
+    ifeq ($(dppABI), ELF_i386)
+        ABI     = ELF
+        ISA     = i386
+    endif
+else
+    ABI         ?= @ABI@
+    ISA         ?= @ISA@
+    LIBBITSUF   ?= @LIBBITSUF@
+endif
+
+ABI_LIST        = @ABI_LIST@
+PLATFORM        = @PLATFORM@
+
+ifeq ($(ABI), N32)
+    ARFLAGS     := -n32 $(ARFLAGS)
+    CFLAGS      += -n32
+    CXXFLAGS    += -n32
+    LDOPTS      += -n32
+    LIBBITSUF   = 32
+endif
+ifeq ($(ABI), 64)
+    ARFLAGS     := -64 $(ARFLAGS)
+    CFLAGS      += -64
+    CXXFLAGS    += -64
+    LDOPTS      += -64
+    LIBBITSUF   = 64
+endif
+ifeq ($(ABI), ELF)
+    LIBBITSUF   =
+endif
+
+ifeq ($(ISA), mips3)
+    ARFLAGS     := -mips3 $(ARFLAGS)
+    CFLAGS      += -mips3
+    CXXFLAGS    += -mips3
+    LDOPTS      += -mips3
+endif
+ifeq ($(ISA), mips4)
+    ARFLAGS     := -mips4 $(ARFLAGS)
+    CFLAGS      += -mips4
+    CXXFLAGS    += -mips4
+    LDOPTS      += -mips4
+endif
+
 @SET_MAKE@
 
 
-###########################
-# project dependant stuff..
-###########################
-LIBOPENAL = @AL_LDFLAGS@ @LIBOPENAL@
-AL_INCLUDES = @AL_INCLUDES@
+# -----------------------------------------------------------------------------
+# Library names.
+# -----------------------------------------------------------------------------
+AJ_LIBRARY     = @LIB_PREFIX@AudioJuggler
