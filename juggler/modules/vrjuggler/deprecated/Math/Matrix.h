@@ -76,7 +76,7 @@ public:
    //Get Euler angles from a matrix
    inline void getXYZEuler(float& xRot, float& yRot, float& zRot) const
    {
-      gmtl::getRot( *this, xRot, yRot, zRot, gmtl::XYZ );
+      gmtl::setRot( xRot, yRot, zRot, gmtl::XYZ, *this  );
       xRot = gmtl::Math::rad2Deg(xRot);
       yRot = gmtl::Math::rad2Deg(yRot);
       zRot = gmtl::Math::rad2Deg(zRot);
@@ -84,7 +84,7 @@ public:
 
    inline void getZYXEuler(float& zRot, float& yRot, float& xRot) const
    {
-      gmtl::getRot( *this, zRot, yRot, xRot, gmtl::ZYX );
+      gmtl::setRot( zRot, yRot, xRot, gmtl::ZYX, *this );
       xRot = gmtl::Math::rad2Deg(xRot);
       yRot = gmtl::Math::rad2Deg(yRot);
       zRot = gmtl::Math::rad2Deg(zRot);
@@ -92,7 +92,7 @@ public:
 
    inline void getZXYEuler( float& zRot, float& xRot, float& yRot ) const
    {
-      gmtl::getRot( *this, zRot, xRot, yRot, gmtl::ZXY );
+      gmtl::setRot( zRot, xRot, yRot, gmtl::ZXY, *this );
       xRot = gmtl::Math::rad2Deg(xRot);
       yRot = gmtl::Math::rad2Deg(yRot);
       zRot = gmtl::Math::rad2Deg(zRot);
@@ -101,7 +101,7 @@ public:
    inline gmtl::Vec3f getXYZEuler() const //New
    {
       float xRot, yRot, zRot;
-      gmtl::getRot( *this, xRot, yRot, zRot, gmtl::XYZ );
+      gmtl::setRot( xRot, yRot, zRot, gmtl::XYZ, *this );
 
       return gmtl::Vec3f( gmtl::Math::rad2Deg(xRot), 
                    gmtl::Math::rad2Deg(yRot),
@@ -167,13 +167,13 @@ public:
    //Get the translation portion of the matrix
    inline void getTrans(float& x, float& y, float& z) const
    {
-      gmtl::getTrans( *this, x, y, z );
+      gmtl::setTrans( x, y, z, *this );
    }
 
    inline gmtl::Vec3f getTrans() const
    {
       gmtl::Vec3f trans;
-      gmtl::getTrans( *this, trans[0], trans[1], trans[2] );
+      gmtl::setTrans( trans[0], trans[1], trans[2], *this );
       return trans;
    }
 
@@ -371,7 +371,7 @@ public:
    inline void makeQuaternion( const gmtl::Quatf& q )
    {
       float rad, x, y, z;
-      gmtl::getRot( q, rad, x, y, z );
+      gmtl::setRot( rad, x, y, z, q );
       *this = gmtl::makeRot<gmtl::Matrix44f>( rad, x, y, z );
    }
         

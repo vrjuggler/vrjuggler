@@ -59,8 +59,8 @@ void TrackedInfo::updateWithMatrix( const gmtl::Matrix44f& matrix )
     _vec = wandForward - wandPos;
 
     // get the x,y,z rotations of the tracker.
-    gmtl::getRot( matrix, _rot.mData[0], _rot.mData[1], _rot.mData[2],
-                  gmtl::XYZ );
+    gmtl::setRot( _rot.mData[0], _rot.mData[1], _rot.mData[2],
+                  gmtl::XYZ, matrix );
 
     // calculate the new rotational delta
     _rotDelta = _rot - _rotOld;

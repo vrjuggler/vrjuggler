@@ -16,7 +16,7 @@ namespace kev
       void output( kev::KeyFramer::Key& key )
       {
          float w, x, y, z;
-         gmtl::getRot( key.rotation(), w, x, y, z );
+         gmtl::setRot( w, x, y, z, key.rotation() );
          vprDEBUG(vprDBG_ALL,1)
             << "KEY " << key.time() << ": " << key.position()[0] <<", \t"
             << key.position()[1] << ", \t" << key.position()[2] << ", |#| "

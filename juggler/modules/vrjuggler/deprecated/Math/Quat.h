@@ -37,7 +37,7 @@ public:
    inline void makeRot( const gmtl::Matrix44f& m )
    {
       float xRot, yRot, zRot;
-      gmtl::getRot( m, xRot, yRot, zRot, gmtl::XYZ );
+      gmtl::setRot( xRot, yRot, zRot, gmtl::XYZ, m );
       *this = gmtl::makeRot<gmtl::Quatf>( xRot, yRot, zRot, gmtl::XYZ );
    }
 
@@ -61,12 +61,12 @@ public:
    //get the quat's twist (radians) and vector
    inline void getRot( float& rad, float& x, float& y, float& z ) const
    {
-      gmtl::getRot( *this, rad, x, y, z );
+      gmtl::setRot( rad, x, y, z, *this );
    }
 
    inline void getRot( float& rad, gmtl::Vec3f& axis ) const //new
    {
-      gmtl::getRot( *this, rad, axis[0], axis[1], axis[2] );
+      gmtl::setRot( rad, axis[0], axis[1], axis[2], *this );
    }
 
    //set to conj of quat

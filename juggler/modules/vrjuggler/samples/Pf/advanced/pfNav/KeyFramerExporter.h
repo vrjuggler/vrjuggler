@@ -39,7 +39,7 @@ namespace kev
             const Quat& quat = key.rotation();
             float deg;
             vrj::Vec3 vec;
-            quat.getRot( deg, vec[0], vec[1], vec[2] );
+            quat.setRot( deg, vec[0], vec[1], vec[2] );
             deg = vrj::Math::rad2deg( deg );
             frames_file<<time<<" "<<pos[0]<<" "<<pos[1]<<" "
                        <<pos[2]<<" "<<deg<<" "<<vec[0]<<" "
