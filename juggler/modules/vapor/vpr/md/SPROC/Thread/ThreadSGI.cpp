@@ -56,32 +56,14 @@ namespace vpr {
  * Spawning constructor.  This will actually start a new thread that will
  * execute the specified function.
  */
-ThreadSGI::ThreadSGI (thread_func_t func, void* arg,
-                      BaseThread::VPRThreadPriority priority,
-                      BaseThread::VPRThreadScope scope,
-                      BaseThread::VPRThreadState state, size_t stack_size)
+ThreadSGI::ThreadSGI(thread_func_t func, void* arg,
+                     BaseThread::VPRThreadPriority priority,
+                     BaseThread::VPRThreadScope scope,
+                     BaseThread::VPRThreadState state, size_t stackSize)
+   : mUserThreadFunctor(NULL)
 {
-   mUserThreadFunctor = NULL;
-
    // Create the thread functor to start
    mUserThreadFunctor = new ThreadNonMemberFunctor(func, arg);
-   ThreadMemberFunctor<ThreadSGI>* start_functor
-               = new ThreadMemberFunctor<ThreadSGI>(this,
-                                                    &ThreadSGI::startThread,
-                                                    NULL);
-
-   // START THREAD
-   // NOTE: Automagically registers UNLESS failure
-   int ret_val = spawn(start_functor, priority, scope, state, stack_size);
-
-   if(!ret_val)
-   {
-      ThreadManager::instance()->lock();
-      {
-         registerThread(false);     // Failed to create
-      }
-      ThreadManager::instance()->unlock();
-   }
 }
 
 
@@ -89,25 +71,27 @@ ThreadSGI::ThreadSGI (thread_func_t func, void* arg,
  * Spawning constructor with arguments (functor version).  This will start a
  * new thread that will execute the specified function.
  */
-ThreadSGI::ThreadSGI (BaseThreadFunctor* functorPtr,
-                      BaseThread::VPRThreadPriority priority,
-                      BaseThread::VPRThreadScope scope,
-                      BaseThread::VPRThreadState state, size_t stack_size)
+ThreadSGI::ThreadSGI(BaseThreadFunctor* functorPtr,
+                     BaseThread::VPRThreadPriority priority,
+                     BaseThread::VPRThreadScope scope,
+                     BaseThread::VPRThreadState state, size_t stackSize)
+   : mUserThreadFunctor(functorPtr)
 {
-    mUserThreadFunctor = NULL;
+}
 
-   // Create the thread functor to start
-   mUserThreadFunctor = functorPtr;
+vpr::ReturnStatus ThreadSGI::start()
+{
+   // XXX: Memory leak.
    ThreadMemberFunctor<ThreadSGI>* start_functor
                = new ThreadMemberFunctor<ThreadSGI>(this,
                                                     &ThreadSGI::startThread,
                                                     NULL);
 
    // START THREAD
-   // NOTE: Automagically registers UNLESS failuer
-   int ret_val = spawn(start_functor, priority, scope, state, stack_size);
+   // NOTE: Automagically registers UNLESS failure
+   vpr::ReturnStatus status = spawn(start_functor);
 
-   if(!ret_val)
+   if ( ! status.success() )
    {
       ThreadManager::instance()->lock();
       {
@@ -115,6 +99,22 @@ ThreadSGI::ThreadSGI (BaseThreadFunctor* functorPtr,
       }
       ThreadManager::instance()->unlock();
    }
+
+   return status;
+}
+
+vpr::ReturnStatus ThreadSGI::spawn(BaseThreadFunctor* functorPtr)
+{
+   vpr::ReturnStatus status;
+   mThreadPID = sproc(thread_func_t(&vprThreadFunctorFunction),
+                      PR_SADDR | PR_SFDS, functorPtr);
+
+   if ( mThreadPID == -1 )
+   {
+      status.setCode(vpr::ReturnStatus::Fail);
+   }
+
+   return status;
 }
 
 /**

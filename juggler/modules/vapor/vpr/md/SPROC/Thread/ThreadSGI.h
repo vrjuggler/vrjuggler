@@ -80,7 +80,7 @@ public:
              BaseThread::VPRThreadPriority priority = VPR_PRIORITY_NORMAL,
              BaseThread::VPRThreadScope scope = VPR_LOCAL_THREAD,
              BaseThread::VPRThreadState state = VPR_JOINABLE_THREAD,
-             size_t stack_size = 0);
+             size_t stackSize = 0);
 
    /**
     * Spawning constructor with arguments (functor version).
@@ -91,11 +91,14 @@ public:
              BaseThread::VPRThreadPriority priority = VPR_PRIORITY_NORMAL,
              BaseThread::VPRThreadScope scope = VPR_LOCAL_THREAD,
              BaseThread::VPRThreadState state = VPR_JOINABLE_THREAD,
-             size_t stack_size = 0);
+             size_t stackSize = 0);
 
    virtual ~ThreadSGI()
    {;}
 
+   virtual vpr::ReturnStatus start();
+
+private:
    /**
     * Spawns a new thread that will execute functorPtr.
     *
@@ -112,16 +115,7 @@ public:
     * @return A non-zero value is returned upon successful thread creation.
     *         -1 is returned if an error occurred.
     */
-   virtual int spawn(BaseThreadFunctor* functorPtr,
-                     BaseThread::VPRThreadPriority priority = VPR_PRIORITY_NORMAL,
-                     BaseThread::VPRThreadScope scope = VPR_LOCAL_THREAD,
-                     BaseThread::VPRThreadState state = VPR_JOINABLE_THREAD,
-                     size_t stack_size = 0)
-   {
-      mThreadPID = sproc(thread_func_t(&vprThreadFunctorFunction),
-                         PR_SADDR | PR_SFDS, functorPtr);
-      return mThreadPID;
-   }
+   vpr::ReturnStatus spawn(BaseThreadFunctor* functorPtr);
 
    /**
     * Called by the spawn routine to start the user thread function.
@@ -136,6 +130,7 @@ private:
     * The functor to call from startThread
     */
    BaseThreadFunctor* mUserThreadFunctor;
+   VPRThreadPriority  mPriority;
 
 public:
 

@@ -101,10 +101,10 @@ public:
     * @post This thread is removed from the thread table and from the local
     *        thread hash.
     */
-   virtual ~ThreadNSPR(void);
+   virtual ~ThreadNSPR();
 
    /**
-    * Creates a new thread that will execute functorPtr.
+    * Creates a new thread that will execute this thread's functor.
     *
     * @pre None.
     * @post A thread (with any specified attributes) is created that begins
@@ -112,18 +112,10 @@ public:
     *        execution immediately, or it may block for a short time before
     *        beginning execution.
     *
-    * @param functor_ptr  Function to be executed by the thread.
-    * @param priority  Priority of created thread (optional).
-    * @param stack_size  Size for thread's stack (optional).
-    *
-    * @return 0 - Succeedful thread creation
-    * @return Nonzero - Error
+    * @return A vpr::ReturnStatus obj is returned to indicate the result of
+    *         the thread creation.
     */
-   int spawn(BaseThreadFunctor* functor_ptr,
-             VPRThreadPriority priority = VPR_PRIORITY_NORMAL,
-             VPRThreadScope scope = VPR_GLOBAL_THREAD,
-             VPRThreadState state = VPR_JOINABLE_THREAD,
-             size_t stack_size = 0);
+   virtual vpr::ReturnStatus start();
 
    /**
     * Makes the calling thread wait for the termination of this thread.
@@ -298,6 +290,8 @@ public:
       return out;
    }
 
+// All private member variables and functions.
+private:
    /**
     * Called by the spawn routine to start the user thread function
     *
@@ -306,11 +300,13 @@ public:
     */
    void startThread(void* null_param);
 
-// All private member variables and functions.
-private:
    PRThread*          mThread;    /**<  PRThread data structure for this thread */
    BaseThreadFunctor* mUserThreadFunctor;     /**< The functor to call when
                                                    the thread starts */
+   VPRThreadPriority  mPriority;
+   VPRThreadScope     mScope;
+   VPRThreadState     mState;
+   PRUint32           mStackSize;
 
    /**
     * Checks the status of the thread creation in order to determine if this

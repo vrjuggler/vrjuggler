@@ -63,6 +63,7 @@ int main(void)
    vpr::TSObjectProxy<int>    tsCounter;     // Allocate a thread specific counter
 
    vpr::Thread* new_thread = new vpr::Thread(doFunc, (void*)(&tsCounter));
+   new_thread->start();
 
    create_mutex.acquire();
       threads_created++;
@@ -94,6 +95,7 @@ void doFunc(void* TSCounterPtr)
          }
          else if ( num_threads_to_create > 0 ) {
             vpr::Thread* new_thread = new vpr::Thread(doFunc, TSCounterPtr);
+            new_thread->start();
             threads_created++;
          }
       create_mutex.release();

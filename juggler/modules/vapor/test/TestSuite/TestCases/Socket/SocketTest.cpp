@@ -124,6 +124,7 @@ void SocketTest::testOpenCloseOpen ()
    // spawn an acceptor thread
    vpr::ThreadMemberFunctor<SocketTest>* acceptor_functor = new vpr::ThreadMemberFunctor<SocketTest>( this, &SocketTest::testOpenCloseOpen_acceptor );
    vpr::Thread acceptor_thread( acceptor_functor );
+   acceptor_thread.start();
 
    // let the acceptor get a chance to start before connecting (sleep a while)
    vpr::System::msleep( 500 );
@@ -131,6 +132,7 @@ void SocketTest::testOpenCloseOpen ()
    // spawn a connector thread
    vpr::ThreadMemberFunctor<SocketTest>* connector_functor = new vpr::ThreadMemberFunctor<SocketTest>( this, &SocketTest::testOpenCloseOpen_connector );
    vpr::Thread connector_thread( connector_functor );
+   connector_thread.start();
 
    // wait for both threads to terminate, then continue
    //vpr::System::sleep( 7 );
@@ -265,6 +267,7 @@ void SocketTest::testSendRecv()
    vpr::ThreadMemberFunctor<SocketTest>* acceptor_functor =
          new vpr::ThreadMemberFunctor<SocketTest>( this, &SocketTest::testSendRecv_acceptor );
    vpr::Thread acceptor_thread( acceptor_functor );
+   acceptor_thread.start();
 
    // let the acceptor get a chance to start before connecting (sleep a while)
    vpr::System::msleep( 500 );
@@ -273,6 +276,7 @@ void SocketTest::testSendRecv()
    vpr::ThreadMemberFunctor<SocketTest>* connector_functor =
       new vpr::ThreadMemberFunctor<SocketTest>( this, &SocketTest::testSendRecv_connector );
    vpr::Thread connector_thread( connector_functor );
+   connector_thread.start();
 
    // wait for both threads to terminate, then continue
    //vpr::System::sleep( 7 );
@@ -526,6 +530,7 @@ void SocketTest::reuseAddrTest()
    vpr::ThreadMemberFunctor<SocketTest>* acceptor_functor =
          new vpr::ThreadMemberFunctor<SocketTest>( this, &SocketTest::reuseAddrTest_acceptor );
    vpr::Thread acceptor_thread( acceptor_functor );
+   acceptor_thread.start();
 
    // let the acceptor get a chance to start before connecting (sleep a while)
    vpr::System::msleep( 500 );
@@ -534,6 +539,7 @@ void SocketTest::reuseAddrTest()
    vpr::ThreadMemberFunctor<SocketTest>* connector_functor =
       new vpr::ThreadMemberFunctor<SocketTest>( this, &SocketTest::reuseAddrTest_connector );
    vpr::Thread connector_thread( connector_functor );
+   connector_thread.start();
 
    // wait for both threads to terminate, then continue
    //vpr::System::sleep( 1 );
@@ -722,6 +728,7 @@ void SocketTest::testBlocking()
    vpr::ThreadMemberFunctor<SocketTest>* acceptor_functor =
       new vpr::ThreadMemberFunctor<SocketTest>( this, &SocketTest::testBlocking_acceptor );
    vpr::Thread acceptor_thread( acceptor_functor );
+   acceptor_thread.start();
 
    // let the acceptor get a chance to start before connecting (sleep a while)
    vpr::System::msleep( 500 );
@@ -730,6 +737,7 @@ void SocketTest::testBlocking()
    vpr::ThreadMemberFunctor<SocketTest>* connector_functor =
       new vpr::ThreadMemberFunctor<SocketTest>( this, &SocketTest::testBlocking_connector );
    vpr::Thread connector_thread( connector_functor );
+   connector_thread.start();
 
    // wait for both threads to terminate, then continue
 
@@ -749,6 +757,7 @@ void SocketTest::testTcpConnection()
    serverFunctor=new vpr::ThreadMemberFunctor<SocketTest>(this, &SocketTest::serverFunc);
    vpr::Thread* serverThread;
    serverThread=new vpr::Thread(serverFunctor);
+   serverThread->start();
 
    vpr::System::sleep(1);
 
@@ -758,6 +767,7 @@ void SocketTest::testTcpConnection()
    for (int t=0; t<mNumClient; t++){
       clientFunctors[t] = new vpr::ThreadMemberFunctor<SocketTest>(this, &SocketTest::clientFunc);
       clientThreads[t] = new vpr::Thread(clientFunctors[t]);
+      clientThreads[t]->start();
    }
 
    vpr::System::sleep(1);
@@ -798,6 +808,7 @@ void SocketTest::serverFunc(void* arg)
          sServerFunctors[num]=new vpr::ThreadMemberFunctor<SocketTest>(this, &SocketTest::sServerFunc, tArgs);
          sServerFunctors[num]->setArg(tArgs);
          sServerThreads[num]= new vpr::Thread(sServerFunctors[num]);
+         sServerThreads[num]->start();
 
          num++;
       }
@@ -899,6 +910,7 @@ void SocketTest::testReadn ()
       new vpr::ThreadMemberFunctor<SocketTest>(this, &SocketTest::testReadnClient,
                                                (void*) &server_port);
    vpr::Thread* client_thread = new vpr::Thread(func);
+   client_thread->start();
    CPPUNIT_ASSERT(client_thread->valid() && "Server could not create client thread");
 
    vpr::SocketStream client_sock;
@@ -930,11 +942,13 @@ void SocketTest::testIsConnected ()
    vpr::ThreadMemberFunctor<SocketTest>* acceptor_functor =
       new vpr::ThreadMemberFunctor<SocketTest>(this, &SocketTest::testIsConnected_acceptor);
    vpr::Thread acceptor_thread(acceptor_functor);
+   acceptor_thread.start();
 
    // Spawn connector thread
    vpr::ThreadMemberFunctor<SocketTest>* connector_functor =
          new vpr::ThreadMemberFunctor<SocketTest>(this, &SocketTest::testIsConnected_connector);
    vpr::Thread connector_thread(connector_functor);
+   connector_thread.start();
 
    // Wait for threads
    acceptor_thread.join();

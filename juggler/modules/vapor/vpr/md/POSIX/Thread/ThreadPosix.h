@@ -110,8 +110,12 @@ public:  // ---- Thread CREATION and SPAWNING -----
     * @post This thread is removed from the thread table and from the local
     *       thread hash.
     */
-   virtual ~ThreadPosix(void);
+   virtual ~ThreadPosix();
 
+   /** Starts this thread's execution. */
+   virtual vpr::ReturnStatus start();
+
+protected:
    /**
     * Creates a new thread that will execute functorPtr.
     *
@@ -122,28 +126,14 @@ public:  // ---- Thread CREATION and SPAWNING -----
     *       beginning execution.
     *
     * @param functorPtr Function to be executed by the thread.
-    * @param priority   Priority of created thread (optional).
-    * @param scope      The scope of the new thread.  This argument is
-    *                   optional, and it defaults to
-    *                   vpr::Thread::VPR_GLOBAL_THREAD.
-    * @param state      The state of the new thread (joinable or unjoinable).
-    *                   This argument is optional, and it defaults to
-    *                   vpr::Thread::VPR_JOINABLE_THREAD.
-    * @param stack_size The stack size for the new thread.  This argument is
-    *                   optional, and it defaults to 0 (use the default stack
-    *                   size offered by the OS).
     *
-    * @return A non-zero value is returned to indicate that the thread was
-    *         created successfully.  -1 is returned otherwise.
+    * @return A vpr::ReturnStatus obj is returned to indicate the result of
+    *         the thread creation.
     *
     * @note The pthreads implementation on HP-UX 10.20 does not allow the
     *       stack address to be changed.
     */
-   int spawn(BaseThreadFunctor* functorPtr,
-             VPRThreadPriority priority = VPR_PRIORITY_NORMAL,
-             VPRThreadScope scope = VPR_LOCAL_THREAD,
-             VPRThreadState state = VPR_JOINABLE_THREAD,
-             size_t stack_size = 0);
+   vpr::ReturnStatus spawn(BaseThreadFunctor* functorPtr);
 
    /**
     * Called by the spawn routine to start the user thread function
@@ -384,8 +374,11 @@ public:  // ----- Various other thread functions ------
 
 // All private member variables and functions.
 private:
-   pthread_t   mThread;        /**< pthread_t data structure for this thread */
-   int         mScope;         /**< Scope (process or system) of this thread */
+   pthread_t         mThread;        /**< pthread_t data structure for this thread */
+   VPRThreadPriority mPriority;
+   VPRThreadScope    mScope;         /**< Scope (process or system) of this thread */
+   VPRThreadState    mState;
+   size_t            mStackSize;
 
    //void checkRegister(int status);
 
