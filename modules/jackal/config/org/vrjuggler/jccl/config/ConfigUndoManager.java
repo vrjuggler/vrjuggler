@@ -38,15 +38,8 @@ import javax.swing.undo.*;
  */
 public class ConfigUndoManager extends UndoManager
 {
-   /**
-    * This class is a singleton, use instance() instead.
-    */
-   protected ConfigUndoManager ()
-   {
-   
-   }
-
-   private boolean mUndoInProgress = false;
+   public ConfigUndoManager ()
+   {;}
    
    public synchronized boolean addEdit(UndoableEdit anEdit)
    {
@@ -57,6 +50,7 @@ public class ConfigUndoManager extends UndoManager
       }
       else
       {
+         ++mEditOffsetFromSave;
          return(super.addEdit(anEdit));
       }
    }
@@ -64,24 +58,29 @@ public class ConfigUndoManager extends UndoManager
    public synchronized void undo() throws CannotUndoException
    {
       mUndoInProgress = true;
+      --mEditOffsetFromSave;
       super.undo();
       mUndoInProgress = false;
    }
-
-   /**
-    * Gets the singleton instance of this class. This implementation is thread
-    * safe.
-    */
-   public static ConfigUndoManager instance ()
+   
+   public synchronized void redo() throws CannotUndoException
    {
-      synchronized (ConfigUndoManager.class)
-      {
-         if ( mInstance == null )
-         {
-            mInstance = new ConfigUndoManager();
-         }
-      }
-      return mInstance;
+      mUndoInProgress = true;
+      ++mEditOffsetFromSave;
+      super.redo();
+      mUndoInProgress = false;
    }
-   private static ConfigUndoManager mInstance = null;
+
+   public void saveHappened()
+   {
+      mEditOffsetFromSave = 0;
+   }
+
+   public boolean getUnsavedChanges()
+   {
+      return ( 0 != mEditOffsetFromSave );
+   }
+
+   private boolean mUndoInProgress = false;
+   int mEditOffsetFromSave = 0;
 }
