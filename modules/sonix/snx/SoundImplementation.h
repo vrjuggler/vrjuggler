@@ -43,6 +43,9 @@
 
 #ifndef SNXSOUNDIMPLEMENTATION_H
 #define SNXSOUNDIMPLEMENTATION_H
+
+#include <snx/snxConfig.h>
+
 #include <assert.h>
 #include <string>
 #include <map>
@@ -55,7 +58,7 @@
 namespace snx
 {
 
-class SoundImplementation : public ISoundImplementation
+class SNX_CLASS_API SoundImplementation : public ISoundImplementation
 {
 public:
    /**
