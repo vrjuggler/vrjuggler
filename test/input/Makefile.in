@@ -10,7 +10,7 @@ srcdir		= @srcdir@
 COMPILE		= @CXX@ @DEFS@ ${VJ_INCLUDES} @CPPFLAGS@ @CXXFLAGS@ -g
 VJ_INCLUDES	= @INCLUDES@ -I${VJ_BASE_DIR}/include -I${srcdir}
 VJ_LIBS		= @TEST_VJ_LIBS_BASIC@ @TEST_VJ_LIBS_GL@ @TEST_LIBS_BASIC@
-VPATH		= @srcdir@
+VPATH		= @srcdir@:@srcdir@/../../Input/vjPosition
 
 # These test programs require the following libraries to be linked:
 #
@@ -40,19 +40,11 @@ all: ${PROGS}
 aFlockTest: aFlockTest.o aFlock.o
 	${COMPILE} -o $@ aFlockTest.o aFlock.o 
 
-aFlockTest.o: aFlockTest.cpp
-	${COMPILE} -woff 3303 -c -o $@ ${srcdir}/aFlockTest.cpp
-
-aFlock.o: ../../Input/vjPosition/aFlock.cpp
-	${COMPILE} -woff 3303 -c -o $@ ../../Input/vjPosition/aFlock.cpp
-
 # ----------------
 # vjFlock test driver
 # ----------------
 vjFlockTest: vjFlockTest.o
 	${COMPILE} -o $@ vjFlockTest.o ${VJ_LIBS} ${EXTRA_LIBS}
-
-vjFlockTest.o: vjFlockTest.cpp
 
 # ----------------
 # new
@@ -60,15 +52,11 @@ vjFlockTest.o: vjFlockTest.cpp
 new: new.o
 	${COMPILE} -o $@ new.o ${VJ_LIBS} ${EXTRA_LIBS}
 
-new.o: new.cpp
-
 # ----------------
 # go
 # ----------------
 go: main.o
 	${COMPILE} -o $@ main.o ${VJ_LIBS} ${EXTRA_LIBS}
-
-main.o: main.cpp
 
 # ----------------
 # go-ibox
@@ -76,23 +64,17 @@ main.o: main.cpp
 go-ibox: main-ibox.o
 	${COMPILE} -o $@ main-ibox.o ${VJ_LIBS} ${EXTRA_LIBS}
 
-main-ibox.o: main-ibox.cpp
-
 # ----------------
 # go-inputgroup
 # ----------------
 go-inputgroup: main-inputgroup.o
 	${COMPILE} -o $@ main-inputgroup.o ${VJ_LIBS} ${EXTRA_LIBS}
 
-main-inputgroup.o: main-inputgroup.cpp
-
 # ----------------
 # go-logiclass
 # ----------------
 go-logiclass: main-logiclass.o
 	${COMPILE} -o $@ main-logiclass.o ${VJ_LIBS} ${EXTRA_LIBS}
-
-main-logiclass.o: main-logiclass.cpp
 
 .cpp.o:
 	${COMPILE} -c $<
