@@ -42,6 +42,7 @@
 #include <vpr/vprConfig.h>
 #include <vpr/Thread/ThreadFunctor.h>
 #include <vpr/Thread/ThreadManager.h>
+#include <vpr/Util/Assert.h>
 
 
 namespace vpr {
@@ -82,6 +83,7 @@ namespace vpr {
     void
     vprThreadFunctorFunction (void* args) {
         BaseThreadFunctor& func = *(BaseThreadFunctor*)args;
+        vprASSERT( func.isValid() );
         func();
     }
 #else
