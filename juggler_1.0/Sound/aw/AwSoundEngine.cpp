@@ -39,7 +39,7 @@
 
 #include <Sound/aw/AwSoundEngine.h> // my header
 
-AwSoundEngine::AwSoundEngine() : mObserver( NULL )
+AwSoundEngine::AwSoundEngine() : vjSoundEngine(), mObserver( NULL )
 {
 }
 
@@ -62,6 +62,7 @@ void AwSoundEngine::init()
 
    // - Definition
    // Call awDefineSys() with the name of an application definition file
+   cout<<"[aw] Loading: "<<mAdfFileName.c_str()<<"\n"<<flush;
    vjASSERT( awDefineSys( mAdfFileName.c_str() ) != -1 );
    // Make explicit function calls to create instances of AudioWorks classes.
 
@@ -93,7 +94,8 @@ void AwSoundEngine::init()
           <<"[aw] \n"<<flush;
    }
    
-   //this->setPosition( 0.0f, 0.0f, 0.0f );
+   // default...
+   this->setPosition( mPosition );
 }
 
 // lookup a filename, given the sound's alias.

@@ -198,7 +198,8 @@ void AwSound::setPosition( float x, float y, float z )
 
    if (mSoundPlayer != NULL)
    {
-      cout<<"[aw] Setting player position to "<<xyz[0]<<" "<<xyz[1]<<" "<<xyz[2]<<"\n"<<flush;
+      // debug:
+      //cout<<"[aw] Setting player position to "<<xyz[0]<<" "<<xyz[1]<<" "<<xyz[2]<<"\n"<<flush;
       awXYZHPR( mSoundPlayer, xyz, hpr);
    }
    // doesn't work... second awSound man page says it should...
