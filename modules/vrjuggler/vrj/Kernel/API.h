@@ -51,31 +51,36 @@ public:
    enum
    {UNKNOWN = 0, PERFORMER = 1, OPENGL = 2};
 
-   //: Constructor
-   //!ARGS: api - enum of the API to set too
+   /** Constructor
+    * @param api  enum of the API to set too
+    */
    API(int api = UNKNOWN)
    { mApi = api;}
 
    // ---  API QUERY  --- //
 public:
-   //: Sets API to Performer
+   /** Sets API to Performer
+    */
    void setPerformer()
    { mApi = PERFORMER;}
 
-   //: Sets API to OpenGL
+   /** Sets API to OpenGL
+    */
    void setOpenGL()
    { mApi = OPENGL;}
 
 public:
-   //: Test if API is Performer
-   //! RETURNS: True - API is Performer
-   //! RETURNS: False - API is not Performer
+   /** Test if API is Performer
+    * @post True - API is Performer
+    * @post False - API is not Performer
+    */
    int Performer()
    { return (mApi == PERFORMER);}
 
-   //: Test if API is OpenGL
-   //! RETURNS: True - API is OpenGL
-   //! RETURNS: False - API is not OpenGL
+   /** Test if API is OpenGL
+    * @post True - API is OpenGL
+    * @post False - API is not OpenGL
+    */
    int OpenGL()
    { return (mApi == OPENGL);}
 
