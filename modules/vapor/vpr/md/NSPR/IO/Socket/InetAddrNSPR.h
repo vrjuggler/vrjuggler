@@ -1,4 +1,3 @@
-
 /*************** <auto-copyright.pl BEGIN do not edit this line> **************
  *
  * VR Juggler is (C) Copyright 1998, 1999, 2000 by Iowa State University
@@ -95,7 +94,7 @@ public:
     //+                 by a colon.  The address can be a hostname or a
     //+                 dotted-decimal IP address.
     // ------------------------------------------------------------------------
-    bool setAddress(const std::string& address);
+    Status setAddress(const std::string& address);
 
     // ------------------------------------------------------------------------
     //: Set the address for this object using the given address and port
@@ -106,9 +105,9 @@ public:
     //+                 address).
     //! ARGS: port    - The port to associate with the IP address.
     // ------------------------------------------------------------------------
-    inline bool setAddress (const std::string& address, const Uint16 port)
+    inline Status setAddress (const std::string& address, const Uint16 port)
     {
-       bool retval;
+       Status retval;
        retval = lookupAddress(address);
        setFamily(SocketTypes::INET);
        setPort(port);
@@ -125,11 +124,11 @@ public:
     //! ARGS: address - A 32-bit integer IP address.
     //! ARGS: port    - The port to associate with the IP address.
     // ------------------------------------------------------------------------
-    inline bool setAddress (const Uint32 address, const Uint16 port) {
+    inline Status setAddress (const Uint32 address, const Uint16 port) {
         setAddressValue(address);
         setPort(port);
         setFamily(SocketTypes::INET);
-        return true;
+        return Status();
     }
 
     // ------------------------------------------------------------------------
@@ -281,7 +280,7 @@ protected:
    // -------------------------------------------------------------------------
    // Look up the address in m_name and store the address in m_remote_addr.
    // -------------------------------------------------------------------------
-   bool lookupAddress(const std::string& address);
+   Status lookupAddress(const std::string& address);
 
    PRNetAddr   mAddr;         // Actual address
 };

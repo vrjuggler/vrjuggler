@@ -460,7 +460,7 @@ public:
       for (int xx = 0; xx < runs; ++xx)
       {
          port = 5977 + xx;
-	 assertTest(local_addr.setAddress("localhost", port));
+	 assertTest(local_addr.setAddress("localhost", port).success());
 
          vpr::SocketStream sock( local_addr, vpr::InetAddr::AnyAddr );	
       
@@ -544,7 +544,7 @@ public:
    {
       vpr::InetAddr addr1;
       
-      threadAssertTest(addr1.setAddress( "localhost", 6667 ));
+      threadAssertTest(addr1.setAddress( "localhost", 6667 ).success());
 
       vpr::SocketStream sock1( addr1, vpr::InetAddr::AnyAddr );
       vpr::SocketStream sock2( addr1, vpr::InetAddr::AnyAddr );
@@ -926,7 +926,7 @@ public:
       vpr::Uint16 port = *((vpr::Uint16*) arg);
       vpr::InetAddr remote_addr;
 
-      threadAssertTest(remote_addr.setAddress("localhost", port) && "Could not assign address");
+      threadAssertTest(remote_addr.setAddress("localhost", port).success() && "Could not assign address");
       vpr::SocketStream client_sock(vpr::InetAddr::AnyAddr, remote_addr);
       char buffer[20];
 
