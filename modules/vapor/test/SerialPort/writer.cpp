@@ -50,11 +50,18 @@ main (int argc, char* argv[]) {
     if ( write_port->open().success() ) {
         char* buffer = "This is a test...\n";
         vpr::Uint32 bytes;
+        vpr::Uint16 size;
 
         std::cout << "Port opened\n";
+
+        if ( write_port->getBufferSize(size).success() )
+        {
+           std::cout << "Min buffer size: " << size << std::endl;
+        }
+
+        write_port->disableCanonicalInput();
         write_port->setUpdateAction(vpr::SerialTypes::NOW);
         write_port->setCharacterSize(vpr::SerialTypes::CS_BITS_8);
-//        write_port->enableLocalAttach();
         write_port->write(buffer, strlen(buffer) + 1, bytes);
         write_port->flushQueue(vpr::SerialTypes::IO_QUEUES);
         std::cout << "Wrote " << bytes << " bytes to " << argv[1] << std::endl;
