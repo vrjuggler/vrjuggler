@@ -5,10 +5,10 @@
 #ifndef _TRACKD_MEM_H_
 #define _TRACKD_MEM_H_
 
-#include <vrj/vrjDefines.h>
 #include <sys/types.h>
+#include <vpr/vpr.h>
 
-#if defined(VJ_OS_Linux)
+#if defined(VPR_OS_Linux)
 #   include <stdint.h>
 #endif
 

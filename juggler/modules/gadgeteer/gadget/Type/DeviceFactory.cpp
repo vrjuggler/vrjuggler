@@ -31,6 +31,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include <vrj/vrjConfig.h>
+#include <vpr/vpr.h>
 #include <gad/Type/DeviceFactory.h>
 
 // Sims
@@ -43,11 +44,11 @@
 #include <gad/Devices/Sim/SimDigitalGlove.h>
 
 /* Physical devices */
-#ifndef WIN32
+#ifndef VPR_OS_Win32
 #   include <gad/Devices/Ascension/Flock.h>
 #   include <gad/Devices/Intersense/Intersense.h>
 
-#   ifdef VJ_OS_Darwin
+#   ifdef VPR_OS_Darwin
 #      include <gad/Devices/Keyboard/OSXKeyboard.h>
 #   else
 #      include <gad/Devices/Immersion/Ibox.h>
@@ -113,8 +114,8 @@ void DeviceFactory::hackLoadKnownDevices()
       vprDEBUG(vprDBG_ALL,vprDBG_CRITICAL_LVL) << clrOutBOLD(clrRED,"ERROR:") << "Failed to load a known device\n" << vprDEBUG_FLUSH;
    }
 
-#ifndef WIN32
-#ifdef VJ_OS_Darwin
+#ifndef VPR_OS_Win32
+#ifdef VPR_OS_Darwin
    DeviceConstructor<OSXKeyboard>* osx_keyboard = new DeviceConstructor<OSXKeyboard>;
    if( (NULL == osx_keyboard) )
    {

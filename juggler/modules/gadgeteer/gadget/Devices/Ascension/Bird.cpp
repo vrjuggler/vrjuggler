@@ -37,6 +37,7 @@
 #include <sys/time.h>
 #include <termios.h>
 
+#include <vpr/vpr.h>
 #include <vpr/System.h>
 
 #include <gad/Devices/Ascension/Bird.h>
@@ -474,9 +475,9 @@ static int open_port(char* serialPort, int baud)
 
    // Set the new attributes
     tcsetattr(port_id, TCSANOW, &port_a);
-# ifndef VJ_OS_HPUX /* HP:HACK - HP didn't like this. */
+#ifndef VPR_OS_HPUX /* HP:HACK - HP didn't like this. */
     ioctl(port_id,TIOCNOTTY);
-# endif
+#endif
     return port_id;
   }
 

@@ -36,8 +36,9 @@
 #include <gad/gadConfig.h>
 
 #include <stdio.h>
+#include <vpr/vpr.h>
 
-#ifdef VJ_OS_HPUX
+#ifdef VPR_OS_HPUX
 #   include <float.h>
 #   include <limits>
 #endif
