@@ -62,7 +62,6 @@
 namespace vrj
 {
 
-//vjKernel* Kernel::_instance = NULL;
 vprSingletonImp(Kernel);
 
 /// Starts the Kernel loop running.
@@ -82,10 +81,8 @@ int Kernel::start()
    vpr::ThreadMemberFunctor<Kernel>* memberFunctor =
       new vpr::ThreadMemberFunctor<Kernel>(this, &Kernel::controlLoop, NULL);
 
-   //vpr::Thread* new_thread;   // I set mControlThread in Kernel::controlLoop
-   //new_thread =
+   // mControlThread is set in controlLoop().
    new vpr::Thread(memberFunctor);
-   //vprASSERT(new_thread->valid());
 
    vprDEBUG(vrjDBG_KERNEL,vprDBG_STATE_LVL)
       << "vjKernel::start: Just started control loop." << std::endl
@@ -378,42 +375,6 @@ void Kernel::updateFrameData()
    // mDisplayManager->updateProjections();
 }
 
-
-//  // -------------------------------
-//  // CHUNK Handler
-//  // -------------------------------
-//  //: Process any pending reconfiguration that we can deal with
-//  //
-//  //  For all dependant managers, call process pending.
-//  //  and call it on our selves
-//  int Kernel::configProcessPending(bool lockIt)
-//  {
-//     int elements_processed(0);     // Needs to return this value
-
-//     ConfigManager* cfg_mgr = ConfigManager::instance();
-//     if(cfg_mgr->pendingNeedsChecked())
-//     {
-//        vprDEBUG_BEGIN(vprDBG_ALL,vprDBG_STATE_LVL) << "vjKernel::configProcessPending: Examining pending list.\n" << vprDEBUG_FLUSH;
-
-//        elements_processed += jccl::ConfigElementHandler::configProcessPending(lockIt);      // Process kernels pending elements
-//        elements_processed += getInputManager()->configProcessPending(lockIt);
-//        elements_processed += mDisplayManager->configProcessPending(lockIt);
-//        if(NULL != mSoundManager)
-//           elements_processed += mSoundManager->configProcessPending(lockIt);
-//        if(NULL != mDrawManager)
-//           elements_processed += mDrawManager->configProcessPending(lockIt);              // XXX: We should not necessarily do this for all draw mgrs
-//        if (NULL != environmentManager)
-//           elements_processed += environmentManager->configProcessPending(lockIt);
-//        if(NULL != mApp)
-//           elements_processed += mApp->configProcessPending(lockIt);
-
-//        vprDEBUG_CONT_END(vprDBG_ALL,vprDBG_STATE_LVL) << std::endl
-//                                                     << vprDEBUG_FLUSH;
-//     }
-//     return elements_processed;
-//  }
-
-
 bool Kernel::configCanHandle(jccl::ConfigElementPtr element)
 {
    return std::string("user") == element->getID();
@@ -510,9 +471,6 @@ void Kernel::loadConfigFile(std::string filename)
 
    // Put them all in pending
    jccl::ConfigManager::instance()->addPendingAdds(cfg);
-
-   //vprDEBUG(vrjDBG_KERNEL, vprDBG_HVERB_LVL) << "------------  Loaded Config Elements ----------" << vprDEBUG_FLUSH;
-   //vprDEBUG(vrjDBG_KERNEL, vprDBG_HVERB_LVL) << (*mInitialCfg) << vprDEBUG_FLUSH;
 }
 
 /**
