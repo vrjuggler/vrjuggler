@@ -37,12 +37,14 @@
   files using version 2.3 of the file format.  Such files can be updated to
   version 3.0 using an XSLT processor, as follows:
 
-     xsltproc -o new-chunks.desc desc_2.3-3.0.xsl old-chunks.desc
+     xsltproc -o junk desc_2.3-3.0.xsl input.desc
 
   or
 
-     xalan -in old-chunks.desc -xsl desc_2.3-3.0.xsl -out new-chunks.desc
+     xalan -in input.desc -xsl desc_2.3-3.0.xsl -out junk
 
+  New files with the extension .jdef will be created in a subdirectory of
+  the current working directory named 'definitions'.
  -->
 
 <xsl:stylesheet version="1.0"
@@ -104,6 +106,11 @@
       <xsl:for-each select="ChunkDescDB/ChunkDesc">
          <xsl:apply-templates select="." />
       </xsl:for-each>
+
+      <xsl:message terminate="yes">
+         <xsl:text>New definition files (.jdef files) are in the </xsl:text>
+         <xsl:text>'definitions' subdirectory.</xsl:text>
+      </xsl:message>
    </xsl:template>
 
    <!-- Match chunk descriptions. -->
@@ -142,6 +149,10 @@
 
       <!-- Start a new document. -->
       <exsl:document href="{$outputfile}" method="xml" encoding="UTF-8" indent="yes">
+         <xsl:message terminate="no">
+            <xsl:text>Creating </xsl:text><xsl:value-of select="$outputfile"/>
+         </xsl:message>
+
          <!-- Add the new version information. -->
          <xsl:processing-instruction name="org-vrjuggler-jccl-settings">definition.version="3.0"</xsl:processing-instruction>
          <xsl:value-of select="$newline" />
