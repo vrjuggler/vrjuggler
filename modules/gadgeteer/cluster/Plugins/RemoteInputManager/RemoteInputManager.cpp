@@ -456,7 +456,7 @@ namespace cluster
         {
            // THIS IS A HACK: find a better way to do this
            jccl::ConfigChunkPtr device_host_ptr = getConfigChunkPointer(device_host);
-           if (device_host_ptr != NULL)
+           if (device_host_ptr.get() != NULL)
            {
               std::string host_name = device_host_ptr->getProperty<std::string>("host_name");
               std::string local_host_name = cluster::ClusterNetwork::instance()->getLocalHostname();
