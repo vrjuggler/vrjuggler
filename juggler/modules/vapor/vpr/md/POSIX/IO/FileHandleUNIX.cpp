@@ -382,33 +382,36 @@ FileHandleUNIX::read_i (void* buffer, const size_t length,
 {
     Status status;
 
-    if(vpr::Interval::NoTimeout != timeout)
-       vprDEBUG(0,vprDBG_WARNING_LVL) << "Timeout not supported\n" << vprDEBUG_FLUSH;
+    status = isReadable(timeout);
 
+    if ( status.success() ) {
+        bytes_read = ::read(m_fdesc, buffer, length);
 
-    bytes_read = ::read(m_fdesc, buffer, length);
+        // Something went wrong while attempting to read from the file.
+        if ( bytes_read < 0 ) {
+            if ( errno == EAGAIN && ! m_blocking ) {
+                status.setCode(Status::WouldBlock);
+            }
+            // If the error is EAGAIN and we are in non-blocking mode, we do not
+            // bother to print the message.
+            if ( ! (errno == EAGAIN && ! m_blocking) ) {
+                fprintf(stderr, "[vpr::FileHandleUNIX] Error reading from %s: %s\n",
+                        m_name.c_str(), strerror(errno));
+                status.setCode(Status::Failure);
+            }
 
-    // Something went wrong while attempting to read from the file.
-    if ( bytes_read < 0 ) {
-        if ( errno == EAGAIN && ! m_blocking ) {
-            status.setCode(Status::WouldBlock);
         }
-        // If the error is EAGAIN and we are in non-blocking mode, we do not
-        // bother to print the message.
-        if ( ! (errno == EAGAIN && ! m_blocking) ) {
-            fprintf(stderr, "[vpr::FileHandleUNIX] Error reading from %s: %s\n",
+        // If 0 bytes were read or an error was returned, we print an error
+        // message.
+        else if ( bytes_read == 0 && errno != 0 ) {
+//        errno != ENOENT
+            fprintf(stderr, "[vpr::FileHandleUNIX] Nothing read from %s: %s\n",
                     m_name.c_str(), strerror(errno));
-            status.setCode(Status::Failure);
         }
-
     }
-    // If 0 bytes were read or an error was returned, we print an error
-    // message.
-    else if ( bytes_read == 0 && errno != 0 ) {
-//    errno != ENOENT
-        fprintf(stderr, "[vpr::FileHandleUNIX] Nothing read from %s: %s\n",
-                m_name.c_str(), strerror(errno));
-    }
+else if ( status == vpr::Status::Timeout ) {
+fprintf(stderr, "Timeout!\n");
+}
 
     return status;
 }
@@ -467,20 +470,21 @@ FileHandleUNIX::write_i (const void* buffer, const size_t length,
 {
     Status status;
 
-    if(vpr::Interval::NoTimeout != timeout)
-       vprDEBUG(0,vprDBG_WARNING_LVL) << "Timeout not supported\n" << vprDEBUG_FLUSH;
+    status = isWriteable(timeout);
 
-    bytes_written = ::write(m_fdesc, buffer, length);
+    if ( status.success() ) {
+        bytes_written = ::write(m_fdesc, buffer, length);
 
-    if ( bytes_written <= 0 ) {
-        if ( errno == EAGAIN && ! m_blocking ) {
-            status.setCode(Status::WouldBlock);
-        }
-        else {
-            fprintf(stderr,
-                    "[vpr::FileHandleUNIX] Error writing to %s: %s\n",
-                    m_name.c_str(), strerror(errno));
-            status.setCode(Status::Failure);
+        if ( bytes_written <= 0 ) {
+            if ( errno == EAGAIN && ! m_blocking ) {
+                status.setCode(Status::WouldBlock);
+            }
+            else {
+                fprintf(stderr,
+                        "[vpr::FileHandleUNIX] Error writing to %s: %s\n",
+                        m_name.c_str(), strerror(errno));
+                status.setCode(Status::Failure);
+            }
         }
     }
 
