@@ -95,20 +95,22 @@ enum Keys
    MBUTTON3
 };
 
+/// Mask values for keyboard modifier keys.
 enum ModiferMask
 {
-   SHIFT_MASK = (1 << 0),
-   ALT_MASK   = (1 << 1),
-   CTRL_MASK  = (1 << 2)
+   SHIFT_MASK = (1 << 0),  /**< Shift key mask */
+   ALT_MASK   = (1 << 1),  /**< Control (CTRL) key mask */
+   CTRL_MASK  = (1 << 2)   /**< Alt key mask */
 };
 
+/// Mask values for up to five mouse buttons.
 enum ButtonMask
 {
-   BUTTON1_MASK = (1 << 3),
-   BUTTON2_MASK = (1 << 4),
-   BUTTON3_MASK = (1 << 5),
-   BUTTON4_MASK = (1 << 6),
-   BUTTON5_MASK = (1 << 7)
+   BUTTON1_MASK = (1 << 3),  /**< Value for mouse button 1 */
+   BUTTON2_MASK = (1 << 4),  /**< Value for mouse button 2 */
+   BUTTON3_MASK = (1 << 5),  /**< Value for mouse button 3 */
+   BUTTON4_MASK = (1 << 6),  /**< Value for mouse button 4 */
+   BUTTON5_MASK = (1 << 7)   /**< Value for mouse button 5 */
 };
 
 } // End of gadget namespace
