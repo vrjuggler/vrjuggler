@@ -1075,6 +1075,10 @@ The filters are applied in the order that they are specified in this configurati
       <item label="size" defaultvalue="1" />
       <help>The size of the depth buffer.  A value of 0 indicates that the smallest available size should be used.  Values greater than 0 indicate that the largest available size greater than or equal to the given value should be used.</help>
     </PropertyDesc>
+    <PropertyDesc name="Full-Screen Anti-Aliasing" token="fsaaEnable" type="bool" variable="0">
+      <item label="Enable FSAA" defaultvalue="0" />
+      <help>Toggles the use of full-screen anti-aliasing.  This may not be available with all OpenGL implementations.</help>
+    </PropertyDesc>
   </ChunkDesc>
   <ChunkDesc token="PerfTestActive" name="PerfTestActive">
     <category>Performance</category>

@@ -1,5 +1,7 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Jan-11-2003 patrickh    Added full-screen anti-aliasing as a configurable
+                        parameter for OpenGL displays using GLX.
 Jan-11-2003 patrickh    Added the ability to configure the frame buffers used
                         in display windows.
                         NEW VERSION: 1.1.132
