@@ -231,7 +231,7 @@ int main( int argc, char* argv[] )
          <title>Plug-in audio subsystems</title>
          <para>Sonix supports the selection of several audio subsystems by the application through implementation plug-ins. Each plug-in implements an adapter to an underlying audio subsystem. The adapter supports a common interface that Sonix knows how talk to. Each adapter is then registered with a factory object, which may ask that adapter to clone itself for use by whoever called the factory. </para>
          <figure>
-            <title>How Sonix is able to support run many audio subsystems through "plug-ins"</title>
+            <title>How Sonix is able to support many audio subsystems through "plug-ins"</title>
             <mediaobject>
                <imageobject>
                   <imagedata
