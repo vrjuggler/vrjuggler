@@ -11,6 +11,8 @@
 #include <gadget/Type/DigitalProxy.h>
 #include <gadget/Type/AnalogProxy.h>
 
+class OpenSGViewer;
+
 
 /** Representation and holder for User related data.
 *
@@ -38,6 +40,10 @@ public:
 
    /** Initialize the user */
    void init();
+
+   // Get/set of viewer
+   void setViewer(OpenSGViewer* viewer);
+   OpenSGViewer* getViewer();
 
    /**
    * Get the positon of the user in the virtual world
@@ -72,6 +78,8 @@ protected:
    ViewPlatform      mViewPlatform;    /**< The viewplatform for this user */ 
    gmtl::Matrix44f   M_vwMuser;        /**< Position of user in virtual world */
     //gmtl::Matrix44f  mUserMworld;      /**< Matrix to convert for world coords to virtual world coords */
+
+   OpenSGViewer*     mViewer;          /**< The current viewer */
 
 protected:
    /** User interface stuff */
