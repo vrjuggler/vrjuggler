@@ -58,6 +58,8 @@ dnl ignore the nasty paths appended by the config scripts...
 saveCXXFLAGS="$CXXFLAGS"
 saveINCLUDES="$INCLUDES"
 
+VJ_VERSION_GROK( VERSION )
+
 # -----------------------------------------------------------------------------
 # Checks for libraries.
 # -----------------------------------------------------------------------------
@@ -392,7 +394,10 @@ AC_OUTPUT(vj/Makefile
           test/TestSuite/Makefile
           Makefile 
           make.defs.mk
-          sonix-config)
+          sonix-config,
+          [ sed -e 's/^\(%.*\)/#\1/g' sonix-config > sonix-config.tmp
+      mv sonix-config.tmp sonix-config
+      chmod a+x sonix-config ] )
 
 cat <<BUILD_INFO
 
