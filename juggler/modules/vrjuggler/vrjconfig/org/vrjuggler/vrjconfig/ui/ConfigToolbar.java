@@ -313,11 +313,22 @@ public class ConfigToolbar
                // Expand env vars in the URL
                File res_file = (File)urls.pop();
                String res_name = expandEnvVars(res_file.getAbsolutePath());
+               System.out.println("Opening included resource: "+res_name);
 
                FileDataSource data_source = new FileDataSource(res_name,
                                                                FileDataSource.ELEMENTS);
                broker.add(res_name, data_source);
                ctx.add(res_name);
+
+               // Add the definitions in this data source to the chunk factory
+               if (data_source.acceptsDefinitions())
+               {
+                  java.util.List descs = data_source.getDefinitions();
+                  for (Iterator itr = descs.iterator(); itr.hasNext(); )
+                  {
+                     ChunkFactory.add((ChunkDesc)itr.next());
+                  }
+               }
 
                // Look through the chunks in the newly loaded file and see if
                // any of them are include directives
