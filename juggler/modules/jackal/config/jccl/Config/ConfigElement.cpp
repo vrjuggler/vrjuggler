@@ -329,8 +329,7 @@ ConfigElementPtr ConfigElement::getProperty_ElementPtr(const std::string& prop,
    const
 {
    // Get the var type
-   VarType var_type = mDef->getPropertyDefinition(prop).getVarType();
-   vprASSERT(var_type == T_CHILD_ELEMENT);
+   vprASSERT(mDef->getPropertyDefinition(prop).getVarType() == T_CHILD_ELEMENT);
    vprASSERT(mNode.get() != NULL);
 
    // Get all property children matching the given property type.
