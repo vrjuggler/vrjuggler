@@ -34,6 +34,9 @@
 
 #include <sys/types.h>
 
+#include <vpr/vpr.h>
+#include <vpr/Util/FileUtils.h>
+
 #include <jccl/Util/Debug.h>
 #include <jccl/Config/ConfigTokens.h>
 #include <jccl/Config/ParseUtil.h>
@@ -144,14 +147,11 @@ std::istream& operator>>(std::istream& in, Configuration& self)
    // Load in the elements from the confiruration node.
    self.loadFromElementNode(cfg_node->getChild(tokens::ELEMENTS));
 
-   // XXX: The following would work, but are not currently being used.
-   
-   /*cppdom::NodePtr def_path_node(cfg_doc->getChild(tokens::DEFINITION_PATH));
+   cppdom::NodePtr def_path_node(cfg_node->getChild(tokens::DEFINITION_PATH));
    if ( def_path_node.get() != NULL )
    {
-      setDefinitionPath(def_path_node);
+      self.setDefinitionPath(def_path_node);
    }
-   */
 
    // Go through the <include> XML elements.
    /*
@@ -200,7 +200,7 @@ bool Configuration::load(const std::string& filename, const std::string& parentf
       
       mConfigurationNode = cfg_node;
 
-      cppdom::NodePtr def_path_node(cfg_doc->getChild(tokens::DEFINITION_PATH));
+      cppdom::NodePtr def_path_node(cfg_node->getChild(tokens::DEFINITION_PATH));
       if ( def_path_node.get() != NULL )
       {
          setDefinitionPath(def_path_node);
@@ -267,13 +267,13 @@ void Configuration::setConfigurationNode(cppdom::NodePtr cfgNode)
    mConfigurationNode = cfgNode;
 }
 
-
 void Configuration::extendDefinitionPath(cppdom::NodePtr defPathNode)
 {
    cppdom::NodeList dirs = defPathNode->getChildren(tokens::DIR);
    for (cppdom::NodeList::iterator d = dirs.begin(); d != dirs.end(); ++d)
    {
       mDefsPath.push_back((*d)->getCdata());
+      ElementFactory::instance()->loadDefs(vpr::replaceEnvVars((*d)->getCdata()));
    }
 }
 
