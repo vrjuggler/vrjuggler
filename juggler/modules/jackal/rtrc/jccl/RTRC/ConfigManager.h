@@ -378,7 +378,7 @@ private:
    int                     mPendingCheckCount;
 
    /** Size of pending list when last checked (used to check for changes). */
-   int                     mLastPendingSize;
+   std::list<PendingElement>::size_type mLastPendingSize;
 
    vpr::LibraryLoader mPluginLoader;
 
