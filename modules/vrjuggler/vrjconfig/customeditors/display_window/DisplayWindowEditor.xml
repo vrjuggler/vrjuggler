@@ -7,6 +7,7 @@
       <dependencies>
          <bean>ConfigBroker</bean>
          <jar path="${TWEEK_BASE_DIR}/bin/beans">jccl_editors.jar</jar>
+         <jar path="${TWEEK_BASE_DIR}/bin">TableLayout.jar</jar>
       </dependencies>
    </service>
 </beanlist>
