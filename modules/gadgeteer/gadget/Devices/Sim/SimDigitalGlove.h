@@ -39,8 +39,7 @@
 #include <gadget/Type/Input.h>
 #include <gadget/Type/Digital.h>
 #include <gadget/Type/Glove.h>
-#include <gadget/Type/Finger.h>
-#include <gadget/Type/Hand.h>
+#include <gadget/Type/InputMixer.h>
 
 #include <gadget/Devices/Sim/SimInput.h>
 
@@ -57,7 +56,7 @@ namespace gadget
  *
  * This class should not be used directly by the user.
  */
-class SimDigitalGlove : virtual public Input, public Digital, public SimInput, public Glove
+class SimDigitalGlove : virtual public InputMixer< InputMixer<Input,Digital>, InputMixer<SimInput,Glove> >
 {
 public:
    /**  Default Constructor */
@@ -89,58 +88,14 @@ public:
       RTHUMB = 6, RINDEX = 7, RMIDDLE = 8, RRING = 9, RPINKY = 10
    };
 
-   /// dev = finger (see finger enum above)
-   virtual const DigitalData getDigitalData( int dev = 0 )
-   {
-      //vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL)<<"*** SimDigitalGlove::getDigitalData("<<dev<<")\n"<< vprDEBUG_FLUSH;
-      vprASSERT( dev < (int)mDigitalData.size() );    // Make sure we have enough space
-      return (mDigitalData[dev]);
-   }
-
-   virtual bool startSampling()
-   {
-     //vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)<<"start\n"<<vprDEBUG_FLUSH;
-       DigitalData temp;
-       temp=0;
-       for (int i=0;i<10;i++)
-       {
-           mDigitalData.push_back(temp);
-       }
-       addDigitalSample(mDigitalData);
-       return 1;
-   }
-
-   virtual bool stopSampling()
-   {
-     //vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)<<"stop\n"<<vprDEBUG_FLUSH;
-     return 1;
-   }
-
-   virtual bool sample()
-   {
-     //vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL)<<"sample\n"<<vprDEBUG_FLUSH;
-     return 1;
-   }
+   virtual bool startSampling(){return true;}
+   virtual bool stopSampling(){return true;}
+   virtual bool sample(){return true;}
 
    /** Updates the data. */
    virtual void updateData();
 
-   void updateFingerAngles();
-
    static std::string getElementType();
-
-// Gesture stuff:
-   /**
-    * Loads trained data for the gesture object.
-    * Loads the file for trained data.
-    *void loadTrainedFile(std::string fileName);
-    */
-
-   /**
-    * Gets the current gesture.
-    * @return id of current gesture.
-    *virtual int getGesture();
-    */
 
    /**
     * Invokes the global scope delete operator.  This is required for proper
@@ -162,11 +117,7 @@ protected:
    }
 
 private:
-   std::vector<DigitalData>   mDigitalData;   /**< The digital data that we have */
    std::vector<KeyModPair>    mSimKeys;       /**< The keys to press for digital simulation */
-
-   Hand                     mLeftHand, mRightHand;
-   //int                     mCurGesture;   /**< The current gesture id */
 };
 
 } // End of gadget namespace
