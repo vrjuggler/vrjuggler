@@ -284,62 +284,76 @@ SocketImplBSD::getOption (const SocketOptions::Types option,
       case SocketOptions::Linger:
         opt_level = SOL_SOCKET;
         opt_name  = SO_LINGER;
+        opt_size  = sizeof(opt_data.linger_val);
         break;
       case SocketOptions::ReuseAddr:
         opt_level = SOL_SOCKET;
         opt_name  = SO_REUSEADDR;
+        opt_size  = sizeof(opt_data.enabled);
         break;
       case SocketOptions::KeepAlive:
         opt_level = SOL_SOCKET;
         opt_name  = SO_KEEPALIVE;
+        opt_size  = sizeof(opt_data.enabled);
         break;
       case SocketOptions::RecvBufferSize:
         opt_level = SOL_SOCKET;
         opt_name  = SO_RCVBUF;
+        opt_size  = sizeof(opt_data.size);
         break;
       case SocketOptions::SendBufferSize:
         opt_level = SOL_SOCKET;
         opt_name  = SO_SNDBUF;
+        opt_size  = sizeof(opt_data.size);
         break;
 
       // IP-level options.
       case SocketOptions::IpTimeToLive:
         opt_level = IPPROTO_IP;
         opt_name  = IP_TTL;
+        opt_size  = sizeof(opt_data.size);
         break;
       case SocketOptions::IpTypeOfService:
         opt_level = IPPROTO_IP;
         opt_name  = IP_TOS;
+        opt_size  = sizeof(opt_data.size);
         break;
       case SocketOptions::AddMember:
         opt_level = IPPROTO_IP;
         opt_name  = IP_ADD_MEMBERSHIP;
+        opt_size  = sizeof(opt_data.mcast_req);
         break;
       case SocketOptions::DropMember:
         opt_level = IPPROTO_IP;
         opt_name  = IP_DROP_MEMBERSHIP;
+        opt_size  = sizeof(opt_data.mcast_req);
         break;
       case SocketOptions::McastInterface:
         opt_level = IPPROTO_IP;
         opt_name  = IP_MULTICAST_IF;
+        opt_size  = sizeof(opt_data.mcast_if);
         break;
       case SocketOptions::McastTimeToLive:
         opt_level = IPPROTO_IP;
         opt_name  = IP_MULTICAST_TTL;
+        opt_size  = sizeof(opt_data.mcast_ttl);
         break;
       case SocketOptions::McastLoopback:
         opt_level = IPPROTO_IP;
         opt_name  = IP_MULTICAST_LOOP;
+        opt_size  = sizeof(opt_data.mcast_loop);
         break;
 
       // TCP-level options.
       case SocketOptions::NoDelay:
         opt_level = IPPROTO_TCP;
         opt_name  = TCP_NODELAY;
+        opt_size  = sizeof(opt_data.enabled);
         break;
       case SocketOptions::MaxSegment:
         opt_level = IPPROTO_TCP;
         opt_name  = TCP_MAXSEG;
+        opt_size  = sizeof(opt_data.size);
         break;
     }
 
