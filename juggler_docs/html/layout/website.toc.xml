@@ -24,6 +24,7 @@ Builder: JExplorerBuilder V 1. 0. 7
     < item title="Download" link="download/index.html" info="Download VR Juggler library in source or binary form." image="Inbox.gif" >
     < item title="Features" link="${MISC}/features.html"  info="List of Juggler features: present and future" image="Leaf_Script.gif" >
     < item title="History" link="${MISC}/history.html"  info="Project History" image="Leaf.gif" >
+    < item title="CVS Repository" link="http://cvs.sourceforge.net/cgi-bin/cvsweb.cgi/juggler/?cvsroot=vrjuggler" info="Web interface to the CVS repository" image="cvs.logo.gif" >
     < folder title="Bugs" link="${BUGS}/bugs.html"  info="Find something wrong with Juggler?  Let us know, submit a bug report." image="Bug.gif" >
                 < item title="Juggler" link="${JUGGLERBUGS}"  target="_top" info="A list of known Check this list of known bugs." image="Leaf.gif" >
                 < item title="VJControl" link="${VJCONTROLBUGS}"  target="_top" info="Check this list of known bugs." image="Leaf.gif" >
