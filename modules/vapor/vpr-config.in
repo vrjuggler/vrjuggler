@@ -57,6 +57,8 @@ vpr_n32_flags="@vpr_n32_flags@"
 vpr_64_flags="@vpr_64_flags@"
 LIBBITSUF='@LIBBITSUF@'
 
+use_base_dir=${USE_BASE_DIR-no}
+
 if [ "x$vpr_default_abi" = "xN32" ]; then
     vpr_abi_flags="$vpr_n32_flags"
 elif [ "x$vpr_default_abi" = "x64" ]; then
