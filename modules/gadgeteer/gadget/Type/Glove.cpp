@@ -125,11 +125,19 @@ istream& vjGloveData::inputAngles(istream& in)
 //                          vjGlove                                   //
 ////////////////////////////////////////////////////////////////////////
 vjGlove::vjGlove()
-{ deviceAbilities = deviceAbilities | DEVICE_GLOVE; }
+{
+   deviceAbilities = deviceAbilities | DEVICE_GLOVE;
+   for(int i=0;i<VJ_MAX_GLOVE_DEVS;i++)
+      mGlovePos[i] = NULL;
+}
 
 vjGlove::vjGlove(vjConfigChunk* chunk)
    : vjInput(chunk)
-{ deviceAbilities = deviceAbilities | DEVICE_GLOVE; }
+{
+   deviceAbilities = deviceAbilities | DEVICE_GLOVE;
+   for(int i=0;i<VJ_MAX_GLOVE_DEVS;i++)
+      mGlovePos[i] = NULL;
+}
 
 
 // Just get the data from the current vector entry
@@ -149,12 +157,20 @@ vjVec3 vjGlove::getGloveVector(vjGloveData::vjGloveComponent component, int devN
 // For now we will not return anything valid
 vjMatrix vjGlove::getGlovePos(vjGloveData::vjGloveComponent component, int devNum)
 {
-   if(component == vjGloveData::WRIST)    // Return base position
+   if(mGlovePos[devNum] != NULL)
    {
-      return *(mGlovePos[devNum]->GetData());
+      if(component == vjGloveData::WRIST)    // Return base position
+      {
+         return *(mGlovePos[devNum]->GetData());
+      }
+      else
+         return vjMatrix();
    }
    else
-      return vjMatrix();
+   {
+      vjDEBUG(0) << "ERROR: vjGlove: Trying to get a glove without a position proxy set.\n" << vjDEBUG_FLUSH;
+      vjASSERT(mGlovePos[devNum] != NULL);      // should be false in here
+   }
 }
 
 // Grab a copy of the most current glove data

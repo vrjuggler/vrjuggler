@@ -11,7 +11,8 @@
 // This class simulates a gesture input device
 //
 // By default the glove is in gesture 0
-class vjSimGloveGesture : public vjGloveGesture, public vjGlove, public vjSimInput
+class vjSimGloveGesture
+   : virtual public vjGloveGesture, virtual public vjGlove, public vjSimInput
 {
 public:
    //: Construct a vjSimGloveGesture
