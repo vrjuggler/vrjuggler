@@ -296,7 +296,7 @@ public:
       grid.setPos( 0.0f, -1.0f, 0.0f );
       grid.size = boardSize;
       
-      sonix::instance()->changeAPI( "OpenAL" );
+      snx::sonix::instance()->changeAPI( "OpenAL" );
       snx::SoundInfo si;
       si.retriggerable = true;
       si.filename = "fire.wav";
@@ -683,7 +683,7 @@ static void OnIdle()
    // non graphics calculations...
    app.stopwatch.pulse();
    app.update( app.stopwatch.timeDelta() );
-   sonix::instance()->step( app.stopwatch.timeDelta() );
+   snx::sonix::instance()->step( app.stopwatch.timeDelta() );
    
    
 }

@@ -55,6 +55,9 @@
 #include <snx/sonix.h>
 
 
+namespace snx
+{
+
 vprSingletonImp(sonix);
 
 //:  destructor
@@ -318,3 +321,5 @@ snx::ISoundImplementation& sonix::impl()
    }
    return *mImplementation;
 }
+
+} // namespace snx

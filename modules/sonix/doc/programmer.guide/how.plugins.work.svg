@@ -602,7 +602,7 @@
       <line x1="198" x2="213" y1="495" style="clip-path:url(#clipPath1); fill:none; stroke:black;" y2="495" />
     </g>
     <g style="font-family:sans-serif;">
-      <text x="38" y="494" style="clip-path:url(#clipPath36); stroke:none;">When sonix::changeAPI()
+      <text x="38" y="494" style="clip-path:url(#clipPath36); stroke:none;">When snx::sonix::changeAPI()
       </text>
       <text x="38" y="507" style="clip-path:url(#clipPath36); stroke:none;">is called, sonix asks the
       </text>

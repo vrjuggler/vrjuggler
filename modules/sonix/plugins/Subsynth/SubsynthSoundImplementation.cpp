@@ -507,7 +507,7 @@ void SubsynthSoundImplementation::bind( const std::string& alias )
       case snx::SoundInfo::FILESYSTEM:
       {
          // open the file as readonly binary
-         if (!snxFileIO::fileExists( soundInfo.filename.c_str() )) 
+         if (!snx::FileIO::fileExists( soundInfo.filename.c_str() )) 
          {
             vprDEBUG(snxDBG, vprDBG_CONFIG_LVL) <<clrOutNORM(clrYELLOW, "ERROR:")<<"Subsynth| alias '" << alias << "', file '"<<soundInfo.filename<<"' doesn't exist\n" << vprDEBUG_FLUSH;
             break;
