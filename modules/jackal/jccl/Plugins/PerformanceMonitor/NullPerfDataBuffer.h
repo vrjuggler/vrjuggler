@@ -31,8 +31,6 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 
-
-
 #include <jccl/jcclConfig.h>
 
 namespace jccl {

@@ -30,8 +30,8 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _VJXERCESSTREAMINPUTSTREAM_H_
-#define _VJXERCESSTREAMINPUTSTREAM_H_
+#ifndef _JCCL_XERCESSTREAMINPUTSTREAM_H_
+#define _JCCL_XERCESSTREAMINPUTSTREAM_H_
 
 #include <jccl/jcclConfig.h>
 #include <util/BinInputStream.hpp>

@@ -32,13 +32,13 @@
 
 
 #include <jccl/jcclConfig.h>
-#include <jccl/Config/vjConfigChunk.h>
-#include <jccl/Config/vjParseUtil.h>
+#include <jccl/Config/ConfigChunk.h>
+#include <jccl/Config/ParseUtil.h>
 #include <vpr/Util/Debug.h>
 #include <vpr/Util/Assert.h>
-#include <jccl/Config/vjChunkFactory.h>
-#include <jccl/Config/vjChunkDesc.h>
-#include <jccl/Config/vjConfigTokens.h>
+#include <jccl/Config/ChunkFactory.h>
+#include <jccl/Config/ChunkDesc.h>
+#include <jccl/Config/ConfigTokens.h>
 
 #include <stdlib.h>
 #include <ctype.h>

@@ -32,11 +32,11 @@
 
 #include <jccl/jcclConfig.h>
 
-#include <jccl/Config/vjChunkDesc.h>
-#include <jccl/Config/vjParseUtil.h>
+#include <jccl/Config/ChunkDesc.h>
+#include <jccl/Config/ParseUtil.h>
 #include <vpr/Util/Assert.h>
-#include <jccl/Config/vjConfigIO.h>
-#include <jccl/Config/vjXMLConfigIOHandler.h>
+#include <jccl/Config/ConfigIO.h>
+#include <jccl/Config/XMLConfigIOHandler.h>
 
 
 namespace jccl {

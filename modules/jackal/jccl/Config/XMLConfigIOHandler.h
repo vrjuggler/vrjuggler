@@ -30,11 +30,11 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _VJXMLCONFIGIOHANDLER_H_
-#define _VJXMLCONFIGIOHANDLER_H_
+#ifndef _JCCL_XMLCONFIGIOHANDLER_H_
+#define _JCCL_XMLCONFIGIOHANDLER_H_
 
 #include <jccl/jcclConfig.h>
-#include <jccl/Config/vjConfigIOHandler.h>
+#include <jccl/Config/ConfigIOHandler.h>
 
 #include <util/PlatformUtils.hpp>
 #include <parsers/DOMParser.hpp>
@@ -43,8 +43,8 @@
 #include <string.h>
 #include <stdlib.h>
 
-#include <jccl/Config/vjConfigChunkDB.h>
-//#include <Config/vjChunkFactory.h>
+#include <jccl/Config/ConfigChunkDB.h>
+//#include <Config/ChunkFactory.h>
 
 namespace jccl
 {

@@ -33,10 +33,10 @@
 
 #include <jccl/jcclConfig.h>
 
-#include <jccl/Config/vjConfigIO.h>
-#include <jccl/Config/vjStandardConfigIOHandler.h>
-#include <jccl/Config/vjXMLConfigIOHandler.h>
-#include <jccl/Config/vjParseUtil.h>
+#include <jccl/Config/ConfigIO.h>
+#include <jccl/Config/StandardConfigIOHandler.h>
+#include <jccl/Config/XMLConfigIOHandler.h>
+#include <jccl/Config/ParseUtil.h>
 
 namespace jccl {
    

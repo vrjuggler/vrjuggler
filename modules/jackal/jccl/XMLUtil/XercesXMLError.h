@@ -30,8 +30,8 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _VJXERCESXMLERROR_H_
-#define _VJXERCESXMLERROR_H_
+#ifndef _JCCL_XERCESXMLERROR_H_
+#define _JCCL_XERCESXMLERROR_H_
 
 #include <util/XercesDefs.hpp>
 #include <sax/ErrorHandler.hpp>

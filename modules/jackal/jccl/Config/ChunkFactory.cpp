@@ -31,7 +31,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 
-#include <jccl/Config/vjChunkFactory.h>
+#include <jccl/Config/ChunkFactory.h>
 
 namespace jccl {
    

@@ -30,14 +30,14 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _VJNETCOMMUNICATOR_H_
-#define _VJNETCOMMUNICATOR_H_
+#ifndef _JCCL_NETCOMMUNICATOR_H_
+#define _JCCL_NETCOMMUNICATOR_H_
 
 #include <jccl/jcclConfig.h>
 
 namespace jccl {
 
-class vjConnect;
+class Connect;
 
 //---------------------------------------------------------------
 //: Communications protocol handler for the Environment Manager.
@@ -47,19 +47,19 @@ class vjConnect;
 //
 // @author Christopher Just
 //---------------------------------------------------------------
-class vjNetCommunicator {
+class NetCommunicator {
 protected:
 
-    //: The vjConnect this communicator is servicing. Initially NULL.
-    vjConnect* connection;
+    //: The Connect this communicator is servicing. Initially NULL.
+    Connect* connection;
 
 public:
 
     //: Constructor
-    vjNetCommunicator ();
+    NetCommunicator ();
 
     //: Destructor
-    virtual ~vjNetCommunicator ();
+    virtual ~NetCommunicator ();
 
     //: Called when a new connection is established.
     //  Used to send any initial messages on a new connection.
@@ -70,7 +70,7 @@ public:
     //! PRE: _connection is open & valid for writing to; connection
     //+      is NULL.
     //! POST: true.
-    virtual void initConnection(vjConnect* _connection);
+    virtual void initConnection(Connect* _connection);
 
 
     //: Called when the connection is shut down.
@@ -92,7 +92,7 @@ public:
 
 
     //: Reads data from a communications stream.
-    //  This should only be called by the vjConnect object self is
+    //  This should only be called by the Connect object self is
     //  owned by.
     //  The Communicator should read data until it reaches the end of
     //  the protocol stream (signified by the character string

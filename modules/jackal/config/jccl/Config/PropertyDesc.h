@@ -32,11 +32,11 @@
 
 
 
-#ifndef _VJ_PROPERTY_DESC_H_
-#define _VJ_PROPERTY_DESC_H_
+#ifndef _JCCL_PROPERTY_DESC_H_
+#define _JCCL_PROPERTY_DESC_H_
 
 #include <jccl/jcclConfig.h>
-#include <jccl/Config/vjEnumEntry.h>
+#include <jccl/Config/EnumEntry.h>
 
 namespace jccl {
    

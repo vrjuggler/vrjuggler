@@ -32,8 +32,8 @@
 
 
 
-#ifndef _VJ_VARVALUE_H_
-#define _VJ_VARVALUE_H_
+#ifndef _JCCL_VARVALUE_H_
+#define _JCCL_VARVALUE_H_
 
 #include <jccl/jcclConfig.h>
 #include <ctype.h>

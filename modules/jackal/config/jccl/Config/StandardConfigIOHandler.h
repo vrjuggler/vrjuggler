@@ -30,16 +30,16 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _VJSTANDARDCONFIGIO_H_
-#define _VJSTANDARDCONFIGIO_H_
+#ifndef _JCCL_STANDARDCONFIGIO_H_
+#define _JCCL_STANDARDCONFIGIO_H_
 
 #include <jccl/jcclConfig.h>
 
 //#include <string.h>
 //#include <stdlib.h>
 
-#include <jccl/Config/vjConfigIOHandler.h>
-#include <jccl/Config/vjConfigChunkDB.h>
+#include <jccl/Config/ConfigIOHandler.h>
+#include <jccl/Config/ConfigChunkDB.h>
 
 namespace jccl
 {

@@ -32,8 +32,8 @@
 
 
 
-#ifndef _VJ_TIMESTAMP_POSIX_
-#define _VJ_TIMESTAMP_POSIX_
+#ifndef _JCCL_TIMESTAMP_POSIX_
+#define _JCCL_TIMESTAMP_POSIX_
 
 #include <jccl/jcclConfig.h>
 #include <sys/time.h>
