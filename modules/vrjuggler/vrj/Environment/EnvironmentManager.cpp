@@ -54,49 +54,4 @@ EnvironmentManager::EnvironmentManager() {
 
 }
 
-
-
-EnvironmentManager::~EnvironmentManager() {
-    // delete stuff
-}
-
-
-
-jccl::ConfigManager* EnvironmentManager::getConfigManager() {
-    return config_manager;
-}
-
-
-jccl::PerformanceMonitor* EnvironmentManager::getPerformanceMonitor() {
-    return performance_monitor;
-}
-
-
-//: jccl::ConfigChunkHandler stuff
-//! PRE: configCanHandle(chunk) == true
-//! RETURNS: success
-bool EnvironmentManager::configAdd(jccl::ConfigChunkPtr chunk) {
-    return false;
-}
-
-
-
-//: Remove the chunk from the current configuration
-//! PRE: configCanHandle(chunk) == true
-//!RETURNS: success
-bool EnvironmentManager::configRemove(jccl::ConfigChunkPtr chunk) {
-    return false;
-}
-
-
-
-//: Can the handler handle the given chunk?
-//! RETURNS: true - Can handle it
-//+          false - Can't handle it
-bool EnvironmentManager::configCanHandle(jccl::ConfigChunkPtr chunk) {
-    return false;
-}
-
-
-
 };
