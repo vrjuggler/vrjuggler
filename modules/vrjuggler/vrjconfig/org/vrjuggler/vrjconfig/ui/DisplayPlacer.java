@@ -110,7 +110,16 @@ public class DisplayPlacer
     */
    protected void addNewDisplay()
    {
-      wndPlacer.repaint();
+      // Create the new window
+      ChunkDescDB all_descs = getConfigManager().getAllChunkDescs();
+      ChunkDesc display_desc = all_descs.getByToken("displayWindow");
+      ConfigChunk display_chunk = new ConfigChunk(display_desc);
+
+      // Add the window to the database
+      ConfigChunkDB active_config = getConfigManager().getActiveConfig();
+      String name = active_config.getNewName(display_desc.getToken());
+      display_chunk.setName(name);
+      active_config.add(display_chunk);
    }
 
    /**
@@ -121,7 +130,8 @@ public class DisplayPlacer
       int idx = wndPlacer.getSelectedIndex();
       if (idx != -1)
       {
-         // Blah ... do stuff here
+         ConfigChunk display_chunk = (ConfigChunk)wndPlacer.getModel().getElement(idx);
+         getConfigManager().getActiveConfig().remove(display_chunk);
       }
    }
 
@@ -241,7 +251,13 @@ public class DisplayPlacer
                scaledIcon.setImage(img);
             }
 
-            g.drawImage(img, 0, 0, null);
+            // Sanity check in case our scale failed
+            if (img != null)
+            {
+               g.drawImage(img, 0, 0, null);
+            }
+
+            // Highlight the window nicely
             if (selected)
             {
                g.setColor(getBackground());
@@ -273,6 +289,7 @@ class DisplayPlacerModel
          ConfigChunk chunk = (ConfigChunk)itr.next();
          chunk.addPropertyChangeListener(this);
       }
+      chunkDB.addChunkDBListener(this);
 //      fireTableContentsChanged();
    }
 
@@ -357,6 +374,7 @@ class DisplayPlacerModel
       ConfigChunk chunk = evt.getChunk();
       if (chunk.getDesc().getToken().equals("displayWindow"))
       {
+         System.out.println("Adding a new displayWindow.");
          chunk.addPropertyChangeListener(this);
          windows.add(0, chunk);
          fireItemsInserted(new int[] { 0 });
@@ -371,6 +389,7 @@ class DisplayPlacerModel
          int idx = getIndexOf(chunk);
          if (idx != -1)
          {
+            System.out.println("Removed a displayWindow.");
             chunk.removePropertyChangeListener(this);
             windows.remove(idx);
             fireItemsRemoved(new int[] { 0 }, new Object[] { chunk });
