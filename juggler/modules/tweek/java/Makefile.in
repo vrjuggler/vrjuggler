@@ -51,6 +51,7 @@ top_srcdir		= @top_srcdir@
 EXTRA_SRCS_PATH		= $(srcdir)/../tweek/idl
 EXTRA_JAVA_SRCS_PATH	= $(srcdir)/tweek
 INSTALL			= @INSTALL@
+INSTALL_FILES		=
 JAVA_IDL_OPTS		= @JAVA_IDL_OPTS@ @JAVA_IDL_GENDIR_OPT@$(srcdir)
 JAVA_IDL_INCLUDES	= @JAVA_IDL_INCFLAG@$(top_srcdir)
 
@@ -192,7 +193,7 @@ else
           $(TWEEKROOT_ABS)/java/tweek.bat $(bindir)/tweek.bat
 endif	# if OS_TYPE == UNIX
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
-          $(topdir)/java/java.security.policy.txt $(bindir)
+          $(top_srcdir)/java/java.security.policy.txt $(bindir)
 	for jar in $(JARS) ;						\
           do								\
               $(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)		\
@@ -203,7 +204,7 @@ endif	# if OS_TYPE == UNIX
               $(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)		\
                 $(topdir)/java/$$bean.jar $(beandir) ;			\
               $(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)		\
-                $(topdir)/java/$$bean.xml $(beandir) ;			\
+                $(top_srcdir)/java/$$bean.xml $(beandir) ;		\
           done
 	for jar in `echo "$(JDOM_JAR)" | sed -e 's/$(JCPS)/ /g'` ;	\
           do								\
