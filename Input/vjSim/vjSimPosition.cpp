@@ -9,7 +9,8 @@ bool vjSimPosition::config(vjConfigChunk* chunk)
    mDTrans = chunk->getProperty("dtrans");
    mDRot   = chunk->getProperty("drot");
 
-   mCoordSystem = chunk->getProperty("xformCoordSystem");
+   mTransCoordSystem = chunk->getProperty("transCoordSystem");
+   mRotCoordSystem = chunk->getProperty("rotCoordSystem");
 
    // Create keypairs
    for(int i=0;i<NUM_POS_CONTROLS;i++)
@@ -91,7 +92,7 @@ void vjSimPosition::UpdateData()
 // Forward is in th -Z direction
 void vjSimPosition::MoveFor(const float amt)
 {
-   if(mCoordSystem == LOCAL)
+   if(mTransCoordSystem == LOCAL)
       mPos.postTrans(mPos, 0.0, 0.0, -amt*mDTrans);
    else
       mPos.preTrans(0.0, 0.0, -amt*mDTrans, mPos);
@@ -101,7 +102,7 @@ void vjSimPosition::MoveFor(const float amt)
 // Left is -X dir
 void vjSimPosition::MoveLeft(const float amt)
 {
-   if(mCoordSystem == LOCAL)
+   if(mTransCoordSystem == LOCAL)
       mPos.postTrans(mPos, -amt*mDTrans, 0.0, 0.0);
    else
       mPos.preTrans(-amt*mDTrans, 0.0, 0.0, mPos);
@@ -111,7 +112,7 @@ void vjSimPosition::MoveLeft(const float amt)
 // Up is in th +Y dir
 void vjSimPosition::MoveUp(const float amt)
 {
-   if(mCoordSystem == LOCAL)
+   if(mTransCoordSystem == LOCAL)
       mPos.postTrans(mPos, 0.0, amt*mDTrans, 0.0);
    else
       mPos.preTrans(0.0, amt*mDTrans, 0.0, mPos);
@@ -121,7 +122,7 @@ void vjSimPosition::MoveUp(const float amt)
 void vjSimPosition::RotUp(const float amt)
 {
    static vjVec3 x_axis(1.0,0.0,0.0);
-   if(mCoordSystem == LOCAL)
+   if(mRotCoordSystem == LOCAL)
       mPos.postRot(mPos, amt*mDRot, x_axis);
    else
    {
@@ -146,7 +147,7 @@ void vjSimPosition::RotLeft(const float amt)
 {
    static vjVec3 y_axis(0.0, 1.0, 0.0);
 
-   if(mCoordSystem == LOCAL)
+   if(mRotCoordSystem == LOCAL)
       mPos.postRot(mPos, amt*mDRot, y_axis);
    else
    {
@@ -171,7 +172,7 @@ void vjSimPosition::RotRollCCW(const float amt)
 {
    static vjVec3 neg_z_axis(0.0, 0.0, -1.0);
 
-   if(mCoordSystem == LOCAL)
+   if(mRotCoordSystem == LOCAL)
       mPos.postRot(mPos, amt*mDRot, neg_z_axis);
    else
    {
