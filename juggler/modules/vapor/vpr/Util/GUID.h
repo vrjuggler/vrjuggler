@@ -142,7 +142,7 @@ public:
     * @param guid_string Ptr to a string that is used to inialize guid. Must
     *                    be non-NULL.
     */
-   GUID(const char* guid_string);
+   explicit GUID(const char* guid_string);
 
    /**
     * Generates a GUID from the given string representation of the GUID using
@@ -152,7 +152,7 @@ public:
     * @param guid_string Ptr to a string that is used to inialize guid. Must
     *                    be non-NULL.
     */
-   GUID (const std::string& guid_string)
+   explicit GUID (const std::string& guid_string)
    {
       fromString(guid_string);
    }

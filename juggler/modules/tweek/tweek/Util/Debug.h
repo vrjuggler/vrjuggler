@@ -44,7 +44,7 @@
 // Tweek debugging categories.
 
 // CORBA stuff.
-const vpr::DebugCategory tweekDBG_CORBA("19138b82-ae13-4474-b0ee-4094c1c619a5",
+const vpr::DebugCategory tweekDBG_CORBA(vpr::GUID("19138b82-ae13-4474-b0ee-4094c1c619a5"),
                                         "DBG_CORBA", "tweekCORBA:");
 
 #endif /* _TWEEK_DEBUG_H_ */
