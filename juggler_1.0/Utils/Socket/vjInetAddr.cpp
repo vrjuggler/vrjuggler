@@ -65,9 +65,11 @@ vjInetAddr::getFamily (void) const {
       case PF_INET:
         family = vjSocketTypes::INET;
         break;
+#ifdef PF_INET6
       case PF_INET6:
         family = vjSocketTypes::INET6;
         break;
+#endif
 #ifndef _WINSOCKAPI_
 #ifdef PF_LINK
       case PF_LINK:
@@ -100,7 +102,12 @@ vjInetAddr::setFamily (const vjSocketTypes::Domain family) {
         m_addr.sin_family = PF_INET;
         break;
       case vjSocketTypes::INET6:
+#ifdef PF_INET6
         m_addr.sin_family = PF_INET6;
+#else
+        fprintf(stderr,
+                "[vjInetAddr] WARNING: IPv6 not supported on this host!\n");
+#endif
         break;
 #ifndef _WINSOCKAPI_
       case vjSocketTypes::LINK:
