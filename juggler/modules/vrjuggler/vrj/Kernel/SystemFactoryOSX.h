@@ -43,17 +43,22 @@ namespace vrj
 
 class DisplayManager;
 
-/** Concrete class for Mac OS X System specific Factory.
- *
- *  Concrete class to create Mac OS X system specific objects.
- */
-static OSErr QuitAppleEventHandler(const AppleEvent *appleEvt, AppleEvent* reply, UInt32 refcon);
+//---------------------------------------------------
+//: Concrete class for Mac OS X System specific Factory.
+//
+//  Concrete class to create Mac OS X system specific objects.
+//
+// @author Allen Bierbaum
+//  Date: 9-9-97
+//----------------------------------------------------
+
+//static OSErr QuitAppleEventHandler(const AppleEvent *appleEvt, AppleEvent* reply, UInt32 refcon);
 
 class SystemFactoryOSX : public SystemFactory
 {
 public:
 
-   void CarbonApplicationThread(void* nullParam);
+   //void CarbonApplicationThread(void* nullParam);
 
       // --- Singleton stuff --- //
 protected:
@@ -65,16 +70,16 @@ protected:
 
 
 protected:
-    Boolean     gQuitFlag;
-    Boolean     InitComplete;
+    //Boolean     gQuitFlag;
+    //Boolean     InitComplete;
 
-    void Initialize(void);
-    void EventLoop(void);
-    void DoEvent(EventRecord *event);
-    void DoMenuCommand(long menuResult);
+    //void Initialize(void);
+    //void EventLoop(void);
+    //void DoEvent(EventRecord *event);
+    //void DoMenuCommand(long menuResult);
 
 public:
-    void setQuitFlag(Boolean value) { gQuitFlag = value; }
+    //void setQuitFlag(Boolean value) { gQuitFlag = value; }
 };
 
 };
