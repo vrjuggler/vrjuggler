@@ -72,7 +72,7 @@ GlBasicSimulator::GlBasicSimulator()
 * @pre chunk is a valid chunk.
 * @post It should be configured
 */
-void GlBasicSimulator::config(jccl::ConfigChunkPtr chunk)
+bool GlBasicSimulator::config(jccl::ConfigChunkPtr chunk)
 {
    vprASSERT(chunk.get() != NULL);
    vprASSERT(chunk->getDescToken() == std::string("default_simulator"));
@@ -97,6 +97,8 @@ void GlBasicSimulator::config(jccl::ConfigChunkPtr chunk)
    mSurfaceColor[0] = chunk->getProperty<float>("surfaceColor", 0);
    mSurfaceColor[1] = chunk->getProperty<float>("surfaceColor", 1);
    mSurfaceColor[2] = chunk->getProperty<float>("surfaceColor", 2);
+
+   return true;
 }
 
 /**
