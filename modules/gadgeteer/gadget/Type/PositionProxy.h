@@ -58,7 +58,7 @@
 // See also: vjPosition
 //------------------------------------------------------------------------
 //!PUBLIC_API:
-class vjPosProxy : public vjTypedProxy<vjPosition>
+class VJ_CLASS_API vjPosProxy : public vjTypedProxy<vjPosition>
 {
 public:
    vjPosProxy() :  mUnitNum(-1), mETrans(false), mFilter(NULL)

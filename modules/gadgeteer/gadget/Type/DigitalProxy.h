@@ -53,7 +53,7 @@
 //  subDevice's amount of data.  (one int)
 //!PUBLIC_API:
 //--------------------------------------------------------------------------
-class vjDigitalProxy : public vjTypedProxy<vjDigital>
+class VJ_CLASS_API vjDigitalProxy : public vjTypedProxy<vjDigital>
 {
 
 public:

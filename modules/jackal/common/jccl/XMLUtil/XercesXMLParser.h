@@ -43,7 +43,7 @@ class ErrorHandler;
 //: Wrapper for libxerces-c parsers.
 //  This class should never be instantiated by itself; only thru the
 //  vjXercesXMLParserPool object.
-class vjXercesXMLParser {
+class VJ_CLASS_API vjXercesXMLParser {
 
 public:
 

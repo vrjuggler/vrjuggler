@@ -46,7 +46,7 @@
 //  config_io handlers.  while this isn't great in terms of modularity, if
 //  we ever actually have more than 2 or 3 config io handlers, this'll be the
 //  least of our problems.
-class vjXercesXMLParserPool {
+class VJ_CLASS_API vjXercesXMLParserPool {
 
 public:
 
@@ -67,6 +67,9 @@ private:
     parser_v used_parsers;
 
     vjMutex pool_lock;
+
+    vjXercesXMLParserPool(const vjXercesXMLParserPool& o) {;}
+    void operator=(const vjXercesXMLParserPool& o) {;}
 
 vjSingletonHeader(vjXercesXMLParserPool);
 
