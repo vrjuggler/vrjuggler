@@ -283,6 +283,23 @@ SocketImplNSPR::connect (vpr::Interval timeout) {
       }
    }
 
+   // Fill in the local address if has not already been assigned.
+   if ( m_connected && vpr::InetAddr::AnyAddr == m_local_addr ) {
+      PRStatus status;
+
+      status = PR_GetSockName(m_handle, m_local_addr.getPRNetAddr());
+
+      if ( status == PR_SUCCESS ) {
+          vprDEBUG(0, vprDBG_STATE_LVL) << "Connected, local address is "
+                                        << m_local_addr << std::endl
+                                        << vprDEBUG_FLUSH;
+      }
+      else {
+          vprDEBUG(0, vprDBG_WARNING_LVL) << "Failed to get local socket name\n"
+                                          << vprDEBUG_FLUSH;
+      }
+   }
+
    return retval;
 }
 

@@ -271,6 +271,28 @@ SocketImplBSD::connect (vpr::Interval timeout) {
         m_blocking_fixed = true;
     }
 
+    // Fill in the local address if has not already been assigned.
+    if ( m_connected && vpr::InetAddr::AnyAddr == m_local_addr ) {
+        int status;
+        socklen_t namelen;
+        struct sockaddr temp_addr;
+
+        namelen = sizeof(struct sockaddr);
+        status  = getsockname(m_handle->m_fdesc, &temp_addr, &namelen);
+
+        if ( status == 0 ) {
+            m_local_addr.setSockaddr(&temp_addr);
+            vprDEBUG(0, vprDBG_STATE_LVL) << "Connected, local address is "
+                                          << m_local_addr << std::endl
+                                          << vprDEBUG_FLUSH;
+        }
+        else {
+            vprDEBUG(0, vprDBG_WARNING_LVL) << "Failed to get sock name: "
+                                            << strerror(errno) << std::endl
+                                            << vprDEBUG_FLUSH;
+        }
+    }
+
     return retval;
 }
 
