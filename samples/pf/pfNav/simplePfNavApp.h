@@ -145,13 +145,14 @@ public:
    simplePfNavApp() : mStatusMessageEmitCount(0),// mWorldDcsTrans( 0.0f, 0.0f, 0.0f ),
       mInitialNavPos( 0.0f, 0.0f, 0.0f ),
       mUseDriveMode( true ),
-      mUCmodels( NULL ),
+      mConfiguredNoCollideModels( NULL ),
       mSoundNodes( NULL ),
-      mUnCollidableModelGroup( NULL )
+      mUnCollidableModelGroup( NULL ),
+      mLightGroup( NULL )
    {
       mSun = NULL;
       mRootNode = NULL;
-      mWorldModel = NULL;
+      mConfiguredCollideModels = NULL;
       //mWorldDCS = NULL;
       mCollidableModelGroup = NULL;
       mUseDriveMode = false;
@@ -294,8 +295,42 @@ public:  // Configure the application
    void addSound(Sound s)
    { mSoundList.push_back(s); }
 
-   void setFilePath(const std::string path)     { mFilePath = path;}
-   void setInitialNavPos(const vjVec3 initialPos)  { mInitialNavPos = initialPos; }
+   void addFilePath(const std::string path)     
+   { 
+      // initScene could be called already,
+      // so, delegate to the the static fileIO func
+      pfFileIO::addFilePath( mFilePath );
+   }
+   void setFilePath( const std::string path )
+   {
+      // initScene could be called already,
+      // so, delegate to the the static fileIO func
+      mFilePath = path;
+      
+      // set some common paths first...
+      pfFileIO::setFilePath( ".:./data:/usr/share/Performer/data:/usr/share/Performer/data/town:");
+      pfFileIO::addFilePath( mFilePath );
+   }   
+   void setInitialNavPos(const vjVec3 initialPos) 
+   { 
+      mInitialNavPos = initialPos;
+      
+      // if the navigator is already created, 
+      // then initScene has been called,
+      // so we need to set the home pos in the nav, 
+      // not just the member var.
+      // FIXME: some code duplication here.
+      if (mVelNavDrive != NULL)
+      {
+         vjDEBUG(vjDBG_ALL,0) << "setting pos\n" <<flush;
+      
+         vjMatrix initial_nav;              // Initial navigation position
+         initial_nav.setTrans( mInitialNavPos );
+
+         mVelNavDrive->setHomePosition(initial_nav);
+         mVelNavDrive->setCurPos(initial_nav);
+      }
+   }
    void setUseDriveMode(const bool val=true)  { mUseDriveMode = val;}
 
    void enableStats() { mUseStats = true;}
@@ -322,21 +357,24 @@ public:
    pfNavDCS*      mNavigationDCS;
 
    // SCENE GRAPH NODES
+   pfGroup*       mLightGroup;
+   pfGroup*       mNoNav;
    pfLightSource* mSun;                      // Sun to light the environment
    pfGroup*       mRootNode;                 // The root of the scene graph
-   pfGroup*       mWorldModel;               // Collidable model of the world
-   pfGroup*       mUCmodels;                 // UnCollidable model of the world
+   pfGroup*       mConfiguredCollideModels;               // Collidable model of the world
+   pfGroup*       mConfiguredNoCollideModels;                 // UnCollidable model of the world
    pfGroup*       mSoundNodes;               // The sounds of the world
    pfGroup*       mCollidableModelGroup;     // Part of the world that is collidable
    pfGroup*       mUnCollidableModelGroup;   // Part of the world that is collidable
 };
 
 // ------- SCENE GRAPH ----
+// a standard organized interface for derived applications:
 //
-//                           /-- sun1
-// rootNode -- mNavigationDCS -- mCollidableModelGroup -- mWorldModel -- loaded stuff...
-//                           \-- mUnCollidableModelGroup - mUCmodels
-//                                                      \-- mSoundNodes
+//                            /-- mLightGroup -- mSun
+// mRootNode -- mNavigationDCS -- mCollidableModelGroup -- mConfiguredCollideModels -- loaded stuff...
+//          \-- mNoNav        \-- mUnCollidableModelGroup -- mConfiguredNoCollideModels -- loaded stuff...
+//                                                       \-- mSoundNodes -- loaded stuff...
 void simplePfNavApp::initializeModels()
 {
    if(NULL == mRootNode)      // If we haven't had initScene called yet
@@ -346,25 +384,20 @@ void simplePfNavApp::initializeModels()
 
    // ----------- DESTROY OLD -------- //
    // REMOVE old Models
-   if(mWorldModel != NULL)
+   if(mConfiguredCollideModels != NULL)
    {
-      mCollidableModelGroup->removeChild(mWorldModel);
+      mCollidableModelGroup->removeChild(mConfiguredCollideModels);
    }
-   if (mUCmodels != NULL)
+   if (mConfiguredNoCollideModels != NULL)
    {
-      mUnCollidableModelGroup->removeChild(mUCmodels);
+      mUnCollidableModelGroup->removeChild(mConfiguredNoCollideModels);
    }
 
    // FIXME: Destory any old data
    // XXX: Delete old stuff
 
-   // ------------- LOAD NEW --------- //
-   // add some common file paths.
-   pfFileIO::setFilePath( ".:./data:/usr/share/Performer/data:/usr/share/Performer/data/town:");
-   pfFileIO::addFilePath( mFilePath );
-
-   mWorldModel = new pfGroup;
-   mUCmodels = new pfGroup;
+   mConfiguredCollideModels = new pfGroup;
+   mConfiguredNoCollideModels = new pfGroup;
 
    for (int x = 0; x < mModelList.size(); ++x)
    {
@@ -387,14 +420,14 @@ void simplePfNavApp::initializeModels()
 
       mModelList[x].modelDCS->addChild( mModelList[x].modelNode );      // Add model to the DCS
       if (mModelList[x].isCollidable == true)
-         mWorldModel->addChild( mModelList[x].modelDCS );
+         mConfiguredCollideModels->addChild( mModelList[x].modelDCS );
       else
-         mUCmodels->addChild( mModelList[x].modelDCS );
+         mConfiguredNoCollideModels->addChild( mModelList[x].modelDCS );
    }
 
    // --- CONSTRUCT SCENE GRAPH --- //
-   mCollidableModelGroup->addChild( mWorldModel );
-   mUnCollidableModelGroup->addChild( mUCmodels );
+   mCollidableModelGroup->addChild( mConfiguredCollideModels );
+   mUnCollidableModelGroup->addChild( mConfiguredNoCollideModels );
 }
 
 // func needs to destroy all previous pf nodes associated with sound
@@ -447,10 +480,15 @@ void simplePfNavApp::initScene()
    mNavigationDCS        = new pfNavDCS;      // DCS to navigate with
    mCollidableModelGroup = new pfGroup;
    mUnCollidableModelGroup = new pfGroup;
+   mNoNav                  = new pfGroup;
    //mWorldDCS             = new pfDCS;
 
+   mRootNode->addChild( mNoNav );
+   
    // Create the SUN
+   mLightGroup = new pfGroup;
    mSun = new pfLightSource;
+   mLightGroup->addChild( mSun );
    mSun->setPos( 0.3f, 0.0f, 0.3f, 0.0f );
    mSun->setColor( PFLT_DIFFUSE,0.3f,0.0f,0.95f );
    mSun->setColor( PFLT_AMBIENT,0.4f,0.4f,0.4f );
@@ -461,7 +499,7 @@ void simplePfNavApp::initScene()
 
    // --- CONSTRUCT STATIC Structure of SCENE GRAPH -- //
    mRootNode->addChild( mNavigationDCS );
-   mNavigationDCS->addChild(mSun);
+   mNavigationDCS->addChild(mLightGroup);
    mNavigationDCS->addChild(mCollidableModelGroup);
    mNavigationDCS->addChild(mUnCollidableModelGroup);
    //mNavigationDCS->addChild( pfFileIO::autoloadFile( "terrain.flt", pfFileIO::FEET ) );
@@ -472,7 +510,7 @@ void simplePfNavApp::initScene()
 
    // Configure the Navigator DCS node:
    vjMatrix initial_nav;              // Initial navigation position
-   initial_nav.setTrans(mInitialNavPos);
+   initial_nav.setTrans( mInitialNavPos );
 
    mVelNavDrive = new velocityNav;
    mVelNavDrive->setHomePosition(initial_nav);
