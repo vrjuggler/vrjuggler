@@ -382,8 +382,8 @@ if (mAccelerateButton-&gt;getData() == gadget::Digital::TOGGLE_ON)
          </itemizedlist>
       </section>
       <section>
-         <title>Configuration</title>
-         <para>The configuration system in VR Juggler has been separated into a standalone library. This library gives exactly the same features as before. This library has its own namespace: <classname>jccl</classname>. The library is called JCCL, short for Juggler Configuration and Control Library </para>
+         <title>Configuration System</title>
+         <para>The configuration system in VR Juggler has been separated into a standalone library. This library gives exactly the same features as before. This library has its own namespace: <literal>jccl</literal>. The library is called JCCL, short for Juggler Configuration and Control Library </para>
          <itemizedlist>
             <listitem>
                <para>The first place you configure VR Juggler applications is in the <function>main()</function> function. JCCL config file are loaded by the kernel. This is exactly the same as before: </para>
@@ -429,6 +429,12 @@ if (mAccelerateButton-&gt;getData() == gadget::Digital::TOGGLE_ON)
                <programlisting>std::string type = (std::string) chunk-&gt;getType();</programlisting>
                <para>to this:</para>
                <programlisting>std::string type = chunk-&gt;getDescToken();</programlisting>
+            </listitem>
+            <listitem>
+               <para>Code that uses <classname>jccl::ConfigManager</classname> (formerly <classname>vjConfigManager</classname>) must be careful in accessing the list of pending configuration elements. Prior to the creation of JCCL, the pending list was locked and unlocked internally for all accesses. Now, the responsibility of protecting access to the pending list has shifted to user-level code. The methods <methodname>lockPending()</methodname> and <methodname>unlockPending()</methodname> are provided to lock and unlock the pending list. Furthermore, the methods that access the pending list have assertions to verify that the list has been locked properly. If your code gets assertion failures similar to the following:</para>
+               <screen>  Assertion failed: (1 == mPendingLock.test()), file
+&lt;some path&gt;/modules/jackal/rtrc/jccl/RTRC/ConfigManager.h, line 214, pid 165370</screen>
+               <para>then you need to verify that you lock and unlock the pending list correctly.</para>
             </listitem>
             <listitem>
                <para>The JCCL library is located in <filename>libjccl</filename>, and the headers are in <filename>include/jccl</filename>.</para>
