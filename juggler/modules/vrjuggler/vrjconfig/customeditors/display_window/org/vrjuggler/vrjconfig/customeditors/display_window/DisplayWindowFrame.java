@@ -325,11 +325,25 @@ public class DisplayWindowFrame
          ConfigElement fb_cfg =
             (ConfigElement) mElement.getProperty("frame_buffer_config", 0);
          fb_cfg.setProperty("visual_id", 0, dlg.getVisualID(), mContext);
-         fb_cfg.setProperty("red_size", 0, dlg.getRedDepth(), mContext);
-         fb_cfg.setProperty("green_size", 0, dlg.getGreenDepth(), mContext);
-         fb_cfg.setProperty("blue_size", 0, dlg.getBlueDepth(), mContext);
-         fb_cfg.setProperty("alpha_size", 0, dlg.getAlphaDepth(), mContext);
+         fb_cfg.setProperty("red_size", 0, dlg.getColorRedDepth(), mContext);
+         fb_cfg.setProperty("green_size", 0, dlg.getColorGreenDepth(),
+                            mContext);
+         fb_cfg.setProperty("blue_size", 0, dlg.getColorBlueDepth(), mContext);
+         fb_cfg.setProperty("alpha_size", 0, dlg.getColorAlphaDepth(),
+                            mContext);
+         fb_cfg.setProperty("auxiliary_buffer_count", 0,
+                            dlg.getAuxiliaryBufferCount(), mContext);
          fb_cfg.setProperty("depth_buffer_size", 0, dlg.getDepthBufferSize(),
+                            mContext);
+         fb_cfg.setProperty("stencil_buffer_size", 0,
+                            dlg.getStencilBufferSize(), mContext);
+         fb_cfg.setProperty("accum_red_size", 0, dlg.getAccumRedDepth(),
+                            mContext);
+         fb_cfg.setProperty("accum_green_size", 0, dlg.getAccumGreenDepth(),
+                            mContext);
+         fb_cfg.setProperty("accum_blue_size", 0, dlg.getAccumBlueDepth(),
+                            mContext);
+         fb_cfg.setProperty("accum_alpha_size", 0, dlg.getAccumAlphaDepth(),
                             mContext);
          fb_cfg.setProperty("fsaa_enable", 0, dlg.getFSAAEnable(), mContext);
 
