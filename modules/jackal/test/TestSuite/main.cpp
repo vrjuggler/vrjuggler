@@ -6,6 +6,8 @@
 #include <TestCases/IncludesTest.h>
 #include <TestCases/LabeledPerfDataBufferTest.h>
 #include <TestCases/EnumerationsTest.h>
+#include <TestCases/ConfigChunkTest.h>
+
 
 #include <vpr/Util/Debug.h>
 #include <vpr/System.h>
@@ -44,6 +46,7 @@ int main (int ac, char **av)
    CppUnit::TestSuite* noninteractive_suite = new CppUnit::TestSuite("noninteractive");
 
    // add tests to the suite
+   noninteractive_suite->addTest(jcclTest::ConfigChunkTest::suite());
    noninteractive_suite->addTest(jcclTest::VarValueTest::suite());
    noninteractive_suite->addTest(jcclTest::ChunkDescTest::suite());
    noninteractive_suite->addTest(jcclTest::IncludesTest::suite());
