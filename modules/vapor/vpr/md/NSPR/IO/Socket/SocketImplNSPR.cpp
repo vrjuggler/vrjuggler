@@ -248,9 +248,9 @@ vpr::ReturnStatus SocketImplNSPR::connect (vpr::Interval timeout)
    vprASSERT((true == m_open) && "Trying to connect an un-opened socket");
    vprASSERT((m_handle != NULL) && "Trying to connect with NULL handle");
 
-   if(m_bound)
+   if(m_connected)
    {
-      vprDEBUG(vprDBG_ALL,0) << "SocketImplNSPR::connect: Socket alreay bound.  Can't connect"
+      vprDEBUG(vprDBG_ALL,0) << "SocketImplNSPR::connect: Socket already connected.  Can't connect again"
                     << vprDEBUG_FLUSH;
       retval.setCode(vpr::ReturnStatus::Fail);
    }
