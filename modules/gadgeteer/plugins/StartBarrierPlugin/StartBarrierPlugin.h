@@ -137,7 +137,7 @@ private:
     */   
    static std::string getElementType()
    {
-      return std::string("StartBarrierPlugin");
+      return std::string("start_barrier_plugin");
    }
 
 private:

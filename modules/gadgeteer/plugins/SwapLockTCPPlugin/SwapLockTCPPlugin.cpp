@@ -94,9 +94,9 @@ namespace cluster
       
       mTCPport = element->getProperty<int>(std::string("listen_port"));
 
-      vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << clrOutBOLD(clrCYAN,"[StartBarrierPlugin] ")
+      vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << clrOutBOLD(clrCYAN,"[SwapLockTCPPlugin] ")
          << "SwapLock Master Chunk Name is: " << barrier_machine_element_name << std::endl << vprDEBUG_FLUSH;         
-      vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << clrOutBOLD(clrCYAN,"[StartBarrierPlugin] ")
+      vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << clrOutBOLD(clrCYAN,"[SwapLockTCPPlugin] ")
          << "SwapLock Master Hostname is: " << mBarrierMasterHostname << std::endl << vprDEBUG_FLUSH;         
       // Starting Barrier Stuff
       /////////////////////////////////////         
