@@ -41,8 +41,8 @@
 #include <plugins/ApplicationDataManager/UserData.h>
 #include "MyType.h"
 
-#include <cluster/ClusterNetwork/ClusterNetwork.h>
-#include <cluster/ClusterNetwork/ClusterNode.h>
+#include <cluster/ClusterNetwork.h>
+#include <cluster/ClusterNode.h>
 
 namespace vrjTest
 {
