@@ -48,6 +48,7 @@ import org.vrjuggler.jccl.config.ConfigContext;
 import org.vrjuggler.jccl.config.ConfigDefinition;
 import org.vrjuggler.jccl.config.ConfigElement;
 import org.vrjuggler.jccl.config.ConfigElementFactory;
+import org.vrjuggler.jccl.config.event.*;
 import org.vrjuggler.jccl.editors.PropertyEditorPanel;
 import org.vrjuggler.vrjconfig.commoneditors.EditorConstants;
 
@@ -82,16 +83,87 @@ public class ViewEditorPanel
                                                            title);
       this.setBorder(mMainBorder);
    }
+   
+   public void updatePosSize(PropertyChangeEvent evt)
+   {
+      ConfigElement screen = (ConfigElement)mCaveModel.getViewToScreenMap().get(mView);
+      int val = Integer.parseInt(evt.getNewValue().toString());
+      int screen_size_x  = ((Integer) screen.getProperty("size", 0)).intValue();
+      int screen_size_y  = ((Integer) screen.getProperty("size", 1)).intValue();
+         
+      if (evt.getSource() == mPositionXField)
+      {
+         float pos_x = (float)val/(float)screen_size_x;
+         mView.setProperty("origin", 0, new Float(pos_x));
+      }
+      else if (evt.getSource() == mPositionYField)
+      {
+         float pos_y = (float)val/(float)screen_size_y;
+         mView.setProperty("origin", 1, new Float(pos_y));
+      }
+      else if (evt.getSource() == mWidthField)
+      {
+         float size_x = (float)val/(float)screen_size_x;
+         mView.setProperty("size", 0, new Float(size_x));
+      }
+      else if (evt.getSource() == mHeightField)
+      {
+         float size_y = (float)val/(float)screen_size_y;
+         mView.setProperty("size", 1, new Float(size_y));
+      }
+   }
 
+   class ChangeListener implements PropertyChangeListener
+   {
+      public void propertyChange(PropertyChangeEvent evt) 
+      {
+         if (evt.getPropertyName().equals("value"))
+         {
+            updatePosSize( evt );
+         }
+      }
+   }
+
+   private ChangeListener mChangeListener = new ChangeListener();
+   
    public void setConfig(ConfigElement view)
    {
       mView = view;
       ConfigElement screen = (ConfigElement)mCaveModel.getViewToScreenMap().get(mView);
       
-      float v_origin_x  = ((Float) mView.getProperty("origin", 0)).floatValue();
-      float v_origin_y  = ((Float) mView.getProperty("origin", 1)).floatValue();
-      float v_size_x  = ((Float) mView.getProperty("size", 0)).floatValue();
-      float v_size_y  = ((Float) mView.getProperty("size", 1)).floatValue();
+      loadPosSizeFromElement();
+      mScreenModel.setSelectedScreen( screen );
+
+
+      mPositionXField.addPropertyChangeListener(mChangeListener);
+      mPositionYField.addPropertyChangeListener(mChangeListener);
+      mWidthField.addPropertyChangeListener(mChangeListener);
+      mHeightField.addPropertyChangeListener(mChangeListener);
+      
+      // Validate the default values for the various text fields.
+      validateUserInput();
+
+      mView.addConfigElementListener( new ConfigElementAdapter()
+         {
+            public void propertyValueChanged(ConfigElementEvent event)
+            {
+               if ( event.getProperty().equals("size") ||
+                    event.getProperty().equals("origin") )
+               {
+                  loadPosSizeFromElement();
+               }
+            }
+         });
+   }
+
+   private void loadPosSizeFromElement()
+   {
+      ConfigElement screen = (ConfigElement)mCaveModel.getViewToScreenMap().get(mView);
+
+      float v_origin_x  = ((Number) mView.getProperty("origin", 0)).floatValue();
+      float v_origin_y  = ((Number) mView.getProperty("origin", 1)).floatValue();
+      float v_size_x  = ((Number) mView.getProperty("size", 0)).floatValue();
+      float v_size_y  = ((Number) mView.getProperty("size", 1)).floatValue();
       
       int s_origin_x  = ((Integer) screen.getProperty("origin", 0)).intValue();
       int s_origin_y  = ((Integer) screen.getProperty("origin", 1)).intValue();
@@ -102,59 +174,6 @@ public class ViewEditorPanel
       mPositionYField.setValue( new Integer((int)(v_origin_y * s_origin_y)) );
       mWidthField.setValue( new Integer((int)(v_size_x * s_size_x)) );
       mHeightField.setValue( new Integer((int)(v_size_y * s_size_y)) );
-      mScreenModel.setSelectedScreen( screen );
-
-
-      mPositionXField.addPropertyChangeListener(new PropertyChangeListener()
-            {
-               public void propertyChange(PropertyChangeEvent evt) 
-               {
-                  if (evt.getPropertyName().equals("value"))
-                  {
-                     mCaveModel.setViewPosX( mView, Integer.parseInt(evt.getNewValue().toString()) );
-                     //mCaveModel.setViewPosX( mView, new Integer(mPositionXField.getValue().toString()) );
-                     System.out.println("New value: " + evt.getNewValue());
-                  }
-               }
-            });
-      mPositionYField.addPropertyChangeListener(new PropertyChangeListener()
-            {
-               public void propertyChange(PropertyChangeEvent evt) 
-               {
-                  if (evt.getPropertyName().equals("value"))
-                  {
-                     mCaveModel.setViewPosY( mView, Integer.parseInt(evt.getNewValue().toString()) );
-                     //mCaveModel.setViewPosX( mView, new Integer(mPositionYField.getValue().toString()) );
-                     System.out.println("New value: " + evt.getNewValue());
-                  }
-               }
-            });
-      mWidthField.addPropertyChangeListener(new PropertyChangeListener()
-            {
-               public void propertyChange(PropertyChangeEvent evt) 
-               {
-                  if (evt.getPropertyName().equals("value"))
-                  {
-                     mCaveModel.setViewWidth( mView, Integer.parseInt(evt.getNewValue().toString()) );
-                     //mCaveModel.setViewPosX( mView, new Integer(mPositionXField.getValue().toString()) );
-                     System.out.println("New value: " + evt.getNewValue());
-                  }
-               }
-            });
-      mHeightField.addPropertyChangeListener(new PropertyChangeListener()
-            {
-               public void propertyChange(PropertyChangeEvent evt) 
-               {
-                  if (evt.getPropertyName().equals("value"))
-                  {
-                     mCaveModel.setViewHeight( mView, Integer.parseInt(evt.getNewValue().toString()) );
-                     //mCaveModel.setViewPosX( mView, new Integer(mPositionXField.getValue().toString()) );
-                     System.out.println("New value: " + evt.getNewValue());
-                  }
-               }
-            });
-      // Validate the default values for the various text fields.
-      validateUserInput();
    }
    
    public Object getViewpoint()

@@ -60,8 +60,6 @@ public class ScreenDisplay
       double size[][] = {{0.50, 0.50},{150}};
       mTableLayout = new TableLayout(size);
       setLayout(mTableLayout);
-      //setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
-      //setLayout(new FlowLayout());
    }
 
    public void setConfig( ConfigContext ctx, CaveModel cm )
@@ -81,73 +79,12 @@ public class ScreenDisplay
    
    private void addScreen(ConfigElement elm)
    {
-      /*
-      JPanel both = new JPanel();
-      JLabel lbl = new JLabel("Aron");
-      JComboBox cb = new JComboBox();
-      
-      ViewportPlacer vp = new ViewportPlacer(mConfigContext, elm);
-      */
       ScreenEditorPanel sep = new ScreenEditorPanel(mConfigContext, elm);
-      /*
-      vp.setMinimumSize(new Dimension(100, 100));
-      vp.setPreferredSize(new Dimension(100, 100));
-      vp.setMaximumSize(new Dimension(100, 100));
-      vp.setBorder(BorderFactory.createLineBorder(java.awt.Color.black));
-      */
-      
-      /*
-      lbl.setMinimumSize(new Dimension(100, 10));
-      lbl.setPreferredSize(new Dimension(100, 10));
-      lbl.setMaximumSize(new Dimension(100, 10));
-      
-      both.setLayout(new BorderLayout());
-      both.add(lbl, BorderLayout.NORTH);
-      both.add(vp, BorderLayout.CENTER);
-      both.add(cb, BorderLayout.SOUTH);
-      
-      both.setMinimumSize(vp.getMinimumSize());
-      both.setPreferredSize(vp.getPreferredSize());
-      both.setMaximumSize(vp.getMaximumSize());
-      */
 
       int col = mTableLayout.getNumColumn();
       mTableLayout.insertColumn(col-1, TableLayout.PREFERRED);
       this.add(sep, new TableLayoutConstraints(col - 1, 0, col - 1, 0, TableLayout.FULL,
                                                TableLayout.FULL));
-      /*
-      this.add(vp, new TableLayoutConstraints(col - 1, 1, col - 1, 1, TableLayout.FULL,
-                                               TableLayout.FULL));
-      this.add(cb, new TableLayoutConstraints(col - 1, 2, col - 1, 2, TableLayout.FULL,
-                                               TableLayout.FULL));
-      */
-      /*
-      double main_size[][] =
-         {{100},
-          {20, 100}};
-      both.setLayout(new TableLayout(main_size));
-      both.add(lbl,  new TableLayoutConstraints(0, 0, 0, 0,
-                                                TableLayout.CENTER,
-                                                TableLayout.CENTER));
-      both.add(vp,  new TableLayoutConstraints(0, 1, 0, 1,
-                                               TableLayout.FULL,
-                                               TableLayout.FULL));
-      */
-      //this.add(both);
-      
-      // XXX: Provide a way to de-select all other placers.
-      /*
-      vp.addMouseListener(new MouseAdapter()
-      {
-         public void mousePressed(MouseEvent e)
-         {
-            if()
-            {
-            }
-         }
-      });
-      */
-      
       mScreens.put(elm, sep);
    }
 
@@ -177,6 +114,7 @@ public class ScreenDisplay
                vp.setPreferredSize(new Dimension(100, 100));
                vp.setMaximumSize(new Dimension(100, 100));
                vp.setBorder(BorderFactory.createLineBorder(java.awt.Color.black));
+               
                mScreenDisplay.add(vp);
                mScreenDisplay.revalidate();
                mScreenDisplay.repaint();
