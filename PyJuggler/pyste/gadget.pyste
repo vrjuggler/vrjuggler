@@ -20,6 +20,7 @@ Class('gadget::AnalogData', 'gadget/Type/AnalogData.h')
 Class('gadget::DigitalData', 'gadget/Type/DigitalData.h')
 #Class('gadget::GloveData', 'gadget/Type/Glove.h')
 Class('gadget::PositionData', 'gadget/Type/PositionData.h')
+Class('gadget::StringData', 'gadget/Type/StringData.h')
 # ======================================================= Base input data types
 
 # Base input types ============================================================
@@ -35,6 +36,15 @@ set_policy(Digital.getDigitalDataBuffer, return_internal_reference())
 
 Position = Class('gadget::Position', 'gadget/Type/Position.h')
 set_policy(Position.getPositionDataBuffer, return_internal_reference())
+
+EventWindow = Class('gadget::EventWindow', 'gadget/Type/EventWindow.h')
+
+SpeechRecogDigital = Class('gadget::SpeechRecogDigital',
+                           'gadget/Type/SpeechRecogDigital.h')
+
+SpeechRecogString = Class('gadget::SpeechRecogString',
+                          'gadget/Type/SpeechRecogString.h')
+set_policy(SpeechRecogString.getStringDataBuffer, return_internal_reference())
 # ============================================================ Base input types
 
 # Proxy types =================================================================
@@ -55,6 +65,25 @@ PositionProxy = Class('gadget::PositionProxy', 'gadget/Type/PositionProxy.h')
 set_policy(PositionProxy.getPositionData, return_internal_reference())
 set_policy(PositionProxy.getPositionPtr, return_internal_reference())
 exclude(PositionProxy.getProxiedInputDevice)
+
+EventWindowProxy = Class('gadget::EventWindowProxy',
+                         'gadget/Type/EventWindowProxy.h')
+set_policy(EventWindowProxy.getEventWindowPtr, return_internal_reference())
+exclude(EventWindowProxy.getProxiedInputDevice)
+
+SpeechRecogDigitalProxy = Class('gadget::SpeechRecogDigitalProxy',
+                                'gadget/Type/SpeechRecogDigitalProxy.h')
+set_policy(SpeechRecogDigitalProxy.getDigitalData, return_internal_reference())
+set_policy(SpeechRecogDigitalProxy.getSpeechRecogDigitalPtr,
+           return_internal_reference())
+
+SpeechRecogStringProxy = Class('gadget::SpeechRecogStringProxy',
+                               'gadget/Type/SpeechRecogStringProxy.h')
+set_policy(SpeechRecogStringProxy.getStringData,
+           return_internal_reference())
+set_policy(SpeechRecogStringProxy.getSpeechRecogStringPtr,
+           return_internal_reference())
+exclude(SpeechRecogStringProxy.getProxiedInputDevice)
 # ================================================================= Proxy types
 
 # Smart pointers ==============================================================
@@ -71,6 +100,18 @@ set_policy(DigitalInterface.getProxy, return_internal_reference())
 PositionInterface = Class('gadgetWrapper::PositionInterface',
                           'gadgeteer-wrappers.h')
 set_policy(PositionInterface.getProxy, return_internal_reference())
+
+EventWindowInterface = Class('gadgetWrapper::EventWindowInterface',
+                             'gadgeteer-wrappers.h')
+set_policy(EventWindowInterface.getProxy, return_internal_reference())
+
+SpeechRecogDigitalInterface = Class('gadgetWrapper::SpeechRecogDigitalInterface',
+                                    'gadgeteer-wrappers.h')
+set_policy(SpeechRecogDigitalInterface.getProxy, return_internal_reference())
+
+SpeechRecogStringInterface = Class('gadgetWrapper::SpeechRecogStringInterface',
+                                   'gadgeteer-wrappers.h')
+set_policy(SpeechRecogStringInterface.getProxy, return_internal_reference())
 
 # XXX: I am not thrilled with this redefinition of DeviceInterface just to
 # get the necessary headers included.  It would be nice if Pyste would allow
