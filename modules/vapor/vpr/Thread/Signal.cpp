@@ -142,7 +142,7 @@ SignalAction::SignalAction (vpr::SignalHandler_t handler,
 
 vpr::ReturnStatus
 SigHandler::registerHandler (const int sig_num,
-                             vpr::SignalHandler_t handler)
+                             vpr::SignalHandler_t handler, const bool restart)
 {
     vpr::SignalAction sa(handler);
     return registerHandler(sig_num, sa);
@@ -150,9 +150,16 @@ SigHandler::registerHandler (const int sig_num,
 
 vpr::ReturnStatus
 SigHandler::registerHandler (const int sig_num,
-                             vpr::SignalAction& action)
+                             vpr::SignalAction& action, const bool restart)
 {
     vpr::ReturnStatus status;
+
+#ifdef SA_RESTART
+    if ( sig_num != SIGALRM && restart )
+    {
+        action.m_sa.sa_flags |= SA_RESTART;
+    }
+#endif
 
     if ( vpr::SigHandler::sigaction(sig_num, &action.m_sa) != 0 ) {
         status.setCode(vpr::ReturnStatus::Fail);
