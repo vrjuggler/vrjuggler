@@ -27,6 +27,8 @@ Jun-23-2000 patrick   Set the stereo bit in an OpenGL window on Win32 if
                       Added the new utility library Juggler_utils which is
                       required by most, if not all, applications after this
                       date.
+Jun-17-2000 kevn      SoundManager added, juggler sound engine for audioworks 
+                      is available.
 Jun-08-2000 allenb    vjApp no longer needs to be passed a vjKernel instance
 Jun-06-2000 kevn      vjGetVJMatrix() has been renamed to vjGetVjMatrix()
 ==[ 0.1.96 ]=========================
