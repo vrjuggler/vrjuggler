@@ -48,96 +48,98 @@ bool readString (istream &in, char *buffer, int size, bool *quoted) {
      * Quoted is set true if the string read was in quotes.
      */
 
+    size = size-5; // this is just cheezy reassurance
     int i;
     bool retval = false;
     char c, vj;
     buffer[0] = '\0';
 
     if (quoted)
-   *quoted = false;
+        *quoted = false;
 
     // read whitespace, comments
     for (;;) {
-   if (!in.get(c))
-       break;
-   if (isspace(c))
-       continue;
-   if (c == '#') {            // shell type comment
-       while (c != '\n')
-      in.get(c);
-       continue;
-   }
-   if ((c == '/') && in.get(vj)) {
-       /* it might be one or the other type of comment */
-       if (vj == '/') {
-      // single line comment.
-      while (c != '\n')
-          if (!in.get(c))
-         break;
-      continue;
-       }
-       else if (vj == '*') {
-      // multiline comment.
-      while (true) {
-          if (!in.get(vj))
-         break;
-          if (vj == '*') {
-         in.get(vj);
-         if (vj == '/')
-             break;
-          }
-      }
-      continue;
-       }
-       else 
-      in.putback(vj);
-   }
-   break; // we read the / character and it wasn't part of a comment
+        if (!in.get(c))
+            break;
+        if (isspace(c))
+            continue;
+        if (c == '#') {            // shell type comment
+            while (c != '\n')
+                in.get(c);
+            continue;
+        }
+        if ((c == '/') && in.get(vj)) {
+            /* it might be one or the other type of comment */
+            if (vj == '/') {
+                // single line comment.
+                while (c != '\n')
+                    if (!in.get(c))
+                        break;
+                continue;
+            }
+            else if (vj == '*') {
+                // multiline comment.
+                while (true) {
+                    if (!in.get(vj))
+                        break;
+                    if (vj == '*') {
+                        in.get(vj);
+                        if (vj == '/')
+                            break;
+                    }
+                }
+                continue;
+            }
+            else 
+                in.putback(vj);
+        }
+        break; // we read the / character and it wasn't part of a comment
     }
     buffer[0] = c;
     
     if ((buffer[0] == '{') || (buffer[0] == '}')) {
-   buffer[1] = '\0';
-   retval = true;
+        buffer[1] = '\0';
+        retval = true;
     }
     else if (buffer[0] == '"') {
-   /* do a quoted string */
-   if (quoted)
-       *quoted = true;
-   for (i = 0; i < size; i++) {
-       in.get(buffer[i]);
-       if (buffer[i] == '"') {
-      buffer[i] = '\0';
-      break;
-       }
-   }
-   if (i == size) {
-       while (in.get(buffer[i]) && (buffer[i] != '"'))
-      ;
-       buffer[i] = '\0';
-       vjDEBUG (vjDBG_ERROR,0) << "ERROR: Truncated string in config file: '"
-                << buffer << "'\n" << vjDEBUG_FLUSH;
-   }
-   retval = true;
+        /* do a quoted string */
+        if (quoted)
+            *quoted = true;
+        for (i = 0; i < size; i++) {
+            in.get(buffer[i]);
+            if (buffer[i] == '"') {
+                buffer[i] = '\0';
+                break;
+            }
+        }
+        if (i == size) {
+            i--; // so that we're writing to the last element of buffer
+            while (in.get(buffer[i]) && (buffer[i] != '"'))
+                ;
+            buffer[i] = '\0';
+            vjDEBUG (vjDBG_ERROR,0) << "ERROR: Truncated string in config file: '"
+                                    << buffer << "'\n" << vjDEBUG_FLUSH;
+        }
+        retval = true;
     }
     else {
-   // should add cleaner overflow handling like above...
-   for (i = 1; i < size-1; i++) {
-       in.get(buffer[i]);
-       if (buffer[i] == '}') {
-      // wanna push back
-      in.putback(buffer[i]);
-      break;
-       }
-       if (isspace(buffer[i]))
-      break;
-   }
-   buffer[i] = '\0';
-   retval = true;
+        // should add cleaner overflow handling like above...
+        for (i = 1; i < size-1; i++) {
+            in.get(buffer[i]);
+            if (buffer[i] == '}') {
+                // wanna push back
+                in.putback(buffer[i]);
+                break;
+            }
+            if (isspace(buffer[i]))
+                break;
+        }
+        buffer[i] = '\0';
+        retval = true;
     }
     //cout << "readString: read string: '" << buffer << "'" << endl;
     if (!retval)
-   buffer[0] = '\0'; // so it's safe to read it...
+        buffer[0] = '\0'; // so it's safe to read it...
     return retval;
 }
 
@@ -147,26 +149,26 @@ VarType readType (istream &in) {
     char str[256];
 
     if (!readString (in, str, 256))
-   return T_INVALID;
-
+        return T_INVALID;
+    
     if (!strcasecmp (str, "int"))
-   return T_INT;
+        return T_INT;
     if (!strcasecmp (str, "integer"))
-   return T_INT;
+        return T_INT;
     if (!strcasecmp (str, "float"))
-   return T_FLOAT;
+        return T_FLOAT;
     if (!strcasecmp (str, "bool"))
-   return T_BOOL;
+        return T_BOOL;
     if (!strcasecmp (str, "boolean"))
-   return T_BOOL;
+        return T_BOOL;
     if (!strcasecmp (str, "string"))
-   return T_STRING;
+        return T_STRING;
     if (!strcasecmp (str, "distance"))
-   return T_DISTANCE;
+        return T_DISTANCE;
     if (!strcasecmp (str, "chunk"))
-   return T_CHUNK;
+        return T_CHUNK;
     if (!strcasecmp (str, "embeddedchunk"))
-   return T_EMBEDDEDCHUNK;
+        return T_EMBEDDEDCHUNK;
     
     return T_INVALID;
 }
@@ -176,61 +178,61 @@ VarType readType (istream &in) {
 char *typeString (VarType t) {
     switch (t) {
     case T_INT:
-   return "Int";
+        return "Int";
     case T_BOOL:
-   return "Bool";
+        return "Bool";
     case T_FLOAT:
-   return "Float";
+        return "Float";
     case T_STRING:
-   return "String";
+        return "String";
     case T_CHUNK:
-   return "Chunk";
+        return "Chunk";
     case T_EMBEDDEDCHUNK:
-   return "EmbeddedChunk";
+        return "EmbeddedChunk";
     default:
-   return "Unrecognized_Type";
+        return "Unrecognized_Type";
     }
 }
 
 
 
 char *unitString (CfgUnit t) {
-  switch (t) {
-  case U_Feet:
-    return "Feet";
-  case U_Inches:
-    return "Inches";
-  case U_Meters:
-    return "Meters";
-  case U_Centimeters:
-    return "Centimeters";
-  default:
-    return "Invalid Unit Type";
-  }
+    switch (t) {
+    case U_Feet:
+        return "Feet";
+    case U_Inches:
+        return "Inches";
+    case U_Meters:
+        return "Meters";
+    case U_Centimeters:
+        return "Centimeters";
+    default:
+        return "Invalid Unit Type";
+    }
 }
 
 float toFeet (float val, CfgUnit unit) {
-  switch (unit) {
-  case U_Feet:
-    return val;
-  case U_Inches:
-    return (val/12);
-  case U_Meters:
-    return (val*3.28084);
-  case U_Centimeters:
-    return (val*0.0328084);
-  default:
-    return val;
-  }
+    switch (unit) {
+    case U_Feet:
+        return val;
+    case U_Inches:
+        return (val/12);
+    case U_Meters:
+        return (val*3.28084);
+    case U_Centimeters:
+        return (val*0.0328084);
+    default:
+        return val;
+    }
 }
 
 
 bool vjstrcasecmp (const std::string& a, const std::string& b) {
     if (a.size() != b.size())
-   return true;
+        return true;
     for (unsigned int i = 0; i < a.size(); i++)
-   if (toupper(a[i]) != toupper(b[i]))
-       return true;
+        if (toupper(a[i]) != toupper(b[i]))
+            return true;
     return false;
 }
 
@@ -239,11 +241,11 @@ bool vjstrncasecmp (const std::string& a, const std::string& b, int _n) {
 
     int n = VJ_MIN2 (a.size(), b.size());
     if (_n >= 0)
-   n = VJ_MIN2 (n, _n);
-
+        n = VJ_MIN2 (n, _n);
+    
     for (int i = 0; i < n; i++)
-   if (toupper(a[i]) != toupper(b[i]))
-       return true;
+        if (toupper(a[i]) != toupper(b[i]))
+            return true;
     return false;
 }
 
@@ -253,11 +255,11 @@ bool vjstrncmp (const std::string& a, const std::string& b, int _n) {
 
     int n = VJ_MIN2 (a.size(), b.size());
     if (_n >= 0)
-   n = VJ_MIN2 (n, _n);
-
+        n = VJ_MIN2 (n, _n);
+    
     for (int i = 0; i < n; i++)
-   if (a[i] != b[i])
-       return true;
+        if (a[i] != b[i])
+            return true;
     return false;
 }
 
