@@ -40,6 +40,8 @@ public:
     // -----------------------------------------------------------------------
     vjSemaphorePosix (int initialValue = 1) {
         // ----- Allocate the unnamed semaphore ----- //
+        sema = (sem_t*) malloc(sizeof(sem_t));
+
         if ( sem_init(sema, 0, initialValue) != 0 ) {
             perror("sem_init() error");
         }
@@ -56,6 +58,8 @@ public:
         if ( sem_destroy(sema) != 0 ) {
             perror("sem_destroy() error");
         }
+
+        free(sema);
     }
 
     // -----------------------------------------------------------------------
