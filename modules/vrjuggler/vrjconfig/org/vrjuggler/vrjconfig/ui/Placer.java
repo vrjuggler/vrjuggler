@@ -102,6 +102,11 @@ public class Placer
    private EventListenerList listeners = new EventListenerList();
 
    /**
+    * Handler for when the model changes.
+    */
+   private PlacerModelHandler modelHandler = new PlacerModelHandler();
+
+   /**
     * Creates a new placer with a default model.
     */
    public Placer()
@@ -130,6 +135,7 @@ public class Placer
       {
          throw new IllegalArgumentException("model can not be null");
       }
+      this.model = model;
 
       // init the renderer
       renderer = new DefaultPlacerRenderer();
@@ -154,7 +160,9 @@ public class Placer
          throw new IllegalArgumentException("model can not be null");
       }
       PlacerModel oldValue = this.model;
+      oldValue.removePlacerModelListener(modelHandler);
       this.model = model;
+      this.model.addPlacerModelListener(modelHandler);
       firePropertyChange("model", oldValue, model);
    }
 
@@ -169,14 +177,15 @@ public class Placer
    /**
     * Sets the renderer to use with this placer.
     */
-   public void setRenderer(PlacerRenderer model)
+   public void setRenderer(PlacerRenderer renderer)
    {
-      if (model == null)
+      if (renderer == null)
       {
          throw new IllegalArgumentException("renderer can not be null");
       }
       PlacerRenderer oldValue = this.renderer;
       this.renderer = renderer;
+      System.out.println("Set renderer to: "+this.renderer);
       firePropertyChange("renderer", oldValue, renderer);
    }
 
@@ -510,14 +519,15 @@ class DefaultPlacerRenderer
          setForeground(placer.getSelectionBackground());
          setBackground(placer.getSelectionForeground());
       }
+
       return this;
    }
 
-   public void paint(Graphics g)
+   public void paintComponent(Graphics g)
    {
       if (placer != null && idx >= 0)
       {
-         super.paint(g);
+         super.paintComponent(g);
          Point pos = placer.getModel().getLocationOf(idx);
          Dimension dim = placer.getModel().getSizeOf(idx);
          g.setColor(Color.white);
