@@ -31,6 +31,7 @@ import java.io.*;
 import java.util.Iterator;
 import javax.swing.*;
 import org.vrjuggler.tweek.beans.loader.BeanJarClassLoader;
+import org.vrjuggler.tweek.services.EnvironmentService;
 import org.vrjuggler.jccl.config.*;
 import org.vrjuggler.vrjconfig.PopupButton;
 
@@ -116,10 +117,52 @@ public class ConfigToolbar
       }
    }
 
+   private ConfigContext createDefaultConfigContext()
+   {
+      ConfigContext ctx = new ConfigContext();
+
+      // Add the VR Juggler definitions into the context
+      String default_desc_file = "${VJ_BASE_DIR}/share/vrjuggler/data/vrj-chunks.desc";
+      default_desc_file = expandEnvVars(default_desc_file);
+      if (getConfigBroker().containsDataSource(default_desc_file))
+      {
+         ctx.add(default_desc_file);
+      }
+
+      return ctx;
+   }
+
    public boolean doNew()
    {
-      fireAction("New");
-      return true;
+      // Create a new context
+      ConfigContext ctx = createDefaultConfigContext();
+
+      // Create a new data source and add it to the broker
+      try
+      {
+         // Get the new filename from the user
+         String filename = askUserForNewConfigFile();
+         if (filename == null)
+         {
+            // User cancelled
+            return false;
+         }
+
+         FileDataSource new_data_source = new FileDataSource(filename,
+                                                             FileDataSource.ELEMENTS);
+         getConfigBroker().add(filename, new_data_source);
+         ctx.add(filename);
+         setConfigContext(ctx);
+
+         fireAction("New");
+         return true;
+      }
+      catch (IOException ioe)
+      {
+         ioe.printStackTrace();
+      }
+
+      return false;
    }
 
    /**
@@ -127,7 +170,9 @@ public class ConfigToolbar
     */
    public boolean doOpen()
    {
-      boolean success = false;
+      // Create a new context
+      ConfigContext ctx = createDefaultConfigContext();
+
       int result = fileChooser.showOpenDialog(this);
       if (result == JFileChooser.APPROVE_OPTION)
       {
@@ -137,12 +182,15 @@ public class ConfigToolbar
             ConfigBroker broker = new ConfigBrokerProxy();
             String res_name = file.getAbsolutePath();
 
-            ChunkFactory.setDescs(broker.getDescs(context));
+            ChunkFactory.setDescs(broker.getDescs(ctx));
             FileDataSource data_source = new FileDataSource(res_name,
                                                             FileDataSource.ELEMENTS);
             broker.add(res_name, data_source);
-            context.add(res_name);
-            success = true;
+            ctx.add(res_name);
+            setConfigContext(ctx);
+
+            fireAction("Open");
+            return true;
          }
          catch (IOException ioe)
          {
@@ -152,7 +200,7 @@ public class ConfigToolbar
          }
       }
 
-      return success;
+      return false;
    }
 
    /**
@@ -226,6 +274,62 @@ public class ConfigToolbar
          contextEditor = new EditContextPopup();
       }
       return contextEditor;
+   }
+
+   /**
+    * Asks the user for a new config filename. If the user does not pick a
+    * unique name, they are scolded and told to try again.
+    */
+   private String askUserForNewConfigFile()
+   {
+      boolean cancelled = false;
+      String name = null;
+      do
+      {
+         JFileChooser chooser = new JFileChooser();
+         int result = chooser.showSaveDialog(this);
+         if (result == JFileChooser.APPROVE_OPTION)
+         {
+            File file = chooser.getSelectedFile();
+            String filename = file.getAbsolutePath();
+            if (! getConfigBroker().containsDataSource(filename))
+            {
+               name = filename;
+            }
+            else
+            {
+               JOptionPane.showMessageDialog(this,
+                                             "That resource is already open",
+                                             "Oops!",
+                                             JOptionPane.ERROR_MESSAGE);
+            }
+         }
+         else
+         {
+            // The user cancelled the new
+            cancelled = true;
+         }
+      }
+      while (name == null && !cancelled);
+
+      return name;
+   }
+
+   /**
+    * Gets a handle to the configuration broker service.
+    */
+   private ConfigBroker getConfigBroker()
+   {
+      return new ConfigBrokerProxy();
+   }
+
+   /**
+    * Returns a copy of the given string with all environment variables
+    * expanded.
+    */
+   private String expandEnvVars(String str)
+   {
+      return EnvironmentService.expandEnvVars(str);
    }
 
    /**
