@@ -121,18 +121,18 @@ public class SimpleApp : vrj.GlApp
 
       // --- Draw the box --- //
       Gl.glPushMatrix();
-//      Gl.glMultMatrixf(box_offset.mData);    // Push the wand offset matrix on the stack
-      Gl.glColor3fv(wand_color);
-      Gl.glScalef(0.5f, 0.5f, 0.5f);
-      drawCube();
+         // Push the wand offset matrix on the stack
+         Gl.glMultMatrixf(box_offset.getData());
+         Gl.glColor3fv(wand_color);
+         Gl.glScalef(0.5f, 0.5f, 0.5f);
+         drawCube();
       Gl.glPopMatrix();
 
       // Draw a coordinate axis "on" the box
       Gl.glLineWidth(5.0f);
       Gl.glDisable(Gl.GL_LIGHTING);
       Gl.glPushMatrix();
-      /*
-         Gl.glMultMatrixf(box_offset.mData);    // Goto wand position
+         Gl.glMultMatrixf(box_offset.getData());    // Goto wand position
          gmtl.Vec3f x_axis = new gmtl.Vec3f(7.0f,0.0f,0.0f);
          gmtl.Vec3f y_axis = new gmtl.Vec3f(0.0f, 7.0f, 0.0f);
          gmtl.Vec3f z_axis = new gmtl.Vec3f(0.0f, 0.0f, 7.0f);
@@ -140,18 +140,17 @@ public class SimpleApp : vrj.GlApp
 
          Gl.glBegin(Gl.GL_LINES);
             Gl.glColor3f(1.0f, 0.0f, 0.0f);
-            Gl.glVertex3fv(origin.mData);
-            Gl.glVertex3fv(x_axis.mData);
+            Gl.glVertex3fv(origin.getData());
+            Gl.glVertex3fv(x_axis.getData());
 
             Gl.glColor3f(0.0f, 1.0f, 0.0f);
-            Gl.glVertex3fv(origin.mData);
-            Gl.glVertex3fv(y_axis.mData);
+            Gl.glVertex3fv(origin.getData());
+            Gl.glVertex3fv(y_axis.getData());
 
             Gl.glColor3f(0.0f, 0.0f, 1.0f);
-            Gl.glVertex3fv(origin.mData);
-            Gl.glVertex3fv(z_axis.mData);
+            Gl.glVertex3fv(origin.getData());
+            Gl.glVertex3fv(z_axis.getData());
          Gl.glEnd();
-      */
       Gl.glPopMatrix();
       Gl.glEnable(Gl.GL_LIGHTING);
       Gl.glPopMatrix();
