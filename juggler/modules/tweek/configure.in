@@ -100,10 +100,9 @@ AC_ARG_WITH(jdom, [  --with-jdom=<PATH>      Path to JDOM JAR file(s) ],
 AC_ARG_WITH(junit, [  --with-junit=<PATH>     Path to JUnit JAR file(s) ],
             JUNIT_JAR="$withval", JUNIT_JAR='none')
 
-# Currently disable building tweek extensions by default until they are stable
 AC_ARG_ENABLE(extensions,
-              [  --enable-extensions     Build in Tweek extensions       [default=no]],
-              use_tweek_extensions="$enableval", use_tweek_extensions='no')
+              [  --enable-extensions     Build in Tweek extensions       [default=yes]],
+              use_tweek_extensions="$enableval", use_tweek_extensions='yes')
 
 DPP_ABI_SETUP
 
