@@ -98,6 +98,8 @@ private:
     int                     fd;
     vjConnectMode           mode;
     bool                    shutdown;        // set to stop procs
+    bool                    read_die;
+    bool                    write_die;
 
     struct vjCommandPtrCmp {
 	bool operator() (const vjCommand* a, const vjCommand* b) {
