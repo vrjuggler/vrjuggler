@@ -55,8 +55,7 @@ endif	# ifndef NO_JAVA
 config-pkg-links:
 	@$(MAKE) instlinks="$(instlinks)" links
 
-config-pkg-install:
-	@$(MAKE) tweek-install
+java-install:
 
 links:
 	@$(MAKE) -C jccl instlinks="$(instlinks)" links

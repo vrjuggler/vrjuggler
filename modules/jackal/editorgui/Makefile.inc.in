@@ -55,7 +55,7 @@ endif	# ifndef NO_JAVA
 editorgui-pkg-links:
 	@$(MAKE) instlinks="$(instlinks)" links
 
-editorgui-pkg-install:
+java-install:
 	@$(MAKE) editorgui-install
 
 links:
