@@ -174,6 +174,11 @@ void EventWindowXWin::controlLoop(void* nullParam)
       vpr::System::usleep(usleep_time);
    }
 
+   if ( mEmptyCursorSet )
+   {
+      XFreeCursor(mDisplay, mEmptyCursor);
+   }
+
    // Exit, cleanup code
    XDestroyWindow(mDisplay, mWindow);
    XCloseDisplay((::Display*) mDisplay);
@@ -967,13 +972,37 @@ int EventWindowXWin::openTheWindow()
    XRaiseWindow(mDisplay, mWindow);
    XClearWindow(mDisplay, mWindow);    // Try to clear the background
 
+//   createEmptyCursor(mDisplay, mWindow);
+
    vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL)
       << "gadget::EventWindowXWin::openTheWindow() : done." << std::endl
       << vprDEBUG_FLUSH;
 
-   XFree (vis_infos);
+   XFree(vis_infos);
 
    return 1;
+}
+
+void EventWindowXWin::createEmptyCursor(Display* display, Window root)
+{
+   Pixmap cursormask;
+   XGCValues xgc;
+   GC gc;
+   XColor dummycolour;
+
+   cursormask = XCreatePixmap(display, root, 1, 1, 1/*depth*/);
+   xgc.function = GXclear;
+   gc =  XCreateGC(display, cursormask, GCFunction, &xgc);
+   XFillRectangle(display, cursormask, gc, 0, 0, 1, 1);
+   dummycolour.pixel = 0;
+   dummycolour.red = 0;
+   dummycolour.flags = 04;
+   mEmptyCursor = XCreatePixmapCursor(display, cursormask, cursormask,
+                                      &dummycolour,&dummycolour, 0,0);
+   XFreePixmap(display,cursormask);
+   XFreeGC(display,gc);
+
+   mEmptyCursorSet = true;
 }
 
 /* Sets basic window manager hints for a window. */
@@ -1068,6 +1097,11 @@ void EventWindowXWin::lockMouse()
    vprDEBUG(gadgetDBG_INPUT_MGR,vprDBG_STATE_LVL)
       << "gadget::EventWindowXWin: LOCKING MOUSE..." << vprDEBUG_FLUSH;
 
+   if ( mEmptyCursorSet )
+   {
+      XDefineCursor(mDisplay, mWindow, mEmptyCursor);
+   }
+
    // Center the mouse
    int win_center_x(mWidth/2), win_center_y(mHeight/2);
    XWarpPointer(mDisplay, None, mWindow, 0,0, 0,0, win_center_x, win_center_y);
@@ -1104,6 +1138,11 @@ void EventWindowXWin::unlockMouse()
 
    // Un-grab the pointer as well
    XUngrabPointer(mDisplay, CurrentTime);
+
+   if ( mEmptyCursorSet )
+   {
+      XUndefineCursor(mDisplay, mWindow);
+   }
 
    vprDEBUG_CONT(gadgetDBG_INPUT_MGR,vprDBG_STATE_LVL)
       << "un-lock finished.\n" << vprDEBUG_FLUSH;
