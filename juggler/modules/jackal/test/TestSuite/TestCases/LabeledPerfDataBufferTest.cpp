@@ -7,7 +7,7 @@
 #include <cppunit/TestSuite.h>
 #include <cppunit/TestCaller.h>
 
-#include <jccl/Plugins/PerformanceMonitor/LabeledPerfDataBuffer.h>
+#include <jccl/PerfMonitor/LabeledPerfDataBuffer.h>
 #include <jccl/Util/Debug.h>
 #include <vpr/Thread/TSObjectProxy.h>
 #include <vpr/Thread/Thread.h>
