@@ -7,6 +7,8 @@ install-docs: install-html install-chunk-html install-pdf
 
 NAME=		programmer.guide
 
+XSLT_TOOL=	Saxon
+
 XML_FILES=	$(NAME).xml
 HTML_FILES=	$(NAME).html
 PDF_FILES=	$(NAME).pdf
