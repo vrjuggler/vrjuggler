@@ -37,15 +37,29 @@
 
 module vrj
 {
+   /**
+    * A simple map of profile names to samples.
+    */
+   struct SampleTimeMap
+   {
+      /** The list of profile names */
+      sequence<string> mNames;
+
+      /** The profile samples */
+      sequence<float> mSampleTimes;
+   };
 
    interface PerformanceMonitorSubject : tweek::Subject
    {
       /** A list of registered subjects. */
       typedef sequence<string> StringList;
 
+
       StringList getAllSections();
       
       float getValue(in float param);
+      
+      SampleTimeMap getValueMap();
    };
 
 };
