@@ -58,7 +58,7 @@ public:
    ~DataGloveStandalone();
 
    /** Connects to the data glove hardware */
-   bool connectToHardware( const std::string& ttyPort, int mBaudRate );
+   bool connectToHardware( const std::string& tty_port, int baud_rate );
 
    /** Reads data from the DataGlove hardware  */
    int ReadRecordsFromHardware(float *ch0, float *ch1, float *ch2, float *ch3,
@@ -68,9 +68,9 @@ public:
 protected:
 
    // Port pointer
-   vpr::SerialPort     *port;
+   vpr::SerialPort     *mPort;
 
-   int mConnectToHardware( const std::string& ttyPort , int baud);
+   int mConnectToHardware( const std::string& tty_port , int baud);
 
 };
 
