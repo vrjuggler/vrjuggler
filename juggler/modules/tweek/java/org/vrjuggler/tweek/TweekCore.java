@@ -77,7 +77,7 @@ public class TweekCore
       return m_instance;
    }
 
-   public void init (String[] args) throws Exception
+   public void init(String[] args) throws Exception
    {
       // Register the internal static beans
       registerStaticBeans();
@@ -88,13 +88,41 @@ public class TweekCore
                             File.separator + "share" +
                             File.separator + "tweek" +
                             File.separator + "beans";
+      mBeanDirs.add(default_path);
+
+
+      // Add in a user-specific Bean search path.
+      try
+      {
+         GlobalPreferencesService service = new GlobalPreferencesServiceProxy();
+         String dir_name = service.getPrefsDir() + File.separator + "beans";
+         File bean_dir = new File(dir_name);
+
+         if ( bean_dir.exists() && ! bean_dir.isDirectory() )
+         {
+            System.err.println("WARNING: " + dir_name +
+                               " exists, but not as a directory!");
+         }
+         // If the directory does not exist, create it to prevent a warning
+         // from being printed later.
+         else if ( ! bean_dir.exists() )
+         {
+            bean_dir.mkdir();
+         }
+
+         mBeanDirs.add(dir_name);
+      }
+      catch(RuntimeException ex)
+      {
+         System.err.println("WARNING: Failed to add user-specific directory " +
+                            "to the default Bean search path");
+         System.err.println(ex.getMessage());
+      }
 
       // Add in the old default Bean directory for backwards compatibility.
       // This will be removed before Tweek 1.0 is relesaed.
       String compat_path = System.getProperty("TWEEK_BASE_DIR") +
                            File.separator + "bin" + File.separator + "beans";
-
-      mBeanDirs.add(default_path);
       mBeanDirs.add(compat_path);
 
       // As a side effect, the following may add more paths to mBeanDirs.
