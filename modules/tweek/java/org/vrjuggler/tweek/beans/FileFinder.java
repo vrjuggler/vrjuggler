@@ -57,7 +57,7 @@ public class FileFinder
     * Constructs a new FileFinder object looking for files with the given
     * extension in the given path.
     *
-    * @pre The named path is a directory.
+    * Pre-condition: The named path is a directory.
     *
     * @param ext     the extension to match against not including the '.'
     * @param path    the path in which to search for files

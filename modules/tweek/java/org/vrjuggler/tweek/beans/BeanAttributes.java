@@ -216,8 +216,8 @@ public class BeanAttributes
     * This must exist here because the EnvironmentService is a JavaBean, and
     * it is this class' responsibility to *find* JavaBeans.
     *
-    * @post Any environment variables known to the JVM as properties are
-    *       expanded.  Unknown variables are left intact.
+    * Post condition: Any environment variables known to the JVM as properties
+    * are expanded.  Unknown variables are left intact.
     */
    protected static String expandEnvVars (String name)
    {

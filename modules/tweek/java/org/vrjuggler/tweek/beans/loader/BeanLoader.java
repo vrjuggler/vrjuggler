@@ -82,7 +82,9 @@ public class BeanLoader
    /**
     * Creates an instance of the loaded Bean.
     *
-    * @pre loadBeanFromJar() loaded the JAR file successfully.
+    * Pre-condition: loadBeanFromJar() loaded the JAR file successfully.
+    *
+    * @see #loadBeanFromJar(String,List,String)
     */
    public Object instantiate (BeanJarClassLoader loader, String bean_class)
       throws BeanInstantiationException

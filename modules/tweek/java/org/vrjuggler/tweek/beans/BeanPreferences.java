@@ -48,7 +48,7 @@ public interface BeanPreferences
    /**
     * Returns the editor component for the Bean's preferences.
     *
-    * @pre The object to be returned must be non-null.
+    * Pre-condition: The object to be returned must be non-null.
     */
    public javax.swing.JComponent getEditor();
 

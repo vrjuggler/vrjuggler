@@ -106,8 +106,8 @@ public class GlobalPreferencesServiceProxy
     * A separate check should be done to determine how to handle the user's
     * preferred start directory versus the default possible choices.
     *
-    * @see getChooserStartDir()
-    * @see setChooserStartDir()
+    * @see #getChooserStartDir()
+    * @see #setChooserStartDir(String)
     */
    public java.util.List getStartDirList()
    {

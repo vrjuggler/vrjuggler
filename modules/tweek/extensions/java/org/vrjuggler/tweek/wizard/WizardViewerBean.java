@@ -232,7 +232,7 @@ public class WizardViewerBean
    /**
     * Sets the wizard that this bean views.
     *
-    * @param   the wizard to view
+    * @param wizard     the wizard to view
     */
    public void setWizard(Wizard wizard)
    {

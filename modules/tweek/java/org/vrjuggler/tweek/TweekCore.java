@@ -480,8 +480,8 @@ public class TweekCore
     * here.  Unrecognized options are left in the array.  The remaining
     * arguments are returned to the caller in a new array.
     *
-    * @post Any Tweek-specific arguments are removed and a new array without
-    *       those arguments is returned.
+    * Post condition: Any Tweek-specific arguments are removed and a new
+    * array without those arguments is returned.
     */
    protected String[] parseTweekArgs (String[] args)
    {
