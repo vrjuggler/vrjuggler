@@ -36,6 +36,8 @@ dnl
 dnl Test for Gadgeteer and then define the following variables:
 dnl     GADGET_CXXFLAGS
 dnl     GADGET_CXXFLAGS_MIN
+dnl     GADGET_INCLUDES
+dnl     GADGET_INCLUDES_MIN
 dnl     GADGET_LIBS_CC
 dnl     GADGET_LIBS_LD
 dnl     GADGET_LIBS_STATIC_CC
@@ -98,6 +100,7 @@ dnl                          test Gadgeteer program], , enable_gadgettest=yes)
         no_gadgeteer=yes
     else
         GADGET_CXXFLAGS=`$GADGETEER_CONFIG $gadget_config_args --cxxflags $ABI`
+        GADGET_INCLUDES=`$GADGETEER_CONFIG $gadget_config_args --includes`
         GADGET_LIBS_CC="`$GADGETEER_CONFIG $gadget_config_args --libs $ABI`"
         GADGET_LIBS_LD="`$GADGETEER_CONFIG $gadget_config_args --linker --libs $ABI`"
         GADGET_LIBS_STATIC_CC="`$GADGETEER_CONFIG $gadget_config_args --libs $ABI --static`"
@@ -107,6 +110,7 @@ dnl                          test Gadgeteer program], , enable_gadgettest=yes)
         GADGET_VERSION=`$GADGETEER_CONFIG --version`
 
         GADGET_CXXFLAGS_MIN=`$GADGETEER_CONFIG $gadget_config_args --cxxflags $ABI --min`
+        GADGET_INCLUDES_MIN=`$GADGETEER_CONFIG $gadget_config_args --includes --min`
         GADGET_LIBS_CC_MIN="`$GADGETEER_CONFIG $gadget_config_args --libs $ABI --min`"
         GADGET_LIBS_LD_MIN="`$GADGETEER_CONFIG $gadget_config_args --linker --libs $ABI --min`"
         GADGET_EXTRA_LIBS_CC_MIN=`$GADGETEER_CONFIG $gadget_config_args --extra-libs $ABI --min`
@@ -125,6 +129,7 @@ dnl                          test Gadgeteer program], , enable_gadgettest=yes)
             echo "*** full path to gadgeteer-config."
         fi
         GADGET_CXXFLAGS=""
+        GADGET_INCLUDES=""
         GADGET_LIBS_CC=""
         GADGET_LIBS_LD=""
         GADGET_LIBS_STATIC_CC=""
@@ -134,12 +139,15 @@ dnl                          test Gadgeteer program], , enable_gadgettest=yes)
         GADGET_VERSION="-1"
 
         GADGET_CXXFLAGS_MIN=""
+        GADGET_INCLUDES_MIN=""
         GADGET_EXTRA_LIBS_CC_MIN=""
         GADGET_EXTRA_LIBS_LD_MIN=""
+
         ifelse([$3], , :, [$3])
     fi
 
     AC_SUBST(GADGET_CXXFLAGS)
+    AC_SUBST(GADGET_INCLUDES)
     AC_SUBST(GADGET_LIBS_CC)
     AC_SUBST(GADGET_LIBS_LD)
     AC_SUBST(GADGET_LIBS_STATIC_CC)
@@ -149,6 +157,7 @@ dnl                          test Gadgeteer program], , enable_gadgettest=yes)
     AC_SUBST(GADGET_VERSION)
 
     AC_SUBST(GADGET_CXXFLAGS_MIN)
+    AC_SUBST(GADGET_INCLUDES_MIN)
     AC_SUBST(GADGET_LIBS_CC_MIN)
     AC_SUBST(GADGET_LIBS_LD_MIN)
     AC_SUBST(GADGET_EXTRA_LIBS_CC_MIN)

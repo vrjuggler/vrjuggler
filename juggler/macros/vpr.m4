@@ -97,6 +97,7 @@ dnl                          test VPR program], , enable_vprtest=yes)
         no_vpr=yes
     else
         VPR_CXXFLAGS=`$VPR_CONFIG $vpr_config_args --cxxflags $ABI`
+        VPR_INCLUDES=`$VPR_CONFIG $vpr_config_args --includes`
         VPR_LIBS_LD="`$VPR_CONFIG $vpr_config_args --libs $ABI --linker`"
         VPR_LIBS_CC="`$VPR_CONFIG $vpr_config_args --libs $ABI`"
         VPR_LIBS_STATIC_LD="`$VPR_CONFIG $vpr_config_args --libs $ABI --linker --static`"
@@ -105,6 +106,7 @@ dnl                          test VPR program], , enable_vprtest=yes)
         VPR_EXTRA_LIBS_LD=`$VPR_CONFIG $vpr_config_args --extra-libs $ABI --linker`
 
         VPR_CXXFLAGS_MIN=`$VPR_CONFIG $vpr_config_args --cxxflags $ABI --min`
+        VPR_INCLUDES_MIN=`$VPR_CONFIG $vpr_config_args --includes --min`
         VPR_LIBS_LD_MIN="`$VPR_CONFIG $vpr_config_args --libs $ABI --linker --min`"
         VPR_LIBS_CC_MIN="`$VPR_CONFIG $vpr_config_args --libs $ABI --min`"
         VPR_LIBS_STATIC_LD="`$VPR_CONFIG $vpr_config_args --libs $ABI --linker --static --min`"
@@ -135,6 +137,7 @@ dnl                          test VPR program], , enable_vprtest=yes)
         VPR_EXTRA_LIBS_LD=''
 
         VPR_CXXFLAGS_MIN''
+        VPR_INCLUDES_MIN''
         VPR_LIBS_LD_MIN''
         VPR_LIBS_CC_MIN''
         VPR_LIBS_STATIC_LD_MIN''
@@ -146,6 +149,7 @@ dnl                          test VPR program], , enable_vprtest=yes)
     fi
 
     AC_SUBST(VPR_CXXFLAGS)
+    AC_SUBST(VPR_INCLUDES)
     AC_SUBST(VPR_LIBS_LD)
     AC_SUBST(VPR_LIBS_CC)
     AC_SUBST(VPR_LIBS_STATIC_LD)
@@ -155,6 +159,7 @@ dnl                          test VPR program], , enable_vprtest=yes)
     AC_SUBST(VPR_CXXFLAGS_MIN)
 
     AC_SUBST(VPR_CXXFLAGS_MIN)
+    AC_SUBST(VPR_INCLUDES_MIN)
     AC_SUBST(VPR_LIBS_LD_MIN)
     AC_SUBST(VPR_LIBS_CC_MIN)
     AC_SUBST(VPR_LIBS_STATIC_LD_MIN)

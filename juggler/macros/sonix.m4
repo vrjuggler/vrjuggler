@@ -97,6 +97,7 @@ dnl                          test SNX program], , enable_sonixtest=yes)
         no_sonix=yes
     else
         SNX_CXXFLAGS=`$SNX_CONFIG $sonix_config_args --cxxflags $ABI`
+        SNX_INCLUDES=`$SNX_CONFIG $sonix_config_args --includes`
         SNX_EXTRA_LIBS_CC=`$SNX_CONFIG $sonix_config_args --extra-libs $ABI`
         SNX_EXTRA_LIBS_LD=`$SNX_CONFIG $sonix_config_args --extra-libs $ABI --linker`
         SNX_LIBS_CC="`$SNX_CONFIG $sonix_config_args --libs $ABI` $SNX_EXTRA_LIBS_CC"
@@ -105,7 +106,8 @@ dnl                          test SNX program], , enable_sonixtest=yes)
         SNX_LIBS_STATIC_LD="`$SNX_CONFIG $sonix_config_args --libs $ABI --linker --static` $SNX_EXTRA_LIBS_LD"
         SNX_VERSION=`$SNX_CONFIG --version`
 
-        SNX_CXXFLAGS=`$SNX_CONFIG $sonix_config_args --cxxflags $ABI --min`
+        SNX_CXXFLAGS_MIN=`$SNX_CONFIG $sonix_config_args --cxxflags $ABI --min`
+        SNX_INCLUDES_MIN=`$SNX_CONFIG $sonix_config_args --includes --min`
         SNX_EXTRA_LIBS_CC_MIN=`$SNX_CONFIG $sonix_config_args --extra-libs $ABI`
         SNX_EXTRA_LIBS_LD_MIN=`$SNX_CONFIG $sonix_config_args --extra-libs $ABI --linker`
         SNX_LIBS_CC="`$SNX_CONFIG $sonix_config_args --libs $ABI --min` $SNX_EXTRA_LIBS_CC_MIN"
@@ -130,6 +132,7 @@ dnl                          test SNX program], , enable_sonixtest=yes)
     fi
 
     AC_SUBST(SNX_CXXFLAGS)
+    AC_SUBST(SNX_INCLUDES)
     AC_SUBST(SNX_LIBS_CC)
     AC_SUBST(SNX_LIBS_LD)
     AC_SUBST(SNX_LIBS_STATIC_CC)
@@ -137,6 +140,7 @@ dnl                          test SNX program], , enable_sonixtest=yes)
     AC_SUBST(SNX_VERSION)
 
     AC_SUBST(SNX_CXXFLAGS_MIN)
+    AC_SUBST(SNX_INCLUDES_MIN)
     AC_SUBST(SNX_LIBS_CC_MIN)
     AC_SUBST(SNX_LIBS_LD_MIN)
 ])

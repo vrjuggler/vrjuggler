@@ -45,6 +45,8 @@ dnl
 dnl Test for Plexus and then define the following variables:
 dnl     PLEXUS_CXXFLAGS
 dnl     PLEXUS_CXXFLAGS_MIN
+dnl     PLEXUS_INCLUDES
+dnl     PLEXUS_INCLUDES_MIN
 dnl     PLEXUS_LIBS_LD
 dnl     PLEXUS_LIBS_LD_MIN
 dnl     PLEXUS_LIBS_STATIC_LD
@@ -109,6 +111,7 @@ dnl                          test Plexus program], , enable_plexustest=yes)
         no_plexus=yes
     else
         PLEXUS_CXXFLAGS=`$PLEXUS_CONFIG $plexus_config_args --cxxflags $ABI`
+        PLEXUS_INCLUDES=`$PLEXUS_CONFIG $plexus_config_args --includes`
         PLEXUS_EXTRA_LIBS_CC=`$PLEXUS_CONFIG $plexus_config_args --extra-libs $ABI`
         PLEXUS_EXTRA_LIBS_LD=`$PLEXUS_CONFIG $plexus_config_args --extra-libs $ABI --linker`
         PLEXUS_LIBS_CC="`$PLEXUS_CONFIG $plexus_config_args --libs $ABI` $PLEXUS_EXTRA_LIBS_CC"
@@ -118,6 +121,7 @@ dnl                          test Plexus program], , enable_plexustest=yes)
         PLEXUS_VERSION=`$PLEXUS_CONFIG --version`
 
         PLEXUS_CXXFLAGS_MIN=`$PLEXUS_CONFIG $plexus_config_args --cxxflags $ABI --min`
+        PLEXUS_INCLUDES_MIN=`$PLEXUS_CONFIG $plexus_config_args --includes --min`
         PLEXUS_LIBS_CC_MIN="`$PLEXUS_CONFIG $plexus_config_args --libs $ABI --min` $PLEXUS_EXTRA_LIBS_CC"
         PLEXUS_LIBS_LD_MIN="`$PLEXUS_CONFIG $plexus_config_args --linker --libs $ABI --min` $PLEXUS_EXTRA_LIBS_LD"
         PLEXUS_LIBS_STATIC_CC_MIN="`$PLEXUS_CONFIG $plexus_config_args --libs $ABI --static --min` $PLEXUS_EXTRA_LIBS_CC"
@@ -137,6 +141,8 @@ dnl                          test Plexus program], , enable_plexustest=yes)
         fi
         PLEXUS_CXXFLAGS=""
         PLEXUS_CXXFLAGS_MIN=""
+        PLEXUS_INCLUDES=""
+        PLEXUS_INCLUDES_MIN=""
         PLEXUS_LIBS_LD=""
         PLEXUS_LIBS_LD_MIN=""
         PLEXUS_LIBS_STATIC_LD=""
@@ -149,12 +155,14 @@ dnl                          test Plexus program], , enable_plexustest=yes)
     fi
 
     AC_SUBST(PLEXUS_CXXFLAGS)
+    AC_SUBST(PLEXUS_INCLUDES)
     AC_SUBST(PLEXUS_LIBS_LD)
     AC_SUBST(PLEXUS_LIBS_STATIC_LD)
     AC_SUBST(PLEXUS_LIBS_CC)
     AC_SUBST(PLEXUS_LIBS_STATIC_CC)
 
     AC_SUBST(PLEXUS_CXXFLAGS_MIN)
+    AC_SUBST(PLEXUS_INCLUDES_MIN)
     AC_SUBST(PLEXUS_LIBS_CC_MIN)
     AC_SUBST(PLEXUS_LIBS_LD_MIN)
     AC_SUBST(PLEXUS_LIBS_STATIC_CC_MIN)
