@@ -39,6 +39,7 @@ import javax.swing.event.*;
 import javax.swing.table.*;
 import javax.swing.tree.*;
 import org.vrjuggler.jccl.config.ConfigChunk;
+import org.vrjuggler.jccl.config.DescEnum;
 import org.vrjuggler.jccl.config.PropertyDesc;
 import org.vrjuggler.jccl.config.ValType;
 import org.vrjuggler.tweek.beans.loader.BeanJarClassLoader;
@@ -130,6 +131,36 @@ public class ConfigChunkPropertySheet
                      return this;
                   }
                };
+            }
+         }
+         else
+         {
+            PropertyDesc prop_desc = getPropertyDescForRow(row);
+            if (prop_desc.getNumEnums() > 0
+               && (prop_desc.getValType() != ValType.CHUNK)
+               && (prop_desc.getValType() != ValType.EMBEDDEDCHUNK))
+            {
+               for (int i=0; i<prop_desc.getNumEnums(); ++i)
+               {
+                  final DescEnum de = prop_desc.getEnumAt(i);
+                  if (de.getValue().get().equals(value))
+                  {
+                     return new DefaultTableCellRenderer()
+                     {
+                        public Component getTableCellRendererComponent(JTable table,
+                                                                       Object value,
+                                                                       boolean selected,
+                                                                       boolean focused,
+                                                                       int row, int col)
+                        {
+                           super.getTableCellRendererComponent(table, value, selected,
+                                                               focused, row, col);
+                           setText(de.getName());
+                           return this;
+                        }
+                     };
+                  }
+               }
             }
          }
       }
