@@ -46,6 +46,26 @@
 #define TCP_PORT 6000 /* bird server port */
 
 
+// BIRDNET command/response codes.
+const unsigned char MSG_WAKE_UP        = 10;
+const unsigned char RSP_WAKE_UP        = 20;
+const unsigned char MSG_SHUT_DOWN      = 11;
+const unsigned char RSP_SHUT_DOWN      = 21;
+const unsigned char MSG_GET_STATUS     = 101;
+const unsigned char MSG_SEND_SETUP     = 102;
+const unsigned char MSG_SINGLE_SHOT    = 103;
+const unsigned char MSG_RUN_CONTINUOUS = 104;
+const unsigned char MSG_STOP_DATA      = 105;
+const unsigned char RSP_GET_STATUS     = 201;
+const unsigned char RSP_GET_SETUP      = 202;
+const unsigned char RSP_RUN_CONTINUOUS = 204;
+const unsigned char RSP_STOP_DATA      = 205;
+const unsigned char DATA_PACKET_MULTI  = 210;
+const unsigned char RSP_ILLEGAL        = 40;
+const unsigned char RSP_UNKNOWN        = 50;
+const unsigned char MSG_SYNC_SEQUENCE  = 30;
+const unsigned char RSP_SYNC_SEQUENCE  = 31;
+
 //: BIRDNET singleBirdStatus packet.  It is 16 bytes long.
 struct SINGLE_BIRD_STATUS {
     unsigned char	status;      //: Device status

@@ -250,11 +250,9 @@ aMotionStar::start () {
 // ----------------------------------------------------------------------------
 void
 aMotionStar::stop () {
-    /* put in a STOP COMMAND here */
-
-    command.sequence      = sequenceNumber;
-    command.type          = 105;
-    numberBytes           = send(s, (void*)lpCommand, sizeof(command), 0);
+    command.sequence = sequenceNumber;
+    command.type     = MSG_STOP_DATA;
+    numberBytes      = send(s, (void*) lpCommand, sizeof(command), 0);
 } // end void aMotionStar::stop()
 
 // ----------------------------------------------------------------------------
@@ -405,13 +403,13 @@ aMotionStar::send_wakeup () {
   /***** send a command to the server wakeup *****/
 //  printf("WAKEUP:");
 
-  command.sequence              = sequenceNumber++;
-  command.type                  = 10;
-  command.xtype                 = 0;
-  command.protocol              = 1;
-  command.number_bytes          = 0;
-  command.error_code            = 0;
-  command.error_code_extension  = 0;
+  command.sequence             = sequenceNumber++;
+  command.type                 = MSG_WAKE_UP;
+  command.xtype                = 0;
+  command.protocol             = 1;
+  command.number_bytes         = 0;
+  command.error_code           = 0;
+  command.error_code_extension = 0;
 
   /*n++;*/
   numberBytes = send(s,(void*)lpCommand, sizeof(command), 0);
@@ -430,10 +428,8 @@ void
 aMotionStar::runContinuous () {
 //  cout << "runContinous" << endl;
 
-  command.type=104;
-// MSG_RUN CONTINIOUS - request server to send packets continuously
-
-  command.xtype = 0;
+  command.type     = MSG_RUN_CONTINUOUS;
+  command.xtype    = 0;
   command.sequence = sequenceNumber++;
   n++;
   numberBytes   = send(s, (void*)lpCommand, sizeof(command), 0);
@@ -471,8 +467,8 @@ aMotionStar::runContinuous () {
 void
 aMotionStar::singleShot () {
   /* send a request for a single shot packet */
-  command.type=103; /* MSG_SINGLE_SHOT - request server to send single packet of data */
-  command.xtype = 0;
+  command.type     = MSG_SINGLE_SHOT;
+  command.xtype    = 0;
   command.sequence = sequenceNumber++;
   numberBytes = send(s,(void*) lpCommand, sizeof(command), 0);
 
@@ -495,8 +491,8 @@ aMotionStar::get_status_all () {
   int                   headerBytes, dataBytes;
   int                   bytesReceived;
 
-  command.type=101;
-  command.xtype=0;
+  command.type  = MSG_GET_STATUS;
+  command.xtype = 0;
   numberBytes = send(s,(void*) lpCommand, sizeof(command), 0);
 
 //  printf("\nGET STATUS - number bytes sent = %5d errorno %d", numberBytes,errno);
@@ -603,8 +599,8 @@ aMotionStar::get_status_all () {
 void
 aMotionStar::set_status_all () {
      int i;
-     response.header.type=102;
-     response.header.xtype=0;
+     response.header.type         = MSG_SEND_SETUP;
+     response.header.xtype        = 0;
      response.header.number_bytes = statusSize-16;
 
      for(i=0;i<6;i++)
@@ -633,8 +629,8 @@ aMotionStar::get_status_fbb (unsigned char fbb_addr) {
   int headerBytes, dataBytes;
   void * lpBuffer;
 
-  command.type=101;
-  command.xtype=fbb_addr;
+  command.type         = MSG_GET_STATUS;
+  command.xtype        = fbb_addr;
   command.number_bytes = 0;
 
   numberBytes = send(s, (void*) lpCommand, sizeof(command), 0);
@@ -675,8 +671,8 @@ aMotionStar::get_status_fbb (unsigned char fbb_addr) {
 // ----------------------------------------------------------------------------
 void
 aMotionStar::set_status_fbb (unsigned char fbb_addr) {
-  response.header.type = 102;
-  response.header.xtype = fbb_addr;
+  response.header.type         = MSG_SEND_SETUP;
+  response.header.xtype        = fbb_addr;
   response.header.number_bytes = 70;
 
   numberBytes = send(s, (void*) lpResponse, 86, 0);
