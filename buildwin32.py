@@ -1147,6 +1147,11 @@ def installVRJugglerPluginsJava(prefix):
       else:
          print "VR Juggler %s Java plug-ins not built.  Skipping." % name
 
+   # Install JFreeChart.
+   destdir = os.path.join(prefix, 'bin')
+   srcdir = os.path.join(gJugglerDir, 'external', 'jfreechart')
+   installDir(srcdir, destdir, ['.jar'])
+
 def installMsvcRT(prefix):
    print "Installing MSVC runtime DLLs"
 
@@ -1631,7 +1636,7 @@ class GuiFrontEnd:
 
       # Entry.
       entry_ref = Tkinter.Entry(master, width = 75,
-                                     textvariable = self.mOptions[optionIndex])
+                                textvariable = self.mOptions[optionIndex])
       entry_ref.grid(row = row, column = 1,
                      sticky = Tkinter.N + Tkinter.E + Tkinter.S + Tkinter.W,
                      pady = 2)
