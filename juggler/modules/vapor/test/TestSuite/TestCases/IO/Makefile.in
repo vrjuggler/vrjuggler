@@ -43,17 +43,18 @@ default: all
 
 include @topdir@/test/TestSuite/test.defs.mk
 
-srcdir		= @srcdir@
-top_srcdir	= @top_srcdir@
+srcdir=		@srcdir@
+top_srcdir=	@top_srcdir@
 
 # Prefix for recursive stuff.
-DIRPRFX		= TestCases/IO/
+DIRPRFX=	TestCases/IO/
 
-SUBDIR		= Port		\
-                  Socket	\
-                  Stats
+SUBDIR=		Port		\
+		Socket		\
+		Stats
 
-SRCS		= SelectorTest.cpp
+SRCS=		SelectorTest.cpp	\
+		SerializableTest.cpp
 
 include $(MKPATH)/dpp.obj-subdir.mk
 
