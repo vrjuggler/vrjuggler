@@ -127,7 +127,7 @@ public class BeanDependencyManager
     * Gets the number of unsatisfied dependencies that the given bean has
     * remaining.
     */
-   private synchronized int getNumUnsatisfiedDependencies(TweekBean bean)
+   public static int getNumUnsatisfiedDependencies(TweekBean bean)
    {
       int num_unsatisfied_deps = 0;
 
