@@ -68,7 +68,22 @@ public:
    virtual ~ObjectWriter()
    {;}
 
-   /** @name Tag and attribute handling */
+   /** @name Tag and attribute handling 
+   * ObjectReader and ObjectWriter support an interface that allows for using tags and attributes
+   * in the written output data.  This allows support for formats such as XML where there is
+   * a logical grouping of the data.
+   *
+   * Tags are similar to the XML concept of elements.  They are used to deliniate a hierarchical group
+   * in the structure of the data.  Attributes are similar to XML attributes in that they are
+   * properties of the most recently started tag.
+   *
+   * The structure looks something like (based on XML):
+   *  
+   * <tag1>
+   *   <tag2 attrib1="XXX">
+   *   </tag2>
+   * </tag1>
+   */
    //@{
    /** Starts a new section/element of name tagName.
    */
