@@ -41,6 +41,7 @@
 //#include <vpr/Util/Error.h>
 
 #include <gadget/Node.h>
+#include <gadget/AbstractNetworkManager.h>
 #include <cluster/Packets/Packet.h>
 #include <cluster/Packets/ConnectionAck.h>
 #include <cluster/Packets/DataPacket.h>
@@ -57,9 +58,10 @@ namespace gadget
 {
 
 Node::Node(const std::string& name, const std::string& host_name, 
-                         const vpr::Uint16& port, vpr::SocketStream* socket_stream)
+                         const vpr::Uint16& port, vpr::SocketStream* socket_stream,
+                         AbstractNetworkManager* net_mgr)
    : mRunning(false), mStatus(DISCONNECTED), mUpdateTriggerSema(0),
-     mNodeDoneSema(0), mControlThread(NULL)
+     mNodeDoneSema(0), mControlThread(NULL), mNetworkManager(net_mgr)
 {
    mThreadActive = false;
    mUpdated = false;
@@ -196,7 +198,7 @@ void Node::update()
    temp_packet->printData(vprDBG_CONFIG_LVL);
 
    // Handle the packet correctly
-   cluster::ClusterManager::instance()->getNetwork()->handlePacket(temp_packet,this);
+   mNetworkManager->handlePacket(temp_packet,this);
 
    // Clean up after ourselves
    delete temp_packet;

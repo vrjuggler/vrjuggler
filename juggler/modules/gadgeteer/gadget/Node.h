@@ -47,6 +47,7 @@ namespace cluster
 
 namespace gadget
 {
+   class AbstractNetworkManager;
 
 class GADGET_CLASS_API Node
 {
@@ -68,7 +69,8 @@ public:
     * @param socket_stream SocketStream used to communicate with remote machine
     */
    Node(const std::string& name, const std::string& host_name, 
-               const vpr::Uint16& port, vpr::SocketStream* socket_stream);
+               const vpr::Uint16& port, vpr::SocketStream* socket_stream,
+               AbstractNetworkManager* net_mgr);
 
    /**
     * Shutdown the update thread and close the SocketStream
@@ -223,28 +225,29 @@ protected:
    void update();
 
 protected:
-   std::string          mName;               /**< Node name */
-   std::string          mHostname;           /**< Host that it is connected to */
-   vpr::Uint16          mPort;               /**< Port that it is connected to */
-   bool                 mRunning;            /**< Thread is running the control loop */
+   std::string          mName;                  /**< Node name */
+   std::string          mHostname;              /**< Host that it is connected to */
+   vpr::Uint16          mPort;                  /**< Port that it is connected to */
+   bool                 mRunning;               /**< Thread is running the control loop */
 
-   vpr::SocketStream*   mSockStream;         /**< Socket used for communication to this node */      
-   vpr::Mutex           mSockWriteLock;      /**< Lock writing to the SocketStream */
-   vpr::Mutex           mSockReadLock;       /**< Lock reading from the SocketStream */
+   vpr::SocketStream*   mSockStream;            /**< Socket used for communication to this node */      
+   vpr::Mutex           mSockWriteLock;         /**< Lock writing to the SocketStream */
+   vpr::Mutex           mSockReadLock;          /**< Lock reading from the SocketStream */
 
-   vpr::Mutex           mStatusLock;         /**< Lock the isConnected value */
-   int                  mStatus;             /**< States if this node is connected */
+   vpr::Mutex           mStatusLock;            /**< Lock the isConnected value */
+   int                  mStatus;                /**< States if this node is connected */
    
-   vpr::Mutex           mUpdatedLock;        /**< Lock the isUpdated value */
-   bool                 mUpdated;            /**< States if this node is updated */
+   vpr::Mutex           mUpdatedLock;           /**< Lock the isUpdated value */
+   bool                 mUpdated;               /**< States if this node is updated */
    
-   vpr::Semaphore    mUpdateTriggerSema;     /**< Semaphore trigger for UserData update  */
-   vpr::Semaphore    mNodeDoneSema;          /**< Semaphore trigger for completion */
+   vpr::Semaphore       mUpdateTriggerSema;     /**< Semaphore trigger for UserData update  */
+   vpr::Semaphore       mNodeDoneSema;          /**< Semaphore trigger for completion */
    
-   vpr::Thread*      mControlThread;         /**< Update thread for this node */
-   bool              mThreadActive;          /**< Has the update thread started? */
+   vpr::Thread*         mControlThread;         /**< Update thread for this node */
+   bool                 mThreadActive;          /**< Has the update thread started? */
 
-   vpr::Uint64       mDelta;                 /**< Time delta between remote and local clocks */
+   vpr::Uint64          mDelta;                 /**< Time delta between remote and local clocks. */
+   AbstractNetworkManager*      mNetworkManager;/**< Network that should handle incoming packets. */
 };
 
 } // end namespace gadget

@@ -46,7 +46,7 @@
 
 namespace gadget
 {
-   Acceptor::Acceptor( AbstractNetworkManager* network )
+   Acceptor::Acceptor( AbstractNetworkManager* network)
       : mNetworkManager( network ), mAcceptThread( NULL )
    {;}
 
@@ -55,8 +55,10 @@ namespace gadget
       shutdown();
    }
 
-   bool Acceptor::startListening( const int& listen_port )
+   bool Acceptor::startListening( const int& listen_port, bool accept_anonymous )
    {
+      mAcceptAnonymous = accept_anonymous;
+
       // If we haven't already started the listening thread
       if ( mAcceptThread == NULL )
       {
@@ -192,31 +194,34 @@ namespace gadget
                      << clrOutBOLD( clrMAGENTA,"[Acceptor]" )
                      << " Nodes not configured yet."
                      << std::endl << vprDEBUG_FLUSH;
- 
-                  vprASSERT( false && "Getting a connection attempt before we are fully configured." );
-                  continue;
-                  //XXX: Need to figure this out soon.
-                  /*
-                  vprDEBUG(gadgetDBG_NET_MGR, vprDBG_CONFIG_STATUS_LVL)
-                     << clrOutBOLD(clrMAGENTA,"[Acceptor]")
-                     << " Node does not exist in Acceptor."
-                     << " Creating new Node."
-                     << std::endl << vprDEBUG_FLUSH;
-
-                  // Create a new Node and pass it the new SocketStream
-                  remote_node = new Node(remote_host_name,
-                                                    remote_host_name,
-                                                    port,
-                                                    client_sock);
                   
-                  vprDEBUG(gadgetDBG_NET_MGR, vprDBG_CONFIG_STATUS_LVL)
-                     << clrOutBOLD(clrMAGENTA,"[Acceptor]")
-                     << " Adding new node to Acceptor..."
-                     << std::endl << vprDEBUG_FLUSH;
+                  if (mAcceptAnonymous)
+                  {
+                     vprDEBUG(gadgetDBG_NET_MGR, vprDBG_CONFIG_STATUS_LVL)
+                        << clrOutBOLD(clrMAGENTA,"[Acceptor]")
+                        << " Node does not exist in Acceptor."
+                        << " Creating new Node."
+                        << std::endl << vprDEBUG_FLUSH;
 
-                  // Add the new node to the cluster
-                  mNetworkManager->addStrangerNode(remote_node);
-                  */
+                     // Create a new Node and pass it the new SocketStream
+                     remote_node = new Node(remote_host_name,
+                                                       remote_host_name,
+                                                       port,
+                                                       client_sock,
+                                                       mNetworkManager);
+                     
+                     vprDEBUG(gadgetDBG_NET_MGR, vprDBG_CONFIG_STATUS_LVL)
+                        << clrOutBOLD(clrMAGENTA,"[Acceptor]")
+                        << " Adding new node to Acceptor..."
+                        << std::endl << vprDEBUG_FLUSH;
+
+                     // Add the new node to the cluster
+                     mNetworkManager->addNode(remote_node);
+                  }
+                  else
+                  {
+                     vprASSERT( false && "Getting a connection attempt before we are fully configured." );
+                  }
                }
             }
             

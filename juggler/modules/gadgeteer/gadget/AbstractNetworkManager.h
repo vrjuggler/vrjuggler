@@ -114,8 +114,6 @@ public:
     */
    void addNode(Node* node);
 
-   void addStrangerNode(Node* node);
-
    /**
     * Removes the Node with the given hostname
     */
@@ -235,7 +233,7 @@ public:
       return(mConnector->attemptConnect(node));
    }
    */
-   virtual void startListening(int listen_port) = 0;
+   virtual void startListening(int listen_port, bool accept_anonymous) = 0;
    /*
    {
       mAcceptor->startListening(listen_port);
@@ -247,11 +245,6 @@ private:
 //   vpr::RWMutex                         mNodesLock;
    
    std::map<vpr::GUID, PacketHandler*>  mHandlerMap;
-/*
-protected:
-   Acceptor*                            mAcceptor;
-   Connector*                           mConnector;
-*/
 };
 
 } // end namespace gadget

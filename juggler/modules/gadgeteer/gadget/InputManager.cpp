@@ -41,19 +41,17 @@
 #include <vpr/DynLoad/LibraryFinder.h>
 #include <vpr/Util/FileUtils.h>
 
-#include <gadget/Type/Proxy.h>
-#include <gadget/Type/DeviceFactory.h>
-#include <gadget/ProxyFactory.h>
-#include <gadget/Type/DeviceInterface.h>
-
-#include <gadget/Util/Debug.h>
-
 #include <jccl/Config/ConfigElement.h>
 #include <jccl/RTRC/ConfigManager.h>
 
 #include <cluster/ClusterManager.h>
-#include <gadget/Type/BaseTypeFactory.h>
 #include <gadget/InputLogger.h>
+#include <gadget/ProxyFactory.h>
+#include <gadget/Type/BaseTypeFactory.h>
+#include <gadget/Type/DeviceFactory.h>
+#include <gadget/Type/Proxy.h>
+#include <gadget/Type/DeviceInterface.h>
+#include <gadget/Util/Debug.h>
 
 #include <gadget/InputManager.h>
 
@@ -73,7 +71,6 @@ static bool recognizeProxyAlias(jccl::ConfigElementPtr element);
  */
 InputManager::InputManager()
 {
-   
 }
 
 /**

@@ -55,7 +55,8 @@
 
 namespace gadget
 {
-   AbstractNetworkManager::AbstractNetworkManager() : mNodes(0), mHandlerMap()
+   AbstractNetworkManager::AbstractNetworkManager() 
+      : mNodes(0), mHandlerMap()
    {
       vprDEBUG(gadgetDBG_NET_MGR, vprDBG_CRITICAL_LVL)
          << clrOutBOLD(clrMAGENTA,"[AbstractNetworkManager]")
@@ -201,7 +202,7 @@ namespace gadget
          << " Adding node: " << name
          << std::endl << vprDEBUG_FLUSH;
 
-      Node* temp_node = new Node(name, host_name, port, socket_stream);
+      Node* temp_node = new Node(name, host_name, port, socket_stream, this);
       mNodes.push_back(temp_node);
       
       return(vpr::ReturnStatus::Succeed);
@@ -397,7 +398,7 @@ namespace gadget
 
             const int listen_port = element->getProperty<int>("listen_port");
             //mAcceptor->startListening(listen_port);
-            startListening(listen_port);
+            startListening(listen_port, false);
          }
          else
          {
