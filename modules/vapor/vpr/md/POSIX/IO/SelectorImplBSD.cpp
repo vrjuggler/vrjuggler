@@ -206,7 +206,7 @@ SelectorImplBSD::select (vpr::Uint16& numWithEvents, const vpr::Interval timeout
    // If timeout is 0, this will be the same as polling the descriptors.  To
    // get no timeout, NULL must be passed to select(2).
    result = ::select(last_fd + 1, &read_set, &write_set, &exception_set,
-                     (timeout.usec() > 0) ? &timeout_obj : NULL);
+                     (timeout != vpr::Interval::NoTimeout) ? &timeout_obj : NULL);
 
    // D'oh!
    if ( -1 == result ) {
