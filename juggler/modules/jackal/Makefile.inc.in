@@ -181,8 +181,10 @@ ifneq (@OS_TYPE@, Win32)
 	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/include/jccl
 	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/$(LIBDIR_NAME)
 	@$(MAKE) -C jccl instlinks=$(instlinks) links           
-	cd $(instlinks)/$(LIBDIR_NAME) && rm -f ./* &&			\
-          ln -s $(LIBDIR_BASE)/* ./
+	for lib in $(LIBS) ; do 					\
+            cd $(instlinks)/$(LIBDIR_NAME) && rm -f $$lib* &&		\
+              $(LN_S) $(LIBDIR_BASE)/$$lib* ./ ;			\
+          done
 	cd $(instlinks) && rm -rf ./$(JCCL_SHARE_DIR) &&		\
           $(SHELL) $(MKINSTALLDIRS) ./$(JCCL_SHARE_DIR)
 	cd $(instlinks)/$(JCCL_SHARE_DIR) && rm -f ./data &&		\
@@ -192,9 +194,9 @@ ifneq (@OS_TYPE@, Win32)
 	cd $(instlinks)/include/jccl && rm -f ./jcclConfig.h &&		\
           $(LN_S) $(JCCLROOT_ABS)/jccl/jcclConfig.h ./jcclConfig.h
 	cd $(instlinks)/include/jccl && rm -f ./jcclDefines.h &&	\
-	  $(LN_S) $(topdir)/jccl/jcclDefines.h ./jcclDefines.h
+          $(LN_S) $(topdir)/jccl/jcclDefines.h ./jcclDefines.h
 	cd $(instlinks)/include/jccl && rm -f ./jcclParam.h &&		\
-	  $(LN_S) $(topdir)/jccl/jcclParam.h ./jcclParam.h
+          $(LN_S) $(topdir)/jccl/jcclParam.h ./jcclParam.h
 	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/bin
 ifndef NO_JAVA_GUI
 	cd $(instlinks)/bin && rm -f ./VjControl.jar &&			\
