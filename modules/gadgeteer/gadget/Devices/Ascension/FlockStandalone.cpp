@@ -169,63 +169,99 @@ void FlockStandalone::setBaudRate(const int& baud)
 int FlockStandalone::start()
 {
    int retval;
-   std::cout << "1" << std::endl;
+   
    if ( ! mActive )
    {
-       std::cout << "2" << std::endl;
       if ( openPort() == -1 )
       {
-          std::cout << "3" << std::endl;
-        vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << "ERROR, can't open serial port: " <<  mPort << "\n" << vprDEBUG_FLUSH;
+         vprDEBUG(vprDBG_ALL,vprDBG_CRITICAL_LVL) << " [FlockStandalone] **** ERROR, can't open serial port: " <<  mPort << " ****\n" << vprDEBUG_FLUSH;
          retval = 0;
-         std::cout << "4" << std::endl;
       }
       else
       {
-         std::cout << "[FlockStandalone] Setting blocking state ("
+         vpr::Uint32 written;
+         char stop_command;
+         
+         vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) 
+            << "============================================================================\n" << vprDEBUG_FLUSH;
+         vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) 
+            << " NOTE: Version number below might be wrong if we need to restart the flock!\n" << vprDEBUG_FLUSH;
+         vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) 
+            << "============================================================================\n" << vprDEBUG_FLUSH;
+
+         this->readSoftwareRevision();
+         
+         vprDEBUG(vprDBG_ALL,vprDBG_CRITICAL_LVL) << " [FlockStandalone] Restarting the flock.\n" << vprDEBUG_FLUSH;
+      
+         //vpr::System::msleep(500);
+         stop_command = 'B';
+         mSerialPort->write(&stop_command, 1, written);
+      
+         //vpr::System::msleep(500);
+         stop_command = 'G';
+         mSerialPort->write(&stop_command, 1, written);
+      
+         mSerialPort->close();
+         vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL)  << " [FlockStandalone] Flock has been Stopped." << std::endl << vprDEBUG_FLUSH;
+         vpr::System::sleep(3);
+      }
+      
+      if ( openPort() == -1 )
+      {
+         vprDEBUG(vprDBG_ALL,vprDBG_CRITICAL_LVL) << " [FlockStandalone] **** ERROR, can't open serial port: " <<  mPort << " ****\n" << vprDEBUG_FLUSH;
+         retval = 0;
+      }
+      else
+      {
+         this->readSoftwareRevision();
+         this->readSystemModel();
+         this->readStatus();
+
+         vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << " [FlockStandalone] Setting Serial Port blocking state ("
                    << (mBlocking ? "" : "non-") << "blocking)\n"
-                   << std::flush;
+                   << vprDEBUG_FLUSH;
          setBlocking();
-         vpr::System::sleep(1);
+         //vpr::System::sleep(1);
 
-         std::cout << "[FlockStandalone] Setting sync\n" << std::flush;
-         setSync();
-         vpr::System::sleep(1);
+         vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << " [FlockStandalone] Setting sync\n" << vprDEBUG_FLUSH;
+         sendSync();
+         //vpr::System::sleep(1);
 
-         std::cout << "[FlockStandalone] Setting group\n" << std::flush;
-         setGroup();
-         vpr::System::sleep(1);
+         vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << " [FlockStandalone] Setting group\n" << vprDEBUG_FLUSH;
+         sendGroup();
+         //vpr::System::sleep(1);
+         
+         vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << " [FlockStandalone] Setting hemisphere\n" << vprDEBUG_FLUSH;
+         sendHemisphere();
+         //vpr::System::sleep(1);
+         
+         vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << " [FlockStandalone] Setting autoconfig\n" << vprDEBUG_FLUSH;
+         sendAutoconfig();
+         //vpr::System::sleep(1);
 
-         std::cout << "[FlockStandalone] Setting autoconfig\n" << std::flush;
-         setAutoconfig();
-         vpr::System::sleep(1);
+         vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << " [FlockStandalone] Setting transmitter\n" << vprDEBUG_FLUSH;
+         sendTransmitter();
+         //vpr::System::sleep(1);
 
-         std::cout << "[FlockStandalone] Setting transmitter\n" << std::flush;
-         setTransmitter();
-         vpr::System::sleep(1);
+         vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << " [FlockStandalone] Setting filter\n" << vprDEBUG_FLUSH;
+         sendFilter();
+         //vpr::System::sleep(1);
 
-         std::cout << "[FlockStandalone] Setting filter\n" << std::flush;
-         setFilter();
-         vpr::System::sleep(1);
 
-         std::cout << "[FlockStandalone] Setting hemisphere\n" << std::flush;
-         setHemisphere();
-         vpr::System::sleep(1);
+         vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << " [FlockStandalone] Setting pos_angles\n" << vprDEBUG_FLUSH;
+         sendPosAngles();
+         //vpr::System::sleep(1);
 
-         std::cout << "[FlockStandalone] Setting pos_angles\n" << std::flush;
-         setPosAngles();
-         vpr::System::sleep(1);
-
-         std::cout << "[FlockStandalone] Setting pickBird\n" << std::flush;
+         vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << " [FlockStandalone] Setting pickBird\n" << vprDEBUG_FLUSH;
          pickBird(mXmitterUnitNumber);
-         vpr::System::sleep(1);
+         //vpr::System::sleep(1);
 
-         std::cout << "[FlockStandalone] Setting rep_and_stream\n" << std::flush;
-         setRepAndStream();
-         vpr::System::sleep(1);
-
-         std::cout  << "[FlockStandalone] Ready to go!\n\n" << std::flush;
-
+         vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << " [FlockStandalone] Setting rep_and_stream\n" << vprDEBUG_FLUSH;
+         sendRepAndStream();
+         //vpr::System::sleep(1);
+         
+         vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << " [FlockStandalone] Ready to go!\n\n" << vprDEBUG_FLUSH;
+         
          // flock is active.
          mActive = true;
 
@@ -235,11 +271,8 @@ int FlockStandalone::start()
    }
    else
    {
-       std::cout << "5" << std::endl;
       retval = 0; // already sampling
    }
-
-   std::cout << "6" << std::endl;
    return retval;
 }
 
@@ -257,16 +290,18 @@ int FlockStandalone::sample()
    }    
    
    int buffer_location=0;
-   for (int bird_id=1;bird_id<loop_count && bird_id<MAX_SENSORS;bird_id++)
+   for (int bird_id=1;
+        bird_id <= loop_count && bird_id < MAX_SENSORS;
+        bird_id++)
    {
-      if (!mExtendedRange && bird_id != mXmitterUnitNumber)
+      if (bird_id != mXmitterUnitNumber)
       {
          vprASSERT( bird_id < MAX_SENSORS );
          vpr::ReturnStatus status = getReading(bird_id, xPos(buffer_location), yPos(buffer_location), zPos(buffer_location), 
                                                         zRot(buffer_location), yRot(buffer_location), xRot(buffer_location));
          if (!status.success())
          {
-            vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << "[Flock of Birds] Error reading packet for bird: "
+            vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << "[Flock of Birds] Error reading packet for bird #: "
                   << bird_id << "\n" << vprDEBUG_FLUSH;
          }
          if ( mUsingCorrectionTable )
@@ -275,6 +310,17 @@ int FlockStandalone::sample()
                                    this->yPos(buffer_location),
                                    this->zPos(buffer_location) );
          }
+         
+         vprDEBUG(vprDBG_ALL,vprDBG_VERB_LVL) << std::endl << "\n===================================================\n" << vprDEBUG_FLUSH;
+         vprDEBUG(vprDBG_ALL,vprDBG_VERB_LVL) << " Position of Bird #: " << bird_id
+                     << " x: " << xPos(buffer_location) 
+                     << " y: " << yPos(buffer_location) 
+                     << " z: " << zPos(buffer_location) << vprDEBUG_FLUSH;
+         vprDEBUG(vprDBG_ALL,vprDBG_VERB_LVL)   << " \nRotation of Bird #: " << bird_id
+                     << " x: " << xRot(buffer_location) 
+                     << " y: " << yRot(buffer_location) 
+                     << " z: " << zRot(buffer_location) << vprDEBUG_FLUSH;
+         vprDEBUG(vprDBG_ALL,vprDBG_VERB_LVL) << "\n===================================================\n\n" << vprDEBUG_FLUSH;
 
          buffer_location++;
       }
@@ -293,24 +339,25 @@ int FlockStandalone::stop ()
    {
       char bird_command[4];
 
-      std::cout << "[FlockStandalone] Stopping the flock ...\n" << std::flush;
+      std::cout << " [FlockStandalone] Stopping the flock ...\n" << std::flush;
 
+      vpr::System::msleep(500);
       bird_command[0] = 'B';
       mSerialPort->write(bird_command, 1, written);
-      mSerialPort->flushQueue(vpr::SerialTypes::IO_QUEUES);
-      vpr::System::usleep(500 * mSleepFactor);
-
+      //mSerialPort->flushQueue(vpr::SerialTypes::IO_QUEUES);
+      
+      vpr::System::msleep(500);
       bird_command[0] = 'G';
       mSerialPort->write(bird_command, 1, written);
-      mSerialPort->flushQueue(vpr::SerialTypes::IO_QUEUES);
-      vpr::System::usleep(200 * FlockStandalone::mSleepFactor);
+      //mSerialPort->flushQueue(vpr::SerialTypes::IO_QUEUES);
+      //vpr::System::usleep(200 * FlockStandalone::mSleepFactor);
 
       mSerialPort->close();
 
       // flock is not active now.
       mActive = false;
 
-      std::cout << "[FlockStandalone] Stopped." << std::endl << std::flush;
+      std::cout << " [FlockStandalone] Stopped." << std::endl << std::flush;
 
       retval = 1;
    }
@@ -601,43 +648,73 @@ float& FlockStandalone::xRot( const int& i )
 //  give - xyz positions               <BR>
 //  give - zyx rotations
 
-// NOTE: CHANGE A VPR::RETURNSTSTUS
 vpr::ReturnStatus FlockStandalone::getReading (const int& n, float& xPos, float& yPos,
                                  float& zPos, float& zRot, float& yRot,
                                  float& xRot)
 {
-   int addr;
    vpr::Uint64 timeout=10000;  // How long to wait for data to arrive
    vpr::Uint32 num_read;
    char buff[14];
 
    if ( mSerialPort != NULL )
    {
-      //int  counter = 0;
+      // buff[0-5] are position
+      // buff[6-11] are orientation
+      // buff[12] is group
 
-      
+      // Do until we get the unit ID we want
+      // Find the beginning of a data packet
+      // Read in the data packet
 
+      // -loop until we get the packet for the bird we want
+      //   -loop until we get the start of a data packet
+      //     -read in the packet
+      //     -convert the data into floats
+      //   -end loop
+      // -end loop
+
+         // Wait until we get the data for the correct bird
       do
       {
-         vpr::ReturnStatus status = mSerialPort->read(&buff,14,num_read,vpr::Interval(timeout, vpr::Interval::Msec));
-         if (status.success())
+            // Wait until the first bit in a byte is a 1, which means start of a packet      
+         do
          {
-            return status;
+            vpr::ReturnStatus status = mSerialPort->read(&buff,1,num_read,vpr::Interval(timeout, vpr::Interval::Msec));
+            if (!status.success())
+            {
+               return(status);
+            }
+         } while( !(0x80 & buff[0]));
+         
+            // Read in the rest of the data, [ (6*2) + 1 for the group byte ] - 1 byte already read
+         vpr::ReturnStatus status = mSerialPort->read(&buff[1],12,num_read,vpr::Interval(timeout, vpr::Interval::Msec));
+         if (!status.success())
+         {
+            return(status);
          }
-      } while(addr != (int)buff[14]);
+      } while((int)buff[12] != n);
+      // buff[0] LSbyte #1
+      // buff[1] MSbyte #1
+      
+      // buff[2] LSbyte #2
+      // buff[3] MSbyte #2
 
-      //std::cout << "addr: " << addr << std::endl;
+      // etc.
 
       // Position
-      xPos = rawToFloat(buff[2], buff[1]) * POSITION_RANGE;
-      yPos = rawToFloat(buff[4], buff[3]) * POSITION_RANGE;
-      zPos = rawToFloat(buff[6], buff[5]) * POSITION_RANGE;
+      
+      xPos = rawToFloat(buff[1], buff[0]) * POSITION_RANGE;
+      yPos = rawToFloat(buff[3], buff[2]) * POSITION_RANGE;
+      zPos = rawToFloat(buff[5], buff[4]) * POSITION_RANGE;
 
+//      std::cout   << "Float X: " << xPos
+//                  << "Float Y: " << yPos
+//                  << "Float Z: " << zPos << std::endl;
 
       // Orientation
-      zRot = rawToFloat(buff[8], buff[7])   * ANGLE_RANGE;
-      yRot = rawToFloat(buff[10], buff[9])   * ANGLE_RANGE;
-      xRot = rawToFloat(buff[12], buff[11]) * ANGLE_RANGE;
+      zRot = rawToFloat(buff[7], buff[6])   * ANGLE_RANGE;
+      yRot = rawToFloat(buff[9], buff[8])   * ANGLE_RANGE;
+      xRot = rawToFloat(buff[11], buff[10]) * ANGLE_RANGE;
       
       return vpr::ReturnStatus::Succeed;
    }
@@ -647,16 +724,357 @@ vpr::ReturnStatus FlockStandalone::getReading (const int& n, float& xPos, float&
    }
 }
 
-float FlockStandalone::rawToFloat (char& r1, char& r2)
+float FlockStandalone::rawToFloat (char& MSchar, char& LSchar)
 {
    // return ((float) (((r1 & 0x7f) << 9) | (r2 & 0x7f) << 2) / 0x7fff);
+   
+   // short int ival1,ival2,val;
+   // ival1 = r1 & 0x7f;                  // Set 8th bit to 0
+   // ival2 = r2 & 0x7f;                  // Set 8th bit to 0
+   // val = (ival1 << 9) | ival2<<2;
+   //return((float)val) / 0x7fff;
 
-   short int ival1,ival2,val;
-   ival1 = r1 & 0x7f;
-   ival2 = r2 & 0x7f;
-   val = (ival1 << 9) | ival2<<2;
-   return((float)val) / 0x7fff;
+   vpr::Int8 MSbyte;
+   vpr::Int8 LSbyte;
+   vpr::Int16 returnVal;
+
+//   std::cout << "Bits before MS: ";
+//   this->showbits(MSchar);
+//   std::cout << " LS:";
+//   this->showbits(LSchar);
+//   std::cout << std::endl;
+
+//   if (MSchar >= 120)
+//   {
+//      std::cout << "ERRORBIT";
+//      std::cout << std::endl;
+//   }
+
+      // 1) Changes 8th bit from a "1" back to "0" after catching it
+      //    0x7f = 01111111  so it masks out the 8th but
+   MSbyte = MSchar & 0x7f;
+   LSbyte = LSchar & 0x7f;
+   
+//   std::cout << "After 1): ";
+//   this->showbits(MSbyte);
+//   std::cout << " LS:";
+//   this->showbits(LSbyte);
+//   std::cout << std::endl;
+
+
+      // 2) Shifts each LSByte left 1 bit
+   LSbyte <<= 1;           // Shift the LS byte left 2 bits becasue flock data format
+
+//   std::cout << "After 2): ";
+//   this->showbits(MSbyte);
+//   std::cout << " LS:";
+//   this->showbits(LSbyte);
+//   std::cout << std::endl;
+
+      // 3) Combine each MSbytee/LSbyte pair
+   returnVal = MSbyte;
+//      std::cout << "After 3a): ";
+//      this->showbits16(returnVal);
+//      std::cout << std::endl;
+
+   returnVal <<= 8;
+//      std::cout << "After 3b): ";
+//      this->showbits16(returnVal);
+//      std::cout << std::endl;
+
+   returnVal += LSbyte;
+//      std::cout << "After 3c): ";
+//      this->showbits16(returnVal);
+//      std::cout << std::endl;
+
+
+
+
+      // 4) Shift each word pair left 1 more bit
+   returnVal <<= 1;
+
+//   std::cout << std::endl << "------------------------------------------" << std::endl;
+//   std::cout << "[vpr::Int16] Before DIV): " << returnVal  << std::endl;
+//   std::cout << "[float]      Before DIV): " << (float)returnVal  << std::endl;
+//   std::cout << "[float]      After DIV): " << ( (float)returnVal ) / 0x7fff  << std::endl;
+//   std::cout << "------------------------------------------" << std::endl << std::endl;
+
+   
+/*   if ( vpr::System::isLittleEndian() )
+   {
+      returnVal = MSbyte;
+//      std::cout << "ReturnVal-1: " << returnVal << std::endl;
+      returnVal <<= 8;        // Shit the MS byte left 8 bits to make it the MS 
+                              // and 1 more because of flock data format
+//      std::cout << "ReturnVal-2: " << returnVal << std::endl;
+      returnVal |= LSbyte;
+      std::cout << "RAW DATA: " << returnVal << std::endl;
+   }
+   else if ( vpr::System::isBigEndian() )
+   {
+      vprASSERT(1==2);
+//      MSbyte <<= 8;           // Shit the MS byte left 8 bits to make it the MS 
+                              // and 1 more because of flock data format
+//      returnVal = MSbyte & LSbyte;
+   }
+   else
+   {
+      vprDEBUG(vprDBG_ALL,vprDBG_CRITICAL_LVL) << "Endianess not specified!\n" << vprDEBUG_FLUSH;
+      vprASSERT(1==2);
+   }
+
+*/
+   return( ( (float)returnVal ) / 0x7fff );  
 }
+
+vpr::ReturnStatus FlockStandalone::readSoftwareRevision()
+{
+   vpr::Uint32 written;
+   if ( mSerialPort != NULL )
+   {
+      vpr::Uint64 timeout=10000;  // How long to wait for data to arrive
+      vpr::Uint32 num_read;
+      char buff[2];
+      
+      
+      // pickBird(1);
+      
+      buff[0] = 0x4F;
+      buff[1] = 0x1;
+
+      vpr::System::msleep(600);
+      mSerialPort->write(&buff, sizeof(buff), written);
+      
+      vpr::ReturnStatus status = mSerialPort->read(&buff,2,num_read,vpr::Interval(timeout, vpr::Interval::Msec));
+      if (!status.success())
+      {
+         return(status);
+      }
+      vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL)  << " [FlockStandalone] Software Revision is: " << (int)buff[0] << "." << (int)buff[1] << std::endl << vprDEBUG_FLUSH;
+      
+      return(vpr::ReturnStatus::Succeed);
+   }
+   else
+   {
+      return(vpr::ReturnStatus::Fail);
+   }
+}
+
+vpr::ReturnStatus FlockStandalone::readSystemModel()
+{
+   // Look on p. 121 of manual to get meanings
+   // 6DFOB       = Stand Alone
+   // 6DERC       = Extended Range Controller
+   // 6DBOF       = MotionStar (old name)
+   // PCBIRD      = pcBIRD
+   // SPACEPAD    = SpacePad
+   // MOTIONSTAR  = MotionStar (new name)
+   // WIRELESS    = MotionStar Wireless
+
+   vpr::Uint32 written;
+   if ( mSerialPort != NULL )
+   {
+      vpr::Uint64 timeout=10000;  // How long to wait for data to arrive
+      vpr::Uint32 num_read;
+      char buff[2];
+      char model_id[10];
+      memset(model_id,' ',10);
+      
+      buff[0] = 0x4F;
+      buff[1] = 0xF;
+
+      // pickBird(1);
+
+      vpr::System::msleep(600);
+      mSerialPort->write(&buff, sizeof(buff), written);
+      
+      vpr::ReturnStatus status = mSerialPort->read(&model_id,10,num_read,vpr::Interval(timeout, vpr::Interval::Msec));
+      if (!status.success())
+      {
+         return(status);
+      }
+      
+      vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << " [FlockStandalone] System ID is: " << model_id << std::endl << vprDEBUG_FLUSH;
+      
+      return(vpr::ReturnStatus::Succeed);
+   }
+   else
+   {
+      return(vpr::ReturnStatus::Fail);
+   }
+}
+
+
+   // Does not work properly
+vpr::ReturnStatus FlockStandalone::readStatus(const int birdNum)
+{
+   
+   // pickBird(birdNum);
+   
+   vpr::Uint32 written;
+   if ( mSerialPort != NULL )
+   {
+      vpr::Uint64 timeout=10000;  // How long to wait for data to arrive
+      vpr::Uint32 num_read;
+      char buff[2];
+      
+      pickBird(birdNum);
+      
+      buff[0] = 'O';
+      buff[1] = 0;
+
+      vpr::System::msleep(600);
+      mSerialPort->write(&buff, sizeof(buff), written);
+
+      vpr::ReturnStatus status = mSerialPort->read(&buff,2,num_read,vpr::Interval(timeout, vpr::Interval::Msec));
+      if (!status.success())
+      {
+         return(status);
+      }
+      // B0-B7  use buff[0]
+      // B8-B15 use buff[1]
+
+      // buff[0]           buff[1]
+      // -------------------------
+      // B0 ->    0x1      <- B8
+      // B1 ->    0x2      <- B9
+      // B2 ->    0x4      <- B10
+      // B3 ->    0x8      <- B11
+      // B4 ->    0x10     <- B12
+      // B5 ->    0x20     <- B13
+      // B6 ->    0x40     <- B14
+      // B7 ->    0x80     <- B15
+
+      vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) 
+         << "================= Flock of Birds Status ===============\n" << vprDEBUG_FLUSH;
+      vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << "   * " << "Mode\n" << vprDEBUG_FLUSH;
+      vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << "     * " 
+         << ( (buff[0] & 0x1) != 0 ? "Stream\n" : "Point\n") << vprDEBUG_FLUSH;                                 // B0
+      vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << "     * " 
+         << ( (buff[0] & 0x20) != 0 ? "Sleep\n" : "Run\n") << vprDEBUG_FLUSH;                                   // B5
+      vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << "     * " 
+         << "Bird is " << ( (buff[1] & 0x10) != 0 ? "Running" : "not Running\n") << vprDEBUG_FLUSH;           // B12
+      vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << "     * " 
+         << ( (buff[0] & 0x40) != 0 ? "XOFF\n" : "XON\n") << vprDEBUG_FLUSH;                                    // B6
+      vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << "     * " 
+         << ( (buff[1] & 0x1) != 0 ? "No " : "") << "Sync mode enabled\n" << vprDEBUG_FLUSH;                  // B8
+      vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << "     * " 
+         << ( (buff[1] & 0x2) != 0 ? "" : "Not ") << "In CRTSYNC mode\n" << vprDEBUG_FLUSH;                   // B9
+      vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << "     * " 
+         << ( (buff[1] & 0x2) != 0 ? "Expanded" : "Normal ") << " Adress mode enabled\n" << vprDEBUG_FLUSH;   // B9
+      vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << "     * " 
+         << ( (buff[1] & 0x8) != 0 ? "" : "Not ") << "In Host Sync mode\n" << vprDEBUG_FLUSH;                 // B11
+         
+         // Get Output Mode
+      char temp = buff[0] & 0x1E;
+      temp >>= 1;
+      
+      switch ((int)temp)
+      {
+      case 1:
+         vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << "     * " 
+            << "POSITION Outputs selected\n" << vprDEBUG_FLUSH;
+         break;
+      case 2:
+         vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << "     * " 
+            << "ANGLE Outputs selected\n" << vprDEBUG_FLUSH;
+         break;
+      case 3:
+         vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << "     * " 
+            << "MATRIX Outputs selected\n" << vprDEBUG_FLUSH;
+         break;
+      case 4:
+         vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << "     * " 
+            << "POSITION/ANGLE Outputs selected\n" << vprDEBUG_FLUSH;
+         break;
+      case 5:
+         vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << "     * " 
+            << "POSITION/MATRIX Outputs selected\n" << vprDEBUG_FLUSH;
+         break;
+      case 6:
+         vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << "     * " 
+            << "Position Outputs selected\n" << vprDEBUG_FLUSH;
+         break;
+      case 7:
+         vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << "     * " 
+            << "QUATERNION Outputs selected\n" << vprDEBUG_FLUSH;
+         break;
+      case 8:
+         vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << "     * " 
+            << "POSITION/QUATERNION Outputs selected\n" << vprDEBUG_FLUSH;
+         break;
+      default:
+         vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << "     * " 
+            << "INVALID/UNKNOWN Output selected\n" << vprDEBUG_FLUSH;
+         break;
+      }
+
+      
+      vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << "   * " 
+         << ( (buff[0] & 0x80) != 0 ? "Factory test and" : "") << "Bird commands enabled\n" << vprDEBUG_FLUSH;  // B7
+      vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << "   * " 
+         << ( (buff[1] & 0x2) != 0 ? "Factory test and" : "") << "Bird commands enabled\n" << vprDEBUG_FLUSH;   // B9
+      vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << "   * " 
+         << "Bird has" << ( (buff[1] & 0x40) != 0 ? "" : " not") << " been initialized\n" << vprDEBUG_FLUSH;    // B14
+      vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << "   * " 
+         << "Bird is a " << ( (buff[1] & 0x80) != 0 ? "Master" : "Slave") << " Bird\n" << vprDEBUG_FLUSH;       // B15
+      vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << "   * " 
+         << ( (buff[1] & 0x20) != 0 ? "" : "NO ") << "Error has been detected!\n" << vprDEBUG_FLUSH;            // B13
+         
+         // If an ERROR occured
+      if ((buff[1] & 0x20) != 0)
+      {
+         this->checkError();
+      }
+      vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << "=======================================================\n" << vprDEBUG_FLUSH;
+
+      return(vpr::ReturnStatus::Succeed);
+   }
+   return(vpr::ReturnStatus::Fail);
+}
+
+   // Does not work with older hadware
+vpr::ReturnStatus FlockStandalone::readHemisphere()
+{
+   vpr::Uint32 written;
+   if ( mSerialPort != NULL )
+   {
+      vpr::Uint64 timeout=10000;  // How long to wait for data to arrive
+      vpr::Uint32 num_read;
+      char buff[2];
+      
+      
+      pickBird(1);
+      
+      buff[0] = 0x4F;
+      buff[1] = 0x16;
+
+      vpr::System::msleep(600);
+      mSerialPort->write(&buff, sizeof(buff), written);
+      
+      //mSerialPort->drainOutput();
+      //vpr::System::msleep(500);
+      
+      //mSerialPort->flushQueue(vpr::SerialTypes::INPUT_QUEUE);
+      
+      vpr::ReturnStatus status = mSerialPort->read(&buff,2,num_read,vpr::Interval(timeout, vpr::Interval::Msec));
+      if (!status.success())
+      {
+         return(status);
+      }
+      std::cout << "Hemisphere is: " << (int)buff[0] << "." << (int)buff[1] << std::endl;
+      
+      //mSerialPort->flushQueue(vpr::SerialTypes::IO_QUEUES);
+      //vpr::System::msleep(500);
+
+      return(vpr::ReturnStatus::Succeed);
+   }
+   else
+   {
+      return(vpr::ReturnStatus::Fail);
+   }
+}
+
 
 void FlockStandalone::pickBird (const int birdID)
 {
@@ -665,10 +1083,11 @@ void FlockStandalone::pickBird (const int birdID)
    {
       char buff = 0xF0 + birdID;
 
+      vpr::System::msleep(600);
       mSerialPort->write(&buff, sizeof(buff), written);
-      mSerialPort->flushQueue(vpr::SerialTypes::IO_QUEUES);
+      // mSerialPort->flushQueue(vpr::SerialTypes::IO_QUEUES);
 
-      vpr::System::usleep(100 * mSleepFactor);
+      // vpr::System::usleep(100 * mSleepFactor);
    }
 }
 
@@ -688,32 +1107,28 @@ int FlockStandalone::openPort ()
    ///////////////////////////////////////////////////////////////////
    if ( mSerialPort != NULL )
    {
+      vprDEBUG_BEGIN(vprDBG_ALL,vprDBG_CONFIG_LVL) << "====== " << "Trying to open serial port: " 
+         << mPort << " =====\n" << vprDEBUG_FLUSH;
+      
       mSerialPort->setOpenReadWrite();
-
-      //vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << "Trying to open serial port: " << mPort << "\n" << vprDEBUG;
-      std::cout << "Trying to open serial port: " << mPort << std::endl;
-
-      std::cout << "1" << std::endl;
+      
       if ( ! mSerialPort->open().success() )
       {
-         std::cout << "[FlockStandalone] Port reset failed (because port "
-                   << "open failed)\n";
+         vprDEBUG(vprDBG_ALL,vprDBG_CRITICAL_LVL) << "Port reset failed (because port "
+                  << "open failed)\n" << vprDEBUG_FLUSH;
          retval = -1;
       }
       else
       {
-         std::cout << "2" << std::endl;
-         vpr::System::sleep(2);
-         std::cout << "3" << std::endl;
+         vpr::System::msleep(500);
          mSerialPort->close();
-         std::cout << "4" << std::endl;
-
-         std::cout << "[FlockStandalone] Port reset successfully (port was "
-                   << "opened then closed)\n" << std::flush;
+         
+         vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << "Port reset successfully (port was "
+                   << "opened then closed)\n" << vprDEBUG_FLUSH;
 
          if ( ! mSerialPort->open().success() )
          {
-            std::cout << "[FlockStandalone] Port open failed\n";
+            vprDEBUG(vprDBG_ALL,vprDBG_CRITICAL_LVL) << "Port open failed\n" << vprDEBUG_FLUSH;
             retval = -1;
          }
          else
@@ -723,39 +1138,42 @@ int FlockStandalone::openPort ()
             mSerialPort->enableLocalAttach();
             mSerialPort->enableBreakByteIgnore();
 
-            std::cout << "[FlockStandalone] Port opened successfully\n"
-                      << std::flush;
+            vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << "Port opened successfully\n"
+                      << vprDEBUG_FLUSH;
 
             mSerialPort->setUpdateAction(vpr::SerialTypes::NOW);
 
             // Setup the port.
-            std::cout << "[FlockStandalone] Setting new baud rate: "
-                      << mBaud << " bits per second\n" << std::flush;
+            vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << "Setting new baud rate: "
+                      << mBaud << " bits per second\n" << vprDEBUG_FLUSH;
             mSerialPort->setInputBaudRate(mBaud);
 
-            std::cout << "Setting output baud rate\n" << std::flush;
+            vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << "Setting output baud rate\n" << vprDEBUG_FLUSH;
             mSerialPort->setOutputBaudRate(mBaud);
 
-            std::cout << "Setting character size\n" << std::flush;
+            vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << "Setting character size\n" << vprDEBUG_FLUSH;
             mSerialPort->setCharacterSize(vpr::SerialTypes::CS_BITS_8);
 /*
                 std::cout << "Setting local attachment\n" << std::flush;
                 mSerialPort->enableLocalAttach();
 */
-            std::cout << "Setting read stuff\n" << std::flush;
+/*            vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << " [FlockStandalone] Setting read stuff\n" << vprDEBUG_FLUSH;
             if ( mSerialPort->enableRead().failure() )
             {
                retval = -1;
             }
+*/
+            vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << "Port setup correctly\n" << vprDEBUG_FLUSH;
          }
       }
    }
    else
    {
-      std::cerr << "[FlockStandalone] ERROR -- No port has been set in FlockStandalone::open_port()!\n";
+      vprDEBUG(vprDBG_ALL,vprDBG_CRITICAL_LVL) << "ERROR -- No port has been set in FlockStandalone::open_port()!\n" << vprDEBUG_FLUSH;
       retval = -1;
    }
 
+   vprDEBUG_END(vprDBG_ALL,vprDBG_CONFIG_LVL) << "====================================================\n" << vprDEBUG_FLUSH;
    return retval;
 }
 
@@ -782,7 +1200,7 @@ void FlockStandalone::setBlocking ()
    }
 }
 
-void FlockStandalone::setSync ()
+void FlockStandalone::sendSync ()
 {
    /////////////////////////////////////////////////////////////////
    // Set CRT sync: (manual page 82)
@@ -794,15 +1212,17 @@ void FlockStandalone::setSync ()
    vpr::Uint32 written;
    if ( mSerialPort != NULL )
    {
-      unsigned char buff[4] = {'A', 1};
+      unsigned char buff[2];
+      buff[0] = 'A';
       buff[1] = mSyncStyle;
 
+      vpr::System::msleep(600);
       mSerialPort->write(buff, 2, written);
-      mSerialPort->flushQueue(vpr::SerialTypes::IO_QUEUES);
+      //mSerialPort->flushQueue(vpr::SerialTypes::IO_QUEUES);
    }
 }
 
-void FlockStandalone::setHemisphere()
+void FlockStandalone::sendHemisphere()
 {
    /////////////////////////////////////////////////////////////////
    // Set Hemisphere for birds taking input
@@ -833,7 +1253,7 @@ void FlockStandalone::setHemisphere()
          }
 
          pickBird(i);
-
+         
          switch ( mHemisphere )
          {
             case FRONT_HEM:
@@ -862,15 +1282,16 @@ void FlockStandalone::setHemisphere()
                break;
          }
 
+         vpr::System::msleep(600);
          mSerialPort->write(buff, sizeof(buff), written);
-         mSerialPort->flushQueue(vpr::SerialTypes::IO_QUEUES);
+         // mSerialPort->flushQueue(vpr::SerialTypes::IO_QUEUES);
 
-         vpr::System::usleep(500 * mSleepFactor);
+         // vpr::System::usleep(500 * mSleepFactor);
       }
    }
 }
 
-void FlockStandalone::setRepAndStream ()
+void FlockStandalone::sendRepAndStream ()
 {
    vpr::Uint32 written;
    if ( mSerialPort != NULL )
@@ -884,21 +1305,23 @@ void FlockStandalone::setRepAndStream ()
       //             T  every 32 cycles
       /////////////////////////////////////////////////////////////////
       buff[0] = mReportRate;
+      vpr::System::msleep(600);
       mSerialPort->write(buff, sizeof(buff), written);
-      mSerialPort->flushQueue(vpr::SerialTypes::IO_QUEUES);
-      vpr::System::usleep(2000 * mSleepFactor);
+      //mSerialPort->flushQueue(vpr::SerialTypes::IO_QUEUES);
+      //vpr::System::usleep(2000 * mSleepFactor);
 
       ////////////////////////////////////////////////////////////////
       // set stream mode
       ////////////////////////////////////////////////////////////////
       buff[0] = '@';
+      vpr::System::msleep(600);
       mSerialPort->write(buff, sizeof(buff), written);
-      mSerialPort->flushQueue(vpr::SerialTypes::IO_QUEUES);
-      vpr::System::usleep(500 * mSleepFactor);
+      //mSerialPort->flushQueue(vpr::SerialTypes::IO_QUEUES);
+      //vpr::System::usleep(500 * mSleepFactor);
    }
 }
 
-void FlockStandalone::setPosAngles ()
+void FlockStandalone::sendPosAngles ()
 {
    //////////////////////////////////////////////////////////////////
    // Set Position Angles
@@ -907,27 +1330,32 @@ void FlockStandalone::setPosAngles ()
    if ( mSerialPort != NULL )
    {
       char buff[1];
-
-      for ( int i = 1; i < (mNumBirds + 1); i++ )
+      
+      int loop_count = mNumBirds;
+      if (mExtendedRange)
+      {
+         loop_count++;
+      }    
+      
+      for ( int bird_id = 1; bird_id < loop_count; bird_id++ )
       {
          // Skip the transmitter unit.
-         if ( i == mXmitterUnitNumber )
+         if ( bird_id != mXmitterUnitNumber )
          {
-            continue;
+            pickBird(bird_id);
+            buff[0] = 'Y';
+            
+            vpr::System::msleep(600);
+            mSerialPort->write(buff, sizeof(buff), written);
+            //mSerialPort->flushQueue(vpr::SerialTypes::IO_QUEUES);
+   
+            //vpr::System::usleep(500 * mSleepFactor);
          }
-
-         pickBird(i);
-
-         buff[0] = 'Y';
-         mSerialPort->write(buff, sizeof(buff), written);
-         mSerialPort->flushQueue(vpr::SerialTypes::IO_QUEUES);
-
-         vpr::System::usleep(500 * mSleepFactor);
       }
    }
 }
 
-void FlockStandalone::setFilter ()
+void FlockStandalone::sendFilter ()
 {
    ///////////////////////////////////////////////////////////////
    // Turn filters on (manual page 48)
@@ -945,15 +1373,16 @@ void FlockStandalone::setFilter ()
       buff[2] = 0x00;
       buff[3] = 0;
 
+      vpr::System::msleep(600);
       mSerialPort->write(buff, sizeof(buff), written);
-      mSerialPort->flushQueue(vpr::SerialTypes::IO_QUEUES);
+      // mSerialPort->flushQueue(vpr::SerialTypes::IO_QUEUES);
 
       //TODO: Do I need to sleep here?
-      vpr::System::usleep(12000 * mSleepFactor);
+      // vpr::System::usleep(12000 * mSleepFactor);
    }
 }
 
-void FlockStandalone::setTransmitter ()
+void FlockStandalone::sendTransmitter ()
 {
    ///////////////////////////////////////////////////////////////
    // Sets up the device for Transmitting (manual page 67)
@@ -967,14 +1396,15 @@ void FlockStandalone::setTransmitter ()
       buff[0] = (unsigned char) (0x30);
       buff[1] = (unsigned char) mXmitterUnitNumber << 4;
 
+      vpr::System::msleep(600);
       mSerialPort->write(buff, sizeof(buff), written);
-      mSerialPort->flushQueue(vpr::SerialTypes::IO_QUEUES);
+      //mSerialPort->flushQueue(vpr::SerialTypes::IO_QUEUES);
 
-      vpr::System::usleep(12000 * FlockStandalone::mSleepFactor);
+      //vpr::System::usleep(12000 * FlockStandalone::mSleepFactor);
    }
 }
 
-void FlockStandalone::setAutoconfig ()
+void FlockStandalone::sendAutoconfig ()
 {
    ///////////////////////////////////////////////////////////////
    // FBB AUTO-CONFIGURATION (manual page 60)
@@ -990,14 +1420,14 @@ void FlockStandalone::setAutoconfig ()
       buff[1] = 0x32;
       buff[2] = mNumBirds + 1;  //number of input devices + 1 for transmitter
 
-      vpr::System::sleep(3);
+      vpr::System::msleep(600);
       mSerialPort->write(buff, sizeof(buff), written);
-      mSerialPort->flushQueue(vpr::SerialTypes::IO_QUEUES);
-      vpr::System::sleep(2);
+      //mSerialPort->flushQueue(vpr::SerialTypes::IO_QUEUES);
+      vpr::System::msleep(600);
    }
 }
 
-void FlockStandalone::setGroup ()
+void FlockStandalone::sendGroup ()
 {
    ////////////////////////////////////////////////////////////////
    // Setup group mode: (manual page 59)
@@ -1014,9 +1444,10 @@ void FlockStandalone::setGroup ()
       buff[1] = 0x23;
       buff[2] = 0x01;
 
+      vpr::System::msleep(600);
       mSerialPort->write(buff, sizeof(buff), written);
-      mSerialPort->flushQueue(vpr::SerialTypes::IO_QUEUES);
-      vpr::System::sleep(2);
+      //mSerialPort->flushQueue(vpr::SerialTypes::IO_QUEUES);
+      //vpr::System::sleep(2);
    }
 }
 
@@ -1084,11 +1515,32 @@ void FlockStandalone::checkRepAndStream()
 void FlockStandalone::showbits(char var)
 {
    static unsigned mask[8]={1,2,4,8,16,32,64,128};
-
+   
+   //if (var < 0)
+   //{
+   //   std::cout << " (-) ";
+   //}
    unsigned bitval;
    for ( int bit=7; bit>=0; bit-- )
    {
       bitval=mask[bit]&var;
+      printf("%c",bitval?'1':'0');
+   }
+}
+
+void FlockStandalone::showbits16(float var)
+{
+   static int mask[16]={  1,  2,   4,   8,  16,  32,   64,  128,
+                             256,512,1024,2048,4096,8192,16384,32768};
+
+   if (var < 0)
+   {
+      std::cout << " (-) ";
+   }
+   unsigned bitval;
+   for ( int bit=15; bit>=0; bit-- )
+   {
+      bitval=mask[bit]&(int)var;
       printf("%c",bitval?'1':'0');
    }
 }
@@ -1305,6 +1757,184 @@ void FlockStandalone::setDeviceReportRate(char rate)
       mSerialPort->write(exam1, sizeof(char), buf);
    }
 }
+
+
+void FlockStandalone::printError( unsigned char ErrCode, unsigned char ExpandedErrCode )
+{
+  /*
+    Display a message describing the Error
+    */
+  switch (ErrCode) {
+  case 0:
+    vprDEBUG(vprDBG_ALL,vprDBG_CRITICAL_LVL) << "**** No Errors Have Occurred ****\n" << vprDEBUG_FLUSH;
+    break;
+  case 1:
+    vprDEBUG(vprDBG_ALL,vprDBG_CRITICAL_LVL) << "**** System RAM Test Error ****\n" << vprDEBUG_FLUSH;
+    break;
+  case 2:
+    vprDEBUG(vprDBG_ALL,vprDBG_CRITICAL_LVL) << "**** Non-Volatile Storage Write Failure ****\n" << vprDEBUG_FLUSH;
+    break;
+  case 3:
+    vprDEBUG(vprDBG_ALL,vprDBG_CRITICAL_LVL) << "**** System EEPROM Configuration Corrupt ****\n" << vprDEBUG_FLUSH;
+    break;
+  case 4:
+    vprDEBUG(vprDBG_ALL,vprDBG_CRITICAL_LVL) << "**** Transmitter EEPROM Configuration Corrupt ****\n" << vprDEBUG_FLUSH;
+    break;
+  case 5:
+    vprDEBUG(vprDBG_ALL,vprDBG_CRITICAL_LVL) << "**** Receiver EEPROM Configuration Corrupt ****\n" << vprDEBUG_FLUSH;
+    break;
+  case 6:
+    vprDEBUG(vprDBG_ALL,vprDBG_CRITICAL_LVL) << "**** Invalid RS232 Command ****\n" << vprDEBUG_FLUSH;
+    break;
+  case 7:
+    vprDEBUG(vprDBG_ALL,vprDBG_CRITICAL_LVL) << "**** Not an FBB Master ****\n" << vprDEBUG_FLUSH;
+    break;
+  case 8:
+    vprDEBUG(vprDBG_ALL,vprDBG_CRITICAL_LVL) << "**** No 6DFOBs are Active ****\n" << vprDEBUG_FLUSH;
+    break;
+  case 9:
+    vprDEBUG(vprDBG_ALL,vprDBG_CRITICAL_LVL) << "**** 6DFOB has not been Initialized ****\n" << vprDEBUG_FLUSH;
+    break;
+  case 10:
+    vprDEBUG(vprDBG_ALL,vprDBG_CRITICAL_LVL) << "**** FBB Receive Error - Intra Bird Bus ****\n" << vprDEBUG_FLUSH;
+    break;
+  case 11:
+    vprDEBUG(vprDBG_ALL,vprDBG_CRITICAL_LVL) << "**** RS232 Overrun and/or Framing Error ****\n" << vprDEBUG_FLUSH;
+    break;
+  case 12:
+    vprDEBUG(vprDBG_ALL,vprDBG_CRITICAL_LVL) << "**** FBB Receive Error - FBB Host Bus ****\n" << vprDEBUG_FLUSH;
+    break;
+  case 13:
+    vprDEBUG(vprDBG_ALL,vprDBG_CRITICAL_LVL) << 
+	    "**** No FBB Command Response from Device at address " 
+       << (ExpandedErrCode & 0x0f) << "(decimal) ****\n" << vprDEBUG_FLUSH;
+    break;
+  case 14:
+    vprDEBUG(vprDBG_ALL,vprDBG_CRITICAL_LVL) << "**** Invalid FBB Host Command ****\n" << vprDEBUG_FLUSH;
+    break;
+  case 15:
+    vprDEBUG(vprDBG_ALL,vprDBG_CRITICAL_LVL) << "**** FBB Run Time Error ****\n" << vprDEBUG_FLUSH;
+    break;
+  case 16:
+    vprDEBUG(vprDBG_ALL,vprDBG_CRITICAL_LVL) << "**** Invalid CPU Speed ****\n" << vprDEBUG_FLUSH;
+    break;
+  case 17:
+    vprDEBUG(vprDBG_ALL,vprDBG_CRITICAL_LVL) << "**** Slave No Data Error ****\n" << vprDEBUG_FLUSH;
+    break;
+  case 18:
+    vprDEBUG(vprDBG_ALL,vprDBG_CRITICAL_LVL) << "**** Illegal Baud Rate ****\n" << vprDEBUG_FLUSH;
+    break;
+  case 19:
+    vprDEBUG(vprDBG_ALL,vprDBG_CRITICAL_LVL) << "**** Slave Acknowledge Error ****\n" << vprDEBUG_FLUSH;
+    break;
+  case 20:
+    vprDEBUG(vprDBG_ALL,vprDBG_CRITICAL_LVL) << "**** CPU Overflow Error - call factory ****\n" << vprDEBUG_FLUSH;
+    break;
+  case 21:
+    vprDEBUG(vprDBG_ALL,vprDBG_CRITICAL_LVL) << "**** Array Bounds Error - call factory ****\n" << vprDEBUG_FLUSH;
+    break;
+  case 22:
+    vprDEBUG(vprDBG_ALL,vprDBG_CRITICAL_LVL) << "**** Unused Opcode Error - call factory ****\n" << vprDEBUG_FLUSH;
+    break;
+  case 23:
+    vprDEBUG(vprDBG_ALL,vprDBG_CRITICAL_LVL) << "**** Escape Opcode Error - call factory ****\n" << vprDEBUG_FLUSH;
+    break;
+  case 24:
+    vprDEBUG(vprDBG_ALL,vprDBG_CRITICAL_LVL) << "**** Reserved Int 9 - call factory ****\n" << vprDEBUG_FLUSH;
+    break;
+  case 25:
+    vprDEBUG(vprDBG_ALL,vprDBG_CRITICAL_LVL) << "**** Reserved Int 10 - call factory ****\n" << vprDEBUG_FLUSH;
+    break;
+  case 26:
+    vprDEBUG(vprDBG_ALL,vprDBG_CRITICAL_LVL) << "**** Reserved Int 11 - call factory ****\n" << vprDEBUG_FLUSH;
+    break;
+  case 27:
+    vprDEBUG(vprDBG_ALL,vprDBG_CRITICAL_LVL) << "**** Numeric CPU Error - call factory ****\n" << vprDEBUG_FLUSH;
+    break;
+  case 28:
+    vprDEBUG(vprDBG_ALL,vprDBG_CRITICAL_LVL) << "**** CRT Syncronization Error ****\n" << vprDEBUG_FLUSH;
+    break;
+  case 29:
+    vprDEBUG(vprDBG_ALL,vprDBG_CRITICAL_LVL) << "**** Transmitter Not Active Error ****\n" << vprDEBUG_FLUSH;
+    break;
+  case 30:
+    vprDEBUG(vprDBG_ALL,vprDBG_CRITICAL_LVL) << "**** ERC Extended Range Transmitter Not Attached Error ****\n" << vprDEBUG_FLUSH;
+    break;
+  case 31:
+    vprDEBUG(vprDBG_ALL,vprDBG_CRITICAL_LVL) << "**** CPU Time Overflow Error ****\n" << vprDEBUG_FLUSH;
+    break;
+  case 32:
+    vprDEBUG(vprDBG_ALL,vprDBG_CRITICAL_LVL) << "**** Receiver Saturated Error ****\n" << vprDEBUG_FLUSH;
+    break;
+  case 33:
+    vprDEBUG(vprDBG_ALL,vprDBG_CRITICAL_LVL) << "**** Slave Configuration Error ****\n" << vprDEBUG_FLUSH;
+    break;
+  case 34:
+    vprDEBUG(vprDBG_ALL,vprDBG_CRITICAL_LVL) << "**** ERC Watchdog Error ****\n" << vprDEBUG_FLUSH;
+    break;
+  case 35:
+    vprDEBUG(vprDBG_ALL,vprDBG_CRITICAL_LVL) << "**** ERC Overtemp Error ****\n" << vprDEBUG_FLUSH;
+    break;
+  default:
+    vprDEBUG(vprDBG_ALL,vprDBG_CRITICAL_LVL) << "**** UNKNOWN ERROR... check user manual ****\n" << vprDEBUG_FLUSH;
+    break;
+  }
+}
+
+// check for flock error, return err number if there is an error
+// zero if no error
+int FlockStandalone::checkError()
+{
+   vpr::Uint32 bytes_read=0;
+   unsigned char bird_command[2];
+   
+   // put the flock to sleep (B to get out of stream mode, G to sleep)
+   bird_command[0] = 'B';
+   bird_command[1] = 'G';
+   if (mSerialPort->write(&bird_command,2,bytes_read) != vpr::ReturnStatus::Succeed)
+   {
+      vprDEBUG(vprDBG_ALL,vprDBG_CRITICAL_LVL) << " [FlockStandalone] Failed writing cmds to tracker.\n" << vprDEBUG_FLUSH;
+      return -1;
+   }
+   
+   mSerialPort->drainOutput();
+   vpr::System::msleep(500);
+   
+   // now get error code and clear error status
+   // we want error code 16, not 10 -- we want the expanded error code
+   // prepare error status query (expanded error codes)
+
+   mSerialPort->flushQueue(vpr::SerialTypes::INPUT_QUEUE);
+   
+   bird_command[0] = 'O';
+   bird_command[1] = 16;
+   
+   if (mSerialPort->write(&bird_command,2,bytes_read) != vpr::ReturnStatus::Succeed)
+   {
+     vprDEBUG(vprDBG_ALL,vprDBG_CRITICAL_LVL) << " [FlockStandalone] Failed writing cmds to tracker.\n" << vprDEBUG_FLUSH;
+     return -1;
+   }
+   
+   // make sure the command is sent out
+   mSerialPort->drainOutput();
+   vpr::System::msleep(500);
+   
+   // read response (2 char response to error query 16),
+   // 1 char response to 10
+   
+   mSerialPort->read(&bird_command,2,bytes_read);
+   if ( bytes_read !=2)
+   {
+      vprDEBUG(vprDBG_ALL,vprDBG_CRITICAL_LVL) << " [FlockStandalone] Received only " 
+         << bytes_read << " of 2 chars for error code\n" << vprDEBUG_FLUSH;
+      return -1;
+   }
+   
+   printError( bird_command[0], bird_command[1] );
+   
+   return bird_command[0];
+}
+
 
 /*
 void FlockStandalone::clearBuffer()
