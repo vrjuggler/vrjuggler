@@ -652,6 +652,7 @@ AC_CACHE_CHECK(whether the C++ compiler handles templates properly,
                    ac_cv_CXX_is_current='yes',
                    [ ac_cv_CXX_is_current='no' ;
                      AC_MSG_ERROR(*** The library requires a current C++ compiler) ]))
+
 CC="${_vjsave_CC}"
 
 AC_PROG_CPP
@@ -830,8 +831,9 @@ elif test "x${_thread_pkg}" = "xIRIX_SPROC" ; then
 fi
 
 dnl # Shared memory and synchronization primitives.
-SYNC_SYS=''			# POSIX, IRIX_SPROC, WIN32
-SHMEM_SYS=''			# IRIX_SPROC, WIN32
+SEMAPHORE_SYS=''		# POSIX, IRIX_SPROC, WIN32
+MUTEX_SYS=''			# POSIX, IRIX_SPROC, WIN32
+SHMEM_SYS=''			# POSIX, IRIX_SPROC, WIN32
 THREAD_SYS=''			# POSIX, IRIX_SPROC, WIN32
 
 dnl # Define various CPP macros depending on which threads implementation will
@@ -846,14 +848,22 @@ if test "$THREADS" = "POSIX" ; then
     AC_DEFINE(RW_MULTI_THREAD,)
     AC_DEFINE(_REENTRANT,)
 
-    dnl # Use POSIX threading, synchronization and shared memory.
-    THREAD_SYS='POSIX'
-    SYNC_SYS='POSIX'
+    dnl # Use POSIX threading, mutexes and shared memory.
+    MUTEX_SYS='POSIX'
     SHMEM_SYS='POSIX'
+    THREAD_SYS='POSIX'
+
+    dnl # If we have sem_init(3), we can use POSIX semaphores.  If not, exit
+    dnl # with a fatal error.  If we are using POSIX threads, we need to have
+    dnl # working POSIX semaphores too.
+    AC_CHECK_FUNC(sem_init,
+        [ SEMAPHORE_SYS='POSIX' ; AC_DEFINE(VJ_POSIX_SEMAPHORES,) ],
+        AC_MSG_ERROR(*** POSIX semaphores are required for POSIX threads ***))
 elif test "$THREADS" = "WIN32" ; then
     dnl # Set to Win32 threading, synchronization and shared memory.
+    SEMPANORE_SYS='WIN32'
     THREAD_SYS='WIN32'
-    SYNC_SYS='WIN32'
+    MUTEX_SYS='WIN32'
     SHMEM_SYS='WIN32'
 elif test "$THREADS" = "IRIX_SPROC" ; then
     AC_DEFINE(VJ_IRIX_SPROC,)
@@ -861,8 +871,9 @@ elif test "$THREADS" = "IRIX_SPROC" ; then
     dnl # Set to IRIX_SPROC threading
     THREAD_SYS='IRIX_SPROC'
 
-    SYNC_SYS='IRIX_SPROC'
+    SEMAPHORE_SYS='IRIX_SPROC'
     SHMEM_SYS='IRIX_SPROC'
+    MUTEX_SYS='IRIX_SPROC'
 elif test "x$THREADS" = "x" ; then
     AC_MSG_ERROR(No threading package defined!)
 fi
@@ -1275,8 +1286,9 @@ AC_SUBST(PFROOT)
 AC_SUBST(OPENGL_API)
 AC_SUBST(PERFORMER_API)
 
+AC_SUBST(SEMAPHORE_SYS)
 AC_SUBST(SHMEM_SYS)
-AC_SUBST(SYNC_SYS)
+AC_SUBST(MUTEX_SYS)
 AC_SUBST(THREAD_SYS)
 
 AC_SUBST(TEST_VJ_LIBS_BASIC)
