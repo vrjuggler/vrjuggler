@@ -454,10 +454,29 @@ def generateVersionHeaders():
 
 def generateAntBuildFiles():
    class AntTarget:
-      def __init__(self, srcdir, moduleName, outputFile = 'build.xml'):
+      def __init__(self, srcdir, moduleName, outputFile = 'build.xml',
+                   topSubDir = 'vc7'):
+         '''
+         __init__(srcdir, moduleName, outputFile, topSubDir)
+         Arguments:
+         srcdir     -- The location of the Java source to be compiled.
+         moduleName -- The name of the Visual C++ project (under the 'vc7'
+                       subdirectory) associated with this Ant build.  When
+                       concatenated to 'vc7', this is where the the .class
+                       file(s) and the .jar file(s) will be created.
+         outputFile -- The name of the Ant build file to generate.  If not
+                       specified, this defaults to 'build.xml'.
+         topSubDir  -- The root of the directory where all the work will be
+                       done.  This is needed for Ant builds that depend on
+                       previously constructed JAR files that will most likely
+                       exist somewhere in the 'vc7' directory tree.  This
+                       string is used as part of the replacment for the
+                       string @topdir@ in the source build.xml.in file.  If
+                       not specified, this defaults to 'vc7'.
+         '''
          self.srcdir      = os.path.join(gJugglerDir, srcdir)
-         self.topdir      = os.path.join(gJugglerDir, r'vc7')
-         self.module_name = os.path.join(self.topdir, moduleName)
+         self.topdir      = os.path.join(gJugglerDir, topSubDir)
+         self.module_name = os.path.join(gJugglerDir, 'vc7', moduleName)
          self.output_file = os.path.join(self.module_name, outputFile)
 
          if not os.path.exists(self.module_name):
@@ -604,19 +623,25 @@ def generateAntBuildFiles():
                          r'VRJConfig\commoneditors',
                          'build-commoneditors.xml'))
    mods.append(AntTarget(r'modules\vrjuggler\vrjconfig\customeditors\display_window',
-                         'VRJConfig', 'build-display_window.xml'))
+                         'VRJConfig', 'build-display_window.xml',
+                         r'vc7\VRJConfig'))
    mods.append(AntTarget(r'modules\vrjuggler\vrjconfig\customeditors\flock',
-                         'VRJConfig', 'build-flock.xml'))
+                         'VRJConfig', 'build-flock.xml', r'vc7\VRJConfig'))
    mods.append(AntTarget(r'modules\vrjuggler\vrjconfig\customeditors\intersense',
-                         'VRJConfig', 'build-intersense.xml'))
+                         'VRJConfig', 'build-intersense.xml',
+                         r'vc7\VRJConfig'))
    mods.append(AntTarget(r'modules\vrjuggler\vrjconfig\customeditors\motionstar',
-                         'VRJConfig', 'build-motionstar.xml'))
+                         'VRJConfig', 'build-motionstar.xml',
+                         r'vc7\VRJConfig'))
    mods.append(AntTarget(r'modules\vrjuggler\vrjconfig\customeditors\pinchglove',
-                         'VRJConfig', 'build-pinchglove.xml'))
+                         'VRJConfig', 'build-pinchglove.xml',
+                         r'vc7\VRJConfig'))
    mods.append(AntTarget(r'modules\vrjuggler\vrjconfig\customeditors\proxyeditor',
-                         'VRJConfig', 'build-proxyeditor.xml'))
+                         'VRJConfig', 'build-proxyeditor.xml',
+                         r'vc7\VRJConfig'))
    mods.append(AntTarget(r'modules\vrjuggler\vrjconfig\customeditors\surfacedisplayeditor',
-                         'VRJConfig', 'build-surfacedisplayeditor.xml'))
+                         'VRJConfig', 'build-surfacedisplayeditor.xml',
+                         r'vc7\VRJConfig'))
    mods.append(AntTarget(r'modules\vrjuggler\plugins\corba_perf_mon',
                          r'VRJugglerPlugins\Perf_Plugin_Java', 'build.xml'))
 
