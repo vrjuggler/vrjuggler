@@ -109,7 +109,7 @@ public:
     *                     and which can be used to resolve dependencies.
     *  @return true if sort succeded.
     */
-   bool dependencySort(ConfigChunkDB* auxChunks = NULL);
+   //bool dependencySort(ConfigChunkDB* auxChunks = NULL);
 
    /* IO functions: */
 
