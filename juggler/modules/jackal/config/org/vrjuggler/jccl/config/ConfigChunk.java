@@ -178,8 +178,6 @@ public class ConfigChunk {
         // note2: a nonrecursive version of this is probably worth it
         //        for the performance increase.  this is yicky.
         try {
-//             if (pathname.equalsIgnoreCase (getLastNameComponent()))
-//                 return this;
             String s = ConfigChunk.getNameRemainder (pathname);
             String s2 = ConfigChunk.getFirstNameComponent (s);
             Property p = getPropertyFromToken (s2);
