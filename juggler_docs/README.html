@@ -11,7 +11,9 @@
 	</ol>
 	<li><a href="#adding">Adding your own documentation</a></li>
 	<ol>
-	<li>File
+		<li><a href="#filetypes">File types handled by the build script</a></li>
+		<li><a href="#subst">Using Aliases and Path substitutions</a></li>
+	</ol>
 </ul>
 
 
@@ -134,8 +136,34 @@ that you can then use to build the project (this is recommended).<BR>
 <b>todo.txt       </b>looking for something to do?  read this file for motivation.<br>
 
 <a name="adding">
-<H3> Adding your own documentation: </H3>
+<H4> Adding your own documentation: </H4>
 </a>
-<a name="adding">
-<H4> Adding your own documentation: </H3>
+<a name="filetypes">
+<H5> File types handled by the build script </H5>
 </a>
+
+install-web.pl does 3 different operations depending on filetype.<BR>
+<li>copied - only does a straight copy if time stamps are different.</li>
+<li>renamed - renames file, for example .placeholder files strip off the extension</li>
+<li>filtered - filters the file, replacing any alias or path variable with one specified in the -w parameter of install-web.pl</li>
+<BR>
+<BR>
+Text and document files: <b>.txt .pdf .ps</b> - <i>copied</i><BR>
+Binary files: <b>.bin .gz .tar .zip .exe .rpm</b> - <i>copied</i><BR>
+HTML Placeholder files: <b>.html.placeholder</b> - <i>renamed, copied, filtered</i><BR>
+Placeholder files: <b>.placeholder</b> - <i>renamed, copied</i><BR>
+HTML files: <b>.htm .html</b> - <i>copied, filtered</i><BR>
+Image files: <b>png jpg gif jpeg</b> - <i>copied</i><BR>
+XML: <b>.xml .XML</b> - <i>copied, filtered</i><BR>
+Java files: <b>.class .jar .js</b> - <i>copied</i><BR>
+Style sheets: <b>css</b> - <i>copied</i><BR>
+
+
+<a name="subst">
+<H5> Using Aliases and Path substitutions </H5>
+</a>
+With the -w parameter, you can specify a file that defines path and alias substitutions.  In this file, using normal perl syntax, you add stuff to two hash tables: $path_subst, $alias_subst.<br>
+<BR>
+Example:<BR>
+$path_subst{"HTML"} = 'html/';<BR>
+$alias_subst{"JUGGLER_MAILING_LIST"} = 'mailto:vrjuggler-contact@vrjuggler.org';<BR>
