@@ -262,7 +262,7 @@ public:
     */
    static int usleep(vpr::Uint32 micro)
    {
-       return ::usleep(micro);
+      return ::usleep(micro);
    }
 
    /**
@@ -290,7 +290,7 @@ public:
     */
    static int sleep(vpr::Uint32 seconds)
    {
-       return ::sleep(seconds);
+      return ::sleep(seconds);
    }
 
    /**
@@ -331,15 +331,7 @@ public:
    /**
     * Outputs the state of the object.
     */
-   std::ostream& outStream(std::ostream& out)
-   {
-      out.setf(std::ios::right);
-      out << std::setw(7) << std::setfill('0') << mThreadPID << "/";
-      out.unsetf(std::ios::right);
-      BaseThread::outStream(out);
-      out << std::setfill(' ');
-      return out;
-   }
+   std::ostream& outStream(std::ostream& out);
 
 private:
    pid_t mThreadPID;      /**<  pid_t data structure for this thread */
