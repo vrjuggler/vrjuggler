@@ -18,7 +18,7 @@ AW_LIBS		= @TEST_EXTRA_LIBS_AW@
 VJ_INCLUDES	= @INCLUDES@ $(AW_INCLUDES) -I$(VJ_BASE_DIR)/include	\
                   -I$(VJ_BASE_DIR)/include/Math -I$(srcdir)		\
                   -I$(srcdir)/../nav -I$(srcdir)/../pfTools
-VJ_LIBS		= @TEST_VJ_LIBS_BASIC@ @TEST_VJ_LIBS_GL@ @TEST_VJ_LIBS_PF@ -lJuggler_aw @TEST_LIBS_BASIC@ 
+VJ_LIBS		= @TEST_VJ_LIBS_BASIC@ @TEST_VJ_LIBS_GL@ @TEST_VJ_LIBS_PF@ @TEST_VJ_LIBS_AW@ @TEST_LIBS_BASIC@ 
 
 VJ_LIB_DEPS	= $(VJ_BASE_DIR)/lib32/libJuggler.a			\
                   $(VJ_BASE_DIR)/lib32/libJuggler_ogl.a			\
