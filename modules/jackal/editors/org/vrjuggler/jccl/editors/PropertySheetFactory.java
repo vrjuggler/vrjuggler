@@ -188,9 +188,11 @@ public class PropertySheetFactory extends PropertyComponent
             }
          });
 
+         // The "add" button spans the label, editor, and delete icon columns.
          TableLayoutConstraints c3 =
-            new TableLayoutConstraints(0, row, 2, row, TableLayout.CENTER,
-                                       TableLayout.TOP);
+            new TableLayoutConstraints(PropertySheet.LABEL_COLUMN, row,
+                                       PropertySheet.DELETE_ICON_COLUMN, row,
+                                       TableLayout.CENTER, TableLayout.TOP);
          sheet.add(add_button, c3);
          ++row;
       }
@@ -265,18 +267,17 @@ public class PropertySheetFactory extends PropertyComponent
          {
             public void actionPerformed(ActionEvent evt)
             {
-               PropertyComponent temp =
-                  (PropertyComponent)((Component)evt.getSource()).getParent();
+               Component source = (Component) evt.getSource();
+               PropertyComponent temp = (PropertyComponent) source.getParent();
                temp_elm.removeProperty(temp_string, temp_value, temp_ctx);
 
                if(temp.getLayout() instanceof TableLayout)
                {
                   TableLayout tl = (TableLayout)temp.getLayout();
                   // Get the row that this panel is in.
-                  TableLayoutConstraints tlc =
-                     tl.getConstraints((Component)evt.getSource());
+                  TableLayoutConstraints tlc = tl.getConstraints(source);
                   int row = tlc.row1;
-                  temp.remove((Component)evt.getSource());
+                  temp.remove(source);
                   tl.deleteRow(row);
                }
 
@@ -290,9 +291,10 @@ public class PropertySheetFactory extends PropertyComponent
          remove_button.setEnabled(false);
       }
 
-      TableLayoutConstraints c4 = new TableLayoutConstraints(2, row, 2, row,
-                                                             TableLayout.LEFT,
-                                                             TableLayout.TOP);
+      TableLayoutConstraints c4 =
+         new TableLayoutConstraints(PropertySheet.DELETE_ICON_COLUMN, row,
+                                    PropertySheet.DELETE_ICON_COLUMN, row,
+                                    TableLayout.LEFT, TableLayout.TOP);
       sheet.add(remove_button, c4);
    }
 
@@ -306,9 +308,11 @@ public class PropertySheetFactory extends PropertyComponent
 
       ((TableLayout)sheet.getLayout()).insertRow(row, TableLayout.PREFERRED);
 
-      TableLayoutConstraints c = new TableLayoutConstraints(0, row, 1, row,
-                                                            TableLayout.FULL,
-                                                            TableLayout.FULL);
+      // Variable list panels span the label and editor columns.
+      TableLayoutConstraints c =
+         new TableLayoutConstraints(PropertySheet.LABEL_COLUMN, row,
+                                    PropertySheet.EDITOR_COLUMN, row,
+                                    TableLayout.FULL, TableLayout.FULL);
       sheet.add(editor_list, c);
 
       revalidate();
@@ -328,11 +332,13 @@ public class PropertySheetFactory extends PropertyComponent
       ((TableLayout)sheet.getLayout()).insertRow(row, TableLayout.PREFERRED);
 
       // Add both columns to this row.
-      TableLayoutConstraints c = new TableLayoutConstraints(1, row, 1, row,
-                                                            TableLayout.FULL,
-                                                            TableLayout.FULL);
+      TableLayoutConstraints c =
+         new TableLayoutConstraints(PropertySheet.EDITOR_COLUMN, row,
+                                    PropertySheet.EDITOR_COLUMN, row,
+                                    TableLayout.FULL, TableLayout.FULL);
       sheet.add(editor, c);
-      sheet.add(new JLabel(label), "0," + Integer.toString(row) + ",F,F");
+      sheet.add(new JLabel(label),
+                PropertySheet.LABEL_COLUMN + "," + row + ",F,F");
 
       addDeleteButton(sheet, ctx, elm, propDef, value, row);
 
@@ -352,9 +358,11 @@ public class PropertySheetFactory extends PropertyComponent
 
       ((TableLayout)sheet.getLayout()).insertRow(row, TableLayout.PREFERRED);
 
-      TableLayoutConstraints c = new TableLayoutConstraints(0, row, 1, row,
-                                                            TableLayout.FULL,
-                                                            TableLayout.FULL);
+      // Embedded element panels span the label and editor columns.
+      TableLayoutConstraints c =
+         new TableLayoutConstraints(PropertySheet.LABEL_COLUMN, row,
+                                    PropertySheet.EDITOR_COLUMN, row,
+                                    TableLayout.FULL, TableLayout.FULL);
       sheet.add(editor_list, c);
 
       addDeleteButton(sheet, ctx, elm, propDef, value, row);
