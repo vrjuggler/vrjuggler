@@ -42,8 +42,22 @@ package org.vrjuggler.tweek.beans;
  * is a change in which Panel Bean is currently focused.
  *
  * @see PanelBean
+ * @see ViewerBean
  */
 public interface BeanFocusChangeListener extends java.util.EventListener
 {
-   public void beanFocusChanged(BeanFocusChangeEvent event);
+   /**
+    * A new Panel Bean has received focus within the Viewer Bean.
+    *
+    * @since 0.92.7
+    */
+   public void beanFocused(BeanFocusChangeEvent event);
+
+   /**
+    * The Panel Bean that had focus within the Viewer Bean is no longer
+    * focused.
+    *
+    * @since 0.92.7
+    */
+   public void beanUnfocused(BeanFocusChangeEvent event);
 }

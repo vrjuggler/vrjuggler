@@ -9,10 +9,16 @@ For all versions:
 ===============================================================================
 
  Version: 1.0 Beta 3 (0.93.0)
-Released: February XX, 2005
+Released: April XX, 2005
    Required changes when upgrading from all previous versions:
        * The interface org.vrjuggler.tweek.beans.FileLoader has two new
          methods: hasUnsavedChanges() and saveAllRequested().
+       * The interface org.vrjuggler.tweek.beans.BeanFocusChangeListener had
+         its method beanFocusChanged() split into beanFocused() and
+         beanUnfocused().  Along with this, the constants
+         org.vrjuggler.tweek.beans.BeanFocusChangeEvent.BEAN_FOCUSED and
+         org.vrjuggler.tweek.beans.BeanFocusChangeEvent.BEAN_UNFOCUSED have
+         been removed.
 
  Version: 0.13.4
 Released: February 2, 2003

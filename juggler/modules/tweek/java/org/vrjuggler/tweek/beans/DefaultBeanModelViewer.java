@@ -36,7 +36,7 @@
 
 package org.vrjuggler.tweek.beans;
 
-import java.util.Vector;
+import javax.swing.event.EventListenerList;
 
 
 /**
@@ -49,7 +49,7 @@ public abstract class DefaultBeanModelViewer implements BeanModelViewer
     * Sets the Bean model to the given value and initializes the Viewer user
     * interface by invoking <code>initGUI()</code>.
     */
-   public final void init (BeanTreeModel model)
+   public final void init(BeanTreeModel model)
    {
       setModel(model);
       initGUI();
@@ -59,65 +59,67 @@ public abstract class DefaultBeanModelViewer implements BeanModelViewer
     * Adds the given listener to the local collection of BeanFOcusChangeListener
     * objects.
     */
-   public final synchronized void addBeanFocusChangeListener (BeanFocusChangeListener l)
+   public final synchronized void addBeanFocusChangeListener(BeanFocusChangeListener l)
    {
-      m_focus_listeners.add(l);
+      this.listenerList.add(BeanFocusChangeListener.class, l);
    }
 
    /**
     * Removed the given listener from the local collection of
     * BeanFOcusChangeListener objects.
     */
-   public final synchronized void removeBeanFocusChangeListener (BeanFocusChangeListener l)
+   public final synchronized void removeBeanFocusChangeListener(BeanFocusChangeListener l)
    {
-      m_focus_listeners.remove(l);
+      this.listenerList.remove(BeanFocusChangeListener.class, l);
    }
 
    /**
     * Fires a BeanFocusChangeEvent that informs listeners that the given Bean
     * has lost focus.
     */
-   public final void fireBeanUnfocusEvent (PanelBean bean)
+   protected void fireBeanUnfocusEvent(PanelBean bean)
    {
-      BeanFocusChangeEvent e =
-         new BeanFocusChangeEvent(this, bean,
-                                  BeanFocusChangeEvent.BEAN_UNFOCUSED);
-      fireEvent(e);
+      Object[] listeners = this.listenerList.getListenerList();
+
+      BeanFocusChangeEvent event = null;
+
+      for ( int i = listeners.length - 2; i >= 0; i -= 2 )
+      {
+         if ( listeners[i] == BeanFocusChangeListener.class )
+         {
+            if ( event == null )
+            {
+               event = new BeanFocusChangeEvent(this, bean);
+            }
+
+            ((BeanFocusChangeListener) listeners[i + 1]).beanUnfocused(event);
+         }
+      }
    }
 
    /**
     * Fires a BeanFocusChangeEvent that informs listeners that the given Bean
     * now has focus.
     */
-   public final void fireBeanFocusEvent (PanelBean bean)
+   protected void fireBeanFocusEvent(PanelBean bean)
    {
-      BeanFocusChangeEvent e =
-         new BeanFocusChangeEvent(this, bean,
-                                  BeanFocusChangeEvent.BEAN_FOCUSED);
-      fireEvent(e);
-   }
+      Object[] listeners = this.listenerList.getListenerList();
 
-   /**
-    * Performs the actual event firing.  This is here so that the public
-    * event-firing methods can create the event and then share the code that
-    * performs the delivery.
-    */
-   private void fireEvent (BeanFocusChangeEvent e)
-   {
-      BeanFocusChangeListener l = null;
-      Vector listeners;
+      BeanFocusChangeEvent event = null;
 
-      synchronized (this)
+      for ( int i = listeners.length - 2; i >= 0; i -= 2 )
       {
-         listeners = (Vector) m_focus_listeners.clone();
-      }
+         if ( listeners[i] == BeanFocusChangeListener.class )
+         {
+            if ( event == null )
+            {
+               event = new BeanFocusChangeEvent(this, bean);
+            }
 
-      for ( int i = 0; i < listeners.size(); i++ )
-      {
-         l = (BeanFocusChangeListener) listeners.elementAt(i);
-         l.beanFocusChanged(e);
+            ((BeanFocusChangeListener) listeners[i + 1]).beanFocused(event);
+         }
       }
    }
 
-   private Vector m_focus_listeners = new Vector();
+   private EventListenerList listenerList = new EventListenerList();
 }
