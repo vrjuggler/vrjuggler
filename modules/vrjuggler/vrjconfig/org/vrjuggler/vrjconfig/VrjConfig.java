@@ -67,6 +67,8 @@ public class VrjConfig
       }
    }
 
+   private static EnvironmentService mEnvService;
+
    static
    {
       mEnvService = new EnvironmentServiceProxy();
@@ -214,8 +216,6 @@ public class VrjConfig
 
    /** Our listener for close notifications from the internal frames. */
    private InternalFrameListener mCloseListener = new CloseListener();
-
-   private static EnvironmentService mEnvService;
 
    /**
     * The special internal frame used to hold configuration editors.
