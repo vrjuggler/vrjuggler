@@ -141,9 +141,12 @@ $(OBJDIR)/%.$(OBJEXT): %.cpp
 $(UTIL_ARC): $(OBJS)
 	$(AR) $(AR_NAME_FLAG)$@ $(OBJS)
 
+cleandepend:
+	rm -f $(DEPEND_FILES)
+
 clean:
-	rm -rf $(OBJDIR_DBG)
-	rm -rf $(OBJDIR_OPT)
+	rm -rf $(OBJDIR_DBG) $(OBJDIR_OPT)
+	rm -f $(DEPEND_FILES)
 
 clobber:
 	$(MAKE) clean
@@ -151,10 +154,10 @@ clobber:
 
 # -----------------------------------------------------------------------------
 # Dependency generation.
-# XXX: This doesn't work quite right yet ...
 # -----------------------------------------------------------------------------
-BASIC_OBJECTS=	$(OBJS)
-CXX_COMPILE=	$(CXX) $(CXXFLAGS)
+BASIC_OBJECTS=	$(SRCS:.cpp=.$(OBJEXT))
+MKDEP_C=	$(CC) $(DEFS) $(INCLUDES) $(CPPFLAGS) $(CFLAGS) -M
+MKDEP_CXX=	$(CXX) $(DEFS) $(INCLUDES) $(CPPFLAGS) $(CXXFLAGS) -M
 
 include $(top_srcdir)/Doozer++/mk/dpp.dep.mk
-#-include $(DEPEND_FILES)
+-include $(DEPEND_FILES)

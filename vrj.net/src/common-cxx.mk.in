@@ -50,6 +50,7 @@ else
 endif
 
 CXXFLAGS+=	$(EXTRA_CXXFLAGS) -I$(srcdir)
+INCLUDES+=	$(EXTRA_INCLUDES)
 OBJDIR_DBG=	obj.dbg
 OBJDIR_OPT=	obj.opt
 
@@ -89,15 +90,29 @@ debug:
 	$(MAKE) BUILD_TYPE=DEBUG $(DLL)
 
 $(OBJDIR)/%.$(OBJEXT): %.cpp
-	$(CXX) $(CXXFLAGS) $(INCLUDES) $(EXTRA_INCLUDES) $(OBJ_NAME_FLAG) -c $<
+	$(CXX) $(CXXFLAGS) $(INCLUDES) $(OBJ_NAME_FLAG) -c $<
 
 $(DLL): $(OBJS)
 	$(CXX_PLUGIN) $(OBJ_NAME_FLAG) $(OBJS) $(LDFLAGS) $(LIBS)	\
           $(EXTRA_LDFLAGS)
 
+cleandepend:
+	rm -f $(DEPEND_FILES)
+
 clean:
 	rm -rf $(OBJDIR_DBG) $(OBJDIR_OPT)
+	rm -f $(DEPEND_FILES)
 
 clobber:
 	$(MAKE) clean
 	rm -f $(DLL)
+
+# -----------------------------------------------------------------------------
+# Dependency generation.
+# -----------------------------------------------------------------------------
+BASIC_OBJECTS=	$(SRCS:.cpp=.$(OBJEXT))
+MKDEP_C=	$(CC) $(DEFS) $(INCLUDES) $(CPPFLAGS) $(CFLAGS) -M
+MKDEP_CXX=	$(CXX) $(DEFS) $(INCLUDES) $(CPPFLAGS) $(CXXFLAGS) -M
+
+include $(top_srcdir)/Doozer++/mk/dpp.dep.mk
+-include $(DEPEND_FILES)
