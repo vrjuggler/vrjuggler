@@ -151,7 +151,7 @@ SelectorImplBSD::getOut (IOSys::Handle handle) {
 Status
 SelectorImplBSD::select (vpr::Uint16& numWithEvents, vpr::Uint16 timeout) {
    vpr::Status ret_val;
-   int result;
+   int result, last_fd;
    fd_set read_set, write_set, exception_set;
    std::vector<BSDPollDesc>::iterator i;
    struct timeval timeout_obj;
@@ -160,6 +160,8 @@ SelectorImplBSD::select (vpr::Uint16& numWithEvents, vpr::Uint16 timeout) {
    FD_ZERO(&read_set);
    FD_ZERO(&write_set);
    FD_ZERO(&exception_set);
+
+   last_fd = -1;
 
    for ( i = mPollDescs.begin(); i != mPollDescs.end(); i++ ) {
       if ( (*i).in_flags & SelectorBase::VPR_READ ) {
@@ -172,6 +174,11 @@ SelectorImplBSD::select (vpr::Uint16& numWithEvents, vpr::Uint16 timeout) {
 
       if ( (*i).in_flags & SelectorBase::VPR_EXCEPT ) {
          FD_SET((*i).fd, &exception_set);
+      }
+
+      // Find the highest-valued file descriptor.
+      if ( last_fd < (*i).fd ) {
+         last_fd = (*i).fd;
       }
    }
 
@@ -190,7 +197,7 @@ SelectorImplBSD::select (vpr::Uint16& numWithEvents, vpr::Uint16 timeout) {
 
    // If timeout is 0, this will be the same as polling the descriptors.  To
    // get no timeout, NULL must be passed to select(2).
-   result = ::select(mPollDescs.size(), &read_set, &write_set, &exception_set,
+   result = ::select(last_fd + 1, &read_set, &write_set, &exception_set,
                      (timeout > 0) ? &timeout_obj : NULL);
 
    // D'oh!
