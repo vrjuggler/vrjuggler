@@ -14,6 +14,8 @@
 vjGlxWindow::vjGlxWindow() {
    window_is_open = 0;
    window_width = window_height = -1;
+   x_display = NULL;
+   visual_info = NULL;
 }
 
 void vjGlxWindow::swapBuffers() {
@@ -368,6 +370,3 @@ int vjGlxWindow::EventIsMapNotify (Display *display,  XEvent *e,  XPointer windo
 
    return ((e->type == MapNotify) && (e->xmap.window == (Window)window));
 }
-
-
-
