@@ -1,3 +1,6 @@
+#ifndef _NETWORK_TEST_WHITEBOARD_SUBJECT_IDL_
+#define _NETWORK_TEST_WHITEBOARD_SUBJECT_IDL_
+
 #include <tweek/idl/Subject.idl>
 
 module networktest
@@ -9,3 +12,5 @@ module networktest
       string getAllText();
    };
 };
+
+#endif /* _NETWORK_TEST_WHITEBOARD_SUBJECT_IDL_ */
