@@ -43,10 +43,40 @@
 module tweek
 {
 
+/**
+ * The most basic interface of all Tweek subjects.  All user-defined subject
+ * interfaces must inherit from this interface.
+ */
 interface Subject
 {
+   /**
+    * Attaches the given observer to this subject.
+    *
+    * @post A reference to the given observer is retained, and the observer
+    *       will be notified whenever the state of this subject changes.
+    *
+    * @param o The observer to be attached.
+    */
    void attach(in Observer o);
+
+   /**
+    * Detaches the given observer from this subject.
+    *
+    * @post The given observer will no longer receive notifications of state
+    *       changes for this subject.
+    *
+    * @param o The observer to be attached.
+    */
    void detach(in Observer o);
+
+   /**
+    * Notifies all attached observers that the state of this subject has
+    * changed in some way.
+    *
+    * @note Observers are not informed of what aspect of this subject's state
+    *       changed.  To get a complete picture of the subject's state, they
+    *       must therefore query all state information.
+    */
    void notify();
 };
 
