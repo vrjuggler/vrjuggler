@@ -10,6 +10,20 @@
 
 //------------------------------------------------------------------
 //: Generator of ConfigChunks...
+//
+//        The notion of embedded chunks complicated the configuration
+//        system - suddenly a chunk needs to be able to find an
+//        arbitrary vjChunkDesc in order to instantiate embedded chunks,
+//        which may themselves embed chunks.
+//        We needed a simpler way to generate vjConfigChunks on-the-fly
+//        inside Juggler apps.  The static vjChunkFactory is a way to
+//        do that.  Note that it relies on the notion that there will be
+//        only one vjChunkDescDB in the Juggler app, and that it gets
+//        told what it is.
+//
+// @author  Christopher Just
+// February 1999
+//------------------------------------------------------------------
 
 class vjChunkFactory {
 
@@ -25,6 +39,11 @@ public:
 	return descdb->getChunkDesc (token);
     }
 
+    //: Creates a Chunk using the named description
+    //! RETURNS: chunk - a vjConfigChunk based on a vjChunkDesc
+    //+          whose token matches the argument.  If no such
+    //+          vjChunkDesc is found, an "empty" vjChunkDesc,
+    //+          containing only a Name vjPropertyDesc, is used.
     static vjConfigChunk* createChunk (char* desctoken) {
 	vjChunkDesc* desc = descdb->getChunkDesc (desctoken);
 	if (desc)
@@ -33,6 +52,7 @@ public:
 	    return new vjConfigChunk (nulldesc, descdb);
     }
 
+    //: Creates a Chunk using the given description
     static vjConfigChunk* createChunk (vjChunkDesc* d) {
 	return new vjConfigChunk (d, descdb);
     }

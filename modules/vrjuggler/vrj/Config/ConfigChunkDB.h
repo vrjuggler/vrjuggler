@@ -40,6 +40,12 @@ public:
     vjConfigChunkDB (vjChunkDescDB *d = NULL);
 
 
+
+    //: Copy constructor
+    vjConfigChunkDB (vjConfigChunkDB& db);
+
+
+
     //: Destructor
     //! PRE: true
     //! POST: self is destroyed and its associated memory freed.
@@ -49,11 +55,7 @@ public:
 
 
 
-    //: copy constructor
-    vjConfigChunkDB (vjConfigChunkDB& db);
-
-
-
+    //: Assignment operator
     vjConfigChunkDB& operator = (vjConfigChunkDB& db);
 
 
@@ -74,6 +76,7 @@ public:
 
 
 
+    //: Checks if self is empty
     //! RETURNS: true - if self contains no vjConfigChunks
     //! RETURNS: false - otherwise
     bool isEmpty();
@@ -106,15 +109,18 @@ public:
     //+       the ConfigChunkDB, and should not be delete()d
     vjConfigChunk *getChunk (char *name);
 
+
     //: return a vector of all the chunks
     //! POST: returns
     //! RETURNS: Copy of the pointers to the chunks in this.
     std::vector<vjConfigChunk*> getChunks();
 
+
     //: Add chunks to this
     //! PRE: Description DB that this points to must have all desc's for added chunks
     //! POST: this has added the chunks specified
     void addChunks(std::vector<vjConfigChunk*> new_chunks);
+
 
 
     //: Returns all chunks of a given type.
@@ -178,6 +184,7 @@ public:
     int removeMatching (char *property, int value);
     int removeMatching (char *property, float value);
     int removeMatching (char *property, char *value);
+
 
     //: Sorts the chunks based on dependencies
     //! PRE: true

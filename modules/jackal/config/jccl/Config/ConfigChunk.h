@@ -25,20 +25,7 @@
 #include <Config/vjProperty.h>
 
 
-typedef enum {
-  TK_String, TK_Float, TK_End, TK_Int, TK_Bool,
-  TK_OpenBracket, TK_CloseBracket, TK_Unit, TK_Error
-} CfgTok;
-
-struct Token {
-  CfgTok type;
-  int intval;
-  float floatval;
-  bool boolval;
-  CfgUnit unitval;
-  char strval[1024];
-};
-
+struct Token;
 
 
 //------------------------------------------------------------------
