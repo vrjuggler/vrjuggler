@@ -244,7 +244,10 @@ inline void OpenSGApp::draw()
    c_data->mRenderAction->setCamera(c_data->mCamera.getCPtr());
    c_data->mRenderAction->setFrustumCulling(false);    // Turn off culling for now because I don't yet trust the frustum setup
 
-   c_data->mRenderAction->apply(getSceneRoot());       // Actually do the rendering
+   // Push the matrix so that drawing after this is not affected by the scene graph
+   glPushMatrix();
+      c_data->mRenderAction->apply(getSceneRoot());       // Actually do the rendering
+   glPopMatrix();
 }
 
 };
