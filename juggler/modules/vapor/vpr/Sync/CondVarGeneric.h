@@ -57,6 +57,7 @@
 #include <vpr/Sync/Semaphore.h>
 #include <vpr/Sync/Mutex.h>
 #include <vpr/Util/Debug.h>
+#include <vpr/Util/Interval.h>
 
 
 namespace vpr {
@@ -103,7 +104,7 @@ public:
     * @post The condition has been modifed, but may not be satisfied.
     * @note The call blocks until a condition has been signaled
     */
-   int wait(void);
+   int wait(vpr::Interval time_to_wait = vpr::Interval::NoTimeout);
 
    /**
     * Signals a condition change.
