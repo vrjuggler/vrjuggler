@@ -3,6 +3,7 @@
 #define _VRJUGGLER_SOUND_MANAGER_
 
 #include <vrj/vrjConfig.h>
+#include <jccl/Config/ConfigChunk.h>
 #include <jccl/Plugins/ConfigManager/ConfigChunkHandler.h>
 
 namespace vrj

@@ -39,7 +39,7 @@
 #include <vrj/Util/Debug.h>
 #include <vrj/Math/Vec3.h>
 
-#include <jccl/Config/ConfigChunkPtr.h>
+#include <jccl/Config/ConfigChunk.h>
 
 namespace vrj
 {
