@@ -1,10 +1,11 @@
 <?xml version="1.0" ?>
-<beanlist>
+<beanlist xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:noNamespaceSchemaLocation="http://www.vrjuggler.org/tweek/beanlist.xsd">
    <guipanel name="VRJConfig">
       <file name="${TWEEK_BASE_DIR}/bin/beans/VRJConfig.jar"
             class="org.vrjuggler.vrjconfig.VrjConfig" />
-      <tree path="/" />
       <dependency file="jccl_config.jar" path="${TWEEK_BASE_DIR}/bin/beans" />
       <dependency file="jccl_editors.jar" path="${TWEEK_BASE_DIR}/bin/beans" />
+      <tree path="/" />
    </guipanel>
 </beanlist>
