@@ -59,9 +59,17 @@ int nodeTravAppPre(pfTraverser* trav, void* userData);
 int nodeTravAppPost(pfTraverser* trav, void* userData);
 
 void openSomeWindows();
+pfPipe* getPipeNum(const int pipe_num);
+void initPipes();
 
 const int NUM_WINS = 12;             // Number of windows total
-const int NUM_OPEN_AT_ONCE = 1;     // Number of windows to open at once
+const int NUM_OPEN_AT_ONCE = 2;     // Number of windows to open at once
+const int NUM_PIPES = 2;            // Total number of pipes to use
+
+char* pipeStrs[6] = { ":0.0", ":1.0", ":2.0", ":3.0", ":4.0", ":5.0" };
+
+pfPipe* pipes[8] = {NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL};
+
 
 //
 // Usage() -- print usage advice and exit. This
@@ -93,6 +101,9 @@ main (int argc, char *argv[])
    // Initialize Performer
    pfInit();
 
+   // Setup number of pipes
+   pfMultipipe(NUM_PIPES);
+
    // Use default multiprocessing mode based on number of
    // processors.
    //
@@ -105,6 +116,10 @@ main (int argc, char *argv[])
    // processes.
    //
    pfConfig();
+
+
+   // Get all the pipes that I need
+   initPipes();
 
    // Append to PFPATH additional standard directories where
    // geometry and textures exist
@@ -132,8 +147,9 @@ main (int argc, char *argv[])
    // Create a pfLightSource and attach it to scene.
    gScene->addChild(new pfLightSource);
 
-   openSomeWindows();
 
+   //openSomeWindows();
+   
    int frame_num = 1;
 
    // Simulate for twenty seconds.
@@ -188,10 +204,13 @@ void openSomeWindows()
    // Configure and open GL window
    char str[PF_MAXSTRING];
    int cur_win(0);
-   pfPipe* p = pfGetPipe(0);
+
    for (int i=0; i < NUM_OPEN_AT_ONCE; i++)
    {
       cur_win = gNumWinActive+i;
+      
+      pfPipe* p = getPipeNum(cur_win%NUM_PIPES);    // Get a pipe in range [0..NUM_PIPES-1]
+
       gPwin[cur_win] = new pfPipeWindow(p);
       sprintf(str, "IRIS Performer - Win %d", cur_win);
       gPwin[cur_win]->setName(str);
@@ -199,12 +218,14 @@ void openSomeWindows()
                                 300, 300);
       gPwin[cur_win]->setConfigFunc(OpenPipeWin);
       gPwin[cur_win]->config();
+/*
    }
 
    // Create and configure a pfChannel.
    for (i=0; i < NUM_OPEN_AT_ONCE; i++)
    {
       cur_win = gNumWinActive+i;
+*/
 
       gChan[cur_win] = new pfChannel(p);
       gPwin[cur_win]->addChan(gChan[cur_win]);
@@ -239,7 +260,38 @@ void openSomeWindows()
 
    cout << "  opened: " << NUM_OPEN_AT_ONCE << endl;
    cout << "  gNumWinActive:" << gNumWinActive << endl;
+}
 
+
+// Get a pipe to use in the system
+pfPipe* getPipeNum(const int pipe_num)
+{
+   if(pipe_num >= NUM_PIPES)
+   {
+      cout << "getPipeNum: PipeNum out of range\n";
+      return NULL;
+   }
+
+   if(pipes[pipe_num] != NULL)
+      return pipes[pipe_num];
+
+   pfPipe* pipe;
+   pipe = pfGetPipe(pipe_num);
+   pipe->setScreen(pipe_num);
+   pipe->setWSConnectionName(pipeStrs[pipe_num]);
+
+   return pipe;
+}
+
+void initPipes()
+{
+   for(int i;i<NUM_PIPES;i++)
+   {
+      pipes[i] = getPipeNum(i);
+
+      pfPipeWindow* pw = new pfPipeWindow(pipes[i]);
+      pw->setOriginSize(0,0,1,1);
+   }
 }
 
 
