@@ -40,7 +40,7 @@ cvs -z3 -d :pserver:anonymous@cvs.vrjuggler.sourceforge.net:/cvsroot/vrjuggler c
                <listitem>
                   <para>Get external packages that Juggler depends on. Typically you will run cvs-gather.pl, found in the top-level <filename>juggler</filename> directory.</para>
                   <para>The syntax will be similar to the following (you may have to edit the file <filename>deps.esrc</filename>, see also <xref linkend="aquire"/>):</para>
-                  <screen>./cvs-gather.pl --versbose --cfg=deps.esrc</screen>
+                  <screen>./cvs-gather.pl --verbose --cfg=deps.esrc</screen>
                   <itemizedlist>
                      <listitem>
                         <para>See <xref linkend="aquire"/>, you can use <command>cvs-gather</command>, or read the file <filename>deps.esrc</filename> and then manually get the packages yourself.</para>
