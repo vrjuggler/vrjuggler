@@ -785,6 +785,11 @@ esac
 vrj_extra_ldflags="$APP_EXTRA_LIBS_BEGIN"
 vrj_extra_libs="$APP_EXTRA_LIBS $APP_EXTRA_LIBS_GL $APP_EXTRA_LIBS_END"
 
+if test "x$PLATFORM" = "xIRIX" ; then
+    vrj_n32_flags='-n32'
+    vrj_64_flags='-64'
+fi
+
 DPP_SUBST
 
 
@@ -834,6 +839,8 @@ AC_SUBST(Juggler_ogl_lib)
 AC_SUBST(Juggler_pf_lib)
 AC_SUBST(vrj_extra_ldflags)
 AC_SUBST(vrj_extra_libs)
+AC_SUBST(vrj_n32_flags)
+AC_SUBST(vrj_64_flags)
 
 # -----------------------------------------------------------------------------
 # Final file generation step.
