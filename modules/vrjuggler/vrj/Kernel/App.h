@@ -89,6 +89,11 @@ public:
    /** Just call App(Kernel::instance()) */
    App();
 
+   virtual ~App()
+   {
+      /* Do nothing. */ ;
+   }
+
 public:
    /** Application init function
     * Execute any initialization needed before the API is started

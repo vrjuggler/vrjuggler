@@ -90,6 +90,11 @@ public:
 
    GlApp() {;}
 
+   virtual ~GlApp()
+   {
+      /* Do nothing. */ ;
+   }
+
    /** Return scale scale factor to get from Juggler units (meters) to application units.
    * Internally VR Juggler stores and processes all position values
    * in meters.  The scale factor returned by this method is
