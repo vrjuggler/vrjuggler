@@ -74,7 +74,7 @@ bool KeyboardXWin::config(jccl::ConfigChunkPtr c)
    if ((x_disp_num >= 0) && (dispSysChunk.get() != NULL) )
    {
       std::string xpipe_str;
-      xpipe_str = dispSysChunk->getProperty("xpipes", x_disp_num);
+      xpipe_str = (std::string)dispSysChunk->getProperty("xpipes", x_disp_num);
       mXDisplayString = xpipe_str;
    }
    else
