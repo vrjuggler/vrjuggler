@@ -381,7 +381,7 @@ void ThreadTest::tsIncCounter(void* arg)
    for(unsigned long i=0;i<IncCount;i++)
    {
       (*mTSCounter) = (*mTSCounter) + 1;
-      vpr::System::msleep(0);    // Sleep for 20 micro seconds      
+//      vpr::System::usleep(0);    // Sleep for 20 micro seconds      
    }
 
    CPPUNIT_ASSERT((*mTSCounter) == IncCount);
