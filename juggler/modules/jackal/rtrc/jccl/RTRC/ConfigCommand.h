@@ -42,6 +42,8 @@ public:
     vjCommandSendChunkDB (vjConfigChunkDB* _db, bool _all = false);
 
     virtual void call (ostream& out);
+
+    virtual std::string getName();
 };
 
 

@@ -47,10 +47,6 @@ public:
 
 
 
-    void activate();
-    void deactivate();
-
-
     //: is the EM accepting connections across the network?
     //! RETURNS: true - EM is accepting connections
     //! RETURNS: false - EM is not accepting connections
@@ -99,16 +95,14 @@ public:
 
 
 private:
-    vjConfigChunkDB*          chunkdb;
+    //vjConfigChunkDB*          chunkdb;
     std::vector<vjConnect*>   connections;
-    //std::vector<vjTimedUpdate*> updaters;
     std::vector<vjPerfDataBuffer*> perf_buffers;
     vjThread*                 listen_thread;
     int                       Port;
     int                       listen_socket;
     vjConnect*                perf_target;
     float                     perf_refresh_time;  // in milliseconds
-    bool                      activated;
     bool                      configured_to_accept;
     vjConfigChunk*            current_perf_config;
 
