@@ -54,15 +54,16 @@ namespace vpr
 /**
  * @class SocketConnector
  *
- * Defines a factory for creating new connections both synchronously and asynchronously
+ * Defines a factory for creating new connections both synchronously and
+ * asynchronously.
  *
  * The socket factory creates a new socket for the user that connects
- * to the given remote destination.  It allows for synchronous and async connection
- * establishment
+ * to the given remote destination.  It allows for synchronous and async
+ * connection establishment.
  *
- * This means that there is no state associated with the connector
+ * This means that there is no state associated with the connector.
  */
-class SocketConnector
+class VPR_CLASS_API SocketConnector
 {
 public:
   SocketConnector()
