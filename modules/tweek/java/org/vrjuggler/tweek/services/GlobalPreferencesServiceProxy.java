@@ -77,6 +77,19 @@ public class GlobalPreferencesServiceProxy
    }
 
    /**
+    * Returns the name of the directory where Tweek-specific data files and
+    * preferences should be stored.  This will be rooted under the
+    * platform-specific application data directory, as returned by
+    * EnvironmentService.getAppDataDir().
+    *
+    * @see EnvironmentService
+    */
+   public String getPrefsDir()
+   {
+      return mPrefsService.getPrefsDir();
+   }
+
+   /**
     * Called by the BeanRegistry singleton whenever a new bean is registered
     * with it.
     *
