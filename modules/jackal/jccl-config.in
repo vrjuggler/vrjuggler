@@ -227,10 +227,10 @@ fi
 
 if test "$echo_cxxflags" = "yes"; then
     if test "$use_base_dir" = "yes"; then
-        echo @jccl_cxxflags@ $jccl_extra_cxxflags -I$JCCL_BASE_DIR/include
+        echo @CXXFLAGS@ $jccl_extra_cxxflags -I@XERCESROOT@/include -I$JCCL_BASE_DIR/include
 #        echo @CXXFLAGS@ $jccl_extra_cxxflags -I$JCCL_BASE_DIR/include
     else
-        echo @jccl_cxxflags@ $jccl_extra_cxxflags -I@includedir@
+        echo @CXXFLAGS@ $jccl_extra_cxxflags -I@XERCESROOT@/include -I@includedir@
 #        echo @CXXFLAGS $jccl_extra_cxxflags -I@includedir@
     fi
 fi
