@@ -44,7 +44,7 @@ class StopWatch
 {
 public:
     //: Default constructor.
-    StopWatch( const int& averageFpsRefreshRate = 15 );
+    StopWatch();
 
 // StopWatch controls:
 public:
@@ -67,28 +67,8 @@ public:
     //: do a stop then a start.  usually called once per frame.
     void pulse();
        
-// StopWatch settings:
-public:
-    //: the refresh rate for mFpsAverage and mTimeAverage (in number of frames)
-    //  mFpsInstant is averaged over [mRefreshRate] number of 
-    //    start/stop cycles
-    //  see also - mFpsAverage for the average frames per second value.
-    //  see also - mTimeAverage for the average time value.
-    //  TODO: make this based on time rather than cycles
-    inline void    setRefreshRate( const int& rate ) 
-    { 
-       mRefreshRate = rate; 
-    }
-
-
 // Time metrics:   
 public:
-    //: the time between the last start/stop cycle averaged 
-    //: over timeRefreshRate start/stop cycles
-    //  format - see NOTE at top for time format
-    //  result - undefined if used before stop() is called
-    inline const double&  timeAverage() const { return mTimeAverage; }
-
     //: the time between the last start/stop cycle
     //: (time = mTimeStopped - mTimeStarted)
     //  format - see NOTE at top for time format
@@ -103,19 +83,6 @@ public:
     // format - see NOTE at top for time format
     inline const double&  timeStop() const { return mTimeStopped; }
 
-// Frames per second metrics (start/stop per second actually):
-public:
-    //: the number start/stop cycles
-    //  Number start/stop cycles that have been
-    //  performed since the last reset() or since construction
-    inline const unsigned long&  count() const { return mCount; }
-
-    //: The average frames per second over [mRefreshRate] start/stop cycles
-    inline const double&  fpsAverage() const { return mFpsAverage; }
-    
-    //: the frames per second between the last start/stop cycle
-    inline const double&  fpsInstant() const { return mFpsInstant; }    
-    
 public:
    //: x-platform getTime function
    //  useful for profiling, returns current time in seconds.
@@ -129,20 +96,9 @@ protected:
 
 // time metrics
 protected:
-    double         mTimeAverage;
     double         mTimeInstant; 
     double         mTimeStarted;
     double         mTimeStopped;
-
-// FPS metrics
-protected:
-    unsigned long  mCount;
-    double         mFpsAverage;
-    double         mFpsInstant;
-
-// hidden/implementation members
-private:
-    double         mTimeAccumulator;
 };
 
 ///////////////////////////////////
@@ -150,16 +106,9 @@ private:
 ///////////////////////////////////
 
 //: Default constructor.
-inline StopWatch::StopWatch( const int& averageFpsRefreshRate ) : 
-		mRefreshRate( averageFpsRefreshRate ), 
-		mTimeAverage( 0.0 ), 
-		mTimeInstant( 0.0 ),
+inline StopWatch::StopWatch() : mTimeInstant( 0.0 ),
                   mTimeStarted( 0.0 ), 
-		mTimeStopped( 0.0 ), 
-		mCount( 0 ), 
-		mFpsAverage( 0.0 ), 
-		mFpsInstant( 0.0 ), 
-		mTimeAccumulator( 0.0 )
+		mTimeStopped( 0.0 ) 
 {
 }
 
@@ -217,30 +166,7 @@ inline void StopWatch::start()
 inline void StopWatch::stop()
 {
     StopWatch::getTime( mTimeStopped );
-    
-    // get the time for this one frame.
     mTimeInstant = mTimeStopped - mTimeStarted;
-    
-    // every [mRefreshRate] frames, calc the average FPS
-    assert( mRefreshRate != 0 && "StopWatch: refresh rate of 0 will cause a math error" );
-    if (mCount % mRefreshRate == 0)
-    {
-      mFpsAverage = mRefreshRate / mTimeAccumulator;
-      mTimeAverage = mTimeAccumulator / mRefreshRate;
-
-      // reset the accumulator
-      mTimeAccumulator = 0.0;
-    }
-    
-    // accumulate the frame times to later calc 
-    // the average FPS time.
-    mTimeAccumulator += mTimeInstant;
-    
-    // calculate the instantaneous FPS value (1 frame/sec)
-    mFpsInstant = 1.0 / mTimeInstant;
-    
-    // Increment the number of frames elapsed
-    ++mCount;
 }
 
 //: Reset the stopwatch
@@ -249,11 +175,6 @@ inline void StopWatch::reset()
 {
     mTimeStarted = 0.0;
     mTimeStopped = 0.0;
-    mTimeAccumulator = 0.0;
-    
-    mCount = 0;
-    mFpsAverage = 0.0;
-    mFpsInstant = 0.0; 
     mTimeInstant = 0.0;
 }
 
