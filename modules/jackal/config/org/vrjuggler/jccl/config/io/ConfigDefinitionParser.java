@@ -120,6 +120,15 @@ public class ConfigDefinitionParser
 
       // Grok the help
       String help = root.getChildTextTrim(HELP, DEF_NS);
+      
+      // Get the parents for inheritance.
+      List parent_definitions = new ArrayList();
+      for (Iterator itr = root.getChildren(PARENT, DEF_NS).iterator(); itr.hasNext(); )
+      {
+         Element elt = (Element)itr.next();
+         parent_definitions.add(elt.getTextTrim());
+      }
+
 
       // Grok the categories
       List categories = new ArrayList();
@@ -148,7 +157,7 @@ public class ConfigDefinitionParser
       String icon_location;
       if(null == parent)
       {
-         throw new ParseException("Elment must have a parent node");
+         throw new ParseException("Element must have a parent node");
       }
       else
       {
@@ -165,6 +174,7 @@ public class ConfigDefinitionParser
                                   name,
                                   icon_location,
                                   version,
+                                  parent_definitions,
                                   help,
                                   categories,
                                   prop_defs);
