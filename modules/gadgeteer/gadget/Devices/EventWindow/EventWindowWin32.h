@@ -188,8 +188,8 @@ protected:
       /* Event window state holders */
    // NOTE: This driver does not use the normal triple buffering mechanism.
    // Instead, it just uses a modified double buffering system.
-   int      mKeys[256];         /**< (0,*): The num key presses during an UpdateData (ie. How many keypress events). */
-   int      mRealkeys[256];     /**< (0,1): The real keyboard state, all events processed (ie. what is the key now). */
+   int      mKeys[gadget::LAST_KEY];         /**< (0,*): The num key presses during an UpdateData (ie. How many keypress events). */
+   int      mRealkeys[gadget::LAST_KEY];     /**< (0,1): The real keyboard state, all events processed (ie. what is the key now). */
 
    vpr::Mutex  mKeysLock;        /**< Must hold this lock when accessing mKeys. */
    bool     mExitFlag;           /**< Should we exit? */
