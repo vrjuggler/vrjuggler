@@ -151,9 +151,9 @@ std::ostream& operator<<(std::ostream& out, GlWindow* win)
    vprASSERT(win->mDisplay != NULL);
 
    //out << "-------- GlWindow --------" << endl;
-   out << "Open: " << (win->window_is_open ? "Y" : "N") << std::endl;
-   out << "Display:" << *(win->mDisplay) << std::endl;
-   out << "Stereo:" << (win->in_stereo ? "Y" : "N") << std::endl;
+   out << "Open: " << (win->window_is_open ? "Yes" : "No") << std::endl;
+   out << "Display Info:\n" << *(win->mDisplay) << std::endl;
+   out << "Stereo: " << (win->in_stereo ? "Yes" : "No") << std::endl;
    return out;
 }
 

@@ -258,8 +258,9 @@ void GlDrawManager::addDisplay(Display* disp)
    vprASSERT(isValidWindow(new_win));      // Make sure it was added to draw manager
 
    // Dump the state
-   vprDEBUG(vrjDBG_DRAW_MGR, 1) << "Reconfiged the glDrawManager.\n" << vprDEBUG_FLUSH;
-   vprDEBUG(vrjDBG_DRAW_MGR, 1) << (*this) << vprDEBUG_FLUSH;
+   vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CONFIG_LVL)
+      << "Reconfigured the glDrawManager.\n" << vprDEBUG_FLUSH;
+   vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CONFIG_LVL) << (*this) << vprDEBUG_FLUSH;
 }
 
 
@@ -604,9 +605,9 @@ void GlDrawManager::outStream(std::ostream& out)
     out     << clrSetNORM(clrGREEN)
             << "========== GlDrawManager: " << (void*)this << " ========="
             << clrRESET << std::endl
-            << clrOutNORM(clrCYAN,"\tapp:") << (void*)mApp << std::endl
-            << clrOutNORM(clrCYAN,"\tWins:") << mWins.size() << std::endl
-            << std::flush;
+            << clrOutNORM(clrCYAN,"\tapp: ") << (void*)mApp << std::endl
+            << clrOutNORM(clrCYAN,"\tWindow count: ") << mWins.size()
+            << std::endl << std::flush;
 
     for(unsigned int i = 0; i < mWins.size(); i++)
     {
