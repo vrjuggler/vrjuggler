@@ -64,7 +64,6 @@ public:
         return *this;
     }
 
-
     AnalogData& operator= (const float f)
     {
         mAnalogData = f;

@@ -43,12 +43,12 @@
 namespace gadget
 {
 
-//: Simulated analog device
-// Simulates an analog device from a keyboard device.
-// It allows any number of simulated analog devices to be created.
-//
-// This class should not be used directly by the user.
-//!PUBLIC_API:
+/** Simulated analog device
+* Simulates an analog device from a keyboard device.
+* It allows any number of simulated analog devices to be created.
+*
+* This class should not be used directly by the user.
+*/
 class SimAnalog : public Input, public Analog, public SimInput
 {
 public:
@@ -58,18 +58,7 @@ public:
 
    virtual bool config(jccl::ConfigChunkPtr chunk);
 
-   //: Return analog data
-   virtual AnalogData* getAnalogData(int devNum=0)
-   {
-      vprASSERT(devNum < (int)mAnaData.size());    // Make sure we have enough space
-      return &(mAnaData[devNum]);
-//        float value = static_cast<float>( mAnaData[devNum] );
-//        float normalized;
-//        this->normalizeMinToMax( value, normalized );
-//        return normalized;
-   }
-
-   /* These functions don't do anything */
+   /** These functions don't do anything */
    int startSampling() { return 1; }
    int stopSampling() { return 1; }
    int sample() { return 1; }
@@ -80,10 +69,10 @@ public:
    static std::string getChunkType() { return std::string("SimAnalog");}
 
 private:
-   std::vector<AnalogData> mAnaData;     //: The analog data that we have
-   std::vector<KeyModPair> mSimKeysUp;   //: The keys to press for moving analog up
-   std::vector<KeyModPair> mSimKeysDown; //: The keys to press for moving analog up
-   float                     mAnaStep;      //: The analog step size
+   std::vector<AnalogData>    mAnaData;      /**< The analog data that we have */
+   std::vector<KeyModPair>    mSimKeysUp;    /**< The keys to press for moving analog up */
+   std::vector<KeyModPair>    mSimKeysDown;  /**< The keys to press for moving analog up */
+   float                      mAnaStep;      /**< The analog step size */
 };
 
 };
