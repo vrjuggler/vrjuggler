@@ -282,6 +282,12 @@ if test "x$DTK_INCLUDES" != "x" ; then
     INCLUDES="$INCLUDES $DTK_INCLUDES"
 fi
 
+# Add these C++ options when compiling with G++.
+if test "x$GXX" = "xyes" ; then
+#    CXXFLAGS="-fhonor-std -Wall -Werror-implicit-function-declaration $CXXFLAGS"
+    CXXFLAGS="-Wall -Werror-implicit-function-declaration $CXXFLAGS"
+fi
+
 CXXFLAGS="$CXXFLAGS $VRJ_CXXFLAGS"
 EXTRA_LINK_FLAGS="$STDFLAGS $EXTRA_LINK_FLAGS"
 
