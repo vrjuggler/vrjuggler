@@ -352,7 +352,8 @@ sub configureModule ($)
 
          if ( /_CONFIG$/ )
          {
-            $ENV{"$_"} = "$cwd/$mod_path/$env_val";
+            $ENV{"$_"}    = "$cwd/$mod_path/$env_val";
+            $ENV{'PATH'} .= ":$cwd/$mod_path";
          }
          elsif ( /_BASE_DIR$/ )
          {
