@@ -43,6 +43,7 @@ includedir=	@includedir@/vrj
 srcdir=		@srcdir@
 top_srcdir=	@top_srcdir@
 INSTALL=	@INSTALL@
+INSTALL_FILES=	$(srcdir)/*.h vrjDefines.h vrjParam.h
 SUBOBJDIR=	$(VJ_LIBRARY)
 
 # Prefix for recursive stuff.
