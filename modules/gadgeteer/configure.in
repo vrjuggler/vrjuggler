@@ -289,8 +289,10 @@ if test "x$GXX" = "xyes" ; then
     CXXFLAGS="-Wall -Werror-implicit-function-declaration $CXXFLAGS"
 fi
 
-CXXFLAGS="$CXXFLAGS $VRJ_CXXFLAGS"
+CXXFLAGS="$CXXFLAGS $VPR_CXXFLAGS $JCCL_CXXFLAGS $VRJ_CXXFLAGS"
 EXTRA_LINK_FLAGS="$STDFLAGS $EXTRA_LINK_FLAGS"
+gadget_cxxflags="$STDFLAGS"
+gadget_cxxflags_all="$VPR_CXXFLAGS $JCCL_CXXFLAGS $VRJ_CXXFLAGS"
 
 if test "x$PLATFORM" = "xIRIX" -a "x$USE_GCC" != "xno" ; then
     CFLAGS="$CFLAGS -woff 1685,515,608,658,799,803,852,1048,1233,1499"
@@ -302,6 +304,7 @@ elif test "x$OS_TYPE" = "xWin32" -a "x$USE_GCC" != "xyes" ; then
     EXTRA_LINK_FLAGS="$EXTRA_LINK_FLAGS /nologo /incremental:no"
     DBG_FLAGS="$DBG_FLAGS /MTd"
     OPT_FLAGS="$OPT_FLAGS /MT"
+    gadget_cxxflags="$CXXFLAGS"
 fi
 
 DPP_SYSTEM_SUBST
@@ -329,10 +332,12 @@ cd "$topdir"
 UNIX_GADGETROOT_ABS="$GADGETROOT_ABS"
 UNIX_JUGGLERROOT_ABS="$JUGGLERROOT_ABS"
 
+# $APP_EXTRA_LIBS must list all the libraries need to link a VR Juggler-based
+# application.
 if test "x$OS_TYPE" = "xWin32" ; then
-    APP_EXTRA_LIBS="$LDFLAGS $VRJ_LIBS $LIBS $XERCES_LDFLAGS $XERCES_LIB.lib comctl32.lib user32.lib gdi32.lib ws2_32.lib"
+    APP_EXTRA_LIBS="$LDFLAGS $VRJ_LIBS $VRJ_EXTRA_LIBS $JCCL_LIBS_LD $JCCL_EXTRA_LIBS $VPR_LIBS_LD $LIBS $VPR_EXTRA_LIBS"
 else
-    APP_EXTRA_LIBS="$LDFLAGS $VRJ_LIBS $LIBS $DTK_LDFLAGS"
+    APP_EXTRA_LIBS="$LDFLAGS $VRJ_LIBS $VRJ_EXTRA_LIBS $JCCL_LIBS_CC $JCCL_EXTRA_LIBS $VPR_LIBS_CC $LIBS $DTK_LDFLAGS $VPR_EXTRA_LIBS"
 fi
 
 # Put together the basic information needed to compile Gadgeteer applications.
@@ -387,14 +392,18 @@ case $OS_TYPE in
 
         gadget_ldflags_compiler="-L\$prefix/lib$LIBBITSUF"
         gadget_ldflags_linker="$gadget_ldflags_compiler"
-        gad_libs='-lgadget'
+        gadget_libs='-lgadget'
+        gadget_extra_libs="$LDFLAGS $LIBS $DTK_LDFLAGS"
+        gadget_extra_libs_juggler="$VRJ_LIBS $VRJ_EXTRA_LIBS $JCCL_LIBS_CC $JCCL_EXTRA_LIBS $VPR_LIBS_CC $VPR_EXTRA_LIBS"
 
         Gadgeteer_lib='-lgadget'
         ;;
     WIN32)
         gadget_ldflags_compiler="/link /libpath:\$prefix/lib/debug "
         gadget_ldflags_linker="/libpath:\$prefix/lib/debug "
-        gad_libs='gadget.lib'
+        gadget_libs='gadget.lib'
+        gadget_extra_libs="$LDFLAGS $LIBS $DTK_LDFLAGS"
+        gadget_extra_libs_juggler="$VRJ_LIBS $VRJ_EXTRA_LIBS $JCCL_LIBS_LD $JCCL_EXTRA_LIBS $VPR_LIBS_LD $VPR_EXTRA_LIBS"
 
         Gadgeteer_lib='gadget.lib'
         ;;
@@ -405,8 +414,7 @@ if test "x$PLATFORM" = "xIRIX" ; then
     gadget_64_flags='-64'
 fi
 
-gad_extra_ldflags="$APP_EXTRA_LIBS_BEGIN"
-gad_extra_libs="$APP_EXTRA_LIBS $APP_EXTRA_LIBS_GL $APP_EXTRA_LIBS_END"
+gadget_extra_ldflags="$APP_EXTRA_LIBS_BEGIN"
 
 DPP_SUBST
 
@@ -432,12 +440,17 @@ AC_SUBST(APP_EXTRA_LIBS_X11)
 
 AC_SUBST(static_begin)
 AC_SUBST(static_end)
+AC_SUBST(gadget_cxxflags)
+AC_SUBST(gadget_cxxflags_all)
+AC_SUBST(gadget_extra_cxxflags)
 AC_SUBST(gadget_ldflags_compiler)
 AC_SUBST(gadget_ldflags_linker)
-AC_SUBST(gad_libs)
+AC_SUBST(gadget_libs)
+AC_SUBST(gadget_libs_all)
 AC_SUBST(Gadgeteer_lib)
-AC_SUBST(gad_extra_ldflags)
-AC_SUBST(gad_extra_libs)
+AC_SUBST(gadget_extra_ldflags)
+AC_SUBST(gadget_extra_libs)
+AC_SUBST(gadget_extra_libs_juggler)
 AC_SUBST(gadget_n32_flags)
 AC_SUBST(gadget_64_flags)
 
