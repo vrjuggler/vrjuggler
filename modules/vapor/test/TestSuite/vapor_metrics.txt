@@ -1,3 +1,9 @@
 gfxn1/Debug/GUIDTest/CreationOverhead                              0.96922
 gfxn1/Debug/Main/MetricTest                                        1221.75
 gfxn1/Debug/TSDataOverhead3                                        25.1299
+simba/Debug/GUIDTest/CreationOverhead                              0.59502
+simba/Debug/Main/MetricTest                                        1221.75
+simba/Debug/TSDataOverhead0                                        32.7834
+simba/Debug/TSDataOverhead1                                        38.4553
+simba/Debug/TSDataOverhead3                                        32.3711
+simba/Debug/TSDataOverhead5                                        35.7699

@@ -36,6 +36,7 @@
 
 #include <TestCases/BoostTest.h>
 #include <TestCases/SystemTest.h>
+#include <TestCases/FileUtilsTest.h>
 
 #include <vpr/Thread/Thread.h>
 #include <vpr/Util/Debug.h>
@@ -130,6 +131,7 @@ int main (int ac, char **av)
    noninteractive_suite->addTest(vprTest::BoostTest::suite());
    noninteractive_suite->addTest(vprTest::FactoryTest::suite());
    noninteractive_suite->addTest(vprTest::SystemTest::suite());
+   noninteractive_suite->addTest(vprTest::FileUtilsTest::suite());
    noninteractive_suite->addTest(vprTest::IntervalTest::suite());
    noninteractive_suite->addTest(vprTest::GUIDTest::suite());
    noninteractive_suite->addTest(vprTest::InetAddrTest::suite());
