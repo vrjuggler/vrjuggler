@@ -38,10 +38,6 @@
          <help>Vertical field of view in degrees</help>
          <value label="Vertical Field Of View" defaultvalue="80.0"/>
       </property>
-      <property valuetype="boolean" variable="false" name="has_simulator_plugin">
-         <help>Does this viewport have a custom simulator plug-in?</help>
-         <value label="Has Simulator Plugin" defaultvalue="false"/>
-      </property>
       <property valuetype="configelement" variable="true" name="simulator_plugin">
          <help>Configuration of a simulator plug-in.</help>
          <value label="Simulator Plugin"/>
