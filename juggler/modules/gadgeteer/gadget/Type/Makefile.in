@@ -47,17 +47,18 @@ top_srcdir	= @top_srcdir@
 INSTALL		= @INSTALL@
 SUBOBJDIR	= $(GAD_LIBRARY)
 
-SRCS		= AnalogProxy.cpp	\
-                  DeviceFactory.cpp	\
-                  DeviceInterface.cpp	\
-                  DigitalProxy.cpp	\
-                  GestureProxy.cpp	\
-                  Glove.cpp		\
-                  GloveGesture.cpp	\
-                  GloveProxy.cpp	\
-                  Input.cpp		\
-                  KeyboardProxy.cpp	\
-                  Position.cpp		\
+SRCS		= AnalogProxy.cpp			\
+                  DeviceFactory.cpp			\
+                  DeviceInterface.cpp			\
+                  DigitalProxy.cpp			\
+                  GestureProxy.cpp			\
+                  Glove.cpp				\
+                  GloveGesture.cpp			\
+                  GloveProxy.cpp			\
+                  Input.cpp				\
+                  KeyboardProxy.cpp			\
+                  LinearSigmoidPositionFilter.cpp	\
+                  Position.cpp				\
                   PositionProxy.cpp
 
 include $(MKPATH)/dpp.obj.mk
