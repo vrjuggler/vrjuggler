@@ -117,12 +117,6 @@
 /* Define to the appropriate type if the ssize_t type is not available.  */
 #undef ssize_t
 
-/*
- * Define to the sizeof a memory address if the type caddr_t is not available.
- * char* is most likely going to be a safe substitute.
- */
-#undef caddr_t
-
 /* Define if you have the sched_yield function.  */
 #undef HAVE_SCHED_YIELD
 
