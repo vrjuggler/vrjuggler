@@ -10,6 +10,7 @@
 #include <MySuites.h>
 
 #include <vpr/IO/XMLObjectWriter.h>
+#include <vpr/IO/XMLObjectReader.h>
 
 
 namespace vprTest
