@@ -66,6 +66,12 @@
 	    pfTools
 	    ..
 	..
+	tutorials
+	    simpleInput
+	    ..
+	    simplePfApp
+	    ..
+	..
 	tools
 	..
     ..
