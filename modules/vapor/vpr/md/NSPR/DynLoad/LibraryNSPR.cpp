@@ -67,9 +67,8 @@ vpr::ReturnStatus LibraryNSPR::load()
 
    if ( NULL == mLibrary )
    {
-      vpr::NSPR_PrintError("WARNING: Failed to load library -- ");
+      vpr::NSPR_PrintError("WARNING: Could not load library -- ");
       status.setCode(vpr::ReturnStatus::Fail);
-      // XXX: Print error message.
    }
 
    return status;
@@ -82,7 +81,7 @@ vpr::ReturnStatus LibraryNSPR::unload()
 
    if ( PR_UnloadLibrary(mLibrary) == PR_FAILURE )
    {
-      vpr::NSPR_PrintError("WARNING: Failed to unload library -- ");
+      vpr::NSPR_PrintError("WARNING: Could not unload library -- ");
       status.setCode(vpr::ReturnStatus::Fail);
    }
    else
