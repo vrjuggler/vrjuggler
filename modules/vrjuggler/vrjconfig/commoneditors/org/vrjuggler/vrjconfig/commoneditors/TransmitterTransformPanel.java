@@ -454,22 +454,22 @@ public class TransmitterTransformPanel
       mTrackerXPosLabel.setText("X:");
       mTrackerPosUnitsLabel.setLabelFor(mTrackerPosUnitsChooser);
       mTrackerPosUnitsLabel.setText("Measurement Units:");
-      mTrackerXPosField.setText("0.0");
       mTrackerXPosField.addPropertyChangeListener(new
          TransmitterTransformPanel_mTrackerXPosField_propertyChangeAdapter(this));
       mTrackerXPosField.setHorizontalAlignment(SwingConstants.TRAILING);
+      mTrackerXPosField.setPreferredSize(new Dimension(75, 22));
       mTrackerYPosLabel.setLabelFor(mTrackerYPosField);
       mTrackerYPosLabel.setText("Y:");
-      mTrackerYPosField.setText("0.0");
       mTrackerYPosField.addPropertyChangeListener(new
          TransmitterTransformPanel_mTrackerYPosField_propertyChangeAdapter(this));
       mTrackerYPosField.setHorizontalAlignment(SwingConstants.TRAILING);
+      mTrackerYPosField.setPreferredSize(new Dimension(75, 22));
       mTrackerZPosLabel.setLabelFor(mTrackerZPosField);
       mTrackerZPosLabel.setText("Z:");
-      mTrackerZPosField.setText("0.0");
       mTrackerZPosField.addPropertyChangeListener(new
          TransmitterTransformPanel_mTrackerZPosField_propertyChangeAdapter(this));
       mTrackerZPosField.setHorizontalAlignment(SwingConstants.TRAILING);
+      mTrackerZPosField.setPreferredSize(new Dimension(75, 22));
       mSensorUnitsPanel.setBorder(mTrackerUnitsBorder);
       mSensorUnitsPanel.setLayout(mSensorUnitsPanelLayout);
       mTrackerUnitsBorder.setTitle("Tracker Units");
@@ -601,21 +601,6 @@ public class TransmitterTransformPanel
                                                   , GridBagConstraints.WEST,
                                                   GridBagConstraints.NONE,
                                                   new Insets(0, 0, 0, 0), 0, 0));
-      mTrackerPosPanel.add(mTrackerXPosField,
-                           new GridBagConstraints(1, 1, 1, 1, 1.0, 0.0
-                                                  , GridBagConstraints.WEST,
-                                                  GridBagConstraints.NONE,
-                                                  new Insets(0, 0, 0, 1), 40, 0));
-      mTrackerPosPanel.add(mTrackerYPosField,
-                           new GridBagConstraints(1, 2, 1, 1, 1.0, 0.0
-                                                  , GridBagConstraints.WEST,
-                                                  GridBagConstraints.NONE,
-                                                  new Insets(0, 0, 0, 1), 40, 0));
-      mTrackerPosPanel.add(mTrackerZPosField,
-                           new GridBagConstraints(1, 3, 1, 1, 1.0, 0.0
-                                                  , GridBagConstraints.WEST,
-                                                  GridBagConstraints.NONE,
-                                                  new Insets(0, 0, 0, 1), 40, 0));
       mSensorUnitsEditorPanel.add(mCustomUnitsEditor,
                             new GridBagConstraints(2, 0, 1, 1, 1.0, 0.0
          , GridBagConstraints.WEST, GridBagConstraints.NONE,
@@ -666,6 +651,21 @@ public class TransmitterTransformPanel
                                                    GridBagConstraints.NONE,
                                                    new Insets(0, 3, 0, 0),
                                                    0, 0));
+      mTrackerPosPanel.add(mTrackerXPosField,
+                           new GridBagConstraints(1, 1, 1, 1, 1.0, 0.0
+                                                  , GridBagConstraints.WEST,
+                                                  GridBagConstraints.NONE,
+                                                  new Insets(0, 0, 0, 1), 0, 0));
+      mTrackerPosPanel.add(mTrackerYPosField,
+                           new GridBagConstraints(1, 2, 1, 1, 1.0, 0.0
+                                                  , GridBagConstraints.WEST,
+                                                  GridBagConstraints.NONE,
+                                                  new Insets(0, 0, 0, 1), 0, 0));
+      mTrackerPosPanel.add(mTrackerZPosField,
+                           new GridBagConstraints(1, 3, 1, 1, 1.0, 0.0
+                                                  , GridBagConstraints.WEST,
+                                                  GridBagConstraints.NONE,
+                                                  new Insets(0, 0, 0, 1), 0, 0));
    }
 
    private ConfigContext mContext = null;
