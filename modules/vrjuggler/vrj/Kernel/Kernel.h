@@ -44,6 +44,7 @@
 #include <vpr/Sync/CondVar.h>
 
 #include <gadget/InputManager.h>
+#include <gadget/Type/DigitalInterface.h>
 
 //class gadget::InputManager;
 
@@ -111,7 +112,7 @@ public:
    * @param newApp - If NULL, stops current application
    */
    void setApplication(vrj::App* newApp);
-   
+
    /** Load configuration data for Kernel
    * @post Config data has been read into initial buffer
    */
@@ -191,6 +192,12 @@ protected:
     */
    void changeApplication(vrj::App* newApp);
 
+   /** Initialize the signal buttons for the kernel */
+   void initSignalButtons();
+
+   /** Check the signal buttons to see if anything has been triggered */
+   void checkSignalButtons();
+
 protected:      // --- DRAW MGR ROUTINES --- //
    /** Starts the draw manager running
    * Calls the app callbacks for the draw manager
@@ -253,6 +260,9 @@ protected:
 
    /// Multi-user information
    std::vector<vrj::User*>   mUsers;         /** A list of user objects in system */
+
+   // Control "signals" from input interfaces
+   gadget::DigitalInterface   mStopKernelSignalButton;
 
    // ----------------------- //
    // --- SINGLETON STUFF --- //

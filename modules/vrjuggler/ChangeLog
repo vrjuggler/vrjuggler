@@ -1,5 +1,9 @@
 DATE        AUTHOR    CHANGE
 ----------- --------- ---------------------------------------------------------
+Jan-31-2002 allenb    Added SignalButtons init and check functions to the
+                      Kernel.  The only "signal" being checked currently
+					  is the VJSystemStopKernel button which triggers a kernel
+					  stop call.
 Jan-31-2002 allenb    Moved left and right projections from surface viewport
                       to the base viewport class.  Now simulator viewports
 					  create to camera projections and just use one by default
