@@ -172,10 +172,42 @@ public class CorbaService
       }
       catch (ServantNotActive ex)
       {
+         ex.printStackTrace();
       }
       catch (WrongPolicy ex)
       {
+         ex.printStackTrace();
       }
+   }
+
+   /**
+    * Removes the given Servant object from the collection of activated CORBA
+    * objects.  In CORBA terms, the servant is deactivated within the POA and
+    * cannot be referenced after this occurs.
+    */
+   public void unregisterObject (Servant servant)
+   {
+/*
+      // Get object reference from the servant and deactivate it within the
+      // POA.
+      try
+      {
+         org.omg.CORBA.Object ref = m_root_poa.servant_to_reference(servant);
+         m_root_poa.deactivate_object(servant._object_id());
+      }
+      catch (ObjectNotActive ex)
+      {
+         ex.printStackTrace();
+      }
+      catch (ServantNotActive ex)
+      {
+         ex.printStackTrace();
+      }
+      catch (WrongPolicy ex)
+      {
+         ex.printStackTrace();
+      }
+*/
    }
 
    private class OrbThread extends Thread
