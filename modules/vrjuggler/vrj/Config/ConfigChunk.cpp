@@ -302,14 +302,14 @@ bool vjConfigChunk::tryassign (vjProperty *p, int index, const char* val) {
     case T_INT:
         i = strtol (val, &endval, 0);
         if (*endval != '\0')
-            vjDEBUG (vjDBG_CONFIG, 0) << "WARNING: Parser expected int, got '"
+            vjDEBUG (vjDBG_CONFIG, 0) << clrOutNORM(clrYELLOW, "WARNING:") << " Parser expected int, got '"
                   << val << "'\n" << vjDEBUG_FLUSH;
         p->setValue (i, index);
         return true;
     case T_FLOAT:
         f = (float)strtod (val, &endval);
         if (*endval != '\0')
-            vjDEBUG (vjDBG_CONFIG, 0) << "WARNING: Parser expected float, got '"
+            vjDEBUG (vjDBG_CONFIG, 0) << clrOutNORM(clrYELLOW, "WARNING:") << " Parser expected float, got '"
                                       << val << "'\n" << vjDEBUG_FLUSH;
         p->setValue (f, index);
         return true;
@@ -323,7 +323,7 @@ bool vjConfigChunk::tryassign (vjProperty *p, int index, const char* val) {
             b = strtol (val, &endval, 0);
             if (endval != '\0') {
                 b = false;
-                vjDEBUG (vjDBG_CONFIG,0) << "WARNING: Parser expected bool, got '"
+                vjDEBUG (vjDBG_CONFIG,0) << clrOutNORM(clrYELLOW, "WARNING:") << " Parser expected bool, got '"
                                          << val << "'\n" << vjDEBUG_FLUSH;
             }
         }
