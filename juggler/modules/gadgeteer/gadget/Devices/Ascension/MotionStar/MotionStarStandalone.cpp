@@ -220,7 +220,7 @@ MotionStarStandalone::MotionStarStandalone(const std::string& address,
                                            const unsigned char reportRate,
                                            const double measurementRate,
                                            const unsigned int birdsRequested)
-   : m_active(false), m_address(port), m_socket(NULL), m_proto(proto),
+   : m_active(false), m_address(), m_socket(NULL), m_proto(proto),
      m_master(master), m_seq_num(0), m_cur_mrate(0.0),
      m_measurement_rate(measurementRate), m_run_mode(runMode),
      m_hemisphere(hemisphere), m_bird_format(birdFormat),
@@ -232,6 +232,8 @@ MotionStarStandalone::MotionStarStandalone(const std::string& address,
       char   c[sizeof(short)];
       short  value;
    } endian;
+
+   m_address.setPort(port);
 
    if ( address.length() > 0 )
    {
