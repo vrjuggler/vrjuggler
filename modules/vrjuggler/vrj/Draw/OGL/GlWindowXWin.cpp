@@ -322,8 +322,8 @@ void vjGlxWindow::config(vjDisplay* _display)
    mXDisplayName = (std::string)dispSysChunk->getProperty("xpipes", mPipe);
    if(mXDisplayName == neg_one_STRING)    // Use display env
    {
-       const char DISPLAY_str[] = "DISPLAY";
-       mXDisplayName = std::string(getenv(DISPLAY_str));
+       const std::string DISPLAY_str("DISPLAY");    // DISPLAY_str[] = "DISPLAY";
+       mXDisplayName = std::string(getenv(DISPLAY_str.c_str()));
    }
    vjDEBUG(vjDBG_DRAW_MGR,4) << "glxWindow::config: display name is: "
                              << mXDisplayName << std::endl << vjDEBUG_FLUSH;
