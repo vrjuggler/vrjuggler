@@ -70,7 +70,7 @@ public:
     /**
      * Default constructor.
      */
-    SocketStream_t (void)        
+    SocketStream_t (void)
     {
        m_socket_stream_imp = boost::shared_ptr<SocketStreamImpl>( new SocketStreamImpl );
        m_socket_imp = m_socket_stream_imp;
@@ -89,9 +89,9 @@ public:
      * @param remote_addr A reference to a vpr::InetAddr object for the
      *                     remote socket address.
      */
-    SocketStream_t (vpr::InetAddr local_addr, vpr::InetAddr remote_addr)        
+    SocketStream_t (vpr::InetAddr local_addr, vpr::InetAddr remote_addr)
     {
-       m_socket_stream_imp = boost::shared_ptr<SocketStreamImpl>(new SocketStreamImpl(local_addr, remote_addr)); 
+       m_socket_stream_imp = boost::shared_ptr<SocketStreamImpl>(new SocketStreamImpl(local_addr, remote_addr));
        m_socket_imp = m_socket_stream_imp;
     }
 
@@ -222,7 +222,7 @@ protected:
      */
     SocketStream_t (SocketStreamImpl* sock_imp)
         : Socket_t<Config>(), m_socket_stream_imp(sock_imp)
-    {       
+    {
        m_socket_imp = m_socket_stream_imp;
     }
 
@@ -240,9 +240,13 @@ protected:
         return m_socket_stream_imp->setOption(option, data);
     }
 
+// Put in back door for simulator
+#if VPR_IO_DOMAIN_INCLUDE == VPR_DOMAIN_SIMULATOR
+public:
+#endif
     /// Platform-specific stream socket implementation
     //SocketStreamImpl m_socket_stream_imp;
-    boost::shared_ptr<SocketStreamImpl> m_socket_stream_imp;  
+    boost::shared_ptr<SocketStreamImpl> m_socket_stream_imp;
 };
 
 }; // End of vpr namespace

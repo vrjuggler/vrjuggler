@@ -221,6 +221,10 @@ protected:
         return m_socket_dgram_imp->setOption(option, data);
     }
 
+// Put in back door for simulator
+#if VPR_IO_DOMAIN_INCLUDE == VPR_DOMAIN_SIMULATOR
+public:
+#endif
     /// Platform-specific datagram socket implementation object
     //SocketDatagramImpl m_socket_dgram_imp;
     boost::shared_ptr<SocketDatagramImpl> m_socket_dgram_imp;

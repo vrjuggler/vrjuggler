@@ -88,28 +88,20 @@ public:
       //memcpy(mMsg, msg, msg_size);
    }
 
-   /**
-    * Copy constructor that makes a deep copy of the given source object.  That
-    * is, new memory is allocated for this object's copy of the message body,
-    * and the message is copied into that memory.  As a result, this could be
-    * a very expensive operation in terms of time and space.
-    */
-   Message (const Message& msg)
-      : mStartOnWire(msg.mStartOnWire),
-        mFullyOnWire(msg.mFullyOnWire), mArrivesFully(msg.mArrivesFully),
-        mMsgPath(msg.mMsgPath), mNextHop(msg.mNextHop), mSrcSock(msg.mSrcSock),
-        mDestSock(msg.mDestSock)
+   /** Creates message by copying shared pointer to data buffer */
+   Message (MessageDataPtr msgData)
+      : mSrcSock(NULL), mDestSock(NULL)
    {
-      mMsg.reset();
-      if ( (msg.mMsg.get() != NULL) && (!msg.mMsg->empty()) )
-      {
-         // Yikes, this could get expensive!
-         // XXX: Find out if this is REALLY needed
-         mMsg = MessageDataPtr( new MessageDataType(msg.mMsg->begin(), msg.mMsg->end()));
-         //mMsg = malloc(msg.mMsgSize);
-         //memcpy(mMsg, msg.mMsg, msg.mMsgSize);
-      }
+      mMsg = msgData;
    }
+
+   /**
+    * Copy constructor that makes a copy of the given source object.  That
+    * is, now new memory is allocated for this object's copy of the message body,
+    * instead we just make a copy of the shared_ptr to the message body and share
+    * it with the other message
+    */
+   Message (const Message& msg);
 
    /**
     * Releases the memory allocated for the contained message body.
@@ -152,6 +144,12 @@ public:
    void* getBody (void) const
    {
       return (void*)&((*mMsg)[0]);
+   }
+
+   /* Returns a shared copy of the message data */
+   MessageDataPtr getMessageData()
+   {
+      return mMsg;
    }
 
    vpr::Uint32 getSize (void) const
