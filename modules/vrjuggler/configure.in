@@ -57,8 +57,8 @@ dnl # Define which threading model to use.  Possible values are "SPROC",
 dnl # "POSIX", "WIN32", or "NSPR".
 dnl # The default is "SPROC".
 AC_ARG_ENABLE(subsystem,
-              [  --with-subsystem=<SPROC|POSIX|WIN32|NSPR>
-                          Define threading implementation],
+              [  --enable-subsystem=<SPROC|POSIX|WIN32|NSPR>
+                          Define OS abstraction subsystem],
               SUBSYSTEM="$enableval", SUBSYSTEM='none')
 
 dnl # Enable compilation of the OpenGL API.  Possible values are "yes" or
