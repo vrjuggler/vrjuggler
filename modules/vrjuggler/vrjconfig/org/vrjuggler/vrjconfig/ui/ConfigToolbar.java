@@ -81,9 +81,34 @@ public class ConfigToolbar
       toolbar.add(comp);
    }
 
-   public void setConfigContext(ConfigContext context)
+   public void setConfigContext(ConfigContext ctx)
    {
-      this.context = context;
+      this.context = ctx;
+
+      boolean nonempty_context = true;
+      if (context.getResources().size() == 0)
+      {
+         nonempty_context = false;
+      }
+      saveBtn.setEnabled(nonempty_context);
+      expandBtn.setEnabled(nonempty_context);
+      context.addContextListener(new ContextListener()
+      {
+         public void resourceAdded(ContextEvent evt)
+         {
+            saveBtn.setEnabled(true);
+            expandBtn.setEnabled(false);
+         }
+
+         public void resourceRemoved(ContextEvent evt)
+         {
+            if (context.getResources().size() == 0)
+            {
+               saveBtn.setEnabled(false);
+               expandBtn.setEnabled(false);
+            }
+         }
+      });
    }
 
    public ConfigContext getConfigContext()
@@ -411,6 +436,7 @@ public class ConfigToolbar
       openBtn.setToolTipText("Open Configuration");
       openBtn.setActionCommand("Open");
       openBtn.setFocusPainted(false);
+      saveBtn.setEnabled(false);
       saveBtn.setToolTipText("Save Configuration");
       saveBtn.setActionCommand("Save");
       saveBtn.setFocusPainted(false);
@@ -422,6 +448,7 @@ public class ConfigToolbar
       saveAllBtn.setToolTipText("Save All Open Configurations");
       saveAllBtn.setActionCommand("SaveAll");
       saveAllBtn.setFocusPainted(false);
+      expandBtn.setEnabled(false);
       expandBtn.setToolTipText("Expand Toolbar");
       expandBtn.setActionCommand("Expand");
       expandBtn.setFocusPainted(false);
