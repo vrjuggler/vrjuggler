@@ -12,16 +12,18 @@ Builder: JExplorerBuilder V 1. 0. 7
     < item title="News" link="${NEWS}/index.html"  info="The latest Juggler news" image="Newspaper.gif" >
     < item title="FAQ" link="${MISC}/faq.html"  info="Frequently Asked Questions" image="Leaf.gif" >
 
-    < folder title="Documentation" ref=1 info="Online documentation.  What does each manual say? What manual do I need?" link="${MISC}/documentation.html" rlink="${ROOT}/books.html" rtarget="${NEW_WINDOW}" image="Book_Closed.gif" >
+    < folder title="Manuals/Guides" ref=1 info="Online documentation.  Click this for an overview." link="${MISC}/documentation.html" rlink="${ROOT}/books.html" rtarget="${NEW_WINDOW}" image="Book_Closed.gif" >
     <!-- install-web include books-include.xml -->
     </folder>
 
-    < folder title="Publications" link="${PUBLICATIONS}/index.html"  info="Papers, Articles, and Press Releases" image="Leaf_Script2.gif" imagetwo="Leaf_Write.gif">
-                < item title="VRJ Performance: IPT 2000 (Adobe PDF format)." info="IPT 2000 (pdf format)" link="${PUB}/cj.ipt2k.pdf" image="Leaf.gif" >
-                < item title="VRJ Performance: IPT 2000 (powerpoint format)." info="IPT 2000 (ppt format)" link="${PUB}/cj.ipt2k.ppt" image="Leaf.gif" >
-                < item title="VR Juggler: A Framework for VR Development, 1998. IPT 98" info="A paper accepted at IPT: VR Juggler: A Framework for VR Development, 1998. IPT 98" link="${PUB}/vr.juggler.framework.for.vr.dev.1998.IPT98.pdf" image="Leaf.gif" >
-                < item title="VR Development Tools, 1998.  SIGGRAPH 98" info="A paper accepted at SIGGRAPH: VR Development Tools, 1998.  SIGGRAPH 98" link="${PUB}/vr.dev.tools.1998.SIGGRAPH98.pdf" image="Leaf.gif" >
-                < item target="_top" rtarget="NewWindow" title="Learning VR Juggler.  VRAC 99" info="A presentation given at VRAC: Learning VR Juggler.  VRAC 99" link="publications/howtoprogramjuggler/index.html" image="slide.gif" >
+    <folder title="Publications" link="${PUBLICATIONS}/index.html"  info="Papers, Articles, and Press Releases" image="Leaf_Script2.gif" imagetwo="Leaf_Write.gif">
+                < item title="Masters Thesis-VRJuggler A.Bierbaum" info="Allen Bierbaum Masters Thesis - VRJuggler (PDF)" link="${PUB}/Bierbaum-VRJuggler-MastersThesis-final.pdf" image="Leaf.gif" >
+                < item title="SIGGRAPH 2000 juggler sketch" info="SIGGRAPH 2000 sketch (one page PDF)" link="${PUB}/juggler_sketch_onepage.pdf" image="Leaf.gif" >
+                < item title="IPT 2000 Juggler reconfig" info="IPT2000 Juggler reconfig (PDF)" link="${PUB}/IPT2000_JugglerReconfig-FINAL.pdf" image="Leaf.gif" >
+                < item title="IPT 2000 Performance in VRjuggler (Adobe PDF format)." info="IPT 2000 (pdf format)" link="${PUB}/cj.ipt2k.pdf" image="Leaf.gif" >
+                < item title="SIGGRAPH 98 VR Development Tools, 1998." info="A paper accepted at SIGGRAPH: VR Development Tools, 1998.  SIGGRAPH 98" link="${PUB}/vr.dev.tools.1998.SIGGRAPH98.pdf" image="Leaf.gif" >
+                < item title="IPT 98 VR Juggler, A Framework for VR Development, 1998. " info="A paper accepted at IPT: VR Juggler: A Framework for VR Development, 1998. IPT 98" link="${PUB}/vr.juggler.framework.for.vr.dev.1998.IPT98.pdf" image="Leaf.gif" >
+                < item target="_top" rtarget="NewWindow" title="VRAC 99 Learning VR Juggler.  " info="A presentation given at VRAC: Learning VR Juggler.  Virtual Reality Application Center" link="publications/howtoprogramjuggler/index.html" image="slide.gif" >
     </folder>
 
     < item title="User Community" link="contact.info/usercommunity.html"  info="Can't find it in the Books?  Reach out and ask someone." image="Chat.gif" >

@@ -63,10 +63,12 @@ $alias_subst{"JUGGLER_MAILING_LIST"} = 'http://sourceforge.net/mail/?group_id=80
 $alias_subst{"MAILTO_JUGGLER_MAILING_LIST"} = 'mailto:vrjuggler-info@lists.sourceforge.net';
 $alias_subst{"JUGGLER_DEV_MAILING_LIST"} = 'http://sourceforge.net/mail/?group_id=8041';
 $alias_subst{"MAILTO_JUGGLER_DEV_MAILING_LIST"} = 'mailto:vrjuggler-devel@lists.sourceforge.net';
+
 $alias_subst{"CONTACT_US_DIRECTLY"} = 'mailto:vrjuggler-contact@vrjuggler.org';
 
 $alias_subst{"SOURCEFORGE"} = 'https://sourceforge.net';
 $alias_subst{"JUGGLER_SOURCEFORGE"} = 'https://sourceforge.net/project/?group_id=8041';
+$alias_subst{"JUGGLER_SOURCEFORGE_CVS"} = 'https://sourceforge.net/cvs/?group_id=8041';
 $alias_subst{"JUGGLER_SOURCEFORGE_IMAGE"} = 'http://sourceforge.net/sflogo.php?group_id=8041&type=1';
 
 # An alias for a New Window.
@@ -80,13 +82,15 @@ $alias_subst{"SUBMITBUGS"} = 'https://sourceforge.net/bugs/?func=addbug&group_id
 
 # Contact information
 $alias_subst{"ALLENB"} = 'http://www.vrac.iastate.edu/~allenb';
-$alias_subst{"CAROLINA"} = 'http://www.ee.iastate.edu/~cruz';
+$alias_subst{"CAROLINA"} = 'http://www.vrac.iastate.edu/~carolina';
 $alias_subst{"KEVIN"} = 'http://www.bigfoot.com/~KevinMeinert';
 $alias_subst{"PATRICK"} = 'mailto:patrick@vrac.iastate.edu';
 $alias_subst{"CHRISJUST"} = 'mailto:cjust@vrac.iastate.edu';
 $alias_subst{"COATS"} = 'mailto:jwcoats@vrac.iastate.edu';
 $alias_subst{"VRAC"} = 'http://www.vrac.iastate.edu';
+$alias_subst{"ISU"} = 'http://www.iastate.edu';
 $alias_subst{"IASTATE"} = 'http://www.iastate.edu';
+$alias_subst{"WEBMASTER"} = 'mailto:kevn@vrjuggler.org';
 
 # font size for the tree control (JEXPLORER)
 $alias_subst{"TREE_FONTSIZE"} = '11';
