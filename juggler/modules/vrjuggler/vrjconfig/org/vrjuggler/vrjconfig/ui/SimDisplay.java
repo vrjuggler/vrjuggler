@@ -29,7 +29,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-package org.vrjuggler.vrjconfig.wizard;
+package org.vrjuggler.vrjconfig.ui;
 
 import java.awt.Dimension;
 import java.awt.Point;
