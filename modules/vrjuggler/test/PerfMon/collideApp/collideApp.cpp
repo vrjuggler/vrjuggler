@@ -141,14 +141,14 @@ void collideApp::init()
 
 void collideApp::bufferPreDraw()
 {
-   VPR_PROFILE("bufferPreDraw");
+   VPR_PROFILE_GUARD("bufferPreDraw");
    glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
    glClear(GL_COLOR_BUFFER_BIT);
 }
 
 void collideApp::draw()
 {
-   VPR_PROFILE("draw");
+   VPR_PROFILE_GUARD("draw");
    glClear(GL_DEPTH_BUFFER_BIT);
    glMatrixMode(GL_MODELVIEW);
    Matrix44f wand_matrix;
@@ -355,7 +355,7 @@ void collideApp::testBallCollision(Sphere<DATA_TYPE>& s1,
                                    DATA_TYPE first, DATA_TYPE second,
                                    bool& hit)
 {
-   VPR_PROFILE("testBallCollsion");
+   VPR_PROFILE_GUARD("testBallCollsion");
    bool collide_balls = false;
    
    collide_balls = intersect(s1, v1, s2, v2, first, second);
@@ -389,7 +389,7 @@ void collideApp::testPlaneCollision(Plane<DATA_TYPE>& plane,
                                     Vec<DATA_TYPE, 3>& vel, DATA_TYPE delta,
                                     bool& hit) 
 {
-   VPR_PROFILE("testPlaneCollision");
+   VPR_PROFILE_GUARD("testPlaneCollision");
    float dist = distance(plane, sp.getCenter());
  
    if ((dist < RADIUS) || (dist == RADIUS))
@@ -478,7 +478,7 @@ void collideApp::decrease()
 
 void collideApp::preFrame()
 {   
-   VPR_PROFILE("preFrame");
+   VPR_PROFILE_GUARD("preFrame");
    float hit1, hit2;
    
    delta = 0.05f; // increase to speed up, decrease to slow down ***************

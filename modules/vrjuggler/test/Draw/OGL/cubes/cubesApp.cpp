@@ -55,7 +55,7 @@
 // Uses a quaternion to do rotation in the environment
 void UserData::updateNavigation()
 {
-   VPR_PROFILE("UserData::updateNavigation");
+   VPR_PROFILE_GUARD("UserData::updateNavigation");
    gmtl::EulerAngleXYZf xyzAngles;
    gmtl::Vec3f xyzTrans;
 
@@ -169,7 +169,7 @@ void UserData::updateNavigation()
 
 void UserData::updateShapeSetting()
 {
-   VPR_PROFILE("UserData::updateShapeSetting");
+   VPR_PROFILE_GUARD("UserData::updateShapeSetting");
    if ( mToggleButton->getData() == gadget::Digital::TOGGLE_ON )
    {
       // Toggle back and forth between cone and cube rendering.
@@ -185,7 +185,7 @@ void UserData::updateShapeSetting()
 // initialization here.
 void cubesApp::init()
 {
-   VPR_PROFILE("cubesApp::init");
+   VPR_PROFILE_GUARD("cubesApp::init");
    vrj::GlApp::init();
 
    vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL) << "---------- cubes:App:init() ---------------"
@@ -224,7 +224,7 @@ void cubesApp::init()
 // here.
 void cubesApp::contextInit()
 {
-   VPR_PROFILE("cubesApp::contextInit");
+   VPR_PROFILE_GUARD("cubesApp::contextInit");
    // Generate some random lists.  NOTE: Needed for testing/debugging only!
    mDlDebugData->maxIndex = rand()%50;
    mDlDebugData->dlIndex = glGenLists(mDlDebugData->maxIndex);
@@ -269,7 +269,7 @@ void cubesApp::contextInit()
 // put your opengl deallocation here...
 void cubesApp::contextClose()
 {
-   VPR_PROFILE("cubesApp::contextClose");
+   VPR_PROFILE_GUARD("cubesApp::contextClose");
    // Deallocate the random display lists used for debugging.
    if ( glIsList(mDlDebugData->dlIndex) == GL_TRUE )
    {
@@ -303,7 +303,7 @@ void cubesApp::contextClose()
 //       DO NOT IMITATE THIS CODE.
 void cubesApp::myDraw(vrj::User* user)
 {
-   VPR_PROFILE_HISTORY("cubesApp::myDraw", 10);
+   VPR_PROFILE_GUARD_HISTORY("cubesApp::myDraw", 10);
    vprDEBUG(vprDBG_ALL, vprDBG_HVERB_LVL) << "\n--- myDraw() ---\n" << vprDEBUG_FLUSH;
 
    static const float SCALE = 100;

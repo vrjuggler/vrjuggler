@@ -217,7 +217,7 @@ public:
    // calculations and state modifications here.
    virtual void preFrame()
    {
-      VPR_PROFILE("cubesApp::preFrame");
+      VPR_PROFILE_GUARD("cubesApp::preFrame");
        vprDEBUG(vprDBG_ALL, vprDBG_HVERB_LVL) << "cubesApp::preFrame()"
                                               << std::endl << vprDEBUG_FLUSH;
 
@@ -247,7 +247,7 @@ public:
    // POST: The current scene has been drawn
    virtual void draw()
    {
-      VPR_PROFILE("cubesApp::draw");
+      VPR_PROFILE_GUARD("cubesApp::draw");
       glClear(GL_DEPTH_BUFFER_BIT);
       initGLState();    // This should really be in another function
 
@@ -264,7 +264,7 @@ public:
    /// Function called after drawing has been triggered but BEFORE it completes.
    virtual void intraFrame()
    {
-      VPR_PROFILE("cubesApp::intraFrame");
+      VPR_PROFILE_GUARD("cubesApp::intraFrame");
       vprDEBUG(vprDBG_ALL, vprDBG_HVERB_LVL) << "cubesApp::intraFrame()" << std::endl
                            << vprDEBUG_FLUSH;
    }
