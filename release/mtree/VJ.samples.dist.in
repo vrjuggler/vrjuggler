@@ -51,6 +51,10 @@
 	    ..
 	    simpleGlove
 	    ..
+	    texture
+		..
+		ImageFileLoaderCode
+	    ..
 	    torus
 	    ..
 	    wand
