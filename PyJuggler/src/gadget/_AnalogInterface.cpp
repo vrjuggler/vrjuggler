@@ -56,6 +56,10 @@ void _Export_AnalogInterface()
              "getProxy() -> gadget.AnalogProxy object\n"
              "Returns the underlying proxy to which we are connected."
          )
+        .def("getTimeStamp", &gadgetWrapper::AnalogInterface::getTimeStamp,
+             "getTimeStamp() -> vpr.Interval object\n"
+             "Returns the time of the last update."
+         )
         .def("getData", &gadgetWrapper::AnalogInterface::getData,
              "getData() -> float\n"
              "Gets the current analog data value from the device."

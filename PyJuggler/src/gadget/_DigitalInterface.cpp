@@ -56,6 +56,10 @@ void _Export_DigitalInterface()
              "getProxy() -> gadget.DigitalProxy object\n"
              "Returns the underlying proxy to which we are connected."
          )
+        .def("getTimeStamp", &gadgetWrapper::DigitalInterface::getTimeStamp,
+             "getTimeStamp() -> vpr.Interval object\n"
+             "Returns the time of the last update."
+         )
         .def("getData", &gadgetWrapper::DigitalInterface::getData,
              "getData() -> gadget.Digital.State value\n"
              "Gets the current digital data value from the device."

@@ -44,12 +44,10 @@ namespace gadgetWrapper
          return mInter.getProxy();
       }
 
-/*
       vpr::Interval getTimeStamp()
       {
          return mInter->getTimeStamp();
       }
-*/
 
       float getData()
       {
@@ -88,12 +86,10 @@ namespace gadgetWrapper
          return mInter.getProxy();
       }
 
-/*
       vpr::Interval getTimeStamp()
       {
          return mInter->getTimeStamp();
       }
-*/
 
       int getData()
       {
