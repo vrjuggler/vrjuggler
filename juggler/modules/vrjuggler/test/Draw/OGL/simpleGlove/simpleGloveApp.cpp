@@ -52,7 +52,7 @@ void simpleGloveApp::myDraw()
    glColor3f(0.0f, 1.0f, 0.0f);
    glPushMatrix();
    {
-      for(finger=vjGloveData::INDEX;finger<=vjGloveData::PINKY;finger++)
+      for(finger=vjGloveData::THUMB;finger<=vjGloveData::PINKY;finger++)
       {
       glPushMatrix();
          finger_matrix =
@@ -70,7 +70,7 @@ void simpleGloveApp::myDraw()
    glColor3f(1.0f, 0.0f, 0.0f);
    glPushMatrix();
    {
-      for(finger=vjGloveData::INDEX;finger<=vjGloveData::PINKY;finger++)
+      for(finger=vjGloveData::THUMB;finger<=vjGloveData::PINKY;finger++)
       {
       glPushMatrix();
          vjVec3   origin(0,0,0);    // Base of the vector
