@@ -63,7 +63,11 @@ public:
    static std::string optimizedName( std::string originalFltName );
 
 
+   //: check the filename.  Does it look like it is already optimized?
+   //  returns true if so.
+   static bool isOptimized( const std::string& fileName )
 
+   
    // returns a DCS that will scale an flt model to the suitable size for
    // viewing in a cave environment.
    // setting the units in multigen doesn't seem to do anything, but if anything

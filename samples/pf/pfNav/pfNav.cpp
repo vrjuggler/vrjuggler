@@ -49,58 +49,6 @@ void usage(char** argv)
    cout<<"_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/_/\n"<<flush;
 }
 
-#ifdef USESOUND
-bool initSoundEngine( const std::string& arg, SoundEngine* &engine )
-{
-   std::string soundConfigFile;
-   if (arg == "sl") // some hacky logic.
-   {
-      soundConfigFile = "sound.dat";
-   }
-
-   else if (arg == "aw")
-   {
-      soundConfigFile = "sound.adf";
-   }
-
-   else if (arg == "nosound")
-   {
-      soundConfigFile = "sound.dat";
-   }
-   else
-   {
-      engine = NULL;
-      cout<<"[soundengine] Invalid option\n"<<flush;
-
-      return false; //user didn't specify an option
-   }
-
-   std::string soundConfigFileWithPath;
-   if (fileIO::fileExistsResolvePath( soundConfigFile, soundConfigFileWithPath ))
-   {
-      engine = SoundFactory::newEngine( arg, soundConfigFileWithPath.c_str() );
-
-      if ( engine == NULL)
-      {
-         cout<<"[soundengine] NULL engine\n"<<flush;
-         return false;
-      }
-   }
-
-   else
-   {
-      cout<<"[soundengine] Couldn't find "<<soundConfigFile<<"\n"<<flush;
-      engine = NULL;
-      return false;
-   }
-
-   cout<<"[soundengine] Good engine\n"<<flush;
-   return true; //user specified an option
-}
-
-
-#endif
-
 // The app class we want to use
 // We are required to have a default constructor
 // so create a new class whose constructor configures the simplePfNavApp
@@ -110,7 +58,6 @@ class myPfNavApp : public simplePfNavApp
 public:
    myPfNavApp()
    {
-   ;
    }
 };
 
@@ -127,47 +74,26 @@ void main(int argc, char* argv[])
    if (argc < 2)
    {
       usage( argv );
-      cout<<"\n\n[ERROR!!!] you must supply at least a model database (then config files)\n\n"<<flush;
-      return;
-   }
-
-   int a = 1; // it's here so i can add in the sound
-              // stuff until we have a complex pfNav :)
-
-#ifdef USESOUND
-   cout<<"[soundengine] Kevin's Sound Stuff is enabled!  1st arg needs to be the engine\n"<<flush;
-   if (initSoundEngine( argv[a], gSoundEngine ))
-   {
-      ++a;
-   }
-   else
-   {
-      // then this will definately work.
-      initSoundEngine( "nosound", gSoundEngine );
-   }
-#endif
-
-   if (argc < a)
-   {
-      usage( argv );
       cout<<"\n\n[ERROR!!!] you must supply a model database (then config files)\n\n"<<flush;
       return;
    }
 
-   std::string model_filename = argv[a];
-   ++a;
-
-   if (argc < a)
+   std::string model_filename = argv[1];
+  
+   if (argc < 3)
    {
       cout<<"\n\n[ERROR!!!] you must supply config files after the model file...\n\n"<<flush;
       return;
    }
 
-    for ( int i = a; i < argc; i++ )
+   cout<<"==========\n"<<flush;
+   for ( int i = 2; i < argc; ++i )
    {
+      cout<<"Loading Config File: "<<argv[i]<<"\n"<<flush;
      kernel->loadConfigFile(argv[i]);
    }
-
+ cout<<"===========\n"<<flush;
+   
     kernel->start();
 
     // Configure that application
