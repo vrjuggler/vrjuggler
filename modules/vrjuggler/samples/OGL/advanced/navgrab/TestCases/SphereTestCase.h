@@ -25,6 +25,9 @@ public:
       : vrj::test::TestCase("SphereTestCase"), mNavGrabApp(NULL), mCurState(Done)
    {;}
 
+   virtual ~SphereTestCase()
+   {;}
+
    /** Do any setup needed before the test starts */
    virtual void setUp()
    {
