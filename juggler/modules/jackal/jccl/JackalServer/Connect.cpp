@@ -203,7 +203,7 @@ void vjConnect::controlLoop(void* nullParam) {
 		}
 	    }
 	    else
-		vjDEBUG(1) << "Error: vjNetworkConnect: Unknown remove type: " 
+		vjDEBUG(1) << "Error: vjConnect: Unknown remove type: " 
 			   << s << endl << vjDEBUG_FLUSH;
 	}
 #if 0
