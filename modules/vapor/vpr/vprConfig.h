@@ -80,6 +80,25 @@
 #include <iomanip>
 #include <fstream>
 
+#if defined(__GNUC__) && \
+    ((__GNUC__ == 3 && __GNUC_MINOR__ >= 1) || __GNUC__ > 3)
+
+namespace __gnu_cxx
+{
+   template<class T> class hash;
+   template<class _Key, class _Tp, class _HashFcn, class _EqualKey, class _Alloc> class hash_map;
+   template<class _Key, class _Tp, class _HashFcn, class _EqualKey, class _Alloc> class hash_multimap;
+   template<class _Key, class _HashFcn, class _EqualKey, class _Alloc> class hash_set;
+}
+
+namespace std
+{
+   using __gnu_cxx::hash;
+   using __gnu_cxx::hash_map;
+   using __gnu_cxx::hash_set;
+}
+#endif
+
 #endif   /* __cplusplus */
 
 /*
