@@ -561,6 +561,7 @@ void EventWindowXWin::addKeyEvent(const gadget::Keys& key,
    KeySym key_sym;
    XComposeStatus cs;
 
+   // Get ASCII representation of key.
    XLookupString(event, buffer, buffer_size, &key_sym, &cs);
 
 #ifdef GADGET_DEBUG
@@ -570,7 +571,6 @@ void EventWindowXWin::addKeyEvent(const gadget::Keys& key,
       << buffer << "'\n" << vprDEBUG_FLUSH;
 #endif
 
-   // Get ASCII representation of key.
    gadget::EventPtr key_event(new gadget::KeyEvent(type, key,
                                                    getMask(event->state),
                                                    event->time, buffer[0]));
