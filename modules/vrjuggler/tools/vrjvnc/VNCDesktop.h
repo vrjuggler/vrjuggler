@@ -154,6 +154,9 @@ private:
    gmtl::Rayf       mWandRay;          /**< The wand ray to draw (clipped to length) */
    gmtl::Point3f    mIsectPoint;       /**< The point of intersection on the desktop plane */
 
+   // Grabing to resize and rotate
+   gmtl::Point3f    mCornerGrabPoint;  /**< The point that we previously grabbed at */
+
    // Corners
    gmtl::AABoxf     mLLCorner;         /**< LL of the desktop */
    gmtl::AABoxf     mLRCorner;         /**< LR of the desktop */

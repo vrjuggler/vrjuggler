@@ -369,6 +369,8 @@ VNCDesktop::Focus VNCDesktop::update(const gmtl::Matrix44f& navMatrix)
       {
          if(select_button_state)
          {
+            mSelectState = LRCornerGrab;        // Set to grab state
+            mCornerGrabPoint = mIsectPoint;
          }
          else     // Just select it
          {
@@ -426,10 +428,29 @@ VNCDesktop::Focus VNCDesktop::update(const gmtl::Matrix44f& navMatrix)
       {
          mSelectState = Nothing;
       }
-   } // nothing selected
-   else if(URCornerGrab == mSelectState)
+   }
+   // --- Resizing
+   else if(LRCornerGrab == mSelectState)
    {
+      // Compute the desired change in height and width
+      float delta_w = mIsectPoint[0] - mCornerGrabPoint[0];       // now - grab
+      float delta_h =  mCornerGrabPoint[1] - mIsectPoint[1];      // Grab - now
 
+      std::cout << "deltah: " << delta_h << "deltaw: " << delta_w << std::endl;
+
+      // Transform opposite of change in height to make it look right
+      m_world_M_desktop *= gmtl::makeTrans<gmtl::Matrix44f>(gmtl::Vec3f(0.0f, -delta_h, 0.0f));
+      mDesktopWidth += delta_w;
+      mDesktopHeight += delta_h;
+
+      updateDesktopParameters();
+
+      // Reset grab point. x becomes new isect. y stays same.
+      mCornerGrabPoint[0] = mIsectPoint[0];
+      //mCornerGrabPoint[1] = 0.0f;             // y stays because we adjust desk mat to make it stay the same
+
+      if(!select_button_state)
+         mSelectState = Nothing;
    }
 
 
