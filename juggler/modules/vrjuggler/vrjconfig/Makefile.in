@@ -45,6 +45,23 @@ include @topdir@/java.defs.mk
 srcdir=			@srcdir@
 top_srcdir=		@top_srcdir@
 
+bundle_tweek_beandir=	$(bundle_javadir)/share/tweek/beans
+bundle_tweek_javadir=	$(bundle_javadir)/share/tweek/java
+bundle_jccl_beandir=	$(bundle_javadir)/share/jccl/beans
+bundle_jccl_datadir=	$(bundle_javadir)/share/jccl/data
+bundle_jccl_javadir=	$(bundle_javadir)/share/jccl/java
+bundle_vrj_datadir=	$(bundle_javadir)/share/vrjuggler/data
+
+ARCH=			$(shell uname -p)
+
+TWEEK_EXT_JARS=		@TWEEK_EXT_JARS@
+
+TWEEK_JAR_DIR=		@vrjconfig_bundle_tweek_jardir@
+TWEEK_BEAN_DIR=		@vrjconfig_bundle_tweek_beandir@
+JCCL_DATA_DIR=		@vrjconfig_bundle_jccl_datadir@
+JCCL_JAR_DIR=		@vrjconfig_bundle_jccl_jardir@
+JCCL_BEAN_DIR=		@vrjconfig_bundle_jccl_beandir@
+
 EXTRA_SRCS_PATH=	$(srcdir)/../tweek/idl
 INSTALL=		@INSTALL@
 INSTALL_FILES=		
@@ -127,6 +144,75 @@ ifneq ($(BEANS), )
                 $(EXTRA_INSTALL_ARGS)					\
                 $(top_srcdir)/vrjconfig/$$bean.xml $(beandir) || exit 1; \
           done
+endif
+ifeq (@PLATFORM@, Darwin)
+	@echo "----------------------------------------------------"
+	@echo "Installing the Mac OS X VRJconfig application bundle"
+	@echo "----------------------------------------------------"
+	$(SHELL) $(MKINSTALLDIRS) $(bundle_bindir)
+	$(SHELL) $(MKINSTALLDIRS) $(bundle_javadir)
+	$(SHELL) $(MKINSTALLDIRS) $(bundle_tweek_javadir)
+	$(SHELL) $(MKINSTALLDIRS) $(bundle_tweek_javadir)/$(ARCH)
+	$(SHELL) $(MKINSTALLDIRS) $(bundle_tweek_beandir)
+	$(SHELL) $(MKINSTALLDIRS) $(bundle_jccl_beandir)
+	$(SHELL) $(MKINSTALLDIRS) $(bundle_jccl_datadir)
+	$(SHELL) $(MKINSTALLDIRS) $(bundle_jccl_javadir)
+	$(SHELL) $(MKINSTALLDIRS) $(bundle_vrj_beandir)
+	$(SHELL) $(MKINSTALLDIRS) $(bundle_vrj_beandir)/customeditors
+	$(SHELL) $(MKINSTALLDIRS) $(bundle_vrj_javadir)
+	$(SHELL) $(MKINSTALLDIRS) $(bundle_vrj_datadir)
+	$(INSTALL) $(EXTRA_INSTALL_ARGS) -m $(EXEC_PERMS)		\
+          $(releasedir)/mac/JavaApplicationStub $(bundle_bindir)
+	$(INSTALL) $(EXTRA_INSTALL_ARGS) -m $(FILE_PERMS)		\
+          $(topdir)/vrjconfig/Info.plist $(bundleroot)/Contents
+	$(INSTALL) $(EXTRA_INSTALL_ARGS) -m $(FILE_PERMS)		\
+          $(top_srcdir)/vrjconfig/vrjconfig.icns			\
+          $(bundleroot)/Contents/Resources
+	$(INSTALL) $(EXTRA_INSTALL_ARGS) -m $(FILE_PERMS)		\
+          $(top_srcdir)/data/ControlPanel.xml $(bundle_vrj_datadir)
+	echo 'AAPL????' > $(bundleroot)/Contents/PkgInfo
+	/Developer/Tools/SetFile -a B $(bundleroot)
+	$(INSTALL) $(EXTRA_INSTALL_ARGS) -m $(FILE_PERMS)		\
+          $(GROUP_OPT_UNIX) $(TWEEK_JAR_DIR)/java.security.policy.txt	\
+          $(bundle_javadir)
+	$(INSTALL) $(EXTRA_INSTALL_ARGS) -m $(EXEC_PERMS)		\
+          $(GROUP_OPT_UNIX) $(TWEEK_JAR_DIR)/$(ARCH)/* $(bundle_javadir)
+	$(INSTALL) $(EXTRA_INSTALL_ARGS) -m $(FILE_PERMS)		\
+          $(TWEEK_JAR_DIR)/*.jar $(bundle_javadir)
+	for j in `echo $(TWEEK_EXT_JARS) | sed -e 's/:/ /g'` ;		\
+          do								\
+              $(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)		\
+                $(EXTRA_INSTALL_ARGS) $$j $(bundle_tweek_javadir) || exit 1 ; \
+          done
+	$(INSTALL) $(EXTRA_INSTALL_ARGS) -m $(FILE_PERMS)		\
+          $(TWEEK_BEAN_DIR)/*.jar $(TWEEK_BEAN_DIR)/*.xml		\
+          $(bundle_tweek_beandir)
+	$(INSTALL) $(EXTRA_INSTALL_ARGS) -m $(FILE_PERMS)		\
+          $(JCCL_DATA_DIR)/*.xsd $(bundle_jccl_datadir)
+	$(INSTALL) $(EXTRA_INSTALL_ARGS) -m $(FILE_PERMS)		\
+          $(JCCL_JAR_DIR)/*.jar $(bundle_jccl_javadir)
+	$(INSTALL) $(EXTRA_INSTALL_ARGS) -m $(FILE_PERMS)		\
+          $(JCCL_BEAN_DIR)/*.jar $(JCCL_BEAN_DIR)/*.xml $(bundle_jccl_beandir)
+ifneq ($(JARS), )
+	for jar in $(JARS) ;						\
+          do								\
+              $(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)		\
+                $(EXTRA_INSTALL_ARGS) $(topdir)/vrjconfig/$$jar		\
+                $(bundle_vrj_javadir) || exit 1;			\
+          done
+endif
+ifneq ($(BEANS), )
+	for bean in $(BEANS) ;						\
+          do								\
+              $(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)		\
+                $(EXTRA_INSTALL_ARGS) $(topdir)/vrjconfig/$$bean.jar	\
+                $(bundle_vrj_beandir) || exit 1 ;			\
+              $(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)		\
+                $(EXTRA_INSTALL_ARGS)					\
+                $(top_srcdir)/vrjconfig/$$bean.xml			\
+                $(bundle_vrj_beandir) || exit 1 ;			\
+          done
+endif
 endif
 	@echo "------------------------------------------------"
 	@echo "Installing Common Editors"

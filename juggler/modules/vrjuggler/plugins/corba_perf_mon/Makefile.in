@@ -101,6 +101,9 @@ ifeq ($(HAVE_TWEEK_JAVA), Y)
    BEAN_INSTALL_FILES=	$(JARS) $(addprefix $(srcdir)/, $(JARS:.jar=.xml))
    BEAN_INSTALL_PATH=	$(projdatadir)/beans
 
+   bundle_beandir=	$(prefix)/VRJConfig.app/Contents/Resources/Java/share/vrjuggler/beans
+   bundle_javadir=	$(prefix)/VRJConfig.app/Contents/Resources/Java/share/vrjuggler/java
+
    AFTERBUILD=		java-build
 endif
 
@@ -125,6 +128,15 @@ install-bean:
               $(INSTALL) $(EXTRA_INSTALL_ARGS) -m $(FILE_PERMS)		\
                 $(GROUP_OPT_UNIX) $$jar $(javadir) ;			\
           done
+ifeq (@PLATFORM@, Darwin)
+	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT) $(EXTRA_INSTALL_ARGS)	\
+          $(BEAN_INSTALL_FILES) $(bundle_beandir)
+	for jar in $(JFREECHART_JARS) ;					\
+          do								\
+              $(INSTALL) $(EXTRA_INSTALL_ARGS) -m $(FILE_PERMS)		\
+                $(GROUP_OPT_UNIX) $$jar $(bundle_javadir) ;		\
+          done
+endif
 
 _LOCAL_CLEAN=	_clean
 

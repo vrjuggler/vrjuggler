@@ -1,5 +1,8 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Nov-05-2004 patrickh    VRJConfig is now installed as a bundle on Mac OS X (in
+                        addition to the "traditional" UNIX installation
+                        launched by a shell script).
 Nov-04-2004 patrickh    Relocated the Java libraries and JavaBeans used by
                         VRJConfig to $VJ_BASE_DIR/share/vrjuggler/java and
                         $VJ_BASE_DIR/share/vrjuggler/beans respectively.
