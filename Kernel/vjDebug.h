@@ -4,7 +4,8 @@
 
 // #define VJ_DEBUG  Defined in vjConfig.h
 #include <vjConfig.h>
-#define LOCK_DEBUG_STREAM
+#include <stdlib.h>
+#include <assert.h>
 
 // Debug output categories
 #define vjDBG_BASE 0
@@ -27,25 +28,36 @@
 
 #define vjDBG_USER 100
 
-// --------------- //
-// --- Headers --- //
-// --------------- //
-#include <stdlib.h>
-#include <assert.h>
+// Suggested use of val/debugLevel
+//
+// 1 - critical messages / Config data
+// 2 -
+// 3 - Object construction
+// 4 -
+// 5 - Highly verbose debug output
+// 6 - Function entry and exit
+// 7 - In house only type debug output
+
 
 #ifdef VJ_DEBUG
-#   define vjDEBUG(cat,val) if (0) ; else if((val <= vjDebug::instance()->getLevel()) && (vjDebug::instance()->isCategoryAllowed(cat))) vjDebug::instance()->getStream(cat, val)
-#   define vjDEBUG_BEGIN(cat,val) if (0) ; else if((val <= vjDebug::instance()->getLevel()) && (vjDebug::instance()->isCategoryAllowed(cat))) vjDebug::instance()->getStream(cat, val, 1)
-#   define vjDEBUG_END(cat,val) if (0) ; else if((val <= vjDebug::instance()->getLevel()) && (vjDebug::instance()->isCategoryAllowed(cat))) vjDebug::instance()->getStream(cat, val, -1)
-
-//#   define vjDEBUG(vjDBG_ALL,val,desc) if (0) ; else if(val <= vjDebug::instance()->getLevel()) vjDebug::instance()->getStream(val)
-//#   define vjDEBUG_BEGIN(vjDBG_ALL,val,desc) if (0) ; else if(val <= vjDebug::instance()->getLevel()) vjDebug::instance()->getStream(val, 1)
-//#   define vjDEBUG_BEGIN(vjDBG_ALL,val,desc) if (0) ; else if(val <= vjDebug::instance()->getLevel()) vjDebug::instance()->getStream(val, -1)
+//#   define vjDEBUG(cat,val) if (0) ; else if((val <= vjDebug::instance()->getLevel()) && (vjDebug::instance()->isCategoryAllowed(cat))) vjDebug::instance()->getStream(cat, val)
+//#   define vjDEBUG_BEGIN(cat,val) if (0) ; else if((val <= vjDebug::instance()->getLevel()) && (vjDebug::instance()->isCategoryAllowed(cat))) vjDebug::instance()->getStream(cat, val, 1)
+//#   define vjDEBUG_END(cat,val) if (0) ; else if((val <= vjDebug::instance()->getLevel()) && (vjDebug::instance()->isCategoryAllowed(cat))) vjDebug::instance()->getStream(cat, val, -1)
+#  define LOCK_DEBUG_STREAM
+#  define MAX_DBG_LEVEL 100
 #else
-#   define vjDEBUG(cat,val) if (1) ; else cout
-#   define vjDEBUG_BEGIN(cat,val) if (1) ; else cout
-#   define vjDEBUG_END(cat,val) if (1) ; else cout
+#  define LOCK_DEBUG_STREAM
+#  define MAX_DBG_LEVEL 1
+//#   define vjDEBUG(cat,val) if (1) ; else cout
+//#   define vjDEBUG_BEGIN(cat,val) if (1) ; else cout
+//#   define vjDEBUG_END(cat,val) if (1) ; else cout
 #endif
+
+
+#define vjDEBUG(cat,val) if (val>MAX_DBG_LEVEL) ; else if((val <= vjDebug::instance()->getLevel()) && (vjDebug::instance()->isCategoryAllowed(cat))) vjDebug::instance()->getStream(cat, val)
+#define vjDEBUG_BEGIN(cat,val) if (val>MAX_DBG_LEVEL) ; else if((val <= vjDebug::instance()->getLevel()) && (vjDebug::instance()->isCategoryAllowed(cat))) vjDebug::instance()->getStream(cat, val, 1)
+#define vjDEBUG_END(cat,val) if (val>MAX_DBG_LEVEL) ; else if((val <= vjDebug::instance()->getLevel()) && (vjDebug::instance()->isCategoryAllowed(cat))) vjDebug::instance()->getStream(cat, val, -1)
+
 
 #ifdef LOCK_DEBUG_STREAM
 #   define vjDEBUG_STREAM_LOCK vjStreamLock(vjDebug::instance()->debugLock())
@@ -81,15 +93,6 @@ extern vjMutex DebugLock;
 //------------------------------------------
 //: Class to support debug output
 //
-// Suggested use of val/debugLevel
-//
-// 1 - critical messages / Config data
-// 2 -
-// 3 - Object construction
-// 4 -
-// 5 - Highly verbose debug output
-// 6 - Function entry and exit
-// 7 - In house only type debug output
 //!PUBLIC_API:
 //-----------------------------------------
 class vjDebug
