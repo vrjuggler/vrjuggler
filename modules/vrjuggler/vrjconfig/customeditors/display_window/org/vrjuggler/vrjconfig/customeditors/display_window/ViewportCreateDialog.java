@@ -36,6 +36,8 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import info.clearthought.layout.*;
+import org.vrjuggler.tweek.services.EnvironmentService;
+import org.vrjuggler.tweek.services.EnvironmentServiceProxy;
 import org.vrjuggler.jccl.config.*;
 import org.vrjuggler.jccl.config.event.ConfigElementEvent;
 import org.vrjuggler.jccl.config.event.ConfigElementListener;
@@ -149,7 +151,6 @@ public abstract class ViewportCreateDialog
    protected void initUI()
    {
       mButtonPanel.setLayout(mButtonPanelLayout);
-      mButtonPanelLayout.setAlignment(FlowLayout.RIGHT);
       mOkButton.setEnabled(false);
       mOkButton.setText("OK");
       mOkButton.addActionListener(new ViewportCreateDialog_mOkButton_actionAdapter(this));
@@ -161,9 +162,21 @@ public abstract class ViewportCreateDialog
       mHelpButton.addActionListener(new ViewportCreateDialog_mHelpButton_actionAdapter(this));
       this.getContentPane().add(mMainPanel, BorderLayout.CENTER);
       this.getContentPane().add(mButtonPanel, BorderLayout.SOUTH);
-      mButtonPanel.add(mOkButton, null);
-      mButtonPanel.add(mCancelButton, null);
-      mButtonPanel.add(mHelpButton, null);
+
+      if ( (new EnvironmentServiceProxy()).getOS() == EnvironmentService.Windows )
+      {
+         mButtonPanelLayout.setAlignment(FlowLayout.CENTER);
+         mButtonPanel.add(mOkButton, null);
+         mButtonPanel.add(mCancelButton, null);
+         mButtonPanel.add(mHelpButton, null);
+      }
+      else
+      {
+         mButtonPanelLayout.setAlignment(FlowLayout.RIGHT);
+         mButtonPanel.add(mHelpButton, null);
+         mButtonPanel.add(mCancelButton, null);
+         mButtonPanel.add(mOkButton, null);
+      }
    }
 
    private int status = CANCEL_OPTION;
