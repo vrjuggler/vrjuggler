@@ -30,26 +30,11 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _VPR_IOSYS_NSPR_H_
-#define _VPR_IOSYS_NSPR_H_
-
-#include <vprConfig.h>
-#include <IO/IOSysBase.h>
-
-#include <prio.h>
+#include <md/NSPR/IOSysNSPR.h>
 
 namespace vpr {
 
-// Base class for all for the IOSys class.
-// The "real" impl is in an included file.
-class IOSysNSPR : public IOSysBase
-{
-public:
-   typedef PRFileDesc* Handle;
-   static const Handle NullHandle;
-};
+const IOSysNSPR::Handle IOSysNSPR::NullHandle = NULL;
 
 }; // End of vpr namespace
 
-
-#endif   /* _VPR_IOSYS_NSPR_H_ */
