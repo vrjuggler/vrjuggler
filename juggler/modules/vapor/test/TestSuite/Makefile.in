@@ -70,7 +70,7 @@ MK_DIR = ${srcdir}/mk
 include ${MK_DIR}/mk.objs
 
 # Compile then Link
-$(PROJECT_NAME): $(OBJS)
+$(PROJECT_NAME): $(OBJS) $(basedir)/lib$(LIBBITSUF)/libvpr.a
 	@echo ""
 	@echo "-------------------------------------------"
 	@echo "Linking... (.$(OBJEXT)'s --> executable)"
