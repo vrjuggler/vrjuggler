@@ -163,14 +163,15 @@ DPP_BASIC_PROGS($PLATFORM, $OS_TYPE)
 # -----------------------------------------------------------------------------
 # Checks for libraries.
 # -----------------------------------------------------------------------------
-VPR_PATH(0.10.1, , AC_MSG_ERROR(*** VPR required for VR Juggler ***))
+VPR_PATH([0.10.1], , [AC_MSG_ERROR(*** VPR required for VR Juggler ***)])
 VPR_SUBSYSTEM=`$VPR_CONFIG --subsystem`
-JCCL_PATH(0.0.6, , AC_MSG_ERROR(*** Jackal required for VR Juggler ***))
-GADGETEER_PATH(0.2.0, , AC_MSG_ERROR(*** Gadgeteer required for VR Juggler ***))
+JCCL_PATH([0.0.6], , [AC_MSG_ERROR(*** Jackal required for VR Juggler ***)])
+GADGETEER_PATH([0.2.0], ,
+               [AC_MSG_ERROR(*** Gadgeteer required for VR Juggler ***)])
 
 vjsave_CPPFLAGS="$CPPFLAGS"
 CPPFLAGS="$CPPFLAGS $STDFLAGS"
-GMTL_PATH(0.0.1, , AC_MSG_ERROR(*** GMTL required for VR Juggler ***))
+GMTL_PATH([0.0.1], , [AC_MSG_ERROR(*** GMTL required for VR Juggler ***)])
 CPPFLAGS="$vjsave_CPPFLAGS"
 
 # ------------
@@ -183,7 +184,7 @@ if test "x${_enable_gl_api}" = "xyes" ; then
     DPP_HAVE_OPENGL(/usr, no,
         [ OPENGL_API='Y' ;
           AC_DEFINE(VJ_API_OPENGL,) ],
-        AC_MSG_ERROR(*** OpenGL API will not be used (GL files not found) ***))
+        [AC_MSG_ERROR(*** OpenGL API will not be used (GL files not found) ***)])
 fi
 
 # --------------------
@@ -196,7 +197,7 @@ if test "x${_enable_pf_api}" = "xyes" ; then
     DPP_HAVE_PERFORMER(/usr, 2.4,
         [ PERFORMER_API='Y' ;
           AC_DEFINE(VJ_API_PERFORMER,) ],
-        AC_MSG_WARN(*** Performer API will not be used (files not found) ***))
+        [AC_MSG_WARN(*** Performer API will not be used (files not found) ***)])
 fi
 
 # --------------------
