@@ -273,7 +273,7 @@ install-share:
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
           $(EXTRA_INSTALL_ARGS) $(topdir)/samples/Makefile $(projdatadir)/src
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
-          $(EXTRA_INSTALL_ARGS) $(TWEEKROOT_ABS)/README.txt $(projdatadir)
+          $(EXTRA_INSTALL_ARGS) $(ROOT_ABS)/README.txt $(projdatadir)
 
 install-test:
 
