@@ -104,7 +104,7 @@ void vjGloveGesture::saveFileHeader(ofstream& outFile)
 
    int i;
    for(i =0;i<mGestureNames.size();i++)
-      outFile << mGestureNames[i] << endl;
+      outFile << mGestureNames[i].c_str() << endl;
 
    for(i=0;i<mGestureExamples.size();i++)
    {

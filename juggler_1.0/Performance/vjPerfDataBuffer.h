@@ -23,6 +23,7 @@
 #ifndef _VJ_PERF_DATA_BUFFER_H_
 #define _VJ_PERF_DATA_BUFFER_H_
 
+#include <vjConfig.h>
 #include <Environment/vjTimedUpdate.h>
 #include <Performance/vjTimeStamp.h>
 #include <Sync/vjMutex.h>

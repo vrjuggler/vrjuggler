@@ -46,13 +46,11 @@
 // Date: 11-6-97
 //-----------------------------------------------
 
-#include <iostream.h>
+#include <vjConfig.h>
 #include <stdio.h>
 #include <windows.h>
 #include <SharedMem/vjMemPool.h>
 
-// - Call usinit in new processes created.  Try to overcome limitation on number of users.
-// otherwise wet to a "big" number.
 
 
 class vjMemPoolWin32 : public vjMemPool
@@ -131,6 +129,5 @@ private:    // Static data for all members -- Must be set before forks!!!!
    static char* arenaForMemPoolsFileName;
 };
 
-void*  vjMemPoolWin32::arenaForMemPools = NULL;
-char* vjMemPoolWin32::arenaForMemPoolsFileName = NULL;
+
 #endif

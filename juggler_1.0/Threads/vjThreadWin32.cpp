@@ -22,18 +22,51 @@
 #include <Threads/vjThreadWin32.h>
 
 
-int vjThreadWin32::thread_count = 1;
+vjThreadTable<DWORD> vjThreadWin32::mThreadTable;
 
-// ---------------------------------------------------------------------------
-// Overload the << operator so that the PID and address of this vjThreadWin32
-// structure can be output in a readable format.
-// ---------------------------------------------------------------------------
-ostream&
-operator<< (ostream& outfile, vjThreadWin32& thread) {
-    outfile << "[PID " << thread.getpid() << ":" << thread.gettid() << "]";
 
-    return outfile;
+//: Spawning constructor
+//  This will actually start a new thread
+//  that will execute the specified function.
+vjThreadWin32::vjThreadWin32 (THREAD_FUNC func, void* arg, long flags,
+             u_int priority, void* stack_addr, size_t stack_size)
+{
+   vjThreadManager::instance()->lock();
+   {
+      vjThreadNonMemberFunctor* NonMemFunctor = new vjThreadNonMemberFunctor(func, arg);
+      int retVal = spawn(NonMemFunctor, flags, priority, stack_addr, stack_size);
+      if (retVal > 0)
+      {
+         registerThread(true);
+         mThreadTable.addThread(this, mThreadTID);
+      }
+      else
+         registerThread(false);     // Failed to create
+   }
+   vjThreadManager::instance()->unlock();
 }
+
+
+//: Spawning constructor with arguments (functor version).
+//   This will start a new
+//   thread that will execute the specified function.
+vjThreadWin32::vjThreadWin32 ( vjBaseThreadFunctor* functorPtr, long flags,
+              u_int priority, void* stack_addr, size_t stack_size)
+{
+   vjThreadManager::instance()->lock();
+   {
+      int retVal = spawn(functorPtr, flags, priority, stack_addr, stack_size);
+      if (retVal > 0)
+      {
+         registerThread(true);
+         mThreadTable.addThread(this, mThreadTID);
+      }
+      else
+         registerThread(false);     // Failed to create));
+   }
+   vjThreadManager::instance()->unlock();
+}
+
 
 // ---------------------------------------------------------------------------
 // Create a new thread that will execute functorPtr.
@@ -45,51 +78,23 @@ operator<< (ostream& outfile, vjThreadWin32& thread) {
 //       beginning execution.
 // ---------------------------------------------------------------------------
 int
-vjThreadWin32::create ( vjBaseThreadFunctor* functorPtr, long flags, u_int priority,
+vjThreadWin32::spawn ( vjBaseThreadFunctor* functorPtr, long flags, u_int priority,
                      void* stack_addr, size_t stack_size)
 {
-    unsigned tid;
-    int result;
     
-//    if (stack_size != 0)
-//    {
-//	size_t size = stack_size;
-//	// -- Check size -- //
-//    }
-//
-//    if (stack != NULL)
-//      {
-//	// Check for validity and set and stuff
-//      }
-
-    if (0 == (*threadID = (HANDLE) _beginthreadex(NULL,0, &ThreadFunctorFunction, functorPtr, 0, &tid)))
+	 unsigned int thread_id;
+    mThreadHandle = (HANDLE) _beginthreadex(NULL,0, &ThreadFunctorFunction, functorPtr, 0, &thread_id);
+    if (0 == mThreadHandle)
     {
-        return 0;
+       cerr << "ERROR: Could not create thread." << endl; 
+		 return -1;
     }
 
-    return 0;
+    mThreadTID = thread_id;
+	 
+
+    return 1;
 }
 
-// ---------------------------------------------------------------------------
-// Create n new threads that execute func() with the argument arg if given.
-//
-// PRE: The thread_ids[] array should not have anything stored in it.  Its
-//      contents are destroyed in the routine.
-// POST: The thread ID's created in this routine are stored and returned in
-//       the array thread_ids[] so that the caller may access them.
-// ---------------------------------------------------------------------------
-int
-vjThreadWin32::create_n (vjThreadWin32 thread_ids[], int n, THREAD_FUNC func,
-                       void* arg, long flags, u_int priority,
-                       void* stack_addr[], size_t stack_size[])
-{
-    for ( int i = 0; i < n; i++ ) {
-        vjThreadWin32* newThread = vjThread::spawn(func, arg, flags, priority,
-                                                 (stack_addr == 0) ? 0 : stack_addr[i],
-                                                 (stack_size == 0) ? 0 : stack_size[i]);
 
-        thread_ids[i] = *newThread;
-    }
 
-    return i;
-} 

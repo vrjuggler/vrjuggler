@@ -56,7 +56,7 @@ void vjProxyFactory::registerProxy(vjProxyConstructorBase* constructor)
 {
    mConstructors.push_back(constructor);     // Add the constructor to the list
    vjDEBUG(vjDBG_INPUT_MGR,1) << "vjProxyFactory::registerProxy: Constructor registered for: "
-              << constructor->getChunkType()
+              << constructor->getChunkType().c_str()
               << "   :" << (void*)constructor
               << " type:" << typeid(*constructor).name() << endl << vjDEBUG_FLUSH;
 }

@@ -28,7 +28,7 @@
 
 #include <Kernel/vjSurfaceDisplay.h>
 #include <Kernel/vjSimDisplay.h>
-#include <Environment/vjEnvironmentManager.h>
+//**//#include <Environment/vjEnvironmentManager.h>
 
 #include <GL/gl.h>
 
@@ -119,7 +119,7 @@ void vjGlPipe::controlLoop(void* nullParam)
 {
    mThreadRunning = true;     // We are running so set flag
    // this should really not be here...
-   vjKernel::instance()->getEnvironmentManager()->addPerfDataBuffer (mPerfBuffer);
+//**//   vjKernel::instance()->getEnvironmentManager()->addPerfDataBuffer (mPerfBuffer);
 
    while (!controlExit)
    {

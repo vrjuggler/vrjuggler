@@ -33,14 +33,11 @@ class vjApp;
 #include <Kernel/vjDebug.h>
 #include <Input/InputManager/vjInputManager.h>
 #include <Kernel/vjSystemData.h>
-#include <Environment/vjEnvironmentManager.h>
+//**//#include <Environment/vjEnvironmentManager.h>
 #include <Performance/vjPerfDataBuffer.h>
 
 #include <Kernel/vjUser.h>
 
-	// --- HACK --- //
-	// Is this really needed??
-#include <Kernel/vjSGISystemFactory.h>
 
     // Config stuff
 #include <Config/vjConfigChunkDB.h>
@@ -169,8 +166,10 @@ public:      // Global "get" interface
    { return mInputManager; }
 
     //: Get the Environment Manager
+    /*
     vjEnvironmentManager* getEnvironmentManager()
     { return environmentManager; }
+    */
 
    //: Get the user associated with given name
    //! RETURNS: NULL - Not found
@@ -199,7 +198,7 @@ protected:
    vjInputManager*   mInputManager;       //: The input manager for the system
    vjDrawManager*    mDrawManager;         //: The Draw Manager we are currently using
    vjDisplayManager* mDisplayManager;      //: The Display Manager we are currently using
-   vjEnvironmentManager* environmentManager; //: The Environment Manager object
+//**//   vjEnvironmentManager* environmentManager; //: The Environment Manager object
 
    /// Performance information
    vjPerfDataBuffer* perfBuffer;          //: store perfdata for kernel main
@@ -236,7 +235,7 @@ protected:
       mInputManager = NULL;
       mDrawManager = NULL;
       mDisplayManager = NULL;
-      environmentManager = NULL;
+//**//      environmentManager = NULL;
       perfBuffer = NULL;
 
       mInitialChunkDB = NULL;

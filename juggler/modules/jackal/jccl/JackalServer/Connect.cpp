@@ -228,7 +228,7 @@ void vjConnect::readControlLoop(void* nullParam) {
 
    read_connect_thread = NULL;
    read_die = write_die = true;
-   vjKernel::instance()->getEnvironmentManager()->connectHasDied(this);
+//**//   vjKernel::instance()->getEnvironmentManager()->connectHasDied(this);
 }
 
 

@@ -10,11 +10,11 @@
       // --- Lib Stuff --- //
 #include <Kernel/vjKernel.h>
 #include <Kernel/vjProjection.h>
-#include <unistd.h>
+//#include <unistd.h>
 
 int main(int argc, char* argv[])
 {
-   vjProjection::setNearFar(0.01, 10000.0f);
+   vjProjection::setNearFar(0.01f, 10000.0f);
    
    vjKernel* kernel = vjKernel::instance();        // Get the kernel
    torusApp* application = new torusApp(kernel);   // Declare an instance of the app
@@ -39,8 +39,11 @@ int main(int argc, char* argv[])
       sleep(2);
       kernel->setApplication(application);
       */
-       usleep (250000);
+       //usleep (250000);
+      Sleep(0);
       
        //sched_yield();
    }
+
+   return 1;
 }

@@ -19,7 +19,6 @@
 
 
 #include <vjConfig.h>
-#include <strings.h>
 #include <ctype.h>
 #include <Config/vjParseUtil.h>
 #include <Kernel/vjDebug.h>

@@ -28,7 +28,7 @@
 #    include <Sync/vjCondGeneric.h>
     
     typedef  vjCondGeneric vjCond;
-#else
+#endif
 #ifdef VJ_USE_PTHREADS
 #   define _POSIX_C_SOURCE VJ_POSIX_C_SOURCE
 
@@ -36,6 +36,10 @@
     
     typedef  vjCondPosix vjCond;
 #endif	/* VJ_USE_PTHREADS */
-#endif	/* VJ_SGI_IPC */
+#ifdef WIN32
+#    include <Sync/vjCondGeneric.h>
+    
+    typedef  vjCondGeneric vjCond;
+#endif
 
 #endif

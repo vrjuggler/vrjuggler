@@ -55,7 +55,7 @@ void vjDeviceInterface::refresh()
       mProxyIndex = vjKernel::instance()->getInputManager()->getProxyIndex(mProxyName);
       if (mProxyIndex == -1)
       {
-         vjDEBUG(vjDBG_ALL,0) << "ERROR: could not find proxy: " << mProxyName << endl << vjDEBUG_FLUSH;
+         vjDEBUG(vjDBG_ALL,0) << "ERROR: could not find proxy: " << mProxyName.c_str() << endl << vjDEBUG_FLUSH;
          vjASSERT(false);
          exit(1);
       }

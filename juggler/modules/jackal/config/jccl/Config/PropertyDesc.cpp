@@ -91,8 +91,8 @@ vjEnumEntry* vjPropertyDesc::getEnumEntryWithValue (vjVarValue& val) {
 
 
 ostream& operator << (ostream& out, vjPropertyDesc& self) {
-    out << self.token << " " << typeString(self.type) << " "
-	<< self.num << " \"" << self.name << "\"";
+    out << self.token.c_str() << " " << typeString(self.type) << " "
+	<< self.num << " \"" << self.name.c_str() << "\"";
 
     /* print valuelabels if we have 'em */
     if (self.valuelabels.size() > 0) {
@@ -100,7 +100,7 @@ ostream& operator << (ostream& out, vjPropertyDesc& self) {
 	out << " vj_valuelabels { ";
 	for (int i = 0; i < self.valuelabels.size(); i++) {
 	    e = self.valuelabels[i];
-	    out << '"' << e->getName() << "\" ";
+	    out << '"' << e->getName().c_str() << "\" ";
 	}
 	out << "}";
     }
@@ -114,7 +114,7 @@ ostream& operator << (ostream& out, vjPropertyDesc& self) {
     }
 
     /* print help string - always quoted. */
-    out << " \"" << self.help << '"';
+    out << " \"" << self.help.c_str() << '"';
     return out;
 }
 

@@ -23,7 +23,7 @@
 #pragma once
 
 #include <vjConfig.h>
-#include <unistd.h>
+//#include <unistd.h>
 
 
 // Typedefs to help with cross-platform abilities
@@ -45,9 +45,9 @@ typedef void (*THREAD_FUNC)(void *);
 #   include <windows.h>
 #   include <process.h>
 #   include <Threads/vjThreadWin32.h>
-#   include <Threads/vjThreadKeyWin32.h>
+//#   include <Threads/vjThreadKeyWin32.h>
     typedef vjThreadWin32 vjThread;
-	typedef vjThreadKeyWin32 vjKeyId;
+//	typedef vjThreadKeyWin32 vjKeyId;
 #else
 #ifdef VJ_USE_PTHREADS
     typedef int		cancel_state_t;

@@ -92,10 +92,10 @@ protected:     // Statics
    static float mFarDist;    // Near far distances
 
 public:
-   static void setNearFar(float _near, float _far)
+   static void setNearFar(float near_val, float far_val)
    {
-      mNearDist = _near;
-      mFarDist = _far;
+      mNearDist = near_val;
+      mFarDist = far_val;
    }
 };
 

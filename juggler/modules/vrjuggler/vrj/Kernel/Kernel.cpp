@@ -23,6 +23,14 @@
 #include <Kernel/vjKernel.h>
 #include <Config/vjChunkFactory.h>
 
+// Get the system factory we need
+#ifdef VJ_OS_SGI
+#include <Kernel/vjSGISystemFactory.h>
+#endif
+#ifdef WIN32
+#include <Kernel/vjWin32SystemFactory.h>
+#endif
+
 // Initailize Statics
 vjKernel* vjKernel::_instance = NULL;
 
@@ -57,7 +65,7 @@ void vjKernel::controlLoop(void* nullParam)
 
    // setup performance buffer
    perfBuffer = new vjPerfDataBuffer ("Kernel loop", 500, 8);
-   environmentManager->addPerfDataBuffer (perfBuffer);
+//**//   environmentManager->addPerfDataBuffer (perfBuffer);
 
    //while(!Exit)
    while (1)
@@ -81,11 +89,11 @@ void vjKernel::controlLoop(void* nullParam)
          mApp->postSync();        // POST SYNC: Do processing after drawing is complete
             perfBuffer->set (4);
       }
-      else
-      {
+      //else
+      //{
          // ??? Should we do this, or just grind up the CPU as fast as possible
          mControlThread->yield();   // Give up CPU
-      }
+      //}
 
       checkForReconfig();        // Check for any reconfiguration that needs done
 
@@ -214,10 +222,13 @@ void vjKernel::initConfig()
 
 
    // Setup initial environments.
+   if(mInitialChunkDB == NULL)            // We don't have a database.  Still need to init the sys though
+      loadConfigFile(std::string(""));
+
    initialSetupInputManager();
    initialSetupDisplayManager();
    setupEnvironmentManager();
-
+   
    configAdd(mInitialChunkDB);       // Add the initial configuration to the config queue
 
 #ifdef VJ_OS_SGI
@@ -226,8 +237,12 @@ void vjKernel::initConfig()
 #ifdef VJ_OS_Linux
    mSysFactory = vjSGISystemFactory::instance(); // HACK - this could be trouble, using SGI factory
 #else
+#ifdef WIN32
+   mSysFactory = vjWin32SystemFactory::instance();
+#else
    vjDEBUG (vjDBG_ERROR,0) << "ERROR!: Don't know how to create System Factory!\n" << vjDEBUG_FLUSH;
    vjASSERT(false);
+#endif
 #endif
 #endif
 
@@ -288,8 +303,8 @@ void vjKernel::processConfigAddQueue()
             added_chunk = mDisplayManager->configAdd(sorted_chunks[i]);
          if((mDrawManager != NULL) && (mDrawManager->configCanHandle(sorted_chunks[i])))   // drawMgr
             added_chunk = mDrawManager->configAdd(sorted_chunks[i]);
-         if(environmentManager->configCanHandle(sorted_chunks[i]))         // envMgr
-   	      added_chunk = environmentManager->configAdd(sorted_chunks[i]);
+//**//         if(environmentManager->configCanHandle(sorted_chunks[i]))         // envMgr
+//**//   	      added_chunk = environmentManager->configAdd(sorted_chunks[i]);
          if((mApp != NULL) && (mApp->configCanHandle(sorted_chunks[i])))   // App
             added_chunk = mApp->configAdd(sorted_chunks[i]);
 
@@ -316,7 +331,7 @@ void vjKernel::processConfigAddQueue()
    vjDEBUG(vjDBG_KERNEL,1) << (*getInputManager()) << endl << vjDEBUG_FLUSH;
 
    // Tell the environment manager to refresh
-   environmentManager->sendRefresh();
+//**//   environmentManager->sendRefresh();
 
    vjDEBUG_END(vjDBG_KERNEL,1) << "vjKernel: configAdd: Done adding\n\n" << vjDEBUG_FLUSH;
 }
@@ -355,8 +370,8 @@ void vjKernel::processConfigRemoveQueue()
             removed_chunk = mDisplayManager->configRemove(chunks[i]);
          if((mDrawManager != NULL) && (mDrawManager->configCanHandle(chunks[i])))   // drawMgr
             removed_chunk = mDrawManager->configRemove(chunks[i]);
-         if(environmentManager->configCanHandle(chunks[i]))                      // envMgr
-   	      removed_chunk = environmentManager->configRemove(chunks[i]);
+//**//         if(environmentManager->configCanHandle(chunks[i]))                      // envMgr
+//**//   	      removed_chunk = environmentManager->configRemove(chunks[i]);
          if((mApp != NULL) && (mApp->configCanHandle(chunks[i])))                // App
             removed_chunk = mApp->configRemove(chunks[i]);
 
@@ -383,7 +398,7 @@ void vjKernel::processConfigRemoveQueue()
    vjDEBUG_END(vjDBG_KERNEL,1) << "vjKernel: processConfigRemoveQueue: Exiting.\n" << vjDEBUG_FLUSH;
 
    // Tell the environment manager to refresh
-   environmentManager->sendRefresh();
+//**//   environmentManager->sendRefresh();
 }
 
 
@@ -430,13 +445,13 @@ bool vjKernel::configKernelRemove(vjConfigChunk* chunk)
 // --- STARTUP ROUTINES --- //
 void vjKernel::loadConfigFile(std::string filename)
 {
-   vjDEBUG(vjDBG_KERNEL,1) << "   vjKernel::loadConfigFile: " << filename << endl << vjDEBUG_FLUSH;
+   vjDEBUG(vjDBG_KERNEL,1) << "   vjKernel::loadConfigFile: " << filename.c_str() << endl << vjDEBUG_FLUSH;
 
    // ------ OPEN chunksDesc file ----- //
    char* vj_base_dir = getenv("VJ_BASE_DIR");
    if(vj_base_dir == NULL)
    {
-      vjDEBUG(vjDBG_ERROR,0) << "vjKernel::loadConfig: Env var VJ_BASE_DIR not defined.\n" << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_ERROR,0) << "vjKernel::loadConfig: Env var VJ_BASE_DIR not defined." << endl << vjDEBUG_FLUSH;
       exit(1);
    }
 
@@ -469,7 +484,7 @@ void vjKernel::loadConfigFile(std::string filename)
    {
       if (!mInitialChunkDB->load(filename.c_str()))
       {
-         vjDEBUG(vjDBG_ERROR,0) << "ERROR: vjKernel::loadConfig: DB Load failed to load file: " << filename << endl << vjDEBUG_FLUSH;
+         vjDEBUG(vjDBG_ERROR,0) << "ERROR: vjKernel::loadConfig: DB Load failed to load file: " << filename.c_str() << endl << vjDEBUG_FLUSH;
          exit(1);
       }
    }
@@ -533,7 +548,7 @@ void vjKernel::stopDrawManager()
 
 void vjKernel::setupEnvironmentManager()
 {
-   environmentManager = new vjEnvironmentManager();
+   //**//environmentManager = new vjEnvironmentManager();
 }
 
 vjUser* vjKernel::getUser(std::string userName)

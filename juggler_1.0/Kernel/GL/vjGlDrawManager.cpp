@@ -32,6 +32,9 @@
 #include <Input/vjGlove/vjGlove.h>
 #include <Input/InputManager/vjGloveProxy.h>
 
+#include <Kernel/GL/vjGlPipe.h>
+#include <Kernel/GL/vjGlWindow.h>
+
 vjGlDrawManager* vjGlDrawManager::_instance = NULL;
 
 
@@ -216,8 +219,8 @@ void vjGlDrawManager::addDisplay(vjDisplay* disp)
 //! POST: window for disp is removed from the draw manager and child pipes
 void vjGlDrawManager::removeDisplay(vjDisplay* disp)
 {
-   vjGlPipe*   pipe(NULL); // The pipe to remove it from
-   vjGlWindow* win(NULL);  // Window to remove
+   vjGlPipe* pipe;  pipe = NULL;
+   vjGlWindow* win; win = NULL;     // Window to remove
 
    for(int i=0;i<mWins.size();i++)
    {
@@ -342,7 +345,7 @@ void vjGlDrawManager::drawProjections(vjSimDisplay* sim)
    std::vector<vjDisplay*> disps = displayManager->getAllDisplays();
 
    vjVec3 apex, ur, lr, ul, ll;
-   vjProjection* proj(NULL);
+   vjProjection* proj; proj = NULL;
 
    for(int i=0;i<disps.size();i++)
    {
@@ -394,19 +397,19 @@ void vjGlDrawManager::drawProjections(vjSimDisplay* sim)
 //! NOTE: This is called internally by the library
 void vjGlDrawManager::drawSimulator(vjSimDisplay* sim)
 {
-   const float head_radius(0.60);      // 7.2 inches
-   const float eye_vertical(0.22);
-   const float eye_horizontal(0.7);
-   const float interoccular(0.27);
+   const float head_radius(0.60f);      // 7.2 inches
+   const float eye_vertical(0.22f);
+   const float eye_horizontal(0.7f);
+   const float interoccular(0.27f);
    const float eye_radius(0.08f);
 
    glPushAttrib( GL_ENABLE_BIT | GL_COLOR_BUFFER_BIT | GL_LIGHTING_BIT);
    {
    	//-----------------set up materials....
-   	float mat_ambient[] = {0.1, 0.1, 0.1, 1.0};
-   	float mat_shininess[] = {50.0};
-   	float mat_diffuse[] = {.7, .7, .7, 1.0};
-   	float mat_specular[] = {1.0, 1.0, 1.0, 1.0};
+   	float mat_ambient[] = {0.1f, 0.1f, 0.1f, 1.0f};
+   	float mat_shininess[] = {50.0f};
+   	float mat_diffuse[] = {.7f, .7f, .7f, 1.0f};
+   	float mat_specular[] = {1.0f, 1.0f, 1.0f, 1.0f};
    	//-----------------Call Materials.....
    	glMaterialfv(GL_FRONT, GL_AMBIENT, mat_ambient);
    	glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
@@ -438,7 +441,7 @@ void vjGlDrawManager::drawSimulator(vjSimDisplay* sim)
 
          //glEnable(GL_BLEND);
          //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-         glColor4f(0.5, 0.75, 0.90, 0.67f);
+         glColor4f(0.5f, 0.75f, 0.90f, 0.67f);
 	      drawSphere(head_radius, 10, 10);             // Head
          glDisable(GL_BLEND);
 
@@ -460,7 +463,7 @@ void vjGlDrawManager::drawSimulator(vjSimDisplay* sim)
       glPushMatrix();
 	      glMultMatrixf(sim->getWandPos().getFloatPtr());
 	      glColor3f(0.0f, 1.0f, 0.0f);
-	      drawCone(0.2, 0.6f, 6, 1);
+	      drawCone(0.2f, 0.6f, 6.0f, 1.0f);
       glPopMatrix();
 
        // Draw a The display surfaces
@@ -586,10 +589,10 @@ void vjGlDrawManager::drawGlove(vjGloveProxy* gloveProxy)
    //glPushAttrib( GL_ENABLE_BIT | GL_LIGHTING_BIT );
    {
       //-----------------set up materials....
-      float mat_ambient[] = {0.1, 0.1, 0.1, 1.0};
-      float mat_shininess[] = {50.0};
-      float mat_diffuse[] = {.7, .7, .7, 1.0};
-      float mat_specular[] = {1.0, 1.0, 1.0, 1.0};
+      float mat_ambient[] = {0.1f, 0.1f, 0.1f, 1.0f};
+      float mat_shininess[] = {50.0f};
+      float mat_diffuse[] = {.7f, .7f, .7f, 1.0f};
+      float mat_specular[] = {1.0f, 1.0f, 1.0f, 1.0f};
       //-----------------Call Materials.....
       glMaterialfv(GL_FRONT, GL_AMBIENT, mat_ambient);
       glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);

@@ -29,7 +29,7 @@
 #ifndef _VJ_THREAD_KEY_WIN_32_H_
 #define _VJ_THREAD_KEY_WIN_32_H_
 
-#include <iostream.h>
+#include <iostream>
 #include <sys/types.h>
 
 #include <Threads/vjThreadFunctor.h>

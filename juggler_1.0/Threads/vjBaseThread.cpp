@@ -38,7 +38,9 @@ ostream& operator<<(ostream& out, vjBaseThread* threadPtr)
 
 //: After the object has been created, call this routine to complete initialization.
 // Done this way, because I need to call this based on stuff that happens
-// in derived class's constructor
+// in derived class's constructor... and that means what???
+//! PRE: The thread manager should be lock()'ed before calling this function so that the
+//+       addThread function can execute correctly
 //! POST: Thread is setup correctly to run
 //+       The thread has been registered with the system
 //! ARGS: successfulCreation - Did the thread get created correctly
@@ -50,5 +52,7 @@ void vjBaseThread::registerThread(bool succesfulCreation)
       vjThreadManager::instance()->addThread(this);      // Add the thread to the table
    }
    else
-      mThreadId = -1;
+   {
+      mThreadId = -1;      // We have an invalid thread
+   }
 }

@@ -59,7 +59,7 @@ public:
          return new_proxy;
       else                 // Failed
       {
-         delete new_proxy;
+  //XXX//       delete new_proxy;
          return NULL;
       }
    }
