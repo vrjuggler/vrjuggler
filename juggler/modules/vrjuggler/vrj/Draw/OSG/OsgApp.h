@@ -303,13 +303,8 @@ inline void OsgApp::draw()
    vprASSERT(drawMan != NULL);
    GlUserData* userData = drawMan->currentUserData();
 
-   // Copy the matrix
-   Projection* project = userData->getProjection();
-   const float* vj_proj_view_mat = project->getViewMatrix().mData;
-   osg::RefMatrix* osg_proj_xform_mat = new osg::RefMatrix;
-   osg_proj_xform_mat->set( vj_proj_view_mat );
-
    //Get the frustrum
+   Projection* project = userData->getProjection();
    Frustum frustum = project->getFrustum();
    sv->setProjectionMatrixAsFrustum(frustum[Frustum::VJ_LEFT],
                                     frustum[Frustum::VJ_RIGHT],
@@ -318,7 +313,8 @@ inline void OsgApp::draw()
                                     frustum[Frustum::VJ_NEAR],
                                     frustum[Frustum::VJ_FAR]);
 
-   sv->setViewMatrix(*osg_proj_xform_mat);
+   // Copy the view matrix
+   sv->setViewMatrix(osg::Matrix(project->getViewMatrix().mData));
 
    //Draw the scene
    sv->update();
