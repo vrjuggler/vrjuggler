@@ -7,6 +7,7 @@
 SHELL		= /bin/sh
 
 bindir		= @bindir@
+headerdir	= @headerdir@
 datadir		= @datadir@
 exec_prefix	= @exec_prefix@
 includedir	= @includedir@
@@ -62,6 +63,25 @@ SUBDIRS		= Math Config Kernel Input SharedMem Sync Threads
 default: dbg
 
 all: dbg opt dso ddso
+
+install: install-dbg
+
+install-dbg: dbg install-recursive
+	${top_srcdir}/mkinstalldirs ${libdir}
+	cp ${DBG_BUILDDIR}/${LIBRARY}.a ${libdir}
+
+install-opt: opt install-recursive
+	${top_srcdir}/mkinstalldirs ${libdir}
+	cp ${OPT_BUILDDIR}/${LIBRARY}.a ${libdir}
+
+install-ddso: ddso install-recursive
+	${top_srcdir}/mkinstalldirs ${libdir}
+	cp ${DBG_BUILDDIR}/${LIBRARY}.a ${libdir}
+
+install-dso: dso install-recursive
+	${top_srcdir}/mkinstalldirs ${libdir}
+	cp ${OPT_BUILDDIR}/${LIBRARY}.a ${libdir}
+  	
 
 all-recursive install-recursive dbg-recursive opt-recursive		\
 dso-recursive ddso-recursive obj-recursive depend-recursive		\
@@ -157,25 +177,25 @@ clean: clean-recursive
 	@if test -d ${DBG_BUILDDIR}; then			\
             echo "Cleaning in ${DBG_BUILDDIR} ...";	\
             cd ${DBG_BUILDDIR};				\
-            rm -f *.o core so_locations;		\
-	    rm -rf ./ii_files;				\
+            -rm -f *.o core so_locations;		\
+	    -rm -rf ./ii_files;				\
         fi
 	@if test -d $OPT_BUILDDIR; then			\
             echo "Cleaning in ${OPT_BUILDDIR} ...";	\
             cd ${OPT_BUILDDIR};				\
-            rm -f *.o core so_locations;		\
-	    rm -rf ./ii_files;				\
+            -rm -f *.o core so_locations;		\
+	    -rm -rf ./ii_files;				\
         fi
 	rm -f so_locations
 
 clobber: clean
 	@if test -d ${DBG_BUILDDIR}; then			\
             echo "Removing ${DBG_BUILDDIR} ...";		\
-            rm -rf ${DBG_BUILDDIR};			\
+            -rm -rf ${DBG_BUILDDIR};			\
         fi
 	@if test -d ${OPT_BUILDDIR}; then			\
             echo "Removing ${OPT_BUILDDIR} ...";		\
-            rm -rf ${OPT_BUILDDIR};			\
+            -rm -rf ${OPT_BUILDDIR};			\
         fi
 
 info::
