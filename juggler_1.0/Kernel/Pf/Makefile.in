@@ -2,7 +2,6 @@
 # Makefile.in for juggler/Kernel/Pf.  It requires GNU make.
 # $Id$
 # -----------------------------------------------------------------------------
-
 default: all
 
 # Include common definitions.
@@ -44,7 +43,7 @@ all dbg opt dso ddso obj: beforebuild ${PF_OBJECTS}
 
 beforebuild:
 ifeq (${PF_API}, Y)
-	${scriptdir}/mkinstalldirs ${OBJDIR}
+	@${scriptdir}/mkinstalldirs ${OBJDIR}
 endif
 
 # -----------------------------------------------------------------------------
