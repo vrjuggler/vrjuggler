@@ -238,11 +238,11 @@ protected:
    vpr::CondVar       mExitWaitCondVar;         /**< Cond var for waiting for exit */
 
    /// Factories and Managers
-   cluster::ClusterManager*   mClusterManager;        /**< The Cluster Manager for the system*/
    gadget::InputManager*      mInputManager;          /**< The input manager for the system  */
    DrawManager*               mDrawManager;           /**< The Draw Manager we are currently using */
    SoundManager*              mSoundManager;          /**< The Audio Manager we are currently using  */
    DisplayManager*            mDisplayManager;        /**< The Display Manager we are currently using */
+   cluster::ClusterManager*   mClusterManager;        /**< The Cluster Manager for the system*/
 
    /// Multi-user information
    std::vector<vrj::User*>   mUsers;         /** A list of user objects in system */
