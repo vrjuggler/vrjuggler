@@ -12,12 +12,12 @@ function openNewWindow( size, address, target, width, height )
 	
 	else if (size == 'minimal')
 	{
-		window.open( address,target,'width='+width+',height='+height+',status=0,location=0,resizeable=yes,toolbar=no' );
+		window.open( address,target,'width='+width+',height='+height+',status=1,location=0,resizeable=yes,toolbar=no' );
    	} 
 	
 	else if (size == 'medium')
 	{
-		window.open( address,target,'width='+width+',height='+height+',status=0,location=0,resizeable=yes,toolbar=yes' );
+		window.open( address,target,'width='+width+',height='+height+',status=1,location=0,resizeable=yes,toolbar=yes' );
    	} 
    
    
