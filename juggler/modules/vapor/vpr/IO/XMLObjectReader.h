@@ -59,10 +59,11 @@
 namespace vpr
 {
 
-/** Object reader that reads out of a data buffer
-*
-* @todo: Add smart buffering for type sizes
-*/
+/**
+ * Object reader that reads out of a data buffer.
+ *
+ * @todo Add smart buffering for type sizes.
+ */
 class VPR_CLASS_API XMLObjectReader : public ObjectReader
 {
 public:
@@ -70,7 +71,7 @@ public:
 
    XMLObjectReader(cppdom::NodePtr rootNode);
 
-   /** @name Tag and attribute handling */
+   /** @name Tag and attribute handling. */
    //@{
    /** Starts a new section/element of name tagName.
    */
@@ -79,10 +80,10 @@ public:
    /** Ends the most recently named tag. */
    virtual vpr::ReturnStatus endTag();
 
-   /** Starts an attribute of the name attributeName */
+   /** Starts an attribute of the name attributeName. */
    virtual vpr::ReturnStatus beginAttribute(std::string attributeName);
 
-   /** Ends the most recently named attribute */
+   /** Ends the most recently named attribute. */
    virtual vpr::ReturnStatus endAttribute();
    //@}
 
@@ -122,21 +123,24 @@ public:
 
 protected:
    enum CurSource
-   { AttribSource, /**< We are currently targetting an attribute */
-     CdataSource /**< We are currently targetting cdata */
-    };
+   {
+      AttribSource, /**< We are currently targetting an attribute. */
+      CdataSource   /**< We are currently targetting cdata. */
+   };
 
-    /** Get the current string source we are reading from.
-    */
+    /** Gets the current string source we are reading from. */
     std::stringstream* getCurSource();
 
-    /** Initialize the members based on a serialized version of something in the data buffer */
+    /**
+     * Initializes the members based on a serialized version of something in
+     * the data buffer.
+     */
     void initCppDomTree(std::vector<vpr::Uint8> data);
 
     void debugDumpStack(int debug_level);
 
 protected:
-   /** State to keep at each level of recursion */
+   /** State to keep at each level of recursion. */
    struct NodeState
    {
       NodeState(cppdom::Node* cur_node=NULL);
@@ -154,9 +158,9 @@ protected:
    };
 
 protected:
-   /* cppdom nodes
-   * When constructed, these are both null.
-   */
+   /* cppdom nodes.
+    * When constructed, these are both null.
+    */
    cppdom::NodePtr         mRootNode;        /**< Base node of the tree */
    std::vector<NodeState>  mCurNodeStack;    /**< Stack of current nodes we are examining recursively */
    std::stringstream       mAttribSource;    /**< Source of attribute data */
@@ -174,4 +178,3 @@ protected:
 } // namespace vpr
 
 #endif
-
