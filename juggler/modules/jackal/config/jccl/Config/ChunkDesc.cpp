@@ -177,7 +177,7 @@ void ChunkDesc::setDefaultChunk (DOM_Node* n) {
 ConfigChunkPtr ChunkDesc::getDefaultChunk() const {
     // thread safety???
     if ((default_chunk.get() == 0) && (default_node != 0)) {
-        XMLConfigIOHandler* handler = (XMLConfigIOHandler*)ConfigIO::instance()->getHandler(ConfigIO::XML_HANDLER);
+        XMLConfigIOHandler* handler = (XMLConfigIOHandler*)ConfigIO::instance()->getHandler();
         ConfigChunkPtr ch = handler->buildConfigChunk (*default_node, false);
         if (ch.get()) {
             // this is a cheat.  and ugly cuz we have to get the real pointer,
@@ -226,52 +226,8 @@ JCCL_IMPLEMENT(std::ostream&) operator << (std::ostream& out,
                                          const ChunkDesc& self)
 {
     self.assertValid();
-
-    out << self.token.c_str() << " \"" << self.name.c_str() << "\" \"" 
-        << self.help.c_str() << '"' << std::endl;
-    for (unsigned int i = 0; i < self.plist.size(); i++)
-        out << "  " << *(self.plist[i]) << std::endl;
-    out << "  end" << std::endl;
+    ConfigIO::instance()->writeChunkDesc (out, self);
     return out;
-}
-
-
-JCCL_IMPLEMENT(std::istream&) operator >> (std::istream& in, ChunkDesc& self)
-{
-    self.assertValid();
-
-    const int buflen = 512;
-    char str[buflen];
-    PropertyDesc *p;
-    
-    readString (in, str, buflen);
-    self.token = str;
-
-    readString (in, str, buflen);
-    self.name = str;
-
-    readString (in, str, buflen);
-    self.help = str;
-
-    for (unsigned int i = 0; i < self.plist.size(); i++) {
-        delete self.plist[i];
-    }
-    self.plist.clear();
-    
-    // this could use improvement
-    do {
-        p = new PropertyDesc();
-        in >> *p;
-        if (!vjstrcasecmp (p->getToken(),std::string("end"))) {
-            delete p;
-            break;
-        }
-        self.add(p);
-    } while (!in.eof());
-    
-    if (!self.getPropertyDesc ("name"))
-        self.plist.insert (self.plist.begin(), new PropertyDesc("name",1,T_STRING," "));
-    return in;
 }
 
 

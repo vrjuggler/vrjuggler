@@ -173,17 +173,6 @@ public:
 
 
 
-    //: reads a value from in
-    //!POST: the value of self is changed based on what is
-    //+      read from in.
-    //!RETURNS: in - the input stream
-    //!ARGS: in - a valid input stream
-    //!ARGS: self - a valid ConfigChunk
-    friend JCCL_API(std::istream&) operator >> (std::istream& in,
-                                              ConfigChunk& self);
-
-
-
     //: Returns the name of a chunk's type.
     //!RETURNS: s - a C string containing the token for this
     //+          chunk's ChunkDesc.

@@ -39,6 +39,7 @@
 #include <jccl/Config/EnumEntry.h>
 #include <jccl/Config/ParseUtil.h>
 #include <jccl/Config/ConfigTokens.h>
+#include <jccl/Config/ConfigIO.h>
 #include <jccl/Util/Debug.h>
 #include <vpr/Util/Assert.h>
 
@@ -210,31 +211,7 @@ EnumEntry* Property::getEnumEntryWithValue (int val) const {
 std::ostream& operator << (std::ostream &out, Property& p) {
     p.assertValid();
 
-    out << p.getToken().c_str() << " { ";
-    for (unsigned int i = 0; i < p.value.size(); i++) {
-        VarValue *v = ((p.value))[i];
-
-        if ((p.type == T_STRING) || (p.type == T_CHUNK)) {
-            out << '"' << *v << '"';
-        }
-        else if (p.type == T_EMBEDDEDCHUNK) {
-            out << "\n" << *v;
-        }
-        else if ((p.type == T_FLOAT) || (p.type == T_BOOL)) {
-            out << *v;
-        }
-        else {
-            EnumEntry *e = p.getEnumEntryWithValue((int)(*v));
-            if (e)
-                out << '"' << e->getName().c_str() << '"';
-            else
-                out << *v;
-        }
-        out << " ";
-    }
-    if (p.type == T_DISTANCE)
-        out << " " << unitString (p.units);
-    out << " } ";
+    ConfigIO::instance()->writeProperty (out, p);
     return out;
 }
 

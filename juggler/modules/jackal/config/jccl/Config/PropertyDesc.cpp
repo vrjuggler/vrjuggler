@@ -37,6 +37,7 @@
 #include <jccl/Util/Debug.h>
 #include <vpr/Util/Assert.h>
 #include <jccl/Config/ConfigTokens.h>
+#include <jccl/Config/ConfigIO.h>
 
 namespace jccl {
    
@@ -167,118 +168,10 @@ EnumEntry* PropertyDesc::getEnumEntryWithValue (const VarValue& val) const {
 
 std::ostream& operator << (std::ostream& out, const PropertyDesc& self) {
     self.assertValid();
-
-    out << self.token.c_str() << " " << typeString(self.type) << " "
-        << self.num << " \"" << self.name.c_str() << "\"";
-
-    /* print valuelabels if we have 'em */
-    if (self.valuelabels.size() > 0) {
-        EnumEntry *e;
-        out << " vj_valuelabels { ";
-        for (unsigned int i = 0; i < self.valuelabels.size(); i++) {
-            e = self.valuelabels[i];
-            out << '"' << e->getName().c_str() << "\" ";
-        }
-        out << "}";
-    }
-
-    /* print enumeration only if we have values. */
-    if (self.enumv.size() > 0) {
-        out << " vj_enumeration { ";
-        for (unsigned int i = 0; i < self.enumv.size(); i++)
-            out << *(self.enumv[i]) << ' ';
-        out << "}";
-    }
-
-    /* print help string - always quoted. */
-    out << " \"" << self.help.c_str() << '"';
+    ConfigIO::instance()->writePropertyDesc (out, self);
     return out;
 }
 
-
-
-std::istream& operator >> (std::istream& in, PropertyDesc& self) {
-    self.assertValid();
-
-
-    const int size = 512;
-    char str[size];
-
-    const char equal_TOKEN[] = "=";
-
-    /* format of line is: name type size { enums/chunktypes } token. */
-
-    readString (in, str, size);
-    //cout << "read propertydesc token " << str << endl;
-    self.token = str;
-    if (!strcasecmp (str, end_TOKEN))
-        return in;
-
-    self.type = readType(in);
-    in >> self.num;
-    readString (in,str,size);
-
-    self.name = str;
-
-    readString (in, str, size);
-
-    /* parsing value labels, if there are any */
-    if (!strcasecmp (str, vj_valuelabels_TOKEN)) {
-        //cout << "reading valuelabels" << endl;
-        readString (in,str,size);
-        if (strcasecmp (str, lbrace_TOKEN))
-            vprDEBUG(vprDBG_ERROR,1) << clrOutNORM(clrRED, "ERROR:") << " expected '{'" << std::endl
-                                   << vprDEBUG_FLUSH;
-
-        EnumEntry *e;
-        readString (in, str, size);
-        while (strcasecmp (str, rbrace_TOKEN) && !in.eof()) {
-            e = new EnumEntry (str, T_STRING);
-            self.valuelabels.push_back (e);
-            readString (in, str, size);
-        }
-        readString (in, str, size);
-    }
-
-    /* parsing enumerations, if there are any */
-    if (!strcasecmp (str, vj_enumeration_TOKEN))
-        readString (in, str, size);
-    if (!strcasecmp (str, lbrace_TOKEN)) {
-        //cout << "parsing enumerations" << endl;
-        int i = 0;
-        readString (in, str, size);
-        while (strcmp (str, rbrace_TOKEN) && !in.eof()) {
-            VarValue *v;
-            // this is slightly kludgey.  We make a varvalue to store the enumeration
-            // value... except for T_CHUNK and T_EMBEDDEDCHUNK where we store a chunk
-            // name type...
-            if ((self.type == T_CHUNK) || (self.type == T_EMBEDDEDCHUNK))
-                v = new VarValue (T_STRING);
-            else
-                v = new VarValue (self.type);
-
-            char* c = strstr (str, equal_TOKEN);
-            if (c) {
-                *c = '\0';
-                *v = (c+1);
-            }
-            else {
-                if (self.type == T_STRING || self.type == T_CHUNK ||
-                    self.type == T_EMBEDDEDCHUNK)
-                    *v = str;
-                else
-                    *v = i++;
-            }
-            self.enumv.push_back (new EnumEntry (str, *v));
-            delete v;
-            readString (in, str, size);
-        }
-        readString (in, str, size);
-    }
-    self.help = str;
-
-    return in;
-}
 
 
 PropertyDesc& PropertyDesc::operator= (const PropertyDesc& pd) {

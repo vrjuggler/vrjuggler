@@ -277,76 +277,16 @@ int ConfigChunkDB::dependencySort(ConfigChunkDB* auxChunks)
 /* IO functions: */
 
 std::ostream& operator << (std::ostream& out, const ConfigChunkDB& self) {
-    for (unsigned int i = 0; i < self.chunks.size(); i++) {
-        out << *(self.chunks[i]) << std::endl;
-    }
-    out << "End" << std::endl;
+    ConfigIO::instance()->writeConfigChunkDB (out, self);
     return out;
 }
 
 
 
 std::istream& operator >> (std::istream& in, ConfigChunkDB& self) {
-
-    const int bufsize = 512;
-    char str[bufsize];
-    ConfigChunkPtr ch;
-
-    do {
-        if (!readString (in, str, bufsize))
-            break; /* eof */
-        if (!strcasecmp (str, end_TOKEN))
-            break;
-
-        std::string newstr = str;
-        ch = ChunkFactory::instance()->createChunk (newstr);
-        if (ch.get() == NULL) {
-            vprDEBUG(vprDBG_ERROR,0) << clrOutNORM(clrRED, "ERROR:") << " Unknown Chunk type: " << str << std::endl
-                                   << vprDEBUG_FLUSH;
-            // skip to end of chunk
-            while (strcasecmp (str, end_TOKEN)) {
-                if (0 == readString (in, str, bufsize))
-                    break;
-                //std::cerr << "read " << str << std::endl;
-            }
-        }
-        else {
-            in >> *ch;
-
-            //std::cerr << "read chunk: " << *ch << std::endl;
-
-            if (!vjstrcasecmp (ch->getType(), "vjIncludeFile")) {
-                std::string s = ch->getProperty ("Name");
-                //vjConfigChunkDB newdb;
-                std::string fname = self.getFileName();
-                self.load (s, fname);
-                // load changes the filename, so reset it.
-                self.setFileName(fname);
-            }
-            else if (!vjstrcasecmp (ch->getType(), "vjIncludeDescFile")) {
-                // the descs could be needed by everybody else in this file,
-                // so load 'em now...
-                std::string s = ch->getProperty ("Name");
-                ChunkDescDB newdb;
-                newdb.load (s, self.file_name);
-                ChunkFactory::instance()->addDescs (&newdb);
-            }
-            else {
-                // just a plain old chunk to add in...
-                self.addChunk(ch);
-            }
-        }
-    } while (!in.eof());
-
-    vprDEBUG(jcclDBG_CONFIG,3) << "ConfigChunkDB::>> : Finished - "
-                            << self.chunks.size() << " chunks read."
-                            << std::endl << vprDEBUG_FLUSH;
-
+    ConfigIO::instance()->readConfigChunkDB (in, self);
     return in;
 }
-
-
-
 
 
 
@@ -363,16 +303,21 @@ bool ConfigChunkDB::load (const std::string& filename, const std::string& parent
 
 
 
-bool ConfigChunkDB::save (const std::string& fname) const {
+bool ConfigChunkDB::save (const std::string& file_name) const {
 
-    std::ofstream out(fname.c_str());
-    if (!out) {
-        vprDEBUG(vprDBG_ERROR,1) << clrOutNORM(clrRED, "ERROR:") << " ConfigChunkDB::save() - Unable to open file '"
-                               << fname.c_str() << "'\n" << vprDEBUG_FLUSH;
-        return false;
+    vprDEBUG(jcclDBG_CONFIG,3) << "ConfigChunkDB::save(): saving file " << file_name.c_str() << " -- " << vprDEBUG_FLUSH;    
+    bool retval = ConfigIO::instance()->writeConfigChunkDB (file_name, *this);
+    if (retval) {
+        vprDEBUG(jcclDBG_CONFIG,3)
+            << " finished.\n" << vprDEBUG_FLUSH;
     }
-    out << *this;
-    return true;
+    else {
+        vprDEBUG(vprDBG_ERROR,1)
+            << clrOutNORM(clrRED, "ERROR:") << " ConfigChunkDB::save() - "
+            << "Unable to open file '"
+            << file_name.c_str() << "'\n" << vprDEBUG_FLUSH;
+    }
+    return retval;
 }
 
 
