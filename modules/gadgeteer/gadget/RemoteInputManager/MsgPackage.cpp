@@ -68,11 +68,11 @@ void MsgPackage::sendAndClear(vpr::SocketStream& sock_stream){
 
 // creates a device request message with the specified id and name
 
-void MsgPackage::createDeviceRequest(ushort device_id, const std::string device_name){            
-   ushort code = MSG_DEVICE_REQ;  // stands for Device Request
+void MsgPackage::createDeviceRequest(vpr::Uint16 device_id, const std::string device_name){            
+   vpr::Uint16 code = MSG_DEVICE_REQ;  // stands for Device Request
    code = htons(code);
    char code_str[2];
-   ushort net_device_id = htons(device_id);
+   vpr::Uint16 net_device_id = htons(device_id);
    char device_id_str[2];
    ushortTo2Bytes(code_str, code);
    ushortTo2Bytes(device_id_str, net_device_id);
@@ -100,12 +100,12 @@ void MsgPackage::createDeviceRequest(ushort device_id, const std::string device_
 
 // creates a device acknowledgement message with the specified id and name
 
-void MsgPackage::createDeviceAck(const ushort remote_device_id, const ushort local_device_id, const std::string device_name){
-   ushort code = MSG_DEVICE_ACK;  // stands for Device Acknowledgement
+void MsgPackage::createDeviceAck(const vpr::Uint16 remote_device_id, const vpr::Uint16 local_device_id, const std::string device_name){
+   vpr::Uint16 code = MSG_DEVICE_ACK;  // stands for Device Acknowledgement
    code = htons(code);
    char code_str[2];
-   ushort net_local_device_id = htons(local_device_id);        // sender id
-   ushort net_remote_device_id = htons(remote_device_id);      // receiver id
+   vpr::Uint16 net_local_device_id = htons(local_device_id);        // sender id
+   vpr::Uint16 net_remote_device_id = htons(remote_device_id);      // receiver id
    char remote_device_id_str[2];
    char local_device_id_str[2];
    ushortTo2Bytes(code_str, code);   
@@ -124,12 +124,12 @@ void MsgPackage::createDeviceAck(const ushort remote_device_id, const ushort loc
 // creates a rejection (negative acknowledgement) message with the specified id and name
 // for simplicity, same as ACK, but with different opcode
 
-void MsgPackage::createDeviceNack(const ushort remote_device_id, const ushort local_device_id, const std::string device_name){
-   ushort code = MSG_DEVICE_NACK;  // stands for Negative Device Acknowledement
+void MsgPackage::createDeviceNack(const vpr::Uint16 remote_device_id, const vpr::Uint16 local_device_id, const std::string device_name){
+   vpr::Uint16 code = MSG_DEVICE_NACK;  // stands for Negative Device Acknowledement
    code = htons(code);
    char code_str[2];
-   ushort net_local_device_id = htons(local_device_id);        // sender id
-   ushort net_remote_device_id = htons(remote_device_id);      // receiver id
+   vpr::Uint16 net_local_device_id = htons(local_device_id);        // sender id
+   vpr::Uint16 net_remote_device_id = htons(remote_device_id);      // receiver id
    char remote_device_id_str[2];
    char local_device_id_str[2];
    ushortTo2Bytes(code_str, code);
@@ -251,7 +251,7 @@ int MsgPackage::receiveDeviceAck(char* ptr, int len){
 
 // creates a clock sync message containing two times
 void MsgPackage::createClockSync(const float& time_a, const float& time_b, const bool clock_is_synced){
-   ushort code = MSG_CLOCK_SYNC;
+   vpr::Uint16 code = MSG_CLOCK_SYNC;
    code = htons(code);
    ushortTo2Bytes(&(mBuffer[0]), code);
    floatTo4Bytes(&(mBuffer[2]), vj_htonf(time_a) );
@@ -276,7 +276,7 @@ int MsgPackage::receiveClockSync(char* ptr, int len, float& time_a, float& time_
 
 // creates a message with a Manager id, and whether we have it or not
 void MsgPackage::createClockSyncHaveSrc(const vpr::GUID& id, const bool clock_is_synced){
-   ushort code = MSG_CLOCK_SRC;
+   vpr::Uint16 code = MSG_CLOCK_SRC;
    code = htons(code);
    ushortTo2Bytes(&(mBuffer[0]), code);
    std::string id_str(id.toString()); 
