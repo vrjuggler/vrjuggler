@@ -4,8 +4,9 @@
 #define IAUDIOJUGGLER_H
 
 #include <string>
-#include "ajSoundInfo.h"
-#include "ajSoundAPIInfo.h"
+#include "aj/ajSoundInfo.h"
+#include "aj/ajSoundAPIInfo.h"
+#include "aj/ajMatrix44.h"
 
 /** @interface*/
 class IAudioJuggler
@@ -37,7 +38,7 @@ public:
     * when listener moves...
     * or is the sound positional - changes volume as listener nears or retreats..
     */
-   void setAmbient( const std::string& alias, bool setting = false ) = 0;
+   virtual void setAmbient( const std::string& alias, bool setting = false ) = 0;
 
    /**
     * @semantics stop the sound
@@ -91,7 +92,7 @@ public:
 
    virtual void changeAPI( const std::string& apiName ) = 0;
    
-   virtual void configure( ajSoundAPIInfo& sai ) = 0;
+   virtual void configure( const ajSoundAPIInfo& sai ) = 0;
 
    /**
      * configure/reconfigure a sound

@@ -4,6 +4,8 @@
 #define SOUND_INFO_DATA
 #include <string>
 
+//#include "aj/ajMatrix44.h"
+
 /**
  * info struct that describes one sound entry.
  */
@@ -11,7 +13,7 @@ struct ajSoundInfo
 {
    ajSoundInfo() : ambient( true ), isPlaying( false ), datasource( FILESYSTEM ), repeat( 1 ), repeat_countdown( 0 ), data(), filename()
    {
-      position.makeIdent();
+      //position.makeIdent();
    }
    std::string alias;
 
@@ -25,7 +27,7 @@ struct ajSoundInfo
    std::string filename;
    std::string data; // TODO: i'll probably want to double buffer this...
 
-   ajMatrix44 position;
+   float position[3];
    
    bool ambient;  // is the sound ambient (true) or positional (false)?
    

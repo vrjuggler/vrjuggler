@@ -3,9 +3,10 @@
 #ifndef AJSOUNDFACTORY_H
 #define AJSOUNDFACTORY_H
 #include <string>
-#include "ajSoundImplementation.h"
+#include "aj/ajSingleton.h"
+#include "aj/ajSoundImplementation.h"
 
-class ajSoundFactory
+class ajSoundFactory : public aj::Singleton<ajSoundFactory>
 {
 public:
 
@@ -15,8 +16,16 @@ public:
     * @postconditions if apiName is not known, then a stub implementation is returned
     * @semantics factory function used to create an implementation of a sound API 
     */
-   static void createImplementation( const std::string& apiName,
+   void createImplementation( const std::string& apiName,
                               ajSoundImplementation* &mImplementation );
+
+   // pass NULL to unregister/delete an API...
+   void reg( const std::string& apiName, ajSoundImplementation* impl )
+   {
+      mRegisteredImplementations[apiName] = impl;
+   }
+   
+   std::map< std::string, ajSoundImplementation* > mRegisteredImplementations;
 private:  
    /** @link dependency */
    /*#  ajSoundImplementation lnkSoundImplementation; */
@@ -30,4 +39,21 @@ private:
    /** @link dependency */
    /*#  ajOpenALSoundImplementation lnkajOpenALSoundImplementation; */
 };
+
+template <class _type>
+class ajSoundFactoryReg
+{
+public:
+   _type mSoundAPI;
+   std::string mNameOfAPI;
+   ajSoundFactoryReg( const std::string& apiName ) : mNameOfAPI( apiName ), mSoundAPI()
+   {
+      ajSoundFactory::instance().reg( mNameOfAPI, &mSoundAPI );
+   }
+   virtual ~ajSoundFactoryReg()
+   {
+      ajSoundFactory::instance().reg( mNameOfAPI, NULL );
+   }   
+};
+
 #endif //AJSOUNDFACTORY_H

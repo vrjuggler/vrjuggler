@@ -5,12 +5,12 @@
 
 #include <string>
 #include <vector>
-#include "ajSoundImplementation.h"
-#include "ajSoundInfo.h"
+#include "aj/ajSoundImplementation.h"
+#include "aj/ajSoundInfo.h"
 
 #include <AL/al.h>
 #include <AL/alc.h>
-#include "ajSoundAPIInfo.h"
+#include "aj/ajSoundAPIInfo.h"
 
 class ajOpenALSoundImplementation : public ajSoundImplementation
 {
@@ -26,6 +26,17 @@ public:
     */
    virtual ~ajOpenALSoundImplementation();
 
+   /**
+     * every implementation can return a new copy of itself
+     */
+   virtual void clone( ajSoundImplementation* &newCopy )
+   {
+      newCopy = new ajOpenALSoundImplementation;
+      
+      // copy state, so that we return a true "clone"
+      newCopy->copy( *this );
+   }
+   
    /**
     * @input alias of the sound to trigger, and number of times to play
     * @preconditions alias does not have to be associated with a loaded sound.
@@ -50,7 +61,7 @@ public:
     * when listener moves...
     * or is the sound positional - changes volume as listener nears or retreats..
     */
-   void setAmbient( const std::string& alias, bool setting = false )
+   virtual void setAmbient( const std::string& alias, bool setting = false )
    {
    }
 
@@ -85,7 +96,7 @@ public:
    /**
     * get the position of the listener
     */
-   virtual void getListenerPosition( ajMatrix44& mat ) const;
+   virtual void getListenerPosition( ajMatrix44& mat );
    
 public:
    /**

@@ -2,6 +2,8 @@
 #ifndef VEC3__INCLUDED
 #define VEC3__INCLUDED
 
+#include "aj/ajMath.h"
+
 class ajVec3
 {
 public:
@@ -18,7 +20,7 @@ public:
    float             dot( const ajVec3& vec ) const;
    float             lengthSquared() const;
    float             length() const;
-   float             normalize();
+   void              normalize();
    
    ajVec3&             operator*=( const float& value );
    ajVec3&             operator/=( const float& value );
@@ -109,19 +111,17 @@ inline float ajVec3::lengthSquared() const
 //  Return the length. (kev::SQRT of dot product)
 inline float ajVec3::length() const
 {
-   return kev::SQRT( this->lengthSquared() );
+   return ajMath::sqrt( this->lengthSquared() );
 }
 
-//  Normalize, return the length prior to normalization.
-inline float ajVec3::normalize()
+//  Normalize
+inline void ajVec3::normalize()
 {
    float invLength = 1.0f / this->length();
 
    mData[0] *= invLength;
    mData[1] *= invLength;
    mData[2] *= invLength;
-
-   return length;
 }
 
 //  Multiply all the components by the value.

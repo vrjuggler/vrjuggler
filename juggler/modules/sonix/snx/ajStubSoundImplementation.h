@@ -3,9 +3,9 @@
 #ifndef AJSTUBSOUNDIMPLEMENTATION_H
 #define AJSTUBSOUNDIMPLEMENTATION_H
 #include <string>
-#include "ajSoundImplementation.h"
-#include "ajSoundInfo.h"
-#include "ajSoundAPIInfo.h"
+#include "aj/ajSoundImplementation.h"
+#include "aj/ajSoundInfo.h"
+#include "aj/ajSoundAPIInfo.h"
 class ajStubSoundImplementation : public ajSoundImplementation
 {
 public:
@@ -21,6 +21,17 @@ public:
    {
    }
 
+   /**
+     * every implementation can return a new copy of itself
+     */
+   virtual void clone( ajSoundImplementation* &newCopy )
+   {
+      newCopy = new ajStubSoundImplementation;
+      
+      // copy state, so that we return a true "clone"
+      newCopy->copy( *this );
+   }
+   
    /**
     * @input alias of the sound to trigger, and number of times to play
     * @preconditions alias does not have to be associated with a loaded sound.
@@ -72,7 +83,7 @@ public:
    /**
     * get the position of the listener
     */
-   virtual void getListenerPosition( ajMatrix44& mat ) const
+   virtual void getListenerPosition( ajMatrix44& mat )
    {
       ajSoundImplementation::getListenerPosition( mat );
    }
