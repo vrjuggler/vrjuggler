@@ -40,5 +40,11 @@
     tools
         ethereal
         ..
+        serial
+            fobtest
+            ..
+            pinchtest
+            ..
+        ..
     ..
 ..
