@@ -125,7 +125,7 @@
 				RelativePath="..\..\..\modules\gadgeteer\drivers\Intersense\IntersenseAPI\IntersenseAPIStandalone.cpp">
 			</File>
 			<File
-				RelativePath="..\..\..\modules\gadgeteer\drivers\Intersense\IntersenseAPI\isense.c">
+				RelativePath="..\..\..\modules\gadgeteer\drivers\Intersense\IntersenseAPI\isense\isense.c">
 			</File>
 		</Filter>
 		<Filter
@@ -138,10 +138,10 @@
 				RelativePath="..\..\..\modules\gadgeteer\drivers\Intersense\IntersenseAPI\IntersenseAPIStandalone.h">
 			</File>
 			<File
-				RelativePath="..\..\..\modules\gadgeteer\drivers\Intersense\IntersenseAPI\isense.h">
+				RelativePath="..\..\..\modules\gadgeteer\drivers\Intersense\IntersenseAPI\isense\isense.h">
 			</File>
 			<File
-				RelativePath="..\..\..\modules\gadgeteer\drivers\Intersense\IntersenseAPI\types.h">
+				RelativePath="..\..\..\modules\gadgeteer\drivers\Intersense\IntersenseAPI\isense\types.h">
 			</File>
 		</Filter>
 		<Filter
