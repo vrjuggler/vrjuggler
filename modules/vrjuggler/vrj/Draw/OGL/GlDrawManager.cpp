@@ -24,7 +24,7 @@ void vjGlDrawManager::draw()
      // Allow the processes to draw
    syncCond.acquire();        // Get exclusive access
    {
-      rendering = 1;          // Signal that rendering can happen
+      triggerRender = true;          // Signal that rendering can happen
       syncCond.signal();
    }
    syncCond.release();
@@ -38,17 +38,16 @@ void vjGlDrawManager::draw()
 void vjGlDrawManager::sync()
 {
    syncCond.acquire();
-   {   // Wait for rendering == 0
-      while (rendering != 0)
+   {   // Wait for triggerRender == false
+      while (triggerRender == true)
          syncCond.wait();
       /* Do nothing */
    }
    syncCond.release();
 }
 
-/**
- * This is the control loop for the manager
- */
+
+//: This is the control loop for the manager
 void vjGlDrawManager::main(void* nullParam)
 {
    //while(!Exit)
@@ -56,14 +55,20 @@ void vjGlDrawManager::main(void* nullParam)
    {
       syncCond.acquire();
       {
-         // Wait for rendering == 1
-         while (rendering == 0)
+         vjDEBUG(3) << "vjGlDrawManager::main: Wait for render trigger\n" << flush << vjDEBUG_FLUSH;
+         
+         // Wait for triggerRender == true
+         while (triggerRender == false)
             syncCond.wait();
-
-         // --- Do Rendering --- //	
+         
+         // THEN --- Do Rendering --- //
+         vjDEBUG(3) << "vjGlDrawManager::main: Draw Pipes\n" << flush << vjDEBUG_FLUSH;
+	
          drawAllPipes();
 
-         rendering = 0;   // We are done rendering
+         vjDEBUG(3) << "vjGlDrawManager::Main: Pipes Rendered\n" << flush << vjDEBUG_FLUSH;
+
+         triggerRender = false;   // We are done rendering
          syncCond.signal();
       }
       syncCond.release();
@@ -72,6 +77,7 @@ void vjGlDrawManager::main(void* nullParam)
 
 void vjGlDrawManager::drawAllPipes()
 {
+   vjDEBUG_BEGIN(3) << "vjGLDrawManager::drawAllPipes: Enter" << endl << flush << vjDEBUG_FLUSH;
    int pipeNum;
 
       // Start rendering all the pipes
@@ -81,6 +87,8 @@ void vjGlDrawManager::drawAllPipes()
       // Wait for rendering to finish on all the pipes
    for(pipeNum=0; pipeNum<pipes.size(); pipeNum++)
       pipes[pipeNum]->completeRender();
+
+   vjDEBUG_END(3) << "vjGLDrawManager::drawAllPipes: Exit" << endl << flush << vjDEBUG_FLUSH;
 }    
 
     /// Initialize the drawing API (if not already running)
@@ -99,7 +107,7 @@ void vjGlDrawManager::initAPI()
     //+	 Window list is correct      <br>
 void vjGlDrawManager::initDrawing()
 {
-   vjDEBUG(3) << "vjGlDrawManager::initDrawing: Entering." << endl;
+   vjDEBUG(3) << "vjGlDrawManager::initDrawing: Entering." << endl << vjDEBUG_FLUSH;
 
    //  For each display:
    //	-- Create a window for it
@@ -114,7 +122,7 @@ void vjGlDrawManager::initDrawing()
    }
 
    // Create Pipes & Add all windows to the correct pipe
-   for(int winId=0;winId<wins.size();winId++)   // For each window
+   for(int winId=0;winId<wins.size();winId++)   // For each window we created
    {
       int pipeNum = wins[winId]->getDisplay()->pipe();  // Find pipe to add it too
                                                         // ASSERT: pipeNum := [0...n]
@@ -135,7 +143,6 @@ void vjGlDrawManager::initDrawing()
    }
 
       // Start all the pipes running
-      // (If they really have windows)
    for(int pipeNum=0;pipeNum<pipes.size();pipeNum++)
    {
       //**//if(pipes[pipeNum]->hasWindows())    // Actually we want all the pipes to run
@@ -151,7 +158,7 @@ void vjGlDrawManager::initDrawing()
 
 	controlPid = vjThread::spawn(memberFunctor, 0);
    
-   vjDEBUG(0) << "vjGlDrawManager::thread: " << *controlPid << endl;
+   vjDEBUG(0) << "vjGlDrawManager::thread: " << *controlPid << endl << vjDEBUG_FLUSH;
    // Dump the state
    debugDump();
 }
@@ -215,14 +222,14 @@ void vjGlDrawManager::drawSimulator(vjSimulator* sim)
 void vjGlDrawManager::debugDump()
 {
     vjDEBUG(0) << "-- DEBUG DUMP --------- vjGlDrawManager: " << (void*)this << " ------------" << endl
-	         << "\tapp:" << (void*)app << endl;
-    vjDEBUG(0) << "\tWins:" << wins.size() << endl;
+	         << "\tapp:" << (void*)app << endl << vjDEBUG_FLUSH;
+    vjDEBUG(0) << "\tWins:" << wins.size() << endl << vjDEBUG_FLUSH;
     
     for(vector<vjGlWindow*>::iterator i = wins.begin(); i != wins.end(); i++)
     {
-	   vjDEBUG(0) << "\n\t\tvjGlWindow:\n" << *(*i) << endl;  
+	   vjDEBUG(0) << "\n\t\tvjGlWindow:\n" << *(*i) << endl << vjDEBUG_FLUSH;
     }
-    vjDEBUG(0) << flush;
+    vjDEBUG(0) << flush << vjDEBUG_FLUSH;
 }
 
 void vjGlDrawManager::initQuadObj()

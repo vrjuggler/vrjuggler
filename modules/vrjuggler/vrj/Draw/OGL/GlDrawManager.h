@@ -107,8 +107,8 @@ protected:
    vector<vjGlPipe*>    pipes;      //: A list of the pipes in the system
 
    // --- MP Stuff -- //
-   vjCond     syncCond;   //: Condition var for syncing
-   int        rendering;  //: Are we rendering
+   vjCond     syncCond;       //: Condition var for syncing
+   bool       triggerRender;  //: Are we able to render
 
 
    // --- Singleton Stuff --- //
@@ -120,7 +120,7 @@ public:
       return _instance;
    }
 protected:
-   vjGlDrawManager() : rendering(0)
+   vjGlDrawManager() : triggerRender(false)
    { ;}
 private:
    static vjGlDrawManager* _instance;          

@@ -58,17 +58,17 @@ public:
       XSetWindowAttributes w_attrib;
       int screen;
 
-      vjDEBUG(2) << "glxWindow: Open window" << endl;
+      vjDEBUG(2) << "glxWindow: Open window" << endl << vjDEBUG_FLUSH;
 
       if (window_is_open)
          return true;
 
       if (window_width == -1)
-         vjDEBUG(1) << "ERROR: Window has not been configured\n";
+         vjDEBUG(1) << "ERROR: Window has not been configured\n" << vjDEBUG_FLUSH;
 
       if (! (x_display = XOpenDisplay (display_name)))
       {
-         vjDEBUG(0) << "Unable to open display " << display_name << endl;
+         vjDEBUG(0) << "Unable to open display " << display_name << endl << vjDEBUG_FLUSH;
          return false;
       }
 
@@ -77,7 +77,7 @@ public:
       // get an XVisualInfo*, which we'll need below
       if ((visual_info = GetGlxVisInfo (x_display, screen)) == NULL)
       {
-         vjDEBUG(0) << "glXChooseVisual failed\n" << flush;
+         vjDEBUG(0) << "glXChooseVisual failed\n" << flush << vjDEBUG_FLUSH;
          return false;
       }
 
@@ -87,7 +87,7 @@ public:
                                                 visual_info->visual,  
                                                 AllocNone)) == NULL)
       {
-         vjDEBUG(0) << "ERROR: XCreateColorMap failed on " << display_name << endl;
+         vjDEBUG(0) << "ERROR: XCreateColorMap failed on " << display_name << endl << vjDEBUG_FLUSH;
          return false;
       }
       w_attrib.event_mask = ExposureMask | StructureNotifyMask
@@ -106,7 +106,7 @@ public:
                                      &w_attrib))  /* Attributes */
           == NULL)
       {
-         vjDEBUG(0) << "ERROR: Couldn't create window for " << display_name << endl;
+         vjDEBUG(0) << "ERROR: Couldn't create window for " << display_name << endl << vjDEBUG_FLUSH;
          return false;
       }
 
@@ -131,7 +131,7 @@ public:
 	cout << "attempting to make window borderless" << endl;
 	Atom vjMotifHints = XInternAtom (x_display, "_MOTIF_WM_HINTS", 0);
 	if (vjMotifHints == None) {
-	  vjDEBUG(2) << "ERROR: Could not get X atom for _MOTIF_WM_HINTS." << endl;
+	  vjDEBUG(2) << "ERROR: Could not get X atom for _MOTIF_WM_HINTS." << endl << vjDEBUG_FLUSH;
 	}
 	else {
 	  MotifWmHints hints;
@@ -164,19 +164,19 @@ public:
       XMapWindow (x_display, x_window);
       XIfEvent (x_display, &fooevent, EventIsMapNotify, (XPointer)x_window);
 
-      vjDEBUG(1) << "glxcWindow: done map" << endl;
+      vjDEBUG(1) << "glxcWindow: done map" << endl << vjDEBUG_FLUSH;
 
       if (! (glx_context = glXCreateContext (x_display, 
                                              visual_info, NULL, True)))
       {
-         vjDEBUG(0) << "ERROR: Couldn't create GlxContext for " << display_name 
+         vjDEBUG(0) << "ERROR: Couldn't create GlxContext for " << display_name << vjDEBUG_FLUSH 
          << endl;
          return false;
       }
 
       if (!glXMakeCurrent ( x_display, x_window, glx_context  ))
       {
-         vjDEBUG(0) << "ERROR: Couldn't set GlxContext for " << display_name << endl;
+         vjDEBUG(0) << "ERROR: Couldn't set GlxContext for " << display_name << endl << vjDEBUG_FLUSH;
          return false;
       }
 
@@ -266,7 +266,7 @@ public:
       
       vjConfigChunk *cfg = display->configChunk();
       display_name = (*dispSysChunk)[0]->getProperty("xpipes", pipe);
-      vjDEBUG(0) << "glxWindow display name is: " << display_name << endl;
+      vjDEBUG(0) << "glxWindow display name is: " << display_name << endl << vjDEBUG_FLUSH;
       try_stereo = display->inStereo();
    }
 
@@ -320,7 +320,7 @@ private:
       if (!glXQueryExtension (display, NULL, NULL))
       {
          vjDEBUG(0) << "ERROR: Display "<< display_name << 
-         "doesn't support GLX.\n  Aborting.\n" <<flush;
+         "doesn't support GLX.\n  Aborting.\n" <<flush << vjDEBUG_FLUSH;
          return NULL;
       }
 
@@ -343,7 +343,7 @@ private:
       {
          vjDEBUG(0) << "WARNING: Display process for " << display_name
                     << "\n  Couldn't get display in stereo."
-                    << "\n  Trying mono.\n";
+                    << "\n  Trying mono.\n" << vjDEBUG_FLUSH;
          in_stereo = false;
          viattrib[12] = GLX_USE_GL; // should be a reasonable 'ignore' tag
          if (vi = glXChooseVisual (display, screen, viattrib))
@@ -353,7 +353,7 @@ private:
       // if we reach here, we didn't.  Maybe we should make alpha optional.
       vjDEBUG(0) << "WARNING: Display process for " << display_name 
                  << "\n  Couldn't get display with alpha channel."
-                 << "\n  Trying without." << endl;
+                 << "\n  Trying without." << endl << vjDEBUG_FLUSH;
       viattrib[11] = 0;
       if (vi = glXChooseVisual (display, screen, viattrib))
          return vi;
