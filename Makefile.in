@@ -195,7 +195,13 @@ ABI_LIST	= @ABI_LIST@
 # =============================================================================
 
 # Build all four versions of the libraries.
-all: beforebuild _opt _dso _dbg _ddso _check_gui
+all:
+	${MAKE} beforebuild
+	${MAKE} _opt
+	${MAKE} _dso
+	${MAKE} _dbg
+	${MAKE} _ddso
+	${MAKE} _check_gui
 	@echo "------------------------------------------------"
 	@echo "Creating symlinks in ${_LIBDIR}"
 	@echo "------------------------------------------------"
@@ -229,10 +235,12 @@ all-abi:
           done
 
 # Things to do before the object files and library are built.
-beforebuild: depend
+beforebuild:
+	${MAKE} depend
 
 # Things to do after the object files and library are built.
-afterbuild: links
+afterbuild:
+	${MAKE} links
 	@echo "------------------------------------------------"
 	@echo "Library build complete"
 	@echo "------------------------------------------------"
@@ -240,9 +248,14 @@ afterbuild: links
 # ---------------------------------------------
 # Make the debugging version of the libraries.
 # ---------------------------------------------
-dbg: beforebuild _dbg _check_gui afterbuild
+dbg:
+	${MAKE} beforebuild
+	${MAKE} _dbg
+	${MAKE} _check_gui
+	${MAKE} afterbuild
 
-_dbg: _build_dbg
+_dbg:
+	${MAKE} _build_dbg
 	${MAKE} BASE_OBJDIR="${_DBG_BUILDDIR}" LIBDIR="${_DBG_LIBDIR}"	\
           ${VJ_LIB_STATIC}
 ifeq (${GL_API}, Y)
@@ -257,9 +270,14 @@ endif
 # ------------------------------------------------------------
 # Make the debugging version of the libraries that uses DSOs.
 # ------------------------------------------------------------
-ddso: beforebuild _ddso _check_gui afterbuild
+ddso:
+	${MAKE} beforebuild
+	${MAKE} _ddso
+	${MAKE} _check_gui
+	${MAKE} afterbuild
 
-_ddso: _build_dbg
+_ddso:
+	${MAKE} _build_dbg
 	${MAKE} BASE_OBJDIR="${_DBG_BUILDDIR}" LIBDIR="${_DBG_LIBDIR}"	\
           ${VJ_LIB_DYNAMIC}
 ifeq (${GL_API}, Y)
@@ -274,9 +292,14 @@ endif
 # ---------------------------------------------
 # Make the optimized version of the libraries.
 # ---------------------------------------------
-opt: beforebuild _opt _check_gui afterbuild
+opt:
+	${MAKE} beforebuild
+	${MAKE} _opt
+	${MAKE} _check_gui
+	${MAKE} afterbuild
 
-_opt: _build_opt
+_opt:
+	${MAKE} _build_opt
 	${MAKE} BASE_OBJDIR="${_OPT_BUILDDIR}" LIBDIR="${_OPT_LIBDIR}"	\
           ${VJ_LIB_STATIC}
 ifeq (${GL_API}, Y)
@@ -291,9 +314,14 @@ endif
 # ------------------------------------------------------------
 # Make the optimized version of the libraries that uses DSOs.
 # ------------------------------------------------------------
-dso: beforebuild _dso _check_gui afterbuild
+dso:
+	${MAKE} beforebuild
+	${MAKE} _dso
+	${MAKE} _check_gui
+	${MAKE} afterbuild
 
-_dso: _build_opt
+_dso:
+	${MAKE} _build_opt
 	${MAKE} BASE_OBJDIR="${_OPT_BUILDDIR}" LIBDIR="${_OPT_LIBDIR}"	\
           ${VJ_LIB_DYNAMIC}
 ifeq (${GL_API}, Y)
@@ -489,9 +517,16 @@ afterinstall:
 
 # Do a full installation all versions of the libraries and the associated
 # files.
-install-all: beforeinstall install-opt install-dso install-dbg		\
-             install-ddso install-headers install-test install-data	\
-             install-gui
+install-all:
+	${MAKE} beforeinstall
+	${MAKE} install-opt
+	${MAKE} install-dso
+	${MAKE} install-dbg
+	${MAKE} install-ddso
+	${MAKE} install-headers
+	${MAKE} install-test
+	${MAKE} install-data
+	${MAKE} install-gui
 	@echo "------------------------------------------------"
 	@echo "Creating symlinks in ${_install_libdir_abs}"
 	@echo "------------------------------------------------"
@@ -528,13 +563,20 @@ install-all-abi:
 	@echo "------------------------------------------------"
 
 # Do a full installation of the static debugging version of the libraries.
-install: beforeinstall install-dbg install-headers install-test		\
-         install-data install-gui afterinstall
+install:
+	${MAKE} beforeinstall
+	${MAKE} install-dbg
+	${MAKE} install-headers
+	${MAKE} install-test
+	${MAKE} install-data
+	${MAKE} install-gui
+	${MAKE} afterinstall
 
 # ------------------------------------------------------------
 # Install only the static debugging version of the libraries.
 # ------------------------------------------------------------
-install-dbg: dbg
+install-dbg:
+	${MAKE} dbg
 	@echo "------------------------------------------------"
 	@echo "Installing static debugging libraries"
 	@echo "------------------------------------------------"
@@ -560,7 +602,8 @@ endif
 # -------------------------------------------------------------
 # Install only the dynamic debugging version of the libraries.
 # -------------------------------------------------------------
-install-ddso: ddso
+install-ddso:
+	${MAKE} ddso
 	@echo "------------------------------------------------"
 	@echo "Installing dynamic debugging libraries"
 	@echo "------------------------------------------------"
@@ -586,7 +629,8 @@ endif
 # ------------------------------------------------------------
 # Install only the static optimized version of the libraries.
 # ------------------------------------------------------------
-install-opt: opt
+install-opt:
+	${MAKE} opt
 	@echo "------------------------------------------------"
 	@echo "Installing static optimized libraries"
 	@echo "------------------------------------------------"
@@ -612,7 +656,8 @@ endif
 # -------------------------------------------------------------
 # Install only the dynamic optimized version of the libraries.
 # -------------------------------------------------------------
-install-dso: dso
+install-dso:
+	${MAKE} dso
 	@echo "------------------------------------------------"
 	@echo "Installing dynamic optimizied libraries"
 	@echo "------------------------------------------------"
@@ -683,7 +728,8 @@ install-data:
           -m ${_FILE_PERMS} -g ${_GROUP_NAME} -o ${prefix}/Data
 
 # Install the Java-based config editor if possible.
-install-gui: _check_gui
+install-gui:
+	${MAKE} _check_gui
 ifeq (${BUILD_GUI}, Y)
 	@echo "------------------------------------------------"
 	@echo "Installing vjcontrol"
@@ -726,7 +772,9 @@ _clean:
 	@echo "Done with 'clean'"
 	@echo "------------------------------------------------"
 
-clobber: _clean clean-links
+clobber:
+	${MAKE} _clean
+	${MAKE} clean-links
 	@echo "------------------------------------------------"
 	@echo "Clobbering build directories"
 	@echo "------------------------------------------------"
