@@ -63,7 +63,7 @@ public:
     * Callback function for drawing.  Called when the object should be drawn.
     * @pre GL context is set and ready to go.
     */
-   virtual void draw();
+   virtual void draw(vrj::User* user);
 
 protected:
    GLUquadricObj* mQuadObj;
@@ -82,7 +82,7 @@ public:
     * Callback function for drawing.  Called when the object should be drawn.
     * @pre GL context is set and ready to go.
     */
-   virtual void draw();
+   virtual void draw(vrj::User* user);
 };
 
 } // End of vrj namespace

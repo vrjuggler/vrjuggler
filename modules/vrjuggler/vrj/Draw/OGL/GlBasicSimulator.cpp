@@ -32,6 +32,8 @@
 
 #include <vrj/vrjConfig.h>
 
+#include <boost/concept_check.hpp>
+
 #include <gmtl/Matrix.h>
 #include <gmtl/Generate.h>
 #include <gmtl/MatrixOps.h>
@@ -50,10 +52,10 @@
 #include <vrj/Display/SimViewport.h>
 #include <vrj/Display/SurfaceViewport.h>
 
+#include <vrj/Draw/OGL/GlDrawHeadFunctors.h>
+#include <vrj/Draw/OGL/GlDrawWandFunctors.h>
 #include <vrj/Draw/OGL/GlSimInterfaceFactory.h>
 #include <vrj/Draw/OGL/GlBasicSimulator.h>
-
-#include <boost/concept_check.hpp>
 
 
 namespace vrj
@@ -63,8 +65,8 @@ VRJ_REGISTER_GL_SIM_INTERFACE_CREATOR(GlBasicSimulator);
 
 GlBasicSimulator::GlBasicSimulator() : mQuadObj(NULL)
 {
-   //setDrawWandFunctor(new GlDrawConeWandFunctor());
    setDrawWandFunctor(new GlDrawRightAngleWandFunctor());
+   setDrawHeadFunctor(new GlDrawEllipsoidHeadFunctor());
 }
 
 /*
@@ -306,17 +308,6 @@ void GlBasicSimulator::drawProjections(bool drawFrustum, gmtl::Vec3f surfColor, 
  */
 void GlBasicSimulator::drawSimulator(const float scaleFactor)
 {
-   // All units are in meters
-   // Note: All the wand and head data in the sim viewport class
-   // has already had the scale factor applied to it
-   const float head_height(0.254f*scaleFactor);      // 10 inches
-   const float head_width_scale(0.7f);
-   const float head_depth_scale(0.8f);
-   //const float eye_vertical(0.067f*scaleFactor);
-   //const float eye_horizontal(0.21f*scaleFactor);
-   const float interocular( mSimViewport->getUser()->getInterocularDistance()*scaleFactor);
-   const float eye_radius(0.0254f*0.5f*scaleFactor);      // 0.5 in
-
    glPushAttrib( GL_ENABLE_BIT | GL_COLOR_BUFFER_BIT | GL_LIGHTING_BIT);
    {
       // Test to see wethere there is lighting active
@@ -349,7 +340,9 @@ void GlBasicSimulator::drawSimulator(const float scaleFactor)
       // Draw base coordinate axis
       ///*
       if(lighting_on)
+      {
          glDisable(GL_LIGHTING);
+      }
 
       glPushMatrix();
          gmtl::Vec3f x_axis(scaleFactor,0.0f,0.0f); gmtl::Vec3f y_axis(0.0f, scaleFactor, 0.0f);
@@ -367,37 +360,13 @@ void GlBasicSimulator::drawSimulator(const float scaleFactor)
          glEnable(GL_LIGHTING);
          glEnable(GL_NORMALIZE);
       }
+
       // Draw the user's head
       glPushMatrix();
          glMultMatrixf(getHeadPos().mData);
-
-         glPushMatrix();
-            // Head pos is the center of the eyes, so we need to move the head offset a bit
-            // to get it positioned correctly.  We will do this by measuring the distance from center
-            // of head to forehead and then translate by the negative of that
-            gmtl::Vec3f forehead_offset(0.0f, head_height*0.17f, -(head_depth_scale*head_height)*0.45f);
-            glTranslatef(-forehead_offset[0], -forehead_offset[1], -forehead_offset[2]);
-            glScalef(head_width_scale, 1.0f, head_depth_scale);      // Scale to get an ellipsoid head
-            //glEnable(GL_BLEND);
-            //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-            glColor4f(0.5f, 0.75f, 0.90f, 0.67f);
-            drawSphere(head_height/2.0f, 10, 10);             // Head
-            //glDisable(GL_BLEND);
-         glPopMatrix();
-
-         // --- Draw the eyes --- //
-         glPushMatrix();
-            glColor3f(0.8f, 0.4f, 0.2f);
-            //glTranslatef(0.0f, eye_vertical, -eye_horizontal);
-            glPushMatrix();                     // Right eye
-               glTranslatef((interocular/2.0f), 0.0f, 0.0f);
-               drawSphere(eye_radius, 5, 5);
-            glPopMatrix();
-            glPushMatrix();                     // Left eye
-               glTranslatef(-(interocular/2.0f), 0.0f, 0.0f);
-               drawSphere(eye_radius, 5, 5);
-            glPopMatrix();
-         glPopMatrix();
+         glScalef(scaleFactor, scaleFactor, scaleFactor);
+         glEnable(GL_NORMALIZE);
+         mDrawHeadFunctor->draw(mSimViewport->getUser());
       glPopMatrix();
 
       // Draw the wand
@@ -405,12 +374,14 @@ void GlBasicSimulator::drawSimulator(const float scaleFactor)
          glMultMatrixf(getWandPos().mData);
          glScalef(scaleFactor,scaleFactor,scaleFactor);
          glEnable(GL_NORMALIZE);
-         mDrawWandFunctor->draw();
+         mDrawWandFunctor->draw(mSimViewport->getUser());
       glPopMatrix();
 
        // Draw a The display surfaces
       if(use_lighting_in_sim)
+      {
          glDisable(GL_LIGHTING);
+      }
 
       glPushMatrix();
          drawProjections(shouldDrawProjections(), getSurfaceColor(), scaleFactor);
@@ -423,7 +394,9 @@ void GlBasicSimulator::drawSimulator(const float scaleFactor)
 void GlBasicSimulator::initQuadObj()
 {
    if (mQuadObj == NULL)
+   {
       mQuadObj = gluNewQuadric();
+   }
 }
 
 void GlBasicSimulator::drawLine(gmtl::Vec3f& start, gmtl::Vec3f& end)
@@ -433,15 +406,6 @@ void GlBasicSimulator::drawLine(gmtl::Vec3f& start, gmtl::Vec3f& end)
       glVertex3fv(end.mData);
    glEnd();
 }
-
-void GlBasicSimulator::drawSphere(float radius, int slices, int stacks)
-{
-  initQuadObj();
-  gluQuadricDrawStyle(mQuadObj, (GLenum) GLU_FILL);
-  gluQuadricNormals(mQuadObj, (GLenum) GLU_SMOOTH);
-  gluSphere(mQuadObj, radius, slices, stacks);
-}
-
 
 void GlBasicSimulator::drawCone(float base, float height, int slices, int stacks)
 {
@@ -647,4 +611,3 @@ void GlBasicSimulator::drawGlove(gadget::GloveProxy* gloveProxy)
 */
 
 }
-
