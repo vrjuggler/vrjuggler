@@ -642,7 +642,7 @@ AC_OUTPUT(tweek-config
           make.defs.mk
           java/Makefile
           java/Makefile.inc
-          java/tweek.sh
+          java/tweek-base.sh
           tweek/Makefile
           tweek/Makefile.inc
           tweek/CORBA/Makefile

@@ -154,7 +154,9 @@ links:
               $(LN_S) $$jar ./ ;					\
           done
 	cd $(instlinks)/bin && rm -f ./tweek &&				\
-          $(LN_S) $(topdir)/java/tweek.sh ./tweek
+          $(LN_S) $(TWEEKROOT_ABS)/java/tweek.sh ./tweek
+	cd $(instlinks)/bin && rm -f ./tweek-base.sh &&			\
+          $(LN_S) $(topdir)/java/tweek-base.sh ./
 	cd $(instlinks)/bin && rm -f ./java.security.policy.txt &&	\
           $(LN_S) $(TWEEKROOT_ABS)/java/java.security.policy.txt ./
 
