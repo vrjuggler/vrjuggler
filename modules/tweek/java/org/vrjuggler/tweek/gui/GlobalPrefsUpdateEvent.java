@@ -53,6 +53,7 @@ public class GlobalPrefsUpdateEvent extends EventObject
    public final static int CHOOSER_OPEN_STYLE   = 5;
    public final static int DEFAULT_CORBA_HOST   = 6;
    public final static int DEFAULT_CORBA_PORT   = 7;
+   public final static int DEFAULT_IIOP_VERSION = 8;
 
    public GlobalPrefsUpdateEvent(Object source)
    {

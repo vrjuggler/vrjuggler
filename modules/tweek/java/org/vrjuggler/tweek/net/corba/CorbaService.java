@@ -53,13 +53,16 @@ public class CorbaService
     *               NameService.
     * @param
     */
-   public CorbaService (String ns_host, int ns_port, String subcontext_id)
+   public CorbaService(String nsHost, int nsPort, String iiopVer,
+                       String subcontextId)
    {
-      nameServiceHost  = ns_host;
-      nameServicePort  = ns_port;
-      namingSubcontext = subcontext_id;
+      nameServiceHost    = nsHost;
+      nameServicePort    = nsPort;
+      nameServiceIiopVer = iiopVer;
+      namingSubcontext   = subcontextId;
 
-      nameServiceURI = "corbaloc:iiop:1.0@" + ns_host + ":" + ns_port + "/NameService";
+      nameServiceURI = "corbaloc:iiop:" + iiopVer + "@" + nsHost + ":" +
+                       nsPort + "/NameService";
 
       System.out.println("nameServiceURI: " + nameServiceURI);
    }
@@ -334,9 +337,10 @@ public class CorbaService
       private ORB mORB = null;
    }
 
-   private String nameServiceHost = null;
-   private int    nameServicePort = 2809;
-   private String nameServiceURI  = null;
+   private String nameServiceHost    = null;
+   private int    nameServicePort    = 2809;
+   private String nameServiceIiopVer = "1.0";
+   private String nameServiceURI     = null;
 
    private String namingSubcontext = null;
 
