@@ -109,15 +109,15 @@ public:
    virtual bool config(jccl::ConfigElementPtr e);
 
    /** Input pure virtual functions **/
-   int startSampling();
-   int stopSampling();
+   bool startSampling();
+   bool stopSampling();
    void updateData();
-   int sample()
+   bool sample()
    {
       std::vector<gadget::PositionData> cur_samples(1);
       getRecord(&cur_samples[0]);
 
-      addPositionSample(cur_samples);      
+      addPositionSample(cur_samples);
 
       return 1;
    }

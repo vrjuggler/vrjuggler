@@ -228,16 +228,16 @@ bool MotionStar::config(jccl::ConfigElementPtr e)
 // ----------------------------------------------------------------------------
 // Begin sampling.
 // ----------------------------------------------------------------------------
-int MotionStar::startSampling()
+bool MotionStar::startSampling()
 {
-   int retval(0);     // Initialize to error status
+   bool retval(false);     // Initialize to error status
 
    // Make sure the device isn't already started.
    if ( isActive() )
    {
       vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_WARNING_LVL)
          << "gadget::MotionStar was already started.\n" << vprDEBUG_FLUSH;
-      retval = 1;
+      retval = true;
    }
    else
    {
@@ -261,11 +261,11 @@ int MotionStar::startSampling()
                   << "gadget::MotionStar could not create sampling thread.\n"
                   << vprDEBUG_FLUSH;
                 vprASSERT(false);  // Fail
-                retval = 0;   // failure
+                retval = false;   // failure
             }
             else
             {
-                retval = 1;   // success
+                retval = true;   // success
             }
          }
          // Connection to server failed.  MotionStarStandalone prints out
@@ -294,7 +294,7 @@ int MotionStar::startSampling()
       // The thread has been started, so we are already sampling.
       else
       {
-         retval = 1;
+         retval = true;
       }
    }
 
@@ -304,14 +304,14 @@ int MotionStar::startSampling()
 // ----------------------------------------------------------------------------
 // Stop sampling.
 // ----------------------------------------------------------------------------
-int MotionStar::stopSampling()
+bool MotionStar::stopSampling()
 {
-   int retval;
+   bool retval;
 
    // If we are not active, we cannot stop the device.
    if ( isActive() == false )
    {
-      retval = 0;
+      retval = false;
    }
    // If the sampling thread was started, stop it and the device.
    else if ( mMyThread != NULL )
@@ -330,19 +330,19 @@ int MotionStar::stopSampling()
          mMotionStar.stop();
          vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CONFIG_LVL)
             << "MotionStar server shut down.\n" << vprDEBUG_FLUSH;
-         retval = 1;
+         retval = true;
       }
       catch (mstar::CommandException ex)
       {
          vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CONFIG_LVL)
             << "MotionStar server did not shut down.\n" << vprDEBUG_FLUSH;
-         retval = 0;
+         retval = false;
       }
    }
    // If the thread was not started, then the device is stopped.
    else
    {
-      retval = 1;
+      retval = true;
    }
 
    return retval;
@@ -351,12 +351,12 @@ int MotionStar::stopSampling()
 // ----------------------------------------------------------------------------
 // Sample data.
 // ----------------------------------------------------------------------------
-int MotionStar::sample()
+bool MotionStar::sample()
 {
-   int retval;
+   bool retval;
    std::vector< gadget::PositionData > cur_samples(mMotionStar.getNumBirds());
 
-   retval = 0;
+   retval = false;
 
    if ( isActive() == false )
    {
@@ -479,14 +479,14 @@ int MotionStar::sample()
          // Add the current data as a sample
          addPositionSample(cur_samples);
 
-         retval = 1;
+         retval = true;
       }
       catch (...)
       {
          vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
             << clrOutNORM(clrRED, "gadget::MotionStar::sample() caught unknown exception")
             << std::endl << vprDEBUG_FLUSH;
-         retval = 0;
+         retval = false;
       }
    }
 

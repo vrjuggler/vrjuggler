@@ -107,7 +107,7 @@ public:
     * Call this repeatedly to update the data from the birds.
     * @note flock.isActive() must be true to use this function.
     */
-   int sample();
+   bool sample();
 
    /** Checks if the flock is active. */
    const bool& isActive() const;

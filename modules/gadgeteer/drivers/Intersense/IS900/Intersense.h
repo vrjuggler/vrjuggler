@@ -152,16 +152,16 @@ public:
    virtual bool config(jccl::ConfigElementPtr e);
 
    /** Begins sampling. */
-   int startSampling();
+   bool startSampling();
 
    /** Main thread of control for this active object. */
    void controlLoop(void* nullParam);
 
    /** Stops sampling. */
-   int stopSampling();
+   bool stopSampling();
 
    /** Samples data. */
-   int sample();
+   bool sample();
 
    /** Updates to the sampled data. */
    void updateData();

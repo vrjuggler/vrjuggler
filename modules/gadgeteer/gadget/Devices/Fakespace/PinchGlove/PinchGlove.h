@@ -75,9 +75,9 @@ public:
 
    static std::string getElementType();
 
-   virtual int startSampling();
-   virtual int stopSampling();
-   virtual int sample();
+   virtual bool startSampling();
+   virtual bool stopSampling();
+   virtual bool sample();
    virtual void updateData ();
 
    /**

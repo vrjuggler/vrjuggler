@@ -163,7 +163,7 @@ Vrpn::~Vrpn()
    stopSampling();
 }
 
-int Vrpn::startSampling()
+bool Vrpn::startSampling()
 {
    int status(0);
 
@@ -262,7 +262,7 @@ void Vrpn::handleButton(vrpn_BUTTONCB b)
    mButtons[b.button] = b.state;
 }
 
-int Vrpn::sample()
+bool Vrpn::sample()
 {
    for ( int i=0;i<mTrackerNumber;i++ )
    {
@@ -283,7 +283,7 @@ int Vrpn::sample()
    return 1;
 }
 
-int Vrpn::stopSampling()
+bool Vrpn::stopSampling()
 {
    return 1;
 }

@@ -83,16 +83,16 @@ public:
    virtual bool config(jccl::ConfigElementPtr fastrakElement);
 
    /** Starts a new thread. */
-   virtual int startSampling();
+   virtual bool startSampling();
 
    /** Reads data from the Fastrak. */
-   virtual int sample();
+   virtual bool sample();
 
    /** Swaps the data and gadget::Input tri-buffered indicies. */
    virtual void updateData();
 
    /** Kills the sample thread. */
-   virtual int stopSampling();
+   virtual bool stopSampling();
 
    /** Device's config element name (match the definition). */
    virtual char* getDeviceName()

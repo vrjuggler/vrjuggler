@@ -233,7 +233,7 @@ void DTK::controlLoop(void* nullParam)
    }
 }
 
-int DTK::startSampling()
+bool DTK::startSampling()
 {
 // make sure inertia cubes aren't already started
    if ( this->isActive() == true )
@@ -280,7 +280,7 @@ int DTK::startSampling()
    return 0;
 }
 
-int DTK::sample()
+bool DTK::sample()
 {
    if ( this->isActive() == false )
    {
@@ -368,7 +368,7 @@ int DTK::sample()
    return 1;
 }
 
-int DTK::stopSampling()
+bool DTK::stopSampling()
 {
    if ( this->isActive() == false )
    {

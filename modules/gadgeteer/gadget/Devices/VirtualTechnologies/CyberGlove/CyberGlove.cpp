@@ -160,7 +160,7 @@ void CyberGlove::controlLoop(void* nullParam)
    }
 }
 
-int CyberGlove::sample()
+bool CyberGlove::sample()
 {
    mGlove->sample();       // Tell the glove to sample
 
@@ -183,7 +183,7 @@ vpr::Guard<vpr::Mutex> updateGuard(lock);
   return;
 }
 
-int CyberGlove::stopSampling()
+bool CyberGlove::stopSampling()
 {
    if (mThread != NULL)
    {
