@@ -38,16 +38,62 @@ import java.util.*;
  */
 public class ConfigManagerService
 {
+   /**
+    * Registers the given ConfigChunk collection with this manager.
+    */
    public void add(ConfigChunkDB db)
    {
       mChunkDBs.add(db);
    }
 
+   /**
+    * Registers the given ChunkDesc collection with this manager.
+    */
    public void add(ChunkDescDB db)
    {
       mDescDBs.add(db);
    }
 
+   /**
+    * Removes the given ConfigChunk collection from this manager.
+    */
+   public void remove(ConfigChunkDB db)
+   {
+      mChunkDBs.remove(db);
+   }
+
+   /**
+    * Removes the given ChunkDesc collection from this manager.
+    */
+   public void remove(ChunkDescDB db)
+   {
+      mDescDBs.remove(db);
+   }
+
+   /**
+    * Sets the active configuration to the given configuration.
+    *
+    * @param chunkDB    the configuration to make active
+    */
+   public void setActiveConfig(ConfigChunkDB chunkDB)
+   {
+      activeConfig = chunkDB;
+   }
+
+   /**
+    * Gets the currently active configuration.
+    *
+    * @return  the active config, null if no config is active
+    */
+   public ConfigChunkDB getActiveConfig()
+   {
+      return activeConfig;
+   }
+
+   /**
+    * Gets a collection of all the ChunkDescs in all the ChunkDesc collections
+    * registered with this manager.
+    */
    public ChunkDescDB getAllChunkDescs()
    {
       ChunkDescDB result = new ChunkDescDB();
@@ -88,6 +134,11 @@ public class ConfigManagerService
       }
       return found;
    }
+
+   /**
+    * The currently active configuration in this manager.
+    */
+   private ConfigChunkDB activeConfig = null;
 
    private List mChunkDBs = new ArrayList();
    private List mDescDBs = new ArrayList();
