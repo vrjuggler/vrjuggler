@@ -1,5 +1,8 @@
 DATE       AUTHOR   CHANGE
 ---------- -------- -----------------------------------------------------------
+2002-01-02 allenb   vpr::Interval now uses a Uint64 value internally.  This 
+                    eliminates the issue of wrapping that existed in the old
+                    method.
 2002-01-01 allenb   Fixed vpr::Interval::operator<().
 2001-12-31 patrickh Sim sockets have had major overhauls that improve
                     performance, stability, and functionality.
