@@ -49,32 +49,31 @@ vjVarValue::~vjVarValue() {
 
 
 vjVarValue& vjVarValue::operator= (const vjVarValue &v) {
-   type = v.type;
-   switch (type)
-   {
-   case T_INVALID:
-      break;
-   case T_INT:
-      val.intval = v.val.intval;
-      break;
-   case T_FLOAT:
-      val.floatval = v.val.floatval;
-      break;
-   case T_BOOL:
-      val.boolval = v.val.boolval;
-      break;
-   case T_EMBEDDEDCHUNK:
-      val.embeddedchunkval = new vjConfigChunk (*v.val.embeddedchunkval);
-      break;
-   case T_STRING:
-   case T_CHUNK:
-      val.strval = v.val.strval;
-      break;
-   default:
-      //cout << "something's wrong with varvalue assign" << endl;
-      break;
-   }
-   return *this;
+    type = v.type;
+    switch (type) {
+	case T_INVALID:
+	break;
+	case T_INT:
+	val.intval = v.val.intval;
+	break;
+	case T_FLOAT:
+	val.floatval = v.val.floatval;
+	break;
+	case T_BOOL:
+	val.boolval = v.val.boolval;
+	break;
+	case T_EMBEDDEDCHUNK:
+	val.embeddedchunkval = new vjConfigChunk (*v.val.embeddedchunkval);
+	break;
+	case T_STRING:
+	case T_CHUNK:
+	val.strval = v.val.strval;
+	break;
+	default:
+	//cout << "something's wrong with varvalue assign" << endl;
+	break;
+    }
+    return *this;
 }
 
 
@@ -82,7 +81,7 @@ vjVarValue& vjVarValue::operator= (const vjVarValue &v) {
 //: Equality Operator
 bool vjVarValue::operator == (const vjVarValue& v) {
     if (type != v.type)
-	return false;
+        return false;
     switch (type) {
     case T_INT:
 	return (val.intval == v.val.intval);
@@ -231,7 +230,6 @@ vjVarValue &vjVarValue::operator = (char *s) {
 	return *this;
     }
 }
-
 
 
 vjVarValue &vjVarValue::operator = (vjConfigChunk *s) {

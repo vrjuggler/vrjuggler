@@ -2,6 +2,7 @@
 #include <strings.h>
 #include <ctype.h>
 #include <Config/vjParseUtil.h>
+#include <Kernel/vjDebug.h>
 
 /* a utility function that probably belongs elsewhere */
 bool readString (istream &in, char *buffer, int size, bool *quoted) {
@@ -18,15 +19,18 @@ bool readString (istream &in, char *buffer, int size, bool *quoted) {
     int i;
     bool retval = false;
     char c, vj;
+    buffer[0] = '\0';
 
     if (quoted)
 	*quoted = false;
+
+    // read whitespace, comments
     for (;;) {
 	if (!in.get(c))
 	    break;
 	if (isspace(c))
 	    continue;
-	if (c == '#') {
+	if (c == '#') {            // shell type comment
 	    while (c != '\n')
 		in.get(c);
 	    continue;
@@ -56,11 +60,11 @@ bool readString (istream &in, char *buffer, int size, bool *quoted) {
 	    else 
 		in.putback(vj);
 	}
-	break;
+	break; // we read the / character and it wasn't part of a comment
     }
     buffer[0] = c;
     
-    if (buffer[0] == '{') {
+    if ((buffer[0] == '{') || (buffer[0] == '}')) {
 	buffer[1] = '\0';
 	retval = true;
     }
@@ -68,15 +72,24 @@ bool readString (istream &in, char *buffer, int size, bool *quoted) {
 	/* do a quoted string */
 	if (quoted)
 	    *quoted = true;
-	for (i = 0; i < size-1; i++) {
+	for (i = 0; i < size; i++) {
 	    in.get(buffer[i]);
-	    if (buffer[i] == '"')
+	    if (buffer[i] == '"') {
+		buffer[i] = '\0';
 		break;
+	    }
 	}
-	buffer[i] = '\0';
+	if (i == size) {
+	    while (in.get(buffer[i]) && (buffer[i] != '"'))
+		;
+	    buffer[i] = '\0';
+	    vjDEBUG (vjDBG_ALL,0) << "ERROR: Truncated string in config file: '"
+				  << buffer << "'\n" << vjDEBUG_FLUSH;
+	}
 	retval = true;
     }
     else {
+	// should add cleaner overflow handling like above...
 	for (i = 1; i < size-1; i++) {
 	    in.get(buffer[i]);
 	    if (buffer[i] == '}') {
@@ -90,7 +103,9 @@ bool readString (istream &in, char *buffer, int size, bool *quoted) {
 	buffer[i] = '\0';
 	retval = true;
     }
-    //cout << "read string: '" << buffer << "'" << endl;
+    //cout << "readString: read string: '" << buffer << "'" << endl;
+    if (!retval)
+	buffer[0] = '\0'; // so it's safe to read it...
     return retval;
 }
 
@@ -98,7 +113,9 @@ bool readString (istream &in, char *buffer, int size, bool *quoted) {
 
 VarType readType (istream &in) {
     char str[256];
-    readString (in, str, 256);
+
+    if (!readString (in, str, 256))
+	return T_INVALID;
 
     if (!strcasecmp (str, "int"))
 	return T_INT;
@@ -211,3 +228,5 @@ bool vjstrncmp (const std::string& a, const std::string& b, int _n) {
 	    return true;
     return false;
 }
+
+
