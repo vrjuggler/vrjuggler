@@ -30,46 +30,30 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <OpenSGNav.h>
-
 #include <vrj/Kernel/Kernel.h>
-
+#include <OpenSGNav.h>
 
 int main(int argc, char* argv[])
 {
-    std::cout << "osgInit begin\n";
-
-    std::cout << "osgInit end\n";
-
     vrj::Kernel* kernel = vrj::Kernel::instance();
-    std::cout << "vjKernel instantiated\n";
-
     OpenSGNav* application = new OpenSGNav(kernel);
 
     if (argc <= 2)
     {
-        std::cout<<"\n"<<std::flush;
-        std::cout<<"\n"<<std::flush;
-
-        std::cout<<"Usage: "<<argv[0]<<" modelname vjconfigfile[0] vjconfigfile[1] ... vjconfigfile[n]\n"<<std::flush;
-
-        std::cout<<"\n"<<std::flush;
-        std::cout<<"\n"<<std::flush;
-        exit(1);
+      std::cout << "\n\nUsage: " << argv[0] << " modelname vjconfigfile[0] vjconfigfile[1] ... vjconfigfile[n]\n" << std::flush;
+      exit(1);
     }
 
     application->setModelFileName(std::string(argv[1]));
 
     // Load any config files specified on the command line
-    std::cout<<"loading config files\n";
     for(int i=2;i<argc;i++)
         kernel->loadConfigFile(argv[i]);
-    std::cout<<"loading config files ended\n";
+    
     kernel->start();
-
     kernel->setApplication(application);
-
     kernel->waitForKernelStop();
 
     return 1;
 }
+
