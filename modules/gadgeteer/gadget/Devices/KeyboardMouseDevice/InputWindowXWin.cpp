@@ -258,7 +258,7 @@ bool InputWindowXWin::openLocalWindow()
       XVisualInfo* p_visinfo;
 
       // Try to find a visual with color depth of at least 8 bits.  Having
-      // such a visual ensures that the event windows at least have a
+      // such a visual ensures that the input windows at least have a
       // black background.
       for ( i = 0, p_visinfo = vis_infos; i < nVisuals; i++, p_visinfo++ ) {
          if ( p_visinfo->depth >= 8 ) {
