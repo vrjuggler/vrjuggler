@@ -32,6 +32,7 @@
 
 #include <gadget/gadgetConfig.h>
 
+#include <boost/concept_check.hpp>
 #include <vpr/Util/Debug.h>
 #include <gadget/Type/Analog.h>
 #include <gadget/Util/DeviceSerializationTokens.h>
@@ -109,7 +110,13 @@ vpr::ReturnStatus Analog::readObject(vpr::ObjectReader* reader)
    reader->beginAttribute(gadget::tokens::DataTypeAttrib);
       vpr::Uint16 temp = reader->readUint16();
    reader->endAttribute();
-   vprASSERT(temp==MSG_DATA_ANALOG && "[Remote Input Manager]Not Analog Data");                          // ASSERT if this data is really not Analog Data
+
+   // ASSERT if this data is really not Analog Data
+   // XXX: Should there be error checking for the case when vprASSERT is
+   // compied out?  -PH 8/21/2003
+   vprASSERT(temp==MSG_DATA_ANALOG && "[Remote Input Manager] Not Analog Data");
+   boost::ignore_unused_variable_warning(temp);
+
    std::vector<AnalogData> dataSample;
 
    unsigned numAnalogDatas;
