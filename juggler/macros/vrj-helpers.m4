@@ -350,7 +350,7 @@ dnl     VJ_APP_LINKER(linker, link-flags, debug-flags, optimization-flags, base-
 dnl ---------------------------------------------------------------------------
 AC_DEFUN(VJ_APP_LINKER,
 [
-    if test "$OS_TYPE" = "UNIX" ; then
+    if test "x$OS_TYPE" = "xUNIX" ; then
         APP_LINK="$1"
         APP_LINK_FLAGS="$2"
 
@@ -372,8 +372,13 @@ AC_DEFUN(VJ_APP_LINKER,
             APP_EXTRA_LIBS_BEGIN='-B dynamic'
             APP_EXTRA_LIBS_END=''
         elif test "x$GXX" = "xyes" -a "x$PLATFORM" != "xDarwin" ; then
-            APP_LINKALL_ON='-Wl,--whole-archive'
-            APP_LINKALL_OFF='-Wl,--no-whole-archive'
+            if test "x$PLATFORM" = "xIRIX" ; then
+                APP_LINKALL_ON='-Wl,-all'
+                APP_LINKALL_OFF=''
+            else
+                APP_LINKALL_ON='-Wl,--whole-archive'
+                APP_LINKALL_OFF='-Wl,--no-whole-archive'
+            fi
 
             APP_BASIC_LIBS_BEGIN="-Wl,-Bstatic \$(LINKALL_ON) -L\$($5)/lib$LIBBITSUF"
             APP_BASIC_LIBS_END="\$(LINKALL_OFF) -Wl,-Bdynamic"
