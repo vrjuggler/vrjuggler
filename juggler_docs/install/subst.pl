@@ -57,8 +57,9 @@ $path_subst{"JUGGLER_USER_COMMUNITY"} = 'html/contact.info/usercommunity.html';
 # The AllenScript doesn't modify the variable at all.
 
 # the href address to mail the Juggler list.
-$alias_subst{"JUGGLER_MAILING_LIST"} = 'mailto:vrjuggler-contact@vrjuggler.org';
-$alias_subst{"JUGGLER_DEV_MAILING_LIST"} = 'mailto:vrjuggler-contact@vrjuggler.org';
+$alias_subst{"JUGGLER_MAILING_LIST"} = 'mailto:vrjuggler@vrjuggler.org';
+$alias_subst{"JUGGLER_DEV_MAILING_LIST"} = 'mailto:vrjuggler@vrjuggler.org';
+$alias_subst{"CONTACT_US_DIRECTLY"} = 'mailto:vrjuggler-contact@vrjuggler.org';
 
 # An alias for a New Window.
 # when you click, should bring content up in a completely new window.
@@ -70,7 +71,7 @@ $alias_subst{"JUGGLERBUGS"} = 'http://www.icemt.iastate.edu/juggler-bugs/';
 # Contact information
 $alias_subst{"ALLENB"} = 'http://www.vrac.iastate.edu/~allenb';
 $alias_subst{"CAROLINA"} = 'http://www.ee.iastate.edu/~cruz';
-$alias_subst{"KEVIN"} = 'http://www.vrac.iastate.edu/~kevn';
+$alias_subst{"KEVIN"} = 'http://www.bigfoot.com/~KevinMeinert';
 $alias_subst{"PATRICK"} = 'mailto:patrick@vrac.iastate.edu';
 $alias_subst{"CHRISJUST"} = 'mailto:cjust@vrac.iastate.edu';
 $alias_subst{"COATS"} = 'mailto:jwcoats@vrac.iastate.edu';
@@ -88,6 +89,14 @@ $alias_subst{"PERL"} = 'http://www.perl.com/';
 $alias_subst{"PERCEPS"} = 'http://starship.python.net/crew/tbryan/PERCEPS/';
 $alias_subst{"CVS"} = 'http://www.sourcegear.com/CVS';
 $alias_subst{"OPENGL"} = 'http://www.opengl.org';
+$alias_subst{"DIRECT3D"} = 'http://www.microsoft.com/directx/';
+$alias_subst{"MICROSOFT"} = 'http://www.microsoft.com';
+$alias_subst{"FAKESPACE"} = 'http://www.fakespace.com';
+$alias_subst{"IMMERSION"} = 'http://www.immersion.com';
+$alias_subst{"ASCENSION"} = 'http://www.ascension-tech.com';
+$alias_subst{"VIRTUALTECHNOLOGIES"} = 'http://www.virtex.com/';
+$alias_subst{"CAVE"} = 'http://www.evl.uiuc.edu';
+$alias_subst{"SSVR"} = 'http://www.mechdyne.com';
 $alias_subst{"PERFORMER"} = 'http://www.vrac.iastate.edu';
 $alias_subst{"PATTERNS"} = 'http://hillside.net/patterns/patterns.html';
 # links to books and manuals
@@ -97,3 +106,7 @@ $alias_subst{"PERFORMERBOOK"} = 'http://techpubs.sgi.com';
 
 # Miscellaneous
 $alias_subst{'CONFIGURE_REV'} = '1.182';
+
+# Time of posting
+require "ctime.pl";
+$alias_subst{'TimeOfLastBuild'} = ctime(time);
