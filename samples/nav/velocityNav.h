@@ -252,7 +252,6 @@ void velocityNav::update()
    stopWatch.stop();
    stopWatch.start();
 
-
    //////////////////////////////////
    // do navigations...
    //////////////////////////////////
@@ -261,14 +260,6 @@ void velocityNav::update()
    vjVec3         trackerXaxis(1.0f, 0.0f, 0.0f);
    vjVec3         trackerYaxis(0.0f, 1.0f, 0.0f);
    const vjVec3   gravity( 0.0f, -9.8f, 0.0f ); //9.8 m/s (METERS), this should be differnet for apps in FEET!
-
-   // get the rotation that takes the scene from localspace (user) to modelspace
-   //vjMatrix currentRotation = mCurPos;
-   //currentRotation.setTrans( 0.0f, 0.0f, 0.0f ); // zero out the translation...
-
-   // get the inverse, we'll need it.
-   //vjMatrix IcurrentRotation;
-   //IcurrentRotation.invert( currentRotation );
 
    if ((mAllowRot) && (mRotating))
    {
@@ -306,8 +297,6 @@ void velocityNav::update()
       // recalculate the current downward velocity from gravity.
       // this vector then is accumulated with the rest of the velocity vectors each frame.
       mVelocityFromGravityAccumulator += (gravity * stopWatch.timeInstant);
-
-      cout << "Grav velocity: " << mVelocityFromGravityAccumulator << endl << flush;
    }
    if (mAllowTrans)
    {
