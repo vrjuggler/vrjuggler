@@ -171,41 +171,41 @@ bool pfBasicConfigNavApp::configAdd( jccl::ConfigElementPtr element )
 
    // models
    mModelList.clear();//start out clean
-   for (x = 0; x < element->getNum( "Model" ); ++x)
+   for (x = 0; x < element->getNum( "models" ); ++x)
    {
       jccl::ConfigElementPtr model_element =
-         element->getProperty<jccl::ConfigElementPtr>( "Model", x );
+         element->getProperty<jccl::ConfigElementPtr>( "models", x );
 
       Model m;
       m.description = model_element->getName();
       m.filename = model_element->getProperty<std::string>( "filename" );
       vprDEBUG_NEXT(vprDBG_ALL,0) << "Reading " <<m.filename<<" model from the config file\n"<< vprDEBUG_FLUSH;;
-      m.scale = model_element->getProperty<float>( "Scale" );
-      m.pos.set( model_element->getProperty<float>( "x" ),
-                 model_element->getProperty<float>( "y" ),
-                 model_element->getProperty<float>( "z" ) );
-      m.rot.set( model_element->getProperty<float>( "rotx" ),
-                 model_element->getProperty<float>( "roty" ),
-                 model_element->getProperty<float>( "rotz" ) );
+      m.scale = model_element->getProperty<float>("scale");
+      m.pos.set( model_element->getProperty<float>("start_pos", 0),
+                 model_element->getProperty<float>("start_pos", 1),
+                 model_element->getProperty<float>("start_pos", 2) );
+      m.rot.set( model_element->getProperty<float>("start_rot", 0),
+                 model_element->getProperty<float>("start_rot", 1),
+                 model_element->getProperty<float>("start_rot", 2) );
       m.isCollidable = model_element->getProperty<bool>( "collidable" );
       addModel( m );
    }
 
    // sounds
    mSoundList.clear();//start out clean
-   for (x = 0; x < element->getNum( "Sounds" ); ++x)
+   for (x = 0; x < element->getNum( "sounds" ); ++x)
    {
       jccl::ConfigElementPtr sound_element =
-         element->getProperty<jccl::ConfigElementPtr>( "Sounds", x );
+         element->getProperty<jccl::ConfigElementPtr>( "sounds", x );
 
       Sound s;
       s.name = sound_element->getName();
-      s.alias = sound_element->getProperty<std::string>( "soundAlias" );
+      s.alias = sound_element->getProperty<std::string>( "sound_alias" );
       vprDEBUG_NEXT(vprDBG_ALL,0) <<"Reading "<<s.alias<<" sound from the config file\n"<< vprDEBUG_FLUSH;
       s.positional = sound_element->getProperty<bool>( "positional" );
-      s.pos.set( sound_element->getProperty<float>( "x" ),
-                 sound_element->getProperty<float>( "y" ),
-                 sound_element->getProperty<float>( "z" ) );
+      s.pos.set( sound_element->getProperty<float>("start_pos", 0),
+                 sound_element->getProperty<float>("start_pos", 1),
+                 sound_element->getProperty<float>("start_pos", 2) );
       mSoundList.push_back( s );
    }
 
