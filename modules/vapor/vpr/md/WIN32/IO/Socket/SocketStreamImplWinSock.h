@@ -44,8 +44,8 @@
 
 namespace vpr {
 
-class SocketStreamImplWinSock : public SocketStreamOpt,
-                                public SocketImplWinSock
+class VPR_CLASS_API SocketStreamImplWinSock : public SocketStreamOpt,
+                                              public SocketImplWinSock
 {
 public:
     // ========================================================================

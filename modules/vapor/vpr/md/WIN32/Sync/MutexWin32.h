@@ -53,7 +53,7 @@ namespace vpr {
 
 //: Mutex wrapper for Win32 systems.
 //!PUBLIC_API:
-class MutexWin32
+class VPR_CLASS_API MutexWin32
 {
 public:
     MutexWin32 ()

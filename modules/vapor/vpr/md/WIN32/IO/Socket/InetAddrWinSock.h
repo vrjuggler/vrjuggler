@@ -51,7 +51,7 @@ namespace vpr {
 //: Cross-platform abstraction to Internet address structures.
 // ----------------------------------------------------------------------------
 //!PUBLIC_API:
-class InetAddrWinSock : public InetAddrBase
+class VPR_CLASS_API InetAddrWinSock : public InetAddrBase
 {
 public:
     static const InetAddrWinSock AnyAddr;

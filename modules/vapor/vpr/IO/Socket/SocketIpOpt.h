@@ -38,7 +38,7 @@
 
 namespace vpr {
 
-class SocketIpOpt : public SocketBasicOpt {
+class VPR_CLASS_API SocketIpOpt : public SocketBasicOpt {
 public:
     /**
      *

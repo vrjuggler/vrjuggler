@@ -45,7 +45,7 @@ namespace vpr {
 //  routine.
 //!PUBLIC_API:
 //---------------------------------------------------------------
-class BaseThreadFunctor
+class VPR_CLASS_API BaseThreadFunctor
 {
 public:
     virtual void operator()() = 0;    // Pure virtual
@@ -58,7 +58,7 @@ public:
 //!PUBLIC_API:
 //---------------------------------------------------------------
 template<class T>
-class ThreadMemberFunctor : public BaseThreadFunctor
+class VPR_CLASS_API ThreadMemberFunctor : public BaseThreadFunctor
 {
 public:
     typedef void (T::* FunPtr)(void*);
@@ -98,7 +98,7 @@ private:
 //
 //!PUBLIC_API:
 //---------------------------------------------------------------
-class ThreadNonMemberFunctor : public BaseThreadFunctor
+class VPR_CLASS_API ThreadNonMemberFunctor : public BaseThreadFunctor
 {
 public:
     typedef void(* NonMemFunPtr)(void*);

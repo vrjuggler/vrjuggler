@@ -53,7 +53,7 @@ namespace vpr {
 
 //: Null mutex wrapper.  Used to pass a "do nothing" mutex as a template type.
 //!PUBLIC_API:
-class NullMutex
+class VPR_CLASS_API NullMutex
 {
 public:
     NullMutex () {}

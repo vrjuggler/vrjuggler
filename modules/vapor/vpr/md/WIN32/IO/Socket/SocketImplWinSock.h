@@ -47,7 +47,7 @@
 
 namespace vpr {
 
-class SocketImplWinSock : public BlockIO, public SocketIpOpt {
+class VPR_CLASS_API SocketImplWinSock : public BlockIO, public SocketIpOpt {
 public:
     // ========================================================================
     // vpr::BlockIO overrides.

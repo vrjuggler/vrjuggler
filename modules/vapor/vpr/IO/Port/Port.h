@@ -33,6 +33,8 @@
 #ifndef _VPR_PORT_H_
 #define _VPR_PORT_H_
 
+#include <vpr/vprConfig.h>
+
 #include <string>
 
 #include <vpr/IO/BlockIO.h>
@@ -45,7 +47,7 @@ namespace vpr {
 //+ parallel, IR, etc.).
 // ----------------------------------------------------------------------------
 //! PUBLIC_API:
-class Port : public BlockIO {
+class VPR_CLASS_API Port : public BlockIO {
 public:
 
 protected:

@@ -41,8 +41,8 @@
 
 namespace vpr {
 
-class SocketDatagramImplWinSock : public SocketDatagramOpt,
-                                  public SocketImplWinSock
+class VPR_CLASS_API SocketDatagramImplWinSock : public SocketDatagramOpt,
+                                                public SocketImplWinSock
 {
 public:
     // ========================================================================

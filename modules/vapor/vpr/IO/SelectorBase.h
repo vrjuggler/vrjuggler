@@ -33,11 +33,13 @@
 #ifndef _VPR_SELECTOR_BASE_H_
 #define _VPR_SELECTOR_BASE_H_
 
+#include <vpr/vprConfig.h>
+
 
 namespace vpr {
 
 // Common base for all selectors and imp's   
-class SelectorBase
+class VPR_CLASS_API SelectorBase
 {
 public:
    enum EventType

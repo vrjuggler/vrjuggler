@@ -52,7 +52,7 @@
 namespace vpr {
 
 //!PUBLIC_API:
-class SemaphoreWin32
+class VPR_CLASS_API SemaphoreWin32
 {
 public:
    SemaphoreWin32 (int initialValue = 1)
