@@ -542,7 +542,7 @@ AC_DEFUN(VJ_VERSION_GROK,
         ver_str_sep=`echo "$ver_num" | sed -e 's/\./ /g'`
         MAJOR_VERSION=`echo "$ver_str_sep" | sed -e 's/^\(..*\) ..* ..*$/\1/'`
         MINOR_VERSION=`echo "$ver_str_sep" | sed -e 's/^..* \(..*\) ..*$/\1/'`
-        MICRO_VERSION=`echo "$ver_str_sep" | sed -e 's/^..* ..* \(..*\)$/\1/'`
+        MICRO_VERSION=`echo "$ver_str_sep" | sed -e 's/^..* ..* \(..*\)-..*$/\1/'`
     fi
 
     AC_SUBST(MAJOR_VERSION)
