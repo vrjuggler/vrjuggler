@@ -115,6 +115,9 @@ while test $# -gt 0; do
         --libs)
             echo_libs=yes
             ;;
+        --extra-libs)
+            echo_extra_libs=yes
+            ;;
         --static)
             echo_static=yes
             ;;
@@ -186,3 +189,9 @@ if test "$echo_libs" = "yes"; then
 
     echo $ldflags $static_begin $vpr_libs $static_end $my_subsystem_libs
 fi      
+
+if test "x$echo_extra_libs" = "xyes"; then
+    vpr_extra_ldflags="@vpr_extra_ldflags@"
+    vpr_extra_libs="@vpr_extra_libs@"
+    echo $vpr_extra_ldflags $vpr_extra_libs
+fi
