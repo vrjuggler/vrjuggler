@@ -3,7 +3,8 @@ DATE        AUTHOR    CHANGE
 Feb-07-2002 allenb    Fixed major problems with OSG application class backport.
                       This fix allows OSG applications to run in simulator
                       and across multi-pipe setups.
-[Version 1.0.3 - 1.24.2002]===================================================
+
+[Version 1.0.4 - 1.22.2002]====================================================
 Jan-21-2001 allenb    Fixed synchronization bug in the vjGlWindow class.  This
                       bug could cause multiple windows to get the same id.
 Jan-17-2002 cjust     Fixed a deallocation bug in performance monitoring code.
