@@ -249,7 +249,7 @@ VNCDesktop::Focus VNCDesktop::update(const gmtl::Matrix44f& navMatrix)
    gmtl::Matrix44f desktop_M_world;                               // inv(wMvw*vwMvnc) -- nav*desktop
    const gmtl::Matrix44f wand_mat_world(mWand->getData());
    gmtl::Matrix44f world_M_desktop = navMatrix*m_vworld_M_desktop;
-   gmtl::invert(desktop_M_world, world_M_desktop);
+   gmtl::invertFull(desktop_M_world, world_M_desktop);
    gmtl::Matrix44f wand_mat = desktop_M_world * wand_mat_world;
 
    const gmtl::Point3f wand_point(gmtl::makeTrans<gmtl::Point3f>(wand_mat));
@@ -423,7 +423,7 @@ VNCDesktop::Focus VNCDesktop::update(const gmtl::Matrix44f& navMatrix)
          {
             mSelectState = TopBorderGrab;
             m_wandMdesktop_grab = wand_mat;
-            gmtl::invert(m_wandMdesktop_grab);
+            gmtl::invertFull(m_wandMdesktop_grab);
          }
          else     // Just select it
          {
@@ -438,7 +438,7 @@ VNCDesktop::Focus VNCDesktop::update(const gmtl::Matrix44f& navMatrix)
          {
             mSelectState = BottomBorderGrab;
             m_wandMdesktop_grab = wand_mat;
-            gmtl::invert(m_wandMdesktop_grab);
+            gmtl::invertFull(m_wandMdesktop_grab);
          }
          else     // Just select it
          {
@@ -453,7 +453,7 @@ VNCDesktop::Focus VNCDesktop::update(const gmtl::Matrix44f& navMatrix)
          {
             mSelectState = LeftBorderGrab;
             m_wandMdesktop_grab = wand_mat;
-            gmtl::invert(m_wandMdesktop_grab);
+            gmtl::invertFull(m_wandMdesktop_grab);
          }
          else     // Just select it
          {
@@ -468,7 +468,7 @@ VNCDesktop::Focus VNCDesktop::update(const gmtl::Matrix44f& navMatrix)
          {
             mSelectState = RightBorderGrab;
             m_wandMdesktop_grab = wand_mat;
-            gmtl::invert(m_wandMdesktop_grab);
+            gmtl::invertFull(m_wandMdesktop_grab);
          }
          else     // Just select it
          {
