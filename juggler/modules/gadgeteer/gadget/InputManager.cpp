@@ -972,9 +972,10 @@ void vjInputManager::ConfigurePosProxy(vjConfigChunkDB *cdb)
             vjDEBUG(2) << "Transform Matrix: " << endl
                        << m_posProxyVector[proxyNum]->GetTransform() << endl << vjDEBUG_FLUSH;
          }
-         else
-            vjDEBUG(0) << "ERROR: Could not find device:" << (*i)->getProperty("device") << endl << vjDEBUG_FLUSH;
       }
+      else
+         vjDEBUG(0) << "ERROR: Could not find device:" << (*i)->getProperty("device") << endl << vjDEBUG_FLUSH;
+
       vjDEBUG_END(1) << endl << vjDEBUG_FLUSH;
    }
    delete vChunks;
