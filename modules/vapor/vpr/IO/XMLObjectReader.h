@@ -293,14 +293,14 @@ inline vpr::Uint64 XMLObjectReader::readUint64()
 
 inline float XMLObjectReader::readFloat()
 {
-   vpr::Uint32 val;
+   float val;
    readValueStringRep(val);
    return val;
 }
 
 inline double XMLObjectReader::readDouble()
 {
-   vpr::Uint64 val;
+   double val;
    readValueStringRep(val);
    return val;
 }
