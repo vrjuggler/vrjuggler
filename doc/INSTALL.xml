@@ -312,6 +312,7 @@ cd build.gadgeteer</screen></para>
                </listitem>
             </itemizedlist>
             <para>For the following steps, assume that you have omniORB installed in <filename>&lt;OMNIORBPATH&gt;</filename>, OpenORB is installed in <filename>&lt;OPENORBPATH&gt;</filename>, and JDOM is installed in <filename>&lt;JDOMPATH&gt;</filename>.</para>
+            <para>IRIX users must configure Tweek (and its VPR dependency) to use the POSIX subsystem or the NSPR subsystem. omniORB <emphasis>will not work</emphasis> with SPROC threads. To configure VPR to use either POSIX threads or NSPR threads, pass either <option>--enable-subsystem=POSIX</option> or <option>--enable-subsystem=NSPR</option> to <command>configure.pl</command> respectively.</para>
             <para>Assuming you have the external packages installed, do the following from the top-level <filename>juggler</filename> directory:</para>
             <orderedlist>
                <listitem>
