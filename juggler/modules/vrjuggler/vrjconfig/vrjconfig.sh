@@ -58,6 +58,6 @@ fi
 
 EXTRA_JDK_ARGS="-DVJ_BASE_DIR=${VJ_BASE_DIR} -DJCCL_DEFINITION_PATH=${JCCL_DEFINITION_PATH}"
 
-. $TWEEK_BASE_DIR/bin/tweek-base.sh --defaultbean="Configuration Editor" $*
+. $TWEEK_BASE_DIR/bin/tweek-base.sh --defaultbean="Configuration Editor" "$@"
 
 exit $status
