@@ -624,7 +624,7 @@ _clean:
 	@echo "Done with 'clean'"
 	@echo "------------------------------------------------"
 
-clobber: _clean
+clobber: _clean clean-links
 	@echo "------------------------------------------------"
 	@echo "Clobbering build directories"
 	@echo "------------------------------------------------"
