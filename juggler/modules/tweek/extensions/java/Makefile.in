@@ -44,9 +44,8 @@ default: all
 
 # Include common definitions.
 include @topdir@/make.defs.mk
+include @topdir@/java.defs.mk
 
-beandir=	$(projdatadir)/beans
-javadir=	$(projdatadir)/java
 srcdir=		@srcdir@
 top_srcdir=	@top_srcdir@
 
@@ -78,9 +77,6 @@ _clean:
 # -----------------------------------------------------------------------------
 # Extra targets
 # -----------------------------------------------------------------------------
-docs:
-	$(JDK_HOME)/bin/javadoc -d $(DOC_ROOT) -sourcepath $(srcdir) \
-          -classpath $(CLASSPATH) $(DOC_PKGS)
 
 # This cannot be named 'install' because Doozer++ already defines that.
 extensions-install:
@@ -92,7 +88,8 @@ ifneq ($(JARS), )
 	for jar in $(JARS) ;						\
           do								\
               $(INSTALL) $(EXTRA_INSTALL_ARGS) -m $(FILE_PERMS)		\
-              $(GROUP_OPT_UNIX) $(topdir)/extensions/java/$$jar $(javadir) ; \
+                $(GROUP_OPT_UNIX) $(topdir)/extensions/java/$$jar	\
+                $(javadir) ;						\
           done
 endif
 ifneq ($(BEANS), )
@@ -106,11 +103,28 @@ ifneq ($(BEANS), )
                 $(top_srcdir)/extensions/java/$$bean.xml $(beandir) ;	\
           done
 endif
-
-install-docs:
-	$(MKINSTALLDIRS) $(doc_prefix)
-	rm -rf $(doc_prefix)/$(DOC_ROOT)
-	mv $(DOC_ROOT) $(doc_prefix)
+ifeq (@PLATFORM@, Darwin)
+ifneq ($(JARS), )
+	for jar in $(JARS) ;						\
+          do								\
+              $(INSTALL) $(EXTRA_INSTALL_ARGS) -m $(FILE_PERMS)		\
+                $(GROUP_OPT_UNIX) $(topdir)/extensions/java/$$jar	\
+                $(bundle_javadir) ;					\
+          done
+endif
+ifneq ($(BEANS), )
+	for bean in $(BEANS) ;						\
+          do								\
+              $(INSTALL) $(EXTRA_INSTALL_ARGS) -m $(FILE_PERMS)		\
+                $(GROUP_OPT_UNIX) $(topdir)/extensions/java/$$bean.jar	\
+                $(bundle_beandir) ;					\
+              $(INSTALL) $(EXTRA_INSTALL_ARGS) -m $(FILE_PERMS)		\
+                $(GROUP_OPT_UNIX)					\
+                $(top_srcdir)/extensions/java/$$bean.xml		\
+                $(bundle_beandir) ;					\
+          done
+endif
+endif
 
 ifdef GLOBAL_BUILD
    CLEAN_DIRS+=	$(top_srcdir)/bin

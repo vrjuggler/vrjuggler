@@ -1105,6 +1105,7 @@ fi
 # when tweek-config is executed.
 changequote(<<, >>)
 tweek_java_api_jars=`echo "$jars" | sed -e 's/\([A-Za-z0-9_][A-Za-z0-9_.-]*\.jar\)/${prefix}\/share\/tweek\/java\/\1/g' -e "s/ /$JCPS/g"`
+tweek_java_api_jars_bundle=`echo "$jars" | sed -e 's/\([A-Za-z0-9_][A-Za-z0-9_.-]*\.jar\)/$JAVAROOT\/\1/g' -e "s/ /$JCPS/g"`
 tweek_ext_jars=`echo "$ext_jars" | sed -e 's/\([a-z][a-z]*\.jar\)/${prefix}\/share\/tweek\/java\/\1/g' -e "s/ /$JCPS/g"`
 changequote([, ])
 
@@ -1194,6 +1195,7 @@ AC_SUBST(tweek_idlflags_java)
 AC_SUBST(tweek_idl_incflag_java)
 AC_SUBST(tweek_idlgendir_java)
 AC_SUBST(tweek_java_api_jars)
+AC_SUBST(tweek_java_api_jars_bundle)
 AC_SUBST(tweek_ext_jars)
 AC_SUBST(tweek_idlflags_python)
 AC_SUBST(tweek_idl_incflag_python)
@@ -1210,6 +1212,7 @@ AC_CONFIG_FILES([
    Makefile
    Makefile.inc
    common.defs.mk
+   java.defs.mk
    make.defs.mk
    tweek.appdefs.mk
    extensions/Makefile
@@ -1217,6 +1220,7 @@ AC_CONFIG_FILES([
    extensions/java/Makefile
    extensions/java/Makefile.inc
    java/build.xml
+   java/Info.plist
    java/Makefile
    java/Makefile.inc
    java/tweek-base.sh
