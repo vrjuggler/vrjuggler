@@ -37,7 +37,7 @@ void Viewport::config(jccl::ConfigChunkPtr chunk)
       sizeY = 1.0f;
    }
 
-         // -- Set local window attributes --- //
+    // -- Set local window attributes --- //
     setOriginAndSize(originX, originY, sizeX, sizeY);
 
     // Get the user for this display

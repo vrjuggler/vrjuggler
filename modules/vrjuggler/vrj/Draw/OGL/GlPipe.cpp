@@ -410,7 +410,8 @@ void GlPipe::renderWindow(GlWindow* win)
          {
             SimViewport* sim_vp = dynamic_cast<SimViewport*>(viewport);
 
-            win->setCameraProjection(sim_vp->getCameraProj());
+            //win->setCameraProjection(sim_vp->getCameraProj());
+            win->setProjection(sim_vp->getCameraProj());
             glManager->currentUserData()->setProjection(sim_vp->getCameraProj());
 
             mPerfBuffer->set(perf_phase++);

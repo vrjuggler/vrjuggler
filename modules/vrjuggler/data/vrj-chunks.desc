@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <ChunkDescDB>
   <ChunkDesc token="displaySystem" name="Display System">
     <PropertyDesc token="Name" name="Name" type="String" num="1">
@@ -1153,9 +1154,6 @@
     </PropertyDesc>
     <PropertyDesc token="vert_fov" name="Vertical FOV" type="Float" num="1">
         <help>Vertical field of view in degrees</help>
-    </PropertyDesc>
-    <PropertyDesc token="aspect_ratio" name="Aspect Ratio" type="Float" num="1">
-        <help>Aspect ratio of the window (w/h)</help>
     </PropertyDesc>
   </ChunkDesc>
   <ChunkDesc token="surfaceViewport" name="Surface Viewport">
