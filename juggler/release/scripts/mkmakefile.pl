@@ -168,9 +168,11 @@ sub printHelp () {
 Usage:
     $0
         [ --app=<name> | --apps <name1>=<srcs1> [ --apps <name2>=<srcs2> ... ]]
-        [ --dirprefix=<prefix> ] [ --dotin | --nodotin --expfile=<file> ]
-        [ --gmake ] [ --srcdir=<dirs> [...] ] [ --subdirs=<dirs> [...] ]
-        [ --subobjdir=<dir> ]
+        [ --basiclibs=<lib1> [...] ] [ --dirprefix=<prefix> ]
+        [ --dotin | --nodotin --expfile=<file> ] [ --extralibs=<lib1> [...] ]
+        [ --gmake ] [ --heading=<file> ] [ --includes=<option> [...] ]
+        [ --nosrcs=<file1> [...] ] [ --srcdir=<dirs> [...] ]
+        [ --subdirs=<dirs> [...] ] [ --subobjdir=<dir> ]
 
 For application makefiles:
 
@@ -182,6 +184,17 @@ For application makefiles:
     --apps <name1>=<srcs1> --apps <name2>=<srcs2> ... --apps <nameN>=<srcsN>
         Specify the names of multiple applications and the lists of source
         files that will be compiled for each application.
+
+    --basiclibs=<lib1> --basliclibs=<lib2> ... --basiclibs=<libN>
+        Provide additional basic libraries that should be linked.  These
+        are in addition to the default basic libraries linked.  Typically,
+        these are optional libraries built as part of the system being
+        compiled needed for a specific application.
+
+    --extralibs=<lib1> --basliclibs=<lib2> ... --extralibs=<libN>
+        Provide additional extra libraries that should be linked.  These
+        are in addition to the default extra libraries linked.  Typically,
+        these are optional system libraries needed for a specific application.
 
     --gmake
         Use GNU make features.
@@ -214,8 +227,19 @@ For all types of makefiles:
   or
 
     --nodotin --expfile=<Perl file>
-        Generate a fully expanded Makefile using the %VARS hash in the
+        Generate a fully expanded Makefile using the \%VARS hash in the
         file named as the argument to --expfile.
+
+    --heading=<file>
+        Print the contents of the given file at the top of the generated
+        makefile before anything else is written.
+
+    --includes=-I<path1> --includes=-I<path2> ... --includes=-I<pathN>
+        Extend the include path to use the specified additional options.
+        The options must be specified using the compiler option that
+        extends the include path.  Each option can be given as an argument
+        to a separate --includes option, or they can all be passed to a
+        single --includes option as a comma-separated list (no spaces).
 
     --nosrcs=<file1> --nosrcs=<file2> ... --nosrcs=<fileN>
         List files that should be excluded when preparing the source list.
