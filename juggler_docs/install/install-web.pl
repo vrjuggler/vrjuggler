@@ -1,4 +1,4 @@
-#!/usr/local/bin/perl
+#!/usr/freeware/bin/perl
 
 # -----------------------------------------------------------------------------
 # Install an entire directory from the VR Juggler development tree without

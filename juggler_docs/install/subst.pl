@@ -15,7 +15,7 @@
 #
 # $path_subst{"DEV_REF"} = '../here/there/everywhere'
 #
-# NOTE: The paths here are relative the "root" of the web
+# NOTE: The paths here are relative to the "root" of the web
 #       where the recursion starts
 #
 #
@@ -56,7 +56,7 @@ $path_subst{"JUGGLER_USER_COMMUNITY"} = 'html/contact.info/usercommunity.html';
 # ALIASES
 #-----------------------
 # An alias is a verbatim substitution.
-# The AllenScript doesn't modify the variable at all.
+# The install-web script doesn't modify the variable at all.
 
 # the href address to mail the Juggler list.
 $alias_subst{"JUGGLER_MAILING_LIST"} = 'mailto:vrjuggler@vrjuggler.org';
