@@ -67,6 +67,8 @@ std::ostream& vpr::operator<<(std::ostream& out, vpr::BaseThread* threadPtr)
  * After the object has been created, call this routine to complete
  * initialization.  Done this way, because I need to call this based on stuff
  * that happens in derived class's constructor... and that means what???
+ *
+ * This means that this can NOT be in the base constructor
  */
 void vpr::BaseThread::registerThread(bool succesfulCreation)
 {
