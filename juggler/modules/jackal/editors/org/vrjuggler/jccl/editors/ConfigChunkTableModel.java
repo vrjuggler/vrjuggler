@@ -31,6 +31,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 package org.vrjuggler.jccl.editors;
 
+import java.beans.*;
 import java.util.*;
 import javax.swing.table.*;
 import org.vrjuggler.jccl.config.*;
@@ -47,7 +48,15 @@ public class ConfigChunkTableModel
     */
    public void setConfigChunk(ConfigChunk chunk)
    {
+      if (mChunk != null)
+      {
+         mChunk.removePropertyChangeListener(chunkListener);
+      }
       mChunk = chunk;
+      if (mChunk != null)
+      {
+         mChunk.addPropertyChangeListener(chunkListener);
+      }
       fireTableDataChanged();
    }
 
@@ -236,6 +245,16 @@ public class ConfigChunkTableModel
    }
 
    /**
+    * Called by our chunk change listener whenever the chunk being modeled
+    * changes its internal state.
+    */
+   private void chunkChanged()
+   {
+      // TODO: be smarter about deciding what has changed
+      fireTableDataChanged();
+   }
+
+   /**
     * The name of the columns.
     */
    private String[] mColumnNames = { "Property", "Value" };
@@ -244,4 +263,22 @@ public class ConfigChunkTableModel
     * The config chunk this table model is representing.
     */
    private ConfigChunk mChunk = null;
+
+   /**
+    * Listener for changes made to the config chunk being displayed/edited.
+    */
+   private ChunkChangeListener chunkListener = new ChunkChangeListener();
+
+   /**
+    * Specialized property change listener to handle notifications when the
+    * config chunk that is being edited changes.
+    */
+   private class ChunkChangeListener
+      implements PropertyChangeListener
+   {
+      public void propertyChange(PropertyChangeEvent evt)
+      {
+         chunkChanged();
+      }
+   }
 }
