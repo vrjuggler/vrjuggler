@@ -62,7 +62,6 @@ VNCDesktop::VNCDesktop(const std::string& hostname, const vpr::Uint16& port,
                        const float& desktopSideLength)
    : mVncIf(hostname, port, password), mVncThreadFunctor(NULL),
      mVncThread(NULL), mHaveKeyboard(false),
-     mDesktopWidth(desktopSideLength), mDesktopHeight(desktopSideLength),
      mDesktopWandIsect(false), mDesktopGrabbed(false),
      mTextureData(NULL)
 {
@@ -74,6 +73,14 @@ VNCDesktop::VNCDesktop(const std::string& hostname, const vpr::Uint16& port,
 
    mTexWidth  = getNearestMultipleOfTwo(mVncIf.getWidth());       // Create a texture of multiple
    mTexHeight = getNearestMultipleOfTwo(mVncIf.getHeight());      // of two sized
+
+   mMaxTexCoordX = float(mVncWidth)/float(mTexWidth);             // Compute the tex coords for the desktop
+   mMaxTexCoordY = float(mVncHeight)/float(mTexHeight);
+
+   // Set initial desktop size based on aspect ratio of the vnc desktop
+   float aspect_ratio = float(mVncWidth)/float(mVncHeight);
+   mDesktopWidth = desktopSideLength;
+   mDesktopHeight = desktopSideLength/aspect_ratio;
 
    vprASSERT((mVncWidth <= mTexWidth) && (mVncHeight <= mTexHeight));   // Make sure tex is large enough
 
@@ -669,23 +676,24 @@ void VNCDesktop::draw()
       else
       {
          glColor3f(1.0f, 1.0f, 1.0f);
-         float tex_coord_height = 1.0f;
+         // Rolling texcoord should vary between 0.0 and mMaxTexCoordY
+         float min_tex_coordY = 0.0f;                                      // Default to full
          if((RollingDown == mActiveState) || (RollingUp == mActiveState))
-            tex_coord_height = (1.0f-mRollUpPercent);
+            min_tex_coordY += mRollUpPercent*mMaxTexCoordY;              // [0.0,mMaxTexCoordY]
 
          glBindTexture(GL_TEXTURE_2D, tex_name);
          glBegin(GL_QUADS);
            // Draw quad, counter counter clockwise from bottom left hand corner (0,0)
-            glTexCoord2f(0.0f, 1.0f);           // LL
+            glTexCoord2f(0.0f, mMaxTexCoordY);           // LL
             glVertex3f(0.0f, 0.0f, 0.0f);
 
-            glTexCoord2f(1.0f, 1.0f);           // LR
+            glTexCoord2f(mMaxTexCoordX, mMaxTexCoordY);           // LR
             glVertex3f(mDesktopWidth, 0.0f, 0.0f);
 
-            glTexCoord2f(1.0f, (1.0f-tex_coord_height));           // UR
+            glTexCoord2f(mMaxTexCoordX, min_tex_coordY);           // UR
             glVertex3f(mDesktopWidth, mDesktopHeight, 0.0f);
 
-            glTexCoord2f(0.0f, (1.0f-tex_coord_height));           // UL
+            glTexCoord2f(0.0f, min_tex_coordY);           // UL
             glVertex3f(0.0f, mDesktopHeight, 0.0f);
          glEnd();
 
