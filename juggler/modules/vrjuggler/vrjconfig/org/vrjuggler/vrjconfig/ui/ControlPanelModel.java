@@ -48,8 +48,13 @@ public interface ControlPanelModel
    /**
     * Gets the element at the given index in the model.
     */
-   public Object getElementAt(int index);
+   public String getLabelAt(int index);
 
+   /**
+    * Gets the element at the given index in the model.
+    */
+   public Object getUserObjectAt(int index);
+   
    /**
     * Gets the icon for the element at the given index.
     */
@@ -63,7 +68,7 @@ public interface ControlPanelModel
     * @return  the index of the object if it is contained in the model; -1 if
     *          <code>value</code> is not in the model
     */
-   public int getIndexOf(Object value);
+   public int getIndexOf(String label);
 
    /**
     * Gets the number of elements in this model.

@@ -57,19 +57,31 @@ public class DefaultControlPanelModel
     * @param value      the object to append
     * @param icon       the icon to associate with the value
     */
-   public void add(Object value, Icon icon)
+   public void add(String label, Icon icon)
+   {
+      this.add(label, icon, null);
+   }
+   
+   /**
+    * Appends a new object to the end of this model.
+    *
+    * @param value      the object to append
+    * @param icon       the icon to associate with the value
+    * @param user_object the object to be associated with this item 
+    */
+   public void add(String label, Icon icon, Object user_object)
    {
       int index0 = getSize();
-      data.add(new Item(value, icon));
+      data.add(new Item(label, icon, user_object));
       fireIntervalAdded(index0, index0);
    }
 
    /**
     * Removes the given object and its icon from this model.
     */
-   public void remove(Object value)
+   public void remove(String label)
    {
-      int index0 = getIndexOf(value);
+      int index0 = getIndexOf(label);
       if (index0 != -1)
       {
          data.remove(index0);
@@ -78,13 +90,23 @@ public class DefaultControlPanelModel
    }
 
    /**
+    * Gets the label at the given index.
+    *
+    * @param index   the index of the label to retrieve
+    */
+   public String getLabelAt(int index)
+   {
+      return ((Item)data.get(index)).mLabel;
+   }
+
+   /**
     * Gets the object at the given index.
     *
     * @param index   the index of the object to retrieve
     */
-   public Object getElementAt(int index)
+   public Object getUserObjectAt(int index)
    {
-      return ((Item)data.get(index)).value;
+      return ((Item)data.get(index)).mUserObject;
    }
 
    /**
@@ -94,7 +116,7 @@ public class DefaultControlPanelModel
     */
    public Icon getIconAt(int index)
    {
-      return ((Item)data.get(index)).icon;
+      return ((Item)data.get(index)).mIcon;
    }
 
    /**
@@ -104,12 +126,12 @@ public class DefaultControlPanelModel
     *
     * @return  the index if successful, -1 if value is not in the model
     */
-   public int getIndexOf(Object value)
+   public int getIndexOf(String label)
    {
       for (int i=0; i<data.size(); ++i)
       {
-         Object elt_value = getElementAt(i);
-         if (value == elt_value)
+         String elt_label = getLabelAt(i);
+         if (label == elt_label)
          {
             return i;
          }
@@ -135,13 +157,15 @@ public class DefaultControlPanelModel
     */
    private class Item
    {
-      public Item(Object value, Icon icon)
+      public Item(String label, Icon icon, Object user_object)
       {
-         this.value = value;
-         this.icon = icon;
+         this.mLabel = label;
+         this.mIcon = icon;
+         this.mUserObject = user_object;
       }
 
-      public Object value;
-      public Icon icon;
+      public Object mUserObject;
+      public String mLabel;
+      public Icon   mIcon;
    }
 }
