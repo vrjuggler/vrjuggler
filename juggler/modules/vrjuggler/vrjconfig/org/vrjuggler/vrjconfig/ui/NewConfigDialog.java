@@ -208,7 +208,11 @@ public class NewConfigDialog
 
    private void addInclude()
    {
-      includesTableModel.add("foo");
+      int new_row = includesTableModel.size();
+      includesTableModel.add("");
+      includesList.requestFocus();
+      includesList.setRowSelectionInterval(new_row, new_row);
+      includesList.editCellAt(new_row, 0);
    }
 
    private void removeInclude(int idx)
@@ -406,6 +410,7 @@ public class NewConfigDialog
       includesListSP.getViewport().add(includesList, null);
       buttonPnl.add(Box.createHorizontalGlue());
       buttonPnl.add(cancelBtn, null);
+      buttonPnl.add(Box.createHorizontalStrut(8));
       buttonPnl.add(okBtn, null);
    }
 
@@ -476,7 +481,7 @@ public class NewConfigDialog
    private class IncludesTableModel
       extends AbstractTableModel
    {
-      private static final int MIN_ROWS = 5;
+      private static final int MIN_ROWS = 1;
 
       public void add(Object elt)
       {
