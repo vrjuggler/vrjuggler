@@ -39,6 +39,7 @@ package org.vrjuggler.tweek.net.corba;
 import java.util.Properties;
 import org.omg.CORBA.*;
 import org.omg.CosNaming.*;
+import org.omg.CosNaming.NamingContextPackage.*;
 
 
 public class CorbaService
@@ -80,18 +81,39 @@ public class CorbaService
       return port;
    }
 
-   public org.omg.CORBA.Object getReference (String id, String kind)
-      throws SystemException, UserException
+   /**
+    * Retrieves a reference to the CORBA object known as the Subject Manager.
+    * Using this reference, the caller can request references to subjects
+    * registered with the manager.
+    *
+    * @return null if the Subject Manager reference cannot be retrieved.
+    */
+   public tweek.SubjectManager getSubjectManager ()
    {
+      tweek.SubjectManager mgr = null;
+
       NameComponent[] name_comp = new NameComponent[1];
+      name_comp[0] = new NameComponent("SubjectManager", "Object");
 
-      name_comp[0] = new NameComponent(id, kind);
+      try
+      {
+         org.omg.CORBA.Object ref = namingContext.resolve(name_comp);
+         mgr = tweek.SubjectManagerHelper.narrow(ref);
+      }
+      catch (InvalidName e)
+      {
+         e.printStackTrace();
+      }
+      catch (CannotProceed e)
+      {
+         e.printStackTrace();
+      }
+      catch (NotFound e)
+      {
+         e.printStackTrace();
+      }
 
-      org.omg.CORBA.Object ref = null;
-
-      ref = namingContext.resolve(name_comp);
-
-      return ref;
+      return mgr;
    }
 
    private String host = null;
