@@ -128,6 +128,11 @@ public:      // Global "get" interface
    vjInputManager* getInputManager()
    { return mInputManager; }
 
+    //: Get the Environment Manager
+    vjEnvironmentManager* getEnvironmentManager() {
+	return environmentManager;
+    }
+
    //: Get the user associated with given name
    //! RETURNS: NULL - Not found
    vjUser*  getUser(std::string userName);

@@ -19,7 +19,7 @@
 #include <vjConfig.h>
 #include <Environment/vjConnect.h>
 #include <Environment/vjTuPerfBufReader.h>
-
+#include <Kernel/vjConfigChunkHandler.h>
 
 
 //-------------------------------------
@@ -28,7 +28,7 @@
 //---------------------------------------
 
 
-class vjEnvironmentManager /* way too long a name */ {
+class vjEnvironmentManager: public vjConfigChunkHandler {
 
 public:
 
@@ -81,7 +81,7 @@ public:
 
 
     //: returns a pointer to a connection with the given name
-    vjConnect* getConnect (char* _name);
+    vjConnect* getConnect (std::string _name);
 
 
 
@@ -91,10 +91,27 @@ public:
 
 
 
+    //: ConfigChunkHandler stuff
+    //! PRE: configCanHandle(chunk) == true
+    //! RETURNS: success
+    virtual bool configAdd(vjConfigChunk* chunk);
+
+    //: Remove the chunk from the current configuration
+    //! PRE: configCanHandle(chunk) == true
+    //!RETURNS: success
+    virtual bool configRemove(vjConfigChunk* chunk);
+    
+    //: Can the handler handle the given chunk?
+    //! RETURNS: true - Can handle it
+    //+          false - Can't handle it
+    virtual bool configCanHandle(vjConfigChunk* chunk);
+
+
 private:
     vjConfigChunkDB*          chunkdb;
     std::vector<vjConnect*>   connections;
     std::vector<vjTimedUpdate*> updaters;
+    std::vector<vjPerfDataBuffer*> perf_buffers;
     vjThread*                 listen_thread;
     int                       Port;
     int                       listen_socket;
@@ -102,9 +119,12 @@ private:
     bool                      activated;
     bool                      configured_to_accept;
     void controlLoop (void* nullParam);
-    void reconfigure();
+    //void reconfigure();
 
-    
+    bool configuredToActivate (vjPerfDataBuffer* b) {
+	return 1;
+    }
+
 }; // end vjEnvironmentManager
 
 
