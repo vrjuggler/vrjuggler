@@ -30,7 +30,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-package org.vrjuggler.vrjconfig.customeditors.display_window;
+package org.vrjuggler.vrjconfig.commoneditors;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -44,29 +44,24 @@ import org.vrjuggler.jccl.config.*;
 
 /**
  * This is a helper class designed to collect together all the config elements
- * associated with a given config element for a simulated device type.  It
+ * associated with a given config element for a Juggler device type.  It
  * finds all the proxies pointing at the given config element and all the
- * aliases that refer to those proxies.  There is nothing that specifically
- * restricts this class to being used with simulated devices.  It just
- * happens to have evolved out of a need for handling simulated device type
- * config elements.
+ * aliases that refer to those proxies.
  */
-public class SimDeviceConfig
+public class DeviceConfig
    implements EditorConstants
 {
    /**
-    * Simple constructor for a simulated device type's config element.
-    * This looks in the context for all proxies pointing at the given
-    * simulated device's config element and all aliases referring to those
-    * discovered proxies.
+    * Simple constructor for a device type's config element.  This looks in
+    * the context for all proxies pointing at the given device's config element
+    * and all aliases referring to those discovered proxies.
     *
-    * @param ctx                the context where the config element is used
-    * @param simDeviceElt       the config element for a Juggler simulated
-    *                           device type
+    * @param ctx        the context where the config element is used
+    * @param deviceElt  the config element for a Juggler device type
     */
-   public SimDeviceConfig(ConfigContext ctx, ConfigElement simDeviceElt)
+   public DeviceConfig(ConfigContext ctx, ConfigElement deviceElt)
    {
-      device = simDeviceElt;
+      device = deviceElt;
 
       findProxies(ctx);
 
@@ -81,25 +76,23 @@ public class SimDeviceConfig
    }
 
    /**
-    * Simple constructor for a simulated device type's config element.
-    * This looks in the context for all proxies of then given type pointing at
-    * the given simulated device's config element and all aliases referring to
-    * those discovered proxies.  For device types that allow multiple proxy
-    * types to be used, use the constructor overload that performs an untyped
-    * proxy search.
+    * Simple constructor for a device type's config element.  This looks in
+    * the context for all proxies of then given type pointing at the given
+    * device's config element and all aliases referring to those discovered
+    * proxies.  For device types that allow multiple proxy types to be used,
+    * use the constructor overload that performs an untyped proxy search.
     *
     * @param ctx                the context where the config element is used
-    * @param simDeviceElt       the config element for a Juggler simulated
-    *                           device type
+    * @param deviceElt          the config element for a Juggler device type
     * @param proxyTypeName      the name of the proxy type that can point at
-    *                           simDeviceElt
+    *                           <code>deviceElt</code>
     *
-    * @see #SimDeviceConfig(ConfigContext,ConfigElement)
+    * @see #DeviceConfig(ConfigContext,ConfigElement)
     */
-   public SimDeviceConfig(ConfigContext ctx, ConfigElement simDeviceElt,
-                          String proxyTypeName)
+   public DeviceConfig(ConfigContext ctx, ConfigElement deviceElt,
+                       String proxyTypeName)
    {
-      device = simDeviceElt;
+      device = deviceElt;
 
       findTypedProxies(ctx, proxyTypeName);
 
@@ -114,25 +107,23 @@ public class SimDeviceConfig
    }
 
    /**
-    * Simple constructor for a simulated device type's config element.
-    * This looks in the context for all proxies of then given type pointing at
-    * the given simulated device's config element and all aliases referring to
-    * those discovered proxies.  For device types that allow multiple proxy
-    * types to be used, use the constructor overload that performs an untyped
-    * proxy search.
+    * Simple constructor for a device type's config element.  This looks in
+    * the context for all proxies of then given type pointing at the given
+    * device's config element and all aliases referring to those discovered
+    * proxies.  For device types that allow multiple proxy types to be used,
+    * use the constructor overload that performs an untyped proxy search.
     *
-    * @param ctx                the context where the config element is used
-    * @param simDeviceElt       the config element for a Juggler simulated
-    *                           device type
-    * @param proxyType          the config definition for the proxy type that
-    *                           can point at simDeviceElt
+    * @param ctx        the context where the config element is used
+    * @param deviceElt  the config element for a Juggler device type
+    * @param proxyType  the config definition for the proxy type that can
+    *                   point at <code>deviceElt</code>
     *
-    * @see #SimDeviceConfig(ConfigContext,ConfigElement)
+    * @see #DeviceConfig(ConfigContext,ConfigElement)
     */
-   public SimDeviceConfig(ConfigContext ctx, ConfigElement simDeviceElt,
-                          ConfigDefinition proxyType)
+   public DeviceConfig(ConfigContext ctx, ConfigElement deviceElt,
+                       ConfigDefinition proxyType)
    {
-      device = simDeviceElt;
+      device = deviceElt;
 
       findTypedProxies(ctx, proxyType);
 
@@ -149,21 +140,20 @@ public class SimDeviceConfig
    /**
     * Device + proxy list constructor.  This constructor assumes that the
     * given list of proxy config elements is both correct (the proxies
-    * refer to the givem simulated device config element) and complete (the
+    * refer to the given input device config element) and complete (the
     * proxies in the list are all those proxies in the context that refer
-    * to the given simulated device config element).  This looks in the
-    * context for all aliases referring to the given list of proxies.
+    * to the given input device config element).  This looks in the context
+    * for all aliases referring to the given list of proxies.
     *
-    * @param ctx                the context where the config element is used
-    * @param simDeviceElt       the config element for a Juggler simulated
-    *                           device type
-    * @param proxyElts          the complete list of proxy config elements in
-    *                           ctx that point to simDeviceElt
+    * @param ctx        the context where the config element is used
+    * @param deviceElt  the config element for a Juggler device type
+    * @param proxyElts  the complete list of proxy config elements in
+    *                   <code>ctx</code> that point to <code>deviceElt</code>
     */
-   public SimDeviceConfig(ConfigContext ctx, ConfigElement simDeviceElt,
-                          List proxyElts)
+   public DeviceConfig(ConfigContext ctx, ConfigElement deviceElt,
+                       List proxyElts)
    {
-      device  = simDeviceElt;
+      device  = deviceElt;
       proxies = proxyElts;
       findAliases(ctx);
    }
@@ -171,21 +161,20 @@ public class SimDeviceConfig
    /**
     * Device + proxy list constructor.  This constructor assumes that the
     * given list of proxy config elements is both correct (the proxies
-    * refer to the givem simulated device config element) and complete (the
+    * refer to the given input device config element) and complete (the
     * proxies in the list are all those proxies in the context that refer
-    * to the given simulated device config element).  This looks in the
-    * context for all aliases referring to the given list of proxies.
+    * to the given input device config element).  This looks in the context
+    * for all aliases referring to the given list of proxies.
     *
-    * @param ctx                the context where the config element is used
-    * @param simDeviceElt       the config element for a Juggler simulated
-    *                           device type
-    * @param proxyElts          the complete array of proxy config elements in
-    *                           ctx that point to simDeviceElt
+    * @param ctx        the context where the config element is used
+    * @param deviceElt  the config element for a Juggler device type
+    * @param proxyElts  the complete array of proxy config elements in
+    *                   <code>ctx</code> that point to <code>deviceElt</code>
     */
-   public SimDeviceConfig(ConfigContext ctx, ConfigElement simDeviceElt,
-                          ConfigElement[] proxyElts)
+   public DeviceConfig(ConfigContext ctx, ConfigElement deviceElt,
+                       ConfigElement[] proxyElts)
    {
-      device  = simDeviceElt;
+      device = deviceElt;
 
       for ( int i = 0; i < proxyElts.length; ++i )
       {
@@ -198,22 +187,22 @@ public class SimDeviceConfig
    /**
     * Device + proxy list + alias list constructor.  This constructor assumes
     * that the given lists of proxy and alias config elements are correct
-    * (the proxies refer to the givem simulated device config element and the
+    * (the proxies refer to the given input device config element and the
     * aliases refer to the given list of proxies) and complete (the proxies in
     * the list are all those proxies in the context that refer to the given
-    * simulated device config element and the aliases are all those in the
-    * context that refer to those proxies).
+    * input device config element and the aliases are all those in the context
+    * that refer to those proxies).
     *
-    * @param ctx                the context where the config element is used
-    * @param simDeviceElt       the config element for a Juggler simulated
-    *                           device type
-    * @param proxyElts          the complete list of proxy config elements in
-    *                           ctx that point to simDeviceElt
-    * @param aliasElts          the complete list of alias config elements in
-    *                           ctx that refer to the proxies in proxyElts
+    * @param ctx        the context where the config element is used
+    * @param deviceElt  the config element for a Juggler device type
+    * @param proxyElts  the complete list of proxy config elements in
+    *                   <code>ctx</code> that point to <code>deviceElt</code>
+    * @param aliasElts  the complete list of alias config elements in
+    *                   <code>ctx</code> that refer to the proxies in
+    *                   <code>proxyElts</code>
     */
-   public SimDeviceConfig(ConfigContext ctx, ConfigElement simDeviceElt,
-                          List proxyElts, List aliasElts)
+   public DeviceConfig(ConfigContext ctx, ConfigElement deviceElt,
+                       List proxyElts, List aliasElts)
    {
 /*
       ConfigDefinition def = aliasElt.getDefinition();
@@ -224,7 +213,7 @@ public class SimDeviceConfig
                                             " (expected " + ALIAS_TYPE + ")");
       }
 */
-      device  = simDeviceElt;
+      device  = deviceElt;
       proxies = proxyElts;
       fillAliasMap(aliasElts);
    }
@@ -232,24 +221,24 @@ public class SimDeviceConfig
    /**
     * Device + proxy list + alias list constructor.  This constructor assumes
     * that the given lists of proxy and alias config elements are correct
-    * (the proxies refer to the givem simulated device config element and the
+    * (the proxies refer to the given input device config element and the
     * aliases refer to the given list of proxies) and complete (the proxies in
     * the list are all those proxies in the context that refer to the given
-    * simulated device config element and the aliases are all those in the
-    * context that refer to those proxies).
+    * input device config element and the aliases are all those in the context
+    * that refer to those proxies).
     *
-    * @param ctx                the context where the config element is used
-    * @param simDeviceElt       the config element for a Juggler simulated
-    *                           device type
-    * @param proxyElts          the complete array of proxy config elements in
-    *                           ctx that point to simDeviceElt
-    * @param aliasElts          the complete array of alias config elements in
-    *                           ctx that refer to the proxies in proxyElts
+    * @param ctx        the context where the config element is used
+    * @param deviceElt  the config element for a Juggler device type
+    * @param proxyElts  the complete array of proxy config elements in
+    *                   <code>ctx</code> that point to simDeviceElt
+    * @param aliasElts  the complete array of alias config elements in
+    *                   <code>ctx</code> that refer to the proxies in
+    *                   <code>proxyElts</code>
     */
-   public SimDeviceConfig(ConfigContext ctx, ConfigElement simDeviceElt,
-                          ConfigElement[] proxyElts, ConfigElement[] aliasElts)
+   public DeviceConfig(ConfigContext ctx, ConfigElement deviceElt,
+                       ConfigElement[] proxyElts, ConfigElement[] aliasElts)
    {
-      device  = simDeviceElt;
+      device = deviceElt;
 
       for ( int i = 0; i < proxyElts.length; ++i )
       {
@@ -266,8 +255,8 @@ public class SimDeviceConfig
    }
 
    /**
-    * Returns the list of aliases referring to this simulated device's
-    * proxy config elements.
+    * Returns the list of aliases referring to this device's proxy config
+    * elements.
     */
    public List getAliases()
    {
@@ -295,8 +284,7 @@ public class SimDeviceConfig
    }
 
    /**
-    * Returns the list of proxies referring to this simulated device's config
-    * element.
+    * Returns the list of proxies referring to this device's config element.
     */
    public List getProxies()
    {
@@ -304,7 +292,7 @@ public class SimDeviceConfig
    }
 
    /**
-    * Returns the config element for this simulated device's configuration.
+    * Returns the config element for this device's configuration.
     */
    public ConfigElement getDevice()
    {
@@ -312,8 +300,7 @@ public class SimDeviceConfig
    }
 
    /**
-    * Presents a string representation of this simulated device's
-    * configuration.
+    * Presents a string representation of this device's configuration.
     */
    public String toString()
    {

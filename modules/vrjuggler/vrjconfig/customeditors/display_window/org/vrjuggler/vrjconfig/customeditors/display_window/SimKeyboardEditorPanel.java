@@ -48,6 +48,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import org.vrjuggler.jccl.config.*;
+import org.vrjuggler.vrjconfig.commoneditors.DeviceConfig;
 import org.vrjuggler.vrjconfig.commoneditors.KeyboardEditorPanel;
 
 
@@ -225,8 +226,7 @@ public class SimKeyboardEditorPanel
                      {
 //                        System.out.println("\t\tMatched " +
 //                                           proxy_elt.getName());
-                        SimDeviceConfig def_cfg = new SimDeviceConfig(ctx,
-                                                                      sim_elt);
+                        DeviceConfig def_cfg = new DeviceConfig(ctx, sim_elt);
                         DefaultListModel model =
                            (DefaultListModel) mDeviceList.getModel();
                         model.addElement(def_cfg);
@@ -359,7 +359,7 @@ public class SimKeyboardEditorPanel
       SimDeviceCreateDialog dlg =
          new SimDeviceCreateDialog(parent, mContext, keyboardProxyElement,
                                    mSimDevProxyDefMap, mDataSourceName);
-      SimDeviceConfig sim_dev_cfg = dlg.showDialog();
+      DeviceConfig sim_dev_cfg = dlg.showDialog();
 
       if ( sim_dev_cfg != null )
       {
@@ -370,8 +370,7 @@ public class SimKeyboardEditorPanel
 
    void mRemoveSimDeviceButton_actionPerformed(ActionEvent event)
    {
-      SimDeviceConfig sim_dev_cfg =
-         (SimDeviceConfig) mDeviceList.getSelectedValue();
+      DeviceConfig sim_dev_cfg = (DeviceConfig) mDeviceList.getSelectedValue();
       ConfigElement dev_elt = sim_dev_cfg.getDevice();
 
       if ( mCurSimEditor != null )
@@ -419,8 +418,8 @@ public class SimKeyboardEditorPanel
 
       if ( selection != null )
       {
-         SimDeviceConfig sim_dev_cfg = (SimDeviceConfig) selection;
-         ConfigElement dev_elt       = sim_dev_cfg.getDevice();
+         DeviceConfig sim_dev_cfg = (DeviceConfig) selection;
+         ConfigElement dev_elt    = sim_dev_cfg.getDevice();
 
          Object cached_editor = mSimEditorCache.get(dev_elt);
 
