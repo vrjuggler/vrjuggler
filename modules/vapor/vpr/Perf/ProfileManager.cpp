@@ -46,6 +46,14 @@
 namespace vpr
 {
 
+// Initialize statics
+ProfileNode    ProfileManager::mRoot( "Root", NULL );
+ProfileNode*   ProfileManager::mCurrentNode = &ProfileManager::mRoot;
+int            ProfileManager::mFrameCounter = 0;
+vpr::Interval* ProfileManager::mResetTime = 0;
+vpr::Mutex     ProfileManager::mTreeLock;
+
+
 
    void  ProfileManager::startProfile( const char * name )
    {
@@ -86,7 +94,7 @@ namespace vpr
    void  ProfileManager::reset( void )
    {
       mTreeLock.acquire();
-      mRoot.reset(); 
+      mRoot.reset();
       mFrameCounter = 0;
       profileGetTicks(mResetTime);
       mTreeLock.release();
