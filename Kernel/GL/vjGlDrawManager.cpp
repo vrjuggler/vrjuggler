@@ -294,6 +294,7 @@ void vjGlDrawManager::drawSimulator(vjSimDisplay* sim)
 	      glMultMatrixf(sim->getHeadPos().getFloatPtr());
 	      glColor3f(1.0f, 0.0f, 0.0f);
 	      drawSphere(head_radius, 10, 10);             // Head
+
 	      glPushMatrix();
 	         glColor3f(0.0f, 0.0f, 1.0f);
 	         glTranslatef(0.0f, eye_vertical, -eye_horizontal);
