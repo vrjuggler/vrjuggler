@@ -243,8 +243,8 @@ ifneq (@OS_TYPE@, Win32)
           ln -s $(LIBDIR_BASE) ./$(LIBDIR_NAME)
 	cd $(instlinks) && rm -rf ./$(VJ_SHARE_DIR) &&			\
           $(SHELL) $(MKINSTALLDIRS) ./$(VJ_SHARE_DIR)
-	cd $(instlinks)/$(VJ_SHARE_DIR) && rm -f ./Data &&		\
-          ln -s $(VJROOT_ABS)/Data ./Data
+	cd $(instlinks)/$(VJ_SHARE_DIR) && rm -f ./data &&		\
+          ln -s $(VJROOT_ABS)/data ./data
 	cd $(instlinks)/$(VJ_SHARE_DIR) && rm -f ./samples &&		\
           ln -s $(VJROOT_ABS)/samples ./samples
 	cd $(instlinks)/include/vrj && rm -f ./*.h &&			\
@@ -287,7 +287,7 @@ clean-links:
 #     2) Install the libraries.
 #     3) Install the header files.
 #     4) Install the test programs.
-#     5) Install the contents of the Data directory.
+#     5) Install the contents of the data directory.
 #     6) Install the Java-based config editor (if possible).
 # =============================================================================
 
@@ -406,8 +406,8 @@ install-data:
 	@echo "------------------------------------------------"
 	$(SHELL) $(MKINSTALLDIRS) $(datadir)
 	$(MTREE_CMD) -Ude -f $(mtreedir)/VJ.data.dist -p $(datadir)
-	$(PERL) $(scriptdir)/install-dir.pl -i $(top_srcdir)/Data	\
-          -m $(FILE_PERMS) $(GROUP_OPT_UNIX) -o $(datadir)/Data		\
+	$(PERL) $(scriptdir)/install-dir.pl -i $(top_srcdir)/data	\
+          -m $(FILE_PERMS) $(GROUP_OPT_UNIX) -o $(datadir)/data		\
           -v "$(topdir)/VARS.pl"
 
 # =============================================================================

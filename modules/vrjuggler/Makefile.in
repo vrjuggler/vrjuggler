@@ -67,7 +67,7 @@
 #
 # hier              - Make the full directory hierarchy for the installation.
 # install-all       - Install all versions of the libraries, all header files,
-#                     the Data directory, and the test code.
+#                     the data directory, and the test code.
 # install-all-abi   - Install every ABI possible on the target platform.
 # install           - Install the full debugging version of VR Juggler (with
 #                     both static and dynamic libraries). 
@@ -84,7 +84,7 @@
 # install-samples   - Install only the sample applications.
 # install-test      - Install only the test code.
 # install-tools     - Install only the user tools code.
-# install-data      - Install only the Data directory.
+# install-data      - Install only the data directory.
 #
 # docs              - Build the internal and the public documentation.
 # doc-internal      - Build only the internal documentation.

@@ -136,7 +136,7 @@ void SystemFactoryOSX::Initialize()
     char* vj_base_dir = getenv("VJ_BASE_DIR");
     if(vj_base_dir == NULL) vj_base_dir = root_path;
 
-    sprintf(bundle_path,"%s/share/Data/OSXData.bundle",vj_base_dir);
+    sprintf(bundle_path,"%s/share/data/OSXData.bundle",vj_base_dir);
     bundle_path_cfstr = CFStringCreateWithCString(NULL, (const char*)bundle_path, kCFStringEncodingMacRoman);
     bundleURL = CFURLCreateWithFileSystemPath(kCFAllocatorDefault, bundle_path_cfstr, kCFURLPOSIXPathStyle, true);
     myBundle = CFBundleCreate(kCFAllocatorDefault, bundleURL);
