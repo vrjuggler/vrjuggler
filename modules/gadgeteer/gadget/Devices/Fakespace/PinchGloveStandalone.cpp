@@ -41,7 +41,7 @@
 // Kevin Meinert
 //
 // NOTES:
-//      The long function names greatly decrease the 
+//      The long function names greatly decrease the
 //       ambiguity of what the functions do ... sorry. :)
 //
 // Date: 1-23-99
@@ -89,7 +89,7 @@ PinchGloveStandalone::~PinchGloveStandalone()
 bool PinchGloveStandalone::connectToHardware(const char* const ttyPort)
 {
     std::cout<<"\n[pinch] Connecting To Fakespace Hardware\n"<<std::flush;
-    int result = mConnectToHardware( ttyPort );    
+    int result = mConnectToHardware( ttyPort );
     if (result == 1)
     {
         std::cout<<"[pinch] Connected to pinch glove hardware on port "<<ttyPort<<"\n"<<std::flush;
@@ -102,19 +102,19 @@ bool PinchGloveStandalone::connectToHardware(const char* const ttyPort)
     return result == 1 ? true:false;
 }
 
-// get the last sampled string, 
+// get the last sampled string,
 // NOTE: call ReSampleData to get most current pinch data.
 void PinchGloveStandalone::getSampledString(std::string& gestureString)
 {
     gestureString = mGestureString;
 }
 
-// call ReSampleData to get most current pinch data. 
+// call ReSampleData to get most current pinch data.
 void PinchGloveStandalone::updateStringFromHardware()
 {
     // make a copy into the previous string.
     mPreviousGestureString = mGestureString;
-       
+
     // get the current string from the pinch hardware
 	// If there is no _new_ string, then tempString will not be modified.
 	// NOTE: this is why we have to save the old value in tempString
@@ -140,8 +140,8 @@ int PinchGloveStandalone::mConnectToHardware(const char* const ttyPort)
     //CREATE A NEW SERIAL PORT
     port = new vpr::SerialPort(ttyPort);
     port->setOpenReadWrite();
-    
-    if (!port->open().success()) 
+
+    if (!port->open().success())
     {
     	std::cout<<"[pinch] Port ("<<ttyPort<<") open failed\n"<<std::flush;
 		port->close();
@@ -152,7 +152,7 @@ int PinchGloveStandalone::mConnectToHardware(const char* const ttyPort)
         std::cout<<"[pinch] Port ("<<ttyPort<<") open success\n"<<std::flush;
         baud = 9600;
         port->clearAll();
-        port->enableLocal();
+        port->enableLocalAttach();
         port->enableBreakByteIgnore();
         port->enableRead();
         port->setBufferSize(1);
@@ -161,17 +161,17 @@ int PinchGloveStandalone::mConnectToHardware(const char* const ttyPort)
         port->setCharacterSize(vpr::SerialTypes::CS_BITS_8);
         std::cout<<"[pinch] Port ("<<ttyPort<<") successfully changed the port settings\n"<<std::flush;
     }
-    
+
     usleep(450000);
-    
+
     port->flushQueue(vpr::SerialTypes::IO_QUEUES);
 
     /* Turn time stamps on */
     mSendCommandToHardware("T1", buf);
-    if (buf[1] != '1') 
+    if (buf[1] != '1')
     {
     	std::cout<<"[pinch] Could not turn time stamps on, result should == '1' but result == '"<<buf[1]<<"'\n";
-    	return 0;   
+    	return 0;
     }
     else
     {   //DELETE
@@ -180,37 +180,37 @@ int PinchGloveStandalone::mConnectToHardware(const char* const ttyPort)
     /* Version compatability */
     usleep(450000);
     mSendCommandToHardware("V1", buf);
-    if (buf[1] != '1') 
+    if (buf[1] != '1')
     {
         std::cout << "[pinch] Could not set to version 1 formatting, result should == '1' but result == '"<<buf[1]<<"'\n";
-        return 0;   
+        return 0;
     }
     else
     {
         printf("[pinch] Set to version 1 formatting\n");
-    } 
+    }
     /* Get the configuration information and print it */
     printf("[pinch] Configuration:\n");
     usleep(450000);
-    cnt = mSendCommandToHardware("CP", buf); 
+    cnt = mSendCommandToHardware("CP", buf);
     buf[cnt-1] = 0; /* get rid of 0x8F */
     printf("\t%s\n",&buf[1]);
-    
+
     usleep(450000);
-    cnt = mSendCommandToHardware("CL", buf); 
+    cnt = mSendCommandToHardware("CL", buf);
     buf[cnt-1] = 0; /* get rid of 0x8F */
     printf("\t%s\n",&buf[1]);
-    
+
     usleep(450000);
     cnt = mSendCommandToHardware("CR", buf);
     buf[cnt-1] = 0; /* get rid of 0x8F */
     printf("\t%s\n",&buf[1]);
-    
+
     usleep(450000);
-    cnt = mSendCommandToHardware("CT", buf); 
+    cnt = mSendCommandToHardware("CT", buf);
     buf[cnt-1] = 0; /* get rid of 0x8F */
     printf("\t%s\n",&buf[1]);
-    
+
     return 1;
 }
 
@@ -239,17 +239,17 @@ int PinchGloveStandalone::mSendCommandToHardware(const char* const command, unsi
         usleep(450000);
     }
 
-    
+
     // Send the 2 byte command by sending each byte seperately and flushing port after each
-    
+
     port->write(&command[0], 1, written);
     port->flushQueue(vpr::SerialTypes::OUTPUT_QUEUE);
     usleep(450000);
-    
+
     port->write(&command[1], 1, written);
     port->flushQueue(vpr::SerialTypes::OUTPUT_QUEUE);
     usleep(450000);
-   
+
     return(mReadRecordsFromHardware(100,reply));
 }
 
@@ -262,7 +262,7 @@ int PinchGloveStandalone::mReadRecordsFromHardware(const int& rec_max_len, unsig
     unsigned char buf[2048];
     clock_t t1, t2;
     vpr::ReturnStatus status;
-    
+
     #define START_BYTE_DATA 0x80
     #define START_BYTE_DATA_TS 0x81
     #define START_BYTE_TEXT 0x82
@@ -270,40 +270,40 @@ int PinchGloveStandalone::mReadRecordsFromHardware(const int& rec_max_len, unsig
 
     records[0] = 0;
     written = 0;
-    
+
     usleep(150000);
-    
+
     status = port->read(&buf[0], 1, written, vpr::Interval::NoWait);
 
     while((records[numbytes-written] != END_BYTE) && status == vpr::ReturnStatus::Succeed)
     {
-        if ( (buf[0] == START_BYTE_DATA) || (buf[0] == START_BYTE_DATA_TS) || (buf[0] == START_BYTE_TEXT)) 
+        if ( (buf[0] == START_BYTE_DATA) || (buf[0] == START_BYTE_DATA_TS) || (buf[0] == START_BYTE_TEXT))
 		{
             records[numbytes++] = buf[0];
 			t1 = clock();
 			t2 = clock();
 
-			if (t1 > t2) 
-			{ 
-                t1 = t2; 
-				t2 = clock(); 
-			} 
-            do 
+			if (t1 > t2)
+			{
+                t1 = t2;
+				t2 = clock();
+			}
+            do
             {
                 written=0;
                 port->read(&records[numbytes], 1,written);
                 numbytes += written;
-                if (t1 > t2) 
+                if (t1 > t2)
 				{
-                    t1 = t2; 
+                    t1 = t2;
 				    t2 = clock();
-				} 
+				}
             }while ( (records[numbytes-written] != END_BYTE) && ((clock_t)t2 - (clock_t)t1 < CLOCKS_PER_SEC));
         }
-        if (t1 > t2) 
-		{ 
-           t1 = t2; 
-		   t2 = clock(); 
+        if (t1 > t2)
+		{
+           t1 = t2;
+		   t2 = clock();
         }
         usleep(150000);
     }
@@ -318,29 +318,29 @@ void PinchGloveStandalone::mGetStringFromHardware( char* gesture)
     static char nges = '0';
     int i, num;
     int touch_count;
-    
+
     num = mReadRecordsFromHardware( BUFFER_LEN, rec );
     // if anything outputs from mReadRecordsFromHardware(), then...
-    if (num) 
+    if (num)
     {
-	   strncpy( gesture, mOpenHandString.data(), 12 );   
+	   strncpy( gesture, mOpenHandString.data(), 12 );
 
-		switch(rec[0]) 
+		switch(rec[0])
 		{
-		case 0x80: 
+		case 0x80:
 		case 0x81:
-			if (rec[0] == 0x80) 
+			if (rec[0] == 0x80)
 			{
-			  for (i=1; i<num-2; ++i) 
+			  for (i=1; i<num-2; ++i)
 			  {
     			  data[i-1] = rec[i];
 			  }
 			  touch_count = (num-2)/2;
-			} 
+			}
 
-			else 
+			else
 			{
-			   for (i=1; i<num-3; ++i) 
+			   for (i=1; i<num-3; ++i)
 			   {
 				   data[i-1] = rec[i];
 			   }
@@ -348,7 +348,7 @@ void PinchGloveStandalone::mGetStringFromHardware( char* gesture)
 			}
 
 
-			for (i=0; i<touch_count; ++i) 
+			for (i=0; i<touch_count; ++i)
 			{
 				/* for debug onlu */
 				/*printf(" %02X.%02X\n",data[2*i],data[2*i+1]); */
@@ -363,8 +363,8 @@ void PinchGloveStandalone::mGetStringFromHardware( char* gesture)
 				}
 
     		  /* left hand */
-    		  switch (data[2*i]) 
-    		  { 
+    		  switch (data[2*i])
+    		  {
         		case 0x10 :  gesture[0] = nges; break;
         		case 0x01 :  gesture[4] = nges; break;
         		case 0x11 :  gesture[0] = nges; gesture[4] = nges; break;
@@ -383,11 +383,11 @@ void PinchGloveStandalone::mGetStringFromHardware( char* gesture)
         		case 0x08 :  gesture[1] = nges; break;
         		case 0x18 :  gesture[0] = nges; gesture[1] = nges; break;
         		case 0x09 :  gesture[1] = nges; gesture[4] = nges; break;
-        		case 0x19 :  gesture[0] = nges; gesture[1] = nges; gesture[4] = nges; break;                    
+        		case 0x19 :  gesture[0] = nges; gesture[1] = nges; gesture[4] = nges; break;
         		case 0x0A :  gesture[1] = nges; gesture[3] = nges; break;
         		case 0x1A :  gesture[0] = nges; gesture[1] = nges; gesture[3] = nges; break;
         		case 0x0B :  gesture[1] = nges; gesture[3] = nges; gesture[4] = nges; break;
-        		case 0x1B :  gesture[0] = nges; gesture[1] = nges; gesture[3] = nges; gesture[4] = nges; break;                   
+        		case 0x1B :  gesture[0] = nges; gesture[1] = nges; gesture[3] = nges; gesture[4] = nges; break;
         		case 0x0C :  gesture[1] = nges; gesture[2] = nges; break;
         		case 0x1C :  gesture[0] = nges; gesture[1] = nges; gesture[2] = nges; break;
         		case 0x0D :  gesture[1] = nges; gesture[2] = nges; gesture[4] = nges; break;
@@ -400,7 +400,7 @@ void PinchGloveStandalone::mGetStringFromHardware( char* gesture)
     		  }
 
     		  switch (data[2*i+1]) /* right hand */
-    		  { 
+    		  {
         		case 0x10 :  gesture[6] = nges; break;
         		case 0x01 :  gesture[10] = nges; break;
         		case 0x11 :  gesture[6] = nges; gesture[10] = nges; break;
@@ -436,9 +436,9 @@ void PinchGloveStandalone::mGetStringFromHardware( char* gesture)
     		  }
 		   }
 		   break; /* case */
-		case 0x82:   
+		case 0x82:
 		   break;
-		default:  
+		default:
 		   break;
 		}
     }
