@@ -124,10 +124,13 @@ public class PerfAnalyzerPanel
 	public AnomaliesButton[] anomalies_buttons;
 	public int num;
 
-	public DataPanelElem (PerfDataCollector _col, JPanel panel, 
+        public DataPanelElem (PerfDataCollector _col) {
+            col = _col;
+        }
+
+	public void initialize (JPanel panel, 
 			      GridBagLayout gblayout, GridBagConstraints gbc) {
 	    Insets insets = new Insets (1,1,1,1);
-	    col = _col;
 	    num = col.getNumPhases();
 	    phase_labels = new JLabel[num];
 	    avg_labels = new JLabel[num];
@@ -225,7 +228,7 @@ public class PerfAnalyzerPanel
     JPanel data_panel;
     GridBagLayout gblayout;
     GridBagConstraints gbc;
-    boolean initialized;
+    boolean ui_initialized;
 
     JScrollPane display_pane;
     JTextArea text_area;
@@ -264,7 +267,7 @@ public class PerfAnalyzerPanel
 	doanomaly = true;
 	anomalycutoff = 1.0f;
 
-        initialized = false;
+        ui_initialized = false;
 
     }
 
@@ -300,8 +303,10 @@ public class PerfAnalyzerPanel
 
 
     public void addDataPanelElem (PerfDataCollector col) {
-	DataPanelElem dpe = new DataPanelElem (col, data_panel, gblayout, gbc);
-	datapanel_elems.addElement(dpe);
+	DataPanelElem dpe = new DataPanelElem (col);
+	datapanel_elems.add(dpe);
+        if (ui_initialized)
+            dpe.initialize (data_panel, gblayout, gbc);
     }
 
 
@@ -396,7 +401,7 @@ public class PerfAnalyzerPanel
 
 
     public void refreshDisplay() {
-        if (initialized) {
+        if (ui_initialized) {
             DataPanelElem dpe;
             int n = datapanel_elems.size();
             for (int i = 0; i < n; i++) {
@@ -409,7 +414,7 @@ public class PerfAnalyzerPanel
 
 
     public void removeAllData() {
-        if (initialized) {
+        if (ui_initialized) {
             int i, n;
 
             for (i = 0; i < child_frames.size(); i++) {
@@ -505,7 +510,7 @@ public class PerfAnalyzerPanel
     }
 
     public boolean initUIComponent() {
-        if (!initialized) {
+        if (!ui_initialized) {
             setLayout (new BorderLayout (5, 5));
             setBorder (new EmptyBorder (5,5,5,5));
 
@@ -559,7 +564,12 @@ public class PerfAnalyzerPanel
             
             add (display_pane, "Center");
 
-            initialized = true;
+            for (int i = 0; i < datapanel_elems.size(); i++) {
+                DataPanelElem dpe = (DataPanelElem)datapanel_elems.get(i);
+                dpe.initialize (data_panel, gblayout, gbc);
+            }
+
+            ui_initialized = true;
         }
         return true;
     }

@@ -131,7 +131,7 @@ public class PerformanceCommunicator
 
     /** Returns true for all stream identifiers we think we understand. */
     public boolean acceptsStreamIdentifier (String id) {
-        if (id.equalsIgnoreCase ("PerfData1"))
+        if (id.equalsIgnoreCase ("vjc_performance"))
             return true;
         return false;
     }
