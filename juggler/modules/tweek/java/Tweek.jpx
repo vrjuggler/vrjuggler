@@ -39,7 +39,6 @@
   <property category="sys" name="WorkingDirectory" value="."/>
   <file path="org/vrjuggler/tweek/AboutBox.java"/>
   <file path="org/vrjuggler/tweek/beans/BeanAttributes.java"/>
-  <file path="org/vrjuggler/tweek/beans/BeanCollectionBuilder.java"/>
   <file path="org/vrjuggler/tweek/BeanContainer.java"/>
   <file path="org/vrjuggler/tweek/beans/BeanDependency.java"/>
   <file path="org/vrjuggler/tweek/beans/BeanFocusChangeEvent.java"/>
@@ -74,7 +73,6 @@
   <file path="org/vrjuggler/tweek/beans/PanelBean.java"/>
   <file path="org/vrjuggler/tweek/PrefsDialog.java"/>
   <file path="org/vrjuggler/tweek/beans/ServiceBean.java"/>
-  <file path="org/vrjuggler/tweek/services/ServiceRegistry.java"/>
   <file path="org/vrjuggler/tweek/beans/TreeModelRefreshEvent.java"/>
   <file path="org/vrjuggler/tweek/beans/TreeModelRefreshListener.java"/>
   <file path="org/vrjuggler/tweek/Tweek.java"/>
@@ -86,5 +84,5 @@
   <file path="org/vrjuggler/tweek/event/UserLevelChangeEvent.java"/>
   <file path="org/vrjuggler/tweek/event/UserLevelChangeListener.java"/>
   <file path="org/vrjuggler/tweek/beans/ViewerBean.java"/>
-  <file path="org/vrjuggler/tweek/ViewerRegistry.java"/>
+  <file path="org/vrjuggler/tweek/beans/XMLBeanFinder.java"/>
 </project>
