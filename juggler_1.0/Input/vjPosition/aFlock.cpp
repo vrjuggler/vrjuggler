@@ -679,16 +679,6 @@ int aFlock::open_port( const char* const serialPort,
     else
 	std::cout<<" failed\n"<<std::flush;
 
-std::cerr << "Final settings:\n";
-std::cerr << "    termIoPort.c_iflag: " << termIoPort.c_iflag << std::endl;
-std::cerr << "    termIoPort.c_oflag: " << termIoPort.c_oflag << std::endl;
-std::cerr << "    termIoPort.c_cflag: " << termIoPort.c_cflag << std::endl;
-std::cerr << "    termIoPort.c_lflag: " << termIoPort.c_lflag << std::endl;
-std::cerr << "    termIoPort.c_ispeed: " << cfgetispeed(&termIoPort)
-          << std::endl;
-std::cerr << "    termIoPort.c_ospeed: " << cfgetospeed(&termIoPort)
-          << std::endl;
-
     // return the portID
     return portId;
 }
