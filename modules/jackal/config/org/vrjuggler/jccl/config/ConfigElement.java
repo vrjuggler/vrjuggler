@@ -36,6 +36,9 @@ import javax.swing.event.EventListenerList;
 
 import org.vrjuggler.jccl.config.event.*;
 import org.vrjuggler.jccl.config.undo.ConfigElementPropertyEdit;
+import org.vrjuggler.jccl.config.undo.ConfigElementPropertyValueAddEdit;
+import org.vrjuggler.jccl.config.undo.ConfigElementPropertyValueRemoveEdit;
+
 
 /**
  * A configuration element is a logical collection of configuration information
@@ -217,7 +220,7 @@ public class ConfigElement implements ConfigElementPointerListener
    /**
     * Sets the value for the property with the given name at the given index
     * only after first ensuring that the new value is different from the
-    * current value. Also a ConfigElementPropertyEdit is automatically
+    * current value.  Then, a ConfigElementPropertyEdit is automatically
     * created and registered with the UndoManager.
     *
     * @param name    the name of the property to set
@@ -240,7 +243,7 @@ public class ConfigElement implements ConfigElementPointerListener
             old_value = "";
          }
       }
-      // Make sure that the value acually changed.
+      // Make sure that the value actually changed.
       if ( !old_value.equals(value) )
       {
          ConfigElementPropertyEdit new_edit = 
@@ -312,15 +315,87 @@ public class ConfigElement implements ConfigElementPointerListener
       firePropertyValueChanged(name, index, old_value);
       System.out.println("setProperty("+name+","+index+","+value+")");
    }
-             
+
    /**
-    * Appends the given value to the list of values for this property. This only
-    * applies if the property supports a variable number of values.
+    * Appends the given value to the list of values for this property. This
+    * only applies if the property supports a variable number of values.
+    * Then, a ConfigElementPropertyValueAddEdit is automatically created and
+    * registered with the UndoManager.
+    *
+    * @param name    the name of the property to set
+    * @param value   the enw value for the property index
+    * @param ctx     the context
+    *
+    * @return The index of the newly added property in the property list.
+    *
+    * @see #addProperty(String, int, Object)
+    */  
+   public synchronized int addProperty(String name, Object value,
+                                       ConfigContext ctx)
+   {
+      List values = getPropertyValues(name);
+      return addProperty(name, values.size(), value, ctx);
+   }
+
+   /**
+    * Inserts the given value to the list of values for this property at the
+    * specified index.  If the given index is larger than the current list of
+    * values, the new value is simply appended to the list of values.  This
+    * only applies if the property supports a variable number of values.
+    * Then, a ConfigElementPropertyValueAddEdit is automatically created and
+    * registered with the UndoManager.
+    *
+    * @param name    the name of the property to set
+    * @param index   the index in the property list where this value will be
+    *                inserted
+    * @param value   the enw value for the property index
+    * @param ctx     the context
+    *
+    * @return The index of the newly added property in the property list.
+    *
+    * @see #addProperty(String, int, Object)
+    */  
+   public synchronized int addProperty(String name, int index, Object value,
+                                       ConfigContext ctx)
+   {
+      int added_index = addProperty(name, index, value);
+      ctx.postEdit(new ConfigElementPropertyValueAddEdit(this, name,
+                                                         added_index, value));
+
+      return added_index;
+   }
+
+   /**
+    * Appends the given value to the list of values for this property. This
+    * only applies if the property supports a variable number of values.
     *
     * @param name    the name of the property to set
     * @param value   the property value to add
+    *
+    * @return The index of the newly added property in the property list.
+    *
+    * @see #addProperty(String, int, Object)
     */
-   public synchronized void addProperty(String name, Object value)
+   public synchronized int addProperty(String name, Object value)
+      throws IllegalArgumentException
+   {
+      List values = getPropertyValues(name);
+      return addProperty(name, values.size(), value);
+   }
+
+   /**
+    * Inserts the given value to the list of values for this property at the
+    * specified index.  If the given index is larger than the current list of
+    * values, the new value is simply appended to the list of values.  This
+    * only applies if the property supports a variable number of values.
+    *
+    * @param name    the name of the property to set
+    * @param index   the index into the property list
+    * @param value   the property value to add
+    *
+    * @return The index of the newly added property in the property list.
+    */
+   public synchronized int addProperty(String name, int index, Object value)
       throws IllegalArgumentException
    {
       // Get the list of property values
@@ -330,14 +405,28 @@ public class ConfigElement implements ConfigElementPointerListener
       PropertyDefinition prop_def = mDefinition.getPropertyDefinition(name);
       if (! prop_def.isVariable())
       {
-         throw new IllegalArgumentException(name + " does not support a variable number of values");
+         throw new IllegalArgumentException(name + " does not support a " +
+                                            "variable number of values");
       }
 
       // TODO: Validate that value is of the correct type for this property
 
-      // Add the value to the list
-      int index = values.size();
-      values.add(value);
+      int added_index;
+
+      // Add the value to the list.  If the given index is greater than or
+      // equal to the current size of the list, simply append the new value.
+      // XXX: It might be useful to allow the list to grow to accomodate the
+      // an index that is larger than the current size of the list.
+      if ( index >= values.size() )
+      {
+         added_index = values.size();
+         values.add(value);
+      }
+      else
+      {
+         added_index = index;
+         values.add(index, value);
+      }
 
       // If the new property is a ConfigElementPointer, add alistener to relay
       // the change events.
@@ -348,16 +437,85 @@ public class ConfigElement implements ConfigElementPointerListener
  
       // Notify listeners of the addition
       firePropertyValueAdded(name, index, value);
+
+      return added_index;
+   }
+
+   /**
+    * Removes the value at the given index for the given property. This only
+    * applies if the property supports a variable number of values.  Then, a
+    * ConfigElementPropertyValueRemoveEdit is automatically created and
+    * registered with the UndoManager.
+    *
+    * @param name    the name of the property to set
+    * @param index   the index of the property value to set
+    * @param ctx     the context
+    *
+    * @return The index of the property removed is returned.  -1 is returned
+    *         if the given value is not in the list of values for the named
+    *         property.
+    */
+   public synchronized int removeProperty(String name, int index,
+                                          ConfigContext ctx)
+   {
+      List values = getPropertyValues(name);
+      Object old_value = values.get(index);
+      int removed_index = removeProperty(name, index);
+
+      if ( removed_index >= 0 )
+      {
+         ctx.postEdit(new ConfigElementPropertyValueRemoveEdit(this, name,
+                                                               removed_index,
+                                                               old_value));
+      }
+
+      return removed_index;
+   }
+
+   /**
+    * Removes the given value from the list of values associated with the
+    * named property.  The first occurrence of the given value is removed if
+    * it exists in the list of values for the named property.  This only
+    * applies if the property supports a variable number of values.  Then, a
+    * ConfigElementPropertyValueRemoveEdit is automatically created and
+    * registered with the UndoManager.
+    *
+    * @param name     the name of the property to modify
+    * @param oldValue the value to remove
+    * @param ctx      the context
+    *
+    * @return The index of the property removed is returned.  -1 is returned
+    *         if the given value is not in the list of values for the named
+    *         property.
+    *
+    * @see #removeProperty(String, int)
+    */
+   public synchronized int removeProperty(String name, Object oldValue,
+                                          ConfigContext ctx)
+   {
+      List values = getPropertyValues(name);
+      int index   = values.indexOf(oldValue);
+
+      if ( index != -1 )
+      {
+         index = removeProperty(name, index, ctx);
+      }
+
+      return index;
    }
 
    /**
     * Removes the value at the given index for the given property. This only
     * applies if the property supports a variable number of values.
     *
-    * @param name    the name of the property to set
-    * @param index   the index of the property value to set
+    * @param name    the name of the property to modify
+    * @param index   the index of the property value to remove
+    *
+    * @return The index of the property removed is returned.  -1 is returned
+    *         if the given value is not in the list of values for the named
+    *         property.
     */
-   public synchronized void removeProperty(String name, int index)
+   public synchronized int removeProperty(String name, int index)
       throws IllegalArgumentException,
              ArrayIndexOutOfBoundsException
    {
@@ -378,29 +536,42 @@ public class ConfigElement implements ConfigElementPointerListener
 
       // Notify listeners of the removal
       firePropertyValueRemoved(name, index, old_value);
+
+      return index;
    }
-   
-   public synchronized void removeProperty(String name, Object old_value)
+
+   /**
+    * Removes the given value from the list of values associated with the
+    * named property.  The first occurrence of the given value is removed if
+    * it exists in the list of values for the named property.  This only
+    * applies if the property supports a variable number of values.
+    *
+    * @param name     the name of the property to modify
+    * @param oldValue the value to remove
+    *
+    * @return The index of the property removed is returned.  -1 is returned
+    *         if the given value is not in the list of values for the named
+    *         property.
+    *
+    * @see #removeProperty(String, int)
+    */
+   public synchronized int removeProperty(String name, Object oldValue)
       throws IllegalArgumentException,
              ArrayIndexOutOfBoundsException
    {
       // Get the list of property values
       List values = getPropertyValues(name);
 
-      // Verify that this property supports variable values
-      PropertyDefinition prop_def = mDefinition.getPropertyDefinition(name);
-      if (! prop_def.isVariable())
+      int index = values.indexOf(oldValue);
+
+      // Only perform the removal if the given value is actually in the list
+      // of values.
+      if ( index != -1 )
       {
-         throw new IllegalArgumentException(name + " does not support a variable number of values");
+         removeProperty(name, index);
       }
 
-      // TODO: Validate that value is of the correct type for this property
-
-      // Remove the value from the list
-      boolean result = values.remove(old_value);
-
-      // Notify listeners of the removal
-      firePropertyValueRemoved(name, -1, old_value);
+      return index;
    }
 
    /**
