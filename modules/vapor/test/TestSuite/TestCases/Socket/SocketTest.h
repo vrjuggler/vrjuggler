@@ -387,19 +387,16 @@ public:
       closeSuccess = sock.close().success();
       assertTest( closeSuccess == true && "close() failed");
    }
+
    // =========================================================================
    // same-address-open-bind-close test
    // open, then bind, then close, repeat many times on the same address..
    // =========================================================================
    void sameAddressOpenBindCloseTest()
    {
-      //std::cout<<"]==================================================\n"<<std::flush;
-      //std::cout<<" same-address-open-bind-close Test: \n"<<std::flush;
-      int openSuccess( 0 );
-      int closeSuccess( 0 );
-      int bindSuccess( 0 );
+      int openSuccess( 0 ), closeSuccess( 0 ), bindSuccess( 0 );
       vpr::InetAddr local_addr;
-      vpr::Uint16 port = 6977;
+      vpr::Uint16 port = (random() % 20000) + 20000;
 
       local_addr.setAddress("localhost", port);
       vpr::SocketStream sock( local_addr, vpr::InetAddr::AnyAddr );
@@ -411,53 +408,83 @@ public:
          openSuccess += sock.open().success() ? 1 : 0;
          bindSuccess += sock.bind().success() ? 1 : 0;
          closeSuccess += sock.close().success() ? 1 : 0;
+         vpr::System::msleep(50);                           // XXX: Kludge to give OS time to close the descriptor
       }
-      const int success_percent = 80;
-      int minimum_for_success = runs * success_percent / 100;
-      //std::cout<<"out of ["<<runs<<"] runs: open="<<openSuccess<<" bind="<<bindSuccess<<" close="<<closeSuccess<<"\n"<<std::flush;
+      const float success_percent = 1.0f;
+      float minimum_for_success = float(runs) * success_percent;
+
       assertTest( openSuccess >= minimum_for_success && "open() failed");
       assertTest( bindSuccess >= minimum_for_success && "bind() failed");
       assertTest( closeSuccess >= minimum_for_success && "close() failed");
    }
+
+   // =========================================================================
+   // same-address-open-bind-destruct test
+   // open, then bind, then delete it, repeat many times on the same address..
+   // =========================================================================
+   void sameAddressOpenBindDestructTest()
+   {
+      int openSuccess( 0 ), bindSuccess( 0 );
+      vpr::InetAddr local_addr;
+      vpr::Uint16 port = (random() % 20000) + 20000;
+
+      local_addr.setAddress("localhost", port);
+      vpr::SocketStream sock( local_addr, vpr::InetAddr::AnyAddr );
+
+      // same address, open-bind-close
+      const int runs = 10;
+      for (int xx = 0; xx < runs; ++xx)
+      {
+         vpr::SocketStream* sock = new vpr::SocketStream( local_addr, vpr::InetAddr::AnyAddr );
+
+         openSuccess += sock->open().success() ? 1 : 0;
+         bindSuccess += sock->bind().success() ? 1 : 0;
+         delete sock;
+         vpr::System::msleep(50);                           // XXX: Kludge to give OS time to close the descriptor
+      }
+      const float success_percent = 1.0f;
+      float minimum_for_success = float(runs) * success_percent;
+
+      assertTest( openSuccess >= minimum_for_success && "open() failed");
+      assertTest( bindSuccess >= minimum_for_success && "bind() failed");
+   }
+
    // =========================================================================
    // different-address-open-bind-close test
    // - Try to open, then close, then bind, repeat*n for a range of ports
    // =========================================================================
    void differentAddressOpenBindCloseTest()
    {
-      //std::cout<<"]==================================================\n"<<std::flush;
-      //std::cout<<" different-address-open-bind-close Test: \n"<<std::flush;
-      int openSuccess( 0 );
-      int closeSuccess( 0 );
-      int bindSuccess( 0 );
+      int openSuccess( 0 ), closeSuccess( 0 ), bindSuccess( 0 );
       vpr::InetAddr local_addr;
-      vpr::Uint16 port;
+      vpr::Uint16 port = (random() % 20000) + 20000;
 
       // same address, open-bind-close
       const int runs = 10;
       for (int xx = 0; xx < runs; ++xx)
       {
-         port = 5977 + xx;
-    assertTest(local_addr.setAddress("localhost", port).success());
+         port++;
+         assertTest(local_addr.setAddress("localhost", port).success());
 
          vpr::SocketStream sock( local_addr, vpr::InetAddr::AnyAddr );
 
          openSuccess += sock.open().success() ? 1 : 0;
          bindSuccess += sock.bind().success() ? 1 : 0;
          closeSuccess += sock.close().success() ? 1 : 0;
+         //vpr::System::msleep(50);
       }
-      const int success_percent = 80;
-      int minimum_for_success = runs * success_percent / 100;
-      //std::cout<<"out of ["<<runs<<"] runs: open="<<openSuccess<<" bind="<<bindSuccess<<" close="<<closeSuccess<<"\n"<<std::flush;
+      const float success_percent = 1.0f;
+      float minimum_for_success = float(runs) * success_percent;
+
       assertTest( openSuccess >= minimum_for_success && "open() failed");
       assertTest( bindSuccess >= minimum_for_success && "bind() failed");
       assertTest( closeSuccess >= minimum_for_success && "close() failed");
    }
+
    // =========================================================================
    // reuse address simple test
    // try to reuse the address... broken...
    // =========================================================================
-
    void reuseAddrSimpleTest()
    {
       //std::cout<<"]==================================================\n"<<std::flush;
@@ -962,8 +989,9 @@ public:
 
       test_suite->addTest( new TestCaller<SocketTest>("testOpenClose", &SocketTest::testOpenClose));
       //test_suite->addTest( new TestCaller<SocketTest>("bind-Again Failure Test", &SocketTest::bindAgainFailTest));
-      //test_suite->addTest( new TestCaller<SocketTest>("same-Address-Open-Bind-Close Test", &SocketTest::sameAddressOpenBindCloseTest));
-      //test_suite->addTest( new TestCaller<SocketTest>("different-Address-Open-Bind-Close Test", &SocketTest::differentAddressOpenBindCloseTest));
+      test_suite->addTest( new TestCaller<SocketTest>("sameAddressOpenBindCloseTest", &SocketTest::sameAddressOpenBindCloseTest));
+      test_suite->addTest( new TestCaller<SocketTest>("sameAddressOpenBindDestructTest", &SocketTest::sameAddressOpenBindDestructTest));
+      test_suite->addTest( new TestCaller<SocketTest>("differentAddressOpenBindCloseTest", &SocketTest::differentAddressOpenBindCloseTest));
 
       //test_suite->addTest( new TestCaller<SocketTest>("ReuseAddr (simple) Test", &SocketTest::reuseAddrSimpleTest));
       //test_suite->addTest( new TestCaller<SocketTest>("ReuseAddr (client/server) Test", &SocketTest::reuseAddrTest));
