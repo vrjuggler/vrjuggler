@@ -122,11 +122,14 @@ bool ConfigChunk::operator==(const ConfigChunk& c) const
       return false;
    }
 
+   bool is_equal = mNode->isEqual(c.mNode);
+   /*
    std::ostringstream self_string, c_string;
    mNode->save(self_string);
    c.mNode->save(c_string);
+   */
 
-   return (self_string == c_string);
+   return is_equal;
 }
 
 bool ConfigChunk::operator<(const ConfigChunk& c) const
