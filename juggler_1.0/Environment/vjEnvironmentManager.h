@@ -82,6 +82,10 @@ public:
 
 
 
+    //: tells EM that a connection has died (ie by gui disconnecting)
+    void connectHasDied (vjConnect* con);
+
+
     //: sends a 'refresh' message to all open connections
     void sendRefresh();
 

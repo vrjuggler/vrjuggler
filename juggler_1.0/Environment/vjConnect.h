@@ -44,12 +44,6 @@ class vjConnect {
 	       vjConnectMode _mode = VJC_INTERACTIVE);
 
 
-    //: default constructor
-    //! POST: self is initialized (filename = s, controlPID is NULL)
-    //! ARGS: s - name of file to open; a non-NULL C string
-    vjConnect(const std::string& s, const std::string& _name);
-
-
 
     vjConnect (vjConfigChunk* c);
 
@@ -64,7 +58,11 @@ class vjConnect {
 
 
 
+    //: returns the name of this connection
+    //! NOTE: The name is the same as the name of the ConfigChunk that
+    //+       represents it.
     std::string getName () {
+	//cout << "name of this thing is " << name << endl;
 	return name;
     }
 
@@ -109,25 +107,31 @@ private:
 
 
     ofstream                output;
+    ifstream                fin;
+    bool                    shutdown;        // set to stop procs
     std::string             name;
     std::string             filename;
     vjThread*               read_connect_thread;
     vjThread*               write_connect_thread;
     int                     fd;
     vjConnectMode           mode;
-    bool                    shutdown;        // set to stop procs
     bool                    read_die;
     bool                    write_die;
 
+    //: used for storing vjCommand* in a priority queue
     struct vjCommandPtrCmp {
 	bool operator() (const vjCommand* a, const vjCommand* b) {
 	    return (a->next_fire_time > b->next_fire_time);
 	}
     };
 
+
     std::priority_queue<vjCommand*, std::vector<vjCommand*>, vjCommandPtrCmp>
                                timed_commands; // used as heap
     std::queue<vjCommand*>     commands;
+
+    //: controls access to commands & timed_commands queues.
+    //  could we dispense with this???
     vjMutex                    commands_mutex;
 
     //: used to see if it's time to spring a timed_command
@@ -138,7 +142,8 @@ private:
     void writeControlLoop (void* nullParam);
 
     //: utility for controlLoop()
-    void readCommand (ifstream& fin);
+    bool readCommand (ifstream& fin);
+
 
 }; // end vjConnect
 
