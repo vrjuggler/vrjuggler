@@ -348,6 +348,10 @@ public class ControlPanelView
          List elements = ConfigUtilities.getElementsWithDefinition(elts, (String)itr.next());
          result.addAll(elements);
       }
+      
+      List elements = ConfigUtilities.getElementsWithDefinition(elts, token);
+      result.addAll(elements);
+      
       return result;
    }
 
