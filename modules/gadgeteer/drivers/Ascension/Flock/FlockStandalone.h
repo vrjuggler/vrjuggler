@@ -40,7 +40,12 @@
 //	Kevin Meinert
 //
 // Last Modified: 4-22-99
+//
+//                4-15-02 (Josh Brown)
+
 //===============================================================
+
+
 
 #ifndef _GADGET_ASCENSION_FLOCKOFBIRD_STANDALONE_H_
 #define _GADGET_ASCENSION_FLOCKOFBIRD_STANDALONE_H_

@@ -107,7 +107,7 @@ FlockStandalone::~FlockStandalone()
 //: see if the flock is active or not
 const bool& FlockStandalone::isActive() const
 {
-	return _active;
+   return _active;
 }
 
 //: set the port to use
@@ -118,8 +118,8 @@ void FlockStandalone::setPort(const char* const serialPort)
 {
     if (_active)
     {
-	std::cout << "Flock: Cannot change the serial Port while active\n";
-	return;
+   std::cout << "Flock: Cannot change the serial Port while active\n";
+   return;
     }
 
     if ( serialPort != NULL ) {
@@ -148,10 +148,10 @@ void FlockStandalone::setBaudRate(const int& baud)
 {
     if (_active)
     {
-	std::cerr << "Flock: Cannot change the baud rate while active\n";
-	return;
+   std::cerr << "Flock: Cannot change the baud rate while active\n";
+   return;
     } else {
-	_baud = baud;
+   _baud = baud;
     }
 }
 
@@ -171,43 +171,43 @@ int FlockStandalone::start()
                       << std::flush;
             set_blocking();
             sleep(1);
-	    
+       
             std::cout << "[FlockStandalone] Setting sync\n" << std::flush;
             set_sync();
-	    sleep(1);
+       sleep(1);
 
             std::cout << "[FlockStandalone] Setting group\n" << std::flush;
             set_group();
-	    sleep(1);
+       sleep(1);
 
             std::cout << "[FlockStandalone] Setting autoconfig\n" << std::flush;
             set_autoconfig();
-	    sleep(1);
+       sleep(1);
 
             std::cout << "[FlockStandalone] Setting transmitter\n" << std::flush;
             set_transmitter();
-	    sleep(1);
+       sleep(1);
 
             std::cout << "[FlockStandalone] Setting filter\n" << std::flush;
             set_filter();
-	    sleep(1);
+       sleep(1);
 
             std::cout << "[FlockStandalone] Setting hemisphere\n" << std::flush;
             set_hemisphere();
-	    sleep(1);
+       sleep(1);
 
             std::cout << "[FlockStandalone] Setting pos_angles\n" << std::flush;
             set_pos_angles();
-	    sleep(1);
+       sleep(1);
 
             std::cout << "[FlockStandalone] Setting pickBird\n" << std::flush;
             pickBird(_xmitterUnitNumber);
             sleep(1);
-	    
+       
             std::cout << "[FlockStandalone] Setting rep_and_stream\n" << std::flush;
             set_rep_and_stream();
             sleep(1);
-	    
+       
             std::cout  << "[FlockStandalone] Ready to go!\n\n" << std::flush;
 
             // flock is active.
@@ -237,30 +237,30 @@ int FlockStandalone::sample()
      // for [1..n] birds, get their reading:
      int j = 0;
      for (i=1; i < loopCount && i < MAX_SENSORS; i++)
-	{
-		j++;
+   {
+   	j++;
 // If the transmitter number is less than or equal to the number of birds, we need to ignore it.
 
           if (i == _xmitterUnitNumber)
-	  { 
+     { 
                 j--;
-		continue;
+   	continue;
           }
  	
 // However, we need to still copy the data into consecutive values in the wrapper class, so we
 // introduce "j" to account for that correction.  It is equal to "i" while we haven't encountered
 // the transmitter, but equal to "i-1" afterwards.
 
-	// you can never go above the maximum number of sensors.
-	assert( i < MAX_SENSORS );
-	getReading(i, xPos(j), yPos(j), zPos(j), zRot(j), yRot(j), xRot(j));
+   // you can never go above the maximum number of sensors.
+   assert( i < MAX_SENSORS );
+   getReading(i, xPos(j), yPos(j), zPos(j), zRot(j), yRot(j), xRot(j));
 
-	if (_usingCorrectionTable)
-	{
-	    this->positionCorrect( this->xPos(j),
-			    this->yPos(j),
-			    this->zPos(j) );
-	}
+   if (_usingCorrectionTable)
+   {
+       this->positionCorrect( this->xPos(j),
+   		    this->yPos(j),
+   		    this->zPos(j) );
+   }
      }
 
      return 1;
@@ -308,10 +308,10 @@ void FlockStandalone::setHemisphere( const BIRD_HEMI& h )
 {
     if (_active)
     {
-	std::cout << "Flock: Cannot change the hemisphere\n" << std::flush;
-	return;
+   std::cout << "Flock: Cannot change the hemisphere\n" << std::flush;
+   return;
     } else {
-	// Set it.
+   // Set it.
         _hemisphere = h;
     }
 }
@@ -322,12 +322,12 @@ void FlockStandalone::setFilterType( const BIRD_FILT& f )
 {
     if (_active)
     {
-	std::cout << "Flock: Cannot change filter type while active\n"
+   std::cout << "Flock: Cannot change filter type while active\n"
                   << std::flush;
-	return;
+   return;
     } else {
-	// Set it.
-	_filter = f;
+   // Set it.
+   _filter = f;
     }
 }
 
@@ -337,12 +337,12 @@ void FlockStandalone::setReportRate( const char& rRate )
 {
     if (_active)
     {
-	std::cout << "Flock: Cannot change report rate while active\n"
+   std::cout << "Flock: Cannot change report rate while active\n"
                   << std::flush;
-	return;
+   return;
     } else {
-	// Set it.
-	_reportRate = rRate;
+   // Set it.
+   _reportRate = rRate;
     }
 }
 
@@ -371,12 +371,12 @@ void FlockStandalone::setNumBirds( const int& n )
 {
     if (_active)
     {
-	std::cout << "Flock: Cannot change num birds while active\n"
+   std::cout << "Flock: Cannot change num birds while active\n"
                   << std::flush;
-	return;
+   return;
     } else {
-	// Set it.
-	_numBirds = n;
+   // Set it.
+   _numBirds = n;
     }
 }
 
@@ -474,7 +474,7 @@ void FlockStandalone::initCorrectionTable( const char* const fName )
   inFile.open( fName );
   if (!inFile)
   {
-	std::cout << "Unable to open calibration.table\n" << std::flush;
+   std::cout << "Unable to open calibration.table\n" << std::flush;
         return;
   } else {
      std::cout << "   Calibration table opened sucessfully." << std::endl
@@ -493,11 +493,11 @@ void FlockStandalone::initCorrectionTable( const char* const fName )
     for (j = 0; j < ysize; j++)
       for (k = 0; k < zsize; k++)
          {
-	    inFile >> dump >> dump >> dump
-		   >> caltable.xloc[i][j][k]
-		   >> caltable.yloc[i][j][k]
-		   >> caltable.zloc[i][j][k];
-	 }
+       inFile >> dump >> dump >> dump
+   	   >> caltable.xloc[i][j][k]
+   	   >> caltable.yloc[i][j][k]
+   	   >> caltable.zloc[i][j][k];
+    }
 
    inFile.close();
 }
@@ -637,29 +637,17 @@ int FlockStandalone::open_port ()
                 retval = -1;
             }
             else {
-                /* ---- Begin almighty code ----
-		vpr::IOSys::Handle handle = _serial_port->getHandle();
-		struct termios tty;
-		tcgetattr(handle, &tty);
-	        tty.c_iflag |=  IGNBRK;
-		tty.c_iflag &=  ~IXON & ~ICRNL;
-		tty.c_lflag &= ~ISIG & ~ECHO & ~ECHOE & ~ECHOK & ~ECHOCTL & ~ECHOKE & ~IEXTEN & ~ICANON;
-		tty.c_oflag &= ~OPOST & ~ONLCR;
-		tty.c_cflag &= ~HUPCL;
-		tcsetattr(handle, TCSANOW, &tty);
-		// ---- End almighty code
-                */
-// temp hack - fix asap
+
                 termios tty;
                 vpr::IOSys::Handle handle = _serial_port->getHandle();
-		_serial_port->clearAll();
+   	          _serial_port->clearAll();
                 _serial_port->enableRead();
                 _serial_port->enableLocalAttach();
                 _serial_port->enableBreakByteIgnore();
 
  
-		    
-		std::cout << "[FlockStandalone] Port opened successfully\n"
+   	    
+   	          std::cout << "[FlockStandalone] Port opened successfully\n"
                           << std::flush;
 
                 _serial_port->setUpdateAction(vpr::SerialTypes::NOW);
@@ -667,10 +655,11 @@ int FlockStandalone::open_port ()
                 // Setup the port.
                 std::cout << "[FlockStandalone] Setting new baud rate: "
                           << _baud << " bits per second\n" << std::flush;
-
                 _serial_port->setInputBaudRate(_baud);
+                
                 std::cout << "Setting output baud rate\n" << std::flush;
                 _serial_port->setOutputBaudRate(_baud);
+                
                 std::cout << "Setting character size\n" << std::flush;
                 _serial_port->setCharacterSize(vpr::SerialTypes::CS_BITS_8);
 /*
@@ -906,7 +895,7 @@ void FlockStandalone::set_autoconfig ()
         buff[1] = 0x32;
         buff[2] = _numBirds + 1;  //number of input devices + 1 for transmitter
 
-	sleep(3);
+   sleep(3);
         _serial_port->write(buff, sizeof(buff), written);
         _serial_port->flushQueue(vpr::SerialTypes::IO_QUEUES);
         sleep(2);
@@ -941,37 +930,37 @@ void FlockStandalone::set_group ()
  ****************************************************/
 
 void FlockStandalone::check_group(){
-	char exam1[1], exam2[1];
-	exam1[0] = 'O';
-	exam2[0] = 0x23;
-	vpr::Uint32 buf=0, buf1=0;
-	char in[2];
-	in[0]='a';
+   char exam1[1], exam2[1];
+   exam1[0] = 'O';
+   exam2[0] = 0x23;
+   vpr::Uint32 buf=0, buf1=0;
+   char in[2];
+   in[0]='a';
 
-	
-	while(true){
-		_serial_port->write(exam1, sizeof(char), buf);
-		_serial_port->write(exam2, sizeof(char), buf);
+   
+   while(true){
+      _serial_port->write(exam1, sizeof(char), buf);
+      _serial_port->write(exam2, sizeof(char), buf);
 
-		_serial_port->readn(in, sizeof(char), buf1);
-		std::cout << in[0] << " " << buf << " " << buf1 << std::endl;
-	}
-	
+      _serial_port->readn(in, sizeof(char), buf1);
+      std::cout << in[0] << " " << buf << " " << buf1 << std::endl;
+   }
+   
 }
 
 void FlockStandalone::check_config(){
     if (_serial_port != NULL ){
 
-	char exam1[1], exam2[1];
-	exam1[0] = 'O';
-	exam2[0] = 0x0;
-	vpr::Uint32 buf=0, buf1=0;
+   char exam1[1], exam2[1];
+   exam1[0] = 'O';
+   exam2[0] = 0x0;
+   vpr::Uint32 buf=0, buf1=0;
         char in[2] = {'a','a'};
         int i = 0;
 
-	clear_buffer();
+   clear_buffer();
 
-	while(i < 400){
+   while(i < 400){
             i++;
             _serial_port->write(exam1, sizeof(char), buf);
             _serial_port->write(exam2, sizeof(char), buf);
@@ -984,11 +973,11 @@ void FlockStandalone::check_config(){
 }
 
 void FlockStandalone::check_pos_angles(){
-	return;
+   return;
 }
 
 void FlockStandalone::check_rep_and_stream(){
-	return;
+   return;
 }
 
 void FlockStandalone::showbits(char var)
@@ -1074,71 +1063,6 @@ void FlockStandalone::examine_value(char exam, int data, int reps, int format)
      _serial_port->flushQueue(vpr::SerialTypes::IO_QUEUES);
      usleep(500 * mSleepFactor);
 }
-
-
-void FlockStandalone::read_data(){
-//    char exam1[1];
-//    exam1[0] = 'B';  // POINT mode
-    vpr::Uint32 buf=0, buf1=0;
-    char in[1];
-    int j = 0, i = 0, k=0, thirteencount = 0;
-
-    int currBytes = 0, lastBytes = 0;
-    int timeout = 10000;
- 
-    vpr::IOSys::Handle handle = _serial_port->getHandle();
-
-    i = 0;
-    while(true){
-        j++;
-	
-	lastBytes = currBytes;
-
-	// Wait until something comes in
-	do{
-	  ioctl(handle, FIONREAD, &currBytes);
-	}while(! currBytes);
-
-	_serial_port->readn(in, sizeof(in), buf1);
-	showbits(in[k]);
-
-    	if (timeout)
-	  usleep(timeout); 
-	
-	
-	std::cout << " t/o: " << timeout << " Buffer: "<< currBytes;
-
-	if (currBytes > 3000 && timeout > 50)
-	  timeout -= 50;
-
-//  if (currBytes < lastBytes){
-//  	  std::cout << " t/o: " << timeout << " Buffer: "<< currBytes;
-//  	  timeout += 250;
-//  	}
-//  	else if (currBytes == lastBytes){
-//  	  std::cout << " t/o: " << timeout << " Buffer: "<< currBytes ;
-//  	}
-//  	else{
-//  	  std::cout << " t/o: " << timeout << " Buffer: " << currBytes;
-//  	  timeout -= 250;
-//  	  if (timeout < 0) timeout = 0;
-//  	}
-
-	if (hextoint(in[k]) == 1 || hextoint(in[k]) == 2){
-	  std::cout << " j = " << j;
-	  if (j == 13)
-	    thirteencount++;
-	  else{
-	    std::cout << " 13count = " << thirteencount;
-	    thirteencount = 0;
-	  }
-	  j = 0;
-	}
-
-	std::cout << std::endl;
-    }
-}
-
 
 
 /***********************************************************
@@ -1272,7 +1196,7 @@ void FlockStandalone::set_report_rate(char rate){
         _serial_port->write(exam1, sizeof(char), buf);
   
 }
-
+/*
 void FlockStandalone::clear_buffer(){
   vpr::Uint32 buf1;
   vpr::IOSys::Handle handle = _serial_port->getHandle();
@@ -1284,4 +1208,4 @@ void FlockStandalone::clear_buffer(){
     ioctl(handle, FIONREAD, &bytes);
   }while(bytes != 0);
 }
-
+*/
