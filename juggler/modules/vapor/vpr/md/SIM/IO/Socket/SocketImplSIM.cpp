@@ -244,10 +244,39 @@ vpr::ReturnStatus SocketImplSIM::write_i (const void* buffer,
    {
       data_written = length;
 
+#ifdef VPR_DEBUG
+      vpr::Uint32 remainder;
+      const char* msg_ptr = (const char*) buffer;
+      remainder = length % 4;
+
       vprDEBUG(vprDBG_ALL, vprDBG_HEX_LVL)
-         << "Sending message from " << mLocalAddr << " to " << mRemoteAddr
-         << ".  Message (size " << length << "): " << std::hex << buffer
-         << std::dec << std::endl << vprDEBUG_FLUSH;
+         << "SocketImplSIM::write_i(): Message (" << length
+         << " bytes in 4-byte hex blocks):" << vprDEBUG_FLUSH;
+
+      for ( vpr::Uint32 i = 0; i < length; i += 4 )
+      {
+         if ( i % 16 == 0 )
+         {
+            vprDEBUG_NEXT(vprDBG_ALL, vprDBG_HEX_LVL)
+               << "\n" << std::hex << std::setfill('0') << std::setw(8)
+               << *((vpr::Uint32*) (&msg_ptr[i])) << " " << vprDEBUG_FLUSH;
+         }
+         else
+         {
+            vprDEBUG_CONT(vprDBG_ALL, vprDBG_HEX_LVL)
+               << std::hex << std::setfill('0') << std::setw(8)
+               << *((vpr::Uint32*) (&msg_ptr[i])) << " " << vprDEBUG_FLUSH;
+         }
+      }
+
+      for ( vpr::Uint32 i = 0; i < remainder; i++ )
+      {
+         vprDEBUG_CONT(vprDBG_ALL, vprDBG_HEX_LVL) << "00" << vprDEBUG_FLUSH;
+      }
+
+      vprDEBUG_NEXT(vprDBG_ALL, vprDBG_HEX_LVL)
+         << "\n---------------------------\n" << std::dec << vprDEBUG_FLUSH;
+#endif
 
       vpr::sim::MessagePtr msg(new vpr::sim::Message(buffer, length));
       msg->setPath(mPathToPeer, this, mPeer);
