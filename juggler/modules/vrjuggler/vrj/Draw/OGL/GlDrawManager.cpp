@@ -32,6 +32,8 @@
 
 #include <vrj/vrjConfig.h>
 
+#include <boost/concept_check.hpp>
+
 #include <vpr/vpr.h>
 #include <vpr/Thread/Thread.h>
 
@@ -50,6 +52,7 @@
 
 #include <vrj/Draw/OGL/GlPipe.h>
 #include <vrj/Draw/OGL/GlWindow.h>
+#include <vrj/Draw/OGL/GlSimInterfaceFactory.h>
 
 #include <gmtl/Vec.h>
 #include <gmtl/Output.h>
@@ -138,6 +141,8 @@ void GlDrawManager::sync()
 /** This is the control loop for the manager. */
 void GlDrawManager::main(void* nullParam)
 {
+   boost::ignore_unused_variable_warning(nullParam);
+
    while(mRunning)
    {
       //**// Runtime config will happen here
@@ -230,6 +235,50 @@ void GlDrawManager::addDisplay(Display* disp)
    vprDEBUG(vrjDBG_DRAW_MGR,3) << "vrj::GlDrawManager:addDisplay: " << disp
                              << std::endl << vprDEBUG_FLUSH;
 
+
+   // -- Finish Simulator setup
+   int num_vp(disp->getNumViewports());
+   
+   for (int i = 0 ; i < num_vp ; i++)
+   {
+      Viewport* vp = disp->getViewport(i);
+      
+      if (vp->isSimulator())
+      {
+         jccl::ConfigChunkPtr vp_chunk = vp->getConfigChunk();
+
+         SimViewport* sim_vp(NULL);
+         sim_vp = dynamic_cast<SimViewport*>(vp);
+         vprASSERT(NULL != sim_vp);
+
+         bool has_simulator(false);
+         has_simulator = vp_chunk->getProperty<bool>("hasSimPlugin");
+         sim_vp->setDrawSimInterface(NULL);
+         
+         // Create the simulator stuff
+         if(has_simulator)
+         {
+            jccl::ConfigChunkPtr sim_chunk =
+               vp_chunk->getProperty<jccl::ConfigChunkPtr>("simPlugIn");
+      
+            vprDEBUG(vrjDBG_DISP_MGR, vprDBG_CONFIG_LVL)
+               << "SimViewport::config() creating simulator of type '"
+               << sim_chunk->getDescToken() << "'\n" << vprDEBUG_FLUSH;
+            
+            DrawSimInterface* new_sim_i = 
+               GlSimInterfaceFactory::instance()->createObject(sim_chunk->getDescToken());
+      
+            // XXX: Change this to an error once the new simulator loading code is
+            // more robust.  -PH (4/13/2003)
+            vprASSERT(NULL != new_sim_i && "Failed to create draw simulator");
+            sim_vp->setDrawSimInterface(new_sim_i);
+            new_sim_i->initialize(sim_vp);
+            new_sim_i->config(sim_chunk);
+         }   
+      }
+   }
+   
+
    // -- Create a window for new display
    // -- Store the window in the wins vector
    // Create the gl window object.  NOTE: The glPipe actually "creates" the opengl window and context later
@@ -247,7 +296,7 @@ void GlDrawManager::addDisplay(Display* disp)
          GlPipe* new_pipe = new GlPipe(pipes.size(), this);  // Create a new pipe to use
          pipes.push_back(new_pipe);                          // Add the pipe
          new_pipe->start();                                  // Start the pipe running
-                                                             // NOTE: Run pipe even if now windows.  Then it waits for windows.
+                                                             // NOTE: Run pipe even if no windows.  Then it waits for windows.
       }
    }
 

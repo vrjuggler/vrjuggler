@@ -131,7 +131,7 @@ void Display::configViewports(jccl::ConfigChunkPtr chunk)
       mViewports.push_back(sim_vp);
    }
 
-   // Create sim viewports
+   // Create surface viewports
    // - Set the parent display
    // - Configure it
    for(i=0;i<num_surface_vps;i++)

@@ -30,58 +30,40 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _VRJ_SIM_DISPLAY_H_
-#define _VRJ_SIM_DISPLAY_H_
-//#pragma once
+#ifndef _VRJ_PF_SIM_INTERFACE_FACTORY_H_
+#define _VRJ_PF_SIM_INTERFACE_FACTORY_H_
 
 #include <vrj/vrjConfig.h>
-#include <vrj/Util/Debug.h>
-#include <vrj/Display/Viewport.h>
-
-#include <jccl/Config/ConfigChunkPtr.h>
+#include <string>
+#include <vpr/Util/Factory.h>
+#include <vpr/Util/Singleton.h>
 #include <vrj/Draw/DrawSimInterface.h>
 
+/**
+ * Registers a creator for the DrawSimInterface implementation classes.
+ *
+ * @pre Requires that the method std::string getChunkType() be defined for
+ *      class SimIfType.
+ *
+ * Ex: VRJ_REGISTER_SIM_INTERFACE_CREATOR(simulators::PySim)
+ */
+#define VRJ_REGISTER_PF_SIM_INTERFACE_CREATOR(SimIfType) \
+class SimIfType; \
+const bool reg_ctr_ ## SimIfType = \
+   vrj::PfSimInterfaceFactory::instance()-> \
+      registerCreator(SimIfType::getChunkType(), \
+                      vpr::CreateProduct<vrj::DrawSimInterface, SimIfType>);
 
 namespace vrj
 {
 
-class SimViewport : public Viewport
+class VJ_CLASS_API PfSimInterfaceFactory :
+   public vpr::Factory<DrawSimInterface, std::string>
 {
 public:
-   SimViewport() : Viewport()
-   {;}
-
-   SimViewport(const SimViewport& sv) : Viewport(sv), mSimulator(sv.mSimulator)
-   {
-      ;
-   }
-
-   virtual ~SimViewport()
-   {
-      ;
-   }
-
-public:
-   /**  Configure the simulator */
-   virtual void config(jccl::ConfigChunkPtr chunk);
-
-   /** Update the projections
-   * @param positionScale - Scale value for converting from Juggler units (meters) to the display units
-   */
-   virtual void updateProjections(const float positionScale);
-
-   DrawSimInterface* getDrawSimInterface()
-   { return mSimulator; }
-
-   void setDrawSimInterface(DrawSimInterface* draw_sim_i)
-   {
-      mSimulator = draw_sim_i;
-   }
-
-protected:
-   DrawSimInterface*    mSimulator;    /**< The simulator that we are using here */
+   vprSingletonHeader(PfSimInterfaceFactory);
 };
 
-}
+} // End of vrj namespace
 
-#endif
+#endif /* _VRJ_DRAW_SIM_INTERFACE_FACTORY_H_ */

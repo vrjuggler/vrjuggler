@@ -30,58 +30,14 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _VRJ_SIM_DISPLAY_H_
-#define _VRJ_SIM_DISPLAY_H_
-//#pragma once
-
 #include <vrj/vrjConfig.h>
-#include <vrj/Util/Debug.h>
-#include <vrj/Display/Viewport.h>
 
-#include <jccl/Config/ConfigChunkPtr.h>
-#include <vrj/Draw/DrawSimInterface.h>
+#include <vrj/Draw/Pf/PfSimInterfaceFactory.h>
 
 
 namespace vrj
 {
 
-class SimViewport : public Viewport
-{
-public:
-   SimViewport() : Viewport()
-   {;}
-
-   SimViewport(const SimViewport& sv) : Viewport(sv), mSimulator(sv.mSimulator)
-   {
-      ;
-   }
-
-   virtual ~SimViewport()
-   {
-      ;
-   }
-
-public:
-   /**  Configure the simulator */
-   virtual void config(jccl::ConfigChunkPtr chunk);
-
-   /** Update the projections
-   * @param positionScale - Scale value for converting from Juggler units (meters) to the display units
-   */
-   virtual void updateProjections(const float positionScale);
-
-   DrawSimInterface* getDrawSimInterface()
-   { return mSimulator; }
-
-   void setDrawSimInterface(DrawSimInterface* draw_sim_i)
-   {
-      mSimulator = draw_sim_i;
-   }
-
-protected:
-   DrawSimInterface*    mSimulator;    /**< The simulator that we are using here */
-};
+vprSingletonImp(PfSimInterfaceFactory)
 
 }
-
-#endif

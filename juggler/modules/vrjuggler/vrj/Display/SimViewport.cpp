@@ -40,8 +40,6 @@
 #include <vrj/Display/Projection.h>
 #include <gadget/Type/Position/PositionUnitConversion.h>
 
-#include <vrj/Draw/DrawSimInterfaceFactory.h>
-
 #include <vrj/Display/SimViewport.h>
 
 
@@ -72,12 +70,12 @@ void SimViewport::config(jccl::ConfigChunkPtr chunk)
    mRightProj->setEye(Projection::RIGHT);
    mRightProj->setViewport(this);
 
-   bool has_simulator(false);
-   has_simulator = chunk->getProperty<bool>("hasSimPlugin");
+   //bool has_simulator(false);
+   //has_simulator = chunk->getProperty<bool>("hasSimPlugin");
    mSimulator = NULL;
 
    // Create the simulator stuff
-   if(has_simulator)
+   /*if(has_simulator)
    {
       jccl::ConfigChunkPtr sim_chunk =
          chunk->getProperty<jccl::ConfigChunkPtr>("simPlugIn");
@@ -93,6 +91,7 @@ void SimViewport::config(jccl::ConfigChunkPtr chunk)
       mSimulator->initialize(this);
       mSimulator->config(sim_chunk);
    }
+   */
 }
 
 void SimViewport::updateProjections(const float positionScale)

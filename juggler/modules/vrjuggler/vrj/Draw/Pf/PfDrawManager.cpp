@@ -50,13 +50,16 @@
 #include <Performer/pfdu.h>
 #include <Performer/pf/pfTraverser.h>
 
+
 #include <vpr/Util/FileUtils.h>
 
+#include <vrj/Util/Debug.h>
 #include <vrj/Display/DisplayManager.h>
 #include <vrj/Draw/Pf/PfDrawManager.h>
 #include <vrj/Draw/Pf/PfApp.h>
 #include <vrj/Draw/Pf/PfSimInterface.h>
-#include <vrj/Util/Debug.h>
+#include <vrj/Draw/Pf/PfSimInterfaceFactory.h>
+
 
 #include <vrj/Display/Display.h>
 #include <vrj/Display/Projection.h>
@@ -285,6 +288,7 @@ void PfDrawManager::addDisplay(Display* disp)
    vprASSERT(disp != NULL);    // Can't add a null display
    vprASSERT((true == mPfHasForked) && "Trying to add display when performer has not been initialized");
 
+
    // Get frame buffer config
    std::vector<int> stereo_fb_config = getStereoFBConfig(disp);
    std::vector<int> mono_fb_config = getMonoFBConfig(disp);
@@ -425,6 +429,39 @@ void PfDrawManager::addDisplay(Display* disp)
          // if sim ==> setup sim channels
          else if(viewport->isSimulator())
          {
+            // -- Finish Simulator setup
+            jccl::ConfigChunkPtr vp_chunk = viewport->getConfigChunk();
+
+            SimViewport* sim_vp(NULL);
+            sim_vp = dynamic_cast<SimViewport*>(viewport);
+            vprASSERT(NULL != sim_vp);
+
+            bool has_simulator(false);
+            has_simulator = vp_chunk->getProperty<bool>("hasSimPlugin");
+            sim_vp->setDrawSimInterface(NULL);
+
+            // Create the simulator stuff
+            if(has_simulator)
+            {
+               jccl::ConfigChunkPtr sim_chunk =
+                  vp_chunk->getProperty<jccl::ConfigChunkPtr>("simPlugIn");
+
+               vprDEBUG(vrjDBG_DISP_MGR, vprDBG_CONFIG_LVL)
+                  << "SimViewport::config() creating simulator of type '"
+                  << sim_chunk->getDescToken() << "'\n" << vprDEBUG_FLUSH;
+
+               DrawSimInterface* new_sim_i = 
+                  PfSimInterfaceFactory::instance()->createObject(sim_chunk->getDescToken());
+
+               // XXX: Change this to an error once the new simulator loading code is
+               // more robust.  -PH (4/13/2003)
+               vprASSERT(NULL != new_sim_i && "Failed to create draw simulator");
+               sim_vp->setDrawSimInterface(new_sim_i);
+               new_sim_i->initialize(sim_vp);
+               new_sim_i->config(sim_chunk);
+            }   
+
+
             vprASSERT(pf_viewport.chans[pfViewport::PRIMARY] != NULL);
 
             // Primary

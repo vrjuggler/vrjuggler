@@ -48,9 +48,10 @@ INSTALL		= @INSTALL@
 SUBOBJDIR	= $(GL_LIBRARY)
 
 SRCS 		= GlBasicSimulator.cpp \
-           GlDrawManager.cpp		\
-           GlPipe.cpp			\
-           GlWindow.cpp
+           GlDrawManager.cpp	       \
+           GlPipe.cpp		       \
+           GlWindow.cpp		       \
+	   GlSimInterfaceFactory.cpp
 
 ifeq (@OS_TYPE@, Win32)
     SRCS	+= GlWindowWin32.cpp
