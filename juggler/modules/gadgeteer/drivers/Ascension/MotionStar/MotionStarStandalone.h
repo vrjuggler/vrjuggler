@@ -268,7 +268,7 @@ int errno; // EXTERN!!
  
 int                     numberBytes;
 int                     bytesReceived;
-#ifdef __FreeBSD__
+#ifdef __FreeBSD__ || defined(_AIX)
 socklen_t		Size, *lpSize;
 #else
 int                     Size, *lpSize;
