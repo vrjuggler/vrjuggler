@@ -366,7 +366,9 @@ Status SerialPortImplWin32::write_i (const void* buffer, const size_t length,
 }
 
 Status SerialPortImplWin32::read_i(void* buffer, const size_t length,
-                                   ssize_t& bytes_read, const vpr::Interval timeout = vpr::Interval::NoTimeout){
+                                   ssize_t& bytes_read,
+                                   const vpr::Interval timeout)
+{
 	Status s;
 	unsigned long bytes;
 
