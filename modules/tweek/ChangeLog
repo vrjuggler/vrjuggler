@@ -1,5 +1,7 @@
 DATE       AUTHOR      CHANGE
 ---------- ----------- --------------------------------------------------------
+2003-03-10 patrickh    Added tweek::SubjectManager::getName() method.
+                       NEW VERSION: 0.13.5
 2003-02-01 patrickh    The Tweek C++ API now builds on Windows.
                        NEW VERSION: 0.13.4
 2003-01-06 patrickh    Updated to VPR 0.22.0.

@@ -285,6 +285,7 @@ vpr::ReturnStatus CorbaManager::createSubjectManager()
          // guaranteed to be unique.
          std::string id_str("SubjectManager.");
          id_str += mSubjectManager->getGUID().toString();
+         mSubjectManager->setName(id_str);
 
          const char* kind = "Object";
 
