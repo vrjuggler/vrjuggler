@@ -67,6 +67,7 @@ public:
     //: Constructor
     inline TimeStampNone() {;}
 
+    TimeStampNone(const float usecs) {;}
 
     //: does nothing - this is the null performance monitor, remember?
     inline void set() {;}
