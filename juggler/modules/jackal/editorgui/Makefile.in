@@ -101,10 +101,11 @@ DOC_ROOT		= programmer.reference.java
 
 JAVA_AFTERBUILD = jars
 
-include $(MKPATH)/dpp.obj.mk
-
 # Hack to get java to compile the classes into the current dir
+override BASE_OBJDIR=
 override OBJDIR=.
+
+include $(MKPATH)/dpp.obj.mk
 
 # -----------------------------------------------------------------------------
 # Extra targets.
