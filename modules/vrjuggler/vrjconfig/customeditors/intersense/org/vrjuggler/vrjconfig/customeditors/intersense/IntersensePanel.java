@@ -283,13 +283,12 @@ public class IntersensePanel extends JPanel implements CustomEditor
                   try
                   {
                      CustomEditor pos_editor = (CustomEditor)jogl_editor_class.newInstance();
-                     ConfigElement pos_filter = (ConfigElement)mConfigElement.getProperty("position_filters", 0);
                      JDialog dlg = new JDialog(
                         (Frame)SwingUtilities.getAncestorOfClass(Frame.class, IntersensePanel.this),
                         "3D Visualization", true);
                      // Make sure to set the context first.
                      pos_editor.setContext(mConfigContext);
-                     pos_editor.setConfigElement(pos_filter);
+                     pos_editor.setConfigElement(mConfigElement);
 
                      dlg.getContentPane().add((JPanel)pos_editor);
                      dlg.pack();
