@@ -428,15 +428,81 @@ std::istream& operator >> (std::istream& in, vjConfigChunkDB& self) {
 bool vjConfigChunkDB::load (const std::string& filename, const std::string& parentfile) {
     file_name = demangleFileName (filename, parentfile);
 
-    std::ifstream in(file_name.c_str());
+    std::ifstream in;
 
     vjDEBUG(vjDBG_CONFIG,3) << "vjConfigChunkDB::load(): opening file " << file_name.c_str() << " -- " << vjDEBUG_FLUSH;
 
+    in.open(file_name.c_str());
 
+    // If the given file could not be opened, fall back on searching the
+    // paths given in the $VJ_CFG_PATH environment variable.
     if (!in) {
-        vjDEBUG(vjDBG_ALL,0) << "\nvjConfigChunkDB::load(): Unable to open file '"
-                             << file_name.c_str() << "'" << std::endl << vjDEBUG_FLUSH;
-        return false;
+        char cfg_path_env[]  = "VJ_CFG_PATH";
+        std::string cfg_path = getenv(cfg_path_env);
+        bool found           = false;
+
+        vjDEBUG(vjDBG_ALL, vjDBG_STATE_LVL) << "Falling back on VJ_CFG_PATH: "
+                                            << cfg_path << "\n"
+                                            << vjDEBUG_FLUSH;
+
+        // If the user set a value for $VJ_CFG_PATH, parse it, baby!
+        if ( cfg_path.length() > 0 ) {
+            std::string::size_type cur_pos = 0, old_pos = 0;
+            std::string full_path;
+
+            while ( ! found ) {
+                // Clear the flags on in so that we can try opening a new file.
+                in.clear();
+
+                // Find the next occurrence of a ':' path separator.
+                cur_pos = cfg_path.find(":", old_pos);
+
+                // If cur_pos is greater than the length of the path, there
+                // are no more :'s in the path.
+                if ( cur_pos > cfg_path.length() ) {
+                    // If old_pos is still less than the length of the path,
+                    // there is one more directory to be read, so set cur_pos
+                    // to the length of the path string so we can read it.
+                    // Once it's read, we'll be done.
+                    if ( old_pos < cfg_path.length() ) {
+                        cur_pos = cfg_path.length();
+                    }
+                    // At this point, both old_pos and cur_pos point beyond
+                    // the end of the path string.
+                    else {
+                        break;
+                    }
+                }
+
+                // Extract the current directory from the path and point
+                // old_pos to be one character past the current position
+                // (which points at a ':').
+                full_path = cfg_path.substr(old_pos, cur_pos - old_pos);
+                old_pos   = cur_pos + 1;
+
+                // Append "/" + file_name to the current directory.
+                full_path += "/";
+                full_path += file_name;
+
+                vjDEBUG(vjDBG_CONFIG, vjDBG_STATE_LVL)
+                    << "vjConfigChunkDB::load(): opening file " << full_path
+                    << "\n" << vjDEBUG_FLUSH;
+
+                // Try to open the file name constructed above.
+                in.open(full_path.c_str());
+
+                if ( in ) {
+                    found = true;
+                }
+            }
+        }
+
+        if ( ! found ) {
+            vjDEBUG(vjDBG_ALL, vjDBG_CRITICAL_LVL)
+                << "\nvjConfigChunkDB::load(): Unable to open file '"
+                << file_name.c_str() << "'" << std::endl << vjDEBUG_FLUSH;
+            return false;
+        }
     }
     vjDEBUG(vjDBG_CONFIG,5) << " succeeded.\n" << vjDEBUG_FLUSH;
     in >> *this;
