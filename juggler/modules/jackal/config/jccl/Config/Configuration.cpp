@@ -157,8 +157,8 @@ bool Configuration::load(const std::string& filename, const std::string& parentf
          setDefinitionPath(def_path_node);
       }
 
-      // Go through the include processing instructions.
-      cppdom::NodeList inc_list = cfg_doc->getChildren(tokens::INCLUDE);
+      // Go through the <include> XML elements.
+      cppdom::NodeList inc_list = cfg_node->getChildren(tokens::INCLUDE);
       for ( cppdom::NodeList::iterator itr = inc_list.begin();
             itr != inc_list.end();
             ++itr )
@@ -170,24 +170,6 @@ bool Configuration::load(const std::string& filename, const std::string& parentf
 
          // Load the file
          load(cfg_filename, filename);
-/*
-         cppdom::NodePtr pi(*itr);
-
-         // A configuration has been included.
-         if (pi->getName() == include_INSTRUCTION)
-         {
-            // Get the path to the included file relative to the current file
-            std::string cfg_filename =
-               pi->getAttribute(file_TOKEN).getValue<std::string>();
-
-            vprDEBUG(jcclDBG_CONFIG, vprDBG_CONFIG_LVL)
-               << "Including " << cfg_filename << std::endl
-               << vprDEBUG_FLUSH;
-
-            // Load the file
-            load(cfg_filename, filename);
-         }
-*/
       }
 
       // Load in the elements in the original file.
