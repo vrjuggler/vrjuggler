@@ -41,9 +41,12 @@ import javax.swing.event.*;
 import javax.swing.tree.*;
 
 import org.vrjuggler.jccl.config.*;
+import org.vrjuggler.jccl.config.event.ConfigContextEvent;
+import org.vrjuggler.jccl.config.event.ConfigContextListener;
 
 public class ConfigContextEditor
    extends JPanel
+   implements ConfigContextListener
 {
    public ConfigContextEditor()
    {
@@ -140,7 +143,28 @@ public class ConfigContextEditor
     */
    public void setContext(ConfigContext context)
    {
+      if (null != getContext())
+      {
+         getContext().removeConfigContextListener(this);
+      }
+      
       mContextModel.setContext(context);
+      getContext().addConfigContextListener(this);
+      
+      // Make sure that we can only add when we have a writable data source.
+      addBtn.setEnabled(false);
+      removeBtn.setEnabled(false);
+      
+      for (Iterator itr = context.getResources().iterator() ; itr.hasNext() ; )
+      {
+         if ( !getBroker().get((String)itr.next()).isReadOnly() )
+         {
+            addBtn.setEnabled(true);
+            removeBtn.setEnabled(true);
+            break;
+         }
+      }
+      
       java.util.List elts = getBroker().getElements(context);
       if (elts.size() > 0)
       {
@@ -169,6 +193,50 @@ public class ConfigContextEditor
       }
 
       mElementTree.expandPath(new TreePath(mContextModel.getRoot()));
+   }
+
+   /**
+    * Gives notification that a resource was added to the context.
+    *
+    * @param evt     the context event
+    */
+   public void resourceAdded(ConfigContextEvent evt)
+   {
+      // Make sure that we can only add when we have a writable data source.
+      addBtn.setEnabled(false);
+      removeBtn.setEnabled(false);
+      
+      for (Iterator itr = getContext().getResources().iterator() ; itr.hasNext() ; )
+      {
+         if ( !getBroker().get((String)itr.next()).isReadOnly() )
+         {
+            addBtn.setEnabled(true);
+            removeBtn.setEnabled(true);
+            return;
+         }
+      }
+   }
+
+   /**
+    * Gives notification that a resource was removed from the context.
+    *
+    * @param evt     the context event
+    */
+   public void resourceRemoved(ConfigContextEvent evt)
+   {
+      // Make sure that we can only add when we have a writable data source.
+      addBtn.setEnabled(false);
+      removeBtn.setEnabled(false);
+      
+      for (Iterator itr = getContext().getResources().iterator() ; itr.hasNext() ; )
+      {
+         if ( !getBroker().get((String)itr.next()).isReadOnly() )
+         {
+            addBtn.setEnabled(true);
+            removeBtn.setEnabled(true);
+            return;
+         }
+      }
    }
 
    /**
@@ -265,9 +333,9 @@ public class ConfigContextEditor
       treeToolbar.setFloatable(false);
 
       addBtn.setText("Add");
-      //addBtn.setEnabled(false);
+      addBtn.setEnabled(false);
       removeBtn.setText("Remove");
-      //removeBtn.setEnabled(false);
+      removeBtn.setEnabled(false);
 
       helpScrollPane.setMinimumSize(new Dimension(0, 0));
       helpPane.setBackground(new Color(255, 253, 181));
