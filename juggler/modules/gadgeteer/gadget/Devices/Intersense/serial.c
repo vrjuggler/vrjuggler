@@ -701,16 +701,3 @@ BOOL waitForShort( COMM_PORT *port, short *num )
 
     return TRUE;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
