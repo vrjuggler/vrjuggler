@@ -190,7 +190,7 @@ private:
 
    void drawCube()
    {
-      drawbox(-0.5, 0.5, -0.5, 0.5, -0.5, 0.5, GL_QUADS);
+      drawbox(-0.25, 0.25, -0.25, 0.25, -0.25, 0.25, GL_QUADS);
    }
 
    void drawFloor();

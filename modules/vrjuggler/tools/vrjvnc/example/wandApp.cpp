@@ -186,9 +186,10 @@ void wandApp::myDraw()
       glMultMatrixf(mNavMat.mData);
 
       // cout << "wand:\n" << *wandMatrix << endl;
+      /*
       glPushMatrix();
          glMultMatrixf(wandMatrix->mData);  // Push the wand matrix on the stack
-         //glColor3f(1.0f, 0.0f, 1.0f);
+
          float wand_color[3];
          wand_color[0] = wand_color[1] = wand_color[2] = 0.0f;
          if(mButton0->getData() == gadget::Digital::ON)
@@ -204,9 +205,9 @@ void wandApp::myDraw()
          if(mButton5->getData() == gadget::Digital::ON)
             wand_color[2] += 0.5f;
          glColor3fv(wand_color);
-         glScalef(0.25f, 0.25f, 0.25f);
          drawCube();
       glPopMatrix();
+      */
 
       // Draw a floor
       drawFloor();
