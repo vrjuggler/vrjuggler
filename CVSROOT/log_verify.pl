@@ -130,7 +130,7 @@ else
 
 sub validUser ()
 {
-   my @users = ('patrickh', 'allenb', 'subatomic');
+   my @users = ('patrickh', 'allenb', 'subatomic', 'aronb');
 
    foreach ( @users )
    {
