@@ -41,7 +41,7 @@ pfNav: ${OBJECTS}
 pfNav.o: pfNav.cpp pfNaver.h
 
 .cpp.o:
-	${COMPILE} -c ${srcdir}/$<
+	${COMPILE} -c $<
 
 # -----------------------------------------------------------------------------
 # Clean-up.
