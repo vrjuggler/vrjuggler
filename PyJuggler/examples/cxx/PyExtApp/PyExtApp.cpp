@@ -70,7 +70,7 @@ void PyExtApp::contextInit()
 
 void PyExtApp::preFrame()
 {
-   if ( NULL != mPythonFunc )
+   if ( NULL != mPythonFunc.get() )
    {
       gmtl::Vec3f wand_pos(gmtl::makeTrans<gmtl::Vec3f>(mWand->getData()));
 

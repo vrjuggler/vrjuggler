@@ -26,7 +26,13 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include <stdlib.h>
-#include <unistd.h>
+
+#ifdef WIN32
+#  include <string.h>
+#else
+#  include <unistd.h>
+#endif
+
 #include <string>
 #include <boost/python.hpp>
 
@@ -50,6 +56,30 @@ int main(int argc, char* argv[])
    // can be overridden on the command line with the -s argument.
    std::string module_name("app.ExampleModule");
 
+#ifdef WIN32
+   int optind, i;
+
+   for ( i = 1; i < argc; ++i )
+   {
+      if ( strcmp(argv[i], "-c") == 0 )
+      {
+         vrj::Kernel::instance()->loadConfigFile(argv[i + i]);
+         ++i;
+      }
+      else if ( strcmp(argv[i], "-m") == 0 )
+      {
+         module_name = std::string(argv[i + 1]);
+         ++i;
+      }
+      else
+      {
+         usage(argv[0]);
+         exit(1);
+      }
+   }
+
+   optind = i;
+#else
    extern char* optarg;
    extern int optind;
    int ch;
@@ -73,6 +103,7 @@ int main(int argc, char* argv[])
             break;
       }
    }
+#endif
 
    argc -= optind;
    argv += optind;
