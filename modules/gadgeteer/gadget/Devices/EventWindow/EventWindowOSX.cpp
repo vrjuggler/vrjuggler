@@ -165,6 +165,7 @@ void EventWindowOSX::updateData()
         m_keys[gadget::MOUSE_POSY] = 0.0;
         m_keys[gadget::MOUSE_NEGY] = 0.0;
    }
+   updateEventQueue()
 }
 
 int EventWindowOSX::stopSampling()
