@@ -44,6 +44,8 @@ namespace vpr {
 class InetAddrBase {
 public:
     //static const InetAddr AnyAddr;  -- NEED An AnyAddr defined
+/*
+  Comment out the conscturctors.  These need to be implemented in the final versions
 
     // ------------------------------------------------------------------------
     //: Default constructor.  This initializes the memory for the encapsulated
@@ -83,6 +85,7 @@ public:
     // ------------------------------------------------------------------------
     InetAddr (const InetAddr& addr)
     {vprASSERT(false && "Implement me");}
+*/
 
     // ------------------------------------------------------------------------
     //: Get the protocol family of this address structure.
@@ -205,9 +208,11 @@ public:
     //
     //! RETURNS: A reference to this object.
     // ------------------------------------------------------------------------
+    /*
     inline InetAddr&
     operator= (const InetAddr& addr)
     {vprASSERT(false && "Implement me");}
+    */
 };
 
 }; // End of vpr namespace
