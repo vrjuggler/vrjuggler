@@ -190,10 +190,6 @@ public class TweekFrame extends JFrame implements TreeModelRefreshListener,
             }
          });
 
-      // Define the Update option in the Network menu.
-
-      // Define the Exit option in the Network menu.
-
       // Define the Edit Global option in the Preferences menu.
       m_menu_prefs_gedit.setMnemonic('G');
       m_menu_prefs_gedit.setText("Edit Global ...");
@@ -245,25 +241,25 @@ public class TweekFrame extends JFrame implements TreeModelRefreshListener,
          });
 */
 
-      m_menu_file_exit.setText("Exit");
-      m_menu_file_exit.setMnemonic('X');
-      m_menu_file_exit.setAccelerator(javax.swing.KeyStroke.getKeyStroke(88, KeyEvent.CTRL_MASK, false));
-      m_menu_file_exit.addActionListener(new ActionListener ()
+      // Define the Quit option in the File menu.
+      m_menu_file_quit.setText("Quit");
+      m_menu_file_quit.setMnemonic('Q');
+      m_menu_file_quit.setAccelerator(javax.swing.KeyStroke.getKeyStroke(81, java.awt.event.KeyEvent.CTRL_MASK, false));
+      m_menu_file_quit.addActionListener(new ActionListener ()
          {
             public void actionPerformed(ActionEvent e)
             {
-               fileExitAction(e);
+               fileQuitAction(e);
             }
          });
 
       // Set up the File menu.  This adds the Open option, a separator, and
-      // the Exit option.
+      // the Quit option.
       m_menu_file.setText("File");
       m_menu_file.setMnemonic('F');
-      m_status_bar.setBorder(BorderFactory.createLoweredBevelBorder());
       m_menu_file.add(m_menu_file_open);
       m_menu_file.addSeparator();
-      m_menu_file.add(m_menu_file_exit);
+      m_menu_file.add(m_menu_file_quit);
 
       // Set up the Network menu.
       m_menu_network.setText("Network");
@@ -298,6 +294,7 @@ public class TweekFrame extends JFrame implements TreeModelRefreshListener,
       this.setJMenuBar(m_menu_bar);
 
       // Add the various components to their respective containers.
+      m_status_bar.setBorder(BorderFactory.createLoweredBevelBorder());
       m_content_pane.add(m_bean_container, BorderLayout.CENTER);
       m_content_pane.add(m_status_bar,  BorderLayout.SOUTH);
    }
@@ -315,7 +312,7 @@ public class TweekFrame extends JFrame implements TreeModelRefreshListener,
 
       if (e.getID() == WindowEvent.WINDOW_CLOSING)
       {
-         fileExitAction(null);
+         fileQuitAction(null);
       }
    }
 
@@ -324,9 +321,9 @@ public class TweekFrame extends JFrame implements TreeModelRefreshListener,
    // ========================================================================
 
    /**
-    * File | Exit action performed.
+    * File | Quit action performed.
     */
-   private void fileExitAction (ActionEvent e)
+   private void fileQuitAction (ActionEvent e)
    {
       System.exit(0);
    }
@@ -495,7 +492,7 @@ public class TweekFrame extends JFrame implements TreeModelRefreshListener,
    private JMenuBar m_menu_bar             = new JMenuBar();
    private JMenu m_menu_file               = new JMenu();
    private JMenuItem m_menu_file_open      = new JMenuItem();
-   private JMenuItem m_menu_file_exit      = new JMenuItem();
+   private JMenuItem m_menu_file_quit      = new JMenuItem();
    private JMenu m_menu_network            = new JMenu();
    private JMenuItem m_menu_net_connect    = new JMenuItem();
    private JMenuItem m_menu_net_disconnect = new JMenuItem();
