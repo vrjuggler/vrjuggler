@@ -29,9 +29,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-package VjConfig;
-
-import java.lang.RuntimeException;
+package org.vrjuggler.jccl.config;
 
 public class VarValueException
    extends RuntimeException

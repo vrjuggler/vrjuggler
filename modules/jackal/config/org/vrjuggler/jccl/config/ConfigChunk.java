@@ -29,13 +29,12 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-package VjConfig;
+package org.vrjuggler.jccl.config;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.io.DataInputStream;
 import java.io.IOException;
-import VjConfig.ChunkDesc;
+import java.util.ArrayList;
+import java.util.List;
 
 /** A ConfigChunk is a logical collection of configuration information.
  *  A vjConfigChunk stores a number of vjPropertys that describe
@@ -44,7 +43,6 @@ import VjConfig.ChunkDesc;
  *  and the vjPropertys that belong to it.
  *
  *  @see ChunkDesc
- *  @author Christopher Just
  *  @version $Revision$
  */
 public class ConfigChunk

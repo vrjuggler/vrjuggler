@@ -29,14 +29,9 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
+package org.vrjuggler.jccl.config;
 
-
-package VjConfig;
-
-import java.util.StringTokenizer;
 import java.util.*;
-import VjConfig.ValType;
-import VjConfig.DescEnum;
 import java.io.*;
 
 /** Individual PropertyDesc of a ChunkDesc.
@@ -49,7 +44,6 @@ import java.io.*;
  *  modifying a PropertyDesc needs to guarantee that no one else is looking
  *  at it at the same time.
  *
- *  @author Christopher Just
  *  @version $Revision$
  */
 public class PropertyDesc

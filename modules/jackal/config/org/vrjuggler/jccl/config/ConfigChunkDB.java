@@ -29,11 +29,10 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-package VjConfig;
+package org.vrjuggler.jccl.config;
 
-import java.util.*;
 import java.io.*;
-import VjConfig.*;
+import java.util.*;
 
 /** Representation of a VR Juggler-style configuration file.
  *  Essentially, a ConfigChunkDB is a container for ConfigChunks. It
@@ -44,7 +43,6 @@ import VjConfig.*;
  *  @see ConfigChunk
  *  @see ChunkDescDB
  *  @see ConfigIO
- *  @author Christopher Just
  *  @version $Revision$
  */
 public class ConfigChunkDB
