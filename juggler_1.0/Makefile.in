@@ -184,14 +184,9 @@ ABI_LIST	= @ABI_LIST@
 #
 #    1) Build dependencies (if necessary).
 #    2) Compile all object files that are out of date.
-#    3) Build the Java-based config editor (if necessary).
-#    4) Compile the actual libraries from the object files.
+#    3) Compile the actual libraries from the object files.
+#    4) Build the Java-based config editor (if necessary).
 #    5) Set up the developer installation links.
-#
-# These four particular targets are wrapper targets for simpler targets with
-# an underscore ('_') prepended to the target name.  It is in these simpler
-# targets that the compilation is done.  The wrapper targets define the order
-# in which things take place.
 # =============================================================================
 
 # Build all four versions of the libraries.
