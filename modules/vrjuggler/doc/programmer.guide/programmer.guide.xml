@@ -3247,23 +3247,35 @@ head_mat = head-&gt;getData();</programlisting>
   <part id="app.programming.part">
     <title>Application Programming</title>
 
-    <chapter id="chapter.writing.apps">
-      <title>Writing Applications</title>
+    <partintro>
+      <para>In each chapter of this part, we outline specific areas of
+      interest for application developers. We begin with the basics of writing
+      VR Juggler applications in general. Then, we move on to the use of
+      different graphics programming interfaces, such as OpenGL and OpenSG,
+      with VR Juggler. Afterwards, we address some additional, but vital,
+      topics such as how to write cluster-capable applications and how to add
+      sound to VR Juggler applications. This part concludes with chapters
+      providing tips on porting applications written using other toolkits such
+      as GLUT and the CAVElibs™.</para>
+    </partintro>
 
-      <indexterm>
+    <chapter id="chapter.writing.apps">
+      <title>Application Authoring Basics</title>
+
+      <indexterm zone="chapter.writing.apps">
         <primary>applications</primary>
 
         <secondary>writing</secondary>
+
+        <tertiary>basics</tertiary>
       </indexterm>
 
-      <para>This chapter alone comprises the bulk of information about
-      application development. Each section outlines one area of interest for
-      application developers. For example, there are sections that show how to
-      get input from the system and others that show how to write applications
-      for each of the currently supported graphics APIs. Please note that when
-      writing an application, there will be overlap between these sections.
-      For example, an application that needs input, sound, and OpenGL graphics
-      will be based on concepts from each of the relevant sections.</para>
+      <para>In this chapter, we build upon the information presented in the
+      previous chapters to explain the basics of writing VR Juggler
+      applications. This information will apply to all applications regardless
+      of the graphics programming interface used to render the immersive
+      space. Understanding this chapter will be critical in being able to
+      write effective, portable VR Juggler applications.</para>
 
       <section>
         <title>Application Review</title>
@@ -3656,11 +3668,35 @@ public:
           </section>
         </section>
       </section>
+    </chapter>
+
+    <chapter id="chapter.writing.apps.graphics.apis">
+      <title>Using Graphics Programming Interfaces</title>
+
+      <indexterm zone="chapter.writing.apps.graphics.apis">
+        <primary>applications</primary>
+
+        <secondary>writing</secondary>
+
+        <tertiary>graphics APIs</tertiary>
+      </indexterm>
+
+      <para>This chapter comprises the bulk of information about application
+      development. This makes sense when one considers the importance of
+      computer grahpics in the context of immersive applications. In each
+      section fo this chapter, we explain the use of different graphics
+      application programming interfaces (APIs) within the scope of VR
+      Juggler. While the sections of this chapter are tied to specific APIs,
+      we highly recommend that all prospective programmers of VR Juggler
+      applications read the first section about OpenGL applications. This
+      section covers core fundamentals of the VR Juggler OpenGL Draw Manager
+      that apply to the use of Open Scene Graph and OpenSG with VR
+      Juggler.</para>
 
       <section id="section.opengl.apps">
         <title>OpenGL Applications</title>
 
-        <indexterm>
+        <indexterm zone="section.opengl.apps">
           <primary>application programming</primary>
 
           <secondary>OpenGL</secondary>
@@ -4542,7 +4578,7 @@ void contextApp::draw()
       <section id="section.pf.apps">
         <title>OpenGL Performer Applications</title>
 
-        <indexterm>
+        <indexterm zone="section.pf.apps">
           <primary>application programming</primary>
 
           <secondary>OpenGL Performer</secondary>
@@ -5106,7 +5142,7 @@ pfDraw();</programlisting>
       <section id="section.opensg.apps">
         <title>OpenSG Applications</title>
 
-        <indexterm>
+        <indexterm zone="section.opensg.apps">
           <primary>application programming</primary>
 
           <secondary>OpenSG</secondary>
@@ -5530,6 +5566,43 @@ public:
           </section>
         </section>
       </section>
+
+      <section id="section.osg.apps">
+        <title>Open Scene Graph Applications</title>
+
+        <indexterm zone="section.osg.apps">
+          <primary>application programming</primary>
+
+          <secondary>Open Scene Graph (OSG)</secondary>
+        </indexterm>
+
+        <para></para>
+      </section>
+
+      <section id="section.vtk.apps">
+        <title>VTK Applications</title>
+
+        <indexterm zone="section.vtk.apps">
+          <primary>application programming</primary>
+
+          <secondary>VTK</secondary>
+        </indexterm>
+
+        <para></para>
+      </section>
+    </chapter>
+
+    <chapter id="chapter.writing.apps.misc">
+      <title>Additional Application Programming Topics</title>
+
+      <para>We now present topics that will be of interest to VR Juggler
+      programmers in general but are not as low-level as those topics
+      described in <xref linkend="chapter.writing.apps" />. Furthermore,
+      understanding the use of graphics APIs within a VR Juggler application
+      will help with understanding how these additional features can be used
+      effectively. As such, it is expected that readers of this chapter will
+      have already read and understood the topics presented in the previous
+      chapters of this part of the book.</para>
 
       <section id="section.cluster.apps">
         <title>Cluster Application Programming</title>
@@ -6800,18 +6873,6 @@ private:
           web page</ulink>, for complete documentation on the interface of
           <classname>snx::SoundHandle</classname>.</para>
         </section>
-      </section>
-
-      <section>
-        <title>VTK Applications</title>
-
-        <indexterm>
-          <primary>application programming</primary>
-
-          <secondary>VTK</secondary>
-        </indexterm>
-
-        <para></para>
       </section>
     </chapter>
 
