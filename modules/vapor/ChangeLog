@@ -1,7 +1,8 @@
 DATE       AUTHOR   CHANGE
 ---------- -------- -----------------------------------------------------------
-2002-01-03 patrickh Added support for connection events to the socket simulator
-                    code.
+2002-01-03 patrickh Added support for connection initiation events, connection
+                    completion events, and localhost message delivery events
+                    to the socket simulator code.
                     NEW VERSION: 0.9.1
 2002-01-02 patrickh Rewrote the build system for the test suite so that it can
                     use .cpp files instead of having everything in .h files.
