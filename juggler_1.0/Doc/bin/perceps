@@ -466,7 +466,19 @@ foreach $file (@tfile) {
           $TC=$tbufct[$i];
           $TOs=$tbufots[$i];
           $TCs=$tbufcts[$i];
-          print OUTFILE &GENTEXT(0,$tbuf[$i],0,$class);
+
+	  my $output = GENTEXT(0, $tbuf[$i], 0, "$class");
+	  my $final = '';
+
+	  # Keep only those lines in the string returned by GENTEXT() that
+	  # are not made up entirely of whitespace.  This retains blank
+	  # lines that may (or may not) have been used for HTML formatting.
+	  foreach ( split('\n', "$output") ) {
+	    next if /^\s+$/;
+	    $final .= "$_\n";
+	  }
+
+	  print OUTFILE "$final";
         }
         close(OUTFILE);
       }
