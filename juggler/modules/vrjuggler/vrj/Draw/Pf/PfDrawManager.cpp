@@ -343,7 +343,7 @@ std::vector<int> vjPfDrawManager::getMonoFBConfig()
    mono_fb.push_back(PFFB_GREEN_SIZE); mono_fb.push_back(8);
    mono_fb.push_back(PFFB_BLUE_SIZE); mono_fb.push_back(8);
    mono_fb.push_back(PFFB_ALPHA_SIZE); mono_fb.push_back(8);
-   mono_fb.push_back(PFFB_DEPTH_SIZE); mono_fb.push_back(24);
+   mono_fb.push_back(PFFB_DEPTH_SIZE); mono_fb.push_back(16);
 
    // Add application requests
    std::vector<int> app_fb = app->getFrameBufferAttrs();
@@ -365,7 +365,7 @@ std::vector<int> vjPfDrawManager::getStereoFBConfig()
    stereo_fb.push_back(PFFB_GREEN_SIZE); stereo_fb.push_back(8);
    stereo_fb.push_back(PFFB_BLUE_SIZE); stereo_fb.push_back(8);
    stereo_fb.push_back(PFFB_ALPHA_SIZE); stereo_fb.push_back(8);
-   stereo_fb.push_back(PFFB_DEPTH_SIZE); stereo_fb.push_back(24);
+   stereo_fb.push_back(PFFB_DEPTH_SIZE); stereo_fb.push_back(16);
 
    // Add application requests
    std::vector<int> app_fb = app->getFrameBufferAttrs();
