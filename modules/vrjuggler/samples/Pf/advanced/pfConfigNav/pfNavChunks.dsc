@@ -1,34 +1,89 @@
-chunk pf_basic_nav_app "Basic nav app" "A basic performer navigation application"
-  Name String 1 "Name" "Unique name of an instance of this chunk type"
-  start_location Float 3 "Start Location" ""
-  file_path String 1 "File Paths" "Paths to search for files"
-  Sound EmbeddedChunk -1 "Sounds" vj_enumeration { "Sound" } "specify a sound here.  usually used "
-  Model EmbeddedChunk -1 "Models" vj_enumeration { "Model" } ""
-  bounding_size Float 1 "Bounding Sphere size" ""
-  icon_view_offset Float 3 "Icon model offset" vj_valuelabels { "X" "y" "z" } "Amount to tranlate the application scene graph for displaying the icon (in pf coords, model coords)"
-  enable_nav Bool 1 "enable_nav" "Allow navigation or not... (false for animation)"
-  animation_play Bool 1 "animation_play" "Play animation (true) or stop (false)"
-  animation_loops Float 1 "animation_loops" "Number of times to loop animation (-1 for infinite)"
-  animation_filename String 1 "animation_filename" "name of animation file to load"
-  end
-chunk Model "Model" ""
-  Name String 1 "Name" "Unique name of an instance of this chunk type"
-  filename String 1 "Filename" ""
-  Scale Float 1 "Scale" "Amount to scale the model"
-  x Float 1 "x" "starting position of the model"
-  y Float 1 "y" "starting position of the model"
-  z Float 1 "z" "starting position of the model"
-  rotx Float 1 "rot x" "Model starting rotation"
-  roty Float 1 "rot y" ""
-  rotz Float 1 "rot z" ""
-  collidable Bool 1 "collidable" "Use collision detection on this model or not."
-  end
-chunk Sound "Sound" ""
-  Name String 1 "Name" "Unique name of an instance of this chunk type"
-  soundAlias String 1 "Sound Alias" ""
-  positional Bool 1 "Positional" "Is it position based sound (vol changes with movement)? Or is it just ambient."
-  x Float 1 "x" "initial position of the sound in juggler coordinates"
-  y Float 1 "y" "initial position of the sound in juggler coordinates"
-  z Float 1 "z" "initial position of sound..."
-  end
-End
+<?xml version="1.0" encoding="UTF-8"?>
+<ChunkDescDB>
+  <ChunkDesc token="pf_basic_nav_app" name="Basic nav app">
+    <help>A basic performer navigation application</help>
+    <PropertyDesc token="Name" name="Name" type="String" num="1">
+        <help>Unique name of an instance of this chunk type</help>
+    </PropertyDesc>
+    <PropertyDesc token="start_location" name="Start Location" type="Float" num="3">
+    </PropertyDesc>
+    <PropertyDesc token="file_path" name="File Paths" type="String" num="1">
+        <help>Paths to search for files</help>
+    </PropertyDesc>
+    <PropertyDesc token="Sound" name="Sounds" type="EmbeddedChunk" num="variable">
+        <help>specify a sound here.  usually used </help>
+        <enumeration name="Sound"/>
+    </PropertyDesc>
+    <PropertyDesc token="Model" name="Models" type="EmbeddedChunk" num="variable">
+        <enumeration name="Model"/>
+    </PropertyDesc>
+    <PropertyDesc token="bounding_size" name="Bounding Sphere size" type="Float" num="1">
+    </PropertyDesc>
+    <PropertyDesc token="icon_view_offset" name="Icon model offset" type="Float" num="3">
+        <help>Amount to tranlate the application scene graph for displaying the icon (in pf coords, model coords)</help>
+        <label name="X"/>
+        <label name="y"/>
+        <label name="z"/>
+    </PropertyDesc>
+    <PropertyDesc token="enable_nav" name="enable_nav" type="Bool" num="1">
+        <help>Allow navigation or not... (false for animation)</help>
+    </PropertyDesc>
+    <PropertyDesc token="animation_play" name="animation_play" type="Bool" num="1">
+        <help>Play animation (true) or stop (false)</help>
+    </PropertyDesc>
+    <PropertyDesc token="animation_loops" name="animation_loops" type="Float" num="1">
+        <help>Number of times to loop animation (-1 for infinite)</help>
+    </PropertyDesc>
+    <PropertyDesc token="animation_filename" name="animation_filename" type="String" num="1">
+        <help>name of animation file to load</help>
+    </PropertyDesc>
+  </ChunkDesc>
+  <ChunkDesc token="Model" name="Model">
+    <PropertyDesc token="Name" name="Name" type="String" num="1">
+        <help>Unique name of an instance of this chunk type</help>
+    </PropertyDesc>
+    <PropertyDesc token="filename" name="Filename" type="String" num="1">
+    </PropertyDesc>
+    <PropertyDesc token="Scale" name="Scale" type="Float" num="1">
+        <help>Amount to scale the model</help>
+    </PropertyDesc>
+    <PropertyDesc token="x" name="x" type="Float" num="1">
+        <help>starting position of the model</help>
+    </PropertyDesc>
+    <PropertyDesc token="y" name="y" type="Float" num="1">
+        <help>starting position of the model</help>
+    </PropertyDesc>
+    <PropertyDesc token="z" name="z" type="Float" num="1">
+        <help>starting position of the model</help>
+    </PropertyDesc>
+    <PropertyDesc token="rotx" name="rot x" type="Float" num="1">
+        <help>Model starting rotation</help>
+    </PropertyDesc>
+    <PropertyDesc token="roty" name="rot y" type="Float" num="1">
+    </PropertyDesc>
+    <PropertyDesc token="rotz" name="rot z" type="Float" num="1">
+    </PropertyDesc>
+    <PropertyDesc token="collidable" name="collidable" type="Bool" num="1">
+        <help>Use collision detection on this model or not.</help>
+    </PropertyDesc>
+  </ChunkDesc>
+  <ChunkDesc token="Sound" name="Sound">
+    <PropertyDesc token="Name" name="Name" type="String" num="1">
+        <help>Unique name of an instance of this chunk type</help>
+    </PropertyDesc>
+    <PropertyDesc token="soundAlias" name="Sound Alias" type="String" num="1">
+    </PropertyDesc>
+    <PropertyDesc token="positional" name="Positional" type="Bool" num="1">
+        <help>Is it position based sound (vol changes with movement)? Or is it just ambient.</help>
+    </PropertyDesc>
+    <PropertyDesc token="x" name="x" type="Float" num="1">
+        <help>initial position of the sound in juggler coordinates</help>
+    </PropertyDesc>
+    <PropertyDesc token="y" name="y" type="Float" num="1">
+        <help>initial position of the sound in juggler coordinates</help>
+    </PropertyDesc>
+    <PropertyDesc token="z" name="z" type="Float" num="1">
+        <help>initial position of sound...</help>
+    </PropertyDesc>
+  </ChunkDesc>
+</ChunkDescDB>
