@@ -121,13 +121,45 @@ listserv/vrjuggler?</a></li>
 <LI><font size=1>Can't find your answer here? <a href="${MAILTO_JUGGLER_MAILING_LIST}">Contact The User List</a></font></li>
 	
 <HR><!-- ----------------------------------------- -->
-<h3><a name="vjcontrolDoesntRun">VJ Control</a></h3>
+<h3><a name="vjcontrolDoesntRun">VjControl</a></h3>
    <blockquote>
-	<li><b>Why doesn't VJ Control run?</b><BR>
-	     VjControl purposely ignores your CLASSPATH environment variable.  So we recommend that you place swingall.jar file into your bin directory along with the vjcontrol or vjcontrol1.1 executable.  <BR>
-        What's swingall.jar?  You may need to install the Java swing distribution from sun.  <BR>
-        After you do that, find the file swingall.jar (in the Java installed location), and copy it to the same place as where the vjcontrol executable is (usually in juggler/bin).  <BR>
-        NOTE: On SGI currently vjcontrol runs best with Java 1.1 - run "vjcontrol1.1" executable instead to use the older Java1.1.  </li>       
+	<li><b>Why doesn't VjControl run?</b><BR>
+	    Prior to the release of VR Juggler 0.1.97, VjControl would
+	    work with Java 1.1 provided that the Java Swing classes were
+	    available in a file called <TT>swingall.jar</TT>.  VjControl
+	    purposely ignores your <TT>CLASSPATH</TT> environment variable,
+	    so with the old releases we recommend that you place
+	    <TT>swingall.jar</TT> file into your <TT>bin</TT> directory
+	    along with the <TT>vjcontrol</TT> or <TT>vjcontrol1.1</TT>
+	    executable.  Since VR Juggler 0.1.97, VjControl <I>only</I>
+	    works with Java 2 or newer (JDK versions 1.2 and higher).
+	    Because of this, <TT>swingall.jar</TT> is no longer needed.
+
+	    <P>
+
+	    Another possibility is that you do not have the
+	    <TT>VJ_BASE_DIR</TT> environment variable set.  Setting this
+	    variable is <I>required</I> to run VjControl because the
+	    shell script (or batch file on Win32) needs to be able to
+	    find the file <TT>VjControl.jar</TT> which is always located
+	    in <TT>VJ_BASE_DIR/bin</TT> with the <TT>vjcontrol</TT> script
+	    and <TT>vjcontrol.bat</TT> batch file.  Refer to the
+	    documentation describing
+	    <A HREF="${PROGRAMMER_GUIDE}/getting.started/User.Setup/environment.variables.html">environment
+	    variables</A> for more information.  It explains all the
+	    environment variables related to VR Juggler (and VjControl).
+	</li>
+	<LI><B>What's <TT>swingall.jar</TT>?</B><BR>
+	  The file <TT>swingall.jar</TT> contains the Swing classes that
+	  are part of the Java 2 distribution.  These classes were need to
+	  use Swing with Java 1.1.  You may need to install the Java Swing
+	  distribution from
+	  <A HREF="http://www.sun.com/" TARGET="_top">Sun</A>.  After you do
+	  that, find the file <TT>swingall.jar</TT> (in the Java installed
+	  location), and copy it to the same place as where the
+	  <TT>vjcontrol</TT> executable is (usually in
+	  <TT>VJ_BASE_DIR/bin</TT>).
+        </LI>
    <LI><font size=1>Can't find your answer here? <a href="${MAILTO_JUGGLER_MAILING_LIST}">Contact The User List</a></font></li>
 	</blockquote>
 <LI><font size=1>Can't find your answer here? <a href="${MAILTO_JUGGLER_MAILING_LIST}">Contact The User List</a></font></li>
