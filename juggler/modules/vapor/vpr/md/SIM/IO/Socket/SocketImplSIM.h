@@ -63,7 +63,7 @@
 #include <vpr/md/SIM/Network/NetworkGraph.h>
 #include <vpr/md/SIM/Network/NetworkNode.h>
 
-#include <vector>
+#include <deque>
 #include <boost/smart_ptr.hpp>
 
 
@@ -651,7 +651,8 @@ protected:
 
    vpr::SocketImplSIM* mPeer; /**< Our peer socket */
 
-   std::vector<vpr::sim::MessagePtr> mArrivedQueue; /**< FIFO of arrived msgs */
+   typedef std::deque<vpr::sim::MessagePtr> arrival_queue_t;
+   arrival_queue_t mArrivedQueue; /**< FIFO of arrived msgs */
 
    vpr::Mutex mArrivedQueueMutex; /**< Mutex for the arrived message queue */
 
