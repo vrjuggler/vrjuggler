@@ -36,7 +36,7 @@ require 5.004;
 
 use strict 'vars';
 use vars qw($base_dir $module $CONFIG_ARGS $PATH_ARGS $HOST_ARGS $FEATURE_ARGS
-            $CUSTOM_ARGS $LAST_ARG_GROUP $DEFAULT_MODULE);
+            $CUSTOM_ARGS $LAST_ARG_GROUP $DEFAULT_MODULE $Win32);
 use vars qw(%MODULES);
 
 use Cwd qw(chdir getcwd);
@@ -92,6 +92,7 @@ pod2usage(-exitstatus => 0, -verbose => 2) if $manual;
 die "ERROR: No configuration given\n" unless $cfg;
 
 $base_dir = (fileparse("$0"))[1];
+$Win32 = 1 if $ENV{'OS'} && $ENV{'OS'} =~ /Windows/;
 
 parseConfigFile("$cfg");
 
@@ -181,6 +182,7 @@ sub parseConfigFile ($)
 
                my @var_list = split(/\s*,\s*/, "$2");
                my %vars = ();
+               my $dep_path = "$1";
 
                my $var;
                foreach $var ( @var_list )
@@ -189,7 +191,8 @@ sub parseConfigFile ($)
                   $vars{"$1"} = "$2";
                }
 
-               push(@{$MODULES{"$mod"}}, {'path' => $1, 'env' => \%vars});
+               push(@{$MODULES{"$mod"}},
+                    {'path' => "$dep_path", 'env' => \%vars});
             }
             else
             {
@@ -333,8 +336,20 @@ sub generateMakefile (;$)
    my $cwd = getcwd();
    chdir("$base_dir");
    $input_file =~ s/\@JUGGLER_PROJECTS\@/$modules/g;
-   $input_file =~ s/\@JUGGLERROOT_ABS\@/$ENV{'PWD'}/g;
-   $input_file =~ s/\@topdir\@/$cwd/g;
+
+   if ( $Win32 )
+   {
+      my $win_pwd = `cygpath -w $ENV{'PWD'}`;
+      my $win_cwd = `cygpath -w $cwd`;
+      $input_file =~ s/\@JUGGLERROOT_ABS\@/$win_pwd/g;
+      $input_file =~ s/\@topdir\@/$win_cwd/g;
+   }
+   else
+   {
+      $input_file =~ s/\@JUGGLERROOT_ABS\@/$ENV{'PWD'}/g;
+      $input_file =~ s/\@topdir\@/$cwd/g;
+   }
+
    chdir("$cwd");
 
    print "Generating Makefile\n";
