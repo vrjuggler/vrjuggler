@@ -100,6 +100,7 @@ SocketStreamImpNSPR::accept () {
     SocketStreamImpNSPR* new_sock;
 
     // Accept an incoming connection request.
+    vprASSERT(m_handle != NULL);
     accept_sock = PR_Accept(m_handle, addr.getPRNetAddr(), PR_INTERVAL_NO_TIMEOUT);
 
     if (NULL == accept_sock) {
@@ -110,6 +111,7 @@ SocketStreamImpNSPR::accept () {
     // Otherwise, create a new vpr::SocketStreamImp object
     else {
         new_sock = new SocketStreamImpNSPR(accept_sock, addr);
+        vprASSERT(new_sock != NULL);
     }
 
     return new_sock;

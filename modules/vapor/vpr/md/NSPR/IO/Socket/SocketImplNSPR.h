@@ -171,6 +171,34 @@ public:
     // ------------------------------------------------------------------------
     virtual bool connect(void);
 
+    // ------------------------------------------------------------------
+    //: Get the status of a possibly connected socket
+    //
+    //! PRE: None
+    //! RETURNS: true - The socket is connected to a remote addr
+    //! RETURNS: false - The socket is not currently connect (the other side may have disconnected)
+    // -----------------------------------------------------------------
+    bool isConnected()
+    {
+        if(isOpen())        // If it is not open, then it can't be connected
+        {
+            if(PR_Available(m_handle) == 0)
+            {
+                PRPollDesc poll_desc;
+                poll_desc.fd = m_handle;
+                poll_desc.in_flags = PR_POLL_READ;
+
+                PR_Poll(&poll_desc, 1, 0);
+                if(poll_desc.out_flags & PR_POLL_READ)
+                    return false;                           // Opened, but not connected
+            }
+            
+            return true;        // Either have data, or are waiting for it
+        }
+        else
+            return false;           // Not open --> not connected
+    }
+
     // ------------------------------------------------------------------------
     //: Get the type of this socket (e.g., vpr::SocketTypes::STREAM).
     //
