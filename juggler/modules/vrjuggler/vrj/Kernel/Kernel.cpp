@@ -55,15 +55,6 @@
 #include <jccl/RTRC/ConfigManager.h>
 #include <jccl/PerfMonitor/PerformanceMonitor.h>
 
-// Get the system factory we need
-#if defined(VPR_OS_IRIX) || defined(VPR_OS_Linux) || defined(VPR_OS_AIX) ||   \
-    defined(VPR_OS_Solaris) || defined(VPR_OS_FreeBSD) || defined(VPR_OS_HPUX)
-#include <vrj/Kernel/SystemFactoryUNIX.h>
-#elif defined(VPR_OS_Darwin)
-#include <vrj/Kernel/SystemFactoryOSX.h>
-#elif defined(VPR_OS_Win32)
-#include <vrj/Kernel/SystemFactoryWin32.h>
-#endif
 
 namespace vrj
 {
@@ -362,18 +353,6 @@ void Kernel::initConfig()
 
    //??// processPending() // Should I do this here
 
-#if defined(VPR_OS_IRIX) || defined(VPR_OS_Linux) || defined(VPR_OS_Solaris) || \
-    defined(VPR_OS_AIX) || defined(VPR_OS_FreeBSD) || defined(VPR_OS_HPUX)
-   mSysFactory = SystemFactoryUNIX::instance(); // XXX: Should not be system specific
-#elif defined(VPR_OS_Darwin)
-   mSysFactory = SystemFactoryOSX::instance();
-#elif defined(VPR_OS_Win32)
-   mSysFactory = SystemFactoryWin32::instance();
-#else
-   //vprDEBUG(0,0) << "ERROR!: Don't know how to create System Factory!\n" << vprDEBUG_FLUSH;
-   vprASSERT(false);
-#endif
-
    // hook dynamically-reconfigurable managers up to config manager...
    jccl::ConfigManager::instance()->addConfigChunkHandler(this);
    jccl::ConfigManager::instance()->addConfigChunkHandler(mInputManager);
@@ -602,7 +581,6 @@ Kernel::Kernel()
    mExitFlag      = false;
    mIsRunning     = false;
    mControlThread = NULL;
-   mSysFactory    = NULL;
    mInputManager  = NULL;
    mDrawManager   = NULL;
    mSoundManager  = NULL;
@@ -630,4 +608,4 @@ Kernel::Kernel()
        ("${VJ_BASE_DIR}/" VJ_SHARE_DIR "/data/vrj-chunks.desc");
 }
 
-};
+}
