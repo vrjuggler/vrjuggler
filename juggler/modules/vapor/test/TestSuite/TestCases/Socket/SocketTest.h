@@ -558,45 +558,52 @@ public:
       vpr::Uint16 port = 7001;
       
       //keep testing until acceptor says finish
-      while (!mFinishFlag) {
+      while (mFinishFlag == false) {
          char  buffer[40];
          bool  result = 0;
-         char  buffer2[]="Oops";
+         char  buffer2[]="Oops!";
          int   amount_read;
          
          // make a new socket that will connect to port "port"
          vpr::SocketStream	connector_socket( vpr::InetAddr::AnyAddr, vpr::InetAddr(port) );
       
          // open socket
+         connector_socket.setOpenBlocking();
          result = connector_socket.open();
          threadAssertTest( result != false && "Socket::open() failed when test blocking" );
 
          // connect to the acceptor
          result = connector_socket.connect();
          threadAssertTest( result != false && "Socket::connect() failed when test blocking" );
-            
+         
+         connector_socket.setNoDelay(true);
+         
          //sleep until acceptor says begin
-         while (!mStartFlag){
-            vpr::System::msleep(1);
+         while (mStartFlag == false){
+            vpr::System::usleep(50);
          }
          
          //set socket to blocking/nonblocking mode as required          
-         if (mBlockingFlag)
+         if (mBlockingFlag == true)
             connector_socket.enableBlocking();
          else
             connector_socket.enableNonBlocking();
          
          //if the the flag of readn is true, use readn(), otherwise use read().
-         if (mReadnFlag)
-            connector_socket.readn(buffer, 20);
+         if (mReadnFlag == true)
+            amount_read=connector_socket.readn(buffer, 20);
          else
             amount_read=connector_socket.read(buffer, 20);
             
-         if (amount_read>0) {
+         if (amount_read>=0) {
             connector_socket.write(buffer, amount_read);
          }
          else {
             connector_socket.write(buffer2, sizeof(buffer2));
+         }
+         
+         while (mStartFlag == true){
+            vpr::System::usleep(50);
          }
          
          result = connector_socket.close();
@@ -609,14 +616,14 @@ public:
 
    void testBlocking_acceptor(void* arg)
    {
-      int num_of_times_to_test = 10;
+      int num_of_times_to_test = 3;
       vpr::Uint16 port = 7001;
       const int backlog = 5;
       bool  result = 0;
       char  buffer[40];
       char  buffer1[]="Hello, there!";
-      char  buffer2[]="Hello!!!";
-      int   amount_read;
+      char  buffer2[]="Hello! Can you hear me?";
+      int   amount_read (0);
       
       // make a new socket listening on port "port"
       vpr::SocketStream	acceptor_socket( vpr::InetAddr(port), vpr::InetAddr::AnyAddr );
@@ -624,63 +631,88 @@ public:
       
       // open socket
       result = acceptor_socket.open();
+      if (result == false) std::cout<<"Socket::open() failed in blocking test"<<endl;
       threadAssertTest( result != false && "Socket::open() failed in blocking test" );
 
       result = acceptor_socket.bind();
       threadAssertTest( result != false && "Socket::bind() failed in blocking test" );
-
+      
+      mFinishFlag = false;
+      
       // set the socket to listen
       result = acceptor_socket.listen( backlog );
       threadAssertTest( result != false && "Socket::listen() failed in blocking test" );
       
-      mFinishFlag = false;
       
       // switch between blocking/nonblocking and read/readn many times...
-      for (int xx = 0; xx < num_of_times_to_test; ++xx)
+      for (int xx = 0; xx < num_of_times_to_test; xx++)
       {
          // wait for a connect (blocking)
          // when someone connects to the server, and we accept the connection, 
          // spawn a child socket to deal with the connection
+         
+         int yy=xx%4;
+         
          vpr::SocketStream* child_socket = acceptor_socket.accept();
          threadAssertTest( child_socket != NULL && "Socket::accept() failed in blocking test" );
          
-         int yy=xx-(xx/4);
-         if(yy==0 || yy==2)
-            mBlockingFlag=true;
-         else mBlockingFlag=false;
-         if(yy==1 || yy==3)
-            mReadnFlag=false;
-         else mReadnFlag=false;
+         mFlagProtectionMutex.acquire();
+            if(yy==0 || yy==2)
+               mBlockingFlag=true;
+            else mBlockingFlag=false;
          
-         mStartFlag=true;
+            if(yy==0 || yy==1)
+               mReadnFlag=false;
+            else mReadnFlag=true;
+            mStartFlag=true;
+         mFlagProtectionMutex.release();
          
-         vpr::System::msleep(200);
+         child_socket->setNoDelay(true); 
+                 
+         vpr::System::msleep(50);
          
          child_socket->write(buffer1, sizeof(buffer1));
          
-         vpr::System::msleep(500);
+         vpr::System::msleep(50);
          
          child_socket->write(buffer2, sizeof(buffer2));
+         child_socket->enableNonBlocking();
          amount_read=child_socket->read(buffer, 40);
-         if (mBlockingFlag && mReadnFlag)
-            threadAssertTest(amount_read==20 && "");
-         if (mBlockingFlag && !mReadnFlag)
-            threadAssertTest(amount_read==13 && "");
-         if (!mBlockingFlag && mReadnFlag)
-            threadAssertTest(amount_read==5 && "");
-         if (!mBlockingFlag && !mReadnFlag)
-            threadAssertTest(amount_read==5 && "");
-            
+         child_socket->enableBlocking();
+
+         switch (yy) {
+         case 0:
+//            std::cout<<"Blocking & read, return "<<buffer<<std::endl;
+            threadAssertTest(amount_read == 14 && "Should return 14");
+            break;         
+         case 1:
+//            std::cout<<"Nonblocking & read, return "<<buffer<<std::endl;
+            threadAssertTest(amount_read == 6 && "Should return 6");
+            break;
+         case 2:
+//            std::cout<<"Blocking & readn, return "<<buffer<<std::endl;
+            threadAssertTest(amount_read == 20 && "Should return 20");
+            break;
+         case 3:
+//            std::cout<<"Nonblocking & readn, return "<<buffer<<std::endl;
+            threadAssertTest(amount_read==6 && "Should return 6");
+         }
+         std::cout<<"+"<<std::flush;
+         mFlagProtectionMutex.acquire();         
+         mStartFlag=false;
+         mFlagProtectionMutex.release();
+         
          result = child_socket->close();
          threadAssertTest( result != false && "Socket::close() failed in blocking test" );
 
          // clean up any memory i've made...
          delete child_socket;
-         mStartFlag=false;
       }
-      // close the socket
       
-      mFinishFlag = true;
+      // close the socket
+      mFlagProtectionMutex.acquire();
+         mFinishFlag = true;
+      mFlagProtectionMutex.release();
       result = acceptor_socket.close();
       threadAssertTest( result != false && "Socket::close() failed" );
    }  
@@ -702,9 +734,14 @@ public:
       vpr::Thread connector_thread( &connector_functor );
       
       // wait for both threads to terminate, then continue
-      vpr::System::sleep( 7 );
+
+      vpr::System::sleep( 10 );
       //connector_thread.join(); // join is broken.
       //acceptor_thread.join();
+      
+      assertTest( mThreadAssertTest && "blocking test: one of the threads asserted" );
+      mThreadAssertTest = true; // reset it
+      
       std::cout << " done\n" << std::flush;
    }
    
@@ -848,6 +885,7 @@ public:
 
 protected:
    vpr::Mutex     mItemProtectionMutex;         // Protect an exclusive item
+   vpr::Mutex     mFlagProtectionMutex;         // Protect an flags using in blocking test
    bool           mFinishFlag;
    bool           mBlockingFlag;
    bool           mStartFlag;
