@@ -19,6 +19,8 @@ public class KunststoffMiniButtonUI extends MetalButtonUI
 
    public static ComponentUI createUI(JComponent c)
    {
+      JButton button = (JButton) c;
+      button.setMargin(new Insets(1, 1, 1, 1));
       return buttonUI;
    }
 
