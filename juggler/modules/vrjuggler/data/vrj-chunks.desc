@@ -232,6 +232,7 @@ chunk MotionStar "Motion Star" "Ascension Wireless Motion Tracker"
   mode Int 1 "Run Mode" vj_enumeration { "Run Continuous=0" "Sample Individually=1" } ""
   translate Float 3 "Translation" ""
   rotate Float 3 "Rotation" ""
+  ipaddress String 1 "IP Address" vj_enumeration { "Backpack 1" "Backpack 2" } ""
   end
 chunk SimRelativePosition "SimRelativePosition" "A positional device simulator for one device relative to another."
   Name String 1 "Name" "Unique name of an instance of this chunk type"
