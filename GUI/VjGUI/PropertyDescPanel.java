@@ -8,6 +8,8 @@ import java.util.Vector;
 import VjConfig.PropertyDesc;
 import VjConfig.ValType;
 import VjConfig.DescEnum;
+import VjGUI.NoSpaceTextField;
+import VjGUI.IntegerTextField;
 
 public class PropertyDescPanel extends BorderedPanel implements ItemListener, 
 MouseListener, ActionListener {
@@ -98,7 +100,7 @@ System.out.println ("newvalues size is " + newvalues.size());
     gblayout.setConstraints(namefield,gbc);
     add (namefield);
     addLabel ("Token");
-    tokenfield = new TextField (d.token, 15);
+    tokenfield = new NoSpaceTextField (d.token, 15);
     gbc.gridwidth = GridBagConstraints.RELATIVE;
     gblayout.setConstraints(tokenfield,gbc);
     add (tokenfield);
@@ -113,7 +115,7 @@ System.out.println ("newvalues size is " + newvalues.size());
     add (varbox);
     varbox.addItemListener(this);
     addLabel ("Number");
-    numfield = new TextField (Integer.toString(d.num), 3);
+    numfield = new IntegerTextField (Integer.toString(d.num), 3);
     add (numfield);
     addLabel ("Type");
     typechoice = new Choice();

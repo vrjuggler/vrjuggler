@@ -9,6 +9,7 @@ import VjConfig.ChunkDesc;
 import VjConfig.PropertyDesc;
 import VjGUI.ClientGlobals;
 import VjGUI.BorderedPanel;
+import VjGUI.NoSpaceTextField;
 
 public class ChunkDescFrame extends Frame implements ActionListener,
        WindowListener { 
@@ -57,7 +58,7 @@ public class ChunkDescFrame extends Frame implements ActionListener,
     npconstraints.fill = GridBagConstraints.HORIZONTAL;
 
     northpanel.add (new Label ("ChunkDesc Token:", Label.RIGHT));
-    tokenfield = new TextField (d.token, 20);
+    tokenfield = new NoSpaceTextField (d.token, 20);
     northpanel.add (tokenfield);
     Label l = new Label ("Descriptive Name:", Label.RIGHT);
     namefield = new TextField (d.name, 20);

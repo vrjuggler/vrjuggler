@@ -34,7 +34,7 @@ public class FileControl {
   public boolean getBaseDir() {
     basedir = null;
     try {
-      String s = homedir + "/.C2config/basedir";
+      String s = homedir + "/.vjconfig/basedir";
       System.out.println ("trying to load " + s);
       FileReader r = new FileReader (s);
       StreamTokenizer st = new ConfigStreamTokenizer(r);
@@ -44,7 +44,7 @@ public class FileControl {
       return (basedir != null);
     }
     catch (FileNotFoundException e) {
-      System.err.println ("Couldn't find file !/.C2config/basedir");
+      System.err.println ("Couldn't find file !/.vjconfig/basedir");
       return false;
     }
     catch (Exception e) {
@@ -58,9 +58,21 @@ public class FileControl {
 
 
   public boolean loadBaseChunkDescDB () {
-    if (!getBaseDir())
-      return false;
-    String fname = basedir + "/chunksDesc";
+      String fname;
+      if (core.chunkdescusestandardfilereq) {
+	  FileDialog fd = new FileDialog ( core.ui, 
+					   "Load Global ChunkDesc File As...", 
+					   FileDialog.SAVE);
+    
+	  //ElCheapoRequester fd = new ElCheapoRequester(core.ui);
+	  fd.show();
+	  fname = fd.getFile();
+      }
+      else {
+	  if (!getBaseDir())
+	      return false;
+	  fname = basedir + "/chunksDesc";
+      }
 
     try {
       FileReader r = new FileReader(fname);
@@ -138,53 +150,56 @@ public class FileControl {
     return loadUserChunkDescDB (fname);
   }
 
+
+
     public boolean loadUserChunkDescDB (String fname) {
 	userchunkdescdbname = fname;
-
-    try {
-      FileReader r = new FileReader(fname);
-      ConfigStreamTokenizer st = new ConfigStreamTokenizer(r);
-      core.descs.read(st);
-      userchunkdescdbname = fname;
-      core.ui.update();
-      return true;
+	
+	try {
+	    FileReader r = new FileReader(fname);
+	    ConfigStreamTokenizer st = new ConfigStreamTokenizer(r);
+	    core.descs.read(st);
+	    userchunkdescdbname = fname;
+	    core.ui.update();
+	    return true;
+	}
+	catch (FileNotFoundException e) {
+	    System.err.println ("Couldn't open file " + fname);
+	    return false;
+	}
+	catch (IOException e) {
+	    System.err.println ("Error reading chunk descriptions from " + fname);
+	    return false;
+	}
     }
-    catch (FileNotFoundException e) {
-      System.err.println ("Couldn't open file " + fname);
-      return false;
-    }
-    catch (IOException e) {
-      System.err.println ("Error reading chunk descriptions from " + fname);
-      return false;
-    }
-  }
 
 
 
-  public boolean saveAsUserChunkDescDB () {
-    /* opens a file requester & saves to selected name */
+    public boolean saveAsUserChunkDescDB () {
+	/* opens a file requester & saves to selected name */
         FileDialog fd = new FileDialog ( core.ui, 
-				     "Save User Chunk Descriptions As...", 
-				     FileDialog.SAVE);
+					 "Save User Chunk Descriptions As...", 
+					 FileDialog.SAVE);
     
-    //ElCheapoRequester fd = new ElCheapoRequester(core.ui);
-      /*CfgFileRequester fd = new CfgFileRequester(core.ui,
-					       homedir + "/.C2config",
-					       "",
-					       true);
-      */
-    fd.show();
-    String name = fd.getFile();
-      if ((name == null) || name.equals(""))
-	return false;
-    return saveUserChunkDescDB(name);
-  }
+	/*CfgFileRequester fd = new CfgFileRequester(core.ui,
+	  homedir + "/.C2config",
+	  "",
+	  true);
+	*/
+	fd.show();
+	String name = fd.getFile();
+	if ((name == null) || name.equals(""))
+	    return false;
+	return saveUserChunkDescDB(name);
+    }
 
 
-  public boolean saveUserChunkDescDB () {
-      //String name = homedir + "/.C2config/chunksDesc";
-    return saveUserChunkDescDB (userchunkdescdbname);
-  }
+
+    public boolean saveUserChunkDescDB () {
+	return saveUserChunkDescDB (userchunkdescdbname);
+    }
+
+
 
   public boolean saveUserChunkDescDB (String name) {
     userchunkdescdbname = name;

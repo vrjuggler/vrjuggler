@@ -22,6 +22,8 @@ import VjConfig.ValType;
 import VjConfig.ConfigChunk;
 import VjConfig.DescEnum;
 import VjConfig.VarValue;
+import VjGUI.IntegerTextField;
+import VjGUI.FloatTextField;
 
 public class VarValuePanel extends BorderedPanel implements ActionListener {
 
@@ -107,7 +109,12 @@ public class VarValuePanel extends BorderedPanel implements ActionListener {
     else {
       /* just add a type label & the text string */
       add(new Label (label + " ("+desc.valtype.strVal()+")", Label.RIGHT), "West");
-      text = new TextField (25);
+      if (desc.valtype.equals(ValType.t_int))
+	  text = new IntegerTextField (25);
+      else if (desc.valtype.equals(ValType.t_float))
+	  text = new FloatTextField (25);
+      else
+	  text = new TextField (25);
       add(text,"Center");
     }
 

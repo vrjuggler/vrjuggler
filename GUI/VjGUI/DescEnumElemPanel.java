@@ -59,6 +59,8 @@ public class DescEnumElemPanel extends BorderedPanel implements MouseListener {
     add (l);
   }
 
+
+
   public DescEnumElemPanel (DescEnum e, ValType t, ClientGlobals c) {
     super(4,4,3,2);
     core = c;
@@ -88,7 +90,12 @@ public class DescEnumElemPanel extends BorderedPanel implements MouseListener {
       namef = new TextField (e.str, 20);
       add (namef);
       addLabel ("Value: ");
-      valf = new TextField (e.val.toString(), 20);
+      if (t.equals(ValType.t_int))
+	  valf = new IntegerTextField (e.val.toString(), 20);
+      else if (t.equals(ValType.t_float))
+	  valf = new FloatTextField (e.val.toString(), 20);
+      else
+	  valf = new IntegerTextField (e.val.toString(), 20);
       add (valf);
     }
 
@@ -118,7 +125,13 @@ public class DescEnumElemPanel extends BorderedPanel implements MouseListener {
       namef = new TextField ("", 20);
       add (namef);
       addLabel ("Value: ");
-      valf = new TextField ("", 20);
+      if (t.equals(ValType.t_int))
+	  valf = new IntegerTextField (20);
+      else if (t.equals(ValType.t_float))
+	  valf = new FloatTextField (20);
+      else
+	  valf = new IntegerTextField (20);
+
       add (valf);
     }
 
