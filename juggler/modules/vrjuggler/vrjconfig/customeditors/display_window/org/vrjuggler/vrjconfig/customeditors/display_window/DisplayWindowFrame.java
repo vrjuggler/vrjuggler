@@ -35,15 +35,15 @@ package org.vrjuggler.vrjconfig.customeditors.display_window;
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
+import javax.swing.event.*;
 import org.vrjuggler.jccl.config.ConfigBrokerProxy;
 import org.vrjuggler.jccl.config.ConfigDefinition;
 import org.vrjuggler.jccl.config.ConfigElement;
 import org.vrjuggler.jccl.config.event.ConfigElementAdapter;
 import org.vrjuggler.jccl.config.event.ConfigElementEvent;
 
-import org.vrjuggler.vrjconfig.customeditors.display_window.placer.PlacerSelectionEvent;
-import org.vrjuggler.vrjconfig.customeditors.display_window.placer.PlacerSelectionListener;
-import javax.swing.event.*;
+import org.vrjuggler.vrjconfig.commoneditors.placer.PlacerSelectionEvent;
+import org.vrjuggler.vrjconfig.commoneditors.placer.PlacerSelectionListener;
 
 
 public class DisplayWindowFrame
