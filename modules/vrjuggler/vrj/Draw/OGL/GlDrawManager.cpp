@@ -51,7 +51,7 @@
 #include <vrj/Draw/OGL/GlDrawWandFunctors.h>
 
 #include <gmtl/Vec.h>
-#include <gmtl/Vec.h>
+#include <gmtl/Output.h>
 
 //#include <gadget/Type/Glove.h>
 //#include <gadget/Type/GloveProxy.h>
