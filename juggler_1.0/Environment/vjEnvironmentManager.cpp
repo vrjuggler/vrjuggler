@@ -406,8 +406,10 @@ bool vjEnvironmentManager::acceptConnections() {
         return false;
     }
     else
-        vjDEBUG(vjDBG_ALL,vjDBG_CRITICAL_LVL) <<  clrOutNORM(clrGREEN,"LISTENING:") << "Environment Manager accepting connections on PORT "
-                                              << Port << '\n' << vjDEBUG_FLUSH;
+        vjDEBUG(vjDBG_ALL,vjDBG_CRITICAL_LVL)
+            << clrOutNORM(clrCYAN, "Environment Manager")
+            << " listening on port " << clrOutNORM(clrMAGENTA, Port) << "\n"
+            << vjDEBUG_FLUSH;
 
     /* now we ought to spin off a thread to do the listening */
     vjThreadMemberFunctor<vjEnvironmentManager>* memberFunctor =
