@@ -12,7 +12,7 @@
 				<string>jconf</string>
 			</array>
 			<key>CFBundleTypeIconFile</key>
-			<string>vrjconfig.icns</string>
+			<string>jconf.icns</string>
 			<key>CFBundleTypeName</key>
 			<string>VR Juggler configuration file</string>
 			<key>CFBundleTypeRole</key>
