@@ -44,7 +44,9 @@ public:
       mPrevSample1 = 0;
       mPrevSample2 = 0;
 
+      mCurSampleIndex = 0;
       mSampleBuffer.clear();
+      mSampleBuffer.resize(mSTASampleLimit);
    }
 
    void addSample(const TYPE sample);
@@ -75,7 +77,8 @@ private:
    vpr::Interval mPrevSampleTime1, mPrevSampleTime2;      // Time of last 2 samples (mPrevST1 < mPrevSt2)
    TYPE          mPrevSample1, mPrevSample2;              // Previous samples
 
-   std::deque< std::pair<TYPE,vpr::Interval> >  mSampleBuffer;    // Buffer of samples used to calc STA
+   unsigned      mCurSampleIndex;                                  // Index of the NEXT sample to write
+   std::vector< std::pair<TYPE,vpr::Interval> >  mSampleBuffer;    // Buffer of samples used to calc STA
 };
 
 template <class TYPE, bool TimeBased>
@@ -85,11 +88,11 @@ void SampleLimitedStatCollector<TYPE, TimeBased>::print(std::ostream& out)
        << "total: " << mCurTotal << "   samples:" << mSampleCount << std::endl
        << "mean: " << getMean() << "    sampleLimit:" << mSTASampleLimit << std::endl
        << "Initial Sample Time:" << mInitialSampleTime.getMinutesf() << std::endl
-       << "prev sampTime: " << mPrevSampleTime1.secf() << "s   prev sampTime2:" << mPrevSampleTime2.secf() << std::endl 
+       << "prev sampTime: " << mPrevSampleTime1.secf() << "s   prev sampTime2:" << mPrevSampleTime2.secf() << std::endl
        << "prev samp: " << mPrevSample1 << "   prev samp2:" << mPrevSample2 << std::endl
        << " --- data --- time --- " << std::endl;
 
-   for(std::deque< std::pair<TYPE,vpr::Interval> >::iterator i = mSampleBuffer.begin();
+   for(std::vector< std::pair<TYPE,vpr::Interval> >::iterator i = mSampleBuffer.begin();
        i!= mSampleBuffer.end(); ++i)
    {
       out << (*i).first << "   " << (*i).second.msec() << "ms\n";
@@ -124,16 +127,15 @@ void SampleLimitedStatCollector<TYPE, TimeBased>::addSample(const TYPE sample)
    mPrevSample2 = sample;
 
    // Add value to sample buffer
-   mRunningSTATotal += sample;
-   mSampleBuffer.push_front( std::pair<TYPE,vpr::Interval>(sample, cur_time) );
+   mRunningSTATotal += sample;                           // Add on new value
+   mRunningSTATotal -= mSampleBuffer[mCurSampleIndex].first;   // Subtract off old value (note: this is 0 when not set yet)
+   mSampleBuffer[mCurSampleIndex] = std::pair<TYPE,vpr::Interval>(sample, cur_time);
 
-   // Limit the size of the queue
-   if(mSampleBuffer.size() > mSTASampleLimit)
-   {
-      TYPE popped_sample = mSampleBuffer.back().first;
-      mRunningSTATotal -= popped_sample;
-      mSampleBuffer.pop_back();
-   }
+   // Goto next index
+   ++mCurSampleIndex;
+   if(mCurSampleIndex == mSTASampleLimit)
+   {  mCurSampleIndex = 0; }
+   vprASSERT(mCurSampleIndex < mSTASampleLimit && "Should never get larger then SampleLimit");
 
    // --- UPDATE MAXES ---- //
    double sta_value = getSTA();
@@ -235,4 +237,6 @@ double SampleLimitedStatCollector<TYPE, TimeBased>::getSTA()
 
 
 }; // namespace vpr
+
 #endif
+
