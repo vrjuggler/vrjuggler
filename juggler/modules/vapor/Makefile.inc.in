@@ -169,13 +169,28 @@ links:
 	@echo "------------------------------------------------"
 	@echo "Setting up developer installation"
 	@echo "------------------------------------------------"
-	@$(MAKE) EXTRA_INSTALL_ARGS=-l prefix="$(instlinks)"		\
-          DEFAULT_DIR="$(DBG_DIR)" installworld
+ifdef BUILD_TYPE
+	$(MAKE) links-$(BUILD_TYPE)
+else
+	$(MAKE) links-dbg
+endif
 	@echo ""
 	@echo "---------------------------------------------------------------"
 	@echo 'You should now set $$VPR_BASE_DIR to:'
 	@cd $(instlinks) && echo "  `pwd`"
 	@echo "---------------------------------------------------------------"
+
+links-all:
+	@$(MAKE) EXTRA_INSTALL_ARGS=-l prefix="$(instlinks)" installworld
+
+links-dbg:
+	@$(MAKE) EXTRA_INSTALL_ARGS=-l prefix="$(instlinks)" install-debug
+
+links-opt:
+	@$(MAKE) EXTRA_INSTALL_ARGS=-l prefix="$(instlinks)" install-optim
+
+links-prof:
+	@$(MAKE) EXTRA_INSTALL_ARGS=-l prefix="$(instlinks)" install-profiled
 
 # Remove the links in $(instlinks).  We cannot do this in the global build,
 # however, because it would blow away links set up by our dependencies.
