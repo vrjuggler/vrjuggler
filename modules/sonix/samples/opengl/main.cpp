@@ -482,7 +482,8 @@ int main(int argc, char* argv[])
     cout<<"               . - move 3d sound source to the right\n"<<flush;
     cout<<"               1 - Change subsystem to OpenAL\n"<<flush;
     cout<<"               2 - Change subsystem to AudioWorks\n"<<flush;
-    cout<<"               3 - Change subsystem to None\n"<<flush;
+    cout<<"               3 - Change subsystem to Subsynth\n"<<flush;
+    cout<<"               4 - Change subsystem to None\n"<<flush;
     cout<<"               a - configure sound object to sol.wav\n"<<flush;
     cout<<"               b - configure sound object to drumsolo.wav\n"<<flush;
     cout<<"               c - configure sound object to suck.wav\n"<<flush;
