@@ -154,10 +154,12 @@ public class PropertyPanel extends JPanel implements ActionListener, VarValuePan
 		ch.setName (((DescEnum)pr.desc.valuelabels.elementAt(valindex)).str);
 	    else
 		ch.setName (pr.desc.name + " " + valindex);
-	    if (useMiniPanel (ch))
-		return new VarValueMiniChunkPanel (this, pr, ch);
-	    else
-		return new VarValueBigChunkPanel (this, pr, ch);
+            // broken temporarily at allen's request
+            return new VarValueMiniChunkPanel (this,pr,ch);
+// 	    if (useMiniPanel (ch))
+// 		return new VarValueMiniChunkPanel (this, pr, ch);
+// 	    else
+// 		return new VarValueBigChunkPanel (this, pr, ch);
 	}
 	else
 	    return new VarValueStandardPanel(this, pr.desc);
