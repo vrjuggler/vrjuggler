@@ -117,8 +117,9 @@ void GlDrawManager::start()
    // XXX: No way to stop this thread later.
    control_thread = new vpr::Thread(memberFunctor);
 
-   vprDEBUG(vrjDBG_DRAW_MGR,1) << "vjGlDrawManager started. thread: "
-                             << control_thread << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CONFIG_LVL)
+      << "vrj::GlDrawManager started. thread: " << control_thread << std::endl
+      << vprDEBUG_FLUSH;
 }
 
 
@@ -191,9 +192,9 @@ void GlDrawManager::drawAllPipes()
       pipes[pipeNum]->completeRender();
 
    // Barrier for Cluster
-   //vprDEBUG(vprDBG_ALL,1) <<  "BARRIER: Going to sleep for: " << num << std::endl << vprDEBUG_FLUSH;
+   //vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL) <<  "BARRIER: Going to sleep for: " << num << std::endl << vprDEBUG_FLUSH;
    cluster::ClusterManager::instance()->createBarrier();
-   // vprDEBUG(vprDBG_ALL,1) <<  "BARRIER: IS DONE" << std::endl << vprDEBUG_FLUSH;
+   //vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL) <<  "BARRIER: IS DONE" << std::endl << vprDEBUG_FLUSH;
 
 
    // SWAP
@@ -469,4 +470,3 @@ vrj::GlWindow* GlDrawManager::getGLWindow()
 }
 
 } // end namespace
-
