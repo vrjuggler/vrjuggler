@@ -85,7 +85,7 @@ public:
 
 
     //: assignment operator
-    inline TimeStampNone& operator= (TimeStampNone& t2) {
+    TimeStampNone& operator= (const TimeStampNone& t2) {
 	return *this;
     }
 
