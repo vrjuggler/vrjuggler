@@ -137,18 +137,18 @@ $(LIBDIR)/$(JCCL_LIB_DYNAMIC): $(OBJDIR)/*.$(OBJEXT)
 	@echo "Creating $@"
 	@echo "------------------------------------------------"
 	@$(SHELL) $(MKINSTALLDIRS) $(LIBDIR)
-	$(LD) $(LDOPTS) $(DYLIB_NAME_FLAG) $(OBJDIR)/*.$(OBJEXT)	\
-            $(DYLIB_DEPS_JCCL)
+	$(LD) $(LDOPTS) $(DYLIB_NAME_FLAG) $(OBJDIR)/*.$(OBJEXT) $(DYLIB_DEPS_JCCL)
 	cd $(LIBDIR_BASE) && rm -f $(notdir $@) && $(LN_S) $@ ./
-ifeq (@OS_TYPE@, Win32)
-	cd $(LIBDIR_BASE) && rm -f $(JCCL_LIB_STATIC) &&		\
-            $(LN_S) $(LIBDIR)/$(JCCL_LIB_STATIC) ./
-	cd $(LIBDIR_BASE) && rm -f $(JCCL_LIBRARY).exp &&			\
-            $(LN_S) $(LIBDIR)/$(JCCL_LIBRARY).exp ./
-endif
 	@echo "------------------------------------------------"
 	@echo "$@ done"
 	@echo "------------------------------------------------"
+
+#ifeq (@OS_TYPE@, Win32)
+#	cd $(LIBDIR_BASE) && rm -f $(JCCL_LIB_STATIC) &&		\
+#            $(LN_S) $(LIBDIR)/$(JCCL_LIB_STATIC) ./
+#	cd $(LIBDIR_BASE) && rm -f $(JCCL_LIBRARY).exp &&			\
+#            $(LN_S) $(LIBDIR)/$(JCCL_LIBRARY).exp ./
+#endif
 
 
 # =============================================================================
