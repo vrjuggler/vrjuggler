@@ -123,7 +123,7 @@ public:
          vpr::IOSys::Handle handle = new_acceptor->getHandle();                  // Get the Handle to register
          acceptorTable[handle] = new_acceptor;
          selector.addHandle(handle);                          // Add to selector
-         selector.setIn(handle, (vpr::Selector::VPR_READ | vpr::Selector::VPR_WRITE | vpr::Selector::VPR_EXCEPT));
+         selector.setIn(handle, (vpr::Selector::Read | vpr::Selector::Write | vpr::Selector::Except));
       }
 
       // First test selector TIMEOUT
@@ -157,7 +157,7 @@ public:
           for(j=0;j<selector.getNumHandles();j++)
           {
             // if selector's out flag is VPR_READ|VPR_EXCEPT
-            if(selector.getOut(selector.getHandle(j)) & (vpr::Selector::VPR_READ | vpr::Selector::VPR_EXCEPT))
+            if(selector.getOut(selector.getHandle(j)) & (vpr::Selector::Read | vpr::Selector::Except))
             {
                threadAssertTest((acceptorTable.find(selector.getHandle(j)) != acceptorTable.end()),
                                 "Handle not found int acceptor table");
@@ -294,7 +294,7 @@ public:
          vpr::IOSys::Handle handle = sock.getHandle();         // Get the Handle to register
          handleTable[handle] = i;                              // Save handle index
          selector.addHandle(handle);                           // Add to selector
-         selector.setIn(handle, (vpr::Selector::VPR_READ));    // Set it for waiting for VPR_READ
+         selector.setIn(handle, (vpr::Selector::Read));        // Set it for waiting for VPR_READ
       }
 
       threadAssertTest((mNumRendevousPorts == selector.getNumHandles()), "We didn't add all ports correctly to selector");
@@ -337,7 +337,7 @@ public:
           for(j=0;j<selector.getNumHandles();j++)
           {
              // If have data to read
-             if(selector.getOut(selector.getHandle(j)) & (vpr::Selector::VPR_READ))
+             if(selector.getOut(selector.getHandle(j)) & (vpr::Selector::Read))
             {
                threadAssertTest((handleTable.find(selector.getHandle(j)) != handleTable.end()),
                                 "Handle not found int acceptor table");

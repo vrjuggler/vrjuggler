@@ -228,7 +228,7 @@ public:
       // Add acceptor's handle to a selector
       vpr::Selector selector;
       selector.addHandle( handle );
-      selector.setIn( handle, vpr::Selector::VPR_READ | vpr::Selector::VPR_WRITE | vpr::Selector::VPR_EXCEPT );
+      selector.setIn( handle, vpr::Selector::Read | vpr::Selector::Write | vpr::Selector::Except );
 
       // a/c: enableNonBlock
       acceptor_socket.enableNonBlocking();
@@ -257,7 +257,7 @@ public:
       status = selector.select( num_events, vpr::Interval(50000,vpr::Interval::Msec) );
       for (int j = 0; j < selector.getNumHandles(); ++j)
       {
-         if (selector.getOut( selector.getHandle(j) ) & (vpr::Selector::VPR_READ | vpr::Selector::VPR_EXCEPT))
+         if (selector.getOut( selector.getHandle(j) ) & (vpr::Selector::Read | vpr::Selector::Except))
          {
             threadAssertTest( handle == selector.getHandle( j )
                   && "Handle doesn't match" );
@@ -291,7 +291,7 @@ public:
       status = selector.select( num_events, 50000 );
       for (int j = 0; j < selector.getNumHandles(); ++j)
       {
-         if (selector.getOut( selector.getHandle(j) ) & (vpr::Selector::VPR_READ | vpr::Selector::VPR_EXCEPT))
+         if (selector.getOut( selector.getHandle(j) ) & (vpr::Selector::Read | vpr::Selector::Except))
          {
             threadAssertTest( handle == selector.getHandle( j )
                   && "Handle doesn't match" );
