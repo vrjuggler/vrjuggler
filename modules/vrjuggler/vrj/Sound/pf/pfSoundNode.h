@@ -66,7 +66,15 @@ public:
    {
    }
 
-   float mX, mY, mZ;
+   pfSoundNode& operator=(const pfSoundNode& rhs)
+   {
+      pfDCS::operator=(rhs);
+      mX = rhs.mX;
+      mY = rhs.mY;
+      mZ = rhs.mZ;
+      mSound = rhs.mSound;
+      mIsPositional = rhs.mIsPositional;
+   }
 
    /** Sets the listener. */
    void setObs( float x, float y, float z )
@@ -98,6 +106,11 @@ public:  // APP traversal
       return TRUE;
    }
 
+protected:
+   float mX, mY, mZ;
+   std::string mSound;
+   bool        mIsPositional;
+
 
 public:  // Required for Performer class
    static void init();
@@ -108,8 +121,7 @@ public:  // Required for Performer class
 
 private:
    static pfType* classType;
-   std::string mSound;
-   bool mIsPositional;
+
 };
 
 
