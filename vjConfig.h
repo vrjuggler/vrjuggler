@@ -77,6 +77,7 @@ typedef UINT u_int;
 #include <map>
 #include <string>
 #include <algorithm>
+#include <math.h>
 
 //#include <Kernel/vjDebug.h>
 #endif
