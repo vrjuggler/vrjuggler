@@ -104,7 +104,7 @@
             </indexterm>
             <para>CORBA, the <glossterm linkend="gloss.corba">Common Object Request Broker Architecture</glossterm>, is a powerful tool for <glossterm linkend="gloss.distrib-programming">distributed programming</glossterm>. It is a <emphasis>language-independent</emphasis> standard specified by the <ulink url="http://www.omg.org/">Object Management Group</ulink> (OMG). Many CORBA implementations, both free and commercial, exist for a wide variety of languages (e.g., C, C++, Java, Perl, Python, and Smalltalk). CORBA allows communication between software written in any programming language running on any operating system on any hardware architecture. It handles all serialization and de-serialization of objects and method parameters so that programmers do not have to worry about endian issues and other system incompatibilities.</para>
             <para>Before going further with the discussion of CORBA in Tweek, readers must be familiar with some terminology. In CORBA, the physical object to which references are made is called a <glossterm linkend="gloss.servant"><firstterm>servant</firstterm></glossterm>. The servant is an instance of some class that implements an interface and derives from <classname>CORBA::Object</classname> (or <classname>org.omg.CORBA.Object</classname> in Java). The actual details of servant implementations are postponed for later sections. For now, it is important to remember that there will be an object located in physical memory on some machine, and <emphasis>references</emphasis> will be made to that object through CORBA. Users acquire references by looking up the object by name in what is known as the CORBA <firstterm>Naming Service</firstterm>. The Naming Service has objects registered within its database, and clients request references from the database. When the reference is made available, methods may be invoked on it. Since the physical object resides in another memory space, this will create network traffic, though it is entirely transparent to the programmer.</para>
-            <para>CORBA uses <glossterm linkend="gloss.orb">Object Request Brokers</glossterm> (ORBs) to manage locally registered objects and to communicate with remote objects. The remote objects are managed by ORBs that reside locally on the machines that have the servants. Two ORBs communicate with each other using a standard protocol. In this case, that protocol is the <glossterm linkend="gloss.iiop">Internet Inter-ORB Protocol</glossterm> (IIOP). IIOP is a new addition to Version 2.3 of the CORBA standard. It allows two ORBs written by different vendors to communicate and interoperate. This capabilitiy is crucial to the correct functionality of Tweek and many other CORBA-based software systems.</para>
+            <para>CORBA uses <glossterm linkend="gloss.orb">Object Request Brokers</glossterm> (ORBs) to manage locally registered objects and to communicate with remote objects. The remote objects are managed by ORBs that reside locally on the machines that have the servants. Two ORBs communicate with each other using a standard protocol. In this case, that protocol is the <glossterm linkend="gloss.iiop">Internet Inter-ORB Protocol</glossterm> (IIOP). IIOP is a new addition to Version 2.3 of the CORBA standard. It allows two ORBs written by different vendors to communicate and inter-operate. This capability is crucial to the correct functionality of Tweek and many other CORBA-based software systems.</para>
             <para>Within the scope of Tweek, CORBA is used to enable transparent communication between C++ applications and the Tweek Java GUI. C++ objects registered with a local ORB are made available to the Java GUI through the Subject Manager. Beyond this, CORBA exists mostly "behind the scenes" so that developers of Tweek-based software do not have to learn very much about CORBA. Programmers must understand the Interface Definition Language, however, and this is explained next.</para>
             <section id="intro.corba.idl.section">
                <title>Interface Definition Language</title>
@@ -192,9 +192,9 @@
             <para>All JavaBeans loaded by the Tweek Java GUI are describe by at least one <glossterm linkend="gloss.xml.main">XML</glossterm> file<indexterm>
                   <primary>XML</primary>
                </indexterm>. The XML file can contain information about many Beans or about a single Bean. The XML file itself is a <quote>beanlist</quote> document. The four Bean categories, described above, each have an XML element that has children giving information about the specific Bean. The elements are <sgmltag>&lt;service&gt;</sgmltag>, <sgmltag>&lt;viewer&gt;</sgmltag>, <sgmltag>&lt;guipanel&gt;</sgmltag>, and <sgmltag>&lt;generic&gt;</sgmltag>.</para>
-            <para>All Bean XML entries must contain a <sgmltag>&lt;file&gt;</sgmltag> element. Through its <literal>source</literal> attribute, this element provides the path to the JAR file that contains the full Bean code. When specifying the JAR file path, envrionment variables may be used. They must use the syntax <varname>${ENV_VAR}</varname> (the curly braces are required). The <literal>entry</literal> element gives the entry within the JAR file of the class that will be instantiated. The value must be specified using a /-separated list giving the path to the class entry within the JAR file. The extension <filename>.class</filename> must not be specified, however. This is to allow the use of serialized classes which have the extension <filename>.ser</filename>. The Tweek Bean-loading code will figure out what is available and take the right actions.</para>
+            <para>All Bean XML entries must contain a <sgmltag>&lt;file&gt;</sgmltag> element. Through its <literal>source</literal> attribute, this element provides the path to the JAR file that contains the full Bean code. When specifying the JAR file path, environment variables may be used. They must use the syntax <varname>${ENV_VAR}</varname> (the curly braces are required). The <literal>entry</literal> element gives the entry within the JAR file of the class that will be instantiated. The value must be specified using a /-separated list giving the path to the class entry within the JAR file. The extension <filename>.class</filename> must not be specified, however. This is to allow the use of serialized classes which have the extension <filename>.ser</filename>. The Tweek Bean-loading code will figure out what is available and take the right actions.</para>
             <para>In addition to the <sgmltag>&lt;file&gt;</sgmltag> element, there may be zero or more <sgmltag>&lt;dependency&gt;</sgmltag> elements. These list dependencies of the Bean named as other external JAR files. The <sgmltag>&lt;dependency&gt;</sgmltag> element has two attributes: <literal>file</literal> and <literal>path</literal>. The attribute <literal>file</literal> names the JAR file; <literal>path</literal> gives the path (a semi-colon separated list of directories) where the JAR file may be found.</para>
-            <para>Of the four Bean categories, the XML for Panel Beans can contain the most information. In addition to the previously mentioned elements, Panel Bean entries may have two optional elements: <sgmltag>&lt;tree&gt;</sgmltag> and <sgmltag>&lt;icon&gt;</sgmltag>. The element <sgmltag>&lt;tree&gt;</sgmltag> specifies the path within the Bean tree hierarchy where the Panel Bean will be placed. The path is given as a /-separated list of directories. If the named path does not exist when the Bean is loaded, it will be created. The element <sgmltag>&lt;icon&gt;</sgmltag> names a custom icon for the Bean and a tooltip. An example of a Panel Bean XML entry is shown in <xref linkend="PlexusGraphView.xml.example"/>. Note that this is not the full file--it is only the <sgmltag>&lt;guipanel&gt;</sgmltag> element for a single Bean.</para>
+            <para>Of the four Bean categories, the XML for Panel Beans can contain the most information. In addition to the previously mentioned elements, Panel Bean entries may have two optional elements: <sgmltag>&lt;tree&gt;</sgmltag> and <sgmltag>&lt;icon&gt;</sgmltag>. The element <sgmltag>&lt;tree&gt;</sgmltag> specifies the path within the Bean tree hierarchy where the Panel Bean will be placed. The path is given as a /-separated list of directories. If the named path does not exist when the Bean is loaded, it will be created. The element <sgmltag>&lt;icon&gt;</sgmltag> names a custom icon for the Bean and a tool-tip. An example of a Panel Bean XML entry is shown in <xref linkend="PlexusGraphView.xml.example"/>. Note that this is not the full file--it is only the <sgmltag>&lt;guipanel&gt;</sgmltag> element for a single Bean.</para>
             <example id="PlexusGraphView.xml.example">
                <title>PlexusGraphView.xml snippet</title>
                <programlisting>&lt;guipanel name="Graph View"&gt;
@@ -232,7 +232,7 @@
       <chapter>
          <title>Programming Basics</title>
          <para>In the following chapters, we present the basic information needed to start programming with Tweek. There will be discussion covering IDL, C++, Java, and CORBA. To use Tweek effectively, a good understanding of C++ and Java is required. The IDL aspect of Tweek is minimal, and programmers familiar with basic object-oriented concepts should be able to understand IDL code easily. Discussion related to CORBA is based on the brief introduction given in <xref linkend="intro.corba.section"/>. The Tweek Java and C++ APIs are designed to hide most CORBA details. Whenever possible, references are given to good sources of information on all of the aforementioned topics.</para>
-         <para>Before proceeding, it is important to know that Tweek is designed and implemented to work with VR Juggler 1.1 and 2.0. It can be used with VR Juggler 1.0, but there have been reports of conflicts occuring between VR Juggler 1.0 and the VR Juggler Portable Runtime (VPR) that is part of VR Juggler 1.1. The Tweek C++ code uses VPR for threading, but it is possible to replace the VPR objects with VR Juggler 1.0 thread objects.</para>
+         <para>Before proceeding, it is important to know that Tweek is designed and implemented to work with VR Juggler 1.1 and 2.0. It can be used with VR Juggler 1.0, but there have been reports of conflicts occurring between VR Juggler 1.0 and the VR Juggler Portable Runtime (VPR) that is part of VR Juggler 1.1. The Tweek C++ code uses VPR for threading, but it is possible to replace the VPR objects with VR Juggler 1.0 thread objects.</para>
       </chapter>
       <chapter id="prog.idl.chapter">
          <title>IDL</title>
@@ -334,7 +334,7 @@ interface Subject
             <para>In this example, we explain how to develop a simple Tweek interface. The goal is to have a <quote>collaborative</quote> slider in a Java GUI component. The value displayed by the slider is retained by a C++ application so that multiple independent sliders can show the same value. The steps explained here are highly representative of the normal steps to be followed when using the Tweek Java and C++ APIs. The structure of the following sections lays out the order of the steps taken. An example makefile that goes along with the code presented can be found in <xref linkend="SliderSubject.makefile.section"/> of <xref linkend="makefile.appendix"/>. The full source for the examples presented in this section can be found in <filename>$TWEEK_BASE_DIR/share/test/NetworkTestBean</filename>.</para>
             <section>
                <title>The Subject</title>
-               <para>To begin, the subject interface must be defined in IDL and implemented in C++. The interface itself will be <quote>compiled</quote> into Java and C++ code. Both ends of the communication channels must know the interface in order for the references to be used, thus requring the generation of code for both languages.</para>
+               <para>To begin, the subject interface must be defined in IDL and implemented in C++. The interface itself will be <quote>compiled</quote> into Java and C++ code. Both ends of the communication channels must know the interface in order for the references to be used, thus requiring the generation of code for both languages.</para>
                <section>
                   <title>Creating the Interface</title>
                   <para>Creating an IDL interface involves writing an IDL file. For this example, we will be storing an integer variable in a C++ servant. The Java GUIs will need to read and write the value, so we need two methods: <methodname>getValue()</methodname> and <methodname>setValue()</methodname>. The type being passed between <glossterm linkend="gloss.orb">ORBs</glossterm> will be <type>long</type>, a 32-bit integer. Depending on the target language, this will map to the corresponding type of the same size.</para>
@@ -372,7 +372,7 @@ module networktest
 #endif</programlisting>
                         <calloutlist>
                            <callout arearefs="cpp.protection">
-                              <para>IDL files are run through the C preprocessor so that they may include external files. To prevent including the same soure multiple times, the file must be enclosed in the traditional preprocessor protection block. This is exactly what is done in C/C++ header files.</para>
+                              <para>IDL files are run through the C preprocessor so that they may include external files. To prevent including the same source multiple times, the file must be enclosed in the traditional preprocessor protection block. This is exactly what is done in C/C++ header files.</para>
                            </callout>
                            <callout arearefs="tweek.subject.idl.include">
                               <para>All Tweek subject IDL files must include <filename>tweek/idl/Subject.idl</filename>. This is required so that the interface being defined can inherit from <interfacename>tweek::Subject</interfacename>.</para>
@@ -1237,7 +1237,7 @@ import org.vrjuggler.tweek.beans.FileLoader;
                         <para>JavaBeans are expected to implement <interfacename>java.io.Serializable</interfacename>, and this class does that. The more interesting interface for this example is <interfacename>org.vrjuggler.tweek.beans.FileLoader</interfacename>. By implementing this interface, the Tweek Java GUI will know that this Bean can manage files.</para>
                      </callout>
                      <callout arearefs="FileOpenTestBean.java.openFileCount">
-                        <para>This is a property of the class that keeps track of hte number of currently open files.</para>
+                        <para>This is a property of the class that keeps track of the number of currently open files.</para>
                      </callout>
                      <callout arearefs="FileOpenTestBean.java.mTextContainer">
                         <para>This Bean is capable of opening multiple files, and it will manage them with a <classname>JTabbedPane</classname>.</para>
@@ -1637,7 +1637,16 @@ clobber:
          <title>CORBA Implementations</title>
          <para>In order to use CORBA, a CORBA implementation must be available. As of this writing, Tweek uses omniORB 3.0.4 <xref linkend="Omn02"/> for a C++ ORB. Since Tweek uses POA, any C++ ORB may be used with only a few changes to the code.</para>
          <para>For the Java side, OpenORB 1.2.0 <xref linkend="Ope02"/> has been used. Java IDL <xref linkend="Jid02"/>, the CORBA implementation that comes with the Java Development Kit (JDK), does not fully implement POA as of JDK 1.3.1. With the release of JDK 1.4.0, Java IDL has a complete implementation and can be used without taking any special steps.</para>
-         <remark>Need to fill in steps for changing ORBs in Java</remark>
+         <para>To use an alternate ORB with Java, two arguments must be passed to the Java virtual machine. They are based on the ORB implementation. For example, if using OpenORB, the following two arguments must be specified:</para>
+         <orderedlist>
+            <listitem>
+               <para><option>-Dorg.omg.CORBA.ORBClass=org.openorb.CORBA.ORB</option></para>
+            </listitem>
+            <listitem>
+               <para><option>-Dorg.omg.CORBA.ORBSingletonClass=org.openorb.CORBA.ORB</option>Singleton</para>
+            </listitem>
+         </orderedlist>
+         <para>Other ORBs will vary in the location of the <classname>ORBClass</classname> and the <classname>ORBSingletonClass</classname>. Refer to the documentation of the specific ORB to find out more about using it instead of Java IDL.</para>
       </appendix>
    </part>
    <bibliography>
@@ -1724,7 +1733,7 @@ clobber:
             <glossterm>application programmer interface</glossterm>
             <acronym>API</acronym>
             <glossdef>
-               <para></para>
+               <para>An application programmer interface is the documented, programatic interface used by programmers to access a software library.</para>
             </glossdef>
          </glossentry>
       </glossdiv>
@@ -1734,7 +1743,7 @@ clobber:
             <glossterm>Common Object Request Broker Architecture</glossterm>
             <acronym>CORBA</acronym>
             <glossdef>
-               <para></para>
+               <para>The Common Object Request Broker Architecture (CORBA) is a standard specified by the Object Management Group for distributed object-oriented programming. It is both platform- and language-independent. Implementations of CORBA are available from many vendors for a wide variety of programming languages.</para>
             </glossdef>
          </glossentry>
       </glossdiv>
@@ -1753,7 +1762,7 @@ clobber:
             <glossterm>Extensible Markup Language</glossterm>
             <acronym>XML</acronym>
             <glossdef>
-               <para></para>
+               <para>The eXtensible Markup Language (XML) is a specification from the World Wide Web Consortium. XML itself is a language for specifying well-defined, structured document markup.</para>
             </glossdef>
          </glossentry>
       </glossdiv>
@@ -1803,7 +1812,7 @@ clobber:
             <glossterm>Internet Inter-ORB Protocol</glossterm>
             <acronym>IIOP</acronym>
             <glossdef>
-               <para></para>
+               <para>The Internet Inter-ORB Protocol (IIOP) is part of the CORBA specification. It is used to standardize communication between ORBs so that ORBs from different vendors can inter-operate seamlessly.</para>
             </glossdef>
          </glossentry>
       </glossdiv>
@@ -1812,14 +1821,14 @@ clobber:
          <glossentry id="gloss.javabean">
             <glossterm>JavaBean</glossterm>
             <glossdef>
-               <para></para>
+               <para>JavaBeans are the component architecture of the Java programming language. There are no restrictions on the interfaces implemented by JavaBeans, though it is strongly recommended that they implement <interfacename>java.io.Serializable</interfacename>.</para>
             </glossdef>
          </glossentry>
          <glossentry id="gloss.jni">
             <glossterm>Java Native Interface</glossterm>
             <acronym>JNI</acronym>
             <glossdef>
-               <para></para>
+               <para>The Java Native Interface is the bridge between a Java virtual machine (JVM) and natively compiled code. Native code can load a JVM and get access to Java objects through it, or Java classes may have native methods that are loaded by the JVM.</para>
             </glossdef>
          </glossentry>
       </glossdiv>
@@ -1829,7 +1838,7 @@ clobber:
             <glossterm>Object Request Broker</glossterm>
             <acronym>ORB</acronym>
             <glossdef>
-               <para></para>
+               <para>An Object Request Broker (ORB) is used by CORBA for management of interface implementation objects (servants) and the references made to those objects. ORBs communicate with each other using a client/server model, though two ORBs may both act as servers and clients during the transactions.</para>
             </glossdef>
          </glossentry>
       </glossdiv>
@@ -1839,7 +1848,7 @@ clobber:
             <glossterm>Portable Object Adapter</glossterm>
             <acronym>POA</acronym>
             <glossdef>
-               <para></para>
+               <para>The Portable Object Adapter (POA) the standard object adapter and is part of the CORBA 2.3 specification. It is used together with IIOP to allow ORB implementations from different vendors to communicate. A single ORB may have multiple POAs each tailored to a certain task using parameterized characteristics.</para>
             </glossdef>
          </glossentry>
       </glossdiv>
@@ -1849,7 +1858,7 @@ clobber:
             <glossterm>Remote Method Invocation</glossterm>
             <acronym>RMI</acronym>
             <glossdef>
-               <para></para>
+               <para>Remote Method Invocation (RMI) is a mechanism for gaining access to remote Java code. It is implemented as part of the Java virtual machine and was originally intended to be comparable to CORBA. RMI allows easy access to code between two virtual machines, but it does not have the cross-language features of CORBA.</para>
             </glossdef>
          </glossentry>
       </glossdiv>
