@@ -896,13 +896,31 @@ def installJCCLJava(prefix):
    if os.path.exists(os.path.join(srcdir, 'jccl_config.jar')):
       printStatus("Installing JCCL Java libraries and data files ...")
 
-      destdir = os.path.join(prefix, 'bin', 'beans')
+      destdir = os.path.join(prefix, 'share', 'jccl', 'beans')
+      mkinstalldirs(destdir)
 
-      for f in ['jccl_config.jar', 'jccl_editors.jar']:
-         shutil.copy2(os.path.join(srcdir, f), destdir)
+      jars = [
+         'jccl_config.jar',
+         'jccl_editors.jar'
+      ]
+
+      for j in jars:
+         shutil.copy2(os.path.join(srcdir, j), destdir)
 
       srcdir = os.path.join(gJugglerDir, 'modules', 'jackal', 'config')
       shutil.copy2(os.path.join(srcdir, 'jccl_config.xml'), destdir)
+
+      # Install dependencies.
+      dep_jars = [
+         r'TableLayout\TableLayout.jar'
+      ]
+
+      destdir = os.path.join(prefix, 'share', 'jccl', 'java')
+      srcroot = os.path.join(gJugglerDir, 'external')
+
+      mkinstalldirs(destdir)
+      for j in dep_jars:
+         shutil.copy2(os.path.join(srcroot, j), destdir)
    else:
       printStatus("JCCL Java API not built.  Skipping.")
 
@@ -912,7 +930,7 @@ def installJCCLPluginsJava(prefix):
    if os.path.exists(os.path.join(srcdir, 'jccl_rtrc.jar')):
       printStatus("Installing JCCL Java plug-ins ...")
 
-      destdir = os.path.join(prefix, 'bin', 'beans')
+      destdir = os.path.join(prefix, 'share', 'jccl', 'beans')
       shutil.copy2(os.path.join(srcdir, 'jccl_rtrc.jar'), destdir)
 
       srcdir = os.path.join(gJugglerDir, 'modules', 'jackal', 'plugins',
@@ -1129,6 +1147,7 @@ def installVRJConfig(prefix):
 
       # Install the base set of VRJConfig JavaBeans.
       destdir = os.path.join(prefix, 'bin', 'beans')
+      mkinstalldirs(destdir)
       for j in bean_jars:
          jar_file = os.path.join(jardir, j)
          if os.path.exists(jar_file):
@@ -1161,7 +1180,6 @@ def installVRJConfig(prefix):
       # Install dependencies.
       dep_jars = [
          r'jgraph\jgraphpad.jar',
-         r'TableLayout\TableLayout.jar'
       ]
 
       srcroot = os.path.join(gJugglerDir, 'external')
@@ -1191,6 +1209,7 @@ def installVRJugglerPluginsJava(prefix):
          printStatus("Installing VR Juggler Java plug-ins ...")
 
          destdir = os.path.join(prefix, 'bin', 'beans')
+         mkinstalldirs(destdir)
          shutil.copy2(os.path.join(srcdir, name + '.jar'), destdir)
 
          srcdir = os.path.join(gJugglerDir, 'modules', 'vrjuggler', 'plugins',
