@@ -118,8 +118,14 @@ sub parseChunks ($$$)
 
             last SWITCH;
          }
-         # No embedded chunk.
-         elsif ( $chunks =~ /^{\s*(".*?")\s*}/s )
+         # No embedded chunk.  The second part of the conditional is needed
+         # to handle the case of old config files that don't use quotes as
+         # liberally as newer versions.  It's probably a hack because it
+         # relies on the structure of the file being a certain way (basically,
+         # an embedded chunk will span multiple lines whereas a single
+         # property will be on a single line.  Blah.
+         elsif ( $chunks =~ /^{\s*(".*?")\s*}/s ||
+                 $chunks =~ /^{\s*(.*?)\s*}/m )
          {
             my $prop_value = "$1";
             $chunks = $';
