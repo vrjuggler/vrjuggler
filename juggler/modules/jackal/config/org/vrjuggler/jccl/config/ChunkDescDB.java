@@ -367,16 +367,6 @@ public class ChunkDescDB
       return null;
    }
 
-   public void setUnsavedChanges (boolean dirty)
-   {
-      mNeedToSave = dirty;
-   }
-
-   public boolean hasUnsavedChanges ()
-   {
-      return mNeedToSave;
-   }
-
    /**
     * Adds the give chunk description object to this database's internal
     * collection of chunk descriptions.  A chunk description with the same
@@ -539,7 +529,6 @@ public class ChunkDescDB
    protected void notifyDescDBTargets(DescDBEvent e)
    {
       DescDBListener[] l = new DescDBListener[20];
-      mNeedToSave = true;
 
       synchronized (targets)
       {
@@ -737,8 +726,6 @@ public class ChunkDescDB
 
    private List targets = new ArrayList();
    private List descs   = new ArrayList();
-
-   private boolean mNeedToSave = false;
 
    /**
     * Property change support for notification of listeners that a desc inside

@@ -426,16 +426,6 @@ public class ConfigChunkDB
       return v;
    }
 
-   public void setUnsavedChanges(boolean dirty)
-   {
-      mNeedToSave = dirty;
-   }
-
-   public boolean hasUnsavedChanges()
-   {
-      return mNeedToSave;
-   }
-
    /**
     * Inserts ch into self.  Any same-named Chunk already in self is removed.
     * The DOM tree node associated with the given chunk is added as a child
@@ -825,7 +815,6 @@ public class ConfigChunkDB
    protected void notifyChunkDBTargets(ChunkDBEvent e)
    {
       ChunkDBListener[] l = new ChunkDBListener[20];
-      mNeedToSave = true;
       synchronized (targets)
       {
          l = (ChunkDBListener[]) targets.toArray(l);
@@ -885,8 +874,4 @@ public class ConfigChunkDB
 
    /** This is the XML document from which this DB was constructed. */
    protected Document mDoc;
-
-   /** Flag to determine if file has been modified since last saved.
-    */
-   protected boolean mNeedToSave = false;
 }
