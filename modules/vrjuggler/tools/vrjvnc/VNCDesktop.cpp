@@ -67,6 +67,7 @@ VNCDesktop::VNCDesktop(const std::string& hostname, const vpr::Uint16& port,
 {
    mSelectState = Nothing;
    mActiveState = Normal;
+   mTexObjId = 0;
 
    mVncWidth = mVncIf.getWidth();                                 // Get real size of the desktop
    mVncHeight = mVncIf.getHeight();
@@ -217,9 +218,11 @@ void VNCDesktop::updateDesktopParameters()
 
 VNCDesktop::Focus VNCDesktop::update(const gmtl::Matrix44f& navMatrix)
 {
+   /*
    vpr::DebugOutputGuard guard(vprDBG_ALL, vprDBG_STATE_LVL,
                                "VNCDesktop::update()\n",
                                "VNCDesktop::update() done.\n");
+                               */
 
    enum Focus focus_val(NOT_IN_FOCUS);
 
@@ -642,76 +645,63 @@ void VNCDesktop::draw()
       // Draw the desktop surface
       glEnable(GL_TEXTURE_2D);
 
-      GLuint tex_name;
-      glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-      glGenTextures(1, &tex_name);
-      glBindTexture(GL_TEXTURE_2D, tex_name);
-      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-      glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-      glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
+      // Check if we need to allocate a texture object
+      // XXX: This should really move to contextInit or somewhere like that
+      if(0 == mTexObjId)
+      {
+         glGenTextures(1, &mTexObjId);
+         glBindTexture(GL_TEXTURE_2D, mTexObjId);
+         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+         glTexEnvf(GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE, GL_DECAL);
+         vprASSERT(glIsTexture(mTexObjId) && "Invalid texture");
+      }
+      else
+      {
+         vprASSERT(glIsTexture(mTexObjId) && "Invalid texture");
+         glBindTexture(GL_TEXTURE_2D, mTexObjId);
+      }
 
-      // Compute texture stats
-      const double one_mb(1024.0*1024.0);
-      double tex_size_mb = (mTexWidth*mTexHeight*8.0*1.0)/one_mb;
-      mTextureUploadRate.addSample(tex_size_mb);
-      mTextureUpdateCount.addSample(tex_size_mb);
+      // Update the texture
+      updateDesktopTexture();
 
-      // XXX: I don't think GL_RGBA should be hard-coded since VNC may not
-      // actually use 8 bytes per pixel.
-      glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, (GLsizei) mTexWidth,
-                  (GLsizei) mTexHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE,
-                  (GLubyte*) mTextureData);
+      glColor3f(1.0f, 1.0f, 1.0f);
 
-      vprASSERT(glIsTexture(tex_name) && "Invalid texture");
+      // --- COMPUTE TEX Coords --- //
+      // Rolling texcoord should vary between 0.0 and mMaxTexCoordY
+      float min_tex_coordY = 0.0f;                                      // Default to full
+      if((RollingDown == mActiveState) || (RollingUp == mActiveState))
+         min_tex_coordY += mRollUpPercent*mMaxTexCoordY;              // [0.0,mMaxTexCoordY]
+
+      glBegin(GL_QUADS);
+        // Draw quad, counter counter clockwise from bottom left hand corner (0,0)
+         glTexCoord2f(0.0f, mMaxTexCoordY);           // LL
+         glVertex3f(0.0f, 0.0f, 0.0f);
+
+         glTexCoord2f(mMaxTexCoordX, mMaxTexCoordY);           // LR
+         glVertex3f(mDesktopWidth, 0.0f, 0.0f);
+
+         glTexCoord2f(mMaxTexCoordX, min_tex_coordY);           // UR
+         glVertex3f(mDesktopWidth, mDesktopHeight, 0.0f);
+
+         glTexCoord2f(0.0f, min_tex_coordY);           // UL
+         glVertex3f(0.0f, mDesktopHeight, 0.0f);
+      glEnd();
+
+      // Check for errors
       GLenum err = glGetError();
-
       if ( err != GL_NO_ERROR )
       {
          vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
             << clrOutNORM(clrRED, "OpenGL ERROR") << ": "
             << gluErrorString(err) << std::endl << vprDEBUG_FLUSH;
       }
-      else
-      {
-         glColor3f(1.0f, 1.0f, 1.0f);
-         // Rolling texcoord should vary between 0.0 and mMaxTexCoordY
-         float min_tex_coordY = 0.0f;                                      // Default to full
-         if((RollingDown == mActiveState) || (RollingUp == mActiveState))
-            min_tex_coordY += mRollUpPercent*mMaxTexCoordY;              // [0.0,mMaxTexCoordY]
 
-         glBindTexture(GL_TEXTURE_2D, tex_name);
-         glBegin(GL_QUADS);
-           // Draw quad, counter counter clockwise from bottom left hand corner (0,0)
-            glTexCoord2f(0.0f, mMaxTexCoordY);           // LL
-            glVertex3f(0.0f, 0.0f, 0.0f);
+      // Set back to default texture
+      glBindTexture(GL_TEXTURE_2D, 0);
 
-            glTexCoord2f(mMaxTexCoordX, mMaxTexCoordY);           // LR
-            glVertex3f(mDesktopWidth, 0.0f, 0.0f);
-
-            glTexCoord2f(mMaxTexCoordX, min_tex_coordY);           // UR
-            glVertex3f(mDesktopWidth, mDesktopHeight, 0.0f);
-
-            glTexCoord2f(0.0f, min_tex_coordY);           // UL
-            glVertex3f(0.0f, mDesktopHeight, 0.0f);
-         glEnd();
-
-
-         // Check for errors
-         err = glGetError();
-
-         if ( err != GL_NO_ERROR )
-         {
-            vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
-               << clrOutNORM(clrRED, "OpenGL ERROR") << ": "
-               << gluErrorString(err) << std::endl << vprDEBUG_FLUSH;
-         }
-
-         glBindTexture(GL_TEXTURE_2D, 0);
-      }
-
-      glDeleteTextures(1, &tex_name);
       glDisable(GL_TEXTURE_2D);
    }
    glPopMatrix();
@@ -719,10 +709,39 @@ void VNCDesktop::draw()
    glEnable(GL_LIGHTING);
 }
 
+/** Update the desktop texture
+* @pre The texture is currently bound
+*/
+void VNCDesktop::updateDesktopTexture()
+{
+   // Compute texture stats
+   const double one_mb(1024.0*1024.0);
+   double tex_size_mb = (mTexWidth*mTexHeight*8.0*1.0)/one_mb;
+   mTextureUploadRate.addSample(tex_size_mb);
+   mTextureUpdateCount.addSample(tex_size_mb);
+
+   // XXX: I don't think GL_RGBA should be hard-coded since VNC may not
+   // actually use 8 bytes per pixel.
+   //glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+   glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, (GLsizei) mTexWidth,
+               (GLsizei) mTexHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE,
+               (GLubyte*) mTextureData);
+
+   GLenum err = glGetError();
+
+   if ( err != GL_NO_ERROR )
+   {
+      vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
+         << clrOutNORM(clrRED, "OpenGL ERROR") << ": "
+         << gluErrorString(err) << std::endl << vprDEBUG_FLUSH;
+   }
+}
+
+
 void VNCDesktop::printStats()
 {
-   std::cout << "Texture upload/sec: mean: " << mTextureUploadRate.getMean() << "  sta: " << mTextureUploadRate.getSTA() << std::endl;
-   std::cout << "Texture counts:     mean: " << mTextureUpdateCount.getMean() << "  sta: " << mTextureUpdateCount.getSTA() << std::endl;
+   std::cout << "Texture upload/sec: mean: " << mTextureUploadRate.getMean()  << std::endl; // << "  sta: " << mTextureUploadRate.getSTA() << std::endl;
+   std::cout << "Texture counts:     mean: " << mTextureUpdateCount.getMean() << std::endl; //<< "  sta: " << mTextureUpdateCount.getSTA() << std::endl;
 }
 
 void VNCDesktop::drawSphere(float radius, gmtl::Point3f offset, int parts)
