@@ -157,23 +157,21 @@ void DataGlove::controlLoop(void* nullParam)
 
 bool DataGlove::sample()
 {
+   int Eflag = mGlove->ReadRecordsFromHardware( &ch0, &ch1, &ch2, &ch3, &ch4, &ch5, &ch6, &ch7, &ch8 );
 
-    std::string gesture;
-    mGlove->ReadRecordsFromHardware( &ch0, &ch1, &ch2, &ch3, &ch4, &ch5, &ch6, &ch7, &ch8 );
-
-    mAnalogData[0]=ch0;    // Thumb (0.0 - 1.0)
-    mAnalogData[1]=ch1;    // Index
-    mAnalogData[2]=ch2;    // Middle
-    mAnalogData[3]=ch3;    // Ring
-    mAnalogData[4]=ch4;    // Pinky
-    mAnalogData[5]=ch5;    // Pitch  (0 - 180)
-    mAnalogData[6]=ch6;    // Roll   (0 - 180)
-    mAnalogData[7]=ch7;    // Gesture  (0 - 15)
-    mAnalogData[8]=ch8;    // Capabilty byte (0:A right hand, 6:Left Glove)
-//    mDigitalData[0]=ch7;   // Somehow DigitalData is not working right!!!
-                             // AnalogData is being used instead of DigitalData.
-
-    addAnalogSample(mAnalogData);
+   if(Eflag)
+   {
+      mAnalogData[0]=ch0;    // Thumb (0.0 - 1.0)
+      mAnalogData[1]=ch1;    // Index
+      mAnalogData[2]=ch2;    // Middle
+      mAnalogData[3]=ch3;    // Ring
+      mAnalogData[4]=ch4;    // Pinky
+      mAnalogData[5]=ch5;    // Pitch  (0 - 180)
+      mAnalogData[6]=ch6;    // Roll   (0 - 180)
+      mAnalogData[7]=ch7;    // Gesture  (0 - 15)
+      mAnalogData[8]=ch8;    // Capabilty byte (0:A right hand, 6:Left Glove)
+      addAnalogSample(mAnalogData);
+    }
     return true;
 }
 
