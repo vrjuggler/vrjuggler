@@ -13,7 +13,7 @@ Builder: JExplorerBuilder V 1. 0. 7
 			< item title="Contribute!" link="${DOCUMENTATION}/why.html"  info="Why you should contribute to the Juggler documentation project. (A compelling argument)" image="Chat.gif" >
 
 			< item title="Introduction" 
-				link="${MISC}/juggler.mission.html" 
+				link="${MISC}/mission.statement.html" 
 				info="What is juggler?  What does it solve?  Why do I need it? How does it compare to others?" 
 				image="Leaf.gif" >
 			
