@@ -2,20 +2,20 @@
 <html>
 <head>
    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-   <meta name="GENERATOR" content="Mozilla/4.7C-SGI [en] (X11; I; IRIX64 6.5 IP30) [Netscape]">
+   <meta name="GENERATOR" content="Mozilla/4.7C-SGI [en] (X11; I; IRIX 6.5 IP22) [Netscape]">
 </head>
 <body>
 
-<h3>
-VRJuggler Workshop</h3>
+<h2>
+VRJuggler Workshop Part I</h2>
 
 <ol>
-<h4>
-Overview of Juggler and its capabilities</h4>
+<h3>
+Overview of Juggler and its capabilities</h3>
 
 <ul>
-<h5>
-Purpose of Juggler:</h5>
+<h4>
+Purpose of Juggler:</h4>
 
 <ul>
 <li>
@@ -35,8 +35,8 @@ configuration files with vjControl.</li>
 To acheive optimal performance when running your VR application.</li>
 </ul>
 
-<h5>
-Extras that will help you create VR applications.</h5>
+<h4>
+Extras that will help you create VR applications.</h4>
 
 <ul>
 <li>
@@ -52,8 +52,8 @@ Helpful math libraries such as vector, matrix, and quaternion classes are
 included, which you can use or include your own instead.</li>
 </ul>
 
-<h5>
-<font size=-1>A simple application</font> that uses openGL and vrJuggler.</h5>
+<h4>
+<font size=-1>A simple application</font> that uses openGL and vrJuggler.</h4>
 Look at the Case Studies: Wand Example and understand the following things.
 <br>Note that knowledge of C++ classes and object oriented programming
 is important.
@@ -68,54 +68,56 @@ Application class&nbsp; (class wandApp : public vjGlApp)</li>
 program.</ul>
 </ul>
 
-<h4>
-Running a simple program in the simulator</h4>
+<h3>
+Running a simple program in the simulator</h3>
 
 <ul>
-<li>
-Compiling:</li>
-
-<br>Problems compiling samples may be caused by incorrect variable and
-path setup.
-<li>
-Simulating:</li>
-
-<br>Enter the executable name followed by a list of configuration files.
-<br>Example:&nbsp; program_name ~/.vjconfig sim.base.config ~/.vjconfig/sim.wand.mixin.config
-<li>
-Windows:</li>
-
-<br>View, head, camera, and wand.
-<li>
-Controlling the wand, head, and camera.</li>
-
-<br>Move the mouse over a window and use the buttons that are defined in
-your sim config file.
-<li>
-The configuration in your config files can be changed with VJcontrol.</li>
-</ul>
-
 <h4>
-vjControl</h4>
+Compiling</h4>
+Problems compiling samples may be caused by incorrect variable and path
+setup.
+<h4>
+Simulating</h4>
+Enter the executable name followed by a list of configuration files.
+<br>Example:&nbsp; program_name ~/.vjconfig sim.base.config ~/.vjconfig/sim.wand.mixin.config
+<h4>
+What you see</h4>
+Three small windows and one large window should appear.&nbsp; The large
+window is your rendering window.&nbsp; The small small windows are for
+controlling the head, wand, and camera (camera is only to help with simulation,
+and will not appear when running in your virtual environment.
+<h4>
+Interaction/Control</h4>
+Move the mouse over a window and use the buttons that are defined in your
+sim config file.
+<br>The default control for the camera and head are located on the number
+keypad.&nbsp; To move the wand, hold down an alt, control, or shift key
+while moving the mouse in the mouse control window.
+<br>The configuration is specified in your config files and can be changed
+with vjControl.</ul>
+
+<h3>
+vjControl</h3>
 Has its own documentation section on this website.
 <br>Additional requirements: set path to include $VJ_BASE_DIR/bin and setenv
 JDK_HOME /usr/java)
 <ul>
-<h5>
-<b><font size=-1>Purpose</font></b></h5>
+<h4>
+<b><font size=-1>Purpose</font></b></h4>
 to allow the same application to be set up for different input/output devices.&nbsp;
 Allows it to change at run-time (without recompiling).
-<h5>
-<b><font size=-1>Run</font></b> vjControl</h5>
-Type "vjcontrol".&nbsp; If there is an error make sure your paths and environment.
-variables are set correctly.
-<h5>
-Predefined configuration files are available.</h5>
+<h4>
+<b><font size=-1>Run</font></b> vjControl</h4>
+Type "vjcontrol".&nbsp; If there is an error make sure your paths and environment
+variables are set correctly.&nbsp; If you're having problems, you're version
+of java may be 1.1.&nbsp; Try running "vjcontrol1.1" instead.
+<h4>
+Predefined configuration files are available.</h4>
 When starting to learn juggler it is not necessary to modify configuration
 files.&nbsp; You will want to use vjControl after you have&nbsp; created
 basic Juggler programs with the default configuration files.
-<h5>
-<b><font size=-1>Modify</font></b> a configuration file yourself:</h5>
+<h4>
+<b><font size=-1>Modify</font></b> a configuration file yourself:</h4>
 
 <ul>
 <li>
@@ -133,8 +135,8 @@ In sim.base.config:&nbsp; change the keys in Input|Simulated Devices|SimCamera1<
 
 <br>Or try adding a fourth button to the wand in Input|Proxies and Aliases|DigitalProxy</ul>
 
-<h5>
-<b><font size=-1>Summary</font></b></h5>
+<h4>
+<b><font size=-1>Summary</font></b></h4>
 
 <ul>
 <li>
@@ -148,16 +150,16 @@ customize it.</li>
 </ul>
 </ul>
 
-<h4>
-More in depth look at how Juggler works</h4>
+<h3>
+A more in depth look at how Juggler works</h3>
 
 <ul>
 <h4>
 <b><font size=-1>Function</font></b> uses and descriptions</h4>
 To find out more about each function, look in the Programmer Reference
 Book on this website.
-<h5>
-<b>B<font size=-1>asic flow</font></b> of a vrJuggler progroam.</h5>
+<h4>
+<b>B<font size=-1>asic flow</font></b> of a vrJuggler program.</h4>
 There are more functions (ContextPreDraw, PipePreDraw, etc.) but learn
 the following first:
 <p>init();&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; // Init
@@ -184,31 +186,31 @@ create display lists.
 idea is mostly the same.&nbsp; You can refer to the header files in Programmer
 Reference for specific information.</ul>
 
-<h4>
-What to do on your own</h4>
+<h3>
+What to do on your own</h3>
 
 <ol>
-<h5>
-Getting Started</h5>
+<h4>
+Getting Started</h4>
 Set your paths, and compile the sample program.
 <br>Use the simulator
-<h5>
-Make changes</h5>
+<h4>
+Make changes</h4>
 Change parts of the sample codes and see what happens.
 <br>Simple example: in the cubes example, change acceleration or add some
 shapes.
 <br>More Complex: change what happens when you click, or change the navigation
 so that it only rotates on the y-axis.s
-<h5>
-<font size=-1>Questions?</font></h5>
+<h4>
+<font size=-1>Questions?</font></h4>
 Look for help on the webpage: www.vrjuggler.org
 <br>It contains setup information, header files,
-<h5>
-<b><font size=-1>Header files</font></b></h5>
+<h4>
+<b><font size=-1>Header files</font></b></h4>
 are in $VJ_BASE_DIR/include define all the functions available to you.&nbsp;
 They are also available on this website in Programmer Reference.
-<h5>
-<b><font size=-1>Use the internet</font></b> as a resource,</h5>
+<h4>
+<b><font size=-1>Use the internet</font></b> as a resource,</h4>
 Examples of where it is helpful:
 <ol>
 <li>
@@ -219,17 +221,17 @@ and a plane, etc.</li>
 Understanding details of c++, such as class inheritance, etc.</li>
 </ol>
 
-<h5>
-<font size=-1>Practice Exercise</font></h5>
-Modify any of the example files to accomplish the following
+<h4>
+<font size=-1>Practice Exercise</font></h4>
+Modify any of the example files to accomplish the following:
 <br>&nbsp;&nbsp;&nbsp; Place a cube, a sphere and a cone inside the area
 where a user can walk in the virtual space.&nbsp; Using a wand, allow a
 user to grab each object independently and to release it anywhere in that
 space.
 <br>&nbsp;&nbsp;&nbsp; Once you are able to compile and simulate Jugger
 programs, you should be able to do understand how to do this in a couple
-days.&nbsp; It may take longer to implement since you will be learning
-some of the classes and functions that you can use.s</ol>
+days.&nbsp; It will probably take longer to implement since you will be
+learning Juggler classes and functions as you work.</ol>
 </ol>
 
 </body>

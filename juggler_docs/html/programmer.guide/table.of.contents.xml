@@ -131,12 +131,20 @@ Builder: JExplorerBuilder V 1. 0. 7
 				</folder>
 			</folder>
 
-			< item title="Classroom Notes" 
-        	                        link="classroom.html"
-                	                info="Overview of Juggler Concepts, Ideas, and Techniques"
-                        	        image="Note.gif" >       
-
-
+			< folder title="Workshop" 
+				link="./workshop/index.html"
+				info="Workshop" 
+				image="Leaf_Script2.gif" >
+			 	
+				< item title="Part 1"
+			 		  link="workshop/day1.html"
+		           		info="Overview of Juggler Concepts, Ideas, and Techniques"
+			   		image="Leaf.gif" >
+ 				< item title="Part 2" 
+        	                        link="workshop/day2.html"
+                	                info="More Juggler Concepts, Ideas, and Techniques"
+                        	        image="Leaf.gif" >  
+			< /folder >
 		</idefault>
 	</font>
 </treecontrol>
