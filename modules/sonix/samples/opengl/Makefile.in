@@ -48,15 +48,6 @@ APP_LIBS	= @snx_extra_ldflags@ @snx_extra_libs@ @sample_application_libs@
 APP_LDFLAGS	= @sample_application_ldflags@
 VPATH		= @srcdir@
 
-# if you're kevin, and you're on irix, then your glut is not in the usual place.
-WHOAMI:=$(shell whoami)
-ifeq ($(WHOAMI), kevn)
-ifneq ($(HOSTTYPE), Win32)
-   APP_INCLUDES += -I/home/users/kevn/software/${HOSTTYPE}/include
-   APP_LIBS += -L/home/users/kevn/software/${HOSTTYPE}/lib$(LIBBITSUF)
-endif
-endif
-
 # default libs
 ifeq ($(HOSTTYPE), Win32)
    APP_LIBS += Glut32.lib Glu32.lib OpenGL32.lib 
