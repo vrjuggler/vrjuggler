@@ -117,16 +117,32 @@ public:
     }
 
     // ------------------------------------------------------------------------
+    //: Reconfigure the socket so that it is in blocking mode.
+    //
+    //! PRE: The socket is open.
+    //! POST: Processes will block when accessing the socket.
+    //
+    //! RETURNS: true  - The blocking mode was changed successfully.
+    //! RETURNS: false - The blocking mode could not be changed for some
+    //+                  reason.
     // ------------------------------------------------------------------------
-    inline virtual Status
+    virtual Status
     enableBlocking (void) {
         vprASSERT(m_open && "precondition says you must open() the socket first");
         return m_handle->enableBlocking();
     }
 
     // ------------------------------------------------------------------------
+    //: Reconfigure the socket so that it is in non-blocking mode.
+    //
+    //! PRE: The socket is open.
+    //! POST: Processes will not block when accessing the socket.
+    //
+    //! RETURNS: true  - The blocking mode was changed successfully.
+    //! RETURNS: false - The blocking mode could not be changed for some
+    //+                  reason.
     // ------------------------------------------------------------------------
-    inline virtual Status
+    virtual Status
     enableNonBlocking (void) {
         vprASSERT(m_open && "precondition says you must open() the socket first");
         return m_handle->enableNonBlocking();
