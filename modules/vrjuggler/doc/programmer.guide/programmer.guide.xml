@@ -960,7 +960,7 @@ my_vec.vec[3] = 1.0;</programlisting>
             </section>
             <section>
                <title>Using <classname>vjMatrix</classname></title>
-               <indexterm zone="vjVec-use-sect">
+               <indexterm>
                   <primary>classes</primary>
                   <secondary>vjMatrix</secondary>
                </indexterm>
@@ -1654,7 +1654,7 @@ vj_mat = vjGetVjMatrix(pf_mat);</programlisting>
             </section>
             <section>
                <title>Using <classname>vjDeviceInterface</classname></title>
-               <indexterm zone="vjVec-use-sect">
+               <indexterm>
                   <primary>classes</primary>
                   <secondary>vjDeviceInterface</secondary>
                </indexterm>
@@ -1719,7 +1719,7 @@ head_mat = head-&gt;getData();</programlisting>
             </section>
             <section>
                <title>Using <classname>vjProxy</classname></title>
-               <indexterm zone="vjVec-use-sect">
+               <indexterm>
                   <primary>classes</primary>
                   <secondary>vjProxy</secondary>
                </indexterm>
@@ -3199,8 +3199,8 @@ int main(int argc, char* argv[])
          <para>In this part of the book, we present information for advanced users who want to create applications that take advantage of VR Juggler features such as threading, run-time reconfiguration, and device driver authoring. While we do recommend that all programmers be familiar with these topics, readers who are not familiar with the basic concepts of multi-threaded programming, for example, may find these chapters difficult to understand.</para>
       </chapter>
       <chapter id="multi-threading.chapter">
-         <title id="index">Multi-threading</title>
-         <indexterm zone="multi-threading-sect">
+         <title>Multi-threading</title>
+         <indexterm>
             <primary>multi-threading</primary>
          </indexterm>
          <para>In this chapter, we present how to use multi-threading within VR Juggler applications. Readers who are not familiar with the basic concepts of multi-threaded programming may find the following sections difficult to understand. This chapter is written with the assumption that readers already know the necessary background material and want to learn about how VR Juggler implements the concepts.</para>
@@ -3296,7 +3296,7 @@ int main(int argc, char* argv[])
                </section>
                <section>
                   <title>Creating <classname>vjThread</classname>s</title>
-                  <indexterm zone="vjThread-use">
+                  <indexterm>
                      <primary>vjThread</primary>
                      <secondary>creating</secondary>
                   </indexterm>
@@ -3332,7 +3332,7 @@ void someFunc ()
                </section>
                <section>
                   <title>Waiting for a Thread to Complete</title>
-                  <indexterm zone="vjThread-use">
+                  <indexterm>
                      <primary>vjThread</primary>
                      <secondary>joining threads</secondary>
                   </indexterm>
@@ -3352,7 +3352,7 @@ thread-&gt;join();
                </section>
                <section>
                   <title>Suspending and Resuming a Thread's Execution</title>
-                  <indexterm zone="vjThread-use">
+                  <indexterm>
                      <primary>vjThread</primary>
                      <secondary>suspend, resume</secondary>
                   </indexterm>
@@ -3364,7 +3364,7 @@ thread-&gt;join();
                </section>
                <section>
                   <title>Getting and Setting a Thread's Priority</title>
-                  <indexterm zone="vjThread-use">
+                  <indexterm>
                      <primary>vjThread</primary>
                      <secondary>priority</secondary>
                   </indexterm>
@@ -3383,7 +3383,7 @@ thread-&gt;setPrio(prio);</programlisting>
                </section>
                <section>
                   <title>Sending Signals to a Thread</title>
-                  <indexterm zone="vjThread-use">
+                  <indexterm>
                      <primary>vjThread</primary>
                      <secondary>sending signals</secondary>
                   </indexterm>
@@ -3395,7 +3395,7 @@ thread-&gt;setPrio(prio);</programlisting>
                </section>
                <section>
                   <title>Canceling a Thread's Execution</title>
-                  <indexterm zone="vjThread-use">
+                  <indexterm>
                      <primary>vjThread</primary>
                      <secondary>canceling</secondary>
                   </indexterm>
@@ -3406,7 +3406,7 @@ thread-&gt;setPrio(prio);</programlisting>
                </section>
                <section>
                   <title>Requesting the Current Thread's Identifier</title>
-                  <indexterm zone="vjThread-use">
+                  <indexterm>
                      <primary>vjThread</primary>
                      <secondary>self</secondary>
                   </indexterm>
@@ -3418,7 +3418,7 @@ my_id = vjThread::self();</programlisting>
                </section>
                <section>
                   <title>The Gory Details</title>
-                  <indexterm zone="vjThread-use">
+                  <indexterm>
                      <primary>vjThread</primary>
                      <secondary>details</secondary>
                   </indexterm>
@@ -3444,18 +3444,18 @@ my_id = vjThread::self();</programlisting>
             </section>
             <section>
                <title>Using the <classname>vjBaseThreadFunctor</classname> Interface</title>
-               <indexterm zone="using-vjThread-sect">
+               <indexterm>
                   <primary>vjBaseThreadFunctor</primary>
                   <seealso>vjThreadMemberFunctor, vjThreadNonMemberFunctor</seealso>
                </indexterm>
                <para>In this section, we explain the concept and use of functors. As with much of VR Juggler, a functor is a high-level concept that encapsulates something quite simple. A functor is defined as <quote>something that performs an operation or a function.</quote> While this is not very detailed, it is clear and concise. In VR Juggler, functors can be used as the code executed by a thread (refer to <xref linkend="using-vjThread-sect"/> for more detail on the topic of <classname>vjThread</classname>s). This section describes how to use functors for exactly that purpose.</para>
                <section>
                   <title>High-Level Description</title>
-                  <indexterm zone="using-vjThread-sect">
+                  <indexterm>
                      <primary>vjBaseThreadFunctor</primary>
                      <secondary>description of</secondary>
                   </indexterm>
-                  <indexterm zone="using-vjThread-sect">
+                  <indexterm>
                      <primary>functor</primary>
                      <secondary>use with vjThread</secondary>
                      <seealso>vjThread</seealso>
@@ -3473,7 +3473,7 @@ my_id = vjThread::self();</programlisting>
                </section>
                <section>
                   <title><classname>vjThreadMemberFunctor</classname></title>
-                  <indexterm zone="using-vjThread-sect">
+                  <indexterm>
                      <primary>vjThreadMemberFunctor</primary>
                      <secondary>use</secondary>
                   </indexterm>
@@ -3509,7 +3509,7 @@ my_functor-&gt;setArg(args);</programlisting>
                </section>
                <section>
                   <title><classname>vjThreadNonMemberFunctor</classname></title>
-                  <indexterm zone="using-vjThread-sect">
+                  <indexterm>
                      <primary>vjThreadNonMemberFunctor</primary>
                      <secondary>use</secondary>
                   </indexterm>
@@ -3531,15 +3531,15 @@ thread = new vjThread(my_functor);</programlisting>
                </section>
                <section>
                   <title>The Gory Details</title>
-                  <indexterm zone="using-vjThread-sect">
+                  <indexterm>
                      <primary>vjBaseThreadFunctor</primary>
                      <secondary>details</secondary>
                   </indexterm>
-                  <indexterm zone="using-vjThread-sect">
+                  <indexterm>
                      <primary>vjThreadMemberFunctor</primary>
                      <secondary>details</secondary>
                   </indexterm>
-                  <indexterm zone="using-vjThread-sect">
+                  <indexterm>
                      <primary>vjThreadNonMemberFunctor</primary>
                      <secondary>details</secondary>
                   </indexterm>
@@ -3550,13 +3550,13 @@ thread = new vjThread(my_functor);</programlisting>
             </section>
             <section>
                <title>Using the <classname>vjSemaphore</classname> Interface</title>
-               <indexterm zone="using-vjThread-sect">
+               <indexterm>
                   <primary>vjSemaphore</primary>
                </indexterm>
                <para>The most important part of multi-threaded programming is proper thread synchronization so that access to shared data is controlled. Doing so results in consistency among all threads. Semaphores are a very common synchronization mechanism and have been used widely in concurrent systems. This short section describes the cross-platform semaphore interface provided with and used by VR Juggler. It does not explain what semaphores are or how to use them&mdash;it is assumed that readers are already familiar with the topic lest they probably would not be reading this chapter on advanced classes at all.</para>
                <section>
                   <title>High-Level Description</title>
-                  <indexterm zone="using-vjThread-sect">
+                  <indexterm>
                      <primary>vjSemaphore</primary>
                      <secondary>description of</secondary>
                   </indexterm>
@@ -3565,7 +3565,7 @@ thread = new vjThread(my_functor);</programlisting>
                </section>
                <section>
                   <title>Creating a <classname>vjSemaphore</classname></title>
-                  <indexterm zone="using-vjThread-sect">
+                  <indexterm>
                      <primary>vjSemaphore</primary>
                      <secondary>creating</secondary>
                   </indexterm>
@@ -3580,7 +3580,7 @@ thread = new vjThread(my_functor);</programlisting>
                </section>
                <section>
                   <title>Locking a Semaphore</title>
-                  <indexterm zone="using-vjThread-sect">
+                  <indexterm>
                      <primary>vjSemaphore</primary>
                      <secondary>locking</secondary>
                   </indexterm>
@@ -3590,7 +3590,7 @@ thread = new vjThread(my_functor);</programlisting>
                </section>
                <section>
                   <title>Releasing a Locked Semaphore</title>
-                  <indexterm zone="using-vjThread-sect">
+                  <indexterm>
                      <primary>vjSemaphore</primary>
                      <secondary>releasing</secondary>
                   </indexterm>
@@ -3600,7 +3600,7 @@ thread = new vjThread(my_functor);</programlisting>
                </section>
                <section>
                   <title>The Gory Details</title>
-                  <indexterm zone="using-vjThread-sect">
+                  <indexterm>
                      <primary>vjSemaphore</primary>
                      <secondary>details</secondary>
                   </indexterm>
@@ -3622,13 +3622,13 @@ thread = new vjThread(my_functor);</programlisting>
             </section>
             <section id="using-vjMutex-sect">
                <title>Using the <classname>vjMutex</classname> Interface</title>
-               <indexterm zone="using-vjThread-sect">
+               <indexterm>
                   <primary>vjMutex</primary>
                </indexterm>
                <para>In addition to cross-platform semaphores, VR Juggler provides an abstraction for cross-platform mutexes. Mutexes are a special type of semaphore known as a binary semaphore. Exactly one thread can hold the lock at any time. This very short section, however, is not about mutexes but rather about the <classname>vjMutex</classname> interface provided with and used by VR Juggler.</para>
                <section>
                   <title>High-Level Description</title>
-                  <indexterm zone="using-vjThread-sect">
+                  <indexterm>
                      <primary>vjMutex</primary>
                      <secondary>description of</secondary>
                   </indexterm>
@@ -3640,7 +3640,7 @@ thread = new vjThread(my_functor);</programlisting>
                </section>
                <section>
                   <title>Creating a <classname>vjMutex</classname></title>
-                  <indexterm zone="using-vjThread-sect">
+                  <indexterm>
                      <primary>vjMutex</primary>
                      <secondary>creating</secondary>
                   </indexterm>
@@ -3650,7 +3650,7 @@ thread = new vjThread(my_functor);</programlisting>
                </section>
                <section>
                   <title>Locking a Mutex</title>
-                  <indexterm zone="using-vjThread-sect">
+                  <indexterm>
                      <primary>vjMutex</primary>
                      <secondary>locking</secondary>
                   </indexterm>
@@ -3660,7 +3660,7 @@ thread = new vjThread(my_functor);</programlisting>
                </section>
                <section>
                   <title>Attempting to Lock a Mutex</title>
-                  <indexterm zone="using-vjThread-sect">
+                  <indexterm>
                      <primary>vjMutex</primary>
                      <secondary>locking</secondary>
                      <tertiary>without blocking</tertiary>
@@ -3671,7 +3671,7 @@ thread = new vjThread(my_functor);</programlisting>
                </section>
                <section>
                   <title>Testing the State of a Mutex</title>
-                  <indexterm zone="using-vjThread-sect">
+                  <indexterm>
                      <primary>vjMutex</primary>
                      <secondary>testing state</secondary>
                   </indexterm>
@@ -3681,7 +3681,7 @@ thread = new vjThread(my_functor);</programlisting>
                </section>
                <section>
                   <title>Releasing a Locked Mutex</title>
-                  <indexterm zone="using-vjThread-sect">
+                  <indexterm>
                      <primary>vjMutex</primary>
                      <secondary>releasing</secondary>
                   </indexterm>
@@ -3691,7 +3691,7 @@ thread = new vjThread(my_functor);</programlisting>
                </section>
                <section>
                   <title>The Gory Details</title>
-                  <indexterm zone="using-vjThread-sect">
+                  <indexterm>
                      <primary>vjMutex</primary>
                      <secondary>details</secondary>
                   </indexterm>
