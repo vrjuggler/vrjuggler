@@ -47,6 +47,7 @@ void AudioWorksSoundImplementation::trigger( const std::string & alias, const un
 
    if (mBindTable.count( alias ) > 0)
    {
+      std::cout<<"DEBUG: trigger: "<<(int)mBindTable[alias].mSound<<"\n"<<std::flush;
       awProp(mBindTable[alias].mSound, AWSND_STATE, AW_ON);
    }
 }
@@ -204,22 +205,25 @@ void AudioWorksSoundImplementation::startAPI()
    //initialize the AW system
    if (awInitSys() == -1) 
    {
-     std::cerr << "InitSys() failed!\n" << std::flush;
+     std::cerr << "ERROR: InitSys() failed!\n" << std::flush;
      return;
    }
 
    //Initialize the engine
    mEngine = awNewEng();         //Define the new engine
+   assert( mEngine != NULL );
    awProp(mEngine, AWENG_VOLUME, 1.0);   //Set its volume to maximum output
-   if (awAttachEng(mEngine) != 0)      //Attach the engine to the system
+   int result = awAttachEng(mEngine);
+   if (result < 0)      //Attach the engine to the system
    {
-       std::cerr << "\nfailed to attach to engine\nengine dump:\n" << std::flush;
-       awPrint(mEngine);
+       std::cerr << "ERROR: failed to attach to engine (retval="<<result<<")...\n\n" << std::flush;
+  //     awPrint(mEngine);
        return;
    }
 
    //Set up the channel
    mChannel = awNewChan();            //Define the new channel
+   assert( mChannel != NULL );
    awChanEng(mChannel, mEngine);         //Associate the channel with the engine
 
    awProp(mChannel, AWCHAN_MODEL, AWIF_QUAD);   //Set QUAD sound imaging model
@@ -229,14 +233,17 @@ void AudioWorksSoundImplementation::startAPI()
 
    //Set up scene object and add the sound objects to it
    mScene = awNewScene();            //Define new scene
-
+   assert( mScene != NULL );
+   
    //Set up environment object
    mEnv = awNewEnv();            //Define new environment
+   assert( mEnv != NULL );
    awProp(mEnv, AWENV_SOS, 330.0);         //Set the speed of sound
 
    //Set up observer object
    mObs = awNewObs();                  //Define new observer
-
+   assert( mObs != NULL );
+      
    awProp(mObs, AWOBS_STATE,       AW_ON);      //Enable the observer
    awProp(mObs, AWOBS_TETHERCOORD,       AWOBS_TABSOLUTE);   //Set coords to absolute
    awProp(mObs, AWOBS_CSREF,       AWOBS_ABSOLUTE);   //Set coords to absolute
@@ -255,21 +262,21 @@ void AudioWorksSoundImplementation::startAPI()
    awObsScene(mObs, mScene);      //Associate observer with the scene
    awObsEnv(mObs, mEnv);         //Associate observer with the environment
 
-//   float xyz[3] = { 0.0f, 0.0f, 0.0f };
-//   float hpr[3] = { 0.0f, 0.0f, 0.0f };
-//   awXYZHPR(mObs, xyz, hpr);      //Set the observer at the origin
-   // init the listener...
-   this->setListenerPosition( mListenerPos );
-  //End observer setup
-
-  if (awConfigSys(1) != 0)         //Attempt to configure the system
+   awConfigChan( mChannel ); /// exp...
+   
+   result = awConfigSys(0);
+  if (result != 0)         //Attempt to configure the system
   {    
-    std::cout << "ConfigSys() failed!\n" << std::flush;
-    awPrint(mEngine);
+    std::cout << "ERROR: ConfigSys() failed (retval="<<result<<")!\n" << std::flush;
+//    awPrint(mEngine);
     return;
   }
   
   mIsStarted = true; //success
+  
+  
+  // init the state now that the engine is started...
+  this->setListenerPosition( mListenerPos );
 }   
 
 /**
@@ -279,8 +286,26 @@ void AudioWorksSoundImplementation::startAPI()
  */
 void AudioWorksSoundImplementation::shutdownAPI()
 {
-   awExit();
-   mIsStarted = false;
+   if (mIsStarted == true)
+   {
+      awUnConfigChan( mChannel );
+      
+      awRemObsChan(mObs, mChannel);
+      awObsScene(mObs, NULL);      
+      awObsEnv(mObs, NULL);         //Associate observer with the environment
+      awDelete( mObs );
+
+      awDelete( mEnv );
+      awDelete( mScene );
+      awDelete( mChannel );
+   
+      awDetachEng( mEngine );
+      awDelete( mEngine );
+      
+      awExit();
+      
+      mIsStarted = false;
+   }
 }   
 
 /**
@@ -334,29 +359,15 @@ void AudioWorksSoundImplementation::clear()
 }   
 
 /**
- * bind: load (or reload) all associate()d sounds
- * @postconditions all sound associations are buffered by the sound API
- */
-void AudioWorksSoundImplementation::bindAll()
-{
-}   
-
-/**
- * unbind: unload/deallocate all associate()d sounds.
- * @postconditions all sound associations are unbuffered by the sound API
- */
-void AudioWorksSoundImplementation::unbindAll()
-{
-}
-
-/**
  * load/allocate the sound data this alias refers to the sound API
  * @postconditions the sound API has the sound buffered.
  */
 void AudioWorksSoundImplementation::bind( const std::string& alias )
 {
+   std::cout<<"DEBUG: bind() "<<alias<<"\n"<<std::flush;
+   
    this->unbind( alias );
-
+   
    AWSoundInfo si;
    aj::SoundInfo sinfo = mSounds[alias];
 
@@ -370,6 +381,10 @@ void AudioWorksSoundImplementation::bind( const std::string& alias )
        awPrint( si.mWave );
        return;
    }
+   else
+   {
+      std::cout << "NOTICE: loaded: "<<sinfo.filename<<"\n" << std::flush;
+   }   
    awMapWavToSE( si.mWave, mEngine );                    //Associate the wave with the engine
    awFlushWavToSE( si.mWave );                            //Flush the changes to the engine
 
@@ -409,6 +424,9 @@ void AudioWorksSoundImplementation::bind( const std::string& alias )
    mBindTable[alias] = si;
 
    this->setAmbient( alias, sinfo.ambient );
+   
+   std::cout<<"DEBUG: bind() done"<<alias<<"\n"<<std::flush;
+   
 }
 
 /**
@@ -419,15 +437,16 @@ void AudioWorksSoundImplementation::unbind( const std::string& alias )
 {
    if (mBindTable.count( alias ) > 0)
    {
-      AWSoundInfo si;
-      si = mBindTable[alias];
-
-      awRemSceneSnd( mScene, si.mSound );  // detach from the scene
-      //awUnMapWavToSE( si.mWave, mEngine ); // detach it from the engine
-      awUnMapWavToSE( si.mWave );           // detach it from the engine
-      awDelete( si.mSound );
-      awDelete( si.mWave );
+      awRemSceneSnd( mScene, mBindTable[alias].mSound );  // detach from the scene
+      awUnMapWavToSE( mBindTable[alias].mWave );           // detach it from the engine
+      awDelete( mBindTable[alias].mSound );
+      awDelete( mBindTable[alias].mWave );
+      
+      mBindTable.erase( alias );
+      std::cout<<"DEBUG: unbind() "<<alias<<"\n"<<std::flush;
    }
+   
+   assert( mBindTable.count( alias ) == 0 && "should have unbound" );
 }
 
 /**
@@ -437,33 +456,36 @@ void AudioWorksSoundImplementation::unbind( const std::string& alias )
  */
 void AudioWorksSoundImplementation::step( const float & timeElapsed )
 {
-   // audioworks wants total time elapsed, not time of last frame.
-   mTotalTimeElapsed += timeElapsed;
-
-   aj::SoundImplementation::step( timeElapsed );
-   double total_time_elapsed = mTotalTimeElapsed;
-   //total_time_elapsed = awGetClockSecs();
-   awFrame(total_time_elapsed);
-
-   /*
-   int num = awGetNumEngWav( mEngine );       // how many wavs do i have loaded in AW
-   int num2 = awGetNumFreeEngWav( mEngine );  // how many wavs can be loaded yet into AW
-   int onOrOff( AW_OFF ), onOrOff2, onOrOff3;
-   awGetProp( si.mSound, AWSND_EMITTING, onOrOff2 );
-   awGetProp( si.mSound, AWSND_PROPAGATING, onOrOff3 );
-
-   if (onOrOff2 == AW_ON || onOrOff3 == AW_ON)
-      onOrOff = AW_ON;
-
-   switch (onOrOff)
+   if (this->isStarted() == true)
    {
-      case AW_ON:
-         break;
-      default:
-      case AW_OFF:
-         break;
+      // audioworks wants total time elapsed, not time of last frame.
+      mTotalTimeElapsed += timeElapsed;
+
+      aj::SoundImplementation::step( timeElapsed );
+      double total_time_elapsed = mTotalTimeElapsed;
+      //total_time_elapsed = awGetClockSecs();
+      awFrame(total_time_elapsed);
+
+      /*
+      int num = awGetNumEngWav( mEngine );       // how many wavs do i have loaded in AW
+      int num2 = awGetNumFreeEngWav( mEngine );  // how many wavs can be loaded yet into AW
+      int onOrOff( AW_OFF ), onOrOff2, onOrOff3;
+      awGetProp( si.mSound, AWSND_EMITTING, onOrOff2 );
+      awGetProp( si.mSound, AWSND_PROPAGATING, onOrOff3 );
+
+      if (onOrOff2 == AW_ON || onOrOff3 == AW_ON)
+         onOrOff = AW_ON;
+
+      switch (onOrOff)
+      {
+         case AW_ON:
+            break;
+         default:
+         case AW_OFF:
+            break;
+      }
+      */
    }
-   */
 }
 
 
