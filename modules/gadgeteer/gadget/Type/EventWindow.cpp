@@ -88,23 +88,7 @@ vpr::ReturnStatus EventWindow::writeObject(vpr::ObjectWriter* writer)
    // Lock the Queue of current events to serialize
    vpr::Guard<vpr::Mutex> cur_guard(mCurEventQueueLock);
 
-   /*
-   // Copy the queue since the only way to iterate over it requires
-   // you to pop events off the front, which destroys the queue
-   std::queue<gadget::EventPtr> temp_queue(mCurEventQueue); 
-
-   // While the queue is not empty
-   //  -Grab the event on the front of the queue
-   //  -Serialize the Event
-   //  -Pop the event off the front of the queue
-   while (!temp_queue.empty())
-   {
-      EventPtr temp_event = temp_queue.front();
-      temp_event->writeObject(writer);
-      temp_queue.pop();
-   }   
-   */
-
+   // Serialize all events.
    for(unsigned i = 0; i<mCurEventQueue.size(); ++i)
       mCurEventQueue[i]->writeObject(writer);
 
@@ -121,16 +105,18 @@ vpr::ReturnStatus EventWindow::readObject(vpr::ObjectReader* reader)
    // XXX: Should there be error checking for the case when vprASSERT() is
    // compiled out?  -PH 8/21/2003
    vpr::Uint16 data_type = reader->readUint16();
-   vprASSERT(data_type==MSG_DATA_EVENT_WINDOW && "[EventWindow::readObject()]Not EventWindow Data");
+   vprASSERT(data_type==MSG_DATA_EVENT_WINDOW && "[EventWindow::readObject()] Not EventWindow Data");
    boost::ignore_unused_variable_warning(data_type);
    
    // We must save this value to set the sync time after we updateEventQueue.
-   // This is because we can not ready the timestamp from an event in the
+   // This is because we can not read the timestamp from an event in the
    // queue since we do not have events every frame.
    vpr::Uint64 temp_sync = reader->readUint64();
    
    // Read Current Keys using the given ObjectReader
    unsigned int num_keys = reader->readUint16();
+   
+   vprASSERT(gadget::LAST_KEY == num_keys && "[EventWindow::readObject()] Different number of keys.");
    for ( unsigned int i = 0; i < num_keys; ++i )
    {
       mCurKeys[i] = reader->readUint32();
