@@ -49,12 +49,14 @@ public class ConfigContextEditor
                   mCustomEditors = null;
                }
 
-               // Get teh selected node.
+               // Get the selected node.
                DefaultMutableTreeNode node =
                   (DefaultMutableTreeNode)mElementTree.getLastSelectedPathComponent();
                if(null == node)
                {
-                  mElementPropSheet.setElement((ConfigElement)null);
+                  // Empty the property sheet.
+                  mElementPropSheet.removeAll();
+                  mElementPropSheet.refresh();
                   return;
                }
 
@@ -66,9 +68,26 @@ public class ConfigContextEditor
                   return;
                }
 
-               // Inform the PropertySheet of the newly selected ConfigElement.
+               
+               Color start_color = new Color(160, 160, 180);
+      
+               Object color = UIManager.get( "desktop" );
+               if(null != color && color instanceof Color)
+               {
+                  start_color = (Color)color;
+               }
+               else
+               {
+                  System.out.println("Could not get the desktop color from the  UIManager.");
+               }
+               
+               // Create a new PropertySheet for the given ConfigElement.
                ConfigElement elt = (ConfigElement)value;
-               mElementPropSheet.setElement(elt);
+               
+               mElementPropSheet =
+                  PropertySheetFactory.instance().makeSheet(elt, start_color);
+               mElementPropSheetScrollPane.getViewport().removeAll();
+               mElementPropSheetScrollPane.getViewport().add(mElementPropSheet, null);
 
 
                // Load all supported custom editors.
@@ -76,6 +95,7 @@ public class ConfigContextEditor
     
                if (mCustomEditors != null)
                {
+
 
                   for(Iterator itr = mCustomEditors.iterator() ; itr.hasNext() ; )
                   {
@@ -100,7 +120,24 @@ public class ConfigContextEditor
       if (elts.size() > 0)
       {
          ConfigElement elt = (ConfigElement)elts.get(0);
-         mElementPropSheet.setElement(elt);
+
+         // Create a PropertySheet for the default selected ConfigElement.
+         Color start_color = new Color(160, 160, 180);
+
+         Object color = UIManager.get( "desktop" );
+         if(null != color && color instanceof Color)
+         {
+            start_color = (Color)color;
+         }
+         else
+         {
+            System.out.println("Could not get the desktop color from the  UIManager.");
+         }
+         
+         // Create a new PropertySheet for the given ConfigElement.
+         mElementPropSheet =
+            PropertySheetFactory.instance().makeSheet(elt, start_color);
+               
          selectConfigElement(elt);
       }
 
