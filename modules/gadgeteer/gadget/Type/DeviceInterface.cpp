@@ -30,9 +30,12 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
+#include <iomanip>
+
 #include <gadget/gadgetConfig.h>
 #include <gadget/Type/DeviceInterface.h>
 #include <gadget/InputManager.h>
+#include <gadget/Type/Proxy.h>
 
 namespace gadget
 {
@@ -82,10 +85,27 @@ void BaseDeviceInterface::refresh()
    }
    else if((NULL != mProxyPtr) && (NULL == prev_proxy_ptr))   // ASSERT: We have just gotten a valid proxy to point to
    {
-      vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL)
-         << "DeviceInterface now able to find proxy: "
-         << mProxyName.c_str() << "               [ "
-         << clrSetNORM(clrGREEN) << "OK" << clrRESET << " ]" << std::endl << vprDEBUG_FLUSH;
+      const int item_width(25+12);
+      //const int type_width(20);
+
+      //vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_STATUS_LVL)
+      //   << "DeviceInterface now able to find proxy: "
+      //   << mProxyName.c_str() << "               [ "
+      //   << clrSetNORM(clrGREEN) << "OK" << clrRESET << " ]" << std::endl << vprDEBUG_FLUSH;
+      
+      //std::string device_name("");
+      //Input* deviceptr = mProxyPtr->getProxiedInputDevice();
+      //if (NULL != deviceptr)
+      //{
+      //   device_name = deviceptr->getInstanceName();
+      //}                                             
+
+      vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_STATUS_LVL)
+         << "DeviceInterface found proxy: " << std::setiosflags(std::ios::right)
+         << std::setfill(' ') << std::setw(item_width) << mProxyName
+         << std::resetiosflags(std::ios::right) << "  ";
+      vprDEBUG_CONTnl(vprDBG_ALL,vprDBG_CONFIG_STATUS_LVL) << "[ " << clrSetNORM(clrGREEN) << "OK" << clrRESET << " ]";
+      vprDEBUG_CONTnl(vprDBG_ALL,vprDBG_CONFIG_STATUS_LVL) << std::endl << vprDEBUG_FLUSH;
    }
 }
 

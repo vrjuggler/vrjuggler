@@ -202,7 +202,7 @@ void Kernel::controlLoop(void* nullParam)
       updateFrameData();         // Any frame-based manager data
    }
 
-   vprDEBUG(vrjDBG_KERNEL, vprDBG_CONFIG_LVL)
+   vprDEBUG(vrjDBG_KERNEL, vprDBG_WARNING_LVL)
       << "vrj::Kernel::controlLoop: Exiting. \n" << vprDEBUG_FLUSH;
 
    // Set the running status to false
@@ -249,13 +249,13 @@ void Kernel::checkForReconfig()
    {
       if((mNewApp == NULL) || (mNewApp->depSatisfied()) )   // If app is NULL or dependencies satisfied
       {
-         vprDEBUG(vrjDBG_KERNEL,vprDBG_CONFIG_LVL) << "vjKernel: New application dependencies: Satisfied.\n" << vprDEBUG_FLUSH;
+         vprDEBUG(vrjDBG_KERNEL,vprDBG_CONFIG_STATUS_LVL) << "vjKernel: New application set, dependencies: Satisfied.\n" << vprDEBUG_FLUSH;
          mNewAppSet = false;
          changeApplication(mNewApp);
       }
       else
       {
-         vprDEBUG(vrjDBG_KERNEL,vprDBG_WARNING_LVL) << "vjKernel: New application dependencies: Not satisfied yet.\n" << vprDEBUG_FLUSH;
+         vprDEBUG(vrjDBG_KERNEL,vprDBG_WARNING_LVL) << "vjKernel: New application set, dependencies: Not satisfied yet.\n" << vprDEBUG_FLUSH;
       }
    }
 }

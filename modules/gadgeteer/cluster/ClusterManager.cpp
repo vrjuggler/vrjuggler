@@ -589,7 +589,7 @@ vpr::ReturnStatus ClusterManager::loadDriverDSO(vpr::LibraryPtr driverDSO)
 
       if ( NULL != creator )
       {
-         vprDEBUG_CONT(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "[ " << clrSetNORM(clrGREEN) << "OK" << clrRESET << " ]\n" << vprDEBUG_FLUSH;
+         vprDEBUG_CONT(gadgetDBG_RIM,vprDBG_CONFIG_STATUS_LVL) << "[ " << clrSetNORM(clrGREEN) << "OK" << clrRESET << " ]\n" << vprDEBUG_FLUSH;
          vprDEBUG(gadgetDBG_RIM, vprDBG_WARNING_LVL)
             << "Got pointer to driver factory\n" << vprDEBUG_FLUSH;
 
