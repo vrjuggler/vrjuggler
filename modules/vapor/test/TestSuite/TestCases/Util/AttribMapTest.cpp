@@ -25,7 +25,7 @@ void AttribMapTest::testExists()
    
    attrib_map.setAttrib("test_val", 12.21f);
 
-   CPPUNIT_ASSERT( !attrib_map.attribExists("test_val"));
+   CPPUNIT_ASSERT( attrib_map.attribExists("test_val"));
 }
 
 }
