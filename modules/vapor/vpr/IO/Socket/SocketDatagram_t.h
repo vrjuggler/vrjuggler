@@ -68,7 +68,10 @@ public:
    /**
     * Default constructor.
     */
-   SocketDatagram_t() : mSocketDgramImpl()
+   SocketDatagram_t()
+      : Socket_t<Config>()
+      , SocketDatagramOpt()
+      , mSocketDgramImpl()
    {
       mSocketDgramImpl = boost::shared_ptr<SocketDatagramImpl>(new SocketDatagramImpl);
       Socket_t<SocketConfig_>::mSocketImpl = mSocketDgramImpl;
@@ -87,6 +90,7 @@ public:
    SocketDatagram_t(const vpr::InetAddr& local_addr,
                     const vpr::InetAddr& remote_addr)
       : Socket_t<Config>()
+      , SocketDatagramOpt()
    {
       mSocketDgramImpl = boost::shared_ptr<SocketDatagramImpl>(new SocketDatagramImpl(local_addr, remote_addr));
       Socket_t<SocketConfig_>::mSocketImpl = mSocketDgramImpl;
@@ -98,7 +102,9 @@ public:
     * @param sock The source socket object to be copied.
     */
    SocketDatagram_t(const SocketDatagram_t& sock)
-      : mSocketDgramImpl(sock.mSocketDgramImpl)
+      : Socket_t<Config>()
+      , SocketDatagramOpt()
+      , mSocketDgramImpl(sock.mSocketDgramImpl)
    {
       Socket_t<SocketConfig_>::mSocketImpl = mSocketDgramImpl;
    }
