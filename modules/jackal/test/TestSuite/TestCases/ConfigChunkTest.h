@@ -191,7 +191,7 @@ namespace jcclTest
 
          // set property integer
          jccl::ConfigChunk chunk_int( desc );
-         bool retval = chunk_int.setProperty( "test prop int", 2, 0 );
+         bool retval = chunk_int.setProperty( "test prop int", 69, 0 );
          CPPUNIT_ASSERT( retval == true );
          
          jccl::ConfigChunk receiving( chunk_int );
@@ -200,10 +200,38 @@ namespace jcclTest
 
       void testIsEqual()
       {
+         // start fresh and new (and shiny!!!)
+         jccl::ChunkFactory::instance()->getChunkDescDB()->removeAll();
+         
+         std::string file_path(TESTFILES_PATH);
+         jccl::ChunkFactory::instance()->loadDescs( file_path + "ConfigChunkTest/ConfigChunkTest.desc" );
+         jccl::ChunkDescPtr desc = jccl::ChunkFactory::instance()->getChunkDesc( "config-chuck-the-beaver" );
+
+         // set property integer
+         jccl::ConfigChunk chunk_int( desc );
+         bool retval = chunk_int.setProperty( "test prop int", -928, 0 );
+         CPPUNIT_ASSERT( retval == true );
+         
+         jccl::ConfigChunk receiving( chunk_int );
+         CPPUNIT_ASSERT( chunk_int == receiving );
       }
 
       void testIsNotEqual()
       {
+         // start fresh and new (and shiny!!!)
+         jccl::ChunkFactory::instance()->getChunkDescDB()->removeAll();
+         
+         std::string file_path(TESTFILES_PATH);
+         jccl::ChunkFactory::instance()->loadDescs( file_path + "ConfigChunkTest/ConfigChunkTest.desc" );
+         jccl::ChunkDescPtr desc = jccl::ChunkFactory::instance()->getChunkDesc( "config-chuck-the-beaver" );
+
+         // set property integer
+         jccl::ConfigChunk chunk_int( desc );
+         bool retval = chunk_int.setProperty( "test prop int", 798324, 0 );
+         CPPUNIT_ASSERT( retval == true );
+         
+         jccl::ConfigChunk receiving( desc );
+         CPPUNIT_ASSERT( chunk_int != receiving );
       }
 
 
