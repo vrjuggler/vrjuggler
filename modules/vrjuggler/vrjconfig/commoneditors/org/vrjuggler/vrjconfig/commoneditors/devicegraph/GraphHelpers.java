@@ -593,6 +593,44 @@ public abstract class GraphHelpers
    }
 
    /**
+    * Creates a new port for a device cell.  The port will be used to
+    * represent the input source (unit) described by the given parameters.
+    *
+    * @param unitType   the type of input source for the new port
+    * @param unitNumber the index of this input source in the device
+    */
+   public DefaultPort createDevicePort(Integer unitType, int unitNumber)
+   {
+      return createDevicePort(new UnitInfo(unitType, new Integer(unitNumber)));
+   }
+
+   /**
+    * Creates a new port for a device cell.  The port will be used to
+    * represent the input source (unit) described by the given parameters.
+    *
+    * @param unitType   the type of input source for the new port
+    * @param unitNumber the index of this input source in the device
+    */
+   public DefaultPort createDevicePort(Integer unitType, Integer unitNumber)
+   {
+      return createDevicePort(new UnitInfo(unitType, unitNumber));
+   }
+
+   /**
+    * Creates a new port for a device cell.  The port will be used to
+    * represent the input source (unit) described by the given parameter.
+    *
+    * @param unitInfo   a <code>UnitInfo</code> object containing the
+    *                   information necessary to create a new port for the
+    *                   device cell that accurately represents the input
+    *                   source
+    */
+   public DefaultPort createDevicePort(UnitInfo unitInfo)
+   {
+      return new DefaultPort(unitInfo);
+   }
+
+   /**
     * Adds the given number of ports to the given graph cell as children.
     * The ports are all instances of <code>org.jgraph.graph.DefaultPort</code>.
     */
@@ -601,7 +639,7 @@ public abstract class GraphHelpers
    {
       for ( int i = 0; i < numUnits; ++i )
       {
-         cell.add(new DefaultPort(new UnitInfo(unitType, new Integer(i))));
+         cell.add(createDevicePort(unitType, i));
       }
    }
 
