@@ -143,7 +143,8 @@ void OpenSGNav::myInit(void)
     }
     else
     {
-        _root = OSG::SceneFileHandler::the().read((OSG::Char8 *)(mFileToLoad.c_str()));
+       std::cout << "OpenSGNav::myInit: Loading [" << mFileToLoad.c_str() << "]\n";
+       _root = OSG::SceneFileHandler::the().read((OSG::Char8 *)(mFileToLoad.c_str()));
     }
     std::cout << "OpenSGNav::myInit before RenderAction::create()\n";
     //the rendering action

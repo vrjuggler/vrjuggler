@@ -36,7 +36,8 @@
 class OpenSGNav : public vjOSGApp
 {
 public:
-    OpenSGNav(vjKernel* kern):vjOSGApp(kern)
+    OpenSGNav(vrj::Kernel* kern)
+       : vjOSGApp(kern)
     {
         std::cout << "OpenSGNav::OpenSGNav called\n";
         mFileToLoad = std::string("");
@@ -130,7 +131,7 @@ public:
     OSG::Matrix OSGMat;
 
   public:
-    vjPosInterface   mWand;
+    gadget::PositionInterface   mWand;
 
     static OSG::UInt32 OSG_MAIN_ASPECT_ID;
 };

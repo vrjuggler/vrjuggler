@@ -1,6 +1,6 @@
 #include <OpenSGNav.h>
 
-#include <Kernel/vjKernel.h>
+#include <vrj/Kernel/Kernel.h>
 
 #ifndef WIN32
 #include <sched.h>
@@ -12,7 +12,7 @@ int main(int argc, char* argv[])
     OSG::osgInit(argc,argv);
     OpenSGNav::OSG_MAIN_ASPECT_ID = OSG::Thread::getAspect();
     std::cout<<"osgInit end\n";
-    vjKernel* kernel = vjKernel::instance();
+    vrj::Kernel* kernel = vrj::Kernel::instance();
     std::cout<<"vjKernel instantiated\n";
     OpenSGNav* application = new OpenSGNav(kernel);
 
