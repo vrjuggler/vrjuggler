@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from $Revision$ of $RCSfile$
+// Generated from Revision: 1.70 of RCSfile: class_cs.tmpl,v
 using System;
 using System.Runtime.InteropServices;
 using System.Reflection;
@@ -46,8 +46,9 @@ public abstract class DrawManager
       m_syncDelegate = new syncDelegate(sync);
       m_setAppDelegate_vrj_App = new setAppDelegate_vrj_App(setApp);
       m_initAPIDelegate = new initAPIDelegate(initAPI);
+      m_addDisplayDelegate_vrj_Display = new addDisplayDelegate_vrj_Display(addDisplay);
+      m_removeDisplayDelegate_vrj_Display = new removeDisplayDelegate_vrj_Display(removeDisplay);
       m_closeAPIDelegate = new closeAPIDelegate(closeAPI);
-      m_outStreamDelegate_std_basic_ostream_char_std__char_traits_char__ = new outStreamDelegate_std_basic_ostream_char_std__char_traits_char__(outStream);
    }
 
    // Constructors.
@@ -62,18 +63,19 @@ public abstract class DrawManager
 	[MarshalAs(UnmanagedType.FunctionPtr)] syncDelegate d1,
 	[MarshalAs(UnmanagedType.FunctionPtr)] setAppDelegate_vrj_App d2,
 	[MarshalAs(UnmanagedType.FunctionPtr)] initAPIDelegate d3,
-	[MarshalAs(UnmanagedType.FunctionPtr)] closeAPIDelegate d4,
-	[MarshalAs(UnmanagedType.FunctionPtr)] outStreamDelegate_std_basic_ostream_char_std__char_traits_char__ d5,
-	[MarshalAs(UnmanagedType.FunctionPtr)] configCanHandleDelegate_boost_shared_ptr_jccl__ConfigElement d6,
-	[MarshalAs(UnmanagedType.FunctionPtr)] configProcessPendingDelegate d7,
-	[MarshalAs(UnmanagedType.FunctionPtr)] configAddDelegate_boost_shared_ptr_jccl__ConfigElement d8,
-	[MarshalAs(UnmanagedType.FunctionPtr)] configRemoveDelegate_boost_shared_ptr_jccl__ConfigElement d9);
+	[MarshalAs(UnmanagedType.FunctionPtr)] addDisplayDelegate_vrj_Display d4,
+	[MarshalAs(UnmanagedType.FunctionPtr)] removeDisplayDelegate_vrj_Display d5,
+	[MarshalAs(UnmanagedType.FunctionPtr)] closeAPIDelegate d6,
+	[MarshalAs(UnmanagedType.FunctionPtr)] configCanHandleDelegate_boost_shared_ptr_jccl__ConfigElement d7,
+	[MarshalAs(UnmanagedType.FunctionPtr)] configProcessPendingDelegate d8,
+	[MarshalAs(UnmanagedType.FunctionPtr)] configAddDelegate_boost_shared_ptr_jccl__ConfigElement d9,
+	[MarshalAs(UnmanagedType.FunctionPtr)] configRemoveDelegate_boost_shared_ptr_jccl__ConfigElement d10);
 
    public DrawManager()
       : base(new NoInitTag())   // Do not initialize mRawObject in base class
    {
       allocDelegates();
-      mRawObject   = vrj_DrawManager_DrawManager__(m_drawDelegate, m_syncDelegate, m_setAppDelegate_vrj_App, m_initAPIDelegate, m_closeAPIDelegate, m_outStreamDelegate_std_basic_ostream_char_std__char_traits_char__, m_configCanHandleDelegate_boost_shared_ptr_jccl__ConfigElement, m_configProcessPendingDelegate, m_configAddDelegate_boost_shared_ptr_jccl__ConfigElement, m_configRemoveDelegate_boost_shared_ptr_jccl__ConfigElement);
+      mRawObject   = vrj_DrawManager_DrawManager__(m_drawDelegate, m_syncDelegate, m_setAppDelegate_vrj_App, m_initAPIDelegate, m_addDisplayDelegate_vrj_Display, m_removeDisplayDelegate_vrj_Display, m_closeAPIDelegate, m_configCanHandleDelegate_boost_shared_ptr_jccl__ConfigElement, m_configProcessPendingDelegate, m_configAddDelegate_boost_shared_ptr_jccl__ConfigElement, m_configRemoveDelegate_boost_shared_ptr_jccl__ConfigElement);
       mWeOwnMemory = true;
    }
 
@@ -101,6 +103,7 @@ public abstract class DrawManager
 
    // Operator overloads.
 
+   // Converter operators.
 
    // Start of non-virtual methods.
    // End of non-virtual methods.
@@ -130,26 +133,23 @@ public abstract class DrawManager
 
    public abstract void initAPI();
 
+   // Delegate for the addDisplay() callback.
+   public delegate void addDisplayDelegate_vrj_Display([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(vrj.DisplayMarshaler))] vrj.Display p0);
+   protected addDisplayDelegate_vrj_Display m_addDisplayDelegate_vrj_Display;
+
+   public abstract void addDisplay(vrj.Display p0);
+
+   // Delegate for the removeDisplay() callback.
+   public delegate void removeDisplayDelegate_vrj_Display([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(vrj.DisplayMarshaler))] vrj.Display p0);
+   protected removeDisplayDelegate_vrj_Display m_removeDisplayDelegate_vrj_Display;
+
+   public abstract void removeDisplay(vrj.Display p0);
+
    // Delegate for the closeAPI() callback.
    public delegate void closeAPIDelegate();
    protected closeAPIDelegate m_closeAPIDelegate;
 
    public abstract void closeAPI();
-
-   // Delegate for the outStream() callback.
-   public delegate void outStreamDelegate_std_basic_ostream_char_std__char_traits_char__(ref sbyte p0);
-   protected outStreamDelegate_std_basic_ostream_char_std__char_traits_char__ m_outStreamDelegate_std_basic_ostream_char_std__char_traits_char__;
-
-   [DllImport("vrj_bridge", CharSet = CharSet.Ansi)]
-   private extern static void vrj_DrawManager_outStream__std_basic_ostream_char_std__char_traits_char__(IntPtr obj,
-	ref sbyte p0);
-
-   public virtual void outStream(ref sbyte p0)
-   {
-      
-      vrj_DrawManager_outStream__std_basic_ostream_char_std__char_traits_char__(mRawObject, ref p0);
-      
-   }
 
    // End of virtual methods.
 
@@ -206,6 +206,28 @@ public class DrawManagerMarshaler : ICustomMarshaler
       public override void initAPI()
       {
          vrj_DrawManager_initAPI__(mRawObject);
+      }
+
+      [DllImport("vrj_bridge", CharSet = CharSet.Ansi)]
+      private extern static void vrj_DrawManager_addDisplay__vrj_Display(IntPtr obj,
+	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(vrj.DisplayMarshaler))] vrj.Display p0);
+
+      public override void addDisplay(vrj.Display p0)
+      {
+         
+         vrj_DrawManager_addDisplay__vrj_Display(mRawObject, p0);
+         
+      }
+
+      [DllImport("vrj_bridge", CharSet = CharSet.Ansi)]
+      private extern static void vrj_DrawManager_removeDisplay__vrj_Display(IntPtr obj,
+	[MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(vrj.DisplayMarshaler))] vrj.Display p0);
+
+      public override void removeDisplay(vrj.Display p0)
+      {
+         
+         vrj_DrawManager_removeDisplay__vrj_Display(mRawObject, p0);
+         
       }
 
       [DllImport("vrj_bridge", CharSet = CharSet.Ansi)]

@@ -32,6 +32,7 @@ DLL_DEPS=	/lib:$(LIBDIR) /r:vprnet.dll /r:jcclnet.dll	\
 		/r:gmtlnet.dll /r:gadgetnet.dll
 
 SRCS=		vrj_App.cs		\
+		vrj_Display.cs		\
 		vrj_DrawManager.cs	\
 		vrj_GlApp.cs		\
 		vrj_Kernel.cs		\
