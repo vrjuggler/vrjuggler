@@ -192,8 +192,10 @@ int ThreadNSPR::join(void** status)
  *
  * @param null_param
  */
-void ThreadNSPR::startThread(void* null_param)
+void ThreadNSPR::startThread(void* nullParam)
 {
+   boost::ignore_unused_variable_warning(nullParam);
+
    // WE are a new thread... yeah!!!!
    // TELL EVERYONE THAT WE LIVE!!!!
    mThread = PR_GetCurrentThread();                   // Set the identity of the thread
@@ -221,9 +223,7 @@ void ThreadNSPR::startThread(void* null_param)
 // Set this thread's priority.
 int ThreadNSPR::setPrio(VPRThreadPriority prio)
 {
-   int retval;
-
-   retval = 0;
+   int retval(0);
 
    if ( prio > 3 )
    {
