@@ -48,7 +48,7 @@
 #include <vpr/Util/Interval.h>
 #include <vpr/System.h>
 
-#if defined (VPR_OS_IRIX)
+#if defined(VPR_OS_IRIX)
 // these includes are needed for accessing the SGI cycle counter.
 #include <sys/utsname.h>
 #include <sys/types.h>
@@ -119,7 +119,7 @@ void Interval::setNowReal()
 #endif
    }
 */
-#elif defined (VPR_OS_IRIX) // SGI Cycle counter version
+#elif defined(VPR_OS_IRIX) // SGI Cycle counter version
    if (mMmem_fd != -1)
    {
       if (64 == mClockWidth)
@@ -168,10 +168,11 @@ void Interval::setNowReal()
 }
 
 
-#if defined (VPR_OS_IRIX) // SGI Cycle counter version support code
+#if defined(VPR_OS_IRIX) // SGI Cycle counter version support code
 
 
-/*static*/ bool Interval::initializeCycleCounter () {
+bool Interval::initializeCycleCounter()
+{
    /*
     * As much as I would like, the service available through this
     * interface on R3000's (aka, IP12) just isn't going to make it.
@@ -188,16 +189,16 @@ void Interval::setNowReal()
    /* on R3000 (IP12) don't even try to use the 24 bit cycle counter. */
    struct utsname utsinfo;
    uname(&utsinfo);
-   if ((strncmp("IP12", utsinfo.machine, 4) != 0)
-       && ((mMmem_fd = open("/dev/mmem", O_RDONLY)) != -1))
+   if ( (strncmp("IP12", utsinfo.machine, 4) != 0) &&
+        ((mMmem_fd = open("/dev/mmem", O_RDONLY)) != -1) )
    {
       int poffmask = getpagesize() - 1;
       __psunsigned_t phys_addr, raddr, cycleval;
 
       phys_addr = syssgi(SGI_QUERY_CYCLECNTR, &cycleval);
       raddr = phys_addr & ~poffmask;
-      mTimerAddr = mmap(
-         0, poffmask, PROT_READ, MAP_PRIVATE, mMmem_fd, (__psint_t)raddr);
+      mTimerAddr = mmap(0, poffmask, PROT_READ, MAP_PRIVATE, mMmem_fd,
+                        (__psint_t)raddr);
 
       mClockWidth = syssgi(SGI_CYCLECNTR_SIZE);
       if (mClockWidth < 0)
