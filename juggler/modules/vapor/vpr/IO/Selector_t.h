@@ -64,14 +64,13 @@ public:
     *       a mask of no-events.
     *
     * @param handle The handle to be added to this selector.
-    * @param mask   A bitmask specifying the handle set(s) to which the given
-    *               handle will be added.  This is optional and defaults to 0
-    *               (none).
+    * @param mask   A bitmask specifying the events of interest for this
+    *               handle.  This is optional and defaults to 0 (none).
     *
     * @return <code>true</code> is returned if <code>handle</code> is added
     *         successfully; <code>false</code> otherwise.
     */
-   bool addHandle(IOSys::Handle handle, vpr::Uint16 mask=0)
+   bool addHandle(vpr::IOSys::Handle handle, vpr::Uint16 mask=0)
    {
       return mSelectorImp.addHandle(handle, mask);
    }
@@ -87,7 +86,7 @@ public:
     * @return <code>true</code> is returned if <code>handle</code> is removed
     *         successfully; <code>false</code> otherwise.
     */
-   bool removeHandle(IOSys::Handle handle)
+   bool removeHandle(vpr::IOSys::Handle handle)
    {
       return mSelectorImp.removeHandle(handle);
    }
@@ -100,14 +99,13 @@ public:
     *      <code>addHandle</code>.
     *
     * @param handle The handle whose event flags will be updated.
-    * @param mask   A bitmask specifying the handle set(s) to which the given
-    *               handle will be added.  This is optional and defaults to 0
-    *               (none).
+    * @param mask   The mask used when checking for ready events on the given
+    *               handle.
     *
     * @return <code>true</code> is returned if <code>handle</code>'s event
     *         flags ar3e set successfully; <code>false</code> otherwise.
     */
-   bool setIn(IOSys::Handle handle, vpr::Uint16 mask)
+   bool setIn(vpr::IOSys::Handle handle, vpr::Uint16 mask)
    {
       return mSelectorImp.setIn(handle, mask);
    }
@@ -123,7 +121,7 @@ public:
     * @return A bitmask value representing the "in flags" of
     *         <code>handle</code>.
     */
-   vpr::Uint16 getIn(IOSys::Handle handle)
+   vpr::Uint16 getIn(vpr::IOSys::Handle handle)
    {
       return mSelectorImp.getIn(handle);
    }
@@ -141,7 +139,7 @@ public:
     *         <code>handle</code>.  These flags state which requested events
     *         were detected for <code>handle</code>.
     */
-   vpr::Uint16 getOut(IOSys::Handle handle)
+   vpr::Uint16 getOut(vpr::IOSys::Handle handle)
    {
       return mSelectorImp.getOut(handle);
    }
@@ -195,7 +193,7 @@ public:
     * @return A <code>vpr::IOSys::Handle</code> object representing the
     *         registered handle at the given index.
     */
-   IOSys::Handle getHandle(vpr::Uint16 index)
+   vpr::IOSys::Handle getHandle(vpr::Uint16 index)
    {
       return mSelectorImp.getHandle(index);
    }
@@ -210,7 +208,7 @@ public:
     *         <code>false</code> is returned if the handle has not been
     *         registered.
     */
-   bool containsHandle(IOSys::Handle handle)
+   bool containsHandle(vpr::IOSys::Handle handle)
    {
       return mSelectorImp.containsHandle(handle);
    }
