@@ -224,6 +224,45 @@ public class ConfigChunkDB extends Vector {
 
 
 
+public Vector getDependencies () {
+    // gets the dependencies of _this_chunk_only_
+    int i, j, k;
+    ConfigChunk ch, ch2;
+    Property p;
+    String s;
+    VarValue val;
+    ChunkDependEntry e;
+
+    Vector dep = new Vector();
+
+    for (i = 0; i < size(); i++) {
+	ch = (ConfigChunk)elementAt(i);
+	for (j = 0; j < ch.props.size(); j++) {
+	    p = (Property)ch.props.elementAt(j);
+	    if (p.valtype.equals (ValType.t_chunk)) {
+		for (k = 0; k < p.vals.size(); k++) {
+		    s = ((VarValue)p.vals.elementAt(k)).getString();
+		    if (s.equals (""))
+			continue;
+		    ch2 = get(s);
+		    if (ch2 == null) {
+			e = new ChunkDependEntry();
+			e.chunk = ch;
+			e.property = p;
+			e.dependency_name = s;
+			dep.addElement(e);
+		    }
+		}
+	    }
+	}
+    }
+
+    return dep;
+}
+
+
+
+
     public String fileRep() {
 	/* returns a string representation (actually a config file representation)
 	 * of the db.

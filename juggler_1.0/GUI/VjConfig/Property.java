@@ -77,6 +77,15 @@ public class Property {
     }
 
 
+    public String getName () {
+	return desc.name;
+    }
+
+    public String getToken () {
+	return desc.token;
+    }
+
+
     public void setValue (VarValue s, int v) {
 	if (!valtype.equals (s.getValType()))
 	    return;
