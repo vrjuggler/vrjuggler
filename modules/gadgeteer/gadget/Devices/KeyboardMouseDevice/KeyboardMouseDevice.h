@@ -74,17 +74,21 @@ public:  // --- Internal helper class ----- //
       /** Add the given window to the registry.
        * @return true if window is added, false if matches existing window name.
        */
-      bool addKeyboardMouseDevice(const std::string& name, KeyboardMouseDeviceInfo eventSourceInfo);
+      bool addKeyboardMouseDevice(const std::string& name,
+                                  KeyboardMouseDeviceInfo eventSourceInfo);
 
       /** Remove the window with the id of "name". */
       void removeKeyboardMouseDevice(const std::string& name);
 
       /** Get the window information. */
-      bool getKeyboardMouseDevice(const std::string& name, KeyboardMouseDeviceInfo& eventSourceInfo);
+      bool getKeyboardMouseDevice(const std::string& name,
+                                  KeyboardMouseDeviceInfo& eventSourceInfo);
 
    protected:
       typedef std::map<std::string, KeyboardMouseDeviceInfo> event_source_map_t;
-      event_source_map_t    mKeyboardMouseDeviceMap;    /**< Map Window name to the data needed for it. */
+
+      /**< Map Window name to the data needed for it. */
+      event_source_map_t    mKeyboardMouseDeviceMap;
 
       vprSingletonHeader(KeyboardMouseDeviceRegistry);
    };
@@ -149,11 +153,11 @@ private:
 
 //XXX: Fix this!
 public:
-   vpr::Mutex   mKeysLock;         /**< Must hold this lock when accessing m_keys. */
-   
+   vpr::Mutex   mKeysLock;   /**< Must hold this lock when accessing m_keys. */
+
    // NOTE: This driver does not use the normal triple buffering mechanism.
    // Instead, it just uses a modified double buffering system.
-   
+
    /* Event window state holders */
    /**
     * (0,*): The num key presses during an UpdateData (ie. How many keypress
