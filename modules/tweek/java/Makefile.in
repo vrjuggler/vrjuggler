@@ -71,7 +71,9 @@ JAVA_SRCS	= org/vrjuggler/tweek/Tweek.java			\
                   tweek/SubjectManagerHolder.java			\
                   tweek/SubjectHolder.java				\
                   tweek/ObserverHolder.java				\
-                  tweek/ObserverPOA.java
+                  tweek/ObserverPOA.java				\
+                  tweek/SubjectManagerPackage/RegisteredSubjectHolder.java \
+                  tweek/SubjectManagerPackage/SubjectListHolder.java
 
 JARS		= Tweek.jar		\
                   TweekBeans.jar	\
@@ -91,7 +93,8 @@ BEANS_CLASSES	= org/vrjuggler/tweek/beans/*.class		\
 
 NET_CLASSES	= org/vrjuggler/tweek/net/*.class		\
                   org/vrjuggler/tweek/net/corba/*.class		\
-                  tweek/*.class
+                  tweek/*.class					\
+                  tweek/SubjectManagerPackage/*.class
 
 SERVICE_MF	= $(srcdir)/services.MF
 SERVICE_CLASSES	=
