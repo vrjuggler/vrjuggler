@@ -45,11 +45,11 @@ XALAN_TXT_PARAMS=	-PARAM page.margin.bottom "0in"	\
 			-PARAM page.margin.top "0in"	\
 			-PARAM paper.type "A5"
 
-DOCBOOK_ROOT=	/home/vr/Juggler/docbook
-SGML_ROOT=	/usr/share/sgml/docbook
+DOCBOOK_ROOT?=	/home/vr/Juggler/docbook
+SGML_ROOT?=	/usr/share/sgml/docbook
 
-DSSSL_DIR=	$(DOCBOOK_ROOT)/docbook-dsssl-1.74b
-XSL_DIR=	$(DOCBOOK_ROOT)/docbook-xsl-1.49
+DSSSL_DIR?=	$(DOCBOOK_ROOT)/docbook-dsssl-1.74b
+XSL_DIR?=	$(DOCBOOK_ROOT)/docbook-xsl-1.49
 #TEXINPUTS=	.:$(HOME)/tex:$(HOME)/latex/passivetex:$(HOME)/latex/base:
 #TEXMF=		$(HOME)/latex
 
