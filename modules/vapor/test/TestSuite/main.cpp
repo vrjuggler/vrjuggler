@@ -119,7 +119,7 @@ int main (int ac, char **av)
          // -------------------------------
          // INTERACTIVE
          // -------------------------------
-         else if ( strcmp(av[i], "noninteractive") == 0 ) {
+         else if ( strcmp(av[i], "interactive") == 0 ) {
             addInteractive(&suite);
          }
          else {
