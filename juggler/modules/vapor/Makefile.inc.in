@@ -129,7 +129,7 @@ ifneq (@OS_TYPE@, Win32)
 	@$(SHELL) $(MKINSTALLDIRS) $(LIBDIR)
 	$(AR) $(AR_NAME_FLAG)$@ $(OBJDIR)/*.$(OBJEXT)
 	$(RANLIB) $@
-	cd $(LIBDIR_BASE) && rm -f $(notdir $@) && $(LN_S) $@ ./
+	cd $(LIBDIR_BASE) && $(RM_LN) $(notdir $@) && $(LN_S) $@ ./
 	@echo "------------------------------------------------"
 	@echo "$@ done"
 	@echo "------------------------------------------------"
@@ -147,7 +147,7 @@ $(LIBDIR)/$(VPR_LIB_DYNAMIC) $(LIBDIR)/$(VPR_PROF_LIB_DYNAMIC): $(OBJDIR)/*.$(OB
 ifeq (@OS_TYPE@, Win32)
 	cd $(LIBDIR_BASE) && cp $(LIBDIR)/* .
 else
-	cd $(LIBDIR_BASE) && rm -f $(notdir $@) && $(LN_S) $@ ./
+	cd $(LIBDIR_BASE) && $(RM_LN) $(notdir $@) && $(LN_S) $@ ./
 endif
 	@echo "------------------------------------------------"
 	@echo "$@ done"
@@ -165,32 +165,22 @@ links:
 	$(SHELL) $(MKINSTALLDIRS) $(instlinks)
 	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/include/vpr
 	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/$(LIBDIR_NAME)
-ifneq (@OS_TYPE@, Win32)
 	cd $(instlinks)/include &&					\
           for dir in $(SUBDIR) ; do					\
-              rm -f ./$$dir ;						\
+              $(RM_LN) ./$$dir ;					\
               $(LN_S) $(VPRROOT_ABS)/$$dir ./$$dir ;			\
           done
-	cd $(instlinks)/include && rm -f ./boost &&			\
+	cd $(instlinks)/include && $(RM_LN) ./boost &&			\
           $(LN_S) $(JUGGLERROOT_ABS)/external/boost/boost ./
-else
-	cd $(instlinks)/include &&					\
-          for dir in $(SUBDIR) ; do					\
-              rm -rf ./$$dir ;						\
-              cp -r $(VPRROOT_ABS)/$$dir ./ ;				\
-          done
-	cd $(instlinks)/include && rm -rf ./boost &&			\
-          cp -r $(JUGGLERROOT_ABS)/external/boost/boost ./
-endif
 	for lib in $(LIBS) ; do 					\
             cd $(instlinks)/$(LIBDIR_NAME) && rm -f $$lib* &&		\
               $(LN_S) $(LIBDIR_BASE)/$$lib* ./ ;			\
           done
-	cd $(instlinks)/include/vpr && rm -f ./*.h &&			\
+	cd $(instlinks)/include/vpr && $(RM_LN) ./*.h &&		\
           $(LN_S) $(VPRROOT_ABS)/vpr/*.h ./
-	cd $(instlinks)/include/vpr && rm -f ./vprDefines.h &&		\
+	cd $(instlinks)/include/vpr && $(RM_LN) ./vprDefines.h &&	\
          $(LN_S) $(topdir)/vpr/vprDefines.h ./vprDefines.h
-	cd $(instlinks)/include/vpr && rm -f ./vprParam.h &&		\
+	cd $(instlinks)/include/vpr && $(RM_LN) ./vprParam.h &&		\
           $(LN_S) $(topdir)/vpr/vprParam.h ./vprParam.h
 	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/bin
 	$(PERL) $(scriptdir)/incvt.pl -i $(topdir)/config.status	\
