@@ -16,8 +16,7 @@ LINK		= @CXX@ @CPPFLAGS@ @CXXFLAGS@ @EXTRA_LINK_FLAGS@ $(EXTRA_FLAGS)
 AW_INCLUDES 	= @APP_EXTRA_INC_AW@
 AW_LIBS		= @APP_EXTRA_LIBS_AW@
 VJ_INCLUDES	= @INCLUDES@ $(AW_INCLUDES) -I$(VJ_BASE_DIR)/include	\
-                  -I$(VJ_BASE_DIR)/include/Math -I$(srcdir)		\
-                  -I$(VJ_BASE_DIR)/samples/nav				\
+                  -I$(srcdir) -I$(VJ_BASE_DIR)/samples/nav		\
                   -I$(VJ_BASE_DIR)/samples/tools			\
                   -I$(VJ_BASE_DIR)/samples/pf/pfNav			\
                   -I$(VJ_BASE_DIR)/samples/pf/pfTools
