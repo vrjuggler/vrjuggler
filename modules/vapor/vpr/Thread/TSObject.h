@@ -43,7 +43,7 @@ namespace vpr {
 //
 // Used so that we can have an array of heterogenous TS objects.
 // (ie. We get some type safety)
-// Also defines some memeber that all TS Objects need.
+// Also defines some members that all TS Objects need.
 //-----------------------------------------------------------------
 class TSBaseObject
 {
