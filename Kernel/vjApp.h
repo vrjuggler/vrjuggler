@@ -5,6 +5,7 @@
 #include <Kernel/vjAPI.h>
 #include <Kernel/vjKernel.h>
 #include <Kernel/vjDebug.h>
+#include <Kernel/vjConfigChunkHandler.h>
 class vjKernel;
 class vjDrawManager;
 
@@ -40,7 +41,7 @@ class vjDrawManager;
 //  Date: 9-8-97
 //!PUBLIC_API:
 //------------------------------------------------------------------
-class vjApp
+class vjApp : public vjConfigChunkHandler
 {
 public:
    //: Constructor
