@@ -726,7 +726,7 @@ bool SerialPortImplWin32::getHardwareFlowControlState ()
     if(dcb.fRtsControl==RTS_CONTROL_DISABLE && dcb.fDtrControl==DTR_CONTROL_DISABLE)
          return false;
     else
-         return false;
+         return true;
 }
 
 vpr::ReturnStatus SerialPortImplWin32::enableHardwareFlowControl ()
