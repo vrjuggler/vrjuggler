@@ -57,6 +57,16 @@ class reference7 {
 @__fqn <oiref:#Package#Sound:oiref> 
 */
 class reference8 {
+}/**
+@__ref <oiref:cpp#Class#Class1:oiref><oihard>
+@__modelType reference 
+*/
+class reference9 {
+}/**
+@__ref <oiref:cpp#Class#Managers:oiref><oihard>
+@__modelType reference 
+*/
+class reference11 {
 }}/**
 @__tags
 @shapeType ClassDiagram 
