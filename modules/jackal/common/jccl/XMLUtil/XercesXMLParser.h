@@ -45,7 +45,7 @@ namespace jccl {
 //: Wrapper for libxerces-c parsers.
 //  This class should never be instantiated by itself; only thru the
 //  XercesXMLParserPool object.
-class VJ_CLASS_API XercesXMLParser {
+class JCCL_CLASS_API XercesXMLParser {
 
 public:
 

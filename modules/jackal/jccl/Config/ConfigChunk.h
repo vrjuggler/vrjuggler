@@ -58,7 +58,7 @@ struct VJCFGToken;
 //
 //!PUBLIC_API:
 //------------------------------------------------------------------
-class VJ_CLASS_API ConfigChunk {
+class JCCL_CLASS_API ConfigChunk {
 
 private:
     ChunkDesc* desc;
@@ -169,7 +169,7 @@ public:
     //!RETURNS: out - the output stream
     //!ARGS: out - a valid ostream.
     //!ARGS: self - a valid ConfigChunk
-    friend VJ_API(std::ostream&) operator << (std::ostream& out,
+    friend JCCL_API(std::ostream&) operator << (std::ostream& out,
                                               const ConfigChunk& self);
 
 
@@ -180,7 +180,7 @@ public:
     //!RETURNS: in - the input stream
     //!ARGS: in - a valid input stream
     //!ARGS: self - a valid ConfigChunk
-    friend VJ_API(std::istream&) operator >> (std::istream& in,
+    friend JCCL_API(std::istream&) operator >> (std::istream& in,
                                               ConfigChunk& self);
 
 

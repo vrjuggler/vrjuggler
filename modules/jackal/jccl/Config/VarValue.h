@@ -85,7 +85,7 @@ class ConfigChunk;
 //!PUBLIC_API:
 //--------------------------------------------------
 
-class VJ_CLASS_API VarValue {
+class JCCL_CLASS_API VarValue {
 
 private:
 

@@ -70,7 +70,7 @@ namespace jccl {
 // write() call.
 //
 //----------------------------------------------------------------
-class VJ_CLASS_API PerfDataBuffer {
+class JCCL_CLASS_API PerfDataBuffer {
 
     struct buf_entry {
 

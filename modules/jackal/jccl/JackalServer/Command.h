@@ -43,7 +43,7 @@
 namespace jccl {
 
 
-    class VJ_CLASS_API Command {
+    class JCCL_CLASS_API Command {
 
     public:
         
@@ -56,7 +56,7 @@ namespace jccl {
     };
 
     
-    class VJ_CLASS_API PeriodicCommand: public Command {
+    class JCCL_CLASS_API PeriodicCommand: public Command {
 
     public:
 

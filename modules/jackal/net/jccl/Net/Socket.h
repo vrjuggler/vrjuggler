@@ -102,7 +102,7 @@ namespace jccl {
 typedef SOCKET SocketIDWin32;
 extern const int vjSOCKID_INVALID;
 
-class VJ_CLASS_API SocketWin32 {
+class JCCL_CLASS_API SocketWin32 {
 
 private:
 

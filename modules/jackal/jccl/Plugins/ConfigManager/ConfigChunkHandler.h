@@ -55,7 +55,7 @@ class ConfigChunk;
 // default one will work in most cases.
 //---------------------------------------------
 //! PUBLIC_API:
-class VJ_CLASS_API ConfigChunkHandler
+class JCCL_CLASS_API ConfigChunkHandler
 {
 public:
    //: Can the handler handle the given chunk?

@@ -53,7 +53,7 @@ namespace jccl {
 //
 //!PUBLIC_API:
 //------------------------------------------------------------------
-class VJ_CLASS_API ConfigChunkDB {
+class JCCL_CLASS_API ConfigChunkDB {
 
 private:
     //: vector of ConfigChunks

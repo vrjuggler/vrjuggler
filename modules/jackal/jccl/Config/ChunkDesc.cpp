@@ -226,7 +226,7 @@ bool ChunkDesc::remove (const std::string& _token)
 
 
 
-VJ_IMPLEMENT(std::ostream&) operator << (std::ostream& out,
+JCCL_IMPLEMENT(std::ostream&) operator << (std::ostream& out,
                                          const ChunkDesc& self)
 {
     self.assertValid();
@@ -240,7 +240,7 @@ VJ_IMPLEMENT(std::ostream&) operator << (std::ostream& out,
 }
 
 
-VJ_IMPLEMENT(std::istream&) operator >> (std::istream& in, ChunkDesc& self)
+JCCL_IMPLEMENT(std::istream&) operator >> (std::istream& in, ChunkDesc& self)
 {
     self.assertValid();
 

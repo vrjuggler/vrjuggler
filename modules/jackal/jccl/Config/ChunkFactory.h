@@ -61,7 +61,7 @@ namespace jccl {
 // February 1999
 //------------------------------------------------------------------
 
-class VJ_CLASS_API ChunkFactory {
+class JCCL_CLASS_API ChunkFactory {
 
 public:
     //: Adds descriptions in _descdb to the factory

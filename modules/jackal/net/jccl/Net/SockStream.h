@@ -37,7 +37,7 @@
 
 namespace jccl {
 
-class VJ_CLASS_API sockstreambuf:public std::streambuf {
+class JCCL_CLASS_API sockstreambuf:public std::streambuf {
 public:
 
 #if defined(__GNUC_MINOR__) && __GNUC_MINOR__ < 97
