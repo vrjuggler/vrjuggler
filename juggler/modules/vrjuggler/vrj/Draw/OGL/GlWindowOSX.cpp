@@ -48,8 +48,10 @@ namespace vrj
 
 AGLContext GlWindowOSX::aglShareContext = NULL;
 
-GlWindowOSX::GlWindowOSX():GlWindow() {
-
+GlWindowOSX::GlWindowOSX():GlWindow()
+{
+    gadget::KeyboardOSX::KeyboardOSX();
+    mAreKeyboardDevice = false;
 }
 
 GlWindowOSX::~GlWindowOSX() {
@@ -120,7 +122,24 @@ int GlWindowOSX::open() {
     SetWindowTitleWithCFString(gpWindow,window_title);
     InstallStandardEventHandler(GetWindowEventTarget(gpWindow));
     ChangeWindowAttributes(gpWindow, NULL, kWindowCloseBoxAttribute );
-
+    
+    //This is the a keyboard window
+    if (mAreKeyboardDevice == true)
+    {
+        std::cout << "YYY Should become a keyboard window" << std::endl;
+        
+        gadget::KeyboardOSX::mWindow = gpWindow;
+        
+        
+        
+        gadget::Input* dev_ptr = dynamic_cast<gadget::Input*>(this);
+        
+        vrj::Kernel::instance()->getInputManager()->addDevice(dev_ptr);
+        
+        startSampling();
+    }
+        
+    
     ShowWindow (gpWindow);
     SetPort ( (GrafPtr) GetWindowPort(gpWindow) );
     glInfo.fAcceleratedMust = false;    // must renderer be accelerated?
@@ -177,8 +196,10 @@ bool GlWindowOSX::makeCurrent() {
     return true;
 }
 
-void GlWindowOSX::config(Display* _display)
+void GlWindowOSX::config(vrj::Display* _display)
 {
+   
+   std::cout << "YYY Start config in GLwindow" << std::endl;
    vprDEBUG(vrjDBG_DRAW_MGR,0) << "vjGlWindowOSX::config(Display* _display)" << std::endl << vprDEBUG_FLUSH;
 
    GlWindow::config(_display);
@@ -191,6 +212,36 @@ void GlWindowOSX::config(Display* _display)
    vprASSERT(mPipe >= 0);
 
    window_title = CFStringCreateWithCString(NULL, _display->getName().c_str(), kCFStringEncodingMacRoman);
+   
+   mAreKeyboardDevice = displayChunk->getProperty<bool>("act_as_keyboard_device");
+   // if should have keyboard device
+   if ( true == mAreKeyboardDevice )
+   {
+      std::cout << "YYY keyboard config in GLwindow" << std::endl;
+      mAreKeyboardDevice = true;       // Set flag saying that we need to have the local device
+
+      // Configure keyboard device portion
+      jccl::ConfigChunkPtr keyboard_chunk =
+         displayChunk->getProperty<jccl::ConfigChunkPtr>("keyboard_device_chunk");
+
+      // Set the name of the chunk to the same as the parent chunk (so we can point at it)
+      //keyboard_chunk->setProperty("name", displayChunk->getName();
+
+      bool test = gadget::KeyboardOSX::config(keyboard_chunk);
+      
+      if (test == false)
+      {
+        std::cout << "YYY keyboard config in GLwindow FAIL" << std::endl;
+     }
+
+      // Custom configuration These proably do not matter
+      //gadget::KeyboardOSX::m_width = GlWindowXWin::window_width;
+      //gadget::KeyboardOSX::m_height = GlWindowXWin::window_height;
+
+      //mWeOwnTheWindow = false;      // Keyboard device does not own window
+   }
+
+   
 }
 
 
@@ -623,5 +674,31 @@ GLenum GlWindowOSX::aglReportError () {
 
    return err;
 }
+
+/* For keyboard input */
+
+int GlWindowOSX::startSampling()
+{
+    if(mAmSampling == true)
+    {
+        vprDEBUG(vprDBG_ERROR,vprDBG_CRITICAL_LVL)
+            << clrOutNORM(clrRED,"ERROR:")
+            << "gadget::KeyboardOSX: startSampling called, when already sampling.\n"
+            << vprDEBUG_FLUSH;
+        vprASSERT(false);
+    }
+
+
+    //openTheWindow();
+    
+    std::cout << "Start sampleing in GLwindow" << std::endl;
+    
+    attachEvents(mWindow); 
+    
+    mAmSampling = true;
+
+    return 1;
+}
+
 
 };
