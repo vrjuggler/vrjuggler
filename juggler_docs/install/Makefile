@@ -47,6 +47,7 @@ install-books:
         fi
 	@for book in $(PDF_BOOKS) ; do		\
             echo "$$book --> $(book_distdir)" ;	\
+            umask 002 ;				\
             cp $$book $(book_distdir) ;		\
         done
 
