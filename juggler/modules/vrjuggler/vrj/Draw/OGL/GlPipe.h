@@ -60,15 +60,23 @@ public:
    /**
     * Constructor.
     *
-    * @param _num  The id number of the pipe.
+    * @param num   The id number of the pipe.
+    * @param glMgr The GL Draw Manager instance associated with this pipe.
+    *
     * @note All contained windows SHOULD have the same pipe number.
     */
    GlPipe(int num, GlDrawManager* glMgr)
-      : mActiveThread(NULL), mPipeNum(num), controlExit(0), glManager(glMgr),
-        renderTriggerSema(0), renderCompleteSema(0), swapTriggerSema(0), swapCompleteSema(0)
+      : mActiveThread(NULL)
+      , mPipeNum(num)
+      , controlExit(0)
+      , glManager(glMgr)
+      , renderTriggerSema(0)
+      , renderCompleteSema(0)
+      , swapTriggerSema(0)
+      , swapCompleteSema(0)
    {
       mThreadRunning = false;
-    }
+   }
 
    /**
     * Starts the pipe running.
@@ -87,7 +95,6 @@ public:
     * -renders all windows when triggered <br>
     */
    void controlLoop(void* nullParam);
-
 
    /**
     * Stops the pipe.
@@ -128,26 +135,28 @@ public:     // --------- Triggering functions ------ //
 public: // --- Window Management ----- //
 
    /**
-    * Adds a GLWindow to the new window list.
+    * Adds the given GLWindow to the new window list.
     * Control loop must now open the window on the next frame.
     */
    void addWindow(GlWindow* win);
 
    /**
-    * Remove a GLWindow from the window list.
+    * Removes the given GLWindow from the window list.
     * @note The window is not actually removed until the next draw trigger.
     */
    void removeWindow(GlWindow* win);
 
-
    /** Returns true if pipe has any windows. */
    int hasWindows()
-   { return ( (mNewWins.size() > 0) || (mOpenWins.size() > 0)); }
-
+   {
+      return ( (mNewWins.size() > 0) || (mOpenWins.size() > 0));
+   }
 
    /** Return a list of open windows. */
    std::vector<GlWindow*> getOpenWindows()
-   { return mOpenWins; }
+   {
+      return mOpenWins;
+   }
 
 private:
    /**
@@ -173,9 +182,10 @@ private:
    /** Swaps the buffers of the given window. */
    void swapWindowBuffers(GlWindow* win);
 
-   /** Do any other window setup stuff that is needed after the window is open
-   * @pre Window is open and is current
-   */
+   /**
+    * Do any other window setup stuff that is needed after the window is open.
+    * @pre Window is open and is current.
+    */
    void finishWindowSetup(GlWindow* win);
 
    GlPipe(const GlPipe& o) {;}
@@ -208,6 +218,6 @@ private:
 
 };
 
-};
+}
 
 #endif
