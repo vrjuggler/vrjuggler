@@ -164,6 +164,15 @@ public:
    }
 
    /**
+    * Sets the amount of time (in microseconds) to sleep after processing a
+    * single event.
+    */
+   void setSimulationPauseTime (const vpr::Uint32 sleep_time)
+   {
+      mSleepTime = sleep_time;
+   }
+
+   /**
     * Adds an event scheduled to occur at the given time to the queue of
     * upcoming events.
     */
@@ -239,6 +248,8 @@ private:
    // iterate over it in increasing order of event times.
    typedef std::multimap<vpr::Interval, NetworkGraph::net_edge_t> event_map_t;
    event_map_t mEvents;
+
+   vpr::Uint32 mSleepTime;
 };
 
 } // End of sim namespace

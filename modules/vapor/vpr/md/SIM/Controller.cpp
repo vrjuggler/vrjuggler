@@ -44,6 +44,7 @@
 #include <boost/utility.hpp>
 #include <vpr/Util/Interval.h>
 #include <vpr/Util/Debug.h>
+#include <vpr/Thread/Thread.h>
 
 #include <vpr/md/SIM/Network/Message.h>
 #include <vpr/md/SIM/Network/MessagePtr.h>
@@ -64,6 +65,7 @@ vpr::TSObjectProxy<Controller::ControllerTS> Controller::mInstance;
 // ============================================================================
 
 Controller::Controller ()
+   : mSleepTime(0)
 {
    /* Do nothing. */ ;
 }
@@ -195,6 +197,11 @@ void Controller::processNextEvent ()
       if ( event_processed )
       {
          mEvents.erase(cur_event);
+
+         if ( mSleepTime > 0 )
+         {
+            vpr::Thread::usleep(mSleepTime);
+         }
       }
    }
 }

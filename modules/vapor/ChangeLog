@@ -1,17 +1,20 @@
 DATE       AUTHOR   CHANGE
 ---------- -------- -----------------------------------------------------------
+2001-12-13 patrickh Users can define a "pause time" in between events in the
+                    simulation controller.
+                    NEW VERSION: 0.7.1
 2001-12-13 allenb   Added method to get the value of the "base" type of 
                     vpr::Interval.  This is to assist in serializing the data.
 2001-12-13 allenb   Added availableBytes() to the BlockIO interface.
                     NEW VERSION: 0.7.0
 2001-12-11 allenb   Added debugOutputGuard to vpr::Debug.  Helps with scoped
                     debug output.
-					NEW VERSION: 0.6.2
+                    NEW VERSION: 0.6.2
 2001-12-11 allenb   Added new return status: NotConnected. Read and write on 
                     sockets can (should) return this status when the socket 
-					being used has lost it's connection to the socket on the
-					other side.
-					NEW VERSION: 0.6.1
+                    being used has lost it's connection to the socket on the
+                    other side.
+                    NEW VERSION: 0.6.1
 2001-12-10 patrickh The simulation controller is now a thread-specific
                     singleton with a clock.  The clock is used for keeping
                     track of time in the simulation.  The Socket Manager is no
