@@ -819,7 +819,7 @@ dnl # XXX: Get this to work without Perl!
 if test "x${_vj_version}" != "xno" ; then
     if test "x$PERL" != "xno" ; then
         _recversion="$PERL $srcdir/release/scripts/record-version.pl"
-        _param_h_args="-i $srcdir/vjParam.h.in -o vjParam.h -s -NSPR"
+        _param_h_args="-i $srcdir/vjParam.h.in -o vjParam.h"
 
         dnl # If no version number is given, try to extract the current
         dnl # value from $srcdir/VERSION.
