@@ -41,3 +41,4 @@ PLUGINS=
 PLUGINS+=	RemoteInputManager
 PLUGINS+=	ApplicationDataManager
 PLUGINS+=	StartBarrierPlugin
+PLUGINS+=	SwapLockPlugin

@@ -476,7 +476,14 @@ namespace cluster
 
       unlockDeviceServers();  
 
+      //      second.setNow();
+      //      vpr::Interval diff_time4(second-first);
+      //      std::cout << "Recv DeviceData Time: " << diff_time4.getBaseVal() << std::endl;
 
+   }
+
+   void RemoteInputManager::sendRequests()
+   {
       //////////////////////////////////////////////////////////////////////////////
       //                           1. Send DeviceReq                              //
       //////////////////////////////////////////////////////////////////////////////
@@ -486,10 +493,6 @@ namespace cluster
       sendDeviceRequests();      
 
       ClusterNetwork::instance()->unlockClusterNodes();
-
-      //      second.setNow();
-      //      vpr::Interval diff_time4(second-first);
-      //      std::cout << "Recv DeviceData Time: " << diff_time4.getBaseVal() << std::endl;
 
    }
 

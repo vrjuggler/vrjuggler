@@ -248,6 +248,24 @@ namespace cluster
       }
       return(false);
    }
+   
+   void ClusterManager::sendRequests()
+   {
+      // Idea is to not create frame lock if we do not need to
+      bool updateNeeded = false;
+      vpr::Guard<vpr::Mutex> guard(mPluginsLock);
+      
+      for (std::list<ClusterPlugin*>::iterator i = mPlugins.begin();
+           i != mPlugins.end() ; i++)
+      {
+         (*i)->sendRequests();
+         updateNeeded = true;
+      }
+      if (updateNeeded)
+      {
+         sendEndBlocksAndSignalUpdate();
+      }                                 
+   }
 
    void ClusterManager::preDraw()
    {
@@ -266,6 +284,7 @@ namespace cluster
          sendEndBlocksAndSignalUpdate();
       }                                 
    }
+
    void ClusterManager::postPostFrame()
    {
       // -If not running

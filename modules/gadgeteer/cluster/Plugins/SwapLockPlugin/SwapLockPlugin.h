@@ -124,7 +124,11 @@ public:
    bool configCanHandle(jccl::ConfigChunkPtr chunk);
 
    bool recognizeSwapLockPluginConfig(jccl::ConfigChunkPtr chunk);
-   
+
+   void MasterSend();
+   void MasterReceive();
+   void SlaveSend();
+   void SlaveReceive();
 private:      
    /**
     * Returns the string representation of the chunk type used for the SwapLockPlugin
@@ -135,6 +139,16 @@ private:
    ClusterBarrier*   mBarrier;
    int               mFrameNumber;
    vpr::GUID         mPluginGUID;
+
+   std::vector<std::string>      mSlaves;
+   std::vector<ClusterNode*>     mSlaveNodes;
+   bool                          mBarrierMaster;
+   std::string                   mBarrierMasterHostname;
+   ClusterNode*                  mMasterNode;
+   //bool                          mSwapLockActive;
+
+   const vpr::Uint8 SYNC_SIGNAL;
+   const vpr::Interval read_timeout;
 };
 
 } // end namespace
