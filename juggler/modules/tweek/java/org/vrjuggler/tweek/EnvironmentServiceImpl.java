@@ -54,6 +54,18 @@ class EnvironmentServiceImpl
 {
    static
    {
+      try
+      {
+         System.loadLibrary("tweek_jni");
+         mHaveTweekJni = true;
+      }
+      catch(UnsatisfiedLinkError ex)
+      {
+         System.err.println("WARNING: Failed to load tweek_jni extension: " +
+                            ex.getMessage());
+         mHaveTweekJni = false;
+      }
+
       if ( System.getProperty("mrj.version") != null )
       {
          os = EnvironmentService.MacOS;
@@ -191,13 +203,50 @@ class EnvironmentServiceImpl
       return appDataDir;
    }
 
+   /**
+    * Returns an identifier for the host operationg system.  The value will be
+    * one of EnvironmentService.UNIX, EnvironmentService.MacOS, or
+    * EnvironmentService.Windows.
+    */
    public int getOS()
    {
       return os;
    }
 
+   /**
+    * Returns the value of the named environment variable or null if the
+    * variable is not set in the user's environment.  This is implementing
+    * using a native method call because System.getenv() is not available
+    * with JDK 1.4.  If the native method call is not available, this method
+    * always returns null.  With JDK 1.5, System.getenv() has returned, so
+    * this could be implemented in terms of that function.
+    *
+    * @param envVarName The name of the variable to look up in the user's
+    *                   environment.
+    *
+    * @return A String object containing the value of the named environment
+    *         variable if the variable exists in the user's environment.  If
+    *         it does not exist, null is returned.  If the native method call
+    *         that is used to implement this method is not available, null is
+    *         always returned.
+    */
+   public String getenv(String envVarName)
+   {
+      String value = null;
+
+      if ( mHaveTweekJni )
+      {
+         value = tweekJniGetenv(envVarName);
+      }
+
+      return value;
+   }
+
+   private native String tweekJniGetenv(String envVarName);
+
    private String[] commandLineArgs = null;
    private String   appDataDir      = null;
 
    private static int os;
+   private static boolean mHaveTweekJni;
 }
