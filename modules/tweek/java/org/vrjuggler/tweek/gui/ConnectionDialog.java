@@ -350,7 +350,13 @@ public class ConnectionDialog extends JDialog
          while ( i.hasNext() )
          {
             cur_mgr = (tweek.SubjectManager) i.next();
-            mgr_list_model.addElement(new SubjectManagerWrapper(cur_mgr));
+
+            // Do not present invalid Subject Manager references to the user.
+            // This little test is pretty sweet--I just hope it's fast.
+            if ( ! cur_mgr._non_existent() )
+            {
+               mgr_list_model.addElement(new SubjectManagerWrapper(cur_mgr));
+            }
          }
 
          mSubjectMgrList.setModel(mgr_list_model);
