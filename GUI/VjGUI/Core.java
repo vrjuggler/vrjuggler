@@ -65,6 +65,7 @@ public class Core {
 	perf_collection = new PerfDataCollection();
 	chunkorgtree = new ChunkOrgTree();
 	descdb = new ChunkDescDB();
+	ChunkFactory.setChunkDescDB (descdb);
 	gui_chunkdb = new ConfigChunkDB (descdb);
 	db = new ConfigChunkDB(descdb);
 	db.setName ("Active Configuration");

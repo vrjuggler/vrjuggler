@@ -12,6 +12,7 @@ import java.io.*;
 import java.net.*;
 import javax.swing.*;
 import javax.swing.filechooser.*;
+import java.util.Vector;
 import VjConfig.*;
 import VjGUI.*;
 
@@ -161,6 +162,12 @@ public class FileControl {
       chunkdb.setFile(f);
       chunkdb.read(st);
       Core.addChunkDB (chunkdb);
+
+      // load included files...
+      Vector v = chunkdb.getOfDescToken("vjIncludeFile");
+      for (int i = 0; i < v.size(); i++)
+	  loadNewChunkDBFile(((ConfigChunk)v.elementAt(i)).getName(), false);
+
       return chunkdb.name;
     }
     catch (FileNotFoundException e) {
@@ -306,7 +313,7 @@ public class FileControl {
 					      boolean showrequester) {
 	File f;
 	FileReader r;
-	StreamTokenizer st;
+	ConfigStreamTokenizer st;
 
 	if (showrequester) {
 	    f = requestOpenFile(currentdir);
@@ -321,8 +328,8 @@ public class FileControl {
 
 	try {
 	    r = new FileReader(f);
-	    st = new StreamTokenizer(r);
-	    st.eolIsSignificant (true);
+	    st = new ConfigStreamTokenizer(r);
+	    st.eolIsSignificant(true);
 
 	    do {
 		st.nextToken();
