@@ -209,8 +209,11 @@ void SimPosition::moveUp(const float amt)
 /** Rotation amt around axis */
 void SimPosition::rotAxis(const float amt, const gmtl::Vec3f rotAxis)
 {
+   // convert the input...
+   gmtl::AxisAnglef axisAngle( gmtl::Math::deg2Rad(amt*mDRot), gmtl::makeNormal( rotAxis ) );
+  
   gmtl::Matrix44f* m = mPos.getPosition();
-  gmtl::Matrix44f delta_rot(gmtl::makeRot<gmtl::Matrix44f>(gmtl::Math::deg2Rad(amt*mDRot), rotAxis));   // make delta rot
+  gmtl::Matrix44f delta_rot( gmtl::makeRot<gmtl::Matrix44f>( axisAngle ) );   // make delta rot
 
   if(mRotCoordSystem == LOCAL)
   {
