@@ -39,7 +39,6 @@
 #include <sys/time.h>
 
 #include <Threads/vjThreadPool.h>
-#include <SharedMem/vjMemory.h>
 #include <Kernel/vjDebug.h>
 
 void doIt(void*);
