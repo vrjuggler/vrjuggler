@@ -283,8 +283,6 @@ public class ProxyVertexView
 
                mAddAliasButton.setEnabled(true);
 
-               ConfigElement proxy_elt = mProxyInfo.getElement();
-
                Dimension label_size = mNameLabel.getPreferredSize();
                Dimension add_size   = mAddAliasButton.getPreferredSize();
                Dimension paste_size = mPasteAliasButton.getPreferredSize();
