@@ -55,7 +55,7 @@ vjVarValue::vjVarValue (const vjVarValue &v)
 {
     validation = 1;
 
-    strval = std::string("");
+    //strval = std::string("");
     intval = 0;
     floatval = 0.0;
     embeddedchunkval = NULL;
@@ -68,7 +68,7 @@ vjVarValue::vjVarValue (vjConfigChunk* ch)
 {
     validation = 1;
 
-    strval = std::string("");
+    //strval = std::string("");
     intval = 0;
     floatval = 0.0;
     embeddedchunkval = NULL;
@@ -83,7 +83,7 @@ vjVarValue::vjVarValue ( VarType t )
 {
     validation = 1;
 
-    strval = std::string("");
+    //strval = std::string("");
     type = t;
     intval = 0;
     floatval = 0.0;
@@ -267,7 +267,7 @@ vjVarValue::operator float () const {
 
 char* vjVarValue::cstring () const {
     assertValid();
-    
+
     switch (type) {
     case T_STRING:
     case T_CHUNK:
