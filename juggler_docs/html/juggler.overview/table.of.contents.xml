@@ -11,23 +11,11 @@ Builder: JExplorerBuilder V 1. 0. 7
 				image="Book_Closed.gif" 
 				imagetwo="BlackBook_Open.gif">
 
-			< item title="QuickStart" 
-			       link="build/juggler/quick.start.html" 
-			       info="No info, just step by step instructions."
+			< item title="Coming Soon" 
+			       link="" 
+			       info="Sorry, no overview guide yet, should be done soon..."
 			       image="Leaf_Script2.gif" >
-			
-			
-			< folder title="Comparisons" 
-				 link="build/index.html" 
-				 info="How does VR Juggler compare to other systems" 
-				 image="Leaf_Script2.gif" >
-					< item title="QuickStart" 
-					link="build/juggler/quick.start.html" 
-					info="No info, just step by step instructions."
-					image="Leaf_Script2.gif" >
-									
-			</folder>						
-                        </rootfolder>
+			</rootfolder>
 		</idefault>
 	</font>
 </treecontrol>
