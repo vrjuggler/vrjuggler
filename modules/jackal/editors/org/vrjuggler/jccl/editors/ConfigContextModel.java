@@ -391,7 +391,7 @@ public class ConfigContextModel
          {
             // Listen to all values for this property
             List emb_elts = elt.getPropertyValues(prop_def.getToken());
-            for (Iterator elt_itr = emb_elts.iterator(); itr.hasNext(); )
+            for (Iterator elt_itr = emb_elts.iterator(); elt_itr.hasNext(); )
             {
                addListenerTo((ConfigElement)elt_itr.next());
             }
