@@ -48,7 +48,6 @@ import org.vrjuggler.jccl.config.*;
 import org.vrjuggler.jccl.config.event.*;
 import org.vrjuggler.vrjconfig.commoneditors.Placer;
 import org.vrjuggler.vrjconfig.commoneditors.placer.*;
-import org.vrjuggler.vrjconfig.commoneditors.EditorConstants;
 
 /**
  * A component suitable for placing viewports within a display window.  This
@@ -57,6 +56,7 @@ import org.vrjuggler.vrjconfig.commoneditors.EditorConstants;
  */
 public class ViewportPlacer
    extends JPanel
+   implements EditorConstants
 {
    public ViewportPlacer(ConfigContext ctx, ConfigElement elt)
    {
@@ -223,15 +223,9 @@ public class ViewportPlacer
       {
          ClassLoader loader = getClass().getClassLoader();
          surfaceIcon =
-            //new ImageIcon(loader.getResource(EditorConstants.imageBase +
-            //                                 "/vrjuggler-surface-viewport.png"));
-            new ImageIcon("/home/users/aronb/Source/CurrentJuggler/juggler/modules/vrjuggler/vrjconfig/customeditors/display_window/org/vrjuggler/vrjconfig/customeditors/display_window/images/vrjuggler-surface-viewport.png");
-         simIcon =
-            new ImageIcon("/home/users/aronb/Source/CurrentJuggler/juggler/modules/vrjuggler/vrjconfig/customeditors/display_window/org/vrjuggler/vrjconfig/customeditors/display_window/images/vrjuggler-sim-viewport.png");
-            //new ImageIcon(loader.getResource(EditorConstants.imageBase +
-            //                                 "/vrjuggler-sim-viewport.png"));
+            new ImageIcon(loader.getResource(IMAGE_BASE +
+                                             "/vrjuggler-surface-viewport.png"));
          scaledSurfaceIcon = new ImageIcon();
-         scaledSimIcon     = new ImageIcon();
       }
 
       public Component getPlacerRendererComponent(Placer placer,
@@ -269,17 +263,8 @@ public class ViewportPlacer
 
             ImageIcon icon, scaled_icon;
 
-            // XXX: Come up with a cleaner way to do this.
-            if ( ((ConfigElement) placer.getModel().getElement(index)).getDefinition().getToken().equals(EditorConstants.surface_viewport_type) )
-            {
-               icon = surfaceIcon;
-               scaled_icon = scaledSurfaceIcon;
-            }
-            else
-            {
-               icon = simIcon;
-               scaled_icon = scaledSimIcon;
-            }
+            icon = surfaceIcon;
+            scaled_icon = scaledSurfaceIcon;
 
             // Check if we need to update the scaled image
             Image img = scaled_icon.getImage();
