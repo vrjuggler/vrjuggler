@@ -123,19 +123,24 @@ public class BeanLoader
       {
          System.err.println("ERROR: Could not instantiate Bean of type " +
                             bean_class);
-//          e.printStackTrace();
+         System.err.println("       Class " + e.getMessage() + " not found.");
+//         e.printStackTrace();
          throw new BeanInstantiationException("Instantiation of " + bean_class +
-                                              " failed (" + e.getMessage() +
-                                              ")");
+                                              " failed!\n(" +
+                                              "Class " + e.getMessage() +
+                                              " not found");
       }
       catch (NoClassDefFoundError e)
       {
          System.err.println("ERROR: Could not instantiate Bean of type " +
                             bean_class);
-//          e.printStackTrace();
+         System.err.println("       No definition found for class " +
+                            e.getMessage());
+//         e.printStackTrace();
          throw new BeanInstantiationException("Instantiation of " + bean_class +
-                                              " failed (" + e.getMessage() +
-                                              ")");
+                                              " failed!\n" +
+                                              "No definition found for class " +
+                                              e.getMessage());
       }
 
       return obj;
