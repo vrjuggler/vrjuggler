@@ -169,7 +169,7 @@ ifneq (@OS_TYPE@, Win32)
               $(LN_S) $(VPRROOT_ABS)/$$dir ./$$dir ;			\
           done
 	cd $(instlinks)/include && rm -f ./boost &&			\
-          $(LN_S) $(VPRROOT_ABS)/contrib/boost ./
+          $(LN_S) $(VPRROOT_ABS)/contrib/boost/boost ./
 	cd $(instlinks) && rm -f ./$(LIBDIR_NAME) &&			\
           ln -s $(LIBDIR_BASE) ./$(LIBDIR_NAME)
 	cd $(instlinks)/include/vpr && rm -f ./*.h &&			\
