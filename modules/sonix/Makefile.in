@@ -64,6 +64,10 @@ endif
 includedir           = @includedir@
 instlinks            = $(topdir)/install-clone
 
+# Extra compiler and linker options needed only by this file.
+DBG_FLAGS	= -D_DEBUG @DBG_FLAGS@
+OPT_FLAGS	= -D_OPT @OPT_FLAGS@
+
 STATICLIB_EXT	= @STATICLIB_EXT@
 DYNAMICLIB_EXT	= @DYNAMICLIB_EXT@
 
