@@ -283,8 +283,7 @@ inline void OpenSGApp::draw()
    glPopMatrix();
    glMatrixMode(GL_MODELVIEW);
    
-   FINFO(("Frame done on Window %lx. Stat: %s\n", c_data->mWin.getCPtr(),
-   	stat.c_str() ));
+   FINFO(("Frame done on Window %lx.\n", c_data->mWin.getCPtr() ));
 }
 
 };
