@@ -3,7 +3,7 @@
 	ProjectType="Visual C++"
 	Version="7.00"
 	Name="pfConfigNav"
-	ProjectGUID="{CFED6BDA-577C-4E29-A4B9-2F1E5E4A1F76}"
+	ProjectGUID="{59551722-A1F0-4B4C-B844-567D6CEEDFEC}"
 	SccProjectName=""
 	SccLocalPath="">
 	<Platforms>
@@ -13,44 +13,47 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory=".\Debug"
-			IntermediateDirectory=".\Debug"
+			OutputDirectory="Debug"
+			IntermediateDirectory="Debug"
 			ConfigurationType="1"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="FALSE">
 			<Tool
 				Name="VCCLCompilerTool"
+				AdditionalOptions="/Zm800"
 				Optimization="0"
-				AdditionalIncludeDirectories=".;../pfNav;../nav;../pfTools;&quot;$(NSPR_ROOT)/include/nspr&quot;;&quot;$(VJ_BASE_DIR)/include&quot;;&quot;C:/Program Files/Silicon Graphics/OpenGL Performer/Include&quot;;&quot;C:/Program Files/Silicon Graphics/OpenGL Performer/Include/Performer&quot;"
-				PreprocessorDefinitions="_DEBUG,_CONSOLE"
+				AdditionalIncludeDirectories=".;..\nav;..\pfNav;..\pfTools;&quot;$(VJ_DEPS_DIR)\include&quot;;&quot;$(VJ_BASE_DIR)\include&quot;;&quot;$(PFROOT)\include&quot;;&quot;$(PFROOT)\include\Performer&quot;"
+				PreprocessorDefinitions="_DEBUG;_CONSOLE;WIN32"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
+				BufferSecurityCheck="FALSE"
 				RuntimeTypeInfo="TRUE"
-				UsePrecompiledHeader="2"
-				PrecompiledHeaderFile=".\Debug/pfConfigNav.pch"
-				AssemblerListingLocation=".\Debug/"
-				ObjectFile=".\Debug/"
-				ProgramDataBaseFileName=".\Debug/"
+				UsePrecompiledHeader="0"
+				PrecompiledHeaderFile=""
+				AssemblerListingLocation=""
+				ObjectFile="$(IntDir)/"
+				ProgramDataBaseFileName="$(IntDir)/"
 				WarningLevel="3"
-				DebugInformationFormat="1"
-				CompileAs="0"
-				ForcedIncludeFiles="vrj/vrjConfig.h"/>
+				DebugInformationFormat="4"
+				CompileAs="2"
+				DisableSpecificWarnings="4244;4251;4275;4290"/>
 			<Tool
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/MACHINE:I386"
-				AdditionalDependencies="vrj.lib vrj_pf.lib sonix.lib gadget.lib jccl.lib vpr.lib libnspr4.lib libplc4.lib libpf.lib libpfdu-util.lib libpfui.lib comctl32.lib ws2_32.lib opengl32.lib glu32.lib"
-				OutputFile="pfConfigNav.exe"
+				AdditionalDependencies="vrj_d.lib vrj_pf_d.lib sonix_d.lib gadget_d.lib jccl_d.lib vpr_d.lib libnspr4.lib libplc4.lib libplc4.lib libpf.lib libpfdu-util.lib libpfui.lib comctl32.lib ws2_32.lib opengl32.lib glu32.lib $(NOINHERIT)"
+				OutputFile="$(OutDir)/pfConfigNav.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="TRUE"
-				AdditionalLibraryDirectories="&quot;$(NSPR_ROOT)/lib&quot;;&quot;$(VJ_BASE_DIR)/lib/debug&quot;;&quot;C:/Program Files/Silicon Graphics/OpenGL Performer/Lib/Debug&quot;"
+				AdditionalLibraryDirectories="&quot;$(VJ_DEPS_DIR)\lib&quot;;&quot;$(NSPR_ROOT)\lib&quot;;&quot;$(VJ_BASE_DIR)\lib&quot;;&quot;$(PFROOT)\lib\Debug&quot;"
 				GenerateDebugInformation="TRUE"
-				ProgramDatabaseFile=".\Debug/pfConfigNav.pdb"
-				SubSystem="1"/>
+				ProgramDatabaseFile="$(OutDir)/pfConfigNav.pdb"
+				SubSystem="1"
+				TargetMachine="1"/>
 			<Tool
 				Name="VCMIDLTool"
-				TypeLibraryName=".\Debug/pfConfigNav.tlb"/>
+				TypeLibraryName="$(OutDir)/pfConfigNav.tlb"/>
 			<Tool
 				Name="VCPostBuildEventTool"/>
 			<Tool
@@ -68,43 +71,48 @@
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory=".\Release"
-			IntermediateDirectory=".\Release"
+			OutputDirectory="Release"
+			IntermediateDirectory="Release"
 			ConfigurationType="1"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="FALSE">
 			<Tool
 				Name="VCCLCompilerTool"
+				AdditionalOptions="/Zm800"
 				InlineFunctionExpansion="1"
-				AdditionalIncludeDirectories=".;../pfNav;../nav;../pfTools;&quot;$(NSPR_ROOT)/include/nspr&quot;;&quot;$(VJ_BASE_DIR)/include&quot;;&quot;C:/Program Files/Silicon Graphics/OpenGL Performer/Include&quot;;&quot;C:/Program Files/Silicon Graphics/OpenGL Performer/Include/Performer&quot;"
-				PreprocessorDefinitions="_OPT,_CONSOLE"
+				OmitFramePointers="FALSE"
+				AdditionalIncludeDirectories=".;..\nav;..\pfNav;..\pfTools;&quot;$(VJ_DEPS_DIR)\include&quot;;&quot;$(VJ_BASE_DIR)\include&quot;;&quot;$(PFROOT)\include&quot;;&quot;$(PFROOT)\include\Performer&quot;"
+				PreprocessorDefinitions="_OPT;NDEBUG;_CONSOLE;WIN32"
 				StringPooling="TRUE"
 				RuntimeLibrary="2"
+				BufferSecurityCheck="FALSE"
 				EnableFunctionLevelLinking="TRUE"
-				UsePrecompiledHeader="2"
-				PrecompiledHeaderFile=".\Release/pfConfigNav.pch"
-				AssemblerListingLocation=".\Release/"
-				ObjectFile=".\Release/"
-				ProgramDataBaseFileName=".\Release/"
+				RuntimeTypeInfo="TRUE"
+				UsePrecompiledHeader="0"
+				PrecompiledHeaderFile=""
+				AssemblerListingLocation=""
+				ObjectFile="$(IntDir)/"
+				ProgramDataBaseFileName="$(IntDir)/"
 				WarningLevel="3"
 				SuppressStartupBanner="TRUE"
-				CompileAs="0"
-				ForcedIncludeFiles="vrj/vrjConfig.h"/>
+				CompileAs="2"
+				DisableSpecificWarnings="4244;4251;4275;4290"/>
 			<Tool
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/MACHINE:I386"
-				AdditionalDependencies="vrj.lib vrj_pf.lib sonix.lib gadget.lib jccl.lib vpr.lib libnspr4.lib libplc4.lib libpf.lib libpfdu-util.lib libpfui.lib comctl32.lib ws2_32.lib opengl32.lib glu32.lib"
-				OutputFile=".\Release/pfConfigNav.exe"
+				AdditionalDependencies="vrj.lib vrj_pf.lib sonix.lib gadget.lib jccl.lib vpr.lib libnspr4.lib libplc4.lib libpf.lib libpfdu-util.lib libpfui.lib comctl32.lib ws2_32.lib opengl32.lib glu32.lib $(NOINHERIT)"
+				OutputFile="$(OutDir)/pfConfigNav.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
-				AdditionalLibraryDirectories="&quot;$(NSPR_ROOT)/lib&quot;;&quot;$(VJ_BASE_DIR)/lib/opt&quot;;&quot;C:/Program Files/Silicon Graphics/OpenGL Performer/Lib&quot;"
-				ProgramDatabaseFile=".\Release/pfConfigNav.pdb"
-				SubSystem="1"/>
+				AdditionalLibraryDirectories="&quot;$(VJ_DEPS_DIR)\lib&quot;;&quot;$(NSPR_ROOT)\lib&quot;;&quot;$(VJ_BASE_DIR)\lib&quot;;&quot;$(PFROOT)\lib&quot;"
+				ProgramDatabaseFile="$(OutDir)/pfConfigNav.pdb"
+				SubSystem="1"
+				TargetMachine="1"/>
 			<Tool
 				Name="VCMIDLTool"
-				TypeLibraryName=".\Release/pfConfigNav.tlb"/>
+				TypeLibraryName="$(OutDir)/pfConfigNav.tlb"/>
 			<Tool
 				Name="VCPostBuildEventTool"/>
 			<Tool
