@@ -21,6 +21,8 @@
 //  vjDigital adds one new pure virtual function, GetDigitalData for
 //  retreiving the digital data, similar to the addition for vjPosition and
 //  vjAnalog.
+//
+// See also: vjInput
 //-----------------------------------------------------------------------------
 class vjDigital : virtual public vjInput
 {
@@ -44,17 +46,9 @@ public:
    virtual int Sample() = 0;
    virtual void UpdateData() = 0;
 
-   /* vjInput virtual functions
-    *
-    *  virtual functions that inherited members should
-    *  override but are not required to
-    */
+   //: Get the name of the digital device
    char* GetDeviceName() { return "vjDigital";}
 
-   /* New pure virtual functions
-    *
-    *  pure virtual functions introduced by vjDigital
-    */
    //: Get the digital data for the given devNum
    virtual int GetDigitalData(int devNum = 0) = 0;
 };
