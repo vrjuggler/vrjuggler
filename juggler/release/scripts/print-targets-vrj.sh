@@ -1,5 +1,14 @@
 #!/bin/sh
 
+# -----------------------------------------------------------------------------
+# $Id$
+# -----------------------------------------------------------------------------
+# Print out the target information for the build system.  These come directly
+# from the comments at the top of the top-level Makefile.in.  Doing this in a
+# shell script is a few orders of magnitude faster than echoing each line
+# individually in the Makefile.
+# -----------------------------------------------------------------------------
+
 cat <<EOF
 
 Build targets are:
