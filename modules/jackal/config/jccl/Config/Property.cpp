@@ -41,13 +41,16 @@
 #include <Config/vjParseUtil.h>
 #include <Kernel/vjDebug.h>
 
-vjProperty::vjProperty (vjPropertyDesc *pd) {
+vjProperty::vjProperty (vjPropertyDesc *pd): value() {
     //cout << "vjProperty(): desc is '" << flush << *pd << "'" << endl;
     int j;
     vjVarValue *v;
 
     validation = 1;
+
+    pd->assertValid();
     description = pd;
+
     num = pd->getNumAllowed();
     type = pd->getType();
     embeddesc = NULL;
@@ -94,11 +97,10 @@ vjVarValue *vjProperty::createVarValue (int i) {
 }
 
 
-
 vjProperty::~vjProperty () {
+    /* XXX
     unsigned int i;
 
-    /* XXX
     for (i = 0; i < value.size(); i++)
         delete (value)[i];
         */
@@ -108,6 +110,7 @@ vjProperty::~vjProperty () {
 
 
 vjProperty::vjProperty (const vjProperty& p):value() {
+    description = NULL;
     validation = 1;
     *this = p;
 }
@@ -117,6 +120,12 @@ vjProperty::vjProperty (const vjProperty& p):value() {
 #ifdef VJ_DEBUG
 void vjProperty::assertValid () const {
     assert (validation == 1 && "Trying to use deleted vjProperty");
+
+    for (unsigned int i = 0; i < value.size(); i++)
+        value[i]->assertValid();
+
+    if (description)
+        description->assertValid();
 }
 #endif
 
@@ -124,6 +133,7 @@ void vjProperty::assertValid () const {
 
 vjProperty& vjProperty::operator= (const vjProperty& p) {
     assertValid();
+    p.assertValid();
 
     unsigned int i;
 
@@ -140,7 +150,6 @@ vjProperty& vjProperty::operator= (const vjProperty& p) {
     for (i = 0; i < value.size(); i++)
         delete (value[i]);
         */
-   // value.erase (value.begin(), value.end());
     value.clear();
 
     for (i = 0; i < p.value.size(); i++) {
@@ -153,6 +162,7 @@ vjProperty& vjProperty::operator= (const vjProperty& p) {
 
 bool vjProperty::operator== (const vjProperty& p) const {
     assertValid();
+    p.assertValid();
 
     if (description != p.description)
         return false;

@@ -117,7 +117,6 @@ void vjChunkDescDB::removeAll () {
         // delete (*i);    XXX:
         i++;
     }
-    //descs.erase(descs.begin(), descs.end());
     descs.clear();
 }
 

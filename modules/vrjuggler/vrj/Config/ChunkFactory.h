@@ -92,20 +92,15 @@ public:
     //+          vjChunkDesc is found, an "empty" vjChunkDesc,
     //+          containing only a Name vjPropertyDesc, is used.
     vjConfigChunk* createChunk (const std::string& desctoken) {
-        vjConfigChunk* ch;
-
-        vjChunkDesc* desc = descdb.getChunkDesc (desctoken);
-        if (desc)
-            ch = new vjConfigChunk (desc);
-        else
-            ch = NULL; //return new vjConfigChunk (nulldesc);
-        return ch;
+        return createChunk (descdb.getChunkDesc (desctoken));
     }
 
     //: Creates a Chunk using the given description
     vjConfigChunk* createChunk (vjChunkDesc* d) {
-        if (d)
+        if (d) {
+            d->assertValid();
             return new vjConfigChunk (d);
+        }
         else
             return 0;
     }
@@ -142,14 +137,13 @@ protected:
    }
 
 private:
-   vjChunkFactory() : nulldesc(NULL)
+   vjChunkFactory()
    {
       setupInitialEnvironment();
    }
 
 private:
     vjChunkDescDB descdb;
-    vjChunkDesc *nulldesc;
 
 vjSingletonHeader(vjChunkFactory);
 /*

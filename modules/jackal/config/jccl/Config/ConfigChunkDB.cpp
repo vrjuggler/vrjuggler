@@ -53,11 +53,8 @@ vjConfigChunkDB::vjConfigChunkDB (): chunks() {
 
 
 vjConfigChunkDB::~vjConfigChunkDB () {
-    // this erase turned out to be a really bad idea, becuase inside of
-    // juggler several dbs can have pointers to the same chunks.  ah.
-    // so if you do want to erase a chunkdb _and_ all the chunks inside
-    // of it, call erase() yourself.
-    //erase();
+    // if ConfigChunkDBs ever start doing memory management of their
+    // ConfigChunks, do it here.
 }
 
 
@@ -73,7 +70,7 @@ vjConfigChunkDB& vjConfigChunkDB::operator = (vjConfigChunkDB& db) {
     unsigned int i;
     //for (i = 0; i < chunks.size(); i++)
     //    delete chunks[i];
-    chunks.erase (chunks.begin(), chunks.end());
+    chunks.clear();
     for (i = 0; i < db.chunks.size(); i++) {
         chunks.push_back (new vjConfigChunk(*(db.chunks[i])));
     }
@@ -168,9 +165,9 @@ std::vector<vjConfigChunk*>* vjConfigChunkDB::getMatching (const std::string& pr
 bool vjConfigChunkDB::erase () {
     /* removes all chunks from self (and frees them)
      */
-    //for (int i = 0; i < chunks.size(); i++)
+    //for (unsigned int i = 0; i < chunks.size(); i++)
     //delete (chunks[i]);
-    chunks.erase (chunks.begin(), chunks.end() );
+    chunks.clear();
     return true;
 }
 
