@@ -160,6 +160,17 @@ public:
     */
    vpr::ReturnStatus unload();
 
+   /**
+    * Returns whether this library has been loaded from local storage.
+    *
+    * @return true is returned if this library has been loaded from local
+    *         storage, false otherwise.
+    */
+   bool isLoaded() const
+   {
+      return mLibrary != NULL;
+   }
+
    //@{
    /**
     * Finds and returns an untyped reference to the specified symbol in this

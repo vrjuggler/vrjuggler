@@ -72,99 +72,127 @@ public:
    }
 };
 
-void LibraryLoaderTest::loadAndInitTestRaw()
+void LibraryLoaderTest::findEntryPointTestRaw()
 {
-   vpr::LibraryLoader loader;
    vpr::ReturnStatus status;
 
    vpr::LibraryPtr dso(new vpr::Library(mModules[0].first));
-   status = loader.loadAndInitDSO(dso, mModules[0].second,
-                                  (bool(*)(void*)) rawCallback);
+   status = vpr::LibraryLoader::findEntryPoint(dso, mModules[0].second,
+                                               (bool(*)(void*)) rawCallback);
    CPPUNIT_ASSERT(status.success());
 }
 
-void LibraryLoaderTest::loadAndInitTestFunctor()
+void LibraryLoaderTest::findEntryPointTestFunctor()
 {
-   vpr::LibraryLoader loader;
    vpr::ReturnStatus status;
 
    LoaderFunctor functor;
    vpr::LibraryPtr dso(new vpr::Library(mModules[1].first));
-   status = loader.loadAndInitDSO(dso, mModules[1].second, functor);
+   status = vpr::LibraryLoader::findEntryPoint(dso, mModules[1].second,
+                                               functor);
    CPPUNIT_ASSERT(status.success());
 }
 
-void LibraryLoaderTest::findAndInitTest()
+void LibraryLoaderTest::findDSOTest()
 {
-   vpr::LibraryLoader loader1, loader2;
-   vpr::ReturnStatus status;
+   vpr::LibraryPtr dso1, dso2;
    std::vector<std::string> path1(1);
 
    path1[0] = std::string(MODULE_DIR);
-   status = loader1.findAndInitDSO("loadermod1", path1, mModules[0].second,
-                                   (bool(*)(void*)) rawCallback);
-   CPPUNIT_ASSERT(status.success());
+   dso1 = vpr::LibraryLoader::findDSO("loadermod1", path1);
+   CPPUNIT_ASSERT(dso1.get() != NULL);
 
    std::vector<fs::path> path2(1);
    path2[0] = fs::path(std::string(MODULE_DIR), fs::native);
-   status = loader2.findAndInitDSO("loadermod1", path2, mModules[0].second,
-                                   (bool(*)(void*)) rawCallback);
+   dso2 = vpr::LibraryLoader::findDSO("loadermod1", path2);
+   CPPUNIT_ASSERT(dso2.get() != NULL);
+}
+
+void LibraryLoaderTest::findDSOAndLookupTest()
+{
+   vpr::ReturnStatus status;
+   vpr::LibraryPtr dso1, dso2;
+   std::vector<std::string> path1(1);
+
+   path1[0] = std::string(MODULE_DIR);
+   status = vpr::LibraryLoader::findDSOAndLookup("loadermod1", path1,
+                                                 mModules[0].second,
+                                                 (bool(*)(void*)) rawCallback,
+                                                 dso1);
    CPPUNIT_ASSERT(status.success());
+   CPPUNIT_ASSERT(dso1.get() != NULL);
+
+   std::vector<fs::path> path2(1);
+   path2[0] = fs::path(std::string(MODULE_DIR), fs::native);
+   status = vpr::LibraryLoader::findDSOAndLookup("loadermod1", path2,
+                                                 mModules[0].second,
+                                                 (bool(*)(void*)) rawCallback,
+                                                 dso2);
+   CPPUNIT_ASSERT(status.success());
+   CPPUNIT_ASSERT(dso2.get() != NULL);
 }
 
 void LibraryLoaderTest::multiLoadTest()
 {
-   vpr::LibraryLoader loader;
    vpr::ReturnStatus status;
 
    vpr::LibraryPtr dso1(new vpr::Library(mModules[0].first));
-   status = loader.loadAndInitDSO(dso1, mModules[0].second,
-                                  (bool(*)(void*)) rawCallback);
+   status = vpr::LibraryLoader::findEntryPoint(dso1, mModules[0].second,
+                                               (bool(*)(void*)) rawCallback);
    CPPUNIT_ASSERT(status.success());
 
    LoaderFunctor functor;
    vpr::LibraryPtr dso2(new vpr::Library(mModules[1].first));
-   status = loader.loadAndInitDSO(dso2, mModules[1].second, functor);
+   status = vpr::LibraryLoader::findEntryPoint(dso2, mModules[1].second,
+                                               functor);
    CPPUNIT_ASSERT(status.success());
 }
 
 void LibraryLoaderTest::loadFailureTest()
 {
-   vpr::LibraryLoader loader;
    vpr::ReturnStatus status;
 
    vpr::Debug::instance()->disableOutput();
       vpr::LibraryPtr dso(new vpr::Library("loadFailureTest"));
-      status = loader.loadAndInitDSO(dso, "notThere",
-                                     (bool(*)(void*)) rawCallback);
+      status = vpr::LibraryLoader::findEntryPoint(dso, "notThere",
+                                                  (bool(*)(void*)) rawCallback);
       CPPUNIT_ASSERT(status.failure());
    vpr::Debug::instance()->enableOutput();
 }
 
 void LibraryLoaderTest::lookupFailureTest()
 {
-   vpr::LibraryLoader loader;
    vpr::ReturnStatus status;
 
    vpr::Debug::instance()->disableOutput();
       vpr::LibraryPtr dso1(new vpr::Library(mModules[0].first));
-      status = loader.loadAndInitDSO(dso1, "lookupFailureTest",
-                                     (bool(*)(void*)) rawCallback);
+      status = vpr::LibraryLoader::findEntryPoint(dso1, "lookupFailureTest",
+                                                  (bool(*)(void*)) rawCallback);
       CPPUNIT_ASSERT(status.failure());
    vpr::Debug::instance()->enableOutput();
 }
 
 void LibraryLoaderTest::findFailureTest()
 {
-   vpr::LibraryLoader loader;
-   vpr::ReturnStatus status;
    std::vector<std::string> path(0);
+   vpr::ReturnStatus status;
+   vpr::LibraryPtr dso1, dso2;
 
+   CPPUNIT_ASSERT(dso1.get() == NULL);
    vpr::Debug::instance()->disableOutput();
-      status = loader.findAndInitDSO("findFailureTest", path, "notThere",
-                                     (bool(*)(void*)) rawCallback);
-      CPPUNIT_ASSERT(status.failure());
+      dso1 = vpr::LibraryLoader::findDSO("findFailureTest", path);
    vpr::Debug::instance()->enableOutput();
+   CPPUNIT_ASSERT(dso1.get() == NULL);
+
+   CPPUNIT_ASSERT(dso2.get() == NULL);
+   vpr::Debug::instance()->disableOutput();
+      status = vpr::LibraryLoader::findDSOAndLookup("findFailureTest", path,
+                                                    "notThere",
+                                                    (bool(*)(void*)) rawCallback,
+                                                    dso2);
+   vpr::Debug::instance()->enableOutput();
+   CPPUNIT_ASSERT(status.failure());
+   CPPUNIT_ASSERT(dso2.get() == NULL);
 }
 
 }
