@@ -486,9 +486,76 @@
       device features that can be manipulated using termios directly. To
       provide cross-platform semantics, however, some termios features are not
       included because there is no corresponding capability with Win32
-      overlapped I/O. Furthermore, any termios settings that relate
-      specifically to modems are not included in the VPR serial port
-      abstraction.</para>
+      overlapped I/O. Furthermore, any termios settings that relate only to
+      modems are not included in the VPR serial port abstraction.</para>
+
+      <section>
+        <title>Interface Overview</title>
+
+        <para>In termios, serial ports are configured by setting or clearing a
+        wide variety of bits in various data structures. Based on this, the
+        VPR serial port API includes methods for enabling a feature, disabling
+        a feature, and testing the current status of a feature. For example,
+        the following methods deal with the hardware flow control bit:</para>
+
+        <itemizedlist>
+          <listitem>
+            <para><methodname>enableHardwareFlowControl()</methodname>:
+            Enables hardware flow control (if it was not already enabled)</para>
+          </listitem>
+
+          <listitem>
+            <para><methodname>disableHardwareFlowControl()</methodname>:
+            Disables hardware flow control (if it was not already disabled)</para>
+          </listitem>
+
+          <listitem>
+            <para><methodname>getHardwareFlowControlState()</methodname>:
+            Returns the current state of hardware flow control (true for on,
+            false for off)</para>
+          </listitem>
+        </itemizedlist>
+
+        <para>When changing the enabled state of a serial port feature, the
+        change may not take effect immediately. This is determined by the
+        update action setting, which is manipulated by
+        <methodname>vpr::SerialPort::setUpdateAction()</methodname>. There are
+        three possible states (corresponding to the enumerated type
+        <type>vpr::SerialTypes::UpdateActionOption</type>):</para>
+
+        <orderedlist>
+          <listitem>
+            <para>Now: Perform the change immediately</para>
+          </listitem>
+
+          <listitem>
+            <para>Drain: Perform the change after all output is transmitted</para>
+          </listitem>
+
+          <listitem>
+            <para>Flush: Perform the change after all output is transmitted
+            and discard all unread input</para>
+          </listitem>
+        </orderedlist>
+
+        <para>The right setting to use may depend on the specific hardware or
+        on the desired behavior.</para>
+      </section>
+
+      <section>
+        <title>Abstraction Details</title>
+
+        <para>The serial port abstraction is handled differently than the
+        other I/O abstraction components. We wrap two serial port interfaces:
+        termios and Win32 overlapped I/O<footnote><para>This is the only
+        Win32-native code in VPR. All other Win32 interfaces are handled by
+        NSPR.</para></footnote>. Because NSPR does not provide a serial port
+        layer, we have to allow the termios to be used with NSPR on UNIX-based
+        platforms. While this makes the implementation a little clumsy and the
+        build system a little more complicated, it has little if any impact on
+        users. The point of the abstraction is to hide the low-level details
+        to provide a consistent interface across platforms.</para>
+      </section>
     </chapter>
 
     <chapter id="chapter.data.marshaling">
@@ -2098,7 +2165,48 @@ cv.release();</programlisting>
     <chapter id="chapter.singleton">
       <title>Singletons</title>
 
-      <para></para>
+      <para>A <firstterm>singleton</firstterm> is a common design pattern
+      <xref linkend="ref.design.patterns" />. In VPR, the class
+      <classname>vpr::Singleton&#60;T&#62;<indexterm><primary>classes</primary><secondary>vpr::Singleton&#60;T&#62;</secondary></indexterm></classname>
+      provides a template-based implementation of this pattern. An example of
+      its use is as follows:</para>
+
+      <programlisting linenumbering="numbered">class MySingleton : public vpr::Singleton&#60;MySingleton&#62;
+{
+public:
+   // Public operations ...
+   void doSomething()
+   {
+      // Do something ...
+   }
+
+private:
+   // Required so that vpr::Singleton can instantiate this class.
+   friend class vpr::Singleton&#60;MySingleton&#62;;
+
+   // Prevent instantiation by user code.
+   MySingleton()
+   {
+      // Some constructor actions ...
+   }
+
+   // Prevent copying.
+   MySingleton(const MySingleton&#38; o)
+   {
+      ;
+   }
+
+   MySingleton&#38; operator=(const MySingleton&#38; o)
+   {
+      ;
+   }
+};</programlisting>
+
+      <para>Getting a reference to the singleton (and calling the
+      <methodname>doSomething()</methodname> method) is then done using the
+      following syntax:</para>
+
+      <programlisting>MySingleton::instance()-&#62;doSomething();</programlisting>
     </chapter>
 
     <chapter id="chapter.factory">
