@@ -56,7 +56,7 @@
 # install-opt     - Install the optimized, static version of the libraries.
 # install-dso     - Install the dynamic shared object version of the libraries.
 # install-headers - Install only the header files.
-# install-sample  - Install only the sample applications.
+# install-samples - Install only the sample applications.
 # install-test    - Install only the test code.
 # install-tools   - Install only the user tools code.
 # install-data    - Install only the Data directory.
@@ -733,7 +733,7 @@ _install_libs:
 # Do everything needed after installing the library binaries.
 _install_post_libs:
 	@${MAKE} install-headers
-	@${MAKE} install-sample
+	@${MAKE} install-samples
 	@${MAKE} install-test
 	@${MAKE} install-tools
 	@${MAKE} install-data
@@ -912,7 +912,7 @@ install-headers:
           ${topdir}/vjDefines.h ${includedir}
 
 # Install the sample applications.
-install-sample:
+install-samples:
 	@echo "------------------------------------------------"
 	@echo "Installing sample applications"
 	@echo "------------------------------------------------"
