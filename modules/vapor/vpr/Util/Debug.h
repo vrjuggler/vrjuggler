@@ -397,7 +397,7 @@ namespace vpr
       {
          if(mIndent)
          {
-            if(mExitText==std::string(""))
+            if(mExitText == std::string(""))
             {
                vprDEBUG_DECREMENT_INDENT();
             }
@@ -408,11 +408,7 @@ namespace vpr
          }
          else
          {
-            if(mExitText==std::string(""))
-            {
-               vprDEBUG_DECREMENT_INDENT();
-            }
-            else
+            if(mExitText != std::string(""))
             {
                vprDEBUG(mCat, mLevel) << mExitText << vprDEBUG_FLUSH;
             }
