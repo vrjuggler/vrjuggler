@@ -131,15 +131,7 @@ case $target_os in
         AC_DEFINE(_BSD_TYPES,)
         ;;
     # HP PA-RISC machine running HP-UX 10.20.
-    hpux10.20)
-        AC_DEFINE(JCCL_HPUX_VERSION, 10)
-        AC_DEFINE(_INCLUDE_TERMIO,)
-        AC_DEFINE(_CMA_NOWRAPPERS_,)
-        ;;
-    # HP PA-RISC machine running HP-UX 11.x.
-    hpux11*)
-        AC_DEFINE(JCCL_HPUX_VERSION, 11)
-        AC_DEFINE(_INCLUDE_TERMIO,)
+    hpux10.20|hpux11*)
         AC_DEFINE(_CMA_NOWRAPPERS_,)
         ;;
     # i386-class machine running Windows {98,NT} with Cygnus GNU-Win32.
