@@ -20,7 +20,7 @@ void SerializableTest::testReaderWriter()
    const vpr::Uint8 data_uint8(0xAB);
    const vpr::Uint16 data_uint16(0xBEEF);
    const vpr::Uint32 data_uint32(0xDEADBEEF);
-   const vpr::Uint64 data_uint64(0xCAFEABCDBEEF1221);
+   const vpr::Uint64 data_uint64(0xCAFEABCDBEEF1221ll);
 
    const vpr::Int8 data_int8(-7);
    const vpr::Int16 data_int16(-298);
@@ -86,6 +86,9 @@ void SerializableTest::testReaderWriter()
    CPPUNIT_ASSERT(data_uint16 == read_uint16);
    CPPUNIT_ASSERT(data_uint32 == read_uint32);
    CPPUNIT_ASSERT(data_uint64 == read_uint64);
+   std::cout << "\ndata_int8: " << (int) data_int8
+             << "\nread_int8: " << (int) read_int8
+             << std::endl;
    CPPUNIT_ASSERT(data_int8 == read_int8);
    CPPUNIT_ASSERT(data_int16 == read_int16);
    CPPUNIT_ASSERT(data_int32 == read_int32);
@@ -105,7 +108,7 @@ void SerializableTest::testDataOffsets()
    const vpr::Uint8 data_uint8(0xAB);
    const vpr::Uint16 data_uint16(0xBEEF);
    const vpr::Uint32 data_uint32(0xDEADBEEF);
-   const vpr::Uint64 data_uint64(0xCAFEABCDBEEF1221);
+   const vpr::Uint64 data_uint64(0xCAFEABCDBEEF1221ll);
    const float       data_float(1221.75f);
    const double      data_double(1.2211975);
    const std::string data_string("test string");
@@ -182,7 +185,7 @@ void SerializableTest::testReadWriteSimple()
    obj1.charVal = 0xAB;
    obj1.shortVal = 0xCAFE;
    obj1.longVal = 0xDEADBEEF;
-   obj1.longlongVal = 0xFACEBEEFCAFEDEAD;
+   obj1.longlongVal = 0xFACEBEEFCAFEDEADll;
 
    obj1.scharVal = -10;
    obj1.sshortVal = -233;
@@ -215,14 +218,14 @@ void SerializableTest::testReadWriteNested()
    obj1.mObj1.charVal = 0xAB;
    obj1.mObj1.shortVal = 0xCAFE;
    obj1.mObj1.longVal = 0xDEADBEEF;
-   obj1.mObj1.longlongVal = 0xFACEBEEFCAFEDEAD;
+   obj1.mObj1.longlongVal = 0xFACEBEEFCAFEDEADll;
    obj1.mObj1.floatVal = 1221.1975f;
    obj1.mObj1.doubleVal = 25.000034;
 
    obj1.mObj2.charVal = 0xEF;
    obj1.mObj2.shortVal = 0xDEAD;
    obj1.mObj2.longVal = 0xBEEFFACE;
-   obj1.mObj2.longlongVal = 0xFACEBEEFCAFEDEAD;
+   obj1.mObj2.longlongVal = 0xFACEBEEFCAFEDEADll;
    obj1.mObj2.floatVal = 1321.1975f;
    obj1.mObj2.doubleVal = 25.000034;
 
