@@ -66,6 +66,15 @@ public:
     ~vjProperty ();
 
 
+
+    vjProperty (vjProperty& p);
+
+
+
+    vjProperty& operator= (vjProperty& p);
+
+
+
     //: Returns actual current number of values in self
     //! RETURNS: n - size of value vector.
     int getNum ();
