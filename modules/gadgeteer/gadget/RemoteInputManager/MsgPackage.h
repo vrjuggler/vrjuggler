@@ -56,12 +56,11 @@ namespace gadget
       vpr::Uint16 mOpcode;
       vpr::Uint16 mSenderId;
       vpr::Uint16 mReceiverId;
-      std::string mDataString;  // can hold the name of the device being requested
+      std::string mDeviceName;
       std::string mBaseType;
 
    public:
       MsgPackage();
-      void sendString(std::string str);
      /**
       * Send contents of current ObjectWriter to the specified socket and 
       * clear the ObjectWriter.
@@ -73,6 +72,18 @@ namespace gadget
       *                    data over.
       */
       void sendAndClear(vpr::SocketStream* sock_stream);
+     
+     /**
+      * Send contents of current ObjectWriter to the specified socket and 
+      * clear the ObjectWriter.
+      * 
+      * @pre   The ObjectWriter contains the packet(s) you want to send.
+      * @post  An empty ObjectWriter and the packets sent over the network.
+      * 
+      * @param sock_stream The network socket that you want to send the 
+      *                    data over.
+      */
+      void sendAndClearDeviceData(vpr::SocketStream* sock_stream, NetDevice* net_device);
 
       /**
        * Returns the sender's unique ID
@@ -93,9 +104,9 @@ namespace gadget
       /**
        * Returns a string mDataString which is used to store the device name.
        */
-      const std::string& getDataString()
+      const std::string& getDeviceName()
       {
-         return mDataString;
+         return mDeviceName;
       }
       
      /**
