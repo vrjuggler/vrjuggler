@@ -366,8 +366,8 @@ class DisplayPlacerModel
    public Dimension getSizeOf(int idx)
    {
       ConfigChunk window_chunk = (ConfigChunk)getElement(idx);
-      int width = window_chunk.getProperty("size", 0).getInt();
-      int height = window_chunk.getProperty("size", 1).getInt();
+      int width = ((Integer)window_chunk.getProperty("size", 0)).intValue();
+      int height = ((Integer)window_chunk.getProperty("size", 1)).intValue();
       return new Dimension(width, height);
    }
 
@@ -376,18 +376,18 @@ class DisplayPlacerModel
       ConfigChunk window_chunk = (ConfigChunk)getElement(idx);
       System.out.println("--- Chunk "+window_chunk.getName()+" new size=("+size.width+", "+size.height+")");
       System.out.println("\thashcode="+window_chunk.hashCode());
-      window_chunk.setProperty("size", 0, new VarValue(size.width));
-      window_chunk.setProperty("size", 1, new VarValue(size.height));
+      window_chunk.setProperty("size", 0, new Integer(size.width));
+      window_chunk.setProperty("size", 1, new Integer(size.height));
    }
 
    public Point getLocationOf(int idx)
    {
       ConfigChunk window_chunk = (ConfigChunk)getElement(idx);
-      int x = window_chunk.getProperty("origin", 0).getInt();
-      int y = window_chunk.getProperty("origin", 1).getInt();
+      int x = ((Integer)window_chunk.getProperty("origin", 0)).intValue();
+      int y = ((Integer)window_chunk.getProperty("origin", 1)).intValue();
 
       // Convert y from Juggler coords (bottom left is origin)
-      int height = window_chunk.getProperty("size", 1).getInt();
+      int height = ((Integer)window_chunk.getProperty("size", 1)).intValue();
       y = mDesktopSize.height - y - height;
       return new Point(x, y);
    }
@@ -397,11 +397,11 @@ class DisplayPlacerModel
       ConfigChunk window_chunk = (ConfigChunk)getElement(idx);
 
       // Convert y to Juggler coords (bottom left is origin)
-      int height = window_chunk.getProperty("size", 1).getInt();
+      int height = ((Integer)window_chunk.getProperty("size", 1)).intValue();
       int y = mDesktopSize.height - pt.y - height;
       
-      window_chunk.setProperty("origin", 0, new VarValue(pt.x));
-      window_chunk.setProperty("origin", 1, new VarValue(y));
+      window_chunk.setProperty("origin", 0, new Integer(pt.x));
+      window_chunk.setProperty("origin", 1, new Integer(y));
    }
 
    public void moveToFront(int idx)

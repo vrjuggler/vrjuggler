@@ -31,7 +31,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 package org.vrjuggler.jccl.config;
 
-/** Identification of the different types of values that VarValues can have.
+/** Identification of the different types of values that properties can have.
  *  Each possible ValType is represented by a static public member of this
  *  class.  Because these instances are final and no other ValTypes can be
  *  created, it is safe to do direct object comparisons.  ie vt1 == vt2 can

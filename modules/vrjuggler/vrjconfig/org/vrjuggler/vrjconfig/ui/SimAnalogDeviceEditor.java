@@ -144,7 +144,7 @@ public class SimAnalogDeviceEditor
     */
    protected String getKeyModPairText(int modKey, int key)
    {
-      ConfigChunk key_mod_pair_chunk = device.getProperty("keyPairsInc", 0).getEmbeddedChunk();
+      ConfigChunk key_mod_pair_chunk = (ConfigChunk)device.getProperty("keyPairsInc", 0);
       String mod_str = getModString(key_mod_pair_chunk, modKey);
       String key_str = getKeyString(key_mod_pair_chunk, key);
 
@@ -173,7 +173,7 @@ public class SimAnalogDeviceEditor
       for (Iterator itr=enums.iterator(); itr.hasNext(); )
       {
          DescEnum de = (DescEnum)itr.next();
-         if (de.getValue().getInt() == mod)
+         if (de.getValue().equals(new Integer(mod)))
          {
             return de.getName();
          }
@@ -187,7 +187,7 @@ public class SimAnalogDeviceEditor
       for (Iterator itr=enums.iterator(); itr.hasNext(); )
       {
          DescEnum de = (DescEnum)itr.next();
-         if (de.getValue().getInt() == key)
+         if (de.getValue().equals(new Integer(key)))
          {
             return de.getName();
          }
@@ -299,11 +299,11 @@ public class SimAnalogDeviceEditor
             {
                if (row == 0)
                {
-                  return chunk.getProperty("keyPairsInc", 0).getEmbeddedChunk();
+                  return chunk.getProperty("keyPairsInc", 0);
                }
                else
                {
-                  return chunk.getProperty("keyPairsDec", 0).getEmbeddedChunk();
+                  return chunk.getProperty("keyPairsDec", 0);
                }
             }
          }
@@ -312,14 +312,13 @@ public class SimAnalogDeviceEditor
 
       public void setValueAt(Object value, int row, int col)
       {
-         VarValue vv = new VarValue((ConfigChunk)value);
          if (row == 0)
          {
-            chunk.setProperty("keyPairsInc", 0, vv);
+            chunk.setProperty("keyPairsInc", 0, value);
          }
          else
          {
-            chunk.setProperty("keyPairsDec", 0, vv);
+            chunk.setProperty("keyPairsDec", 0, value);
          }
          fireTableCellUpdated(row, col);
       }
@@ -350,8 +349,8 @@ public class SimAnalogDeviceEditor
             if (chunk.getDesc().getToken().equals("KeyModPair"))
             {
                String text = getKeyModPairText(
-                                 chunk.getProperty("modKey").getInt(),
-                                 chunk.getProperty("key").getInt());
+                                 ((Integer)chunk.getProperty("modKey")).intValue(),
+                                 ((Integer)chunk.getProperty("key")).intValue());
                setText(text);
             }
          }
@@ -384,9 +383,9 @@ public class SimAnalogDeviceEditor
       {
          // Update the chunk with the new keys
          keyChunk.setProperty("modKey", 0,
-                              new VarValue(getJavaToVRJMod(catcher.getLastModKey())));
+                              getJavaToVRJMod(catcher.getLastModKey()));
          keyChunk.setProperty("key", 0,
-                              new VarValue(getJavaToVRJKey(catcher.getLastKey())));
+                              getJavaToVRJKey(catcher.getLastKey()));
          return keyChunk;
       }
 
@@ -442,8 +441,8 @@ public class SimAnalogDeviceEditor
           */
          private void textChanged()
          {
-            String text = getKeyModPairText(getJavaToVRJMod(lastModKey),
-                                            getJavaToVRJKey(lastKey));
+            String text = getKeyModPairText(getJavaToVRJMod(lastModKey).intValue(),
+                                            getJavaToVRJKey(lastKey).intValue());
             setText(text);
             updateUI();
          }
@@ -455,122 +454,129 @@ public class SimAnalogDeviceEditor
       /**
        * Converts the given java key code to a VRJ key code for a modifier key.
        */
-      private int getJavaToVRJMod(int javaKey)
+      private Integer getJavaToVRJMod(int javaKey)
       {
          PropertyDesc desc = keyChunk.getPropertyDesc("modKey");
+         Object key;
 
          switch (javaKey)
          {
          case KeyEvent.VK_ALT:
-            return desc.getEnumValue("ALT").getInt();
+            key = desc.getEnumValue("ALT");
          case KeyEvent.VK_SHIFT:
-            return desc.getEnumValue("SHIFT").getInt();
+            key = desc.getEnumValue("SHIFT");
          case KeyEvent.VK_CONTROL:
-            return desc.getEnumValue("CTRL").getInt();
+            key = desc.getEnumValue("CTRL");
          default:
-            return desc.getEnumValue("NONE").getInt();
+            key = desc.getEnumValue("NONE");
          }
+
+         return (Integer)key;
       }
 
       /**
        * Converts the given java key code to a VRJ key code.
        */
-      private int getJavaToVRJKey(int javaKey)
+      private Integer getJavaToVRJKey(int javaKey)
       {
          PropertyDesc desc = keyChunk.getPropertyDesc("key");
+         Object key;
+
          switch (javaKey)
          {
          case KeyEvent.VK_UP:
-            return desc.getEnumValue("KEY_UP").getInt();
+            key = desc.getEnumValue("KEY_UP");
          case KeyEvent.VK_DOWN:
-            return desc.getEnumValue("KEY_DOWN").getInt();
+            key = desc.getEnumValue("KEY_DOWN");
          case KeyEvent.VK_LEFT:
-            return desc.getEnumValue("KEY_LEFT").getInt();
+            key = desc.getEnumValue("KEY_LEFT");
          case KeyEvent.VK_RIGHT:
-            return desc.getEnumValue("KEY_RIGHT").getInt();
+            key = desc.getEnumValue("KEY_RIGHT");
          case KeyEvent.VK_CONTROL:
-            return desc.getEnumValue("KEY_CTRL").getInt();
+            key = desc.getEnumValue("KEY_CTRL");
          case KeyEvent.VK_SHIFT:
-            return desc.getEnumValue("KEY_SHIFT").getInt();
+            key = desc.getEnumValue("KEY_SHIFT");
          case KeyEvent.VK_ALT:
-            return desc.getEnumValue("KEY_ALT").getInt();
+            key = desc.getEnumValue("KEY_ALT");
          case KeyEvent.VK_1:
-            return desc.getEnumValue("KEY_1").getInt();
+            key = desc.getEnumValue("KEY_1");
          case KeyEvent.VK_2:
-            return desc.getEnumValue("KEY_2").getInt();
+            key = desc.getEnumValue("KEY_2");
          case KeyEvent.VK_3:
-            return desc.getEnumValue("KEY_3").getInt();
+            key = desc.getEnumValue("KEY_3");
          case KeyEvent.VK_4:
-            return desc.getEnumValue("KEY_4").getInt();
+            key = desc.getEnumValue("KEY_4");
          case KeyEvent.VK_5:
-            return desc.getEnumValue("KEY_5").getInt();
+            key = desc.getEnumValue("KEY_5");
          case KeyEvent.VK_6:
-            return desc.getEnumValue("KEY_6").getInt();
+            key = desc.getEnumValue("KEY_6");
          case KeyEvent.VK_7:
-            return desc.getEnumValue("KEY_7").getInt();
+            key = desc.getEnumValue("KEY_7");
          case KeyEvent.VK_8:
-            return desc.getEnumValue("KEY_8").getInt();
+            key = desc.getEnumValue("KEY_8");
          case KeyEvent.VK_9:
-            return desc.getEnumValue("KEY_9").getInt();
+            key = desc.getEnumValue("KEY_9");
          case KeyEvent.VK_0:
-            return desc.getEnumValue("KEY_0").getInt();
+            key = desc.getEnumValue("KEY_0");
          case KeyEvent.VK_A:
-            return desc.getEnumValue("KEY_A").getInt();
+            key = desc.getEnumValue("KEY_A");
          case KeyEvent.VK_B:
-            return desc.getEnumValue("KEY_B").getInt();
+            key = desc.getEnumValue("KEY_B");
          case KeyEvent.VK_C:
-            return desc.getEnumValue("KEY_C").getInt();
+            key = desc.getEnumValue("KEY_C");
          case KeyEvent.VK_D:
-            return desc.getEnumValue("KEY_D").getInt();
+            key = desc.getEnumValue("KEY_D");
          case KeyEvent.VK_E:
-            return desc.getEnumValue("KEY_E").getInt();
+            key = desc.getEnumValue("KEY_E");
          case KeyEvent.VK_F:
-            return desc.getEnumValue("KEY_F").getInt();
+            key = desc.getEnumValue("KEY_F");
          case KeyEvent.VK_G:
-            return desc.getEnumValue("KEY_G").getInt();
+            key = desc.getEnumValue("KEY_G");
          case KeyEvent.VK_H:
-            return desc.getEnumValue("KEY_H").getInt();
+            key = desc.getEnumValue("KEY_H");
          case KeyEvent.VK_I:
-            return desc.getEnumValue("KEY_I").getInt();
+            key = desc.getEnumValue("KEY_I");
          case KeyEvent.VK_J:
-            return desc.getEnumValue("KEY_K").getInt();
+            key = desc.getEnumValue("KEY_K");
          case KeyEvent.VK_K:
-            return desc.getEnumValue("KEY_J").getInt();
+            key = desc.getEnumValue("KEY_J");
          case KeyEvent.VK_L:
-            return desc.getEnumValue("KEY_L").getInt();
+            key = desc.getEnumValue("KEY_L");
          case KeyEvent.VK_M:
-            return desc.getEnumValue("KEY_M").getInt();
+            key = desc.getEnumValue("KEY_M");
          case KeyEvent.VK_N:
-            return desc.getEnumValue("KEY_N").getInt();
+            key = desc.getEnumValue("KEY_N");
          case KeyEvent.VK_O:
-            return desc.getEnumValue("KEY_O").getInt();
+            key = desc.getEnumValue("KEY_O");
          case KeyEvent.VK_P:
-            return desc.getEnumValue("KEY_P").getInt();
+            key = desc.getEnumValue("KEY_P");
          case KeyEvent.VK_Q:
-            return desc.getEnumValue("KEY_Q").getInt();
+            key = desc.getEnumValue("KEY_Q");
          case KeyEvent.VK_R:
-            return desc.getEnumValue("KEY_R").getInt();
+            key = desc.getEnumValue("KEY_R");
          case KeyEvent.VK_S:
-            return desc.getEnumValue("KEY_S").getInt();
+            key = desc.getEnumValue("KEY_S");
          case KeyEvent.VK_T:
-            return desc.getEnumValue("KEY_T").getInt();
+            key = desc.getEnumValue("KEY_T");
          case KeyEvent.VK_U:
-            return desc.getEnumValue("KEY_U").getInt();
+            key = desc.getEnumValue("KEY_U");
          case KeyEvent.VK_V:
-            return desc.getEnumValue("KEY_V").getInt();
+            key = desc.getEnumValue("KEY_V");
          case KeyEvent.VK_W:
-            return desc.getEnumValue("KEY_W").getInt();
+            key = desc.getEnumValue("KEY_W");
          case KeyEvent.VK_X:
-            return desc.getEnumValue("KEY_X").getInt();
+            key = desc.getEnumValue("KEY_X");
          case KeyEvent.VK_Y:
-            return desc.getEnumValue("KEY_Y").getInt();
+            key = desc.getEnumValue("KEY_Y");
          case KeyEvent.VK_Z:
-            return desc.getEnumValue("KEY_Z").getInt();
+            key = desc.getEnumValue("KEY_Z");
          case KeyEvent.VK_ESCAPE:
-            return desc.getEnumValue("KEY_ESC").getInt();
+            key = desc.getEnumValue("KEY_ESC");
          default:
-            return desc.getEnumValue("KEY_NONE").getInt();
+            key = desc.getEnumValue("KEY_NONE");
          }
+
+         return (Integer)key;
       }
 
       private ConfigChunk keyChunk;
