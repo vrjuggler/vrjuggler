@@ -66,7 +66,7 @@ vjConnect::vjConnect(vjSocket* s, const std::string& _name,
 	ch->setProperty ("filename", filename);
 	ch->setProperty ("Enabled", true);
 	db->addChunk(ch);
-	vjKernel::instance()->configAdd(db);
+	vjKernel::instance()->configAddDB(db);
     }
 }
 
@@ -366,7 +366,7 @@ bool vjConnect::readCommand(istream& fin) {
 	    //    cachedDescdb->removeAll();
 	    //fin >> *cachedDescdb;
 	}
-    
+
     else if (!strcasecmp (s, "chunks"))
 	{
 	    /* message contains one or more chunks.  If the
@@ -378,16 +378,16 @@ bool vjConnect::readCommand(istream& fin) {
 	    //if (!strcasecmp (s, "all"))
 	    //	chunkdb->removeAll()
 	    vjDEBUG(vjDBG_ENV_MGR,1) << "vjConnect:: Read: chunks: Started\n" << vjDEBUG_FLUSH;
-	    
+	
 	    vjConfigChunkDB* newchunkdb = new vjConfigChunkDB;
 	    fin >> *newchunkdb;
 	    vjDEBUG(vjDBG_ENV_MGR,5) << *newchunkdb << endl << vjDEBUG_FLUSH;
 	    vjDEBUG(vjDBG_ENV_MGR,3) << "vjConnect:: Read: chunks: Completed\n" << vjDEBUG_FLUSH;
 	    // ALLEN: PUT A FUNCTION HERE FOR THE KERNEL TO LOOK AT NEWCHUNKDB
-	    vjKernel::instance()->configAdd(newchunkdb);      // Add new chunks
+	    vjKernel::instance()->configAddDB(newchunkdb);      // Add new chunks
 	    vjDEBUG(vjDBG_ENV_MGR,3) << "vjConnect: Kernel has added the new chunks\n" << vjDEBUG_FLUSH;
 	}
-    
+
     else if (!strcasecmp (s, "remove"))
 	{
 	    s = strtok (NULL, " \t\n");
@@ -403,16 +403,16 @@ bool vjConnect::readCommand(istream& fin) {
 	    else if (!strcasecmp (s, "chunks"))
 		{
 		    vjConfigChunkDB* remove_chunk_db = new vjConfigChunkDB();
-		    
+		
 		    vjDEBUG(vjDBG_ENV_MGR,5) << "vjConnect: Remove: chunks: Starting...\n"  << vjDEBUG_FLUSH;
-		    
+		
 		    fin >> *remove_chunk_db;       // Read in the chunks to remove
-		    
+		
 		    vjDEBUG(vjDBG_ENV_MGR,5) << *remove_chunk_db << endl << vjDEBUG_FLUSH;
-		    
+		
 		    // Tell kernel to remove the chunks
-		    
-		    vjKernel::instance()->configRemove(remove_chunk_db);
+		
+		    vjKernel::instance()->configRemoveDB(remove_chunk_db);
 		    vjDEBUG(vjDBG_ENV_MGR,3) << "vjConnect: Kernel has removed the chunks\n" << vjDEBUG_FLUSH;
 		}
 	    else
