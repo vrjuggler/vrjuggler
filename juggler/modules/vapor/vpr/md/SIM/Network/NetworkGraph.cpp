@@ -300,11 +300,10 @@ NetworkGraph::VertexListPtr NetworkGraph::getShortestPath (const NetworkGraph::n
 NetworkGraph::VertexListPtr NetworkGraph::reversePath (NetworkGraph::VertexListPtr path)
 {
    VertexListPtr new_path(new NetworkGraph::VertexList(path->size()));
-   NetworkGraph::VertexList::reverse_iterator i;
 
-   for ( i = path->rbegin(); i != path->rend(); i++ )
+   for ( vpr::Uint32 i = path->size(), j = 0; i > 0; i--, j++ )
    {
-      new_path->push_back(*i);
+      (*new_path)[j] = (*path)[i - 1];
    }
 
    return new_path;
