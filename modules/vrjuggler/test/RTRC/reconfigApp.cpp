@@ -381,7 +381,7 @@ bool reconfigApp::addElementFile( std::string filename )
 
    if (mNewCfg->load( std::string( filename )))
    {
-      jccl::ConfigManager::instance()->addPendingAdds( mNewCfg );
+      jccl::ConfigManager::instance()->addConfigurationAdditions(mNewCfg);
       return true;
    }
    else
@@ -402,7 +402,7 @@ bool reconfigApp::removeElementFile( std::string filename )
 
    if (mNewCfg->load( std::string( filename )))
    {
-      jccl::ConfigManager::instance()->addPendingRemoves( mNewCfg );
+      jccl::ConfigManager::instance()->addConfigurationRemovals(mNewCfg);
       return true;
    }
    else
@@ -436,7 +436,7 @@ bool reconfigApp::removeRecentConfiguration()
 {
    if (mNewCfg != NULL)
    {
-      jccl::ConfigManager::instance()->addPendingRemoves( mNewCfg );
+      jccl::ConfigManager::instance()->addConfigurationRemovals(mNewCfg);
       return true;
    }
    else
