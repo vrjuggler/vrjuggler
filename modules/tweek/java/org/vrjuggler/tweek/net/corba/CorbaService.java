@@ -110,7 +110,7 @@ public class CorbaService
       }
       catch (UserException user_ex)
       {
-         user_ex.getMessage();
+         System.err.println(user_ex.getMessage());
          user_ex.printStackTrace();
       }
    }
@@ -165,28 +165,32 @@ public class CorbaService
    public List getSubjectManagerList()
    {
       ArrayList subj_mgrs = new ArrayList();
-      int data_size = 100;
 
-      BindingListHolder     list_holder = new BindingListHolder();
-      BindingIteratorHolder iter_holder = new BindingIteratorHolder();
-
-      // Get the list of objects (of any type) bound in localContext.
-      localContext.list(data_size, list_holder, iter_holder);
-
-      // Using the returned list of objects, populate subj_mgrs with any
-      // objects that implement the tweek.SubjectManager interface.
-      addSubjectManagers(list_holder.value, subj_mgrs);
-
-      if ( null != iter_holder.value )
+      if ( null != localContext )
       {
-         BindingIterator iter = iter_holder.value;
+         int data_size = 100;
 
-         while ( iter.next_n(data_size, list_holder) )
+         BindingListHolder     list_holder = new BindingListHolder();
+         BindingIteratorHolder iter_holder = new BindingIteratorHolder();
+
+         // Get the list of objects (of any type) bound in localContext.
+         localContext.list(data_size, list_holder, iter_holder);
+
+         // Using the returned list of objects, populate subj_mgrs with any
+         // objects that implement the tweek.SubjectManager interface.
+         addSubjectManagers(list_holder.value, subj_mgrs);
+
+         if ( null != iter_holder.value )
          {
-            addSubjectManagers(list_holder.value, subj_mgrs);
-         }
+            BindingIterator iter = iter_holder.value;
 
-         iter.destroy();
+            while ( iter.next_n(data_size, list_holder) )
+            {
+               addSubjectManagers(list_holder.value, subj_mgrs);
+            }
+
+            iter.destroy();
+         }
       }
 
       return subj_mgrs;
