@@ -74,14 +74,6 @@
 //vjSingletonImp( vjDeviceFactory ); //kevin
 vjSingletonImpWithInitFunc( vjDeviceFactory, hackLoadKnownDevices );
 
-template <class DEV>
-vjDeviceConstructor<DEV>::vjDeviceConstructor()
-{
-   vjASSERT(vjDeviceFactory::instance() != NULL);
-   vjDeviceFactory::instance()->registerDevice(this);
-}
-
-
 // Register all the devices that I know about
 //!NOTE: This should really be moved to dynamic library loading code.
 void vjDeviceFactory::hackLoadKnownDevices()

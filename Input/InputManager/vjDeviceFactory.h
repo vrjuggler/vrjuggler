@@ -63,30 +63,6 @@ public:
    { return std::string("BaseConstructor: Invalid type"); }
 };
 
-
-template <class DEV>
-class vjDeviceConstructor : public vjDeviceConstructorBase
-{
-public:
-   vjDeviceConstructor();
-
-   vjInput* createDevice(vjConfigChunk* chunk)
-   {
-      DEV* new_dev = new DEV;
-      bool success = new_dev->config(chunk);
-      if(success)
-      {
-         return new_dev;
-      } else {
-         delete new_dev;
-         return NULL;
-      }
-   }
-
-   virtual std::string getChunkType()
-   { return DEV::getChunkType(); }
-};
-
 //: Object used for creating devices
 //!NOTE: Singleton
 class vjDeviceFactory
@@ -151,5 +127,33 @@ private:
    static vjDeviceFactory* mInstance;
    */
 };
+
+template <class DEV>
+class vjDeviceConstructor : public vjDeviceConstructorBase
+{
+public:
+   vjDeviceConstructor()
+   {
+      vjASSERT(vjDeviceFactory::instance() != NULL);
+      vjDeviceFactory::instance()->registerDevice(this);
+   }
+
+   vjInput* createDevice(vjConfigChunk* chunk)
+   {
+      DEV* new_dev = new DEV;
+      bool success = new_dev->config(chunk);
+      if(success)
+      {
+         return new_dev;
+      } else {
+         delete new_dev;
+         return NULL;
+      }
+   }
+
+   virtual std::string getChunkType()
+   { return DEV::getChunkType(); }
+};
+
 
 #endif
