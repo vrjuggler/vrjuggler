@@ -96,7 +96,6 @@ bool GlWindowXWin::open()
    ::XEvent map_event;
    ::XSetWindowAttributes w_attrib;
    int screen;
-   char* foo;
    ::XSizeHints *sizehints;
    ::XClassHint *classhint;
    unsigned long event_mask(0);    // Event masks to use
@@ -204,8 +203,7 @@ bool GlWindowXWin::open()
       // InSoc makes things simple
       // X makes things complicated
       ::XTextProperty w_name;
-      foo = (char*) mWindowName.c_str();
-      ::XStringListToTextProperty(&foo, 1, &w_name);
+      ::XStringListToTextProperty(&(classhint->res_name), 1, &w_name);
 
       /* guarantee window position */
       sizehints = XAllocSizeHints();
