@@ -161,20 +161,6 @@ case $target_os in
         AC_DEFINE(_INCLUDE_TERMIO,)
         AC_DEFINE(_CMA_NOWRAPPERS_,)
         ;;
-    # A machine running FreeBSD.  Currently only i386 is known to compile.
-    freebsd*)
-        CXXFLAGS="-Wall -Werror-implicit-function-declaration $CXXFLAGS"
-        ;;
-    # A machine running Linux.  Currently only i386 is known to work.
-    linux*)
-        # CXXFLAGS="-fhonor-std -Wall -Werror-implicit-function-declaration $CXXFLAGS"
-        CXXFLAGS="-Wall -Werror-implicit-function-declaration $CXXFLAGS"
-        ;;
-    # A machine running Solaris (aka SunOS).  Currently only i386 is known to
-    # work.
-    solaris*)
-        CXXFLAGS="-Wall -Werror-implicit-function-declaration $CXXFLAGS"
-        ;;
     # i386-class machine running Windows {98,NT} with Cygnus GNU-Win32.
     cygwin)
         # There is no performance testing/monitoring code for Win32 (yet).
@@ -474,6 +460,7 @@ DPP_INSTALLER(vrjuggler, 0644, 0755, 0755)
 # -----------------------------------------------------------------------------
 # Do Makefile substitutions.
 # -----------------------------------------------------------------------------
+
 if test "x$X_INCLUDES" != "x" ; then
     INCLUDES="$INCLUDES $X_INCLUDES"
 fi
@@ -492,6 +479,12 @@ fi
 
 if test "x$DTK_INCLUDES" != "x" ; then
     INCLUDES="$INCLUDES $DTK_INCLUDES"
+fi
+
+# Add these C++ options when compiling with G++.
+if test "x$GXX" = "xyes" ; then
+#    CXXFLAGS="-fhonor-std -Wall -Werror-implicit-function-declaration $CXXFLAGS"
+    CXXFLAGS="-Wall -Werror-implicit-function-declaration $CXXFLAGS"
 fi
 
 CXXFLAGS="$CXXFLAGS $VPR_CXXFLAGS $JCCL_CXXFLAGS"

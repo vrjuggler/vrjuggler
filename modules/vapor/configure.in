@@ -153,8 +153,6 @@ case $target_os in
         ;;
     # A machine running FreeBSD.  Currently only i386 is known to compile.
     freebsd*)
-        CXXFLAGS="-Wall -Werror-implicit-function-declaration $CXXFLAGS"
-
         if test "x$SUBSYSTEM" = "xnone" ; then
             AC_MSG_WARN(*** Forcing the use of POSIX subsystem ***)
             SUBSYSTEM='POSIX'
@@ -188,9 +186,6 @@ case $target_os in
         ;;
     # A machine running Linux.  Currently only i386 is known to work.
     linux*)
-#        CXXFLAGS="-fhonor-std -Wall -Werror-implicit-function-declaration $CXXFLAGS"
-        CXXFLAGS="-Wall -Werror-implicit-function-declaration $CXXFLAGS"
-
         if test "x$SUBSYSTEM" = "xnone" ; then
             AC_MSG_WARN(*** Forcing the use of POSIX subsystem ***)
             SUBSYSTEM='POSIX'
@@ -206,8 +201,6 @@ case $target_os in
     # A machine running Solaris (aka SunOS).  Currently only i386 is known
     # to work.
     solaris*)
-        CXXFLAGS="-Wall -Werror-implicit-function-declaration $CXXFLAGS"
-
         if test "x$SUBSYSTEM" = "xnone" ; then
             AC_MSG_WARN(*** Forcing the use of POSIX subsystem ***)
             SUBSYSTEM='POSIX'
@@ -468,6 +461,16 @@ LIBS="${_vpr_save_LIBS}"
 # -----------------------------------------------------------------------------
 
 DPP_INSTALLER(vrjuggler, 0644, 0755, 0755)
+
+# -----------------------------------------------------------------------------
+# Do Makefile substitutions.
+# -----------------------------------------------------------------------------
+
+# Add these C++ options when compiling with G++.
+if test "x$GXX" = "xyes" ; then
+#    CXXFLAGS="-fhonor-std -Wall -Werror-implicit-function-declaration $CXXFLAGS"
+    CXXFLAGS="-Wall -Werror-implicit-function-declaration $CXXFLAGS"
+fi
 
 # For use in linking applications.
 EXTRA_LINK_FLAGS=''
