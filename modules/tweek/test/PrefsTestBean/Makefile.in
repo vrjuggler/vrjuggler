@@ -1,22 +1,22 @@
 default: all
 
 # Basic options.
-srcdir			= @srcdir@
-JAVAC_FLAGS		= -classpath $(CLASSPATH) -sourcepath $(srcdir) -d .
-JCPS			= @JCPS@
+srcdir=		@srcdir@
+JAVAC_FLAGS=	-classpath $(CLASSPATH) -sourcepath $(srcdir) -d .
+JCPS=		@JCPS@
 
-JDOM_JAR		= @JDOM_JAR@
+JDOM_JAR=	@JDOM_JAR@
 
-CLASSPATH		= $(TWEEK_BASE_DIR)/bin/TweekServices.jar$(JCPS)$(TWEEK_BASE_DIR)/bin/TweekBeans.jar$(JCPS)$(JDOM_JAR)
+CLASSPATH=	$(TWEEK_BASE_DIR)/bin/TweekServices.jar$(JCPS)$(TWEEK_BASE_DIR)/bin/TweekBeans.jar$(JCPS)$(JDOM_JAR)
 
 # Commands to execute.
-JAVA_COMPILE		= @JAVAC@ $(JAVAC_FLAGS)
-JAR			= @JAR@
+JAVA_COMPILE=	@JAVAC@ $(JAVAC_FLAGS)
+JAR=		@JAR@
 
-VPATH		= @srcdir@
+VPATH=		@srcdir@
 
-CLASSES		= prefstestbean/PrefsTestBean.class
-ALL_CLASSES	= prefstestbean/*.class
+CLASSES=	prefstestbean/PrefsTestBean.class
+ALL_CLASSES=	prefstestbean/*.class
 
 # -----------------------------------------------------------------------------
 # Application build targets.
