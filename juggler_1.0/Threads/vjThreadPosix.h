@@ -178,6 +178,61 @@ public:
     virtual int setPrio(int prio);
 
     // -----------------------------------------------------------------------
+    //: Set the CPU affinity for this thread (the CPU on which this thread
+    //+ will exclusively run).
+    //
+    //! PRE: The thread must have been set to be a system-scope thread.
+    //! POST: The CPU affinity is set or an error status is returned.
+    //
+    //! ARGS: cpu - The CPU on which this thread will run exclusively.
+    //
+    //! RETURNS:  0 - Successful completion
+    //! RETURNS: -1 - Error
+    //
+    //! NOTE: This is currently only available on IRIX 6.5 and is
+    //+       non-portable.
+    // -----------------------------------------------------------------------
+    virtual int
+    setRunOn (int cpu) {
+#ifdef VJ_OS_SGI
+        return pthread_setrunon_np(cpu);
+#else
+        cerr << "vjThreadPosix::setRunOn(): Not available on this system.\n";
+
+        return -1;
+#endif
+    }
+
+    // -----------------------------------------------------------------------
+    //: Get the CPU affinity for this thread (the CPU on which this thread
+    //+ exclusively runs).
+    //
+    //! PRE: The thread must have been set to be a system-scope thread, and
+    //+      a previous affinity must have been set using setRunOn().
+    //! POST: The CPU affinity for this thread is stored in the cur_cpu
+    //+       pointer.
+    //
+    //! ARGS: cur_cpu - The CPU affinity for this thread (set by a previous
+    //+                 call to setRunOn().
+    //
+    //! RETURNS:  0 - Successful completion
+    //! RETURNS: -1 - Error
+    //
+    //! NOTE: This is currently only available on IRIX 6.5 and is
+    //+       non-portable.
+    // -----------------------------------------------------------------------
+    virtual int
+    getRunOn (int* cur_cpu) {
+#ifdef VJ_OS_SGI
+        return pthread_getrunon_np(cur_cpu);
+#else
+        cerr << "vjThreadPosix::getRunOn(): Not available on this system.\n";
+
+        return -1;
+#endif
+    }
+
+    // -----------------------------------------------------------------------
     //: Yield execution of the calling thread to allow a different blocked
     //+ thread to execute.
     //
@@ -259,7 +314,6 @@ public:
 // All private member variables and functions.
 private:
     pthread_t	mThread;	//: pthread_t data structure for this thread
-    bool	exited;		//: Flag stating if this thread has exited
 
     void checkRegister(int status);
 
