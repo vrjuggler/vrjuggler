@@ -102,7 +102,10 @@ JUGGLERROOT_ABS	= @SAFE_JUGGLERROOT_ABS@
 # -----------------------------------------------------------------------------
 EXTRA_CFLAGS		= $(CFLAGS_DYNLIB)
 EXTRA_CXXFLAGS		= $(CXXFLAGS_DYNLIB)
-EXTRA_DEPEND_FLAGS	= -I$(VPRROOT_ABS) -I$(JUGGLERROOT_ABS)/external/boost
+EXTRA_DEPEND_FLAGS	= -I$(VPRROOT_ABS)				\
+                          -I$(JUGGLERROOT_ABS)/external/boost		\
+                          -I$(JUGGLERROOT_ABS)/external/leach-uuid	\
+                          -I$(JUGGLERROOT_ABS)/external/md5-c
 EXTRA_DEFS		+= -D_VPR_BUILD_
 EXTRA_INCLUDES		= -I$(VPRROOT)					\
                           -I$(JUGGLERROOT_ABS)/external/boost		\
