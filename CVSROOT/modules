@@ -25,4 +25,4 @@
 # can be useful for creating a module that consists of many directories
 # spread out over the entire source repository.
 vapor     &juggler/modules/vapor     &juggler/Doozer++ &juggler/external/cppunit &juggler/external/leach-uuid &juggler/external/md5-c &juggler/external/boost &juggler/macros &juggler/release &juggler/share
-vrjuggler &juggler/modules/vrjuggler &juggler/modules/vapor &juggler/modules/jackal &juggler/Doozer++ &juggler/external/cppunit &juggler/external/leach-uuid &juggler/external/md5-c &juggler/macros &juggler/release &juggler/share
+vrjuggler juggler
