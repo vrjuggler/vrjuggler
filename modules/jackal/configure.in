@@ -540,6 +540,8 @@ AC_OUTPUT(Makefile
           samples/vjcontrol/PlxViewComponent/Makefile
           samples/jccl/Makefile
           samples/jccl/serverdemo/Makefile
+          test/Makefile
+          test/TestSuite/Makefile
           mtree/JCCL.data.dist
           mtree/JCCL.include.dist
           mtree/JCCL.install.dist
