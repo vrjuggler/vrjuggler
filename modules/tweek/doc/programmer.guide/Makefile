@@ -10,7 +10,7 @@ HTML_FILES=	book.html
 PDF_FILES=	book.pdf
 
 # Fill these in!!  Together, they make up the installation prefix.
-webroot=	$(HOME)/public_html/phpjug
+webroot=	$(HOME)/public_html/jugglerweb
 instdir=	tweek/1.0/programmer.guide
 
 prefix=		$(webroot)/$(instdir)
