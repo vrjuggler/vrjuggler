@@ -97,13 +97,13 @@ vpr::ReturnStatus IboxStandalone::connect(const std::string& port_name,
 		std::cerr << "[IBox] Success, Port: " << mPortName << " opened." << std::endl;
 	}
     port->clearAll();
-    port->enableLocalAttach();
+    port->setLocalAttach(true);
     port->setBufferSize(0);
     port->setTimeout(0);
     port->setOutputBaudRate(mBaudRate); // Put me before input to be safe
-	port->setInputBaudRate(mBaudRate);
+    port->setInputBaudRate(mBaudRate);
     port->setCharacterSize(vpr::SerialTypes::CS_BITS_8);
-    port->enableRead();
+    port->setRead(true);
 	std::cerr << "[IBox] Changed all of the port Settings." << std::endl;
 	if ( autosynch()!=vpr::ReturnStatus::Succeed )
 	{
@@ -131,13 +131,13 @@ vpr::ReturnStatus IboxStandalone::connect()
 		std::cerr << "[IBox] Success, Port: " << mPortName << " opened." << std::endl;
 	}
     port->clearAll();
-    port->enableLocalAttach();
+    port->setLocalAttach(true);
     port->setBufferSize(0);
     port->setTimeout(0);
     port->setOutputBaudRate(mBaudRate); // Put me before input to be safe
-	port->setInputBaudRate(mBaudRate);
+    port->setInputBaudRate(mBaudRate);
     port->setCharacterSize(vpr::SerialTypes::CS_BITS_8);
-    port->enableRead();
+    port->setRead(true);
 	std::cerr << "[IBox] Changed all of the port Settings." << std::endl;
 	if ( autosynch()!=vpr::ReturnStatus::Succeed )
 	{

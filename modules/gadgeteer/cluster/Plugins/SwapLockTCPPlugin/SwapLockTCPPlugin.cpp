@@ -239,7 +239,7 @@ namespace cluster
       
          // If we can successfully open the socket and connect to the server
       mSyncServerSocket->open();
-      mSyncServerSocket->enableBlocking();
+      mSyncServerSocket->setBlocking(true);
       
       if (mSyncServerSocket->connect().success())
       {   

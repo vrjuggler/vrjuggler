@@ -1139,13 +1139,13 @@ vpr::ReturnStatus FlockStandalone::openPort ()
             mSerialPort->clearAll();
 
             vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << " [FlockStandalone] Setting read stuff\n" << vprDEBUG_FLUSH;
-            mSerialPort->enableRead();
+            mSerialPort->setRead(true);
 
             vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << " [FlockStandalone] Setting local attachment\n" << vprDEBUG_FLUSH;
-            mSerialPort->enableLocalAttach();
+            mSerialPort->setLocalAttach(true);
 
             vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << " [FlockStandalone] Setting Break Byte ignore\n" << vprDEBUG_FLUSH;
-            mSerialPort->enableBreakByteIgnore();
+            mSerialPort->setBreakByteIgnore(true);
 
             mSerialPort->setUpdateAction(vpr::SerialTypes::NOW);
 
@@ -1161,8 +1161,8 @@ vpr::ReturnStatus FlockStandalone::openPort ()
             vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << "Setting character size\n" << vprDEBUG_FLUSH;
             mSerialPort->setCharacterSize(vpr::SerialTypes::CS_BITS_8);
 
-            mSerialPort->disableHardwareFlowControl();
-            mSerialPort->disableParityGeneration();         // No parity checking
+            mSerialPort->setHardwareFlowControl(false);
+            mSerialPort->setParityGeneration(false);       // No parity checking
             mSerialPort->setRequestToSend(false);           // Lower the RTS bit otherwise bird is in reset mode
 
             vprDEBUG(vprDBG_ALL,vprDBG_CONFIG_LVL) << "Port setup completed.\n" << vprDEBUG_FLUSH;
@@ -1214,16 +1214,7 @@ void FlockStandalone::setBlocking ()
    //////////////////////////////////////////////////////////////////
    if ( mSerialPort != NULL )
    {
-      if ( mBlocking )
-      {
-         mSerialPort->enableBlocking();
-         std::cerr << "enable Blocking" << std::endl;
-      }
-      else
-      {
-         mSerialPort->enableNonBlocking();
-      }
-
+      mSerialPort->setBlocking(mBlocking);
       mSerialPort->flushQueue(vpr::SerialTypes::IO_QUEUES);
 
       vpr::System::usleep(1000 * mSleepFactor);
