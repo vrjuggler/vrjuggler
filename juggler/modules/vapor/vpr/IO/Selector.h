@@ -33,7 +33,7 @@
 #ifndef _VPR_SELECTOR_H_
 #define _VPR_SELECTOR_H_
 
-#include <string>
+#include <vprConfig.h>
 
 // include bridge class
 #include <IO/Socket/Selector_t.h>

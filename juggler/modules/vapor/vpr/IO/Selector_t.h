@@ -35,10 +35,26 @@
 #define _VPR_SELECTOR_BRIDGE_H_
 // NOTE: this is the bridge class for use with Selector.h
 
+#include <vprConfig.h>
+
 #include <string>
 #include <IO/IOSys.h>
 
 namespace vpr {
+
+
+// Common base for all selectors and imp's   
+class SelectorBase
+{
+public:
+   enum EventType
+      { READ = 1,           // Read - 
+        WRITE = 2,          // Write -
+        EXCEPT = 4,         // Exception -
+        ERR = 8,            // Error -
+        INVALID = 16         // Invalid - Invalid handle
+      };
+};
 
 // ----------------------------------------------------------------------------
 //: Cross-platform selection interface.
@@ -48,17 +64,9 @@ namespace vpr {
 // ----------------------------------------------------------------------------
 //!PUBLIC_API:
 template<class RealSelectorImp>
-class Selector_t
+class Selector_t : public SelectorBase
 {
 public:
-   enum EventType
-   { READ = 1,           // Read - 
-     WRITE = 2,          // Write -
-     EXCEPT = 4,         // Exception -
-     ERR = 8,            // Error -
-     INVALID = 16         // Invalid - Invalid handle
-   };
-
    //: Add the given handle to the selector
    //! PRE: handle is a valid handle
    //! POST: handle is added to the handle set, and initialized to a mask of no-events
@@ -82,13 +90,13 @@ public:
    }
 
    //: Get the current in flag mask
-   vpr::Unit16 getIn(IOSys::Handle handle)
+   vpr::Uint16 getIn(IOSys::Handle handle)
    {
       return mSelectorImpl.getIn(handle);
    }
 
    //: Get the current out flag mask
-   vpr::Unit16 getOut(IOSys::Handle handle)
+   vpr::Uint16 getOut(IOSys::Handle handle)
    {
       return mSelectorImpl.getOut(handle);
    }
