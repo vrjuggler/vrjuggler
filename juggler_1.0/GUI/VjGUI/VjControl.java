@@ -31,6 +31,7 @@ public class VjControl {
 	auto_chunkdbnames = new Vector();
 	Vector descdbnames = new Vector();
 	Vector chunkdbnames = new Vector();
+	Vector perfdatanames = new Vector();
 
 	String orgtreename = null;
 
@@ -54,6 +55,9 @@ public class VjControl {
 	    }
 	    else if (args[i].equalsIgnoreCase("-c")) {
 		chunkdbnames.addElement (args[++i]);
+	    }
+	    else if (args[i].equalsIgnoreCase("-p")) {
+		perfdatanames.addElement (args[++i]);
 	    }
 	    else if (args[i].equalsIgnoreCase("-o")) {
 		orgtreename = args[++i];
@@ -92,7 +96,10 @@ public class VjControl {
 	    lastfname = (String)chunkdbnames.elementAt(i);
 	    FileControl.loadNewChunkDBFile (lastfname, false);
 	}
-	
+	for (i = 0; i < perfdatanames.size(); i++) {
+	    lastfname = (String)perfdatanames.elementAt(i);
+	    FileControl.loadNewPerfDataFile (lastfname, false);
+	}
 	if (orgtreename == null && autoload) {
 	    FileControl.loadMainChunkOrgTree();
 	}
@@ -105,6 +112,7 @@ public class VjControl {
 	Core.ui.selectLeftDB ("Active Configuration");
 	Core.ui.selectRightDB (lastfname);
 	Core.ui.selectDescDB (lastdname);
+	Core.ui.refreshPerfData();
 
 	Core.reconfigure();
 	

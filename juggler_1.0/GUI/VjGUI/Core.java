@@ -10,6 +10,7 @@ import java.awt.Color;
 import javax.swing.*;
 import VjGUI.*;
 import VjConfig.*;
+import VjPerf.*;
 
 public class Core {
 
@@ -23,6 +24,8 @@ public class Core {
     static public ConfigChunkDB gui_chunkdb;
     static public ConfigChunk vjcontrol_preferences = null;
 
+    static public PerfDataCollection perf_collection;
+
     static final boolean info_msg_to_stdout = false;
     static final boolean error_msg_to_stdout = true;
     static public int    screenWidth;
@@ -33,6 +36,23 @@ public class Core {
     static ImageIcon save_icn;
     static ImageIcon close_icn;
 
+    static public ConfigChunk findPrefixMatchChunk (String name) {
+	/* finds a chunk whose name is a prefix of name */
+	ConfigChunk ch;
+	ConfigChunkDB db;
+	int i, j;
+	for (i = 0; i < chunkdbs.size(); i++) {
+	    db = ((ChunkDBTreeModel)chunkdbs.elementAt(i)).chunkdb;
+	    for (j = 0; j < db.size(); j++) {
+		ch = (ConfigChunk)db.elementAt(j);
+		if (name.startsWith (ch.getName()))
+		    return ch;
+	    }
+	}
+	return null;
+    }
+
+
     static public void initialize () {
 	ConfigChunkDB db;
 	
@@ -40,6 +60,7 @@ public class Core {
 	screenHeight = 600;
 	descdbs = new Vector();
 	chunkdbs = new Vector();
+	perf_collection = new PerfDataCollection();
 	chunkorgtree = new ChunkOrgTree();
 	descdb = new ChunkDescDB();
 	gui_chunkdb = new ConfigChunkDB (descdb);
