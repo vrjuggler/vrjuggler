@@ -58,9 +58,20 @@ public:
    /**
     * Default constructor.
     */
-   CorbaManager (void) : m_my_thread(NULL)
+   CorbaManager (void) : m_my_thread(NULL), m_subj_mgr(NULL)
    {
       /* Do nothing. */ ;
+   }
+
+   ~CorbaManager (void)
+   {
+      if ( m_subj_mgr != NULL )
+      {
+         delete m_subj_mgr;
+         m_subj_mgr = NULL;
+      }
+
+      // XXX: Need to perform other shutdown stuff ...
    }
 
    /**
@@ -85,7 +96,16 @@ public:
    /**
     * Binds the interface object.
     */
-   vpr::ReturnStatus registerSubjectManager(tweek::SubjectManagerImpl* mgr);
+   vpr::ReturnStatus createSubjectManager(void);
+
+   /**
+    * Returns this CORBA managaer's SubjectManagerImpl instance to the caller.
+    * Users will need this so that they may register subjects.
+    */
+   tweek::SubjectManagerImpl* getSubjectManager (void) const
+   {
+      return m_subj_mgr;
+   }
 
    const PortableServer::POA_var& getRootPOA (void) const
    {
@@ -120,6 +140,8 @@ private:
    PortableServer::ObjectId_var m_subj_mgr_id;
    CosNaming::NamingContext_var m_root_context;
    CosNaming::NamingContext_var m_local_context;
+
+   tweek::SubjectManagerImpl* m_subj_mgr;
 };
 
 } // End of tweek namespace

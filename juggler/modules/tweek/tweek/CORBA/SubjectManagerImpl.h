@@ -42,7 +42,6 @@
 #include <string>
 #include <map>
 #include <vpr/Sync/Mutex.h>
-#include <vpr/Util/Singleton.h>
 
 #include <tweek/CORBA/Subject.h>
 #include <tweek/CORBA/SubjectManager.h>
@@ -56,22 +55,22 @@ class SubjectImpl;
 
 class TWEEK_CLASS_API SubjectManagerImpl
    : public POA_tweek::SubjectManager,
-     public PortableServer::RefCountServantBase,
-     public vpr::Singleton<SubjectManagerImpl>
+     public PortableServer::RefCountServantBase
 {
 public:
-   void registerSubject(const CorbaManager& corba_mgr,
-                        SubjectImpl* subject, const char* name);
+   void registerSubject(SubjectImpl* subject, const char* name);
 
    virtual Subject_ptr getSubject(const char* name);
 
 protected:
-   void registerSubject(Subject_ptr subject, const char* name);
+   // Only this class can instantiate me.
+   friend class tweek::CorbaManager;
 
-   friend class vpr::Singleton<SubjectManagerImpl>;
-
-   /// Default constructor.
-   SubjectManagerImpl (void)
+   /**
+    * Default constructor.  It is protected because only instances of
+    * tweek::CorbaManager may create objects of this type.
+    */
+   SubjectManagerImpl (const CorbaManager& corba_mgr) : m_corba_mgr(corba_mgr)
    {
       /* Do nothing. */ ;
    }
@@ -79,10 +78,19 @@ protected:
    // These two have to be here because Visual C++ will try to make them
    // exported public symbols.  This causes problems because copying
    // vpr::Mutex objects is not allowed.
-   SubjectManagerImpl (const SubjectManagerImpl& sm) {;}
+   SubjectManagerImpl (const SubjectManagerImpl& sm)
+      : m_corba_mgr(sm.m_corba_mgr)
+   {
+      /* Do nothing. */ ;
+   }
+
    void operator= (const SubjectManagerImpl& sm) {;}
 
+   void registerSubject(Subject_ptr subject, const char* name);
+
 private:
+   const CorbaManager& m_corba_mgr;
+
    typedef std::map<std::string, Subject_ptr> subject_map_t;
    subject_map_t m_subjects;
    vpr::Mutex m_subjects_mutex;

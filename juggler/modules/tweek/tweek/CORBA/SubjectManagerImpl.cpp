@@ -47,12 +47,11 @@
 namespace tweek
 {
 
-void SubjectManagerImpl::registerSubject (const CorbaManager& corba_mgr,
-                                          SubjectImpl* subject_servant,
+void SubjectManagerImpl::registerSubject (SubjectImpl* subject_servant,
                                           const char* name)
 {
-   // need to register servant with POA first ...
-   corba_mgr.getChildPOA()->activate_object(subject_servant);
+   // We have to register servant with POA first.
+   m_corba_mgr.getChildPOA()->activate_object(subject_servant);
 
    registerSubject(subject_servant->_this(), name);
 }
