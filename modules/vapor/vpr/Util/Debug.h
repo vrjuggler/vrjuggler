@@ -163,7 +163,11 @@
 #define vprDEBUG_PushColumn(val) vpr::Debug::instance()->pushThreadLocalColumn(val)
 #define vprDEBUG_PopColumn() vpr::Debug::instance()->popThreadLocalColumn()
 #define vprDEBUG_ColumnGuard(val) vpr::DebugColumnGuard debug_col_guard(val)
-#define vprDEBUG_TSColor(color) vpr::Debug::instance()->setThreadLocalColor(color)
+
+#define vprDEBUG_PushTSColor(color) vpr::Debug::instance()->pushThreadLocalColor(color)
+#define vprDEBUG_PopTSColor() vpr::Debug::instance()->popThreadLocalColor()
+#define vprDEBUG_TSColorGuard(color) vpr::DebugColorGuard debug_color_guard(color)
+
 #define vprDEBUG_ThreadLocalEnable() vpr::Debug::instance()->enableThreadLocalSettings()
 #define vprDEBUG_ThreadLocalDisable() vpr::Debug::instance()->disableThreadLocalSettings()
 
@@ -230,9 +234,11 @@ namespace vpr {
       void disableThreadLocalSettings()
       { mUseThreadLocal = false;}
 
+      // Thread local settings: Columns and color
       void pushThreadLocalColumn(int column);
       void popThreadLocalColumn();
-      void setThreadLocalColor(std::string color);
+      void pushThreadLocalColor(std::string color);
+      void popThreadLocalColor();
 
       //@{
       /** Is debuging enabled */
@@ -270,6 +276,16 @@ namespace vpr {
       ~DebugColumnGuard()
       { vprDEBUG_PopColumn();}
    };
+
+   struct DebugColorGuard
+   {
+      DebugColorGuard(std::string color_val)
+      { vprDEBUG_PushTSColor(color_val);}
+
+      ~DebugColorGuard()
+      { vprDEBUG_PopTSColor();}
+   };
+
 
 }; // End of vpr namespace
 
