@@ -38,7 +38,7 @@ AC_REVISION($Revision$)
 AC_INIT(tweek/tweekConfig.h)
 AC_CONFIG_AUX_DIR(../../share/config)
 AC_CONFIG_HEADER(tweek/tweekDefines.h)
-DPP_PREREQ([1.4.107])
+DPP_PREREQ([1.4.108])
 DPP_INIT
 
 DPP_GEN_RECONFIG
@@ -603,8 +603,6 @@ elif test "x$OS_TYPE" = "xWin32" -a "x$USE_GCC" != "xyes" ; then
    EXTRA_LINK_FLAGS="$EXTRA_LINK_FLAGS /nologo /incremental:no"
    tweek_cxxflags="$CXXFLAGS $EXTRA_DEFS $INCLUDES $IDL_GEN_INCLUDES"
 fi
-
-DPP_SYSTEM_SUBST
 
 # For makedepend(1) to work properly on HP-UX with aCC, we have to include
 # these extra paths.
