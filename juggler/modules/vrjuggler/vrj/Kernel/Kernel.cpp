@@ -58,11 +58,6 @@
 #include <jccl/RTRC/ConfigManager.h>
 #include <jccl/PerfMonitor/PerformanceMonitor.h>
 
-//NEED TO REMOVE THESE FILES
-#include <cluster/Plugins/RemoteInputManager/RemoteInputManager.h>
-#include <cluster/Plugins/ApplicationDataManager/ApplicationDataManager.h>
-
-
 namespace vrj
 {
 
@@ -377,11 +372,6 @@ void Kernel::initConfig()
    jccl::ConfigManager::instance()->addConfigChunkHandler(mInputManager);
    jccl::ConfigManager::instance()->addConfigChunkHandler(mClusterManager);
    jccl::ConfigManager::instance()->addConfigChunkHandler(mDisplayManager);
-
-   //MOVE LATER
-   jccl::ConfigManager::instance()->addConfigChunkHandler(cluster::RemoteInputManager::instance());
-   jccl::ConfigManager::instance()->addConfigChunkHandler(cluster::ApplicationDataManager::instance());
-
 
    vprDEBUG_END(vrjDBG_KERNEL,3) << "vjKernel::initConfig: Done.\n" << vprDEBUG_FLUSH;
 }

@@ -83,9 +83,9 @@ public:
     */
    bool configCanHandle(jccl::ConfigChunkPtr chunk);
 
-   void addManager(ClusterPlugin* new_manager);
-   void removeManager(ClusterPlugin* old_manager);
-   bool doesManagerExist(ClusterPlugin* old_manager);
+   void addPlugin(ClusterPlugin* new_manager);
+   void removePlugin(ClusterPlugin* old_manager);
+   bool doesPluginExist(ClusterPlugin* old_manager);
    void sendEndBlocksAndSignalUpdate();
 
 private:      
@@ -95,8 +95,8 @@ private:
    static std::string getChunkType() { return std::string( "ClusterManager" ); }
 
 private:
-   std::list<ClusterPlugin*>     mManagers;
-   vpr::Mutex                    mManagersLock;  /**< Lock on Device Server list.*/
+   std::list<ClusterPlugin*>     mPlugins;
+   vpr::Mutex                    mPluginsLock;  /**< Lock on Device Server list.*/
 };
 
 } // end namespace

@@ -139,6 +139,7 @@ namespace cluster
       gadget::Input* virtual_device = RemoteInputManager::instance()->getVirtualDevice(mVirtualId);
       if (virtual_device != NULL)
       {
+         mPacketReader->setAttrib("rim.timestamp.delta", node->getDelta());
          virtual_device->readObject(mPacketReader);
       }
       SerializableData* user_data = ApplicationDataManager::instance()->getRemoteUserData(mVirtualId);

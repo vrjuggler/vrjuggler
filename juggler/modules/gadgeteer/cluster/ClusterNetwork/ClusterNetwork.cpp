@@ -365,7 +365,7 @@ namespace cluster
             delete temp_packet;
             
             // XXX: HACK FOR NOW
-            ClusterManager::instance()->addManager(RemoteInputManager::instance());
+//            ClusterManager::instance()->addManager(RemoteInputManager::instance());
             RemoteInputManager::instance()->setActive(true);
 
             // NOTE: We must also set the Updated flag here since we are done with this node during this frame
