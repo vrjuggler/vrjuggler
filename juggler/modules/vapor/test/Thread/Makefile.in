@@ -61,9 +61,11 @@ VPATH		= @srcdir@
 # 64-bit binaries, use -L/usr/lib64.
 EXTRA_LIBS	= @APP_EXTRA_LIBS_BEGIN@ @APP_EXTRA_LIBS_BASIC@ @APP_EXTRA_LIBS_END@
 
-TEST_PROGS	= test@EXEEXT@			\
+TEST_PROGS	= stlTest@EXEEXT@		\
+                  test@EXEEXT@			\
                   testPool@EXEEXT@		\
-                  stlTest@EXEEXT@
+                  testSelfPerformance@EXEEXT@	\
+                  testTSD_Performance@EXEEXT@
 
 # -----------------------------------------------------------------------------
 # Targets.
