@@ -106,4 +106,19 @@ public interface EnvironmentService
     *         it does not exist, null is returned.
     */
    public String getenv(String envVarName);
+
+   /**
+    * Returns the value of the named environment variable or the given
+    * default value if the variable is not set in the user's environment.
+    *
+    * @param envVarName   The name of the variable to look up in the user's
+    *                     environment.
+    * @param defaultValue The value to return if the named variable is not
+    *                     found in the user's environment.
+    *
+    * @return A String object containing the value of the named environment
+    *         variable if the variable exists in the user's environment.  If
+    *         it does not exist, the given default value is returned.
+    */
+   public String getenv(String envVarName, String defaultValue);
 }

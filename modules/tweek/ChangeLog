@@ -1,5 +1,9 @@
 DATE       AUTHOR      CHANGE
 ---------- ----------- --------------------------------------------------------
+2004-12-06 patrickh    Added an overload of EnvironmentService.getenv() that
+                       allows users to specify a default value to be returned
+                       if the environment variable is not found.
+                       NEW VERSION: 0.20.3
 2004-11-13 patrickh    Added org.vrjuggler.tweek.event.EventListenerRegistry.
                        NEW VERSION: 0.20.1
 2004-11-13 patrickh    Refactored the handling of TweekFrameListener so that
