@@ -110,11 +110,11 @@ public:
     * context-specific data.
     *
     * @note THIS CAN NOT BE USED IN A DRAW PROCESS OR VERY BAD THINGS WILL
-    *       HAPPEN.  Only for EXPERT use
+    *       HAPPEN.  Only for EXPERT use.
     *       Needed for casses where something must be done to each
     *       copy of the data during pre-draw.
     */
-   std::vector<ContextDataType>* getDataVector()
+   std::vector<ContextDataType*>* getDataVector()
    {
       return &mContextDataVector;
    }
