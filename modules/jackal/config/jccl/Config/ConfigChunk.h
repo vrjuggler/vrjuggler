@@ -159,7 +159,7 @@ public:
 
 
     // used for dependency resolution
-    vjConfigChunk* vjConfigChunk::getEmbeddedChunk (const std::string &path);
+    vjConfigChunk* getEmbeddedChunk (const std::string &path);
 
 
     //: writes self to out
