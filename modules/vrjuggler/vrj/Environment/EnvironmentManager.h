@@ -95,7 +95,7 @@ public:
 
 
 private:
-    //vjConfigChunkDB*          chunkdb;
+    std::string               perf_target_name;
     std::vector<vjConnect*>   connections;
     std::vector<vjPerfDataBuffer*> perf_buffers;
     vjThread*                 listen_thread;
