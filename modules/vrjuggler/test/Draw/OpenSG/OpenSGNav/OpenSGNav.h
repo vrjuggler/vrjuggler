@@ -13,6 +13,8 @@
 #include <gadget/Type/AnalogInterface.h>
 #include <gadget/Type/DigitalInterface.h>
 
+#include <vrj/Draw/OGL/GlContextData.h>
+
 /*-----------------------------OpenSG includes--------------------------------*/
 #include <OpenSG/OSGBaseTypes.h>
 #include <OpenSG/OSGWindow.h>
@@ -28,10 +30,27 @@
 #include <OpenSG/OSGSimpleMaterial.h>
 #include <OpenSG/OSGPerspectiveCamera.h>
 #include <OpenSG/OSGDirectionalLight.h>
+#include <OpenSG/OSGGroup.h>
 
 /*----------------------------------------------------------------------------*/
 
 #include <vjOSGApp.h>
+
+struct context_data
+{
+   context_data()
+     : mContextThreadInitialized(false)
+   {;}
+
+   OSG::PassiveWindowPtr      mWin; // passive window to render with (the context)
+   OSG::PerspectiveCameraPtr  mCamera;
+   OSG::TransformPtr          mCameraCartTransform;
+   OSG::NodePtr               mCameraCartNode;
+
+   bool                       mContextThreadInitialized;
+   OSG::ExternalThread*       mOsgThread;
+};
+
 
 class OpenSGNav : public vrj::OpenSGApp
 {
@@ -41,50 +60,35 @@ public:
     {
         std::cout << "OpenSGNav::OpenSGNav called\n";
         mFileToLoad = std::string("");
-        thread1_initialized=false;
-        thread2_initialized=false;
     }
 
     virtual ~OpenSGNav (void)
     {
         std::cout << "OpenSGNav::~OpenSGNav called\n";
-        if (_action)
-            delete _action;
     }
 
+    // Handle any initialization needed before API
+    virtual void init();
 
-    virtual void initScene()
+    virtual void initAPI()
     {
-        std::cout << "OpenSGNav::initScene called\n";
-        std::string wand("VJWand");
-        mWand.init(wand);
-        //OSG::osgInit(0,0);
-
-        initRenderer();
-        //myInit();
-
+       vrj::OpenSGApp::initAPI();
+       this->initRenderer();
+       this->initScene();
     }
+
+    virtual void initScene();
 
     void myInit(void);
     void initRenderer();
 
-    virtual OSG::RenderAction * getAction()
-    {
-        std::cout << "OpenSGNav::getAction called\n";
-        return _action;
-    }
-
     virtual void draw();
 
-    virtual void contextInit()
-    {
-        //vjOSGApp::contextInit();
-        initGLState();
-    }
+    virtual void contextInit();
 
     void bufferPreDraw();
 
-    //virtual void preFrame();
+    virtual void preFrame();
 
     /*
     virtual void intraFrame()
@@ -114,19 +118,20 @@ public:
     float speed;
 
     std::string mFileToLoad;
+    OSG::NodePtr              mSceneRoot;       /**< The root of the scene */
+    OSG::NodePtr              mLightNode;       /**< The light node */
+    OSG::NodePtr              mLightCart;       /**< The cart for the light */
 
-    OSG::NodePtr              _root;
+    OSG::NodePtr              mRoot;            /**< The root of the scene graph.  Applicatin must add it's nodes to this one */
+    OSG::GroupPtr             mRootGroupCore;   /**< The group core of the root */
 
     OSG::ImageForegroundPtr   _foreground;
     OSG::NodePtr              _internalRoot;
     OSG::DirectionalLightPtr  _headlight;
-    OSG::RenderAction *       _action;
-    OSG::PerspectiveCameraPtr _camera;
-    OSG::TransformPtr         _cart;
+    OSG::RenderAction*        mRenderAction;    /**< The render action for the scene */
 
-    static  OSG::SimpleMaterialPtr    _highlightMaterial;
+    vrj::GlContextData<context_data>  mContextData;
 
-    bool thread1_initialized,thread2_initialized;
     OSG::Matrix OSGMat;
 
   public:

@@ -10,8 +10,6 @@ int main(int argc, char* argv[])
 {
     std::cout << "osgInit begin\n";
 
-    OSG::osgInit(argc,argv);
-    OpenSGNav::OSG_MAIN_ASPECT_ID = OSG::Thread::getAspect();
     std::cout << "osgInit end\n";
 
     vrj::Kernel* kernel = vrj::Kernel::instance();
