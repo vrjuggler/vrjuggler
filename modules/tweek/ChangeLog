@@ -1,5 +1,8 @@
 DATE       AUTHOR      CHANGE
 ---------- ----------- --------------------------------------------------------
+2002-08-11 patrickh    Changed the URL for the beanlist XML Schema to include
+                       version information:
+                       http://www.vrjuggler.org/tweek/xsd/1.0/beanlist.xsd
 2002-08-02 patrickh    Developer installations are now constructed using the
                        standard installation targets.
 2002-08-02 patrickh    Refactored the tweek::SubjectManager interface and the
