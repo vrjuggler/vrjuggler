@@ -142,6 +142,7 @@ SocketStreamImplNSPR::accept (SocketStreamImplNSPR& sock, vpr::Interval timeout)
           sock.setRemoteAddr(addr);
           sock.m_open = true;
           sock.m_bound = true;
+          sock.m_blocking = m_blocking;
           sock.m_blocking_fixed = true;
        }
     }
