@@ -155,7 +155,8 @@ DPP_PROG_LINKER
 # -----------------------------------------------------------------------------
 # Checks for libraries.
 # -----------------------------------------------------------------------------
-JCCL_PATH_CXX([0.14.0], [test_tweek_cxx='Y'],
+jccl_version='0.15.0'
+JCCL_PATH_CXX([$jccl_version], [test_tweek_cxx='Y'],
    [AC_MSG_WARN([*** JCCL C++ API required for JCCL C++ plug-ins ***])
     test_tweek_cxx='N'
    ])
@@ -168,7 +169,7 @@ if test "x$test_tweek_cxx" = "xY" ; then
 fi
 
 if test "x$BUILD_JAVA" = "xY" ; then
-   JCCL_PATH_JAVA([0.14.0], [test_tweek_java='Y'],
+   JCCL_PATH_JAVA([$jccl_version], [test_tweek_java='Y'],
       [AC_MSG_WARN([*** JCCL Java API required for JCCL Java plug-ins ***])
        test_tweek_java='N'
       ])
