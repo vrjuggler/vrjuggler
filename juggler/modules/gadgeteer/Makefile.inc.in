@@ -169,10 +169,14 @@ links:
 	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/include/gadget
 	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/$(LIBDIR_NAME)
 	@$(MAKE) -C gadget instlinks=$(instlinks) links
+ifeq (@OS_TYPE@, Win32)
+	cd $(instlinks)/$(LIBDIR_NAME) && cp -r $(LIBDIR_BASE)/* .
+else
 	for lib in $(LIBS) ; do 					\
             cd $(instlinks)/$(LIBDIR_NAME) && $(RM_LN) $$lib* &&	\
               $(LN_S) $(LIBDIR_BASE)/$$lib* ./ ;			\
           done
+endif
 	cd $(instlinks)/include/gadget && $(RM_LN) ./*.h &&		\
           $(LN_S) $(GADGETROOT_ABS)/gadget/*.h ./
 	cd $(instlinks)/include/gadget && $(RM_LN) ./gadgetDefines.h &&	\
