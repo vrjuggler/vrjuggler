@@ -109,6 +109,7 @@ public:
    AnalogData* getAnalogData(int devNum = 0)
    {
       // XXX: Fill in;
+      return NULL;
    }
 
 protected:
