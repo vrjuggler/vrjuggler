@@ -407,7 +407,7 @@ namespace Flock
       if(NormalAddressing == addrMode) return "Normal Addressing";
       else if(ExpandedAddressing == addrMode) return "Expanded Addressing";
       else if(SuperExpandedAddressing == addrMode) return "Super Expanded Addressing";
-      else return "Uknown addressing";
+      else return "Unknown addressing";
    }
 }
 
