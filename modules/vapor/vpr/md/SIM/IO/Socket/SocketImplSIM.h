@@ -84,20 +84,10 @@ class VPR_CLASS_API SocketImplSIM
 {
 public:
    /**
-    * Destructor.  This currently does nothing.
+    * Destructor.  This will unbind the socket from its network node if it was
+    * previously bound to a node.
     */
-   virtual ~SocketImplSIM( void )
-   {
-      // cant do this because accept retuns an imp, which gets deleted
-      // after constructing the returned Socket_t
-      /*
-      if (this->isOpen())
-      {
-         std::cout<<"~SocketImplSIM(), closing...\n"<<std::flush;
-         this->close();
-      }
-      */
-   }
+   virtual ~SocketImplSIM(void);
 
    // =========================================================================
    // vpr::BlockIO basics.
