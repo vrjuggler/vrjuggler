@@ -43,9 +43,9 @@
 
    <!-- Clean up -->
    <target name="clean">
-      <delete>
+      <delete failonerror="false">
          <fileset dir="org" includes="**/*.class" />
       </delete>
-      <delete file="jccl_editors.jar" />
+      <delete file="jccl_editors.jar" failonerror="false" />
    </target>
 </project>
