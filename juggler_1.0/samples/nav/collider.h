@@ -31,7 +31,7 @@
  * -----------------------------------------------------------------
  */
 
-#include <vjVec3.h>
+#include <Math/vjVec3.h>
 
 #ifndef _COLLIDER_H_
 #define _COLLIDER_H_
