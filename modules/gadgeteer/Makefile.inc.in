@@ -115,10 +115,6 @@ AFTERBUILD	= afterbuild
 # Things to do before the object files and library are built.
 beforebuild:
 	@$(SHELL) $(scriptdir)/make-ver.sh $(VER_ARGS)
-	@$(PERL) $(scriptdir)/incvt.pl -i $(topdir)/config.status	\
-            -t $(GADGETROOT_ABS)/gadgeteer-config.in			\
-            -o $(topdir)/gadgeteer-config -v $(GADGETROOT_ABS)/VERSION
-	@chmod +x $(topdir)/gadgeteer-config
 
 # Things to do after the object files and library are built.
 afterbuild:

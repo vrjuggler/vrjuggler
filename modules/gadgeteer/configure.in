@@ -39,6 +39,7 @@
 
 AC_REVISION($Revision$)
 AC_INIT(gadget/gadgetConfig.h)
+AC_CONFIG_AUX_DIR(../../share/config)
 AC_CONFIG_HEADER(gadget/gadgetDefines.h)
 DPP_PREREQ(1.4)
 DPP_INIT
@@ -112,6 +113,20 @@ case $target_os in
 esac
 
 # -----------------------------------------------------------------------------
+# Path setup.
+# -----------------------------------------------------------------------------
+
+# $srcdir is the root directory of the juggler source tree.  To get a value for
+# $GADGETROOT_ABS, we cd there and save the value of running pwd.  Then return
+# to the directory where configure is being run ($topdir).
+cd "$srcdir"
+GADGETROOT_ABS=`pwd`
+
+cd "$GADGETROOT_ABS/../.."
+JUGGLERROOT_ABS=`pwd`
+cd "$topdir"
+
+# -----------------------------------------------------------------------------
 # Checks for programs.
 # -----------------------------------------------------------------------------
 VJ_COMPILER_SETUP
@@ -123,12 +138,15 @@ DPP_CXX_HAVE_STD
 DPP_CXX_INLINE(AC_MSG_ERROR(*** The library requires C++ inline support ***))
 DPP_CXX_RTTI(AC_MSG_ERROR(*** The library requires C++ RTTI support ***))
 DPP_CXX_STATIC_CAST(AC_MSG_ERROR(*** The library requires C++ static_cast<> ***))
+DPP_CXX_DYNAMIC_CAST(AC_MSG_ERROR(*** The library requires C++ dynamic_cast<> ***))
 
 # Ensure that a version of Perl greater than or equal to 5.004 is available.
 DPP_PERL_VER(5.004)
 
 AC_CHECK_PROG(MTREE_CMD, mtree, mtree, \$(PERL) \$(scriptdir)/mtree.pl)
 
+DPP_HAVE_GNU_MAKE(3.78, ,
+    AC_MSG_ERROR(*** The build system requires GNU make 3.78 or newer ***))
 DPP_BASIC_PROGS($PLATFORM, $OS_TYPE)
 
 # -----------------------------------------------------------------------------
@@ -250,12 +268,11 @@ AC_TYPE_SIZE_T
 # -----------------------------------------------------------------------------
 # Checks for library functions.
 # -----------------------------------------------------------------------------
-AC_CHECK_FUNCS(socket strcasecmp strdup strerror strtod strtok_r)
+AC_CHECK_FUNCS(strdup strerror)
 
 # -----------------------------------------------------------------------------
 # Miscellaneous checks.
 # -----------------------------------------------------------------------------
-
 DPP_INSTALLER(vrjuggler, 0644, 0755, 0755)
 
 # -----------------------------------------------------------------------------
@@ -288,8 +305,8 @@ elif test "x$OS_TYPE" = "xWin32" -a "x$USE_GCC" != "xyes" ; then
     CFLAGS="$CFLAGS /W3 /GR /GX /EHc /QIfdiv /QI0f"
     CXXFLAGS="$CXXFLAGS /W3 /GR /GX /EHc /QIfdiv /QI0f"
     EXTRA_LINK_FLAGS="$EXTRA_LINK_FLAGS /nologo /incremental:no"
-    DBG_FLAGS="$DBG_FLAGS /MTd"
-    OPT_FLAGS="$OPT_FLAGS /MT"
+    DBG_FLAGS="$DBG_FLAGS /MDd"
+    OPT_FLAGS="$OPT_FLAGS /MD"
     gadget_cxxflags="$CXXFLAGS"
 fi
 
@@ -303,15 +320,6 @@ if test "x$PLATFORM" = "xHP" ; then
 elif test "x$OS_TYPE" = "xWin32" ; then
     DEPEND_EXTRAS="$DEPEND_EXTRAS -D__cplusplus"
 fi
-
-# $srcdir is the root directory of the juggler source tree.  To get a value for
-# $GADGETROOT_ABS, we cd there and save the value of running pwd.  Then return
-# to the directory where configure is being run ($topdir).
-cd "$srcdir"
-GADGETROOT_ABS=`pwd`
-cd "$GADGETROOT_ABS/../.."
-JUGGLERROOT_ABS=`pwd`
-cd "$topdir"
 
 # Define the base path to the source directory using $(GADGETROOT_ABS) as an
 # alternative to using $(srcdir).
@@ -402,6 +410,8 @@ fi
 
 gadget_extra_ldflags="$APP_EXTRA_LIBS_BEGIN"
 
+VJ_VERSION_GROK(VERSION)
+
 DPP_SUBST
 
 AC_SUBST(topdir)
@@ -446,7 +456,8 @@ AC_SUBST(gadget_64_flags)
 
 VJ_MTREE_LIB_GEN(GADGET, mtree, $PLATFORM, $ISA)
 
-AC_OUTPUT(Makefile
+AC_OUTPUT(gadgeteer-config
+          Makefile
           Makefile.inc
           common.defs.mk
           make.defs.mk
@@ -470,12 +481,16 @@ AC_OUTPUT(Makefile
           mtree/GADGET.include.dist
           mtree/GADGET.install.dist
           mtree/GADGET.test.dist
-          VARS.pl)
+          VARS.pl,
+    [ sed -e 's/^\(%.*\)/#\1/g' gadgeteer-config > gadgeteer-config.tmp
+      mv gadgeteer-config.tmp gadgeteer-config
+      chmod a+x gadgeteer-config ])
 
 cat <<BUILD_INFO
 
  Remember that you need to build Gadgeteer with GNU make.
  GNU make is called 'gmake' on most systems.
- See the file README for more details on compiling the Gadgeteer distribution.
+ See the file README for more details on compiling the Gadgeteer
+ distribution.
 
 BUILD_INFO
