@@ -218,9 +218,8 @@ sub installFile ($$$$$) {
     if ( ! $Win32 )
     {
        chown($uid, $gid, "$inst_dir/$filename") or die "chown: $!\n";
+       chmod(oct($mode), "$inst_dir/$filename") or die "chmod: $!\n";
     }
-
-    chmod(oct($mode), "$inst_dir/$filename") or die "chmod: $!\n";
 }
 
 # -----------------------------------------------------------------------------
