@@ -450,13 +450,25 @@ namespace sim
    vpr::ReturnStatus SocketManager::assignToNode (vpr::SocketImplSIM* handle,
                                                   const vpr::InetAddrSIM& addr)
    {
-      NetworkGraph::net_vertex_t node;
       vpr::ReturnStatus status;
+      NetworkGraph::net_vertex_t node;
 
-      vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
-         << "SocketManager::assignToNode(): Trying to find node with address "
-         << addr << "\n" << vprDEBUG_FLUSH;
-      status = vpr::sim::Controller::instance()->getNetworkGraph().getNodeWithAddr(addr.getAddressValue(), node);
+      // 0x7F000001 is the integer value for 127.0.0.1.
+      if ( 0x7F000001 == addr.getAddressValue() )
+      {
+         vpr::Uint32 last_node = vpr::sim::Controller::instance()->getNetworkGraph().getNodeCount() - 1;
+         vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
+            << "SocketManager::assignToNode(): Using last node (#" << last_node
+            << ") for localhost\n" << vprDEBUG_FLUSH;
+         node = vpr::sim::Controller::instance()->getNetworkGraph().getNode(last_node);
+      }
+      else
+      {
+         vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
+            << "SocketManager::assignToNode(): Trying to find node with address "
+            << addr << "\n" << vprDEBUG_FLUSH;
+         status = vpr::sim::Controller::instance()->getNetworkGraph().getNodeWithAddr(addr.getAddressValue(), node);
+      }
 
       if ( status.success() )
       {
@@ -507,36 +519,46 @@ namespace sim
 
       status = msg->getNextHop(first_hop, true);
       vprASSERT(status.success() && "Could not get first node in message's path");
+
       status = msg->getNextHop(second_hop, false);
-      vprASSERT(status.success() && "Could not get second node in message's path");
 
-      boost::tie(first_edge, found) = vpr::sim::Controller::instance()->getNetworkGraph().getEdge(first_hop, second_hop);
-
-      if ( found )
+      if ( status.success() )
       {
-         NetworkLine first_edge_prop;
-         NetworkLine::LineDirection dir;
-         vpr::Interval event_time;
+         boost::tie(first_edge, found) = vpr::sim::Controller::instance()->getNetworkGraph().getEdge(first_hop, second_hop);
 
-         first_edge_prop = vpr::sim::Controller::instance()->getNetworkGraph().getLineProperty(first_edge);
+         if ( found )
+         {
+            NetworkLine first_edge_prop;
+            NetworkLine::LineDirection dir;
+            vpr::Interval event_time;
 
-         dir = vpr::sim::Controller::instance()->getNetworkGraph().isSource(first_hop, first_edge) ? NetworkLine::FORWARD : NetworkLine::REVERSE;
+            first_edge_prop = vpr::sim::Controller::instance()->getNetworkGraph().getLineProperty(first_edge);
 
-         // XXX: The direction will not always be forward!
-         first_edge_prop.calculateMessageEventTimes(msg, vpr::Interval::now(),
-                                                    dir);
+            // Determine the direction for the message on this line.
+            dir = vpr::sim::Controller::instance()->getNetworkGraph().isSource(first_hop, first_edge) ? NetworkLine::FORWARD : NetworkLine::REVERSE;
+            first_edge_prop.calculateMessageEventTimes(msg, vpr::Interval::now(),
+                                                       dir);
 
-         vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
-            << "SocketManager::sendMessage(): Starting message on wire "
-            << first_edge_prop.getNetworkAddressString() << ": ("
-            << msg->whenStartOnWire().usec() << ", "
-            << msg->whenFullyOnWire().usec() << ", "
-            << msg->whenArrivesFully().usec() << ")\n" << vprDEBUG_FLUSH;
+            vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
+               << "SocketManager::sendMessage(): Starting message on wire "
+               << first_edge_prop.getNetworkAddressString() << ": ("
+               << msg->whenStartOnWire().usec() << ", "
+               << msg->whenFullyOnWire().usec() << ", "
+               << msg->whenArrivesFully().usec() << ")\n" << vprDEBUG_FLUSH;
 
-         event_time = msg->whenStartOnWire();
-         first_edge_prop.addReadyMessage(msg, dir);
-         vpr::sim::Controller::instance()->getNetworkGraph().setLineProperty(first_edge, first_edge_prop);
-         vpr::sim::Controller::instance()->addEvent(event_time, first_edge);
+            event_time = msg->whenStartOnWire();
+            first_edge_prop.addReadyMessage(msg, dir);
+            vpr::sim::Controller::instance()->getNetworkGraph().setLineProperty(first_edge, first_edge_prop);
+            vpr::sim::Controller::instance()->addEvent(event_time, first_edge);
+         }
+      }
+      // This is a loopback, so we can just deliver the message without going
+      // through the network.
+      else
+      {
+         vprASSERT(msg->getSourceSocket()->getLocalAddr().getAddressValue() == msg->getDestinationSocket()->getLocalAddr().getAddressValue() && "Could not get second node in message's path");
+         NetworkNode node_prop = vpr::sim::Controller::instance()->getNetworkGraph().getNodeProperty(first_hop);
+         node_prop.deliverMessage(msg);
       }
    }
 
