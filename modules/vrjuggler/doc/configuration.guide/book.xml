@@ -29,7 +29,7 @@
       <title>VjControl's config file editing panel.</title>
       <mediaobject>
         <imageobject>
-          <imagedata fileref="gfx/mainpanel.png" format="PNG" scale="50" width="4in"/>
+          <imagedata fileref="figures/mainpanel.png" format="PNG" scale="50" width="4in"/>
         </imageobject>
       </mediaobject>
     </figure>
@@ -76,7 +76,7 @@
         <title>Editor window for MotionStar input driver.</title>
         <mediaobject>
           <imageobject>
-            <imagedata fileref="gfx/motionstar_chunk.png" format="PNG" scale="45" width="4in"/>
+            <imagedata fileref="figures/motionstar_chunk.png" format="PNG" scale="45" width="4in"/>
           </imageobject>
           <textobject>
             <para>Image of MotionStar configuration window.</para>
@@ -94,7 +94,7 @@
           <title>The editor window for a Position Proxy called "VJHead". The proxy attaches to a device named "MotionStar", and applies a transformation and rotation to the device data.</title>
           <mediaobject>
             <imageobject>
-              <imagedata fileref="gfx/vjhead_chunk.png" format="PNG" scale="50" width="4in"/>
+              <imagedata fileref="figures/vjhead_chunk.png" format="PNG" scale="50" width="4in"/>
             </imageobject>
           </mediaobject>
         </figure>
@@ -121,7 +121,7 @@
         <title>Configuration for the Immersion Ibox.</title>
         <mediaobject>
           <imageobject>
-            <imagedata fileref="gfx/ibox_chunk.png" format="PNG" scale="55" width="4in"/>
+            <imagedata fileref="figures/ibox_chunk.png" format="PNG" scale="55" width="4in"/>
           </imageobject>
         </mediaobject>
       </figure>
@@ -144,7 +144,7 @@
         <title>User data ConfigChunk.</title>
         <mediaobject>
           <imageobject>
-            <imagedata fileref="gfx/user_chunk.png" format="PNG" scale="60" width="4in"/>
+            <imagedata fileref="figures/user_chunk.png" format="PNG" scale="60" width="4in"/>
           </imageobject>
         </mediaobject>
       </figure>
@@ -163,7 +163,7 @@
           <title>DisplaySystem chunk.</title>
           <mediaobject>
             <imageobject>
-              <imagedata fileref="gfx/displaysystem_chunk.png" format="PNG" scale="60" width="4in"/>
+              <imagedata fileref="figures/displaysystem_chunk.png" format="PNG" scale="60" width="4in"/>
             </imageobject>
           </mediaobject>
         </figure>
@@ -178,7 +178,7 @@
           <title>Surface Display chunk for the front screen.</title>
           <mediaobject>
             <imageobject>
-              <imagedata fileref="gfx/surfacedisplay_chunk.png" format="PNG" scale="60" width="4in"/>
+              <imagedata fileref="figures/surfacedisplay_chunk.png" format="PNG" scale="60" width="4in"/>
             </imageobject>
           </mediaobject>
         </figure>
@@ -228,7 +228,7 @@
           <title>ConfigChunk for activating performance measurements.</title>
           <mediaobject>
             <imageobject>
-              <imagedata fileref="gfx/performance_chunk.png" format="PNG" scale="55" width="4in"/>
+              <imagedata fileref="figures/performance_chunk.png" format="PNG" scale="55" width="4in"/>
             </imageobject>
           </mediaobject>
         </figure>
@@ -239,7 +239,7 @@
           <title>Configuring a log file for VR Juggler performance data.</title>
           <mediaobject>
             <imageobject>
-              <imagedata fileref="gfx/connection_chunk.png" format="PNG" scale="60" width="4in"/>
+              <imagedata fileref="figures/connection_chunk.png" format="PNG" scale="60" width="4in"/>
             </imageobject>
           </mediaobject>
         </figure>
@@ -267,7 +267,7 @@
           <title>ConfigChunks for the <trademark>Trackd</trademark> input device daemon.</title>
           <mediaobject>
             <imageobject>
-              <imagedata fileref="gfx/trackd_chunks.png" format="PNG" scale="60" width="4in"/>
+              <imagedata fileref="figures/trackd_chunks.png" format="PNG" scale="60" width="4in"/>
             </imageobject>
           </mediaobject>
         </figure>
@@ -289,7 +289,7 @@
           <title>Configuration for InterSense tracking system.</title>
           <mediaobject>
             <imageobject>
-              <imagedata fileref="gfx/isense_chunk.png" format="PNG" scale="45" width="5in"/>
+              <imagedata fileref="figures/isense_chunk.png" format="PNG" scale="45" width="5in"/>
             </imageobject>
           </mediaobject>
         </figure>
@@ -338,7 +338,7 @@
           <title>Configuration of simulated devices. These are the digital and positional simulators used to provide the user's head control and wand buttons in the simstandalone.config file included in the VR Juggler distribution.</title>
           <mediaobject>
             <imageobject>
-              <imagedata fileref="gfx/simdevice_chunk.png" format="PNG" scale="40"/>
+              <imagedata fileref="figures/simdevice_chunk.png" format="PNG" scale="40"/>
             </imageobject>
           </mediaobject>
         </figure>
