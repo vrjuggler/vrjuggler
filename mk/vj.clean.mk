@@ -24,13 +24,12 @@
 # 'cleandepend' target is finished.
 # -----------------------------------------------------------------------------
 
-CLEAN_FILES	= Makedepend core so_locations
-CLEAN_DIRS	=
+CLEAN_FILES	= core so_locations
+CLEAN_DIRS	= ii_files
 
 clean:
 	rm -f ${CLEAN_FILES}
 	rm -rf ${CLEAN_DIRS}
-	if [ -d "ii_files" ] ; then rm -rf ii_files ; fi
 ifdef _LOCAL_CLEAN
 	${MAKE} _clean
 endif
