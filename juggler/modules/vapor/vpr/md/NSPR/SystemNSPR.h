@@ -46,6 +46,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <prtime.h>
+#include <prnetdb.h>
 
 #include <SystemBase.h>
 
@@ -64,9 +65,11 @@ struct timezone {
 #endif
 
 
-namespace  {
+namespace vpr {
 
-class SystemNSPR : public SystemBase {
+class SystemNSPR 
+     : public SystemBase
+{
 public:
     inline static int
     gettimeofday (struct timeval* tp, struct timezone* tzp = NULL) {
@@ -78,6 +81,16 @@ public:
 
         return 0;
     }
+
+    vpr::Int16 ntohs(vpr::Int32 conversion)
+    { return PR_ntohs(conversion); }
+    vpr::Int32 ntohl(vpr::Int32 conversion)
+    { return PR_ntohl(conversion); }
+    vpr::Int16 htons(vpr::Int32 conversion)
+    { return PR_htons(conversion); }
+    vpr::Int32 htonl(vpr::Int32 conversion)
+    { return PR_htonl(conversion); }
+
 };
 
 }; // End of vpr namespace
