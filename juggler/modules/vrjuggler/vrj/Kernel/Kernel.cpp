@@ -63,12 +63,15 @@ namespace vrj
 
 vprSingletonImp(Kernel);
 
-/// Starts the Kernel loop running.
+// Starts the Kernel loop running.
 int Kernel::start()
 {
    if(mControlThread != NULL) // Have already started
    {
-      vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL) << clrOutNORM(clrRED,"ERROR:") << "vjKernel::start called when kernel already running\n" << vprDEBUG_FLUSH;
+      vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
+         << clrOutNORM(clrRED,"ERROR:")
+         << " vrj::Kernel::start() called when kernel already running!\n"
+         << vprDEBUG_FLUSH;
       vprASSERT(false);
       exit(0);
    }
@@ -84,14 +87,15 @@ int Kernel::start()
    new vpr::Thread(memberFunctor);
 
    vprDEBUG(vrjDBG_KERNEL,vprDBG_STATE_LVL)
-      << "vjKernel::start: Just started control loop." << std::endl
+      << "vrj::Kernel::start(): Just started control loop." << std::endl
       << vprDEBUG_FLUSH;
 
    return 1;
 }
 
 // Set the stop flag
-// NOTE: The kernel should not actually stop until the application has been close (ie. mApp is NULL)
+// NOTE: The kernel should not actually stop until the application has been
+// close (ie. mApp is NULL).
 void Kernel::stop()
 {
    mExitWaitCondVar.acquire();
@@ -101,17 +105,17 @@ void Kernel::stop()
    }
    mExitWaitCondVar.release();
 
-   setApplication(NULL);      // Set NULL application so that the app gets closed
+   setApplication(NULL);    // Set NULL application so that the app gets closed
 }
 
-/** Blocks until the kernel exits
-*
-* Waits for !mIsRunning && mExitFlag
-*
-* Need both of those, because even though exit flag may be triggered
-* we can not exit until the kernel control loop stops.  This is signaled by
-* setting mIsRunning = false;
-*/
+/**
+ * Blocks until the kernel exits.
+ *
+ * This method waits for the condition !mIsRunning && mExitFlag.
+ * We need both of those because even though exit flag may be triggered
+ * we can not exit until the kernel control loop stops.  This is signaled by
+ * setting mIsRunning to false.
+ */
 void Kernel::waitForKernelStop()
 {
    mExitWaitCondVar.acquire();
@@ -125,7 +129,7 @@ void Kernel::waitForKernelStop()
 }
 
 
-/// The Kernel loop
+// The Kernel loop.
 void Kernel::controlLoop(void* nullParam)
 {
    boost::ignore_unused_variable_warning(nullParam);
@@ -153,9 +157,13 @@ void Kernel::controlLoop(void* nullParam)
       // Iff we have an app and a draw manager
       if((mApp != NULL) && (mDrawManager != NULL) && cluster)
       {
-            vprDEBUG(vrjDBG_KERNEL, vprDBG_HVERB_LVL) << "vjKernel::controlLoop: mApp->preFrame()\n" << vprDEBUG_FLUSH;
+            vprDEBUG(vrjDBG_KERNEL, vprDBG_HVERB_LVL)
+               << "vrj::Kernel::controlLoop: mApp->preFrame()\n"
+               << vprDEBUG_FLUSH;
          mApp->preFrame();         // PREFRAME: Do Any application pre-draw stuff
-            vprDEBUG(vrjDBG_KERNEL, vprDBG_HVERB_LVL) << "vjKernel::controlLoop: Update ClusterManager preDraw()\n" << vprDEBUG_FLUSH;
+            vprDEBUG(vrjDBG_KERNEL, vprDBG_HVERB_LVL)
+               << "vrj::Kernel::controlLoop: Update ClusterManager preDraw()\n"
+               << vprDEBUG_FLUSH;
       }
       else
       {
@@ -168,17 +176,27 @@ void Kernel::controlLoop(void* nullParam)
 
       if((mApp != NULL) && (mDrawManager != NULL) && cluster)
       {
-            vprDEBUG(vrjDBG_KERNEL, vprDBG_HVERB_LVL) << "vjKernel::controlLoop: mApp->latePreFrame()\n" << vprDEBUG_FLUSH;
+            vprDEBUG(vrjDBG_KERNEL, vprDBG_HVERB_LVL)
+               << "vrj::Kernel::controlLoop: mApp->latePreFrame()\n"
+               << vprDEBUG_FLUSH;
          mApp->latePreFrame();
-            vprDEBUG(vrjDBG_KERNEL, vprDBG_HVERB_LVL) << "vjKernel::controlLoop: drawManager->draw()\n" << vprDEBUG_FLUSH;
+            vprDEBUG(vrjDBG_KERNEL, vprDBG_HVERB_LVL)
+               << "vrj::Kernel::controlLoop: drawManager->draw()\n"
+               << vprDEBUG_FLUSH;
          mDrawManager->draw();    // DRAW: Trigger the beginning of frame drawing
          mSoundManager->update();
-            vprDEBUG(vrjDBG_KERNEL, vprDBG_HVERB_LVL) << "vjKernel::controlLoop: mApp->intraFrame()\n" << vprDEBUG_FLUSH;
+            vprDEBUG(vrjDBG_KERNEL, vprDBG_HVERB_LVL)
+               << "vrj::Kernel::controlLoop: mApp->intraFrame()\n"
+               << vprDEBUG_FLUSH;
          mApp->intraFrame();        // INTRA FRAME: Do computations that can be done while drawing.  This should be for next frame.
-            vprDEBUG(vrjDBG_KERNEL, vprDBG_HVERB_LVL) << "vjKernel::controlLoop: drawManager->sync()\n" << vprDEBUG_FLUSH;
+            vprDEBUG(vrjDBG_KERNEL, vprDBG_HVERB_LVL)
+               << "vrj::Kernel::controlLoop: drawManager->sync()\n"
+               << vprDEBUG_FLUSH;
          mSoundManager->sync();
          mDrawManager->sync();    // SYNC: Block until drawing is done
-            vprDEBUG(vrjDBG_KERNEL, vprDBG_HVERB_LVL) << "vjKernel::controlLoop: mApp->postFrame()\n" << vprDEBUG_FLUSH;
+            vprDEBUG(vrjDBG_KERNEL, vprDBG_HVERB_LVL)
+               << "vrj::Kernel::controlLoop: mApp->postFrame()\n"
+               << vprDEBUG_FLUSH;
          mApp->postFrame();        // POST FRAME: Do processing after drawing is complete
       }
       else
@@ -191,11 +209,16 @@ void Kernel::controlLoop(void* nullParam)
       // --- Stop for reconfiguration -- //
       checkForReconfig();        // Check for any reconfiguration that needs done (system or application)
       checkSignalButtons();      // Check for any pending control requests
-         vprDEBUG(vrjDBG_KERNEL, vprDBG_HVERB_LVL) << "vjKernel::controlLoop: Update Trackers\n" << vprDEBUG_FLUSH;
+         vprDEBUG(vrjDBG_KERNEL, vprDBG_HVERB_LVL)
+            << "vrj::Kernel::controlLoop: Update Trackers\n" << vprDEBUG_FLUSH;
       getInputManager()->updateAllData();    // Update the input manager
-         vprDEBUG(vrjDBG_KERNEL, vprDBG_HVERB_LVL) << "vjKernel::controlLoop: Update ClusterManager\n" << vprDEBUG_FLUSH;
+         vprDEBUG(vrjDBG_KERNEL, vprDBG_HVERB_LVL)
+            << "vrj::Kernel::controlLoop: Update ClusterManager\n"
+            << vprDEBUG_FLUSH;
       mClusterManager->postPostFrame();   // Can I move to before pre-frame to allow future config barrier
-         vprDEBUG(vrjDBG_KERNEL, vprDBG_HVERB_LVL) << "vjKernel::controlLoop: Update Projections\n" << vprDEBUG_FLUSH;
+         vprDEBUG(vrjDBG_KERNEL, vprDBG_HVERB_LVL)
+            << "vrj::Kernel::controlLoop: Update Projections\n"
+            << vprDEBUG_FLUSH;
       updateFrameData();         // Any frame-based manager data
    }
 
@@ -215,16 +238,13 @@ void Kernel::controlLoop(void* nullParam)
 // XXX: Should have protection here
 void Kernel::setApplication(App* newApp)
 {
-   vprDEBUG(vrjDBG_KERNEL,vprDBG_CONFIG_LVL) << "vjKernel::setApplication: New application set\n" << vprDEBUG_FLUSH;
+   vprDEBUG(vrjDBG_KERNEL,vprDBG_CONFIG_LVL)
+      << "vrj::Kernel::setApplication: New application set\n" << vprDEBUG_FLUSH;
    mNewApp = newApp;
    mNewAppSet = true;
 }
 
-/**
- * Checks to see if there is reconfiguration to be done.
- * @post Any reconfiguration needed has been completed.
- * @note Can only be called by the kernel thread.
- */
+// Checks to see if there is reconfiguration to be done.
 void Kernel::checkForReconfig()
 {
    vprASSERT(vpr::Thread::self() == mControlThread);      // ASSERT: We are being called from kernel thread
@@ -243,22 +263,22 @@ void Kernel::checkForReconfig()
    {
       if((mNewApp == NULL) || (mNewApp->depSatisfied()) )   // If app is NULL or dependencies satisfied
       {
-         vprDEBUG(vrjDBG_KERNEL,vprDBG_CONFIG_STATUS_LVL) << "vjKernel: New application set, dependencies: Satisfied.\n" << vprDEBUG_FLUSH;
+         vprDEBUG(vrjDBG_KERNEL,vprDBG_CONFIG_STATUS_LVL)
+            << "vrj::Kernel: New application set, dependencies: Satisfied.\n"
+            << vprDEBUG_FLUSH;
          mNewAppSet = false;
          changeApplication(mNewApp);
       }
       else
       {
-         vprDEBUG(vrjDBG_KERNEL,vprDBG_WARNING_LVL) << "vjKernel: New application set, dependencies: Not satisfied yet.\n" << vprDEBUG_FLUSH;
+         vprDEBUG(vrjDBG_KERNEL,vprDBG_WARNING_LVL)
+            << "vrj::Kernel: New application set, dependencies: Not satisfied yet.\n"
+            << vprDEBUG_FLUSH;
       }
    }
 }
 
 // Changes the application in use
-//  If there is another app active, it has to stop that
-//  application first then restart all API specif ic Managers.
-//! ARGS: newApp - If NULL, stops current application
-//! NOTE: This can only be called from the kernel thread
 // app = NULL ==> stop draw manager and null out app
 // app != NULL ==>
 //             Get the draw manager needed
@@ -313,33 +333,33 @@ void Kernel::changeApplication(App* newApp)
    }
 }
 
-
-/** Initialize the signal buttons for the kernel */
+// Initialize the signal buttons for the kernel.
 void Kernel::initSignalButtons()
 {
    mStopKernelSignalButton.init("VJSystemStopKernel");
 }
 
-/** Check the signal buttons to see if anything has been triggered */
+// Check the signal buttons to see if anything has been triggered.
 void Kernel::checkSignalButtons()
 {
    if(mStopKernelSignalButton->getData() == gadget::Digital::ON)
    {
-      vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_LVL) << "StopKernelSignalButton pressed: Kernel will exit.\n" << vprDEBUG_FLUSH;
+      vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
+         << "Stop kernel signal button pressed: Kernel will exit.\n"
+         << vprDEBUG_FLUSH;
       this->stop();  // Signal kernel to stop
    }
 }
 
 
-//-----------------------------------------------
 // Load config
 // Setup Input, Display, and kernel
-//!NOTE: Does initial configuration and then sends config file to configAdd
-//!POST: config is init'd
-//----------------------------------------------
+// NOTE: Does initial configuration and then sends config file to configAdd().
 void Kernel::initConfig()
 {
-   vprDEBUG_BEGIN(vrjDBG_KERNEL,3) << "vjKernel::initConfig: Setting initial config.\n" << vprDEBUG_FLUSH;
+   vprDEBUG_BEGIN(vrjDBG_KERNEL, vprDBG_CONFIG_LVL)
+      << "vrj::Kernel::initConfig(): Setting initial config.\n"
+      << vprDEBUG_FLUSH;
 
    // ---- ALLOCATE MANAGERS --- //
    //initialSetupInputManager();
@@ -347,7 +367,7 @@ void Kernel::initConfig()
 
    //initialSetupDisplayManager();
    mDisplayManager = DisplayManager::instance();  // Get display manager
-   vprASSERT(mDisplayManager != NULL);                 // Did we get an object
+   vprASSERT(mDisplayManager != NULL);            // Did we get an object
 
    mClusterManager = cluster::ClusterManager::instance();
 
@@ -359,9 +379,9 @@ void Kernel::initConfig()
    jccl::ConfigManager::instance()->addConfigElementHandler(mInputManager);
    jccl::ConfigManager::instance()->addConfigElementHandler(mClusterManager);
    jccl::ConfigManager::instance()->addConfigElementHandler(mDisplayManager);
-   vprDEBUG_END(vrjDBG_KERNEL,3) << "vjKernel::initConfig: Done.\n" << vprDEBUG_FLUSH;
+   vprDEBUG_END(vrjDBG_KERNEL, vprDBG_CONFIG_LVL)
+      << "vrj::Kernel::initConfig(): Done.\n" << vprDEBUG_FLUSH;
 }
-
 
 void Kernel::updateFrameData()
 {
@@ -407,7 +427,7 @@ bool Kernel::configRemove(jccl::ConfigElementPtr element)
    }
 }
 
-/** Adds a new user to the kernel. */
+// Adds a new user to the kernel.
 bool Kernel::addUser(jccl::ConfigElementPtr element)
 {
    vprASSERT(element->getID() == "user");
@@ -418,16 +438,15 @@ bool Kernel::addUser(jccl::ConfigElementPtr element)
    if(!success)
    {
       vprDEBUG(vrjDBG_KERNEL, vprDBG_CRITICAL_LVL)
-          << clrOutNORM(clrRED,"ERROR:") << "Failed to add new User: "
-          << element->getName() << std::endl << vprDEBUG_FLUSH;
+         << clrOutNORM(clrRED,"ERROR:") << " Failed to add new User: "
+         << element->getName() << std::endl << vprDEBUG_FLUSH;
       delete new_user;
    }
    else
    {
       vprDEBUG(vrjDBG_KERNEL, vprDBG_STATE_LVL)
-                             << "vjKernel: Added new User: "
-                             << new_user->getName().c_str() << std::endl
-                             << vprDEBUG_FLUSH;
+         << "vrj::Kernel: Added new User: " << new_user->getName() << std::endl
+         << vprDEBUG_FLUSH;
       mUsers.push_back(new_user);
    }
 
@@ -468,19 +487,14 @@ void Kernel::loadConfigFile(std::string filename)
    jccl::ConfigManager::instance()->addPendingAdds(cfg);
 }
 
-/**
- * Scans the given directory (or directories) for .jdef files and loads all
- * discovered files into the JCCL Element Factory.
- */
+// Scans the given directory (or directories) for .jdef files and loads all
+// discovered files into the JCCL Element Factory.
 void Kernel::scanForConfigDefinitions(const std::string& path)
 {
    jccl::ElementFactory::instance()->loadDefs(path);
 }
 
-/**
- * This starts up the Draw Manager given.
- * @post All processes and data should have been created by Draw Manager.
- */
+// This starts up the Draw Manager.
 void Kernel::startDrawManager(bool newMgr)
 {
    vprASSERT((mApp != NULL) && (mDrawManager != NULL) && (mDisplayManager != NULL));
@@ -506,10 +520,9 @@ void Kernel::startDrawManager(bool newMgr)
    }
 }
 
-// Stop the draw manager and close it's resources, then delete it
-//! POST: draw mgr resources are closed
-//+       draw mgr is deleted, display manger set to NULL draw mgr
-// XXX: @todo Make stop draw manager reconfigure the draw manager to close all the windows
+// Stop the draw manager and close its resources, then delete it>
+// XXX: @todo Make stop draw manager reconfigure the draw manager to close all
+// the windows.
 void Kernel::stopDrawManager()
 {
    if(mDrawManager != NULL)
@@ -521,7 +534,7 @@ void Kernel::stopDrawManager()
    }
 }
 
-/** Gets the Input Manager. */
+// Gets the Input Manager.
 gadget::InputManager* Kernel::getInputManager()
 {
    return mInputManager;
@@ -545,6 +558,9 @@ Kernel::Kernel()
      mExitFlag(false), mControlThread(NULL), mInputManager(NULL),
      mDrawManager(NULL), mSoundManager(NULL), mDisplayManager(NULL), mClusterManager(NULL)
 {
+   vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+      << "[Constructor] vrj::Kernel::mControlThread == 0x" << std::hex
+      << (void*) mControlThread << std::dec << std::endl << vprDEBUG_FLUSH;
    // Print out the Juggler version number when the kernel is created.
    vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << std::string(strlen(VJ_VERSION) + 12, '=')
                                              << std::endl << vprDEBUG_FLUSH;
@@ -559,6 +575,7 @@ Kernel::Kernel()
                                              << clrRESET << std::endl << vprDEBUG_FLUSH;
    vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << std::string(strlen(VJ_VERSION) + 12, '=')
                                              << std::endl << vprDEBUG_FLUSH;
+
    // Load in the configuration definitions
    std::string def_path;
    if (vpr::System::getenv("JCCL_DEFINITION_PATH", def_path) != vpr::ReturnStatus::Succeed)
