@@ -85,7 +85,7 @@ public:
     //! RETURNS: true - The device was configured succesfully.
     //! RETURNS: false - The config chunk is invalid.
     // ------------------------------------------------------------------------
-    virtual bool config(ConfigChunk* c);
+    virtual bool config(jccl::ConfigChunk* c);
 
    //: Begin sampling
    int startSampling() { return 1; }
@@ -120,11 +120,11 @@ public:
     //+  For example, if you have recievers 1,2, and 4 with transmitter on 3,
     //+  then you can access them, in order, as 0,1,2.
     // ------------------------------------------------------------------------
-    Matrix* getPosData(int dev = 0);
+    vrj::Matrix* getPosData(int dev = 0);
 
 private:
     TrackdSensorStandalone* mTrackdSensors; // The sensors that we are dealing with
-    std::vector<Matrix>   mCurSensorValues; // The current (up-to-date) values
+    std::vector<vrj::Matrix>   mCurSensorValues; // The current (up-to-date) values
 };
 
 };

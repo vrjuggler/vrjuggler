@@ -38,7 +38,7 @@
 namespace gadget
 {
 
-bool DigitalProxy::config(ConfigChunk* chunk)
+bool DigitalProxy::config(jccl::ConfigChunk* chunk)
 {
    vprDEBUG_BEGIN(vrjDBG_INPUT_MGR,3) << "----------- configuring DIGITAL proxy ----\n" << vprDEBUG_FLUSH;
    vprASSERT(((std::string)chunk->getType()) == "DigProxy");

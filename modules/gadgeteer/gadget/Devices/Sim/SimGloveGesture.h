@@ -58,7 +58,7 @@ public:
    //: Construct a SimGloveGesture
    SimGloveGesture() {;}
 
-   virtual bool config(ConfigChunk* chunk);
+   virtual bool config(jccl::ConfigChunk* chunk);
 
    //: Get the current gesture.
    //! RETURNS: id of current gesture

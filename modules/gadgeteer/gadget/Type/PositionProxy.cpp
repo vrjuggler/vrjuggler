@@ -64,7 +64,7 @@ void PositionProxy::setTransform(float xoff, float yoff, float zoff,    // Trans
 
 
 
-bool PositionProxy::config(ConfigChunk* chunk)
+bool PositionProxy::config(jccl::ConfigChunk* chunk)
 {
    vprDEBUG_BEGIN(vrjDBG_INPUT_MGR,3) << "------------------ POS PROXY config() -----------------\n" << vprDEBUG_FLUSH;
    vprASSERT(((std::string)chunk->getType()) == "PositionProxy");
@@ -98,7 +98,7 @@ bool PositionProxy::config(ConfigChunk* chunk)
       LinearSigmoidPositionFilter* sig_filter;
       sig_filter = new LinearSigmoidPositionFilter();
 
-      ConfigChunk* sigmoid_params = (ConfigChunk*)chunk->getProperty("sigmoidParams");
+      jccl::ConfigChunk* sigmoid_params = (jccl::ConfigChunk*)chunk->getProperty("sigmoidParams");
       if(sigmoid_params == NULL)
       { vprDEBUG(vprDBG_ERROR,0) << clrOutBOLD(clrRED,"ERROR:") << "Got NULL sigmoid Params.\n" << vprDEBUG_FLUSH; }
 

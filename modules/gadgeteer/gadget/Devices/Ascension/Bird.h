@@ -63,7 +63,7 @@ public:
    ~Bird();
    //@}
 
-   virtual bool config(ConfigChunk* c);
+   virtual bool config(jccl::ConfigChunk* c);
 
    /** @name Input pure virtual functions
     *
@@ -85,7 +85,7 @@ public:
    //old function
    //void getData(POS_DATA* &data);
    // XXX: Bad things live here
-   Matrix* getPosData(int dev = 0); // 0 base
+   vrj::Matrix* getPosData(int dev = 0); // 0 base
    //@}
 
 

@@ -47,7 +47,7 @@
 namespace gadget
 {
 
-int getReading(Matrix* data, int port);
+int getReading(vrj::Matrix* data, int port);
 float rawToFloat(char& r1, char& r2);
 void  pickBird(int sensor, int port_id);
 static int open_port(char* serialPort, int baud);
@@ -74,15 +74,15 @@ Bird::Bird()
   myThread = NULL;
 }
 
-bool Bird::config(ConfigChunk *c)
+bool Bird::config(jccl::ConfigChunk *c)
 {
    if(! (Input::config(c) && Position::config(c)))
       return false;
 
   strncpy(sPort,"/dev/ttyd3", 30);
   initCorrectionTable();
-  //theData = (Matrix*)allocate(3*sizeof(Matrix));
-  theData = new Matrix[3];
+  //theData = (vrj::Matrix*)allocate(3*sizeof(vrj::Matrix));
+  theData = new vrj::Matrix[3];
 
   return true;
 }
@@ -213,9 +213,9 @@ int Bird::stopSampling()
 }
 
 // XXX: Bad Bad Bad
-Matrix* Bird::getPosData( int d) // d is 0 based
+vrj::Matrix* Bird::getPosData( int d) // d is 0 based
 {
-  return (Matrix*)&theData[current];
+  return (vrj::Matrix*)&theData[current];
 }
 
 void Bird::updateData()
@@ -367,7 +367,7 @@ void Bird::initCorrectionTable()
 ///////////////////////////////////////////////////////////////////
 // Local functions to Bird.cpp
 //////////////////////////////////////////////////////////////////
-inline int getReading(Matrix *data, int port)
+inline int getReading(vrj::Matrix *data, int port)
 {
   char buff[12];
   //char group;
@@ -395,7 +395,7 @@ inline int getReading(Matrix *data, int port)
 
   //vjPOS_DATA *dataPtr = data + addr - 1;
 
-  Vec3 pos_data, or_data;
+  vrj::Vec3 pos_data, or_data;
 
   pos_data[0] = rawToFloat(buff[1],buff[0]) * POSITION_RANGE;       // X
   pos_data[1] = rawToFloat(buff[3],buff[2]) * POSITION_RANGE;       // Y

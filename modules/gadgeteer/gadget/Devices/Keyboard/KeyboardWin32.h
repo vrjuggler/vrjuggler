@@ -73,7 +73,7 @@ public:
    ~KeyboardWin32() { stopSampling();}
 
 
-   virtual bool config(ConfigChunk* c);
+   virtual bool config(jccl::ConfigChunk* c);
 
    /* Pure Virtuals required by Input */
    int startSampling();

@@ -44,10 +44,13 @@
 #include <gadget/Type/Input.h>
 #include <gadget/Type/Keyboard.h>
 
+namespace jccl {
+    class ConfigChunk;
+};
+
+
 namespace gadget
 {
-
-   class ConfigChunk;
 
 //---------------------------------------------------------------
 //: XWin Keyboard class
@@ -91,7 +94,7 @@ public:
    }
    ~KeyboardXWin() { stopSampling();}
 
-   virtual bool config(ConfigChunk* c);
+   virtual bool config(jccl::ConfigChunk* c);
 
    // Main thread of control for this active object
    void controlLoop(void* nullParam);

@@ -54,7 +54,7 @@ public:
 
    // Get the position to use
    // ARGS: newPos - The new postion this frame of the physical device
-   Matrix getPos(const Matrix newPos);
+   vrj::Matrix getPos(const vrj::Matrix newPos);
 
    // Given a distance, return the scale factor
    // based upon the minDist and maxDist values
@@ -70,7 +70,7 @@ public:
    float maxTheshold() { return mMaxThreshold; }
 
 private:
-   Matrix mLastReturnedPos;
+   vrj::Matrix mLastReturnedPos;
 
    // These parameters influence the sigmoid
    float    mMinDist;            // Mininum distance parameter

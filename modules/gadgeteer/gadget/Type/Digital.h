@@ -80,7 +80,7 @@ public:
    {
    }
 
-   virtual bool config(ConfigChunk* c)
+   virtual bool config(jccl::ConfigChunk* c)
    {
       //vprDEBUG(vprDBG_ALL,4)<<"*** Digital::config()\n"<< vprDEBUG_FLUSH;
       return true;;

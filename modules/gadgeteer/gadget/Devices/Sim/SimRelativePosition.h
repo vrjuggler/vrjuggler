@@ -38,9 +38,12 @@
 #include <gadget/Type/Position.h>
 #include <gadget/Type/PositionInterface.h>
 
+namespace jccl {
+    class ConfigChunk;
+};
+
 namespace gadget
 {
-   class ConfigChunk;
 
 //: Simulated a position device by making
 // An existing device behave relative to another one.
@@ -58,16 +61,16 @@ public:
    SimRelativePosition() {;}
    virtual ~SimRelativePosition() {;}
 
-   virtual bool config(ConfigChunk* chunk);
+   virtual bool config(jccl::ConfigChunk* chunk);
 
    //: Return position data
-   Matrix* getPosData(int devNum=0)
+   vrj::Matrix* getPosData(int devNum=0)
    {
       vprASSERT(devNum == 0);    // Make sure we have a valid dev
       return &mPos;
    }
 
-   TimeStamp* getPosUpdateTime (int devNum = 0) {
+   jccl::TimeStamp* getPosUpdateTime (int devNum = 0) {
       return &mUpdateTime;
     }
 
@@ -82,11 +85,11 @@ public:
    static std::string getChunkType() { return std::string( "SimRelativePosition" ); }
 
 private:
-   Matrix            mPos;                   //: The current position being simulated
+   vrj::Matrix            mPos;                   //: The current position being simulated
    PositionInterface mBaseFrame;             //: The base frame of reference
    PositionInterface mRelativePos;           //: the relative position
 
-   TimeStamp         mUpdateTime;            //: Time of last update
+   jccl::TimeStamp         mUpdateTime;            //: Time of last update
 };
 
 };

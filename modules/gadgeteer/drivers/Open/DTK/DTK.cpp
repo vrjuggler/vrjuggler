@@ -67,9 +67,9 @@ DTK::DTK()
     port = NULL;
 }
 
-bool DTK::config(ConfigChunk *c)
+bool DTK::config(jccl::ConfigChunk *c)
 {
-    vprDEBUG(vrjDBG_INPUT_MGR,1) << "  DTK::config(ConfigChunk*)"
+    vprDEBUG(vrjDBG_INPUT_MGR,1) << "  DTK::config(jccl::ConfigChunk*)"
                    << std::endl << vprDEBUG_FLUSH;
 
     if (!Position::config(c) || !Digital::config(c) || !Analog::config(c))
@@ -84,7 +84,7 @@ bool DTK::config(ConfigChunk *c)
 //     String: segmentName
 //        int: dataType
 
-    ConfigChunk* embeddedChunk = NULL;
+    jccl::ConfigChunk* embeddedChunk = NULL;
     int i = 0;
 
 /* Dynamically Load the DTK Library
@@ -104,7 +104,7 @@ bool DTK::config(ConfigChunk *c)
 
     for(i = 0; i < numSegments; i++)
     {
-        embeddedChunk = static_cast<ConfigChunk*>(c->getProperty("segments", i));
+        embeddedChunk = static_cast<jccl::ConfigChunk*>(c->getProperty("segments", i));
         _dtkSegments[i] = new DTKMemorySegment;
         if(embeddedChunk != NULL)
         {
@@ -170,8 +170,8 @@ void DTK::controlLoop(void* nullParam)
     delete [] mDigitalData;
 
     int numbuffs = numPositional*3;
-    theData = (Matrix*) new Matrix[numbuffs];
-    mDataTimes = new TimeStamp[numbuffs];
+    theData = (vrj::Matrix*) new vrj::Matrix[numbuffs];
+    mDataTimes = new jccl::TimeStamp[numbuffs];
 
     numbuffs = numDigital*3;
     mDigitalData = new int[numbuffs];
@@ -245,8 +245,8 @@ int DTK::sample()
     float *floatData;
     int   *intData;
 
-    TimeStamp sampletime;
-    Matrix world_T_transmitter, transmitter_T_reciever, world_T_reciever;
+    jccl::TimeStamp sampletime;
+    vrj::Matrix world_T_transmitter, transmitter_T_reciever, world_T_reciever;
 
     sampletime.set();
 
@@ -340,7 +340,7 @@ int DTK::stopSampling()
     return 1;
 }
 
-Matrix* DTK::getPosData( int d )
+vrj::Matrix* DTK::getPosData( int d )
 {
     if( (this->isActive() == false) || (d < 0) || (d >= numPositional) )
     return NULL;
@@ -367,7 +367,7 @@ float DTK::getAnalogData( int d )
 
 }
 
-TimeStamp* DTK::getPosUpdateTime (int d)
+jccl::TimeStamp* DTK::getPosUpdateTime (int d)
 {
     if( (this->isActive() == false) || (d < 0) || (d >= numPositional) )
     return NULL;

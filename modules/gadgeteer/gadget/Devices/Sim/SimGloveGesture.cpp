@@ -44,19 +44,19 @@ namespace gadget
 // -Load the sample file
 // -Trim the smallest so they are same length
 // -Find/Set pos proxy for glove
-bool SimGloveGesture::config(ConfigChunk* chunk)
+bool SimGloveGesture::config(jccl::ConfigChunk* chunk)
 {
    if((!GloveGesture::config(chunk)) || (!SimInput::config(chunk)))
       return false;
 
    mCurGesture = 0;     // We are in no gesture yet
 
-   std::vector<VarValue*> key_list = chunk->getAllProperties("keyPairs");
+   std::vector<jccl::VarValue*> key_list = chunk->getAllProperties("keyPairs");
    mSimKeys = readKeyList(key_list);
 
    // Get sample filename
    std::string sample_file = chunk->getProperty("trainedFilename");
-   loadTrainedFile(FileIO::replaceEnvVars(sample_file));
+   loadTrainedFile(vrj::FileIO::replaceEnvVars(sample_file));
 
    // Trim the lengths
    unsigned int num_gestures = getNumGestures();
