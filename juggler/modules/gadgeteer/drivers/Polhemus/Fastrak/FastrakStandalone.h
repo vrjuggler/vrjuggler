@@ -111,6 +111,8 @@ public:
    int getCoords(unsigned int stations, float *vecXYZ, float *vecAER);
 
 private:
+   vpr::ReturnStatus readStatus();
+
    int Read(int len);
    void readloop(void* unused);
    void checkchild();
