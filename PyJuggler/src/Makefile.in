@@ -34,7 +34,7 @@ top_srcdir=	@top_srcdir@
 MKINSTALLDIRS=	$(scriptdir)/mkinstalldirs
 
 CXX=		@CXX@
-CXXFLAGS=	@BOOST_PYTHON_INCLUDES@
+CXXFLAGS=	@BOOST_PYTHON_INCLUDES@ @CXXFLAGS_DYNLIB@
 
 ifeq (@OS_TYPE@, Win32)
    CXXFLAGS+=	$(shell vrjuggler-config --includes) /Zm800 /GX /GR /Op	\
