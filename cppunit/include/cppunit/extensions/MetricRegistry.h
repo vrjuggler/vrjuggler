@@ -225,8 +225,6 @@ private:
    MetricMapType mMetricMap;
 };
 
-MetricRegistry* MetricRegistry::mInstance = NULL;
-
 }; // namespace
 
 #define CPPUNIT_ASSERT_METRIC_GE(test_key, cur_value, soft_limit, hard_limit)\
