@@ -998,8 +998,18 @@ def installVRJConfig(prefix):
          if os.path.exists(jar_file):
             shutil.copy2(jar_file, destdir)
 
-      srcdir = os.path.join(juggler_dir, 'modules', 'vrjuggler', 'vrjconfig')
-      shutil.copy2(os.path.join(srcdir, 'VRJConfig.xml'), destdir)
+      shutil.copy2(os.path.join(vrjconfig_src, 'VRJConfig.xml'), destdir)
+
+      # Install any custom editors that were compiled.
+      destdir = os.path.join(prefix, 'lib', 'vrjuggler', 'customeditors')
+      mkinstalldirs(destdir)
+
+      for e in editors:
+         jar_file = os.path.join(jardir, e[1] + '.jar')
+         xml_file = os.path.join(editor_src, e[0], e[1] + '.xml')
+         if os.path.exists(jar_file):
+            shutil.copy2(xml_file, destdir)
+            shutil.copy2(jar_file, destdir)
 
       # Install vrjconfig.bat.
       destdir = os.path.join(prefix, 'bin')
