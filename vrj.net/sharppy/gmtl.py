@@ -37,30 +37,60 @@ Matrix = ReferenceTemplate(mod, 'gmtl::Matrix', 'gmtl/Matrix.h')
 
 Matrix44f = Matrix('float 4 4', rename = 'gmtl::Matrix44f')
 sealed(Matrix44f)
+return_array(Matrix44f.getData, 16)
+property(Matrix44f.mData)
+readonly(Matrix44f.mData)
 
 Matrix44d = Matrix('double 4 4', rename = 'gmtl::Matrix44d')
 sealed(Matrix44d)
+return_array(Matrix44d.getData, 16)
+property(Matrix44d.mData)
+readonly(Matrix44d.mData)
 
 Matrix33f = Matrix('float 3 3', rename = 'gmtl::Matrix33f')
 sealed(Matrix33f)
+return_array(Matrix33f.getData, 9)
+property(Matrix33f.mData)
+readonly(Matrix33f.mData)
 
 Matrix33d = Matrix('double 3 3', rename = 'gmtl::Matrix33d')
 sealed(Matrix33d)
+return_array(Matrix33d.getData, 9)
+property(Matrix33d.mData)
+readonly(Matrix33d.mData)
 # ============================================================== gmtl::Matrix<>
 
 # gmtl::Vec<> =================================================================
 # XXX: The gmtl::VecBase<> instantiations cannot be renamed until Sharppy
 # supports renaming without requiring existing typedefs.
 VecBase = ReferenceTemplate(mod, 'gmtl::VecBase', 'gmtl/VecBase.h')
+
 VecBase2f = VecBase('float 2')
+return_array(VecBase2f.getData, 2)
+
 VecBase2d = VecBase('double 2')
+return_array(VecBase2d.getData, 2)
+
 VecBase2i = VecBase('int 2')
+return_array(VecBase2i.getData, 2)
+
 VecBase3f = VecBase('float 3')
+return_array(VecBase3f.getData, 3)
+
 VecBase3d = VecBase('double 3')
+return_array(VecBase3d.getData, 3)
+
 VecBase3i = VecBase('int 3')
+return_array(VecBase3i.getData, 3)
+
 VecBase4f = VecBase('float 4')
+return_array(VecBase4f.getData, 4)
+
 VecBase4d = VecBase('double 4')
+return_array(VecBase4d.getData, 4)
+
 VecBase4i = VecBase('int 4')
+return_array(VecBase4i.getData, 4)
 
 Vec = ReferenceTemplate(mod, 'gmtl::Vec', 'gmtl/Vec.h')
 
@@ -117,18 +147,28 @@ sealed(Point2i)
 EulerAngle = ReferenceTemplate(mod, 'gmtl::EulerAngle', 'gmtl/EulerAngle.h')
 
 EulerAngleXYZf = EulerAngle('float gmtl::XYZ', rename = 'gmtl::EulerAngleXYZf')
-EulerAngleZYXf = EulerAngle('float gmtl::ZYX', rename = 'gmtl::EulerAngleZYXf')
-EulerAngleZXYf = EulerAngle('float gmtl::ZXY', rename = 'gmtl::EulerAngleZXYf')
 sealed(EulerAngleXYZf)
+return_array(EulerAngleXYZf.getData, 3)
+
+EulerAngleZYXf = EulerAngle('float gmtl::ZYX', rename = 'gmtl::EulerAngleZYXf')
 sealed(EulerAngleZYXf)
+return_array(EulerAngleZYXf.getData, 3)
+
+EulerAngleZXYf = EulerAngle('float gmtl::ZXY', rename = 'gmtl::EulerAngleZXYf')
 sealed(EulerAngleZXYf)
+return_array(EulerAngleZXYf.getData, 3)
 
 EulerAngleXYZd = EulerAngle('double gmtl::XYZ', rename = 'gmtl::EulerAngleXYZd')
-EulerAngleZYXd = EulerAngle('double gmtl::ZYX', rename = 'gmtl::EulerAngleZYXd')
-EulerAngleZXYd = EulerAngle('double gmtl::ZXY', rename = 'gmtl::EulerAngleZXYd')
 sealed(EulerAngleXYZd)
+return_array(EulerAngleXYZd.getData, 3)
+
+EulerAngleZYXd = EulerAngle('double gmtl::ZYX', rename = 'gmtl::EulerAngleZYXd')
 sealed(EulerAngleZYXd)
+return_array(EulerAngleZYXd.getData, 3)
+
+EulerAngleZXYd = EulerAngle('double gmtl::ZXY', rename = 'gmtl::EulerAngleZXYd')
 sealed(EulerAngleZXYd)
+return_array(EulerAngleZXYd.getData, 3)
 # ========================================================== gmtl::EulerAngle<>
 
 # gmtl::AxisAngle<> ===========================================================
