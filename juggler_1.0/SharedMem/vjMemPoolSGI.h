@@ -39,35 +39,8 @@
 class vjMemPoolSGI : public vjMemPool
 {
 public:    
-   vjMemPoolSGI(size_t initialSize = 65536,  int numProcs = 8, char* staticTempName = "/var/tmp/memPoolSGIXXXXXX") {
-      cerr << "\n\nMemPoolSGI: Allocating Arena."
-      << "\n\tSize: " << initialSize
-      << "\n\tnProcs: " << numProcs << "\n" << flush;
-      usconfig(CONF_INITUSERS, numProcs);
-      usconfig(CONF_INITSIZE, initialSize);
-      usconfig(CONF_AUTOGROW, 1);   // Default, but we set anyway
-//#ifdef DEBUG_VJ
-      usconfig(CONF_LOCKTYPE, US_DEBUGPLUS);    // what type of lock information
-//#endif
-
-      //static char* staticTempName = "/var/tmp/memPoolSGIXXXXXX";  // Do it this way because mktemp overwrite's the variable
-      char* tempName = new char[strlen(staticTempName)+1];      // Therefore we need to use a non-static variable
-      strcpy(tempName, staticTempName);
-
-      arena = usinit(mktemp(tempName));   // Allocate the arena
-
-      arenaFileName = tempName;      // So we know where the file is
-      //delete tempName;		    // Delete the temporary file name
-
-      if (arena == NULL)
-      {
-         perror("ERROR: vjMemPoolSGI::MemPoolSGI");
-      }
-
-      cerr << "\tfile: " << arenaFileName << endl;
-      cerr << "\tpool: " << this << endl;
-      cerr << "\tarena: " << arena << endl;
-   }
+   vjMemPoolSGI(size_t initialSize = 65536, int numProcs = 8,
+                char* staticTempName = "/var/tmp/memPoolSGIXXXXXX");
 
    virtual ~vjMemPoolSGI() {
       usdetach(arena);
@@ -103,39 +76,11 @@ public:      // Non-virtual functions
 
 public:
    // Function must be called before any vjMemPools are created.
-   // Automatically called by the first new with default values if not called previously
-   static void init(size_t initialSize = 32768, int numProcs = 64, char* staticTempName = "/var/tmp/memPoolsArenaXXXXXX")     // Function to initialize any STATIC data structures
-   {
-      if (arenaForMemPools == NULL)
-      {
-         cerr << "\n\nMemPoolSGI: Allocating Base Arena for ALL vjMemPoolSGI's."
-         << "\n\tSize: " << initialSize
-         << "\n\tnProcs: " << numProcs << "\n" << flush;
-   
-         usconfig(CONF_INITUSERS, numProcs);
-         usconfig(CONF_INITSIZE, initialSize);
-         usconfig(CONF_AUTOGROW, 1);   // Default, but we set anyway
-   
-         char* tempName = new char[strlen(staticTempName)+1];      // Therefore we need to use a non-static variable
-         strcpy(tempName, staticTempName);
-   
-         arenaForMemPools = usinit(mktemp(tempName));
-         unlink(tempName);
-   
-         if (arenaForMemPools == NULL)
-         {
-            perror("ERROR: vjMemPoolSGI::init. Was not able to get an arena!!!!");
-         }
-   
-         arenaForMemPoolsFileName = (char*)usmalloc(strlen(staticTempName+1), arenaForMemPools);
-         strcpy(arenaForMemPoolsFileName, tempName);
-   
-         cerr << "\tfile: " << arenaForMemPoolsFileName << endl;
-         cerr << "\tarena: " << arenaForMemPools << endl;
-      } else {
-         cerr << "Tried to re-init the Base Arena for ALL vjMemPoolSGI's" << endl;
-      }
-   }
+   // Automatically called by the first new with default values if not called
+   // previously.
+   // Function to initialize any STATIC data structures.
+   static void init(size_t initialSize = 32768, int numProcs = 64,
+                    char* staticTempName = "/var/tmp/memPoolsArenaXXXXXX");
 
    void* operator new(size_t sz)
    {   
@@ -150,6 +95,7 @@ public:
    { 
       usfree(ptr, arenaForMemPools);
    } 
+
 private:
    usptr_t*   arena;
    char*   arenaFileName;
