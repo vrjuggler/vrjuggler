@@ -3,6 +3,7 @@
 
 #include <vrj/Draw/OGL/GlApp.h>
 #include <deprecated/Kernel/vjKernel.h>
+#include <deprecated/Kernel/GL/vjGlDrawManager.h>
 
 typedef vrj::GlApp vjGlApp;
 
