@@ -54,25 +54,65 @@ public class ProxiedDeviceCellViewFactory
       mCreatorMap = creatorMap;
    }
 
+   /**
+    * Pairs up the given <code>ConfigDefinition</code> with the given
+    * <code>Class</code> instance for later creation of custom views for cells
+    * holding <code>ConfigElement</code> objects with the given definition.
+    * The <code>Class</code> instance must be for a type that is a subclass
+    * of <code>org.jgraph.graph.AbstractCellView</code>.
+    *
+    * @param def        the config definition that will be used for looking
+    *                   up the <code>Class</code> reference in the view
+    *                   creation methods
+    * @param creator    the creator class reference
+    *
+    * @see org.jgraph.graph.AbstractCellView
+    */
    public void registerCreator(ConfigDefinition def, Class creator)
    {
       mCreatorMap.put(def, creator);
    }
 
+   /**
+    * Creates a <code>VertexView</code> for the given cell, which is expected
+    * to be for a vertex in the graph.  If the cell is a type we are expecting
+    * and it holds a user object that we know how to handle, we determine if a
+    * custom renderer has been registered with us for that cell type.  If no
+    * custom view is found, we fall back on the superclass version of this
+    * method.
+    *
+    * @return An instance of <code>VertexView</code> (or a subclass thereof)
+    *         for the given cell.
+    *
+    * @see org.jgraph.graph.VertexView
+    * @see org.jgraph.graph.DefaultCellViewFactory#createVertexView(Object)
+    */
    protected VertexView createVertexView(Object cell)
    {
       VertexView view = null;
 
+      // Right now, we expect that vertex cells are instances of
+      // DefaultGraphCell (or some subclass thereof) and that they contain a
+      // user object of type ConfigElementHolder (or some subclass thereof).
+      // This is not inifinitely flexible, but considering the purpose of the
+      // devicegraph package, it is a reasonable assumption.
       if ( cell instanceof DefaultGraphCell &&
            ((DefaultGraphCell) cell).getUserObject() instanceof ConfigElementHolder )
       {
+         // Extract the user object which we know to be an instance of
+         // ConfigElementHolder.
          ConfigElementHolder holder =
             (ConfigElementHolder) ((DefaultGraphCell) cell).getUserObject();
 
+         // Look up the config definition for the held ConfigElement and check
+         // to see if a VertexView was registered with us for that definition.
          ConfigElement elt    = holder.getElement();
          ConfigDefinition def = elt.getDefinition();
          Class view_class     = (Class) mCreatorMap.get(def);
 
+         // If a VertexView for the cell's config definition was registered
+         // with us, try to instantiate and use that view for the given
+         // cell.
          if ( null != view_class )
          {
             try
@@ -89,6 +129,8 @@ public class ProxiedDeviceCellViewFactory
          }
       }
 
+      // If we have no custom view at this point, use the JGraph version of
+      // createVertexView() to get a default view for the given cell.
       if ( null == view )
       {
          view = super.createVertexView(cell);
