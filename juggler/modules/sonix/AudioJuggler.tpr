@@ -23,6 +23,9 @@ cvscs.repository=/home/users/kevn/.repository
 option.cvs.releaseTag=fdsfdsfasdfsd
 option.cvs.repository=kevn@cruncher.vrac.iastate.edu:/home/users/kevn/.repository
 option.defaultOffline=false
+cvscs.pserver=false
+cvscs.user=kevn
+provider.class=CVS LAN
 [project]
 default.InitialDiagram=UseCaseDiagram
 [model]
@@ -31,3 +34,26 @@ showDiagramContents=false
 showPackagesFirst=true
 [newDiagramExpert]
 includeInCurrentDiagram=true
+[IDL]
+ConvertStandardTypes=true
+CreateIdlSubdirectory=false
+FilterbyStereotype=false
+IncludeClasses=true
+IncludeInterfaces=true
+InterfaceSuffix=
+ModulePrefix=null
+OneFileForModule=true
+OutputDirectory=/home/users/kevn/software/weekend/AudioJuggler/idl
+ProcessAttributes=true
+ProcessCardinality=false
+ProcessImports=false
+ProcessLinks=true
+ProcessPublicMembersOnly=false
+SuppressWarnings=true
+UseLongFileNames=false
+UseModuleStatements=true
+[srccontrol]
+enabled=true
+[idldialog]
+selected.flavor=false
+selected.type=2
