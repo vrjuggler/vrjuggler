@@ -644,7 +644,6 @@ cd "$topdir"
 
 # Define the base path to the source directory using $(VJROOT_ABS) as an
 # alternative to using $(srcdir).
-VJ_SRCDIR='$(VJROOT_ABS)'
 UNIX_VJROOT_ABS="$VJROOT_ABS"
 UNIX_JUGGLERROOT_ABS="$JUGGLERROOT_ABS"
 
@@ -730,7 +729,6 @@ fi
 if test "x$OS_TYPE" = "xWin32" ; then
     SAFE_VJROOT_ABS=`unix2dos -p "$VJROOT_ABS"`
     SAFE_JUGGLERROOT_ABS=`unix2dos -p "$JUGGLERROOT_ABS"`
-    VJ_SRCDIR=`unix2dos "$VJ_SRCDIR"`
 
     DEPEND_EXTRAS=`unix2dos "$DEPEND_EXTRAS"`
     INCLUDES=`unix2dos "$INCLUDES"`
@@ -808,7 +806,6 @@ AC_SUBST(UNIX_VJROOT_ABS)
 AC_SUBST(UNIX_JUGGLERROOT_ABS)
 AC_SUBST(SAFE_VJROOT_ABS)
 AC_SUBST(SAFE_JUGGLERROOT_ABS)
-AC_SUBST(VJ_SRCDIR)
 AC_SUBST(VJ_SHARE_DIR)
 AC_SUBST(SUBSYSTEM)
 
