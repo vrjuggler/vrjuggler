@@ -10,6 +10,7 @@
   <OL>
     <LI><A HREF="#intro">Introduction</A>
     <LI><A HREF="#recommend">Recommended Reading</A>
+    <LI><A HREF="#quick">General Quick Start</A>
     <LI><A HREF="#autoconf">Autoconf and Autoheader</A>
     <LI><A HREF="#usage">Usage</A>
     <LI><A HREF="#template">Template (<TT>.in</TT>) Files</A>
@@ -69,6 +70,38 @@
       <A HREF="http://www.ora.com/">O'Reilly &amp; Associates</A>)
     </LI>
   </UL>
+
+<A NAME="quick"><H4>General Quick Start</H4></A>
+
+  <P>
+    When first downloading the Juggler source to compile it, users must
+    generate the configure script and <TT>vjDefines.h.in</TT> template
+    using <TT>autoconf</TT> and <TT>autoheader</TT>.  This files are not
+    part of the repository because they are generated using third-party
+    tools from files in the repository (i.e., <TT>configure.in</TT> and
+    <TT>acconfig.h</TT>).  The usual way to generate the files is:
+
+<PRE>
+    % autoconf ; autoheader
+</PRE>
+
+    This must be executed in the top-level Juggler source directory.
+  </P>
+
+  <P>
+    Once the configure script is generated, it can be invoked by simply
+    typing:
+
+<PRE>
+    % ./configure
+</PRE>
+
+    To get a list of all the available options, do:
+
+<PRE>
+    % ./configure --help
+</PRE>
+  </P>
 
 <A NAME="autoconf"><H4>Autoconf and Autoheader</H4></A>
 
