@@ -75,7 +75,12 @@ public:
     int close();
     bool makeCurrent();
 
-   void config(vrj::Display* disp);
+    /** Check events
+    * @post If (areKeyboardDevice), checks the x-events and processes them
+    */
+    virtual void checkEvents();
+
+    void config(vrj::Display* disp);
 
 public:  /**** Static Helpers *****/
    /* static */ virtual bool createHardwareSwapGroup(std::vector<vrj::GlWindow*> wins);
