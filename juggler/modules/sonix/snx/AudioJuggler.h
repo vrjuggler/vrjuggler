@@ -57,7 +57,7 @@
 class AudioJuggler : public IAudioJuggler, public aj::Singleton<AudioJuggler>
 {
 protected:
-   //friend class aj::Singleton<AudioJuggler>;
+   friend class aj::Singleton<AudioJuggler>;
 
    //: default constructor
    AudioJuggler() : IAudioJuggler(), mImplementation( NULL )
