@@ -65,7 +65,7 @@ fi
 usage()
 {
     cat <<EOF
-Usage: $0 [OPTIONS] [LIBRARIES]
+Usage: vpr-config [OPTIONS] [LIBRARIES]
 Options:
         [--basedir]           Use \$VPR_BASE_DIR when printing paths
         [--prefix[=DIR]]      Print the installation prefix or set an
