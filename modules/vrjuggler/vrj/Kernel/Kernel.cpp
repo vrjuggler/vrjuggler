@@ -58,24 +58,31 @@ void vjKernel::initConfig()
 /// The Kernel loop
 void vjKernel::controlLoop(void* nullParam)
 {
-   cerr << "vjKernel::controlLoop: Entered.\n";
+   vjDEBUG(0) << "vjKernel::controlLoop: Entered.\n" << vjDEBUG_FLUSH;
 
    initConfig();
 
    //while(!Exit)
    while (1)
    {
+         vjDEBUG(3) << "vjKernel::controlLoop: app->preDraw()\n" << vjDEBUG_FLUSH;
       app->preDraw();         // Do Any application pre-draw stuff
+         vjDEBUG(3) << "vjKernel::controlLoop: drawManager->draw()\n" << vjDEBUG_FLUSH;
       drawManager->draw();    // Trigger the beginning of frame drawing
+         vjDEBUG(3) << "vjKernel::controlLoop: app->postDraw\n" << vjDEBUG_FLUSH;
       app->postDraw();        // Do computations that can be done while drawing.  This should be for next frame.
+         vjDEBUG(3) << "vjKernel::controlLoop: drawManager->sync()\n" << vjDEBUG_FLUSH;
       drawManager->sync();    // Block until drawing is done
+         vjDEBUG(3) << "vjKernel::controlLoop: app->postSync()\n" << vjDEBUG_FLUSH;
       app->postSync();        // Do processing after drawing is complete
 
       // Sync should be here for Kernel changes from
       // the environment manager
 
       //Tell trackers to swap buffers;
+         vjDEBUG(3) << "vjKernel::controlLoop: Update Trackers\n" << vjDEBUG_FLUSH;
       data.inputManager->UpdateAllData();
+         vjDEBUG(3) << "vjKernel::controlLoop: Update Projections\n" << vjDEBUG_FLUSH;
       drawManager->updateProjections(); 
    }
 }
