@@ -58,146 +58,172 @@
 class SNX_CLASS_API sonix
 {
 protected:
-   //: default constructor
+   /** Default constructor. */
    sonix() : mImplementation( NULL )
    {
    }
 
-   //: virtual destructor
+   /** Virtual destructor. */
    virtual ~sonix();
 
 public:
 
    /**
-    * @input alias of the sound to trigger, and number of times to play, -1 to 
-    *        repeat infinately, 1 (single shot) is default.
-    * @preconditions alias does not have to be associated with a loaded sound.
-    * @postconditions if it is, then the loaded sound is triggered.  if it isn't then nothing happens.
-    * @semantics Triggers a sound
+    * Triggers a sound.
+    *
+    * @pre alias does not have to be associated with a loaded sound.
+    * @post If it is, then the loaded sound is triggered.  If it isn't, then
+    *       nothing happens.
+    *
+    * @param alias Alias of the sound to trigger, and number of times to play,
+    *              -1 to repeat infinately, 1 (single shot) is default.
     */
    virtual void trigger( const std::string& alias, const int& repeat = 1 );
    
    /**
-     * is the sound currently playing?
-     */
+    * Is the sound currently playing?
+    */
    virtual bool isPlaying( const std::string& alias );
 
-   /*
-    * when sound is already playing then you call trigger,
-    * does the sound restart from beginning?
+   /**
+    * When sound is already playing then you call trigger,
+    * Does the sound restart from beginning?
     */
    virtual void setRetriggerable( const std::string& alias, bool onOff );
 
    /**
-    * is the sound retriggerable?
+    * Is the sound retriggerable?
     */
    virtual bool isRetriggerable( const std::string& alias );
 
    /**
-    * @semantics stop the sound
-    * @input alias of the sound to be stopped
+    * Stops the sound.
+    *
+    * @param alias Alias of the sound to be stopped.
     */
    virtual void stop( const std::string& alias );
 
    /**
-    * pause the sound, use unpause to return playback where you left off...
+    * Pause the sound, use unpause to return playback where you left off.
     */
    virtual void pause( const std::string& alias );
 
    /**
-    * resume playback from a paused state.  does nothing if sound was not paused.
+    * Resumes playback from a paused state.  Does nothing if sound was not
+    * paused.
     */
    virtual void unpause( const std::string& alias );
    
-   /** if the sound is paused, then return true. */
+   /** If the sound is paused, then return true. */
    virtual bool isPaused( const std::string& alias );
    
    /**
-    * ambient or positional sound.
-    * is the sound ambient - attached to the listener, doesn't change volume
-    * when listener moves...
-    * or is the sound positional - changes volume as listener nears or retreats..
+    * Ambient or positional sound.
+    * Is the sound ambient: attached to the listener, doesn't change volume
+    * when listener moves.
+    * Or is the sound positional: changes volume as listener nears or retreats.
     */
    virtual void setAmbient( const std::string& alias, bool setting = false );
 
-   /** is the sound ambient? */
+   /** Is the sound ambient? */
    virtual bool isAmbient( const std::string& alias );
 
-   /** alters the frequency of the sample.
-    *  1 is no change
-    *  < 1 is low
-    *  > 1 is high.
+   /**
+    * Alters the frequency of the sample.
+    * 1 is no change.
+    * < 1 is low.
+    * > 1 is high.
     */
    virtual void setPitchBend( const std::string& alias, float amount );
 
-   /** affect volume.  set to a value between [0..1]. */
+   /** Effect volume.  Set to a value between [0..1]. */
    virtual void setVolume( const std::string& alias, float amount );
    
-   /** affect cutoff.
-    *  set to a value between [0..1]... 1 is no change.  0 is total cutoff.
+   /**
+    * Effect cutoff.
+    * Set to a value between [0..1]... 1 is no change.  0 is total cutoff.
     */
    virtual void setCutoff( const std::string& alias, float amount );
    
    /**
-    * set sound's 3D position 
-    * @input x,y,z are in OpenGL coordinates.  alias is a name that has been associate()d with some sound data
+    * Set sound's 3D position.
+    *
+    * @param alias A name that has been associated with some sound data.
+    * @param x     The X coordinate of the sound in 3D OpenGL coordinates.
+    * @param y     The Y coordinate of the sound in 3D OpenGL coordinates.
+    * @param z     The Z coordinate of the sound in 3D OpenGL coordinates.
     */
    virtual void setPosition( const std::string& alias, const float& x, const float& y, const float& z );
 
    /**
-    * get sound's 3D position
-    * @input alias is a name that has been associate()d with some sound data
-    * @output x,y,z are returned in OpenGL coordinates.
+    * Get sound's 3D position
+    *
+    * @param alias A name that has been associated with some sound data.
+    * @param x     Storage for the X coordinate of the sound in 3D OpenGL
+    *              coordinates.
+    * @param y     Storage for the Y coordinate of the sound in 3D OpenGL
+    *              coordinates.
+    * @param z     Storage for the Z coordinate of the sound in 3D OpenGL
+    *              coordinates.
     */
    virtual void getPosition( const std::string& alias, float& x, float& y, float& z );
 
    /**
-    * set the position of the listener
+    * Sets the position of the listener.
     */
    virtual void setListenerPosition( const gmtl::Matrix44f& mat );
 
    /**
-    * get the position of the listener
+    * Gets the position of the listener.
     */
    virtual void getListenerPosition( gmtl::Matrix44f& mat );
 
 
    /**
-    * change the underlying sound API to something else.
-    * @input usually a name of a valid registered sound API implementation
-    * @preconditions sound implementation should be registered
-    * @postconditions underlying API is changed to the requested API name.   if apiName's implementation is not registered, then underlying API is changed to the stub version.
-    * @semantics function is safe: always returns a valid implementation.
-    * @time O(1)
-    * @output a valid sound API.  if apiName is invalid, then a stub implementation is returned.
+    * Changes the underlying sound API to something else.  This function is
+    * safe.  It always returns a valid implementation.  It runs in O(1)
+    * (constant) time.
+    *
+    * @pre Sound implementation should be registered
+    * @post Underlying API is changed to the requested API name.   If
+    *       apiName's implementation is not registered, then underlying API is
+    *       changed to the stub version.
+    *
+    * @param apiName Usually a name of a valid registered sound API
+    *                implementation.
     */
    virtual void changeAPI( const std::string& apiName );
 
-   /*
-    * configure the sound API global settings
+   /**
+    * Configures the sound API global settings.
     */
    virtual void configure( const snx::SoundAPIInfo& sai );
 
    /**
-     * configure/reconfigure a sound
-     * configure: associate a name (alias) to the description if not already done
-     * reconfigure: change properties of the sound to the descriptino provided.
-     * @preconditions provide an alias and a SoundInfo which describes the sound
-     * @postconditions alias will point to loaded sound data
-     * @semantics associate an alias to sound data.  later this alias can be used to operate on this sound data.
-     */
+    * Configures/reconfigures a sound by associating an alias with the sound
+    * data.  Later, this alias can be used to operate on the sound data.
+    *
+    * Configure: associate a name (alias) to the description if not already
+    * done.
+    * Reconfigure: change properties of the sound to the descriptino provided.
+    *
+    * @pre provide an alias and a SoundInfo which describes the sound
+    * @post alias will point to loaded sound data
+    */
    virtual void configure( const std::string& alias, const snx::SoundInfo& description );
 
    /**
-     * remove a configured sound, any future reference to the alias will not
-     * cause an error, but will not result in a rendered sound
-     */
+    * Removes a configured sound.  Any future reference to the alias will not
+    * cause an error, but will not result in a rendered sound.
+    */
    virtual void remove( const std::string alias );
 
    /**
-     * @semantics call once per sound frame (doesn't have to be same as your graphics frame)
-     * @input time elapsed since last frame
-     */
+    * Call once per sound frame (doesn't have to be same as your graphics
+    * frame).
+    *
+    * @param timeElapsed Time elapsed since the last sound frame.
+    */
    virtual void step( const float& timeElapsed );
    
 protected:
