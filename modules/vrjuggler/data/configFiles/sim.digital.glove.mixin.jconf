@@ -151,6 +151,7 @@
                <post_rotation>0.0</post_rotation>
             </position_transform_filter>
          </position_filters>
+         <device_host />
       </simulated_positional_device>
       <simulated_positional_device name="Right SimGlovePos" version="2">
          <event_window_proxy>GloveKeyProxy</event_window_proxy>
@@ -254,6 +255,7 @@
                <post_rotation>0.0</post_rotation>
             </position_transform_filter>
          </position_filters>
+         <device_host />
       </simulated_positional_device>
       <alias name="LeftThumb" version="1">
          <proxy>DigitalLeftThumb</proxy>
@@ -404,6 +406,7 @@
          </key_pair>
          <left_glove_position>GlovePos Proxy</left_glove_position>
          <right_glove_position>Right GlovePos Proxy</right_glove_position>
+         <device_host />
       </simulated_digital_glove>
       <glove_proxy name="Glove Proxy" version="1">
          <device>SimDigitalGlove</device>

@@ -195,6 +195,7 @@
                <post_rotation>0.0</post_rotation>
             </position_transform_filter>
          </position_filters>
+         <device_host />
       </simulated_positional_device>
       <event_window_proxy name="Wandevent_window_proxy" version="1">
          <device>Wand Event Window</device>
@@ -255,6 +256,7 @@
                <key>15</key>
             </key_modifier_pair>
          </key_pair>
+         <device_host />
       </simulated_digital_device>
    </elements>
 </configuration>
