@@ -11,7 +11,7 @@
 // --------------------------------------------------------------------------
 
 #include <vjConfig.h>
-#include <hash_map.h>
+#include <hash_map>
 #include <Threads/vjThreadFunctor.h>
 
 class vjBaseThread
@@ -253,7 +253,7 @@ public:
    //: Get a thread from the list
    vjBaseThread* getThread(IdxType index)
    {
-      hash_map<IdxType, vjBaseThread*>::iterator i;
+      std::hash_map<IdxType, vjBaseThread*>::iterator i;
       i = mThreadMap.find(index);
       if(i == mThreadMap.end())
          return NULL;
@@ -268,7 +268,7 @@ public:
    }
 
 private:
-   hash_map<IdxType, vjBaseThread*> mThreadMap;
+   std::hash_map<IdxType, vjBaseThread*> mThreadMap;
 };
 
 #endif
