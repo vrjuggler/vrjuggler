@@ -202,6 +202,32 @@ public class ConfigBrokerProxy
    }
 
    /**
+    * Gets a list of all the configuration descriptions within the given
+    * resource.
+    *
+    * @param resource   the name of the resource in which to get descriptions
+    *
+    * @return  a list of the chunk descs in the resource if it has any
+    */
+   public List getDescsIn(String resource)
+   {
+      return broker.getDescsIn(resource);
+   }
+
+   /**
+    * Gets a list of all the configuration elements within the given
+    * resource.
+    *
+    * @param resource   the name of the resource in which to get elements
+    *
+    * @return  a list of the config chunks in the resource if it has any
+    */
+   public List getChunksIn(String resource)
+   {
+      return broker.getChunksIn(resource);
+   }
+
+   /**
     * Gets a list of the names all the resources currently being managed by this
     * broker.
     *

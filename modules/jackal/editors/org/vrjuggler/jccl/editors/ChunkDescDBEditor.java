@@ -53,7 +53,7 @@ public class ChunkDescDBEditor
    extends JPanel
    implements PropertyChangeListener
             , ChunkDescListener
-            , DescDBListener
+            , ContextListener
 {
    /**
     * The ID used to reference the ChunkDesc editor panel in the CardLayout
@@ -150,38 +150,49 @@ public class ChunkDescDBEditor
    }
 
    /**
-    * Sets the chunk desc DB that this panel should edit.
+    * Sets the context in which this panel is editing descriptions.
     */
-   public void setChunkDescDB(ChunkDescDB descDB)
+   public void setConfigContext(ConfigContext context)
    {
-      // remove everything from the root
-      DefaultMutableTreeNode root = (DefaultMutableTreeNode)treeModel.getRoot();
-      root.removeAllChildren();
+      if (this.context != null)
+      {
+         this.context.removeContextListener(this);
+      }
+      this.context = context;
+      if (this.context != null)
+      {
+         this.context.addContextListener(this);
+      }
 
-      // Update our internal reference
-      if (chunkDescDB != null)
-      {
-         chunkDescDB.removePropertyChangeListener(this);
-         chunkDescDB.removeChunkDescListener(this);
-         chunkDescDB.removeDescDBListener(this);
-      }
-      chunkDescDB = descDB;
-      if (chunkDescDB != null)
-      {
-         chunkDescDB.addPropertyChangeListener(this);
-         chunkDescDB.addChunkDescListener(this);
-         chunkDescDB.addDescDBListener(this);
-      }
-      // rebuild the tree, firing off the node structure changed event
+      // rebuild the tree
       rebuildTree();
    }
 
    /**
-    * Gets the chunk desc DB that this panel is editing.
+    * Gets the context that this panel is using to edit descriptions.
     */
-   public ChunkDescDB getChunkDescDB()
+   public ConfigContext getConfigContext()
    {
-      return chunkDescDB;
+      return context;
+   }
+
+   /**
+    * Called by the current context when a resource has been added to it.
+    */
+   public void resourceAdded(ContextEvent evt)
+   {
+      System.out.println("ChunkDescDB.resourceAdded()");
+      String resource = evt.getResource();
+      addDescs(getConfigBroker().getDescsIn(resource));
+   }
+
+   /**
+    * Called by the current context when a resource has been removed from it.
+    */
+   public void resourceRemoved(ContextEvent evt)
+   {
+      String resource = evt.getResource();
+      removeDescs(getConfigBroker().getDescsIn(resource));
    }
 
    /**
@@ -268,51 +279,6 @@ public class ChunkDescDBEditor
       }
    }
 
-   public void chunkDescAdded(DescDBEvent evt)
-   {
-      ChunkDesc desc = evt.getDesc();
-      // Add the desc to each of its categories
-      for (Iterator itr = desc.getCategories(); itr.hasNext(); )
-      {
-         // Get the node for the desc's category
-         String category = (String)itr.next();
-         DefaultMutableTreeNode categoryNode = getCategoryNode(category);
-
-         // Add the desc to the category
-         DefaultMutableTreeNode descNode = addDesc(categoryNode, desc);
-
-         // Notify listeners
-         int idx = treeModel.getIndexOfChild(categoryNode, descNode);
-         treeModel.nodesWereInserted(categoryNode, new int[] { idx });
-      }
-   }
-
-   public void chunkDescRemoved(DescDBEvent evt)
-   {
-      ChunkDesc desc = evt.getDesc();
-
-      // Get the nodes for the desc
-      List desc_nodes = getNodesFor(desc);
-      for (Iterator itr = desc_nodes.iterator(); itr.hasNext(); )
-      {
-         // Remove the chunk desc node from its parent. In this case, the
-         // tree model will automatically fire off the removed event for us.
-         DefaultMutableTreeNode desc_node = (DefaultMutableTreeNode)itr.next();
-         treeModel.removeNodeFromParent(desc_node);
-      }
-   }
-
-   public void chunkDescReplaced(DescDBEvent evt)
-   {
-   }
-
-   public void chunkDescsCleared(DescDBEvent evt)
-   {
-      DefaultMutableTreeNode root = (DefaultMutableTreeNode)treeModel.getRoot();
-      root.removeAllChildren();
-      treeModel.reload();
-   }
-
    /**
     * Gets a list of all the tree nodes that contain the given Object.
     */
@@ -369,26 +335,42 @@ public class ChunkDescDBEditor
     */
    private void rebuildTree()
    {
-      // Add each desc as a child of each category it is a member of
-      for (int i=0; i<chunkDescDB.size(); ++i)
+      // First clear out all the old nodes from the tree.
+      ((DefaultMutableTreeNode)treeModel.getRoot()).removeAllChildren();
+
+      // Run through all chunk descs in the context
+      List descs = getConfigBroker().getDescs(context);
+      addDescs(descs);
+   }
+
+   /**
+    * Adds all the given chunk descriptions in the given list into the tree in
+    * all of their categories.
+    */
+   private void addDescs(List descs)
+   {
+      for (Iterator itr = descs.iterator(); itr.hasNext(); )
       {
-         ChunkDesc desc = chunkDescDB.get(i);
-
-         // Add the desc to each of its categories
-         for (Iterator itr = desc.getCategories(); itr.hasNext(); )
-         {
-            // Get the node for the desc's category
-            String category = (String)itr.next();
-            DefaultMutableTreeNode categoryNode = getCategoryNode(category);
-
-            // Add the desc to the category
-            addDesc(categoryNode, desc);
-         }
-
+         ChunkDesc desc = (ChunkDesc)itr.next();
+         addDesc(desc);
       }
+   }
 
-      // Let the tree model know that we replaced its entire tree
-      treeModel.nodeStructureChanged((TreeNode)treeModel.getRoot());
+   /**
+    * Adds the given chunk description into the tree in all of its categories.
+    */
+   private void addDesc(ChunkDesc desc)
+   {
+      // Add the desc to each of its categories
+      for (Iterator itr = desc.getCategories(); itr.hasNext(); )
+      {
+         // Get the node for the desc's category
+         String category = (String)itr.next();
+         DefaultMutableTreeNode categoryNode = getCategoryNode(category);
+
+         // Add the desc to the category
+         addDescTo(categoryNode, desc);
+      }
    }
 
    /**
@@ -463,7 +445,7 @@ public class ChunkDescDBEditor
     * @param parent     the node that will be the desc's parent
     * @param desc       the ChunkDesc to insert into the tree
     */
-   private DefaultMutableTreeNode addDesc(DefaultMutableTreeNode parent,
+   private DefaultMutableTreeNode addDescTo(DefaultMutableTreeNode parent,
                                           ChunkDesc desc)
    {
       // Create the node for the desc and add it to the parent
@@ -625,6 +607,29 @@ public class ChunkDescDBEditor
    }
 
    /**
+    * Removes all of the chunk descs in the given list from all their locations
+    * in the tree.
+    */
+   private void removeDescs(List descs)
+   {
+      for (Iterator itr = descs.iterator(); itr.hasNext(); )
+      {
+         removeDesc((ChunkDesc)itr.next());
+      }
+   }
+
+   /**
+    * Removes the given chunk desc from all of its locations in the tree.
+    */
+   private void removeDesc(ChunkDesc desc)
+   {
+      for (Iterator itr = getNodesFor(desc).iterator(); itr.hasNext(); )
+      {
+         treeModel.removeNodeFromParent((MutableTreeNode)itr.next());
+      }
+   }
+
+   /**
     * Called when the user has clicked the generic add button positioned above
     * the tree.
     */
@@ -639,7 +644,7 @@ public class ChunkDescDBEditor
          chunk_desc.setName("New Chunk Description");
          chunk_desc.setToken("undefined");
          chunk_desc.addCategory((String)node.getUserObject());
-         chunkDescDB.add(chunk_desc);
+         getConfigBroker().add(context, chunk_desc);
       }
       // Check if the user wants to add a new PropertyDesc
       else if (node.getUserObject() instanceof ChunkDesc)
@@ -665,7 +670,7 @@ public class ChunkDescDBEditor
       if (node.getUserObject() instanceof ChunkDesc)
       {
          ChunkDesc chunk_desc = (ChunkDesc)node.getUserObject();
-         chunkDescDB.remove(chunk_desc);
+         getConfigBroker().remove(context, chunk_desc);
       }
       // Check if the user wants to remove a PropertyDesc
       else if (node.getUserObject() instanceof PropertyDesc)
@@ -675,6 +680,18 @@ public class ChunkDescDBEditor
          PropertyDesc prop_desc = (PropertyDesc)node.getUserObject();
          chunk_desc.removePropertyDesc(prop_desc);
       }
+   }
+
+   /**
+    * Gets the cached config broker proxy instance.
+    */
+   private ConfigBroker getConfigBroker()
+   {
+      if (broker == null)
+      {
+         broker = new ConfigBrokerProxy();
+      }
+      return broker;
    }
 
    /**
@@ -731,9 +748,14 @@ public class ChunkDescDBEditor
    private DefaultTreeModel treeModel;
 
    /**
-    * The config chunk database that this editor is editing.
+    * The context that provides our view into the active configuration.
     */
-   private ChunkDescDB chunkDescDB;
+   private ConfigContext context = new ConfigContext();
+
+   /**
+    * We cache the config broker proxy for speed.
+    */
+   private ConfigBroker broker;
 
    /**
     * The property sheet for the ChunkDesc editing pane.
