@@ -84,8 +84,12 @@ public:
    }
 
    /**
-    * copies current state of the system from one API to another.
-    * Doesn't do binding here; you must do that separately.
+    * Copies the current state of the system from the given API into this
+    * object.  This does not perform any binding.  That must be done
+    * separately.
+    *
+    * @param si The object from which the state will be copied into this
+    *           object.
     */
    void copy( const SoundImplementation& si );
 
@@ -98,8 +102,8 @@ public:
     * @post If alias is associated with a loaded sound, then the loaded sound
     *       is triggered.  If it isn't, then nothing happens.
     *
-    * @param alias Alias of the sound to trigger, and number of times to play:
-    *              -1 is repeat infinitely.
+    * @param alias  Alias of the sound to trigger.
+    * @param repeat The number of times to play.  Use -1 to repeat forever.
     */
    virtual void trigger( const std::string & alias, const int & repeat = 1 )
    {
@@ -110,7 +114,9 @@ public:
    }
 
    /**
-    * Is the sound currently playing?
+    * Is the named sound currently playing?
+    *
+    * @param alias The alias of the sound to query.
     */
    virtual bool isPlaying( const std::string& alias )
    {
@@ -119,8 +125,13 @@ public:
    }
 
    /**
-    * When sound is already playing then you call trigger,
-    * does the sound restart from beginning?
+    * Specifies whether the named sound retriggers from beginning when
+    * triggered while playing.  In other words, when the named sound is already
+    * playing and trigger() is called, does the sound restart from the
+    * beginning?
+    *
+    * @param alias The alias of the sound to change.
+    * @param onOff A Boolean value enabling or disabling retriggering.
     */
    virtual void setRetriggerable( const std::string& alias, bool onOff )
    {
@@ -128,7 +139,9 @@ public:
    }
 
    /**
-    * Is the sound retriggerable?
+    * Is the named sound retriggerable?
+    *
+    * @param alias The alias of the sound to query.
     */
    virtual bool isRetriggerable( const std::string& alias )
    {
@@ -136,7 +149,8 @@ public:
    }
 
    /**
-    * Stops the sound.
+    * Stops the named sound.
+    *
     * @param alias Alias of the sound to be stopped.
     */
    virtual void stop( const std::string& alias )
@@ -146,7 +160,10 @@ public:
    }
 
    /**
-    * Pauses the sound, use unpause to return playback where you left off.
+    * Pauses the named sound.  Use unpause() to return playback from where the
+    * sound was paused.
+    *
+    * @param alias The alias of the sound to pause.
     */
    virtual void pause( const std::string& alias )
    {
@@ -154,15 +171,21 @@ public:
    }
 
    /**
-    * Resumes playback from a paused state.  Does nothing if sound was not
-    * paused.
+    * Resumes playback of the named sound from a paused state.  This does
+    * nothing if sound was not paused.
+    *
+    * @param alias The alias of the sound to unpause.
     */
    virtual void unpause( const std::string& alias )
    {
       this->trigger( alias, this->lookup( alias ).repeat );
    }
 
-   /** If the sound is paused, then return true. */
+   /**
+    * If the named sound is paused, then return true.
+    *
+    * @param alias The alias of the sound to query.
+    */
    virtual bool isPaused( const std::string& alias )
    {
       boost::ignore_unused_variable_warning(alias);
@@ -170,10 +193,14 @@ public:
    }
 
    /**
-    * Ambient or positional sound.
-    * Is the sound ambient: attached to the listener, doesn't change volume
-    * when listener moves.
-    * Or is the sound positional: changes volume as listener nears or retreats.
+    * Sets the named sound as either ambient or positional depending on the
+    * value of ambient.  If the sound is ambient, it is attached to the
+    * listener, and its volume does not change when the listener moves.  If
+    * the sound is positional, the volume changes when the listener moves.
+    *
+    * @param ambient A flag identifying whether this sound is ambient (true)
+    *                or positional (false).  This parameter is optional,
+    *                and it defaults to false (the sound is positional).
     */
    virtual void setAmbient( const std::string& alias, bool ambient = false )
    {
@@ -181,29 +208,48 @@ public:
    }
 
    /**
-    * Is the sound ambient: attached to the listener, doesn't change volume
-    * when listener moves.
+    * Is the named sound ambient?
+    *
+    * @param alias The alias of the sound to query.
     */
    virtual bool isAmbient( const std::string& alias )
    {
       return this->lookup( alias ).ambient;
    }
 
-   /** Bend the pitch of the sound. */
+   /**
+    * Alters the frequency of the named sound.
+    *
+    * @param alias  The alias of the sound to change.
+    * @param amount The value that determines the pitch bend.  1.0 means
+    *               that there is no change.  A value less than 1.0 is low;
+    *               a value greather than 1.0 is high.
+    */
    virtual void setPitchBend( const std::string& alias, float amount )
    {
       this->lookup( alias ).pitchbend = amount;
    }
 
-   /** Sets the effect volume.  Set to a value between [0..1]. */
+   /**
+    * Sets the effect volume of the named sound.  The value must be in the
+    * range [0,1].
+    *
+    * @param alias  The alias of the sound to change.
+    * @param amount The value of the volume.  It must be between 0.0 and
+    *               1.0 inclusive.
+    */
    virtual void setVolume( const std::string& alias, float amount )
    {
       this->lookup( alias ).volume = amount;
    }
 
    /**
-    * Sets the effect cutoff.
-    * Set to a value between [0..1]... 1 is no change.  0 is total cutoff.
+    * Sets the effect cutoff of the named soudn.  The value must be in the
+    * range [0,1].
+    *
+    * @param alias  The alias of the sound to change.
+    * @param amount The value of the cutoff.  1.0 is no change; 0.0 is
+    *               total cutoff.
     */
    virtual void setCutoff( const std::string& alias, float amount )
    {
@@ -211,9 +257,15 @@ public:
    }
 
    /**
-    * Set sound's 3D position.
+    * Set the named sound's 3D position.
+    *
+    * @param alias The alias of the sound to change.
+    * @param x     The X coordinate of the sound in 3D OpenGL coordinates.
+    * @param y     The Y coordinate of the sound in 3D OpenGL coordinates.
+    * @param z     The Z coordinate of the sound in 3D OpenGL coordinates.
     */
-   virtual void setPosition( const std::string& alias, float x, float y, float z )
+   virtual void setPosition(const std::string& alias, float x, float y,
+                            float z)
    {
       vprASSERT(this->isStarted() == true && "must call startAPI prior to this function");
       this->lookup( alias ).position[0] = x;
@@ -222,9 +274,9 @@ public:
    }
 
    /**
-    * Gets sound's 3D position.
+    * Gets the named sound's 3D position.
     *
-    * @param alias A that has been associated with some sound data.
+    * @param alias A name that has been associated with some sound data.
     * @param x     Storage for the X coordinate of the sound's position (in
     *              OpenGL coordinates).
     * @param y     Storage for the Y coordinate of the sound's position (in
@@ -232,7 +284,8 @@ public:
     * @param z     Storage for the Z coordinate of the sound's position (in
     *              OpenGL coordinates).
     */
-   virtual void getPosition( const std::string& alias, float& x, float& y, float& z )
+   virtual void getPosition(const std::string& alias, float& x, float& y,
+                            float& z)
    {
       vprASSERT(this->isStarted() == true && "must call startAPI prior to this function");
 
@@ -243,6 +296,9 @@ public:
 
    /**
     * Sets the position of the listener.
+    *
+    * @param mat A transformation matrix representing the position of the
+    *            listener.
     */
    virtual void setListenerPosition( const gmtl::Matrix44f& mat )
    {
@@ -252,6 +308,8 @@ public:
 
    /**
     * Gets the position of the listener.
+    *
+    * @param mat Storage for returning the position of the listener.
     */
    virtual void getListenerPosition( gmtl::Matrix44f& mat )
    {
@@ -260,17 +318,17 @@ public:
    }
 
    /**
-    * Start the sound API, Creating any contexts or other configurations at
+    * Start the sound API, creating any contexts or other configurations at
     * startup.  This function should be called before using the other
     * functions in the class.
     *
     * @post Sound API is ready to go.
-    * @return 1 if success return 0 otherwise
+    * @return 1 if success, 0 otherwise.
     */
    virtual int startAPI() = 0;
 
    /**
-    * Queries whether the API has been started or not.
+    * Queries whether the API has been started.
     *
     * @return true if API has been started, false otherwise.
     */
@@ -281,12 +339,14 @@ public:
     * be called any time.  The function could be called multiple times, so it
     * should be smart.
     *
-    * @post Sound API is ready to go.
+    * @post The sound API is no longer running or available for use.
     */
    virtual void shutdownAPI() {}
 
-   /*
+   /**
     * Configures/reconfigures the sound API global settings.
+    *
+    * @param sai A description of the settings for this sound API.
     */
    virtual void configure( const snx::SoundAPIInfo& sai )
    {
@@ -294,26 +354,35 @@ public:
    }
 
    /**
-    * Configures/reconfigures a sound by associating an alias to sound data.
-    * Later, this alias can be used to operate on this sound data.
+    * Configures/reconfigures the named sound by associating sound data with
+    * the named sound.  Afterwards, the alias can be used to operate on sound
+    * data.
     *
     * Configure: associate a name (alias) to the description if not already
     * done.
-    * Reconfigure: change properties of the sound to the description provided.
     *
-    * @pre Provide an alias and a SoundInfo which describes the sound.
-    * @post Alias will point to loaded sound data.
+    * Reconfigure: change properties of the sound to the description
+    * provided.
+    *
+    * @pre Provide a SoundInfo which describes the sound.
+    * @post This handle will point to loaded sound data.
+    *
+    * @param description An object that describes the sound for which this
+    *                    object will be a handle.
     */
-   virtual void configure( const std::string& alias, const snx::SoundInfo& description );
+   virtual void configure(const std::string& alias,
+                          const snx::SoundInfo& description);
 
    /**
     * Removes a configured sound.  Any future reference to the alias will not
-    * cause an error, but will not result in a rendered sound.
+    * cause an error, but it will not result in a rendered sound.
+    *
+    * @param alias The alias of the sound to be removed.
     */
    virtual void remove(const std::string& alias);
 
    /**
-    * Call once per sound frame (doesn't have to be same as your graphics
+    * Call once per sound frame (which does not have to be same as the graphics
     * frame).
     *
     * @param timeElapsed The time elapsed since the last sound frame.
@@ -355,7 +424,7 @@ public:
    virtual void bind( const std::string& alias ) = 0;
 
    /**
-    * Unloads/deallocates the sound data this alias refers from the sound API.
+    * Unloads/deallocates the sound data this alias refers to in the sound API.
     *
     * @post The sound API no longer has the sound buffered.
     */

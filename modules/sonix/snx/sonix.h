@@ -76,79 +76,120 @@ public:
     * Triggers a sound.
     *
     * @pre alias does not have to be associated with a loaded sound.
-    * @post If it is, then the loaded sound is triggered.  If it isn't, then
-    *       nothing happens.
+    * @post If alias is associated with a loaded sound, then the loaded sound
+    *       is triggered.  If it isn't, then nothing happens.
     *
-    * @param alias Alias of the sound to trigger, and number of times to play,
+    * @param alias  Alias of the sound to trigger.
+    * @param repeat The number of times to play.  Use -1 to repeat forever.
     *              -1 to repeat infinately, 1 (single shot) is default.
     */
    virtual void trigger( const std::string& alias, const int& repeat = 1 );
-   
+
    /**
-    * Is the sound currently playing?
+    * Is the named sound currently playing?
+    *
+    * @param alias The alias of the sound to query.
     */
    virtual bool isPlaying( const std::string& alias );
 
    /**
-    * When sound is already playing then you call trigger,
-    * Does the sound restart from beginning?
+    * Specifies whether the named sound retriggers from beginning when
+    * triggered while playing.  In other words, when the named sound is already
+    * playing and trigger() is called, does the sound restart from the
+    * beginning?
+    *
+    * @param alias The alias of the sound to change.
+    * @param onOff A Boolean value enabling or disabling retriggering.
     */
    virtual void setRetriggerable( const std::string& alias, bool onOff );
 
    /**
-    * Is the sound retriggerable?
+    * Is the named sound retriggerable?
+    *
+    * @param alias The alias of the sound to query.
     */
    virtual bool isRetriggerable( const std::string& alias );
 
    /**
-    * Stops the sound.
+    * Stops the named sound.
     *
     * @param alias Alias of the sound to be stopped.
     */
    virtual void stop( const std::string& alias );
 
    /**
-    * Pause the sound, use unpause to return playback where you left off.
+    * Pauses the named sound.  Use unpause() to return playback from where the
+    * sound was paused.
+    *
+    * @param alias The alias of the sound to pause.
     */
    virtual void pause( const std::string& alias );
 
    /**
-    * Resumes playback from a paused state.  Does nothing if sound was not
-    * paused.
+    * Resumes playback of the named sound from a paused state.  This does
+    * nothing if sound was not paused.
+    *
+    * @param alias The alias of the sound to unpause.
     */
    virtual void unpause( const std::string& alias );
-   
-   /** If the sound is paused, then return true. */
-   virtual bool isPaused( const std::string& alias );
-   
-   /**
-    * Ambient or positional sound.
-    * Is the sound ambient: attached to the listener, doesn't change volume
-    * when listener moves.
-    * Or is the sound positional: changes volume as listener nears or retreats.
-    */
-   virtual void setAmbient( const std::string& alias, bool setting = false );
 
-   /** Is the sound ambient? */
+   /**
+    * If the named sound is paused, then return true.
+    *
+    * @param alias The alias of the sound to query.
+    */
+   virtual bool isPaused( const std::string& alias );
+
+   /**
+    * Sets the named sound as either ambient or positional depending on the
+    * value of ambient.  If the sound is ambient, it is attached to the
+    * listener, and its volume does not change when the listener moves.  If
+    * the sound is positional, the volume changes when the listener moves.
+    *
+    * @param ambient A flag identifying whether this sound is ambient (true)
+    *                or positional (false).  This parameter is optional,
+    *                and it defaults to false (the sound is positional).
+    */
+   virtual void setAmbient(const std::string& alias,
+                           const bool ambient = false);
+
+   /**
+    * Is the named sound ambient?
+    *
+    * @param alias The alias of the sound to query.
+    */
    virtual bool isAmbient( const std::string& alias );
 
    /**
-    * Alters the frequency of the sample.
-    * 1 is no change.
-    * < 1 is low.
-    * > 1 is high.
+    * Alters the frequency of the named sound.
+    *
+    * @param alias  The alias of the sound to change.
+    * @param amount The value that determines the pitch bend.  1.0 means
+    *               that there is no change.  A value less than 1.0 is low;
+    *               a value greather than 1.0 is high.
     */
    virtual void setPitchBend( const std::string& alias, float amount );
 
-   /** Effect volume.  Set to a value between [0..1]. */
-   virtual void setVolume( const std::string& alias, float amount );
-   
    /**
-    * Effect cutoff.
-    * Set to a value between [0..1]... 1 is no change.  0 is total cutoff.
+    * Sets the effect volume of the named sound.  The value must be in the
+    * range [0,1].
+    *
+    * @param alias  The alias of the sound to change.
+    * @param amount The value of the volume.  It must be between 0.0 and
+    *               1.0 inclusive.
+    */
+   virtual void setVolume( const std::string& alias, float amount );
+
+   /**
+    * Sets the effect cutoff of the named soudn.  The value must be in the
+    * range [0,1].
+    *
+    * @param alias  The alias of the sound to change.
+    * @param amount The value of the cutoff.  1.0 is no change; 0.0 is
+    *               total cutoff.
     */
    virtual void setCutoff( const std::string& alias, float amount );
-   
+
    /**
     * Set sound's 3D position.
     *
@@ -157,7 +198,8 @@ public:
     * @param y     The Y coordinate of the sound in 3D OpenGL coordinates.
     * @param z     The Z coordinate of the sound in 3D OpenGL coordinates.
     */
-   virtual void setPosition( const std::string& alias, const float& x, const float& y, const float& z );
+   virtual void setPosition(const std::string& alias, const float& x,
+                            const float& y, const float& z);
 
    /**
     * Get sound's 3D position
@@ -170,66 +212,82 @@ public:
     * @param z     Storage for the Z coordinate of the sound in 3D OpenGL
     *              coordinates.
     */
-   virtual void getPosition( const std::string& alias, float& x, float& y, float& z );
+   virtual void getPosition(const std::string& alias, float& x, float& y,
+                            float& z);
 
    /**
     * Sets the position of the listener.
+    *
+    * @param mat A transformation matrix representing the position of the
+    *            listener.
     */
    virtual void setListenerPosition( const gmtl::Matrix44f& mat );
 
    /**
     * Gets the position of the listener.
+    *
+    * @param mat Storage for returning the position of the listener.
     */
    virtual void getListenerPosition( gmtl::Matrix44f& mat );
 
-
    /**
     * Changes the underlying sound API to something else.  This function is
-    * safe.  It always returns a valid implementation.  It runs in O(1)
+    * safe.  It always changes to a valid implementation.  It runs in O(1)
     * (constant) time.
     *
-    * @pre Sound implementation should be registered
-    * @post Underlying API is changed to the requested API name.   If
-    *       apiName's implementation is not registered, then underlying API is
-    *       changed to the stub version.
+    * @pre The named sound implementation should be registered.
+    * @post The underlying API is changed to the requested API name.   If
+    *       apiName's implementation is not registered, then the underlying API
+    *       is changed to the stub version.
     *
-    * @param apiName Usually a name of a valid registered sound API
+    * @param apiName Usually a name of a valid, registered sound API
     *                implementation.
     */
    virtual void changeAPI( const std::string& apiName );
 
    /**
-    * Configures the sound API global settings.
+    * Configures/reconfigures the sound API global settings.
+    *
+    * @param sai A description of the settings for this sound API.
     */
    virtual void configure( const snx::SoundAPIInfo& sai );
 
    /**
-    * Configures/reconfigures a sound by associating an alias with the sound
-    * data.  Later, this alias can be used to operate on the sound data.
+    * Configures/reconfigures the named sound by associating sound data with
+    * the named sound.  Afterwards, the alias can be used to operate on sound
+    * data.
     *
     * Configure: associate a name (alias) to the description if not already
     * done.
-    * Reconfigure: change properties of the sound to the descriptino provided.
     *
-    * @pre provide an alias and a SoundInfo which describes the sound
-    * @post alias will point to loaded sound data
+    * Reconfigure: change properties of the sound to the description
+    * provided.
+    *
+    * @pre Provide a SoundInfo which describes the sound.
+    * @post This handle will point to loaded sound data.
+    *
+    * @param description An object that describes the sound for which this
+    *                    object will be a handle.
     */
-   virtual void configure( const std::string& alias, const snx::SoundInfo& description );
+   virtual void configure(const std::string& alias,
+                          const snx::SoundInfo& description);
 
    /**
     * Removes a configured sound.  Any future reference to the alias will not
-    * cause an error, but will not result in a rendered sound.
+    * cause an error, but it will not result in a rendered sound.
+    *
+    * @param alias The alias of the sound to be removed.
     */
    virtual void remove( const std::string alias );
 
    /**
-    * Call once per sound frame (doesn't have to be same as your graphics
+    * Call once per sound frame (which does not have to be same as the graphics
     * frame).
     *
     * @param timeElapsed Time elapsed since the last sound frame.
     */
    virtual void step( const float& timeElapsed );
-   
+
 protected:
    snx::ISoundImplementation& impl();
 
@@ -237,11 +295,11 @@ private:
    /** @link dependency */
    /*#  snx::SoundFactory lnkSoundFactory; */
 
-   /** @link aggregation 
+   /** @link aggregation
     * @clientCardinality 1
     * @supplierCardinality 1*/
    snx::ISoundImplementation* mImplementation;
-        
+
    /** sonix API includes objects of this type
     * @link dependency */
    /*#  snx::SoundInfo lnkSoundInfo; */
