@@ -11,6 +11,47 @@ AC_INIT(vjConfig.h)
 AC_CONFIG_HEADER(vjDefines.h)
 
 dnl # -------------------------------------------------------------------------
+dnl # Helper subroutines.
+dnl # -------------------------------------------------------------------------
+
+dnl # UNIX path translator.  This converts a UNIX-style path to a DOS/Win32
+dnl # path.  With this routine, we can safely use UNIX paths for all Win32
+dnl # variables while the configure script runs.  Then, immediately before
+dnl # Makefile substitution is done, we can translate all the paths to
+dnl # DOS-style for use in the Makefiles.
+unix2dos ( ) {
+    dnl # The first expression changes a "//C" drive name to "C:".  The
+    dnl # second handles the slash-to-backslash conversion.  These both have
+    dnl # a pair of surrounding []'s because those symbols have special
+    dnl # meaning to m4(1).  Without them, the first pair of []'s in the
+    dnl # regular expression will be lost.
+    _drive_exp=['s/^\/\/\([[:alpha:]]\)/\1:/']
+    _slash_exp=['s/\//\\/g']
+    _retval=`echo $1 | sed -e "${_drive_exp}" -e "${_slash_exp}"`
+
+    echo "${_retval}"
+}
+
+dnl # DOS path translator.  This converts a DOS-style path to a UNIX path.
+dos2unix ( ) {
+    dnl # All expressions hers are enclosed in []'s because those symbols
+    dnl # have special meaning to m4(1).  This is the same situation as
+    dnl # above.
+
+    dnl # This changes \'s to /'s and escapes any whitespace in the path.
+    _slash_exp=['s/\\/\//g']
+    _ws_esc_exp=['s/ /\\ /g']
+    _unix_root=`echo "$1" | sed -e "${_slash_exp}" -e "${_ws_esc_exp}"`
+
+    dnl # This changes the leading "C:" to "//C" (for the appropriate drive
+    dnl # letter).
+    _colon_rem_exp=['s/^\([[:alpha:]]\):/\/\/\1/']
+    _retval=`echo "${_unix_root}" | sed -e "${_colon_rem_exp}"`
+
+    echo "${_retval}"
+}
+
+dnl # -------------------------------------------------------------------------
 dnl # Command-line arguments (--enable-option, --with-pkg=package_name).
 dnl # -------------------------------------------------------------------------
 
