@@ -264,8 +264,8 @@ public:
    // Do calculations here.
    virtual void postFrame()
    {
-      vprDEBUG(vprDBG_ALL, vprDBG_HERB_LVL) << "cubesApp::postFrame" << std::endl
-                           << vprDEBUG_FLUSH;
+      vprDEBUG(vprDBG_ALL, vprDBG_HVERB_LVL)
+         << "cubesApp::postFrame" << std::endl << vprDEBUG_FLUSH;
    }
 
    //: Make sure that all our dependencies are satisfied
