@@ -23,7 +23,7 @@ public class DependencyFrame extends JFrame implements ActionListener {
 
     private void buildInnerPanel() {
 	ChunkDependEntry cde;
-	ChunkDependEntry.PropDependEntry pde;
+	PropDependEntry pde;
 	JButton chbutton;
 	JTextArea chtext;
 	JPanel panel;
@@ -44,7 +44,7 @@ public class DependencyFrame extends JFrame implements ActionListener {
 	    chtext.setEditable (false);
 	    chtext.setBorder (BorderFactory.createBevelBorder (BevelBorder.LOWERED));
 	    for (j = 0; j < cde.propdepends.size(); j++) {
-		pde = (ChunkDependEntry.PropDependEntry)cde.propdepends.elementAt(j);
+		pde = (PropDependEntry)cde.propdepends.elementAt(j);
 		chtext.append (pde.toString());
 	    }
 	    gbc.gridwidth = 1;
