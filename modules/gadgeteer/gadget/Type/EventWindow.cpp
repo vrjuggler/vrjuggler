@@ -67,6 +67,7 @@ vpr::ReturnStatus EventWindow::writeObject(vpr::ObjectWriter* writer)
    // Lock the Queue of current events to serialize
    vpr::Guard<vpr::Mutex> cur_guard(mCurEventQueueLock);
 
+   /*
    // Copy the queue since the only way to iterate over it requires
    // you to pop events off the front, which destroys the queue
    std::queue<gadget::EventPtr> temp_queue(mCurEventQueue); 
@@ -81,6 +82,11 @@ vpr::ReturnStatus EventWindow::writeObject(vpr::ObjectWriter* writer)
       temp_event->writeObject(writer);
       temp_queue.pop();
    }   
+   */
+
+   for(unsigned i = 0; i<mCurEventQueue.size(); ++i)
+      mCurEventQueue[i]->writeObject(writer);
+
    return vpr::ReturnStatus::Succeed;
 }
 
@@ -322,7 +328,7 @@ std::string EventWindow::getKeyName(gadget::Keys keyId)
    return std::string("Unrecognized key");
 }
 
-std::queue<gadget::EventPtr> EventWindow::getEventQueue()
+EventWindow::EventQueue EventWindow::getEventQueue()
 {
    vpr::Guard<vpr::Mutex> guard(mCurEventQueueLock);
    return mCurEventQueue;
@@ -331,7 +337,7 @@ std::queue<gadget::EventPtr> EventWindow::getEventQueue()
 void EventWindow::addEvent(gadget::EventPtr e)
 {
    vpr::Guard<vpr::Mutex> guard(mWorkingEventQueueLock);
-   mWorkingEventQueue.push(e);
+   mWorkingEventQueue.push_back(e);
 }
 
 void EventWindow::updateEventQueue()
@@ -344,10 +350,7 @@ void EventWindow::updateEventQueue()
       mCurEventQueue = mWorkingEventQueue;
    }
    
-   while ( ! mWorkingEventQueue.empty() )
-   {
-      mWorkingEventQueue.pop();
-   }
+   mWorkingEventQueue.clear();      // Clear old queue
 }
 
 } // End of gadget namespcae
