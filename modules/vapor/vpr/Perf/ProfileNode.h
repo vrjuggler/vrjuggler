@@ -94,7 +94,11 @@ namespace vpr
 
       ProfileNode*  getSubNode( const char * name, const unsigned int queueSize);
 
+      /** Return pointer to sub-node (child) with the given name.
+       * NOTE: Currently requires the char* to be same as used to create.
+       */
       ProfileNode*  getNamedNode( const char* nodeName );
+
       /**
        * return This nodes parent.
        */
