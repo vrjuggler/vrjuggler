@@ -32,7 +32,7 @@
 #         --DEFS=<Compile-time defs>
 #         --CPPFLAGS=<C preprocessor flags>
 #         --CXXFLAGS=<C++ compiler flags>
-#         --DBG_FLAGS=<Compiler debugging flags>
+#         --EXTRA_LINK_FLAGS=<Extra miscellaneous C++ linker flags>
 #         --OBJ_NAME_FLAG=<Flag used for naming a compiled object file>
 #         --INCLUDES=<Extra include dirs>
 #         --TEST_VJ_LIBS_BASIC=<Basic Juggler libraries needed for test code>
@@ -83,7 +83,7 @@ Usage:
         --DEFS=<Compile-time defs>
         --CPPFLAGS=<C preprocessor flags>
         --CXXFLAGS=<C++ compiler flags>
-        --DBG_FLAGS=<Compiler debugging flags>
+        --EXTRA_LINK_FLAGS=<Extra miscellaneous C++ linker flags>
         --OBJ_NAME_FLAG=<Flag used for naming a compiled object file>
         --INCLUDES=<Extra include dirs>
         --srcdir=<Location of source code>
@@ -106,7 +106,7 @@ USAGE_EOF
 GetOptions("CXX=s" => \$VARS{'CXX'}, "DEFS:s" => \$VARS{'DEFS'},
 	   "CPPFLAGS:s" => \$VARS{'CPPFLAGS'},
 	   "CXXFLAGS:s" => \$VARS{'CXXFLAGS'},
-	   "DBG_FLAGS:s" => \$VARS{'DBG_FLAGS'},
+	   "EXTRA_LINK_FLAGS:s" => \$VARS{'EXTRA_LINK_FLAGS'},
 	   "OBJ_NAME_FLAG:s" => \$VARS{'OBJ_NAME_FLAG'},
 	   "INCLUDES:s" => \$VARS{'INCLUDES'},
 	   "TEST_VJ_LIBS_BASIC=s" => \$VARS{'TEST_VJ_LIBS_BASIC'},

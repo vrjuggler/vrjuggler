@@ -897,8 +897,9 @@ install-sample:
           -m ${_FILE_PERMS} -g ${_GROUP_NAME} -o ${prefix}/samples
 	${PERL} ${scriptdir}/makefiles-gen.pl --CXX="${CXX}"		\
           --DEFS="${DEFS}" --CPPFLAGS="${CPPFLAGS}"			\
-          --CXXFLAGS="${CXXFLAGS}" --INCLUDES="@INCLUDES@"		\
-          --DBG_FLAGS="${DBG_FLAGS}"					\
+          --CXXFLAGS="${CXXFLAGS} ${DBG_FLAGS}"				\
+          --EXTRA_LINK_FLAGS="@EXTRA_LINK_FLAGS@"			\
+          --INCLUDES="@INCLUDES@"					\
           --OBJ_NAME_FLAG='@OBJ_NAME_FLAG_SUBST@'			\
           --startdir="${top_srcdir}/samples"				\
           --SUBDIRS="${SAMPLE_SUBDIRS}"	--mode="${_FILE_PERMS}"		\
@@ -922,8 +923,9 @@ install-test:
           -m ${_FILE_PERMS} -g ${_GROUP_NAME} -o ${prefix}/test
 	${PERL} ${scriptdir}/makefiles-gen.pl --CXX="${CXX}"		\
           --DEFS="${DEFS}" --CPPFLAGS="${CPPFLAGS}"			\
-          --CXXFLAGS="${CXXFLAGS}" --INCLUDES="@INCLUDES@"		\
-          --DBG_FLAGS="${DBG_FLAGS}" --startdir="${top_srcdir}/test"	\
+          --CXXFLAGS="${CXXFLAGS} ${DBG_FLAGS}"				\
+          --EXTRA_LINK_FLAGS="@EXTRA_LINK_FLAGS@"			\
+          --INCLUDES="@INCLUDES@" --startdir="${top_srcdir}/test"	\
           --SUBDIRS="${TEST_SUBDIRS}" --mode="${_FILE_PERMS}"		\
           --gname="${_GROUP_NAME}" --srcdir="."				\
           --prefix="${prefix}/test"					\

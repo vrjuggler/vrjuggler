@@ -1022,12 +1022,15 @@ dnl # All of the above function checks may not be necessary ...
 dnl # -------------------------------------------------------------------------
 dnl # Do Makefile substitutions.
 dnl # -------------------------------------------------------------------------
+EXTRA_LINK_FLAGS=''		dnl # For use in linking Juggler applications
+
 if test "$PLATFORM" = "SGI" ; then
     CFLAGS="$CFLAGS -woff 1685,515,608,658,799,803,852,1048,1233,1499"
     CXXFLAGS="$CXXFLAGS -woff 3322 -w2"
 elif test "$OS_TYPE" = "Win32" -a "x${_use_gcc}" != "xyes" ; then
     CFLAGS="$CFLAGS -W3 -Gm -GR -GX -ZI -EHc -QIfdiv -QI0f"
     CXXFLAGS="$CXXFLAGS -W3 -Gm -GR -GX -ZI -EHc -QIfdiv -QI0f"
+    EXTRA_LINK_FLAGS="$EXTRA_LINK_FLAGS -MT"
 fi
 
 DEPENDFLAGS=""
@@ -1152,6 +1155,7 @@ AC_SUBST(CXXFLAGS)
 AC_SUBST(DEP_GEN_FLAG)
 AC_SUBST(DEPENDFLAGS)
 AC_SUBST(DEPEND_EXTRAS)
+AC_SUBST(EXTRA_LINK_FLAGS)
 AC_SUBST(INCLUDES)
 AC_SUBST(LD)
 AC_SUBST(LIBS)
