@@ -47,7 +47,7 @@ void AudioWorksSoundImplementation::trigger( const std::string & alias, const un
 
    if (mBindTable.count( alias ) > 0)
    {
-      std::cout<<"DEBUG: trigger: "<<(int)mBindTable[alias].mSound<<"\n"<<std::flush;
+      std::cout<<"[aj]AudioWorks| DEBUG: trigger: "<<(int)mBindTable[alias].mSound<<"\n"<<std::flush;
       awProp(mBindTable[alias].mSound, AWSND_STATE, AW_ON);
    }
 }
@@ -205,7 +205,7 @@ void AudioWorksSoundImplementation::startAPI()
    //initialize the AW system
    if (awInitSys() == -1) 
    {
-     std::cerr << "ERROR: InitSys() failed!\n" << std::flush;
+     std::cerr << "[aj]AudioWorks| ERROR: InitSys() failed!\n" << std::flush;
      return;
    }
 
@@ -216,7 +216,7 @@ void AudioWorksSoundImplementation::startAPI()
    int result = awAttachEng(mEngine);
    if (result < 0)      //Attach the engine to the system
    {
-       std::cerr << "ERROR: failed to attach to engine (retval="<<result<<")...\n\n" << std::flush;
+       std::cerr << "[aj]AudioWorks| ERROR: failed to attach to engine (retval="<<result<<")...\n\n" << std::flush;
   //     awPrint(mEngine);
        return;
    }
@@ -267,7 +267,7 @@ void AudioWorksSoundImplementation::startAPI()
    result = awConfigSys(0);
   if (result != 0)         //Attempt to configure the system
   {    
-    std::cout << "ERROR: ConfigSys() failed (retval="<<result<<")!\n" << std::flush;
+    std::cout << "[aj]AudioWorks| ERROR: ConfigSys() failed (retval="<<result<<")!\n" << std::flush;
 //    awPrint(mEngine);
     return;
   }
@@ -364,7 +364,7 @@ void AudioWorksSoundImplementation::clear()
  */
 void AudioWorksSoundImplementation::bind( const std::string& alias )
 {
-   std::cout<<"DEBUG: bind() "<<alias<<"\n"<<std::flush;
+   std::cout<<"[aj]AudioWorks| DEBUG: bind() "<<alias<<"\n"<<std::flush;
    
    this->unbind( alias );
    
@@ -377,13 +377,13 @@ void AudioWorksSoundImplementation::bind( const std::string& alias )
    awName( si.mWave, sinfo.filename.c_str() ); //Set the aifc filename
    if (awLoadWav(si.mWave) != 0)               //Load the aifc file
    {
-       std::cout << "\nfailed to open wave file\nwave dump:\n" << std::flush;
+       std::cout << "[aj]AudioWorks| \nfailed to open wave file\nwave dump:\n" << std::flush;
        awPrint( si.mWave );
        return;
    }
    else
    {
-      std::cout << "NOTICE: loaded: "<<sinfo.filename<<"\n" << std::flush;
+      std::cout << "[aj]AudioWorks| NOTICE: loaded: "<<sinfo.filename<<"\n" << std::flush;
    }   
    awMapWavToSE( si.mWave, mEngine );                    //Associate the wave with the engine
    awFlushWavToSE( si.mWave );                            //Flush the changes to the engine
@@ -425,7 +425,7 @@ void AudioWorksSoundImplementation::bind( const std::string& alias )
 
    this->setAmbient( alias, sinfo.ambient );
    
-   std::cout<<"DEBUG: bind() done"<<alias<<"\n"<<std::flush;
+   std::cout<<"[aj]AudioWorks| DEBUG: bind() done"<<alias<<"\n"<<std::flush;
    
 }
 
@@ -443,7 +443,7 @@ void AudioWorksSoundImplementation::unbind( const std::string& alias )
       awDelete( mBindTable[alias].mWave );
       
       mBindTable.erase( alias );
-      std::cout<<"DEBUG: unbind() "<<alias<<"\n"<<std::flush;
+      std::cout<<"[aj]AudioWorks| DEBUG: unbind() "<<alias<<"\n"<<std::flush;
    }
    
    assert( mBindTable.count( alias ) == 0 && "should have unbound" );
