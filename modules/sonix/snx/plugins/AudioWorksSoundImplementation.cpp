@@ -419,6 +419,9 @@ namespace snx
          std::cout << "[snx]AudioWorks| NOTICE: loaded: "<<filename<<"\n" << std::flush;
       }
       
+      awPrint( &wav );
+          
+      
       /*
       // wav
       awProp( wav, AWWV_NFRAMES, samples );
