@@ -157,6 +157,9 @@ namespace vpr
 
       static void getNamesRecursively( std::vector<std::string>& nameList, ProfileNode* node )
       {
+         if ( node == NULL)
+         { return; }
+
          getNamesRecursively(nameList, node->getSibling());
          nameList.push_back(node->getName());
          getNamesRecursively(nameList, node->getChild());
