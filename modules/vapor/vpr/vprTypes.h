@@ -89,11 +89,19 @@ namespace vpr
 
 #  include VPR_HASH_MAP_INCLUDE
 
+#if defined(__GNUC__) && __GNUC__ == 3 && __GNUC_MINOR__ >= 1
+namespace __gnu_cxx
+#else
 namespace std
+#endif
 {
 /// Nice little helper class for hashing a vpr::Uint64.
 template<>
+#ifdef VPR_OS_Win32
+struct _Hash<vpr::Uint64>
+#else
 struct hash<vpr::Uint64>
+#endif
 {
    union Uint64_val
    {

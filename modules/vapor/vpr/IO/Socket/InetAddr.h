@@ -56,7 +56,11 @@
 #  include VPR_HASH_MAP_INCLUDE
 #endif
 
+#if defined(__GNUC__) && __GNUC__ == 3 && __GNUC_MINOR__ >= 1
+namespace __gnu_cxx
+#else
 namespace std
+#endif
 {
 
 #ifdef VPR_HASH_MAP_INCLUDE
