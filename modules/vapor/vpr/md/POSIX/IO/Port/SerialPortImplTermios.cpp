@@ -946,6 +946,9 @@ ReturnStatus
 SerialPortImplTermios::setAttrs (struct termios* term, const char* err_msg,
                                  const bool print_sys_err)
 {
+    vprASSERT(term != NULL);
+    vprASSERT(err_msg != NULL);
+
     ReturnStatus retval;
 
     vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
