@@ -104,7 +104,8 @@ public class PropertySheet extends PropertyComponent
             else
             {
                // Normal Property.
-               addNormalEditor(value, prop_def, prop_def.getToken(), row, 0);
+               String label = prop_def.getPropertyValueDefinition(0).getLabel();
+               addNormalEditor(value, prop_def, label, row, 0);
                ++row;
             }
          }
@@ -145,7 +146,8 @@ public class PropertySheet extends PropertyComponent
             else
             {
                // Normal Property.
-               addNormalEditor(value, prop_def, prop_def.getToken(), row, 0);
+               String label = prop_def.getPropertyValueDefinition(0).getLabel();
+               addNormalEditor(value, prop_def, label, row, 0);
                ++row;
             }
          }
