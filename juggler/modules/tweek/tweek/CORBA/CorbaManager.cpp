@@ -42,6 +42,7 @@
 #include <vpr/Util/Assert.h>
 
 #include <tweek/Util/Version.h>
+#include <tweek/Util/Debug.h>
 #include <tweek/CORBA/SubjectManager.h>
 #include <tweek/CORBA/CorbaManager.h>
 
@@ -54,13 +55,13 @@ CorbaManager::CorbaManager () : m_my_thread(NULL), m_subj_mgr(NULL)
    std::string tweek_ver = getVersionString();
 
    // Print out the Tweek version information.
-   vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+   vprDEBUG(tweekDBG_CORBA, vprDBG_CRITICAL_LVL)
       << std::string(tweek_ver.length() + 7, '=') << std::endl
       << vprDEBUG_FLUSH;
-   vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+   vprDEBUG(tweekDBG_CORBA, vprDBG_CRITICAL_LVL)
       << clrOutNORM(clrGREEN, "Tweek: ") << clrOutNORM(clrGREEN, tweek_ver)
       << clrRESET << std::endl << vprDEBUG_FLUSH;
-   vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+   vprDEBUG(tweekDBG_CORBA, vprDBG_CRITICAL_LVL)
       << std::string(tweek_ver.length() + 7, '=') << std::endl
       << vprDEBUG_FLUSH;
 }
@@ -73,8 +74,8 @@ vpr::ReturnStatus CorbaManager::init (const std::string& local_id, int& argc,
    try
    {
       // Initialize the ORB.
-      vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL) << "Initializing ORB\n"
-                                             << vprDEBUG_FLUSH;
+      vprDEBUG(tweekDBG_CORBA, vprDBG_STATE_LVL) << "Initializing ORB\n"
+                                                 << vprDEBUG_FLUSH;
       m_orb = CORBA::ORB_init(argc, argv, "omniORB3");
 
       status = createChildPOA(local_id);
@@ -91,8 +92,8 @@ vpr::ReturnStatus CorbaManager::init (const std::string& local_id, int& argc,
             << vprDEBUG_FLUSH;
       }
 
-      vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL) << "Starting ORB thread\n"
-                                             << vprDEBUG_FLUSH;
+      vprDEBUG(tweekDBG_CORBA, vprDBG_STATE_LVL) << "Starting ORB thread\n"
+                                                 << vprDEBUG_FLUSH;
       vpr::ThreadMemberFunctor<CorbaManager>* corba_run =
          new vpr::ThreadMemberFunctor<CorbaManager>(this, &CorbaManager::run);
 
@@ -167,14 +168,14 @@ vpr::ReturnStatus CorbaManager::createSubjectManager ()
    // to UNIQUE_ID.
    catch (PortableServer::POA::ServantAlreadyActive& active_ex)
    {
-      vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
+      vprDEBUG(tweekDBG_CORBA, vprDBG_WARNING_LVL)
          << "WARNING: Servant already active within our POA\n"
          << vprDEBUG_FLUSH;
    }
    catch (PortableServer::POA::WrongPolicy& policy_ex)
    {
       status.setCode(vpr::ReturnStatus::Fail);
-      vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+      vprDEBUG(tweekDBG_CORBA, vprDBG_CRITICAL_LVL)
          << "Invalid policy used when activating Subject Manager object\n"
          << vprDEBUG_FLUSH;
    }
@@ -283,14 +284,14 @@ vpr::ReturnStatus CorbaManager::destroySubjectManager ()
          delete m_subj_mgr;
          m_subj_mgr = NULL;
 
-         vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
+         vprDEBUG(tweekDBG_CORBA, vprDBG_WARNING_LVL)
             << "WARNING: Coult not deactive Subject Manager: not active in POA\n"
             << vprDEBUG_FLUSH;
       }
       catch (PortableServer::POA::WrongPolicy& policy_ex)
       {
          status.setCode(vpr::ReturnStatus::Fail);
-         vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
+         vprDEBUG(tweekDBG_CORBA, vprDBG_WARNING_LVL)
             << "WARNING: Coult not deactive Subject Manager: wrong POA policy\n"
             << vprDEBUG_FLUSH;
       }
@@ -298,7 +299,7 @@ vpr::ReturnStatus CorbaManager::destroySubjectManager ()
    else
    {
       status.setCode(vpr::ReturnStatus::Fail);
-      vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
+      vprDEBUG(tweekDBG_CORBA, vprDBG_WARNING_LVL)
          << "WARNING: No Subject Manager servant to destroy!\n"
          << vprDEBUG_FLUSH;
    }
@@ -318,8 +319,8 @@ vpr::ReturnStatus CorbaManager::createChildPOA (const std::string& local_id)
 
    // Obtain a reference to the root POA.  The caller will have to catch any
    // thrown exceptions.
-   vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL) << "Requesting Root POA\n"
-                                          << vprDEBUG_FLUSH;
+   vprDEBUG(tweekDBG_CORBA, vprDBG_STATE_LVL) << "Requesting Root POA\n"
+                                              << vprDEBUG_FLUSH;
    obj        = m_orb->resolve_initial_references("RootPOA");
    m_root_poa = PortableServer::POA::_narrow(obj);
 
@@ -346,7 +347,7 @@ vpr::ReturnStatus CorbaManager::createChildPOA (const std::string& local_id)
 
    try
    {
-      vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
+      vprDEBUG(tweekDBG_CORBA, vprDBG_STATE_LVL)
          << "Creating child of root POA named " << poa_name << std::endl
          << vprDEBUG_FLUSH;
       m_child_poa = m_root_poa->create_POA(poa_name.c_str(),
@@ -397,8 +398,8 @@ vpr::ReturnStatus CorbaManager::initNamingService (const std::string& ref_name,
          << vprDEBUG_FLUSH;
    }
 
-   vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL) << "Requesting Name Service\n"
-                                          << vprDEBUG_FLUSH;
+   vprDEBUG(tweekDBG_CORBA, vprDBG_STATE_LVL) << "Requesting Name Service\n"
+                                              << vprDEBUG_FLUSH;
    name_obj       = m_orb->resolve_initial_references(ref_name.c_str());
    m_root_context = CosNaming::NamingContext::_narrow(name_obj);
 
@@ -447,8 +448,8 @@ vpr::ReturnStatus CorbaManager::initNamingService (const std::string& ref_name,
 
 void CorbaManager::run(void* args)
 {
-   vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL) << "Server is running!\n"
-                                          << vprDEBUG_FLUSH;
+   vprDEBUG(tweekDBG_CORBA, vprDBG_STATE_LVL) << "Server is running!\n"
+                                              << vprDEBUG_FLUSH;
 
    PortableServer::POAManager_var pman = m_child_poa->the_POAManager();
 
@@ -456,8 +457,8 @@ void CorbaManager::run(void* args)
    m_orb->run();
 //   m_orb->destroy();
 
-   vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL) << "Server has shut down\n"
-                                          << vprDEBUG_FLUSH;
+   vprDEBUG(tweekDBG_CORBA, vprDBG_STATE_LVL) << "Server has shut down\n"
+                                              << vprDEBUG_FLUSH;
 }
 
 } // End of tweek namespace

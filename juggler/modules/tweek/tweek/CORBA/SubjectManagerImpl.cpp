@@ -39,6 +39,7 @@
 #include <vpr/Sync/Guard.h>
 #include <vpr/Util/Debug.h>
 
+#include <tweek/Util/Debug.h>
 #include <tweek/CORBA/CorbaManager.h>
 #include <tweek/CORBA/SubjectImpl.h>
 #include <tweek/CORBA/SubjectManagerImpl.h>
@@ -98,7 +99,7 @@ void SubjectManagerImpl::registerSubject (Subject_ptr subject,
 {
    vpr::Guard<vpr::Mutex> guard(m_subjects_mutex);
 
-   vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
+   vprDEBUG(tweekDBG_CORBA, vprDBG_STATE_LVL)
       << "Registering subject named '" << name << "'\n" << vprDEBUG_FLUSH;
 
    m_subjects[name] = Subject::_duplicate(subject);
@@ -117,7 +118,7 @@ Subject_ptr SubjectManagerImpl::getSubject (const char* name)
    if ( i != m_subjects.end() )
    {
       subject = Subject::_duplicate((*i).second);
-      vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
+      vprDEBUG(tweekDBG_CORBA, vprDBG_STATE_LVL)
          << "Returning subject named '" << name << "'\n" << vprDEBUG_FLUSH;
    }
    else
@@ -136,7 +137,7 @@ tweek::SubjectManager::SubjectList* SubjectManagerImpl::getAllSubjects ()
    subject_map_t::iterator i;
    CORBA::ULong j;
 
-   vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
+   vprDEBUG(tweekDBG_CORBA, vprDBG_STATE_LVL)
       << "Constructing sequence of subjects to return to caller ...\n"
       << vprDEBUG_FLUSH;
 
@@ -145,7 +146,7 @@ tweek::SubjectManager::SubjectList* SubjectManagerImpl::getAllSubjects ()
       new tweek::SubjectManager::SubjectList();
    subjects->length(m_subjects.size());
 
-   vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL)
+   vprDEBUG(tweekDBG_CORBA, vprDBG_VERB_LVL)
       << "Sequence size: " << subjects->length() << std::endl
       << vprDEBUG_FLUSH;
 
@@ -155,14 +156,14 @@ tweek::SubjectManager::SubjectList* SubjectManagerImpl::getAllSubjects ()
       rs.subject_name = CORBA::string_dup((*i).first.c_str());
       rs.subject_ref  = Subject::_duplicate((*i).second);
 
-      vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL)
+      vprDEBUG(tweekDBG_CORBA, vprDBG_VERB_LVL)
          << "Adding subject[" << j << "]: " << rs.subject_name << std::endl
          << vprDEBUG_FLUSH;
 
       (*subjects)[j] = rs;
    }
 
-   vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
+   vprDEBUG(tweekDBG_CORBA, vprDBG_STATE_LVL)
       << "Returning all subjects to caller\n" << vprDEBUG_FLUSH;
 
    return subjects;
