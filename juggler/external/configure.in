@@ -44,8 +44,11 @@ AC_COPYRIGHT([VR Juggler is (C) Copyright 1998-2003 by Iowa State University])
 AC_REVISION([$Revision$])
 AC_CONFIG_SRCDIR([ant/lib/ant.jar])
 AC_CONFIG_AUX_DIR(../share/config)
-DPP_PREREQ([1.5.1])
+DPP_PREREQ([1.99.15])
 DPP_INIT
+
+# Define the binary format.
+DPP_ABI_SETUP
 
 # -----------------------------------------------------------------------------
 # Duplicates of the options for the external C++ dependencies.  We use these
