@@ -133,11 +133,11 @@
 /* Define if you have the sched_yield function.  */
 #undef HAVE_SCHED_YIELD
 
-/* Define if you have the uuid_create(3) function.  */
-#undef HAVE_UUID_CREATE
+/* Define if you have the DCE 1.1 UUID functions (uuid_create(3), etc.).  */
+#undef VPR_USE_DCE_1_1_UUID
 
-/* Define if you have the uuid_generate(3) function.  */
-#undef HAVE_UUID_GENERATE
+/* Define if you have the e2fsprogs libuuid funcs (uuid_generate(3), etc.).  */
+#undef VPR_USE_LIBUUID
 
 /* Define if neither uuid_create(3) nor uuid_generate(3) are available.  */
 #undef VPR_USE_LEACH_UUID
