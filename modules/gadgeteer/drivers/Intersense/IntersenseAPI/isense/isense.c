@@ -21,7 +21,7 @@
 #if defined(_WIN32) || defined(WIN32) || defined(__WIN32__)
 #define ISD_LIB_NAME "isense"
 #elif defined MACOSX
-#include "dlcompat.h"
+#include <dlfcn.h>
 #define ISD_LIB_NAME "libisense"
 #elif defined HP || defined HPUX
 #include <dl.h>
