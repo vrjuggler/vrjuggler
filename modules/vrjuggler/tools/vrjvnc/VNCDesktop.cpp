@@ -1,9 +1,9 @@
-/*************** <auto-copyright.pl BEGIN do not edit this line> **************
+/*********** <VRJ VNC auto-copyright.pl BEGIN do not edit this line> **********
  *
  * VRJ VNC is (C) Copyright 2003 by Iowa State University
  *
- * Original Author:
- *   Patrick Hartling
+ * Original Authors:
+ *   Patrick Hartling, Allen Bierbaum
  *
  * This library is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License as
@@ -26,7 +26,7 @@
  * Version:       $Revision$
  * -----------------------------------------------------------------
  *
- *************** <auto-copyright.pl END do not edit this line> ***************/
+ ************ <VRJ VNC auto-copyright.pl END do not edit this line> **********/
 
 #include <stdlib.h>
 #include <string.h>
@@ -164,6 +164,9 @@ void VNCDesktop::init(const std::string& wandName,
 */
 void VNCDesktop::updateDesktopParameters()
 {
+   vprDEBUG(vrjDBG_VNC, vprDBG_CRITICAL_LVL)
+       << "VNCDesktop::updateDesktopParams() entered\n" << vprDEBUG_FLUSH;
+
    const float BorderSize(0.50f);
    const float BorderDepth(BorderSize/2.0f);
    const float CornerSize(BorderSize+0.2f);
@@ -222,6 +225,9 @@ void VNCDesktop::updateDesktopParameters()
 
    // Set the translation point to be the middle of the desktop polygon.
    //gmtl::setTrans(mDesktopMatrix, gmtl::Vec3f(0.0f, 5.0f, -5.0f));
+
+   vprDEBUG(vrjDBG_VNC, vprDBG_CRITICAL_LVL)
+       << "VNCDesktop::updateDesktopParams() exitd\n" << vprDEBUG_FLUSH;
 }
 
 VNCDesktop::Focus VNCDesktop::update(const gmtl::Matrix44f& navMatrix)
@@ -557,6 +563,9 @@ VNCDesktop::Focus VNCDesktop::update(const gmtl::Matrix44f& navMatrix)
 void VNCDesktop::updateDesktopTexture()
 {
 #if 1
+   vprDEBUG(vrjDBG_VNC, vprDBG_CRITICAL_LVL)
+      << "VNCDesktop::updateDesktopTexture() entered\n" << vprDEBUG_FLUSH;
+
    const int bytes_per_pixel(mVncIf.getPixelSize() / 8);
    // - If have update
    // - Get the source buffer pointer and compute any other params
@@ -616,11 +625,17 @@ void VNCDesktop::updateDesktopTexture()
          << clrOutNORM(clrRED, "OpenGL ERROR") << ": "
          << gluErrorString(err) << std::endl << vprDEBUG_FLUSH;
    }
+
+   vprDEBUG(vrjDBG_VNC, vprDBG_CRITICAL_LVL)
+      << "VNCDesktop::updateDesktopTexture() exited\n" << vprDEBUG_FLUSH;
 }
 
 
 void VNCDesktop::contextPreDraw()
 {
+   vprDEBUG(vrjDBG_VNC, vprDBG_CRITICAL_LVL)
+      << "VNCDesktop::contextPreDraw() entered\n" << vprDEBUG_FLUSH;
+
    glPushAttrib(GL_TEXTURE_BIT);
 
    // Draw the desktop surface
@@ -660,10 +675,16 @@ void VNCDesktop::contextPreDraw()
    updateDesktopTexture();
 
    glPopAttrib();
+
+   vprDEBUG(vrjDBG_VNC, vprDBG_CRITICAL_LVL)
+      << "VNCDesktop::contextPreDraw() exited\n" << vprDEBUG_FLUSH;
 }
 
 void VNCDesktop::draw()
 {
+   vprDEBUG(vrjDBG_VNC, vprDBG_CRITICAL_LVL)
+      << "VNCDesktop::draw() entered\n" << vprDEBUG_FLUSH;
+
    // -- Const colors to choose from --//
    // Put them here so we don't have to change a bunch of code below to change the visuals
    const gmtl::Vec3f micro_gui_blue(0.39f,0.51f,0.77f);
@@ -776,6 +797,9 @@ void VNCDesktop::draw()
       glPopAttrib();
    }
    glPopMatrix();
+
+   vprDEBUG(vrjDBG_VNC, vprDBG_CRITICAL_LVL)
+      << "VNCDesktop::draw() exited\n" << vprDEBUG_FLUSH;
 }
 
 
