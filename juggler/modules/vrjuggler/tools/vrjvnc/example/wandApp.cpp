@@ -106,8 +106,7 @@ void wandApp::preFrame()
    // Update embedded VNC desktop
    if ( mEmbeddedGUI )
    {
-      gmtl::Matrix44f nav_matrix;
-      VNCDesktop::Focus focus = mDesktop->update(nav_matrix);
+      VNCDesktop::Focus focus = mDesktop->update(mNavMat);
       we_have_focus = (focus == VNCDesktop::NOT_IN_FOCUS);
    }
 
