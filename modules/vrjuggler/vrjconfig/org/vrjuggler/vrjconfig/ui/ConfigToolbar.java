@@ -454,36 +454,6 @@ public class ConfigToolbar
       return false;
    }
 
-
-   /**
-    * Programmatically execute a save action.
-    */
-   public boolean doSaveAll()
-   {
-      boolean success = false;
-      try
-      {
-         ConfigBroker broker = new ConfigBrokerProxy();
-         for (Iterator itr = context.getResources().iterator(); itr.hasNext(); )
-         {
-            DataSource data_source = broker.get((String)itr.next());
-            if (! data_source.isReadOnly())
-            {
-               data_source.commit();
-            }
-         }
-         success = true;
-      }
-      catch (IOException ioe)
-      {
-         JOptionPane.showMessageDialog(getParentFrame(), ioe.getMessage(),
-                                       "Error", JOptionPane.ERROR_MESSAGE);
-         ioe.printStackTrace();
-      }
-
-      return success;
-   }
-
    /**
     * Programmatically execute a close action.
     */
@@ -605,7 +575,8 @@ public class ConfigToolbar
       {
          public void actionPerformed(ActionEvent evt)
          {
-            doSaveAll();
+            // Send a SaveAll action to all ConfigIFrames.
+            fireAction("SaveAll");
          }
       });
       copyBtn.addActionListener(new ActionListener()
