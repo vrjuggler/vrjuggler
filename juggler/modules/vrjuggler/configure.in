@@ -1174,6 +1174,12 @@ if test "x${_enable_pf_api}" = "xyes" ; then
             _PFOGLLIB="${_PFOGLLIB} -ldl"
         fi
     fi
+    
+    dnl # Under Irix users will need -limage to load .flt files 
+    dnl # referencing .sgi images
+    if test "$PLATFORM" = "IRIX" ; then
+            _PFOGLLIB="${_PFOGLLIB} -limage"
+    fi
 
     dnl # Restore $CFLAGS now that we are done testing.
     CFLAGS="${_vjsave_CFLAGS}"
