@@ -240,8 +240,7 @@ TweekNet.jar: $(NET_CLASSES) $(CORBA_CLASSES) tweek/*.class tweek/SubjectManager
 	$(JAR) cvf $@ \
 		$(NET_DIR)/*.class \
 		$(CORBA_DIR)/*.class \
-		tweek/*.class \
-		tweek/SubjectManagerPackage/*.class
+		tweek
 
 TweekServices.jar: $(SERVICES_CLASSES)
 	$(JAR) cvfm $@ $(SERVICES_MF) \
