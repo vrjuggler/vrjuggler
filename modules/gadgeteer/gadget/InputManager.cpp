@@ -791,7 +791,7 @@ vpr::ReturnStatus InputManager::loadDriverDSO(vpr::LibraryPtr driverDSO)
          vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_WARNING_LVL)
             << clrOutNORM(clrYELLOW, "WARNING")
             << ": Failed to look up factory function in driver DSO '"
-            << driverDSO << "'\n" << vprDEBUG_FLUSH;
+            << driverDSO->getName() << "'\n" << vprDEBUG_FLUSH;
       }
    }
    else
