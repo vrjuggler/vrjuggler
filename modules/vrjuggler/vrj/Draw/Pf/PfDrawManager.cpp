@@ -70,15 +70,7 @@
 #include <jccl/Config/ConfigElement.h>
 #include <jccl/RTRC/ConfigManager.h>
 
-#ifndef VPR_OS_Win32
-//#  include <gadget/Devices/EventWindow/EventWindowXWin.h>
-#endif
-
-#include <boost/concept_check.hpp>
-
-#include <gmtl/Output.h>
-
-
+#ifdef VPR_OS_Win32
 typedef struct _pfuWin32Event
 {
   HWND hwnd;
@@ -87,6 +79,11 @@ typedef struct _pfuWin32Event
   LPARAM lParam;
   double time;
 } pfuWin32Event;
+#endif
+
+#include <boost/concept_check.hpp>
+
+#include <gmtl/Output.h>
 
 namespace vrj
 {

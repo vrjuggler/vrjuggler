@@ -58,7 +58,11 @@
 
 namespace vrj
 {
+#ifdef VPR_OS_Win32
 class PfInputHandler : public gadget::InputAreaWin32
+#else
+class PfInputHandler : public gadget::InputAreaXWin
+#endif
 {
 public:
    /**
