@@ -49,6 +49,12 @@
 #include <sys/types.h>
 #include <netinet/in.h>
 
+// I don't know why this is necessary, but I think something is being defined
+// incorrectly somewhere.
+#ifdef VPR_OS_IRIX
+#include <sys/endian.h>
+#endif
+
 #include <vpr/IO/Socket/InetAddrBase.h>
 #include <vpr/IO/Socket/SocketTypes.h>
 
