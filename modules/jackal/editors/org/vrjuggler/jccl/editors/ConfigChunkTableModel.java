@@ -88,7 +88,8 @@ public class ConfigChunkTableModel
          for (Iterator itr = prop_descs.iterator(); itr.hasNext(); )
          {
             PropertyDesc desc = (PropertyDesc)itr.next();
-            size += mChunk.getNumPropertyValues(desc.getToken());
+            size += Math.max(mChunk.getNumPropertyValues(desc.getToken()),
+                             desc.getItemsSize());
          }
       }
       return size;
@@ -140,7 +141,8 @@ public class ConfigChunkTableModel
          // Move the cur_row cursor along by the number of values the current
          // property has
          PropertyDesc cur_desc = (PropertyDesc)itr.next();
-         int num_values = mChunk.getNumPropertyValues(cur_desc.getToken());
+         int num_values = Math.max(mChunk.getNumPropertyValues(cur_desc.getToken()),
+                                   cur_desc.getItemsSize());
          cur_row += num_values;
 
          // If we've passed the row we're looking for, return that desc.
@@ -166,7 +168,8 @@ public class ConfigChunkTableModel
          // number of values in the property
          if (! cur_desc.equals(desc))
          {
-            cursor += mChunk.getNumPropertyValues(cur_desc.getToken());
+            cursor += Math.max(mChunk.getNumPropertyValues(cur_desc.getToken()),
+                               cur_desc.getItemsSize());
          }
          // If we found the desc we're looking for, add in the index and quit
          else
