@@ -50,7 +50,11 @@ SHOW_INCLUDE_FILES     = NO
 
 GENERATE_TODOLIST      = YES
 
+# We are only generating LaTeX with this file.
 GENERATE_HTML          = NO
+GENERATE_MAN           = NO
+GENERATE_RTF           = NO
+GENERATE_XML           = NO
 
 #---------------------------------------------------------------------------
 # configuration options related to the LaTeX output
