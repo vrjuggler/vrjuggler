@@ -38,8 +38,11 @@ import java.util.*;
 import javax.swing.*;
 import javax.swing.event.*;
 import javax.swing.tree.*;
+
 import org.vrjuggler.jccl.config.*;
 import org.vrjuggler.jccl.config.event.*;
+import org.vrjuggler.jccl.config.io.ConfigDefinitionWriter;
+
 
 /**
  * A specialized panel that knows how to edit configuration definitions within a
@@ -174,7 +177,8 @@ public class ConfigDefinitionRepositoryEditor
       });
    }
    
-   private ConfigDefinition mConfigDef = null;
+   private ConfigDefinition mCurConfigDef = null;
+   private ConfigDefinition mOrigConfigDef = null;
    private PropertyDefinition mPropDef = null;
    private ConfigDefinitionListener cdl = null; 
    private PropertyDefinitionListener pdl = null;
@@ -186,38 +190,52 @@ public class ConfigDefinitionRepositoryEditor
       {
          if(mDefinitionChanged)
          {
+            ConfigDefinition def = mDefEditor.getDefinition();
             int result = JOptionPane.showConfirmDialog(
                SwingUtilities.getAncestorOfClass(Frame.class, this),
-               "ConfigDefinition \"" + mDefEditor.getDefinition().getName() +
-               "\" has changed. Do you want to save the changes?", "VRJConfig",
-               JOptionPane.YES_NO_OPTION);
-            
+               "ConfigDefinition \"" + def.getName() +
+               "\" has changed. Do you want to save the changes?",
+               "Config Definition Editor", JOptionPane.YES_NO_OPTION);
+
             if(JOptionPane.YES_OPTION == result)
             {
-               (new ConfigBrokerProxy()).saveDefinition(mDefEditor.getDefinition().getToken());
+               try
+               {
+                  (new ConfigBrokerProxy()).saveDefinition(def);
+               }
+               catch(Exception ex)
+               {
+                  JOptionPane.showMessageDialog(this,
+                     "ERROR: Failed to save definition '" + def.getName() +
+                        "' version " + def.getVersion() + ": " +
+                        ex.getMessage() + "!",
+                     "Definition Save Failure", JOptionPane.ERROR_MESSAGE);
+               }
             }
-            
-                     
+
             mDefinitionChanged = false;
          }
          mDefEditor.setDefinition(config_def);
       }
    }
+
    private void setupListeners()
    {
       cdl = new ConfigDefinitionListener()
          {
             public void nameChanged(ConfigDefinitionEvent evt)
             {
-               System.out.println("Config Definition Changed..." +
-                     ((ConfigDefinition)evt.getSource()).getToken() +
-                     " " + mConfigDef.getToken());
+               mDefinitionChanged = true;
+
+               System.out.println("Config Definition Name Changed: " +
+                     evt.getValue() + " --> " + mCurConfigDef.getName());
             }
             public void tokenChanged(ConfigDefinitionEvent evt)
             {
-               System.out.println("ERROR: Can not change token..." +
-                     ((ConfigDefinition)evt.getSource()).getToken() +
-                     " " + mConfigDef.getToken());
+               JOptionPane.showMessageDialog(null,
+                                             "Changing the token name is not currently supported",
+                                             "Config Definition Editor Error",
+                                             JOptionPane.ERROR_MESSAGE);
             }
             public void helpChanged(ConfigDefinitionEvent evt)
             {
@@ -225,7 +243,7 @@ public class ConfigDefinitionRepositoryEditor
 
                System.out.println("Config Definition Help Changed..." +
                      ((ConfigDefinition)evt.getSource()).getToken() +
-                     " " + mConfigDef.getToken());
+                     " " + mCurConfigDef.getToken());
             }
             public void categoryAdded(ConfigDefinitionEvent evt)
             {
@@ -233,7 +251,7 @@ public class ConfigDefinitionRepositoryEditor
 
                System.out.println("Config Definition Category Changed..." +
                      ((ConfigDefinition)evt.getSource()).getToken() +
-                     " " + mConfigDef.getToken());
+                     " " + mCurConfigDef.getToken());
             }
             public void categoryRemoved(ConfigDefinitionEvent evt)
             {
@@ -241,7 +259,7 @@ public class ConfigDefinitionRepositoryEditor
 
                System.out.println("Config Definition Category Changed..." +
                      ((ConfigDefinition)evt.getSource()).getToken() +
-                     " " + mConfigDef.getToken());
+                     " " + mCurConfigDef.getToken());
             }
             public void propertyDefinitionAdded(ConfigDefinitionEvent evt)
             {
@@ -249,7 +267,7 @@ public class ConfigDefinitionRepositoryEditor
 
                System.out.println("Config Definition Prop Definition Added..." +
                      ((ConfigDefinition)evt.getSource()).getToken() +
-                     " " + mConfigDef.getToken());
+                     " " + mCurConfigDef.getToken());
             }
             public void propertyDefinitionRemoved(ConfigDefinitionEvent evt)
             {
@@ -257,7 +275,7 @@ public class ConfigDefinitionRepositoryEditor
 
                System.out.println("Config Definition Prop Definition Removed..." +
                      ((ConfigDefinition)evt.getSource()).getToken() +
-                     " " + mConfigDef.getToken());
+                     " " + mCurConfigDef.getToken());
             }
          };
       pdl = new PropertyDefinitionListener()
@@ -267,42 +285,42 @@ public class ConfigDefinitionRepositoryEditor
                mDefinitionChanged = true;
 
                System.out.println("Property Definition Changed..." +
-                     " " + mConfigDef.getToken());
+                     " " + mCurConfigDef.getToken());
             }
             public void tokenChanged(PropertyDefinitionEvent evt)
             {
                mDefinitionChanged = true;
 
                System.out.println("Property Definition Changed..." +
-                     " " + mConfigDef.getToken());
+                     " " + mCurConfigDef.getToken());
             }
             public void typeChanged(PropertyDefinitionEvent evt)
             {
                mDefinitionChanged = true;
 
                System.out.println("Property Definition Changed..." +
-                     " " + mConfigDef.getToken());
+                     " " + mCurConfigDef.getToken());
             }
             public void helpChanged(PropertyDefinitionEvent evt)
             {
                mDefinitionChanged = true;
 
                System.out.println("Property Definition Changed..." +
-                     " " + mConfigDef.getToken());
+                     " " + mCurConfigDef.getToken());
             }
             public void propertyValueDefinitionAdded(PropertyDefinitionEvent evt)
             {
                mDefinitionChanged = true;
 
                System.out.println("Property Definition Changed..." +
-                     " " + mConfigDef.getToken());
+                     " " + mCurConfigDef.getToken());
             }
             public void propertyValueDefinitionRemoved(PropertyDefinitionEvent evt)
             {
                mDefinitionChanged = true;
 
                System.out.println("Property Definition Changed..." +
-                     " " + mConfigDef.getToken());
+                     " " + mCurConfigDef.getToken());
             }
             public void enumEditableChanged(PropertyDefinitionEvent evt)
             {
@@ -313,47 +331,48 @@ public class ConfigDefinitionRepositoryEditor
                mDefinitionChanged = true;
 
                System.out.println("Property Definition Changed..." +
-                     " " + mConfigDef.getToken());
+                     " " + mCurConfigDef.getToken());
             }
             public void enumRemoved(PropertyDefinitionEvent evt)
             {
                mDefinitionChanged = true;
 
                System.out.println("Property Definition Changed..." +
-                     " " + mConfigDef.getToken());
+                     " " + mCurConfigDef.getToken());
             }
             public void allowedTypeAdded(PropertyDefinitionEvent evt)
             {
                mDefinitionChanged = true;
 
                System.out.println("Property Definition Changed..." +
-                     " " + mConfigDef.getToken());
+                     " " + mCurConfigDef.getToken());
             }
             public void allowedTypeRemoved(PropertyDefinitionEvent evt)
             {
                mDefinitionChanged = true;
 
                System.out.println("Property Definition Changed..." +
-                     " " + mConfigDef.getToken());
+                     " " + mCurConfigDef.getToken());
             }
             public void variableChanged(PropertyDefinitionEvent evt)
             {
                mDefinitionChanged = true;
 
                System.out.println("Property Definition Changed..." +
-                     " " + mConfigDef.getToken());
+                     " " + mCurConfigDef.getToken());
             }
          };
 
    }
+
    private void updateListeners(Object value)
    {
       DefaultMutableTreeNode node = (DefaultMutableTreeNode)
                      mDefPropTree.getLastSelectedPathComponent();
 
-      if(null != mConfigDef)
+      if(null != mCurConfigDef)
       {
-         mConfigDef.removeConfigDefinitionListener(cdl);
+         mCurConfigDef.removeConfigDefinitionListener(cdl);
       }
       if(null != mPropDef)
       {
@@ -362,8 +381,18 @@ public class ConfigDefinitionRepositoryEditor
 
       if(null != value && value instanceof ConfigDefinition)
       {
-         mConfigDef = (ConfigDefinition)value;
-         mConfigDef.addConfigDefinitionListener(cdl);
+         mCurConfigDef = (ConfigDefinition)value;
+         mCurConfigDef.addConfigDefinitionListener(cdl);
+
+         // Only change mOrigConfigDef if is not already set or we have
+         // changed definition types (not just versions of the same type).
+         // This is needed so that we can determine if and when a new version
+         // of the definition stored in mOrigConfigDef is required.
+         if ( mOrigConfigDef == null ||
+              ! mOrigConfigDef.getToken().equals(mCurConfigDef.getToken()) )
+         {
+            mOrigConfigDef = mCurConfigDef;
+         }
       }
       if(null != value && value instanceof PropertyDefinition)
       {
@@ -371,8 +400,8 @@ public class ConfigDefinitionRepositoryEditor
          int index = path.getPathCount() - 2;
          DefaultMutableTreeNode def_node =
             (DefaultMutableTreeNode)path.getPathComponent(index);
-         mConfigDef = (ConfigDefinition)def_node.getUserObject();
-         mConfigDef.addConfigDefinitionListener(cdl);
+         mCurConfigDef = (ConfigDefinition)def_node.getUserObject();
+         mCurConfigDef.addConfigDefinitionListener(cdl);
          mPropDef = (PropertyDefinition)value;
          mPropDef.addPropertyDefinitionListener(pdl);
       }
@@ -407,10 +436,18 @@ public class ConfigDefinitionRepositoryEditor
       // Check if the user wants to add a new config definition
       if (node.getUserObject() instanceof Category)
       {
+         ConfigBroker broker = new ConfigBrokerProxy();
+         String new_def_name =
+            JOptionPane.showInputDialog(this,
+                                        "Enter the name for the new definition");
+
          java.util.List categories = new ArrayList();
          categories.add(node.getUserObject());
-         ConfigDefinition def = new ConfigDefinition("Untitled",
-                                                     "untitled",
+
+         String token =
+            new_def_name.trim().toLowerCase().replaceAll("\\s+", "_");
+         ConfigDefinition def = new ConfigDefinition(new_def_name,
+                                                     token,
                                                      "",
                                                      1,
                                                      new ArrayList(),
@@ -418,7 +455,23 @@ public class ConfigDefinitionRepositoryEditor
                                                      categories,
                                                      new ArrayList(),
                                                      null);
-         getRepository().add(def);
+
+         try
+         {
+            broker.saveDefinition(def);
+
+            // Only store the new definition in the repository if it was
+            // saved successfully.
+            getRepository().add(def);
+         }
+         catch(Exception ex)
+         {
+            JOptionPane.showMessageDialog(this,
+                                          "Failed to store new definition: " + 
+                                             ex.getMessage(),
+                                          "Config Definition Editor Error",
+                                          JOptionPane.ERROR_MESSAGE);
+         }
       }
       // Check if the user wants to add a new property definition
       else if (node.getUserObject() instanceof ConfigDefinition)
@@ -433,6 +486,17 @@ public class ConfigDefinitionRepositoryEditor
                                                               new ArrayList(),
                                                               false);
          ConfigDefinition def = (ConfigDefinition)node.getUserObject();
+
+         if ( isNewVersionNeeded(def) )
+         {
+            def = addNewDefinitionVersion(def);
+
+            // This is needed to prevent checkForChanges() from thinking that
+            // we need to save the new definition version prematurely.
+            // XXX: This feels like a hack.  -PH 11/12/2004
+            mDefEditor.setDefinition(def);
+         }
+
          def.addPropertyDefinition(prop_def);
       }
    }
@@ -457,8 +521,70 @@ public class ConfigDefinitionRepositoryEditor
          DefaultMutableTreeNode parent = (DefaultMutableTreeNode)node.getParent();
          ConfigDefinition def = (ConfigDefinition)parent.getUserObject();
          PropertyDefinition prop_def = (PropertyDefinition)node.getUserObject();
+
+         if ( isNewVersionNeeded(def) )
+         {
+            def = addNewDefinitionVersion(def);
+
+            // This is needed to prevent checkForChanges() from thinking that
+            // we need to save the new definition version prematurely.
+            // XXX: This feels like a hack.  -PH 11/12/2004
+            mDefEditor.setDefinition(def);
+         }
+
          def.removePropertyDefinition(prop_def);
       }
+   }
+
+   protected boolean isNewVersionNeeded(ConfigDefinition def)
+   {
+      // If we are already working with a version newer than what we started
+      // with, we do not need to make another new version.
+      if ( def.getVersion() > mOrigConfigDef.getVersion() )
+      {
+         return false;
+      }
+      // If we started with an empty config definition, we do not need to
+      // create a new version.
+      else if ( mOrigConfigDef.getVersion() == 1 &&
+                mOrigConfigDef.getPropertyDefinitions().size() == 0 )
+      {
+         return false;
+      }
+      // At this point, we know that def and mOrigConfigDef are the same
+      // version and that mOrigConfigDef may still be a new, unsaved
+      // definition having more than zero property definitions.  This tests
+      // to see if mOrigConfigDef and def are the same object and we simply
+      // have unsaved changes.  In this case, we are working on a new
+      // definition that has not had any version saved yet.
+      else if ( mOrigConfigDef == def && mDefinitionChanged )
+      {
+         return false;
+      }
+
+      // Otherwise, we need to make a new version.
+      return true;
+   }
+
+   protected ConfigDefinition addNewDefinitionVersion(ConfigDefinition oldDef)
+   {
+      System.out.println("Creating a new definition version (" +
+                         (oldDef.getVersion() + 1) + ")");
+      ConfigDefinition new_def = makeNewDefinitionVersion(oldDef);
+      System.out.println("new_def => " + new_def);
+      getRepository().add(new_def);
+      updateListeners(new_def);
+
+      return new_def;
+   }
+
+   protected ConfigDefinition makeNewDefinitionVersion(ConfigDefinition oldDef)
+   {
+      return new ConfigDefinition(oldDef.getName(), oldDef.getToken(),
+                                  oldDef.getIconLocation(),
+                                  oldDef.getVersion() + 1, oldDef.getParents(),
+                                  oldDef.getHelp(), oldDef.getCategories(),
+                                  oldDef.getPropertyDefinitions(), null);
    }
 
    /**

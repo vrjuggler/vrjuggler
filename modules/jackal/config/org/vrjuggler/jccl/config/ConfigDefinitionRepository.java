@@ -73,6 +73,71 @@ public class ConfigDefinitionRepository
    }
 
    /**
+    * Removes the given definition and all its versions from this repository.
+    *
+    * @param def the definition to remove
+    */
+   public synchronized void remove(ConfigDefinition def)
+      throws DefinitionLookupException
+   {
+      if ( mDefs.containsKey(def.getToken()) )
+      {
+         mDefs.remove(def.getToken());
+         fireDefinitionRemoved(def);
+      }
+      else
+      {
+         throw new DefinitionLookupException("No definition with token '" +
+                                             def.getToken() + "' exists");
+      }
+   }
+
+   /**
+    * Removes the named definition and all its versions from this repository.
+    *
+    * @param token the identifier of the definition to remove
+    */
+   public synchronized void remove(String token)
+      throws DefinitionLookupException
+   {
+      if ( mDefs.containsKey(token) )
+      {
+         ConfigDefinition def = (ConfigDefinition) mDefs.remove(token);
+         fireDefinitionRemoved(def);
+      }
+      else
+      {
+         throw new DefinitionLookupException("No definition with token '" +
+                                             token + "' exists");
+      }
+   }
+
+   /**
+    * Re-inserts the named definition into the repository under the new name.
+    *
+    * @param oldToken the old identifier under which the definition is
+    *                 registered
+    * @param newToken the new identifier under which the definition will be
+    *                 registered
+    */
+/*
+   public synchronized void rename(String oldToken, String newToken)
+      throws DefinitionLookupException
+   {
+      if ( mDefs.containsKey(oldToken) )
+      {
+         Map def_versions = (Map) mDefs.remove(oldToken);
+         mDefs.put(newToken, def_versions);
+      }
+      else
+      {
+         throw new DefinitionLookupException("No definition with token '" +
+                                             oldToken + "' exists");
+      }
+   }
+*/
+
+   /**
     * Gets the latest version of the definition with the given token.
     *
     * @param token      the token of the definition to get
@@ -227,10 +292,10 @@ public class ConfigDefinitionRepository
    public synchronized List getSubDefinitions(List tokens)
    {
       List result = new ArrayList();
-      
+
       // We can start by adding the tokens for all listed items.
       result.addAll(tokens);
-      
+
       for (Iterator itr = tokens.iterator(); itr.hasNext(); )
       {
          result.addAll(getSubDefinitions((String)itr.next()));
