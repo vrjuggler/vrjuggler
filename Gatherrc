@@ -5,7 +5,7 @@ GMTL
 {
    CVSROOT: :pserver:anonymous@cvs.ggt.sourceforge.net:/cvsroot/ggt;
    Module: GGT/macros         [macros.GGT];
-   Module: GGT/modules/GMTL   [modules/GMTL];
+   Module: GGT/modules/GMTL   [external/GMTL];
    Tag: HEAD;
    Path: .;
 };
