@@ -820,12 +820,16 @@ int main(int argc, char* argv[])
             after <classname>preFrame()</classname> and after shared
             application-specific data is synchronized among the cluster nodes
             (see <xref linkend="section.cluster.apps" /> for more details) but
-            before the scene is rendered. When sharing application-specific
-            data in a cluster configuration, this is when the reader nodes
-            should perform updates based on the most recently received copy of
-            the shared application data. The writer node must have written to
-            the shared application data in <methodname>preFrame()</methodname>
-            to minimize the latency of the data.</para>
+            before the scene is rendered. Scene graph-based application
+            objects making use of application-specific data in a cluster
+            configuration should perform scene graph updates based on the most
+            recently received copy of the shared application data. Application
+            objects not using a scene graph can make state updates in this
+            method or in the rendering method (<methodname>draw()</methodname>
+            in the case of <classname>vrj::GlApp</classname>). The writer node
+            must have written to the shared application data in
+            <methodname>preFrame()</methodname> to minimize the latency of the
+            data.</para>
 
             <section>
               <title>Timing</title>
@@ -838,9 +842,9 @@ int main(int argc, char* argv[])
             <section>
               <title>Uses</title>
 
-              <para>When using shared application-specific data in a cluster
-              configuration, the nodes that read from the shared data (those
-              where
+              <para>When using shared application-specific data with a
+              scene-graph based application object in a cluster configuration,
+              the nodes that read from the shared data (those where
               <methodname>cluster::UserData&lt;T&gt;::isLocal()</methodname>
               returns false) should perform state updates based on the freshly
               received update to the shared data.</para>
@@ -5884,6 +5888,7 @@ public:
    void init();
    void preFrame();
    void latePreFrame();
+   void draw();
 
    // Other public member functions ...
 
@@ -6012,17 +6017,20 @@ private:
           <para>After the snapshot of the application-specific shared data for
           the current frame has been distributed to the cluster nodes, it is
           time to read the shared data and set up the application state for
-          rendering the current frame. This must be done in the application
-          object method <methodname>latePreFrame()</methodname>. This is
-          demonstrated in <xref linkend="example.read.cluster.UserData" />.
-          All the nodes in the cluster will read the results of the
-          computations made in <methodname>preFrame()</methodname> and set up
-          the application state. In general, there should be no need to use
+          rendering the current frame. This should be done in the application
+          object method <methodname>latePreFrame()</methodname> or in
+          <methodname>draw()</methodname>. This is demonstrated in <xref
+          linkend="example.read.cluster.UserData.latePreFrame" /> and in <xref
+          linkend="example.read.cluster.UserData.draw" />. All the nodes in
+          the cluster will read the results of the computations made in
+          <methodname>preFrame()</methodname> and set up the application state
+          before rendering. In general, there should be no need to use
           <methodname>cluster::UserData&lt;T&gt;::isLocal()</methodname> at
           this point.</para>
 
-          <example id="example.read.cluster.UserData">
-            <title>Reading from Application-Specific Shared Data</title>
+          <example id="example.read.cluster.UserData.latePreFrame">
+            <title>Reading from Application-Specific Shared Data in
+            <methodname>latePreFrame()</methodname></title>
 
             <programlisting>void AppObject::latePreFrame()
 {
@@ -6031,6 +6039,40 @@ private:
    // And so on ...
 }</programlisting>
           </example>
+
+          <example id="example.read.cluster.UserData.draw">
+            <title>Reading from Application-Specific Shared Data in
+            <methodname>draw()</methodname></title>
+
+            <programlisting>void AppObject::draw()
+{
+   int  state_var1 = mMyTypeObj-&gt;getIntData();
+   char state_var2 = mMyTypeObj-&gt;getByteData();
+   // And so on ...
+   // Render the scene ...
+}</programlisting>
+          </example>
+
+          <para>The choice of which method to use depends on the application
+          type and on the data flow of the application object. Scene
+          graph-based application objects will not have a
+          <methodname>draw()</methodname> method, so
+          <methodname>latePreFrame()</methodname> must be used. For
+          application object types not based on a scene graph (currently only
+          <classname>vrj::GlApp</classname>), there is a trade off to
+          consider. If <methodname>latePreFrame()</methodname> is used, then
+          the rendering state information must be stored in member variables
+          fo the application class. If <methodname>draw()</methodname> is
+          used, then the state can be defined using stack variables within the
+          method, but the additional function call overhead and pointer
+          derference (resulting from the use of the Smart Pointer pattern)
+          could impact the application frame rate. Remember that
+          <methodname>draw()</methodname> is invoked for every window and
+          every viewport within each window. The number of calls to
+          <methodname>draw()</methodname> increases further when stereoscopic
+          rendering is enabled. If <methodname>latePreFrame()</methodname> is
+          used instead, the Smart Pointer overhead will only be exhibited once
+          per frame.</para>
         </section>
 
         <section>
