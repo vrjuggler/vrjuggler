@@ -5,7 +5,8 @@
       <file name="${TWEEK_BASE_DIR}/bin/beans/jccl_editors.jar"
             class="org.vrjuggler.jccl.editors.ChunkPanelFactoryService"/>
       <dependencies>
-         <bean>Config</bean>
+         <bean>ConfigBroker</bean>
+         <jar path="${TWEEK_BASE_DIR}/bin/beans">TableLayout.jar</jar>
       </dependencies>
    </service>
 </beanlist>
