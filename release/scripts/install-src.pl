@@ -174,5 +174,13 @@ sub recurseAction ($) {
 	    installFile("$curfile", $uid, $gid, "$mode", "$dest_dir");
 	    last SWITCH;
 	}
+
+	# Match .dsp, .dsw, .DSP or .DSW.  These are Visual C++ workspace
+	# files.
+	if ( $curfile =~ /\.ds[wp]$/i ) {
+	    installFile("$curfile", $uid, $gid, "$mode", "$dest_dir");
+	    last SWITCH;
+	}
+
     }
 }
