@@ -155,9 +155,6 @@ bool InputWindowXWin::startSampling()
 
    mExitFlag = false;
    
-   XResizeWindow(mXDisplay, mXWindow, 1,1); //Dummy event
-   XFlush(mXDisplay);
-
    // Create a new thread to handle the control
    vpr::ThreadMemberFunctor<InputWindowXWin>* memberFunctor =
       new vpr::ThreadMemberFunctor<InputWindowXWin>(this, &InputWindowXWin::controlLoop, NULL);
@@ -181,6 +178,9 @@ bool InputWindowXWin::stopSampling()
    if (mThread != NULL)
    {
       mExitFlag = true;
+
+      XResizeWindow(mXDisplay, mXWindow, 1,1); //Dummy event
+      XFlush(mXDisplay);
 
       mThread->join();
 
