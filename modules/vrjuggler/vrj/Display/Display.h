@@ -36,6 +36,7 @@
 #include <vrj/vrjConfig.h>
 #include <vector>
 #include <jccl/Config/ConfigChunkPtr.h>
+#include <vpr/Util/Assert.h>
 
 
 namespace vrj
