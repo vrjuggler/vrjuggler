@@ -41,7 +41,7 @@
 #include <vrj/Display/Viewport.h>
 #include <vrj/Display/CameraProjection.h>
 
-#include <vrj/Config/ConfigChunk.h>
+#include <jccl/Config/ConfigChunk.h>
 
 namespace vrj
 {
@@ -55,7 +55,7 @@ public:
 
 public:
    //: Configure the simulator
-   virtual void config(ConfigChunk* chunk)
+   virtual void config(jccl::ConfigChunk* chunk)
    {
       vprASSERT(chunk != NULL);
       vprASSERT((std::string)chunk->getType() == std::string("simViewport"));

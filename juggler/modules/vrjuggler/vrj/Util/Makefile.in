@@ -48,12 +48,7 @@ INSTALL		= @INSTALL@
 SUBOBJDIR	= $(UTILS_LIBRARY)
 
 SRCS 		= Debug.cpp			\
-                  FileIO.cpp			\
-                  XercesStreamInputSource.cpp	\
-                  XercesStreamInputStream.cpp	\
-                  XercesXMLError.cpp		\
-                  XercesXMLParser.cpp		\
-                  XercesXMLParserPool.cpp
+                  FileIO.cpp
 
 include $(MKPATH)/dpp.obj-subdir.mk
 

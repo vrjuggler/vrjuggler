@@ -48,13 +48,16 @@
 #include <vrj/Draw/Pf/PfUtil.h>
 #include <vpr/Util/Singleton.h>
 
+// namespace jccl {
+//     class ConfigChunkDB;
+// }
+
 namespace vrj
 {
 
 
 class PfApp;
 class Projection;
-class ConfigChunkDB;
 
     // Performer Config function called in draw proc after window is set up
 void PFconfigPWin(pfPipeWindow* pWin);
@@ -122,7 +125,7 @@ protected:
 public:
     //: Function to config API specific stuff.
     // Takes a chunkDB and extracts API specific stuff
-   //virtual void configInitial(ConfigChunkDB*  chunkDB);
+   //virtual void configInitial(jccl::ConfigChunkDB*  chunkDB);
 
     //: Blocks until the end of the frame
     //! PRE: none
@@ -181,18 +184,18 @@ public: // Chunk handlers
    //: Can the handler handle the given chunk?
    //! RETURNS: true - Can handle it
    //+          false - Can't handle it
-   virtual bool configCanHandle(ConfigChunk* chunk);
+   virtual bool configCanHandle(jccl::ConfigChunk* chunk);
 
 protected:     // --- Config handling functions --- //
    //: Add the chunk to the configuration
    //! PRE: configCanHandle(chunk) == true
    //! RETURNS: success
-   virtual bool configAdd(ConfigChunk* chunk);
+   virtual bool configAdd(jccl::ConfigChunk* chunk);
 
    //: Remove the chunk from the current configuration
    //! PRE: configCanHandle(chunk) == true
    //!RETURNS: success
-   virtual bool configRemove(ConfigChunk* chunk)
+   virtual bool configRemove(jccl::ConfigChunk* chunk)
    {
       vprDEBUG(vprDBG_ALL,vprDBG_CRITICAL_LVL) << "vjPfDrawManager::configRemove: configRemove is not supported.\n" << vprDEBUG_FLUSH;
       return false;
@@ -203,12 +206,12 @@ protected:     // --- Config handling functions --- //
    //! NOTE: MUST be called before initDrawing
    //! NOTE: This must be called by the draw manager
    //        because the chunk must be gotten from the draw manager
-   bool configDisplaySystem(ConfigChunk* chunk);
+   bool configDisplaySystem(jccl::ConfigChunk* chunk);
 
    //: Configure pfAPI stuff
    //! PRE: chunk.type == "apiPerformer"
    //! NOTE: MUST be called before initDrawing
-   bool configPerformerAPI(ConfigChunk* chunk);
+   bool configPerformerAPI(jccl::ConfigChunk* chunk);
 
 protected:
    //: Call all the application channel callbacks

@@ -36,15 +36,14 @@
 #include <vrj/vrjConfig.h>
 #include <vpr/Sync/Mutex.h>
 #include <vpr/Thread/Thread.h>
-#include <vrj/Kernel/ConfigChunkHandler.h>
-#include <vrj/Environment/Socket.h>
+#include <jccl/JackalServer/JackalServer.h>
+#include <jccl/Plugins/ConfigManager/ConfigManager.h>
+//#include <jccl/Plugins/ConfigManager/ConfigChunkHandler.h>
+#include <jccl/Plugins/PerformanceMonitor/PerformanceMonitor.h>
 
 namespace vrj
 {
 
-class Connect;
-class PerfDataBuffer;
-class ConfigChunkDB;
 
 
 //-------------------------------------
@@ -69,7 +68,7 @@ class ConfigChunkDB;
 // Date 2-27-98
 //---------------------------------------
 
-class VJ_CLASS_API EnvironmentManager: public ConfigChunkHandler {
+class VJ_CLASS_API EnvironmentManager: public jccl::ConfigChunkHandler {
 
 public:
 
@@ -84,96 +83,37 @@ public:
 
 
 
-    //: is the EM accepting connections across the network?
-    //! RETURNS: true - EM is accepting connections
-    //! RETURNS: false - EM is not accepting connections
-    bool isAccepting();
+    jccl::ConfigManager* getConfigManager();
+
+    jccl::PerformanceMonitor* getPerformanceMonitor();
 
 
-
-    //: registers a buffer containing perf data...
-    void addPerfDataBuffer (PerfDataBuffer *v);
-
-
-    //: unregisters a buffer of perf data
-    void removePerfDataBuffer (PerfDataBuffer *v);
-
-
-
-    //: tells EM that a connection has died (ie by gui disconnecting)
-    void connectHasDied (Connect* con);
-
-
-    //: sends a 'refresh' message to all open connections
-    void sendRefresh();
-
-
-
-    //: ConfigChunkHandler stuff
+    //: jccl::ConfigChunkHandler stuff
     //! PRE: configCanHandle(chunk) == true
     //! RETURNS: success
-    virtual bool configAdd(ConfigChunk* chunk);
+    virtual bool configAdd(jccl::ConfigChunk* chunk);
 
 
 
     //: Remove the chunk from the current configuration
     //! PRE: configCanHandle(chunk) == true
     //!RETURNS: success
-    virtual bool configRemove(ConfigChunk* chunk);
+    virtual bool configRemove(jccl::ConfigChunk* chunk);
 
 
 
     //: Can the handler handle the given chunk?
     //! RETURNS: true - Can handle it
     //+          false - Can't handle it
-    virtual bool configCanHandle(ConfigChunk* chunk);
+    virtual bool configCanHandle(jccl::ConfigChunk* chunk);
 
 
 
 private:
-    std::string               perf_target_name;
-    std::vector<Connect*>   connections;
-    std::vector<PerfDataBuffer*> perf_buffers;
-    vpr::Thread*                 listen_thread;
-    int                       Port;
-    Socket*                 listen_socket;
-    Connect*                perf_target;
-    float                     perf_refresh_time;  // in milliseconds
-    bool                      configured_to_accept;
-    ConfigChunk*            current_perf_config;
-    vpr::Mutex                   connections_mutex;
-    vpr::Mutex                   perf_buffers_mutex;
 
-    // PRIVATE utility functions
-
-    void controlLoop (void* nullParam);
-
-    void activatePerfBuffers();
-    void deactivatePerfBuffers();
-
-    void setPerformanceTarget (Connect* con);
-
-    void removeConnect (Connect* con);
-
-    //: returns a pointer to a connection with the given name
-    Connect* getConnect (const std::string& _name);
-
-
-    //: allows the Environment Manager to accept connections.
-    //! RETURNS: reflects succesfully grabbing a port and listening.
-    bool acceptConnections();
-
-
-
-    //: stop listening for client connections
-    //! PRE:  True
-    //! POST: no new connections are accepted. open connections
-    //+       are not changed.
-    bool rejectConnections();
-
-
-    //: Kills all open connections
-    void killConnections();
+    jccl::JackalServer*             jackal_server;
+    jccl::ConfigManager*            config_manager;
+    jccl::PerformanceMonitor*       performance_monitor;
 
     // These are needed to appease Visual C++ in its creation of DLLs.
     EnvironmentManager(const EnvironmentManager&) {;}

@@ -38,15 +38,12 @@
 #include <vrj/Math/Vec3.h>
 #include <vrj/Input/Type/Position.h>
 #include <vrj/Kernel/User.h>
-#include <vrj/Environment/EnvironmentManager.h>
-#include <vrj/Performance/PerfDataBuffer.h>
-
+//#include <vrj/Environment/EnvironmentManager.h>
+#include <jccl/Plugins/PerformanceMonitor/PerfDataBuffer.h>
+#include <jccl/Config/ConfigChunk.h>
 
 namespace vrj
 {
-
-// Config stuff
-class ConfigChunk;
 
 
 //---------------------------------------------------------------------
@@ -84,7 +81,7 @@ public:
       //+       and "fix" the error.
       //! NOTE: All derived viewport classes MUST call this function
       //+       after doing local configuration.
-   virtual void config(ConfigChunk* chunk);
+   virtual void config(jccl::ConfigChunk* chunk);
 
    //: Updates the projection data for this display
    // Uses the data for the head position for this window
@@ -126,7 +123,7 @@ public:
    }
 
    //: Get the config chunk that configured this display
-   ConfigChunk* getConfigChunk()
+   jccl::ConfigChunk* getConfigChunk()
    { return mViewportChunk; }
 
    //: Get the user associated with this display
@@ -143,7 +140,7 @@ protected:
    Viewport::View  mView;               //: Which buffer(s) to display (left, right, stereo)
    bool              mActive;             //: Is this viewport active
 
-   ConfigChunk* mViewportChunk;        //: The chunk data for this display
+   jccl::ConfigChunk* mViewportChunk;        //: The chunk data for this display
    float          mXorigin, mYorigin, mXsize, mYsize;    // Location and size of viewport
                                                          // ASSERT: all values are >= 0.0 and <= 1.0
 };

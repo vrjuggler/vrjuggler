@@ -38,12 +38,12 @@
 #include <vrj/Math/Coord.h>
 #include <vrj/Math/Vec3.h>
 #include <vrj/Math/Vec4.h>
-#include <vrj/Config/ConfigChunk.h>
+#include <jccl/Config/ConfigChunk.h>
 
 namespace vrj
 {
 
-void SurfaceViewport::config(ConfigChunk *chunk)
+void SurfaceViewport::config(jccl::ConfigChunk *chunk)
 {
    vprASSERT(chunk != NULL);
    vprASSERT((std::string)chunk->getType() == std::string("surfaceViewport"));
@@ -53,10 +53,10 @@ void SurfaceViewport::config(ConfigChunk *chunk)
    mType = SURFACE;
 
    // Read in the corners
-   ConfigChunk* ll_corner_chunk = chunk->getProperty("corners",0);
-   ConfigChunk* lr_corner_chunk = chunk->getProperty("corners",1);
-   ConfigChunk* ur_corner_chunk = chunk->getProperty("corners",2);
-   ConfigChunk* ul_corner_chunk = chunk->getProperty("corners",3);
+   jccl::ConfigChunk* ll_corner_chunk = chunk->getProperty("corners",0);
+   jccl::ConfigChunk* lr_corner_chunk = chunk->getProperty("corners",1);
+   jccl::ConfigChunk* ur_corner_chunk = chunk->getProperty("corners",2);
+   jccl::ConfigChunk* ul_corner_chunk = chunk->getProperty("corners",3);
    mLLCorner.set(ll_corner_chunk->getProperty("x"),
                  ll_corner_chunk->getProperty("y"),
                  ll_corner_chunk->getProperty("z"));

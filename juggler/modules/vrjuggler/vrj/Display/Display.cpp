@@ -49,7 +49,7 @@ void Display::updateProjections()
 }
 
 
-void Display::config(ConfigChunk* chunk)
+void Display::config(jccl::ConfigChunk* chunk)
 {
    vprASSERT(chunk != NULL);
 
@@ -57,7 +57,7 @@ void Display::config(ConfigChunk* chunk)
    configViewports(chunk);
 }
 
-void Display::configDisplayWindow(ConfigChunk* chunk)
+void Display::configDisplayWindow(jccl::ConfigChunk* chunk)
 {
    vprASSERT(chunk != NULL);
 
@@ -104,14 +104,14 @@ void Display::configDisplayWindow(ConfigChunk* chunk)
     mDisplayChunk = chunk;        // Save the chunk for later use
 }
 
-void Display::configViewports(ConfigChunk* chunk)
+void Display::configViewports(jccl::ConfigChunk* chunk)
 {
    vprASSERT(chunk != NULL);
 
    unsigned num_sim_vps = chunk->getNum("sim_viewports");
    unsigned num_surface_vps = chunk->getNum("surface_viewports");
 
-   ConfigChunk* vp_chunk = NULL;
+   jccl::ConfigChunk* vp_chunk = NULL;
    SimViewport* sim_vp = NULL;
    SurfaceViewport* surf_vp = NULL;
 

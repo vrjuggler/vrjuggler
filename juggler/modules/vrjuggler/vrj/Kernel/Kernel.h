@@ -39,9 +39,8 @@
 #include <vpr/Util/Singleton.h>
 
 #include <vrj/Kernel/SystemFactory.h>
-#include <vrj/Performance/PerfDataBuffer.h>
-#include <vrj/Kernel/ConfigChunkHandler.h>  // Config stuff
-
+#include <jccl/Plugins/PerformanceMonitor/PerfDataBuffer.h>
+#include <vrj/Environment/EnvironmentManager.h>
 
 namespace vpr
 {
@@ -52,7 +51,6 @@ namespace vrj
 {
 class DisplayManager;
 class DrawManager;
-class EnvironmentManager;
 class InputManager;
 class SoundManager;
 class User;
@@ -72,7 +70,7 @@ class App;
 // Date: 9-7-97
 //-------------------------------------------------------
 //!PUBLIC_API:
-class VJ_CLASS_API Kernel : public ConfigChunkHandler
+class VJ_CLASS_API Kernel : public jccl::ConfigChunkHandler
 {
 public:
 
@@ -115,7 +113,7 @@ protected:  // -- CHUNK HANDLER
    //: Can the handler handle the given chunk?
    //! RETURNS: true - Can handle it
    //+          false - Can't handle it
-   virtual bool configCanHandle(vrj::ConfigChunk* chunk);
+   virtual bool configCanHandle(jccl::ConfigChunk* chunk);
 
    //: Process any pending reconfiguration that we can deal with
    //
@@ -123,27 +121,27 @@ protected:  // -- CHUNK HANDLER
    //  it's dependant managers (basically all of them
    //  that don't have a control thread)
    //
-   // It just calls process pending for dependant processes
-   virtual int configProcessPending(bool lockIt = true);
+//     // It just calls process pending for dependant processes
+//     virtual int configProcessPending(bool lockIt = true);
 
 protected:  // -- CHUNK HANDLER
    //: Add the chunk to the configuration
    //! PRE: configCanHandle(chunk) == true
    //! RETURNS: success
-   virtual bool configAdd(vrj::ConfigChunk* chunk);
+   virtual bool configAdd(jccl::ConfigChunk* chunk);
 
    //: Remove the chunk from the current configuration
    //! PRE: configCanHandle(chunk) == true
    //!RETURNS: success
-   virtual bool configRemove(vrj::ConfigChunk* chunk);
+   virtual bool configRemove(jccl::ConfigChunk* chunk);
 
 protected:  // Local config functions
    //: Add a User to the system
-   bool addUser(vrj::ConfigChunk* chunk);
+   bool addUser(jccl::ConfigChunk* chunk);
 
    //: Remove a User from the system
    //! NOTE: Currently not implemented
-   bool removeUser(vrj::ConfigChunk* chunk);
+   bool removeUser(jccl::ConfigChunk* chunk);
 
 protected:
    //: Updates any data that needs updated once a frame (Trackers, etc.)
@@ -213,7 +211,7 @@ protected:
    EnvironmentManager*   environmentManager;     //: The Environment Manager object
 
    /// Performance information
-   PerfDataBuffer* perfBuffer;          //: store perfdata for kernel main
+   jccl::PerfDataBuffer* perfBuffer;          //: store perfdata for kernel main
    bool              performanceEnabled;
 
    /// Multi-user information
