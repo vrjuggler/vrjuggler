@@ -227,8 +227,10 @@ public:
    {
       CppUnit::TestSuite* test_suite = new CppUnit::TestSuite("SocketConnectorAcceptorTest");
 
+#ifndef VPR_SIMULATOR
       test_suite->addTest( new CppUnit::TestCaller<SocketConnectorAcceptorTest>("testAcceptorConstruction", &SocketConnectorAcceptorTest::testAcceptorConstruction));
       test_suite->addTest( new CppUnit::TestCaller<SocketConnectorAcceptorTest>("testSpawnedAcceptor", &SocketConnectorAcceptorTest::testSpawnedAcceptor));
+#endif
 
       return test_suite;
    }
