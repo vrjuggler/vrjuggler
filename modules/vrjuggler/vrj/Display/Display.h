@@ -44,8 +44,8 @@ namespace vrj
    class Viewport;
 
 /**
- * Container class for viewports and window information.
- * Stores location of window and viewports within the window.
+ * Container class for viewports and window information.  This stores the
+ * size and location of the window and the viewports contained within.
  *
  * @date 3-5-2001
  */
@@ -72,6 +72,7 @@ public:
 public:
    /**
     * Takes a display config element and configures the display based one it.
+    *
     * @pre element is a valid configuration element.
     * @post display is configured.
     *        If there is an error is the specified config, we output error
@@ -85,45 +86,67 @@ public:
    void configDisplayWindow(jccl::ConfigElementPtr element);
    void configViewports(jccl::ConfigElementPtr element);
 
-   /** Updates the projection data for each contained viewport.
-   * @param positionScale - Scale value for converting from Juggler units (meters) to the display units
-   */
+   /**
+    * Updates the projection data for each contained viewport.
+    *
+    * @param positionScale Scale value for converting from Juggler units
+    *                      (meters) to the display units.
+    */
    void updateProjections(const float positionScale);
 
 public:
+   /** Determines whether this display window is active. */
    bool isActive() const
    {
       return mActive;
    }
 
-   void setName(std::string name)
+   /** Sets the name of this display window. */
+   void setName(const std::string& name)
    {
       mName = name;
    }
 
-   /** Gets the name of this display. */
+   /** Gets the name of this display window. */
    std::string getName() const
    {
       return mName;
    }
 
+   /**
+    * Determines whether the window manager should decorate this display
+    * window with a title and border.
+    */
    bool shouldDrawBorder() const
    {
       return mBorder;
    }
 
+   /**
+    * Determines whether the mouse pointer should be hidden while within the
+    * borders of this display window.
+    */
    bool shouldHideMouse() const
    {
       return mHideMouse;
    }
 
-   /** Explicitly set the origin and size 
-   * @param updateConfig - If true, then the changes will be reflected in the config element for this display.
-   */
+   /**
+    * Explicitly sets the origin and size of this display window.
+    *
+    * @param originX      The X coordinate for the origin of this display
+    *                     window.
+    * @param originY      The Y coordinate for the origin of this display
+    *                     window.
+    * @param width        The new width for this display window.
+    * @param height       The new height for this display window.
+    * @param updateConfig If true, then the changes will be reflected in the
+    *                     config element for this display window.
+    */
    void setOriginAndSize(const int originX, const int originY, const int width,
                          const int height, const bool updateConfig = false);
    
-   /** Return the current origin and size */
+   /** Returns the current origin and size of this display window. */
    void getOriginAndSize(int& originX, int& originY, int& width, int& height)
    {
       vprASSERT(mOriginX != -1);     // Make sure we have been configured
@@ -133,11 +156,17 @@ public:
       height  = mHeight;
    }
 
+   /**
+    * Sets the graphics pipe for this display window.
+    */
    void setPipe(const int pipe)
    {
       mPipe = pipe;
    }
 
+   /**
+    * Gets the graphics pipe for this display window.
+    */
    int getPipe() const
    {
       return mPipe;
@@ -159,20 +188,31 @@ public:
       return mDisplayElement;
    }
 
+   /** Gets the frame buffer configuration element for this display window. */
    jccl::ConfigElementPtr getGlFrameBufferConfig() const;
 
    friend VJ_API(std::ostream&) operator<<(std::ostream& out, vrj::Display& disp);
 
-   // --- Viewport handling --- //
+   /** @name Viewport handling */
+   //@{
+   /** Gets the number of viewports contained within this window. */
    std::vector<vrj::Viewport*>::size_type getNumViewports() const
    {
       return mViewports.size();
    }
 
+   /**
+    * Returns the requested viewport from this display window.
+    *
+    * @pre vpNum < getNumViewports().
+    *
+    * @param vpNum The integer identifier of the requested viewport.
+    */
    vrj::Viewport* getViewport(const int vpNum)
    {
       return mViewports[vpNum];
    }
+   //@}
 
 protected:
    std::string mName;         /**< Name of the window */
