@@ -71,7 +71,8 @@ public:
       mat[0][3] = a30; mat[1][3] = a31; mat[2][3] = a32; mat[3][3] = a33;
    }
 
-   //: Build matrix from coord
+   //: Build matrix from a vjCoord object
+   //! POST: mat = coord represented as a matrix
    vjMatrix(vjCoord coord);
 
 public:
@@ -266,7 +267,8 @@ public:
    void preMult(const vjMatrix&  _m);
 
    //: Find inverse of a matrix
-   //!POST: mat' = inverse(_m)
+   //!POST: mat = inverse(_m)
+   //! RETURNS: 1 - Success
    int invert(vjMatrix& _m);
 
 public:
