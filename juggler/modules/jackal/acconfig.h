@@ -48,6 +48,9 @@
 /* Define if performance-gathering code will be used. */
 #undef USE_JCCL_PERF
 
+/* Define if the Tweek C++ API (the C++ CORBA stuff) is available. */
+#undef HAVE_TWEEK_CXX
+
 @BOTTOM@
 
 #endif	/* _JCCL_DEFINES_H_ */
