@@ -50,6 +50,7 @@
 #include <Math/vjQuat.h>
 #include <Kernel/vjDebug.h>
 
+#include <strstream.h>
 #include <fstream.h>
 
 // Helper to return the index for theData array
@@ -88,7 +89,16 @@ bool vjIsense::config(vjConfigChunk *c)
     mTracker.setPortName( vjInput::getPort() );
     mTracker.rBaudRate() = vjInput::getBaudRate();
     mTracker.rNumStations() = (int)  static_cast<int>(c->getProperty("num"));
-    mTracker.sendScript(static_cast<std::string>(c->getProperty("script")).c_str());
+
+// load an init script for the tracker and then pass it to mTracker
+    char* filename = c->getProperty("script").cstring();
+    strstream	script;
+    ifstream	scriptFile;
+    scriptFile.open(filename);
+    script<<scriptFile.rdbuf();
+    mTracker.setScript(script.str());
+    scriptFile.close();
+    
     return true;
 }
 
@@ -104,7 +114,7 @@ vjIsense::~vjIsense()
 // Main thread of control for this active object
 void vjIsense::controlLoop(void* nullParam)
 {
-    vjDEBUG(vjDBG_INPUT_MGR,3) << "vjIsense: Spawned SampleBirds starting" << endl << vjDEBUG_FLUSH;
+
     if (theData != NULL)
 	delete [] theData;
     if (mDataTimes != NULL)
@@ -121,18 +131,6 @@ void vjIsense::controlLoop(void* nullParam)
 
 // Reset current, progress, and valid indices
     resetIndexes();
-
-    vjDEBUG(vjDBG_INPUT_MGR,1) << "    Getting intersense ready....\n" << vjDEBUG_FLUSH;
-
-    mTracker.open();
-
-//sanity check.. make sure birds actually started
-    if (this->isActive() == false) {
-	vjDEBUG(vjDBG_INPUT_MGR,0)  << "vjIsense failed to start.." << endl << vjDEBUG_FLUSH;
-	return;
-    }
-      
-    vjDEBUG(vjDBG_INPUT_MGR,1)  << "vjIsense ready to go..." << endl << vjDEBUG_FLUSH;
     
 // Loop through and keep sampling
     for (;;)
@@ -159,9 +157,16 @@ int vjIsense::startSampling()
 	vjASSERT(false);
 	
     } else {
-    
-// Create a new thread to handle the control
 
+// open the tracker connection
+	mTracker.open();
+// sanity check.. make sure birds actually started
+    	if (this->isActive() == false) {
+		vjDEBUG(vjDBG_INPUT_MGR,2)  << "vjIsense: mTracker.open failed to start tracker" << endl << vjDEBUG_FLUSH;
+		return 0;
+    	}
+
+// Create a new thread to handle the control
 	vjThreadMemberFunctor<vjIsense>* memberFunctor =
 	    new vjThreadMemberFunctor<vjIsense>(this, &vjIsense::controlLoop, NULL);
 	vjThread* new_thread;

@@ -56,7 +56,7 @@ bool isIntersense::open()
   bool tracker_connect = false;
   if (-1 != mHandle) {
     tracker_connect = true;    
-
+    sendScript();
     getConfigState(1);
     rAngleFormat(1) = ISD_EULER;
     rButtons(1) = 1;
