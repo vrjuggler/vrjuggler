@@ -221,7 +221,7 @@ int vjConfigChunkDB::dependencySort()
    // Create new src list to work from
    // Targetting the local data
    vector<vjConfigChunk*> src_chunks = chunks;
-   chunks = vector<vjConfigChunk*>(0);             // Chunks is the local data
+   chunks = vector<vjConfigChunk*>(0);             // Chunks is the local data - Zero it out to start
 
    bool dep_pass(true);             // Pass dependency check
    vector<string> deps;             // Source dependencies
@@ -253,16 +253,16 @@ int vjConfigChunkDB::dependencySort()
       for(int i=0;i<src_chunks.size();i++)
       {
           vjDEBUG(0) << "ERROR: Dependency error:  Chunk:" << chunks[i]->getProperty("name")
-                     << "\tDepends on: " << vjDEBUG_FLUSH;
+                     << "\tDepends on: \n" << vjDEBUG_FLUSH;
          vector<string> deps = chunks[i]->getDependencies();
          if(deps.size() > 0)
          {
             for(int j=0;j<deps.size();j++)
-               vjDEBUG(0) << "\t" << deps[j] << vjDEBUG_FLUSH;
+               vjDEBUG(0) << "\tdep " << j << ": " << deps[j] << endl << vjDEBUG_FLUSH;
          } else {
-            vjDEBUG(0) << "Nothing." << vjDEBUG_FLUSH;
+            vjDEBUG(0) << "Nothing.\n" << vjDEBUG_FLUSH;
          }
-         vjDEBUG(0) << "Check for undefined devices that others depend upon." << endl << vjDEBUG_FLUSH;
+         vjDEBUG(0) << "Check for undefined devices that others depend upon.\n" << vjDEBUG_FLUSH;
       }
       chunks.insert(chunks.end(), src_chunks.begin(), src_chunks.end());   // Copy over the rest
 
