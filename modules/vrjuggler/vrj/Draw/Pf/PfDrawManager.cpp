@@ -78,6 +78,16 @@
 
 #include <gmtl/Output.h>
 
+
+typedef struct _pfuWin32Event
+{
+  HWND hwnd;
+  UINT uMsg;
+  WPARAM wParam; // we should copy this and lParam
+  LPARAM lParam;
+  double time;
+} pfuWin32Event;
+
 namespace vrj
 {
 
@@ -105,25 +115,87 @@ PfDrawManager::~PfDrawManager()
    mPfInputHandlers.clear();
 }
 
+#ifndef GET_X_LPARAM
+#  define GET_X_LPARAM(lp)   ((int)(short)LOWORD(lp))
+#endif
+#ifndef GET_Y_LPARAM
+#  define GET_Y_LPARAM(lp)   ((int)(short)HIWORD(lp))
+#endif
+
 // Helper method that forwards all events to the correct PfInputHandler.
 void handlePerformerEvents(int dev, void* val , pfuCustomEvent* pfuevent)
 {
    boost::ignore_unused_variable_warning( dev );
    boost::ignore_unused_variable_warning( pfuevent );
-   
-   ::XAnyEvent* event = (::XAnyEvent*)val;
+
+#ifdef VPR_OS_Win32
+   pfuWin32Event* event = (pfuWin32Event*)val;
    vprASSERT( event != NULL );
 
+   int cur_x = GET_X_LPARAM(event->lParam);
+   int cur_y = GET_Y_LPARAM(event->lParam);
+
+   POINT pt;
+   pt.x = cur_x;
+   pt.y = cur_y;
+   ::ClientToScreen(event->hwnd, &pt);
+
+   HWND real_window = event->hwnd;
+   TCHAR tmpName[101];
+
+   // Check for child.
+   if(GetClassName(event->hwnd, tmpName, 100) > 0)
+   {
+      if(!strcmp(tmpName,"pfChildWNDCLASS"))
+      {
+         real_window = (HWND)GetWindowLong(event->hwnd, GWL_HWNDPARENT);
+
+         if(real_window == NULL)
+         {
+            // Fall back on given window if it is not a child window.
+            real_window = event->hwnd;
+         }
+      }
+   }
+   else
+   {
+      vprDEBUG(vrjDBG_DRAW_MGR,vprDBG_CRITICAL_LVL) 
+         << "[PfDrawManager::handlePerformerInput()] Unable to determine class name of win = "
+         << std::hex << event->hwnd << std::dec << std::endl << vprDEBUG_FLUSH;
+   }
+
+   MSG message;
+   message.hwnd = real_window;
+   message.lParam = event->lParam;
+   message.message = event->uMsg;
+   message.pt = pt;
+   message.time = event->time;
+   message.wParam = event->wParam;
+
+   PfInputHandler* pf_input_handler = PfDrawManager::getPfInputHandler( real_window );
+   if ( NULL != pf_input_handler )
+   {
+      pf_input_handler->handlePerformerEvent( message );
+   }
+   else
+   {
+      vprDEBUG(vrjDBG_DRAW_MGR,vprDBG_CRITICAL_LVL)
+         << "[PfDrawManager::handlePerformerInput()] Got an event for an unknown window."
+         << std::endl << vprDEBUG_FLUSH;
+   }
+#else
+   ::XAnyEvent* event = (::XAnyEvent*)val;
+   vprASSERT( event != NULL );
    PfInputHandler* pf_input_handler = PfDrawManager::getPfInputHandler( event->window );
    vprASSERT( pf_input_handler != NULL );
-   
    pf_input_handler->handlePerformerEvent( *((::XEvent*)val) );
+#endif
 }
 
 // Instantiate the mPfInputMap.
-std::map< ::Window, PfInputHandler* > PfDrawManager::mPfInputMap;
+std::map< WINKEY, PfInputHandler* > PfDrawManager::mPfInputMap;
 
-void PfDrawManager::addPfInputHandler(::Window win, PfInputHandler* pfInput)
+void PfDrawManager::addPfInputHandler(WINKEY win, PfInputHandler* pfInput)
 {
    vprASSERT( pfInput != NULL );
 
@@ -133,14 +205,14 @@ void PfDrawManager::addPfInputHandler(::Window win, PfInputHandler* pfInput)
    }
 }
 
-void PfDrawManager::removePfInputHandler(::Window win)
+void PfDrawManager::removePfInputHandler(WINKEY win)
 {
    mPfInputMap.erase(win);     // Erase the entry in the list
 }
 
-PfInputHandler* PfDrawManager::getPfInputHandler(::Window win)
+PfInputHandler* PfDrawManager::getPfInputHandler(WINKEY win)
 {
-   std::map< ::Window, PfInputHandler* >::iterator pfInputIter;
+   std::map< WINKEY, PfInputHandler* >::iterator pfInputIter;
    
    pfInputIter = mPfInputMap.find(win);
    if ( pfInputIter == mPfInputMap.end() )     // Not found
@@ -630,36 +702,6 @@ void PfDrawManager::addDisplay(Display* disp)
       //pfuInit();
       pfuLoadPWinCursor(pf_disp.pWin, PFU_CURSOR_OFF);
    }
-
-/*    this never worked for some reason......but it works when pf is an event window..
-#ifndef VPR_OS_Win32
-   
-   // ----------- Register this window with XEvent Device registry --------- //
-   gadget::EventWindowXWin::WindowRegistry::WindowInfo xwin_info;
-   xwin_info.displayName = mPipeStrs[disp->getPipe()];
-   xwin_info.xWindow = pf_disp.pWin->getWSWindow();
-   vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CONFIG_LVL) << "PfDrawManager::addDisplay: window id: " << int(xwin_info.xWindow) << "\n" << vprDEBUG_FLUSH;
-
-   gadget::EventWindowXWin::WindowRegistry::instance()->addWindow(disp->getName(), xwin_info);
-
-   // ------------ Hide mouse pointer as neccesary -------------- //
-   if(pf_disp.disp->shouldHideMouse())
-   {
-      std::cout << "I am really getting noticed!!!!!" << std::endl;
-      ::Display* x_disp = XOpenDisplay( xwin_info.displayName.c_str());
-      createEmptyCursor(x_disp, xwin_info.xWindow);
-      XDefineCursor(x_disp, xwin_info.xWindow, mEmptyCursor);
-   }
-#endif
-   */
-   
-   // Set up the Performer Input handler.
-   /*
-   jccl::ConfigElementPtr display_elt = disp->getConfigElement();
-   PfInputHandler* input_handler = new PfInputHandler();
-   mInputHandlers.push_back(input_handler);
-   input_handler->config(display_elt);
-   */
 
    jccl::ConfigElementPtr display_elt = disp->getConfigElement();
    std::string displayName = mPipeStrs[disp->getPipe()];
