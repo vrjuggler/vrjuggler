@@ -75,7 +75,7 @@ public:
       // Compute time difference
       mSampleStopTime.setNow();
       //std::cout << "sto: " << mSampleStopTime.usec() << "\n";
-      vpr::Interval diff(mSampleStartTime - mSampleStopTime);
+      vpr::Interval diff(mSampleStopTime - mSampleStartTime);
       //std::cout << "d: " << diff.usec() << "\n";
       double sample(0.0f);
 
