@@ -57,6 +57,7 @@
 #include <errno.h>
 
 #include <vpr/Util/ReturnStatus.h>
+#include <assert.h>
 
 
 namespace vpr
@@ -80,7 +81,20 @@ public:
    MutexPosix()
    {
       // Initialize the mutex.
+#ifndef _DEBUG
       pthread_mutex_init(&mMutex, NULL);
+#else
+#ifdef VPR_OS_Linux
+      // If Linux and debug, then use error checking mutex
+      pthread_mutexattr_t mutex_attr;
+      pthread_mutexattr_init(&mutex_attr);
+      pthread_mutexattr_settype(&mutex_attr, PTHREAD_MUTEX_ERRORCHECK_NP);
+      pthread_mutex_init(&mMutex, &mutex_attr);
+      pthread_mutexattr_destroy(&mutex_attr);
+#else
+      pthread_mutex_init(&mMutex, NULL);
+#endif
+#endif
    }
 
    /**
@@ -127,6 +141,7 @@ public:
       else if ( retval == EDEADLK )
       {
          perror("Tried to lock mutex twice (MutexPosix.h:118)");
+         assert(false && "Mutex deadlock detected");
          return vpr::ReturnStatus(vpr::ReturnStatus::Fail);
       }
 #endif
@@ -242,9 +257,17 @@ public:
     */
    vpr::ReturnStatus release()
    {
-      if ( pthread_mutex_unlock(&mMutex) == 0 )
+      int retval = pthread_mutex_unlock(&mMutex);
+
+      if (0 == retval )
       {
          return vpr::ReturnStatus();
+      }
+      else if(EPERM == retval)
+      {
+         perror("Tried to lock mutex twice (MutexPosix.h:263)");
+         assert(false && "Mutex release by non-owning thread.");
+         return vpr::ReturnStatus(vpr::ReturnStatus::Fail);
       }
       else
       {
