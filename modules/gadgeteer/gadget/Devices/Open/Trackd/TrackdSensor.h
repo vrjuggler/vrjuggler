@@ -126,7 +126,7 @@ public:
 
 private:
     aTrackdSensor*         mTrackdSensors;      // The sensors that we are dealing with
-   std::vector<vjMatrix>   mCurSensorValues; // The current (up-to-date) values
+    std::vector<vjMatrix>   mCurSensorValues; // The current (up-to-date) values
 };
 
 #endif
