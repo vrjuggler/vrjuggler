@@ -42,7 +42,7 @@
 namespace gadget
 {
 
-//: Constructor
+/** Constructor. */
 bool KeyboardXWin::config(jccl::ConfigChunkPtr c)
 {
    if(! (Input::config(c) && Keyboard::config(c)))
@@ -127,13 +127,13 @@ void KeyboardXWin::controlLoop(void* nullParam)
    mThread = (vpr::Thread*) vpr::Thread::self();
 
    vprASSERT(mWeOwnTheWindow && "control loop should not be called if we don't own window. Update in owning thread.");
-   
+
    // Open the x-window
    openTheWindow();
 
    // Sync up with window
    XSync(m_display,0);
-      
+
    // If we have initial locked, then we need to lock the system
    if(mLockState == Lock_LockKey)      // Means that we are in the initially locked state
    {
@@ -185,7 +185,7 @@ int KeyboardXWin::startSampling()
    {
       return 0; // fail
    }
-   else 
+   else
    {
       return 1; // success
    }
@@ -211,7 +211,7 @@ int KeyboardXWin::onlyModifier(int mod)
 void KeyboardXWin::updateData()
 {
 vpr::Guard<vpr::Mutex> guard(mKeysLock);      // Lock access to the m_keys array
-   
+
 // Scale mouse values based on sensitivity
    m_keys[VJMOUSE_POSX] = int(float(m_keys[VJMOUSE_POSX]) * m_mouse_sensitivity);
    m_keys[VJMOUSE_NEGX] = int(float(m_keys[VJMOUSE_NEGX]) * m_mouse_sensitivity);
@@ -235,7 +235,7 @@ vpr::Guard<vpr::Mutex> guard(mKeysLock);      // Lock access to the m_keys array
    // Set the initial state of the m_key key counts based on the current state of the system
    // this is to ensure that if a key is still down, we get at least one event for it
    for(unsigned int j = 0; j < 256; j++)
-      m_keys[j] = m_realkeys[j];   
+      m_keys[j] = m_realkeys[j];
 }
 
 void KeyboardXWin::HandleEvents()
@@ -249,9 +249,9 @@ void KeyboardXWin::HandleEvents()
    const long event_mask = (KeyPressMask | KeyReleaseMask | ButtonPressMask |
                              ButtonReleaseMask | ButtonMotionMask |
                              PointerMotionMask | StructureNotifyMask);
-      
+
    // Check for events
-   // If we own, 
+   // If we own,
    //  - Wait until we actually have some events -- THIS BLOCKS for an event
    // else
    //  - check for event, if none, then we exit
@@ -270,7 +270,7 @@ void KeyboardXWin::HandleEvents()
 // In order to copy data over to the m_curKeys array
 vpr::Guard<vpr::Mutex> guard(mKeysLock);      // Lock access to the m_keys array for the duration of this function
 
-      
+
    // Loop while the event queue contains events for m_window that are part
    // of the given event mask.
    while(have_events_to_check)
@@ -501,7 +501,7 @@ int KeyboardXWin::stopSampling()
       while( !mControlLoopDone )
       {
          // give the window thread a chance before we delete...
-         vpr::System::usleep( 20 ); 
+         vpr::System::usleep( 20 );
       }
 
       delete mThread;
@@ -673,7 +673,7 @@ int KeyboardXWin::openTheWindow()
                               ButtonMotionMask | PointerMotionMask | StructureNotifyMask;
    m_swa.event_mask = event_mask;
    m_swa.background_pixel = BlackPixel(m_display,m_screen);
-   
+
    m_window = createWindow ( DefaultRootWindow(m_display) ,
                              1,
                              BlackPixel(m_display,m_screen),

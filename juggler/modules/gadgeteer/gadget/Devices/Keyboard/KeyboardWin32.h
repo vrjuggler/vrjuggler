@@ -68,11 +68,13 @@ namespace gadget
 class GADGET_CLASS_API KeyboardWin32 : public Input, public Keyboard
 {
 public:
-   // Enum to keep track of current lock state for state machine
-   // Unlocked - The mouse is free
-   // Lock_LockKey - The mouse is locked due to lock toggle key press
-   // Lock_LockKeyDown - The mouse is locked due to a key being held down
-   enum lockState { Unlocked, Lock_LockKey, Lock_KeyDown};
+   /**< Enum to keep track of current lock state for state machine. */
+   enum lockState
+   {
+      Unlocked,     /**< The mouse is free. */
+      Lock_LockKey, /**< The mouse is locked due to lock toggle key press. */
+      Lock_KeyDown  /**< The mouse is locked due to a key being held down. */
+   };
 
    KeyboardWin32() : mControlLoopDone( false ),
                      mPrevX( 0 ),
@@ -90,23 +92,27 @@ public:
 
    virtual bool config(jccl::ConfigChunkPtr c);
 
-   // Main thread of control for this active object
+   /** Main thread of control for this active object. */
    void controlLoop( void* nullParam );
 
-   /* Pure Virtuals required by Input */
+   /* Pure Virtuals required by Input. */
    int startSampling();
    int stopSampling();
 
-   // process the current x-events
-   // Called repetatively by the controlLoop
+   /**
+    * Processes the current events.
+    * Called repetatively by the controlLoop.
+    */
    int sample();
    void updateData();
    static std::string getChunkType();
 
-   // returns the number of times the key was pressed during the
-   // last frame, so you can put this in an if to check if was
-   // pressed at all, or if you are doing processing based on this
-   // catch the actual number..
+   /**
+    * Returns the number of times the key was pressed during the
+    * last frame, so you can put this in an if to check if was
+    * pressed at all, or if you are doing processing based on this
+    * catch the actual number..
+    */
    int isKeyPressed( int Key );
 
    /**
@@ -138,8 +144,10 @@ protected:
    void createWindowWin32();
    void updKeys( UINT message,  UINT wParam, LONG lParam );
 
-   //: Handle any events in the system
-   // Copies m_keys to m_curKeys
+   /**
+    * Handles any events in the system.
+    * Copies m_keys to m_curKeys.
+    */
    void handleEvents();
 
    /** @name Private functions for processing input data */
@@ -156,26 +164,26 @@ protected:
    BOOL MenuInit( HINSTANCE hInstance );
    //@}
 
-   bool         mWeOwnTheWindow;       // True if this class owns the window (is reposible for opening, closing, and event processing)
-   int          m_screen, m_x, m_y;    // screen id, x_origin, y_origin
+   bool         mWeOwnTheWindow;       /**< True if this class owns the window (is reposible for opening, closing, and event processing). */
+   int          m_screen, m_x, m_y;    /**< screen id, x_origin, y_origin. */
    unsigned int m_width,m_height;
 
       /* Keyboard state holders */
    // NOTE: This driver does not use the normal triple buffering mechanism.
    // Instead, it just uses a modified double buffering system.
-   int      m_keys[256];         // (0,*): The num key presses during an UpdateData (ie. How many keypress events)
-   int      m_realkeys[256];     // (0,1): The real keyboard state, all events processed (ie. what is the key now)
+   int      m_keys[256];         /**< (0,*): The num key presses during an UpdateData (ie. How many keypress events). */
+   int      m_realkeys[256];     /**< (0,1): The real keyboard state, all events processed (ie. what is the key now). */
 
-   vpr::Mutex  mKeysLock;           // Must hold this lock when accessing m_keys
-   bool     mExitFlag;           // Should we exit
+   vpr::Mutex  mKeysLock;        /**< Must hold this lock when accessing m_keys. */
+   bool     mExitFlag;           /**< Should we exit? */
 
-   lockState   mLockState;       // The current state of locking
-   int         mLockStoredKey;   // The key that was pressed down
-   int         mLockToggleKey;   // The key that toggles the locking
+   lockState   mLockState;       /**< The current state of locking. */
+   int         mLockStoredKey;   /**< The key that was pressed down. */
+   int         mLockToggleKey;   /**< The key that toggles the locking. */
 
    float m_mouse_sensitivity;
-   int   mSleepTimeMS;            // Amount of time to sleep in milliseconds between updates
-   int   mPrevX, mPrevY;          // Previous mouse location
+   int   mSleepTimeMS;            /**< Amount of time to sleep in milliseconds between updates. */
+   int   mPrevX, mPrevY;          /**< Previous mouse location. */
    bool  mControlLoopDone;
 };
 

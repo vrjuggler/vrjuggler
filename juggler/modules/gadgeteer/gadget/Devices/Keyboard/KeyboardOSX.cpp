@@ -44,7 +44,7 @@
 namespace gadget
 {
 
-//: Constructor
+/** Constructor. */
 bool KeyboardOSX::config(jccl::ConfigChunkPtr c)
 {
    if(! (Input::config(c) && Keyboard::config(c)))
@@ -238,7 +238,7 @@ int KeyboardOSX::osxKeyToKey(UInt32 osxKey)
 /******************** OS X WINDOW STUFF **************************/
 /*****************************************************************/
 /*****************************************************************/
-// Open the carbon window to sample from
+/** Open the carbon window to sample from. */
 int KeyboardOSX::openTheWindow()
 {
     Rect         wRect;
@@ -310,8 +310,10 @@ int KeyboardOSX::openTheWindow()
 
 
 
-// Called when locking states
-// - Re-center the mouse
+/**
+ * Called when locking states.
+ * - Re-center the mouse
+ */
 void KeyboardOSX::lockMouse()
 {
     //Used when we want a graphics window to also handle input
@@ -360,7 +362,7 @@ void KeyboardOSX::lockMouse()
       << "lock finished.\n" << vprDEBUG_FLUSH;
 }
 
-// Called when locking ends
+/** Called when locking ends. */
 void KeyboardOSX::unlockMouse()
 {
 
@@ -690,10 +692,11 @@ pascal OSStatus KeyboardOSX::gotKeyEvent (  EventHandlerCallRef  nextHandler,
 
 
 
-// Call back function to register with the carbon event loop.  The userData
-// argument contains a reference to the instance of the KeyboardOSX class that
-// registered to receive the event for its window
-
+/**
+ * Call back function to register with the carbon event loop.  The userData
+ * argument contains a reference to the instance of the KeyboardOSX class that
+ * registered to receive the event for its window
+ */
 pascal OSStatus keyboardHandlerOSX ( EventHandlerCallRef  nextHandler,
                                      EventRef             theEvent,
                                      void*                userData)

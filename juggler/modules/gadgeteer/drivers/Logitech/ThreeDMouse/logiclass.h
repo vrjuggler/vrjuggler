@@ -98,8 +98,9 @@ namespace gadget
 class ThreeDMouse : public InputMixer<Input,Position>
 {
 public:
-   //: Default constructor
-   ThreeDMouse() {
+   /** Default constructor. */
+   ThreeDMouse()
+   {
       mThreadID = NULL;
    }
 
@@ -180,7 +181,7 @@ private:
             // Originally set to 0,0,0
 
    std::string    mPortName;
-   
+
    int  logitechOpen (const std::string& port_name);
 
    void eulerToAbsolute (byte record[], gmtl::Matrix44f* data);

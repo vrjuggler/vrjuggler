@@ -2,7 +2,7 @@
 
 #include <assert.h>
 
-//: Get the num input values
+/** Gets the num input values. */
 int TrackdControllerStandalone::numButtons()
 {
    assert(mMem != NULL);
@@ -14,7 +14,7 @@ int TrackdControllerStandalone::numValuators()
    return trackd_num_valuators(mMem);
 }
 
-// Return the value of the button
+/** Returns the value of the button. */
 int TrackdControllerStandalone::getButton(int btnNum)
 {
    assert(mMem != NULL);
@@ -28,18 +28,19 @@ float TrackdControllerStandalone::getValuator(int valNum)
    return trackd_valuator(mMem, valNum);
 }
 
-//: Attach to the memory segment with key (mShmKey)
-//! POST: mMem = address of the shared memory area
+/**
+ * Attaches to the memory segment with key (mShmKey).
+ * @post mMem = address of the shared memory area.
+ */
 void TrackdControllerStandalone::attachToMem()
 {
    assert(mShmKey != 0 && "Key was not set correctly");
    mMem = trackd_attach_tracker_mem(mShmKey);
 }
 
-//: Release the memory segment of mMem
+/** Releases the memory segment of mMem. */
 void TrackdControllerStandalone::releaseMem()
 {
    assert(mMem != NULL && "Trying to release trackd memory that was NULL");
    trackd_release_tracker_mem(mMem);
 }
-
