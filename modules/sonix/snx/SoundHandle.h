@@ -91,7 +91,7 @@ namespace snx
       SoundHandle( const std::string& myUniqueName ) : mAlias( myUniqueName )
       {
       }
-
+      
       /**  initialize the name of this sound.
        *   @semantics initialize the handle your chosen name.
        *   important: you must configure() your sound after calling init(), if this name hasn't been configured before...
@@ -284,7 +284,7 @@ namespace snx
       }   
       
    private:
-      const std::string mDefaultName;
+      std::string mDefaultName;
       std::string mAlias;
    };
 }
