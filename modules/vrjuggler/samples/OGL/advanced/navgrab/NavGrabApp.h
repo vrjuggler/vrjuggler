@@ -34,6 +34,8 @@
 #define _INTERACT_APP_H_
 
 #include <stdlib.h>
+#include <GL/gl.h>
+#include <GL/glu.h>
 #include <gmtl/Point.h>
 #include <gmtl/Sphere.h>
 #include <gmtl/AABox.h>
