@@ -1,4 +1,4 @@
-# The "taginfo" file is used to control pre-tag checks.
+## The "taginfo" file is used to control pre-tag checks.
 # The filter on the right is invoked with the following arguments:
 #
 # $1 -- tagname
