@@ -58,7 +58,7 @@
          <title>Installing from a ZIP File (Win32 only)</title>
          <para>On the Win32 family of platforms, the ZIP format rules. In the old days, you would use the PKZIP utility to uncompress and extract a ZIP file. Nowadays, most people use <ulink url="http://www.winzip.com/">WinZip</ulink> or some other comparable graphical interface. This documentation covers only the use of WinZip when extracting a ZIP file.</para>
          <para>Once you have downloaded the VR Juggler ZIP file, the easiest way to extract it is to double-click on its icon in the open folder window as shown in <xref linkend="windows.temp.folder-view.figure"/>.</para>
-         <figure float="1" id="windows.temp.folder-view.figure">
+         <figure id="windows.temp.folder-view.figure">
             <title>Windows Folder View of ZIP File</title>
             <mediaobject>
                <imageobject>
@@ -67,7 +67,7 @@
             </mediaobject>
          </figure>
          <para>Double-clicking opens the main WinZip window, as shown in <xref linkend="winzip.main.figure"/>.</para>
-         <figure float="1" id="winzip.main.figure">
+         <figure id="winzip.main.figure">
             <title>Open WinZip Window</title>
             <mediaobject>
                <imageobject>
@@ -76,7 +76,7 @@
             </mediaobject>
          </figure>
          <para>Note that in this screen shot, the <guibutton>Extract</guibutton> button is highlighted. Click this button to open the following window:Note that in this screen shot, the <guibutton>Extract</guibutton> button is highlighted. Click this button to open the dialog box shown in <xref linkend="winzip.extract.figure"/>.</para>
-         <figure float="1" id="winzip.extract.figure">
+         <figure id="winzip.extract.figure">
             <title>WinZip Extract Dialog</title>
             <mediaobject>
                <imageobject>
@@ -307,7 +307,7 @@ value</screen>
                <para>This section has not been updated for VR Juggler 1.1/2.0 yet. Until it is updated, Win32 users must compile from the command line or create Visual C++ workspaces themselves.</para>
             </note>
             <para>All OpenGL sample applications are shipped with pre-configured Microsoft Visual C++ workspaces. This is done to help new users get started with compiling VR Juggler applications and to give experienced Visual Studio users a starting place for their application development. To use the workspace for the Torus application, begin by opening the folder containing the source code and double-clicking on <filename>torus.dsw</filename>.</para>
-            <figure float="1">
+            <figure>
                <title>Selecting the Workspace File</title>
                <mediaobject>
                   <imageobject>
@@ -316,7 +316,7 @@ value</screen>
                </mediaobject>
             </figure>
             <para>Visual C++ will open, and the Torus project will be loaded. The unexpanded class view will appear as shown in <xref linkend="visual.studio.start.figure"/> when Visual C++ first loads.</para>
-            <figure float="1" id="visual.studio.start.figure">
+            <figure id="visual.studio.start.figure">
                <title>torus Project</title>
                <mediaobject>
                   <imageobject>
@@ -325,7 +325,7 @@ value</screen>
                </mediaobject>
             </figure>
             <para>Before proceeding, the program arguments must be set. This is done using the <guimenuitem>Settings</guimenuitem> item under the <guimenu>Project</guimenu> menu. This is shown in <xref linkend="visual.studio.project-menu.figure"/>.</para>
-            <figure float="1" id="visual.studio.project-menu.figure">
+            <figure id="visual.studio.project-menu.figure">
                <title>Project Menu</title>
                <mediaobject>
                   <imageobject>
@@ -334,7 +334,7 @@ value</screen>
                </mediaobject>
             </figure>
             <para>Selecting this item opens the <quote>Project Settings</quote> dialog, shown in <xref linkend="visual.studio.project-settings.dialog.figure"/>. In this window, choose the <guilabel>Debug</guilabel> tab. There will be an empty text entry field under the heading <guilabel>Project arguments</guilabel>. Here, enter the full paths to the VR Juggler configuration files that will be used to run the torus application. The <varname>VJ_BASE_DIR</varname> environment variable cannot be used here, unfortunately, so the <emphasis>full path</emphasis> to <emphasis>every</emphasis> file must be used. The following shows the beginning of the program arguments listing <filename>sim.base.config</filename> and <filename>sim.wand.mixin.config</filename>:</para>
-            <figure float="1" id="visual.studio.project-settings.dialog.figure">
+            <figure id="visual.studio.project-settings.dialog.figure">
                <title>Project Settings Dialog</title>
                <mediaobject>
                   <imageobject>
@@ -344,7 +344,7 @@ value</screen>
             </figure>
             <para>Note that in this example, the / directory separator is used instead of \ for the program arguments. This is not strictly required in this case, but doing it this way maintains consistency with other examples.</para>
             <para>Once the program arguments are set up, compile the application. Under the <guimenu>Build</guimenu> menu, choose the <guimenuitem>Build torus.exe</guimenuitem> item as shown in <xref linkend="visual.studio.build-menu.figure"/>.</para>
-            <figure float="1" id="visual.studio.build-menu.figure">
+            <figure id="visual.studio.build-menu.figure">
                <title>Build <filename>torus.exe</filename></title>
                <mediaobject>
                   <imageobject>
@@ -353,7 +353,7 @@ value</screen>
                </mediaobject>
             </figure>
             <para>Visual C++ will compile the application, and if you have everything configured properly on your computer, the compiling will complete successfully. Once it is done, execute the torus program by choosing the <guimenuitem>Execute torus.exe</guimenuitem> item from the <guimenu>Build</guimenu> menu, shown below in <xref linkend="visual.studio.build-menu.exectue.figure"/>.</para>
-            <figure float="1" id="visual.studio.build-menu.exectue.figure">
+            <figure id="visual.studio.build-menu.exectue.figure">
                <title>Execute <filename>torus.exe</filename></title>
                <mediaobject>
                   <imageobject>
@@ -412,7 +412,7 @@ value</screen>
                <para>This is being remedied for VR Juggler 1.1 and beyond.</para>
             </footnote>. Beginning users will typically want to reference the example configuration files in <filename>$VJ_BASE_DIR/share/vrjuggler/data/configFiles</filename>. As you get more comfortable with VR Juggler and its configuration system, you may want to make your own modified files and put them in the directory <filename>$HOME/.vjconfig</filename>. To simplify running applications, you may want to make a shell script (or batch file as appropriate) that does all the work of passing configuration files and common command-line arguments. For now, though, use the path <filename>$VJ_BASE_DIR/share/vrjuggler/data/configFiles</filename> for each of the configuration files you pass on the command line.</para>
          <para>As the application starts, you will see a plethora of output (more or less depending on how you have <varname>$VPR_DEBUG_NFY_LEVEL</varname> and <varname>$VPR_DEBUG_CATAGORIES</varname> set), and then one moderately sized simulator display window will open on the left side of your screen while three blank keyboard input windows open on the right side of your screen. The display window will be titled <quote>SimWindow1</quote>, and the keyboard input windows will be titled <quote>Head Keyboard</quote>, <quote>Sim View Cameras Control</quote> and <quote>Wand Keyboard</quote> (in order from the top of the display to the bottom). Do not worry that the keyboard windows are black&mdash;that is normal. The display window will have an animated blue mesh, a cyan sphere, and a green pointer. The mesh is what you have come to see; the sphere is the simulated user's head; and the pointer is the simulated user's wand. In <xref linkend="MPApp.running.figure"/>, we show what this looks on an IRIX 6.5 desktop for comparison with what you are seeing. Note that the head and wand are only rendered in the simulator windows. They are present because head and wand input are being simulated, and it is typically quite helpful to see the results of that simulated input. To exit the application, press <keysym>ESC</keysym> in the window titled <quote>Head Window</quote>.</para>
-         <figure float="1" id="MPApp.running.figure">
+         <figure id="MPApp.running.figure">
             <title>MPApp running on a Linux desktop with multiple input windows</title>
             <mediaobject>
                <imageobject>
@@ -423,7 +423,7 @@ value</screen>
          <para>With VR Juggler 1.1/2.0, it is possible to use a single window for graphics and for input. To use such a configuration, execute MPApp as follows:</para>
          <screen>% MPApp standalone.config</screen>
          <para>This time, only a single window opens, as shown in <xref linkend="MPApp.running.single.figure"/>. It shows the same graphics as before, but now it is configured to take keyboard and mouse input. To exit, press <keysym>ESC</keysym> in the graphics window.</para>
-         <figure float="1" id="MPApp.running.single.figure">
+         <figure id="MPApp.running.single.figure">
             <title>MPApp running on a Linux desktop with one window</title>
             <mediaobject>
                <imageobject>
