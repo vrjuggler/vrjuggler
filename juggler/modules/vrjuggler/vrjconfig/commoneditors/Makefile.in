@@ -31,7 +31,7 @@
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # -----------------------------------------------------------------------------
-# Makefile.in for vrjuggler/vrjconfig/commoneditors/proxyeditor.  It requires GNU make.
+# Makefile.in for vrjuggler/vrjconfig/commoneditors.  It requires GNU make.
 #
 # Generated for use on @PLATFORM@
 # -----------------------------------------------------------------------------
@@ -40,10 +40,9 @@ default: all
 
 # Include common definitions.
 include @topdir@/make.defs.mk
+include @topdir@/java.defs.mk
 
-# Install common editors in same place as custom editors
-# so that they are loaded automatically.
-jardir=			$(libdir)/vrjuggler
+jardir=			$(javadir)
 
 srcdir=			@srcdir@
 top_srcdir=		@top_srcdir@
@@ -83,7 +82,6 @@ install-commoneditors:
 	@echo "------------------------------------------------"
 	@echo "Installing the Common Editors code base"
 	@echo "------------------------------------------------"
-	$(MKINSTALLDIRS) $(jardir)
 ifneq ($(JARS), )
 	for jar in $(JARS) ;						\
           do								\
@@ -99,13 +97,8 @@ endif
 	for jar in `echo "$(JOGL_JARS)" | sed -e 's/$(JCPS)/ /g'` ;	\
           do								\
               $(INSTALL) $(EXTRA_INSTALL_ARGS) -m $(FILE_PERMS)		\
-                $(GROUP_OPT_UNIX) $$jar $(bindir) ;			\
+                $(GROUP_OPT_UNIX) $$jar $(javadir) ;			\
           done
-
-install-docs:
-	$(MKINSTALLDIRS) $(doc_prefix)
-	rm -rf $(doc_prefix)/$(DOC_ROOT)
-	mv $(DOC_ROOT) $(doc_prefix)
 
 ifdef GLOBAL_BUILD
    CLEAN_DIRS+=	$(top_srcdir)/bin

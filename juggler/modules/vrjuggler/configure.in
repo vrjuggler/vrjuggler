@@ -719,6 +719,7 @@ AC_CONFIG_FILES([
    Makefile
    Makefile.inc
    common.defs.mk
+   java.defs.mk
    make.defs.mk
    vrj/Makefile
    vrj/Display/Makefile
@@ -812,6 +813,7 @@ AC_CONFIG_FILES([
    mtree/VJ.data.dist
    mtree/VJ.include.dist
    mtree/VJ.install.dist
+   mtree/VJ.java.dist
    mtree/VJ.samples.dist
    mtree/VJ.test.dist
    mtree/VJ.tools.dist

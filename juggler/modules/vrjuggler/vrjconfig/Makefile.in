@@ -40,10 +40,11 @@ default: all
 
 # Include common definitions.
 include @topdir@/make.defs.mk
+include @topdir@/java.defs.mk
 
-beandir=		$(bindir)/beans
 srcdir=			@srcdir@
 top_srcdir=		@top_srcdir@
+
 EXTRA_SRCS_PATH=	$(srcdir)/../tweek/idl
 INSTALL=		@INSTALL@
 INSTALL_FILES=		
@@ -78,11 +79,11 @@ java_afterbuild:
 	@echo "------------------------------------------------"
 	@echo "Building Common Editors"
 	@echo "------------------------------------------------"
-	$(MAKE) -C commoneditors commoneditors
+	@$(MAKE) -C commoneditors commoneditors
 	@echo "------------------------------------------------"
 	@echo "Building Custom Editors"
 	@echo "------------------------------------------------"
-	$(MAKE) -C customeditors customeditors
+	@$(MAKE) -C customeditors customeditors
 
 _clean:
 	$(ANT) clean
@@ -106,12 +107,14 @@ else
 	$(INSTALL) -m $(EXEC_PERMS) $(GROUP_OPT_UNIX)			\
           $(VJROOT_ABS)/vrjconfig/vrjconfig.bat $(bindir)/vrjconfig.bat
 endif	# if OS_TYPE == UNIX
+	$(SHELL) $(MKINSTALLDIRS) $(projdatadir)
+	$(MTREE_CMD) -Ude -f $(mtreedir)/VJ.java.dist -p $(projdatadir)
 ifneq ($(JARS), )
 	for jar in $(JARS) ;						\
           do								\
               $(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)		\
                 $(EXTRA_INSTALL_ARGS) $(topdir)/vrjconfig/$$jar		\
-                $(bindir) || exit 1;					\
+                $(javadir) || exit 1;					\
           done
 endif
 ifneq ($(BEANS), )
@@ -125,16 +128,14 @@ ifneq ($(BEANS), )
                 $(top_srcdir)/vrjconfig/$$bean.xml $(beandir) || exit 1; \
           done
 endif
-# Install all custom editors recursivly
 	@echo "------------------------------------------------"
 	@echo "Installing Common Editors"
 	@echo "------------------------------------------------"
-	$(MAKE) -C commoneditors install-commoneditors
-
+	@$(MAKE) -C commoneditors install-commoneditors
 	@echo "------------------------------------------------"
 	@echo "Installing Custom Editors"
 	@echo "------------------------------------------------"
-	$(MAKE) -C customeditors install-customeditors
+	@$(MAKE) -C customeditors install-customeditors
 	
 ifdef GLOBAL_BUILD
    CLEAN_DIRS+=	$(top_srcdir)/bin
