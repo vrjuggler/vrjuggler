@@ -1,9 +1,6 @@
 #ifndef NAVIGATION_H
 #define NAVIGATION_H
 
-//typedef  Vector3<float> Vec3;
-//typedef  Matrix4f Matrix4;
-
 typedef  vjVec3 Vec3;
 typedef  vjMatrix Matrix4;
 
