@@ -236,17 +236,11 @@ vjMotionStar::sample () {
       // Get the index to the current read buffer
       int index = getBirdIndex(i,progress);
 
-      //if (i==0)
-      //vjDEBUG(vjDBG_ALL,0) << "i:  " << i << "  x: " << xPos(i) << "  y: " << yPos(i) << endl << vjDEBUG_FLUSH;
-
       theData[index].makeZYXEuler(mMotionStar.zRot(i), mMotionStar.yRot(i),
                                   mMotionStar.xRot(i));
 
       theData[index].setTrans(mMotionStar.xPos(i), mMotionStar.yPos(i),
                               mMotionStar.zPos(i));
-
-//      if (i==1)
-//         vjDEBUG(vjDBG_ALL,2) << "Flock: bird1:    orig:" << vjCoord(theData[index]).pos << endl << vjDEBUG_FLUSH;
 
       // Transforms between the cord frames
       // See transform documentation and VR System pg 146
@@ -265,9 +259,6 @@ vjMotionStar::sample () {
 
       // Store corrected xform back into data.
       theData[index] = world_T_reciever;
-
-//      if (i == 1)
-//         vjDEBUG(vjDBG_ALL,2) << "Flock: bird1: xformed:" << vjCoord(theData[index]).pos << endl << vjDEBUG_FLUSH;
    }
 
    // Locks and then swaps the indices.
@@ -455,6 +446,6 @@ int
 vjMotionStar::getBirdIndex (int birdNum, int bufferIndex) {
    int ret_val = (birdNum*3)+bufferIndex;
    vjASSERT((ret_val >= 0) && (ret_val < ((getNumBirds()+1)*3)));
-   //assertIndexes();   // Can't assert here because it is possible the indexes are switching right now
+
    return ret_val;
 }
