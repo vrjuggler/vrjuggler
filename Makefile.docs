@@ -46,6 +46,7 @@ SUBDIR=		doc/team.guide					\
 		modules/vrjuggler/doc/configuration.guide	\
 		modules/vrjuggler/doc/faq			\
 		modules/vrjuggler/doc/getting.started.guide	\
+		modules/vrjuggler/doc/perf.measure.guide	\
 		modules/vrjuggler/doc/programmer.guide		\
 		modules/vrjuggler/doc/vjcontrol.guide
 
