@@ -92,15 +92,15 @@ std::string demangleTraceString(char* traceLine)
       }
       else if(-1==status)
       {
-         std::cerr << "vpr::SystemBase::dmangleTraceString: A memory allocation failiure occurred.\n";
+         //std::cerr << "vpr::SystemBase::dmangleTraceString: A memory allocation failiure occurred.\n";
       }
       else if(-2 == status)
       {
-         std::cerr << "vpr::SystemBase::demangleTraceString: mangled_name is not a valid name under the C++ ABI mangling rules.\n";
+         //std::cerr << "vpr::SystemBase::demangleTraceString: mangled_name is not a valid name under the C++ ABI mangling rules.\n";
       }
       else if(-3 == status)
       {
-         std::cerr << "vpr::SystemBase::demangleTraceString: One of the arguments is invalid.\n";
+         //std::cerr << "vpr::SystemBase::demangleTraceString: One of the arguments is invalid.\n";
       }
    }
 
