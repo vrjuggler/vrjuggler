@@ -49,7 +49,7 @@ int vjConfigChunkHandler::configProcessPending(bool lockIt)
          vjConfigChunk* cur_chunk = (*current).mChunk;
 
          vjDEBUG_BEGINlg(vjDBG_ALL,1,false,true) << "Processing: item: " << cur_chunk->getProperty("name")
-                                                 << " type: " << (std::string)cur_chunk->getType() << vjDEBUG_FLUSH;
+                                                 << " type: " << ((std::string)cur_chunk->getType()).c_str() << vjDEBUG_FLUSH;
          
          // If we know about it
          if(this->configCanHandle(cur_chunk))
