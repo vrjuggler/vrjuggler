@@ -75,7 +75,7 @@ public:
    
    //Helper Functions for Plugins
 private:   
-   void sendEndBlocksAndSignalUpdate();
+   void sendEndBlocksAndSignalUpdate(int temp);
    
    //Configuration
 public:

@@ -583,7 +583,7 @@ namespace cluster
       
       new_packet->setHeader(packet_head);
       
-      std::vector<vpr::Uint8> mData;
+      std::vector<vpr::Uint8> incoming_data;
 
       if (NULL == mSockStream)
       {
@@ -603,7 +603,7 @@ namespace cluster
 
          //vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "Blocking while reading " 
          //   << packet_head->getPacketLength()-Header::RIM_PACKET_HEAD_SIZE << " bytes.\n" << vprDEBUG_FLUSH;
-         vpr::ReturnStatus status = mSockStream->recvn(mData, packet_head->getPacketLength()-Header::RIM_PACKET_HEAD_SIZE, bytes_read);	  
+         vpr::ReturnStatus status = mSockStream->recvn(incoming_data, packet_head->getPacketLength()-Header::RIM_PACKET_HEAD_SIZE, bytes_read);	  
          //vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "We got " 
          //   << bytes_read << " bytes.\n" << vprDEBUG_FLUSH;
 
@@ -614,17 +614,25 @@ namespace cluster
             mSockStream = NULL;
             vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << clrSetBOLD(clrRED) << "Reading packet data failed. Expecting: "
                   << packet_head->getPacketLength()-Header::RIM_PACKET_HEAD_SIZE << " But got: " << bytes_read
-                  << " ReturnStatus Code: " << status.code() << std::endl << clrRESET << vprDEBUG_FLUSH;
+                  << " ReturnStatus Code: " << (int)status.code() << std::endl << clrRESET << vprDEBUG_FLUSH;
             throw cluster::ClusterException("ClusterNode::recvPacket() - Reading packet data failed!");
          }
       }
       
-      vpr::BufferObjectReader* reader = new vpr::BufferObjectReader(&mData);
+      vpr::BufferObjectReader* reader = new vpr::BufferObjectReader(&incoming_data);
       
       // Parse Packet with new data
       new_packet->parse(reader);
       
-      //NOTE: mData goes out of scope here
+      //NOTE: incoming_data goes out of scope here which means that we are left with only the data that we parsed.
+      //TODO: We could save memory by not parsing the raw DataPacket but just passing the location of the memory that we want to use.
+
+      //parse_data_length = DataPacket::ParsedDataLength
+      //recvn(incoming_parse_data, ...)
+      //reader = new reader(incoming_parse_data);
+      //new_packet->parse(reader);
+      //recvn(incoming_raw_data, ...)
+      //new_packet->setRawData(incoming_raw_data);
 
       return new_packet;
    }

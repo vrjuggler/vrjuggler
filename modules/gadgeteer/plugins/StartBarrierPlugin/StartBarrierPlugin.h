@@ -82,7 +82,7 @@ public:
    virtual void postPostFrame();
    virtual bool isPluginReady();
    
-   virtual std::string getManagerName()
+   virtual std::string getPluginName()
    {
       return(std::string("StartBarrierPlugin"));
    }

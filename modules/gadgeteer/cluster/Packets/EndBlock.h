@@ -82,6 +82,10 @@ public:
    {
        return(Header::RIM_END_BLOCK);
    }
+   vpr::Uint16 getTempVar()
+   {
+      return mTempVar;
+   }
 private:
    vpr::Uint16    mTempVar;    /**< Temporary variable that is no longer used. */
 };

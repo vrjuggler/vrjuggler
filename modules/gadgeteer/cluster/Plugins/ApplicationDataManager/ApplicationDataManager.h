@@ -80,7 +80,7 @@ public:
    virtual void postPostFrame();
    virtual void sendRequests();
    virtual bool isPluginReady();
-   virtual std::string getManagerName()
+   virtual std::string getPluginName()
    {
       return(std::string("ApplicationDataManager"));
    }
