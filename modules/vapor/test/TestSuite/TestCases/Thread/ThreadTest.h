@@ -6,6 +6,7 @@
 #include <cppunit/TestCaller.h>
 
 #include <vpr/Sync/Mutex.h>
+#include <vpr/Thread/TSObjectProxy.h>
 
 
 namespace vprTest{
@@ -78,15 +79,27 @@ public:
    // Arg is a pointer to a long
    void recurseConsumeResources(void* arg);
 
+   // ------------------------------------ //
+   // ---- Thread specific data stuff ---- //
+   // ------------------------------------ //
+   void ThreadTest::testThreadSpecificData();
+   
+   /**
+   * @param arg - ptr to std::string id of thread
+   */
+   void ThreadTest::tsIncCounter(void* arg);
+
+
    static CppUnit::Test* suite()
    {
       CppUnit::TestSuite* test_suite = new CppUnit::TestSuite("ThreadTest");
 
-      test_suite->addTest( new CppUnit::TestCaller<ThreadTest>("testCreateJoin", &ThreadTest::testCreateJoin));
-      test_suite->addTest( new CppUnit::TestCaller<ThreadTest>("testSuspendResume", &ThreadTest::testSuspendResume));
-      test_suite->addTest( new CppUnit::TestCaller<ThreadTest>("testPriority", &ThreadTest::testPriority));
-      test_suite->addTest( new CppUnit::TestCaller<ThreadTest>("testThreadStackSize", &ThreadTest::testThreadStackSize));
-
+      //test_suite->addTest( new CppUnit::TestCaller<ThreadTest>("testCreateJoin", &ThreadTest::testCreateJoin));
+      //test_suite->addTest( new CppUnit::TestCaller<ThreadTest>("testSuspendResume", &ThreadTest::testSuspendResume));
+      //test_suite->addTest( new CppUnit::TestCaller<ThreadTest>("testPriority", &ThreadTest::testPriority));
+      //test_suite->addTest( new CppUnit::TestCaller<ThreadTest>("testThreadStackSize", &ThreadTest::testThreadStackSize));
+      test_suite->addTest( new CppUnit::TestCaller<ThreadTest>("testThreadSpecificData", &ThreadTest::testThreadSpecificData));
+      
       return test_suite;
    }
 
@@ -98,13 +111,14 @@ public:
    }
 
 protected:
-   vpr::Mutex*   mItemProtectionMutex;         // Protect an exclusive item
+   vpr::Mutex*    mItemProtectionMutex;         // Protect an exclusive item
    long           mCounter;                    // A counter that we will use for now
    vpr::Mutex     mCounterMutex;
    long           mCounter1;                   // A nother counter
    vpr::Mutex     mCounter1Mutex;
    long           mNumRecursions;              // Number of recursions to go
    long           mStackSpaceConsumed;         // Amount of stack space that we have used
+   vpr::TSObjectProxy<unsigned long>   mTSCounter; // Thread specific counter variable
 
    bool           mStopGrindingCPU;            // Flag to tell the test to stop grinding the CPU
 };

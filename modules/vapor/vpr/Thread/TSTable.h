@@ -57,7 +57,10 @@ namespace vpr {
  *
  * This class maintains a table that has ptrs to all the TS data
  * in the system for a specific thread.
- * Only the owning thread may actually access the table
+ * Only the owning thread may actually access the table.
+ * Because of this, we do not have to lock the table at all when adding and removing.
+ *
+ * Uses TSBaseObject*'s so that there is some type safety. (ie. better then void*'s)
  */
 class VPR_CLASS_API TSTable
 {
@@ -68,7 +71,16 @@ public:
    /**
     * Deletes the table. It deletes all objects in the table.
     */
-   ~TSTable();
+   ~TSTable()
+   {  
+      // For all elements in the table
+      for(unsigned int i=0;i<mTSObjects.size();i++)
+      {
+         if(mTSObjects[i] != NULL)        // If valid object
+         {  delete mTSObjects[i]; }       // Delete them 
+      }
+   }
+
 
 public:
    /**
@@ -76,28 +88,69 @@ public:
     * If false, then the user should setObject(...,key) before
     * attempting to access the object.
     */
-   bool containsKey(long key)
+   bool containsKey(unsigned long key)
    {
       vprASSERT((key >= 0) && "Called contains key with invalid key");
       return ((key>=0)&&((unsigned)key<mTSObjects.size()));
    }
 
-   /// Gets the object with the spcified key.
-   TSBaseObject* getObject(unsigned int objectKey);
+   /** Gets the object with the spcified key. */
+   TSBaseObject* getObject(unsigned long objectKey)
+   {
+      vprASSERT(containsKey(objectKey));    // Did you check to make sure the table contained it
+      return mTSObjects[objectKey];
+   }
 
-   /// Sets an object entry in the table.
-   void setObject(TSBaseObject* object, long key);
+   /** Sets an object entry in the table. */
+   inline void setObject(TSBaseObject* object, unsigned long key);
 
    /**
     * Releases the object given by key.
     *
     * @post Obj(key) is deleted, and the ptr is set to NULL.
     */
-   void releaseObject(unsigned long key);
+   inline void releaseObject(unsigned long key);
 
 private:
-   std::vector<TSBaseObject*> mTSObjects; //! Map object key to TS Object ptr
+   std::vector<TSBaseObject*> mTSObjects;    /**< Map object key to TS Object ptr */
 };
+
+
+//-----------------------------------------------------------------
+//: Set an object entry in the table.
+//-----------------------------------------------------------------
+void TSTable::setObject(TSBaseObject* object, unsigned long key)
+{
+   vprASSERT(key >= 0);
+#ifdef _DEBUG
+   unsigned long size_before = mTSObjects.size();
+#endif
+   if(mTSObjects.size() <= key)              
+   {
+      mTSObjects.resize((key+1), NULL);       // We will find these later and actually allocate them
+   }
+   mTSObjects[key] = object;
+
+#ifdef _DEBUG
+   vprASSERT( size_before <= mTSObjects.size());   // ASSERT: vector should never get smaller 
+#endif
+}
+
+//-----------------------------------------------------------------
+//: Release the object given by key.
+//
+//! POST: Obj(key) is deleted, and the ptr is set to NULL.
+//-----------------------------------------------------------------
+void TSTable::releaseObject(unsigned long key)
+{
+   vprASSERT(containsKey(key));
+   if (mTSObjects[key] != NULL)
+   {
+      delete mTSObjects[key];
+   }
+   mTSObjects[key] = NULL;
+}
+
 
 }; // End of vpr namespace
 
