@@ -99,17 +99,17 @@ void GlWindow::finishSetup()
    vprASSERT(mWindowIsOpen && "Pre-condition of being open failed");
 
    // --- Setup any attached simulator that is needed --- //
-//   Viewport* viewport(NULL);
-//   SimViewport* sim_vp(NULL);
+   // XXX: This is where we used to set the keyboard proxy for the simulator
+   //   this needs to be customized now since we do not acutally have a device here any more
+   //   Ideas: - look up device based on registry
+   //          - Do something else???
+/*
+   Viewport* viewport(NULL);
+   SimViewport* sim_vp(NULL);
    unsigned num_vps = mVrjDisplay->getNumViewports();
    for(unsigned vp_num=0; vp_num < num_vps; vp_num++)
    {
       viewport = mVrjDisplay->getViewport(vp_num);
-      // XXX: This is where we used to set the keyboard proxy for the simulator
-      //   this needs to be customized now since we do not acutally have a device here any more
-      //   Ideas: - look up device based on registry
-      //          - Do something else???
-      /*
       if(viewport->isSimulator())
       {
          sim_vp = dynamic_cast<SimViewport*>(viewport);
@@ -169,9 +169,8 @@ void GlWindow::finishSetup()
             vprASSERT(false && "You configured a simulator viewport, but I cannot find a DrawSimInterface for it");
          }
       }
-      */
    }
-
+*/
 }
 
 void GlWindow::updateViewport()
