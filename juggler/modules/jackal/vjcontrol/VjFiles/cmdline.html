@@ -1,0 +1,36 @@
+<html>
+
+<title>Command Line Arguments</title>
+
+<body bgcolor="#ffffcc">
+<h2><img src="juggler.gif"></img>VjControl Command Line Arguments</h2>
+
+<tt>vjcontrol [hostname] [port] [-noautoload] [-o file] [-c file] [-d file]</tt>
+
+
+<h3>Networking Options</h3>
+If a hostname and (optionally) port are specified, vjcontrol will try to
+establish a network connection to a running VR Juggler application on that
+machine. <i>This feature is <b>highly experimental</b> and should only be
+used by the VR Juggler development team at this time.</i>
+
+<h3>File Loading Options</h3>
+
+<ul>
+<li><b>-noautoload</b>  Vjcontrol can be configured to automatically load
+certain files at startup.  This switch suppresses automatic loading, so that
+only files given on the command line are loaded.
+
+<br><li><b>-o name</b>  Loads the Chunk Organization tree <i>name</i>
+
+<br><li><b>-d name</b>  Loads the Chunk Description file <i>name</i>
+
+<br><li><b>-c name</b>  Loads the Configuration file <i>name</i>
+
+</ul>
+
+
+</body>
+
+</html>
+

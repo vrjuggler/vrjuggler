@@ -1,0 +1,41 @@
+<html>
+<head>
+<title>Known Bugs</title>
+</head>
+<body bgcolor="#ffffcc">
+<h2><img src="juggler.gif"></img>VjControl 1.0 Known Bugs</h2>
+
+<ul>
+<li>VjControl is perfect.  It has no bugs.  If in doubt, repeat this as a 
+mantra until you believe.
+
+<br><li>Changes made by editing description files (adding, removing, or editing
+ChunkDescs) in the Description pane are ignored by the Configure pane.
+If you modify a descriptions file in any significant way, you should save,
+quit VjControl, and then restart to modify the chunks.
+
+<br><li>Strings can't contain quotes (parsing bug).
+
+<br><li>Various textfields will currently allow illegal input.  For the time
+being, do not try to input a floating point number into a field expecting an int,
+do not try to enter a string into a field expecting any kind of number, and
+especially, <b>do not use quotes in strings</b> - this is a good way to screw up
+your config file so that it'll have to be fixed by hand before VjControl can read
+it.  (Solution: need to add input handlers to all the textfields).  Oh yea, and
+any field labeled 'token' must not have spaces in it!
+
+<br><li>The help panel (ie the window you're looking at now) doesn't respond to
+the font selected in preferences.
+
+<br><li>Additional frames that are open when vjcontrol's look & feel are 
+changed don't adopt the new look and feel. (The help panel never changes look & feel).
+
+<br><li>Some menu items don't respond to font changes.
+
+<br><li>No matter what you do, <b>DO NOT</b> click on the word <a href="http://www.public.iastate.edu/~pyre/area.html">crotch</a>.
+
+</ul>
+
+</body>
+
+</html>
