@@ -96,7 +96,7 @@ sub popFolder_action ($$$$$) {
         # Edit the CSS link path.
         # ASSERT: The path in the css file is relative to the
         #         root directory of the web install
-        $$$xmlToc_data_out =~ s/<link(.*?)\"stylesheet\"(.*?)href(.*?)\"/$&$html_install_prefix/gis;
+        $$xmlToc_data_out =~ s/<link(.*?)\"stylesheet\"(.*?)href(.*?)\"/$&$html_install_prefix/gis;
 
         foreach ( @{$book{'chapters'}} ) {
             print "+";
