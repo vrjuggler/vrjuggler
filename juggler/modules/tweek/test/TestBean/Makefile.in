@@ -42,7 +42,7 @@ install:
 # Clean-up targets.
 # -----------------------------------------------------------------------------
 clean:
-	rm -rf testbean
+	rm -f $(ALL_CLASSES)
 
 clobber:
 	@$(MAKE) clean

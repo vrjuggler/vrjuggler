@@ -45,7 +45,7 @@ install:
 # Clean-up targets.
 # -----------------------------------------------------------------------------
 clean:
-	rm -rf prefstestbean
+	rm -f $(ALL_CLASSES)
 
 clobber:
 	@$(MAKE) clean
