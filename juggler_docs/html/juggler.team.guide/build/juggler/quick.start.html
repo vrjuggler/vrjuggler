@@ -17,7 +17,7 @@
 <H4> Introduction </H4>
 </a>
 Of particular interest, The VR Juggler project uses the autoconf utility to stay portable across platforms.  
-This means you will have to 'configure' the project before you make it..<BR>
+This means you will have to 'configure' the project before you make it.  The 'configure' script will let you change how Juggler compiles.<BR>
 To make sense of this documentation, please understand the concepts listed in <a href="#required">Required Reading</a>.  
 Posting about these subjects to the mailing list will probably be ignored.<BR>
 <BR>
@@ -102,8 +102,9 @@ Posting about these subjects to the mailing list will probably be ignored.<BR>
 		<b><font color="#ff0000">autoconf</font></b>
 		</li>
 
-		<li> Probe the system for capabilities, generate Makefiles, etc...<BR>
-        		this "configures" the source tree for the current system<BR>
+		<li> Configure the Build.  This probes the system for capabilities, generate Makefiles, etc...<BR>
+        		this "configures" the source tree for the current system. The 'configure' script will let you change how Juggler compiles.  For example, you could build juggler without the Performer API using an option passed to the 'configure' script.<BR>
+			<b>NOTE:</b> You can type 'configure --help' for options. <BR>
 		<b><font color="#ff0000">"$source_code_dir"/juggler/configure</font></b>
 		</li>
 
