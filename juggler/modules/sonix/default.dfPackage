@@ -31,6 +31,16 @@ class reference3 {
 @__modelType reference 
 */
 class reference4 {
+}/**
+@__ref <oiref:cpp#Class#aj:oiref><oihard>
+@__modelType reference 
+*/
+class reference5 {
+}/**
+@__ref <oiref:cpp#Class#StubSoundImplementation:oiref><oihard>
+@__modelType reference 
+*/
+class reference8 {
 }}/**
 @__tags
 @shapeType ClassDiagram 
@@ -41,22 +51,25 @@ class __tags {
 */
 class __options {
 }/**
-@__positions <oigroup:MemberLink#<oiref:cpp#Member#SoundFactory#lnkISoundImplementation:oiref>=371,70,436,95:oigroup>
+@__positions <oigroup:MemberLink#<oiref:cpp#Member#aj#lnkISoundImplementation:oiref>=217,219,457,142:oigroup>
+<oigroup:<oiref:cpp#Extends#OpenALSoundImplementation#ISoundImplementation:oiref>=477,201,477,178:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#aj#lnkSoundFactory:oiref>=779,60,388,60:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#ISoundInterface#lnkISoundImplementation:oiref>=213,141,435,141:oigroup>
+<oigroup:<oiref:cpp#Class#StubSoundImplementation:oiref>=426,281,198,59,1:oigroup>
+<oigroup:<oiref:cpp#Class#SoundFactory:oiref>=283,42,105,69,1:oigroup>
+<oigroup:<oiref:cpp#Extends#StubSoundImplementation#ISoundImplementation:oiref>=528,281,528,178:oigroup>
+<oigroup:<oiref:cpp#Class#ISoundImplementation:oiref>=435,95,187,83,1:oigroup>
+<oigroup:<oiref:cpp#Extends#AudioWorksSoundImplementation#ISoundImplementation:oiref>=589,205,589,178:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#SoundFactory#lnkISoundImplementation:oiref>=388,98,435,117:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#ISoundInterface#lnkSoundFactory:oiref>=213,69,283,69:oigroup>
+<oigroup:<oiref:cpp#Extends#aj#ISoundInterface:oiref>=779,23,222,23,213,23:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#aj#mImplementation:oiref>=779,136,622,136:oigroup>
+<oigroup:<oiref:cpp#Class#AudioWorksSoundImplementation:oiref>=538,205,264,59,0:oigroup>
+<oigroup:<oiref:cpp#Class#aj:oiref>=779,12,203,213,1:oigroup>
 <oigroup:<oiref:cpp#Member#ISoundInterface#remove#(##)#:oiref>=29,116,0,0,1:oigroup>
-<oigroup:<oiref:cpp#Extends#AudioWorksSoundImplementation#ISoundImplementation:oiref>=544,187,544,146:oigroup>
-<oigroup:<oiref:cpp#Class#AudioWorksSoundImplementation:oiref>=517,187,203,59,1:oigroup>
-<oigroup:Composite#supplierCardinality#MemberLink#<oiref:cpp#Member#SoundFactory#lnkISoundImplementation:oiref>=414,66,18,15,0:oigroup>
-<oigroup:MemberLink#<oiref:cpp#Member#ISoundInterface#lnkISoundImplementation:oiref>=129,117,436,117:oigroup>
-<oigroup:<oiref:cpp#Class#ISoundInterface:oiref>=10,10,119,193,1:oigroup>
-<oigroup:MemberLink#<oiref:cpp#Member#ISoundInterface#lnkSoundFactory:oiref>=129,47,284,47:oigroup>
-<oigroup:Composite#supplierCardinality#MemberLink#<oiref:cpp#Member#ISoundInterface#lnkISoundImplementation:oiref>=425,98,7,15,0:oigroup>
+<oigroup:<oiref:cpp#Class#OpenALSoundImplementation:oiref>=287,201,233,59,0:oigroup>
 <oigroup:<oiref:cpp#Member#ISoundInterface#setPosition#(##)#:oiref>=48,167,0,0,1:oigroup>
-<oigroup:<oiref:cpp#Extends#OpenALSoundImplementation#ISoundImplementation:oiref>=456,185,456,146:oigroup>
-<oigroup:<oiref:cpp#Class#OpenALSoundImplementation:oiref>=319,185,178,59,1:oigroup>
-<oigroup:<oiref:cpp#Class#ISoundImplementation:oiref>=436,73,136,73,1:oigroup>
-<oigroup:Composite#clientCardinality#MemberLink#<oiref:cpp#Member#SoundFactory#lnkISoundImplementation:oiref>=375,51,7,15,0:oigroup>
-<oigroup:<oiref:cpp#Class#SoundFactory:oiref>=284,11,87,73,1:oigroup>
-<oigroup:Composite#clientCardinality#MemberLink#<oiref:cpp#Member#ISoundInterface#lnkISoundImplementation:oiref>=133,98,7,15,0:oigroup>
+<oigroup:<oiref:cpp#Class#ISoundInterface:oiref>=10,10,203,203,1:oigroup>
 
 */
 class __positions {

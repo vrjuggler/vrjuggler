@@ -6,12 +6,12 @@
 class SoundFactory : public vpr::Singleton
 {
 public:
-private:    
+private:   
 
-    /**
-     * @clientCardinality 1
-     * @supplierCardinality 0..*
-     */
-    ISoundImplementation lnkISoundImplementation;
+   /**
+    * @clientCardinality 1
+    * @supplierCardinality 0..*
+    */
+   ISoundImplementation lnkISoundImplementation;
 };
 #endif //SOUNDFACTORY_H
