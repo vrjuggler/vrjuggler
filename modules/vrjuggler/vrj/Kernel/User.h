@@ -42,7 +42,8 @@
 namespace vrj
 {
 
-/**
+/** \class User User.h vrj/Kernel/User.h
+ *
  * Representation for Juggler user in multi-user environments.
  *
  * Each user has a system-assigned ID as well as a string name from the 'user'

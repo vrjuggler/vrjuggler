@@ -67,10 +67,10 @@ void TrackedSurfaceProjection::updateSurfaceParams(const float scaleFactor)
    trans=trans/scaleFactor;
    gmtl::setTrans(trackerMatrix,trans);
 
-   mLLCorner=trackerMatrix * mOrigionalLLCorner;
-   mLRCorner=trackerMatrix * mOrigionalLRCorner;
-   mURCorner=trackerMatrix * mOrigionalURCorner;
-   mULCorner=trackerMatrix * mOrigionalULCorner;
+   mLLCorner=trackerMatrix * mOriginalLLCorner;
+   mLRCorner=trackerMatrix * mOriginalLRCorner;
+   mURCorner=trackerMatrix * mOriginalURCorner;
+   mULCorner=trackerMatrix * mOriginalULCorner;
 
    calculateOffsets();
 }

@@ -54,7 +54,9 @@
 
 namespace vrj
 {
-/**
+
+/** \class GlBasicSimulator GlBasicSimulator.h vrj/Draw/OGL/GlBasicSimulator.h
+ *
  * Interface for objects that wish to perform simulator function with an
  * OpenGL application.
  */
@@ -67,8 +69,9 @@ public:
 
    /**
     * Configures the basic OpenGL simulator.
+    *
     * @pre element is a valid configuration element.
-    * @post It should be configured
+    * @post It should be configured.
     */
    virtual bool config(jccl::ConfigElementPtr element);
 
@@ -95,28 +98,38 @@ public:
    virtual void setKeyboardMouse(gadget::KeyboardMouseInterface kmInterface);
 
 public:
-   gmtl::Matrix44f getCameraPos()
-   { return mCameraPos; }
+   const gmtl::Matrix44f& getCameraPos()
+   {
+      return mCameraPos;
+   }
 
-   gmtl::Matrix44f getHeadPos()
-   { return mHeadPos; }
+   const gmtl::Matrix44f& getHeadPos()
+   {
+      return mHeadPos;
+   }
 
-   gmtl::Matrix44f getWandPos()
-   { return mWandPos; }
+   const gmtl::Matrix44f& getWandPos()
+   {
+      return mWandPos;
+   }
 
    virtual void updateProjectionData(const float positionScale,
-                                     Projection* leftProj, Projection* rightProj);
+                                     Projection* leftProj,
+                                     Projection* rightProj);
 
    /**  Update internal simulator data */
    void updateInternalData(float positionScale);
 
 public:  // Sim Drawing parameters
    bool shouldDrawProjections()
-   { return mDrawProjections; }
+   {
+      return mDrawProjections;
+   }
 
    gmtl::Vec3f getSurfaceColor()
-   { return mSurfaceColor; }
-
+   {
+      return mSurfaceColor;
+   }
 
 protected: // Drawing functions used by library
    /**
@@ -126,7 +139,8 @@ protected: // Drawing functions used by library
    void drawObjects();
 
    /** Draws projections in OpenGL. */
-   void drawProjections(bool drawFrustum, gmtl::Vec3f surfColor, const float scaleFactor);
+   void drawProjections(bool drawFrustum, gmtl::Vec3f surfColor,
+                        const float scaleFactor);
 
    /**
     * Draws a simulator using OpenGL commands.
@@ -156,7 +170,6 @@ protected:     // --- Geom helpers --- //
    void drawSolidCube(float size);
    //void drawGlove(gadget::GloveProxy* gloveProxy);
 
-
 protected:
    GlDrawObjectFunctor* mDrawWandFunctor;  /**< The functor to draw the wand */
    GlDrawObjectFunctor* mDrawHeadFunctor;  /**< The functor to draw the head */
@@ -166,13 +179,13 @@ protected:
    SimViewport*   mSimViewport;
 
    // Drawing attributes
-   bool           mDrawProjections;       /**< Should we draw projections */
-   gmtl::Vec3f    mSurfaceColor;   /**< Color to draw surfaces */
+   bool           mDrawProjections;   /**< Should we draw projections */
+   gmtl::Vec3f    mSurfaceColor;      /**< Color to draw surfaces */
 
    gadget::PositionInterface mCamera; /**< Proxy interfaces to devices needed */
    gadget::PositionInterface mWand;
 
-   gmtl::Matrix44f    mCameraPos;    /**< The data about the position of all this stuff */
+   gmtl::Matrix44f    mCameraPos;     /**< The data about the position of all this stuff */
    gmtl::Matrix44f    mHeadPos;
    gmtl::Matrix44f    mWandPos;
 };

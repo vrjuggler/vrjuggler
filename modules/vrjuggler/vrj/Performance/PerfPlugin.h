@@ -41,7 +41,10 @@
 namespace vrj
 {
 
-/** */
+   /** \class PerfPlugin PerfPlugin.h vrj/Performance/PerfPlugin.h
+    *
+    * Performance monitoring plug-in interface.
+    */
    class PerfPlugin
    {
    public:

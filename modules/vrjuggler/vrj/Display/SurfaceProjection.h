@@ -43,7 +43,8 @@ namespace vrj
 
 class Matrix;
 
-/**
+/** \class SurfaceProjection SurfaceProjection.h vrj/Display/SurfaceProjection.h
+ *
  * Surface specific class for projection definitions.
  *
  * Responsible for storing and computing projection information of a surface
@@ -53,17 +54,20 @@ class SurfaceProjection : public Projection
 {
 public:
    /**
-   * @param surfaceRot - The rotation of the surface relative to the base world
-   *                     base_M_surface
-   */
-   SurfaceProjection(gmtl::Point3f llCorner, gmtl::Point3f lrCorner,
-                    gmtl::Point3f urCorner, gmtl::Point3f ulCorner)
+    * @param llCorner Lower left corner.
+    * @param lrCorner Lower right corner.
+    * @param urCorner Upper right corner.
+    * @param ulCorner Upper left corner.
+    */
+   SurfaceProjection(const gmtl::Point3f& llCorner,
+                     const gmtl::Point3f& lrCorner,
+                     const gmtl::Point3f& urCorner,
+                     const gmtl::Point3f& ulCorner)
+      : mLLCorner(llCorner)
+      , mLRCorner(lrCorner)
+      , mURCorner(urCorner)
+      , mULCorner(ulCorner)
    {
-      mLLCorner=llCorner;
-      mLRCorner=lrCorner;
-      mURCorner=urCorner;
-      mULCorner=ulCorner;
-
       calculateOffsets();
    }
 
@@ -78,13 +82,15 @@ public:
     * @pre scaleFactor is the scale current used
     * @post frustum has been recomputed for given eyePos.
     */
-   virtual void calcViewMatrix(gmtl::Matrix44f& eyePos, const float scaleFactor);
+   virtual void calcViewMatrix(gmtl::Matrix44f& eyePos,
+                               const float scaleFactor);
 
    /**
     * Calculates the frustum needed for the view matrix.
     * @note This function is called as part of calcViewMatrix.
     */
-   virtual void calcViewFrustum(gmtl::Matrix44f& eyePos, const float scaleFactor);
+   virtual void calcViewFrustum(gmtl::Matrix44f& eyePos,
+                                const float scaleFactor);
 
    std::ostream& outStream(std::ostream& out,
                            const unsigned int indentLevel = 0);
@@ -100,41 +106,78 @@ protected:
       gmtl::cross(norm1, bot_side, diag);
       gmtl::cross(norm2, bot_side, right_side);
       gmtl::normalize( norm1 ); gmtl::normalize(norm2);
-      if(gmtl::isEqual(norm1,norm2,1e-4f)==false){
-         vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL) << "ERROR: Invalid surface corners.\n" << vprDEBUG_FLUSH;
+
+      if(gmtl::isEqual(norm1,norm2,1e-4f)==false)
+      {
+         vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
+            << "ERROR: Invalid surface corners.\n" << vprDEBUG_FLUSH;
       }
    }
 
-   /** These calculate mOriginToScreen, etc, from the screen corners.
-   * calculateOffsets requires that mLLCorner to mULCorner be set correctly, and it will
-   * handle calling calculateSurfaceRotation & calculateCornersInBaseFrame
-   */
+   /**
+    * @name Screen calculation functions
+    *
+    * These calculate mOriginToScreen, etc, from the screen corners.
+    * calculateOffsets requires that mLLCorner to mULCorner be set correctly,
+    * and it will handle calling calculateSurfaceRotation and
+    * calculateCornersInBaseFrame.
+    */
+   //@{
    void calculateOffsets();
    void calculateSurfaceRotation();
    void calculateCornersInBaseFrame();
+   //@}
 
-   /* Coordinate system descriptions
-   * Base - B - Base coordinate system of the real physical world
-   * Surface - S - Cordinate frame that is aligned with the surface.  This is the coordinates that
-   *                the surface and frustum (projection) parameters are stored in/relative to.
-   * Surface Transform - ST - Coordinate frame that offsets the Surface in space.  Only used for tracked surfaces.
-   * Eye - E - Coordinate system that is aligned with the eye.  This is the frame that the frustum
-   *              is drawn in for final projection.  This is where the "view" starts from.
-   */
+   /**
+    * @name Coordinate systems
+    *
+    * Coordinate system descriptions:
+    *
+    * Base              - B  - Base coordinate system of the real physical
+    *                          world.<br>
+    * Surface           - S  - Cordinate frame that is aligned with the surface.
+    *                          This is the coordinates that.  The surface and
+    *                          frustum (projection) parameters are stored
+    *                          in/relative to.<br>
+    * Surface Transform - ST - Coordinate frame that offsets the Surface in
+    *                          space.  Only used for tracked surfaces.<br>
+    * Eye               - E  - Coordinate system that is aligned with the eye.
+    *                          This is the frame that the frustum is drawn in
+    *                          for final projection.  This is where the "view"
+    *                          starts from.
+    */
+   //@{
+   gmtl::Matrix44f mSurfaceRotation;	/**< Same as m_base_M_surface */
 
-   gmtl::Matrix44f mSurfaceRotation;	/** Same as m_base_M_surface */
-
-   /** Rotation of the surface
-   * Xfrom from the Base to the surface
-   */
+   /*
+    * @name Rotation of the surface
+    * Transform from the Base to the surface.
+    */
    gmtl::Matrix44f   m_base_M_surface;
-   gmtl::Matrix44f   m_surface_M_base;    /** Stored inverse for performance */
+   gmtl::Matrix44f   m_surface_M_base;  /**< Stored inverse for performance */
+   //@}
 
-   /** Screen configuration (in Surface coordinate frame )
-   */
-   gmtl::Point3f mLLCorner, mLRCorner, mURCorner, mULCorner;
-   gmtl::Point3f  mxLLCorner, mxLRCorner, mxURCorner, mxULCorner;    /**< The corners transformed onto an x,y plane */
-   float mOriginToScreen, mOriginToRight, mOriginToLeft, mOriginToTop, mOriginToBottom;
+   /** @name Screen configuration (in Surface coordinate frame) */
+   //@{
+   gmtl::Point3f mLLCorner;
+   gmtl::Point3f mLRCorner;
+   gmtl::Point3f mURCorner;
+   gmtl::Point3f mULCorner;
+   //@}
+
+   /** @name Corners transformed onto an XY plane */
+   //@{
+   gmtl::Point3f mxLLCorner;
+   gmtl::Point3f mxLRCorner;
+   gmtl::Point3f mxURCorner;
+   gmtl::Point3f mxULCorner;
+   //@}
+
+   float mOriginToScreen;
+   float mOriginToRight;
+   float mOriginToLeft;
+   float mOriginToTop;
+   float mOriginToBottom;
 };
 
 }

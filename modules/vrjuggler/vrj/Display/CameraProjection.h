@@ -44,7 +44,8 @@
 namespace vrj
 {
 
-/**
+/** \class CameraProjection CameraProjection.h vrj/Display/CameraProjection.h
+ *
  * Projection class that simply takes a matrix for the camera position.
  */
 class VJ_CLASS_API CameraProjection : public Projection

@@ -53,46 +53,68 @@ class Viewport;
 class GlWindow;
 
 
-/**
+/** \class GlUserData GlUserData.h vrj/Draw/OGL/GlUserData.h
+ *
  * Holds data about gl users for draw process.
  *
- * This class holds interesting information that can
- * be used in a gl draw callback to find information
- * about the user.
+ * This class holds interesting information that can be used in an OpenGL draw
+ * callback to find information about the user.
  *
- * @note: These values are only intended for use
- *        by advanced users/applications.  By using
- *        these values it is possible to create applications
- *        that are non-portable.
+ * @note These values are only intended for use by advanced users/applications.
+ *       By using these values it is possible to create applications that are
+ *       non-portable.
  */
 class GlUserData
 {
 public:
    GlUserData()
+      : mUser(NULL)
+      , mProj(NULL)
+      , mViewport(NULL)
+      , mGlWindow(NULL)
    {
-      mUser = NULL;
-      mProj = NULL;
+      /* Do nothing. */ ;
    }
 
    User* getUser()
-      { return mUser; }
+   {
+      return mUser;
+   }
+
    void setUser(User* user)
-      { mUser = user; }
+   {
+      mUser = user;
+   }
 
    Projection* getProjection()
-      { return mProj; }
+   {
+      return mProj;
+   }
+
    void setProjection(Projection* proj)
-      { mProj = proj; }
+   {
+      mProj = proj;
+   }
 
    Viewport* getViewport()
-      { return mViewport; }
+   {
+      return mViewport;
+   }
+
    void setViewport(Viewport* vp)
-      { mViewport = vp; }
+   {
+      mViewport = vp;
+   }
 
    GlWindow* getGlWindow()
-      { return mGlWindow; }
+   {
+      return mGlWindow;
+   }
+
    void setGlWindow(GlWindow* win)
-      { mGlWindow = win; }
+   {
+      mGlWindow = win;
+   }
 
 protected:
    User*        mUser;        /**< The current user we are rendering */
@@ -101,6 +123,6 @@ protected:
    GlWindow*    mGlWindow;    /**< The current GL window that we are rendering in. (basically the gl context) */
 };
 
+}
 
-};
 #endif

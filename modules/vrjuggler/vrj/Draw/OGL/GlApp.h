@@ -44,7 +44,8 @@ namespace vrj
 {
    class Kernel;
 
-/**
+/** \class GlApp GlApp.h vrj/Draw/OGL/GlApp.h
+ *
  * vrj::GlApp encapulates an actual OpenGL application object.
  * This defines the base class from which OpenGL-based application classes
  * should be derived.  The interface given is what the kernel and the OpenGL

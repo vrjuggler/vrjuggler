@@ -62,6 +62,10 @@ namespace
 namespace vrj
 {
 
+/** \class OpenSGApp OpenSGApp.h vrj/Draw/OpenSG/OpenSGApp.h
+ *
+ * Base type for OpenSG application objects.
+ */
 class OpenSGApp : public vrj::GlApp
 {
 public:
@@ -112,20 +116,21 @@ public:
    /**
     * Initializes OpenSG.
     * Make sure to call initScene if you override this function.
-    * If a derived class overrides this method, the overriding function MUST call
-    * OpenSGApp::apiInit().
+    * If a derived class overrides this method, the overriding function MUST
+    * call OpenSGApp::apiInit().
     */
    virtual void apiInit();
 
    /**
-    * Shuts down OpenSG.  If overridden, the overriding method call this method.
+    * Shuts down OpenSG.  If overridden, the overriding method call this
+    * method.
     */
    virtual void exit();
    
    /**
     * OpenGL Drawing functions.
-    * If user code overrides these functions, the overriding functions MUST call these
-    * methods.
+    * If user code overrides these functions, the overriding functions MUST
+    * call these methods.
     */
    //@{
    virtual void contextInit();

@@ -57,6 +57,10 @@ const bool reg_ctr_ ## SimIfType = \
 namespace vrj
 {
 
+/** \class PfSimInterfaceFactory PfSimInterfaceFactory.h vrj/Draw/Pf/PfSimInterfaceFactory.h
+ *
+ * Simulator renderer factory.
+ */
 class VJ_CLASS_API PfSimInterfaceFactory :
    public vpr::Factory<DrawSimInterface, std::string>
 {

@@ -43,7 +43,8 @@ class DisplayManager;
 class App;
 class Display;
 
-/**
+/** \class DrawManager DrawManager.h vrj/Draw/DrawManager.h
+ *
  * Abstract base class for API-specific Draw Manager.
  *
  * Concrete classes are resonsible for all rendering.

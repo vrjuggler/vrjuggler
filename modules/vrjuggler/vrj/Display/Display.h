@@ -43,7 +43,8 @@ namespace vrj
 {
    class Viewport;
 
-/**
+/** \class Display Display.h vrj/Display/Display.h
+ *
  * Container class for viewports and window information.  This stores the
  * size and location of the window and the viewports contained within.
  *

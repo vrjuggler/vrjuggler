@@ -58,27 +58,34 @@
 
 namespace vrj
 {
+
+/** \class PfInputHandler PfInputHandler.h vrj/Draw/Pf/PfInputHandler.h
+ *
+ * Performer input handler.
+ */
+class PfInputHandler
 #ifdef VPR_OS_Win32
-class PfInputHandler : public gadget::InputAreaWin32
+   : public gadget::InputAreaWin32
 #else
-class PfInputHandler : public gadget::InputAreaXWin
+   : public gadget::InputAreaXWin
 #endif
 {
 public:
    /**
-    * Create an adaptor which will route events from Performer into
-    * platform specific events.
+    * Creates an adaptor which will route events from Performer into
+    * platform-specific events.
     *
-    * @param pfWin - Performer window to grab events from.
+    * @param pWin        Performer window to grab events from.
+    * @param displayName The name of the display.
     */
    PfInputHandler(pfPipeWindow* pWin, const std::string& displayName);
 
    /**
-    * Configure the adaptor.
+    * Configures the adaptor.
     *
-    * @param e - ConfigElement that contains all configuration
-    *            information to configure an InputArea.
-    * @param disp - VR Juggler display which contains size info.
+    * @param e    ConfigElement that contains all configuration
+    *             information to configure an InputArea.
+    * @param disp VR Juggler display which contains size info.
     */
    void config(jccl::ConfigElementPtr e, vrj::Display* disp)
    {
@@ -93,7 +100,7 @@ public:
    {;}
    
    /**
-    * Forward the recieved platform independent event to
+    * Forwards the recieved platform independent event to
     * the base class to be handled.
     */
 #ifdef VPR_OS_Win32
@@ -102,6 +109,8 @@ public:
    void handlePerformerEvent(::XEvent& event);
 #endif
 };
+
 }
+
 
 #endif
