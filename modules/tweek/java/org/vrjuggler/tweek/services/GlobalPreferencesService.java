@@ -444,7 +444,7 @@ public class GlobalPreferencesService
    public synchronized void save (boolean add_newlines)
    {
       XMLOutputter outputter = new XMLOutputter("  ", add_newlines);
-      outputter.setNewlines("\n");
+      outputter.setLineSeparator(System.getProperty("line.separator"));
 
       try
       {
