@@ -87,6 +87,13 @@ AH_TEMPLATE([_CMA_NOWRAPPERS_], [Define if building on HP-UX.])
 # Depending on the target operating system, set various command options and
 # such.
 case $target_os in
+   # Darwin, aka Mac OS X.
+   darwin*)
+      if test "x$XWIN_UI" != "xyes" ; then
+         AC_MSG_WARN([WARNING: Forcing the use of the X Window System. The Carbon support is currently unusable.])
+         XWIN_UI='yes'
+      fi
+      ;;
    # SGI running IRIX 6.*.
    irix6*)
       if test "x$USE_GCC" != "xyes" ; then
