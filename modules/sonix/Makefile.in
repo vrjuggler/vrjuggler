@@ -98,10 +98,11 @@ SUBDIR          = snx
 EXTRA_LIBS      = @LIBS@ -lm
 
 # Version information.
+PARAM_HEADER	= snx/snxParam.h
 BRANCH		= HEAD
 CANON_NAME	= Mario
 VER_ARGS	= -f $(ROOT_ABS)/VERSION -s @SUBSYSTEM@ -b $(BRANCH)	\
-                  -i $(ROOT_ABS)/snx/snxParam.h.in -o snx/snxParam.h		\
+                  -i $(ROOT_ABS)/$(PARAM_HEADER).in -o $(PARAM_HEADER)	\
                   -d "`date '+%b %e, %Y %H:%M:%S'`" -n "$(CANON_NAME)"
 
 ifdef VERSION
@@ -169,7 +170,9 @@ BEFOREBUILD	= beforebuild
 AFTERBUILD	= afterbuild
 
 # Things to do before the object files and library are built.
-beforebuild:
+beforebuild: $(PARAM_HEADER)
+
+$(PARAM_HEADER): $(ROOT_ABS)/$(PARAM_HEADER).in $(ROOT_ABS)/VERSION
 	@$(SHELL) $(scriptdir)/make-ver.sh $(VER_ARGS)
 
 # Things to do after the object files and library are built.
