@@ -89,6 +89,15 @@ public class ConfigBrokerImpl
       }
    }
 
+   /**
+    * Loads the DOM document from the given input stream.
+    *
+    * @param input      the stream to read from
+    *
+    * @return  the DOM document corresponding to the resource's data
+    *
+    * @throws IOException     if there was an error loading the resource
+    */
    private Document loadResource(InputStream input)
       throws IOException
    {
@@ -145,7 +154,31 @@ public class ConfigBrokerImpl
     */
    public boolean add(ConfigContext context, ConfigChunk chunk)
    {
-      return false;
+      // Get a list of the resources in this context that are config chunk DBs
+      List chunk_res = getResourcesOfType(context, ConfigChunkDB.class);
+      ConfigChunkDB target = null;
+
+      // Check if this context has nothing to add to
+      if (chunk_res.size() == 0)
+      {
+         return false;
+      }
+
+      // If there is more than one file to add to, ask the user which one they
+      // want to add it to.
+      if (chunk_res.size() > 1)
+      {
+         // TODO: ask the user which file they want to add to, for now pick the
+         // first
+         target = (ConfigChunkDB)chunk_res.get(0);
+      }
+      else
+      {
+         target = (ConfigChunkDB)chunk_res.get(0);
+      }
+
+      target.add(chunk);
+      return true;
    }
 
    /**
@@ -163,6 +196,18 @@ public class ConfigBrokerImpl
     */
    public boolean remove(ConfigContext context, ConfigChunk chunk)
    {
+      // Get a list of the resources in this context that are config chunk DBs
+      List chunk_res = getResourcesOfType(context, ConfigChunkDB.class);
+
+      for (Iterator itr = chunk_res.iterator(); itr.hasNext(); )
+      {
+         ConfigChunkDB db = (ConfigChunkDB)itr.next();
+         if (db.contains(chunk))
+         {
+            db.remove(chunk);
+            return true;
+         }
+      }
       return false;
    }
 
@@ -178,7 +223,31 @@ public class ConfigBrokerImpl
     */
    public boolean add(ConfigContext context, ChunkDesc desc)
    {
-      return false;
+      // Get a list of the resources in this context that are chunk desc DBs
+      List desc_res = getResourcesOfType(context, ChunkDescDB.class);
+      ChunkDescDB target = null;
+
+      // Check if this context has nothing to add to
+      if (desc_res.size() == 0)
+      {
+         return false;
+      }
+
+      // If there is more than one file to add to, ask the user which one they
+      // want to add it to.
+      if (desc_res.size() > 1)
+      {
+         // TODO: ask the user which file they want to add to, for now pick the
+         // first
+         target = (ChunkDescDB)desc_res.get(0);
+      }
+      else
+      {
+         target = (ChunkDescDB)desc_res.get(0);
+      }
+
+      target.add(desc);
+      return true;
    }
 
    /**
@@ -196,6 +265,18 @@ public class ConfigBrokerImpl
     */
    public boolean remove(ConfigContext context, ChunkDesc desc)
    {
+      // Get a list of the resources in this context that are config chunk DBs
+      List desc_res = getResourcesOfType(context, ChunkDescDB.class);
+
+      for (Iterator itr = desc_res.iterator(); itr.hasNext(); )
+      {
+         ChunkDescDB db = (ChunkDescDB)itr.next();
+         if (db.contains(desc))
+         {
+            db.remove(desc);
+            return true;
+         }
+      }
       return false;
    }
 
@@ -256,6 +337,35 @@ public class ConfigBrokerImpl
    {
       List result = new ArrayList();
       result.addAll(resources.keySet());
+      return result;
+   }
+
+   /**
+    * Gets a list of all the resources managed by this broker that are of the
+    * given class.
+    *
+    * @param context       the context in which to search
+    * @param testClass     the class to test for
+    *
+    * @return  a list of the matching resources
+    */
+   protected List getResourcesOfType(ConfigContext context, Class testClass)
+   {
+      List result = new ArrayList();
+
+      for (Iterator itr = context.getResources().iterator(); itr.hasNext(); )
+      {
+         String name = (String)itr.next();
+         Object resource = resources.get(name);
+         if (resource != null)
+         {
+            if (testClass.isInstance(resource))
+            {
+               result.add(resource);
+            }
+         }
+      }
+
       return result;
    }
 
