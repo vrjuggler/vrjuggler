@@ -27,10 +27,13 @@ vpath %.c @srcdir@
 vpath %.cpp @srcdir@
 vpath %.o ${OBJDIR}
 
-ENVIRONTMENT_SRCS	:= vjEnvironmentManager.cpp	\
+ENVIRONTMENT_SRCS	:= vjTimedUpdate.cpp
+
+ifneq (@OS_TYPE@, Win32)
+ENVIRONTMENT_SRCS	+= vjEnvironmentManager.cpp	\
                            vjConnect.cpp                \
-		           vjCommand.cpp                \
-		           vjTimedUpdate.cpp
+                           vjCommand.cpp
+endif
 
 ENVIRONMENT_OBJECTS	:= ${addprefix ${OBJDIR}/,${ENVIRONTMENT_SRCS:.cpp=.o}}
 DEPEND_FILES		:= ${ENVIRONTMENT_SRCS:.cpp=.d}
