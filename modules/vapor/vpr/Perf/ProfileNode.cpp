@@ -43,6 +43,7 @@
 #include <vpr/Perf/ProfileManager.h>
 #include <vpr/Perf/ProfileNode.h>
 #include <vpr/Util/Debug.h>
+#include <vpr/Sync/Guard.h>
 #include <sstream>
 
 namespace vpr
@@ -126,16 +127,17 @@ namespace vpr
 
    void ProfileNode::printTree(ProfileNode* node)
    {
-      if ( node == NULL ) return;
+      if ( node == NULL )
+      {  return; }
 
       ProfileNode::printTree(node->getSibling());
 
       mNodeLock.acquire();
-      vprDEBUG(vprDBG_ALL, 0) << clrSetBOLD(clrGREEN) << "[PROFILE STATS] " << clrRESET 
-         << clrSetBOLD(clrRED) << node->getName() << clrRESET << clrSetBOLD(clrYELLOW)  
-      << " total calls: " << clrRESET << node->getTotalCalls()
-      << clrSetBOLD(clrYELLOW) << " total time: " << clrRESET << node->getTotalTime()
-      << clrSetBOLD(clrYELLOW) << " ave: " << clrRESET 
+      vprDEBUG(vprDBG_ALL, 0) << clrSetBOLD(clrGREEN) << "[PROFILE STATS] " << clrRESET
+         << clrSetBOLD(clrRED) << node->getName() << clrRESET
+         << clrSetBOLD(clrYELLOW) << " total calls: " << clrRESET << node->getTotalCalls()
+         << clrSetBOLD(clrYELLOW) << " total time: " << clrRESET << node->getTotalTime()
+         << clrSetBOLD(clrYELLOW) << " ave: " << clrRESET
          << node->getTotalTime() / node->getTotalCalls() << std::endl << vprDEBUG_FLUSH;
 
       std::stringstream s;
@@ -156,7 +158,7 @@ namespace vpr
 
    void  ProfileNode::reset( void )
    {
-      mNodeLock.acquire();
+   Guard<Mutex> guard(mNodeLock);
       mTotalCalls = 0;
       mTotalTime = 0.0f;
 
@@ -169,43 +171,33 @@ namespace vpr
       {
          mSibling->reset();
       }
-      mNodeLock.release();
    }
 
    void  ProfileNode::call( void )
    {
-      mNodeLock.acquire();
+   Guard<Mutex> guard(mNodeLock);
       mTotalCalls++;
       if ( mRecursionCounter++ == 0 )
       {
          profileGetTicks(&mStartTime);
       }
-      mNodeLock.release();
    }
 
    bool  ProfileNode::Return( void )
    {
-      mNodeLock.acquire();
+   Guard<Mutex> guard(mNodeLock);
       if ( --mRecursionCounter == 0 && mTotalCalls != 0 )
       {
          vpr::Interval time;
          profileGetTicks(&time);
-         time-=mStartTime;
+         time -= mStartTime;
          mHistory.push_front((float)(time.secf() / profileGetTickRate().secf()));
          mHistory.resize(mHistorySize);
          mTotalTime += mHistory.front();
       }
 
-      mNodeLock.release();
       return( mRecursionCounter == 0 );
    }
-
-   ProfileNode    ProfileManager::mRoot( "Root", NULL );
-   ProfileNode*   ProfileManager::mCurrentNode = &ProfileManager::mRoot;
-   int            ProfileManager::mFrameCounter = 0;
-   vpr::Interval* ProfileManager::mResetTime = 0;
-   vpr::Mutex     ProfileManager::mTreeLock;
-
 
 
 } // end vpr namespace
