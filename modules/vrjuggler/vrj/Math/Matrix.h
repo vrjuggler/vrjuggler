@@ -426,10 +426,11 @@ public:
       return dst;
    }
 
-   friend inline vjMatrix operator*( float _s, const vjMatrix& );
-   friend inline vjMatrix operator*( const vjMatrix& _v, float _s );
-   friend inline vjMatrix operator/( const vjMatrix& _v, float _s );
-   friend std::ostream& operator<<( std::ostream& out, const vjMatrix& _mat );
+   friend VJ_API(vjMatrix) operator*( float _s, const vjMatrix& );
+   friend VJ_API(vjMatrix) operator*( const vjMatrix& _v, float _s );
+   friend VJ_API(vjMatrix) operator/( const vjMatrix& _v, float _s );
+   friend VJ_API(std::ostream&) operator<<( std::ostream& out,
+                                            const vjMatrix& _mat );
 
 public:
    // Assignment operators
@@ -458,5 +459,10 @@ public:
    //vjMatrix&  operator+=( const vjMatrix&  _m );
    //vjMatrix&  operator-=( const vjMatrix&  _m );
 };
+
+VJ_API(vjMatrix) operator*( float _s, const vjMatrix& );
+VJ_API(vjMatrix) operator*( const vjMatrix& _v, float _s );
+VJ_API(vjMatrix) operator/( const vjMatrix& _v, float _s );
+VJ_API(std::ostream&) operator<<( std::ostream& out, const vjMatrix& _mat );
 
 #endif

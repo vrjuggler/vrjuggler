@@ -290,7 +290,7 @@ public:
    std::ostream& outStreamReadable( std::ostream& out ) const;
    
    //: output operator
-   friend std::ostream& operator<<( std::ostream& out, const vjQuat& q );
+   friend VJ_API(std::ostream&) operator<<( std::ostream& out, const vjQuat& q );
    
    //: quaternion data access for external function use (like quat to matrix)
    // non-const version                                           <BR>
