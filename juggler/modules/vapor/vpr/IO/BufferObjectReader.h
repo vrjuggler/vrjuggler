@@ -48,6 +48,7 @@
 
 #include <boost/static_assert.hpp>
 #include <vpr/IO/ObjectReader.h>
+#include <vpr/System.h>
 
 
 namespace vpr
@@ -79,13 +80,13 @@ public:
    {
       return vpr::ReturnStatus::Succeed;
    }
-   
+
    /** Ends the most recently named tag. */
    virtual vpr::ReturnStatus endTag()
    {
       return vpr::ReturnStatus::Succeed;
    }
-   
+
    /** Starts an attribute of the name attributeName */
    virtual vpr::ReturnStatus beginAttribute(std::string attributeName)
    {
