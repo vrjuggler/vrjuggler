@@ -850,7 +850,7 @@ AC_SUBST(vrj_extra_libs)
 # Final file generation step.
 # -----------------------------------------------------------------------------
 
-VJ_MTREE_LIB_GEN(VJ, release/mtree, $PLATFORM, $ISA)
+VJ_MTREE_LIB_GEN(VJ, mtree, $PLATFORM, $ISA)
 
 AC_OUTPUT(Makefile
           Makefile.inc
@@ -918,12 +918,12 @@ AC_OUTPUT(Makefile
           test/testDynamicCastSTL/Makefile
           tools/Makefile
           Doc/Makefile
-          release/mtree/VJ.data.dist
-          release/mtree/VJ.include.dist
-          release/mtree/VJ.install.dist
-          release/mtree/VJ.samples.dist
-          release/mtree/VJ.test.dist
-          release/mtree/VJ.tools.dist
+          mtree/VJ.data.dist
+          mtree/VJ.include.dist
+          mtree/VJ.install.dist
+          mtree/VJ.samples.dist
+          mtree/VJ.test.dist
+          mtree/VJ.tools.dist
           VARS.pl)
 
 cat <<BUILD_INFO
