@@ -67,17 +67,26 @@ std::vector<std::string> vjConfigChunk::getDependencies()
 {
     char* chunkname;
     std::vector<std::string> dep_list;     // Create return vector
+    int i, j;
 
     //cout << "Dependency test for " << getProperty ("name") << endl;
-    for(int i=0;i<props.size();i++)
+    for(i=0;i<props.size();i++) {
 	if(props[i]->type == T_CHUNK)
-	    for(int j=0;j<props[i]->getNum();j++) {
+	    for(j=0;j<props[i]->getNum();j++) {
 		chunkname = (char*)props[i]->getValue(j);
 		if (chunkname && (chunkname[0] != '\0')) {
 		    dep_list.push_back((std::string)chunkname);
 		}
 	    }
-
+	if (props[i]->type == T_EMBEDDEDCHUNK) {
+	    std::vector<std::string> child_deps;
+	    for (j = 0; j < props[i]->getNum(); j++) {
+		// if we ever have cyclic dependencies, we're in trouble
+		child_deps = ((vjConfigChunk*)props[i]->getValue(j))->getDependencies();
+		dep_list.insert (dep_list.end(), child_deps.begin(), child_deps.end()); 
+	    }
+	}
+    }
    return dep_list;      // Return the list
 }
 
