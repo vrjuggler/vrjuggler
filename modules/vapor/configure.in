@@ -631,6 +631,20 @@ AC_CHECK_FUNC([sched_yield], [AC_DEFINE([HAVE_SCHED_YIELD])],
                     AC_DEFINE([HAVE_SCHED_YIELD]) ])])
 LIBS="${_vpr_save_LIBS}"
 
+# Test to see if the function backtrace() (a GLIBC feature) is available.
+# As of right now, we know of no other libc implementation with this feature,
+# so this test is not very sophisticated.
+AC_CACHE_CHECK([for backtrace], [ac_cv_has_backtrace],
+   [AC_TRY_COMPILE([#include <execinfo.h> ],
+                   [int size = backtrace(0, 0);],
+                   [ac_cv_has_backtrace='yes'],
+                   [ac_cv_has_backtrace='no'])])
+
+if test "x$ac_cv_has_backtrace" = "xyes" ; then
+   AC_DEFINE([HAVE_BACKTRACE], ,
+             [Define if the GLIBC backtrace() function is available.])
+fi
+
 # -----------------------------------------------------------------------------
 # Miscellaneous checks.
 # -----------------------------------------------------------------------------

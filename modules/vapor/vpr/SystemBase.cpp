@@ -41,7 +41,7 @@
 
 #include <vpr/vprConfig.h>
 
-#if defined(VPR_OS_Linux)
+#if defined(HAVE_BACKTRACE)
 #include <sys/types.h>
 #include <unistd.h>
 #include <execinfo.h>
@@ -60,8 +60,7 @@ std::string SystemBase::getCallStack()
 {
    std::string ret_stack("Stack trace:\n   <Call stack not supported>");
 
-   // XXX: should come up with better test for glib
-#if defined(VPR_OS_Linux)
+#if defined(HAVE_BACKTRACE)
    void* trace_syms[100];
    size_t size;
    char** strings;
