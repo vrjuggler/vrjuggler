@@ -9,10 +9,14 @@
   page.
  -->
 
+<!-- install-web book-ignore-begin -->
 <FONT SIZE="-1"><B>{path}</B></FONT><BR>
-<FONT SIZE="+3"><B>
+<!-- install-web book-ignore-end -->
+
+<!--NewPage-->
+<H1>
   {include ../common/class_name.html.inc}
-</B></FONT>
+</H1>
 
 {if children}
   <P>
