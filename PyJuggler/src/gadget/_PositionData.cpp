@@ -19,7 +19,10 @@ using namespace boost::python;
 // Module ======================================================================
 void _Export_PositionData()
 {
-    class_< gadget::PositionData >("PositionData", init<  >())
+    class_< gadget::PositionData >("PositionData",
+         "gadget.InputData subclass for positional data.",
+         init<  >()
+        )
         .def(init< const gadget::PositionData& >())
         .def_readwrite("mPosData", &gadget::PositionData::mPosData)
         .def("getPosition", &gadget::PositionData::getPosition)

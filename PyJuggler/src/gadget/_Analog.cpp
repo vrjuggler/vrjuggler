@@ -97,23 +97,83 @@ struct gadget_Analog_Wrapper: gadget::Analog
     PyObject* self;
 };
 
-BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(gadget_Analog_getAnalogData_overloads_0_1, getAnalogData, 0, 1)
-
 }// namespace 
 
 
 // Module ======================================================================
 void _Export_Analog()
 {
-    class_< gadget::Analog, boost::noncopyable, pyj::gadget_Analog_Wrapper >("Analog", init<  >())
-        .def("writeObject", (vpr::ReturnStatus (gadget::Analog::*)(vpr::ObjectWriter*) )&gadget::Analog::writeObject, (vpr::ReturnStatus (pyj::gadget_Analog_Wrapper::*)(vpr::ObjectWriter*))&pyj::gadget_Analog_Wrapper::default_writeObject)
-        .def("readObject", (vpr::ReturnStatus (gadget::Analog::*)(vpr::ObjectReader*) )&gadget::Analog::readObject, (vpr::ReturnStatus (pyj::gadget_Analog_Wrapper::*)(vpr::ObjectReader*))&pyj::gadget_Analog_Wrapper::default_readObject)
-        .def("config", &gadget::Analog::config, &pyj::gadget_Analog_Wrapper::default_config)
-        .def("getInputTypeName", &gadget::Analog::getInputTypeName, &pyj::gadget_Analog_Wrapper::default_getInputTypeName)
-        .def("getAnalogData", &gadget::Analog::getAnalogData, pyj::gadget_Analog_getAnalogData_overloads_0_1())
-        .def("addAnalogSample", &gadget::Analog::addAnalogSample)
-        .def("swapAnalogBuffers", &gadget::Analog::swapAnalogBuffers)
-        .def("getAnalogDataBuffer", &gadget::Analog::getAnalogDataBuffer, return_internal_reference< 1 >())
+    class_< gadget::Analog, boost::noncopyable, pyj::gadget_Analog_Wrapper >("Analog",
+         "gadget.Analog is the abstract base class from which devices\n"
+         "returning analog data must derive.  This is in addition to\n"
+         "gadget.Input.  gadget.Input provides pure virtual function\n"
+         "constraints in the following functions: startSampling(),\n"
+         "stopSampling(), sample(), and updateData().\n\n"
+         "gadget.Analog adds the function getAnalogDdta() for retrieving the\n"
+         "received analog data.  This is similar to the additions made by\n"
+         "gadget.Position and gadget.Digital."
+         ,
+         init<  >()
+        )
+        .def("writeObject",
+             (vpr::ReturnStatus (gadget::Analog::*)(vpr::ObjectWriter*) )&gadget::Analog::writeObject,
+             (vpr::ReturnStatus (pyj::gadget_Analog_Wrapper::*)(vpr::ObjectWriter*))&pyj::gadget_Analog_Wrapper::default_writeObject,
+             "writeObject(writer) -> vpr.ReturnStatus object\n"
+             "Serializes this object."
+         )
+        .def("readObject",
+             (vpr::ReturnStatus (gadget::Analog::*)(vpr::ObjectReader*) )&gadget::Analog::readObject,
+             (vpr::ReturnStatus (pyj::gadget_Analog_Wrapper::*)(vpr::ObjectReader*))&pyj::gadget_Analog_Wrapper::default_readObject,
+             "readObject(reader) -> vpr.ReturnStatus object\n"
+             "De-serializes this object."
+         )
+        .def("config", &gadget::Analog::config,
+             &pyj::gadget_Analog_Wrapper::default_config,
+             "config(element) -> Boolean\n"
+             "Reads the minimum and maximum value configuration information\n"
+             "for this analog device.\n"
+             "Arguments:\n:"
+             "element -- The config element for an analog device.  It must\n"
+             "           derive from the base config element type\n"
+             "           'analog_device'."
+         )
+        .def("getInputTypeName", &gadget::Analog::getInputTypeName,
+             &pyj::gadget_Analog_Wrapper::default_getInputTypeName)
+        .def("getAnalogData", &gadget::Analog::getAnalogData,
+             (args("devNum") = 0),
+             "getAnalogData(devNum = 0) -> gadget.AnalogData object\n"
+             "Returns analog data.\n"
+             "Post-condition:\n"
+             "A value is returned in the range from 0.0 to 1.0\n"
+             "Keyword arguments:\n"
+             "devNum -- The device unit numbmer to access.  This parameter\n"
+             "          optional.  It defaults to 0."
+         )
+        .def("addAnalogSample", &gadget::Analog::addAnalogSample,
+             "addAnalogSample(sampleList)\n"
+             "Helper method to add a collection of samples to the analog\n"
+             "sample buffers for this device.  This MUST be called by all\n"
+             "analog devices to add a new sample.  The data samples passed\n"
+             "in will then be modified by any local filters.\n"
+             "Post-condition:\n"
+             "The given samples are added to the buffers and the local\n"
+             "filters are run on the new samples."
+             "Arguments:\n"
+             "sampleList -- The list of newly collected samples."
+         )
+        .def("swapAnalogBuffers", &gadget::Analog::swapAnalogBuffers,
+             "swapAnalogBuffers()\n"
+             "Swaps the analog data buffers.\n"
+             "Post-condition:\n"
+             "If the ready queue has values, then those values are copied\n"
+             "from the ready queue to the stable queue.  If not, the stable\n"
+             "queue is not changed."
+         )
+        .def("getAnalogDataBuffer", &gadget::Analog::getAnalogDataBuffer,
+             return_internal_reference< 1 >(),
+             "getAnalogDataBuffer() -> list of lists of AnalogData objects\n"
+             "Returns the current stable sample buffers for this device."
+         )
     ;
 
 }

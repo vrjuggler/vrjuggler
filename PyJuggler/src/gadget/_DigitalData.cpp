@@ -19,7 +19,10 @@ using namespace boost::python;
 // Module ======================================================================
 void _Export_DigitalData()
 {
-    class_< gadget::DigitalData >("DigitalData", init<  >())
+    class_< gadget::DigitalData >("DigitalData",
+         "gadget.InputData subclass for digital data.",
+         init<  >()
+        )
         .def(init< const gadget::DigitalData& >())
         .def(init< const int >())
         .def("getDigital", &gadget::DigitalData::getDigital)

@@ -19,7 +19,10 @@ using namespace boost::python;
 // Module ======================================================================
 void _Export_AnalogData()
 {
-    class_< gadget::AnalogData >("AnalogData", init<  >())
+    class_< gadget::AnalogData >("AnalogData",
+         "gadget.InputData subclass for analog data.",
+         init<  >()
+        )
         .def(init< const gadget::AnalogData& >())
         .def(init< float >())
         .def("getAnalog", &gadget::AnalogData::getAnalog)

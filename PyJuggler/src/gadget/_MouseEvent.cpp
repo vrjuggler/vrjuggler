@@ -76,20 +76,106 @@ struct gadget_MouseEvent_Wrapper: gadget::MouseEvent
 void _Export_MouseEvent()
 {
     scope* gadget_MouseEvent_scope = new scope(
-    class_< gadget::MouseEvent, bases< gadget::Event >, pyj::gadget_MouseEvent_Wrapper >("MouseEvent", init<  >())
+    class_< gadget::MouseEvent, bases< gadget::Event >, pyj::gadget_MouseEvent_Wrapper >("MouseEvent",
+         "Mouse event class.  This captures the state of the mouse when any\n"
+         "mouse event occurs.  This includes button presses, button\n"
+         "releases, and mouse motion."
+         ,
+         init<  >(
+            "__init__()\n"
+            "Default constructor needed in order to use the templated\n"
+            "EventFactory without modification.\n\n"
+            "__init__(type, button, x, y, globalX, globalY, state, time)\n"
+            "Initializes data members.\n"
+            "Arguments:\n"
+            "type    -- The type of this event (a mouse button press, a mouse\n"
+            "           a mouse button release, or a mouse move).\n"
+            "button  -- The button that generated the event.\n"
+            "x       -- The X coordinate of the mouse within the window.\n"
+            "y       -- The Y coordinate of the mouse within the window.\n"
+            "globalX -- The X coordinate of the mouse relative to the root\n"
+            "           window (i.e., the desktop).\n"
+            "globalY -- The Y coordinate of the mouse relative to the root\n"
+            "           window (i.e., the desktop).\n"
+            "state   -- The mask of mouse buttons and any modifiers being\n"
+            "           pressed.  This should be constructed using the\n"
+            "           bitwise OR of gadget.ModifierMask and\n"
+            "           gadget.ButtonMask values."
+            "time    -- The time at which this event occurred.  This should\n"
+            "           be as accurate as possible, preferrably acquired\n"
+            "           from the operating system or windowing event system\n"
+            "           event data structure.  The time at which the event\n"
+            "           was processed is not an acceptable value."
+         )
+        )
         .def(init< const gadget::MouseEvent& >())
         .def(init< const gadget::EventType&, const gadget::Keys&, const int&, const int&, const int&, const int&, const int&, const long unsigned int& >())
-        .def("writeObject", (vpr::ReturnStatus (gadget::MouseEvent::*)(vpr::ObjectWriter*) )&gadget::MouseEvent::writeObject, (vpr::ReturnStatus (pyj::gadget_MouseEvent_Wrapper::*)(vpr::ObjectWriter*))&pyj::gadget_MouseEvent_Wrapper::default_writeObject)
-        .def("readObject", (vpr::ReturnStatus (gadget::MouseEvent::*)(vpr::ObjectReader*) )&gadget::MouseEvent::readObject, (vpr::ReturnStatus (pyj::gadget_MouseEvent_Wrapper::*)(vpr::ObjectReader*))&pyj::gadget_MouseEvent_Wrapper::default_readObject)
-        .def("getButton", &gadget::MouseEvent::getButton, return_value_policy< copy_const_reference >())
-        .def("getX", &gadget::MouseEvent::getX, return_value_policy< copy_const_reference >())
-        .def("getY", &gadget::MouseEvent::getY, return_value_policy< copy_const_reference >())
-        .def("getGlobalX", &gadget::MouseEvent::getGlobalX, return_value_policy< copy_const_reference >())
-        .def("getGlobalY", &gadget::MouseEvent::getGlobalY, return_value_policy< copy_const_reference >())
-        .def("getState", &gadget::MouseEvent::getState, return_value_policy< copy_const_reference >())
-        .def("type", &gadget::Event::type, return_value_policy< copy_const_reference >())
-        .def("setType", &gadget::Event::setType)
-        .def("time", &gadget::Event::time, return_value_policy< copy_const_reference >())
+        .def("writeObject",
+             (vpr::ReturnStatus (gadget::MouseEvent::*)(vpr::ObjectWriter*) )&gadget::MouseEvent::writeObject,
+             (vpr::ReturnStatus (pyj::gadget_MouseEvent_Wrapper::*)(vpr::ObjectWriter*))&pyj::gadget_MouseEvent_Wrapper::default_writeObject,
+             "writeObject(writer) -> vpr.ReturnStatus object\n"
+             "Serializes this event using the given vpr.ObjectWriter."
+         )
+        .def("readObject",
+             (vpr::ReturnStatus (gadget::MouseEvent::*)(vpr::ObjectReader*) )&gadget::MouseEvent::readObject,
+             (vpr::ReturnStatus (pyj::gadget_MouseEvent_Wrapper::*)(vpr::ObjectReader*))&pyj::gadget_MouseEvent_Wrapper::default_readObject,
+             "readObject(reader) -> vpr.ReturnStatus object\n"
+             "De-serializes this event using the given vpr.ObjectReader."
+         )
+        .def("getButton", &gadget::MouseEvent::getButton,
+             return_value_policy< copy_const_reference >(),
+             "getButton() -- gadget.Keys value\n"
+         )
+        .def("getX", &gadget::MouseEvent::getX,
+            return_value_policy< copy_const_reference >(),
+            "getX() -> int\n"
+            "Returns the X coordinate of the mouse pointer relative to the\n"
+            "window."
+         )
+        .def("getY", &gadget::MouseEvent::getY,
+             return_value_policy< copy_const_reference >(),
+            "getY() -> int\n"
+            "Returns the Y coordinate of the mouse pointer relative to the\n"
+            "window."
+         )
+        .def("getGlobalX", &gadget::MouseEvent::getGlobalX,
+             return_value_policy< copy_const_reference >(),
+             "getGlobalX() -> int\n"
+             "Returns the X coordinate of the mouse pointer relative to the\n"
+             "root window (i.e., the desktop)."
+         )
+        .def("getGlobalY", &gadget::MouseEvent::getGlobalY,
+             return_value_policy< copy_const_reference >(),
+             "getGlobalY() -> int\n"
+             "Returns the Y coordinate of the mouse pointer relative to the\n"
+             "root window (i.e., the desktop)."
+         )
+        .def("getState", &gadget::MouseEvent::getState,
+             return_value_policy< copy_const_reference >(),
+             "getState() -> int\n"
+             "Returns the state of the mouse buttons and keyboard modifier\n"
+             "keys (CTRL, ALT, and SHIFT)."
+         )
+        .def("type", &gadget::Event::type,
+             return_value_policy< copy_const_reference >(),
+             "type() -> gadget.EventType object\n"
+             "Returns the type of this event.  This can be used for dynamic\n"
+             "casting to more specific event types."
+         )
+        .def("setType", &gadget::Event::setType,
+             "setType(type)\n"
+             "Sets the type of this event.  This is needed because, while\n"
+             "using an object reader to de-serialize a gadget.Event object,\n"
+             "we cannot set the type during construction.  We must set the\n"
+             "event type after creating this event using the EventFactory."
+             "Arguments:\n"
+             "type -- A gadget.EventType object or a subclass thereof."
+         )
+        .def("time", &gadget::Event::time,
+             return_value_policy< copy_const_reference >(),
+             "time() -> int\n"
+             "Returns the time at which the event occurred."
+         )
     );
     register_ptr_to_python< boost::shared_ptr< gadget::MouseEvent > >();
     delete gadget_MouseEvent_scope;
