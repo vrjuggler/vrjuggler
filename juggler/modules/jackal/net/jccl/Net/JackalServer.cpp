@@ -89,6 +89,8 @@ void JackalServer::addJackalControl (JackalControl* jc) {
         jc->addConnect (connections[i]);
     connections_mutex.release();
     jackal_controls_mutex.release();
+
+    jc->setJackalServer (this);
 }
 
 
@@ -125,11 +127,11 @@ void JackalServer::connectHasDied (Connect* con) {
 
 
 void JackalServer::sendRefresh() {
-   connections_mutex.acquire();
-   for (unsigned int i = 0; i < connections.size(); i++) {
-       connections[i]->sendRefresh();
-   }
-   connections_mutex.release();
+//     connections_mutex.acquire();
+//     for (unsigned int i = 0; i < connections.size(); i++) {
+//         connections[i]->sendRefresh();
+//     }
+//     connections_mutex.release();
 }
 
 

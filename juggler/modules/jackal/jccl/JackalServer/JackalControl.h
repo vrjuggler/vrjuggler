@@ -1,7 +1,8 @@
 
 
 
-
+#ifndef _JCCL_JACKAL_CONTROL_H_
+#define _JCCL_JACKAL_CONTROL_H_
 
 namespace jccl {
 
@@ -23,3 +24,6 @@ public:
 };
 
 };
+
+
+#endif

@@ -40,8 +40,10 @@
 //#include <Config/vjConfigChunk.h>
 class ConfigChunk;
 
+#include <jccl/JackalServer/JackalControl.h>
 #include <jccl/Config/ConfigChunkDB.h>
 #include <jccl/Config/ChunkDescDB.h>
+#include <jccl/JackalServer/XMLConfigCommunicator.h>
 //#include <Config/vjChunkFactory.h>
 #include <vpr/Sync/Mutex.h>
 #include <vpr/Sync/Guard.h>
@@ -58,7 +60,7 @@ namespace jccl {
 //! Created: Jan-13-2000
 //! Author: Allen Bierbaum
 //
-class ConfigManager
+class ConfigManager: public JackalControl 
 {
 public:
    struct PendingChunk
@@ -253,6 +255,17 @@ public:
    //! RETURNS: The number of lost dependencies found
    int scanForLostDependencies();
 
+
+
+    //------------------ JackalControl Stuff --------------------------------
+
+    virtual void setJackalServer (JackalServer* js);
+    virtual void addConnect (Connect *c);
+    virtual void removeConnect (Connect* c);
+
+
+
+
 private:
    ConfigChunkDB            mActiveConfig;   //: List of current configuration
    std::list<PendingChunk>  mPendingConfig;   //: List of pending configuration changes
@@ -264,10 +277,21 @@ private:
    vpr::Mutex                    mPendingCountMutex;
    int                        mPendingCheckCount;  //: How many pending checks since last change to pending
    int                        mLastPendingSize;    //: The size of pending at last check
-protected:
-   ConfigManager()
-   {;}
 
+    JackalServer*             jackal_server;
+    XMLConfigCommunicator*     config_communicator;
+
+protected:
+    ConfigManager() {
+        mPendingCheckCount = 0;
+        mLastPendingSize = 0;
+        jackal_server = 0;
+        config_communicator = new XMLConfigCommunicator();
+    }
+
+    virtual ~ConfigManager () {
+        ;
+    }
 
    vprSingletonHeader(ConfigManager);
 };
