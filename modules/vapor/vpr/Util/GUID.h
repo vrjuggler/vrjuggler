@@ -122,7 +122,8 @@ public:
    GUID(const struct StdGUID& guid);
 
    /**
-    * Generates a GUID from the given string representation.
+    * Generates a GUID from the given string representation of the GUID.
+    * Format: "8x-4x-4x-2x2x-2x2x2x2x2x2x"
     */
    GUID(const std::string& guid_string);
 
