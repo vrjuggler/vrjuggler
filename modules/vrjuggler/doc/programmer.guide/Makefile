@@ -29,5 +29,7 @@ NEED_DB_IMAGES=	1
 $(NAME).html: $(NAME).xml $(IMAGES)
 $(NAME).pdf: $(NAME).xml $(NAME).fo $(IMAGES)
 
+CLOBBER_FILES=	$(IMAGES)
+
 include ../version.mk
 include ../../../../docs/docbook.mk
