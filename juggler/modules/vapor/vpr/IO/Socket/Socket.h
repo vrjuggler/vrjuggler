@@ -63,7 +63,7 @@ public:
     //+       is opened in read-only mode.  If the socket is already open,
     //+       this has no effect.
     // ------------------------------------------------------------------------
-    inline virtual void
+    inline void
     setOpenReadOnly (void) {
         m_socket_imp->setOpenReadOnly();
     }
@@ -76,7 +76,7 @@ public:
     //+       is opened in write-only mode.  If the socket is already open,
     //+       this has no effect.
     // ------------------------------------------------------------------------
-    inline virtual void
+    inline void
     setOpenWriteOnly (void) {
         m_socket_imp->setOpenWriteOnly();
     }
@@ -89,7 +89,7 @@ public:
     //+       is opened in read/write mode.  If the socket is already open,
     //+       this has no effect.
     // ------------------------------------------------------------------------
-    inline virtual void
+    inline void
     setOpenReadWrite (void) {
         m_socket_imp->setOpenReadWrite();
     }
@@ -102,7 +102,7 @@ public:
     //+       is opened in blocking mode.  If the socket is already open, this
     //+       has no effect.
     // ------------------------------------------------------------------------
-    inline virtual void
+    inline void
     setOpenBlocking (void) {
         m_socket_imp->setOpenBlocking();
     }
@@ -116,7 +116,7 @@ public:
     //+       is opened in non-blocking mode.  If the socket is already open,
     //+       this has no effect.
     // ------------------------------------------------------------------------
-    inline virtual void
+    inline void
     setOpenNonBlocking (void) {
         m_socket_imp->setOpenNonBlocking();
     }
@@ -132,7 +132,7 @@ public:
     //! RETURNS: true  - The socket was opened successfully.
     //! RETURNS: false - The socket could not be opened for some reason.
     // ------------------------------------------------------------------------
-    inline virtual bool
+    inline bool
     open (void) {
         return m_socket_imp->open();
     }
@@ -148,7 +148,7 @@ public:
     //! RETURNS: true  - The socket was closed successfully.
     // ! RETURNS:false - The socket could not be closed for some reason.
     // ------------------------------------------------------------------------
-    virtual bool
+    inline bool
     close (void) {
         return m_socket_imp->close();
     }
@@ -163,7 +163,7 @@ public:
     //! RETURNS: true  - The socket is in the open state.
     //! RETURNS: false - The socket is in the closed state.
     // ------------------------------------------------------------------------
-    inline virtual bool
+    inline bool
     isOpen (void) {
         return m_socket_imp->isOpen();
     }
@@ -178,7 +178,7 @@ public:
     //! RETURNS: false - The blocking mode could not be changed for some
     //+                  reason.
     // ------------------------------------------------------------------------
-    inline virtual bool
+    inline bool
     enableBlocking (void) {
         return m_socket_imp->enableBlocking();
     }
@@ -193,7 +193,7 @@ public:
     //! RETURNS: false - The blocking mode could not be changed for some
     //+                  reason.
     // ------------------------------------------------------------------------
-    inline virtual bool
+    inline bool
     enableNonBlocking (void) {
         return m_socket_imp->enableNonBlocking();
     }
@@ -208,7 +208,7 @@ public:
     //! RETURNS: false - The socket could not be bound to the address.  An
     //+                  error message is printed explaining what went wrong.
     // ------------------------------------------------------------------------
-    inline virtual bool
+    inline bool
     bind (void) {
         return m_socket_imp->bind();
     }
@@ -230,7 +230,7 @@ public:
     //! RETURNS: >-1 - The number of bytes successfully read from the socket.
     //! RETURNS:  -1 - An error occurred when reading.
     // ------------------------------------------------------------------------
-    inline virtual ssize_t
+    inline ssize_t
     read (void* buffer, const size_t length) {
         return m_socket_imp->read(buffer, length);
     }
@@ -252,7 +252,7 @@ public:
     //! RETURNS: >-1 - The number of bytes successfully read from the socket.
     //! RETURNS:  -1 - An error occurred when reading.
     // ------------------------------------------------------------------------
-    inline virtual ssize_t
+    inline ssize_t
     readn (void* buffer, const size_t length) {
         return m_socket_imp->readn(buffer, length);
     }
@@ -270,7 +270,7 @@ public:
     //! RETURNS: >-1 - The number of bytes successfully written to the socket.
     //! RETURNS:  -1 - An error occurred when writing.
     // ------------------------------------------------------------------------
-    inline virtual ssize_t
+    inline ssize_t
     write (const void* buffer, const size_t length) {
         return m_socket_imp->write(buffer, length);
     }
@@ -295,7 +295,7 @@ public:
     //! RETURNS: false - The connect could not be made.  An error message is
     //+                  printed explaining what happened.
     // ------------------------------------------------------------------------
-    inline virtual bool
+    inline bool
     connect (void) {
         return m_socket_imp->connect();
     }

@@ -101,7 +101,7 @@ public:
     //+                  An error message is printed explaining what went
     //+                  wrong.
     // ------------------------------------------------------------------------
-    inline virtual bool
+    inline bool
     listen (const int backlog) {
         return m_socket_stream_imp.listen(backlog);
     }
@@ -123,7 +123,7 @@ public:
     //! NOTE: This is a blocking call and will block until a connection is
     //+       established.
     // ------------------------------------------------------------------------
-    inline virtual SocketStream_t*
+    inline SocketStream_t*
     accept (void) {
         SocketStream_t* new_socket;
         RealSocketStreamImp* sock_imp = m_socket_stream_imp.accept();
@@ -149,7 +149,7 @@ public:
     //! RETURNS: false - The server socket could not be set up.  An error
     //+                  message is printed explaining what went wrong.
     // ------------------------------------------------------------------------
-    inline virtual bool
+    inline bool
     openServer (const int backlog = 5) {
         bool retval;
 
