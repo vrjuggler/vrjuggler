@@ -39,11 +39,6 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
-import javax.swing.event.EventListenerList;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import org.vrjuggler.jccl.config.*;
 import org.vrjuggler.jccl.config.event.*;
 import org.vrjuggler.jccl.editors.PropertyEditorPanel;
@@ -52,91 +47,9 @@ import org.vrjuggler.vrjconfig.commoneditors.event.*;
 
 public class TransmitterTransformPanel
    extends JPanel
-   implements ChangeListener
 {
    public TransmitterTransformPanel()
    {
-      mCoordFrames[0]  = new CoordFrame(0.0, 0.0, 0.0);
-      mCoordFrames[1]  = new CoordFrame(90.0, 0.0, 0.0);
-      mCoordFrames[2]  = new CoordFrame(180.0, 0.0, 0.0);
-      mCoordFrames[3]  = new CoordFrame(180.0, 0.0, -90.0);
-      mCoordFrames[4]  = new CoordFrame(180.0, 0.0, 90.0);
-      mCoordFrames[5]  = new CoordFrame(0.0, 180.0, 0.0);
-      mCoordFrames[6]  = new CoordFrame(180.0, -90.0, 0.0);
-      mCoordFrames[7]  = new CoordFrame(0.0, 0.0, 90.0);
-      mCoordFrames[8]  = new CoordFrame(0.0, 0.0, 180.0);
-      mCoordFrames[9]  = new CoordFrame(0.0, 0.0, -90.0);
-      mCoordFrames[10] = new CoordFrame(90.0, 0.0, 90.0);
-      mCoordFrames[11] = new CoordFrame(90.0, 0.0, 180.0);
-      mCoordFrames[12] = new CoordFrame(90.0, 0.0, -90.0);
-      mCoordFrames[13] = new CoordFrame(90.0, 90.0, 0.0);
-      mCoordFrames[14] = new CoordFrame(-180.0, 90.0, 0.0);
-      mCoordFrames[15] = new CoordFrame(-90.0, 90.0, 0.0);
-      mCoordFrames[16] = new CoordFrame(0.0, 90.0, 0.0);
-      mCoordFrames[17] = new CoordFrame(-90.0, 0.0, 180.0);
-      mCoordFrames[18] = new CoordFrame(-90.0, 0.0, -90.0);
-      mCoordFrames[19] = new CoordFrame(-90.0, 0.0, 0.0);
-      mCoordFrames[20] = new CoordFrame(-90.0, 0.0, 90.0);
-      mCoordFrames[21] = new CoordFrame(90.0, -90.0, 0.0);
-      mCoordFrames[22] = new CoordFrame(0.0, -90.0, 0.0);
-      mCoordFrames[23] = new CoordFrame(-90.0, -90.0, 0.0);
-
-      // Create the renderers for mVrjCoordChooser and mTrackerCoordChooser.
-      CoordFrameRenderer r0 = new CoordFrameRenderer(mCoordFrames);
-      CoordFrameRenderer r1 = new CoordFrameRenderer(mCoordFrames);
-
-      try
-      {
-         ClassLoader loader = getClass().getClassLoader();
-         String img_base = "org/vrjuggler/vrjconfig/commoneditors/images";
-
-         for ( int i = 0; i < mCoordFrames.length; ++i )
-         {
-            StringBuffer buf = new StringBuffer(Integer.toString(i));
-            if ( buf.length() == 1 )
-            {
-               buf.insert(0, 0);
-            }
-            mCoordFrames[i].setIcon(
-               new ImageIcon(loader.getResource(img_base + "/axis" + buf +
-                                                ".png"))
-            );
-         }
-
-         // Only set up preferred sizes if all the icons were loaded
-         // successfully.
-         int w = 70, h = 70;
-         r0.setPreferredSize(new Dimension(w, h));
-         r1.setPreferredSize(new Dimension(w, h));
-         mVrjCoordChooserPane.setMinimumSize(new Dimension(w, h));
-         mVrjCoordChooserPane.setPreferredSize(new Dimension(w, h));
-         mTrackerCoordChooserPane.setMinimumSize(new Dimension(w, h));
-         mTrackerCoordChooserPane.setPreferredSize(new Dimension(w, h));
-      }
-      // If any one icon failed to load, clear all the coordinate frame icons.
-      catch(NullPointerException ex)
-      {
-         for ( int i = 0; i < mCoordFrames.length; ++i )
-         {
-            mCoordFrames[i].setIcon(null);
-         }
-      }
-
-      // Set up the list models for the coordinate frame choosers.
-      DefaultListModel vrj_model     = new DefaultListModel();
-      DefaultListModel tracker_model = new DefaultListModel();
-
-      for ( int i = 0; i < mCoordFrames.length; ++i )
-      {
-         vrj_model.addElement(new Integer(i));
-         tracker_model.addElement(new Integer(i));
-      }
-
-      mVrjCoordChooser.setModel(vrj_model);
-      mVrjCoordChooser.setCellRenderer(r0);
-      mTrackerCoordChooser.setModel(tracker_model);
-      mTrackerCoordChooser.setCellRenderer(r1);
-
       mTranslationUnits    = new MeasurementUnit[4];
       mTranslationUnits[0] = new MeasurementUnit("Meters", 1.0);
       mTranslationUnits[1] = new MeasurementUnit("Centimeters", 0.1);
@@ -148,13 +61,6 @@ public class TransmitterTransformPanel
          mTrackerPosUnitsChooser.addItem(mTranslationUnits[i].name);
       }
 
-      mTrackerXRotSpinner.setModel(new SpinnerNumberModel(0.0, -180.0,
-                                                          180.0, 0.1));
-      mTrackerYRotSpinner.setModel(new SpinnerNumberModel(0.0, -180.0,
-                                                          180.0, 0.1));
-      mTrackerZRotSpinner.setModel(new SpinnerNumberModel(0.0, -180.0,
-                                                          180.0, 0.1));
-
 /*
       try
       {
@@ -165,38 +71,6 @@ public class TransmitterTransformPanel
          ex.printStackTrace();
       }
 */
-   }
-
-   public void stateChanged(ChangeEvent e)
-   {
-      JSpinner source = (JSpinner) e.getSource();
-
-      int value_index;
-
-      if ( source == mTrackerXRotSpinner )
-      {
-         value_index = 0;
-      }
-      else if ( source == mTrackerYRotSpinner )
-      {
-         value_index = 1;
-      }
-      else if ( source == mTrackerYRotSpinner )
-      {
-         value_index = 2;
-      }
-      else
-      {
-         System.err.println("[TransmitterTransformPanel.stateChanged()] " +
-                            "Received state change event from unknown source " +
-                            source);
-         return;
-      }
-
-      // Using the object returned by source.getValue() seems to be safe
-      // because every change in the spinner's value creates a new object.
-      // NOTE: The object returned is of type Double rather than Float.
-      mElement.setProperty("pre_rotation", value_index, source.getValue());
    }
 
    public void setConfig(ConfigContext ctx, ConfigElement elt)
@@ -225,16 +99,7 @@ public class TransmitterTransformPanel
          mTrackerYPosField.setValue(elt.getProperty("pre_translate", 1));
          mTrackerZPosField.setValue(elt.getProperty("pre_translate", 2));
 
-         double x_rot =
-            ((Number) elt.getProperty("pre_rotation", 0)).doubleValue();
-         double y_rot =
-            ((Number) elt.getProperty("pre_rotation", 1)).doubleValue();
-         double z_rot =
-            ((Number) elt.getProperty("pre_rotation", 2)).doubleValue();
-
-         mTrackerXRotSpinner.setValue(new Double(x_rot));
-         mTrackerYRotSpinner.setValue(new Double(y_rot));
-         mTrackerZRotSpinner.setValue(new Double(z_rot));
+         mRotationPanel.setConfig(ctx, elt);
 
          try
          {
@@ -244,43 +109,6 @@ public class TransmitterTransformPanel
          {
             ex.printStackTrace();
          }
-
-         // This is slow, but I don't think that there is a better way to do
-         // it.
-         // NOTE: This must be done *after* jbInit() is called so that the
-         // scroll pane will be updated to display the selected coordinate
-         // frame.
-         int i;
-         for ( i = 0; i < mCoordFrames.length; ++i )
-         {
-            if ( mCoordFrames[i].getXRot() == x_rot &&
-                 mCoordFrames[i].getYRot() == y_rot &&
-                 mCoordFrames[i].getZRot() == z_rot )
-            {
-               mTrackerCoordChooser.setSelectedIndex(i);
-               mTrackerCoordChooser.ensureIndexIsVisible(i);
-               break;
-            }
-         }
-
-         mVrjCoordChooser.setSelectedIndex(0);
-         mVrjCoordChooser.ensureIndexIsVisible(0);
-
-         System.out.println("[TrackerTransformPanel.setConfig()] i == " + i);
-         System.out.println("[TrackerTransformPanel.setConfig()] mCoordFrames.length == " + mCoordFrames.length);
-
-         // If the search through mCoordFrames turned up no match, then we
-         // will enable the manual rotation editing just to be friendly.
-         if ( i == mCoordFrames.length )
-         {
-            mTrackerManualRotButton.setSelected(true);
-         }
-
-         // The change listener should be added after the spinners are fully
-         // set up.  This will help avoid needless event handling on our part.
-         mTrackerXRotSpinner.addChangeListener(this);
-         mTrackerYRotSpinner.addChangeListener(this);
-         mTrackerZRotSpinner.addChangeListener(this);
       }
       else
       {
@@ -293,107 +121,52 @@ public class TransmitterTransformPanel
 
    public void addJugglerTransformChangeListener(TransformChangeListener l)
    {
-      mJugglerListeners.add(TransformChangeListener.class, l);
+      mRotationPanel.addJugglerTransformChangeListener(l);
    }
 
    public void removeJugglerTransformChangeListener(TransformChangeListener l)
    {
-      mJugglerListeners.remove(TransformChangeListener.class, l);
+      mRotationPanel.removeJugglerTransformChangeListener(l);
    }
 
    public void addTrackerTransformChangeListener(TransformChangeListener l)
    {
-      mTrackerListeners.add(TransformChangeListener.class, l);
+      mRotationPanel.addTrackerTransformChangeListener(l);
    }
 
    public void removeTrackerTransformChangeListener(TransformChangeListener l)
    {
-      mTrackerListeners.remove(TransformChangeListener.class, l);
+      mRotationPanel.removeTrackerTransformChangeListener(l);
    }
 
    public double getJugglerXRot()
    {
-      return mCoordFrames[mVrjCoordChooser.getSelectedIndex()].getXRot();
+      return mRotationPanel.getJugglerXRot();
    }
 
    public double getJugglerYRot()
    {
-      return mCoordFrames[mVrjCoordChooser.getSelectedIndex()].getYRot();
+      return mRotationPanel.getJugglerYRot();
    }
 
    public double getJugglerZRot()
    {
-      return mCoordFrames[mVrjCoordChooser.getSelectedIndex()].getZRot();
+      return mRotationPanel.getJugglerZRot();
    }
 
    public double getTrackerXRot()
    {
-      double x_rot;
-
-      if ( mTrackerManualRotButton.isSelected() )
-      {
-         x_rot = ((Double) mTrackerXRotSpinner.getValue()).doubleValue();
-      }
-      else
-      {
-         x_rot = mCoordFrames[mTrackerCoordChooser.getSelectedIndex()].getXRot();
-      }
-
-      return x_rot;
+      return mRotationPanel.getTrackerXRot();
    }
 
    public double getTrackerYRot()
    {
-      double y_rot;
-
-      if ( mTrackerManualRotButton.isSelected() )
-      {
-         y_rot = ((Double) mTrackerYRotSpinner.getValue()).doubleValue();
-      }
-      else
-      {
-         y_rot = mCoordFrames[mTrackerCoordChooser.getSelectedIndex()].getYRot();
-      }
-
-      return y_rot;
+      return mRotationPanel.getTrackerYRot();
    }
 
    public double getTrackerZRot()
    {
-      double z_rot;
-
-      if ( mTrackerManualRotButton.isSelected() )
-      {
-         z_rot = ((Double) mTrackerZRotSpinner.getValue()).doubleValue();
-      }
-      else
-      {
-         z_rot = mCoordFrames[mTrackerCoordChooser.getSelectedIndex()].getZRot();
-      }
-
-      return z_rot;
-   }
-
-   protected void fireTransformChanged(EventListenerList listenerList,
-                                       double xRot, double yRot, double zRot)
-   {
-      TransformChangeEvent change_event = null;
-      Object[] listeners = listenerList.getListenerList();
-
-      // Process the listeners last to first, notifying
-      // those that are interested in this event
-      for ( int i = listeners.length - 2; i >= 0; i -= 2 )
-      {
-         if (listeners[i] == TransformChangeListener.class)
-         {
-            // Lazily create the event:
-            if ( change_event == null)
-            {
-               change_event = new TransformChangeEvent(this, xRot, yRot, zRot);
-            }
-            ((TransformChangeListener) listeners[i + 1]).transformChanged(change_event);
-         }
-      }
+      return mRotationPanel.getTrackerZRot();
    }
 
    private void jbInit()
@@ -401,50 +174,10 @@ public class TransmitterTransformPanel
    {
       this.setLayout(mMainLayout);
       mRotationPanel.setBorder(mRotationBorder);
-      mRotationPanel.setLayout(mRotationPanelLayout);
       mRotationBorder.setTitle("Orientation");
       mTranslationPanel.setBorder(mTranslationBorder);
       mTranslationPanel.setLayout(mTranslationPanelLayout);
       mTranslationBorder.setTitle("Position");
-      mVrjCoordChooserLabel.setLabelFor(mVrjCoordChooser);
-      mVrjCoordChooserLabel.setText("<html>VR Juggler Coordinate Frame</html>");
-      mVrjCoordChooserLabel.setHorizontalAlignment(SwingConstants.CENTER);
-      mVrjCoordPanel.setLayout(mVrjCoordPanelLayout);
-      mVrjCoordChooser.setEnabled(false);
-      mVrjCoordChooser.addListSelectionListener(new
-         TransmitterTransformPanel_mVrjCoordChooser_listSelectionAdapter(this));
-      mVrjCoordAdvButton.setText("Advanced");
-      mVrjCoordAdvButton.addActionListener(new
-         TransmitterTransformPanel_mVrjCoordAdvButton_actionAdapter(this));
-      mTrackerCoordPanel.setLayout(mTrackerCoordPanelLayout);
-      mTrackerCoordChooserLabel.setLabelFor(mTrackerCoordChooser);
-      mTrackerCoordChooserLabel.setText(
-         "<html>Transmitter Coordinate Frame</html>");
-      mTrackerCoordChooserLabel.setHorizontalAlignment(SwingConstants.CENTER);
-      mTrackerAdvPanel.setLayout(mTrackerAdvPanelLayout);
-      mTrackerAnglesLabel.setLabelFor(mTrackerAnglesPanel);
-      mTrackerAnglesLabel.setText(
-         "<html>Transmitter Pre-Rotation Angles</html>");
-      mTrackerAnglesLabel.setHorizontalAlignment(SwingConstants.CENTER);
-      mTrackerAnglesPanel.setLayout(mTrackerAnglesPanelLayout);
-      mTrackerXRotLabel.setHorizontalAlignment(SwingConstants.TRAILING);
-      mTrackerXRotLabel.setLabelFor(mTrackerXRotSpinner);
-      mTrackerXRotLabel.setText("X Rotation:");
-      mTrackerXRotLabel.setForeground(Color.red);
-      mTrackerYRotLabel.setHorizontalAlignment(SwingConstants.TRAILING);
-      mTrackerYRotLabel.setLabelFor(mTrackerYRotSpinner);
-      mTrackerYRotLabel.setText("Y Rotation:");
-      mTrackerYRotLabel.setForeground(Color.green);
-      mTrackerZRotLabel.setHorizontalAlignment(SwingConstants.TRAILING);
-      mTrackerZRotLabel.setLabelFor(mTrackerZRotSpinner);
-      mTrackerZRotLabel.setText("Z Rotation:");
-      mTrackerZRotLabel.setForeground(Color.blue);
-      mTrackerManualRotButton.setText("Manual Entry");
-      mTrackerManualRotButton.addActionListener(new
-         TransmitterTransformPanel_mTrackerManualRotButton_actionAdapter(this));
-      mTrackerXRotSpinner.setEnabled(false);
-      mTrackerYRotSpinner.setEnabled(false);
-      mTrackerZRotSpinner.setEnabled(false);
       mTrackerPosLabel.setLabelFor(mTrackerPosPanel);
       mTrackerPosLabel.setText(
          "<html>Position of the tracker transmitter from VR Juggler origin (pre-translation)</html>");
@@ -485,10 +218,6 @@ public class TransmitterTransformPanel
          TransmitterTransformPanel_mTrackerPosUnitsChooser_actionAdapter(this));
       mSensorUnitsEditor.setToolTipText(
          "Choose the units of samples collected from sensors");
-      mTrackerCoordChooser.addListSelectionListener(new
-         TransmitterTransformPanel_mTrackerCoordChooser_listSelectionAdapter(this));
-      mVrjCoordChooserPane.getViewport().add(mVrjCoordChooser);
-      mTrackerCoordChooserPane.getViewport().add(mTrackerCoordChooser);
       mSensorUnitsEditorPanel.add(mSensorUnitsLabel,
                                   new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0,
                                                          GridBagConstraints.EAST,
@@ -513,103 +242,6 @@ public class TransmitterTransformPanel
                                                    GridBagConstraints.NONE,
                                                    new Insets(0, 3, 0, 0),
                                                    0, 0));
-      mVrjCoordPanel.add(mVrjCoordChooserLabel,
-                         new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0,
-                                                GridBagConstraints.CENTER,
-                                                GridBagConstraints.HORIZONTAL,
-                                                new Insets(0, 0, 0, 0), 0, 0));
-      mVrjCoordPanel.add(mVrjCoordChooserPane,
-                         new GridBagConstraints(0, 1, 1, 1, 1.0, 1.0,
-                                                GridBagConstraints.CENTER,
-                                                GridBagConstraints.BOTH,
-                                                new Insets(0, 0, 0, 2), 0, 0));
-      mVrjCoordPanel.add(mVrjCoordAdvButton,
-                         new GridBagConstraints(0, 2, 1, 1, 0.0, 0.0,
-                                                GridBagConstraints.CENTER,
-                                                GridBagConstraints.HORIZONTAL,
-                                                new Insets(0, 0, 0, 0), 0, 0));
-      mTrackerCoordPanel.add(mTrackerCoordChooserLabel,
-                             new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0,
-                                                    GridBagConstraints.CENTER,
-                                                    GridBagConstraints.HORIZONTAL,
-                                                    new Insets(0, 0, 0, 0),
-                                                    0, 0));
-      mTrackerCoordPanel.add(mTrackerCoordChooserPane,
-                             new GridBagConstraints(0, 1, 1, 1, 1.0, 0.0,
-                                                    GridBagConstraints.CENTER,
-                                                    GridBagConstraints.BOTH,
-                                                    new Insets(0, 0, 0, 2),
-                                                    0, 0));
-      mRotationPanel.add(mVrjCoordPanel,
-                         new GridBagConstraints(0, 0, 1, 1, 1.0, 1.0,
-                                                GridBagConstraints.NORTH,
-                                                GridBagConstraints.HORIZONTAL,
-                                                new Insets(0, 3, 0, 5), 0, 0));
-      mRotationPanel.add(mTrackerCoordPanel,
-                         new GridBagConstraints(1, 0, 1, 1, 1.0, 1.0,
-                                                GridBagConstraints.NORTH,
-                                                GridBagConstraints.HORIZONTAL,
-                                                new Insets(0, 0, 0, 5), 0, 0));
-      mRotationPanel.add(mTrackerAdvPanel,
-                         new GridBagConstraints(2, 0, 1, 1, 1.0, 1.0,
-                                                GridBagConstraints.CENTER,
-                                                GridBagConstraints.BOTH,
-                                                new Insets(0, 0, 0, 2),
-                                                -66, -89));
-      mTrackerAnglesPanel.add(mTrackerXRotLabel,
-                              new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0,
-                                                     GridBagConstraints.EAST,
-                                                     GridBagConstraints.NONE,
-                                                     new Insets(0, 0, 0, 3),
-                                                     0, 0));
-      mTrackerAnglesPanel.add(mTrackerXRotSpinner,
-                              new GridBagConstraints(1, 0, 1, 1, 1.0, 1.0,
-                                                     GridBagConstraints.WEST,
-                                                     GridBagConstraints.NONE,
-                                                     new Insets(2, 0, 3, 0),
-                                                     0, 0));
-      mTrackerAnglesPanel.add(mTrackerYRotLabel,
-                              new GridBagConstraints(0, 1, 1, 1, 0.0, 0.0,
-                                                     GridBagConstraints.EAST,
-                                                     GridBagConstraints.NONE,
-                                                     new Insets(0, 0, 0, 3),
-                                                     0, 0));
-      mTrackerAnglesPanel.add(mTrackerYRotSpinner,
-                              new GridBagConstraints(1, 1, 1, 1, 1.0, 1.0,
-                                                     GridBagConstraints.WEST,
-                                                     GridBagConstraints.NONE,
-                                                     new Insets(0, 0, 3, 0),
-                                                     0, 0));
-      mTrackerAnglesPanel.add(mTrackerZRotLabel,
-                              new GridBagConstraints(0, 2, 1, 1, 0.0, 0.0,
-                                                     GridBagConstraints.EAST,
-                                                     GridBagConstraints.NONE,
-                                                     new Insets(0, 0, 0, 3),
-                                                     0, 0));
-      mTrackerAnglesPanel.add(mTrackerZRotSpinner,
-                              new GridBagConstraints(1, 2, 1, 1, 1.0, 1.0,
-                                                     GridBagConstraints.WEST,
-                                                     GridBagConstraints.NONE,
-                                                     new Insets(0, 0, 2, 0),
-                                                     0, 0));
-      mTrackerAdvPanel.add(mTrackerAnglesLabel,
-                           new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0,
-                                                  GridBagConstraints.CENTER,
-                                                  GridBagConstraints.HORIZONTAL,
-                                                  new Insets(0, 0, 3, 0),
-                                                  0, 0));
-      mTrackerAdvPanel.add(mTrackerAnglesPanel,
-                           new GridBagConstraints(0, 1, 1, 1, 1.0, 1.0,
-                                                  GridBagConstraints.CENTER,
-                                                  GridBagConstraints.BOTH,
-                                                  new Insets(0, 0, 0, 0),
-                                                  0, 0));
-      mTrackerAdvPanel.add(mTrackerManualRotButton,
-                           new GridBagConstraints(0, 2, 1, 1, 0.0, 0.0,
-                                                  GridBagConstraints.CENTER,
-                                                  GridBagConstraints.HORIZONTAL,
-                                                  new Insets(3, 0, 0, 0),
-                                                  0, 0));
       mTranslationPanel.add(mTrackerPosLabel,
                             new GridBagConstraints(0, 0, 1, 1, 0.0, 0.0,
                                                    GridBagConstraints.WEST,
@@ -690,34 +322,13 @@ public class TransmitterTransformPanel
    private ConfigContext mContext = null;
    private ConfigElement mElement = null;
 
-   private CoordFrame[]      mCoordFrames      = new CoordFrame[24];
-   private EventListenerList mJugglerListeners = new EventListenerList();
-   private EventListenerList mTrackerListeners = new EventListenerList();
    private MeasurementUnit[] mTranslationUnits = null;
 
-   private JPanel mRotationPanel = new JPanel();
+   private CoordinateFrameEditor mRotationPanel =
+      new CoordinateFrameEditor(CoordinateFrameEditor.TRANSMITTER);
    private TitledBorder mRotationBorder = new TitledBorder("");
    private JPanel mTranslationPanel = new JPanel();
    private TitledBorder mTranslationBorder = new TitledBorder("");
-   private JPanel mVrjCoordPanel = new JPanel();
-   private JLabel mVrjCoordChooserLabel = new JLabel();
-   private JScrollPane mVrjCoordChooserPane = new JScrollPane();
-   private JList mVrjCoordChooser = new JList();
-   private JCheckBox mVrjCoordAdvButton = new JCheckBox();
-   private JPanel mTrackerCoordPanel = new JPanel();
-   private JLabel mTrackerCoordChooserLabel = new JLabel();
-   private JScrollPane mTrackerCoordChooserPane = new JScrollPane();
-   private JList mTrackerCoordChooser = new JList();
-   private JPanel mTrackerAdvPanel = new JPanel();
-   private JLabel mTrackerAnglesLabel = new JLabel();
-   private JPanel mTrackerAnglesPanel = new JPanel();
-   private JLabel mTrackerXRotLabel = new JLabel();
-   private JSpinner mTrackerXRotSpinner = new JSpinner();
-   private JLabel mTrackerYRotLabel = new JLabel();
-   private JSpinner mTrackerYRotSpinner = new JSpinner();
-   private JLabel mTrackerZRotLabel = new JLabel();
-   private JSpinner mTrackerZRotSpinner = new JSpinner();
-   private JCheckBox mTrackerManualRotButton = new JCheckBox();
    private JLabel mTrackerPosLabel = new JLabel();
    private JPanel mTrackerPosPanel = new JPanel();
    private JLabel mTrackerXPosLabel = new JLabel();
@@ -734,11 +345,6 @@ public class TransmitterTransformPanel
    private JLabel mSensorUnitsLabel = new JLabel();
    private PropertyEditorPanel mSensorUnitsEditor = null;
    private PropertyEditorPanel mCustomUnitsEditor = null;
-   private GridBagLayout mVrjCoordPanelLayout = new GridBagLayout();
-   private GridBagLayout mTrackerCoordPanelLayout = new GridBagLayout();
-   private GridBagLayout mTrackerAdvPanelLayout = new GridBagLayout();
-   private GridBagLayout mTrackerAnglesPanelLayout = new GridBagLayout();
-   private GridBagLayout mRotationPanelLayout = new GridBagLayout();
    private GridBagLayout mSensorUnitsPanelLayout = new GridBagLayout();
    private GridBagLayout mSensorUnitsEditorPanelLayout = new GridBagLayout();
    private GridBagLayout mTrackerPosPanelLayout = new GridBagLayout();
@@ -757,37 +363,6 @@ public class TransmitterTransformPanel
             mCustomUnitsEditor.setEnabled(enable);
          }
       }
-   }
-
-   void mVrjCoordAdvButton_actionPerformed(ActionEvent actionEvent)
-   {
-      mVrjCoordChooser.setEnabled(mVrjCoordAdvButton.isSelected());
-   }
-
-   void mVrjCoordChooser_valueChanged(ListSelectionEvent listSelectionEvent)
-   {
-      CoordFrame cf = mCoordFrames[mVrjCoordChooser.getSelectedIndex()];
-      fireTransformChanged(mJugglerListeners, cf.getXRot(), cf.getYRot(),
-                           cf.getZRot());
-   }
-
-   void mTrackerCoordChooser_valueChanged(ListSelectionEvent listSelectionEvent)
-   {
-      CoordFrame cf = mCoordFrames[mTrackerCoordChooser.getSelectedIndex()];
-      mTrackerXRotSpinner.getModel().setValue(new Double(cf.getXRot()));
-      mTrackerYRotSpinner.getModel().setValue(new Double(cf.getYRot()));
-      mTrackerZRotSpinner.getModel().setValue(new Double(cf.getZRot()));
-
-      fireTransformChanged(mTrackerListeners, cf.getXRot(), cf.getYRot(),
-                           cf.getZRot());
-   }
-
-   void mTrackerManualRotButton_actionPerformed(ActionEvent actionEvent)
-   {
-      boolean enabled = mTrackerManualRotButton.isSelected();
-      mTrackerXRotSpinner.setEnabled(enabled);
-      mTrackerYRotSpinner.setEnabled(enabled);
-      mTrackerZRotSpinner.setEnabled(enabled);
    }
 
    void mTrackerPosUnitsChooser_actionPerformed(ActionEvent actionEvent)
@@ -828,38 +403,6 @@ public class TransmitterTransformPanel
       {
          mElement.setProperty("pre_translate", 2, mTrackerZPosField.getValue());
       }
-   }
-}
-
-class TransmitterTransformPanel_mTrackerCoordChooser_listSelectionAdapter
-   implements ListSelectionListener
-{
-   private TransmitterTransformPanel adaptee;
-   TransmitterTransformPanel_mTrackerCoordChooser_listSelectionAdapter(
-      TransmitterTransformPanel adaptee)
-   {
-      this.adaptee = adaptee;
-   }
-
-   public void valueChanged(ListSelectionEvent listSelectionEvent)
-   {
-      adaptee.mTrackerCoordChooser_valueChanged(listSelectionEvent);
-   }
-}
-
-class TransmitterTransformPanel_mVrjCoordChooser_listSelectionAdapter
-   implements ListSelectionListener
-{
-   private TransmitterTransformPanel adaptee;
-   TransmitterTransformPanel_mVrjCoordChooser_listSelectionAdapter(
-      TransmitterTransformPanel adaptee)
-   {
-      this.adaptee = adaptee;
-   }
-
-   public void valueChanged(ListSelectionEvent listSelectionEvent)
-   {
-      adaptee.mVrjCoordChooser_valueChanged(listSelectionEvent);
    }
 }
 
@@ -937,136 +480,4 @@ class MeasurementUnit
 
    public String name;
    public double toMeters;
-}
-
-class CoordFrame
-{
-   CoordFrame(double xRot, double yRot, double zRot)
-   {
-      this(xRot, yRot, zRot, null);
-   }
-
-   CoordFrame(double xRot, double yRot, double zRot, ImageIcon icon)
-   {
-      this.xRot = xRot;
-      this.yRot = yRot;
-      this.zRot = zRot;
-      this.icon = icon;
-   }
-
-   public double getXRot()
-   {
-      return xRot;
-   }
-
-   public double getYRot()
-   {
-      return yRot;
-   }
-
-   public double getZRot()
-   {
-      return zRot;
-   }
-
-   public ImageIcon getIcon()
-   {
-      return icon;
-   }
-
-   public void setIcon(ImageIcon icon)
-   {
-      this.icon = icon;
-   }
-
-   public String toString()
-   {
-      return "X: " + getXRot() + "\u00B0, " +
-             "Y: " + getYRot() + "\u00B0, " +
-             "Z: " + getZRot() + "\u00B0";
-   }
-
-   private double xRot;
-   private double yRot;
-   private double zRot;
-   private ImageIcon icon;
-}
-
-class CoordFrameRenderer
-   extends JLabel
-   implements ListCellRenderer
-{
-   public CoordFrameRenderer(CoordFrame[] coordFrames)
-   {
-      this.mCoordFrames = coordFrames;
-      setOpaque(true);
-      setHorizontalAlignment(LEFT);
-      setVerticalAlignment(CENTER);
-   }
-
-   public Component getListCellRendererComponent(JList list, Object value,
-                                                 int index,
-                                                 boolean isSelected,
-                                                 boolean cellHasFocus)
-   {
-      int selected_index = ((Integer) value).intValue();
-
-      if ( isSelected )
-      {
-         setBackground(list.getSelectionBackground());
-         setForeground(list.getSelectionForeground());
-      }
-      else
-      {
-         setBackground(list.getBackground());
-         setForeground(list.getForeground());
-      }
-
-      if ( mCoordFrames[selected_index].getIcon() != null )
-      {
-         setIcon(mCoordFrames[selected_index].getIcon());
-         setToolTipText(mCoordFrames[selected_index].toString());
-         setHorizontalTextPosition(RIGHT);
-         setVerticalTextPosition(CENTER);
-      }
-
-      setText(mCoordFrames[selected_index].toString());
-      setFont(list.getFont());
-
-      return this;
-   }
-
-   private CoordFrame[] mCoordFrames;
-}
-
-class TransmitterTransformPanel_mTrackerManualRotButton_actionAdapter
-   implements ActionListener
-{
-   private TransmitterTransformPanel adaptee;
-   TransmitterTransformPanel_mTrackerManualRotButton_actionAdapter(
-      TransmitterTransformPanel adaptee)
-   {
-      this.adaptee = adaptee;
-   }
-
-   public void actionPerformed(ActionEvent actionEvent)
-   {
-      adaptee.mTrackerManualRotButton_actionPerformed(actionEvent);
-   }
-}
-
-class TransmitterTransformPanel_mVrjCoordAdvButton_actionAdapter
-   implements ActionListener
-{
-   private TransmitterTransformPanel adaptee;
-   TransmitterTransformPanel_mVrjCoordAdvButton_actionAdapter(
-      TransmitterTransformPanel adaptee)
-   {
-      this.adaptee = adaptee;
-   }
-
-   public void actionPerformed(ActionEvent actionEvent)
-   {
-      adaptee.mVrjCoordAdvButton_actionPerformed(actionEvent);
-   }
 }
