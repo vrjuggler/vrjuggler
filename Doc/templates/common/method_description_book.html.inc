@@ -16,13 +16,7 @@
 	{endif}
       {endelse}
 
-      <P>
-	<B>Contract</B>
-      </P>
-
-      <BLOCKQUOTE>
-	{include ../common/contract.html.inc}
-      </BLOCKQUOTE>
+      {include ../common/contract.html.inc}
     {endprivate}
 
     {if ARGS}
