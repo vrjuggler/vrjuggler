@@ -1,5 +1,27 @@
 DATE        AUTHOR    CHANGE
 ----------- --------- ---------------------------------------------------------
+Aug-20-2001 cjust     Added a VjControl wizard for creating simulator-mode
+                      configuration files.
+Aug-20-2001 cjust     Merged support for XML-based configuration files in
+                      VjControl.  VjControl now requires JAXP (Java API for
+                      XML processing).
+Aug-20-2001 cjust     Added an improved default-value handling for ChunkDescs.
+                      Default values are now stored in the .desc files, and
+                      are editable directly from the ChunkDesc editing window
+                      in VjControl.  (This requires XML-format ChunkDesc 
+                      files).
+Aug-20-2001 cjust     Updated VjControl's protocol-selection system to use
+                      the new XML-like syntax.  This breaks communication
+                      with older versions of VR Juggler.
+Aug-20-2001 cjust     Fixed a redraw bug in VjControl that happened when
+                      updating the Active chunkdb from a network connection.
+                      This could cause the status bar label or the chunkdb's
+                      JTree to be shifted to the upper-left corner of the
+                      VjControl window.
+Aug-20-2001 cjust     Added lazy initialization of VjControl panels; this
+                      cuts startup time and improves scalability.
+Aug-20-2001 cjust     VjControl is no longer built into a compressed .jar
+                      file.  This cuts several seconds off startup time.
 Aug-10-2001 allenb    Added initial version of OSG (www.openscenegraph.org) 
                       support to VR Juggler.
                       This introduces and new application class called vjOsgApp
