@@ -485,7 +485,6 @@ setup_omniORB_cxx ( )
    fi
 
    tweek_omni_lib="omniORB$OMNI_VER"
-   tweek_extra_libs=`$VPR_CONFIG --extra-libs`
 
    tweek_save_CPPFLAGS="$CPPFLAGS"
 
@@ -533,7 +532,7 @@ setup_omniORB_cxx ( )
          changequote([, ])
          LIBS="$LIBS $omni_win32_libs"
       else
-         LIBS="$LIBS -l$tweek_omni_lib -lomnithread $tweek_extra_libs"
+         LIBS="$LIBS -l$tweek_omni_lib -lomnithread"
       fi
 
       if test "x$OMNI_VER" = "x3" ; then
@@ -606,9 +605,11 @@ int omni_main_i(int argc, char** const argv)
 
       if test "x$OS_TYPE" = "xWin32" ; then
          CXX_ORB_BIN_DIR=`unixpath "$OMNI_BIN_DIR"`
+         CXX_ORB_LIB_DIR=`unixpath "$OMNI_LIB_DIR"`
          omniidl_search_path="${CXX_ORB_BIN_DIR}:${PATH}"
       else
          CXX_ORB_BIN_DIR="$OMNI_BIN_DIR"
+         CXX_ORB_LIB_DIR="$OMNI_LIB_DIR"
          omniidl_search_path="${OMNI_BIN_DIR}:${PATH}"
       fi
 
@@ -967,7 +968,7 @@ done
 #done
 
 CXXFLAGS="$CXXFLAGS $VPR_CXXFLAGS_MIN"
-tweek_cxxflags="$STDFLAGS $EXTRA_DEFS $INCLUDES -I\$cxx_orb_root/include $tweek_idl_gen_includes"
+tweek_cxxflags="$STDFLAGS $EXTRA_DEFS $INCLUDES $tweek_idl_gen_includes"
 INCLUDES="$INCLUDES $CXX_ORB_INCLUDES"
 DEPEND_FLAGS="$VPR_INCLUDES_MIN"
 
@@ -1073,7 +1074,6 @@ case $OS_TYPE in
       tweek_ldflags_linker="$tweek_ldflags_compiler"
       tweek_libs="-ltweek"
       tweek_prof_libs="-ltweek_p"
-      tweek_cxx_orb_ldflags="$CXX_ORB_LDFLAGS"
       tweek_extra_libs="$CXX_ORB_LIB"
       ;;
    Win32)
@@ -1081,16 +1081,14 @@ case $OS_TYPE in
       tweek_ldflags_linker="/libpath:\$prefix/lib/debug"
       tweek_libs="tweek.lib"
       tweek_prof_libs="tweek.lib"
-      tweek_cxx_orb_ldflags="$CXX_ORB_LDFLAGS_LINK_EXE"
       tweek_extra_libs="$CXX_ORB_LIB_LINK_EXE"
       ;;
 esac
 
 tweek_cxx_orb_root="$cxx_orb_root"
-tweek_cxx_orb_bindir="$CXX_ORB_BIN_DIR"
-tweek_extra_cxxflags=''
-tweek_extra_include_dirs=''
-tweek_extra_ldflags="$EXTRA_LDFLAGS \$cxx_orb_ldflags"
+tweek_cxx_orb_bindir=`echo $CXX_ORB_BIN_DIR | sed -e "s|$cxx_orb_root/\(.*\)|\1|"`
+tweek_cxx_orb_libdir=`echo $CXX_ORB_LIB_DIR | sed -e "s|$cxx_orb_root/\(.*\)|\1|"`
+tweek_extra_ldflags="$EXTRA_LDFLAGS"
 
 if test "x$PLATFORM" = "xIRIX" -a "x$USE_GCC" != "xyes" ; then
    tweek_n32_flags='-n32'
@@ -1182,7 +1180,7 @@ AC_SUBST(static_begin)
 AC_SUBST(static_end)
 AC_SUBST(tweek_cxx_orb_root)
 AC_SUBST(tweek_cxx_orb_bindir)
-AC_SUBST(tweek_cxx_orb_ldflags)
+AC_SUBST(tweek_cxx_orb_libdir)
 AC_SUBST(tweek_dep_scripts)
 AC_SUBST(tweek_cxxflags)
 AC_SUBST(tweek_ldflags_compiler)
