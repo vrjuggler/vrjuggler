@@ -232,6 +232,9 @@ chunk Vec3 "Vec3" ""
 chunk vjIncludeFile "Include File" "File that should be loaded along with this one"
   Name String 1 "Name" "Unique name of an instance of this chunk type"
   end
+chunk vjIncludeDescFile "Include Descriptions File" "Chunk Descriptions File that should be loaded before processing the rest of this file"
+  Name String 1 "Name" "Unique name of an instance of this chunk type"
+  end
 chunk vjcontrol "VjControl Configuration" "Configuration information for the VjControl GUI itself"
   Name String 1 "Name" "Unique name of an instance of this chunk type"
   looknfeel String 1 "Look and Feel" vj_enumeration { "Java" "Motif" "Windows" } "The visual 'Look and Feel' to use for the GUI"
