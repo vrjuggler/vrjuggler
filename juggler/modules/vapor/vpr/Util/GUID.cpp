@@ -78,7 +78,6 @@ extern "C" {
 
 #include <boost/concept_check.hpp>  // for ignore_unused_variable_warning
 #include <vpr/System.h>
-#include <vpr/Util/Assert.h>
 #include <vpr/IO/ObjectWriter.h>
 #include <vpr/IO/ObjectReader.h>
 #include <vpr/Util/GUID.h>
@@ -156,18 +155,6 @@ GUID::GUID(const struct vpr::GUID::StdGUID& guid)
 GUID::GUID(const GUID& ns_guid, const std::string& name)
 {
    generate(ns_guid,name);
-}
-
-GUID::GUID(const char* guid_string)
-{
-   vprASSERT( (guid_string != NULL) && "Tried to initialize with NULL ptr");
-   vprASSERT( (isalpha(*guid_string) || isdigit(*guid_string)) && "Possibly invalid pointer passed to constructor");
-
-   if(NULL != guid_string)
-   {
-      std::string temp(guid_string);
-      fromString(temp);
-   }
 }
 
 void GUID::generate()
