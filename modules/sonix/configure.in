@@ -75,9 +75,11 @@ dnl ignore the nasty paths appended by the config scripts...
 # find and append GMTL flags...
 vjsave_CPPFLAGS="$CPPFLAGS"
 CPPFLAGS="$CPPFLAGS $STDFLAGS"
-GMTL_PATH( 0.0.1, , AC_MSG_ERROR(*** GMTL math required for sonix ***) )
+GMTL_PATH(0.0.2, [$JUGGLERROOT_ABS/external/GMTL],
+          [$JUGGLERROOT_ABS/external/GMTL], ,
+          [AC_MSG_ERROR([*** GMTL required for sonix ***])])
 CPPFLAGS="$vjsave_CPPFLAGS"
-CXXFLAGS="$CXXFLAGS $GMTL_CXXFLAGS"
+CXXFLAGS="$CXXFLAGS $GMTL_INCLUDES"
 
 DPP_BASIC_PROGS($PLATFORM, $OS_TYPE)
 
