@@ -142,7 +142,7 @@
 #define vprDEBUG_BEGINlg(cat,val,show_thread,use_indent,lockIt) if (val>VPR_MAX_DBG_LEVEL) ; else if((vpr::Debug::instance()->isDebugEnabled()) && (val <= vpr::Debug::instance()->getLevel()) && (vpr::Debug::instance()->isCategoryAllowed(cat))) vpr::Debug::instance()->getStream(cat, val, show_thread, use_indent, 1, lockIt)
 #define vprDEBUG_END(cat,val) if (val>VPR_MAX_DBG_LEVEL) ; else if((vpr::Debug::instance()->isDebugEnabled()) && (val <= vpr::Debug::instance()->getLevel()) && (vpr::Debug::instance()->isCategoryAllowed(cat))) vpr::Debug::instance()->getStream(cat, val, true, true, -1)
 #define vprDEBUG_ENDlg(cat,val,show_thread,use_indent,lockIt) if (val>VPR_MAX_DBG_LEVEL) ; else if((vpr::Debug::instance()->isDebugEnabled()) && (val <= vpr::Debug::instance()->getLevel()) && (vpr::Debug::instance()->isCategoryAllowed(cat))) vpr::Debug::instance()->getStream(cat, val, show_thread, use_indent, -1, lockIt)
-#define vprDEBUG_DECREMENT_INDENT() vpr::Debug::instance()->decrementIndentLevel()
+#define vprDEBUG_DECREMENT_INDENT(cat, val) if (val>VPR_MAX_DBG_LEVEL) ; else if((vpr::Debug::instance()->isDebugEnabled()) && (val <= vpr::Debug::instance()->getLevel()) && (vpr::Debug::instance()->isCategoryAllowed(cat))) vpr::Debug::instance()->decrementIndentLevel()
 
 
 #define vprDEBUG_CONT(cat,val) vprDEBUGlg(cat,val,false,false,true)
@@ -281,23 +281,15 @@ namespace vpr
       { mDebugEnabled = false;}
       //@}
 
-      /** Dump the current status to screen */
+      /** Dump the current status to screen. */
       void debugDump();
 
-      /// Decrement the level of indention
-      void decrementIndentLevel()
-      {
-         if(indentLevel>0)
-            indentLevel--;
-      }
+      /// Decrement the level of indention.
+      void decrementIndentLevel();
 
-      /// Increment the level of indention
-      void incrementIndentLevel()
-      {
-         indentLevel++;
-      }
+      /// Increment the level of indention.
+      void incrementIndentLevel();
 
-      
    private:
       bool mDebugEnabled;  // Is debug output enabled
       int debugLevel;      //! Debug level to use
