@@ -47,6 +47,7 @@
 #include <string>
 #include <vector>
 #include <boost/function.hpp>
+#include <boost/filesystem/path.hpp>
 
 #include <vpr/DynLoad/Library.h>
 
@@ -89,7 +90,8 @@ public:
     *                     platform-specific file extension will be appended
     *                     prior to the search.
     * @param searchPath   A list of directories where the target DSO may
-    *                     exist.
+    *                     exist.  The paths given must be platform-specific
+    *                     (i.e., native) paths.
     * @param initFuncName The name of the initialization function in the DSO
     *                     that will be invoked to initialize the DSO's code.
     * @param initFunc     A Boost.Function object (that is, a callable object)
@@ -105,6 +107,41 @@ public:
     */
    vpr::ReturnStatus findAndInitDSO(const std::string& dsoBaseName,
                                     const std::vector<std::string>& searchPath,
+                                    const std::string& initFuncName,
+                                    boost::function1<bool, void*> initFunc);
+
+   /**
+    * Searches for a dynamic shared object (DSO) with the "base" name given in
+    * dsoBaseName.  The base name is a platform-independent, abstract name
+    * that makes up a substring of the name of the actual file that will be
+    * loaded.  A platform-specific extension (.so, .dll, etc) will be appended,
+    * and for an instantiation of this class in debug-enabled code, the suffix
+    * "_d" will be appended to the DSO's base name.  For example, given the
+    * base name mydso, a debug build on Windows would search for the file
+    * mydso_d.dll.  For a release (optimized) build, it would search for
+    * mysdso.dll.  The search will be performed using list of directories
+    * given in searchPath.
+    *
+    * @param dsoBaseName  The base name of the DSO to be loaded.  The
+    *                     platform-specific file extension will be appended
+    *                     prior to the search.
+    * @param searchPath   A list of directories (specified as Boost.Filesystem
+    *                     path objects) where the target DSO may exist.
+    * @param initFuncName The name of the initialization function in the DSO
+    *                     that will be invoked to initialize the DSO's code.
+    * @param initFunc     A Boost.Function object (that is, a callable object)
+    *                     that will be invoked as a callback to initialize the
+    *                     DSO.  It will be passed a void* pointer to the
+    *                     initialization function looked up in the DSO.
+    *
+    * @note The vpr::Library object instantiated to hold the DSO is not
+    *       returned to the caller.  It can be retrieved through the
+    *       getDsoList() method.
+    *
+    * @see getDsoList, loadAndInitDSO
+    */
+   vpr::ReturnStatus findAndInitDSO(const std::string& dsoBaseName,
+                                    const std::vector<boost::filesystem::path>& searchPath,
                                     const std::string& initFuncName,
                                     boost::function1<bool, void*> initFunc);
 
