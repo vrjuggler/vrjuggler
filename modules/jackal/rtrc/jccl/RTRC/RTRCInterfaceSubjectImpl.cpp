@@ -105,7 +105,7 @@ char* RTRCInterfaceSubjectImpl::getChunks()
    jccl::ConfigManager::instance()->unlockActive();
 
    //Return the full string
-   return active_output.str();
+   return CORBA::string_dup(active_output.str().c_str());
 }
 
 char* RTRCInterfaceSubjectImpl::getChunkDescs()
@@ -120,7 +120,7 @@ char* RTRCInterfaceSubjectImpl::getChunkDescs()
    descs_output << chunkDescs;
 
    //Return the full string
-   return descs_output.str();
+   return CORBA::string_dup(descs_output.str().c_str());
 }
 
 
