@@ -538,7 +538,7 @@ private:
     //! POST: A MSG_WAKE_UP is sent to the server, and an acknowledgment is
     //+       expected before processing continues.
     // ------------------------------------------------------------------------
-    void send_wakeup();
+    void sendWakeup();
 
     // ------------------------------------------------------------------------
     //: Tell the MotionStar server to sample continuously.
@@ -570,7 +570,7 @@ private:
     //+       received, a message is written to stdout describing the system
     //+       status.
     // ------------------------------------------------------------------------
-    void get_status_all();
+    void getSystemStatus();
 
     // ------------------------------------------------------------------------
     //: Set the system status.
@@ -580,7 +580,7 @@ private:
     //! POST: A MSG_SEND_SETUP is sent to the server, and an acknowledgement
     //+       is expected before processing continues.
     // ------------------------------------------------------------------------
-    void set_status_all();
+    void setSystemStatus();
 
     // ------------------------------------------------------------------------
     //: Get the status of an individual bird.
@@ -592,7 +592,7 @@ private:
     //
     //! ARGS: fbb_addr - The bird whose status is being requested.
     // ------------------------------------------------------------------------
-    void get_status_fbb(unsigned char);
+    void getBirdStatus(unsigned char);
 
     // ------------------------------------------------------------------------
     //: Set the status of an individual bird.
@@ -604,7 +604,7 @@ private:
     //
     //! ARGS: fbb_addr - The bird whose status is being set.
     // ------------------------------------------------------------------------
-    void set_status_fbb(unsigned char);
+    void setBirdStatus(unsigned char);
 
     // ------------------------------------------------------------------------
     //: Combine the two given bytes (passed as high byte and low byte
@@ -780,7 +780,7 @@ private:
     //! PRE: None.
     //! POST: This currently does nothing.
     // ------------------------------------------------------------------------
-    void display_hdr();
+    void displayHdr();
 
     // ------------------------------------------------------------------------
     //: Print the error message that corresponds to the given error code.
