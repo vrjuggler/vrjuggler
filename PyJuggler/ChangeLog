@@ -1,5 +1,8 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Oct-28-2004 patrickh    The pyjutil library is now linked into the PyJuggler
+                        modules that need it using dynamic linking instead of
+                        static linking.
 Oct-27-2004 patrickh    The configure script option --enable-boost-hacks is no
                         longer required for detection of some Boost.Python
                         installations.
