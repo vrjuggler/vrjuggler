@@ -41,13 +41,11 @@
         jccl
             Config
             ..
-            JackalServer
+            Net
             ..
-            Plugins
-                ConfigManager
-                ..
-                PerformanceMonitor
-                ..
+            PerfMonitor
+            ..
+            RTRC
             ..
             Util
             ..
