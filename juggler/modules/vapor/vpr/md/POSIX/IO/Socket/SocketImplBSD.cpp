@@ -193,7 +193,7 @@ SocketImpBSD::connect () {
     // error status.
     if ( status == -1 ) {
         fprintf(stderr, "[vpr::SocketImpBSD] Error connecting to %s: %s\n",
-                m_name.c_str(), strerror(errno));
+                m_remote_addr.getAddressString().c_str(), strerror(errno));
         retval = false;
     }
     // Otherwise, return success.
@@ -213,7 +213,7 @@ SocketImpBSD::connect () {
 // defaults.
 // ----------------------------------------------------------------------------
 SocketImpBSD::SocketImpBSD ()
-    : SocketImp_i(), m_handle(NULL)
+    : BlockIO(std::string("INADDR_ANY")), m_handle(NULL)
 {
 fprintf(stderr, "vpr::SocketImpBSD default constructor\n");
     /* Do nothing. */ ;
@@ -228,7 +228,8 @@ fprintf(stderr, "vpr::SocketImpBSD default constructor\n");
 SocketImpBSD::SocketImpBSD (const InetAddr& local_addr,
                             const InetAddr& remote_addr,
                             const SocketTypes::Type sock_type)
-    : SocketImp_i(local_addr, remote_addr, sock_type)
+    : BlockIO(std::string("INADDR_ANY")), m_handle(NULL),
+      m_local_addr(local_addr), m_remote_addr(remote_addr), m_type(sock_type)
 {
 fprintf(stderr, "vpr::SocketImpBSD(local, remote) constructor\n");
 fprintf(stderr, "    Local Address: %s\n",

@@ -36,7 +36,6 @@
 #include <vprConfig.h>
 
 #include <IO/Socket/Socket.h>
-#include <IO/Socket/SocketStreamImp.h>
 #include <IO/Socket/InetAddr.h>
 
 

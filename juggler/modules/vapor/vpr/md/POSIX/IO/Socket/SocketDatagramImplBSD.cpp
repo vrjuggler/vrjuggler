@@ -55,7 +55,7 @@ namespace vpr {
 // Default constructor.  This does nothing.
 // ----------------------------------------------------------------------------
 SocketDatagramImpBSD::SocketDatagramImpBSD (void)
-    : SocketImpBSD(), SocketDatagramImp_i()
+    : SocketImpBSD()
 {
 fprintf(stderr, "vpr::SocketDatagramImpBSD default constructor\n");
     /* Do nothing. */ ;
@@ -68,8 +68,7 @@ fprintf(stderr, "vpr::SocketDatagramImpBSD default constructor\n");
 // ----------------------------------------------------------------------------
 SocketDatagramImpBSD::SocketDatagramImpBSD (const InetAddr& local_addr,
                                             const InetAddr& remote_addr)
-    : SocketImpBSD(local_addr, remote_addr, SocketTypes::DATAGRAM),
-      SocketDatagramImp_i(local_addr, remote_addr)
+    : SocketImpBSD(local_addr, remote_addr, SocketTypes::DATAGRAM)
 {
 fprintf(stderr, "vpr::SocketDatagramImpBSD(local, remote) constructor\n");
 fprintf(stderr, "    Local Address: %s -> %s\n",

@@ -37,15 +37,12 @@
 
 #include <string>
 
-#include <IO/Socket/SocketStreamImp.h>
 #include <md/POSIX/SocketImpBSD.h>
 
 
 namespace vpr {
 
-class SocketStreamImpBSD : virtual public SocketImpBSD,
-                           virtual public SocketStreamImp_i
-{
+class SocketStreamImpBSD : public SocketImpBSD {
 public:
     // ========================================================================
     // vpr::SocketStreamImp implementation.

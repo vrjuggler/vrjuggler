@@ -37,7 +37,6 @@
 
 #include <IO/BlockIO.h>
 #include <IO/Socket/SocketTypes.h>
-#include <IO/Socket/SocketImp.h>
 
 
 namespace vpr {

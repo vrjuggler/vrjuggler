@@ -58,7 +58,7 @@ namespace vpr {
 // variables of the object.
 // ----------------------------------------------------------------------------
 SocketStreamImpBSD::SocketStreamImpBSD (void)
-    : SocketImpBSD(), SocketStreamImp_i()
+    : SocketImpBSD()
 {
 fprintf(stderr, "vpr::SocketStreamImpBSD default constructor\n");
     /* Do nothing. */ ;
@@ -71,8 +71,7 @@ fprintf(stderr, "vpr::SocketStreamImpBSD default constructor\n");
 // ----------------------------------------------------------------------------
 SocketStreamImpBSD::SocketStreamImpBSD (const InetAddr& local_addr,
                                         const InetAddr& remote_addr)
-    : SocketImpBSD(local_addr, remote_addr, SocketTypes::STREAM),
-      SocketStreamImp_i(local_addr, remote_addr)
+    : SocketImpBSD(local_addr, remote_addr, SocketTypes::STREAM)
 {
 fprintf(stderr, "vpr::SocketStreamImpBSD(address, port) constructor\n");
 fprintf(stderr, "    Local Address: %s -> %s\n",
@@ -152,7 +151,7 @@ SocketStreamImpBSD::accept () {
 // ----------------------------------------------------------------------------
 SocketStreamImpBSD::SocketStreamImpBSD (const int sock,
                                         const InetAddr& remote_addr)
-    : SocketImpBSD(), SocketStreamImp_i()
+    : SocketImpBSD()
 {
 fprintf(stderr, "Protected vpr::SocketStreamImpBSD constructor\n");
 // XXX: Merge
