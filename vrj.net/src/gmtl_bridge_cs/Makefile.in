@@ -81,6 +81,7 @@ SRCS=		Gmtl.cs				\
 		gmtl_Spheref.cs			\
 		gmtl_Trid.cs			\
 		gmtl_Trif.cs			\
+		gmtl_Trii.cs			\
 		gmtl_Vec3d.cs			\
 		gmtl_Vec3f.cs			\
 		gmtl_Vec3i.cs			\
