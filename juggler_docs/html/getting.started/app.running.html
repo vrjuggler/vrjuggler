@@ -133,10 +133,15 @@
 	a larger one that is inactive initially.
       </LI>
       <LI>
-	<TT>sim.analog.mixin.config</TT> - A ``mix-in'' configuration file
+	<TT>sim.analog.wandmixin.config</TT> - A ``mix-in'' configuration file
 	that defines simulated analog input using the keyboard.  This is
 	only required for applications where analog input is used and needs
 	to be simulated when in simulator mode.
+      </LI>
+    <LI>
+	<TT>sim.analog.mixin.config</TT> - This version of the wand sim
+   opens its own window.  See the previous sim.analog.wandmixin.config for 
+   other details.  
       </LI>
       <LI>
 	<TT>sim.c6displays.mixin.config</TT> - A ``mix-in'' configuration
@@ -633,12 +638,16 @@
 <A NAME="analog"><H3>Using a Simulated Analog Device</H3></A>
 
   <P>
-    If you include the <TT>sim.analog.mixin.config</TT> file, your
+    If you include the <TT>sim.analog.wandmixin.config</TT> file, your
     application will also have access to a set of four analog devices
     (devices with a value in a range from 0.0 to 1.0).  The analog devices
     are also controlled using the ``<TT>Wand Keyboard</TT>'' window which
-    means that their config file requires the wand config file.  They
-    key presses used for controlling the analog devices are:
+    means that their config file requires the wand config file.<BR><BR>  
+    
+    NOTE: a separate file <TT>sim.analog.mixin.config</TT>, is provided for
+    analog input from a separate simulator window.<BR><BR>
+    
+    They key presses used for controlling the analog devices are:
 
     <BLOCKQUOTE>
       <TABLE BORDER="1">
