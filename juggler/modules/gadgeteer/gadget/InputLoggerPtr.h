@@ -6,7 +6,7 @@
 namespace gadget
 {
    class InputLogger;
-   typedef boost::shared_ptr<ChunkDesc> InputLoggerPtr;
+   typedef boost::shared_ptr<InputLogger> InputLoggerPtr;
 }
 
 #endif
