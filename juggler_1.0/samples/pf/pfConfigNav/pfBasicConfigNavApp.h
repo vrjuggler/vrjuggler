@@ -60,6 +60,7 @@
 #include <pfRayCollider.h>
 #include <pfBoxCollider.h>
 
+
 #include <simplePfNavApp.h>
 
 // ----- pfBasicConfigNav class ---- //
@@ -135,6 +136,23 @@ bool pfBasicConfigNavApp::configApp(vjConfigChunk* chunk)
                    (float)chunk->getProperty("start_location",1),
                    (float)chunk->getProperty("start_location",2));
 
+   ///////////////////////////
+   this->enableNav( (bool)chunk->getProperty( "enable_nav" ) );
+   vjDEBUG_BEGIN(vjDBG_ALL,0) << "enable_nav: " << (bool)chunk->getProperty( "enable_nav" ) << "\n===========================\n" << vjDEBUG_FLUSH;
+
+   std::string a = (std::string)chunk->getProperty( "animation_filename" );
+   this->loadAnimation( a.c_str() );
+   if ((bool)chunk->getProperty( "animation_play" ) == true)
+   {
+      this->keyFramer().play();
+   }
+   else
+   {
+      this->keyFramer().stop();
+   }   
+   this->keyFramer().loop( (int)chunk->getProperty( "animation_loops" ) );
+   ////////////////////////////
+   
    vjDEBUG_BEGIN(vjDBG_ALL,0) << "pfBasicConfigNav::configApp: " << app_name << "===========================\n" << vjDEBUG_FLUSH;
 
    // models
@@ -185,6 +203,8 @@ bool pfBasicConfigNavApp::configApp(vjConfigChunk* chunk)
                              << vjDEBUG_FLUSH;
    vjDEBUG_END(vjDBG_ALL,0) << "========================================\n" << vjDEBUG_FLUSH;
 
+   
+   
    // Initialize the models and sounds
    initializeModels();                 // Only actally gets processed if initScene has already run
    initializeSounds();                 // Only actally gets processed if initScene has already run

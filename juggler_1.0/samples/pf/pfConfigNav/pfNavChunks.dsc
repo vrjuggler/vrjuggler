@@ -6,6 +6,10 @@ chunk pf_basic_nav_app "Basic nav app" "A basic performer navigation application
   Model EmbeddedChunk -1 "Models" vj_enumeration { "Model" } ""
   bounding_size Float 1 "Bounding Sphere size" ""
   icon_view_offset Float 3 "Icon model offset" vj_valuelabels { "X" "y" "z" } "Amount to tranlate the application scene graph for displaying the icon (in pf coords, model coords)"
+  enable_nav Bool 1 "enable_nav" "Allow navigation or not... (false for animation)"
+  animation_play Bool 1 "animation_play" "Play animation (true) or stop (false)"
+  animation_loops Float 1 "animation_loops" "Number of times to loop animation (-1 for infinite)"
+  animation_filename String 1 "animation_filename" "name of animation file to load"
   end
 chunk Model "Model" ""
   Name String 1 "Name" "Unique name of an instance of this chunk type"

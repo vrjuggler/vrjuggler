@@ -207,8 +207,9 @@ public:
 
    //: Make matrix from given quaternion
    //!POST: mat = Matrix specified by Quaternion _quat
-   void     makeQuaternion( float* q );
-   void     makeQuaternion( vjQuat& q );
+   //!POST: sets every cell, no need to call makeIdent before this.
+   void     makeQuaternion( const float* const q );
+   void     makeQuaternion( const vjQuat& q );
 
 
    //: Make rotation matrix around _axis

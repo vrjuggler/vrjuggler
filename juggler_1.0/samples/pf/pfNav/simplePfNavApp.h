@@ -74,6 +74,10 @@
 
 #include "pfFileIO.h" // handy fileloading/caching functions
 
+// animation
+#include "KeyFramerImporter.h"
+#include "KeyFramer.h"
+
 #include <Performer/pf/pfTraverser.h>
 
 int AppNotifyPreTrav(pfTraverser* trav, void* data);
@@ -154,7 +158,7 @@ public:
       mLightGroup( NULL ),
       mConfiguredNoCollideModels( NULL ),
       mSoundNodes( NULL ),
-      mUnCollidableModelGroup( NULL )
+      mUnCollidableModelGroup( NULL ), mDisableNav( false )
    {
       mSun = NULL;
       mRootNode = NULL;
@@ -208,6 +212,16 @@ public:
       pfSoundTraverser::preForkInit();
    }
 
+   void loadAnimation( const char* const filename )
+   {
+      std::string dFilename = vjFileIO::demangleFileName( std::string( filename ), std::string( "" ) );
+      kev::KeyFramerImporter kfi;
+      kfi.execute( dFilename.c_str(), mKeyFramer );
+   }  
+   
+   kev::KeyFramer& keyFramer() { return mKeyFramer; }
+   const kev::KeyFramer& keyFramer() const { return mKeyFramer; }
+    
    /// Initialize the scene graph
    virtual void initScene();
 
@@ -246,23 +260,55 @@ public:
    /// Function called after pfSync and before pfDraw
    virtual void preFrame()
    {
-      // Deal with focus based changes
-      mNavigationDCS->setActive(haveFocus());
+      mStopWatch.stop();
+      mStopWatch.start();
 
-      if(haveFocus() && (mNavCycleButton->getData() == vjDigital::TOGGLE_ON))
-      {cycleNavigator();}
+      if (mStopWatch.timeInstant < 1.0)
+         mKeyFramer.update( mStopWatch.timeInstant );
 
-      if(haveFocus())
+      vjMatrix mat;
+      mKeyFramer.getMatrix( mat );
+      pfMatrix pf_mat;
+      pf_mat = vjGetPfMatrix( mat );
+      mAnimDCS->setMat( pf_mat );
+            
+      if (mDisableNav == true)
       {
-         // Emit cur position
-         if (0 == (mStatusMessageEmitCount++ % 60))
+         mNavigationDCS->setActive( false );
+      }
+      else
+      {
+         // Deal with focus based changes
+         mNavigationDCS->setActive(haveFocus());
+
+         if(haveFocus() && (mNavCycleButton->getData() == vjDigital::TOGGLE_ON))
+         {cycleNavigator();}
+
+         if(haveFocus())
          {
-            vjVec3 cur_pos;
-            cur_pos = mNavigationDCS->getNavigator()->getCurPos().getTrans();
-            std::cout << "Cur pos:" << cur_pos << std::endl;
+            // Emit cur position
+            if (0 == (mStatusMessageEmitCount++ % 60))
+            {
+               vjVec3 cur_pos;
+               cur_pos = mNavigationDCS->getNavigator()->getCurPos().getTrans();
+               vjQuat quat;
+               quat.makeQuat( mNavigationDCS->getNavigator()->getCurPos() );
+               
+               std::cout << "You: " << cur_pos << " :|: ";
+               quat.outStream( std::cout );
+               std::cout << std::endl;
+               
+               cur_pos = -cur_pos;
+               quat.invert( quat );
+               std::cout << "World: " << cur_pos << " :|: ";
+               quat.outStream( std::cout );
+               std::cout << std::endl << std::endl;
+               
+               
+            }
          }
       }
-
+            
       if(mUseStats && haveFocus())
          mStats.preFrame();
    }
@@ -279,6 +325,14 @@ public:
       mNavigationDCS->reset();        // Reset navigation
    }
 
+   // set to true to enable navigation
+   void enableNav( bool state = true )
+   {
+      mDisableNav = !state;
+      if (mDisableNav == true) vjDEBUG_BEGIN(vjDBG_ALL,0) << "====================\nnavigation disabled\n" << vjDEBUG_FLUSH;
+      if (mDisableNav == false) vjDEBUG_BEGIN(vjDBG_ALL,0) << "====================\nnavigation enabled\n" << vjDEBUG_FLUSH;
+   }   
+   
    //: Called when the focus state changes
    // If an application has focus:
    // - The user may be attempting to interact with it, so the app should process input
@@ -332,7 +386,8 @@ public:  // Configure the application
    }
    void setFilePath( const std::string path )
    {
-      mFilePath = path;
+      std::string dFilePath = vjFileIO::demangleFileName( path, std::string( "" ) );
+      mFilePath = dFilePath;
    }
    void setInitialNavPos(const vjVec3 initialPos)
    {
@@ -389,6 +444,12 @@ public:
    std::vector< Sound > mSoundList;
 
 public:
+   // animation
+   kev::KeyFramer      mKeyFramer;
+   StopWatch           mStopWatch;
+   bool                mDisableNav;
+   pfDCS*               mAnimDCS;
+   
    // CONFIG PARAMS
    std::string    mFilePath;
    vjVec3         mInitialNavPos;
@@ -420,9 +481,9 @@ public:
 // ------- SCENE GRAPH ----
 // a standard organized interface for derived applications:
 //
-//                            /-- mLightGroup -- mSun
-// mRootNode -- mNavigationDCS -- mCollidableModelGroup -- mConfiguredCollideModels -- loaded stuff...
-//          \-- mNoNav        \-- mUnCollidableModelGroup -- mConfiguredNoCollideModels -- loaded stuff...
+//                                         /-- mLightGroup -- mSun
+// mRootNode -- mNavigationDCS -- mAnimDCS -- mCollidableModelGroup -- mConfiguredCollideModels -- loaded stuff...
+//          \-- mNoNav                     \-- mUnCollidableModelGroup -- mConfiguredNoCollideModels -- loaded stuff...
 //                                                       \-- mSoundNodes -- loaded stuff...
 void simplePfNavApp::initializeModels()
 {
@@ -543,6 +604,7 @@ void simplePfNavApp::initScene()
    mRootNode             = new pfGroup;       // Root of our graph
    mRootNode->setName("simplePfNavApp::mRootNode");
    mNavigationDCS        = new pfNavDCS;      // DCS to navigate with
+   mAnimDCS              = new pfDCS;
    mCollidableModelGroup = new pfGroup;
    mUnCollidableModelGroup = new pfGroup;
    mNoNav                  = new pfGroup;
@@ -575,9 +637,13 @@ void simplePfNavApp::initScene()
 
    // --- CONSTRUCT STATIC Structure of SCENE GRAPH -- //
    mRootNode->addChild( mNavigationDCS );
-   mNavigationDCS->addChild(mLightGroup);
-   mNavigationDCS->addChild(mCollidableModelGroup);
-   mNavigationDCS->addChild(mUnCollidableModelGroup);
+   mNavigationDCS->addChild( mAnimDCS );
+   pfMatrix mat;
+   mat.makeIdent();
+   mAnimDCS->setMat( mat );
+   mAnimDCS->addChild( mLightGroup );
+   mAnimDCS->addChild( mCollidableModelGroup );
+   mAnimDCS->addChild( mUnCollidableModelGroup );
    //mNavigationDCS->addChild( pfFileIO::autoloadFile( "terrain.flt", pfFileIO::FEET ) );
 
    // --- Load the model (if it is configured) --- //
