@@ -29,7 +29,7 @@ public:
    //@}
 
    /** @name vjInput pure virtual functions
-    *  
+    *
     *  pure virtual functions required from vjInput
     */
    //@{
@@ -68,31 +68,31 @@ public:
     */
    //@{
    void SetSync(int sync);
-   int  GetSync() 
+   int  GetSync()
    {return syncStyle;}
 
    void SetBlocking(int blVal);
-   int  GetBlocking() 
+   int  GetBlocking()
    { return blocking;}
 
    void SetFilters(BIRD_FILT f);
-   int  GetFilters() 
+   int  GetFilters()
    { return filter;}
 
    void SetHemisphere(BIRD_HEMI h);
-   int  GetHemisphere() 
+   int  GetHemisphere()
    {return hemisphere;}
 
    void SetReportRate(char rRate);
-   char GetReportRate() 
+   char GetReportRate()
    {return repRate;}
    //@}
 
 private:
-   void Position_Correct(float&x,float&y,float&z); 
-   void InitCorrectionTable(); 
-   vjThreadId* myThreadID;
-   CalStruct caltable;
+   void Position_Correct(float&x,float&y,float&z);
+   void InitCorrectionTable();
+   vjThread*   myThread;      // ptr to our thread object
+   CalStruct   caltable;
    int  syncStyle, blocking;
    char repRate;
    BIRD_HEMI hemisphere;

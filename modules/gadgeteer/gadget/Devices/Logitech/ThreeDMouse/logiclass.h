@@ -5,7 +5,7 @@
 //	    (based on Logitech's "logidrvr.h")
 //
 // Author:   Andy Himberger
-//	    Allen Bierbaum    
+//	    Allen Bierbaum
 //	    (original) Terry Fong <terry@ptolemy.arc.nasa.gov>
 // History:  27-Mar-92  original version
 //	    25-Jan-95  adapted to class structure by Allen
@@ -50,11 +50,11 @@
 //  Digital driver support could/should be added in the future.
 //
 class vjThreeDMouse : public vjPosition {
-    
+
     public:
 	/** @name Construction/Destruction */
 	//@{
-	vjThreeDMouse(vjConfigChunk *c);  
+	vjThreeDMouse(vjConfigChunk *c);
 	//@}
 	
 	/** @name vjInput pure virtual functions */
@@ -62,7 +62,7 @@ class vjThreeDMouse : public vjPosition {
         int StartSampling();
 	int StopSampling();
 	void UpdateData();
-	int Sample()	    
+	int Sample()	
 	    { return GetRecord(&theData[current]); }
 	//@}
 	
@@ -111,7 +111,7 @@ class vjThreeDMouse : public vjPosition {
 		
 	void SetBaseOrigin();
 	    // PURPOSE: Sets the current mouse X,Y,Z position to be the base origin
-	    
+	
 	float GetX()	
 	{ return theData[current].pos[0] + baseVector[0]; }
 	float GetY()	
@@ -125,7 +125,7 @@ class vjThreeDMouse : public vjPosition {
 	
 //	int ButtonPressed() { return currentMouseReadings.buttons; }
 	    // PURPOSE: Examine what buttons are pressed
-	    // Returns packed int, 
+	    // Returns packed int,
 	    // EX:  if(ButtonPressed() & logitech_LEFTBUTTON) then
 	    //		    Button was pressed.
 	
@@ -134,8 +134,8 @@ class vjThreeDMouse : public vjPosition {
 	int mouseFD;
 	vjPOS_DATA theData[3];
 
-        vjThreadId* myThreadID;	// Thread ID structure
-	vjVec3 baseVector;	// Used to store the base location tooffset from
+   vjThread*   myThreadID;	// Ptr to the thread object
+	vjVec3      baseVector;	// Used to store the base location tooffset from
 				// Originally set to 0,0,0
 	
 	int  LogitechOpen (char *port_name);

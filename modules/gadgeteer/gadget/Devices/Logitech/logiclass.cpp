@@ -14,17 +14,17 @@
 
 
 #include <config.h>
-#include <stdio.h>	 // for perror(3C) 
-#include <sys/types.h>	 // for open(2) 
-#include <sys/stat.h>	 // for open(2) 
-#include <fcntl.h>	 // for open(2) 
-#include <termios.h>	 // for tcsetattr(3T) 
+#include <stdio.h>	 // for perror(3C)
+#include <sys/types.h>	 // for open(2)
+#include <sys/stat.h>	 // for open(2)
+#include <fcntl.h>	 // for open(2)
+#include <termios.h>	 // for tcsetattr(3T)
 #include <limits.h>	 // for sginap(2)
 #include <unistd.h>	 // for close()
-#include <iostream.h>	    // for buffered I/O 
+#include <iostream.h>	    // for buffered I/O
 #include <sys/time.h>
 
-#include <Input/vjPosition/logiclass.h>	// classprototypes and data types 
+#include <Input/vjPosition/logiclass.h>	// classprototypes and data types
 
 // uncommenting the following will produce debug print statements */
 //
@@ -39,8 +39,8 @@ int vjThreeDMouse::StartSampling()
    vjThreeDMouse* devicePtr = this;
    void SampleMouse(void*);
 
-   myThreadID = vjThread::spawn(SampleMouse, (void *) devicePtr, 0);
-   if ( myThreadID == NULL ) {
+   myThread = new vjThread(SampleMouse, (void *) devicePtr, 0);
+   if ( !myThread->valid() ) {
       return -1;
    } else {
       cout << "going " << endl;
@@ -60,10 +60,10 @@ void SampleMouse(void* pointer) {
     for(;;) {
      gettimeofday(&tv,0);
      start_time = (double)tv.tv_sec+ (double)tv.tv_usec / 1000000.0;
- 
+
     for(int i = 0; i < 60; i++)
 	devPointer->Sample();
- 
+
      gettimeofday(&tv,0);
      stop_time = (double)tv.tv_sec+ (double)tv.tv_usec / 1000000.0;
      cout << 1/((stop_time-start_time) / 60)
@@ -76,9 +76,9 @@ void SampleMouse(void* pointer) {
 
 int vjThreeDMouse::StopSampling()
 {
-  if (myThreadID != 0) {
-    vjThread::kill(myThreadID,SIGKILL);
-    
+  if (myThread != NULL) {
+    myThread->kill();
+
     myThreadID = 0;
 //    sginap(1);
     cout << "stopping the vjThreeDMouse.." << endl;
@@ -150,11 +150,11 @@ int vjThreeDMouse::LogitechOpen (char* port_name)
     perror (port_name);
     return (-1);
   }
-  
+
     /// Can now safely set the mouseFD value
-  mouseFD = fd; 
-    
-    
+  mouseFD = fd;
+
+
   /* disable all input mode processing */
   t.c_iflag = 0;
 
@@ -334,7 +334,7 @@ void vjThreeDMouse::GetDiagnostics ( char data[])
 {
   vjThreeDMouse::CuRequestDiagnostics ();	/* command diagnostics */
   //sginap (100);			/* wait 1 second */
-  sleep(1); 
+  sleep(1);
   read (mouseFD, data, DIAGNOSTIC_SIZE);
 }
 
@@ -353,12 +353,12 @@ int vjThreeDMouse::GetRecord ( vjPOS_DATA* data)
 
   /* if didn't get a complete record or if invalid record, then try
      to get a good one */
-  while ((num_read < EULER_RECORD_SIZE) || !(record[0] & logitech_FLAGBIT)) { 
+  while ((num_read < EULER_RECORD_SIZE) || !(record[0] & logitech_FLAGBIT)) {
 
     #ifdef DEBUG
 	printf ("get_record: only got %d bytes\n", num_read);
     #endif
-    
+
     /* flush the buffer */
     ioctl (mouseFD, TCFLSH, 0);
 
@@ -377,7 +377,7 @@ int vjThreeDMouse::GetRecord ( vjPOS_DATA* data)
 
 
 //////////////////////////////////////////////////////////////////////////////
-// Set control unit into demand reporting, send reset command, and wait for 
+// Set control unit into demand reporting, send reset command, and wait for
 // the reset.
 //////////////////////////////////////////////////////////////////////////////
 void vjThreeDMouse::ResetControlUnit ()
@@ -396,7 +396,7 @@ void vjThreeDMouse::SetBaseOrigin()
     baseVector[0] = theData[current].pos[0];
     baseVector[1] = theData[current].pos[1];
     baseVector[2] = theData[current].pos[2];
-    // Setup currrent offest as origin   
+    // Setup currrent offest as origin
 }
 
 
@@ -419,7 +419,7 @@ void vjThreeDMouse::EulerToAbsolute (byte record[], vjPOS_DATA* data)
   ay |= (long)(record[4] & 0x7f) << 14;
   ay |= (long)(record[5] & 0x7f) << 7;
   ay |= (record[6] & 0x7f);
-  
+
   az = (record[7] & 0x40) ? 0xFFE00000 : 0;
   az |= (long)(record[7] & 0x7f) << 14;
   az |= (long)(record[8] & 0x7f) << 7;
@@ -431,10 +431,10 @@ void vjThreeDMouse::EulerToAbsolute (byte record[], vjPOS_DATA* data)
 
   arx  = (record[10] & 0x7f) << 7;
   arx += (record[11] & 0x7f);
-  
+
   ary  = (record[12] & 0x7f) << 7;
   ary += (record[13] & 0x7f);
-   
+
   arz  = (record[14] & 0x7f) << 7;
   arz += (record[15] & 0x7f);
 

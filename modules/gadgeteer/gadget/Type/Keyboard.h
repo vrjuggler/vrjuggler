@@ -4,7 +4,7 @@
 // Keyboard input device, simulates 2 positional, 4 digital, and 4 analog
 //          devices.
 //
-// History:  
+// History:
 //
 // Andy Himberger:    v0.0 - 12-1-97 - Inital version
 ////////////////////////////////////////////////////////////////////////////
@@ -21,7 +21,7 @@
 #include <Input/vjInput/vjAnalog.h>
 #include <Threads/vjThread.h>
 
-/** @name type-checked constants for the Keyboard and mouse 
+/** @name type-checked constants for the Keyboard and mouse
  */
 //@{
 const int VJKEY_NONE   = 0;
@@ -72,8 +72,8 @@ const int VJKEY_ESC    = 44;
 
 #define LAST_KEY 44  // Don't forget to change this when new keys are added
 
-const int VJMOUSE_POSX = LAST_KEY + 1;  
-const int VJMOUSE_NEGX = LAST_KEY + 2; 
+const int VJMOUSE_POSX = LAST_KEY + 1;
+const int VJMOUSE_NEGX = LAST_KEY + 2;
 const int VJMOUSE_POSY = LAST_KEY + 3;
 const int VJMOUSE_NEGY = LAST_KEY + 4;
 const int VJMBUTTON1   = LAST_KEY + 5;
@@ -81,7 +81,7 @@ const int VJMBUTTON2   = LAST_KEY + 6;
 const int VJMBUTTON3   = LAST_KEY + 7;
 //@}
 
-/** @name type-checked constants for the array indicies to the positional 
+/** @name type-checked constants for the array indicies to the positional
  *          keyboard controls.
  */
 // XXX: This should be #defines so that we don't clutter up global variable space ??
@@ -109,8 +109,8 @@ public:
 
    vjKeyboard(vjConfigChunk *c);
    vjKeyboard()
-   { 
-      myThreadID = 0;
+   {
+      myThread = NULL;
       for (int i =0; i < 256; i++)
          m_realkeys[i] = m_keys[i] = 0;
       m_realkeys[0] = m_keys[0] = 1;
@@ -119,10 +119,10 @@ public:
    ~vjKeyboard() { StopSampling();}
 
    /* Pure Virtuals required by vjInput */
-   int StartSampling(); 
+   int StartSampling();
    int StopSampling();
    int Sample() { return 1;}
-   void UpdateData(); 
+   void UpdateData();
 
    /* vjInput virtual functions
     *
@@ -173,8 +173,8 @@ private:
    vjMatrix     m_posdata[2];       // Local position data
    int          m_anadata[4];       // Local analog data
    int          m_digdata[4];       // Local digital data
-   
-   vjThreadId*  myThreadID;
+
+   vjThread*  myThread;
    Window       m_window;
    XVisualInfo* m_visual;
    Display*     m_display;
@@ -187,8 +187,8 @@ private:
    int m_realkeys[256]; // The real keyboard state, all events processed
 
    /* Control key holders */
-   int m_pos0key[NUM_POS_CONTROLS];  
-   int m_pos0mod[NUM_POS_CONTROLS]; 
+   int m_pos0key[NUM_POS_CONTROLS];
+   int m_pos0mod[NUM_POS_CONTROLS];
 
    int m_pos1key[NUM_POS_CONTROLS];
    int m_pos1mod[NUM_POS_CONTROLS];

@@ -51,9 +51,8 @@ int vjIBox::StartSampling()
 {
   ibox_result result;
 
-  if (samplePID == 0)
+  if (myThread == NULL)
   {
-      vjThreadId* processID;
       int retval;
 
       current = 0;
@@ -80,12 +79,11 @@ int vjIBox::StartSampling()
 
       vjIBox* devicePtr = this;
       void SampleBox(void*);
-      processID = vjThread::spawn(SampleBox, (void*)devicePtr, 0);
-      if (processID == NULL)
-	  return 0; //fail
+      myThread = new vjThread(SampleBox, (void*)devicePtr, 0);
+      if (!myThread->valid())
+	      return 0; //fail
       else {
-	  samplePID = processID;
-	  return 1;
+	      return 1;
       }
   }
   else return 0; // already sampling
@@ -171,10 +169,11 @@ int vjIBox::Sample()
 *********************************************** ahimberg */
 int vjIBox::StopSampling()
 {
-  if (samplePID != 0)
+  if (myThread != NULL)
   {
-    vjThread::kill(samplePID,SIGKILL);
-    samplePID = 0;
+    myThread->kill();
+    delete(myThread);
+    myThread = NULL;
 
     sginap(1);
 
