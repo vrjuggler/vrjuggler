@@ -1,6 +1,4 @@
 #include <vjConfig.h>
-#include <iostream.h>
-#include <iomanip.h>
 #include <sys/file.h>
 #include <sys/ioctl.h>
 #include <sys/time.h>

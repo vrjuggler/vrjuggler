@@ -21,7 +21,6 @@
 #include <termios.h>	 // for tcsetattr(3T)
 #include <limits.h>	 // for sginap(2)
 #include <unistd.h>	 // for close()
-#include <iostream.h>	    // for buffered I/O
 #include <sys/time.h>
 
 #include <Input/vjPosition/logiclass.h>	// classprototypes and data types
