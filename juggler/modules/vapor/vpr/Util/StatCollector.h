@@ -128,7 +128,7 @@ void StatCollector<TYPE, TimeBased>::print(std::ostream& out)
        << "prev samp: " << mPrevSample1 << "   prev samp2:" << mPrevSample2 << std::endl
        << " --- data --- time --- " << std::endl;
 
-   for(std::deque< std::pair<TYPE,vpr::Interval> >::iterator i = mSampleBuffer.begin();
+   for(typename std::deque< std::pair<TYPE,vpr::Interval> >::iterator i = mSampleBuffer.begin();
        i!= mSampleBuffer.end(); ++i)
    {
       out << (*i).first << "   " << (*i).second.msec() << "ms\n";
@@ -240,7 +240,7 @@ double StatCollector<TYPE, TimeBased>::getSTA()
 
    // --- CULL OFF old values --- //
    bool got_cull_point(false);
-   std::deque< std::pair<TYPE,vpr::Interval> >::iterator cull_from;
+   typename std::deque< std::pair<TYPE,vpr::Interval> >::iterator cull_from;
    cull_from = mSampleBuffer.end();
 
    // Go until I am pointing at an element that is within range
@@ -277,7 +277,7 @@ double StatCollector<TYPE, TimeBased>::getSTA()
       double sum(0.0f);
       vpr::Interval first_sample_time(mSampleBuffer[0].second);
 
-      std::deque< std::pair<TYPE,vpr::Interval> >::iterator cur_sample(mSampleBuffer.begin());
+      typename std::deque< std::pair<TYPE,vpr::Interval> >::iterator cur_sample(mSampleBuffer.begin());
 
       for( ; cur_sample != mSampleBuffer.end(); ++cur_sample)       // Sum the total bandwidth up
       {  sum += (*cur_sample).first; }
