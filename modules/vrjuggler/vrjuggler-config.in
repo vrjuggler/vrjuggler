@@ -47,12 +47,21 @@ vrj_n32_flags="@vrj_n32_flags@"
 vrj_64_flags="@vrj_64_flags@"
 LIBBITSUF='@LIBBITSUF@'
 
+USE_GCC='@USE_GCC@'
+
 if [ "x$vrj_default_abi" = "xN32" ]; then
     vrj_abi_flags="$vrj_n32_flags"
 elif [ "x$vrj_default_abi" = "x64" ]; then
     vrj_abi_flags="$vrj_64_flags"
 else
     vrj_abi_flags=''
+fi
+
+if [ "x$USE_GCC" != "xyes" ]; then
+   if [ "x$vrj_default_isa" = "xmips3" -o "x$vrj_default_isa" = "xmips4" ]
+   then
+      vrj_isa_flags="-$vrj_default_isa"
+   fi
 fi
 
 if [ "x$vrj_default_isa" = "xmips3" -o "x$vrj_default_isa" = "xmips4" ]; then
