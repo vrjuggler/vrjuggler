@@ -1,34 +1,34 @@
-dnl  ************ <auto-copyright.pl BEGIN do not edit this line> ************
-dnl 
-dnl  VR Juggler is (C) Copyright 1998, 1999, 2000 by Iowa State University
-dnl 
-dnl  Original Authors:
-dnl    Allen Bierbaum, Christopher Just,
-dnl    Patrick Hartling, Kevin Meinert,
-dnl    Carolina Cruz-Neira, Albert Baker
-dnl 
-dnl  This library is free software; you can redistribute it and/or
-dnl  modify it under the terms of the GNU Library General Public
-dnl  License as published by the Free Software Foundation; either
-dnl  version 2 of the License, or (at your option) any later version.
-dnl 
-dnl  This library is distributed in the hope that it will be useful,
-dnl  but WITHOUT ANY WARRANTY; without even the implied warranty of
-dnl  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-dnl  Library General Public License for more details.
-dnl 
-dnl  You should have received a copy of the GNU Library General Public
-dnl  License along with this library; if not, write to the
-dnl  Free Software Foundation, Inc., 59 Temple Place - Suite 330,
-dnl  Boston, MA 02111-1307, USA.
-dnl 
-dnl  -----------------------------------------------------------------
-dnl  File:          $RCSfile$
-dnl  Date modified: $Date$
-dnl  Version:       $Revision$
-dnl  -----------------------------------------------------------------
-dnl 
-dnl  ************* <auto-copyright.pl END do not edit this line> *************
+dnl ************ <auto-copyright.pl BEGIN do not edit this line> ************
+dnl
+dnl VR Juggler is (C) Copyright 1998, 1999, 2000 by Iowa State University
+dnl
+dnl Original Authors:
+dnl   Allen Bierbaum, Christopher Just,
+dnl   Patrick Hartling, Kevin Meinert,
+dnl   Carolina Cruz-Neira, Albert Baker
+dnl
+dnl This library is free software; you can redistribute it and/or
+dnl modify it under the terms of the GNU Library General Public
+dnl License as published by the Free Software Foundation; either
+dnl version 2 of the License, or (at your option) any later version.
+dnl
+dnl This library is distributed in the hope that it will be useful,
+dnl but WITHOUT ANY WARRANTY; without even the implied warranty of
+dnl MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+dnl Library General Public License for more details.
+dnl
+dnl You should have received a copy of the GNU Library General Public
+dnl License along with this library; if not, write to the
+dnl Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+dnl Boston, MA 02111-1307, USA.
+dnl
+dnl -----------------------------------------------------------------
+dnl File:          $RCSfile$
+dnl Date modified: $Date$
+dnl Version:       $Revision$
+dnl -----------------------------------------------------------------
+dnl
+dnl ************* <auto-copyright.pl END do not edit this line> *************
 
 AC_DEFUN(VJ_COMPILER_SETUP,
 [
@@ -125,8 +125,8 @@ AC_DEFUN(VJ_MTREE_LIB_GEN,
 [
     mtree_path=`echo $2 | sed -e 's|/| |g'`
 
-    dnl Ensure that the release directory exists since configure would not
-    dnl create it otherwise.
+    # Ensure that the release directory exists since configure would not
+    # create it otherwise.
     for dir in $mtree_path ; do
         full_path="${full_path}${dir}/"
         if test ! -d "$full_path" ; then
@@ -134,23 +134,23 @@ AC_DEFUN(VJ_MTREE_LIB_GEN,
         fi
     done
 
-    dnl Create the VJ.lib.dist file in release/mtree.  This is generated from
-    dnl scratch since it cannot be generalized into a template using our
-    dnl library directory scheme.  The only time this file needs to be
-    dnl generated is when configure is run, so it is not set up to be one of
-    dnl the commands that config.status can execute.
+    # Create the VJ.lib.dist file in release/mtree.  This is generated from
+    # scratch since it cannot be generalized into a template using our
+    # library directory scheme.  The only time this file needs to be generated
+    # is when configure is run, so it is not set up to be one of the commands
+    # that config.status can execute.
     _lib_file="$2/$1.lib.dist"
     _set_line="/set type=dir mode=$DIR_PERMS uname=$OWNER_NAME gname=$GROUP_NAME"
 
-    dnl Ensure that the file exists and has zero length.  Then write out the
-    dnl /set line which is going to be there no matter what.
+    # Ensure that the file exists and has zero length.  Then write out the
+    # /set line which is going to be there no matter what.
     echo "creating ${_lib_file}"
     echo >${_lib_file}
     echo "${_set_line}" >>${_lib_file}
     echo "" >>${_lib_file}
 
-    dnl On IRIX, it's easy to compile for different ABI/ISA combinations, so
-    dnl we just make cases for all -n32/-64/-mips3/-mips4 settings.
+    # On IRIX, it's easy to compile for different ABI/ISA combinations, so we
+    # just make cases for all -n32/-64/-mips3/-mips4 settings.
     if test "x$3" = "xIRIX" ; then
         cat >>${_lib_file} <<END_IRIX_DIST
 .
@@ -184,8 +184,8 @@ AC_DEFUN(VJ_MTREE_LIB_GEN,
     ..
 ..
 END_IRIX_DIST
-    dnl If a value for $4 has been given (which is the case for some
-    dnl platforms), create a subdirectory in lib for that value.
+    # If a value for $4 has been given (which is the case for some platforms),
+    # create a subdirectory in lib for that value.
     elif test "x$4" != "x" ; then
         cat >>${_lib_file} <<END_ISA_DIST
 .
@@ -199,8 +199,8 @@ END_IRIX_DIST
     ..
 ..
 END_ISA_DIST
-    dnl In all other cases, just make a simple directory tree for debugging and
-    dnl optimized libraries.
+    # In all other cases, just make a simple directory tree for debugging and
+    # optimized libraries.
     else
         cat >>${_lib_file} <<END_DIST
 .
