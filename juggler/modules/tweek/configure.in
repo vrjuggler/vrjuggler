@@ -838,7 +838,14 @@ if test "x${_idl_java}" = "xno" ; then
    APP_JAVA_IDL_INST="JAVA_HOME=\"$JDK_HOME\" JACORB_PATH=\"\$(TWEEK_BASE_DIR)/bin\" \"\$(TWEEK_BASE_DIR)/bin/idl\""
 
    config_jacorb_dir='$prefix/bin'
-   config_java_idl="JAVA_HOME=\"$JDK_HOME\" JACORB_PATH=\"$config_jacorb_dir\" \"$config_jacorb_dir/idl\""
+
+   # The double $-sign here is needed to prevent the JAVA_HOME expression from
+   # being evaluated by make(1).  All the extra escape characters are needed
+   # because the value of $config_java_idl will be substituted in a Perl
+   # script, so we also have to prevent perl(1) from trying to evaluate the
+   # JAVA_HOME expression.  All this complexity exists to prevent smashing the
+   # user's $JAVA_HOME environment variable with a (possibly) incorrect path.
+   config_java_idl="JAVA_HOME="\\\$\\\${JAVA_HOME-$JDK_HOME}" JACORB_PATH=\"$config_jacorb_dir\" \"$config_jacorb_dir/idl\""
 else
    # XXX: Need to support more than one IDL compiler for Java by recognizing
    # the name of the compiler and defining options for it below.  Blah.
