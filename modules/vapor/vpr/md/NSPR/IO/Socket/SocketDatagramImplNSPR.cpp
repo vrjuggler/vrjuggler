@@ -72,7 +72,7 @@ SocketDatagramImplNSPR::recvfrom (void* msg, const size_t length,
         PRErrorCode err_code = PR_GetError();
 
         if ( err_code == PR_WOULD_BLOCK_ERROR ) {
-            retval.setCode(Status::InProgress);
+            retval.setCode(vpr::Status::WouldBlock);
         }
         else if ( err_code == PR_IO_TIMEOUT_ERROR ) {
             retval.setCode(Status::Timeout);
@@ -103,7 +103,7 @@ SocketDatagramImplNSPR::sendto (const void* msg, const size_t length,
         PRErrorCode err_code = PR_GetError();
 
         if ( err_code == PR_WOULD_BLOCK_ERROR ) {
-            retval.setCode(Status::InProgress);
+            retval.setCode(vpr::Status::WouldBlock);
         }
         else if ( err_code == PR_IO_TIMEOUT_ERROR ) {
             retval.setCode(Status::Timeout);

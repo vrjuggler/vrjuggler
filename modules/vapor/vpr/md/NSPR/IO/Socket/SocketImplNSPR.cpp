@@ -283,7 +283,7 @@ SocketImplNSPR::read_i (void* buffer, const size_t length, ssize_t& bytes_read,
       PRErrorCode err_code = PR_GetError();
 
       if ( err_code == PR_WOULD_BLOCK_ERROR ) {
-         retval.setCode(vpr::Status::InProgress);
+         retval.setCode(vpr::Status::WouldBlock);
       }
       else if ( err_code == PR_IO_TIMEOUT_ERROR ) {
          retval.setCode(vpr::Status::Timeout);
@@ -314,7 +314,7 @@ SocketImplNSPR::readn_i (void* buffer, const size_t length,
       PRErrorCode err_code = PR_GetError();
 
       if ( err_code == PR_WOULD_BLOCK_ERROR ) {
-         retval.setCode(vpr::Status::InProgress);
+         retval.setCode(vpr::Status::WouldBlock);
       }
       else if ( err_code == PR_IO_TIMEOUT_ERROR ) {
          retval.setCode(vpr::Status::Timeout);
@@ -344,7 +344,7 @@ SocketImplNSPR::write_i (const void* buffer, const size_t length,
       PRErrorCode err_code = PR_GetError();
 
       if ( err_code == PR_WOULD_BLOCK_ERROR ) {
-         retval.setCode(vpr::Status::InProgress);
+         retval.setCode(vpr::Status::WouldBlock);
       }
       else if ( err_code == PR_IO_TIMEOUT_ERROR ) {
          retval.setCode(vpr::Status::Timeout);
