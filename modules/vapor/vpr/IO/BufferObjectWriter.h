@@ -190,7 +190,13 @@ inline vpr::ReturnStatus BufferObjectWriter::writeString(std::string val)
 
 inline vpr::ReturnStatus BufferObjectWriter::writeBool(bool val)
 {
+   // Darwin uses four bytes (!) for bools.
+#ifdef VPR_OS_Darwin
+   vpr::Uint8 temp = (vpr::Uint8) val;
+   return writeRaw((vpr::Uint8*)&temp, 1);
+#else
    return writeRaw((vpr::Uint8*)&val, 1);
+#endif
 }
 
 inline vpr::ReturnStatus BufferObjectWriter::writeRaw(vpr::Uint8* data, unsigned len)
