@@ -106,20 +106,6 @@ case $target_os in
         AC_DEFINE(_INCLUDE_TERMIO,)
         AC_DEFINE(_CMA_NOWRAPPERS_,)
         ;;
-    # A machine running FreeBSD.  Currently only i386 is known to compile.
-    freebsd*)
-        CXXFLAGS="-Wall -Werror-implicit-function-declaration $CXXFLAGS"
-        ;;
-    # A machine running Linux.  Currently only i386 is known to work.
-    linux*)
-        # CXXFLAGS="-fhonor-std -Wall -Werror-implicit-function-declaration $CXXFLAGS"
-        CXXFLAGS="-Wall -Werror-implicit-function-declaration $CXXFLAGS"
-        ;;
-    # A machine running Solaris (aka SunOS).  Currently only i386 is known to
-    # work.
-    solaris*)
-        CXXFLAGS="-Wall -Werror-implicit-function-declaration $CXXFLAGS"
-        ;;
     darwin1.*)
         AC_DEFINE(_BSD_TYPES,) 
         ;;
