@@ -65,6 +65,12 @@ public:
     vjChunkDesc ();
 
 
+
+    //:Copy Constructor
+    vjChunkDesc (vjChunkDesc& desc);
+
+
+
     //:Desctructor
     //!POST: Destroys self and frees all allocated memory.
     ~vjChunkDesc ();

@@ -35,6 +35,12 @@ vjPropertyDesc::vjPropertyDesc () : enumv(), valuelabels() {
 
 
 
+vjPropertyDesc::vjPropertyDesc (vjPropertyDesc& d) {
+    *this = d;
+}
+
+
+
 vjPropertyDesc::vjPropertyDesc (const std::string& n, int i, VarType t, 
 				const std::string& h):enumv(), valuelabels () {
     name = n;
@@ -201,15 +207,25 @@ istream& operator >> (istream& in, vjPropertyDesc& self) {
 
 
 vjPropertyDesc& vjPropertyDesc::operator= (vjPropertyDesc& pd) {
-    //cout << "propdesc operator= is called!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!" << endl;
+    int i;
     if (&pd == this)
-    return *this;
+	return *this;
     name = pd.name;
     token = pd.token;
     help = pd.help;
     type = pd.type;
+    num = pd.num;
+
+    for (i = 0; i < valuelabels.size(); i++)
+	delete valuelabels[i];
+    for (i = 0; i < enumv.size(); i++)
+	delete enumv[i];
     valuelabels.erase (valuelabels.begin(), valuelabels.end());
     enumv.erase (enumv.begin(), enumv.end());
+    for (i = 0; i < pd.valuelabels.size(); i++)
+	valuelabels.push_back (new vjEnumEntry(*(pd.valuelabels[i])));
+    for (i = 0; i < pd.enumv.size(); i++)
+	enumv.push_back (new vjEnumEntry(*(pd.enumv[i])));
     return *this;
 }
 
