@@ -121,9 +121,9 @@ protected:
    {
       METERS, FEET
    };
-   
+
    void setUnits( Units units = FEET ) { mUnits = units; }
-   
+
 private:
    vjVec3 mVelocity;
    vjVec3 mVelocityFromGravityAccumulator;
@@ -149,9 +149,9 @@ private:
    bool  mRotating;
    bool  mStopping;
    bool  mResetting;
-   
-   
-   
+
+
+
    Units       mUnits;
    StopWatch   stopWatch;
    navMode     mMode;
@@ -222,6 +222,12 @@ void velocityNav::setNavPosControl(std::string wand_dev)
 
 void velocityNav::updateInteraction()
 {
+   // If we are not supposed to be active, then don't run
+   if(!this->isActive())
+   {
+      return;
+   }
+
    mAcceleratingForward = checkForAction( mActionButtons, mAccelForwardCombo );
    mBraking = checkForAction( mActionButtons, mBrakeCombo );
    mStopping = checkForAction( mActionButtons, mStopCombo );
@@ -291,7 +297,7 @@ void velocityNav::update()
    vjVec3         trackerYaxis(0.0f, 1.0f, 0.0f);
    const vjVec3   gravity_meters_per_second( 0.0f, -9.8f, 0.0f ); //9.8 m/s (METERS)
    vjVec3         gravity( 0.0f, -9.8f, 0.0f ); // to be set by switch (mUnits == METERS)
-   
+
    switch (mUnits)
    {
    case FEET:
@@ -302,7 +308,7 @@ void velocityNav::update()
       gravity = gravity_meters_per_second;
       break;
    }
-   
+
    if ((mAllowRot) && (mRotating))
    {
       this->scaled_rotate( mRotationalAcceleration );     // Interpolates the rotation, and updates mCurPos matrix
