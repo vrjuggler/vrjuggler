@@ -41,100 +41,112 @@
 class TrackedInfo
 {
 public:
-    //: call this once per frame with your tracker's matrix.
-    void updateWithMatrix( const gmtl::Matrix44f& matrix );
+   //: call this once per frame with your tracker's matrix.
+   void updateWithMatrix(const gmtl::Matrix44f& matrix);
 
-    const gmtl::Vec3f& vector() const { return _vec; }
-    const gmtl::Vec3f& rotDelta() const { return _rotDelta; }
-    const gmtl::Vec3f& rotation() const { return _rot; }
+   const gmtl::Vec3f& vector() const
+   {
+      return mVec;
+   }
 
+   const gmtl::Vec3f& rotDelta() const
+   {
+      return mRotDelta;
+   }
+
+   const gmtl::Vec3f& rotation() const
+   {
+      return mRot;
+   }
 
 private:
-    gmtl::Vec3f _vec, _rot, _rotOld;
-    gmtl::Vec3f _rotDelta;
+   gmtl::Vec3f mVec, mRot, mRotOld;
+   gmtl::Vec3f mRotDelta;
 
-    //: a vector pointing forward in our space,
-    //  useful for getting what direction a device is pointing.
-    static const gmtl::Vec3f forwardVec;
+   //: a vector pointing forward in our space,
+   //  useful for getting what direction a device is pointing.
+   static const gmtl::Vec3f mForwardVec;
 
-    //: the origin
-    static const gmtl::Vec3f origin;
+   //: the origin
+   static const gmtl::Vec3f mOrigin;
 };
 
 class UserInfo
 {
 public:
-    //: default constructor
-    UserInfo();
+   //: default constructor
+   UserInfo();
 
-    //: set the "velocity per frame" once each frame.
-    //  required - call this before you use any 'update' functions.
-    void  setVelocity( const float& velocity );
+   //: set the "velocity per frame" once each frame.
+   //  required - call this before you use any 'update' functions.
+   void setVelocity(const float velocity);
 
-    //: set the "angular velocity per frame" once each frame.
-    //  required - call this before you use any 'update' functions.
-    //  give - aVelocity, a value from [0,1]
-    void  setAngularVelocity( const float& aVelocity );
+   //: set the "angular velocity per frame" once each frame.
+   //  required - call this before you use any 'update' functions.
+   //  give - aVelocity, a value from [0,1]
+   void setAngularVelocity(const float aVelocity);
 
-    //: call this once per frame with the tracker's TrackerInfo
-    //  this will update user data such as position, velocity
-    //  NOTE: if in "weightless" mode,
-    //        then pass (0,0,0) in for gravity
-    void  update( const TrackedInfo& tracker, const gmtl::Vec3f& gravity );
+   //: call this once per frame with the tracker's TrackerInfo
+   //  this will update user data such as position, velocity
+   //  NOTE: if in "weightless" mode,
+   //        then pass (0,0,0) in for gravity
+   void update(const TrackedInfo& tracker, const gmtl::Vec3f& gravity);
 
-    //: get the transform to put the scene from the user's point of view
-    //  from the user's info, calculate, then return, the
-    //  transform to put the scene into the user's point of view
-    void  getSceneTransform( gmtl::Matrix44f& sceneMatrtix ) const;
+   //: get the transform to put the scene from the user's point of view
+   //  from the user's info, calculate, then return, the
+   //  transform to put the scene into the user's point of view
+   void getSceneTransform(gmtl::Matrix44f& sceneMatrtix) const;
 
-    inline void move( gmtl::Vec3f& dist )
-    { move( dist[0], dist[1], dist[2] ); }
+   void move(const gmtl::Vec3f& dist)
+   {
+      move(dist[0], dist[1], dist[2]);
+   }
 
-    inline void move( float a, float b, float c )
-    { _pos[0] += a;
-      _pos[1] += b;
-      _pos[2] += c;
-    }
+   void move(const float a, const float b, const float c)
+   {
+      mPos[0] += a;
+      mPos[1] += b;
+      mPos[2] += c;
+   }
 
-    inline void reset()
-    {
-    _pos.set(0, 0, 0);
-    _posOld.set(0, 0, 0);
-    _rot.set(0, 0, 0);
-    _rotOld.set(0, 0, 0);
-    _velocity = 0.0f;
-    _velocityVec.set(0, 0, 0);
-    _angularVelocity = 0;
-    }
+   void reset()
+   {
+      mPos.set(0.0f, 0.0f, 0.0f);
+      mPosOld.set(0.0f, 0.0f, 0.0f);
+      mRot.set(0.0f, 0.0f, 0.0f);
+      mRotOld.set(0.0f, 0.0f, 0.0f);
+      mVelocity = 0.0f;
+      mVelocityVec.set(0.0f, 0.0f, 0.0f);
+      mAngularVelocity = 0.0f;
+   }
 
-
-    inline bool&  walk()
-    {
-    return _walkingMode;
-    }
+   bool& walk()
+   {
+      return mWalkingMode;
+   }
 
 private:
 
-    void _updateWithTracker( const TrackedInfo& tracker );
-    void _updateWithGravity( const gmtl::Vec3f& gravity );
+   void updateWithTracker(const TrackedInfo& tracker);
+   void updateWithGravity(const gmtl::Vec3f& gravity);
 
-    // current and old position
-    gmtl::Vec3f  _pos, _posOld;
+   // current and old position
+   gmtl::Vec3f mPos, mPosOld;
 
-    // current and old rotations
-    gmtl::Vec3f  _rot, _rotOld;
+   // current and old rotations
+   gmtl::Vec3f mRot, mRotOld;
 
-    // velocity vector
-    gmtl::Vec3f  _velocityVec;
+   // velocity vector
+   gmtl::Vec3f mVelocityVec;
 
-    // velocity per frame
-    float _velocity;
+   // velocity per frame
+   float mVelocity;
 
-    // angular velocity
-    float _angularVelocity;
+   // angular velocity
+   float mAngularVelocity;
 
-    // are we in walking or weightless mode?
-    bool _walkingMode;
+   // are we in walking or weightless mode?
+   bool mWalkingMode;
 };
 
 #endif
