@@ -183,9 +183,4 @@ vprSingletonImp (PerformanceCategories);
 jcclREGISTER_PERF_CATEGORY(jcclPERF_JACKAL, PERF_JACKAL);
 
 
-}; // namespace jccl
-
-const vpr::GUID jcclPERF_JACKAL ("29ecd55b-e68e-40ce-9db2-99e7682b36b4");
-const vpr::GUID jcclPERF_ALL ("0b6b599c-f90c-43f6-8fbb-08454dd78872");
-
-
+} // namespace jccl
