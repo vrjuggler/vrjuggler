@@ -97,7 +97,7 @@ public class PropertySheetFactory extends PropertyComponent
       sheet.setColor(color);
       sheet.init();
 
-      int row = 1;
+      int row = PropertySheet.START_ROW;
 
       // Loop over all properties.
       ConfigDefinition def = elm.getDefinition();
@@ -151,7 +151,7 @@ public class PropertySheetFactory extends PropertyComponent
       sheet.setColor(color);
       sheet.init();
 
-      int row = 1;
+      int row = PropertySheet.START_ROW;
 
       // If we have a variable list then create the buttons to add new values.
       if(propDef.isVariable())

@@ -105,11 +105,11 @@ public class VarListPanel
 
       PropertySheetFactory f = PropertySheetFactory.instance();
 
-      // Add 2 to the index to account for the way that the layout is done by
-      // PropertySheetFactory.  Row 0 is empty, and Row 1 contains the "New"
-      // button (yes, this class should probably not have to account for
-      // that...).
-      int row = evt.getIndex() + 2;
+      // Add the value index to the starting row for a variable-valued property
+      // list.  This gives the row in the property sheet's table layout where
+      // this new property value will be inserted.
+      // XXX: Is there a better way to keep track of this?
+      int row = evt.getIndex() + PropertySheet.VAR_LIST_VALUE_START_ROW;
       int prop_num = evt.getIndex();
 
       if(ConfigElement.class == prop_def.getType())

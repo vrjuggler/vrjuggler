@@ -57,6 +57,9 @@ public class PropertySheet extends PropertyComponent
    public static final int EDITOR_COLUMN      = 1;
    public static final int DELETE_ICON_COLUMN = 2;
 
+   public static final int START_ROW                = 1;
+   public static final int VAR_LIST_VALUE_START_ROW = 2;
+
    public void setConfigElement(ConfigElement elm)
    {
       mConfigElement = elm;
