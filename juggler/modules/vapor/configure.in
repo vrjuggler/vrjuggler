@@ -505,7 +505,7 @@ if test "x$GXX" = "xyes" ; then
    _vpr_gxx_ver=`$CXX -dumpversion`
 
    case ${_vpr_gxx_ver} in
-      3.0*)
+      3.*)
          CXXFLAGS="$CXXFLAGS -fexceptions"
          vpr_cxxflags="$vpr_cxxflags -fexceptions"
          ;;
