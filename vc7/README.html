@@ -1,0 +1,123 @@
+<head>
+<title>Compiling the Juggler Suite Using Visual Studio 7.x</title>
+</head>
+
+<body>
+<h1>Set Environment Variables</h1>
+
+<p>
+Prior to starting the Visual Studio GUI, several environment variables
+must be set.  These variables provide paths to external dependencies of
+the Juggler source code.  There are some environment variables that are
+required for successful compilation of the Juggler source, and there are
+some that are optional for getting additional code to compile.
+</p>
+
+<h2>Required Environment Variables</h2>
+
+<p>
+The required environment variables are as follows:
+</p>
+
+<dl>
+  <dt><tt>BOOST_ROOT</tt></dt>
+  <dd>
+    The root directory of an installed copy of
+    <a href="http://www.boost.org/">Boost</a> 1.31.0 or newer.  This must
+    contain a directory named <tt>lib</tt> that contains <i>at least</i>
+    compiled versions of the Boost.Filesystem library.  Refer to the relevant
+    <a href="http://www.boost.org/more/getting_started.html#Build_Install">Boost
+    documentation</a> for instructions on how to get and install Boost.
+  </dd>
+  <dt><tt>BOOST_INCLUDES</tt></dt>
+  <dd>
+    The directory containing the root of the Boost header tree.  For a
+    Boost 1.31.0 installation, this will normally be set to the value of
+    <tt>%BOOST_ROOT%\include\boost-1_31</tt>.  The requirement here is
+    that the value of this environment variable must be the full path to
+    a directory that contains a sub-directory named <tt>boost</tt>, in
+    which the Boost headers will be found.
+  </dd>
+  <dt><tt>BOOST_TOOL</tt></dt>
+  <dd>
+    The name of the Boost Jam toolset used to compile Boost.  This will
+    be either <tt>vc7</tt> or <tt>vc7.1</tt> depending on how Boost was
+    compiled.  To figure out for sure which was used, look at the names
+    of the libraries in <tt>%BOOST_ROOT%\lib</tt>.  For example, the
+    name of the Boost.Filesystem DLL may be
+    <tt>boost_filesystem-<b>vc7</b>-mt-1_31.dll</tt> where the
+    <tt>vc7</tt> part of the file name indicates that it was compiled
+    using the <tt>vc7</tt> toolset.
+  </dd>
+  <dt><tt>BOOST_VERSION</tt></dt>
+  <dd>
+    The version of Boost against which the Juggler code will be compiled.
+    However, this string must use underscores (<tt>_</tt>) instead of
+    periods (<tt>.</tt>), and it should only reference the majro and
+    minor version number.  For example, if you are compiling against Boost
+    1.31.2, this environment variable would be set to <tt>1_31</tt>.
+  </dd>
+  <dt><tt>NSPR_ROOT</tt></dt>
+  <dd>
+    The root directory of an installed copy of
+    <a href="http://www.mozilla.org/projects/nspr/">NSPR</a> 4.2 or newer.
+    This must contain a directory named <tt>lib</tt> and a directory
+    named <tt>include</tt>.
+  </dd>
+  <dt><tt>CPPDOM_ROOT</tt></dt>
+  <dd>
+    The root directory of an installed copy of
+    <a href="http://www.sourceforge.net/projects/xml-cppdom/">CppDOM</a>
+    0.3.0 or newer.  This must contain a directory named <tt>lib</tt> and a
+    directory named <tt>include</tt>.  Within <tt>lib</tt>, there must be
+    directories named <tt>Debug</tt>, <tt>DebugDLL</tt>, <tt>Release</tt>,
+    and <tt>ReleaseDLL</tt>.  Each of these contains one build of the CppDOM
+    library that reflects the name of the containing directory.
+  </dd>
+</dl>
+
+<h2>Optional Environment Variables</h2>
+
+<p>
+The optional environment variables are as follows:
+</p>
+
+<dl>
+  <dt><tt>OMNIORB_ROOT</tt></dt>
+  <dd>
+    The root directory of an
+    <a href="http://omniorb.sourceforge.net/">omniORB</a> 4.0.x installation.
+    This directory must contain the sub-directories <tt>bin</tt>,
+    <tt>include</tt>, and <tt>lib</tt>.  In <tt>bin</tt> and <tt>lib</tt>,
+    there must be sub-directories named <tt>x86_win32</tt> that contain the
+    actual compiled binaries.  This is the normal directory structure seen
+    after omniORB is compiled successfully.
+  </dd>
+  <dt><tt>VRPN_ROOT</tt></dt>
+  <dd>
+    The root directory of an
+    <a href="http://www.cs.unc.edu/Research/vrpn/">VRPN</a> 6.04 or newer
+    tree.  This directory must contain the sub-directories <tt>quat</tt>
+    and <tt>vrpn</tt>.  In each of those, there must be a sub-directory
+    named <tt>pc_win32</tt>, and within it, there must be sub-directories
+    named <tt>Debug</tt> and <tt>Release</tt>.  These contain the compiled
+    version of the appropriate library.  This is the normal directory
+    structure seen after VRPN is compiled successfully.
+  </dd>
+</dl>
+
+<h1>Running Visual Studio</h1>
+
+<p>
+Once the environment variables are set, double-click on <tt>Juggler.sln</tt>
+or load that file into the Visual Studio GUI.  The chosen target should
+be either "Debug DLL" or "Release DLL".  Otherwise, select "Batch Build"
+and compile everything selected.  By default, the static versions of the
+libraries will not be compiled.
+</p>
+
+<p>
+<font size="-1"><i>$Id$</i></font>
+</p>
+
+</body>
