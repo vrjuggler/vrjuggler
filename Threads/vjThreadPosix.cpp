@@ -44,6 +44,7 @@
 #endif
 
 #include <Threads/vjThread.h>
+#include <Threads/vjThreadManager.h>
 
 
 vjThreadTable<thread_id_t> vjThreadPosix::mThreadTable;
