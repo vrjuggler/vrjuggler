@@ -1,0 +1,183 @@
+# -----------------------------------------------------------------------------
+# Base Makefile.in for c2lib
+# $Date$
+# -----------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
+
+SHELL		= /bin/sh
+
+bindir		= @bindir@
+datadir		= @datadir@
+exec_prefix	= @exec_prefix@
+includedir	= @includedir@
+libdir		= @libdir@
+libexecdir	= @libexecdir@
+prefix		= @prefix@
+sbindir		= @sbindir@
+srcdir		= @srcdir@
+sysconfdir	= @sysconfdir@
+topdir		= @topdir@
+top_srcdir	= @top_srcdir@
+wwwdir		= ${srcdir}/Doc
+VJROOT		= ${top_srcdir}
+VJROOT_ABS	= @VJROOT_ABS@
+VJ_SRCDIR	= @VJ_SRCDIR@
+WORKDIR		= ${topdir}
+
+# Include commom definitions
+include @topdir@/Makefile.base
+
+
+LD		= @LD@
+LIBOPTS		= @LIBOPTS@
+LDOPTS		= @LDOPTS@
+LDFLAGS		= @LDFLAGS@ -L/usr/lib${LIBBITSUF} -L/usr/lib
+LIBS		= @LIBS@
+OBJDIR		= .
+
+OPT_FLAGS	= @OPT_FLAGS@
+VPATH		= @srcdir@
+
+DSOREGFILE	= @DSOREGFILE@
+DSOVERSION	= @DSOVERSION@
+DSOVERSIONOPTS	= @DSOVERSIONOPTS@
+
+VJRELEASE	= @VJRELEASE@
+LIBBITSUF	= @LIBBITSUF@
+PLATFORM	= @PLATFORM@
+
+DBG_BUILDDIR	= ${VJROOT_ABS}/lib/DBG.${VJRELEASE}.${PLATFORM}
+OPT_BUILDDIR	= ${VJROOT_ABS}/lib/OPT.${VJRELEASE}.${PLATFORM}
+
+LIBRARY		= libJuggler
+SHAREDLIB_EXT	= @SHAREDLIB_EXT@
+SUBDIRS		= Math Config Kernel Input SharedMem Sync Threads
+
+@SET_MAKE@
+
+# -----------------------------------------------------------------------------
+# Library targets.
+# -----------------------------------------------------------------------------
+
+default: dbg
+
+all: dbg opt dso ddso
+
+all-recursive install-recursive dbg-recursive opt-recursive		\
+dso-recursive ddso-recursive obj-recursive depend-recursive		\
+newdepend-recursive:
+	@set fnord ${MAKEFLAGS}; amf=$$2;				\
+            list='${SUBDIRS}';						\
+            for subdir in $$list; do					\
+                target=`echo $@ | sed s/-recursive//`;			\
+                echo "Making $$target in $$subdir";			\
+                (cd $$subdir && ${MAKE} OPTIMIZER="${OPTIMIZER}"	\
+                                    OBJDIR=${OBJDIR} $$target)		\
+                    || case "$$amf" in					\
+                         *=*) exit 1;;					\
+                         *k*) fail=yes;;				\
+                         *) exit 1;;					\
+                       esac;						\
+            done && test -z "$$fail"
+
+# Make a debugging version of the library.
+dbg:
+	@echo "Making DBG version of ${LIBRARY}"
+	@if test ! -d ${DBG_BUILDDIR}; then mkdir -p ${DBG_BUILDDIR} ; fi
+	${MAKE} depend-recursive
+	${MAKE} OPTIMIZER="-g" OBJDIR=${DBG_BUILDDIR} dbg-recursive
+	${MAKE} OBJDIR=${DBG_BUILDDIR} ${LIBRARY}.a
+	@echo "${LIBRARY}.a done"
+
+# Make an optimized version of the library.
+opt:
+	@echo "Making OPT version of ${LIBRARY}"
+	@if test ! -d ${OPT_BUILDDIR}; then mkdir -p ${OPT_BUILDDIR} ; fi
+	${MAKE} depend-recursive
+	${MAKE} OPTIMIZER="-O ${OPT_FLAGS}" OBJDIR=${OPT_BUILDDIR} opt-recursive
+	${MAKE} OBJDIR=${OPT_BUILDDIR} ${LIBRARY}.a
+	@echo "${LIBRARY}.a done"
+
+# Make an optimized version of the library that uses DSOs.
+dso:
+	@echo "Making DSO version of ${LIBRARY}"
+	@if test ! -d ${OPT_BUILDDIR}; then mkdir -p ${OPT_BUILDDIR} ; fi
+	${MAKE} depend-recursive
+	${MAKE} OPTIMIZER="-O ${OPT_FLAGS}" OBJDIR=${OPT_BUILDDIR} dso-recursive
+	${MAKE} OBJDIR=${OPT_BUILDDIR} ${LIBRARY}.${SHAREDLIB_EXT}
+	@echo "${LIBRARY}.${SHAREDLIB_EXT} done"
+
+# Make a debugging version of the library that uses DSOs.
+ddso:
+	@echo "Making DDSO version of ${LIBRARY}"
+	@if test ! -d ${DBG_BUILDDIR}; then mkdir -p ${DBG_BUILDDIR} ; fi
+	${MAKE} depend-recursive
+	${MAKE} OPTIMIZER="-O ${OPT_FLAGS}" OBJDIR=${DBG_BUILDDIR} ddso-recursive
+	${MAKE} OBJDIR=${DBG_BUILDDIR} ${LIBRARY}.${SHAREDLIB_EXT}
+	@echo "${LIBRARY}.${SHAREDLIB_EXT} done"
+
+# Build only the object files using the default values for ${OBJDIR}.
+obj:
+	@echo "Making ${LIBRARY} object files"
+	${MAKE} obj-recursive
+	@echo "Object files built"
+
+${LIBRARY}.a:
+	cd ${OBJDIR} && ${AR} $@ *.o
+
+${LIBRARY}.${SHAREDLIB_EXT}:
+	cd ${OBJDIR} && \
+          ${LD} ${LIBOPTS} ${DSOREGFILE} ${DSOVERSIONOPT} ${LDOPTS} *.o -o $@
+
+depend: depend-recursive
+
+newdepend: newdepend-recursive
+
+# -----------------------------------------------------------------------------
+# Clean-up.
+# -----------------------------------------------------------------------------
+clean-recursive:
+	@set fnord ${MAKEFLAGS}; amf=$$2;		\
+            rev=''; list='${SUBDIRS}';			\
+            for subdir in $$list; do			\
+                rev="$$subdir $$rev";			\
+            done;					\
+            for subdir in $$rev; do			\
+                target=`echo $@ | sed s/-recursive//`;	\
+                echo "Making $$target in $$subdir";	\
+                (cd $$subdir && ${MAKE} $$target)	\
+                    || case "$$amf" in			\
+                         *=*) exit 1;;			\
+                         *k*) fail=yes;;		\
+                         *) exit 1;;			\
+                       esac;				\
+            done && test -z "$$fail"
+
+clean: clean-recursive
+	@if test -d ${DBG_BUILDDIR}; then			\
+            echo "Cleaning in ${DBG_BUILDDIR} ...";	\
+            cd ${DBG_BUILDDIR};				\
+            rm -f *.o core so_locations;		\
+	    rm -rf ./ii_files;				\
+        fi
+	@if test -d $OPT_BUILDDIR; then			\
+            echo "Cleaning in ${OPT_BUILDDIR} ...";	\
+            cd ${OPT_BUILDDIR};				\
+            rm -f *.o core so_locations;		\
+	    rm -rf ./ii_files;				\
+        fi
+	rm -f so_locations
+
+clobber: clean
+	@if test -d ${DBG_BUILDDIR}; then			\
+            echo "Removing ${DBG_BUILDDIR} ...";		\
+            rm -rf ${DBG_BUILDDIR};			\
+        fi
+	@if test -d ${OPT_BUILDDIR}; then			\
+            echo "Removing ${OPT_BUILDDIR} ...";		\
+            rm -rf ${OPT_BUILDDIR};			\
+        fi
+
+info::
+	@echo "\nInfo for the make of ${LIBRARY}"
+	@echo "\nOBJDIR: ${OBJDIR}"

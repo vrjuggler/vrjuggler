@@ -1,0 +1,38 @@
+# Listfiles 1.0
+# v 1.0 (10/12/97) Christopher Just
+#
+# bash shell script
+# 
+# listfiles: takes as args any number of directories, followed by "-files"
+# marker, followed by any number of files.  Does a find for each file in
+# the specified directories, listing (only) the first match for each
+# filename.
+#   listfiles dir1 dir2 ... -files f1 f2 ...
+
+# First, we build up dirlist as a concatenation of all the directories
+# specified on the command line, separated by spaces.
+dirlist=
+
+#echo "--- Building file list ---"
+
+while test $1 != "-files"
+do
+  dirlist=${dirlist}" "${1}
+  shift
+done
+# remove -files from the arguments
+shift
+
+#echo "dirlist is " $dirlist
+
+# $* is a quick way to refer to all the remaining arguments -
+# i.e. all the files.
+for fname in $*
+do
+    # now we find the particular filename if it's anywhere below a
+    # directory in dirlist.  We pipe that through head -1 so that only 
+    # the first hit is printed.
+    find $dirlist -name $fname | head -1
+done
+
+#echo "Complete..."

@@ -1,0 +1,384 @@
+#------------------------
+# C2Lib DLL make file
+#------------------------
+
+# Add new source files to C2LIB_OBJECTS and the build rules at
+#   the end of the file 
+
+#!ifndef C2LIB
+#error:
+#	@echo Error: Do not call nmake directly on this makefile.  Use make.bat.
+#!endif
+
+C2RELEASE = X86
+
+!if "$(TYPE)" == "SHIP"
+SHIP = 1
+!else
+DEBUG = 1
+!endif
+
+!ifdef DEBUG
+EXE  = libC2
+!else # SHIP
+EXE  = libC2
+!endif # SHIP
+
+PROJ = C2LIB
+S = $(C2LIB)
+BUILD = DLL
+#EXE = c2lib
+
+DEFFILE = libc2.def
+
+!include makefile.common.win32
+
+# List all object files here
+# Add new object files to end of file for
+#  build rule
+C2LIB_OBJECTS = ConfigChunk.obj ParseUtil.obj \
+	Property.obj ChunkDescDB.obj ChunkDesc.obj \
+	ConfigChunkDB.obj C2Position.obj C2DummyPosition.obj \
+	C2Input.obj InputGroup.obj \
+#	C2Ibox.obj \
+#KERNEL_OBJECTS = \
+#	C2API.obj \
+#	C2Display.obj \
+#	C2DisplayManager.obj \
+#	C2DrawManager.obj \
+#	C2Kernel.obj \
+	C2Matrix.obj \
+#	C2SGISystemFactory.obj \
+	C2Vec3.obj \
+	C2Vec4.obj 
+#	C2WallProjection.obj \
+#	C2glDrawManager.obj \
+#	C2glPipe.obj \
+#	C2glWindow.obj \
+#	C2pfDrawManager.obj
+
+# Header Files, not used for anything yet
+
+INPUT_HS = $(INPUT_HS) C2Position.h \
+	       C2Flock.h	C2Bird.h \
+	       C2DummyPosition.h logiclass.h
+
+CONFIG_HS = ChunkDesc.h 	    ConfigChunk.h \
+	    ParseUtil.h     ChunkDescDB.h \
+	    ConfigChunkDB.h 	    VarValue.h \
+	     
+INPUT_HS = $(INPUT_HS)  C2Input.h \
+	     C2Analog.h C2Digital.h \
+	     C2DummyAnalog.h C2DummyDigital.h \
+#	     C2Ibox.h \
+	     C2KeyboardWin32.h
+
+INPUT_HS = $(INPUT_HS) InputGroup.h \
+	       C2AnalogProxy.h \
+	       C2DigitalProxy.h	C2PosProxy.h
+
+THREADS_HS = C2Thread.h \
+	     C2ThreadPool.h		ThreadFunctor.h \
+	     ThreadSGI.h
+
+SHARED_MEM_HS = C2Memory.h \
+		MemPool.h 	MemPoolSGI.h \
+		MemPoolHeap.h 	SharedType.h
+
+SYNC_HS = BarrierSGI.h \
+	  C2Guard.h 	  C2Semaphore.h \
+	  NullMutex.h 	  C2Barrier.h \
+	  C2Mutex.h 	  CondSGI.h \
+	  SemaphoreSGI.h 	  C2Cond.h \
+	  C2RWMutex.h	  MutexSGI.h
+
+
+
+KERNEL_HS = \
+	    C2API.h C2APIFactory.h  C2App.h C2Debug.h C2Display.h \
+	    C2DisplayManager.h C2DrawManager.h C2Frustrum.h \
+	    C2Kernel.h C2Matrix.h C2Projection.h C2SGIDisplay.h \
+	    C2SGISystemFactory.h C2System.h C2SystemData.h \
+	    C2SystemFactory.h  C2Vec3.h C2Vec4.h \
+	    C2WallProjection.h C2glAPIFactory.h C2glApp.h \
+	    C2glDrawManager.h C2glPipe.h C2glWindow.h \
+	    C2glxWindow.h C2pfAPIFactory.h C2pfApp.h \
+	    C2pfDrawManager.h
+
+
+C2LIB_HFILES = \
+	$(KERNEL_HS) \
+	$(CONFIG_HS) \
+	$(INPUT_HS) \
+	$(THREADS_HS) \
+	$(SYNC_HS) \
+	$(SHARED_MEM_HS)
+
+
+
+.PATH: $(C2_PATHS)
+#.PATH.h: $(C2_PATHS)
+INCLUDE  = $(INCLUDE) $(C2_PATHS)
+
+OBJECTS	= $(C2LIB_OBJECTS)
+HFILES = $(C2LIB_HFILES)
+
+
+goal: $(EXE).lib 
+	echo Success! > good.snt
+
+LINK     = link
+CC       = cl
+LIBEXE   = lib
+MKTYPLIB = mktyplib
+RC       = rc
+MAKE     = nmake
+
+SRC_DIR   = $(C2_PATHS)
+C2_INC_DIR   = $(C2_PATHS)
+
+RES_DIR   = $(SRC_DIR)\res\usa
+STATIC_RES_DIR   = $(SRC_DIR)\res\static
+
+# Settings common to Ship and Debug builds
+
+OLE_FLAGS =  -DWIN32S  
+
+CFLAGS	  = $(BSC) -TP -c -D_X86_=1 -DWIN32 -DWIN -Gz -GX -GR  -nologo  -QIfdiv- \
+	$(C2_PATHS)
+
+!ifdef SHIP
+CFLAGS = $(CFLAGS) -MT -Ox -Gf -Gy -G3 -W4
+!else 
+CFLAGS = $(CFLAGS) -MTd -Od -Oi -FR /nologo /MTd /W3 \
+  /Z7 /D "WIN32" /D "_DEBUG" /D "_WINDOWS" \
+  /Fp"C2Lib.pch" /YX /Fo /Fd /FD 
+!endif
+
+# LFLAGS = -align:0x1000 -entry:WinStart -incremental:no -map -nodefaultlib -nologo -fixed -subsystem:windows,4.00
+#LFLAGS = -align:0x1000 -incremental:no -nologo -lib
+# Bogus!  This has to be / and all caps, or the linker might choke on it
+LFLAGS = -lib $(LFLAGS) /FORCE:MULTIPLE /DBGIMPLIB  \
+	/LIBPATH:$(VCROOT)\lib 
+
+!ifdef SHIP
+#LFLAGS = $(LFLAGS) -merge:.rdata=.text -optidata -opt:ref -warn:3
+!else 
+#LFLAGS = $(LFLAGS) -warn:2
+!endif
+
+!ifdef LEGO
+LFLAGS = $(LFLAGS) -debug -debugtype:cv,fixup
+!else
+!ifndef SHIP
+#LFLAGS = $(LFLAGS) -debug -debugtype:cv
+!endif
+!endif
+
+!ifndef SHIP
+PP_FLAGS = -D_DEBUG
+OLE_FLAGS = $(OLE_FLAGS) -D_DEBUG
+RCFLAGS   = $(RCFLAGS) -D_DEBUG
+!endif
+
+SYSLIBS	= kernel32.lib \
+			advapi32.lib \
+			user32.lib \
+			gdi32.lib \
+			comdlg32.lib \
+			shell32.lib \
+			comctl32.lib \
+			version.lib \
+			ole32.lib \
+			oleaut32.lib \
+			uuid.lib \
+			odbc32.lib\
+			odbccp32.lib 
+
+
+!ifdef SHIP
+SYSLIBS = $(SYSLIBS) 
+!else
+SYSLIBS = $(SYSLIBS)  
+!endif
+
+
+COMMONINCL= $(HFILES)
+
+
+RES_OBJS	= 
+
+##########################################################################
+#
+# main obj lists; add new obj files here
+#
+
+APP_OBJS =  $(OBJECTS)
+
+ 
+##########################################################################
+#
+# Browser stuff
+#
+
+$(EXE).bsc : $(BSCFILES)
+	$(BSCMAKE) -El  -nologo -v -o $(@F) $(BSCFILES)
+
+
+##########################################################################
+
+##########################################################################
+#
+# link/res commands
+
+# $(EXE).exe: $(APP_OBJS) $(MSO_DLL) $(SRC_DIR)\$(APP).def $(BSCGOAL)
+#$(EXE).dll: $(APP_OBJS) $(C2ROOT)\lib\win32\softdist.def $(BSCGOAL)
+#    $(LINK) $(LFLAGS)  $(APP_OBJS)  -out:$@ $(SYSLIBS) $(OLELIBS) 
+
+$(EXE).lib: $(OBJECTS)
+#	/usr/lib/DCC/edg_prelink $?
+	$(LINK) $(LFLAGS) -out:$@ $(OBJECTS)
+
+##########################################################################
+#
+# build rules for src directory
+#
+
+ConfigChunk.obj \
+ParseUtil.obj \
+Property.obj \
+ChunkDescDB.obj \
+ChunkDesc.obj \
+ConfigChunkDB.obj:
+ $(CC) $(CFLAGS) $(OLE_FLAGS) $(C2ROOT)\Config\$*.C
+
+C2Position.obj C2DummyPosition.obj:
+ $(CC) $(CFLAGS) $(OLE_FLAGS) $(C2ROOT)\Input\C2Position\$*.C
+
+
+C2Input.obj \
+#	C2Ibox.obj \
+C2KeyboardWin32.obj:
+	$(CC) $(CFLAGS) $(OLE_FLAGS) $(C2ROOT)\Input\C2Input\$*.C
+
+InputGroup.obj:
+	$(CC) $(CFLAGS) $(OLE_FLAGS) $(C2ROOT)\Input\InputGroup\$*.C
+
+C2Vec3.obj \
+C2Vec4.obj \
+C2Matrix.obj:
+	$(CC) $(CFLAGS) $(OLE_FLAGS) $(C2ROOT)\Kernel\$*.C
+
+#{$(SRC_DIR)}.{$(OBJECTS)}:
+#    $(CC) $(CFLAGS) $(OLE_FLAGS) $<
+
+#{$(SRC_DIR)}.C{}.obj:
+#    $(CC) $(CFLAGS) $(OLE_FLAGS) $<
+
+#{$(SRC_DIR)}.h{}:
+#	
+
+#{$(SRC_DIR)}.cpp{}.pp:
+#    $(CC) $(CFLAGS) $(OLE_FLAGS) -EP $< > $@
+
+##########################################################################
+#
+# clean (erase) generated files
+
+clean:
+	if exist *.bsc del *.bsc
+	if exist *.bm del *.bm
+	if exist *.hs del *.hs
+	if exist *.sdm del *.sdm
+	if exist *.def del *.def
+	if exist *.dll del *.dll
+	if exist *.exe del *.exe
+	if exist *.exp del *.exp
+	if exist *.hs  del *.hs
+	if exist *.ilk del *.ilk
+	if exist *.imf del *.imf
+	if exist *.lib del *.lib
+	if exist *.map del *.map
+	if exist *.obj del *.obj
+	if exist *.pch del *.pch
+	if exist *.pdb del *.pdb
+	if exist *.pef del *.pef
+	if exist *.r del *.r
+	if exist *.res del *.res
+	if exist *.sbr del *.sbr
+	if exist *.sdm del *.sdm				
+	if exist binder.tlb del binder.tlb
+	if exist *.olb del *.olb
+	if exist *.typ del *.typ
+	if exist ibinder.h del ibinder.h
+	if exist ostrman*.* del ostrman*.*
+
+full: clean goal
+
+#########################################################
+# Dependencies
+#########################################################
+
+#ostrman.pp: $(RES_DIR)\ostrman.pp
+#        cl /EP /c $(PP_FLAGS) $(RES_DIR)\ostrman.pp > ostrman.pp
+
+#ostrman.h: ostrman.pp
+#        ostrman -1 ostrman.pp
+###        ostrman -g > ostrman.h
+
+default: dbg
+
+dbg: 
+	@ echo "making DBG version of $(EXE)"
+	@ mkdir  DBG.$(C2RELEASE).WIN 
+	@ cd DBG.$(C2RELEASE).WIN 
+	 $(MAKE) /f "../Makefile.win" $(EXE).lib
+#	@ echo $(MAKE) /f "../Makefile.win" $(EXE).dll
+
+opt: 
+	@ echo "making OPT version of $(EXE)"
+	 SET SHIP = 1
+	@ mkdir  OPT.$(C2RELEASE).WIN 
+	@ cd OPT.$(C2RELEASE).WIN 
+	 $(MAKE) /f "../Makefile.win" $(EXE).lib
+#	@ echo $(MAKE) /f "../Makefile.win" $(EXE).dll
+
+info::
+	@ echo "Info for the make of $(LIBRARY)"
+	@ echo "C2_PATHS: $(C2_PATHS)"
+	@ echo "OBJS: $(OBJECTS)"
+	@ echo "HS: $(HFILES)"
+	@ echo "Include: $(INCLUDE)"
+	@ echo "DocFiles: $(DOCFILES)"
+
+#c2api.obj : $(OBJECTS)
+
+
+#$(C2ROOT)\lib\win32\softdist.def: $(OBJECTS)
+
+
+#!include $(MSO)\office.mak
+
+#DFLAGS = $(DFLAGS) -DCOM_BUILD
+#CFLAGS = $(CFLAGS) -Fd$(PROJ)
+
+#LINK32_FLAGS=kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib\
+# advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib\
+# odbccp32.lib libc.lib /subsystem:windows /incremental:yes\
+# /def:$(MSO)\softdist\$(DEFFILE)
+
+#-------------------------
+
+#OBJS = \
+#	softdist.obj
+
+#-------------------------
+
+#$(EXE) : $(OBJS)
+#	$(LINK) $(LINK32_FLAGS) -dll -nologo -out:softdist.dll $(OBJS)
+
+#-------------------------
+#	clean
+
+#clean :
+#	del /q .

@@ -1,0 +1,22 @@
+#C2ROOT = /home/users/ahimberg/source/c2lib
+C2ROOT = C:\C2Lib
+VCROOT = C:\progra~1\devstudio\vc
+
+
+
+C2_PATHS = \
+ -I$(C2ROOT)/Config \
+ -I$(C2ROOT)/Input/C2Input \
+ -I$(C2ROOT)/Input/C2Position \
+ -I$(C2ROOT)/Input/ibox \
+ -I$(C2ROOT)/Input/InputGroup \
+ -I$(C2ROOT)/Input/C2Glove \
+ -I$(C2ROOT)/Kernel \
+ -I$(C2ROOT)/Threads \
+ -I$(C2ROOT)/SharedMem \
+ -I$(C2ROOT)/Sync
+
+C2_PATHS = $(C2_PATHS) -I$(VCROOT)\include -I$(VCROOT)\mfc\include
+	 
+
+
