@@ -1,4 +1,3 @@
-
 /****************** <SNX heading BEGIN do not edit this line> *****************
  *
  * sonix
@@ -80,72 +79,16 @@
 #include <fstream.h>
 #include <stdio.h> // for FILE
 
-#include "snx/Endian.h" //needed for snxEndian::isBig, snxEndian::isLittle funcs
+#include <snx/Endian.h> //needed for snxEndian::isBig, snxEndian::isLittle funcs
 
 namespace snxFileIO
 {
    //: true - 
-   inline bool fileExists( const char* const name )
-   {
-      if (name == NULL) return false;
-      
-      FILE* file = ::fopen( name, "r" );
-      if (file == NULL)
-      {
-         return false;
-      }
-      
-      else
-      {
-         ::fclose( file );
-         return true;
-      }
-   }
-   
-   inline int fileSize( const char* const filename )
-   {
-      if (filename == NULL) return 0;
-      
-      if (!fileExists( filename ))
-         return 0;
+   bool fileExists( const char* const name );
 
-      FILE* fh = fopen( filename, "rb" );
-      assert( fh != NULL ); 
-      
-      const int one_kilobyte = 1024;
-      const int arbitraliy_chosen_size = one_kilobyte * 1000;
-      
-      char data[arbitraliy_chosen_size];
-      int file_length( arbitraliy_chosen_size ); // makes the first while condition
-      int total_size = 0;
-      
-      while (file_length == arbitraliy_chosen_size)
-      {
-         file_length = fread( &data, 1, arbitraliy_chosen_size, fh );
-         total_size += file_length;
-      }
-      
-      fclose( fh );
+   int fileSize( const char* const filename );
 
-      return total_size;
-   }
-   
-   inline void fileLoad( const char* const filename, std::vector<unsigned char>& data )
-   {
-      if (filename == NULL) return;
-      
-      if (!fileExists( filename ))
-         return;
-
-      int size = fileSize( filename );
-      data.resize( size );
-      
-      FILE* fh = fopen( filename, "rb" );
-      unsigned int file_length = fread( &data[0], 1, data.size(), fh );
-      assert( file_length == data.size() );
-      fclose( fh );
-   }
-
+   void fileLoad( const char* const filename, std::vector<unsigned char>& data );
 
    enum Endianness
    {
@@ -194,80 +137,32 @@ namespace snxFileIO
       return size;
    }
 
-
-
    // Read one byte of data from the file stream
-   inline static int ReadByte( FILE *fp, unsigned char& value )
-   {
-      return ::fread( &value, 1, sizeof(unsigned char), fp );
-   }
+   static int ReadByte( FILE *fp, unsigned char& value );
 
    // Read one short of data from the file stream
    // NOTE: these enhance readability and type checking, try to use them over the generic ReadData function
-   inline static int ReadShort( Endianness fileByteOrdering, FILE* fp, unsigned short& value )
-   {
-      return ReadData( fileByteOrdering, fp, value );
-   }
+   static int ReadShort( Endianness fileByteOrdering, FILE* fp, unsigned short& value );
 
    // Read one long of data from the file stream
    // NOTE: these enhance readability and type checking, try to use them over the generic ReadData function
-   inline static int ReadLong( Endianness fileByteOrdering, FILE *fp, unsigned long& value )
-   {
-      return ReadData( fileByteOrdering, fp, value );
-   }
+   static int ReadLong( Endianness fileByteOrdering, FILE *fp, unsigned long& value );
 
    // Write one byte of data to the file stream
-   inline static int WriteByte( FILE *fp, const unsigned char& value )
-   {
-      return ::fwrite( &value, 1, sizeof(unsigned char), fp );
-   }
+   static int WriteByte( FILE *fp, const unsigned char& value );
 
    // Write one short of data to the file stream
    // NOTE: these enhance readability and type checking, try to use them over the generic WriteData function
-   inline static int WriteShort( Endianness fileByteOrdering, FILE* fp, const unsigned short& value )
-   {
-      return WriteData( fileByteOrdering, fp, value );
-   }
+   static int WriteShort( Endianness fileByteOrdering, FILE* fp, const unsigned short& value );
 
    // Write one long of data to the file stream
    // NOTE: these enhance readability and type checking, try to use them over the generic WriteData function
-   inline static int WriteLong( Endianness fileByteOrdering, FILE *fp, const unsigned long& value )
-   {
-      return WriteData( fileByteOrdering, fp, value );
-   }
+   static int WriteLong( Endianness fileByteOrdering, FILE *fp, const unsigned long& value );
 
-   inline static void getLine( ifstream& f, std::string& text  )
-   {
-      char buffer[2049];
-      f.getline( buffer, 2048, '\n' );
-      buffer[2048] = '\0';
-      if (f.gcount() < 2048)
-      {
-         buffer[f.gcount()] = '\0';
-      }
-      text = buffer;
-   }
+   static void getLine( ifstream& f, std::string& text  );
 
-   inline static void getAll( ifstream& f, std::string& buffer )
-   {
-      //cout<<"Reading:["<<flush;
-      while ((f.eof() == false) && (f.fail() == 0) )
-      //while (f.gcount() >= 2048)
-      {
-         //cout<<"."<<flush;
-         char buf[2049];
-         f.read( buf, 2048 );
-         buf[2048] = '\0';
-         if (f.gcount() < 2048)
-         {
-            buf[f.gcount()] = '\0';
-         }
-         buffer += buf;
-      }
-      //cout<<"]\n"<<flush;
-      //cout << "Gcount == " << f.gcount() << "\n"<<flush;
-   }
-   
+   static void getAll( ifstream& f, std::string& buffer );
+
 }; //end namespace.
 
 #endif
