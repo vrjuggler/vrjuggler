@@ -309,10 +309,13 @@ sub mail_notification {
 
     @mailaddrs = &read_logfile("$MAIL_FILE.$id", "");
 
+    # On IRIX, use /usr/lib/sendmail.  On Linux, use /usr/sbin/sendmail.
+    # (Linux does have /usr/lib/sendmail, but it is a link to
+    # /usr/sbin/sendmail.)
     if ($debug) {
-	open(MAIL, "| /usr/lib/sendmail -odb -oem patrick\@vrac.iastate.edu");
+	open(MAIL, "| /usr/sbin/sendmail -odb -oem patrick\@vrac.iastate.edu");
     } else {
-	open(MAIL, "| /usr/lib/sendmail -odb -oem -t");
+	open(MAIL, "| /usr/sbin/sendmail -odb -oem -t");
     }
 
 #    print(MAIL 'To: cvs-committers' . $dom . ", cvs-all" . $dom);
