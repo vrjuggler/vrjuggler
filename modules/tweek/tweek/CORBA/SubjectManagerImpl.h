@@ -106,7 +106,7 @@ protected:
     * tweek::CorbaManager may create objects of this type.
     */
    SubjectManagerImpl(const CorbaManager& corba_mgr)
-      : m_corba_mgr(corba_mgr), mAppName("unknown"), mGUID()
+      : mCorbaMgr(corba_mgr), mAppName("unknown"), mGUID()
    {
       mGUID.generate();
    }
@@ -115,7 +115,7 @@ protected:
    // exported public symbols.  This causes problems because copying
    // vpr::Mutex objects is not allowed.
    SubjectManagerImpl(const SubjectManagerImpl& sm)
-      : m_corba_mgr(sm.m_corba_mgr)
+      : mCorbaMgr(sm.mCorbaMgr)
    {
       /* Do nothing. */ ;
    }
@@ -128,17 +128,17 @@ protected:
    void registerSubject(Subject_ptr subject, const std::string& name);
 
 private:
-   const CorbaManager& m_corba_mgr;
+   const CorbaManager& mCorbaMgr;
    std::string         mAppName;
    vpr::GUID           mGUID;
 
    typedef std::map<std::string, Subject_ptr> subject_map_t;
-   subject_map_t m_subjects;
-   vpr::Mutex m_subjects_mutex;
+   subject_map_t mSubjects;
+   vpr::Mutex    mSubjectsMutex;
 
    typedef std::map<std::string, PortableServer::ObjectId_var> subject_id_map_t;
-   subject_id_map_t m_subject_ids;
-   vpr::Mutex m_subject_ids_mutex;
+   subject_id_map_t mSubjectIds;
+   vpr::Mutex       mSubjectIdsMutex;
 };
 
 } // End of tweek namespace

@@ -74,17 +74,17 @@ public:
    {
       // If the Subject Manager exists, we need to deactivate it, remove it
       // from the Naming Service, and free its memory.
-      if ( m_subj_mgr != NULL )
+      if ( mSubjectManager != NULL )
       {
          destroySubjectManager();
       }
 
       shutdown();
 
-      if ( m_my_thread != NULL )
+      if ( mOrbThread != NULL )
       {
-         delete m_my_thread;
-         m_my_thread = NULL;
+         delete mOrbThread;
+         mOrbThread = NULL;
       }
    }
 
@@ -124,7 +124,7 @@ public:
     */
    bool isValid() const
    {
-      return ! (CORBA::is_nil(m_orb) || CORBA::is_nil(m_root_poa));
+      return ! (CORBA::is_nil(mORB) || CORBA::is_nil(mRootPOA));
    }
 
    /**
@@ -150,17 +150,17 @@ public:
     */
    tweek::SubjectManagerImpl* getSubjectManager() const
    {
-      return m_subj_mgr;
+      return mSubjectManager;
    }
 
    const PortableServer::POA_var& getRootPOA() const
    {
-      return m_root_poa;
+      return mRootPOA;
    }
 
    const PortableServer::POA_var& getChildPOA() const
    {
-      return m_child_poa;
+      return mChildPOA;
    }
 
 private:
@@ -180,17 +180,17 @@ private:
 
    std::string mAppName;
 
-   vpr::Thread* m_my_thread;
+   vpr::Thread* mOrbThread;
 
-   CORBA::ORB_var m_orb;
-   PortableServer::POA_var m_root_poa;
-   PortableServer::POA_var m_child_poa;
-   CosNaming::NamingContext_var m_root_context;
-   CosNaming::NamingContext_var m_local_context;
+   CORBA::ORB_var mORB;
+   PortableServer::POA_var mRootPOA;
+   PortableServer::POA_var mChildPOA;
+   CosNaming::NamingContext_var mRootContext;
+   CosNaming::NamingContext_var mLocalContext;
 
-   tweek::SubjectManagerImpl*   m_subj_mgr;
-   PortableServer::ObjectId_var m_subj_mgr_id;
-   CosNaming::Name              m_subj_mgr_name;
+   tweek::SubjectManagerImpl*   mSubjectManager;
+   PortableServer::ObjectId_var mSubjectManagerId;
+   CosNaming::Name              mSubjectManagerName;
 };
 
 } // End of tweek namespace
