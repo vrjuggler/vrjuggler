@@ -31,12 +31,18 @@
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # -----------------------------------------------------------------------------
-# Makefile.in for juggler/test/Draw/OGL/wand
-# This requires GNU make.
+# Makefile for vrjuggler/tools/vrjvnc/example.  This requires GNU make.
 # -----------------------------------------------------------------------------
 
+# XXX: This is kind of bad.  What if Doozer didn't come with VR Juggler?
+DZR_BASE_DIR?=	$(VJ_BASE_DIR)/share/Doozer
 
-APP_NAME=	vncapp$(OS_EXE_EXT)
+include $(DZR_BASE_DIR)/mk/dzr.hosttype.mk
+include $(DZR_BASE_DIR)/ext/vpr/dzr.vpr.mk
+
+SYS_SETTING=	$(DZR_HOSTTYPE)-$(VPR_SUBSYSTEM)
+
+APP_NAME=	vncapp-$(SYS_SETTING)$(OS_EXE_EXT)
 
 all: $(APP_NAME)
 
@@ -51,14 +57,13 @@ SRCS=		d3des.c			\
 		main.cpp		\
 		vncApp.cpp
 
-
 EXTRA_PATH_FOR_SOURCES=	$(srcdir)/..
+
+OBJDIR=	$(SYS_SETTING).obj
+DEPDIR=	$(SYS_SETTING).obj
 
 include $(VJ_BASE_DIR)/share/vrjuggler/vrj.appdefs.mk
 include $(DZR_BASE_DIR)/ext/vrjuggler/dzr.vrjuggler.glapp.mk
-
-#OBJDIR = $(DZR_HOSTTYPE).obj
-#DEPDIR = $(DZR_HOSTTYPE).obj
 
 # -----------------------------------------------------------------------------
 # Application build targets.
