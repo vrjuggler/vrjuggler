@@ -33,6 +33,8 @@
 #ifndef _VJ_PF_APP_STATS_
 #define _VJ_PF_APP_STATS_
 
+#include <Input/InputManager/vjDigitalInterface.h>
+#include <Input/InputManager/vjDigitalProxy.h>
 #include <Performer/pf/pfChannel.h>
 #include <Performer/pfutil.h>
 #include <pfMPStats.h>

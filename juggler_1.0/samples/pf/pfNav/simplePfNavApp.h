@@ -37,6 +37,7 @@
 #include "KeyFramer.h" // for keyframer...
 #include <vjPfAppStats.h> // for stats
 #include "StopWatch.h"    // for time
+#include <Kernel/Pf/vjPfApp.h>    // the performer application base type
 class pfNavDCS;
 class navigator;
 

@@ -72,10 +72,11 @@ vpath %.cpp $(VJ_BASE_DIR)/@VJ_SHARE_DIR@/samples/pf/pfTools
 # 64-bit binaries, use -L/usr/lib64.
 EXTRA_LIBS	= @APP_EXTRA_LIBS_BEGIN@ @APP_EXTRA_LIBS_BASIC@ $(AW_LIBS) @APP_EXTRA_LIBS_PF@ @APP_EXTRA_LIBS_GL@ @APP_EXTRA_LIBS_END@
 
-COMMON_OBJECTS	= pfFileIO.@OBJEXT@		\
-                  pfTerryCollide.@OBJEXT@	\
+COMMON_OBJECTS	= simplePfNavApp.@OBJEXT@        \
+                  pfFileIO.@OBJEXT@             \
+                  pfTerryCollide.@OBJEXT@	      \
                   pfTerryPogoCollide.@OBJEXT@	\
-                  pfTerryBoxCollide.@OBJEXT@	\
+                  pfTerryBoxCollide.@OBJEXT@	   \
                   pfMPStats.@OBJEXT@
 
 PFNAV_OBJECTS	= pfNav.@OBJEXT@ $(COMMON_OBJECTS)
