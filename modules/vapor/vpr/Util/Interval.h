@@ -45,12 +45,10 @@
 #include <vpr/vprConfig.h>
 #include <vpr/Util/Assert.h>
 
-#ifndef VPR_SIMULATOR
-#  if defined(VPR_USE_NSPR)
-#     include <prinrval.h>
-#  else
-#     include <vpr/System.h>
-#  endif
+#if defined(VPR_USE_NSPR)
+#  include <prinrval.h>
+#else
+#  include <vpr/System.h>
 #endif
 
 namespace vpr
@@ -140,10 +138,14 @@ public:
     * Set the interval to the current time.  This can them be used to compute a time
     * interval by subtracting two intervals from each other.
     */
-#ifndef VPR_SIMULATOR
-   inline
-#endif
+#ifdef VPR_SIMULATOR
    void setNow();
+#else
+   inline void setNow();
+#endif
+
+   /** Set now that is gauranteed to be "real" time */
+   inline void setNowReal();
 
    void sec(const vpr::Uint32 num)
    { set(num, Interval::Sec); }
@@ -232,8 +234,13 @@ private:
 // include problems (vpr::sim::Controller needs vpr::Interval, and
 // vpr::Interval needs vpr::sim::Controller's vpr::sim::Clock instance).  Thus,
 // the simulator version of setNow() is in Interval.cpp.
-#ifndef VPR_SIMULATOR
+//
+// If in simulator, then this is setNowReal, else this is setNow.
+#ifdef VPR_SIMULATOR
+inline void Interval::setNowReal()
+#else
 inline void Interval::setNow()
+#endif /* ifdef VPR_SIMULATOR */
 {
 #if defined(VPR_USE_NSPR)
    /*  Todo our own rounding
@@ -250,7 +257,14 @@ inline void Interval::setNow()
    mTensOfUsecs = (cur_time.tv_usec + (1000000 * cur_time.tv_sec)) / 10;
 #endif
 }
-#endif /* ifndef VPR_SIMULATOR */
+
+// if not simulator, then define setNowReal to call setNow()
+// Note: we do not just have setNow() call setNowReal becuase
+//       the inlining may not optimize out both inline calls.
+#ifndef VPR_SIMULATOR
+inline void Interval::setNowReal()
+{  setNow(); }
+#endif
 
 }; // namespace vpr
 
