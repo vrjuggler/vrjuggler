@@ -44,7 +44,13 @@
 # Common code for plug-in DSOs.
 # -----------------------------------------------------------------------------
 ifeq ($(BUILD_TYPE), dbg)
-   BUILD_TYPE_EXT=	_d
+   BUILD_TYPE_DIR=	dbg
+endif
+ifeq ($(BUILD_TYPE), opt)
+   BUILD_TYPE_DIR=	opt
+endif
+ifeq ($(BUILD_TYPE), prof)
+   BUILD_TYPE_DIR=	dbg
 endif
 
 LIBDIR_NAME?=	lib$(LIBBITSUF)
@@ -52,10 +58,10 @@ LIBDIR_NAME?=	lib$(LIBBITSUF)
 # $(LIBDIR_BASE) is the base directory where the libraries will be built.
 LIBDIR_BASE?=	$(topdir)/$(LIBDIR_NAME)
 
-DSO_PLUGIN_SUBDIR=	snx/plugins
+DSO_PLUGIN_SUBDIR=	snx/plugins/$(BUILD_TYPE_DIR)
 DSO_PLUGIN_DIR=		$(LIBDIR_BASE)/$(DSO_PLUGIN_SUBDIR)
 
-PLUGIN_DSO=	$(PLUGIN_NAME)$(BUILD_TYPE_EXT).$(DYNAMICLIB_EXT)
+PLUGIN_DSO=	$(PLUGIN_NAME).$(DYNAMICLIB_EXT)
 DYLIB_DEPS=	$(PRE_DSO_PLUGIN_DEPS) @DSO_PLUGIN_DEPS@ $(POST_DSO_PLUGIN_DEPS)
 
 plugin-dso: $(DSO_PLUGIN_DIR)/$(PLUGIN_DSO)
