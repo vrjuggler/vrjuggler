@@ -8,7 +8,7 @@
    <definition_version version="1" label="Application Data">
       <help>Specify the host that is responsible for the given ApplicationData object.</help>
       <parent />
-      <category>/ClusterJuggler</category>
+      <category>/Cluster Juggler</category>
       <property valuetype="string" variable="false" name="guid">
          <help/>
          <value label="Global Unique Identifier" defaultvalue="" />
