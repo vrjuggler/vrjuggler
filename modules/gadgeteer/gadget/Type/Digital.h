@@ -170,7 +170,7 @@ namespace gadget
          return vpr::ReturnStatus::Succeed;
       }
 
-      virtual vpr::ReturnStatus readObject(vpr::ObjectReader* reader)
+      virtual vpr::ReturnStatus readObject(vpr::ObjectReader* reader, vpr::Uint64* delta)
       {
             //std::cout << "[Remote Input Manager] In Digital read" << std::endl;
          
@@ -200,7 +200,7 @@ namespace gadget
                //std::cout << value;
                timeStamp = reader->readUint64();                  //Write Time Stamp vpr::Uint64
                temp_digital_data.setDigital(value);
-               temp_digital_data.setTime(vpr::Interval(timeStamp + mDelta,vpr::Interval::Usec));
+               temp_digital_data.setTime(vpr::Interval(timeStamp + *delta,vpr::Interval::Usec));
                dataSample.push_back(temp_digital_data);
             }
             //std::cout << std::endl;

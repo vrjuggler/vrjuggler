@@ -104,11 +104,14 @@ namespace gadget
       void getClusterSync()
       {
          mDelta = mClusterSync.getClusterSync(mSockStream);
+         std::cout << "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX " << mDelta.getBaseVal() << std::endl;
       }
       
-      vpr::Uint64 getDelta()
+      vpr::Uint64* getDelta()
       {
-         return(mDelta.getBaseVal());
+         vpr::Uint64 temp = mDelta.getBaseVal();
+         vpr::Uint64* tempPtr = &temp;
+         return(tempPtr);
       }
 
 
