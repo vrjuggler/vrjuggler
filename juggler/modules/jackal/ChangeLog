@@ -1,5 +1,6 @@
 DATE        AUTHOR    CHANGE
 ----------- --------- ---------------------------------------------------------
+Jan-11-2002 cjust     Made PerformanceMonitor a singleton.
 Jan-08-2002 cjust     Testing equality of two "invalid" VarValues now
                       returns true.
                       Added a VarValue::isValid() convenience method.
