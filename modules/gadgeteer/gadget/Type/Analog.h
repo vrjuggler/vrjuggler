@@ -108,6 +108,10 @@ public:
    // XXX: Add a "sample" filter that does the normalization in here instead of in the driver
    AnalogData* getAnalogData(int devNum = 0)
    {
+      vprASSERT(!mAnalogSamples.stableBuffer().empty() && "Empty stable buffer, can't get sample");
+      vprASSERT((mAnalogSamples.stableBuffer().back().size() > (unsigned)devNum) && 
+                "Trying to get out of range device. No dev available"); 
+
       // XXX: Fill in;
       //return NULL;
       return &(mAnalogSamples.stableBuffer().back()[devNum]);
