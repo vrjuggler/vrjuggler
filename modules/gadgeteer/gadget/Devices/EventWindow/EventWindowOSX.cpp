@@ -33,12 +33,13 @@
 #include <gadget/gadgetConfig.h>
 
 #include <boost/concept_check.hpp>
-#include <vpr/Thread/Thread.h>
-#include <vpr/System.h>
+//#include <vpr/Thread/Thread.h>
+#include <jccl/Config/ConfigChunk.h>
 
 #include <gadget/Util/Debug.h>
-#include <gadget/InputManager.h>
-#include <jccl/Config/ConfigChunk.h>
+//#include <gadget/InputManager.h>
+#include <gadget/Type/EventWindow/KeyEvent.h>
+#include <gadget/Type/EventWindow/MouseEvent.h>
 
 #include <gadget/Devices/EventWindow/EventWindowOSX.h> // my header
 
@@ -99,7 +100,8 @@ int EventWindowOSX::startSampling()
         vprASSERT(false);
     }
 
-    std::cout << "Start sampleing in EventWindow" << std::endl;
+    vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
+       << "Start sampling in gadget::EventWindowOSX\n" << vprDEBUG_FLUSH;
     openTheWindow();
     mAmSampling = true;
 
@@ -166,6 +168,7 @@ void EventWindowOSX::updateData()
         m_keys[gadget::MOUSE_POSY] = 0;
         m_keys[gadget::MOUSE_NEGY] = 0;
    }
+
    updateEventQueue();
 }
 
@@ -178,7 +181,104 @@ int EventWindowOSX::stopSampling()
     return 1;
 }
 
-int EventWindowOSX::osxKeyToKey(UInt32 osxKey)
+void EventWindowOSX::addKeyEvent(const gadget::Keys& key,
+                                 const gadget::EventType& type,
+                                 EventRef event)
+{
+   UInt32 mod_keys;
+   GetEventParameter(event, kEventParamKeyModifiers, typeUInt32, NULL,
+                     sizeof(typeUInt32), NULL, &mod_keys);
+
+   // XXX: GetEventTime() returns the time of the event in seconds (as a
+   // double) since the system started up.  This may not be quite what we want.
+   unsigned long time = (unsigned long) GetEventTime(event);
+
+   // XXX: No ASCII representation of key press here.
+   gadget::EventPtr key_event(new gadget::KeyEvent(type, key,
+                                                   getMask(mod_keys), time));
+   addEvent(key_event);
+}
+
+void EventWindowOSX::addMouseMoveEvent(EventRef event)
+{
+   // XXX: GetEventTime() returns the time of the event in seconds (as a
+   // double) since the system started up.  This may not be quite what we want.
+   unsigned long time = (unsigned long) GetEventTime(event);
+
+   UInt32 mod_keys;
+   GetEventParameter(event, kEventParamKeyModifiers, typeUInt32, NULL,
+                     sizeof(typeUInt32), NULL, &mod_keys);
+
+   // Get the global mouse position.
+   Point mouse_pos;
+   GetEventParameter(event, kEventParamMouseLocation, typeQDPoint, NULL,
+                     sizeof(typeQDPoint), NULL, &mouse_pos);
+
+   // Coordinates for the mouse position within the window.  This converts
+   // the global mouse position into the coordinate frame of the window.
+   int x(mouse_pos.h - m_x), y(mouse_pos.v - m_y);
+
+   gadget::EventPtr mouse_event(new gadget::MouseEvent(gadget::MouseMoveEvent,
+                                                       gadget::NO_MBUTTON,
+                                                       x, y, mouse_pos.h,
+                                                       mouse_pos.v,
+                                                       getMask(mod_keys),
+                                                       time));
+   addEvent(mouse_event);
+}
+
+void EventWindowOSX::addMouseButtonEvent(const gadget::Keys& button,
+                                         EventRef event,
+                                         const gadget::EventType& type)
+{
+   // XXX: GetEventTime() returns the time of the event in seconds (as a
+   // double) since the system started up.  This may not be quite what we want.
+   unsigned long time = (unsigned long) GetEventTime(event);
+
+   UInt32 mod_keys;
+   GetEventParameter(event, kEventParamKeyModifiers, typeUInt32, NULL,
+                     sizeof(typeUInt32), NULL, &mod_keys);
+
+   // Get the global mouse position.
+   Point mouse_pos;
+   GetEventParameter(event, kEventParamMouseLocation, typeQDPoint, NULL,
+                     sizeof(typeQDPoint), NULL, &mouse_pos);
+
+   // Coordinates for the mouse position within the window.  This converts
+   // the global mouse position into the coordinate frame of the window.
+   int x(mouse_pos.h - m_x), y(mouse_pos.v - m_y);
+
+   gadget::EventPtr mouse_event(new gadget::MouseEvent(type, button, x, y,
+                                                       mouse_pos.h,
+                                                       mouse_pos.v,
+                                                       getMask(mod_keys),
+                                                       time));
+   addEvent(mouse_event);
+}
+
+int EventWindowOSX::getMask(const UInt32& modKeys)
+{
+   int mask(0);
+
+   if ( modKeys & shiftKey )
+   {
+      mask |= gadget::SHIFT_MASK;
+   }
+
+   if ( modKeys & controlKey )
+   {
+      mask |= gadget::CTRL_MASK;
+   }
+
+   if ( modKeys & optionKey )
+   {
+      mask |= gadget::ALT_MASK;
+   }
+
+   return mask;
+}
+
+gadget::Keys EventWindowOSX::osxKeyToKey(UInt32 osxKey)
 {
     switch (osxKey)
     {
@@ -244,7 +344,7 @@ int EventWindowOSX::osxKeyToKey(UInt32 osxKey)
         case OSXK_y : return gadget::KEY_Y;
         case OSXK_z : return gadget::KEY_Z;
         case OSXK_Ecs   : return gadget::KEY_ESC;
-        default     : return 255;
+        default     : return gadget::KEY_UNKNOWN;
    }
 
 }
@@ -417,7 +517,7 @@ pascal OSStatus EventWindowOSX::gotKeyEvent(EventHandlerCallRef  nextHandler,
             //The type of event
             UInt32     eventClass;
             UInt32     eventKind;
-            int        vj_key; // The key in vj space
+            gadget::Keys vj_key; // The key in vj space
             //The modifier keys
             UInt32     modKeys;
             //The mouse button
@@ -448,7 +548,10 @@ pascal OSStatus EventWindowOSX::gotKeyEvent(EventHandlerCallRef  nextHandler,
                 m_realkeys[vj_key] = 1;
                 m_keys[vj_key] += 1;
 
-                //std::cout << "Got Down: " << vj_key << std::endl;
+                vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_HVERB_LVL)
+                   << "vj_key press value: " << (unsigned int) vj_key
+                   << std::endl << vprDEBUG_FLUSH;
+                addKeyEvent(vj_key, gadget::KeyPressEvent, theEvent);
 
                 // -- Update lock state -- //
                 // Any[key == ESC]/unlock(ifneeded) -> Unlocked
@@ -532,6 +635,7 @@ pascal OSStatus EventWindowOSX::gotKeyEvent(EventHandlerCallRef  nextHandler,
 
                 vj_key = osxKeyToKey(keyInt);
                 m_realkeys[vj_key] = 0;
+                addKeyEvent(vj_key, gadget::KeyReleaseEvent, theEvent);
 
                 //std::cout << "Got Up: " << vj_key << std::endl;
 
@@ -556,10 +660,11 @@ pascal OSStatus EventWindowOSX::gotKeyEvent(EventHandlerCallRef  nextHandler,
 
             }
 
-
+            // XXX: This does not currently add an event to the queue.  My
+            // assumption is that the key press/release event handling above
+            // will deal with that since modifiers are just keys.
             if ( eventClass == kEventClassKeyboard && eventKind == kEventRawKeyModifiersChanged)
             {
-
                 GetEventParameter (theEvent, kEventParamKeyModifiers, typeUInt32,
                                 NULL, sizeof(typeUInt32), NULL, &modKeys);
 
@@ -651,12 +756,18 @@ pascal OSStatus EventWindowOSX::gotKeyEvent(EventHandlerCallRef  nextHandler,
                 {
                     case kEventMouseButtonPrimary :
                         m_realkeys[gadget::MBUTTON1] = m_keys[gadget::MBUTTON1] = 1;
+                        addMouseButtonEvent(gadget::MBUTTON1, theEvent,
+                                            gadget::MouseButtonPressEvent);
                         break;
                     case kEventMouseButtonSecondary:
                         m_realkeys[gadget::MBUTTON2] = m_keys[gadget::MBUTTON2] = 1;
+                        addMouseButtonEvent(gadget::MBUTTON2, theEvent,
+                                            gadget::MouseButtonPressEvent);
                         break;
                     case kEventMouseButtonTertiary:
                         m_realkeys[gadget::MBUTTON3] = m_keys[gadget::MBUTTON3] = 1;
+                        addMouseButtonEvent(gadget::MBUTTON3, theEvent,
+                                            gadget::MouseButtonPressEvent);
                         break;
                 }
                 //std::cout << "mouse down" << std::endl;
@@ -674,12 +785,18 @@ pascal OSStatus EventWindowOSX::gotKeyEvent(EventHandlerCallRef  nextHandler,
                 {
                     case kEventMouseButtonPrimary :
                         m_realkeys[gadget::MBUTTON1] = m_keys[gadget::MBUTTON1] = 0;
+                        addMouseButtonEvent(gadget::MBUTTON1, theEvent,
+                                            gadget::MouseButtonReleaseEvent);
                         break;
                     case kEventMouseButtonSecondary:
                         m_realkeys[gadget::MBUTTON2] = m_keys[gadget::MBUTTON2] = 0;
+                        addMouseButtonEvent(gadget::MBUTTON2, theEvent,
+                                            gadget::MouseButtonReleaseEvent);
                         break;
                     case kEventMouseButtonTertiary:
                         m_realkeys[gadget::MBUTTON3] = m_keys[gadget::MBUTTON3] = 0;
+                        addMouseButtonEvent(gadget::MBUTTON3, theEvent,
+                                            gadget::MouseButtonReleaseEvent);
                         break;
                 }
 
