@@ -77,7 +77,7 @@ public:
     *       initialized before any other member functions can do anything
     *       with it.
     */
-   RWMutexPosix (void) : mLocked(0)
+   RWMutexPosix() : mLocked(0)
    {
       // Initialize the mutex.
       pthread_rwlock_init(&mRWMutex, NULL);
@@ -91,7 +91,7 @@ public:
     *      it.
     * @post The mutex variable is destroyed and unlocked if necessary.
     */
-   ~RWMutexPosix (void)
+   ~RWMutexPosix()
    {
       // Destroy the mutex.
       if ( pthread_rwlock_destroy(&mRWMutex) == -1 )
@@ -113,7 +113,7 @@ public:
     *         vpr::ReturnStatus::Fail is returned if an error occurred.
     * @note acquires the write lock.
     */
-   vpr::ReturnStatus acquire (void)
+   vpr::ReturnStatus acquire()
    { 
       return acquireWrite();
    }
@@ -129,7 +129,7 @@ public:
     * @return vpr::ReturnStatus::Succeed is returned if the lock is acquired.
     *         vpr::ReturnStatus::Fail is returned if an error occurred.
     */
-   vpr::ReturnStatus acquireRead (void)
+   vpr::ReturnStatus acquireRead()
    {
       int retval = pthread_rwlock_rdlock(&mRWMutex);
 
@@ -166,7 +166,7 @@ public:
     * @return vpr::ReturnStatus::Succeed is returned if the lock is acquired.
     *         vpr::ReturnStatus::Fail is returned if an error occurred.
     */
-   vpr::ReturnStatus acquireWrite (void)
+   vpr::ReturnStatus acquireWrite()
    {
       int retval = pthread_rwlock_rdlock(&mRWMutex);
 
@@ -205,7 +205,7 @@ public:
     *         locked.
     * @note Trys to acquire the write mutex.
     */
-   vpr::ReturnStatus tryAcquire (void)
+   vpr::ReturnStatus tryAcquire()
    {
       return tryAcquireWrite();
    }
@@ -222,7 +222,7 @@ public:
     *         acquired.  vpr::ReturnStatus::Fail is returned if the mutex is
     *         already locked.
     */
-   vpr::ReturnStatus tryAcquireRead (void)
+   vpr::ReturnStatus tryAcquireRead()
    {
       if ( pthread_rwlock_tryrdlock(&mRWMutex) == 0 )
       {
@@ -248,7 +248,7 @@ public:
     *         acquired.  vpr::ReturnStatus::Fail is returned if the mutex is
     *         already locked.
     */
-   vpr::ReturnStatus tryAcquireWrite (void)
+   vpr::ReturnStatus tryAcquireWrite()
    {
       if ( pthread_rwlock_trywrlock(&mRWMutex) == 0 )
       {
@@ -271,7 +271,7 @@ public:
     * @return vpr::ReturnStatus::Succeed is returned if the lock is released successfully.<br>
     *         -1 is returned otherwise.
     */
-   vpr::ReturnStatus release (void)
+   vpr::ReturnStatus release()
    {
       mLocked = 0;
       if ( pthread_rwlock_unlock(&mRWMutex) == 0 )
@@ -293,7 +293,7 @@ public:
     * @return 0 is returned if this mutex is not currently locked.<br>
     *         1 is returned if this mutex is locked.
     */
-   int test(void)
+   int test()
    {
       return mLocked;
    }
@@ -310,8 +310,8 @@ public:
     *                It defaults to stderr if no descriptor is specified.
     * @param message Message printed out before the output is dumped.
     */
-   void dump (FILE* dest = stderr,
-              const char* message = "\n------ RW Mutex Dump -----\n") const
+   void dump(FILE* dest = stderr,
+             const char* message = "\n------ RW Mutex Dump -----\n") const
    {
       fprintf(dest, "%s", message);
       fprintf(dest, "This is not currently implemented ...\n");

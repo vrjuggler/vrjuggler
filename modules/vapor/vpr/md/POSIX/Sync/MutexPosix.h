@@ -77,7 +77,7 @@ public:
     *       initialized before any other member functions can do anything
     *       with it.
     */
-   MutexPosix (void)
+   MutexPosix()
    {
       // Initialize the mutex.
       pthread_mutex_init(&mMutex, NULL);
@@ -91,7 +91,7 @@ public:
     *      it.
     * @post The mutex variable is destroyed and unlocked if necessary.
     */
-   ~MutexPosix (void)
+   ~MutexPosix()
    {
       // Destroy the mutex.
       if ( pthread_mutex_destroy(&mMutex) == -1 )
@@ -112,7 +112,7 @@ public:
     * @return vpr::ReturnStatus::Succeed is returned if the lock is acquired.
     *         vpr::ReturnStatus::Fail is returned if an error occurred.
     */
-   vpr::ReturnStatus acquire (void)
+   vpr::ReturnStatus acquire()
    {
       int retval = pthread_mutex_lock(&mMutex);
 
@@ -150,7 +150,7 @@ public:
     *
     * @note No special read lock has been defined for now.
     */
-   vpr::ReturnStatus acquireRead (void)
+   vpr::ReturnStatus acquireRead()
    {
       return this->acquire();
    }
@@ -168,7 +168,7 @@ public:
     *
     * @note No special write lock has been defined for now.
     */
-   vpr::ReturnStatus acquireWrite (void)
+   vpr::ReturnStatus acquireWrite()
    {
       return this->acquire();
    }
@@ -185,7 +185,7 @@ public:
     *         vpr::ReturnStatus::Fail is returned if the mutex is already
     *         locked.
     */
-   vpr::ReturnStatus tryAcquire (void)
+   vpr::ReturnStatus tryAcquire()
    {
       if ( pthread_mutex_trylock(&mMutex) == 0 )
       {
@@ -209,7 +209,7 @@ public:
     *         acquired.  vpr::ReturnStatus::Fail is returned if the mutex is
     *         already locked.
     */
-   vpr::ReturnStatus tryAcquireRead (void)
+   vpr::ReturnStatus tryAcquireRead()
    {
       return this->tryAcquire();
    }
@@ -226,7 +226,7 @@ public:
     *         acquired.  vpr::ReturnStatus::Fail is returned if the mutex is
     *         already locked.
     */
-   vpr::ReturnStatus tryAcquireWrite (void)
+   vpr::ReturnStatus tryAcquireWrite()
    {
       return this->tryAcquire();
    }
@@ -240,7 +240,7 @@ public:
     * @return vpr::ReturnStatus::Succeed is returned if the lock is released successfully.<br>
     *         -1 is returned otherwise.
     */
-   vpr::ReturnStatus release (void)
+   vpr::ReturnStatus release()
    {
       if ( pthread_mutex_unlock(&mMutex) == 0 )
       {
@@ -261,7 +261,7 @@ public:
     * @return 0 is returned if this mutex is not currently locked.<br>
     *         1 is returned if this mutex is locked.
     */
-   int test(void);
+   int test();
 
    /**
     * Dumps the mutex debug stuff and current state.
@@ -275,8 +275,8 @@ public:
     *                It defaults to stderr if no descriptor is specified.
     * @param message Message printed out before the output is dumped.
     */
-   void dump (FILE* dest = stderr,
-              const char* message = "\n------ Mutex Dump -----\n") const
+   void dump(FILE* dest = stderr,
+             const char* message = "\n------ Mutex Dump -----\n") const
    {
       fprintf(dest, "%s", message);
       fprintf(dest, "This is not currently implemented ...\n");
