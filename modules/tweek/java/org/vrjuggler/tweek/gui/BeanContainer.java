@@ -57,7 +57,7 @@ import org.vrjuggler.tweek.net.corba.*;
  *
  * @version $Revision$
  */
-public class BeanContainer extends JScrollPane
+public class BeanContainer extends JPanel
                            implements BeanInstantiationListener
 {
    // ========================================================================
@@ -82,8 +82,8 @@ public class BeanContainer extends JScrollPane
    {
       if ( v != null )
       {
-         this.getViewport().removeAll();
-         this.getViewport().add(v.getViewer(), null);
+         this.removeAll();
+         this.add(v.getViewer(), BorderLayout.CENTER);
          this.repaint();
       }
    }
@@ -237,6 +237,7 @@ public class BeanContainer extends JScrollPane
 
    private void jbInit() throws Exception
    {
+      this.setLayout(mContainerLayout);
    }
 
    private void fireFrameStateChangeEvent (TweekFrameEvent e)
@@ -265,4 +266,5 @@ public class BeanContainer extends JScrollPane
    private Vector mFrameListeners = new Vector();
 
    private TreeModel mDataModel = null;
+   private BorderLayout mContainerLayout = new BorderLayout();
 }
