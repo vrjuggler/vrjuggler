@@ -197,8 +197,6 @@ int Flock::startSampling()
       vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CONFIG_LVL)
          << "gadget::Flock ready to go..\n" << vprDEBUG_FLUSH;
 
-//      Flock* devicePtr = this;
-
       // Create a new thread to handle the control
       vpr::ThreadMemberFunctor<Flock>* memberFunctor =
           new vpr::ThreadMemberFunctor<Flock>(this, &Flock::controlLoop, NULL);
@@ -223,7 +221,7 @@ int Flock::sample()
 {
    std::vector< gadget::PositionData > cur_samples(mFlockOfBirds.getNumBirds());
 
-   if (this->isActive() == false)
+   if ( !isActive() )
    {
       return 0;
    }
@@ -247,27 +245,8 @@ int Flock::sample()
       // Transforms between the cord frames
       gmtl::Matrix44f transmitter_T_reciever;
 
-      // We add 1 to "i" to account for the fact that FlockStandalone is
-      // 1-based
-
-      /*
-      transmitter_T_reciever.makeZYXEuler(mFlockOfBirds.zRot( i+1 ),
-                                                   mFlockOfBirds.yRot( i+1 ),
-                                                   mFlockOfBirds.xRot( i+1 ));
-
-      transmitter_T_reciever.setTrans(mFlockOfBirds.xPos( i+1 ),
-                                               mFlockOfBirds.yPos( i+1 ),
-                                               mFlockOfBirds.zPos( i+1 ));
-      */
-  /*    gmtl::identity(transmitter_T_reciever);
-      gmtl::EulerAngleZYXf euler( gmtl::Math::deg2Rad(mFlockOfBirds.zRot( i+1 )),
-                                  gmtl::Math::deg2Rad(mFlockOfBirds.yRot( i+1 )),
-                                  gmtl::Math::deg2Rad(mFlockOfBirds.xRot( i+1 )) );
-      gmtl::setRot( transmitter_T_reciever, euler );
-      gmtl::setTrans( transmitter_T_reciever, gmtl::Vec3f( mFlockOfBirds.xPos( i+1 ),
-                                                           mFlockOfBirds.yPos( i+1 ),
-                                                           mFlockOfBirds.zPos( i+1 )) );
-     */
+      // XXX: Check to see if this comment is valid.
+      // We add 1 to "i" to account for the fact that FlockStandalone is 1-based
       gmtl::identity(transmitter_T_reciever);
       gmtl::EulerAngleZYXf euler( gmtl::Math::deg2Rad(mFlockOfBirds.zRot( i )),
                                   gmtl::Math::deg2Rad(mFlockOfBirds.yRot( i )),
@@ -276,23 +255,9 @@ int Flock::sample()
       gmtl::setTrans( transmitter_T_reciever, gmtl::Vec3f( mFlockOfBirds.xPos( i ),
                                                            mFlockOfBirds.yPos( i ),
                                                            mFlockOfBirds.zPos( i )) );
-
-//      if (i==1)
-//      {
-//         vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
-//            << "Flock: bird1:    orig:" << Coord(theData[index]).pos
-//            << std::endl << vprDEBUG_FLUSH;
-//      }
-
-      cur_samples[i].mPosData = transmitter_T_reciever;                                     // Store corrected xform back into data
+      // Set timestamp & Store the corrected xform back into buffer.
+      cur_samples[i].mPosData = transmitter_T_reciever;
       cur_samples[i].setTime (cur_samples[0].getTime());
-
-//      if (i == 1)
-//      {
-//         vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
-//            << "Flock: bird1: xformed:" << Coord(theData[index]).pos
-//            << std::endl << vprDEBUG_FLUSH;
-//      }
    }
 
    // Add data sample
@@ -340,14 +305,10 @@ int Flock::stopSampling()
 
 void Flock::updateData()
 {
-   if (this->isActive() == false)
+   if ( isActive() )
    {
-      return;
+      swapPositionBuffers();
    }
-
-   swapPositionBuffers();
-
-   return;
 }
 
 void Flock::setHemisphere(const BIRD_HEMI& h)

@@ -31,91 +31,75 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include <iostream>
-
+#include <stdlib.h>
+#include <ctype.h>
 #include <gadget/Devices/Intersense/IntersenseAPI/IntersenseAPIStandalone.h>
 
-void IntersenseAPIStandalone::init()
+bool IntersenseAPIStandalone::open(const std::string& dso_location)
 {
-  mBaudRate = 9600;
-  mPort = 0;
-  mVerbose = false;
-  mHandle = 0;
-  mActive = false;
-  mNumStations = 0;
-  script = NULL;
+   if(!mActive)
+   {
+      int port_num = convertPort(mPort); 
+      mHandle = ISD_OpenTracker( (Hwnd) NULL, port_num, true, true , dso_location.c_str());
+      if (-1 != mHandle) 
+      {
+         mActive = true;
+         //sendScript();
+      }
+   }
+   return mActive;
 }
 
-bool IntersenseAPIStandalone::open(std::string dso_location)
+int IntersenseAPIStandalone::convertPort(const std::string& port)
 {
-  //if(!mPortName.empty()) {
-  //    mHandle = ISD_OpenTrackerPort(mPortName.c_str(), FALSE, mVerbose, (DWORD)mBaudRate);
-  //} else {
-   std::cout << "IntersenseStandalone, trying to open: " << mPortName << " at " << mBaudRate << std::endl;
-//      mHandle = ISD_OpenTracker(mPortName, mBaudRate, FALSE, mVerbose/*, (DWORD)mBaudRate*/);
-  //mHandle = ISD_OpenTracker( (Hwnd) NULL, 0, FALSE, verbose );
-   mHandle = ISD_OpenTracker( (Hwnd) NULL, 0, true, true , dso_location.c_str());
-  //}
-  bool tracker_connect = false;
-  if (-1 != mHandle) {
-    tracker_connect = true;
-    //sendScript();
-  }
-
-  mActive = true;
-  return tracker_connect;
-
+   std::string result;
+   
+   for(unsigned int i = 0 ; i < port.size() ; i++)
+   {
+      if(isdigit(port[i]))
+      {
+         //std::cout << port[i] << std::endl;
+         result += port[i];
+      }
+   }
+   // If we did not find a valid number, autodetect
+   if("" == result)
+   {
+      result = "0";
+   }
+   std::cout << "Converted port: " << port << " to port #" << result << std::endl;
+   return(atoi(result.c_str()));
 }
 
 bool IntersenseAPIStandalone::close()
 {
-  return (bool)ISD_CloseTracker( mHandle );
+   return (bool)ISD_CloseTracker( mHandle );
 }
 
 bool IntersenseAPIStandalone::updateData()
 {
-
-  bool is_data = false;
-
-  if (FALSE != ISD_GetData(mHandle, &mData))
-  {
-      is_data = true;
-  }
-  
-  return is_data;
-
+   if (FALSE != ISD_GetData(mHandle, &mData))
+   {
+      return true; 
+   }
+   return false;
 }
-
-
-
-//TODO: verify that data is in euler angle form. or quaternion
-//FIX:  this is done in the Isense
-float& IntersenseAPIStandalone::xPos( const int& i ) { return mData.Station[i].Position[0]; }
-float& IntersenseAPIStandalone::yPos( const int& i ) { return mData.Station[i].Position[1]; }
-float& IntersenseAPIStandalone::zPos( const int& i ) { return mData.Station[i].Position[2]; }
-
-float& IntersenseAPIStandalone::xRot( const int& i ) { return mData.Station[i].Orientation[2]; }
-float& IntersenseAPIStandalone::yRot( const int& i ) { return mData.Station[i].Orientation[1]; }
-float& IntersenseAPIStandalone::zRot( const int& i ) { return mData.Station[i].Orientation[0]; }
-
-float& IntersenseAPIStandalone::xQuat( const int& i ) { return mData.Station[i].Orientation[2]; }
-float& IntersenseAPIStandalone::yQuat( const int& i ) { return mData.Station[i].Orientation[1]; }
-float& IntersenseAPIStandalone::zQuat( const int& i ) { return mData.Station[i].Orientation[0]; }
-float& IntersenseAPIStandalone::wQuat( const int& i ) { return mData.Station[i].Orientation[3]; }
 
 int IntersenseAPIStandalone::buttonState(const int& i, const int& f)
 {
-  if(f < MAX_NUM_BUTTONS && i < mNumStations)
-     return mData.Station[i].ButtonState[f];
-  else
-     return 0;
+   if(f < MAX_NUM_BUTTONS && i < mNumStations)
+   {
+      return mData.Station[i].ButtonState[f];
+   }
+   return 0;
 }
 
 
-int IntersenseAPIStandalone::analogData(const int& i, const int& j) {
-  if(j < MAX_ANALOG_CHANNELS && i < mNumStations)
-     return mData.Station[i].AnalogData[j];
-  else
-     return 0;
+int IntersenseAPIStandalone::analogData(const int& i, const int& j)
+{
+   if(j < MAX_ANALOG_CHANNELS && i < mNumStations)
+   {
+      return mData.Station[i].AnalogData[j];
+   }
+   return 0;
 }
-
-
