@@ -77,8 +77,11 @@ bool InputArea::config(jccl::ConfigElementPtr e)
    // If we have a pointer to a window in registry, then use that
    mKeyboardMouseDeviceName = e->getProperty<std::string>("keyboard_mouse_device_name");
 
-   KeyboardMouseDevice::KeyboardMouseDeviceRegistry::KeyboardMouseDeviceInfo event_source_info;
-   bool found_window = KeyboardMouseDevice::KeyboardMouseDeviceRegistry::instance()->getKeyboardMouseDevice(mKeyboardMouseDeviceName, event_source_info);
+   km_registry_t::KeyboardMouseDeviceInfo event_source_info;
+   bool found_window =
+      km_registry_t::instance()->getKeyboardMouseDevice(mKeyboardMouseDeviceName,
+                                                        event_source_info);
+
    if(!found_window)
    {
       // Use vprDBG_WARNING_LVL for input_window config elements as they are
