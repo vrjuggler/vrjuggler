@@ -48,6 +48,19 @@ SRC_MKFILES	= Makefile
 
 include @topdir@/make.defs.mk
 
+STARTTIME	:= $(shell LC_TIME=C date)
+
+BUILD_PROF_C	= @BUILD_PROF_C@
+BUILD_PROF_CXX	= @BUILD_PROF_CXX@
+
+# If we can build both C and C++ profiled objects, we will build profiled
+# libraries.
+ifeq ($(BUILD_PROF_C), Y)
+ifeq ($(BUILD_PROF_CXX), Y)
+    BUILD_PROF_LIBS	= 1
+endif
+endif
+
 includedir           = @includedir@
 instlinks            = $(topdir)/install-clone
 
@@ -57,7 +70,10 @@ DYNAMICLIB_EXT	= @DYNAMICLIB_EXT@
 SNX_LIBRARY           = @LIB_PREFIX@sonix
 SNX_LIB_STATIC        = $(SNX_LIBRARY).$(STATICLIB_EXT)
 SNX_LIB_DYNAMIC       = $(SNX_LIBRARY).$(DYNAMICLIB_EXT)
+SNX_PROF_LIB_STATIC	= $(SNX_LIBRARY)$(PROFLIB_EXT).$(STATICLIB_EXT)
+SNX_PROF_LIB_DYNAMIC	= $(SNX_LIBRARY)$(PROFLIB_EXT).$(DYNAMICLIB_EXT)
 DYLIB_DEPS_SNX		= @snx_ldflags_linker@
+DYLIB_PROF_DEPS_SNX	= @snx_ldflags_linker@
 
 # setup the list of libs to be built...
 LIBS        = $(SNX_LIBRARY)
@@ -85,7 +101,7 @@ endif
 # -----------------------------------------------
 # Construct the static version of the libraries.
 # -----------------------------------------------
-$(LIBDIR)/$(SNX_LIB_STATIC): $(OBJDIR)/*.$(OBJEXT)
+$(LIBDIR)/$(SNX_LIB_STATIC) $(LIBDIR)/$(SNX_PROF_LIB_STATIC): $(OBJDIR)/*.$(OBJEXT)
 	@echo "------------------------------------------------"
 	@echo "Creating $@"
 	@echo "------------------------------------------------"
@@ -113,6 +129,20 @@ $(LIBDIR)/$(SNX_LIB_DYNAMIC): $(OBJDIR)/*.$(OBJEXT)
 	@echo "$@ done"
 	@echo "------------------------------------------------"
 
+# ------------------------------------------------
+# Construct the dynamic version of the libraries.
+# ------------------------------------------------
+$(LIBDIR)/$(SNX_PROF_LIB_DYNAMIC): $(OBJDIR)/*.$(OBJEXT)
+	@echo "------------------------------------------------"
+	@echo "Creating $@"
+	@echo "------------------------------------------------"
+	@$(SHELL) $(MKINSTALLDIRS) $(LIBDIR)
+	$(LD) $(LDOPTS) $(DYLIB_NAME_FLAG) $(OBJDIR)/*.$(OBJEXT) \
+          $(DYLIB_PROF_DEPS_SNX)
+	cd $(LIBDIR_BASE) && rm -f $(notdir $@) && $(LN_S) $@ ./
+	@echo "------------------------------------------------"
+	@echo "$@ done"
+	@echo "------------------------------------------------"
 
 # =============================================================================
 # Library targets.
