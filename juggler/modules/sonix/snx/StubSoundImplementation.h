@@ -202,7 +202,7 @@ public:
      * remove a configured sound, any future reference to the alias will not
      * cause an error, but will not result in a rendered sound
      */
-   virtual void remove( const std::string alias )
+   virtual void remove( const std::string& alias )
    {
       snx::SoundImplementation::remove( alias );
       // do nothing

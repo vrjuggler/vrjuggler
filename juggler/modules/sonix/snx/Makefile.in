@@ -43,7 +43,9 @@ default: all
 
 include @topdir@/make.defs.mk
 
-SRCS = FileIO.cpp SoundFactory.cpp
+SRCS=	FileIO.cpp		\
+	SoundFactory.cpp	\
+	SoundImplementation.cpp
 
 ifeq ($(OS_TYPE), Win32)
     SRCS        += dirent-win32.cpp

@@ -536,7 +536,7 @@ namespace snx
      * remove a configured sound, any future reference to the alias will not
      * cause an error, but will not result in a rendered sound
      */
-   void AudioWorksSoundImplementation::remove( const std::string alias )
+   void AudioWorksSoundImplementation::remove( const std::string& alias )
    {
       snx::SoundImplementation::remove( alias );
       // do nothing

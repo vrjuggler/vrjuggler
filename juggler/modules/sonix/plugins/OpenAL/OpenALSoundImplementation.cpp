@@ -94,7 +94,7 @@ void OpenALSoundImplementation::step( const float & timeElapsed )
 }
 
 
-void OpenALSoundImplementation::remove( const std::string alias )
+void OpenALSoundImplementation::remove( const std::string& alias )
 {
    snx::SoundImplementation::remove( alias );
 }
