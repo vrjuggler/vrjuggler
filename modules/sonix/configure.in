@@ -450,6 +450,7 @@ AC_OUTPUT(
           test/apps/Makefile
           test/TestSuite/Makefile
           Makefile 
+          common.defs.mk
           make.defs.mk
           sonix-config,
           [chmod a+x sonix-config])
