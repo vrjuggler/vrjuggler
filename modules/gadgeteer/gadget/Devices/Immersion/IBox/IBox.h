@@ -43,8 +43,7 @@
 #include <gad/Type/Input.h>
 #include <gad/Type/Digital.h>
 #include <gad/Type/Analog.h>
-#include <gad/Devices/Immersion/hci.h>
-#include <gad/Devices/Immersion/iboxStandalone.h>
+#include <gad/Devices/Immersion/ibox2.h>
 
 namespace vrj
 {
@@ -108,7 +107,9 @@ private:
    // juggler ibox data in the range of [0..255]
    IBOX_DATA theData[3];
    // ibox native data in the range of [0..255]
-   hci_rec thingie;
+   ibox2 thingie;
+   std::string port_id;
+   long baudRate;
 };
 
 };
