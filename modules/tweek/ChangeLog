@@ -1,5 +1,8 @@
 DATE       AUTHOR      CHANGE
 ---------- ----------- --------------------------------------------------------
+2003-08-25 aronb       Added a BeanStatus dialog box that shows all loaded beans
+                       and beans that are waiting for dependancies. It also
+                       shows details such as JAR URL, Class Name, and deps.
 2003-08-23 patrickh    Added the JGoodies Looks Swing look and feel.
 2003-08-16 patrickh    Refactored the built-in Tweek Service Beans to be
                        accessed via proxies.  This makes acquisition of the
