@@ -69,7 +69,7 @@ public class LabeledPerfDataCollector implements PerfDataCollector {
 	}
     }
 
-    // stores a single "line" - execution loop - of data...
+    /** Stores a single frame's worth of DataElems. */
     protected class DataLine {
 	List samples;  // list of DataElems
 	boolean cutoff;     // true if there was lost data at end of line.
@@ -95,6 +95,7 @@ public class LabeledPerfDataCollector implements PerfDataCollector {
 	}
     }
 
+    /** Stores information about a particular label. */
     protected class IndexInfo {
 	// summary of info for a given index string
 	int num_samples;
@@ -102,6 +103,7 @@ public class LabeledPerfDataCollector implements PerfDataCollector {
 	public String category;
 	public String index;
         protected double max_time;
+	List label_components;
 
 	public IndexInfo (String _category, String _index) {
 	    category = _category;
@@ -109,6 +111,47 @@ public class LabeledPerfDataCollector implements PerfDataCollector {
 	    num_samples = 0;
 	    total_times = 0.0;
             max_time = 0.0;
+	    label_components = new ArrayList();
+
+	    // want to break the index string into subparts based on
+	    // a separator character...
+	    char separator = '/';
+	    char escape = '\\';
+	    int n = index.length();
+	    int startpos = 0;
+	    int currentpos = 0;
+	    boolean escaped = false;
+	    StringBuffer substring = new StringBuffer();
+	    while (currentpos < n) {
+		char ch = index.charAt(currentpos);
+		if (escaped) {
+		    escaped = false;
+		    currentpos++;
+		}
+		else {
+		    if (ch == escape) {
+			escaped = true;
+			substring.append (index.substring(startpos,currentpos));
+			currentpos++;
+			startpos = currentpos;
+		    }
+		    else if (ch == separator) {
+			substring.append (index.substring(startpos, currentpos));
+			currentpos++;
+			startpos = currentpos;
+			label_components.add (new String (substring));
+			substring = new StringBuffer();
+		    }
+		    else {
+			currentpos++;
+		    }
+		}
+	    }
+	    // and add in the last part of the string
+	    substring.append (index.substring (startpos, currentpos));
+	    label_components.add (new String (substring));
+
+	    System.out.println ("division of indices: " + label_components);
 	}
 
 	public void addSample (double sample_time) {
