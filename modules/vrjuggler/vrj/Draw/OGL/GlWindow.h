@@ -53,6 +53,8 @@ public:
    virtual void config(vjDisplay* _display);
 
    //: Performs an OpenGL swap buffers command
+   //! POST: a glFlush must be called explicitly by the implementation
+   //+       or explicitly by the functions used in the implementation
    virtual void swapBuffers(){;}
 
 public:
