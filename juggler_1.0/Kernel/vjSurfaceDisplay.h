@@ -167,11 +167,11 @@ public:
    {
       vjDisplay::outStream(out);
 
-      out << "LLCorner: " << mLLCorner << "\nLRCorner: " << mLRCorner
-          << "\nURCorner: " << mURCorner << "\nULCorner" << mULCorner << endl;
+      out << "LL: " << mLLCorner << ", LR: " << mLRCorner
+          << ", UR: " << mURCorner << ", UL:" << mULCorner << endl;
       out << "surfRot: \n" << mSurfaceRotation << endl;
-      out << "leftProj: " << *mLeftProj << endl;
-      out << "rightProj: " << *mRightProj << endl;
+      out << "leftProj: " << *mLeftProj;
+      out << "  rightProj: " << *mRightProj << endl;
       return out;
    }
 

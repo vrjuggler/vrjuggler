@@ -57,13 +57,13 @@
 void vjWallProjection::calcViewMatrix(vjMatrix& eyePos)
 {
    calcViewFrustum(eyePos);
-      
+
    vjCoord eye_coord(eyePos);
    vjVec3   eye_pos;             // Non-xformed pos
    eye_pos = eye_coord.pos;
-   
+
    // Need to post translate to get the view matrix at the position of the eye
-   mViewMat.postTrans(mWallRotationMatrix, -eye_pos[VJ_X], -eye_pos[VJ_Y], -eye_pos[VJ_Z]);   
+   mViewMat.postTrans(mWallRotationMatrix, -eye_pos[VJ_X], -eye_pos[VJ_Y], -eye_pos[VJ_Z]);
 }
 
 
@@ -133,10 +133,7 @@ void vjWallProjection::calcViewFrustum(vjMatrix& eyePos)
 
 ostream& vjWallProjection::outStream(ostream& out)
 {
-   out << "vjWallProjection:\n";
-   out << "surface: ";
-
-   out << endl;
+   out << "vjWallProjection: ";
 
    return vjProjection::outStream(out);
 }

@@ -82,7 +82,7 @@ ostream& vjProjection::outStream(ostream& out)
       out << "Right";
       break;
    }
-   out << "\nFrustum: " << mFrustum << endl;
+   out << "  Frustum: " << mFrustum;
    return out;
 }
 
