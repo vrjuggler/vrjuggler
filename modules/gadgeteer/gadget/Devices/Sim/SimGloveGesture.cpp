@@ -32,6 +32,7 @@
 
 #include <gadget/gadgetConfig.h>
 
+#include <fstream>
 #include <vpr/Util/FileUtils.h>
 #include <jccl/Config/ConfigChunk.h>
 #include <gadget/Util/Debug.h>
