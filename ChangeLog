@@ -1,5 +1,8 @@
 DATE        AUTHOR    CHANGE
 ----------- --------- ---------------------------------------------------------
+Dec-30-2003 patrickh  Fixed rotation errors and Gimbal Lock problems in the
+                      Trackd driver.
+
 [Version 1.0.7 - 4.30.2003]====================================================
 Oct-20-2002 patrickh  Use of the numeric keypad works on HP and Sun hardware.
                       Submitted by Fuel Tech Inc.
