@@ -598,8 +598,16 @@ sub processFile ($$$$$$$$$$$$$$$) {
 
     if ( ! $Win32 ) {
 	$uname = getpwuid($<) if ! $uname;
-	$uid = (getpwnam("$uname"))[2] if $uname && ! $uid;
-	$gid = (getgrnam("$gname"))[2] if $gname && ! $gid;
+
+	if ( $uname && ! $uid ) {
+	    my(@user_info) = getpwnam("$uname") or die "getpwnam($uname): $!\n";
+	    $uid = $user_info[2];
+	}
+
+	if ( $gname && ! $gid ) {
+	    my(@group_info) = getgrnam("$gname") or die "getgrnam($gname): $!\n";
+	    $gid = $group_info[2];
+	}
     }
 
     SWITCH: {
@@ -615,7 +623,7 @@ sub processFile ($$$$$$$$$$$$$$$) {
 		    mkdir("$name", 0755) or
 			die "ERROR: Cannot mkdir $name: $!\n";
 		    chmod(oct($mode), "$name") if $mode;
-		    chown($uid, $gid, "$name") if $uid && $gid;
+		    chown($uid, $gid, "$name");
 		    print " (created)\n";
 		} else {
 		    print "\n";
