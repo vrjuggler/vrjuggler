@@ -62,8 +62,9 @@ unix2dos ( ) {
     dnl # /tmp instead of //D/tmp if D: is the home drive.  The expression
     dnl # simply prepends "$HOMEDRIVE" (after evaluation) to the path.
     _drive_exp=['s/^\/\/\([[:alpha:]]\)/\1:/']
+    _drive_exp2=['s/^\/cygdrive\/\([[:alpha:]]\)/\1:/']
     _add_home_exp=["s/^\//$HOMEDRIVE\//"]
-    _retval=`echo $1 | sed -e "${_drive_exp}" -e "${_add_home_exp}"`
+    _retval=`echo $1 | sed -e "${_drive_exp}" -e "${_drive_exp2}" -e "${_add_home_exp}"`
 
     echo "${_retval}"
 }
