@@ -127,8 +127,6 @@ $(LIBDIR)/$(SNX_LIB_DYNAMIC): $(OBJDIR)/*.$(OBJEXT)
 ifeq (@OS_TYPE@, Win32)
 	cd $(LIBDIR_BASE) && $(RM_LN) $(SNX_LIB_STATIC) &&		\
             $(LN_S) $(LIBDIR)/$(SNX_LIB_STATIC) ./
-	cd $(LIBDIR_BASE) && $(RM_LN) $(SNX_LIBRARY).exp &&		\
-            $(LN_S) $(LIBDIR)/$(SNX_LIBRARY).exp ./
 endif
 	@echo "------------------------------------------------"
 	@echo "$@ done"
