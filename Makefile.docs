@@ -50,6 +50,7 @@ SUBDIR=		doc/team.guide					\
 		modules/tweek/doc				\
 		modules/tweek/doc/programmer.guide		\
 		modules/vapor/doc				\
+		modules/vrjuggler/doc/configuration.guide	\
 		modules/vrjuggler/doc/doxy			\
 		modules/vrjuggler/doc/faq			\
 		modules/vrjuggler/doc/getting.started.guide	\
