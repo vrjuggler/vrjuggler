@@ -706,16 +706,17 @@ int ibox2::autosynch(){
         char *sign_ch = SIGNON_STR;
 //        char temp[sizeof(SIGNON_STR) - 1];
         char temp;
-        vpr::Status status;
-
+        vpr::ReturnStatus status;
         while(!signed_on && !port->getBufferSize(size).failure()){
                 end();
+                std::cerr << "1: " << SIGNON_STR << " : " << sizeof(SIGNON_STR) << std::endl;
+                if(port->getReadState()) std::cerr << "hi" << std::endl;
+//                std::cerr << "hi Josh " << std::endl;
                 port->write(SIGNON_STR, sizeof(SIGNON_STR) - 1, written);
-                vpr::System::msleep(15); /* XXX: Artificial pause */
+//                vpr::System::msleep(15); /* XXX: Artificial pause */
                 status = port->read(&temp, 1, written);
-
-                while(status != vpr::Status::Failure && written != 0){
-                        
+                while(status != vpr::ReturnStatus::Failure && written != 0){
+//                        std::cerr << "2: " << temp << std::endl;
                         if(temp == *sign_ch){
                                 if(!*++sign_ch){
                                         signed_on=1;
