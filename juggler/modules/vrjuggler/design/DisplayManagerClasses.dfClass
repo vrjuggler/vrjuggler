@@ -1,0 +1,51 @@
+package idfsycyax23xmcyazuj6j;
+
+/**
+@version 2.0
+@__modelType diagram 
+@__hiddenLink MemberLink#<oiref:cpp#Member#vrj::DisplayManager#mInactiveDisplays:oiref>
+*/
+class diagram {
+/**
+@__ref <oiref:cpp#Class#vrj::DisplayManager:oiref><oihard>
+@__modelType reference
+@__imported 
+*/
+class reference {
+}/**
+@__ref <oiref:cpp#Class#vrj::Display:oiref><oihard>
+@__modelType reference
+@__imported 
+*/
+class reference52 {
+}/**
+@__ref <oiref:cpp#Class#vrj::Kernel:oiref><oihard>
+@__modelType reference
+@__imported 
+*/
+class reference53 {
+}}/**
+
+@__tags
+@shapeType ClassDiagram 
+*/
+class __tags {
+}/**
+@__options filter.d1.state = on
+filter.e.state = on
+filter.d2.state = on 
+*/
+class __options {
+}/**
+@__positions <oigroup:<oiref:cpp#Class#vrj::Display:oiref>=250,120,83,46,0:oigroup>
+<oigroup:Composite#supplierCardinality#MemberLink#<oiref:cpp#Member#vrj::DisplayManager#mActiveDisplays:oiref>=257,103,30,16,0:oigroup>
+<oigroup:<oiref:cpp#Class#vrj::Kernel:oiref>=10,10,154,60,0:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#vrj::Kernel#mDisplayManager:oiref>=164,40,220,40:oigroup>
+<oigroup:<oiref:cpp#Class#vrj::DisplayManager:oiref>=220,10,154,60,0:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#vrj::DisplayManager#mActiveDisplays:oiref>=291,70,291,120:oigroup>
+<oigroup:Composite#supplierCardinality#MemberLink#<oiref:cpp#Member#vrj::DisplayManager#mInactiveDisplays:oiref>=0,0,30,16,0:oigroup>
+<oigroup:Composite#supplierCardinality#MemberLink#<oiref:cpp#Member#vrj::Kernel#mDisplayManager:oiref>=184,23,32,16,0:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#vrj::DisplayManager#mInactiveDisplays:oiref>=302,142,283,254:oigroup>
+*/
+class __positions {
+}
