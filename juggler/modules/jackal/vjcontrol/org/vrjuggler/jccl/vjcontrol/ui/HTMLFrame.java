@@ -193,7 +193,9 @@ public class HTMLFrame extends JFrame
         
         url = getFileURL (System.getProperty ("user.dir") + "/.vjconfig/" + name);
         if (url == null)
-            url = getFileURL (System.getProperty ("VJ_SHARE_DIR") + "/Data/" + name);
+            url = getFileURL (System.getProperty ("JCCL_SHARE_DIR") + "/data/" + name);
+        if (url == null)
+            url = getFileURL (System.getProperty ("VJ_SHARE_DIR") + "/data/" + name);
         if (url == null)
             url = getFileURL ("share/Data/" + name);
         if (url == null)
