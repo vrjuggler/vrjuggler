@@ -58,13 +58,13 @@ namespace vpr
 
 std::string SystemBase::getCallStack()
 {
-   std::string ret_stack("<Call stack not supported>");
+   std::string ret_stack("Stack trace:\n   <Call stack not supported>");
 
    // XXX: should come up with better test for glib
 #if defined(VPR_OS_Linux)
    void* trace_syms[100];
    size_t size;
-   char **strings;
+   char** strings;
 
    pid_t cur_pid = getpid();
    size = backtrace(trace_syms, 100);
@@ -75,7 +75,7 @@ std::string SystemBase::getCallStack()
 
    for (size_t i = 0; i < size; ++i)
    {
-      trace_stream << "   " << strings[i] << std::endl;
+      trace_stream << "   " << i << ":" << strings[i] << std::endl;
    }
 
    free(strings);

@@ -1,6 +1,7 @@
 #include <vpr/System.h>
 
 #include <TestCases/SystemTest.h>
+#include <vpr/Util/Assert.h>
 
 
 namespace vprTest
@@ -67,6 +68,9 @@ void SystemTest::GetSetEnvTest()
 void SystemTest::getStackTrace()
 {
    stack_trace_1();
+
+   // Test assert stack trace
+   //vprASSERT(false && "Failed on purpose to test stack trace abilities.");
 }
 
 void SystemTest::stack_trace_1()

@@ -1,5 +1,8 @@
 DATE       AUTHOR   CHANGE
 ---------- -------- -----------------------------------------------------------
+2003-08-31 allenb   Refactored vprASSERT to print stacktrace.  Refined stack
+                    trace output slightly.
+                    NEW VERSION: 0.27.8
 2003-08-31 allenb   Added vpr::SystemBase::getStackTrace().
                     NEW VERSION: 0.27.7
 2003-08-11 patrickh Added vpr::LibraryLoader.
