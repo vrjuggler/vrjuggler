@@ -111,6 +111,24 @@ die "ERROR: No configuration given\n" unless $cfg || $user_cfg;
 
 $Win32 = 1 if $ENV{'OS'} && $ENV{'OS'} =~ /Windows/;
 
+# On Windows, the command-line arguments can confuse the Cygwin shell.  For
+# example, the character used to separate paths is ';', but the shell sees
+# that as a statement separator.  We can deal with this by ensuring that the
+# shell interprets command-line arguments as literal strings (i.e., by
+# putting quotes around each argument).
+if ( $Win32 ) 
+{
+   for ( my $i = 0; $i <= $#save_argv; $i++ )
+   {
+      $save_argv[$i] = "\"$save_argv[$i]\"";
+   }
+
+   for ( my $i = 0; $i <= $#ARGV; $i++ )
+   {
+      $ARGV[$i] = "\"$ARGV[$i]\"";
+   }
+}
+
 my $cfg_load = ("$user_cfg" eq "") ? "$base_dir/$cfg" : "$user_cfg";
 %MODULES = JugglerConfigure::parseConfigFile("$cfg_load");
 
@@ -501,7 +519,7 @@ sub generateMakefile (;$)
 sub generateReconfig ($@)
 {
    my $gen_module = shift;
-   my @save_argv  = @_;
+   my @arg_list   = @_;
 
    my $modules;
 
@@ -529,7 +547,7 @@ sub generateReconfig ($@)
    }
 
    print RECONFIG "rm -f config.cache\n";
-   print RECONFIG "$0 ", "@save_argv\n";
+   print RECONFIG "$0 ", "@arg_list \n";
    close(RECONFIG);
    chmod(0755, "reconfig");
 }
