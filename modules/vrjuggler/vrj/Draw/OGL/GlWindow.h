@@ -69,20 +69,13 @@ class VJ_CLASS_API GlWindow
 {
 public:
    GlWindow()
+      : mWindowId(getNextWindowId()), in_stereo(false), border(false), \
+        window_is_open(false), mDirtyContext(true), mDirtyViewport(true), \
+        mVrjDisplay(0), window_width(0), window_height(0), origin_x(0), \
+        origin_y(0), mAreEventSource(false)
    {
       // XXX: Sync problem on window id value assignment
-      mWindowId = getNextWindowId();
-      in_stereo = false;
-      border = false;
-      window_is_open = false;
-      mDirtyContext = true;      // Always dirty when window first created
-      mDirtyViewport = true;
-
-      mVrjDisplay = NULL;
-
-      window_width = window_height = 0;
-      origin_x = origin_y = 0;
-      mAreEventSource = false;
+      // The context is always dirty when the window is first created
    }
 
    // Virtual destructor
@@ -191,7 +184,7 @@ public:
     * Queries wether the window is in stereo.
     * @return true if window is in stereo.
     */
-   bool isStereo()
+   bool isStereo() const
    { return in_stereo;}
 
    bool isEventSource() const
@@ -207,7 +200,7 @@ public:
    /**
     * @return A unique window id.
     */
-   int getId()
+   int getId() const
    { return mWindowId; }
 
    // Called by event function to update size info
