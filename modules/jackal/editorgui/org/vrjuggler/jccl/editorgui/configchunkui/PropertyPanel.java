@@ -129,6 +129,8 @@ public class PropertyPanel extends JPanel implements ActionListener, VarValuePan
         for (i = 0; i < n; i++) {
 	    if (pr.getDesc().getValueLabelsSize() > i)
 		lj = new JLabel (valuelabelpad + pr.getDesc().getValueLabel(i));
+            else if (pr.getDesc().getValType().equals(ValType.t_embeddedchunk))
+                lj = new JLabel (valuelabelpad + pr.getValue(i).getEmbeddedChunk().getLastNameComponent());
 	    else
 		lj = new JLabel (valuelabelpad);
 	    c.gridwidth = GridBagConstraints.RELATIVE;
@@ -239,8 +241,12 @@ public class PropertyPanel extends JPanel implements ActionListener, VarValuePan
 	    JLabel lj;
 
 	    i = valuepanels.size();
+	    VarValuePanel p = makeVarValuePanel(prop, i);
+
 	    if (i < prop.getDesc().getValueLabelsSize())
 		lj = new JLabel (valuelabelpad + prop.getDesc().getValueLabel(i));
+            else if (prop.getDesc().getValType().equals(ValType.t_embeddedchunk))
+                lj = new JLabel (valuelabelpad + p.getValue().getEmbeddedChunk().getLastNameComponent());
 	    else
 		lj = new JLabel (valuelabelpad);
 	    lj.setBackground (Color.green);
@@ -251,7 +257,6 @@ public class PropertyPanel extends JPanel implements ActionListener, VarValuePan
 	    c.weightx = 1;
 	    c.gridwidth = GridBagConstraints.REMAINDER;
 
-	    VarValuePanel p = makeVarValuePanel(prop, i);
 	    valuepanels.add(p);
 	    //c.gridwidth = GridBagConstraints.REMAINDER;
 	    eastpanellayout.setConstraints(p,c);

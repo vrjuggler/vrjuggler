@@ -37,12 +37,12 @@
  *
  *     -----------------------------------------------------
  *     |                                                   |
- *     | Type(optional) valuegadget  removebutton(optional)|
+ *     | Type(optional) valuegadget  remove_button(optional)|
  *     |                                                   |
  *     -----------------------------------------------------
  *
  * the value gadget is going to be either a TextArea or a multisetSelectedItem
- * with the acceptable values in it.  removebutton will be there if the
+ * with the acceptable values in it.  remove_button will be there if the
  * associated property has var numbers of values.
  */
 
@@ -67,8 +67,8 @@ public class VarValueBigChunkPanel
     VarValuePanelParent     parent; // the parent is a listener on the remove button
     Property      prop;
     ConfigChunk  chunk;
-    JButton           removebutton;
-    JButton           editbutton;
+    JButton           remove_button;
+    JButton           edit_button;
     GenericEditorFrame chunkframe;
     ConfigUIHelper uihelper_module;
 
@@ -82,19 +82,22 @@ public class VarValueBigChunkPanel
 	chunkframe = null;
         uihelper_module = _uihelper_module;
 
-	setLayout (new BoxLayout (this, BoxLayout.X_AXIS));
+	//setLayout (new BoxLayout (this, BoxLayout.X_AXIS));
+        setLayout (new GridLayout (1, 2));
 
-	editbutton = new JButton ("Edit Chunk");
-	editbutton.addActionListener (this);
-	add (editbutton);
+        Insets in = new Insets (0,0,0,0);
+
+	edit_button = new JButton ("Edit");
+        edit_button.setMargin (in);
+	edit_button.addActionListener (this);
+	add (edit_button);
 
 	if (!prop.hasFixedNumberOfValues()) {
 	    /* then it's a variable # of values */
-	    removebutton = new JButton("Remove");
-	    Insets in = new Insets (0,0,0,0);
-	    removebutton.setMargin (in);
-	    add (removebutton);
-	    removebutton.addActionListener(this);
+	    remove_button = new JButton("Remove");
+	    remove_button.setMargin (in);
+	    add (remove_button);
+	    remove_button.addActionListener(this);
 	}
     }
 
@@ -113,6 +116,8 @@ public class VarValueBigChunkPanel
 	    chunkframe = null;
 	}
 	chunk = new ConfigChunk (v.getEmbeddedChunk());
+
+        //edit_button.setText ("Edit " + chunk.getLastNameComponent());
     }
 
 
@@ -124,9 +129,9 @@ public class VarValueBigChunkPanel
 
 
     public void actionPerformed (ActionEvent e) {
-	if (e.getSource() == removebutton)
+	if (e.getSource() == remove_button)
 	    parent.removePanel(this);
-	else if (e.getSource() == editbutton) {
+	else if (e.getSource() == edit_button) {
 	    if (chunkframe == null) {
                 ConfigChunkPanel p = uihelper_module.configchunkpanel_factory.createConfigChunkPanel (chunk.getDescToken());
                 p.setChunk (chunk, null);
@@ -157,6 +162,7 @@ public class VarValueBigChunkPanel
     public void applyChild (ChildFrame frame) {
         ConfigChunkPanel p = (ConfigChunkPanel)chunkframe.getEditorPanel();
         chunk = p.getNewValue();
+        //edit_button.setText ("Edit " + chunk.getLastNameComponent());
     }
 
 }
