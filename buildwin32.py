@@ -173,15 +173,15 @@ def setDefaultVars():
    }
 
    # If there are cached options, read them in.
-   cache_file = os.path.join(juggler_dir, gOptionsFileName)
+   cache_file = os.path.join(gJugglerDir, gOptionsFileName)
    if os.path.exists(cache_file):
       execfile(cache_file)
    return options
 
 def setVars():
-   cache_file = os.path.join(juggler_dir, gOptionsFileName)
+   cache_file = os.path.join(gJugglerDir, gOptionsFileName)
    options = setDefaultVars()
-   
+
    print "+++ Required Settings"
    processInput(options, 'prefix', 'installation prefix')
    boost_ver = processInput(options, 'BOOST_VERSION', 'Boost C++ version')
@@ -210,7 +210,7 @@ def setVars():
    if os.environ['JAVA_HOME'] != '' and os.path.exists(os.environ['JAVA_HOME']):
       jdk_path = os.path.join(os.environ['JAVA_HOME'], 'bin')
       os.environ['PATH'] = jdk_path + os.pathsep + os.environ['PATH']
-      os.environ['JACORB_PATH'] = os.path.join(juggler_dir, r'external\JacORB')
+      os.environ['JACORB_PATH'] = os.path.join(gJugglerDir, r'external\JacORB')
 
    processInput(options, 'JOGL_HOME', 'Jogl installation directory', False)
    processInput(options, 'JAVA3D_HOME', 'Java3D installation directory', False)
@@ -271,8 +271,8 @@ def setVars():
 def generateVersionHeaders():
    class JugglerModule:
       def __init__(self, srcDir, header, projDir, templateFile = None):
-         self.source_dir     = os.path.join(juggler_dir, srcDir)
-         self.header         = os.path.join(juggler_dir, 'vc7', projDir,
+         self.source_dir     = os.path.join(gJugglerDir, srcDir)
+         self.header         = os.path.join(gJugglerDir, 'vc7', projDir,
                                             header)
          self.version_params = os.path.join(self.source_dir, 'Makefile.inc.in')
          self.version_file   = os.path.join(self.source_dir, 'VERSION')
@@ -367,7 +367,7 @@ def generateVersionHeaders():
    mods.append(JugglerModule(r'modules\tweek', r'tweek\tweekParam.h',
                              'Tweek_CXX'))
    mods.append(JugglerModule(r'modules\jackal', r'jccl\jcclParam.h', 'JCCL',
-                             os.path.join(juggler_dir,
+                             os.path.join(gJugglerDir,
                                           r'modules\jackal\common\jccl\jcclParam.h.in')))
    mods.append(JugglerModule(r'modules\sonix', r'snx\snxParam.h', 'Sonix'))
    mods.append(JugglerModule(r'modules\gadgeteer', r'gadget\gadgetParam.h',
@@ -381,8 +381,8 @@ def generateVersionHeaders():
 def generateAntBuildFiles():
    class AntTarget:
       def __init__(self, srcdir, moduleName, outputFile = 'build.xml'):
-         self.srcdir      = os.path.join(juggler_dir, srcdir)
-         self.topdir      = os.path.join(juggler_dir, r'vc7')
+         self.srcdir      = os.path.join(gJugglerDir, srcdir)
+         self.topdir      = os.path.join(gJugglerDir, r'vc7')
          self.module_name = os.path.join(self.topdir, moduleName)
          self.output_file = os.path.join(self.module_name, outputFile)
 
@@ -407,39 +407,39 @@ def generateAntBuildFiles():
       java3d_jars_re    = re.compile(r'^(.*)@JAVA3D_JAR@(.*)$')
 
       jdom_jars = [
-         os.path.join(juggler_dir, r'external\jdom\jaxen-core.jar'),
-         os.path.join(juggler_dir, r'external\jdom\xalan.jar'),
-         os.path.join(juggler_dir, r'external\jdom\jaxen-jdom.jar'),
-         os.path.join(juggler_dir, r'external\jdom\xerces.jar'),
-         os.path.join(juggler_dir, r'external\jdom\jdom.jar'),
-         os.path.join(juggler_dir, r'external\jdom\xml-apis.jar'),
-         os.path.join(juggler_dir, r'external\jdom\saxpath.jar')
+         os.path.join(gJugglerDir, r'external\jdom\jaxen-core.jar'),
+         os.path.join(gJugglerDir, r'external\jdom\xalan.jar'),
+         os.path.join(gJugglerDir, r'external\jdom\jaxen-jdom.jar'),
+         os.path.join(gJugglerDir, r'external\jdom\xerces.jar'),
+         os.path.join(gJugglerDir, r'external\jdom\jdom.jar'),
+         os.path.join(gJugglerDir, r'external\jdom\xml-apis.jar'),
+         os.path.join(gJugglerDir, r'external\jdom\saxpath.jar')
       ]
 
       tweek_jars = [
-         os.path.join(juggler_dir, r'vc7\Tweek_Java', 'Tweek.jar'),
-         os.path.join(juggler_dir, r'vc7\Tweek_Java', 'TweekBeans.jar'),
-         os.path.join(juggler_dir, r'vc7\Tweek_Java', 'TweekEvents.jar'),
-         os.path.join(juggler_dir, r'vc7\Tweek_Java', 'TweekNet.jar'),
-         os.path.join(juggler_dir, r'vc7\Tweek_Java', 'TweekBeanDelivery.jar'),
-         os.path.join(juggler_dir, r'vc7\Tweek_Java', 'TweekServices.jar'),
-         os.path.join(juggler_dir, r'vc7\Tweek_Java', 'Viewers.jar'),
-         os.path.join(juggler_dir, r'vc7\Tweek_Java', 'kunststoff-mod.jar')
+         os.path.join(gJugglerDir, r'vc7\Tweek_Java', 'Tweek.jar'),
+         os.path.join(gJugglerDir, r'vc7\Tweek_Java', 'TweekBeans.jar'),
+         os.path.join(gJugglerDir, r'vc7\Tweek_Java', 'TweekEvents.jar'),
+         os.path.join(gJugglerDir, r'vc7\Tweek_Java', 'TweekNet.jar'),
+         os.path.join(gJugglerDir, r'vc7\Tweek_Java', 'TweekBeanDelivery.jar'),
+         os.path.join(gJugglerDir, r'vc7\Tweek_Java', 'TweekServices.jar'),
+         os.path.join(gJugglerDir, r'vc7\Tweek_Java', 'Viewers.jar'),
+         os.path.join(gJugglerDir, r'vc7\Tweek_Java', 'kunststoff-mod.jar')
       ]
 
       tweek_ext_jars = [
-         os.path.join(juggler_dir, r'vc7\Tweek_Java', 'ui.jar'),
-         os.path.join(juggler_dir, r'vc7\Tweek_Java', 'wizard.jar'),
-         os.path.join(juggler_dir, r'vc7\Tweek_Java', 'WizardBuilder.jar')
+         os.path.join(gJugglerDir, r'vc7\Tweek_Java', 'ui.jar'),
+         os.path.join(gJugglerDir, r'vc7\Tweek_Java', 'wizard.jar'),
+         os.path.join(gJugglerDir, r'vc7\Tweek_Java', 'WizardBuilder.jar')
       ]
 
       jccl_jars = [
-         os.path.join(juggler_dir, r'vc7\JCCL_Java', 'jccl_config.jar'),
-         os.path.join(juggler_dir, r'vc7\JCCL_Java', 'jccl_editors.jar')
+         os.path.join(gJugglerDir, r'vc7\JCCL_Java', 'jccl_config.jar'),
+         os.path.join(gJugglerDir, r'vc7\JCCL_Java', 'jccl_editors.jar')
       ]
 
       jccl_rtrc_jars = [
-         os.path.join(juggler_dir, r'vc7\JCCL_Java\RTRC_Plugin_Java',
+         os.path.join(gJugglerDir, r'vc7\JCCL_Java\RTRC_Plugin_Java',
                       'jccl_rtrc.jar')
       ]
 
@@ -473,7 +473,7 @@ def generateAntBuildFiles():
                                         match.groups()[1])
             elif self.juggler_root_re.search(line):
                match = self.juggler_root_re.search(line)
-               input[i] = '%s%s%s\n' % (match.groups()[0], juggler_dir,
+               input[i] = '%s%s%s\n' % (match.groups()[0], gJugglerDir,
                                         match.groups()[1])
             elif self.java_orb_jar_re.search(line):
                match = self.java_orb_jar_re.search(line)
@@ -633,29 +633,29 @@ def installExternal(prefix):
    # Install Doozer (even though it probably won't be used).
    print "Installing Doozer ..."
    destdir = os.path.join(prefix, 'share', 'Doozer')
-   srcdir  = os.path.join(juggler_dir, 'external', 'Doozer')
+   srcdir  = os.path.join(gJugglerDir, 'external', 'Doozer')
    installDir(srcdir, destdir, ['.mk'])
 
 def installVPR(prefix):
    print "Installing VPR headers and libraries ..."
 
    destdir = os.path.join(prefix, 'include', 'vpr')
-   srcdir  = os.path.join(juggler_dir, 'modules', 'vapor', 'vpr')
+   srcdir  = os.path.join(gJugglerDir, 'modules', 'vapor', 'vpr')
    installDir(srcdir, destdir, ['.h'])
 
-   srcdir  = os.path.join(juggler_dir, 'vc7', 'VPR', 'vpr')
+   srcdir  = os.path.join(gJugglerDir, 'vc7', 'VPR', 'vpr')
    installDir(srcdir, destdir, ['.h'])
 
    destdir = os.path.join(prefix, 'lib')
-   srcroot = os.path.join(juggler_dir, 'vc7', 'VPR')
+   srcroot = os.path.join(gJugglerDir, 'vc7', 'VPR')
    installLibs(srcroot, destdir)
 
    destdir = os.path.join(prefix, 'share', 'vpr', 'test')
-   srcdir  = os.path.join(juggler_dir, 'modules', 'vapor', 'test')
+   srcdir  = os.path.join(gJugglerDir, 'modules', 'vapor', 'test')
    installDir(srcdir, destdir, None, ['.in'])
 
    destdir = os.path.join(prefix, 'share', 'vpr')
-   srcroot = os.path.join(juggler_dir, 'modules', 'vapor')
+   srcroot = os.path.join(gJugglerDir, 'modules', 'vapor')
 
    extra_files = ['ChangeLog', 'COPYING.txt', 'README.txt', 'RELEASE_NOTES.txt']
    for f in extra_files:
@@ -665,33 +665,33 @@ def installTweek(prefix):
    print "Installing Tweek C++ headers, libraries, and data files ..."
 
    destdir = os.path.join(prefix, 'include', 'tweek')
-   srcdir  = os.path.join(juggler_dir, 'modules', 'tweek', 'tweek')
+   srcdir  = os.path.join(gJugglerDir, 'modules', 'tweek', 'tweek')
    installDir(srcdir, destdir, ['.h', '.idl'])
 
-   srcdir  = os.path.join(juggler_dir, 'vc7', 'Tweek_CXX', 'tweek')
+   srcdir  = os.path.join(gJugglerDir, 'vc7', 'Tweek_CXX', 'tweek')
    installDir(srcdir, destdir, ['.h'])
 
    destdir = os.path.join(prefix, 'lib')
-   srcroot = os.path.join(juggler_dir, 'vc7', 'Tweek_CXX')
+   srcroot = os.path.join(gJugglerDir, 'vc7', 'Tweek_CXX')
    installLibs(srcroot, destdir)
 
    destdir = os.path.join(prefix, 'share', 'tweek', 'test')
-   srcdir  = os.path.join(juggler_dir, 'modules', 'tweek', 'test')
+   srcdir  = os.path.join(gJugglerDir, 'modules', 'tweek', 'test')
    installDir(srcdir, destdir, None, ['.in'])
 
    destdir = os.path.join(prefix, 'share', 'tweek', 'data')
-   srcdir  = os.path.join(juggler_dir, 'modules', 'tweek', 'data')
+   srcdir  = os.path.join(gJugglerDir, 'modules', 'tweek', 'data')
    installDir(srcdir, destdir)
 
    destdir = os.path.join(prefix, 'share', 'tweek')
-   srcroot = os.path.join(juggler_dir, 'modules', 'tweek')
+   srcroot = os.path.join(gJugglerDir, 'modules', 'tweek')
 
    extra_files = ['ChangeLog', 'COPYING.txt', 'RELEASE_NOTES.txt']
    for f in extra_files:
       shutil.copy2(os.path.join(srcroot, f), destdir)
 
 def installTweekJava(prefix):
-   srcdir = os.path.join(juggler_dir, 'vc7', 'Tweek_Java')
+   srcdir = os.path.join(gJugglerDir, 'vc7', 'Tweek_Java')
 
    if os.path.exists(os.path.join(srcdir, 'Tweek.jar')):
       print "Installing Tweek Java libraries and data files ..."
@@ -722,7 +722,7 @@ def installTweekJava(prefix):
       mkinstalldirs(destdir)
 
       bean_srcdir = srcdir
-      xml_srcdir  = os.path.join(juggler_dir, 'modules', 'tweek', 'java')
+      xml_srcdir  = os.path.join(gJugglerDir, 'modules', 'tweek', 'java')
 
       # Install the standard Tweek Beans.
       for b in beans:
@@ -731,7 +731,7 @@ def installTweekJava(prefix):
          shutil.copy2(os.path.join(bean_srcdir, jar), destdir)
          shutil.copy2(os.path.join(xml_srcdir, xml), destdir)
 
-      xml_srcdir  = os.path.join(juggler_dir, 'modules', 'tweek', 'extensions',
+      xml_srcdir  = os.path.join(gJugglerDir, 'modules', 'tweek', 'extensions',
                                  'java')
 
       # Install the extension Tweek Beans.
@@ -742,17 +742,17 @@ def installTweekJava(prefix):
          shutil.copy2(os.path.join(xml_srcdir, xml), destdir)
 
       # Install tweek.bat.
-      srcdir = os.path.join(juggler_dir, 'modules', 'tweek', 'java')
+      srcdir = os.path.join(gJugglerDir, 'modules', 'tweek', 'java')
       destdir = os.path.join(prefix, 'bin')
       shutil.copy2(os.path.join(srcdir, 'tweek.bat'), destdir)
 
       # Install JacORB IDL compiler.
-      srcdir = os.path.join(juggler_dir, 'external', 'JacORB')
+      srcdir = os.path.join(gJugglerDir, 'external', 'JacORB')
       installDir(srcdir, destdir, ['.jar'])
       shutil.copy2(os.path.join(srcdir, 'idl.bat'), destdir)
 
       # Install JDOM.
-      srcdir = os.path.join(juggler_dir, 'external', 'jdom')
+      srcdir = os.path.join(gJugglerDir, 'external', 'jdom')
       installDir(srcdir, destdir, ['.jar'])
 
       # Install various look and feel implementations.
@@ -762,7 +762,7 @@ def installTweekJava(prefix):
          r'metouia\metouia.jar'
       ]
 
-      srcroot = os.path.join(juggler_dir, 'external', 'swing-laf')
+      srcroot = os.path.join(gJugglerDir, 'external', 'swing-laf')
       for j in laf_jars:
          shutil.copy2(os.path.join(srcroot, j), destdir)
    else:
@@ -772,36 +772,36 @@ def installJCCL(prefix):
    print "Installing JCCL C++ headers, libraries, and tools ..."
 
    destdir = os.path.join(prefix, 'include', 'jccl')
-   srcdir  = os.path.join(juggler_dir, 'modules', 'jackal', 'common', 'jccl')
+   srcdir  = os.path.join(gJugglerDir, 'modules', 'jackal', 'common', 'jccl')
    installDir(srcdir, destdir, ['.h'])
 
-   srcdir  = os.path.join(juggler_dir, 'modules', 'jackal', 'config', 'jccl')
+   srcdir  = os.path.join(gJugglerDir, 'modules', 'jackal', 'config', 'jccl')
    installDir(srcdir, destdir, ['.h'])
 
-   srcdir  = os.path.join(juggler_dir, 'modules', 'jackal', 'rtrc', 'jccl')
+   srcdir  = os.path.join(gJugglerDir, 'modules', 'jackal', 'rtrc', 'jccl')
    installDir(srcdir, destdir, ['.h'])
 
-   srcdir  = os.path.join(juggler_dir, 'vc7', 'JCCL', 'jccl')
+   srcdir  = os.path.join(gJugglerDir, 'vc7', 'JCCL', 'jccl')
    installDir(srcdir, destdir, ['.h'])
 
    destdir = os.path.join(prefix, 'lib')
-   srcroot = os.path.join(juggler_dir, 'vc7', 'JCCL')
+   srcroot = os.path.join(gJugglerDir, 'vc7', 'JCCL')
    installLibs(srcroot, destdir)
 
    destdir = os.path.join(prefix, 'share', 'jccl', 'test')
-   srcdir  = os.path.join(juggler_dir, 'modules', 'jackal', 'test')
+   srcdir  = os.path.join(gJugglerDir, 'modules', 'jackal', 'test')
    installDir(srcdir, destdir, None, ['.in'])
 
    destdir = os.path.join(prefix, 'share', 'jccl', 'tools')
-   srcdir  = os.path.join(juggler_dir, 'modules', 'jackal', 'tools')
+   srcdir  = os.path.join(gJugglerDir, 'modules', 'jackal', 'tools')
    installDir(srcdir, destdir)
 
    destdir = os.path.join(prefix, 'share', 'jccl', 'data')
-   srcdir  = os.path.join(juggler_dir, 'modules', 'jackal', 'data')
+   srcdir  = os.path.join(gJugglerDir, 'modules', 'jackal', 'data')
    installDir(srcdir, destdir)
 
    destdir = os.path.join(prefix, 'share', 'jccl')
-   srcroot = os.path.join(juggler_dir, 'modules', 'jackal')
+   srcroot = os.path.join(gJugglerDir, 'modules', 'jackal')
 
    extra_files = ['ChangeLog', 'COPYING.txt', 'RELEASE_NOTES.txt']
    for f in extra_files:
@@ -811,11 +811,11 @@ def installJCCLPlugins(prefix):
    print "Installing JCCL C++ plug-ins ..."
 
    destdir = os.path.join(prefix, 'lib', 'jccl', 'plugins')
-   srcroot = os.path.join(juggler_dir, 'vc7', 'JCCL', 'RTRC_Plugin_CXX')
+   srcroot = os.path.join(gJugglerDir, 'vc7', 'JCCL', 'RTRC_Plugin_CXX')
    installLibs(srcroot, destdir, extensions = ['.dll'])
 
 def installJCCLJava(prefix):
-   srcdir = os.path.join(juggler_dir, 'vc7', 'JCCL_Java')
+   srcdir = os.path.join(gJugglerDir, 'vc7', 'JCCL_Java')
 
    if os.path.exists(os.path.join(srcdir, 'jccl_config.jar')):
       print "Installing JCCL Java libraries and data files ..."
@@ -825,13 +825,13 @@ def installJCCLJava(prefix):
       for f in ['jccl_config.jar', 'jccl_editors.jar']:
          shutil.copy2(os.path.join(srcdir, f), destdir)
 
-      srcdir = os.path.join(juggler_dir, 'modules', 'jackal', 'config')
+      srcdir = os.path.join(gJugglerDir, 'modules', 'jackal', 'config')
       shutil.copy2(os.path.join(srcdir, 'jccl_config.xml'), destdir)
    else:
       print "JCCL Java API not built.  Skipping."
 
 def installJCCLPluginsJava(prefix):
-   srcdir = os.path.join(juggler_dir, 'vc7', 'JCCL_Java', 'RTRC_Plugin_Java')
+   srcdir = os.path.join(gJugglerDir, 'vc7', 'JCCL_Java', 'RTRC_Plugin_Java')
 
    if os.path.exists(os.path.join(srcdir, 'jccl_rtrc.jar')):
       print "Installing JCCL Java plug-ins ..."
@@ -839,7 +839,7 @@ def installJCCLPluginsJava(prefix):
       destdir = os.path.join(prefix, 'bin', 'beans')
       shutil.copy2(os.path.join(srcdir, 'jccl_rtrc.jar'), destdir)
 
-      srcdir = os.path.join(juggler_dir, 'modules', 'jackal', 'plugins',
+      srcdir = os.path.join(gJugglerDir, 'modules', 'jackal', 'plugins',
                             'corba_rtrc')
       shutil.copy2(os.path.join(srcdir, 'jccl_rtrc.xml'), destdir)
    else:
@@ -849,26 +849,26 @@ def installSonix(prefix):
    print "Installing Sonix headers, libraries, and samples ..."
 
    destdir = os.path.join(prefix, 'include', 'snx')
-   srcdir  = os.path.join(juggler_dir, 'modules', 'sonix', 'snx')
+   srcdir  = os.path.join(gJugglerDir, 'modules', 'sonix', 'snx')
    installDir(srcdir, destdir, ['.h'])
 
-   srcdir  = os.path.join(juggler_dir, 'vc7', 'Sonix', 'snx')
+   srcdir  = os.path.join(gJugglerDir, 'vc7', 'Sonix', 'snx')
    installDir(srcdir, destdir, ['.h'])
 
    destdir = os.path.join(prefix, 'lib')
-   srcroot = os.path.join(juggler_dir, 'vc7', 'Sonix')
+   srcroot = os.path.join(gJugglerDir, 'vc7', 'Sonix')
    installLibs(srcroot, destdir)
 
    destdir = os.path.join(prefix, 'share', 'sonix', 'samples')
-   srcdir  = os.path.join(juggler_dir, 'modules', 'sonix', 'samples')
+   srcdir  = os.path.join(gJugglerDir, 'modules', 'sonix', 'samples')
    installDir(srcdir, destdir, None, ['.in'])
 
    destdir = os.path.join(prefix, 'share', 'sonix', 'data')
-   srcdir  = os.path.join(juggler_dir, 'modules', 'sonix', 'data')
+   srcdir  = os.path.join(gJugglerDir, 'modules', 'sonix', 'data')
    installDir(srcdir, destdir)
 
    destdir = os.path.join(prefix, 'share', 'sonix')
-   srcroot = os.path.join(juggler_dir, 'modules', 'sonix')
+   srcroot = os.path.join(gJugglerDir, 'modules', 'sonix')
 
    extra_files = ['ChangeLog', 'COPYING.txt', 'README.txt']
    for f in extra_files:
@@ -880,11 +880,11 @@ def installSonixPlugins(prefix):
    destdir_dbg = os.path.join(prefix, 'lib', 'snx', 'plugins', 'dbg')
    destdir_opt = os.path.join(prefix, 'lib', 'snx', 'plugins', 'opt')
 
-   srcroot = os.path.join(juggler_dir, 'vc7', 'Sonix', 'OpenAL')
+   srcroot = os.path.join(gJugglerDir, 'vc7', 'Sonix', 'OpenAL')
    installLibs(srcroot, destdir_dbg, ['DebugDLL'], ['.dll'])
    installLibs(srcroot, destdir_opt, ['ReleaseDLL'], ['.dll'])
 
-   srcroot = os.path.join(juggler_dir, 'vc7', 'Sonix', 'Audiere')
+   srcroot = os.path.join(gJugglerDir, 'vc7', 'Sonix', 'Audiere')
    installLibs(srcroot, destdir_dbg, ['DebugDLL'], ['.dll'])
    installLibs(srcroot, destdir_opt, ['ReleaseDLL'], ['.dll'])
 
@@ -892,38 +892,38 @@ def installGadgeteer(prefix):
    print "Installing Gadgeteer headers, libraries, and samples ..."
 
    destdir = os.path.join(prefix, 'include', 'gadget')
-   srcdir  = os.path.join(juggler_dir, 'modules', 'gadgeteer', 'gadget')
+   srcdir  = os.path.join(gJugglerDir, 'modules', 'gadgeteer', 'gadget')
    installDir(srcdir, destdir, ['.h'])
 
-   srcdir  = os.path.join(juggler_dir, 'vc7', 'Gadgeteer', 'gadget')
+   srcdir  = os.path.join(gJugglerDir, 'vc7', 'Gadgeteer', 'gadget')
    installDir(srcdir, destdir, ['.h'])
 
    destdir = os.path.join(prefix, 'include', 'cluster')
-   srcdir  = os.path.join(juggler_dir, 'modules', 'gadgeteer', 'cluster')
+   srcdir  = os.path.join(gJugglerDir, 'modules', 'gadgeteer', 'cluster')
    installDir(srcdir, destdir, ['.h'])
 
    destdir = os.path.join(prefix, 'lib')
-   srcroot = os.path.join(juggler_dir, 'vc7', 'Gadgeteer')
+   srcroot = os.path.join(gJugglerDir, 'vc7', 'Gadgeteer')
    installLibs(srcroot, destdir)
 
    destdir = os.path.join(prefix, 'share', 'gadgeteer', 'data')
-   srcdir  = os.path.join(juggler_dir, 'modules', 'gadgeteer', 'data')
+   srcdir  = os.path.join(gJugglerDir, 'modules', 'gadgeteer', 'data')
    installDir(srcdir, destdir)
 
    destdir = os.path.join(prefix, 'share', 'gadgeteer', 'samples')
-   srcdir  = os.path.join(juggler_dir, 'modules', 'gadgeteer', 'samples')
+   srcdir  = os.path.join(gJugglerDir, 'modules', 'gadgeteer', 'samples')
    installDir(srcdir, destdir, None, ['.in'])
 
    destdir = os.path.join(prefix, 'share', 'gadgeteer', 'test')
-   srcdir  = os.path.join(juggler_dir, 'modules', 'gadgeteer', 'test')
+   srcdir  = os.path.join(gJugglerDir, 'modules', 'gadgeteer', 'test')
    installDir(srcdir, destdir, None, ['.in'])
 
    destdir = os.path.join(prefix, 'share', 'gadgeteer', 'tools')
-   srcdir  = os.path.join(juggler_dir, 'modules', 'gadgeteer', 'tools')
+   srcdir  = os.path.join(gJugglerDir, 'modules', 'gadgeteer', 'tools')
    installDir(srcdir, destdir, None, ['.in'])
 
    destdir = os.path.join(prefix, 'share', 'gadgeteer')
-   srcroot = os.path.join(juggler_dir, 'modules', 'gadgeteer')
+   srcroot = os.path.join(gJugglerDir, 'modules', 'gadgeteer')
 
    extra_files = ['ChangeLog', 'COPYING.txt', 'RELEASE_NOTES.txt']
    for f in extra_files:
@@ -933,7 +933,7 @@ def installGadgeteerDrivers(prefix):
    print "Installing Gadgeteer device drivers ..."
 
    destdir = os.path.join(prefix, 'lib', 'gadgeteer', 'drivers')
-   srcroot = os.path.join(juggler_dir, 'vc7', 'Gadgeteer')
+   srcroot = os.path.join(gJugglerDir, 'vc7', 'Gadgeteer')
 
    drivers = ['DataGlove', 'Fastrak', 'Flock', 'IBox', 'IntersenseAPI',
               'IS900', 'MotionStar', 'MSFTSpeechRecognition', 'PinchGlove', 'SerialEncoder',
@@ -948,12 +948,12 @@ def installGadgeteerPlugins(prefix):
 
    destdir = os.path.join(prefix, 'include', 'plugins',
                           'ApplicationDataManager')
-   srcdir  = os.path.join(juggler_dir, 'modules', 'gadgeteer', 'plugins',
+   srcdir  = os.path.join(gJugglerDir, 'modules', 'gadgeteer', 'plugins',
                           'ApplicationDataManager')
    installDir(srcdir, destdir, ['.h'])
 
    destdir = os.path.join(prefix, 'lib', 'gadgeteer', 'plugins')
-   srcroot = os.path.join(juggler_dir, 'vc7', 'Gadgeteer')
+   srcroot = os.path.join(gJugglerDir, 'vc7', 'Gadgeteer')
 
    plugins = ['ApplicationDataManager', 'RemoteInputManager',
               'StartBarrierPlugin', 'SwapLockTCPPlugin']
@@ -966,49 +966,49 @@ def installVRJuggler(prefix):
    print "Installing VR Juggler headers, libraries, and samples ..."
 
    destdir = os.path.join(prefix, 'include', 'vrj')
-   srcdir  = os.path.join(juggler_dir, 'modules', 'vrjuggler', 'vrj')
+   srcdir  = os.path.join(gJugglerDir, 'modules', 'vrjuggler', 'vrj')
    installDir(srcdir, destdir, ['.h'])
 
-   srcdir  = os.path.join(juggler_dir, 'vc7', 'VRJuggler', 'vrj')
+   srcdir  = os.path.join(gJugglerDir, 'vc7', 'VRJuggler', 'vrj')
    installDir(srcdir, destdir, ['.h'])
 
    destdir = os.path.join(prefix, 'lib')
-   srcroot = os.path.join(juggler_dir, 'vc7', 'VRJuggler')
+   srcroot = os.path.join(gJugglerDir, 'vc7', 'VRJuggler')
    installLibs(srcroot, destdir)
 
-   srcroot = os.path.join(juggler_dir, 'vc7', 'VRJuggler',
+   srcroot = os.path.join(gJugglerDir, 'vc7', 'VRJuggler',
                           'OpenGL_Draw_Manager')
    installLibs(srcroot, destdir)
 
-   srcroot = os.path.join(juggler_dir, 'vc7', 'VRJuggler',
+   srcroot = os.path.join(gJugglerDir, 'vc7', 'VRJuggler',
                           'Performer_Draw_Manager')
    installLibs(srcroot, destdir)
 
    destdir = os.path.join(prefix, 'share', 'vrjuggler', 'data')
-   srcdir  = os.path.join(juggler_dir, 'modules', 'vrjuggler', 'data')
+   srcdir  = os.path.join(gJugglerDir, 'modules', 'vrjuggler', 'data')
    installDir(srcdir, destdir)
 
    destdir = os.path.join(prefix, 'share', 'vrjuggler', 'samples')
-   srcdir  = os.path.join(juggler_dir, 'modules', 'vrjuggler', 'samples')
+   srcdir  = os.path.join(gJugglerDir, 'modules', 'vrjuggler', 'samples')
    installDir(srcdir, destdir, None, ['.in'])
 
    destdir = os.path.join(prefix, 'share', 'vrjuggler', 'test')
-   srcdir  = os.path.join(juggler_dir, 'modules', 'vrjuggler', 'test')
+   srcdir  = os.path.join(gJugglerDir, 'modules', 'vrjuggler', 'test')
    installDir(srcdir, destdir, None, ['.in'])
 
    destdir = os.path.join(prefix, 'share', 'vrjuggler', 'tools')
-   srcdir  = os.path.join(juggler_dir, 'modules', 'vrjuggler', 'tools')
+   srcdir  = os.path.join(gJugglerDir, 'modules', 'vrjuggler', 'tools')
    installDir(srcdir, destdir, None, ['.in'])
 
    destdir = os.path.join(prefix, 'share', 'vrjuggler')
-   srcroot = os.path.join(juggler_dir, 'modules', 'vrjuggler')
+   srcroot = os.path.join(gJugglerDir, 'modules', 'vrjuggler')
 
    extra_files = ['ChangeLog', 'COPYING.txt', 'RELEASE_NOTES.txt']
    for f in extra_files:
       shutil.copy2(os.path.join(srcroot, f), destdir)
 
 def installVRJConfig(prefix):
-   jardir = os.path.join(juggler_dir, 'vc7', 'VRJConfig')
+   jardir = os.path.join(gJugglerDir, 'vc7', 'VRJConfig')
 
    if os.path.exists(os.path.join(jardir, 'VRJConfig.jar')):
       print "Installing VRJConfig ..."
@@ -1021,7 +1021,7 @@ def installVRJConfig(prefix):
          'Simulator.jar'
       ]
 
-      vrjconfig_src = os.path.join(juggler_dir, 'modules', 'vrjuggler',
+      vrjconfig_src = os.path.join(gJugglerDir, 'modules', 'vrjuggler',
                                    'vrjconfig')
       bean_jars = [
          'VRJConfig.jar'
@@ -1082,7 +1082,7 @@ def installVRJConfig(prefix):
          r'TableLayout\TableLayout.jar'
       ]
 
-      srcroot = os.path.join(juggler_dir, 'external')
+      srcroot = os.path.join(gJugglerDir, 'external')
       for j in dep_jars:
          shutil.copy2(os.path.join(srcroot, j), destdir)
    else:
@@ -1092,12 +1092,12 @@ def installVRJugglerPlugins(prefix):
    print "Installing VR Juggler C++ plug-ins ..."
 
    destdir = os.path.join(prefix, 'lib', 'vrjuggler', 'plugins')
-   srcroot = os.path.join(juggler_dir, 'vc7', 'VRJugglerPlugins',
+   srcroot = os.path.join(gJugglerDir, 'vc7', 'VRJugglerPlugins',
                           'Perf_Plugin_CXX')
    installLibs(srcroot, destdir, extensions = ['.dll'])
 
 def installVRJugglerPluginsJava(prefix):
-   srcdir = os.path.join(juggler_dir, 'vc7', 'VRJugglerPlugins',
+   srcdir = os.path.join(gJugglerDir, 'vc7', 'VRJugglerPlugins',
                          'Perf_Plugin_Java')
 
    plugins = [('PerformanceMonitor', 'corba_perf_mon')]
@@ -1111,7 +1111,7 @@ def installVRJugglerPluginsJava(prefix):
          destdir = os.path.join(prefix, 'bin', 'beans')
          shutil.copy2(os.path.join(srcdir, name + '.jar'), destdir)
 
-         srcdir = os.path.join(juggler_dir, 'modules', 'vrjuggler', 'plugins',
+         srcdir = os.path.join(gJugglerDir, 'modules', 'vrjuggler', 'plugins',
                                dir)
          shutil.copy2(os.path.join(srcdir, name + '.xml'), destdir)
       else:
@@ -1264,29 +1264,30 @@ def installOmniORB(prefix):
    if os.path.exists(srcdir):
       destdir = os.path.join(prefix, 'bin', 'scripts')
       installDir(srcdir, destdir)
-      
-def Str2TkinterStrVar(Str):
-   TempStrVar = Tkinter.StringVar()
-   TempStrVar.set(Str)
-   return TempStrVar
 
-class Win32SetupFrontEnd:
+def str2TkinterStrVar(Str):
+   temp = Tkinter.StringVar()
+   temp.set(Str)
+   return temp
+
+class GuiFrontEnd:
    def __init__(self, master):
       self.mRoot = master
-      self.mRoot.title("VrJuggler Win32 Build -- Python")
+      self.mRoot.title("VR Juggler Win32 Build")
       self.mRoot.protocol("WM_DELETE_WINDOW", self.cleanup)
       self.mRoot.bind("<Destroy>", lambda e: self.cleanup)
 
-      Options = setDefaultVars()
+      options = setDefaultVars()
       self.mOptions = {}
-      #make a StringVar Dictionary
-      for k in Options:
-         self.mOptions[k] = Str2TkinterStrVar(Options[k])
-   
+
+      # Make a StringVar dictionary.
+      for k in options:
+         self.mOptions[k] = str2TkinterStrVar(options[k])
+
       self.makeOptionsInterface()
-      
+
    def cleanup(self):
-      cache_file = os.path.join(juggler_dir, gOptionsFileName)
+      cache_file = os.path.join(gJugglerDir, gOptionsFileName)
       cache_file = open(cache_file, 'w')
       for k, v in self.mOptions.iteritems():
          output = "options['%s'] = r'%s'\n" % (k, v.get())
@@ -1295,142 +1296,257 @@ class Win32SetupFrontEnd:
       self.mRoot.destroy()
 
    def makeOptionsInterface(self):
-      #Set up the Frames
-      PadAmmount=10
+      # Set up the frames.
+      pad_amount = 10
 
-      #Settings
+      # Settings.
       self.Juggler = "#0EAE06"
       self.JugglerYellow = "#EECE26"
       self.JugglerPurple = "#8E76AA"
       self.HeaderFont = (16)
-      
-      self.mRoot.HeaderFrame = Tkinter.Frame(self.mRoot, borderwidth=1, relief="sunken", bg=self.JugglerYellow)
-      self.mRoot.HeaderFrame.grid(row=0, column=0, sticky=Tkinter.N+Tkinter.E+Tkinter.S+Tkinter.W, ipadx=PadAmmount, ipady=PadAmmount)
-      
-      self.mRoot.SettingsFrame = Tkinter.Frame(self.mRoot, borderwidth=1, relief="sunken", bg=self.JugglerYellow)
-      self.mRoot.SettingsFrame.grid(row=0, column=1, sticky=Tkinter.N+Tkinter.E+Tkinter.S+Tkinter.W, ipadx=PadAmmount, ipady=PadAmmount)
 
-      self.mRoot.CommandFrame = Tkinter.Frame(self.mRoot, borderwidth=1, relief="sunken", bg=self.JugglerYellow)
-      self.mRoot.CommandFrame.grid(row=1, column=0, sticky=Tkinter.N+Tkinter.E+Tkinter.S+Tkinter.W, ipadx=PadAmmount, ipady=PadAmmount)
+      self.mRoot.HeaderFrame = Tkinter.Frame(self.mRoot, borderwidth = 1,
+                                             relief = "sunken",
+                                             bg = self.JugglerYellow)
+      self.mRoot.HeaderFrame.grid(row = 0, column = 0,
+                                  sticky = Tkinter.N + Tkinter.E + Tkinter.S + Tkinter.W,
+                                  ipadx = pad_amount, ipady = pad_amount)
 
-      self.mRoot.OutputFrame = Tkinter.Frame(self.mRoot, borderwidth=1, relief="sunken", bg=self.JugglerYellow)
-      self.mRoot.OutputFrame.grid(row=1, column=1, sticky=Tkinter.N+Tkinter.E+Tkinter.S+Tkinter.W, ipadx=PadAmmount, ipady=PadAmmount)
+      self.mRoot.SettingsFrame = Tkinter.Frame(self.mRoot, borderwidth = 1,
+                                               relief = "sunken",
+                                               bg = self.JugglerYellow)
+      self.mRoot.SettingsFrame.grid(row = 0, column = 1,
+                                    sticky = Tkinter.N + Tkinter.E + Tkinter.S + Tkinter.W,
+                                    ipadx = pad_amount, ipady = pad_amount)
 
-      self.mRoot.StatusFrame = Tkinter.Frame(self.mRoot, borderwidth=1, relief="sunken", bg=self.JugglerYellow)
-      self.mRoot.StatusFrame.grid(row=2, column=0, columnspan=2, sticky=Tkinter.W+Tkinter.E)
-      
-      #HeaderFrame Innards
+      self.mRoot.CommandFrame = Tkinter.Frame(self.mRoot, borderwidth = 1,
+                                              relief = "sunken",
+                                              bg = self.JugglerYellow)
+      self.mRoot.CommandFrame.grid(row = 1, column = 0,
+                                   sticky = Tkinter.N + Tkinter.E + Tkinter.S + Tkinter.W,
+                                   ipadx = pad_amount, ipady = pad_amount)
+
+      self.mRoot.OutputFrame = Tkinter.Frame(self.mRoot, borderwidth = 1,
+                                             relief = "sunken",
+                                             bg = self.JugglerYellow)
+      self.mRoot.OutputFrame.grid(row = 1, column = 1,
+                                  sticky = Tkinter.N + Tkinter.E + Tkinter.S + Tkinter.W,
+                                  ipadx = pad_amount, ipady = pad_amount)
+
+      self.mRoot.StatusFrame = Tkinter.Frame(self.mRoot, borderwidth = 1,
+                                             relief = "sunken",
+                                             bg = self.JugglerYellow)
+      self.mRoot.StatusFrame.grid(row = 2, column = 0, columnspan = 2,
+                                  sticky = Tkinter.W + Tkinter.E)
+
+      # HeaderFrame Innards
       self.mRoot.HeaderFrame.vjImage = Tkinter.PhotoImage(file="modules/vrjuggler/vrjconfig/org/vrjuggler/vrjconfig/images/juggler.logo.100x100.gif", format="gif")
-      self.mRoot.HeaderFrame.Image = Tkinter.Label(self.mRoot.HeaderFrame, image=self.mRoot.HeaderFrame.vjImage, bg=self.JugglerYellow)
-      self.mRoot.HeaderFrame.Image.grid(row=0, column=0, sticky=Tkinter.N)
-      self.mRoot.HeaderFrame.ImageLabel = Tkinter.Label(self.mRoot.HeaderFrame, text="VR Juggler Win32 Build Configuration", bg=self.JugglerYellow, font=self.HeaderFont)
-      self.mRoot.HeaderFrame.ImageLabel.grid(row=1, column=0, sticky=Tkinter.N)
+      self.mRoot.HeaderFrame.Image = Tkinter.Label(self.mRoot.HeaderFrame,
+                                                   image = self.mRoot.HeaderFrame.vjImage,
+                                                   bg = self.JugglerYellow)
+      self.mRoot.HeaderFrame.Image.grid(row = 0, column = 0, sticky = Tkinter.N)
+      self.mRoot.HeaderFrame.ImageLabel = \
+         Tkinter.Label(self.mRoot.HeaderFrame,
+                       text = "VR Juggler Win32 Build Configuration",
+                       bg = self.JugglerYellow, font = self.HeaderFont)
+      self.mRoot.HeaderFrame.ImageLabel.grid(row = 1, column = 0,
+                                             sticky = Tkinter.N)
       self.mRoot.HeaderFrame.rowconfigure(1, weight = 1)
-      
-      #SettingsFrame Innards
-      self.mRoot.SettingsFrame.RequiredSettingsFrame = Tkinter.Frame(self.mRoot.SettingsFrame, borderwidth=1, relief="sunken", bg=self.JugglerYellow)
-      self.mRoot.SettingsFrame.RequiredSettingsFrame.grid(row=1, column=0, sticky=Tkinter.N+Tkinter.E+Tkinter.S+Tkinter.W)
+
+      # SettingsFrame Innards
+      self.mRoot.SettingsFrame.RequiredSettingsFrame = \
+         Tkinter.Frame(self.mRoot.SettingsFrame, borderwidth = 1,
+                       relief = "sunken", bg = self.JugglerYellow)
+      self.mRoot.SettingsFrame.RequiredSettingsFrame.grid(row = 1, column = 0,
+                                                          sticky = Tkinter.N + Tkinter.E + Tkinter.S + Tkinter.W)
       self.mRoot.SettingsFrame.RequiredSettingsFrame.SettingsRows = {}
-      self.mRoot.SettingsFrame.OptionalSettingsFrame = Tkinter.Frame(self.mRoot.SettingsFrame, borderwidth=1, relief="sunken", bg=self.JugglerYellow)
-      self.mRoot.SettingsFrame.OptionalSettingsFrame.grid(row=2, column=0, sticky=Tkinter.N+Tkinter.E+Tkinter.S+Tkinter.W)
+      self.mRoot.SettingsFrame.OptionalSettingsFrame = \
+         Tkinter.Frame(self.mRoot.SettingsFrame, borderwidth = 1,
+                       relief = "sunken", bg = self.JugglerYellow)
+      self.mRoot.SettingsFrame.OptionalSettingsFrame.grid(row = 2, column = 0,
+                                                          sticky = Tkinter.N + Tkinter.E + Tkinter.S + Tkinter.W)
       self.mRoot.SettingsFrame.OptionalSettingsFrame.SettingsRows = {}
-      
-      #RequiredSettingsFrame
-      NextRow = 0
-      self.mRoot.SettingsFrame.RequiredSettingsFrame.Label = Tkinter.Label(self.mRoot.SettingsFrame.RequiredSettingsFrame, font=self.HeaderFont, text="Required Settings", bg=self.JugglerPurple)
-      self.mRoot.SettingsFrame.RequiredSettingsFrame.Label.grid(row=NextRow, column=0, columnspan=3, sticky=Tkinter.EW)
+
+      # RequiredSettingsFrame
+      next_row = 0
+      self.mRoot.SettingsFrame.RequiredSettingsFrame.Label = \
+         Tkinter.Label(self.mRoot.SettingsFrame.RequiredSettingsFrame,
+                       font = self.HeaderFont, text = "Required Settings",
+                       bg = self.JugglerPurple)
+      self.mRoot.SettingsFrame.RequiredSettingsFrame.Label.grid(row = next_row,
+                                                                column = 0,
+                                                                columnspan = 3,
+                                                                sticky = Tkinter.EW)
       self.mRoot.SettingsFrame.RequiredSettingsFrame.columnconfigure(0, weight = 1)
-      NextRow = NextRow+1
-      self.makeEntryRow(self.mRoot.SettingsFrame.RequiredSettingsFrame,"Instalation Prefix:", 'prefix', NextRow)
-      NextRow = NextRow+1
-      self.makeEntryRow(self.mRoot.SettingsFrame.RequiredSettingsFrame,"Boost C++ version:", 'BOOST_VERSION',NextRow,True, False)
-      NextRow = NextRow+1
-      self.makeEntryRow(self.mRoot.SettingsFrame.RequiredSettingsFrame,"Boost C++ instalation directory:", 'BOOST_ROOT',NextRow)
-      NextRow = NextRow+1
-      self.makeEntryRow(self.mRoot.SettingsFrame.RequiredSettingsFrame,"Directory Containing Boost C++ Header Tree:", 'BOOST_INCLUDES',NextRow)
-      NextRow = NextRow+1
-      self.makeEntryRow(self.mRoot.SettingsFrame.RequiredSettingsFrame,"Boost.Build toolset used to Construct Boost C++:", 'BOOST_TOOL',NextRow,True, False)
-      NextRow = NextRow+1
-      self.makeEntryRow(self.mRoot.SettingsFrame.RequiredSettingsFrame,"NSPR instalation directory:", 'NSPR_ROOT',NextRow)
-      NextRow = NextRow+1
-      self.makeEntryRow(self.mRoot.SettingsFrame.RequiredSettingsFrame,"CppDom instalation directory:", 'CPPDOM_ROOT',NextRow)
-      NextRow = NextRow+1
-      self.makeEntryRow(self.mRoot.SettingsFrame.RequiredSettingsFrame,"GMTL instalation directory:", 'GMTL_ROOT',NextRow)
-      NextRow = NextRow+1
+      next_row = next_row + 1
+      self.makeEntryRow(self.mRoot.SettingsFrame.RequiredSettingsFrame,
+                        "Instalation Prefix:", 'prefix', next_row)
+      next_row = next_row + 1
+      self.makeEntryRow(self.mRoot.SettingsFrame.RequiredSettingsFrame,
+                        "Boost C++ version:", 'BOOST_VERSION', next_row, True,
+                        False)
+      next_row = next_row + 1
+      self.makeEntryRow(self.mRoot.SettingsFrame.RequiredSettingsFrame,
+                        "Boost C++ instalation directory:", 'BOOST_ROOT',
+                        next_row)
+      next_row = next_row + 1
+      self.makeEntryRow(self.mRoot.SettingsFrame.RequiredSettingsFrame,
+                        "Directory Containing Boost C++ Header Tree:",
+                        'BOOST_INCLUDES', next_row)
+      next_row = next_row + 1
+      self.makeEntryRow(self.mRoot.SettingsFrame.RequiredSettingsFrame,
+                        "Boost.Build toolset used to Construct Boost C++:",
+                        'BOOST_TOOL', next_row, True, False)
+      next_row = next_row + 1
+      self.makeEntryRow(self.mRoot.SettingsFrame.RequiredSettingsFrame,
+                        "NSPR instalation directory:", 'NSPR_ROOT', next_row)
+      next_row = next_row + 1
+      self.makeEntryRow(self.mRoot.SettingsFrame.RequiredSettingsFrame,
+                        "CppDOM instalation directory:", 'CPPDOM_ROOT',
+                        next_row)
+      next_row = next_row + 1
+      self.makeEntryRow(self.mRoot.SettingsFrame.RequiredSettingsFrame,
+                        "GMTL instalation directory:", 'GMTL_ROOT', next_row)
+      next_row = next_row + 1
 
       #OptionalSettingsFrame
-      NextRow = 0
-      self.mRoot.SettingsFrame.OptionalSettingsFrame.Label = Tkinter.Label(self.mRoot.SettingsFrame.OptionalSettingsFrame, font=self.HeaderFont, text="Optional Settings", bg=self.JugglerPurple)
-      self.mRoot.SettingsFrame.OptionalSettingsFrame.Label.grid(row=NextRow, column=0, columnspan=3, sticky=Tkinter.EW)
+      next_row = 0
+      self.mRoot.SettingsFrame.OptionalSettingsFrame.Label = \
+         Tkinter.Label(self.mRoot.SettingsFrame.OptionalSettingsFrame,
+                       font = self.HeaderFont, text = "Optional Settings",
+                       bg = self.JugglerPurple)
+      self.mRoot.SettingsFrame.OptionalSettingsFrame.Label.grid(row = next_row,
+                                                                column = 0,
+                                                                columnspan = 3,
+                                                                sticky = Tkinter.EW)
       self.mRoot.SettingsFrame.OptionalSettingsFrame.columnconfigure(0, weight = 1)
-      NextRow = NextRow+1
+      next_row = next_row + 1
 
-      self.makeEntryRow(self.mRoot.SettingsFrame.OptionalSettingsFrame,"Dependency instalation prefix:", 'deps-prefix',NextRow, False)
-      NextRow = NextRow+1
-      self.makeEntryRow(self.mRoot.SettingsFrame.OptionalSettingsFrame,"Java instalation directory:", 'JAVA_HOME',NextRow, False)
-      NextRow = NextRow + 1
       self.makeEntryRow(self.mRoot.SettingsFrame.OptionalSettingsFrame,
-                        "Jogl instalation directory:", 'JOGL_HOME', NextRow,
+                        "Dependency instalation prefix:", 'deps-prefix',
+                        next_row, False)
+      next_row = next_row + 1
+      self.makeEntryRow(self.mRoot.SettingsFrame.OptionalSettingsFrame,
+                        "Java instalation directory:", 'JAVA_HOME', next_row,
                         False)
-      NextRow = NextRow+1
-      self.makeEntryRow(self.mRoot.SettingsFrame.OptionalSettingsFrame,"Java3D instalation directory:", 'JAVA3D_HOME',NextRow, False)
-      NextRow = NextRow+1
-      self.makeEntryRow(self.mRoot.SettingsFrame.OptionalSettingsFrame,"OmniORB instalation directory:", 'OMNIORB_ROOT',NextRow, False)
-      NextRow = NextRow+1
-      self.makeEntryRow(self.mRoot.SettingsFrame.OptionalSettingsFrame,"OpenGL Performer instalation directory:", 'PFROOT',NextRow, False)
-      NextRow = NextRow+1
-      self.makeEntryRow(self.mRoot.SettingsFrame.OptionalSettingsFrame,"VRPN instalation directory:", 'VRPN_ROOT',NextRow, False)
-      NextRow = NextRow+1
-      self.makeEntryRow(self.mRoot.SettingsFrame.OptionalSettingsFrame,"Audiere instalation directory:", 'AUDIERE_ROOT',NextRow, False)
-      NextRow = NextRow+1
-      self.makeEntryRow(self.mRoot.SettingsFrame.OptionalSettingsFrame,"OpenAL SDK instalation directory:", 'OPENAL_ROOT',NextRow, False)
-      NextRow = NextRow+1
-      self.makeEntryRow(self.mRoot.SettingsFrame.OptionalSettingsFrame,"TrackdAPI instalation directory:", 'TRACKD_API_ROOT',NextRow, False)
-      NextRow = NextRow+1
-      #self.makeEntryRow(self.mRoot.mFrame,"Microsoft Speech SDK instalation directory:", '',NextRow, False)
-      #NextRow = NextRow+1
+      next_row = next_row + 1
+      self.makeEntryRow(self.mRoot.SettingsFrame.OptionalSettingsFrame,
+                        "Jogl instalation directory:", 'JOGL_HOME', next_row,
+                        False)
+      next_row = next_row + 1
+      self.makeEntryRow(self.mRoot.SettingsFrame.OptionalSettingsFrame,
+                        "Java3D instalation directory:", 'JAVA3D_HOME',
+                        next_row, False)
+      next_row = next_row + 1
+      self.makeEntryRow(self.mRoot.SettingsFrame.OptionalSettingsFrame,
+                        "OmniORB instalation directory:", 'OMNIORB_ROOT',
+                        next_row, False)
+      next_row = next_row + 1
+      self.makeEntryRow(self.mRoot.SettingsFrame.OptionalSettingsFrame,
+                        "OpenGL Performer instalation directory:", 'PFROOT',
+                        next_row, False)
+      next_row = next_row + 1
+      self.makeEntryRow(self.mRoot.SettingsFrame.OptionalSettingsFrame,
+                        "VRPN instalation directory:", 'VRPN_ROOT', next_row,
+                        False)
+      next_row = next_row + 1
+      self.makeEntryRow(self.mRoot.SettingsFrame.OptionalSettingsFrame,
+                        "Audiere instalation directory:", 'AUDIERE_ROOT',
+                        next_row, False)
+      next_row = next_row + 1
+      self.makeEntryRow(self.mRoot.SettingsFrame.OptionalSettingsFrame,
+                        "OpenAL SDK instalation directory:", 'OPENAL_ROOT',
+                        next_row, False)
+      next_row = next_row + 1
+      self.makeEntryRow(self.mRoot.SettingsFrame.OptionalSettingsFrame,
+                        "TrackdAPI instalation directory:", 'TRACKD_API_ROOT',
+                        next_row, False)
+      next_row = next_row + 1
+      #self.makeEntryRow(self.mRoot.mFrame,
+      #                  "Microsoft Speech SDK instalation directory:", '',
+      #                  next_row, False)
+      #next_row = next_row + 1
 
       #CommandFrame Innards
-      NextRow = 0
-      self.mRoot.CommandFrame.BatchBuildCheck = Tkinter.Checkbutton(self.mRoot.CommandFrame,text="Batch Build", bg=self.JugglerYellow, activebackground=self.JugglerYellow, onvalue="Yes", offvalue="No")
+      next_row = 0
+      self.mRoot.CommandFrame.BatchBuildCheck = \
+         Tkinter.Checkbutton(self.mRoot.CommandFrame, text="Batch Build",
+                             bg = self.JugglerYellow,
+                             activebackground = self.JugglerYellow,
+                             onvalue = "Yes", offvalue = "No")
       self.mRoot.CommandFrame.BatchBuildCheck.Variable = Tkinter.StringVar()
       self.mRoot.CommandFrame.BatchBuildCheck.Variable.set("Yes")
-      self.mRoot.CommandFrame.BatchBuildCheck["variable"] = self.mRoot.CommandFrame.BatchBuildCheck.Variable
-      self.mRoot.CommandFrame.BatchBuildCheck.grid(row=NextRow, column=0, sticky=Tkinter.EW, pady=4)
-      NextRow = NextRow+1
-      self.mRoot.CommandFrame.InstallJugglerCheck = Tkinter.Checkbutton(self.mRoot.CommandFrame,text="Install Juggler", bg=self.JugglerYellow, activebackground=self.JugglerYellow, onvalue="Yes", offvalue="No")
+      self.mRoot.CommandFrame.BatchBuildCheck["variable"] = \
+         self.mRoot.CommandFrame.BatchBuildCheck.Variable
+      self.mRoot.CommandFrame.BatchBuildCheck.grid(row = next_row, column = 0,
+                                                   sticky = Tkinter.EW,
+                                                   pady = 4)
+      next_row = next_row + 1
+      self.mRoot.CommandFrame.InstallJugglerCheck = \
+         Tkinter.Checkbutton(self.mRoot.CommandFrame, text = "Install Juggler",
+                             bg = self.JugglerYellow,
+                             activebackground = self.JugglerYellow,
+                             onvalue ="Yes", offvalue = "No")
       self.mRoot.CommandFrame.InstallJugglerCheck.Variable = Tkinter.StringVar()
       self.mRoot.CommandFrame.InstallJugglerCheck.Variable.set("Yes")
-      self.mRoot.CommandFrame.InstallJugglerCheck["variable"] = self.mRoot.CommandFrame.InstallJugglerCheck.Variable
-      self.mRoot.CommandFrame.InstallJugglerCheck.grid(row=NextRow, column=0, sticky=Tkinter.EW, pady=4)
-      NextRow = NextRow+1
-      self.mRoot.CommandFrame.InstallJugglerDepsCheck = Tkinter.Checkbutton(self.mRoot.CommandFrame,text="Install Juggler Dependancies", bg=self.JugglerYellow, activebackground=self.JugglerYellow, onvalue="Yes", offvalue="No")#,command=self.installDeps, state="disabled")
+      self.mRoot.CommandFrame.InstallJugglerCheck["variable"] = \
+         self.mRoot.CommandFrame.InstallJugglerCheck.Variable
+      self.mRoot.CommandFrame.InstallJugglerCheck.grid(row = next_row,
+                                                       column = 0,
+                                                       sticky = Tkinter.EW,
+                                                       pady = 4)
+      next_row = next_row + 1
+      self.mRoot.CommandFrame.InstallJugglerDepsCheck = \
+         Tkinter.Checkbutton(self.mRoot.CommandFrame,
+                             text = "Install Juggler Dependancies",
+                             bg = self.JugglerYellow,
+                             activebackground = self.JugglerYellow,
+                             onvalue = "Yes", offvalue = "No")
+                             #,command=self.installDeps, state="disabled")
       self.mRoot.CommandFrame.InstallJugglerDepsCheck.Variable = Tkinter.StringVar()
       self.mRoot.CommandFrame.InstallJugglerDepsCheck.Variable.set("No")
-      self.mRoot.CommandFrame.InstallJugglerDepsCheck["variable"] = self.mRoot.CommandFrame.InstallJugglerDepsCheck.Variable
-      self.mRoot.CommandFrame.InstallJugglerDepsCheck.grid(row=NextRow, column=0, sticky=Tkinter.EW, pady=4)
-      NextRow = NextRow+1
-     
-      self.mRoot.CommandFrame.BuildInstallButton = Tkinter.Button(self.mRoot.CommandFrame,text="Build and Install",command=self.doBuild, state="disabled")
-      self.mRoot.CommandFrame.BuildInstallButton.grid(row=NextRow, column=0, sticky=Tkinter.EW, pady=4)
-      NextRow = NextRow+1
+      self.mRoot.CommandFrame.InstallJugglerDepsCheck["variable"] = \
+         self.mRoot.CommandFrame.InstallJugglerDepsCheck.Variable
+      self.mRoot.CommandFrame.InstallJugglerDepsCheck.grid(row = next_row,
+                                                           column = 0,
+                                                           sticky = Tkinter.EW,
+                                                           pady = 4)
+      next_row = next_row + 1
+
+      self.mRoot.CommandFrame.BuildInstallButton = \
+         Tkinter.Button(self.mRoot.CommandFrame, text = "Build and Install",
+                        command = self.doBuild, state = "disabled")
+      self.mRoot.CommandFrame.BuildInstallButton.grid(row = next_row,
+                                                      column = 0,
+                                                      sticky = Tkinter.EW,
+                                                      pady = 4)
+      next_row = next_row + 1
 
       #OutputFrame Innards
-      self.mRoot.OutputFrame.MessageText = Tkinter.Text(self.mRoot.OutputFrame, height=20, width=100, state='disabled')
-      self.mRoot.OutputFrame.MessageText.grid(row=0, column=0)
-      self.mRoot.OutputFrame.MessageText.tag_config("a", foreground="blue")
+      self.mRoot.OutputFrame.MessageText = Tkinter.Text(self.mRoot.OutputFrame,
+                                                        height = 20,
+                                                        width = 100,
+                                                        state = 'disabled')
+      self.mRoot.OutputFrame.MessageText.grid(row = 0, column = 0)
+      self.mRoot.OutputFrame.MessageText.tag_config("a", foreground = "blue")
 
-      self.mRoot.OutputFrame.MessageText.ScrollBar = Tkinter.Scrollbar(self.mRoot.OutputFrame)
-      self.mRoot.OutputFrame.MessageText.ScrollBar.grid(row=0, column=1, sticky=Tkinter.W+Tkinter.N+Tkinter.S)
+      self.mRoot.OutputFrame.MessageText.ScrollBar = \
+         Tkinter.Scrollbar(self.mRoot.OutputFrame)
+      self.mRoot.OutputFrame.MessageText.ScrollBar.grid(row = 0, column = 1,
+                                                        sticky = Tkinter.W + Tkinter.N + Tkinter.S)
 
-      self.mRoot.OutputFrame.MessageText.config(yscrollcommand=self.mRoot.OutputFrame.MessageText.ScrollBar.set)
-      self.mRoot.OutputFrame.MessageText.ScrollBar.config(command=self.mRoot.OutputFrame.MessageText.yview)
+      self.mRoot.OutputFrame.MessageText.config(yscrollcommand = self.mRoot.OutputFrame.MessageText.ScrollBar.set)
+      self.mRoot.OutputFrame.MessageText.ScrollBar.config(command = self.mRoot.OutputFrame.MessageText.yview)
 
       #StatusFrame Innards
-      self.mRoot.StatusFrame.Label = Tkinter.Label(self.mRoot.StatusFrame, text="Status: ")
+      self.mRoot.StatusFrame.Label = Tkinter.Label(self.mRoot.StatusFrame,
+                                                   text = "Status: ")
       self.mRoot.StatusFrame.Label.grid(row=0, column=0, rowspan=2)#, sticky="W")
-      self.mRoot.StatusFrame.StatusLabel = Tkinter.Label(self.mRoot.StatusFrame, text="Test", anchor=Tkinter.W)
-      self.mRoot.StatusFrame.StatusLabel.grid(row=0, column=1, sticky=Tkinter.EW)
+      self.mRoot.StatusFrame.StatusLabel = Tkinter.Label(self.mRoot.StatusFrame,
+                                                         text = "Test",
+                                                         anchor = Tkinter.W)
+      self.mRoot.StatusFrame.StatusLabel.grid(row = 0, column = 1,
+                                              sticky = Tkinter.EW)
       self.mRoot.StatusFrame.columnconfigure(1, weight = 1)
 
       self.update()
@@ -1440,25 +1556,27 @@ class Win32SetupFrontEnd:
          self.updateOptionsValidation()
          self.updateCommandFrame()
 
-   def entryValidation(self, Entry, Update=False):
-      if os.path.isdir( Entry.get() ):
-         Entry.config(fg="blue")
+   def entryValidation(self, entry, update = False):
+      if os.path.isdir(entry.get()):
+         entry.config(fg = "blue")
       else:
-         Entry.config(fg="red")
-      if Update:
+         entry.config(fg = "red")
+
+      if update:
          self.updateRequiredOptions()
          self.updateCommandFrame()
-      
-   def updateOptionValidation(self, Setting):
-      if Setting["isDirectory"]:
-         self.entryValidation(Setting["Entry"])
-            
+
+   def updateOptionValidation(self, setting):
+      if setting["isDirectory"]:
+         self.entryValidation(setting["Entry"])
+
    def updateOptionsValidation(self):
       for k in self.mRoot.SettingsFrame.RequiredSettingsFrame.SettingsRows:
          self.updateOptionValidation(self.mRoot.SettingsFrame.RequiredSettingsFrame.SettingsRows[k])
+
       for k in self.mRoot.SettingsFrame.OptionalSettingsFrame.SettingsRows:
          self.updateOptionValidation(self.mRoot.SettingsFrame.OptionalSettingsFrame.SettingsRows[k])
-         
+
    def updateRequiredOptions(self):
       self.mReqSettingsSet = True
       for k in self.mRoot.SettingsFrame.RequiredSettingsFrame.SettingsRows:
@@ -1467,43 +1585,50 @@ class Win32SetupFrontEnd:
 
    def updateCommandFrame(self):
       if self.mReqSettingsSet:
-         #self.mRoot.CommandFrame.BuildButton.config(state="normal")
-         self.mRoot.CommandFrame.BuildInstallButton.config(state="normal")
+         #self.mRoot.CommandFrame.BuildButton.config(state = "normal")
+         self.mRoot.CommandFrame.BuildInstallButton.config(state = "normal")
       else:
-         #self.mRoot.CommandFrame.BuildButton.config(state="disabled")
-         self.mRoot.CommandFrame.BuildInstallButton.config(state="disabled")
-            
-      
-   def validateOptions(self):
-      RetValue = True
+         #self.mRoot.CommandFrame.BuildButton.config(state = "disabled")
+         self.mRoot.CommandFrame.BuildInstallButton.config(state = "disabled")
 
-      #Make sure that all options that are directories reference valid directories
-      InvDirList = []
+   def validateOptions(self):
+      status = True
+
+      # Make sure that all options that are directories reference valid
+      # directories.
+      inv_dir_list = []
       for k in self.mOptions:
-         if (self.mOptionWidgetsDict[k][4]) and ( not os.path.isdir(self.mOptions[k].get()) and (self.mOptions[k].get() != "")):
-            RetValue = False
-            InvDirList.append( self.mOptionWidgetsDict[k][0]['text'] )
-      if not RetValue:
+         if self.mOptionWidgetsDict[k][4] and \
+            not os.path.isdir(self.mOptions[k].get() and \
+            self.mOptions[k].get() != ""):
+            status = False
+            inv_dir_list.append(self.mOptionWidgetsDict[k][0]['text'])
+
+      if not status:
          tkMessageBox.showwarning(
             "Invalid Directory",
-            "The following settings reference non-existant directories and must be set before proceeding.\n%s" % (InvDirList) )
-         return RetValue
+            "The following settings reference non-existant directories and must be set before proceeding.\n%s" % (inv_dir_list) )
+         return status
 
-      return RetValue
+      return status
 
    def doBuild(self):
-      self.mRoot.CommandFrame.BuildInstallButton.config(state="disabled")
-      #Set the Environment Vars
+      self.mRoot.CommandFrame.BuildInstallButton.config(state = "disabled")
+
+      # Set the environment vars.
       for k in self.mOptions.iterkeys():
          os.environ[k] = self.mOptions[k].get()
 
       if True:#self.validateOptions():
-         if os.environ['JAVA_HOME'] != '' and os.path.exists(os.environ['JAVA_HOME']):
+         if os.environ['JAVA_HOME'] != '' and \
+            os.path.exists(os.environ['JAVA_HOME']):
             jdk_path = os.path.join(os.environ['JAVA_HOME'], 'bin')
             os.environ['PATH'] = jdk_path + os.pathsep + os.environ['PATH']
-            os.environ['JACORB_PATH'] = os.path.join(juggler_dir, r'external\JacORB')
+            os.environ['JACORB_PATH'] = os.path.join(gJugglerDir,
+                                                     r'external\JacORB')
 
-         if os.environ['OMNIORB_ROOT'] != '' and os.path.exists(os.environ['OMNIORB_ROOT']):
+         if os.environ['OMNIORB_ROOT'] != '' and \
+            os.path.exists(os.environ['OMNIORB_ROOT']):
             omni_bin = os.path.join(os.environ['OMNIORB_ROOT'], 'bin')
 
             if os.path.exists(os.path.join(omni_bin, 'omniidl.exe')):
@@ -1536,14 +1661,15 @@ class Win32SetupFrontEnd:
                   os.environ['OMNIORB_VERSION'] = match.group(1)
                   break
 
-         cache_file = os.path.join(juggler_dir, gOptionsFileName)
+         cache_file = os.path.join(gJugglerDir, gOptionsFileName)
          cache_file = open(cache_file, 'w')
          for k, v in self.mOptions.iteritems():
             output = "options['%s'] = r'%s'\n" % (k, v.get())
             cache_file.write(output)
          cache_file.close()
-         
-         self.BuildThread = threading.Thread(None, self.runVisualStudio, "BuildThread")
+
+         self.BuildThread = threading.Thread(None, self.runVisualStudio,
+                                             "BuildThread")
          self.BuildThread.start()
 
    def installJuggler(self):
@@ -1552,69 +1678,97 @@ class Win32SetupFrontEnd:
    def installDeps(self):
       doDependencyInstall(self.mOptions['deps-prefix'].get())
 
-   def getFile(self, optionIndex, initialdir, toEntry):
-      def clearAndGet(self, optionIndex, initialdir):
-         ResultDir = tkFileDialog.askdirectory(title=optionIndex, initialdir=initialdir)
-         if ResultDir != '':
-            self.mOptions[optionIndex].set(ResultDir)
+   def getFile(self, optionIndex, initialDir, toEntry):
+      def clearAndGet(self, optionIndex, initialDir):
+         result_dir = tkFileDialog.askdirectory(title = optionIndex,
+                                                initialdir = initialDir)
+         if result_dir != '':
+            self.mOptions[optionIndex].set(result_dir)
 
-      return lambda: clearAndGet(self, optionIndex, initialdir)
-   
-   def makeEntryRow(self, master, label, optionIndex, row, Required=True, isDirectory=True):
-      #Label
-      tempLabelRef = Tkinter.Label(master, text=label)
-      tempLabelRef.grid(row=row, column=0, sticky=Tkinter.N+Tkinter.E+Tkinter.S+Tkinter.W, pady=2)
+      return lambda: clearAndGet(self, optionIndex, initialDir)
 
-      #Entry
-      tempEntryRef = Tkinter.Entry(master, width=75, textvariable=self.mOptions[optionIndex])
-      tempEntryRef.grid(row=row, column=1, sticky=Tkinter.N+Tkinter.E+Tkinter.S+Tkinter.W, pady=2)
+   def makeEntryRow(self, master, label, optionIndex, row, required = True,
+                    isDirectory = True):
+      # Label.
+      label_ref = Tkinter.Label(master, text = label)
+      label_ref.grid(row = row, column = 0,
+                     sticky = Tkinter.N + Tkinter.E + Tkinter.S + Tkinter.W,
+                     pady = 2)
+
+      # Entry.
+      entry_ref = Tkinter.Entry(master, width = 75,
+                                     textvariable = self.mOptions[optionIndex])
+      entry_ref.grid(row = row, column = 1,
+                     sticky = Tkinter.N + Tkinter.E + Tkinter.S + Tkinter.W,
+                     pady = 2)
+
       if isDirectory:
-         if Required:
-            self.mOptions[optionIndex].trace_variable('w', lambda n, i, m: self.entryValidation(tempEntryRef, True))
+         if required:
+            self.mOptions[optionIndex].trace_variable('w',
+               lambda n, i, m: self.entryValidation(entry_ref, True))
          else:
-            self.mOptions[optionIndex].trace_variable('w', lambda n, i, m: self.entryValidation(tempEntryRef, False))
+            self.mOptions[optionIndex].trace_variable('w',
+               lambda n, i, m: self.entryValidation(entry_ref, False))
 
 
-      #Button, if there is one
-      if (not isDirectory):
-         tempButtonRef = None
-      else:
-         tempButtonRef = Tkinter.Button(master, text='Browse', command=self.getFile(optionIndex, self.mOptions[optionIndex].get(), tempEntryRef))
-         tempButtonRef.grid(row=row, column=2, sticky=Tkinter.N+Tkinter.E+Tkinter.S+Tkinter.W, pady=2)
+      # Button, if there is one.
+      button_ref = None
+      if isDirectory:
+         button_ref = Tkinter.Button(master, text = 'Browse',
+                                     command = self.getFile(optionIndex,
+                                                            self.mOptions[optionIndex].get(),
+                                                            entry_ref))
+         button_ref.grid(row = row, column = 2,
+                         sticky = Tkinter.N + Tkinter.E + Tkinter.S + Tkinter.W,
+                         pady = 2)
+
       master.SettingsRows[optionIndex] = {
-         "Label" : tempLabelRef,
-         "Entry" : tempEntryRef,
-         "Button" : tempButtonRef,
-         "isRequired" : Required,
+         "Label" : label_ref,
+         "Entry" : entry_ref,
+         "Button" : button_ref,
+         "isRequired" : required,
          "isDirectory" : isDirectory
          }
-      
+
    def buildFinished(self):
       print self.mRoot.CommandFrame.InstallJugglerCheck.Variable.get()
       print self.mRoot.CommandFrame.InstallJugglerDepsCheck['state']
+
       if self.mRoot.CommandFrame.InstallJugglerCheck.Variable.get() == "Yes":
          self.mRoot.OutputFrame.MessageText['state'] = 'normal'
-         self.mRoot.OutputFrame.MessageText.insert(Tkinter.END, "Installing Juggler...\n", "a")
+         self.mRoot.OutputFrame.MessageText.insert(Tkinter.END,
+                                                   "Installing Juggler...\n",
+                                                   "a")
          self.mRoot.OutputFrame.MessageText['state'] = 'disabled'
          doInstall(self.mOptions['prefix'].get())
+
       if self.mRoot.CommandFrame.InstallJugglerDepsCheck.Variable.get() == "Yes":
          self.mRoot.OutputFrame.MessageText['state'] = 'normal'
-         self.mRoot.OutputFrame.MessageText.insert(Tkinter.END, "Installing Juggler Dependancies...\n", "a")
+         self.mRoot.OutputFrame.MessageText.insert(Tkinter.END,
+                                                   "Installing Juggler Dependancies...\n",
+                                                   "a")
          self.mRoot.OutputFrame.MessageText['state'] = 'disabled'
          doDependencyInstall(self.mOptions['deps-prefix'].get())
+
       self.mRoot.OutputFrame.MessageText['state'] = 'normal'
-      self.mRoot.OutputFrame.MessageText.insert(Tkinter.END, "Build and Installation Finished.\n", "a")
+      self.mRoot.OutputFrame.MessageText.insert(Tkinter.END,
+                                                "Build and Installation Finished.\n",
+                                                "a")
       self.mRoot.OutputFrame.MessageText['state'] = 'disabled'
       self.updateCommandFrame()
 
-   def runVisualStudio( self ):
+   def runVisualStudio(self):
       #print "generateVersionHeaders()"
       self.mRoot.OutputFrame.MessageText['state'] = 'normal'
-      self.mRoot.OutputFrame.MessageText.insert(Tkinter.END, "Generating Version Headers.\n", "a")
+      self.mRoot.OutputFrame.MessageText.insert(Tkinter.END,
+                                                "Generating Version Headers.\n",
+                                                "a")
       self.mRoot.OutputFrame.MessageText['state'] = 'disabled'
       generateVersionHeaders()
       self.mRoot.OutputFrame.MessageText['state'] = 'normal'
-      self.mRoot.OutputFrame.MessageText.insert(Tkinter.END, "Generating Ant Build Files.\n", "a")
+      self.mRoot.OutputFrame.MessageText.insert(Tkinter.END,
+                                                "Generating Ant Build Files.\n",
+                                                "a")
       self.mRoot.OutputFrame.MessageText['state'] = 'disabled'
       generateAntBuildFiles()
       devenv_cmd = None
@@ -1633,7 +1787,7 @@ class Win32SetupFrontEnd:
       (devenv_cmd_no_exe, ext) = os.path.splitext(devenv_cmd)
       devenv_cmd_no_exe = '"%s"' % (devenv_cmd_no_exe)
 
-      #solution_file = r'%s' % os.path.join(juggler_dir, 'vc7', 'Juggler.sln')
+      #solution_file = r'%s' % os.path.join(gJugglerDir, 'vc7', 'Juggler.sln')
       solution_file = r'%s' % os.path.join('vc7', 'Juggler.sln')
       build_args = r'/build Debug'
 
@@ -1670,25 +1824,25 @@ class Win32SetupFrontEnd:
 def main():
    disable_tk = False
 
-   # If the user passed in -c on the command line, disable use of the GUI.
-   #if '-c' in sys.argv[1:]:
-   #   disable_tk = True
-   #deal with arguments
    try:
-      cmd_opts, cmd_args = getopt.getopt(sys.argv[1:], "cao:h", ["nogui", "auto", "options-file=", "help"])
+      cmd_opts, cmd_args = getopt.getopt(sys.argv[1:], "cao:h",
+                                         ["nogui", "auto", "options-file=",
+                                          "help"])
    except getopt.GetoptError:
       usage()
       sys.exit(4)
-   NoGui = False
+
    global gOptionsFileName
    for o, a in cmd_opts:
       if o in ("-c","--nogui"):
          disable_tk = True
       elif o in ("-o", "--options-file="):
          gOptionsFileName = a
-         #Make sure file exists
+
+         # Make sure file exists.
          if not os.path.isfile(gOptionsFileName):
-            print "No file %s exists.  Will use default options." % (gOptionsFileName)
+            print "No file %s exists.  Will use default options." % \
+                  gOptionsFileName
       elif o in ("-h", "--help"):
          usage()
          sys.exit(0)
@@ -1713,7 +1867,7 @@ def main():
          devenv_cmd = r'%s' % os.path.join(os.getenv('VSINSTALLDIR', ''),
                                            'devenv.exe')
 
-      solution_file = r'%s' % os.path.join(juggler_dir, 'vc7', 'Juggler.sln')
+      solution_file = r'%s' % os.path.join(gJugglerDir, 'vc7', 'Juggler.sln')
 
       try:
          status = os.spawnl(os.P_WAIT, devenv_cmd, 'devenv', solution_file)
@@ -1735,9 +1889,7 @@ def main():
       sys.exit(EXIT_STATUS_SUCCESS)
    else:
       root = Tkinter.Tk()
-
-      myApp = Win32SetupFrontEnd(root)
-
+      my_app = GuiFrontEnd(root)
       root.mainloop()
 
 def usage():
@@ -1748,8 +1900,9 @@ def usage():
    print "-o, --options-file=FILE  Uses FILE to Load/Save Options."
    print "-h, --help               Print this usage text and quit."
 
-juggler_dir = os.path.dirname(os.path.abspath(sys.argv[0]))
+gJugglerDir = os.path.dirname(os.path.abspath(sys.argv[0]))
 gOptionsFileName = "options.cache"
+
 if __name__ == '__main__':
    try:
       main()
