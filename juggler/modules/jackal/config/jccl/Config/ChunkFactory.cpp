@@ -40,7 +40,7 @@ namespace jccl
 ChunkFactory::ChunkFactory () : mLoadedDefaultDescs(false)
 {
    // Create global context
-   mGlobalContext = cppdom::XMLContextPtr(new cppdom::XMLContext);
+   mGlobalContext = cppdom::ContextPtr(new cppdom::Context);
 }
 
 void ChunkFactory::loadDefaultDescs()

@@ -50,16 +50,16 @@ namespace jccl
 */
 std::ostream& operator << (std::ostream& out, const ChunkDescDB& self)
 {
-   cppdom::XMLNodePtr chunk_desc_db_node;
+   cppdom::NodePtr chunk_desc_db_node;
    self.createChunkDescDBNode(chunk_desc_db_node);
 
    try
    {
       chunk_desc_db_node->save(out);
    }
-   catch (cppdom::XMLError& xml_e)
+   catch (cppdom::Error& xml_e)
    {
-      cppdom::XMLLocation where(chunk_desc_db_node->getContext()->getLocation());
+      cppdom::Location where(chunk_desc_db_node->getContext()->getLocation());
       std::string errmsg;
       xml_e.getStrError(errmsg);
 
@@ -80,16 +80,16 @@ std::ostream& operator << (std::ostream& out, const ChunkDescDB& self)
 
 std::istream& operator >> (std::istream& in, ChunkDescDB& self)
 {
-   cppdom::XMLNodePtr chunk_desc_db_node = ChunkFactory::instance()->createXMLNode();
-   cppdom::XMLContextPtr context_ptr = chunk_desc_db_node->getContext();
+   cppdom::NodePtr chunk_desc_db_node = ChunkFactory::instance()->createXMLNode();
+   cppdom::ContextPtr context_ptr = chunk_desc_db_node->getContext();
 
    try
    {
       chunk_desc_db_node->load( in, context_ptr );
    }
-   catch (cppdom::XMLError& xml_e)
+   catch (cppdom::Error& xml_e)
    {
-      cppdom::XMLLocation where(chunk_desc_db_node->getContext()->getLocation());
+      cppdom::Location where(chunk_desc_db_node->getContext()->getLocation());
       std::string errmsg;
       xml_e.getStrError(errmsg);
 
@@ -123,22 +123,22 @@ ChunkDescPtr ChunkDescDB::get (const std::string descToken)
 bool ChunkDescDB::load (const std::string& filename, const std::string& parentfile)
 {
    std::string fname = demangleFileName (filename, parentfile);
-   cppdom::XMLDocumentPtr chunk_desc_doc = ChunkFactory::instance()->createXMLDocument();
+   cppdom::DocumentPtr chunk_desc_doc = ChunkFactory::instance()->createXMLDocument();
    bool status(false);
 
    try
    {
       chunk_desc_doc->loadFile( fname );
 
-      cppdom::XMLNodePtr chunk_desc_db_node = chunk_desc_doc->getChild( jccl::chunk_desc_db_TOKEN);
+      cppdom::NodePtr chunk_desc_db_node = chunk_desc_doc->getChild( jccl::chunk_desc_db_TOKEN);
       vprASSERT(chunk_desc_db_node.get() != NULL);
 
       loadFromChunkDescDBNode( chunk_desc_db_node );
       status = true;
    }
-   catch (cppdom::XMLError& xml_e)
+   catch (cppdom::Error& xml_e)
    {
-      cppdom::XMLLocation where(chunk_desc_doc->getContext()->getLocation());
+      cppdom::Location where(chunk_desc_doc->getContext()->getLocation());
       std::string errmsg;
       xml_e.getStrError(errmsg);
 
@@ -165,18 +165,18 @@ bool ChunkDescDB::load (const std::string& filename, const std::string& parentfi
 
 bool ChunkDescDB::save (const std::string& file_name)
 {
-   cppdom::XMLNodePtr chunk_desc_db_node;
+   cppdom::NodePtr chunk_desc_db_node;
    createChunkDescDBNode(chunk_desc_db_node);                              // Get base db element
-   cppdom::XMLDocumentPtr chunk_desc_db_doc = ChunkFactory::instance()->createXMLDocument();        // Put in in a document
+   cppdom::DocumentPtr chunk_desc_db_doc = ChunkFactory::instance()->createXMLDocument();        // Put in in a document
    chunk_desc_db_doc->addChild(chunk_desc_db_node);
 
    try
    {
       chunk_desc_db_doc->saveFile(file_name);                                 // Write out the document
    }
-   catch (cppdom::XMLError& xml_e)
+   catch (cppdom::Error& xml_e)
    {
-      cppdom::XMLLocation where(chunk_desc_db_doc->getContext()->getLocation());
+      cppdom::Location where(chunk_desc_db_doc->getContext()->getLocation());
       std::string errmsg;
       xml_e.getStrError(errmsg);
 
@@ -196,7 +196,7 @@ bool ChunkDescDB::save (const std::string& file_name)
 }
 
 /** Load the chunks from a given "ChunkDescDB" element into the db */
-bool ChunkDescDB::loadFromChunkDescDBNode(cppdom::XMLNodePtr chunkDescDBNode)
+bool ChunkDescDB::loadFromChunkDescDBNode(cppdom::NodePtr chunkDescDBNode)
 {
    if(chunkDescDBNode->getName() != chunk_desc_db_TOKEN)
    {
@@ -204,7 +204,7 @@ bool ChunkDescDB::loadFromChunkDescDBNode(cppdom::XMLNodePtr chunkDescDBNode)
       return false;
    }
 
-   for(cppdom::XMLNodeList::iterator cur_child = chunkDescDBNode->getChildren().begin();
+   for(cppdom::NodeList::iterator cur_child = chunkDescDBNode->getChildren().begin();
         cur_child != chunkDescDBNode->getChildren().end(); cur_child++)
    {
       ChunkDescPtr new_desc(new ChunkDesc( *cur_child ) );     // New desc
@@ -214,7 +214,7 @@ bool ChunkDescDB::loadFromChunkDescDBNode(cppdom::XMLNodePtr chunkDescDBNode)
    return true;
 }
 
-void ChunkDescDB::createChunkDescDBNode(cppdom::XMLNodePtr& chunkDescDBNode) const
+void ChunkDescDB::createChunkDescDBNode(cppdom::NodePtr& chunkDescDBNode) const
 {
    chunkDescDBNode = ChunkFactory::instance()->createXMLNode();
    chunkDescDBNode->setName(chunk_desc_db_TOKEN);
@@ -223,7 +223,7 @@ void ChunkDescDB::createChunkDescDBNode(cppdom::XMLNodePtr& chunkDescDBNode) con
 
    for(cur_desc = mDescs.begin(); cur_desc != mDescs.end(); ++cur_desc)
    {
-      cppdom::XMLNodePtr child_node = (*cur_desc).second->getNode();
+      cppdom::NodePtr child_node = (*cur_desc).second->getNode();
       chunkDescDBNode->addChild( child_node );
    }
 }
