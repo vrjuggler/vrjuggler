@@ -62,7 +62,7 @@
       <section>
          <title>Viewing Performance Graphs</title>
          <para>Of course, averages do not tell the whole story - a few large anomalous readings could seriously skew the averages, for example. Therefore VjControl can also display a graph of the actual data over time. For example, see <xref linkend="perf_graph_figure"/>. Each vertical line on the graph represents the time taken for drawing during one iteration of the loop. As you can see, the graph is mostly smooth, but there is a single anomalously large reading (approx. 295 ms) at the far left. This is a common occurrence when VR Juggler applications start up - the first few frames involve all of the application's configuration, initialization of device drivers, and so forth, before the application eventually settles into its regular routine.</para>
-         <figure float="1" id="perf_graph_figure">
+         <figure id="perf_graph_figure">
             <title>Example performance data graph.</title>
             <mediaobject>
                <imageobject>
@@ -82,7 +82,7 @@
       <para>Enabling JCCL's performance monitoring capabilities requires two simple additions to the application's configuration file.</para>
       <para>First, we need to tell the application which kinds of performance data to gather. JCCL provides multiple "categories" of performance data, so that tests in particular ojbects, or particular threads, can be individually turned on or off. JCCL provides a default category name (PERF_ALL) as well as a category for its own internal usage (PERF_JACKAL). Additionally, application code can define its own categories with unique names.</para>
       <para>These categories can be individually activated and deactivated with a <property>Performance Measurements</property> ConfigChunk (which you can create under the <guilabel>Environment Manager</guilabel> folder in VjControl's config file editing window) - see <xref linkend="PerformanceChunkFigure"/>.Simply create an entry with the category's name and set it to true or false. If a category isn't named in the configuration, it defaults to false (disabled).</para>
-      <figure float="1" id="PerformanceChunkFigure">
+      <figure id="PerformanceChunkFigure">
          <title>ConfigChunk for activating performance measurements.</title>
          <mediaobject>
             <imageobject>
@@ -93,7 +93,7 @@
       <para>Secondly, we must tell VR Juggler where to send the performance data once it is collected. This is determined by the <property>Performance Target</property> property. If we are dynamically reconfiguring VR Juggler so that we can view performance while the application is running, the pulldown menu for the <property>Performance Target</property> property will list the network connection between VjControl and the application as a possible target. If that connection is selected, performance data can be viewed in a panel in VjControl (click on the <guilabel>Performance</guilabel> tab).</para>
       <para>We can also send performance data to a file for later evaluation. To do this, first create an <property>EM Connection</property> ConfigChunk (found in the <guilabel>Environment Manager</guilabel> folder in VjControl). This chunk is illustrated in <xref linkend="EMConnectionChunkFigure"/>. Here we can select the name of the output file and tell VR Juggler to "activate" it - that is, to open it and write to it. Note that the <property>File Mode</property> property should always be "output" for a log file.</para>
       <para>Once we have created the <property>EM Connection</property> for our log file, we can return to the <property>Performance Measurements</property> ConfigChunk and select it as our target for performance data. The output file that results from running the application with this configuration can be loaded into VjControl's Performance panel for analysis.</para>
-      <figure float="1" id="EMConnectionChunkFigure">
+      <figure id="EMConnectionChunkFigure">
          <title>Configuring a log file for VR Juggler performance data.</title>
          <mediaobject>
             <imageobject>
