@@ -67,11 +67,11 @@ namespace vpr
 
 const InetAddrBSD InetAddrBSD::AnyAddr;      // Default constructor defaults to ANY addr
 
-// ----------------------------------------------------------------------------
-// Construct an address object using the given address.  It must be of the
-// form <address>:<port> where <address> can be a hostname or a
-// dotted-decimal IP address.
-// ----------------------------------------------------------------------------
+/**
+ * Constructs an address object using the given address.  It must be of the
+ * form <address>:<port> where <address> can be a hostname or a
+ * dotted-decimal IP address.
+ */
 vpr::ReturnStatus InetAddrBSD::setAddress (const std::string& address)
 {
    std::string::size_type pos;
@@ -92,9 +92,9 @@ vpr::ReturnStatus InetAddrBSD::setAddress (const std::string& address)
    return retval;
 }
 
-// ----------------------------------------------------------------------------
-// Get the protocol family of this address structure.
-// ----------------------------------------------------------------------------
+/**
+ * Gets the protocol family of this address structure.
+ */
 vpr::SocketTypes::Domain InetAddrBSD::getFamily (void) const
 {
    vpr::SocketTypes::Domain family;
@@ -130,9 +130,9 @@ vpr::SocketTypes::Domain InetAddrBSD::getFamily (void) const
    return family;
 }
 
-// ----------------------------------------------------------------------------
-// Set the protocol family of this address structure.
-// ----------------------------------------------------------------------------
+/**
+ * Sets the protocol family of this address structure.
+ */
 void InetAddrBSD::setFamily (const vpr::SocketTypes::Domain family)
 {
    switch ( family )
@@ -172,10 +172,10 @@ void InetAddrBSD::setFamily (const vpr::SocketTypes::Domain family)
    }
 }
 
-// ----------------------------------------------------------------------------
-// Get the IP address associated with this structure as a human-readable
-// string.
-// ----------------------------------------------------------------------------
+/**
+ * Get the IP address associated with this structure as a human-readable
+ * string.
+ */
 std::string InetAddrBSD::getAddressString (void) const
 {
    char ip_addr[sizeof("255.255.255.255")];
@@ -195,9 +195,9 @@ std::string InetAddrBSD::getAddressString (void) const
    return ip_str;
 }
 
-// ----------------------------------------------------------------------------
-// Look up the given address and store the address in m_addr.
-// ----------------------------------------------------------------------------
+/**
+ * Look up the given address and store the address in m_addr.
+ */
 vpr::ReturnStatus InetAddrBSD::lookupAddress (const std::string& address)
 {
    vpr::ReturnStatus retval;
