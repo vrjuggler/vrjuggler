@@ -14,11 +14,15 @@ class GADGET_CLASS_API NetInput : public Input{
 protected:
     std::string mSrcName;
     int num_dependencies;
-    NetData* mData;
+    NetData* mData;    // can be removed when NetPosition is updated to SampleBuffers design
     bool mAckInitialization;
     bool mWaitingForData;
     bool mNeedToResendRequest;
-
+    std::string mDeviceName;
+    VJ_NETID_TYPE mLocalId;  // unsigned short
+    VJ_NETID_TYPE mRemoteId;
+    char* mSendBuffer;  
+   
    // constructor used when a device has been requested from us (and remote id has been given)
    NetInput(const std::string& device_name, Input* input_ptr);
 
@@ -49,13 +53,13 @@ public:
 
     std::string getSourceName() const { return mSrcName; }
 
-    void updateFromLocalSource(){ mData->updateFromLocalSource(); }
-    void updateFromRemoteSource(char* recv_buffer, int recv_buff_len){ mData->updateFromRemoteSource(recv_buffer, recv_buff_len); }
-    char* getDataPtr(){ return mData->getDataPtr(); }
-    int getDataByteLength() const { return mData->getDataByteLength(); }
-    VJ_NETID_TYPE getLocalId() const { return mData->getLocalId(); }
-    VJ_NETID_TYPE getRemoteId() const { return mData->getRemoteId(); }
-    void setRemoteId(VJ_NETID_TYPE remote_id){ mData->setRemoteId(remote_id); }
+    virtual void updateFromLocalSource(){ mData->updateFromLocalSource(); }
+    virtual void updateFromRemoteSource(char* recv_buffer, int recv_buff_len){ mData->updateFromRemoteSource(recv_buffer, recv_buff_len); }
+    virtual char* getDataPtr(){ return mData->getDataPtr(); }
+    virtual int getDataByteLength() const { return mData->getDataByteLength(); }
+    virtual VJ_NETID_TYPE getLocalId() const { return mData->getLocalId(); }
+    virtual VJ_NETID_TYPE getRemoteId() const { return mData->getRemoteId(); }
+    virtual void setRemoteId(VJ_NETID_TYPE remote_id){ mData->setRemoteId(remote_id); }
 
     int sample(){return 1;}
     int startSampling(){return 1;}
