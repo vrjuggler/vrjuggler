@@ -46,7 +46,7 @@ void usage(char** argv)
 
 int main(int argc, char* argv[])
 {
-   Kernel* kernel = Kernel::instance(); // Declare a new Kernel
+   vrj::Kernel* kernel = vrj::Kernel::instance(); // Declare a new Kernel
    simplePfApp* application = new simplePfApp();  // Delcare an instance of my application
 
    // --- CHECK FOR CORRECT ARGUMENTS ---- //
