@@ -1,5 +1,8 @@
 DATE        AUTHOR    CHANGE
 ----------- --------- ---------------------------------------------------------
+Jun-20-2001 patrick   The Mac OS X port no longer requires Carbon SetupGL
+                      because the necessary SetupGL code has been copied into
+                      the library
 Jun-19-2001 allenb    Performer now fully uses run-time reconfiguration at
                       startup and allows for the addition of new display
                       windows at run-time.
