@@ -4,6 +4,7 @@
 #include <cppunit/TestSuite.h>
 #include <cppunit/TestCaller.h>
 
+#include <vpr/System.h>
 #include <vpr/Util/FileUtils.h>
 
 
@@ -84,5 +85,3 @@ namespace vprTest
    }
 
 }
-
-#endif
