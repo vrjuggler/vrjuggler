@@ -86,10 +86,14 @@ vjSocketImpUNIX::open () {
 #endif
         break;
       case vjSocketTypes::LINK:
-#ifdef PF_LINK
+#if defined(PF_LINK)
         domain = PF_LINK;
-#else
+#elif defined(PF_RAW)
         domain = PF_RAW;
+#else
+        fprintf(stderr,
+                "[vjSocketImpUNIX] WARNING: Cannot use LINK sockets\n",
+                m_addr.getFamily());
 #endif
         break;
       default:
