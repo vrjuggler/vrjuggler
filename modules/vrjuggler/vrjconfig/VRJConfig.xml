@@ -29,9 +29,9 @@
       <dependencies>
          <bean>ConfigBroker</bean>
          <bean>RTRCDataSourceBroker</bean>
-         <bean>WizardBuilder</bean>
          <jar path="${JCCL_BASE_DIR}/share/jccl/beans">jccl_editors.jar</jar>
          <jar path="${TWEEK_BASE_DIR}/share/tweek/java">ui.jar</jar>
+         <jar path="${TWEEK_BASE_DIR}/share/tweek/java">wizard.jar</jar>
       </dependencies>
       <tree path="/VRJConfig/" />
    </guipanel>
