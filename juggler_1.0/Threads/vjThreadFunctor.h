@@ -95,15 +95,15 @@ public:
     unsigned int __stdcall ThreadFunctorFunction(void* args);
 #else
 #ifdef VJ_USE_PTHREADS
-        extern "C" void
 #   ifdef _PTHREADS_DRAFT_4
-        ThreadFunctorFunction (void* args);
+        extern "C" void
 #   else
-        *ThreadFunctorFunction (void* args);
-#   endif	/* ifdef VJ_OS_HPUX */
+        extern "C" void*
+#   endif
+        ThreadFunctorFunction (void* args);
 #else
     extern "C" void ThreadFunctorFunction(void* args);
-#endif	/* CS_USE_PTHREADS */
+#endif	/* VJ_USE_PTHREADS */
 #endif	/* WIN32 */
 #endif	/* VJ_SGI_IPC */
 
