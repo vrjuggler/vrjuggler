@@ -52,6 +52,7 @@ main (int argc, char* argv[]) {
 //        read_port->setUpdateAction(vpr::SerialIO::NOW);
 //        read_port->enableLocalAttach();
         read_port->setCharacterSize(vpr::SerialTypes::CS_BITS_8);
+        read_port->enableRead();
 //        read_port->flushQueue(vpr::SerialIO::INPUT_QUEUE);
         std::cout << "Port opened\n";
         read_port->read(buffer, sizeof(buffer), bytes);
