@@ -392,6 +392,8 @@ void GlPipe::renderWindow(GlWindow* win)
 
                jcclTIMESTAMP (jcclPERF_ALL, "GlPipe/renderWindow/set left buffer and projection");
 
+               win->setViewport(vp_ox, vp_oy, vp_sx, vp_sy);      // HACK: For bug in OSG
+
                theApp->draw();
 
                jcclTIMESTAMP (jcclPERF_ALL, "GlPipe/renderWindow/app/left draw()");
@@ -412,6 +414,8 @@ void GlPipe::renderWindow(GlWindow* win)
                glManager->currentUserData()->setProjection(viewport->getRightProj());
 
                jcclTIMESTAMP (jcclPERF_ALL, "GlPipe/renderWindow/set right buffer and projection");
+
+               win->setViewport(vp_ox, vp_oy, vp_sx, vp_sy);      // HACK: For bug in OSG
 
                theApp->draw();
 
