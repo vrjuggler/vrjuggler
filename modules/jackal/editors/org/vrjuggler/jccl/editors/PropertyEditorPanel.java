@@ -21,6 +21,7 @@ public class PropertyEditorPanel extends PropertyComponent
                               int prop_num, Color color)
    {
       mPropName = prop_def.getToken();
+      mPropDef = prop_def;
       mConfigElement = elm;
       mPropNum = prop_num;
       mColor = color;
@@ -68,6 +69,11 @@ public class PropertyEditorPanel extends PropertyComponent
       {
          //XXX Print this out to the Tweek console
          System.out.println(iae.getMessage());
+         JOptionPane.showMessageDialog(null, "Warning: " + iae.getMessage());
+         if (mEditorComponent instanceof JTextField)
+         {
+            ((JTextField)mEditorComponent).setText(mEditor.getAsText());
+         }
       }
       return false;
    }
@@ -78,7 +84,7 @@ public class PropertyEditorPanel extends PropertyComponent
    protected Component createComboBox()
    {
       // Populate the box with the tags
-      JComboBox box = new JComboBox(mEditor.getTags());
+      final JComboBox box = new JComboBox(mEditor.getTags());
       //box.setBorder(BorderFactory.createLoweredBevelBorder());
       box.setSelectedItem(mEditor.getAsText());
       box.setFont(box.getFont().deriveFont(Font.PLAIN));
@@ -87,6 +93,17 @@ public class PropertyEditorPanel extends PropertyComponent
          public void actionPerformed(ActionEvent evt)
          {
             stopCellEditing();
+         }
+      });
+      box.addFocusListener(new FocusAdapter()
+      {
+         public void focusGained(FocusEvent evt)
+         {
+            // Set the help text.
+            ConfigContextEditor context_editor =
+            (ConfigContextEditor)SwingUtilities.getAncestorOfClass(ConfigContextEditor.class,
+                                                                   box);
+            context_editor.getHelpPane().setText(mPropDef.getHelp());
          }
       });
       return box;
@@ -122,6 +139,12 @@ public class PropertyEditorPanel extends PropertyComponent
          public void focusGained(FocusEvent evt)
          {
             txtField.setBorder(BorderFactory.createLineBorder(Color.black, 2));
+
+            // Set the help text.
+            ConfigContextEditor context_editor =
+            (ConfigContextEditor)SwingUtilities.getAncestorOfClass(ConfigContextEditor.class,
+                                                                   txtField);
+            context_editor.getHelpPane().setText(mPropDef.getHelp());
          }
          public void focusLost(FocusEvent evt)
          {
@@ -268,9 +291,10 @@ public class PropertyEditorPanel extends PropertyComponent
       return ed;
    }
 
-   protected ConfigElement    mConfigElement = null;
-   protected int              mPropNum = 0;
-   protected PropertyEditor   mEditor = null;
-   protected Component        mEditorComponent = null;
-   protected String           mPropName = null;
+   protected PropertyDefinition mPropDef = null;
+   protected ConfigElement      mConfigElement = null;
+   protected int                mPropNum = 0;
+   protected PropertyEditor     mEditor = null;
+   protected Component          mEditorComponent = null;
+   protected String             mPropName = null;
 }
