@@ -43,25 +43,23 @@
 #include <jccl/Config/ConfigChunkPtr.h>
 #include <gadget/Type/DigitalData.h>
 #include <gadget/Type/SampleBuffer.h>
+#include <vpr/Util/Debug.h>
 
 namespace gadget
 {
-
-//-----------------------------------------------------------------------------
-//: Digital is the abstract base class that devices with digital data derive
-//+ from.
-//
-//  Digital is the base class that digital devices must derive from.
-//  Digital inherits from Input, so it has pure virtual function
-//  constraints from Input in the following functions: StartSampling,
-//  StopSampling, Sample, and UpdateData. <br>
-//  Digital adds one new pure virtual function, GetDigitalData for
-//  retreiving the digital data, similar to the addition for Position and
-//  Analog.
-//
-// See also: Input
-//!PUBLIC_API:
-//-----------------------------------------------------------------------------
+   
+/** Digital is the abstract base class that devices with digital data derive from.
+*
+*  Digital is the base class that digital devices must derive from.
+*  Digital inherits from Input, so it has pure virtual function
+*  constraints from Input in the following functions: StartSampling,
+*  StopSampling, Sample, and UpdateData. <br>
+*  Digital adds one new pure virtual function, GetDigitalData for
+*  retreiving the digital data, similar to the addition for Position and
+*  Analog.
+*
+* See also: Input
+*/
 class Digital
 {
 public:
@@ -105,6 +103,14 @@ public:
       } 
       else        // No data or request out of range, return default value
       {
+         if(stable_buffer.empty())
+         {
+            vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL) << "Warning: Digital::getDigitalData: Stable buffer is empty. If this is not the first read, then this is a problem.\n" << vprDEBUG_FLUSH;
+         }
+         else
+         {
+            vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_LVL) << "Warning: Digital::getDigitalData: Requested devNum is not in the range available.  May have configuration error\n" << vprDEBUG_FLUSH;
+         }
          return mDefaultValue;
       }
    }
