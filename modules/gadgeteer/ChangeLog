@@ -1,5 +1,9 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Oct-01-2004 aronb       Split gadget::InputManager::updateAllData() into
+                        gadget::InputManager::updateAllDevices() and
+                        gadget::InputManager::updateAllProxies().
+                        NEW VERSION: 0.15.0-1
 Apr-26-2004 pallindo    Refactored glove support.
                         NEW VERSION: 0.15.0
 Apr-11-2004 patrickh    Gadgeteer now depends on an installed version of GMTL.
