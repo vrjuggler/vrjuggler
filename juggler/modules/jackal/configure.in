@@ -168,7 +168,7 @@ VJ_COMPILER_SETUP
 
 # Ensure that the C++ compiler we've found is capable of compiling the newer
 # newer C++ features that we need.
-DPP_CXX_NAMESPACE(AC_MSG_ERROR(*** The library requires C++ namesapce support ***))
+DPP_CXX_NAMESPACE(AC_MSG_ERROR(*** The library requires C++ namespace support ***))
 DPP_CXX_HAVE_STD
 DPP_CXX_INLINE(AC_MSG_ERROR(*** The library requires C++ inline support ***))
 DPP_CXX_RTTI(AC_MSG_ERROR(*** The library requires C++ RTTI support ***))
@@ -188,7 +188,21 @@ else
         newInstance(), ,
         BUILD_VJCONTROL='Y',
         [ BUILD_VJCONTROL='N' ;
-          AC_MSG_WARN(*** VjControl requires JAXP extensions for java -- it will not be built ***) ])
+          AC_MSG_WARN(*** VjControl requires JAXP extensions for java -- it will not be built ***)
+        ],
+        $JAXP_JAR)
+fi
+
+# If we're building VjControl, we should build the test cases too.
+if test "x$BUILD_VJCONTROL" = "xY" ; then
+    # Check for the JUnit library
+    DPP_CHECK_JAVA_STATIC_METHOD(junit.framework.Assert,
+        assertTrue(true), ,
+        BUILD_JAVA_TEST_SUITE='Y',
+        [ BUILD_JAVA_TEST_SUITE='N' ;
+          AC_MSG_WARN(*** JUnit required for VjControl Java test suite ***)
+        ],
+        $JUNIT_JAR)
 fi
 
 # Ensure that a version of Perl greater than or equal to 5.004 is available.
@@ -503,6 +517,9 @@ AC_SUBST(JCCL_SHARE_DIR)
 AC_SUBST(EXTRA_LINK_FLAGS)
 
 AC_SUBST(BUILD_VJCONTROL)
+
+AC_SUBST(BUILD_JAVA_TEST_SUITE)
+AC_SUBST(JUNIT_JAR)
 
 AC_SUBST(XERCESROOT)
 

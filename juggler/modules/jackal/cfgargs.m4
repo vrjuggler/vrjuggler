@@ -32,3 +32,13 @@ AC_ARG_WITH(xerceslib,
             [  --with-xerceslib=<NAME>
                           Xerces-c base library name      [default=xerces-c]],
             XERCES_LIB="$withval", XERCES_LIB='xerces-c')
+
+# Specify location of JAXP jars
+AC_ARG_WITH(jaxp,
+            [  --with-jaxp=<PATH>      Path to JAXP JAR file(s) ],
+            JAXP_JAR="$withval", JAXP_JAR='none')
+
+# Specify where JUnit is located
+AC_ARG_WITH(junit,
+            [  --with-junit=<PATH>     Path to JUnit JAR file(s) ],
+            JUNIT_JAR="$withval", JUNIT_JAR='none')
