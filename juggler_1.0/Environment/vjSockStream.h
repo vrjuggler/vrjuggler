@@ -39,6 +39,10 @@
 class sockstreambuf:public std::streambuf {
 public:
 
+#if defined(__GNUC_MINOR__) && __GNUC_MINOR__ < 97
+    typedef int int_type;
+#endif
+
     int sock;
     static const size_t BUFSIZE;
     char* buf;
