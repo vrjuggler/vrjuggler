@@ -72,6 +72,7 @@ public class TweekFrame
             , BeanInstantiationListener
             , GlobalPrefsUpdateListener
             , WindowListener
+            , RegistrationListener
 {
    public TweekFrame(MessageDocument msgDocument)
    {
@@ -108,19 +109,11 @@ public class TweekFrame
 
       for ( Iterator i = known_beans.iterator(); i.hasNext(); )
       {
-         Object bean = ((TweekBean) i.next()).getBean();
-         if ( bean instanceof BeanPreferences )
-         {
-            addPrefsBean((BeanPreferences) bean);
-         }
-
-         if ( bean instanceof TweekFrameListener )
-         {
-            addTweekFrameListener((TweekFrameListener) bean);
-         }
+         checkObjectInterfaces(((TweekBean) i.next()).getBean());
       }
 
       BeanInstantiationCommunicator.instance().addBeanInstantiationListener(this);
+      EventListenerRegistry.instance().addRegistrationListener(this);
    }
 
    /**
@@ -344,18 +337,16 @@ public class TweekFrame
     */
    public void beanInstantiated(BeanInstantiationEvent e)
    {
-      Object new_bean = e.getTweekBean().getBean();
+      checkObjectInterfaces(e.getTweekBean().getBean());
+   }
 
-      if ( new_bean instanceof BeanPreferences )
-      {
-         addPrefsBean((BeanPreferences) new_bean);
-         mMenuPrefsBeanEdit.setEnabled(true);
-      }
+   public void listenerRegistered(RegistrationEvent e)
+   {
+      checkObjectInterfaces(e.getRegistrant());
+   }
 
-      if ( new_bean instanceof TweekFrameListener )
-      {
-         addTweekFrameListener((TweekFrameListener) new_bean);
-      }
+   public void listenerUnregistered(RegistrationEvent e)
+   {
    }
 
    /**
@@ -509,6 +500,7 @@ public class TweekFrame
    {
       if ( fireFrameClosing(new TweekFrameEvent(e.getWindow(), e.getID())) )
       {
+         System.out.println("Disposing");
          dispose();
       }
    }
@@ -537,6 +529,24 @@ public class TweekFrame
    // =========================================================================
    // Private methods.
    // =========================================================================
+
+   /**
+    * Checks the interfaces of the given object to determine what, if any,
+    * interfaces it implements that are of interest to this class.
+    */
+   private void checkObjectInterfaces(Object obj)
+   {
+      if ( obj instanceof BeanPreferences )
+      {
+         addPrefsBean((BeanPreferences) obj);
+         mMenuPrefsBeanEdit.setEnabled(true);
+      }
+
+      if ( obj instanceof TweekFrameListener )
+      {
+         addTweekFrameListener((TweekFrameListener) obj);
+      }
+   }
 
    private synchronized void fireFrameOpened(TweekFrameEvent e)
    {
@@ -737,7 +747,7 @@ public class TweekFrame
       mMenuFileOpen.setText("Open ...");
       mMenuFileOpen.setEnabled(false);
       mMenuFileOpen.setAccelerator(javax.swing.KeyStroke.getKeyStroke(79, shortcut_mask, false));
-      mMenuFileOpen.addActionListener(new java.awt.event.ActionListener()
+      mMenuFileOpen.addActionListener(new ActionListener()
       {
          public void actionPerformed(ActionEvent e)
          {
@@ -748,7 +758,7 @@ public class TweekFrame
       mMenuFileClose.setEnabled(false);
       mMenuFileClose.setText("Close ...");
       mMenuFileClose.setAccelerator(javax.swing.KeyStroke.getKeyStroke(87, shortcut_mask, false));
-      mMenuFileClose.addActionListener(new java.awt.event.ActionListener()
+      mMenuFileClose.addActionListener(new ActionListener()
       {
          public void actionPerformed(ActionEvent e)
          {
@@ -776,7 +786,7 @@ public class TweekFrame
       mMenuFileSave.setEnabled(false);
       mMenuFileSave.setText("Save");
       mMenuFileSave.setAccelerator(javax.swing.KeyStroke.getKeyStroke(83, shortcut_mask, false));
-      mMenuFileSave.addActionListener(new java.awt.event.ActionListener()
+      mMenuFileSave.addActionListener(new ActionListener()
       {
          public void actionPerformed(ActionEvent e)
          {
@@ -785,7 +795,7 @@ public class TweekFrame
       });
       mMenuFileSaveAs.setEnabled(false);
       mMenuFileSaveAs.setText("Save As ...");
-      mMenuFileSaveAs.addActionListener(new java.awt.event.ActionListener()
+      mMenuFileSaveAs.addActionListener(new ActionListener()
       {
          public void actionPerformed(ActionEvent e)
          {
