@@ -23,11 +23,11 @@ $command .= " -s $src_dir";
 $command .= " -t $dest_dir";
 $command .= " -i __deleteme,install,CVS,ver1.05,ver1.08,bak";
 $command .= " -c $css_filename";
-$command .= " -f $html_header_filename";
+$command .= " -e $html_header_filename";
 $command .= " -f $html_footer_filename";
 $command .= " -h $html_install_prefix";
 $command .= " -w $subst_file";
-$command .= " -z use.last.build.pl";
+$command .= " -z most.recent.pl";
 if($opt_a == 1)
 {
 $command .= " -a";
@@ -35,9 +35,20 @@ $command .= " -a";
 
 print "$command\n\n\n\n----------------\n\n";
 system("$command");
-if($opt_n == 0)
-{
-    my $netscape_command = "netscape " . $html_install_prefix . "index.html &";
-    print "$netscape_command\n";
-    system("$netscape_command");
-}
+#if($opt_n == 0)
+#{
+#    my $netscape_command = "netscape " . $html_install_prefix . "index.html &";
+#    print "$netscape_command\n";
+#    system("$netscape_command");
+#}
+
+
+
+
+
+
+
+
+
+
+
