@@ -1811,6 +1811,13 @@ The filters are applied in the order that they are specified in this configurati
       <help>Number of buttons supported by Vrpn server.</help>
       <item label="Number of buttons" defaultvalue="1" />
     </PropertyDesc>
+    <PropertyDesc name="Position Filters" token="position_filters" type="embeddedchunk" variable="1">
+      <item label="Position Filter" />
+      <allowedtype>PosXformFilter</allowedtype>
+      <help>This is a list of all the filters that are to be applied to the postional device data.
+
+The filters are applied in the order that they are specified in this configuration.</help>
+    </PropertyDesc>
   </ChunkDesc>
   <ChunkDesc token="simKeyDigital" name="simKeyDigital" version="1.0">
     <category>Devices/Simulator</category>
