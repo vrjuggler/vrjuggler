@@ -60,7 +60,8 @@ class StringSubjectImpl : public POA_CxxClientTest::StringSubject,
 {
 public:
    StringSubjectImpl()
-      : tweek::SubjectImpl(), mValue("")
+      : tweek::SubjectImpl()
+      , mValue("")
    {
       /* Do nothing. */ ;
    }
@@ -73,12 +74,12 @@ public:
    /**
     * Sets this subject's internal value.
     */
-   virtual void setValue(const char* value);
+   virtual void setValue(const char* value) throw(CORBA::SystemException);
 
    /**
     * Returns this subject's internal value.
     */
-   virtual char* getValue();
+   virtual char* getValue() throw(CORBA::SystemException);
 
    /**
     * This overriding method is needed so that the correct type is returned
