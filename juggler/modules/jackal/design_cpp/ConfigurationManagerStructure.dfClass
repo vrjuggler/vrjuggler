@@ -1,0 +1,123 @@
+package ididjfcydgs0hccydh3uvo;
+
+/**
+@version 2.0
+@__modelType diagram 
+*/
+class diagram {
+/**
+@__ref <oiref:cpp#Class#jccl::ConfigManager:oiref><oihard>
+@__modelType reference
+@__imported
+@__hiddenMember <oiref:cpp#Member#jccl::ConfigManager#mPendingLock:oiref>
+@__hiddenMember <oiref:cpp#Member#jccl::ConfigManager#mActiveLock:oiref>
+@__hiddenMember <oiref:cpp#Member#jccl::ConfigManager#mPendingCountMutex:oiref>
+@__hiddenMember <oiref:cpp#Member#jccl::ConfigManager#mPendingCheckCount:oiref>
+@__hiddenMember <oiref:cpp#Member#jccl::ConfigManager#mLastPendingSize:oiref>
+@__hiddenMember <oiref:cpp#Member#jccl::ConfigManager#isChunkInActiveList#(#std::string#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#jccl::ConfigManager#addChunkDB#(#jccl::ConfigChunkDBPtr#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#jccl::ConfigManager#removeChunkDB#(#jccl::ConfigChunkDBPtr#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#jccl::ConfigManager#getNumPending#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#jccl::ConfigManager#lockPending#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#jccl::ConfigManager#unlockPending#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#jccl::ConfigManager#getPendingBegin#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#jccl::ConfigManager#getPendingEnd#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#jccl::ConfigManager#removePending#(#std::list<jccl::ConfigManager:;PendingChunk>::iterator#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#jccl::ConfigManager#debugDumpPending#(#int#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#jccl::ConfigManager#isActiveEmpty#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#jccl::ConfigManager#lockActive#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#jccl::ConfigManager#unlockActive#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#jccl::ConfigManager#getActiveEnd#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#jccl::ConfigManager#getActiveBegin#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#jccl::ConfigManager#removeActive#(#std::string#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#jccl::ConfigManager#addActive#(#jccl::ConfigChunkPtr#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#jccl::ConfigManager#getActiveConfig#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#jccl::ConfigManager#$$constructor$$#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#jccl::ConfigManager#vprSingletonHeader#(#jccl::ConfigManager#)#:oiref> 
+@__hiddenMember <oiref:cpp#Member#jccl::ConfigManager#mChunkHandlers:oiref>
+@__hiddenMember <oiref:cpp#Member#jccl::ConfigManager#mCachedLocalHostName:oiref>
+@__hiddenMember <oiref:cpp#Member#jccl::ConfigManager#delayStalePendingList#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#jccl::ConfigManager#addConfigChunkHandler#(#ConfigChunkHandler*#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#jccl::ConfigManager#removeConfigChunkHandler#(#ConfigChunkHandler*#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#jccl::ConfigManager#attemptReconfiguration#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#jccl::ConfigManager#$$destructor$$#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#jccl::ConfigManager#$$constructor$$#(#const ConfigManager&#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#jccl::ConfigManager#operator=#(#const ConfigManager&#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#jccl::ConfigManager#vprSingletonHeader#(#ConfigManager#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#jccl::ConfigManager#isChunkTypeInActiveList#(#std::string#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#jccl::ConfigManager#isChunkTypeInPendingList#(#std::string#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#jccl::ConfigManager#refreshPendingList#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#jccl::ConfigManager#addPendingAdds#(#ConfigChunkDB*#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#jccl::ConfigManager#addPendingRemoves#(#ConfigChunkDB*#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#jccl::ConfigManager#removePending#(#std::list<PendingChunk>::iterator#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#jccl::ConfigManager#removeActive#(#const std::string&#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#jccl::ConfigManager#addActive#(#ConfigChunkPtr#)#:oiref>
+@hideClasses*/
+class reference {
+}/**
+@__ref <oiref:cpp#Class#jccl::ConfigChunk:oiref><oihard>
+@__modelType reference
+@__imported
+@__hiddenMember <oiref:cpp#Member#jccl::ConfigChunk#desc:oiref>
+@__hiddenMember <oiref:cpp#Member#jccl::ConfigChunk#props:oiref>
+@__hiddenMember <oiref:cpp#Member#jccl::ConfigChunk#type_as_varvalue:oiref>
+@__hiddenMember <oiref:cpp#Member#jccl::ConfigChunk#validation:oiref>
+@__hiddenMember <oiref:cpp#Member#jccl::ConfigChunk#$$constructor$$#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#jccl::ConfigChunk#$$constructor$$#(#jccl::ChunkDescPtr#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#jccl::ConfigChunk#$$destructor$$#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#jccl::ConfigChunk#$$constructor$$#(#const jccl::ConfigChunk&#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#jccl::ConfigChunk#assertValid#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#jccl::ConfigChunk#associateDesc#(#jccl::ChunkDescPtr#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#jccl::ConfigChunk#operator=#(#const jccl::ConfigChunk&#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#jccl::ConfigChunk#operator==#(#const jccl::ConfigChunk&#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#jccl::ConfigChunk#operator!=#(#const jccl::ConfigChunk&#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#jccl::ConfigChunk#operator<#(#const jccl::ConfigChunk&#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#jccl::ConfigChunk#getType#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#jccl::ConfigChunk#getNum#(#const std::string&#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#jccl::ConfigChunk#getProperty#(#const std::string&#int#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#jccl::ConfigChunk#getAllProperties#(#const std::string&#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#jccl::ConfigChunk#setProperty#(#const std::string&#int#int#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#jccl::ConfigChunk#setProperty#(#const std::string&#float#int#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#jccl::ConfigChunk#setProperty#(#const std::string&#const std::string&#int#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#jccl::ConfigChunk#setProperty#(#const std::string&#jccl::ConfigChunkPtr#int#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#jccl::ConfigChunk#addValue#(#const std::string&#int#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#jccl::ConfigChunk#addValue#(#const std::string&#float#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#jccl::ConfigChunk#addValue#(#const std::string&#const std::string&#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#jccl::ConfigChunk#addValue#(#const std::string&#jccl::ConfigChunkPtr#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#jccl::ConfigChunk#doesPropertyExistFromToken#(#const std::string&#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#jccl::ConfigChunk#getChunkPtrDependencies#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#jccl::ConfigChunk#getPropertyPtrFromName#(#const std::string&#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#jccl::ConfigChunk#getPropertyPtrFromToken#(#const std::string&#)#:oiref>
+@hideAttributes
+@hideOperations
+*/
+class reference4 {
+}/**
+@__ref <oiref:cpp#Class#jccl::ConfigManager::PendingChunk:oiref><oihard>
+@__modelType reference
+@__imported
+@__hiddenMember <oiref:cpp#Member#jccl::ConfigManager::PendingChunk#$$constructor$$#(##)#:oiref> 
+@hideClasses
+*/
+class reference5 {
+}}/**
+
+@__tags
+@shapeType ClassDiagram 
+*/
+class __tags {
+}/**
+@__options 
+*/
+class __options {
+}/**
+@__positions <oigroup:MemberLink#<oiref:cpp#Member#jccl::ConfigManager#mPendingConfig:oiref>=205,140,205,210:oigroup>
+<oigroup:<oiref:cpp#Class#jccl::ConfigManager::PendingChunk:oiref>=10,210,290,130,0:oigroup>
+<oigroup:Composite#supplierCardinality#MemberLink#<oiref:cpp#Member#jccl::ConfigManager#mPendingConfig:oiref>=171,193,30,13,0:oigroup>
+<oigroup:<oiref:cpp#Class#jccl::ConfigChunk:oiref>=340,210,135,53,1:oigroup>
+<oigroup:<oiref:cpp#Class#jccl::ConfigManager:oiref>=170,0,310,140,0:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#jccl::ConfigManager::PendingChunk#mChunk:oiref>=177,261,250,261:oigroup>
+<oigroup:MemberLink#<oiref:cpp#Member#jccl::ConfigManager#lnkjccl::ConfigChunk:oiref>=308,140,308,220:oigroup>
+*/
+class __positions {
+}
