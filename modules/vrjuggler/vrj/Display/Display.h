@@ -100,7 +100,7 @@ public:
    { _xo = xo; _yo = yo; _xs = xs; _ys = ys;}
    void getOriginAndSize(int& xo, int& yo, int& xs, int& ys)
    {
-      vprASSERT(xo != -1);     // Make sure we have been configured
+      vprASSERT(_xo != -1);     // Make sure we have been configured
       xo = _xo; yo = _yo; xs = _xs; ys = _ys;
    }
 

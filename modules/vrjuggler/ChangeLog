@@ -1,5 +1,8 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Aug-15-2002 allenb      Fixed some uninitialized values.
+                        Fixed assertion in Display.h that was asserting on the
+						wrong value.
 Aug-06-2002 patrickh    Developer installations are now constructed using the
                         standard installation targets.
 Jul-19-2002 subatomic   Sonix is now required to compile VR Juggler.
