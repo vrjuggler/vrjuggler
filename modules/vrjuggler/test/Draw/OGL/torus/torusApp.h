@@ -66,6 +66,10 @@ public:
    torusApp(vjKernel* kern) : vjGlApp(kern)
    {;}
 
+   virtual ~torusApp (void) {
+      /* Do nothing. */ ;
+   }
+
    // Execute any initialization needed before the API is started
    virtual void init()
    {
