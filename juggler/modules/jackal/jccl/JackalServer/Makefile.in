@@ -33,7 +33,8 @@ ENVIRONTMENT_SRCS	:= vjTimedUpdate.cpp		\
                            vjEnvironmentManager.cpp	\
                            vjConnect.cpp                \
                            vjCommand.cpp		\
-			   vjSocket.cpp
+			   vjSocket.cpp			\
+			   vjSockStream.cpp
 
 ENVIRONMENT_OBJECTS	:= ${addprefix ${OBJDIR}/,${ENVIRONTMENT_SRCS:.cpp=.${OBJ_FILE_SUFFIX}}}
 DEPEND_FILES		:= ${ENVIRONTMENT_SRCS:.cpp=.d}

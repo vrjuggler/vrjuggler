@@ -59,6 +59,11 @@ public:
 
     ~vjSocketPosix ();
 
+//    std::string getName ();
+    int getID () {
+        return (int)sockid;
+    }
+
     void close();
 
 
@@ -88,7 +93,7 @@ typedef vjSocketIDPosix vjSocketID;
 /******************************* Winsock2 version ************************/
 
 #include <winsock2.h>
-
+//#include <Environment/sockstream.h>
 
 typedef SOCKET vjSocketIDWin32;
 extern const int vjSOCKID_INVALID;
@@ -108,6 +113,10 @@ public:
     vjSocketWin32(vjSocketIDWin32& id);
 
     ~vjSocketWin32 ();
+
+	int getID () {
+		return (int)sockid;
+	}
 
     void close();
 
