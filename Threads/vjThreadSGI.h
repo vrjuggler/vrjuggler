@@ -190,7 +190,7 @@ public:
 
 
    // -----------------------------------------------------------------------
-   //: OUput the state of the object
+   //: Output the state of the object
    // -----------------------------------------------------------------------
    ostream& outStream(ostream& out)
    {
