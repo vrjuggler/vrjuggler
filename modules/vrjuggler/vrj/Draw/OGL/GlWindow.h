@@ -267,7 +267,7 @@ public:
    friend std::ostream& operator<<(std::ostream& out, GlWindow& win);
 
 public:
-   virtual bool createHardwareSwapGroup(std::vector<GlWindow*> wins)
+   virtual bool createHardwareSwapGroup(const std::vector<GlWindow*>& wins)
    {
       boost::ignore_unused_variable_warning(wins);
       vprDEBUG(vprDBG_ALL,vprDBG_WARNING_LVL)

@@ -255,7 +255,7 @@ int GlWindowXWin::open()
       /* Open the window, select the input events, and wait until mapped (XIfEvent) */
       ::XSelectInput(mXDisplay, mXWindow, event_mask);
       ::XMapWindow(mXDisplay, mXWindow);
-      ::XIfEvent(mXDisplay, &fooevent, EventIsMapNotify, (XPointer)mXWindow);
+      ::XIfEvent(mXDisplay, &fooevent, eventIsMapNotify, (XPointer)mXWindow);
       ::XSync(mXDisplay, 0);
    
       vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_VERB_LVL) << "vrj::GlWindowXWin: done mapping window\n"
@@ -443,7 +443,7 @@ void GlWindowXWin::configWindow(vrj::Display* disp)
    }
 }
 
-bool GlWindowXWin::createHardwareSwapGroup(std::vector<vrj::GlWindow*> wins)
+bool GlWindowXWin::createHardwareSwapGroup(const std::vector<vrj::GlWindow*>& wins)
 {
    // Convert to glx windows
    std::vector<GlWindowXWin*> glx_wins;
@@ -473,11 +473,11 @@ bool GlWindowXWin::createHardwareSwapGroup(std::vector<vrj::GlWindow*> wins)
          glXJoinSwapGroupSGIX(mXDisplay, mXWindow, glx_wins[i]->mXWindow);
       }
    }
-
 #else
    vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
       << "WARNING: createHardwareSwapGroup not supported.\n" << vprDEBUG_FLUSH;
 #endif
+
    return true;
 }
 
@@ -746,8 +746,8 @@ void GlWindowXWin::checkEvents()
  * @note this is a utility function for InitGfx,  used to wait
  *       until a window has actually been mapped.
  */
-int GlWindowXWin::EventIsMapNotify(::Display* display, ::XEvent* e,
-                                   ::XPointer window)
+int GlWindowXWin::eventIsMapNotify(::Display* display, XEvent* e,
+                                   XPointer window)
 {
    boost::ignore_unused_variable_warning(display);
    return((e->type == MapNotify) && (e->xmap.window == (Window)window));
