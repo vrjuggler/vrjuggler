@@ -235,11 +235,18 @@ namespace gadget
          switch (sync_method)
          {
          case 0:
+            mBarrier = NULL;
+            vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << 
+               clrOutBOLD(clrRED,"Barrier Method: NONE") << vprDEBUG_FLUSH;            
+            vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << 
+               clrOutBOLD(clrRED,"Significant Tear Might Appear Between Screens!!!") << vprDEBUG_FLUSH;            
+            break;
+         case 1:
             mBarrier = new gadget::ClusterBarrierTCP;
             vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << 
                "ClusterBarrierTCP Barrier Method: TCP/IP Sockets \n" << vprDEBUG_FLUSH;
             break;
-         case 1:
+         case 2:
             mBarrier = new gadget::ClusterBarrierSerial;
             vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << 
                "ClusterBarrierSerial Barrier Method: TCP/IP Sockets & Serial Port \n" << vprDEBUG_FLUSH;
@@ -273,33 +280,36 @@ namespace gadget
             break;
          }
          
-         mBarrier->setHostname(sync_server_hostname);
-         mBarrier->setTCPPort(sync_server_listen_port);
-         mBarrier->setSerialPort(serial_port);
-         mBarrier->setBaudRate(baud_rate);
-         vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << clrSetBOLD(clrCYAN)                                
-             << "=========== Barrier Settings ==============="
-             << "\nBarrier-SyncServer Chunk:  " << mSyncMasterChunkName 
-             << "\nBarrier-SyncServer Host    " << sync_server_hostname 
-             << "\nBarrier-SyncServer Port:   " << sync_server_listen_port
-             << "\nBarrier-Local Serial Port: " << serial_port
-             << "\nBarrier-Local Baud Rate:   " << baud_rate << clrRESET << std::endl << vprDEBUG_FLUSH;
-   
-         // Have all clients connect to sync server
-         //   If master 
-         //   - Set master true
-         //   Else
-         //   - connect to sync Master server  
-   
-         if (this->hostnameMatchesLocalHostname(sync_server_hostname))
+         if (mBarrier != NULL)
          {
-            mBarrier->setMaster(true);
-            mBarrier->Init();
-            vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "SYNC This machine is sync server!" << std::endl << vprDEBUG_FLUSH;
-         }
-         else
-         {
-            mBarrier->Init();
+            mBarrier->setHostname(sync_server_hostname);
+            mBarrier->setTCPPort(sync_server_listen_port);
+            mBarrier->setSerialPort(serial_port);
+            mBarrier->setBaudRate(baud_rate);
+            vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << clrSetBOLD(clrCYAN)                                
+                << "=========== Barrier Settings ==============="
+                << "\nBarrier-SyncServer Chunk:  " << mSyncMasterChunkName 
+                << "\nBarrier-SyncServer Host    " << sync_server_hostname 
+                << "\nBarrier-SyncServer Port:   " << sync_server_listen_port
+                << "\nBarrier-Local Serial Port: " << serial_port
+                << "\nBarrier-Local Baud Rate:   " << baud_rate << clrRESET << std::endl << vprDEBUG_FLUSH;
+      
+            // Have all clients connect to sync server
+            //   If master 
+            //   - Set master true
+            //   Else
+            //   - connect to sync Master server  
+      
+            if (this->hostnameMatchesLocalHostname(sync_server_hostname))
+            {
+               mBarrier->setMaster(true);
+               mBarrier->Init();
+               vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "SYNC This machine is sync server!" << std::endl << vprDEBUG_FLUSH;
+            }
+            else
+            {
+               mBarrier->Init();
+            }
          }
          //////////////////////
 
