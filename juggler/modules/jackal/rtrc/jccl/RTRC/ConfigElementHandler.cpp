@@ -68,10 +68,6 @@ int ConfigElementHandler::configProcessPending()
       << typeid(*this).name() << "::configProcessPending: Entering: "
       << num_pending_before << " items pending.\n" << vprDEBUG_FLUSH;
 
-// XXX: This is not thread safe now. (bad things can happen)
-//    if(lockIt)
-//       cfg_mgr->lockPending();     // We need to lock the pending first
-//    {
       std::list<ConfigManager::PendingElement>::iterator current, end, remove_me;
       current = cfg_mgr->getPendingBegin();
       end = cfg_mgr->getPendingEnd();
@@ -163,10 +159,6 @@ int ConfigElementHandler::configProcessPending()
          vprDEBUG_END(vprDBG_ALL,vprDBG_VERB_LVL) << "==== End item =====\n" << vprDEBUG_FLUSH;
 
       }        // END: while(current != end)
-
-//    }
-//    if(lockIt)
-//       cfg_mgr->unlockPending();   // Unlock it
 
    num_pending_after = cfg_mgr->getNumPending();
 
