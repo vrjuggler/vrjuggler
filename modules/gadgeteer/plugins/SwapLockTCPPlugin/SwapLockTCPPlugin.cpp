@@ -262,7 +262,8 @@ namespace cluster
             new gadget::Node(std::string("Unknown"),
                                     std::string("Unknown"),
                                     vpr::Uint16(0),
-                                    mSyncServerSocket);
+                                    mSyncServerSocket,
+                                    ClusterManager::instance()->getNetwork());
             
          temp_node->send(&sync_request);
          Packet* packet = temp_node->recvPacket();
@@ -467,7 +468,8 @@ namespace cluster
                   new gadget::Node(std::string("Unknown"),
                                           std::string("Unknown"),
                                           vpr::Uint16(0),
-                                          client_sock);
+                                          client_sock,
+                                          ClusterManager::instance()->getNetwork());
 
                temp_packet = temp_node->recvPacket();
                delete temp_node;
@@ -530,7 +532,8 @@ namespace cluster
                new gadget::Node(std::string("Unknown"),
                                        std::string("Unknown"),
                                        vpr::Uint16(0),
-                                       client_sock);
+                                       client_sock,
+                                       ClusterManager::instance()->getNetwork());
 
             temp_node->send(&temp_ack);
             delete temp_node;
