@@ -91,7 +91,11 @@ void vjDeviceInterface::removeDevInterface(vjDeviceInterface* dev)
 void vjDeviceInterface::refreshAllDevices()
 {
    for(unsigned int i=0;i<mAllocatedDevices.size();i++)
-      mAllocatedDevices[i]->refresh();
+   {
+      vjDeviceInterface* dev = mAllocatedDevices[i];
+      vjDEBUG(vjDBG_ALL,0) << clrOutNORM(clrGREEN,"Refreshing devInterface: ") << dev << endl << vjDEBUG_FLUSH;
+      dev->refresh();
+   }
 }
 
 std::vector<vjDeviceInterface*> vjDeviceInterface::mAllocatedDevices = std::vector<vjDeviceInterface*>();

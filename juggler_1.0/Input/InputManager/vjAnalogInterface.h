@@ -46,6 +46,9 @@
 //!PUBLIC_API:
 class vjAnalogInterface : public vjDeviceInterface
 {
+protected:
+   vjAnalogInterface(vjAnalogInterface& other) {;}
+
 public:
    vjAnalogInterface() : mAnaProxy(NULL)
    {;}

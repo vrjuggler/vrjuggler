@@ -51,6 +51,9 @@
 //------------------------------------------------------------------------------
 class vjDeviceInterface
 {
+protected:
+   vjDeviceInterface(const vjDeviceInterface& other) {;}
+
 public:
    vjDeviceInterface();
 
