@@ -1,5 +1,8 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Jul-12-2004 patrickh    Began adding very basic exception handling to the
+                        kernel.
+                        NEW VERSION: 1.1.154
 Jun-06-2004 patrickh    Refactored surface viewport configurations to remove
                         unnecessary nesting of configuration elements.
 May-22-2004 patrickh    Moved vrj::FileIO out of the vrj library and into the

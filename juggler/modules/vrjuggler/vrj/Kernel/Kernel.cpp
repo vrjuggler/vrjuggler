@@ -39,6 +39,7 @@
 #include <vrj/Display/DisplayManager.h>
 #include <vrj/Kernel/App.h>
 #include <vrj/Kernel/User.h>
+#include <vrj/Kernel/Exceptions.h>
 #include <vrj/Sound/SoundManager.h>
 
 #include <vpr/vpr.h>
@@ -515,15 +516,35 @@ void Kernel::startDrawManager(bool newMgr)
       }
       jccl::ConfigManager::instance()->unlockPending();
    }
-   mDrawManager->setApp(mApp);
 
-   mApp->init();                     // Init the app
-   if(newMgr)
-      mDrawManager->initAPI();       // Just sets up API type stuff, possibly starts new processes
-   mApp->apiInit();                  // Have app do any app-init stuff
-   if(newMgr)
+   try
    {
-     mDisplayManager->setDrawManager(mDrawManager);      // This can trigger the update of windows to the draw manager
+      mDrawManager->setApp(mApp);
+
+      mApp->init();                // Init the app
+
+      if(newMgr)
+      {
+         // Just sets up API type stuff, possibly starts new processes.
+         mDrawManager->initAPI();
+      }
+
+      mApp->apiInit();             // Have app do any app-init stuff
+
+      if(newMgr)
+      {
+         // This can trigger the update of windows to the Draw Manager.
+         mDisplayManager->setDrawManager(mDrawManager);
+      }
+   }
+   catch(vrj::DrawMgrException& ex)
+   {
+      vprDEBUG(vrjDBG_KERNEL, vprDBG_WARNING_LVL)
+         << clrOutBOLD(clrYELLOW, "WARNING:")
+         << " Draw Manager rejected application object:" << std::endl
+         << vprDEBUG_FLUSH;
+      vprDEBUG_NEXT(vrjDBG_KERNEL, vprDBG_WARNING_LVL)
+         << ex.what() << std::endl << vprDEBUG_FLUSH;
    }
 }
 
