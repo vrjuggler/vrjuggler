@@ -138,94 +138,71 @@ bool MotionStar::config(jccl::ConfigChunkPtr c)
 // ----------------------------------------------------------------------------
 int MotionStar::startSampling()
 {
-   int retval;
+   int retval(0);     // Initialize to error status
 
    // Make sure the device isn't already started.
    if ( isActive() )
    {
-      vprDEBUG(gadgetDBG_INPUT_MGR, 2)
+      vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_WARNING_LVL)
          << "gadget::MotionStar was already started.\n" << vprDEBUG_FLUSH;
-      retval = 0;
+      retval = 1;
    }
    else
    {
-      if ( mMyThread == NULL )
+      if ( NULL == mMyThread )
       {
-         int start_status;
-
-         vprDEBUG(gadgetDBG_INPUT_MGR, 1)
+         vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CONFIG_LVL)
             << "    Getting MotionStar ready ...\n" << vprDEBUG_FLUSH;
 
-         start_status = mMotionStar.start();
+         try
+         {
+            mMotionStar.start();
 
-         switch (start_status)
-         {
-            // Proper startup.
-            case 0:
-               break;
-            // Connection to server failed.  MotionStarStandalone prints out
-            // the system error message about why.
-            case -1:
-               vprDEBUG(gadgetDBG_INPUT_MGR, 0)
-                  << "gadget::MotionStar failed to connect to server\n"
-                  << vprDEBUG_FLUSH;
-               retval = 1;
-               break;
-            // No socket could be created, so no connection can be made.
-            case -2:
-               vprDEBUG(gadgetDBG_INPUT_MGR, 0)
-                  << "gadget::MotionStar could not create a socket\n"
-                  << vprDEBUG_FLUSH;
-               retval = 1;
-               break;
-            // No address has been set for the server, so no connection can be
-            // made.
-            case -3:
-               vprDEBUG(gadgetDBG_INPUT_MGR, 0)
-                  << "No server address set for MotionStar\n"
-                  << vprDEBUG_FLUSH;
-               retval = 1;
-               break;
-            // Unkonwn return value from MotionStarStandalone::start().
-            default:
-               vprDEBUG(gadgetDBG_INPUT_MGR, 0)
-                  << "Abnormal return from MotionStarStandalone::start()\n"
-                  << vprDEBUG_FLUSH;
-               retval = 1;
-               break;
-         }
-
-         // Sanity check.  Make sure the servers were actually started.
-         if ( ! isActive() )
-         {
-            vprDEBUG(gadgetDBG_INPUT_MGR, 0)
-               << "gadget::MotionStar failed to start.\n" << vprDEBUG_FLUSH;
-            retval = 1;
-         }
-         else
-         {
-            vprDEBUG(gadgetDBG_INPUT_MGR, 1)
+            vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CONFIG_LVL)
                << "gadget::MotionStar ready to go.\n" << vprDEBUG_FLUSH;
 
             mMyThread = new vpr::Thread(sampleBirds, (void*) this);
 
             if ( mMyThread == NULL )
             {
-               vprDEBUG(gadgetDBG_INPUT_MGR, 0)
+               vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
                   << "gadget::MotionStar could not create sampling thread.\n"
                   << vprDEBUG_FLUSH;
                 vprASSERT(false);  // Fail
+                retval = 0;   // failure
             }
             else
             {
                 retval = 1;   // success
             }
          }
+         // Connection to server failed.  MotionStarStandalone prints out
+         // the system error message about why.
+         catch (mstar::ConnectException ex)
+         {
+            vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
+               << "gadget::MotionStar failed to connect to server: "
+               << ex.getMessage() << std::endl << vprDEBUG_FLUSH;
+         }
+         // Some network error occurred when trying to start the device.
+         catch (mstar::NetworkException ex)
+         {
+            vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
+               << "gadget::MotionStar could not create a socket\n"
+               << vprDEBUG_FLUSH;
+         }
+         // Unkonwn exception from MotionStarStandalone::start().
+         catch (mstar::MotionStarException ex)
+         {
+            vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
+               << "Abnormal return from MotionStarStandalone::start(): "
+               << ex.getMessage() << std::endl << vprDEBUG_FLUSH;
+         }
       }
       // The thread has been started, so we are already sampling.
       else
       {
-         retval = 0;
+         retval = 1;
       }
    }
 
