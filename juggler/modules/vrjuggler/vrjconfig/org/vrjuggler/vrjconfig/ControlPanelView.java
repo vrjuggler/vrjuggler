@@ -68,19 +68,11 @@ public class ControlPanelView
             if (item.equals("D e v i c e s"))
             {
                showDevicesPanel();
-//               JDialog dlg = new JDialog(
-//                     (Frame)SwingUtilities.getAncestorOfClass(Frame.class, ControlPanelView.this),
-//                     "Sim Device Editor",
-//                     true);
-//               dlg.getContentPane().setLayout(new BorderLayout());
-//               SimPosDeviceEditor editor = new SimPosDeviceEditor();
-//
-//               ConfigManagerService mgr = getConfigManager();
-//               ConfigChunk device = mgr.getActiveConfig().get("SimHeadPos");
-//               editor.setDevice(device);
-//               dlg.getContentPane().add(editor, BorderLayout.CENTER);
-//               dlg.pack();
-//               dlg.setVisible(true);
+            }
+            else if (item.equals("D i s p l a y"))
+            {
+               ControlPanelView.this.remove(control);
+               ControlPanelView.this.add(new DisplayEditor());
             }
             else if (item.equals("C l u s t e r"))
             {
