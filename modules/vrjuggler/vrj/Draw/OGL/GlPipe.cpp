@@ -227,12 +227,13 @@ void GlPipe::checkForWindowsToClose()
          GlWindow* win = mClosingWins[i];
 
          // Call contextClose
-         GlApp* theApp = glManager->getApp();       // Get application for easy access
-         //Display* theDisplay = win->getDisplay();   // Get the display for easy access
-         glManager->setCurrentContext(win->getId());     // Set TS data of context id
-         glManager->currentUserData()->setUser(NULL);         // Set user data
+         GlApp* theApp = glManager->getApp();               // Get application for easy access
+         //Display* theDisplay = win->getDisplay();         // Get the display for easy access
+         glManager->setCurrentContext(win->getId());        // Set TS data of context id
+         glManager->currentUserData()->setUser(NULL);       // Set user data
          glManager->currentUserData()->setProjection(NULL);
-         glManager->currentUserData()->setViewport(NULL);         // Set vp data
+         glManager->currentUserData()->setViewport(NULL);   // Set vp data
+         glManager->currentUserData()->setGlWindow(win);    // Set the gl window
 
          win->makeCurrent();              // Make the context current
          theApp->contextClose();          // Call context close function
@@ -325,6 +326,7 @@ void GlPipe::renderWindow(GlWindow* win)
       glManager->currentUserData()->setUser(NULL);         // Set user data
       glManager->currentUserData()->setProjection(NULL);
       glManager->currentUserData()->setViewport(NULL);     // Set vp data
+      glManager->currentUserData()->setGlWindow(win);      // Set the gl window
 
       theApp->contextInit();              // Call context init function
       win->setDirtyContext(false);        // All clean now
@@ -368,8 +370,9 @@ void GlPipe::renderWindow(GlWindow* win)
          win->setViewport(vp_ox, vp_oy, vp_sx, vp_sy);
 
          // Set user information
-         glManager->currentUserData()->setUser(viewport->getUser());         // Set user data
-         glManager->currentUserData()->setViewport(viewport);                // Set the viewport
+         glManager->currentUserData()->setUser(viewport->getUser());       // Set user data
+         glManager->currentUserData()->setViewport(viewport);              // Set the viewport
+         glManager->currentUserData()->setGlWindow(win);                   // Set the gl window
 
          jcclTIMESTAMP (jcclPERF_ALL, "GlPipe/renderWindow/set viewport and user");
 
@@ -392,8 +395,6 @@ void GlPipe::renderWindow(GlWindow* win)
 
                jcclTIMESTAMP (jcclPERF_ALL, "GlPipe/renderWindow/set left buffer and projection");
 
-               win->setViewport(vp_ox, vp_oy, vp_sx, vp_sy);      // HACK: For bug in OSG
-
                theApp->draw();
 
                jcclTIMESTAMP (jcclPERF_ALL, "GlPipe/renderWindow/app/left draw()");
@@ -414,8 +415,6 @@ void GlPipe::renderWindow(GlWindow* win)
                glManager->currentUserData()->setProjection(viewport->getRightProj());
 
                jcclTIMESTAMP (jcclPERF_ALL, "GlPipe/renderWindow/set right buffer and projection");
-
-               win->setViewport(vp_ox, vp_oy, vp_sx, vp_sy);      // HACK: For bug in OSG
 
                theApp->draw();
 
