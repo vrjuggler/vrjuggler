@@ -486,10 +486,6 @@ AC_CONFIG_FILES([
    rtrc/Makefile.inc
    rtrc/jccl/Makefile
    rtrc/jccl/RTRC/Makefile
-   perfmonitor/Makefile
-   perfmonitor/Makefile.inc
-   perfmonitor/jccl/Makefile
-   perfmonitor/jccl/PerfMonitor/Makefile
    test/Makefile
    test/TestSuite/Makefile
    test/TestSuite/test.defs.mk
