@@ -39,8 +39,6 @@ package org.vrjuggler.tweek.beans;
 
 /**
  * @since 1.0
- *
- * @see org.vrjuggler.tweek.beans.BeanCollectionBuilder
  */
 public class ServiceBean extends TweekBean
 {

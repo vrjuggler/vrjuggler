@@ -47,7 +47,7 @@ import java.util.Vector;
  * @since 1.0
  *
  * @see org.vrjuggler.tweek.beans.BeanInstantiationEvent
- * @see org.vrjuggler.tweek.beans.feanInstantiationListener
+ * @see org.vrjuggler.tweek.beans.BeanInstantiationListener
  */
 public class BeanInstantiationCommunicator
 {
