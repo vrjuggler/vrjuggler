@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wizard xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:noNamespaceSchemaLocation="http://www.vrjuggler.org/tweek/xsd/1.1/beanlist.xsd">
+   <step title="Step 1" class="org.vrjuggler.vrjconfig.wizard.cluster.NewClusterFileStep" />
+   <step title="Step 2" class="org.vrjuggler.vrjconfig.wizard.cluster.SimClusterSequence" />
+</wizard>
