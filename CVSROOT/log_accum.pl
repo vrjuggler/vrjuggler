@@ -56,7 +56,7 @@ $SUMMARY_FILE  = "/tmp/#cvs.files.summary";
 $MAIL_FILE     = "/tmp/#cvs.files.mail";
 $SUBJ_FILE     = "/tmp/#cvs.files.subj";
 
-$CVSROOT       = $ENV{'CVSROOT'} || "/home/selab/Juggler/CVSRepos";
+$CVSROOT       = $ENV{'CVSROOT'} || "/home/vr/Juggler/CVSRepos";
 
 ############################################################
 #
