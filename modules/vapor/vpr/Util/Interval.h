@@ -84,7 +84,7 @@ public:
 
 public:
    Interval() : mMicroSeconds(0)
-   { }
+   {;}
 
    Interval(const vpr::Uint64 num, const Unit timeUnit) : mMicroSeconds(0)
    { set(num, timeUnit); }
@@ -250,6 +250,35 @@ public:
 
 private:
    vpr::Uint64 mMicroSeconds;
+
+#if defined(VPR_OS_IRIX)
+   // All of these variables are required to make the cycle counter
+   // timing implementation work.
+   // Closely copied from NSPR (irix.c), modified to translate ticks
+   // directly to usecs (instead of NSPR 100us 'ticks'),
+   // with additional error handling & initialization adapted
+   // from JCCL::TimeStampSGI
+   // For more information, see the discussion of SGI_QUERY_CYCLECNTR
+   // in the syssgi man page.
+   static int mMmem_fd;                  /**< Fd for mem mapping           */
+   static int mClockWidth;               /**< #bits in cycle counter       */
+   static void *mTimerAddr;              /**< Address of mmapped counter   */
+   static vpr::Uint32 mClockMask;        /**< Used for wraparound handling */
+   static vpr::Uint32 mPrevious;         /**< Used for wraparound handling */
+   static vpr::Uint32 mResidual;         /**< Used for wraparound handling */
+   static double mTicksToMicroseconds;   /**< Conversion multiplier        */
+   vpr::Uint64 mTicks;                   /**< Actual cycle counter ticks   */
+
+public:
+   /** Initializer method for SGI cycle counter access. */
+   static bool initializeCycleCounter ();
+
+private:
+   static const bool mInitialized;       /**< Forces counter initialization. */
+   
+#endif // VPR_OS_IRIX cycle counter stuff
+
+   
 }; // class Interval
 
 

@@ -48,6 +48,18 @@
 #include <vpr/Util/Interval.h>
 #include <vpr/System.h>
 
+#if defined (VPR_OS_IRIX)
+// these includes are needed for accessing the SGI cycle counter.
+#include <sys/utsname.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <sys/mman.h>
+#include <unistd.h>
+#include <sys/syssgi.h>
+#include <sys/errno.h>
+#endif
+
 const vpr::Interval vpr::Interval::NoWait(0,vpr::Interval::Base);
 const vpr::Interval vpr::Interval::NoTimeout(0xffffffffUL, vpr::Interval::Base);
 const vpr::Interval vpr::Interval::HalfPeriod((0xffffffffUL/2), vpr::Interval::Base);
@@ -107,8 +119,45 @@ void Interval::setNowReal()
 #endif
    }
 */
+#elif defined (VPR_OS_IRIX) // SGI Cycle counter version
+   if (mMmem_fd != -1)
+   {
+      if (64 == mClockWidth)
+      {
+         Uint64 temp = *(Uint64*)mTimerAddr;
+         mTicks = temp;
+         mMicroSeconds = temp*mTicksToMicroseconds;
+      }
+      else
+      {
+         // clockwidth <= 32. clockmask only relevent for width=24...?
+         Uint64 ticks = mTicks;
+         unsigned int now = *(unsigned int*)mTimerAddr, temp;
+         unsigned int residual = mResidual;
+         unsigned int previous = mPrevious;
+          
+         //if (now < previous)
+         //   std::cout << "wraparound occurred!!!" << std::endl;
+
+         temp = now - previous + residual;
+         residual = temp & mClockMask;
+         ticks += temp;
+         
+         mPrevious = now;
+         mResidual = residual;
+         mTicks = ticks;
+         mMicroSeconds = ticks * mTicksToMicroseconds;
+      }
+   }
+   else
+   {
+      // couldn't access the cycle counter for whatever reason.
+      // use gettimeofday as our fallback.
+      timeval cur_time;
+      gettimeofday(&cur_time);
+      mMicroSeconds = (cur_time.tv_usec + (1000000 * cur_time.tv_sec));
+   }
 #else    // Default to POSIX time setting
-   
    timeval cur_time;
    vpr::System::gettimeofday(&cur_time);
    mMicroSeconds = (cur_time.tv_usec + (1000000 * cur_time.tv_sec));
@@ -116,4 +165,81 @@ void Interval::setNowReal()
 #endif
 }
 
+
+#if defined (VPR_OS_IRIX) // SGI Cycle counter version support code
+
+
+/*static*/ bool Interval::initializeCycleCounter () {
+   /*
+    * As much as I would like, the service available through this
+    * interface on R3000's (aka, IP12) just isn't going to make it.
+    * The register is only 24 bits wide, and rolls over at a voracious
+    * rate.
+    */
+   mMmem_fd = -1;
+   mClockWidth = 0;
+   mTimerAddr = NULL;
+   mClockMask = 0;
+   mPrevious = 0;          // used for wraparound handling
+   mResidual = 0;          // used for wraparound handling
+
+   /* on R3000 (IP12) don't even try to use the 24 bit cycle counter. */
+   struct utsname utsinfo;
+   uname(&utsinfo);
+   if ((strncmp("IP12", utsinfo.machine, 4) != 0)
+       && ((mMmem_fd = open("/dev/mmem", O_RDONLY)) != -1))
+   {
+      int poffmask = getpagesize() - 1;
+      __psunsigned_t phys_addr, raddr, cycleval;
+      
+      phys_addr = syssgi(SGI_QUERY_CYCLECNTR, &cycleval);
+      raddr = phys_addr & ~poffmask;
+      mTimerAddr = mmap(
+         0, poffmask, PROT_READ, MAP_PRIVATE, mMmem_fd, (__psint_t)raddr);
+      
+      mClockWidth = syssgi(SGI_CYCLECNTR_SIZE);
+      if (mClockWidth < 0)
+      {
+         /* 
+          * We must be executing on a 6.0 or earlier system, since the
+          * SGI_CYCLECNTR_SIZE call is not supported.
+          * 
+          * The only pre-6.1 platforms with 64-bit counters are
+          * IP19 and IP21 (Challenge, PowerChallenge, Onyx).
+          */
+         if (!strncmp(utsinfo.machine, "IP19", 4) ||
+             !strncmp(utsinfo.machine, "IP21", 4))
+         {
+            mClockWidth = 64;
+         }
+         else
+         {
+            mClockWidth = 32;
+         }
+      }
+      
+      //std::cout << "cycleval is " << cycleval << " ps." << std::endl;
+      
+      mTicksToMicroseconds = cycleval / 1000000.0L;
+      mClockMask = (1 << mClockWidth) -1;
+      mTimerAddr = (void*)
+         ((__psunsigned_t)mTimerAddr + (phys_addr & poffmask));
+   }
+
+   return true;
+}
+
+int Interval::mMmem_fd;
+int Interval::mClockWidth;
+void *Interval::mTimerAddr;
+vpr::Uint32 Interval::mClockMask;         // used for short cycle counters
+vpr::Uint32 Interval::mPrevious;          // used for wraparound handling
+vpr::Uint32 Interval::mResidual;          // used for wraparound handling
+double  Interval::mTicksToMicroseconds;
+
+const bool Interval::mInitialized = Interval::initializeCycleCounter();
+
+#endif // VPR_OS_IRIX cycle counter version
+
 } // namespace vpr
+
