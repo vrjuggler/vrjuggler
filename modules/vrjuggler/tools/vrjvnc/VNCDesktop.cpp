@@ -828,7 +828,8 @@ void VNCDesktop::drawCylinder(const gmtl::AABoxf& cyBox, unsigned majorAxis, uns
    const float radius((cyBox.mMax[non_major] - cyBox.mMin[non_major])/2.0f);
 
    // Compute the point at the center of the base of this cylinder
-   gmtl::Point3f center_base((cyBox.mMax + cyBox.mMin)/2);     // Average 2 points
+   gmtl::Point3f temp_point(cyBox.mMax + cyBox.mMin);
+   gmtl::Point3f center_base(temp_point / 2.0f);     // Average 2 points
    center_base[majorAxis] = cyBox.mMin[majorAxis];             // Project down to the min side of major axis
 
    //std::cout << " cy: box: " << cyBox << "   major:" << majorAxis << "   center:" << center_base << std::endl;
