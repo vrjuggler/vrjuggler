@@ -237,9 +237,9 @@ namespace gadget
          case 0:
             mBarrier = NULL;
             vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << 
-               clrOutBOLD(clrRED,"Barrier Method: NONE") << vprDEBUG_FLUSH;            
+               clrOutBOLD(clrRED,"Barrier Method: NONE\n") << vprDEBUG_FLUSH;            
             vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << 
-               clrOutBOLD(clrRED,"Significant Tear Might Appear Between Screens!!!") << vprDEBUG_FLUSH;            
+               clrOutBOLD(clrRED,"Significant Tear Might Appear Between Screens!!!\n") << vprDEBUG_FLUSH;            
             break;
          case 1:
             mBarrier = new gadget::ClusterBarrierTCP;
@@ -1022,9 +1022,8 @@ namespace gadget
          else
          {
                // While this connection has not received an END_BLOCK
-            while ( !(*i)->getAllPacketsReceived() ||
-                     (*i)->getSockStream()->availableBytes() > 8)
-   
+            while ( !(*i)->getAllPacketsReceived() /*|| 
+                     (*i)->getSockStream()->availableBytes() > 8*/)   
             {  
                if ((*i)->getAllPacketsReceived())
                {
@@ -1063,8 +1062,8 @@ namespace gadget
          else
          {
                // While this connection has not received an END_BLOCK
-            while ( !(*i)->getAllPacketsReceived() || 
-                     (*i)->getSockStream()->availableBytes() > 8)
+            while ( !(*i)->getAllPacketsReceived() /*|| 
+                     (*i)->getSockStream()->availableBytes() > 8*/)
             {
                if ((*i)->getAllPacketsReceived())
                {
@@ -1074,7 +1073,6 @@ namespace gadget
                {
                   mTransmittingConnections.erase(i);
                }
-
             }
             vprDEBUG(gadgetDBG_RIM,vprDBG_VERB_LVL) << "ALL PACKETS RECEIVED for: " << (*i)->getHostname() << "\n" << vprDEBUG_FLUSH;
          }

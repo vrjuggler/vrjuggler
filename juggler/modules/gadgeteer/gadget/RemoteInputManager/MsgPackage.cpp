@@ -44,6 +44,8 @@ namespace gadget
    {
       mObjectWriter = new vpr::ObjectWriter;
       mTempWriter = new vpr::ObjectWriter;
+      mSendDataPacketCount=0;
+      mRecvDataPacketCount=0;
    }
 
    void MsgPackage::sendAndClear(vpr::SocketStream* sock_stream)
@@ -407,7 +409,9 @@ namespace gadget
       vprDEBUG_BEGIN(gadgetDBG_RIM,vprDBG_VERB_LVL) <<  clrOutBOLD(clrCYAN,"[Create Packet]CREATING A DEVICE DATA PACKET\n") << vprDEBUG_FLUSH;
       vprDEBUG(gadgetDBG_RIM,vprDBG_VERB_LVL) <<  "Name:      " << net_device->getSourceName() << "\n" << vprDEBUG_FLUSH;
       vprDEBUG(gadgetDBG_RIM,vprDBG_VERB_LVL) <<  "Remote ID: " << net_device->getRemoteId() << "\n" << vprDEBUG_FLUSH;
-      
+      mSendDataPacketCount++;
+      vprDEBUG(gadgetDBG_RIM,vprDBG_STATE_LVL) <<  clrSetBOLD(clrYELLOW) 
+         << "Data Packet Number: " << mSendDataPacketCount << "\n" << clrRESET << vprDEBUG_FLUSH;
       /////////////////
       // CREATE BODY //
       /////////////////
@@ -465,6 +469,10 @@ namespace gadget
       vprASSERT(virtual_device != NULL && "Virtual Device does not exist!!!");
       vprASSERT(object_reader != NULL && "Object Reader does not exist!!!");
       
+      mRecvDataPacketCount++;
+      vprDEBUG(gadgetDBG_RIM,vprDBG_STATE_LVL) <<  clrSetBOLD(clrYELLOW) 
+         << "Data Packet Number: " << mRecvDataPacketCount << "\n" << clrRESET << vprDEBUG_FLUSH;
+
          //Read the device data from the packet
       virtual_device->readObject(object_reader, delta);
       

@@ -196,8 +196,8 @@ namespace gadget
             << "\n"<< vprDEBUG_FLUSH;
       mMsgPackage.createDeviceRequest(net_device->getLocalId(), net_device->getSourceName());
       mMsgPackage.sendAndClear(mSockStream);
-      mMsgPackage.createEndBlock();
-      mMsgPackage.sendAndClear(mSockStream);
+//      mMsgPackage.createEndBlock();
+//      mMsgPackage.sendAndClear(mSockStream);
    }
 
    //+++++++++++++++++++++++++
