@@ -105,7 +105,15 @@ gmtl::Point3f result_p = mat * point;</programlisting>
 float radians = gmtl::Math::deg2Rad( degrees );</programlisting>
             </listitem>
             <listitem>
-               <para>There are no changes to individual member functions.</para>
+               <para>
+               While porting applications to GMTL there is
+               one critical thing to keep in mind.  All GMTL functions
+               take angles in 
+               <emphasis>radians</emphasis> while 1.0 Math took
+               <emphasis>degrees</emphasis>
+               for most of its functions.  You may need to use
+                  gmtl::Math::deg2Rad() to convert some values.  
+               </para>
             </listitem>
             <listitem>
                <para>The headers are in the directory <filename>gmtl/</filename>.  Typically you will type your #includes in the following format: #include&lt;gmtl/somefile.h&gt;</para>
