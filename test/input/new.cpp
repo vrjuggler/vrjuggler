@@ -1,23 +1,25 @@
 #include <iostream.h>
 #include <iomanip.h>
-#include <SharedMem/MemPool.h>
-#include <SharedMem/SharedType.h>
+#include <SharedMem/vjMemPool.h>
+//#include <SharedMem/SharedType.h>
 #include <Input/vjPosition/vjFlock.h>
+#include <Input/ibox/hci.h>
 #include <Input/ibox/ibox.h>
+#include <Input/vjInput/vjIbox.h>
 #include <Input/vjGlove/vjCyberGlove.h>
 
 int main()
 {
-  MemPool* anSgiPool = new MemPoolSGI(1024*1024);
+  vjMemPool* anSgiPool = new vjSharedPool(1024*1024);
   
-  C2Flock* flock = new(anSgiPool) C2Flock;
-  IBox* anIbox = new(anSgiPool) IBox;
-  CyberGlove* aGlove = new(anSgiPool) 
-          CyberGlove("/home/vr/CAVE/glove","/dev/ttyd45",38400);
+  vjFlock* flock = new(anSgiPool) vjFlock;
+  vjIBox* anIbox = new(anSgiPool) vjIBox;
+  vjCyberGlove* aGlove = new(anSgiPool) 
+          vjCyberGlove("/home/vr/CAVE/glove","/dev/ttyd45",38400);
 
-  C2POS_DATA *data,*data2;
+  vjPOS_DATA *data,*data2;
  
-  C2IBOX_DATA *iboxData;
+  vjIBOX_DATA *iboxData;
 
   char achar;
   cout << "U - Update\n"
@@ -50,13 +52,13 @@ int main()
 	// aGlove->UpdateData();
 //	 aGlove->GetData(gdata);
        system("clear");  
-     cout << "C2Flock------------------------------------------------------------" << endl 
-          << "Data: x:" << setw(10) << data->x << " Data2x:" << setw(10) << data2->x << endl
-          << "      y:" << setw(10) << data->y << "      y:" << setw(10) << data2->y << endl
-          << "      z:" << setw(10) << data->z << "      z:" << setw(10) << data2->z << endl
-          << "    azi:" << setw(10) << data->azi << "    azi:" << setw(10) << data2->azi << endl  
-          << "   elev:" << setw(10) << data->elev << "   elev:" << setw(10) << data2->elev << endl 
-          << "   roll:" << setw(10) <<data->roll  << "   roll:" << setw(10) <<data2->roll << endl
+     cout << "vjFlock------------------------------------------------------------" << endl 
+          << "Data: x:" << setw(10) << data->pos.vec[0] << " Data2x:" << setw(10) << data2->pos.vec[0] << endl
+          << "      y:" << setw(10) << data->pos.vec[1] << "      y:" << setw(10) << data2->pos.vec[1] << endl
+          << "      z:" << setw(10) << data->pos.vec[2] << "      z:" << setw(10) << data2->pos.vec[2] << endl
+          << "    azi:" << setw(10) << data->orient.vec[0] << "    azi:" << setw(10) << data2->orient.vec[0] << endl  
+          << "   elev:" << setw(10) << data->orient.vec[1] << "   elev:" << setw(10) << data2->orient.vec[1] << endl 
+          << "   roll:" << setw(10) <<data->orient.vec[2]  << "   roll:" << setw(10) <<data2->orient.vec[2] << endl
               << endl;
      cout << "Ibox---------------------------------------------------------------" << endl
 	  << " button1: " << iboxData->button[0] << endl
