@@ -1,5 +1,7 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+May-21-2003 patrickh    Updated to Gadgeteer 0.12.0 API.
+                        NEW VERSION: 0.5.1
 May-21-2003 patrickh    Removed the GMTL bindings.  They now live in the PyGMTL
                         project.
                         NEW VERSION: 0.5.0

@@ -378,6 +378,69 @@ struct gadget_Position_Wrapper: gadget::Position
     PyObject* self;
 };
 
+struct gadget_KeyEvent_Wrapper: gadget::KeyEvent
+{
+    gadget_KeyEvent_Wrapper(PyObject* self_, const gadget::KeyEvent & p0):
+        gadget::KeyEvent(p0), self(self_) {}
+
+    gadget_KeyEvent_Wrapper(PyObject* self_, const gadget::EventType & p0, const gadget::Keys & p1, const int & p2, const long unsigned int & p3):
+        gadget::KeyEvent(p0, p1, p2, p3), self(self_) {}
+
+    gadget_KeyEvent_Wrapper(PyObject* self_, const gadget::EventType & p0, const gadget::Keys & p1, const int & p2, const long unsigned int & p3, char p4):
+        gadget::KeyEvent(p0, p1, p2, p3, p4), self(self_) {}
+
+    gadget_KeyEvent_Wrapper(PyObject* self_):
+        gadget::KeyEvent(), self(self_) {}
+
+    vpr::ReturnStatus writeObject(vpr::ObjectWriter * p0) {
+        return call_method< vpr::ReturnStatus >(self, "writeObject", p0);
+    }
+
+    vpr::ReturnStatus default_writeObject(vpr::ObjectWriter * p0) {
+        return gadget::KeyEvent::writeObject(p0);
+    }
+
+    vpr::ReturnStatus readObject(vpr::ObjectReader * p0) {
+        return call_method< vpr::ReturnStatus >(self, "readObject", p0);
+    }
+
+    vpr::ReturnStatus default_readObject(vpr::ObjectReader * p0) {
+        return gadget::KeyEvent::readObject(p0);
+    }
+
+    PyObject* self;
+};
+
+struct gadget_MouseEvent_Wrapper: gadget::MouseEvent
+{
+    gadget_MouseEvent_Wrapper(PyObject* self_, const gadget::MouseEvent & p0):
+        gadget::MouseEvent(p0), self(self_) {}
+
+    gadget_MouseEvent_Wrapper(PyObject* self_, const gadget::EventType & p0, const gadget::Keys & p1, const int & p2, const int & p3, const int & p4, const int & p5, const int & p6, const long unsigned int & p7):
+        gadget::MouseEvent(p0, p1, p2, p3, p4, p5, p6, p7), self(self_) {}
+
+    gadget_MouseEvent_Wrapper(PyObject* self_):
+        gadget::MouseEvent(), self(self_) {}
+
+    vpr::ReturnStatus writeObject(vpr::ObjectWriter * p0) {
+        return call_method< vpr::ReturnStatus >(self, "writeObject", p0);
+    }
+
+    vpr::ReturnStatus default_writeObject(vpr::ObjectWriter * p0) {
+        return gadget::MouseEvent::writeObject(p0);
+    }
+
+    vpr::ReturnStatus readObject(vpr::ObjectReader * p0) {
+        return call_method< vpr::ReturnStatus >(self, "readObject", p0);
+    }
+
+    vpr::ReturnStatus default_readObject(vpr::ObjectReader * p0) {
+        return gadget::MouseEvent::readObject(p0);
+    }
+
+    PyObject* self;
+};
+
 
 
 }// namespace 
@@ -395,20 +458,6 @@ BOOST_PYTHON_MODULE(gadget)
         .staticmethod("refreshAllDevices")
         .def("refresh", &gadget::BaseDeviceInterface::refresh, &gadget_BaseDeviceInterface_Wrapper::default_refresh)
     ;
-
-    scope* gadget_Event_scope = new scope(
-    class_< gadget::Event >("Event", init< const gadget::Event & >())
-        .def("type", &gadget::Event::type, return_value_policy< copy_const_reference >())
-        .def("time", &gadget::Event::time, return_value_policy< copy_const_reference >())
-    );
-    // Temporary code for smart pointers
-    objects::class_value_wrapper< 
-      boost::shared_ptr< gadget::Event >, objects::make_ptr_instance< 
-        gadget::Event, objects::pointer_holder< 
-          boost::shared_ptr< gadget::Event >, gadget::Event >
-      >
-    >();
-    delete gadget_Event_scope;
 
     class_< gadgetWrapper::AnalogInterface, boost::noncopyable >("AnalogInterface", init<  >())
         .def(init< gadgetWrapper::AnalogInterface & >())
@@ -452,41 +501,6 @@ BOOST_PYTHON_MODULE(gadget)
         .def("getDigital", &gadget::DigitalData::getDigital)
         .def("setDigital", &gadget::DigitalData::setDigital)
     ;
-
-    scope* gadget_KeyEvent_scope = new scope(
-    class_< gadget::KeyEvent, bases< gadget::Event >  >("KeyEvent", init< const gadget::KeyEvent & >())
-        .def(init< const gadget::EventType &, const gadget::Keys &, const int &, const long unsigned int &, optional< char > >())
-        .def("getKey", &gadget::KeyEvent::getKey, return_value_policy< copy_const_reference >())
-        .def("getModifierMask", &gadget::KeyEvent::getModifierMask, return_value_policy< copy_const_reference >())
-        .def("getKeyChar", &gadget::KeyEvent::getKeyChar, return_value_policy< copy_const_reference >())
-    );
-    // Temporary code for smart pointers
-    objects::class_value_wrapper< 
-      boost::shared_ptr< gadget::KeyEvent >, objects::make_ptr_instance< 
-        gadget::KeyEvent, objects::pointer_holder< 
-          boost::shared_ptr< gadget::KeyEvent >, gadget::KeyEvent >
-      >
-    >();
-    delete gadget_KeyEvent_scope;
-
-    scope* gadget_MouseEvent_scope = new scope(
-    class_< gadget::MouseEvent, bases< gadget::Event >  >("MouseEvent", init< const gadget::MouseEvent & >())
-        .def(init< const gadget::EventType &, const gadget::Keys &, const int &, const int &, const int &, const int &, const int &, const long unsigned int & >())
-        .def("getButton", &gadget::MouseEvent::getButton, return_value_policy< copy_const_reference >())
-        .def("getX", &gadget::MouseEvent::getX, return_value_policy< copy_const_reference >())
-        .def("getY", &gadget::MouseEvent::getY, return_value_policy< copy_const_reference >())
-        .def("getGlobalX", &gadget::MouseEvent::getGlobalX, return_value_policy< copy_const_reference >())
-        .def("getGlobalY", &gadget::MouseEvent::getGlobalY, return_value_policy< copy_const_reference >())
-        .def("getState", &gadget::MouseEvent::getState, return_value_policy< copy_const_reference >())
-    );
-    // Temporary code for smart pointers
-    objects::class_value_wrapper< 
-      boost::shared_ptr< gadget::MouseEvent >, objects::make_ptr_instance< 
-        gadget::MouseEvent, objects::pointer_holder< 
-          boost::shared_ptr< gadget::MouseEvent >, gadget::MouseEvent >
-      >
-    >();
-    delete gadget_MouseEvent_scope;
 
     class_< gadget::PositionData >("PositionData", init<  >())
         .def(init< const gadget::PositionData & >())
@@ -575,6 +589,21 @@ BOOST_PYTHON_MODULE(gadget)
 
     delete gadget_Digital_scope;
 
+    scope* gadget_Event_scope = new scope(
+    class_< gadget::Event, boost::noncopyable >("Event", no_init)
+        .def("type", &gadget::Event::type, return_value_policy< copy_const_reference >())
+        .def("setType", &gadget::Event::setType)
+        .def("time", &gadget::Event::time, return_value_policy< copy_const_reference >())
+    );
+    // Temporary code for smart pointers
+    objects::class_value_wrapper< 
+      boost::shared_ptr< gadget::Event >, objects::make_ptr_instance< 
+        gadget::Event, objects::pointer_holder< 
+          boost::shared_ptr< gadget::Event >, gadget::Event >
+      >
+    >();
+    delete gadget_Event_scope;
+
     class_< gadget::Position, boost::noncopyable, gadget_Position_Wrapper >("Position", init<  >())
         .def("getPositionData", &gadget::Position::getPositionData, gadget_Position_getPositionData_overloads_0_1())
         .def("addPositionSample", &gadget::Position::addPositionSample)
@@ -585,6 +614,47 @@ BOOST_PYTHON_MODULE(gadget)
         .def("writeObject", &gadget::Position::writeObject, &gadget_Position_Wrapper::default_writeObject)
         .def("readObject", &gadget::Position::readObject, &gadget_Position_Wrapper::default_readObject)
     ;
+
+    scope* gadget_KeyEvent_scope = new scope(
+    class_< gadget::KeyEvent, bases< gadget::Event > , gadget_KeyEvent_Wrapper >("KeyEvent", init<  >())
+        .def(init< const gadget::KeyEvent & >())
+        .def(init< const gadget::EventType &, const gadget::Keys &, const int &, const long unsigned int &, optional< char > >())
+        .def("getKey", &gadget::KeyEvent::getKey, return_value_policy< copy_const_reference >())
+        .def("getModifierMask", &gadget::KeyEvent::getModifierMask, return_value_policy< copy_const_reference >())
+        .def("getKeyChar", &gadget::KeyEvent::getKeyChar, return_value_policy< copy_const_reference >())
+        .def("writeObject", &gadget::KeyEvent::writeObject, &gadget_KeyEvent_Wrapper::default_writeObject)
+        .def("readObject", &gadget::KeyEvent::readObject, &gadget_KeyEvent_Wrapper::default_readObject)
+    );
+    // Temporary code for smart pointers
+    objects::class_value_wrapper< 
+      boost::shared_ptr< gadget::KeyEvent >, objects::make_ptr_instance< 
+        gadget::KeyEvent, objects::pointer_holder< 
+          boost::shared_ptr< gadget::KeyEvent >, gadget::KeyEvent >
+      >
+    >();
+    delete gadget_KeyEvent_scope;
+
+    scope* gadget_MouseEvent_scope = new scope(
+    class_< gadget::MouseEvent, bases< gadget::Event > , gadget_MouseEvent_Wrapper >("MouseEvent", init<  >())
+        .def(init< const gadget::MouseEvent & >())
+        .def(init< const gadget::EventType &, const gadget::Keys &, const int &, const int &, const int &, const int &, const int &, const long unsigned int & >())
+        .def("getButton", &gadget::MouseEvent::getButton, return_value_policy< copy_const_reference >())
+        .def("getX", &gadget::MouseEvent::getX, return_value_policy< copy_const_reference >())
+        .def("getY", &gadget::MouseEvent::getY, return_value_policy< copy_const_reference >())
+        .def("getGlobalX", &gadget::MouseEvent::getGlobalX, return_value_policy< copy_const_reference >())
+        .def("getGlobalY", &gadget::MouseEvent::getGlobalY, return_value_policy< copy_const_reference >())
+        .def("getState", &gadget::MouseEvent::getState, return_value_policy< copy_const_reference >())
+        .def("writeObject", &gadget::MouseEvent::writeObject, &gadget_MouseEvent_Wrapper::default_writeObject)
+        .def("readObject", &gadget::MouseEvent::readObject, &gadget_MouseEvent_Wrapper::default_readObject)
+    );
+    // Temporary code for smart pointers
+    objects::class_value_wrapper< 
+      boost::shared_ptr< gadget::MouseEvent >, objects::make_ptr_instance< 
+        gadget::MouseEvent, objects::pointer_holder< 
+          boost::shared_ptr< gadget::MouseEvent >, gadget::MouseEvent >
+      >
+    >();
+    delete gadget_MouseEvent_scope;
 
     enum_< gadget::ButtonMask >("ButtonMask")
         .value("BUTTON5_MASK", gadget::BUTTON5_MASK)
@@ -628,6 +698,7 @@ BOOST_PYTHON_MODULE(gadget)
         .value("KEY_P", gadget::KEY_P)
         .value("KEY_S", gadget::KEY_S)
         .value("KEY_R", gadget::KEY_R)
+        .value("KEY_AT", gadget::KEY_AT)
         .value("KEY_Y", gadget::KEY_Y)
         .value("KEY_X", gadget::KEY_X)
         .value("KEY_Z", gadget::KEY_Z)
@@ -738,6 +809,7 @@ BOOST_PYTHON_MODULE(gadget)
         .value("MOUSE_POSX", gadget::MOUSE_POSX)
         .value("MOUSE_POSY", gadget::MOUSE_POSY)
         .value("KEY_QUESTION", gadget::KEY_QUESTION)
+        .value("KEY_BACKSLASH", gadget::KEY_BACKSLASH)
         .value("KEY_INSERT", gadget::KEY_INSERT)
         .value("KEY_BRACE_RIGHT", gadget::KEY_BRACE_RIGHT)
         .value("KEY_TAB", gadget::KEY_TAB)
