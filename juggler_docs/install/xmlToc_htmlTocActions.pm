@@ -98,6 +98,12 @@ sub item_action($$$$$)
    $myParams =~ m/title[ ]*=[ ]*"(.*?)"/s;
    my $title = $1;
 
+   my $link = '';
+
+   if ( $myParams =~ /link[ ]*=[ ]*"(.*?)"/s ) {
+      $link = "$1";
+   }
+
    if ($myParams =~ m/jit[ ]*=[ ]*"(.*?)"/s)
    {
       my $jitfolder = "";
@@ -108,7 +114,13 @@ sub item_action($$$$$)
    else
    {
       outputIndents( $xmlToc_data_out, $indent_level);
-      $$xmlToc_data_out .= "<li>$title</li>\n";
+
+      if ( "$link" eq "" ) {
+         $$xmlToc_data_out .= "<li>$title</li>\n";
+      }
+      else {
+         $$xmlToc_data_out .= "<li><a href=\"$link\">$title</a></li>\n";
+      }
    }
 }
 
