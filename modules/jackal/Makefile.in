@@ -126,7 +126,11 @@ BUILD_VJCONTROL	= @BUILD_VJCONTROL@
 # =============================================================================
 
 # Subdirectories used for recursion through the source tree.
-SUBDIR		= jccl
+SUBDIR		= jccl/Config        \
+		  jccl/JackalServer  \
+		  jccl/ConfigManager \
+		  jccl/Performance   \
+		  jccl/XMLUtil
 
 # =============================================================================
 # Library targets.  The default is 'debug' as defined above.  The steps for 
