@@ -45,7 +45,13 @@
 # -----------------------------------------------------------------------------
 default: all
 
-SUBDIRS	= corba FileOpenTestBean NetworkTestBean PrefsTestBean TestBean
+SUBDIRS=	corba			\
+		BeanDeliveryTest	\
+		CxxClient		\
+		FileOpenTestBean	\
+		NetworkTestBean		\
+		PrefsTestBean		\
+		TestBean
 
 all: $(SUBDIRS)
 
