@@ -54,11 +54,11 @@ import java.io.*;
  */
 public class PropertyDesc implements Cloneable {
 
-    public String name;
-    public String token;
-    public String help;
-    public int num;
-    public ValType valtype;
+    private String name;
+    private String token;
+    private String help;
+    private int num;
+    private ValType valtype;
     private int enumval; // for assigning numeric defaults to enum entries
 
     // items for assisting in GUI displays of chunks.
@@ -67,10 +67,10 @@ public class PropertyDesc implements Cloneable {
     private int user_level;
 
     /** Contains a fixed set of possible values with string labels. */
-    protected ArrayList enums;
+    private ArrayList enums;
 
     /** Assigns an individual label to each value of a property. */
-    protected ArrayList valuelabels;
+    private ArrayList valuelabels;
 
 
     public Object clone () throws CloneNotSupportedException {
@@ -198,6 +198,17 @@ public class PropertyDesc implements Cloneable {
 
     public ValType getValType () {
         return valtype;
+    }
+
+    public void setHasVariableNumberOfValues (boolean b) {
+        if (b)
+            num = -1;
+        else
+            num = 1;
+    }
+
+    public boolean getHasVariableNumberOfValues () {
+        return (num == -1);
     }
 
     public void setNumValues (int n) {

@@ -310,7 +310,7 @@ public class ConfigChunk {
 	/* This next part is O(n^2) <sigh> */
 	for (int i = 0; i < props.size(); i++) {
 	    p1 = (Property) props.get(i);
-	    p2 = c.getProperty(p1.token);
+	    p2 = c.getProperty(p1.getToken());
 	    if (!p1.equals(p2))
 		return false;
 	}
@@ -359,7 +359,7 @@ public class ConfigChunk {
         Property p2;
         for (i = 0; i < n; i++) {
             p2 = (Property)props.get(i);
-            if (p2.token.equalsIgnoreCase (p.token)) {
+            if (p2.getToken().equalsIgnoreCase (p.getToken())) {
                 props.set (i, p);
                 return true;
             }
@@ -373,7 +373,7 @@ public class ConfigChunk {
         int i, n = props.size();
 	for (i = 0; i < n; i++) {
 	    p = (Property)props.get(i);
-	    if (p.desc.token.equalsIgnoreCase(_token))
+	    if (p.getToken().equalsIgnoreCase(_token))
 		return p;
 	}
 	return null;
