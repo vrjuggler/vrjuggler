@@ -191,7 +191,6 @@
 #  define vprDEBUG_FLUSH std::flush
 #endif
 
-
 namespace vpr
 {
 
@@ -224,7 +223,7 @@ namespace vpr
       Debug();
 
       // These two have to be here because Visual C++ will try to make them
-      // exported public symbols.  This causes problems because copying
+      // exported public symbols.  This causes problems because copying 
       // vpr::Mutex objects is not allowed.
       Debug(const Debug& d) {;}
       void operator= (const Debug& d) {;}
@@ -234,12 +233,34 @@ namespace vpr
 
    public:
 
-      void setOutputFile(const std::string& output);
+      ~Debug()
+      {
+      }
 
+      /**
+       * This simultaneously sets the output stream type to
+       * std::ofstream and sets the name of the std::ofstream to use
+       * to output.  If there is an error opening the file, no change
+       * to the output location will be made.
+       *
+       * @param   output      the name of the file to use for output
+       *
+       * @return     true if the file was successfully set, false if not.
+       */
+      bool setOutputFile(const std::string& output);
+
+      /**
+       * Sets the debug stream to use for debug output.
+       * This will switch the default output location to stream.
+       *
+       * @param   stream         the new stream to use for debug output.
+       */
+      void setOutputStream(std::ostream& stream);
+      
       // Get the debug stream to use
       std::ostream& getStream(const vpr::DebugCategory& cat, const int level,
                               const bool show_thread_info = true,
-                              const bool use_indent = true,
+                              const bool use_indent = true, 
                               const int indentChange = 0,
                               const bool lockStream = true);
 
@@ -316,7 +337,9 @@ namespace vpr
       int debugLevel;      //! Debug level to use
       int indentLevel;     //! Amount to indent
 
-      std::ostream* mFile;     /**< File we are using for all output. */
+      std::ofstream* mFile;     /**< File we are using for all output. */
+
+      std::ostream* mStreamPtr;
 
       bool  mUseThreadLocal;  //! Whether to use thread local info or not
 
@@ -403,6 +426,7 @@ namespace vpr
 
 namespace vpr
 {
+   
 /*
    struct DebugCatRegistrator
    {
