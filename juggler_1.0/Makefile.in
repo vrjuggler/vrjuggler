@@ -12,6 +12,7 @@
 # buildworld      - Build everything (same as 'all').
 # installworld    - Install everything (same as 'install-all').  This requires 
 #                   that 'buildworld' be successfully completed beforehand.
+# release         - Build and install a release version.
 #
 # all             - Build everything.
 # all-abi         - Build everything using all supported ABIs.
@@ -290,6 +291,34 @@ endif
 	@${MAKE} _install_post_libs
 	@echo "==============================================================="
 	@echo ">>> VR Juggler make world completed on `LTIME=C date`"
+	@echo "==============================================================="
+
+# -------------------------------------------------------------
+# Build and install everything (i.e., the world) for a release.
+# -------------------------------------------------------------
+.PHONY: release
+
+release:
+	@echo "==============================================================="
+	@echo ">>> VR Juggler make release started on `LTIME=C date`"
+	@echo "==============================================================="
+ifndef NO_CLEAN
+	@${MAKE} clobber
+endif
+	@${MAKE} _libs
+	@${MAKE} gui
+	@echo "---------------------------------------------------------------"
+	@echo "Beginning VR Juggler release installation process"
+	@echo "---------------------------------------------------------------"
+	@${MAKE} beforeinstall
+	@${MAKE} _install_libs
+	@${MAKE} _install_post_libs
+	${INSTALL} -m ${FILE_PERMS} ${_GROUP_OPT_UNIX}			\
+          ${VJROOT_ABS}/ChangeLog ${VJROOT_ABS}/COPYING	 		\
+          ${VJROOT_ABS}/README ${VJROOT_ABS}/RELEASE_NOTES 		\
+          ${prefix}
+	@echo "==============================================================="
+	@echo ">>> VR Juggler make release completed on `LTIME=C date`"
 	@echo "==============================================================="
 
 # ------------------------------------------
