@@ -154,6 +154,7 @@ AC_ARG_WITH([boost-fs-lib],
 # System-dependent stuff.
 # -----------------------------------------------------------------------------
 AC_CANONICAL_TARGET
+DPP_SYSTEM_SETUP
 
 # These are used on all platforms.
 AC_DEFINE_UNQUOTED([VPR_OS_RELEASE], ["$OS_REL_STR"],
