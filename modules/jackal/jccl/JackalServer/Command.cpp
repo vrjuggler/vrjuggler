@@ -46,6 +46,10 @@ void vjCommandSendChunkDB::call (ostream& out) {
     out << *db << flush;
 }
 
+std::string vjCommandSendChunkDB::getName () {
+    return (std::string)"Send ChunkDB command";
+}
+
 
 //vjCommandSendDescDB
 

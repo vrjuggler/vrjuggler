@@ -7,7 +7,6 @@
 #include <Environment/vjEnvironmentManager.h>
 #include <Environment/vjConnect.h>
 #include <Performance/vjPerfDataBuffer.h>
-//#include <Kernel/vjKernel.h>
 #include <Config/vjChunkDescDB.h>
 #include <Config/vjConfigChunkDB.h>
 #include <Environment/vjTimedUpdate.h>
@@ -28,7 +27,6 @@ vjEnvironmentManager::vjEnvironmentManager():
     Port = 4450;
     listen_thread = NULL;
     listen_socket = -1;
-    activated = false;
     configured_to_accept = false;
     perf_refresh_time = 500;
 
@@ -39,25 +37,6 @@ vjEnvironmentManager::vjEnvironmentManager():
 
 
 vjEnvironmentManager::~vjEnvironmentManager() {
-    deactivate();
-}
-
-
-
-void vjEnvironmentManager::activate() {
-
-    activated = true;
-    if (configured_to_accept) {
-	acceptConnections();
-    }
-    else
-	vjDEBUG(vjDBG_ALL,0) << "NOTE: EM not configured to accept connections!!!\n" << vjDEBUG_FLUSH;
-}
-
-
-
-void vjEnvironmentManager::deactivate() {
-    activated = false;
     rejectConnections();
     killConnections();
 }
@@ -333,8 +312,6 @@ void vjEnvironmentManager::activatePerfBuffers () {
 bool vjEnvironmentManager::acceptConnections() {
     struct sockaddr_in sockaddress;
 
-    if (!activated)
-	return false;
     if (listen_thread != NULL)
 	return true;
 
