@@ -51,6 +51,35 @@
          <value label="Glove Position"/>
          <allowed_type>position_proxy</allowed_type>
       </property>
-      <upgrade_transform/>
+      <upgrade_transform>
+         <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:jconf="http://www.vrjuggler.org/jccl/xsd/3.0/configuration" version="1.0">
+            <xsl:output method="xml" version="1.0" encoding="UTF-8" indent="yes"/>
+            <xsl:variable name="jconf">http://www.vrjuggler.org/jccl/xsd/3.0/configuration</xsl:variable>
+
+            <xsl:template match="/">
+                <xsl:apply-templates/>
+            </xsl:template>
+
+            <xsl:template match="jconf:simulated_glove_gesture">
+               <xsl:element namespace="{$jconf}" name="simulated_glove_gesture">
+                  <xsl:attribute name="name">
+                     <xsl:value-of select="@name"/>
+                  </xsl:attribute>
+                  <xsl:attribute name="version">
+                     <xsl:text>3</xsl:text>
+                  </xsl:attribute>
+                  <xsl:element namespace="{$jconf}" name="keyboard_mouse_proxy">
+                     <xsl:value-of select="./jconf:event_window_proxy"/>
+                  </xsl:element>
+                  <xsl:for-each select="./jconf:key_presses">
+                     <xsl:copy-of select="."/>
+                  </xsl:for-each>
+                  <xsl:copy-of select="./jconf:trained_filename"/>
+                  <xsl:copy-of select="./jconf:glove_position"/>
+                  <xsl:copy-of select="./jconf:device_host"/>
+               </xsl:element>
+            </xsl:template>
+         </xsl:stylesheet>
+      </upgrade_transform>
    </definition_version>
 </definition>
