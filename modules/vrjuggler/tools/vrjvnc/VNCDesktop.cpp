@@ -422,8 +422,7 @@ VNCDesktop::Focus VNCDesktop::update(const gmtl::Matrix44f& navMatrix)
          if(select_button_state)
          {
             mSelectState = TopBorderGrab;
-            m_wandMdesktop_grab = wand_mat;
-            gmtl::invertFull(m_wandMdesktop_grab);
+            gmtl::invertFull(m_wandMdesktop_grab, wand_mat);
          }
          else     // Just select it
          {
@@ -437,8 +436,7 @@ VNCDesktop::Focus VNCDesktop::update(const gmtl::Matrix44f& navMatrix)
          if(select_button_state)
          {
             mSelectState = BottomBorderGrab;
-            m_wandMdesktop_grab = wand_mat;
-            gmtl::invertFull(m_wandMdesktop_grab);
+            gmtl::invertFull(m_wandMdesktop_grab, wand_mat);
          }
          else     // Just select it
          {
@@ -452,8 +450,7 @@ VNCDesktop::Focus VNCDesktop::update(const gmtl::Matrix44f& navMatrix)
          if(select_button_state)
          {
             mSelectState = LeftBorderGrab;
-            m_wandMdesktop_grab = wand_mat;
-            gmtl::invertFull(m_wandMdesktop_grab);
+            gmtl::invertFull(m_wandMdesktop_grab, wand_mat);
          }
          else     // Just select it
          {
@@ -467,8 +464,7 @@ VNCDesktop::Focus VNCDesktop::update(const gmtl::Matrix44f& navMatrix)
          if(select_button_state)
          {
             mSelectState = RightBorderGrab;
-            m_wandMdesktop_grab = wand_mat;
-            gmtl::invertFull(m_wandMdesktop_grab);
+            gmtl::invertFull(m_wandMdesktop_grab, wand_mat);
          }
          else     // Just select it
          {
