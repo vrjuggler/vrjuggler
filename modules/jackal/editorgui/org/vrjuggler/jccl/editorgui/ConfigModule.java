@@ -295,9 +295,23 @@ public class ConfigModule extends DefaultCoreModule {
 
     public ConfigChunkDB getChunkDB (File f) {
 	ConfigChunkDB db;
+        File canonical, other, other_canonical;
+        try {
+            canonical = f.getCanonicalFile();
+        }
+        catch (IOException e1) {
+            canonical = f;
+        }
 	for (int i = 0; i < chunkdbs.size(); i++) {
 	    db = (ConfigChunkDB)chunkdbs.get(i);
-            if (db.getFile().equals (f))
+	    other = db.getFile();
+            try {
+                other_canonical = other.getCanonicalFile();
+            }
+            catch (IOException e2) {
+                other_canonical = other;
+            }
+            if (canonical.equals (other_canonical))
                 return db;
 	}
 	return null;
