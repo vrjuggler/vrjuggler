@@ -36,7 +36,7 @@
 #include <Kernel/Pf/vjPfUtil.h>
 
 //: Convert Performer matrix to Juggler matrix
-vjMatrix vjGetVJMatrix(pfMatrix& perfMat)
+vjMatrix vjGetVjMatrix(pfMatrix& perfMat)
 {
    vjMatrix mat;
    vjVec3 x_axis(1,0,0);
