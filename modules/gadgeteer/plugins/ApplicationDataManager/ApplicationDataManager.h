@@ -132,6 +132,7 @@ public:
 
 private:      
    bool recognizeApplicationDataManagerConfig(jccl::ConfigChunkPtr chunk);
+   bool recognizeApplicationDataConfig(jccl::ConfigChunkPtr chunk);
    /**
     * Returns the string representation of the chunk type used for the ApplicationDataManager
     */   
@@ -185,6 +186,9 @@ private:
 private:
    std::map<vpr::GUID, ApplicationData*>           mRemoteApplicationData;              /**< Application level ApplicationData list. */
    vpr::Mutex                                      mRemoteApplicationDataLock;          /**< Lock on ApplicationData list.*/   
+   
+   std::vector<ApplicationData*>                   mNeedsConfiged;              /**< Application level ApplicationData list. */
+   vpr::Mutex                                      mNeedsConfigedLock;          /**< Lock on ApplicationData list.*/   
 
    std::map<ApplicationDataRequest*, std::string>  mPendingApplicationDataRequests;     /**< ApplicationData Request list. */
    vpr::Mutex                                      mPendingApplicationDataRequestsLock; /**< Lock on ApplicationData Request list.*/   

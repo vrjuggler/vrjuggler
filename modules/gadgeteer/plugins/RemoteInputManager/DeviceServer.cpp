@@ -160,8 +160,6 @@ namespace cluster
 
    void DeviceServer::debugDump(int debug_level)
    {
-      vprASSERT(0 == mClientsLock.test());
-      
       vpr::Guard<vpr::Mutex> guard(mClientsLock);
 
       vpr::DebugOutputGuard dbg_output(gadgetDBG_RIM,debug_level,

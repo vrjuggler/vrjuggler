@@ -90,6 +90,14 @@ public:
    {
       return mHostname;
    }
+
+   /**
+    * Return the hostname of the node that should update this object
+    */
+   void setHostname(const std::string& hostname)
+   {
+      mHostname = hostname;
+   }
 private:
    bool        mIsLocal;   /**< True if this object is to be updated by the local node. */
    vpr::GUID   mId;        /**< GUID for this object */
