@@ -238,7 +238,7 @@ public class XMLConfigIOHandler implements ConfigIOHandler {
                 }
             }
             else {
-                iostatus.addWarning ("Unrecognized element '" + name + "'.\n");
+                iostatus.addWarning ("Unrecognized element '" + name + "'.");
             }
             break;
         case Node.COMMENT_NODE:
@@ -247,7 +247,7 @@ public class XMLConfigIOHandler implements ConfigIOHandler {
         case Node.TEXT_NODE:
             break;
         default:
-            iostatus.addWarning ("Unexpected DOM node type...\n");
+            iostatus.addWarning ("Unexpected DOM node type...");
         }
     }
 
@@ -270,7 +270,7 @@ public class XMLConfigIOHandler implements ConfigIOHandler {
             ch = ChunkFactory.createChunkWithDescToken (name, use_defaults);
             if (ch == null) {
                 iostatus.addError ("Unable to create ConfigChunk of type '"
-                                   + name + "' - no ChunkDesc known.\n");
+                                   + name + "' - no ChunkDesc known.");
             }
             else {
                 // parse attributes
@@ -294,7 +294,7 @@ public class XMLConfigIOHandler implements ConfigIOHandler {
         case Node.TEXT_NODE:
             break;
         default:
-            iostatus.addWarning ("Unexpected DOM node type...\n");
+            iostatus.addWarning ("Unexpected DOM node type...");
         }
 
         return ch;
@@ -335,7 +335,7 @@ public class XMLConfigIOHandler implements ConfigIOHandler {
                             iostatus.addWarning ("Unexpected XML element in " +
                                                  "Property definition: '" +
                                                  child.getNodeValue() + 
-                                                 "'.\n");
+                                                 "'.");
                         }
                     }
                     child = child.getNextSibling();
@@ -344,7 +344,7 @@ public class XMLConfigIOHandler implements ConfigIOHandler {
             else
                 iostatus.addWarning ("No such property '" + name + 
                                      "' in ConfigChunk of type '" +
-                                     ch.getDescName() + "'.\n");
+                                     ch.getDescName() + "'.");
             break;
         case Node.ATTRIBUTE_NODE:
             if (name.equalsIgnoreCase ("name")) {
@@ -358,7 +358,7 @@ public class XMLConfigIOHandler implements ConfigIOHandler {
                 else
                     iostatus.addWarning ("No such property '" + name + 
                                          "' in ConfigChunk of type '" +
-                                         ch.getDescName() + "'.\n");
+                                         ch.getDescName() + "'.");
             }
             break;
         case Node.COMMENT_NODE:
@@ -367,7 +367,7 @@ public class XMLConfigIOHandler implements ConfigIOHandler {
         case Node.TEXT_NODE:
             break;
         default:
-            iostatus.addWarning ("Unexpected DOM node type...\n");
+            iostatus.addWarning ("Unexpected DOM node type...");
         }
     }
 
@@ -441,7 +441,7 @@ public class XMLConfigIOHandler implements ConfigIOHandler {
         }
         else
             iostatus.addError ("THIS SHOULD NOT HAPPEN in XMLConfigIOHandler" +
-                               ".parseTextValues().\n");
+                               ".parseTextValues().");
 
     }
 
@@ -564,7 +564,7 @@ public class XMLConfigIOHandler implements ConfigIOHandler {
                 }
             }
             else
-                iostatus.addWarning ("Unrecognized element '" + name + "'.\n");
+                iostatus.addWarning ("Unrecognized element '" + name + "'.");
             break;
         case Node.COMMENT_NODE:
         case Node.NOTATION_NODE:
@@ -572,7 +572,7 @@ public class XMLConfigIOHandler implements ConfigIOHandler {
         case Node.TEXT_NODE:
             break;
         default:
-            iostatus.addWarning ("Unrecognized DOM Node type...\n");
+            iostatus.addWarning ("Unrecognized DOM Node type...");
         }
 
     }
@@ -616,7 +616,7 @@ public class XMLConfigIOHandler implements ConfigIOHandler {
                 }
             }
             else
-                iostatus.addWarning ("Unrecognized element '" + name + "'.\n");
+                iostatus.addWarning ("Unrecognized element '" + name + "'.");
             break;
         case Node.COMMENT_NODE:
         case Node.NOTATION_NODE:
@@ -624,7 +624,7 @@ public class XMLConfigIOHandler implements ConfigIOHandler {
         case Node.TEXT_NODE:
             break;
         default:
-            iostatus.addWarning ("Unrecognized DOM Node type...\n");
+            iostatus.addWarning ("Unrecognized DOM Node type...");
         }
 
         return desc;
@@ -703,7 +703,7 @@ public class XMLConfigIOHandler implements ConfigIOHandler {
                     default:
                         iostatus.addWarning (
                             "Unexpected element '" + child.getNodeValue() + 
-                            "' in ChunkDesc help text element.\n");
+                            "' in ChunkDesc help text element.");
                     }
                     child = child.getNextSibling();
                 }
@@ -725,13 +725,13 @@ public class XMLConfigIOHandler implements ConfigIOHandler {
                         // it's just white space & crap like that.
                         break;
                     default:
-                        iostatus.addWarning ("Unrecognized DOM Node type...\n");
+                        iostatus.addWarning ("Unrecognized DOM Node type...");
                     }
                     child = child.getNextSibling();
                 }
             }
             else
-                iostatus.addWarning ("Unrecognized element '" + name + "'.\n");
+                iostatus.addWarning ("Unrecognized element '" + name + "'.");
             break;
         case Node.COMMENT_NODE:
         case Node.NOTATION_NODE:
@@ -739,7 +739,7 @@ public class XMLConfigIOHandler implements ConfigIOHandler {
         case Node.TEXT_NODE:
             break;
         default:
-            iostatus.addWarning ("Unrecognized DOM Node type...\n");
+            iostatus.addWarning ("Unrecognized DOM Node type...");
         }
     }
 
@@ -774,7 +774,7 @@ public class XMLConfigIOHandler implements ConfigIOHandler {
                         enumname = child.getNodeValue();
                     else
                         iostatus.addError ("Unidentified attribute: '" +
-                                           childname + "' in value label.\n");
+                                           childname + "' in value label.");
                 }
                 if (!enumname.equals(""))
                     p.appendValueLabel (enumname);
@@ -794,7 +794,7 @@ public class XMLConfigIOHandler implements ConfigIOHandler {
                         enumval = child.getNodeValue();
                     else
                         iostatus.addError ("Unidentified attribute: '" +
-                                           childname + "' in enumeration label.\n");
+                                           childname + "' in enumeration label.");
                 }
                 if (!enumname.equals(""))
                     p.appendEnumeration (enumname, enumval);
@@ -811,14 +811,14 @@ public class XMLConfigIOHandler implements ConfigIOHandler {
                     default:
                         iostatus.addWarning (
                             "Unexpected element '" + child.getNodeValue() + 
-                            "' in PropertyDesc help text element.\n");
+                            "' in PropertyDesc help text element.");
                     }
                     child = child.getNextSibling();
                 }
                 p.setHelp (h);
             }
             else
-                iostatus.addWarning ("Unrecognized element '" + name + "'.\n");
+                iostatus.addWarning ("Unrecognized element '" + name + "'.");
             break;
         case Node.COMMENT_NODE:
         case Node.NOTATION_NODE:
@@ -826,7 +826,7 @@ public class XMLConfigIOHandler implements ConfigIOHandler {
         case Node.TEXT_NODE:
             break;
         default:
-            iostatus.addWarning ("Unrecognized DOM Node type...\n");
+            iostatus.addWarning ("Unrecognized DOM Node type...");
         }
     }
 
