@@ -14,8 +14,8 @@
          <value label="Number of Pipes" defaultvalue="0" />
       </property>
       <property valuetype="string" variable="true" name="x11_pipes">
-         <help>The X11-display strings for the pipes. The string "-1" is treated as being equal to the DISPLAY environment variable. NOTE: This is a zero-based list.</help>
-         <value label="X11 Pipe" defaultvalue=":0.0" /> 
+         <help>The X11 display strings for the pipes. The string "-1" is treated as being equal to the DISPLAY environment variable. NOTE: This is a zero-based list.</help>
+         <value label="X11 Display" defaultvalue=":0.0" /> 
       </property>
       <upgrade_transform />
    </definition_version>
