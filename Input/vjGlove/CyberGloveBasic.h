@@ -37,6 +37,9 @@
 
 #include <vjConfig.h>
 
+#include <stdio.h>
+#include <stdarg.h>
+
 #ifdef VJ_OS_HPUX
 #   include <float.h>
 #   include <limits>
@@ -45,7 +48,6 @@
 #include <Input/vjGlove/vt_types.h>
 #include <Input/vjGlove/vt_glove-types.h>
 #include <Input/vjGlove/vt_virtual_hand-types.h>
-#include <stdio.h>
 
 struct CYBER_GLOVE_DATA {
   float joints[MAX_SENSOR_GROUPS][MAX_SENSOR_VALUES];
