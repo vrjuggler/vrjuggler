@@ -110,6 +110,7 @@ bool vjPosProxy::config(vjConfigChunk* chunk)
 
       sig_filter->setMaxDist(sigmoid_params->getProperty("maxDist"));
       sig_filter->setMinDist(sigmoid_params->getProperty("minDist"));
+      sig_filter->setMaxThreshold(sigmoid_params->getProperty("maxThreshold"));
       mFilter = sig_filter;
    }
    else
