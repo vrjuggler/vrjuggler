@@ -96,7 +96,7 @@ private:
       ResourceID() : id( -1 )
       {
       }
-      unsigned int id;
+      int id;
    };
    
    // helper functions to make your code easier to read
@@ -106,7 +106,7 @@ private:
       void* data = reinterpret_cast<void*>( &texObjectID );
       t.setUserData( data );
    }   
-   static unsigned int& getTexObjID( Texture& t ) 
+   static int& getTexObjID( Texture& t ) 
    { 
       vjGlContextData<ResourceID>* texObject = static_cast<vjGlContextData<ResourceID>* >( t.userData() );
       return (*texObject)->id;

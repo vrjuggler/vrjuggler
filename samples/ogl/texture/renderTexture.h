@@ -15,9 +15,9 @@ class tex
 {
 public:
    // listID: listID must == -1 (to mean unused tex object)
-   static void bind( Texture& texture, unsigned int& texObjectID, int mipmapLevelOfDetail = 0, int bordersize = 0 )
+   static void bind( Texture& texture, int& texObjectID, int mipmapLevelOfDetail = 0, int bordersize = 0 )
    {
-      assert( texObjectID > 0 && "listID must == -1 (to mean unused tex object)" );
+      assert( texObjectID == -1 && "listID must == -1 (to mean unused tex object)" );
 
       // find out what dimension texture we're using
       int texDimension;
@@ -27,27 +27,30 @@ public:
          texDimension = GL_TEXTURE_2D;
 
       // create the texture object, setting the texObjectID
+      unsigned int id;
       #ifdef GL_VERSION_1_1
-         ::glGenTextures( 1, &texObjectID );
-         ::glBindTexture( texDimension, texObjectID );
+         ::glGenTextures( 1, &id );
+         ::glBindTexture( texDimension, id );
       #else
-         ::glGenTexturesEXT( 1, &texObjectID );
-         ::glBindTextureEXT( texDimension, texObjectID );
+         ::glGenTexturesEXT( 1, &id );
+         ::glBindTextureEXT( texDimension, id );
       #endif
+      texObjectID = id;
 
       // load the texture into hardware that will be referenced by the texObjectID
       tex::load( texture, mipmapLevelOfDetail, bordersize );
    }
 
    // texObjectID: must be valid and != -1
-   static void unbind( Texture& texture, unsigned int& texObjectID )
+   static void unbind( Texture& texture, int& texObjectID )
    {
       assert( texObjectID != -1 && "texture object already deleted" );
 
+      unsigned int id( texObjectID );
       #ifdef GL_VERSION_1_1
-         ::glDeleteTextures( 1, &texObjectID );
+         ::glDeleteTextures( 1, &id );
       #else
-         ::glDeleteTexturesEXT( 1, &texObjectID );
+         ::glDeleteTexturesEXT( 1, &id );
       #endif
 
       texObjectID = -1; // unused
@@ -171,9 +174,9 @@ public:
    // texObjectID: if == -1 then function will load the texture.image() data each time
    //              you should use the texture bind function before calling render for
    //              better performance
-   static void render( Texture& texture, unsigned int texObjectID )
+   static void render( const Texture& texture, const int& texObjectID )
    {
-      Image& image = texture.image();
+      const Image& image = texture.image();
       
       // find out what dimension texture we're using
       int texDimension;

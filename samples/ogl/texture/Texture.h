@@ -61,14 +61,14 @@ public:
     Image& 			image();
     const Image&  image() const;
     
+    //:Specifies how to map texture onto surface.
+    // MODULATE, DECAL, or BLEND
+    Model			model;
+    
     //: Specify how texture is wrapped onto surface
     // REPEAT, or CLAMP
     Wrap			wrapS;
     Wrap			wrapT;
-    
-    //:Specifies how to map texture onto surface.
-    // MODULATE, DECAL, or BLEND
-    Model			model;
     
     //WARNING: set this before requesting to use texture object.
     Filtering			filtering;

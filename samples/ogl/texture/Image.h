@@ -81,16 +81,16 @@ public:
 	//  allows you to cut out a square area of this image
 	//  give - the sub image coordinates, these must be within this image's pixel coordinates 
 	//  returns - copies the specified sub image into the Image object that you provide.
-	void			getSubImage(const int& pixelLeft, const int& pixelTop, const int& pixelRight, const int& pixelBottom, Image& newImage) const;
+	void			getSubImage(const unsigned int& pixelLeft, const unsigned int& pixelTop, const unsigned int& pixelRight, const unsigned int& pixelBottom, Image& newImage) const;
 
 	void			asciioutput( bool useCarriageReturns ) const;
 
 	//: specify the 2 channels to swap.
-	void			swapChannels( const int& channel1, const int& channel2 );
+	void			swapChannels( const unsigned int& channel1, const unsigned int& channel2 );
 
 	//: specify the 2 channels to swap.
 	//  copies the image while swapping the 2 channels
-	void			swapChannels( const Image& image, const int& channel1, const int& channel2 );
+	void			swapChannels( const Image& image, const unsigned int& channel1, const unsigned int& channel2 );
 
 	//: blit an image to xpos,ypos 
 	//  source = image
