@@ -1,5 +1,6 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Aug-19-2002 nonchocoboy Put vrj-chunks.desc in new contexts by default.
 Aug-16-2002 nonchocoboy Added support in VRJConfig for editing multiple
                         configurations (of multiple files each) simultaneously.
                         NEW VERSION: 1.1.125
