@@ -1,14 +1,14 @@
+# Generated automatically from Makefile.in by configure.
 # -----------------------------------------------------------------------------
 # Makefile.in for juggler/test/input
 # $Id$
 # -----------------------------------------------------------------------------
 
-srcdir		= @srcdir@
+srcdir		= .
 
-COMPILE		= @CXX@ @DEFS@ ${VJ_INCLUDES} @CPPFLAGS@ @CXXFLAGS@ -g
-VJ_INCLUDES	= @INCLUDES@ -I${VJ_BASE_DIR}/include -I${srcdir}
-VJ_LIBS		= @TEST_VJ_LIBS_BASIC@ @TEST_VJ_LIBS_GL@ @TEST_LIBS_BASIC@
-VPATH		= @srcdir@
+COMPILE		= CC -DHAVE_CONFIG_H ${VJ_INCLUDES}  -ptv  -nostdinc -woff 3322 -w2 -g
+VJ_INCLUDES	=  -I/usr/include/CC -I/usr/include -I${VJ_BASE_DIR}/include -I${srcdir}
+VJ_LIBS		= -B static -L${VJ_BASE_DIR}/lib32 -lJuggler -lJuggler_ogl -B dynamic -lm -lC
 
 # These test programs require the following libraries to be linked:
 #
@@ -21,7 +21,7 @@ VPATH		= @srcdir@
 # Binary Interface (ABI) used.  For o32 binaries, -L/usr/lib is the
 # appropriate path.  For n32 binaries, use -L/usr/lib32.  For 64-bit binaries,
 # use -L/usr/lib64.
-EXTRA_LIBS	= @TEST_EXTRA_LIBS_BASIC@ @TEST_EXTRA_LIBS_GL@
+EXTRA_LIBS	=   -L/usr/lib32 -limage -L/usr -lGLU -lGL -lXext -lXmu -lX11
 
 OBJECTS		= main.o main-ibox.o main-inputgroup.o main-logiclass.o
 PROGS		= go go-ibox go-inputgroup go-logiclass
@@ -53,7 +53,6 @@ vjFlockTest: vjFlockTest.o
 
 vjFlockTest.o: vjFlockTest.cpp
 	${COMPILE} -woff 3303 -c -o $@ ${srcdir}/vjFlockTest.cpp
-
 
 # ----------------
 # new
