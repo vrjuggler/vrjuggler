@@ -289,8 +289,8 @@ const unsigned char* Image::row( const int& whichRow ) const
 
 void Image::blit( const Image& image, const int& xpos, const int& ypos )
 {
-	int wide = kev::min( this->width(),  image.width()  );
-	int high = kev::min( this->height(), image.height() );
+	int wide = kev::Min( this->width(),  image.width()  );
+	int high = kev::Min( this->height(), image.height() );
 
 	assert( xpos >= 0 && "no support to blit image to a negetive position (yet)" );
 	assert( ypos >= 0 && "no support to blit image to a negetive position (yet)" );
