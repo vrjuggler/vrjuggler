@@ -535,9 +535,7 @@ public class WizardBuilder
       String newFilename = file.getAbsolutePath();
       try
       {
-         WizardInputStream in = new WizardInputStream(
-                                 new BufferedInputStream(
-                                  new FileInputStream(newFilename)));
+         WizardInputStream in = new WizardInputStream(newFilename);
          Wizard wizard = in.readWizard();
          in.close();
          model.setWizard(wizard);
