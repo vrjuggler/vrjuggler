@@ -65,54 +65,54 @@ void gloveApp::myDraw()
     this->renderLightsAndMaterials();
 
     glPushMatrix();
-	glMatrixMode(GL_MODELVIEW);
-	glMultMatrixf( mNavigation.getFloatPtr() );
+   glMatrixMode(GL_MODELVIEW);
+   glMultMatrixf( mNavigation.getFloatPtr() );
 
-	// draw the floor
-	glPushMatrix();
-	    glScalef( 3.0f, 1.0f, 3.0f );
-	    mScene->drawFloor();
-	glPopMatrix();
+   // draw the floor
+   glPushMatrix();
+       glScalef( 3.0f, 1.0f, 3.0f );
+       mScene->drawFloor();
+   glPopMatrix();
 
-	// draw cube.
-	glPushMatrix();
-	    glColor3f( 0.4f, 0.1f, 0.2f );
-	    glTranslatef( mCubePos[0], mCubePos[1], mCubePos[2] );
-	    glEnable(GL_TEXTURE_2D);
-	    mScene->renderRainbowTexture();
-	    mScene->drawCube( 1.0f, 1.0f, 1.0f, mCubeSelected );
-	    glDisable(GL_TEXTURE_2D);
-	glPopMatrix();
+   // draw cube.
+   glPushMatrix();
+       glColor3f( 0.4f, 0.1f, 0.2f );
+       glTranslatef( mCubePos[0], mCubePos[1], mCubePos[2] );
+       glEnable(GL_TEXTURE_2D);
+       mScene->renderRainbowTexture();
+       mScene->drawCube( 1.0f, 1.0f, 1.0f, mCubeSelected );
+       glDisable(GL_TEXTURE_2D);
+   glPopMatrix();
 
-	// draw cone.
-	glPushMatrix();
-	    glColor3f( 0.6f, 0.2f, 0.6f );
-	    glTranslatef( mConePos[0], mConePos[1], mConePos[2] );
-	    mScene->drawCone( 1.0f, 1.0f, 1.0f, mConeSelected );
-	glPopMatrix();
+   // draw cone.
+   glPushMatrix();
+       glColor3f( 0.6f, 0.2f, 0.6f );
+       glTranslatef( mConePos[0], mConePos[1], mConePos[2] );
+       mScene->drawCone( 1.0f, 1.0f, 1.0f, mConeSelected );
+   glPopMatrix();
 
-	// draw Sphere.
-	glPushMatrix();
-	    glColor3f( 0.8f, 0.8f, 0.2f );
-	    glTranslatef( mSpherePos[0], mSpherePos[1], mSpherePos[2] );
-	    mScene->drawSphere( 1.0f, 1.0f, 1.0f, mSphereSelected );
-	glPopMatrix();
+   // draw Sphere.
+   glPushMatrix();
+       glColor3f( 0.8f, 0.8f, 0.2f );
+       glTranslatef( mSpherePos[0], mSpherePos[1], mSpherePos[2] );
+       mScene->drawSphere( 1.0f, 1.0f, 1.0f, mSphereSelected );
+   glPopMatrix();
 
-	// draw table.
-	glPushMatrix();
-	    glTranslatef( 0.0f, 0.0f, -20.0f );
-	    glEnable(GL_TEXTURE_2D);
-	    mScene->renderWoodTexture();
-	    mScene->drawTable();
-	    glDisable(GL_TEXTURE_2D);
-	glPopMatrix();
+   // draw table.
+   glPushMatrix();
+       glTranslatef( 0.0f, 0.0f, -20.0f );
+       glEnable(GL_TEXTURE_2D);
+       mScene->renderWoodTexture();
+       mScene->drawTable();
+       glDisable(GL_TEXTURE_2D);
+   glPopMatrix();
     glPopMatrix();
 }
 
 //: Function called after tracker update but before start of drawing
 //  In the glove application, this function does the logic for picking the
 //  objects.
-void gloveApp::preDraw()
+void gloveApp::preFrame()
 {
     //: we need to keep track of the wand, and the user.
     UserInfo    userInfo;
@@ -139,11 +139,11 @@ void gloveApp::preDraw()
 
     if (mGesture->getGesture() == mGesture->getGestureIndex("Pointing"))
     {
-	userVelocity += 0.0001f;
+   userVelocity += 0.0001f;
     } else
     if (mGesture->getGesture() == mGesture->getGestureIndex("Closed Fist"))
     {
-	userVelocity = 0.0f;
+   userVelocity = 0.0f;
     }
     userInfo.setVelocity( userVelocity );
     userInfo.setAngularVelocity( 0.01f );
@@ -157,12 +157,12 @@ void gloveApp::preDraw()
     //  set the object position equal to the glove position.
     if ( mGesture->getGesture() == mGesture->getGestureIndex("Open Hand"))
     {
-	if (mConeSelected)
-	    mConePos = glovePos;
-	else if (mSphereSelected)
-	    mSpherePos = glovePos;
-	else if (mCubeSelected)
-	    mCubePos = glovePos;
+   if (mConeSelected)
+       mConePos = glovePos;
+   else if (mSphereSelected)
+       mSpherePos = glovePos;
+   else if (mCubeSelected)
+       mCubePos = glovePos;
     }
 
     float cubeDistance   = (glovePos - mCubePos).length();
@@ -174,35 +174,35 @@ void gloveApp::preDraw()
      //  don't highlight any of them.
      if (min > 1.0f)
      {
-	 mCubeSelected = false;
-	 mSphereSelected = false;
-	 mConeSelected = false;
+    mCubeSelected = false;
+    mSphereSelected = false;
+    mConeSelected = false;
      }
 
     // ...otherwise,
     //   If glove is not pointing, or
     //   we don't already have a selected one, then...
     else if ( mGesture->getGesture() != mGesture->getGestureIndex("Open Hand") ||
-	      (mCubeSelected   == false &&
-	       mSphereSelected == false &&
-	       mConeSelected   == false)   )
+         (mCubeSelected   == false &&
+          mSphereSelected == false &&
+          mConeSelected   == false)   )
     {
-	// ... highlight the closest one to the glove.
-    	if (min == coneDistance)
-	{
-	    mCubeSelected = false;
-	    mSphereSelected = false;
-	    mConeSelected = true;
-	} else if (min == sphereDistance)
-	{
-	    mCubeSelected = false;
-	    mSphereSelected = true;
-	    mConeSelected = false;
-	} else if (min == cubeDistance)
-	{
-	    mCubeSelected = true;
-	    mSphereSelected = false;
-	    mConeSelected = false;
-	}
+   // ... highlight the closest one to the glove.
+      if (min == coneDistance)
+   {
+       mCubeSelected = false;
+       mSphereSelected = false;
+       mConeSelected = true;
+   } else if (min == sphereDistance)
+   {
+       mCubeSelected = false;
+       mSphereSelected = true;
+       mConeSelected = false;
+   } else if (min == cubeDistance)
+   {
+       mCubeSelected = true;
+       mSphereSelected = false;
+       mConeSelected = false;
+   }
     }
 }

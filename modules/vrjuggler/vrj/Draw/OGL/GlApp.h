@@ -1,7 +1,7 @@
 /*
- *  File:	    $RCSfile$
+ *  File:       $RCSfile$
  *  Date modified:  $Date$
- *  Version:	    $Revision$
+ *  Version:       $Revision$
  *
  *
  *                                VR Juggler
@@ -36,7 +36,7 @@
 //: vjGlApp: Encapulates an actual OpenGL application.
 //
 // PURPOSE:
-//	This class defines the class that OpenGL
+// This class defines the class that OpenGL
 //  application classes should be derived from.  The interface
 //  given is the interface that the System expects in order to
 //  interface with the application.
@@ -88,7 +88,7 @@ public:
    //!PRE: The library is preparing to render all windows on a given pipe
    //!POST: Any pre-pipe user calls have been done
    //!NOTE: Currently the OGL context is not set when this function is called <br>
-   //+      This is a TEST function.  DO NOT USE!!!
+   //+      This is a TEST function.  USE AT YOUR OWN RISK!!!
    virtual void pipePreDraw()
    {;}
 

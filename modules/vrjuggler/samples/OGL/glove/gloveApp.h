@@ -26,13 +26,13 @@
 //
 //  while (drawing)
 //  {
-//        preDraw();
-//	      draw();
-//	       postDraw();      // Drawing is happening while here
+//        preFrame();
+//       draw();
+//        intraFrame();      // Drawing is happening while here
 //       sync();
-//        postSync();      // Drawing is now done
+//        postFrame();      // Drawing is now done
 //
-//	      UpdateTrackers();
+//       UpdateTrackers();
 //  }
 class gloveApp : public vjGlApp
 {
@@ -46,9 +46,9 @@ public:
                                 mCubeSelected(false),
                                 mSphereSelected(false),
                                 mConeSelected(false),
-				mCubePos(0.0f, 3.5f, -20.0f),
-				mConePos(-2.5f, 3.5f, -20.0f),
-				mSpherePos(2.5f, 3.5f, -20.0f)
+            mCubePos(0.0f, 3.5f, -20.0f),
+            mConePos(-2.5f, 3.5f, -20.0f),
+            mSpherePos(2.5f, 3.5f, -20.0f)
    {
       /* Do nothing */ ;
    }
@@ -80,17 +80,17 @@ public:
    }
 
    /// Function called before updating trackers but after the frame is drawn
-   virtual void postSync()
+   virtual void postFrame()
    {
       /* Do nothing. */ ;
    }
 
    //: Function called after tracker update but before start of drawing
    //  In the glove application, this function does the logic for picking the objects.
-   virtual void preDraw();
+   virtual void preFrame();
 
    /// Function called after drawing has been triggered but BEFORE it completes
-   virtual void postDraw()
+   virtual void intraFrame()
    {
       /* Do nothing. */
    }
@@ -122,7 +122,7 @@ protected:
    vjVec3               mConePos;
    vjVec3               mSpherePos;
 
-   vjMatrix		mNavigation;
+   vjMatrix    mNavigation;
 
    vjGlContextData<Scene> mScene;
 };

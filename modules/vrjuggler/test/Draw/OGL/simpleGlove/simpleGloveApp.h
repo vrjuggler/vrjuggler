@@ -54,26 +54,26 @@ public:
    //
    //  while (drawing)
    //  {
-   //        preDraw();
-   //	      draw();
-   //	       postDraw();      // Drawing is happening while here
+   //        preFrame();
+   //       draw();
+   //        intraFrame();      // Drawing is happening while here
    //       sync();
-   //        postSync();      // Drawing is now done
+   //        postFrame();      // Drawing is now done
    //
-   //	      UpdateTrackers();
+   //       UpdateTrackers();
    //  }
    //------------------------------------
 
    /// Function called before updating trackers but after the frame is drawn
-   virtual void postSync()
+   virtual void postFrame()
    {;}
 
    /// Function called after tracker update but before start of drawing
-   virtual void preDraw()
+   virtual void preFrame()
    {;}
 
    /// Function called after drawing has been triggered but BEFORE it completes
-   virtual void postDraw()
+   virtual void intraFrame()
    {;}
 
 private:

@@ -1,7 +1,7 @@
 /*
- *  File:	    $RCSfile$
+ *  File:       $RCSfile$
  *  Date modified:  $Date$
- *  Version:	    $Revision$
+ *  Version:       $Revision$
  *
  *
  *                                VR Juggler
@@ -73,21 +73,21 @@ void vjKernel::controlLoop(void* nullParam)
       // Iff we have an app and a draw manager
       if((mApp != NULL) && (mDrawManager != NULL))
       {
-            vjDEBUG(vjDBG_KERNEL,5) << "vjKernel::controlLoop: mApp->preDraw()\n" << vjDEBUG_FLUSH;
-         mApp->preDraw();         // PREDRAW: Do Any application pre-draw stuff
+            vjDEBUG(vjDBG_KERNEL,5) << "vjKernel::controlLoop: mApp->preFrame()\n" << vjDEBUG_FLUSH;
+         mApp->preFrame();         // PREFRAME: Do Any application pre-draw stuff
             perfBuffer->set (0);
             vjDEBUG(vjDBG_KERNEL,5) << "vjKernel::controlLoop: drawManager->draw()\n" << vjDEBUG_FLUSH;
          mDrawManager->draw();    // DRAW: Trigger the beginning of frame drawing
             perfBuffer->set (1);
-            vjDEBUG(vjDBG_KERNEL,5) << "vjKernel::controlLoop: mApp->postDraw\n" << vjDEBUG_FLUSH;
-         mApp->postDraw();        // POST DRAW: Do computations that can be done while drawing.  This should be for next frame.
+            vjDEBUG(vjDBG_KERNEL,5) << "vjKernel::controlLoop: mApp->intraFrame()\n" << vjDEBUG_FLUSH;
+         mApp->intraFrame();        // INTRA FRAME: Do computations that can be done while drawing.  This should be for next frame.
          //usleep(15000);              // Generate a wait in critical section
             perfBuffer->set (2);
             vjDEBUG(vjDBG_KERNEL,5) << "vjKernel::controlLoop: drawManager->sync()\n" << vjDEBUG_FLUSH;
          mDrawManager->sync();    // SYNC: Block until drawing is done
             perfBuffer->set (3);
-            vjDEBUG(vjDBG_KERNEL,5) << "vjKernel::controlLoop: mApp->postSync()\n" << vjDEBUG_FLUSH;
-         mApp->postSync();        // POST SYNC: Do processing after drawing is complete
+            vjDEBUG(vjDBG_KERNEL,5) << "vjKernel::controlLoop: mApp->postFrame()\n" << vjDEBUG_FLUSH;
+         mApp->postFrame();        // POST FRAME: Do processing after drawing is complete
             perfBuffer->set (4);
       }
       else
@@ -259,7 +259,7 @@ bool vjKernel::processChunkAdd(vjConfigChunk* chunk)
    if((mDrawManager != NULL) && (mDrawManager->configCanHandle(chunk)))   // drawMgr
       added_chunk = mDrawManager->configAdd(chunk);
 //**//         if(environmentManager->configCanHandle(sorted_chunks[i]))         // envMgr
-//**//   	      added_chunk = environmentManager->configAdd(sorted_chunks[i]);
+//**//            added_chunk = environmentManager->configAdd(sorted_chunks[i]);
    if((mApp != NULL) && (mApp->configCanHandle(chunk)))   // App
       added_chunk = mApp->configAdd(chunk);
 
@@ -282,7 +282,7 @@ bool vjKernel::processChunkRemove(vjConfigChunk* chunk)
    if((mDrawManager != NULL) && (mDrawManager->configCanHandle(chunk)))   // drawMgr
       removed_chunk = mDrawManager->configRemove(chunk);
 //**//         if(environmentManager->configCanHandle(chunks[i]))                      // envMgr
-//**//   	      removed_chunk = environmentManager->configRemove(chunks[i]);
+//**//            removed_chunk = environmentManager->configRemove(chunks[i]);
    if((mApp != NULL) && (mApp->configCanHandle(chunk)))                // App
       removed_chunk = mApp->configRemove(chunk);
 
