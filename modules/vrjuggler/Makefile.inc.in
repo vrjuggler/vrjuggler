@@ -46,6 +46,8 @@ instlinks	= $(topdir)/instlinks
 srcdir		= @srcdir@
 top_srcdir	= @top_srcdir@
 
+BUILD_JAVA=	@BUILD_JAVA@
+
 # Extra compiler and linker options needed only by this file.
 DBG_FLAGS	= -D_DEBUG @DBG_FLAGS@
 OPT_FLAGS	= -D_OPT @OPT_FLAGS@
@@ -220,12 +222,18 @@ EXTRA_OBJ_TARGETS = vrjconfig-jar
 
 # Build the VRJConfig code base and the JAR files
 vrjconfig-gui:
+ifndef NO_JAVA
 	@$(MAKE) vrjconfig-java
 	@$(MAKE) vrjconfig-jar
+else
+	@echo "------------------------------------------------"
+	@echo "VRJConfig build disabled"
+	@echo "------------------------------------------------"
+endif
 
 # Build the java code and the JAR files
 vrjconfig-java vrjconfig-jar:
-ifeq (@BUILD_JAVA@, Y)
+ifeq ($(BUILD_JAVA), Y)
 	@echo "===> vrjconfig"
 	$(MAKE) -C vrjconfig $@
 	@echo "<=== vrjconfig"
@@ -271,8 +279,10 @@ endif
 	cd $(instlinks)/include/vrj && $(RM_LN) ./vrjParam.h &&		\
           $(LN_S) $(topdir)/vrj/vrjParam.h ./
 	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/bin
-ifeq (@BUILD_JAVA@, Y)
+ifndef NO_JAVA
+ifeq ($(BUILD_JAVA), Y)
 	@$(MAKE) -C vrjconfig instlinks="$(instlinks)" vrjconfig-gui-links
+endif
 endif
 	cd $(instlinks)/bin && cp -p $(topdir)/vrjuggler-config .
 	@echo "\n\n"
@@ -343,6 +353,7 @@ pre-install:
 
 # Do everything needed after installing the library binaries.
 post-install:
+	@$(MAKE) install-java
 	@$(MAKE) install-samples
 	@$(MAKE) install-test
 	@$(MAKE) install-tools
@@ -370,6 +381,13 @@ install-headers-deprecated:
 	@$(PERL) $(scriptdir)/install-dir.pl -m $(FILE_PERMS)		\
           $(GROUP_OPT_UNIX) -e .h -o $(includedir)/deprecated		\
           -i $(VJROOT_ABS)/deprecated
+
+install-java:
+ifndef NO_JAVA
+ifeq ($(BUILD_JAVA), Y)
+	@$(MAKE) -C vrjconfig vrjconfig-install
+endif
+endif
 
 # Install the sample applications.
 install-samples:
