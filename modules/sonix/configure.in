@@ -183,6 +183,8 @@ elif test "x$OS_TYPE" = "xWin32" -a "x$USE_GCC" != "xyes" ; then
     CFLAGS="$CFLAGS /W3 /GR /GX /EHc /QIfdiv /QI0f"
     CXXFLAGS="$CXXFLAGS /W3 /GR /GX /EHc /QIfdiv /QI0f"
     EXTRA_LINK_FLAGS="$EXTRA_LINK_FLAGS /MTd"
+    DBG_FLAGS="$DBG_FLAGS /MDd"
+    OPT_FLAGS="$OPT_FLAGS /MD"
 fi
 
 DPP_SYSTEM_SUBST
@@ -352,7 +354,7 @@ if test "x$OS_TYPE" = "xWin32" ; then
    snx_libs="$snx_libs sonix.lib"
    sample_application_libs="$sample_application_libs /LIBPATH:\$(SNX_BASE_DIR)/lib$LIBBITSUF/sonix.lib $LIBS"
 
-   DYLIB_DEPS='libcd.lib'
+   DYLIB_DEPS='comctl32.lib user32.lib gdi32.lib ws2_32.lib'
    DYLIB_PROF_DEPS="$DYLIB_DEPS"
 else
    if test "x$GXX" = "xyes" ; then
