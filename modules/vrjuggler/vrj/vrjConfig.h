@@ -53,8 +53,6 @@
 
 #include <windows.h>
 
-typedef __int32 int32_t;
-typedef __int64 int64_t;
 #define strcasecmp _stricmp
 
 #define M_PI	3.14159265358979323846
