@@ -33,8 +33,8 @@
 //
 #include <jccl/PerfMonitor/PerformanceMonitor.h>
 #include <jccl/PerfMonitor/PerformanceCategories.h>
-#include <jccl/JackalServer/JackalServer.h>
-#include <jccl/JackalServer/Connect.h>
+#include <jccl/Net/JackalServer.h>
+#include <jccl/Net/Connect.h>
 #include <jccl/PerfMonitor/PerfCommand.h>
 #include <jccl/Config/ConfigChunk.h>
 #include <jccl/Config/ParseUtil.h>

@@ -33,8 +33,8 @@
 #define _JCCL_PERFORMANCE_MONITOR_H_
 
 #include <jccl/jcclConfig.h>
-#include <jccl/JackalServer/JackalControl.h>
-#include <jccl/Plugins/ConfigManager/ConfigChunkHandler.h>
+#include <jccl/Net/JackalControl.h>
+#include <jccl/RTRC/ConfigChunkHandler.h>
 #include <jccl/Config/ConfigChunk.h>
 #include <jccl/PerfMonitor/LabeledPerfDataBuffer.h>
 #include <jccl/PerfMonitor/PerformanceCategories.h>
