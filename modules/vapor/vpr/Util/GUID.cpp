@@ -84,9 +84,12 @@ bool GUID::operator== (const GUID& guid) const
 // Private methods.
 // ============================================================================
 
-GUID::GUID ()
+GUID::GUID (bool genRandom)
 {
-   uuid_create( (uuid_t*)(&m_guid.standard));
+   if(genRandom)
+   {
+      generate();
+   }
 }
 
 GUID::GUID (const struct vpr::GUID::StdGUID& guid)
@@ -114,11 +117,22 @@ GUID::GUID (const std::string& guid_string)
 
 GUID::GUID (const GUID& ns_guid, const std::string& name)
 {
+   generate(ns_guid,name);
+}
+
+void GUID::generate()
+{
+   uuid_create( (uuid_t*)(&m_guid.standard));
+}
+
+void GUID::generate(const GUID& ns_guid, const std::string& name)
+{
    uuid_t temp_ns_id = *((uuid_t*)(&ns_guid.m_guid.standard));    // nasty, but works
    
    uuid_create_from_name((uuid_t*)(&m_guid.standard), 
                          temp_ns_id,
                          (void*) name.c_str(), name.length());
 }
+
 
 } // End of vpr namespace

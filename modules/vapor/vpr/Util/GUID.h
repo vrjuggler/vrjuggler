@@ -87,7 +87,7 @@ public:
    /**
     * Generates a random GUID.
     */
-   GUID(void);
+   GUID(bool genRandom=false);
 
    /**
     * Generates a GUID from the given struct.
@@ -105,8 +105,24 @@ public:
     */
    GUID(const GUID& ns_guid, const std::string& name);
 
-   GUID (const GUID& obj) {;}
-   void operator= (const GUID& obj) {;}
+   GUID (const GUID& obj)
+   { 
+      m_guid.packed.l0 = obj.m_guid.packed.l0;
+      m_guid.packed.l1 = obj.m_guid.packed.l1;
+      m_guid.packed.l2 = obj.m_guid.packed.l2;
+      m_guid.packed.l3 = obj.m_guid.packed.l3;
+   }
+
+   void operator= (const GUID& obj)
+   {
+      m_guid.packed.l0 = obj.m_guid.packed.l0;
+      m_guid.packed.l1 = obj.m_guid.packed.l1;
+      m_guid.packed.l2 = obj.m_guid.packed.l2;
+      m_guid.packed.l3 = obj.m_guid.packed.l3;
+   }
+
+   void generate();
+   void generate(const GUID& ns_guid, const std::string& name);
 
    union _vpr_guid
    {
