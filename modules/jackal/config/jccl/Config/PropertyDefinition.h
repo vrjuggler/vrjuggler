@@ -45,7 +45,7 @@ namespace jccl
  * Describes properties.  Holds all the information describing a property.
  * Instances of this class are read-only objects.
  */
-class PropertyDefinition
+class JCCL_CLASS_API PropertyDefinition
 {
 public:
 
