@@ -56,7 +56,7 @@ class Matrix;
 class WallProjection : public Projection
 {
 public:
-   WallProjection(Matrix surfaceRot, float toScr,
+   WallProjection(gmtl::Matrix44f surfaceRot, float toScr,
                     float toRight, float toLeft,
                     float toTop, float toBottom)
    {
@@ -77,17 +77,17 @@ public:
    //! PRE: WallRotation matrix must be set correctly
    //! PRE: mOrigin*'s must all be set correctly
    //!POST: frustum has been recomputed for given eyePos
-   virtual void calcViewMatrix(Matrix& eyePos);
+   virtual void calcViewMatrix(gmtl::Matrix44f& eyePos);
 
    //: Calculate the frustum needed for the view matrix
    //! NOTE: This function is called as part of calcViewMatrix
-   virtual void calcViewFrustum(Matrix& eyePos);
+   virtual void calcViewFrustum(gmtl::Matrix44f& eyePos);
 
    std::ostream& outStream(std::ostream& out);
 
 protected:
    // Rotation of the screen
-   Matrix   mWallRotationMatrix;
+   gmtl::Matrix44f   mWallRotationMatrix;
 
    // Screen configuration
    float mOriginToScreen, mOriginToRight, mOriginToLeft, mOriginToTop, mOriginToBottom;

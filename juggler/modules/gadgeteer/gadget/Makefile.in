@@ -51,9 +51,10 @@ SUBOBJDIR	= $(GADGET_LIBRARY)
 DIRPRFX	= gadget/
 
 # Subdirectories to compile.
-SUBDIR	= Devices	\
-          RemoteInputManager \
-          Type
+SUBDIR	= Devices		\
+          RemoteInputManager	\
+          Type			\
+          Util
 
 SRCS	= InputManager.cpp	\
           ProxyDepChecker.cpp	\

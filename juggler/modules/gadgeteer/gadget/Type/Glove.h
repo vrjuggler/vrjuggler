@@ -38,8 +38,8 @@
 #include <gadget/Type/Input.h>
 //#include <gadget/Type/DeviceInterface.h>
 #include <gadget/Type/PositionProxy.h>
-#include <vrj/Math/Vec3.h>
-#include <vrj/Math/Matrix.h>
+#include <gmtl/Vec.h>
+#include <gmtl/Matrix.h>
 
 // TODO: 2 devs here is a hack until we make
 //       the pinch glove act more like the flock of birds.
@@ -98,13 +98,13 @@ public:
    //: These are the xforms from TO the coord system of the given joint
    // Ex: xforms[0] ==> <br>
    //     base<b>T</b>mpj mpj<b>T</b>pij pij<b>T</b>dij
-   vrj::Matrix  xforms[NUM_COMPONENTS][(NUM_JOINTS-1)];
+   gmtl::Matrix44f  xforms[NUM_COMPONENTS][(NUM_JOINTS-1)];
 
    // Finger params
    //  XXX: Should put better info about hand dimensions in here
    // For now this is the translations FROM the previous joint to
    // the SPECIFIED joint.  In case of (DIJ+1), length to tip of finger
-   vrj::Vec3    dims[NUM_COMPONENTS][NUM_JOINTS];
+   gmtl::Vec3f    dims[NUM_COMPONENTS][NUM_JOINTS];
 };
 
 
@@ -136,12 +136,12 @@ public:  // ---- GLOVE INTERFACE ---- //
 
    //: This returns a vector ponting "out" of the component
    // Can be used for selection, etc.
-   vrj::Vec3 getGloveVector(GloveData::GloveComponent component, int devNum);
+   gmtl::Vec3f getGloveVector(GloveData::GloveComponent component, int devNum);
 
    //: This returns the position of given components.
    // Defaults to returning the palm position.
    // Can also get finger tips.
-   vrj::Matrix getGlovePos(GloveData::GloveComponent component = GloveData::WRIST, int devNum = 0);
+   gmtl::Matrix44f getGlovePos(GloveData::GloveComponent component = GloveData::WRIST, int devNum = 0);
 
    //: This returns a copy of the glove data struct
    GloveData getGloveData(int devNum);

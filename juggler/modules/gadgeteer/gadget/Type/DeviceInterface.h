@@ -34,7 +34,7 @@
 #define _GADGET_DEVICE_INTERFACE_H_
 
 #include <gadget/gadgetConfig.h>
-#include <vrj/Util/Debug.h>
+#include <gadget/Util/Debug.h>
 
 namespace gadget
 {
@@ -130,7 +130,9 @@ public:
          mTypeSpecificProxy = dynamic_cast<PROXY_TYPE*>(mProxyPtr);
          if(NULL == mTypeSpecificProxy)
          {
-            vprDEBUG(vrjDBG_INPUT_MGR, vprDBG_CRITICAL_LVL) << "vjAnalogInterface: Tried to point at proxy of incorrect type named: " << mProxyName << std::endl << vprDEBUG_FLUSH;
+            vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
+               << "vjAnalogInterface: Tried to point at proxy of incorrect type named: "
+               << mProxyName << std::endl << vprDEBUG_FLUSH;
          }
       }
 

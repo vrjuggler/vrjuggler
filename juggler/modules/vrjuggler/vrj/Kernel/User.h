@@ -85,7 +85,7 @@ public:
    //! POST: Positional device for user location has been set
    virtual bool config(jccl::ConfigChunkPtr chunk);
 
-   Matrix* getHeadPos()
+   gmtl::Matrix44f* getHeadPos()
    { return mHead->getData(); }
 
    vpr::Interval getHeadUpdateTime()

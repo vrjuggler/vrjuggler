@@ -33,9 +33,10 @@
 #ifndef _NAVIGATOR_H_
 #define _NAVIGATOR_H_
 
-#include <vrj/Math/Vec3.h>
-#include <vrj/Math/Matrix.h>
-#include <vrj/Math/Coord.h>
+#include <gmtl/Vec.h>
+#include <gmtl/Matrix.h>
+#include <gmtl/Coord.h>
+#include <gmtl/Generate.h>
 #include <collider.h>
 #include <vector>
 #include <gadget/Type/DigitalInterface.h>
@@ -71,22 +72,23 @@ public:
 
    virtual void heading( float& pitch, float& yaw, float& roll )
    {
-      mCurPos.getXYZEuler( pitch, yaw, roll );
+      gmtl::getRot(mCurPos, pitch, yaw, roll, gmtl::XYZ);
       pitch = -pitch;
       yaw = -yaw;
       roll = -roll;
    }
 
-   vrj::Matrix getCurPos() const
+   gmtl::Matrix44f getCurPos() const
    { return mCurPos; }
 
-   void setCurPos(vrj::Matrix pos)
+   void setCurPos(gmtl::Matrix44f pos)
    { mCurPos = pos; }
 
-   void setHomePosition(vrj::Matrix pos)
+   void setHomePosition(gmtl::Matrix44f pos)
    {
       mHomePos = pos;
-      vrj::Vec3 hpos = mHomePos.getTrans();
+      gmtl::Vec3f hpos;
+      gmtl::getTrans(mHomePos, hpos[0], hpos[1], hpos[2]);
       vprDEBUG(vprDBG_ALL,0) << clrOutNORM(clrCYAN,"navigator: HomePosition = ")
                            << hpos << std::endl << vprDEBUG_FLUSH;
     }
@@ -114,15 +116,15 @@ protected:
    // NOTE: the direction "forward" would be relative to current user position
    // ARGS: didCollide - true - The navigator collided with the model
    //       totalCorrection - The actual amount moved given the correction (in modelspace)
-   void navTranslate( const vrj::Vec3 trans, bool& didCollide, vrj::Vec3& totalCorrection);
+   void navTranslate( const gmtl::Vec3f trans, bool& didCollide, gmtl::Vec3f& totalCorrection);
 
-   void navRotate( vrj::Matrix rot_mat );
+   void navRotate( gmtl::Matrix44f rot_mat );
 
    // Correct the given attempted translation
    // Checks the given translation (in model cordinate space) against
    // the collidors given
    // Returns the corrected trans in trans, also returns the totalCorrection used
-   void navCollideTransCorrect(vrj::Vec3& trans, bool& didCollide, vrj::Vec3& totalCorrection);
+   void navCollideTransCorrect(gmtl::Vec3f& trans, bool& didCollide, gmtl::Vec3f& totalCorrection);
 
    // HELPER
    // returns true if the action state is true
@@ -131,9 +133,9 @@ protected:
 protected:
    std::string       mName;         // Name of the collidor
    bool mAllowRot,   mAllowTrans;
-   vrj::Matrix       mCurPos;       // (modelspace_M_user) The current position or the user- In Juggler coords
+   gmtl::Matrix44f   mCurPos;       // (modelspace_M_user) The current position or the user- In Juggler coords
                                     // Moves the "user" from the models origin to the user's navigated origin (coord system)
-   vrj::Matrix       mHomePos;      // Resets to this location
+   gmtl::Matrix44f   mHomePos;      // Resets to this location
 
    bool              allowAxis[3];  // Which axes are we allowed to rotate on
    bool              mIsActive;     // Is the navigator currently active in the environment
@@ -142,10 +144,10 @@ protected:
 };
 
 
-inline void navigator::navTranslate(vrj::Vec3 trans, bool& didCollide, vrj::Vec3& totalCorrection)
+inline void navigator::navTranslate(gmtl::Vec3f trans, bool& didCollide, gmtl::Vec3f& totalCorrection)
 {
    /*
-   vrj::Coord cur_pos(mCurPos);
+   gmtl::CoordVec3fEuler cur_pos(mCurPos);
    std::cerr << "Cur P: " << cur_pos.pos << std::endl << "Trans: " << trans
              << std::endl
              << "    =: " << cur_pos.pos+trans << std::endl;
@@ -154,10 +156,10 @@ inline void navigator::navTranslate(vrj::Vec3 trans, bool& didCollide, vrj::Vec3
    // convert the info to model coordinates, since that's what the nav routines take.
    // trans is in local (user) coordinates,  xform it to model coordinates (since we are testing against virtual world (model))
    // Mtrans_model = model_M_user * Mtrans_user
-   vrj::Matrix cur_rotation = mCurPos;             // Get rotation only part of model_M_user
-   cur_rotation.setTrans( 0.0f, 0.0f, 0.0f );   // zero out the translation...
-   vrj::Vec3 trans_in_modelspace;
-   trans_in_modelspace.xformFull( cur_rotation, trans );
+   gmtl::Matrix44f cur_rotation = mCurPos;      // Get rotation only part of model_M_user
+   gmtl::setTrans(cur_rotation, gmtl::Vec3f(0.0f, 0.0f, 0.0f)); // zero out the translation...
+   gmtl::Vec3f trans_in_modelspace;
+   gmtl::xform( trans_in_modelspace, cur_rotation, trans );
 
    // Get correction for collision detection
    // This func returns the totalCorrection
@@ -165,32 +167,32 @@ inline void navigator::navTranslate(vrj::Vec3 trans, bool& didCollide, vrj::Vec3
    navCollideTransCorrect( trans_in_modelspace, didCollide, totalCorrection );
 
    // Convert back to trans_in_modelspace back into local space
-   vrj::Matrix inv_cur_rotation;
-   inv_cur_rotation.invert(cur_rotation);
-   trans.xformFull(inv_cur_rotation, trans_in_modelspace);
+   gmtl::Matrix44f inv_cur_rotation;
+   gmtl::invert(inv_cur_rotation, cur_rotation);
+   gmtl::xform(trans, inv_cur_rotation, trans_in_modelspace);
 
    // Post mult cur_mat by the trans we need to do
    // model_M_new-user = model_M_user*user_M_new-user
-   vrj::Matrix user_M_newUser;
-   user_M_newUser.makeTrans(trans);
-   mCurPos.postMult(user_M_newUser);
+   gmtl::Matrix44f user_M_newUser;
+   gmtl::setTrans(user_M_newUser, trans);
+   gmtl::postMult(mCurPos, user_M_newUser);
 }
 
 
-inline void navigator::navRotate( vrj::Matrix rot_mat )
+inline void navigator::navRotate( gmtl::Matrix44f rot_mat )
 {
    //rot_mat.constrainRotAxis( allowAxis[0], allowAxis[1], allowAxis[2], rot_mat );
 
-   mCurPos.postMult( rot_mat );
-   
+   gmtl::postMult( mCurPos, rot_mat );
+
    //mCurPos.constrainRotAxis( allowAxis[0], allowAxis[1], allowAxis[2], mCurPos );
 
-   vrj::Matrix old_pos = mCurPos;
+   gmtl::Matrix44f old_pos = mCurPos;
    float x_pos, y_pos, z_pos;
-   old_pos.getTrans(x_pos,y_pos,z_pos);
-   mCurPos.makeXYZEuler(0,old_pos.getYRot(),0);     // Only allow Yaw (rot y)
-   mCurPos.setTrans(x_pos,y_pos,z_pos);
-   
+   gmtl::getTrans(old_pos, x_pos, y_pos, z_pos);
+   mCurPos = gmtl::makeRot<gmtl::Matrix44f>(0.0f, gmtl::getYRot(old_pos), 0.0f, gmtl::XYZ); // Only allow Yaw (rot y)
+   gmtl::setTrans(mCurPos, gmtl::Vec3f(x_pos, y_pos, z_pos));
+
    /*
    float x_rot, y_rot, z_rot;
    mCurPos.getXYZEuler(x_rot,y_rot,z_rot);
@@ -203,15 +205,15 @@ inline void navigator::navRotate( vrj::Matrix rot_mat )
 // Checks the given translation (in model cordinate space) against
 // the collidors given
 // returns the modified trans, and the total correction that was applied
-inline void navigator::navCollideTransCorrect(vrj::Vec3& trans, bool& didCollide, vrj::Vec3& totalCorrection)
+inline void navigator::navCollideTransCorrect(gmtl::Vec3f& trans, bool& didCollide, gmtl::Vec3f& totalCorrection)
 {
    didCollide = false;
    totalCorrection.set(0,0,0);
 
    // mCurPos (model_M_user) is already in model coordinates,
    // since it is used to move the geometry from modelspace to userSpace
-   vrj::Vec3 whereYouAre = vrj::Coord(mCurPos).pos;
-   //vrj::Coord cur_pos(mCurPos);
+   gmtl::Vec3f whereYouAre = gmtl::makeTrans<gmtl::Vec3f>(mCurPos);
+   //gmtl::CoordVec3fEuler cur_pos(mCurPos);
    //whereYouAre = cur_pos.pos;
 
    // Find out where you want to move to (modelspace = modelspace + modelspace::: no conversion nessesary)
@@ -219,7 +221,7 @@ inline void navigator::navCollideTransCorrect(vrj::Vec3& trans, bool& didCollide
 
    // the collider will return a correction vector in modelspace coordinates
    // add this to correct your distance requested to move.
-   vrj::Vec3 local_correction;
+   gmtl::Vec3f local_correction;
    totalCorrection.set(0.0,0.0,0.0);
 
    ////////////////////////////////////////////////////////////

@@ -31,15 +31,18 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include <gadget/gadgetConfig.h>
-#include <gadget/Type/AnalogProxy.h>
 #include <jccl/Config/ConfigChunk.h>
+#include <gadget/Util/Debug.h>
+#include <gadget/Type/AnalogProxy.h>
 
 namespace gadget
 {
 
 bool AnalogProxy::config(jccl::ConfigChunkPtr chunk)
 {
-   vprDEBUG_BEGIN(vrjDBG_INPUT_MGR,vprDBG_STATE_LVL) << "----------- configuring ANALOG PROXY -----------------\n" << vprDEBUG_FLUSH;
+   vprDEBUG_BEGIN(gadgetDBG_INPUT_MGR,vprDBG_STATE_LVL)
+      << "----------- configuring ANALOG PROXY -----------------\n"
+      << vprDEBUG_FLUSH;
    vprASSERT(((std::string)chunk->getType()) == "AnaProxy");
 
    m_unitNum = chunk->getProperty("unit");

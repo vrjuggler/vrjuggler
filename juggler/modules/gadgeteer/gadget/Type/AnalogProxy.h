@@ -40,7 +40,6 @@
 #define _GADGET_ANALOGPROXY_H_
 
 #include <gadget/gadgetConfig.h>
-#include <vrj/Util/Debug.h>
 #include <gadget/Type/Analog.h>
 #include <gadget/Type/Proxy.h>
 #include <gadget/Type/AnalogData.h>

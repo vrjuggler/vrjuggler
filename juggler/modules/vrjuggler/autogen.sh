@@ -8,7 +8,7 @@ DIE=0
 dpp_path=${DPP_PATH-../../Doozer++}
 
 if [ -n "$dpp_path" ]; then
-	ACLOCAL_FLAGS="-I $dpp_path/config -I ../../macros $ACLOCAL_FLAGS"
+	ACLOCAL_FLAGS="-I $dpp_path/config -I ../../macros -I ../../macros.GGT $ACLOCAL_FLAGS"
 fi
 
 (autoconf --version) < /dev/null > /dev/null 2>&1 || {

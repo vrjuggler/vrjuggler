@@ -39,6 +39,8 @@
 #include <gadget/Devices/Sim/SimInput.h>
 #include <gadget/Type/Position.h>
 
+#include <gmtl/Vec.h>
+#include <gmtl/VecOps.h>
 
 namespace gadget
 {
@@ -76,7 +78,7 @@ public:
 public:
    SimPosition()
       : mTransCoordSystem(LOCAL), mRotCoordSystem(LOCAL),
-        mDTrans(-1221.75f), mDRot(-1221.75f)   
+        mDTrans(-1221.75f), mDRot(-1221.75f)
    {;}
    virtual ~SimPosition() {;}
 
@@ -93,6 +95,13 @@ public:
    static std::string getChunkType() { return std::string("SimPosition"); }
 
 private:
+   /** @name Movement helpers */
+   //@{
+   /** Move amt in direction
+   * Captures code common for all movements
+   */
+   void moveDir(const float amt, const gmtl::Vec3f dir);
+
    //: Move forward (-z) the given amount on position data n
    void moveFor(const float amt);
 
@@ -102,18 +111,26 @@ private:
    //: Move up (+y) the given amount
    void moveUp(const float amt);
 
-   //: Pitch up - rot +x axis
+   /** @name Rotation helpers */
+   //@{
+   /** Rotation amt around axis
+   * Captures code common for all rotations
+   */
+   void rotAxis(const float amt, const gmtl::Vec3f rotAxis);
+
+   /** Pitch up - rot +x axis */
    void rotUp(const float amt);
 
-   //: Yaw left - rot +Y axis
+   /** Yaw left - rot +Y axis */
    void rotLeft(const float amt);
 
-   //: Roll Left - rot -z axis
+   /** Roll Left - rot -z axis */
    void rotRollCCW(const float amt);
+   //@}
 
-   //: Check if movement is allowed
+      //: Check if movement is allowed
    //! NOTE: It is not allowed if it hits a simulated wall, etc.
-   bool isTransAllowed(vrj::Vec3 trans);
+   bool isTransAllowed(gmtl::Vec3f trans);
 
 
 private:

@@ -35,7 +35,7 @@
 
 #include <gadget/gadgetConfig.h>
 
-#include <vrj/Math/Matrix.h>
+#include <gmtl/Matrix.h>
 
 namespace gadget
 {
@@ -46,7 +46,7 @@ class PositionFilter
 public:
    // Get the position to use
    // ARGS: newPos - The new postion this frame of the physical device
-   virtual vrj::Matrix getPos(const vrj::Matrix newPos) = 0;
+   virtual gmtl::Matrix44f getPos(const gmtl::Matrix44f newPos) = 0;
 
 };
 

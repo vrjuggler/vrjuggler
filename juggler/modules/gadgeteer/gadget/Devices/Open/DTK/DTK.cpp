@@ -38,7 +38,7 @@
 #include <dtk.h>
 #include <dlfcn.h>
 
-#include <vrj/Util/Debug.h>
+#include <gadget/Util/Debug.h>
 #include <jccl/Config/ConfigChunk.h>
 #include <gadget/Devices/Open/DTK/DTK.h>
 
@@ -69,8 +69,8 @@ DTK::DTK()
 
 bool DTK::config(jccl::ConfigChunkPtr c)
 {
-    vprDEBUG(vrjDBG_INPUT_MGR,1) << "  DTK::config(jccl::ConfigChunkPtr)"
-                   << std::endl << vprDEBUG_FLUSH;
+    vprDEBUG(gadgetDBG_INPUT_MGR,1) << "  DTK::config(jccl::ConfigChunkPtr)"
+                                    << std::endl << vprDEBUG_FLUSH;
 
     if (!Position::config(c) || !Digital::config(c) || !Analog::config(c))
     return false;
@@ -170,7 +170,7 @@ void DTK::controlLoop(void* nullParam)
     delete [] mDigitalData;
 
     int numbuffs = numPositional*3;
-    theData = (vrj::Matrix*) new vrj::Matrix[numbuffs];
+    theData = (gmtl::Matrix44f*) new gmtl::Matrix44f[numbuffs];
     mDataTimes = new jccl::TimeStamp[numbuffs];
 
     numbuffs = numDigital*3;
@@ -194,7 +194,7 @@ int DTK::startSampling()
 // make sure inertia cubes aren't already started
     if (this->isActive() == true)
     {
-    vprDEBUG(vrjDBG_INPUT_MGR,2) << "vjDTK was already started."
+    vprDEBUG(gadgetDBG_INPUT_MGR,2) << "vjDTK was already started."
                                    << std::endl << vprDEBUG_FLUSH;
     return 0;
     }
@@ -246,7 +246,7 @@ int DTK::sample()
     int   *intData;
 
     jccl::TimeStamp sampletime;
-    vrj::Matrix world_T_transmitter, transmitter_T_reciever, world_T_reciever;
+    gmtl::Matrix44f world_T_transmitter, transmitter_T_reciever, world_T_reciever;
 
     sampletime.set();
 
@@ -325,8 +325,9 @@ int DTK::stopSampling()
 
     if (mThread != NULL)
     {
-    vprDEBUG(vrjDBG_INPUT_MGR,1) << "vjDTK::stopSampling(): Stopping the DTK thread... "
-                   << vprDEBUG_FLUSH;
+    vprDEBUG(gadgetDBG_INPUT_MGR,1)
+       << "vjDTK::stopSampling(): Stopping the DTK thread... "
+       << vprDEBUG_FLUSH;
 
     mThread->kill();
     delete mThread;
@@ -334,13 +335,14 @@ int DTK::stopSampling()
 
     this->stopDTK();
 
-    vprDEBUG(vrjDBG_INPUT_MGR,1) << "stopped." << std::endl << vprDEBUG_FLUSH;
+    vprDEBUG(gadgetDBG_INPUT_MGR,1) << "stopped." << std::endl
+                                    << vprDEBUG_FLUSH;
     }
 
     return 1;
 }
 
-vrj::Matrix* DTK::getPosData( int d )
+gmtl::Matrix44f* DTK::getPosData( int d )
 {
     if( (this->isActive() == false) || (d < 0) || (d >= numPositional) )
     return NULL;

@@ -44,24 +44,23 @@
 
 #include <gadget/Type/Position.h>
 #include <gadget/Type/Proxy.h>
-#include <vrj/Math/Matrix.h>
 #include <gadget/Type/PositionFilter.h>
+#include <gadget/Type/PositionData.h>
+
+#include <gmtl/Matrix.h>
+#include <gmtl/MatrixOps.h>
 
 
 namespace gadget
 {
 
-//-----------------------------------------------------------------------
-//: A proxy class to positional devices, used by the InputManager.
-//
-//  A PositionProxy always points to a positional device and subUnit number,
-//  the inputgroup can therefore keep an array of these around and
-//  treat them as positional devices which only return a single
-//  subDevice's amount of data.  (one POS_DATA)
-//
-// See also: Position
-//------------------------------------------------------------------------
-//!PUBLIC_API:
+/**
+ * A proxy class to positional devices, used by the InputManager.
+ * A PositionProxy always points to a positional device and subUnit number,
+ * the inputgroup can therefore keep an array of these around and
+ * treat them as positional devices which only return a single
+ * subDevice's amount of data.  (one POS_DATA)
+ */
 class GADGET_CLASS_API PositionProxy : public TypedProxy<Position>
 {
 public:
@@ -70,9 +69,12 @@ public:
 
    virtual ~PositionProxy() {}
 
-   //: Update the proxy's copy of the data
-   // Copy the device data to local storage, and transform it if necessary
-   virtual void updateData() {
+   /**
+    * Updates the proxy's copy of the data.
+    * Copies the device data to local storage, and transform it if necessary.
+    */
+   virtual void updateData()
+   {
       if(!mStupified)
       {
           mPositionData = (mTypedDevice->getPositionData (mUnitNum));
@@ -88,41 +90,48 @@ public:
       }
    }
 
-    //: returns time of last update...
-    vpr::Interval getTimeStamp () {
-        return mPositionData.getTime();
-    }
+   /// Returns time of last update.
+   vpr::Interval getTimeStamp ()
+   {
+      return mPositionData.getTime();
+   }
 
-
-   //: Set the transform for this PositionProxy
-   // Sets the transformation matrix to
-   //    mMatrixTransform = M<sub>trans</sub>.post(M<sub>rot</sub>)
-   //! NOTE: This means that to set transform, you specific the translation
-   //+       followed by rotation that takes the device from where it physically
-   //+       is in space to where you want it to be.
+   /**
+    * Sets the transform for this PositionProxy.
+    * Sets the transformation matrix to:
+    * <code>
+    *    mMatrixTransform = M<sub>trans</sub>.post(M<sub>rot</sub>)
+    * </code>
+    *
+    * @note This means that to set transform, you specific the translation
+    *       followed by rotation that takes the device from where it physically
+    *       is in space to where you want it to be.
+    */
    void setTransform( float xoff, float yoff, float zoff,    // Translate
                       float xrot, float yrot, float zrot);   // Rotate
 
-   //: Get the data
-   vrj::Matrix* getData()
+   /// Gets the data.
+   gmtl::Matrix44f* getData()
    {
       if(mStupified)
-         mPositionData.getPosition()->makeIdent();
+      {
+         gmtl::identity(*mPositionData.getPosition());
+      }
 
       return mPositionData.getPosition();
    }
 
-    /** Get the actual PositionData. */
-    PositionData* getPosition() {
+    /** Gets the actual PositionData. */
+    PositionData* getPosition()
+    {
         return &mPositionData;
     }
 
-
-   //: Return this device's subunit number
+   /// Returns this device's subunit number.
    int getUnit()
    { return mUnitNum; }
 
-   //: Return the Position pointer held by this proxy
+   /// Return the Position pointer held by this proxy.
    Position* getPositionPtr()
    {
       if(!mStupified)
@@ -131,18 +140,25 @@ public:
          return NULL;
    }
 
-   //: Get the transform being using by this proxy
-   vrj::Matrix& getTransform()
+   /// Gets the transform being using by this proxy.
+   gmtl::Matrix44f& getTransform()
    { return mMatrixTransform; }
 
-   //: Transform the data in mPosData
-   //! PRE: mPosData needs to have most recent data
-   //! POST: mPosData is transformed by the xform matrix
-   //+       mPosData = old(mPosData).post(xformMatrix)
-   //!NOTE: This moves the wMr to the modifed reciever system wMmr
-   //+  where w = world, mr = world of the reciever, and r = reciever
+   /**
+    * Transforms the data in mPosData.
+    *
+    * @pre mPosData needs to have most recent data.
+    * @post mPosData is transformed by the xform matrix.
+    *       mPosData = old(mPosData).post(xformMatrix)
+    *
+    * @note This moves the wMr to the modifed reciever system wMmr
+    *       where w = world, mr = world of the reciever, and r = reciever
+    */
    void transformData()
-   { mPositionData.getPosition()->postMult(mMatrixTransform); }
+   {
+      //mPositionData.getPosition()->postMult(mMatrixTransform);
+      *(mPositionData.getPosition()) *= mMatrixTransform;   // post multiply
+   }
 
    static std::string getChunkType() { return "PosProxy"; }
 
@@ -151,7 +167,9 @@ public:
    virtual Input* getProxiedInputDevice()
    {
       if(NULL == mTypedDevice)
+      {
          return NULL;
+      }
 
       Input* ret_val = dynamic_cast<Input*>(mTypedDevice);
       vprASSERT(ret_val != NULL);
@@ -160,10 +178,10 @@ public:
 
 private:
    PositionData      mPositionData;
-   vrj::Matrix       mMatrixTransform;    // reciever_t_modifiedReciever
+   gmtl::Matrix44f   mMatrixTransform; /**< reciever_t_modifiedReciever */
    int               mUnitNum;
-   bool              mETrans;             // Are transformation enabled;
-   PositionFilter*   mFilter;             // A possible position filter to use
+   bool              mETrans;          /**< Are transformation enabled? */
+   PositionFilter*   mFilter;          /**< A possible position filter to use */
 };
 
 } // End of gadget namespace

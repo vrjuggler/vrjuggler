@@ -40,6 +40,7 @@
 #include <gadget/Type/KeyboardProxy.h>
 #include <gadget/ProxyDepChecker.h>
 #include <gadget/ProxyFactory.h>
+#include <gadget/Util/Debug.h>
 #include <jccl/Config/ConfigChunk.h>
 
 #include <typeinfo>
@@ -87,11 +88,14 @@ void ProxyFactory::loadKnownProxies()
 void ProxyFactory::registerProxy(ProxyConstructorBase* constructor)
 {
    mConstructors.push_back(constructor);     // Add the constructor to the list
-   vprDEBUG(vrjDBG_INPUT_MGR,1) << "vjProxyFactory: Constructor registered for: "
-              << std::setiosflags(std::ios::right) << std::setw(25) << std::setfill(' ') << constructor->getChunkType().c_str() << std::resetiosflags(std::ios::right)
-              //<< "   :" << (void*)constructor
-              << " type: " << typeid(*constructor).name() << std::endl
-              << vprDEBUG_FLUSH;
+   vprDEBUG(gadgetDBG_INPUT_MGR,1)
+      << "vjProxyFactory: Constructor registered for: "
+      << std::setiosflags(std::ios::right) << std::setw(25)
+      << std::setfill(' ') << constructor->getChunkType().c_str()
+      << std::resetiosflags(std::ios::right)
+      //<< "   :" << (void*)constructor
+      << " type: " << typeid(*constructor).name() << std::endl
+      << vprDEBUG_FLUSH;
 }
 
 // Simply query all proxy constructors registered looking
@@ -118,9 +122,10 @@ Proxy* ProxyFactory::loadProxy(jccl::ConfigChunkPtr chunk)
    Proxy* new_dev;
    ProxyConstructorBase* constructor = mConstructors[index];
 
-   vprDEBUG(vrjDBG_INPUT_MGR,3) << "vjProxyFactory::loadProxy: Loading proxy: "
-              << chunk->getType() << "  with: "
-              << typeid(*constructor).name() << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(gadgetDBG_INPUT_MGR,3)
+      << "vjProxyFactory::loadProxy: Loading proxy: "
+      << chunk->getType() << "  with: "
+      << typeid(*constructor).name() << std::endl << vprDEBUG_FLUSH;
    new_dev = constructor->createProxy(chunk);
    return new_dev;
 }

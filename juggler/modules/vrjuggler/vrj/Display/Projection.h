@@ -34,11 +34,12 @@
 #define _VRJ_PROJECTION_H_
 
 #include <vrj/vrjConfig.h>
-#include <vrj/Math/Matrix.h>
 #include <vrj/Display/Frustum.h>
 #include <vrj/Util/Debug.h>
-#include <vrj/Math/Vec3.h>
 #include <vrj/Display/Viewport.h>
+
+#include <gmtl/Matrix.h>
+#include <gmtl/Vec.h>
 
 #include <jccl/Config/ConfigChunk.h>
 
@@ -89,14 +90,15 @@ public:
    Viewport* getViewport()
    { return mViewport; }
 
-   virtual void calcViewMatrix(Matrix& eyePos) = 0;
+   virtual void calcViewMatrix(gmtl::Matrix44f& eyePos) = 0;
 
    /** Helper to the frustum apex and corners in model coordinates
    * @note This function is meant for debugging purposes
    * @post The given vars contain the values of the frustums
    * corners in model space.
    */
-   void getFrustumApexAndCorners(Vec3& apex, Vec3& ur, Vec3& lr, Vec3& ul, Vec3& ll);
+   void getFrustumApexAndCorners(gmtl::Vec3f& apex, gmtl::Vec3f& ur, gmtl::Vec3f& lr,
+                                 gmtl::Vec3f& ul, gmtl::Vec3f& ll);
 
    /** Virtual output oporators.
    * Every class derived from us shoudl just define this, and
@@ -108,8 +110,8 @@ public:
 
 
 public:
-   Matrix    mViewMat;     /**< The view transformation matrix for this projection */
-   Frustum   mFrustum;     /**< The calculated view frustum for this projection */
+   gmtl::Matrix44f   mViewMat;     /**< The view transformation matrix for this projection */
+   Frustum           mFrustum;     /**< The calculated view frustum for this projection */
 
 protected:
    Eye         mEye;          /**< The eye that this projection is rendering */

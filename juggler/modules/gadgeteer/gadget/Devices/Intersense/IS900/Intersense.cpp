@@ -48,10 +48,16 @@
 #include <fstream>
 
 #include <gadget/Devices/Intersense/Intersense.h>
-#include <vrj/Math/Coord.h>
-#include <vrj/Math/Quat.h>
-#include <vrj/Util/Debug.h>
+#include <gmtl/Quat.h>
+#include <gadget/Util/Debug.h>
 #include <jccl/Config/ConfigChunk.h>
+
+#include <gmtl/Matrix.h>
+#include <gmtl/Vec.h>
+#include <gmtl/MatrixOps.h>
+#include <gmtl/Generate.h>
+#include <gmtl/Convert.h>
+
 
 namespace gadget
 {
@@ -75,14 +81,16 @@ int Intersense::getStationIndex(int stationNum, int bufferIndex)
 
 Intersense::Intersense()
 {
-    vprDEBUG(vrjDBG_INPUT_MGR,1) << "*** Intersense::Intersense() ***\n" << vprDEBUG_FLUSH;
-    //vprDEBUG(vrjDBG_INPUT_MGR,1) << "*** Intersense::deviceAbilities = " << deviceAbilities << " ***\n" << vprDEBUG_FLUSH;
+    vprDEBUG(gadgetDBG_INPUT_MGR,1)
+       << "*** Intersense::Intersense() ***\n" << vprDEBUG_FLUSH;
+    //vprDEBUG(gadgetDBG_INPUT_MGR,1) << "*** Intersense::deviceAbilities = " << deviceAbilities << " ***\n" << vprDEBUG_FLUSH;
 }
 
 bool Intersense::config(jccl::ConfigChunkPtr c)
 {
-    vprDEBUG(vrjDBG_INPUT_MGR,1) << "         Intersense::config(jccl::ConfigChunkPtr)"
-                               << std::endl << vprDEBUG_FLUSH;
+    vprDEBUG(gadgetDBG_INPUT_MGR,1)
+       << "         Intersense::config(jccl::ConfigChunkPtr)"
+       << std::endl << vprDEBUG_FLUSH;
 
 // read in Position's, Digital's, and Analog's config stuff,
 // --> this will be the port and baud fields
@@ -91,7 +99,9 @@ bool Intersense::config(jccl::ConfigChunkPtr c)
 
 // keep IntersenseStandalone's port and baud members in sync with Input's port
 // and baud members.
-    vprDEBUG(vrjDBG_INPUT_MGR,1) << "   Intersense::config(jccl::ConfigChunkPtr) -> Input::getPort() = " << Input::getPort() << std::endl << vprDEBUG_FLUSH;
+    vprDEBUG(gadgetDBG_INPUT_MGR,1)
+       << "   Intersense::config(jccl::ConfigChunkPtr) -> Input::getPort() = "
+       << Input::getPort() << std::endl << vprDEBUG_FLUSH;
     mTracker.setPortName( Input::getPort() );
     mTracker.rBaudRate() = Input::getBaudRate();
     mTracker.rNumStations() = c->getNum("stations");
@@ -163,8 +173,8 @@ int Intersense::startSampling()
 // make sure inertia cubes aren't already started
     if (this->isActive() == true)
     {
-        vprDEBUG(vrjDBG_INPUT_MGR,2) << "vjIntersense was already started."
-                                   << std::endl << vprDEBUG_FLUSH;
+        vprDEBUG(gadgetDBG_INPUT_MGR,2) << "vjIntersense was already started."
+                                        << std::endl << vprDEBUG_FLUSH;
         return 0;
     }
 
@@ -240,21 +250,25 @@ int Intersense::sample()
 
       if ( mTracker.rAngleFormat(stationIndex) == ISD_EULER )
       {
-         cur_pos_samples[i].getPosition()->makeZYXEuler(mTracker.zRot( stationIndex ),
-                                                      mTracker.yRot( stationIndex ),
-                                                      mTracker.xRot( stationIndex ));
-         cur_pos_samples[i].getPosition()->setTrans(mTracker.xPos( stationIndex ),
-                                                  mTracker.yPos( stationIndex ),
-                                                  mTracker.zPos( stationIndex ));
+         gmtl::identity(*(cur_pos_samples[i].getPosition()));
+         gmtl::setRot( *(cur_pos_samples[i].getPosition()),
+                         gmtl::Math::deg2Rad(mTracker.zRot( stationIndex )),
+                         gmtl::Math::deg2Rad(mTracker.yRot( stationIndex )),
+                         gmtl::Math::deg2Rad(mTracker.xRot( stationIndex )),
+                        gmtl::ZYX );
+
+         gmtl::setTrans( *(cur_pos_samples[i].getPosition()),
+                            gmtl::Vec3f(mTracker.xPos( stationIndex ),
+                                        mTracker.yPos( stationIndex ),
+                                        mTracker.zPos( stationIndex )) );
       }
       else
       {
-
-         vrj::Quat quatValue(mTracker.xQuat( stationIndex ),
+         gmtl::Quatf quatValue(mTracker.xQuat( stationIndex ),
                              mTracker.yQuat( stationIndex ),
                              mTracker.zQuat( stationIndex ),
                              mTracker.wQuat( stationIndex ));
-         cur_pos_samples[i].getPosition()->makeQuaternion(quatValue);
+         gmtl::convert( *(cur_pos_samples[i].getPosition()), quatValue );
       }
 
       cur_pos_samples[i].setTime (cur_pos_samples[0].getTime());
@@ -290,13 +304,12 @@ int Intersense::sample()
    // Since we want the reciver in the world system, Rw
    // wTr = wTt*tTr
 
-      vrj::Matrix world_T_transmitter, transmitter_T_reciever, world_T_reciever;
+      gmtl::Matrix44f world_T_transmitter, transmitter_T_reciever, world_T_reciever;
 
       world_T_transmitter = xformMat;                                       // Set transmitter offset from local info
       transmitter_T_reciever = *(cur_pos_samples[i].getPosition());           // Get reciever data from sampled data
-      world_T_reciever.mult(world_T_transmitter, transmitter_T_reciever);   // compute total transform
+      gmtl::mult( world_T_reciever, world_T_transmitter, transmitter_T_reciever);   // compute total transform
       *(cur_pos_samples[i].getPosition()) = world_T_reciever;                                     // Store corrected xform back into data
-
    }
 
     // Locks and then swaps the indices
@@ -317,31 +330,35 @@ int Intersense::sample()
 
 int Intersense::stopSampling()
 {
-    if (this->isActive() == false)
-        return 0;
+   if (this->isActive() == false)
+      return 0;
 
-    if (mThread != NULL)
-    {
-   vprDEBUG(vrjDBG_INPUT_MGR,1) << "vjIntersense::stopSampling(): Stopping the intersense thread... " << vprDEBUG_FLUSH;
-
-   mThread->kill();
-   delete mThread;
-   mThread = NULL;
-
-   mTracker.close();
-
-   if (this->isActive() == true)
+   if (mThread != NULL)
    {
-       vprDEBUG(vrjDBG_INPUT_MGR,0)  << clrOutNORM(clrRED,"\nERROR:")
-               << "vjIntersense::stopSampling(): Intersense tracker failed to stop.\n"
-               << vprDEBUG_FLUSH;
-       return 0;
+      vprDEBUG(gadgetDBG_INPUT_MGR,1)
+         << "vjIntersense::stopSampling(): Stopping the intersense thread... "
+         << vprDEBUG_FLUSH;
+
+      mThread->kill();
+      delete mThread;
+      mThread = NULL;
+
+      mTracker.close();
+
+      if (this->isActive() == true)
+      {
+         vprDEBUG(gadgetDBG_INPUT_MGR,0)
+            << clrOutNORM(clrRED,"\nERROR:")
+            << "vjIntersense::stopSampling(): Intersense tracker failed to stop.\n"
+            << vprDEBUG_FLUSH;
+         return 0;
+      }
+
+      vprDEBUG(gadgetDBG_INPUT_MGR,1) << "stopped." << std::endl
+                                      << vprDEBUG_FLUSH;
    }
 
-        vprDEBUG(vrjDBG_INPUT_MGR,1) << "stopped." << std::endl << vprDEBUG_FLUSH;
-    }
-
-    return 1;
+   return 1;
 }
 
 

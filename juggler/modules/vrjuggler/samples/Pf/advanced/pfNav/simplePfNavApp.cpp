@@ -45,6 +45,8 @@
 #include <Performer/pfdu.h>
 #include <Performer/pfutil.h>
 
+#include <gmtl/VecOps.h>
+
     // --- VR Juggler Stuff --- //
 #include <vrj/Kernel/Kernel.h>
 #include <vrj/Draw/Pf/PfApp.h>    // the performer application base type
@@ -95,7 +97,7 @@ simplePfNavApp::Model::Model() : description( "no description" ),
 }
 
 simplePfNavApp::Model::Model( const std::string& desc, const std::string& file_name,
-            const float& s, const vrj::Vec3& position, const vrj::Vec3& rotation, 
+            const float& s, const gmtl::Vec3f& position, const gmtl::Vec3f& rotation,
             const bool& collidable )
 {
    description = desc;
@@ -114,10 +116,10 @@ simplePfNavApp::Sound::Sound() : name( "no name" ),
 {
 }
 
-simplePfNavApp::Sound::Sound( const std::string& sound_name, 
-                              const std::string& alias_name, 
-                              const bool& isPositional, 
-                              const vrj::Vec3& position )
+simplePfNavApp::Sound::Sound( const std::string& sound_name,
+                              const std::string& alias_name,
+                              const bool& isPositional,
+                              const gmtl::Vec3f& position )
 {
    name = sound_name;
    alias = alias_name;
@@ -126,16 +128,16 @@ simplePfNavApp::Sound::Sound( const std::string& sound_name,
 }
 
 //: default application constructor
-simplePfNavApp::simplePfNavApp() : mDisableNav( false ), 
+simplePfNavApp::simplePfNavApp() : mDisableNav( false ),
                                    mInitialNavPos( 0.0f, 0.0f, 0.0f ),
                                    mBoundingSize(0.0f),
-                                   mStatusMessageEmitCount(0),     
+                                   mStatusMessageEmitCount(0),
                                    mCurNavIndex(0),
                                    mLightGroup( NULL ),
                                    mConfiguredCollideModels( NULL ),
                                    mConfiguredNoCollideModels( NULL ),
                                    mSoundNodes( NULL ),
-                                   mCollidableModelGroup( NULL ), 
+                                   mCollidableModelGroup( NULL ),
                                    mUnCollidableModelGroup( NULL )
 {
    mSun = NULL;
@@ -149,7 +151,7 @@ simplePfNavApp::simplePfNavApp() : mDisableNav( false ),
 }
 
 //: application destructor
-simplePfNavApp::~simplePfNavApp() 
+simplePfNavApp::~simplePfNavApp()
 {
 }
 
@@ -226,31 +228,30 @@ void simplePfNavApp::preFrame()
    if (mStopWatch.timeInstant < 1.0)
       mKeyFramer.update( mStopWatch.timeInstant );
 
-   
+
 
    if (mDisableNav == true)
    {
       mNavigationDCS->setActive( false );
       std::cout<<"disable...\n"<<std::flush;
-      
+
       // do animation...
-      vrj::Matrix mat;
+      gmtl::Matrix44f mat;
       mKeyFramer.getMatrix( mat );
       pfMatrix pf_mat;
       pf_mat = vrj::GetPfMatrix( mat );
       mAnimDCS->setMat( pf_mat );
-      
+
       // Emit a time
       if (0 == (mStatusMessageEmitCount++ % 60))
       {
-         vrj::Vec3 cur_pos;
-         cur_pos = mat.getTrans();
-         vrj::Quat quat;
-         quat.makeRot( mat );
+         gmtl::Vec3f cur_pos;
+         gmtl::getTrans(mat, cur_pos[0], cur_pos[1], cur_pos[2]);
+         gmtl::Quatf quat;
+         gmtl::convert(quat, mat);
 
-         std::cout << mKeyFramer.time() << ": "<<cur_pos << " :|: ";
-         quat.outStreamReadable( std::cout );
-         std::cout << std::endl;
+         std::cout << mKeyFramer.time() << ": "<<cur_pos << " :|: " << quat
+                   << std::endl;
       }
    }
    else
@@ -268,36 +269,34 @@ void simplePfNavApp::preFrame()
          // Emit cur position
          if (0 == (mStatusMessageEmitCount++ % 60))
          {
-            vrj::Vec3 cur_pos;
-            cur_pos = mNavigationDCS->getNavigator()->getCurPos().getTrans();
-            vrj::Quat quat;
-            quat.makeRot( mNavigationDCS->getNavigator()->getCurPos() );
+            gmtl::Vec3f cur_pos;
+            gmtl::getTrans( mNavigationDCS->getNavigator()->getCurPos(),
+                            cur_pos[0], cur_pos[1], cur_pos[2] );
+            gmtl::Quatf quat;
+            gmtl::convert( quat, mNavigationDCS->getNavigator()->getCurPos() );
 
-            std::cout << "You: " << cur_pos << " :|: ";
-            quat.outStreamReadable( std::cout );
-            std::cout << std::endl;
+            std::cout << "You: " << cur_pos << " :|: " << quat << std::endl;
 
-            cur_pos = -cur_pos;
-            quat.invert( quat );
-            std::cout << "World: " << cur_pos << " :|: ";
-            quat.outStreamReadable( std::cout );
-            std::cout << std::endl << std::endl;
-            
+            cur_pos = -1 * cur_pos;
+            gmtl::invert( quat );
+            std::cout << "World: " << cur_pos << " :|: " << quat << std::endl
+                      << std::endl;
+
             // debug//./////
             /*
-            vrj::Matrix mmm = mNavigationDCS->getNavigator()->getCurPos();
+            gmtl::Matrix44f mmm = mNavigationDCS->getNavigator()->getCurPos();
             std::cout << "MatrixNav:\n" << mmm << std::endl << std::endl;
-            
+
             std::cout << "-----------" << std::endl;
-            
-            std::cout << mKeyFramer.time() << ": "<<(vrj::Vec3)mKeyFramer.key().position() << " :|: ";
+
+            std::cout << mKeyFramer.time() << ": "<<(gmtl::Vec3f)mKeyFramer.key().position() << " :|: ";
             mKeyFramer.key().rotation().outStreamReadable( std::cout );
             std::cout << std::endl;
-            
+
             std::cout << "MatrixAnim:\n" << mat << std::endl << std::endl;
             */
                   // debug//./////
-            
+
          }
       }
    }
@@ -322,15 +321,15 @@ void simplePfNavApp::reset()
 void simplePfNavApp::enableNav( bool state )
 {
    mDisableNav = !state;
-   if (mDisableNav == true) 
+   if (mDisableNav == true)
    {
       vprDEBUG_BEGIN(vprDBG_ALL,0) << "====================\nnavigation disabled\n" << vprDEBUG_FLUSH;
    }
-   if (mDisableNav == false) 
+   if (mDisableNav == false)
    {
       vprDEBUG_BEGIN(vprDBG_ALL,0) << "====================\nnavigation enabled\n" << vprDEBUG_FLUSH;
    }
-}   
+}
 
 //: Called when the focus state changes
 // If an application has focus:
@@ -380,27 +379,27 @@ void simplePfNavApp::loadAnimation( const char* const filename )
    std::string dFilename = vrj::FileIO::demangleFileName( std::string( filename ), std::string( "" ) );
    kev::KeyFramerImporter kfi;
    kfi.execute( dFilename.c_str(), mKeyFramer );
-}  
-
-kev::KeyFramer& simplePfNavApp::keyFramer() 
-{ 
-   return mKeyFramer; 
 }
 
-const kev::KeyFramer& simplePfNavApp::keyFramer() const 
-{ 
-   return mKeyFramer; 
+kev::KeyFramer& simplePfNavApp::keyFramer()
+{
+   return mKeyFramer;
+}
+
+const kev::KeyFramer& simplePfNavApp::keyFramer() const
+{
+   return mKeyFramer;
 }
 
 // Add a model to the application
 void simplePfNavApp::addModel( const Model& m)
-{ 
-   mModelList.push_back( m ); 
+{
+   mModelList.push_back( m );
 }
 
 void simplePfNavApp::addSound( const Sound& s )
-{ 
-   mSoundList.push_back( s ); 
+{
+   mSoundList.push_back( s );
 }
 
 void simplePfNavApp::addFilePath( const std::string& path )
@@ -412,7 +411,7 @@ void simplePfNavApp::setFilePath( const std::string& path )
    std::string dFilePath = vrj::FileIO::demangleFileName( path, std::string( "" ) );
    mFilePath = dFilePath;
 }
-void simplePfNavApp::setInitialNavPos( const vrj::Vec3& initialPos )
+void simplePfNavApp::setInitialNavPos( const gmtl::Vec3f& initialPos )
 {
    mInitialNavPos = initialPos;
 
@@ -421,9 +420,9 @@ void simplePfNavApp::setInitialNavPos( const vrj::Vec3& initialPos )
    // FIXME: some code duplication here.
    for (unsigned int i = 0; i < mNavigators.size(); ++i)
    {
-      vrj::Matrix initial_nav;
+      gmtl::Matrix44f initial_nav;
       vprDEBUG(vprDBG_ALL,0) << "setting pos\n" << vprDEBUG_FLUSH;
-      initial_nav.setTrans( mInitialNavPos );
+      gmtl::setTrans( initial_nav, mInitialNavPos );
 
       mNavigators[i]->setHomePosition(initial_nav);
       mNavigators[i]->setCurPos(initial_nav);
@@ -460,21 +459,21 @@ void simplePfNavApp::setNavigator( unsigned new_index )
    }
 }
 
-void simplePfNavApp::enableStats() 
-{ 
+void simplePfNavApp::enableStats()
+{
    mUseStats = true;
 }
 
-void simplePfNavApp::disableStats() 
+void simplePfNavApp::disableStats()
 {
    mUseStats = false;
 }
 
 
 // load the set models into the scene graph
-// If models are already in the scene graph, we destroy 
+// If models are already in the scene graph, we destroy
 // them and reload the list of set model names.. (could be smarter)
-// The models loaded is based on the configuration information that we 
+// The models loaded is based on the configuration information that we
 // currently have...
 // This may be called multiple times
 // ------- SCENE GRAPH ----
@@ -588,7 +587,7 @@ void simplePfNavApp::initializeSounds()
       #ifdef USE_SONIX
       sonix::instance().trigger( mSoundList[x].alias );
       #endif
-      
+
       nextSoundDCS->addChild( nextSound );
       mSoundNodes->addChild( nextSoundDCS );
    }
@@ -653,8 +652,8 @@ void simplePfNavApp::initScene()
    initializeSounds();
 
    // Configure the Navigator DCS node:
-   vrj::Matrix initial_nav;              // Initial navigation position
-   initial_nav.setTrans( mInitialNavPos );
+   gmtl::Matrix44f initial_nav;              // Initial navigation position
+   gmtl::setTrans( initial_nav, mInitialNavPos );
 
 
    // --- CREATE VELOCITY navigator --- //

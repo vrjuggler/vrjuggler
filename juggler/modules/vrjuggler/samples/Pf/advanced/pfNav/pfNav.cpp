@@ -35,6 +35,8 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include <gmtl/Vec.h>
+
  // --- VR Juggler Stuff --- //
 #include <vrj/Kernel/Kernel.h>
 #include <simplePfNavApp.h>
@@ -72,9 +74,9 @@ int main(int argc, char* argv[])
 
    std::string file_path( "" );
    const float dcs_scale( 1.0f );
-   const vrj::Vec3 dcs_trans( 0.0f, 0.0f, 0.0f );
-   const vrj::Vec3 dcs_rot(0.0,0.0,0.0);
-   const vrj::Vec3 initial_pos( 0.0f, 0.0f, 0.0f );
+   const gmtl::Vec3f dcs_trans( 0.0f, 0.0f, 0.0f );
+   const gmtl::Vec3f dcs_rot(0.0f, 0.0f, 0.0f);
+   const gmtl::Vec3f initial_pos( 0.0f, 0.0f, 0.0f );
 
    if (argc < 2)
    {

@@ -49,8 +49,8 @@
 #include <vrj/Draw/OGL/GlPipe.h>
 #include <vrj/Draw/OGL/GlWindow.h>
 
-#include <vrj/Math/Vec3.h>
-#include <vrj/Math/Vec4.h>
+#include <gmtl/Vec.h>
+#include <gmtl/Vec.h>
 
 //#include <gadget/Type/Glove.h>
 //#include <gadget/Type/GloveProxy.h>
@@ -362,13 +362,13 @@ void GlDrawManager::drawObjects()
 //!POST: Draws the projections
 //+      If withApex, then it draws the frustums with different colors
 //+      If !withApex, then just draws the surfaces in all white
-void GlDrawManager::drawProjections(bool drawFrustum, Vec3 surfColor)
+void GlDrawManager::drawProjections(bool drawFrustum, gmtl::Vec3f surfColor)
 {
    const float ALPHA_VALUE(0.25f);
 
    std::vector<Display*> disps = mDisplayManager->getAllDisplays();
 
-   Vec3 apex, ur, lr, ul, ll;
+   gmtl::Vec3f apex, ur, lr, ul, ll;
    Projection* proj; proj = NULL;
 
    for (unsigned int i=0;i<disps.size();i++)
@@ -396,10 +396,10 @@ void GlDrawManager::drawProjections(bool drawFrustum, Vec3 surfColor)
             if ((!red_on) && (!blue_on) && (!green_on))      // Case of 0's (black is bad)
                red = blue = green = 0.75f;
 
-            Vec3 surf_color;
+            gmtl::Vec3f surf_color;
             if (drawFrustum)
             {
-               surf_color = Vec3(red,blue,green);
+               surf_color = gmtl::Vec3f(red,blue,green);
             }
             else
             {
@@ -409,14 +409,16 @@ void GlDrawManager::drawProjections(bool drawFrustum, Vec3 surfColor)
             // Compute scaled colors for the corners
             // ll is going to be lighter and upper right is going to be darker
             const float ll_scale(0.10f); const float ul_scale(0.55); const float ur_scale(1.0f);
-            Vec4 ll_clr(ll_scale*surf_color[0],ll_scale*surf_color[1],ll_scale*surf_color[2],ALPHA_VALUE);
-            Vec4 ul_clr(ul_scale*surf_color[0],ul_scale*surf_color[1],ul_scale*surf_color[2],ALPHA_VALUE);
-            Vec4 lr_clr(ul_scale*surf_color[0],ul_scale*surf_color[1],ul_scale*surf_color[2],ALPHA_VALUE);
-            Vec4 ur_clr(ur_scale*surf_color[0],ur_scale*surf_color[1],ur_scale*surf_color[2],ALPHA_VALUE);
+            gmtl::Vec4f ll_clr(ll_scale*surf_color[0],ll_scale*surf_color[1],ll_scale*surf_color[2],ALPHA_VALUE);
+            gmtl::Vec4f ul_clr(ul_scale*surf_color[0],ul_scale*surf_color[1],ul_scale*surf_color[2],ALPHA_VALUE);
+            gmtl::Vec4f lr_clr(ul_scale*surf_color[0],ul_scale*surf_color[1],ul_scale*surf_color[2],ALPHA_VALUE);
+            gmtl::Vec4f ur_clr(ur_scale*surf_color[0],ur_scale*surf_color[1],ur_scale*surf_color[2],ALPHA_VALUE);
 
             // Draw the thingy
             proj->getFrustumApexAndCorners(apex, ur, lr, ul, ll);
-            glColor4fv(ur_clr.vec);
+            vprDEBUG(vprDBG_ALL,0) << "apex: " << apex << std::endl << vprDEBUG_FLUSH;
+
+            glColor4fv(&(ur_clr[0]));
             glPushMatrix();
             if (drawFrustum)
             {
@@ -430,13 +432,13 @@ void GlDrawManager::drawProjections(bool drawFrustum, Vec3 surfColor)
             glEnable(GL_BLEND);
             glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
             glBegin(GL_TRIANGLES);
-            glColor4fv(ll_clr.vec);  glVertex3fv(ll.vec);
-            glColor4fv(lr_clr.vec);  glVertex3fv(lr.vec);
-            glColor4fv(ur_clr.vec);  glVertex3fv(ur.vec);
+            glColor4fv(ll_clr.mData);  glVertex3fv(ll.mData);
+            glColor4fv(lr_clr.mData);  glVertex3fv(lr.mData);
+            glColor4fv(ur_clr.mData);  glVertex3fv(ur.mData);
 
-            glColor4fv(ur_clr.vec); glVertex3fv(ur.vec);
-            glColor4fv(ul_clr.vec); glVertex3fv(ul.vec);
-            glColor4fv(ll_clr.vec); glVertex3fv(ll.vec);
+            glColor4fv(ur_clr.mData); glVertex3fv(ur.mData);
+            glColor4fv(ul_clr.mData); glVertex3fv(ul.mData);
+            glColor4fv(ll_clr.mData); glVertex3fv(ll.mData);
             glEnd();
             glDisable(GL_BLEND);
             glPopMatrix();
@@ -478,11 +480,12 @@ void GlDrawManager::drawSimulator(SimViewport* sim_vp)
       ///*
       glDisable(GL_LIGHTING);
       glPushMatrix();
-         Vec3 x_axis(2.0f,0.0f,0.0f); Vec3 y_axis(0.0f, 2.0f, 0.0f); Vec3 z_axis(0.0f, 0.0f, 2.0f); Vec3 origin(0.0f, 0.0f, 0.0f);
+         gmtl::Vec3f x_axis(2.0f,0.0f,0.0f); gmtl::Vec3f y_axis(0.0f, 2.0f, 0.0f);
+         gmtl::Vec3f z_axis(0.0f, 0.0f, 2.0f); gmtl::Vec3f origin(0.0f, 0.0f, 0.0f);
          glBegin(GL_LINES);
-            glColor3f(1.0f, 0.0f, 0.0f); glVertex3fv(origin.vec); glVertex3fv(x_axis.vec);
-            glColor3f(0.0f, 1.0f, 0.0f); glVertex3fv(origin.vec); glVertex3fv(y_axis.vec);
-            glColor3f(0.0f, 0.0f, 1.0f); glVertex3fv(origin.vec); glVertex3fv(z_axis.vec);
+            glColor3f(1.0f, 0.0f, 0.0f); glVertex3fv(origin.mData); glVertex3fv(x_axis.mData);
+            glColor3f(0.0f, 1.0f, 0.0f); glVertex3fv(origin.mData); glVertex3fv(y_axis.mData);
+            glColor3f(0.0f, 0.0f, 1.0f); glVertex3fv(origin.mData); glVertex3fv(z_axis.mData);
          glEnd();
       glPopMatrix();
       //*/
@@ -490,7 +493,7 @@ void GlDrawManager::drawSimulator(SimViewport* sim_vp)
       glEnable(GL_LIGHTING);
       // Draw the user's head
       glPushMatrix();
-         glMultMatrixf(sim_vp->getHeadPos().getFloatPtr());
+         glMultMatrixf(sim_vp->getHeadPos().mData);
 
          //glEnable(GL_BLEND);
          //glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -514,7 +517,7 @@ void GlDrawManager::drawSimulator(SimViewport* sim_vp)
 
       // Draw the wand
       glPushMatrix();
-         glMultMatrixf(sim_vp->getWandPos().getFloatPtr());
+         glMultMatrixf(sim_vp->getWandPos().mData);
          glColor3f(0.0f, 1.0f, 0.0f);
          drawCone(0.2f, 0.6f, 6, 1);
       glPopMatrix();
@@ -552,11 +555,11 @@ void GlDrawManager::initQuadObj()
       mQuadObj = gluNewQuadric();
 }
 
-void GlDrawManager::drawLine(Vec3& start, Vec3& end)
+void GlDrawManager::drawLine(gmtl::Vec3f& start, gmtl::Vec3f& end)
 {
    glBegin(GL_LINES);
-      glVertex3fv(start.vec);
-      glVertex3fv(end.vec);
+      glVertex3fv(start.mData);
+      glVertex3fv(end.mData);
    glEnd();
 }
 
@@ -639,9 +642,9 @@ void GlDrawManager::drawSolidCube(float size)
 // links as you go.
 void GlDrawManager::drawGlove(gadget::GloveProxy* gloveProxy)
 {
-   Matrix    base_glove_pos = gloveProxy->getPos();    // Get the location of the base coord system
+   gmtl::Matrix44f    base_glove_pos = gloveProxy->getPos();    // Get the location of the base coord system
    gadget::GloveData gd = gloveProxy->getData();               // Get the glove data
-   Vec3      origin(0.0f,0.0f,0.0f);
+   gmtl::Vec3f      origin(0.0f,0.0f,0.0f);
 
    //glPushAttrib( GL_ENABLE_BIT | GL_LIGHTING_BIT );
    {
@@ -673,13 +676,13 @@ void GlDrawManager::drawGlove(gadget::GloveProxy* gloveProxy)
 
       //glEnable(GL_LIGHTING);
       //glEnable(GL_LIGHT7);
-      
+
       glPushMatrix();
       {
          glColor3f(0.76f, 0.80f, 0.95f);
          glLineWidth(3.0f);
          // Get to hand coord system to start drawing
-         glMultMatrixf(base_glove_pos.getFloatPtr());
+         glMultMatrixf(base_glove_pos.mData);
 
          // Draw PALM
          glPushMatrix();
@@ -694,13 +697,13 @@ void GlDrawManager::drawGlove(gadget::GloveProxy* gloveProxy)
          // Draw INDEX finger
          glPushMatrix();
          {
-            glMultMatrixf(gd.xforms[gadget::GloveData::INDEX][gadget::GloveData::MPJ].getFloatPtr());
+            glMultMatrixf(gd.xforms[gadget::GloveData::INDEX][gadget::GloveData::MPJ].mData);
             drawSphere((0.1f/12.0f), 4, 4);
             drawLine(origin, gd.dims[gadget::GloveData::INDEX][gadget::GloveData::PIJ]);
-            glMultMatrixf(gd.xforms[gadget::GloveData::INDEX][gadget::GloveData::PIJ].getFloatPtr());
+            glMultMatrixf(gd.xforms[gadget::GloveData::INDEX][gadget::GloveData::PIJ].mData);
             drawSphere((0.1f/12.0f), 4, 4);
             drawLine(origin, gd.dims[gadget::GloveData::INDEX][gadget::GloveData::DIJ]);
-            glMultMatrixf(gd.xforms[gadget::GloveData::INDEX][gadget::GloveData::DIJ].getFloatPtr());
+            glMultMatrixf(gd.xforms[gadget::GloveData::INDEX][gadget::GloveData::DIJ].mData);
             drawSphere((0.1f/12.0f), 4, 4);
             drawLine(origin, gd.dims[gadget::GloveData::INDEX][gadget::GloveData::DIJ+1]);
          }
@@ -709,13 +712,13 @@ void GlDrawManager::drawGlove(gadget::GloveProxy* gloveProxy)
          // Draw MIDDLE finger
          glPushMatrix();
          {
-            glMultMatrixf(gd.xforms[gadget::GloveData::MIDDLE][gadget::GloveData::MPJ].getFloatPtr());
+            glMultMatrixf(gd.xforms[gadget::GloveData::MIDDLE][gadget::GloveData::MPJ].mData);
             drawSphere((0.1f/12.0f), 4, 4);
             drawLine(origin, gd.dims[gadget::GloveData::MIDDLE][gadget::GloveData::PIJ]);
-            glMultMatrixf(gd.xforms[gadget::GloveData::MIDDLE][gadget::GloveData::PIJ].getFloatPtr());
+            glMultMatrixf(gd.xforms[gadget::GloveData::MIDDLE][gadget::GloveData::PIJ].mData);
             drawSphere((0.1f/12.0f), 4, 4);
             drawLine(origin, gd.dims[gadget::GloveData::MIDDLE][gadget::GloveData::DIJ]);
-            glMultMatrixf(gd.xforms[gadget::GloveData::MIDDLE][gadget::GloveData::DIJ].getFloatPtr());
+            glMultMatrixf(gd.xforms[gadget::GloveData::MIDDLE][gadget::GloveData::DIJ].mData);
             drawSphere((0.1f/12.0f), 4, 4);
             drawLine(origin, gd.dims[gadget::GloveData::MIDDLE][gadget::GloveData::DIJ+1]);
          }
@@ -724,13 +727,13 @@ void GlDrawManager::drawGlove(gadget::GloveProxy* gloveProxy)
          // Draw RING finger
          glPushMatrix();
          {
-            glMultMatrixf(gd.xforms[gadget::GloveData::RING][gadget::GloveData::MPJ].getFloatPtr());
+            glMultMatrixf(gd.xforms[gadget::GloveData::RING][gadget::GloveData::MPJ].mData);
             drawSphere((0.1f/12.0f), 4, 4);
             drawLine(origin, gd.dims[gadget::GloveData::RING][gadget::GloveData::PIJ]);
-            glMultMatrixf(gd.xforms[gadget::GloveData::RING][gadget::GloveData::PIJ].getFloatPtr());
+            glMultMatrixf(gd.xforms[gadget::GloveData::RING][gadget::GloveData::PIJ].mData);
             drawSphere((0.1f/12.0f), 4, 4);
             drawLine(origin, gd.dims[gadget::GloveData::RING][gadget::GloveData::DIJ]);
-            glMultMatrixf(gd.xforms[gadget::GloveData::RING][gadget::GloveData::DIJ].getFloatPtr());
+            glMultMatrixf(gd.xforms[gadget::GloveData::RING][gadget::GloveData::DIJ].mData);
             drawSphere((0.1f/12.0f), 4, 4);
             drawLine(origin, gd.dims[gadget::GloveData::RING][gadget::GloveData::DIJ+1]);
          }
@@ -739,13 +742,13 @@ void GlDrawManager::drawGlove(gadget::GloveProxy* gloveProxy)
          // Draw PINKY finger
          glPushMatrix();
          {
-            glMultMatrixf(gd.xforms[gadget::GloveData::PINKY][gadget::GloveData::MPJ].getFloatPtr());
+            glMultMatrixf(gd.xforms[gadget::GloveData::PINKY][gadget::GloveData::MPJ].mData);
             drawSphere((0.1f/12.0f), 4, 4);
             drawLine(origin, gd.dims[gadget::GloveData::PINKY][gadget::GloveData::PIJ]);
-            glMultMatrixf(gd.xforms[gadget::GloveData::PINKY][gadget::GloveData::PIJ].getFloatPtr());
+            glMultMatrixf(gd.xforms[gadget::GloveData::PINKY][gadget::GloveData::PIJ].mData);
             drawSphere((0.1f/12.0f), 4, 4);
             drawLine(origin, gd.dims[gadget::GloveData::PINKY][gadget::GloveData::DIJ]);
-            glMultMatrixf(gd.xforms[gadget::GloveData::PINKY][gadget::GloveData::DIJ].getFloatPtr());
+            glMultMatrixf(gd.xforms[gadget::GloveData::PINKY][gadget::GloveData::DIJ].mData);
             drawSphere((0.1f/12.0f), 4, 4);
             drawLine(origin, gd.dims[gadget::GloveData::PINKY][gadget::GloveData::DIJ+1]);
          }
@@ -754,13 +757,13 @@ void GlDrawManager::drawGlove(gadget::GloveProxy* gloveProxy)
          // Draw THUMB
          glPushMatrix();
          {
-            glMultMatrixf(gd.xforms[gadget::GloveData::THUMB][gadget::GloveData::MPJ].getFloatPtr());
+            glMultMatrixf(gd.xforms[gadget::GloveData::THUMB][gadget::GloveData::MPJ].mData);
             drawSphere((0.1f/12.0f), 4, 4);
             drawLine(origin, gd.dims[gadget::GloveData::THUMB][gadget::GloveData::PIJ]);
-            glMultMatrixf(gd.xforms[gadget::GloveData::THUMB][gadget::GloveData::PIJ].getFloatPtr());
+            glMultMatrixf(gd.xforms[gadget::GloveData::THUMB][gadget::GloveData::PIJ].mData);
             drawSphere((0.1f/12.0f), 4, 4);
             drawLine(origin, gd.dims[gadget::GloveData::THUMB][gadget::GloveData::DIJ]);
-            glMultMatrixf(gd.xforms[gadget::GloveData::THUMB][gadget::GloveData::DIJ].getFloatPtr());
+            glMultMatrixf(gd.xforms[gadget::GloveData::THUMB][gadget::GloveData::DIJ].mData);
             drawSphere((0.1f/12.0f), 4, 4);
             drawLine(origin, gd.dims[gadget::GloveData::THUMB][gadget::GloveData::DIJ+1]);
          }

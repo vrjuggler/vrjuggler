@@ -39,7 +39,6 @@
 #include <gadget/Type/Keyboard.h>
 #include <vpr/Sync/Mutex.h>
 #include <Carbon/Carbon.h>
-#include <vrj/Kernel/OSXSystemFactory.h>
 #include <jccl/Config/ConfigChunkPtr.h>
 
 

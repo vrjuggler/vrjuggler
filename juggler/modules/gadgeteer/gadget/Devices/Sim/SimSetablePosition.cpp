@@ -67,10 +67,10 @@ void SimSetablePosition::setData(const PositionData& pos_data)
    mPosSamples.lock();
    mPosSamples.addSample(pos_data_vec);
    mPosSamples.unlock();
-   
+
    mPosSamples.swapBuffers(); // Swap the buffers
 
-   vprDEBUG(vrjDBG_INPUT_MGR,6) << "SimSetablePosition: set Data:" << *(const_cast<PositionData*>(&pos_data)->getPosition()) << std::endl << vprDEBUG_FLUSH;
+   //vprDEBUG(gadgetDBG_INPUT_MGR,6) << "SimSetablePosition: set Data:" << *(const_cast<PositionData*>(&pos_data)->getPosition()) << std::endl << vprDEBUG_FLUSH;
 }
 
 

@@ -181,7 +181,7 @@ inline void OsgApp::draw()
 
    // Copy the matrix
    Projection* project = userData->getProjection();
-   float* vj_proj_view_mat = project->mViewMat.getFloatPtr();
+   float* vj_proj_view_mat = project->mViewMat.mData;
    osg::Matrix osg_proj_xform_mat;
    osg_proj_xform_mat.set( vj_proj_view_mat );
 

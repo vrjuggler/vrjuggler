@@ -36,8 +36,9 @@
 #include <Performer/pf/pfDCS.h>
 #include <Performer/pr/pfLinMath.h>
 
+#include <gmtl/Coord.h>
+
 #include <vrj/Kernel/Kernel.h>
-#include <vrj/Math/Coord.h>
 #include <vrj/Util/Debug.h>
 #include <vrj/Draw/Pf/PfUtil.h>
 
@@ -123,9 +124,9 @@ inline void pfNavDCS::updateTransformMatrix()
 
    // Set the navigation DCS to the new navigation matrix
    // cur_pos = modelspace_M_user
-   vrj::Matrix cur_pos_inv, cur_pos;
+   gmtl::Matrix44f cur_pos_inv, cur_pos;
    cur_pos = mNaver->getCurPos();
-   cur_pos_inv.invert( cur_pos );
+   gmtl::invert( cur_pos_inv, cur_pos );
    pfMatrix model_move = vrj::GetPfMatrix( cur_pos_inv );
    this->setMat( model_move );
 }

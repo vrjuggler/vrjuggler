@@ -36,7 +36,7 @@
 #include <gadget/gadgetConfig.h>
 
 #include <gadget/Type/PositionFilter.h>
-#include <vrj/Math/Quat.h>
+#include <gmtl/Quat.h>
 
 namespace gadget
 {
@@ -54,7 +54,7 @@ public:
 
    // Get the position to use
    // ARGS: newPos - The new postion this frame of the physical device
-   vrj::Matrix getPos(const vrj::Matrix newPos);
+   gmtl::Matrix44f getPos(const gmtl::Matrix44f newPos);
 
    // Given a distance, return the scale factor
    // based upon the minDist and maxDist values
@@ -70,7 +70,7 @@ public:
    float maxTheshold() { return mMaxThreshold; }
 
 private:
-   vrj::Matrix mLastReturnedPos;
+   gmtl::Matrix44f mLastReturnedPos;
 
    // These parameters influence the sigmoid
    float    mMinDist;            // Mininum distance parameter

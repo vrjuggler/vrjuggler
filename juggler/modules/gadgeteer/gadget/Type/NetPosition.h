@@ -2,7 +2,7 @@
 #define GADGET_NET_POS_H
 
 #include <gadget/gadgetConfig.h>
-#include <gadget/RemoteInputManager/NetUtils.h>                                       
+#include <gadget/RemoteInputManager/NetUtils.h>
 #include <gadget/Type/NetInput.h>
 #include <gadget/Type/Position.h>
 #include <gadget/Type/PositionInterface.h>
@@ -12,7 +12,7 @@ namespace gadget{
 
 class GADGET_CLASS_API NetPosition : public NetInput, public Position{
 protected:
-   std::vector <vrj::Matrix>  mNetworkMatrices;  // holds data in network byte order
+   std::vector <gmtl::Matrix44f>  mNetworkMatrices;  // holds data in network byte order
    PositionInterface mLocalSource;  // local source of data, only used in transmitting data.
 
 public:
@@ -20,14 +20,14 @@ public:
    NetPosition(const std::string& src_device_name, Input* input_ptr, VJ_NETID_TYPE local_device_id, VJ_NETID_TYPE rmt_device_id);
 
    // constructor for a transmitting proxy
-   NetPosition(const std::string& src_device_name, Proxy* proxy_ptr, VJ_NETID_TYPE local_device_id, VJ_NETID_TYPE rmt_device_id); 
+   NetPosition(const std::string& src_device_name, Proxy* proxy_ptr, VJ_NETID_TYPE local_device_id, VJ_NETID_TYPE rmt_device_id);
 
    // constructor for a receiving NetInput
    NetPosition(jccl::ConfigChunkPtr chunk, VJ_NETID_TYPE local_device_id);
 
    // CONFIG related functions
    static std::string getChunkType() { return std::string("NetPosition"); }
-  
+
    // Overriding NetInput virtual functions
    virtual void updateFromLocalSource();
    virtual void updateFromRemoteSource(char* recv_buffer, int recv_buff_len);

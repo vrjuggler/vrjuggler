@@ -32,6 +32,7 @@
 
 #include <vrj/vrjConfig.h>
 
+#include <vpr/Util/FileUtils.h>
 #include <vrj/Util/Debug.h>
 #include <vrj/Util/FileIO.h>
 
@@ -42,7 +43,7 @@ std::vector<std::string> FileIO::mPaths;
 
 void FileIO::addFilePath( const std::string& filepath )
 {
-   std::string demangled = replaceEnvVars( filepath );
+   std::string demangled = vpr::replaceEnvVars( filepath );
    mPaths.push_back( demangled );
 }
 
@@ -105,68 +106,6 @@ std::string FileIO::resolvePathForName( const char* const filename )
 
 /** filename handling routines **/
 
-//: Returns a copy of s with all environment variable names replaced
-//+ with their values.
-std::string FileIO::replaceEnvVars( const std::string& s )
-{
-    unsigned int i, j;
-    int lastpos = 0;
-    std::string result = "";
-    for (i = 0; i < s.length(); i++)
-    {
-        if (s[i] == '$')
-        {
-            //process an env var
-            result += std::string(s, lastpos, i - lastpos);
-            i++; // skip $
-            if (s[i] == '{')
-            {
-               // now search for the closing brace...
-                for (j = i; j < s.length(); j++)
-                    if (s[j] == '}')
-                        break;
-                std::string var(s,i+1,j-i-1);
-                //cout << "searching for env var '" << var.c_str() << '\'' << endl;
-                std::string res = getenv( var.c_str() );
-                if (res == "")
-                {
-                   vprDEBUG( vprDBG_ALL, 0 ) << clrOutNORM(clrYELLOW,"!!! WARNING: ENV VARIABLE NOT FOUND !!!:") << var.c_str() <<" does not exist in your environment, please set it... Your application's behaviour is now undefined!\n" << vprDEBUG_FLUSH;
-                   result += var; // don't replace the var (or replace var with var...)
-                }
-                else
-                {
-                   result += res; // replace var with the found env variable.
-                }
-                i = j+1;
-                lastpos = i;
-            }
-            else {
-                for (j = i; j < s.length(); j++)
-                    if (s[j] == '/' || s[j] == '\\')
-                        break;
-                std::string var(s,i,j-i);
-                //cout << "searching for env var '" << var.c_str() << '\'' << endl;
-                std::string res = getenv (var.c_str());
-                if (res == "")
-                {
-                   vprDEBUG( vprDBG_ALL, 0 ) << clrOutNORM(clrYELLOW,"!!! WARNING: ENV VARIABLE NOT FOUND !!!:") << var.c_str() <<" does not exist in your environment, please set it... Your application's behaviour is now undefined!\n" << vprDEBUG_FLUSH;
-                   result += var; // don't replace the var (or replace var with var...)
-                }
-                else
-                {
-                   result += res; // replace var with the found env variable.
-                }
-                i = j;
-                lastpos = i;
-            }
-        }
-    }
-    result += std::string(s, lastpos, s.length() - lastpos);
-    return result;
-}
-
-
-
 //: is n an absolute path name?
 bool FileIO::isAbsolutePathName (const std::string& n)
 {
@@ -183,7 +122,7 @@ bool FileIO::isAbsolutePathName (const std::string& n)
 std::string FileIO::demangleFileName (const std::string& n, std::string parentfile)
 {
 
-   std::string fname = replaceEnvVars (n);
+   std::string fname = vpr::replaceEnvVars (n);
 
    if (!isAbsolutePathName(fname))
    {

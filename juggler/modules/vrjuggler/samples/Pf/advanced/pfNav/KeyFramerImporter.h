@@ -2,7 +2,7 @@
 #include <fstream>        // for ifstream
 #include "KeyFramer.h"
 #include <vrj/Util/Debug.h>
-#include <vrj/Math/Math.h>
+#include <gmtl/Math.h>
 
 namespace kev
 {
@@ -16,8 +16,12 @@ namespace kev
       void output( kev::KeyFramer::Key& key )
       {
          float w, x, y, z;
-         key.rotation().getRot( w, x, y, z );
-         vprDEBUG(vprDBG_ALL,1)<<"KEY "<<key.time()<<": "<<key.position()[0]<<", \t"<<key.position()[1]<<", \t"<<key.position()[2]<<", |#| "<<vrj::Math::rad2deg( w )<<", "<<x<<", "<<y<<", "<<z<<"\n"<<vprDEBUG_FLUSH;
+         gmtl::getRot( key.rotation(), w, x, y, z );
+         vprDEBUG(vprDBG_ALL,1)
+            << "KEY " << key.time() << ": " << key.position()[0] <<", \t"
+            << key.position()[1] << ", \t" << key.position()[2] << ", |#| "
+            << gmtl::Math::rad2Deg( w ) << ", " << x << ", " << y << ", "
+            << z << "\n" <<vprDEBUG_FLUSH;
       }
 
       void execute( const char* const filename, kev::KeyFramer& kf )
@@ -41,8 +45,8 @@ namespace kev
 
          float time;
          float deg;
-         vrj::Vec3 vec;
-         vrj::Vec3 pos;
+         gmtl::Vec3f vec;
+         gmtl::Vec3f pos;
          while (!frames_file.eof())
          {
             frames_file>>time;
@@ -56,9 +60,9 @@ namespace kev
             frames_file>>pos[0]>>pos[1]>>pos[2]>>deg>>vec[0]>>vec[1]>>vec[2];
 
             // convert [TWIST, VEC] to Quat
-            vrj::Quat rot;
-            float rad = vrj::Math::deg2rad( deg );
-            rot.makeRot( rad, vec[0], vec[1], vec[2] );
+            gmtl::Quatf rot;
+            float rad = gmtl::Math::deg2Rad( deg );
+            gmtl::setRot( rot, rad, vec );
 
             kev::KeyFramer::Key key( time, pos, rot );
             kf.addkey( key );

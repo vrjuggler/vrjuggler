@@ -36,7 +36,7 @@
 #include <vpr/System.h>
 
 #include <gadget/Devices/Immersion/Ibox.h>
-#include <vrj/Util/Debug.h>
+#include <gadget/Util/Debug.h>
 #include <jccl/Config/ConfigChunk.h>
 
 namespace gadget
@@ -49,19 +49,20 @@ bool IBox::config(jccl::ConfigChunkPtr c)
   if(! (Input::config(c) && Analog::config(c) && Digital::config(c) ))
       return false;
 
-  vprDEBUG(vrjDBG_INPUT_MGR,3) << "   IBox::config:" << std::endl
-                             << vprDEBUG_FLUSH;
+  vprDEBUG(gadgetDBG_INPUT_MGR,3) << "   IBox::config:" << std::endl
+                                  << vprDEBUG_FLUSH;
   mPortStr = static_cast<std::string>(c->getProperty( "port" ));
 
   // Done in Input
   //active = 0;
   mBaudRate = (long) static_cast<int>(c->getProperty("baud"));
 
-  vprDEBUG(vrjDBG_INPUT_MGR,1) << "   Creating an IBox.. params: " << std::endl
-             << "    portnum: " << mPortStr << std::endl
-             << "        baud   : " << mBaudRate << std::endl
-             << "   instanceName: " << mInstName << std::endl << std::endl
-             << vprDEBUG_FLUSH;
+  vprDEBUG(gadgetDBG_INPUT_MGR,1)
+     << "   Creating an IBox.. params: " << std::endl
+     << "    portnum: " << mPortStr << std::endl
+     << "        baud   : " << mBaudRate << std::endl
+     << "   instanceName: " << mInstName << std::endl << std::endl
+     << vprDEBUG_FLUSH;
 
   return true;
 }
@@ -97,17 +98,17 @@ int IBox::startSampling()
       if (result == mPhysicalIbox.SUCCESS)
       {
          mActive = true;
-         vprDEBUG(vrjDBG_INPUT_MGR,1) << "     Connected to IBox.\n"
-         << std::flush << vprDEBUG_FLUSH;
+         vprDEBUG(gadgetDBG_INPUT_MGR,1) << "     Connected to IBox.\n"
+                                         << std::flush << vprDEBUG_FLUSH;
       } else
       {
          mActive = false;
-         vprDEBUG(vrjDBG_INPUT_MGR,0)
-         << "   FAILED TO CONNECT to the Ibox named " << mInstName
-         << std::endl << "     Ibox settings were: " << std::endl
-         << "      port : " << mPortStr << std::endl
-         << "   mBaudRate: " << mBaudRate << std::endl << std::endl
-         << vprDEBUG_FLUSH;
+         vprDEBUG(gadgetDBG_INPUT_MGR,0)
+            << "   FAILED TO CONNECT to the Ibox named " << mInstName
+            << std::endl << "     Ibox settings were: " << std::endl
+            << "      port : " << mPortStr << std::endl
+            << "   mBaudRate: " << mBaudRate << std::endl << std::endl
+            << vprDEBUG_FLUSH;
          return 0;
       }
       mPhysicalIbox.std_cmd(0,0,0);

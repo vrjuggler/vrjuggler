@@ -48,31 +48,31 @@ extern int AppNotifyPostTrav( pfTraverser* trav, void* data );
 //: Ready-Made Application
 //
 // The ready-made-application-in-a-box-handy-dandy-automatic-do-all
-// vr juggler performer application for sounds, models, and scripted 
+// vr juggler performer application for sounds, models, and scripted
 // flythroughs.  Just tell it your models and sounds, and it does the rest.
-// 
-// Better than snake oil, this application easy to use, 
+//
+// Better than snake oil, this application easy to use,
 // but really hard to understand.
 // - i.e. don't use this to learn vrjuggler or performer!
 //        you've been warned...
 class simplePfNavApp : public vrj::PfApp
 {
-public: 
+public:
    // Model and sound member classes
    class Model
    {
    public:
       Model();
       Model( const std::string& desc, const std::string& file_name,
-            const float& s, const vrj::Vec3& position,
-            const vrj::Vec3& rotation, const bool& collidable );
+             const float& s, const gmtl::Vec3f& position,
+             const gmtl::Vec3f& rotation, const bool& collidable );
 
       // Config parameters
       std::string description;
       std::string filename;
       float       scale;
-      vrj::Vec3   pos;
-      vrj::Vec3   rot;
+      gmtl::Vec3f pos;
+      gmtl::Vec3f rot;
       bool        isCollidable;
 
       // Run-time information
@@ -85,13 +85,13 @@ public:
    {
     public:
       Sound();
-      Sound( const std::string& sound_name, const std::string& alias_name, 
-            const bool& isPositional, const vrj::Vec3& position );
-      
+      Sound( const std::string& sound_name, const std::string& alias_name,
+            const bool& isPositional, const gmtl::Vec3f& position );
+
       std::string name;
       std::string alias;
       bool        positional;
-      vrj::Vec3   pos;
+      gmtl::Vec3f pos;
    };
 
 // application callbacks:
@@ -135,7 +135,7 @@ public:
    virtual void intraFrame();
 
 // Methods to configure the application
-public:  
+public:
    //: Reset the application to initial state (removes all sounds and models)
    virtual void reset();
 
@@ -144,7 +144,7 @@ public:
 
    //: set the keyframed animation file to use
    void loadAnimation( const char* const filename );
-   
+
    //: These must be set before the kernel starts calling the application
    void addModelFile( const std::string& filename );
 
@@ -156,7 +156,7 @@ public:
 
    void addFilePath( const std::string& path );
    void setFilePath( const std::string& path );
-   void setInitialNavPos( const vrj::Vec3& initialPos );
+   void setInitialNavPos( const gmtl::Vec3f& initialPos );
 
    // Go to the next navigator
    void cycleNavigator();
@@ -184,10 +184,10 @@ public:
    StopWatch           mStopWatch;
    bool                mDisableNav;
    pfDCS*              mAnimDCS;
-   
+
    // CONFIG PARAMS
    std::string    mFilePath;
-   vrj::Vec3      mInitialNavPos;
+   gmtl::Vec3f    mInitialNavPos;
    float          mBoundingSize;       // XXX: This is a hack and should be refactored
 
    int            mStatusMessageEmitCount;

@@ -35,11 +35,15 @@
 #include <vrj/Display/SurfaceViewport.h>
 #include <vrj/Display/WallProjection.h>
 #include <vrj/Display/TrackedWallProjection.h>
-#include <vrj/Math/Math.h>
-#include <vrj/Math/Coord.h>
-#include <vrj/Math/Vec3.h>
-#include <vrj/Math/Vec4.h>
+#include <gmtl/Math.h>
+//#include <vrj/Math/Coord.h>
+#include <gmtl/Vec.h>
 #include <jccl/Config/ConfigChunk.h>
+
+#include <gmtl/Matrix.h>
+#include <gmtl/MatrixOps.h>
+#include <gmtl/Generate.h>
+#include <gmtl/Xforms.h>
 
 namespace vrj
 {
@@ -87,22 +91,22 @@ void SurfaceViewport::config(jccl::ConfigChunkPtr chunk)
    //rot_inv.invert(mSurfaceRotation);
    if(!mTracked)
    {
-      mLeftProj = new WallProjection(mSurfaceRotation,-mxLLCorner[VJ_Z],
-                                    mxLRCorner[VJ_X],-mxLLCorner[VJ_X],
-                                    mxURCorner[VJ_Y],-mxLRCorner[VJ_Y]);
-      mRightProj = new WallProjection(mSurfaceRotation,-mxLLCorner[VJ_Z],
-                                    mxLRCorner[VJ_X],-mxLLCorner[VJ_X],
-                                    mxURCorner[VJ_Y],-mxLRCorner[VJ_Y]);
+      mLeftProj = new WallProjection(mSurfaceRotation,-mxLLCorner[gmtl::Zelt],
+                                    mxLRCorner[gmtl::Xelt],-mxLLCorner[gmtl::Xelt],
+                                    mxURCorner[gmtl::Yelt],-mxLRCorner[gmtl::Yelt]);
+      mRightProj = new WallProjection(mSurfaceRotation,-mxLLCorner[gmtl::Zelt],
+                                    mxLRCorner[gmtl::Xelt],-mxLLCorner[gmtl::Xelt],
+                                    mxURCorner[gmtl::Yelt],-mxLRCorner[gmtl::Yelt]);
    }
    else
    {
-      mLeftProj = new TrackedWallProjection(mSurfaceRotation,-mxLLCorner[VJ_Z],
-                                    mxLRCorner[VJ_X],-mxLLCorner[VJ_X],
-                                    mxURCorner[VJ_Y],-mxLRCorner[VJ_Y],
+      mLeftProj = new TrackedWallProjection(mSurfaceRotation,-mxLLCorner[gmtl::Zelt],
+                                    mxLRCorner[gmtl::Xelt],-mxLLCorner[gmtl::Xelt],
+                                    mxURCorner[gmtl::Yelt],-mxLRCorner[gmtl::Yelt],
                                               mTrackerProxyName);
-      mRightProj = new TrackedWallProjection(mSurfaceRotation,-mxLLCorner[VJ_Z],
-                                    mxLRCorner[VJ_X],-mxLLCorner[VJ_X],
-                                    mxURCorner[VJ_Y],-mxLRCorner[VJ_Y],
+      mRightProj = new TrackedWallProjection(mSurfaceRotation,-mxLLCorner[gmtl::Zelt],
+                                    mxLRCorner[gmtl::Xelt],-mxLLCorner[gmtl::Xelt],
+                                    mxURCorner[gmtl::Yelt],-mxLRCorner[gmtl::Yelt],
                                                mTrackerProxyName);
    }
    // Configure the projections
@@ -117,10 +121,11 @@ void SurfaceViewport::config(jccl::ConfigChunkPtr chunk)
 
 void SurfaceViewport::updateProjections()
 {
-   Matrix left_eye_pos, right_eye_pos;     // NOTE: Eye coord system is -z forward, x-right, y-up
+   gmtl::Matrix44f left_eye_pos, right_eye_pos;     // NOTE: Eye coord system is -z forward, x-right, y-up
 
    // -- Calculate Eye Positions -- //
-   Matrix cur_head_pos = *(mUser->getHeadPos());
+   gmtl::Matrix44f cur_head_pos = *(mUser->getHeadPos());
+   /*
    Coord  head_coord(cur_head_pos);       // Create a user readable version
 
    vprDEBUG(vprDBG_ALL,5)
@@ -128,14 +133,15 @@ void SurfaceViewport::updateProjections()
       << vprDEBUG_FLUSH;
    vprDEBUG(vprDBG_ALL,5) << "\tHeadPos:" << head_coord.pos << "\tHeadOr:"
                         << head_coord.orient << std::endl << vprDEBUG_FLUSH;
+                        */
 
    // Compute location of left and right eyes
    //float interocularDist = 2.75f/12.0f;
    float interocularDist = mUser->getInterocularDistance();
    float eye_offset = interocularDist/2.0f;      // Distance to move eye
 
-   left_eye_pos.postTrans(cur_head_pos, -eye_offset, 0, 0);
-   right_eye_pos.postTrans(cur_head_pos, eye_offset, 0, 0);
+   left_eye_pos = cur_head_pos * gmtl::makeTrans<gmtl::Matrix44f>(gmtl::Vec3f( -eye_offset, 0, 0));
+   right_eye_pos = cur_head_pos * gmtl::makeTrans<gmtl::Matrix44f>(gmtl::Vec3f(eye_offset, 0, 0));
 
    mLeftProj->calcViewMatrix(left_eye_pos);
    mRightProj->calcViewMatrix(right_eye_pos);
@@ -147,39 +153,40 @@ void SurfaceViewport::calculateSurfaceRotation()
 
    // Find the base vectors for the surface axiis (in terms of the base coord system)
    // With z out, x to the right, and y up
-   Vec3 x_base, y_base, z_base;
+   gmtl::Vec3f x_base, y_base, z_base;
    x_base = (mLRCorner-mLLCorner);
    y_base = (mURCorner-mLRCorner);
-   z_base = x_base.cross(y_base);
+   gmtl::cross( z_base, x_base, y_base);
 
    // They must be normalized
-   x_base.normalize(); y_base.normalize(); z_base.normalize();
+   gmtl::normalize(x_base); gmtl::normalize(y_base); gmtl::normalize(z_base);
 
    // Calculate the surfaceRotMat using law of cosines
-   mSurfaceRotation.makeDirCos(x_base,y_base,z_base);      // surfMbase
+   mSurfaceRotation = gmtl::makeDirCos<gmtl::Matrix44f>(x_base, y_base, z_base );
+   //mSurfaceRotation.makeDirCos(x_base,y_base,z_base);      // surfMbase
    //mSurfaceRotation.invert(mSurfRotInv);              // baseMsurf
 }
 
 void SurfaceViewport::calculateCornersInBaseFrame()
 {
-   mxLLCorner.xformFull(mSurfaceRotation,mLLCorner);
-   mxLRCorner.xformFull(mSurfaceRotation,mLRCorner);
-   mxURCorner.xformFull(mSurfaceRotation,mURCorner);
-   mxULCorner.xformFull(mSurfaceRotation,mULCorner);
+   gmtl::xform( mxLLCorner, mSurfaceRotation,mLLCorner);
+   gmtl::xform( mxLRCorner, mSurfaceRotation,mLRCorner);
+   gmtl::xform( mxURCorner, mSurfaceRotation,mURCorner);
+   gmtl::xform( mxULCorner, mSurfaceRotation,mULCorner);
 
    // Verify that they are all in the same x,y plane
    vprDEBUG(vprDBG_ALL, vprDBG_HVERB_LVL) << std::setprecision(10)
-                                          << mxLLCorner[VJ_Z] << " "
-                                          << mxLRCorner[VJ_Z] << " "
-                                          << mxURCorner[VJ_Z] << " "
-                                          << mxULCorner[VJ_Z] << "\n"
+                                          << mxLLCorner[gmtl::Zelt] << " "
+                                          << mxLRCorner[gmtl::Zelt] << " "
+                                          << mxURCorner[gmtl::Zelt] << " "
+                                          << mxULCorner[gmtl::Zelt] << "\n"
                                           << vprDEBUG_FLUSH;
 #ifdef VJ_DEBUG
    const float epsilon = 1e-6;
 #endif
-   vprASSERT(vrj::Math::isEqual(mxLLCorner[VJ_Z], mxLRCorner[VJ_Z], epsilon) &&
-             vrj::Math::isEqual(mxURCorner[VJ_Z], mxULCorner[VJ_Z], epsilon) &&
-             vrj::Math::isEqual(mxLLCorner[VJ_Z], mxULCorner[VJ_Z], epsilon));
+   vprASSERT(gmtl::Math::isEqual(mxLLCorner[gmtl::Zelt], mxLRCorner[gmtl::Zelt], epsilon) &&
+             gmtl::Math::isEqual(mxURCorner[gmtl::Zelt], mxULCorner[gmtl::Zelt], epsilon) &&
+             gmtl::Math::isEqual(mxLLCorner[gmtl::Zelt], mxULCorner[gmtl::Zelt], epsilon));
 }
 
 };

@@ -166,7 +166,12 @@ DPP_BASIC_PROGS($PLATFORM, $OS_TYPE)
 VPR_PATH(0.10.1, , AC_MSG_ERROR(*** VPR required for VR Juggler ***))
 VPR_SUBSYSTEM=`$VPR_CONFIG --subsystem`
 JCCL_PATH(0.0.6, , AC_MSG_ERROR(*** Jackal required for VR Juggler ***))
-GADGETEER_PATH(0.0.1, , AC_MSG_WARN(*** Gadgeteer required for VR Juggler ***))
+GADGETEER_PATH(0.0.1, , AC_MSG_ERROR(*** Gadgeteer required for VR Juggler ***))
+
+vjsave_CPPFLAGS="$CPPFLAGS"
+CPPFLAGS="$CPPFLAGS $STDFLAGS"
+GMTL_PATH(0.0.1, , AC_MSG_ERROR(*** GMTL required for VR Juggler ***))
+CPPFLAGS="$vjsave_CPPFLAGS"
 
 # ------------
 # OpenGL API.
@@ -330,9 +335,9 @@ if test "x$GXX" = "xyes" ; then
     CXXFLAGS="-Wall -Werror-implicit-function-declaration $CXXFLAGS"
 fi
 
-CXXFLAGS="$CXXFLAGS $VPR_CXXFLAGS $JCCL_CXXFLAGS $GADGET_CXXFLAGS $SNX_CXXFLAGS"
+CXXFLAGS="$CXXFLAGS $VPR_CXXFLAGS $JCCL_CXXFLAGS $GADGET_CXXFLAGS $SNX_CXXFLAGS $GMTL_INCLUDES"
 EXTRA_LINK_FLAGS="$STDFLAGS $EXTRA_LINK_FLAGS"
-vrj_cxxflags="$STDFLAGS"
+vrj_cxxflags="$STDFLAGS $GMTL_INCLUDES"
 vrj_cxxflags_all="$VPR_CXXFLAGS $JCCL_CXXFLAGS $GADGET_CXXFLAGS $SNX_CXXFLAGS"
 
 if test "x$PLATFORM" = "xIRIX" -a "x$USE_GCC" != "xno" ; then
@@ -615,7 +620,6 @@ AC_OUTPUT(Makefile
           vrj/Draw/Pf/Makefile
           vrj/Environment/Makefile
           vrj/Kernel/Makefile
-          vrj/Math/Makefile
           vrj/Sound/Makefile
           vrj/Sound/pf/Makefile
           vrj/Util/Makefile

@@ -64,18 +64,21 @@ public:
    virtual ~simplePfApp (void)
    {;}
 
-   // Called between pfInit and pfConfig
-   // This function allows the user application to do any processing that needs
-   // to happen before performer forks its processes off but after
-   // pfInit()
+   /**
+    * Called between pfInit and pfConfig.  This function allows the user
+    * application to do any processing that needs to happen before Performer
+    * forks its processes off but after pfInit().
+    */
    virtual void preForkInit()
    {
       // Initialize model converters
       pfdInitConverter( mModelFileName.c_str() );
    }
 
-   // Initialize the scene graph
-   // Called after pfInit & pfConfig but before apiInit
+   /**
+    * Initializes the scene graph.
+    * Called after pfInit & pfConfig but before apiInit.
+    */
    virtual void initScene();
 
    /// Return the current scene graph
@@ -84,10 +87,14 @@ public:
       return mRootNode;
    }
 
-   // Set the name of the model to load
-   // This must be called before the application is given to the kernel
+   /**
+    * Sets the name of the model to load.  This must be called before the
+    * application is given to the kernel.
+    */
    void setModel(std::string modelFile)
-   { mModelFileName = modelFile; }
+   {
+      mModelFileName = modelFile;
+   }
 
 public:
    // CONFIG PARAMS
@@ -95,9 +102,9 @@ public:
 
    // SCENE GRAPH NODES
    pfGroup*       mLightGroup;
-   pfLightSource* mSun;                      // Sun to light the environment
-   pfGroup*       mRootNode;                 // The root of the scene graph
-   pfNode*        mModelRoot;                // Root of the model
+   pfLightSource* mSun;                 /**< Sun to light the environment */
+   pfGroup*       mRootNode;            /**< The root of the scene graph */
+   pfNode*        mModelRoot;           /**< Root of the model */
 };
 
 #endif

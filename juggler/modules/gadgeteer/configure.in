@@ -155,9 +155,12 @@ DPP_BASIC_PROGS($PLATFORM, $OS_TYPE)
 # Checks for libraries.
 # -----------------------------------------------------------------------------
 VPR_PATH(0.12.0, , AC_MSG_ERROR(*** VPR required for Gadgeteer ***))
-VRJUGGLER_PATH(1.1.91, ,
-               AC_MSG_ERROR(*** VR Juggler required for Gadgeteer ***))
 JCCL_PATH(0.0.2, , AC_MSG_ERROR(*** JCCL required for Gadgeteer ***))
+
+gadsave_CPPFLAGS="$CPPFLAGS"
+CPPFLAGS="$CPPFLAGS $STDFLAGS"
+GMTL_PATH(0.0.1, , AC_MSG_ERROR(*** GMTL required for Gadgeteer ***))
+CPPFLAGS="$gadsave_CPPFLAGS"
 
 AC_PATH_X
 
@@ -294,10 +297,10 @@ if test "x$GXX" = "xyes" ; then
     CXXFLAGS="-Wall -Werror-implicit-function-declaration $CXXFLAGS"
 fi
 
-CXXFLAGS="$CXXFLAGS $VPR_CXXFLAGS $JCCL_CXXFLAGS $VRJ_CXXFLAGS"
+CXXFLAGS="$CXXFLAGS $VPR_CXXFLAGS $JCCL_CXXFLAGS $GMTL_INCLUDES"
 EXTRA_LINK_FLAGS="$STDFLAGS $EXTRA_LINK_FLAGS"
-gadget_cxxflags="$STDFLAGS"
-gadget_cxxflags_all="$VPR_CXXFLAGS $JCCL_CXXFLAGS $VRJ_CXXFLAGS"
+gadget_cxxflags="$STDFLAGS $GMTL_INCLUDES"
+gadget_cxxflags_all="$VPR_CXXFLAGS $JCCL_CXXFLAGS"
 
 if test "x$PLATFORM" = "xIRIX" -a "x$USE_GCC" != "xno" ; then
     CFLAGS="$CFLAGS -woff 1685,515,608,658,799,803,852,1048,1233,1499"
@@ -331,9 +334,9 @@ UNIX_JUGGLERROOT_ABS="$JUGGLERROOT_ABS"
 # $APP_EXTRA_LIBS must list all the libraries need to link a VR Juggler-based
 # application.
 if test "x$OS_TYPE" = "xWin32" ; then
-    APP_EXTRA_LIBS="$LDFLAGS $VRJ_LIBS $VRJ_EXTRA_LIBS $JCCL_LIBS_LD $JCCL_EXTRA_LIBS $VPR_LIBS_LD $LIBS $VPR_EXTRA_LIBS"
+    APP_EXTRA_LIBS="$LDFLAGS $JCCL_LIBS_LD $JCCL_EXTRA_LIBS $VPR_LIBS_LD $LIBS $VPR_EXTRA_LIBS"
 else
-    APP_EXTRA_LIBS="$LDFLAGS $VRJ_LIBS $VRJ_EXTRA_LIBS $JCCL_LIBS_CC $JCCL_EXTRA_LIBS $VPR_LIBS_CC $LIBS $DTK_LDFLAGS $VPR_EXTRA_LIBS"
+    APP_EXTRA_LIBS="$LDFLAGS $JCCL_LIBS_CC $JCCL_EXTRA_LIBS $VPR_LIBS_CC $LIBS $DTK_LDFLAGS $VPR_EXTRA_LIBS"
 fi
 
 # Put together the basic information needed to compile Gadgeteer applications.
@@ -390,7 +393,7 @@ case $OS_TYPE in
         gadget_ldflags_linker="$gadget_ldflags_compiler"
         gadget_libs='-lgadget'
         gadget_extra_libs="$LDFLAGS $LIBS $DTK_LDFLAGS"
-        gadget_extra_libs_juggler="$VRJ_LIBS $VRJ_EXTRA_LIBS $JCCL_LIBS_CC $JCCL_EXTRA_LIBS $VPR_LIBS_CC $VPR_EXTRA_LIBS"
+        gadget_extra_libs_juggler="$JCCL_LIBS_CC $JCCL_EXTRA_LIBS $VPR_LIBS_CC $VPR_EXTRA_LIBS"
 
         Gadgeteer_lib='-lgadget'
         ;;
@@ -399,7 +402,7 @@ case $OS_TYPE in
         gadget_ldflags_linker="/libpath:\$prefix/lib/debug "
         gadget_libs='gadget.lib'
         gadget_extra_libs="$LDFLAGS $LIBS $DTK_LDFLAGS"
-        gadget_extra_libs_juggler="$VRJ_LIBS $VRJ_EXTRA_LIBS $JCCL_LIBS_LD $JCCL_EXTRA_LIBS $VPR_LIBS_LD $VPR_EXTRA_LIBS"
+        gadget_extra_libs_juggler="$JCCL_LIBS_LD $JCCL_EXTRA_LIBS $VPR_LIBS_LD $VPR_EXTRA_LIBS"
 
         Gadgeteer_lib='gadget.lib'
         ;;
@@ -479,6 +482,7 @@ AC_OUTPUT(gadgeteer-config
           gadget/Devices/VirtualTechnologies/Makefile
           gadget/RemoteInputManager/Makefile
           gadget/Type/Makefile
+          gadget/Util/Makefile
           test/Makefile
           mtree/GADGET.data.dist
           mtree/GADGET.include.dist

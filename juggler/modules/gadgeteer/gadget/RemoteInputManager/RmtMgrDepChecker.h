@@ -37,7 +37,7 @@
 // Dependency checker includes
 #include <jccl/Plugins/ConfigManager/DepChecker.h>
 #include <jccl/Config/ConfigChunkPtr.h>
-#include <vrj/Util/Debug.h>
+#include <vpr/Util/Debug.h>
 
 namespace gadget{
 

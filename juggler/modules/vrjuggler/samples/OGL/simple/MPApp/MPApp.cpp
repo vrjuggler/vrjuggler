@@ -36,9 +36,6 @@
 #include <GL/gl.h>
 //#include <GL/glu.h>
 
-#include <vrj/Math/Vec3.h>
-#include <vrj/Math/Coord.h>
-
 #include <MPApp.h>
 
 using namespace vrj;

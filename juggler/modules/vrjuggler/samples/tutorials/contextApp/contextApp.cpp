@@ -36,11 +36,12 @@
 #include <GL/gl.h>
 //#include <GL/glu.h>
 
-#include <vrj/Math/Vec3.h>
-#include <vrj/Math/Coord.h>
+#include <gmtl/Vec.h>
+#include <gmtl/Matrix.h>
 
 #include <contextApp.h>
 
+using namespace gmtl;
 using namespace vrj;
 
 
@@ -61,7 +62,7 @@ void contextApp::draw()
    glMatrixMode(GL_MODELVIEW);
 
    // -- Get Wand matrix --- //
-   Matrix wand_matrix;
+   Matrix44f wand_matrix;
    wand_matrix = *(mWand->getData());
 
    // --- Create a color for the wand --- //
@@ -72,7 +73,7 @@ void contextApp::draw()
 
       // --- Draw the box --- //
       glPushMatrix();
-         glMultMatrixf(wand_matrix.getFloatPtr());    // Push the wand offset matrix on the stack
+         glMultMatrixf(wand_matrix.mData);    // Push the wand offset matrix on the stack
          glColor3fv(wand_color);
          glCallList(*mCubeDlId);
       glPopMatrix();
@@ -81,7 +82,7 @@ void contextApp::draw()
       glLineWidth(5.0f);
       glDisable(GL_LIGHTING);
       glPushMatrix();
-         glMultMatrixf(wand_matrix.getFloatPtr());    // Goto wand position
+         glMultMatrixf(wand_matrix.mData);    // Goto wand position
          drawAxis();
       glPopMatrix();
       glEnable(GL_LIGHTING);
@@ -136,7 +137,7 @@ void contextApp::initGLState()
    glShadeModel(GL_SMOOTH);
 }
 
-//: Utility function for drawing a cube
+/// Utility function for drawing a cube
 void drawbox(GLdouble x0, GLdouble x1, GLdouble y0, GLdouble y1,
              GLdouble z0, GLdouble z1, GLenum type)
 {
@@ -188,22 +189,22 @@ void drawbox(GLdouble x0, GLdouble x1, GLdouble y0, GLdouble y1,
 
 void drawAxis()
 {
-   Vec3 x_axis(7.0f,0.0f,0.0f);
-   Vec3 y_axis(0.0f, 7.0f, 0.0f);
-   Vec3 z_axis(0.0f, 0.0f, 7.0f);
-   Vec3 origin(0.0f, 0.0f, 0.0f);
+   Vec3f x_axis(7.0f,0.0f,0.0f);
+   Vec3f y_axis(0.0f, 7.0f, 0.0f);
+   Vec3f z_axis(0.0f, 0.0f, 7.0f);
+   Vec3f origin(0.0f, 0.0f, 0.0f);
 
    glBegin(GL_LINES);
       glColor3f(1.0f, 0.0f, 0.0f);
-      glVertex3fv(origin.vec);
-      glVertex3fv(x_axis.vec);
+      glVertex3fv(origin.mData);
+      glVertex3fv(x_axis.mData);
 
       glColor3f(0.0f, 1.0f, 0.0f);
-      glVertex3fv(origin.vec);
-      glVertex3fv(y_axis.vec);
+      glVertex3fv(origin.mData);
+      glVertex3fv(y_axis.mData);
 
       glColor3f(0.0f, 0.0f, 1.0f);
-      glVertex3fv(origin.vec);
-      glVertex3fv(z_axis.vec);
+      glVertex3fv(origin.mData);
+      glVertex3fv(z_axis.mData);
    glEnd();
 }

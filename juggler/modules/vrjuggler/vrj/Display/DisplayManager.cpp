@@ -37,7 +37,6 @@
 #include <vrj/Display/SimViewport.h>
 #include <vrj/Draw/DrawManager.h>
 #include <vrj/Kernel/Kernel.h>
-#include <vrj/Math/Coord.h>
 
 #include <jccl/Config/ConfigChunk.h>
 
@@ -55,6 +54,31 @@ std::vector<Display*> DisplayManager::getAllDisplays()
    return ret_val;
 }
 
+jccl::ConfigChunkPtr DisplayManager::getDisplaySystemChunk()
+{
+   if ( mDisplaySystemChunk.get() == NULL )
+   {
+      jccl::ConfigManager* cfg_mgr = jccl::ConfigManager::instance();
+
+      cfg_mgr->lockActive();
+      {
+         std::vector<jccl::ConfigChunkPtr>::iterator i;
+         for(i=cfg_mgr->getActiveBegin(); i != cfg_mgr->getActiveEnd();++i)
+         {
+            if(std::string((*i)->getType()) == std::string("displaySystem"))
+            {
+               mDisplaySystemChunk = *i;
+               break;         // This guarantees that we get the first displaySystem chunk.
+            }
+         }
+      }
+      cfg_mgr->unlockActive();
+
+//      vprASSERT(mDisplaySystemChunk.get() != NULL && "No Display Manager chunk found!");
+   }
+
+   return mDisplaySystemChunk;
+}
 
 void DisplayManager::setDrawManager(DrawManager* drawMgr)
 {

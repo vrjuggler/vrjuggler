@@ -46,16 +46,16 @@ void TrackedWallProjection::updateWallParams()
    // We want surfMbase <=== surfMbase*trackerMbase
    // NOTE: wallRotMat's base is the base of the tracking system
 
-   Matrix tracker_mat = *(mTracker->getData());     // baseMtracker
+   gmtl::Matrix44f tracker_mat = *(mTracker->getData());     // baseMtracker
 
    // Method 1:
    // baseMsurf = baseMtracker*baseMsurf
    // surfMbase = inv(baseMsurf)
    // Cost: 2 inversions, 1 mult, 2 temp matrices
 #if 0
-   Matrix wall_rot_bak_inv;
+   gmtl::Matrix44f wall_rot_bak_inv;
    wall_rot_bak_inv.invert(mWallRotationMatrix_bak);
-   Matrix base_m_surf;
+   gmtl::Matrix44f base_m_surf;
    base_m_surf.mult(tracker_mat,wall_rot_bak_inv);
    mWallRotationMatrix.invert(base_m_surf);
 #endif
@@ -64,9 +64,9 @@ void TrackedWallProjection::updateWallParams()
    // Method 2:
    // surfMbase = surfMbase*trackerMbase
    // Cost: 1 inversion, 1 mult, 1 temp matrix
-   Matrix tracker_mat_inv;                 // trackerMbase
-   tracker_mat_inv.invert(tracker_mat);
-   mWallRotationMatrix.mult(mWallRotationMatrix_bak,tracker_mat_inv);
+   gmtl::Matrix44f tracker_mat_inv;                 // trackerMbase
+   gmtl::invert( tracker_mat_inv, tracker_mat);
+   mWallRotationMatrix = mWallRotationMatrix_bak * tracker_mat_inv;
 #endif
 }
 
