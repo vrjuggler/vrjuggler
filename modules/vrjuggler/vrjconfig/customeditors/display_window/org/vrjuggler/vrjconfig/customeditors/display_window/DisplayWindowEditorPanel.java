@@ -480,7 +480,7 @@ public class DisplayWindowEditorPanel
          elt.setProperty(START_LOCKED_PROPERTY, 0, dlg.shouldStartLocked());
          elt.setProperty(SLEEP_TIME_PROPERTY, 0, dlg.getSleepTime());
 
-         dlg.getResource().add(elt);
+         broker.add(mContext, elt, dlg.getResource());
          addDisplayWindow(elt);
       }
    }
@@ -551,7 +551,7 @@ public class DisplayWindowEditorPanel
          elt.setProperty(SIZE_PROPERTY, 0, new Integer(bounds.width));
          elt.setProperty(SIZE_PROPERTY, 1, new Integer(bounds.height));
 
-         dlg.getResource().add(elt);
+         broker.add(mContext, elt, dlg.getResource());
          addInputWindow(elt);
       }
    }
