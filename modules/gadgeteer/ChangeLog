@@ -1,5 +1,8 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+May-30-2003 patrickh    Fixed the Polhemus Fastrak driver.  Submitted by
+                        Eric Klein <elklein@ucdavis.edu>.
+                        NEW VERSION: 0.12.1
 May-20-2003 patrickh    configure.in requries Autoconf 2.53 or newer.
 Apr-30-2003 patrickh    Added all (U.S. Latin) keyboard keys as recognized
                         input from event windows.

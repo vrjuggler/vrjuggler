@@ -97,7 +97,8 @@ public:
    /** Device's configchunk name (match .desc file). */
    virtual char* getDeviceName()
    {
-      return "vjFastrak";
+//      return "vjFastrak";
+      return "Fastrak";
    };
 
 public:
