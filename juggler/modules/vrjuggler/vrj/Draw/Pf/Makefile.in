@@ -18,6 +18,7 @@ ifneq (${OBJDIR}, .)
     OBJDIR	:= ${OBJDIR}/Pf
 endif
 
+INSTALL		= @INSTALL@
 VJROOT		= ${top_srcdir}
 VJ_SRCDIR	= @VJ_SRCDIR@/Kernel/Pf
 WORKDIR		= ${topdir}/Kernel/Pf
