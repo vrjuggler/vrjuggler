@@ -1,10 +1,13 @@
 #include <Input/vjSim/vjSimPosition.h>
+#include <Math/vjCoord.h>
 
 vjSimPosition::vjSimPosition(vjConfigChunk* chunk)
    : vjPosition(chunk), vjSimInput(chunk), vjInput(chunk)
 {
    mDTrans = chunk->getProperty("dtrans");
    mDRot   = chunk->getProperty("drot");
+
+   mCoordSystem = chunk->getProperty("xformCoordSystem");
 
    // Create keypairs
    for(int i=0;i<NUM_POS_CONTROLS;i++)
@@ -73,6 +76,10 @@ void vjSimPosition::UpdateData()
    amt = checkKeyPair(mSimKeys[ROT_ROLL_CW]);
    if(amt)
       RotRollCCW( -1 * amt);
+
+   // Debug output
+   //vjCoord pos_data(mPos);
+   //vjDEBUG(1) << "simPos: pos:" << pos_data.pos << "  or:" << pos_data.orient << endl << vjDEBUG_FLUSH;
 }
 
 
@@ -80,41 +87,103 @@ void vjSimPosition::UpdateData()
 // Forward is in th -Z direction
 void vjSimPosition::MoveFor(const float amt)
 {
-   mPos.postTrans(mPos, 0.0, 0.0, -amt*mDTrans);
+   if(mCoordSystem == LOCAL)
+      mPos.postTrans(mPos, 0.0, 0.0, -amt*mDTrans);
+   else
+      mPos.preTrans(0.0, 0.0, -amt*mDTrans, mPos);
 }
 
 // Move left the given amount on position data n
 // Left is -X dir
 void vjSimPosition::MoveLeft(const float amt)
 {
-    mPos.postTrans(mPos, -amt*mDTrans, 0.0, 0.0);
+   if(mCoordSystem == LOCAL)
+      mPos.postTrans(mPos, -amt*mDTrans, 0.0, 0.0);
+   else
+      mPos.preTrans(-amt*mDTrans, 0.0, 0.0, mPos);
 }
 
 // Move up the given amount on position data n
 // Up is in th +Y dir
 void vjSimPosition::MoveUp(const float amt)
 {
-  mPos.postTrans(mPos, 0.0, amt*mDTrans, 0.0);
+   if(mCoordSystem == LOCAL)
+      mPos.postTrans(mPos, 0.0, amt*mDTrans, 0.0);
+   else
+      mPos.preTrans(0.0, amt*mDTrans, 0.0, mPos);
 }
 
 // Pitch up - rot +x axis
 void vjSimPosition::RotUp(const float amt)
 {
    static vjVec3 x_axis(1.0,0.0,0.0);
-   mPos.postRot(mPos, amt*mDRot, x_axis);
+   if(mCoordSystem == LOCAL)
+      mPos.postRot(mPos, amt*mDRot, x_axis);
+   else
+   {
+      // Get the translation and rotation seperated
+      // Make new matrix with Trans*DeltaRot*Rot
+      float x,y,z;
+      mPos.getTrans(x,y,z);      // Get translation
+      vjMatrix trans;
+      trans.makeTrans(x,y,z);
+
+      vjMatrix delta_rot;        // make delta rot
+      delta_rot.makeRot(amt*mDRot, x_axis);
+
+      mPos.setTrans(0,0,0);      // Get to rotation only
+      mPos.preMult(delta_rot);
+      mPos.preMult(trans);
+   }
 }
 
 // Yaw left - rot +Y axis
 void vjSimPosition::RotLeft(const float amt)
 {
    static vjVec3 y_axis(0.0, 1.0, 0.0);
-   mPos.postRot(mPos, amt*mDRot, y_axis);
+
+   if(mCoordSystem == LOCAL)
+      mPos.postRot(mPos, amt*mDRot, y_axis);
+   else
+   {
+      // Get the translation and rotation seperated
+      // Make new matrix with Trans*DeltaRot*Rot
+      float x,y,z;
+      mPos.getTrans(x,y,z);      // Get translation
+      vjMatrix trans;
+      trans.makeTrans(x,y,z);
+
+      vjMatrix delta_rot;        // make delta rot
+      delta_rot.makeRot(amt*mDRot, y_axis);
+
+      mPos.setTrans(0,0,0);      // Get to rotation only
+      mPos.preMult(delta_rot);
+      mPos.preMult(trans);
+   }
 }
 
 // Roll Left - rot -z axis
 void vjSimPosition::RotRollCCW(const float amt)
 {
    static vjVec3 neg_z_axis(0.0, 0.0, -1.0);
-   mPos.postRot(mPos, amt*mDRot, neg_z_axis);
+
+   if(mCoordSystem == LOCAL)
+      mPos.postRot(mPos, amt*mDRot, neg_z_axis);
+   else
+   {
+      // Get the translation and rotation seperated
+      // Make new matrix with Trans*DeltaRot*Rot
+      float x,y,z;
+      mPos.getTrans(x,y,z);      // Get translation
+      vjMatrix trans;
+      trans.makeTrans(x,y,z);
+
+      vjMatrix delta_rot;        // make delta rot
+      delta_rot.makeRot(amt*mDRot, neg_z_axis);
+
+      mPos.setTrans(0,0,0);      // Get to rotation only
+      mPos.preMult(delta_rot);
+      mPos.preMult(trans);
+   }
 }
 
