@@ -65,33 +65,48 @@ void vjKernel::controlLoop(void* nullParam)
 
    initConfig();
 
+   // setup performance buffer
+   performanceEnabled = 0;
+   vector<vjConfigChunk*>* perfchunks = mChunkDB->getMatching ("PerfMeasure");
+   if (perfchunks->size() > 0) {
+       vjConfigChunk* perfchunk = (*perfchunks)[0];
+       performanceEnabled = (*perfchunks)[0]->getProperty ("KernelEnabled");
+       delete perfchunks;
+   }
    perfBuffer = new vjPerfDataBuffer ("Kernel loop",
-				      500, 10, 0);
+				      500, 7, performanceEnabled);
    environmentManager->addPerfDataBuffer (perfBuffer);
+
 
    //while(!Exit)
    while (1)
    {
-       perfBuffer->set (0);
+       // perfBuffer->set (0);
          vjDEBUG(3) << "vjKernel::controlLoop: app->preDraw()\n" << vjDEBUG_FLUSH;
       app->preDraw();         // Do Any application pre-draw stuff
+      perfBuffer->set (0);
          vjDEBUG(3) << "vjKernel::controlLoop: drawManager->draw()\n" << vjDEBUG_FLUSH;
       drawManager->draw();    // Trigger the beginning of frame drawing
+      perfBuffer->set (1);
          vjDEBUG(3) << "vjKernel::controlLoop: app->postDraw\n" << vjDEBUG_FLUSH;
       app->postDraw();        // Do computations that can be done while drawing.  This should be for next frame.
+      perfBuffer->set (2);
          vjDEBUG(3) << "vjKernel::controlLoop: drawManager->sync()\n" << vjDEBUG_FLUSH;
       drawManager->sync();    // Block until drawing is done
+      perfBuffer->set (3);
          vjDEBUG(3) << "vjKernel::controlLoop: app->postSync()\n" << vjDEBUG_FLUSH;
       app->postSync();        // Do processing after drawing is complete
-
+      perfBuffer->set (4);
       // Sync should be here for Kernel changes from
       // the environment manager
 
       //Tell trackers to swap buffers;
          vjDEBUG(3) << "vjKernel::controlLoop: Update Trackers\n" << vjDEBUG_FLUSH;
       data.inputManager->UpdateAllData();
+      perfBuffer->set(5);
          vjDEBUG(3) << "vjKernel::controlLoop: Update Projections\n" << vjDEBUG_FLUSH;
       drawManager->updateProjections();
+      perfBuffer->set(6);
    }
 }
 
