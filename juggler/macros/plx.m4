@@ -49,15 +49,19 @@ AC_DEFUN(PLEXUS_PATH,
 [
     dnl Get the cflags and libraries from the plexus-config script
     AC_ARG_WITH(plexus-prefix,
-                [  --with-plexus-prefix=<PREFIX>
-                          Prefix where Plexus is installed (optional)],
+                [  --with-plexus-prefix=<PATH>
+                          Prefix where Plexus is installed
+                          (optional)                      [No default]],
                 plexus_config_prefix="$withval", plexus_config_prefix="")
     AC_ARG_WITH(plexus-exec-prefix,
-                [  --with-plexus-exec-prefix=<PREFIX>
-                          Exec prefix where Plexus is installed (optional)],
-                plexus_config_exec_prefix="$withval", plexus_config_exec_prefix="")
-    AC_ARG_ENABLE(plexustest, [  --disable-plexustest    Do not try to compile and run a test Plexus program],
-                    , enable_plexustest=yes)
+                [  --with-plexus-exec-prefix=<PATH>
+                          Exec prefix where Plexus is
+                          installed (optional)            [No default]],
+                plexus_config_exec_prefix="$withval",
+                plexus_config_exec_prefix="")
+    AC_ARG_ENABLE(plexustest,
+                  [  --disable-plexustest    Do not try to compile and run a
+                          test Plexus program], , enable_plexustest=yes)
 
     if test "x$plexus_config_exec_prefix" != "x" ; then
         plexus_config_args="$plexus_config_args --exec-prefix=$plexus_config_exec_prefix"
