@@ -39,10 +39,22 @@
 // determine which implementation of vprSystem to include.
 #if defined(VPR_IRIX_SPROC) || defined(VPR_USE_PTHREADS)
 #   include <md/POSIX/SystemPosix.h>
+
+namespace vpr {
+    typedef SystemPosix System;
+};
 #elif defined(VPR_OS_Win32)
 #   include <md/WIN32/SystemWin32.h>
+
+namespace vpr {
+    typedef SystemWin32 System;
+};
 #else
 #   include <md/NSPR/SystemNSPR.h>
+
+namespace vpr {
+    typedef SystemNSPR System;
+};
 #endif  /* VPR_IRIX_SPROC || VPR_USE_PTHREADS */
 
 #endif // _VPR_SYSTEM_FAKE_H_
