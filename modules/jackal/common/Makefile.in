@@ -85,7 +85,7 @@ include $(MKPATH)/dpp.obj-common.mk
 # -----------------------------------------------------------------------------
 # Recursive make setup
 # -----------------------------------------------------------------------------
-DIRPRFX	= config/
+DIRPRFX	= common/
 SUBDIR	= jccl
 $(RECTARGET): recursive
 include $(MKPATH)/dpp.subdir.mk
