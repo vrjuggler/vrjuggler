@@ -48,10 +48,10 @@ DIRPRFX		= tweek/
 
 # Subdirectories used for recursion through the source tree.
 SUBDIR		= CORBA		\
+                  Ext		\
                   Util		\
                   idl
 
 $(RECTARGET): recursive
 
 include $(MKPATH)/dpp.subdir.mk
-include Makefile.inc
