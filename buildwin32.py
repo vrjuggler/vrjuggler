@@ -1028,7 +1028,13 @@ def installBoost(prefix):
 
    srcdir = os.path.join(srcroot, 'lib')
    destdir = os.path.join(prefix, 'lib')
-   installDir(srcdir, destdir)
+   mkinstalldirs(destdir)
+
+   lib_list = glob.glob(os.path.join(srcdir, '*filesystem*')) + \
+              glob.glob(os.path.join(srcdir, '*python*'))
+
+   for f in lib_list:
+      shutil.copy2(f, destdir)
 
 def installGMTL(prefix):
    simpleInstall('GMTL headers', os.environ['GMTL_ROOT'], prefix)
@@ -1038,8 +1044,48 @@ def installAudiere(prefix):
                  os.getenv('AUDIERE_ROOT', ''), prefix, True)
 
 def installOmniORB(prefix):
-   simpleInstall('omniORB headers, libraries, and executables',
-                 os.getenv('OMNIORB_ROOT', ''), prefix, True)
+   root = os.getenv('OMNIORB_ROOT', '')
+   if root == '':
+      return
+
+   print 'Installing omniORB headers, libraries, and executables'
+
+   # Install all header files.
+   srcdir = os.path.join(root, 'include')
+
+   if os.path.exists(srcdir):
+      destdir = os.path.join(prefix, 'include')
+      installDir(srcdir, destdir, ['.h', '.hh'])
+
+   # Install all libraries.
+   # NOTE: When we install the omniORB .lib files, we get rid of the x86_win32
+   # subdirectory.
+   srcdir = os.path.join(root, 'lib', 'x86_win32')
+
+   if os.path.exists(srcdir):
+      destdir = os.path.join(prefix, 'lib')
+      installDir(srcdir, destdir)
+
+   srcdir = os.path.join(root, 'lib', 'python')
+
+   if os.path.exists(srcdir):
+      destdir = os.path.join(prefix, 'lib', 'python')
+      installDir(srcdir, destdir)
+
+   # Install all executables and DLLs.
+   # NOTE: When we install the omniORB .dll files, we get rid of the x86_win32
+   # subdirectory.
+   srcdir = os.path.join(root, 'bin', 'x86_win32')
+
+   if os.path.exists(srcdir):
+      destdir = os.path.join(prefix, 'bin')
+      installDir(srcdir, destdir)
+
+   srcdir = os.path.join(root, 'bin', 'scripts')
+
+   if os.path.exists(srcdir):
+      destdir = os.path.join(prefix, 'bin', 'scripts')
+      installDir(srcdir, destdir)
 
 def main():
    options = setVars()
