@@ -14,6 +14,7 @@ Begin "Zelda"
             "Digital Proxy"
             "Glove Proxy"
             "Gesture Proxy"
+	    "Keyboard Proxy"
         End
         Begin "Input Devices"
             "Keyboard"
