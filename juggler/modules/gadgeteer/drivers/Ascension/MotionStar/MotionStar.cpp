@@ -290,21 +290,21 @@ bool MotionStar::startSampling()
          }
          // Connection to server failed.  MotionStarStandalone prints out
          // the system error message about why.
-         catch (mstar::ConnectException ex)
+         catch(mstar::ConnectException& ex)
          {
             vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
                << "gadget::MotionStar failed to connect to server: "
                << ex.getMessage() << std::endl << vprDEBUG_FLUSH;
          }
          // Some network error occurred when trying to start the device.
-         catch (mstar::NetworkException ex)
+         catch(mstar::NetworkException&)
          {
             vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
                << "gadget::MotionStar could not create a socket\n"
                << vprDEBUG_FLUSH;
          }
          // Unkonwn exception from MotionStarStandalone::start().
-         catch (mstar::MotionStarException ex)
+         catch(mstar::MotionStarException& ex)
          {
             vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
                << "Abnormal return from MotionStarStandalone::start(): "
@@ -351,7 +351,7 @@ bool MotionStar::stopSampling()
             << "MotionStar server shut down.\n" << vprDEBUG_FLUSH;
          retval = true;
       }
-      catch (mstar::CommandException ex)
+      catch(mstar::CommandException&)
       {
          vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CONFIG_LVL)
             << "MotionStar server did not shut down.\n" << vprDEBUG_FLUSH;
@@ -649,7 +649,7 @@ void MotionStar::setRunMode(const unsigned int mode)
                break;
          }
       }
-      catch (mstar::CommandException ex)
+      catch(mstar::CommandException&)
       {
          vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_WARNING_LVL)
             << "gadget::MotionStar: Failed to change run mode to " << mode
