@@ -43,6 +43,8 @@
 #include <jccl/Config/PropertyDesc.h>
 #include <jccl/Config/ChunkDesc.h>
 
+#include <boost/concept_check.hpp>
+
 namespace jccl
 {
 
@@ -237,6 +239,7 @@ std::vector<PropertyDesc> ChunkDesc::getAllPropertyDesc() const
 
 bool ChunkDesc::remove (const std::string& _token)
 {
+   boost::ignore_unused_variable_warning(_token);
    vprASSERT(false && "ChunkDesc::remove: Not implemented yet");
    return false;
 }

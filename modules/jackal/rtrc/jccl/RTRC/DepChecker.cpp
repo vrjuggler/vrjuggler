@@ -36,6 +36,7 @@
 #include <jccl/Config/ChunkDesc.h>
 #include <jccl/RTRC/ConfigManager.h>
 #include <jccl/RTRC/DepChecker.h>
+#include <boost/concept_check.hpp>
 
 namespace jccl
 {
@@ -52,6 +53,7 @@ DepChecker::DepChecker ()
 
 /*virtual*/ bool DepChecker::canHandle (ConfigChunkPtr chunk)
 {
+   boost::ignore_unused_variable_warning(chunk);
    return true;
 }
 
