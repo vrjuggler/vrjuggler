@@ -170,8 +170,8 @@ public:
     */
    virtual bool config(jccl::ConfigChunkPtr c)
    {
-      mMin = c->getProperty<float>("min");
-      mMax = c->getProperty<float>("max");
+      mMin = c->template getProperty<float>("min");
+      mMax = c->template getProperty<float>("max");
 
       vprDEBUG(vprDBG_ALL,4) << " SimAnalog::config() min:" << mMin
                              << " max:" << mMax << "\n" << vprDEBUG_FLUSH;

@@ -476,8 +476,8 @@ vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
 
    std::string alias_name, proxy_name;  // The string of the alias, name of proxy to pt to
 
-   alias_name = chunk->getProperty<std::string>("aliasName");
-   proxy_name = chunk->getProperty<std::string>("proxyPtr");
+   alias_name = chunk->template getProperty<std::string>("aliasName");
+   proxy_name = chunk->template getProperty<std::string>("proxyPtr");
 
    addProxyAlias(alias_name, proxy_name);
 
@@ -500,7 +500,7 @@ vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
 
    std::string alias_name, proxy_name;  // The string of the alias, name of proxy to pt to
 
-   alias_name = chunk->getProperty<std::string>("aliasName");
+   alias_name = chunk->template getProperty<std::string>("aliasName");
 
    if(mProxyAliases.end() == mProxyAliases.find(alias_name))
    {
