@@ -63,6 +63,13 @@ kernel</p>
 kernel gets ready to startup a new application, it first calls the init() 
 
 method to signal to the application that it is about to be executed.</p>
+
+<h5>
+
+Uses...</h5>
+
+<p>Loading data files, creating lookup tables.&nbsp; Basically and
+pre-processing that the application needs to setup data structures.</p>
 <h4>vjApp::apiInit()</h4>
 <p>Graphics API specific initialization</p>
 
@@ -76,11 +83,13 @@ graphics API has been initialized. &nbsp;In OpenGL applications, there is no con
 
 the API, so it is not normally used.</p>
 
-<h4>
+<h5>
 
-What type of things should
+Uses...</h5>
 
-go in each function?</h4>
+<p>
+
+Scene graph loading or other API specific initialization.</p>
 
 <h3>
 
@@ -108,7 +117,7 @@ Uses...</h5>
 
 <p>
 
-This should be used for...</p>
+Updating data in response to device input.</p>
 
 <h4>
 
@@ -138,7 +147,7 @@ Uses...</h5>
 
 <p>
 
-This should be used for...</p>
+Time consuming computation for the next frame.</p>
 
 <h4>
 
@@ -158,7 +167,7 @@ Uses...</h5>
 
 <p>
 
-This should be used for...</p>
+Clean up, sync with external networking or computation processes.</p>
 
 <h4>
 
