@@ -226,7 +226,6 @@ case $host_os in
         CXXFLAGS="-ptv $CXXFLAGS"
         DBG_FLAGS="-g -gslim"
         LD='${CXX} -shared'
-        LDFLAGS="$LDFLAGS"
         _LD_REGOPTS='-check_registry ${DSOREGFILE}'
         LDOPTS="$LDOPTS -all ${_LD_REGOPTS} -elf -rdata_shared"
         SHAREDLIB_EXT='so'
