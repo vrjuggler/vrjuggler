@@ -347,20 +347,16 @@ public class ConnectionDialog extends JDialog
          // Create a new list model for the fresh list of Subject Managers.
          DefaultListModel mgr_list_model = new DefaultListModel();
 
-         // Get the list of Subject Managers.  There had better be at least one!
+         // Get the list of Subject Managers.  There had better be at least
+         // one!  The list returned is guaranteed to contain valid references
+         // at the time of construction.
          java.util.Iterator i = new_orb.getSubjectManagerList().iterator();
          tweek.SubjectManager cur_mgr;
 
          while ( i.hasNext() )
          {
             cur_mgr = (tweek.SubjectManager) i.next();
-
-            // Do not present invalid Subject Manager references to the user.
-            // This little test is pretty sweet--I just hope it's fast.
-            if ( ! cur_mgr._non_existent() )
-            {
-               mgr_list_model.addElement(new SubjectManagerWrapper(cur_mgr));
-            }
+            mgr_list_model.addElement(new SubjectManagerWrapper(cur_mgr));
          }
 
          mSubjectMgrList.setModel(mgr_list_model);
