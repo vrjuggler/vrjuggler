@@ -16,13 +16,14 @@ class vjDummyPosition: public vjPosition {
 	/** @name Construction/Destruction */
 	//@{
 	vjDummyPosition(vjConfigChunk *c);
-	vjDummyPosition() { active = 1;
+	vjDummyPosition() : vjPosition()
+   { active = 1;
 			    instName = NULL;}
 	~vjDummyPosition();
 	//@}
 
 	/** @name vjInput pure virtual functions
-	 *  
+	 *
 	 *  pure virtual functions required from vjInput
 	 */
 	//@{
