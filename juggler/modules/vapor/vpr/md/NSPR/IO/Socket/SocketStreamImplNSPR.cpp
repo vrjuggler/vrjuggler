@@ -45,7 +45,7 @@
 #include <string.h>
 
 #ifdef HAVE_STRINGS_H
-#include <strings.h>
+#  include <strings.h>
 #endif
 
 #include <prio.h>
@@ -55,7 +55,8 @@
 #include <vpr/md/NSPR/NSPRHelpers.h>
 
 
-namespace vpr {
+namespace vpr
+{
 
 // ============================================================================
 // Public methods.
@@ -69,7 +70,7 @@ namespace vpr {
 SocketStreamImplNSPR::SocketStreamImplNSPR (void)
    : SocketImplNSPR(vpr::SocketTypes::STREAM)
 {
-    /* Do nothing. */ ;
+   /* Do nothing. */ ;
 }
 
 // ----------------------------------------------------------------------------
@@ -79,91 +80,100 @@ SocketStreamImplNSPR::SocketStreamImplNSPR (void)
 // ----------------------------------------------------------------------------
 SocketStreamImplNSPR::SocketStreamImplNSPR (const vpr::InetAddr& local_addr,
                                             const vpr::InetAddr& remote_addr)
-    : SocketImplNSPR(local_addr, remote_addr, vpr::SocketTypes::STREAM)
-{;}
+   : SocketImplNSPR(local_addr, remote_addr, vpr::SocketTypes::STREAM)
+{
+   ;
+}
 
 // ----------------------------------------------------------------------------
 // Listen on the socket for incoming connection requests.
 // ----------------------------------------------------------------------------
-vpr::ReturnStatus
-SocketStreamImplNSPR::listen (const int backlog)
+vpr::ReturnStatus SocketStreamImplNSPR::listen (const int backlog)
 {
-    vpr::ReturnStatus retval;
-    PRStatus status;
+   vpr::ReturnStatus retval;
+   PRStatus status;
 
-    if(!mBound)        // To listen, we must be bound
-    {
-        vprDEBUG(vprDBG_ALL,0) << "SocketStreamImplNSPR::listen: Trying to listen on an unbound socket.\n"
-                      << vprDEBUG_FLUSH;
-        retval.setCode(vpr::ReturnStatus::Fail);
-    }
-    else {
-        // Put the socket into listning mode.  If that fails, print an error
-        // and return error status.
-        status = PR_Listen(mHandle, backlog);
+   if ( !mBound )        // To listen, we must be bound
+   {
+      vprDEBUG(vprDBG_ALL,0) << "SocketStreamImplNSPR::listen: Trying to listen on an unbound socket.\n"
+      << vprDEBUG_FLUSH;
+      retval.setCode(vpr::ReturnStatus::Fail);
+   }
+   else
+   {
+      // Put the socket into listning mode.  If that fails, print an error
+      // and return error status.
+      status = PR_Listen(mHandle, backlog);
 
-        if (PR_FAILURE == status) {
-           NSPR_PrintError("SocketStreamImplNSPR::listen: Cannon listen on socket: ");
-           retval.setCode(vpr::ReturnStatus::Fail);
-        }
-    }
+      if ( PR_FAILURE == status )
+      {
+         NSPR_PrintError("SocketStreamImplNSPR::listen: Cannon listen on socket: ");
+         retval.setCode(vpr::ReturnStatus::Fail);
+      }
+   }
 
-    return retval;
+   return retval;
 }
 
 // ----------------------------------------------------------------------------
 // Accept an incoming connection request.
 // ----------------------------------------------------------------------------
-vpr::ReturnStatus
-SocketStreamImplNSPR::accept (SocketStreamImplNSPR& sock, vpr::Interval timeout)
+vpr::ReturnStatus SocketStreamImplNSPR::accept (SocketStreamImplNSPR& sock,
+                                                vpr::Interval timeout)
 {
-    vpr::ReturnStatus retval;
-    vpr::InetAddr addr;
+   vpr::ReturnStatus retval;
+   vpr::InetAddr addr;
 
-    if(!mBound)        // To listen, we must be bound
-    {
-        vprDEBUG(vprDBG_ALL,0) << "SocketStreamImplNSPR::accept: Trying to accept on an unbound socket.\n"
-                      << vprDEBUG_FLUSH;
-        retval.setCode(vpr::ReturnStatus::Fail);
-    }
-    else {
-       PRFileDesc* accept_sock = NULL;
+   if ( ! mBound )        // To listen, we must be bound
+   {
+      vprDEBUG(vprDBG_ALL,0) << "SocketStreamImplNSPR::accept: Trying to accept on an unbound socket.\n"
+      << vprDEBUG_FLUSH;
+      retval.setCode(vpr::ReturnStatus::Fail);
+   }
+   else
+   {
+      PRFileDesc* accept_sock = NULL;
 
-       // PR_Accept() is a potentially blocking call.
-       mBlockingFixed = true;
+      // PR_Accept() is a potentially blocking call.
+      mBlockingFixed = true;
 
-       // Accept an incoming connection request.
-       vprASSERT(mHandle != NULL);
-       accept_sock = PR_Accept(mHandle, addr.getPRNetAddr(),
-                               NSPR_getInterval(timeout) );
+      // Accept an incoming connection request.
+      vprASSERT(mHandle != NULL);
+      accept_sock = PR_Accept(mHandle, addr.getPRNetAddr(),
+                              NSPR_getInterval(timeout) );
 
-       if (NULL == accept_sock) {
-          PRErrorCode err_code = PR_GetError();
+      if ( NULL == accept_sock )
+      {
+         PRErrorCode err_code = PR_GetError();
 
-          if ( err_code == PR_WOULD_BLOCK_ERROR ) {
-             retval.setCode(vpr::ReturnStatus::WouldBlock);
-          }
-          else if ( err_code == PR_IO_TIMEOUT_ERROR ) {
-             retval.setCode(vpr::ReturnStatus::Timeout);
-          }
-          else {
-             NSPR_PrintError("SocketStreamImplNSPR::accept: Cannot accept on socket: ");
-             retval.setCode(vpr::ReturnStatus::Fail);
-          }
-       }
-       // Otherwise, put the new socket in the passed socket object.
-       else {
-          sock.mHandle = accept_sock;
-          sock.setRemoteAddr(addr);
-          sock.mOpen = true;
-          sock.mBound = true;
-          sock.mConnected = true;
-          sock.mBlocking = mBlocking;
-          sock.mBlockingFixed = true;
-       }
-    }
+         if ( err_code == PR_WOULD_BLOCK_ERROR )
+         {
+            retval.setCode(vpr::ReturnStatus::WouldBlock);
+         }
+         else if ( err_code == PR_IO_TIMEOUT_ERROR )
+         {
+            retval.setCode(vpr::ReturnStatus::Timeout);
+         }
+         else
+         {
+            NSPR_PrintError("SocketStreamImplNSPR::accept: Cannot accept on socket: ");
+            retval.setCode(vpr::ReturnStatus::Fail);
+         }
+      }
+      // Otherwise, put the new socket in the passed socket object.
+      else
+      {
+         sock.mHandle = accept_sock;
+         sock.setRemoteAddr(addr);
+         sock.mOpen = true;
+         sock.mBound = true;
+         sock.mConnected = true;
+         sock.mBlocking = mBlocking;
+         sock.mBlockingFixed = true;
+      }
+   }
 
-    return retval;
+   return retval;
 }
 
-}; // End of vpr namespace
+} // End of vpr namespace

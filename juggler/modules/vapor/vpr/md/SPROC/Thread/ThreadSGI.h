@@ -60,7 +60,8 @@
 #include <vpr/Thread/BaseThread.h>
 
 
-namespace vpr {
+namespace vpr
+{
 
 //: Threads implementation using multiple processes created with sproc(2).
 
@@ -111,23 +112,22 @@ public:
    //! RETURNS: non-zero - Succeedful thread creation
    //! RETURNS:       -1 - Error
    // -----------------------------------------------------------------------
-   virtual int
-   spawn (BaseThreadFunctor* functorPtr,
-          BaseThread::VPRThreadPriority priority = VPR_PRIORITY_NORMAL,
-          BaseThread::VPRThreadScope scope = VPR_LOCAL_THREAD,
-          BaseThread::VPRThreadState state = VPR_JOINABLE_THREAD,
-          size_t stack_size = 0)
+   virtual int spawn (BaseThreadFunctor* functorPtr,
+                      BaseThread::VPRThreadPriority priority = VPR_PRIORITY_NORMAL,
+                      BaseThread::VPRThreadScope scope = VPR_LOCAL_THREAD,
+                      BaseThread::VPRThreadState state = VPR_JOINABLE_THREAD,
+                      size_t stack_size = 0)
    {
-      mThreadPID = sproc(thread_func_t(&vprThreadFunctorFunction), 
+      mThreadPID = sproc(thread_func_t(&vprThreadFunctorFunction),
                          PR_SADDR | PR_SFDS,
                          functorPtr);
       return mThreadPID;
    }
 
    // Called by the spawn routine to start the user thread function
-    // PRE: Called ONLY by a new thread
-    // POST: The new thread will have started the user thread function
-    void startThread(void* null_param);
+   // PRE: Called ONLY by a new thread
+   // POST: The new thread will have started the user thread function
+   void startThread(void* null_param);
 
 private:
    // The functor to call from startThread
@@ -142,8 +142,7 @@ public:
    //! RETURNS:  0 - Succeedful completion
    //! RETURNS: -1 - Error
    // -----------------------------------------------------------------------
-   virtual int
-   join (void** = 0);
+   virtual int join (void** = 0);
 
    // -----------------------------------------------------------------------
    //: Resume the execution of a thread that was previously suspended using
@@ -158,7 +157,9 @@ public:
    //! RETURNS: -1 - Error
    // -----------------------------------------------------------------------
    virtual int resume (void)
-   { return ::kill(mThreadPID, SIGCONT);}
+   {
+      return ::kill(mThreadPID, SIGCONT);
+   }
 
    // -----------------------------------------------------------------------
    //: Suspend the execution of this thread.
@@ -171,7 +172,9 @@ public:
    //! RETURNS: -1 - Error
    // -----------------------------------------------------------------------
    virtual int suspend (void)
-   { return ::kill(mThreadPID, SIGSTOP);}
+   {
+      return ::kill(mThreadPID, SIGSTOP);
+   }
 
    // -----------------------------------------------------------------------
    //: Get this thread's priority.
@@ -191,9 +194,13 @@ public:
       *prio = getpriority(PRIO_PROCESS, mThreadPID);
 
       if ((*prio)== -1)
+      {
          return -1;
+      }
       else
+      {
          return 0;
+      }
    }
 
    // -----------------------------------------------------------------------
@@ -207,8 +214,7 @@ public:
    //! RETURNS:  0 - Succeedful completion
    //! RETURNS: -1 - Error
    // -----------------------------------------------------------------------
-   inline int
-   setprio (int prio)
+   int setprio (int prio)
    {
       return setpriority(PRIO_PROCESS, mThreadPID, prio);
    }
@@ -222,26 +228,27 @@ public:
    //+       process.
    // -----------------------------------------------------------------------
    static void yield (void)
-   { sginap(0);}
+   {
+      sginap(0);
+   }
 
    // -----------------------------------------------------------------------
    // -----------------------------------------------------------------------
-   inline static int
-   usleep (vpr::Uint32 micro) {
+   static int usleep (vpr::Uint32 micro) {
        return ::usleep(micro);
    }
 
    // -----------------------------------------------------------------------
    // -----------------------------------------------------------------------
-   inline static int
-   msleep (vpr::Uint32 milli) {
+   static int msleep (vpr::Uint32 milli)
+   {
        return ::usleep(milli * 1000);
    }
 
    // -----------------------------------------------------------------------
    // -----------------------------------------------------------------------
-   inline static int
-   sleep (vpr::Uint32 seconds) {
+   static int sleep (vpr::Uint32 seconds)
+   {
        return ::sleep(seconds);
    }
 
@@ -257,7 +264,9 @@ public:
    //! RETURNS: -1 - Error
    // -----------------------------------------------------------------------
    virtual int kill (int signum)
-   { return ::kill(mThreadPID, signum);}
+   {
+      return ::kill(mThreadPID, signum);
+   }
 
    // -----------------------------------------------------------------------
    //: Kill (cancel) this thread.
@@ -274,8 +283,9 @@ public:
    //+       version of kill() is also used for sending signals to threads.
    // -----------------------------------------------------------------------
    virtual void kill (void)
-   { kill(SIGKILL);}
-
+   {
+      kill(SIGKILL);
+   }
 
    // -----------------------------------------------------------------------
    //: Output the state of the object.
@@ -330,7 +340,7 @@ private:
    };
 };
 
-}; // End of vpr namespace
+} // End of vpr namespace
 
 
 #endif   /* _VPR_THREAD_SGI_H_ */

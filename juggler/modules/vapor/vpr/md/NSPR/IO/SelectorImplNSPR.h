@@ -55,7 +55,8 @@
 #include <vpr/Util/ReturnStatus.h>
 
 
-namespace vpr {
+namespace vpr
+{
 
 // ----------------------------------------------------------------------------
 //: NSPR Implementation of ---> Cross-platform selection interface.
@@ -128,15 +129,16 @@ protected:
    std::vector<PRPollDesc>                  mPollDescs;    // List of Poll Descriptions to pass to PR_Poll()
 
 /*
-struct PRPollDesc {
-    PRFileDesc* fd;
-    PRInt16 in_flags;
-    PRInt16 out_flags;
- };
+   struct PRPollDesc
+   {
+      PRFileDesc* fd;
+      PRInt16 in_flags;
+      PRInt16 out_flags;
+   };
 */
 };
 
-}; // End of vpr namespace
+} // End of vpr namespace
 
 
 #endif  /* _VPR_SELECTOR_IMP_NSPR_H_ */

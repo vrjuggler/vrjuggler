@@ -45,13 +45,13 @@
 #include <vpr/vprConfig.h>
 
 #ifdef VPR_OS_Win32
-   #include <process.h>
+#  include <process.h>
 #endif
 
 #include <sys/types.h>
 
 #ifdef HAVE_UNISTD_H
-   #include <unistd.h>
+#  include <unistd.h>
 #endif
 
 #include <vpr/Sync/Semaphore.h>
@@ -96,8 +96,8 @@ public:
       waiters = 0;
 
       std::cerr << "------------------------------------\n"
-      << "  vpr::CondVarGeneric: DOES NOT WORK\n"
-      << "------------------------------------\n";
+                << "  vpr::CondVarGeneric: DOES NOT WORK\n"
+                << "------------------------------------\n";
    }
 
    /**
@@ -184,13 +184,13 @@ public:
    void dump (void) const
    {
       vprDEBUG_BEGIN(vprDBG_ALL,0)
-      << "------------- vpr::CondVarGeneric::Dump ---------\n"
-      << vprDEBUG_FLUSH;
+         << "------------- vpr::CondVarGeneric::Dump ---------\n"
+         << vprDEBUG_FLUSH;
       vprDEBUG(vprDBG_ALL,0) << "waiters: " << waiters << std::endl
-      << vprDEBUG_FLUSH;
+                             << vprDEBUG_FLUSH;
       condMutex->dump();
       vprDEBUG_END(vprDBG_ALL,0) << "-----------------------------------\n"
-      << vprDEBUG_FLUSH;
+                                 << vprDEBUG_FLUSH;
    }
 
 private:

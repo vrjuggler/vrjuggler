@@ -47,7 +47,8 @@
 #include <vpr/md/NSPR/Thread/ThreadNSPR.h>
 
 
-namespace vpr {
+namespace vpr
+{
 
 ThreadTable<PRThread*> ThreadNSPR::mThreadTable;
 PRUint32 ThreadNSPR::mTicksPerSec = PR_TicksPerSecond();
@@ -62,21 +63,21 @@ ThreadNSPR::ThreadNSPR (thread_func_t func, void* arg,
                         VPRThreadPriority priority, VPRThreadScope scope,
                         VPRThreadState state, PRUint32 stack_size)
 {
-    ThreadManager* vpr_tm_inst;
+   ThreadManager* vpr_tm_inst;
 
-    vpr_tm_inst = ThreadManager::instance();
+   vpr_tm_inst = ThreadManager::instance();
 
-    vpr_tm_inst->lock();
-    {
-        int ret_val;
-        ThreadNonMemberFunctor* NonMemFunctor;
+   vpr_tm_inst->lock();
+   {
+      int ret_val;
+      ThreadNonMemberFunctor* NonMemFunctor;
 
-        NonMemFunctor = new ThreadNonMemberFunctor(func, arg);
+      NonMemFunctor = new ThreadNonMemberFunctor(func, arg);
 
-        ret_val = spawn(NonMemFunctor, priority, scope, state, stack_size);
-        checkRegister(ret_val);
-    }
-    vpr_tm_inst->unlock();
+      ret_val = spawn(NonMemFunctor, priority, scope, state, stack_size);
+      checkRegister(ret_val);
+   }
+   vpr_tm_inst->unlock();
 }
 
 // ---------------------------------------------------------------------------
@@ -91,16 +92,16 @@ ThreadNSPR::ThreadNSPR (BaseThreadFunctor* functorPtr,
    vprASSERT(functorPtr->isValid() );
    ThreadManager* vpr_tm_inst;
 
-    vpr_tm_inst = ThreadManager::instance();
+   vpr_tm_inst = ThreadManager::instance();
 
-    vpr_tm_inst->lock();
-    {
-        int ret_val;
+   vpr_tm_inst->lock();
+   {
+      int ret_val;
 
-        ret_val = spawn(functorPtr, priority, scope, state, stack_size);
-        checkRegister(ret_val);
-    }
-    vpr_tm_inst->unlock();
+      ret_val = spawn(functorPtr, priority, scope, state, stack_size);
+      checkRegister(ret_val);
+   }
+   vpr_tm_inst->unlock();
 }
 
 // ---------------------------------------------------------------------------
@@ -110,8 +111,9 @@ ThreadNSPR::ThreadNSPR (BaseThreadFunctor* functorPtr,
 // POST: This thread is removed from the thread table and from the local
 //       thread hash.
 // ---------------------------------------------------------------------------
-ThreadNSPR::~ThreadNSPR () {
-    mThreadTable.removeThread(gettid());
+ThreadNSPR::~ThreadNSPR ()
+{
+   mThreadTable.removeThread(gettid());
 }
 
 // ---------------------------------------------------------------------------
@@ -123,36 +125,36 @@ ThreadNSPR::~ThreadNSPR () {
 //       execution immediately, or it may block for a short time before
 //       beginning execution.
 // ---------------------------------------------------------------------------
-int
-ThreadNSPR::spawn (BaseThreadFunctor* functor_ptr,
-                   VPRThreadPriority priority, VPRThreadScope scope,
-                   VPRThreadState state, size_t stack_size)
+int ThreadNSPR::spawn (BaseThreadFunctor* functor_ptr,
+                       VPRThreadPriority priority, VPRThreadScope scope,
+                       VPRThreadState state, size_t stack_size)
 {
-    PRThreadPriority nspr_prio;
-    PRThreadScope nspr_scope;
-    PRThreadState nspr_state;
-    int retval;
+   PRThreadPriority nspr_prio;
+   PRThreadScope nspr_scope;
+   PRThreadState nspr_state;
+   int retval;
 
-    nspr_prio  = vprThreadPriorityToNSPR(priority);
-    nspr_scope = vprThreadScopeToNSPR(scope);
-    nspr_state = vprThreadStateToNSPR(state);
+   nspr_prio  = vprThreadPriorityToNSPR(priority);
+   nspr_scope = vprThreadScopeToNSPR(scope);
+   nspr_state = vprThreadStateToNSPR(state);
 
-    retval = 0;
+   retval = 0;
 
-    vprASSERT(functor_ptr->isValid());
+   vprASSERT(functor_ptr->isValid());
 
-    // Finally create the thread.
-    mThread = PR_CreateThread(PR_USER_THREAD, vprThreadFunctorFunction,
-                              (void*) functor_ptr, nspr_prio, nspr_scope,
-                              nspr_state, (PRUint32) stack_size);
+   // Finally create the thread.
+   mThread = PR_CreateThread(PR_USER_THREAD, vprThreadFunctorFunction,
+                             (void*) functor_ptr, nspr_prio, nspr_scope,
+                             nspr_state, (PRUint32) stack_size);
 
-    // Inform the caller if the thread was not created successfully.
-    if ( mThread == NULL ) {
-        NSPR_PrintError("vpr::ThreadNSPR::spawn() - Cannot create thread");
-        retval = -1;
-    }
+   // Inform the caller if the thread was not created successfully.
+   if ( mThread == NULL )
+   {
+      NSPR_PrintError("vpr::ThreadNSPR::spawn() - Cannot create thread");
+      retval = -1;
+   }
 
-    return retval;
+   return retval;
 }
 
 // ---------------------------------------------------------------------------
@@ -161,19 +163,22 @@ ThreadNSPR::spawn (BaseThreadFunctor* functor_ptr,
 // PRE: None.
 // POST: This thread has its priority set to the specified value.
 // ---------------------------------------------------------------------------
-int
-ThreadNSPR::setPrio (VPRThreadPriority prio) {
-    int retval;
+int ThreadNSPR::setPrio (VPRThreadPriority prio)
+{
+   int retval;
 
-    retval = 0;
+   retval = 0;
 
-    if ( prio > 3 ) {
-        retval = -1;
-    } else {
-        PR_SetThreadPriority(mThread, vprThreadPriorityToNSPR(prio));
-    }
+   if ( prio > 3 )
+   {
+      retval = -1;
+   }
+   else
+   {
+      PR_SetThreadPriority(mThread, vprThreadPriorityToNSPR(prio));
+   }
 
-    return retval;
+   return retval;
 }
 
 // ===========================================================================
@@ -184,134 +189,143 @@ ThreadNSPR::setPrio (VPRThreadPriority prio) {
 // Check the status of the thread creation in order to determine if this
 // thread should be registered in the thread table or not.
 // ---------------------------------------------------------------------------
-void
-ThreadNSPR::checkRegister (const int status) {
-    if ( status == 0 ) {
-        registerThread(true);
-        mThreadTable.addThread(this, mThread);
-    } else {
-        registerThread(false);	// Failed to create
-    }
+void ThreadNSPR::checkRegister (const int status)
+{
+   if ( status == 0 )
+   {
+      registerThread(true);
+      mThreadTable.addThread(this, mThread);
+   }
+   else
+   {
+      registerThread(false);  // Failed to create
+   }
 }
 
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
-PRThreadPriority
-ThreadNSPR::vprThreadPriorityToNSPR (const VPRThreadPriority priority) {
-    PRThreadPriority nspr_prio;
+PRThreadPriority ThreadNSPR::vprThreadPriorityToNSPR (const VPRThreadPriority priority)
+{
+   PRThreadPriority nspr_prio;
 
-    switch (priority) {
+   switch ( priority )
+   {
       case VPR_PRIORITY_LOW:
-        nspr_prio = PR_PRIORITY_LOW;
-        break;
+         nspr_prio = PR_PRIORITY_LOW;
+         break;
       case VPR_PRIORITY_NORMAL:
-        nspr_prio = PR_PRIORITY_NORMAL;
-        break;
+         nspr_prio = PR_PRIORITY_NORMAL;
+         break;
       case VPR_PRIORITY_HIGH:
-        nspr_prio = PR_PRIORITY_HIGH;
-        break;
+         nspr_prio = PR_PRIORITY_HIGH;
+         break;
       case VPR_PRIORITY_URGENT:
-        nspr_prio = PR_PRIORITY_URGENT;
-        break;
-    };
+         nspr_prio = PR_PRIORITY_URGENT;
+         break;
+   };
 
-    return nspr_prio;
+   return nspr_prio;
 }
 
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
-PRThreadScope
-ThreadNSPR::vprThreadScopeToNSPR (const VPRThreadScope scope) {
-    PRThreadScope nspr_scope;
+PRThreadScope ThreadNSPR::vprThreadScopeToNSPR (const VPRThreadScope scope)
+{
+   PRThreadScope nspr_scope;
 
-    switch (scope) {
+   switch ( scope )
+   {
       case VPR_LOCAL_THREAD:
-        nspr_scope = PR_LOCAL_THREAD;
-        break;
+         nspr_scope = PR_LOCAL_THREAD;
+         break;
       case VPR_GLOBAL_THREAD:
-        nspr_scope = PR_GLOBAL_THREAD;
-        break;
-    };
+         nspr_scope = PR_GLOBAL_THREAD;
+         break;
+   };
 
-    return nspr_scope;
+   return nspr_scope;
 }
 
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
-PRThreadState
-ThreadNSPR::vprThreadStateToNSPR (const VPRThreadState state) {
-    PRThreadState nspr_state;
+PRThreadState ThreadNSPR::vprThreadStateToNSPR (const VPRThreadState state)
+{
+   PRThreadState nspr_state;
 
-    switch (state) {
+   switch ( state )
+   {
       case VPR_JOINABLE_THREAD:
-        nspr_state = PR_JOINABLE_THREAD;
-        break;
+         nspr_state = PR_JOINABLE_THREAD;
+         break;
       case VPR_UNJOINABLE_THREAD:
-        nspr_state = PR_UNJOINABLE_THREAD;
-        break;
-    };
+         nspr_state = PR_UNJOINABLE_THREAD;
+         break;
+   };
 
-    return nspr_state;
+   return nspr_state;
 }
 
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
-BaseThread::VPRThreadPriority
-ThreadNSPR::nsprThreadPriorityToVPR (const PRThreadPriority priority) {
-    VPRThreadPriority vpr_prio;
+BaseThread::VPRThreadPriority ThreadNSPR::nsprThreadPriorityToVPR (const PRThreadPriority priority)
+{
+   VPRThreadPriority vpr_prio;
 
-    switch (priority) {
+   switch ( priority )
+   {
       case PR_PRIORITY_LOW:
-        vpr_prio = VPR_PRIORITY_LOW;
-        break;
+         vpr_prio = VPR_PRIORITY_LOW;
+         break;
       case PR_PRIORITY_NORMAL:
-        vpr_prio = VPR_PRIORITY_NORMAL;
-        break;
+         vpr_prio = VPR_PRIORITY_NORMAL;
+         break;
       case PR_PRIORITY_HIGH:
-        vpr_prio = VPR_PRIORITY_HIGH;
-        break;
+         vpr_prio = VPR_PRIORITY_HIGH;
+         break;
       case PR_PRIORITY_URGENT:
-        vpr_prio = VPR_PRIORITY_URGENT;
-        break;
-    };
+         vpr_prio = VPR_PRIORITY_URGENT;
+         break;
+   };
 
-    return vpr_prio;
+   return vpr_prio;
 }
 
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
-BaseThread::VPRThreadScope
-ThreadNSPR::nsprThreadScopeToVPR (const PRThreadScope scope) {
-    VPRThreadScope vpr_scope;
+BaseThread::VPRThreadScope ThreadNSPR::nsprThreadScopeToVPR (const PRThreadScope scope)
+{
+   VPRThreadScope vpr_scope;
 
-    switch (scope) {
+   switch ( scope )
+   {
       case PR_LOCAL_THREAD:
-        vpr_scope = VPR_LOCAL_THREAD;
-        break;
+         vpr_scope = VPR_LOCAL_THREAD;
+         break;
       case PR_GLOBAL_THREAD:
-        vpr_scope = VPR_GLOBAL_THREAD;
-        break;
-    };
+         vpr_scope = VPR_GLOBAL_THREAD;
+         break;
+   };
 
-    return vpr_scope;
+   return vpr_scope;
 }
 
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
-BaseThread::VPRThreadState
-ThreadNSPR::nsprThreadStateToVPR (const PRThreadState state) {
-    VPRThreadState vpr_state;
+BaseThread::VPRThreadState ThreadNSPR::nsprThreadStateToVPR (const PRThreadState state)
+{
+   VPRThreadState vpr_state;
 
-    switch (state) {
+   switch ( state )
+   {
       case PR_JOINABLE_THREAD:
-        vpr_state = VPR_JOINABLE_THREAD;
-        break;
+         vpr_state = VPR_JOINABLE_THREAD;
+         break;
       case PR_UNJOINABLE_THREAD:
-        vpr_state = VPR_UNJOINABLE_THREAD;
-        break;
-    };
+         vpr_state = VPR_UNJOINABLE_THREAD;
+         break;
+   };
 
-    return vpr_state;
+   return vpr_state;
 }
 
-}; // End of vpr namespace
+} // End of vpr namespace

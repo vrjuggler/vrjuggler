@@ -63,7 +63,7 @@
 //    be shared across processes.
 //
 // Author:
-//	Allen Bierbaum
+//  Allen Bierbaum
 //
 // Date: 1-9-97
 //-----------------------------------------------
@@ -78,7 +78,8 @@
 // otherwise wet to a "big" number.
 
 
-namespace vpr {
+namespace vpr
+{
 
 class MemPoolSGI : public MemPool
 {
@@ -86,7 +87,8 @@ public:
    MemPoolSGI(size_t initialSize = 65536, int numProcs = 8,
               char* staticTempName = "/var/tmp/memPoolSGIXXXXXX");
 
-   virtual ~MemPoolSGI() {
+   virtual ~MemPoolSGI()
+   {
       usdetach(arena);
       unlink(arenaFileName);
       std::cerr << "\nUnlinking: " << arenaFileName << std::endl;
@@ -98,8 +100,10 @@ public:
       void* retval;
       retval = usmalloc(size, arena);
 
-      if (retval == NULL)
+      if ( retval == NULL )
+      {
          std::cerr << "MemPoolSGI: Out of memory!!!" << std::endl;
+      }
 
       return retval;
    }
@@ -116,7 +120,9 @@ public:
 
 public:      // Non-virtual functions
    usptr_t*    getArena() // Use with extreme caution  NOTE: Possibly use "friend" stuff
-   { return arena;}
+   {
+      return arena;
+   }
 
 public:
    // Function must be called before any vpr::MemPools are created.
@@ -129,8 +135,10 @@ public:
    void* operator new(size_t sz)
    {
       std::cerr << "MemPoolSGI::new called. sz:" << sz << "\n";
-      if (arenaForMemPools == NULL)
+      if ( arenaForMemPools == NULL )
+      {
          init(); // Make sure that we are initialized already.
+      }
 
       return usmalloc(sizeof(MemPoolSGI), arenaForMemPools);
    }
@@ -149,7 +157,7 @@ private:    // Static data for all members -- Must be set before forks!!!!
    static char* arenaForMemPoolsFileName;
 };
 
-}; // End of vpr namespace
+} // End of vpr namespace
 
 
 #endif

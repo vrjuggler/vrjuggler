@@ -48,7 +48,7 @@
 #include <sched.h>
 
 #ifdef HAVE_SYS_CAPABILITY_H
-#   include <sys/capability.h>
+#  include <sys/capability.h>
 #endif
 
 #include <vpr/Thread/ThreadManager.h>
@@ -60,7 +60,8 @@
 
 typedef struct sched_param sched_param_t;
 
-namespace vpr {
+namespace vpr
+{
 
 ThreadPosix::staticWrapper ThreadPosix::statics;
 
@@ -84,16 +85,15 @@ ThreadPosix::ThreadPosix (thread_func_t func, void* arg,
    // Create the thread functor to start
    mUserThreadFunctor = new ThreadNonMemberFunctor(func, arg);
    mDeleteThreadFunctor = true;
-   ThreadMemberFunctor<ThreadPosix>* start_functor
-               = new ThreadMemberFunctor<ThreadPosix>(this,
-                                                      &ThreadPosix::startThread,
-                                                      NULL);
+   ThreadMemberFunctor<ThreadPosix>* start_functor =
+      new ThreadMemberFunctor<ThreadPosix>(this, &ThreadPosix::startThread,
+                                           NULL);
 
    // START THREAD
    // NOTE: Automagically registers thread UNLESS failure
    int ret_val = spawn(start_functor, priority, scope, state, stack_size);
 
-   if(ret_val)
+   if ( ret_val )
    {
       vpr_tm_inst->lock();  // Need to lock thread manager before I register the thread with them
       {
@@ -111,32 +111,31 @@ ThreadPosix::ThreadPosix (thread_func_t func, void* arg,
 ThreadPosix::ThreadPosix (BaseThreadFunctor* functorPtr,
                           VPRThreadPriority priority, VPRThreadScope scope,
                           VPRThreadState state, size_t stack_size)
-    : mUserThreadFunctor(NULL), mDeleteThreadFunctor(false)
+   : mUserThreadFunctor(NULL), mDeleteThreadFunctor(false)
 {
-    ThreadManager* vpr_tm_inst;
+   ThreadManager* vpr_tm_inst;
 
-    mScope = VPR_THREAD_SCOPE;
-    vpr_tm_inst = ThreadManager::instance();
+   mScope = VPR_THREAD_SCOPE;
+   vpr_tm_inst = ThreadManager::instance();
 
-    // Create the thread functor to start
-    mUserThreadFunctor = functorPtr;
-    ThreadMemberFunctor<ThreadPosix>* start_functor
-             = new ThreadMemberFunctor<ThreadPosix>(this,
-                                                    &ThreadPosix::startThread,
-                                                    NULL);
+   // Create the thread functor to start
+   mUserThreadFunctor = functorPtr;
+   ThreadMemberFunctor<ThreadPosix>* start_functor =
+      new ThreadMemberFunctor<ThreadPosix>(this, &ThreadPosix::startThread,
+                                           NULL);
 
-    // Start thread
-    // NOTE: Automagically registers thread UNLESS failure
-    int ret_val = spawn(start_functor, priority, scope, state, stack_size);
+   // Start thread
+   // NOTE: Automagically registers thread UNLESS failure
+   int ret_val = spawn(start_functor, priority, scope, state, stack_size);
 
-    if(ret_val)
-    {
-       vpr_tm_inst->lock();  // Need to lock thread manager before I register the thread with them
-       {
+   if ( ret_val )
+   {
+      vpr_tm_inst->lock();  // Need to lock thread manager before I register the thread with them
+      {
          registerThread(false);
-       }
-       vpr_tm_inst->unlock();
-    }
+      }
+      vpr_tm_inst->unlock();
+   }
 }
 
 // ---------------------------------------------------------------------------
@@ -146,14 +145,16 @@ ThreadPosix::ThreadPosix (BaseThreadFunctor* functorPtr,
 // POST: This thread is removed from the thread table and from the local
 //       thread hash.
 // ---------------------------------------------------------------------------
-ThreadPosix::~ThreadPosix (void) {
-    int status;
+ThreadPosix::~ThreadPosix (void)
+{
+   int status;
 
-    if ( mDeleteThreadFunctor ) {
-        delete mUserThreadFunctor;
-    }
+   if ( mDeleteThreadFunctor )
+   {
+      delete mUserThreadFunctor;
+   }
 
-    status = 0;
+   status = 0;
 }
 
 // ---------------------------------------------------------------------------
@@ -165,86 +166,91 @@ ThreadPosix::~ThreadPosix (void) {
 //       execution immediately, or it may block for a short time before
 //       beginning execution.
 // ---------------------------------------------------------------------------
-int
-ThreadPosix::spawn (BaseThreadFunctor* functorPtr,
-                    VPRThreadPriority priority, VPRThreadScope scope,
-                    VPRThreadState state, size_t stack_size)
+int ThreadPosix::spawn (BaseThreadFunctor* functorPtr,
+                        VPRThreadPriority priority, VPRThreadScope scope,
+                        VPRThreadState state, size_t stack_size)
 {
-    int ret_val;
-    pthread_attr_t thread_attrs;
-    int pthread_prio;
+   int ret_val;
+   pthread_attr_t thread_attrs;
+   int pthread_prio;
 
-    pthread_prio = vprThreadPriorityToPOSIX(priority);
+   pthread_prio = vprThreadPriorityToPOSIX(priority);
 
-    // Initialize thread_attrs and set the priority of the thread if it is
-    // supported.  HP-UX requires a slightly different syntax than other
-    // operating systems.
+   // Initialize thread_attrs and set the priority of the thread if it is
+   // supported.  HP-UX requires a slightly different syntax than other
+   // operating systems.
 #ifdef _PTHREADS_DRAFT_4
-    pthread_attr_create(&thread_attrs);
+   pthread_attr_create(&thread_attrs);
 
-#   ifdef _POSIX_THREAD_REALTIME_SCHEDULING
-        if ( pthread_prio > 0 ) {
-            pthread_attr_setprio(&thread_attrs, pthread_prio);
-        }
-#   endif   /* _POSIX_THREAD_REALTIME_SCHEDULING */
+#  ifdef _POSIX_THREAD_REALTIME_SCHEDULING
+   if ( pthread_prio > 0 )
+   {
+      pthread_attr_setprio(&thread_attrs, pthread_prio);
+   }
+#  endif   /* _POSIX_THREAD_REALTIME_SCHEDULING */
 
 #else /* ! _PTHREADS_DRAFT_4 */
-    sched_param_t prio_param;
+   sched_param_t prio_param;
 
-    pthread_attr_init(&thread_attrs);
+   pthread_attr_init(&thread_attrs);
 
-    // If thread priority scheduling is available, set the thread's priority
-    // if it is set to be higher than 0.
-#   ifdef _POSIX_THREAD_PRIORITY_SCHEDULING
-#   if defined(HAVE_SYS_CAPABILITY_H) && ! defined(VPR_OS_FreeBSD) && ! defined(VPR_OS_Linux)
-        cap_t capabilities = cap_get_proc();
+   // If thread priority scheduling is available, set the thread's priority
+   // if it is set to be higher than 0.
+#  ifdef _POSIX_THREAD_PRIORITY_SCHEDULING
+#  if defined(HAVE_SYS_CAPABILITY_H) && ! defined(VPR_OS_FreeBSD) && \
+      ! defined(VPR_OS_Linux)
+   cap_t capabilities = cap_get_proc();
 
-        // If we have the capability to do so, set the scope of the threads
-        // to system scope.
-        if ( capabilities->cap_effective & CAP_SCHED_MGT ) {
-            mScope = PTHREAD_SCOPE_SYSTEM;
-        }
-#   endif   /* HAVE_SYS_CAPABILITY_H */
+   // If we have the capability to do so, set the scope of the threads
+   // to system scope.
+   if ( capabilities->cap_effective & CAP_SCHED_MGT )
+   {
+      mScope = PTHREAD_SCOPE_SYSTEM;
+   }
+#  endif   /* HAVE_SYS_CAPABILITY_H */
 
-        pthread_attr_setscope(&thread_attrs, mScope);
+   pthread_attr_setscope(&thread_attrs, mScope);
 
-        if ( pthread_prio > 0 ) {
-            prio_param.sched_priority = pthread_prio;
-            pthread_attr_setschedparam(&thread_attrs, &prio_param);
-        }
-#   endif   /* _POSIX_THREAD_PRIORITY_SCHEDULING */
+   if ( pthread_prio > 0 )
+   {
+      prio_param.sched_priority = pthread_prio;
+      pthread_attr_setschedparam(&thread_attrs, &prio_param);
+   }
+#  endif   /* _POSIX_THREAD_PRIORITY_SCHEDULING */
 
 #endif   /* _PTHREADS_DRAFT_4 */
 
-    // Set the stack size if a value greater than 0 is specified and this
-    // pthreads implementation supports it.  Ensure that
-    // _POSIX_THREAD_ATTR_STACKSIZE is defined before trying to test its
-    // value.
+   // Set the stack size if a value greater than 0 is specified and this
+   // pthreads implementation supports it.  Ensure that
+   // _POSIX_THREAD_ATTR_STACKSIZE is defined before trying to test its
+   // value.
 #ifdef _POSIX_THREAD_ATTR_STACKSIZE
-    if ( stack_size > 0 ) {
-        // ** STACK SIZE CHECK NEEDED **
+   if ( stack_size > 0 )
+   {
+      // ** STACK SIZE CHECK NEEDED **
 
-        pthread_attr_setstacksize(&thread_attrs, stack_size);
-    }
+      pthread_attr_setstacksize(&thread_attrs, stack_size);
+   }
 #endif
 
-    // Finally create the thread.
+   // Finally create the thread.
 #ifdef _PTHREADS_DRAFT_4
-    ret_val = pthread_create(&(mThread), thread_attrs,
-                             (pthread_startroutine_t) vprThreadFunctorFunction,
-                             (pthread_addr_t) functorPtr);
+   ret_val = pthread_create(&(mThread), thread_attrs,
+                            (pthread_startroutine_t) vprThreadFunctorFunction,
+                            (pthread_addr_t) functorPtr);
 #else
-    ret_val = pthread_create(&(mThread), &thread_attrs,
-                             vprThreadFunctorFunction, (void *) functorPtr);
+   ret_val = pthread_create(&(mThread), &thread_attrs,
+                            vprThreadFunctorFunction, (void *) functorPtr);
 #endif
 
-    // Inform the caller if the thread was not created successfully.
-    if ( ret_val != 0 ) {
-        std::cerr << "vpr::ThreadPosix::spawn() - Cannot create thread:"
-                  << strerror(ret_val) << std::endl;
-    }
+   // Inform the caller if the thread was not created successfully.
+   if ( ret_val != 0 )
+   {
+      std::cerr << "vpr::ThreadPosix::spawn() - Cannot create thread:"
+                << strerror(ret_val) << std::endl;
+   }
 
-    return ret_val;
+   return ret_val;
 }
 
 
@@ -272,7 +278,6 @@ void ThreadPosix::startThread(void* null_param)
    (*mUserThreadFunctor)();
 }
 
-
 // ---------------------------------------------------------------------------
 // Get this thread's priority.
 //
@@ -280,20 +285,20 @@ void ThreadPosix::startThread(void* null_param)
 // POST: The priority of this thread is returned in the integer pointer
 //       variable.
 // ---------------------------------------------------------------------------
-int
-ThreadPosix::getPrio (VPRThreadPriority* prio) {
+int ThreadPosix::getPrio (VPRThreadPriority* prio)
+{
 #ifdef _POSIX_THREAD_PRIORITY_SCHEDULING
-    int policy, ret_val;
-    sched_param_t fifo_sched_param;
+   int policy, ret_val;
+   sched_param_t fifo_sched_param;
 
-    ret_val = pthread_getschedparam(mThread, &policy, &fifo_sched_param);
-    *prio = posixThreadPriorityToVPR(fifo_sched_param.sched_priority);
+   ret_val = pthread_getschedparam(mThread, &policy, &fifo_sched_param);
+   *prio = posixThreadPriorityToVPR(fifo_sched_param.sched_priority);
 
-    return ret_val;
+   return ret_val;
 #else
-    std::cerr << "vpr::ThreadPosix::getPrio(): Not supported\n";
+   std::cerr << "vpr::ThreadPosix::getPrio(): Not supported\n";
 
-    return -1;
+   return -1;
 #endif
 }
 
@@ -303,23 +308,22 @@ ThreadPosix::getPrio (VPRThreadPriority* prio) {
 // PRE: None.
 // POST: This thread has its priority set to the specified value.
 // ---------------------------------------------------------------------------
-int
-ThreadPosix::setPrio (VPRThreadPriority prio) {
+int ThreadPosix::setPrio (VPRThreadPriority prio)
+{
 #ifdef _POSIX_THREAD_PRIORITY_SCHEDULING
-    sched_param_t fifo_sched_param;
+   sched_param_t fifo_sched_param;
 
-    fifo_sched_param.sched_priority = prio;
+   fifo_sched_param.sched_priority = prio;
 
-    return pthread_setschedparam(mThread, SCHED_FIFO, &fifo_sched_param);
+   return pthread_setschedparam(mThread, SCHED_FIFO, &fifo_sched_param);
 #else
-    std::cerr << "vpr::ThreadPosix::setPrio(): Not supported\n";
+   std::cerr << "vpr::ThreadPosix::setPrio(): Not supported\n";
 
-    return -1;
+   return -1;
 #endif
 }
 
-BaseThread*
-ThreadPosix::self (void)
+BaseThread* ThreadPosix::self (void)
 {
    vprASSERT((statics.mStaticsInitialized==1221) && "Trying to call vpr::ThreadPosix::self before statics are initialized. Don't do that");
 
@@ -328,8 +332,6 @@ ThreadPosix::self (void)
 
    return my_thread;
 }
-
-
 
 // ===========================================================================
 // Private methods follow.
@@ -347,146 +349,157 @@ ThreadPosix::self (void)
 //! ARGS: status - The integer status returned by spawn().
 // ---------------------------------------------------------------------------
 /*
-void
-ThreadPosix::checkRegister (int status) {
-    if ( status == 0 ) {
-       mThreadTable.addThread(this, hash());      // Store way to look me up
-       threadIdKey().setspecific((void*)this);     // Store the pointer to me
-       registerThread(true);
-    } else {
-        registerThread(false);   // Failed to create
-    }
+void ThreadPosix::checkRegister (int status)
+{
+   if ( status == 0 )
+   {
+      mThreadTable.addThread(this, hash());      // Store way to look me up
+      threadIdKey().setspecific((void*)this);    // Store the pointer to me
+      registerThread(true);
+   }
+   else
+   {
+      registerThread(false);   // Failed to create
+   }
 }
 */
 
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
-int
-ThreadPosix::vprThreadPriorityToPOSIX (const VPRThreadPriority priority) {
-    int posix_prio;
-    int min_prio, max_prio;
+int ThreadPosix::vprThreadPriorityToPOSIX (const VPRThreadPriority priority)
+{
+   int posix_prio;
+   int min_prio, max_prio;
 
-    min_prio = sched_get_priority_min(SCHED_OTHER);
-    max_prio = sched_get_priority_max(SCHED_OTHER);
+   min_prio = sched_get_priority_min(SCHED_OTHER);
+   max_prio = sched_get_priority_max(SCHED_OTHER);
 
-    switch (priority) {
+   switch ( priority )
+   {
       case VPR_PRIORITY_LOW:
       case VPR_PRIORITY_NORMAL:
-        posix_prio = min_prio;
-        break;
+         posix_prio = min_prio;
+         break;
       case VPR_PRIORITY_HIGH:
-        posix_prio = min_prio + 1;
-        break;
+         posix_prio = min_prio + 1;
+         break;
       case VPR_PRIORITY_URGENT:
-        posix_prio = max_prio;
-        break;
+         posix_prio = max_prio;
+         break;
       default:
-        posix_prio = min_prio;
-        break;
-    };
+         posix_prio = min_prio;
+         break;
+   };
 
-    return posix_prio;
+   return posix_prio;
 }
 
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
-int
-ThreadPosix::vprThreadScopeToPOSIX (const VPRThreadScope scope) {
-    int posix_scope;
+int ThreadPosix::vprThreadScopeToPOSIX (const VPRThreadScope scope)
+{
+   int posix_scope;
 
-    switch (scope) {
+   switch ( scope )
+   {
       case VPR_LOCAL_THREAD:
-        posix_scope = PTHREAD_SCOPE_PROCESS;
-        break;
+         posix_scope = PTHREAD_SCOPE_PROCESS;
+         break;
       case VPR_GLOBAL_THREAD:
-        posix_scope = PTHREAD_SCOPE_SYSTEM;
-        break;
+         posix_scope = PTHREAD_SCOPE_SYSTEM;
+         break;
       default:
-        posix_scope = VPR_THREAD_SCOPE;
-        break;
-    };
+         posix_scope = VPR_THREAD_SCOPE;
+         break;
+   };
 
-    return posix_scope;
+   return posix_scope;
 }
 
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
-int
-ThreadPosix::vprThreadStateToPOSIX (const VPRThreadState state) {
-    int posix_state;
+int ThreadPosix::vprThreadStateToPOSIX (const VPRThreadState state)
+{
+   int posix_state;
 
-    switch (state) {
+   switch ( state )
+   {
       case VPR_JOINABLE_THREAD:
-        posix_state = PTHREAD_CREATE_JOINABLE;
-        break;
+         posix_state = PTHREAD_CREATE_JOINABLE;
+         break;
       case VPR_UNJOINABLE_THREAD:
-        posix_state = PTHREAD_CREATE_DETACHED;
-        break;
+         posix_state = PTHREAD_CREATE_DETACHED;
+         break;
       default:
-        posix_state = PTHREAD_CREATE_JOINABLE;
-        break;
-    };
+         posix_state = PTHREAD_CREATE_JOINABLE;
+         break;
+   };
 
-    return posix_state;
+   return posix_state;
 }
 
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
-BaseThread::VPRThreadPriority
-ThreadPosix::posixThreadPriorityToVPR (const int priority) {
-    VPRThreadPriority vpr_prio;
-    int min_prio, max_prio;
+BaseThread::VPRThreadPriority ThreadPosix::posixThreadPriorityToVPR (const int priority)
+{
+   VPRThreadPriority vpr_prio;
+   int min_prio, max_prio;
 
-    min_prio = sched_get_priority_min(SCHED_OTHER);
-    max_prio = sched_get_priority_max(SCHED_OTHER);
+   min_prio = sched_get_priority_min(SCHED_OTHER);
+   max_prio = sched_get_priority_max(SCHED_OTHER);
 
-    if ( priority == min_prio ) {
-        vpr_prio = VPR_PRIORITY_NORMAL;
-    }
-    else if ( priority == max_prio ) {
-        vpr_prio = VPR_PRIORITY_URGENT;
-    }
-    else {
-        vpr_prio = VPR_PRIORITY_HIGH;
-    }
+   if ( priority == min_prio )
+   {
+      vpr_prio = VPR_PRIORITY_NORMAL;
+   }
+   else if ( priority == max_prio )
+   {
+      vpr_prio = VPR_PRIORITY_URGENT;
+   }
+   else
+   {
+      vpr_prio = VPR_PRIORITY_HIGH;
+   }
 
-    return vpr_prio;
+   return vpr_prio;
 }
 
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
-BaseThread::VPRThreadScope
-ThreadPosix::posixThreadScopeToVPR (const int scope) {
-    VPRThreadScope vpr_scope;
+BaseThread::VPRThreadScope ThreadPosix::posixThreadScopeToVPR (const int scope)
+{
+   VPRThreadScope vpr_scope;
 
-    switch (scope) {
+   switch ( scope )
+   {
       case PTHREAD_SCOPE_PROCESS:
-        vpr_scope = VPR_LOCAL_THREAD;
-        break;
+         vpr_scope = VPR_LOCAL_THREAD;
+         break;
       case PTHREAD_SCOPE_SYSTEM:
-        vpr_scope = VPR_GLOBAL_THREAD;
-        break;
-    };
+         vpr_scope = VPR_GLOBAL_THREAD;
+         break;
+   };
 
-    return vpr_scope;
+   return vpr_scope;
 }
 
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
-BaseThread::VPRThreadState
-ThreadPosix::posixThreadStateToVPR (const int state) {
-    VPRThreadState vpr_state;
+BaseThread::VPRThreadState ThreadPosix::posixThreadStateToVPR (const int state)
+{
+   VPRThreadState vpr_state;
 
-    switch (state) {
+   switch ( state )
+   {
       case PTHREAD_CREATE_JOINABLE:
-        vpr_state = VPR_JOINABLE_THREAD;
-        break;
+         vpr_state = VPR_JOINABLE_THREAD;
+         break;
       case PTHREAD_CREATE_DETACHED:
-        vpr_state = VPR_UNJOINABLE_THREAD;
-        break;
-    };
+         vpr_state = VPR_UNJOINABLE_THREAD;
+         break;
+   };
 
-    return vpr_state;
+   return vpr_state;
 }
 
-}; // End of vpr namespace
+} // End of vpr namespace

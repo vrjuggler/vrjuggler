@@ -46,7 +46,8 @@
 #include <sys/time.h>
 #endif
 
-namespace vpr {
+namespace vpr
+{
 
 /**
  * Simple class to take timings and give averages.
@@ -130,5 +131,6 @@ private:               // Timing stuff
    long    timeCount;       //! The count on the number of times
 };  // class Timer
 
-};   // namespace vpr
+}   // namespace vpr
+
 #endif

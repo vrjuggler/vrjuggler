@@ -43,19 +43,20 @@
 #include <vpr/IO/Port/Port.h>
 
 
-namespace vpr {
-
-Port::Port (const std::string& port_name)
-    : BlockIO(port_name)
+namespace vpr
 {
-    /* Do nothing. */ ;
+
+Port::Port (const std::string& port_name) : BlockIO(port_name)
+{
+   /* Do nothing. */ ;
 }
 
 /**
  * Destructor.  This does nothing.
  */
-Port::~Port () {
-    /* Do nothing. */ ;
+Port::~Port ()
+{
+   /* Do nothing. */ ;
 }
 
 }

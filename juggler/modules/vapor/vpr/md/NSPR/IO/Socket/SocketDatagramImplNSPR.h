@@ -49,68 +49,68 @@
 #include <vpr/md/NSPR/IO/Socket/SocketImplNSPR.h>
 
 
-namespace vpr {
+namespace vpr
+{
 
 class VPR_CLASS_API SocketDatagramImplNSPR : public SocketImplNSPR
 {
 public:
-    typedef SocketImplNSPR Parent;
+   typedef SocketImplNSPR Parent;
 
-    // ========================================================================
-    // vpr::SocketDatagram implementation.
-    // ========================================================================
+   // ========================================================================
+   // vpr::SocketDatagram implementation.
+   // ========================================================================
 
-    // ------------------------------------------------------------------------
-    //: Default constructor.  This does nothing.
-    //
-    //! PRE: None.
-    //! POST: None.
-    // ------------------------------------------------------------------------
-    SocketDatagramImplNSPR (void)
-        : SocketImplNSPR(SocketTypes::DATAGRAM)
-    {
-        /* Do nothing. */ ;
-    }
+   // ------------------------------------------------------------------------
+   //: Default constructor.  This does nothing.
+   //
+   //! PRE: None.
+   //! POST: None.
+   // ------------------------------------------------------------------------
+   SocketDatagramImplNSPR (void) : SocketImplNSPR(SocketTypes::DATAGRAM)
+   {
+      /* Do nothing. */ ;
+   }
 
-    // ------------------------------------------------------------------------
-    //
-    //! PRE: None.
-    //! POST: The member variables are initialized with the type in particular
-    //+       set to vpr::SocketTypes::DATAGRAM.
-    //
-    // ------------------------------------------------------------------------
-    SocketDatagramImplNSPR (const InetAddr& local_addr,
+   // ------------------------------------------------------------------------
+   //
+   //! PRE: None.
+   //! POST: The member variables are initialized with the type in particular
+   //+       set to vpr::SocketTypes::DATAGRAM.
+   //
+   // ------------------------------------------------------------------------
+   SocketDatagramImplNSPR (const InetAddr& local_addr,
                            const InetAddr& remote_addr)
-        : SocketImplNSPR(local_addr, remote_addr, SocketTypes::DATAGRAM)
-    {
-        /* Do nothing. */ ;
-    }
+      : SocketImplNSPR(local_addr, remote_addr, SocketTypes::DATAGRAM)
+   {
+      /* Do nothing. */ ;
+   }
 
-    // ------------------------------------------------------------------------
-    // Copy constructor.
-    // ------------------------------------------------------------------------
-    SocketDatagramImplNSPR (const SocketDatagramImplNSPR& sock)
-        : SocketImplNSPR(SocketTypes::DATAGRAM)
-    {
-        mLocalAddr  = sock.mLocalAddr;
-        mRemoteAddr = sock.mRemoteAddr;
-    }
+   // ------------------------------------------------------------------------
+   // Copy constructor.
+   // ------------------------------------------------------------------------
+   SocketDatagramImplNSPR (const SocketDatagramImplNSPR& sock)
+      : SocketImplNSPR(SocketTypes::DATAGRAM)
+   {
+      mLocalAddr  = sock.mLocalAddr;
+      mRemoteAddr = sock.mRemoteAddr;
+   }
 
-    // ------------------------------------------------------------------------
-    // ------------------------------------------------------------------------
-    vpr::ReturnStatus recvfrom(void* msg, const vpr::Uint32 length, const int flags,
-                         vpr::InetAddr& from, vpr::Uint32& bytes_read,
-                         const vpr::Interval timeout = vpr::Interval::NoTimeout);
+   // ------------------------------------------------------------------------
+   // ------------------------------------------------------------------------
+   vpr::ReturnStatus recvfrom(void* msg, const vpr::Uint32 length, const int flags,
+                              vpr::InetAddr& from, vpr::Uint32& bytes_read,
+                              const vpr::Interval timeout = vpr::Interval::NoTimeout);
 
-    // ------------------------------------------------------------------------
-    // ------------------------------------------------------------------------
-    vpr::ReturnStatus sendto(const void* msg, const vpr::Uint32 length,
-                       const int flags, const vpr::InetAddr& to,
-                       vpr::Uint32& bytes_sent,
-                       const vpr::Interval timeout = vpr::Interval::NoTimeout);
+   // ------------------------------------------------------------------------
+   // ------------------------------------------------------------------------
+   vpr::ReturnStatus sendto(const void* msg, const vpr::Uint32 length,
+                            const int flags, const vpr::InetAddr& to,
+                            vpr::Uint32& bytes_sent,
+                            const vpr::Interval timeout = vpr::Interval::NoTimeout);
 };
 
-}; // End of namespace
+} // End of namespace
 
 
 #endif  /* _VPR_SOCKET_DATAGRAM_IMPL_NSPR_H_ */

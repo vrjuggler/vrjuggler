@@ -45,25 +45,27 @@
 #include <vpr/vprConfig.h>
 
 
-namespace vpr {
+namespace vpr
+{
 
 /**
- * Common base for all selectors and imp's   
+ * Common base for all selectors and imp's
  */
 class VPR_CLASS_API SelectorBase
 {
 public:
    enum EventType
-      { Read = 1,          /**< Read -  */
-        Accept = 1,        /**< Accept - Same as READ  */
-        Write = 2,         /**< Write - */
-        Except = 4,        /**< Exception - */
-        Error = 8,         /**< Error - */
-        Invalid = 16       /**< Invalid - Invalid handle */
-      };
+   {
+      Read = 1,          /**< Read -  */
+      Accept = 1,        /**< Accept - Same as READ  */
+      Write = 2,         /**< Write - */
+      Except = 4,        /**< Exception - */
+      Error = 8,         /**< Error - */
+      Invalid = 16       /**< Invalid - Invalid handle */
+   };
 };
 
 } // End of vpr namespace
 
 
-#endif	/* _VPR_SELECTOR_BASE_H_ */
+#endif  /* _VPR_SELECTOR_BASE_H_ */

@@ -50,93 +50,97 @@
 #include <vpr/Util/ReturnStatus.h>
 
 
-namespace vpr {
+namespace vpr
+{
 
 /**
  * Options for stream sockets.
  */
-class VPR_CLASS_API SocketStreamOpt : public vpr::SocketOptionWrapper {
+class VPR_CLASS_API SocketStreamOpt : public vpr::SocketOptionWrapper
+{
 public:
-    /**
-     * Default constructor.  This does nothing and exists only so that we can
-     * build a DLL on Win32.
-     */
-    SocketStreamOpt(void);
+   /**
+    * Default constructor.  This does nothing and exists only so that we can
+    * build a DLL on Win32.
+    */
+   SocketStreamOpt(void);
 
-    /**
-     * Default destructor.  This does nothing and exists only so that we can
-     * build a DLL on Win32.
-     */
-    virtual ~SocketStreamOpt(void);
+   /**
+    * Default destructor.  This does nothing and exists only so that we can
+    * build a DLL on Win32.
+    */
+   virtual ~SocketStreamOpt(void);
 
-    /**
-     *
-     */
-    inline vpr::ReturnStatus
-    getMaxSegmentSize (vpr::Int32& size) {
-        vpr::SocketOptions::Data option;
-        vpr::ReturnStatus retval;
+   /**
+    *
+    */
+   vpr::ReturnStatus getMaxSegmentSize (vpr::Int32& size)
+   {
+      vpr::SocketOptions::Data option;
+      vpr::ReturnStatus retval;
 
-        retval = getOption(vpr::SocketOptions::MaxSegment, option);
+      retval = getOption(vpr::SocketOptions::MaxSegment, option);
 
-        if ( retval.success() ) {
-            size = option.max_segment;
-        }
+      if ( retval.success() )
+      {
+         size = option.max_segment;
+      }
 
-        return retval;
-    }
+      return retval;
+   }
 
-    /**
-     *
-     */
-    inline vpr::ReturnStatus
-    setMaxSegmentSize (const vpr::Int32 size) {
-        vpr::SocketOptions::Data option;
-        option.max_segment = size;
-        return setOption(vpr::SocketOptions::MaxSegment, option);
-    }
+   /**
+    *
+    */
+   vpr::ReturnStatus setMaxSegmentSize (const vpr::Int32 size)
+   {
+      vpr::SocketOptions::Data option;
+      option.max_segment = size;
+      return setOption(vpr::SocketOptions::MaxSegment, option);
+   }
 
-    /**
-     * Gets the current no-delay status for this socket.  If no-delay is true,
-     * then the Nagel algorithm has been disabled.
-     *
-     * @param enabled A reference to a <code>bool</code> variable to be used as
-     *                storage for the current no-delay enable state.  If the
-     *                value is <code>true</code>, the Nagel algorithm is
-     *                <i>not</i> being used to delay the transmission of TCP
-     *                segements.  Otherwise, the Nagel alorithm is delaying
-     *                the transmission.
-     */
-    inline vpr::ReturnStatus
-    getNoDelay (bool& enabled) {
-        vpr::SocketOptions::Data option;
-        vpr::ReturnStatus retval;
+   /**
+    * Gets the current no-delay status for this socket.  If no-delay is true,
+    * then the Nagel algorithm has been disabled.
+    *
+    * @param enabled A reference to a <code>bool</code> variable to be used as
+    *                storage for the current no-delay enable state.  If the
+    *                value is <code>true</code>, the Nagel algorithm is
+    *                <i>not</i> being used to delay the transmission of TCP
+    *                segements.  Otherwise, the Nagel alorithm is delaying
+    *                the transmission.
+    */
+   vpr::ReturnStatus getNoDelay (bool& enabled)
+   {
+      vpr::SocketOptions::Data option;
+      vpr::ReturnStatus retval;
 
-        retval = getOption(vpr::SocketOptions::NoDelay, option);
+      retval = getOption(vpr::SocketOptions::NoDelay, option);
 
-        if ( retval.success() ) {
-            enabled = option.no_delay;
-        }
+      if ( retval.success() )
+      {
+         enabled = option.no_delay;
+      }
 
-        return retval;
-    }
+      return retval;
+   }
 
-    /**
-     * Sets the current no-delay status for this socket.  If no-delay is true,
-     * then the Nagel algorithm will be disabled.
-     *
-     * @param enable_val The Boolean enable/disable state for no-delay on this
-     *                   socket.
-     */
-    inline vpr::ReturnStatus
-    setNoDelay (const bool enable_val) {
-        vpr::SocketOptions::Data option;
-        option.no_delay = enable_val;
-        return setOption(vpr::SocketOptions::NoDelay, option);
-    }
+   /**
+    * Sets the current no-delay status for this socket.  If no-delay is true,
+    * then the Nagel algorithm will be disabled.
+    *
+    * @param enable_val The Boolean enable/disable state for no-delay on this
+    *                   socket.
+    */
+   vpr::ReturnStatus setNoDelay (const bool enable_val)
+   {
+      vpr::SocketOptions::Data option;
+      option.no_delay = enable_val;
+      return setOption(vpr::SocketOptions::NoDelay, option);
+   }
 };
 
-}; // End of vpr namespace
+} // End of vpr namespace
 
 
-#endif	/* _VPR_SOCKET_STREAM_OPT_H_ */
+#endif  /* _VPR_SOCKET_STREAM_OPT_H_ */

@@ -54,7 +54,8 @@
 #include <vpr/Util/Singleton.h>
 
 
-namespace vpr {
+namespace vpr
+{
 
 /**
  * Manager that maintains data about all threads.
@@ -135,7 +136,7 @@ protected:
 vprSingletonHeader(ThreadManager);
 };
 
-}; // End of vpr namespace
+} // End of vpr namespace
 
 
 #endif

@@ -55,8 +55,10 @@ vpr::ReturnStatus vpr::CondVarGeneric::wait (vpr::Interval time_to_wait)
    std::cerr << std::setw(5) << getpid() << "  Wait: Begin:" << std::endl;
    // ASSERT:  We have been locked
    if ( condMutex->test() == 0 )    // Not locked
+   {
       std::cerr << " vpr::CondVarGeneric::wait: INCORRECT USAGE: Mutex was not locked when wait invoked!!!"
-      << std::endl;
+                << std::endl;
+   }
 
    waiters++;              // We have lock already
 

@@ -45,7 +45,7 @@
 #include <string.h>
 
 #ifdef HAVE_STRINGS_H
-#include <strings.h>
+#  include <strings.h>
 #endif
 
 #include <prio.h>
@@ -60,7 +60,8 @@
 // ============================================================================
 extern int errno;
 
-namespace vpr {
+namespace vpr
+{
 
 // ============================================================================
 // Public methods.
@@ -68,86 +69,97 @@ namespace vpr {
 
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
-ReturnStatus
-SocketDatagramImplNSPR::recvfrom (void* msg, const vpr::Uint32 length,
-                                  const int flags, InetAddr& from,
-                                  vpr::Uint32& bytes_read,
-                                  const vpr::Interval timeout)
+vpr::ReturnStatus SocketDatagramImplNSPR::recvfrom (void* msg,
+                                                    const vpr::Uint32 length,
+                                                    const int flags,
+                                                    vpr::InetAddr& from,
+                                                    vpr::Uint32& bytes_read,
+                                                    const vpr::Interval timeout)
 {
-    ReturnStatus retval;
-    PRInt32 bytes;
+   ReturnStatus retval;
+   PRInt32 bytes;
 
-    bytes = PR_RecvFrom(mHandle, msg, length, flags, from.getPRNetAddr(),
-                        NSPR_getInterval(timeout));
+   bytes = PR_RecvFrom(mHandle, msg, length, flags, from.getPRNetAddr(),
+                       NSPR_getInterval(timeout));
 
-    if ( bytes > 0)
-    {
-       bytes_read = bytes;
-    }
-    if ( bytes == -1 ) {
-        PRErrorCode err_code = PR_GetError();
+   if ( bytes > 0 )
+   {
+      bytes_read = bytes;
+   }
+   if ( bytes == -1 )
+   {
+      PRErrorCode err_code = PR_GetError();
 
-        bytes_read = 0;
+      bytes_read = 0;
 
-        if ( err_code == PR_WOULD_BLOCK_ERROR ) {
-            retval.setCode(vpr::ReturnStatus::WouldBlock);
-        }
-        else if ( err_code == PR_IO_TIMEOUT_ERROR ) {
-            retval.setCode(ReturnStatus::Timeout);
-        }
-        else {
-            NSPR_PrintError("SocketDatagramImplNSPR::recvfrom: Could not read from socket");
-            retval.setCode(ReturnStatus::Fail);
-        }
-    }
-    else if (bytes == 0)      // Not connected
-    {
-       retval.setCode(ReturnStatus::NotConnected);
-       bytes_read = bytes;
-    }
+      if ( err_code == PR_WOULD_BLOCK_ERROR )
+      {
+         retval.setCode(vpr::ReturnStatus::WouldBlock);
+      }
+      else if ( err_code == PR_IO_TIMEOUT_ERROR )
+      {
+         retval.setCode(ReturnStatus::Timeout);
+      }
+      else
+      {
+         NSPR_PrintError("SocketDatagramImplNSPR::recvfrom: Could not read from socket");
+         retval.setCode(ReturnStatus::Fail);
+      }
+   }
+   else if ( bytes == 0 )      // Not connected
+   {
+      retval.setCode(ReturnStatus::NotConnected);
+      bytes_read = bytes;
+   }
 
-    return retval;
+   return retval;
 }
 
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
-ReturnStatus
-SocketDatagramImplNSPR::sendto (const void* msg, const vpr::Uint32 length,
-                                const int flags, const InetAddr& to,
-                                vpr::Uint32& bytes_sent,
-                                const vpr::Interval timeout)
+vpr::ReturnStatus SocketDatagramImplNSPR::sendto (const void* msg,
+                                                  const vpr::Uint32 length,
+                                                  const int flags,
+                                                  const vpr::InetAddr& to,
+                                                  vpr::Uint32& bytes_sent,
+                                                  const vpr::Interval timeout)
 {
-    ReturnStatus retval;
-    PRInt32 bytes;
+   ReturnStatus retval;
+   PRInt32 bytes;
 
-    bytes = PR_SendTo(mHandle, msg, length, flags, to.getPRNetAddr(),
-                      NSPR_getInterval(timeout));
+   bytes = PR_SendTo(mHandle, msg, length, flags, to.getPRNetAddr(),
+                     NSPR_getInterval(timeout));
 
-    if ( bytes == -1 ) {
-        PRErrorCode err_code = PR_GetError();
+   if ( bytes == -1 )
+   {
+      PRErrorCode err_code = PR_GetError();
 
-        bytes_sent = 0;
+      bytes_sent = 0;
 
-        if ( err_code == PR_WOULD_BLOCK_ERROR ) {
-            retval.setCode(vpr::ReturnStatus::WouldBlock);
-        }
-        else if ( err_code == PR_IO_TIMEOUT_ERROR ) {
-            retval.setCode(ReturnStatus::Timeout);
-        }
-        else if ( err_code == PR_NOT_CONNECTED_ERROR )
-        {
-           retval.setCode(vpr::ReturnStatus::NotConnected);
-        }
-        else {
-            NSPR_PrintError("SocketDatagramImplNSPR::sendto: Could not send message");
-            retval.setCode(ReturnStatus::Fail);
-        }
-    }
-    else {
-        bytes_sent = bytes;
-    }
+      if ( err_code == PR_WOULD_BLOCK_ERROR )
+      {
+         retval.setCode(vpr::ReturnStatus::WouldBlock);
+      }
+      else if ( err_code == PR_IO_TIMEOUT_ERROR )
+      {
+         retval.setCode(ReturnStatus::Timeout);
+      }
+      else if ( err_code == PR_NOT_CONNECTED_ERROR )
+      {
+         retval.setCode(vpr::ReturnStatus::NotConnected);
+      }
+      else
+      {
+         NSPR_PrintError("SocketDatagramImplNSPR::sendto: Could not send message");
+         retval.setCode(ReturnStatus::Fail);
+      }
+   }
+   else
+   {
+      bytes_sent = bytes;
+   }
 
-    return retval;
+   return retval;
 }
 
 } // End of vpr namespace

@@ -47,7 +47,8 @@
 
 #include <prio.h>
 
-namespace vpr {
+namespace vpr
+{
 
 // Base class for all for the IOSys class.
 // The "real" impl is in an included file.
@@ -58,7 +59,7 @@ public:
    static const Handle NullHandle;
 };
 
-}; // End of vpr namespace
+} // End of vpr namespace
 
 
 #endif   /* _VPR_IOSYS_NSPR_H_ */

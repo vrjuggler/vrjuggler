@@ -46,10 +46,11 @@
 #include <vpr/vprTypes.h>
 #include <map>
 #include <vpr/Thread/ThreadFunctor.h>
-#include <vpr/Thread/TSTable.h>            // Needed to cache a copy here
+#include <vpr/Thread/TSTable.h>            /* Needed to cache a copy here */
 
 
-namespace vpr {
+namespace vpr
+{
 
 /**
  * This is used as the base class for all thread classes.
@@ -57,21 +58,24 @@ namespace vpr {
 class VPR_CLASS_API BaseThread
 {
 public:
-   enum VPRThreadPriority {
-       VPR_PRIORITY_LOW,      /**< The lowest possible priority */
-       VPR_PRIORITY_NORMAL,   /**< The most common priority */
-       VPR_PRIORITY_HIGH,     /**< Slightly higher priority */
-       VPR_PRIORITY_URGENT    /**< The highest priority */
+   enum VPRThreadPriority
+   {
+      VPR_PRIORITY_LOW,      /**< The lowest possible priority */
+      VPR_PRIORITY_NORMAL,   /**< The most common priority */
+      VPR_PRIORITY_HIGH,     /**< Slightly higher priority */
+      VPR_PRIORITY_URGENT    /**< The highest priority */
    };
 
-   enum VPRThreadScope {
-       VPR_LOCAL_THREAD,
-       VPR_GLOBAL_THREAD
+   enum VPRThreadScope
+   {
+      VPR_LOCAL_THREAD,
+      VPR_GLOBAL_THREAD
    };
 
-   enum VPRThreadState {
-       VPR_JOINABLE_THREAD,   /**< The thread can be reattached later */
-       VPR_UNJOINABLE_THREAD  /**< The thread cannot be attached with join() */
+   enum VPRThreadState
+   {
+      VPR_JOINABLE_THREAD,   /**< The thread can be reattached later */
+      VPR_UNJOINABLE_THREAD  /**< The thread cannot be attached with join() */
    };
 
    BaseThread()
@@ -90,14 +94,18 @@ public:     // Thread specific data caching
     * instead, use vpr::TSObjectProxies.
     */
    TSTable* getTSTable()
-   { return &mTSTable; }
+   {
+      return &mTSTable;
+   }
 
    /**
     * Get the Thread the global thread specific data table.
     * This table is shared by all threads that were not created by vpr.
     */
    static TSTable* getGlobalTSTable()
-   { return &gTSTable; }
+   {
+      return &gTSTable;
+   }
 
 private:
    TSTable        mTSTable;  /**< Thread specific data for the thread */
@@ -166,7 +174,9 @@ public:
     *         -1 is returned on an error condition.
     */
    virtual int join (void** status = 0)
-   {return -1;}
+   {
+      return -1;
+   }
 
    /**
     * Resumes the execution of this thread (if it was previously suspended
@@ -176,7 +186,9 @@ public:
     *         -1 is returned otherwise.
     */
    virtual int resume()
-   {return -1;}
+   {
+      return -1;
+   }
 
    /**
     * Suspends the execution of this thread.
@@ -185,7 +197,9 @@ public:
     *         -1 is returned otherwise.
     */
    virtual int suspend()
-   {return -1;}
+   {
+      return -1;
+   }
 
    /**
     * Gets this thread's current priority.
@@ -201,7 +215,9 @@ public:
     *         -1 is returned if the priority could not be read.
     */
    virtual int getPrio(VPRThreadPriority* prio)
-   { return -1;}
+   {
+      return -1;
+   }
 
    /**
     * Sets this thread's priority.
@@ -212,7 +228,9 @@ public:
     *         -1 is returned otherwise.
     */
    virtual int setPrio(VPRThreadPriority prio)
-   { return -1;}
+   {
+      return -1;
+   }
 
    /**
     * Gets the "thread ID" of this vpr::BaseThread object.  This is a unique
@@ -223,7 +241,9 @@ public:
     *         Otherwise, the value returned is this thread's ID.
     */
    vpr::Int32 getTID()
-   { return mThreadId; }
+   {
+      return mThreadId;
+   }
 
    /**
     * Is this a valid thread?
@@ -247,7 +267,9 @@ public:
     *         -1 is returned if an error occurred.
     */
    virtual int kill (int signum)
-   { return -1;}
+   {
+      return -1;
+   }
 
    /**
     * Kill (cancel) this thread.
@@ -339,10 +361,14 @@ public:
       //std::hash_map<IdxType, BaseThread*>::iterator i;
       typename std::map<IdxType, BaseThread*>::iterator i;
       i = mThreadMap.find(index);
-      if(i == mThreadMap.end())
+      if (i == mThreadMap.end())
+      {
          return NULL;
+      }
       else
+      {
          return (*i).second;
+      }
    }
 
    /**
@@ -366,7 +392,7 @@ private:
 /// Ouput operator.
 std::ostream& operator<<(std::ostream& out, BaseThread* threadPtr);
 
-}; // End of vpr namespace
+} // End of vpr namespace
 
 
 #endif

@@ -39,59 +39,63 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-
 #include <vpr/vprConfig.h>
 
 #include <vpr/md/NSPR/Sync/RWMutexNSPR.h>
 
 
-namespace vpr {
+namespace vpr
+{
 
 //----------------------------------------------------------
 // Try to acquire a read mutex.
 //----------------------------------------------------------
-int
-RWMutexNSPR::tryAcquireRead () {
-    int retVal = -1;
+int RWMutexNSPR::tryAcquireRead ()
+{
+   int retVal = -1;
 
 /*
-    if (stateLock.acquire() != -1)
-    {
-        if(refCount == -1 || numWaitingWriters >0)
-            retVal = -1;
-        else
-        {
-            refCount++;
-            retVal = 0;
-        }
-        stateLock.release();
-    }
+   if (stateLock.acquire() != -1)
+   {
+      if (refCount == -1 || numWaitingWriters >0)
+      {
+         retVal = -1;
+      }
+      else
+      {
+         refCount++;
+         retVal = 0;
+      }
+      stateLock.release();
+   }
 */
-    return retVal;
+   return retVal;
 }
 
 //----------------------------------------------------------
 // Try to acquire a write mutex.
 //----------------------------------------------------------
-int
-RWMutexNSPR::tryAcquireWrite () {
-    int retVal = -1;
+int RWMutexNSPR::tryAcquireWrite ()
+{
+   int retVal = -1;
 
 /*
-    if (stateLock.acquire() != -1)
-    {
-        if(refCount != 0)
-            retVal = -1;
-        else
-        {
-            refCount = -1;
-            retVal = 0;
-        }
-        stateLock.release();
-    }
+   if (stateLock.acquire() != -1)
+   {
+      if(refCount != 0)
+      {
+        retVal = -1;
+      }
+      else
+      {
+         refCount = -1;
+         retVal = 0;
+      }
+      stateLock.release();
+   }
 */
 
-    return retVal;
+   return retVal;
 }
 
 }; // End of vpr namespace

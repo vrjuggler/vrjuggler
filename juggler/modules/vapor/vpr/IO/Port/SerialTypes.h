@@ -43,7 +43,8 @@
 #define _VPR_SERIAL_TYPES_H_
 
 
-namespace vpr {
+namespace vpr
+{
 
 /**
  * Serial I/O types.
@@ -92,7 +93,7 @@ namespace SerialTypes
    };
 };
 
-}; // End of namespace
+} // End of namespace
 
 
 #endif  /* _VPR_SERIAL_TYPES_H_ */

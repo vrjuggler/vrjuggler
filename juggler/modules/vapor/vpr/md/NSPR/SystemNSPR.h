@@ -53,7 +53,7 @@
 #include <vpr/vprConfig.h>
 
 #ifdef VPR_OS_Win32
-   #include <winsock2.h>    /* For struct timeval */
+#  include <winsock2.h>    /* For struct timeval */
 #endif
 
 #include <stdlib.h>
@@ -68,13 +68,13 @@
 #include <vpr/SystemBase.h>
 
 #ifndef HAVE_GETTIMEOFDAY
-   #ifndef VPR_OS_Win32
+#  ifndef VPR_OS_Win32
 struct timeval
 {
    long tv_sec;           /* seconds since Jan. 1, 1970 */
    long tv_usec;          /* and microseconds */
 };
-   #endif
+#  endif
 
 struct timezone
 {
@@ -82,11 +82,12 @@ struct timezone
    int tv_dsttime;        /* type of dst correction */
 };
 #else
-   #include <sys/time.h>
+#  include <sys/time.h>
 #endif
 
 
-namespace vpr {
+namespace vpr
+{
 
 class VPR_CLASS_API SystemNSPR
 : public SystemBase
@@ -198,7 +199,7 @@ public:
    }
 };
 
-}; // End of vpr namespace
+} // End of vpr namespace
 
 
 #endif   /* _VPR_SYSTEM_NSPR_H_ */

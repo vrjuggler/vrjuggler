@@ -48,7 +48,8 @@
 #include <vpr/Util/Assert.h>
 
 
-namespace vpr {
+namespace vpr
+{
 
 /**
  * Converts a function into a functor that can be passed to a
@@ -60,34 +61,36 @@ class VPR_CLASS_API BaseThreadFunctor
 public:
 
    virtual ~BaseThreadFunctor()
-   {;}
+   {
+      ;
+   }
 
-    /**
-     * Overloaded operator() used for invoking the function encapsulated by
-     * this object.  This version takes no argument and instead passes the
-     * argument given when this object was constructed.
-     */
-    virtual void operator()() = 0;    // Pure virtual
+   /**
+    * Overloaded operator() used for invoking the function encapsulated by
+    * this object.  This version takes no argument and instead passes the
+    * argument given when this object was constructed.
+    */
+   virtual void operator()(void) = 0;    // Pure virtual
 
-    /**
-     * Overloaded operator() used for invoking the function encapsulated by
-     * this object.  This version takes an argument that is passed on to the
-     * function.
-     *
-     * @param arg The argument to be passed to the encapsulated function.
-     */
-    virtual void operator()(void* arg) = 0;
+   /**
+    * Overloaded operator() used for invoking the function encapsulated by
+    * this object.  This version takes an argument that is passed on to the
+    * function.
+    *
+    * @param arg The argument to be passed to the encapsulated function.
+    */
+   virtual void operator()(void* arg) = 0;
 
-    /**
-     * Sets the argument passed to the encapsulated function.  This will be
-     * used when the function is invoked through the overloaded operator().
-     */
-    virtual void setArg(void*) = 0;
+   /**
+    * Sets the argument passed to the encapsulated function.  This will be
+    * used when the function is invoked through the overloaded operator().
+    */
+   virtual void setArg(void*) = 0;
 
-    /**
-     * Function to see if we have a valid functor.
-     */
-    virtual bool isValid() = 0;
+   /**
+    * Function to see if we have a valid functor.
+    */
+   virtual bool isValid() = 0;
 };
 
 /**
@@ -98,57 +101,61 @@ template<class OBJ_TYPE>
 class VPR_CLASS_API ThreadMemberFunctor : public BaseThreadFunctor
 {
 public:
-    typedef void (OBJ_TYPE::* FunPtr)(void*);
+   typedef void (OBJ_TYPE::* FunPtr)(void*);
 
-    ThreadMemberFunctor(OBJ_TYPE* theObject, FunPtr func, void* arg = NULL)
-    {
-        mObject = theObject;
-        mFunction = func;
-        mArgument = arg;
-    }
+   ThreadMemberFunctor(OBJ_TYPE* theObject, FunPtr func, void* arg = NULL)
+   {
+      mObject = theObject;
+      mFunction = func;
+      mArgument = arg;
+   }
 
-    virtual ~ThreadMemberFunctor()
-    {
-        mObject = (OBJ_TYPE*)0xDEADBEEF;
-        //mFunction = 0xDEADBEEF;
-        mArgument = (void*)0xDEADBEEF;
-    }
+   virtual ~ThreadMemberFunctor()
+   {
+      mObject = (OBJ_TYPE*)0xDEADBEEF;
+      //mFunction = 0xDEADBEEF;
+      mArgument = (void*)0xDEADBEEF;
+   }
 
-    void
-    operator() (void* arg) {
-        (mObject->*mFunction)(arg);
-    }
+   void operator() (void* arg)
+   {
+      (mObject->*mFunction)(arg);
+   }
 
-    void
-    operator() () {
-        (mObject->*mFunction)(mArgument);
-    }
+   void operator() (void)
+   {
+      (mObject->*mFunction)(mArgument);
+   }
 
-    void
-    setArg (void* arg) {
-        mArgument = arg;
-    }
+   void setArg (void* arg)
+   {
+      mArgument = arg;
+   }
 
-    bool isValid()
-    {
-       if((NULL == mObject) || ((OBJ_TYPE*)0xDEADBEEF == mObject))
-       {
-          vprASSERT( NULL != mObject);
-          vprASSERT( (OBJ_TYPE*)0xDEADBEEF != mObject);
-          return false;
-       }
-       /*
-       else if(NULL == mFunction)
-          return false;
-          */
-       else
-          return true;
-    }
+   bool isValid()
+   {
+      if ( (NULL == mObject) || ((OBJ_TYPE*)0xDEADBEEF == mObject) )
+      {
+         vprASSERT( NULL != mObject);
+         vprASSERT( (OBJ_TYPE*)0xDEADBEEF != mObject);
+         return false;
+      }
+      /*
+      else if (NULL == mFunction)
+      {
+         return false;
+      }
+      */
+      else
+      {
+         return true;
+      }
+   }
 
 private:
-    OBJ_TYPE*  mObject;
-    FunPtr     mFunction;
-    void*      mArgument;
+   OBJ_TYPE*  mObject;
+   FunPtr     mFunction;
+   void*      mArgument;
 };
 
 
@@ -159,48 +166,53 @@ private:
 class VPR_CLASS_API ThreadNonMemberFunctor : public BaseThreadFunctor
 {
 public:
-    typedef void(* NonMemFunPtr)(void*);
+   typedef void(* NonMemFunPtr)(void*);
 
-    /**
-     * Constructor.
-     *
-     * @param f A pointer to a function that is not a class member.
-     * @param a A pointer to an argument to be passed to the function.  This
-     *          argument is optional and defaults to NULL.
-     */
-    ThreadNonMemberFunctor (NonMemFunPtr f, void* a = NULL)
-       : mFunc(f), mArgument(a)
-    {;}
+   /**
+    * Constructor.
+    *
+    * @param f A pointer to a function that is not a class member.
+    * @param a A pointer to an argument to be passed to the function.  This
+    *          argument is optional and defaults to NULL.
+    */
+   ThreadNonMemberFunctor (NonMemFunPtr f, void* a = NULL)
+      : mFunc(f), mArgument(a)
+   {
+      ;
+   }
 
-    virtual ~ThreadNonMemberFunctor()
-    {
+   virtual ~ThreadNonMemberFunctor()
+   {
       mFunc = (NonMemFunPtr)0xDEADBEEF;
       mArgument = (void*)0xDEADBEEF;
-    }
+   }
 
-    virtual void operator() (void* arg) {
-        (*mFunc)(arg);
-    }
+   virtual void operator() (void* arg)
+   {
+      (*mFunc)(arg);
+   }
 
-    virtual void operator() () {
-        (*mFunc)(mArgument);
-    }
+   virtual void operator() (void)
+   {
+      (*mFunc)(mArgument);
+   }
 
-    void setArg (void* arg) {
-        mArgument = arg;
-    }
+   void setArg (void* arg)
+   {
+      mArgument = arg;
+   }
 
-    bool isValid()
-    {
-       vprASSERT(mFunc != NULL);
-       vprASSERT( mArgument != (void*)0xDEADBEEF);
-       return ( (mFunc != NULL) && (mArgument != (void*)0xDEADBEEF) );
-    }
+   bool isValid()
+   {
+      vprASSERT(mFunc != NULL);
+      vprASSERT( mArgument != (void*)0xDEADBEEF);
+      return( (mFunc != NULL) && (mArgument != (void*)0xDEADBEEF) );
+   }
 
-    // private:
-    // = Arguments to thread startup.
-    NonMemFunPtr mFunc;  /**< Thread startup function (C++ linkage). */
-    void* mArgument;     /**< Argument to thread startup function. */
+   // private:
+   // = Arguments to thread startup.
+   NonMemFunPtr mFunc;  /**< Thread startup function (C++ linkage). */
+   void* mArgument;     /**< Argument to thread startup function. */
 };
 
 //---------------------------------------------
@@ -208,18 +220,18 @@ public:
 // It must be extern "C"
 //---------------------------------------------
 #if defined(VPR_USE_IRIX_SPROC) /* ---- SGI IPC Barrier ------ */
-    extern "C" void vprThreadFunctorFunction(void* args);
+extern "C" void vprThreadFunctorFunction(void* args);
 #elif defined(VPR_USE_PTHREADS)
-#   ifdef _PTHREADS_DRAFT_4
-        extern "C" void
-#   else
-        extern "C" void*
-#   endif
-        vprThreadFunctorFunction(void* args);
+#  ifdef _PTHREADS_DRAFT_4
+   extern "C" void vprThreadFunctorFunction(void* args);
+#  else
+   extern "C" void* vprThreadFunctorFunction(void* args);
+#  endif
 #else
-    extern "C" void vprThreadFunctorFunction(void* args);
+extern "C" void vprThreadFunctorFunction(void* args);
 #endif  /* VPR_USE_IRIX_SPROC */
 
-}; // End of vpr namespace
+} // End of vpr namespace
+
 
 #endif  /* _VPR_THREAD_FUNCTOR_H_ */
