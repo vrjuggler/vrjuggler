@@ -33,6 +33,7 @@
 
 #include <sgInput.h>
 #include <sgChan.h>
+#include <GL/gl.h>
 
 sgInput::sgInput()
 {
@@ -46,13 +47,13 @@ sgInput::sgInput()
     //**//oldZZeroPt.set(-1, -1, -1);
 }
 
-	// motion = -1  <--- Default
+   // motion = -1  <--- Default
 void sgInput::updateMouse(int xLoc, int yLoc, int motion)
 {
-    if(motion >= 0)		// Has been set
-		setMotion(motion);
+    if(motion >= 0)     // Has been set
+      setMotion(motion);
 
-	 oldX = curX;
+    oldX = curX;
     oldY = curY;
     oldGLmouseX = GLmouseX;
     oldGLmouseY = GLmouseY;
@@ -68,7 +69,7 @@ void sgInput::updateMouse(int xLoc, int yLoc, int motion)
      */
 void sgInput::update()
 {
-    updateViewportAndMats();	    // Get the current vp and mats
+    updateViewportAndMats();      // Get the current vp and mats
     updateGLmouse();
     //updateProjSeg();
     //updateZeroPlaneIsect();
@@ -94,14 +95,14 @@ void sgInput::updateProjSeg()
     GLdouble wxFar, wyFar, wzFar;
 
     gluUnProject((GLdouble)GLmouseX, (GLdouble)GLmouseY, 0.001,
-		mvmatrix, projmatrix, viewport, &wx, &wy, &wz);
+      mvmatrix, projmatrix, viewport, &wx, &wy, &wz);
 //    cerr << "UnProject: Near: " << wx << " " << wy << " " << wz << endl;
 
     gluUnProject((GLdouble)GLmouseX, (GLdouble)GLmouseY, 0.99,
-		mvmatrix, projmatrix, viewport, &wxFar, &wyFar, &wzFar);
+      mvmatrix, projmatrix, viewport, &wxFar, &wyFar, &wzFar);
 //    cerr << "UnProject: Far: " << wxFar << " " << wyFar << " " << wzFar << endl;
-	
-	// Make the projecting segment
+
+   // Make the projecting segment
     projSeg.makePts(sgVec3(wx, wy, wz), sgVec3(wxFar, wyFar, wzFar));
 }
 
@@ -112,19 +113,19 @@ void sgInput::updateZeroPlaneIsect()
 
     if (hit)
     {
-			sgDEBUG(2) << "Hit Z Zero Plane: tDist:" << tDist << endl;
-		oldZZeroPt = zZeroPt;
-		zZeroPt = projSeg.pos + (projSeg.dir * tDist);
-			sgDEBUG(2) << "        pt:" << zZeroPt[0] << "  " << zZeroPt[1] << "  " << zZeroPt[2] << endl;
+         sgDEBUG(2) << "Hit Z Zero Plane: tDist:" << tDist << endl;
+      oldZZeroPt = zZeroPt;
+      zZeroPt = projSeg.pos + (projSeg.dir * tDist);
+         sgDEBUG(2) << "        pt:" << zZeroPt[0] << "  " << zZeroPt[1] << "  " << zZeroPt[2] << endl;
     }
 
 #if defined(DEBUG_SG)
-	glBegin(GL_POINTS);
-		glColor3f(0.0, 1.0, 0.0);
-		glVertex3fv(oldZZeroPt.vec);
-		glColor3f(1.0, 0.0, 0.0);
-		glVertex3fv(zZeroPt.vec);
-	glEnd();
+   glBegin(GL_POINTS);
+      glColor3f(0.0, 1.0, 0.0);
+      glVertex3fv(oldZZeroPt.vec);
+      glColor3f(1.0, 0.0, 0.0);
+      glVertex3fv(zZeroPt.vec);
+   glEnd();
 #endif
 }
 */

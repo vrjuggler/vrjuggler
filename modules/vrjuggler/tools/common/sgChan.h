@@ -39,6 +39,8 @@
 #include <sgDrawFunctor.h>
 #include <Math/vjMatrix.h>
 #include <Math/vjVec3.h>
+#include <GL/gl.h>
+#include <GL/glu.h>
 
 /**
  * sgChan: Defines a channel viewwindow into the set scene.
