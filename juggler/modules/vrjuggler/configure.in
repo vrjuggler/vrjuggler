@@ -41,7 +41,7 @@ AC_REVISION($Revision$)
 AC_INIT(vrj/vrjConfig.h)
 AC_CONFIG_AUX_DIR(../../share/config)
 AC_CONFIG_HEADER(vrj/vrjDefines.h)
-DPP_PREREQ(1.4.98)
+DPP_PREREQ(1.4.103)
 DPP_INIT
 
 # Generate the reconfig script first so that it's easy to run configure again
@@ -120,7 +120,9 @@ DPP_SYSTEM_SETUP
 case $target_os in
     # SGI running IRIX 6.*.
     irix6*)
-        DBG_FLAGS="$DBG_FLAGS -gslim"
+        if test "x$USE_GCC" != "xyes" ; then
+            DBG_FLAGS="$DBG_FLAGS -gslim"
+        fi
 
         AC_DEFINE(_BSD_TYPES,)
         ;;
@@ -340,7 +342,7 @@ EXTRA_LINK_FLAGS="$STDFLAGS $EXTRA_LINK_FLAGS"
 vrj_cxxflags="$STDFLAGS $GMTL_INCLUDES"
 vrj_cxxflags_all="$VPR_CXXFLAGS $JCCL_CXXFLAGS $GADGET_CXXFLAGS $SNX_CXXFLAGS"
 
-if test "x$PLATFORM" = "xIRIX" -a "x$USE_GCC" != "xno" ; then
+if test "x$PLATFORM" = "xIRIX" -a "x$USE_GCC" != "xyes" ; then
     CFLAGS="$CFLAGS -woff 1685,515,608,658,799,803,852,1048,1233,1499"
     CXXFLAGS="$CXXFLAGS -woff 3322 -w2"
     EXTRA_LINK_FLAGS="$EXTRA_LINK_FLAGS -J4 -all"
@@ -544,7 +546,7 @@ esac
 
 vrj_extra_ldflags="$APP_EXTRA_LIBS_BEGIN"
 
-if test "x$PLATFORM" = "xIRIX" ; then
+if test "x$PLATFORM" = "xIRIX" -a "x$USE_GCC" != "xyes" ; then
     vrj_n32_flags='-n32'
     vrj_64_flags='-64'
 fi
