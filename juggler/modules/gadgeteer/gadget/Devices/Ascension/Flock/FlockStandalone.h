@@ -11,6 +11,10 @@
 #define ANGLE_RANGE   180.0f
 #define MAX_SENSORS    128
 
+#ifndef _BOOL
+#include <list.h>
+#endif
+
 typedef struct {
         float xmin, ymin, zmin;
         float xmax, ymax, zmax;
@@ -190,14 +194,16 @@ private:
 	BIRD_HEMI   _hemisphere;
 	BIRD_FILT   _filter;
 	
-	std::string _port;
+	static const int   MAXCHARSTRINGSIZE;
+	char	    _port[256];
+	char	    _calibrationFileName[256];
+	
 	int	    _portId;
 	int	    _baud;
 	int	    _syncStyle;
 	int	    _blocking;
 	int	    _numBirds;
 	int	    _xmitterUnitNumber;
-	std::string _calibrationFileName;
 	bool	    _usingCorrectionTable;
 	
 	//    x,y,z,        r,y,p
