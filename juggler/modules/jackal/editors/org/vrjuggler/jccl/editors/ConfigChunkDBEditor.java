@@ -185,6 +185,8 @@ public class ConfigChunkDBEditor
       categoryEditorScrollPane.setPreferredSize(categoryEditor.getPreferredSize());
       editorPane.add(categoryEditorScrollPane, CATEGORY);
 
+      editorPaneLayout.show(editorPane, CATEGORY);
+
       // Init the ConfigChunkDB tree
       DefaultMutableTreeNode root = new DefaultMutableTreeNode("Config");
       treeModel = new DefaultTreeModel(root);
@@ -202,11 +204,12 @@ public class ConfigChunkDBEditor
             // Show basic help if nothing is selected
             if (node == null)
             {
-               // Disable the add/remove buttons
-               addBtn.setEnabled(false);
+               // Set enabled status on the add/remove buttons
+               addBtn.setEnabled(true);
                removeBtn.setEnabled(false);
 
                // TODO: Show the basic help. For now show nothing.
+               editorPaneLayout.show(editorPane, CATEGORY);
                return;
             }
 
@@ -218,9 +221,8 @@ public class ConfigChunkDBEditor
                DefaultMutableTreeNode parent = (DefaultMutableTreeNode)node.getParent();
                boolean is_emb_chunk = parent.getUserObject() instanceof PropertyDesc;
 
-               // Disable the add button. Enable the remove button if not an
-               // embedded chunk
-               addBtn.setEnabled(false);
+               // Set enabled status on the add/remove buttons
+               addBtn.setEnabled(true);
                removeBtn.setEnabled(! is_emb_chunk);
 
                // Show an editor for the given chunk
@@ -237,7 +239,7 @@ public class ConfigChunkDBEditor
             // Selected a category
             else if (node.getUserObject() instanceof String)
             {
-               // Enable the add button. Disable the remove button.
+               // Set enabled status on the add/remove buttons
                addBtn.setEnabled(true);
                removeBtn.setEnabled(false);
 
@@ -248,7 +250,8 @@ public class ConfigChunkDBEditor
             // Selected a property desc (for an embedded chunk)
             else if (node.getUserObject() instanceof PropertyDesc)
             {
-               addBtn.setEnabled(false);
+               // Set enabled status on the add/remove buttons
+               addBtn.setEnabled(true);
                removeBtn.setEnabled(false);
 
                //TODO: Switch to a property desc panel.
@@ -1061,7 +1064,9 @@ public class ConfigChunkDBEditor
       propsSplitPane.setOneTouchExpandable(true);
       treeToolbar.setFloatable(false);
       addBtn.setText("Add");
+      addBtn.setEnabled(false);
       removeBtn.setText("Remove");
+      removeBtn.setEnabled(false);
       helpScrollPane.setMinimumSize(new Dimension(0, 0));
       helpPane.setBackground(new Color(255, 253, 181));
       helpPane.setBorder(null);

@@ -10,6 +10,20 @@ For all versions:
 
 ===============================================================================
 
+ Version: 1.1 DR3 (1.1.128)
+Released: September 29, 2002
+
+    Please refer to the following to get started with VR Juggler 1.1 DR3:
+
+       http://www.vrjuggler.org/vrjuggler/1.1-DR3/migration.guide/
+
+    Required application and configuration changes for upgrading from all
+    previous versions (including 1.1.x up through 1.1 DR2):
+        * The configuration file format has changed to an XML-based format.
+          There is an upgrade path using the cfgupdater script and various
+          XSLT stylesheets. Please follow the steps in the Migration Guide
+          for further details.
+
  Version: 1.1 DR2 (1.1.126)
 Released: September 6, 2002
 

@@ -55,4 +55,9 @@ public interface PlacerModelListener
     * Notifies this listener that items have been removed from the placer.
     */
    public void placerItemsRemoved(PlacerModelEvent evt);
+
+   /**
+    * Notifies this listener that the size of the desktop has changed.
+    */
+   public void placerDesktopSizeChanged(PlacerModelEvent evt);
 }
