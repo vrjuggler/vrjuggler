@@ -414,7 +414,7 @@ int OpenALSoundImplementation::startAPI()
       mDev = alcOpenDevice( NULL );
       if (mDev == NULL) 
       {
-         std::cerr << "[snx]OpenAL| ERROR: Could not open device\n" << std::flush;
+         vprDEBUG(snxDBG, vprDBG_CONFIG_LVL) << clrOutNORM(clrYELLOW, "OpenAL| ERROR: Could not open device\n" << vprDEBUG_FLUSH;
          return 0;
       }
 
@@ -426,18 +426,18 @@ int OpenALSoundImplementation::startAPI()
       if (mContextId == NULL) 
       {
          std::string err = (char*)alGetString( alcGetError( mDev ) );
-         std::cerr << "[snx]OpenAL| ERROR: Could not open context: " << err.c_str() << "\n" << std::flush;
+         vprDEBUG(snxDBG, vprDBG_CONFIG_LVL) << clrOutNORM(clrYELLOW, "OpenAL| ERROR:") << "Could not open context: " << err.c_str() << "\n" << vprDEBUG_FLUSH;
          return 0;
       }
 
       // make context active...
       alcMakeContextCurrent( mContextId );
       
-      std::cerr<<"[snx]OpenAL| NOTICE: OpenAL API started: [dev="<<(int)mDev<<",ctx="<<(int)mContextId<<"]\n"<<std::flush;
+      vprDEBUG(snxDBG, vprDBG_CONFIG_LVL) << clrOutNORM(clrYELLOW, "OpenAL| NOTICE:") << " OpenAL API started: [dev=" << (int)mDev << ",ctx=" << (int)mContextId << "]\n" << vprDEBUG_FLUSH;
    }
    else
    {
-      std::cerr << "[snx]OpenAL| WARNING: startAPI called when API is already started\n" << std::flush;
+      vprDEBUG(snxDBG, vprDBG_CONFIG_LVL) << clrOutNORM(clrYELLOW, "OpenAL| WARNING: startAPI called when API is already started\n") << vprDEBUG_FLUSH;
    }      
 
   
@@ -459,7 +459,7 @@ void OpenALSoundImplementation::shutdownAPI()
 {
    if (this->isStarted() == false)
    {
-      std::cerr << "[snx]OpenAL| WARNING: API not started, nothing to shutdown [dev="<<(int)mDev<<",ctx="<<(int)mContextId<<"]\n" << std::flush;
+      vprDEBUG(snxDBG, vprDBG_CONFIG_LVL) << clrOutNORM(clrYELLOW, "OpenAL| WARNING:") << "API not started, nothing to shutdown [dev=" << (int)mDev << ",ctx=" << (int)mContextId << "]\n" << vprDEBUG_FLUSH;
       return;
    }
    
@@ -478,7 +478,7 @@ void OpenALSoundImplementation::shutdownAPI()
    mContextId = NULL;
    mDev = NULL;
 
-   std::cerr<<"[snx]OpenAL| NOTICE: OpenAL API closed: [dev="<<(int)mDev<<",ctx="<<(int)mContextId<<"]\n"<<std::flush;
+   vprDEBUG(snxDBG, vprDBG_CONFIG_LVL) << clrOutNORM(clrYELLOW, "OpenAL| NOTICE:") << " OpenAL API closed: [dev=" << (int)mDev << ",ctx=" << (int)mContextId << "]\n" << vprDEBUG_FLUSH;
 }   
 
 /**
@@ -507,7 +507,7 @@ void OpenALSoundImplementation::bind( const std::string& alias )
 
    if (this->isStarted() == false)
    {
-      std::cerr << "[snx]OpenAL| ERROR: API not started, bind() failed\n" << std::flush;
+      vpr::Debug(snxDBG, vprDBG_CONFIG_LVL) << clrOutNORM(clrYELLOW, "[snx]OpenAL| ERROR: API not started, bind() failed\n") << vprDEBUG_FLUSH;
       return;
    }
    
@@ -545,17 +545,17 @@ void OpenALSoundImplementation::bind( const std::string& alias )
          err = alGetError();
          if (err != AL_NO_ERROR)
          {
-            std::cerr << "ERROR: Could not gen a buffer [err="<<err<<"]\n" << std::flush;
+            vprDEBUG(snxDBG, vprDBG_CONFIG_LVL) << clrOutNORM(clrYELLOW, "ERROR:") << "Could not gen a buffer [err="<<err<<"]\n" << vprDEBUG_FLUSH;
             switch (err)
             {
                case AL_INVALID_VALUE:
-                  std::cerr << "       invalid value < 0\n" << std::flush;
+                  vprDEBUG(snxDBG, vprDBG_CONFIG_LVL) << clrOutNORM(clrYELLOW, "       invalid value < 0\n") << vprDEBUG_FLUSH;
                   break;
                case AL_OUT_OF_MEMORY:
-                  std::cerr << "       out of memory\n" << std::flush;
+                  vprDEBUG(snxDBG, vprDBG_CONFIG_LVL) << clrOutNORM(clrYELLOW, "       out of memory\n") << vprDEBUG_FLUSH;
                   break;
                default:
-                  std::cerr << "       unknown error\n" << std::flush;
+                  vprDEBUG(snxDBG, vprDBG_CONFIG_LVL) << clrOutNORM(clrYELLOW, "       unknown error\n") << vprDEBUG_FLUSH;
             }
          }
          
@@ -564,23 +564,23 @@ void OpenALSoundImplementation::bind( const std::string& alias )
          err = alGetError();
          if (err != AL_NO_ERROR)
          {
-            std::cerr << "[snx]OpenAL| ERROR: Could not buffer data [bufferID="<<bufferID<<",err="<<err<<"]\n" << std::flush;
+            vprDEBUG(snxDBG, vprDBG_CONFIG_LVL) << clrOutNORM(clrYELLOW, "OpenAL| ERROR: Could not buffer data [bufferID=") << clrOutNORM(clrYELLOW, bufferID) << clrOutNORM(clrYELLOW, ",err=") << clrOurNORM(clrYELLOW, err) << clrOutNORM(clrYELLOW, "]\n") << vprDEBUG_FLUSH;
             switch (err)
             {
                case AL_ILLEGAL_COMMAND:
-                  std::cerr <<  "Streaming buffers cannot use alBufferData\n" << std::flush;
+                  vprDEBUG(snxDBG, vprDBG_CONFIG_LVL) <<  clrOutNORM(clrYELLOW, "Streaming buffers cannot use alBufferData\n") << vprDEBUG_FLUSH;
                   break;
                case AL_INVALID_NAME:
-                  std::cerr << "bufferID is not a valid buffer name\n" << std::flush;
+                  vprDEBUG(snxDBG, vprDBG_CONFIG_LVL) << clrOutNORM(clrYELLOW, "bufferID is not a valid buffer name\n") << vprDEBUG_FLUSH;
                   break;
                //case AL_INVALID_ENUM:
                //   std::cout<<"       format is invalid\n"<<std::flush;
                //   break;
                case AL_OUT_OF_MEMORY:
-                  std::cerr << "not enough memory is available to make a copy of this data\n" << std::flush;
+                  vprDEBUG(snxDBG, vprDBG_CONFIG_LVL) << clrOutNORM(clrYELLOW, "not enough memory is available to make a copy of this data\n") << vprDEBUG_FLUSH;
                   break;
                default:
-                  std::cerr << "       unknown error\n" << std::flush;
+                  vprDEBUG(snxDBG, vprDBG_CONFIG_LVL) << clrOutNORM(clrYELLOW, "       unknown error\n") << vprDEBUG_FLUSH;
             }            
             alDeleteBuffers( 1, &bufferID );
             mBindLookup.erase( alias );
@@ -596,7 +596,7 @@ void OpenALSoundImplementation::bind( const std::string& alias )
          alGenSources( 1, &sourceID );
          if (alGetError() != AL_NO_ERROR)
          {
-            std::cerr << "[snx]OpenAL| ERROR: Could not generate a source\n" << std::flush;
+            vprDEBUG(snxDBG, vprDBG_CONFIG_LVL) << clrOutNORM(clrYELLOW, "OpenAL| ERROR: Could not generate a source\n") << vprDEBUG_FLUSH
             alDeleteBuffers( 1, &bufferID );
             mBindLookup.erase( alias );
             break;
@@ -635,7 +635,7 @@ void OpenALSoundImplementation::unbind( const std::string& alias )
 {
    if (this->isStarted() == false)
    {
-      std::cerr << "[snx]OpenAL| ERROR: API not started, unbind() failed\n" << std::flush;
+      vprDEBUG(snxDBG, vprDBG_CONFIG_LVL) << clrOutNORM(clrYELLOW, "[snx]OpenAL| ERROR: API not started, unbind() failed\n") << vprDEBUG_FLUSH;
       return;
    }
  
