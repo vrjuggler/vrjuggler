@@ -34,14 +34,15 @@
 #define _JCCL_CONFIG_CHUNK_H_
 
 #include <jccl/jcclConfig.h>
-#include <jccl/Util/Debug.h>
-
-#include <jccl/Config/ConfigChunkPtr.h>
-#include <jccl/Config/ConfigTokens.h>
-#include <jccl/Config/ChunkDescPtr.h>
 
 #include <sstream>
 #include <cppdom/cppdom.h>
+#include <vpr/Util/Assert.h>
+
+#include <jccl/Util/Debug.h>
+
+#include <jccl/Config/ConfigChunkPtr.h>
+#include <jccl/Config/ChunkDescPtr.h>
 
 namespace jccl
 {
