@@ -29,9 +29,7 @@ srcdir=		@srcdir@
 
 MOD_NAME=	gmtlnet
 
-SRCS=		Gmtl.cs				\
-		Math.cs				\
-		gmtl_AABoxd.cs			\
+SRCS=		gmtl_AABoxd.cs			\
 		gmtl_AABoxf.cs			\
 		gmtl_AxisAngled.cs		\
 		gmtl_AxisAnglef.cs		\
@@ -61,8 +59,10 @@ SRCS=		Gmtl.cs				\
 		gmtl_EulerAngleZXYf.cs		\
 		gmtl_EulerAngleZYXd.cs		\
 		gmtl_EulerAngleZYXf.cs		\
+		gmtl_Gmtl.cs			\
 		gmtl_LineSegd.cs		\
 		gmtl_LineSegf.cs		\
+		gmtl_Math.cs			\
 		gmtl_Matrix33f.cs		\
 		gmtl_Matrix44f.cs		\
 		gmtl_Planed.cs			\
