@@ -46,13 +46,8 @@
 #include <snx/sonix.h> 
 #include <snx/FileIO.h>
 
-   std::cout<<"Usage: "<<argv[0]<<" apiname filename\n"<<std::flush;
-   std::cout<<"       "<<argv[0]<<" OpenAL sample.wav\n"<<std::flush;
-   std::cout<<"       "<<argv[0]<<" AudioWorks sample.aifc\n"<<std::flush;
-
 int main( int argc, char* argv[] )
 {
-   char bok[] = "";
    std::string filename, api;
    
    if (argc == 3)
