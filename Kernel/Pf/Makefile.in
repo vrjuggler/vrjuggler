@@ -33,8 +33,10 @@ vpath %.cpp @srcdir@
 vpath %.o ${OBJDIR}
 
 PF_API		:= @PERFORMER_API@
-PF_SRCS 	:= vjPfDrawManager.cpp
+PF_SRCS 	:= vjPfDrawManager.cpp	\
+                   vjPfUtil.cpp
 DEPEND_SRCS	:=
+DEPENDFLAGS	+= -DPF_CPLUSPLUS_API
 
 ifeq ($(PF_API),Y)
     DEPEND_SRCS += $(PF_SRCS)
