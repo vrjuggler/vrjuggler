@@ -78,6 +78,6 @@ else
       ORBSingletonClass_PROP="-Dorg.omg.CORBA.ORBSingletonClass=$ORB_SINGLETON_CLASS_PROP"
    fi
 
-   $JDK_HOME/bin/java $ORBClass_PROP $ORBSingletonClass_PROP -Djava.security.policy="$TWEEK_BASE_DIR/bin/java.security.policy.txt" -DTWEEK_BASE_DIR="${TWEEK_BASE_DIR}" $EXTRA_JDK_ARGS org.vrjuggler.tweek.Tweek $*
+   $JDK_HOME/bin/java $ORBClass_PROP $ORBSingletonClass_PROP -Djava.security.policy="$TWEEK_BASE_DIR/bin/java.security.policy.txt" -DTWEEK_BASE_DIR="${TWEEK_BASE_DIR}" $EXTRA_JDK_ARGS org.vrjuggler.tweek.Tweek "$@"
    status=0
 fi
