@@ -248,6 +248,17 @@ if test "x$have_cxx_orb" = "xY" ; then
          if test "x$CXX_ORB_LIB_DIR" = "xnone" ; then
             CXX_ORB_LIB_DIR="$CXX_ORB_ROOT/lib"
          fi
+
+         if test -d "$CXX_ORB_LIB_DIR/$OMNI_PYTHON_DIR/site-packages/omniidl"
+         then
+            OMNI_PYTHON_PKG_DIR="$OMNI_PYTHON_DIR/site-packages"
+         elif test -d "$CXX_ORB_LIB_DIR/$OMNI_PYTHON_DIR/omniidl" ; then
+            OMNI_PYTHON_PKG_DIR="$OMNI_PYTHON_DIR"
+         elif test -d "$CXX_ORB_LIB_DIR/python/omniidl" ; then
+            OMNI_PYTHON_PKG_DIR="python"
+         else
+            OMNI_PYTHON_PKG_DIR="$OMNI_PYTHON_DIR/site-packages"
+         fi
       fi
    elif test "x$orb" = "xTAO" ; then
       if test -d "$CXX_ORB_ROOT/include/tao" ; then
@@ -310,6 +321,7 @@ AC_SUBST(OMNIORB_CMDS)
 AC_SUBST(PYTHON_DIR)
 AC_SUBST(PYTHON_VERSION)
 AC_SUBST(OMNI_PYTHON_DIR)
+AC_SUBST(OMNI_PYTHON_PKG_DIR)
 AC_SUBST(OMNI_PYTHON_VERSION)
 
 AC_SUBST(USE_OMNIPYTHON)
