@@ -64,7 +64,7 @@ public:
    /** Constructor. */
    PerformanceMonitor();
 
-   
+
    /** Destructor. */
    virtual ~PerformanceMonitor();
 
@@ -124,8 +124,7 @@ private:
 
 }; // end PerformanceMonitor
 
+} // End of jccl nameapce
 
-
-};
 
 #endif

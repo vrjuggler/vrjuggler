@@ -57,8 +57,8 @@ void DependencyManager::registerChecker (DepChecker* checker)
    mDepCheckers.push_back(checker);       // Add the checker to the list
    vprDEBUG(jcclDBG_RECONFIGURATION,vprDBG_CONFIG_LVL)
       << "DependencyManager: Registered: "
-      << std::setiosflags(std::ios::right) << std::setw(25) 
-      << std::setfill(' ') << checker->getCheckerName().c_str() 
+      << std::setiosflags(std::ios::right) << std::setw(25)
+      << std::setfill(' ') << checker->getCheckerName().c_str()
       << std::resetiosflags(std::ios::right)
       << "  type: " << typeid(*checker).name() << std::endl
       << vprDEBUG_FLUSH;
@@ -86,20 +86,20 @@ void DependencyManager::debugOutDependencies (ConfigChunkPtr chunk,
 DepChecker* DependencyManager::findDepChecker (ConfigChunkPtr chunk)
 {
    vprASSERT(NULL != chunk.get());
-   
+
    //std::string chunk_type;
    //chunk_type = (std::string)chunk->getType();
-   
+
    for(unsigned int i=0;i<mDepCheckers.size();i++)
    {
       // Get next constructor
       DepChecker* checker = mDepCheckers[i];
       vprASSERT(checker != NULL);
-      
-      if(checker->canHandle(chunk)) 
+
+      if(checker->canHandle(chunk))
       {
          return checker;
-      }   
+      }
    }
 
    return &mDefaultChecker;
@@ -109,13 +109,13 @@ DepChecker* DependencyManager::findDepChecker (ConfigChunkPtr chunk)
 void DependencyManager::debugDump()
 {
    //vprDEBUG_BEGIN(jcclDBG_RECONFIGURATION, jcclDBG_CONFIG_LVL) << "DependencyManager::debugDump\n" << vprDEBUG_FLUSH;
-   vprDEBUG_BEGIN(jcclDBG_RECONFIGURATION,vprDBG_STATE_LVL) 
+   vprDEBUG_BEGIN(jcclDBG_RECONFIGURATION,vprDBG_STATE_LVL)
       << "----- Current dependency checkers -----\n" << vprDEBUG_FLUSH;
-   vprDEBUG_NEXT(jcclDBG_RECONFIGURATION,vprDBG_STATE_LVL) 
-      << "num checkers:" << mDepCheckers.size() << "\n" 
+   vprDEBUG_NEXT(jcclDBG_RECONFIGURATION,vprDBG_STATE_LVL)
+      << "num checkers:" << mDepCheckers.size() << "\n"
       << vprDEBUG_FLUSH;
-   vprDEBUG_NEXT(jcclDBG_RECONFIGURATION,vprDBG_STATE_LVL) 
-      << "-1: Checker: default   type: default checker  recog: all (this is a fallback)\n" 
+   vprDEBUG_NEXT(jcclDBG_RECONFIGURATION,vprDBG_STATE_LVL)
+      << "-1: Checker: default   type: default checker  recog: all (this is a fallback)\n"
       << vprDEBUG_FLUSH;
 
    for(unsigned int cNum=0;cNum<mDepCheckers.size();cNum++)
@@ -124,13 +124,13 @@ void DependencyManager::debugDump()
       vprDEBUG_NEXT(jcclDBG_RECONFIGURATION,vprDBG_STATE_LVL)
          << cNum << ": Checker:" << (void*)checker
          << "   type:" << typeid(*checker).name()
-         << "   recog:" << checker->getCheckerName().c_str() 
+         << "   recog:" << checker->getCheckerName().c_str()
          << "\n" << vprDEBUG_FLUSH;
    }
 
-   vprDEBUG_END(jcclDBG_RECONFIGURATION,vprDBG_STATE_LVL) 
+   vprDEBUG_END(jcclDBG_RECONFIGURATION,vprDBG_STATE_LVL)
       << "---------------------\n" << vprDEBUG_FLUSH;
 }
 
 
-}; // namespace jccl
+} // namespace jccl

@@ -41,6 +41,6 @@ namespace jccl
 {
    class ChunkDesc;
    typedef boost::shared_ptr<ChunkDesc> ChunkDescPtr;
-};
+}
 
 #endif

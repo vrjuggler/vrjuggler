@@ -49,16 +49,16 @@ namespace jccl
  *  configuration add request.
  *  The default behavior is to simply check the ConfigManager's
  *  active list for all ConfigChunk's that the request's
- *  ConfigChunk refers to.  However, additional DepCheckers 
+ *  ConfigChunk refers to.  However, additional DepCheckers
  *  can be registered to provide specialized functionality.
  *
- *  Note that this class is a singleton - primarily so that the 
+ *  Note that this class is a singleton - primarily so that the
  *  master list of DepCheckers can be appended to by any entity
  *  in the system.
  */
 class JCCL_CLASS_API DependencyManager
 {
-   
+
 private:
    /** Constructor. Private since this is a singleton. */
    DependencyManager ();
@@ -78,12 +78,12 @@ public:
 
    /** Prints information about chunk's dependencies. */
    void debugOutDependencies (ConfigChunkPtr chunk, int dbg_lvl);
-    
+
 
 private:
 
    /** Finds a DepChecker that can handle chunk.
-    *  DepCheckers list the ConfigChunk types that they know how to 
+    *  DepCheckers list the ConfigChunk types that they know how to
     *  handle; this is checked versus chunk.getDescToken().
     *  @return A DepChecker that knows how to handle chunk.  If no
     *          specific checker is found, the default checker is
@@ -92,27 +92,26 @@ private:
     *          dependent.
     */
    DepChecker* findDepChecker(ConfigChunkPtr chunk);
-   
+
 
    /** Prints information about the DependencyManager's state to vprDEBUG. */
    void debugDump();
 
-    
+
 private:
 
    /** List of dependency checkers. */
    std::vector<DepChecker*> mDepCheckers;
 
    /** Default dependency checker. */
-   DepChecker               mDefaultChecker;  
+   DepChecker               mDefaultChecker;
 
    vprSingletonHeader(DependencyManager);
 
-   
+
 }; // class DependencyManager
 
+} // namespace jccl
 
-}; // namespace jccl
 
 #endif
-
