@@ -412,6 +412,10 @@ public class IntersenseVertexView
 
       public void propertyValueOrderChanged(ConfigElementEvent evt)
       {
+         System.err.println(
+            "WARNING: IntersenseVertexView.propertyValueOrderChanged() " +
+            "is not implemented!  Complain about this."
+         );
       }
 
       public void propertyValueRemoved(ConfigElementEvent evt)
