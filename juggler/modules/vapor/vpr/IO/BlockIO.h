@@ -268,7 +268,7 @@ public:
        // Allocate the temporary buffer, zero it, and read in the current
        // buffer from the device.
        buffer.resize( length );
-       memset( &buffer[0], 0, buffer.size() );
+       memset( &buffer[0], '\0', buffer.size() );
        status = this->read( &buffer[0], buffer.size(), bytes_read );
 
        return status;
@@ -299,6 +299,7 @@ public:
        
        // Allocate the temporary buffer, zero it, and read in the current
        // buffer from the device.
+       memset( &buffer[0], '\0', buffer.size() );
        status = this->read( &buffer[0], buffer.size(), bytes_read );
 
        // size it down if needed, if (bytes_read==length), 
@@ -358,6 +359,7 @@ public:
        // Allocate the temporary buffer, zero it, and read in the current
        // buffer from the device.
        buffer.resize( length );
+       memset( &buffer[0], '\0', buffer.size() );
        status = this->readn( &buffer[0], buffer.size(), bytes_read);
        
        // If anything was read into temp_buf, copy it into buffer.
@@ -396,6 +398,7 @@ public:
         // Allocate the temporary buffer, zero it, and read in the current
         // buffer from the device.
         buffer.resize( length );
+        memset( &buffer[0], '\0', buffer.size() );
         status = this->readn( &buffer[0], buffer.size(), bytes_read );
 
         // If anything was read into temp_buf, copy it into buffer.
@@ -442,6 +445,7 @@ public:
     write (const std::string& buffer, const size_t length,
            ssize_t& bytes_written)
     {
+       assert( length <= buffer.size() && "length was bigger than the data given" );
        return this->write(buffer.c_str(), length, bytes_written);
     }
 
@@ -463,6 +467,7 @@ public:
     write (const std::vector<char>& buffer, const size_t length,
            ssize_t& bytes_written)
     {
+        assert( length <= buffer.size() && "length was bigger than the data given" );
         return this->write(&buffer[0], length, bytes_written);
     }
 
