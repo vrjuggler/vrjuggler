@@ -296,6 +296,13 @@ DPP_PROG_INSTALL
 # Checks for libraries.
 # -----------------------------------------------------------------------------
 
+# We do this first so that we can pass the $DL_LOAD_LIB in as a dependency of
+# NSPR.
+_vpr_save_LIBS="$LIBS"
+AC_CHECK_FUNC([dlopen], [DL_LOAD_LIB=''],
+    [AC_CHECK_LIB([dl], [dlopen], [DL_LOAD_LIB='-ldl'])])
+LIBS="${_vpr_save_LIBS}"
+
 # Shared memory and synchronization primitives.
 SEMAPHORE_SYS=''		# POSIX, SPROC, NSPR
 MUTEX_SYS=''			# POSIX, SPROC, NSPR
@@ -372,8 +379,11 @@ else
         USE_PTHREADS='no'
     fi
 
+    _vpr_save_LIBS="$LIBS"
+    LIBS="$LIBS $DL_LOAD_LIB"
     DPP_HAVE_NSPR([4.0], ["$USE_PTHREADS"],
         [AC_MSG_ERROR([*** NSPR requried for compiling ***])])
+    LIBS="${_vpr_save_LIBS}"
 
     AC_DEFINE(VPR_USE_NSPR,)
 
@@ -478,11 +488,6 @@ AC_CHECK_FUNCS([gettimeofday sigaction sigemptyset sigfillset sigaddset \
 _vpr_save_LIBS="$LIBS"
 AC_CHECK_FUNC([gethostbyname], [SOCKET_LIB=''],
     [AC_CHECK_LIB([socket], [gethostbyname], [SOCKET_LIB='-lsocket'])])
-LIBS="${_vpr_save_LIBS}"
-
-_vpr_save_LIBS="$LIBS"
-AC_CHECK_FUNC([dlopen], [DL_LOAD_LIB=''],
-    [AC_CHECK_LIB([dl], [dlopen], [DL_LOAD_LIB='-ldl'])])
 LIBS="${_vpr_save_LIBS}"
 
 # Ensure that we have sched_yield(3).  On Solaris, sched_yield(3) and its
