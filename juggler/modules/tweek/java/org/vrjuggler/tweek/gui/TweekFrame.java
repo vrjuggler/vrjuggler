@@ -41,14 +41,14 @@ import java.awt.event.*;
 import java.net.InetAddress;
 import java.util.Vector;
 import javax.swing.*;
+import javax.swing.filechooser.FileFilter;
 import javax.swing.tree.DefaultTreeModel;
 import javax.swing.tree.DefaultMutableTreeNode;
 import org.vrjuggler.tweek.beans.*;
 import org.vrjuggler.tweek.net.CommunicationEvent;
 import org.vrjuggler.tweek.net.CommunicationListener;
 import org.vrjuggler.tweek.net.corba.*;
-import org.vrjuggler.tweek.services.GlobalPreferencesService;
-import org.vrjuggler.tweek.services.EnvironmentService;
+import org.vrjuggler.tweek.services.*;
 
 
 /**
@@ -442,25 +442,61 @@ public class TweekFrame extends JFrame implements TreeModelRefreshListener,
 
    private void beansLoadAction (ActionEvent e)
    {
-      String path =
-         JOptionPane.showInputDialog(null,
-            "Please provide the path to a Bean XML file or directory",
-            "Tweek Bean Finder", JOptionPane.QUESTION_MESSAGE);
-
-      if ( path != null )
+      if ( GlobalPreferencesService.instance().getUserLevel() > 5 )
       {
-         try
+         String path =
+            JOptionPane.showInputDialog(null,
+               "Please provide the path to a Bean XML file or directory",
+               "Tweek Bean Finder", JOptionPane.QUESTION_MESSAGE);
+
+         if ( path != null )
          {
-            String exp_path = EnvironmentService.expandEnvVars(path);
-            BeanCollectionBuilder.instance().build(exp_path, ! exp_path.endsWith(".xml"));
+            loadBeansFromPath(path);
             BeanCollectionBuilder.instance().getPanelTree().fireTreeModelRefreshEvent();
          }
-         catch (BeanPathException path_ex)
+      }
+      else
+      {
+         JFileChooser chooser = new JFileChooser();
+         chooser.setMultiSelectionEnabled(true);
+         chooser.setDialogTitle("Tweek Bean Finder");
+         chooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+
+         ExtensionFileFilter filter = new ExtensionFileFilter("Bean XML Files");
+         filter.addExtension("xml");
+         chooser.addChoosableFileFilter(filter);
+
+         int status = chooser.showOpenDialog(this);
+
+         if ( status == JFileChooser.APPROVE_OPTION )
          {
-            JOptionPane.showMessageDialog(null, "Invalid Bean XML path '" +
-                                          path + "'", "Bad Bean Path",
-                                          JOptionPane.ERROR_MESSAGE);
+            java.io.File[] files = chooser.getSelectedFiles();
+
+            if ( files.length > 0 )
+            {
+               for ( int i = 0; i < files.length; i++ )
+               {
+                  String path = files[i].getAbsolutePath();
+                  loadBeansFromPath(path);
+               }
+
+               BeanCollectionBuilder.instance().getPanelTree().fireTreeModelRefreshEvent();
+            }
          }
+      }
+   }
+
+   private void loadBeansFromPath (String path)
+   {
+      try
+      {
+         BeanCollectionBuilder.instance().build(path, ! path.endsWith(".xml"));
+      }
+      catch (BeanPathException path_ex)
+      {
+         JOptionPane.showMessageDialog(null, "Invalid Bean XML path '" + path + "'",
+                                       "Bad Bean Path",
+                                       JOptionPane.ERROR_MESSAGE);
       }
    }
 
