@@ -28,6 +28,7 @@
 #include <gadget/Devices/Sim/SimDigital.h>
 #include <gadget/Devices/Sim/SimAnalog.h>
 #include <gadget/Devices/Sim/SimInput.h>
+#include <gadget/Devices/Keyboard/KeyboardXWin.h>
 
 #include <jccl/Config/ConfigChunkPtr.h>
 
