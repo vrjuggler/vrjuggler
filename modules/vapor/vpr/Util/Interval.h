@@ -172,7 +172,7 @@ public:
    float usecf() const
    { return (mTensOfUsecs*10.0f); }
 
-   vpr::Uint32 getBaseVal()
+   vpr::Uint32 getBaseVal() const
    { return mTensOfUsecs; }
 
    bool operator ==(const Interval& r) const
