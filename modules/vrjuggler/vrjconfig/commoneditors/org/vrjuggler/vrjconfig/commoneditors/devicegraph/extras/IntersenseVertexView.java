@@ -318,19 +318,14 @@ public class IntersenseVertexView
                  evt.getProperty().equals(DIGITAL_COUNT_PROPERTY) )
             {
                ConfigElement dev_elt = mDeviceInfo.getElement();
-               int station_count =
-                  dev_elt.getPropertyValueCount(STATIONS_PROPERTY);
-               int station_num = -1;
+
+               int station_num =
+                  dev_elt.getPropertyValueIndex(STATIONS_PROPERTY, src_elt);
                StationGroup sg = null;
 
-               for ( int i = 0; i < station_count; ++i )
+               if ( station_num != -1 )
                {
-                  if ( dev_elt.getProperty(STATIONS_PROPERTY, i) == src_elt )
-                  {
-                     station_num = i;
-                     sg = (StationGroup) mStations.get(i);
-                     break;
-                  }
+                  sg = (StationGroup) mStations.get(station_num);
                }
 
                Integer old_count = (Integer) evt.getValue();
@@ -423,6 +418,10 @@ public class IntersenseVertexView
                }
             }
          }
+      }
+
+      public void propertyValueOrderChanged(ConfigElementEvent evt)
+      {
       }
 
       public void propertyValueRemoved(ConfigElementEvent evt)

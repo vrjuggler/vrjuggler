@@ -408,6 +408,10 @@ public class ProxyTreeModel
    {
       elementChanged(evt);
    }
+   public void propertyValueOrderChanged(ConfigElementEvent evt)
+   {
+      elementChanged(evt);
+   }
    public void propertyValueAdded(ConfigElementEvent evt)
    {
       elementChanged(evt);

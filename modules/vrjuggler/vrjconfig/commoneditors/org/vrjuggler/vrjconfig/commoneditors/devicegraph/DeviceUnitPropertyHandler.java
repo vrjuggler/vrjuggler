@@ -86,12 +86,20 @@ public interface DeviceUnitPropertyHandler
    public void propertyValueAdded(ConfigElementEvent evt);
 
    /**
-    * Invoked when a proeprty value is changed in the config element being
+    * Invoked when a property value is changed in the config element being
     * held by this handler.  Whether this results in a
     * <code>DeviceUnitEvent</code> event being generated is dependent upon the
     * specific implementation of this interface.
     */
    public void propertyValueChanged(ConfigElementEvent evt);
+
+   /**
+    * Invoked when the order of property values is changed in the config
+    * element being held by this handler.  Whether this results in a
+    * <code>DeviceUnitEvent</code> event being generated is dependent upon the
+    * specific implementation of this interface.
+    */
+   public void propertyValueOrderChanged(ConfigElementEvent evt);
 
    /**
     * Invoked when a property value is removed from the config element being

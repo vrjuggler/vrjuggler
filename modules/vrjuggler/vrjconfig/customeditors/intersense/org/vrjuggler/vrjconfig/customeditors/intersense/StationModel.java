@@ -208,6 +208,10 @@ public class StationModel implements ConfigElementListener
 
       }
    }
+
+   public void propertyValueOrderChanged(ConfigElementEvent evt)
+   {;}
+
    public void propertyValueAdded(ConfigElementEvent evt)
    {;}
    public void propertyValueRemoved(ConfigElementEvent evt)

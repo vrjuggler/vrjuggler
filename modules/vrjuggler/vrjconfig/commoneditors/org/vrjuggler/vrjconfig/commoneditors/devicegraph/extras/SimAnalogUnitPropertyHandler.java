@@ -81,6 +81,10 @@ public class SimAnalogUnitPropertyHandler
       /* Do nothing. */ ;
    }
 
+   public void propertyValueOrderChanged(ConfigElementEvent evt)
+   {
+   }
+
    /**
     * Handles the removal of an existing property value from our config
     * element.  A <code>DeviceUnitEvent</code> event is fired if and only if

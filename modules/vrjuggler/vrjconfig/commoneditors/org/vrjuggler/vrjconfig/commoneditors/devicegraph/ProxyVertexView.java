@@ -357,6 +357,10 @@ public class ProxyVertexView
       {
       }
 
+      public void propertyValueOrderChanged(ConfigElementEvent evt)
+      {
+      }
+
       public void propertyValueRemoved(ConfigElementEvent evt)
       {
       }

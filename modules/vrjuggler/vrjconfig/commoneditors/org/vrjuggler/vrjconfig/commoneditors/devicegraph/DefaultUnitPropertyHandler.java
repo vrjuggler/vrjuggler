@@ -176,6 +176,10 @@ public class DefaultUnitPropertyHandler
       }
    }
 
+   public void propertyValueOrderChanged(ConfigElementEvent evt)
+   {
+   }
+
    /**
     * Handles the removal of a new property value from our config element.
     * The changed property is comopared with internally stored information to

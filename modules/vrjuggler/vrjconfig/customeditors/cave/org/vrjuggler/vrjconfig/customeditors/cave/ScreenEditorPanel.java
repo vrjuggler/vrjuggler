@@ -175,7 +175,10 @@ public class ScreenEditorPanel
       
       public void propertyValueChanged(ConfigElementEvent evt)
       {;}
-      
+
+      public void propertyValueOrderChanged(ConfigElementEvent evt)
+      {;}
+
       public void propertyValueAdded(ConfigElementEvent evt)
       {
          /*
