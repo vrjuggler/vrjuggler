@@ -74,7 +74,7 @@ bool vjPinchGlove::config(vjConfigChunk *c)
     else
        vjDEBUG(vjDBG_INPUT_MGR,0)
           << "[vjPinch] ERROR: fsPinchGlove::fsPinchGlove: Can't find posProxy."
-          << std::endl << vjDEBUG_FLUSH << std::endl;
+          << std::endl << std::endl << vjDEBUG_FLUSH;
 
     mGlove = new fsPinchGlove();
 
@@ -89,7 +89,7 @@ vjPinchGlove::~vjPinchGlove ()
 
 int vjPinchGlove::startSampling()
 {
-   vjDEBUG(vjDBG_INPUT_MGR, 0) << "[vjPinch] Begin sampling\n" << std::flush
+   vjDEBUG(vjDBG_INPUT_MGR, 0) << "[vjPinch] Begin sampling\n"
                                << vjDEBUG_FLUSH;
    
    if (myThread == NULL)
@@ -98,7 +98,7 @@ int vjPinchGlove::startSampling()
 
       // Create a new thread to handle the control
       vjDEBUG(vjDBG_INPUT_MGR, 0) << "[vjPinch] Spawning control thread\n"
-                                  << std::flush << vjDEBUG_FLUSH;
+                                  << vjDEBUG_FLUSH;
       vjThreadMemberFunctor<vjPinchGlove>* memberFunctor =
          new vjThreadMemberFunctor<vjPinchGlove>(this, &vjPinchGlove::controlLoop, NULL);
 
@@ -123,13 +123,13 @@ int vjPinchGlove::startSampling()
 void vjPinchGlove::controlLoop(void* nullParam)
 {
    vjDEBUG(vjDBG_INPUT_MGR, 0) << "[vjPinch] Entered control thread\n"
-                               << std::flush << vjDEBUG_FLUSH;
+                               << vjDEBUG_FLUSH;
    
    bool result = false;
    while (result == false)
 	{
 		vjDEBUG(vjDBG_INPUT_MGR, 0) << "[vjPinch] Connecting to "
-                                            << sPort << "...\n" << std::flush
+                                            << sPort << "...\n"
                                             << vjDEBUG_FLUSH;
       result = mGlove->connectToHardware( sPort );
       if (result == false)
