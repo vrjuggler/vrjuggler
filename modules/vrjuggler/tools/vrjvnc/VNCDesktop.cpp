@@ -256,8 +256,6 @@ VNCDesktop::Focus VNCDesktop::update(const gmtl::Matrix44f& navMatrix)
 
    // --------- UPDATE NAV AND DESKTOP MATRICES ----------------------- //
 
-   //gmtl::Matrix44f desktop_nav = navMatrix * mDesktopMatrix;
-
    // Do all intersection testing and stuff in the local coordinate frame so we don't have
    // to deal with rotations and translations of the desktop.
    // Just transform the wand into the local frame and we are set to go with minimal effort.
@@ -339,8 +337,9 @@ VNCDesktop::Focus VNCDesktop::update(const gmtl::Matrix44f& navMatrix)
          }
          else     // Just select it
          {
+            if(URCornerSelect != mSelectState)
+               std:: cout << "State: URCornerSelect" << std::endl;
             mSelectState = URCornerSelect;
-            std:: cout << "State: URCornerSelect" << std::endl;
          }
       }
       else if( gmtl::isInVolume(mULCorner, mIsectPoint))
@@ -350,8 +349,9 @@ VNCDesktop::Focus VNCDesktop::update(const gmtl::Matrix44f& navMatrix)
          }
          else     // Just select it
          {
+            if(ULCornerSelect != mSelectState)
+               std:: cout << "State: ULCornerSelect" << std::endl;
             mSelectState = ULCornerSelect;
-            std:: cout << "State: ULCornerSelect" << std::endl;
          }
       }
       else if( gmtl::isInVolume(mLLCorner, mIsectPoint))
@@ -363,8 +363,9 @@ VNCDesktop::Focus VNCDesktop::update(const gmtl::Matrix44f& navMatrix)
          }
          else     // Just select it
          {
+            if(LLCornerSelect != mSelectState)
+               std:: cout << "State: LLCornerSelect" << std::endl;
             mSelectState = LLCornerSelect;
-            std:: cout << "State: LLCornerSelect" << std::endl;
          }
       }
       else if( gmtl::isInVolume(mLRCorner, mIsectPoint))
@@ -376,8 +377,9 @@ VNCDesktop::Focus VNCDesktop::update(const gmtl::Matrix44f& navMatrix)
          }
          else     // Just select it
          {
+            if(LRCornerSelect != mSelectState)
+               std:: cout << "State: LRCornerSelect" << std::endl;
             mSelectState = LRCornerSelect;
-            std:: cout << "State: LRCornerSelect" << std::endl;
          }
       }
       // ---- Check border selection --- //
@@ -391,8 +393,9 @@ VNCDesktop::Focus VNCDesktop::update(const gmtl::Matrix44f& navMatrix)
          }
          else     // Just select it
          {
+            if(TopBorderSelect != mSelectState)
+               std:: cout << "State: TopBorderSelect" << std::endl;
             mSelectState = TopBorderSelect;
-            std:: cout << "State: TopBorderSelect" << std::endl;
          }
       }
       else if( gmtl::isInVolume(mBottomBorder, mIsectPoint))
@@ -405,8 +408,9 @@ VNCDesktop::Focus VNCDesktop::update(const gmtl::Matrix44f& navMatrix)
          }
          else     // Just select it
          {
+            if(BottomBorderSelect != mSelectState)
+               std:: cout << "State: BottomBorderSelect" << std::endl;
             mSelectState = BottomBorderSelect;
-            std:: cout << "State: BottomBorderSelect" << std::endl;
          }
       }
       else if( gmtl::isInVolume(mLeftBorder, mIsectPoint))
@@ -419,8 +423,9 @@ VNCDesktop::Focus VNCDesktop::update(const gmtl::Matrix44f& navMatrix)
          }
          else     // Just select it
          {
+            if(LeftBorderSelect != mSelectState)
+               std:: cout << "State: LeftBorderSelect" << std::endl;
             mSelectState = LeftBorderSelect;
-            std:: cout << "State: LeftBorderSelect" << std::endl;
          }
       }
       else if( gmtl::isInVolume(mRightBorder, mIsectPoint))
@@ -433,8 +438,9 @@ VNCDesktop::Focus VNCDesktop::update(const gmtl::Matrix44f& navMatrix)
          }
          else     // Just select it
          {
+            if(RightBorderSelect != mSelectState)
+               std:: cout << "State: RightBorderSelect" << std::endl;
             mSelectState = RightBorderSelect;
-            std:: cout << "State: RightBorderSelect" << std::endl;
          }
       }
 
@@ -444,76 +450,50 @@ VNCDesktop::Focus VNCDesktop::update(const gmtl::Matrix44f& navMatrix)
       }
    }
    // --- Resizing
-   else if(LRCornerGrab == mSelectState)
+   else  // Grab state is active
    {
-      // Compute the desired change in height and width
-      float delta_w = mIsectPoint[0] - mCornerGrabPoint[0];       // now - grab
-      float delta_h =  mCornerGrabPoint[1] - mIsectPoint[1];      // Grab - now
+      if(LRCornerGrab == mSelectState)
+      {
+         // Compute the desired change in height and width
+         float delta_w = mIsectPoint[0] - mCornerGrabPoint[0];       // now - grab
+         float delta_h =  mCornerGrabPoint[1] - mIsectPoint[1];      // Grab - now
 
-      // Transform opposite of change in height to make it look right
-      m_world_M_desktop *= gmtl::makeTrans<gmtl::Matrix44f>(gmtl::Vec3f(0.0f, -delta_h, 0.0f));
-      mDesktopWidth += delta_w;
-      mDesktopHeight += delta_h;
+         // Transform opposite of change in height to make it look right
+         m_world_M_desktop *= gmtl::makeTrans<gmtl::Matrix44f>(gmtl::Vec3f(0.0f, -delta_h, 0.0f));
+         mDesktopWidth += delta_w;
+         mDesktopHeight += delta_h;
 
-      updateDesktopParameters();
+         // Reset grab point. x becomes new isect. y stays same.
+         mCornerGrabPoint[0] = mIsectPoint[0];
+      }
+      else if(LLCornerGrab == mSelectState)
+      {
+         // Compute the desired change in height and width
+         float delta_w =  mCornerGrabPoint[0] - mIsectPoint[0];      // grab - now
+         float delta_h =  mCornerGrabPoint[1] - mIsectPoint[1];      // Grab - now
 
-      // Reset grab point. x becomes new isect. y stays same.
-      mCornerGrabPoint[0] = mIsectPoint[0];
-      //mCornerGrabPoint[1] = 0.0f;             // y stays because we adjust desk mat to make it stay the same
+         // Transform opposite of change in height and width to look right
+         m_world_M_desktop *= gmtl::makeTrans<gmtl::Matrix44f>(gmtl::Vec3f(-delta_w, -delta_h, 0.0f));
+         mDesktopWidth += delta_w;
+         mDesktopHeight += delta_h;
+         // Don't reset grab point. Both stay same since we transformed to get them to be the same
+         //mCornerGrabPoint[0] = mIsectPoint[0];
+      }
+      // --- Moving - Rotation and translation --- //
+      else if((LeftBorderGrab == mSelectState) || (RightBorderGrab == mSelectState) ||
+              (TopBorderGrab == mSelectState) || (BottomBorderGrab == mSelectState))
+      {
+         // Compute desired pos and then figure out how to get the desktop to there
+         gmtl::Matrix44f desired_pos = (wand_mat * m_wandMdesktop_grab);
+         m_world_M_desktop *= desired_pos;
+      }
 
+      // Get out of grab states if possible
       if(!select_button_state)
-         mSelectState = Nothing;
-   }
-   else if(LLCornerGrab == mSelectState)
-   {
-      // Compute the desired change in height and width
-      float delta_w =  mCornerGrabPoint[0] - mIsectPoint[0];      // grab - now
-      float delta_h =  mCornerGrabPoint[1] - mIsectPoint[1];      // Grab - now
+            mSelectState = Nothing;
+   } // grab states
 
-      // Transform opposite of change in height and width to look right
-      m_world_M_desktop *= gmtl::makeTrans<gmtl::Matrix44f>(gmtl::Vec3f(-delta_w, -delta_h, 0.0f));
-      mDesktopWidth += delta_w;
-      mDesktopHeight += delta_h;
-
-      updateDesktopParameters();
-
-      // Don't reset grab point. Both stay same since we transformed to get them to be the same
-      //mCornerGrabPoint[0] = mIsectPoint[0];
-
-      if(!select_button_state)
-         mSelectState = Nothing;
-   }
-   // --- Moving --- //
-   else if((LeftBorderGrab == mSelectState) || (RightBorderGrab == mSelectState) ||
-           (TopBorderGrab == mSelectState) || (BottomBorderGrab == mSelectState))
-   {
-      // Compute desired pos and then figure out how to get the desktop to there
-      gmtl::Matrix44f desired_pos = (wand_mat * m_wandMdesktop_grab);
-      m_world_M_desktop *= desired_pos;
-
-      if(!select_button_state)
-         mSelectState = Nothing;
-   }
-
-
-   // Resize it
-   /*
-   mDesktopWidth += mIncSize;
-   if(mDesktopWidth > mMaxSize)
-   {
-      mDesktopWidth = mMaxSize;
-      mIncSize *= -1.0f;
-   }
-   else if(mDesktopWidth < mMinSize)
-   {
-      mDesktopWidth = mMinSize;
-      mIncSize *= -1.0f;
-   }
-   mDesktopHeight = mDesktopWidth;
-   //std::cout << "Height: " << mDesktopHeight << std::endl;
-   */
    updateDesktopParameters();
-
 
    return focus_val;
 }
@@ -545,7 +525,7 @@ void VNCDesktop::draw()
 
       // -- Draw the desktop "objects" -- //
       // Draw isect point
-      drawSphere(0.25f, mIsectPoint);
+      //**//drawSphere(0.25f, mIsectPoint);
 
       // Draw the desktop corners and borders
       setColorIfState(corner_color_selected, corner_color, LLCornerSelect, LLCornerGrab);
