@@ -1,29 +1,30 @@
-DATE        AUTHOR    CHANGE
------------ --------- ---------------------------------------------------------
-Jul-12-2002 allenb    Added OpenSG section to programmers guide.
-Jul-05-2002 subatomic Enabled GlWindowWin32 to get window events.
-                      This change allows window events such as keyboard
-                      and mouse to be recieved in graphics windows while
-                      running with the Win32 build of vrjuggler.
-Jul-01-2002 allenb    Removed OSG hack and replaced with a much better
-                      (and less trusting) solution using new glUserData.
-Jul-01-2002 allenb    Temporary hack added to GlPipe.cpp to set viewport
-                      before each call to draw.  This was needed to work
-                      around a bug in OSG.  
-Jun-27-2002 patrickh  The application makefiles now require GNU make, Doozer
-                      and the *-config scripts.  This fixes path problems in
-                      the installation tree.
-                      NEW VERSION: 1.1.97
-Jun-25-2002 patrickh  The vrjuggler-config script is now written in Perl.  It
-                      is capable of determining its installation path at
-                      runtime.
-Jun-21-2002 allenb    Fixed bug where GLX window was not processing keyup or
-                      button events.
-Jun-20-2002 allenb    Remove multi-threading from the case where GLXWindow and 
-                      XWinKeyboard are sharing the window to process it as a 
-                      GFX window and as a keyboard window.
-                      This change should greatly increase the stability of GFX 
-                      window input under X with OpenGL.
+DATE        AUTHOR      CHANGE
+----------- ---------   ---------------------------------------------------------
+Jul-16-2002 nonchocoboy New VRJConfig Tweek bean to replace VjControl.
+Jul-12-2002 allenb      Added OpenSG section to programmers guide.
+Jul-05-2002 subatomic   Enabled GlWindowWin32 to get window events.
+                        This change allows window events such as keyboard
+                        and mouse to be recieved in graphics windows while
+                        running with the Win32 build of vrjuggler.
+Jul-01-2002 allenb      Removed OSG hack and replaced with a much better
+                        (and less trusting) solution using new glUserData.
+Jul-01-2002 allenb      Temporary hack added to GlPipe.cpp to set viewport
+                        before each call to draw.  This was needed to work
+                        around a bug in OSG.  
+Jun-27-2002 patrickh    The application makefiles now require GNU make, Doozer
+                        and the *-config scripts.  This fixes path problems in
+                        the installation tree.
+                        NEW VERSION: 1.1.97
+Jun-25-2002 patrickh    The vrjuggler-config script is now written in Perl.  It
+                        is capable of determining its installation path at
+                        runtime.
+Jun-21-2002 allenb      Fixed bug where GLX window was not processing keyup or
+                        button events.
+Jun-20-2002 allenb      Remove multi-threading from the case where GLXWindow and 
+                        XWinKeyboard are sharing the window to process it as a 
+                        GFX window and as a keyboard window.
+                        This change should greatly increase the stability of GFX 
+                        window input under X with OpenGL.
 
 [1.1 DR1 released - 6.13.2002]=================================================
 Jun-13-2002 patrickh  Removed vrj::EnvironmentManager.
