@@ -58,6 +58,7 @@ public class PropertySheet extends PropertyComponent
       PropertyEditorManager.registerEditor(Integer.class, IntegerEditor.class);
       PropertyEditorManager.registerEditor(Float.class, FloatEditor.class);
    }
+
    public void setElement(ConfigElement elm)
    {
       mConfigElement = elm;
@@ -109,6 +110,7 @@ public class PropertySheet extends PropertyComponent
          }
       }
    }
+   
    public PropertySheet(ConfigElement elm, Color color)
    {
       mConfigElement = elm;
@@ -148,23 +150,6 @@ public class PropertySheet extends PropertyComponent
             }
          }
       }
-   }
-   
-   private void init()
-   {
-      setBackground(mColor);
-           // Create a frame
-      setBounds (100, 100, 700, 300);
-
-      // Create a TableLayout for the frame
-      double border = 10;
-      double f = TableLayout.FILL;
-      double p = TableLayout.PREFERRED;
-      double size[][] =
-         {{p, f, 16},    // Columns
-          {p, p}};   // Rows
-
-      this.setLayout(new TableLayout(size)); 
    }
    
    // This is the special case where we actually have a Variable list of values.
@@ -213,7 +198,7 @@ public class PropertySheet extends PropertyComponent
             }
          });
          
-         TableLayoutConstraints c3 = new TableLayoutConstraints(1, row, 1, row, TableLayout.CENTER, TableLayout.TOP);
+         TableLayoutConstraints c3 = new TableLayoutConstraints(0, row, 2, row, TableLayout.CENTER, TableLayout.TOP);
          add(mAddButton, c3);
          ++row;
       }
@@ -247,6 +232,23 @@ public class PropertySheet extends PropertyComponent
 
          ++row;
       }
+   }
+   
+   private void init()
+   {
+      setBackground(mColor);
+           // Create a frame
+      setBounds (100, 100, 700, 300);
+
+      // Create a TableLayout for the frame
+      double border = 10;
+      double f = TableLayout.FILL;
+      double p = TableLayout.PREFERRED;
+      double size[][] =
+         {{f, f, 16},    // Columns
+          {p, p}};   // Rows
+
+      this.setLayout(new TableLayout(size)); 
    }
 
    /**
@@ -351,7 +353,7 @@ public class PropertySheet extends PropertyComponent
       editor_list.refresh();
    }
 
-   public void addNewNormalEditor(ConfigElement elm, PropertyDefinition prop_def)
+   private void addNewNormalEditor(ConfigElement elm, PropertyDefinition prop_def)
    {
       // We know that we want the default value for the first
       // PropertyValueDefinition since this is a variable list.
@@ -364,7 +366,7 @@ public class PropertySheet extends PropertyComponent
             elm.getPropertyValueCount(prop_def.getToken()) - 1);
    }
    
-   public void addNewEmbeddedElement(ConfigElement elm, PropertyDefinition prop_def)
+   private void addNewEmbeddedElement(ConfigElement elm, PropertyDefinition prop_def)
    {
       Object new_value = null;
       

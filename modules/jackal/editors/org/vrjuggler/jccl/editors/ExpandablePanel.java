@@ -63,7 +63,7 @@ public class ExpandablePanel extends PropertyComponent
             {
                if(!mExpanded)
                {
-                  TableLayoutConstraints c2 = new TableLayoutConstraints(1, 1, 4, 1, TableLayout.LEFT, TableLayout.FULL);
+                  TableLayoutConstraints c2 = new TableLayoutConstraints(1, 1, 4, 1, TableLayout.FULL, TableLayout.FULL);
                   add(mComponent, c2);
                   
                   // Refresh us.

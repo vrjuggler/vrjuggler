@@ -12,6 +12,7 @@ import java.awt.Insets;
 import java.beans.PropertyEditor;
 import java.beans.PropertyEditorManager;
 import javax.swing.*;
+import javax.swing.border.*;
 import org.vrjuggler.jccl.config.*;
 
 public class PropertyEditorPanel extends PropertyComponent 
@@ -78,7 +79,7 @@ public class PropertyEditorPanel extends PropertyComponent
    {
       // Populate the box with the tags
       JComboBox box = new JComboBox(mEditor.getTags());
-      box.setBorder(BorderFactory.createLoweredBevelBorder());
+      //box.setBorder(BorderFactory.createLoweredBevelBorder());
       box.setSelectedItem(mEditor.getAsText());
       box.setFont(box.getFont().deriveFont(Font.PLAIN));
       box.addActionListener(new ActionListener()
@@ -99,14 +100,12 @@ public class PropertyEditorPanel extends PropertyComponent
    {
       // Populate the text field with the object's string value
       final JTextField txtField = new JTextField(mEditor.getAsText());
-      //txtField.setBorder(BorderFactory.createEmptyBorder(0,10,0,0));
-      txtField.setBorder(BorderFactory.createLoweredBevelBorder());
-      txtField.setBackground(mColor);
+      txtField.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
       txtField.addActionListener(new ActionListener()
       {
          public void actionPerformed(ActionEvent evt)
          {
-            txtField.setBackground(mColor);
+            txtField.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
             // Force the focus to be lost.
             txtField.transferFocusUpCycle();
             // Force the focus to be transfered to the next component.
@@ -122,11 +121,11 @@ public class PropertyEditorPanel extends PropertyComponent
       {
          public void focusGained(FocusEvent evt)
          {
-            txtField.setBackground(java.awt.Color.white);
+            txtField.setBorder(BorderFactory.createLineBorder(Color.black, 2));
          }
          public void focusLost(FocusEvent evt)
          {
-            txtField.setBackground(mColor);
+            txtField.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
             stopCellEditing();
          }
       });
@@ -196,7 +195,6 @@ public class PropertyEditorPanel extends PropertyComponent
       if (mEditor.getTags() != null)
       {
          mEditorComponent = createComboBox();
-         //mEditorComponent.setBackground(table.getBackground());
       }
       // Property editor does not have known tagged values, use a textfield
       else
