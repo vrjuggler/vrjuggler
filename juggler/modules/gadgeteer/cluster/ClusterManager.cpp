@@ -447,32 +447,32 @@ namespace cluster
    {
       if (recognizeClusterManagerConfig(element))
       {
-         vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << clrOutBOLD(clrCYAN,"[ClusterManager] ")
+         vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_STATUS_LVL) << clrOutBOLD(clrCYAN,"[ClusterManager] ")
             << "Configure the Cluster: " << element->getName()
             << "\n" << vprDEBUG_FLUSH;
 
          // Get a list of cluster nodes to use for this cluster.
          int num_nodes = element->getNum(std::string("cluster_nodes"));
-         vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << clrOutBOLD(clrCYAN,"[ClusterManager] ")
+         vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_STATUS_LVL) << clrOutBOLD(clrCYAN,"[ClusterManager] ")
             << "configAdd() Number of nodes: " << num_nodes
             << "\n" << vprDEBUG_FLUSH;
          for (int i = 0 ; i < num_nodes ; i++)
          {
             std::string new_node = element->getProperty<std::string>(std::string("cluster_nodes"), i);
-            vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
+            vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_STATUS_LVL)
                << clrOutBOLD(clrCYAN,"[ClusterManager] ")
                << "configAdd() New Node Name: " << new_node << "\n"
                << vprDEBUG_FLUSH;
             jccl::ConfigElementPtr new_node_element = getConfigElementPointer(new_node);
             std::string new_node_hostname = new_node_element->getProperty<std::string>(std::string("host_name"));
-            vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
+            vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_STATUS_LVL)
                << clrOutBOLD(clrCYAN,"[ClusterManager] ")
                << "configAdd() New Node Hostname: " << new_node_hostname
                << "\n" << vprDEBUG_FLUSH;
 
             if (new_node_hostname != ClusterNetwork::instance()->getLocalHostname())
             {
-               vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL)
+               vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_STATUS_LVL)
                   << clrOutBOLD(clrCYAN,"[ClusterManager] ")
                   << "configAdd() Added Node since it is non-local\n"
                   << vprDEBUG_FLUSH;
