@@ -128,6 +128,7 @@ float radians = vrj::Math::deg2rad( degrees );</programlisting>
                      <para><symbol>vjDEBUG</symbol> is now <symbol>vprDEBUG</symbol>. Related output symbols (e.g.,<symbol>vjDEBUG_FLUSH</symbol>, <symbol>vjDEBUG_BEGIN</symbol>, etc.) have been renamed similarly. When calling <symbol>vprDEBUG</symbol>, the category is now required. Previously, an integer constant could be used in place of a category symbol. For example: </para>
                      <programlisting>vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) &lt;&lt; "hello world!" &lt;&lt; vprDEBUG_FLUSH;</programlisting>
                      <para>Here, the category is <symbol>vprDBG_ALL</symbol>. The order of the category and level arguments has not changed.</para>
+                     <para>Related to this change is the location of the debugging output headers. In VR Juggler 1.0, the only debugging header was <filename>Kernel/vjDebug.h</filename>. Now, the basic header that is always needed is <filename>vpr/Util/Debug.h</filename>. Project-specific extensions are named similarly. For example, the JCCL debugging header is <filename>jccl/Util/Debug.h</filename>. In VR Juggler proper, the header is <filename>vrj/Util/Debug.h</filename>.</para>
                   </listitem>
                   <listitem>
                      <para> The VPR C++ portable runtime library is located in <filename>libvpr</filename>, and the headers can be found in <filename>include/vpr</filename>.</para>
