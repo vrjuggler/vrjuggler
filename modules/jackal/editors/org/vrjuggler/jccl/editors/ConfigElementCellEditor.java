@@ -192,7 +192,7 @@ public class ConfigElementCellEditor
          if (propDef.getType() == ConfigElementPointer.class)
          {
             ConfigElementPointerEditor cpe = new ConfigElementPointerEditor();
-            cpe.setPropertyDefinition(propDef);
+            //cpe.setPropertyDefinition(propDef);
             ed = cpe;
          }
       }

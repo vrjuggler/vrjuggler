@@ -29,13 +29,14 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-package org.vrjuggler.jccl.config;
+package org.vrjuggler.jccl.config.undo;
 
 import java.util.*;
-import javax.swing.event.EventListenerList;
+import javax.swing.undo.AbstractUndoableEdit;
+import javax.swing.undo.CannotUndoException;
+import javax.swing.undo.CannotRedoException;
 
-import org.vrjuggler.jccl.config.event.*;
-import javax.swing.undo.*;
+import org.vrjuggler.jccl.config.ConfigElement;
 
 public class ConfigElementPropertyEdit extends AbstractUndoableEdit
 {
@@ -47,9 +48,6 @@ public class ConfigElementPropertyEdit extends AbstractUndoableEdit
       mPropIndex = index;
       mOldValue = old_val;
       mNewValue = new_val;
-
-
-      
    }
 
    public void undo() throws CannotUndoException 
