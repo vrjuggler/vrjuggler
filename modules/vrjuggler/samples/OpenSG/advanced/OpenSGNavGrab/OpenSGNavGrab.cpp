@@ -551,7 +551,7 @@ void OpenSGNavGrab::initHighlight()
       osg::endEditCP(index);
 
       mHighlightPoints = osg::GeoPositions3f::create();
-      beginEditCP(mHighlightPoints);
+      osg::beginEditCP(mHighlightPoints);
          mHighlightPoints->push_back(osg::Pnt3f(-1, -1, -1));
          mHighlightPoints->push_back(osg::Pnt3f( 1, -1, -1));
          mHighlightPoints->push_back(osg::Pnt3f(-1,  1, -1));
@@ -560,7 +560,7 @@ void OpenSGNavGrab::initHighlight()
          mHighlightPoints->push_back(osg::Pnt3f( 1, -1,  1));
          mHighlightPoints->push_back(osg::Pnt3f(-1,  1,  1));
          mHighlightPoints->push_back(osg::Pnt3f( 1,  1,  1));
-      endEditCP(mHighlightPoints);
+      osg::endEditCP(mHighlightPoints);
 
       osg::GeometryPtr geo = osg::Geometry::create();
       osg::beginEditCP(geo);
