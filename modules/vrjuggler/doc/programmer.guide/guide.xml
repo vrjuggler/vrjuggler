@@ -125,7 +125,7 @@
                   <title><classname>vjApp</classname> hierarchy</title>
                   <mediaobject>
                      <imageobject>
-                        <imagedata fileref="myAppHierarchy.png" format="PNG"/>
+                        <imagedata align="center" fileref="myAppHierarchy.png" format="PNG" scale="100" scalefit="1"/>
                      </imageobject>
                   </mediaobject>
                </figure>
@@ -232,7 +232,7 @@ int main (int argc, char* argv[])
                <title>Kernel loop sequence</title>
                <mediaobject>
                   <imageobject>
-                     <imagedata fileref="AppInitAndMainLoop_modified.png" format="PNG"/>
+                     <imagedata align="center" fileref="AppInitAndMainLoop_modified.png" format="PNG" scale="100" scalefit="1"/>
                   </imageobject>
                </mediaobject>
             </figure>
@@ -282,7 +282,7 @@ int main (int argc, char* argv[])
                <title>Application object interface</title>
                <mediaobject>
                   <imageobject>
-                     <imagedata fileref="myAppHierarchy-highlightVjApp.png" format="PNG"/>
+                     <imagedata align="center" fileref="myAppHierarchy-highlightVjApp.png" format="PNG" scale="100" scalefit="1"/>
                   </imageobject>
                </mediaobject>
             </figure>
@@ -393,7 +393,7 @@ int main (int argc, char* argv[])
                   <title><classname>vjGlApp</classname> interface extensions to <classname>vjApp</classname></title>
                   <mediaobject>
                      <imageobject>
-                        <imagedata fileref="myAppHierarchy-highlightVjOglApp.png" format="PNG"/>
+                        <imagedata align="center" fileref="myAppHierarchy-highlightVjOglApp.png" format="PNG" scale="100" scalefit="1"/>
                      </imageobject>
                   </mediaobject>
                </figure>
@@ -417,7 +417,7 @@ int main (int argc, char* argv[])
                   <title><classname>vjPfApp</classname> interface extensions to <classname>vjApp</classname></title>
                   <mediaobject>
                      <imageobject>
-                        <imagedata fileref="myAppHierarchy-highlightVjPfApp.png" format="PNG"/>
+                        <imagedata align="center" fileref="myAppHierarchy-highlightVjPfApp.png" format="PNG" scale="100" scalefit="1"/>
                      </imageobject>
                   </mediaobject>
                </figure>
@@ -1838,7 +1838,7 @@ wand_pos = *(mWand-&gt;getData());
                   <title>VR Juggler kernel control loop</title>
                   <mediaobject>
                      <imageobject>
-                        <imagedata/>
+                        <imagedata align="center" scale="100" scalefit="1"/>
                      </imageobject>
                   </mediaobject>
                </figure>
@@ -1994,7 +1994,7 @@ public:
                <title><classname>vjGlApp</classname> application class</title>
                <mediaobject>
                   <imageobject>
-                     <imagedata fileref="myAppHierarchy-highlightVjOglApp.png" format="PNG"/>
+                     <imagedata align="center" fileref="myAppHierarchy-highlightVjOglApp.png" format="PNG" scale="100" scalefit="1"/>
                   </imageobject>
                </mediaobject>
             </figure>
@@ -2283,7 +2283,7 @@ userApp::draw()
                   <title>VR Juggler OpenGL system</title>
                   <mediaobject>
                      <imageobject>
-                        <imagedata fileref="JugglerOGLSystemChart.png" format="PNG"/>
+                        <imagedata align="center" fileref="JugglerOGLSystemChart.png" format="PNG" scale="100" scalefit="1"/>
                      </imageobject>
                   </mediaobject>
                </figure>
@@ -2414,7 +2414,7 @@ public:
                <title><classname>vjPfApp</classname> application class</title>
                <mediaobject>
                   <imageobject>
-                     <imagedata fileref="myAppHierarchy-highlightVjPfApp.png" format="PNG"/>
+                     <imagedata align="center" fileref="myAppHierarchy-highlightVjPfApp.png" format="PNG" scale="100" scalefit="1"/>
                   </imageobject>
                </mediaobject>
             </figure>
