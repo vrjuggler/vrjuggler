@@ -172,6 +172,33 @@ public:
       return prop_string;
    }
 
+   /**
+    * Specialization for booleans so that we can read "true" and "false" rather
+    * than "1" and "0".
+    */
+   template<>
+   bool getProperty<bool>(const std::string& prop, int ind) const
+   {
+      std::string prop_string = getPropertyString(prop,ind);
+      if ("false" == prop_string || "0" == prop_string)
+      {
+         return false;
+      }
+      else if ("true" == prop_string || "1" == prop_string)
+      {
+         return true;
+      }
+      else
+      {
+         vprDEBUG(jcclDBG_CONFIG, vprDBG_CONFIG_LVL)
+            << "Expecting boolean string for property '" << prop
+            << "' in config chunk '" << getName() << "'. Got '"
+            << prop_string << " instead. Assuming value of true."
+            << vprDEBUG_FLUSH;
+         return true;
+      }
+   }
+
    template<>
    ConfigChunkPtr getProperty<ConfigChunkPtr>(const std::string& prop, int ind) const
    {
@@ -214,6 +241,29 @@ public:
       return true;
    }
 
+   /**
+    * Specialization for boolean values.
+    */
+   bool setProperty(const std::string& prop, const int ind, bool val)
+   {
+      cppdom::NodePtr cdata_node = getPropertyCdataNode(prop, ind, true);
+      vprASSERT(cdata_node.get() != NULL && "Autogrow failed");
+
+      std::string str_val;
+
+      if (true == val)
+      {
+         str_val = "true";
+      }
+      else
+      {
+         str_val = "false";
+      }
+      cdata_node->setCdata(str_val);
+
+      return true;
+   }
+
    /** Specialization for ConfigChunkPtrs */
    bool setProperty(const std::string& prop, int ind, ConfigChunkPtr val)
    {
@@ -230,7 +280,7 @@ public:
    std::vector<std::string> getChunkPtrDependencies() const;
 
    /** Return a list of self's embedded chunks.
-    *  @return A vector of ConfigChunkPtrs to embedded ConfigChunks 
+    *  @return A vector of ConfigChunkPtrs to embedded ConfigChunks
     *          within self.
     */
    std::vector<jccl::ConfigChunkPtr> getEmbeddedChunks() const;
@@ -241,7 +291,9 @@ public:
    void setDesc(ChunkDescPtr d);
 
    cppdom::NodePtr getNode()
-   { return mNode; }
+   {
+      return mNode;
+   }
 
 protected:
    /** Returns the string value of the given property
@@ -277,6 +329,33 @@ inline std::string ConfigChunk::getProperty<std::string>(const std::string& prop
 {
    std::string prop_string = getPropertyString(prop,ind);
    return prop_string;
+}
+
+/**
+ * Specialization for booleans so that we can read "true" and "false" rather
+ * than "1" and "0".
+ */
+template<>
+inline bool ConfigChunk::getProperty<bool>(const std::string& prop, int ind) const
+{
+   std::string prop_string = getPropertyString(prop,ind);
+   if ("false" == prop_string || "0" == prop_string)
+   {
+      return false;
+   }
+   else if ("true" == prop_string || "1" == prop_string)
+   {
+      return true;
+   }
+   else
+   {
+      vprDEBUG(jcclDBG_CONFIG, vprDBG_CONFIG_LVL)
+         << "Expecting boolean string for property '" << prop
+         << "' in config chunk '" << getName() << "'. Got '"
+         << prop_string << " instead. Assuming value of true."
+         << vprDEBUG_FLUSH;
+      return true;
+   }
 }
 
 /** Specialization for ConfigChunkPtr's
