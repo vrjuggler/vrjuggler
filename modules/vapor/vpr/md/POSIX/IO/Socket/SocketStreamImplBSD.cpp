@@ -142,12 +142,8 @@ vpr::ReturnStatus SocketStreamImplBSD::accept(SocketStreamImplBSD& sock,vpr::Int
          sock.mHandle         = new FileHandleImplUNIX(addr.getAddressString());
          sock.mHandle->mFdesc = accept_sock;
          sock.mHandle->mOpen  = true;
-         sock.mOpen           = true;
 
-         // Inherit the blocking state from the accepting socket.  This
-         // must be done after mOpen is set to true to satisfy the
-         // pre-condition.
-         sock.setBlocking(isBlocking());
+         sock.setBlocking(this->isBlocking());
 
          sock.mBound         = true;
          sock.mConnected     = true;
