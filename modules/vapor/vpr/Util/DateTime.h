@@ -52,7 +52,7 @@ namespace vpr {
 /**
  * Simple wrapper around time since the UNIX Epoch (00:00 UTC January 1, 1970).
  */
-class VPR_CLASS_API DateTime {
+class DateTime {
 public:
     /**
      * Constructs an empty time object.  To assign this object the current
