@@ -47,6 +47,7 @@ DOC_PKGS=	$(BASE_PKG)					\
 		$(BASE_PKG).commoneditors.devicegraph.extras	\
 		$(BASE_PKG).commoneditors.event			\
 		$(BASE_PKG).commoneditors.placer		\
+		$(BASE_PKG).commoneditors.proxytree		\
 		$(BASE_PKG).ui
 SRC_PATH=	$(srcdir):$(srcdir)/commoneditors
 JDOM_DIR=	../../../external/jdom
