@@ -54,7 +54,8 @@ SRCS		= MsgPackage.cpp \
                   RmtMgrDepChecker.cpp \
                   ClusterSync.cpp \
                   ClusterBarrierSerial.cpp \
-                  ClusterBarrierTCP.cpp
+                  ClusterBarrierTCP.cpp \
+		  ClusterBarrierWired.cpp
 
 include $(MKPATH)/dpp.obj.mk
 

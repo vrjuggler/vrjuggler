@@ -178,7 +178,7 @@ namespace gadget
       // If we have a RIMChunk configChunk
       if ( this->recognizeRemoteInputManagerConfig(chunk)) 
       {
-         // Add all MachineSpecific chunks if they are in the current list of Cluster nodes
+	 // Add all MachineSpecific chunks if they are in the current list of Cluster nodes
          ////////////////////////////////////////////////////////////////////////////////////
          
          int numNodes = chunk->getNum("cluster_nodes");
@@ -209,6 +209,7 @@ namespace gadget
                      << " Found the local Cluster Machine Chunk: " << mLocalMachineChunkName << "\n"<< vprDEBUG_FLUSH;
             }
          }
+
          ////////////////////////////////////////////////////////////////////////////////////
 
          // Find the name of the Sync Server
@@ -229,7 +230,14 @@ namespace gadget
          int                  sync_method = chunk->getProperty<int>("sync_method");
 
          jccl::ConfigChunkPtr local_machine_chunk = mClusterTable[mLocalMachineChunkName];
-         std::string          serial_port = local_machine_chunk->getProperty<std::string>("serialPort");
+         
+	 if(local_machine_chunk == NULL)
+	 {
+	    vprDEBUG(gadgetDBG_RIM,vprDBG_CRITICAL_LVL) << clrOutBOLD(clrRED,"This machine is not in the current Cluster Configuration!\n") << vprDEBUG_FLUSH;
+	    exit(1);
+	 }
+	 
+	 std::string          serial_port = local_machine_chunk->getProperty<std::string>("serialPort");
          int                  baud_rate = local_machine_chunk->getProperty<int>("serialBaud");
          
          switch (sync_method)
@@ -251,6 +259,12 @@ namespace gadget
             vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << 
                "ClusterBarrierSerial Barrier Method: TCP/IP Sockets & Serial Port \n" << vprDEBUG_FLUSH;
             break;
+         case 3:
+            mBarrier = new gadget::ClusterBarrierWired;
+            vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << 
+               "ClusterBarrierWire Barrier Method: Altered Serial Driver \n" << vprDEBUG_FLUSH;
+            break;
+
 /*         case 2:
             mBarrier = new gadget::ClusterBarrierUDP;
 
@@ -571,6 +585,9 @@ namespace gadget
    
       if (mConfigured && mBarrier != NULL && mBarrier->isActive())
       {
+         //vpr::Interval first_time, second_time;
+         //first_time.setNow();
+
          if (mBarrier->isMaster())
          {
             mBarrier->MasterReceive();
@@ -578,16 +595,12 @@ namespace gadget
          }
          else
          {
-            //vpr::Interval first_time, second_time;
-            //first_time.setNow();
-   
             mBarrier->SlaveSend();
-            mBarrier->SlaveReceive();
-   
-            //second_time.setNow();
-            //vpr::Interval diff_time(second_time-first_time);
-            //std::cout << "Latency:" << setw(8) << diff_time.getBaseVal() << " usecs" << std::endl;
+            mBarrier->SlaveReceive();   
          }
+         //second_time.setNow();
+         //vpr::Interval diff_time(second_time-first_time);
+         //vprDEBUG(gadgetDBG_RIM,vprDBG_CRITICAL_LVL) << clrSetBOLD(clrCYAN) << "Latency: " << diff_time.getBaseVal() << " usecs\n"<< vprDEBUG_FLUSH;
       }
    }
 
@@ -746,13 +759,12 @@ namespace gadget
          
          readTransmittingConnectionData();           // Read in END_BLOCKS
          
-         for (std::list<NetConnection*>::iterator i = mReceivingConnections.begin();
+         /*for (std::list<NetConnection*>::iterator i = mReceivingConnections.begin();
               i != mReceivingConnections.end();i++)
          {
              if ((*i)->getSockStream()->availableBytes() > 0)
              {
                  vprDEBUG(gadgetDBG_RIM,vprDBG_CRITICAL_LVL) << "ERROR: RECEIVING Bytes on socket: " << (*i)->getSockStream()->availableBytes() << std::endl << vprDEBUG_FLUSH;
-                 std::cout << "ERROR: RECEIVING Bytes on socket: " << (*i)->getSockStream()->availableBytes() << std::endl;
              }
          }
          for (std::list<NetConnection*>::iterator i = mTransmittingConnections.begin();
@@ -761,9 +773,8 @@ namespace gadget
             if ((*i)->getSockStream()->availableBytes() > 0)
             {
                 vprDEBUG(gadgetDBG_RIM,vprDBG_CRITICAL_LVL) << "ERROR: TRANS Bytes on socket: " << (*i)->getSockStream()->availableBytes() << std::endl << vprDEBUG_FLUSH;
-                std::cout << "ERROR: RECEIVING Bytes on socket: " << (*i)->getSockStream()->availableBytes() << std::endl;
             }
-         }
+         } */
 
          
          mConfigMutex.release();  // Don't allow devices to be added or removed when we are accessing them
@@ -859,7 +870,7 @@ namespace gadget
                   }
                   else
                   {
-                     vprASSERT(false && "Tried to conneted to a client machine!");
+                     vprASSERT(false && "[Remote Input Manager] This Machine is NOT the Sync Master, do not connect to it!");
                   }
                }
                else if (getTransmittingConnectionByManagerId(streamManagerId) == NULL)   // If the transmitting NetConnection does not exist yet
@@ -994,7 +1005,7 @@ namespace gadget
       std::list<NetConnection*>::iterator i;
       for ( i = mTransmittingConnections.begin(); i != mTransmittingConnections.end();i++ )
       {
-            vprDEBUG(gadgetDBG_RIM,vprDBG_VERB_LVL) <<  "[RIM] Sending data for: " << (*i)->getHostname() << "\n" << vprDEBUG_FLUSH;
+            vprDEBUG(gadgetDBG_RIM,vprDBG_VERB_LVL) <<  "[RIM] Sending data to: " << (*i)->getHostname() << "\n" << vprDEBUG_FLUSH;
             (*i)->sendNetworkData();
       }
    }
