@@ -70,8 +70,6 @@ public class ConfigElementPointer
       String old_target = mTarget;
       mTarget = target;
       fireTargetChanged(old_target);
-      System.out.println("Adding edit for ConfigElementPointer: ");
-      ConfigUndoManager.instance().addEdit(new ConfigElementPointerEdit(old_target, target));
    }
 
    public class ConfigElementPointerEdit extends AbstractUndoableEdit
