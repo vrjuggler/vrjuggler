@@ -42,7 +42,7 @@ namespace vpr {
 //: Add the given handle to the selector
 //! PRE: handle is a valid handle
 //! POST: handle is added to the handle set, and initialized to a mask of no-events
-bool SelectorImplNSPR::addHandle(IOSys::Handle handle)
+bool SelectorImplNSPR::addHandle(IOSys::Handle handle, vpr::Uint16 mask)
 {
    if(getHandle(handle) != mPollDescs.end())
    {
@@ -51,7 +51,8 @@ bool SelectorImplNSPR::addHandle(IOSys::Handle handle)
 
    PRPollDesc new_desc;
    new_desc.fd = handle;
-   new_desc.in_flags = 0;
+   new_desc.in_flags = convertMaskVprToNspr(mask);
+   //new_desc.in_flags = 0;
    new_desc.out_flags = 0;
 
    mPollDescs.push_back(new_desc);

@@ -69,7 +69,7 @@ public:
    //! PRE: handle is a valid handle
    //! POST: handle is added to the handle set, and initialized to a mask of
    //+       no-events
-   bool addHandle(IOSys::Handle handle);
+   bool addHandle(IOSys::Handle handle, vpr::Uint16 mask=0);
 
    //: Remove a handle from the selector
    //! PRE: handle is in the selector

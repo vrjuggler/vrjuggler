@@ -122,8 +122,9 @@ public:
          new_acceptor->open(local_acceptor_addr);                                // Open acceptor
          vpr::IOSys::Handle handle = new_acceptor->getHandle();                  // Get the Handle to register
          acceptorTable[handle] = new_acceptor;
-         selector.addHandle(handle);                          // Add to selector
-         selector.setIn(handle, (vpr::Selector::Read | vpr::Selector::Write | vpr::Selector::Except));
+         //selector.addHandle(handle);
+         selector.addHandle(handle, (vpr::Selector::Read | vpr::Selector::Write | vpr::Selector::Except) );                      // Add to selector
+         //selector.setIn(handle, (vpr::Selector::Read | vpr::Selector::Write | vpr::Selector::Except));
       }
 
       // First test selector TIMEOUT
@@ -303,7 +304,7 @@ public:
       // Use selector to find the sock(s) to read on
       // Then read message after checking to verify subgroup
        for(i=0;i<mNumIters;i++)
-       {         
+       {
           // WAIT for data to be sent
          mCondVar.acquire();
          {
@@ -335,7 +336,7 @@ public:
           // mSelectedPorts holds the index numbers of the sockets that data was sent on
           // Read from each selected socket
           //std::cout << "Reading: ";
-          
+
           unsigned num_found(0);
           for(unsigned s_idx=0;s_idx<selector.getNumHandles();s_idx++)
           {
@@ -345,7 +346,7 @@ public:
                threadAssertTest((handleTable.find(selector.getHandle(s_idx)) != handleTable.end()),
                                 "Handle not found int acceptor table");
                vpr::Uint16 sock_index = handleTable[selector.getHandle(s_idx)];
-               
+
                //std::cout << sock_index << ", ";
 
                threadAssertTest(sock_index == s_idx, "Indices out of sync");
@@ -428,7 +429,7 @@ public:
                             mSelectedPorts.begin(), mSelectedPorts.end());
 
          //std::cout << "writing on: ";
-         
+
          // Send data to the random subset of ports
          for(j=0;j<mSelectedPorts.size();j++)
          {

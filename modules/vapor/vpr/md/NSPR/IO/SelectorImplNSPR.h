@@ -60,8 +60,6 @@ namespace vpr {
 class VPR_CLASS_API SelectorImplNSPR : public SelectorBase
 {
 public:
-
-
    // XXX: What should we do when we are adding a handler while
    //    also iterating through the current handles.  Bad things "may" happend
    // This happens ALL the time with acceptors because they add to the reactor as they
@@ -70,7 +68,7 @@ public:
    //: Add the given handle to the selector
    //! PRE: handle is a valid handle
    //! POST: handle is added to the handle set, and initialized to a mask of no-events
-   bool addHandle(IOSys::Handle handle);
+   bool addHandle(IOSys::Handle handle, vpr::Uint16 mask=0);
 
    //: Remove a handle from the selector
    //! PRE: handle is in the selector
