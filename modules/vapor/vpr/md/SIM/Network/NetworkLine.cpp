@@ -89,7 +89,14 @@ vpr::ReturnStatus NetworkLine::getReadyMessage (const vpr::Interval& event_time,
 
    if ( queue.size() > 0 )
    {
-      vpr::sim::MessagePtr front_msg = queue.front();
+      msg_queue_t::iterator front    = queue.begin();
+      vpr::sim::MessagePtr front_msg = (*front).second;
+
+      vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL)
+         << "NetworkLine::getReadyMessage() [" << mNetworkIPStr
+         << "]: Next event occurs at "
+         << front_msg->whenStartOnWire().getBaseVal() << ", event time is "
+         << event_time.getBaseVal() << "\n" << vprDEBUG_FLUSH;
 
       if ( front_msg->whenStartOnWire() <= event_time )
       {
@@ -109,7 +116,14 @@ vpr::ReturnStatus NetworkLine::getTransmittedMessage (const vpr::Interval& event
 
    if ( queue.size() > 0 )
    {
-      vpr::sim::MessagePtr front_msg = queue.front();
+      msg_queue_t::iterator front    = queue.begin();
+      vpr::sim::MessagePtr front_msg = (*front).second;
+
+      vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL)
+         << "NetworkLine::getTransmittedMessage() [" << mNetworkIPStr
+         << "]: Next event occurs at "
+         << front_msg->whenFullyOnWire().getBaseVal() << ", event time is "
+         << event_time.getBaseVal() << "\n" << vprDEBUG_FLUSH;
 
       if ( front_msg->whenFullyOnWire() <= event_time )
       {
@@ -129,7 +143,14 @@ vpr::ReturnStatus NetworkLine::getArrivedMessage (const vpr::Interval& event_tim
 
    if ( queue.size() > 0 )
    {
-      vpr::sim::MessagePtr front_msg = queue.front();
+      msg_queue_t::iterator front    = queue.begin();
+      vpr::sim::MessagePtr front_msg = (*front).second;
+
+      vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL)
+         << "NetworkLine::getArrivedMessage() [" << mNetworkIPStr
+         << "]: Next event occurs at "
+         << front_msg->whenArrivesFully().getBaseVal() << ", event time is "
+         << event_time.getBaseVal() << "\n" << vprDEBUG_FLUSH;
 
       if ( front_msg->whenArrivesFully() <= event_time )
       {
@@ -148,14 +169,16 @@ void NetworkLine::calculateMessageEventTimes (vpr::sim::MessagePtr msg,
    // Need to set the message's times for wire stuff...
    if ( queue.size() > 0 )
    {
-      vpr::sim::MessagePtr tail_msg = queue.back();
+      msg_queue_t::reverse_iterator last = queue.rbegin();
+      vpr::sim::MessagePtr tail_msg      = (*last).second;
 
       // Set the start time for the transmission of the given message to the
       // max of the current time and the full transmission time of the last
       // message in the queue.
-      vpr::Interval start_time =
-         (tail_msg->whenFullyOnWire() < cur_time ? cur_time
-                                                 : tail_msg->whenFullyOnWire());
+      vpr::Interval wire_ready(tail_msg->whenFullyOnWire().getBaseVal() + 1,
+                               vpr::Interval::Base);
+      vpr::Interval start_time = (wire_ready < cur_time ? cur_time
+                                                        : wire_ready);
 
       msg->setStartOnWireTime(start_time);
       msg->setFullyOnWireTime(msg->whenStartOnWire() +
@@ -174,8 +197,10 @@ void NetworkLine::addMessage (vpr::sim::MessagePtr msg, msg_queue_t& queue)
 {
    vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL)
       << "NetworkLine::addMessage(): Adding new message to queue for "
-      << mNetworkIPStr << "\n" << vprDEBUG_FLUSH;
-   queue.push(msg);
+      << mNetworkIPStr << " (" << msg->whenStartOnWire().getBaseVal() << ", "
+      << msg->whenFullyOnWire().getBaseVal() << ", "
+      << msg->whenArrivesFully().getBaseVal() << ")\n" << vprDEBUG_FLUSH;
+   queue[msg->whenStartOnWire()] = msg;
 }
 
 } // End of sim namespace
