@@ -1259,7 +1259,8 @@ void EventWindowXWin::updateOriginAndSize(unsigned int width, unsigned int heigh
 }
 
 /** Add the given window to the registry. */
-bool EventWindowXWin::WindowRegistry::addWindow(std::string name, EventWindowXWin::WindowRegistry::WindowInfo winInfo)
+bool EventWindowXWin::WindowRegistry::addWindow(const std::string& name,
+                                                EventWindowXWin::WindowRegistry::WindowInfo winInfo)
 {
    window_map_t::iterator found_window = mWindowMap.find(name);
    if(found_window != mWindowMap.end())
@@ -1279,7 +1280,7 @@ bool EventWindowXWin::WindowRegistry::addWindow(std::string name, EventWindowXWi
 }
 
 /** Remove the window with the id of "name". */
-void EventWindowXWin::WindowRegistry::removeWindow(std::string name)
+void EventWindowXWin::WindowRegistry::removeWindow(const std::string& name)
 {
    unsigned num_erased = mWindowMap.erase(name);
    if(0 == num_erased)
@@ -1290,7 +1291,7 @@ void EventWindowXWin::WindowRegistry::removeWindow(std::string name)
    }
 }
 
-bool EventWindowXWin::WindowRegistry::getWindow(std::string name,
+bool EventWindowXWin::WindowRegistry::getWindow(const std::string& name,
                                                 WindowInfo& winInfo)
 {
    window_map_t::iterator found_window = mWindowMap.find(name);
