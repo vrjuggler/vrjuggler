@@ -37,12 +37,15 @@
 #include <vrj/Draw/OGL/GlApp.h>
 
 
+// Simplify (visually) calls to Boost.Python.
+namespace python = boost::python;
+
 class PyExtApp : public vrj::GlApp
 {
 public:
    PyExtApp(const std::string& moduleName)
-      : vrj::GlApp(), mModuleName(moduleName), mModule(NULL),
-        mModuleDict(NULL), mPythonFunc(NULL)
+      : vrj::GlApp(), mModuleName(moduleName), mModule(),
+        mModuleDict(), mPythonFunc()
    {
       /* Do nothing. */ ;
    }
@@ -75,10 +78,10 @@ private:
 
    void initGLState();
 
-   std::string mModuleName;  /**< The name of the Python module we can use. */
-   PyObject*   mModule;      /**< The handle to the loaded module. */
-   PyObject*   mModuleDict;  /**< The handle to the module's dictionary. */
-   PyObject*   mPythonFunc;  /**< The handle to the function myFunc. */
+   std::string      mModuleName; /**< The name of the Python module we can use. */
+   python::handle<> mModule;     /**< The handle to the loaded module. */
+   python::handle<> mModuleDict; /**< The handle to the module's dictionary. */
+   python::handle<> mPythonFunc; /**< The handle to the function myFunc. */
 
    gadget::DigitalInterface  mButton0; /**< Button 0 interface. */
    gadget::DigitalInterface  mButton1; /**< Button 1 interface. */

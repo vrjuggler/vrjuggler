@@ -35,20 +35,10 @@
 #include <PyExtApp.h>
 
 
-// Simplify (visually) calls to Boost.Python.
 namespace python = boost::python;
 
 PyExtApp::~PyExtApp()
 {
-   if ( NULL != mPythonFunc )
-   {
-      Py_DECREF(mPythonFunc);
-   }
-
-   if ( NULL != mModule )
-   {
-      Py_DECREF(mModule);
-   }
 }
 
 void PyExtApp::init()
@@ -90,7 +80,7 @@ void PyExtApp::preFrame()
          // arguments and returns nothing.  When PyJuggler grows up, maybe
          // it will be possible for the function to take a gmtl::Vec3f
          // argument--or better yet a gmtl::Matrix44f.
-         python::call<void, float, float, float>(mPythonFunc, wand_pos[0],
+         python::call<void, float, float, float>(mPythonFunc.get(), wand_pos[0],
                                                  wand_pos[1], wand_pos[2]);
       }
       catch(...)
@@ -122,56 +112,47 @@ void PyExtApp::initPython()
                         "PyExtApp::initPython() entered\n",
                         "PyExtApp::initPython() done.\n");
 
-   // First, we need to get the module name in a form that Python/C likes.
-   PyObject* py_module_name = PyString_FromString(mModuleName.c_str());
-
-   // If py_module_name is non-NULL, the module name converted correctly.
-   if ( NULL != py_module_name )
+   try
    {
+      // First, we need to get the module name in a form that Python/C likes.
+      python::handle<> py_module_name(PyString_FromString(mModuleName.c_str()));
+
       vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
          << "Loading module named '" << mModuleName << "'\n" << vprDEBUG_FLUSH;
 
       // Next, we import the Python module into the Python interpreter.
-      mModule = PyImport_Import(py_module_name);
+      mModule =
+         python::handle<>(python::borrowed(PyImport_Import(py_module_name.get())));
 
-      // If mModule is non-NULL, the import was successful.
-      if ( NULL != mModule )
-      {
-         vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL) << "Getting dictionary\n"
-                                                   << vprDEBUG_FLUSH;
+      vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL) << "Getting dictionary\n"
+                                                << vprDEBUG_FLUSH;
 
-         // Next, we get the module's dictionary so we can look up functions
-         // and such.
-         mModuleDict = PyModule_GetDict(mModule);
+      // Next, we get the module's dictionary so we can look up functions
+      // and such.
+      mModuleDict =
+         python::handle<>(python::borrowed(PyModule_GetDict(mModule.get())));
 
-         vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL)
-            << "Looking up myFunc in dictionary\n" << vprDEBUG_FLUSH;
+      vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL)
+         << "Looking up myFunc in dictionary\n" << vprDEBUG_FLUSH;
 
-         // Now we find the entry point function (arbitrarily) called "myFunc."
-         mPythonFunc = PyDict_GetItemString(mModuleDict, "myFunc");
+      // Now we find the entry point function (arbitrarily) called "myFunc."
+      mPythonFunc =
+         python::handle<>(python::borrowed(PyDict_GetItemString(mModuleDict.get(),
+                                                                "myFunc")));
 
-         // Test the results of the dictionary lookup.  If the dictionary
-         // lookup failed, then mPythonFunc is not usable.
-         if ( NULL == mPythonFunc || ! PyCallable_Check(mPythonFunc) )
-         {
-            PyErr_Print();
-            vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
-               << clrOutNORM(clrRED, "ERROR")
-               << ": Did not find function myFunc\n" << vprDEBUG_FLUSH;
-            Py_DECREF(mModule);
-            mModule     = NULL;
-            mPythonFunc = NULL; // Just to be safe
-         }
-      }
-      // Print an error explaining what when wrong with the module import.
-      else
+      // Test the results of the dictionary lookup.  If the dictionary
+      // lookup failed, then mPythonFunc is not usable.
+      if ( ! PyCallable_Check(mPythonFunc.get()) )
       {
          PyErr_Print();
          vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
-            << clrOutNORM(clrYELLOW, "WARNING")
-            << ": Could not import module named '" << mModuleName << "'\n"
-            << vprDEBUG_FLUSH;
+            << clrOutNORM(clrRED, "ERROR")
+            << ": Did not find function myFunc\n" << vprDEBUG_FLUSH;
       }
+   }
+   catch(python::error_already_set)
+   {
+      PyErr_Print();
    }
 }
 
