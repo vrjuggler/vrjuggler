@@ -425,6 +425,7 @@ public class ConfigChunk
     */
    public Object getProperty(String propType, int index)
    {
+//      System.out.println("getProperty("+propType+", "+index+")");
       Object value = null;
 
       // Get the property description for the given property type.
@@ -462,14 +463,9 @@ public class ConfigChunk
                // A child chunk property.
                if (ValType.EMBEDDEDCHUNK == val_type)
                {
-                  // Gets the child at the requested index if it exists.
-                  // Otherwise, return a null object.
-                  if (index < prop.getChildren().size())
-                  {
-                     Element child = (Element)prop.getChildren().get(index);
-                     ConfigChunk child_chunk = new ConfigChunk(child);
-                     value = child_chunk;
-                  }
+                  Element child = (Element)prop.getChildren().get(0);
+                  ConfigChunk child_chunk = new ConfigChunk(child);
+                  value = child_chunk;
                }
                // All other property types.
                else
