@@ -48,6 +48,11 @@
          <sleep_time>75</sleep_time>
          <device_host />
       </event_window>
+      <corba_remote_reconfig name="CORBA Remote Run-Time Reconfiguration" version="1">
+         <naming_service_host>localhost</naming_service_host>
+         <naming_service_port>2809</naming_service_port>
+         <iiop_version>1.0</iiop_version>
+      </corba_remote_reconfig>
    </elements>
 </configuration>
 
