@@ -58,25 +58,16 @@ DPP_GEN_RECONFIG
 
 DPP_STD_CPP(yes)
 
-# Enable performance testing.  Values that enable it are as follows:
-#
-#      SGI: Enable SGI IPC performance testing.  This defines JCCL_PERFORMANCE
-#           to be JCCL_PERF_SGI
-#    POSIX: Enable POSIX threads performance testing.  This defines
-#           JCCL_PERFORMANCE to be JCCL_PERF_POSIX
-#
-# Values that disable it are "no" or "NONE".  The default is "SGI".
+# Enable performance testing.
 AC_ARG_ENABLE(performance,
-              [  --enable-performance=<SGI|POSIX|NONE>
-                          Enable performance testing      [default=SGI]],
-              [ if test "x$enableval" = "xyes" ; then
-                    _enable_perf='SGI'
-                elif test "x$enableval" = "xno" ; then
-                    _enable_perf='NONE'
-                else
-                    _enable_perf="$enableval"
-                fi
-              ], _enable_perf='SGI')
+              [  --enable-performance
+                          Enable performance testing      [default=yes]],
+              _enable_perf="$enableval", _enable_perf='yes')
+
+# Enable performance-gathering code if the user requested it.
+if test "x${_enable_perf}" = "xyes" ; then
+    AC_DEFINE(USE_JCCL_PERF,)
+fi
 
 # -------------------------------------------- #
 # --with-pkg[=arg] and --without-pkg arguments #
@@ -136,45 +127,10 @@ case $target_os in
     hpux10.20|hpux11*)
         AC_DEFINE(_CMA_NOWRAPPERS_,)
         ;;
-    # i386-class machine running Windows {98,NT} with Cygnus GNU-Win32.
-    cygwin)
-        # There is no performance testing/monitoring code for Win32 (yet).
-        if test "x${_enable_perf}" != "xNONE" ; then
-            AC_MSG_WARN([*** Disabling performance testing on $host ***])
-            _enable_perf='NONE'
-        fi
-
-        ;;
     darwin1.*)
         AC_DEFINE(_BSD_TYPES,) 
         ;;
 esac
-
-# --------------------------------------------------------------------
-# Depending on host type and the value in ${_enable_perf}, define the
-# settings for the performance code.
-# --------------------------------------------------------------------
-if test "$PLATFORM" != "IRIX" -a "${_enable_perf}" != "NONE" ; then
-    _enable_perf='POSIX'
-fi
-
-# Define unique values for each type of performance testing option.
-# Only one of these may be used for the value to which JCCL_PERFORMANCE is set.
-AC_DEFINE(JCCL_PERF_NONE, 0)
-AC_DEFINE(JCCL_PERF_SGI, 1)
-AC_DEFINE(JCCL_PERF_POSIX, 2)
-
-# Define JCCL_PERFORMANCE based on ${_enable_perf}.  Default to JCCL_PERF_SGI if
-# ${_enable_perf} has some unknown value.
-if test "x${_enable_perf}" = "xSGI" ; then
-    AC_DEFINE(JCCL_PERFORMANCE, JCCL_PERF_SGI)
-elif test "x${_enable_perf}" = "xPOSIX" ; then
-    AC_DEFINE(JCCL_PERFORMANCE, JCCL_PERF_POSIX)
-elif test "x${_enable_perf}" = "xNONE" ; then
-    AC_DEFINE(JCCL_PERFORMANCE, JCCL_PERF_NONE)
-else
-    AC_DEFINE(JCCL_PERFORMANCE, JCCL_PERF_SGI)
-fi
 
 # -----------------------------------------------------------------------------
 # Checks for programs.
