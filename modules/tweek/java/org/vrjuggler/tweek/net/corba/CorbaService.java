@@ -250,11 +250,13 @@ public class CorbaService
                         mgrList.add(mgr);
                      }
                   }
-                  catch (Exception e)
+                  // What the heck is this??
+                  catch (org.omg.CORBA.TRANSIENT ex)
                   {
-                     System.err.println("Caught unexpected exception of type " +
-                                         e.getClass().getName());
-                     e.printStackTrace();
+                     System.err.println("Caught CORBA.TRANSIENT exception " +
+                                        "when trying to verify reference " +
+                                        "validity: " + ex.getMessage());
+//                     ex.printStackTrace();
                   }
                }
                catch (InvalidName e)
