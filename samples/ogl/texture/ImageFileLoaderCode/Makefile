@@ -1,6 +1,6 @@
 #!gmake
 
-CXX_COMPILE = CC
+CXX_COMPILE = CC -LANG:std
 OBJS = TgaImporter.o SgiImporter.o FileHandler.o main.o ../Image.o
 INCLUDE_PATHS = -I..
 PATH_TO_SRCS = ..:.
