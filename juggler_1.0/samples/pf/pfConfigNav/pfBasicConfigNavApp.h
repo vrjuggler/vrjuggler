@@ -73,10 +73,17 @@ public:
      mCurrentConfig = NULL;
    }
 
-   void configApp(vjConfigChunk* chunk);
+   bool configApp(vjConfigChunk* chunk);
 
 public:     // RECONFIG STUFF
    virtual bool configCanHandle(vjConfigChunk* chunk)
+   {
+      return configCanHandleChunk(chunk);
+   }
+
+   // This function is so that others can query this object to
+   // see if it can be configured with the given information
+   static bool configCanHandleChunk(vjConfigChunk* chunk)
    {
       std::string chunk_type = (std::string)chunk->getType();
 
@@ -85,6 +92,7 @@ public:     // RECONFIG STUFF
       else
          return false;
    }
+
 
    //: Are any application dependencies satisfied
    // If the application requires anything special of the system for successful
@@ -114,7 +122,7 @@ protected:
 // XXX: Smart update
 // Set the properties
 // Load with new settings
-void pfBasicConfigNavApp::configApp(vjConfigChunk* chunk)
+bool pfBasicConfigNavApp::configApp(vjConfigChunk* chunk)
 {
    vjASSERT(std::string("pf_basic_nav_app") == (std::string)chunk->getType());
 
@@ -172,8 +180,10 @@ void pfBasicConfigNavApp::configApp(vjConfigChunk* chunk)
    vjDEBUG_END(vjDBG_ALL,0) << "========================================\n" << vjDEBUG_FLUSH;
 
    // Initialize the models and sounds
-   initializeModels();
-   initializeSounds();
+   initializeModels();                 // Only actally gets processed if initScene has already run
+   initializeSounds();                 // Only actally gets processed if initScene has already run
+
+   return true;
 }
 
 
