@@ -738,6 +738,55 @@ int main(int argc, char* argv[])
           interactivity.</para>
 
           <section>
+            <title><methodname>vrj::App::getDrawScaleFactor()</methodname></title>
+
+            <para>As of VR Juggler 2.0 Alpha 1, applications can specify the
+            units of measure that are the basis for the graphics they render.
+            The default unit of measure is feet (identified by the constant
+            scale factor
+            <constant>gadget::PositionUnitConversion::ConvertToFeet</constant>)
+            to maintain backwards compatibility with the previous VR Juggler
+            semantics. By overriding this method, applications can identify
+            the unit of measure they expect. The default implementation is the
+            following:</para>
+
+            <programlisting>float vrj::App::getDrawScaleFactor()
+{
+   return gadget::PositionUnitConversion::ConvertToFeet;
+}</programlisting>
+
+            <para>Overriding this method means changing the rendering scale
+            factor used by the VR Juggler Draw Managers. The current list of
+            constants (defined in
+            <filename>gadget/Position/PositionUnitConversion.h</filename>) is
+            as follows:</para>
+
+            <itemizedlist>
+              <listitem>
+                <para><constant>gadget::PositionUnitConversion::ConvertToFeet</constant></para>
+              </listitem>
+
+              <listitem>
+                <para><constant>gadget::PositionUnitConversion::ConvertToInches</constant></para>
+              </listitem>
+
+              <listitem>
+                <para><constant>gadget::PositionUnitConversion::ConvertToMeters</constant></para>
+              </listitem>
+
+              <listitem>
+                <para><constant>gadget::PositionUnitConversion::ConvertToCentimeters</constant></para>
+              </listitem>
+            </itemizedlist>
+
+            <para>Because the value returned is simply a scaling factor, user
+            applications can define whatever units they want. Note that
+            internally, VR Juggler is treating all units as
+            <emphasis>meters</emphasis>, so the scaling factor converts from
+            meters to the desired units.</para>
+          </section>
+
+          <section>
             <title><methodname>vrj::App::preFrame()</methodname></title>
 
             <para>The <methodname>preFrame()</methodname> method is called
@@ -927,55 +976,6 @@ int main(int argc, char* argv[])
             Draw Manager when it needs to render the current scene in an
             OpenGL graphics window. It is called for each active OpenGL
             context.</para>
-          </section>
-
-          <section>
-            <title><methodname>vrj::GlApp::getDrawScaleFactor()</methodname></title>
-
-            <para>As of VR Juggler 2.0 Alpha 1, applications can specify the
-            units of measure that are the basis for the graphics they render.
-            The default unit of measure is feet (identified by the constant
-            scale factor
-            <constant>gadget::PositionUnitConversion::ConvertToFeet</constant>)
-            to maintain backwards compatibility with the previous VR Juggler
-            semantics. By overriding this method, applications can identify
-            the unit of measure they expect. The default implementation is the
-            following:</para>
-
-            <programlisting>float vrj::GlApp::getDrawScaleFactor()
-{
-   return gadget::PositionUnitConversion::ConvertToFeet;
-}</programlisting>
-
-            <para>Overriding this method means changing the rendering scale
-            factor used by the OpenGL Draw Manager. The current list of
-            constants (defined in
-            <filename>gadget/Position/PositionUnitConversion.h</filename>) is
-            as follows:</para>
-
-            <itemizedlist>
-              <listitem>
-                <para><constant>gadget::PositionUnitConversion::ConvertToFeet</constant></para>
-              </listitem>
-
-              <listitem>
-                <para><constant>gadget::PositionUnitConversion::ConvertToInches</constant></para>
-              </listitem>
-
-              <listitem>
-                <para><constant>gadget::PositionUnitConversion::ConvertToMeters</constant></para>
-              </listitem>
-
-              <listitem>
-                <para><constant>gadget::PositionUnitConversion::ConvertToCentimeters</constant></para>
-              </listitem>
-            </itemizedlist>
-
-            <para>Because the value returned is simply a scaling factor, user
-            applications can define whatever units they want. Note that
-            internally, VR Juggler is treating all units as
-            <emphasis>meters</emphasis>, so the scaling factor converts from
-            meters to the desired units.</para>
           </section>
         </section>
 
