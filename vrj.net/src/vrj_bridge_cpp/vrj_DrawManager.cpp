@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from $Revision$ of $RCSfile$
+// Generated from Revision: 1.58 of RCSfile: class_cxx.tmpl,v
 
 
 
@@ -36,19 +36,20 @@
 extern "C"
 {
    // Constructor wrapper.
-   SHARPPY_API vrj_DrawManager_Adapter* vrj_DrawManager_DrawManager__(vrj_DrawManager_Adapter::draw_callback_t cb0, vrj_DrawManager_Adapter::sync_callback_t cb1, vrj_DrawManager_Adapter::setApp_callback_vrj_App_t cb2, vrj_DrawManager_Adapter::initAPI_callback_t cb3, vrj_DrawManager_Adapter::closeAPI_callback_t cb4, vrj_DrawManager_Adapter::outStream_callback_std_basic_ostream_char_std__char_traits_char___t cb5, vrj_DrawManager_Adapter::configCanHandle_callback_boost_shared_ptr_jccl__ConfigElement_t cb6, vrj_DrawManager_Adapter::configProcessPending_callback_t cb7, vrj_DrawManager_Adapter::configAdd_callback_boost_shared_ptr_jccl__ConfigElement_t cb8, vrj_DrawManager_Adapter::configRemove_callback_boost_shared_ptr_jccl__ConfigElement_t cb9)
+   SHARPPY_API vrj_DrawManager_Adapter* vrj_DrawManager_DrawManager__(vrj_DrawManager_Adapter::draw_callback_t cb0, vrj_DrawManager_Adapter::sync_callback_t cb1, vrj_DrawManager_Adapter::setApp_callback_vrj_App_t cb2, vrj_DrawManager_Adapter::initAPI_callback_t cb3, vrj_DrawManager_Adapter::addDisplay_callback_vrj_Display_t cb4, vrj_DrawManager_Adapter::removeDisplay_callback_vrj_Display_t cb5, vrj_DrawManager_Adapter::closeAPI_callback_t cb6, vrj_DrawManager_Adapter::configCanHandle_callback_boost_shared_ptr_jccl__ConfigElement_t cb7, vrj_DrawManager_Adapter::configProcessPending_callback_t cb8, vrj_DrawManager_Adapter::configAdd_callback_boost_shared_ptr_jccl__ConfigElement_t cb9, vrj_DrawManager_Adapter::configRemove_callback_boost_shared_ptr_jccl__ConfigElement_t cb10)
    {
       vrj_DrawManager_Adapter* obj = new vrj_DrawManager_Adapter();
       obj->draw_callback = cb0;
       obj->sync_callback = cb1;
       obj->setApp_callback_vrj_App = cb2;
       obj->initAPI_callback = cb3;
-      obj->closeAPI_callback = cb4;
-      obj->outStream_callback_std_basic_ostream_char_std__char_traits_char__ = cb5;
-      obj->configCanHandle_callback_boost_shared_ptr_jccl__ConfigElement = cb6;
-      obj->configProcessPending_callback = cb7;
-      obj->configAdd_callback_boost_shared_ptr_jccl__ConfigElement = cb8;
-      obj->configRemove_callback_boost_shared_ptr_jccl__ConfigElement = cb9;
+      obj->addDisplay_callback_vrj_Display = cb4;
+      obj->removeDisplay_callback_vrj_Display = cb5;
+      obj->closeAPI_callback = cb6;
+      obj->configCanHandle_callback_boost_shared_ptr_jccl__ConfigElement = cb7;
+      obj->configProcessPending_callback = cb8;
+      obj->configAdd_callback_boost_shared_ptr_jccl__ConfigElement = cb9;
+      obj->configRemove_callback_boost_shared_ptr_jccl__ConfigElement = cb10;
       return obj;
    }
 
@@ -82,19 +83,24 @@ extern "C"
       self_->initAPI();
    }
 
+   // Wrapper for virtual method vrj::DrawManager::addDisplay()
+   SHARPPY_API void vrj_DrawManager_addDisplay__vrj_Display(vrj_DrawManager_Adapter* self_, vrj::Display* p0)
+   {
+      self_->addDisplay(p0);
+   }
+
+   // Wrapper for virtual method vrj::DrawManager::removeDisplay()
+   SHARPPY_API void vrj_DrawManager_removeDisplay__vrj_Display(vrj_DrawManager_Adapter* self_, vrj::Display* p0)
+   {
+      self_->removeDisplay(p0);
+   }
+
    // Wrapper for virtual method vrj::DrawManager::closeAPI()
    SHARPPY_API void vrj_DrawManager_closeAPI__(vrj_DrawManager_Adapter* self_)
    {
       self_->closeAPI();
    }
 
-   // Wrapper for virtual method vrj::DrawManager::outStream()
-   SHARPPY_API void vrj_DrawManager_outStream__std_basic_ostream_char_std__char_traits_char__(vrj_DrawManager_Adapter* self_, std::basic_ostream<char,std::char_traits<char> >* p0)
-   {
-      std::basic_ostream<char,std::char_traits<char> >& marshal_p0 = *p0; // Pre-call marshaling for p0
-      self_->vrj::DrawManager::outStream(marshal_p0);
-      ; // Post-call marshaling for p0
-   }
 
 
 

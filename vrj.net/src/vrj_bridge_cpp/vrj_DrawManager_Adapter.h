@@ -129,6 +129,24 @@ public:
       initAPI_callback();
    }
 
+   typedef void (*addDisplay_callback_vrj_Display_t)(vrj::Display*);
+   addDisplay_callback_vrj_Display_t addDisplay_callback_vrj_Display;
+
+   /// Override for virtual function vrj::DrawManager::addDisplay.
+   virtual void addDisplay(vrj::Display* p0)
+   {
+      addDisplay_callback_vrj_Display(p0);
+   }
+
+   typedef void (*removeDisplay_callback_vrj_Display_t)(vrj::Display*);
+   removeDisplay_callback_vrj_Display_t removeDisplay_callback_vrj_Display;
+
+   /// Override for virtual function vrj::DrawManager::removeDisplay.
+   virtual void removeDisplay(vrj::Display* p0)
+   {
+      removeDisplay_callback_vrj_Display(p0);
+   }
+
    typedef void (*closeAPI_callback_t)();
    closeAPI_callback_t closeAPI_callback;
 
@@ -136,17 +154,6 @@ public:
    virtual void closeAPI()
    {
       closeAPI_callback();
-   }
-
-   typedef void (*outStream_callback_std_basic_ostream_char_std__char_traits_char___t)(std::basic_ostream<char,std::char_traits<char> >*);
-   outStream_callback_std_basic_ostream_char_std__char_traits_char___t outStream_callback_std_basic_ostream_char_std__char_traits_char__;
-
-   /// Override for virtual function vrj::DrawManager::outStream.
-   virtual void outStream(std::basic_ostream<char,std::char_traits<char> >& p0)
-   {
-      ;
-      outStream_callback_std_basic_ostream_char_std__char_traits_char__(&marshal_p0);
-      ;
    }
 
 }; // class vrj_DrawManager_Adapter

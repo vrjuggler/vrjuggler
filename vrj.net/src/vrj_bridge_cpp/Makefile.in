@@ -38,8 +38,11 @@ MOD_NAME=	vrj
 DLL_DEPS=	$(topdir)/lib/@LIB_PREFIX@vrjnet_util.@STATICLIB_EXT@
 
 SRCS=		vrj_App.cpp		\
+		vrj_Display.cpp		\
+		vrj_DrawManager.cpp	\
 		vrj_GlApp.cpp		\
 		vrj_Kernel.cpp		\
+		vrj_SoundManager.cpp	\
 		vrj_User.cpp
 
 ifeq ($(BUILD_TYPE), DEBUG)
