@@ -227,6 +227,8 @@ ARFLAGS=''		dnl # Flags for $AR
 DEP_GEN_FLAG='-M'	dnl # Flag for the compiler to generate dependencies
 LD=''			dnl # Shared library command (usually ld(1))
 LDOPTS=''		dnl # More options for shared library generator
+
+LIB_PREFIX='lib'	dnl # Prefix for library name
 STATICLIB_EXT='a'	dnl # Extension for shared library names (usually 'a')
 SHAREDLIB_EXT=''	dnl # Extension for shared library names (usually 'so')
 
@@ -427,6 +429,7 @@ case $target_os in
         CFLAGS="-nologo"
         CXXFLAGS="-nologo"
         DBG_FLAGS='-Od -GZ'
+        LIB_PREFIX=''
         STATICLIB_EXT='lib'
         SHAREDLIB_EXT='dll'
 
@@ -1031,6 +1034,8 @@ AC_SUBST(LDOPTS)
 AC_SUBST(DBG_FLAGS)
 AC_SUBST(OPT_FLAGS)
 AC_SUBST(PERL)
+
+AC_SUBST(LIB_PREFIX)
 AC_SUBST(STATICLIB_EXT)
 AC_SUBST(SHAREDLIB_EXT)
 
