@@ -51,10 +51,20 @@
  * ----------------------------------------------------------------------------
  */
 
+/*
+ * Protect against redefinition of symbols added by Autoconf 2.5x in
+ * vprDefines.h.
+ */
+#undef PACKAGE_BUGREPORT
+#undef PACKAGE_NAME
+#undef PACKAGE_STRING
+#undef PACKAGE_TARNAME
+#undef PACKAGE_VERSION
+
 /* This should always be included first. */
 #include <vpr/vprDefines.h>
 
-/* Get rid of symbols added by Autoconf 2.5x. */
+/* Get rid of symbols added by Autoconf 2.5x in vprDefines.h. */
 #undef PACKAGE_BUGREPORT
 #undef PACKAGE_NAME
 #undef PACKAGE_STRING
