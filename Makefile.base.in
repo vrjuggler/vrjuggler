@@ -15,79 +15,80 @@
 # -----------------------------------------------------------------------------
 # Variables defined here are:
 #
-# bindir         - Path to bin directory containing executables (usually
-#                  ${exec_prefix}/bin).
-# datadir        - Path to a directory generally sharing platform-independent
-#                  data (usually ${prefix}/share).
-# exec_prefix    - Path to base directory where executables will be (usually
-#                  ${prefix}).
-# libdir         - Path to directory containing shared and static libraries
-#                  (usually ${exec_prefix}/lib).
-# libexecdir     - Path to libexec directory that generally contains
-#                  executables not called directly by users (usually
-#                  ${exec_prefix}/libexec).
-# mtreedir       - Base directory containing the mtree directory hierarchy
-#                  specifications.
-# mtreedir_os    - Subdirectory of ${mtreedir} containing platform-specific
-#                  directory hierarchy specification files.
-# prefix         - Base path used for installation and other things.
-# releasedir     - The absolute path to the release directory.
-# sbindir        - Path to sbin directory containing executables (usually
-#                  ${exec_prefix}/sbin).
-# scriptdir      - The path to the directory containing scripts used in the
-#                  build and install/release process.
-# sysconfdir     - System configuration directory (usually ${prefix}/etc).
-# topdir         - The top of the build tree.
-# VJROOT_ABS     - The absolute path to the root of the VR Juggler source
-#                  tree.
+# bindir          - Path to bin directory containing executables (usually
+#                   ${exec_prefix}/bin).
+# datadir         - Path to a directory generally sharing platform-independent
+#                   data (usually ${prefix}/share).
+# exec_prefix     - Path to base directory where executables will be (usually
+#                   ${prefix}).
+# libdir          - Path to directory containing shared and static libraries
+#                   (usually ${exec_prefix}/lib).
+# libexecdir      - Path to libexec directory that generally contains
+#                   executables not called directly by users (usually
+#                   ${exec_prefix}/libexec).
+# mtreedir        - Base directory containing the mtree directory hierarchy
+#                   specifications.
+# mtreedir_os     - Subdirectory of ${mtreedir} containing platform-specific
+#                   directory hierarchy specification files.
+# prefix          - Base path used for installation and other things.
+# releasedir      - The absolute path to the release directory.
+# sbindir         - Path to sbin directory containing executables (usually
+#                   ${exec_prefix}/sbin).
+# scriptdir       - The path to the directory containing scripts used in the
+#                   build and install/release process.
+# sysconfdir      - System configuration directory (usually ${prefix}/etc).
+# topdir          - The top of the build tree.
+# VJROOT_ABS      - The absolute path to the root of the VR Juggler source
+#                   tree.
 #
-# AR             - Path to ar(1) (or equivalent program).
-# ARFLAGS        - Flags for ${AR}.
-# CC             - Path to C compiler.
-# CXX            - Path to C++ compiler.
-# CPP            - Command for invoking the C preprocessor.
-# CXXCPP         - Command for invoking the C preprocessor used by the C++
-#                  compiler.
-# CFLAGS         - Flags for ${CC}.
-# CPPFLAGS       - Flags for ${CPP} and ${CXXCPP}.
-# CXXFLAGS       - Flags for ${CXX}.
-# DEFS           - Command-line preprocessor definitions (-Dvariable=value).
-# DEP_GEN_FLAG   - Flag passed to the compiler to generate dependencies.
-# DEPENDFLAGS    - Flags passed to makedepend(1) (or equivalent program for
-#                  generating dependencies).
-# DEPEND_EXTRAS  - Flags not recognized by makedepend(1) that may be necessary
-#                  in ${CFLAGS} or ${CXXFLAGS}.
-# GROUP_NAME     - The name of the group that will own the files.
-# INCLUDES       - Additions to the include path (-I/path/to/include).
-# LD             - Path to ld(1) (or equivalent program).
-# LDFLAGS        - Flags for ${LD}.
-# LDOPTS         - Extra, often platform-specific, options for the linker.
-# LIBS           - Extra external libraries needed at link time.
-# MKPATH         - Path to shared vj.*.mk file directory.
-# MTREE_CMD      - Path to a BSD-compatible mtree.
-# OBJ_NAME_FLAG  - Flag passed to the compiler to name an object file.
-# OBJDIR         - Path to the directory where the object files will be built.
-# PERL           - Path to Perl 5 binary.
+# AR              - Path to ar(1) (or equivalent program).
+# ARFLAGS         - Flags for ${AR}.
+# CC              - Path to C compiler.
+# CXX             - Path to C++ compiler.
+# CPP             - Command for invoking the C preprocessor.
+# CXXCPP          - Command for invoking the C preprocessor used by the C++
+#                   compiler.
+# CFLAGS          - Flags for ${CC}.
+# CPPFLAGS        - Flags for ${CPP} and ${CXXCPP}.
+# CXXFLAGS        - Flags for ${CXX}.
+# DEFS            - Command-line preprocessor definitions (-Dvariable=value).
+# DEP_GEN_FLAG    - Flag passed to the compiler to generate dependencies.
+# DEPENDFLAGS     - Flags passed to makedepend(1) (or equivalent program for
+#                   generating dependencies).
+# DEPEND_EXTRAS   - Flags not recognized by makedepend(1) that may be
+#                   necessary in ${CFLAGS} or ${CXXFLAGS}.
+# GROUP_NAME      - The name of the group that will own the files.
+# INCLUDES        - Additions to the include path (-I/path/to/include).
+# LD              - Path to ld(1) (or equivalent program).
+# LDFLAGS         - Flags for ${LD}.
+# LDOPTS          - Extra, often platform-specific, options for the linker.
+# LIBS            - Extra external libraries needed at link time.
+# MKPATH          - Path to shared vj.*.mk file directory.
+# MTREE_CMD       - Path to a BSD-compatible mtree.
+# OBJ_NAME_FLAG   - Flag passed to the compiler to name an object file.
+# OBJDIR          - Path to the directory where the object files will be
+#                   built.
+# PERL            - Path to Perl 5 binary.
 #
-# C_COMPILE      - Command for compiling C code.
-# CXX_COMPILE    - Command for compiling C++ code.
+# C_COMPILE       - Command for compiling C code.
+# CXX_COMPILE     - Command for compiling C++ code.
 #
-# ABI            - Application Binary Interface type.  This may be used for
-#                  other binary types when supported by the operating
-#                  system (e.g., "ELF", "N32" or "64").
-# LIBBITSUF      - Suffix for the library path used by the linker on IRIX
-#                  only.  For o32 binaries, it will be blank.  For n32
-#                  binaries, it will be 32.  For 64-bit binaries, it will be
-#                  64.
-# PLATFORM       - The operating system abbreviation on which the library is
-#                  being built.
+# ABI             - Application Binary Interface type.  This may be used for
+#                   other binary types when supported by the operating
+#                   system (e.g., "ELF", "N32" or "64").
+# LIBBITSUF       - Suffix for the library path used by the linker on IRIX
+#                   only.  For o32 binaries, it will be blank.  For n32
+#                   binaries, it will be 32.  For 64-bit binaries, it will be
+#                   64.
+# PLATFORM        - The operating system abbreviation on which the library is
+#                   being built.
 #
-# VJ_LIBRARY     - The base name of the core Juggler library that will be
-#                  built with no file extension.
-# GL_LIBRARY     - The base name of the OpenGL Juggler API library with no
-#                  file extension.
-# PF_LIBRARY     - The base name of the Performer Juggler API library with no
-#                  file extension.
+# VJ_LIBRARY      - The base name of the core Juggler library that will be
+#                   built with no file extension.
+# GL_LIBRARY      - The base name of the OpenGL Juggler API library with no
+#                   file extension.
+# PF_LIBRARY      - The base name of the Performer Juggler API library with no
+#                   file extension.
 # -----------------------------------------------------------------------------
 # Targets defined here are:
 #
