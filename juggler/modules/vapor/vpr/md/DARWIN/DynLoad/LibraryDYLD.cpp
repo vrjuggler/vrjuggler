@@ -72,6 +72,7 @@ WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #include <stdarg.h>
 #include <limits.h>
 #include <mach-o/dyld.h>
+#include <boost/concept_check.hpp>
 
 #include <vpr/Util/Assert.h>
 #include <vpr/Util/Debug.h>
