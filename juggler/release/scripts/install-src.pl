@@ -140,6 +140,12 @@ sub recurseAction ($) {
 	    last SWITCH;
 	}
 
+	# Match .desc or .dsc for chuck description files.
+	if ( $curfile =~ /\.de?sc$/i ) {
+	    installFile("$curfile", $uid, $gid, "$mode", "$dest_dir");
+	    last SWITCH;
+	}
+
 	# Match Makefile.
 	if ( "$curfile" eq "Makefile" ) {
 	    installFile("$curfile", $uid, $gid, "$mode", "$dest_dir");
