@@ -206,6 +206,9 @@ namespace vpr
       Debug(const Debug& d) {;}
       void operator= (const Debug& d) {;}
 
+      /** Initialize the system */
+      void init();
+
    public:
       // Get the debug stream to use
       std::ostream& getStream(const vpr::GUID& cat, const int level, const bool show_thread_info = true,
@@ -261,6 +264,9 @@ namespace vpr
       { mDebugEnabled = false;}
       //@}
 
+      /** Dump the current status to screen */
+      void debugDump();
+
    private:
       bool mDebugEnabled;  // Is debug output enabled
       int debugLevel;      //! Debug level to use
@@ -291,7 +297,7 @@ namespace vpr
       typedef std::map<vpr::GUID, CategoryInfo > category_map_t;
       std::map<vpr::GUID, CategoryInfo > mCategories; //! The names and id of allowed catagories
 
-      vprSingletonHeader(Debug);
+      vprSingletonHeaderWithInitFunc(Debug, init);
    };
 
 // Helper class
