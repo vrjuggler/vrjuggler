@@ -168,11 +168,18 @@ std::ostream& SurfaceViewport::outStream(std::ostream& out,
        << ", UR: " << mURCorner << ", UL:" << mULCorner << std::endl;
    out << "surfRot: \n" << mSurfaceRotation << std::endl;
    */
-   out << indent_text << "Left projection:\n";
-   mLeftProj->outStream(out, indentLevel + 2);
-   out << std::endl;
-   out << indent_text << "Right projection:\n";
-   mRightProj->outStream(out, indentLevel + 2);
+   if ( mView == vrj::Viewport::LEFT_EYE || mView == vrj::Viewport::STEREO )
+   {
+      out << indent_text << "Left projection:\n";
+      mLeftProj->outStream(out, indentLevel + 2);
+      out << std::endl;
+   }
+   if ( mView == vrj::Viewport::RIGHT_EYE || mView == vrj::Viewport::STEREO )
+   {
+      out << indent_text << "Right projection:\n";
+      mRightProj->outStream(out, indentLevel + 2);
+      out << std::endl;
+   }
 
    return out;
 }
