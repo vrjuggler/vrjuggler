@@ -223,6 +223,9 @@
 				RelativePath="..\..\modules\gadgeteer\gadget\Type\Input.cpp">
 			</File>
 			<File
+				RelativePath="..\..\modules\gadgeteer\gadget\Devices\KeyboardMouseDevice\InputArea.cpp">
+			</File>
+			<File
 				RelativePath="..\..\modules\gadgeteer\gadget\Devices\KeyboardMouseDevice\InputAreaWin32.cpp">
 			</File>
 			<File
