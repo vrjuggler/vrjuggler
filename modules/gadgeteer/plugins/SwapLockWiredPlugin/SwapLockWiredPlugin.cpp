@@ -46,11 +46,9 @@
 #include <cluster/ClusterDepChecker.h>
 
 #include <cluster/ClusterManager.h>
-#include <cluster/ClusterNetwork/ClusterNetwork.h>
-#include <cluster/ClusterNetwork/ClusterNode.h>
+#include <cluster/ClusterNetwork.h>
+#include <gadget/Node.h>
 
-//#include <cluster/Plugins/SwapLockPlugin/ClusterBarrier.h>
-//#include <cluster/ClusterNetwork/ClusterNetwork.h>
 #include <cluster/Packets/PacketFactory.h>
 #include <cluster/Packets/SyncRequest.h>
 #include <cluster/Packets/SyncAck.h>
@@ -191,7 +189,7 @@ namespace cluster
    {;
    }
 
-   void SwapLockWiredPlugin::handlePacket(Packet* packet, ClusterNode* node)
+   void SwapLockWiredPlugin::handlePacket(Packet* packet, gadget::Node* node)
    {
       boost::ignore_unused_variable_warning(packet);
       boost::ignore_unused_variable_warning(node);
