@@ -239,6 +239,7 @@ vpr::ReturnStatus CorbaRemoteReconfig::startCorba(const std::string& nsHost,
          }
          catch(CORBA::Exception& ex)
          {
+            boost::ignore_unused_variable_warning(ex);
             err_msg = "Caught a CORBA exception while creating the Subject Manager";
             throw;  // Rethrow the exception, which will be caught below
          }
