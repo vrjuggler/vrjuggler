@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<beanlist>
-   <guipanel name="WizardBuilder">
-      <file name="${TWEEK_BASE_DIR}/bin/beans/WizardBuilder.jar"
-            class="org.vrjuggler.tweek.wizard.builder.WizardBuilder"/>
-      <tree path="/Wizards/"/>
-   </guipanel>
-</beanlist>
