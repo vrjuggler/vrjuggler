@@ -11,6 +11,7 @@ include @topdir@/Makefile.base
 includedir	= @includedir@/Kernel/Pf
 srcdir		= @srcdir@
 top_srcdir	= @top_srcdir@
+OBJDIR		:= ${OBJDIR}/Pf
 VJROOT		= ${top_srcdir}
 VJ_SRCDIR	= @VJ_SRCDIR@/Kernel/Pf
 WORKDIR		= ${topdir}/Kernel/Pf
@@ -40,7 +41,12 @@ PF_OBJECTS	= $(addprefix $(OBJDIR)/,$(DEPEND_SRCS:.C=.o))
 # -----------------------------------------------------------------------------
 # Library targets.
 # -----------------------------------------------------------------------------
-all dbg opt dso ddso obj: ${PF_OBJECTS}
+all dbg opt dso ddso obj: beforebuild ${PF_OBJECTS}
+
+beforebuild:
+ifeq (${PF_API}, Y)
+	${scriptdir}/mkinstalldirs ${OBJDIR}
+endif
 
 # -----------------------------------------------------------------------------
 # Clean-up.
