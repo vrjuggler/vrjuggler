@@ -58,10 +58,12 @@ namespace vpr {
 // ----------------------------------------------------------------------------
 // Constructor.  This creates a file handle object connected to the given port
 // name and sets the update action to happen immediately.
+// NOTE:  set to open in non-blocking mode, so in linux we can repoen the port.
 // ----------------------------------------------------------------------------
 SerialPortImplTermios::SerialPortImplTermios (const std::string& port_name) {
     mHandle = new FileHandleImplUNIX(port_name);
     setUpdateAction(SerialTypes::NOW);
+    setOpenNonBlocking();
 }
 
 // ----------------------------------------------------------------------------
