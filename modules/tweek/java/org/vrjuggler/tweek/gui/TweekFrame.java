@@ -825,48 +825,29 @@ public class TweekFrame extends JFrame implements BeanFocusChangeListener,
       mBeanPrefsDialog.display();
    }
 
-   private void beansLoadAction (ActionEvent e)
+   private void beansLoadAction(ActionEvent e)
    {
-      GlobalPreferencesService prefs =
-         (GlobalPreferencesService)BeanRegistry.instance().getBean( "GlobalPreferences" );
+      JFileChooser chooser = new JFileChooser();
+      chooser.setMultiSelectionEnabled(true);
+      chooser.setDialogTitle("Tweek Bean Finder");
+      chooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
 
-      if ( prefs.getUserLevel() > 5 )
+      ExtensionFileFilter filter = new ExtensionFileFilter("Bean XML Files");
+      filter.addExtension("xml");
+      chooser.addChoosableFileFilter(filter);
+
+      int status = chooser.showOpenDialog(this);
+
+      if ( status == JFileChooser.APPROVE_OPTION )
       {
-         String path =
-            JOptionPane.showInputDialog(null,
-               "Please provide the path to a Bean XML file or directory",
-               "Tweek Bean Finder", JOptionPane.QUESTION_MESSAGE);
+         java.io.File[] files = chooser.getSelectedFiles();
 
-         if ( path != null )
+         if ( files.length > 0 )
          {
-            String exp_path = EnvironmentService.expandEnvVars(path);
-            loadBeansFromPath(exp_path);
-         }
-      }
-      else
-      {
-         JFileChooser chooser = new JFileChooser();
-         chooser.setMultiSelectionEnabled(true);
-         chooser.setDialogTitle("Tweek Bean Finder");
-         chooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
-
-         ExtensionFileFilter filter = new ExtensionFileFilter("Bean XML Files");
-         filter.addExtension("xml");
-         chooser.addChoosableFileFilter(filter);
-
-         int status = chooser.showOpenDialog(this);
-
-         if ( status == JFileChooser.APPROVE_OPTION )
-         {
-            java.io.File[] files = chooser.getSelectedFiles();
-
-            if ( files.length > 0 )
+            for ( int i = 0; i < files.length; i++ )
             {
-               for ( int i = 0; i < files.length; i++ )
-               {
-                  String path = files[i].getAbsolutePath();
-                  loadBeansFromPath(path);
-               }
+               String path = files[i].getAbsolutePath();
+               loadBeansFromPath(path);
             }
          }
       }
