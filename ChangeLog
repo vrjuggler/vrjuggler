@@ -1,5 +1,9 @@
 DATE        AUTHOR    CHANGE
 ----------- --------- ---------------------------------------------------------
+Jan-09-2001 patrick   RELENG_1_0 CVS branch created in preparation for 1.0
+                      release.  The branch point is the same as for RELENG_0_2,
+                      and all changes on RELENG_0_2 were merged onto this
+                      branch.  RELENG_0_2 is now dead.
 Dec-18-2000 bthomp    UNIX version of IS-900 driver converted to use termios
                       which in turn fixes cross-platform building
 Dec-13-2000 patrick   RELENG_0_2 CVS branch created in preparation for 0.2.0
