@@ -110,7 +110,7 @@ public:
     //+                  An error message is printed explaining what went
     //+                  wrong.
     // ------------------------------------------------------------------------
-    inline bool
+    inline vpr::Status
     listen (const int backlog = 5) {
         return m_socket_stream_imp.listen(backlog);
     }
@@ -132,15 +132,14 @@ public:
     //! NOTE: This is a blocking call and will block until a connection is
     //+       established.
     // ------------------------------------------------------------------------
-    inline SocketStream_t*
-    accept (void) {
-        SocketStream_t* new_socket;
-        RealSocketStreamImp* sock_imp = m_socket_stream_imp.accept();
-        vprASSERT((sock_imp != NULL) && "Impl:accept: returned null sock.  This may be non-blocking accept");
-        new_socket = new SocketStream_t(sock_imp);
-        delete sock_imp;
+    inline Status
+    accept (SocketStream_t& sock) {
+        Status status;
 
-        return new_socket;
+        status = m_socket_stream_imp.accept(sock.m_socket_stream_imp);
+        vprASSERT((! status.failure()) && "Impl:accept: failed.  This may be non-blocking accept");
+
+        return status;
     }
 
     // ------------------------------------------------------------------------
@@ -161,28 +160,34 @@ public:
     //! RETURNS: false - The server socket could not be set up.  An error
     //+                  message is printed explaining what went wrong.
     // ------------------------------------------------------------------------
-    inline bool
+    inline vpr::Status
     openServer (const bool reuse_addr = true, const int backlog = 5) {
-        bool retval;
+        vpr::Status status;
 
         // First, open the socket.
-        if ( retval = open() ) {
-            setReuseAddr(reuse_addr);
+        status = open();
 
-            // If that succeeded, bind to the internal address.
-            if ( retval = bind() ) {
-                // Finally, if that succeeded, go into listening mode.
-                retval = listen(backlog);
+        if ( status.success() ) {
+            status = setReuseAddr(reuse_addr);
+
+            if ( status.success() ) {
+                status = bind();
+
+                // If that succeeded, bind to the internal address.
+                if ( status.success() ) {
+                    // Finally, if that succeeded, go into listening mode.
+                    status = listen(backlog);
+                }
             }
         }
 
-        return retval;
+        return status;
     }
 
     /**
      *
      */
-    inline bool
+    inline vpr::Status
     getMaxSegmentSize (Int32& size) const {
         return m_socket_stream_imp.getMaxSegmentSize(size);
     }
@@ -190,7 +195,7 @@ public:
     /**
      *
      */
-    inline bool
+    inline vpr::Status
     setMaxSegmentSize (const Int32 size) {
         return m_socket_stream_imp.setMaxSegmentSize(size);
     }
@@ -198,7 +203,7 @@ public:
     /**
      *
      */
-    inline bool
+    inline vpr::Status
     getNoDelay (bool& enabled) const {
         return m_socket_stream_imp.getNoDelay(enabled);
     }
@@ -206,7 +211,7 @@ public:
     /**
      *
      */
-    inline bool
+    inline vpr::Status
     setNoDelay (const bool enable_val) {
         return m_socket_stream_imp.setNoDelay(enable_val);
     }

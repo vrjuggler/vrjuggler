@@ -43,6 +43,8 @@
 #include <sys/types.h>
 #endif
 
+#include <vprStatus.h>
+
 
 namespace vpr {
 
@@ -154,7 +156,7 @@ public:
     //! RETURNS: true  - The device was opened successfully.
     //! RETURNS: false - The device could not be opened for some reason.
     // ------------------------------------------------------------------------
-    virtual bool open(void) = 0;
+    virtual Status open(void) = 0;
 
     // ------------------------------------------------------------------------
     //: Close the I/O device.
@@ -167,7 +169,7 @@ public:
     //! RETURNS: true  - The device was closed successfully.
     //! RETURNS: false - The device could not be closed for some reason.
     // ------------------------------------------------------------------------
-    virtual bool close(void) = 0;
+    virtual Status close(void) = 0;
 
     // ------------------------------------------------------------------------
     //: Get the open state of this I/O device.
@@ -193,7 +195,7 @@ public:
     //! RETURNS: false - The blocking mode could not be changed for some
     //+                  reason.
     // ------------------------------------------------------------------------
-    virtual bool enableBlocking(void) = 0;
+    virtual Status enableBlocking(void) = 0;
 
     // ------------------------------------------------------------------------
     //: Reconfigure the I/O device so that it is in non-blocking mode.
@@ -205,7 +207,7 @@ public:
     //! RETURNS: false - The blocking mode could not be changed for some
     //+                  reason.
     // ------------------------------------------------------------------------
-    virtual bool enableNonBlocking(void) = 0;
+    virtual Status enableNonBlocking(void) = 0;
 
     // ------------------------------------------------------------------------
     //: Get the current blocking state for the I/O device.
@@ -229,19 +231,18 @@ public:
     //+      bytes long.
     //! POST: The given buffer has length bytes copied into it from the
     //+       device, and the number of bytes read successfully is returned to
-    //+       the caller.
+    //+       the caller via the bytes_read argument.
     //
-    //! ARGS: buffer - A pointer to the buffer where the device's buffer
-    //+                contents are to be stored.
-    //! ARGS: length - The number of bytes to be read.
+    //! ARGS: buffer     - A pointer to the buffer where the device's buffer
+    //+                    contents are to be stored.
+    //! ARGS: length     - The number of bytes to be read.
+    //! ARGS: bytes_read - The number of bytes read into the buffer.
     //
-    //! RETURNS: >-1 - The number of bytes successfully read from the I/O
-    //+                device.
-    //! RETURNS:  -1 - An error occurred when reading.
+    //! RETURNS:
     // ------------------------------------------------------------------------
-    ssize_t
-    read (void* buffer, const size_t length) {
-        return read_i(buffer, length);
+    Status
+    read (void* buffer, const size_t length, ssize_t& bytes_read) {
+        return read_i(buffer, length, bytes_read);
     }
 
     // ------------------------------------------------------------------------
@@ -252,45 +253,35 @@ public:
     //+      bytes long.
     //! POST: The given buffer has length bytes copied into it from the
     //+       device, and the number of bytes read successfully is returned to
-    //+       the caller.
+    //+       the caller via the bytes_read argument.
     //
-    //! ARGS: buffer - A reference to the buffer (a std::string object) where
-    //+                the device's buffer contents are to be stored.
-    //! ARGS: length - The number of bytes to be read.  This is optional and
-    //+                can be determined from the length of the string object
-    //+                if not specified.
+    //! ARGS: buffer     - A reference to the buffer (a std::string object)
+    //+                    where the device's buffer contents are to be
+    //+                    stored.
+    //! ARGS: length     - The number of bytes to be read.
+    //! ARGS: bytes_read - The number of bytes read into the buffer.
     //
-    //! RETURNS: >-1 - The number of bytes successfully read from the I/O
-    //+                device.
-    //! RETURNS:  -1 - An error occurred when reading.
+    //! RETURNS:
     // ------------------------------------------------------------------------
-    ssize_t read(std::string& buffer, const size_t length = 0)
-    {
-       ssize_t bytes;
+    Status
+    read (std::string& buffer, const size_t length, ssize_t& bytes_read) {
+       Status status;
        char* temp_buf;
-       size_t buf_len;
-
-       if ( length == 0 ) {
-           buf_len = buffer.size();
-       }
-       else {
-           buf_len = length;
-       }
 
        // Allocate the temporary buffer, zero it, and read in the current
        // buffer from the device.
-       temp_buf = (char*) malloc(buf_len);
-       memset(temp_buf, 0, buf_len);
-       bytes = read(temp_buf, buf_len);
+       temp_buf = (char*) malloc(length);
+       memset(temp_buf, 0, length);
+       status = read(temp_buf, length, bytes_read);
 
        // If anything was read into temp_buf, copy it into buffer.
-       if ( bytes > -1 ) {
+       if ( bytes_read > -1 ) {
            buffer = temp_buf;
        }
 
        free(temp_buf);
 
-       return bytes;
+       return status;
     }
 
     // ------------------------------------------------------------------------
@@ -303,51 +294,40 @@ public:
     //+       device, and the number of bytes read successfully is returned to
     //+       the caller.
     //
-    //! ARGS: buffer - A pointer to the buffer (a vector of chars) where the
-    //+                device's buffer contents are to be stored.
-    //! ARGS: length - The number of bytes to be read.  This is optional and
-    //+                can be determined from the length of the vector if not
-    //+                specified.
+    //! ARGS: buffer     - A pointer to the buffer (a vector of chars) where
+    //+                    the device's buffer contents are to be stored.
+    //! ARGS: length     - The number of bytes to be read.
+    //! ARGS: bytes_read - The number of bytes read into the buffer.
     //
-    //! RETURNS: >-1 - The number of bytes successfully read from the I/O
-    //+                device.
-    //! RETURNS:  -1 - An error occurred when reading.
+    //! RETURNS:
     // ------------------------------------------------------------------------
-    virtual ssize_t read(std::vector<char>& buffer,
-                         const size_t length = 0)
+    Status
+    read (std::vector<char>& buffer, const size_t length, ssize_t& bytes_read)
     {
-       ssize_t bytes;
+       Status status;
        char* temp_buf;
-       size_t buf_len;
-
-       if ( length == 0 ) {
-           buf_len = buffer.size();
-       }
-       else {
-           buf_len = length;
-       }
 
        // Allocate the temporary buffer, zero it, and read in the current
        // buffer from the device.
-       temp_buf = (char*) malloc(buf_len);
-       memset(temp_buf, 0, buf_len);
-       bytes = read(temp_buf, buf_len);
+       temp_buf = (char*) malloc(length);
+       memset(temp_buf, 0, length);
+       status = read(temp_buf, length, bytes_read);
 
        // If anything was read into temp_buf, copy it into buffer.
-       if ( bytes > -1 ) {
+       if ( bytes_read > -1 ) {
           // Check to make sure we have enough space
-          if (bytes > (int)buffer.size()) {
-             buffer.resize(bytes);
+          if (bytes_read > (int)buffer.size()) {
+             buffer.resize(bytes_read);
           }
 
-          for ( ssize_t i = 0; i < bytes; i++ ) {
+          for ( ssize_t i = 0; i < bytes_read; i++ ) {
                buffer[i] = temp_buf[i];
            }
        }
 
        free(temp_buf);
 
-       return bytes;
+       return status;
     }
 
     // ------------------------------------------------------------------------
@@ -360,17 +340,16 @@ public:
     //+       device, and the number of bytes read successfully is returned to
     //+       the caller.
     //
-    //! ARGS: buffer - A pointer to the buffer where the device's buffer
-    //+                contents are to be stored.
-    //! ARGS: length - The number of bytes to be read.
+    //! ARGS: buffer     - A pointer to the buffer where the device's buffer
+    //+                    contents are to be stored.
+    //! ARGS: length     - The number of bytes to be read.
+    //! ARGS: bytes_read - The number of bytes read into the buffer.
     //
-    //! RETURNS: >-1 - The number of bytes successfully read from the I/O
-    //+                device.
-    //! RETURNS:  -1 - An error occurred when reading.
+    //! RETURNS:
     // ------------------------------------------------------------------------
-    ssize_t
-    readn (void* buffer, const size_t length) {
-        return readn_i(buffer, length);
+    Status
+    readn (void* buffer, const size_t length, ssize_t& bytes_read) {
+        return readn_i(buffer, length, bytes_read);
     }
 
     // ------------------------------------------------------------------------
@@ -383,39 +362,33 @@ public:
     //+       device, and the number of bytes read successfully is returned to
     //+       the caller.
     //
-    //! ARGS: buffer - A reference to the buffer (a std::string object) where
-    //+                the device's buffer contents are to be stored.
-    //! ARGS: length - The number of bytes to be read.  This is optional and
-    //+                can be determined from the length of the string object
-    //+                if not specified.
+    //! ARGS: buffer     - A reference to the buffer (a std::string object)
+    //+                    where the device's buffer contents are to be
+    //+                    stored.
+    //! ARGS: length     - The number of bytes to be read.
+    //! ARGS: bytes_read - The number of bytes read into the buffer.
     //
-    //! RETURNS: >-1 - The number of bytes successfully read from the I/O
-    //+                device.
-    //! RETURNS:  -1 - An error occurred when reading.
+    //! RETURNS:
     // ------------------------------------------------------------------------
-    virtual ssize_t readn(std::string& buffer, const size_t length = 0)
-    {
-        //return m_socket_imp->readn(buffer, length);
-        size_t buf_len;
+    Status
+    readn (std::string& buffer, const size_t length, ssize_t& bytes_read) {
+       Status status;
        char* temp_buf;
-       ssize_t bytes;
-
-       buf_len = (length == 0) ? buffer.size() : length;
 
        // Allocate the temporary buffer, zero it, and read in the current
        // buffer from the device.
-       temp_buf = (char*) malloc(buf_len);
-       memset(temp_buf, 0, buf_len);
-       bytes = readn(temp_buf, buf_len);
+       temp_buf = (char*) malloc(length);
+       memset(temp_buf, 0, length);
+       status = readn(temp_buf, length, bytes_read);
        
        // If anything was read into temp_buf, copy it into buffer.
-       if ( bytes > -1 ) {
+       if ( bytes_read > -1 ) {
            buffer = temp_buf;
        }
 
        free(temp_buf);
 
-       return bytes;
+       return status;
     }
 
     // ------------------------------------------------------------------------
@@ -438,38 +411,30 @@ public:
     //+                device.
     //! RETURNS:  -1 - An error occurred when reading.
     // ------------------------------------------------------------------------
-    virtual ssize_t readn(std::vector<char>& buffer,
-                          const size_t length = 0)
+    Status
+    readn (std::vector<char>& buffer, const size_t length, ssize_t& bytes_read)
     {
-        ssize_t bytes;
-         char* temp_buf;
-         size_t buf_len;
+        Status status;
+        char* temp_buf;
 
-         if ( length == 0 ) {
-           buf_len = buffer.size();
-         }
-         else {
-           buf_len = length;
-         }
+        // Allocate the temporary buffer, zero it, and read in the current
+        // buffer from the device.
+        temp_buf = (char*) malloc(length);
+        memset(temp_buf, 0, length);
+        status = readn(temp_buf, length, bytes_read);
 
-         // Allocate the temporary buffer, zero it, and read in the current
-         // buffer from the device.
-         temp_buf = (char*) malloc(buf_len);
-         memset(temp_buf, 0, buf_len);
-         bytes = readn(temp_buf, buf_len);
+        // If anything was read into temp_buf, copy it into buffer.
+        if ( bytes_read > -1 ) {
+           if(bytes_read > (int)buffer.size())
+              buffer.resize(bytes_read);
+           for ( ssize_t i = 0; i < bytes_read; i++ ) {
+              buffer[i] = temp_buf[i];
+          }
+        }
 
-         // If anything was read into temp_buf, copy it into buffer.
-         if ( bytes > -1 ) {
-            if(bytes > (int)buffer.size())
-               buffer.resize(bytes);
-            for ( ssize_t i = 0; i < bytes; i++ ) {
-               buffer[i] = temp_buf[i];
-           }
-         }
+        free(temp_buf);
 
-         free(temp_buf);
-
-         return bytes;
+        return status;
     }
 
     // ------------------------------------------------------------------------
@@ -479,16 +444,15 @@ public:
     //! POST: The given buffer is written to the I/O device, and the number of
     //+       bytes written successfully is returned to the caller.
     //
-    //! ARGS: buffer - A pointer to the buffer to be written.
-    //! ARGS: length - The length of the buffer.
+    //! ARGS: buffer        - A pointer to the buffer to be written.
+    //! ARGS: length        - The length of the buffer.
+    //! ARGS: bytes_written - The number of bytes written to the device.
     //
-    //! RETURNS: >-1 - The number of bytes successfully written to the I/O
-    //+                device.
-    //! RETURNS:  -1 - An error occurred when writing.
+    //! RETURNS:
     // ------------------------------------------------------------------------
-    virtual ssize_t
-    write (const void* buffer, const size_t length) {
-        return write_i(buffer, length);
+    Status
+    write (const void* buffer, const size_t length, ssize_t& bytes_written) {
+        return write_i(buffer, length, bytes_written);
     }
 
     // ------------------------------------------------------------------------
@@ -498,21 +462,18 @@ public:
     //! POST: The given buffer is written to the I/O device, and the number of
     //+       bytes written successfully is returned to the caller.
     //
-    //! ARGS: buffer - A reference to the buffer (a std::string object) to be
-    //+                written.
-    //! ARGS: length - The length of the buffer.  This is optional and can be
-    //+                determined from the length of the string object if not
-    //+                specified.
+    //! ARGS: buffer        - A reference to the buffer (a std::string object)
+    //+                       to be written.
+    //! ARGS: length        - The length of the buffer.
+    //! ARGS: bytes_written - The number of bytes written to the device.
     //
-    //! RETURNS: >-1 - The number of bytes successfully written to the I/O
-    //+                device.
-    //! RETURNS:  -1 - An error occurred when writing.
+    //! RETURNS: >-1
     // ------------------------------------------------------------------------
-    virtual ssize_t write(const std::string& buffer,
-                          const size_t length = 0)
+    Status
+    write (const std::string& buffer, const size_t length,
+           ssize_t& bytes_written)
     {
-       size_t buf_len = ( ((length == 0) || (length > buffer.size())) ? buffer.size() : length);
-       return write(buffer.c_str(), buf_len);
+       return write(buffer.c_str(), length, bytes_written);
     }
 
     // ------------------------------------------------------------------------
@@ -522,21 +483,18 @@ public:
     //! POST: The given buffer is written to the I/O device, and the number of
     //+       bytes written successfully is returned to the caller.
     //
-    //! ARGS: buffer - A pointer to the buffer (a vector of chars) to be
-    //+                written.
-    //! ARGS: length - The length of the buffer.  This is optional and can be
-    //+                determined from the length of the vector if not
-    //+                specified.
+    //! ARGS: buffer        - A pointer to the buffer (a vector of chars) to
+    //+                       be written.
+    //! ARGS: length        - The length of the buffer.
+    //! ARGS: bytes_written - The number of bytes written to the device.
     //
-    //! RETURNS: >-1 - The number of bytes successfully written to the I/O
-    //+                device.
-    //! RETURNS:  -1 - An error occurred when writing.
+    //! RETURNS:
     // ------------------------------------------------------------------------
-    virtual ssize_t write(const std::vector<char>& buffer,
-                          const size_t length = 0)
+    Status
+    write (const std::vector<char>& buffer, const size_t length,
+           ssize_t& bytes_written)
     {
-        size_t buf_len = ( ((length == 0) || (length > buffer.size())) ? buffer.size() : length);
-        return write(&buffer[0],buf_len);
+        return write(&buffer[0], length, bytes_written);
     }
 
     // ------------------------------------------------------------------------
@@ -626,17 +584,20 @@ protected:
     /**
      *
      */
-    virtual ssize_t read_i(void* buffer, const size_t length) = 0;
+    virtual Status read_i(void* buffer, const size_t length,
+                          ssize_t& bytes_read) = 0;
 
     /**
      *
      */
-    virtual ssize_t readn_i(void* buffer, const size_t length) = 0;
+    virtual Status readn_i(void* buffer, const size_t length,
+                           ssize_t& bytes_read) = 0;
 
     /**
      *
      */
-    virtual ssize_t write_i(const void* buffer, const size_t length) = 0;
+    virtual Status write_i(const void* buffer, const size_t length,
+                           ssize_t& bytes_written) = 0;
 
     std::string m_name;          //: The name of the I/O device
     _open_mode  m_open_mode;     //: The open mode of the device

@@ -43,14 +43,14 @@ public:
     /**
      *
      */
-    inline bool
+    inline Status
     getTypeOfService (SocketOptions::TypeOfService& tos) {
         SocketOptions::Data option;
-        int retval;
+        Status retval;
 
         retval = getOption(SocketOptions::IpTypeOfService, option);
 
-        if ( retval == 0 ) {
+        if ( retval.success() ) {
             tos = option.type_of_service;
         }
 
@@ -60,7 +60,7 @@ public:
     /**
      *
      */
-    inline bool
+    inline Status
     setTypeOfService (const SocketOptions::TypeOfService& tos) {
         SocketOptions::Data option;
         option.type_of_service = tos;
@@ -70,14 +70,14 @@ public:
     /**
      *
      */
-    inline bool
+    inline Status
     getTimeToLive (Int32& ttl) {
         SocketOptions::Data option;
-        int retval;
+        Status retval;
 
         retval = getOption(SocketOptions::IpTimeToLive, option);
 
-        if ( retval == 0 ) {
+        if ( retval.success() ) {
             ttl = option.ip_ttl;
         }
 
@@ -87,7 +87,7 @@ public:
     /**
      *
      */
-    inline bool
+    inline Status
     setTimeToLive (const Int32 ttl) {
         SocketOptions::Data option;
         option.ip_ttl = ttl;

@@ -63,15 +63,16 @@ main (int argc, char* argv[]) {
         return 1;
     }
 
-    if ( sock->open() ) {
+    if ( sock->open().success() ) {
         char buffer[40];
 
         // Connect to the server.
-        if ( sock->connect() ) {
+        if ( sock->connect().success() ) {
+            vpr::Status status;
             ssize_t bytes;
 
             // Read from teh server.
-            bytes = sock->read(buffer, 40);
+            status = sock->read(buffer, 40, bytes);
 
             // If we read anything, print it.
             if ( bytes > 0 ) {

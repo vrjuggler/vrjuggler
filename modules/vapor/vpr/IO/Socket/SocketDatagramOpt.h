@@ -43,14 +43,14 @@ public:
     /**
      *
      */
-    inline bool
+    inline Status
     getMcastInterface (InetAddr& mcast_if) {
         SocketOptions::Data option;
-        int retval;
+        Status retval;
 
         retval = getOption(SocketOptions::McastInterface, option);
 
-        if ( retval == 0 ) {
+        if ( retval.success() ) {
             mcast_if = option.mcast_if;
         }
 
@@ -60,7 +60,7 @@ public:
     /**
      *
      */
-    inline bool
+    inline Status
     setMcastInterface (const InetAddr& mcast_if) {
         SocketOptions::Data option;
         option.mcast_if = mcast_if;
@@ -70,14 +70,14 @@ public:
     /**
      *
      */
-    inline bool
+    inline Status
     getMcastTimeToLive (Uint8& ttl) {
         SocketOptions::Data option;
-        int retval;
+        Status retval;
 
         retval = getOption(SocketOptions::McastTimeToLive, option);
 
-        if ( retval == 0 ) {
+        if ( retval.success() ) {
             ttl = option.mcast_ttl;
         }
 
@@ -87,7 +87,7 @@ public:
     /**
      *
      */
-    inline bool
+    inline Status
     setMcastTimeToLive (const Uint8 ttl) {
         SocketOptions::Data option;
         option.mcast_ttl = ttl;
@@ -97,14 +97,14 @@ public:
     /**
      *
      */
-    inline bool
+    inline Status
     getMcastLoopback (Uint8& loop) {
         SocketOptions::Data option;
-        int retval;
+        Status retval;
 
         retval = getOption(SocketOptions::McastLoopback, option);
 
-        if ( retval == 0 ) {
+        if ( retval.success() ) {
             loop = option.mcast_loopback;
         }
 
@@ -114,7 +114,7 @@ public:
     /**
      *
      */
-    inline bool
+    inline Status
     setMcastLoopback (const Uint8 loop) {
         SocketOptions::Data option;
         option.mcast_loopback = loop;
@@ -124,7 +124,7 @@ public:
     /**
      *
      */
-    inline bool
+    inline Status
     addMcastMember (const McastReq& request) {
         SocketOptions::Data option;
         option.mcast_add_member = request;
@@ -134,7 +134,7 @@ public:
     /**
      *
      */
-    inline bool
+    inline Status
     dropMcastMember (const McastReq& request) {
         SocketOptions::Data option;
         option.mcast_drop_member = request;

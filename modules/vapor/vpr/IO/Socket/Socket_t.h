@@ -38,6 +38,8 @@
 
 #include <IO/BlockIO.h> // base class.
 #include <IO/IOSys.h>
+#include <vprStatus.h>
+
 
 namespace vpr {
 
@@ -130,7 +132,7 @@ public:
     //! RETURNS: true  - The socket was opened successfully.
     //! RETURNS: false - The socket could not be opened for some reason.
     // ------------------------------------------------------------------------
-    inline bool
+    inline vpr::Status
     open (void) {
         return m_socket_imp->open();
     }
@@ -146,7 +148,7 @@ public:
     //! RETURNS: true  - The socket was closed successfully.
     // ! RETURNS:false - The socket could not be closed for some reason.
     // ------------------------------------------------------------------------
-    inline bool
+    inline vpr::Status
     close (void) {
         return m_socket_imp->close();
     }
@@ -194,7 +196,7 @@ public:
     //! RETURNS: false - The blocking mode could not be changed for some
     //+                  reason.
     // ------------------------------------------------------------------------
-    inline bool
+    inline vpr::Status
     enableBlocking (void) {
         return m_socket_imp->enableBlocking();
     }
@@ -209,7 +211,7 @@ public:
     //! RETURNS: false - The blocking mode could not be changed for some
     //+                  reason.
     // ------------------------------------------------------------------------
-    inline bool
+    inline vpr::Status
     enableNonBlocking (void) {
         return m_socket_imp->enableNonBlocking();
     }
@@ -224,7 +226,7 @@ public:
     //! RETURNS: false - The socket could not be bound to the address.  An
     //+                  error message is printed explaining what went wrong.
     // ------------------------------------------------------------------------
-    inline bool
+    inline vpr::Status
     bind (void) {
         return m_socket_imp->bind();
     }
@@ -249,7 +251,7 @@ public:
     //! RETURNS: false - The connect could not be made.  An error message is
     //+                  printed explaining what happened.
     // ------------------------------------------------------------------------
-    inline bool
+    inline vpr::Status
     connect (void) {
         return m_socket_imp->connect();
     }
@@ -271,9 +273,9 @@ public:
     //! RETURNS: >-1 - The number of bytes successfully read from the socket.
     //! RETURNS:  -1 - An error occurred when reading.
     // ------------------------------------------------------------------------
-    inline ssize_t
-    recv (void* buffer, const size_t length) {
-        return read(buffer, length);
+    inline Status
+    recv (void* buffer, const size_t length, ssize_t& bytes_read) {
+        return read(buffer, length, bytes_read);
     }
 
     // ------------------------------------------------------------------------
@@ -288,16 +290,14 @@ public:
     //
     //! ARGS: buffer - A reference to the buffer (a std::string object) where
     //+                the socket's buffer contents are to be stored.
-    //! ARGS: length - The number of bytes to be read.  This is optional and
-    //+                can be determined from the length of the string object
-    //+                if not specified.
+    //! ARGS: length - The number of bytes to be read.
     //
     //! RETURNS: >-1 - The number of bytes successfully read from the socket.
     //! RETURNS:  -1 - An error occurred when reading.
     // ------------------------------------------------------------------------
-    inline ssize_t
-    recv (std::string& buffer, const size_t length = 0) {
-       return read(buffer, length);
+    inline Status
+    recv (std::string& buffer, const size_t length, ssize_t& bytes_read) {
+       return read(buffer, length, bytes_read);
     }
 
     // ------------------------------------------------------------------------
@@ -312,16 +312,15 @@ public:
     //
     //! ARGS: buffer - A reference to the buffer (a std::vector<char> object)
     //+                where the socket's buffer contents are to be stored.
-    //! ARGS: length - The number of bytes to be read.  This is optional and
-    //+                can be determined from the length of the vector object
-    //+                if not specified.
+    //! ARGS: length - The number of bytes to be read.
     //
     //! RETURNS: >-1 - The number of bytes successfully read from the socket.
     //! RETURNS:  -1 - An error occurred when reading.
     // ------------------------------------------------------------------------
-    inline ssize_t
-    recv (std::vector<char>& buffer, const size_t length = 0) {
-       return read(buffer, length);
+    inline Status
+    recv (std::vector<char>& buffer, const size_t length, ssize_t& bytes_read)
+    {
+       return read(buffer, length, bytes_read);
     }
 
     // ------------------------------------------------------------------------
@@ -341,9 +340,9 @@ public:
     //! RETURNS: >-1 - The number of bytes successfully read from the socket.
     //! RETURNS:  -1 - An error occurred when reading.
     // ------------------------------------------------------------------------
-    inline ssize_t
-    recvn (void* buffer, const size_t length) {
-        return readn(buffer, length);
+    inline Status
+    recvn (void* buffer, const size_t length, ssize_t& bytes_read) {
+        return readn(buffer, length, bytes_read);
     }
 
     // ------------------------------------------------------------------------
@@ -358,16 +357,14 @@ public:
     //
     //! ARGS: buffer - A reference to the buffer (a std::string object) where
     //+                the socket's buffer contents are to be stored.
-    //! ARGS: length - The number of bytes to be read.  This is optional and
-    //+                can be determined from the length of the string object
-    //+                if not specified.
+    //! ARGS: length - The number of bytes to be read.
     //
     //! RETURNS: >-1 - The number of bytes successfully read from the socket.
     //! RETURNS:  -1 - An error occurred when reading.
     // ------------------------------------------------------------------------
-    inline ssize_t
-    recvn (std::string& buffer, const size_t length = 0) {
-        return readn(buffer, length);
+    inline Status
+    recvn (std::string& buffer, const size_t length, ssize_t& bytes_read) {
+        return readn(buffer, length, bytes_read);
     }
 
     // ------------------------------------------------------------------------
@@ -382,16 +379,15 @@ public:
     //
     //! ARGS: buffer - A reference to the buffer (a std::vector<char> object)
     //+                where the socket's buffer contents are to be stored.
-    //! ARGS: length - The number of bytes to be read.  This is optional and
-    //+                can be determined from the length of the vector object
-    //+                if not specified.
+    //! ARGS: length - The number of bytes to be read.
     //
     //! RETURNS: >-1 - The number of bytes successfully read from the socket.
     //! RETURNS:  -1 - An error occurred when reading.
     // ------------------------------------------------------------------------
-    inline ssize_t
-    recvn (std::vector<char>& buffer, const size_t length = 0) {
-        return readn(buffer, length);
+    inline Status
+    recvn (std::vector<char>& buffer, const size_t length, ssize_t& bytes_read)
+    {
+        return readn(buffer, length, bytes_read);
     }
 
     // ------------------------------------------------------------------------
@@ -407,9 +403,9 @@ public:
     //! RETURNS: >-1 - The number of bytes successfully written to the socket.
     //! RETURNS:  -1 - An error occurred when writing.
     // ------------------------------------------------------------------------
-    inline ssize_t
-    send (const void* buffer, const size_t length) {
-        return write(buffer, length);
+    inline Status
+    send (const void* buffer, const size_t length, ssize_t& bytes_written) {
+        return write(buffer, length, bytes_written);
     }
 
     // ------------------------------------------------------------------------
@@ -421,16 +417,16 @@ public:
     //
     //! ARGS: buffer - A reference to the buffer (a std::string object) to be
     //+                written.
-    //! ARGS: length - The length of the buffer.  This is optional and can be
-    //+                determined from the length of the string object if not
-    //+                specified.
+    //! ARGS: length - The length of the buffer.
     //
     //! RETURNS: >-1 - The number of bytes successfully written to the socket.
     //! RETURNS:  -1 - An error occurred when writing.
     // ------------------------------------------------------------------------
-    inline ssize_t
-    send (const std::string& buffer, const size_t length = 0) {
-       return write(buffer, buf_len);
+    inline Status
+    send (const std::string& buffer, const size_t length,
+          ssize_t& bytes_written)
+    {
+       return write(buffer, buf_len, bytes_written);
     }
 
     // ------------------------------------------------------------------------
@@ -442,16 +438,16 @@ public:
     //
     //! ARGS: buffer - A reference to the buffer (a std::vector<char> object)
     //+                to be written.
-    //! ARGS: length - The length of the buffer.  This is optional and can be
-    //+                determined from the length of the vector object if not
-    //+                specified.
+    //! ARGS: length - The length of the buffer.
     //
     //! RETURNS: >-1 - The number of bytes successfully written to the socket.
     //! RETURNS:  -1 - An error occurred when writing.
     // ------------------------------------------------------------------------
-    inline ssize_t
-    send (const std::vector<char>& buffer, const size_t length = 0) {
-       return write(buffer, buf_len);
+    inline Status
+    send (const std::vector<char>& buffer, const size_t length,
+          ssize_t& bytes_written)
+    {
+       return write(buffer, buf_len, bytes_written);
     }
 
     // ------------------------------------------------------------------------
@@ -475,8 +471,8 @@ public:
         return m_socket_imp->getLocalAddr();
     }
 
-    bool setLocalAddr(const InetAddr& addr)
-    {
+    inline Status
+    setLocalAddri (const InetAddr& addr) {
       return m_socket_imp->setLocalAddr(addr);
     }
 
@@ -487,15 +483,15 @@ public:
         return m_socket_imp->getRemoteAddr();
     }
 
-    bool setRemoteAddr(const InetAddr& addr)
-    {
+    inline Status
+    setRemoteAddr (const InetAddr& addr) {
        return m_socket_imp->setRemoteAddr(addr);
     }
 
     /**
      *
      */
-    inline bool
+    inline Status
     getKeepAlive (bool& enabled) const {
         return m_socket_imp->getKeepAlive(enabled);
     }
@@ -503,7 +499,7 @@ public:
     /**
      *
      */
-    inline bool
+    inline Status
     setKeepAlive (const bool enable_val) {
         return m_socket_imp->setKeepAlive(enable_val);
     }
@@ -511,7 +507,7 @@ public:
     /**
      *
      */
-    inline bool
+    inline Status
     getLingerOnClose (bool& enabled, int& linger_sec) const {
         return m_socket_imp->getLingerOnClose(enabled, linger_sec);
     }
@@ -519,7 +515,7 @@ public:
     /**
      *
      */
-    inline bool
+    inline Status
     setLingerOnClose (const bool enable_val, const int linger_sec) {
         return m_socket_imp->setLingerOnClose(enable_val, linger_sec);
     }
@@ -527,7 +523,7 @@ public:
     /**
      *
      */
-    inline bool
+    inline Status
     getRecvBufferSize (Int32& size) const {
         return m_socket_imp->getRecvBufferSize(size);
     }
@@ -535,7 +531,7 @@ public:
     /**
      *
      */
-    inline bool
+    inline Status
     setRecvBufferSize (const Int32 size) {
         return m_socket_imp->getRecvBufferSize(size);
     }
@@ -543,7 +539,7 @@ public:
     /**
      *
      */
-    inline bool
+    inline Status
     getSendBufferSize (int& size) const {
         return m_socket_imp->getSecvBufferSize(size);
     }
@@ -551,7 +547,7 @@ public:
     /**
      *
      */
-    inline bool
+    inline Status
     setSendBufferSize (const Int32 size) {
         return m_socket_imp->getSecvBufferSize(size);
     }
@@ -559,7 +555,7 @@ public:
     /**
      *
      */
-    inline bool
+    inline Status
     getReuseAddr (bool& enabled) const {
         return m_socket_imp->getReuseAddr(enabled);
     }
@@ -569,7 +565,7 @@ public:
      *
      * PRE: The socket has been opened, but bind() has not been called.
      */
-    inline bool
+    inline Status
     setReuseAddr (const bool enable_val) {
         return m_socket_imp->setReuseAddr(enable_val);
     }
@@ -578,7 +574,7 @@ public:
     /**
      *
      */
-    inline bool
+    inline Status
     getTypeOfService (SocketOptions::TypeOfService& tos) {
         return m_socket_imp->getTypeOfService(tos);
     }
@@ -586,7 +582,7 @@ public:
     /**
      *
      */
-    inline bool
+    inline Status
     setTypeOfService (const SocketOptions::TypeOfService& tos) {
         return m_socket_imp->setTypeOfService(tos);
     }
@@ -595,7 +591,7 @@ public:
     /**
      *
      */
-    inline bool
+    inline Status
     getTimeToLive (Int32& ttl) {
         return m_socket_imp->getTimeToLive(ttl);
     }
@@ -603,7 +599,7 @@ public:
     /**
      *
      */
-    inline bool
+    inline Status
     setTimeToLive (const Int32 ttl) {
         return m_socket_imp->setTimeToLive(ttl);
     }
@@ -667,9 +663,9 @@ protected:
     //! RETURNS: >-1 - The number of bytes successfully read from the socket.
     //! RETURNS:  -1 - An error occurred when reading.
     // ------------------------------------------------------------------------
-    virtual ssize_t
-    read_i (void* buffer, const size_t length) {
-        return m_socket_imp->read(buffer, length);
+    virtual Status
+    read_i (void* buffer, const size_t length, ssize_t& bytes_read) {
+        return m_socket_imp->read(buffer, length, bytes_read);
     }
 
     // ------------------------------------------------------------------------
@@ -689,9 +685,9 @@ protected:
     //! RETURNS: >-1 - The number of bytes successfully read from the socket.
     //! RETURNS:  -1 - An error occurred when reading.
     // ------------------------------------------------------------------------
-    virtual ssize_t
-    readn_i (void* buffer, const size_t length) {
-        return m_socket_imp->readn(buffer, length);
+    virtual Status
+    readn_i (void* buffer, const size_t length, ssize_t& bytes_read) {
+        return m_socket_imp->readn(buffer, length, bytes_read);
     }
 
     // ------------------------------------------------------------------------
@@ -707,9 +703,9 @@ protected:
     //! RETURNS: >-1 - The number of bytes successfully written to the socket.
     //! RETURNS:  -1 - An error occurred when writing.
     // ------------------------------------------------------------------------
-    virtual ssize_t
-    write_i (const void* buffer, const size_t length) {
-        return m_socket_imp->write(buffer, length);
+    virtual Status
+    write_i (const void* buffer, const size_t length, ssize_t& bytes_written) {
+        return m_socket_imp->write(buffer, length, bytes_written);
     }
 
     RealSocketImp* m_socket_imp; //: Platform-specific socket implementation
