@@ -31,6 +31,9 @@
  * -----------------------------------------------------------------
  */
 
+#ifndef _VJ_SOUND_MANAGER_H_
+#define _VJ_SOUND_MANAGER_H_
+
 #include <Sound/vjSoundEngine.h>
 #include <Sound/vjSound.h>
 #include <Kernel/vjConfigChunkHandler.h>
@@ -71,3 +74,6 @@ public:
    
    vjSoundEngine* mSoundEngine;
 };
+
+
+#endif	/* _VJ_SOUND_MANAGER_H_ */
