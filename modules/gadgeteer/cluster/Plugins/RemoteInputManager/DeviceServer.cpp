@@ -40,7 +40,7 @@
 
 namespace cluster
 {
-   DeviceServer::DeviceServer(const std::string& name, gadget::Input* device, const vpr::GUID& plugin_guid) 
+   DeviceServer::DeviceServer(const std::string& name, gadget::Input* device, const vpr::GUID& plugin_guid)
          : deviceServerTriggerSema(0), deviceServerDoneSema(0)
    {
       mId.generate();   // Generate a unique ID for this device
@@ -50,7 +50,7 @@ namespace cluster
       mPluginGUID = plugin_guid;
 
       mDataPacket = new DataPacket();
-      mDeviceData = new std::vector<vpr::Uint8>;      
+      mDeviceData = new std::vector<vpr::Uint8>;
       mBufferObjectWriter = new vpr::BufferObjectWriter(mDeviceData);
       start();
    }
@@ -58,7 +58,7 @@ namespace cluster
    {
       shutdown();
    }
-   
+
    void DeviceServer::shutdown()
    {     // Kill the accepting thread
       if ( mControlThread )
@@ -82,7 +82,7 @@ namespace cluster
       for (std::vector<cluster::ClusterNode*>::iterator i = mClients.begin();
            i != mClients.end() ; i++)
       {
-         //vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "Sending data to: " 
+         //vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "Sending data to: "
          //   << (*i)->getName() << std::endl << vprDEBUG_FLUSH;
          (*i)->lockSockWrite();
          //vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "We have the lock for " << (*i)->getName()
@@ -94,25 +94,25 @@ namespace cluster
          }
          catch(cluster::ClusterException cluster_exception)
          {
-            vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "DeviceServer::send() Caught an exception!" 
+            vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "DeviceServer::send() Caught an exception!"
                << std::endl << vprDEBUG_FLUSH;
             vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << clrSetBOLD(clrRED)
                << cluster_exception.getMessage() << clrRESET
                << std::endl << vprDEBUG_FLUSH;
 
-            vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << 
+            vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) <<
                "DeviceServer::send() We have lost our connection to: " << (*i)->getName() << ":" << (*i)->getPort()
                << std::endl << vprDEBUG_FLUSH;
-            
+
             (*i)->setConnected(ClusterNode::DISCONNECTED);
             (*i)->unlockSockWrite();
-//            vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "Released the lock for " << (*i)->getName() 
+//            vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "Released the lock for " << (*i)->getName()
 //               << std::endl << vprDEBUG_FLUSH;
 
             debugDump(vprDBG_CONFIG_LVL);
          }
          (*i)->unlockSockWrite();
-//         vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "Released the lock for " << (*i)->getName() 
+//         vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "Released the lock for " << (*i)->getName()
 //            << std::endl << vprDEBUG_FLUSH;
 
       }
@@ -137,16 +137,16 @@ namespace cluster
       lockClients();
 
       mClients.push_back(new_client_node);
-      
+
       unlockClients();
    }
-   
+
    void DeviceServer::removeClient(const std::string& host_name)
    {
       vprASSERT(0 == mClientsLock.test());
       lockClients();
-   
-      for (std::vector<cluster::ClusterNode*>::iterator i = mClients.begin() ; 
+
+      for (std::vector<cluster::ClusterNode*>::iterator i = mClients.begin() ;
             i!= mClients.end() ; i++)
       {
          if ((*i)->getHostname() == host_name)
@@ -158,7 +158,7 @@ namespace cluster
       }
       unlockClients();
    }
-   
+
    void DeviceServer::debugDump(int debug_level)
    {
       vprASSERT(0 == mClientsLock.test());
@@ -169,12 +169,12 @@ namespace cluster
                                  std::string("------------------------------------------\n"));
 
       vprDEBUG(gadgetDBG_RIM,debug_level) << "Name:     " << mName << std::endl << vprDEBUG_FLUSH;
-      
-      { // Used simply to make the following DebugOutputGuard go out of scope 
+
+      { // Used simply to make the following DebugOutputGuard go out of scope
          vpr::DebugOutputGuard dbg_output2(gadgetDBG_RIM,debug_level,
                            std::string("------------ Clients ------------\n"),
                            std::string("---------------------------------\n"));
-         for (std::vector<cluster::ClusterNode*>::iterator i = mClients.begin() ; 
+         for (std::vector<cluster::ClusterNode*>::iterator i = mClients.begin() ;
                i!= mClients.end() ; i++)
          {
             vprDEBUG(gadgetDBG_RIM,debug_level) << "-------- " << (*i)->getName() << " --------" << std::endl << vprDEBUG_FLUSH;
@@ -201,7 +201,7 @@ namespace cluster
 
          updateLocalData();
          send();
-         
+
          // Signal Done Rendering
          deviceServerDoneSema.release();
       }
@@ -211,18 +211,19 @@ namespace cluster
    {
       // --- Setup Multi-Process stuff --- //
       // Create a new thread to handle the control
-      
+
       vpr::ThreadMemberFunctor<DeviceServer>* memberFunctor =
          new vpr::ThreadMemberFunctor<DeviceServer>(this, &DeviceServer::controlLoop, NULL);
-   
+
       mControlThread = new vpr::Thread(memberFunctor);
-   
+
       if (mControlThread->valid())
       {
          mThreadActive = true;
       }
-      vprDEBUG(gadgetDBG_RIM,1) << "DeviceServer " << getName() << " started. thread: "
-                                << mControlThread << std::endl << vprDEBUG_FLUSH;
+      vprDEBUG(gadgetDBG_RIM, vprDBG_CONFIG_LVL)
+         << "DeviceServer " << getName() << " started. thread: "
+         << mControlThread << std::endl << vprDEBUG_FLUSH;
    }
 
    void DeviceServer::go()
@@ -234,8 +235,8 @@ namespace cluster
       }
       deviceServerTriggerSema.release();
    }
-   
-   
+
+
    /**
     * Blocks until the end of the frame.
     * @post The frame has been drawn.

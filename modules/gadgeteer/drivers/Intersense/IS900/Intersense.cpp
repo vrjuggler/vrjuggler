@@ -76,14 +76,16 @@ int Intersense::getStationIndex(int stationNum, int bufferIndex)
 
 Intersense::Intersense()
 {
-    vprDEBUG(gadgetDBG_INPUT_MGR,1)
+    vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL)
        << "*** Intersense::Intersense() ***\n" << vprDEBUG_FLUSH;
-    //vprDEBUG(gadgetDBG_INPUT_MGR,1) << "*** Intersense::deviceAbilities = " << deviceAbilities << " ***\n" << vprDEBUG_FLUSH;
+//    vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CONFIG_LVL)
+//       << "*** Intersense::deviceAbilities = " << deviceAbilities << " ***\n"
+//       << vprDEBUG_FLUSH;
 }
 
 bool Intersense::config(jccl::ConfigChunkPtr c)
 {
-    vprDEBUG(gadgetDBG_INPUT_MGR,1)
+    vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CONFIG_LVL)
        << "         Intersense::config(jccl::ConfigChunkPtr)"
        << std::endl << vprDEBUG_FLUSH;
 
@@ -168,26 +170,29 @@ int Intersense::startSampling()
 // make sure inertia cubes aren't already started
     if (this->isActive() == true)
     {
-        vprDEBUG(gadgetDBG_INPUT_MGR,2) << "vjIntersense was already started."
-                                        << std::endl << vprDEBUG_FLUSH;
+        vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_WARNING_LVL)
+           << "gadget::Intersense was already started." << std::endl
+           << vprDEBUG_FLUSH;
         return 0;
     }
 
 // Has the thread actually started already
     if(mThread != NULL)
     {
-        vprDEBUG(vprDBG_ERROR,vprDBG_CRITICAL_LVL) << clrOutNORM(clrRED,"ERROR:")
-                                                << "vjIntersense: startSampling called, when already sampling.\n"
-                                                << vprDEBUG_FLUSH;
+        vprDEBUG(vprDBG_ERROR,vprDBG_CRITICAL_LVL)
+           << clrOutNORM(clrRED,"ERROR:")
+           << "gadget::Intersense: startSampling called, when already sampling.\n"
+           << vprDEBUG_FLUSH;
         vprASSERT(false);
     } else {
 
 // open the tracker connection
    mTracker.open();
       if (this->isActive() == false) {
-      vprDEBUG(vprDBG_ERROR,vprDBG_CRITICAL_LVL) << clrOutNORM(clrRED,"ERROR:")
-                  << "vjIntersense: mTracker.open() failed to connect to tracker.\n"
-                  << vprDEBUG_FLUSH;
+      vprDEBUG(vprDBG_ERROR,vprDBG_CRITICAL_LVL)
+         << clrOutNORM(clrRED,"ERROR:")
+         << "gadget::Intersense: mTracker.open() failed to connect to tracker.\n"
+         << vprDEBUG_FLUSH;
       return 0;
       }
 
@@ -308,8 +313,8 @@ int Intersense::stopSampling()
 
    if (mThread != NULL)
    {
-      vprDEBUG(gadgetDBG_INPUT_MGR,1)
-         << "vjIntersense::stopSampling(): Stopping the intersense thread... "
+      vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CONFIG_LVL)
+         << "gadget::Intersense::stopSampling(): Stopping the intersense thread... "
          << vprDEBUG_FLUSH;
 
       mThread->kill();
@@ -320,15 +325,15 @@ int Intersense::stopSampling()
 
       if (this->isActive() == true)
       {
-         vprDEBUG(gadgetDBG_INPUT_MGR,0)
+         vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
             << clrOutNORM(clrRED,"\nERROR:")
-            << "vjIntersense::stopSampling(): Intersense tracker failed to stop.\n"
+            << "gadget::Intersense::stopSampling(): Intersense tracker failed to stop.\n"
             << vprDEBUG_FLUSH;
          return 0;
       }
 
-      vprDEBUG(gadgetDBG_INPUT_MGR,1) << "stopped." << std::endl
-                                      << vprDEBUG_FLUSH;
+      vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CONFIG_LVL)
+         << "stopped." << std::endl << vprDEBUG_FLUSH;
    }
 
    return 1;

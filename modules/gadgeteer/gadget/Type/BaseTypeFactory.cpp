@@ -139,7 +139,7 @@ void BaseTypeFactory::registerNetDevice(BaseTypeConstructorBase* constructor)
 {
    vprASSERT(constructor != NULL);
    mConstructors.push_back(constructor);     // Add the constructor to the list
-   //vprDEBUG(gadgetDBG_INPUT_MGR,1)
+   //vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CONFIG_LVL)
    //   << "gadget::DeviceFactory: Registered: "
    //   << std::setiosflags(std::ios::right) << std::setw(25)
    //   << std::setfill(' ') << constructor->getChunkType()

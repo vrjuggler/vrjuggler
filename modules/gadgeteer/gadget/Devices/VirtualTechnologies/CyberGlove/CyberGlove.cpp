@@ -123,8 +123,8 @@ CyberGlove::startSampling()
       }
       else
       {
-         vprDEBUG(gadgetDBG_INPUT_MGR,1) << "gadget::CyberGlove is active "
-                                         << std::endl << vprDEBUG_FLUSH;
+         vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CONFIG_LVL)
+            << "gadget::CyberGlove is active " << std::endl << vprDEBUG_FLUSH;
          mActive = true;
          return 1;
       }
@@ -187,8 +187,8 @@ int CyberGlove::stopSampling()
       vpr::System::usleep(100);
 
       mGlove->close();
-      vprDEBUG(gadgetDBG_INPUT_MGR,1) << "stopping CyberGlove.."
-                                      << std::endl << vprDEBUG_FLUSH;
+      vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CONFIG_LVL)
+         << "stopping CyberGlove.." << std::endl << vprDEBUG_FLUSH;
    }
    return 1;
 }

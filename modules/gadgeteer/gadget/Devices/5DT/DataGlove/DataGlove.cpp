@@ -54,7 +54,7 @@ bool DataGlove::config(jccl::ConfigChunkPtr c)
 {
    if(! (Input::config(c) /*&& Glove::config(c)*/ ))
       return false;
-   
+
    mPortName = c->getProperty<std::string>("port");
    mBaudRate = c->getProperty<int>("baud");
 
@@ -110,8 +110,9 @@ int DataGlove::startSampling()
       }
       else
       {
-         vprDEBUG(gadgetDBG_INPUT_MGR,1) << "[dataglove] DataGlove is active "
-                                         << std::endl << vprDEBUG_FLUSH;
+         vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CONFIG_LVL)
+            << "[dataglove] DataGlove is active " << std::endl
+            << vprDEBUG_FLUSH;
          mActive = true;
          return 1;
       }
@@ -141,7 +142,7 @@ int DataGlove::sample()
 
     std::string gesture;
     mGlove->ReadRecordsFromHardware( &ch0, &ch1, &ch2, &ch3, &ch4, &ch5, &ch6, &ch7, &ch8 );
-   
+
     mAnalogData[0]=ch0;    // Thumb (0.0 - 1.0)
     mAnalogData[1]=ch1;    // Index
     mAnalogData[2]=ch2;    // Middle
@@ -150,10 +151,10 @@ int DataGlove::sample()
     mAnalogData[5]=ch5;    // Pitch  (0 - 180)
     mAnalogData[6]=ch6;    // Roll   (0 - 180)
     mAnalogData[7]=ch7;    // Gesture  (0 - 15)
-    mAnalogData[8]=ch8;    // Capabilty byte (0:A right hand, 6:Left Glove) 
+    mAnalogData[8]=ch8;    // Capabilty byte (0:A right hand, 6:Left Glove)
 //    mDigitalData[0]=ch7;   // Somehow DigitalData is not working right!!!
                              // AnalogData is being used instead of DigitalData.
-    
+
     addAnalogSample(mAnalogData);
     return 1;
 }
@@ -174,8 +175,8 @@ int DataGlove::stopSampling()
       mThread = NULL;
       vpr::System::usleep(100);
 
-      vprDEBUG(gadgetDBG_INPUT_MGR,1) << "[dataglove] stopping DataGlove.."
-                                      << std::endl << vprDEBUG_FLUSH;
+      vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CONFIG_LVL)
+         << "[dataglove] stopping DataGlove.." << std::endl << vprDEBUG_FLUSH;
    }
    return 1;
 }

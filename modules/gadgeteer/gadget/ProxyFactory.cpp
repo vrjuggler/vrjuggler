@@ -88,8 +88,8 @@ void ProxyFactory::loadKnownProxies()
 void ProxyFactory::registerProxy(ProxyConstructorBase* constructor)
 {
    mConstructors.push_back(constructor);     // Add the constructor to the list
-   vprDEBUG(gadgetDBG_INPUT_MGR,1)
-      << "vjProxyFactory: Constructor registered for: "
+   vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CONFIG_LVL)
+      << "gadget::ProxyFactory: Constructor registered for: "
       << std::setiosflags(std::ios::right) << std::setw(25)
       << std::setfill(' ') << constructor->getChunkType().c_str()
       << std::resetiosflags(std::ios::right)
