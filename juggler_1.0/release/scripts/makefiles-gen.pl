@@ -67,6 +67,8 @@ BEGIN {
 use lib("$path");
 use InstallOps;
 
+$Win32 = 1 if $ENV{'OS'} =~ /Windows/;
+
 # Turn off case insensitivity when parsing command-line options.
 $Getopt::Long::ignorecase = 0;
 
@@ -118,13 +120,13 @@ my ($basedir, $dir);
 chop($basedir = `pwd`);
 
 # Defaults.
-my($uid, $gid, $mode_bits) = ($<, (getpwuid($<))[3], "0644");
+my($uid, $gid, $mode_bits) = ($<, (getpwuid($<))[3], "0644") unless $Win32;
 
 if ( $uname ) {
     $uid = (getpwnam("$uname"))[2] or die "getpwnam($uname): $!\n";
 }
 
-if ( $gname ) {
+if ( $gname && ! $Win32 ) {
     $gid = (getgrnam("$gname"))[2] or die "getgrnam($gname): $!\n";
 }
 
@@ -138,7 +140,14 @@ foreach $dir ( split(/\s/, "$VARS{'SUBDIRS'}") ) {
     print "Generating $outfile ...\n";
 
     my $infile = "$basedir/$dir/Makefile.in";
-    my $workfile = "/tmp/Makefile.in";
+
+    my $workfile;
+
+    if ( $Win32 ) {
+	$workfile = "C:/temp/Makefile.in";
+    } else {
+	$workfile = "/tmp/Makefile.in";
+    }
 
     # Make a working copy of the input file to be safe.
     copy("$infile", "$workfile") unless "$infile" eq "$workfile";

@@ -46,6 +46,8 @@ BEGIN {
 use lib("$path");
 use InstallOps;
 
+$Win32 = 1 if $ENV{'OS'} =~ /Windows/;
+
 # Ensure that there are four command-line arguments.  If not, exit with
 # error status.
 if ( $#ARGV < 3 || $#ARGV > 9 ) {
@@ -59,15 +61,15 @@ getopt('g:i:m:o:u:');
 
 my $dest_dir = "$opt_o";
 
-# Defaults for ownership and permissions.
-my($uid, $gid, $mode) = ($<, (getpwuid($<))[3], "0644");
+# Defaults for ownership and permissions (except on Win32).
+my($uid, $gid, $mode) = ($<, (getpwuid($<))[3], "0644") unless $Win32;
 
 if ( $opt_u ) {
     $uname = "$opt_u" if $opt_u;
     $uid = (getpwnam("$uname"))[2] or die "getpwnam($uname): $!\n";
 }
 
-if ( $opt_g ) {
+if ( $opt_g && ! $Win32 ) {
     $gname = "$opt_g" if $opt_g;
     $gid = (getgrnam("$gname"))[2] or die "getgrnam($gname): $!\n";
 }
