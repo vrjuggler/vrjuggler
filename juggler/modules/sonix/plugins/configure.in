@@ -73,8 +73,7 @@ AC_ARG_ENABLE(audioworks,
 
 # does the user want Audiere?
 AC_ARG_ENABLE(audiere,
-              [  --enable-audiere        Compile in Audiere support
-              [default=yes]],
+              [  --enable-audiere        Compile in Audiere support      [default=yes]],
               [AUDIERE_ENABLED="$enableval"], [AUDIERE_ENABLED='yes'])
 
 # -------------------------------------------- #
