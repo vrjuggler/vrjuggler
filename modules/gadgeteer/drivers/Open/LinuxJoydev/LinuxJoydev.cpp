@@ -128,6 +128,16 @@ bool LinuxJoydev::startSampling()
    char js_name[255];
 
    ioctl(mJsFD, JSIOCGVERSION, &version);
+
+   // Check to see if the version is high enough.
+   if (version < 1)
+   {
+      vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
+         << "ERROR: Linux Joystick API Version is too low.  The LinuxJoydev "
+         << "driver requires version 1.0 or greater, but found version \""
+         << version << "\"\n" << vprDEBUG_FLUSH;
+         return false;
+   }
    ioctl(mJsFD, JSIOCGAXES, &num_axes);
    ioctl(mJsFD, JSIOCGBUTTONS, &num_buttons);
 
@@ -135,28 +145,34 @@ bool LinuxJoydev::startSampling()
    mNumButtons = num_buttons;
 
    // Get joystick name
-   if (ioctl(mJsFD, JSIOCGNAME(sizeof(js_name)), js_name) < 0)
-   {  mPhysicalJsName = std::string("Unknown"); }
+   if ( ioctl(mJsFD, JSIOCGNAME(sizeof(js_name)), js_name) < 0 )
+   {  
+      mPhysicalJsName = std::string("Unknown"); 
+   }
    else
-   {  mPhysicalJsName = js_name; }
+   {  
+      mPhysicalJsName = js_name; 
+   }
 
    // Output joystick description
    vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CONFIG_STATUS_LVL)
-         << "  joystick label: " << mJsLabel << std::endl
-         << "   joystick name: " << mPhysicalJsName << std::endl
-         << "            axes: " << mNumAxes << std::endl
-         << "         buttons: " << mNumButtons << std::endl
-         << "      driver ver: " << version << std::endl
-         << "    axis buttons: ";
+         << "  Joystick Label: " << mJsLabel << std::endl
+         << "   Joystick Name: " << mPhysicalJsName << std::endl
+         << "            Axes: " << mNumAxes << std::endl
+         << "         Buttons: " << mNumButtons << std::endl
+         << "  Driver version: " << version << std::endl
+         << "    Axis buttons: ";
 
    for(unsigned i=0;i<mAxisButtonIndices.size(); ++i)
-   { vprDEBUG_CONTnl(gadgetDBG_INPUT_MGR, vprDBG_CONFIG_STATUS_LVL) << mAxisButtonIndices[i] << " "; }
+   { 
+      vprDEBUG_CONTnl(gadgetDBG_INPUT_MGR, vprDBG_CONFIG_STATUS_LVL) << mAxisButtonIndices[i] << " "; 
+   }
    vprDEBUG_CONTnl(gadgetDBG_INPUT_MGR, vprDBG_CONFIG_STATUS_LVL) << std::endl << vprDEBUG_FLUSH;
 
    // Allocate initial device data
    // - By default this will clear them out
    mCurAxes.resize(mNumAxes);
-   mCurAxesRanges.resize(mNumAxes, axis_range_t(0.0f, 255.0f));             // Initialize ranges to 0,255
+   mCurAxesRanges.resize(mNumAxes, axis_range_t(0,1));             // Initialize ranges to 0,255
    mCurButtons.resize(mNumButtons + mAxisButtonIndices.size());
 
    // Setup axis as button stuff
@@ -164,7 +180,7 @@ bool LinuxJoydev::startSampling()
    mAxisToButtonIndexLookup.resize(mNumAxes, -1);            // Default to -1, meaning no axis button
    for(unsigned i=0;i<mAxisButtonIndices.size(); ++i)       // For each configured axis index
    {
-      unsigned virtual_btn_index = (mNumButtons+i);                     // Index of the virtual button from the axis
+      unsigned virtual_btn_index = (mNumButtons+i); // Index of the virtual button from the axis
       vprASSERT(virtual_btn_index < mCurButtons.size() && "Virtual button index out of range");
       unsigned axis_index = mAxisButtonIndices[i];                      // Index of the axis we are mapping
       mAxisToButtonIndexLookup[axis_index] = int(virtual_btn_index);    // Setup the mapping
@@ -216,6 +232,7 @@ void LinuxJoydev::updateData()
          vprASSERT(axis_number < mCurAxes.size() && "Axis out of range");
          vprASSERT(axis_number < mCurAxesRanges.size() && "Axis out of range");
 
+         float norm_value = 0;
          // Verify range (expand if needed)
          axis_range_t axis_range = mCurAxesRanges[axis_number];
          if(cur_event.value < axis_range.first)
@@ -223,21 +240,18 @@ void LinuxJoydev::updateData()
             axis_range.first = cur_event.value;
             mCurAxesRanges[axis_number] = axis_range;
          }
-         if(cur_event.value > axis_range.second)
+         
+         else if(cur_event.value > axis_range.second)
          {
             axis_range.second = cur_event.value;
             mCurAxesRanges[axis_number] = axis_range;
          }
 
-         // norm = (val - min)/(min+max)
-         float norm_value = (float(cur_event.value) - axis_range.first)/(axis_range.first+axis_range.second);
-         /*
-         std::cout << "axis: " << axis_number
-                   << "  value: " << cur_event.value
-                   << "  norm:" << norm_value
-                   << "  range: [" << axis_range.first << " - " << axis_range.second << "]" << std::endl;
-                   */
-
+         else
+         {
+            norm_value = (float(cur_event.value) - axis_range.first)/(axis_range.second-axis_range.first);
+         }
+         
          mCurAxes[axis_number] = norm_value;
          mCurAxes[axis_number].setTime();
 
