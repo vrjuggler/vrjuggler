@@ -102,7 +102,7 @@ private:
 
 
 
-pfNavDCS::pfNavDCS() : pfDCS()
+inline pfNavDCS::pfNavDCS() : pfDCS()
 {
    setType(classType);  // Set the type
    mActive = true;
@@ -112,7 +112,7 @@ pfNavDCS::pfNavDCS() : pfDCS()
 
 // Get the current position from the navigator
 // and set the DCS with it
-void pfNavDCS::updateTransformMatrix()
+inline void pfNavDCS::updateTransformMatrix()
 {
    vprASSERT(mNaver != NULL);     // We mut have a naver
 
@@ -131,7 +131,7 @@ void pfNavDCS::updateTransformMatrix()
 // TRUE).
 // app() is called automatically by Performer; it is not called directly
 // by a program.
-int pfNavDCS::app(pfTraverser *trav)
+inline int pfNavDCS::app(pfTraverser *trav)
 {
    if(mNaver != NULL)
    {
@@ -163,7 +163,7 @@ int pfNavDCS::app(pfTraverser *trav)
 // this class must then call setType(classType_).
 pfType *pfNavDCS::classType = NULL;
 
-void pfNavDCS::init(void)
+inline void pfNavDCS::init(void)
 {
  if (classType == NULL)
    {
