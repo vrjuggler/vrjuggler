@@ -76,8 +76,8 @@ bool DepChecker::depSatisfied(ConfigElementPtr element)
 void DepChecker::debugOutDependencies(ConfigElementPtr element, int dbg_lvl)
 {
    vprDEBUG_NEXT_BEGIN(vprDBG_ALL,dbg_lvl)
-      << "---- Dependencies for: item: " << element->getName()
-      << " type: " << element->getID() << "-------\n" << vprDEBUG_FLUSH;
+      << "---- Dependencies for " << element->getName()
+      << " (type: " << element->getID() << ") ----\n" << vprDEBUG_FLUSH;
 
    ConfigManager* cfg_mgr = ConfigManager::instance();
 
