@@ -628,7 +628,7 @@ case $SUBSYSTEM in
         subsystem_libs="$SEM_LIB $SOCKET_LIB"
         static_begin="-B static"
         static_end="-B dynamic"
-        vpr_ldflags="$EXTRA_LDFLAGS -L\$prefix/lib$LIBBITSUF"
+        vpr_ldflags="-L\$prefix/lib$LIBBITSUF"
         vpr_libs='-lvpr'
         ;;
     POSIX)
@@ -646,7 +646,7 @@ case $SUBSYSTEM in
             fi
         fi
 
-        vpr_ldflags="$EXTRA_LDFLAGS -L\$prefix/lib$LIBBITSUF"
+        vpr_ldflags="-L\$prefix/lib$LIBBITSUF"
         vpr_libs='-lvpr'
         ;;
     NSPR)
@@ -660,7 +660,7 @@ case $SUBSYSTEM in
             subsystem_cflags="$INCLUDES"
             subsystem_cxxflags="$INCLUDES"
             subsystem_libs="$NSPR_LDFLAGS $NSPR_LIB $PTHREAD_LIB $SEM_LIB $SOCKET_LIB"
-            vpr_ldflags="$EXTRA_LDFLAGS -L\$prefix/lib$LIBBITSUF"
+            vpr_ldflags="-L\$prefix/lib$LIBBITSUF"
             vpr_libs='-lvpr'
 
             if test "x$PLATFORM" != "xDarwin" ; then
@@ -675,6 +675,8 @@ case $SUBSYSTEM in
         fi
         ;;
 esac
+
+vpr_extra_ldflags="$EXTRA_LDFLAGS"
 
 DPP_SUBST
 
@@ -718,6 +720,8 @@ AC_SUBST(static_begin)
 AC_SUBST(static_end)
 AC_SUBST(vpr_ldflags)
 AC_SUBST(vpr_libs)
+AC_SUBST(vpr_extra_ldflags)
+AC_SUBST(vpr_extra_libs)
 
 # -----------------------------------------------------------------------------
 # Final file generation step.
