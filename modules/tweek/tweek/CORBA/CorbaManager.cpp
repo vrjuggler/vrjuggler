@@ -95,8 +95,7 @@ vpr::ReturnStatus CorbaManager::init(const std::string& local_id, int& argc,
 
       try
       {
-         mRootContext = tweek::getRootNamingContext(mORB,
-                                                    std::string("NameService"));
+         mRootContext = tweek::getRootNamingContextByInitRef(mORB);
 
          if ( ! CORBA::is_nil(mRootContext) )
          {

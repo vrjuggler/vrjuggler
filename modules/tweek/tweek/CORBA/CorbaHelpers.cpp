@@ -10,8 +10,7 @@
 namespace tweek
 {
 
-CosNaming::NamingContext_var getRootNamingContext(CORBA::ORB_ptr orb,
-                                                  const std::string& refName)
+CosNaming::NamingContext_var getRootNamingContextByInitRef(CORBA::ORB_ptr orb)
 {
 #ifdef OMNIORB_VER
    // If the user does not have the OMNIORB_CONFIG environment variable set,
@@ -33,7 +32,28 @@ CosNaming::NamingContext_var getRootNamingContext(CORBA::ORB_ptr orb,
 
    vprDEBUG(tweekDBG_CORBA, vprDBG_STATE_LVL) << "Requesting Name Service\n"
                                               << vprDEBUG_FLUSH;
-   name_obj     = orb->resolve_initial_references(refName.c_str());
+   name_obj     = orb->resolve_initial_references("NameService");
+   root_context = CosNaming::NamingContext::_narrow(name_obj);
+
+   if ( CORBA::is_nil(root_context) )
+   {
+      vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+         << "Failed to narrow Naming Service root context\n"
+         << vprDEBUG_FLUSH;
+   }
+
+   return root_context;
+}
+
+CosNaming::NamingContext_var getRootNamingContextByURI(CORBA::ORB_ptr orb,
+                                                       const std::string& nameServiceURI)
+{
+   CORBA::Object_var name_obj;
+   CosNaming::NamingContext_var root_context;
+
+   vprDEBUG(tweekDBG_CORBA, vprDBG_STATE_LVL) << "Requesting Name Service\n"
+                                              << vprDEBUG_FLUSH;
+   name_obj     = orb->string_to_object(nameServiceURI.c_str());
    root_context = CosNaming::NamingContext::_narrow(name_obj);
 
    if ( CORBA::is_nil(root_context) )
