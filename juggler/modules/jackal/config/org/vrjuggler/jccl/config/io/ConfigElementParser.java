@@ -128,11 +128,11 @@ public class ConfigElementParser
          for(int ver_num = our_version ; ver_num < newest_version_number ; ++ver_num)
          {
             // Get the XSLT from the next versions definition file.
-            Source xslt_source = mDefinitionRepos.get(token,ver_num + 1).getXsltSource();
-            if(null != xslt_source)
+            Element xslt_element = mDefinitionRepos.get(token,ver_num + 1).getXsltElement();
+            if(null != xslt_element)
             {
                // Transform the element to the next version.
-               root = transformElement(root, xslt_source);
+               root = transformElement(root, xslt_element);
             }
             else
             {
@@ -176,9 +176,10 @@ public class ConfigElementParser
    }
 
 
-   private static Element transformElement(Element element_node, Source xslt_source)
+   private static Element transformElement(Element element_node, Element xslt_element)
       throws ParseException
    {
+      JDOMSource xslt_source = new JDOMSource(xslt_element);
       JDOMSource source = new JDOMSource(element_node);
 
       try

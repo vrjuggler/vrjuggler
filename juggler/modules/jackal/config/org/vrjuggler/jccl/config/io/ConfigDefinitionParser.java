@@ -155,12 +155,11 @@ public class ConfigDefinitionParser
       // Grok the XSLT transform
       int num = root.getChild(UPGRADE_TRANSFORM, DEF_NS).getChildren().size();
       
-      JDOMSource xslt_source = null;
-      
+      Element xslt_element = null; 
       if(num > 0)
       {
-         Element xslt_element = (Element)root.getChild(UPGRADE_TRANSFORM, DEF_NS).getChildren().get(0);
-         xslt_source = new JDOMSource(xslt_element);
+         xslt_element = (Element)root.getChild(UPGRADE_TRANSFORM, DEF_NS).getChildren().get(0);
+         xslt_element = (Element)xslt_element.clone();
       }
 
       // Get the parent and the icon location.
@@ -188,7 +187,7 @@ public class ConfigDefinitionParser
                                   parent_definitions,
                                   help,
                                   categories,
-                                  prop_defs, xslt_source);
+                                  prop_defs, xslt_element);
    }
 
    private PropertyDefinition parsePropertyDefinition(Element root)

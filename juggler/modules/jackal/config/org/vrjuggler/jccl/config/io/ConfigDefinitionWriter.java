@@ -97,7 +97,9 @@ public class ConfigDefinitionWriter
 
       // Create the XML document
       String name = ((ConfigDefinition)versions.get(0)).getToken();
-      Document doc = createDocument(name);
+      String icon_path = ((ConfigDefinition)versions.get(0)).getIconLocation();
+
+      Document doc = createDocument(name, icon_path);
 
       // Add each definition version
       for (Iterator itr = versions.iterator(); itr.hasNext(); )
@@ -111,25 +113,27 @@ public class ConfigDefinitionWriter
       out.setTextNormalize(true);
       out.setIndent("   ");
       out.setNewlines(true);
+      out.setLineSeparator(System.getProperty("line.separator"));
       out.output(doc, this);
    }
 
    /**
     * Creates a new XML document for definitions with the given name.
     */
-   private Document createDocument(String name)
+   private Document createDocument(String name, String icon_path)
    {
       // Create the document
       Document doc = new Document();
 
       // Insert the PI with the file format version
       ProcessingInstruction pi = new ProcessingInstruction(SETTINGS_INSTRUCTION,
-                                                           DEF_VERSION_ATTR+"="+DEF_VERSION);
+                                                           DEF_VERSION_ATTR + "=" + "\"" + DEF_VERSION + "\"");
       doc.addContent(pi);
 
       // Create the definitions root element
       Element root = new Element(DEFINITION, DEF_NS);
       root.setAttribute(NAME, name);
+      root.setAttribute(ICON_PATH, icon_path);
       root.setAttribute(SCHEMA_LOCATION, DEF_NS_str, XSI_NS);
       doc.setRootElement(root);
 
@@ -152,9 +156,13 @@ public class ConfigDefinitionWriter
       help.setText(def.getHelp());
       def_elt.addContent(help);
 
-      // Add the parent child
-      Element parent = new Element(PARENT, DEF_NS);
-      def_elt.addContent(parent);
+      // Add the parents
+      for (Iterator itr = def.getParents().iterator(); itr.hasNext(); )
+      {
+         Element parent = new Element(PARENT, DEF_NS);
+         parent.setText((String)itr.next());
+         def_elt.addContent(parent);
+      }
 
       // Add the categories
       for (Iterator itr = def.getCategories().iterator(); itr.hasNext(); )
@@ -175,6 +183,12 @@ public class ConfigDefinitionWriter
 
       // Add the upgrade transform
       Element upgrade_xform = new Element(UPGRADE_TRANSFORM, DEF_NS);
+      
+      if(null != def.getXsltElement())
+      {
+         upgrade_xform.addContent(def.getXsltElement());
+      }
+      
       def_elt.addContent(upgrade_xform);
 
       // Add the definition version to the root element
@@ -205,7 +219,7 @@ public class ConfigDefinitionWriter
          value_elt.setAttribute(LABEL, value.getLabel());
 
          // Only add the default value attribute for simple types
-         if (propDef.getType() != ConfigElement.class ||
+         if (propDef.getType() != ConfigElement.class &&
              propDef.getType() != ConfigElementPointer.class)
          {
             value_elt.setAttribute(DEFAULTVALUE, value.getDefaultValue().toString());
@@ -269,7 +283,7 @@ public class ConfigDefinitionWriter
       return null;
    }
 
-   private static final Namespace XSI_NS = Namespace.getNamespace("http://www.w3.org/2001/XMLSchema-instance");
+   private static final Namespace XSI_NS = Namespace.getNamespace("xsi", "http://www.w3.org/2001/XMLSchema-instance");
 
    private static final String ALLOWED_TYPE           = "allowed_type";
    private static final String CATEGORY               = "category";
@@ -280,6 +294,7 @@ public class ConfigDefinitionWriter
    private static final String HELP                   = "help";
    private static final String LABEL                  = "label";
    private static final String NAME                   = "name";
+   private static final String ICON_PATH              = "icon_path";
    private static final String PARENT                 = "parent";
    private static final String PROPERTY               = "property";
    private static final String UPGRADE_TRANSFORM      = "upgrade_transform";
