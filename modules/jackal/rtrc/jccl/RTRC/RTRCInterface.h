@@ -38,6 +38,7 @@
 #include <stdlib.h>
 #include <string>
 
+#include <vpr/Util/ReturnStatus.h>
 #include <tweek/CORBA/CorbaManager.h>
 
 
@@ -61,17 +62,17 @@ public:
    ~RTRCInterface();
 
    /**
-    *  Initialize the RTRC interface
+    * Initializes the RTRC interface.
     */
-   void init();
+   vpr::ReturnStatus init();
 
    /**
-    *  Turn on the interface to RTRC (allow incoming connections)
+    * Turns on the interface to RTRC (allow incoming connections).
     */   
-   void enable();
+   vpr::ReturnStatus enable();
 
    /**
-    *  Turn off the interface to RTRC (disallow incoming connections)
+    * Turns off the interface to RTRC (disallow incoming connections).
     */
    void disable();
 
