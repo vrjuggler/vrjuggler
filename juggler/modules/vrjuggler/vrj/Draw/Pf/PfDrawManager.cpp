@@ -55,6 +55,7 @@
 #include <vrj/Draw/Pf/PfApp.h>
 #include <vrj/Util/Debug.h>
 
+#include <vrj/Display/Display.h>
 #include <vrj/Display/Projection.h>
 #include <vrj/Display/CameraProjection.h>
 
