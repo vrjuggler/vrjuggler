@@ -41,6 +41,11 @@
 
 namespace vpr {
 
+/**
+ * Implementation class for datagram sockets using the BSD sockets interface.
+ *
+ * @author Patrick Hartling
+ */
 class SocketDatagramImplBSD : public SocketDatagramOpt, public SocketImplBSD {
 public:
     typedef SocketImplBSD Parent;
@@ -49,25 +54,28 @@ public:
     // vpr::SocketDatagram implementation.
     // ========================================================================
 
-    // ------------------------------------------------------------------------
-    //: Default constructor.  This does nothing.
-    //
-    //! PRE: None.
-    //! POST: None.
-    // ------------------------------------------------------------------------
+    /**
+     * Default constructor.  This sets the socket type to
+     * vpr::SocketTypes::DATAGRAM.
+     */
     SocketDatagramImplBSD (void)
         : SocketImplBSD(SocketTypes::DATAGRAM)
     {
         /* Do nothing. */ ;
     }
 
-    // ------------------------------------------------------------------------
-    //
-    //! PRE: None.
-    //! POST: The member variables are initialized with the type in particular
-    //+       set to vpr::SocketTypes::DATAGRAM.
-    //
-    // ------------------------------------------------------------------------
+    /**
+     * Constructs a datagram socket using the given addresses as defaults for
+     * communication channels.
+     *
+     * @post The member variables are initialized with the type in particular
+     *       set to vpr::SocketTypes::DATAGRAM.
+     *
+     * @param local_addr  The local address for this socket.  This is used for
+     *                    binding the socket.
+     * @param remote_addr The remote address for this socket.  This is used to
+     *                    specify a default destination for all packets.
+     */
     SocketDatagramImplBSD (const InetAddr& local_addr,
                            const InetAddr& remote_addr)
         : SocketImplBSD(local_addr, remote_addr, SocketTypes::DATAGRAM)
@@ -75,9 +83,11 @@ public:
         /* Do nothing. */ ;
     }
 
-    // ------------------------------------------------------------------------
-    // Copy constructor.
-    // ------------------------------------------------------------------------
+    /**
+     * Copy constructor.
+     *
+     * @post This socket is a copy of the given socket.
+     */
     SocketDatagramImplBSD (const SocketDatagramImplBSD& sock)
         : SocketImplBSD(SocketTypes::DATAGRAM)
     {
@@ -87,32 +97,29 @@ public:
         m_handle->m_fdesc = sock.m_handle->m_fdesc;
     }
 
-    // ------------------------------------------------------------------------
-    //: Destructor.  This currently does nothing.
-    //
-    //! PRE: None.
-    //! POST: None.
-    // ------------------------------------------------------------------------
+    /**
+     * Destructor.  This currently does nothing.
+     */
     virtual ~SocketDatagramImplBSD (void) {
         /* Do nothing. */ ;
     }
 
-    // ------------------------------------------------------------------------
-    // ------------------------------------------------------------------------
+    /**
+     * Receives a message from the specified address.
+     */
     virtual Status recvfrom(void* msg, const size_t length, const int flags,
                             InetAddr& from, ssize_t& bytes_read,
                             const vpr::Interval timeout = vpr::Interval::NoTimeout);
 
-    // ------------------------------------------------------------------------
-    // ------------------------------------------------------------------------
+    /**
+     * Sends a message to the specified address.
+     */
     virtual Status sendto(const void* msg, const size_t length,
                           const int flags, const InetAddr& to,
                           ssize_t& bytes_sent,
                           const vpr::Interval timeout = vpr::Interval::NoTimeout);
 
 protected:
-    // ------------------------------------------------------------------------
-    // ------------------------------------------------------------------------
     virtual Status
     getOption (const SocketOptions::Types option,
                struct SocketOptions::Data& data)
@@ -120,8 +127,6 @@ protected:
         return SocketImplBSD::getOption(option, data);
     }
 
-    // ------------------------------------------------------------------------
-    // ------------------------------------------------------------------------
     virtual Status
     setOption (const SocketOptions::Types option,
                const struct SocketOptions::Data& data)
