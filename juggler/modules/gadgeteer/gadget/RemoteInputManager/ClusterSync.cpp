@@ -36,8 +36,8 @@
 
 #include <boost/static_assert.hpp>
 #include <vpr/IO/Socket/SocketStream.h>
-#include <vpr/IO/ObjectWriter.h>
-#include <vpr/IO/ObjectReader.h>
+#include <vpr/IO/BufferObjectWriter.h>
+#include <vpr/IO/BufferObjectReader.h>
 #include <gadget/RemoteInputManager/ClusterSync.h>
 #include <gadget/RemoteInputManager/NetUtils.h>
 #include <gmtl/Math.h>
@@ -50,7 +50,8 @@ namespace gadget
    {
       mTol = 2;
       mAccept = false;
-      mReader = new vpr::ObjectReader(&syncPacket);
+      mReader = new vpr::BufferObjectReader(&syncPacket);
+      mWriter = new vpr::BufferObjectWriter;
    }
 
    void ClusterSync::clientClusterSync(vpr::SocketStream* socket_stream)
@@ -91,7 +92,7 @@ namespace gadget
       //}
       //else
       //{
-         mWriter.writeUint64(mLocalSendTime.getBaseVal());
+         mWriter->writeUint64(mLocalSendTime.getBaseVal());
                      vprDEBUG(gadgetDBG_RIM,vprDBG_VERB_LVL) << "[SYNC] Send Handshake: " << mLocalSendTime.getBaseVal() << "\n" << vprDEBUG_FLUSH;
       //}
       sendAndClear();
@@ -128,7 +129,7 @@ namespace gadget
       mLocalSendTime.setNow();
       mExpectedRemoteTime = mLocalSendTime + mDelta + mLatencyTime;
                      vprDEBUG(gadgetDBG_RIM,vprDBG_VERB_LVL) << "[SYNC]     Sent Expected Time: " << mExpectedRemoteTime.getBaseVal() << "\n" << vprDEBUG_FLUSH;
-      mWriter.writeUint64(mExpectedRemoteTime.getBaseVal());
+      mWriter->writeUint64(mExpectedRemoteTime.getBaseVal());
       sendAndClear();
    }
    void ClusterSync::receiveExpectedTime()
@@ -164,7 +165,7 @@ namespace gadget
    {
                      vprDEBUG(gadgetDBG_RIM,vprDBG_VERB_LVL) << "[SYNC] Createing Responce" << "\n" << vprDEBUG_FLUSH;
                      vprDEBUG(gadgetDBG_RIM,vprDBG_VERB_LVL) << "[SYNC]     mTol: " << mTol << " Accept?: " << mAccept << "\n" << vprDEBUG_FLUSH;
-      mWriter.writeBool(mAccept);
+      mWriter->writeBool(mAccept);
       sendAndClear();
    }
 
@@ -181,12 +182,12 @@ namespace gadget
    void ClusterSync::sendAndClear()
    {
       vpr::Uint32 bytes_just_sent = 0;
-      if ( !mWriter.getData()->empty() )
+      if ( !mWriter->getData()->empty() )
       {
-         mSocketStream->send(*(mWriter.getData()),mWriter.getData()->size(),bytes_just_sent);
+         mSocketStream->send(*(mWriter->getData()),mWriter->getData()->size(),bytes_just_sent);
       }
-      mWriter.mData->clear();
-      mWriter.mCurHeadPos = 0;
+      mWriter->mData->clear();
+      mWriter->mCurHeadPos = 0;
    }
    void ClusterSync::getPacket(unsigned num)
    {                                      // Need to delete the old Object Readers

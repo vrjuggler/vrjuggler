@@ -46,7 +46,8 @@
 
 #include <vector>
 #include <boost/static_assert.hpp>
-
+#include <vpr/IO/BufferObjectWriter.h>
+#include <vpr/IO/BufferObjectReader.h>
 
    // Algorithm to calculate clock diff between the two nodes (as a vpr::Interval)
    // - Initialize tolerance value
@@ -110,11 +111,11 @@ private:
 
    // Tolerance
    float                   mTol;
-   
+
    // Object Reader & Writer
    unsigned                mCurHeadPos;
-   vpr::ObjectWriter       mWriter;
-   vpr::ObjectReader*      mReader;
+   vpr::BufferObjectWriter*      mWriter;
+   vpr::BufferObjectReader*      mReader;
    vpr::SocketStream*      mSocketStream;
 };
 

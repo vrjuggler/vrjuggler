@@ -1,6 +1,7 @@
 DATE        AUTHOR    CHANGE
 ----------- --------- ---------------------------------------------------------
-Jan-06-2002 patrickh  Updated to VPR 0.22.0.
+Jan-08-2003 allenb    Updated to the new ObjectWriter & ObjectReader interfaces
+Jan-06-2003 patrickh  Updated to VPR 0.22.0.
                       NEW VERSION: 0.6.6
 Dec-24-2002 patrickh  Updated to VPR 0.21.0.
                       NEW VERSION: 0.6.5

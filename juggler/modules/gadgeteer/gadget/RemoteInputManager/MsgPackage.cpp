@@ -36,14 +36,15 @@
 #include <gadget/Util/Debug.h>
 #include <gadget/RemoteInputManager/MsgPackage.h>
 #include <gadget/Type/DeviceFactory.h>
+#include <vpr/IO/BufferObjectWriter.h>
 
 namespace gadget
 {
-   
+
    MsgPackage::MsgPackage()
    {
-      mObjectWriter = new vpr::ObjectWriter;
-      mTempWriter = new vpr::ObjectWriter;
+      mObjectWriter = new vpr::BufferObjectWriter;
+      mTempWriter = new vpr::BufferObjectWriter;
       mSendDataPacketCount=0;
       mRecvDataPacketCount=0;
    }
@@ -63,11 +64,11 @@ namespace gadget
          }
       }
       else
-      {  
+      {
             // We should remove the connection here too, but it is not easily done
          vprDEBUG(gadgetDBG_RIM,vprDBG_CRITICAL_LVL) <<  clrOutBOLD(clrRED,"ERROR: Can not send packet, connection has been lost. ")
                <<  clrOutBOLD(clrRED,"And NetConnection should be deleted. \n") << vprDEBUG_FLUSH;
-        
+
       }
          // Clear the old data
       mTempWriter->mData->clear();
@@ -95,11 +96,11 @@ namespace gadget
          }
       }
       else
-      {  
+      {
             // We should remove the connection here too, but it is not easily done
          vprDEBUG(gadgetDBG_RIM,vprDBG_CRITICAL_LVL) <<  clrOutBOLD(clrRED,"ERROR: Can not send packet, connection has been lost. ")
                <<  clrOutBOLD(clrRED,"And NetConnection should be deleted. \n") << vprDEBUG_FLUSH;
-        
+
       }
          // Clear the old data
       mTempWriter->mData->clear();
@@ -129,7 +130,7 @@ namespace gadget
       vprDEBUG_BEGIN(gadgetDBG_RIM,vprDBG_CONFIG_LVL) <<  clrOutBOLD(clrCYAN,"[Create Packet]CREATING A DEVICE REQUEST\n") << vprDEBUG_FLUSH;
       vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) <<  "Name:      " << device_name << "\n" << vprDEBUG_FLUSH;
       vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) <<  "Remote ID: " << device_id << "\n" << vprDEBUG_FLUSH;
-      
+
       /////////////////
       // CREATE BODY //
       /////////////////
@@ -149,11 +150,11 @@ namespace gadget
       ///////////////////
 
       mObjectWriter->writeUint16(RIM_PACKET_MSG);
-      mObjectWriter->writeUint16(MSG_DEVICE_REQ);    
+      mObjectWriter->writeUint16(MSG_DEVICE_REQ);
       mObjectWriter->writeUint32(length + RIM_HEAD_LENGTH);
-      
+
       vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) <<  "LENGTH OF PACKET: " << length + RIM_HEAD_LENGTH <<"\n" << vprDEBUG_FLUSH;
-      
+
       ///////////////////////
       // ADD HEADER & BODY //
       ///////////////////////
@@ -161,10 +162,10 @@ namespace gadget
       //mObjectWriter->getData()->insert(mObjectWriter->getData()->end(),mTempWriter->getData()->begin(),mTempWriter->getData()->end());
       //mObjectWriter->setCurPos(length + RIM_HEAD_LENGTH);
       vprDEBUG_END(gadgetDBG_RIM,vprDBG_CONFIG_LVL) <<  clrOutBOLD(clrCYAN,"[Create Packet]CREATING A DEVICE REQUEST\n") << vprDEBUG_FLUSH;
-      
+
    }
 
-   bool MsgPackage::receiveDeviceRequest(vpr::ObjectReader* object_reader)
+   bool MsgPackage::receiveDeviceRequest(vpr::BufferObjectReader* object_reader)
    {
       ///////////////////////////////////////////////////////////////////////
       //																   //
@@ -183,13 +184,13 @@ namespace gadget
       //			-------------------------------------				   //
       //																   //
       ///////////////////////////////////////////////////////////////////////
-   
+
       vprDEBUG_BEGIN(gadgetDBG_RIM,vprDBG_CONFIG_LVL) <<  clrOutBOLD(clrCYAN,"[Parse Packet]RECEIVE DEVICE REQUEST\n") << vprDEBUG_FLUSH;
       vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) <<  "LENGTH OF PACKET: " << object_reader->mData->size() + RIM_HEAD_LENGTH <<"\n" << vprDEBUG_FLUSH;
-      
+
       // Remote Device ID
       mSenderId = object_reader->readUint16();
-   
+
       // Device Name
       vpr::Uint16 temp_name_len = object_reader->readUint16();
       mDeviceName = object_reader->readString(temp_name_len);
@@ -228,13 +229,13 @@ namespace gadget
       // CREATE BODY //
       /////////////////
 
-      
+
       vprDEBUG_BEGIN(gadgetDBG_RIM,vprDBG_CONFIG_LVL) <<  clrOutBOLD(clrCYAN,"[Create Packet]CREATE DEVICE_ACK\n") << vprDEBUG_FLUSH;
       vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) <<  "Name:      " << device_name << "\n" << vprDEBUG_FLUSH;
       vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) <<  "Remote ID: " << remote_device_id << "\n" << vprDEBUG_FLUSH;
       vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) <<  "Local ID:  " << local_device_id << "\n" << vprDEBUG_FLUSH;
       vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) <<  "BaseType:  " << base_type << "\n" << vprDEBUG_FLUSH;
-      
+
          // Remote and Local ID's
       mTempWriter->writeUint16(remote_device_id);
       mTempWriter->writeUint16(local_device_id);
@@ -242,11 +243,11 @@ namespace gadget
          // Device Name
       mTempWriter->writeUint16(device_name.size());
       mTempWriter->writeString(device_name);
-      
+
          // Base Type
       mTempWriter->writeUint16(base_type.size());
       mTempWriter->writeString(base_type);
-      
+
          // Set the size of the packet
       vpr::Uint32 length = mTempWriter->getData()->size();
 
@@ -255,13 +256,13 @@ namespace gadget
       ///////////////////
       // CREATE HEADER //
       ///////////////////
-      
+
       mObjectWriter->writeUint16(RIM_PACKET_MSG);
-      mObjectWriter->writeUint16(MSG_DEVICE_ACK);    
+      mObjectWriter->writeUint16(MSG_DEVICE_ACK);
       mObjectWriter->writeUint32(length + RIM_HEAD_LENGTH);
-      
+
       vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) <<  "LENGTH OF PACKET: " << length + RIM_HEAD_LENGTH <<"\n" << vprDEBUG_FLUSH;
-      
+
       ///////////////////////
       // ADD HEADER & BODY //
       ///////////////////////
@@ -302,8 +303,8 @@ namespace gadget
       vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) <<  "Name:      " << device_name << "\n" << vprDEBUG_FLUSH;
       vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) <<  "Remote ID: " << remote_device_id << "\n" << vprDEBUG_FLUSH;
       vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) <<  "Local ID:  " << local_device_id << "\n" << vprDEBUG_FLUSH;
-      
-      
+
+
          // Remote and Local ID's
       mTempWriter->writeUint16(remote_device_id);
       mTempWriter->writeUint16(local_device_id);
@@ -311,25 +312,25 @@ namespace gadget
          // Device Name
       mTempWriter->writeUint16(device_name.size());
       mTempWriter->writeString(device_name);
-      
+
          // Base Type
       std::string base_type = "I Don't have it!";
       mTempWriter->writeUint16(base_type.size());
       mTempWriter->writeString(base_type);
-      
+
          // Set the size of the packet
       vpr::Uint32 length = mTempWriter->getData()->size();
 
       ///////////////////
       // CREATE HEADER //
       ///////////////////
-      
+
       mObjectWriter->writeUint16(RIM_PACKET_MSG);
-      mObjectWriter->writeUint16(MSG_DEVICE_NACK);   
+      mObjectWriter->writeUint16(MSG_DEVICE_NACK);
       mObjectWriter->writeUint32(length + RIM_HEAD_LENGTH);
-      
+
       vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) <<  "LENGTH OF PACKET: " << length + RIM_HEAD_LENGTH <<"\n" << vprDEBUG_FLUSH;
-      
+
       ///////////////////////
       // ADD HEADER & BODY //
       ///////////////////////
@@ -341,7 +342,7 @@ namespace gadget
    }
 
 
-   bool  MsgPackage::receiveDeviceAck(vpr::ObjectReader* object_reader)
+   bool  MsgPackage::receiveDeviceAck(vpr::BufferObjectReader* object_reader)
    {
       ///////////////////////////////////////////////////////////////////////
       //																   //
@@ -367,7 +368,7 @@ namespace gadget
 
       vprDEBUG_BEGIN(gadgetDBG_RIM,vprDBG_CONFIG_LVL) <<  clrOutBOLD(clrCYAN,"[Parse Packet]RECEIVE DEVICE_ACK\n") << vprDEBUG_FLUSH;
       vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) <<  "LENGTH OF PACKET: " << object_reader->mData->size() + RIM_HEAD_LENGTH <<"\n" << vprDEBUG_FLUSH;
-      
+
          // Remote and Local ID's
       mReceiverId = object_reader->readUint16();
       mSenderId = object_reader->readUint16();
@@ -379,7 +380,7 @@ namespace gadget
          // Base Type
       temp_string_len = object_reader->readUint16();
       mBaseType = object_reader->readString(temp_string_len);
-      
+
       vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) <<  "Name:      " << mDeviceName << "\n" << vprDEBUG_FLUSH;
       vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) <<  "Remote ID: " << mSenderId << "\n" << vprDEBUG_FLUSH;
       vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) <<  "Local ID:  " << mReceiverId << "\n" << vprDEBUG_FLUSH;
@@ -410,29 +411,29 @@ namespace gadget
       vprDEBUG(gadgetDBG_RIM,vprDBG_VERB_LVL) <<  "Name:      " << net_device->getSourceName() << "\n" << vprDEBUG_FLUSH;
       vprDEBUG(gadgetDBG_RIM,vprDBG_VERB_LVL) <<  "Remote ID: " << net_device->getRemoteId() << "\n" << vprDEBUG_FLUSH;
       mSendDataPacketCount++;
-      vprDEBUG(gadgetDBG_RIM,vprDBG_STATE_LVL) <<  clrSetBOLD(clrYELLOW) 
+      vprDEBUG(gadgetDBG_RIM,vprDBG_STATE_LVL) <<  clrSetBOLD(clrYELLOW)
          << "Data Packet Number: " << mSendDataPacketCount << "\n" << clrRESET << vprDEBUG_FLUSH;
       /////////////////
       // CREATE BODY //
       /////////////////
-      
+
          // Get the data from the NetDevice
       //mTempWriter->mData = net_device->getObjectWriter()->getData();
-      
+
          // Set the size of the packet
       vpr::Uint32 length = net_device->getObjectWriter()->getData()->size();
-      
+
       ///////////////////
       // CREATE HEADER //
       ///////////////////
-      
-      mObjectWriter->writeUint16(RIM_PACKET_MSG);    
+
+      mObjectWriter->writeUint16(RIM_PACKET_MSG);
       mObjectWriter->writeUint16(MSG_DEVICE_DATA);
       mObjectWriter->writeUint32(length + RIM_HEAD_LENGTH + 2);
-      
+
       vprDEBUG(gadgetDBG_RIM,vprDBG_VERB_LVL) <<  "LENGTH OF PACKET: " << length + RIM_HEAD_LENGTH + 2 <<"\n" << vprDEBUG_FLUSH;
-      mObjectWriter->writeUint16(net_device->getRemoteId());   
-      
+      mObjectWriter->writeUint16(net_device->getRemoteId());
+
       ///////////////////////
       // ADD HEADER & BODY //
       ///////////////////////
@@ -447,7 +448,7 @@ namespace gadget
       return true;
    }
 
-   bool MsgPackage::receiveDeviceDataPacket(vpr::ObjectReader* object_reader, Input* virtual_device, vpr::Uint64* delta)
+   bool MsgPackage::receiveDeviceDataPacket(vpr::BufferObjectReader* object_reader, Input* virtual_device, vpr::Uint64* delta)
    {
       //////////////////////////////////////////////////////////////////////////////////////
       //																			      //
@@ -464,18 +465,18 @@ namespace gadget
       //////////////////////////////////////////////////////////////////////////////////////
       vprDEBUG_BEGIN(gadgetDBG_RIM,vprDBG_VERB_LVL) <<  clrOutBOLD(clrCYAN,"[Parse Packet]RECEIVEING A DEVICE DATA PACKET\n") << vprDEBUG_FLUSH;
       vprDEBUG(gadgetDBG_RIM,vprDBG_VERB_LVL) <<  "LENGTH OF PACKET: " << object_reader->mData->size() + RIM_HEAD_LENGTH <<"\n" << vprDEBUG_FLUSH;
-      
+
          // object_reader and virtual_device should never be NULL
       vprASSERT(virtual_device != NULL && "Virtual Device does not exist!!!");
       vprASSERT(object_reader != NULL && "Object Reader does not exist!!!");
-      
+
       mRecvDataPacketCount++;
-      vprDEBUG(gadgetDBG_RIM,vprDBG_STATE_LVL) <<  clrSetBOLD(clrYELLOW) 
+      vprDEBUG(gadgetDBG_RIM,vprDBG_STATE_LVL) <<  clrSetBOLD(clrYELLOW)
          << "Data Packet Number: " << mRecvDataPacketCount << "\n" << clrRESET << vprDEBUG_FLUSH;
 
          //Read the device data from the packet
       virtual_device->readObject(object_reader, delta);
-      
+
       vprDEBUG_END(gadgetDBG_RIM,vprDBG_VERB_LVL) <<  clrOutBOLD(clrCYAN,"[Parse Packet]RECEIVEING A DEVICE DATA PACKET\n") << vprDEBUG_FLUSH;
       return true;
    }
@@ -498,20 +499,20 @@ namespace gadget
       // CREATE BODY //
       /////////////////
       mTempWriter->writeUint64(12);
-      
+
       // Set the size of the packet
       vpr::Uint32 length = mTempWriter->getData()->size();
-      
+
       ///////////////////
       // CREATE HEADER //
       ///////////////////
-      mObjectWriter->writeUint16(RIM_PACKET_MSG);    
+      mObjectWriter->writeUint16(RIM_PACKET_MSG);
       mObjectWriter->writeUint16(MSG_END_BLOCK);
       mObjectWriter->writeUint32(length + RIM_HEAD_LENGTH);
-      
+
       vprDEBUG(gadgetDBG_RIM,vprDBG_VERB_LVL) <<  "LENGTH OF PACKET: " << length + RIM_HEAD_LENGTH <<"\n" << vprDEBUG_FLUSH;
       vprDEBUG(gadgetDBG_RIM,vprDBG_VERB_LVL) <<  "LENGTH OF DATA: " << length <<"\n" << vprDEBUG_FLUSH;
-      
+
       vprDEBUG(gadgetDBG_RIM,vprDBG_VERB_LVL) <<  clrOutBOLD(clrCYAN,"[Create Packet]CREATE END BLOCK\n") << vprDEBUG_FLUSH;
       //mObjectWriter->getData()->insert(mObjectWriter->getData()->end(),mTempWriter->getData()->begin(),mTempWriter->getData()->end());
       //mObjectWriter->setCurPos(length + RIM_HEAD_LENGTH);
@@ -549,13 +550,13 @@ namespace gadget
 
       // Set the size of the packet
       vpr::Uint32 length = mTempWriter->getData()->size();
-      
+
 
       ///////////////////
       // CREATE HEADER //
       ///////////////////
       mObjectWriter->writeUint16(RIM_PACKET_MSG);
-      mObjectWriter->writeUint16(MSG_DELETE_DEVICE);    
+      mObjectWriter->writeUint16(MSG_DELETE_DEVICE);
       mObjectWriter->writeUint32(length + RIM_HEAD_LENGTH);
       std::cout << "		LENGTH OF PACKET " << length + RIM_HEAD_LENGTH << std::endl;
 
@@ -598,8 +599,8 @@ namespace gadget
 
       std::cout << "DELETE DEVICE" << std::endl;
       // Remote and Local ID's
-      
-      return(object_reader->readUint16()); 
+
+      return(object_reader->readUint16());
    } */
 
 
@@ -618,9 +619,9 @@ namespace gadget
       //			---------------------------------	 //
       //												 //
       /////////////////////////////////////////////////////
-      
+
       vprDEBUG(gadgetDBG_RIM,vprDBG_CRITICAL_LVL) <<  clrOutBOLD(clrCYAN,"[Create Packet]Requesting a clock sync client.\n") << vprDEBUG_FLUSH;
-      mObjectWriter->writeUint16(RIM_PACKET_MSG);    
+      mObjectWriter->writeUint16(RIM_PACKET_MSG);
       mObjectWriter->writeUint16(MSG_END_BLOCK);
       mObjectWriter->writeUint32(10);
       mObjectWriter->writeUint16(10);
@@ -645,23 +646,23 @@ namespace gadget
       //			|	str_len | manager_id | 							   //
       //   	        ------------------------- 							   //
       ///////////////////////////////////////////////////////////////////////
-      
+
       vprDEBUG_BEGIN(gadgetDBG_RIM,vprDBG_CRITICAL_LVL) <<  clrOutBOLD(clrCYAN,"[Create Packet]CREATING HANDSHAKE\n") << vprDEBUG_FLUSH;
       vprDEBUG(gadgetDBG_RIM,vprDBG_CRITICAL_LVL) <<  "Host: " << host << "\n" << vprDEBUG_FLUSH;
       vprDEBUG(gadgetDBG_RIM,vprDBG_CRITICAL_LVL) <<  "Port: " << port << "\n" << vprDEBUG_FLUSH;
-      
+
       /////////////////
       // CREATE BODY //
       /////////////////
 
       vprDEBUG(gadgetDBG_RIM,vprDBG_CRITICAL_LVL) <<  clrSetBOLD(clrYELLOW) << "SEND BOOL: " << accept_reject << "\n" << clrRESET << vprDEBUG_FLUSH;
       mTempWriter->writeBool(accept_reject);
-      mTempWriter->writeBool(sync);    
-      
+      mTempWriter->writeBool(sync);
+
       // Write hostname
       mTempWriter->writeUint16(host.size());
       mTempWriter->writeString(host);
-      
+
       // Write port
       vprDEBUG(gadgetDBG_RIM,vprDBG_CRITICAL_LVL) <<  clrSetBOLD(clrYELLOW) << "SEND Port: " << port << "\n" << clrRESET << vprDEBUG_FLUSH;
       mTempWriter->writeUint16(port);
@@ -669,7 +670,7 @@ namespace gadget
          // Write Manager ID
       mTempWriter->writeUint16(manager_id.size());
       mTempWriter->writeString(manager_id);
-      
+
       // Get the length of the data
       vpr::Uint32 length = mTempWriter->getData()->size();
 
@@ -678,11 +679,11 @@ namespace gadget
       // CREATE HEADER //
       ///////////////////
       mObjectWriter->writeUint16(RIM_PACKET_MSG);
-      mObjectWriter->writeUint16(MSG_HANDSHAKE);     
+      mObjectWriter->writeUint16(MSG_HANDSHAKE);
       mObjectWriter->writeUint32(length + RIM_HEAD_LENGTH);
-         
+
       vprDEBUG(gadgetDBG_RIM,vprDBG_CRITICAL_LVL) <<  "LENGTH OF PACKET: " << length + RIM_HEAD_LENGTH <<"\n" << vprDEBUG_FLUSH;
-      
+
       ///////////////////////
       // ADD HEADER & BODY //
       ///////////////////////
@@ -719,7 +720,7 @@ namespace gadget
       ///////////////////////////////////////////////////////////////////////
 
       vprDEBUG_BEGIN(gadgetDBG_RIM,vprDBG_CONFIG_LVL) <<  clrOutBOLD(clrCYAN,"[Parse Packet]RECEIVING HANDSHAKE\n") << vprDEBUG_FLUSH;
-      
+
 
       std::vector<vpr::Uint8> packet_head(100);
 
@@ -731,12 +732,12 @@ namespace gadget
       // Read in the Packet Header
       while (newStream->recvn(packet_head,8,bytes_read) != vpr::ReturnStatus::Succeed)
       {
-         vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << clrOutNORM(clrGREEN,"...Still waiting for handshake HEAD") 
+         vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << clrOutNORM(clrGREEN,"...Still waiting for handshake HEAD")
             << "\n" << vprDEBUG_FLUSH;
 
       }
-      
-      vpr::ObjectReader* head_reader = new vpr::ObjectReader(&packet_head);
+
+      vpr::BufferObjectReader* head_reader = new vpr::BufferObjectReader(&packet_head);
 
       // Read the info from the header
       vpr::Uint16 rimcode =  head_reader->readUint16();
@@ -744,15 +745,15 @@ namespace gadget
       vpr::Uint32 length  =  head_reader->readUint32();
 
       std::vector<vpr::Uint8> packet_data(100);
-      
+
       while (newStream->recvn(packet_data,length-RIM_HEAD_LENGTH,bytes_read,vpr::Interval(100,vpr::Interval::Msec)) == vpr::ReturnStatus::Timeout)
       {
-         vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << clrOutNORM(clrGREEN,"...Still waiting for handshake DATA") 
+         vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << clrOutNORM(clrGREEN,"...Still waiting for handshake DATA")
             << "\n" << vprDEBUG_FLUSH;
 
       }
-      
-      vpr::ObjectReader* reader = new vpr::ObjectReader(&packet_data);
+
+      vpr::BufferObjectReader* reader = new vpr::BufferObjectReader(&packet_data);
 
       vprDEBUG(gadgetDBG_RIM,vprDBG_CRITICAL_LVL) <<  "LENGTH OF PACKET: " << reader->mData->size() + RIM_HEAD_LENGTH <<"\n" << vprDEBUG_FLUSH;
       if ( rimcode == RIM_PACKET_MSG && opcode == MSG_HANDSHAKE )
@@ -772,7 +773,7 @@ namespace gadget
          vprDEBUG(gadgetDBG_RIM,vprDBG_CRITICAL_LVL) <<  clrSetBOLD(clrYELLOW) << "port:       " << receivedPort << "\n" << clrRESET << vprDEBUG_FLUSH;
          vprDEBUG(gadgetDBG_RIM,vprDBG_CRITICAL_LVL) <<  clrSetBOLD(clrYELLOW) << "str_len:    " << temp_string_len << "\n" << clrRESET << vprDEBUG_FLUSH;
          vprDEBUG(gadgetDBG_RIM,vprDBG_CRITICAL_LVL) <<  clrSetBOLD(clrYELLOW) << "manager_id: " << received_manager_id << "\n" << clrRESET << vprDEBUG_FLUSH;
-         
+
 
          vprDEBUG(gadgetDBG_RIM,vprDBG_CRITICAL_LVL) <<  "Host: " << receivedHostname << "\n" << vprDEBUG_FLUSH;
          vprDEBUG(gadgetDBG_RIM,vprDBG_CRITICAL_LVL) <<  "Port: " << receivedPort << "\n" << vprDEBUG_FLUSH;
@@ -780,7 +781,7 @@ namespace gadget
          {
             vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) <<  clrOutBOLD(clrRED, "HANDSHAKE FALSE\n") << vprDEBUG_FLUSH;
          }
-            
+
       }
       vprDEBUG_END(gadgetDBG_RIM,vprDBG_CONFIG_LVL) <<  clrOutBOLD(clrCYAN,"[PACKET]RECEIVING HANDSHAKE\n") << vprDEBUG_FLUSH;
       return accept_reject;

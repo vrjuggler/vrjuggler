@@ -35,6 +35,9 @@
 
 #include <gadget/gadgetConfig.h>
 
+#include <gadget/RemoteInputManager/SerializableDevice.h>
+
+
 
 // --------- VJKEY's ------------ //
 // Names of defined keys
@@ -110,7 +113,7 @@ namespace gadget
  * That is to say, that Keyboard counts the number of keypresses between
  * updates.  Updates in Juggler occur once per frame.
  */
-class Keyboard
+class Keyboard : public SerializableDevice
 {
 public:
    Keyboard()
@@ -122,7 +125,7 @@ public:
    {
       return std::string("Keyboard");
    }
-   
+
    virtual vpr::ReturnStatus writeObject(vpr::ObjectWriter* writer)
    {
       //std::cout << "[Remote Input Manager] In Keyboard write" << std::endl;
@@ -137,11 +140,11 @@ public:
       //std::cout << std::endl;
       return vpr::ReturnStatus::Succeed;
    }
-   
+
    virtual vpr::ReturnStatus readObject(vpr::ObjectReader* reader, vpr::Uint64* delta)
    {
       //std::cout << "[Remote Input Manager] In Keyboard read" << std::endl;
-   
+
       // ASSERT if this data is really not Digital Data
       vpr::Uint16 temp = reader->readUint16();
       vprASSERT(temp==MSG_DATA_KEYBOARD && "[Remote Input Manager]Not Digital Data");
@@ -154,7 +157,7 @@ public:
       }
       //std::cout << std::endl;
       return vpr::ReturnStatus::Succeed;
-   }                            
+   }
 
 
    virtual bool config(jccl::ConfigChunkPtr chunk)
