@@ -114,8 +114,8 @@ public:
 
    virtual void configSceneView(osgUtil::SceneView* newSceneViewer)
    {
-      newSceneViewer->setDefaults();
-      newSceneViewer->setClearColor(osg::Vec4(0.0f, 0.0f, 0.0f, 0.0f));
+      vrj::OsgApp::configSceneView(newSceneViewer);
+
       newSceneViewer->getLight()->setAmbient(osg::Vec4(0.3f,0.3f,0.3f,1.0f));
       newSceneViewer->getLight()->setDiffuse(osg::Vec4(0.9f,0.9f,0.9f,1.0f));
       newSceneViewer->getLight()->setSpecular(osg::Vec4(1.0f,1.0f,1.0f,1.0f));
