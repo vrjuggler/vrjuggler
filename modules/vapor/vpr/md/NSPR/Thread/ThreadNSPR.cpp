@@ -33,6 +33,7 @@
 #include <vpr/vprConfig.h>
 
 #include <vpr/Thread/Thread.h>
+#include <vpr/md/NSPR/NSPRHelpers.h>
 #include <vpr/md/NSPR/Thread/ThreadNSPR.h>
 
 
@@ -134,7 +135,7 @@ ThreadNSPR::spawn (BaseThreadFunctor* functor_ptr,
 
     // Inform the caller if the thread was not created successfully.
     if ( mThread == NULL ) {
-        perror("vpr::ThreadNSPR::spawn() - Cannot create thread");
+        NSPR_PrintError("vpr::ThreadNSPR::spawn() - Cannot create thread");
         retval = -1;
     }
 
