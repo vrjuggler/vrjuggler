@@ -171,8 +171,14 @@ public:
       return _instance;
    }
 protected:
-   vjPfDrawManager()
-   {;}
+   vjPfDrawManager() {
+      sceneRoot    = NULL;
+      mSimTree     = NULL;
+      mRootWithSim = NULL;
+      mHeadDCS     = NULL;
+      mWandDCS     = NULL;
+   }
+
 private:
    static vjPfDrawManager* _instance;
 };
