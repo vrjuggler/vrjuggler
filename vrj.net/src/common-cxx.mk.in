@@ -96,7 +96,7 @@ $(DLL): $(OBJS)
           $(EXTRA_LDFLAGS)
 
 clean:
-	rm -f $(OBJS)
+	rm -rf $(OBJDIR_DBG) $(OBJDIR_OPT)
 
 clobber:
 	$(MAKE) clean
