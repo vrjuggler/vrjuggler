@@ -96,27 +96,27 @@ vpr::ReturnStatus SerialPortImplTermios::open ()
               getName().c_str(), strerror(errno));
    }
 #ifdef VPR_OS_IRIX
-   // Otherwise, initialize the serial port's flags.
+   // Otherwise, initialize the serial port's flags.--enable-subsystem=<SPROC|POSIX|NSPR>
    else
    {
-      struct termios term;
+       struct termios term;
 
-      if ( getAttrs(&term).success() )
-      {
-         // Initialize all the flags to 0.
-         term.c_iflag = term.c_oflag = term.c_cflag = term.c_lflag = 0;
+       if ( getAttrs(&term).success() )
+       {
+          // Initialize all the flags to 0.
+          term.c_iflag = term.c_oflag = term.c_cflag = term.c_lflag = 0;
 
-         // Initialize the minimum buffer size to 1 and the timeout to 0.
-         term.c_cc[VMIN]  = 1;
-         term.c_cc[VTIME] = 0;
+          // Initialize the minimum buffer size to 1 and the timeout to 0.
+          term.c_cc[VMIN]  = 1;
+          term.c_cc[VTIME] = 0;
 
-         // If we cannot set the initialized attribute flags on the port,
-         // then we are not considered open.
-         if ( ! setAttrs(&term, "Could not initialize flags").success() )
-         {
-            status.setCode(ReturnStatus::Fail);
-         }
-      }
+          // If we cannot set the initialized attribute flags on the port,
+          // then we are not considered open.
+          if ( ! setAttrs(&term, "Could not initialize flags").success() )
+          {
+             status.setCode(ReturnStatus::Fail);
+          }
+       }
    }
 #endif
 
@@ -148,6 +148,29 @@ vpr::SerialTypes::UpdateActionOption SerialPortImplTermios::getUpdateAction ()
    }
 
    return action;
+}
+
+// ----------------------------------------------------------------------------
+// Clear all flags by setting them to 0. This is mainly needed by Linux
+// because IRIX does this automatically.
+// ----------------------------------------------------------------------------
+vpr::ReturnStatus SerialPortImplTermios::clearAll ()
+{
+    vpr::ReturnStatus status;
+  
+    int pinchfd = getHandle();
+    struct termios data;
+    data.c_cflag = 0;
+    data.c_lflag = 0;
+    data.c_iflag = 0;
+    data.c_oflag = 0;
+    data.c_cc[ VMIN ] = 1;   //Set default to 1, setting 0 would be dangerous
+    if (tcsetattr(pinchfd, TCSAFLUSH, &data) < 0) 
+    {
+        std::cout<<"[pinch] tcsetattr failed\n"<<std::flush;
+        status.setCode(ReturnStatus::Fail);
+        return status;
+    }
 }
 
 // ----------------------------------------------------------------------------
@@ -338,6 +361,32 @@ vpr::ReturnStatus SerialPortImplTermios::disableRead ()
 }
 
 // ----------------------------------------------------------------------------
+// Get the current CLOCAL state for the port.
+// ----------------------------------------------------------------------------
+bool SerialPortImplTermios::getLocalState ()
+{
+   return getBit(CLOCAL, SerialPortImplTermios::CFLAG);
+}
+
+// ----------------------------------------------------------------------------
+// Enable CLOCAL
+// ----------------------------------------------------------------------------
+vpr::ReturnStatus SerialPortImplTermios::enableLocal ()
+{
+   return setBit(CLOCAL, SerialPortImplTermios::CFLAG, true,
+                 "Could not enable local");
+}
+
+// ----------------------------------------------------------------------------
+// Disable CLOCAL
+// ----------------------------------------------------------------------------
+vpr::ReturnStatus SerialPortImplTermios::disableLocal ()
+{
+   return setBit(CLOCAL, SerialPortImplTermios::CFLAG, false,
+                 "Could not disable local");
+}
+
+// ----------------------------------------------------------------------------
 // Get the number of stop bits in use.  This will be either 1 or 2.
 // ----------------------------------------------------------------------------
 vpr::ReturnStatus SerialPortImplTermios::getStopBits (Uint8& num_bits)
@@ -449,6 +498,32 @@ vpr::ReturnStatus SerialPortImplTermios::disableBadByteIgnore ()
 {
    return setBit(IGNPAR, SerialPortImplTermios::IFLAG, false,
                  "Could not disable bad byte ignoring");
+}
+// ----------------------------------------------------------------------------
+// Get the current state of ignoring BREAK bytes
+// 
+// ----------------------------------------------------------------------------
+bool SerialPortImplTermios::getBreakByteIgnoreState ()
+{
+   return getBit(IGNBRK, SerialPortImplTermios::IFLAG);
+}
+
+// ----------------------------------------------------------------------------
+// Enable ignoring of received BREAK bytes
+// ----------------------------------------------------------------------------
+vpr::ReturnStatus SerialPortImplTermios::enableBreakByteIgnore ()
+{
+   return setBit(IGNBRK, SerialPortImplTermios::IFLAG, true,
+                 "Could not enable break byte ignoring");
+}
+
+// ----------------------------------------------------------------------------
+// Disable ignoring of received BREAK bytes 
+// ----------------------------------------------------------------------------
+vpr::ReturnStatus SerialPortImplTermios::disableBreakByteIgnore ()
+{
+   return setBit(IGNBRK, SerialPortImplTermios::IFLAG, false,
+                 "Could not disable break byte ignoring");
 }
 
 // ----------------------------------------------------------------------------
