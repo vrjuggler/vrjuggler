@@ -46,6 +46,7 @@
 
 #ifndef SNXSOUNDIMPLEMENTATION_H
 #define SNXSOUNDIMPLEMENTATION_H
+#include <assert.h>
 #include <string>
 #include <map>
 #include <gmtl/Math.h>
