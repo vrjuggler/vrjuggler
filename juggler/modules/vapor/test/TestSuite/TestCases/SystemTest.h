@@ -45,7 +45,7 @@ public:
       test_suite->addTest( new CppUnit::TestCaller<SystemTest>("LongConversions", &SystemTest::LongConversions));
       test_suite->addTest( new CppUnit::TestCaller<SystemTest>("LongLongConversions", &SystemTest::LongLongConversions));
       test_suite->addTest( new CppUnit::TestCaller<SystemTest>("GetSetEnvTest", &SystemTest::GetSetEnvTest));
-      
+
 
       return test_suite;
    }

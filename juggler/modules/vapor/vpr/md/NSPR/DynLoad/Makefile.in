@@ -39,8 +39,9 @@
 #
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
+
 # -----------------------------------------------------------------------------
-# Makefile.in for vapor/vpr/md/POSIX.  It requires GNU make.
+# Makefile.in for vapor/vpr/md/NSPR/DynLoad.  It requires GNU make.
 #
 # Generated for use on @PLATFORM@
 # -----------------------------------------------------------------------------
@@ -50,32 +51,23 @@ default: all
 # Include common definitions.
 include @topdir@/make.defs.mk
 
-includedir	= @includedir@/vpr/md/POSIX
-srcdir		= @srcdir@
-top_srcdir	= @top_srcdir@
-INSTALL		= @INSTALL@
-SUBOBJDIR	= $(VPR_LIBRARY)
+includedir=	@includedir@/vpr/md/NSPR/DynLoad
+srcdir=		@srcdir@
+top_srcdir=	@top_srcdir@
+INSTALL=	@INSTALL@
+SUBOBJDIR=	$(VPR_LIBRARY)
 
-# Prefix for recursive stuff.
-DIRPRFX		= vpr/md/POSIX/
-
-SUBDIR		= DynLoad	\
-                  IO		\
-                  Sync		\
-                  Thread	\
-                  Util
-
-ifeq (@SUBSYSTEM@, POSIX)
-#SRCS		=
+ifeq (@SUBSYSTEM@, NSPR)
+SRCS=		LibraryNSPR.cpp
 endif
 
-include $(MKPATH)/dpp.obj-subdir.mk
+include $(MKPATH)/dpp.obj.mk
 
 # -----------------------------------------------------------------------------
 # Include dependencies generated automatically.
 # -----------------------------------------------------------------------------
-#ifndef DO_CLEANDEPEND
-#ifndef DO_BEFOREBUILD
-#    -include $(DEPEND_FILES)
-#endif
-#endif
+ifndef DO_CLEANDEPEND
+ifndef DO_BEFOREBUILD
+   -include $(DEPEND_FILES)
+endif
+endif

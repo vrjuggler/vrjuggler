@@ -59,7 +59,8 @@ SUBOBJDIR	= $(VPR_LIBRARY)
 # Prefix for recursive stuff.
 DIRPRFX		= vpr/md/NSPR/
 
-SUBDIR		= IO		\
+SUBDIR		= DynLoad	\
+                  IO		\
                   Sync		\
                   Thread	\
                   Util
