@@ -271,46 +271,53 @@ public class IntersensePanel extends JPanel implements CustomEditor
       mTopSectionPanel.add(Box.createHorizontalGlue());
       mTopSectionPanel.add(mDeviceInfoPanel);
 
-   ClassLoader loader = getClass().getClassLoader();
-
-   String class_name = "org.vrjuggler.vrjconfig.commoneditors.positionaldeviceeditor.PositionalDeviceEditor";
-   final Class jogl_editor_class = loader.loadClass(class_name);
-
-   mTopSectionPanel.add(mVisualizeBtn);
-
-   mVisualizeBtn.addActionListener(new ActionListener()
+      try
       {
-         public void actionPerformed(ActionEvent evt)
-         {
-            try
-            {
-               CustomEditor pos_editor = (CustomEditor)jogl_editor_class.newInstance();
-               ConfigElement pos_filter = (ConfigElement)mConfigElement.getProperty("position_filters", 0);
-               JDialog dlg = new JDialog(
-                  (Frame)SwingUtilities.getAncestorOfClass(Frame.class, IntersensePanel.this),
-                  "3D Visualization", true);
-               // Make sure to set the context first.
-               pos_editor.setContext(mConfigContext);
-               pos_editor.setConfigElement(pos_filter);
+         ClassLoader loader = getClass().getClassLoader();
 
-               dlg.getContentPane().add((JPanel)pos_editor);
-               dlg.pack();
-               dlg.setVisible(true);
-               //frame.setSize(750, 750);
-               //frame.show();
-            }
-            catch(InstantiationException e)
+         String class_name = "org.vrjuggler.vrjconfig.commoneditors.positionaldeviceeditor.PositionalDeviceEditor";
+         final Class jogl_editor_class = loader.loadClass(class_name);
+
+         mTopSectionPanel.add(mVisualizeBtn);
+
+         mVisualizeBtn.addActionListener(new ActionListener()
             {
-               System.out.println(e);
-               e.printStackTrace();
-            }
-            catch(IllegalAccessException e)
-            {
-               System.out.println(e);
-               e.printStackTrace();
-            }
-         }
-      });
+               public void actionPerformed(ActionEvent evt)
+               {
+                  try
+                  {
+                     CustomEditor pos_editor = (CustomEditor)jogl_editor_class.newInstance();
+                     ConfigElement pos_filter = (ConfigElement)mConfigElement.getProperty("position_filters", 0);
+                     JDialog dlg = new JDialog(
+                        (Frame)SwingUtilities.getAncestorOfClass(Frame.class, IntersensePanel.this),
+                        "3D Visualization", true);
+                     // Make sure to set the context first.
+                     pos_editor.setContext(mConfigContext);
+                     pos_editor.setConfigElement(pos_filter);
+
+                     dlg.getContentPane().add((JPanel)pos_editor);
+                     dlg.pack();
+                     dlg.setVisible(true);
+                     //frame.setSize(750, 750);
+                     //frame.show();
+                  }
+                  catch(InstantiationException e)
+                  {
+                     System.out.println(e);
+                     e.printStackTrace();
+                  }
+                  catch(IllegalAccessException e)
+                  {
+                     System.out.println(e);
+                     e.printStackTrace();
+                  }
+               }
+            });
+      }
+      catch(ClassNotFoundException e)
+      {
+         System.out.println("*** Could not find the PositionalDeviceEditor, JOGL must not be availible. ***");
+      }
       
       this.add(mTopSectionPanel, BorderLayout.NORTH);
 
