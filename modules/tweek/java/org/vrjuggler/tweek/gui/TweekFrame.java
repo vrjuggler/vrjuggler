@@ -86,7 +86,7 @@ public class TweekFrame extends JFrame implements BeanFocusChangeListener,
          }
          else
          {
-            System.out.println("WARNING: Unknown viewer type: '" + viewer + "'");
+            MessagePanel.instance().printWarning("WARNING: Unknown viewer type: '" + viewer + "'\n");
             ViewerBean defaultBean = (ViewerBean)registry.getBeansOfType( ViewerBean.class.getName() ).get( 0 );
             m_bean_container.replaceViewer((BeanModelViewer)defaultBean.getViewer() );
          }
@@ -330,7 +330,8 @@ public class TweekFrame extends JFrame implements BeanFocusChangeListener,
       }
       catch (NullPointerException e)
       {
-         System.err.println("WARNING: Failed to load icon " + bulb_on_icon_name);
+         MessagePanel.instance().printWarning("WARNING: Failed to load icon " +
+                                              bulb_on_icon_name + "\n");
       }
 
       try
@@ -339,7 +340,8 @@ public class TweekFrame extends JFrame implements BeanFocusChangeListener,
       }
       catch (NullPointerException e)
       {
-         System.err.println("WARNING: Failed to load icon " + bulb_off_icon_name);
+         MessagePanel.instance().printWarning("WARNING: Failed to load icon " +
+                                              bulb_off_icon_name + "\n");
       }
 
       if ( m_bulb_off_icon != null )
@@ -604,11 +606,8 @@ public class TweekFrame extends JFrame implements BeanFocusChangeListener,
       {
          m_main_panel.setBottomComponent(null);
          m_main_panel.resetToPreferredSizes();
-         MessagePanel.instance().clear();
          m_msg_panel_expanded = false;
 
-         // The message panel has been cleared now, so we can clear any message
-         // that may have been printed in the status bar regarding that panel.
          m_status_msg_label.setText("");
 
          if ( m_status_msg_button.getIcon() == null )
