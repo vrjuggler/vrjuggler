@@ -69,7 +69,7 @@ public:
 public:
    ~GUID (void) {;}
 
-   GUID(const vpr::GUID::generate_tag_type tag)
+   GUID(const vpr::GUID::GenerateTag tag)
    {
       boost::ignore_unused_variable_warning(tag);
       generate();
