@@ -29,53 +29,23 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-package org.vrjuggler.tweek.wizard;
+package org.vrjuggler.vrjconfig.ui.placer;
 
-import java.util.*;
+import java.awt.Component;
+import org.vrjuggler.vrjconfig.ui.Placer;
 
 /**
- * This all static class acts as a registry and factory for WizardSteps.
+ * Interface for an object that wishes to display a placer object.
  */
-public class WizardStepFactory
+public interface PlacerRenderer
 {
    /**
-    * Registers a WizardStep class that can be inserted into a Wizard.
+    * Gets the component that the Placer uses to render an individual value
+    * within the Placer.
     */
-   public static void registerWizardStep(Class target)
-   {
-      steps.add(target);
-      System.out.println("WizardStepFactory: registered "+target.getName());
-   }
-
-   /**
-    * Gets the number of wizard steps in this factory.
-    */
-   public static int getNumWizardSteps()
-   {
-      return steps.size();
-   }
-
-   /**
-    * Gets i'th the wizard step in this factory.
-    */
-   public static WizardStep getWizardStep(int index)
-   {
-      Class wizardClass = (Class)steps.get(index);
-
-      WizardStep step = null;
-      try
-      {
-         step = (WizardStep)wizardClass.newInstance();
-      }
-      catch (Exception e)
-      {
-         e.printStackTrace();
-      }
-      return step;
-   }
-
-   /**
-    * The list of all registered wizard steps in this factory.
-    */
-   private static List steps = new ArrayList();
+   public Component getPlacerRendererComponent(Placer placer,
+                                               Object value,
+                                               boolean selected,
+                                               boolean hasFocus,
+                                               int idx);
 }

@@ -29,53 +29,60 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-package org.vrjuggler.tweek.wizard;
+package org.vrjuggler.vrjconfig.ui.placer;
 
-import java.util.*;
+import java.util.EventObject;
 
 /**
- * This all static class acts as a registry and factory for WizardSteps.
+ * Encapsulates information describing changes to a placer data model used to
+ * notify placer model listeners of that change.
  */
-public class WizardStepFactory
+public class PlacerModelEvent
+   extends EventObject
 {
    /**
-    * Registers a WizardStep class that can be inserted into a Wizard.
+    * The indicies of the items changed.
     */
-   public static void registerWizardStep(Class target)
+   private int[] indicies;
+
+   /**
+    * The values of the items changed.
+    */
+   private Object[] values;
+
+   /**
+    * Creates a new event fired from the given source. This signifies that all
+    * items in the model have changed.
+    */
+   public PlacerModelEvent(Object source)
    {
-      steps.add(target);
-      System.out.println("WizardStepFactory: registered "+target.getName());
+      this(source, null, null);
    }
 
    /**
-    * Gets the number of wizard steps in this factory.
+    * Creates a new event fired from the given source that affects the items
+    * at the given indices/values in the source.
     */
-   public static int getNumWizardSteps()
+   public PlacerModelEvent(Object source, int[] indicies, Object[] values)
    {
-      return steps.size();
+      super(source);
+      this.indicies = indicies;
+      this.values = values;
    }
 
    /**
-    * Gets i'th the wizard step in this factory.
+    * Gets the indicies of the items that have changed.
     */
-   public static WizardStep getWizardStep(int index)
+   public int[] getIndicies()
    {
-      Class wizardClass = (Class)steps.get(index);
-
-      WizardStep step = null;
-      try
-      {
-         step = (WizardStep)wizardClass.newInstance();
-      }
-      catch (Exception e)
-      {
-         e.printStackTrace();
-      }
-      return step;
+      return indicies;
    }
 
    /**
-    * The list of all registered wizard steps in this factory.
+    * Gets the values of the items that have changed.
     */
-   private static List steps = new ArrayList();
+   public Object[] getValues()
+   {
+      return values;
+   }
 }
