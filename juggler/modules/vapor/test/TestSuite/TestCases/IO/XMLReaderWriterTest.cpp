@@ -17,7 +17,8 @@ void XMLReaderWriterTest::testBasicWriteRead()
    const vpr::Uint64 data_uint64(122119757911221);
    const float       data_float(1221.75f);
    const double      data_double(1.2211975);
-   const std::string data_string("test string");
+   const std::string data_string1("test string1");
+   const std::string data_string2("test string2");
    const bool        data_bool(true);
    std::string long_string("X");
    for(unsigned s=0;s<1500;s++)
@@ -47,6 +48,7 @@ void XMLReaderWriterTest::testBasicWriteRead()
       // - non string in cdata
       // - Multiple cdata areas for a node
       // - Very long string (> 1024chars)
+      // - Empty tags
       xml_writer.beginTag("FirstLevel");
          xml_writer.beginAttribute("uint8");
             xml_writer.writeUint8(data_uint8);
@@ -57,14 +59,16 @@ void XMLReaderWriterTest::testBasicWriteRead()
          xml_writer.beginTag("LargeNumberLevel");
             xml_writer.writeFloat(data_float);
             xml_writer.beginAttribute("StringAttrib");
-               xml_writer.writeString(data_string);
+               xml_writer.writeString(data_string1);
             xml_writer.endAttribute();
             xml_writer.writeDouble(data_double);
          xml_writer.endTag();
-         xml_writer.writeString(data_string);
+         xml_writer.writeString(data_string2);
          xml_writer.writeBool(data_bool);
          xml_writer.beginTag("DataLevel");
             xml_writer.writeString(long_string);
+         xml_writer.endTag();
+         xml_writer.beginTag("EmptyLevel");
          xml_writer.endTag();
       xml_writer.endTag();
 
@@ -85,7 +89,7 @@ void XMLReaderWriterTest::testBasicWriteRead()
          xml_reader.readUint64(read_uint64);
          xml_reader.beginTag("LargeNumberLevel");
             xml_reader.readFloat(read_float);
-            xml_reader.beginAttribute("String Attrib");
+            xml_reader.beginAttribute("StringAttrib");
                xml_reader.readString(read_string_attrib);
             xml_reader.endAttribute();
             xml_reader.readDouble(read_double);
@@ -94,6 +98,8 @@ void XMLReaderWriterTest::testBasicWriteRead()
          xml_reader.readBool(read_bool);
          xml_reader.beginTag("DataLevel");
             xml_reader.readString(read_long_string);
+         xml_reader.endTag();
+         xml_reader.beginTag("EmptyLevel");
          xml_reader.endTag();
       xml_reader.endTag();
    }
@@ -123,8 +129,8 @@ void XMLReaderWriterTest::testBasicWriteRead()
    CPPUNIT_ASSERT_EQUAL(data_uint64, read_uint64);
    CPPUNIT_ASSERT_DOUBLES_EQUAL(data_float, read_float, 0.001f);
    CPPUNIT_ASSERT_DOUBLES_EQUAL(data_double, read_double, 0.001f);
-   CPPUNIT_ASSERT_EQUAL(data_string, read_string);
-   CPPUNIT_ASSERT_EQUAL(data_string, read_string_attrib);
+   CPPUNIT_ASSERT_EQUAL(data_string1, read_string_attrib);
+   CPPUNIT_ASSERT_EQUAL(data_string2, read_string);
    CPPUNIT_ASSERT_EQUAL(data_bool, read_bool);
    CPPUNIT_ASSERT_EQUAL(long_string, read_long_string);
 }
