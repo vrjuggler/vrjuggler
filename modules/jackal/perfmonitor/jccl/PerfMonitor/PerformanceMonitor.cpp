@@ -49,95 +49,111 @@ namespace jccl {
 vprSingletonImp(PerformanceMonitor);
 
 
-PerformanceMonitor::PerformanceMonitor() { 
+PerformanceMonitor::PerformanceMonitor()
+{
+   mPerfRefreshTime = 500;
 
-    perf_refresh_time = 500;
+   mPerfTargetName = "";
+   mPerfTarget = NULL;
 
-    perf_target_name = "";
-    perf_target = NULL;
-
-    mBuffersCommand = new CommandWriteLabeledPerfData (perf_refresh_time);
+   mBuffersCommand = new CommandWriteLabeledPerfData (mPerfRefreshTime);
 }
 
 
 
-PerformanceMonitor::~PerformanceMonitor() {
-    delete mBuffersCommand;
+PerformanceMonitor::~PerformanceMonitor()
+{
+   delete mBuffersCommand;
 }
 
 
 
-/*virtual*/ void PerformanceMonitor::addConnect (Connect* con) {
-    vprASSERT (con != NULL);
+/*virtual*/ void PerformanceMonitor::addConnect (Connect* con)
+{
+   vprASSERT (con != NULL);
 
-    if (con->getName() == perf_target_name)
-        setPerformanceTarget (con);
+   if (con->getName() == mPerfTargetName) 
+   {
+      setPerformanceTarget (con);
+   } 
 }
 
 
-/*virtual*/ void PerformanceMonitor::removeConnect (Connect* con) {
-    vprASSERT (con != NULL);
-
-    if (con == perf_target)
-        setPerformanceTarget (NULL);
-}
-
-
-
-    //---------------------- ConfigChunkHandler Stuff ----------------------
-
-bool PerformanceMonitor::configAdd(ConfigChunkPtr chunk) {
-
-    std::string s = chunk->getType();
-    if (!vjstrcasecmp (s, "PerfMeasure")) {
-        current_perf_config = chunk;//new ConfigChunk (*chunk);
-
-        perf_target_name = (std::string)chunk->getProperty ("PerformanceTarget");
-        if ((perf_target == 0) || 
-            !vjstrcasecmp (perf_target->getName(), perf_target_name)) {
-            std::vector<Connect*>& connections = JackalServer::instance()->getConnections();
-            for (unsigned int i = 0; i < connections.size(); i++)
-                if (!vjstrcasecmp (connections[i]->getName(), perf_target_name)) {
-                    setPerformanceTarget (connections[i]);
-                    break;
-                }
-            JackalServer::instance()->releaseConnections();
-        }
-        else {
-            // just activate buffers to pick up changes to individual
-            // buffer activation states.
-            activatePerfBuffers();
-        }
-
-        return true;
-    }
-
-    return false;
+/*virtual*/ void PerformanceMonitor::removeConnect (Connect* con)
+{
+   vprASSERT (con != NULL);
+   
+   if (con == mPerfTarget)
+      setPerformanceTarget (NULL);
 }
 
 
 
-bool PerformanceMonitor::configRemove(ConfigChunkPtr chunk) {
+//---------------------- ConfigChunkHandler Stuff ----------------------
 
-    std::string s = chunk->getType();
-    if (!vjstrcasecmp (s, "PerfMeasure")) {
-        if (current_perf_config.get()) {
-            if (!vjstrcasecmp (current_perf_config->getProperty ("Name"),
-                               chunk->getProperty ("Name"))) {
-                current_perf_config.reset(0);
-                deactivatePerfBuffers ();
+bool PerformanceMonitor::configAdd(ConfigChunkPtr chunk)
+{
+   std::string s = chunk->getType();
+   if (!vjstrcasecmp (s, "PerfMeasure"))
+   {
+      mCurrentPerfConfig = chunk;//new ConfigChunk (*chunk);
+      
+      mPerfTargetName = (std::string)chunk->getProperty ("PerformanceTarget");
+      if ((mPerfTarget == 0) || 
+          !vjstrcasecmp (mPerfTarget->getName(), mPerfTargetName))
+      {
+         std::vector<Connect*>& connections =
+            JackalServer::instance()->getConnections();
+         for (unsigned int i = 0; i < connections.size(); i++) 
+         {
+            if (!vjstrcasecmp (connections[i]->getName(), mPerfTargetName))
+            {
+               setPerformanceTarget (connections[i]);
+               break;
             }
-        }
-        return true;
-    }
-    return false;
+         }
+         JackalServer::instance()->releaseConnections();
+      }
+      else
+      {
+         // just activate buffers to pick up changes to individual
+         // buffer activation states.
+         activatePerfBuffers();
+      }
+
+      return true;
+   }
+
+   return false;
 }
 
 
 
-bool PerformanceMonitor::configCanHandle(ConfigChunkPtr chunk) {
-    std::string s = chunk->getType();
-    return (!vjstrcasecmp (s, "PerfMeasure"));
+bool PerformanceMonitor::configRemove(ConfigChunkPtr chunk)
+{
+   std::string s = chunk->getType();
+   if (!vjstrcasecmp (s, "PerfMeasure"))
+   {
+      if (mCurrentPerfConfig.get())
+      {
+         if (!vjstrcasecmp (mCurrentPerfConfig->getProperty ("Name"),
+                            chunk->getProperty ("Name")))
+         {
+            mCurrentPerfConfig.reset(0);
+            deactivatePerfBuffers ();
+         }
+      }
+      return true;
+   }
+   return false;
+}
+
+
+
+bool PerformanceMonitor::configCanHandle(ConfigChunkPtr chunk)
+{
+   std::string s = chunk->getType();
+   return (!vjstrcasecmp (s, "PerfMeasure"));
 }
 
 
@@ -146,57 +162,70 @@ bool PerformanceMonitor::configCanHandle(ConfigChunkPtr chunk) {
 
 
 
-
-    void PerformanceMonitor::setPerformanceTarget (Connect* con) {
-        if (con == perf_target)
-            return;
-        deactivatePerfBuffers();
-        perf_target = con;
-        activatePerfBuffers();
-    }
-
-
-
-    void PerformanceMonitor::deactivatePerfBuffers () {
-        PerformanceCategories::instance()->deactivate();
-        if (perf_target)
-            perf_target->removePeriodicCommand (mBuffersCommand);
-    }
+void PerformanceMonitor::setPerformanceTarget (Connect* con)
+{
+   if (con == mPerfTarget) 
+   {
+      return;
+   }
+   deactivatePerfBuffers();
+   mPerfTarget = con;
+   activatePerfBuffers();
+}
 
 
 
-    void PerformanceMonitor::activatePerfBuffers () {
-        // activates all perf buffers configured to do so
-        // this is still a bit on the big and bulky side.
+void PerformanceMonitor::deactivatePerfBuffers ()
+{
+   PerformanceCategories::instance()->deactivate();
+   if (mPerfTarget) 
+   {
+            mPerfTarget->removePeriodicCommand (mBuffersCommand);
+   }
+}
+
+
+
+void PerformanceMonitor::activatePerfBuffers ()
+{
+   // activates all perf buffers configured to do so
+   // this is still a bit on the big and bulky side.
+   
+   if (mPerfTarget == NULL || mCurrentPerfConfig.get() == NULL)
+   {
+      deactivatePerfBuffers();
+      return;
+   }
         
-        if (perf_target == NULL || current_perf_config.get() == NULL) {
-            deactivatePerfBuffers();
-            return;
-        }
-        
-        /* individually enable/disable the old-style buffers */
-        std::vector<VarValue*> v = current_perf_config->getAllProperties ("TimingTests");
-        std::vector<VarValue*>::const_iterator val;
-        ConfigChunkPtr ch;
+   /* individually enable/disable the old-style buffers */
+   std::vector<VarValue*> v =
+      mCurrentPerfConfig->getAllProperties ("TimingTests");
+   std::vector<VarValue*>::const_iterator val;
+   ConfigChunkPtr ch;
 
-        v = current_perf_config->getAllProperties ("PerfCategories");
+   v = mCurrentPerfConfig->getAllProperties ("PerfCategories");
 
-        for (val = v.begin(); val != v.end(); val++) {
-            ch = (ConfigChunkPtr)*(*val); // this line demonstrates a subtle danger
-            if ((bool)ch->getProperty ("Enabled")) {
-                PerformanceCategories::instance()->activateCategory ((std::string)ch->getProperty ("Prefix"));
-            }
-            else {
-                PerformanceCategories::instance()->deactivateCategory ((std::string)ch->getProperty ("Prefix"));
-            }
+   for (val = v.begin(); val != v.end(); val++)
+   {
+      ch = (ConfigChunkPtr)*(*val); // this line demonstrates a subtle danger
+      if ((bool)ch->getProperty ("Enabled"))
+      {
+         PerformanceCategories::instance()->activateCategory ((std::string)ch->getProperty ("Prefix"));
+      }
+      else
+      {
+         PerformanceCategories::instance()->deactivateCategory ((std::string)ch->getProperty ("Prefix"));
+      }
 
-            delete (*val); // delete the varvalue (copy) from getallprops
-        }
+      delete (*val); // delete the varvalue (copy) from getallprops
+   }
 
-        PerformanceCategories::instance()->activate();
-        if (perf_target)
-            perf_target->addPeriodicCommand (mBuffersCommand);
-    }
+   PerformanceCategories::instance()->activate();
+   if (mPerfTarget) 
+   {
+      mPerfTarget->addPeriodicCommand (mBuffersCommand);
+   }
+}
 
 
 };

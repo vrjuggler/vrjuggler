@@ -45,75 +45,79 @@
 #include <vpr/Util/Singleton.h>
 
 
-namespace jccl {
+namespace jccl
+{
 
-    class Connect;
-    class JackalServer;
-    class PeriodicCommand;
+class Connect;
+class JackalServer;
+class PeriodicCommand;
 
 
-    /** Jackal Performance-monitoring agent.
-     *
-     *  @version $Revision$, $Date$
-     */
-class JCCL_CLASS_API PerformanceMonitor: public JackalControl, public ConfigChunkHandler {
+/** Jackal Performance-monitoring agent.
+ *
+ *  @version $Revision$, $Date$
+ */
+class JCCL_CLASS_API PerformanceMonitor: public JackalControl,
+                                         public ConfigChunkHandler
+{
 
 public:
 
-    /** Constructor. */
-    PerformanceMonitor();
+   /** Constructor. */
+   PerformanceMonitor();
+
+   
+   /** Destructor. */
+   virtual ~PerformanceMonitor();
 
 
-    /** Destructor. */
-    virtual ~PerformanceMonitor();
+   /** Get access to the thread-specific labeled buffers. */
+   inline LabeledPerfDataBuffer* getLabeledTSBuffer ()
+   {
+      return &(*mTSBuffers);
+   }
 
 
+   
+   //--------------- JackalControl Stuff -----------------------
 
-    /** Get access to the thread-specific labeled buffers. */
-    inline LabeledPerfDataBuffer* getLabeledTSBuffer () {
-        return &(*mTSBuffers);
-    }
+   virtual void addConnect (Connect *c);
 
-
-    //--------------- JackalControl Stuff -----------------------
-
-    virtual void addConnect (Connect *c);
-
-    virtual void removeConnect (Connect* c);
+   virtual void removeConnect (Connect* c);
 
 
-    //---------------- ConfigChunkHandler Stuff -----------------
+   //---------------- ConfigChunkHandler Stuff -----------------
 
-    virtual bool configAdd(ConfigChunkPtr chunk);
+   virtual bool configAdd(ConfigChunkPtr chunk);
 
-    virtual bool configRemove(ConfigChunkPtr chunk);
+   virtual bool configRemove(ConfigChunkPtr chunk);
 
-    virtual bool configCanHandle(ConfigChunkPtr chunk);
+   virtual bool configCanHandle(ConfigChunkPtr chunk);
 
 
 
 private:
 
-    std::string               perf_target_name;
-    Connect*                  perf_target;
-    float                     perf_refresh_time;  // in milliseconds
-    ConfigChunkPtr            current_perf_config;
+   std::string               mPerfTargetName;
+   Connect*                  mPerfTarget;
+   float                     mPerfRefreshTime;  // in milliseconds
+   ConfigChunkPtr            mCurrentPerfConfig;
 
-    vpr::TSObjectProxy<LabeledPerfDataBuffer> mTSBuffers;
+   vpr::TSObjectProxy<LabeledPerfDataBuffer> mTSBuffers;
 
-    PeriodicCommand* mBuffersCommand;
+   PeriodicCommand* mBuffersCommand;
 
-    void activatePerfBuffers();
-    void deactivatePerfBuffers();
+   void activatePerfBuffers();
+   void deactivatePerfBuffers();
 
-    void setPerformanceTarget (Connect* con);
+   void setPerformanceTarget (Connect* con);
 
 
-    // These are needed to appease Visual C++ in its creation of DLLs.
-    PerformanceMonitor(const PerformanceMonitor&) {;}
-    void operator=(const PerformanceMonitor&) {;}
+   // These are needed to appease Visual C++ in its creation of DLLs.
+   PerformanceMonitor(const PerformanceMonitor&) {;}
+   void operator=(const PerformanceMonitor&) {;}
 
-    vprSingletonHeader(PerformanceMonitor);
+   vprSingletonHeader(PerformanceMonitor);
 
 }; // end PerformanceMonitor
 
