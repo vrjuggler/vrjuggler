@@ -43,6 +43,7 @@
 #include <assert.h>
 #include <time.h>
 #include <netdb.h>
+#include <sys/time.h>
 
 #include <Input/vjPosition/aMotionStar.h>
 
@@ -401,12 +402,20 @@ void aMotionStar::sample() {
     lpBuffer = (char*)lpResponse + 16;
 
     if (runMode == 0) {
+      struct timeval first, second;
+
       while(totalBytesReceived != totalBytesNeeded){
+	gettimeofday(&first);
         bytesReceived = recv(s, (void*) lpBuffer,
                              (totalBytesNeeded - totalBytesReceived), 0);
+	gettimeofday(&second);
 
         if (bytesReceived < 0)
           perror("recv2"), exit(1);
+
+	if ( second.tv_usec - first.tv_usec > 5000 ) {
+	    fprintf(stderr, "WARNING: Packet took longer than 5 ms\n");
+	}
 
         totalBytesReceived = totalBytesReceived + bytesReceived;
         lpBuffer = (char*)lpBuffer + bytesReceived;
