@@ -7,7 +7,6 @@
 #include <gmtl/VecOps.h>
 #include <gmtl/Matrix.h>
 #include <gmtl/Generate.h>
-#include <gmtl/Convert.h>
 
 namespace vrj
 {
