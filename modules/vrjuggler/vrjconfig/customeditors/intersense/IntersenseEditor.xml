@@ -6,9 +6,9 @@
             class="org.vrjuggler.vrjconfig.customeditors.intersense.IntersensePanel"/>
       <dependencies>
          <bean>ConfigBroker</bean>
-         <bean>PositionalDeviceEditor</bean>
          <jar path="${TWEEK_BASE_DIR}/bin/beans">jccl_editors.jar</jar>
          <jar path="${TWEEK_BASE_DIR}/bin">ui.jar</jar>
+         <jar path="${TWEEK_BASE_DIR}/lib/vrjuggler/customeditors">CustomEditors.jar</jar>
       </dependencies>
    </service>
 </beanlist>

@@ -237,18 +237,6 @@ public class PinchGlovePanel extends JPanel implements CustomEditor
       mSerialPort = new PropertyEditorPanel(mConfigElement.getProperty("port", 0),
                                             cfg_def.getPropertyDefinition("port"),
                                             mConfigElement, 0, getBackground());
-      if(null == mConfigElement.getProperty("baud", 0))
-      {
-         System.out.println("xxx 1");
-      }
-      if(null == cfg_def.getPropertyDefinition("baud"))
-      {
-         System.out.println("xxx 2");
-      }
-      if(null == mConfigElement)
-      {
-         System.out.println("xxx 3");
-      }
 
       mName.setText(mConfigElement.getName());
       mName.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
