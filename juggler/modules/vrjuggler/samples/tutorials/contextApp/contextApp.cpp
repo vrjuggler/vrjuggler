@@ -1,13 +1,15 @@
-#include <vjConfig.h>
+#include <vrj/vjConfig.h>
 
 #include <math.h>
 #include <GL/gl.h>
 //#include <GL/glu.h>
 
-#include <Math/vjVec3.h>
-#include <Math/vjCoord.h>
+#include <vrj/Math/Vec3.h>
+#include <vrj/Math/Coord.h>
 
 #include <contextApp.h>
+
+using namespace vrj;
 
 
 // Draw an axis in OpenGL

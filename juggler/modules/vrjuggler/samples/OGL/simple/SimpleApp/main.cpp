@@ -6,8 +6,10 @@
 #include <simpleApp.h>
 
 // --- Lib Stuff --- //
-#include <Kernel/vjKernel.h>
+#include <vrj/Kernel/Kernel.h>
 #include <vpr/System.h>
+
+using namespace vrj;
 
 int main(int argc, char* argv[])
 {

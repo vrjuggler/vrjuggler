@@ -6,8 +6,10 @@
 #include <contextApp.h>
 
 // --- Lib Stuff --- //
-#include <Kernel/vjKernel.h>
+#include <vrj/Kernel/Kernel.h>
 #include <vpr/System.h>
+
+using namespace vrj;
 
 int main(int argc, char* argv[])
 {
@@ -19,8 +21,10 @@ int main(int argc, char* argv[])
    //    Display usage information and exit
    if (argc <= 1)
    {
-      cout << "\n\n";
-      cout << "Usage: " << argv[0] << " vjconfigfile[0] vjconfigfile[1] ... vjconfigfile[n]" << endl;
+      std::cout << "\n\n";
+      std::cout << "Usage: " << argv[0]
+                << " vjconfigfile[0] vjconfigfile[1] ... vjconfigfile[n]"
+                << std::endl;
       exit(1);
    }
 

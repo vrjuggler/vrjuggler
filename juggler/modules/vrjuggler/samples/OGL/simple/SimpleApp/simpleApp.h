@@ -1,17 +1,18 @@
 #ifndef _SIMPLE_APP
 #define _SIMPLE_APP
 
-#include <vjConfig.h>
+#include <vrj/vjConfig.h>
 
 #include <iostream>
 #include <iomanip>
 
-#include <Kernel/GL/vjGlApp.h>
-#include <Math/vjMatrix.h>
+#include <vrj/Draw/OGL/GlApp.h>
+#include <vrj/Math/Matrix.h>
 
-#include <Input/InputManager/vjPosInterface.h>
-#include <Input/InputManager/vjAnalogInterface.h>
-#include <Input/InputManager/vjDigitalInterface.h>
+#include <vrj/Input/Type/PosInterface.h>
+#include <vrj/Input/Type/DigitalInterface.h>
+
+using namespace vrj;
 
 // Utility function to draw a cube
 void drawbox( GLdouble x0, GLdouble x1, GLdouble y0, GLdouble y1,
