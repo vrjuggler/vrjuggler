@@ -45,6 +45,7 @@
 #include <vpr/Thread/Thread.h>
 #include <vrj/Environment/EnvironmentManager.h>
 #include <vpr/System.h>
+#include <vpr/Util/Version.h>
 
 #include <gadget/InputManager.h>
 
@@ -601,12 +602,15 @@ Kernel::Kernel()
 
    // Print out the Juggler version number when the kernel is created.
    vprDEBUG(vprDBG_ALL, 0) << std::string(strlen(VJ_VERSION) + 12, '=')
-                          << std::endl << vprDEBUG_FLUSH;
+                           << std::endl << vprDEBUG_FLUSH;
    vprDEBUG(vprDBG_ALL, 0) << clrOutNORM(clrGREEN, "VR Juggler: ")
-                          << clrOutNORM(clrGREEN, VJ_VERSION) << clrRESET
-                          << std::endl << vprDEBUG_FLUSH;
+                           << clrOutNORM(clrGREEN, VJ_VERSION) << clrRESET
+                           << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(vprDBG_ALL, 0) << clrOutNORM(clrGREEN, "VPR: ")
+                           << clrOutNORM(clrGREEN, vpr::getVersionString())
+                           << clrRESET << std::endl << vprDEBUG_FLUSH;
    vprDEBUG(vprDBG_ALL, 0) << std::string(strlen(VJ_VERSION) + 12, '=')
-                          << std::endl << vprDEBUG_FLUSH;
+                           << std::endl << vprDEBUG_FLUSH;
 
    jccl::ChunkFactory::instance()->loadDescs
        ("${VJ_BASE_DIR}/share/data/vrj-chunks.desc");
