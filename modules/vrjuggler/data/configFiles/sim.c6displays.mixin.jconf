@@ -48,6 +48,10 @@
                <tracker_proxy />
             </surface_viewport>
          </surface_viewports>
+         <keyboard_mouse_device_name />
+         <lock_key>KEY_NONE</lock_key>
+         <start_locked>false</start_locked>
+         <sleep_time>75</sleep_time>
       </display_window>
       <display_window name="Front Surface" version="4">
          <origin>200</origin>
@@ -95,6 +99,10 @@
                <tracker_proxy />
             </surface_viewport>
          </surface_viewports>
+         <keyboard_mouse_device_name />
+         <lock_key>KEY_NONE</lock_key>
+         <start_locked>false</start_locked>
+         <sleep_time>75</sleep_time>
       </display_window>
       <display_window name="Left Surface" version="4">
          <origin>0</origin>
@@ -142,6 +150,10 @@
                <tracker_proxy />
             </surface_viewport>
          </surface_viewports>
+         <keyboard_mouse_device_name />
+         <lock_key>KEY_NONE</lock_key>
+         <start_locked>false</start_locked>
+         <sleep_time>75</sleep_time>
       </display_window>
       <display_window name="Floor Surface" version="4">
          <origin>200</origin>
@@ -189,6 +201,10 @@
                <tracker_proxy />
             </surface_viewport>
          </surface_viewports>
+         <keyboard_mouse_device_name />
+         <lock_key>KEY_NONE</lock_key>
+         <start_locked>false</start_locked>
+         <sleep_time>75</sleep_time>
       </display_window>
       <display_window name="Ceiling Surface" version="4">
          <origin>200</origin>
@@ -236,6 +252,10 @@
                <tracker_proxy />
             </surface_viewport>
          </surface_viewports>
+         <keyboard_mouse_device_name />
+         <lock_key>KEY_NONE</lock_key>
+         <start_locked>false</start_locked>
+         <sleep_time>75</sleep_time>
       </display_window>
       <display_window name="Entrance Surface" version="4">
          <origin>600</origin>
@@ -283,6 +303,10 @@
                <tracker_proxy />
             </surface_viewport>
          </surface_viewports>
+         <keyboard_mouse_device_name />
+         <lock_key>KEY_NONE</lock_key>
+         <start_locked>false</start_locked>
+         <sleep_time>75</sleep_time>
       </display_window>
       <display_window name="rightSurfaceAngled" version="4">
          <origin>400</origin>
@@ -330,6 +354,10 @@
                <tracker_proxy />
             </surface_viewport>
          </surface_viewports>
+         <keyboard_mouse_device_name />
+         <lock_key>KEY_NONE</lock_key>
+         <start_locked>false</start_locked>
+         <sleep_time>75</sleep_time>
       </display_window>
       <display_window name="Ceiling Surface Angled" version="4">
          <origin>200</origin>
@@ -377,6 +405,10 @@
                <tracker_proxy />
             </surface_viewport>
          </surface_viewports>
+         <keyboard_mouse_device_name />
+         <lock_key>KEY_NONE</lock_key>
+         <start_locked>false</start_locked>
+         <sleep_time>75</sleep_time>
       </display_window>
    </elements>
 </configuration>

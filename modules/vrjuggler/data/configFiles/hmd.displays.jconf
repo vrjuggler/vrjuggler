@@ -48,6 +48,10 @@
                <tracker_proxy>Head Proxy</tracker_proxy>
             </surface_viewport>
          </surface_viewports>
+         <keyboard_mouse_device_name />
+         <lock_key>KEY_NONE</lock_key>
+         <start_locked>false</start_locked>
+         <sleep_time>75</sleep_time>
       </display_window>
       <display_window name="Right Eye" version="4">
          <origin>0</origin>
@@ -95,6 +99,10 @@
                <tracker_proxy>Head Proxy</tracker_proxy>
             </surface_viewport>
          </surface_viewports>
+         <keyboard_mouse_device_name />
+         <lock_key>KEY_NONE</lock_key>
+         <start_locked>false</start_locked>
+         <sleep_time>75</sleep_time>
       </display_window>
       <position_proxy name="HMDDispPos" version="1">
          <device />
