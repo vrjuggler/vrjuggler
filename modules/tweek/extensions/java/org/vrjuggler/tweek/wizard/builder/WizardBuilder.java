@@ -535,10 +535,10 @@ public class WizardBuilder
       String newFilename = file.getAbsolutePath();
       try
       {
-         ObjectInputStream in = new ObjectInputStream(
+         WizardInputStream in = new WizardInputStream(
                                  new BufferedInputStream(
                                   new FileInputStream(newFilename)));
-         Wizard wizard = (Wizard)in.readObject();
+         Wizard wizard = in.readWizard();
          in.close();
          model.setWizard(wizard);
       }
@@ -547,14 +547,6 @@ public class WizardBuilder
          ioe.printStackTrace();
          JOptionPane.showMessageDialog(this,
                         "Open failed: "+ioe.getMessage(),
-                        "Error", JOptionPane.ERROR_MESSAGE);
-         return false;
-      }
-      catch (ClassNotFoundException cnfe)
-      {
-         cnfe.printStackTrace();
-         JOptionPane.showMessageDialog(this,
-                        "The file does not contain a serialized Wizard.",
                         "Error", JOptionPane.ERROR_MESSAGE);
          return false;
       }
@@ -578,10 +570,10 @@ public class WizardBuilder
 
       try
       {
-         ObjectOutputStream out = new ObjectOutputStream(
+         WizardOutputStream out = new WizardOutputStream(
                                     new BufferedOutputStream(
                                        new FileOutputStream(filename)));
-         out.writeObject(wizard);
+         out.writeWizard(wizard);
          out.close();
       }
       catch (IOException ioe)

@@ -36,6 +36,7 @@
 package org.vrjuggler.tweek.wizard;
 
 import java.io.Serializable;
+import java.util.*;
 
 /**
  * Describes collection of WizardPanes in a particular sequence with the
@@ -120,6 +121,26 @@ public class Wizard
    public WizardStepIterator iterator()
    {
       return new WizardIterator(this.begin());
+   }
+
+   /**
+    * Gets a list of all the custom classes this Wizard requires to run in a
+    * separate VM.
+    */
+   public List getRequiredClasses()
+   {
+      // XXX: Query each wizard step
+      return new ArrayList();
+   }
+
+   /**
+    * Gets a list of all the custom resources this Wizard requires to run in a
+    * separate VM.
+    */
+   public List getRequiredResources()
+   {
+      // XXX: Query each wizard step
+      return new ArrayList();
    }
 
    /**
