@@ -165,6 +165,21 @@ vpr::ReturnStatus SocketImplSIM::connect (vpr::Interval timeout)
    return status;
 }
 
+vpr::Uint32 SocketImplSIM::availableBytes ()
+{
+   vpr::Guard<vpr::Mutex> guard(mArrivedQueueMutex);
+   vpr::Uint32 bytes = 0;
+
+   for ( std::vector<vpr::sim::MessagePtr>::iterator i = mArrivedQueue.begin();
+         i != mArrivedQueue.end();
+         i++ )
+   {
+      bytes += (*i)->getSize();
+   }
+
+   return bytes;
+}
+
 vpr::ReturnStatus SocketImplSIM::read_i (void* buffer,
                                          const vpr::Uint32 length,
                                          vpr::Uint32& data_read,
@@ -183,7 +198,7 @@ vpr::ReturnStatus SocketImplSIM::read_i (void* buffer,
          size_t copy_len, msg_size;
 
          // Remove the message from the arrival queue.
-         message = mArrivedQueue.front();
+         message = mArrivedQueue[0];
 
          msg_size = message->getSize();
 
@@ -197,8 +212,7 @@ vpr::ReturnStatus SocketImplSIM::read_i (void* buffer,
 
          if ( message->resize(copy_len) == 0 )
          {
-            mArrivedQueue.pop();
-//            delete message;
+            mArrivedQueue.erase(mArrivedQueue.begin());
          }
       }
       // Nothing is in the queue, so we tell the caller that the operation is
