@@ -51,7 +51,7 @@
 
 #include <jccl/Config/ConfigChunk.h>
 #include <jccl/Config/ChunkFactory.h>
-#include <jccl/Net/JackalServer.h>
+//#include <jccl/Net/JackalServer.h>
 #include <jccl/RTRC/ConfigManager.h>
 #include <jccl/PerfMonitor/PerformanceMonitor.h>
 
@@ -348,10 +348,12 @@ void Kernel::initConfig()
    vprASSERT(mDisplayManager != NULL);                 // Did we get an object
 
    //setupEnvironmentManager();
+/*
    jccl::JackalServer::instance()->addJackalControl(jccl::ConfigManager::instance());
    jccl::JackalServer::instance()->addJackalControl(jccl::PerformanceMonitor::instance());
 
    jccl::ConfigManager::instance()->addConfigChunkHandler(jccl::JackalServer::instance());
+*/
    jccl::ConfigManager::instance()->addConfigChunkHandler(jccl::PerformanceMonitor::instance());
 
    //??// processPending() // Should I do this here
