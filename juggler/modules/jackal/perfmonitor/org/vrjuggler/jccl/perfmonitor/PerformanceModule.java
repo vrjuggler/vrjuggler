@@ -207,7 +207,7 @@ public class PerformanceModule extends DefaultCoreModule {
         boolean retval = true;
         Node child;
 
-	System.out.println ("interpretXMLCommands");
+	//System.out.println ("interpretXMLCommands");
 
         switch (doc.getNodeType()) {
         case Node.DOCUMENT_NODE:
