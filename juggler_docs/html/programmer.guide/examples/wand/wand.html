@@ -1,0 +1,85 @@
+<html>
+
+<head>
+<title>Wand Position</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<meta name="GENERATOR" content="Microsoft FrontPage 4.0">
+
+
+<meta name="Microsoft Border" content="tb">
+</head>
+
+<body><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td>
+
+<p align="left"><nobr>[&nbsp;<a href="../../index.htm">Home</a>&nbsp;]</nobr> <nobr>[&nbsp;<a href="wand.htm">Up</a>&nbsp;]</nobr></p>
+
+<p align="left"><font size="6"><strong>Wand Position</strong></font></p>
+
+</td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><!--msnavigation--><td valign="top">
+<div align="left">
+
+<table border="0" width="94%" height="1">
+  <tr>
+    <td width="15%" height="1"></td>
+    <td width="85%" height="84"><div align="left"><table border="0">
+      <tr>
+        <td><h3>Get the wand position</h3>
+        </td>
+      </tr>
+      <tr>
+        <td><font face="System">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; vjMatrix* wandMatrix;<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; wandMatrix = mWand-&gt;GetData();</font></td>
+      </tr>
+      <tr>
+        <td>These lines get a pointer to the matrix that holds the location of the wand.
+        &nbsp; mWand is a vjPosInterface object that was initialized to point to
+        &quot;VJWand&quot;.&nbsp; When it is dereferenced ( mWand-&gt; ) it evaluates to a pointer
+        to a vjPosProxy.&nbsp; This allows the user to call the GetData function of vjPosProxy
+        which returns a pointer to a matrix with the location of the wand.</td>
+      </tr>
+      <tr>
+        <td>&nbsp;<h3>Draw a cube at the wand position</h3>
+        </td>
+      </tr>
+      <tr>
+        <td><font face="System">
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; glMultMatrixf(wandMatrix-&gt;getFloatPtr());<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; glColor3f(1.0f, 0.0f, 1.0f);<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; glScalef(0.25f, 0.25f, 0.25f);<br>
+        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; drawCube();</font></td>
+      </tr>
+      <tr>
+        <td rowspan="3">A vjMatrix object is in the same format that OpenGL uses for matrices.
+        &nbsp; Because of this, we can just call glMultMatrix( ourMatrix-&gt;getFloatPtr() ).
+        &nbsp; We need the getFloatPtr because OpenGL expects a pointer to 16 float values, not a
+        matrix object. <strong>Note</strong>: In future versions there may be an automatic type
+        conversion from matrix to float*.<p>Once the matrix has been passed to OpenGL, the box is
+        drawn at the position of the wand.</td>
+      </tr>
+      <tr>
+        <td></td>
+      </tr>
+      <tr>
+        <td></td>
+      </tr>
+    </table>
+    </div><div align="right"><table border="0">
+      <tr>
+        <td><!--webbot bot="Navigation" S-Type="arrows" S-Orientation="horizontal" S-Rendering="graphics" B-Include-Home="FALSE" B-Include-Up="FALSE" U-Page S-Target startspan --><nobr>[&nbsp;<a href="wand_2.htm">Back</a>&nbsp;]</nobr><!--webbot bot="Navigation" endspan i-checksum="8648" --></td>
+      </tr>
+    </table>
+    </div></td>
+  </tr>
+</table>
+</div>
+
+<p>&nbsp;<!--msnavigation--></td></tr><!--msnavigation--></table><!--msnavigation--><table border="0" cellpadding="0" cellspacing="0" width="100%"><tr><td><table border="0">
+  <tr>
+    <td><img src="../../_borders/juggler.gif" alt="juggler.gif (2873 bytes)" width="29" height="33"></td>
+    <td><h5>VR Juggler<br>
+    Copyright 1998 ©&nbsp; All rights reserved.<br>
+    Revised: July 01, 1999.</h5>
+    </td>
+  </tr>
+</table></td></tr><!--msnavigation--></table></body>
+</html>
