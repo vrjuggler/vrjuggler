@@ -81,7 +81,8 @@ public:
     //! POST:
     //
     //! ARGS: address - A string giving the address and port number separated
-    //+                 by a colon.
+    //+                 by a colon.  The address can be a hostname or a
+    //+                 dotted-decimal IP address.
     // ------------------------------------------------------------------------
     InetAddrBSD (const std::string& address) {
         std::string::size_type pos;
