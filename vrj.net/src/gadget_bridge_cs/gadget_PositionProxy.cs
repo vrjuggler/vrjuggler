@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.78 of RCSfile: class_cs.tmpl,v
+// Generated from Revision: 1.79 of RCSfile: class_cs.tmpl,v
 using System;
 using System.Runtime.InteropServices;
 using System.Reflection;
@@ -45,12 +45,6 @@ public sealed class PositionProxy
    }
 
    // Constructors.
-   protected PositionProxy(NoInitTag doInit)
-      : base(doInit)
-   {
-      allocDelegates();
-   }
-
    [DllImport("gadget_bridge", CharSet = CharSet.Ansi)]
    private extern static IntPtr gadget_PositionProxy_PositionProxy__gadget_PositionProxy1([MarshalAs(UnmanagedType.CustomMarshaler, MarshalTypeRef = typeof(gadget.PositionProxyMarshaler))] gadget.PositionProxy p0);
 

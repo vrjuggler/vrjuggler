@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.78 of RCSfile: class_cs.tmpl,v
+// Generated from Revision: 1.79 of RCSfile: class_cs.tmpl,v
 using System;
 using System.Runtime.InteropServices;
 using System.Reflection;
@@ -39,9 +39,8 @@ namespace vrj
 
 public sealed class User
 {
-   protected IntPtr mRawObject = IntPtr.Zero;
-   protected bool mWeOwnMemory = false;
-   protected class NoInitTag {}
+   private IntPtr mRawObject = IntPtr.Zero;
+   private bool mWeOwnMemory = false;
 
    /// <summary>
    /// This is needed for the custom marshaler to be able to perform a
@@ -58,11 +57,6 @@ public sealed class User
    }
 
    // Constructors.
-   protected User(NoInitTag doInit)
-   {
-      allocDelegates();
-   }
-
    [DllImport("vrj_bridge", CharSet = CharSet.Ansi)]
    private extern static IntPtr vrj_User_User__0();
 

@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.78 of RCSfile: class_cs.tmpl,v
+// Generated from Revision: 1.79 of RCSfile: class_cs.tmpl,v
 using System;
 using System.Runtime.InteropServices;
 using System.Reflection;
@@ -39,9 +39,8 @@ namespace gmtl
 
 public sealed class Coord4dZXY
 {
-   protected IntPtr mRawObject = IntPtr.Zero;
-   protected bool mWeOwnMemory = false;
-   protected class NoInitTag {}
+   private IntPtr mRawObject = IntPtr.Zero;
+   private bool mWeOwnMemory = false;
 
    /// <summary>
    /// This is needed for the custom marshaler to be able to perform a
@@ -54,10 +53,6 @@ public sealed class Coord4dZXY
    }
 
    // Constructors.
-   protected Coord4dZXY(NoInitTag doInit)
-   {
-   }
-
    [DllImport("gmtl_bridge", CharSet = CharSet.Ansi)]
    private extern static IntPtr gmtl_Coord_gmtl_Vec_double_4__gmtl_EulerAngle_double_gmtl_ZXY____Coord__0();
 

@@ -25,7 +25,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Generated from Revision: 1.78 of RCSfile: class_cs.tmpl,v
+// Generated from Revision: 1.79 of RCSfile: class_cs.tmpl,v
 using System;
 using System.Runtime.InteropServices;
 using System.Reflection;
@@ -45,12 +45,6 @@ public sealed class InputManager
    }
 
    // Constructors.
-   protected InputManager(NoInitTag doInit)
-      : base(doInit)
-   {
-      allocDelegates();
-   }
-
    // Internal constructor needed for marshaling purposes.
    internal InputManager(IntPtr instPtr, bool ownMemory)
       : base(new NoInitTag())
