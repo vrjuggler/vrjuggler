@@ -29,22 +29,18 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-
-
-package VjComponents.UI;
+package org.vrjuggler.jccl.vjcontrol.ui;
 
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.text.*;
 
-import VjControl.*;
-import VjComponents.UI.PlugPanel;
-import VjConfig.ConfigChunk;
+import org.vrjuggler.jccl.vjcontrol.*;
+import org.vrjuggler.jccl.config.ConfigChunk;
 
 /** PlugPanel to display error and status messages.
  * 
- *  @author Christopher Just
  *  @version $Revision$
  */
 public class ConsolePane extends JPanel implements PlugPanel, LogMessageListener {

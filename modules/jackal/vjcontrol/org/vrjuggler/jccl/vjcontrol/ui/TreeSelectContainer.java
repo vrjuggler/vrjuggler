@@ -29,25 +29,21 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
+package org.vrjuggler.jccl.vjcontrol.ui;
 
-
-package VjComponents.UI;
-
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.util.Vector;
 import javax.swing.*;
 import javax.swing.tree.*;
-import java.util.Vector;
-import java.awt.BorderLayout;
-import java.awt.Component;
-import java.awt.Graphics;
-import java.awt.Color;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseEvent;
-import java.awt.Dimension;
 
-import VjControl.*;
-import VjComponents.UI.PlugPanel;
-import VjComponents.UI.PlugPanelContainer;
-import VjConfig.*;
+import org.vrjuggler.jccl.vjcontrol.*;
+import org.vrjuggler.jccl.config.*;
 
 public class TreeSelectContainer
     extends JSplitPane 
