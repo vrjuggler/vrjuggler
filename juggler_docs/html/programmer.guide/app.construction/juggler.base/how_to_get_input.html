@@ -11,27 +11,56 @@
 <body>
 
 <h2>Getting input from VR Juggler</h2>
-<h3>Use helper classes</h3>
-<p>VR Juggler maintains a set of named devices. &nbsp;Each of these devices is
-running in their own thread and is executing asynchronously from the rest of the
-system. &nbsp;Once each frame, the kernel updates a local copy of the input data
-for applications to use. &nbsp;To access the devices, applications must make use
-of a device handle to a named device.</p>
-<p>Every time an application receives device data, it must use this handle.
-&nbsp;As shown in { REF _Ref465158845 \h }Figure 7, the mWand data member is a
-device handle. &nbsp;It is initialized by passing the name of the device it
-references to the init() method. &nbsp;Then to use the device in an application,
-the getData() method is called which returns a reference to the type of data
-that the device supports. &nbsp;In this case, mWand-&gt;getData() returns a
-reference to a vjMatrix because the &quot;VJWand&quot; is a positional device.</p>
-<p>Because all devices are accessed through device handles, VR Juggler has
-flexibility in how the devices in the system are handled and how the device data
-is returned. &nbsp;The device a handle refers to can be changed at run-time.
-&nbsp;This change can occur without the application ever knowing it took place.</p>
-<h3>How does an app get input&nbsp;</h3>
-<h3>Where should input be handled</h3>
-<p>Latency critical should be in preFrame()</p>
-<p>Computations based upon input should be in postFrame()</p>
+<h3>How does an app get input?</h3>
+<p>There are many types of input devices that VR Juggler applications can use,
+positional, digital, analog, and quite a few more.&nbsp; But the process and
+concepts about how to get input from all these devices is exactly the same in
+all applications.</p>
+<p>The primary thing to remember about getting input in applications is that all
+VR Juggler applications receive input through device handles that are managed by
+vjDeviceInterfaces .&nbsp; There are vjDeviceInterfaces for each type of input
+data that VR Juggler can handle.&nbsp; There is one of positional input, one for
+analog, and so on.&nbsp; The all have very similar interfaces and behave exactly
+the same.&nbsp; (please see <a href="../../helper.classes/vjDeviceInterface.html">vjDeviceInterface</a>
+for details)</p>
+<h3>Show me the code</h3>
+<p>So, what does the code look like for getting device input using these device
+interfaces.&nbsp; Since all device interfaces look the same, I will just give an
+example of getting positional input.&nbsp; All other types are very similar.</p>
+
+<pre>class myApp : public vjApp
+{
+public:
+   init();
+   preFrame();
+private:
+   vjPosInterface mWand;
+}</pre>
+
+<p>The first thing that has to be added to an application is the variable that is the actual device interface.  Usually they are member variables of the user application class.&nbsp;
+This is how mWand is declared above.
+
+<pre>myApp::init()
+{
+   mWand.init(&quot;NameOfPosDevInConfiguration&quot;);
+}</pre>
+
+<p>The device interface has to be told what device it is getting data from, this is done by calling the init() function with the string name of device that the interface should get data from.  This device name comes from the active configuration.
+<p>
+
+So, now we know how to declare a device interface and how to initialize it.  How do we actually use it???
+<pre>...
+vjMatrix wand_pos;
+wand_pos = *(mWand-&gt;getData());
+...</pre>
+
+<p>This code shows an example of using the device interface in an
+application.&nbsp; It shows some sample code where the application copies the
+positional information from a device interface.&nbsp; When it is dereferenced,
+the device interface figures out what device it is pointing to and returns the
+data from that device.</p>
+<p>Once again, please see <a href="../../helper.classes/vjDeviceInterface.html">vjDeviceInterface</a>
+for much more complete details on how to use vjDeviceInterfaces.</p>
 
 </body>
 
