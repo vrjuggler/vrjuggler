@@ -164,9 +164,13 @@ GMTL_PATH(0.1.9, [$JUGGLERROOT_ABS/external/GMTL],
           [AC_MSG_ERROR([*** GMTL required for sonix ***])])
 CPPFLAGS="$snx_save_CPPFLAGS"
 
-# XXX: This adds the *wrong* path to GMTL when 'sonix-config --cxxflags is
-# run.
 CXXFLAGS="$CXXFLAGS $GMTL_INCLUDES"
+
+if test "x$GMTL_ROOT" != "x$JUGGLERROOT_ABS/external/GMTL" ; then
+   LOCAL_GMTL='Y'
+else
+   LOCAL_GMTL='N'
+fi
 
 DPP_CHECK_DYNLOAD_LIB
 
@@ -340,8 +344,10 @@ fi
 dnl ===================================================
 dnl  Just extra stuff here (non-sonic stuff)
 dnl ===================================================
-snx_extra_cxxflags="$snx_extra_cxxflags $GMTL_INCLUDES"
-snx_extra_include_dirs="$snx_extra_include_dirs"
+if test "x$LOCAL_GMTL" = "xY" ; then
+   snx_extra_cxxflags="$snx_extra_cxxflags $GMTL_INCLUDES"
+fi
+
 snx_extra_ldflags="$snx_extra_ldflags $APP_EXTRA_LIBS_BEGIN"
 #snx_extra_libs="$snx_extra_libs $LDFLAGS $VPR_LIBS_CC_MIN $LIBS $APP_EXTRA_LIBS_END"
 snx_extra_libs="$snx_extra_libs $LDFLAGS $LIBS $APP_EXTRA_LIBS_END"
