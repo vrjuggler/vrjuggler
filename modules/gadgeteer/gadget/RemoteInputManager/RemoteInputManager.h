@@ -60,8 +60,7 @@ namespace gadget{
 
    // Note the RemoteInputManager does not inherit vjConfigChunkHandler like the Input Manager does.
    // That's because it is closely connected to the Input Manager and the chunks it processes must also
-   // be processed by the Input Manager.
-
+   // be processed by the Input Manager.   
    class GADGET_CLASS_API RemoteInputManager
    {
    protected:
