@@ -36,7 +36,7 @@ HR
    size: 1;
 }
 
-img, a img
+img, a img, p img, body img
 {
    border-width: 0;
 }
