@@ -69,7 +69,7 @@ int vjGlWinWin32::open()
         else {
             vjDEBUG(vjDBG_DRAW_MGR, 5) << "attempting to make window borderless"
                                        << std::endl << vjDEBUG_FLUSH;
-            style |= WS_BORDER;
+            style |= WS_OVERLAPPED | WS_POPUP | WS_VISIBLE;
         }
 
 	// Create the main application window
