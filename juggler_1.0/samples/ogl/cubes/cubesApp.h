@@ -62,12 +62,13 @@ public:
    ContextData()
    {
       firstTime = true;
-      cubeDLIndex = -1;
+      dlIndex   = -1;
    }
 
 public:
    bool  firstTime;
-   int   cubeDLIndex;
+   int   dlIndex;
+   int   maxIndex;     // For debugging purposes only!
 };
 
 // Class to hold all data for a specific user
@@ -141,6 +142,11 @@ public:
    // once for every display window that is opened.  Put OpenGL resource
    // allocation here.
    virtual void contextInit();
+
+   // Called immediately upon closing an OpenGL context 
+   // (called for every window that is closed)
+   // put your opengl deallocation here...
+   virtual void contextClose();
 
    /**   name Drawing Loop Functions
     *
@@ -216,7 +222,7 @@ private:
 
    void drawCube()
    {
-       glCallList(mDlData->cubeDLIndex);
+       glCallList(mDlData->dlIndex);
        //drawbox(-1.0f, 1.0f, -1.0f, 1.0f, -1.0f, 1.0f, GL_QUADS);
    }
 
@@ -225,6 +231,7 @@ private:
 
 public:
    vjGlContextData<ContextData>  mDlData;       // Data for display lists
+   vjGlContextData<ContextData>  mDlDebugData;  // Data for debugging display lists
    std::vector<UserData*>        mUserData;     // All the users in the program
 };
 
