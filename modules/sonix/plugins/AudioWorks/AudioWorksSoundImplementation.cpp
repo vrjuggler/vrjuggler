@@ -111,8 +111,10 @@ namespace snx
     */
    void AudioWorksSoundImplementation::trigger( const std::string & alias, const int & looping )
    {
+      std::cout<<"AWSoundImpl::trigger("<<alias<<", "<<looping<<")"<<std::endl;
       snx::SoundImplementation::trigger( alias, looping );
 
+      std::cout<<"Bindtable count: "<<mBindTable.count(alias)<<std::endl;
       if (mBindTable.count( alias ) > 0)
       {
          if (this->isPaused( alias ))
@@ -121,6 +123,7 @@ namespace snx
          }
          else
          {
+            std::cout<<"Triggering sound"<<std::endl;
             awProp(mBindTable[alias].mSound, AWSND_STATE, AW_ON);
             awProp(mBindTable[alias].mSound, AWSND_ENABLE, AW_ON);
             
@@ -158,7 +161,7 @@ namespace snx
       {
          // @todo  this isn't _quite_ pause.  AW didn't really seem to have one 
          //        (that I could find..)  enable does a mute...
-         awProp( mBindTable[alias].mSound, AWSND_ENABLE, false );
+         awProp( mBindTable[alias].mSound, AWSND_STATE, AW_OFF );
       }
    }   
 
@@ -171,7 +174,7 @@ namespace snx
       {
          // @todo  this isn't _quite_ pause.  AW didn't really seem to have one 
          //        (that I could find..)  enable does a mute...
-         awProp( mBindTable[alias].mSound, AWSND_ENABLE, true );
+         awProp( mBindTable[alias].mSound, AWSND_STATE, AW_ON );
       }
    }
    
@@ -180,8 +183,7 @@ namespace snx
    {
       if (mBindTable.count( alias ) > 0)
       {
-         bool paused = (bool)awGetProp( mBindTable[alias].mSound, AWSND_ENABLE );
-         return paused;
+         return (awGetProp(mBindTable[alias].mSound, AWSND_STATE) == AW_OFF);
       }
       return false;
    }
@@ -457,7 +459,7 @@ namespace snx
 
       awConfigChan( mChannel ); /// exp...
 
-      result = awConfigSys(0);
+      result = awConfigSys(1);
      if (result != 0)         //Attempt to configure the system
      {    
        std::cout << "[snx]AudioWorks| ERROR: ConfigSys() failed (retval="<<result<<")!\n" << std::flush;
