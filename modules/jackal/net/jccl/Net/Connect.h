@@ -35,14 +35,15 @@
 #define _JCCL_CONNECT_H_
 
 #include <jccl/jcclConfig.h>
-#include <queue>
 #include <jccl/Config/ConfigChunkPtr.h>
 #include <jccl/Config/ConfigChunk.h>
 #include <jccl/JackalServer/Socket.h>
 #include <jccl/JackalServer/NetCommunicator.h>
-#include <vpr/Thread/Thread.h>
-#include <jccl/Plugins/PerformanceMonitor/TimeStamp.h>
 #include <jccl/JackalServer/Command.h>
+#include <vpr/Thread/Thread.h>
+#include <vpr/Util/Interval.h>
+
+#include <queue>
 
 namespace jccl {
 
@@ -52,7 +53,6 @@ enum ConnectMode { INTERACTIVE_CONNECT, INPUT_CONNECT, OUTPUT_CONNECT };
 //--------------------------------------------------
 //: vjConnect reads/writes to a file, pipe, or socket.
 //
-// @author  Christopher Just
 //
 //---------------------------------------
 class JCCL_CLASS_API Connect {
@@ -167,7 +167,7 @@ private:
     vpr::Mutex                    commands_mutex;
 
     //: used to see if it's time to spring a timed_command
-    TimeStamp             current_time;
+    vpr::Interval             current_time;
 
     //: body of network process.
     void readControlLoop (void* nullParam);

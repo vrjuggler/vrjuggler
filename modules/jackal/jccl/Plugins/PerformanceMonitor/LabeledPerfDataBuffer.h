@@ -37,7 +37,6 @@
 #define _JCCL_LABELED_PERF_DATA_BUFFER_H_
 
 #include <jccl/jcclConfig.h>
-#include <jccl/Plugins/PerformanceMonitor/TimeStamp.h>
 #include <jccl/Plugins/PerformanceMonitor/PerformanceCategories.h>
 #include <vpr/Sync/Mutex.h>
 #include <vpr/Util/GUID.h>

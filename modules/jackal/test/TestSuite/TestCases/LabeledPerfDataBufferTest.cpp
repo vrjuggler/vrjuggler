@@ -8,14 +8,10 @@
 #include <cppunit/TestCaller.h>
 
 #include <jccl/Plugins/PerformanceMonitor/LabeledPerfDataBuffer.h>
-#include <jccl/Plugins/PerformanceMonitor/TimeStamp.h>
 #include <jccl/Util/Debug.h>
 #include <vpr/Thread/TSObjectProxy.h>
 #include <vpr/Thread/Thread.h>
 #include <vpr/Sync/Barrier.h>
-// #include <jccl/Config/VarValue.h>
-// #include <jccl/Config/ConfigChunk.h>
-// #include <jccl/Config/ChunkDesc.h>
 
 /*****************************************************************
  tests out the functionality expected of jccl::LabeledPerfDataBuffer
@@ -49,17 +45,17 @@ namespace jcclTest
 
         jccl::LabeledPerfDataBuffer buffer1("testSetOverhead buffer 1", n+1);
 
-        jccl::TimeStamp ts1, ts2;
+        vpr::Interval ts1, ts2;
 
-        ts1.set();
+        ts1.setNow();
 
         while(i--) {
             buffer1.set(jcclPERF_JACKAL, "foobar");
         }
 
-        ts2.set();
+        ts2.setNow();
 
-        double average = (ts2.usecs() - ts1.usecs())/n;
+        double average = (ts2.usecf() - ts1.usecf())/n;
 
         std::cout << "jccl::LabeledPerfDataBuffer::set()\n";
         std::cout << "\tOverhead = " << average << " us per call" << std::endl;
@@ -70,15 +66,15 @@ namespace jcclTest
 
         i = n;
 
-        ts1.set();
+        ts1.setNow();
 
         while(i--) {
             tsbuffer->set(jcclPERF_JACKAL, "foobar");
         }
 
-        ts2.set();
+        ts2.setNow();
 
-        average = (ts2.usecs() - ts1.usecs())/n;
+        average = (ts2.usecf() - ts1.usecf())/n;
 
         std::cout << "jccl::LabeledPerfDataBuffer::set() (Thread-specific)\n";
         std::cout << "\tOverhead = " << average << " us per call" << std::endl;
@@ -124,7 +120,7 @@ namespace jcclTest
         //jccl::PerformanceCategories::instance()->activate();
 
         vpr::TSObjectProxy<jccl::LabeledPerfDataBuffer> tsbuffer;
-        jccl::TimeStamp ts1, ts2;
+        vpr::Interval ts1, ts2;
 
         int num_threads = 6;
         int n = 100000;
@@ -140,15 +136,15 @@ namespace jcclTest
             new vpr::Thread(memberFunctor);
         }
 
-        ts1.set();
+        ts1.setNow();
         // trigger;
         b.wait();
         // wait for finish;
         b.wait();
-        ts2.set();
+        ts2.setNow();
 
 
-        float average = (ts2.usecs() - ts1.usecs())/n;
+        float average = (ts2.usecf() - ts1.usecf())/n;
 
         std::cout << "jccl::LabeledPerfDataBuffer::set() (6 thread contention)\n";
         std::cout << "\tOverhead = " << average << " us per call" << std::endl;

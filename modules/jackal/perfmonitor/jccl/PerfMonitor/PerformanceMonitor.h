@@ -37,20 +37,17 @@
 #include <jccl/jcclConfig.h>
 #include <jccl/JackalServer/JackalControl.h>
 #include <jccl/Plugins/ConfigManager/ConfigChunkHandler.h>
-//#include <jccl/Config/ConfigChunkPtr.h>
 #include <jccl/Config/ConfigChunk.h>
 #include <jccl/Plugins/PerformanceMonitor/LabeledPerfDataBuffer.h>
 #include <jccl/Plugins/PerformanceMonitor/PerformanceCategories.h>
 #include <vpr/Thread/TSObjectProxy.h>
 #include <vpr/Thread/Thread.h>
-#include <vpr/Sync/Mutex.h>
 #include <vpr/Util/Singleton.h>
 
 
 namespace jccl {
 
     class Connect;
-    class PerfDataBuffer;
     class JackalServer;
     class PeriodicCommand;
 
@@ -70,20 +67,6 @@ public:
     /** Destructor. */
     virtual ~PerformanceMonitor();
 
-
-
-    /** Allocates a buffer for collecting performance data.
-     *  @param name - Name of the buffer.
-     *  @param numbufs - Number of samples to store.
-     *  @param nindex - Number of unique indices (from 0 to n-1).
-     */
-    PerfDataBuffer*  getPerfDataBuffer (const std::string& _name, 
-                                        int _numbufs, 
-                                        int _nindex);
-
-
-    /** Unregisters and destroys a PerfDataBuffer. */
-    void releasePerfDataBuffer (PerfDataBuffer *v);
 
 
     /** Get access to the thread-specific labeled buffers. */
@@ -110,17 +93,11 @@ public:
 
 
 private:
-    struct buffer_element {
-        PerfDataBuffer* buffer;
-        PeriodicCommand* command;
-    };
 
     std::string               perf_target_name;
     Connect*                  perf_target;
-    std::vector<buffer_element> perf_buffers;
     float                     perf_refresh_time;  // in milliseconds
     ConfigChunkPtr            current_perf_config;
-    vpr::Mutex                perf_buffers_mutex;
 
     vpr::TSObjectProxy<LabeledPerfDataBuffer> mTSBuffers;
 

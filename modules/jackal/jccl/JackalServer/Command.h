@@ -38,7 +38,7 @@
 #define _JCCL_COMMAND_H_
 
 #include <jccl/jcclConfig.h>
-#include <jccl/Plugins/PerformanceMonitor/TimeStamp.h>
+#include <vpr/Util/Interval.h>
 
 namespace jccl {
 
@@ -65,7 +65,7 @@ namespace jccl {
 
         PeriodicCommand (float _refresh_time);
 
-        void resetFireTime (TimeStamp& ts);
+        void resetFireTime (vpr::Interval& ts);
 
         int operator < (const PeriodicCommand& cmd2) const;
 
