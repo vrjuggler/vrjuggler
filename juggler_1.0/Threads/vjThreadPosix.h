@@ -13,11 +13,11 @@
  * --------------------------------------------------------------------------
  */
 
-#ifndef _THREAD_POSIX_H_
-#define _THREAD_POSIX_H_
-
+#ifndef _VJ_THREAD_POSIX_H_
+#define _VJ_THREAD_POSIX_H_
 
 #include <vjConfig.h>
+
 #include <pthread.h>
 #include <sys/types.h>
 #include <unistd.h>
@@ -30,7 +30,6 @@ typedef uint32_t	thread_id_t;
 
 //: Threads implementation using POSIX threads (both Draft 4 and the "final"
 //+ draft of the standard are supported).
-
 //!PUBLIC_API:
 class vjThreadPosix : public vjBaseThread
 {
@@ -237,7 +236,7 @@ public:
     }
 
     // -----------------------------------------------------------------------
-    //: Get a ptr to the thread we are in
+    //: Get a ptr to the thread we are in.
     //
     //! RETURNS: NULL - Thread is not in global table
     //! RETURNS: NonNull - Ptr to the thread that we are running within
@@ -260,6 +259,7 @@ public:
 // All private member variables and functions.
 private:
     pthread_t	mThread;	//: pthread_t data structure for this thread
+    bool	exited;		//: Flag stating if this thread has exited
 
     void checkRegister(int status);
 
@@ -332,4 +332,4 @@ private:
 };
 
 
-#endif	/* _THREAD_POSIX_H_ */
+#endif	/* _VJ_THREAD_POSIX_H_ */
