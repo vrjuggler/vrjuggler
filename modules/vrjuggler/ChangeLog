@@ -1,5 +1,6 @@
 DATE        AUTHOR    CHANGE
 ----------- --------- ---------------------------------------------------------
+Oct-15-2001 patrick   Renamed the juggler-config script to vrjuggler-config.
 Oct-12-2001 allenb    Removed vrj::Debug.  We now use vpr::Debug for all
                       debug output.  This involved introducing GUIDs for the 
                       vrj debug categories.  They can be found in Debug.h

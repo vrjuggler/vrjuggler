@@ -548,11 +548,6 @@ AC_TYPE_SIZE_T
 # -----------------------------------------------------------------------------
 AC_CHECK_FUNCS(gettimeofday socket strcasecmp strdup strerror strtod strtok_r)
 
-_vjsave_LIBS="$LIBS"
-AC_CHECK_FUNC(gethostbyname, SOCKET_LIB='',
-    AC_CHECK_LIB(socket, gethostbyname, SOCKET_LIB='-lsocket'))
-LIBS="${_vjsave_LIBS}"
-
 # In a Win32 environment with MS Visual C++ as the compiler, these math
 # functions are not in any special library.  Test for them normally.
 if test "x$OS_TYPE" = "xWin32" -a "x$USE_GCC" != "xyes" ; then
@@ -759,7 +754,7 @@ fi
 VJ_SHARE_DIR=`echo "$datadir" | sed -e 's|^${prefix}/||'`
 VJ_SHARE_DIR=`echo "$VJ_SHARE_DIR" | sed -e "${_prefix_exp}"`
 
-# Information needed to generate juggler-config.
+# Information needed to generate vrjuggler-config.
 case $OS_TYPE in
     UNIX)
         if test "x$GXX" = "xyes" ; then
