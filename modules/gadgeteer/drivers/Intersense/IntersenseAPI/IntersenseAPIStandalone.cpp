@@ -45,7 +45,6 @@ bool IntersenseAPIStandalone::open(const std::string& dsoLocation)
       if (-1 != mHandle) 
       {
          mActive = true;
-         //sendScript();
       }
    }
    return mActive;
@@ -59,7 +58,6 @@ int IntersenseAPIStandalone::convertPort(const std::string& port)
    {
       if(isdigit(port[i]))
       {
-         //std::cout << port[i] << std::endl;
          result += port[i];
       }
    }

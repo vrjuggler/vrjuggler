@@ -79,11 +79,6 @@ typedef struct
 } ISStationConfig;
 
 
-// XXX: It should be virtual public, but that causes an assertion failure.
-// This needs to be debugged.
-//class Intersense : virtual public Position, virtual public Digital, virtual public Analog
-//class Intersense :  public Input, public Position,  public Digital,  public Analog
-
 /**
  * Position derived class for running an IS900 tracking system.
  *
@@ -138,35 +133,6 @@ public:
    /** Returns what element type is associated with this class. */
    static std::string getElementType();
 
-   /** Gets current data from the receiver.
-    *  @arg dev The receiver number.  Clients of juggler should access
-    *           tracker receivers as [0-n].  For example, if you have
-    *           receivers 1, 2, and 4, with transmitter on 3, then
-    *           you can access them as devs 0, 1, and 2.
-    *  @return a pointer to the receiver's current PositionData, or NULL
-    *          if the device is not active.
-    */
-   // PositionData* getPositionData (int dev=0);
-
-   /**
-    * Gets the digital and analog data.
-    * @param d  The button number.
-    * @post returns a boolean value where 0 = false and 1 = true
-    * @note Since the tracker has multiple possible devices but digital
-    *       devices assume only one device, the buttons are layed out as
-    *       d = MAX_NUM_BUTTONS*(device number) + (button number)
-    *       device number is zero based
-    *       button number is zero based
-    */
-    // ex.  for button number 4 of device 1
-    // buttonValue = getDigitalData( 1*MAX_NUM_BUTTONS + 4);
-    // Most configurations have the wand on port 2... so the device number is 1
-    // The rest button layout is described in the Intersense Manual
-    // (this value is set in the juggler config files)
-    //
-//   DigitalData* getDigitalData(int d = 0);
-//   AnalogData* getAnalogData(int d = 0);
-
    /** Checks if the device is active. */
    bool isActive()
    {
@@ -197,25 +163,10 @@ private:
 
     IntersenseAPIStandalone mTracker;
 
-    //Isense_Data mInput[3];
-
     ISStationConfig* stations;
-
-    //PositionData* mData;
 
     std::vector<DigitalData> mDigitalData;
     std::vector<AnalogData>  mAnalogData;
-
-//KLUDGE: work around the inherent difference between Position and Digital
-//(and Analog)
-// Motivation: Positional expects multiple positional devices to be connected
-// to the same port and provides a means for accesses each positional device.
-// So, if there are four wands there is one tracker unit that allows access to
-// each wand...  For digital devices, there may be limitless input, but each
-// digital button is attached to the same digital device.  The tracker with
-// digital io uses its natural subset of positional devices to encapsulate the
-// digital IO as well. Therefore what is needed with four wands is a digital
-// device that allows access to subsets of digital buttons.
 
    std::string    mISenseDriverLocation;
    bool           mDone;

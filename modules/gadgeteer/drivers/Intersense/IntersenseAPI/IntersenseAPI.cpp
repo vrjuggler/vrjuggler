@@ -160,17 +160,6 @@ bool IntersenseAPI::config(jccl::ConfigElementPtr e)
       stations[i].ana_num = station_config->getProperty<int>("analog_count");
    }
 
-   //XXX: We currentl do not support sending a script file to the tracker since
-   //     it is so easy to screw up the whole tracker
-   //     configuration/constillation this way.
-   //const char* filename = e->getProperty<std::string>("script").c_str();
-   //std::stringstream script;
-   //std::ifstream scriptFile;
-   //scriptFile.open(filename);
-   //script<<scriptFile.rdbuf();
-   //mTracker.setScript(script.str().c_str());
-   //scriptFile.close();
-
    return true;
 }
 
