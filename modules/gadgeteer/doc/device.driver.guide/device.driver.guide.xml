@@ -1438,9 +1438,11 @@ linkends="MyButtonDevice.config.hostelement.value.co" />
 
 #include &#60;stdlib.h&#62;
 
+#include &#60;vpr/vpr.h&#62;
 #include &#60;vpr/Thread/Thread.h&#62;
+#include &#60;gadget/Type/Input.h&#62;
 #include &#60;gadget/Type/Digital.h&#62;
-#include &#60;gadget/Type/DeviceFactory.h&#62;
+#include &#60;gadget/Type/InputMixer.h&#62;
 
 
 namespace gadget
@@ -1454,27 +1456,53 @@ class ButtonDevice
    : public gadget::InputMixer&#60;gadget::Input, gadget::Digital&#62;
 {
 public:
-   ButtonDevice() : mSampleThread(NULL), mThreadRunning(false)
-   {;}
+   ButtonDevice()
+      : mSampleThread(NULL)
+      , mRunning(false)
+   {
+      /* Do nothing. */ ;
+   }
 
    virtual ~ButtonDevice()
    {
-      this-&#62;stopSampling();
+      if ( mRunning )
+      {
+         this-&#62;stopSampling();
+      }
    }
 
-   virtual void  getData();
-   virtual int   startSampling();
-   virtual int   sample();
-   virtual int   stopSampling();
+   virtual void updateData();
+   virtual int  startSampling();
+   virtual int  sample();
+   virtual int  stopSampling();
 
    static std::string getElementType();
+
+   /**
+    * Invokes the global scope delete operator.  This is required for proper
+    * releasing of memory in DLLs on Win32.
+    */
+   void operator delete(void* p)
+   {
+      ::operator delete(p);
+   }
+
+protected:
+   /**
+    * Deletes this object.  This is an implementation of the pure virtual
+    * gadget::Input::destroy() method.
+    */
+   virtual void destroy()
+   {
+      delete this;
+   }
 
 private:
    static void   sampleFunction(void* classPointer);
    int           mDigitalData;
    vpr::Thread*  mSampleThread;
 
-   bool          mThreadRunning;
+   bool          mRunning;
 
    // configuration data set by config()
    std::string   mPortName;
@@ -1491,33 +1519,60 @@ private:
 
 #include &#60;vpr/vpr.h&#62;
 #include &#60;vpr/System.h&#62;
-#include &#60;vpr/Sync/Guard.h&#62;
+#include &#60;gadget/InputManager.h&#62;
 #include &#60;gadget/Type/DeviceConstructor.h&#62;
 
 #include &#34;ButtonDevice.h&#34;
 
 
-void initDevice(gadget::InputManager* inputMgr)
+using namespace gadget;
+
+void initDevice(InputManager* inputMgr)
 {
-   new gadget::DeviceConstructor&#60;ButtonDevice&#62;(inputMgr);
+   new DeviceConstructor&#60;ButtonDevice&#62;(inputMgr);
 }
 
-// What is the name of this device?
-// This function returns a string that should match this device&#39;s
-// config element name.
+/** Returns a string that matches this device&#39;s configuration element type. */
 std::string ButtonDevice::getElementType()
 {
-   return std::string(&#34;ButtonDevice&#34;);
+   return std::string(&#34;MyButtonDevice&#34;);
 }
 
-// spawn a sample thread,
-// which calls ButtonDevice::sample() repeatedly
+//: When the system detects a configuration change for your driver, it will
+//  pass the new jccl::ConfigElement into this function.  See the documentation
+//  on config elements, for information on how to access them.
+bool ButtonDevice::config(jccl::ConfigElementPtr e)
+{
+  if ( ! Digital::config(e))
+  {
+     return false;
+  }
+
+  mPort = e-&#62;getProperty&#60;std::string&#62;(&#34;port&#34;);
+  mBaud = e-&#62;getProperty&#60;int&#62;(&#34;baud&#34;);
+
+  return true;
+}
+
+void ButtonDevice::updateData()
+{
+   if ( mRunning )
+   {
+      swapDigitalBuffers();
+   }
+}
+
+/**
+ * Spanws the sample thread, which calls MyButtonDevice::sample() repeatedly.
+ */
 int ButtonDevice::startSampling()
 {
-   mSampleThread = new vpr::Thread(threadedSampleFunction, (void*)this);
+   mRunning = true;
+   mSampleThread = new vpr::Thread(threadedSampleFunction, (void*) this);
 
    if ( ! mSampleThread-&#62;valid() )
    {
+      mRunning = false;
       return 0; // thread creation failed
    }
    else
@@ -1526,22 +1581,37 @@ int ButtonDevice::startSampling()
    }
 }
 
-//: Record (or sample) the current data
-// this is called repeatedly by the sample thread created by startSampling()
+/**
+ * Records (or samples) the current data.  This is called repeatedly by the
+ * sample thread created by startSampling().
+ */
 int ButtonDevice::sample()
 {
-   // here you would add your code to
-   // sample the hardware for a button press:
-   mDigitalData[progress] = rand_number_0_or_1();
-   return 0;
+   int status(0);
+
+   if ( mRunning )
+   {
+      // Here you would add your code to sample the hardware for a button
+      // press:
+      std::vector&#60;DigitalData&#62; samples(1);
+      samples[0] = 1;
+      addDigitalSample(samples);
+
+      // Successful sample.
+      status = 1;
+   }
+
+   return status;
 }
 
-// kill sample thread
+/** Kills the sample thread. */
 int ButtonDevice::stopSampling()
 {
-   if ( mSampleThread != NULL &#38;&#38; mThreadRunning )
+   mRunning = false;
+
+   if (mSampleThread != NULL)
    {
-      mThreadRunning = false;
+      mSampleThread-&#62;kill(); // Not guaranteed to work on all platforms
       mSampleThread-&#62;join();
       delete mSampleThread;
       mSampleThread = NULL;
@@ -1549,45 +1619,21 @@ int ButtonDevice::stopSampling()
    return 1;
 }
 
-// function for users to get the digital data.
-// here we overload gadget::Digital::getDigitalData
-int ButtonDevice::getDigitalData(int d)
+/**
+ * Our sampling function that is executed by the spawned sample thread.
+ * This function is declared as a static member of MyButtonDevice.  It simply
+ * calls MyButtonDevice::sample() over and over.
+ */
+void ButtonDevice::threadedSampleFunction(void* classPointer)
 {
-   // only one button, so we ignore &#34;d&#34;
-   return mDigitalData[current];
-}
-
-// Our threaded sample function
-// This function is declared as a static member of ButtonDevice
-// just spins... calling sample() over and over.
-void ButtonDevice::sampleFunction(void* classPointer)
-{
-   ButtonDevice* this_ptr = static_cast&#60;ButtonDevice*&#62;(classPointer);
-
-   this_ptr-&#62;mThreadRunning = true;
+   ButtonDevice* this_ptr = static_cast&#60;ButtonDevice*&#62;( classPointer );
 
    // spin until someone kills &#34;mSampleThread&#34;
-   while ( this_ptr-&#62;mThreadRunning )
+   while ( this_ptr-&#62;mRunning )
    {
-      this_ptr-&#62;sample();
-      vpr::System::sleep(1); //specify some time here, so you don&#39;t waste CPU cycles
+     this_ptr-&#62;sample();
+     vpr::System::sleep(1); //specify some time here, so you don&#39;t waste CPU cycles
    }
-}
-
-// When the system detects a configuration change for your driver, it will
-// pass the new jccl::ConfigElementPtr into this function.  See the
-// documentation on config elements for information on how to access them.
-bool ButtonDevice::config(jccl::ConfigElementPtr e)
-{
-   if ( ! gadget::Digital::config(e) )
-   {
-      return false;
-   }
-
-   mPortName = e-&#62;getProperty&#60;std::string&#62;(&#34;port&#34;);
-   mBaudRate = e-&#62;getProperty&#60;int&#62;(&#34;baud&#34;);
-
-   return true;
 }</programlisting>
         </example>
       </section>
@@ -1619,7 +1665,7 @@ SRCS=		ButtonDevice.cpp		\
 		DriverStandalone.cpp
 
 include $(MKPATH)/dpp.obj.mk
-include @topdir@/gadget/Devices/driver.defs.mk
+include @topdir@/driver.defs.mk
 
 # -----------------------------------------------------------------------------
 # Include dependencies generated automatically.
@@ -1637,33 +1683,12 @@ endif</programlisting>
         <example>
           <title>Makefile for Use Outside Gadgeteer Source Tree</title>
 
-          <programlisting linenumbering="numbered">default: all
+          <programlisting linenumbering="unnumbered">BUILD_TYPE=	dbg
 
-# Include common definitions.
-include @topdir@/make.defs.mk
+DRIVER_NAME=	button
+SRCS=		buttondevice.cpp
 
-DRIVER_NAME=	ButtonDevice
-
-srcdir=		.
-INSTALL=	@INSTALL@
-INSTALL_FILES=	
-SUBOBJDIR=	$(DRIVER_NAME)
-C_AFTERBUILD=	driver-dso
-
-SRCS=		ButtonDevice.cpp		\
-		DriverStandalone.cpp
-
-include $(MKPATH)/dpp.obj.mk
-include @topdir@/gadget/Devices/driver.defs.mk
-
-# -----------------------------------------------------------------------------
-# Include dependencies generated automatically.
-# -----------------------------------------------------------------------------
-ifndef DO_CLEANDEPEND
-ifndef DO_BEFOREBUILD
-   -include $(DEPEND_FILES)
-endif
-endif</programlisting>
+include $(GADGET_BASE_DIR)/share/gadgeteer/gadget.driver.mk</programlisting>
         </example>
       </section>
     </appendix>
