@@ -58,3 +58,10 @@ Points of interest in the Juggler 1.1 code
 TODO: Change all of the _check functions to load the files that they are supposed
       to test against and look at the chunk properties to test against what the
       config manager(s) know about.
+
+      Some tests don't test for ALL possible testable values. Update them to
+      fill in these possible holes.
+
+      Some tests ignore the return values of chunk loading functions. Change
+      them to bail out if a file loading operator fails, because the rest of
+      the test will be tainted anyways.
