@@ -242,12 +242,12 @@ public:
     //! POST: The maximum buffer size is returned to the caller through the
     //+       by-reference argument.
     //
-    //! ARGS: size - A reference to a vpr::Uint8 where the buffer size is
+    //! ARGS: size - A reference to a vpr::Uint16 where the buffer size is
     //+              stored for return to the caller.
     //
     //! RETURNS: A vpr::Status object describing the results of the operation.
     // ------------------------------------------------------------------------
-    Status getBufferSize(Uint8& size);
+    Status getBufferSize(Uint16& size);
 
     // ------------------------------------------------------------------------
     //: Attempt to change the buffer size to the given argument.
