@@ -36,16 +36,16 @@
 // author: Christopher Just
 
 
-#include <jccl/JackalServer/EnvironmentManager.h>
+#include <jccl/JackalServer/JackalServer.h>
 //#include <Kernel/Kernel.h>
 #include <jccl/JackalServer/Connect.h>
-#include <Performance/PerfDataBuffer.h>
+#include <jccl/Performance/PerfDataBuffer.h>
 #include <jccl/Config/ChunkDescDB.h>
 #include <jccl/Config/ConfigChunkDB.h>
 #include <jccl/Config/ParseUtil.h>
 #include <jccl/JackalServer/TimedUpdate.h>
 
-//#include <Kernel/ConfigManager.h>
+#include <jccl/ConfigManager/ConfigManager.h>
 
 namespace jccl {
 
@@ -153,7 +153,7 @@ bool JackalServer::configAdd(ConfigChunk* chunk) {
     int newport;
 
     std::string s = chunk->getType();
-    if (!strcasecmp (s, "EnvironmentManager")) {
+    if (!vjstrcasecmp (s, "EnvironmentManager")) {
         configured_to_accept = chunk->getProperty ("AcceptConnections");
         newport = chunk->getProperty("Port");
 
@@ -183,21 +183,21 @@ bool JackalServer::configAdd(ConfigChunk* chunk) {
 
         return true;
     }
-    else if (!strcasecmp (s, "PerfMeasure")) {
+    else if (!vjstrcasecmp (s, "PerfMeasure")) {
         current_perf_config = new ConfigChunk (*chunk);
         perf_buffers_mutex.acquire();
         activatePerfBuffers();
         perf_buffers_mutex.release();
         return true;
     }
-    else if (!strcasecmp (s, "FileConnect")) {
+    else if (!vjstrcasecmp (s, "FileConnect")) {
         // I wanted to just look if the fileconnect had been added yet.
         // however I seem to have a chicken/egg problem.
         // so the kludge we'll do now is to not directly add a chunk that's
-        // of type C_INTERACTIVE. sigh.
+        // of type VJC_INTERACTIVE. sigh.
         // Unfortunately, this means that for other cases (such as attaching
         // to a named pipe) we're still broken
-        if ((int)chunk->getProperty("Mode") != C_INTERACTIVE) {
+        if ((int)chunk->getProperty("Mode") != VJC_INTERACTIVE) {
             // it's new to us
             Connect* vn = new Connect (chunk);
             vprDEBUG (vprDBG_ENV_MGR, 1) << "EM adding connection: " << vn->getName().c_str() << '\n'
@@ -205,7 +205,7 @@ bool JackalServer::configAdd(ConfigChunk* chunk) {
             connections_mutex.acquire();
             connections.push_back (vn);
             vn->startProcess();
-            if (!strcasecmp (vn->getName(), perf_target_name))
+            if (!vjstrcasecmp (vn->getName(), perf_target_name))
                 setPerformanceTarget (vn);
             connections_mutex.release();
         }
@@ -222,7 +222,7 @@ bool JackalServer::configAdd(ConfigChunk* chunk) {
 bool JackalServer::configRemove(ConfigChunk* chunk) {
 
     std::string s = chunk->getType();
-    if (!strcasecmp (s, "EnvironmentManager")) {
+    if (!vjstrcasecmp (s, "EnvironmentManager")) {
         // this could be trouble if the chunk being removed isn't the chunk
         // we were configured with...
         rejectConnections();
@@ -230,9 +230,9 @@ bool JackalServer::configRemove(ConfigChunk* chunk) {
         configured_to_accept = false;
         return true;
     }
-    else if (!strcasecmp (s, "PerfMeasure")) {
+    else if (!vjstrcasecmp (s, "PerfMeasure")) {
         if (current_perf_config) {
-            if (!strcasecmp (current_perf_config->getProperty ("Name"),
+            if (!vjstrcasecmp (current_perf_config->getProperty ("Name"),
                                chunk->getProperty ("Name"))) {
                 delete (current_perf_config);
                 current_perf_config = NULL;
@@ -243,7 +243,7 @@ bool JackalServer::configRemove(ConfigChunk* chunk) {
         }
         return true;
     }
-    else if (!strcasecmp (s, "FileConnect")) {
+    else if (!vjstrcasecmp (s, "FileConnect")) {
         vprDEBUG (vprDBG_ENV_MGR,1) << "EM Removing connection: "
                                   << chunk->getProperty ("Name") << '\n' << vprDEBUG_FLUSH;
         connections_mutex.acquire();
@@ -266,9 +266,9 @@ bool JackalServer::configRemove(ConfigChunk* chunk) {
 //+          false - Can't handle it
 bool JackalServer::configCanHandle(ConfigChunk* chunk) {
     std::string s = chunk->getType();
-    return (!strcasecmp (s, "EnvironmentManager") ||
-            !strcasecmp (s, "PerfMeasure") ||
-            !strcasecmp (s, "FileConnect"));
+    return (!vjstrcasecmp (s, "EnvironmentManager") ||
+            !vjstrcasecmp (s, "PerfMeasure") ||
+            !vjstrcasecmp (s, "FileConnect"));
 }
 
 
@@ -377,7 +377,7 @@ void JackalServer::activatePerfBuffers () {
         for (val = v.begin(); val != v.end(); val++) {
             ch = *(*val); // this line demonstrates a subtle danger
             if ((bool)ch->getProperty ("Enabled")) {
-                if (!strncasecmp(ch->getProperty("Prefix"), (*b)->getName()))
+                if (!vjstrncasecmp(ch->getProperty("Prefix"), (*b)->getName()))
                     found = true;
             }
         }
