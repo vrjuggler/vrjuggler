@@ -36,6 +36,8 @@
 #include <vpr/Util/Debug.h>
 
 #include <vrj/Util/Debug.h>
+#include <vrj/Display/DisplayManager.h>
+#include <vrj/Draw/DrawManager.h>
 #include <vrj/Display/CameraProjection.h>
 #include <vrj/Display/Projection.h>
 #include <gadget/Type/Position/PositionUnitConversion.h>
@@ -86,6 +88,13 @@ void SimViewport::config(jccl::ConfigChunkPtr chunk)
          << "SimViewport::config() creating simulator of type '"
          << sim_chunk->getDescToken() << "'\n" << vprDEBUG_FLUSH;
       mSimulator = DrawSimInterfaceFactory::instance()->createObject(sim_chunk->getDescToken());
+
+      // Fallback on the DrawManager's default simulator if the DrawSimInterfaceFactory
+      // can not find the specified SimInterface
+      if (NULL == mSimulator)
+      {
+         mSimulator = DisplayManager::instance()->getDrawManager()->createDefaultSimulator();
+      }
 
       // XXX: Change this to an error once the new simulator loading code is
       // more robust.  -PH (4/13/2003)

@@ -47,7 +47,7 @@
 #include <vrj/Display/SurfaceViewport.h>
 
 #include <vrj/Draw/OGL/GlApp.h>
-
+#include <vrj/Draw/OGL/GlBasicSimulator.h>
 #include <vrj/Draw/OGL/GlPipe.h>
 #include <vrj/Draw/OGL/GlWindow.h>
 
@@ -83,6 +83,9 @@ void GlDrawManager::setApp(App* _app)
 /** Returns the app we are rednering. */
 GlApp* GlDrawManager::getApp()
 { return mApp; }
+
+DrawSimInterface* GlDrawManager::createDefaultSimulator()
+{ return(new GlBasicSimulator()); }
 
 
 /**
