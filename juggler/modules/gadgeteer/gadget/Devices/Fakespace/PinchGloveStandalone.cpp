@@ -47,16 +47,6 @@
 // Date: 1-23-99
 //===============================================================
 
-/*#include <string.h> // for strcpy();
-#include <stdio.h>
-#include <stdlib.h>
-#include <iostream>        // for std::cout
-// #include <fstream>         // for ifstream
-#include <string.h>
-
-#include <vpr/Util/Assert.h>        // for assert
-*/
-
 #include <gadget/gadgetConfig.h>
 #include <stdio.h>
 #include <vpr/vpr.h>
@@ -80,29 +70,28 @@ PinchGloveStandalone::PinchGloveStandalone()
 
 PinchGloveStandalone::~PinchGloveStandalone()
 {
-   if ( port != NULL )
+   if ( mPort != NULL )
    {
-      port->close();
-      delete port;
-      port = NULL;
+      mPort->close();
+      delete mPort;
+      mPort = NULL;
    }
 }
 
 // Connect to the pinch glove hardware
-bool PinchGloveStandalone::connectToHardware(const std::string& ttyPort, int mBaudRate)
+vpr::ReturnStatus PinchGloveStandalone::connectToHardware()
 {
-   std::cout<<"\n[pinch] Connecting To Fakespace Hardware\n"<<std::flush;
-   int result = mConnectToHardware( ttyPort , mBaudRate);
-   if ( result == 1 )
+   std::cout<<"\n[PinchGloveStandalone] Connecting To Fakespace Hardware\n"<<std::flush;
+   if ( mConnectToHardware() == vpr::ReturnStatus::Succeed )
    {
-      std::cout<<"[pinch] Connected to pinch glove hardware on port "<<ttyPort<<"\n"<<std::flush;
+      std::cout<< "[PinchGloveStandalone] Connected to pinch glove hardware on port "<< mPortName << std::endl;
+      return(vpr::ReturnStatus::Succeed);
    }
    else
    {
-      std::cout<<"[pinch] connectToHardware(\""<<ttyPort<<"\") returned "<<(result == 1 ? "true":"false")<<"\n"<<std::flush;
+      std::cout<< "[PinchGloveStandalone] Could not connect to PinchGlove on port " << mPortName << std::endl;
+      return(vpr::ReturnStatus::Fail);
    }
-   std::cout<<"\n"<<std::flush;
-   return result == 1 ? true:false;
 }
 
 // get the last sampled string,
@@ -133,88 +122,92 @@ void PinchGloveStandalone::updateStringFromHardware()
 
 // send to hardware methods:
 
-int PinchGloveStandalone::mConnectToHardware(const std::string& ttyPort, int baud)
+vpr::ReturnStatus PinchGloveStandalone::mConnectToHardware()
 {
    const int BUFFER_LEN = 100;
    unsigned char buf[BUFFER_LEN];
    int cnt;
    //long int baud;
 
-   //CREATE A NEW SERIAL PORT
-   port = new vpr::SerialPort(ttyPort);
-   port->setOpenReadWrite();
-
-   if ( !port->open().success() )
+   // CREATE A NEW SERIAL PORT
+   mPort = new vpr::SerialPort(mPortName);    
+   
+   mPort->setOpenReadWrite();
+   
+   if ( !mPort->open().success() )
    {
-      std::cout<<"[pinch] Port ("<<ttyPort<<") open failed\n"<<std::flush;
-      port->close();
-      return 0;
+      return(vpr::ReturnStatus::Fail);
    }
    else
    {
-      std::cout<<"[pinch] Port ("<<ttyPort<<") open success\n"<<std::flush;
-      //baud = 9600;
-      port->clearAll();
-      port->enableLocalAttach();
-      port->enableBreakByteIgnore();
-      port->enableRead();
-      port->setBufferSize(1);
-      port->setOutputBaudRate(baud); // Put me before input to be safe
-      port->setInputBaudRate(baud);
-      port->setCharacterSize(vpr::SerialTypes::CS_BITS_8);
-      std::cout<<"[pinch] Port ("<<ttyPort<<") successfully changed the port settings\n"<<std::flush;
+      std::cout<<"[PinchGloveStandalone] Port ("<< mPortName <<") open success\n"<<std::flush;
+      mPort->clearAll();
+      mPort->enableLocalAttach();
+      mPort->enableBreakByteIgnore();
+      mPort->enableRead();
+      mPort->setBufferSize(1);
+      mPort->setOutputBaudRate(mBaudRate); // Put me before input to be safe
+      mPort->setInputBaudRate(mBaudRate);
+      mPort->setCharacterSize(vpr::SerialTypes::CS_BITS_8);
+      std::cout<<"[PinchGloveStandalone] Port ("<< mPortName <<") successfully changed the port settings\n"<<std::flush;
    }
 
-   vpr::System::usleep(450000);
+   mPort->flushQueue(vpr::SerialTypes::IO_QUEUES);
 
-   port->flushQueue(vpr::SerialTypes::IO_QUEUES);
-
+   vpr::System::msleep(100);
+   
    /* Turn time stamps on */
    mSendCommandToHardware("T1", buf);
    if ( buf[1] != '1' )
    {
-      std::cout<<"[pinch] Could not turn time stamps on, result should == '1' but result == '"<<buf[1]<<"'\n";
-      return 0;
+      std::cout<<"[PinchGloveStandalone] Could not turn time stamps on, result should == '1' but result == '" << buf[1] << "'" << std::endl;
+      // We must close the serial port since we are going to quit trying now
+      mPort->close();
+      return(vpr::ReturnStatus::Fail);
    }
    else
-   {   //DELETE
-      std::cout<<"[pinch] Turned time stamps on.\n";
+   {  
+      std::cout<<"[PinchGloveStandalone] Turned time stamps on.\n";
    }
    /* Version compatability */
-   vpr::System::usleep(450000);
+   
+   vpr::System::msleep(100);  //450
+   
    mSendCommandToHardware("V1", buf);
    if ( buf[1] != '1' )
    {
-      std::cout << "[pinch] Could not set to version 1 formatting, result should == '1' but result == '"<<buf[1]<<"'\n";
-      return 0;
+      std::cout << "[PinchGloveStandaone] Could not set to version 1 formatting, result should == '1' but result == '" << buf[1] <<"'" << std::endl;
+      // We must close the serial port since we are going to quit trying now
+      mPort->close();
+      return(vpr::ReturnStatus::Fail);
    }
    else
    {
-      printf("[pinch] Set to version 1 formatting\n");
+      printf("[PinchGloveStandalone] Set to version 1 formatting\n");
    }
    /* Get the configuration information and print it */
-   printf("[pinch] Configuration:\n");
-   vpr::System::usleep(450000);
+   printf("[PinchGloveStandalone] Configuration:\n");
+   vpr::System::msleep(45);
    cnt = mSendCommandToHardware("CP", buf);
    buf[cnt-1] = 0; /* get rid of 0x8F */
    printf("\t%s\n",&buf[1]);
 
-   vpr::System::usleep(450000);
+   vpr::System::msleep(45);
    cnt = mSendCommandToHardware("CL", buf);
    buf[cnt-1] = 0; /* get rid of 0x8F */
    printf("\t%s\n",&buf[1]);
 
-   vpr::System::usleep(450000);
+   vpr::System::msleep(45);
    cnt = mSendCommandToHardware("CR", buf);
    buf[cnt-1] = 0; /* get rid of 0x8F */
    printf("\t%s\n",&buf[1]);
 
-   vpr::System::usleep(450000);
+   vpr::System::msleep(45);
    cnt = mSendCommandToHardware("CT", buf);
    buf[cnt-1] = 0; /* get rid of 0x8F */
    printf("\t%s\n",&buf[1]);
 
-   return 1;
+   return(vpr::ReturnStatus::Succeed);
 }
 
 int PinchGloveStandalone::mSendCommandToHardware(const char* const command, unsigned char *reply)
@@ -230,27 +223,27 @@ int PinchGloveStandalone::mSendCommandToHardware(const char* const command, unsi
    if ( first )
    {
       first = 0;
-      port->write("*", 1, written);
-      vpr::System::usleep(450000);
-      status = port->read(&buf[0], 3, written, vpr::Interval::NoWait);
+      mPort->write("*", 1, written);
+      vpr::System::msleep(450);
+      status = mPort->read(&buf[0], 3, written, vpr::Interval::NoWait);
       if ( status!=vpr::ReturnStatus::Succeed )
       {
-         port->write("*", 1, written);
-         vpr::System::usleep(450000);
-         port->read(&buf[0], 3,written, vpr::Interval::NoWait);
+         mPort->write("*", 1, written);
+         vpr::System::msleep(450);
+         mPort->read(&buf[0], 3,written, vpr::Interval::NoWait);
       }
    }
 
 
    // Send the 2 byte command by sending each byte seperately and flushing port after each
 
-   port->write(&command[0], 1, written);
-   port->flushQueue(vpr::SerialTypes::OUTPUT_QUEUE);
-   vpr::System::usleep(450000);
+   mPort->write(&command[0], 1, written);
+   mPort->flushQueue(vpr::SerialTypes::OUTPUT_QUEUE);
+   vpr::System::msleep(450);
 
-   port->write(&command[1], 1, written);
-   port->flushQueue(vpr::SerialTypes::OUTPUT_QUEUE);
-   vpr::System::usleep(450000);
+   mPort->write(&command[1], 1, written);
+   mPort->flushQueue(vpr::SerialTypes::OUTPUT_QUEUE);
+   vpr::System::msleep(450);
 
    return(mReadRecordsFromHardware(100,reply));
 }
@@ -264,17 +257,15 @@ int PinchGloveStandalone::mReadRecordsFromHardware(const int& rec_max_len, unsig
    unsigned char buf[2048];
    vpr::ReturnStatus status;
 
-#define START_BYTE_DATA 0x80
-#define START_BYTE_DATA_TS 0x81
-#define START_BYTE_TEXT 0x82
-#define END_BYTE 0x8F
+   const unsigned short START_BYTE_DATA = 0x80;
+   const unsigned short START_BYTE_DATA_TS = 0x81;
+   const unsigned short START_BYTE_TEXT = 0x82;
+   const unsigned short END_BYTE = 0x8F;
 
    records[0] = 0;
    written = 0;
 
-   //vpr::System::usleep(150000);
-
-   status = port->read(&buf[0], 1, written, vpr::Interval::NoWait);
+   status = mPort->read(&buf[0], 1, written, vpr::Interval::NoWait);
 
    while ( (records[numbytes-written] != END_BYTE) && status == vpr::ReturnStatus::Succeed )
    {
@@ -284,11 +275,10 @@ int PinchGloveStandalone::mReadRecordsFromHardware(const int& rec_max_len, unsig
          do
          {
             written=0;
-            port->read(&records[numbytes], 1,written);
+            mPort->read(&records[numbytes], 1,written);
             numbytes += written;
          }while ( (records[numbytes-written] != END_BYTE) );
       }
-      //vpr::System::usleep(150000);
    }
    return numbytes;
 }
