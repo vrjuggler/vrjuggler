@@ -32,25 +32,25 @@
 
 default: debug
 
-bindir		= @bindir@
-datadir		= @datadir@
-exec_prefix	= @exec_prefix@
-libdir		= @libdir@
-libexecdir	= @libexecdir@
-prefix		= @prefix@
-releasedir	= $(JUGGLERROOT_ABS)/release
-sbindir		= @sbindir@
-scriptdir	= $(releasedir)/scripts
-srcdir		= @srcdir@
-sysconfdir	= @sysconfdir@
-topdir		= @topdir@
+bindir=		@bindir@
+datadir=	@datadir@
+exec_prefix=	@exec_prefix@
+libdir=		@libdir@
+libexecdir=	@libexecdir@
+prefix=		@prefix@
+releasedir=	$(JUGGLERROOT_ABS)/release
+sbindir=	@sbindir@
+scriptdir=	$(releasedir)/scripts
+srcdir=		@srcdir@
+sysconfdir=	@sysconfdir@
+topdir=		@topdir@
 
-MAKEFLAGS	+= --no-print-directory
-JUGGLERROOT_ABS	= @JUGGLERROOT_ABS@
+MAKEFLAGS+=	--no-print-directory
+JUGGLERROOT_ABS=@JUGGLERROOT_ABS@
 
 #@SET_MAKE@
 
-DIRS		= @JUGGLER_PROJECTS@
+DIRS=		@JUGGLER_PROJECTS@
 
 debug dbg dbg-dso optim opt opt-dso profiled prof prof-dso release	\
 world install-debug install-optim install-profiled links clean-links:
