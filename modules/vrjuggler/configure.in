@@ -324,8 +324,10 @@ case $host_os in
         SHAREDLIB_EXT='so'
 
         AC_DEFINE(VJ_OS_Linux,)
+        ABI='ELF'
         ISA='i386'
         ABI_LIST='ELF'
+        LIBBITSUF=''
         PLATFORM='Linux'
         ;;
     dnl # Unkown operating system (to config.guess).
