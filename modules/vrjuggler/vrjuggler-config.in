@@ -403,37 +403,30 @@ sub make_EXTRA_LDFLAGS ($;$$$)
    # Determine what dependency libraries will be printed.
    my $extra_libs = '';
 
+   # This one is first because it depends on libraries returned by the
+   # following two.
+   if ( $LIBS{'vrj_pf'} )
+   {
+      $extra_libs = qq(@vrj_pf_extra_libs@);
+   }
+
+   if ( $LIBS{'vrj_ogl'} || $LIBS{'vrj_pf'} )
+   {
+      $extra_libs .= qq( @vrj_ogl_extra_libs@);
+   }
+
+   # This one is last because it will probably contain things such as the
+   # X11 libraries and the math library.
+   if ( $LIBS{'vrj'} || $LIBS{'vrj_pf'} )
+   {
+      $extra_libs .= qq( @vrj_extra_libs@);
+   }
+
+   # Only add the "internal" dependencies when we want the basic vrj
+   # library.
    if ( $LIBS{'vrj'} )
    {
-      $extra_libs = qq(@vrj_extra_libs@ $dep_libs);
-   }
-   else
-   {
-      # This one is first because it depends on libraries returned by the
-      # following two.
-      if ( $LIBS{'vrj_pf'} )
-      {
-         $extra_libs = qq(@vrj_pf_extra_libs@);
-      }
-
-      if ( $LIBS{'vrj_ogl'} || $LIBS{'vrj_pf'} )
-      {
-         $extra_libs .= qq( @vrj_ogl_extra_libs@);
-      }
-
-      # This one is last because it will probably contain things such as the
-      # X11 libraries and the math library.
-      if ( $LIBS{'vrj'} || $LIBS{'vrj_pf'} )
-      {
-         $extra_libs .= qq( @vrj_extra_libs@);
-      }
-
-      # Only add the "internal" dependencies when we want the basic vrj
-      # library.
-      if ( $LIBS{'vrj'} )
-      {
-         $extra_libs = "$dep_libs $extra_libs";
-      }
+      $extra_libs = "$dep_libs $extra_libs";
    }
 
    my $extra_ldflags = ($use_linker ? qq(@vrj_extra_ldflags_linker@)
