@@ -30,9 +30,8 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-
-#ifndef _GADGET_INPUTDATA_H_
-#define _GADGET_INPUTDATA_H_
+#ifndef _GADGET_INPUT_DATA_H_
+#define _GADGET_INPUT_DATA_H_
 
 #include <gadget/gadgetConfig.h>
 #include <vpr/Util/Interval.h>
@@ -45,10 +44,9 @@ namespace gadget
  * This provides all input data with a standard timestamping system used to
  * calculate input latency.
  */
-class GADGET_CLASS_API InputData 
+class InputData 
 {
 public:
-
    /** Constructor. */
    InputData()
    {
@@ -81,11 +79,9 @@ protected:
    }
 
    vpr::Interval mTimeStamp;
-
-
 }; // class InputData
 
 } // namespace gadget
 
 
-#endif
+#endif /* _GADGET_INPUT_DATA_H_ */
