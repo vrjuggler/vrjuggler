@@ -42,7 +42,7 @@ class OpenSGNav : public vrj::OpenSGApp
 {
 public:
     OpenSGNav(vrj::Kernel* kern)
-       : OpenSGApp(kern)
+       : vrj::OpenSGApp(kern)
     {
         std::cout << "OpenSGNav::OpenSGNav called\n";
         mFileToLoad = std::string("");
