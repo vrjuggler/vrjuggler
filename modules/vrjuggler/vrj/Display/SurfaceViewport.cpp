@@ -41,6 +41,8 @@
 #include <jccl/Config/ConfigChunk.h>
 #include <vrj/Kernel/User.h>
 
+#include <gadget/Type/Position/PositionUnitConversion.h>
+
 #include <gmtl/Matrix.h>
 #include <gmtl/MatrixOps.h>
 #include <gmtl/Generate.h>
@@ -127,7 +129,7 @@ void SurfaceViewport::updateProjections()
    gmtl::Matrix44f left_eye_pos, right_eye_pos;     // NOTE: Eye coord system is -z forward, x-right, y-up
 
    // -- Calculate Eye Positions -- //
-   gmtl::Matrix44f cur_head_pos = *(mUser->getHeadPos());
+   gmtl::Matrix44f cur_head_pos = mUser->getHeadPosProxy()->getData(gadget::PositionUnitConversion::ConvertToMeters);
    /*
    Coord  head_coord(cur_head_pos);       // Create a user readable version
 

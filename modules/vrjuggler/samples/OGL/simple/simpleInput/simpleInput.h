@@ -103,7 +103,7 @@ public:
 
       // -- Get Wand matrix --- //
       Matrix44f wand_matrix;
-      wand_matrix = *(mWand->getData());
+      wand_matrix = mWand->getData();
       std::cout << "Wand pos: \n" << wand_matrix << std::endl;
    }
 

@@ -38,6 +38,7 @@
 #include <vrj/Kernel/App.h>
 
 #include <vrj/Draw/OGL/GlDrawManager.h>
+#include <gadget/Type/Position/PositionUnitConversion.h>
 
 //#include <vrj/Kernel/Kernel.h>
 #include <vrj/Kernel/User.h>
@@ -88,6 +89,19 @@ public:
    }
 
    GlApp() {;}
+
+   /** Return scale scale factor to get from Juggler units (meters) to application units.
+   * Internally VR Juggler stores and processes all position values
+   * in meters.  The scale factor returned by this method is
+   * used by VR Juggler to scale the OpenGL drawing state from meters to
+   * whatever local units the application wants to use
+   *
+   * Example: to use feet as local app unit, return 3.28;
+   */
+   virtual float getDrawScaleFactor()
+   {
+      return gadget::PositionUnitConversion::ConvertToFeet;
+   }
 
    /** Function to draw the scene.
     * Override this function with the user draw routine.

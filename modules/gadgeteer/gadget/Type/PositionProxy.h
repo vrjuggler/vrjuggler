@@ -45,6 +45,7 @@
 #include <gadget/Type/Position.h>
 #include <gadget/Type/Proxy.h>
 #include <gadget/Filter/Position/PositionFilter.h>
+#include <gadget/Type/Position/PositionUnitConversion.h>
 #include <gadget/Type/PositionData.h>
 
 #include <gmtl/Matrix.h>
@@ -85,20 +86,14 @@ public:
     * Gets the positional data within the device pointed to by this proxy as a
     * matrix.
     *
+    * @param scaleFactor - factor to convert from meters to the desired units
     * @return  the position of the device as a matrix
+    * @example getData(3.28f) will return a matrix in feet
     */
-   gmtl::Matrix44f* getData()
-   {
-      if(mStupified)
-      {
-         gmtl::identity(*mPositionData.getPosition());
-      }
-
-      return mPositionData.getPosition();
-   }
-
-    /** Gets the actual PositionData. */
-    PositionData* getPosition()
+   gmtl::Matrix44f getData(float scaleFactor = gadget::PositionUnitConversion::ConvertToFeet );
+   
+   /** Gets the actual PositionData. */
+    PositionData* getPositionData()
     {
         return &mPositionData;
     }
@@ -114,28 +109,6 @@ public:
          return mTypedDevice;
       else
          return NULL;
-   }
-
-   /// Gets the transform being using by this proxy.
-   /*
-   gmtl::Matrix44f& getTransform()
-   { return mMatrixTransform; }
-   */
-
-   /**
-    * Transforms the data in mPosData.
-    *
-    * @pre mPosData needs to have most recent data.
-    * @post mPosData is transformed by the xform matrix.
-    *       mPosData = old(mPosData).post(xformMatrix)
-    *
-    * @note This moves the wMr to the modifed reciever system wMmr
-    *       where w = world, mr = world of the reciever, and r = reciever
-    */
-   void transformData()
-   {
-      //mPositionData.getPosition()->postMult(mMatrixTransform);
-      //*(mPositionData.getPosition()) *= mMatrixTransform;   // post multiply
    }
 
    static std::string getChunkType() { return "PosProxy"; }
@@ -158,20 +131,9 @@ private:
    PositionData      mPositionData;
    int               mUnitNum;
 
+   gmtl::Matrix44f   mPosMatrix_feet;                 /**< Cached version of data in feet */
+
    std::vector<PositionFilter*>  mPositionFilters;    /**< The active filters that are to be used */
-   
-public:
-   /** Sets the scale factor to be applied to all positional
-   * data returned from position proxies in the system.
-   *
-   * Since gadgeteer uses Meters internally, this factor
-   * is meant to convert from Meters to the units desired.
-   */
-   static void setScaleFactor(float scaleFactor)
-   { sScaleFactor = scaleFactor; }
-   
-private:
-   static float sScaleFactor;
 };
 
 } // End of gadget namespace

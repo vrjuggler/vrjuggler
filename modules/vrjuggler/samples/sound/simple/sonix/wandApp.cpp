@@ -67,13 +67,12 @@ void wandApp::myDraw()
    glMatrixMode(GL_MODELVIEW);
 
       // -- Draw box on wand --- //
-   gmtl::Matrix44f* wandMatrix;
-   wandMatrix = mWand->getData();      // Get the wand matrix
+   gmtl::Matrix44f wandMatrix = mWand->getData();      // Get the wand matrix
 
    glPushMatrix();
       // cout << "wand:\n" << *wandMatrix << endl;
       glPushMatrix();
-         glMultMatrixf(wandMatrix->mData);  // Push the wand matrix on the stack
+         glMultMatrixf(wandMatrix.mData);  // Push the wand matrix on the stack
          //glColor3f(1.0f, 0.0f, 1.0f);
          float wand_color[3];
          wand_color[0] = wand_color[1] = wand_color[2] = 0.0f;
@@ -104,7 +103,7 @@ void wandApp::myDraw()
       // Draw Axis
       glDisable(GL_LIGHTING);
       glPushMatrix();
-         glMultMatrixf(wandMatrix->mData);    // Goto wand position
+         glMultMatrixf(wandMatrix.mData);    // Goto wand position
 
          gmtl::Vec3f x_axis(7.0f,0.0f,0.0f);
          gmtl::Vec3f y_axis(0.0f, 7.0f, 0.0f);

@@ -95,10 +95,7 @@ public:
     * @note: Derived classes MUST call base class version of this method
     */
    virtual void init()
-   {
-      // Set default application units to feet
-      gadget::PositionProxy::setScaleFactor( gadget::PositionUnitConversion::ConvertToFeet );
-   }
+   {;}
 
    /** Application API init function
     * Execute any initialization needed <b>after</b> API is started

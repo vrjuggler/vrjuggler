@@ -34,6 +34,7 @@
 
 #include <gadget/Devices/Sim/SimRelativePosition.h>
 #include <jccl/Config/ConfigChunk.h>
+#include <gadget/Type/Position/PositionUnitConversion.h>
 
 namespace gadget
 {
@@ -55,7 +56,8 @@ bool SimRelativePosition::config(jccl::ConfigChunkPtr chunk)
 
 void SimRelativePosition::updateData()
 {
-   gmtl::mult( *(mPos.getPosition()), *(mBaseFrame->getData()),*(mRelativePos->getData()) );
+   gmtl::mult( mPos.mPosData, mBaseFrame->getData(gadget::PositionUnitConversion::ConvertToMeters), 
+                              mRelativePos->getData(gadget::PositionUnitConversion::ConvertToMeters) );
 
    // NOTE: This is a little bit of an overkill, but it works and it allows for the
    //       buffering that could be needed in multi-threaded cases

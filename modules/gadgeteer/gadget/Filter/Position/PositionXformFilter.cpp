@@ -141,7 +141,7 @@ void PositionXformFilter::apply(std::vector< PositionData >& posSample)
 
    for(std::vector<PositionData>::iterator i=posSample.begin(); i != posSample.end(); ++i)
    {                               
-      cur_mat = (*i).getPosition();
+      cur_mat = &((*i).mPosData);
 
       gmtl::postMult(*cur_mat, mPostXform);           // POST xform: cur = cur*postTrans*postRot
 

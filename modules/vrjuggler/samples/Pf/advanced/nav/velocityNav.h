@@ -265,7 +265,7 @@ inline void velocityNav::updateInteraction()
       this->reset();
 
    // Rotating
-   gmtl::Matrix44f rot_mat = *(mNavWand->getData());
+   gmtl::Matrix44f rot_mat = mNavWand->getData();
    //std::cout<<"1: "<<rot_mat<<"\n"<<std::flush;
    gmtl::setTrans(rot_mat, gmtl::Vec3f(0.0f, 0.0f, 0.0f));
    //std::cout<<"2: "<<rot_mat<<"\n=======\n\n"<<std::flush;

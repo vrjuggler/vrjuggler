@@ -80,18 +80,18 @@ bool SimPosition::config(jccl::ConfigChunkPtr chunk)
    float y_rot = chunk->getProperty<float>("initialRot",1);
    float z_rot = chunk->getProperty<float>("initialRot",2);
 
-   gmtl::identity( *(mPos.getPosition()) );
+   gmtl::identity( mPos.mPosData );
 
    if((x_pos != 0.0f) || (y_pos != 0.0f) || (z_pos != 0.0f))
    {
-      gmtl::setTrans( *(mPos.getPosition()), gmtl::Vec3f(x_pos, y_pos, z_pos));
+      gmtl::setTrans( mPos.mPosData, gmtl::Vec3f(x_pos, y_pos, z_pos));
    }
    if((x_rot != 0.0f) || (y_rot != 0.0f) || (z_rot != 0.0f))
    {
       gmtl::EulerAngleXYZf euler( gmtl::Math::deg2Rad(x_rot),
                                   gmtl::Math::deg2Rad(y_rot),
                                   gmtl::Math::deg2Rad(z_rot) );
-      gmtl::postMult( (*mPos.getPosition()), gmtl::makeRot<gmtl::Matrix44f>(euler) );
+      gmtl::postMult( mPos.mPosData, gmtl::makeRot<gmtl::Matrix44f>(euler) );
    }
    mPos.setTime();
 
@@ -173,11 +173,11 @@ void SimPosition::moveDir(const float amt, const gmtl::Vec3f dir)
    {
       if(mTransCoordSystem == LOCAL)
       {
-         gmtl::postMult(*(mPos.getPosition()), gmtl::makeTrans<gmtl::Matrix44f>(move_vector) );
+         gmtl::postMult(mPos.mPosData, gmtl::makeTrans<gmtl::Matrix44f>(move_vector) );
       }
       else
       {
-         gmtl::preMult(*(mPos.getPosition()), gmtl::makeTrans<gmtl::Matrix44f>(move_vector) );
+         gmtl::preMult(mPos.mPosData, gmtl::makeTrans<gmtl::Matrix44f>(move_vector) );
       }
 
    }
@@ -219,23 +219,22 @@ void SimPosition::rotAxis(const float amt, const gmtl::Vec3f rotAxis)
    // convert the input...
    gmtl::AxisAnglef axisAngle( gmtl::Math::deg2Rad(amt*mDRot), gmtl::makeNormal( rotAxis ) );
 
-  gmtl::Matrix44f* m = mPos.getPosition();
   gmtl::Matrix44f delta_rot( gmtl::makeRot<gmtl::Matrix44f>( axisAngle ) );   // make delta rot
 
   if(mRotCoordSystem == LOCAL)
   {
-     gmtl::postMult(*m, delta_rot);
+     gmtl::postMult(mPos.mPosData, delta_rot);
   }
   else
   {
      // Get the translation and rotation seperated
      // Make new matrix with Trans*DeltaRot*Rot
-     gmtl::Vec3f trans_vec(gmtl::makeTrans<gmtl::Vec3f>(*m));          // Get translation
+     gmtl::Vec3f trans_vec(gmtl::makeTrans<gmtl::Vec3f>(mPos.mPosData));          // Get translation
      gmtl::Matrix44f trans_mat(gmtl::makeTrans<gmtl::Matrix44f>( trans_vec ));   // Make trans matrix
-     gmtl::Matrix44f rot_mat(*m);
+     gmtl::Matrix44f rot_mat(mPos.mPosData);
 
      gmtl::setTrans(rot_mat, gmtl::Vec3f(0.0f,0.0f,0.0f));  // Clear out trans
-     *m = trans_mat * delta_rot * rot_mat;
+     mPos.mPosData = trans_mat * delta_rot * rot_mat;
      /*
      gmtl::setTrans(*m, gmtl::Vec3f(0,0,0));      // Get to rotation only
      gmtl::preMult(*m, delta_rot);

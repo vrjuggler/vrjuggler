@@ -382,7 +382,7 @@ int MotionStar::sample()
             }
 
             // Store corrected xform back into data.
-            *(cur_samples[i].getPosition()) = transmitter_T_receiver;
+            cur_samples[i].mPosData = transmitter_T_receiver;
          }
 
          // Add the current data as a sample

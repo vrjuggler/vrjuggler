@@ -86,8 +86,8 @@ public:
     */
    virtual bool config(jccl::ConfigChunkPtr chunk);
 
-   gmtl::Matrix44f* getHeadPos()
-   { return mHead->getData(); }
+   gadget::PositionProxy* getHeadPosProxy()
+   { return mHead.getProxy(); }
 
    vpr::Interval getHeadUpdateTime()
    { return mHead->getTimeStamp(); }

@@ -120,7 +120,7 @@ vpr::ReturnStatus Position::writeObject(vpr::ObjectWriter* writer)
 
          for ( unsigned i=0;i<stable_buffer[j].size();i++ )       // For each pos value
          {
-            gmtl::Matrix44f* PosMatrix = stable_buffer[j][i].getPosition();
+            gmtl::Matrix44f* PosMatrix = &(stable_buffer[j][i].mPosData);
             const float* pos_data = PosMatrix->getData();
 
             writer->beginTag(gadget::tokens::PosValue);
