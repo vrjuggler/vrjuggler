@@ -14,7 +14,7 @@ default: echo_info $(PROJECT_NAME)
 
 srcdir		= @srcdir@
 topdir		= @topdir@
-CPP_UNIT	?=  $(srcdir)/../../../../external/cppunit
+CPP_UNIT	?= @CPPUNIT_ROOT@
 
 CXX		= @CXX@
 CFLAGS		= @CFLAGS@ $(OPTIMIZER) $(EXTRA_FLAGS)
@@ -47,7 +47,9 @@ USE_MAKEDEPEND	= @USE_MAKEDEPEND@
 LINK		= $(CXX) $(CPPFLAGS) $(CXXFLAGS) @EXTRA_LINK_FLAGS@	\
                   $(EXTRA_FLAGS) 
 
-EXTRA_LIBS	= $(APP_LDFLAGS) $(APP_LIBS)
+EXTRA_LIBS	= $(APP_LDFLAGS) $(APP_LIBS)				\
+                  @CPPUNIT_LDFLAGS@ @LIBCPPUNIT@
+                  $(NULL)
 
 # -----------------------------------------------------------------------------
 # Compiler command lines.
@@ -55,30 +57,14 @@ EXTRA_LIBS	= $(APP_LDFLAGS) $(APP_LIBS)
 C_COMPILE	= $(CC) $(DEFS) $(INCLUDES) $(CPPFLAGS) $(CFLAGS)
 CXX_COMPILE	= $(CXX) $(DEFS) $(INCLUDES) $(CPPFLAGS) $(CXXFLAGS)
 
-# objects to be included in the project....
-# SRC Files
-TEST_SRCS = 
-CPPUNIT_TEXTUI_SRCS = TextTestRunner.cpp TextTestResult.cpp
-CPPUNIT_SRCS	= Exception.cpp		\
-                  NotEqualException.cpp	\
-                  TestAssert.cpp	\
-                  TestCase.cpp		\
-                  TestResult.cpp	\
-                  TestFailure.cpp	\
-                  TestSuite.cpp
-
 RUNNER_SRCS	= main.cpp
-SRCS		= $(TEST_SRCS)			\
-                  $(CPPUNIT_TEXTUI_SRCS)	\
-                  $(CPPUNIT_SRCS)		\
-                  $(RUNNER_SRCS)
+SRCS		= $(RUNNER_SRCS)
 
 OBJDIR = .
 DEPDIR = 
 
 INCLUDE_PATHS = 
-PATH_TO_SRCS = $(srcdir) $(srcdir)/TestCases 				\
-               $(CPP_UNIT)/src/cppunit
+PATH_TO_SRCS = $(srcdir) $(srcdir)/TestCases
 MK_DIR = $(srcdir)/mk
 
 include ${MK_DIR}/mk.objs
