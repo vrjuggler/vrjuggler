@@ -49,7 +49,7 @@ SUBOBJDIR	= $(VJ_LIBRARY)
 
 SRCS 		=
 
-include $(MKPATH)/dpp.obj-subdir.mk
+include $(MKPATH)/dpp.obj.mk
 
 # -----------------------------------------------------------------------------
 # Include dependencies generated automatically.
