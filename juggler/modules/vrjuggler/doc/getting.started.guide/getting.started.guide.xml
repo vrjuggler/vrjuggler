@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<?xml-stylesheet href="../../../../../../../../../../../home/users/patrick/src/Juggler/docs/stylesheet/docbook_ab.css" type="text/css"?>
+<?xml-stylesheet href="http://www.vrjuggler.org/docbook_ab.css" type="text/css"?>
 <?morphon-document-settings
   morphon.document.settings.whitespaces.amount="3"
   morphon.document.settings.print.fixed.attributes="true"
@@ -14,7 +14,7 @@
    <bookinfo>
       <title>VR Juggler</title>
       <subtitle>Getting Started Guide</subtitle>
-      <releaseinfo>Version 1.1 DR2</releaseinfo>
+      <releaseinfo>Version 1.1 DR3</releaseinfo>
       <pubdate>$Date$</pubdate>
    </bookinfo>
    <preface>
@@ -253,7 +253,7 @@ value</screen>
       <para>VR Juggler comes with several sample applications in its <filename>samples</filename> directory tree. Many of them are very simple and are designed to demonstrate a specific feature of VR Juggler or a technique to use when writing your own applications. This chapter lists the current sample applications as of this writing and gives a quick description of what you as a potential developer might find interesting in the code. Those users who just want to run applications can safely skip this chapter.</para>
       <section>
          <title>Tutorial Applications</title>
-         <para>Some sample applications are in <filename>$VJ_BASE_DIR/share/vrjuggler/samples/tutorials</filename>. All of these applications were designed to be used as part of courses teaching people how to write VR Juggler applications. They contain clear comments explaining what the code is doing, and they are intended to be as simple as possible. These tutorials are as follows:</para>
+         <para>Some sample applications designed for getting started with VR Juggler are found in <filename>$VJ_BASE_DIR/share/vrjuggler/samples/OGL/simple</filename>. All of these applications were designed to be used as part of courses teaching people how to write VR Juggler applications using OpenGL. They contain clear comments explaining what the code is doing, and they are intended to be as simple as possible. These tutorials are as follows:</para>
          <itemizedlist>
             <listitem>
                <para>simpleInput: An application that demonstrates how to get input from devices. No graphics are rendered with this application. It is intended to be a starting point for getting an understanding of how user input is queried.</para>
@@ -266,9 +266,6 @@ value</screen>
             </listitem>
             <listitem>
                <para>MPApp: A more complex OpenGL application that demonstrates how to do multi-processing in VR Juggler applications. As it exists in its distributed form, no multi-processing is done. A more detailed lesson is available that explains how to extend the application to employ multi-processing techniques.</para>
-            </listitem>
-            <listitem>
-               <para>simplePf: An introductory OpenGL Performer application that demonstrates how to load a model into the Performer scenegraph. No navigation or collision detection is provided in this tutorial.</para>
             </listitem>
          </itemizedlist>
          <para>For a step-by-step lesson how to use these applications to learn VR Juggler application programming, please refer to the <emphasis>Programmer's Guide</emphasis>. It contains sections explaining each of the above applications in great detail. Each lesson ends with an exercise where the reader extends the application to include some new functionality.</para>
@@ -288,7 +285,7 @@ value</screen>
    </chapter>
    <chapter id="app.compile.chapter">
       <title>Compiling a VR Juggler Sample Program</title>
-      <para>Now that you have VR Juggler installed and you have your environment all configured, it is time for the fun to begin. No, seriously. You are now ready to compile and run VR Juggler applications, and that is the whole point, right? This chapter explains how to compile the applications provided in the directory <filename>$VJ_BASE_DIR/share/vrjuggler/samples/tutorials</filename>.</para>
+      <para>Now that you have VR Juggler installed and you have your environment all configured, it is time for the fun to begin. No, seriously. You are now ready to compile and run VR Juggler applications, and that is the whole point, right? This chapter explains how to compile the applications provided in the directory <filename>$VJ_BASE_DIR/share/vrjuggler/samples/OGL/simple</filename>.</para>
       <section>
          <title>Required Reading </title>
          <para>Before reading any further, make sure you have already read the instructions on how to install VR Juggler (in <xref linkend="install.vrj.chapter"/>) and on how to configure your environment (in <xref linkend="envvar.chapter"/>). That information will not be repeated, and it is assumed that you already know what we mean by <varname>VJ_BASE_DIR</varname>. You should also have a basic understanding of how <command>make</command>(1) works, but in these examples, nothing more will be necessary than typing <literal>make</literal> on the command line. Refer to the <command>make</command>(1) manual page for more information about it.</para>
@@ -299,7 +296,7 @@ value</screen>
          <section>
             <title>Compiling from the Command Line</title>
             <para>All the sample programs in <filename>$VJ_BASE_DIR/share/samples</filename> use the same basic steps to compile unless otherwise noted. Always refer to the top of the sample application's <filename>Makefile</filename> for information that may be specific to building that application. In general, though, all applications' makefiles required the GNU version of the <command>make</command>(1) utility, sometimes installed as <command>gmake</command>.</para>
-            <para>The example used here will be the MPApp tutorial application found in <filename>$VJ_BASE_DIR/share/vrjuggler/samples/tutorials/MPApp</filename>. It is an OpenGL-based application that will compile and run on all platforms supported by VR Juggler. Begin by changing into the directory <filename>$VJ_BASE_DIR/share/vrjuggler/samples/tutorials/MPApp</filename> in a command shell.</para>
+            <para>The example used here will be the MPApp tutorial application found in <filename>$VJ_BASE_DIR/share/vrjuggler/samples/OGL/simple/MPApp</filename>. It is an OpenGL-based application that will compile and run on all platforms supported by VR Juggler. Begin by changing into the directory <filename>$VJ_BASE_DIR/share/vrjuggler/samples/OGL/simple/MPApp</filename> in a command shell.</para>
             <para>To compile MPApp, simply enter the following:</para>
             <screen>% gmake</screen>
             <para>The compile process will then begin. As noted above, the use of GNU make is required to use the distributed makefiles. With Cygwin, GNU make is simply <command>make</command>. If you have your system set up properly, it will complete with an executable <filename>MPApp</filename> file (or <filename>MP2App.exe</filename> on Win32) in the directory. Now that you have a program compiled, it is time to learn how to run it. (Readers who are not using Visual Studio can skip ahead to <xref linkend="running.app.chapter"/>.)</para>
