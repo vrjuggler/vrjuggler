@@ -59,7 +59,6 @@ const InetAddrBSD InetAddrBSD::AnyAddr;      // Default constructor defaults to 
 
 // ----------------------------------------------------------------------------
 // Get the protocol family of this address structure.
-// XXX: Are raw sockets allowed with WinSock, and if so, what is the PF value?
 // ----------------------------------------------------------------------------
 SocketTypes::Domain
 InetAddrBSD::getFamily (void) const {
@@ -97,7 +96,6 @@ InetAddrBSD::getFamily (void) const {
 
 // ----------------------------------------------------------------------------
 // Set the protocol family of this address structure.
-// XXX: Are raw sockets allowed with WinSock, and if so, what is the PF value?
 // ----------------------------------------------------------------------------
 void
 InetAddrBSD::setFamily (const SocketTypes::Domain family) {
@@ -160,7 +158,7 @@ InetAddrBSD::getAddressString (void) const {
 }
 
 // ----------------------------------------------------------------------------
-// Look up the address in m_name and store the address in m_remote_addr.
+// Look up the given address and store the address in m_addr.
 // ----------------------------------------------------------------------------
 bool
 InetAddrBSD::lookupAddress (const std::string& address) {
@@ -177,7 +175,7 @@ InetAddrBSD::lookupAddress (const std::string& address) {
     }
     // If gethostbyname(3) failed, the address string may be an IP address.
     else {
-        unsigned long addr;
+        in_addr_t addr;
 
         // Try looking it up with inet_addr(3).
         addr = inet_addr(address.c_str());
