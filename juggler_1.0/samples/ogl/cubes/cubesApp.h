@@ -81,6 +81,7 @@ public:
    UserData(vjUser* user, std::string wandName, std::string incButton,
             std::string decButton, std::string stopButton)
    {
+      mCurVelocity = 0.0;
       mNavMatrix.makeIdent();
 
       mUser = user;
