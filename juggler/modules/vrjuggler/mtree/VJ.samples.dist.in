@@ -42,8 +42,14 @@
             advanced
                 glove
                 ..
+                navgrab
+                    TestCases
+                    ..
+                ..
             ..
             simple
+                ConfigApp
+                ..
                 MPApp
                 ..
                 SimpleApp
