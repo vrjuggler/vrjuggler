@@ -961,40 +961,66 @@ def installVRJuggler(prefix):
       shutil.copy2(os.path.join(srcroot, f), destdir)
 
 def installVRJConfig(prefix):
-   srcdir = os.path.join(juggler_dir, 'vc7', 'VRJConfig')
+   jardir = os.path.join(juggler_dir, 'vc7', 'VRJConfig')
 
-   if os.path.exists(os.path.join(srcdir, 'VRJConfig.jar')):
+   if os.path.exists(os.path.join(jardir, 'VRJConfig.jar')):
       print "Installing VRJConfig ..."
 
+      # XXX: Enumerating these JAR files is really a pain.  These lists should
+      # be constructed using a glob.
       lib_jars = [
+         'ClusterWizard.jar',
          'Devices.jar',
-         'ClusterWizard.jar'
-      ]
-      bean_jars = [
-         'VRJConfig.jar',
-         'IntersenseEditor.jar',
-         'ProxyEditor.jar',
-         'SurfaceDisplayEditor.jar'
+         'Simulator.jar'
       ]
 
+      vrjconfig_src = os.path.join(juggler_dir, 'modules', 'vrjuggler',
+                                   'vrjconfig')
+      bean_jars = [
+         'VRJConfig.jar'
+      ]
+
+      editor_src = os.path.join(vrjconfig_src, 'customeditors')
+      editors = [
+         ('display_window', 'DisplayWindowEditor'),
+         ('intersense', 'IntersenseEditor'),
+         ('pinchglove', 'PinchGloveEditor'),
+         ('proxyeditor', 'ProxyEditor'),
+         ('surfacedisplayeditor', 'SurfaceDisplayEditor')
+      ]
+
+      # Install JAR files that act as reusable Java class libraries.
       destdir = os.path.join(prefix, 'bin')
       for j in lib_jars:
-         jar_file = os.path.join(srcdir, j)
+         jar_file = os.path.join(jardir, j)
          if os.path.exists(jar_file):
             shutil.copy2(jar_file, destdir)
 
+      # Install the base set of VRJConfig JavaBeans.
       destdir = os.path.join(prefix, 'bin', 'beans')
       for j in bean_jars:
-         jar_file = os.path.join(srcdir, j)
+         jar_file = os.path.join(jardir, j)
          if os.path.exists(jar_file):
             shutil.copy2(jar_file, destdir)
 
-      srcdir = os.path.join(juggler_dir, 'modules', 'vrjuggler', 'vrjconfig')
-      shutil.copy2(os.path.join(srcdir, 'VRJConfig.xml'), destdir)
+      shutil.copy2(os.path.join(vrjconfig_src, 'VRJConfig.xml'), destdir)
+
+      # Install any custom editors that were compiled.
+      destdir = os.path.join(prefix, 'lib', 'vrjuggler', 'customeditors')
+      mkinstalldirs(destdir)
+
+      for e in editors:
+         jar_file = os.path.join(jardir, e[1] + '.jar')
+         xml_file = os.path.join(editor_src, e[0], e[1] + '.xml')
+         print "jar_file:", jar_file
+         print "xml_file:", xml_file
+         if os.path.exists(jar_file):
+            shutil.copy2(xml_file, destdir)
+            shutil.copy2(jar_file, destdir)
 
       # Install vrjconfig.bat.
       destdir = os.path.join(prefix, 'bin')
-      shutil.copy2(os.path.join(srcdir, 'vrjconfig.bat'), destdir)
+      shutil.copy2(os.path.join(vrjconfig_src, 'vrjconfig.bat'), destdir)
 
       # Install dependencies.
       dep_jars = [
@@ -1006,7 +1032,7 @@ def installVRJConfig(prefix):
       for j in dep_jars:
          shutil.copy2(os.path.join(srcroot, j), destdir)
    else:
-      print "VRJConfig not build.  Skipping."
+      print "VRJConfig not built.  Skipping."
 
 def installMsvcRT(prefix):
    print "Installing MSVC runtime DLLs"
