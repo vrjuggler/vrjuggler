@@ -38,13 +38,15 @@
 #include <vjConfig.h>
 #include <Input/vjGlove/vjGlove.h>
 #include <Input/vjGlove/fsPinchGlove.h>
+#include <string>
 
+//: Fakespace Pinchglove Device
 //!PUBLIC_API:
 class vjPinchGlove : public vjGlove
 {
 public:
    //: Construct
-   vjPinchGlove() : mGlove(NULL), mControlThread(NULL), mCalDir(NULL)
+   vjPinchGlove() : mGlove(NULL), mCalDir(NULL)
    {;}
 
    //: Destroy the glove
@@ -53,7 +55,7 @@ public:
    virtual bool config(vjConfigChunk* c);
 
    virtual char* getDeviceName() { return "vjPinchGlove";}
-   static string getChunkType() { return string("PinchGlove");}
+   static std::string getChunkType() { return std::string("PinchGlove");}
 
    virtual int startSampling();
    virtual int stopSampling();
@@ -67,7 +69,7 @@ protected:
    void copyDataFromGlove();
 
 protected:
-   vjThread*         mControlThread;      // The thread of control for the object
+   //vjThread*         mControlThread;      // The thread of control for the object
    fsPinchGlove*     mGlove;              // The actual glove
 
    char*             mCalDir;             // Calibration file directory
