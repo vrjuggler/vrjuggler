@@ -23,8 +23,6 @@ all: run
 run: ${OBJECTS}
 	${COMPILE} -o $@ ${OBJECTS}
 
-main.o: main.cpp
-
 .cpp.o:
 	${COMPILE} -c $<
 
@@ -32,5 +30,5 @@ main.o: main.cpp
 # Clean-up.
 # -----------------------------------------------------------------------------
 clean:
-	rm -f Makedepend cubes ${OBJECTS} core so_locations
+	rm -f Makedepend run ${OBJECTS} core so_locations
 	rm -rf ./ii_files
