@@ -102,7 +102,9 @@ class OsgNavigator:
       if delta > 1.0:
          delta = 1.0
 
-      qrot = gmtl.makeQuat(self.mRotVelocity)
+      qrot = gmtl.Quatf()
+      gmtl.set(qrot, self.mRotVelocity)
+
       scaled_qrot = gmtl.Quatf()
       src_rot     = gmtl.Quatf()
       delta_rot   = gmtl.Matrix44f()
@@ -124,7 +126,11 @@ class OsgNavigator:
       if self.mMode == NavMode.WALK:
          self.mVelocity[1] = 0.0
 
-      trans_delta = mVelocity * delta
+      # XXX: This should work...
+#      trans_delta = self.mVelocity * delta
+      trans_delta[0] *= delta
+      trans_delta[1] *= delta
+      trans_delta[2] *= delta
 
       trans_matrix = gmtl.makeTransMatrix44(trans_delta)
       gmtl.postMult(self.mNavData.mCurPos, trans_matrix)
@@ -244,10 +250,10 @@ class PyOsgNav(vrj.OsgApp):
       self.mModel = osgDB.readNodeFile(self.mFileToLoad)
       print "done."
 
-      self.mModelTrans.preMult(osg.Matrix.rotate(gmtl.Math.deg2Rad(-90.0),
+      self.mModelTrans.preMult(osg.Matrix.rotate(gmtl.deg2Rad(-90.0),
                                                  1.0, 0.0, 0.0))
 
-      if mModel is None:
+      if self.mModel is None:
          print "ERROR: Could not load file '", self.mFileToLoad, "'"
       else:
          # Add the model to the transform.
