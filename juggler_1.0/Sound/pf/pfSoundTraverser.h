@@ -245,7 +245,13 @@ protected:
          return PFTRAV_CONT;      // Return continue
       }
 
-      std::string nodeName = currentNode->getName();
+      const char* nodeNameChar = currentNode->getName();
+     std::string nodeName;
+     if (nodeNameChar == NULL)
+          nodeName = "";
+     else
+          nodeName = nodeNameChar;
+
       if (nodeName.size() <= keyName.size())
       {
          // name was too short to even be a match, discard it.
