@@ -59,8 +59,9 @@ SRCS=		Analog.cpp			\
 		DeviceInterface.cpp		\
 		Digital.cpp			\
 		DigitalProxy.cpp		\
+		EventWindow.cpp			\
+		EventWindowProxy.cpp		\
 		Input.cpp			\
-		KeyboardProxy.cpp		\
 		Position.cpp			\
 		PositionProxy.cpp		\
 		Glove.cpp			\

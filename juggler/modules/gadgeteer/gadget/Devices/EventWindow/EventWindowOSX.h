@@ -30,33 +30,32 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _GADGET_KEYBOARD_OSX_H_
-#define _GADGET_KEYBOARD_OSX_H_
+#ifndef _GADGET_EVENT_WINDOW_OSX_H_
+#define _GADGET_EVENT_WINDOW_OSX_H_
+
+#include <gadget/gadgetConfig.h>
 
 #include <Carbon/Carbon.h>
 
 #include <gadget/Type/Input.h>
-#include <gadget/Type/Keyboard.h>
+#include <gadget/Type/EventWindow.h>
 #include <gadget/Type/InputMixer.h>
 #include <jccl/Config/ConfigChunkPtr.h>
-#include <gadget/gadgetConfig.h>
 
 namespace gadget
 {
 
 /**
  * Call back function to register with the carbon event loop.  The userData
- * argument contains a reference to the instance of the KeyboardOSX class that
- * registered to receive the event for its window.
+ * argument contains a reference to the instance of the EventWindowOSX class
+ * that registered to receive the event for its window.
  */
 pascal OSStatus keyboardHandlerOSX ( EventHandlerCallRef  nextHandler,
                                      EventRef             theEvent,
                                      void*                userData);
 
 /**
- * OSX Keyboard class.
- * Converts keyboard input into simulated input devices.
- *
+ * OSX event window class.
  * This device is a source of keyboard events.  The device should not be
  * used directly, it should be referenced through proxies.
  *
@@ -71,9 +70,9 @@ pascal OSStatus keyboardHandlerOSX ( EventHandlerCallRef  nextHandler,
  *  CASE 2: The user can toggle locking using a special "locking" key
  *           defined in the configuration chunk.
  *
- * @see Keyboard, KeyboardProxy
+ * @see EventWindow, EventWindowProxy
  */
-class KeyboardOSX : public InputMixer<Input,Keyboard>
+class EventWindowOSX : public InputMixer<Input,EventWindow>
 {
 public:
    /** Enum to keep track of current lock state for state machine. */
@@ -84,7 +83,7 @@ public:
       Lock_KeyDown  /**< The mouse is locked due to a key being held down */
    };
 
-   KeyboardOSX()
+   EventWindowOSX()
    {
         mLockState = Unlocked;     // Initialize to unlocked.
         //Sampling has not been called yet
@@ -95,7 +94,7 @@ public:
         //mShared = false;                         // False by default
    }
 
-   ~KeyboardOSX() { stopSampling();}
+   ~EventWindowOSX() { stopSampling();}
 
    virtual bool config(jccl::ConfigChunkPtr c);
 
@@ -112,7 +111,7 @@ public:
    int sample() { return 1; }
    void updateData();
 
-   static std::string getChunkType() { return std::string("Keyboard");}
+   static std::string getChunkType() { return std::string("EventWindow");}
 
    /**
     * Returns the number of times the key was pressed during the
@@ -121,8 +120,9 @@ public:
     * catch the actual number..
     */
    int isKeyPressed(int Key)
-   {  return m_curKeys[Key];}
-
+   {
+      return mCurKeys[Key];
+   }
 
    /**
     * Called by callback function.
@@ -170,7 +170,7 @@ private:
 
    /** Opens the carbon window to get events from. */
    int openTheWindow();
-   
+
 
    /** Performs anything that must be done when state switches. */
    void lockMouse();
@@ -193,7 +193,7 @@ protected:
    int          m_screen, m_x, m_y;    /**< screen id, x_origin, y_origin */
    unsigned int m_width,m_height;
 
-   /** @name Keyboard state holders */
+   /** @name Event window state holders */
    //@{
    // NOTE: This driver does not use the normal triple buffering mechanism.
    // Instead, it just uses a modified double buffering system.

@@ -41,7 +41,7 @@
 #include <gadget/Type/Digital.h>
 #include <gadget/Type/Analog.h>
 #include <gadget/Type/Position.h>
-#include <gadget/Type/Keyboard.h>
+#include <gadget/Type/EventWindow.h>
 #include <gadget/Type/InputMixer.h>
 //#include <gadget/Type/BaseTypes.h>
 #include <gadget/Util/Debug.h>
@@ -112,9 +112,9 @@ void BaseTypeFactory::hackLoadKnownDevices()
     BaseTypeConstructor< InputMixer< InputMixer<SimInput,Input> , Analog>::MixedPlaceholderType >* siminput_input_analog
             =new BaseTypeConstructor< InputMixer< InputMixer<SimInput,Input> , Analog>::MixedPlaceholderType >;
 
-    // Input Keyboard
-    BaseTypeConstructor< InputMixer<Input,Keyboard>::MixedPlaceholderType >* input_keyboard
-            =new BaseTypeConstructor< InputMixer<Input,Keyboard>::MixedPlaceholderType >;
+    // Input event window
+    BaseTypeConstructor< InputMixer<Input,EventWindow>::MixedPlaceholderType >* input_keyboard
+            =new BaseTypeConstructor< InputMixer<Input,EventWindow>::MixedPlaceholderType >;
 
 
 

@@ -31,7 +31,7 @@
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # -----------------------------------------------------------------------------
-# Makefile.in for gadgeteer/gadget/Devices/Keyboard.  It requires GNU make.
+# Makefile.in for gadgeteer/gadget/Devices/EventWindow.  It requires GNU make.
 #
 # Generated for use on @PLATFORM@
 # -----------------------------------------------------------------------------
@@ -41,20 +41,20 @@ default: all
 # Include common definitions.
 include @topdir@/make.defs.mk
 
-includedir	= @includedir@/gadget/Devices/Keyboard
-srcdir		= @srcdir@
-top_srcdir	= @top_srcdir@
-INSTALL		= @INSTALL@
-SUBOBJDIR	= $(GADGET_LIBRARY)
+includedir=	@includedir@/gadget/Devices/EventWindow
+srcdir=		@srcdir@
+top_srcdir=	@top_srcdir@
+INSTALL=	@INSTALL@
+SUBOBJDIR=	$(GADGET_LIBRARY)
 
 ifeq (@OS_TYPE@, Win32)
-    SRCS	= KeyboardWin32.cpp
+   SRCS=	EventWindowWin32.cpp
 else
-    ifeq (@PLATFORM@, Darwin)
-	SRCS	= KeyboardOSX.cpp
-    else
-	SRCS	= KeyboardXWin.cpp
-    endif
+   ifeq (@PLATFORM@, Darwin)
+      SRCS=	EventWindowOSX.cpp
+   else
+      SRCS=	EventWindowXWin.cpp
+   endif
 endif
 
 include $(MKPATH)/dpp.obj.mk
@@ -64,6 +64,6 @@ include $(MKPATH)/dpp.obj.mk
 # -----------------------------------------------------------------------------
 ifndef DO_CLEANDEPEND
 ifndef DO_BEFOREBUILD
-    -include $(DEPEND_FILES)
+   -include $(DEPEND_FILES)
 endif
 endif

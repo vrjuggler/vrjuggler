@@ -30,8 +30,8 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _GADGET_KEYBOARD_XWIN_H_
-#define _GADGET_KEYBOARD_XWIN_H_
+#ifndef _GADGET_EVENT_WINDOW_XWIN_H_
+#define _GADGET_EVENT_WINDOW_XWIN_H_
 
 #include <gadget/gadgetConfig.h>
 
@@ -42,7 +42,7 @@
 #include <vpr/Sync/Mutex.h>
 
 #include <gadget/Type/Input.h>
-#include <gadget/Type/Keyboard.h>
+#include <gadget/Type/EventWindow.h>
 #include <gadget/Type/InputMixer.h>
 
 #include <jccl/Config/ConfigChunkPtr.h>
@@ -52,9 +52,7 @@ namespace gadget
 {
 
 /**
- * XWin Keyboard class.
- * Converts keyboard input into simulated input devices.
- *
+ * X Winndow System event window class.
  * This device is a source of keyboard events.  The device should not be
  * used directly, it should be referenced through proxies.
  *
@@ -67,9 +65,9 @@ namespace gadget
  *  CASE 2: The user can toggle locking using a special "locking" key
  *           defined in the configuration chunk.
  *
- * @see Keyboard, KeyboardProxy
+ * @see EventWindow, EventWindowProxy
  */
-class KeyboardXWin : public InputMixer<Input,Keyboard>
+class EventWindowXWin : public InputMixer<Input,EventWindow>
 {
 public:
    /** Enum to keep track of current lock state for state machine. */
@@ -80,19 +78,18 @@ public:
       Lock_KeyDown  /**< The mouse is locked due to a key being held down */
    };
 
-   KeyboardXWin()
+   EventWindowXWin()
+      : mWeOwnTheWindow(true), mVisual(NULL), mDisplay(NULL),
+        mExitFlag(false), mControlLoopDone(false), mLockState(Unlocked),
+        mPrevX(0), mPrevY(0)
    {
-      m_visual = NULL;
-      m_display = NULL;
       //mThread = NULL; -- Should be done in base constructor
-
-      mPrevX = 0; mPrevY = 0;
-      mLockState = Unlocked;                    // Initialize to unlocked.
-      mExitFlag = false;
-      mControlLoopDone = false;
-      mWeOwnTheWindow = true;
    }
-   ~KeyboardXWin() { stopSampling();}
+
+   ~EventWindowXWin()
+   {
+      stopSampling();
+   }
 
    virtual bool config(jccl::ConfigChunkPtr c);
 
@@ -109,19 +106,28 @@ public:
     * Processes the current x-events.
     * Called repetatively by the controlLoop.
     */
-   int sample() { HandleEvents(); return 1; }
+   int sample()
+   {
+      HandleEvents();
+      return 1;
+   }
+
    void updateData();
 
-   static std::string getChunkType() { return std::string("Keyboard");}
+   static std::string getChunkType()
+   {
+      return std::string("EventWindow");
+   }
 
    /**
-    * Returns the number of times the key was pressed during the
-    * last frame, so you can put this in an if to check if was
-    * pressed at all, or if you are doing processing based on this
-    * catch the actual number..
+    * Returns the number of times the key was pressed during the last frame.
+    * You can put this in an if to check if was pressed at all, or if you are
+    * doing processing based on this catch the actual number.
     */
    int isKeyPressed(int Key)
-   {  return m_curKeys[Key];}
+   {
+      return mCurKeys[Key];
+   }
 
    /**
     * Invokes the global scope delete operator.  This is required for proper
@@ -154,17 +160,17 @@ private:
 
    /**
     * Handles any events in the system.
-    * Copies m_keys to m_curKeys.
+    * Copies mKeys to mCurKeys.
     */
    void HandleEvents();
 
-   /** @name X-Windows utility functions */
+   /** @name X-Window System utility functions */
    //@{
    /**
-    * Convert XKey to Key.
+    * Converts X Window key to Key.
     * @note Keypad keys are transformed ONLY to number keys.
     */
-   int xKeyToKey( ::KeySym xKey );
+   int xKeyToKey(::KeySym xKey);
 
    /** Opens the X window to sample from. */
    int openTheWindow();
@@ -172,6 +178,7 @@ private:
    ::Window createWindow(::Window parent, unsigned int border,
                          unsigned long fore, unsigned long back,
                          unsigned long event_mask);
+
    void setHints(::Window window, char*  window_name, char*  icon_name,
                  char* class_name, char* class_type);
    //@}
@@ -181,37 +188,37 @@ private:
    void unlockMouse();
 
 protected:
-   bool         mWeOwnTheWindow;       /**< True if this class owns the window (is reposible for opening, closing, and event processing). */
+   bool mWeOwnTheWindow; /**< True if this class owns the window (is reposible for opening, closing, and event processing). */
 
-   ::Window       m_window;
-   ::XVisualInfo* m_visual;
-   ::Display*     m_display;
-   ::XSetWindowAttributes m_swa;
-   int          m_screen, m_x, m_y;    /**< screen id, x_origin, y_origin. */
-   unsigned int m_width,m_height;
+   ::Window       mWindow;
+   ::XVisualInfo* mVisual;
+   ::Display*     mDisplay;
+   ::XSetWindowAttributes mSWA;
+   int          mScreen, mX, mY;    /**< screen id, x-origin, y-origin. */
+   unsigned int mWidth, mHeight;
 
-   /** @name Keyboard state holders
+   /** @name EventWindow state holders
     * @note This driver does not use the normal triple buffering mechanism.
     * Instead, it just uses a modified double buffering system.
     */
    //@{
-   int      m_keys[256];         /**< (0,*): The num key presses during an UpdateData (ie. How many keypress events). */
+   int        mKeys[256];        /**< (0,*): The num key presses during an UpdateData (ie. How many keypress events). */
 
-   int      m_realkeys[256];     /**< (0,1): The real keyboard state, all events processed (ie. what is the key now). */
-   vpr::Mutex  mKeysLock;        /**< Must hold this lock when accessing m_keys. */
-   bool     mExitFlag;           /**< Should we exit? */
-   bool     mControlLoopDone;
+   int        mRealkeys[256];    /**< (0,1): The real keyboard state, all events processed (ie. what is the key now). */
+   vpr::Mutex mKeysLock;         /**< Must hold this lock when accessing m_keys. */
+   bool       mExitFlag;         /**< Should we exit? */
+   bool       mControlLoopDone;
 
-   lockState   mLockState;       /**< The current state of locking. */
-   int         mLockStoredKey;   /**< The key that was pressed down. */
-   int         mLockToggleKey;   /**< The key that toggles the locking. */
+   lockState  mLockState;        /**< The current state of locking. */
+   int        mLockStoredKey;    /**< The key that was pressed down. */
+   int        mLockToggleKey;    /**< The key that toggles the locking. */
    //@}
 
-   std::string mXDisplayString;   /**< The display string to use from systemDisplay config info. */
+   std::string mXDisplayString;  /**< The display string to use from systemDisplay config info. */
 
-   float m_mouse_sensitivity;
-   int   mSleepTimeMS;            /**< Amount of time to sleep in milliseconds between updates. */
-   int   mPrevX, mPrevY;          /**< Previous mouse location. */
+   float mMouseSensitivity;
+   int   mSleepTimeMS;           /**< Amount of time to sleep in milliseconds between updates. */
+   int   mPrevX, mPrevY;         /**< Previous mouse location. */
 };
 
 } // end namespace
