@@ -92,7 +92,6 @@ public:
    // Initialize VR Juggler device interfaces here.
    virtual void init()
    {
-      vrj::GlApp::init();
       // for the glove position
       mGlove.init("VJGlove");
       
@@ -116,7 +115,6 @@ public:
    // allocation here.
    virtual void contextInit()
    {
-      vrj::GlApp::contextInit();
       // Init the scene's displaylists for this context.
       mScene->init();
    }
@@ -140,7 +138,6 @@ public:
    //  but before the drawManager starts the drawing loops.
    virtual void apiInit()
    {
-      vrj::GlApp::apiInit();
       // Do nothing
    }
 
@@ -150,7 +147,6 @@ public:
    // objects.
    virtual void preFrame()
    {
-      vrj::GlApp::preFrame();
       // Do nothing
    }   
 
@@ -166,7 +162,6 @@ public:
    // Function called after drawing has been triggered but BEFORE it completes
    virtual void intraFrame()
    {
-      vrj::GlApp::intraFrame();
       // Do nothing
    }
 
