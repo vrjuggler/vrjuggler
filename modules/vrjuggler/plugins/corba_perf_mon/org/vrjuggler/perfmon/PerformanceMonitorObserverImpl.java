@@ -112,5 +112,18 @@ public class PerformanceMonitorObserverImpl extends ObserverPOA
       return 0.0f;
    }
 
+   public SampleTimeMap getValueMap()
+   {
+      try
+      {
+         return mPerformanceMonitorSubject.getValueMap();
+      }
+      catch (org.omg.CORBA.COMM_FAILURE comm_ex)
+      {
+         System.out.println(comm_ex);
+         comm_ex.printStackTrace();
+      }
+      return new SampleTimeMap();
+   }
    private PerformanceMonitorSubject mPerformanceMonitorSubject = null;
 }

@@ -65,7 +65,6 @@ public class PerformanceMonitorGUI extends JPanel
    private PerformanceMonitorObserverImpl mPerfMonObserver = null;
    ChartPanel mChartPanel = null;
    BorderLayout borderLayout1 = new BorderLayout();
-   TimeSeries series = null;
    double lastValue = 100.0;
    JPanel jPanel1 = new JPanel();
 
@@ -76,31 +75,23 @@ public class PerformanceMonitorGUI extends JPanel
    SpinnerNumberModel mSpinnerModel = new SpinnerNumberModel( value, min, max, step );
 
    JSpinner mJSpinner = new JSpinner( mSpinnerModel );
-   Thread mThread = null;
+
+   ///The thread that handles updating the GUI.
+   private Thread mUpdaterThread = null;
 
    public PerformanceMonitorGUI()
    {
-      try
-      {
-         //this.series = new TimeSeries( "Random Data", Millisecond.class );
-         //TimeSeriesCollection dataset = new TimeSeriesCollection( this.series );
-         TimeSeriesCollection dataset = new TimeSeriesCollection( );
-         JFreeChart chart = createChart( dataset );
-         mChartPanel = new ChartPanel( chart );
+      TimeSeriesCollection dataset = new TimeSeriesCollection( );
+      JFreeChart chart = createChart( dataset );
+      mChartPanel = new ChartPanel( chart );
 
-         jbInit();
-         //mThread = new Thread( new Updater( series, mSpinnerModel ) );
-         //mThread.start();
-
-         System.out.println("PerformanceMonitor started");
-      }
-      catch ( Exception ex )
-      {
-         ex.printStackTrace();
-      }
+      jbInit();
+      mUpdaterThread = new Thread( new Updater( dataset, mSpinnerModel, mPerfMonObserver ) );
+      
+      System.out.println("PerformanceMonitor started");
    }
 
-   void jbInit () throws Exception
+   void jbInit ()
    {
        this.setLayout( borderLayout1 );
        mChartPanel.setPreferredSize( new java.awt.Dimension( 500, 270 ) );
@@ -140,6 +131,7 @@ public class PerformanceMonitorGUI extends JPanel
     */
    public void connectionOpened(CommunicationEvent e)
    {
+      System.out.println("[DBG] PerfMon Connection Opened.");
       // The first thing to do is get the CORBA service object from the
       // event.  We need this so we know to whom we are are connecting.  Once
       // we have the CORBA service, we get its Subject Manager since that's
@@ -159,9 +151,13 @@ public class PerformanceMonitorGUI extends JPanel
       }
       catch (BAD_PARAM narrow_ex)
       {
+         mPerformanceMonitorSubject = null;
+      }
+      if (mPerformanceMonitorSubject == null)
+      {
          JOptionPane.showMessageDialog(null,
-                                       "Failed to narrow subject to SliderSubject",
-                                       "SliderSubject Narrow Error",
+                                       "Failed to narrow subject to CorbaPerfPlugin",
+                                       "CorbaPerfPlugin Narrow Error",
                                        JOptionPane.ERROR_MESSAGE);
       }
       //if (CommunicationEvent.CONNECT == e.getType())
@@ -179,6 +175,9 @@ public class PerformanceMonitorGUI extends JPanel
          // subject.  The subject needs to know who its observers are so
          // that it can notify them of updates.
          mPerformanceMonitorSubject.attach(mPerfMonObserver._this());
+      
+         ///Start the updater thread.
+         mUpdaterThread.start();
       }
    }
 
