@@ -192,12 +192,13 @@ int vjConfigChunkDB::removeMatching (char *property, char *value) {
 //: Sorts the chunks based on dependancies
 //! PRE: we need a "good object"
 //! MODIFIES: self.  We move the objects around so they are sorted
+//! ARGS: auxChunks - Auxilary chunks that have been loaded already
 //! POST: Topologically sorted
 // Copy the chunks over to a new list.  Repetatively try to
 // find an item in the source list that already has it's dependencies
 // copied into the dst list.  Do this iteratively until done or
 // until fail.
-int vjConfigChunkDB::dependencySort()
+int vjConfigChunkDB::dependencySort(vjConfigChunkDB* auxChunks)
 {
    // Print out dependancies
 #ifdef VJ_DEBUG
@@ -238,7 +239,10 @@ int vjConfigChunkDB::dependencySort()
 
       deps = (*cur_item)->getDependencies();             // Get src dependencies
       for(int dep_num=0;dep_num<deps.size();dep_num++)   // For each dependency
-         if (getChunk((char*)deps[dep_num].c_str()) == NULL)    // If depency not in list yet
+            // If dependency not in list yet or in aux buffer
+            // If (not in src && (!aux exists || not in aux))
+         if ((getChunk((char*)deps[dep_num].c_str()) == NULL) &&
+             ((auxChunks == NULL) || (auxChunks->getChunk((char*)deps[dep_num].c_str()) == NULL)))
             dep_pass = false;                                   // Failed check (we don't pass)
 
       if(dep_pass)        // If all dependencies are accounted for
