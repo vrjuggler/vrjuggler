@@ -74,7 +74,7 @@ CLEAN_FILES	+= $(addprefix $(srcdir)/, $(IDL_CXX_FILES))
 # Include dependencies generated automatically.
 # -----------------------------------------------------------------------------
 ifndef DO_CLEANDEPEND
-ifndef DO_BEFOREBUILD
+ifndef DO_IDL
     -include $(DEPEND_FILES)
 endif
 endif
