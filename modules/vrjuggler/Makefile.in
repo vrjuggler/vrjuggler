@@ -229,7 +229,7 @@ clean-links:
 	-cd ${instlinks} && rm -rf bin
 	-cd ${instlinks}/lib && rm -f ${LIB_DYNAMIC} ${LIB_STATIC}
 	-cd ${instlinks}/include && rm -f ./config.h
-	-cd ${instlinks} && rm -f ./include ./lib
+	-cd ${instlinks} && rm -f ./include ./lib ./Data
 	rmdir ${instlinks}
 
 # Installation targets.
