@@ -1027,17 +1027,15 @@ int EventWindowXWin::openTheWindow()
       mSWA.colormap = XCreateColormap(mDisplay,
                                       RootWindow(mDisplay, mVisual->screen),
                                       mVisual->visual, AllocNone);
-      // Try to make it just a black window
-      mSWA.border_pixel = WhitePixel(mDisplay, mScreen);
-      unsigned long event_mask = ExposureMask | StructureNotifyMask | KeyPressMask |
-                                 KeyReleaseMask | ButtonPressMask | ButtonReleaseMask |
-                                 ButtonMotionMask | PointerMotionMask | StructureNotifyMask;
-      mSWA.event_mask = event_mask;
       mSWA.background_pixel = BlackPixel(mDisplay, mScreen);
+      mSWA.border_pixel = WhitePixel(mDisplay, mScreen);
+      const unsigned int event_mask =
+         ExposureMask | StructureNotifyMask | KeyPressMask | KeyReleaseMask |
+         ButtonPressMask | ButtonReleaseMask | ButtonMotionMask |
+         PointerMotionMask | StructureNotifyMask;
+      mSWA.event_mask = event_mask;
 
-      mWindow = createWindow(DefaultRootWindow(mDisplay), 1,
-                             BlackPixel(mDisplay, mScreen),
-                             WhitePixel(mDisplay, mScreen), event_mask);
+      mWindow = createWindow(DefaultRootWindow(mDisplay), 1);
 
       setHints(mWindow, const_cast<char*>(mInstName.c_str()),
                "VJm_keys" , "VJEventWindow2", "VJInputD");
@@ -1048,7 +1046,7 @@ int EventWindowXWin::openTheWindow()
       XRaiseWindow(mDisplay, mWindow);
       XClearWindow(mDisplay, mWindow);    // Try to clear the background
 
-   //   createEmptyCursor(mDisplay, mWindow);
+//      createEmptyCursor(mDisplay, mWindow);
 
       vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL)
          << "[gadget::EventWindowXWin::openTheWindow()] done." << std::endl
@@ -1162,24 +1160,10 @@ void EventWindowXWin::setHints(Window window, char* window_name,
    XFree(i_name.value);
 }
 
-Window EventWindowXWin::createWindow(Window parent, unsigned int border,
-                                     unsigned long fore, unsigned long back,
-                                     unsigned long event_mask)
+Window EventWindowXWin::createWindow(Window parent,
+                                     const unsigned int borderWidth)
 {
-   // NOTE: The following can be removed if code below is ever uncommented.
-   boost::ignore_unused_variable_warning(fore);
-   boost::ignore_unused_variable_warning(back);
-   boost::ignore_unused_variable_warning(event_mask);
-
    Window window;
-   //UnUsed// XSetWindowAttributes attributes;
-   //UnUsed// unsigned long attribute_mask;
-
-   // set up attributes
-   //UnUsed// attributes.background_pixel = back;
-   //UnUsed// attributes.border_pixel = fore;
-   //UnUsed// attributes.event_mask = event_mask;
-   //UnUsed// attribute_mask = CWBackPixel | CWBorderPixel | CWEventMask;
 
    // need screen size so we can convert origin from lower-left
    XWindowAttributes winattrs;
@@ -1188,7 +1172,7 @@ Window EventWindowXWin::createWindow(Window parent, unsigned int border,
 
    // create it
    window = XCreateWindow(mDisplay, parent, mX, winattrs.height - mY - mHeight,
-                          mWidth, mHeight, border, mVisual->depth,
+                          mWidth, mHeight, borderWidth, mVisual->depth,
                           InputOutput, mVisual->visual,
                           CWBackPixel | CWBorderPixel | CWColormap | CWEventMask,
                           &mSWA);
