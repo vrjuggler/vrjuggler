@@ -39,16 +39,12 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-
 /*
- * --------------------------------------------------------------------------
- * Author:
- *   Patrick Hartling
- * --------------------------------------------------------------------------
+ * ----------------------------------------------------------------------------
  * NOTES:
- *    - This file (CondVarNSPR.h) must be included by vpr/Cond.h, not the
+ *    - This file (CondVarNSPR.h) must be included by vpr/Sync/Cond.h, not the
  *      other way around.
- * --------------------------------------------------------------------------
+ * ----------------------------------------------------------------------------
  */
 
 #ifndef _VPR_COND_VAR_NSPR_H_
@@ -67,23 +63,24 @@
 namespace vpr
 {
 
-//: Condition variable wrapper for NSPR condition variables.
-//!PUBLIC_API:
+/**
+ * Condition variable wrapper for NSPR condition variables.
+ */
 class VPR_CLASS_API CondVarNSPR
 {
 public:
-   // -----------------------------------------------------------------------
-   //: Constructor for vpr::CondVarNSPR class.
-   //
-   //! PRE: None.
-   //! POST: The condition variable is intialized, and the mutex variable
-   //+       associated with it is defined.  These two steps must be done
-   //+       before any other member functions can use them.
-   //
-   //! ARGS: mutex - Pointer to a vpr::MutexNSPR variable that is used in
-   //+               association with the condition variable in this class
-   //+               (optional).
-   // -----------------------------------------------------------------------
+   /**
+    * Constructor.
+    *
+    * @pre None.
+    * @post The condition variable is intialized, and the mutex variable
+    *       associated with it is defined.  These two steps must be done
+    *       before any other member functions can use them.
+    *
+    * @param mutex Pointer to a vpr::MutexNSPR variable that is used in
+    *              association with the condition variable in this class
+    *              (optional).
+    */
    CondVarNSPR (MutexNSPR* mutex = NULL)
    {
       // If the caller did not specify a mutex variable to use with
@@ -103,28 +100,33 @@ public:
       vprASSERT(mCondVar != NULL);
    }
 
-   // -----------------------------------------------------------------------
-   //: Destructor for CondVarNSPR class.
-   //
-   //! PRE: The condition variable is no longer in use.
-   //! POST: The condition variable is destroyed.
-   // -----------------------------------------------------------------------
+   /**
+    * Destructor.
+    *
+    * @pre The condition variable is no longer in use.
+    * @post The condition variable is destroyed.
+    */
    ~CondVarNSPR (void)
    {
       PR_DestroyCondVar(mCondVar);
    }
 
-   // -----------------------------------------------------------------------
-   //: Block on a condition.
-   //
-   //! PRE: The mutex variable associated with the condition variable must
-   //+      be locked.
-   //! POST: The condition variable is locked.  If it was previously
-   //+       locked, the caller blocks until signaled.
-   //
-   //! RETURNS:  0 - Succeedful completion
-   //! RETURNS: -1 - Error
-   // -----------------------------------------------------------------------
+   /**
+    * Blocks on a condition.  The lock asociated with this condition variable
+    * must be held prior to invoking this method.  When invoked, the lock on
+    * the variable is released, and the calling thread is blocked until another
+    * thread informs it that the condition has changed or until the timeout
+    * expires.
+    *
+    * @pre The mutex variable associated with the condition variable must
+    *      be locked.
+    * @post The condition variable is locked.  If it was previously
+    *       locked, the caller blocks until signaled.
+    *
+    * @return vpr::ReturnStatus::Succeed is returned when the calling thread is
+    *         signaled.  vpr::ReturnStatus::Fail is returned if something
+    *         went wrong in blocking on the condition.
+    */
    vpr::ReturnStatus wait (vpr::Interval timeToWait = vpr::Interval::NoTimeout)
    {
       vpr::ReturnStatus status;
@@ -141,16 +143,16 @@ public:
       return status;
    }
 
-   // -----------------------------------------------------------------------
-   //: Signal a thread waiting on the condition variable.
-   //
-   //! PRE: The condition variable must be locked.
-   //! POST: The condition variable is unlocked, and a signal is sent to a
-   //+       thread waiting on it.
-   //
-   //! RETURNS:  0 - Succeedful completion
-   //! RETURNS: -1 - Error
-   // -----------------------------------------------------------------------
+   /**
+    * Signals another thread waiting on this condition variable.
+    *
+    * @pre The condition variable must be locked.
+    * @post The condition variable is unlocked, and a signal is sent to a
+    *       thread waiting on it.
+    *
+    * @return vpr::ReturnStatus::Succeed is returned when the signal is sent
+    *         successfully.  vpr::ReturnStatus::Fail is returned otherwise.
+    */
    vpr::ReturnStatus signal (void)
    {
       vpr::ReturnStatus status;
@@ -166,17 +168,18 @@ public:
       return status;
    }
 
-   // -----------------------------------------------------------------------
-   //: Signal all waiting threads.
-   //
-   //! PRE: The mutex variable associated with the condition variable
-   //+      should be locked.
-   //! POST: The condition variable is unlocked, and all waiting threads
-   //+       are signaled of this event.
-   //
-   //! RETURNS:  0 - Succeedful completion
-   //! RETURNS: -1 - Error
-   // -----------------------------------------------------------------------
+   /**
+    * Signals all threads waiting on the condition variable.
+    *
+    * @pre The mutex variable associated with the condition variable
+    *      should be locked.
+    * @post The condition variable is unlocked, and all waiting threads
+    *       are signaled of this event.
+    *
+    * @return vpr::ReturnStatus::Succeed is returned if the broadcast message
+    *         is sent successfully.  vpr::ReturnStatus::Fail is returned
+    *         otherwise.
+    */
    vpr::ReturnStatus broadcast (void)
    {
       vpr::ReturnStatus status;
@@ -192,66 +195,73 @@ public:
       return status;
    }
 
-   // -----------------------------------------------------------------------
-   //: Acquire a lock on the mutex variable associated with the condition
-   //+ variable.
-   //
-   //! PRE: None.
-   //! POST: A lock is acquired on the mutex variable associated with the
-   //+      condition variable.  If a lock is acquired, the caller controls
-   //+      the mutex variable.  If it was previously locked, the caller
-   //+      blocks until it is unlocked.
-   //
-   //! RETURNS:  0 - Succeedful completion
-   //! RETURNS: -1 - Error
-   // -----------------------------------------------------------------------
+   /**
+    * Acquires a lock on the mutex variable associated with the condition
+    * variable.
+    *
+    * @pre None.
+    * @post A lock is acquired on the mutex variable associated with the
+    *      condition variable.  If a lock is acquired, the caller controls
+    *      the mutex variable.  If it was previously locked, the caller
+    *      blocks until it is unlocked.
+    *
+    * @return vpr::ReturnStatus::Succeed is returned if the lock on this
+    *         condition variable is acquired successfully.
+    *         vpr::ReturnStatus::Fail is returned otherwise.
+    */
    vpr::ReturnStatus acquire (void)
    {
       return mCondMutex->acquire();
    }
 
-   // -----------------------------------------------------------------------
-   //: Try to acquire a lock on the mutex variable associated with the
-   //+ condition variable.
-   //
-   //! PRE: None.
-   //! POST: If the mutex variable is not already locked, the caller
-   //+       obtains a lock on it.  If it is already locked, the routine
-   //+       returns immediately to the caller.
-   //
-   //! RETURNS:  0 - Succeedful completion
-   //! RETURNS: -1 - Error
-   // -----------------------------------------------------------------------
+   /**
+    * Tries to acquire a lock on the mutex variable associated with the
+    * condition variable.
+    *
+    * @pre None.
+    * @post If the mutex variable is not already locked, the caller
+    *       obtains a lock on it.  If it is already locked, the routine
+    *       returns immediately to the caller.
+    *
+    * @return vpr::ReturnStatus::Succeed is returned if the lock on this
+    *         condition variable is acquired successfully.
+    *         vpr::ReturnStatus::Fail is returned if the lock is already held
+    *         by another thread.
+    */
    vpr::ReturnStatus tryAcquire (void)
    {
       return mCondMutex->tryAcquire();
    }
 
-   // -----------------------------------------------------------------------
-   //: Release the lock on the mutex variable associated with the condition
-   //+ variable.
-   //
-   //! PRE: None.
-   //! POST: The lock held by the caller on the mutex variable is released.
-   // -----------------------------------------------------------------------
+   /**
+    * Releases the lock on the mutex variable associated with the condition
+    * variable.
+    *
+    * @pre None.
+    * @post The lock held by the caller on the mutex variable is released.
+    *
+    * @return vpr::ReturnStatus::Succeed is returned if the lock on this
+    *         condition variable is released successfully.
+    *         vpr::ReturnStatus::Fail is returned otherwise.
+    */
    vpr::ReturnStatus release (void)
    {
       return mCondMutex->release();
    }
 
-   // -----------------------------------------------------------------------
-   //: Change the condition variable mutex to be the specifiec mutex
-   //+ variable.
-   //
-   //! PRE: The specified mutex variable must be initialized.
-   //! POST: The condition variable associated with the mutex variable is
-   //+       reset to the specified variable.
-   //
-   //! ARGS: mutex - Pointer to a vpr::MutexNSPR variable that is used in
-   //+               association with the condition variable in this class.
-   //
-   //! NOTE: NEVER call except to initialize explicitly.
-   // -----------------------------------------------------------------------
+   /**
+    * Changes the condition variable mutex to be the specifiec mutex
+    * variable.
+    *
+    * @pre The specified mutex variable must be initialized.
+    * @post The condition variable associated with the mutex variable is
+    *       reset to the specified variable.
+    *
+    * @param mutex Pointer to a vpr::MutexNSPR variable that is used in
+    *              association with the condition variable in this class.
+    *
+    * @note NEVER call except to initialize explicitly.
+    */
    void setMutex (MutexNSPR* mutex)
    {
       // NOT exactly correct, but just make sure not to leave it locked
@@ -259,24 +269,24 @@ public:
       mCondMutex = mutex;
    }
 
-   // -----------------------------------------------------------------------
-   //: Print out information about the condition variable to stderr.
-   //
-   //! PRE: None.
-   //! POST: All important data and debugging information related to the
-   //+       condition variable and its mutex are dumped to stderr.
-   // -----------------------------------------------------------------------
+   /**
+    * Prints out information about the condition variable to stderr.
+    *
+    * @pre None.
+    * @post All important data and debugging information related to the
+    *       condition variable and its mutex are dumped to stderr.
+    */
    void dump (void) const
    {
       std::cerr << "------------- vpr::CondVarNSPR::Dump ---------\n"
-      << "Not Implemented yet.\n";
+                << "Not Implemented yet.\n";
    }
 
 private:
-   PRCondVar*      mCondVar;   //: Condition variable
-   MutexNSPR*      mCondMutex; //: Mutex for the condition variable
+   PRCondVar*      mCondVar;   /**< Condition variable */
+   MutexNSPR*      mCondMutex; /**< Mutex for the condition variable */
 
-   MutexNSPR       mDefaultMutex;  //: A default mutex variable
+   MutexNSPR       mDefaultMutex;  /**< A default mutex variable */
 
    // = Prevent assignment and initialization.
    void operator= (const CondVarNSPR&)

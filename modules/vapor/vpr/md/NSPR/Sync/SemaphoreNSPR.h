@@ -39,13 +39,6 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-/*
- * --------------------------------------------------------------------------
- * Author:
- *   Patrick Hartling.
- * --------------------------------------------------------------------------
- */
-
 #ifndef _VPR_SEMAPHORE_NSPR_H_
 #define _VPR_SEMAPHORE_NSPR_H_
 
@@ -60,52 +53,51 @@
 namespace vpr
 {
 
-//: Wrapper for semaphores implemented using condition variables.
-
-//!PUBLIC_API:
+/**
+ * Wrapper for semaphores implemented using condition variables.
+ */
 class VPR_CLASS_API SemaphoreNSPR
 {
 public:
-   // -----------------------------------------------------------------------
-   //: Custructor for vpr::SemaphoreNSPR class.
-   //
-   //! PRE: None.
-   //! POST: The semaphore variable for the class is initilized as an
-   //+       unnamed semaphore.
-   //
-   //! ARGS: initialValue - The initial number of resources controlled by
-   //+                      the semaphore.  If not specified, the default
-   //+                      value is 1.
-   // -----------------------------------------------------------------------
+   /**
+    * Custructor.
+    *
+    * @pre None.
+    * @post The semaphore variable for the class is initilized as an
+    *       unnamed semaphore.
+    *
+    * @param initialValue The initial number of resources controlled by the
+    *                     semaphore.  If not specified, the default value is 1.
+    */
    SemaphoreNSPR (int initial_value = 1)
    {
       mCondVar = new CondVar;
       PR_AtomicSet(&mValue, initial_value);
    }
 
-   // -----------------------------------------------------------------------
-   //: Destructor for vpr::SemaphoreNSPR class.
-   //
-   //! PRE: None.
-   //! POST: The resources used by the semaphore variable are freed.
-   // -----------------------------------------------------------------------
+   /**
+    * Destructor.
+    *
+    * @pre None.
+    * @post The resources used by the semaphore variable are freed.
+    */
    ~SemaphoreNSPR (void)
    {
       delete mCondVar;
    }
 
-   // -----------------------------------------------------------------------
-   //: Lock the semaphore.
-   //
-   //! PRE: None.
-   //! POST: The calling thread either acquires the semaphore until
-   //+       release() is called, or the caller is put at the tail of a wait
-   //+       and is suspended until such time as it can be freed and allowed
-   //+       to acquire the semaphore itself.
-   //
-   //! RETURNS:  1 - Lock acquired
-   //! RETURNS: -1 - Error
-   // -----------------------------------------------------------------------
+   /**
+    * Locks this semaphore.
+    *
+    * @pre None.
+    * @post The calling thread either acquires the semaphore until release()
+    *       is called, or the caller is put at the tail of a wait and is
+    *       suspended until such time as it can be freed and allowed to acquire
+    *       the semaphore itself.
+    *
+    * @return vpr::ReturnStatus::Succeed is returned if a resource lock is
+    *         acquired.  vpr::ReturnStatus::Fail is returned otherwise.
+    */
    vpr::ReturnStatus acquire (void)
    {
       mCondVar->acquire();
@@ -120,56 +112,57 @@ public:
       return vpr::ReturnStatus();
    }
 
-   // -----------------------------------------------------------------------
-   //: Acquire and lock a read semaphore.
-   //
-   //! PRE: None.
-   //! POST: The calling thread either acquires the semaphore until
-   //+       release() is called, or the caller is put at the tail of a wait
-   //+       and is suspended until such time as it can be freed and allowed
-   //+       to acquire the semaphore itself.
-   //
-   //! RETURNS:  1 - Lock acquired
-   //! RETURNS: -1 - Error
-   //
-   //! NOTE: There is no special read semaphore for now.
-   // -----------------------------------------------------------------------
+   /**
+    * Acquires a read lock on a resource protected by this semaphore.
+    *
+    * @pre None.
+    * @post The calling thread either acquires the semaphore until release()
+    *       is called, or the caller is put at the tail of a wait and is
+    *       suspended until such time as it can be freed and allowed to acquire
+    *       the semaphore itself.
+    *
+    * @return vpr::ReturnStatus::Succeed is returned if a resource read lock is
+    *         acquired.  vpr::ReturnStatus::Fail is returned otherwise.
+    *
+    * @note There is no special read semaphore for now.
+    */
    vpr::ReturnStatus acquireRead (void)
    {
       return this->acquire();
    }
 
-   // -----------------------------------------------------------------------
-   //: Acquire and lock a write semaphore.
-   //
-   //! PRE: None.
-   //! POST: The calling thread either acquires the semaphore until
-   //+       release() is called, or the caller is put at the tail of a wait
-   //+       and is suspended until such time as it can be freed and allowed
-   //+       to acquire the semaphore itself.
-   //
-   //! RETURNS:  1 - Lock acquired
-   //! RETURNS: -1 - Error
-   //
-   //! NOTE: There is no special write semaphore for now.
-   // -----------------------------------------------------------------------
+   /**
+    * Acquires a write lock on a resource protected by this semaphore.
+    *
+    * @pre None.
+    * @post The calling thread either acquires the semaphore until release()
+    *       is called, or the caller is put at the tail of a wait and is
+    *       suspended until such time as it can be freed and allowed to acquire
+    *       the semaphore itself.
+    *
+    * @return vpr::ReturnStatus::Succeed is returned if a resource write lock
+    *         is acquired.  vpr::ReturnStatus::Fail is returned otherwise.
+    *
+    * @note There is no special write semaphore for now.
+    */
    vpr::ReturnStatus acquireWrite (void)
    {
       return this->acquire();
    }
 
-   // -----------------------------------------------------------------------
-   //: Try to acquire the semaphore immediately (does not block).
-   //
-   //! PRE: None.
-   //! POST: If the semaphore could be acquired by the caller, the caller
-   //+       gets control of the semaphore.  If the semaphore was already
-   //+       locked, the routine returns immediately without suspending the
-   //+       calling thread.
-   //
-   //! RETURNS: 1 - Acquired
-   //! RETURNS: 0 - Not acquired
-   // -----------------------------------------------------------------------
+   /**
+    * Tries to acquire the a resource lock immediately (does not block).
+    *
+    * @pre None.
+    * @post If the semaphore could be acquired by the caller, the caller
+    *       gets control of the semaphore.  If the semaphore was already
+    *       locked, the routine returns immediately without suspending the
+    *       calling thread.
+    *
+    * @return vpr::ReturnStatus::Succeed is returned if a lock is acquired.
+    *         vpr::ReturnStatus::Fail is returned if no resource could be
+    *         locked without blocking.
+    */
    vpr::ReturnStatus tryAcquire (void)
    {
       vpr::ReturnStatus status(vpr::ReturnStatus::Fail);
@@ -182,50 +175,53 @@ public:
       return status;
    }
 
-   // -----------------------------------------------------------------------
-   //: Try to acquire a read semaphore (does not block).
-   //
-   //! PRE: None.
-   //! POST: If the semaphore could be acquired by the caller, the caller
-   //+       gets control of the semaphore.  If the semaphore was already
-   //+       locked, the routine returns immediately without suspending the
-   //+       calling thread.
-   //
-   //! RETURNS: 1 - Acquired
-   //! RETURNS: 0 - Not acquired
-   // -----------------------------------------------------------------------
+   /**
+    * Tries to acquire a read lock on a resource (does not block).
+    *
+    * @pre None.
+    * @post If the semaphore could be acquired by the caller, the caller
+    *       gets control of the semaphore.  If the semaphore was already
+    *       locked, the routine returns immediately without suspending the
+    *       calling thread.
+    *
+    * @return vpr::ReturnStatus::Succeed is returned if a read lock is
+    *         acquired.  vpr::ReturnStatus::Fail is returned if no resource
+    *         could be locked without blocking.
+    */
    vpr::ReturnStatus tryAcquireRead (void)
    {
       return this->tryAcquire();
    }
 
-   // -----------------------------------------------------------------------
-   //: Try to acquire a write semaphore (does not block).
-   //
-   //! PRE: None.
-   //! POST: If the semaphore could be acquired by the caller, the caller
-   //+       gets control of the semaphore.  If the semaphore was already
-   //+       locked, the routine returns immediately without suspending the
-   //+       calling thread.
-   //
-   //! RETURNS: 1 - Acquired
-   //! RETURNS: 0 - Not acquired
-   // -----------------------------------------------------------------------
+   /**
+    * Tries to acquire a write lock on a resource (does not block).
+    *
+    * @pre None.
+    * @post If the semaphore could be acquired by the caller, the caller
+    *       gets control of the semaphore.  If the semaphore was already
+    *       locked, the routine returns immediately without suspending the
+    *       calling thread.
+    *
+    * @return vpr::ReturnStatus::Succeed is returned if a write lock is
+    *         acquired.  vpr::ReturnStatus::Fail is returned if no resource
+    *         could be locked without blocking.
+    */
    vpr::ReturnStatus tryAcquireWrite (void)
    {
       return this->tryAcquire();
    }
 
-   // -----------------------------------------------------------------------
-   //: Release the semaphore.
-   //
-   //! PRE: The semaphore should have been locked before being released.
-   //! POST: The semaphore is released and the thread at the haed of the
-   //+       wait queue is allowed to execute again.
-   //
-   //! RETURNS:  0 - Succeed
-   //! RETURNS: -1 - Error
-   // -----------------------------------------------------------------------
+   /**
+    * Releases a resource lock.
+    *
+    * @pre The semaphore should have been locked before being released.
+    * @post The semaphore is released and the thread at the head of the
+    *       wait queue is allowed to execute again.
+    *
+    * @return vpr::ReturnStatus::Succeed is returned if a resource is
+    *         unlocked successfully.  vpr::ReturnStatus::Fail is returned
+    *         otherwise.
+    */
    vpr::ReturnStatus release (void)
    {
       vpr::ReturnStatus status;
@@ -238,20 +234,21 @@ public:
       return status;
    }
 
-   // -----------------------------------------------------------------------
-   //: Reset the semaphore.
-   //
-   //! PRE: None.
-   //! POST: The semaphore's count is set to the specified value.
-   //
-   //! ARGS: val - The value to which the semaphore is reset.
-   //
-   //! RETURNS:  0 - Succeed
-   //! RETURNS: -1 - Error
-   //
-   //! NOTE: If processes are waiting on the semaphore, the results are
-   //+       undefined.
-   // -----------------------------------------------------------------------
+   /**
+    * Resets the resource count for this semaphore.
+    *
+    * @pre None.
+    * @post This semaphore's count is set to the specified value.
+    *
+    * @param val - The value to which the semaphore is reset.
+    *
+    * @return vpr::ReturnStatus::Succeed is returned if the resource count is
+    *         reset successfully.  vpr::ReturnStatus::Fail is returned
+    *         otherwise.
+    *
+    * @note If processes are waiting on the semaphore, the results are
+    *       undefined.
+    */
    vpr::ReturnStatus reset (int val)
    {
       vpr::ReturnStatus status;
@@ -264,18 +261,18 @@ public:
       return status;
    }
 
-   // -----------------------------------------------------------------------
-   //: Dump the semaphore debug stuff and current state.
-   //
-   //! PRE: None.
-   //! POST: All important data and debugging information related to the
-   //+       semaphore is dumped to the specified file descriptor (or to
-   //+       stderr if none is given).
-   //
-   //! ARGS: dest - File descriptor to which the output will be written.
-   //+              It defaults to stderr if no descriptor is specified.
-   //! ARGS: message - Message printed out before the output is dumped.
-   // -----------------------------------------------------------------------
+   /**
+    * Dumps the semaphore debug stuff and current state.
+    *
+    * @pre None.
+    * @post All important data and debugging information related to this
+    *       semaphore is dumped to the specified file descriptor (or to
+    *       stderr if none is given).
+    *
+    * @param dest    File descriptor to which the output will be written.
+    *                It defaults to stderr if no descriptor is specified.
+    * @param message Message printed out before the output is dumped.
+    */
    void dump (FILE* dest = stderr,
               const char* message = "\n------ Semaphore Dump -----\n") const
    {
@@ -284,8 +281,8 @@ public:
    }
 
 protected:
-   CondVar*  mCondVar;       //: Semaphore simulator variable for the class
-   PRInt32   mValue;
+   CondVar*  mCondVar;     /**< Semaphore simulator variable for the class */
+   PRInt32   mValue;       /**< The resource count */
 
    // Prevent assignment and initialization.
    void operator= (const SemaphoreNSPR &)
