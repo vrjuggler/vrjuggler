@@ -142,11 +142,6 @@ public:
       syncCount = procs;
    }
 
-   void dump (void) const
-   {
-      std::cerr << "\n BarrierSGI::dump: Not implemented.\n";
-   }
-
 protected:
    Mutex    mutex;
    int      syncCount;
