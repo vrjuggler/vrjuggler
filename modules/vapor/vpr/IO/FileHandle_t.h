@@ -286,7 +286,7 @@ public:
     *              appended.
     *
     * @return <code>vpr::ReturnStatus::Succeed</code> is returned if the write
-    *         mode was changed successfully.
+    *         mode was changed successfully.<br>
     *         <code>vpr::ReturnStatus::Fail</code> is returned otherwise.
     */
    vpr::ReturnStatus disableAppend (void)
@@ -294,33 +294,33 @@ public:
       return m_handle_impl.disableAppend();
    }
 
-   // ------------------------------------------------------------------------
-   //: Reconfigure the file handle so that writes are synchronous.
-   //
-   //! PRE: The file handle is open.
-   //! POST: Writes are performed synchronously.
-   //
-   //! RETURNS: vpr::ReturnStatus::Succeed - The write mode was changed
-   //+                                 successfully.
-   //! RETURNS: vpr::ReturnStatus::Fail - The write mode could not be changed
-   //+                                 for some reason.
-   // ------------------------------------------------------------------------
+   /**
+    * Reconfigures the file handle so that writes are synchronous.
+    *
+    * @pre The file handle is open.
+    * @post Writes are performed synchronously.
+    *
+    * @return vpr::ReturnStatus::Succeed is returned if the write mode was
+    *         changed successfully.<br>
+    *         vpr::ReturnStatus::Fail is returned if the write mode could not
+    *         be changed for some reason.
+    */
    vpr::ReturnStatus enableSynchronousWrite (void)
    {
       return m_handle_impl.enableSynchronousWrite();
    }
 
-   // ------------------------------------------------------------------------
-   //: Reconfigure the file handle so that writes are asynchronous.
-   //
-   //! PRE: The file handle is open.
-   //! POST: Writes are performed asynchronously.
-   //
-   //! RETURNS: vpr::ReturnStatus::Succeed - The write mode was changed
-   //+                                 successfully.
-   //! RETURNS: vpr::ReturnStatus::Fail - The write mode could not be changed
-   //+                                 for some reason.
-   // ------------------------------------------------------------------------
+   /**
+    * Reconfigures the file handle so that writes are asynchronous.
+    *
+    * @pre The file handle is open.
+    * @post Writes are performed asynchronously.
+    *
+    * @return vpr::ReturnStatus::Succeed is returned if the write mode was
+    *         changed successfully.<br>
+    *         vpr::ReturnStatus::Fail is returned if if the write mode could
+    *         not be changed for some reason.
+    */
    vpr::ReturnStatus enableAsynchronousWrite (void)
    {
       return m_handle_impl.enableAsynchronousWrite();
@@ -372,33 +372,33 @@ public:
    }
 
 protected:
-   // ------------------------------------------------------------------------
-   //: Read at most the specified number of bytes from the file handle into
-   //+ the given buffer.
-   //
-   //! PRE: The file handle implementation object is valid, and the buffer is
-   //+      at least length bytes long.
-   //! POST: The given buffer has length bytes copied into it from the file
-   //+       bufffer, and the number of bytes read successfully is returned
-   //+       to the caller.
-   //
-   //! ARGS: buffer     - A pointer to the buffer where the file's buffer
-   //+                    contents are to be stored.
-   //! ARGS: length     - The number of bytes to be read.
-   //! ARGS: bytes_read - A reference to a variable where the number of bytes
-   //+                    successfully read from the file will be stored.
-   //+                    The value will be -1 if an error occurred.
-   //! ARGS: timeout    - The amount of time to wait before returning to the
-   //+                    caller.  This argument is optional and defaults to
-   //+                    vpr::Interval::NoTimeout.
-   //
-   //! RETURNS: vpr::ReturnStatus::Succeed    - The read operation completed
-   //+                                          successfully.
-   //! RETURNS: vpr::ReturnStatus::Fail       - The read operation failed.
-   //! RETURNS: vpr::ReturnStatus::WouldBlock - The handle is in non-blocking
-   //+                                          mode, and there is no data to
-   //+                                          read.
-   // ------------------------------------------------------------------------
+   /**
+    * Reads at most the specified number of bytes from the file handle into
+    * the given buffer.
+    *
+    * @pre The file handle implementation object is valid, and the buffer is
+    *      at least length bytes long.
+    * @post The given buffer has length bytes copied into it from the file
+    *       bufffer, and the number of bytes read successfully is returned
+    *       to the caller.
+    *
+    * @param buffer     A pointer to the buffer where the file's buffer
+    *                   contents are to be stored.
+    * @param length     The number of bytes to be read.
+    * @param bytes_read A reference to a variable where the number of bytes
+    *                   successfully read from the file will be stored.
+    *                   The value will be -1 if an error occurred.
+    * @param timeout    The amount of time to wait before returning to the
+    *                   caller.  This argument is optional and defaults to
+    *                   vpr::Interval::NoTimeout.
+    *
+    * @return vpr::ReturnStatus::Succeed is returned if the read operation
+    *         completed successfully.<br>
+    *         vpr::ReturnStatus::Fail is returned if the read operation
+    *         failed.<br>
+    *         vpr::ReturnStatus::WouldBlock is returned if the handle is in
+    *         non-blocking mode, and there is no data to read.
+    */
    vpr::ReturnStatus read_i (void* buffer, const vpr::Uint32 length,
                              vpr::Uint32& bytes_read,
                              const vpr::Interval timeout = vpr::Interval::NoTimeout)
@@ -406,30 +406,30 @@ protected:
       return m_handle_impl.read_i(buffer, length, bytes_read, timeout);
    }
 
-   // ------------------------------------------------------------------------
-   //: Read exactly the specified number of bytes from the file into the
-   //+ given buffer.
-   //
-   //! PRE: The handle implementation object is valid, and the buffer is at
-   //+      least length bytes long.
-   //! POST: The given buffer has length bytes copied into it from the file
-   //+       buffer, and the number of bytes read successfully is returned to
-   //+       the caller.
-   //
-   //! ARGS: buffer     - A pointer to the buffer where the file's buffer
-   //+                    contents are to be stored.
-   //! ARGS: length     - The number of bytes to be read.
-   //! ARGS: bytes_read - A reference to a variable where the number of bytes
-   //+                    successfully read from the file will be stored.
-   //+                    The value will be -1 if an error occurred.
-   //! ARGS: timeout    - The amount of time to wait before returning to the
-   //+                    caller.  This argument is optional and defaults to
-   //+                    vpr::Interval::NoTimeout.
-   //
-   //! RETURNS: vpr::ReturnStatus::Succeed - The read operation completed
-   //+                                 successfully.
-   //! RETURNS: vpr::ReturnStatus::Fail - The read operation failed.
-   // ------------------------------------------------------------------------
+   /**
+    * Reads exactly the specified number of bytes from the file into the
+    * given buffer.
+    *
+    * @pre The handle implementation object is valid, and the buffer is at
+    *      least length bytes long.
+    * @post The given buffer has length bytes copied into it from the file
+    *       buffer, and the number of bytes read successfully is returned to
+    *       the caller.
+    *
+    * @param buffer     A pointer to the buffer where the file's buffer
+    *                   contents are to be stored.
+    * @param length     The number of bytes to be read.
+    * @param bytes_read A reference to a variable where the number of bytes
+    *                   successfully read from the file will be stored.
+    *                   The value will be -1 if an error occurred.
+    * @param timeout    The amount of time to wait before returning to the
+    *                   caller.  This argument is optional and defaults to
+    *                   vpr::Interval::NoTimeout.
+    *
+    * @return vpr::ReturnStatus::Succeed is returned if the read operation
+    *         completed successfully.<br>
+    *         vpr::ReturnStatus::Fail is returned if the read operation failed.
+    */
    vpr::ReturnStatus readn_i (void* buffer, const vpr::Uint32 length,
                               vpr::Uint32& bytes_read,
                               const vpr::Interval timeout = vpr::Interval::NoTimeout)
@@ -437,30 +437,31 @@ protected:
       return m_handle_impl.readn_i(buffer, length, bytes_read, timeout);
    }
 
-   // ------------------------------------------------------------------------
-   //: Write the given buffer to the file.
-   //
-   //! PRE: The handle implementation object is valid.
-   //! POST: The given buffer is written to the file, and the number of
-   //+       bytes written successfully is returned to the caller.
-   //
-   //! ARGS: buffer        - A pointer to the buffer to be written.
-   //! ARGS: length        - The length of the buffer.
-   //! ARGS: bytes_written - A reference to a variable where the number of
-   //+                       bytes successfully written to the file will be
-   //+                       stored.  The value will be -1 if an error
-   //+                       occurred.
-   //! ARGS: timeout       - The amount of time to wait before returning to the
-   //+                       caller.  This argument is optional and defaults to
-   //+                       vpr::Interval::NoTimeout.
-   //
-   //! RETURNS: vpr::ReturnStatus::Succeed    - The write operation completed
-   //+                                          successfully.
-   //! RETURNS: vpr::ReturnStatus::Fail       - The write operation failed.
-   //! RETURNS: vpr::ReturnStatus::WouldBlock - The handle is in non-blocking
-   //+                                          mode, and the write operation
-   //+                                          could not be completed.
-   // ------------------------------------------------------------------------
+   /**
+    * Writes the given buffer to the file.
+    *
+    * @pre The handle implementation object is valid.
+    * @post The given buffer is written to the file, and the number of
+    *       bytes written successfully is returned to the caller.
+    *
+    * @param buffer        A pointer to the buffer to be written.
+    * @param length        The length of the buffer.
+    * @param bytes_written A reference to a variable where the number of
+    *                      bytes successfully written to the file will be
+    *                      stored.  The value will be -1 if an error
+    *                      occurred.
+    * @param timeout       The amount of time to wait before returning to the
+    *                      caller.  This argument is optional and defaults to
+    *                      vpr::Interval::NoTimeout.
+    *
+    * @return vpr::ReturnStatus::Succeed is returned if the write operation
+    *         completed successfully.<br>
+    *         vpr::ReturnStatus::Fail is returned if the write operation
+    *         failed.<br>
+    *         vpr::ReturnStatus::WouldBlock is returned if the handle is in
+    *         non-blocking mode, and the write operation could not be
+    *         completed.
+    */
    vpr::ReturnStatus write_i (const void* buffer, const vpr::Uint32 length,
                               vpr::Uint32& bytes_written,
                               const vpr::Interval timeout = vpr::Interval::NoTimeout)
