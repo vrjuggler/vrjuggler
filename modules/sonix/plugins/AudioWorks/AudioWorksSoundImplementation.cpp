@@ -39,11 +39,8 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-
-
-
-
 #include <stdlib.h>
+#include <string>
 #include <gmtl/Math.h>
 #include <gmtl/Matrix.h>
 #include <gmtl/Vec.h>
@@ -51,8 +48,9 @@
 #include <gmtl/VecOps.h>
 #include <gmtl/Xforms.h>
 
-#include "snx/SoundFactory.h"
-#include "snx/plugins/AudioWorks/AudioWorksSoundImplementation.h"
+#include <snx/SoundFactory.h>
+#include <snx/Util/Debug.h>
+#include <snx/plugins/AudioWorks/AudioWorksSoundImplementation.h>
 
 /////////////////////////
 // plugin API:
