@@ -100,14 +100,21 @@ implements ActionListener, ItemListener {
 	/***************** Menus *********************/
 	filemenu = new Menu("File");
 	filemenu.addActionListener(this);
-	filemenu.add("Open User Config...");
-	filemenu.add("Save User Config");
-	filemenu.add("Save User Config As...");
-	filemenu.add("Open Global Config...");
-	filemenu.add("Save Global Config");
-	filemenu.add("Save Global Config As...");
+	if (core.multilevelconfigenabled) {
+	    filemenu.add("Open User Config...");
+	    filemenu.add("Save User Config");
+	    filemenu.add("Save User Config As...");
+	    filemenu.add("Open Global Config...");
+	    filemenu.add("Save Global Config");
+	    filemenu.add("Save Global Config As...");
+	}
+	else {
+	    filemenu.add ("Open Config...");
+	    filemenu.add ("Save Config");
+	    filemenu.add ("Save Config As...");
+	}
 	filemenu.add("Exit");
-	
+
 	networkmenu = new Menu("File");
 	networkmenu.addActionListener(this);
 	networkmenu.add("Disconnect");
@@ -254,11 +261,22 @@ implements ActionListener, ItemListener {
 	    if (s.equalsIgnoreCase ("save user config")) {
 		core.fileio.saveUserConfigChunkDB();
 	    }
+	    else if (s.equalsIgnoreCase ("save config")) {
+		core.fileio.saveUserConfigChunkDB();
+	    }
 	    else if (s.equalsIgnoreCase ("save user config as...")) {
+		core.fileio.saveAsUserConfigChunkDB();
+	    }
+	    else if (s.equalsIgnoreCase ("save config as...")) {
 		core.fileio.saveAsUserConfigChunkDB();
 	    }
 	    else if (s.equalsIgnoreCase ("open user config...")) {
 		core.fileio.loadUserConfigChunkDB();
+		update();
+	    }
+	    else if (s.equalsIgnoreCase ("open config...")) {
+		core.fileio.loadUserConfigChunkDB();
+		update();
 	    }
 	    else if (s.equalsIgnoreCase ("open global config...")) {
 		core.fileio.loadBaseConfigChunkDB();

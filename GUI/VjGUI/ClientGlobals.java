@@ -14,7 +14,18 @@ public class ClientGlobals {
     public FileControl fileio;
     public ClientUI ui;
 
+    /* some annoying flag-type variables */
+    public boolean        multilevelconfigenabled;
+    /* If true, we can load/save global _and_ user config/chunkdesc
+     * files.  Otherwise, we work with one file at a time.
+     * basically changes what menu items get displayed.
+     * (basically, if true, all files are treated as user files)
+     */
+    public boolean        multilevelchunkdescenabled;
+
     public ClientGlobals (boolean l) {
+	multilevelconfigenabled = false;
+	multilevelchunkdescenabled = false;
     }
 
     public boolean isConnected() {
