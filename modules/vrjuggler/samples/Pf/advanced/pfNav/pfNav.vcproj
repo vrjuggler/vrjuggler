@@ -88,13 +88,14 @@
 				ProgramDataBaseFileName=".\Release/"
 				WarningLevel="3"
 				SuppressStartupBanner="TRUE"
-				CompileAs="0"/>
+				CompileAs="0"
+				ForcedIncludeFiles="vrj/vrjConfig.h"/>
 			<Tool
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalOptions="/MACHINE:I386"
-				AdditionalDependencies="Juggler.lib Juggler_pf.lib gadget.lib jccl.lib vpr.lib libnspr4.lib libplc4.lib libpf.lib libpfdu-util.lib libpfui.lib comctl32.lib ws2_32.lib opengl32.lib glu32.lib"
+				AdditionalDependencies="Juggler.lib Juggler_pf.lib sonix.lib gadget.lib jccl.lib vpr.lib libnspr4.lib libplc4.lib libpf.lib libpfdu-util.lib libpfui.lib comctl32.lib ws2_32.lib opengl32.lib glu32.lib"
 				OutputFile=".\Release/pfNav.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
