@@ -1,5 +1,9 @@
 DATE        AUTHOR    CHANGE
 ----------- --------- ---------------------------------------------------------
+May-04-2002 patrickh  Implemented vjThreadSGI::join() based on VPR's version.
+Apr-29-2002 aronb     Fixed analog data collection in IBox driver.
+
+[Version 1.0.5 - 2.8.2002]=====================================================
 Feb-24-2002 cjust     Fixed possible segv when looking up environment 
                       variables in filenames included from config files.
 Feb-18-2002 cjust     VjControl fix - would fail to open performance data files
