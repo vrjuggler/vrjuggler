@@ -916,16 +916,19 @@ gmtl::Matrix44f FlockStandalone::processSensorRecord(vpr::Uint8* buff)
 float FlockStandalone::rawToFloat(const vpr::Uint8& MSchar,
                                   const vpr::Uint8& LSchar)
 {
-   // short int ival1,ival2,val;
-   // ival1 = r1 & 0x7f;                  // Set 8th bit to 0
-   // ival2 = r2 & 0x7f;                  // Set 8th bit to 0
-   // val = (ival1 << 9) | ival2<<2;
-   //return((float)val) / 0x7fff;
+   vpr::Int16 ival1,ival2,val;
+   ival1 = MSchar & 0x7f;
+   ival2 = LSchar & 0x7f;
+   val = (ival1 << 9) | ival2<<2;
+   return ((float)val) / 32768.0f;  // 32768=0x7fff  
+   
+
+   /*  More slow and tedious way of doing the above.
+   This is a more descriptive implementation as given pg.89 of Flock Manual
 
    vpr::Int8 MSbyte;
    vpr::Int8 LSbyte;
    vpr::Int16 returnVal;
-
    // 1) Changes 8th bit from a "1" back to "0" after catching it
    //    0x7f = 01111111  so it masks out the 8th but
    MSbyte = MSchar & 0x7f;
@@ -942,13 +945,8 @@ float FlockStandalone::rawToFloat(const vpr::Uint8& MSchar,
    // 4) Shift each word pair left 1 more bit
    returnVal <<= 1;
 
-//   std::cout << std::endl << "------------------------------------------" << std::endl;
-//   std::cout << "[vpr::Int16] Before DIV): " << returnVal  << std::endl;
-//   std::cout << "[float]      Before DIV): " << (float)returnVal  << std::endl;
-//   std::cout << "[float]      After DIV): " << ( (float)returnVal ) / 0x7fff  << std::endl;
-//   std::cout << "------------------------------------------" << std::endl << std::endl;
-
    return( ( (float)returnVal ) / 0x7fff );
+   */
 }
 
 // ------------------------------------------------------------------------- //
