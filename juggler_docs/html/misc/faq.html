@@ -36,6 +36,8 @@ listserv/vrjuggler?</a></li>
    </ul>
 	<li><a href="#applications"> VR applications</a></LI>
    <ul>
+      <LI><A HREF="#head_wand">Why is there a blue sphere and a green cone in
+      my way when I run in simulator mode?</A></LI>
       <li><a href="#cavelib2dxform"> 2D Projections </a></li>
       <li><a href="#portingcaveapps"> How do I port a CAVElib application to Juggler? </a></li>
    </ul>
@@ -167,6 +169,23 @@ listserv/vrjuggler?</a></li>
 
 <h3><a name="applications">VR applications</a></h3>
 <blockquote>
+      <A NAME="head_wand"><B>Why is there a blue sphere and a green cone in
+      my way when I run in simulator mode?</B></A>
+
+      <P>
+	When you run in simulator mode, typically there will be VR Juggler
+	simulator displays open showing the 3D space you are simulating.
+	These are a special type of VR Juggler display.  Instead of basing
+	its viewpoint on the head position of one of the users, the
+	viewpoint is controlled by a separate ``camera'' that is just
+	another positional device.  The Sim Display also draws certain
+	objects to help visualize the environment.  For example, the heads
+	of users are represented as blue spheres with gray eyes, and a wand
+	(if present) is drawn as a green cone.  These are seen <I>only</I>
+	in simulator displays and are there to help you if you are doing
+	development using the simulator environment.
+      </P>
+
 	<a name="cavelib2dxform"><li><b>I'm a CAVELib user that's trying to learn VRJuggler for a new project.  Is
    there an easy way to setup a 2d projection on the walls?  In Cavelib
    you'd do a CAVEWallTransform which puts you in a 2d projection on the
