@@ -150,6 +150,24 @@ AC_ARG_WITH(install-group,
                           Installed file group name       [default=vrjuggler]],
             _install_group="$withval", _install_group='vrjuggler')
 
+dnl # Provide permissions for installed (normal) files.
+AC_ARG_WITH(file-perms,
+            [  --with-file-perms=<FILE PERMISSIONS>
+                          Installed file permissions      [default=0644]],
+            FILE_PERMS="$withval", FILE_PERMS='0644')
+
+dnl # Provide permissions for installed executable files.
+AC_ARG_WITH(exec-perms,
+            [  --with-exec-perms=<EXEC PERMISSIONS>
+                          Installed executable permisions [default=0755]],
+            EXEC_PERMS="$withval", EXEC_PERMS='0755')
+
+dnl # Provide permissions for directories in the installation tree.
+AC_ARG_WITH(dir-perms,
+            [  --with-dir-perms=<DIRECTORY PERMISSIONS>
+                          Installed directory permisions  [default=0755]],
+            DIR_PERMS="$withval", DIR_PERMS='0755')
+
 dnl # ------------------------------------------------------ #
 dnl # --enable-feature[=arg] and --disable-feature arguments #
 dnl # ------------------------------------------------------ #
@@ -1288,6 +1306,9 @@ AC_SUBST(DEPENDFLAGS)
 AC_SUBST(DEPEND_EXTRAS)
 AC_SUBST(EXTRA_LINK_FLAGS)
 AC_SUBST(GROUP_NAME)
+AC_SUBST(FILE_PERMS)
+AC_SUBST(EXEC_PERMS)
+AC_SUBST(DIR_PERMS)
 AC_SUBST(INCLUDES)
 AC_SUBST(LD)
 AC_SUBST(LIBS)
