@@ -39,6 +39,7 @@ package org.vrjuggler.tweek.beans.loader;
 import java.io.InputStream;
 import java.io.IOException;
 import java.net.JarURLConnection;
+import java.util.Iterator;
 import java.util.List;
 import java.util.jar.*;
 import java.util.jar.JarEntry;
@@ -97,7 +98,17 @@ public class BeanLoader
 
       loader.addJarFile(mBeanJar.getJarFile());
       loader.extendClassPath(mBeanJar.getClassPath());
-      loader.addDependencies(mBeanJar.getDependencies());
+      List remainder = loader.resolveDependencies(mBeanJar.getDependencies());
+
+      if ( remainder.size() != 0 )
+      {
+         System.err.println("The following dependencies are unresolved:");
+
+         for ( Iterator i = remainder.iterator(); i.hasNext(); )
+         {
+            System.err.println("\t" + (String) i.next());
+         }
+      }
 
       try
       {
