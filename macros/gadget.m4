@@ -48,6 +48,7 @@ dnl     GADGET_PROF_LIBS_STATIC_CC
 dnl     GADGET_PROF_LIBS_STATIC_LD
 dnl     GADGET_EXTRA_LIBS_CC
 dnl     GADGET_EXTRA_LIBS_LD
+dnl     GADGET_USE_X11
 dnl ---------------------------------------------------------------------------
 AC_DEFUN(GADGETEER_PATH,
 [
@@ -129,6 +130,7 @@ dnl                          test Gadgeteer program], , enable_gadgettest=yes)
         GADGET_PROF_LIBS_STATIC_LD_MIN="`$GADGETEER_CONFIG $gadget_config_args --linker --libs $ABI --static --profiled --min`"
         GADGET_EXTRA_LIBS_CC_MIN=`$GADGETEER_CONFIG $gadget_config_args --extra-libs $ABI --min`
         GADGET_EXTRA_LIBS_LD_MIN=`$GADGETEER_CONFIG $gadget_config_args --extra-libs $ABI --min --linker`
+        GADGET_USE_X11=`$GADGETEER_CONFIG $gadget_config_args --use-x11`
 
         AC_MSG_CHECKING([whether Gadgeteer version is >= $min_gadget_version])
         AC_MSG_RESULT([$GADGET_VERSION])
@@ -168,6 +170,7 @@ dnl                          test Gadgeteer program], , enable_gadgettest=yes)
         GADGET_PROF_LIBS_STATIC_LD_MIN=""
         GADGET_EXTRA_LIBS_CC_MIN=""
         GADGET_EXTRA_LIBS_LD_MIN=""
+        GADGET_USE_X11=''
 
         ifelse([$3], , :, [$3])
     fi
@@ -198,4 +201,6 @@ dnl                          test Gadgeteer program], , enable_gadgettest=yes)
     AC_SUBST(GADGET_PROF_LIBS_STATIC_LD_MIN)
     AC_SUBST(GADGET_EXTRA_LIBS_CC_MIN)
     AC_SUBST(GADGET_EXTRA_LIBS_LD_MIN)
+
+    AC_SUBST(GADGET_USE_X11)
 ])
