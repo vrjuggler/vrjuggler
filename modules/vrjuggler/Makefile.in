@@ -195,6 +195,7 @@ links:
 	${scriptdir}/mkinstalldirs ${instlinks}
 	cd ${instlinks} && rm -f ./include && ln -s ${VJROOT_ABS} ./include
 	cd ${instlinks} && rm -f ./lib && ln -s ${VJROOT_ABS}/lib ./lib
+	cd ${instlinks} && rm -f ./Data && ln -s ${VJROOT_ABS}/Data ./Data
 	cd ${instlinks}/include && ln -sf ${topdir}/config.h ./config.h
 	cd ${instlinks}/lib && ln -sf ${OBJDIR}/${LIB_STATIC} ./
 	cd ${instlinks}/lib && ln -sf ${OBJDIR}/${LIB_DYNAMIC} ./
