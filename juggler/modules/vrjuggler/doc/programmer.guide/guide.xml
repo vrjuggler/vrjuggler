@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?xml-stylesheet href="file://localhost/home/users/patrick/src/Juggler/docs/stylesheet/docbook_ab.css" type="text/css"?>
-<!DOCTYPE book SYSTEM "file:/home/users/patrick/XMLEditor-1.1.1a/examples/docbook/dtd/docbookx.dtd" [
+<!DOCTYPE book SYSTEM "file:/home/users/patrick/Morphon_XML-Editor/examples/docbook/dtd/docbookx.dtd" [
 ]>
 <book>
    <title>VR Juggler Programmer's Guide</title>
@@ -1204,8 +1204,8 @@ vj_mat = vjGetVjMatrix(pf_mat);</programlisting>
             <para>For further information, the best possible source of information, especially for this class, is the header file. Read it; understand it; love it. </para>
          </section>
       </section>
-      <section>
-         <title>The <classname id="vjDeviceInterface_section">vjDeviceInterface</classname> Helper Class</title>
+      <section id="vjDeviceInterface_section">
+         <title>The <classname>vjDeviceInterface</classname> Helper Class</title>
          <para>The concept of device interfaces in VR Juggler is one which often causes confusion for new users. Two object-oriented design patterns are combined by <classname>vjDeviceInterface</classname>: smart pointers and proxies. Within this section, we aim to explain VR Juggler device interfaces clearly and simply. We begin with a high-level description and then move right into using the class.</para>
          <section>
             <title>High-Level Description</title>
@@ -1236,8 +1236,8 @@ head_mat = head-&gt;getData();</programlisting></para>
             <para>The beauty of it all is that the proxy object being pointed to by the device interface can be changed without affecting the execution of the user application. In other words, the proxies can be changed at run time to point to different physical devices. All the while, the user code is still using the smart pointer interface and getting data of some sort. This flexibility is one of the most important features of VR Juggler, and it is important to understand.</para>
          </section>
       </section>
-      <section>
-         <title id="vjProxy_section">The <classname>vjProxy</classname> Helper Class</title>
+      <section id="vjProxy_section">
+         <title>The <classname>vjProxy</classname> Helper Class</title>
          <para>This whole proxy scheme can be confusing. We admit that it makes the learning curve for VR Juggler a little steeper, but once you get it, you will know it all. An alternate title for this section is ``Horton Hears a Proxy.'' In this case, Horton is VR Juggler (it is rather elephant-like at times), and the complexity of dealing with these ethereal, ubiquitous proxies causes VR Juggler to take a lot of guff. This document presents the <classname>vjProxy</classname> class, the base class for the input proxies making it the one that is used the most. It should be noted, however, that the concept is spreading to other parts of VR Juggler because it is so useful. While this is only the introduction, we'll give you the moral of the story now: proxies are important concepts, and you should not step on them.</para>
          <section>
             <title>High-Level Description</title>
@@ -1566,8 +1566,8 @@ public:
                   <para>Texture objects</para>
                </listitem>
             </itemizedlist>
-            <section>
-               <title id="cs_data_needed_sect">Why it is Needed</title>
+            <section id="cs_data_needed_sect">
+               <title>Why it is Needed</title>
                <para>As outlined in the VR Juggler architecture documentation, VR Juggler uses a single memory area for all application data. All threads can see the same memory area and thus share the same copy of all variables. This makes programming normal application code very easy because programmers never have to worry about which thread can see which variables. In the case of context-specific data, however, it presents a problem.</para>
                <para>To understand the problem, consider an environment where we use a single display list. That display list is created to draw some object in the scene. We would like to be able to call the display list in our <methodname>draw()</methodname> method and have it draw the primitives that were captured in it.</para>
                <para>The following class skeleton shows an outline of this idea. Do not worry for now that we do not show the code where we allocate the display list--that will be covered later. For now, we see that there is a variable that stores the display list ID, and we use it in the <methodname>draw()</methodname> method.</para>
