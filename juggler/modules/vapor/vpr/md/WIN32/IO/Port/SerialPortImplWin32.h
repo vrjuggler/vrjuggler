@@ -487,15 +487,15 @@ public:
    {
       return vpr::ReturnStatus(vpr::ReturnStatus::Fail);
    }
-   
+
    /**
     * Get the local attach state.  That is, test if the device is attached
-    * locally.       
+    * locally.
     *
-    * @pre The serial port is open.       
-    * @post The local attach state is returned to the caller.       
+    * @pre The serial port is open.
+    * @post The local attach state is returned to the caller.
     * @return true  - The device is attached locally.
-    *         false - The device is not attached locally, and opening the       
+    *         false - The device is not attached locally, and opening the
     *                 device will usually block until there is a response.
     */
    bool getLocalAttachState(void);
@@ -504,7 +504,7 @@ public:
     * Mark the device as locally attached.
     *
     * @pre This serial port is open.
-    * @post The device has its local attachment state enabled.       
+    * @post The device has its local attachment state enabled.
     *
     * @return A vpr::ReturnStatus object describing the results of the
     *         operation.
@@ -512,19 +512,19 @@ public:
    vpr::ReturnStatus enableLocalAttach(void);
 
    /**
-    * Mark the device as not locally attached.       
+    * Mark the device as not locally attached.
     *
     * @pre This serial port is open.
-    * @post The device has its local attachment state disabled.       
+    * @post The device has its local attachment state disabled.
     *
     * @return A vpr::ReturnStatus object describing the results of the
     *         operation.
     */
    vpr::ReturnStatus disableLocalAttach(void);
-    
+
    /**
     * Get the current state of ignoring BREAK bytes
-    * 
+    *
     *
     * @pre This serial port is open.
     * @post The BREAK byte ignore state is returned to the caller.
@@ -533,20 +533,20 @@ public:
     * @return false - Bad bytes are not ignored.
     */
    bool getBreakByteIgnoreState ();
-   
+
    /**
     * Enable ignoring of received BREAK bytes
     *
     *
     * @pre This serial port is open.
     * @post BREAK byte ignoring is enabled.
-    * 
+    *
     * @return A vpr::ReturnStatus object describing the results of the
     *         operation.
     */
    vpr::ReturnStatus enableBreakByteIgnore ();
 
-   /** 
+   /**
     * Disable ignoring of received BREAK bytes
     *
     *
@@ -1073,6 +1073,59 @@ public:
     *         operation.
     */
    vpr::ReturnStatus sendBreak(const vpr::Int32 duration);
+
+    /**
+   * Return the status of the carrier detect signal.
+   * @return - May be platform dependent, but will at least be as follows.
+   *           0 - not high, 1 - high, -1 - Not supported
+   */
+   int getCarrierDetect()
+   {
+      return -1;
+   }
+
+   /**
+   * Return the status of the data set ready line.
+   * @return - May be platform dependent, but will at least be as follows.
+   *           0 - not high, 1 - high, -1 - Not supported
+   */
+   int getDataSetReady()
+   {
+      return -1;
+   }
+
+   /**
+   * Return the status of the clear to send.
+   * @return - May be platform dependent, but will at least be as follows.
+   *           0 - not high, 1 - high, -1 - Not supported
+   */
+   int getClearToSend()
+   {
+      return -1;
+   }
+
+   /**
+   * Return the status of the ring indicator line.
+   * @return - May be platform dependent, but will at least be as follows.
+   *           0 - not high, 1 - high, -1 - Not supported
+   */
+   int getRingIndicator()
+   {
+      returm -1;
+   }
+
+   /** Set the data terminal ready line. */
+   vpr::ReturnStatus setDataTerminalReady(bool val)
+   {
+      return vpr::ReturnStatus::Fail;
+   }
+
+   /** Set the ready to send line */
+   vpr::ReturnStatus setRequestToSend(bool val)
+   {
+      return vpr::ReturnStatus::Fail;
+   }
+
 
    /**
     * Implementation of the <code>read</code> template method.  This reads at

@@ -489,15 +489,15 @@ public:
     *         operation.
     */
    vpr::ReturnStatus disableRead();
-   
+
    /**
-    * Get the local attach state.  That is, test if the device is attached       
-    * locally.       
+    * Get the local attach state.  That is, test if the device is attached
+    * locally.
     *
-    * @pre The serial port is open.       
-    * @post The local attach state is returned to the caller.       
+    * @pre The serial port is open.
+    * @post The local attach state is returned to the caller.
     * @return true  - The device is attached locally.
-    *         false - The device is not attached locally, and opening the       
+    *         false - The device is not attached locally, and opening the
     *                 device will usually block until there is a response.
     */
    bool getLocalAttachState();
@@ -506,7 +506,7 @@ public:
     * Mark the device as locally attached.
     *
     * @pre This serial port is open.
-    * @post The device has its local attachment state enabled.       
+    * @post The device has its local attachment state enabled.
     *
     * @return A vpr::ReturnStatus object describing the results of the
     *         operation.
@@ -514,10 +514,10 @@ public:
    vpr::ReturnStatus enableLocalAttach();
 
    /**
-    * Mark the device as not locally attached.       
+    * Mark the device as not locally attached.
     *
     * @pre This serial port is open.
-    * @post The device has its local attachment state disabled.       
+    * @post The device has its local attachment state disabled.
     *
     * @return A vpr::ReturnStatus object describing the results of the
     *         operation.
@@ -627,10 +627,10 @@ public:
     *         operation.
     */
    vpr::ReturnStatus disableBadByteIgnore();
-   
+
    /**
     * Gets the current state of ignoring BREAK bytes
-    * 
+    *
     * @pre This serial port is open.
     * @post The BREAK byte ignore state is returned to the caller.
     *
@@ -1080,6 +1080,41 @@ public:
     */
    vpr::ReturnStatus sendBreak(const Int32 duration);
 
+    /**
+   * Return the status of the carrier detect signal.
+   * @return - May be platform dependent, but will at least be as follows.
+   *           0 - not high, 1 - high, -1 - Not supported
+   */
+   int getCarrierDetect();
+
+   /**
+   * Return the status of the data set ready line.
+   * @return - May be platform dependent, but will at least be as follows.
+   *           0 - not high, 1 - high, -1 - Not supported
+   */
+   int getDataSetReady();
+
+   /**
+   * Return the status of the clear to send.
+   * @return - May be platform dependent, but will at least be as follows.
+   *           0 - not high, 1 - high, -1 - Not supported
+   */
+   int getClearToSend();
+
+   /**
+   * Return the status of the ring indicator line.
+   * @return - May be platform dependent, but will at least be as follows.
+   *           0 - not high, 1 - high, -1 - Not supported
+   */
+   int getRingIndicator();
+
+   /** Set the data terminal ready line. */
+   vpr::ReturnStatus setDataTerminalReady(bool val);
+
+   /** Set the request to send line */
+   vpr::ReturnStatus setRequestToSend(bool val);
+
+
    /**
     * Implementation of the <code>read</code> template method.  This reads at
     * most the specified number of bytes from the serial port into the given
@@ -1241,6 +1276,12 @@ protected:
    vpr::ReturnStatus setBit(const tcflag_t bit, TermFlag flag,
                             const bool enable, const std::string& err_msg,
                             const bool print_sys_err = true);
+
+   /** Helper for setting line status flags */
+   vpr::ReturnStatus setLineFlag(Uint8 flag, bool val);
+
+   /** Helper for getting lines status flags */
+   bool getLineFlag(Uint8 flag);
 
    /**
     * Converts a termios baud rate to its corresponding integer value.
