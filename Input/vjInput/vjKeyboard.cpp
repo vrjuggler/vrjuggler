@@ -99,7 +99,7 @@ if (myThreadID == 0) {
   m_display = XOpenDisplay(NULL);
   if (m_display == NULL)
   {
-     cout << "vjKeyboard::StartSampling() : failed to open display" << endl;
+     cerr << "vjKeyboard::StartSampling() : failed to open display" << endl;
      return 0;
   }
   m_screen = DefaultScreen(m_display);
@@ -122,7 +122,7 @@ if (myThreadID == 0) {
   
   if (i == nVisuals)
   {
-    cout << "vjKeyboard::StartSampling() : find visual failed" << endl;
+    cerr << "vjKeyboard::StartSampling() : find visual failed" << endl;
     return 0;
   }
   
@@ -148,7 +148,7 @@ if (myThreadID == 0) {
   XRaiseWindow(m_display,m_window);
   
 
-  cerr << "vjKeyboard::StartSampling() : ready to go.." << endl;
+  vjDEBUG(0) << "vjKeyboard::StartSampling() : ready to go.." << endl;
   
   //UnUsed// vjKeyboard* devicePtr = this;
   void Samplem_keys(void*);
@@ -156,7 +156,8 @@ if (myThreadID == 0) {
   myThreadID = (vjThreadId *) 1;
   return 1;
      
-  }else return 0; // already sampling
+  }
+  else return 0; // already sampling
 
 
 }
