@@ -97,6 +97,7 @@ public:
    DigitalData* getDigitalData(int devNum = 0)
    {
       // XXX: Fill in;
+      return &(mDigitalSamples.stableBuffer().back()[devNum]);
    }
 
 protected:

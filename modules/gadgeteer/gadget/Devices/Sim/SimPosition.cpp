@@ -75,9 +75,9 @@ bool SimPosition::config(jccl::ConfigChunkPtr chunk)
    float z_rot = chunk->getProperty("initialRot",2);
 
    if((x_pos != 0.0f) || (y_pos != 0.0f) || (z_pos != 0.0f))
-      mPos.getPositionData()->makeTrans(x_pos, y_pos, z_pos);
+      mPos.getPosition()->makeTrans(x_pos, y_pos, z_pos);
    if((x_rot != 0.0f) || (y_rot != 0.0f) || (z_rot != 0.0f))
-      mPos.getPositionData()->postXYZEuler(*(mPos.getPositionData()), x_rot, y_rot, z_rot);
+      mPos.getPosition()->postXYZEuler(*(mPos.getPosition()), x_rot, y_rot, z_rot);
    mPos.setTime();
 
    return true;
@@ -152,9 +152,9 @@ void SimPosition::moveFor(const float amt)
    if(isTransAllowed(move_forward))
    {
       if(mTransCoordSystem == LOCAL)
-         mPos.getPositionData()->postTrans(*(mPos.getPositionData()), move_forward);
+         mPos.getPosition()->postTrans(*(mPos.getPosition()), move_forward);
       else
-         mPos.getPositionData()->preTrans(move_forward, *(mPos.getPositionData()));
+         mPos.getPosition()->preTrans(move_forward, *(mPos.getPosition()));
    }
    else
       vprDEBUG(vrjDBG_INPUT_MGR,4) << "SimPos hit a surface.\n" << vprDEBUG_FLUSH;
@@ -170,9 +170,9 @@ void SimPosition::moveLeft(const float amt)
    if(isTransAllowed(move_left))
    {
       if(mTransCoordSystem == LOCAL)
-         mPos.getPositionData()->postTrans(*(mPos.getPositionData()), move_left);
+         mPos.getPosition()->postTrans(*(mPos.getPosition()), move_left);
       else
-         mPos.getPositionData()->preTrans(move_left, *(mPos.getPositionData()));
+         mPos.getPosition()->preTrans(move_left, *(mPos.getPosition()));
    }
    else
       vprDEBUG(vrjDBG_INPUT_MGR,4) << "SimPos hit a surface.\n" << vprDEBUG_FLUSH;
@@ -188,9 +188,9 @@ void SimPosition::moveUp(const float amt)
    if(isTransAllowed(move_up))
    {
       if(mTransCoordSystem == LOCAL)
-         mPos.getPositionData()->postTrans(*(mPos.getPositionData()), move_up);
+         mPos.getPosition()->postTrans(*(mPos.getPosition()), move_up);
       else
-         mPos.getPositionData()->preTrans(move_up, *(mPos.getPositionData()));
+         mPos.getPosition()->preTrans(move_up, *(mPos.getPosition()));
    }
    else
       vprDEBUG(vrjDBG_INPUT_MGR,4) << "SimPos hit a surface.\n" << vprDEBUG_FLUSH;
@@ -200,7 +200,7 @@ void SimPosition::moveUp(const float amt)
 void SimPosition::rotUp(const float amt)
 {
    static vrj::Vec3 x_axis(1.0,0.0,0.0);
-   vrj::Matrix* m = mPos.getPositionData();
+   vrj::Matrix* m = mPos.getPosition();
    if(mRotCoordSystem == LOCAL)
       m->postRot(*m, amt*mDRot, x_axis);
    else
@@ -225,7 +225,7 @@ void SimPosition::rotUp(const float amt)
 void SimPosition::rotLeft(const float amt)
 {
    static vrj::Vec3 y_axis(0.0, 1.0, 0.0);
-   vrj::Matrix* m = mPos.getPositionData();
+   vrj::Matrix* m = mPos.getPosition();
 
    if(mRotCoordSystem == LOCAL)
       m->postRot(*m, amt*mDRot, y_axis);
@@ -251,7 +251,7 @@ void SimPosition::rotLeft(const float amt)
 void SimPosition::rotRollCCW(const float amt)
 {
    static vrj::Vec3 neg_z_axis(0.0, 0.0, -1.0);
-   vrj::Matrix* m = mPos.getPositionData();
+   vrj::Matrix* m = mPos.getPosition();
 
    if(mRotCoordSystem == LOCAL)
       m->postRot(*m, amt*mDRot, neg_z_axis);

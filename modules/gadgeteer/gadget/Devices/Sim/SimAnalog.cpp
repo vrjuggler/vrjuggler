@@ -76,18 +76,18 @@ void SimAnalog::updateData()
    // -- Update analog data --- //
    for (unsigned int i = 0; i < mSimKeysUp.size(); ++i)
    {
-      mAnaData[i].setAnalogData(mAnaData[i].getAnalogData()
+      mAnaData[i].setAnalog(mAnaData[i].getAnalog()
                                 + (float)checkKeyPair(mSimKeysUp[i]) * mAnaStep);
-      mAnaData[i].setAnalogData(mAnaData[i].getAnalogData()
+      mAnaData[i].setAnalog(mAnaData[i].getAnalog()
                                 - (float)checkKeyPair(mSimKeysDown[i]) * mAnaStep);
 
-      if (mAnaData[i].getAnalogData() < 0.0f)
-      {   mAnaData[i].setAnalogData(0.0f); }
-      if (mAnaData[i].getAnalogData() > 255.0f)
-      {  mAnaData[i].setAnalogData(255.0f); }
+      if (mAnaData[i].getAnalog() < 0.0f)
+      {   mAnaData[i].setAnalog(0.0f); }
+      if (mAnaData[i].getAnalog() > 255.0f)
+      {  mAnaData[i].setAnalog(255.0f); }
 
       float f;
-      this->normalizeMinToMax( mAnaData[i].getAnalogData(), f );
+      this->normalizeMinToMax( mAnaData[i].getAnalog(), f );
       mAnaData[i] = f;
 
       mAnaData[i].setTime();     // Set the sample time

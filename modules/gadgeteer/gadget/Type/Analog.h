@@ -109,7 +109,8 @@ public:
    AnalogData* getAnalogData(int devNum = 0)
    {
       // XXX: Fill in;
-      return NULL;
+      //return NULL;
+      return &(mAnalogSamples.stableBuffer().back()[devNum]);
    }
 
 protected:

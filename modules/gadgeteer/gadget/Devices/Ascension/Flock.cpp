@@ -93,7 +93,7 @@ Flock::Flock(const char* const port,
                       report,
                       calfile)
 {
-   mThread = NULL;   
+   mThread = NULL;
 }
 
 bool Flock::config(jccl::ConfigChunkPtr c)
@@ -152,7 +152,7 @@ bool Flock::config(jccl::ConfigChunkPtr c)
 
 Flock::~Flock()
 {
-   this->stopSampling();   
+   this->stopSampling();
 }
 
 void Flock::controlLoop(void* nullParam)
@@ -251,17 +251,17 @@ int Flock::sample()
       transmitter_T_reciever.setTrans(mFlockOfBirds.xPos( i+1 ),
                                                mFlockOfBirds.yPos( i+1 ),
                                                mFlockOfBirds.zPos( i+1 ));
-      
+
       //if (i==1)
          //vprDEBUG(vprDBG_ALL,2) << "Flock: bird1:    orig:" << Coord(theData[index]).pos << std::endl << vprDEBUG_FLUSH;
 
       // XXX: is all this copying really necessary?
 
       world_T_transmitter = xformMat;                    // Set transmitter offset from local info
-      //transmitter_T_reciever = *(mData[index].getPositionData());           // Get reciever data from sampled data
+      //transmitter_T_reciever = *(mData[index].getPosition());           // Get reciever data from sampled data
       world_T_reciever.mult(world_T_transmitter, transmitter_T_reciever);   // compute total transform
-      
-      *(cur_samples[i].getPositionData()) = world_T_reciever;                                     // Store corrected xform back into data
+
+      *(cur_samples[i].getPosition()) = world_T_reciever;                                     // Store corrected xform back into data
       cur_samples[i].setTime (cur_samples[0].getTime());
 
 
