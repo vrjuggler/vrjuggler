@@ -279,14 +279,14 @@ protected:
    std::vector< std::vector<pfPipeWindow*> > mPipeWindows;
 
    //   mRoot
-   //       \
+   //       |
    //     mSceneGroup -- mSceneRoot -- app scene
    //       /
    // mRootWithSim   mHeadDCS
    //       \       /
    //       mSimTree
-   //               \
-   //                mWandDCS
+   //              |
+   //              mWandDCS
    pfScene*          mRoot;            // Root of performer tree to render
    pfGroup*          mSceneRoot;       // Root of scene to render (changes at run-time)
    pfGroup*          mSceneGroup;      // The group node with only sceneRoot under it
