@@ -488,7 +488,7 @@ DPP_HAVE_BOOST([1.31.0], [/usr/local], , ,
 # Checks for library functions.
 # -----------------------------------------------------------------------------
 AC_CHECK_FUNCS([gettimeofday sigaction sigemptyset sigfillset sigaddset \
-                sigdelset sigismember snprintf strerror])
+                sigdelset sigismember snprintf strerror strerror_r])
 
 _vpr_save_LIBS="$LIBS"
 AC_CHECK_FUNC([socket], [SOCKET_LIB=''],
