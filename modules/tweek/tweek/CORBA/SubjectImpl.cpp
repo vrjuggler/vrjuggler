@@ -53,24 +53,30 @@ void SubjectImpl::attach (Observer_ptr o)
    m_observers.push_back(Observer::_duplicate(o));
 }
 
+template<class T>
+struct RemovePred
+{
+   RemovePred (T o)
+   {
+      obj = o;
+   }
+
+   bool operator() (T thingy)
+   {
+      return obj->_is_equivalent(thingy);
+   }
+
+   T obj;
+};
+
 void SubjectImpl::detach (Observer_ptr o)
 {
    vpr::Guard<vpr::Mutex> guard(m_observers_mutex);
    observer_vec_t::iterator i;
 
-   for ( i = m_observers.begin(); i != m_observers.end(); i++ )
-   {
-      if ( o->_is_equivalent(*i) )
-      {
-         observer_vec_t::iterator j = i;
-         i++;
-
-         vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL) << "Detaching observer\n"
-                                                << vprDEBUG_FLUSH;
-         CORBA::release(*j);
-         m_observers.erase(j);
-      }
-   }
+   i = remove_if(m_observers.begin(), m_observers.end(),
+                 RemovePred<Observer_ptr>(o));
+   m_observers.erase(i, m_observers.end());
 }
 
 void SubjectImpl::notify ()
