@@ -65,38 +65,53 @@ class myApplication : public vrj::GlApp</programlisting>
          <title>Math Library</title>
          <orderedlist numeration="lowerroman">
             <listitem>
-               <para>The <classname>vjMatrix</classname>, <classname>vjVec3</classname>, and <classname>vjQuat</classname> that you're used to has been changed to <classname>vrj::Matrix</classname>, <classname>vrj::Vec3</classname>, and <classname>vrj::Quat</classname> respectively. This follows with the use of the vrj namespace mentioned earlier. The following shows an example of using the math classes. </para>
-               <programlisting>#include &lt;vrj/Math/Matrix.h&gt;
-#include &lt;vrj/Math/Quat.h&gt;
-#include &lt;vrj/Math/Vec3.h&gt;
+               <para>
+               VR Juggler now uses the GMTL math library (http://ggt.sf.net).  The old vrj/Math library is no longer avaliable.  There are some very fundamental changes between GMTL and Math from VR Juggler 1.0.  You should definatly read the GMTL programmer's guide available from the ggt.sf.net website.  This helps you understand how the toolkit is structured, which is pretty simple.
+               </para>
+               <para>
+               The main difference between GMTL and VRJ 1.0 Math is the way you use methods.  GMTL is similar to object oriented C programming where the object is always the first parameter in the function.  This difference from VRJ 1.0 Math will affect all application code using math.  
+               </para>
+               <para>
+               The <classname>vjMatrix</classname>, <classname>vjVec3</classname>, and <classname>vjQuat</classname> that you're used to has been changed to <classname>gmtl::Matrix44f</classname>, <classname>gmtl::Vec3f</classname>, <classname>gmtl::Point3f</classname>, and <classname>gmtl::Quatf</classname> respectively. The following shows an example of using the math classes. 
+               </para>
+               <programlisting>#include &lt;gmtl/Matrix.h&gt;
+#include &lt;gmtl/Quat.h&gt;
+#include &lt;gmtl/Vec.h&gt;
+#include &lt;gmtl/Generate.h&gt;
 
 // make a rotation
-vrj::Quat q;
-q.makeRot( vrj::Math::deg2rad( 90.0f ), 0.0f, 1.0f, 0.0f );
+vrj::Quatf q;
+gmtl::setRot( q, gmtl::Math::deg2Rad( 90.0f ), 0.0f, 1.0f, 0.0f );
 
 // set the matrix to that rotation
-vrj::Matrix mat;
-mat.setQuaternion( q );
+gmtl::Matrix44f mat;
+gmtl::convert( mat, q );
 
 // set the translation of the matrix
-vrj::Vec3 vec( 1.0f, 3.0f, -5.0f );
-mat.setTrans( vec );</programlisting>
+gmtl::Vec3f vec( 1.0f, 3.0f, -5.0f );
+gmtl::setTrans( mat, vec );
+
+// transform the vector (the mathematical definition of Mat * Vec is that it only does rotation)
+gmtl::Vec3f result_v = mat * vec;
+
+// transform a point (the mathematical definition of Mat * Pnt is that does a full transform)
+gmtl::Point3f result_p = mat * point;</programlisting>
             </listitem>
             <listitem>
-               <para>Common C preprocessor symbols such as <symbol>VJ_DEG2RAD</symbol>, <symbol>VJ_RAD2DEG</symbol> found in <filename>vjConfig.h</filename> are now located as inline functions in <filename>vrj/Math/Math.h</filename>. These are listed in the <classname>vrj::Math</classname> namespace. For example, <symbol>VJ_DEG2RAD</symbol> is now <function>vrj::Math::deg2rad()</function>. The following illustrates the new use:</para>
-               <programlisting>#include &lt;vrj/Math/Math.h&gt;
+               <para>Common C preprocessor symbols such as <symbol>VJ_DEG2RAD</symbol>, <symbol>VJ_RAD2DEG</symbol> found in <filename>vjConfig.h</filename> are now located as inline functions in <filename>gmtl/Math.h</filename>. These are listed in the <classname>gmtl::Math</classname> namespace. For example, <symbol>VJ_DEG2RAD</symbol> is now <function>gmtl::Math::deg2Rad()</function>. The following illustrates the new use:</para>
+               <programlisting>#include &lt;gmtl/Math.h&gt;
 
 // convert degrees to radians...
-float radians = vrj::Math::deg2rad( degrees );</programlisting>
+float radians = gmtl::Math::deg2Rad( degrees );</programlisting>
             </listitem>
             <listitem>
                <para>There are no changes to individual member functions.</para>
             </listitem>
             <listitem>
-               <para>As before, the math library is located in <filename>libJuggler</filename>, and the headers are in the directory <filename>vrj/Math</filename>.</para>
+               <para>The headers are in the directory <filename>gmtl/</filename>.  Typically you will type your #includes in the following format: #include&lt;gmtl/somefile.h&gt;</para>
             </listitem>
             <listitem>
-               <para>For more information, refer to the headers <filename>vrj/Math/Vec3.h</filename>, <filename>vrj/Math/Matrix.h</filename>, and <filename>vrj/Math/Quat.h</filename>.</para>
+               <para>For more information, refer to the http://ggt.sf.net website.  It has excellent online reference guide, and a programming guide that is more in depth than this short porting tutorial.  If you don't have a web connection, see also the headers in the gmtl/ directory, it has all the docs in the headers.  Typically the headers you'll use are these: <filename>gmtl/Vec.h</filename>, <filename>gmtl/Point.h</filename>, <filename>gmtl/Matrix.h</filename>, and <filename>gmtl/Quat.h</filename>.</para>
             </listitem>
          </orderedlist>
       </section>
