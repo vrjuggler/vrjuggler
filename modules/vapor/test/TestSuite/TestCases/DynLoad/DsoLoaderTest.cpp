@@ -4,6 +4,7 @@
 #include <vpr/vpr.h>
 #include <vpr/DynLoad/DsoLoader.h>
 #include <vpr/System.h>
+#include <vpr/Util/Debug.h>
 #include <TestCases/DynLoad/modules/TestInterface.h>
 
 #include <TestCases/DynLoad/DsoLoaderTest.h>
@@ -115,6 +116,7 @@ void DsoLoaderTest::loadFailureTest()
 {
    vpr::DsoLoader loader(INIT_FUNC_NAME);
 
+   vpr::Debug::instance()->disableOutput();
    try
    {
       vpr::DsoLoader::CreatorArg arg("loadFailureTest", NULL);
@@ -125,12 +127,14 @@ void DsoLoaderTest::loadFailureTest()
    {
       CPPUNIT_ASSERT(loaderEx.error() == vpr::LoaderError::FILE_LOAD_ERROR);
    }
+   vpr::Debug::instance()->enableOutput();
 }
 
 void DsoLoaderTest::lookupFailureTest()
 {
    vpr::DsoLoader loader("bogusFunc");
 
+   vpr::Debug::instance()->disableOutput();
    try
    {
       vpr::DsoLoader::CreatorArg arg("lookupFailureTest", NULL);
@@ -141,6 +145,7 @@ void DsoLoaderTest::lookupFailureTest()
    {
       CPPUNIT_ASSERT(loaderEx.error() == vpr::LoaderError::SYM_LOOKUP_ERROR);
    }
+   vpr::Debug::instance()->enableOutput();
 }
 
 }
