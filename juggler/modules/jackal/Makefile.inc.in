@@ -277,7 +277,7 @@ post-install:
 	@$(MAKE) install-samples
 #	@$(MAKE) install-test
 #	@$(MAKE) install-tools
-#	@$(MAKE) install-data
+	@$(MAKE) install-data
 	@$(MAKE) install-m4
 	@$(MAKE) install-vjcontrol
 	$(INSTALL) -m $(EXEC_PERMS) $(GROUP_OPT_UNIX)			\
