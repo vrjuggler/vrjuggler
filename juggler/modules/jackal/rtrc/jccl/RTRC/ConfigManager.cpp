@@ -127,6 +127,19 @@ void ConfigManager::loadRemoteReconfig()
       }
    }
 
+   const std::string no_rtrc_plugin("NO_RTRC_PLUGIN");
+   std::string junk;
+
+   // If the user has the environment variable NO_RTRC_PLUGIN set (to any
+   // value), do not attempt to load the plug-in.
+   if ( vpr::System::getenv(no_rtrc_plugin, junk).success() )
+   {
+      vprDEBUG(jcclDBG_RECONFIG, vprDBG_STATE_LVL)
+         << "Remote reconfig plug-in loading disabled via NO_RTRC_PLUGIN."
+         << std::endl << vprDEBUG_FLUSH;
+      return;
+   }
+
 #if defined(_ABIN32)
    const std::string bit_suffix("32");
 #elif defined(_ABI64)
