@@ -189,6 +189,7 @@ namespace vpr
 
       typedef class CondVarPosix   CondVar;
       typedef class MutexPosix     Mutex;
+      typedef class RWMutexPosix   RWMutex;
       typedef class SemaphorePosix Semaphore;
 
       typedef int                  cancel_state_t;
