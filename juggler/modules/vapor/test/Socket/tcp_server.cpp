@@ -48,10 +48,12 @@ main (int argc, char* argv[]) {
     if ( sock.openServer() ) {
         vpr::SocketStream* client_sock;
         char buffer[] = "Hello there!";
+//        std::string buffer = "Hello there!";
 
         while ( 1 ) {
             client_sock = sock.accept();
             client_sock->write(buffer, sizeof(buffer));
+//            client_sock->write(buffer);
             delete client_sock;
         }
 
