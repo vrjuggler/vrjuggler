@@ -125,7 +125,7 @@ void vncApp::preFrame()
    if(we_have_focus)
    {
       gmtl::Matrix44f wandMatrix;
-      wandMatrix = (*mWand->getData());      // Get the wand matrix
+      wandMatrix = mWand->getData();      // Get the wand matrix
 
       // Update navigation
       // - Find forward direction of wand
@@ -194,7 +194,7 @@ void vncApp::draw()
    glMatrixMode(GL_MODELVIEW);
 
    // -- Draw box on wand --- //
-   gmtl::Matrix44f wand_world = *(mWand->getData());
+   gmtl::Matrix44f wand_world = mWand->getData();
    gmtl::Matrix44f wand_mat;
    gmtl::Matrix44f inv_nav;
    gmtl::invert(inv_nav, mNavMat);
