@@ -68,7 +68,7 @@ ALL_CLASSES=	networktest/*.class
 
 include $(TWEEK_BASE_DIR)/share/tweek/tweek.appdefs.mk
 
-CXX_GEN_DIR=		$(srcdir)
+CXX_GEN_DIR=		.
 CXX_IDL=		$(TWEEK_IDL_CXX)
 CXX_IDL_OPTS=		$(TWEEK_IDLFLAGS_CXX)			\
 			$(TWEEK_IDL_GENDIR_CXX)$(CXX_GEN_DIR)
