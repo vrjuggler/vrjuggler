@@ -63,12 +63,22 @@ typedef caddr_t thread_id_t;
 typedef u_int32_t thread_id_t;
 #endif
 
+#include <Threads/vjThreadKeyPosix.h>     // To get the posix key stuff for storing self
+
 //: Threads implementation using POSIX threads (both Draft 4 and the "final"
 //+ draft of the standard are supported).
+//
+// Desc: <br>
+//   Functions by recieving a function in the constructor that is the function
+// to call when the new thread is created.  This function is stored internally
+// to the class, then the class is "boot-strapped" by spawning a call
+// to the startThread function with in turn will call the previously set thread
+// function
+//
 //!PUBLIC_API:
 class vjThreadPosix : public vjBaseThread
 {
-public:
+public:  // ---- Thread CREATION and SPAWNING ----- //
     // -----------------------------------------------------------------------
     //: Spawning constructor.
     //
@@ -122,6 +132,16 @@ public:
     int spawn(vjBaseThreadFunctor* functorPtr, long flags = 0,
               u_int priority = 0, void* stack_addr = NULL,
               size_t stack_size = 0);
+
+    // Called by the spawn routine to start the user thread function
+    // PRE: Called ONLY by a new thread
+    // POST: The new thread will have started the user thread function
+    void startThread(void* null_param);
+
+private:
+   vjBaseThreadFunctor* mUserThreadFunctor;     // The functor to call when the thread starts
+
+public:  // ----- Various other thread functions ------ //
 
     // -----------------------------------------------------------------------
     //: Make the calling thread wait for the termination of this thread.
@@ -350,9 +370,7 @@ public:
     //! RETURNS: NonNull - Ptr to the thread that we are running within
     // -----------------------------------------------------------------------
     static vjBaseThread*
-    self (void) {
-        return mThreadTable.getThread(gettid());
-    }
+    self(void);
 
     // -----------------------------------------------------------------------
     //: Provide a way of printing the process ID neatly.
@@ -434,6 +452,7 @@ private:
         return hash(me);
     }
 
+    static vjThreadKeyPosix            mThreadIdKey;     // Key for the id of the local thread
     static vjThreadTable<thread_id_t>  mThreadTable;
 };
 

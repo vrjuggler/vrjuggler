@@ -45,9 +45,11 @@
 
 #include <Threads/vjThread.h>
 #include <Threads/vjThreadManager.h>
+#include <Threads/vjThreadFunctor.h>
 
 
 vjThreadTable<thread_id_t> vjThreadPosix::mThreadTable;
+vjThreadKeyPosix           vjThreadPosix::mThreadIdKey(NULL);
 
 typedef struct sched_param sched_param_t;
 
@@ -60,26 +62,32 @@ typedef struct sched_param sched_param_t;
 // ---------------------------------------------------------------------------
 vjThreadPosix::vjThreadPosix (THREAD_FUNC func, void* arg, long flags,
                               u_int priority, void* stack_addr,
-                              size_t stack_size)
+                              size_t stack_size) 
 {
-    vjThreadManager* vj_tm_inst;
+   mUserThreadFunctor = NULL;
+   vjThreadManager* vj_tm_inst;
 
-    mScope = VJ_THREAD_SCOPE;
-    vj_tm_inst = vjThreadManager::instance();
+   mScope = VJ_THREAD_SCOPE;
+   vj_tm_inst = vjThreadManager::instance();
 
-    vj_tm_inst->lock();
-    {
-        int ret_val;
-        vjThreadNonMemberFunctor* NonMemFunctor;
+   // Create the thread functor to start
+   mUserThreadFunctor = new vjThreadNonMemberFunctor(func, arg);
+   vjThreadMemberFunctor<vjThreadPosix>* start_functor
+               = new vjThreadMemberFunctor<vjThreadPosix>(this,&vjThreadPosix::startThread,NULL);
 
-        // XXX: Memory leak
-        NonMemFunctor = new vjThreadNonMemberFunctor(func, arg);
-
-        ret_val = spawn(NonMemFunctor, flags, priority, stack_addr,
+   // START THREAD
+   // NOTE: Automagically registers thread UNLESS failure
+   int ret_val = spawn(start_functor, flags, priority, stack_addr,
                         stack_size);
-        checkRegister(ret_val);
-    }
-    vj_tm_inst->unlock();
+
+   if(!ret_val)
+   {
+      vj_tm_inst->lock();  // Need to lock thread manager before I register the thread with them
+      {
+         registerThread(false);
+      }
+      vj_tm_inst->unlock();
+   }
 }
 
 // ---------------------------------------------------------------------------
@@ -89,21 +97,30 @@ vjThreadPosix::vjThreadPosix (THREAD_FUNC func, void* arg, long flags,
 // ---------------------------------------------------------------------------
 vjThreadPosix::vjThreadPosix (vjBaseThreadFunctor* functorPtr, long flags,
                               u_int priority, void* stack_addr,
-                              size_t stack_size)
+                              size_t stack_size)  : mUserThreadFunctor(NULL)
 {
     vjThreadManager* vj_tm_inst;
 
     mScope = VJ_THREAD_SCOPE;
     vj_tm_inst = vjThreadManager::instance();
 
-    vj_tm_inst->lock();
-    {
-        int ret_val;
+    // Create the thread functor to start
+    mUserThreadFunctor = functorPtr;
+    vjThreadMemberFunctor<vjThreadPosix>* start_functor
+                  = new vjThreadMemberFunctor<vjThreadPosix>(this,&vjThreadPosix::startThread,NULL);
 
-        ret_val = spawn(functorPtr, flags, priority, stack_addr, stack_size);
-        checkRegister(ret_val);
+    // Start thread
+    // NOTE: Automagically registers thread UNLESS failure
+    int ret_val = spawn(start_functor, flags, priority, stack_addr, stack_size);
+
+    if(!ret_val)
+    {
+       vj_tm_inst->lock();  // Need to lock thread manager before I register the thread with them
+       {
+         registerThread(false);
+       }
+       vj_tm_inst->unlock();
     }
-    vj_tm_inst->unlock();
 }
 
 // ---------------------------------------------------------------------------
@@ -117,6 +134,7 @@ vjThreadPosix::~vjThreadPosix (void) {
     int status;
 
     mThreadTable.removeThread(hash());
+    delete mUserThreadFunctor;
 
     status = 0;
     pthread_exit((void*) &status);
@@ -216,6 +234,32 @@ vjThreadPosix::spawn (vjBaseThreadFunctor* functorPtr, long flags,
     return ret_val;
 }
 
+
+/**
+ * Called by the spawn routine to start the user thread function
+ * PRE: Called ONLY by a new thread
+ * POST: Do any thread registration necessary
+ *       Call the user thread functor
+ * 
+ * @param null_param
+ */
+void vjThreadPosix::startThread(void* null_param)
+{
+   // WE are a new thread... yeah!!!!
+   // TELL EVERYONE THAT WE LIVE!!!!
+   vjThreadManager::instance()->lock();      // Lock manager
+   {
+      mThreadTable.addThread(this, hash());      // Store way to look me up
+      mThreadIdKey.setspecific((void*)this);     // Store the pointer to me 
+      registerThread(true);  
+   }
+   vjThreadManager::instance()->unlock();
+
+   // --- CALL USER FUNCTOR --- //
+   (*mUserThreadFunctor)();
+}
+
+
 // ---------------------------------------------------------------------------
 // Get this thread's priority.
 //
@@ -261,6 +305,27 @@ vjThreadPosix::setPrio (int prio) {
 #endif
 }
 
+vjBaseThread*
+vjThreadPosix::self (void)
+{
+   vjBaseThread* my_thread;
+   mThreadIdKey.getspecific((void**)&my_thread);
+   
+   /*
+   vjBaseThread* old_thread_id = mThreadTable.getThread(gettid());
+   if (my_thread != old_thread_id)
+   {
+      cout << "FATAL ERROR: vjThreadPosix::self: Incorrect self.\n" << flush;
+      cout << "old: " << (void*)old_thread_id << " new:" << (void*)my_thread << endl << flush;
+      exit(1);
+   }
+   */
+
+   return my_thread;
+}
+
+
+
 // ===========================================================================
 // Private methods follow.
 // ===========================================================================
@@ -279,8 +344,9 @@ vjThreadPosix::setPrio (int prio) {
 void
 vjThreadPosix::checkRegister (int status) {
     if ( status == 0 ) {
-        registerThread(true);
-        mThreadTable.addThread(this, hash());
+       mThreadTable.addThread(this, hash());      // Store way to look me up
+       mThreadIdKey.setspecific((void*)this);     // Store the pointer to me 
+       registerThread(true);       
     } else {
         registerThread(false);   // Failed to create
     }
