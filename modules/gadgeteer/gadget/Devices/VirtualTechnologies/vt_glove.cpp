@@ -56,7 +56,7 @@ void abduct_18(void);
 
 
 CbGlove
-vjCyberGlove::allocate_CbGlove(void)
+CyberGloveBasic::allocate_CbGlove(void)
 {
   CbGlove newglove;
   CbGlovePrivateStruct *private_data;
@@ -91,7 +91,7 @@ vjCyberGlove::allocate_CbGlove(void)
 }
 
 int
-vjCyberGlove::glove_boot(CbGlove glove)
+CyberGloveBasic::glove_boot(CbGlove glove)
 {
   CbGlovePrivate private_data = glove->private_data;
 
@@ -138,7 +138,7 @@ vjCyberGlove::glove_boot(CbGlove glove)
 }
 
 int
-vjCyberGlove::vt_open_glove_port(char *dev_name, int baudrate)
+CyberGloveBasic::vt_open_glove_port(char *dev_name, int baudrate)
 {
   if ((current_glove->portfd = vt_serial_open(dev_name,baudrate)) < Ok)
     return (vt_print_error("vt_open_glove_port"));
@@ -154,19 +154,19 @@ vjCyberGlove::vt_open_glove_port(char *dev_name, int baudrate)
 }
 
 void
-vjCyberGlove::vt_close_glove_port(CbGlove glove)
+CyberGloveBasic::vt_close_glove_port(CbGlove glove)
 {
   vt_serial_close(glove->portfd);
   glove->portfd = -1;
 }
 
 CbGlove
-vjCyberGlove::vt_create_CbGlove(Boolean connect, ...)
+CyberGloveBasic::vt_create_CbGlove(Boolean connect, ...)
 {
   char *dev_name;
   int baudrate;
   va_list address_arg1 = (va_list) &connect;
-  
+
   current_glove = allocate_CbGlove();
   current_glove_private = current_glove->private_data;
 
@@ -182,7 +182,7 @@ vjCyberGlove::vt_create_CbGlove(Boolean connect, ...)
 }
 
 void
-vjCyberGlove::vt_destroy_CbGlove(CbGlove glove)
+CyberGloveBasic::vt_destroy_CbGlove(CbGlove glove)
 {
   if (glove->portfd != -1)
     vt_serial_close(glove->portfd);
@@ -200,7 +200,7 @@ vjCyberGlove::vt_destroy_CbGlove(CbGlove glove)
 /*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
 void
-vjCyberGlove::vt_unprocess_glove_angles(void)
+CyberGloveBasic::vt_unprocess_glove_angles(void)
 {
   int finger, joint;
   glove_sensor_map_struct (*mapping)[MAX_GROUP_VALUES];
@@ -237,7 +237,7 @@ vjCyberGlove::vt_unprocess_glove_angles(void)
 
 
 int
-vjCyberGlove::query_reply_head_check(int portfd, char *query_string)
+CyberGloveBasic::query_reply_head_check(int portfd, char *query_string)
 {
   unsigned char reply[2];
 
@@ -251,7 +251,7 @@ vjCyberGlove::query_reply_head_check(int portfd, char *query_string)
 }
 
 int
-vjCyberGlove::reply_tail_check(CbGlove glove)
+CyberGloveBasic::reply_tail_check(CbGlove glove)
 {
   int i, lastbytes[5], portfd = glove->portfd;
   CbGlovePrivate private_data = glove->private_data;
@@ -310,13 +310,13 @@ vjCyberGlove::reply_tail_check(CbGlove glove)
 	return (vt_set_error("reply_tail_check",CG_ERROR5));
       }
   }
-  
+
   printf("\nYO BABY!\n"); fflush(stdout);
   return Ok;
 }
 
 int
-vjCyberGlove::command_reply_check(CbGlove glove, char command_char)
+CyberGloveBasic::command_reply_check(CbGlove glove, char command_char)
 {
   unsigned char reply[4] = "FFF";
 
@@ -338,7 +338,7 @@ vjCyberGlove::command_reply_check(CbGlove glove, char command_char)
 
 
 int
-vjCyberGlove::read_and_decode_timestamp(int portfd, unsigned long *timestamp)
+CyberGloveBasic::read_and_decode_timestamp(int portfd, unsigned long *timestamp)
 {
   word_byte_union newstamp;
   int bitflipflags;
@@ -374,7 +374,7 @@ vjCyberGlove::read_and_decode_timestamp(int portfd, unsigned long *timestamp)
 }
 
 int
-vjCyberGlove::vt_read_glove_data(void)
+CyberGloveBasic::vt_read_glove_data(void)
 {
   int portfd = current_glove->portfd;
   unsigned long sensor_mask, stencil = 0x1;
@@ -418,7 +418,7 @@ vjCyberGlove::vt_read_glove_data(void)
   if (current_glove_private->param_flags.word & CG_TIME_STAMP_FLAG)
     if (read_and_decode_timestamp(portfd,&current_glove->timestamp) < Ok)
       return (vt_print_error("vt_read_glove_data"));
-    
+
   if (current_glove_private->param_flags.word & CG_STATUS_BYTE_FLAG)
   {
     if ((status_byte = vt_serial_read_byte(portfd)) == -1)
@@ -434,8 +434,8 @@ vjCyberGlove::vt_read_glove_data(void)
 }
 
 int
-vjCyberGlove::vt_read_processed_glove_data(void)
-{ 
+CyberGloveBasic::vt_read_processed_glove_data(void)
+{
   if (vt_read_glove_data() < Ok)
     return (vt_print_error("vt_read_processed_glove_data"));
 
@@ -461,7 +461,7 @@ vjCyberGlove::vt_read_processed_glove_data(void)
 /*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
 
 int
-vjCyberGlove::set_baud_rate(CbGlove glove, void *address_arg1)
+CyberGloveBasic::set_baud_rate(CbGlove glove, void *address_arg1)
 {
   int portfd = glove->portfd;
   CbGlovePrivate private_data = glove->private_data;
@@ -496,7 +496,7 @@ vjCyberGlove::set_baud_rate(CbGlove glove, void *address_arg1)
 /*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
 
 int
-vjCyberGlove::enable_timestamp(CbGlove glove, void *address_arg1)
+CyberGloveBasic::enable_timestamp(CbGlove glove, void *address_arg1)
 {
   int portfd = glove->portfd;
   CbGlovePrivate private_data = glove->private_data;
@@ -513,7 +513,7 @@ vjCyberGlove::enable_timestamp(CbGlove glove, void *address_arg1)
   /* check the response */
   if (command_reply_check(glove,CG_TIME_STAMP_CH) < Ok)
     return(vt_print_error("enable_timestamp"));
-  
+
   private_data->param_flags.word = (enabled) ?
                             private_data->param_flags.word | CG_TIME_STAMP_FLAG :
                             private_data->param_flags.word & ~CG_TIME_STAMP_FLAG;
@@ -532,7 +532,7 @@ vjCyberGlove::enable_timestamp(CbGlove glove, void *address_arg1)
 /*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
 
 int
-vjCyberGlove::enable_filter(CbGlove glove, void *address_arg1)
+CyberGloveBasic::enable_filter(CbGlove glove, void *address_arg1)
 {
   int portfd = glove->portfd;
   CbGlovePrivate private_data = glove->private_data;
@@ -566,7 +566,7 @@ vjCyberGlove::enable_filter(CbGlove glove, void *address_arg1)
 /*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
 
 int
-vjCyberGlove::request_single_sample(CbGlove glove, void *address_arg1)
+CyberGloveBasic::request_single_sample(CbGlove glove, void *address_arg1)
 {
   int portfd = glove->portfd;
 
@@ -590,8 +590,8 @@ vjCyberGlove::request_single_sample(CbGlove glove, void *address_arg1)
 /*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
 
 int
-vjCyberGlove::request_sample_stream(CbGlove glove, void *address_arg1)
-{ 
+CyberGloveBasic::request_sample_stream(CbGlove glove, void *address_arg1)
+{
   int portfd = glove->portfd;
 
   /* send the request sensor value stream command */
@@ -615,7 +615,7 @@ vjCyberGlove::request_sample_stream(CbGlove glove, void *address_arg1)
 /*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
 
 int
-vjCyberGlove::enable_switch_controls_light(CbGlove glove, void *address_arg1)
+CyberGloveBasic::enable_switch_controls_light(CbGlove glove, void *address_arg1)
 {
   int portfd = glove->portfd;
   CbGlovePrivate private_data = glove->private_data;
@@ -650,7 +650,7 @@ vjCyberGlove::enable_switch_controls_light(CbGlove glove, void *address_arg1)
 /*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
 
 int
-vjCyberGlove::set_sensor_mask(CbGlove glove, void *address_arg1)
+CyberGloveBasic::set_sensor_mask(CbGlove glove, void *address_arg1)
 {
   int num_enabled_sensors = 0, portfd = glove->portfd;
   CbGlovePrivate private_data = glove->private_data;
@@ -675,7 +675,7 @@ vjCyberGlove::set_sensor_mask(CbGlove glove, void *address_arg1)
   /* check the response */
   if (command_reply_check(glove,CG_SENSOR_MASK_CH) < Ok)
     return(vt_print_error("set_sensor_mask"));
-    
+
   private_data->sensors_in_use.word = mask;
 
   while (mask != 0)
@@ -702,7 +702,7 @@ vjCyberGlove::set_sensor_mask(CbGlove glove, void *address_arg1)
 /*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
 
 int
-vjCyberGlove::set_num_values_returned(CbGlove glove, void *address_arg1)
+CyberGloveBasic::set_num_values_returned(CbGlove glove, void *address_arg1)
 {
   int portfd = glove->portfd;
   CbGlovePrivate private_data = glove->private_data;
@@ -739,7 +739,7 @@ vjCyberGlove::set_num_values_returned(CbGlove glove, void *address_arg1)
 /*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
 
 int
-vjCyberGlove::set_param_flags(CbGlove glove, void *address_arg1)
+CyberGloveBasic::set_param_flags(CbGlove glove, void *address_arg1)
 {
   int portfd = glove->portfd;
   CbGlovePrivate private_data = glove->private_data;
@@ -761,7 +761,7 @@ vjCyberGlove::set_param_flags(CbGlove glove, void *address_arg1)
   /* check the response */
   if (command_reply_check(glove,CG_PARAMETER_CH) < Ok)
     return(vt_print_error("set_param_flags"));
-    
+
   private_data->param_flags.word = param_flags.word;
 
   return (Ok);
@@ -777,7 +777,7 @@ vjCyberGlove::set_param_flags(CbGlove glove, void *address_arg1)
 /*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
 
 int
-vjCyberGlove::reboot_CGIU(CbGlove glove, void *address_arg1)
+CyberGloveBasic::reboot_CGIU(CbGlove glove, void *address_arg1)
 {
   int lastbyte, portfd = glove->portfd;
   unsigned char buffer[2];
@@ -817,17 +817,17 @@ vjCyberGlove::reboot_CGIU(CbGlove glove, void *address_arg1)
 /*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
 
 int
-vjCyberGlove::vt_send_glove_command(int id, ...)
+CyberGloveBasic::vt_send_glove_command(int id, ...)
 {
   va_list address_arg1 = (va_list) &id;
-  static int (vjCyberGlove::*command_function[])(CbGlove, void *) =
+  static int (CyberGloveBasic::*command_function[])(CbGlove, void *) =
   {
-    &vjCyberGlove::set_baud_rate, NULL, NULL, &vjCyberGlove::enable_timestamp,
-    &vjCyberGlove::enable_filter, &vjCyberGlove::request_single_sample,
-    &vjCyberGlove::request_sample_stream, NULL,
-    &vjCyberGlove::enable_switch_controls_light, NULL,
-    &vjCyberGlove::set_sensor_mask, &vjCyberGlove::set_num_values_returned,
-    &vjCyberGlove::set_param_flags, &vjCyberGlove::reboot_CGIU, NULL, NULL, NULL,
+    &CyberGloveBasic::set_baud_rate, NULL, NULL, &CyberGloveBasic::enable_timestamp,
+    &CyberGloveBasic::enable_filter, &CyberGloveBasic::request_single_sample,
+    &CyberGloveBasic::request_sample_stream, NULL,
+    &CyberGloveBasic::enable_switch_controls_light, NULL,
+    &CyberGloveBasic::set_sensor_mask, &CyberGloveBasic::set_num_values_returned,
+    &CyberGloveBasic::set_param_flags, &CyberGloveBasic::reboot_CGIU, NULL, NULL, NULL,
     NULL, NULL
   };
 
@@ -835,7 +835,7 @@ vjCyberGlove::vt_send_glove_command(int id, ...)
     return (Ok);
 
   va_arg(address_arg1,int);		/* increment to first variable arg */
-  
+
   if ((this->*command_function[id])(current_glove,address_arg1) < Ok)
     return (vt_print_error("vt_send_glove_command"));
 
@@ -860,7 +860,7 @@ vjCyberGlove::vt_send_glove_command(int id, ...)
 /*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
 
 int
-vjCyberGlove::glove_ok_query(CbGlove glove, void *address_arg1)
+CyberGloveBasic::glove_ok_query(CbGlove glove, void *address_arg1)
 {
   int status, portfd = glove->portfd;
   CbGlovePrivate private_data = glove->private_data;
@@ -887,7 +887,7 @@ vjCyberGlove::glove_ok_query(CbGlove glove, void *address_arg1)
   /* read the data returned */
   if ((status = vt_serial_read_byte(portfd)) == -1)
     return (vt_print_error("glove_ok_query"));
-  
+
   /* check for a bad tail byte returned */
   if (reply_tail_check(glove) < Ok)
     return (vt_print_error("glove_ok_query"));
@@ -916,7 +916,7 @@ vjCyberGlove::glove_ok_query(CbGlove glove, void *address_arg1)
 /*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
 
 int
-vjCyberGlove::get_glove_info(CbGlove glove, void *address_arg1)
+CyberGloveBasic::get_glove_info(CbGlove glove, void *address_arg1)
 {
   int portfd = glove->portfd;
   char *query_string = CG_GLOVE_QUERY;
@@ -973,7 +973,7 @@ vjCyberGlove::get_glove_info(CbGlove glove, void *address_arg1)
 /*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
 
 int
-vjCyberGlove::get_avail_sensor_mask(CbGlove glove, void *address_arg1)
+CyberGloveBasic::get_avail_sensor_mask(CbGlove glove, void *address_arg1)
 {
   int portfd = glove->portfd;
   CbGlovePrivate private_data = glove->private_data;
@@ -1024,7 +1024,7 @@ vjCyberGlove::get_avail_sensor_mask(CbGlove glove, void *address_arg1)
 /*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
 
 int
-vjCyberGlove::get_sensor_mask(CbGlove glove, void *address_arg1)
+CyberGloveBasic::get_sensor_mask(CbGlove glove, void *address_arg1)
 {
   int num_enabled_sensors = 0, portfd = glove->portfd;
   CbGlovePrivate private_data = glove->private_data;
@@ -1087,7 +1087,7 @@ vjCyberGlove::get_sensor_mask(CbGlove glove, void *address_arg1)
 /*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
 
 int
-vjCyberGlove::get_num_values_returned(CbGlove glove, void *address_arg1)
+CyberGloveBasic::get_num_values_returned(CbGlove glove, void *address_arg1)
 {
   int portfd = glove->portfd;
   CbGlovePrivate private_data = glove->private_data;
@@ -1137,7 +1137,7 @@ vjCyberGlove::get_num_values_returned(CbGlove glove, void *address_arg1)
 /*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
 
 int
-vjCyberGlove::read_param_flags(CbGlove glove, void *address_arg1)
+CyberGloveBasic::read_param_flags(CbGlove glove, void *address_arg1)
 {
   int portfd = glove->portfd;
   CbGlovePrivate private_data = glove->private_data;
@@ -1189,7 +1189,7 @@ vjCyberGlove::read_param_flags(CbGlove glove, void *address_arg1)
 /*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
 
 int
-vjCyberGlove::right_hand_glove_query(CbGlove glove, void *address_arg1)
+CyberGloveBasic::right_hand_glove_query(CbGlove glove, void *address_arg1)
 {
   int portfd = glove->portfd;
   CbGlovePrivate private_data = glove->private_data;
@@ -1217,7 +1217,7 @@ vjCyberGlove::right_hand_glove_query(CbGlove glove, void *address_arg1)
   /* read the data returned */
   if ((is_righthand = vt_serial_read_byte(portfd)) == -1)
     return (vt_print_error("right_hand_glove_query"));
-  
+
   /* check for a bad tail byte returned */
   if (reply_tail_check(glove) < Ok)
     return (vt_print_error("right_hand_glove_query"));
@@ -1244,7 +1244,7 @@ vjCyberGlove::right_hand_glove_query(CbGlove glove, void *address_arg1)
 /*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
 
 int
-vjCyberGlove::get_max_num_sensors(CbGlove glove, void *address_arg1)
+CyberGloveBasic::get_max_num_sensors(CbGlove glove, void *address_arg1)
 {
   int portfd = glove->portfd;
   CbGlovePrivate private_data = glove->private_data;
@@ -1255,7 +1255,7 @@ vjCyberGlove::get_max_num_sensors(CbGlove glove, void *address_arg1)
 
   if (temp)
     num_sensors_return = va_arg(temp,int *);
-  
+
   if (num_sensors_return)
     *num_sensors_return = 0;
 
@@ -1271,7 +1271,7 @@ vjCyberGlove::get_max_num_sensors(CbGlove glove, void *address_arg1)
   /* read the data returned */
   if ((num_sensors = vt_serial_read_byte(portfd)) == -1)
     return (vt_print_error("get_max_num_sensors"));
-  
+
   /* check for a bad tail byte returned */
   if (reply_tail_check(glove) < Ok)
     return (vt_print_error("get_max_num_sensors"));
@@ -1295,18 +1295,18 @@ vjCyberGlove::get_max_num_sensors(CbGlove glove, void *address_arg1)
 /*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
 
 int
-vjCyberGlove::vt_send_glove_query(int id, ...)
+CyberGloveBasic::vt_send_glove_query(int id, ...)
 {
   va_list address_arg1 = (va_list) &id;
 
-  static int (vjCyberGlove::*query_function[])(CbGlove, void *) =
+  static int (CyberGloveBasic::*query_function[])(CbGlove, void *) =
   {
     NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
-    &vjCyberGlove::get_sensor_mask, &vjCyberGlove::get_num_values_returned,
-    &vjCyberGlove::read_param_flags, NULL, NULL, NULL, NULL, NULL,
-    NULL, &vjCyberGlove::glove_ok_query, &vjCyberGlove::get_glove_info,
-    &vjCyberGlove::get_avail_sensor_mask, &vjCyberGlove::right_hand_glove_query,
-    &vjCyberGlove::get_max_num_sensors
+    &CyberGloveBasic::get_sensor_mask, &CyberGloveBasic::get_num_values_returned,
+    &CyberGloveBasic::read_param_flags, NULL, NULL, NULL, NULL, NULL,
+    NULL, &CyberGloveBasic::glove_ok_query, &CyberGloveBasic::get_glove_info,
+    &CyberGloveBasic::get_avail_sensor_mask, &CyberGloveBasic::right_hand_glove_query,
+    &CyberGloveBasic::get_max_num_sensors
   };
 
   if (current_glove->portfd == -1)
@@ -1329,7 +1329,7 @@ vjCyberGlove::vt_send_glove_query(int id, ...)
 
 
 void
-vjCyberGlove::vt_process_glove_data(void)
+CyberGloveBasic::vt_process_glove_data(void)
 {
   int finger, joint;
   glove_sensor_map_struct (*mapping)[MAX_GROUP_VALUES];
@@ -1374,7 +1374,7 @@ vjCyberGlove::vt_process_glove_data(void)
 }
 
 void
-vjCyberGlove::abduct_18(void)
+CyberGloveBasic::abduct_18(void)
 {
   /*  Abduct function for gloves w/MDL,RNG,PNK sensors only              */
   /*  This algorithm allows the Index to be set directly with the        */

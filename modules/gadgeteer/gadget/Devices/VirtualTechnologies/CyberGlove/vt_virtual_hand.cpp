@@ -76,7 +76,7 @@ allocate_VirtualHand(void)
 /*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
 void
-vjCyberGlove::init_VirtualHand(VirtualHand hand, int glove_index,
+CyberGloveBasic::init_VirtualHand(VirtualHand hand, int glove_index,
 		 char calfile[],
 		 Boolean visible)
 {
@@ -104,7 +104,7 @@ vjCyberGlove::init_VirtualHand(VirtualHand hand, int glove_index,
 /*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
 VirtualHand
-vjCyberGlove::vt_create_VirtualHand( char *port, int baud, AppDataStruct &app )
+CyberGloveBasic::vt_create_VirtualHand( char *port, int baud, AppDataStruct &app )
 {
   VirtualHand thehand;
   int glove_index;
@@ -148,7 +148,7 @@ vjCyberGlove::vt_create_VirtualHand( char *port, int baud, AppDataStruct &app )
 /*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
 void
-vjCyberGlove::vt_destroy_VirtualHand(VirtualHand hand)
+CyberGloveBasic::vt_destroy_VirtualHand(VirtualHand hand)
 {
   vt_destroy_CbGlove(hand->private_data->glove);
   free(hand->private_data->user);
@@ -203,7 +203,7 @@ vt_hand_glove_address(VirtualHand hand)
 /*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -*/
 
 void
-vjCyberGlove::vt_build_hand_matrices(VirtualHand hand)
+CyberGloveBasic::vt_build_hand_matrices(VirtualHand hand)
 {
   VirtualHandPrivate private_data = hand->private_data;
   UserGeometry user = private_data->user;
@@ -212,7 +212,7 @@ vjCyberGlove::vt_build_hand_matrices(VirtualHand hand)
   static vec3d z_axis = {0.0,0.0,1.0};
   matrix4x4 rotmatrix;
   float oldtheta,theta,length;
-  
+
   /* this function determines the transform for each joint */
   /* the transform that is stored with each joint is the transform */
   /* that gets you from the previous joints coord system to the local */
@@ -227,7 +227,7 @@ vjCyberGlove::vt_build_hand_matrices(VirtualHand hand)
     {
       digit[VX] = user->geom[finger][joint+1][VX] -
 	                                user->geom[finger][joint][VX];
-      digit[VY] = user->geom[finger][joint+1][VY] - 
+      digit[VY] = user->geom[finger][joint+1][VY] -
                                         user->geom[finger][joint][VY];
       theta = atan2(digit[VY], digit[VX]) - M_PI/2.0;
     }
@@ -289,7 +289,7 @@ vjCyberGlove::vt_build_hand_matrices(VirtualHand hand)
     oldtheta = atan2(digit[VY],digit[VX]);
     for (; joint < ABDUCT; joint++)
     {
-      digit[VX] = user->geom[finger][joint][VX] - 
+      digit[VX] = user->geom[finger][joint][VX] -
                                             user->geom[finger][joint-1][VX];
       digit[VY] = user->geom[finger][joint][VY] -
 	                                    user->geom[finger][joint-1][VY];
@@ -322,7 +322,7 @@ vjCyberGlove::vt_build_hand_matrices(VirtualHand hand)
 /*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
 void
-vjCyberGlove::vt_update_hand_state(VirtualHand hand)
+CyberGloveBasic::vt_update_hand_state(VirtualHand hand)
 {
  /* if hand is not on reflect changes due to sliders */
  if (hand->read_glove)
@@ -340,7 +340,7 @@ vjCyberGlove::vt_update_hand_state(VirtualHand hand)
 /*- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - */
 
 float
-vjCyberGlove::vt_calc_thumb_roll(VirtualHand hand)
+CyberGloveBasic::vt_calc_thumb_roll(VirtualHand hand)
 {
   float roll_vector[3],x_axis_desired[3],rot_axis[3];
   float *x_axis,*y_axis,*bone_vector;

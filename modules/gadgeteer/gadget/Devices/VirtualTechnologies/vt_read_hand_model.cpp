@@ -44,7 +44,7 @@ read_model_geom(char infilename[], vec3d geom[5][4], vec3d thumb_roll_vecs[2])
   int finger,joint,i;
   pos3d axis_seg[2];
   matrix4x4 rotmatrix;
-  
+
   inputfp = fopen(infilename,"r");
 
   /* The nice gentlemen at Viewpoint have their hand pointing in */
@@ -105,7 +105,7 @@ scale_fudge_factors(int finger, int joint, vec3d scalevec)
   scalevec[VY] = 1.0;
   scalevec[VX] = scalevec[VZ] = 1.2; /* Make the finger diameter larger. */
 
-  if (finger == THUMB)    
+  if (finger == THUMB)
     scalevec[VZ] = 1.0;
 }
 
@@ -115,8 +115,8 @@ translation_fudge_factors(int finger, int joint, vec3d transvec)
   transvec[VX] = transvec[VY] = transvec[VZ] = 0.0;
 
   if (finger == THUMB && joint == DIP) {
-      transvec[VX] = 0.0; 
-      transvec[VY] = -0.1; 
+      transvec[VX] = 0.0;
+      transvec[VY] = -0.1;
       transvec[VZ] = 0.0;
     }
 }
@@ -228,7 +228,7 @@ skip_comments(FILE *inputfp)
 }
 
 void
-vjCyberGlove::vt_read_hand_model(char infilename[], VirtualHand hand, char *glovedir)
+CyberGloveBasic::vt_read_hand_model(char infilename[], VirtualHand hand, char *glovedir)
 {
   int finger,joint,numobjects;
   vec3d thumb_roll_vecs[2];
@@ -251,7 +251,7 @@ vjCyberGlove::vt_read_hand_model(char infilename[], VirtualHand hand, char *glov
   /* skip any comments at the beginning of the file */
   skip_comments(inputfp);
   fscanf(inputfp,"\tTotal Number of Objects In World:%d\n",&numobjects);
-  
+
   if (numobjects < (1+FINGERS*ABDUCT))
     printf("WARNING in vt_read_hand_model: file contains too few objects");
 
@@ -262,7 +262,7 @@ vjCyberGlove::vt_read_hand_model(char infilename[], VirtualHand hand, char *glov
   vt_mult_scale_matrix(scalevec,Postmult,totmatrix);
   vt_mult_trans_matrix(transvec,Postmult,totmatrix);
   vt_mult_rot_matrix(M_PI,'z',Postmult,totmatrix);
-   
+
   /* Viewpoint has their hand pointing in the -y direction !@%$&*^ */
   vt_rot_matrix(M_PI,'z',rotmatrix);
 
@@ -312,7 +312,7 @@ vjCyberGlove::vt_read_hand_model(char infilename[], VirtualHand hand, char *glov
 }
 
 void
-vjCyberGlove::vt_read_lowres_hand_model(char infilename[], VirtualHand hand)
+CyberGloveBasic::vt_read_lowres_hand_model(char infilename[], VirtualHand hand)
 {
   int finger,joint,numobjects;
   FILE *inputfp;
@@ -329,7 +329,7 @@ vjCyberGlove::vt_read_lowres_hand_model(char infilename[], VirtualHand hand)
   /* skip any comments at the beginning of the file */
   skip_comments(inputfp);
   fscanf(inputfp,"\tTotal Number of Objects In World:%d\n",&numobjects);
-  
+
   if (numobjects < 3)
     printf("WARNING in vt_read_hand_model: file contains too few objects");
 

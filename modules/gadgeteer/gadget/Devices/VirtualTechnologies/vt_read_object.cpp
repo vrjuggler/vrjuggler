@@ -48,7 +48,7 @@ vt_get_index(void *baseofarray, void *thiselem, int sizeof_elem)
 }
 
 loopsegptr
-vjCyberGlove::vt_loopseg_twin(loopsegptr theloopseg)
+CyberGloveBasic::vt_loopseg_twin(loopsegptr theloopseg)
 {
   if (theloopseg->edge == NULL)
     return(theloopseg);
@@ -139,15 +139,15 @@ read_face_loop(FILE *infile, objptr thisobj, faceptr thisface)
       printf("WARNING in read_face_loop: index is >= numverts\n");
   }
 }
-    
+
 static void
 read_faces(FILE *infile, objptr thisobj)
 {
   int index,numfaces;
-  
+
   fscanf (infile," Number of Faces:%d\n",&numfaces);
   fscanf(infile," FVE List:\n");
-  
+
   if ((thisobj->faces = (faceptr) calloc(numfaces,sizeof(facestruct))) == NULL)
     vt_fatal_unix_error("read_faces","facestruct calloc");
 
@@ -214,7 +214,7 @@ make_edges(objptr thisobj)
   loopsegptr other_loopseg,loopsegs;
   edgeptr edges;
   int i,j,k,numedges,numloopsegs, edge_index = 0;
-  
+
   faces = thisobj->faces;
 
   numedges = thisobj->numfaces + thisobj->numverts - 2;
@@ -274,7 +274,7 @@ make_edges(objptr thisobj)
 }
 
 void
-vjCyberGlove::vt_calculate_face_normals(objptr thisobj, Boolean clockwise)
+CyberGloveBasic::vt_calculate_face_normals(objptr thisobj, Boolean clockwise)
 {
   /* NOTE: we assume a consistent face orientation here! */
   int i,j,nextj,numloopsegs;
@@ -324,11 +324,11 @@ vjCyberGlove::vt_calculate_face_normals(objptr thisobj, Boolean clockwise)
     }
     vt_normalize3(norm,norm);
   }
-  
+
 }
 
 void
-vjCyberGlove::vt_calculate_dihedral_angles(objptr thisobj)
+CyberGloveBasic::vt_calculate_dihedral_angles(objptr thisobj)
 {
   int i;
   edgeptr edges;
@@ -345,7 +345,7 @@ vjCyberGlove::vt_calculate_dihedral_angles(objptr thisobj)
 }
 
 void
-vjCyberGlove::vt_calculate_vertex_normals(objptr thisobj)
+CyberGloveBasic::vt_calculate_vertex_normals(objptr thisobj)
 {
   /* NOTE: we assume a consistent clockwise face orientation here! */
   int i,numfaces,loopsegindex;
@@ -381,7 +381,7 @@ vjCyberGlove::vt_calculate_vertex_normals(objptr thisobj)
 	thisloopseg = &(parentface->loopsegs[vt_next_index(loopsegindex,
 				   parentface->numloopsegs)]);
       } while (thisloopseg != loopseg0);
-      
+
     vertnorm[VX] = vertnorm[VX] / (float) numfaces;
     vertnorm[VY] = vertnorm[VY] / (float) numfaces;
     vertnorm[VZ] = vertnorm[VZ] / (float) numfaces;
@@ -390,7 +390,7 @@ vjCyberGlove::vt_calculate_vertex_normals(objptr thisobj)
 }
 
 void
-vjCyberGlove::vt_read_object(FILE *infile, objptr thisobj)
+CyberGloveBasic::vt_read_object(FILE *infile, objptr thisobj)
 {
   int ch,dumobjnum,dumnumshells,dumshellnum;
   char objname[256],comment_line[256];
