@@ -87,14 +87,14 @@ private:
    {
       uuid_t leach;
 
-      struct _std
+      struct _standard
       {
          vpr::Uint32 m0;
          vpr::Uint16 m1;
          vpr::Uint16 m2;
          vpr::Uint16 m3;
          vpr::Uint8  m4[6];
-      } std;
+      } standard;
 
       struct _packed
       {
