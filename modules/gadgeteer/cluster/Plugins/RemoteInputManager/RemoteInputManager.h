@@ -118,7 +118,7 @@ public:
    /** 
     *  Returns the name of the this plugin
     */
-   virtual std::string getManagerName()
+   virtual std::string getPluginName()
    {
       return(std::string("RemoteInputManager"));
    }
@@ -236,8 +236,6 @@ public:
       vprASSERT(1 == mDeviceServersLock.test());
       return mDeviceServers.end();
    }
-   
-   void updateAll();
    
    void setReconfigurationNeededOnConnection(bool val)
    { mReconfigurationNeededOnConnection = val; }

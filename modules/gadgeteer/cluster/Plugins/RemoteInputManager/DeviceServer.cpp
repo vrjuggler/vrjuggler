@@ -57,10 +57,15 @@ namespace cluster
    DeviceServer::~DeviceServer()
    {
       shutdown();
+      delete mDataPacket;
+      // mDataPacket will clean up the memory that mDeviceData points
+      // to since mDataPacket contains a reference to the ame memory.
+      mDeviceData = NULL;
    }
 
    void DeviceServer::shutdown()
-   {     // Kill the accepting thread
+   {     
+      // TODO: Make the device server actually shutdown
       if ( mControlThread )
       {
          mThreadActive = false;

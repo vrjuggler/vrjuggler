@@ -96,7 +96,7 @@ public:
    
    bool createBarrier();
 
-   virtual std::string getManagerName()
+   virtual std::string getPluginName()
    {
       return(std::string("SwapLockPlugin"));
    }
