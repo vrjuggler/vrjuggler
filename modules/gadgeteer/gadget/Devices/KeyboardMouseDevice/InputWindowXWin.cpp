@@ -61,7 +61,7 @@ bool InputWindowXWin::config(jccl::ConfigElementPtr e)
 {
    unsigned required_definition_ver(1);
 
-   if(e->getVersion() < required_definition_ver)
+   if (e->getVersion() < required_definition_ver)
    {
       vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
          << clrOutBOLD(clrRED, "ERROR")
@@ -89,8 +89,14 @@ bool InputWindowXWin::config(jccl::ConfigElementPtr e)
    mHeight = e->getProperty<int>("size", 1);
 
    // Sanity checks.
-   if (mWidth == 0) mWidth = 400;
-   if (mHeight == 0) mHeight = 400;
+   if (mWidth == 0)
+   {
+      mWidth = 400;
+   }
+   if (mHeight == 0)
+   {
+      mHeight = 400;
+   }
 
    mX = e->getProperty<int>("origin", 0);
    mY = e->getProperty<int>("origin", 1);
@@ -138,7 +144,7 @@ bool InputWindowXWin::config(jccl::ConfigElementPtr e)
 
 bool InputWindowXWin::startSampling()
 {
-   if(mThread != NULL)
+   if (mThread != NULL)
    {
       vprDEBUG(vprDBG_ERROR,vprDBG_CRITICAL_LVL)
          << clrOutNORM(clrRED,"ERROR")
@@ -148,6 +154,10 @@ bool InputWindowXWin::startSampling()
    }
 
    mExitFlag = false;
+   
+   XResizeWindow(mXDisplay, mXWindow, 1,1); //Dummy event
+   XFlush(mXDisplay);
+
    // Create a new thread to handle the control
    vpr::ThreadMemberFunctor<InputWindowXWin>* memberFunctor =
       new vpr::ThreadMemberFunctor<InputWindowXWin>(this, &InputWindowXWin::controlLoop, NULL);
@@ -168,7 +178,7 @@ bool InputWindowXWin::startSampling()
 bool InputWindowXWin::stopSampling()
 {
    // If there is a thread for us and we actually own the window
-   if(mThread != NULL)
+   if (mThread != NULL)
    {
       mExitFlag = true;
 
@@ -209,7 +219,7 @@ void InputWindowXWin::controlLoop(void* nullParam)
    XSync(mXDisplay, 0);
 
    // If we have initial locked, then we need to lock the system
-   if(mLockState == Lock_LockKey)      // Means that we are in the initially locked state
+   if (mLockState == Lock_LockKey)      // Means that we are in the initially locked state
    {
       vprDEBUG(gadgetDBG_INPUT_MGR,vprDBG_STATE_LVL)
          << "gadget::InputWindowXWin::controlLoop: Mouse set to initial lock. Locking it now.\n"
@@ -218,7 +228,7 @@ void InputWindowXWin::controlLoop(void* nullParam)
    }
 
    // Loop on updating
-   while(!mExitFlag)
+   while (!mExitFlag)
    {
       sample();
       long usleep_time(1); // to be set...
@@ -228,7 +238,6 @@ void InputWindowXWin::controlLoop(void* nullParam)
       vpr::System::usleep(usleep_time);
    }
 
-   XResizeWindow(mXDisplay, mXWindow, 1,1); //Dummy event
    XFlush(mXDisplay);
 
    if ( mEmptyCursorSet )
@@ -272,14 +281,17 @@ bool InputWindowXWin::openLocalWindow()
    vis_infos = XGetVisualInfo(mXDisplay, vMask, &vTemplate, &nVisuals);
 
    // Verify that we got at least one visual from XGetVisualInfo(3).
-   if ( vis_infos != NULL && nVisuals >= 1 ) {
+   if ( vis_infos != NULL && nVisuals >= 1 )
+   {
       XVisualInfo* p_visinfo;
 
       // Try to find a visual with color depth of at least 8 bits.  Having
       // such a visual ensures that the input windows at least have a
       // black background.
-      for ( i = 0, p_visinfo = vis_infos; i < nVisuals; i++, p_visinfo++ ) {
-         if ( p_visinfo->depth >= 8 ) {
+      for ( i = 0, p_visinfo = vis_infos; i < nVisuals; i++, p_visinfo++ )
+      {
+         if ( p_visinfo->depth >= 8 )
+         {
             mVisual = p_visinfo;
             break;
          }
@@ -287,12 +299,14 @@ bool InputWindowXWin::openLocalWindow()
 
       // If we couldn't find a visual with at least 8-bit color, just use the
       // first one in the list.
-      if ( i == nVisuals ) {
+      if ( i == nVisuals )
+      {
           mVisual = vis_infos;
       }
    }
    // If we didn't get a matching visual, we're in trouble.
-   else {
+   else
+   {
       vprDEBUG(vprDBG_ERROR,vprDBG_CRITICAL_LVL)
          <<  clrOutNORM(clrRED,"ERROR")
          << ": [gadget::InputWindowXWin::openTheWindow()] find visual failed"
@@ -332,33 +346,6 @@ bool InputWindowXWin::openLocalWindow()
 
    return 1;
 }
-
-/*
-bool InputWindowXWin::setupRemoteWindow()
-{
-   // - Open the display connection
-   // - Setup up input selection so we get events from that display.
-
-   mXDisplay = XOpenDisplay(mRemoteWinInfo.displayName.c_str());   // Open display connection to remote server
-   if (NULL == mXDisplay)
-   {
-      vprDEBUG(vprDBG_ERROR,vprDBG_CRITICAL_LVL)
-         <<  clrOutNORM(clrRED,"ERROR")
-         << ": [gadget::InputWindowXWin::open()] failed to open display "
-         << mRemoteWinInfo.displayName << std::endl << vprDEBUG_FLUSH;
-      return 0;
-   }
-
-   unsigned long event_mask = StructureNotifyMask | KeyPressMask | KeyReleaseMask
-                              | ButtonPressMask | ButtonReleaseMask
-                              | ButtonMotionMask | PointerMotionMask ;
-   mXWindow = mRemoteWinInfo.xWindow;
-   XSelectInput(mXDisplay, mXWindow, event_mask);
-   createEmptyCursor(mXDisplay,mXWindow);
-
-   return true;
-}
-*/
 
 void InputWindowXWin::setupWindowWidthAndHeight()
 {
@@ -409,7 +396,7 @@ void InputWindowXWin::setHints(Window window, char* window_name,
      */
    status = XStringListToTextProperty(&window_name, 1, &w_name);
 
-   if(0 == status)
+   if (0 == status)
    {
       vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
          << "Error allocating XString\n" << vprDEBUG_FLUSH;
@@ -417,7 +404,7 @@ void InputWindowXWin::setHints(Window window, char* window_name,
 
    status = XStringListToTextProperty(&icon_name, 1, &i_name);
 
-   if(0 == status)
+   if (0 == status)
    {
       vprDEBUG(vprDBG_ERROR, vprDBG_CRITICAL_LVL)
          << "Error allocating XString\n" << vprDEBUG_FLUSH;
