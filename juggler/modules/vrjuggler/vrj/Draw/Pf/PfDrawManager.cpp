@@ -259,6 +259,7 @@ void vjPfDrawManager::initDrawing()
       vjASSERT(NULL != tempPfDisp.pWin);
 
       tempPfDisp.disp->getOriginAndSize(xo, yo, xs, ys);
+      //tempPfDisp.pWin->setMode(PFWIN_ORIGIN_LL, PF_OFF);
       tempPfDisp.pWin->setOriginSize(xo, yo, xs, ys);
 
          // Setup window border
