@@ -70,7 +70,7 @@
 class OsgNav : public vrj::OsgApp
 {
 public:
-   OsgNav() : vrj::OsgApp()         // Initialize base class
+   OsgNav(vrj::Kernel* kern) : vrj::OsgApp(kern)         // Initialize base class
    {
       mFileToLoad = std::string("");
    }
