@@ -10,6 +10,27 @@ For all versions:
 
 ===============================================================================
 
+ Version: 1.1.90 (dev build)
+Released: September 21, 2001
+
+    Required application changes for upgrading from all versions previous
+    releases (including 1.1.x up through 1.1.89):
+        * The directory structure for the source tree has been completely
+          reorganized.  All source and header files are now rooted in the
+          vrj directory.  The Kernel directory has been separated into
+          "Kernel", "Draw", and "Displays".  The Draw directory now contains
+          the API-specific application headers in the directories OGL (for
+          OpenGL), OSG (for OpenScenegraph), and Pf (for Performer).  In
+          addition, the files and classes no longer have the "vj" prefix
+          because the vrj namespace has been put into use.  Easy upgrading
+          from 1.0 and 1.1.x builds prior to 1.1.90 can be done using the
+          compatibility headers in the "deprecated" tree.  Simply add
+          -I$(VJ_BASE_DIR)/include/deprecated to your application's makefile
+          and recompile.  For a complete upgrade to the new structure and
+          naming convention, consult the following web page:
+
+             http://www.vrjuggler.org/<fill in path>/
+
  Version: 1.1 (dev build)
 Started: April 13, 2001
 
@@ -81,7 +102,7 @@ Released: July 18, 2000
         * Link Juggler_utils
         * Keyboard chunk in config files should have sleep_time set to a
           non-zero value.  50 is a reasonable value.  Failing to do so can
-          result in a major perforamnce decrease.
+          result in a major performance decrease.
         * All windows are positioned with a coordinate system based at the
           lower left corner of the window relative to the lower left corner
           of the display.  Full screen windows should be placed at 0,0.
@@ -89,8 +110,8 @@ Released: July 18, 2000
           vjGetVjMatrix().
 
     New features:
-        * Debugging output can be color coded for easier readbility.  This
-          is currently only availble with the UNIX versions.
+        * Debugging output can be color coded for easier readability.  This
+          is currently only available with the UNIX versions.
         * Many bug fixes that include fixing some bad memory references.
         * Pinch glove driver is now supported and has a digital simulator.
         * MotionStar driver is working but still has some limitations (see
