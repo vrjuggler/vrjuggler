@@ -349,6 +349,13 @@ Compiling
    be heard at run time. See the section called "Sonix (individual)" for more
    information about how to configure Sonix to use OpenAL or AudioWorks.
 
+   For example uses of configure.pl, take a look at the Wiki page relating to
+   building from CVS
+   (http://www.vrjuggler.org/twiki_public/bin/view/Juggler/BuildingFromCvs).
+   It is not a replacement for this document, but it shows how some members
+   of the Juggler team configure VR Juggler. It also has information on more
+   advanced uses of configure.pl that are beyond the scope of this document.
+
       Using locally installed software
 
    As noted in the section called "Getting the Source Code", VR Juggler
