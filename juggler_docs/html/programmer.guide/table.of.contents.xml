@@ -7,6 +7,7 @@ Builder: JExplorerBuilder V 1. 0. 7
 				expand 
 				link="index.html"
 				info="In depth documentation for VR application developers.  Includes introductions, easy explanations, case studies, and lots of hand holding."
+				target="Body" 
 				image="Book_Closed.gif" 
 				imagetwo="Book_Open.gif">
 

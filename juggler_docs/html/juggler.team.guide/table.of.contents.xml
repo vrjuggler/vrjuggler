@@ -7,6 +7,7 @@ Builder: JExplorerBuilder V 1. 0. 7
 				expand 
 				link="index.html"
 				info="In depth documentation for the VR Juggler project.  Intended to be a resource for the Juggle Development Team (JDT)"
+				target="Body" 
 				image="BlackBook_Closed.gif" 
 				imagetwo="BlackBook_Open.gif">
 
