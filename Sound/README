@@ -1,0 +1,7 @@
+SoundEngine: Abstraction for multiple sound API's
+
+Purpose: To get people to use sound more in their VR apps - since it's
+nearly impossible when the license restricts you to one machine.
+
+Caveats: The Aw classes runs on Audioworks machines only... how barfy
+Read the TODO file for other limitations.
