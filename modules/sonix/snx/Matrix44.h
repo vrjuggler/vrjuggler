@@ -46,6 +46,8 @@
 #ifndef AUDIOJUGGLER_32BIT_4X4_MATRIX
 #define AUDIOJUGGLER_32BIT_4X4_MATRIX
 
+#include <iostream>
+
 namespace aj
 {
 
@@ -155,15 +157,17 @@ private:
    // the matrix data.
    float mData[16];
 };
-
-inline std::ostream& operator<<( std::ostream& out, Matrix44& mat )
+inline std::ostream& operator<<( std::ostream& out, const Matrix44& mat )
 {
-   out<<mat(0,0)<<" "<<mat(0,0)<<" "<<mat(0,0)<<" "<<mat(0,0)<<" "
-      <<mat(0,1)<<" "<<mat(1,1)<<" "<<mat(2,1)<<" "<<mat(3,1)<<" "
-      <<mat(0,1)<<" "<<mat(1,1)<<" "<<mat(2,1)<<" "<<mat(3,1)<<" "
+   out<<mat(0,0)<<" "<<mat(0,0)<<" "<<mat(0,0)<<" "<<mat(0,0)<<"\n"
+      <<mat(0,1)<<" "<<mat(1,1)<<" "<<mat(2,1)<<" "<<mat(3,1)<<"\n"
+      <<mat(0,1)<<" "<<mat(1,1)<<" "<<mat(2,1)<<" "<<mat(3,1)<<"\n"
       <<mat(0,1)<<" "<<mat(1,1)<<" "<<mat(2,1)<<" "<<mat(3,1)<<"\n"<<std::flush;
+   return out;
 }
 
 }; // end namespace
+
+
 
 #endif
