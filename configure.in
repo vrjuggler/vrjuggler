@@ -552,13 +552,19 @@ if test "x${_thread_pkg}" = "xPOSIX" ; then
         fi
 
         dnl # Define the default thread scope depending on the platform.  On
-        dnl # IRIX, only process scope is avaiable.  Other systems may support
-        dnl # system scope.
+        dnl # IRIX, only process scope is avaiable without special
+        dnl # configuration options.  Other systems may support system scope.
         if test "$PLATFORM" = "SGI" ; then
             AC_DEFINE(VJ_THREAD_SCOPE, PTHREAD_SCOPE_PROCESS)
-            AC_DEFINE(VJ_POSIX_C_SOURCE, 199506L)
         else
             AC_DEFINE(VJ_THREAD_SCOPE, PTHREAD_SCOPE_SYSTEM)
+        fi
+
+        dnl # Define the appropriate value for _POSIX_C_SOURCE on the current
+        dnl # platform.
+        if test "$PLATFORM" = "SGI" ; then
+            AC_DEFINE(VJ_POSIX_C_SOURCE, 199506L)
+        else
             AC_DEFINE(VJ_POSIX_C_SOURCE, 2)
         fi
     else
