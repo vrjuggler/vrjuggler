@@ -29,20 +29,16 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-
-
-
-package VjComponents.ConfigEditor.ChunkDescUI;
+package org.vrjuggler.jccl.editorgui.ChunkDescUI;
 
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.border.*;
 
-import VjControl.Core;
-import VjConfig.*;
-import VjComponents.ConfigEditor.*;
-import VjComponents.UI.Widgets.*;
+import org.vrjuggler.jccl.config.*;
+import org.vrjuggler.jccl.vjcontrol.Core;
+import org.vrjuggler.jccl.vjcontrol.ui.widgets.*;
 
 
 /** DescEnumElemPanel - a small bordered panel for editing a single entry
