@@ -38,10 +38,15 @@
 
 namespace vpr {
 
+/**
+ * Options for datagram sockets.
+ *
+ * @author Patrick Hartling
+ */
 class VPR_CLASS_API SocketDatagramOpt : public SocketIpOpt {
 public:
     /**
-     *
+     * Gets the multicast interface for this datagram socket.
      */
     inline Status
     getMcastInterface (InetAddr& mcast_if) {
@@ -58,7 +63,7 @@ public:
     }
 
     /**
-     *
+     * Sets the multicast interface for this datagram socket.
      */
     inline Status
     setMcastInterface (const InetAddr& mcast_if) {
@@ -68,7 +73,8 @@ public:
     }
 
     /**
-     *
+     * Gets the multicast time-to-live parameter for packets sent on this
+     * socket.
      */
     inline Status
     getMcastTimeToLive (Uint8& ttl) {

@@ -102,7 +102,8 @@ public:
     }
 
     /**
-     * Listens on the socket for incoming connection requests.
+     * Puts this socket into the listening state where it listens for
+     * incoming connection requests.
      *
      * @pre The socket has been opened and bound to the address in m_addr.
      * @post The socket is in a listening state waiting for incoming
@@ -110,9 +111,9 @@ public:
      *
      * @param backlog The maximum length of th queue of pending connections.
      *
-     * @return <code>vpr::Status::Success</code> is returned if this socket
-     *         is now in a listening state.<br>
-     *         <code>vpr::Status::Failure</code> is returned otherwise.
+     * @return vpr::Status::Success is returned if this socket is now in a
+     *         listening state.<br>
+     *         vpr::Status::Failure is returned otherwise.
      */
     inline vpr::Status
     listen (const int backlog = 5) {
@@ -124,24 +125,23 @@ public:
      * to the caller in the given socket object reference.
      *
      * @pre The socket is open and is in a listening state.
-     * @post
+     * @post When a connection is established, the given vpr::SocketStream
+     *       object is assigned the newly connected socket.
      *
      * @param sock    A reference to a vpr::SocketStream object that will
      *                be used to return the connected socket created.
      * @param timeout The length of time to wait for the accept call to
      *                return.
      *
-     * @return <code>vpr::Status::Success</code> is returned if the incoming
-     *         request has been handled, and the given SocketStream object is
-     *         a valid, connected socket.<br>
-     *         <code>vpr::Status::WouldBlock</code> is returned if this is a
-     *         non-blocking socket, and there are no waiting connection
-     *         requests.<br>
-     *         <code>vpr::Status::Timeout</code> is returned when no connections
-     *         requests arrived within the given timeout period.<br>
-     *         <code>vpr::Status::Failure</code> is returned if the accept
-     *         failed.  The given vpr::SocketStream object is not modified in
-     *         this case.
+     * @return vpr::Status::Success is returned if the incoming request has
+     *         been handled, and the given SocketStream object is a valid,
+     *         connected socket.<br>
+     *         vpr::Status::WouldBlock is returned if this is a non-blocking
+     *         socket, and there are no waiting connection requests.<br>
+     *         vpr::Status::Timeout is returned when no connections requests
+     *         arrived within the given timeout period.<br>
+     *         vpr::Status::Failure is returned if the accept failed.  The
+     *         given vpr::SocketStream object is not modified in this case.
      */
     inline vpr::Status
     accept (SocketStream_t& sock,
