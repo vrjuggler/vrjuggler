@@ -40,10 +40,10 @@
 include @topdir@/make.defs.mk
 
 # Prefix for recursive stuff.
-DIRPRFX		= config/jccl/
+DIRPRFX=	config/jccl/
 
 # Subdirectories used for recursion through the source tree.
-SUBDIR		= Config
+SUBDIR=		Config
 
 $(RECTARGET): recursive
 

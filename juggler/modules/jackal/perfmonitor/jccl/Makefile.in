@@ -40,10 +40,10 @@
 include @topdir@/make.defs.mk
 
 # Prefix for recursive stuff.
-DIRPRFX		= perfmonitor/jccl/
+DIRPRFX=	perfmonitor/jccl/
 
 # Subdirectories used for recursion through the source tree.
-SUBDIR		= PerfMonitor
+SUBDIR=		PerfMonitor
 
 $(RECTARGET): recursive
 
