@@ -6,10 +6,10 @@ JAVAC_FLAGS=	-classpath "$(CLASSPATH)" -sourcepath "$(srcdir)" -d .
 JCPS=		@JCPS@
 
 JUNIT_JAR=	@JUNIT_JAR@
-JDOM_JAR=	@JDOM_JAR@
+		
 JCCL_JARS=	$(shell $(JCCL_BASE_DIR)/bin/jccl-config --jars)
 TWEEK_JARS=	$(shell $(JCCL_BASE_DIR)/bin/tweek-config --jars)
-CLASSPATH=	$(JUNIT_JAR)$(JCPS)$(TWEEK_JARS)$(JCPS)$(JCCL_JARS)$(JCPS)$(JDOM_JAR)
+CLASSPATH=	$(JUNIT_JAR)$(JCPS)$(TWEEK_JARS)$(JCPS)$(JCCL_JARS)$(JCPS)
 
 # Commands to execute.
 JAVA_COMPILE=	@JAVAC@ $(JAVAC_FLAGS)
