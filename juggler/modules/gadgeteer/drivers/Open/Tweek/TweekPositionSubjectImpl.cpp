@@ -44,8 +44,8 @@
 #include <vpr/Util/Debug.h>
 
 #include <gadget/Util/Debug.h>
-#include <gadget/Devices/Tweek/TweekGadget.h>
-#include <gadget/Devices/Tweek/TweekPositionSubjectImpl.h>
+#include <drivers/Open/Tweek/TweekGadget.h>
+#include <drivers/Open/Tweek/TweekPositionSubjectImpl.h>
 
 
 namespace gadget

@@ -27,7 +27,7 @@
   <property category="sys" name="Libraries" value="OpenORB;Tweek Beans;Tweek Network Library;JCCL Config;Tweek Services;JDOM"/>
   <property category="sys" name="MakeStable" value="0"/>
   <property category="sys" name="OutPath" value="classes"/>
-  <property category="sys" name="SourcePath" value=".;../../../../../build.linux.nspr.gcc3-dso+vrj/modules/gadgeteer/gadget/Devices/Tweek"/>
+  <property category="sys" name="SourcePath" value=".;../../../../../build.linux.nspr.gcc3-dso+vrj/modules/gadgeteer/drivers/Open/Tweek"/>
   <property category="sys" name="TestPath" value="."/>
   <property category="sys" name="Title" value="Tweek CORBA Testing JavaBean"/>
   <property category="sys" name="TitleLabel" value="Title:"/>
