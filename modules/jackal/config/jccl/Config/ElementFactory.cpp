@@ -53,7 +53,7 @@ namespace jccl
       mGlobalContext = cppdom::ContextPtr(new cppdom::Context);
    }
 
-   void ElementFactory::loadDefs(const std::string& path)
+   void ElementFactory::loadDefs(const std::string& defaultPath)
    {
 #ifdef VPR_OS_Win32
       static const std::string path_sep(";");
@@ -62,7 +62,8 @@ namespace jccl
 #endif
 
       vprDEBUG(jcclDBG_CONFIG, vprDBG_VERB_LVL)
-         << "Given .jdef search path: '" << path << "'\n" << vprDEBUG_FLUSH;
+         << "Default .jdef search path: '" << defaultPath << "'\n"
+         << vprDEBUG_FLUSH;
 
       // Determine if $JCCL_DEFINITION_PATH is set.  If it is, test to see
       // if the given search path is empty.  In that case, use the value of
@@ -70,12 +71,12 @@ namespace jccl
       // that value to the given search path.
       // If $JCCL_DEFINITION_PATH is not set, use the given path as the
       // search path.
-      std::string add_path, jccl_def_path(path);
+      std::string add_path, jccl_def_path(defaultPath);
       if ( vpr::System::getenv("JCCL_DEFINITION_PATH", add_path).success() )
       {
          // The path provided as a parameter to this function is empty.
          // Therefore, $JCCL_DEFINITION_PATH becomes the full search path.
-         if ( path.empty() )
+         if ( defaultPath.empty() )
          {
             vprDEBUG(jcclDBG_CONFIG, vprDBG_CONFIG_LVL)
                << "Using JCCL_DEFINITION_PATH value (" << add_path << ")\n"
@@ -94,7 +95,7 @@ namespace jccl
                << ")\n" << vprDEBUG_FLUSH;
             vprDEBUG_NEXT(jcclDBG_CONFIG, vprDBG_CRITICAL_LVL)
                << "to the .jdef search path." << std::endl << vprDEBUG_FLUSH;
-            jccl_def_path = path + path_sep + add_path;
+            jccl_def_path = defaultPath + path_sep + add_path;
          }
       }
 
