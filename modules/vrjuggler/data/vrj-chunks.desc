@@ -582,6 +582,10 @@
       <help>Id of the transmitter</help>
       <item label="Transmitter ID" defaultvalue="3" />
     </PropertyDesc>
+    <PropertyDesc token="extendedRange" name="Extended Range" type="bool" variable="0">
+      <help>Id of the transmitter</help>
+      <item label="Extended Range" defaultvalue="0" />
+    </PropertyDesc>
     <PropertyDesc name="Host Node" token="host_chunk" type="chunk" variable="0">
       <help />
       <item label="" defaultvalue="" />
