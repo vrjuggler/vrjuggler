@@ -43,6 +43,7 @@
 #define _VPR_OBJECT_WRITER_H
 
 #include <vpr/vprConfig.h>
+#include <vpr/vprTypes.h>
 #include <vpr/Util/AttributeMapBase.h>
 #include <vector>
 
@@ -71,7 +72,7 @@ public:
    /** Starts a new section/element of name tagName.
    */
    virtual vpr::ReturnStatus beginTag(std::string tagName) = 0;
-   
+
    /** Ends the most recently named tag. */
    virtual vpr::ReturnStatus endTag() = 0;
 
