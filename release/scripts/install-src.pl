@@ -95,6 +95,20 @@ if ( $opt_g && ! $Win32 ) {
 
 $mode = "$opt_m" if $opt_m;
 
+# If the mode does not have at least one bit set for execution, define
+# $script_mode to set the execute bit for all owners.
+if ( $mode !~ /[157]/ ) {
+    if ( $mode =~ /^(\d)(\d)(\d)(\d)$/ ) {
+        $script_mode = sprintf("%d%d%d%d", $1, $2 + 1, $3 + 1, $4 + 1);
+    }
+    elsif ( $mode =~ /^(\d)(\d)(\d)$/ ) {
+        $script_mode = sprintf("0%d%d%d", $1 + 1, $2 + 1, $3 + 1);
+    }
+}
+else {
+    $script_mode = "$mode";
+}
+
 umask(002);
 mkpath("$dest_dir", 0, 0755);	# Make sure that $dest_dir exists
 
@@ -140,6 +154,12 @@ sub recurseAction ($) {
 	# Match .cxx, .cpp, .CXX or .CPP.
 	if ( $curfile =~ /\.c(xx|pp)$/i ) {
 	    installFile("$curfile", $uid, $gid, "$mode", "$dest_dir");
+	    last SWITCH;
+	}
+
+	# Match .pl or .PL and install them with the execute bit set.
+	if ( $curfile =~ /\.pl$/i ) {
+	    installFile("$curfile", $uid, $gid, "$script_mode", "$dest_dir");
 	    last SWITCH;
 	}
 
