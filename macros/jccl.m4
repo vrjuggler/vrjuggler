@@ -1,21 +1,6 @@
-dnl **************** <JCCL heading BEGIN do not edit this line> ****************
+dnl ************ <auto-copyright.pl BEGIN do not edit this line> ************
 dnl
-dnl Juggler Application Configuration & Control Library
-dnl
-dnl Original Authors:
-dnl   Christopher Just, Carolina Cruz-Neira
-dnl
-dnl -----------------------------------------------------------------
-dnl File:          $RCSfile$
-dnl Date modified: $Date$
-dnl Version:       $Revision$
-dnl -----------------------------------------------------------------
-dnl
-dnl ***************** <JCCL heading END do not edit this line> *****************
-
-dnl ************* <auto-copyright.pl BEGIN do not edit this line> *************
-dnl
-dnl VR Juggler is (C) Copyright 1998, 1999, 2000, 2001 by Iowa State University
+dnl VR Juggler is (C) Copyright 1998-2002 by Iowa State University
 dnl
 dnl Original Authors:
 dnl   Allen Bierbaum, Christopher Just,
@@ -37,7 +22,13 @@ dnl License along with this library; if not, write to the
 dnl Free Software Foundation, Inc., 59 Temple Place - Suite 330,
 dnl Boston, MA 02111-1307, USA.
 dnl
-dnl ************** <auto-copyright.pl END do not edit this line> **************
+dnl -----------------------------------------------------------------
+dnl File:          $RCSfile$
+dnl Date modified: $Date$
+dnl Version:       $Revision$
+dnl -----------------------------------------------------------------
+dnl
+dnl ************* <auto-copyright.pl END do not edit this line> *************
 
 dnl ---------------------------------------------------------------------------
 dnl JCCL_PATH([MINIMUM-VERSION, [ACTION-IF-FOUND [, ACTION-IF-NOT-FOUND [, MODULES]]]])
