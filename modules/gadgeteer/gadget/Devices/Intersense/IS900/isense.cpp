@@ -344,7 +344,7 @@ BOOL ISD_SendScript( ISD_TRACKER_HANDLE handle, char *script )
     unsigned int i, len;
     int stringReady = FALSE;
 
-    if( handle > 0 && handle <= ISD_MAX_TRACKERS )
+    if( script && handle > 0 && handle <= ISD_MAX_TRACKERS )
     {
         tracker = &ISD_tracker[ handle - 1 ];
         buf = command;
