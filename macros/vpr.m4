@@ -44,7 +44,7 @@ dnl VPR_PATH([MINIMUM-VERSION, [ACTION-IF-FOUND [, ACTION-IF-NOT-FOUND [, MODULE
 dnl
 dnl Test for VPR and then define VPR_CXXFLAGS, VPR_LIBS, and VPR_LIBS_STATIC.
 dnl ---------------------------------------------------------------------------
-AC_DEFUN(VPR_PATH,
+AC_DEFUN([VPR_PATH],
 [
     dnl Get the cflags and libraries from the vpr-config script
     AC_ARG_WITH(vpr,

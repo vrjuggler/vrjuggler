@@ -30,7 +30,7 @@ dnl -----------------------------------------------------------------
 dnl
 dnl ************* <auto-copyright.pl END do not edit this line> *************
 
-AC_DEFUN(VJ_STRIP_JAR_PATH,
+AC_DEFUN([VJ_STRIP_JAR_PATH],
 [
    dnl Helper function that removes any path information leading up to a JAR
    dnl file name (i.e, a file that ends in .jar).
@@ -57,7 +57,7 @@ dnl ---------------------------------------------------------------------------
 dnl Usage:
 dnl     VJ_PROG_CC_PROF_FLAG([prefer-gnu])
 dnl ---------------------------------------------------------------------------
-AC_DEFUN(VJ_PROG_CC_PROF_FLAG,
+AC_DEFUN([VJ_PROG_CC_PROF_FLAG],
 [
     if test "x$GCC" = "xyes" ; then
         if test "x$1" = "xyes" ; then
@@ -90,7 +90,7 @@ dnl ---------------------------------------------------------------------------
 dnl Usage:
 dnl     VJ_PROG_CXX_PROF_FLAG([prefer-gnu])
 dnl ---------------------------------------------------------------------------
-AC_DEFUN(VJ_PROG_CXX_PROF_FLAG,
+AC_DEFUN([VJ_PROG_CXX_PROF_FLAG],
 [
     vrj_prefer_gnu_prof=$1
 
@@ -122,7 +122,7 @@ AC_DEFUN(VJ_PROG_CXX_PROF_FLAG,
     AC_SUBST(BUILD_PROF_CXX)
 ])
 
-AC_DEFUN(VJ_COMPILER_SETUP,
+AC_DEFUN([VJ_COMPILER_SETUP],
 [
     AC_REQUIRE([DPP_WITH_GCC])
     AC_REQUIRE([DPP_SYSTEM_SETUP])
@@ -498,7 +498,7 @@ dnl ---------------------------------------------------------------------------
 dnl Usage:
 dnl     VJ_MTREE_GEN(file-prefix, path, platform [, ISA])
 dnl ---------------------------------------------------------------------------
-AC_DEFUN(VJ_MTREE_LIB_GEN,
+AC_DEFUN([VJ_MTREE_LIB_GEN],
 [
     mtree_path=`echo $2 | sed -e 's|/| |g'`
 
@@ -614,7 +614,7 @@ dnl
 dnl Usage
 dnl     VJ_APP_COMPILER(C-compiler, C-flags, C++-compiler, C++-flags, debug-flags, optimization-flags, base-dir, defs, includes, extra-flags)
 dnl ---------------------------------------------------------------------------
-AC_DEFUN(VJ_APP_COMPILER,
+AC_DEFUN([VJ_APP_COMPILER],
 [
     if test "$OS_TYPE" = "UNIX" ; then
         APP_CC="$1"
@@ -671,7 +671,7 @@ dnl
 dnl Usage
 dnl     VJ_APP_LINKER(linker, link-flags, debug-flags, optimization-flags, base-dir-name, basic-libs, extra-libs)
 dnl ---------------------------------------------------------------------------
-AC_DEFUN(VJ_APP_LINKER,
+AC_DEFUN([VJ_APP_LINKER],
 [
     AC_REQUIRE([DPP_PROG_LINKER])
 
@@ -774,7 +774,7 @@ dnl
 dnl Usage:
 dnl    VJ_APP_LINKER_DOOZER(linker, link-flags, debug-flags, optimization-flags, basic librar(y|ies), extra-libraries)
 dnl ---------------------------------------------------------------------------
-AC_DEFUN(VJ_APP_LINKER_DOOZER,
+AC_DEFUN([VJ_APP_LINKER_DOOZER],
 [
    AC_REQUIRE([DPP_PROG_LINKER])
 
@@ -861,7 +861,7 @@ dnl ---------------------------------------------------------------------------
 dnl Usage:
 dnl     VJ_VERSION_GROK(version-file)
 dnl ---------------------------------------------------------------------------
-AC_DEFUN(VJ_VERSION_GROK,
+AC_DEFUN([VJ_VERSION_GROK],
 [
     version_file="$srcdir/$1"
 

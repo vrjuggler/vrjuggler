@@ -45,7 +45,7 @@ dnl     VRJ_LIBS_STATIC_LD
 dnl     VRJ_EXTRA_LIBS_CC
 dnl     VRJ_EXTRA_LIBS_LD
 dnl ---------------------------------------------------------------------------
-AC_DEFUN(VRJUGGLER_PATH,
+AC_DEFUN([VRJUGGLER_PATH],
 [
     dnl Get the cflags and libraries from the vrjuggler-config script
     AC_ARG_WITH(vrjuggler,
