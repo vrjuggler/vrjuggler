@@ -66,8 +66,8 @@ public:
     // -----------------------------------------------------------------------
     //: Spawning constructor.
     //
-    //  This will actually start a new thread
-    //+ that will execute the specified function.
+    // This will actually start a new thread that will execute the specified
+    // function.
     // -----------------------------------------------------------------------
     vjThreadPosix(THREAD_FUNC func, void* arg = 0, long flags = 0,
                   u_int priority = 0, void* stack_addr = NULL,
@@ -76,8 +76,7 @@ public:
     // -----------------------------------------------------------------------
     //: Spawning constructor with arguments (functor version).
     //
-    //  This will start a new
-    //+ thread that will execute the specified function.
+    // This will start a new thread that will execute the specified function.
     // -----------------------------------------------------------------------
     vjThreadPosix(vjBaseThreadFunctor* functorPtr, long flags = 0,
                   u_int priority = 0, void* stack_addr = NULL,

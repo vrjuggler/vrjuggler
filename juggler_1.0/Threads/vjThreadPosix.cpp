@@ -26,8 +26,8 @@ typedef struct sched_param	sched_param_t;
 // ---------------------------------------------------------------------------
 //: Spawning constructor
 //
-//  This will actually start a new thread that will execute the specified
-//+ function.
+// This will actually start a new thread that will execute the specified
+// function.
 // ---------------------------------------------------------------------------
 vjThreadPosix::vjThreadPosix (THREAD_FUNC func, void* arg, long flags,
                               u_int priority, void* stack_addr,

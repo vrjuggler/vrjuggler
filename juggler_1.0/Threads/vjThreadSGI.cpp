@@ -20,7 +20,7 @@ vjThreadTable<pid_t> vjThreadSGI::mThreadTable;
 
 //: Spawning constructor
 //  This will actually start a new thread
-//+ that will execute the specified function.
+//  that will execute the specified function.
 vjThreadSGI::vjThreadSGI (THREAD_FUNC func, void* arg, long flags,
              u_int priority, void* stack_addr, size_t stack_size)
 {
@@ -42,7 +42,7 @@ vjThreadSGI::vjThreadSGI (THREAD_FUNC func, void* arg, long flags,
 
 //: Spawning constructor with arguments (functor version).
 //   This will start a new
-//+  thread that will execute the specified function.
+//   thread that will execute the specified function.
 vjThreadSGI::vjThreadSGI ( vjBaseThreadFunctor* functorPtr, long flags,
               u_int priority, void* stack_addr, size_t stack_size)
 {

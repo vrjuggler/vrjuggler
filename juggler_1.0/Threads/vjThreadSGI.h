@@ -24,7 +24,7 @@ public:
 
    //: Spawning constructor
    //  This will actually start a new thread
-   //+ that will execute the specified function.
+   //  that will execute the specified function.
    vjThreadSGI (THREAD_FUNC func, void* arg = 0, long flags = 0,
                  u_int priority = 0, void* stack_addr = NULL,
                  size_t stack_size = 0);
@@ -32,7 +32,7 @@ public:
 
    //: Spawning constructor with arguments (functor version).
    //   This will start a new
-   //+  thread that will execute the specified function.
+   //   thread that will execute the specified function.
    vjThreadSGI ( vjBaseThreadFunctor* functorPtr, long flags = 0,
                   u_int priority = 0, void* stack_addr = NULL,
                   size_t stack_size = 0);
