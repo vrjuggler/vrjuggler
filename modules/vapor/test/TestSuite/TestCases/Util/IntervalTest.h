@@ -83,9 +83,9 @@ public:
 
       val.secf(12.345678);
 
-      float val_sec = val.secf();
-      float val_msec = val.msecf();
-      float val_usec = val.usecf();
+      //float val_sec = val.secf();
+      //float val_msec = val.msecf();
+      //float val_usec = val.usecf();
 
       assertTest(val.secf()  == 12.345678f);
       assertTest(val.msecf() == 12345.678f);
@@ -108,9 +108,9 @@ public:
 
       val.msecf(12345.678f);
 
-      float val_sec = val.secf();
-      float val_msec = val.msecf();
-      float val_usec = val.usecf();
+      //float val_sec = val.secf();
+      //float val_msec = val.msecf();
+      //float val_usec = val.usecf();
 
       assertTest(val.secf()  == 12.345678f);
       assertTest(val.msecf() == 12345.678f);
@@ -133,9 +133,9 @@ public:
 
       val.usecf(12345678.0f);
 
-      float val_sec = val.secf();
-      float val_msec = val.msecf();
-      float val_usec = val.usecf();
+      //float val_sec = val.secf();
+      //float val_msec = val.msecf();
+      //float val_usec = val.usecf();
 
 
       assertTest(val.secf()  == 12.345678f);
