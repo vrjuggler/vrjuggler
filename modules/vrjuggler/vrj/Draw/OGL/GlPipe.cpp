@@ -223,8 +223,6 @@ void GlPipe::checkForWindowsToClose()
          // Call contextClose
          GlApp* theApp = glManager->getApp();       // Get application for easy access
          Display* theDisplay = win->getDisplay();   // Get the display for easy access
-         //theDisplay->recordLatency (0, 1);
-
          glManager->setCurrentContext(win->getId());     // Set TS data of context id
          glManager->currentUserData()->setUser(NULL);         // Set user data
          glManager->currentUserData()->setProjection(NULL);
@@ -349,6 +347,8 @@ void GlPipe::renderWindow(GlWindow* win)
       // Should viewport be rendered???
       if(viewport->isActive())
       {
+         viewport->recordLatency (0, 1);
+
          view = viewport->getView();
 
          // Set the glViewport to draw within
@@ -435,8 +435,8 @@ void GlPipe::swapWindowBuffers(GlWindow* win)
 {
    win->makeCurrent();           // Set correct context
    win->swapBuffers();           // Implicitly calls a glFlush
-   //vjDisplayWindow* theDisplay = win->getDisplay();   // Get the display for easy access
-   //theDisplay->recordLatency (2, 3);
+//     vjDisplayWindow* theDisplay = win->getDisplay();   // Get the display for easy access
+//     theDisplay->recordLatency (2, 3);
 }
 
 };
