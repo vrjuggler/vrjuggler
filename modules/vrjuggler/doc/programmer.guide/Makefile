@@ -6,12 +6,9 @@ docs: html chunk-html pdf
 install-docs: install-html install-chunk-html install-pdf
 
 NAME=		programmer.guide
+XML_FILES=	$(NAME).xml
 
 XSLT_TOOL=	Saxon
-
-XML_FILES=	$(NAME).xml
-HTML_FILES=	$(NAME).html
-PDF_FILES=	$(NAME).pdf
 
 SVG_IMAGES= \
 	figures/AppHierarchy.svg		\
@@ -36,8 +33,9 @@ INSTALL_FILES=	$(webroot)/base_style.css
 
 NEED_DB_IMAGES=	1
 
-$(NAME).html: $(NAME).xml $(IMAGES)
-$(NAME).pdf: $(NAME).xml $(NAME).fo $(IMAGES)
+$(NAME).html: $(IMAGES)
+$(NAME)/index.html: $(IMAGES)
+$(NAME).pdf: $(IMAGES)
 
 CLOBBER_FILES=	$(IMAGES)
 

@@ -129,27 +129,15 @@ ifdef NEED_DB_IMAGES
 LINK_DEPS=	images
 endif
 
+HTML_FILES=		$(XML_FILES:.xml=.html)
+CHUNK_HTML_FILES=	$(XML_FILES:.xml=/index.html)
+FO_FILES=		$(XML_FILES:.xml=.fo)
+PDF_FILES=		$(XML_FILES:.xml=.pdf)
+TXT_FILES=		$(XML_FILES:.xml=.txt)
+
 txt: $(TXT_FILES)
-
 html: $(LINK_DEPS) $(HTML_FILES)
-
-chunk-html:
-	for file in $(XML_FILES) ; do \
-            dir=`echo $$file | sed -e 's/\.xml//'` ; \
-            if [ ! -d $$dir ] ; then mkdir $$dir ; fi ; \
-            cur_dir=`pwd` ; \
-            cd $$dir ; \
-            $(ENV) $(SAXON) -i $$cur_dir/$$file -xsl $(CHUNK_HTML_XSL) \
-              $(SAXON_HTML_PARAMS) $(EXTRA_SAXON_HTML_PARAMS) ; \
-            cd $$cur_dir ; \
-            if [ ! -z "$(INSTALL_FILES)" ]; then \
-                cp $(INSTALL_FILES) $$dir ; \
-            fi ; \
-            if [ ! -z "$(INSTALL_DIRS)" ]; then \
-                cp -r $(INSTALL_DIRS) $$dir ; \
-            fi ; \
-          done
-
+chunk-html: $(CHUNK_HTML_FILES)
 pdf: $(LINK_DEPS) $(PDF_FILES)
 
 # The method for specifying a path to the images that come with the DocBook
@@ -227,7 +215,7 @@ install install-all:
 
 # Basic XSL conversions -------------------------------------------------------
 
-.xml.html:
+%.html: %.xml
 ifeq ($(XSLT_TOOL), Xalan)
 	$(ENV) $(XALAN) -in $< -xsl $(HTML_XSL) -out $@		\
           $(XALAN_HTML_PARAMS) $(EXTRA_XALAN_HTML_PARAMS)
@@ -236,7 +224,24 @@ else
           $(SAXON_HTML_PARAMS) $(EXTRA_SAXON_HTML_PARAMS)
 endif
 
-.xml.fo:
+%/index.html: %.xml
+	for file in $(XML_FILES) ; do \
+            dir=`echo $$file | sed -e 's/\.xml//'` ; \
+            if [ ! -d $$dir ] ; then mkdir $$dir ; fi ; \
+            cur_dir=`pwd` ; \
+            cd $$dir ; \
+            $(ENV) $(SAXON) -i $$cur_dir/$$file -xsl $(CHUNK_HTML_XSL) \
+              $(SAXON_HTML_PARAMS) $(EXTRA_SAXON_HTML_PARAMS) ; \
+            cd $$cur_dir ; \
+            if [ ! -z "$(INSTALL_FILES)" ]; then \
+                cp $(INSTALL_FILES) $$dir ; \
+            fi ; \
+            if [ ! -z "$(INSTALL_DIRS)" ]; then \
+                cp -r $(INSTALL_DIRS) $$dir ; \
+            fi ; \
+          done
+
+%.fo: %.xml
 ifeq ($(XSLT_TOOL), Xalan)
 	$(ENV) $(XALAN) -in $< -xsl $(FO_XSL) -out $@		\
           $(XALAN_FO_PARAMS) $(EXTRA_XALAN_FO_PARAMS)
@@ -245,10 +250,10 @@ else
           $(SAXON_FO_PARAMS) $(EXTRA_SAXON_FO_PARAMS)
 endif
 
-.html.txt:
+%.txt: %.html
 	$(HTML2TXT) $(HTML2TXTOPTS) $(EXTRA_HTML2TXTOPTS) $(HTML2TXTFILE) > $@
 
-#.xml.txt:
+#%.txt: %.xml
 #ifeq ($(XSLT_TOOL), Xalan)
 #	$(ENV) $(XALAN) -in $< -xsl $(FO_XSL) -out $@		\
 #          $(XALAN_TXT_PARAMS) $(EXTRA_XALAN_TXT_PARAMS)
@@ -260,15 +265,18 @@ endif
 
 # Generate a PDF file from an FO file using FOP.
 ifeq ($(FO_VERSION), FOP)
-.fo.pdf:
+$(PDF_FILES): $(FO_FILES)
+$(TXT_FILES): $(FO_FILES)
+
+%.pdf: %.fo
 	$(FOP) $< $@
 
-.fo.txt:
+%.txt: %.fo
 	$(FOP) -fo $< -txt $@
 endif
 
 # Generate a PDF file from an XML file using FOP.
-#.xml.pdf:
+#%.pdf: %.xml
 #	$(FOP) -xml $< -xsl $(FO_XSL) -pdf $@
 
 # -----------------------------------------------------------------------------
@@ -277,16 +285,16 @@ endif
 
 # Generate a TeX file using Jade.
 ifdef USE_JADEPROC
-.xml.pdf:
+%.pdf: %.xml
 	$(TEX_ENV) $(JADEPROC) -i $< -o $@ -d $(DB_SGML_DTD)		\
           -s $(DSSSL_DIR)/print/docbook.dsl
          
 else
-.xml.tex:
+%.tex: %.xml
 	$(JADE) -t tex -d $(DSSSL_DIR)/print/docbook.dsl $<
 
 # $(PDFJADETEX) has to be run twice for page references to be calculated.  :(
-.tex.pdf:
+%.pdf: %.xml
 	-$(TEX_ENV) $(PDFJADETEX) $<
 endif
 
@@ -297,12 +305,14 @@ endif
 # Generate a PDF file from an XML file using PassiveTeX.  This one requires
 # that a simple TeX file be generated from the XML first (see below).
 ifeq ($(FO_VERSION), PASSIVE_TEX)
-.fo.pdf:
+$(PDF_FILES): $(FO_FILES)
+
+%.pdf: %.fo
 	$(TEX_ENV) $(PDFXMLTEX) $*.fo
 #	$(TEX_ENV) $(PDFXMLTEX) $*.fo
 
 # Generate a TeX file for use with PassiveTeX.
-#.xml.tex:
+#%.tex: %.xml
 #	@echo "Generating $*.tex from $<"
 #	@echo '\def\xmlfile{$*.fo}' >$*.tex
 #	@echo '\input xmltex' >>$*.tex
@@ -315,7 +325,9 @@ endif
 # Generate a PDF file using XEP from RenderX.  This requires that an FO file
 # be generated first.
 ifeq ($(FO_VERSION), XEP)
-.fo.pdf:
+$(PDF_FILES): $(FO_FILES)
+
+%.pdf: %.fo
 	$(XEP) $*.fo
 endif
 
@@ -329,7 +341,7 @@ endif
 
 clobber:
 	@$(MAKE) clean
-	$(RM) *.html *.pdf $(LINK_DEPS) $(CLOBBER_FILES)
+	$(RM) -f *.html *.pdf $(LINK_DEPS) $(CLOBBER_FILES)
 	$(RM) -rf $(XML_FILES:.xml=)
 ifneq ($(CLOBBER_DIRS), )
 	$(RM) -r $(CLOBBER_DIRS)

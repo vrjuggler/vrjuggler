@@ -6,6 +6,7 @@ docs: html chunk-html pdf
 install-docs: install-html install-chunk-html install-pdf
 
 NAME=		technical-overview
+XML_FILES=    $(NAME).xml
 
 # Define to use OpenJade to render PDF document.
 #USE_JADEPROC=1
@@ -44,18 +45,10 @@ prefix=		$(webroot)/$(instdir)
 INSTALL_DIRS=	figures
 INSTALL_FILES=	$(webroot)/base_style.css
 
-MK_PATH=	../../../../doc
-
-#########################################################
-
-XML_FILES=    $(NAME).xml
-TXT_FILES=    $(NAME).txt
-HTML_FILES=   $(NAME).html
-PDF_FILES=    $(NAME).pdf
-
-$(NAME).txt:  $(NAME).xml $(IMAGES) # $(NAME).fo
-$(NAME).html: $(NAME).xml $(IMAGES)
-$(NAME).pdf:  $(NAME).xml $(NAME).fo $(IMAGES)
+$(NAME).txt: $(IMAGES)
+$(NAME).html: $(IMAGES)
+$(NAME)/index.html: $(IMAGES)
+$(NAME).pdf: $(IMAGES)
 
 include ../version.mk
-include $(MK_PATH)/docbook.mk
+include ../../../../doc/docbook.mk
