@@ -90,8 +90,11 @@ public:
    bool removeRecentChunkDB();
 
    bool checkTime();
+
    bool verifyProxy( std::string proxyName, std::string deviceName );
+
    vrj::Display* getDisplay( std::string name );
+   bool verifyDisplayFile( std::string filename );
    bool verifyDisplayProps( vrj::Display* disp,
                             std::string name,
                             int x_origin,
