@@ -55,6 +55,7 @@ bool RmtMgrDepChecker::depSatisfied(jccl::ConfigChunkPtr chunk)
    {
       return false;
    }*/
+   return true;
 }
 
 
