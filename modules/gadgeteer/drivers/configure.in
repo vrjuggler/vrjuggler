@@ -205,16 +205,9 @@ fi
 # TODO: Add this back in.
 #gadsave_CPPFLAGS="$CPPFLAGS"
 #CPPFLAGS="$CPPFLAGS $STDFLAGS"
-#GMTL_PATH(0.1.9, [$JUGGLERROOT_ABS/external/GMTL],
-#          [$JUGGLERROOT_ABS/external/GMTL], ,
+#GMTL_PATH(0.1.9, [/usr/local], , ,
 #          [AC_MSG_ERROR([*** GMTL required for Gadgeteer ***])])
 #CPPFLAGS="$gadsave_CPPFLAGS"
-
-# If we are not using GMTL from the external directory, we have a locally
-# installed copy.
-#if test "x$GMTL_ROOT" != "x$JUGGLERROOT_ABS/external/GMTL" ; then
-#    LOCAL_GMTL='Y'
-#fi
 
 # -----------
 # Trackd API

@@ -1,5 +1,6 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Apr-11-2004 patrickh    VR Juggler now depends on an installed version of GMTL.
 Apr-05-2004 patrickh    Updated to JCCL 0.17.0.
 Mar-19-2004 patrickh    Restored the ability to specify a search path for
                         configuration files using the environment variable

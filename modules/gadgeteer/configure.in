@@ -158,16 +158,9 @@ JCCL_PATH_CXX([0.17], ,
 
 gadsave_CPPFLAGS="$CPPFLAGS"
 CPPFLAGS="$CPPFLAGS $STDFLAGS"
-GMTL_PATH(0.1.9, [$JUGGLERROOT_ABS/external/GMTL],
-          [$JUGGLERROOT_ABS/external/GMTL], ,
+GMTL_PATH(0.1.9, [/usr/local], , ,
           [AC_MSG_ERROR([*** GMTL required for Gadgeteer ***])])
 CPPFLAGS="$gadsave_CPPFLAGS"
-
-# If we are not using GMTL from the external directory, we have a locally
-# installed copy.
-if test "x$GMTL_ROOT" != "x$JUGGLERROOT_ABS/external/GMTL" ; then
-    LOCAL_GMTL='Y'
-fi
 
 AC_PATH_X
 
@@ -220,16 +213,12 @@ DPP_INSTALLER(vrjuggler, 0644, 0755, 0755)
 CXXFLAGS="$CXXFLAGS $VPR_CXXFLAGS_MIN $JCCL_CXXFLAGS_MIN $GMTL_INCLUDES"
 BASE_APP_LINK_FLAGS="$STDFLAGS $BASE_APP_LINK_FLAGS"
 DEPEND_FLAGS="$VPR_INCLUDES_MIN $JCCL_INCLUDES_MIN $GMTL_INCLUDES"
-gadget_cxxflags="$STDFLAGS"
+gadget_cxxflags="$STDFLAGS $GMTL_INCLUDES"
 
 # List the scripts gadgeteer-config will call to get flags.  This should be
 # in the order used for linking.  That means the dependencies are satisfied
 # right to left.
 gadget_dep_scripts='jccl-config vpr-config'
-
-if test "x$LOCAL_GMTL" = "xY" ; then
-   gadget_cxxflags="$gadget_cxxflags $GMTL_INCLUDES"
-fi
 
 if test "x$PLATFORM" = "xIRIX" -a "x$USE_GCC" != "xyes" ; then
 #    CFLAGS="$CFLAGS -woff 1685,515,608,658,799,803,852,1048,1233,1499"
