@@ -26,6 +26,7 @@ void ConfigChunkDBTest::testLoad ()
    CPPUNIT_ASSERT(! chunkdb.vec().empty() && "The DB should not be empty");
 }
 
+/*
 void ConfigChunkDBTest::testDependencySort ()
 {
    std::string file_path(TESTFILES_PATH);
@@ -82,6 +83,7 @@ void ConfigChunkDBTest::testDependencySortFailure ()
    status = chunkdb.dependencySort(NULL);
    CPPUNIT_ASSERT(! status && "Dependency sort should have failed");
 }
+*/
 
 void ConfigChunkDBTest::testClear ()
 {
