@@ -49,8 +49,8 @@
 #                   the source files.
 #
 # clean           - Clean up everything (uses common 'clean' target).
-# clobber         - Clean up everything and remove the directory containing
-#                   the compiled libraries.
+# clobber         - Clean up everything and remove the directories containing
+#                   the compiled libraries and its object files.
 #
 # info            - Print out information about the build process that may be
 #                   useful to the user.
@@ -594,29 +594,25 @@ newdepend:
 
 # -----------------------------------------------------------------------------
 # Clean-up.  '_clean' removes all the files in the build directories.  
-# 'clobber' removes the ${_DBG_BUILDDIR} and ${_OPT_BUILDDR} directories.
+# 'clobber' removes the ${_BUILDDIR_BASE} and ${_LIBDIR_NAME} directories.
 # -----------------------------------------------------------------------------
 _clean:
 	@echo "------------------------------------------------"
-	@echo "Cleaning up the source tree"
+	@echo "Cleaning up the build tree"
 	@echo "------------------------------------------------"
 	${MAKE} RECTARGET="clean" recursive
 	cd GUI && ${MAKE} clean
 	@if test -d ${_DBG_BUILDDIR}; then				\
             echo "------------------------------------------------" ;	\
-            echo "Cleaning in ${_DBG_BUILDDIR} ..."                 ;	\
+            echo "Removing ${_DBG_BUILDDIR} ..."                    ;	\
             echo "------------------------------------------------" ;	\
-            cd ${_DBG_BUILDDIR} ;					\
-            rm -f *.o core so_locations ;				\
-            rm -rf ./ii_files ;						\
+            rm -r ${_DBG_BUILDDIR} ;					\
         fi
 	@if test -d ${_OPT_BUILDDIR}; then				\
             echo "------------------------------------------------" ;	\
-            echo "Cleaning in ${_OPT_BUILDDIR} ..."                  ;	\
+            echo "Removing ${_OPT_BUILDDIR} ..."                    ;	\
             echo "------------------------------------------------" ;	\
-            cd ${_OPT_BUILDDIR} ;					\
-            rm -f *.o core so_locations ;				\
-            rm -rf ./ii_files ;						\
+            rm -r ${_OPT_BUILDDIR} ;					\
         fi
 	-@rm -f .*_done
 	rm -f so_locations
@@ -628,29 +624,17 @@ clobber: _clean clean-links
 	@echo "------------------------------------------------"
 	@echo "Clobbering build directories"
 	@echo "------------------------------------------------"
-	@if test -d ${_DBG_BUILDDIR}; then				\
+	@if test -d ${_BUILDDIR_BASE} ; then				\
             echo "------------------------------------------------" ;	\
-            echo "Removing ${_DBG_BUILDDIR} ..."                    ;	\
+            echo "Removing ${_BUILDDIR_BASE} ..."                   ;	\
             echo "------------------------------------------------" ;	\
-            rm -rf ${_DBG_BUILDDIR} ;					\
+            rm -rf ${_BUILDDIR_BASE} ;					\
         fi
-	@if test -d ${_OPT_BUILDDIR}; then				\
+	@if test -d ${_LIBDIR_NAME}; then				\
             echo "------------------------------------------------" ;	\
-            echo "Removing ${_DBG_BUILDDIR} ..."                    ;	\
+            echo "Removing ${_LIBDIR_NAME} ..."                     ;	\
             echo "------------------------------------------------" ;	\
-            rm -rf ${_OPT_BUILDDIR} ;					\
-        fi
-	@if test -d ${_DBG_LIBDIR} ; then				\
-            echo "------------------------------------------------" ;	\
-            echo "Removing ${_DBG_LIBDIR} ..."                      ;	\
-            echo "------------------------------------------------" ;	\
-            rm -rf ${_DBG_LIBDIR} ;					\
-        fi
-	@if test -d ${_OPT_LIBDIR} ; then				\
-            echo "------------------------------------------------" ;	\
-            echo "Removing ${_OPT_LIBDIR} ..."                      ;	\
-            echo "------------------------------------------------" ;	\
-            rm -rf ${_OPT_LIBDIR} ;					\
+            rm -rf ${_LIBDIR_NAME} ;					\
         fi
 	@echo "------------------------------------------------"
 	@echo "Done with 'clobber'"
