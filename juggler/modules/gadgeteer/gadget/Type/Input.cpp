@@ -67,3 +67,33 @@ int vjInput::FDeviceSupport(int devAbility)
 {
     return (deviceAbilities & devAbility);
 }
+
+//: Reset the Index Holders
+// Sets to (0,1,2) in that order
+void vjInput::resetIndexes()
+{
+    current = 0;
+    valid = 1;
+    progress = 2;
+}
+
+//: Swap the current and valid indexes (thread safe)
+void vjInput::swapCurrentIndexes()
+{
+  lock.acquire();
+  int tmp = current;
+  current = valid;
+  valid = tmp;
+  lock.release();
+}
+
+//: Swap the valid and progress indexes (thread safe)
+void vjInput::swapValidIndices()
+{
+   lock.acquire();
+	int tmp = valid;
+	valid= progress;
+	progress = tmp;
+	lock.release();
+}
+
