@@ -28,7 +28,7 @@ DPP_STD_CPP([yes])
 AC_ARG_ENABLE([boost-hacks],
               [  --enable-boost-hacks    Turn off workarounds for Boost
                           header versioning madness],
-              [BOOST_HACKS="$withval"], [BOOST_HACKS='no'])
+              [BOOST_HACKS="$enableval"], [BOOST_HACKS='no'])
 
 # -------------------------------------------- #
 # --with-pkg[=arg] and --without-pkg arguments #
