@@ -161,9 +161,10 @@ AC_DEFUN(VJ_COMPILER_SETUP,
     DPP_GET_EXT
 
     if test "x$GXX" = "xyes" ; then
-        # If we are using GCC as the compiler, we need to be using at least
-        # egcs 1.1.2.  A newer version (e.g., 2.95.2) is even better.
-        DPP_GPLUSPLUS_MODERN([AC_MSG_ERROR([*** VR Juggler requires a modern G++ ***])])
+        # If we are using GCC as the compiler, we need to be using version
+        # 2.95.3 or newer.
+        DPP_GPLUSPLUS_VER(2.95.3,
+                          [AC_MSG_ERROR([*** VR Juggler requires a modern G++ ***])])
     fi
 
     if test "x$GCC" = "xyes" ; then
