@@ -120,7 +120,7 @@ Debug::Debug()
    }
 }
 
-void Debug::init(const std::string filename)
+void Debug::setOutputFile(const std::string& filename)
 {
    if(filename == "")
    {
@@ -132,6 +132,11 @@ void Debug::init(const std::string filename)
       mFile = new std::fstream;
       mFile->open(filename.c_str(), std::ios_base::out );
    }
+   
+}
+
+void Debug::init()
+{
    // --- Register primitive categories --- //
    /*
    addCategory(vprDBG_ALL, "DBG_ALL", "DBG:");
@@ -140,7 +145,8 @@ void Debug::init(const std::string filename)
    addCategory(vprDBG_VPR, "DBG_VPR", "VPR:");
    */
 }
-
+   
+   
 std::ostream& Debug::getStream(const vpr::DebugCategory& cat, const int level,
                                const bool show_thread_info,
                                const bool use_indent, const int indentChange,
