@@ -99,7 +99,7 @@ public:
    std::vector<Thread*> getThreads()
    { return mThreads; }
 
-   unsigned getNumThreads()
+   std::vector<Thread*>::size_type getNumThreads()
    { return mThreads.size(); }
 
    Thread* getThread(unsigned i)
