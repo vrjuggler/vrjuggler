@@ -134,6 +134,9 @@ public:
    //!NOTE: Fork happens here
    virtual void initDrawing();
 
+   // Initialize the parameters of the master channel
+   void initMasterChanAtrribs();
+
    //: Callback when display is added to display manager
    virtual void addDisplay(vjDisplay* disp);
 
