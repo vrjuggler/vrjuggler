@@ -68,54 +68,48 @@ namespace vpr {
 class VPR_CLASS_API ThreadManager
 {
 public:
-   //-----------------------------------------------------
-   //: Called when a thread has been added to the system.
-   //
-   //! PRE: Manager must be locked.
-   //-----------------------------------------------------
+   /**
+    * Called when a thread has been added to the system.
+    *
+    * @pre Manager must be locked.
+    */
    void addThread(BaseThread* thread);
 
-   //-----------------------------------------------------
-   //: Called when a thread has been removed from the
-   //+ system.
-   //
-   //! PRE: Manager must be locked.
-   //-----------------------------------------------------
+   /**
+    * Called when a thread has been removed from the system.
+    *
+    * @pre Manager must be locked.
+    */
    void removeThread(BaseThread* thread);
 
-   //-----------------------------------------------------
-   //: Lock the manager so that we have complete control
-   //+ to do stuff.
-   // The manager should be locked whenever there is
-   // about to be a change in number of threads in the
-   // system.
-   //-----------------------------------------------------
+   /**
+    * Locks the manager so that we have complete control to do stuff.
+    * The manager should be locked whenever there is about to be a change in
+    * number of threads in the system.
+    */
    void lock()
    {
       mThreadVectorMutex.acquire();
    }
 
-   //-----------------------------------------------------
-   //: Unlock the manager to allow people to use it
-   //+ again.
-   //-----------------------------------------------------
+   /// Unlocks the manager to allow people to use it again.
    void unlock()
    {
       mThreadVectorMutex.release();
    }
 
-   //-----------------------------------------------------
-   //: Dump the state of the manager to debug.
-   //-----------------------------------------------------
+   /// Dumps the state of the manager to debug.
    void debugDump();
 
 private:
-   Mutex                    mThreadVectorMutex;     //: Mutex to protect the threads vector
-   std::vector<BaseThread*> mThreads;            //: List of all threads in system
+   Mutex                    mThreadVectorMutex;  //! Mutex to protect the threads vector
+   std::vector<BaseThread*> mThreads;            //! List of all threads in system
 
 public:
-   //: Generate a unique key for Thread Specific data
-   // This value will be used locally by each thread in the system
+   /**
+    * Generates a unique key for Thread Specific data.
+    * This value will be used locally by each thread in the system.
+    */
    long generateNewTSKey()
    {
       Guard<Mutex> guard(mTSKeyMutex);
@@ -123,18 +117,14 @@ public:
    }
 
 private:
-   Mutex     mTSKeyMutex;          //: Mutex to protect allocate of TS keys
-   long      mNextTSObjectKey;  //: The next available object key
-
+   Mutex     mTSKeyMutex;       //! Mutex to protect allocate of TS keys
+   long      mNextTSObjectKey;  //! The next available object key
 
    // ----------------------- //
    // --- SINGLETON STUFF --- //
    // ----------------------- //
 protected:
-   //-----------------------------------------------------
-   //: Constructor.  Hidden, so no instantiation is
-   //+ allowed.
-   //-----------------------------------------------------
+   /// Constructor.  Hidden, so no instantiation is allowed.
    ThreadManager() : mNextTSObjectKey(0)
    {;}
 

@@ -63,9 +63,13 @@ public:
    {;}
 };
 
-//-----------------------------------------------------------------
-//: This is the object actually stored in the system.
-//-----------------------------------------------------------------
+/**
+ * This is the object actually stored in the system.
+ *
+ * @author Allen Bierbaum
+ *
+ * @see vpr::TSTable
+ */
 template <class T>
 class TSObject : public TSBaseObject
 {
@@ -73,9 +77,7 @@ public:
    virtual ~TSObject()
    {;}
 
-   //-----------------------------------------------------------------
-   //: Return the address of our object
-   //-----------------------------------------------------------------
+   /// Returns the address of our object.
    T* getObject()
    { return &mLocalObj; }
 

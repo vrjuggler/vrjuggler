@@ -67,37 +67,38 @@ public:
    TSTable()
    {;}
 
-   //: Delete the table
-   // Delete all objects in the table
+   /**
+    * Deletes the table. It deletes all objects in the table.
+    */
    ~TSTable();
 
 public:
-   // Returns true if the table contains the given key
-   // If false, then the user should setObject(...,key) before
-   // attempting to access the object
+   /**
+    * Returns true if the table contains the given key.
+    * If false, then the user should setObject(...,key) before
+    * attempting to access the object.
+    */
    bool containsKey(long key)
    {
       vprASSERT((key >= 0) && "Called contains key with invalid key");
       return ((key>=0)&&((unsigned)key<mTSObjects.size()));
    }
 
-   //: Get the object with the spcified key
+   /// Gets the object with the spcified key.
    TSBaseObject* getObject(unsigned int objectKey);
 
-   //-----------------------------------------------------------------
-   //: Set an object entry in the table.
-   //-----------------------------------------------------------------
+   /// Sets an object entry in the table.
    void setObject(TSBaseObject* object, long key);
 
-   //-----------------------------------------------------------------
-   //: Release the object given by key.
-   //
-   //! POST: Obj(key) is deleted, and the ptr is set to NULL.
-   //-----------------------------------------------------------------
+   /**
+    * Releases the object given by key.
+    *
+    * @post Obj(key) is deleted, and the ptr is set to NULL.
+    */
    void releaseObject(unsigned long key);
 
 private:
-   std::vector<TSBaseObject*> mTSObjects; //: Map object key to TS Object ptr
+   std::vector<TSBaseObject*> mTSObjects; //! Map object key to TS Object ptr
 };
 
 }; // End of vpr namespace

@@ -85,49 +85,64 @@ public:
    }
 
 public:     // Thread specific data caching
-   /** Get the Thread specific data table.
+   /**
+    * Gets the Thread specific data table.
     * NOTE: Users should NOT access the table directly
-    * instead, use vpr::TSObjectProxies
+    * instead, use vpr::TSObjectProxies.
     */
    TSTable* getTSTable()
    { return &mTSTable; }
 
-   /** Get the Thread the global thread specific data table.
+   /**
+    * Get the Thread the global thread specific data table.
     * This table is shared by all threads that were not created by vpr.
     */
    static TSTable* getGlobalTSTable()
    { return &gTSTable; }
 
 private:
-   TSTable        mTSTable;      // Thread specific data for the thread
-   static TSTable gTSTable;      // Global thread specific data.  Used in all threads NOT created by vpr.  (ie. the primordial thread)
+   TSTable        mTSTable;  /**< Thread specific data for the thread */
+   static TSTable gTSTable;  /**< Global thread specific data.  Used in all
+                                  threads NOT created by vpr.  (ie. the
+                                  primordial thread) */
 
 protected:
-   //: After the object has been created, call this routine to complete
-   //+ initialization.
-   // Done this way, because I need to call this based on stuff that happens
-   // in derived class's constructor.
-   //! POST: Thread is setup correctly to run.
-   //+       The thread has been registered with the system.
-   //+       Creates the thread's id (mThreadId)
-   //! ARGS: successfulCreation - Did the thread get created correctly
+   /**
+    * After the object has been created, call this routine to complete
+    * initialization.
+    * Done this way, because I need to call this based on stuff that happens
+    * in derived class's constructor.
+    *
+    * @post Thread is setup correctly to run.
+    *       The thread has been registered with the system.
+    *       Creates the thread's id (mThreadId)
+    *
+    * @param successfulCreation Did the thread get created correctly
+    */
    void registerThread(bool succesfulCreation);
 
 public:
-   // -----------------------------------------------------------------------
-   //: Create a new thread that will execute functorPtr.
-   //
-   //! PRE: None.
-   //! POST: A thread (with any specified attributes) is created that begins
-   //+       executing func().
-   //
-   //! ARGS: functorPtr - Function to be executed by the thread.
-   //! ARGS: priority - Priority of created thread (optional).
-   //! ARGS: stack_size - Size for thread's stack (optional).
-   //
-   //! RETURNS:  non-zero - Successful thread creation
-   //! RETURNS: -1 - Error
-   // -----------------------------------------------------------------------
+   /**
+    * Creates a new thread that will execute functorPtr.
+    *
+    * @post A thread (with any specified attributes) is created that begins
+    *       executing func().
+    *
+    * @param functorPtr Function to be executed by the thread.
+    * @param priority   Priority of created thread (optional).
+    * @param scope      The scope of the new thread.  This argument is
+    *                   optional, and it defaults to
+    *                   vpr::Thread::VPR_GLOBAL_THREAD.
+    * @param state      The state of the new thread (joinable or unjoinable).
+    *                   This argument is optional, and it defaults to
+    *                   vpr::Thread::VPR_JOINABLE_THREAD.
+    * @param stack_size The stack size for the new thread.  This argument is
+    *                   optional, and it defaults to 0 (use the default stack
+    *                   size offered by the OS).
+    *
+    * @return A non-zero value is returned to indicate that the thread was
+    *         created successfully.  -1 is returned otherwise.
+    */
    virtual int spawn (BaseThreadFunctor* functorPtr,
                       VPRThreadPriority priority = VPR_PRIORITY_NORMAL,
                       VPRThreadScope scope = VPR_LOCAL_THREAD,
@@ -138,116 +153,115 @@ public:
       return -1;
    }
 
-   // -----------------------------------------------------------------------
-   //: Make the calling thread wait for the termination of this thread.
-   //
-   //! PRE: None.
-   //! POST: The caller blocks until this thread finishes its execution
-   //+       (i.e., calls the exit() method).  This routine may return
-   //+       immediately if this thread has already exited.
-   //
-   //! ARGS: status - Current state of the terminating thread when that
-   //+                thread calls the exit routine (optional).
-   //
-   //! RETURNS:  0 - Successful completion
-   //! RETURNS: -1 - Error
-   // -----------------------------------------------------------------------
+   /**
+    * Causes the calling thread wait for the termination of this thread.
+    *
+    * @post The caller blocks until this thread finishes its execution
+    *       (i.e., calls the exit() method).  This routine may return
+    *       immediately if this thread has already exited.
+    *
+    * @param status Current state of the terminating thread when that thread
+    *               calls the exit routine (optional).
+    *
+    * @return 0 is returned if this thread is "joined" successfully.<br>
+    *         -1 is returned on an error condition.
+    */
    virtual int join (void** status = 0)
    {return -1;}
 
-   // -----------------------------------------------------------------------
-   //: Resume the execution of a thread that was previously suspended using
-   //+ suspend().
-   //
-   //! RETURNS:  0 - Successful completion
-   //! RETURNS: -1 - Error
-   // -----------------------------------------------------------------------
+   /**
+    * Resumes the execution of this thread (if it was previously suspended
+    * using suspend()).
+    *
+    * @return 0 is returned if this thread resumes execuation successfully.<br>
+    *         -1 is returned otherwise.
+    */
    virtual int resume()
    {return -1;}
 
-   // -----------------------------------------------------------------------
-   //: Suspend the execution of this thread.
-   //
-   //! RETURNS:  0 - Successful completion
-   //! RETURNS: -1 - Error
-   // -----------------------------------------------------------------------
+   /**
+    * Suspends the execution of this thread.
+    *
+    * @return 0 is returned if this thread is suspended successfully.<br>
+    *         -1 is returned otherwise.
+    */
    virtual int suspend()
    {return -1;}
 
-   // -----------------------------------------------------------------------
-   //: Get this thread's priority.
-   //
-   //! PRE: None.
-   //! POST: The priority of this thread is returned in the integer pointer
-   //+       variable.
-   //
-   //! ARGS: prio - Pointer to an int variable that will have the thread's
-   //+              priority stored in it.
-   //
-   //! RETURNS:  0 - Successful completion
-   //! RETURNS: -1 - Error
-   // -----------------------------------------------------------------------
+   /**
+    * Gets this thread's current priority.
+    *
+    * @pre None.
+    * @post The priority of this thread is returned in the integer pointer
+    *       variable.
+    *
+    * @param prio Pointer to an int variable that will have the thread's
+    *             priority stored in it.
+    *
+    * @return 0 is returned if the priority was retrieved successfully.<br>
+    *         -1 is returned if the priority could not be read.
+    */
    virtual int getPrio(VPRThreadPriority* prio)
    { return -1;}
 
-   // -----------------------------------------------------------------------
-   //: Set this thread's priority.
-   //
-   //! ARGS: prio - The new priority for this thread.
-   //
-   //! RETURNS:  0 - Successful completion
-   //! RETURNS: -1 - Error
-   // -----------------------------------------------------------------------
+   /**
+    * Sets this thread's priority.
+    *
+    * @param prio The new priority for this thread.
+    *
+    * @return 0 is returned if this thread's priority was set successfully.<br>
+    *         -1 is returned otherwise.
+    */
    virtual int setPrio(VPRThreadPriority prio)
    { return -1;}
 
-   // -----------------------------------------------------------------------
-   //: Get the "thread ID" of this vpr::BaseThread object.  This is a unique
-   //+ integer value assigned when the thread was created.
-   //
-   //! RETURNS: -1 - Bad thread. Creation error.
-   //! RETURNS: other - id of thread in Juggler
-   // -----------------------------------------------------------------------
+   /**
+    * Gets the "thread ID" of this vpr::BaseThread object.  This is a unique
+    * integer value assigned when the thread was created.
+    *
+    * @return -1 is returned if this is a bad thread.  This usually means that
+    *         there was a reation error.<br>
+    *         Otherwise, the value returned is this thread's ID.
+    */
    Int32 getTID()
    { return mThreadId; }
 
-   // -----------------------------------------------------------------------
-   //: Is this a valid thread?
-   //
-   //! RETURNS: true - object represents a thread that has been created
-   //+                 correctly.
-   // -----------------------------------------------------------------------
+   /**
+    * Is this a valid thread?
+    *
+    * @return true is returned if this object represents a thread that has
+    *         been created correctly.
+    */
    bool valid()
    {
       return (mThreadId != -1);
    }
 
-   // -----------------------------------------------------------------------
-   //: Send the specified signal to this thread (not necessarily SIGKILL).
-   //
-   //! POST: This thread receives the specified signal.
-   //
-   //! ARGS: signum - The signal to send to the specified thread.
-   //
-   //! RETURNS:  0 - Successful completion
-   //! RETURNS: -1 - Error
-   // -----------------------------------------------------------------------
+   /**
+    * Sends the specified signal to this thread (not necessarily SIGKILL).
+    *
+    * @post This thread receives the specified signal.
+    *
+    * @param signum The signal to send to the specified thread.
+    *
+    * @return 0 is returned if the thread was sent the given signal.<br>
+    *         -1 is returned if an error occurred.
+    */
    virtual int kill (int signum)
    { return -1;}
 
-   // -----------------------------------------------------------------------
-   //: Kill (cancel) this thread.
-   //
-   //! PRE: None.
-   //! POST: This thread is cancelled. Immediate
-   //+       cancellation is not guaranteed.
-   // -----------------------------------------------------------------------
+   /**
+    * Kill (cancel) this thread.
+    *
+    * @pre None.
+    * @post This thread is cancelled. Immediate cancellation is not guaranteed.
+    */
    virtual void kill()
    {;}
 
-   // -----------------------------------------------------------------------
-   //: Ouput the state of the object.
-   // -----------------------------------------------------------------------
+   /**
+    * Ouputs the state of the object.
+    */
    virtual std::ostream& outStream(std::ostream& out)
    {
       out.setf(std::ios::right);
@@ -257,21 +271,21 @@ public:
    }
 
 protected:
-   // -----------------------------------------------------------------------
-   //: Initialize the state of the object.
-   // -----------------------------------------------------------------------
+   /**
+    * Initializes the state of the object.
+    */
    void create_thread_id()
    {
       mThreadId = getNextThreadId();
    }
 
 private:
-   // Don't allow copy
+   /// Don't allow copy
    BaseThread(BaseThread& other)
    {;}
 
 private:
-   Int32  mThreadId;    // The local id for the thread, -1 ==> invalid thread
+   Int32  mThreadId;    //! The local id for the thread, -1 ==> invalid thread
 
    // --- STATICS ---- //
 
@@ -286,27 +300,43 @@ private:
 };
 
 
-//: Helper class fot vpr::Thread that maintains a list of threads and ides
-//
-// Basically maps from system specific index ==> vpr::Thread*
-//
-// Used internally because we can have many types of indexes for the thread
-// list depending upon the type of threads being used.
+/**
+ * Helper class for vpr::Thread that maintains a list of threads and IDs.
+ * It maps from system specific index ==> vpr::BaseThread*
+ *
+ * Used internally because we can have many types of indexes for the thread
+ * list depending upon the type of threads being used.
+ *
+ * @author Allen Bierbaum
+ */
 template <class IdxType>
 class VPR_CLASS_API ThreadTable
 {
 public:
-   // -----------------------------------------------------------------------
-   //: Add a thread to the list.
-   // -----------------------------------------------------------------------
+   /**
+    * Adds a thread to the list.
+    *
+    * @post The given thread object is registred using the given index.
+    *
+    * @param threadPtr A pointer to the thread to register.
+    * @param index     The index of the thread to be added.
+    */
    void addThread(BaseThread* threadPtr, IdxType index)
    {
       mThreadMap[index] = threadPtr;
    }
 
-   // -----------------------------------------------------------------------
-   //: Get a thread from the list.
-   // -----------------------------------------------------------------------
+   /**
+    * Gets a thread from the list.
+    *
+    * @post The thread indexed by the given value is returned to the caller.
+    *
+    * @param index The index of the thread to be retrieved.
+    *
+    * @return A pointer to a vpr::BaseThread is returned if the index was
+    *         valid.<br>
+    *         NULL is returned if the indexed thread could not be found.
+    */
    BaseThread* getThread(IdxType index)
    {
       //std::hash_map<IdxType, BaseThread*>::iterator i;
@@ -318,9 +348,14 @@ public:
          return (*i).second;
    }
 
-   // -----------------------------------------------------------------------
-   //: Remove a thread from the list.
-   // -----------------------------------------------------------------------
+   /**
+    * Removes a thread from the list.
+    *
+    * @pre The given value is the index of a registered thread.
+    * @post The thread indexed by the given value is removed from the list.
+    *
+    * @param index The index of the thread to be removed.
+    */
    void removeThread(IdxType index)
    {
       mThreadMap.erase(index);
@@ -331,7 +366,7 @@ private:
    //std::hash_map<IdxType, BaseThread*> mThreadMap;
 };
 
-/// Ouput operator
+/// Ouput operator.
 std::ostream& operator<<(std::ostream& out, BaseThread* threadPtr);
 
 }; // End of vpr namespace
