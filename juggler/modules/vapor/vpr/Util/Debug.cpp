@@ -34,6 +34,7 @@
 
 #include <vpr/Sync/Mutex.h>
 #include <vpr/Thread/Thread.h>
+#include <vpr/Thread/TSObjectProxy.h>
 #include <vpr/Util/StreamLock.h>
 #include <vpr/Util/Debug.h>
 
@@ -44,6 +45,13 @@ namespace vpr {
 Debug* Debug::_instance = NULL;
 Mutex  Debug::_inst_lock;
 */
+
+// Some thread specific global variables
+// They are globals because I can't include their type in the vjDEBUG header file
+// If I did, then we could not output debug info in the Thread manager itself
+TSObjectProxy<int> gVprDebugCurColumn;       // What column to indent to
+TSObjectProxy<std::string> gVprDebugCurColor;        // What color to display "everything" in
+
 
 vprSingletonImp(Debug);
 
@@ -95,6 +103,12 @@ std::ostream& Debug::getStream(int cat, int level, bool show_thread_info,
       std::cout << vprDEBUG_STREAM_LOCK << "              ";
    */
 
+   // If we have thread local stuff to do
+   if(mUseThreadLocal)
+   {
+      std::cout << clrSetNORM(*gVprDebugCurColor);
+   }
+
    // Ouput thread info
    // If not, then output space if we are also using indent (assume this means
    // new line used)
@@ -103,11 +117,20 @@ std::ostream& Debug::getStream(int cat, int level, bool show_thread_info,
    else if(use_indent)
       std::cout << "                  ";
 
-
-      // Insert the correct number of tabs into the stream for indenting
+   // Insert the correct number of tabs into the stream for indenting
    if(use_indent)
    {
       for(int i=0;i<indentLevel;i++)
+         std::cout << "\t";
+   }
+
+   // If we have thread local stuff to do
+   if(mUseThreadLocal)
+   {
+      const int column_width(3);
+      int column = (*gVprDebugCurColumn);
+      
+      for(int i=0;i<(column*column_width);i++)
          std::cout << "\t";
    }
 
@@ -198,5 +221,18 @@ void Debug::growAllowedCategoryVector(int newSize)
    while((int)mAllowedCategories.size() < newSize)
       mAllowedCategories.push_back(false);
 }
+
+void Debug::setThreadLocalColumn(int column)
+{
+
+    (*gVprDebugCurColumn) = column;
+}
+
+void Debug::setThreadLocalColor(std::string color)
+{
+    (*gVprDebugCurColor) = color;
+}
+
+
 
 }; // End of vpr namespace

@@ -232,10 +232,20 @@ public:
 
    void growAllowedCategoryVector(int newSize);
 
+   void enableThreadLocalSettings()
+   { mUseThreadLocal = true; }
+   void disableThreadLocalSettings()
+   { mUseThreadLocal = false; }
+
+   void setThreadLocalColumn(int column);
+   void setThreadLocalColor(std::string color);
+
 private:
    int debugLevel;      // Debug level to use
    int indentLevel;     // Amount to indent
-
+   
+   bool  mUseThreadLocal;  // Wether to use thread local info or not
+      
    Mutex          mDebugLock;
 
    std::vector<bool> mAllowedCategories;      //: The categories we allow
