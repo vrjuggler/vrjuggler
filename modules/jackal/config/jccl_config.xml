@@ -4,5 +4,8 @@
    <service name="ConfigBroker">
       <file name="${TWEEK_BASE_DIR}/bin/beans/jccl_config.jar"
             class="org.vrjuggler.jccl.config.ConfigBrokerImpl" />
+      <dependencies>
+            <jar path="${TWEEK_BASE_DIR}/bin">wizard.jar</jar>
+      </dependencies>
    </service>
 </beanlist>
