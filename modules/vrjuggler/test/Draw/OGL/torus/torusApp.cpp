@@ -10,7 +10,7 @@ doughnut(GLfloat r, GLfloat R, GLint nsides, GLint rings);
 //----------------------------------------------
 void torusApp::draw()
 {
-   vjCoord wand_pos(*mWand->GetData());
+   vjCoord wand_pos(*mWand->getData());
 
    glClearColor(0.0, 0.0, 0.0, 0.0);
    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
