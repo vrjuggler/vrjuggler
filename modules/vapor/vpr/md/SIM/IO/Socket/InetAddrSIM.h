@@ -45,6 +45,7 @@
 #include <vpr/vprConfig.h>
 
 #include <string>
+#include <vector>
 #include <vpr/IO/Socket/SocketTypes.h>
 #include <vpr/IO/Socket/InetAddrBase.h> // my base class...
 
@@ -213,6 +214,25 @@ public:
     *         in the human-readable "dotted-decimal" notation.
     */
    std::string getAddressString(void) const;
+
+   /**
+    * Returns the fully qualified hostname for this address.
+    */
+   std::string getHostname (void) const
+   {
+      return getAddressString();
+   }
+
+   /**
+    * Returns the fully qualified primary hostname for this address and all
+    * known aliases.
+    */
+   std::vector<std::string> getHostnames (void) const
+   {
+      std::vector<std::string> vec(1);
+      vec[0] = getAddressString();
+      return vec;
+   }
 
    /**
     * Overloaded assignment operator to ensure that assignments work

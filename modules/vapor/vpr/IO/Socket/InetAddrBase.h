@@ -45,6 +45,7 @@
 #include <vpr/vprConfig.h>
 
 #include <string>
+#include <vector>
 
 #include <vpr/IO/Socket/SocketTypes.h>
 #include <vpr/Util/Assert.h>
@@ -166,6 +167,19 @@ public:
      */
     std::string getAddressString(void) const
     {vprASSERT(false && "Implement me"); return std::string("");}
+
+    /**
+     * Returns the fully qualified hostname for this address.
+     */
+    std::string getHostname (void) const
+    {vprASSERT(false && "Implement me"); return std::string("");}
+
+    /**
+     * Returns the fully qualified primary hostname for this address and all
+     * known aliases.
+     */
+    std::vector<std::string> getHostnames (void) const
+    {vprASSERT(false && "Implement me"); return std::vector<std::string>();}
 
     /**
      * Set the address for this object using the given address.  It must be

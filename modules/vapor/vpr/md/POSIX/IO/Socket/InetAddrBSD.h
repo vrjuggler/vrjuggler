@@ -46,6 +46,7 @@
 
 #include <string.h>
 #include <string>
+#include <vector>
 #include <sys/types.h>
 #include <netinet/in.h>
 
@@ -270,6 +271,17 @@ public:
     *         the human-readable "dotted-decimal" notation.
     */
    std::string getAddressString(void) const;
+
+   /**
+    * Returns the fully qualified hostname for this address.
+    */
+   std::string getHostname(void) const;
+
+   /**
+    * Returns the fully qualified primary hostname for this address and all
+    * known aliases.
+    */
+   std::vector<std::string> getHostnames(void) const;
 
    /**
     * Overloaded assignment operator to ensure that assignments work
