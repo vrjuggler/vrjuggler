@@ -145,9 +145,21 @@ class aMotionStar {
     // returns whether the MotionStar is active
 
       bool& isActive();
-    // initializes the MotionStar, setting the status for each bird
 
-      void start();
+    // ------------------------------------------------------------------------
+    //: Initializes the MotionStar, setting the status for each bird.
+    //
+    //! PRE: The server address (either IP address or hostname) has been set.
+    //! POST: A connection attempt is made to the server.  If successful, the
+    //+       socket is set up in connected mode.  Each bird has its status
+    //+       set regardless of the connection attempt results.  If the
+    //+       connection attempt fails, error status is returned to the
+    //+       caller.
+    //
+    //! RETURNS:  0 - Successful startup.
+    //! RETURNS: -1 - Failed to connect to server.
+    // ------------------------------------------------------------------------
+    int start();
 
     // gets singleShots # of samplings, if 0 then runs continuously
 

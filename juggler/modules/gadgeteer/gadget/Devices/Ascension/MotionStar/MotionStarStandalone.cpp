@@ -88,8 +88,20 @@ aMotionStar::~aMotionStar() {
 } // end aMotionStar::~aMotionStar()
 
 
-void aMotionStar::start () {
-
+// ----------------------------------------------------------------------------
+//: Initializes the MotionStar, setting the status for each bird.
+//
+//! PRE: The server address (either IP address or hostname) has been set.
+//! POST: A connection attempt is made to the server.  If successful, the
+//+       socket is set up in connected mode.  Each bird has its status set
+//+       regardless of the connection attempt results.  If the connection
+//+       attempt fails, error status is returned to the caller.
+//
+//! RETURNS:  0 - Successful startup.
+//! RETURNS: -1 - Failed to connect to server.
+// ----------------------------------------------------------------------------
+int
+aMotionStar::start () {
   struct hostent* host_ent;
 
 //  cout << "In start" << endl;
@@ -143,9 +155,9 @@ void aMotionStar::start () {
 
   printf("\nConnecting to %s ...\n", address);
 
-  if (( s = socket(AF_INET,SOCK_STREAM,0))<0) {
+  if ( (s = socket(AF_INET, SOCK_STREAM, 0)) < 0 ) {
     perror("client: can't open stream socket");
-    return;
+    return -1;
   }
 
   /* Fill in the structure with the address of the
@@ -153,8 +165,8 @@ void aMotionStar::start () {
    */
 
   bzero((char *)&server, sizeof(server));
-  server.sin_family=AF_INET;
-  server.sin_port=htons(TCP_PORT);                              /* Server port number */
+  server.sin_family = AF_INET;
+  server.sin_port   = htons(TCP_PORT);		// Server port number
 
   // Try to look up address by name.  This will work for an IP address too,
   // but we fall back on inet_addr(3) below just to be safe.
@@ -230,6 +242,7 @@ void aMotionStar::start () {
   }
   active = true;
 
+  return 0;
 } // end void aMotionStar::start()
 
 
