@@ -858,7 +858,7 @@ protected:
     read_i (void* buffer, const size_t length, ssize_t& bytes_read,
             const vpr::Interval timeout = vpr::Interval::NoTimeout)
     {
-        return m_socket_imp->read(buffer, length, bytes_read, timeout);
+        return m_socket_imp->read_i(buffer, length, bytes_read, timeout);
     }
 
     /**
@@ -881,18 +881,19 @@ protected:
      *                   available for reading.  This argument is optional and
      *                   defaults to <code>vpr::Interval::NoTimeout</code>
      *
-     * @return vpr::Status::Success is returned if the read operation completed successfully.
-     * @return vpr::Status::InProgress if the device is in
-     *         non-blocking mode, and the read operation is in progress.
-     * @return vpr::Status::Timeout is returned if the read
-     *         could not begin within the timeout interval.
-     * @return vpr::Status::Failure is returned if the read operation failed.     
+     * @return vpr::Status::Success is returned if the read operation
+     *         completed successfully.<br>
+     *         vpr::Status::InProgress if the device is in non-blocking mode,
+     *         and the read operation is in progress.<br>
+     *         vpr::Status::Timeout is returned if the read could not begin
+     *         within the timeout interval.<br>
+     *         vpr::Status::Failure is returned if the read operation failed.
      */
     virtual vpr::Status
     readn_i (void* buffer, const size_t length, ssize_t& bytes_read,
              const vpr::Interval timeout = vpr::Interval::NoTimeout)
     {
-        return m_socket_imp->readn(buffer, length, bytes_read, timeout);
+        return m_socket_imp->readn_i(buffer, length, bytes_read, timeout);
     }
 
     /**
@@ -924,7 +925,7 @@ protected:
     write_i (const void* buffer, const size_t length, ssize_t& bytes_written,
              const vpr::Interval timeout = vpr::Interval::NoTimeout)
     {
-        return m_socket_imp->write(buffer, length, bytes_written, timeout);
+        return m_socket_imp->write_i(buffer, length, bytes_written, timeout);
     }
 
     /// Platform-specific socket implementation object

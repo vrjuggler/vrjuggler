@@ -278,13 +278,6 @@ public:
         return (m_open_mode == O_RDWR);
     }
 
-protected:
-    // Friends.
-    friend class SerialPortImplTermios;
-    friend class SocketDatagramImplBSD;
-    friend class SocketImplBSD;
-    friend class SocketStreamImplBSD;
-
     /**
      * Implementation of the <code>read</code> template method.  This reads at
      * most the specified number of bytes from the file into the given buffer.
@@ -374,6 +367,13 @@ protected:
     virtual Status write_i(const void* buffer, const size_t length,
                            ssize_t& bytes_written,
                            const vpr::Interval timeout = vpr::Interval::NoTimeout);
+
+protected:
+    // Friends.
+    friend class SerialPortImplTermios;
+    friend class SocketDatagramImplBSD;
+    friend class SocketImplBSD;
+    friend class SocketStreamImplBSD;
 
     /**
      * Gets the current file handle flags.

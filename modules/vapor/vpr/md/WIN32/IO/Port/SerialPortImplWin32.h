@@ -768,8 +768,6 @@ public:
     // ------------------------------------------------------------------------
     Status sendBreak(const Int32 duration);
 
-protected:
-
     // ------------------------------------------------------------------------
     //! Read up to the specified number of bytes from the serial port into the
     //+ given buffer.
@@ -814,7 +812,6 @@ protected:
         Status status;
 		return status;
     }
-	
 
     // ------------------------------------------------------------------------
     //: Write the buffer to the serial port.
