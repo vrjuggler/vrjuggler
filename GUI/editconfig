@@ -1,12 +1,7 @@
-#!/bin/csh
+#!/bin/sh
 
 #setenv PATH /usr/java/bin:$PATH
-setenv JDK_HOME /usr/java
+#setenv JDK_HOME /usr/java
 
 
-#java -classpath ~cjust/fromlinux/java/VjCfg.jar:/usr/java/classes VjGUI.AppCore fileeditor $1 $2 $3
-
-#java -classpath VjCfg.jar:/usr/java/classes VjGUI.AppCore fileeditor $1 $2 $3
-
-
-/usr/java/bin/java -classpath VjCfg.jar:/usr/java/lib/classes.zip VjGUI.AppCore fileeditor $1 $2 $3
+java -DVJ_BASE_DIR=${VJ_BASE_DIR} -classpath ${VJ_BASE_DIR}/bin/VjCfg.jar:/usr/java/lib/classes.zip VjGUI.AppCore fileeditor $1 $2 $3 $4 $5 $6
