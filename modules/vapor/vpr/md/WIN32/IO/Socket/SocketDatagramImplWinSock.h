@@ -30,19 +30,19 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _VPR_SOCKET_DATAGRAM_IMP_WINSOCK_H_
-#define _VPR_SOCKET_DATAGRAM_IMP_WINSOCK_H_
+#ifndef _VPR_SOCKET_DATAGRAM_IMPL_WINSOCK_H_
+#define _VPR_SOCKET_DATAGRAM_IMPL_WINSOCK_H_
 
 #include <string>
 
-#include <md/WIN32/SocketImpWinSock.h>
-#include <IO/Socket/SocketDatagramOpt.h>
+#include <vpr/md/WIN32/IO/Socket/SocketImplWinSock.h>
+#include <vpr/IO/Socket/SocketDatagramOpt.h>
 
 
 namespace vpr {
 
-class SocketDatagramImpWinSock : public SocketDatagramOpt,
-                                 public SocketImpWinSock
+class SocketDatagramImplWinSock : public SocketDatagramOpt,
+                                  public SocketImplWinSock
 {
 public:
     // ========================================================================
@@ -55,7 +55,7 @@ public:
     //! PRE: None.
     //! POST: None.
     // ------------------------------------------------------------------------
-    SocketDatagramImpWinSock(void);
+    SocketDatagramImplWinSock(void);
 
     // ------------------------------------------------------------------------
     //
@@ -64,8 +64,8 @@ public:
     //+       set to vpr::SocketTypes::DATAGRAM.
     //
     // ------------------------------------------------------------------------
-    SocketDatagramImpWinSock(const InetAddr& local_addr,
-                             const InetAddr& remote_addr);
+    SocketDatagramImplWinSock(const InetAddr& local_addr,
+                              const InetAddr& remote_addr);
 
     // ------------------------------------------------------------------------
     //: Destructor.  This currently does nothing.
@@ -73,7 +73,7 @@ public:
     //! PRE: None.
     //! POST: None.
     // ------------------------------------------------------------------------
-    virtual ~SocketDatagramImpWinSock (void) {
+    virtual ~SocketDatagramImplWinSock (void) {
         /* Do nothing. */ ;
     }
 
@@ -119,7 +119,7 @@ protected:
     getOption (const SocketOptions::Types option,
                struct SocketOptions::Data& data)
     {
-        return SocketImpWinSock::getOption(option, data);
+        return SocketImplWinSock::getOption(option, data);
     }
 
     // ------------------------------------------------------------------------
@@ -128,11 +128,11 @@ protected:
     setOption (const SocketOptions::Types option,
                const struct SocketOptions::Data& data)
     {
-        return SocketImpWinSock::setOption(option, data);
+        return SocketImplWinSock::setOption(option, data);
     }
 };
 
 }; // End of vpr namespace
 
 
-#endif	/* _VPR_SOCKET_DATAGRAM_IMP_WINSOCK_H_ */
+#endif	/* _VPR_SOCKET_DATAGRAM_IMPL_WINSOCK_H_ */

@@ -41,13 +41,13 @@ default: all
 # Include common definitions.
 include @topdir@/make.defs.mk
 
-includedir	= @includedir@/Utils
+includedir	= @includedir@/vpr/Util
 srcdir		= @srcdir@
 top_srcdir	= @top_srcdir@
 INSTALL		= @INSTALL@
 SUBOBJDIR	= $(VPR_LIBRARY)
 VPRROOT		= $(top_srcdir)
-VPR_SRCDIR	= @VPR_SRCDIR@/Utils
+VPR_SRCDIR	= @VPR_SRCDIR@/vpr/Util
 
 SRCS 		= Debug.cpp		\
                   StreamLock.cpp

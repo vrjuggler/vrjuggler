@@ -31,8 +31,8 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 
-#include <vprConfig.h>
-#include <md/SPROC/BarrierSGI.h>
+#include <vpr/vprConfig.h>
+#include <vpr/md/SPROC/Sync/BarrierSGI.h>
 
 vpr::MemPoolSGI* vpr::BarrierSGI::barrierPool = NULL;
 int* vpr::BarrierSGI::attachedCounter         = NULL;

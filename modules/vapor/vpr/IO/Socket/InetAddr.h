@@ -33,21 +33,21 @@
 #ifndef _VPR_INET_ADDR_H_
 #define _VPR_INET_ADDR_H_
 
-#include <vprConfig.h>
+#include <vpr/vprConfig.h>
 #include <iostream>
 
 #if defined(VPR_USE_NSPR)
-#   include <md/NSPR/InetAddrNSPR.h>
+#   include <vpr/md/NSPR/IO/Socket/InetAddrNSPR.h>
 namespace vpr {
     typedef InetAddrNSPR InetAddr;
 };
 #elif defined(VPR_USE_WIN32)
-#   include <md/WIN32/InetAddrWinSock.h>
+#   include <vpr/md/WIN32/IO/Socket/InetAddrWinSock.h>
 namespace vpr {
     typedef InetAddrWinSock InetAddr;
 };
 #else
-#   include <md/POSIX/InetAddrBSD.h>
+#   include <vpr/md/POSIX/IO/Socket/InetAddrBSD.h>
 namespace vpr {
     typedef InetAddrBSD InetAddr;
 };

@@ -39,7 +39,7 @@ namespace vpr {
 //: Cross-platform serial port interface.
 // ----------------------------------------------------------------------------
 //!PUBLIC_API:
-template<class RealSerialPortImp>
+template<class RealSerialPortImpl>
 class SerialPort_t : public Port {
 public:
     // ------------------------------------------------------------------------
@@ -960,11 +960,11 @@ protected:
         return m_sio_imp.write(buffer, length, bytes_written);
     }
 
-    RealSerialPortImp m_sio_imp;    //: Platform-specific serial port
-                                    //+ implementation object
+    RealSerialPortImpl m_sio_imp;    //: Platform-specific serial port
+                                     //+ implementation object
 };
 
 }; // End of vpr namespace
 
 
-#endif	/* _VPR_SERIAL_PORT_H_ */
+#endif	/* _VPR_SERIAL_PORT_T_H_ */

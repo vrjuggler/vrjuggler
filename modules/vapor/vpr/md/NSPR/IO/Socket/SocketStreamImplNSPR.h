@@ -30,20 +30,20 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _VPR_SOCKET_STREAM_IMP_NSPR_H_
-#define _VPR_SOCKET_STREAM_IMP_NSPR_H_
+#ifndef _VPR_SOCKET_STREAM_IMPL_NSPR_H_
+#define _VPR_SOCKET_STREAM_IMPL_NSPR_H_
 
-#include <vprConfig.h>
+#include <vpr/vprConfig.h>
 #include <string>
 #include <prio.h>
 
-#include <md/NSPR/SocketImpNSPR.h>
-#include <IO/Socket/SocketStreamOpt.h>
-#include <Utils/Debug.h>
+#include <vpr/md/NSPR/IO/Socket/SocketImplNSPR.h>
+#include <vpr/IO/Socket/SocketStreamOpt.h>
+#include <vpr/Util/Debug.h>
 
 namespace vpr {
 
-class SocketStreamImpNSPR : public SocketStreamOpt, public SocketImpNSPR {
+class SocketStreamImplNSPR : public SocketStreamOpt, public SocketImplNSPR {
 public:
     // ========================================================================
     // vpr::SocketStreamImp implementation.
@@ -58,18 +58,18 @@ public:
     // POST: The member variables are initialized with the m_type variable in
     //       particular set to SOCK_STREAM.
     // ------------------------------------------------------------------------
-    SocketStreamImpNSPR(void);
+    SocketStreamImplNSPR(void);
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
-    SocketStreamImpNSPR(const InetAddr& local_addr,
-                       const InetAddr& remote_addr);
+    SocketStreamImplNSPR(const InetAddr& local_addr,
+                         const InetAddr& remote_addr);
 
     // ------------------------------------------------------------------------
     // Copy constructor.
     // XXX: We need to have a reference count here
     // ------------------------------------------------------------------------
-    SocketStreamImpNSPR (const SocketStreamImpNSPR& sock) : SocketImpNSPR(sock)
+    SocketStreamImplNSPR (const SocketStreamImplNSPR& sock) : SocketImplNSPR(sock)
     { /* Just call base class */ }
 
     // ------------------------------------------------------------------------
@@ -78,7 +78,7 @@ public:
     // PRE: None.
     // POST: None.
     // ------------------------------------------------------------------------
-    virtual ~SocketStreamImpNSPR (void) {
+    virtual ~SocketStreamImplNSPR (void) {
         /* Do nothing. */ ;
     }
 
@@ -114,7 +114,7 @@ public:
     //     This is a blocking call and will block until a connection is
     //     established.
     // ------------------------------------------------------------------------
-    virtual Status accept(SocketStreamImpNSPR& sock);
+    virtual Status accept(SocketStreamImplNSPR& sock);
 
 protected:
     // ------------------------------------------------------------------------
@@ -123,7 +123,7 @@ protected:
     getOption (const SocketOptions::Types option,
                struct SocketOptions::Data& data)
     {
-        return SocketImpNSPR::getOption(option, data);
+        return SocketImplNSPR::getOption(option, data);
     }
 
     // ------------------------------------------------------------------------
@@ -132,11 +132,11 @@ protected:
     setOption (const SocketOptions::Types option,
                const struct SocketOptions::Data& data)
     {
-        return SocketImpNSPR::setOption(option, data);
+        return SocketImplNSPR::setOption(option, data);
     }
 };
 
 }; // End of vpr namespace
 
 
-#endif   /* _VJ_SOCKET_STREAM_IMP_BSD_H_ */
+#endif   /* _VJ_SOCKET_STREAM_IMPL_NSPR_H_ */

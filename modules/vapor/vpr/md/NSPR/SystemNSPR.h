@@ -41,7 +41,7 @@
 #ifndef _VPR_SYSTEM_NSPR_H_
 #define _VPR_SYSTEM_NSPR_H_
 
-#include <vprConfig.h>
+#include <vpr/vprConfig.h>
 
 #include <stdlib.h>
 #include <string.h>
@@ -50,7 +50,8 @@
 #include <prnetdb.h>
 #include <prenv.h>
 
-#include <SystemBase.h>
+#include <vpr/Util/Status.h>
+#include <vpr/SystemBase.h>
 
 #ifndef HAVE_GETTIMEOFDAY
 struct timeval {

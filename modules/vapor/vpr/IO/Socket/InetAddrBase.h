@@ -33,12 +33,13 @@
 #ifndef _VPR_INET_ADDR_BASE_H_
 #define _VPR_INET_ADDR_BASE_H_
 
-#include <vprConfig.h>
+#include <vpr/vprConfig.h>
 
 #include <string>
 
-#include <IO/Socket/SocketTypes.h>
-#include <Utils/Assert.h>
+#include <vpr/IO/Socket/SocketTypes.h>
+#include <vpr/Util/Assert.h>
+#include <vpr/Util/Status.h>
 
 namespace vpr {
 

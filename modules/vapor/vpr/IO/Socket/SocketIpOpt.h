@@ -33,7 +33,7 @@
 #ifndef _VPR_SOCKET_IP_OPT_H_
 #define _VPR_SOCKET_IP_OPT_H_
 
-#include <IO/Socket/SocketBasicOpt.h>
+#include <vpr/IO/Socket/SocketBasicOpt.h>
 
 
 namespace vpr {

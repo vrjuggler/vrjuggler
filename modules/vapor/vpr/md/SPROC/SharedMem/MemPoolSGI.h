@@ -30,8 +30,8 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _MemPoolSGI_h_
-#define _MemPoolSGI_h_
+#ifndef _VPR_MemPoolSGI_h_
+#define _VPR_MemPoolSGI_h_
 
 //----------------------------------------------
 // vpr::MemPoolSGI
@@ -59,7 +59,7 @@
 // Date: 1-9-97
 //-----------------------------------------------
 
-#include <vprConfig.h>
+#include <vpr/vprConfig.h>
 #include <stdio.h>
 #include <unistd.h>
 #include <ulocks.h>

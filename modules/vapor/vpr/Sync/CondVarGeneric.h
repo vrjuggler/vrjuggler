@@ -30,10 +30,10 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _VPR_CondGeneric_h_
-#define _VPR_CondGeneric_h_
+#ifndef _VPR_CondVarGeneric_h_
+#define _VPR_CondVarGeneric_h_
 
-#include <vprConfig.h>
+#include <vpr/vprConfig.h>
 
 #ifdef VPR_OS_Win32
 #   include <process.h>
@@ -45,15 +45,15 @@
 #   include <unistd.h>
 #endif
 
-#include <Sync/Semaphore.h>
-#include <Sync/Mutex.h>
-#include <Utils/Debug.h>
+#include <vpr/Sync/Semaphore.h>
+#include <vpr/Sync/Mutex.h>
+#include <vpr/Util/Debug.h>
 
 
 namespace vpr {
 
 //----------------------------------------------
-//  vpr::CondGeneric
+//  vpr::CondVarGeneric
 //
 // Purpose:
 //:   Condition Variable wrapper for the any system
@@ -72,13 +72,13 @@ namespace vpr {
 // Date: 1-29-97
 //!PUBLIC_API:
 //-----------------------------------------------
-class CondGeneric
+class CondVarGeneric
 {
 public:
    //: Constructor
    //! ARGS: mutex - a pointer to a user specified mutex
    //+               if not specified, uses internal mutex
-   CondGeneric(Mutex* mutex = NULL)
+   CondVarGeneric(Mutex* mutex = NULL)
    {
       if (mutex == NULL)
          mutex = &defaultMutex;
@@ -86,9 +86,9 @@ public:
       condMutex = mutex;
       waiters = 0;
 
-      std::cerr << "-----------------------------------\n"
-                << "  vpr::CondGeneric: DOES NOT WORK\n"
-                << "-----------------------------------\n";
+      std::cerr << "------------------------------------\n"
+                << "  vpr::CondVarGeneric: DOES NOT WORK\n"
+                << "------------------------------------\n";
    }
 
    //: Wait for possible condition change
@@ -104,7 +104,7 @@ public:
       std::cerr << std::setw(5) << getpid() << "  Signal" << std::endl;
       // ASSERT:  We have been locked
       if (condMutex->test() == 0)    // Not locked
-         std::cerr << " vpr::CondGeneric::signal: Mutex was not locked when signal called!!!" << std::endl;
+         std::cerr << " vpr::CondVarGeneric::signal: Mutex was not locked when signal called!!!" << std::endl;
 
       if (waiters > 0)
       {
@@ -121,7 +121,7 @@ public:
    {
       // ASSERT:  We have been locked
       if (condMutex->test() == 0)    // Not locked
-         std::cerr << " vpr::CondGeneric::broadcast: Mutex was not locked when broadcase called!!!" << std::endl;
+         std::cerr << " vpr::CondVarGeneric::broadcast: Mutex was not locked when broadcase called!!!" << std::endl;
 
       for (int i = waiters;i>0;i--)
          sema.release();
@@ -158,7 +158,7 @@ public:
    void dump (void) const
    {
       vprDEBUG_BEGIN(vprDBG_ALL,0)
-          << "------------- vpr::CondGeneric::Dump ---------\n"
+          << "------------- vpr::CondVarGeneric::Dump ---------\n"
           << vprDEBUG_FLUSH;
       vprDEBUG(vprDBG_ALL,0) << "waiters: " << waiters << std::endl
                              << vprDEBUG_FLUSH;
@@ -177,8 +177,8 @@ private:
    Mutex defaultMutex; //: Mutex to use if user does not specify one
 
    // = Prevent assignment and initialization.
-   void operator= (const CondGeneric&) {;}
-   CondGeneric (const CondGeneric &c) {;}
+   void operator= (const CondVarGeneric&) {;}
+   CondVarGeneric (const CondVarGeneric &c) {;}
 };
 
 }; // End of vpr namespace

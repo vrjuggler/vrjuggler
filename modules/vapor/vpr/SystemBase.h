@@ -33,12 +33,12 @@
 #ifndef _VPR_SYSTEM_BASE_H_
 #define _VPR_SYSTEM_BASE_H_
 
-#include <vprConfig.h>
+#include <vpr/vprConfig.h>
 
 #include <math.h>
 
-#include <vprTypes.h>
-#include <Threads/Thread.h>
+#include <vpr/vprTypes.h>
+#include <vpr/Thread/Thread.h>
 
 namespace vpr {
 

@@ -30,7 +30,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vprConfig.h>
+#include <vpr/vprConfig.h>
 
 #include <stdio.h>
 #include <string.h>
@@ -44,8 +44,8 @@
 #include <sys/time.h>
 #include <errno.h>
 
-#include <md/POSIX/SelectorImpBSD.h>
-#include <Utils/Assert.h>
+#include <vpr/md/POSIX/IO/SelectorImplBSD.h>
+#include <vpr/Util/Assert.h>
 
 
 namespace vpr {
@@ -55,7 +55,7 @@ namespace vpr {
 //! POST: handle is added to the handle set, and initialized to a mask of
 //+       no-events
 bool
-SelectorImpBSD::addHandle (IOSys::Handle handle) {
+SelectorImplBSD::addHandle (IOSys::Handle handle) {
    bool status;
 
    if ( getHandle(handle) == mPollDescs.end() ) {
@@ -78,7 +78,7 @@ SelectorImpBSD::addHandle (IOSys::Handle handle) {
 //! PRE: handle is in the selector
 //! POST: handle is removed from the set of valid handles
 bool
-SelectorImpBSD::removeHandle (IOSys::Handle handle) {
+SelectorImplBSD::removeHandle (IOSys::Handle handle) {
    bool status;
    std::vector<BSDPollDesc>::iterator i = getHandle(handle);
 
@@ -95,7 +95,7 @@ SelectorImpBSD::removeHandle (IOSys::Handle handle) {
 
 //: Set the event flags going in to the select to mask
 bool
-SelectorImpBSD::setIn (IOSys::Handle handle, vpr::Uint16 mask) {
+SelectorImplBSD::setIn (IOSys::Handle handle, vpr::Uint16 mask) {
    bool status;
    std::vector<BSDPollDesc>::iterator i = getHandle(handle);
 
@@ -112,7 +112,7 @@ SelectorImpBSD::setIn (IOSys::Handle handle, vpr::Uint16 mask) {
 
 //: Get the current in flag mask
 vpr::Uint16
-SelectorImpBSD::getIn (IOSys::Handle handle) {
+SelectorImplBSD::getIn (IOSys::Handle handle) {
    vpr::Uint16 flags;
    std::vector<BSDPollDesc>::iterator i = getHandle(handle);
 
@@ -129,7 +129,7 @@ SelectorImpBSD::getIn (IOSys::Handle handle) {
 
 //: Get the current out flag mask
 vpr::Uint16
-SelectorImpBSD::getOut (IOSys::Handle handle) {
+SelectorImplBSD::getOut (IOSys::Handle handle) {
    vpr::Uint16 flags;
    std::vector<BSDPollDesc>::iterator i = getHandle(handle);
 
@@ -149,7 +149,7 @@ SelectorImpBSD::getOut (IOSys::Handle handle) {
 //+                       have events
 //! ARGS: timeout - The number of msecs to select for (0 - don't wait)
 Status
-SelectorImpBSD::select (vpr::Uint16& numWithEvents, vpr::Uint16 timeout) {
+SelectorImplBSD::select (vpr::Uint16& numWithEvents, vpr::Uint16 timeout) {
    vpr::Status ret_val;
    int result;
    fd_set read_set, write_set, exception_set;
@@ -195,7 +195,7 @@ SelectorImpBSD::select (vpr::Uint16& numWithEvents, vpr::Uint16 timeout) {
 
    // D'oh!
    if ( -1 == result ) {
-      fprintf(stderr, "SelectorImpBSD::select: Error selecting: %s\n",
+      fprintf(stderr, "SelectorImplBSD::select: Error selecting: %s\n",
               strerror(errno));
       numWithEvents = 0;
       ret_val.setCode(Status::Failure);
@@ -229,8 +229,8 @@ SelectorImpBSD::select (vpr::Uint16& numWithEvents, vpr::Uint16 timeout) {
 
 // Get the index of the handle given
 //! RETURNS: .end() - Not found, else the index to the handle in mPollDescs
-std::vector<SelectorImpBSD::BSDPollDesc>::iterator
-SelectorImpBSD::getHandle (int handle) {
+std::vector<SelectorImplBSD::BSDPollDesc>::iterator
+SelectorImplBSD::getHandle (int handle) {
    // XXX: Should probably be replaced by a map in the future for speed
 
    for(std::vector<BSDPollDesc>::iterator i=mPollDescs.begin();

@@ -33,7 +33,8 @@
 #ifndef _VPR_H_INCLUDED_
 #define _VPR_H_INCLUDED_
 
-#include <vprConfig.h>
-#include <vprTypes.h>
+#include <vpr/vprConfig.h>
+#include <vpr/vprTypes.h>
+#include <vpr/Util/Status.h>
 
 #endif	/* _VPR_H_INCLUDED_ */

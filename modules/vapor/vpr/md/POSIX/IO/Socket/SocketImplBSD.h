@@ -30,27 +30,27 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _VPR_SOCKET_IMP_BSD_H_
-#define _VPR_SOCKET_IMP_BSD_H_
+#ifndef _VPR_SOCKET_IMPL_BSD_H_
+#define _VPR_SOCKET_IMPL_BSD_H_
 
-#include <vprConfig.h>
+#include <vpr/vprConfig.h>
 
 #include <sys/types.h>
 #include <netinet/in.h>
 #include <string>
 #include <vector>
 
-#include <IO/BlockIO.h>
-#include <IO/IOSys.h>
-#include <md/POSIX/FileHandleUNIX.h>
-#include <IO/Socket/InetAddr.h>
-#include <IO/Socket/SocketIpOpt.h>
-#include <Utils/Assert.h>
+#include <vpr/IO/BlockIO.h>
+#include <vpr/IO/IOSys.h>
+#include <vpr/md/POSIX/IO/FileHandleUNIX.h>
+#include <vpr/IO/Socket/InetAddr.h>
+#include <vpr/IO/Socket/SocketIpOpt.h>
+#include <vpr/Util/Assert.h>
 
 
 namespace vpr {
 
-class SocketImpBSD : public BlockIO, public SocketIpOpt
+class SocketImplBSD : public BlockIO, public SocketIpOpt
 {
 public:
     // ========================================================================
@@ -200,7 +200,7 @@ protected:
     // POST: The member variables are initialized accordingly to reasonable
     //       defaults.
     // ------------------------------------------------------------------------
-    SocketImpBSD (const SocketTypes::Type sock_type)
+    SocketImplBSD (const SocketTypes::Type sock_type)
         : BlockIO(std::string("INADDR_ANY")), m_bound(false),
           m_connected(false), m_handle(NULL), m_type(sock_type)
     {
@@ -218,8 +218,8 @@ protected:
     //     local_addr  - The local address for the socket.
     //     remote_addr - The remote address for the socket.
     // ------------------------------------------------------------------------
-    SocketImpBSD (const InetAddr& local_addr, const InetAddr& remote_addr,
-                  const SocketTypes::Type sock_type)
+    SocketImplBSD (const InetAddr& local_addr, const InetAddr& remote_addr,
+                   const SocketTypes::Type sock_type)
         : BlockIO(std::string("INADDR_ANY")), m_bound(false),
           m_connected(false), m_handle(NULL), m_local_addr(local_addr),
           m_remote_addr(remote_addr), m_type(sock_type)
@@ -233,7 +233,7 @@ protected:
     // PRE: None.
     // POST: None.
     // ------------------------------------------------------------------------
-    virtual ~SocketImpBSD(void);
+    virtual ~SocketImplBSD(void);
 
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
@@ -279,4 +279,4 @@ protected:
 }; // End of vpr namespace
 
 
-#endif   /* _VPR_SOCKET_IMP_BSD_H_ */
+#endif   /* _VPR_SOCKET_IMPL_BSD_H_ */

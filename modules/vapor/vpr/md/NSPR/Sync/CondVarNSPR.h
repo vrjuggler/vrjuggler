@@ -36,31 +36,31 @@
  *   Patrick Hartling
  * --------------------------------------------------------------------------
  * NOTES:
- *    - This file (vprCondNSPR.h) must be included by vprCond.h, not the
+ *    - This file (CondVarNSPR.h) must be included by vpr/Cond.h, not the
  *      other way around.
  * --------------------------------------------------------------------------
  */
 
-#ifndef _VPR_COND_NSPR_H_
-#define _VPR_COND_NSPR_H_
+#ifndef _VPR_COND_VAR_NSPR_H_
+#define _VPR_COND_VAR_NSPR_H_
 
-#include <vprConfig.h>
+#include <vpr/vprConfig.h>
 
 #include <prcvar.h>
 
-#include <md/NSPR/MutexNSPR.h>
-#include <Utils/Debug.h>
-#include <Utils/Assert.h>
+#include <vpr/md/NSPR/Sync/MutexNSPR.h>
+#include <vpr/Util/Debug.h>
+#include <vpr/Util/Assert.h>
 
 
 namespace vpr {
 
 //: Condition variable wrapper for NSPR condition variables.
 //!PUBLIC_API:
-class CondNSPR {
+class CondVarNSPR {
 public:
     // -----------------------------------------------------------------------
-    //: Constructor for vpr::CondNSPR class.
+    //: Constructor for vpr::CondVarNSPR class.
     //
     //! PRE: None.
     //! POST: The condition variable is intialized, and the mutex variable
@@ -71,7 +71,7 @@ public:
     //+               association with the condition variable in this class
     //+               (optional).
     // -----------------------------------------------------------------------
-    CondNSPR (MutexNSPR* mutex = NULL) {
+    CondVarNSPR (MutexNSPR* mutex = NULL) {
         // If the caller did not specify a mutex variable to use with
         // the condition variable, use mDefaultMutex.
         if ( mutex == NULL ) {
@@ -87,12 +87,12 @@ public:
     }
 
     // -----------------------------------------------------------------------
-    //: Destructor for CondNSPR class.
+    //: Destructor for CondVarNSPR class.
     //
     //! PRE: The condition variable is no longer in use.
     //! POST: The condition variable is destroyed.
     // -----------------------------------------------------------------------
-    ~CondNSPR (void) {
+    ~CondVarNSPR (void) {
         PR_DestroyCondVar(mCondVar);
     }
 
@@ -239,7 +239,7 @@ public:
     // -----------------------------------------------------------------------
     void
     dump (void) const {
-        std::cerr << "------------- vpr::CondNSPR::Dump ---------\n"
+        std::cerr << "------------- vpr::CondVarNSPR::Dump ---------\n"
                   << "Not Implemented yet.\n";
     }
 
@@ -250,11 +250,11 @@ private:
     MutexNSPR		mDefaultMutex;	//: A default mutex variable
 
     // = Prevent assignment and initialization.
-    void operator= (const CondNSPR&) {
+    void operator= (const CondVarNSPR&) {
         /* Do nothing.*/ ;
     }
 
-    CondNSPR (const CondNSPR &c) {
+    CondVarNSPR (const CondVarNSPR &c) {
         /* Do nothing.*/ ;
     }
 };
@@ -262,4 +262,4 @@ private:
 }; // End of vpr namespace
 
 
-#endif	/* _VPR_COND_NSPR_H_ */
+#endif	/* _VPR_COND_VAR_NSPR_H_ */

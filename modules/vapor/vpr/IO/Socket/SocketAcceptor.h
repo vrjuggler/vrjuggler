@@ -30,14 +30,13 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
+#ifndef _VPR_SOCK_ACCEPTOR_H_
+#define _VPR_SOCK_ACCEPTOR_H_
 
-#ifndef SOCK_ACCEPTOR_H
-#define SOCK_ACCEPTOR_H
-
-#include <vprConfig.h>
-#include <IO/Socket/SocketStream.h>
-#include <IO/Socket/InetAddr.h>
-#include <Utils/Status.h>
+#include <vpr/vprConfig.h>
+#include <vpr/IO/Socket/SocketStream.h>
+#include <vpr/IO/Socket/InetAddr.h>
+#include <vpr/Util/Status.h>
 
 namespace vpr
 {
@@ -135,5 +134,4 @@ vpr::Status SocketAcceptor::accept(SocketStream& sock)
 }
 
 
-#endif //SOCK_ACCEPTOR_H
-
+#endif /* _VPR_SOCK_ACCEPTOR_H_ */

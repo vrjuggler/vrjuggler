@@ -34,8 +34,8 @@
 #define _VPR_STREAM_LOCK_H_
 //#pragma once
 
-#include <vprConfig.h>
-#include <Sync/Mutex.h>
+#include <vpr/vprConfig.h>
+#include <vpr/Sync/Mutex.h>
 
 
 namespace vpr {

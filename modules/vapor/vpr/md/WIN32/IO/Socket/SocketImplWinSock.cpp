@@ -30,7 +30,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vprConfig.h>
+#include <vpr/vprConfig.h>
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -38,7 +38,7 @@
 #include <winsock2.h>
 #include <ws2tcpip.h>
 
-#include <md/WIN32/SocketImpWinSock.h>
+#include <vpr/md/WIN32/IO/Socket/SocketImplWinSock.h>
 
 
 namespace vpr {
@@ -52,7 +52,7 @@ namespace vpr {
 // options set through member variables.
 // ----------------------------------------------------------------------------
 Status
-SocketImpWinSock::open () {
+SocketImplWinSock::open () {
     Status retval;
     int domain, type;
 
@@ -93,7 +93,7 @@ SocketImpWinSock::open () {
 
     if ( m_sockfd == INVALID_SOCKET ) {
         fprintf(stderr,
-                "[vpr::SocketImpWinSock] Could not create socket (%s): %s\n",
+                "[vpr::SocketImplWinSock] Could not create socket (%s): %s\n",
                 m_name.c_str(), strerror(errno));
         retval.setCode(Status::Failure);
     }
@@ -105,7 +105,7 @@ SocketImpWinSock::open () {
 // Close the socket.
 // ----------------------------------------------------------------------------
 Status
-SocketImpWinSock::close (void) {
+SocketImplWinSock::close () {
     Status retval;
 
     if ( ::closesocket(m_sockfd) == 0 ) {
@@ -113,7 +113,7 @@ SocketImpWinSock::close (void) {
     }
     else {
         fprintf(stderr,
-                "[vpr::SocketImpWinSock] Could not close socket (%s): %s\n",
+                "[vpr::SocketImplWinSock] Could not close socket (%s): %s\n",
                 m_name.c_str(), strerror(errno));
         retval.setCode(Status::Failure);
     }
@@ -125,7 +125,7 @@ SocketImpWinSock::close (void) {
 // Bind this socket to the address in the host address member variable.
 // ----------------------------------------------------------------------------
 Status
-SocketImpWinSock::bind () {
+SocketImplWinSock::bind () {
     Status retval;
     int status;
 
@@ -136,7 +136,7 @@ SocketImpWinSock::bind () {
     // If that fails, print an error and return error status.
     if ( status == -1 ) {
         fprintf(stderr,
-                "[vpr::SocketImpWinSock] Cannot bind socket to address: %s\n",
+                "[vpr::SocketImplWinSock] Cannot bind socket to address: %s\n",
                 strerror(errno));
         retval.setCode(Status::Failure);
     }
@@ -154,7 +154,7 @@ SocketImpWinSock::bind () {
 // establishing a connection with the destination.
 // ----------------------------------------------------------------------------
 Status
-SocketImpWinSock::connect () {
+SocketImplWinSock::connect () {
     Status retval;
     int status;
 
@@ -165,7 +165,7 @@ SocketImpWinSock::connect () {
     // If connect(2) failed, print an error message explaining why and return
     // error status.
     if ( status == -1 ) {
-        fprintf(stderr, "[vpr::SocketImpWinSock] Error connecting to %s: %s\n",
+        fprintf(stderr, "[vpr::SocketImplWinSock] Error connecting to %s: %s\n",
                 m_name.c_str(), strerror(errno));
         retval.setCode(Status::Failure);
     }
@@ -184,7 +184,7 @@ SocketImpWinSock::connect () {
 // Default constructor.  This just initializes member variables to reasonable
 // defaults.
 // ----------------------------------------------------------------------------
-SocketImpWinSock::SocketImpWinSock ()
+SocketImplWinSock::SocketImplWinSock ()
     : BlockIO(std::string("INADDR_ANY")), m_sockfd(-1), m_bound(false),
       m_connected(false)
 {
@@ -197,9 +197,9 @@ SocketImpWinSock::SocketImpWinSock ()
 // in the member variables for use when opening the socket and performing
 // communications.
 // ----------------------------------------------------------------------------
-SocketImpWinSock::SocketImpWinSock (const InetAddr& local_addr,
-                                    const InetAddr& remote_addr,
-                                    const SocketTypes::Type type)
+SocketImplWinSock::SocketImplWinSock (const InetAddr& local_addr,
+                                      const InetAddr& remote_addr,
+                                      const SocketTypes::Type type)
     : BlockIO(std::string("INADDR_ANY")), m_sockfd(-1), m_bound(false),
       m_connected(false), m_local_addr(local_addr),
       m_remote_addr(remote_addr), m_type(type)
@@ -210,7 +210,7 @@ SocketImpWinSock::SocketImpWinSock (const InetAddr& local_addr,
 // ----------------------------------------------------------------------------
 // Destructor.  This currently does nothing.
 // ----------------------------------------------------------------------------
-SocketImpWinSock::~SocketImpWinSock () {
+SocketImplWinSock::~SocketImplWinSock () {
     init();
 }
 
@@ -220,7 +220,7 @@ SocketImpWinSock::~SocketImpWinSock () {
 // TCP/IP Programming_ by Jon C. Snader.
 // ----------------------------------------------------------------------------
 void
-SocketImpWinSock::init () {
+SocketImplWinSock::init () {
     WSADATA wsadata;
     WSAStartup(MAKEWORD(2, 2), &wsadata);
 }
@@ -230,8 +230,8 @@ SocketImpWinSock::init () {
 // local side is connected.
 // ----------------------------------------------------------------------------
 Status
-SocketImpWinSock::recv (void* buffer, const size_t length, const int flags,
-                        ssize_t& bytes_read)
+SocketImplWinSock::recv (void* buffer, const size_t length, const int flags,
+                         ssize_t& bytes_read)
 {
     Status retval;
 
@@ -250,8 +250,8 @@ SocketImpWinSock::recv (void* buffer, const size_t length, const int flags,
 // _Effective TCP/IP Programming_ by Jon D. Snader.
 // ----------------------------------------------------------------------------
 Status
-SocketImpWinSock::recvn (void* buffer, const size_t length, const int flags,
-                         ssize_t& bytes_read)
+SocketImplWinSock::recvn (void* buffer, const size_t length, const int flags,
+                          ssize_t& bytes_read)
 {
     size_t count;
     Status retval;
@@ -284,8 +284,8 @@ SocketImpWinSock::recvn (void* buffer, const size_t length, const int flags,
 // local side to the remote site to which we are connected.
 // ----------------------------------------------------------------------------
 Status
-SocketImpWinSock::send (const void* buffer, const size_t length,
-                        const int flags, ssize_t& bytes_sent)
+SocketImplWinSock::send (const void* buffer, const size_t length,
+                         const int flags, ssize_t& bytes_sent)
 {
     Status retval;
 
@@ -312,8 +312,8 @@ union sockopt_data {
 };
 
 Status
-SocketImpWinSock::getOption (const SocketOptions::Types option,
-                             struct SocketOptions::Data& data)
+SocketImplWinSock::getOption (const SocketOptions::Types option,
+                              struct SocketOptions::Data& data)
 {
     int opt_name, opt_level;
     Status retval;
@@ -383,7 +383,7 @@ SocketImpWinSock::getOption (const SocketOptions::Types option,
         break;
       case SocketOptions::MaxSegment:
         fprintf(stderr,
-                "[vpr::SocketImpWinSock] WARNING: This platform does not "
+                "[vpr::SocketImplWinSock] WARNING: This platform does not "
                 "support the TCP max segment option!\n");
         do_get = false;
         break;
@@ -469,7 +469,7 @@ SocketImpWinSock::getOption (const SocketOptions::Types option,
         else {
             retval.setCode(Status::Failure);
             fprintf(stderr,
-                    "[vpr::SocketImpWinSock] ERROR: Could not get socket "
+                    "[vpr::SocketImplWinSock] ERROR: Could not get socket "
                     "option for socket %s: %s\n", getName().c_str(),
                     strerror(errno));
         }
@@ -482,8 +482,8 @@ SocketImpWinSock::getOption (const SocketOptions::Types option,
 }
 
 Status
-SocketImpWinSock::setOption (const SocketOptions::Types option,
-                             const struct SocketOptions::Data& data)
+SocketImplWinSock::setOption (const SocketOptions::Types option,
+                              const struct SocketOptions::Data& data)
 {
     int opt_name, opt_level;
     socklen_t opt_size;
@@ -544,7 +544,7 @@ SocketImpWinSock::setOption (const SocketOptions::Types option,
             opt_data.size = IPTOS_LOWDELAY;
 #else
             fprintf(stderr,
-                    "[vpr::SocketImpWinSock] WARNING: This platform does not "
+                    "[vpr::SocketImplWinSock] WARNING: This platform does not "
                     "support LowDelay type of service!\n");
 #endif
             break;
@@ -553,7 +553,7 @@ SocketImpWinSock::setOption (const SocketOptions::Types option,
             opt_data.size = IPTOS_THROUGHPUT;
 #else
             fprintf(stderr,
-                    "[vpr::SocketImpWinSock] WARNING: This platform does not "
+                    "[vpr::SocketImplWinSock] WARNING: This platform does not "
                     "support LowDelay type of service!\n");
 #endif
             break;
@@ -562,7 +562,7 @@ SocketImpWinSock::setOption (const SocketOptions::Types option,
             opt_data.size = IPTOS_RELIABILITY;
 #else
             fprintf(stderr,
-                    "[vpr::SocketImpWinSock] WARNING: This platform does not "
+                    "[vpr::SocketImplWinSock] WARNING: This platform does not "
                     "support LowDelay type of service!\n");
 #endif
             break;
@@ -571,7 +571,7 @@ SocketImpWinSock::setOption (const SocketOptions::Types option,
             opt_data.size = IPTOS_LOWCOST;
 #else
             fprintf(stderr,
-                    "[vpr::SocketImpWinSock] WARNING: This platform does not "
+                    "[vpr::SocketImplWinSock] WARNING: This platform does not "
                     "support LowCost type of service!\n");
 #endif
             break;
@@ -621,7 +621,7 @@ SocketImpWinSock::setOption (const SocketOptions::Types option,
         break;
       case SocketOptions::MaxSegment:
         fprintf(stderr,
-                "[vpr::SocketImpWinSock] WARNING: This platform does not "
+                "[vpr::SocketImplWinSock] WARNING: This platform does not "
                 "support the TCP max segment option!\n");
         do_set = false;
         break;

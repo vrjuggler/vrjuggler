@@ -33,10 +33,10 @@
 #ifndef _VPR_BASE_THREAD_H_
 #define _VPR_BASE_THREAD_H_
 
-#include <vprConfig.h>
+#include <vpr/vprConfig.h>
 #include <map>
-#include <Threads/ThreadFunctor.h>
-#include <Threads/TSTable.h>            // Needed to cache a copy here
+#include <vpr/Thread/ThreadFunctor.h>
+#include <vpr/Thread/TSTable.h>            // Needed to cache a copy here
 
 
 namespace vpr {

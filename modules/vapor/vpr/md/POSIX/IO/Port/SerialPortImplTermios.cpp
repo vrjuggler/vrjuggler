@@ -35,7 +35,7 @@
 #include <termios.h>
 #include <errno.h>
 
-#include <md/POSIX/SerialPortImpTermios.h>
+#include <vpr/md/POSIX/IO/Port/SerialPortImplTermios.h>
 
 
 extern int errno;
@@ -50,7 +50,7 @@ namespace vpr {
 // Constructor.  This creates a file handle object connected to the given port
 // name and sets the update action to happen immediately.
 // ----------------------------------------------------------------------------
-SerialPortImpTermios::SerialPortImpTermios (const std::string& port_name)
+SerialPortImplTermios::SerialPortImplTermios (const std::string& port_name)
     : Port(port_name), m_handle(NULL)
 {
     m_handle = new FileHandleUNIX(port_name);
@@ -60,7 +60,7 @@ SerialPortImpTermios::SerialPortImpTermios (const std::string& port_name)
 // ----------------------------------------------------------------------------
 // Destructor.  If the file handle is non-NULL, its memory is released.
 // ----------------------------------------------------------------------------
-SerialPortImpTermios::~SerialPortImpTermios () {
+SerialPortImplTermios::~SerialPortImplTermios () {
     if ( m_handle != NULL ) {
         delete m_handle;
     }
@@ -70,7 +70,7 @@ SerialPortImpTermios::~SerialPortImpTermios () {
 // Open the serial port and initialize its flags.
 // ----------------------------------------------------------------------------
 Status
-SerialPortImpTermios::open () {
+SerialPortImplTermios::open () {
     Status status;
 
     status = m_handle->open();
@@ -78,7 +78,7 @@ SerialPortImpTermios::open () {
     // If the serial port could not be opened, print an error message.
     if ( ! status.success() ) {
         fprintf(stderr,
-                "[vpr::SerialPortImpTermios] Could not open serial port %s: %s\n",
+                "[vpr::SerialPortImplTermios] Could not open serial port %s: %s\n",
                 m_name.c_str(), strerror(errno));
         m_open = false;
     }
@@ -113,7 +113,7 @@ SerialPortImpTermios::open () {
 // device take effect.
 // ----------------------------------------------------------------------------
 SerialTypes::UpdateActionOption
-SerialPortImpTermios::getUpdateAction () {
+SerialPortImplTermios::getUpdateAction () {
     SerialTypes::UpdateActionOption action;
 
     switch (m_actions) {
@@ -136,7 +136,7 @@ SerialPortImpTermios::getUpdateAction () {
 // value.
 // ----------------------------------------------------------------------------
 void
-SerialPortImpTermios::setUpdateAction (SerialTypes::UpdateActionOption action)
+SerialPortImplTermios::setUpdateAction (SerialTypes::UpdateActionOption action)
 {
     switch (action) {
       case SerialTypes::NOW:
@@ -155,7 +155,7 @@ SerialPortImpTermios::setUpdateAction (SerialTypes::UpdateActionOption action)
 // Query the serial port for the maximum buffer size.
 // ----------------------------------------------------------------------------
 Status
-SerialPortImpTermios::getBufferSize (Uint16& size) {
+SerialPortImplTermios::getBufferSize (Uint16& size) {
     Status retval;
     struct termios term;
 
@@ -170,7 +170,7 @@ SerialPortImpTermios::getBufferSize (Uint16& size) {
 // Attempt to change the buffer size to the given argument.
 // ----------------------------------------------------------------------------
 Status
-SerialPortImpTermios::setBufferSize (const Uint8 size) {
+SerialPortImplTermios::setBufferSize (const Uint8 size) {
     Status retval;
     struct termios term;
 
@@ -187,7 +187,7 @@ SerialPortImpTermios::setBufferSize (const Uint8 size) {
 // arrive.  This is only applicable in non-canonical mode.
 // ----------------------------------------------------------------------------
 Status
-SerialPortImpTermios::getTimeout (Uint8& timeout) {
+SerialPortImplTermios::getTimeout (Uint8& timeout) {
     Status retval;
     struct termios term;
 
@@ -204,7 +204,7 @@ SerialPortImpTermios::getTimeout (Uint8& timeout) {
 // mode.
 // ----------------------------------------------------------------------------
 Status
-SerialPortImpTermios::setTimeout (const Uint8 timeout) {
+SerialPortImplTermios::setTimeout (const Uint8 timeout) {
     Status retval;
     struct termios term;
 
@@ -220,7 +220,7 @@ SerialPortImpTermios::setTimeout (const Uint8 timeout) {
 // Get the character size (the bits per byte).
 // ----------------------------------------------------------------------------
 Status
-SerialPortImpTermios::getCharacterSize (SerialTypes::CharacterSizeOption& size)
+SerialPortImplTermios::getCharacterSize (SerialTypes::CharacterSizeOption& size)
 {
     Status retval;
     struct termios term;
@@ -251,7 +251,7 @@ SerialPortImpTermios::getCharacterSize (SerialTypes::CharacterSizeOption& size)
 // include the parity bit (if any).
 // ----------------------------------------------------------------------------
 Status
-SerialPortImpTermios::setCharacterSize (const SerialTypes::CharacterSizeOption bpb)
+SerialPortImplTermios::setCharacterSize (const SerialTypes::CharacterSizeOption bpb)
 {
     struct termios term;
     Status retval;
@@ -289,7 +289,7 @@ SerialPortImpTermios::setCharacterSize (const SerialTypes::CharacterSizeOption b
 // Get the number of stop bits in use.  This will be either 1 or 2.
 // ----------------------------------------------------------------------------
 Status
-SerialPortImpTermios::getStopBits (Uint8& num_bits) {
+SerialPortImplTermios::getStopBits (Uint8& num_bits) {
     struct termios term;
     Status retval;
 
@@ -311,7 +311,7 @@ SerialPortImpTermios::getStopBits (Uint8& num_bits) {
 // Set the number of stop bits to use.  The value must be either 1 or 2.
 // ----------------------------------------------------------------------------
 Status
-SerialPortImpTermios::setStopBits (const Uint8 num_bits) {
+SerialPortImplTermios::setStopBits (const Uint8 num_bits) {
     struct termios term;
     Status retval;
 
@@ -327,7 +327,7 @@ SerialPortImpTermios::setStopBits (const Uint8 num_bits) {
             break;
           default:
             fprintf(stderr,
-                    "[vpr::SerialPortImpTermios] Stop bits may only be set to "
+                    "[vpr::SerialPortImplTermios] Stop bits may only be set to "
                     "1 or 2 on port %s\n", m_name.c_str());
             break;
         }
@@ -352,8 +352,8 @@ SerialPortImpTermios::setStopBits (const Uint8 num_bits) {
 // information.
 // ----------------------------------------------------------------------------
 bool
-SerialPortImpTermios::getCanonicalState () {
-    return getBit(ICANON, SerialPortImpTermios::LFLAG);
+SerialPortImplTermios::getCanonicalState () {
+    return getBit(ICANON, SerialPortImplTermios::LFLAG);
 }
 
 // ----------------------------------------------------------------------------
@@ -361,8 +361,8 @@ SerialPortImpTermios::getCanonicalState () {
 // what this means.
 // ----------------------------------------------------------------------------
 Status
-SerialPortImpTermios::enableCanonicalInput () {
-    return setBit(ICANON, SerialPortImpTermios::LFLAG, true,
+SerialPortImplTermios::enableCanonicalInput () {
+    return setBit(ICANON, SerialPortImplTermios::LFLAG, true,
            "Could not enable canonical input mode");
 }
 
@@ -371,8 +371,8 @@ SerialPortImpTermios::enableCanonicalInput () {
 // about what this means.
 // ----------------------------------------------------------------------------
 Status
-SerialPortImpTermios::disableCanonicalInput () {
-    return setBit(ICANON, SerialPortImpTermios::LFLAG, false,
+SerialPortImplTermios::disableCanonicalInput () {
+    return setBit(ICANON, SerialPortImplTermios::LFLAG, false,
            "Could not disable canonical input mode");
 }
 
@@ -381,16 +381,16 @@ SerialPortImpTermios::disableCanonicalInput () {
 // BREAK) or parity errors.
 // ----------------------------------------------------------------------------
 bool
-SerialPortImpTermios::getBadByteIgnoreState () {
-    return getBit(IGNPAR, SerialPortImpTermios::IFLAG);
+SerialPortImplTermios::getBadByteIgnoreState () {
+    return getBit(IGNPAR, SerialPortImplTermios::IFLAG);
 }
 
 // ----------------------------------------------------------------------------
 // Enable ignoring of received bytes with framing errors or parity errors.
 // ----------------------------------------------------------------------------
 Status
-SerialPortImpTermios::enableBadByteIgnore () {
-    return setBit(IGNPAR, SerialPortImpTermios::IFLAG, true,
+SerialPortImplTermios::enableBadByteIgnore () {
+    return setBit(IGNPAR, SerialPortImplTermios::IFLAG, true,
                   "Could not enable bad byte ignoring");
 }
 
@@ -398,8 +398,8 @@ SerialPortImpTermios::enableBadByteIgnore () {
 // Disable ignoring of received bytes with framing errors or parity errors.
 // ----------------------------------------------------------------------------
 Status
-SerialPortImpTermios::disableBadByteIgnore () {
-    return setBit(IGNPAR, SerialPortImpTermios::IFLAG, false,
+SerialPortImplTermios::disableBadByteIgnore () {
+    return setBit(IGNPAR, SerialPortImplTermios::IFLAG, false,
                   "Could not disable bad byte ignoring");
 }
 
@@ -407,16 +407,16 @@ SerialPortImpTermios::disableBadByteIgnore () {
 // Get the state of parity checking for input.
 // ----------------------------------------------------------------------------
 bool
-SerialPortImpTermios::getInputParityCheckState () {
-    return getBit(IGNPAR, SerialPortImpTermios::IFLAG);
+SerialPortImplTermios::getInputParityCheckState () {
+    return getBit(IGNPAR, SerialPortImplTermios::IFLAG);
 }
 
 // ----------------------------------------------------------------------------
 // Enable input parity checking.
 // ----------------------------------------------------------------------------
 Status
-SerialPortImpTermios::enableInputParityCheck () {
-    return setBit(INPCK, SerialPortImpTermios::IFLAG, true,
+SerialPortImplTermios::enableInputParityCheck () {
+    return setBit(INPCK, SerialPortImplTermios::IFLAG, true,
                   "Could not enable input parity checking");
 }
 
@@ -424,8 +424,8 @@ SerialPortImpTermios::enableInputParityCheck () {
 // Disable input parity checking.
 // ----------------------------------------------------------------------------
 Status
-SerialPortImpTermios::disableInputParityCheck () {
-    return setBit(INPCK, SerialPortImpTermios::IFLAG, false,
+SerialPortImplTermios::disableInputParityCheck () {
+    return setBit(INPCK, SerialPortImplTermios::IFLAG, false,
                   "Could not disable input parity checking");
 }
 
@@ -434,16 +434,16 @@ SerialPortImpTermios::disableInputParityCheck () {
 // stripped to seven bits.  Otherwise, all eight bits are processed.
 // ----------------------------------------------------------------------------
 bool
-SerialPortImpTermios::getBitStripState () {
-    return getBit(ISTRIP, SerialPortImpTermios::IFLAG);
+SerialPortImplTermios::getBitStripState () {
+    return getBit(ISTRIP, SerialPortImplTermios::IFLAG);
 }
 
 // ----------------------------------------------------------------------------
 // Enable stripping of input bytes to seven bits.
 // ----------------------------------------------------------------------------
 Status
-SerialPortImpTermios::enableBitStripping () {
-    return setBit(ISTRIP, SerialPortImpTermios::IFLAG, true,
+SerialPortImplTermios::enableBitStripping () {
+    return setBit(ISTRIP, SerialPortImplTermios::IFLAG, true,
                   "Could not enable bit stripping from eight to seven bits");
 }
 
@@ -451,8 +451,8 @@ SerialPortImpTermios::enableBitStripping () {
 // Disable stripping of input bytes to seven bits.
 // ----------------------------------------------------------------------------
 Status
-SerialPortImpTermios::disableBitStripping () {
-    return setBit(ISTRIP, SerialPortImpTermios::IFLAG, false,
+SerialPortImplTermios::disableBitStripping () {
+    return setBit(ISTRIP, SerialPortImplTermios::IFLAG, false,
                   "Could not disable bit stripping");
 }
 
@@ -465,8 +465,8 @@ SerialPortImpTermios::disableBitStripping () {
 // queue.
 // ----------------------------------------------------------------------------
 bool
-SerialPortImpTermios::getStartStopInputState () {
-    return getBit(IXOFF, SerialPortImpTermios::IFLAG);
+SerialPortImplTermios::getStartStopInputState () {
+    return getBit(IXOFF, SerialPortImplTermios::IFLAG);
 }
 
 // ----------------------------------------------------------------------------
@@ -474,8 +474,8 @@ SerialPortImpTermios::getStartStopInputState () {
 // information.
 // ----------------------------------------------------------------------------
 Status
-SerialPortImpTermios::enableStartStopInput () {
-    return setBit(IXOFF, SerialPortImpTermios::IFLAG, true,
+SerialPortImplTermios::enableStartStopInput () {
+    return setBit(IXOFF, SerialPortImplTermios::IFLAG, true,
                   "Could not enable start-stop input control");
 }
 
@@ -484,8 +484,8 @@ SerialPortImpTermios::enableStartStopInput () {
 // information.
 // ----------------------------------------------------------------------------
 Status
-SerialPortImpTermios::disableStartStopInput () {
-    return setBit(IXOFF, SerialPortImpTermios::IFLAG, false,
+SerialPortImplTermios::disableStartStopInput () {
+    return setBit(IXOFF, SerialPortImplTermios::IFLAG, false,
                   "Could not disable start-stop input control");
 }
 
@@ -496,8 +496,8 @@ SerialPortImpTermios::disableStartStopInput () {
 // normal characters.
 // ----------------------------------------------------------------------------
 bool
-SerialPortImpTermios::getStartStopOutputState () {
-    return getBit(IXON, SerialPortImpTermios::IFLAG);
+SerialPortImplTermios::getStartStopOutputState () {
+    return getBit(IXON, SerialPortImplTermios::IFLAG);
 }
 
 // ----------------------------------------------------------------------------
@@ -505,8 +505,8 @@ SerialPortImpTermios::getStartStopOutputState () {
 // information.
 // ----------------------------------------------------------------------------
 Status
-SerialPortImpTermios::enableStartStopOutput () {
-    return setBit(IXON, SerialPortImpTermios::IFLAG, true,
+SerialPortImplTermios::enableStartStopOutput () {
+    return setBit(IXON, SerialPortImplTermios::IFLAG, true,
                   "Could not enable start-stop output control");
 }
 
@@ -515,8 +515,8 @@ SerialPortImpTermios::enableStartStopOutput () {
 // information.
 // ----------------------------------------------------------------------------
 Status
-SerialPortImpTermios::disableStartStopOutput () {
-    return setBit(IXON, SerialPortImpTermios::IFLAG, false,
+SerialPortImplTermios::disableStartStopOutput () {
+    return setBit(IXON, SerialPortImplTermios::IFLAG, false,
                   "Could not disable start-stop output control");
 }
 
@@ -525,8 +525,8 @@ SerialPortImpTermios::disableStartStopOutput () {
 // checking for incoming bytes.
 // ----------------------------------------------------------------------------
 bool
-SerialPortImpTermios::getParityGenerationState () {
-    return getBit(PARENB, SerialPortImpTermios::CFLAG);
+SerialPortImplTermios::getParityGenerationState () {
+    return getBit(PARENB, SerialPortImplTermios::CFLAG);
 }
 
 // ----------------------------------------------------------------------------
@@ -534,8 +534,8 @@ SerialPortImpTermios::getParityGenerationState () {
 // incoming bytes.
 // ----------------------------------------------------------------------------
 Status
-SerialPortImpTermios::enableParityGeneration () {
-    return setBit(PARENB, SerialPortImpTermios::CFLAG, true,
+SerialPortImplTermios::enableParityGeneration () {
+    return setBit(PARENB, SerialPortImplTermios::CFLAG, true,
                   "Could not enable parity generation on outgoing characters");
 }
 
@@ -544,8 +544,8 @@ SerialPortImpTermios::enableParityGeneration () {
 // incoming bytes.
 // ----------------------------------------------------------------------------
 Status
-SerialPortImpTermios::disableParityGeneration () {
-    return setBit(PARENB, SerialPortImpTermios::CFLAG, false,
+SerialPortImplTermios::disableParityGeneration () {
+    return setBit(PARENB, SerialPortImplTermios::CFLAG, false,
                   "Could not disable parity generation on outgoing characters");
 }
 
@@ -558,16 +558,16 @@ SerialPortImpTermios::disableParityGeneration () {
 // sequence \377 \377.
 // ----------------------------------------------------------------------------
 bool
-SerialPortImpTermios::getParityErrorMarkingState () {
-    return getBit(PARMRK, SerialPortImpTermios::IFLAG);
+SerialPortImplTermios::getParityErrorMarkingState () {
+    return getBit(PARMRK, SerialPortImplTermios::IFLAG);
 }
 
 // ----------------------------------------------------------------------------
 // Enable parity error and framing error marking.
 // ----------------------------------------------------------------------------
 Status
-SerialPortImpTermios::enableParityErrorMarking () {
-    return setBit(PARMRK, SerialPortImpTermios::IFLAG, true,
+SerialPortImplTermios::enableParityErrorMarking () {
+    return setBit(PARMRK, SerialPortImplTermios::IFLAG, true,
                   "Could not enable parity error marking");
 }
 
@@ -575,8 +575,8 @@ SerialPortImpTermios::enableParityErrorMarking () {
 // Disable parity error and framing error marking.
 // ----------------------------------------------------------------------------
 Status
-SerialPortImpTermios::disableParityErrorMarking () {
-    return setBit(PARMRK, SerialPortImpTermios::IFLAG, false,
+SerialPortImplTermios::disableParityErrorMarking () {
+    return setBit(PARMRK, SerialPortImplTermios::IFLAG, false,
                   "Could not disable parity error marking");
 }
 
@@ -584,11 +584,11 @@ SerialPortImpTermios::disableParityErrorMarking () {
 // Get the current parity checking type (either odd or even).
 // ----------------------------------------------------------------------------
 SerialTypes::ParityType
-SerialPortImpTermios::getParity () {
+SerialPortImplTermios::getParity () {
     SerialTypes::ParityType retval;
 
     // Odd parity if PARODD is set.
-    if ( getBit(PARODD, SerialPortImpTermios::CFLAG) ) {
+    if ( getBit(PARODD, SerialPortImplTermios::CFLAG) ) {
         retval = SerialTypes::PORT_PARITY_ODD;
     }
     // Even parity if PARODD is not set.
@@ -603,8 +603,8 @@ SerialPortImpTermios::getParity () {
 // Enable odd parity.
 // ----------------------------------------------------------------------------
 Status
-SerialPortImpTermios::setOddParity () {
-    return setBit(PARODD, SerialPortImpTermios::CFLAG, true,
+SerialPortImplTermios::setOddParity () {
+    return setBit(PARODD, SerialPortImplTermios::CFLAG, true,
                   "Could not set odd parity");
 }
 
@@ -612,8 +612,8 @@ SerialPortImpTermios::setOddParity () {
 // Enable even parity.
 // ----------------------------------------------------------------------------
 Status
-SerialPortImpTermios::setEvenParity () {
-    return setBit(PARODD, SerialPortImpTermios::CFLAG, false,
+SerialPortImplTermios::setEvenParity () {
+    return setBit(PARODD, SerialPortImplTermios::CFLAG, false,
                   "Could not set even parity");
 }
 
@@ -621,7 +621,7 @@ SerialPortImpTermios::setEvenParity () {
 // Get the current input baud rate.
 // ----------------------------------------------------------------------------
 Status
-SerialPortImpTermios::getInputBaudRate (Uint32& rate) {
+SerialPortImplTermios::getInputBaudRate (Uint32& rate) {
     struct termios term;
     Status retval;
 
@@ -639,7 +639,7 @@ SerialPortImpTermios::getInputBaudRate (Uint32& rate) {
 // Set the current input baud rate.
 // ----------------------------------------------------------------------------
 Status
-SerialPortImpTermios::setInputBaudRate (const Uint32 baud) {
+SerialPortImplTermios::setInputBaudRate (const Uint32 baud) {
     struct termios term;
     Status retval;
 
@@ -672,7 +672,7 @@ fprintf(stderr, "Setting input baud rate to %d\n", new_rate);
 // Get the current output baud rate.
 // ----------------------------------------------------------------------------
 Status
-SerialPortImpTermios::getOutputBaudRate (Uint32& rate) {
+SerialPortImplTermios::getOutputBaudRate (Uint32& rate) {
     struct termios term;
     Status retval;
 
@@ -690,7 +690,7 @@ SerialPortImpTermios::getOutputBaudRate (Uint32& rate) {
 // Set the current output baud rate.
 // ----------------------------------------------------------------------------
 Status
-SerialPortImpTermios::setOutputBaudRate (const Uint32 baud) {
+SerialPortImplTermios::setOutputBaudRate (const Uint32 baud) {
     struct termios term;
     Status retval;
 
@@ -723,12 +723,12 @@ fprintf(stderr, "Setting output baud rate to %d\n", new_rate);
 // Wait for all output to be transmitted.
 // ----------------------------------------------------------------------------
 Status
-SerialPortImpTermios::drainOutput () {
+SerialPortImplTermios::drainOutput () {
     Status retval;
 
     if ( tcdrain(m_handle->m_fdesc) == -1 ) {
         fprintf(stderr,
-                "[vpr::SerialPortImpTermios] Failed to drain output on port %s: %s\n",
+                "[vpr::SerialPortImplTermios] Failed to drain output on port %s: %s\n",
                 m_name.c_str(), strerror(errno));
         retval.setCode(Status::Failure);
     }
@@ -743,7 +743,7 @@ SerialPortImpTermios::drainOutput () {
 // data.
 // ----------------------------------------------------------------------------
 Status
-SerialPortImpTermios::controlFlow (SerialTypes::FlowActionOption opt) {
+SerialPortImplTermios::controlFlow (SerialTypes::FlowActionOption opt) {
     int action;
     Status retval;
 
@@ -764,7 +764,7 @@ SerialPortImpTermios::controlFlow (SerialTypes::FlowActionOption opt) {
 
     if ( tcflow(m_handle->m_fdesc, action) == -1 ) {
         fprintf(stderr,
-                "[vpr::SerialPortImpTermios] Failed to alter flow control on "
+                "[vpr::SerialPortImplTermios] Failed to alter flow control on "
                 "port %s: %s\n", m_name.c_str(), strerror(errno));
         retval.setCode(Status::Failure);
     }
@@ -778,7 +778,7 @@ SerialPortImpTermios::controlFlow (SerialTypes::FlowActionOption opt) {
 // terminal device).  The argument tells which queue (or queues) to flush.
 // ----------------------------------------------------------------------------
 Status
-SerialPortImpTermios::flushQueue (SerialTypes::FlushQueueOption vpr_queue) {
+SerialPortImplTermios::flushQueue (SerialTypes::FlushQueueOption vpr_queue) {
     int queue;
     Status retval;
 
@@ -810,7 +810,7 @@ SerialPortImpTermios::flushQueue (SerialTypes::FlushQueueOption vpr_queue) {
         }
 
         fprintf(stderr,
-                "[vpr::SerialPortImpTermios] Failed to flush %s on port %s: %s\n",
+                "[vpr::SerialPortImplTermios] Failed to flush %s on port %s: %s\n",
                 queue_name.c_str(), m_name.c_str(), strerror(errno));
         retval.setCode(Status::Failure);
     }
@@ -825,12 +825,12 @@ SerialPortImpTermios::flushQueue (SerialTypes::FlushQueueOption vpr_queue) {
 // stream.
 // ----------------------------------------------------------------------------
 Status
-SerialPortImpTermios::sendBreak (const Int32 duration) {
+SerialPortImplTermios::sendBreak (const Int32 duration) {
     Status retval;
 
     if ( tcsendbreak(m_handle->m_fdesc, duration) == -1 ) {
         fprintf(stderr,
-                "[vpr::SerialPortImpTermios] Failed to send break on port %s: %s\n",
+                "[vpr::SerialPortImplTermios] Failed to send break on port %s: %s\n",
                 m_name.c_str(), strerror(errno));
         retval.setCode(Status::Failure);
     }
@@ -846,7 +846,7 @@ SerialPortImpTermios::sendBreak (const Int32 duration) {
 // Set the control character at the given index to the given value.
 // ----------------------------------------------------------------------------
 void
-SerialPortImpTermios::setControlCharacter (const Uint32 index,
+SerialPortImplTermios::setControlCharacter (const Uint32 index,
                                            const Uint8 value)
 {
     struct termios term;
@@ -865,7 +865,7 @@ SerialPortImpTermios::setControlCharacter (const Uint32 index,
         }
         else {
             fprintf(stderr,
-                    "[vpr::SerialPortImpTermios] Index %u too large for "
+                    "[vpr::SerialPortImplTermios] Index %u too large for "
                     "control character array\n", index);
         }
     }
@@ -875,7 +875,7 @@ SerialPortImpTermios::setControlCharacter (const Uint32 index,
 // Get the value of the control character at the given index.
 // ----------------------------------------------------------------------------
 Uint8
-SerialPortImpTermios::getControlCharacter (const Uint32 index) {
+SerialPortImplTermios::getControlCharacter (const Uint32 index) {
     struct termios term;
     Uint8 retval;
 
@@ -887,7 +887,7 @@ SerialPortImpTermios::getControlCharacter (const Uint32 index) {
         }
         else {
             fprintf(stderr,
-                    "[vpr::SerialPortImpTermios] Index %u too large for "
+                    "[vpr::SerialPortImplTermios] Index %u too large for "
                     "control character array\n", index);
         }
     }
@@ -898,12 +898,12 @@ SerialPortImpTermios::getControlCharacter (const Uint32 index) {
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
 Status
-SerialPortImpTermios::getAttrs (struct termios* term) {
+SerialPortImplTermios::getAttrs (struct termios* term) {
     Status retval;
 
     if ( tcgetattr(m_handle->m_fdesc, term) == -1 ) {
         fprintf(stderr,
-                "[vpr::SerialPortImpTermios] Could not get attributes for port %s: %s\n",
+                "[vpr::SerialPortImplTermios] Could not get attributes for port %s: %s\n",
                 m_name.c_str(), strerror(errno));
         retval.setCode(Status::Failure);
     }
@@ -914,31 +914,31 @@ SerialPortImpTermios::getAttrs (struct termios* term) {
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
 Status
-SerialPortImpTermios::setAttrs (struct termios* term, const char* err_msg,
+SerialPortImplTermios::setAttrs (struct termios* term, const char* err_msg,
                                 const bool print_sys_err)
 {
     Status retval;
 
-fprintf(stderr, "[vpr::SerialPortImpTermios] term->c_iflag: %d\n",
+fprintf(stderr, "[vpr::SerialPortImplTermios] term->c_iflag: %d\n",
         term->c_iflag);
-fprintf(stderr, "[vpr::SerialPortImpTermios] term->c_oflag: %d\n",
+fprintf(stderr, "[vpr::SerialPortImplTermios] term->c_oflag: %d\n",
         term->c_oflag);
-fprintf(stderr, "[vpr::SerialPortImpTermios] term->c_cflag: %d\n",
+fprintf(stderr, "[vpr::SerialPortImplTermios] term->c_cflag: %d\n",
         term->c_cflag);
-fprintf(stderr, "[vpr::SerialPortImpTermios] term->c_lflag: %d\n",
+fprintf(stderr, "[vpr::SerialPortImplTermios] term->c_lflag: %d\n",
         term->c_lflag);
-fprintf(stderr, "[vpr::SerialPortImpTermios] term->c_ispeed: %d\n",
+fprintf(stderr, "[vpr::SerialPortImplTermios] term->c_ispeed: %d\n",
         cfgetispeed(term));
-fprintf(stderr, "[vpr::SerialPortImpTermios] term->c_ospeed: %d\n\n",
+fprintf(stderr, "[vpr::SerialPortImplTermios] term->c_ospeed: %d\n\n",
         cfgetospeed(term));
-fprintf(stderr, "[vpr::SerialPortImpTermios] term->c_cc[]:");
+fprintf(stderr, "[vpr::SerialPortImplTermios] term->c_cc[]:");
 for ( int i = 0; i < NCCS; i++ ) {
     fprintf(stderr, " %u", (unsigned int) term->c_cc[i]);
 }
 fprintf(stderr, "\n");
 
     if ( tcsetattr(m_handle->m_fdesc, m_actions, term) == -1 ) {
-        fprintf(stderr, "[vpr::SerialPortImpTermios] %s (port '%s')", err_msg,
+        fprintf(stderr, "[vpr::SerialPortImplTermios] %s (port '%s')", err_msg,
                 m_name.c_str());
 
         if ( print_sys_err ) {
@@ -956,9 +956,9 @@ fprintf(stderr, "\n");
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
 Status
-SerialPortImpTermios::setAttrs (struct termios* term,
-                                const std::string& err_msg,
-                                const bool print_sys_err)
+SerialPortImplTermios::setAttrs (struct termios* term,
+                                 const std::string& err_msg,
+                                 const bool print_sys_err)
 {
     return setAttrs(term, err_msg.c_str(), print_sys_err);
 }
@@ -966,8 +966,8 @@ SerialPortImpTermios::setAttrs (struct termios* term,
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
 bool
-SerialPortImpTermios::getBit (const tcflag_t bit,
-                              SerialPortImpTermios::_term_flag flag)
+SerialPortImplTermios::getBit (const tcflag_t bit,
+                               SerialPortImplTermios::_term_flag flag)
 {
     struct termios term;
     bool retval;
@@ -994,11 +994,11 @@ SerialPortImpTermios::getBit (const tcflag_t bit,
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
 Status
-SerialPortImpTermios::setBit (const tcflag_t bit,
-                              SerialPortImpTermios::_term_flag flag,
-                              const bool enable,
-                              const std::string& err_msg,
-                              const bool print_sys_err)
+SerialPortImplTermios::setBit (const tcflag_t bit,
+                               SerialPortImplTermios::_term_flag flag,
+                               const bool enable,
+                               const std::string& err_msg,
+                               const bool print_sys_err)
 {
     struct termios term;
     Status retval;
@@ -1049,7 +1049,7 @@ SerialPortImpTermios::setBit (const tcflag_t bit,
 // Convert a termios baud rate to its corresponding integer value.
 // ----------------------------------------------------------------------------
 Uint32
-SerialPortImpTermios::baudToInt (const speed_t baud_rate) {
+SerialPortImplTermios::baudToInt (const speed_t baud_rate) {
     Uint32 retval;
 
     switch (baud_rate) {
@@ -1110,7 +1110,7 @@ SerialPortImpTermios::baudToInt (const speed_t baud_rate) {
 // Convert an integer baud rate to the corresponding termios rate constant.
 // ----------------------------------------------------------------------------
 speed_t
-SerialPortImpTermios::intToBaud (const Uint32 speed_int) {
+SerialPortImplTermios::intToBaud (const Uint32 speed_int) {
     speed_t rate;
 
     switch (speed_int) {

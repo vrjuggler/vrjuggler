@@ -36,8 +36,9 @@
 #include <string.h>
 #include <strings.h>
 
-#include <IO/Port/SerialPort.h>
-#include <IO/Port/SerialTypes.h>
+#include <vpr/vpr.h>
+#include <vpr/IO/Port/SerialPort.h>
+#include <vpr/IO/Port/SerialTypes.h>
 
 
 int
@@ -58,7 +59,6 @@ main (int argc, char* argv[]) {
 
         port->setUpdateAction(vpr::SerialTypes::NOW);
         port->setCharacterSize(vpr::SerialTypes::CS_BITS_8);
-        port->enableRead();
 
         for ( int i = 0; i < 10; i++ ) {
             bzero((void*) &read_buffer, sizeof(read_buffer));

@@ -9,20 +9,20 @@
 #include <TestSuite.h>
 #include <TestCaller.h>
 
-#include <IO/Socket/Socket.h>
-#include <IO/Socket/SocketStream.h>
-#include <IO/Socket/InetAddr.h>
+#include <vpr/IO/Socket/Socket.h>
+#include <vpr/IO/Socket/SocketStream.h>
+#include <vpr/IO/Socket/InetAddr.h>
 
-#include <IO/IOSys.h>
-#include <IO/Selector.h>
-#include <Utils/Status.h>
+#include <vpr/IO/IOSys.h>
+#include <vpr/IO/Selector.h>
+#include <vpr/Util/Status.h>
 
-#include <System.h>
+#include <vpr/System.h>
 
-#include <Threads/Thread.h>
-#include <Threads/ThreadFunctor.h>
-#include <Sync/Mutex.h>
-#include <Sync/Cond.h>
+#include <vpr/Thread/Thread.h>
+#include <vpr/Thread/ThreadFunctor.h>
+#include <vpr/Sync/Mutex.h>
+#include <vpr/Sync/CondVar.h>
 
 #include <vector>
 

@@ -35,30 +35,30 @@
 
 #include <string>
 
-#include <IO/BlockIO.h>
-#include <IO/Socket/SocketTypes.h>
-#include <IO/Socket/InetAddr.h>
+#include <vpr/IO/BlockIO.h>
+#include <vpr/IO/Socket/SocketTypes.h>
+#include <vpr/IO/Socket/InetAddr.h>
 
 // include bridge class
-#include <IO/Socket/Socket_t.h>
+#include <vpr/IO/Socket/Socket_t.h>
 
 // make the connection
 #if defined(VPR_USE_NSPR)
-#   include <md/NSPR/SocketImpNSPR.h>
+#   include <vpr/md/NSPR/IO/Socket/SocketImplNSPR.h>
 namespace vpr {
-  typedef Socket_t<SocketImpNSPR> Socket;
+  typedef Socket_t<SocketImplNSPR> Socket;
 };
 
 #elif defined(VPR_USE_WIN32)
-#   include <md/WIN32/SocketImpWinSock.h>
+#   include <vpr/md/WIN32/IO/Socket/SocketImplWinSock.h>
 namespace vpr {
-  typedef Socket_t<SocketImpWinSock> Socket;
+  typedef Socket_t<SocketImplWinSock> Socket;
 };
 
 #else
-#   include <md/POSIX/SocketImpBSD.h>
+#   include <vpr/md/POSIX/IO/Socket/SocketImplBSD.h>
 namespace vpr {
-  typedef Socket_t<SocketImpBSD> Socket;
+  typedef Socket_t<SocketImplBSD> Socket;
 };
 #endif
 

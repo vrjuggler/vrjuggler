@@ -9,18 +9,18 @@
 #include <TestSuite.h>
 #include <TestCaller.h>
 
-#include <IO/Socket/Socket.h>
-#include <IO/Socket/SocketStream.h>
-#include <IO/Socket/InetAddr.h>
-#include <IO/Socket/SocketAcceptor.h>
-#include <IO/Socket/SocketConnector.h>
+#include <vpr/IO/Socket/Socket.h>
+#include <vpr/IO/Socket/SocketStream.h>
+#include <vpr/IO/Socket/InetAddr.h>
+#include <vpr/IO/Socket/SocketAcceptor.h>
+#include <vpr/IO/Socket/SocketConnector.h>
 
-#include <System.h>
+#include <vpr/System.h>
 
-#include <Threads/Thread.h>
-#include <Threads/ThreadFunctor.h>
-#include <Sync/Mutex.h>
-#include <Sync/Cond.h>
+#include <vpr/Thread/Thread.h>
+#include <vpr/Thread/ThreadFunctor.h>
+#include <vpr/Sync/Mutex.h>
+#include <vpr/Sync/CondVar.h>
 
 #include <vector>
 
@@ -246,7 +246,7 @@ protected:
     vpr::Uint16     mMessageLen;        // Length of message to send
     std::string     mMessageValue;      // The value of the message that is supposed to be sent (and recieved)
 
-    vpr::Cond       mCondVar;       // Condition variable
+    vpr::CondVar    mCondVar;       // Condition variable
     vpr::Mutex      mSyncMutex;     // Mutex used to do synchronization
 
     enum State { READY, NOT_READY, CONNECTOR_CLOSED

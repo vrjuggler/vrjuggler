@@ -34,7 +34,7 @@
 #define _VPR_THREAD_NSPR_H_
 //#pragma once
 
-#include <vprConfig.h>
+#include <vpr/vprConfig.h>
 
 #ifdef HAVE_UNISTD_H
 #   include <unistd.h>
@@ -48,8 +48,8 @@
 #include <prtypes.h>
 #include <prinrval.h>
 
-#include <Threads/BaseThread.h>
-#include <Threads/ThreadManager.h>
+#include <vpr/Thread/BaseThread.h>
+#include <vpr/Thread/ThreadManager.h>
 
 
 namespace vpr {

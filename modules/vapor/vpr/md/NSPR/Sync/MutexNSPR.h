@@ -34,23 +34,23 @@
  * --------------------------------------------------------------------------
  * Author:
  *   Patrick Hartling
- * --------------------------------------------------------------------------
+ * ----------------------------------------------------------------------------
  * NOTES:
- *    - This file (vprMutexNSPR.h) must be included by vprMutex.h, not the
+ *    - This file (MutexNSPR.h) must be included by vpr/Sync/Mutex.h, not the
  *      other way around.
- * --------------------------------------------------------------------------
+ * ----------------------------------------------------------------------------
  */
 
 #ifndef _VPR_MUTEX_NSPR_H_
 #define _VPR_MUTEX_NSPR_H_
 
-#include <vprConfig.h>
+#include <vpr/vprConfig.h>
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <prlock.h>
 
-#include <Utils/Assert.h>
+#include <vpr/Util/Assert.h>
 
 
 namespace vpr {
@@ -244,7 +244,7 @@ public:
     // Allow the vpr::CondNSPR class to access the private and protected
     // members of this class.  Specifically, direct access is needed to the
     // mutex variable.
-    friend class CondNSPR;
+    friend class CondVarNSPR;
 
 protected:
     PRLock* mMutex;     //: Mutex variable for the class.

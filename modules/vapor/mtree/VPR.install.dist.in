@@ -38,6 +38,8 @@
     bin
     ..
     include
+        vpr
+        ..
     ..
     share
     ..

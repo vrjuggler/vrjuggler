@@ -33,10 +33,10 @@
 #ifndef _VPR_THREAD_POOL_H_
 #define _VPR_THREAD_POOL_H_
 
-#include <vprConfig.h>
+#include <vpr/vprConfig.h>
 
-#include <Threads/Thread.h>
-#include <Sync/Semaphore.h>
+#include <vpr/Thread/Thread.h>
+#include <vpr/Sync/Semaphore.h>
 
 
 namespace vpr {

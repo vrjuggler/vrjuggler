@@ -31,8 +31,10 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include <iostream>
-#include <IO/Socket/SocketDatagram.h>
-#include <IO/Socket/InetAddr.h>
+
+#include <vpr/vpr.h>
+#include <vpr/IO/Socket/SocketDatagram.h>
+#include <vpr/IO/Socket/InetAddr.h>
 
 
 int

@@ -31,7 +31,7 @@
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # -----------------------------------------------------------------------------
-# Makefile.in for vpr/src/test/Threads
+# Makefile.in for vapor/vpr/test/Thread
 #
 # Generated for use on @PLATFORM@
 # -----------------------------------------------------------------------------
@@ -62,6 +62,7 @@ VPATH		= @srcdir@
 EXTRA_LIBS	= @APP_EXTRA_LIBS_BEGIN@ @APP_EXTRA_LIBS_BASIC@ @APP_EXTRA_LIBS_END@
 
 TEST_PROGS	= test@EXEEXT@			\
+                  testPool@EXEEXT@		\
                   stlTest@EXEEXT@
 
 # -----------------------------------------------------------------------------
@@ -78,7 +79,7 @@ stlTest@EXEEXT@: stlTest.@OBJEXT@
 	$(LINK) -o $@ stlTest.@OBJEXT@ $(VPR_LIBS) $(EXTRA_LIBS)
 
 testPool@EXEEXT@: testPool.@OBJEXT@
-	$(LINK) -o $@ testPool.@OBJEXT@ $(VPR_LIBS) $(EXTRA_LIBS)
+	$(LINK) -o $@ testPool.@OBJEXT@ $(VPR_LIBS) $(EXTRA_LIBS) -lm
 	
 testSelfPerformance@EXEEXT@: testSelfPerformance.@OBJEXT@
 	$(LINK) -o $@ testSelfPerformance.@OBJEXT@ $(VPR_LIBS) $(EXTRA_LIBS)

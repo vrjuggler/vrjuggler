@@ -30,7 +30,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vprConfig.h>
+#include <vpr/vprConfig.h>
 
 #include <stdio.h>
 #include <string.h>
@@ -42,8 +42,8 @@
 #include <prio.h>
 #include <prinrval.h>
 
-#include <md/NSPR/SocketStreamImpNSPR.h>
-#include <md/NSPR/NSPRHelpers.h>
+#include <vpr/md/NSPR/IO/Socket/SocketStreamImplNSPR.h>
+#include <vpr/md/NSPR/NSPRHelpers.h>
 
 
 namespace vpr {
@@ -57,8 +57,8 @@ namespace vpr {
 // remote site and a port and stores the values for later use in the member
 // variables of the object.
 // ----------------------------------------------------------------------------
-SocketStreamImpNSPR::SocketStreamImpNSPR (void)
-   : SocketImpNSPR(SocketTypes::STREAM)
+SocketStreamImplNSPR::SocketStreamImplNSPR (void)
+   : SocketImplNSPR(SocketTypes::STREAM)
 {
     /* Do nothing. */ ;
 }
@@ -68,23 +68,23 @@ SocketStreamImpNSPR::SocketStreamImpNSPR (void)
 // remote site and a port and stores the values for later use in the member
 // variables of the object.
 // ----------------------------------------------------------------------------
-SocketStreamImpNSPR::SocketStreamImpNSPR (const InetAddr& local_addr,
-                                        const InetAddr& remote_addr)
-    : SocketImpNSPR(local_addr, remote_addr, SocketTypes::STREAM)
+SocketStreamImplNSPR::SocketStreamImplNSPR (const InetAddr& local_addr,
+                                            const InetAddr& remote_addr)
+    : SocketImplNSPR(local_addr, remote_addr, SocketTypes::STREAM)
 {;}
 
 // ----------------------------------------------------------------------------
 // Listen on the socket for incoming connection requests.
 // ----------------------------------------------------------------------------
 Status
-SocketStreamImpNSPR::listen (const int backlog)
+SocketStreamImplNSPR::listen (const int backlog)
 {
     Status retval;
     PRStatus status;
 
     if(!m_bound)        // To listen, we must be bound
     {
-        vprDEBUG(0,0) << "SocketStreamImpNSPR::listen: Trying to listen on an unbound socket.\n"
+        vprDEBUG(0,0) << "SocketStreamImplNSPR::listen: Trying to listen on an unbound socket.\n"
                       << vprDEBUG_FLUSH;
         retval.setCode(Status::Failure);
     }
@@ -94,7 +94,7 @@ SocketStreamImpNSPR::listen (const int backlog)
         status = PR_Listen(m_handle, backlog);
 
         if (PR_FAILURE == status) {
-           NSPR_PrintError("SocketStreamImpNSPR::listen: Cannon listen on socket: ");
+           NSPR_PrintError("SocketStreamImplNSPR::listen: Cannon listen on socket: ");
            retval.setCode(Status::Failure);
         }
     }
@@ -106,13 +106,13 @@ SocketStreamImpNSPR::listen (const int backlog)
 // Accept an incoming connection request.
 // ----------------------------------------------------------------------------
 Status
-SocketStreamImpNSPR::accept (SocketStreamImpNSPR& sock) {
+SocketStreamImplNSPR::accept (SocketStreamImplNSPR& sock) {
     Status retval;
     InetAddr addr;
 
     if(!m_bound)        // To listen, we must be bound
     {
-        vprDEBUG(0,0) << "SocketStreamImpNSPR::accept: Trying to accept on an unbound socket.\n"
+        vprDEBUG(0,0) << "SocketStreamImplNSPR::accept: Trying to accept on an unbound socket.\n"
                       << vprDEBUG_FLUSH;
         retval.setCode(Status::Failure);
     }
@@ -129,7 +129,7 @@ SocketStreamImpNSPR::accept (SocketStreamImpNSPR& sock) {
              retval.setCode(Status::WouldBlock);
           }
           else {
-             NSPR_PrintError("SocketStreamImpNSPR::accept: Cannot accept on socket: ");
+             NSPR_PrintError("SocketStreamImplNSPR::accept: Cannot accept on socket: ");
              retval.setCode(Status::Failure);
           }
        }

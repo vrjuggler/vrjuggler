@@ -33,11 +33,11 @@
 #ifndef _VPR_GUARDED_QUEUE_H_
 #define _VPR_GUARDED_QUEUE_H_
 
-#include <vprConfig.h>
+#include <vpr/vprConfig.h>
 
 #include <queue>
-#include <Sync/Mutex.h>
-#include <Sync/Guard.h>
+#include <vpr/Sync/Mutex.h>
+#include <vpr/Sync/Guard.h>
 
 
 namespace vpr {

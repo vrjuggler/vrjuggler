@@ -33,7 +33,7 @@
 #ifndef _VPR_IOSYS_BASE_H_
 #define _VPR_IOSYS_BASE_H_
 
-#include <vprConfig.h>
+#include <vpr/vprConfig.h>
 
 
 namespace vpr {

@@ -30,13 +30,13 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vprConfig.h>
+#include <vpr/vprConfig.h>
 
 #include <stdio.h>
 #include <string.h>
 #include <winsock2.h>
 
-#include <md/WIN32/SocketStreamImpWinSock.h>
+#include <vpr/md/WIN32/IO/Socket/SocketStreamImplWinSock.h>
 
 
 namespace vpr {
@@ -50,10 +50,9 @@ namespace vpr {
 // remote site and a port and stores the values for later use in the member
 // variables of the object.
 // ----------------------------------------------------------------------------
-SocketStreamImpWinSock::SocketStreamImpWinSock (void)
-    : SocketImpWinSock()
+SocketStreamImplWinSock::SocketStreamImplWinSock ()
+    : SocketImplWinSock()
 {
-fprintf(stderr, "vpr::SocketStreamImpWinSock default constructor\n");
     /* Do nothing. */ ;
 }
 
@@ -62,37 +61,30 @@ fprintf(stderr, "vpr::SocketStreamImpWinSock default constructor\n");
 // remote site and a port and stores the values for later use in the member
 // variables of the object.
 // ----------------------------------------------------------------------------
-SocketStreamImpWinSock::SocketStreamImpWinSock (const InetAddr& local_addr,
-                                                const InetAddr& remote_addr)
-    : SocketImpWinSock(local_addr, remote_addr, SocketTypes::STREAM)
+SocketStreamImplWinSock::SocketStreamImplWinSock (const InetAddr& local_addr,
+                                                  const InetAddr& remote_addr)
+    : SocketImplWinSock(local_addr, remote_addr, SocketTypes::STREAM)
 {
-fprintf(stderr, "vpr::SocketStreamImpWinSock(local, remote) constructor\n");
-fprintf(stderr, "    Local Address: %s -> %s\n",
         local_addr.getAddressString().c_str(),
         m_local_addr.getAddressString().c_str());
-fprintf(stderr, "    Local Port: %hu -> %hu\n", local_addr.getPort(),
         m_local_addr.getPort());
-fprintf(stderr, "    Remote Address: %s -> %s\n",
         remote_addr.getAddressString().c_str(),
         m_remote_addr.getAddressString().c_str());
-fprintf(stderr, "    Remote Port: %hu -> %hu\n", remote_addr.getPort(),
         m_remote_addr.getPort());
-fprintf(stderr, "    Domain: %d\n", m_local_addr.getFamily());
-fprintf(stderr, "    Type: %d\n", m_type);
 }
 
 // ----------------------------------------------------------------------------
 // Listen on the socket for incoming connection requests.
 // ----------------------------------------------------------------------------
 Status
-SocketStreamImpWinSock::listen (const int backlog) {
+SocketStreamImplWinSock::listen (const int backlog) {
     Status retval;
 
     // Put the socket into listning mode.  If that fails, print an error and
     // return error status.
     if ( ::listen(m_sockfd, backlog) == -1 ) {
         fprintf(stderr,
-                "[vpr::SocketStreamImpWinSock] Cannot listen on socket: %s\n",
+                "[vpr::SocketStreamImplWinSock] Cannot listen on socket: %s\n",
                 strerror(errno));
         retval.setCode(Status::Failure);
     }
@@ -104,7 +96,7 @@ SocketStreamImpWinSock::listen (const int backlog) {
 // Accept an incoming connection request.
 // ----------------------------------------------------------------------------
 Status
-SocketStreamImpWinSock::accept (SocketStreamImpWinSock& sock) {
+SocketStreamImplWinSock::accept (SocketStreamImplWinSock& sock) {
     SOCKET accept_sock;
     InetAddr addr;
     int addrlen;
@@ -118,11 +110,11 @@ SocketStreamImpWinSock::accept (SocketStreamImpWinSock& sock) {
     // If accept(2) failed, print an error message and return error stauts.
     if ( accept_sock == -1 ) {
         fprintf(stderr,
-                "[vpr::SocketStreamImpWinSock] Error while accepting incoming connection: %s\n",
+                "[vpr::SocketStreamImplWinSock] Error while accepting incoming connection: %s\n",
                 strerror(errno));
         retval.setCode(Status::Failure);
     }
-    // Otherwise, create a new vpr::SocketStreamImpWinSock object using what
+    // Otherwise, create a new vpr::SocketStreamImplWinSock object using what
     // the operating system gave us through accept(2).
     else {
         sock.setRemoteAddr(addr);

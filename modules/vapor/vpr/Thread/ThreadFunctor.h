@@ -33,7 +33,7 @@
 #ifndef _VPR_THREAD_FUNCTOR_H_
 #define _VPR_THREAD_FUNCTOR_H_
 
-#include <vprConfig.h>
+#include <vpr/vprConfig.h>
 #include <stdlib.h>
 
 

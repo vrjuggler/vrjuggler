@@ -33,10 +33,10 @@
 #ifndef _VPR_SOCKET_OPTIONS_H_
 #define _VPR_SOCKET_OPTIONS_H_
 
-#include <vprConfig.h>
+#include <vpr/vprConfig.h>
 
-#include <IO/Socket/InetAddr.h>
-#include <IO/Socket/McastReq.h>
+#include <vpr/IO/Socket/InetAddr.h>
+#include <vpr/IO/Socket/McastReq.h>
 
 
 namespace vpr {

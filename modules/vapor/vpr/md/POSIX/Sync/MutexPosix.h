@@ -31,23 +31,21 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 /*
- * --------------------------------------------------------------------------
+ * ----------------------------------------------------------------------------
  * Author:
  *   Patrick Hartling (based on vpr::MutexSGI by Allen Bierbaum).
- * --------------------------------------------------------------------------
+ * ----------------------------------------------------------------------------
  * NOTES:
- *    - This file (vprMutexPosix.h) must be included by vprMutex.h, not the
+ *    - This file (MutexPosix.h) must be included by vpr/Sync/Mutex.h, not the
  *      other way around.
- *    - The following libraries must be linked in at compile time:
- *         HP-UX 10.20 --> -lcma
- *         IRIX 6.x    --> -lpthread
- * --------------------------------------------------------------------------
+ * ----------------------------------------------------------------------------
  */
 
 #ifndef _VPR_MUTEX_POSIX_H_
 #define _VPR_MUTEX_POSIX_H_
 
-#include <vprConfig.h>
+#include <vpr/vprConfig.h>
+
 #include <stdio.h>
 #include <pthread.h>
 #include <errno.h>
@@ -267,7 +265,7 @@ public:
     // Allow the vpr::CondPosix class to access the private and protected
     // members of this class.  Specifically, direct access is needed to the
     // mutex variable.
-    friend class CondPosix;
+    friend class CondVarPosix;
 
 protected:
     pthread_mutex_t mMutex;    //: Mutex variable for the class.

@@ -30,11 +30,11 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vprConfig.h>
+#include <vpr/vprConfig.h>
 
 #include <stdio.h>
 
-#include <md/WIN32/InetAddrWinSock.h>
+#include <vpr/md/WIN32/IO/Socket/InetAddrWinSock.h>
 
 #ifndef INADDR_NONE
 #define INADDR_NONE 0xffffffff   /* -1 return */

@@ -30,12 +30,12 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vprConfig.h>
+#include <vpr/vprConfig.h>
 
 #include <stdio.h>
 
-#include <md/NSPR/InetAddrNSPR.h>
-#include <md/NSPR/NSPRHelpers.h>
+#include <vpr/md/NSPR/IO/Socket/InetAddrNSPR.h>
+#include <vpr/md/NSPR/NSPRHelpers.h>
 
 namespace vpr {
 

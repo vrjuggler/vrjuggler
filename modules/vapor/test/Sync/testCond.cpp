@@ -37,9 +37,10 @@
 #include <time.h>
 #include <sys/time.h>
 
-#include <Threads/Thread.h>
-#include <Sync/Cond.h>
-#include <Utils/Debug.h>
+#include <vpr/vpr.h>
+#include <vpr/Thread/Thread.h>
+#include <vpr/Sync/CondVar.h>
+#include <vpr/Util/Debug.h>
 
 class SyncIncrementer
 {
@@ -60,7 +61,7 @@ public:
       { return value; }
 
 private:
-   vpr::Cond syncCond;     // condition var
+   vpr::CondVar syncCond;     // condition var
    bool   go;
    int    value;
 };

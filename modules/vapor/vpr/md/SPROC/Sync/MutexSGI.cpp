@@ -30,10 +30,10 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vprConfig.h>
+#include <vpr/vprConfig.h>
 
-#include <Sync/Mutex.h>
-#include <md/SPROC/MutexSGI.h>
+#include <vpr/Sync/Mutex.h>
+#include <vpr/md/SPROC/Sync/MutexSGI.h>
 
 vpr::MemPoolSGI* vpr::MutexSGI::mutexPool = NULL;
 int* vpr::MutexSGI::attachedCounter       = NULL;

@@ -46,7 +46,7 @@
 // Date: 1-21-97
 //-----------------------------------------------
 
-#include <vprConfig.h>
+#include <vpr/vprConfig.h>
 
 
 namespace vpr {

@@ -30,9 +30,9 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vprConfig.h>
+#include <vpr/vprConfig.h>
 
-#include <md/NSPR/RWMutexNSPR.h>
+#include <vpr/md/NSPR/Sync/RWMutexNSPR.h>
 
 
 namespace vpr {

@@ -42,10 +42,10 @@
 #define _VPR_THREAD_KEY_SGI_H_
 //#pragma once
 
-#include <vprConfig.h>
+#include <vpr/vprConfig.h>
 #include <sys/types.h>
 
-#include <Threads/ThreadFunctor.h>
+#include <vpr/Thread/ThreadFunctor.h>
 
 namespace vpr {
 

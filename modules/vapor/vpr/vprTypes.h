@@ -35,7 +35,7 @@
 
 
 #ifdef VPR_USE_NSPR
-#include <md/NSPR/vprTypesNSPR.h>
+#include <vpr/md/NSPR/vprTypesNSPR.h>
 #else
 namespace vpr {
 #if SIZEOF_CHAR == 1

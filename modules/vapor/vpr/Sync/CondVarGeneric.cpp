@@ -30,20 +30,20 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vprConfig.h>
+#include <vpr/vprConfig.h>
 
-#include <Sync/CondGeneric.h>
+#include <vpr/Sync/CondVarGeneric.h>
 
 
 // Wait for possible condition change
 // POST: The condition has been modifed, but may not be satisfied.
 // NOTE: The call blocks until a condition has been signaled
 int
-vpr::CondGeneric::wait () {
+vpr::CondVarGeneric::wait () {
    std::cerr << std::setw(5) << getpid() << "  Wait: Begin:" << std::endl;
    // ASSERT:  We have been locked
    if (condMutex->test() == 0)    // Not locked
-      std::cerr << " vpr::CondGeneric::wait: INCORRECT USAGE: Mutex was not locked when wait invoked!!!"
+      std::cerr << " vpr::CondVarGeneric::wait: INCORRECT USAGE: Mutex was not locked when wait invoked!!!"
                 << std::endl;
 
    waiters++;              // We have lock already

@@ -33,7 +33,7 @@
 #ifndef _VPR_BLOCK_IO_H_
 #define _VPR_BLOCK_IO_H_
 
-#include <vprConfig.h>
+#include <vpr/vprConfig.h>
 
 #include <vector>
 #include <string>
@@ -43,7 +43,8 @@
 #include <sys/types.h>
 #endif
 
-#include <Utils/Assert.h>
+#include <vpr/Util/Assert.h>
+#include <vpr/Util/Status.h>
 
 
 namespace vpr {

@@ -30,12 +30,12 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vprConfig.h>
+#include <vpr/vprConfig.h>
 
-#include <Sync/Mutex.h>
-#include <Threads/Thread.h>
-#include <Utils/StreamLock.h>
-#include <Utils/Debug.h>
+#include <vpr/Sync/Mutex.h>
+#include <vpr/Thread/Thread.h>
+#include <vpr/Util/StreamLock.h>
+#include <vpr/Util/Debug.h>
 
 
 namespace vpr {

@@ -4,7 +4,7 @@
 #include <TestSuite.h>
 #include <TestCaller.h>
 
-#include <IO/Socket/InetAddr.h>
+#include <vpr/IO/Socket/InetAddr.h>
 
 namespace vprTest
 {

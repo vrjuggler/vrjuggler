@@ -30,6 +30,8 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
+#include <vpr/vpr.h>
+
 #include <stdlib.h>
 #include <iostream>
 #include <stdio.h>
@@ -37,14 +39,13 @@
 #include <time.h>
 #include <sys/time.h>
 
-#include <Sync/Mutex.h>
-//#include <Sync/Semaphore.h>
-//#include <Sync/Barrier.h>
-//#include <Sync/NullMutex.h>
-#include <Threads/ThreadPool.h>
-#include <SharedMem/MemPool.h>
-#include <Utils/Debug.h>
-#include <System.h>
+#include <vpr/Sync/Mutex.h>
+//#include <vpr/Sync/Semaphore.h>
+//#include <vpr/Sync/Barrier.h>
+//#include <vpr/Sync/NullMutex.h>
+#include <vpr/Thread/ThreadPool.h>
+#include <vpr/Util/Debug.h>
+#include <vpr/System.h>
 
 void doIt(void*);
 
@@ -56,8 +57,7 @@ const int NUMTHREADS = 16;
 	///---//  Beginning of main
 int main(void )
 {
-    vpr::SharedPool myPool(65536, 16);    // size, num threads
-    vpr::ThreadPool* thePool = new(&myPool) vpr::ThreadPool(NUMTHREADS);
+    vpr::ThreadPool* thePool = new vpr::ThreadPool(NUMTHREADS);
     vpr::Mutex DebugLock;
     
     DebugLock.acquire();
@@ -70,7 +70,7 @@ int main(void )
     
         
     for (float i=0;i<70;i++) {
-	thePool->startFunc((THREAD_FUNC)doIt);      
+	thePool->startFunc((vpr::thread_func_t)doIt);      
     }
     thePool->barrier();
 
@@ -79,7 +79,7 @@ int main(void )
     counter = 0;
 
     for (float z=0;z<30;z++) {
-	thePool->startFunc((THREAD_FUNC)doIt);
+	thePool->startFunc((vpr::thread_func_t)doIt);
     }
     thePool->barrier();
   
@@ -104,7 +104,7 @@ void doIt(void* param)
     long iters = (1000000*drand48());
     for(float q=0;q<iters;q += .34)
     {
-	pdq = vpr::System::sin(vpr::System::sin(q)*q*vpr::System::cos(q*pdq));
+	pdq = sin(sin(q)*q*cos(q*pdq));
     }
     	
 }

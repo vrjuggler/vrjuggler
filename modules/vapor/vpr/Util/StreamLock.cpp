@@ -30,7 +30,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <Utils/StreamLock.h>
+#include <vpr/Util/StreamLock.h>
 
 
 namespace vpr {

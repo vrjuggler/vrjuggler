@@ -34,11 +34,11 @@
 #define _VPR_TS_TABLE_H_
 //#pragma once
 
-#include <vprConfig.h>
+#include <vpr/vprConfig.h>
 #include <vector>
-#include <Threads/TSObject.h>
-#include <Sync/Mutex.h>
-#include <Utils/Assert.h>
+#include <vpr/Thread/TSObject.h>
+#include <vpr/Sync/Mutex.h>
+#include <vpr/Util/Assert.h>
 
 
 namespace vpr {

@@ -33,8 +33,9 @@
 #include <iostream>
 #include <string.h>
 
-#include <IO/Port/SerialPort.h>
-#include <IO/Port/SerialTypes.h>
+#include <vpr/vpr.h>
+#include <vpr/IO/Port/SerialPort.h>
+#include <vpr/IO/Port/SerialTypes.h>
 
 
 int

@@ -43,8 +43,8 @@
  */
 
 /* This should always be included first. */
-#include <vprDefines.h>
-#include <vprTypes.h>
+#include <vpr/vprDefines.h>
+#include <vpr/vprTypes.h>
 
 #ifdef _DEBUG
 #   define VPR_DEBUG
@@ -77,8 +77,6 @@
 #ifdef HAVE_UNISTD_H
 #include <unistd.h>
 #endif
-
-#include <Utils/Status.h> // for return values, error status.
 
 /*
  * ----------------------------------------------------------------------------

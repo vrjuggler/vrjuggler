@@ -46,10 +46,7 @@
 // Date: 11-9-97
 //-----------------------------------------------
 
-#include <vprConfig.h>
-#include <SharedMem/MemPool.h>
-#include <md/WIN32/MemPoolWin32.h>
-#include <Threads/Thread.h>
+#include <vpr/vprConfig.h>
 
 
 namespace vpr {

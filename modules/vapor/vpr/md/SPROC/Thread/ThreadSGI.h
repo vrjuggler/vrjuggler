@@ -37,7 +37,7 @@
 // NOTE: This file(vprThreadSGI.h) MUST be included by vprThread.h.
 // Not the other way around
 
-#include <vprConfig.h>
+#include <vpr/vprConfig.h>
 #include <stdlib.h>
 #include <sys/resource.h>
 #include <sys/types.h>
@@ -46,8 +46,8 @@
 #include <sched.h>
 #include <unistd.h>
 
-#include <Threads/ThreadFunctor.h>
-#include <Threads/BaseThread.h>
+#include <vpr/Thread/ThreadFunctor.h>
+#include <vpr/Thread/BaseThread.h>
 
 
 namespace vpr {

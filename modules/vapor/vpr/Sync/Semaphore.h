@@ -33,17 +33,17 @@
 #ifndef _VPR_Semaphore_h_
 #define _VPR_Semaphore_h_
 
-#include <vprConfig.h>
+#include <vpr/vprConfig.h>
 
 #if defined(VPR_USE_IRIX_SPROC)
 #   include <ulocks.h>
-#   include <md/SPROC/SemaphoreSGI.h>
+#   include <vpr/md/SPROC/Sync/SemaphoreSGI.h>
     
 namespace vpr {
     typedef SemaphoreSGI Semaphore;
 };
 #elif defined(VPR_USE_WIN32)
-#  include <md/WIN32/SemaphoreWin32.h>
+#  include <vpr/md/WIN32/Sync/SemaphoreWin32.h>
 
 namespace vpr {
    typedef SemaphoreWin32 Semaphore;
@@ -53,13 +53,13 @@ namespace vpr {
 #   define _POSIX_C_SOURCE VPR_POSIX_C_SOURCE
 #endif
 
-#   include <md/POSIX/SemaphorePosix.h>
+#   include <vpr/md/POSIX/Sync/SemaphorePosix.h>
 
 namespace vpr {
     typedef SemaphorePosix Semaphore;
 };
 #else
-#  include <md/NSPR/SemaphoreNSPR.h>
+#  include <vpr/md/NSPR/Sync/SemaphoreNSPR.h>
 
 namespace vpr {
    typedef SemaphoreNSPR Semaphore;

@@ -35,7 +35,7 @@
 
 #include <string>
 
-#include <IO/BlockIO.h>
+#include <vpr/IO/BlockIO.h>
 
 
 namespace vpr {

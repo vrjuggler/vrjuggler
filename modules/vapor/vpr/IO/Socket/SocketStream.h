@@ -33,31 +33,31 @@
 #ifndef _VPR_SOCKET_STREAM_H_
 #define _VPR_SOCKET_STREAM_H_
 
-#include <vprConfig.h>
+#include <vpr/vprConfig.h>
 
-#include <IO/Socket/Socket.h>
-#include <IO/Socket/InetAddr.h>
+#include <vpr/IO/Socket/Socket.h>
+#include <vpr/IO/Socket/InetAddr.h>
 
 // include bridge class
-#include <IO/Socket/SocketStream_t.h>
+#include <vpr/IO/Socket/SocketStream_t.h>
 
 // make the connection
 #if defined(VPR_USE_NSPR)
-#   include <md/NSPR/SocketStreamImpNSPR.h>
+#   include <vpr/md/NSPR/IO/Socket/SocketStreamImplNSPR.h>
 namespace vpr {
-    typedef SocketStream_t<SocketStreamImpNSPR, SocketImpNSPR> SocketStream;
+    typedef SocketStream_t<SocketStreamImplNSPR, SocketImplNSPR> SocketStream;
 };
 
 #elif defined(VPR_USE_WIN32)
-#   include <md/WIN32/SocketStreamImpWinSock.h>
+#   include <vpr/md/WIN32/IO/Socket/SocketStreamImplWinSock.h>
 namespace vpr {
-    typedef SocketStream_t<SocketStreamImpWinSock, SocketImpWinSock> SocketStream;
+    typedef SocketStream_t<SocketStreamImplWinSock, SocketImplWinSock> SocketStream;
 };
 
 #else
-#   include <md/POSIX/SocketStreamImpBSD.h>
+#   include <vpr/md/POSIX/IO/Socket/SocketStreamImplBSD.h>
 namespace vpr {
-    typedef SocketStream_t<SocketStreamImpBSD, SocketImpBSD> SocketStream;
+    typedef SocketStream_t<SocketStreamImplBSD, SocketImplBSD> SocketStream;
 };
 #endif
 

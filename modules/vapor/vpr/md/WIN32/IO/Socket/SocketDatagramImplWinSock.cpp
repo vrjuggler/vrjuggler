@@ -30,13 +30,13 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vprConfig.h>
+#include <vpr/vprConfig.h>
 
 #include <stdio.h>
 #include <string.h>
 
-#include <Utils/Assert.h>
-#include <md/WIN32/SocketDatagramImpWinSock.h>
+#include <vpr/Util/Assert.h>
+#include <vpr/md/WIN32/IO/Socket/SocketDatagramImplWinSock.h>
 
 
 // ============================================================================
@@ -54,8 +54,8 @@ namespace vpr {
 // ----------------------------------------------------------------------------
 // Default constructor.  This does nothing.
 // ----------------------------------------------------------------------------
-SocketDatagramImpWinSock::SocketDatagramImpWinSock ()
-    : SocketImpWinSock()
+SocketDatagramImplWinSock::SocketDatagramImplWinSock ()
+    : SocketImplWinSock()
 {
     /* Do nothing. */ ;
 }
@@ -65,9 +65,9 @@ SocketDatagramImpWinSock::SocketDatagramImpWinSock ()
 // remote site and a port and stores the values for later use in the member
 // variables of the object.
 // ----------------------------------------------------------------------------
-SocketDatagramImpWinSock::SocketDatagramImpWinSock (const InetAddr& local_addr,
-                                                    const InetAddr& remote_addr)
-    : SocketImpWinSock(local_addr, remote_addr, SocketTypes::DATAGRAM)
+SocketDatagramImplWinSock::SocketDatagramImplWinSock (const InetAddr& local_addr,
+                                                      const InetAddr& remote_addr)
+    : SocketImplWinSock(local_addr, remote_addr, SocketTypes::DATAGRAM)
 {
     /* Do nothing. */ ;
 }
@@ -75,9 +75,9 @@ SocketDatagramImpWinSock::SocketDatagramImpWinSock (const InetAddr& local_addr,
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
 Status
-SocketDatagramImpWinSock::recvfrom (void* msg, const size_t length,
-                                    const int flags, InetAddr& from,
-                                    ssize_t& bytes_read)
+SocketDatagramImplWinSock::recvfrom (void* msg, const size_t length,
+                                     const int flags, InetAddr& from,
+                                     ssize_t& bytes_read)
 {
     int fromlen;
     Status retval;
@@ -88,7 +88,7 @@ SocketDatagramImpWinSock::recvfrom (void* msg, const size_t length,
 
     if ( bytes_read == -1 ) {
         fprintf(stderr,
-                "[vpr::SocketDatagramImpWinSock] ERROR: Could not read from socket (%s:%hu): %s\n",
+                "[vpr::SocketDatagramImplWinSock] ERROR: Could not read from socket (%s:%hu): %s\n",
                 m_remote_addr.getAddressString().c_str(),
                 m_remote_addr.getPort(), strerror(errno));
         retval.setCode(Status::Failure);
@@ -100,9 +100,9 @@ SocketDatagramImpWinSock::recvfrom (void* msg, const size_t length,
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
 Status
-SocketDatagramImpWinSock::recvfrom (std::string& msg, const size_t length,
-                                    const int flags, InetAddr& from,
-                                    ssize_t& bytes_read)
+SocketDatagramImplWinSock::recvfrom (std::string& msg, const size_t length,
+                                     const int flags, InetAddr& from,
+                                     ssize_t& bytes_read)
 {
     msg.resize(length);
     memset(&msg[0], '\0', msg.size());
@@ -113,9 +113,9 @@ SocketDatagramImpWinSock::recvfrom (std::string& msg, const size_t length,
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
 Status
-SocketDatagramImpWinSock::recvfrom (std::vector<vpr::Uint8>& msg,
-                                    const size_t length, const int flags,
-                                    InetAddr& from, ssize_t& bytes_read)
+SocketDatagramImplWinSock::recvfrom (std::vector<vpr::Uint8>& msg,
+                                     const size_t length, const int flags,
+                                     InetAddr& from, ssize_t& bytes_read)
 {
     Status retval;
 
@@ -136,9 +136,9 @@ SocketDatagramImpWinSock::recvfrom (std::vector<vpr::Uint8>& msg,
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
 Status
-SocketDatagramImpWinSock::sendto (const void* msg, const size_t length,
-                                  const int flags, const InetAddr& to,
-                                  ssize_t& bytes_sent)
+SocketDatagramImplWinSock::sendto (const void* msg, const size_t length,
+                                   const int flags, const InetAddr& to,
+                                   ssize_t& bytes_sent)
 {
     Status retval;
 
@@ -147,7 +147,7 @@ SocketDatagramImpWinSock::sendto (const void* msg, const size_t length,
 
     if ( bytes_sent == -1 ) {
         fprintf(stderr,
-                "[vpr::SocketDatagramImpWinSock] ERROR: Could not send to %s:%hu on socket (%s:%hu): %s\n",
+                "[vpr::SocketDatagramImplWinSock] ERROR: Could not send to %s:%hu on socket (%s:%hu): %s\n",
                 to.getAddressString().c_str(), to.getPort(),
                 m_remote_addr.getAddressString().c_str(),
                 m_remote_addr.getPort(), strerror(errno));
@@ -160,9 +160,9 @@ SocketDatagramImpWinSock::sendto (const void* msg, const size_t length,
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
 Status
-SocketDatagramImpWinSock::sendto (const std::string& msg, const size_t length,
-                                  const int flags, const InetAddr& to,
-                                  ssize_t& bytes_sent)
+SocketDatagramImplWinSock::sendto (const std::string& msg, const size_t length,
+                                   const int flags, const InetAddr& to,
+                                   ssize_t& bytes_sent)
 {
     vprASSERT(length <= msg.size() && "Length is bigger than data given");
     return sendto(msg.c_str(), length, flags, to, bytes_sent);
@@ -171,9 +171,9 @@ SocketDatagramImpWinSock::sendto (const std::string& msg, const size_t length,
 // ----------------------------------------------------------------------------
 // ----------------------------------------------------------------------------
 Status
-SocketDatagramImpWinSock::sendto (const std::vector<vpr::Uint8>& msg,
-                                  const size_t length, const int flags,
-                                  const InetAddr& to, ssize_t& bytes_sent)
+SocketDatagramImplWinSock::sendto (const std::vector<vpr::Uint8>& msg,
+                                   const size_t length, const int flags,
+                                   const InetAddr& to, ssize_t& bytes_sent)
 {
     vprASSERT(length <= msg.size() && "Length is bigger than data given");
     return sendto((const void*) &msg[0], length, flags, to, bytes_sent);

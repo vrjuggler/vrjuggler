@@ -34,12 +34,12 @@
 #define _VPR_SOCKET_BRIDGE_H_
 // NOTE: this is the bridge class for use with Socket.h
 
-#include <vprConfig.h>
+#include <vpr/vprConfig.h>
 
 #include <string>
 
-#include <IO/BlockIO.h> // base class.
-#include <IO/IOSys.h>
+#include <vpr/IO/BlockIO.h> // base class.
+#include <vpr/IO/IOSys.h>
 
 
 namespace vpr {
@@ -49,7 +49,7 @@ namespace vpr {
 //+ be instantiated.  Instead, see vpr::SocketStream and vpr::SocketDatagram.
 // ----------------------------------------------------------------------------
 //!PUBLIC_API:
-template<class RealSocketImp>
+template<class RealSocketImpl>
 class Socket_t : public BlockIO {
 public:
     // ========================================================================
@@ -712,8 +712,8 @@ protected:
         return m_socket_imp->write(buffer, length, bytes_written);
     }
 
-    RealSocketImp* m_socket_imp; //: Platform-specific socket implementation
-                                 //+ object
+    RealSocketImpl* m_socket_imp; //: Platform-specific socket implementation
+                                  //+ object
 };
 
 }; // End of vpr namespace

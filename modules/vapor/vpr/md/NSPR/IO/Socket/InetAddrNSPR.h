@@ -33,10 +33,10 @@
 #ifndef _VPR_INET_ADDR_NSPR_H_
 #define _VPR_INET_ADDR_NSPR_H_
 
-#include <vprConfig.h>
+#include <vpr/vprConfig.h>
 
-#include <IO/Socket/SocketTypes.h>
-#include <IO/Socket/InetAddrBase.h>
+#include <vpr/IO/Socket/SocketTypes.h>
+#include <vpr/IO/Socket/InetAddrBase.h>
 
 #include <prio.h>
 #include <prnetdb.h>

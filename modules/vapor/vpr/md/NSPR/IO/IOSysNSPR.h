@@ -33,8 +33,8 @@
 #ifndef _VPR_IOSYS_NSPR_H_
 #define _VPR_IOSYS_NSPR_H_
 
-#include <vprConfig.h>
-#include <IO/IOSysBase.h>
+#include <vpr/vprConfig.h>
+#include <vpr/IO/IOSysBase.h>
 
 #include <prio.h>
 

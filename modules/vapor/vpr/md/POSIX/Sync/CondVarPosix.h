@@ -31,23 +31,23 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 /*
- * --------------------------------------------------------------------------
+ * ----------------------------------------------------------------------------
  * Author:
  *   Patrick Hartling (based on vpr::CondSGI by Allen Bierbaum).
- * --------------------------------------------------------------------------
+ * ----------------------------------------------------------------------------
  * NOTES:
- *    - This file (vprCondPosix.h) must be included by vprCond.h, not the
- *      other way around.
- * --------------------------------------------------------------------------
+ *    - This file (CondVarPosix.h) must be included by vpr/Sync/Cond.h, not
+ *      the other way around.
+ * ----------------------------------------------------------------------------
  */
 
-#ifndef _VPR_COND_POSIX_H_
-#define _VPR_COND_POSIX_H_
+#ifndef _VPR_COND_VAR_POSIX_H_
+#define _VPR_COND_VAR_POSIX_H_
 
 
-#include <vprConfig.h>
+#include <vpr/vprConfig.h>
 #include <pthread.h>
-#include <md/POSIX/MutexPosix.h>
+#include <vpr/md/POSIX/Sync/MutexPosix.h>
 
 
 namespace vpr {
@@ -55,10 +55,10 @@ namespace vpr {
 //: Condition variable wrapper for POSIX-compliant systems using pthreads
 //+ condition variables for the implementation.
 //!PUBLIC_API:
-class CondPosix {
+class CondVarPosix {
 public:
     // -----------------------------------------------------------------------
-    //: Constructor for vpr::CondPosix class.
+    //: Constructor for vpr::CondVarPosix class.
     //
     //! PRE: None.
     //! POST: The condition variable is intialized, and the mutex variable
@@ -69,7 +69,7 @@ public:
     //+               association with the condition variable in this class
     //+               (optional).
     // -----------------------------------------------------------------------
-    CondPosix (MutexPosix* mutex = NULL) {
+    CondVarPosix (MutexPosix* mutex = NULL) {
         // Initialize the condition variable.
 #ifdef _PTHREADS_DRAFT_4
         pthread_cond_init(&mCondVar, pthread_condattr_default);
@@ -87,12 +87,12 @@ public:
     }
 
     // -----------------------------------------------------------------------
-    //: Destructor for vpr::CondPosix class.
+    //: Destructor for vpr::CondVarPosix class.
     //
     //! PRE: None.
     //! POST: The condition variable is destroyed.
     // -----------------------------------------------------------------------
-    ~CondPosix (void) {
+    ~CondVarPosix (void) {
         pthread_cond_destroy(&mCondVar);
     }
 
@@ -113,7 +113,7 @@ public:
 
         // If not locked ...
         if ( mCondMutex->test() == 0 ) {
-            std::cerr << "vpr::CondPosix::wait: INCORRECT USAGE: Mutex was not "
+            std::cerr << "vpr::CondVarPosix::wait: INCORRECT USAGE: Mutex was not "
                       << "locked when wait invoked!!!\n";
 
             return -1;
@@ -157,7 +157,7 @@ public:
 
         // If not locked ...
         if ( mCondMutex->test() == 0 ) {
-            std::cerr << "vpr::CondPosix::broadcast: Mutex was not locked when "
+            std::cerr << "vpr::CondVarPosix::broadcast: Mutex was not locked when "
                       << "broadcast called!!!\n";
         }
 
@@ -240,7 +240,7 @@ public:
     // -----------------------------------------------------------------------
     void
     dump (void) const {
-        std::cerr << "------------- vpr::CondPosix::Dump ---------\n"
+        std::cerr << "------------- vpr::CondVarPosix::Dump ---------\n"
                   << "Not Implemented yet.\n";
     }
 
@@ -250,8 +250,8 @@ private:
     MutexPosix     mDefaultMutex; //: A default mutex variable
 
     // = Prevent assignment and initialization.
-    void operator= (const CondPosix&) {;}
-    CondPosix (const CondPosix &c) {;}
+    void operator= (const CondVarPosix&) {;}
+    CondVarPosix (const CondVarPosix &c) {;}
 };
 
 }; // End of vpr namespace

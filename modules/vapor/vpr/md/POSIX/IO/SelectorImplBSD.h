@@ -30,18 +30,19 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _VPR_SELECTOR_IMP_BSD_H_
-#define _VPR_SELECTOR_IMP_BSD_H_
+#ifndef _VPR_SELECTOR_IMPL_BSD_H_
+#define _VPR_SELECTOR_IMPL_BSD_H_
 
-#include <vprConfig.h>
+#include <vpr/vprConfig.h>
 
 #include <vector>
 #include <map>
 #include <string>
 
-#include <IO/SelectorBase.h>
-#include <IO/IOSys.h>
-#include <Utils/Debug.h>
+#include <vpr/IO/SelectorBase.h>
+#include <vpr/IO/IOSys.h>
+#include <vpr/Util/Debug.h>
+#include <vpr/Util/Status.h>
 
 
 namespace vpr {
@@ -55,7 +56,7 @@ namespace vpr {
 // Implementation site of the Selector_t bridge.
 // ----------------------------------------------------------------------------
 //!PUBLIC_API:
-class SelectorImpBSD : public SelectorBase
+class SelectorImplBSD : public SelectorBase
 {
 public:
    // XXX: What should we do when we are adding a handler while
@@ -123,4 +124,4 @@ protected:
 }; // End of vpr namespace
 
 
-#endif  /* _VPR_SELECTOR_IMP_BSD_H_ */
+#endif  /* _VPR_SELECTOR_IMPL_BSD_H_ */

@@ -30,14 +30,16 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
+#include <vpr/vpr.h>
+
 #include <iostream>
 #include <stdio.h>
 #include <math.h>
 
-#include <Threads/Thread.h>
-#include <Sync/Mutex.h>
-#include <Utils/Debug.h>
-#include <Utils/Timer.h>
+#include <vpr/Thread/Thread.h>
+#include <vpr/Sync/Mutex.h>
+#include <vpr/Util/Debug.h>
+#include <vpr/Util/Timer.h>
 
 #define MAX_NUM_THREADS 1000
 

@@ -33,7 +33,7 @@
 #ifndef _VPR_IOSYS_WIN32_H_
 #define _VPR_IOSYS_WIN32_H_
 
-#include <vprConfig.h>
+#include <vpr/vprConfig.h>
 
 #include <winsock2.h>
 #include <windows.h>

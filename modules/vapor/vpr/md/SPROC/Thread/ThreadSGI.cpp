@@ -30,14 +30,14 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vprConfig.h>
+#include <vpr/vprConfig.h>
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <sys/prctl.h>
 
-#include <Threads/Thread.h>
-#include <Threads/ThreadManager.h>
-#include <md/SPROC/ThreadSGI.h>
+#include <vpr/Thread/Thread.h>
+#include <vpr/Thread/ThreadManager.h>
+#include <vpr/md/SPROC/Thread/ThreadSGI.h>
 
 
 namespace vpr {

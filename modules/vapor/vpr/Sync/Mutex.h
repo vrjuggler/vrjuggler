@@ -46,36 +46,36 @@
 // Date: 1-20-97
 //-----------------------------------------------
 
-#include <vprConfig.h>
+#include <vpr/vprConfig.h>
 
 #if defined(VPR_USE_IRIX_SPROC)
 #   include <ulocks.h>
-#   include <md/SPROC/MutexSGI.h>    
+#   include <vpr/md/SPROC/Sync/MutexSGI.h>    
     
 namespace vpr {
     typedef MutexSGI Mutex;
 };
 #elif defined(VPR_USE_WIN32)
-#   include <md/WIN32/MutexWin32.h>
+#   include <vpr/md/WIN32/Sync/MutexWin32.h>
 
 namespace vpr {
     typedef MutexWin32 Mutex;
 };
 #elif defined(VPR_USE_PTHREADS)
-#   include <md/POSIX/MutexPosix.h>
+#   include <vpr/md/POSIX/Sync/MutexPosix.h>
 
 namespace vpr {
     typedef MutexPosix Mutex;
 };
 #elif defined(VPR_USE_NSPR)
-#   include <md/NSPR/MutexNSPR.h>
+#   include <vpr/md/NSPR/Sync/MutexNSPR.h>
 
 namespace vpr {
     typedef MutexNSPR Mutex;
 };
 #endif	/* VPR_IRIX_SPROC */
 
-#include <Sync/NullMutex.h>
+#include <vpr/Sync/NullMutex.h>
 
 
 #endif	/* _VPR_MUTEX_H_ */
