@@ -28,7 +28,7 @@
 <b>NOTE</b>: This document explains OpenGL versions of Juggler and CAVElib
 </p>
 
-<h2><a name="idf">Draw, frame, and init routines</a></h2>
+<h2><a name="idf">Init, Draw, and Frame routines</a></h2>
 <p>
 In CAVElib(TM) these routines are "called-back" using function pointers (C-style).
 In VR Juggler, these routines are "called-back" using an application object, a C++ class which defines these
@@ -73,7 +73,7 @@ methods to encapsulate the functionality of the application within one C++ class
 <h2><a name="input">Getting input from devices</a></h2>
 <ul>
    <h3>In CAVElib(tm)</h3>
-   For trackers you used these functions:
+   For <a href="${GLOSSARY}#tracker">tracker</a>s you used these functions:
    <ul>
    <li>CAVEGetPosition(id,pos) 
    <li>CAVEGetOrientation(id,or) 
@@ -92,7 +92,7 @@ methods to encapsulate the functionality of the application within one C++ class
    <h3>In VR Juggler:</h3>
    You use the vjDevinceInterface derived classes such as:<BR>
    <ul>
-      <li>vjPositionInterface&nbsp;(for trackers and other positional devices)
+      <li>vjPositionInterface&nbsp;(for <a href="${GLOSSARY}#tracker">tracker</a>s and other positional devices)
       <li>vjDigitalInterface&nbsp;&nbsp;(for buttons and other on/off devices)
       <li>vjAnalogInterface&nbsp;&nbsp;&nbsp;(for Ibox/potentiometers and other multi range data devices)
    </ul>
@@ -171,11 +171,16 @@ after each has become active.
    <pre>
    class MyApplication
    {
+   public:
+   // Data callbacks  (Do not put OpenGL code here)
       virtual void init();
-      virtual void draw();
       virtual void preFrame();
-      virtual void postFrame();
       virtual void intraFrame();
+      virtual void postFrame();
+      
+   // OpenGL callbacks (put only OpenGL code here)
+      virtual void contextInit();
+      virtual void draw();
    };
 
    int main(int argc, char* argv[]) 

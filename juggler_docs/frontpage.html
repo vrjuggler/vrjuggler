@@ -9,93 +9,141 @@
 
 <body>
 
+<!-- 2 columns (content and news)-->
 <table width=100%>
 <tr>
 
+   <!-- content -->
    <td width=100%>
    <h2>Welcome to VR Juggler</h2>
 
+   <!-- make 2 columns (spacer and content) -->
    <TABLE BORDER="0">
-     <TR>
-       <TD>
+      <TR>
+      <!-- spacer cell -->
+      <TD>
          <IMG SRC="${IMAGES}/clear.dot.gif" WIDTH="10">
-       </TD>
-       <TD>
-      <h3>About VR Juggler</h3>
-      <p>
-         VR Juggler is an <a href="${OPENSOURCE}">opensource</a> software 
-         library for <a href="${GLOSSARY}#vr">VR</a> application development.  
-         It is scalable between simple systems like PCs to complex systems like HMDs, CAVEs, and Powerwalls. <BR>
-         Click for <a href="${GALLERY}/index.html">pictures and stories</a>, for <a href="${MISC}/about.html">more info about Juggler...</a>
-      </p>
+      </TD>
 
-      <h3>Juggler Project Status</h3>
-      <p>
-         Check out the <a href="${MISC}/history.html">status of Juggler's last stable release</a><BR>
-         For <a href="${JUGGLER_SOURCEFORGE}">up-to-the-minute status</a>, you can scour the 
-          <a href="${JUGGLER_SOURCEFORGE}">Juggler development page</a> at <a href="${SOURCEFORGE}">Sourceforge.net</a>
-      </p>
-     
-      <h3><a href="${DOCUMENTATION}">Manuals / Guides</a></h3>
-      <ul>
-        <h4>For average Juggler users</h4>
-        <li><a href="${MISC}/faq.html">FAQ</a> - Frequently Asked Questions</li>
-        <li><a href="${OVERVIEW}/index.html">Juggler overview</a> (an introductory description of Juggler)</li>
-        <li><a href="${GETTINGSTARTED}/index.html">Getting Started</a> (Learn how to install, setup, and compile Juggler and Juggler applications on your system)</li>
-        <li><a href="${PROGRAMMERGUIDE}/index.html">Programmer's Guide</a> (Write VR programs on top of Juggler)</li>
-        <li><a href="${GLOSSARY}">Glossary of Terms</a> (confused about a term we use?)</li>
-      </ul>
-      <ul>   
-        <h4>For contributors, researchers, and other interested people.</h4>
-        <li><a href="${PUBLICATIONS}/index.html">Publications</a> (Technical topics that have been published in journals/magazines, conferences, and theses).</li>
-        <li><a href="${TEAMGUIDE}/index.html">Team Guide</a> (Contribute drivers and modifications to Juggler).</li>
-        <li><a href="${SPECIFICATION}/index.html">Juggler specification</a> (technical description of the design of VR Juggler - design doc)</li>
-        </p>
-      </ul>
-     
-      <h3>Download</h3>
-      <p>
-         You can <a href="${DOWNLOAD}/index.html">Jump to the download page</a> at any time by clicking the <a href="${DOWNLOAD}/index.html"><img width=77 height=18 border=0 src="${IMAGES}/plastic.theme/download.text.jpg"></a> text at the top of the Juggler web page.
-      </p>
-       </TD>
-     </TR>
-   </TABLE>
-   </td>
+      <!-- main content cell -->
+      <TD>
+         <!-- use a table so we can have inverse headings -->
+         <table cellspacing=6 width=100%>
 
-   
-   
-   <!-- NEWS NEWS NEWS NEWS NEWS NEWS NEWS NEWS NEWS NEWS NEWS NEWS NEWS NEWS NEWS -->
-   <td valign="top" align="right">
-      
+         <!-- ------------ -->
+         <tr><td width=100% bgcolor="${VJPURPLE}">
+            <b><font color=white>About VR Juggler</font></a></b>
+         </td></tr>
+         <tr><td>
+            VR Juggler is an <a href="${OPENSOURCE}">opensource</a> software 
+            library for <a href="${GLOSSARY}#vr">VR</a> application development.  
+            It is scalable between simple systems like PCs to complex systems like HMDs, CAVEs, and Powerwalls. <BR>
+            <BR>
+            Click for <a href="${GALLERY}/index.html">pictures and stories</a>, for <a href="${MISC}/about.html">more info about Juggler...</a><BR>
+            <img width=1 height=3 src="${IMAGES}/clear.dot.gif">
+         </td></tr>
+
+         <!-- ------------ -->
+         <tr><td width=100% bgcolor="${VJPURPLE}">
+            <b><font color=white>Juggler Project Status</font></a></b>
+         </td></tr>
+         <tr><td>
+            Check out the <a href="${MISC}/history.html">status of Juggler's last stable release</a><BR>
+            For <a href="${JUGGLER_SOURCEFORGE}">up-to-the-minute status</a>, you can scour the 
+            <a href="${JUGGLER_SOURCEFORGE}">Juggler development page</a> at <a href="${SOURCEFORGE}">Sourceforge.net</a><BR>
+            <img width=1 height=3 src="${IMAGES}/clear.dot.gif">
+         </td></tr>
+
+         <!-- ------------ -->
+         <tr><td width=100% bgcolor="${VJPURPLE}">
+            <b><font color=white>Manuals / Guides</font></a></b>
+         </td></tr>
+         <tr><td>
+            <b> For average Juggler users...</b><BR>
+            <ul>   
+               <li><a href="${DOCUMENTATION}">Manuals / Guides Overview</a>
+               <li><a href="${MISC}/faq.html">FAQ</a> - Frequently Asked Questions
+               <li><a href="${OVERVIEW}/index.html">Juggler overview</a> (an introductory description of Juggler)
+               <li><a href="${GETTINGSTARTED}/index.html">Getting Started</a> (Learn how to install, setup, and compile Juggler and Juggler applications on your system)
+               <li><a href="${PROGRAMMERGUIDE}/index.html">Programmer's Guide</a> (Write VR programs on top of Juggler)
+               <li><a href="${GLOSSARY}">Glossary of Terms</a> (confused about a term we use?)
+            </ul>
+            <b> For contributors, researchers, and other interested people...</b><BR>
+            <ul>   
+              <li><a href="${PUBLICATIONS}/index.html">Publications</a> (Technical topics that have been published in journals/magazines, conferences, and theses).
+              <li><a href="${TEAMGUIDE}/index.html">Team Guide</a> (Contribute drivers and modifications to Juggler).
+              <li><a href="${SPECIFICATION}/index.html">Juggler specification</a> (technical description of the design of VR Juggler - design doc)
+            </ul>
+            <img width=1 height=3 src="${IMAGES}/clear.dot.gif">
+         </td></tr>
+
+         <!-- ------------ -->
+         <tr><td width=100% bgcolor="${VJPURPLE}">
+            <b><font color=white>Download</font></a></b>
+         </td></tr>
+         <tr><td>
+            You can <a href="${DOWNLOAD}/index.html">Jump to the download page</a> at any time by clicking the <a href="${DOWNLOAD}/index.html"><img width=77 height=18 border=0 src="${IMAGES}/plastic.theme/download.text.jpg"></a> text at the top of the Juggler web page.<BR>
+            <img width=1 height=3 src="${IMAGES}/clear.dot.gif">
+         </td></tr>
          
-      <!-- Right side bar -->
-      <table valign=top>
-      <tr>
-      <!-- left vert border -->
-      <td width=1><img width=1 height=200 src="${IMAGES}/purple.dot.gif"></td>
+         <!-- ------------ -->
+         </table>  <!-- end of table used for inverse headings... -->
       
-      <!-- news-cell -->
-      <td valign=top>
-         <table width=100%><tr><td width=100% bgcolor="${VJBLUE}">
-             <b><A href="${NEWS}/index.html"><p><font color=white>Recent&nbsp;News</font></a></b>
-         </td></tr></table>
-         <p>
-         <A href="${NEWS}/index.html">CVS&nbsp;access&nbsp;available</a><BR>
-         <A href="${NEWS}/index.html">VRJ&nbsp;now&nbsp;on&nbsp;Sourceforge</a><BR>
-         <a href="${NEWS}/index.html">VRJ&nbsp;0.1.97&nbsp;released</a><BR>
-         <A href="${NEWS}/index.html">VRJ&nbsp;at&nbsp;IPT2000</a><BR>
-         <A href="${NEWS}/index.html">VRJ&nbsp;now&nbsp;opensource</a>
-         </p>
-      </td>
-      </tr>
-      <tr>
-      <!-- bottom horiz border -->
-      <td width=1 height=1></td>
-      <td height=1><img width=100% height=1 src="${IMAGES}/clear.dot.gif"></td>
-      </tr>
-      </table>
+      </TD>    <!-- end of content cell -->
+      </TR>
+      </TABLE> 
+   </td>       <!-- end of 2 cells -->
+
+   <!-- Right side bar -->
+   <td valign="top" align="right">
+      <table valign=top height=1>
+      <!-- NEWS NEWS NEWS NEWS NEWS NEWS NEWS NEWS NEWS NEWS NEWS NEWS NEWS NEWS NEWS -->
+         <tr>
+         <!-- left vert border 
+              NOTE: this determines the height of the text box!!! -->
+         <td width=1><img width=1 height=150 src="${IMAGES}/purple.dot.gif"></td>
+
+         <!-- news-cell -->
+         <td valign=top height=1>
+            <table width=100%><tr><td width=100% bgcolor="${VJBLUE}">
+                <b><A href="${NEWS}/index.html"><p><font color=white>Recent&nbsp;News</font></a></b>
+            </td></tr></table>
+            <A href="${NEWS}/index.html">CVS&nbsp;access&nbsp;available</a><BR>
+            <A href="${NEWS}/index.html">VRJ&nbsp;now&nbsp;on&nbsp;Sourceforge</a><BR>
+            <a href="${NEWS}/index.html">VRJ&nbsp;0.1.97&nbsp;released</a><BR>
+            <A href="${NEWS}/index.html">VRJ&nbsp;at&nbsp;IPT2000</a><BR>
+            <A href="${NEWS}/index.html">VRJ&nbsp;now&nbsp;opensource</a>
+         </td>
+         </tr>
+         <tr>
+         <!-- bottom horiz border -->
+         <td width=1 height=1></td>
+         <td height=1><img width=100% height=1 src="${IMAGES}/purple.dot.gif"></td>
+         </tr>
+      <!-- NEWS NEWS NEWS NEWS NEWS NEWS NEWS NEWS NEWS NEWS NEWS NEWS NEWS NEWS NEWS -->
+      <!-- QUICKIES QUICKIES QUICKIES QUICKIES QUICKIES QUICKIES QUICKIES QUICKIES -->
+         <tr>
+         <!-- left vert border 
+              NOTE: this determines the height of the text box!!! -->
+         <td width=1><img width=1 height=150 src="${IMAGES}/purple.dot.gif"></td>
+
+         <!-- quickies-cell -->
+         <td valign=top height=1>
+            <table width=100%><tr><td width=100% bgcolor="${VJBLUE}">
+                <b><font color=white>Quickies</font></b>
+            </td></tr></table>
+            <A href="${PROGRAMMERGUIDE}/app.construction/cave-to-juggler.html">Port CAVElib to Juggler</a><BR>
+            <A href="${PROGRAMMERGUIDE}/app.construction/glut-to-juggler.html">Port GLUT to Juggler</a>
+         </td>
+         </tr>
+         <tr>
+         <!-- bottom horiz border -->
+         <td width=1 height=1></td>
+         <td height=1><img width=100% height=1 src="${IMAGES}/purple.dot.gif"></td>
+         </tr>
+      <!-- QUICKIES QUICKIES QUICKIES QUICKIES QUICKIES QUICKIES QUICKIES QUICKIES -->
+     </table>
    </td>
-   <!-- NEWS NEWS NEWS NEWS NEWS NEWS NEWS NEWS NEWS NEWS NEWS NEWS NEWS NEWS NEWS -->
 </tr>
 </table>
 

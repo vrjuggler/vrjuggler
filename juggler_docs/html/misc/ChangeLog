@@ -1,6 +1,22 @@
 DATE        AUTHOR    CHANGE
 ----------- --------- ---------------------------------------------------------
-
+Nov-02-2000 patrick   Finished new MotionStar driver--config files must be
+                      updated to reflect some new options
+Oct-28-2000 allenb    Fixed bug preventing right eye only mono in Performer
+Sep-30-2000 allenb    Moved src to SourceForge.net
+Sep-18-2000 allenb    Added interocular distance configuration
+Sep-15-2000 patrick   Fixed positioning of keyboard input windows on Win32
+Sep-03-2000 allenb    Fixed a couple of race conditions on start up.
+Sep-03-2000 allenb    Fixed bug that prevented X-Win keyboards from
+                      reconfiguring
+Sep-02-2000 allenb    Fixed several lingering seg fault bugs
+Aug-30-2000 allenb    Added ability to specify FOV and aspect ratio in sim
+                      windows.
+Aug-29-2000 allenb    Fixed bug with Performer calling app traversals
+                      once per channel.
+Aug-21-2000 allenb    Added initial trackd driver support
+Aug-05-2000 patrick   Now using std namespace for all C++ I/O
+Aug-03-2000 patrick   -LANG:std is now used when compiling on IRIX
 Jul-18-2000           VR Juggler 0.1.97 released
 
 [Version 0.1.97 - 7.19.2000]===================================================

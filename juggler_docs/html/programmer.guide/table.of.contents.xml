@@ -166,7 +166,10 @@ Builder: JExplorerBuilder V 1. 0. 7
 	link="${PROGRAMMERGUIDE}/app.construction/cave-to-juggler.html" 
 	info="Converting a CAVElib application to a VR Juggler application" 
 	image="Leaf.gif" >
-
+< item title="Porting from GLUT" 
+	link="${PROGRAMMERGUIDE}/app.construction/glut-to-juggler.html" 
+	info="Converting a GLUT application to a VR Juggler application" 
+	image="Leaf.gif" >
 
 </rootfolder>
 </idefault>
