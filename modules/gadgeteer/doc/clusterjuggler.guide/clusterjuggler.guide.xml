@@ -782,7 +782,7 @@
       VR Juggler</secondary></indexterm>ClusterJuggler extends VR Juggler by
       using the RemoteInputManager plugin as an extension to the existing
       input manager. The RemoteInputManager provides a few key functions:
-      device location transparency, homogeneous clusters, support for platform
+      device location transparency, eteroerogeneous clusters, support for platform
       specific device drivers, and an unlimited number of devices.</para>
 
       <formalpara>
@@ -808,7 +808,7 @@
       </figure>
 
       <formalpara>
-        <title>Homogeneous Clusters</title>
+        <title>Heterogeneous Clusters</title>
 
         <para>Also by distributing the input to cluster nodes across the
         network, we can remove the typical cluster computing constraint of
@@ -816,15 +816,15 @@
         this very easily since our ClusterNetwork layer works across multiple
         platforms. This allows us to construct a cluster from any combination
         of the platforms supported by VR Juggler(<xref
-        linkend="RIM.Homogenous" />).</para>
+        linkend="RIM.Heterogeneous" />).</para>
       </formalpara>
 
-      <figure id="RIM.Homogenous">
-        <title>Homogeneous Cluster</title>
+      <figure id="RIM.Heterogeneous">
+        <title>Heterogeneous Cluster</title>
 
         <mediaobject>
           <imageobject>
-            <imagedata align="center" fileref="figures/HomogenousCluster.png" />
+            <imagedata align="center" fileref="figures/HeterogeneousCluster.png" />
           </imageobject>
         </mediaobject>
       </figure>
@@ -1020,7 +1020,7 @@ vpr::SerializableObjectMixin&#60;MyType&#62;::readObject(vpr::ObjectReader* read
       <example>
         <title>Declare an Instance</title>
 
-        <programlisting linenumbering="numbered">cluster::UserData&#60;vpr::SerializableObjectMixin&#60;MyType&#62; &#62; mMyData;<co id="ADM.declare" linkends="ADM.declare.desc" /></programlisting>
+        <programlisting>cluster::UserData&#60;vpr::SerializableObjectMixin&#60;MyType&#62; &#62; mMyData;<co id="ADM.declare" linkends="ADM.declare.desc" /></programlisting>
 
         <calloutlist>
           <callout arearefs="ADM.declare" id="ADM.declare.desc">
@@ -1032,7 +1032,7 @@ vpr::SerializableObjectMixin&#60;MyType&#62;::readObject(vpr::ObjectReader* read
       <example>
         <title>Initialize the Data Structure</title>
 
-        <programlisting linenumbering="numbered">vpr::GUID new_guid(&#34;d6be4359-e8cf-41fc-a72b-a5b4f3f29aa2&#34;);<co id="ADM.init.guid" linkends="ADM.init.guid.desc" /> 
+        <programlisting>vpr::GUID new_guid(&#34;d6be4359-e8cf-41fc-a72b-a5b4f3f29aa2&#34;);<co id="ADM.init.guid" linkends="ADM.init.guid.desc" /> 
         std::string hostname = &#34;gfxn1&#34;;<co id="ADM.init.hostname" linkends="ADM.init.hostname.desc" /> 
         mMyData.init(new_guid, hostname);<co id="ADM.init.init" linkends="ADM.init.init.desc" /></programlisting>
 
@@ -1091,7 +1091,7 @@ vpr::SerializableObjectMixin&#60;MyType&#62;::readObject(vpr::ObjectReader* read
       <example>
         <title>Use the Data Structure</title>
 
-        <programlisting linenumbering="numbered">if (mMyData-&#62;drawBool == true)<co id="ADM.getValue.test" linkends="ADM.getValue.test.desc" /> 
+        <programlisting>if (mMyData-&#62;drawBool == true)<co id="ADM.getValue.test" linkends="ADM.getValue.test.desc" /> 
 {
    drawNetwork();<co id="ADM.getValue.drawNetwork" linkends="ADM.getValue.drawNetwork" /> 
 }</programlisting>
