@@ -409,7 +409,7 @@ case $OS_TYPE in
 
         Gadgeteer_lib='-lgadget'
         ;;
-    WIN32)
+    Win32)
         gadget_ldflags_compiler="/link /libpath:\$prefix/lib/debug "
         gadget_ldflags_linker="/libpath:\$prefix/lib/debug "
         gadget_libs='gadget.lib'
