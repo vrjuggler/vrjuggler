@@ -54,7 +54,7 @@ ifneq ($(PYDOC), no)
 	PYTHONPATH=$(pythonpath) $(PYDOC) -w PyJuggler.vrj
 	PYTHONPATH=$(pythonpath) $(PYDOC) -w PyJuggler.__vrj
 ifeq (@HAVE_OSG@, Y)
-	PYTHONPATH=$(pythonpath) $(PYDOC) -w PyJuggler.__osg
+	PYTHONPATH=$(pythonpath) $(PYDOC) -w PyJuggler.__osgapp
 endif
 endif
 

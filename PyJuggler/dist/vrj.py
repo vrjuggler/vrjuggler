@@ -19,10 +19,10 @@ except:
    pass
 
 __doc__ = '''PyJuggler.vrj is a module that imports the symbols from
-PyJuggler.__vrj and PyJuggler.__osg into its namespace.  PyJuggler.__osg
+PyJuggler.__vrj and PyJuggler.__osgapp into its namespace.  PyJuggler.__osgapp
 is an optional module, and importing it may fail if it was not compiled
 or if the Open Scene Graph is not available at run time.
 
-Refer to the PyJuggler.__vrj and PyJuggler.__osg modules for class
+Refer to the PyJuggler.__vrj and PyJuggler.__osgapp modules for class
 documentation.
 '''
