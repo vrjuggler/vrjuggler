@@ -86,17 +86,26 @@ namespace jccl
                fs::directory_iterator end_itr;
                for (fs::directory_iterator file(dir); file != end_itr; ++file)
                {
-                  // Ignore directories
-                  if (!fs::is_directory(*file))
+                  try
                   {
-                     // Only accept files with a .jdef extension
-                     const std::string def_ext = ".jdef";
-                     const std::string::size_type pos = file->leaf().size() - def_ext.size();
-                     const std::string file_ext = file->leaf().substr(pos);
-                     if (file_ext == def_ext)
+                     // Ignore directories
+                     if (!fs::is_directory(*file))
                      {
-                        loadDef(file->native_file_string());
+                        // Only accept files with a .jdef extension
+                        const std::string def_ext = ".jdef";
+                        const std::string::size_type pos = file->leaf().size() - def_ext.size();
+                        const std::string file_ext = file->leaf().substr(pos);
+                        if (file_ext == def_ext)
+                        {
+                           loadDef(file->native_file_string());
+                        }
                      }
+                  }
+                  catch (fs::filesystem_error& err)
+                  {
+                     vprDEBUG(jcclDBG_CONFIG, vprDBG_WARNING_LVL)
+                        << "Failed to read '" << file->native_file_string()
+                        << "': " << err.what() << std::endl << vprDEBUG_FLUSH;
                   }
                }
             }
