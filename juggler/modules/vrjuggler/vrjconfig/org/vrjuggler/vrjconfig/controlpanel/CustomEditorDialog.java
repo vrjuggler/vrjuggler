@@ -87,6 +87,7 @@ public class CustomEditorDialog
       }
 
       this.pack();
+      this.setLocationRelativeTo(parent);
    }
 
    public int showDialog()
