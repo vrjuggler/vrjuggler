@@ -708,7 +708,7 @@ if test "$OS_TYPE" = "UNIX" ; then
     fi
 
     if test "x$OSG_LDFLAGS" != "x" ; then
-        APP_EXTRA_LIBS_OSG="-L$OSGROOT/lib$LIBBITSUF $LIBOSG"
+        APP_EXTRA_LIBS_OSG="-L$OSGROOT/lib $LIBOSG"
     else
         APP_EXTRA_LIBS_OSG="$LIBOSG"
     fi
