@@ -98,12 +98,12 @@ public:
 public:
 
    /**
-    * @input alias of the sound to trigger, and number of times to play
+    * @input alias of the sound to trigger, and number of times to play, -1 is repeat infinately
     * @preconditions alias does not have to be associated with a loaded sound.
     * @postconditions if it is, then the loaded sound is triggered.  if it isn't then nothing happens.
     * @semantics Triggers a sound
     */
-   virtual void trigger( const std::string & alias, const unsigned int & repeat = -1 )
+   virtual void trigger( const std::string & alias, const unsigned int & repeat = 1 )
    {
       assert( this->isStarted() == true && "must call startAPI prior to this function" );
       

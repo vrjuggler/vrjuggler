@@ -60,11 +60,11 @@ struct SoundInfo
 {
    SoundInfo() : alias(), 
                  datasource( FILESYSTEM ), 
-                 filename(), 
-                 data(), 
-                 ambient( true ), 
-                 retriggerable( false ), 
-                 repeat( 1 ), 
+                 filename(),
+                 data(),
+                 ambient( true ),
+                 retriggerable( false ),
+                 repeat( 1 ),
                  triggerOnNextBind( false ), 
                  repeatCountdown( 0 )
    {
@@ -105,7 +105,7 @@ struct SoundInfo
    
    bool ambient;  // is the sound ambient (true) or positional (false)?
    bool retriggerable;  // can the sound be retriggered while playing?
-   int repeat;           // number of times to repeat (static)
+   int repeat;           // number of times to repeat (static), -1 is infinite
 
    // -----------------------------------------------
    bool triggerOnNextBind;
