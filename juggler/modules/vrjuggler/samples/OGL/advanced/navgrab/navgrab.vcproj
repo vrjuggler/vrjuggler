@@ -145,6 +145,12 @@
 			<File
 				RelativePath="NavGrabApp.h">
 			</File>
+			<File
+				RelativePath="TestCases\FailureTestCase.h">
+			</File>
+			<File
+				RelativePath="TestCases\SphereTestCase.h">
+			</File>
 		</Filter>
 		<Filter
 			Name="Resource Files"
