@@ -125,38 +125,41 @@ namespace vpr
       bool unrefDelete();
 
    public:
-      //: decrease the reference count by 1, return the new refcount
+      /// Decreases the reference count by 1, return the new refcount.
       const int& unref();
 
-      //: return the reference count
+      /// Returns the reference count.
       const int& getRef() const;
 
-      //: decrease the reference count by 1, return the new refcount
+      /// Decreases the reference count by 1, return the new refcount.
       const int& unrefGetRef();
 
-      //: if refcount <= 0, then delete the memory
-      //  if the object has any refcountable children, then they will
-      //  have RefCountMemory::unrefDelete() called on them.
-      // return true if deleted, false if not
+      /**
+       * If refcount <= 0, then delete the memory.
+       * If the object has any refcountable children, then they will
+       * have RefCountMemory::unrefDelete() called on them.
+       *
+       * @return true if deleted, false if not
+       */
       virtual bool checkDelete();
 
    private:
       mutable int ___mNumTimesReferenced;
    };
 
-   //: default constructor
+   /// Default constructor.
    inline RefCountMemory::RefCountMemory() : ___mNumTimesReferenced( 0 )
    {
    }
 
-   //: get the reference count
+   /// Gets the reference count.
    inline const int& RefCountMemory::getRef() const
    {
       assert( ___mNumTimesReferenced != BAD && "this data has been deleted, someone is probably holding on to the data after they called deref()" );
       return ___mNumTimesReferenced;
    }
    
-   //: increase the reference count
+   /// Increases the reference count.
    inline const int& RefCountMemory::ref()
    {
       assert( ___mNumTimesReferenced != BAD && "this data has been deleted, someone is probably holding on to the data after they called deref()" );
@@ -164,7 +167,7 @@ namespace vpr
       return this->getRef();
    }
 
-   //: decrease the reference count.
+   /// Decreases the reference count.
    inline const int& RefCountMemory::unref()
    {
       assert( ___mNumTimesReferenced != BAD && ___mNumTimesReferenced >= 0 && "this data has been dereferenced more times than referenced, someone is probably holding on to the data after they called deref(), or someone called deref too many times. also, make sure you use checkDelete, or unrefDelete." );
@@ -172,10 +175,13 @@ namespace vpr
       return this->getRef();
    }
 
-   //: if refcount <= 0, then delete the memory
-   //  if the object has any refcountable children, then they will
-   //  have RefCountMemory::unrefDelete() called on them.
-   // return true if deleted, false if not
+   /**
+    * If refcount <= 0, then delete the memory.
+    * If the object has any refcountable children, then they will
+    * have RefCountMemory::unrefDelete() called on them.
+    *
+    * @return true if deleted, false if not
+    */
    inline bool RefCountMemory::checkDelete()
    {
       assert( ___mNumTimesReferenced != BAD && ___mNumTimesReferenced >= 0 && "this data has been dereferenced more times than referenced, someone is probably holding on to the data after they called deref(), or someone called deref too many times. also, make sure you use checkDelete, or unrefDelete." );
@@ -190,16 +196,20 @@ namespace vpr
       }   
    }
    
-   //: decrease the reference count by 1, then call checkDelete
-   // equivalent to calling RefCountMemory::unref followed by RefCountMemory::checkDelete
-   // return true if deleted, false if not
+   /**
+    * Decreases the reference count by 1, then call checkDelete.  This is
+    * equivalent to calling RefCountMemory::unref followed by
+    * RefCountMemory::checkDelete.
+    *
+    * @return true if deleted, false if not
+    */
    inline bool RefCountMemory::unrefDelete()
    {
       this->unref();
       return this->checkDelete();
    }
 
-   //: decrease the reference count by 1, return the new refcount
+   /// Decreases the reference count by 1, return the new refcount.
    inline const int& RefCountMemory::unrefGetRef()
    {
       this->unref();
