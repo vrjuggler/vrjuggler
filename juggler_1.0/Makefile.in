@@ -704,13 +704,9 @@ ${LIBDIR}/${AW_LIB_DYNAMIC} ${LIBDIR}/${SL_LIB_DYNAMIC}: ${OBJDIR}/*.${OBJ_FILE_
 gui:
 ifndef NO_JAVA_GUI
 ifeq (${BUILD_GUI}, Y)
-	@echo "------------------------------------------------"
-	@echo "Building GUI"
-	@echo "------------------------------------------------"
+	@echo "===> GUI"
 	@${MAKE} -C GUI all
-	@echo "------------------------------------------------"
-	@echo "GUI done"
-	@echo "------------------------------------------------"
+	@echo "<=== GUI"
 else
 	@echo "------------------------------------------------"
 	@echo "GUI cannot be built without javac"
