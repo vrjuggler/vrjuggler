@@ -142,7 +142,8 @@ bool JackalServer::configAdd(ConfigChunk* chunk) {
     int newport;
 
     std::string s = chunk->getType();
-    if (!vjstrcasecmp (s, "EnvironmentManager")) {
+    if (!vjstrcasecmp (s, "EnvironmentManager") || 
+        !vjstrcasecmp (s, "JackalServer"))  {
         configured_to_accept = chunk->getProperty ("AcceptConnections");
         newport = chunk->getProperty("Port");
 
@@ -150,7 +151,7 @@ bool JackalServer::configAdd(ConfigChunk* chunk) {
             newport = Port;
         if ((newport != Port) || (configured_to_accept != isAccepting()))
             networkingchanged = true;
-        perf_target_name = (std::string)chunk->getProperty ("PerformanceTarget");
+//         perf_target_name = (std::string)chunk->getProperty ("PerformanceTarget");
         connections_mutex.acquire();
 
 //          Connect* new_perf_target = getConnect(perf_target_name);
@@ -160,7 +161,7 @@ bool JackalServer::configAdd(ConfigChunk* chunk) {
         if (networkingchanged) {
             Port = newport;
             if (isAccepting())
-                rejectConnections();
+                rejectConnections();  // close port w/ old config
             if (configured_to_accept)
                 acceptConnections();
             else
@@ -236,6 +237,7 @@ bool JackalServer::configRemove(ConfigChunk* chunk) {
 bool JackalServer::configCanHandle(ConfigChunk* chunk) {
     std::string s = chunk->getType();
     return (!vjstrcasecmp (s, "EnvironmentManager") ||
+            !vjstrcasecmp (s, "JackalServer") ||
             !vjstrcasecmp (s, "FileConnect"));
 }
 
