@@ -193,7 +193,7 @@ public class WizardPanel extends JPanel implements PlugPanel, ActionListener {
             // which will form the basis of all our defaults...
             initial_chunkdb = new ConfigChunkDB();
             try {
-                URL init_url = ClassLoader.getSystemResource ("VjWizards/data/SimWizardDB.config");
+                URL init_url = ClassLoader.getSystemResource("org/vrjuggler/jccl/wizards/data/SimWizardDB.config");
                 ConfigIO.readConfigChunkDB (init_url.openStream(), 
                                             initial_chunkdb);  
             }
@@ -217,8 +217,8 @@ public class WizardPanel extends JPanel implements PlugPanel, ActionListener {
             add (p, "South");
 
             // create subpanels...
-            ImageIcon icon = new ImageIcon (ClassLoader.getSystemResource("VjWizards/gfx/corner.png"));
-            //addSubPanel (new BeginnerSubPanel1(), new ImageIcon (ClassLoader.getSystemResource("VjWizards/gfx/beginner_1.png")));
+            ImageIcon icon = new ImageIcon (ClassLoader.getSystemResource("org/vrjuggler/jccl/wizards/gfx/corner.png"));
+            //addSubPanel (new BeginnerSubPanel1(), new ImageIcon (ClassLoader.getSystemResource("org/vrjuggler/jccl/wizards/gfx/beginner_1.png")));
             addSubPanel (new DisplayWindowPanel(), icon, "Step 1: Display Window");
             addSubPanel (new InputWindowPanel(), icon, "Step 2: Input Windows");
             addSubPanel (new InputDevicePanel(), icon, "Step 3: Input Devices");
