@@ -43,16 +43,15 @@
 #define _VPR_SERIALIZABLE_OBJ_H
 
 #include <vpr/vprConfig.h>
-//#include <vpr/System.h>
 
-#include <vector>
-
-#include <vpr/IO/ObjectWriter.h>
-#include <vpr/IO/ObjectReader.h>
+#include <boost/concept_check.hpp>
 
 
 namespace vpr
 {
+
+class ObjectWriter;
+class ObjectReader;
 
 class WriteableObject
 {
@@ -62,6 +61,16 @@ public:
    * POST: All object data is written to the writer
    */
    virtual vpr::ReturnStatus writeObject(ObjectWriter* writer) = 0;
+
+protected:
+   WriteableObject()
+   {;}
+
+   WriteableObject(const WriteableObject& o)
+   {
+      boost::ignore_unused_variable_warning(o);
+   }
+
 private:
 
    /** @link dependency
@@ -77,6 +86,16 @@ public:
    * POST: All object data is read from the reader
    */
    virtual vpr::ReturnStatus readObject(ObjectReader* reader) = 0;
+
+protected:
+   ReadableObject()
+   {;}
+
+   ReadableObject(const ReadableObject& o)
+   {
+      boost::ignore_unused_variable_warning(o);
+   }
+
 private:
 
    /** @link dependency
@@ -86,6 +105,14 @@ private:
 
 class SerializableObject : public WriteableObject, public ReadableObject
 {
+protected:
+   SerializableObject()
+      : WriteableObject(), ReadableObject()
+   {;}
+
+   SerializableObject(const SerializableObject& o)
+      : WriteableObject(o), ReadableObject(o)
+   {;}
 };
 
 /** Mixin to add serializable capabilities to an existing object.

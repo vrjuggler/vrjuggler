@@ -43,59 +43,62 @@
 #define _VPR_OBJECT_WRITER_H
 
 #include <vpr/vprConfig.h>
+
 #include <vpr/vprTypes.h>
 #include <vpr/Util/AttributeMapBase.h>
-#include <vector>
 #include <vpr/Util/ReturnStatus.h>
-
-#include <boost/static_assert.hpp>
-#include <map>
 
 
 namespace vpr
 {
 
-/** Interface used to write object data to a stream.
-*
-* @todo: Add smart buffering for type sizes
-*/
+/**
+ * Interface used to write object data to a stream.
+ *
+ * @todo Add smart buffering for type sizes.
+ */
 class ObjectWriter : public AttributeMapBase
 {
-public:
+protected:
    ObjectWriter()
    {;}
 
+   ObjectWriter(const ObjectWriter& o)
+      : AttributeMapBase(o)
+   {;}
+
+public:
    virtual ~ObjectWriter()
    {;}
 
-   /** @name Tag and attribute handling 
-   * ObjectReader and ObjectWriter support an interface that allows for using tags and attributes
-   * in the written output data.  This allows support for formats such as XML where there is
-   * a logical grouping of the data.
-   *
-   * Tags are similar to the XML concept of elements.  They are used to deliniate a hierarchical group
-   * in the structure of the data.  Attributes are similar to XML attributes in that they are
-   * properties of the most recently started tag.
-   *
-   * The structure looks something like (based on XML):
-   *  
-   * <tag1>
-   *   <tag2 attrib1="XXX">
-   *   </tag2>
-   * </tag1>
-   */
+   /** @name Tag and attribute handling.
+    * ObjectReader and ObjectWriter support an interface that allows for using
+    * tags and attributes in the written output data.  This allows support for
+    * formats such as XML where there is a logical grouping of the data.
+    *
+    * Tags are similar to the XML concept of elements.  They are used to
+    * deliniate a hierarchical group in the structure of the data.  Attributes
+    * are similar to XML attributes in that they are properties of the most
+    * recently started tag.
+    *
+    * The structure looks something like (based on XML):
+    *  
+    * <tag1>
+    *   <tag2 attrib1="XXX">
+    *   </tag2>
+    * </tag1>
+    */
    //@{
-   /** Starts a new section/element of name tagName.
-   */
+   /** Starts a new section/element of name tagName. */
    virtual vpr::ReturnStatus beginTag(std::string tagName) = 0;
 
    /** Ends the most recently named tag. */
    virtual vpr::ReturnStatus endTag() = 0;
 
-   /** Starts an attribute of the name attributeName */
+   /** Starts an attribute of the name attributeName. */
    virtual vpr::ReturnStatus beginAttribute(std::string attributeName) = 0;
 
-   /** Ends the most recently named attribute */
+   /** Ends the most recently named attribute. */
    virtual vpr::ReturnStatus endAttribute() = 0;
    //@}
 
