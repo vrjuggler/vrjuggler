@@ -24,6 +24,11 @@
 #include "wsock.h"
 #include "itcom.h"
 
+
+#ifdef HAVE_UNISTD_H
+#include <unistd.h>
+#endif
+
 static void wsockInitConfig( wsockType *wsock, int type );
 static const char *wsockErrorStrings( int error );
 static int  wsockGetLastError (void);
