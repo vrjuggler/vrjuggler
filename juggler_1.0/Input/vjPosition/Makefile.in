@@ -36,9 +36,7 @@ ifneq (@OS_TYPE@, Win32)
 VJPOS_SRCS	+= logiclass.cpp	\
                    vjBird.cpp		\
                    aFlock.cpp		\
-                   vjFlock.cpp		\
-		   vjMotionStar.cpp     \
-		   aMotionStar.cpp
+                   vjFlock.cpp
 endif
 
 VJPOS_OBJECTS	:= ${addprefix ${OBJDIR}/,${VJPOS_SRCS:.cpp=.${OBJ_FILE_SUFFIX}}}

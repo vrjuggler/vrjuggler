@@ -66,7 +66,16 @@ void wandApp::myDraw()
       // cout << "wand:\n" << *wandMatrix << endl;
       glPushMatrix();
          glMultMatrixf(wandMatrix->getFloatPtr());    // Push the wand matrix on the stack
-         glColor3f(1.0f, 0.0f, 1.0f);
+         //glColor3f(1.0f, 0.0f, 1.0f);
+         float wand_color[3];
+         wand_color[0] = wand_color[1] = wand_color[2] = 0.0f;
+         if(mButton0->getData() == vjDigital::ON)
+            wand_color[0] = 1.0f;
+         if(mButton1->getData() == vjDigital::ON)
+            wand_color[1] = 1.0f;
+         if(mButton2->getData() == vjDigital::ON)
+            wand_color[2] = 1.0f;
+         glColor3fv(wand_color);
          glScalef(0.25f, 0.25f, 0.25f);
          drawCube();
       glPopMatrix();

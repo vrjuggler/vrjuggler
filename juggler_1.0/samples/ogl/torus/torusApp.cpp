@@ -75,7 +75,10 @@ void torusApp::draw()
       glRotatef(30, 0,1,0);         // Around Y
       glRotatef(-30, 1,0,0);        // Around X
 
-      doughnut(1.5f, 5.0f, 20, 20);
+      //doughnut(1.5f,9.0f,300,300);
+      //doughnut(1.5f,6.0f,120,120);
+      doughnut(1.5f,3.0f,30,30);
+      //doughnut(0.5f,1.0f,100,100);
    glPopMatrix();
 }
 
