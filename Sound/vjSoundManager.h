@@ -62,7 +62,7 @@ public:
    //! POST: The frame has been drawn
    virtual void sync();
 
-   // given an alias, return the handle.
+   // given an alias, return the sound.
    // memory managed internal to manager...
    // returns NULL if invalid name.
    vjSound* getHandle( const char* const alias );
@@ -80,6 +80,20 @@ public:
    // TODO make protected...
    vjSoundEngine* mSoundEngine;
 
+   /*
+   vjSound stubSound;
+   vjSound* sound( vjSoundHandle* handle )
+   {
+      if (handle == NULL || handle->isStale())
+      {
+         return &stubSound;
+      }
+      else
+      {
+         
+      }
+   }*/
+   
 public:
    //: Get instance of singleton object
    static vjSoundManager* instance()
