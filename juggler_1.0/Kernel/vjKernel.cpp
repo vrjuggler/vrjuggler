@@ -219,6 +219,8 @@ void vjKernel::configAdd(vjConfigChunkDB* chunkDB, bool guarded)
          added_chunk = mDisplayManager->configAdd(chunks[i]);
       if((mDrawManager != NULL) && (mDrawManager->configCanHandle(chunks[i])))   // drawMgr
          added_chunk = mDrawManager->configAdd(chunks[i]);
+      if (environmentManager->configCanHandle (chunks[i]))
+	  added_chunk = environmentManager->configAdd(chunks[i]);  // EM
       if((mApp != NULL) && (mApp->configCanHandle(chunks[i])))                // App
          added_chunk = mApp->configAdd(chunks[i]);
 
