@@ -5,21 +5,12 @@
 
 default: all
 
-bindir		= @bindir@
 includedir	= @includedir@/Threads
-datadir		= @datadir@
-exec_prefix	= @exec_prefix@
-libdir		= @libdir@
-libexecdir	= @libexecdir@
-prefix		= @prefix@
-sbindir		= @sbindir@
 srcdir		= @srcdir@
-sysconfdir	= @sysconfdir@
 topdir		= @topdir@
 top_srcdir	= @top_srcdir@
 wwwdir		= ${srcdir}/Doc
 VJROOT		= ${top_srcdir}
-VJROOT_ABS	= @VJROOT_ABS@
 VJ_SRCDIR	= @VJ_SRCDIR@/Threads
 WORKDIR		= ${topdir}/Threads
 

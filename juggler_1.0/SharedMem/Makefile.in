@@ -5,21 +5,12 @@
 
 default: all
 
-bindir		= @bindir@
-datadir		= @datadir@
-exec_prefix	= @exec_prefix@
 includedir	= @includedir@/SharedMem
-libdir		= @libdir@
-libexecdir	= @libexecdir@
-prefix		= @prefix@
-sbindir		= @sbindir@
 srcdir		= @srcdir@
-sysconfdir	= @sysconfdir@
 topdir		= @topdir@
 top_srcdir	= @top_srcdir@
 wwwdir		= ${srcdir}/Doc
 VJROOT		= ${top_srcdir}
-VJROOT_ABS	= @VJROOT_ABS@
 VJ_SRCDIR	= @VJ_SRCDIR@/SharedMem
 WORKDIR		= ${topdir}/SharedMem
 
