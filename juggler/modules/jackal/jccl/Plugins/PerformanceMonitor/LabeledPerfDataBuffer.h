@@ -113,6 +113,9 @@ public:
     LabeledPerfDataBuffer (const std::string& _name, int _numbufs);
 
 
+    LabeledPerfDataBuffer ();
+
+
     //: destructor
     //: POST: all memory & buffers have been freed.
     virtual ~LabeledPerfDataBuffer ();

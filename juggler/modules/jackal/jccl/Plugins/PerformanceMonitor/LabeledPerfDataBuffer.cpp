@@ -36,6 +36,18 @@
 
 namespace jccl {
 
+
+LabeledPerfDataBuffer::LabeledPerfDataBuffer () {
+    name = "untitled";
+    numbufs = 100;
+    buffer = new buf_entry[numbufs];
+    read_begin = 0;
+    write_pos = 1;
+    lost = 0;
+    active = false;
+}
+
+
 LabeledPerfDataBuffer::LabeledPerfDataBuffer (const std::string& _name, 
                                               int _numbufs) {
     name = _name;
