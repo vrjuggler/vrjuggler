@@ -157,4 +157,25 @@ public interface ConfigBroker
     * @return  a list of the resource names
     */
    public List getResourceNames();
+
+   /**
+    * Adds the given listener to receive config events from this broker.
+    */
+   public void addConfigListener(ConfigListener listener);
+
+   /**
+    * Removes the given listener from receiving config events from this broker.
+    */
+   public void removeConfigListener(ConfigListener listener);
+
+   /**
+    * Adds the given listener to receive config broker events from this broker.
+    */
+   public void addConfigBrokerListener(ConfigBrokerListener listener);
+
+   /**
+    * Removes the given resource listener from receiving confi broker events
+    * from this broker.
+    */
+   public void removeConfigBrokerListener(ConfigBrokerListener listener);
 }
