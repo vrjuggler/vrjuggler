@@ -81,16 +81,16 @@ struct Callable
     */
    bool operator()(void* func)
    {
-      jccl::RemoteReconfig* (*init_func)();
+      jccl::RemoteReconfig* (*init_func)(jccl::ConfigManager*);
 
       // Cast the entry point function to the correct signature so that we can
       // call it.  All dynamically plug-ins must have an entry point function
       // that takes no argument and returns a pointer to an implementation of
       // the jccl::RemoteReconfig interface.
-      init_func = (jccl::RemoteReconfig* (*)()) func;
+      init_func = (jccl::RemoteReconfig* (*)(jccl::ConfigManager*)) func;
 
       // Call the entry point function.
-      jccl::RemoteReconfig* plugin = (*init_func)();
+      jccl::RemoteReconfig* plugin = (*init_func)(mgr);
 
       if ( NULL != plugin )
       {
