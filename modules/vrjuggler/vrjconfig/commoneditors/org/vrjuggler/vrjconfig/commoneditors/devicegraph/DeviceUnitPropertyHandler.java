@@ -117,7 +117,7 @@ public interface DeviceUnitPropertyHandler
     *
     * @param unitType   the type (as defined in <code>UnitConstants</code> of
     *                   the device unit to be added)
-    * @param untiNumber the index of the unit to remove
+    * @param unitNumber the index of the unit to remove
     *
     * @see UnitConstants
     */
