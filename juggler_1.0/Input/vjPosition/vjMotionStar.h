@@ -194,7 +194,8 @@ public:
     }
 
     // ------------------------------------------------------------------------
-    //: Get the reciever transform for the given bird number.
+    //: Get the reciever transform for the given bird number.  The birds are
+    //+ zero-based.
     //
     //! PRE: None.
     //! POST: If the device is active, a pointer to the given receiver's
@@ -209,7 +210,7 @@ public:
     //+  For example, if you have recievers 1,2, and 4 with transmitter on 3,
     //+  then you can access them, in order, as 0,1,2.
     // ------------------------------------------------------------------------
-    vjMatrix* getPosData(int dev = 0); // 0 based
+    vjMatrix* getPosData(int dev = 0);
 
     // ------------------------------------------------------------------------
     //: Not used currently -- needed for interface.
