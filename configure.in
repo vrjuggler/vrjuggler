@@ -1548,6 +1548,7 @@ dnl #     * APP_VJ_LIBS_GL: The VR Juggler OpenGL API library.
 dnl #     * APP_VJ_LIBS_PF: The VR Juggler Performer API library.
 dnl #     * APP_VJ_LIBS_AW: The VR Juggler AudioWorks API library.
 dnl #     * APP_VJ_LIBS_SL: The VR Juggler SL API library.
+dnl #     * APP_VJ_LIBS_UTILS: The VR Juggler general utilities library.
 dnl #     * APP_LIBS_BASIC: The _most basic_ basic libraries needed for
 dnl #       compiling (e.g., -lC).
 dnl #     * APP_EXTRA_LIBS_BEGIN: Options used at the beginning of the list
@@ -1609,6 +1610,7 @@ if test "$OS_TYPE" = "UNIX" ; then
 
     APP_VJ_LIBS_GL="-lJuggler_ogl"
     APP_VJ_LIBS_PF="-lJuggler_pf"
+    APP_VJ_LIBS_UTILS="-lJuggler_utils"
     APP_EXTRA_LIBS_BASIC="$LDFLAGS $LIBS"
     APP_EXTRA_LIBS_GL="${_SYSTEM_OPENGL}"
     APP_EXTRA_LIBS_PF="${_PFOGLLIB}"
@@ -1618,6 +1620,7 @@ elif test "$OS_TYPE" = "Win32" ; then
     APP_LIBS_BASIC='comctl32.lib user32.lib gdi32.lib ws2_32.lib'
     APP_VJ_LIBS_GL='Juggler_ogl.lib'
     APP_VJ_LIBS_PF='Juggler_pf.lib'
+    APP_VJ_LIBS_UTILS='Juggler_utils.lib'
     APP_EXTRA_LIBS_BASIC="$LDFLAGS $LIBS"
     APP_EXTRA_LIBS_GL="${_SYSTEM_OPENGL}"
     APP_EXTRA_LIBS_PF="${_PFOGLLIB}"
@@ -1723,6 +1726,7 @@ AC_SUBST(APP_VJ_LIBS_GL)
 AC_SUBST(APP_VJ_LIBS_PF)
 AC_SUBST(APP_VJ_LIBS_AW)
 AC_SUBST(APP_VJ_LIBS_SL)
+AC_SUBST(APP_VJ_LIBS_UTILS)
 AC_SUBST(APP_LIBS_BASIC)
 AC_SUBST(APP_EXTRA_LIBS_BEGIN)
 AC_SUBST(APP_EXTRA_LIBS_END)
