@@ -37,6 +37,8 @@
 #include <Input/vjGlove/vjCyberGlove.h>
 #include <Input/vjInput/vjKeyboard.h>
 #include <Input/vjPosition/logiclass.h>
+#else
+#include <Input/vjInput/vjKeyboardWin32.h>
 #endif
 
 //: The InputManager holds an manages all vj Input devices.  
@@ -269,9 +271,9 @@ private:
    void ConfigureDummyPos(vjConfigChunkDB* cdb);
    void ConfigureIbox(vjConfigChunkDB* cdb);
    void ConfigurevjCyberGlove(vjConfigChunkDB *cdb);
-   void ConfigureKeyboard(vjConfigChunkDB *cdb);
    void Configure3DMouse(vjConfigChunkDB *cdb);
 #endif
+   void ConfigureKeyboard(vjConfigChunkDB *cdb);
    void ConfigurePosProxy(vjConfigChunkDB* cdb);
    void ConfigureDigProxy(vjConfigChunkDB* cdb);
    void ConfigureAnaProxy(vjConfigChunkDB* cdb);
