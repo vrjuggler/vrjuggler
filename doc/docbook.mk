@@ -135,7 +135,7 @@ chunk-html:
             if [ ! -d $$dir ] ; then mkdir $$dir ; fi ; \
             cur_dir=`pwd` ; \
             cd $$dir ; \
-            $(ENV) $(SAXON) -i $$cur_dir/$$file -xsl $(HTML_XSL) \
+            $(ENV) $(SAXON) -i $$cur_dir/$$file -xsl $(CHUNK_HTML_XSL) \
               $(SAXON_HTML_PARAMS) $(EXTRA_SAXON_HTML_PARAMS) ; \
             cd $$cur_dir ; \
             if [ ! -z "$(INSTALL_FILES)" ]; then \
