@@ -117,6 +117,14 @@ if test "x$PYTHON" = "xno" ; then
    AC_MSG_ERROR([*** Python is required for building PyJuggler ***])
 fi
 
+# Determine if the detected Python installation directory matches the input
+# from --with-python.  If not, use the detected installation directory.
+found_python_root=`$PYTHON -c "import distutils.sysconfig; print distutils.sysconfig.get_config_var('prefix')"`
+
+if test "x$PYTHON_ROOT" != "x$found_python_root" ; then
+   PYTHON_ROOT="$found_python_root"
+fi
+
 AC_CHECK_FILE([$PYSTE], , [AC_MSG_WARN([*** pyste.py does not exist ***])])
 
 AC_MSG_CHECKING([for Python version])
