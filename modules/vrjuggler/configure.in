@@ -44,7 +44,7 @@ AC_COPYRIGHT([VR Juggler is (C) Copyright 1998-2003 by Iowa State University])
 AC_CONFIG_SRCDIR([vrj/vrjConfig.h])
 AC_REVISION($Revision$)
 AC_CONFIG_AUX_DIR([../../share/config])
-DPP_PREREQ([1.5.1])
+DPP_PREREQ([1.99.17])
 DPP_INIT
 
 # Generate the reconfig script first so that it's easy to run configure again
@@ -192,7 +192,8 @@ GADGETEER_PATH([0.19.0], ,
 SNX_PATH([0.0.3], [vrj_sonix_config='sonix-config'],
          [AC_MSG_ERROR(*** Sonix required for VR Juggler ***)])
 
-if test "x$GADGET_USE_X11" = "xyes" ; then
+VRJ_USE_X11="$GADGET_USE_X11"
+if test "x$VRJ_USE_X11" = "xyes" ; then
    AC_DEFINE([VRJ_USE_X11], , [Define if the X Window System will be used.])
 fi
 
@@ -237,8 +238,8 @@ if test "x$OS_TYPE" = "xUNIX" -a "x$PLATFORM" != "xDarwin" ; then
    vjsave_LIBS="$LIBS"
    vjsave_LDFLAGS="$LDFLAGS"
 
-   CFLAGS="$CFLAGS $X_INCLUDES"
-   LDFLAGS="$LDFLAGS $X_LDFLAGS"
+   CFLAGS="$CFLAGS $X_CFLAGS"
+   LDFLAGS="$LDFLAGS $X_PRE_LIBS $X_LIBS -lX11 $X_EXTRA_LIBS"
 
    # First, make sure that libXxf86vm even exists and that the function that
    # we'll use for testing below is available.  If this test fails, we assume
@@ -468,10 +469,6 @@ VJ_APP_LINKER_DOOZER([$CXX], [$BASE_APP_LINK_FLAGS], [$LDOPTS_DBG],
 APP_BASE_DIR='$(topdir)/instlinks'
 APP_BASE_DIR_INST='$(VJ_BASE_DIR)'
 
-if test "x$x_libraries" != "xNONE" -a "x$x_libraries" != "x" ; then
-   X_LDFLAGS="-L$x_libraries"
-fi
-
 if test "$OS_TYPE" = "UNIX" ; then
     REQ_EXTRA_LIBS="$LDFLAGS $GADGET_LIBS_CC_MIN $JCCL_LIBS_CC_MIN $JCCL_EXTRA_LIBS_CC $LIBS -lm"
     DYLIB_DEPS_VJ="$SNX_LIBS_CC $REQ_EXTRA_LIBS"
@@ -480,13 +477,13 @@ if test "$OS_TYPE" = "UNIX" ; then
 
     osx_frameworks=''
 
-    if test "x$GADGET_USE_X11" != "xyes" ; then
+    if test "x$VRJ_USE_X11" != "xyes" ; then
         osx_frameworks="-framework AGL -framework ApplicationServices -framework Carbon"
     fi
 
     if test "x$PLATFORM" = "xDarwin" ; then
-        if test "x$GADGET_USE_X11" = "xyes" ; then
-            DYLIB_DEPS_GL="$DYLIB_DEPS_GL $X_LDFLAGS -lGLU -lGL -lX11 $osx_frameworks"
+        if test "x$VRJ_USE_X11" = "xyes" ; then
+            DYLIB_DEPS_GL="$DYLIB_DEPS_GL -lGLU -lGL $X_PRE_LIBS $X_LIBS -lX11 $X_EXTRA_LIBS $osx_frameworks"
         else
             DYLIB_DEPS_GL="$DYLIB_DEPS_GL $OGL_LDFLAGS $LIBOPENGL $osx_frameworks"
         fi
@@ -499,15 +496,15 @@ if test "$OS_TYPE" = "UNIX" ; then
     DYLIB_PROF_DEPS_GL="-L\$(LIBDIR) -lvrj_p $OGL_LDFLAGS $LIBOPENGL $REQ_EXTRA_PROF_LIBS"
     DYLIB_PROF_DEPS_PF="-L\$(LIBDIR) -lvrj_p $PF_LDFLAGS $LIBPERFORMER $REQ_EXTRA_PROF_LIBS"
 
-    if test "x$GADGET_USE_X11" = "xyes" ; then
-        APP_EXTRA_LIBS_X11="$X_LDFLAGS -lX11"
+    if test "x$VRJ_USE_X11" = "xyes" ; then
+        APP_EXTRA_LIBS_X11="$X_PRE_LIBS $X_LIBS -lX11 $X_EXTRA_LIBS"
     fi
 
     APP_EXTRA_LIBS_OSG='-L$(OSGHOME)/lib -losg -losgDB -losgGA -losgUtil -lOpenThreads'
 
     if test "x$OGL_LDFLAGS" != "x" ; then
         if test "x$PLATFORM" = "xDarwin" ; then
-            if test "x$GADGET_USE_X11" = "xyes" ; then
+            if test "x$VRJ_USE_X11" = "xyes" ; then
                 APP_EXTRA_LIBS_GL="-lGLU -lGL $osx_frameworks"
             else
                 APP_EXTRA_LIBS_GL="$OGL_LDFLAGS $osx_frameworks"
