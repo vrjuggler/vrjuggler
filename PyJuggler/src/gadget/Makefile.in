@@ -21,6 +21,9 @@ SRCS= \
 	_AnalogInterface.cpp			\
 	_AnalogProxy.cpp			\
 	_BaseDeviceInterface.cpp		\
+	_Command.cpp				\
+	_CommandInterface.cpp			\
+	_CommandProxy.cpp			\
 	_Digital.cpp				\
 	_DigitalData.cpp			\
 	_DigitalInterface.cpp			\
@@ -37,12 +40,9 @@ SRCS= \
 	_PositionInterface.cpp			\
 	_PositionProxy.cpp			\
 	_PositionUnitConversion.cpp		\
-	_SpeechRecogDigital.cpp			\
-	_SpeechRecogDigitalInterface.cpp	\
-	_SpeechRecogDigitalProxy.cpp		\
-	_SpeechRecogString.cpp			\
-	_SpeechRecogStringInterface.cpp		\
-	_SpeechRecogStringProxy.cpp		\
+	_String.cpp				\
+	_StringInterface.cpp			\
+	_StringProxy.cpp			\
 	_StringData.cpp				\
 	_gadget_Type_EventWindow_Event_h.cpp	\
 	_gadget_Type_EventWindow_Keys_h.cpp	\

@@ -13,7 +13,7 @@
 // Includes ====================================================================
 #include <vpr/IO/ObjectReader.h>
 #include <vpr/IO/ObjectWriter.h>
-#include <gadget/Type/SpeechRecogString.h>
+#include <gadget/Type/String.h>
 
 // Using =======================================================================
 using namespace boost::python;
@@ -21,17 +21,17 @@ using namespace boost::python;
 // Declarations ================================================================
 namespace pyj {
 
-struct gadget_SpeechRecogString_Wrapper: gadget::SpeechRecogString
+struct gadget_String_Wrapper: gadget::String
 {
-    gadget_SpeechRecogString_Wrapper(PyObject* self_):
-        gadget::SpeechRecogString(), self(self_) {}
+    gadget_String_Wrapper(PyObject* self_):
+        gadget::String(), self(self_) {}
 
     bool config(jccl::ConfigElementPtr p0) {
         return call_method< bool >(self, "config", p0);
     }
 
     bool default_config(jccl::ConfigElementPtr p0) {
-        return gadget::SpeechRecogString::config(p0);
+        return gadget::String::config(p0);
     }
 
     std::string getInputTypeName() {
@@ -39,7 +39,7 @@ struct gadget_SpeechRecogString_Wrapper: gadget::SpeechRecogString
     }
 
     std::string default_getInputTypeName() {
-        return gadget::SpeechRecogString::getInputTypeName();
+        return gadget::String::getInputTypeName();
     }
 
     vpr::ReturnStatus writeObject(vpr::ObjectWriter* p0) {
@@ -47,7 +47,7 @@ struct gadget_SpeechRecogString_Wrapper: gadget::SpeechRecogString
     }
 
     vpr::ReturnStatus default_writeObject(vpr::ObjectWriter* p0) {
-        return gadget::SpeechRecogString::writeObject(p0);
+        return gadget::String::writeObject(p0);
     }
 
     vpr::ReturnStatus readObject(vpr::ObjectReader* p0) {
@@ -55,7 +55,7 @@ struct gadget_SpeechRecogString_Wrapper: gadget::SpeechRecogString
     }
 
     vpr::ReturnStatus default_readObject(vpr::ObjectReader* p0) {
-        return gadget::SpeechRecogString::readObject(p0);
+        return gadget::String::readObject(p0);
     }
 
     PyObject* self;
@@ -65,45 +65,44 @@ struct gadget_SpeechRecogString_Wrapper: gadget::SpeechRecogString
 
 
 // Module ======================================================================
-void _Export_SpeechRecogString()
+void _Export_String()
 {
-    class_< gadget::SpeechRecogString, boost::noncopyable, pyj::gadget_SpeechRecogString_Wrapper >("SpeechRecogString",
-         "gadget.SpeechRecogString is the abstract base class for devices\n"
-         "that return spoken commands.  Drivers for all such devices must\n"
-         "derive from this class.  This is in addition to gadget.Input.\n"
-         "gadget.Input provides pure virtual function constraints in the\n"
-         "following functions: startSampling(), stopSampling(), sample(),\n"
-         "and updateData().\n\n"
-         "gadget.SpeechRecogString adds the function getStringDdta() for\n"
+    class_< gadget::String, boost::noncopyable, pyj::gadget_String_Wrapper >("String",
+         "gadget.String is the abstract base class for devices that return\n"
+         "strinsg.  Drivers for all such devices must derive from this class.\n"
+         "This is in addition to gadget.Input.  gadget.Input provides pure\n"
+         "virtual function constraints in the following functions:\n"
+         "startSampling(), stopSampling(), sample(), and updateData().\n\n"
+         "gadget.String adds the function getStringDdta() for\n"
          "retrieving the received commands.  This is similar to the\n"
          "additions made by gadget.Position and gadget.Analog."
          ,
          init<  >()
         )
-        .def("config", &gadget::SpeechRecogString::config,
-             &pyj::gadget_SpeechRecogString_Wrapper::default_config,
+        .def("config", &gadget::String::config,
+             &pyj::gadget_String_Wrapper::default_config,
              "config(element) -> Boolean\n"
-             "Configures this speech recognition device.\n"
+             "Configures this string device.\n"
              "Arguments:\n"
-             "element -- The config element for a digital speech recognition\n"
-             "           device.  It must derive from the base config\n"
-             "           element type 'speech_recog_string_device'."
+             "element -- The config element for a string device.  It must\n"
+             "           derive from the base config element type\n"
+             "           'string_device'."
          )
-        .def("getInputTypeName", &gadget::SpeechRecogString::getInputTypeName,
-             &pyj::gadget_SpeechRecogString_Wrapper::default_getInputTypeName
+        .def("getInputTypeName", &gadget::String::getInputTypeName,
+             &pyj::gadget_String_Wrapper::default_getInputTypeName
          )
         .def("writeObject",
-             (vpr::ReturnStatus (gadget::SpeechRecogString::*)(vpr::ObjectWriter*) )&gadget::SpeechRecogString::writeObject,
-             (vpr::ReturnStatus (pyj::gadget_SpeechRecogString_Wrapper::*)(vpr::ObjectWriter*))&pyj::gadget_SpeechRecogString_Wrapper::default_writeObject,
+             (vpr::ReturnStatus (gadget::String::*)(vpr::ObjectWriter*) )&gadget::String::writeObject,
+             (vpr::ReturnStatus (pyj::gadget_String_Wrapper::*)(vpr::ObjectWriter*))&pyj::gadget_String_Wrapper::default_writeObject,
              "writeObject(writer) -> vpr.ReturnStatus object\n"
              "Serializes this object."
          )
         .def("readObject",
-             (vpr::ReturnStatus (gadget::SpeechRecogString::*)(vpr::ObjectReader*) )&gadget::SpeechRecogString::readObject, (vpr::ReturnStatus (pyj::gadget_SpeechRecogString_Wrapper::*)(vpr::ObjectReader*))&pyj::gadget_SpeechRecogString_Wrapper::default_readObject,
+             (vpr::ReturnStatus (gadget::String::*)(vpr::ObjectReader*) )&gadget::String::readObject, (vpr::ReturnStatus (pyj::gadget_String_Wrapper::*)(vpr::ObjectReader*))&pyj::gadget_String_Wrapper::default_readObject,
              "readObject(reader) -> vpr.ReturnStatus object\n"
              "De-serializes this object."
          )
-        .def("getStringData", &gadget::SpeechRecogString::getStringData,
+        .def("getStringData", &gadget::String::getStringData,
              (args("devNum") = 0),
              "getStringData(devNum = 0) -> gadget.StringData object\n"
              "Returns string data.\n"
@@ -111,7 +110,7 @@ void _Export_SpeechRecogString()
              "devNum -- The device unit numbmer to access.  This parameter\n"
              "          optional.  It defaults to 0."
          )
-        .def("addStringSample", &gadget::SpeechRecogString::addStringSample,
+        .def("addStringSample", &gadget::String::addStringSample,
              "addStringSample(sampleList)\n"
              "Helper method to add a collection of samples to the digital\n"
              "sample buffers for this device.  This MUST be called by all\n"
@@ -121,8 +120,7 @@ void _Export_SpeechRecogString()
              "Arguments:\n"
              "sampleList -- The list of newly collected samples."
          )
-        .def("swapStringBuffers",
-             &gadget::SpeechRecogString::swapStringBuffers,
+        .def("swapStringBuffers", &gadget::String::swapStringBuffers,
              "swapStringBuffers()\n"
              "Swaps the digital data buffers.\n"
              "Post-condition:\n"
@@ -130,8 +128,7 @@ void _Export_SpeechRecogString()
              "from the ready queue to the stable queue.  If not, the stable\n"
              "queue is not changed."
          )
-        .def("getStringDataBuffer",
-             &gadget::SpeechRecogString::getStringDataBuffer,
+        .def("getStringDataBuffer", &gadget::String::getStringDataBuffer,
              return_value_policy< copy_const_reference >(),
              "getStringDataBuffer() -> list of lists of StringData objects\n"
              "Returns the current stable sample buffers for this device."

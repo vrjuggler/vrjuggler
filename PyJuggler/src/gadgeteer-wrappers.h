@@ -13,8 +13,8 @@
 #include <gadget/Type/DigitalInterface.h>
 #include <gadget/Type/EventWindowInterface.h>
 #include <gadget/Type/PositionInterface.h>
-#include <gadget/Type/SpeechRecogDigitalInterface.h>
-#include <gadget/Type/SpeechRecogStringInterface.h>
+#include <gadget/Type/CommandInterface.h>
+#include <gadget/Type/StringInterface.h>
 
 
 namespace gadgetWrapper
@@ -197,7 +197,7 @@ namespace gadgetWrapper
       gadget::EventWindowInterface mInter;
    };
 
-   class SpeechRecogDigitalInterface
+   class CommandInterface
    {
    public:
       void init(const std::string& proxyName)
@@ -220,7 +220,7 @@ namespace gadgetWrapper
          return mInter.isConnected();
       }
 
-      gadget::SpeechRecogDigitalProxy* getProxy()
+      gadget::CommandProxy* getProxy()
       {
          return mInter.getProxy();
       }
@@ -236,10 +236,10 @@ namespace gadgetWrapper
       }
 
    private:
-      gadget::SpeechRecogDigitalInterface mInter;
+      gadget::CommandInterface mInter;
    };
 
-   class SpeechRecogStringInterface
+   class StringInterface
    {
    public:
       void init(const std::string& proxyName)
@@ -262,7 +262,7 @@ namespace gadgetWrapper
          return mInter.isConnected();
       }
 
-      gadget::SpeechRecogStringProxy* getProxy()
+      gadget::StringProxy* getProxy()
       {
          return mInter.getProxy();
       }
@@ -278,7 +278,7 @@ namespace gadgetWrapper
       }
 
    private:
-      gadget::SpeechRecogStringInterface mInter;
+      gadget::StringInterface mInter;
    };
 }
 
