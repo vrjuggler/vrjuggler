@@ -48,7 +48,10 @@ class simplePfNavApp : public vjPfApp
 public:
    simplePfNavApp() : mStatusMessageEmitCount(0),// mWorldDcsTrans( 0.0f, 0.0f, 0.0f ),
       mInitialNavPos( 0.0f, 0.0f, 0.0f ),
-      mUseDriveMode( true )//, mWorldDcsScale( 0.0f )
+      mUseDriveMode( true ),
+      mUCmodels( NULL ), 
+      mSoundNodes( NULL ),
+      mUnCollidableModelGroup( NULL )
    {
       mSun = NULL;
       mRootNode = NULL;
@@ -58,9 +61,9 @@ public:
       mUseDriveMode = true;
 
       mVelNavDrive = NULL;
-       mNavigationDCS = NULL;
+      mNavigationDCS = NULL;
 
-       enableStats();
+      enableStats();
    }
 
    virtual void init()
@@ -178,7 +181,8 @@ public:
          filename( "no name" ),
          scale( 1.0f ),
          pos( 0.0f, 0.0f, 0.0f ),
-         rot( 0.0f, 0.0f, 0.0f )
+         rot( 0.0f, 0.0f, 0.0f ),
+         isCollidable( true )
       {
       }    
       std::string description;
@@ -186,6 +190,7 @@ public:
       float scale;
       vjVec3 pos;
       vjVec3 rot;
+      bool isCollidable;
    };
    std::vector< model > mModelList;
    class sound
@@ -226,15 +231,19 @@ public:
    pfLightSource* mSun;                      // Sun to light the environment
    pfGroup*       mRootNode;                 // The root of the scene graph
    pfGroup*        mWorldModel;               // The model of the world
+   pfGroup*        mUCmodels;               // The model of the world
+   pfGroup*        mSoundNodes;               // The sounds of the world
    //pfDCS*         mWorldDCS;                 // DCS to transform the world
    pfGroup*       mCollidableModelGroup;     // Part of the world that is collidable
+   pfGroup*       mUnCollidableModelGroup;     // Part of the world that is collidable
 };
 
 // ------- SCENE GRAPH ----
 //
 //                           /-- sun1
 // rootNode -- mNavigationDCS -- mCollidableModelGroup -- mWorldModel -- loaded stuff...
-//
+//                           \-- mUnCollidableModelGroup - mUCmodels
+//                                                      \-- mSoundNodes
 void simplePfNavApp::initializeModels()
 {
    if(NULL == mRootNode)      // If we haven't had initScene called yet
@@ -243,11 +252,15 @@ void simplePfNavApp::initializeModels()
    }
 
    // ----------- DESTROY OLD -------- //
-   // REMOVE old Model
-   if(mWorldModel != NULL)    // If we already have one world model
+   // REMOVE old Models
+   if(mWorldModel != NULL)
    {
-      mCollidableModelGroup->removeChild(mWorldModel);
+      mCollidableModelGroup->removeChild(mWorldModel);  
    }
+   if (mUCmodels != NULL)
+   {
+      mUnCollidableModelGroup->removeChild(mUCmodels);
+   }   
 
    // FIXME: Destory any old data
    // XXX: Delete old stuff
@@ -258,6 +271,7 @@ void simplePfNavApp::initializeModels()
    pfFileIO::addFilePath( mFilePath );
 
    mWorldModel = new pfGroup;
+   mUCmodels = new pfGroup;
    
    for (int x = 0; x < mModelList.size(); ++x)
    {
@@ -274,20 +288,40 @@ void simplePfNavApp::initializeModels()
       
       nextModelDCS->setScale( mModelList[x].scale );
       cout<<"Adding "<<mModelList[x].filename<<"\n"<<flush;
-      pfNode* nextModel = pfFileIO::autoloadFile( mModelList[x].filename, pfFileIO::FEET );
+      pfNode* nextModel = pfFileIO::autoloadFile( mModelList[x].filename, pfFileIO::NOCONVERT );
       
       assert( nextModel != NULL );
       
       nextModelDCS->addChild( nextModel );
-      mWorldModel->addChild( nextModelDCS );
+      if (mModelList[x].isCollidable == true)
+         mWorldModel->addChild( nextModelDCS );
+      else
+         mUCmodels->addChild( nextModelDCS );
    }   
    
    // --- CONSTRUCT SCENE GRAPH --- //
-   mCollidableModelGroup->addChild(mWorldModel);
+   mCollidableModelGroup->addChild( mWorldModel );
+   mUnCollidableModelGroup->addChild( mUCmodels );
 }
 
+// func needs to destroy all previous pf nodes associated with sound
+// and then reading mSoundList, create them all again.
 void simplePfNavApp::initializeSounds()
 {
+   if(NULL == mRootNode)      // If we haven't had initScene called yet
+   {
+      return;
+   }
+
+   // ----------- DESTROY OLD -------- //
+   // REMOVE old sounds
+   if(mSoundNodes != NULL)
+   {
+      mUnCollidableModelGroup->removeChild( mSoundNodes );  
+   }
+   
+   mSoundNodes = new pfGroup();
+   
    for (int x = 0; x < mSoundList.size(); ++x)
    {
       pfDCS* nextSoundDCS = new pfDCS();
@@ -301,11 +335,13 @@ void simplePfNavApp::initializeSounds()
       
       vjSound* vjs = vjSoundManager::instance()->getHandle( mSoundList[x].alias.c_str() );
       pjSoundNode* nextSound = new pjSoundNode( vjs, mSoundList[x].positional );
-
+      vjs->trigger();  //make sure it's playing..
+      
       nextSoundDCS->addChild( nextSound );
-      mWorldModel->addChild( nextSoundDCS );
-      // TODO: add sounds to an uncollidable group to prevent traversal during collision detection...
+      mSoundNodes->addChild( nextSoundDCS );
    }
+   
+   mUnCollidableModelGroup->addChild( mSoundNodes );
 }
 
 void simplePfNavApp::initScene()
@@ -317,6 +353,7 @@ void simplePfNavApp::initScene()
    mRootNode             = new pfGroup;       // Root of our graph
    mNavigationDCS        = new pfNavDCS;      // DCS to navigate with
    mCollidableModelGroup = new pfGroup;
+   mUnCollidableModelGroup = new pfGroup;
    //mWorldDCS             = new pfDCS;
 
    // Create the SUN
@@ -333,12 +370,13 @@ void simplePfNavApp::initScene()
    mRootNode->addChild( mNavigationDCS );
    mNavigationDCS->addChild(mSun);
    mNavigationDCS->addChild(mCollidableModelGroup);
+   mNavigationDCS->addChild(mUnCollidableModelGroup);
    //mNavigationDCS->addChild( pfFileIO::autoloadFile( "terrain.flt", pfFileIO::FEET ) );
    
    // --- Load the model (if it is configured) --- //
    initializeModels();
    initializeSounds();
-   
+      
    // Configure the Navigator DCS node:
    vjMatrix initial_nav;              // Initial navigation position
    initial_nav.setTrans(mInitialNavPos);
@@ -363,9 +401,12 @@ void simplePfNavApp::initScene()
 
    mNavigationDCS->setNavigator(mVelNavDrive);
 
+   // make sure config is processed, before doing sound replace traversal.
+   this->configProcessPending();
+   
    // replace all nodes with _Sound_ with pjSoundNodes...
    std::string extension = "_Sound_";
-   pjSoundReplaceTrav::traverse( mNavigationDCS, extension );
+   pjSoundReplaceTrav::traverse( mRootNode, extension );
    
 
    // load these files into perfly to see just what your scenegraph

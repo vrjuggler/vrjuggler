@@ -82,10 +82,10 @@ void registerSomeApps(pfSwitcherApp* switcher)
    bool  drive_mode1(false);
 
    // Configure that application
-   app1->setFileName( filename1 );
+   app1->addModel( filename1 );
    app1->setFilePath( file_path1 );
-   app1->setWorldDcsScale( dcs_scale1 );
-   app1->setWorldDcsTrans( dcs_trans1 );
+   //app1->setWorldDcsScale( dcs_scale1 );
+   //app1->setWorldDcsTrans( dcs_trans1 );
    app1->setInitialNavPos( initial_pos1 );
    app1->setUseDriveMode(drive_mode1);
 
@@ -100,10 +100,10 @@ void registerSomeApps(pfSwitcherApp* switcher)
    bool  drive_mode2(false);
 
    // Configure that application
-   app2->setFileName( filename2 );
+   app2->addModel( filename2 );
    app2->setFilePath( file_path2 );
-   app2->setWorldDcsScale( dcs_scale2 );
-   app2->setWorldDcsTrans( dcs_trans2 );
+   //app2->setWorldDcsScale( dcs_scale2 );
+   //app2->setWorldDcsTrans( dcs_trans2 );
    app2->setInitialNavPos( initial_pos2 );
    app2->setUseDriveMode(drive_mode2);
 
