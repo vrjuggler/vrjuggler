@@ -225,11 +225,32 @@ struct vpr_ObjectWriter_Wrapper: vpr::ObjectWriter
 // Module ======================================================================
 void _Export_ObjectWriter()
 {
-    class_< vpr::ObjectWriter, boost::noncopyable, pyj::vpr_ObjectWriter_Wrapper >("ObjectWriter", no_init)
-        .def("beginTag", pure_virtual(&vpr::ObjectWriter::beginTag))
-        .def("endTag", pure_virtual(&vpr::ObjectWriter::endTag))
-        .def("beginAttribute", pure_virtual(&vpr::ObjectWriter::beginAttribute))
-        .def("endAttribute", pure_virtual(&vpr::ObjectWriter::endAttribute))
+    class_< vpr::ObjectWriter, boost::noncopyable, pyj::vpr_ObjectWriter_Wrapper >("ObjectWriter",
+         "Interface used to write object data to a stream.\n\n"
+         "ObjectReader and ObjectWriter support an interface that allows for\n"
+         "using tags and attributes in the written output data.  This allows\n"
+         "support for formats such as XML where there is a logical grouping\n"
+         "of the data.\n\n"
+         "The structure looks something like the following (based on XML):\n\n"
+         "<pre>\n"
+         "<tag1>\n"
+         "  <tag2 attrib1=\"XXX\">\n"
+         "  </tag2>\n"
+         "</tag1>\n"
+         "</pre>",
+         no_init)
+        .def("beginTag", pure_virtual(&vpr::ObjectWriter::beginTag),
+             "beginTag(tagName) -> PyJuggler.vpr.ReturnStatus object\n"
+             "Starts a new section/element of name tagName.")
+        .def("endTag", pure_virtual(&vpr::ObjectWriter::endTag),
+             "endTag() -> PyJuggler.vpr.ReturnStatus object\n"
+             "Ends the most recently named tag.")
+        .def("beginAttribute", pure_virtual(&vpr::ObjectWriter::beginAttribute),
+             "beginAttribute(attributeName) -> PyJuggler.vpr.ReturnStatus object\n"
+             "Starts an attribute of the name attributeName.")
+        .def("endAttribute", pure_virtual(&vpr::ObjectWriter::endAttribute),
+             "endAttribute() -> PyJuggler.vpr.ReturnStatus object\n"
+             "Ends the most recently named attribute.")
         .def("writeUint8", pure_virtual(&vpr::ObjectWriter::writeUint8))
         .def("writeUint16", pure_virtual(&vpr::ObjectWriter::writeUint16))
         .def("writeUint32", pure_virtual(&vpr::ObjectWriter::writeUint32))
@@ -238,8 +259,13 @@ void _Export_ObjectWriter()
         .def("writeDouble", pure_virtual(&vpr::ObjectWriter::writeDouble))
         .def("writeString", pure_virtual(&vpr::ObjectWriter::writeString))
         .def("writeBool", pure_virtual(&vpr::ObjectWriter::writeBool))
-        .def("isBinary", &vpr::ObjectWriter::isBinary)
-        .def("attribExists", &vpr::AttributeMapBase::attribExists)
+        .def("isBinary", &vpr::ObjectWriter::isBinary,
+             "Returns true if the writer is using a binary-based format.\n"
+             "This can be used to choose whether to use human-readable forms\n"
+             "of serialization.")
+        .def("attribExists", &vpr::AttributeMapBase::attribExists,
+             "attribExists(name) -> bool\n"
+             "Determines if the named attribute exists.")
     ;
 
 }

@@ -273,14 +273,46 @@ struct vpr_ObjectReader_Wrapper: vpr::ObjectReader
 // Module ======================================================================
 void _Export_ObjectReader()
 {
-    class_< vpr::ObjectReader, boost::noncopyable, pyj::vpr_ObjectReader_Wrapper >("ObjectReader", no_init)
-        .def("beginTag", pure_virtual(&vpr::ObjectReader::beginTag))
-        .def("endTag", pure_virtual(&vpr::ObjectReader::endTag))
-        .def("beginAttribute", pure_virtual(&vpr::ObjectReader::beginAttribute))
-        .def("endAttribute", pure_virtual(&vpr::ObjectReader::endAttribute))
-        .def("resetReading", pure_virtual(&vpr::ObjectReader::resetReading))
-        .def("pushState", pure_virtual(&vpr::ObjectReader::pushState))
-        .def("popState", pure_virtual(&vpr::ObjectReader::popState))
+    class_< vpr::ObjectReader, boost::noncopyable, pyj::vpr_ObjectReader_Wrapper >("ObjectReader",
+         "Interface used to read object data from a stream.\n\n"
+         "ObjectReader and ObjectWriter support an interface that allows for\n"
+         "using tags and attributes in the written output data.  This allows\n"
+         "support for formats such as XML where there is a logical grouping\n"
+         "of the data.\n\n"
+         "The structure looks something like the following (based on XML):\n\n"
+         "<pre>\n"
+         "<tag1>\n"
+         "  <tag2 attrib1=\"XXX\">\n"
+         "  </tag2>\n"
+         "</tag1>\n"
+         "</pre>",
+         no_init)
+        .def("beginTag", pure_virtual(&vpr::ObjectReader::beginTag),
+             "beginTag(tagName) -> PyJuggler.vpr.ReturnStatus object\n"
+             "Starts a new section/element of name tagName.")
+        .def("endTag", pure_virtual(&vpr::ObjectReader::endTag),
+             "endTag() -> PyJuggler.vpr.ReturnStatus object\n"
+             "Ends the most recently named tag.")
+        .def("beginAttribute", pure_virtual(&vpr::ObjectReader::beginAttribute),
+             "beginAttribute(attributeName) -> PyJuggler.vpr.ReturnStatus object\n"
+             "Starts an attribute of the name attributeName.")
+        .def("endAttribute", pure_virtual(&vpr::ObjectReader::endAttribute),
+             "endAttribute() -> PyJuggler.vpr.ReturnStatus object\n"
+             "Ends the most recently named attribute.")
+        .def("resetReading", pure_virtual(&vpr::ObjectReader::resetReading),
+             "resetReading()\n"
+             "Resets teh reading to the initial reading state.\n"
+             "<b>Post condition:</b> The reaer can be reused and will\n"
+             "function as if it were just initialized.")
+        .def("pushState", pure_virtual(&vpr::ObjectReader::pushState),
+             "pushState()\n"
+             "This allows users to push the active state of reading.  Later,\n"
+             "this can be used to move back to the previous reading state if\n"
+             "needed.")
+        .def("popState", pure_virtual(&vpr::ObjectReader::popState),
+             "pushState()\n"
+             "This allows users to pop the active state of reading.  This\n"
+             "is used to move back to the previous reading state.")
         .def("readUint8", pure_virtual((vpr::Uint8 (vpr::ObjectReader::*)() )&vpr::ObjectReader::readUint8))
         .def("readUint16", pure_virtual((vpr::Uint16 (vpr::ObjectReader::*)() )&vpr::ObjectReader::readUint16))
         .def("readUint32", pure_virtual((vpr::Uint32 (vpr::ObjectReader::*)() )&vpr::ObjectReader::readUint32))
@@ -289,8 +321,13 @@ void _Export_ObjectReader()
         .def("readDouble", pure_virtual((double (vpr::ObjectReader::*)() )&vpr::ObjectReader::readDouble))
         .def("readString", pure_virtual((std::string (vpr::ObjectReader::*)() )&vpr::ObjectReader::readString))
         .def("readBool", pure_virtual((bool (vpr::ObjectReader::*)() )&vpr::ObjectReader::readBool))
-        .def("isBinary", &vpr::ObjectReader::isBinary)
-        .def("attribExists", &vpr::AttributeMapBase::attribExists)
+        .def("isBinary", &vpr::ObjectReader::isBinary,
+             "Returns true if the reader is using a binary-based format.\n"
+             "This can be used to choose whether to use human-readable forms\n"
+             "of serialization.")
+        .def("attribExists", &vpr::AttributeMapBase::attribExists,
+             "attribExists(name) -> bool\n"
+             "Determines if the named attribute exists.")
     ;
 
 }

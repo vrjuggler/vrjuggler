@@ -51,7 +51,11 @@ struct vpr_ReadableObject_Wrapper: vpr::ReadableObject
 void _Export_ReadableObject()
 {
     class_< vpr::ReadableObject, boost::noncopyable, pyj::vpr_ReadableObject_Wrapper >("ReadableObject", no_init)
-        .def("readObject", pure_virtual(&vpr::ReadableObject::readObject))
+        .def("readObject", pure_virtual(&vpr::ReadableObject::readObject),
+             "readObject(reader) -> PyJuggler.vpr.ReturnStatus object\n"
+             "Template method for reading into this object from the given\n"
+             "stream.\n"
+             "<b>Post condition:</b> All object data is read from the reader.")
     ;
 
 }
