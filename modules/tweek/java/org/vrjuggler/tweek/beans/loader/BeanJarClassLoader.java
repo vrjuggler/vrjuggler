@@ -156,18 +156,18 @@ public class BeanJarClassLoader extends ClassLoader
       return unresolved_deps;
    }
 
-   public Class findClass (String name) throws ClassNotFoundException
+   public Class findClass (String classname) throws ClassNotFoundException
    {
       Class loaded_class = null;
 
       try
       {
-         byte[] b = loadClassData(name);
-         loaded_class = defineClass(name.replace('/', '.'), b, 0, b.length);
+         byte[] b = loadClassData(classname);
+         loaded_class = defineClass(classname, b, 0, b.length);
       }
       catch (IOException e)
       {
-         System.err.println("ERROR: Could not load class data for " + name);
+         System.err.println("ERROR: Could not load class data for " + classname);
       }
 
       return loaded_class;
@@ -250,7 +250,7 @@ public class BeanJarClassLoader extends ClassLoader
     * @pre The class path and dependency list have been extended to include all
     *      dependencies needed by the class being instantiated.
     */
-   protected byte[] loadClassData (String name)
+   protected byte[] loadClassData (String classname)
       throws IOException, ClassNotFoundException
    {
       InputStream stream = null;
@@ -262,14 +262,14 @@ public class BeanJarClassLoader extends ClassLoader
          for ( int i = 0; i < mJars.size(); i++ )
          {
             // First look up the class as a .class entry in the JAR file.
-            String entry_name = name.replace('.', '/') + ".class";
+            String entry_name = classname.replace('.', '/') + ".class";
             JarFile jar_file  = (JarFile) mJars.elementAt(i);
             JarEntry entry    = jar_file.getJarEntry(entry_name);
 
             // If no such entry was found, try looking it up as a .ser entry.
             if ( entry == null )
             {
-               entry_name = name.replace('.', '/') + ".ser";
+               entry_name = classname.replace('.', '/') + ".ser";
                entry      = jar_file.getJarEntry(entry_name);
             }
 
@@ -289,7 +289,7 @@ public class BeanJarClassLoader extends ClassLoader
       // data.
       if ( stream == null )
       {
-         throw new ClassNotFoundException("Could not find class " + name);
+         throw new ClassNotFoundException("Could not find class " + classname);
       }
 
       byte[] class_bytes = new byte[size];
