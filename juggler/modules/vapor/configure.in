@@ -86,18 +86,6 @@ esac
 # either.
 DPP_ENABLE_NSPR_THREADS(no)
 
-# -------------------------------------------- #
-# --with-pkg[=arg] and --without-pkg arguments #
-# -------------------------------------------- #
-
-# Override the C compiler that configure would otherwise find itself.
-AC_ARG_WITH(cc, [  --with-cc=<PATH>        Alternate C compiler ],
-            _alt_cc="$withval", _alt_cc='none')
-
-# Override the C++ compiler that configure would otherwise find itself.
-AC_ARG_WITH(cxx, [  --with-cxx=<PATH>       Alternate C++ compiler ],
-            _alt_cxx="$withval", _alt_cxx='none')
-
 # Force the use of GCC as the compiler.
 # NOTE: This is not fully implemented yet for any platform, but it is
 # partially usable on Windows.
@@ -223,64 +211,15 @@ esac
 # -----------------------------------------------------------------------------
 # Checks for programs.
 # -----------------------------------------------------------------------------
-CC_ERR=''
-CXX_ERR=''
+VJ_COMPILER_SETUP
 
-_vpr_save_CFLAGS="$CFLAGS"
-_vpr_save_CXXFLAGS="$CXXFLAGS"
-
-# If no alternate C compiler was specified, check to see if it is necessary
-# to force the use of a specific compiler on a given platform.
-if test "x${_alt_cc}" = "xnone" ; then
-    CC_IRIX='cc'
-    CC_PIC_IRIX='-KPIC'
-
-    # On IRIX, we have to use cc (not gcc).
-    if test "$PLATFORM" = "IRIX" ; then
-        CC_ERR='*** The library requires the IRIX MIPSpro C compiler ***'
-    fi
-# Otherwise, force the use of the alternate C compiler.
-else
-    CC="${_alt_cc}"
-fi
-
-# If no alternate C++ compiler was specified, check to see if it is
-# necessary to force the use of a specific compiler on a given platform.
-if test "x${_alt_cxx}" = "xnone" ; then
-    if test "x$USE_GCC" != "xyes" ; then
-        CXX_HP='aCC'
-        CXX_IRIX='CC'
-        CXX_PIC_IRIX='-KPIC'
-    fi
-
-    # On HP-UX, we have to use the aCC C++ compiler.
-    if test "$PLATFORM" = "HP" -a "x$USE_GCC" != "xyes" ; then
-        CXX_ERR='*** The library requires the HP-UX aCC C++ compiler ***'
-    # On Windows, we have to use the Microsoft Visual C++ compiler CL.EXE.
-    elif test "$OS_TYPE" = "Win32" -a "x$USE_GCC" != "xyes" ; then
-        CXX='msvccc'
-        CC="$CXX"
-        CC_FALLBACKS='cl'
-        CXX_FALLBACKS="$CC_FALLBACKS"
-        CXX_ERR='*** The library requires the MS Visual C++ compiler ***'
-    # On IRIX, we have to use CC (not g++).
-    elif test "x$PLATFORM" = "xIRIX" ; then
-        CXX_ERR='*** The library requires the IRIX MIPSpro C++ compiler ***'
-    fi
-# Otherwise, force the use of the alternate C++ compiler.
-else
-    CXX="${_alt_cxx}"
-fi
-
-DPP_PROG_CC($CC, , AC_MSG_ERROR($CC_ERR))
-DPP_PROG_CXX($CXX, , AC_MSG_ERROR($CXX_ERR))
-DPP_GET_EXT
-
-if test "x$GXX" = "xyes" ; then
-    # If we are using GCC as the compiler, we need to be using at least egcs
-    # 1.1.2.  A newer version (e.g., 2.95.2) is even better.
-    DPP_GPLUSPLUS_MODERN(AC_MSG_ERROR(*** VPR requires a modern G++ ***))
-fi
+# Ensure that the C++ compiler we've found is capable of compiling the newer
+# newer C++ features that we need.
+DPP_CXX_NAMESPACE(AC_MSG_ERROR(*** The library requires C++ namesapce support ***))
+DPP_CXX_HAVE_STD
+DPP_CXX_INLINE(AC_MSG_ERROR(*** The library requires C++ inline support ***))
+DPP_CXX_RTTI(AC_MSG_ERROR(*** The library requires C++ RTTI support ***))
+DPP_CXX_STATIC_CAST(AC_MSG_ERROR(*** The library requires C++ static_cast<> ***))
 
 # Now check to see if the compiler accepts the -pthread option.
 if test "x$SUBSYSTEM" != "xSPROC" -a "x$SUBSYSTEM" != "WIN32" -a \
@@ -292,15 +231,6 @@ then
         DPP_CC_PTHREADS_ARG
     fi
 fi
-
-# Ensure that the C++ compiler we've found is capable of compiling the newer
-# newer C++ features that we need.
-DPP_CXX_NAMESPACE(AC_MSG_ERROR(*** The library requires C++ namesapce support ***))
-DPP_CXX_HAVE_STD
-DPP_CXX_TEMPLATES(AC_MSG_ERROR(*** The library requires C++ template support ***))
-DPP_CXX_INLINE(AC_MSG_ERROR(*** The library requires C++ inline support ***))
-DPP_CXX_RTTI(AC_MSG_ERROR(*** The library requires C++ RTTI support ***))
-DPP_CXX_STATIC_CAST(AC_MSG_ERROR(*** The library requires C++ static_cast<> ***))
 
 # Ensure that a version of Perl greater than or equal to 5.004 is available.
 DPP_PERL_VER(5.004)
@@ -776,92 +706,7 @@ AC_SUBST(vpr_libs)
 # Final file generation step.
 # -----------------------------------------------------------------------------
 
-# Ensure that the release directory exists since configure would not create it
-# otherwise.
-if test ! -d release ; then
-    mkdir release
-    mkdir release/mtree
-fi
-
-# Create the VPR.lib.dist file in release/mtree.  This is generated from
-# scratch since it cannot be generalized into a template using our library
-# directory scheme.  The only time this file needs to be generated is when
-# configure is run, so it is not set up to be one of the commands that
-# config.status can execute.
-_lib_file='release/mtree/VPR.lib.dist'
-_set_line="/set type=dir mode=$DIR_PERMS uname=$OWNER_NAME gname=$GROUP_NAME"
-
-# Ensure that the file exists and has zero length.  Then write out the /set
-# line which is going to be there no matter what.
-echo "creating ${_lib_file}"
-echo >${_lib_file}
-echo "${_set_line}" >>${_lib_file}
-echo "" >>${_lib_file}
-
-# On IRIX, it's easy to compile for different ABI/ISA combinations, so we just
-# make cases for all -n32/-64/-mips3/-mips4 settings.
-if test "x$PLATFORM" = "xIRIX" ; then
-    cat >>${_lib_file} <<END_IRIX_DIST
-.
-    lib32
-        mips3
-            debug
-            ..
-            opt
-            ..
-        ..
-        mips4
-            debug
-            ..
-            opt
-            ..
-        ..
-    ..
-    lib64
-        mips3
-            debug
-            ..
-            opt
-            ..
-        ..
-        mips4
-            debug
-            ..
-            opt
-            ..
-        ..
-    ..
-..
-END_IRIX_DIST
-# If a value for $ISA has been set (which is the case for some platforms),
-# create a subdirectory in lib for that value.
-elif test "x$ISA" != "x" ; then
-    cat >>${_lib_file} <<END_ISA_DIST
-.
-    lib
-         $ISA
-             debug
-             ..
-             opt
-             ..
-         ..
-    ..
-..
-END_ISA_DIST
-# In all other cases, just make a simple directory tree for debugging and
-# optimized libraries.
-else
-    cat >>${_lib_file} <<END_DIST
-.
-    lib
-         debug
-         ..
-         opt
-         ..
-    ..
-..
-END_DIST
-fi
+VJ_MTREE_LIB_GEN(VPR, release/mtree, $PLATFORM, $ISA)
 
 AC_OUTPUT(Makefile
           Makefile.inc
