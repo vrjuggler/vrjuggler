@@ -142,7 +142,7 @@ public:
 
     vrj::GlContextData<context_data>  mContextData;
 
-    OSG::Matrix OSGMat;
+    /* OSG::Matrix OSGMat; */
 
   public:
     gadget::PositionInterface   mWand;
