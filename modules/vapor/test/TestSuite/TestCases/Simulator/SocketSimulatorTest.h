@@ -17,6 +17,14 @@ namespace vprTest
 
 class SocketSimulatorTest : public CppUnit::ThreadTestCase
 {
+CPPUNIT_TEST_SUITE(GUIDTest);
+CPPUNIT_TEST( graphConstructionTest );
+CPPUNIT_TEST( singleThreadTest );
+CPPUNIT_TEST( networkCommTestTCP );
+CPPUNIT_TEST( networkCommTestUDP );
+CPPUNIT_TEST( networkFlushTest );
+CPPUNIT_TEST_SUITE_END();
+
 public:
    SocketSimulatorTest (std::string name)
       : CppUnit::ThreadTestCase(name)
@@ -49,19 +57,6 @@ public:
    void multiThreadTest_acceptor(void* arg);
 
    void multiThreadTest_connector(void* arg);
-
-   static CppUnit::Test*
-   suite (void) {
-      CppUnit::TestSuite* test_suite = new CppUnit::TestSuite ("SocketSimulatorTest");
-      test_suite->addTest( new CppUnit::TestCaller<SocketSimulatorTest>("graphConstructionTest", &SocketSimulatorTest::graphConstructionTest));
-      test_suite->addTest( new CppUnit::TestCaller<SocketSimulatorTest>("singleThreadTest", &SocketSimulatorTest::singleThreadTest));
-      test_suite->addTest( new CppUnit::TestCaller<SocketSimulatorTest>("networkCommTestTCP", &SocketSimulatorTest::networkCommTestTCP));
-      test_suite->addTest( new CppUnit::TestCaller<SocketSimulatorTest>("networkCommTestUDP", &SocketSimulatorTest::networkCommTestUDP));
-      test_suite->addTest( new CppUnit::TestCaller<SocketSimulatorTest>("networkFlushTest", &SocketSimulatorTest::networkFlushTest));
-//      test_suite->addTest(new CppUnit::TestCaller<SocketSimulatorTest>("multiThreadTest", &SocketSimulatorTest::multiThreadTest));
-
-      return test_suite;
-   }
 
 protected:
    vpr::ReturnStatus constructGraph(void);

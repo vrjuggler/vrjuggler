@@ -3,9 +3,8 @@
 
 #include <iostream>
 
-#include <cppunit/TestCase.h>
-#include <cppunit/TestSuite.h>
-#include <cppunit/TestCaller.h>
+#include <cppunit/TestFixture.h>
+#include <cppunit/extensions/HelperMacros.h>
 
 #include <vpr/Util/FileUtils.h>
 
@@ -17,8 +16,12 @@
 namespace vprTest
 {
 
-class FileUtilsTest : public CppUnit::TestCase
+class FileUtilsTest : public CppUnit::TestFixture
 {
+CPPUNIT_TEST_SUITE(FileUtilsTest);
+CPPUNIT_TEST( ReplaceEnvVarsTest );
+CPPUNIT_TEST_SUITE_END();
+
 public:
    FileUtilsTest() : CppUnit::TestCase ()
    {
@@ -33,14 +36,6 @@ public:
    }
 
    void ReplaceEnvVarsTest();
-
-   static CppUnit::Test* suite()
-   {
-      CppUnit::TestSuite* test_suite = new CppUnit::TestSuite("FileUtilsTest");
-      test_suite->addTest( new CppUnit::TestCaller<FileUtilsTest>("ReplaceEnvVarsTest", &FileUtilsTest::ReplaceEnvVarsTest));
-
-      return test_suite;
-   }
 };
 
 }

@@ -4,6 +4,10 @@
 #include <vector>
 #include <string>
 
+#include <cppunit/TestFixture.h>
+#include <cppunit/extensions/HelperMacros.h>
+#include <MySuites.h>
+
 #include <cppunit/TestCase.h>
 #include <cppunit/extensions/ThreadTestCase.h>
 #include <cppunit/TestSuite.h>
@@ -20,6 +24,13 @@ namespace vprTest
 
 class SelectorTest : public CppUnit::ThreadTestCase
 {
+CPPUNIT_TEST_SUITE(SelectorTest);
+#ifndef VPR_SIMULATOR
+CPPUNIT_TEST( testAcceptorPoolSelection );
+CPPUNIT_TEST( testSendThenPoll );
+#endif
+CPPUNIT_TEST_SUITE_END();
+
 public:
    SelectorTest()
    : CppUnit::ThreadTestCase ()
@@ -62,17 +73,6 @@ public:
    void testSendThenPoll_acceptor(void* arg);
    void testSendThenPoll_connector(void* arg);
 
-   static CppUnit::Test* suite()
-   {
-      CppUnit::TestSuite* test_suite = new CppUnit::TestSuite("SelectorTest");
-
-#ifndef VPR_SIMULATOR
-      test_suite->addTest( new CppUnit::TestCaller<SelectorTest>("testAcceptorPoolSelection", &SelectorTest::testAcceptorPoolSelection));
-      test_suite->addTest( new CppUnit::TestCaller<SelectorTest>("testSendThenPoll", &SelectorTest::testSendThenPoll));
-#endif
-
-      return test_suite;
-   }
 
 protected:
     unsigned     mNumIters;

@@ -7,7 +7,7 @@
 #include <vpr/Util/Factory.h>
 #include <vpr/Util/Singleton.h>
 
-#include <FactoryTest.h>
+#include <TestCases/Util/FactoryTest.h>
 
 namespace vprTest
 {

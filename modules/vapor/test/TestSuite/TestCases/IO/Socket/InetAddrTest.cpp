@@ -1,8 +1,9 @@
-#include <InetAddrTest.h>
+#include <TestCases/IO/Socket/InetAddrTest.h>
 
 
 namespace vprTest
 {
+CPPUNIT_TEST_SUITE_REGISTRATION( InetAddrTest );
 
 void InetAddrTest::testEqual()
 {

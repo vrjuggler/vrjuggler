@@ -5,11 +5,13 @@
 #include <vpr/Thread/ThreadFunctor.h>
 #include <vpr/IO/Port/SerialPort.h>
 
-#include <SerialPortTest.h>
+#include <TestCases/IO/Port/SerialPortTest.h>
 
 
 namespace vprTest
 {
+
+CPPUNIT_TEST_SUITE_NAMED_REGISTRATION( SerialPortTest, vprTest::MySuites::interactive() );
 
 std::string SerialPortTest::mSendPortName;
 std::string SerialPortTest::mRecvPortName;
@@ -677,43 +679,5 @@ void SerialPortTest::testSendRecv_sender (void* arg)
    }
 }
 
-CppUnit::Test* SerialPortTest::suite ()
-{
-   CppUnit::TestSuite* test_suite = new CppUnit::TestSuite("SerialPortTest");
-
-   test_suite->addTest(new CppUnit::TestCaller<SerialPortTest>("testGetName", &SerialPortTest::testGetName));
-   test_suite->addTest(new CppUnit::TestCaller<SerialPortTest>("testChangeUpdateAction", &SerialPortTest::testChangeUpdateAction));
-
-   test_suite->addTest(new CppUnit::TestCaller<SerialPortTest>("testOpen", &SerialPortTest::testOpen));
-   test_suite->addTest(new CppUnit::TestCaller<SerialPortTest>("testRepeatedOpen", &SerialPortTest::testRepeatedOpen));
-   test_suite->addTest(new CppUnit::TestCaller<SerialPortTest>("testOpenModes", &SerialPortTest::testOpenModes));
-   test_suite->addTest(new CppUnit::TestCaller<SerialPortTest>("testBlockingOpen", &SerialPortTest::testBlockingOpen));
-   test_suite->addTest(new CppUnit::TestCaller<SerialPortTest>("testNonBlockingOpen", &SerialPortTest::testNonBlockingOpen));
-   test_suite->addTest(new CppUnit::TestCaller<SerialPortTest>("testEnableBlocking", &SerialPortTest::testEnableBlocking));
-   test_suite->addTest(new CppUnit::TestCaller<SerialPortTest>("testEnableNonBlocking", &SerialPortTest::testEnableNonBlocking));
-   test_suite->addTest(new CppUnit::TestCaller<SerialPortTest>("testChangeBufferSize", &SerialPortTest::testChangeBufferSize));
-   test_suite->addTest(new CppUnit::TestCaller<SerialPortTest>("testChangeTimeout", &SerialPortTest::testChangeTimeout));
-   test_suite->addTest(new CppUnit::TestCaller<SerialPortTest>("testChangeCharacterSize", &SerialPortTest::testChangeCharacterSize));
-   test_suite->addTest(new CppUnit::TestCaller<SerialPortTest>("testChangeReadState", &SerialPortTest::testChangeReadState));
-   test_suite->addTest(new CppUnit::TestCaller<SerialPortTest>("testChangeStopBits", &SerialPortTest::testChangeStopBits));
-   test_suite->addTest(new CppUnit::TestCaller<SerialPortTest>("testChangeCanonicalInput", &SerialPortTest::testChangeCanonicalInput));
-   test_suite->addTest(new CppUnit::TestCaller<SerialPortTest>("testChangeBadByteIgnore", &SerialPortTest::testChangeBadByteIgnore));
-   test_suite->addTest(new CppUnit::TestCaller<SerialPortTest>("testChangeInputParityCheck", &SerialPortTest::testChangeInputParityCheck));
-   test_suite->addTest(new CppUnit::TestCaller<SerialPortTest>("testChangeBitStripping", &SerialPortTest::testChangeBitStripping));
-   test_suite->addTest(new CppUnit::TestCaller<SerialPortTest>("testChangeStartStopInput", &SerialPortTest::testChangeStartStopInput));
-   test_suite->addTest(new CppUnit::TestCaller<SerialPortTest>("testChangeStartStopOutput", &SerialPortTest::testChangeStartStopOutput));
-   test_suite->addTest(new CppUnit::TestCaller<SerialPortTest>("testChangeParityGeneration", &SerialPortTest::testChangeParityGeneration));
-   test_suite->addTest(new CppUnit::TestCaller<SerialPortTest>("testChangeParityErrorMarking", &SerialPortTest::testChangeParityErrorMarking));
-   test_suite->addTest(new CppUnit::TestCaller<SerialPortTest>("testChangeParity", &SerialPortTest::testChangeParity));
-#ifndef VPR_OS_IRIX
-   test_suite->addTest(new CppUnit::TestCaller<SerialPortTest>("testChangeInputBaudRate", &SerialPortTest::testChangeInputBaudRate));
-#endif
-   test_suite->addTest(new CppUnit::TestCaller<SerialPortTest>("testChangeOutputBaudRate", &SerialPortTest::testChangeOutputBaudRate));
-   test_suite->addTest(new CppUnit::TestCaller<SerialPortTest>("testChangeHardwareFlowControl", &SerialPortTest::testChangeHardwareFlowControl));
-   test_suite->addTest(new CppUnit::TestCaller<SerialPortTest>("testChangeSoftwareFlowControl", &SerialPortTest::testChangeSoftwareFlowControl));
-   test_suite->addTest(new CppUnit::TestCaller<SerialPortTest>("testSendRecv", &SerialPortTest::testSendRecv));
-
-   return test_suite;
-}
 
 } // End of vprTest namespace

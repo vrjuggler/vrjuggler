@@ -16,11 +16,13 @@
 #include <vpr/Thread/Thread.h>
 #include <vpr/Thread/ThreadFunctor.h>
 
-#include <SocketConnectorAcceptorTest.h>
+#include <TestCases/Socket/SocketConnectorAcceptorTest.h>
 
 
 namespace vprTest
 {
+
+CPPUNIT_TEST_SUITE_REGISTRATION( SocketConnectorAcceptorTest );
 
 void SocketConnectorAcceptorTest::testAcceptorConstruction ()
 {

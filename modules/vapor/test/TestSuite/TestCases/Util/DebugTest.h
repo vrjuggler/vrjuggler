@@ -3,9 +3,8 @@
 
 #include <iostream>
 
-#include <cppunit/TestCase.h>
-#include <cppunit/TestSuite.h>
-#include <cppunit/TestCaller.h>
+#include <cppunit/TestFixture.h>
+#include <cppunit/extensions/HelperMacros.h>
 
 #include <vpr/Util/Debug.h>
 
@@ -17,8 +16,12 @@
 namespace vprTest
 {
 
-class DebugTest : public CppUnit::TestCase
+class DebugTest : public CppUnit::TestFixture
 {
+CPPUNIT_TEST_SUITE(DebugTest);
+CPPUNIT_TEST( OutputDebug );
+CPPUNIT_TEST_SUITE_END();
+
 public:
    DebugTest() : CppUnit::TestCase ()
    {
@@ -34,14 +37,6 @@ public:
 
    /** Just outputs some debug info at each level */
    void OutputDebug();
-      
-   static CppUnit::Test* suite()
-   {
-      CppUnit::TestSuite* test_suite = new CppUnit::TestSuite("DebugTest");
-      test_suite->addTest( new CppUnit::TestCaller<DebugTest>("OutputDebug", &DebugTest::OutputDebug));
-            
-      return test_suite;
-   }
 };
 
 }

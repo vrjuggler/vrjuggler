@@ -16,11 +16,11 @@
 #include <vpr/Thread/Thread.h>
 #include <vpr/Thread/ThreadFunctor.h>
 
-#include <SocketTest.h>
-
+#include <TestCases/Socket/SocketTest.h>
 
 namespace vprTest
 {
+CPPUNIT_TEST_SUITE_REGISTRATION( SocketTest );
 
 void SocketTest::testOpenCloseOpen_connector( void* data )
 {
@@ -1067,33 +1067,5 @@ void SocketTest::testIsConnected_connector (void* arg)
    //assertTestThread(! con_sock.isConnected() && "Connect didn't disconnect?");
 }
 
-CppUnit::Test* SocketTest::suite()
-{
-   CppUnit::TestSuite* test_suite = new CppUnit::TestSuite("SocketTest");
-
-// None of these tests can be used with the simulator because they all
-// expect blocking sockets.
-#ifndef VPR_SIMULATOR
-   test_suite->addTest( new CppUnit::TestCaller<SocketTest>("testOpenClose", &SocketTest::testOpenClose));
-   //test_suite->addTest( new CppUnit::TestCaller<SocketTest>("bind-Again Failure Test", &SocketTest::bindAgainFailTest));
-   test_suite->addTest( new CppUnit::TestCaller<SocketTest>("sameAddressOpenBindCloseTest", &SocketTest::sameAddressOpenBindCloseTest));
-   test_suite->addTest( new CppUnit::TestCaller<SocketTest>("sameAddressOpenBindDestructTest", &SocketTest::sameAddressOpenBindDestructTest));
-   test_suite->addTest( new CppUnit::TestCaller<SocketTest>("differentAddressOpenBindCloseTest", &SocketTest::differentAddressOpenBindCloseTest));
-
-   //test_suite->addTest( new CppUnit::TestCaller<SocketTest>("ReuseAddr (simple) Test", &SocketTest::reuseAddrSimpleTest));
-   //test_suite->addTest( new CppUnit::TestCaller<SocketTest>("ReuseAddr (client/server) Test", &SocketTest::reuseAddrTest));
-
-   //test_suite->addTest( new CppUnit::TestCaller<SocketTest>("testOpenCloseOpen", &SocketTest::testOpenCloseOpen));
-   //test_suite->addTest( new CppUnit::TestCaller<SocketTest>("testSendRecv", &SocketTest::testSendRecv));
-
-   //test_suite->addTest( new CppUnit::TestCaller<SocketTest>("testBlocking", &SocketTest::testBlocking));
-   //test_suite->addTest( new CppUnit::TestCaller<SocketTest>("testTcpConnection", &SocketTest::testTcpConnection));
-   //test_suite->addTest( new CppUnit::TestCaller<SocketTest>("testReadn", &SocketTest::testReadn));
-   test_suite->addTest(new CppUnit::TestCaller<SocketTest>("testIsConnected",
-                       &SocketTest::testIsConnected));
-#endif
-
-   return test_suite;
-}
 
 } // End of vprTest namespace

@@ -3,44 +3,27 @@
 #include <cppunit/TestSuite.h>
 #include <cppunit/ui/text/TestRunner.h>
 #include <cppunit/extensions/MetricRegistry.h>
+#include <cppunit/extensions/TestFactoryRegistry.h>
+#include <cppunit/BriefTestProgressListener.h>
+#include <cppunit/CompilerOutputter.h>
+#include <cppunit/TestResult.h>
+//#include <DumperListener.h>
 
-// Common (sim and real) tests.
-#include <TestCases/DynLoad/LibraryTest.h>
-#include <TestCases/DynLoad/LibraryFinderTest.h>
-#include <TestCases/Socket/SocketTest.h>
-#include <TestCases/Socket/NonBlockingSocketsTest.h>
-#include <TestCases/Socket/SocketCopyConstructorTest.h>
-#include <TestCases/Socket/SocketConnectorAcceptorTest.h>
+#include <MySuites.h>
 
-#include <TestCases/Thread/ThreadTest.h>
+#include <exception>
+#include <stdexcept>
 
-#include <TestCases/IO/Socket/InetAddrTest.h>
-#include <TestCases/IO/SelectorTest.h>
-#include <TestCases/IO/SerializableTest.h>
-
-#include <TestCases/IO/Stats/SocketBandwidthIOStatsTest.h>
-
-#include <TestCases/Util/ReturnStatusTest.h>
-#include <TestCases/Util/IntervalTest.h>
-#include <TestCases/Util/GUIDTest.h>
-#include <TestCases/Util/FactoryTest.h>
-#include <TestCases/Util/DebugTest.h>
-
-// Simulator tests.
-#ifdef VPR_SIMULATOR
-#  include <vpr/md/SIM/Controller.h>
-
-#  include <TestCases/Simulator/SimSelectorTest.h>
-#  include <TestCases/Simulator/SocketSimulatorTest.h>
-
-// Real tests.
-#else
-#  include <TestCases/IO/Port/SerialPortTest.h>
+#ifdef USE_QT_TESTRUNNER
+   #include <qapplication.h>
+   #include <cppunit/ui/qt/TestRunner.h>
 #endif
 
-#include <TestCases/BoostTest.h>
-#include <TestCases/SystemTest.h>
-#include <TestCases/FileUtilsTest.h>
+#include <cppunit/extensions/MetricRegistry.h>
+
+#ifdef VPR_SIMULATOR
+#  include <vpr/md/SIM/Controller.h>
+#endif
 
 #include <vpr/Thread/Thread.h>
 #include <vpr/Util/Debug.h>
@@ -59,10 +42,14 @@ static void run (void* arg)
 }
 #endif
 
-int main (int ac, char **av)
+int main (int argc, char **argv)
 {
-   vprDEBUG(vprDBG_ALL,0) << "\n\n-----------------------------------------\n" << vprDEBUG_FLUSH;
-   vprDEBUG(vprDBG_ALL,0) << "Starting test\n" << vprDEBUG_FLUSH;       // Do this here to get init text out of the way
+#ifdef USE_QT_TESTRUNNER
+   QApplication app( argc, argv );
+#endif
+
+   // Commandline parameter is the test path to use
+   std::string test_path = (argc > 1) ? std::string(argv[1]) : "noninteractive";
 
     // Init random number generation
     unsigned int random_seed;
@@ -84,9 +71,7 @@ int main (int ac, char **av)
 
 #ifdef VPR_SIMULATOR       // ------ CONFIGURE SIM NETWORK ------ //
    std::string path_base(GRAPH_PATH);
-
    vpr::sim::Controller::instance()->constructNetwork(path_base.append("/test/TestSuite/test_network.vsn"));
-
    vpr::Thread sim_thread(run);
 #endif
 
@@ -113,101 +98,72 @@ int main (int ac, char **av)
    metric_reg->setFilename("vapor_metrics.txt");
    metric_reg->setMetric("Main/MetricTest", 1221.75f);
 
-   CppUnit::TextUi::TestRunner runner;
+   //------------------------------------
+   //  Test suites
+   //------------------------------------
+   CppUnit::TestFactoryRegistry& global_registry = CppUnit::TestFactoryRegistry::getRegistry();
 
-   //------------------------------------
-   //  noninteractive
-   //------------------------------------
    // create non-interactive test suite
    CppUnit::TestSuite* noninteractive_suite = new CppUnit::TestSuite("noninteractive");
+   noninteractive_suite->addTest( global_registry.makeTest());
 
-   // add tests to the suite
-#ifdef VPR_SIMULATOR
-   // Simulator tests.
-   noninteractive_suite->addTest(vprTest::SocketSimulatorTest::suite());
-   noninteractive_suite->addTest(vprTest::SimSelectorTest::suite());
+   // create interactive test suite
+   CppUnit::TestSuite* interactive_suite = new CppUnit::TestSuite( vprTest::MySuites::interactive() );
+   interactive_suite->addTest( CppUnit::TestFactoryRegistry::getRegistry(vprTest::MySuites::interactive()).makeTest());
+
+   // create interactive test suite
+   CppUnit::TestSuite* metric_suite = new CppUnit::TestSuite( vprTest::MySuites::metric() );
+   metric_suite->addTest( CppUnit::TestFactoryRegistry::getRegistry(vprTest::MySuites::metric()).makeTest());
+
+#ifdef USE_QT_TESTRUNNER
+   CppUnit::QtUi::TestRunner runner;
 #else
-   // Real tests.
+   // Use a text runner
+   CppUnit::TextUi::TestRunner runner;
+
+   // Make it use a compiler outputter
+   CppUnit::Outputter* run_outputter = CppUnit::CompilerOutputter::defaultOutputter(
+                                       &runner.result(), std::cout );
+   runner.setOutputter( run_outputter );
+
+   CppUnit::TestResult& result_event_manager = runner.eventManager();
+
+   // Add a listener that print test names as the tests progress
+   CppUnit::BriefTestProgressListener progress;
+   result_event_manager.addListener( &progress );
+
+   // Listener for dumping a lot of stuff
+   //DumperListener dumper(true);
+   //result_event_manager.addListener( &dumper );
 #endif
 
-   // Common tests (both real and simulator).
-   noninteractive_suite->addTest(vprTest::ReturnStatusTest::suite());
-   noninteractive_suite->addTest(vprTest::BoostTest::suite());
-   noninteractive_suite->addTest(vprTest::LibraryTest::suite());
-   noninteractive_suite->addTest(vprTest::LibraryFinderTest::suite());
-   noninteractive_suite->addTest(vprTest::FactoryTest::suite());
-   noninteractive_suite->addTest(vprTest::SystemTest::suite());
-   noninteractive_suite->addTest(vprTest::FileUtilsTest::suite());
-   noninteractive_suite->addTest(vprTest::IntervalTest::suite());
-   noninteractive_suite->addTest(vprTest::GUIDTest::suite());
-   noninteractive_suite->addTest(vprTest::DebugTest::suite());
-   noninteractive_suite->addTest(vprTest::InetAddrTest::suite());
-   noninteractive_suite->addTest(vprTest::SocketTest::suite());
-   noninteractive_suite->addTest(vprTest::NonBlockingSocketTest::suite());
-//   noninteractive_suite->addTest(vprTest::SocketCopyConstructorTest::suite());
-   noninteractive_suite->addTest(vprTest::SocketConnectorAcceptorTest::suite());
-   noninteractive_suite->addTest(vprTest::SelectorTest::suite());
-   noninteractive_suite->addTest(vprTest::SerializableTest::suite());
-   noninteractive_suite->addTest(vprTest::ThreadTest::suite());
-
-   // Add the test suite to the runner
+   // -- ADD SUITES --- //
    runner.addTest( noninteractive_suite );
+   runner.addTest( interactive_suite );
+   runner.addTest( metric_suite );
 
-   // ------------------------------
-   // METRICS
-   // ------------------------------
-   CppUnit::TestSuite* metrics_suite = new CppUnit::TestSuite("metrics");
+   bool was_successfull(false);
 
-   metrics_suite->addTest(vprTest::IntervalTest::metric_suite());
-   metrics_suite->addTest(vprTest::GUIDTest::metric_suite());
-   metrics_suite->addTest(vprTest::SocketBandwidthIOStatsTest::metric_suite());
-
-   runner.addTest(metrics_suite);
-
-   //noninteractive_suite->addTest(metrics_suite);
-
-
-   // -------------------------------
-   // INTERACTIVE
-   // -------------------------------
-   CppUnit::TestSuite* interactive_suite = new CppUnit::TestSuite("interactive");
-
-//   interactive_suite->addTest(vprTest::ThreadTest::interactiveSuite());
-
-#ifndef VPR_SIMULATOR
-   interactive_suite->addTest(vprTest::SerialPortTest::suite());
+#ifdef USE_QT_TESTRUNNER
+   runner.run();
+#else
+   // Run the tests
+   try
+   {
+     std::cout << "Running "  <<  test_path << std::endl;
+     was_successfull = runner.run( test_path );
+     //was_successfull = runner.run( );
+   }
+   catch ( std::invalid_argument &e )  // Test path not resolved
+   {
+     std::cerr  <<  std::endl
+                <<  "ERROR: "  <<  e.what()
+                << std::endl;
+     return 0;
+   }
 #endif
 
-   runner.addTest(interactive_suite);
-
-   // run all test suites
-   if ( ac > 1 )
-   {
-      if ( strcmp(av[1], "interactive") == 0 )
-      {
-         runner.run("interactive");
-      }
-      else if ( strcmp(av[1], "noninteractive") == 0 )
-      {
-         runner.run("noninteractive");
-      }
-      else if ( strcmp(av[1], "metrics") == 0 )
-      {
-         runner.run("metrics");
-      }
-      else if ( strcmp(av[1], "all") == 0 )
-      {
-         runner.run("noninteractive");
-         runner.run("metrics");
-         runner.run("interactive");
-      }
-   }
-   else
-   {
-      runner.run("noninteractive");
-      runner.run("metrics");
-      runner.run("interactive");
-   }
-
-   return 0;
+   // Cleanup
+   return was_successfull;
 }
+

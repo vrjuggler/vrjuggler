@@ -1,11 +1,12 @@
 #include <vpr/vpr.h>
 #include <vpr/Util/Interval.h>
 
-#include <IntervalTest.h>
-
+#include <TestCases/Util/IntervalTest.h>
 
 namespace vprTest
 {
+CPPUNIT_TEST_SUITE_REGISTRATION( IntervalTest );
+CPPUNIT_TEST_SUITE_NAMED_REGISTRATION( IntervalMetricTest, MySuites::metric() );
 
 void IntervalTest::construction()
 {
@@ -217,7 +218,7 @@ void IntervalTest::testLessThen()
    CPPUNIT_ASSERT(val3 <= val2);
 }
 
-void IntervalTest::testSetNowOverhead()
+void IntervalMetricTest::testSetNowOverhead()
 {
    const vpr::Uint32 iters(100000);
    vpr::Uint32 loops = iters;
@@ -236,29 +237,6 @@ void IntervalTest::testSetNowOverhead()
    per_call = (diff.usecf()*1000.0f) / double(iters);
 
    std::cout << "vpr::Interval::setNow: overhead = " << per_call << "ns per call\n" << std::flush;
-}
-
-CppUnit::Test* IntervalTest::suite()
-{
-   CppUnit::TestSuite* test_suite = new CppUnit::TestSuite("IntervalTest");
-
-   test_suite->addTest( new CppUnit::TestCaller<IntervalTest>("construction", &IntervalTest::construction));
-   test_suite->addTest( new CppUnit::TestCaller<IntervalTest>("testSet", &IntervalTest::testSet));
-   test_suite->addTest( new CppUnit::TestCaller<IntervalTest>("testSetf", &IntervalTest::testSetf));
-   test_suite->addTest( new CppUnit::TestCaller<IntervalTest>("testSetd", &IntervalTest::testSetd));
-   test_suite->addTest( new CppUnit::TestCaller<IntervalTest>("testSec", &IntervalTest::testSec));
-   test_suite->addTest( new CppUnit::TestCaller<IntervalTest>("testSecf", &IntervalTest::testSecf));
-   test_suite->addTest( new CppUnit::TestCaller<IntervalTest>("testSecd", &IntervalTest::testSecd));
-   test_suite->addTest( new CppUnit::TestCaller<IntervalTest>("testMsec", &IntervalTest::testMsec));
-   test_suite->addTest( new CppUnit::TestCaller<IntervalTest>("testMsecf", &IntervalTest::testMsecf));
-   test_suite->addTest( new CppUnit::TestCaller<IntervalTest>("testMsecd", &IntervalTest::testMsecd));
-   test_suite->addTest( new CppUnit::TestCaller<IntervalTest>("testUsec", &IntervalTest::testUsec));
-   test_suite->addTest( new CppUnit::TestCaller<IntervalTest>("testUsecf", &IntervalTest::testUsecf));
-   test_suite->addTest( new CppUnit::TestCaller<IntervalTest>("testUsecd", &IntervalTest::testUsecd));
-   test_suite->addTest( new CppUnit::TestCaller<IntervalTest>("testSubtract", &IntervalTest::testSubtract));
-   test_suite->addTest( new CppUnit::TestCaller<IntervalTest>("testLessThen", &IntervalTest::testLessThen));
-
-   return test_suite;
 }
 
 } // End of vprTest namespace

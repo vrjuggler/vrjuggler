@@ -3,20 +3,29 @@
 
 #include <string>
 
-#include <cppunit/TestCase.h>
-#include <cppunit/TestSuite.h>
+#include <cppunit/TestFixture.h>
+#include <cppunit/extensions/HelperMacros.h>
+#include <MySuites.h>
 #include <cppunit/extensions/ThreadTestCase.h>
 
 #include <vpr/vpr.h>
 #include <vpr/Sync/Mutex.h>
 #include <vpr/Sync/CondVar.h>
 
-
 namespace vprTest
 {
 
 class NonBlockingSocketTest : public CppUnit::ThreadTestCase
 {
+CPPUNIT_TEST_SUITE(NonBlockingSocketTest);
+CPPUNIT_TEST( testSetOpenNonBlockingThenOpenThenClose );
+CPPUNIT_TEST( testSetOpenNonBlockingThenOpenThenEnableNonBlockThenClose );
+CPPUNIT_TEST( testConnect2NonBlockingSockets );
+CPPUNIT_TEST( testNonBlockingTransfer );
+CPPUNIT_TEST( testConnect2NonBlockingSocketsUsingSelect );
+CPPUNIT_TEST( testSendUDP );
+CPPUNIT_TEST_SUITE_END();
+
 public:
    NonBlockingSocketTest()
       : CppUnit::ThreadTestCase (), mAcceptorPort(0)
@@ -82,8 +91,7 @@ public:
    void testSendUDP_receiver(void* arg);
 
    void testSendUDP_sender(void* arg);
-
-   static CppUnit::Test* suite(void);
+   
 
 protected:
    vpr::Mutex     mMutex;

@@ -1,9 +1,12 @@
 #include <boost/smart_ptr.hpp>
 
-#include <BoostTest.h>
+#include <TestCases/BoostTest.h>
+
 
 namespace vprTest
 {
+
+CPPUNIT_TEST_SUITE_REGISTRATION( BoostTest );
 
 void BoostTest::shared_ptr_basic ()
 {
