@@ -1,5 +1,5 @@
 #include <tweek/CORBA/CorbaManager.h>
-#include <vpr/Thread/Thread.h>
+#include <vpr/System.h>
 #include <vpr/Util/Debug.h>
 
 #include <StringSubjectImpl.h>
