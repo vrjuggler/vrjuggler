@@ -445,6 +445,15 @@ namespace cluster
                vprDEBUG(gadgetDBG_RIM,vprDBG_VERB_LVL) << clrOutBOLD(clrCYAN,"[Start Barrier] ")
                   << "isClusterReady() Sending Barrier Signal to master: " << mBarrierMasterHostname << std::endl << vprDEBUG_FLUSH;
             }
+            else
+            {
+               //If we are not connected and we are not in pending list, add to the pending list
+               if (NULL == ClusterNetwork::instance()->getPendingNode(barrier_master->getHostname()))
+               {
+                  ClusterNetwork::instance()->addPendingNode(barrier_master);
+               }
+
+            }
          }
          else
          {
