@@ -32,6 +32,11 @@
 
 package org.vrjuggler.vrjconfig.commoneditors.devicegraph;
 
+import javax.swing.event.EventListenerList;
+
+import org.vrjuggler.vrjconfig.commoneditors.event.UnitInfoEvent;
+import org.vrjuggler.vrjconfig.commoneditors.event.UnitInfoListener;
+
 
 /**
  * A holder for information about input sources (units) on some input device.
@@ -108,7 +113,10 @@ public class UnitInfo
     */
    public void setUnitNumber(Integer unitNumber)
    {
+      Integer old_value = this.unitNumber;
       this.unitNumber = unitNumber;
+
+      fireUnitNumberChanged(old_value);
    }
 
    /**
@@ -126,7 +134,10 @@ public class UnitInfo
     */
    public void decrementUnitNumber(int amount)
    {
+      Integer old_value = this.unitNumber;
       this.unitNumber = new Integer(this.unitNumber.intValue() - amount);
+
+      fireUnitNumberChanged(old_value);
    }
 
    /**
@@ -144,7 +155,10 @@ public class UnitInfo
     */
    public void incrementUnitNumber(int amount)
    {
+      Integer old_value = this.unitNumber;
       this.unitNumber = new Integer(this.unitNumber.intValue() + amount);
+
+      fireUnitNumberChanged(old_value);
    }
 
    /**
@@ -179,6 +193,22 @@ public class UnitInfo
    }
 
    /**
+    * Adds a listener for events fired by this object.
+    */
+   public void addUnitInfoListener(UnitInfoListener l)
+   {
+      mListeners.add(UnitInfoListener.class, l);
+   }
+
+   /**
+    * Removes the given object as a listener for events fired by this object.
+    */
+   public void removeUnitInfoListener(UnitInfoListener l)
+   {
+      mListeners.remove(UnitInfoListener.class, l);
+   }
+
+   /**
     * Strig-ifies this object.
     */
    public String toString()
@@ -188,6 +218,31 @@ public class UnitInfo
              this.unitType + "),Number=" + this.unitNumber + "]";
    }
 
+   /**
+    * Fires a <code>UnitInfoEvent</code> for a change in this object's unit
+    * number.
+    */
+   protected void fireUnitNumberChanged(Integer oldValue)
+   {
+      UnitInfoEvent event = null;
+      Object[] listeners = mListeners.getListenerList();
+
+      for ( int i = listeners.length - 2; i >= 0; i -= 2 )
+      {
+         if ( listeners[i] == UnitInfoListener.class )
+         {
+            if ( event == null )
+            {
+               event = new UnitInfoEvent(this, oldValue, this.unitNumber);
+            }
+
+            ((UnitInfoListener) listeners[i + 1]).unitNumberChanged(event);
+         }
+      }
+   }
+
    private Integer unitType   = null;
    private Integer unitNumber = null;
+
+   private EventListenerList mListeners = new EventListenerList();
 }
