@@ -51,14 +51,24 @@ PfInputHandler::PfInputHandler(pfPipeWindow* pWin, const std::string& displayNam
 #ifdef VPR_OS_Win32
 void PfInputHandler::handlePerformerEvent(MSG message)
 {
-   // Forward events on to subclass. The magic of inheritance :)
-   InputAreaWin32::updKeys( message );
+   // If we have a valid KeyboardMouseDevice, process
+   // all keyboard/mouse events
+   if ( NULL != mKeyboardMouseDevice )
+   {
+      // Forward events on to subclass. The magic of inheritance :)
+      InputAreaWin32::updKeys( message );
+	}
 }
 #else
 void PfInputHandler::handlePerformerEvent(::XEvent& event)
 {
-   // Forward events on to subclass. The magic of inheritance :)
-   InputAreaXWin::handleEvent( event );
+   // If we have a valid KeyboardMouseDevice, process
+   // all keyboard/mouse events
+   if ( NULL != mKeyboardMouseDevice )
+   {
+      // Forward events on to subclass. The magic of inheritance :)
+      InputAreaXWin::handleEvent( event );
+	}
 }
 #endif
 
