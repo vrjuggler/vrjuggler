@@ -86,15 +86,12 @@ public:
     * @pre None.
     * @post The mAddr structure has its memory zeroed, and the port and
     *       internet address are set to wildcard values.
-    *
-    * @param port An unsigned 16-bit integer port number for this address in
-    *             host byte order.
     */
-   InetAddrBSD (const Uint16 port = 0)
+   InetAddrBSD ()
    {
       memset(&mAddr, 0, sizeof(mAddr));
       setAddressValue(INADDR_ANY);
-      setPort(port);
+      setPort(0);
       setFamily(SocketTypes::INET);
    }
 

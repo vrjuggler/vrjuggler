@@ -74,16 +74,14 @@ public:
     *
     * @pre None.
     * @post Zero out the address and set everything to ANY
-    *
-    * @param port An unsigned 16-bit integer port number for this address
-    *             in host byte order.
     */
-   InetAddrNSPR (const vpr::Uint16 port = 0)
+
+   InetAddrNSPR ()
    {
       memset(&mAddr, 0, sizeof(mAddr));
       setFamily(SocketTypes::INET);
       setAddressValue(PR_INADDR_ANY);
-      setPort(port);
+      setPort(0);
    }
 
    /**
