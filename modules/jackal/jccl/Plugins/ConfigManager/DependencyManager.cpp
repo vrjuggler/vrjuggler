@@ -31,17 +31,18 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 
-#include <vjConfig.h>
-#include <Kernel/vjDependencyManager.h>
+#include <jccl/jcclConfig.h>
+#include <jccl/ConfigManager/DependencyManager.h>
+
+namespace jccl {
 
 // Initialize the singleton ptr
-//vjDependencyManager* vjDependencyManager::mInstance = NULL;
-vjSingletonImp(vjDependencyManager);
+vprSingletonImp(DependencyManager);
 
 
-vjDepChecker* vjDependencyManager::findDepChecker(vjConfigChunk* chunk)
+DepChecker* DependencyManager::findDepChecker(ConfigChunk* chunk)
 {
-   vjASSERT(NULL != chunk);
+   vprASSERT(NULL != chunk);
 
    //std::string chunk_type;
    //chunk_type = (std::string)chunk->getType();
@@ -49,8 +50,8 @@ vjDepChecker* vjDependencyManager::findDepChecker(vjConfigChunk* chunk)
    for(unsigned int i=0;i<mDepCheckers.size();i++)
    {
       // Get next constructor
-      vjDepChecker* checker = mDepCheckers[i];
-      vjASSERT(checker != NULL);
+      DepChecker* checker = mDepCheckers[i];
+      vprASSERT(checker != NULL);
 
       if(checker->canHandle(chunk))
          return checker;
@@ -60,22 +61,23 @@ vjDepChecker* vjDependencyManager::findDepChecker(vjConfigChunk* chunk)
 }
 
 
-void vjDependencyManager::debugDump()
+void DependencyManager::debugDump()
 {
-   //vjDEBUG_BEGIN(vjDBG_KERNEL, vjDBG_CONFIG_LVL) << "vjDepChecker::debugDump\n" << vjDEBUG_FLUSH;
-   vjDEBUG_NEXT(vjDBG_KERNEL,vjDBG_STATE_LVL) << "----- Current dependency checkers -----\n" << vjDEBUG_FLUSH;
-   vjDEBUG_NEXT(vjDBG_KERNEL,vjDBG_STATE_LVL) << "num checkers:" << mDepCheckers.size() << "\n" << vjDEBUG_FLUSH;
-   vjDEBUG_NEXT(vjDBG_KERNEL,vjDBG_STATE_LVL) << "-1: Checker: default   type: default checker  recog: all (this is a fallback)\n" << vjDEBUG_FLUSH;
+   //vprDEBUG_BEGIN(vprDBG_KERNEL, vprDBG_CONFIG_LVL) << "DepChecker::debugDump\n" << vprDEBUG_FLUSH;
+   vprDEBUG_NEXT(vprDBG_KERNEL,vprDBG_STATE_LVL) << "----- Current dependency checkers -----\n" << vprDEBUG_FLUSH;
+   vprDEBUG_NEXT(vprDBG_KERNEL,vprDBG_STATE_LVL) << "num checkers:" << mDepCheckers.size() << "\n" << vprDEBUG_FLUSH;
+   vprDEBUG_NEXT(vprDBG_KERNEL,vprDBG_STATE_LVL) << "-1: Checker: default   type: default checker  recog: all (this is a fallback)\n" << vprDEBUG_FLUSH;
 
    for(unsigned int cNum=0;cNum<mDepCheckers.size();cNum++)
    {
-      vjDepChecker* checker = mDepCheckers[cNum];
-      vjDEBUG_NEXT(vjDBG_KERNEL,vjDBG_STATE_LVL)
+      DepChecker* checker = mDepCheckers[cNum];
+      vprDEBUG_NEXT(vprDBG_KERNEL,vprDBG_STATE_LVL)
                  << cNum << ": Checker:" << (void*)checker
                  << "   type:" << typeid(*checker).name()
-                 << "   recog:" << checker->getCheckerName().c_str() << "\n" << vjDEBUG_FLUSH;
+                 << "   recog:" << checker->getCheckerName().c_str() << "\n" << vprDEBUG_FLUSH;
    }
 
-   vjDEBUG_END(vjDBG_KERNEL,vjDBG_STATE_LVL) << "---------------------\n" << vjDEBUG_FLUSH;
+   vprDEBUG_END(vprDBG_KERNEL,vprDBG_STATE_LVL) << "---------------------\n" << vprDEBUG_FLUSH;
 }
 
+}; // namespace jccl

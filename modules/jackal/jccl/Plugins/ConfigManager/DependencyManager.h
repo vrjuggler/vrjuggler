@@ -31,41 +31,41 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 
-#ifndef _VJ_DEP_MGR_H_
-#define _VJ_DEP_MGR_H_
-//#pragma once
+#ifndef _JCCL_DEP_MGR_H_
+#define _JCCL_DEP_MGR_H_
 
-#include <vjConfig.h>
-#include <Kernel/vjDepChecker.h>
-#include <Config/vjConfigChunk.h>
+#include <jccl/jcclConfig.h>
+#include <jccl/ConfigManager/DepChecker.h>
+#include <jccl/Config/ConfigChunk.h>
 #include <typeinfo>
-#include <Utils/vjSingleton.h>
+#include <vpr/Util/Singleton.h>
 
+namespace jccl {
 
 //: Object used for creating devices
 //!NOTE: Singleton
-class vjDependencyManager
+class DependencyManager
 {
 private:
    // Singleton so must be private
-   vjDependencyManager() : mDepCheckers(), mDefaultChecker()
+   DependencyManager() : mDepCheckers(), mDefaultChecker()
    {
-      mDepCheckers = std::vector<vjDepChecker*>(0);
-      vjASSERT(mDepCheckers.size() == 0);
+      mDepCheckers = std::vector<DepChecker*>(0);
+      vprASSERT(mDepCheckers.size() == 0);
       //debugDump();
    }
 
 public:
    // Called to register a new checker with the system
-   void registerChecker(vjDepChecker* checker)
+   void registerChecker(DepChecker* checker)
    {
-      vjASSERT(checker != NULL);
+      vprASSERT(checker != NULL);
       mDepCheckers.push_back(checker);          // Add the checker to the list
-      vjDEBUG(vjDBG_KERNEL,vjDBG_CONFIG_LVL)
-              << "vjDependencyManager: Registered: "
+      vprDEBUG(vprDBG_KERNEL,vprDBG_CONFIG_LVL)
+              << "DependencyManager: Registered: "
               << std::setiosflags(std::ios::right) << std::setw(25) << std::setfill(' ') << checker->getCheckerName().c_str() << std::resetiosflags(std::ios::right)
               << "  type: " << typeid(*checker).name() << std::endl
-              << vjDEBUG_FLUSH;
+              << vprDEBUG_FLUSH;
       debugDump();
    }
 
@@ -74,17 +74,17 @@ public:
    //: Are the dependencies satisfied for the given chunk?
    //
    //!RETURNS: true - dependencies are currently satisifed for the chunk
-   bool depSatisfied(vjConfigChunk* chunk)
+   bool depSatisfied(ConfigChunk* chunk)
    {
-      vjASSERT(NULL != chunk);
-      vjDepChecker* checker = findDepChecker(chunk);
+      vprASSERT(NULL != chunk);
+      DepChecker* checker = findDepChecker(chunk);
       return checker->depSatisfied(chunk);
    }
 
-   void debugOutDependencies(vjConfigChunk* chunk,int dbg_lvl)
+   void debugOutDependencies(ConfigChunk* chunk,int dbg_lvl)
    {
-      vjASSERT(NULL != chunk);
-      vjDepChecker* checker = findDepChecker(chunk);
+      vprASSERT(NULL != chunk);
+      DepChecker* checker = findDepChecker(chunk);
       checker->debugOutDependencies(chunk,dbg_lvl);
    }
 
@@ -92,32 +92,19 @@ private:
    //: Returns a dependency checker for the given chunk
    //! RETURNS: If checker found, it is returned
    //+          Otherwise, it returns the default checker
-   vjDepChecker* findDepChecker(vjConfigChunk* chunk);
+   DepChecker* findDepChecker(ConfigChunk* chunk);
 
    void debugDump();
 
 private:
-   std::vector<vjDepChecker*> mDepCheckers;     //: List of the device constructors
-   vjDepChecker               mDefaultChecker;  //: The default checker
+   std::vector<DepChecker*> mDepCheckers;     //: List of the device constructors
+   DepChecker               mDefaultChecker;  //: The default checker
 
-vjSingletonHeader(vjDependencyManager);
-/*
-public:     // ------ SINGLETON ----- ///
-   //: Return singleton instance of the class
-   static vjDependencyManager* instance()
-   {
-      if(mInstance == NULL)
-      {
-         mInstance = new vjDependencyManager();
-      }
+    vprSingletonHeader(DependencyManager);
 
-      return mInstance;
-   }
-
-private:
-   static vjDependencyManager* mInstance;
-   */
 };
+
+}; // namespace jccl
 
 #endif
 
