@@ -31,7 +31,7 @@
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # -----------------------------------------------------------------------------
-# Base configure.in for Juggler App Control & Configuration Library (Jackal).
+# Base configure.in for Juggler App Control & Configuration Library (JCCL).
 # -----------------------------------------------------------------------------
 # This file is "compiled" by GNU autoconf to generate the configure script
 # that is actually run.
@@ -196,6 +196,8 @@ TWEEK_PATH_JAVA([0.4.0], ,
                  BUILD_JAVA='N'
                 ])
 
+VPR_SUBSYSTEM=`$VPR_CONFIG --subsystem`
+
 # -----------
 # cppdom
 # -----------
@@ -343,7 +345,7 @@ fi
 #
 #     * APP_VJ_LIBS_UTILS: The VR Juggler general utilities library.
 
-# Put together the basic information needed to compile Jackal applications.
+# Put together the basic information needed to compile JCCL applications.
 VJ_APP_COMPILER([$CC], [$CFLAGS], [$CXX], [$CXXFLAGS], [$DBG_FLAGS],
                 [$OPT_FLAGS], [JCCL_BASE_DIR], [$DEFS], [$INCLUDES],
                 [${_EXTRA_FLAGS}])
@@ -447,6 +449,7 @@ AC_SUBST(UNIX_JUGGLERROOT_ABS)
 AC_SUBST(JCCLROOT_ABS)
 AC_SUBST(JUGGLERROOT_ABS)
 AC_SUBST(JCCL_SHARE_DIR)
+AC_SUBST(VPR_SUBSYSTEM)
 
 AC_SUBST(RM_LN)
 AC_SUBST(EXTRA_LINK_FLAGS)
@@ -540,14 +543,12 @@ AC_OUTPUT(jccl-config
           mtree/JCCL.test.dist
           mtree/JCCL.tools.dist
           VARS.pl,
-    [ sed -e 's/^\(%.*\)/#\1/g' jccl-config > jccl-config.tmp
-      mv jccl-config.tmp jccl-config
-      chmod a+x jccl-config ])
+    [chmod a+x jccl-config])
 
 cat <<BUILD_INFO
 
- Remember that you need to build Jackal with GNU make.
+ Remember that you need to build JCCL with GNU make.
  GNU make is called 'gmake' on most systems.
- See the file README for more details on compiling the Jackal distribution.
+ See the file README for more details on compiling the JCCL distribution.
 
 BUILD_INFO

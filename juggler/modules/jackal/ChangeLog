@@ -1,5 +1,8 @@
 DATE        AUTHOR      CHANGE
--------------------------------------------------------------------------------
+----------- ----------- -------------------------------------------------------
+Jun-24-2002 patrickh    The jccl-config script is now written in Perl.  It is
+                        capable of determining its installation path at
+                        runtime.
 Jun-16-2002 nonchocoboy NEW VERSION: 0.3.0
 Jun-11-2002 nonchocoboy VjControl now runs as a Tweek bean.
 Jun-10-2002 nonchocoboy Ported generic editor panel creation for ChunkDescs and
