@@ -176,7 +176,7 @@ class MainWindow(MainWindowBase):
       roll_dist = 0.45                # Outside this dist, roll
     
       rot_heading = -mx * max_rate         # Neg for heading
-      rot_pitch = -my * max_rate
+      rot_pitch = my * max_rate
       rot_roll = 0.0
       
       if abs(my) < heading_only_band:
