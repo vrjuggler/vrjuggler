@@ -454,7 +454,6 @@ case $target_os in
         ARFLAGS='-ruv'
         CXXFLAGS="-Wall -Werror-implicit-function-declaration $CXXFLAGS"
         LD='${CXX} -shared'
-        LDFLAGS="$LDFLAGS -L/usr/X11R6/lib"
         LDOPTS=''
         OPT_FLAGS='-O2'
         DBG_FLAGS='-g'
@@ -1052,6 +1051,10 @@ if test "x${_enable_gl_api}" = "xyes" ; then
         OPENGL_API="Y"
         AC_DEFINE(VJ_API_OPENGL,)
     else
+        if test "x$x_libraries" != "xNONE" -a "x$x_libraries" != "x" ; then
+            LDFLAGS="-L$x_libraries $LDFLAGS"
+        fi
+
         dnl # If the OpenGL library was found, add the API object files to the
         dnl # files to be compiled and enable the OpenGL API compile-time
         dnl # option.
