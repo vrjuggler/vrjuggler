@@ -128,6 +128,46 @@
 {next friend}
 <br><br>
 {endif friend}
+{if private}
+
+<LI><FONT SIZE=2><B>Private:</B></FONT><br><br>
+
+{foreach private}
+
+    <DT>{type}<B>{mname}</B>{if func}({args}) {if const}const{endif} {if throws} <FONT COLOR="red"> throws {throwclass}({throwargs}) </FONT>{endif}{endif}
+    {if enum} {lb}{args}{rb} {endif};
+    <DD><FONT FACE="Times" SIZE=3>
+      {private false}
+        {if brief}  <B>{brief}</B> <br> {endif}
+        {if detail} {detail} <br> {endif}
+        <TABLE BORDER="1">
+        {if MODIFIES} <TR><TD><B>Modifies</B></TD>  <TD><P>{MODIFIES}</TD>  </TR> {endif}
+        {if PRE} <TR><TD><B>Pre</B></TD>  <TD><P>{PRE}</TD>  </TR> {endif}
+        {if POST} <TR><TD><B>Post</B></TD>  <TD><P>{POST}</TD>  </TR> {endif}
+        {if NOTE} <TR><TD><B>Note</B></TD>  <TD><P>{NOTE}</TD>  </TR>  {endif}
+        </TABLE>
+      {endprivate}
+
+      {if ARGS} <BR> {ARGS} {endif}
+      {if RETURNS} <BR> {RETURNS} {endif}
+
+      {private true}
+        <P>
+        {if brief}  <B>{brief}</B> <br> {endif}
+        {if detail} {detail} <br> {endif}
+        <TABLE BORDER="1">
+        {if MODIFIES} <TR><TD><B>Modifies</B></TD>  <TD><P>{MODIFIES}</TD>  </TR> {endif}
+        {if PRE} <TR><TD><B>Pre</B></TD>  <TD><P>{PRE}</TD>  </TR> {endif}
+        {if POST} <TR><TD><B>Post</B></TD>  <TD><P>{POST}</TD>  </TR> {endif}
+        {if NOTE} <TR><TD><B>Note</B></TD>  <TD><P>{NOTE}</TD>  </TR>  {endif}
+        </TABLE>
+      {endprivate}
+      </FONT>
+
+<br>
+{next private}
+<br><br>
+{endif private}
 </UL>
 {if author} Programmer: { author } {endif}
 </FONT>
