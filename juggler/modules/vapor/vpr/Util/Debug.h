@@ -96,10 +96,11 @@ const std::string vprDBG_CONFIGstr("DBG_CONFIGDB");
 #define vprDBG_HEX_LVL 7
 
 
-// COLOR CONTROL CODES
+// ANSI COLOR CONTROL CODES
 // TODO: Make the work for windows
 // 00=none 01=bold 04=underscore 05=blink 07=reverse 08=concealed
 // 30=black 31=red 32=green 33=yellow 34=blue 35=magenta 36=cyan 37=white
+// Add 10 for background colors.
 #define clrNONE "00"
 #define clrBOLD "01"
 #define clrBLACK "30"
@@ -179,6 +180,13 @@ const std::string vprDBG_CONFIGstr("DBG_CONFIGDB");
 #define vprDEBUG_NEXT_BEGINnl(cat,val) vprDEBUG_BEGINlg(cat,val,false,true,false)
 #define vprDEBUG_NEXT_ENDnl(cat,val) vprDEBUG_ENDlg(cat,val,false,true,false)
 
+#define vprDEBUG_PushColumn(val) vpr::Debug::instance()->pushThreadLocalColumn(val)
+#define vprDEBUG_PopColumn() vpr::Debug::instance()->popThreadLocalColumn()
+#define vprDEBUG_ColumnGuard(val) vpr::DebugColumnGuard debug_col_guard(val)
+#define vprDEBUG_TSColor(color) vpr::Debug::instance()->setThreadLocalColor(color)
+#define vprDEBUG_ThreadLocalEnable() vpr::Debug::instance()->enableThreadLocalSettings()
+#define vprDEBUG_ThreadLocalDisable() vpr::Debug::instance()->disableThreadLocalSettings()
+
 
 #ifdef LOCK_DEBUG_STREAM
 #   define vprDEBUG_STREAM_LOCK vpr::StreamLock(vpr::Debug::instance()->debugLock())
@@ -246,21 +254,32 @@ public:
    void disableThreadLocalSettings()
    { mUseThreadLocal = false; }
 
-   void setThreadLocalColumn(int column);
+   void pushThreadLocalColumn(int column);
+   void popThreadLocalColumn();
    void setThreadLocalColor(std::string color);
 
 private:
    int debugLevel;      // Debug level to use
    int indentLevel;     // Amount to indent
-   
+
    bool  mUseThreadLocal;  // Wether to use thread local info or not
-      
+
    Mutex          mDebugLock;
 
    std::vector<bool> mAllowedCategories;      //: The categories we allow
    std::map<std::string,int> mCategoryNames; //: The names and id of allowed catagories
 
 vprSingletonHeader(Debug);
+};
+
+// Helper class
+struct DebugColumnGuard
+{
+   DebugColumnGuard(int col_val)
+   { vprDEBUG_PushColumn(col_val); }
+
+   ~DebugColumnGuard()
+   { vprDEBUG_PopColumn(); }
 };
 
 }; // End of vpr namespace

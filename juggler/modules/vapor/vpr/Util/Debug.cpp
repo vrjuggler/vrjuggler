@@ -58,7 +58,7 @@ Mutex  Debug::_inst_lock;
 // Some thread specific global variables
 // They are globals because I can't include their type in the vjDEBUG header file
 // If I did, then we could not output debug info in the Thread manager itself
-TSObjectProxy<int> gVprDebugCurColumn;       // What column to indent to
+TSObjectProxy<std::vector<int> > gVprDebugCurColumn;       // What column to indent to
 TSObjectProxy<std::string> gVprDebugCurColor;        // What color to display "everything" in
 
 
@@ -115,7 +115,7 @@ std::ostream& Debug::getStream(int cat, int level, bool show_thread_info,
    // If we have thread local stuff to do
    if(mUseThreadLocal)
    {
-      std::cout << clrSetNORM(*gVprDebugCurColor);
+      std::cout << clrSetBOLD(*gVprDebugCurColor);
    }
 
    // Ouput thread info
@@ -138,8 +138,10 @@ std::ostream& Debug::getStream(int cat, int level, bool show_thread_info,
    if(mUseThreadLocal)
    {
       const int column_width(3);
-      int column = (*gVprDebugCurColumn);
-      
+      int column(0);
+      if( (*gVprDebugCurColumn).size() > 0)
+         column = (*gVprDebugCurColumn).back();
+
       for(int i=0;i<(column*column_width);i++)
          std::cout << "\t";
    }
@@ -232,10 +234,15 @@ void Debug::growAllowedCategoryVector(int newSize)
       mAllowedCategories.push_back(false);
 }
 
-void Debug::setThreadLocalColumn(int column)
+void Debug::pushThreadLocalColumn(int column)
 {
+   (*gVprDebugCurColumn).push_back(column);
+}
 
-    (*gVprDebugCurColumn) = column;
+void Debug::popThreadLocalColumn()
+{
+   if( (*gVprDebugCurColumn).size() > 0)
+      (*gVprDebugCurColumn).pop_back();
 }
 
 void Debug::setThreadLocalColor(std::string color)
