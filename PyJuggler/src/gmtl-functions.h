@@ -52,6 +52,8 @@
 #include <gmtl/PlaneOps.h>
 #include <gmtl/Tri.h>
 #include <gmtl/TriOps.h>
+#include <gmtl/Coord.h>
+#include <gmtl/CoordOps.h>
 #include <gmtl/Containment.h>
 #include <gmtl/Generate.h>
 #include <gmtl/Intersection.h>
@@ -231,15 +233,17 @@ namespace gmtl
    template gmtl::Quatf& log(gmtl::Quatf&);
    template gmtl::Quatd& log(gmtl::Quatd&);
 
-   template void squad(gmtl::Quatf&, float, const Quatf&, const Quatf&,
-                       const Quatf&, const Quatf&);
-   template void squad(gmtl::Quatd&, double, const Quatd&, const Quatd&,
-                       const Quatd&, const Quatd&);
+   template void squad(gmtl::Quatf&, float, const gmtl::Quatf&,
+                       const gmtl::Quatf&, const gmtl::Quatf&,
+                       const gmtl::Quatf&);
+   template void squad(gmtl::Quatd&, double, const gmtl::Quatd&,
+                       const gmtl::Quatd&, const gmtl::Quatd&,
+                       const gmtl::Quatd&);
 
-   template Quatf& slerp(Quatf&, const float, const Quatf&, const Quatf&,
-                         bool);
-   template Quatd& slerp(Quatd&, const double, const Quatd&, const Quatd&,
-                         bool);
+   template gmtl::Quatf& slerp(gmtl::Quatf&, const float, const gmtl::Quatf&,
+                               const gmtl::Quatf&, bool);
+   template gmtl::Quatd& slerp(gmtl::Quatd&, const double, const gmtl::Quatd&,
+                               const gmtl::Quatd&, bool);
 
    template Quatf& lerp(Quatf&, const float, const Quatf&, const Quatf&);
    template Quatd& lerp(Quatd&, const double, const Quatd&, const Quatd&);
@@ -334,6 +338,56 @@ namespace gmtl
    template bool isEqual(const gmtl::Trif&, const gmtl::Trif&, const float&);
    template bool isEqual(const gmtl::Trid&, const gmtl::Trid&, const double&);
 // ====================================================== gmtl::Tri<> functions
+
+// gmtl::Plane<> functions ====================================================
+   template bool isEqual(const gmtl::Coord3fXYZ&, const gmtl::Coord3fXYZ&,
+                         float);
+   template bool isEqual(const gmtl::Coord3fZYX&, const gmtl::Coord3fZYX&,
+                         float);
+   template bool isEqual(const gmtl::Coord3fZXY&, const gmtl::Coord3fZXY&,
+                         float);
+
+   template bool isEqual(const gmtl::Coord3dXYZ&, const gmtl::Coord3dXYZ&,
+                         double);
+   template bool isEqual(const gmtl::Coord3dZYX&, const gmtl::Coord3dZYX&,
+                         double);
+   template bool isEqual(const gmtl::Coord3dZXY&, const gmtl::Coord3dZXY&,
+                         double);
+
+   template bool isEqual(const gmtl::Coord4fXYZ&, const gmtl::Coord4fXYZ&,
+                         float);
+   template bool isEqual(const gmtl::Coord4fZYX&, const gmtl::Coord4fZYX&,
+                         float);
+   template bool isEqual(const gmtl::Coord4fZXY&, const gmtl::Coord4fZXY&,
+                         float);
+
+   template bool isEqual(const gmtl::Coord4dXYZ&, const gmtl::Coord4dXYZ&,
+                         double);
+   template bool isEqual(const gmtl::Coord4dZYX&, const gmtl::Coord4dZYX&,
+                         double);
+   template bool isEqual(const gmtl::Coord4dZXY&, const gmtl::Coord4dZXY&,
+                         double);
+
+   template bool isEqual(const gmtl::Coord3fQuat&, const gmtl::Coord3fQuat&,
+                         float);
+   template bool isEqual(const gmtl::Coord3dQuat&, const gmtl::Coord3dQuat&,
+                         double);
+
+   template bool isEqual(const gmtl::Coord4fQuat&, const gmtl::Coord4fQuat&,
+                         float);
+   template bool isEqual(const gmtl::Coord4dQuat&, const gmtl::Coord4dQuat&,
+                         double);
+
+   template bool isEqual(const gmtl::Coord3fAxisAngle&,
+                         const gmtl::Coord3fAxisAngle&, float);
+   template bool isEqual(const gmtl::Coord3dAxisAngle&,
+                         const gmtl::Coord3dAxisAngle&, double);
+
+   template bool isEqual(const gmtl::Coord4fAxisAngle&,
+                         const gmtl::Coord4fAxisAngle&, float);
+   template bool isEqual(const gmtl::Coord4dAxisAngle&,
+                         const gmtl::Coord4dAxisAngle&, double);
+// ==================================================== gmtl::Plane<> functions
 
 // Generator functions ========================================================
    // See gmtl-wrappers.h for GMTL functions that use the Type2Type idiom.
@@ -476,7 +530,35 @@ namespace gmtl
    template gmtl::Matrix33d makeInvert(const gmtl::Matrix33d&);
    template gmtl::Matrix44d makeInvert(const gmtl::Matrix44d&);
 
-   // XXX: gmtl::set(Matrix, const Coord) missing...
+   template gmtl::Matrix33f& set(gmtl::Matrix33f&, const gmtl::Coord3fXYZ&);
+   template gmtl::Matrix33f& set(gmtl::Matrix33f&, const gmtl::Coord3fZYX&);
+   template gmtl::Matrix33f& set(gmtl::Matrix33f&, const gmtl::Coord3fZXY&);
+   template gmtl::Matrix33f& set(gmtl::Matrix33f&, const gmtl::Coord4fXYZ&);
+   template gmtl::Matrix33f& set(gmtl::Matrix33f&, const gmtl::Coord4fZYX&);
+   template gmtl::Matrix33f& set(gmtl::Matrix33f&, const gmtl::Coord4fZXY&);
+
+   template gmtl::Matrix44f& set(gmtl::Matrix44f&, const gmtl::Coord3fXYZ&);
+   template gmtl::Matrix44f& set(gmtl::Matrix44f&, const gmtl::Coord3fZYX&);
+   template gmtl::Matrix44f& set(gmtl::Matrix44f&, const gmtl::Coord3fZXY&);
+   template gmtl::Matrix44f& set(gmtl::Matrix44f&, const gmtl::Coord4fXYZ&);
+   template gmtl::Matrix44f& set(gmtl::Matrix44f&, const gmtl::Coord4fZYX&);
+   template gmtl::Matrix44f& set(gmtl::Matrix44f&, const gmtl::Coord4fZXY&);
+
+   template gmtl::Matrix33f& set(gmtl::Matrix33f&, const gmtl::Coord3fQuat&);
+   template gmtl::Matrix33f& set(gmtl::Matrix33f&, const gmtl::Coord4fQuat&);
+
+   template gmtl::Matrix44f& set(gmtl::Matrix44f&, const gmtl::Coord3fQuat&);
+   template gmtl::Matrix44f& set(gmtl::Matrix44f&, const gmtl::Coord4fQuat&);
+
+   template gmtl::Matrix33f& set(gmtl::Matrix33f&,
+                                 const gmtl::Coord3fAxisAngle&);
+   template gmtl::Matrix33f& set(gmtl::Matrix33f&,
+                                 const gmtl::Coord4fAxisAngle&);
+
+   template gmtl::Matrix44f& set(gmtl::Matrix44f&,
+                                 const gmtl::Coord3fAxisAngle&);
+   template gmtl::Matrix44f& set(gmtl::Matrix44f&,
+                                 const gmtl::Coord4fAxisAngle&);
 
    template gmtl::Matrix33f& setRot(gmtl::Matrix33f&, const gmtl::Quatf&);
    template gmtl::Matrix44f& setRot(gmtl::Matrix44f&, const gmtl::Quatf&);
@@ -488,8 +570,61 @@ namespace gmtl
    template gmtl::Matrix33d& set(gmtl::Matrix33d&, const gmtl::Quatd&);
    template gmtl::Matrix44d& set(gmtl::Matrix44d&, const gmtl::Quatd&);
 
-   // XXX: gmtl::set(Coord, const Matrix) missing...
-   // XXX: gmtl::setRot(Coord, const Matrix) missing...
+   template gmtl::Coord3fXYZ& set(gmtl::Coord3fXYZ&, const gmtl::Matrix33f&);
+   template gmtl::Coord3fZYX& set(gmtl::Coord3fZYX&, const gmtl::Matrix33f&);
+   template gmtl::Coord3fZXY& set(gmtl::Coord3fZXY&, const gmtl::Matrix33f&);
+   template gmtl::Coord4fXYZ& set(gmtl::Coord4fXYZ&, const gmtl::Matrix33f&);
+   template gmtl::Coord4fZYX& set(gmtl::Coord4fZYX&, const gmtl::Matrix33f&);
+   template gmtl::Coord4fZXY& set(gmtl::Coord4fZXY&, const gmtl::Matrix33f&);
+
+   template gmtl::Coord3fXYZ& set(gmtl::Coord3fXYZ&, const gmtl::Matrix44f&);
+   template gmtl::Coord3fZYX& set(gmtl::Coord3fZYX&, const gmtl::Matrix44f&);
+   template gmtl::Coord3fZXY& set(gmtl::Coord3fZXY&, const gmtl::Matrix44f&);
+   template gmtl::Coord4fXYZ& set(gmtl::Coord4fXYZ&, const gmtl::Matrix44f&);
+   template gmtl::Coord4fZYX& set(gmtl::Coord4fZYX&, const gmtl::Matrix44f&);
+   template gmtl::Coord4fZXY& set(gmtl::Coord4fZXY&, const gmtl::Matrix44f&);
+
+   template gmtl::Coord3fQuat& set(gmtl::Coord3fQuat&, const gmtl::Matrix33f&);
+   template gmtl::Coord4fQuat& set(gmtl::Coord4fQuat&, const gmtl::Matrix33f&);
+
+   template gmtl::Coord3fQuat& set(gmtl::Coord3fQuat&, const gmtl::Matrix44f&);
+   template gmtl::Coord4fQuat& set(gmtl::Coord4fQuat&, const gmtl::Matrix44f&);
+
+   template gmtl::Coord3fXYZ& setRot(gmtl::Coord3fXYZ&,
+                                     const gmtl::Matrix33f&);
+   template gmtl::Coord3fZYX& setRot(gmtl::Coord3fZYX&,
+                                     const gmtl::Matrix33f&);
+   template gmtl::Coord3fZXY& setRot(gmtl::Coord3fZXY&,
+                                     const gmtl::Matrix33f&);
+   template gmtl::Coord4fXYZ& setRot(gmtl::Coord4fXYZ&,
+                                     const gmtl::Matrix33f&);
+   template gmtl::Coord4fZYX& setRot(gmtl::Coord4fZYX&,
+                                     const gmtl::Matrix33f&);
+   template gmtl::Coord4fZXY& setRot(gmtl::Coord4fZXY&,
+                                     const gmtl::Matrix33f&);
+
+   template gmtl::Coord3fXYZ& setRot(gmtl::Coord3fXYZ&,
+                                     const gmtl::Matrix44f&);
+   template gmtl::Coord3fZYX& setRot(gmtl::Coord3fZYX&,
+                                     const gmtl::Matrix44f&);
+   template gmtl::Coord3fZXY& setRot(gmtl::Coord3fZXY&,
+                                     const gmtl::Matrix44f&);
+   template gmtl::Coord4fXYZ& setRot(gmtl::Coord4fXYZ&,
+                                     const gmtl::Matrix44f&);
+   template gmtl::Coord4fZYX& setRot(gmtl::Coord4fZYX&,
+                                     const gmtl::Matrix44f&);
+   template gmtl::Coord4fZXY& setRot(gmtl::Coord4fZXY&,
+                                     const gmtl::Matrix44f&);
+
+   template gmtl::Coord3fQuat& setRot(gmtl::Coord3fQuat&,
+                                      const gmtl::Matrix33f&);
+   template gmtl::Coord4fQuat& setRot(gmtl::Coord4fQuat&,
+                                      const gmtl::Matrix33f&);
+
+   template gmtl::Coord3fQuat& setRot(gmtl::Coord3fQuat&,
+                                      const gmtl::Matrix44f&);
+   template gmtl::Coord4fQuat& setRot(gmtl::Coord4fQuat&,
+                                      const gmtl::Matrix44f&);
 
 // ======================================================== Generator functions
 
