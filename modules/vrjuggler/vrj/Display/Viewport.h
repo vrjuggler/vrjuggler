@@ -36,9 +36,7 @@
 #include <vrj/vrjConfig.h>
 
 #include <vrj/Math/Vec3.h>
-#include <vrj/Input/Type/Position.h>
 #include <vrj/Kernel/User.h>
-//#include <vrj/Environment/EnvironmentManager.h>
 #include <jccl/Plugins/PerformanceMonitor/PerfDataBuffer.h>
 #include <jccl/Config/ConfigChunk.h>
 

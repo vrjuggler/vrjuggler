@@ -35,10 +35,11 @@
 
 #include <vrj/vrjConfig.h>
 
+//class gadget::InputManager;
+
 namespace vrj
 {
 
-class InputManager;
 
 /**
  * vpr::SystemData: Globabl data that many objects need access to.
@@ -52,10 +53,10 @@ class vpr::SystemData
 {
 public:
     vpr::SystemData (void) {
-        inputManager = NULL;
+  //      inputManager = NULL;
     }
 
-    InputManager*      inputManager;
+    //gadget::InputManager*      inputManager;
 };
 
 };

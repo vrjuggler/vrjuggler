@@ -46,7 +46,7 @@
 #include <vrj/Environment/EnvironmentManager.h>
 #include <vpr/System.h>
 
-#include <vrj/Input/InputManager.h>
+#include <gadget/InputManager.h>
 
 #include <jccl/Config/ConfigChunk.h>
 #include <jccl/Config/ChunkFactory.h>
@@ -278,7 +278,7 @@ void Kernel::initConfig()
 
    // ---- ALLOCATE MANAGERS --- //
    //initialSetupInputManager();
-   mInputManager = new InputManager;
+   mInputManager = gadget::InputManager::instance();
 
    //initialSetupDisplayManager();
    mDisplayManager = DisplayManager::instance();  // Get display manager
@@ -502,7 +502,7 @@ void Kernel::stopDrawManager()
 
 
 //: Get the input manager
-InputManager* Kernel::getInputManager()
+gadget::InputManager* Kernel::getInputManager()
 { return mInputManager; }
 
 

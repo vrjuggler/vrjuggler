@@ -40,8 +40,6 @@
 #include <vrj/Math/Vec3.h>
 #include <vrj/Math/Vec4.h>
 
-
-#include <vrj/Input/Type/Position.h>
 #include <vrj/Math/Coord.h>
 #include <vrj/Util/Debug.h>
 

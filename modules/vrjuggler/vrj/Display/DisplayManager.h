@@ -37,7 +37,7 @@
 
 #include <vpr/Util/Singleton.h>
 
-#include <vrj/Input/Type/Position.h>
+//#include <gadget/Type/Position.h>
 #include <vrj/Util/Debug.h>
 #include <jccl/Plugins/ConfigManager/ConfigChunkHandler.h>
 

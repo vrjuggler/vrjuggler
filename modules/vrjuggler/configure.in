@@ -711,20 +711,6 @@ AC_OUTPUT(Makefile
           vrj/Draw/OSG/Makefile
           vrj/Draw/Pf/Makefile
           vrj/Environment/Makefile
-          vrj/Input/Makefile
-          vrj/Input/Devices/Makefile
-          vrj/Input/Devices/Ascension/Makefile
-          vrj/Input/Devices/Fakespace/Makefile
-          vrj/Input/Devices/Immersion/Makefile
-          vrj/Input/Devices/Intersense/Makefile
-          vrj/Input/Devices/Keyboard/Makefile
-          vrj/Input/Devices/Logitech/Makefile
-          vrj/Input/Devices/Open/Makefile
-          vrj/Input/Devices/Open/DTK/Makefile
-          vrj/Input/Devices/Open/Trackd/Makefile
-          vrj/Input/Devices/Sim/Makefile
-          vrj/Input/Devices/VirtualTechnologies/Makefile
-          vrj/Input/Type/Makefile
           vrj/Kernel/Makefile
           vrj/Math/Makefile
           vrj/Sound/Makefile

@@ -35,7 +35,6 @@
 
 #include <vrj/vrjConfig.h>
 #include <vrj/Display/Projection.h>
-//#include <vrj/Input/Type/Position.h>
 //#include <vrj/Math/Coord.h>
 
 namespace vrj

@@ -37,9 +37,11 @@
 #include <vrj/vrjConfig.h>
 #include <vrj/Math/Matrix.h>
 #include <vrj/Util/Debug.h>
-#include <vrj/Input/Type/PosInterface.h>
 #include <vrj/Display/Viewport.h>
 #include <vrj/Display/CameraProjection.h>
+
+#include <gadget/Type/PositionInterface.h>
+
 
 #include <jccl/Config/ConfigChunk.h>
 
@@ -133,8 +135,8 @@ private:
    /// Defines the projection for this window. Ex. RIGHT, LEFT, FRONT
    CameraProjection*   mCameraProj;            // Camera projection. (For sim, etc.)
 
-   PosInterface mCamera;     // Prosy interfaces to devices needed
-   PosInterface mWand;
+   gadget::PositionInterface mCamera;     // Prosy interfaces to devices needed
+   gadget::PositionInterface mWand;
 
    Matrix    mCameraPos;    // The data about the position of all this stuff
    Matrix    mHeadPos;
