@@ -34,86 +34,59 @@ package org.vrjuggler.vrjconfig.commoneditors.devicegraph;
 
 import java.util.Iterator;
 import java.util.List;
-import org.jgraph.graph.DefaultPort;
+
+import org.jgraph.graph.DefaultGraphCell;
 import org.jgraph.graph.DefaultGraphModel;
+import org.jgraph.graph.DefaultPort;
+import org.jgraph.graph.Edge;
 
 import org.vrjuggler.jccl.config.ConfigDefinition;
 import org.vrjuggler.jccl.config.ConfigElement;
 import org.vrjuggler.jccl.config.PropertyDefinition;
 
 
+/**
+ * A special-purpose graph model used for proxy/device connections.  In this
+ * model, proxies are always sources, and devices (rather, input sources
+ * within the device) are always targets.
+ */
 public class DeviceGraphModel
    extends DefaultGraphModel
    implements org.vrjuggler.vrjconfig.commoneditors.EditorConstants
 {
    /**
-    * Verifies that the given port holds a PropertyDefinition (that of the
-    * proxy's EditorConstants.DEVICE_PROPERTY property) and that the target's
-    * ConfigDefinition (that of the device being proxied) is among that
-    * property's allowed types.
+    * Verifies that the given port can be a source of the given edge.  This
+    * determination is made by testing to see if the parent of the potential
+    * source holds a <code>ProxyInfo</code> object.  If it does, then the
+    * parent of the target port (which must have parent containing a
+    * <code>DeviceInfo</code> object) is used to verify that the chosen proxy
+    * is allowed to point at the device unit.
     */
    public boolean acceptsSource(Object edge, Object port)
    {
       boolean accepts = false;
 
-      System.out.println("Checking if port " + port +
-                         " can be a source for edge " + edge);
-
-      if ( port != null && port instanceof DefaultPort &&
-           ((DefaultPort) port).getUserObject() instanceof PropertyDefinition )
+      if ( port != null )
       {
-         DefaultPort cell = (DefaultPort) port;
-         PropertyDefinition device_ptr_def =
-            (PropertyDefinition) cell.getUserObject();
-         List allowed_types = device_ptr_def.getAllowedTypes();
-
-         ProxyPointerEdge proxy_edge = (ProxyPointerEdge) edge;
-         ConfigDefinition device_def =
-            proxy_edge.getDeviceElement().getDefinition();
-         System.out.println("Checking if '" + device_def.getToken() +
-                            "' is in " + allowed_types);
-         accepts = allowed_types.contains(device_def.getToken());
-         System.out.println("\tResult -> " + accepts);
-      }
-
-      return accepts;
-   }
-
-   /**
-    * Verifies that the given port holds a ConfigDefinition object (that of
-    * the device config element) that is among the allowed types for the
-    * source's property definition.
-    */
-   public boolean acceptsTarget(Object edge, Object port)
-   {
-      boolean accepts = false;
-
-      System.out.println("Checking if port " + port +
-                         " can be a target for edge " + edge);
-
-      if ( port != null && port instanceof DefaultPort &&
-           ((DefaultPort) port).getUserObject() instanceof ConfigDefinition )
-      {
-         DefaultPort cell = (DefaultPort) port;
-         ConfigDefinition new_device_def =
-            (ConfigDefinition) cell.getUserObject();
-
          try
          {
-            ProxyPointerEdge proxy_edge = (ProxyPointerEdge) edge;
-            ConfigDefinition proxy_def =
-               proxy_edge.getProxyElement().getDefinition();
+            DefaultPort proxy_port = (DefaultPort) port;
+            DefaultPort unit_port  = (DefaultPort) ((Edge) edge).getTarget();
+            DefaultGraphCell dev_cell =
+               (DefaultGraphCell) unit_port.getParent();
+            DefaultGraphCell proxy_cell =
+               (DefaultGraphCell) proxy_port.getParent();
 
-            PropertyDefinition device_ptr_def =
-               proxy_def.getPropertyDefinition(DEVICE_PROPERTY);
-            List allowed_types = device_ptr_def.getAllowedTypes();
-
-            System.out.println("Checking if '" + new_device_def.getToken() +
-                               "' is in " + allowed_types);
-            accepts = allowed_types.contains(new_device_def.getToken());
-            System.out.println("\tResult -> " + accepts);
+            accepts =
+               checkProxyDeviceConnection(
+                  (ProxyInfo) proxy_cell.getUserObject(),
+                  (DeviceInfo) dev_cell.getUserObject()
+               );
          }
-         catch (IllegalArgumentException ex)
+         // If we catch a ClassCastException at any point, then we are not
+         // working with the cells and/or user objects that we expect.  Hence,
+         // the source cannot be accepted.
+         catch (ClassCastException ex)
          {
             ex.printStackTrace();
             /* Oh well. */ ;
@@ -121,5 +94,80 @@ public class DeviceGraphModel
       }
 
       return accepts;
+   }
+
+   /**
+    * Verifies that the given port can be a target of the given edge.  This
+    * determination is made by testing to see if the parent of the potential
+    * target holds a <code>DeviceInfo</code> object.  If it does, then the
+    * parent of the source port (which must have parent containing a
+    * <code>ProxyInfo</code> object) is used to verify that the proxy is
+    * allowed to point at the chosen device unit.
+    */
+   public boolean acceptsTarget(Object edge, Object port)
+   {
+      boolean accepts = false;
+
+      if ( port != null )
+      {
+         try
+         {
+            DefaultPort unit_port  = (DefaultPort) port;
+            DefaultPort proxy_port = (DefaultPort) ((Edge) edge).getSource();
+            DefaultGraphCell dev_cell =
+               (DefaultGraphCell) unit_port.getParent();
+            DefaultGraphCell proxy_cell =
+               (DefaultGraphCell) proxy_port.getParent();
+
+            accepts =
+               checkProxyDeviceConnection(
+                  (ProxyInfo) proxy_cell.getUserObject(),
+                  (DeviceInfo) dev_cell.getUserObject()
+               );
+         }
+         // If we catch a ClassCastException at any point, then we are not
+         // working with the cells and/or user objects that we expect.  Hence,
+         // the target cannot be accepted.
+         catch (ClassCastException ex)
+         {
+            ex.printStackTrace();
+            /* Oh well. */ ;
+         }
+      }
+
+      return accepts;
+   }
+
+   private boolean checkProxyDeviceConnection(ProxyInfo proxyInfo,
+                                              DeviceInfo deviceInfo)
+   {
+      boolean valid = false; 
+
+      ConfigDefinition dev_def   = deviceInfo.getElement().getDefinition();
+      ConfigDefinition proxy_def = proxyInfo.getElement().getDefinition();
+
+      PropertyDefinition dev_prop_def =
+         proxy_def.getPropertyDefinition(DEVICE_PROPERTY);
+
+      List allowed_types = dev_prop_def.getAllowedTypes();
+
+      if ( allowed_types.contains(dev_def.getToken()) )
+      {
+         valid = true;
+      }
+      else
+      {
+         for ( Iterator p = dev_def.getParents().iterator();
+               p.hasNext(); )
+         {
+            if ( allowed_types.contains(p.next()) )
+            {
+               valid = true;
+               break;
+            }
+         }
+      }
+
+      return valid;
    }
 }
