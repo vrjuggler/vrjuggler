@@ -31,6 +31,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include <jccl/jcclConfig.h>
+#include <fstream>
 #include <ctype.h>
 #include <jccl/Config/ParseUtil.h>
 #include <jccl/Util/Debug.h>

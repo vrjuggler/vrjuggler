@@ -31,13 +31,14 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include <jccl/jcclConfig.h>
+#include <iomanip>
+#include <typeinfo>
 #include <jccl/RTRC/ConfigChunkHandler.h>
 #include <jccl/RTRC/ConfigManager.h>
 #include <jccl/Config/ChunkDesc.h>
 #include <jccl/Config/ConfigChunk.h>
 #include <jccl/RTRC/DependencyManager.h>
 #include <jccl/Util/Debug.h>
-#include <typeinfo>
 
 namespace jccl
 {
