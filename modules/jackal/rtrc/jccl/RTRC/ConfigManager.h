@@ -50,6 +50,8 @@
 
 namespace jccl {
 
+    class ConfigChunkHandler;
+
 //: Configuration manager class
 //
 //
@@ -239,6 +241,9 @@ public:
 
     //------------------ DynamicReconfig Stuff ------------------------------
 
+    void addConfigChunkHandler (ConfigChunkHandler* h);
+    void removeConfigChunkHandler (ConfigChunkHandler* h);
+    int attemptReconfiguration ();
 
     //------------------ JackalControl Stuff --------------------------------
 
@@ -258,6 +263,7 @@ private:
     vpr::Mutex               mPendingLock;    //: Lock on pending list
     vpr::Mutex               mActiveLock;     //: Lock for current config list
 
+    std::vector<ConfigChunkHandler*> chunk_handlers;
 
     // The following variables are used to implement some logic
     // that "stales" the pending list.   (see pendingNeedsChecked)

@@ -35,6 +35,8 @@
 #include <jccl/Config/ConfigChunk.h>
 #include <jccl/Config/ChunkFactory.h>
 #include <jccl/ConfigManager/DependencyManager.h>
+#include <jccl/ConfigManager/ConfigChunkHandler.h>
+#include <jccl/JackalServer/JackalServer.h>
 #include <jccl/JackalServer/Connect.h>
 #include <vpr/Util/Debug.h>
 #include <stdlib.h>
@@ -324,11 +326,46 @@ namespace jccl {
    }
 
 
+    //------------------ DynamicReconfig Stuff ------------------------------
+
+    void ConfigManager::addConfigChunkHandler (ConfigChunkHandler* h) {
+        chunk_handlers.push_back (h);
+    }
+
+
+    void ConfigManager::removeConfigChunkHandler (ConfigChunkHandler* h) {
+        std::vector<ConfigChunkHandler*>::iterator it;
+        for (it = chunk_handlers.begin(); it != chunk_handlers.end(); it++) {
+            if (*it == h) {
+                chunk_handlers.erase(it);
+                break;
+            }
+        }
+    }
+
+
+    int ConfigManager::attemptReconfiguration () {
+        int chunks_processed(0);     // Needs to return this value
+        if (pendingNeedsChecked()) {
+            vprDEBUG_BEGIN(vprDBG_ALL,vprDBG_STATE_LVL) << "ConfigManager::attemptReconfiguration: Examining pending list.\n" << vprDEBUG_FLUSH;
+            std::vector<ConfigChunkHandler*>::iterator it = chunk_handlers.begin();
+            std::vector<ConfigChunkHandler*>::iterator end = chunk_handlers.end();
+            for (; it != end; it++) {
+                chunks_processed += (*it)->configProcessPending (true);
+            }
+        }
+
+        return chunks_processed;
+    }
+
+
+
 
     //------------------ JackalControl Stuff --------------------------------
     
     /*virtual*/ void ConfigManager::setJackalServer (JackalServer* js) {
         jackal_server = js;
+        addConfigChunkHandler (js);
     }
     /*virtual*/ void ConfigManager::addConnect (Connect *c) {
         c->addCommunicator (config_communicator);
