@@ -28,6 +28,9 @@ server: $(SERVER)
 client: $(CLIENT)
 	$(COMPILER) $(LINK_OPTIONS) -o client $(CLIENT)
 
+socketUtil.o : socketUtil.cpp
+	$(COMPILER) $(PREPROCESS_OPTIONS) -c $@ ../../Input/vjSpeech/socketUtil.cpp
+
 # Build-rule to make .o's from .c files
 .c.o:
 	$(COMPILER) $(PREPROCESS_OPTIONS) -c $@ $*.c 
