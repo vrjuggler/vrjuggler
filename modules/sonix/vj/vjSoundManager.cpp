@@ -46,11 +46,52 @@ bool vjSoundManager::configAdd( vjConfigChunk* chunk )
 {
    if (!configCanHandle( chunk ))
    {
+      std::cerr << "ERROR: Wrong chunk type\n" << std::flush;
       return false;
    }
 
-   // TODO: configure audiojuggler based on chunk...
-
+   std::string manager_name = chunk->getProperty( "Name" );
+   std::string api_to_use = chunk->getProperty( "api" );
+   float listener_position[3];
+   listener_position[0] = (float)chunk->getProperty( "listener_position", 0 );
+   listener_position[1] = (float)chunk->getProperty( "listener_position", 1 );
+   listener_position[2] = (float)chunk->getProperty( "listener_position", 2 );
+   std::string file_search_path = chunk->getProperty( "file_search_path" );
+   
+   // configure audiojuggler
+   AudioJuggler::instance().changeAPI( api_to_use );
+   aj::Matrix mat;
+   mat.setTrans( listener_position[0], listener_position[1], listener_position[2] );
+   AudioJuggler::instance().setListenerPosition( mat );
+   
+   // read the list of sounds
+   int size = chunk->getNum( "Sound" );
+   for (x = 0; x < size; ++x)
+   {
+      vjConfigChunk* sound_chunk = chunk->getProperty( "Sound", x );
+      std::string alias = (std::string)sound_chunk->getProperty( "Name" );
+      std::string filename = (std::string)sound_chunk->getProperty( "filename" );
+      bool ambient = (bool)sound_chunk->getProperty( "ambient" );
+      bool retriggerable = (bool)sound_chunk->getProperty( "retriggerable" );
+      int loop = (int)sound_chunk->getProperty( "loop" );
+      float position[3];
+      position[0] = (float)chunk->getProperty( "position", 0 );
+      position[1] = (float)chunk->getProperty( "position", 1 );
+      position[2] = (float)chunk->getProperty( "position", 2 );
+      
+      // configure the sound...
+      aj::SoundInfo si;
+      si.datasource = aj::SoundInfo::FILESYSTEM;
+      si.filename = filename;
+      si.repeat = loop;
+      si.ambient = ambient;
+      si.retriggerable = retriggerable;
+      si.position[0] = position[0];
+      si.position[1] = position[1];
+      si.position[2] = position[2];
+      AudioJuggler::instance().configure( alias, si );
+   }
+   
    return true;
 }
 
@@ -58,7 +99,16 @@ bool vjSoundManager::configAdd( vjConfigChunk* chunk )
 //! PRE: configCanHandle(chunk) == true
 bool vjSoundManager::configRemove(vjConfigChunk* chunk)
 {
-   return false;
+   // remove any specified sounds...
+   int size = chunk->getNum( "Sound" );
+   for (x = 0; x < size; ++x)
+   {
+      vjConfigChunk* sound_chunk = chunk->getProperty( "Sound", x );
+      std::string alias = (std::string)sound_chunk->getProperty( "Name" );
+      AudioJuggler::instance().remove( alias );
+   }
+   
+   return true;
 }
 
 //: Can the handler handle the given chunk?
@@ -66,8 +116,12 @@ bool vjSoundManager::configRemove(vjConfigChunk* chunk)
 //+          false - Can't handle it
 bool vjSoundManager::configCanHandle( vjConfigChunk* chunk )
 {
-   // TODO: do I handle this kind of chunk?
-   return false;
+   std::string chunk_type = (std::string)chunk->getType();
+
+   if(std::string("juggler_audio_manager") == chunk_type)
+      return true;
+   else
+      return false;
 }
 
 //: Enable a frame to be drawn
