@@ -47,9 +47,10 @@ JAVA_IDL_INCLUDES=	@JAVA_IDL_INCFLAG@$(top_srcdir)
 
 #TWEEK_JARS	= @TWEEK_JARS@
 #JCCL_JARS	= @JCCL_JARS@
-TWEEK_JARS = $(shell $(TWEEK_BASE_DIR)/bin/tweek-config --jars)
-JCCL_JARS = $(JCCL_BASE_DIR)/bin/beans/jccl_config.jar$(JCPS)$(JCCL_BASE_DIR)/bin/beans/jccl_editors.jar
-CLASSPATH	= $(JCCL_JARS)$(JCPS)$(TWEEK_JARS)
+TWEEK_JARS	= $(shell $(TWEEK_BASE_DIR)/bin/tweek-config --jars)
+WIZARD_JARS	= $(TWEEK_BASE_DIR)/bin/wizard.jar
+JCCL_JARS	= $(JCCL_BASE_DIR)/bin/beans/jccl_config.jar$(JCPS)$(JCCL_BASE_DIR)/bin/beans/jccl_editors.jar
+CLASSPATH	= $(JCCL_JARS)$(JCPS)$(WIZARD_JARS)$(JCPS)$(TWEEK_JARS)
 
 VRJCONFIG_PKG		= org.vrjuggler.vrjconfig
 VRJCONFIG_DIR		= $(subst .,/,$(VRJCONFIG_PKG))
@@ -61,9 +62,21 @@ UI_DIR			= $(subst .,/,$(UI_PKG))
 UI_SRCS			= $(patsubst $(srcdir)/%,%,$(wildcard $(srcdir)/$(UI_DIR)/*.java))
 UI_CLASSES		= $(UI_SRCS:.java=.class)
 
+PLACER_PKG		= org.vrjuggler.vrjconfig.ui.placer
+PLACER_DIR		= $(subst .,/,$(PLACER_PKG))
+PLACER_SRCS		= $(patsubst $(srcdir)/%,%,$(wildcard $(srcdir)/$(PLACER_DIR)/*.java))
+PLACER_CLASSES		= $(PLACER_SRCS:.java=.class)
+
+WIZARD_PKG		= org.vrjuggler.vrjconfig.wizard
+WIZARD_DIR		= $(subst .,/,$(WIZARD_PKG))
+WIZARD_SRCS		= $(patsubst $(srcdir)/%,%,$(wildcard $(srcdir)/$(WIZARD_DIR)/*.java))
+WIZARD_CLASSES		= $(WIZARD_SRCS:.java=.class)
+
 JAVA_SRCS = \
 	$(VRJCONFIG_SRCS) \
-	$(UI_SRCS)
+	$(UI_SRCS) \
+	$(PLACER_SRCS) \
+	$(WIZARD_SRCS)
 
 JAVA_CLASSES = $(JAVA_SRCS:.java=.class)
 
@@ -95,12 +108,15 @@ ifneq ($(BEANS), )
 endif
 endif
 
-VRJConfig.jar: $(VRJCONFIG_CLASSES) $(UI_CLASSES)
+VRJConfig.jar: $(VRJCONFIG_CLASSES) $(UI_CLASSES) $(PLACER_CLASSES) $(WIZARD_CLASSES)
 	$(JAR) cvf $@ \
 		$(VRJCONFIG_DIR)/*.class \
-		$(UI_DIR)/*.class
+		$(UI_DIR)/*.class \
+		$(PLACER_DIR)/*.class \
+		$(WIZARD_DIR)/*.class
 	cd $(srcdir) && $(JAR) uvf $(topdir)/vrjconfig/$@ \
 		$(VRJCONFIG_DIR)/images/*.gif \
+		$(WIZARD_DIR)/images/*.gif \
 		LICENSE-java-laf.txt
 
 links:

@@ -29,53 +29,29 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-package org.vrjuggler.tweek.wizard;
+package org.vrjuggler.vrjconfig.ui.placer;
 
-import java.util.*;
+import java.util.EventListener;
 
 /**
- * This all static class acts as a registry and factory for WizardSteps.
+ * Interface for an object that wishes to know when a placer model has changed.
  */
-public class WizardStepFactory
+public interface PlacerModelListener
+   extends EventListener
 {
    /**
-    * Registers a WizardStep class that can be inserted into a Wizard.
+    * Notifies this listener that the model it was listening to has changed in
+    * some way.
     */
-   public static void registerWizardStep(Class target)
-   {
-      steps.add(target);
-      System.out.println("WizardStepFactory: registered "+target.getName());
-   }
+   public void placerItemsChanged(PlacerModelEvent evt);
 
    /**
-    * Gets the number of wizard steps in this factory.
+    * Notifies this listener that items have been inserted into the placer.
     */
-   public static int getNumWizardSteps()
-   {
-      return steps.size();
-   }
+   public void placerItemsInserted(PlacerModelEvent evt);
 
    /**
-    * Gets i'th the wizard step in this factory.
+    * Notifies this listener that items have been removed from the placer.
     */
-   public static WizardStep getWizardStep(int index)
-   {
-      Class wizardClass = (Class)steps.get(index);
-
-      WizardStep step = null;
-      try
-      {
-         step = (WizardStep)wizardClass.newInstance();
-      }
-      catch (Exception e)
-      {
-         e.printStackTrace();
-      }
-      return step;
-   }
-
-   /**
-    * The list of all registered wizard steps in this factory.
-    */
-   private static List steps = new ArrayList();
+   public void placerItemsRemoved(PlacerModelEvent evt);
 }

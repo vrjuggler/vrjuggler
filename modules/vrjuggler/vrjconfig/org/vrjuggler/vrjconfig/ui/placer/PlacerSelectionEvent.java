@@ -29,53 +29,53 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-package org.vrjuggler.tweek.wizard;
+package org.vrjuggler.vrjconfig.ui.placer;
 
-import java.util.*;
+import java.util.EventObject;
 
 /**
- * This all static class acts as a registry and factory for WizardSteps.
+ * Encapsulates information describing changes to a placer's selection used to
+ * notify placer selection listeners of that change.
  */
-public class WizardStepFactory
+public class PlacerSelectionEvent
+   extends EventObject
 {
    /**
-    * Registers a WizardStep class that can be inserted into a Wizard.
+    * The index of the selected item.
     */
-   public static void registerWizardStep(Class target)
+   private int index;
+
+   /**
+    * The value of the selected item.
+    */
+   private Object value;
+
+   /**
+    * Creates a new event fired from the given source that has the given index
+    * and value selected.
+    */
+   public PlacerSelectionEvent(Object source, int index, Object value)
    {
-      steps.add(target);
-      System.out.println("WizardStepFactory: registered "+target.getName());
+      super(source);
+      this.index = index;
+      this.value = value;
    }
 
    /**
-    * Gets the number of wizard steps in this factory.
+    * Gets the index of the item that is selected.
+    *
+    * @retrun  the selected index or -1 if nothing is selected
     */
-   public static int getNumWizardSteps()
+   public int getIndex()
    {
-      return steps.size();
+      return index;
    }
 
    /**
-    * Gets i'th the wizard step in this factory.
+    * Gets the value of the item that is selected.
     */
-   public static WizardStep getWizardStep(int index)
+   public Object getValue()
    {
-      Class wizardClass = (Class)steps.get(index);
-
-      WizardStep step = null;
-      try
-      {
-         step = (WizardStep)wizardClass.newInstance();
-      }
-      catch (Exception e)
-      {
-         e.printStackTrace();
-      }
-      return step;
+      return value;
    }
-
-   /**
-    * The list of all registered wizard steps in this factory.
-    */
-   private static List steps = new ArrayList();
 }
