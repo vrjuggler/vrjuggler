@@ -50,13 +50,12 @@ default: all
 # Include common definitions.
 include @topdir@/make.defs.mk
 
-BOOST_FS_DIR=		@srcdir@/../../../../external/boost_fs
+BOOST_FS_DIR=		@srcdir@/../../../../external/boost
 
-includedir=		@includedir@/boost/filesystem
 srcdir=			$(BOOST_FS_DIR)/libs/filesystem/src
 top_srcdir=		@top_srcdir@
 EXTRA_INCLUDES+=	-I$(BOOST_FS_DIR)
-INSTALL_FILES=		$(BOOST_FS_DIR)/boost/filesystem/*.hpp
+INSTALL_FILES=		
 SUBOBJDIR=		$(VPR_LIBRARY)/ext/boost_fs
 
 SRCS=			exception.cpp			\

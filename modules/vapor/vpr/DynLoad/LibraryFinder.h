@@ -85,7 +85,7 @@ public:
     */
    LibraryFinder(const std::string& libDir, const std::string& libExt,
                  bool scanNow = true)
-      : mLibDir(libDir, boost::filesystem::system_specific), mLibExt(libExt)
+      : mLibDir(libDir, boost::filesystem::native), mLibExt(libExt)
    {
       if ( scanNow )
       {
@@ -106,8 +106,7 @@ public:
     */
    void setLibraryDirectory(const std::string& dir)
    {
-      mLibDir = boost::filesystem::path(dir,
-                                        boost::filesystem::system_specific);
+      mLibDir = boost::filesystem::path(dir, boost::filesystem::native);
       rescan();
    }
 
@@ -149,8 +148,7 @@ public:
     */
    void setDirAndExt(const std::string& dir, const std::string& ext)
    {
-      mLibDir = boost::filesystem::path(dir,
-                                        boost::filesystem::system_specific);
+      mLibDir = boost::filesystem::path(dir, boost::filesystem::native);
       mLibExt = ext;
       rescan();
    }
