@@ -2362,7 +2362,7 @@ sub PROCCLASS {
         $enum{$classname,$membername}=1;
       }
       # Match Member Variables
-      elsif ( $line =~ /^\s*([\w<>:\,\s\*&]*[\w<>:\*&]\s[\s\*&]*)(\w[\w\s\[\]]*)\s*\=*\s*[^,;]*([,;])/ )
+      elsif ( $line =~ /^\s*([\w<>:\,\s\*&]*[\w<>:\*&]\s[\s\*&]*)(\w[\w\s\[\]()\-+*\/%]*)\s*\=*\s*[^,;]*([,;])/ )
       {
         $newmem=1;
         $membername=$2;
