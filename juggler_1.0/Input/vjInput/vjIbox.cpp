@@ -127,18 +127,18 @@ int vjIBox::Sample()
      else if (result == SUCCESS)
      {
         hci_std_cmd(&thingie, 0,0,0);
-	if (c == 0) {
-	  gettimeofday(&tv,0);
-	  // start_time = (double)tv.tv_sec+ (double)tv.tv_usec / 1000000.0;
-	}
-	c++;
-	if (c == 60) {
-	  gettimeofday(&tv,0);
-	  // stop_time = (double)tv.tv_sec+ (double)tv.tv_usec / 1000000.0;
-	  //cout << 1/((stop_time-start_time) / 60)
-	  //     << "  " << endl;
-	  c = 0;
-	}
+// 	if (c == 0) {
+// 	  gettimeofday(&tv,0);
+// 	  start_time = (double)tv.tv_sec+ (double)tv.tv_usec / 1000000.0;
+// 	}
+// 	c++;
+// 	if (c == 60) {
+// 	  gettimeofday(&tv,0);
+// 	  stop_time = (double)tv.tv_sec+ (double)tv.tv_usec / 1000000.0;
+// 	  cout << 1/((stop_time-start_time) / 60)
+// 	       << "  " << endl;
+// 	  c = 0;
+// 	}
 
 	theData[progress].button[0] = thingie.button[0];
 	theData[progress].button[1] = thingie.button[1];
@@ -148,7 +148,7 @@ int vjIBox::Sample()
 	theData[progress].analog[1] = thingie.analog[1];
 	theData[progress].analog[2] = thingie.analog[2];
 	theData[progress].analog[3] = thingie.analog[3];
-
+ 
 	swapValidIndexes();     // Swap the buffers since we just read in a complete value
      }
      return 1;
@@ -184,7 +184,7 @@ int vjIBox::StopSampling()
 *********************************************** ahimberg */
 int vjIBox::GetAnalogData(int d)
 {
- return  (theData+current*sizeof(vjIBOX_DATA))->analog[d];
+    return theData[current].button[d];
 }
 
 /**********************************************************
@@ -193,7 +193,7 @@ int vjIBox::GetAnalogData(int d)
 *********************************************** ahimberg */
 int vjIBox::GetDigitalData(int d)
 {
- return  (theData+current*sizeof(vjIBOX_DATA))->button[d];
+    return theData[current].button[d];
 }
 
 /**********************************************************
