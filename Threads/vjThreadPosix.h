@@ -295,7 +295,7 @@ private:
     // Static member variables and functions.
     static hash_map<caddr_t, thread_id_t, hash<caddr_t>, eq_thread> mPthreadHash;
 
-    static thread_id_t			thread_count;
+    static thread_id_t			mThreadCount;
     static vjThreadTable<thread_id_t>	mThreadTable;
 
     static thread_id_t gettid(void);
