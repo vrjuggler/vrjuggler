@@ -171,7 +171,7 @@ public:
           assertTestThread((ret_val.success()) && "Problem closing accepted socket");
        }
 
-       // Delete acceptors
+       // Delete acceptors (which in turn closes's and deletes their sockets)
        for( std::map<IOSys::Handle, vpr::SocketAcceptor*>::iterator a=acceptorTable.begin(); a != acceptorTable.end(); a++)
        {
           delete (*a).second;
@@ -280,7 +280,7 @@ public:
          SocketStream sock;
          ret_val = acceptors[i]->accept(sock);           // Accept the connection
          assertTestThread((ret_val.success()) && "Error accepting a connection");
-         socks.push_back(sock);
+         socks.push_back(sock);                          // Pushes a copy of the socket onto the socket list
          vpr::IOSys::Handle handle = sock.getHandle();         // Get the Handle to register
          handleTable[handle] = i;                              // Save handle index
          selector.addHandle(handle);                           // Add to selector
@@ -380,7 +380,7 @@ public:
       vpr::Uint32 bytes_written;
       vpr::InetAddr remote_addr;
       vpr::SocketConnector connector;           // Connect to acceptor
-      std::vector<vpr::SocketStream> sockets(mNumRendevousPorts);       // Initialize with the number of sockets needed
+      std::vector<vpr::SocketStream> sockets;                        // The sockets that we are using.
       std::vector<vpr::Uint16> port_indicies(mNumRendevousPorts);     // This vector holds a list of valid indices to send data to
       std::iota(port_indicies.begin(), port_indicies.end(), 0);    // Fill with (0...n)
 
@@ -396,10 +396,12 @@ public:
       for(i=0;i<mNumRendevousPorts;i++)
       {
          remote_addr.setAddress("localhost", (mRendevousPort+i));             // Set remote port
-         ret_val = connector.connect(sockets[i], remote_addr, vpr::Interval::NoTimeout );           // Connect to the port
+         vpr::SocketStream cur_sock;                                          // The current socket to connect
+         ret_val = connector.connect(cur_sock, remote_addr, vpr::Interval::NoTimeout );           // Connect to the port
          assertTestThread((ret_val.success()) && "Connector can't connect");
-         ret_val = sockets[i].setNoDelay(true);
+         ret_val = cur_sock.setNoDelay(true);
          assertTestThread(ret_val.success() && "Failed to set nodelay on socket");
+         sockets.push_back(cur_sock);                                         // Copy the connected socket handle into list
       }
 
       // Send data in random groupings
