@@ -551,11 +551,6 @@ public class PropertyDefinitionEditor
    class PropertyDefChangeListener
       implements PropertyDefinitionListener
    {
-      public void nameChanged(PropertyDefinitionEvent evt)
-      {
-         revalidate();
-      }
-
       public void tokenChanged(PropertyDefinitionEvent evt)
       {
          revalidate();
@@ -639,7 +634,7 @@ public class PropertyDefinitionEditor
          // We only have rows if we have a property def to model
          if (mPropDef != null)
          {
-            return 4;
+            return rowNames.length;
          }
          else
          {
@@ -661,12 +656,10 @@ public class PropertyDefinitionEditor
             switch (row)
             {
             case 0: // name
-               return mPropDef.getName();
-            case 1: // token
                return mPropDef.getToken();
-            case 2: // type
+            case 1: // type
                return mPropDef.getType();
-            case 3: // variable
+            case 2: // variable
                return new Boolean(mPropDef.isVariable());
             }
          }
@@ -685,15 +678,14 @@ public class PropertyDefinitionEditor
          switch (row)
          {
          case 0: // name
-            mPropDef.setName((String)value);
+            String name = (String) value;
+            String token = name.trim().toLowerCase().replaceAll("\\s+", "_");
+            mPropDef.setToken(token);
             break;
-         case 1: // token
-            mPropDef.setToken((String)value);
-            break;
-         case 2: // type
+         case 1: // type
             mPropDef.setType((Class)value);
             break;
-         case 3: // variable
+         case 2: // variable
             mPropDef.setVariable(((Boolean)value).booleanValue());
             break;
          default:
@@ -712,7 +704,6 @@ public class PropertyDefinitionEditor
        * The names of the rows.
        */
       private String[] rowNames = { "Name"
-                                  , "Token"
                                   , "Type"
                                   , "Variable"
                                   };

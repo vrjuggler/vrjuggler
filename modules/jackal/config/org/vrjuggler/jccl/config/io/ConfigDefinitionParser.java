@@ -279,7 +279,6 @@ public class ConfigDefinitionParser
 
       // Create the new property definition
       return new PropertyDefinition(name,
-                                    name,
                                     valuetype,
                                     help,
                                     values,
