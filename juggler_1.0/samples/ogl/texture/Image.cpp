@@ -16,13 +16,17 @@
 
 
 //: Default constructor
-Image::Image() : _rowAlignment(1), _rowPadding(0), _usingPointer(false), _data(NULL)
+Image::Image() : _data( NULL ), _xsize( 0 ), _ysize( 0 ), _bpp( 0 ), 
+               _channels( 0 ), _name( "unnamed" ), _rowPadding( 0 ), 
+               _rowAlignment( 1 ), _usingPointer( false )
 {
 }
 
 //: Copy constructor		
-Image::Image( const Image& image ) : _rowAlignment(1), _rowPadding(0),
-									_usingPointer(false), _data(NULL)
+Image::Image( const Image& image ) : _data(NULL), _xsize( 0 ), 
+                              _ysize( 0 ), _bpp( 0 ), _channels( 0 ), 
+                              _name( "unnamed" ), _rowPadding( 0 ), 
+                              _rowAlignment( 1 ), _usingPointer( false )
 {
 	this->copy( image );
 }
@@ -30,15 +34,18 @@ Image::Image( const Image& image ) : _rowAlignment(1), _rowPadding(0),
 //: Data copy constructor
 // - set the source pixel data (bytes), this must be a valid pointer, 
 //   and must contain the data you specify in the next few fields.
-// - set copyData to true to copy the data into this Image, otherwise Image just stores the pointer.
+// - set copyData to true to copy the data into this Image, otherwise 
+//   Image just stores the pointer.
 // - set bpp to the colordepth of your data: 8, 15, 16, 24, or 32 bit
 // - set xsize and ysize to the size in pixels of your bitmap...
 // - set channels to the number of channels in your data
 // - specify your data's byte alignment (usually 1 if no row padding)
-//  NOTE: memory will not be free'd on destruct, if copyData is false (copyData == false implies Image does not own the data)
-Image::Image( unsigned char* bytes, const bool& copyData, const unsigned int xsize, 
-				const unsigned int ysize, const unsigned int bpp, const unsigned int channels, 
-				const unsigned int alignment )
+//  NOTE: memory will not be free'd on destruct, if copyData is false 
+//        (copyData == false implies Image does not own the data)
+Image::Image( unsigned char* bytes, const bool& copyData, 
+              const unsigned int xsize, const unsigned int ysize, 
+              const unsigned int bpp, const unsigned int channels, 
+				  const unsigned int alignment )
 {
 	this->setData( bytes, copyData, xsize, ysize, bpp, channels, alignment );
 }
@@ -74,15 +81,18 @@ void Image::free()
 //: set the image memory yourself 
 // - set the source pixel data, this must be valid pointer, 
 //   and must contain the data you specify in the next few fields.
-// - set copyData to true to copy the data into this Image, otherwise Image just stores the pointer.
+// - set copyData to true to copy the data into this Image, otherwise Image 
+//   just stores the pointer.
 // - set bpp to the colordepth of your data: 8, 15, 16, 24, or 32 bit
 // - set xsize and ysize to the size in pixels of your bitmap...
 // - set channels to the number of channels in your data
 // - specify your data's byte alignment (usually 1 if no row padding)
-//  NOTE: memory will not be free'd on destruct, if copyData is false (copyData == false implies Image does not own the data)
-void Image::setData(unsigned char* bytes, const bool& copyData, const unsigned int xsize, 
-					const unsigned int ysize, const unsigned int bpp, const unsigned int channels, 
-					const unsigned int alignment)
+//  NOTE: memory will not be free'd on destruct, if copyData is false 
+//        (copyData == false implies Image does not own the data)
+void Image::setData( unsigned char* bytes, const bool& copyData, 
+                     const unsigned int xsize, const unsigned int ysize, 
+                     const unsigned int bpp, const unsigned int channels, 
+                     const unsigned int alignment)
 {
 	if (copyData == true)
 	{
@@ -112,7 +122,9 @@ void Image::setData(unsigned char* bytes, const bool& copyData, const unsigned i
 // - bpp is the colordepth of 8, 15, 16, 24, or 32 bit
 // - xsize and ysize is the size in pixels of your bitmap...
 // - pad is the number of bytes to attach to each row
-void Image::reserve(const unsigned int xsize, const unsigned int ysize, const unsigned int bpp, const unsigned int channels, const unsigned int alignment )
+void Image::reserve( const unsigned int xsize, const unsigned int ysize, 
+                     const unsigned int bpp, const unsigned int channels, 
+                     const unsigned int alignment )
 {
 	this->free();
     _usingPointer = false;
@@ -156,14 +168,16 @@ void Image::reserve(const unsigned int xsize, const unsigned int ysize, const un
 
 
 //: copy an image into another.
-const Image & Image::copy(const Image& image)
+const Image & Image::copy( const Image& image )
 {
 	if (image.data() == NULL) return *this;
 
-	this->reserve( image.width(), image.height(), image.depth(), image.channels(), image.rowAlignment() );
+	this->reserve( image.width(), image.height(), image.depth(), 
+                  image.channels(), image.rowAlignment() );
 
 	// attempt a fast copy
-	assert( image.size() == this->size() && "Copy didn't reserve the correct amount of space in the image." );
+	assert( image.size() == this->size() && 
+           "Copy didn't reserve the correct amount of space in the image." );
 	::memcpy( this->data(), image.data(), image.size() );
 
 	return *this;
@@ -172,9 +186,15 @@ const Image & Image::copy(const Image& image)
 
 //: get a subimage of this image. (top=0,left=0,bottom>0,right>0)
 //  allows you to cut out a square area of this image
-//  give - the sub image coordinates, these must be within this image's pixel coordinates
-//  returns - copies the specified sub image into the Image object that you provide.
-void Image::getSubImage(const int& pixelLeft, const int& pixelTop, const int& pixelRight, const int& pixelBottom, Image& newImage) const
+//  give - the sub image coordinates, these must be within this image's 
+//         pixel coordinates
+//  returns - copies the specified sub image into the Image object that you 
+//            provide.
+void Image::getSubImage( const unsigned int& pixelLeft, 
+                         const unsigned int& pixelTop, 
+                         const unsigned int& pixelRight, 
+                         const unsigned int& pixelBottom, 
+                         Image& newImage ) const
 {
 	// make sure the client follows the function's requirements
 	assert( pixelLeft >= 0 && "left position is not within bounds" );
@@ -183,25 +203,26 @@ void Image::getSubImage(const int& pixelLeft, const int& pixelTop, const int& pi
 	assert( pixelBottom  < this->height() && "bottom position is not within bounds" );
 	
 	// set the dim's of the client's image.
-	newImage.reserve( pixelRight - pixelLeft, pixelBottom - pixelTop, this->bpp(), this->channels() );
+	newImage.reserve( pixelRight - pixelLeft, pixelBottom - pixelTop, 
+                     this->bpp(), this->channels() );
 
 
 	int imageChannels = this->channels();
 	int newImageChannels = newImage.channels();
-	int imageWidth = this->width();
-	int newImageWidth = newImage.width();
-	const unsigned char* const imagePtr = this->data();
-	unsigned char* newImagePtr = newImage.data();
+	//int imageWidth = this->width();
+	//int newImageWidth = newImage.width();
+	//const unsigned char* const imagePtr = this->data();
+	//unsigned char* newImagePtr = newImage.data();
 
 	// copy the subimage from this image into newImage.
-	for (int y = 0; y < newImage.height(); ++y)
+	for (unsigned int y = 0; y < newImage.height(); ++y)
 	{
 		// get an index to each row to be copied next.
 		const unsigned char* const rowImage = this->row( y+pixelTop );
 		unsigned char* rowNewData = newImage.row( y );
 
 		// copy the row from image1 to image2
-		for (int x = 0; x < newImage.width(); ++x)
+		for (unsigned int x = 0; x < newImage.width(); ++x)
 		{
 			// get the index to this image's pixel to copy from
 			int imageX = (x + pixelLeft) * imageChannels;
@@ -215,7 +236,7 @@ void Image::getSubImage(const int& pixelLeft, const int& pixelTop, const int& pi
 			
 			// copy the entire pixel.
 			// TODO: this could be optimized...
-			for (int c = 0; c < this->channels(); ++c)
+			for (unsigned int c = 0; c < this->channels(); ++c)
 			{
 				rowNewData[newImageX + c] = rowImage[imageX + c];
 			}
@@ -265,7 +286,7 @@ const unsigned char* Image::row( const int& whichRow ) const
 	return &_data[ byteIndex + numberOfRowPads ];
 }
 
-void Image::blit(const Image& image, const int& xpos, const int& ypos )
+void Image::blit( const Image& image, const int& xpos, const int& ypos )
 {
 	int wide = kev::min( this->width(),  image.width()  );
 	int high = kev::min( this->height(), image.height() );
@@ -291,7 +312,7 @@ void Image::blit(const Image& image, const int& xpos, const int& ypos )
 			
 			// copy the entire pixel.
 			// TODO: this could be optimized...
-			for (int c = 0; c < this->channels(); ++c)
+			for (unsigned int c = 0; c < this->channels(); ++c)
 			{
 				rowImage[imageX + c] = rowSourceImage[sourceImageX + c];
 			}
@@ -301,8 +322,9 @@ void Image::blit(const Image& image, const int& xpos, const int& ypos )
 
 //: align the bytes in each scanline to 'alignment' 
 //  this will effectivly pad the end of each row with 
-//  enough bytes so that the next row begins on a multiple of 'alignment' address
-//  some video cards render more efficiently with different byte alignments.
+//  enough bytes so that the next row begins on a multiple of 'alignment' 
+//  address some video cards render more efficiently with different byte 
+//  alignments.
 void Image::setRowAlignment( const unsigned int& alignment )
 {
 	_rowAlignment = alignment;
@@ -310,13 +332,15 @@ void Image::setRowAlignment( const unsigned int& alignment )
 
 	Image temp;
 	temp = *this;
-	this->reserve( temp.width(), temp.height(), temp.bpp(), temp.channels(), _rowPadding );
+	this->reserve( temp.width(), temp.height(), temp.bpp(), temp.channels(), 
+                  _rowPadding );
 	this->blit( temp, 0, 0 );
 }
 
 //: specify the 2 channels to swap.
 //  copies the image while swapping the 2 channels
-void Image::swapChannels( const Image& image, const int& channel1, const int& channel2 )
+void Image::swapChannels( const Image& image, const unsigned int& channel1, 
+                          const unsigned int& channel2 )
 {
 	if ( (image.width() != this->width()		) ||
 		 (image.height() != this->height()		) ||
@@ -324,7 +348,8 @@ void Image::swapChannels( const Image& image, const int& channel1, const int& ch
 		 (image.channels() != this->channels()  ) ||
 		 (image.rowAlignment() != this->rowAlignment()) )
 	{
-		this->reserve( image.width(), image.height(), image.bpp(), image.channels(), image.rowAlignment() );
+		this->reserve( image.width(), image.height(), image.bpp(), 
+                     image.channels(), image.rowAlignment() );
 	}
 
 	assert( image.size() == this->size() && "Can't swap channels" );
@@ -335,12 +360,12 @@ void Image::swapChannels( const Image& image, const int& channel1, const int& ch
 		return;
 
 	char temp1, temp2;
-	for (int y = 0; y < this->height(); ++y)
+	for (unsigned int y = 0; y < this->height(); ++y)
 	{
 		const unsigned char* const rowSrc = image.row( y );
 		unsigned char* rowDest = this->row( y );
 
-		for (int x = 0; x < this->width() * this->channels(); x += this->channels())
+		for (unsigned int x = 0; x < this->width() * this->channels(); x += this->channels())
 		{
 			temp1 = rowSrc[x + channel1];
 			temp2 = rowSrc[x + channel2];
@@ -351,7 +376,8 @@ void Image::swapChannels( const Image& image, const int& channel1, const int& ch
 }
 
 //: specify the 2 channels to swap.
-void Image::swapChannels( const int& channel1, const int& channel2 )
+void Image::swapChannels( const unsigned int& channel1, 
+                          const unsigned int& channel2 )
 {
 	assert( channel1 <= (this->channels()-1) && channel1 >= 0 && "you must specify a valid channel 1" );
 	assert( channel2 <= (this->channels()-1) && channel2 >= 0 && "you must specify a valid channel 2" );
@@ -360,11 +386,11 @@ void Image::swapChannels( const int& channel1, const int& channel2 )
 		return;
 
 	char temp;
-	for (int y = 0; y < this->height(); ++y)
+	for (unsigned int y = 0; y < this->height(); ++y)
 	{
 		unsigned char* row = this->row( y );
 
-		for (int x = 0; x < this->width() * this->channels(); x += this->channels())
+		for (unsigned int x = 0; x < this->width() * this->channels(); x += this->channels())
 		{
 			temp = row[x + channel1];
 			row[x + channel1] = row[x + channel2];
@@ -375,30 +401,31 @@ void Image::swapChannels( const int& channel1, const int& channel2 )
 
 void Image::asciioutput( bool useCarriageReturns ) const
 {
-    if (useCarriageReturns)
-    {
-	int bytesWide = this->width() * this->channels() * this->bpc() + this->rowPadding();	
-	
-	for ( int te = 0; te < this->size(); ++te )
-	{
-		cout<<(int)this->data()[te]<<" ";
-		
-		if ( (te % bytesWide) == ((bytesWide)-1) )
-		{
-			cout<<'\n';
-		}
-	}
-	
-    } else {
-    	    
-	for ( int te = 0; te < this->size(); ++te )
-	{
-		cout<<this->data()[te];
-	}
-    }
+   if (useCarriageReturns)
+   {
+      unsigned int bytesWide = this->width() * this->channels() * this->bpc() + this->rowPadding();
+      for ( unsigned int te = 0; te < this->size(); ++te )
+      {
+         cout<<(int)this->data()[te]<<" ";
+
+         if ( (te % bytesWide) == ((bytesWide)-1) )
+         {
+	         cout<<'\n';
+         }
+      }
+   } 
+   else 
+   {
+      for (unsigned int te = 0; te < this->size(); ++te)
+      {
+	      cout<<this->data()[te];
+      }
+   }
 }
 
-//TODO: make a base class IImage which Image derives from.  
+// some notes:
+//IDEA: make a base class IImage which Image derives from.  
 //      make a IImage subclass SubImage, which aggregates an IImage*.
-//      SubImage will reference it's IImage* with calls to data(), row(), and pixel().
+//      SubImage will reference it's IImage* with calls to data(), row(), 
+//      and pixel().
 //BAD: wouldn't be able to pass SubImage's .data ptr to opengl, right???
