@@ -184,16 +184,7 @@ sub generateFile ($$)
 
    print "Generating $outfile ...\n";
 
-   my $workfile;
-
-   if ( $Win32 )
-   {
-      $workfile = "C:/temp/working.in-$$";
-   }
-   else
-   {
-      $workfile = "/tmp/working.in-$$";
-   }
+   my $workfile = "working.in-$$";
 
    # Make a working copy of the input file to be safe.
    copy("$infile", "$workfile") unless "$infile" eq "$workfile";
