@@ -558,28 +558,41 @@ User* Kernel::getUser(const std::string& userName)
 }
 
 Kernel::Kernel()
-   : mApp(NULL), mNewApp(NULL), mNewAppSet(false), mIsRunning(false),
-     mExitFlag(false), mControlThread(NULL), mInputManager(NULL),
-     mDrawManager(NULL), mSoundManager(NULL), mDisplayManager(NULL), mClusterManager(NULL)
+   : mApp(NULL)
+   , mNewApp(NULL)
+   , mNewAppSet(false)
+   , mIsRunning(false)
+   , mExitFlag(false)
+   , mControlThread(NULL)
+   , mInputManager(NULL)
+   , mDrawManager(NULL)
+   , mSoundManager(NULL)
+   , mDisplayManager(NULL)
+   , mClusterManager(NULL)
 {
    // Print out the Juggler version number when the kernel is created.
-   vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << std::string(strlen(VJ_VERSION) + 12, '=')
-                                             << std::endl << vprDEBUG_FLUSH;
-   vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << clrOutNORM(clrGREEN, "VR Juggler: ")
-                                             << clrOutNORM(clrGREEN, VJ_VERSION) << clrRESET
-                                             << std::endl << vprDEBUG_FLUSH;
-   vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << clrOutNORM(clrGREEN, "VPR: ")
-                                             << clrOutNORM(clrGREEN, vpr::getVersionString())
-                                             << clrRESET << std::endl << vprDEBUG_FLUSH;
-   vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << clrOutNORM(clrGREEN, "Gadgeteer: ")
-                                             << clrOutNORM(clrGREEN, gadget::getVersionString())
-                                             << clrRESET << std::endl << vprDEBUG_FLUSH;
-   vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) << std::string(strlen(VJ_VERSION) + 12, '=')
-                                             << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+      << std::string(strlen(VJ_VERSION) + 12, '=')
+      << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+      << clrOutNORM(clrGREEN, "VR Juggler: ")
+      << clrOutNORM(clrGREEN, VJ_VERSION) << clrRESET
+      << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+      << clrOutNORM(clrGREEN, "VPR: ")
+      << clrOutNORM(clrGREEN, vpr::getVersionString())
+      << clrRESET << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+      << clrOutNORM(clrGREEN, "Gadgeteer: ")
+      << clrOutNORM(clrGREEN, gadget::getVersionString())
+      << clrRESET << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+      << std::string(strlen(VJ_VERSION) + 12, '=')
+      << std::endl << vprDEBUG_FLUSH;
 
    // Load in the configuration definitions
    std::string def_path;
-   if (vpr::System::getenv("JCCL_DEFINITION_PATH", def_path) != vpr::ReturnStatus::Succeed)
+   if ( ! vpr::System::getenv("JCCL_DEFINITION_PATH", def_path).success() )
    {
       def_path = "${VJ_BASE_DIR}/" VJ_SHARE_DIR "/data/definitions";
       vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
