@@ -6,8 +6,9 @@
 // -Set the keyboard key pairs <b>
 // -Load the sample file
 // -Trim the smallest so they are same length
+// -Find/Set pos proxy for glove
 vjSimGloveGesture::vjSimGloveGesture(vjConfigChunk* chunk)
-   :  vjGloveGesture(chunk), vjGlove(chunk), vjSimInput(chunk)
+   :  vjInput(chunk), vjGlove(chunk), vjGesture(chunk), vjGloveGesture(chunk), vjSimInput(chunk)
 {
    mCurGesture = 0;     // We are in no gesture yet
 
@@ -37,6 +38,21 @@ vjSimGloveGesture::vjSimGloveGesture(vjConfigChunk* chunk)
       vjDEBUG(0) << "vjSimGloveGesture: Not enough gestures. Trimming" << endl << vjDEBUG_FLUSH;
    }
 
+   // Find pos proxy
+   string glove_pos_proxy = (char*)chunk->getProperty("glovePos");    // Get the name of the pos_proxy
+   if(glove_pos_proxy == string(""))
+   {
+      vjDEBUG(0) << "ERROR: vjSimGloveGesture has no posProxy." << endl << vjDEBUG_FLUSH;
+      return;
+   }
+   // init glove proxy interface
+   int proxy_index = vjKernel::instance()->getInputManager()->GetProxyIndex(glove_pos_proxy);
+   if(proxy_index != -1)
+      mGlovePos[0] = vjKernel::instance()->getInputManager()->GetPosProxy(proxy_index);
+   else
+      vjDEBUG(0) << "ERROR: vjSimGloveGesture::vjCyberGlove: Can't find posProxy." << endl << vjDEBUG_FLUSH << endl;
+
+   // Set the indexes to defaults
    resetIndexes();
 }
 
@@ -57,12 +73,13 @@ void vjSimGloveGesture::UpdateData()
       {
          mCurGesture = i;
          vjDEBUG(0) << "vjSimGloveGesture: Got gesture: " << getGestureString(mCurGesture) << endl << vjDEBUG_FLUSH;
+
+         // Set the glove to the sample
+         mTheData[0][current] = mGestureExamples[mCurGesture];    // Copy over the example
+         mTheData[0][current].calcXforms();                       // Update the xform data
       }
    }
 
-   // Set the glove to the sample
-   mTheData[0][current] = mGestureExamples[mCurGesture];    // Copy over the example
-   mTheData[0][current].calcXforms();                       // Update the xform data
 }
 
 
@@ -72,6 +89,14 @@ void vjSimGloveGesture::loadTrainedFile(string fileName)
 {
    ifstream inFile(fileName.c_str());
 
-   this->loadFileHeader(inFile);
+   if(inFile)
+   {
+      this->loadFileHeader(inFile);
+      inFile.close();                     // Close the file
+   }
+   else
+   {
+      vjDEBUG(0) << "vjSimGloveGesture:: Can't load trained file: " << fileName << endl << vjDEBUG_FLUSH;
+   }
 }
 
