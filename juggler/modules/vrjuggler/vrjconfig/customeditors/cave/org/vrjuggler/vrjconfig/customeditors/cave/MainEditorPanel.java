@@ -60,7 +60,7 @@ public class MainEditorPanel
    extends JPanel
    implements ChangeListener
 {
-   private WallEditorPanel mWallPanel = new WallEditorPanel();
+   //private WallEditorPanel mWallPanel = new WallEditorPanel();
    private List mWalls = new ArrayList();
    
    private JPanel mStereoPanel = new JPanel();
@@ -87,6 +87,7 @@ public class MainEditorPanel
       mCaveModel = cm;
       mCaveWall = in_wall;
       
+      /*
       try
       {
          jbInit();
@@ -95,25 +96,10 @@ public class MainEditorPanel
       {
          ex.printStackTrace();
       }
-      
-      // Ensure that we remove the old wall editor so that it can be garbage collected.
-      this.remove(mWallPanel);
-      mWallPanel = new WallEditorPanel(mCaveWall);
-      mWallPanel.setBorder(mWallBorder);
-      this.add(mWallPanel, new TableLayoutConstraints(0, 0, 0, 1,
-                                       TableLayout.FULL,
-                                       TableLayout.FULL));
+      */
 
-      
-      mLeftViewEditorPanel = new ViewEditorPanel(mCaveModel, new Dimension(200, 200), "Left Eye");
-      mViewPanel.add(mLeftViewEditorPanel, new TableLayoutConstraints(0, 0, 0, 0,
-                                               TableLayout.FULL,
-                                               TableLayout.FULL));
-      
-      mRightViewEditorPanel = new ViewEditorPanel(mCaveModel, new Dimension(200, 200), "Right Eye");
-      mViewPanel.add(mRightViewEditorPanel, new TableLayoutConstraints(0, 1, 0, 1,
-                                               TableLayout.FULL,
-                                               TableLayout.FULL));
+      mLeftViewEditorPanel.setCaveModel(mCaveModel);
+      mRightViewEditorPanel.setCaveModel(mCaveModel);
       
       updateStereoGUI();
       updateViewGUI();
@@ -126,7 +112,6 @@ public class MainEditorPanel
 
    public MainEditorPanel()
    {
-      /*
       try
       {
          jbInit();
@@ -135,13 +120,11 @@ public class MainEditorPanel
       {
          ex.printStackTrace();
       }
-      */
    }
    
    private Container getOwner()
    {
       Object owner = SwingUtilities.getRoot(this);
-      System.out.println("owner class: " + owner.getClass());
       return (Container) owner;
    }
    
@@ -237,17 +220,18 @@ public class MainEditorPanel
 
 
       
-      mWallPanel.setBorder(mWallBorder);
+      //mWallPanel.setBorder(mWallBorder);
       
       double[][] main_size = {{TableLayout.PREFERRED, TableLayout.PREFERRED},
                               {TableLayout.PREFERRED, TableLayout.PREFERRED}};
       
       this.setLayout(new TableLayout(main_size));
       
+      /*
       this.add(mWallPanel, new TableLayoutConstraints(0, 0, 0, 1,
                                        TableLayout.FULL,
                                        TableLayout.FULL));
-
+      */
       this.add(mViewPanel, new TableLayoutConstraints(1, 1, 1, 1,
                                                TableLayout.FULL,
                                                TableLayout.FULL));
@@ -256,6 +240,16 @@ public class MainEditorPanel
                             {TableLayout.PREFERRED, TableLayout.PREFERRED}};
       mViewPanel.setLayout(new TableLayout(vp_size));
       mViewPanel.setBorder(mViewBorder);
+
+      mLeftViewEditorPanel = new ViewEditorPanel(new Dimension(200, 200), "Left Eye");
+      mViewPanel.add(mLeftViewEditorPanel, new TableLayoutConstraints(0, 0, 0, 0,
+                                               TableLayout.FULL,
+                                               TableLayout.FULL));
+      
+      mRightViewEditorPanel = new ViewEditorPanel(new Dimension(200, 200), "Right Eye");
+      mViewPanel.add(mRightViewEditorPanel, new TableLayoutConstraints(0, 1, 0, 1,
+                                               TableLayout.FULL,
+                                               TableLayout.FULL));
       
       this.add(mStereoPanel, new TableLayoutConstraints(1, 0, 1, 0,
                                                TableLayout.FULL,
