@@ -2186,9 +2186,7 @@
       <xsl:param name="defaultValue" select="''"/>
 
       <xsl:element name="include">
-         <xsl:attribute name="file">
-            <xsl:value-of select="$file"/>
-         </xsl:attribute>
+         <xsl:value-of select="$file"/>
       </xsl:element>
 
       <xsl:value-of select="$newline"/>
