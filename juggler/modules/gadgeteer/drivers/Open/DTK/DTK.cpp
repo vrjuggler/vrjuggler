@@ -252,9 +252,7 @@ int DTK::sample()
     float *floatData;
     int   *intData;
 
-    jccl::TimeStamp sampletime;
-    gmtl::Matrix44f world_T_transmitter, transmitter_T_reciever, world_T_reciever;
-
+    jccl::TimeStamp sampletime;        
     sampletime.set();
 
     vpr::Thread::yield()
@@ -264,14 +262,13 @@ int DTK::sample()
     segment = _dtkSegments[i];
     if(segment != NULL)
     {
-        if(segment->SegmentType() <= dtk_pos_QUAT && segment->ItemIndex() < numPositional) {
+        if(segment->SegmentType() <= dtk_pos_QUAT && segment->ItemIndex() < numPositional) 
+        {
             index = getStationIndex(segment->ItemIndex(),progress);
 
             floatData = static_cast<float*>(*segment);
                 // Check to see that the pointer is valid
                 if(floatData == NULL) continue;
-
-
 
             if(segment->SegmentType() != dtk_pos_QUAT)
                 {
@@ -286,19 +283,9 @@ int DTK::sample()
 
             }
             mDataTimes[index] = sampletime;
-
-    // Transforms between the cord frames
-    // See transform documentation and VR System pg 146
-    // Since we want the reciver in the world system, Rw
-    // wTr = wTt*tTr
-
-            world_T_transmitter = xformMat;                    // Set transmitter offset from local info
-            transmitter_T_reciever = theData[index];           // Get reciever data from sampled data
-            world_T_reciever.mult(world_T_transmitter, transmitter_T_reciever);   // compute total transform
-            theData[index] = world_T_reciever;                                     // Store corrected xform back into data
-
-        } else if(segment->SegmentType() == dtk_digital && segment->ItemIndex() < numDigital) {
-
+        } 
+        else if(segment->SegmentType() == dtk_digital && segment->ItemIndex() < numDigital) 
+        {
             index = getStationIndex(segment->ItemIndex(),progress);
 
             intData = static_cast<int*>(*segment);

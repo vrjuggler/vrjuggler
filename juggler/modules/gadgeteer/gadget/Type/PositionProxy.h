@@ -44,7 +44,7 @@
 
 #include <gadget/Type/Position.h>
 #include <gadget/Type/Proxy.h>
-#include <gadget/Type/PositionFilter.h>
+//#include <gadget/Type/PositionFilter.h>
 #include <gadget/Type/PositionData.h>
 
 #include <gmtl/Matrix.h>
@@ -64,7 +64,7 @@ namespace gadget
 class GADGET_CLASS_API PositionProxy : public TypedProxy<Position>
 {
 public:
-   PositionProxy() :  mUnitNum(-1), mETrans(false), mFilter(NULL)
+   PositionProxy() :  mUnitNum(-1), mETrans(false)   // , mFilter(NULL)
    {;}
 
    virtual ~PositionProxy() {}
@@ -83,10 +83,12 @@ public:
             transformData();
 
          // Filter the data if there is an active filters
+         /*
          if(mFilter != NULL)
          {
             *(mPositionData.getPosition()) = mFilter->getPos(*(mPositionData.getPosition()));
          }
+         */
       }
    }
 
@@ -186,7 +188,7 @@ private:
    gmtl::Matrix44f   mMatrixTransform; /**< reciever_t_modifiedReciever */
    int               mUnitNum;
    bool              mETrans;          /**< Are transformation enabled? */
-   PositionFilter*   mFilter;          /**< A possible position filter to use */
+   //PositionFilter*   mFilter;          /**< A possible position filter to use */
 };
 
 } // End of gadget namespace

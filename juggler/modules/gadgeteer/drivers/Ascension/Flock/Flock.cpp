@@ -236,10 +236,7 @@ int Flock::sample()
    for (i=0; i < (mFlockOfBirds.getNumBirds()); ++i)
    {
       // Transforms between the cord frames
-      // See transform documentation and VR System pg 146
-      // Since we want the reciver in the world system, Rw
-      // wTr = wTt*tTr
-      gmtl::Matrix44f world_T_transmitter, transmitter_T_reciever, world_T_reciever;
+      gmtl::Matrix44f transmitter_T_reciever;
 
       // We add 1 to "i" to account for the fact that FlockStandalone is
       // 1-based
@@ -274,21 +271,14 @@ int Flock::sample()
       //if (i==1)
          //vprDEBUG(vprDBG_ALL,2) << "Flock: bird1:    orig:" << Coord(theData[index]).pos << std::endl << vprDEBUG_FLUSH;
 
-      // XXX: is all this copying really necessary?
-
-      world_T_transmitter = xformMat;                    // Set transmitter offset from local info
-      //transmitter_T_reciever = *(mData[index].getPosition());           // Get reciever data from sampled data
-      world_T_reciever = (world_T_transmitter * transmitter_T_reciever);   // compute total transform
-
-      *(cur_samples[i].getPosition()) = world_T_reciever;                                     // Store corrected xform back into data
+      *(cur_samples[i].getPosition()) = transmitter_T_reciever;                                     // Store corrected xform back into data
       cur_samples[i].setTime (cur_samples[0].getTime());
-
 
       //if (i == 1)
          //vprDEBUG(vprDBG_ALL,2) << "Flock: bird1: xformed:" << Coord(theData[index]).pos << std::endl << vprDEBUG_FLUSH;
    }
 
-   // Locks and then swaps the indices.
+   // Add data sample
    addPositionSample(cur_samples);   
 
    return 1;

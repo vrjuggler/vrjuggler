@@ -33,8 +33,8 @@
 #include <gadget/gadgetConfig.h>
 #include <jccl/Config/ConfigChunk.h>
 
-#include <gadget/Type/PositionFilter.h>
-#include <gadget/Type/LinearSigmoidPositionFilter.h>
+//#include <gadget/Type/PositionFilter.h>
+//#include <gadget/Type/LinearSigmoidPositionFilter.h>
 #include <gadget/Util/Debug.h>
 
 #include <gmtl/Matrix.h>
@@ -130,6 +130,7 @@ vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
       // Setup filter method
       // XXX: For now, just hardcode to a single filter type
       // in future, there should be a filter factory
+      /*
       if(true == chunk->getProperty<bool>("useFilter"))
       {
          vprDEBUG_NEXT(gadgetDBG_INPUT_MGR,3)
@@ -157,6 +158,7 @@ vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
          vprDEBUG_NEXT(gadgetDBG_INPUT_MGR,3) << "NOT USING FILTER."
                                               << std::endl << vprDEBUG_FLUSH;
       }
+      */
    }
 
    // --- SETUP PROXY with INPUT MGR ---- //

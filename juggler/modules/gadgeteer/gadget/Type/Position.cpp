@@ -41,39 +41,49 @@
 #include <gmtl/MatrixOps.h>
 #include <gmtl/Generate.h>
 
+#include <gadget/Filter/Position/PositionFilter.h>
+#include <gadget/Filter/Position/PositionFilterFactory.h>
+
 
 namespace gadget
 {
 
+Position::Position()
+{;}
+
+Position::~Position()
+{;}
+
+
 // Set up the transformation information
 bool Position::config(jccl::ConfigChunkPtr c)
 {
-   //vprDEBUG(vprDBG_ALL,0) << "vjPosition::config(jccl::ConfigChunkPtr)" << vprDEBUG_FLUSH;
-   if ( (c->getNum("translate") == 3) && (c->getNum("rotate") == 3) )
+   // --- Configure filters --- //
+   unsigned num_filters = c->getNum("position_filters");
+
+   vprDEBUG( vprDBG_ALL, 0) << "Num filters: " << num_filters << std::endl << vprDEBUG_FLUSH;
+
+   jccl::ConfigChunkPtr cur_filter;
+   PositionFilter* new_filter = NULL;
+
+   for(unsigned i=0;i<num_filters;++i)
    {
-      // These are the transforms from the base tracker coord system
+      cur_filter = c->getProperty<jccl::ConfigChunkPtr>("position_filters",i);
+      vprASSERT(cur_filter.get() != NULL);
 
-      float xt, yt, zt;
-      xt = c->getProperty<float>("translate",0);
-      yt = c->getProperty<float>("translate",1);
-      zt = c->getProperty<float>("translate",2);
+      std::string filter_chunk_desc = cur_filter->getDescToken();
+      vprDEBUG( vprDBG_ALL, 0) << "   Filter [" << i << "]: Type:" << filter_chunk_desc << std::endl << vprDEBUG_FLUSH;
 
-      // These values are specified in human-friendly degrees but must be passed
-      // to GMTL as radians.
-      float xr, yr, zr;
-      xr = gmtl::Math::deg2Rad(c->getProperty<float>("rotate",0));
-      yr = gmtl::Math::deg2Rad(c->getProperty<float>("rotate",1));
-      zr = gmtl::Math::deg2Rad(c->getProperty<float>("rotate",2));
-
-      // This makes a rotation matrix that moves a pt in
-      // the device's coord system to the vj coord system.
-      // ==> world_M_transmitter
-      gmtl::EulerAngleXYZf euler( xr,yr,zr );
-      rotMat = gmtl::makeRot<gmtl::Matrix44f>( euler );
-
-      gmtl::identity(xformMat);
-      gmtl::setTrans(xformMat, gmtl::Vec3f(xt, yt, zt) );
-      gmtl::postMult(xformMat, rotMat);         // xformMat = T*R
+      new_filter = PositionFilterFactory::instance()->createObject(filter_chunk_desc);
+      if(new_filter != NULL)
+      {
+         new_filter->config(cur_filter);
+         mPositionFilters.push_back(new_filter);
+      }
+      else
+      {
+         vprDEBUG( vprDBG_ALL, 0) << "   NULL Filter!!!" << std::endl << vprDEBUG_FLUSH;
+      }
    }
 
    return true;
@@ -206,15 +216,20 @@ vpr::ReturnStatus Position::readObject(vpr::ObjectReader* reader, vpr::Uint64* d
    return(vpr::ReturnStatus::Succeed);
 }
 
-Position::Position()
+void Position::addPositionSample(std::vector< PositionData > posSample)
 {
-   //vprDEBUG(vprDBG_ALL,0) << "vjPosition::Position()" << vprDEBUG_FLUSH;
-   gmtl::identity(xformMat);
+   // Apply all the positional filters
+   for(std::vector<PositionFilter*>::iterator i=mPositionFilters.begin(); i != mPositionFilters.end(); ++i)
+   {
+      (*i)->apply(posSample);
+   }
+   
+   // Locks and then swaps the indices.
+   mPosSamples.lock();
+   mPosSamples.addSample(posSample);
+   mPosSamples.unlock();
 }
 
-Position::~Position()
-{
-   ;
-}
 
 } // End of gadget namespace
+
