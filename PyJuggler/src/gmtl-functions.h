@@ -55,7 +55,6 @@
 #include <gmtl/Containment.h>
 #include <gmtl/Generate.h>
 #include <gmtl/Intersection.h>
-#include <gmtl/Output.h>
 #include <gmtl/Xforms.h>
 
 namespace gmtl
@@ -630,15 +629,6 @@ namespace gmtl
                                           const gmtl::Matrix<double, 4, 4>&,
                                           const gmtl::Point<double, 3>&);
 // ======================================================== Transform functions
-
-// Output functions ===========================================================
-   template std::ostream& operator<<(std::ostream&, const gmtl::VecBase<float,3>&);
-   template std::ostream& operator<<(std::ostream&, const gmtl::VecBase<double,3>&);
-   template std::ostream& operator<<(std::ostream&, const gmtl::VecBase<float,4>&);
-   template std::ostream& operator<<(std::ostream&, const gmtl::VecBase<double,4>&);
-   template std::ostream& operator<<(std::ostream&, const gmtl::Matrix33f&);
-   template std::ostream& operator<<(std::ostream&, const gmtl::Matrix44f&);
-// =========================================================== Output functions
 }
 
 
