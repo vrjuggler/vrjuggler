@@ -98,7 +98,7 @@ vpr::ReturnStatus IboxStandalone::connect(const std::string& port_name,
 	}
     port->clearAll();
     port->setLocalAttach(true);
-    port->setBufferSize(0);
+    port->setMinInputSize(0);
     port->setTimeout(0);
     port->setOutputBaudRate(mBaudRate); // Put me before input to be safe
     port->setInputBaudRate(mBaudRate);
@@ -132,7 +132,7 @@ vpr::ReturnStatus IboxStandalone::connect()
 	}
     port->clearAll();
     port->setLocalAttach(true);
-    port->setBufferSize(0);
+    port->setMinInputSize(0);
     port->setTimeout(0);
     port->setOutputBaudRate(mBaudRate); // Put me before input to be safe
     port->setInputBaudRate(mBaudRate);
@@ -479,7 +479,7 @@ vpr::ReturnStatus IboxStandalone::passwd_cmd(byte cmnd)
     port->read(ch, 1, written, fastTimeOut);
 	while ( ch[0]!=cmnd )
 	{
-		if ( port->getBufferSize(size).failure() )
+		if ( port->getMinInputSize(size).failure() )
 		{
 			return(vpr::ReturnStatus::Fail);
 		}
@@ -631,7 +631,7 @@ vpr::ReturnStatus    IboxStandalone::check_packet()
 	}
 	else
 	{
-		if ( port->getBufferSize(size).failure() )
+		if ( port->getMinInputSize(size).failure() )
 		{
 			return(vpr::ReturnStatus::Timeout);
 		}
