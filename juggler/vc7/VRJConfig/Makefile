@@ -37,11 +37,13 @@ all: java
 java:
 	$(ANT)
 	$(ANT) -f build-intersense.xml
+	$(ANT) -f build-pinchglove.xml
 	$(ANT) -f build-proxyeditor.xml
 	-$(ANT) -f build-surfacedisplayeditor.xml
 
 clean:
 	$(ANT) clean
 	$(ANT) -f build-intersense.xml clean
+	$(ANT) -f build-pinchglove.xml clean
 	$(ANT) -f build-proxyeditor.xml clean
 	$(ANT) -f build-surfacedisplayeditor.xml clean
