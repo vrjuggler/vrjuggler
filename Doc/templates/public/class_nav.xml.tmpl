@@ -3,7 +3,10 @@
 {foreach classgroup sort} < folder title="{gname}" >
 {foreach gmember sort}
 {if PUBLIC_API} {if class}
-<folder title="{classname}" link="classes/{class}_desc.html#{memberef}" {if brief} info="{brief}" {endif} image="Class.gif">
+{if gmember}
+	<folder title="{classname}" link="classes/{class}_desc.html#{memberef}" {if brief} info="{brief}" {endif} image="Class.gif">
+{if classgroup}
+	<folder title="{classname}" link="classes/{class}_desc.html" {if brief} info="{brief}" {endif} image="Class.gif">
     
   <!-- Public Funcs -->
     <font style="Bold" color="000022">
