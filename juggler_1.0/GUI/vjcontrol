@@ -2,5 +2,23 @@
 
 # shell script for running vjcontrol under jdk 1.2 using the java command
 
-CLASSPATH=
-${JDK_HOME-/usr/java}/bin/java -DVJ_BASE_DIR=${VJ_BASE_DIR} -cp ${VJ_BASE_DIR}/bin/VjControl.jar VjGUI.VjControl $*
+# If the environment variable JDK_HOME is not set, default it to /usr/java.
+if test "x${JDK_HOME}" = "x" ; then
+    echo "WARNING: Setting JDK_HOME environment variable to /usr/java"
+    JDK_HOME='/usr/java' ; export JDK_HOME
+fi
+
+# Make sure that $JDK_HOME/bin/java exists and is executable.  If it is not,
+# exit with an error message and status 1.
+if test ! -x "$JDK_HOME/bin/java" ; then
+    echo "ERROR: Could not find Java in $JDK_HOME"
+    status=1
+# Otherwise, start up VjControl and exit with status 0.
+else
+    CLASSPATH=
+    ${JDK_HOME}/bin/java -DVJ_BASE_DIR=${VJ_BASE_DIR} -cp	\
+      ${VJ_BASE_DIR}/bin/VjControl.jar VjGUI.VjControl $*
+    status=0
+fi
+
+exit $status
