@@ -75,11 +75,10 @@ public:
     * peer host.
     *
     * @pre None.
-    * @post
     *
     * @return An object containing the "name" of this socket.
     */
-   const std::string& getName (void)
+   const std::string& getName()
    {
       return mHandle->getName();
    }
@@ -92,7 +91,7 @@ public:
     *       is opened in blocking mode.  If the socket is already open, this
     *       has no effect.
     */
-   void setOpenBlocking (void)
+   void setOpenBlocking()
    {
       mOpenBlocking = true;
    }
@@ -106,7 +105,7 @@ public:
     *       is opened in non-blocking mode.  If the socket is already open,
     *       this has no effect.
     */
-   void setOpenNonBlocking (void)
+   void setOpenNonBlocking()
    {
       mOpenBlocking = false;
    }
@@ -124,7 +123,7 @@ public:
     *         successfully.<br>
     *         vpr::ReturnStatus::Fail is returned otherwise.
     */
-   vpr::ReturnStatus open(void);
+   vpr::ReturnStatus open();
 
    /**
     * Close the socket.
@@ -136,7 +135,7 @@ public:
     * @return vpr::ReturnStatus::Succeed is returned if the socket was closed
     *         successfully; vpr::ReturnStatus::Fail otherwise.
     */
-   vpr::ReturnStatus close (void)
+   vpr::ReturnStatus close()
    {
       vpr::ReturnStatus retval;
 
@@ -153,17 +152,17 @@ public:
     * @post The boolean value giving the open state is returned to the
     *       caller.
     *
-    * @return <code>true</code> is returned if this socket is open;
-    *         <code>false</code> otherwise.
+    * @return true is returned if this socket is open; false otherwise.
     */
-   bool isOpen (void)
+   bool isOpen()
    {
       return mOpen;
    }
 
    bool isBound() const
-   {  return mBound; }
-
+   {
+      return mBound;
+   }
 
    /**
     * Binds this socket to the address in the host address member variable.
@@ -172,14 +171,14 @@ public:
     * @post The socket is bound to the address in mLocalAddr.
     *
     * @return vpr::ReturnStatus::Sucess is returned if the socket was bound to
-    *         the address successfully.<br>
+    *         the address successfully.
     *         vpr::ReturnStatus::Fail is returned if the socket could not be
     *         bound to the address in mLocalAddr.
     */
-   vpr::ReturnStatus bind(void);
+   vpr::ReturnStatus bind();
 
-   /// Returns the contained handle.
-   vpr::IOSys::Handle getHandle (void)
+   /** Returns the contained handle. */
+   vpr::IOSys::Handle getHandle()
    {
       return mHandle->getHandle();
    }
@@ -188,53 +187,35 @@ public:
     * Queries if the blocking state for this socket is fixed and can no
     * longer be changed.
     */
-   bool isBlockingFixed (void)
+   bool isBlockingFixed()
    {
       return mBlockingFixed;
    }
 
    /**
-    * Reconfigures the socket so that it is in blocking mode.
+    * Reconfigures the socket so that it is in blocking or non-blocking mode.
     *
     * @pre The socket is open.
-    * @post Processes will block when accessing the socket.
+    * @post Processes will block (or not) when accessing the socket.
+    *
+    * @param blocking A value of true indicates that the socket will be
+    *                 configured to use blocking I/O.  A value of false
+    *                 indicates that it will use non-blocking I/O.
     *
     * @return vpr::ReturnStatus::Succeed is returned if the blocking mode was
     *         changed successfully; vpr::ReturnStatus::Fail otherwise.
     */
-   vpr::ReturnStatus enableBlocking(void);
-
-   /**
-    * Reconfigures the socket so that it is in non-blocking mode.
-    *
-    * @pre The socket is open.
-    * @post Processes will not block when accessing the socket.
-    *
-    * @return vpr::ReturnStatus::Succeed is returned if the blocking mode was
-    *         changed successfully; vpr::ReturnStatus::Fail otherwise.
-    */
-   vpr::ReturnStatus enableNonBlocking(void);
+   vpr::ReturnStatus setBlocking(const bool& blocking);
 
    /**
     * Gets the current blocking state for the socket.
     *
-    * @return <code>true</code> is returned if the socket is in blocking
-    *         mode.  Otherwise, <code>false</code> is returned.
+    * @return true is returned if the socket is in blocking mode.  Otherwise,
+    *         false is returned.
     */
-   bool getBlocking (void) const
+   bool isBlocking() const
    {
-      return mHandle->getBlocking();
-   }
-
-   /**
-    * Gets the current non-blocking state for the socket.
-    *
-    * @return <code>true</code> is returned if the socket is in non-blocking
-    *         mode.  Otherwise, <code>false</code> is returned.
-    */
-   bool getNonBlocking (void) const
-   {
-      return mHandle->getNonBlocking();
+      return mHandle->isBlocking();
    }
 
    // ========================================================================
@@ -273,7 +254,7 @@ public:
     * @return true is returned if this socket is still connected.<br>
     *         false is returned if this socket is not currently connected.
     */
-   bool isConnected(void);
+   bool isConnected();
 
    /**
     * Gets the type of this socket (e.g., vpr::SocketTypes::STREAM).
@@ -284,7 +265,7 @@ public:
     * @return A vpr::SocketTypes::Type value giving the socket type for this
     *         socket.
     */
-   const vpr::SocketTypes::Type& getType (void) const
+   const vpr::SocketTypes::Type& getType() const
    {
       return mType;
    }
@@ -298,7 +279,7 @@ public:
     * @return A vpr::SocketTypes::Type value giving the socket type for this
     *         socket.
     */
-   const vpr::InetAddr& getLocalAddr (void) const
+   const vpr::InetAddr& getLocalAddr() const
    {
       return mLocalAddr;
    }
@@ -315,7 +296,7 @@ public:
     * Returns the remote address for this socket.  This is typically the
     * address to which this socket is connected.
     */
-   const vpr::InetAddr& getRemoteAddr (void) const
+   const vpr::InetAddr& getRemoteAddr() const
    {
       return mRemoteAddr;
    }
@@ -422,7 +403,7 @@ public:
                              vpr::Uint32& bytes_written,
                              const vpr::Interval timeout = vpr::Interval::NoTimeout);
 
-   vpr::Uint32 availableBytes (void)
+   vpr::Uint32 availableBytes()
    {
       return mHandle->availableBytes();
    }
@@ -459,7 +440,7 @@ public:
     * @pre If mHandle is NULL, its memory has already been deleted.
     * @post The memory for mHandle is deleted.
     */
-   ~SocketImplBSD(void);
+   ~SocketImplBSD();
 
 protected:
   /**
@@ -469,7 +450,7 @@ protected:
     * @post The member variables are initialized accordingly to reasonable
     *       defaults.
     */
-   SocketImplBSD (const vpr::SocketTypes::Type sock_type)
+   SocketImplBSD(const vpr::SocketTypes::Type sock_type)
       : mOpen(false), mOpenBlocking(true), mBound(false),
         mConnected(false), mBlockingFixed(false), mHandle(NULL),
         mType(sock_type)
@@ -487,9 +468,9 @@ protected:
     * @param remote_addr The remote address for the socket.
     * @param sock_type   The type for this socket (stream, datagram, etc.).
     */
-   SocketImplBSD (const vpr::InetAddr& local_addr,
-                  const vpr::InetAddr& remote_addr,
-                  const vpr::SocketTypes::Type sock_type)
+   SocketImplBSD(const vpr::InetAddr& local_addr,
+                 const vpr::InetAddr& remote_addr,
+                 const vpr::SocketTypes::Type sock_type)
       : mOpen(false), mOpenBlocking(true), mBound(false),
         mConnected(false), mBlockingFixed(false), mHandle(NULL),
         mLocalAddr(local_addr), mRemoteAddr(remote_addr), mType(sock_type)

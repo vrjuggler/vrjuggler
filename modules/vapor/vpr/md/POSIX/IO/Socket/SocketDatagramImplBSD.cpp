@@ -60,14 +60,12 @@ namespace vpr
 // Public methods.
 // ============================================================================
 
-// ----------------------------------------------------------------------------
-// ----------------------------------------------------------------------------
-vpr::ReturnStatus SocketDatagramImplBSD::recvfrom (void* msg,
-                                                   const vpr::Uint32 length,
-                                                   const int flags,
-                                                   vpr::InetAddr& from,
-                                                   vpr::Uint32& bytes_read,
-                                                   const vpr::Interval timeout)
+vpr::ReturnStatus SocketDatagramImplBSD::recvfrom(void* msg,
+                                                  const vpr::Uint32 length,
+                                                  const int flags,
+                                                  vpr::InetAddr& from,
+                                                  vpr::Uint32& bytes_read,
+                                                  const vpr::Interval timeout)
 {
 #if defined(VPR_OS_IRIX) || defined(VPR_OS_HPUX)
    int fromlen;
@@ -93,7 +91,7 @@ vpr::ReturnStatus SocketDatagramImplBSD::recvfrom (void* msg,
       {
          bytes_read = 0;
 
-         if ( errno == EAGAIN && getNonBlocking() )
+         if ( errno == EAGAIN && ! isBlocking() )
          {
             retval.setCode(vpr::ReturnStatus::WouldBlock);
          }
@@ -119,14 +117,12 @@ vpr::ReturnStatus SocketDatagramImplBSD::recvfrom (void* msg,
    return retval;
 }
 
-// ----------------------------------------------------------------------------
-// ----------------------------------------------------------------------------
-vpr::ReturnStatus SocketDatagramImplBSD::sendto (const void* msg,
-                                                 const vpr::Uint32 length,
-                                                 const int flags,
-                                                 const vpr::InetAddr& to,
-                                                 vpr::Uint32& bytes_sent,
-                                                 const vpr::Interval timeout)
+vpr::ReturnStatus SocketDatagramImplBSD::sendto(const void* msg,
+                                                const vpr::Uint32 length,
+                                                const int flags,
+                                                const vpr::InetAddr& to,
+                                                vpr::Uint32& bytes_sent,
+                                                const vpr::Interval timeout)
 {
    vpr::ReturnStatus retval;
 
@@ -145,7 +141,7 @@ vpr::ReturnStatus SocketDatagramImplBSD::sendto (const void* msg,
       {
          bytes_sent = 0;
 
-         if ( errno == EAGAIN && getNonBlocking() )
+         if ( errno == EAGAIN && ! isBlocking() )
          {
             retval.setCode(vpr::ReturnStatus::WouldBlock);
          }

@@ -77,7 +77,7 @@ public:
     *
     * @return An object containing the "name" of this socket.
     */
-   const std::string& getName (void)
+   const std::string& getName()
    {
       return mName;
    }
@@ -90,7 +90,7 @@ public:
     *       is opened in blocking mode.  If the socket is already open, this
     *       has no effect.
     */
-   void setOpenBlocking (void)
+   void setOpenBlocking()
    {
       mOpenBlocking = true;
    }
@@ -104,7 +104,7 @@ public:
     *       is opened in non-blocking mode.  If the socket is already open,
     *       this has no effect.
     */
-   void setOpenNonBlocking (void)
+   void setOpenNonBlocking()
    {
       mOpenBlocking = false;
    }
@@ -121,7 +121,7 @@ public:
     *     false - The socket could not be opened for some reason (an error
     *             message is printed explaining why).
     */
-   vpr::ReturnStatus open(void);
+   vpr::ReturnStatus open();
 
    /**
     * Closes the socket.
@@ -134,7 +134,7 @@ public:
     * @return true if the socket was closed successfully.
     * @return false if the socket could not be closed for some reason.
     */
-   vpr::ReturnStatus close(void);
+   vpr::ReturnStatus close();
 
    /**
     * Gets the open state of this socket.
@@ -145,7 +145,7 @@ public:
     *
     * @return true is returned if this socket is open; false otherwise.
     */
-   bool isOpen (void)
+   bool isOpen()
    {
       return mOpen;
    }
@@ -167,7 +167,7 @@ public:
     *             mLocalAddr.  An error message is printed explaining what
     *             went wrong.
     */
-   vpr::ReturnStatus bind(void);
+   vpr::ReturnStatus bind();
 
    /**
     *  Return the contained handle
@@ -181,14 +181,12 @@ public:
     * Queries if the blocking state for this socket is fixed and can no
     * longer be changed.
     */
-   bool isBlockingFixed (void)
+   bool isBlockingFixed()
    {
       return mBlockingFixed;
    }
 
-   vpr::ReturnStatus enableBlocking(void);
-
-   vpr::ReturnStatus enableNonBlocking(void);
+   vpr::ReturnStatus setBlocking(const bool& blocking);
 
    /**
     * Gets the current blocking state for the socket.
@@ -196,20 +194,9 @@ public:
     * @return <code>true</code> is returned if the socket is in blocking
     *         mode.  Otherwise, <code>false</code> is returned.
     */
-   bool getBlocking (void) const
+   bool isBlocking() const
    {
       return mBlocking;
-   }
-
-   /**
-    * Gets the current non-blocking state for the socket.
-    *
-    * @return <code>true</code> is returned if the socket is in non-blocking
-    *         mode.  Otherwise, <code>false</code> is returned.
-    */
-   bool getNonBlocking (void) const
-   {
-      return ! mBlocking;
    }
 
    // ========================================================================
@@ -274,12 +261,12 @@ public:
     * @return A vpr::SocketTypes::Type value giving the socket type for
     *           this socket.
     */
-   const SocketTypes::Type& getType (void) const
+   const SocketTypes::Type& getType() const
    {
       return mType;
    }
 
-   const vpr::InetAddr& getLocalAddr (void) const
+   const vpr::InetAddr& getLocalAddr() const
    {
       return mLocalAddr;
    }
@@ -299,7 +286,7 @@ public:
       return status;
    }
 
-   const vpr::InetAddr& getRemoteAddr (void) const
+   const vpr::InetAddr& getRemoteAddr() const
    {
       return mRemoteAddr;
    }
@@ -370,7 +357,7 @@ public:
     * @post Closes the socket, and deallocates and resources associated with
     *       the socket.
     */
-   ~SocketImplNSPR(void);
+   ~SocketImplNSPR();
 
 protected:
    /**
@@ -400,7 +387,7 @@ protected:
     * Copy constructor.
     * XXX: We need to have a reference count here
     */
-   SocketImplNSPR (const SocketImplNSPR& sock)
+   SocketImplNSPR(const SocketImplNSPR& sock)
    {
       mLocalAddr      = sock.mLocalAddr;
       mRemoteAddr     = sock.mRemoteAddr;

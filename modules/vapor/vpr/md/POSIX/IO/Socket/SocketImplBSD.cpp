@@ -159,49 +159,29 @@ vpr::ReturnStatus SocketImplBSD::open ()
       // non-blocking mode.
       if ( ! mOpenBlocking )
       {
-         retval = enableNonBlocking();
+         retval = setBlocking(false);
       }
    }
 
    return retval;
 }
 
-// ----------------------------------------------------------------------------
 // Reconfigures the socket so that it is in blocking mode.
-// ----------------------------------------------------------------------------
-vpr::ReturnStatus SocketImplBSD::enableBlocking ()
+vpr::ReturnStatus SocketImplBSD::setBlocking(const bool& blocking)
 {
    vpr::ReturnStatus status;
 
    vprASSERT(isOpen() && "precondition says you must open() the socket first");
    vprASSERT(! mBlockingFixed &&
-             "Cannot enable blocking after a blocking call!");
+             "Cannot change blocking state after a blocking call!");
 
-   status = mHandle->enableBlocking();
-
-   return status;
-}
-
-// ----------------------------------------------------------------------------
-// Reconfigures the socket so that it is in non-blocking mode.
-// ----------------------------------------------------------------------------
-vpr::ReturnStatus SocketImplBSD::enableNonBlocking ()
-{
-   vpr::ReturnStatus status;
-
-   vprASSERT(isOpen() && "precondition says you must open() the socket first");
-   vprASSERT(! mBlockingFixed &&
-             "Cannot disable blocking after a blocking call!");
-
-   status = mHandle->enableNonBlocking();
+   status = mHandle->setBlocking(blocking);
 
    return status;
 }
 
-// ----------------------------------------------------------------------------
 // Bind this socket to the address in the host address member variable.
-// ----------------------------------------------------------------------------
-vpr::ReturnStatus SocketImplBSD::bind ()
+vpr::ReturnStatus SocketImplBSD::bind()
 {
    vpr::ReturnStatus retval;
    int status;
@@ -226,13 +206,11 @@ vpr::ReturnStatus SocketImplBSD::bind ()
    return retval;
 }
 
-// ----------------------------------------------------------------------------
 // Connect the socket on the client side to the server side.  For a datagram
 // socket, this makes the address given to the constructor the default
 // destination for all packets.  For a stream socket, this has the effect of
 // establishing a connection with the destination.
-// ----------------------------------------------------------------------------
-vpr::ReturnStatus SocketImplBSD::connect (vpr::Interval timeout)
+vpr::ReturnStatus SocketImplBSD::connect(vpr::Interval timeout)
 {
    vpr::ReturnStatus retval;
    int status;
@@ -250,7 +228,7 @@ vpr::ReturnStatus SocketImplBSD::connect (vpr::Interval timeout)
       // vpr::ReturnStatus::InProgress to indicate that the connection will
       // complete later.  I'm not sure if it's safe to set mConnected and
       // mBlockingFixed at this point, but they have to be set sometime.
-      if ( errno == EINPROGRESS && getNonBlocking() )
+      if ( errno == EINPROGRESS && ! isBlocking() )
       {
          if ( vpr::Interval::NoWait == timeout )
          {
@@ -322,9 +300,7 @@ vpr::ReturnStatus SocketImplBSD::connect (vpr::Interval timeout)
 
 bool SocketImplBSD::isConnected ()
 {
-   bool retval;
-
-   retval = false;
+   bool connected(false);
 
    if ( mOpen && mConnected )
    {
@@ -341,17 +317,17 @@ bool SocketImplBSD::isConnected ()
             // socket is readable, then something is wrong.
             if ( ! mHandle->isReadable(vpr::Interval::NoWait).success() )
             {
-               retval = true;
+               connected = true;
             }
          }
          else
          {
-            retval = true;
+            connected = true;
          }
       }
    }
 
-   return retval;
+   return connected;
 }
 
 vpr::ReturnStatus SocketImplBSD::setLocalAddr (const InetAddr& addr)
