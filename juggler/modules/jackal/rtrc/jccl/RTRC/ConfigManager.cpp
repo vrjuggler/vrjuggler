@@ -145,7 +145,7 @@ void ConfigManager::setRemoteReconfigPlugin(jccl::RemoteReconfig* plugin)
    // If we already have a remote reconfig plug-in, discard it first.
    if ( NULL != mReconfigIf && NULL != plugin )
    {
-      vprDEBUG(jcclDBG_RECONFIGURATION, vprDBG_STATE_LVL)
+      vprDEBUG(jcclDBG_RECONFIG, vprDBG_STATE_LVL)
          << "[ConfigManager::setRemoteReconfigPlugin()] "
          << "Removing old remote reconfig plug-in\n" << vprDEBUG_FLUSH;
 
@@ -157,7 +157,7 @@ void ConfigManager::setRemoteReconfigPlugin(jccl::RemoteReconfig* plugin)
       delete mReconfigIf;
    }
 
-   vprDEBUG(jcclDBG_RECONFIGURATION, vprDBG_VERB_LVL)
+   vprDEBUG(jcclDBG_RECONFIG, vprDBG_VERB_LVL)
       << "[ConfigManager::setRemoteReconfigPlugin()] "
       << "Enabling new remote reconfig plug-in\n" << vprDEBUG_FLUSH;
    mReconfigIf = plugin;
@@ -170,7 +170,7 @@ void ConfigManager::setRemoteReconfigPlugin(jccl::RemoteReconfig* plugin)
          // Now, attempt to enable remote run-time reconfiguration.
          if ( ! mReconfigIf->enable().success() )
          {
-            vprDEBUG(jcclDBG_RECONFIGURATION, vprDBG_WARNING_LVL)
+            vprDEBUG(jcclDBG_RECONFIG, vprDBG_WARNING_LVL)
                << clrOutBOLD(clrYELLOW, "WARNING:")
                << " Failed to enable remote run-time reconfiguration.\n"
                << vprDEBUG_FLUSH;
@@ -181,7 +181,7 @@ void ConfigManager::setRemoteReconfigPlugin(jccl::RemoteReconfig* plugin)
       // Initialization failed.
       else
       {
-         vprDEBUG(jcclDBG_RECONFIGURATION, vprDBG_WARNING_LVL)
+         vprDEBUG(jcclDBG_RECONFIG, vprDBG_WARNING_LVL)
             << clrOutBOLD(clrYELLOW, "WARNING:")
             << " Failed to initialize remote run-time reconfiguration.\n"
             << vprDEBUG_FLUSH;
