@@ -58,7 +58,11 @@ public:
     * Constructor.
     * @post We have been registered with the proxy factory.
     */
-   ProxyConstructorBase() {;}
+   ProxyConstructorBase()
+   {;}
+
+   virtual ~ProxyConstructorBase()
+   {;}
 
    /**
     * Creates the proxy.

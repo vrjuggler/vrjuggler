@@ -60,6 +60,12 @@ public:
     * @pre OpenGL context is set and ready to go.
     */
    virtual void draw(vrj::User* user) = 0;
+
+protected:
+   virtual ~GlDrawObjectFunctor()
+   {
+      /* Do nothing. */ ;
+   }
 };
 
 /** \class GlDrawGloveObjectFunctor GlDrawObjectFunctor.h vrj/Draw/OGL/GlDrawObjectFunctor.h
@@ -70,6 +76,12 @@ class GlDrawGloveObjectFunctor : public GlDrawObjectFunctor
 {
 public:
    virtual void setGlove() = 0;
+
+protected:
+   virtual ~GlDrawGloveObjectFunctor()
+   {
+      /* Do nothing. */ ;
+   }
 };
 
 }
