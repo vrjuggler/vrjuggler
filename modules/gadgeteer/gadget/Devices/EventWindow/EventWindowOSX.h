@@ -48,15 +48,6 @@ namespace gadget
 {
 
 /**
- * Call back function to register with the carbon event loop.  The userData
- * argument contains a reference to the instance of the EventWindowOSX class
- * that registered to receive the event for its window.
- */
-pascal OSStatus keyboardHandlerOSX ( EventHandlerCallRef  nextHandler,
-                                     EventRef             theEvent,
-                                     void*                userData);
-
-/**
  * OSX event window class.
  * This device is a source of keyboard events.  The device should not be
  * used directly, it should be referenced through proxies.
