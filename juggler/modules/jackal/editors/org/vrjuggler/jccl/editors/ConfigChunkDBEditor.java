@@ -566,8 +566,8 @@ public class ConfigChunkDBEditor
             for (int i=0; i<numPropValues; ++i)
             {
                // Add the embedded chunk as a child of the current property
-               VarValue value = chunk.getProperty(propDesc.getToken(), i);
-               addChunk(descNode, value.getEmbeddedChunk());
+               ConfigChunk emb_chunk = (ConfigChunk)chunk.getProperty(propDesc.getToken(), i);
+               addChunk(descNode, emb_chunk);
             }
          }
       }
@@ -1017,7 +1017,7 @@ public class ConfigChunkDBEditor
 
          // Append a new value into the property
          int insert_idx = parent_chunk.getNumPropertyValues(prop_desc.getToken());
-         VarValue default_value = prop_desc.getDefaultValue(insert_idx);
+         Object default_value = prop_desc.getDefaultValue(insert_idx);
          parent_chunk.setProperty(prop_desc.getToken(), insert_idx, default_value);
       }
       else if (cmd.equals(REMOVE_VALUE_ACTION))

@@ -256,7 +256,7 @@ public class ConfigChunkTableModel
          }
          else
          {
-            return mChunk.getProperty(desc.getToken(), value_idx).get();
+            return mChunk.getProperty(desc.getToken(), value_idx);
          }
       }
    }
@@ -283,39 +283,12 @@ public class ConfigChunkTableModel
          {
             PropertyDesc desc = getPropertyDesc(row);
 
-            VarValue varVal;
-            if (value instanceof Boolean)
-            {
-               varVal = new VarValue(((Boolean)value).booleanValue());
-            }
-            else if (value instanceof Integer)
-            {
-               varVal = new VarValue(((Integer)value).intValue());
-            }
-            else if (value instanceof Float)
-            {
-               varVal = new VarValue(((Float)value).floatValue());
-            }
-            else if (value instanceof String)
-            {
-               varVal = new VarValue(value.toString());
-            }
-            else if (value instanceof ConfigChunk)
-            {
-               varVal = new VarValue((ConfigChunk)value);
-            }
-            else
-            {
-               // ACK!
-               varVal = null;
-            }
-
             // Figure out which property value we're editing
             int base_row = getRowFor(desc);
             int value_idx = row - base_row;
 
             // Modify the value and notify listeners
-            mChunk.setProperty(desc.getToken(), value_idx, varVal);
+            mChunk.setProperty(desc.getToken(), value_idx, value);
             fireTableCellUpdated(row, col);
          }
       }

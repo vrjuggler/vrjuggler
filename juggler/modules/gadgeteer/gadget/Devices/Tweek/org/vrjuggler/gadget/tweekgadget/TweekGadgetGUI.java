@@ -205,7 +205,7 @@ public class TweekGadgetGUI
 
          for ( int j = 0; j < cur_elem.getNumPropertyValues("digitalDevice"); ++j )
          {
-            String ptr_name = cur_elem.getProperty("digitalDevice", j).getString();
+            String ptr_name = (String)cur_elem.getProperty("digitalDevice", j);
             int index = ptr_name.lastIndexOf("/");
             String subj_name = null;
 

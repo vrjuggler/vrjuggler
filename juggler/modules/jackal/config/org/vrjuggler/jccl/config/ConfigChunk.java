@@ -342,7 +342,7 @@ public class ConfigChunk
             String propdesc_token = prop_desc.getToken();
             for (int i=0; i<getNumPropertyValues(propdesc_token); ++i)
             {
-               ConfigChunk embedded_chunk = getProperty(propdesc_token, i).getEmbeddedChunk();
+               ConfigChunk embedded_chunk = (ConfigChunk)getProperty(propdesc_token, i);
                if (embedded_chunk != null)
                {
                   chunks.add(embedded_chunk);
@@ -373,7 +373,7 @@ public class ConfigChunk
     * Returns the named property value in propStorage if the property exists
     * in this chunk.
     */
-   public VarValue getProperty (String propType)
+   public Object getProperty (String propType)
    {
       return getProperty(propType, 0);
    }
@@ -387,7 +387,7 @@ public class ConfigChunk
     *                 chunk's description.
     * @param index    The indexed property matching the named type.
     *
-    * @return  A valid VarValue object containing the property value.
+    * @return  An object containing the property value.
     *
     * @note The rest of the code expects this method to return null if the
     *       index is valid but not within the range of currently defined
@@ -395,9 +395,9 @@ public class ConfigChunk
     *       every place.  Either that, or determining the difference between
     *       an "empty" VarValue object and a default value may be too hard.
     */
-   public VarValue getProperty(String propType, int index)
+   public Object getProperty(String propType, int index)
    {
-      VarValue value = null;
+      Object value = null;
 
       // Get the property description for the given property type.
       PropertyDesc prop_desc = desc.getPropertyDesc(propType);
@@ -430,7 +430,6 @@ public class ConfigChunk
                // Look up the property in the list.
                Element prop = (Element) props.get(index);
                String prop_val = prop.getTextTrim();
-               value = new VarValue(val_type);
 
                // A child chunk property.
                if (ValType.EMBEDDEDCHUNK == val_type)
@@ -448,13 +447,13 @@ public class ConfigChunk
                   if (null != child)
                   {
                      ConfigChunk child_chunk = new ConfigChunk(child);
-                     value.set(child_chunk);
+                     value = child_chunk;
                   }
                }
                // All other property types.
                else
                {
-                  value.set(prop_desc.getEnumValue(prop_val));
+                  value = prop_desc.getEnumValue(prop_val);
                }
             }
             // The index is outside the range of currently defined property
@@ -506,12 +505,15 @@ public class ConfigChunk
     * @return A boolean value stating whether or not the set operation
     *         succeeded is returned to the caller.
     */
-   public boolean setProperty(String propType, int index, VarValue value)
+   public boolean setProperty(String propType, int index, Object value)
    {
       List props = mDomElement.getChildren(propType);
       boolean status = false;
 
       PropertyDesc prop_desc = desc.getPropertyDesc(propType);
+
+      // Extract the information relevant for the given property type.
+      ValType val_type = prop_desc.getValType();
 
       // Verify that we can set the property value at the given index.
       if (index < prop_desc.getItemsSize() ||
@@ -523,10 +525,10 @@ public class ConfigChunk
 
             // The special case for embedded chunks is needed because we do
             // not want to insert them as text strings.
-            if (value.getValType() == ValType.EMBEDDEDCHUNK)
+            if (val_type == ValType.EMBEDDEDCHUNK)
             {
                prop.removeChildren();
-               prop.addContent(value.getEmbeddedChunk().getNode());
+               prop.addContent(((ConfigChunk)value).getNode());
             }
             else
             {
@@ -534,7 +536,7 @@ public class ConfigChunk
             }
 
             // Notify listeners of the change
-            firePropertyValueChanged(prop_desc.getToken(), index, value.get());
+            firePropertyValueChanged(prop_desc.getToken(), index, value);
          }
          // The property does not currently exist, so we'll add it.
          else
@@ -543,11 +545,12 @@ public class ConfigChunk
 
             // The special case for embedded chunks is needed because we do
             // not want to insert them as text strings.
-            if (value.getValType() == ValType.EMBEDDEDCHUNK)
+            if (val_type == ValType.EMBEDDEDCHUNK)
             {
-               if (value.getEmbeddedChunk() != null)
+               ConfigChunk emb_chunk = (ConfigChunk)value;
+               if (emb_chunk != null)
                {
-                  prop.addContent(value.getEmbeddedChunk().getNode());
+                  prop.addContent(emb_chunk.getNode());
                }
             }
             else
@@ -558,7 +561,7 @@ public class ConfigChunk
             mDomElement.addContent(prop);
 
             // Notify listeners of the addition
-            firePropertyValueAdded(prop_desc.getToken(), index, value.get());
+            firePropertyValueAdded(prop_desc.getToken(), index, value);
          }
 
          status = true;
@@ -579,13 +582,13 @@ public class ConfigChunk
 
       if (index < props.size())
       {
-         VarValue old_value = getProperty(propType, index);
+         Object old_value = getProperty(propType, index);
 
          Element del_prop = (Element)props.get(index);
          mDomElement.removeContent(del_prop);
 
          // Notify listeners of the removal
-         firePropertyValueRemoved(prop_desc.getToken(), index, old_value.get());
+         firePropertyValueRemoved(prop_desc.getToken(), index, old_value);
          status = true;
       }
 

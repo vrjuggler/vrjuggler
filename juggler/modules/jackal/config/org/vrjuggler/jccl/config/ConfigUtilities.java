@@ -32,6 +32,7 @@
 package org.vrjuggler.jccl.config;
 
 import java.util.*;
+import org.jdom.Element;
 
 /**
  * A collection of commonly-used utility methods for use in manipulating
@@ -144,5 +145,75 @@ public class ConfigUtilities
    public static List getChunksWithDescToken(List chunks, ChunkDesc desc)
    {
       return getChunksWithDescToken(chunks, desc.getToken());
+   }
+
+   /**
+    * Given a DOM element, the name of an attribute in that element, and the
+    * type of the value that is supposed to be stored in the attribute, this
+    * method will return the value in that attribute as the correct type.
+    *
+    * @param element    the DOM element to examine
+    * @param attrName   the name of the attribute in the element
+    * @param type       the type of the value stored in the attribute
+    *
+    * @return  the value of the attribute as the correct class
+    */
+   public static Object getAttributeValue(Element element, String attrName,
+                                          ValType type)
+   {
+      String value_string = element.getAttribute(attrName).getValue();
+      return makeProperty(value_string, type);
+   }
+
+   /**
+    * Given the string representation of a property value and the type it is
+    * supposed to be, return the value as the correct class.
+    *
+    * @param valueString   the string representation of the value
+    * @param type          the type of the value
+    *
+    * @return  the value as the correct class
+    */
+   public static Object makeProperty(String valueString, ValType type)
+   {
+      // Covert the attribute to the appropriate type
+      if (type == ValType.STRING)
+      {
+         return new String(valueString);
+      }
+      else if (type == ValType.FLOAT)
+      {
+         try
+         {
+            return new Float(valueString);
+         }
+         catch (NumberFormatException nfe)
+         {
+            return new Float(0.0f);
+         }
+      }
+      else if (type == ValType.INT)
+      {
+         try
+         {
+            return new Integer(valueString);
+         }
+         catch (NumberFormatException nfe)
+         {
+            return new Integer(0);
+         }
+      }
+      else if (type == ValType.BOOL)
+      {
+         return new Boolean(valueString);
+      }
+      else if (type == ValType.CHUNK)
+      {
+         return new String(valueString);
+      }
+      else
+      {
+         throw new IllegalArgumentException("Invalid type");
+      }
    }
 }

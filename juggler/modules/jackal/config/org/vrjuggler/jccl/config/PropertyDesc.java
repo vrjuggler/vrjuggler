@@ -196,7 +196,7 @@ public class PropertyDesc
       changeSupport.firePropertyChange("item", null, null);
    }
 
-   public Vector getItems ()
+   public Vector getItems()
    {
       Vector items = new Vector();
 
@@ -219,7 +219,7 @@ public class PropertyDesc
       return mDomElement.getChildren(item_TOKEN).size();
    }
 
-   public void setItem (int index, Item item)
+   public void setItem(int index, Item item)
    {
       if ( index >= mDomElement.getChildren(item_TOKEN).size() )
       {
@@ -241,31 +241,33 @@ public class PropertyDesc
 
    /**
     * Returns a reference to the default value at the given index.  If there
-    * is no such value, an empty VarValue object is returned.
+    * is no such value, this method returns null.
     */
-   public VarValue getDefaultValue (int index)
+   public Object getDefaultValue(int index)
    {
       ValType val_type = this.getValType();
-      VarValue val = new VarValue(val_type);
+      Object val = null;
 
       List children = mDomElement.getChildren(item_TOKEN);
 
-      if ( index < children.size() )
+      if (index < children.size())
       {
-         Element item_child = (Element) children.get(index);
+         Element item_child = (Element)children.get(index);
 
-         if ( item_child.getAttribute(default_value_TOKEN) != null )
+         if (item_child.getAttribute(default_value_TOKEN) != null)
          {
-            val.set(item_child.getAttribute(default_value_TOKEN).getValue().trim());
+            val = ConfigUtilities.getAttributeValue(item_child,
+                                                    default_value_TOKEN,
+                                                    val_type);
          }
          // XXX: Default values for embedded chunks are not yet supported.
-         else if ( ValType.EMBEDDEDCHUNK == val_type )
+         else if (ValType.EMBEDDEDCHUNK == val_type)
          {
             System.out.println("PropertyDesc.getDefaultValue("+index+"): Creating new default embedded chunk");
             String chunk_type = this.getEnumAt(0).getName();
             ConfigChunk emb_chunk = ChunkFactory.createConfigChunk(chunk_type);
             emb_chunk.setName(item_child.getAttribute("label").getValue());
-            val.set(emb_chunk);
+            val = emb_chunk;
          }
       }
       // Support embedded chunks for property descs that don't have items
@@ -275,31 +277,35 @@ public class PropertyDesc
          String chunk_type = this.getEnumAt(0).getName();
          ConfigChunk emb_chunk = ChunkFactory.createConfigChunk(chunk_type);
          emb_chunk.setName(this.getName());
-         val.set(emb_chunk);
+         val = emb_chunk;
+      }
+      // Getting a default value past the end of the items list
+      else
+      {
+         // If we have a variable number of values, return the last specified
+         // default value.
+         if (hasVariableNumberOfValues())
+         {
+            Element item_child = (Element)children.get(children.size()-1);
+
+            if (item_child.getAttribute(default_value_TOKEN) != null)
+            {
+               val = ConfigUtilities.getAttributeValue(item_child,
+                                                       default_value_TOKEN,
+                                                       val_type);
+            }
+         }
+         // If the property is not of variable length, throw an exception
+         else
+         {
+            throw new IllegalArgumentException("Cannot request a default value for a value past the end of the items list if the property is not variable.");
+         }
       }
 
       return val;
    }
 
-   /**
-    * Returns a copy of the default value at the given index.  If there is
-    * no such default value, null is returned.
-    */
-   public VarValue getDefaultValueCopy (int index)
-   {
-      VarValue val = getDefaultValue(index);
-      VarValue val_copy = null;
-
-      // If we do have a default value at the given index, make the copy.
-      if ( val != null )
-      {
-         val_copy = new VarValue(val);
-      }
-
-      return val_copy;
-   }
-
-   public void setHasVariableNumberOfValues (boolean allowsVariable)
+   public void setHasVariableNumberOfValues(boolean allowsVariable)
    {
       boolean old = hasVariableNumberOfValues();
       if ( allowsVariable )
@@ -376,12 +382,12 @@ public class PropertyDesc
       return level;
    }
 
-   public int getValueLabelsSize ()
+   public int getValueLabelsSize()
    {
       return mDomElement.getChildren(item_TOKEN).size();
    }
 
-   public String getValueLabel (int i)
+   public String getValueLabel(int i)
    {
       if ( i < getValueLabelsSize() )
       {
@@ -402,7 +408,7 @@ public class PropertyDesc
     *
     * @see addItem()
     */
-   public void setValueLabels (List labels)
+   public void setValueLabels(List labels)
    {
       mDomElement.removeChildren(item_TOKEN);
       Iterator i = labels.iterator();
@@ -424,7 +430,7 @@ public class PropertyDesc
     *
     * @see addItem()
     */
-   public void appendValueLabel (String label)
+   public void appendValueLabel(String label)
    {
       Element new_item = new Element(item_TOKEN);
       new_item.setAttribute(item_label_TOKEN, label);
@@ -530,25 +536,25 @@ public class PropertyDesc
    }
 
    /** Maps a string to an enumeration value.
-    *  @return The VarValue which is mapped by val, or null if no such
+    *  @return The value which is mapped by val, or null if no such
     *          mapping exists.
     */
-   public VarValue getEnumValue (String val)
+   public Object getEnumValue(String val)
    {
-      VarValue enum_value = null;
+      Object enum_value = null;
       Iterator i = mDomElement.getChildren(prop_enum_TOKEN).iterator();
 
-      while ( i.hasNext() )
+      while (i.hasNext())
       {
-         Element enum_elem = (Element) i.next();
+         Element enum_elem = (Element)i.next();
 
-         if ( enum_elem.getAttribute("name").getValue().equals(val) )
+         if (enum_elem.getAttribute("name").getValue().equals(val))
          {
-            enum_value = new VarValue(this.getValType());
-
-            if ( enum_elem.getAttribute("value") != null )
+            if (enum_elem.getAttribute("value") != null)
             {
-               enum_value.set(enum_elem.getAttribute("value").getValue());
+               enum_value = ConfigUtilities.getAttributeValue(enum_elem,
+                                                              "value",
+                                                              getValType());
             }
 
             break;
@@ -557,10 +563,9 @@ public class PropertyDesc
 
       // If no enumeration value was found, make a new var value from the
       // original input string.
-      if ( null == enum_value )
+      if (null == enum_value)
       {
-         enum_value = new VarValue(this.getValType());
-         enum_value.set(val);
+         enum_value = ConfigUtilities.makeProperty(val, getValType());
       }
 
       return enum_value;
@@ -570,24 +575,24 @@ public class PropertyDesc
     * Maps a value back to the name of the enum entry.  This does the reverse
     * of getEnumVal(), but it is much, much slower.
     */
-   public String getEnumString (VarValue val)
+   public String getEnumString(Object val)
    {
-      VarValue val_storage = new VarValue(val.getValType());
-      Iterator i =
-         mDomElement.getChildren(prop_enum_TOKEN).iterator();
+      Object val_storage = null;
       Element enum_elem;
       String return_val = val.toString();
 
+      Iterator i = mDomElement.getChildren(prop_enum_TOKEN).iterator();
       while ( i.hasNext() )
       {
-         enum_elem = (Element) i.next();
+         enum_elem = (Element)i.next();
 
          // If the current element has a value attribute, we extract its and
          // set its value to the value of val_storage.  Slow, slow, slow...
          if ( enum_elem.getAttribute("value") != null )
          {
-            val_storage.set(enum_elem.getAttribute("value").getValue());
-
+            val_storage = ConfigUtilities.getAttributeValue(enum_elem,
+                                                            "value",
+                                                            getValType());
             if ( val_storage.equals(val) )
             {
                return_val = enum_elem.getAttribute("name").getValue();
@@ -604,7 +609,7 @@ public class PropertyDesc
     * package visible to prevent abuse of this exposure of implementation
     * by outside packages.
     */
-   Element getNode ()
+   Element getNode()
    {
       return mDomElement;
    }
@@ -631,9 +636,10 @@ public class PropertyDesc
     * This is used to contain the attributes of a <ProprtyDesc>'s <item>
     * child(ren).
     */
-   public static class Item implements Cloneable
+   public static class Item
+      implements Cloneable
    {
-      public Item (ValType type)
+      public Item(ValType type)
       {
          this.mNode    = new Element(item_TOKEN);
          this.mValType = type;
@@ -642,13 +648,13 @@ public class PropertyDesc
          this.setDefaultValue("");
       }
 
-      public Item (Element root, ValType type)
+      public Item(Element root, ValType type)
       {
          this.mNode    = root;
          this.mValType = type;
       }
 
-      public Object clone () throws CloneNotSupportedException
+      public Object clone() throws CloneNotSupportedException
       {
          Item new_item  = (Item) super.clone();
          new_item.mNode = (Element) this.mNode.clone();
@@ -656,35 +662,35 @@ public class PropertyDesc
          return new_item;
       }
 
-      public String getLabel ()
+      public String getLabel()
       {
          return mNode.getAttribute(item_label_TOKEN).getValue();
       }
 
-      public void setLabel (String label)
+      public void setLabel(String label)
       {
          mNode.setAttribute(item_label_TOKEN, label);
       }
 
-      public ValType getValType ()
+      public ValType getValType()
       {
          return mValType;
       }
 
-      public VarValue getDefaultValue ()
+      public Object getDefaultValue()
       {
-         VarValue default_value = null;
+         Object default_value = null;
 
          // If the item actually has a default value, return it
-         if ( mNode.getAttribute(default_value_TOKEN) != null )
+         if (mNode.getAttribute(default_value_TOKEN) != null)
          {
-            default_value = new VarValue(mValType);
-            default_value.set(mNode.getAttribute(default_value_TOKEN).getValue());
+            default_value = ConfigUtilities.getAttributeValue(mNode,
+                                                              default_value_TOKEN,
+                                                              mValType);
          }
          // Otherwise, create a new value for the default
          else
          {
-            default_value = new VarValue(mValType);
             // If the type is an embedded chunk, create the chunk needed
             if (mValType == ValType.EMBEDDEDCHUNK)
             {
@@ -694,19 +700,19 @@ public class PropertyDesc
                String desc_token = desc_node.getAttributeValue(name_TOKEN);
 
                // Get the default config chunk for the found desc
-               default_value.set(ChunkFactory.createConfigChunk(desc_token));
+               default_value = ChunkFactory.createConfigChunk(desc_token);
             }
          }
 
          return default_value;
       }
 
-      public void setDefaultValue (VarValue value)
+      public void setDefaultValue(Object value)
       {
          setDefaultValue(value.toString());
       }
 
-      private void setDefaultValue (String value)
+      private void setDefaultValue(String value)
       {
          mNode.setAttribute(default_value_TOKEN, value);
       }
@@ -714,7 +720,7 @@ public class PropertyDesc
       /**
        * @note This is private so that only the PropertyDesc class call it.
        */
-      private Element getNode ()
+      private Element getNode()
       {
          return mNode;
       }

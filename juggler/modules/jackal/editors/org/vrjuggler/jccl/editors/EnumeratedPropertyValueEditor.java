@@ -51,7 +51,7 @@ public class EnumeratedPropertyValueEditor
       for (int i=0; i<propertyDesc.getNumEnums(); ++i)
       {
          DescEnum de = propertyDesc.getEnumAt(i);
-         if (de.getValue().get().equals(this.value))
+         if (de.getValue().equals(this.value))
          {
             return de.getName();
          }
@@ -82,7 +82,7 @@ public class EnumeratedPropertyValueEditor
             DescEnum de = propertyDesc.getEnumAt(i);
             if (text.equals(de.getName()))
             {
-               setValue(de.getValue().get());
+               setValue(de.getValue());
                return;
             }
          }

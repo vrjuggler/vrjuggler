@@ -47,7 +47,6 @@ import org.vrjuggler.jccl.config.ConfigChunk;
 import org.vrjuggler.jccl.config.DescEnum;
 import org.vrjuggler.jccl.config.PropertyDesc;
 import org.vrjuggler.jccl.config.ValType;
-import org.vrjuggler.jccl.config.VarValue;
 
 /**
  * Describes an editor component bean useful for editing PropertyDescs.
@@ -558,7 +557,7 @@ public class PropertyDescEditor
          }
          else
          {
-            return item.getDefaultValue().get();
+            return item.getDefaultValue();
          }
       }
 
@@ -588,24 +587,7 @@ public class PropertyDescEditor
          }
          else
          {
-            VarValue varval = null;
-            if (value instanceof Boolean)
-            {
-               varval = new VarValue(((Boolean)value).booleanValue());
-            }
-            else if (value instanceof Integer)
-            {
-               varval = new VarValue(((Integer)value).intValue());
-            }
-            else if (value instanceof Float)
-            {
-               varval = new VarValue(((Float)value).floatValue());
-            }
-            else if (value instanceof String)
-            {
-               varval = new VarValue((String)value);
-            }
-            item.setDefaultValue(varval);
+            item.setDefaultValue(value);
          }
 
          fireTableCellUpdated(row, col);
@@ -689,15 +671,7 @@ public class PropertyDescEditor
          }
          else
          {
-            VarValue value = desc_enum.getValue();
-            if (value != null)
-            {
-               return value.get();
-            }
-            else
-            {
-               return null;
-            }
+            return desc_enum.getValue();
          }
       }
 
@@ -720,25 +694,7 @@ public class PropertyDescEditor
          }
          else
          {
-            VarValue new_val = null;
-            if (value instanceof Boolean)
-            {
-               new_val = new VarValue(((Boolean)value).booleanValue());
-            }
-            else if (value instanceof Integer)
-            {
-               new_val = new VarValue(((Integer)value).intValue());
-            }
-            else if (value instanceof Float)
-            {
-               new_val = new VarValue(((Float)value).floatValue());
-            }
-            else if (value instanceof String)
-            {
-               new_val = new VarValue((String)value);
-            }
-
-            desc_enum.setValue(new_val);
+            desc_enum.setValue(value);
          }
          fireTableCellUpdated(row, col);
       }

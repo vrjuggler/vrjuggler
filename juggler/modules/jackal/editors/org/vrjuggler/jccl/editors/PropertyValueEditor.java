@@ -42,7 +42,6 @@ import javax.swing.table.*;
 
 import org.vrjuggler.jccl.config.ConfigChunk;
 import org.vrjuggler.jccl.config.PropertyDesc;
-import org.vrjuggler.jccl.config.VarValue;
 
 /**
  * Base cell editor for a ConfigChunk property sheet. This is essentially
@@ -237,7 +236,7 @@ public class PropertyValueEditor
          int add_index = src_chunk.getNumPropertyValues(desc.getToken());
 
          // Get the default value
-         VarValue default_value = desc.getDefaultValue(add_index);
+         Object default_value = desc.getDefaultValue(add_index);
 
          src_chunk.setProperty(desc.getToken(), add_index, default_value);
       }

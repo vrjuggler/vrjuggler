@@ -131,7 +131,7 @@ public class ConfigChunkTreeTableModel
          int idx = parent.getChildCount();
 //         System.out.println("Adding property node for single-valued property: "+
 //                            propDesc.getToken()+"["+idx+"]");
-         Object value = chunk.getProperty(propDesc.getToken()).get();
+         Object value = chunk.getProperty(propDesc.getToken());
          DefaultMutableTreeNode value_node = new DefaultMutableTreeNode(value);
          insertNodeInto(value_node, parent, idx);
       }
@@ -149,7 +149,7 @@ public class ConfigChunkTreeTableModel
          int num_props = chunk.getNumPropertyValues(propDesc.getToken());
          for (int i=0; i<num_props; ++i)
          {
-            Object value = chunk.getProperty(propDesc.getToken(), i).get();
+            Object value = chunk.getProperty(propDesc.getToken(), i);
             if (! (value instanceof ConfigChunk))
             {
 //               System.out.println("Adding property value: "+propDesc.getToken()+"["+i+"]");
@@ -172,11 +172,12 @@ public class ConfigChunkTreeTableModel
    private void addEmbeddedChunk(DefaultMutableTreeNode parent, ConfigChunk chunk, int index)
    {
       chunk.addConfigChunkListener(this);
-      System.out.println("Adding embedded chunk node for chunk: "+
-                         chunk.getName()+"["+index+"]");
+//      System.out.println("Adding embedded chunk node for chunk: "+
+//                         chunk.getName()+"["+index+"]");
       DefaultMutableTreeNode chunk_node = new DefaultMutableTreeNode(chunk);
       insertNodeInto(chunk_node, parent, index);
 
+//      System.out.println("Adding in properties ...");
       for (Iterator itr = chunk.getDesc().getPropertyDescs().iterator(); itr.hasNext(); )
       {
          PropertyDesc prop_desc = (PropertyDesc)itr.next();
@@ -394,34 +395,7 @@ public class ConfigChunkTreeTableModel
    private void setProperty(Object value, ConfigChunk chunk, String propToken,
                             int value_idx)
    {
-      VarValue varVal;
-      if (value instanceof Boolean)
-      {
-         varVal = new VarValue(((Boolean)value).booleanValue());
-      }
-      else if (value instanceof Integer)
-      {
-         varVal = new VarValue(((Integer)value).intValue());
-      }
-      else if (value instanceof Float)
-      {
-         varVal = new VarValue(((Float)value).floatValue());
-      }
-      else if (value instanceof String)
-      {
-         varVal = new VarValue(value.toString());
-      }
-      else if (value instanceof ConfigChunk)
-      {
-         varVal = new VarValue((ConfigChunk)value);
-      }
-      else
-      {
-         // ACK!
-         varVal = null;
-      }
-
-      chunk.setProperty(propToken, value_idx, varVal);
+      chunk.setProperty(propToken, value_idx, value);
    }
 
    /**
@@ -576,8 +550,9 @@ public class ConfigChunkTreeTableModel
     */
    private DefaultMutableTreeNode getNodeFor(Object obj, DefaultMutableTreeNode node)
    {
+//      System.out.println("getNodeFor() node: " + node.getUserObject());
       // Check if we found a match
-      if (node.getUserObject().equals(obj))
+      if (obj.equals(node.getUserObject()))
       {
          return node;
       }

@@ -137,7 +137,7 @@ public class PropertyValueRenderer
                for (int i=0; i<desc.getNumEnums(); ++i)
                {
                   DescEnum de = desc.getEnumAt(i);
-                  if (de.getValue().get().equals(value))
+                  if (de.getValue().equals(value))
                   {
                      setText(de.getName());
                      break;

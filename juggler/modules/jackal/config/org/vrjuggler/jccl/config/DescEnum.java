@@ -45,7 +45,7 @@ public class DescEnum
     */
    public DescEnum()
    {
-      this("", new VarValue(ValType.STRING));
+      this("", ValType.STRING);
    }
 
    /**
@@ -53,16 +53,15 @@ public class DescEnum
     */
    public DescEnum(String name, ValType type)
    {
-      this(name, new VarValue(type));
-      setName(name);
+      this(name, type, null);
    }
 
    /**
     * Creates a new enumeration with the given name and value.
     */
-   public DescEnum(String name, VarValue value)
+   public DescEnum(String name, ValType type, Object value)
    {
-      this(new Element(prop_enum_TOKEN), value.getValType());
+      this(new Element(prop_enum_TOKEN), type);
       setName(name);
       setValue(value);
    }
@@ -123,12 +122,12 @@ public class DescEnum
     *
     * @param value      the new value for this enumeration
     */
-   public void setValue(VarValue value)
+   public void setValue(Object value)
    {
       // Make sure we don't try to set a value for an embedded chunk
       if (getValType() != ValType.EMBEDDEDCHUNK)
       {
-         VarValue old = getValue();
+         Object old = getValue();
          mDomElement.setAttribute("value", value.toString());
          changeSupport.firePropertyChange("value", old, value);
       }
@@ -140,13 +139,14 @@ public class DescEnum
     *
     * @return  the value of this enumeration, null if it has no value
     */
-   public VarValue getValue()
+   public Object getValue()
    {
-      VarValue value = null;
+      Object value = null;
       if (mDomElement.getAttribute("value") != null)
       {
-         value = new VarValue(mValType);
-         value.set(mDomElement.getAttribute("value").getValue());
+         value = ConfigUtilities.getAttributeValue(mDomElement,
+                                                   "value",
+                                                   mValType);
       }
       return value;
    }
