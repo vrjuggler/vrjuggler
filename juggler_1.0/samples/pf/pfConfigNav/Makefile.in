@@ -17,15 +17,18 @@ AW_INCLUDES 	= @APP_EXTRA_INC_AW@
 AW_LIBS		= @APP_EXTRA_LIBS_AW@
 VJ_INCLUDES	= @INCLUDES@ $(AW_INCLUDES) -I$(VJ_BASE_DIR)/include	\
                   -I$(VJ_BASE_DIR)/include/Math -I$(srcdir)		\
-                  -I$(srcdir)/../../nav -I$(srcdir)/../../tools		\
-                  -I$(srcdir)/../pfNav -I$(srcdir)/../pfTools
+                  -I$(VJ_BASE_DIR)/samples/nav				\
+                  -I$(VJ_BASE_DIR)/samples/tools			\
+                  -I$(VJ_BASE_DIR)/samples/pf/pfNav			\
+                  -I$(VJ_BASE_DIR)/samples/pf/pfTools
 VJ_LIBS		= @APP_VJ_LIBS_BASIC@ @APP_VJ_LIBS_GL@ @APP_VJ_LIBS_PF@ @APP_VJ_LIBS_AW@ @APP_LIBS_BASIC@ 
 
 VJ_LIB_DEPS	= $(VJ_BASE_DIR)/lib32/libJuggler.a			\
                   $(VJ_BASE_DIR)/lib32/libJuggler_ogl.a			\
                   $(VJ_BASE_DIR)/lib32/libJuggler_pf.a
 
-vpath %.cpp @srcdir@ @srcdir@/../../nav @srcdir@/../../tools @srcdir@/../pfTools
+vpath %.cpp $(srcdir) $(VJ_BASE_DIR)/samples/nav $(VJ_BASE_DIR)/samples/tools
+vpath %.cpp $(VJ_BASE_DIR)/samples/pf/pfTools
 
 # This test program requires the following libraries to be linked:
 #
