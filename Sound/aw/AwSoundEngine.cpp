@@ -62,7 +62,7 @@ void AwSoundEngine::init()
 
    // - Definition
    // Call awDefineSys() with the name of an application definition file
-   vjASSERT( awDefineSys( mAdfFileName ) != -1 );
+   vjASSERT( awDefineSys( mAdfFileName.c_str() ) != -1 );
    // Make explicit function calls to create instances of AudioWorks classes.
 
    // - Configuration
