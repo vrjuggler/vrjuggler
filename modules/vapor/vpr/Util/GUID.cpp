@@ -104,7 +104,9 @@ bool GUID::operator== (const GUID& guid) const
 // ============================================================================
 
 GUID::GUID ()
+   :  m_guid( GUID::NullGUID.m_guid )     // Assign a null guid
 {
+   ; /* Do nothing */
 }
 
 GUID::GUID (const struct vpr::GUID::StdGUID& guid)
