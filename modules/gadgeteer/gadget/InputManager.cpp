@@ -32,6 +32,7 @@
 
 #include <gadget/gadgetConfig.h>
 
+#include <vpr/DynLoad/LibraryFinder.h>
 #include <vpr/Util/FileUtils.h>
 
 #include <gadget/InputManager.h> // my header...
@@ -125,14 +126,14 @@ vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
                                        std::string("Handling InputManager chunk:\n"),
                                        std::string("-- end state -- \n"));
 
-      const std::string prop_name("driver");
-      int driver_count = chunk->getNum(prop_name);
+      const std::string driver_prop_name("driver");
+      int driver_count = chunk->getNum(driver_prop_name);
       std::string driver_dso;
 
       for ( int i = 0; i < driver_count; ++i )
       {
          driver_dso =
-            vpr::replaceEnvVars(chunk->getProperty<std::string>(prop_name, i));
+            vpr::replaceEnvVars(chunk->getProperty<std::string>(driver_prop_name, i));
          vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
             << "Loading driver DSO '" << driver_dso << "'\n" << vprDEBUG_FLUSH;
 
@@ -142,6 +143,32 @@ vpr::DebugOutputGuard dbg_output(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL,
          vpr::LibraryPtr driver_library =
             vpr::LibraryPtr(new vpr::Library(driver_dso));
          this->loadDriverDSO(driver_library);
+      }
+
+      const std::string dir_prop_name("driverDirectory");
+      const std::string dso_ext_name("dsoExtName");
+      int dir_count = chunk->getNum(dir_prop_name);
+      std::string driver_dir;
+
+      const std::string driver_ext = chunk->getProperty<std::string>(dso_ext_name);
+
+      for ( int i = 0; i < dir_count; ++i )
+      {
+         driver_dir =
+            vpr::replaceEnvVars(chunk->getProperty<std::string>(dir_prop_name, i));
+         vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_CRITICAL_LVL)
+            << "Searching for driver DSOs in '" << driver_dir << "'\n"
+            << vprDEBUG_FLUSH;
+
+         vpr::LibraryFinder finder(driver_dir, driver_ext);
+         vpr::LibraryFinder::LibraryList libs = finder.getLibraries();
+
+         for ( vpr::LibraryFinder::LibraryList::iterator lib = libs.begin();
+               lib != libs.end();
+               ++lib )
+         {
+            this->loadDriverDSO(*lib);
+         }
       }
 
       ret_val = true;
