@@ -120,11 +120,31 @@ namespace jcclTest
 
       void testIsEqual()
       {
+         // start fresh and new (and shiny!!!)
+         jccl::ChunkFactory::instance()->getChunkDescDB()->removeAll();
          
+         std::string file_path( TESTFILES_PATH );
+         jccl::ChunkFactory::instance()->loadDescs( file_path + "ChunkDescTest/ChunkDescTest.desc" );
+         jccl::ChunkDescPtr desc = jccl::ChunkFactory::instance()->getChunkDesc( "config-chuck-the-beaver" );
+         
+         jccl::ChunkDesc receiving;
+         receiving = (*desc);
+
+         CPPUNIT_ASSERT( receiving == (*desc) );
       }
 
       void testIsNotEqual()
       {
+         // start fresh and new (and shiny!!!)
+         jccl::ChunkFactory::instance()->getChunkDescDB()->removeAll();
+         
+         std::string file_path( TESTFILES_PATH );
+         jccl::ChunkFactory::instance()->loadDescs( file_path + "ChunkDescTest/ChunkDescTest.desc" );
+         jccl::ChunkDescPtr desc = jccl::ChunkFactory::instance()->getChunkDesc( "config-chuck-the-beaver" );
+         
+         jccl::ChunkDesc receiving;
+
+         CPPUNIT_ASSERT( receiving != (*desc) );
       }
 
       static CppUnit::Test* suite()
