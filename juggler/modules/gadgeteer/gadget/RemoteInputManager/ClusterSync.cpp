@@ -76,7 +76,7 @@ namespace gadget
    /*inline*/ void ClusterSync::createHandshake()
    {
       mLocalSendTime.setNow();
-      if ( mLocalReceiveTime.getBaseVal() != 0 )//					Makes a little more accurate
+      if ( mLocalReceiveTime.getBaseVal() != 0 )// Makes a little more accurate
       {
          mWriter.writeUint64(mLocalReceiveTime.getBaseVal());
       }
@@ -104,7 +104,7 @@ namespace gadget
       vprDEBUG(gadgetDBG_RIM,1) << "[SYNC] 	Sent Expected Time: " << mExpectedRemoteTime.getBaseVal() << "\n" << vprDEBUG_FLUSH;
       //mWriter.writeUint16(RIM_PACKET_MSG);
       //mWriter.writeUint16(MSG_SYNC_EXP_TIME);
-      //mWriter.writeUint32(16);			//Length
+      //mWriter.writeUint32(16);   //Length
       mWriter.writeUint64(mExpectedRemoteTime.getBaseVal());
       sendAndClear();
    }
