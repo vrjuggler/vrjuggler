@@ -305,12 +305,18 @@ install-data:
 	${scriptdir}/install-dir.pl -i ${top_srcdir}/Data -o ${prefix}/Data
 
 install-gui: gui
+ifeq (@BUILD_GUI@, yes)
 	@echo "------------------------------------------------"
 	@echo "Installing vjConfig"
 	@echo "------------------------------------------------"
 	${scriptdir}/mkinstalldirs ${bindir}
 	${INSTALL} -m 644 ${topdir}/GUI/VjCfg.jar ${bindir}
 	${INSTALL} -m 755 ${VJROOT_ABS}/GUI/editconfig ${bindir}/vjConfig
+else
+	@echo "------------------------------------------------"
+	@echo "Skipping installation of vjConfig (not built)"
+	@echo "------------------------------------------------"
+endif
 
 # Dependency generation.
 depend: .depend_done
