@@ -1,9 +1,5 @@
-
-#include <IncludesTest.h>
-
 #include <iostream>
 
-#include <cppunit/TestCase.h>
 #include <cppunit/TestSuite.h>
 #include <cppunit/TestCaller.h>
 
@@ -11,6 +7,8 @@
 #include <jccl/Config/ConfigDefinition.h>
 #include <jccl/Config/Configuration.h>
 #include <jccl/Config/ElementFactory.h>
+
+#include <IncludesTest.h>
 
 /*****************************************************************
  tests out the functionality of definition & config file includes in
@@ -47,6 +45,10 @@ namespace jcclTest
         CPPUNIT_ASSERT(element.get() != NULL);
         int i = element->getProperty<int>("int_prop", 0);
         CPPUNIT_ASSERT((i == 2) && "value from include has been superceded");
+
+        element = configuration.get("Test 2");
+        i = element->getProperty<int>("int_prop");
+        CPPUNIT_ASSERT((i == 100));
     }
 
     CppUnit::Test* IncludesTest::suite()
