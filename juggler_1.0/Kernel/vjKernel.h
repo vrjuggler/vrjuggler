@@ -13,6 +13,8 @@
 #include <Kernel/vjDebug.h>
 #include <Input/InputManager/vjInputManager.h>
 #include <Kernel/vjSystemData.h>
+#include <Environment/vjEnvironmentManager.h>
+#include <Performance/vjPerfDataBuffer.h>
 
 	// --- HACK --- //
 	// Is this really needed??
@@ -81,6 +83,7 @@ protected:      // --- STARTUP ROUTINES --- //
 
       // --- Manager setup functions ---- //
    void setupInputManager();
+    void setupEnvironmentManager();
    void setupDisplayManager();
    void setupDrawManager();
 
@@ -106,7 +109,9 @@ protected:
    vjSystemFactory*  sysFactory;          //: The current System factory
    vjDrawManager*    drawManager;         //: The Draw Manager we are currently using
    vjDisplayManager* displayManager;      //: The Display Manager we are currently using
-
+   vjEnvironmentManager* environmentManager; //: The Environment Manager object
+   vjPerfDataBuffer* perfBuffer; //: store perfdata for kernel main
+ 
    /// Config Stuff
    vjChunkDescDB*    configDesc;
    vjConfigChunkDB*  mChunkDB;            //: The current chunk db for the system
