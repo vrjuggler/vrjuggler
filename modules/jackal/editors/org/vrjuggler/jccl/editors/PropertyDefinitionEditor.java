@@ -112,6 +112,7 @@ public class PropertyDefinitionEditor
          public void focusLost(FocusEvent evt)
          {
             mPropDef.setHelp(helpTextArea.getText());
+            helpPreviewPanel.setText(mPropDef.getHelp());
             System.out.println("Updating property desc help");
          }
       });
@@ -135,10 +136,12 @@ public class PropertyDefinitionEditor
       if (mPropDef != null)
       {
          helpTextArea.setText(mPropDef.getHelp());
+         helpPreviewPanel.setText(mPropDef.getHelp());
       }
       else
       {
          helpTextArea.setText("");
+         helpPreviewPanel.setText("");
       }
 
       // Enable the enum tab only if the type is not element pointer,
@@ -464,8 +467,11 @@ public class PropertyDefinitionEditor
       this.add(generalTab, "General");
       this.add(enumTab, "Enumerations");
       this.add(allowedTypesTab, "Allowed Types");
-      this.add(helpTab,  "Help");
-      helpTab.setViewportView(helpTextArea);
+      this.add(mHelpPanel,  "Help");
+      mHelpEditorScrollPane.setViewportView(helpTextArea);
+      mHelpPanel.add(mHelpEditorScrollPane, "Editor");
+      mHelpPreviewScrollPane.setViewportView(helpPreviewPanel);
+      mHelpPanel.add(mHelpPreviewScrollPane, "Preview");
    }
 
    /**
@@ -505,8 +511,11 @@ public class PropertyDefinitionEditor
    private JScrollPane allowedTypesTab = new JScrollPane();
    private JScrollPane allowedTypesScrollPane = new JScrollPane();
    private JTable allowedTypesTable = new JTable();
-   private JScrollPane helpTab = new JScrollPane();
+   private JTabbedPane mHelpPanel = new JTabbedPane();
+   private JScrollPane mHelpEditorScrollPane = new JScrollPane();
    private JTextArea helpTextArea = new JTextArea();
+   private JScrollPane mHelpPreviewScrollPane = new JScrollPane();
+   private JEditorPane helpPreviewPanel = new JEditorPane("text/html", "");
    private JScrollPane generalTab = new JScrollPane();
    private JScrollPane basicScrollPane = new JScrollPane();
    private JTable basicTable = new JTable();
@@ -963,7 +972,7 @@ public class PropertyDefinitionEditor
          // We only have rows if we have a property definition to model
          if (propertyDesc != null)
          {
-            return propertyDesc.getAllowedTypesCount();
+            return propertyDesc.getAllowedAndDerivedTypesCount();
          }
          else
          {

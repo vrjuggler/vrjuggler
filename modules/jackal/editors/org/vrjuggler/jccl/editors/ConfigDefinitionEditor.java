@@ -80,6 +80,14 @@ public class ConfigDefinitionEditor
    }
 
    /**
+    * Returns the ConfigDefinition that is currently being edited.
+    */
+   public ConfigDefinition getDefinition()
+   {
+      return mDefinition;
+   }
+   
+   /**
     * Sets the configuration definition that this panel is editing.
     *
     * @param definition   the configuration definition to edit

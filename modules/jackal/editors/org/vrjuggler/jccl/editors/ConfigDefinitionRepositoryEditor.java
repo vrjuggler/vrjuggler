@@ -77,6 +77,8 @@ public class ConfigDefinitionRepositoryEditor
          e.printStackTrace();
       }
 
+      setupListeners();
+
       // Init the configuration definition editor pane
       mDefEditorScrollPane.setViewportView(mDefEditor);
       mDefEditorScrollPane.setMinimumSize(new Dimension(0, 0));
@@ -105,12 +107,16 @@ public class ConfigDefinitionRepositoryEditor
          {
             DefaultMutableTreeNode node = (DefaultMutableTreeNode)
                            mDefPropTree.getLastSelectedPathComponent();
+
             // Show basic help if nothing is selected
             if (node == null)
             {
                // Disable the add/remove buttons
                mAddBtn.setEnabled(false);
                mRemoveBtn.setEnabled(false);
+               
+               updateListeners(null);
+               checkForChanges(null);
 
                // TODO: Show the basic help
                mEditorPaneLayout.show(mEditorPane, EMPTY);
@@ -122,9 +128,11 @@ public class ConfigDefinitionRepositoryEditor
             {
                mAddBtn.setEnabled(true);
                mRemoveBtn.setEnabled(true);
+               
+               updateListeners(node.getUserObject());
 
                ConfigDefinition def = (ConfigDefinition)node.getUserObject();
-               mDefEditor.setDefinition(def);
+               checkForChanges(def);
                mEditorPaneLayout.show(mEditorPane, CONFIG_DEFINITION);
                return;
             }
@@ -133,7 +141,18 @@ public class ConfigDefinitionRepositoryEditor
             {
                mAddBtn.setEnabled(false);
                mRemoveBtn.setEnabled(true);
+               
+               updateListeners(node.getUserObject());
 
+               // Get the first ancestor that is a ConfigDefinition.
+               TreePath path = mDefPropTree.getSelectionPath();
+               int index = path.getPathCount() - 2;
+               DefaultMutableTreeNode def_node =
+                  (DefaultMutableTreeNode)path.getPathComponent(index);
+               ConfigDefinition config_def = (ConfigDefinition)def_node.getUserObject();
+
+               checkForChanges(config_def);
+               
                PropertyDefinition prop_def = (PropertyDefinition)node.getUserObject();
                mPropertyDefEditor.setPropertyDefinition(prop_def);
                mEditorPaneLayout.show(mEditorPane, PROPERTY_DEFINITION);
@@ -144,6 +163,9 @@ public class ConfigDefinitionRepositoryEditor
             {
                mAddBtn.setEnabled(true);
                mRemoveBtn.setEnabled(false);
+               
+               updateListeners(node.getUserObject());
+               checkForChanges(null);
 
                mEditorPaneLayout.show(mEditorPane, EMPTY);
                return;
@@ -151,6 +173,207 @@ public class ConfigDefinitionRepositoryEditor
          }
       });
    }
+   
+   private ConfigDefinition mConfigDef = null;
+   private PropertyDefinition mPropDef = null;
+   private ConfigDefinitionListener cdl = null; 
+   private PropertyDefinitionListener pdl = null;
+   private boolean mDefinitionChanged = false;
+
+   private void checkForChanges(ConfigDefinition config_def)
+   {
+      if(config_def != mDefEditor.getDefinition())
+      {
+         if(mDefinitionChanged)
+         {
+            int result = JOptionPane.showConfirmDialog(this,
+               "ConfigDefinition \"" + mDefEditor.getDefinition().getName() +
+               "\" has changed. Do you want to save the changes?", "VRJConfig",
+               JOptionPane.YES_NO_OPTION);
+            
+            if(JOptionPane.YES_OPTION == result)
+            {
+               (new ConfigBrokerProxy()).saveDefinition(mDefEditor.getDefinition().getToken());
+            }
+            
+                     
+            mDefinitionChanged = false;
+         }
+         mDefEditor.setDefinition(config_def);
+      }
+   }
+   private void setupListeners()
+   {
+      cdl = new ConfigDefinitionListener()
+         {
+            public void nameChanged(ConfigDefinitionEvent evt)
+            {
+               System.out.println("Config Definition Changed..." +
+                     ((ConfigDefinition)evt.getSource()).getToken() +
+                     " " + mConfigDef.getToken());
+            }
+            public void tokenChanged(ConfigDefinitionEvent evt)
+            {
+               System.out.println("ERROR: Can not change token..." +
+                     ((ConfigDefinition)evt.getSource()).getToken() +
+                     " " + mConfigDef.getToken());
+            }
+            public void helpChanged(ConfigDefinitionEvent evt)
+            {
+               mDefinitionChanged = true;
+
+               System.out.println("Config Definition Help Changed..." +
+                     ((ConfigDefinition)evt.getSource()).getToken() +
+                     " " + mConfigDef.getToken());
+            }
+            public void categoryAdded(ConfigDefinitionEvent evt)
+            {
+               mDefinitionChanged = true;
+
+               System.out.println("Config Definition Category Changed..." +
+                     ((ConfigDefinition)evt.getSource()).getToken() +
+                     " " + mConfigDef.getToken());
+            }
+            public void categoryRemoved(ConfigDefinitionEvent evt)
+            {
+               mDefinitionChanged = true;
+
+               System.out.println("Config Definition Category Changed..." +
+                     ((ConfigDefinition)evt.getSource()).getToken() +
+                     " " + mConfigDef.getToken());
+            }
+            public void propertyDefinitionAdded(ConfigDefinitionEvent evt)
+            {
+               mDefinitionChanged = true;
+
+               System.out.println("Config Definition Prop Definition Added..." +
+                     ((ConfigDefinition)evt.getSource()).getToken() +
+                     " " + mConfigDef.getToken());
+            }
+            public void propertyDefinitionRemoved(ConfigDefinitionEvent evt)
+            {
+               mDefinitionChanged = true;
+
+               System.out.println("Config Definition Prop Definition Removed..." +
+                     ((ConfigDefinition)evt.getSource()).getToken() +
+                     " " + mConfigDef.getToken());
+            }
+         };
+      pdl = new PropertyDefinitionListener()
+         {
+            public void nameChanged(PropertyDefinitionEvent evt)
+            {
+               mDefinitionChanged = true;
+
+               System.out.println("Property Definition Changed..." +
+                     " " + mConfigDef.getToken());
+            }
+            public void tokenChanged(PropertyDefinitionEvent evt)
+            {
+               mDefinitionChanged = true;
+
+               System.out.println("Property Definition Changed..." +
+                     " " + mConfigDef.getToken());
+            }
+            public void typeChanged(PropertyDefinitionEvent evt)
+            {
+               mDefinitionChanged = true;
+
+               System.out.println("Property Definition Changed..." +
+                     " " + mConfigDef.getToken());
+            }
+            public void helpChanged(PropertyDefinitionEvent evt)
+            {
+               mDefinitionChanged = true;
+
+               System.out.println("Property Definition Changed..." +
+                     " " + mConfigDef.getToken());
+            }
+            public void propertyValueDefinitionAdded(PropertyDefinitionEvent evt)
+            {
+               mDefinitionChanged = true;
+
+               System.out.println("Property Definition Changed..." +
+                     " " + mConfigDef.getToken());
+            }
+            public void propertyValueDefinitionRemoved(PropertyDefinitionEvent evt)
+            {
+               mDefinitionChanged = true;
+
+               System.out.println("Property Definition Changed..." +
+                     " " + mConfigDef.getToken());
+            }
+            public void enumAdded(PropertyDefinitionEvent evt)
+            {
+               mDefinitionChanged = true;
+
+               System.out.println("Property Definition Changed..." +
+                     " " + mConfigDef.getToken());
+            }
+            public void enumRemoved(PropertyDefinitionEvent evt)
+            {
+               mDefinitionChanged = true;
+
+               System.out.println("Property Definition Changed..." +
+                     " " + mConfigDef.getToken());
+            }
+            public void allowedTypeAdded(PropertyDefinitionEvent evt)
+            {
+               mDefinitionChanged = true;
+
+               System.out.println("Property Definition Changed..." +
+                     " " + mConfigDef.getToken());
+            }
+            public void allowedTypeRemoved(PropertyDefinitionEvent evt)
+            {
+               mDefinitionChanged = true;
+
+               System.out.println("Property Definition Changed..." +
+                     " " + mConfigDef.getToken());
+            }
+            public void variableChanged(PropertyDefinitionEvent evt)
+            {
+               mDefinitionChanged = true;
+
+               System.out.println("Property Definition Changed..." +
+                     " " + mConfigDef.getToken());
+            }
+         };
+
+   }
+   private void updateListeners(Object value)
+   {
+      DefaultMutableTreeNode node = (DefaultMutableTreeNode)
+                     mDefPropTree.getLastSelectedPathComponent();
+
+      if(null != mConfigDef)
+      {
+         mConfigDef.removeConfigDefinitionListener(cdl);
+      }
+      if(null != mPropDef)
+      {
+         mPropDef.removePropertyDefinitionListener(pdl);
+      }
+
+      if(null != value && value instanceof ConfigDefinition)
+      {
+         mConfigDef = (ConfigDefinition)value;
+         mConfigDef.addConfigDefinitionListener(cdl);
+      }
+      if(null != value && value instanceof PropertyDefinition)
+      {
+         TreePath path = mDefPropTree.getSelectionPath();
+         int index = path.getPathCount() - 2;
+         DefaultMutableTreeNode def_node =
+            (DefaultMutableTreeNode)path.getPathComponent(index);
+         mConfigDef = (ConfigDefinition)def_node.getUserObject();
+         mConfigDef.addConfigDefinitionListener(cdl);
+         mPropDef = (PropertyDefinition)value;
+         mPropDef.addPropertyDefinitionListener(pdl);
+      }
+
+   }
+   
 
    /**
     * Sets the repository that should be edited.
