@@ -101,8 +101,9 @@ void Controller::addEvent (const vpr::Interval& event_time,
    mEvents.insert(std::pair<vpr::Interval, EventData>(event_time, EventData(edge, dir)));
 }
 
-void Controller::processNextEvent ()
+void Controller::processNextEvent (vpr::SocketImplSIM** recvSocket)
 {
+   (*recvSocket) = NULL;
    event_map_t::iterator cur_event = mEvents.begin();
 
    if ( cur_event != mEvents.end() )
@@ -133,7 +134,7 @@ void Controller::processNextEvent ()
          << " queue of line " << line.getNetworkAddressString() << "\n"
          << vprDEBUG_FLUSH;
       mClock.setCurrentTime(event_time);
-      moveMessage(msg, event_time);
+      moveMessage(msg, event_time, recvSocket);
 
       mEvents.erase(cur_event);
 
@@ -146,6 +147,7 @@ void Controller::processNextEvent ()
 
 void Controller::processEvents (const vpr::Interval& time_step)
 {
+   vpr::SocketImplSIM* recv_sock;
    vpr::Interval event_time = mClock.getCurrentTime() + time_step;
    event_map_t::iterator next_event;
 
@@ -157,7 +159,7 @@ void Controller::processEvents (const vpr::Interval& time_step)
    while ( (next_event = mEvents.begin()) != mEvents.end() &&
            (*next_event).first <= event_time )
    {
-      processNextEvent();
+      processNextEvent(&recv_sock);
    }
 }
 
@@ -166,8 +168,10 @@ void Controller::processEvents (const vpr::Interval& time_step)
 // ============================================================================
 
 void Controller::moveMessage (vpr::sim::MessagePtr msg,
-                              const vpr::Interval& cur_time)
+                              const vpr::Interval& cur_time,
+                              vpr::SocketImplSIM** recvSocket)
 {
+   (*recvSocket) = NULL;
    NetworkGraph::net_vertex_t next_hop = msg->getNextHop();
 
    bool end_of_path;
@@ -216,6 +220,7 @@ void Controller::moveMessage (vpr::sim::MessagePtr msg,
          << vprDEBUG_FLUSH;
 
       msg->getDestinationSocket()->addArrivedMessage(msg);
+      (*recvSocket) = msg->getDestinationSocket();             // Return the socket that now has the event
 
       // The above should be the last use of the memory held by msg, so the
       // should get deleted when the value of msg changes.
