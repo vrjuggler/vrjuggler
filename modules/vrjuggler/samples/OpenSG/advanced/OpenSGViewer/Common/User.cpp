@@ -1,17 +1,18 @@
+#include <Common/User.h>
+
 #include <gmtl/Matrix.h>
 #include <gmtl/MatrixOps.h>
 #include <gmtl/Vec.h>
 #include <gmtl/Generate.h>
 #include <gmtl/Output.h>
 
-#include <ViewPlatform.h>
 
-void User::update(ViewPlatform* vp)
+void User::update()
 {
-   //mViewPlatform.update(this);   // Update the view platform
+   mViewPlatform.update(this);   // Update the view platform
 
    // --- UPDATE USER POSITION --- //
-   gmtl::Matrix44f vw_M_plat = vp->getTransform_virtMplat();
+   gmtl::Matrix44f vw_M_plat = mViewPlatform.getTransform_virtMplat();
    gmtl::Matrix44f head_pos_world;  // Head position in real world (platform) coords
    head_pos_world = *(getHeadPos()->getData());
 
