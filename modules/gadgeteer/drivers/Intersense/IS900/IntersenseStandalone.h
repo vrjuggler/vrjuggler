@@ -187,7 +187,7 @@ public:
 //: sendScript
 //+ filename: the name of a file containing an intersense protocol script
     bool sendScript() {
-       return ISD_SendScript( mHandle, (char *) script );
+       return ((ISD_SendScript(mHandle, (char*) script) == 1) ? true : false);
     }
 
     bool setScript(const char* inscript) {
