@@ -502,11 +502,8 @@ void FlockStandalone::sample()
 int FlockStandalone::close()
 {
    int retval;
-   vpr::Uint32 written;
    if ( mSerialPort != NULL )
    {
-      char bird_command[4];
-
       std::cout << " [FlockStandalone] Closing the flock ...\n" << std::flush;
 
       if (STREAMING == mStatus)

@@ -112,7 +112,7 @@ namespace Flock
       const std::string& getMessage() const
       { return mMsg; }
 
-      virtual const char* what() throw()
+      virtual const char* what() const throw()
       { return mMsg.c_str();  }
 
    protected:
@@ -673,13 +673,13 @@ public:  // ---- Query methods for flock state ---- //
 
    // ---- Attribute getters ------ //
    // These methods are only valid after the initial open command completes
-   Flock::AddressingMode getAddressingMode()
+   Flock::AddressingMode getAddressingMode() const
    {  return mAddrMode; }
-   float getSoftwareRevision()
+   float getSoftwareRevision() const
    {  return mSwRevision; }
-   std::string getModelId()
+   std::string getModelId() const
    {  return mModelId; }
-   Status getStatus()
+   Status getStatus() const
    { return mStatus; }
 
 protected:     // -- Bird commands --- //
