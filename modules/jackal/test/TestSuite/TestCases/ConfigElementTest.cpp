@@ -8,7 +8,9 @@
 namespace jcclTest
 {
 
-void ConfigElementTest::setPropTests()
+CPPUNIT_TEST_SUITE_REGISTRATION(ConfigElementTest);
+
+void ConfigElementTest::SetProperty()
 {
    bool retval = false;
 
@@ -104,7 +106,7 @@ void ConfigElementTest::setPropTests()
    }
 }
 
-void ConfigElementTest::PropertyValueTests()
+void ConfigElementTest::PropertyValues()
 {
    const std::string file_path(TESTFILES_PATH);
 
@@ -152,7 +154,35 @@ void ConfigElementTest::PropertyValueTests()
    CPPUNIT_ASSERT(elt2->getProperty<int>("single_int") == 21);
 }
 
-void ConfigElementTest::testEqual()
+void ConfigElementTest::BasicEquality()
+{
+   jccl::ConfigDefinitionPtr desc =
+      jccl::ElementFactory::instance()->getConfigDefinition("test_element", 1);
+
+   // set property integer
+   jccl::ConfigElement elt_int(desc);
+   bool retval = elt_int.setProperty("test_prop_int", 0, -928);
+   CPPUNIT_ASSERT( retval == true );
+
+   jccl::ConfigElement receiving(elt_int);
+   CPPUNIT_ASSERT(elt_int == receiving);
+}
+
+void ConfigElementTest::CopyConstructor()
+{
+   jccl::ConfigDefinitionPtr desc =
+      jccl::ElementFactory::instance()->getConfigDefinition("test_element", 1);
+
+   // set property integer
+   jccl::ConfigElement elt_int(desc);
+   bool retval = elt_int.setProperty( "test_prop_int", 0, 69 );
+   CPPUNIT_ASSERT( retval == true );
+
+   jccl::ConfigElement receiving(elt_int);
+   CPPUNIT_ASSERT(elt_int.getProperty<int>("test_prop_int", 0) == receiving.getProperty<int>("test_prop_int", 0));
+}
+
+void ConfigElementTest::ContentEquality()
 {
    jccl::ConfigDefinitionPtr desc =
       jccl::ElementFactory::instance()->getConfigDefinition("test_element", 1);
@@ -172,35 +202,7 @@ void ConfigElementTest::testEqual()
    CPPUNIT_ASSERT(elt_int.getProperty<int>("test_prop_int", 0) == receiving.getProperty<int>("test_prop_int", 0));
 }
 
-void ConfigElementTest::testCopyConstr()
-{
-   jccl::ConfigDefinitionPtr desc =
-      jccl::ElementFactory::instance()->getConfigDefinition("test_element", 1);
-
-   // set property integer
-   jccl::ConfigElement elt_int(desc);
-   bool retval = elt_int.setProperty( "test_prop_int", 0, 69 );
-   CPPUNIT_ASSERT( retval == true );
-
-   jccl::ConfigElement receiving(elt_int);
-   CPPUNIT_ASSERT(elt_int.getProperty<int>("test_prop_int", 0) == receiving.getProperty<int>("test_prop_int", 0));
-}
-
-void ConfigElementTest::testIsEqual()
-{
-   jccl::ConfigDefinitionPtr desc =
-      jccl::ElementFactory::instance()->getConfigDefinition("test_element", 1);
-
-   // set property integer
-   jccl::ConfigElement elt_int(desc);
-   bool retval = elt_int.setProperty("test_prop_int", 0, -928);
-   CPPUNIT_ASSERT( retval == true );
-
-   jccl::ConfigElement receiving(elt_int);
-   CPPUNIT_ASSERT(elt_int == receiving);
-}
-
-void ConfigElementTest::testIsNotEqual()
+void ConfigElementTest::BasicInequality()
 {
    jccl::ConfigDefinitionPtr desc =
       jccl::ElementFactory::instance()->getConfigDefinition("test_element", 1);
@@ -214,7 +216,7 @@ void ConfigElementTest::testIsNotEqual()
    CPPUNIT_ASSERT(elt_int != receiving);
 }
 
-void ConfigElementTest::testAreDefaultsProperlyReturned()
+void ConfigElementTest::ReadPropertyValues()
 {
    jccl::ConfigDefinitionPtr desc =
       jccl::ElementFactory::instance()->getConfigDefinition("test_element", 1);
@@ -225,23 +227,6 @@ void ConfigElementTest::testAreDefaultsProperlyReturned()
    CPPUNIT_ASSERT( std::string( "upchuck" ) == defaults.getProperty<std::string>( "test_prop_string", 0 ) );
    CPPUNIT_ASSERT( std::string( "woodchuck" ) == defaults.getProperty<std::string>( "test_prop_multi", 0 ) );
    CPPUNIT_ASSERT( true == defaults.getProperty<bool>( "test_prop_bool", 0 ) );
-}
-
-CppUnit::Test* ConfigElementTest::suite()
-{
-   CppUnit::TestSuite* test_suite = new CppUnit::TestSuite( "ConfigElementTest" );
-   test_suite->addTest( new CppUnit::TestCaller<ConfigElementTest>( "PropertyValueTests", &ConfigElementTest::PropertyValueTests ) );
-   test_suite->addTest( new CppUnit::TestCaller<ConfigElementTest>( "setPropTests", &ConfigElementTest::setPropTests ) );
-
-   test_suite->addTest( new CppUnit::TestCaller<ConfigElementTest>( "testEqual", &ConfigElementTest::testEqual ) );
-   test_suite->addTest( new CppUnit::TestCaller<ConfigElementTest>( "testCopyConstr", &ConfigElementTest::testCopyConstr ) );
-
-   test_suite->addTest( new CppUnit::TestCaller<ConfigElementTest>( "testIsEqual", &ConfigElementTest::testIsEqual ) );
-   test_suite->addTest( new CppUnit::TestCaller<ConfigElementTest>( "testIsNotEqual", &ConfigElementTest::testIsNotEqual ) );
-
-   test_suite->addTest( new CppUnit::TestCaller<ConfigElementTest>( "testAreDefaultsProperlyReturned", &ConfigElementTest::testAreDefaultsProperlyReturned ) );
-
-   return test_suite;
 }
 
 }  // End of jcclTest namespace

@@ -1,8 +1,3 @@
-#include <iostream>
-
-#include <cppunit/TestSuite.h>
-#include <cppunit/TestCaller.h>
-
 #include <jccl/Config/ConfigElement.h>
 #include <jccl/Config/ConfigDefinition.h>
 #include <jccl/Config/Configuration.h>
@@ -18,45 +13,45 @@
 namespace jcclTest
 {
 
-    IncludesTest::IncludesTest() : CppUnit::TestCase()
-    {
-    }
+CPPUNIT_TEST_SUITE_REGISTRATION(IncludesTest);
 
-    IncludesTest::IncludesTest(std::string name) : CppUnit::TestCase(name)
-    {
-    }
+void IncludesTest::BasicInclude()
+{
+   jccl::ConfigElementPtr element1, element2;
+   jccl::Configuration configuration;
 
-    IncludesTest::~IncludesTest()
-    {
-    }
+   std::string file_path(TESTFILES_PATH);
+   configuration.load(file_path + "cfg/include_test.jcfg");
 
-    void IncludesTest::XMLElementIncludeTest()
-    {
-        jccl::ConfigElementPtr element;
-        jccl::Configuration configuration;
+   element1 = configuration.get("Test 1");
+   CPPUNIT_ASSERT(element1.get() != NULL && "Failed to load first file");
 
-        std::string file_path(TESTFILES_PATH);
-        configuration.load(file_path + "cfg/include_test.jcfg");
+   element2 = configuration.get("Test 2");
+   CPPUNIT_ASSERT(element2.get() != NULL && "Failed to include second file");
 
-        element = configuration.get("Test 1");
-        CPPUNIT_ASSERT(element.get() != NULL);
+   int i = element2->getProperty<int>("int_prop");
+   CPPUNIT_ASSERT((i == 100) && "Failed to get contents from second file");
+}
 
-        element = configuration.get("Superceding Test");
-        CPPUNIT_ASSERT(element.get() != NULL);
-        int i = element->getProperty<int>("int_prop", 0);
-        CPPUNIT_ASSERT((i == 2) && "value from include has been superceded");
+void IncludesTest::ValueSuperceding()
+{
+   jccl::ConfigElementPtr element;
+   jccl::Configuration configuration;
 
-        element = configuration.get("Test 2");
-        i = element->getProperty<int>("int_prop");
-        CPPUNIT_ASSERT((i == 100));
-    }
+   std::string file_path(TESTFILES_PATH);
+   configuration.load(file_path + "cfg/include_test.jcfg");
 
-    CppUnit::Test* IncludesTest::suite()
-    {
-        CppUnit::TestSuite* test_suite = new CppUnit::TestSuite("IncludesTest");
-        test_suite->addTest( new CppUnit::TestCaller<IncludesTest>("XMLElementIncludeTest", &IncludesTest::XMLElementIncludeTest));
+   element = configuration.get("Test 1");
+   CPPUNIT_ASSERT(element.get() != NULL);
 
-        return test_suite;
-    }
+   element = configuration.get("Superceding Test");
+   CPPUNIT_ASSERT(element.get() != NULL);
+   int i = element->getProperty<int>("int_prop", 0);
+   CPPUNIT_ASSERT((i == 2) && "value from include has been superceded");
+
+   element = configuration.get("Test 2");
+   i = element->getProperty<int>("int_prop");
+   CPPUNIT_ASSERT((i == 100));
+}
 
 }  // namespace jcclTest

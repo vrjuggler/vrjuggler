@@ -8,7 +8,9 @@
 namespace jcclTest
 {
 
-void ConfigurationTest::testLoad()
+CPPUNIT_TEST_SUITE_REGISTRATION(ConfigurationTest);
+
+void ConfigurationTest::Load()
 {
    std::string file_path(TESTFILES_PATH);
    bool status;
@@ -80,7 +82,7 @@ void ConfigurationTest::testDependencySortFailure()
 }
 */
 
-void ConfigurationTest::testClear()
+void ConfigurationTest::Clear()
 {
    std::string file_path(TESTFILES_PATH);
    bool status;
