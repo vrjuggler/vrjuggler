@@ -36,21 +36,21 @@ import VjConfig.*;
  */
 
 public class ChunkOrgTreePane extends JPanel 
-    implements ActionListener, CellEditorListener, MouseListener {
+    implements ActionListener, CellEditorListener, MouseListener, CoreDBListener {
 
-    JButton   new_button;
-    JButton   load_button;
-    JButton   save_button;
-    JButton   apply_button;
+    private JButton   new_button;
+    private JButton   load_button;
+    private JButton   save_button;
+    private JButton   apply_button;
 
-    JButton   remove_button;
-    JButton   insertfolder_button;
-    JButton   insertdescname_button;
+    private JButton   remove_button;
+    private JButton   insertfolder_button;
+    private JButton   insertdescname_button;
 
-    JPopupMenu treeitem_menu, childlesstreeitem_menu;
-    TreePath treeitem_menu_path;
-    JMenuItem addfolder_mi, remove_mi, cremove_mi, unnameddesc_mi;
-    JMenu addchunkdesc_menu;
+    private JPopupMenu treeitem_menu, childlesstreeitem_menu;
+    private TreePath treeitem_menu_path;
+    private JMenuItem addfolder_mi, remove_mi, cremove_mi, unnameddesc_mi;
+    private JMenu addchunkdesc_menu;
 
     ChunkOrgTree orgtree;
 
@@ -158,9 +158,13 @@ public class ChunkOrgTreePane extends JPanel
 	remove_mi.addActionListener (this);
 	unnameddesc_mi.addActionListener (this);
 	cremove_mi.addActionListener (this);
+
+	Core.addCoreDBListener (this);
     }
 
-    public void updateInsertTypes () {
+
+
+    private void updateInsertTypes () {
 	int i;
 	ChunkDesc d;
 	JMenuItem mi;
@@ -327,6 +331,24 @@ public class ChunkOrgTreePane extends JPanel
 
     public void editingStopped (ChangeEvent e) {
 	//System.out.println ("Edit event :" + e + ", from " + e.getSource());
+    }
+
+
+
+    // CoreDBListener stuff
+
+    public void addChunkDB (CoreDBEvent e) {
+    }
+
+    public void removeChunkDB (CoreDBEvent e) {
+    }
+
+    public void addDescDB (CoreDBEvent e) {
+	updateInsertTypes();
+    }
+
+    public void removeDescDB (CoreDBEvent e) {
+	updateInsertTypes();
     }
 }
 

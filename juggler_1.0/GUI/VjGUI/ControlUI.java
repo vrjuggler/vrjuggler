@@ -33,8 +33,16 @@ import VjGUI.configchunk.ConfigChunkFrame;
 import VjConfig.*;
 import VjPerf.*;
 
+// BUG: this code doesn't now deal with adding to the helpdesc_menu... code
+// such as this for when we add to the global DescDB...
+//  	for (i = 0; i < db.size(); i++) {
+//  	    d = (ChunkDesc)db.elementAt(i);
+//  	    helpdesc_menu.add (newmenu = new JMenuItem (d.getName()));
+//  	    newmenu.addActionListener(this);
+
+
 public class ControlUI  extends JFrame 
-    implements ActionListener, WindowListener, JFrameParent {
+    implements ActionListener, WindowListener, JFrameParent, LogMessageListener {
 
 
     JPanel      main_panel;
@@ -188,43 +196,29 @@ public class ControlUI  extends JFrame
 
 	//show();
 	//configure_pane.setDividerLocation (0.5);
+
+	Core.addLogMessageListener (this);
     }
 
 
 
-    public void addChunkDBTree (ChunkDBTreeModel dbt) {
-	configure_pane.addChunkDBTree (dbt);
-    }
 
 
+//      public void addDescDB (ChunkDescDB db) {
+//  	int i;
+//  	ChunkDesc d;
+//  	JMenuItem newmenu;
 
-    public void removeChunkDBTree (ChunkDBTreeModel dbt) {
-	configure_pane.removeChunkDBTree (dbt);
-    }
-
-
-
-    public void removeDescDB (String name) {
-	descdb_pane.removeDescDB (name);
-    }
-
-
-
-    public void addDescDB (ChunkDescDB db) {
-	int i;
-	ChunkDesc d;
-	JMenuItem newmenu;
-
-	descdb_pane.addDescDB (db.name);
-	configure_pane.updateInsertTypes();
-	orgtree_pane.updateInsertTypes();
-	// update our helpdesc_menu
-	for (i = 0; i < db.size(); i++) {
-	    d = (ChunkDesc)db.elementAt(i);
-	    helpdesc_menu.add (newmenu = new JMenuItem (d.getName()));
-	    newmenu.addActionListener(this);
-	}
-    }
+//  	descdb_pane.addDescDB (db.name);
+//  	configure_pane.updateInsertTypes();
+//  	orgtree_pane.updateInsertTypes();
+//  	// update our helpdesc_menu
+//  	for (i = 0; i < db.size(); i++) {
+//  	    d = (ChunkDesc)db.elementAt(i);
+//  	    helpdesc_menu.add (newmenu = new JMenuItem (d.getName()));
+//  	    newmenu.addActionListener(this);
+//  	}
+//      }
 
 
 
@@ -538,6 +532,28 @@ public class ControlUI  extends JFrame
     public void windowOpened(WindowEvent e) {}
 
 
+    /* LogMessageListener stuff */
+    public void logMessage (LogMessageEvent e) {
+	String source = e.getSourceName();
+	String s = e.getMessage();
+
+	switch (e.getStyle()) {
+	case LogMessageEvent.TEMPORARY_MESSAGE:
+	    status_label.setText ("(" + source + "): " + s);
+	    status_label.setForeground (UIManager.getColor ("Label.foreground"));
+	    //Core.ui.status_label.repaint((long)1);
+	    paint (getGraphics());
+	    break;
+	case LogMessageEvent.PERMANENT_MESSAGE:
+	    status_label.setText ("(" + source + "): " + s);
+	    status_label.setForeground (UIManager.getColor ("Label.foreground"));
+	    break;
+	case LogMessageEvent.PERMANENT_ERROR:
+	    status_label.setText ("Error (" + source + "): " + s);
+	    status_label.setForeground (Color.red);
+	    break;
+	}
+    }
 
 }
 
