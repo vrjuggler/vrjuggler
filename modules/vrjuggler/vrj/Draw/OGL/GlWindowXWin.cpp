@@ -415,11 +415,13 @@ XVisualInfo* vjGlxWindow::GetGlxVisInfo (Display *display, int screen)
    if (mDisplay->inStereo())
    {
       viattrib[NumAttribs++] = GLX_STEREO;
-      viattrib[NumAttribs] = None;
       in_stereo = true;
    }
    else
       in_stereo = false;
+
+   // Add terminator
+   viattrib[NumAttribs] = None;
 
 
    // first, see if we can get exactly what we want.
