@@ -61,6 +61,8 @@ BOOST_PYTHON_LDFLAGS=	@BOOST_PYTHON_LDFLAGS@
 LDFLAGS=		@EXTRA_LINK_FLAGS@ $(BOOST_PYTHON_LDFLAGS)	\
 			$(PYTHON_LDFLAGS)
 
+PYJUTIL_LIB=		@PYJUTIL_LDFLAGS@
+
 DLLEXT=			@DYNAMICLIB_EXT@
 DYLIB_NAME_FLAG=	@DYLIB_NAME_FLAG@
 OBJEXT=			@OBJEXT@
@@ -71,16 +73,54 @@ PYSTE_FILES=	vpr.pyste	\
 		gadget.pyste	\
 		vrj.pyste
 
-SRCS=		$(PYSTE_FILES:.pyste=.cpp)
-OBJS=		$(SRCS:.cpp=.$(OBJEXT))
-MODS=		$(PYSTE_FILES:.pyste=.$(DLLEXT))
+MODS=		$(addprefix mods/, $(PYSTE_FILES:.pyste=.$(DLLEXT)))
 
-VPR_OBJS=	vpr.$(OBJEXT)
+VPR_SRCS= \
+	vpr/_GUID.cpp		\
+	vpr/_Interval.cpp	\
+	vpr/_ReturnStatus.cpp	\
+	vpr/vpr.cpp
+
+GADGET_SRCS= \
+	gadget/_Analog.cpp				\
+	gadget/_AnalogData.cpp				\
+	gadget/_AnalogInterface.cpp			\
+	gadget/_AnalogProxy.cpp				\
+	gadget/_BaseDeviceInterface.cpp			\
+	gadget/_Digital.cpp				\
+	gadget/_DigitalData.cpp				\
+	gadget/_DigitalInterface.cpp			\
+	gadget/_DigitalProxy.cpp			\
+	gadget/_Event.cpp				\
+	gadget/_KeyEvent.cpp				\
+	gadget/_MouseEvent.cpp				\
+	gadget/_Position.cpp				\
+	gadget/_PositionData.cpp			\
+	gadget/_PositionInterface.cpp			\
+	gadget/_PositionProxy.cpp			\
+	gadget/_gadget_Type_EventWindow_Event_h.cpp	\
+	gadget/_gadget_Type_EventWindow_Keys_h.cpp	\
+	gadget/gadget.cpp
+
+VRJ_SRCS= \
+	vrj/_App.cpp			\
+	vrj/_CameraProjection.cpp	\
+	vrj/_Display.cpp		\
+	vrj/_Frustum.cpp		\
+	vrj/_GlApp.cpp			\
+	vrj/_Kernel.cpp			\
+	vrj/_Projection.cpp		\
+	vrj/_SimViewport.cpp		\
+	vrj/_User.cpp			\
+	vrj/_Viewport.cpp		\
+	vrj/vrj.cpp
+
+VPR_OBJS=	$(VPR_SRCS:.cpp=.$(OBJEXT))
 JCCL_OBJS=	jccl.$(OBJEXT)
-GADGET_OBJS=	gadget.$(OBJEXT)
-VRJ_OBJS=	vrj.$(OBJEXT)
+GADGET_OBJS=	$(GADGET_SRCS:.cpp=.$(OBJEXT))
+VRJ_OBJS=	$(VRJ_SRCS:.cpp=.$(OBJEXT))
 
-PYJUTIL_LIB=	-L$(topdir)/lib -lpyjutil
+OBJS=		$(VPR_OBJS) $(JCCL_OBJS) $(GADGET_OBJS) $(VRJ_OBJS)
 
 vpath %.cpp $(srcdir)
 vpath %.pyste $(srcdir)/../pyste
@@ -97,6 +137,10 @@ vpath %.pyste $(srcdir)/../pyste
 # distribution issues.
 
 all:
+	if [ ! -d vpr ] ; then mkdir vpr ; fi
+	if [ ! -d gadget ] ; then mkdir gadget ; fi
+	if [ ! -d vrj ] ; then mkdir vrj ; fi
+	if [ ! -d mods ] ; then mkdir mods ; fi
 	$(MAKE) modules
 	$(MAKE) prefix="$(topdir)" install
 
@@ -105,9 +149,7 @@ modules: $(MODS)
 install:
 	$(MKINSTALLDIRS) $(PYTHON_PACKAGES)
 	cp $(top_srcdir)/dist/__init__.py $(PYTHON_PACKAGES)
-	for mod in $(MODS) ; do			\
-            cp -p $$mod $(PYTHON_PACKAGES) ;	\
-          done
+	cp -p $(MODS) $(PYTHON_PACKAGES)
 
 # Rule for generating a .cpp file from a .pyste file.
 %.cpp: %.pyste
@@ -119,19 +161,19 @@ install:
 %.$(DLLEXT): %.$(OBJEXT)
 	$(CXX_PLUGIN) $(DYLIB_NAME_FLAG) $< $(LDFLAGS) $(LIBS) $(EXTRA_LIBS)
 
-vpr.$(DLLEXT): $(VPR_OBJS)
+mods/vpr.$(DLLEXT): $(VPR_OBJS)
 	$(CXX_PLUGIN) $(DYLIB_NAME_FLAG) $(VPR_OBJS) $(LDFLAGS)		\
           $(VPR_LIBS) $(VPR_EXTRA_LIBS)
 
-jccl.$(DLLEXT): $(JCCL_OBJS)
+mods/jccl.$(DLLEXT): $(JCCL_OBJS)
 	$(CXX_PLUGIN) $(DYLIB_NAME_FLAG) $(JCCL_OBJS) $(LDFLAGS)	\
           $(JCCL_LIBS) $(JCCL_EXTRA_LIBS)
 
-gadget.$(DLLEXT): $(GADGET_OBJS)
+mods/gadget.$(DLLEXT): $(GADGET_OBJS)
 	$(CXX_PLUGIN) $(DYLIB_NAME_FLAG) $(GADGET_OBJS) $(LDFLAGS)	\
           $(GADGET_LIBS) $(GADGET_EXTRA_LIBS)
 
-vrj.$(DLLEXT): $(VRJ_OBJS)
+mods/vrj.$(DLLEXT): $(VRJ_OBJS)
 	$(CXX_PLUGIN) $(DYLIB_NAME_FLAG) $(VRJ_OBJS) $(PYJUTIL_LIB)	\
           $(LDFLAGS) $(VJ_LIBS) $(VJ_EXTRA_LIBS)
 

@@ -1,5 +1,7 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Jun-30-2003 patrickh    Separated the source for the vpr, gadget, and vrj
+                        modules into multiple .cpp files.
 Jun-26-2003 patrickh    Removed the vjAvatar bindings.  They now live along
                         side the vjAvatar C++ code.
                         NEW VERSION: 0.7.0

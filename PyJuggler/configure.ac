@@ -231,6 +231,12 @@ if test "x$USE_GCC" != "xyes" ; then
    fi
 fi
 
+if test "x$OS_TYPE" = "xWin32" ; then
+   PYJUTIL_LDFLAGS='/libpath:$(topdir)/lib pyjutil.lib'
+else
+   PYJUTIL_LDFLAGS='-L$(topdir)/lib -lpyjutil'
+fi
+
 DPP_PTHREAD_FINISH
 
 # -----------------------------------------------------------------------------
@@ -240,6 +246,7 @@ DPP_PTHREAD_FINISH
 DPP_SUBST
 
 AC_SUBST(EXTRA_LINK_FLAGS)
+AC_SUBST(PYJUTIL_LDFLAGS)
 
 AC_SUBST(PYTHON_ROOT)
 AC_SUBST(PYTHON_INCLUDES)
