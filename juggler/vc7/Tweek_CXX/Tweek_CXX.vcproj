@@ -38,7 +38,7 @@
 				OutputFile="$(OutDir)/tweek_d.dll"
 				Version="0.16.2"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="&quot;$(OMNIORB_ROOT)\lib\x86_win32&quot;;&quot;$(NSPR_ROOT)\lib&quot;;..\VPR\DebugDLL"
+				AdditionalLibraryDirectories="&quot;$(OMNIORB_LIB)&quot;;&quot;$(NSPR_ROOT)\lib&quot;;..\VPR\DebugDLL"
 				ModuleDefinitionFile="..\..\modules\tweek\corba_exports.def"
 				GenerateDebugInformation="TRUE"
 				ProgramDatabaseFile="$(OutDir)/tweek_d.pdb"
@@ -53,10 +53,10 @@
 				Name="VCPreBuildEventTool"
 				Description="Generating C++ stubs from CORBA IDL..."
 				CommandLine="mkdir tweek\CORBA
-$(OMNIORB_ROOT)\bin\x86_win32\omniidl -bcxx -Wbh=.h,s=.cpp -Ctweek\CORBA -I../../modules/tweek ../../modules/tweek/tweek/idl/SubjectManager.idl
-$(OMNIORB_ROOT)\bin\x86_win32\omniidl -bcxx -Wbh=.h,s=.cpp -Ctweek\CORBA -I../../modules/tweek ../../modules/tweek/tweek/idl/Subject.idl
-$(OMNIORB_ROOT)\bin\x86_win32\omniidl -bcxx -Wbh=.h,s=.cpp -Ctweek\CORBA -I../../modules/tweek ../../modules/tweek/tweek/idl/Observer.idl
-$(OMNIORB_ROOT)\bin\x86_win32\omniidl -bcxx -Wbh=.h,s=.cpp -Ctweek\CORBA -I../../modules/tweek ../../modules/tweek/tweek/idl/BeanDeliverySubject.idl
+$(OMNIORB_BIN)\omniidl -bcxx -Wbh=.h,s=.cpp -Ctweek\CORBA -I../../modules/tweek ../../modules/tweek/tweek/idl/SubjectManager.idl
+$(OMNIORB_BIN)\omniidl -bcxx -Wbh=.h,s=.cpp -Ctweek\CORBA -I../../modules/tweek ../../modules/tweek/tweek/idl/Subject.idl
+$(OMNIORB_BIN)\omniidl -bcxx -Wbh=.h,s=.cpp -Ctweek\CORBA -I../../modules/tweek ../../modules/tweek/tweek/idl/Observer.idl
+$(OMNIORB_BIN)\omniidl -bcxx -Wbh=.h,s=.cpp -Ctweek\CORBA -I../../modules/tweek ../../modules/tweek/tweek/idl/BeanDeliverySubject.idl
 "/>
 			<Tool
 				Name="VCPreLinkEventTool"/>
@@ -98,7 +98,7 @@ $(OMNIORB_ROOT)\bin\x86_win32\omniidl -bcxx -Wbh=.h,s=.cpp -Ctweek\CORBA -I../..
 				OutputFile="$(OutDir)/tweek.dll"
 				Version="0.16.2"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="..\VPR\ReleaseDLL;&quot;$(NSPR_ROOT)\lib&quot;;&quot;$(OMNIORB_ROOT)\lib\x86_win32&quot;"
+				AdditionalLibraryDirectories="..\VPR\ReleaseDLL;&quot;$(NSPR_ROOT)\lib&quot;;&quot;$(OMNIORB_LIB)&quot;"
 				ModuleDefinitionFile="..\..\modules\tweek\corba_exports.def"
 				GenerateDebugInformation="FALSE"
 				SubSystem="2"
@@ -114,10 +114,10 @@ $(OMNIORB_ROOT)\bin\x86_win32\omniidl -bcxx -Wbh=.h,s=.cpp -Ctweek\CORBA -I../..
 				Name="VCPreBuildEventTool"
 				Description="Generating C++ stubs from CORBA IDL..."
 				CommandLine="mkdir tweek\CORBA
-$(OMNIORB_ROOT)\bin\x86_win32\omniidl -bcxx -Wbh=.h,s=.cpp -Ctweek\CORBA -I../../modules/tweek ../../modules/tweek/tweek/idl/SubjectManager.idl
-$(OMNIORB_ROOT)\bin\x86_win32\omniidl -bcxx -Wbh=.h,s=.cpp -Ctweek\CORBA -I../../modules/tweek ../../modules/tweek/tweek/idl/Subject.idl
-$(OMNIORB_ROOT)\bin\x86_win32\omniidl -bcxx -Wbh=.h,s=.cpp -Ctweek\CORBA -I../../modules/tweek ../../modules/tweek/tweek/idl/Observer.idl
-$(OMNIORB_ROOT)\bin\x86_win32\omniidl -bcxx -Wbh=.h,s=.cpp -Ctweek\CORBA -I../../modules/tweek ../../modules/tweek/tweek/idl/BeanDeliverySubject.idl
+$(OMNIORB_BIN)\omniidl -bcxx -Wbh=.h,s=.cpp -Ctweek\CORBA -I../../modules/tweek ../../modules/tweek/tweek/idl/SubjectManager.idl
+$(OMNIORB_BIN)\omniidl -bcxx -Wbh=.h,s=.cpp -Ctweek\CORBA -I../../modules/tweek ../../modules/tweek/tweek/idl/Subject.idl
+$(OMNIORB_BIN)\omniidl -bcxx -Wbh=.h,s=.cpp -Ctweek\CORBA -I../../modules/tweek ../../modules/tweek/tweek/idl/Observer.idl
+$(OMNIORB_BIN)\omniidl -bcxx -Wbh=.h,s=.cpp -Ctweek\CORBA -I../../modules/tweek ../../modules/tweek/tweek/idl/BeanDeliverySubject.idl
 "/>
 			<Tool
 				Name="VCPreLinkEventTool"/>
