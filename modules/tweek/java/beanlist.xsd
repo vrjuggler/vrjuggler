@@ -17,7 +17,8 @@
   <xs:complexType name="basicBean">
     <xs:sequence>
       <xs:element name="file"       type="beanFile" />
-      <xs:element name="dependency" type="beanDep" minOccurs="0" />
+      <xs:element name="dependency" type="beanDep" minOccurs="0"
+                  maxOccurs="unbounded" />
     </xs:sequence>
     <xs:attribute name="name" type="xs:string" use="required" />
   </xs:complexType>
