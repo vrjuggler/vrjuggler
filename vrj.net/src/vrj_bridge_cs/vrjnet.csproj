@@ -102,7 +102,43 @@
             </References>
         </Build>
         <Files>
-            <Include/>
+            <Include>
+                <File
+                    RelPath = "vrj_App.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "vrj_Display.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "vrj_DrawManager.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "vrj_GlApp.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "vrj_Kernel.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "vrj_SoundManager.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+                <File
+                    RelPath = "vrj_User.cs"
+                    SubType = "Code"
+                    BuildAction = "Compile"
+                />
+            </Include>
         </Files>
     </CSHARP>
 </VisualStudioProject>
