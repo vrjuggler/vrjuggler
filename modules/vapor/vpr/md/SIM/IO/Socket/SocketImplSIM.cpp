@@ -43,6 +43,7 @@
 
 #include <stdlib.h>
 #include <string.h>
+#include <boost/concept_check.hpp>
 
 #include <vpr/Util/Assert.h>
 #include <vpr/Util/Debug.h>
@@ -200,7 +201,7 @@ vpr::Uint32 SocketImplSIM::availableBytes()
    vprASSERT(mBound && "We must be bound first");
 
    vpr::Guard<vpr::Mutex> guard(mArrivedQueueMutex);
-   vpr::Uint32 bytes = 0;
+   vpr::Uint32 bytes(0);
 
    if ( ! mArrivedQueue.empty() )
    {
@@ -215,6 +216,8 @@ vpr::ReturnStatus SocketImplSIM::read_i(void* buffer,
                                         vpr::Uint32& data_read,
                                         vpr::Interval timeout )
 {
+   boost::ignore_unused_variable_warning(timeout);
+
    vpr:: ReturnStatus status;
    vprASSERT(mOpen && "Cannot read on an unopened socket");
 
@@ -267,6 +270,8 @@ vpr::ReturnStatus SocketImplSIM::read_i(vpr::sim::Message::MessageDataPtr& msgDa
                                         vpr::Uint32& data_read,
                                         vpr::Interval timeout)
 {
+   boost::ignore_unused_variable_warning(timeout);
+
    vpr:: ReturnStatus status;
    vprASSERT(mOpen && "Cannot read on an unopened socket");
 
@@ -300,6 +305,8 @@ vpr::ReturnStatus SocketImplSIM::write_i(const void* buffer,
                                          vpr::Uint32& data_written,
                                          vpr::Interval timeout)
 {
+   boost::ignore_unused_variable_warning(timeout);
+
    vpr::ReturnStatus status;
    vprASSERT(mBound && "We must be bound first");
    vprASSERT(mOpen && "We must be open first");
@@ -362,6 +369,8 @@ vpr::ReturnStatus SocketImplSIM::write_i(vpr::sim::Message::MessageDataPtr msgDa
                                          vpr::Uint32& data_written,
                                          vpr::Interval timeout)
 {
+   boost::ignore_unused_variable_warning(timeout);
+
    vprASSERT(mBound && "We must be bound first");
    vprASSERT(mOpen && "We must be open first");
 
