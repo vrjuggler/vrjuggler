@@ -71,7 +71,7 @@
 #include <jccl/RTRC/ConfigManager.h>
 
 #ifndef VPR_OS_Win32
-#  include <gadget/Devices/EventWindow/EventWindowXWin.h>
+//#  include <gadget/Devices/EventWindow/EventWindowXWin.h>
 #endif
 
 #include <boost/concept_check.hpp>
@@ -209,7 +209,8 @@ void PfDrawManager::setApp(App* _app)
 void PfDrawManager::initAPI()
 {
    pfInit();
-
+   pfuInitUtil();
+   
    // XXX: This call should really be triggered by a change in draw manager or something
    vprASSERT(mDisplayManager != NULL);
    configDisplaySystem(mDisplayManager->getDisplaySystemElement());    // Configure all the display system stuff
@@ -970,6 +971,7 @@ void PfDrawManager::initAppGraph()
 void PfDrawManager::closeAPI()
 {
    pfExit();
+   pfuExitUtil();
 }
 
 
@@ -1197,7 +1199,9 @@ void PFconfigPWin(pfPipeWindow* pWin)
    // Init the vj monitor modes
    pWin->open();
    pfInitGfx();
-
+   pfuInitInput( pWin, PFUINPUT_NOFORK_X );
+   //pfPWinType( pWin, PFPWIN_TYPE_X_NOFORK );
+   
    // Call user config function
    dm->mApp->configPWin(pWin);
 

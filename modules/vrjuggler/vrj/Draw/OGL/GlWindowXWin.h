@@ -42,7 +42,7 @@
 #include <GL/glx.h>
 
 #include <vrj/Draw/OGL/GlWindow.h>
-
+#include <gadget/Devices/KeyboardMouseDevice/InputAreaXWin.h>
 
 namespace vrj
 {
@@ -68,7 +68,7 @@ MotifWmHints;
  * This class is responsbile for connecting to the X server, getting a GLX visual,
  * opening a GL window and associated context, and handling all managment of that context.
  */
-class GlWindowXWin: public vrj::GlWindow
+class GlWindowXWin: public vrj::GlWindow, public gadget::InputAreaXWin
 {
 public:
    GlWindowXWin();
@@ -105,10 +105,10 @@ protected:
    void createEmptyCursor(::Display* display, ::Window root);
 
 private:
-   ::Display*   mXDisplay;
+   //::Display*   mXDisplay;
    XVisualInfo* mVisualInfo;
    GLXContext   mGlxContext;
-   Window       mXWindow;
+   //::Window     mXWindow;
    std::string  mWindowName;
    int          mPipe;
    std::string  mXDisplayName;       /**<  Name of the x display to use */
