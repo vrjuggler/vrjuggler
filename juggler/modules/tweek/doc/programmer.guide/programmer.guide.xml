@@ -21,7 +21,7 @@
             <surname>Hartling</surname>
          </author>
       </authorgroup>
-      <releaseinfo>0.13.0</releaseinfo>
+      <releaseinfo>0.13</releaseinfo>
       <pubdate>$Date$</pubdate>
    </bookinfo>
    <preface>
@@ -214,7 +214,7 @@
             <para>All JavaBeans loaded by the Tweek Java GUI are describe by at least one <glossterm linkend="gloss.xml.main">XML</glossterm> file<indexterm>
                   <primary>XML</primary>
                </indexterm>. The XML file can contain information about many Beans or about a single Bean. The XML file itself is a <quote>beanlist</quote> document. The four Bean categories, described above, each have an XML element that has children giving information about the specific Bean. The elements are <sgmltag>&lt;service&gt;</sgmltag>, <sgmltag>&lt;viewer&gt;</sgmltag>, <sgmltag>&lt;guipanel&gt;</sgmltag>, and <sgmltag>&lt;generic&gt;</sgmltag>.</para>
-            <para>All Bean XML entries must contain a <sgmltag>&lt;file&gt;</sgmltag> element. Through its <literal>source</literal> attribute, this element provides the path to the JAR file that contains the full Bean code. When specifying the JAR file path, environment variables may be used. They must use the syntax <varname>${ENV_VAR}</varname> (the curly braces are required). The <literal>class</literal> element gives the fully qualified name of the class stored within the JAR file that will be instantiated. The extension <filename>.class</filename> must not be specified. This is to allow the use of serialized classes which have the extension <filename>.ser</filename>. The Tweek Bean-loading code will figure out what is available and take the right actions.</para>
+            <para>All Bean XML entries must contain a <sgmltag>&lt;file&gt;</sgmltag> element. Through its <literal>source</literal> attribute, this element provides the path to the JAR file that contains the full Bean code. When specifying the JAR file path, environment variables may be used. They must use the syntax <envar>${ENV_VAR}</envar> (the curly braces are required). The <literal>class</literal> element gives the fully qualified name of the class stored within the JAR file that will be instantiated. The extension <filename>.class</filename> must not be specified. This is to allow the use of serialized classes which have the extension <filename>.ser</filename>. The Tweek Bean-loading code will figure out what is available and take the right actions.</para>
             <para>In addition to the <sgmltag>&lt;file&gt;</sgmltag> element, a &lt;dependencies&gt; element may be specified. Dependencies of the Bean may be named as external JAR files or other Beans may be listed therein. The &lt;dependencies&gt; element may contain zero of more elements of type &lt;jar&gt; and/or &lt;bean&gt;. The &lt;jar&gt; element has a single attribute, <literal>path</literal>, which gives the path (a semi-colon separated list of directories) where the JAR file may be found. The contents of the &lt;jar&gt; element defines the name of the JAR file. The &lt;bean&gt; element's contents defines the name of the Bean that the current Bean depends on.</para>
             <para>Of the four Bean categories, the XML for Panel Beans can contain the most information. In addition to the previously mentioned elements, Panel Bean entries may have two optional elements: <sgmltag>&lt;tree&gt;</sgmltag> and <sgmltag>&lt;icon&gt;</sgmltag>. The element <sgmltag>&lt;tree&gt;</sgmltag> specifies the path within the Bean tree hierarchy where the Panel Bean will be placed. The path is given as a /-separated list of directories. If the named path does not exist when the Bean is loaded, it will be created. The element <sgmltag>&lt;icon&gt;</sgmltag> names a custom icon for the Bean and a tool-tip. An example of a Panel Bean XML entry is shown in <xref linkend="PlexusGraphView.xml.example"/>. Note that this is not the full file&mdash;it is only the <sgmltag>&lt;guipanel&gt;</sgmltag> element for a single Bean.</para>
             <example id="PlexusGraphView.xml.example">
@@ -700,7 +700,7 @@ int main(int argc, char* argv[])
                         <parameter>userName</parameter>
                      </methodparam>
                   </methodsynopsis>
-                  <para>Similar to <methodname>setApplicationName()</methodname>, this method allows users to tell the Subject Manager their user name. When multiple users are all running the same application (and are thus using the same parameter to <methodname>setApplicationName()</methodname>), this provides another level of uniqueness. If this method is not used, the Subject Manager will try to get the user name through the <varname>$USER</varname> environment variable.</para>
+                  <para>Similar to <methodname>setApplicationName()</methodname>, this method allows users to tell the Subject Manager their user name. When multiple users are all running the same application (and are thus using the same parameter to <methodname>setApplicationName()</methodname>), this provides another level of uniqueness. If this method is not used, the Subject Manager will try to get the user name through the <envar>$USER</envar> environment variable.</para>
                </section>
                <section>
                   <title><methodname>addInfoItem()</methodname></title>
@@ -1460,7 +1460,7 @@ public void connectionClosed(ConnectEvent e)                              <co li
                      <para>Run a CORBA Naming Service. This is required so that the C++ and Java ORBs can resolve symbolic references.</para>
                   </listitem>
                   <listitem>
-                     <para>Since Tweek uses omniORB for a C++ ORB (see <xref linkend="orb-impl.appendix"/> for more information on this), the environment variable <varname>$OMNIORB_CONFIG</varname> must be set. This gives the full path to an omniORB configuration file that omniORB will load at runtime.</para>
+                     <para>Since Tweek uses omniORB for a C++ ORB (see <xref linkend="orb-impl.appendix"/> for more information on this), the environment variable <envar>$OMNIORB_CONFIG</envar> must be set. This gives the full path to an omniORB configuration file that omniORB will load at runtime.</para>
                   </listitem>
                   <listitem>
                      <para>Run the C++ application.</para>
