@@ -1124,7 +1124,9 @@ def installOmniORB(prefix):
    srcdir = os.path.join(root, 'lib', 'python')
 
    if os.path.exists(srcdir):
-      destdir = os.path.join(prefix, 'lib', 'python')
+      # Install the omniidl Python bits into the bin directory so that users
+      # do not have to set %PYTHONPATH%.
+      destdir = os.path.join(prefix, 'bin')
       installDir(srcdir, destdir)
 
    # If omnipython is installed along with omniORB, we need to install it, too.
