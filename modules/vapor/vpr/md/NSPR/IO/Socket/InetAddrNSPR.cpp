@@ -44,7 +44,8 @@
 #include <stdio.h>
 
 #include <vpr/md/NSPR/IO/Socket/InetAddrNSPR.h>
-#include <vpr/md/NSPR/NSPRHelpers.h>
+#include <vpr/Util/Error.h>
+
 
 namespace vpr
 {
@@ -145,7 +146,7 @@ std::string InetAddrNSPR::getHostname () const
 
    if ( ret_status == PR_FAILURE )
    {
-      NSPR_PrintError("[InetAddrNSPR::getHostname] Failed to get host by address");
+      vpr::Error::outputCurrentError(std::cerr, "[InetAddrNSPR::getHostname] Failed to get host by address");
       hostname = std::string("<hostname lookup failed>");
    }
    else
@@ -197,7 +198,7 @@ vpr::ReturnStatus InetAddrNSPR::lookupAddress (const std::string& address)
       std::string error_msg("[InetAddrNSPR::lookupAddress] Fail to look up host: ");
       error_msg += address;
 
-      NSPR_PrintError(error_msg);
+      vpr::Error::outputCurrentError(std::cerr, error_msg);
       retval.setCode(ReturnStatus::Fail);
    }
    else
@@ -209,7 +210,7 @@ vpr::ReturnStatus InetAddrNSPR::lookupAddress (const std::string& address)
 
       if ( retval.failure() )
       {
-         NSPR_PrintError(std::string("[InetAddrNSPR::lookupAddress] Could not enumerate host entry"));
+         vpr::Error::outputCurrentError(std::cerr, "[InetAddrNSPR::lookupAddress] Could not enumerate host entry");         
       }
    }
 

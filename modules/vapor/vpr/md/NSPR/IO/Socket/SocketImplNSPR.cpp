@@ -48,7 +48,7 @@
 #include <prerror.h>
 
 #include <vpr/md/NSPR/IO/Socket/SocketImplNSPR.h>
-#include <vpr/md/NSPR/NSPRHelpers.h>
+#include <vpr/Util/Error.h>
 
 namespace vpr
 {
@@ -93,7 +93,7 @@ vpr::ReturnStatus SocketImplNSPR::open ()
       // If socket(2) failed, print an error message and return error status.
       if ( new_sock == NULL )
       {
-         NSPR_PrintError("[vpr::SocketImplNSPR] Could not create socket");
+         vpr::Error::outputCurrentError(std::cerr, "[vpr::SocketImplNSPR] Could not create socket");
          retval.setCode(vpr::ReturnStatus::Fail);
       }
       // Otherwise, return success.
@@ -163,7 +163,7 @@ vpr::ReturnStatus SocketImplNSPR::bind ()
    if ( status == PR_FAILURE )
    {
       retval.setCode(vpr::ReturnStatus::Fail);
-      NSPR_PrintError("SocketImplNSPR::bind: Failed to bind.");
+      vpr::Error::outputCurrentError(std::cerr, "SocketImplNSPR::bind: Failed to bind.");
    }
    // Otherwise, return success.
    else
@@ -193,7 +193,7 @@ vpr::ReturnStatus SocketImplNSPR::enableBlocking ()
    // If that fails, print an error and return error status.
    if ( status == PR_FAILURE )
    {
-      NSPR_PrintError("SocketImplNSPR::enableBlocking: Failed to set.");
+      vpr::Error::outputCurrentError(std::cerr, "SocketImplNSPR::enableBlocking: Failed to set.");
       retval.setCode(vpr::ReturnStatus::Fail);
    }
    else
@@ -223,7 +223,7 @@ vpr::ReturnStatus SocketImplNSPR::enableNonBlocking ()
    // If that fails, print an error and return error status.
    if ( status == PR_FAILURE )
    {
-      NSPR_PrintError("SocketImplNSPR::enableNonBlocking: Failed to set.");
+      vpr::Error::outputCurrentError(std::cerr, "SocketImplNSPR::enableNonBlocking: Failed to set.");
       retval.setCode(vpr::ReturnStatus::Fail);
    }
    else
@@ -302,7 +302,7 @@ vpr::ReturnStatus SocketImplNSPR::connect (vpr::Interval timeout)
          }
          else
          {
-            NSPR_PrintError("SocketImplNSPR::connect: Failed to connect.");
+            vpr::Error::outputCurrentError(std::cerr, "SocketImplNSPR::connect: Failed to connect.");
             retval.setCode(vpr::ReturnStatus::Fail);
          }
       }
@@ -364,8 +364,8 @@ vpr::ReturnStatus SocketImplNSPR::read_i (void* buffer,
    else if ( bytes == -1 )      // -1 indicates failure which includes PR_WOULD_BLOCK_ERROR.
    {
       PRErrorCode err_code = PR_GetError();
-      NSPR_PrintError( "SocketImplNSPR::read_i::Error -->");
-
+      vpr::Error::outputCurrentError(std::cerr, "SocketImplNSPR::read_i::Error -->");
+      
       bytes_read = 0;
 
       if ( err_code == PR_WOULD_BLOCK_ERROR )
@@ -472,9 +472,8 @@ vpr::ReturnStatus SocketImplNSPR::write_i (const void* buffer,
    if ( bytes == -1 )
    {
       PRErrorCode err_code = PR_GetError();
-
-      NSPR_PrintError("SocketImplNspr::write_i: Error --> ");
-
+      vpr::Error::outputCurrentError(std::cerr, "SocketImplNspr::write_i: Error --> ");
+      
       bytes_written = 0;
 
       if ( err_code == PR_WOULD_BLOCK_ERROR )
@@ -640,7 +639,7 @@ vpr::ReturnStatus SocketImplNSPR::getOption (const vpr::SocketOptions::Types opt
       else
       {
          retval.setCode(vpr::ReturnStatus::Fail);
-         NSPR_PrintError("[vpr::SocketImplNSPR] ERROR: Could not get socket option for socket");
+         vpr::Error::outputCurrentError(std::cerr, "[vpr::SocketImplNSPR] ERROR: Could not get socket option for socket");
       }
    }
    else

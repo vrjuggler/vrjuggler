@@ -39,29 +39,23 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _VPR_NSPR_HELPER_H_
-#define _VPR_NSPR_HELPER_H_
+#ifndef _VPR_ERROR_H_
+#define _VPR_ERROR_H_
 
-#include <string>
-#include <prinrval.h>
-#include <vpr/Util/Interval.h>
+#include <vpr/vprConfig.h>
 
-namespace vpr
-{
+// include base class
+#include <vpr/Util/ErrorBase.h>
 
-// Print out the current NSPR error message to stderr
-extern void NSPR_PrintError(const std::string error_prefix_string, std::ostream& = std::cout);
-
-inline PRUint32 NSPR_getInterval(const vpr::Interval interval)
-{
-   if(interval == vpr::Interval::NoTimeout)
-      return PR_INTERVAL_NO_TIMEOUT;
-   else if(interval == vpr::Interval::NoWait)
-      return PR_INTERVAL_NO_WAIT;
-   else
-      return PR_MicrosecondsToInterval(interval.usec());
-}
-
-}; // namespace
-
+// make the connection
+#ifdef VPR_USE_NSPR
+#   include <vpr/md/NSPR/Util/ErrorImplNSPR.h>
+/*
+#elif VPR_IO_DOMAIN_INCLUDE == VPR_DOMAIN_POSIX
+#   include <vpr/md/POSIX/IO/SelectorImplBSD.h>
+#elif VPR_IO_DOMAIN_INCLUDE == VPR_DOMAIN_SIMULATOR
+#   include <vpr/md/SIM/IO/SelectorImplSIM.h>
+*/
 #endif
+
+#endif  /* _VPR_SELECTOR_H_ */

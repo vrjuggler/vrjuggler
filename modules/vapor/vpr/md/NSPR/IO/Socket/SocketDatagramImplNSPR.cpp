@@ -53,6 +53,8 @@
 
 #include <vpr/Util/Assert.h>
 #include <vpr/md/NSPR/IO/Socket/SocketDatagramImplNSPR.h>
+#include <vpr/Util/Error.h>
+
 
 
 // ============================================================================
@@ -102,7 +104,7 @@ vpr::ReturnStatus SocketDatagramImplNSPR::recvfrom (void* msg,
       }
       else
       {
-         NSPR_PrintError("SocketDatagramImplNSPR::recvfrom: Could not read from socket");
+         vpr::Error::outputCurrentError(std::cerr, "SocketDatagramImplNSPR::recvfrom: Could not read from socket");
          retval.setCode(ReturnStatus::Fail);
       }
    }
@@ -150,7 +152,7 @@ vpr::ReturnStatus SocketDatagramImplNSPR::sendto (const void* msg,
       }
       else
       {
-         NSPR_PrintError("SocketDatagramImplNSPR::sendto: Could not send message");
+         vpr::Error::outputCurrentError(std::cerr, "SocketDatagramImplNSPR::sendto: Could not send message");
          retval.setCode(ReturnStatus::Fail);
       }
    }
