@@ -20,8 +20,9 @@
 			ATLMinimizesCRunTimeLibraryUsage="FALSE">
 			<Tool
 				Name="VCCLCompilerTool"
+				AdditionalOptions="/Zm800"
 				Optimization="0"
-				AdditionalIncludeDirectories=".;&quot;$(CPPDOM_ROOT)\include&quot;;&quot;$(BOOST_INCLUDES)&quot;;&quot;$(NSPR_ROOT)\include&quot;;&quot;$(VJ_BASE_DIR)\include&quot;"
+				AdditionalIncludeDirectories=".;&quot;$(VJ_DEPS_DIR)\include&quot;;&quot;$(VJ_BASE_DIR)\include&quot;"
 				PreprocessorDefinitions="_DEBUG;_CONSOLE;WIN32"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -45,7 +46,7 @@
 				OutputFile="$(OutDir)\cubes.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="TRUE"
-				AdditionalLibraryDirectories="&quot;$(NSPR_ROOT)\lib&quot;;&quot;$(VJ_BASE_DIR)\lib&quot;"
+				AdditionalLibraryDirectories="&quot;$(VJ_DEPS_DIR)\lib&quot;;&quot;$(NSPR_ROOT)\lib&quot;;&quot;$(VJ_BASE_DIR)\lib&quot;"
 				GenerateDebugInformation="TRUE"
 				ProgramDatabaseFile=".\Debug/cubes.pdb"
 				SubSystem="1"/>
@@ -77,7 +78,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				InlineFunctionExpansion="1"
-				AdditionalIncludeDirectories=".;&quot;$(CPPDOM_ROOT)\include&quot;;&quot;$(BOOST_INCLUDES)&quot;;&quot;$(NSPR_ROOT)\include&quot;;&quot;$(VJ_BASE_DIR)\include&quot;"
+				AdditionalIncludeDirectories=".;&quot;$(VJ_DEPS_DIR)\include&quot;;&quot;$(VJ_BASE_DIR)\include&quot;"
 				PreprocessorDefinitions="_OPT;NDEBUG;_CONSOLE;WIN32"
 				StringPooling="TRUE"
 				RuntimeLibrary="2"
@@ -102,7 +103,7 @@
 				OutputFile="$(OutDir)\cubes.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
-				AdditionalLibraryDirectories="&quot;$(NSPR_ROOT)\lib&quot;;&quot;$(VJ_BASE_DIR)\lib&quot;"
+				AdditionalLibraryDirectories="&quot;$(VJ_DEPS_DIR)\lib&quot;;&quot;$(NSPR_ROOT)\lib&quot;;&quot;$(VJ_BASE_DIR)\lib&quot;"
 				ProgramDatabaseFile=".\Release/cubes.pdb"
 				SubSystem="1"/>
 			<Tool
