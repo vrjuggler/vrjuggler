@@ -1,5 +1,8 @@
 DATE       AUTHOR   CHANGE
 ---------- -------- -----------------------------------------------------------
+2003-11-03 allenb   Renamed serial port interface methods *BufferSize to
+                    *MinInputSize to better reflect their use.
+                    NEW VERSION: 0.31.0
 2003-10-28 patrickh Refactored the various I/O interfaces to reduce the number
                     of methods.
                     NEW VERSION: 0.30.0
