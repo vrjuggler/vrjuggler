@@ -1,6 +1,8 @@
 
 #include <Environment/vjTimedUpdate.h>
 
+
+
 void vjTimedUpdate::write (ostream& out) {
     ;
 }

@@ -28,7 +28,7 @@ vjChunkDesc* vjChunkDescDB::getChunkDesc (const std::string& _token) {
 
 
 bool vjChunkDescDB::insert (vjChunkDesc *d) {
-    for (int i = 0; i < descs.size(); i++) 
+    for (int i = 0; i < descs.size(); i++)
 	if (!vjstrcasecmp (descs[i]->token, d->token)) {
 	    delete (descs[i]);
 	    descs[i] = d;
@@ -40,8 +40,9 @@ bool vjChunkDescDB::insert (vjChunkDesc *d) {
 
 
 
+
 bool vjChunkDescDB::remove (const std::string& tok) {
-  
+
     std::vector<vjChunkDesc*>::iterator begin = descs.begin();
     while (begin != descs.end()) {
 	if (!vjstrcasecmp ((*begin)->token, tok)) {
@@ -84,8 +85,9 @@ ostream& operator << (ostream& out, vjChunkDescDB& self) {
 
 
 istream& operator >> (istream& in, vjChunkDescDB& self) {
+
     char str[256];
-  
+
     for (;;) {
 	vjChunkDesc *ch;
 	if (readString (in, str, 256) == 0)
@@ -94,15 +96,15 @@ istream& operator >> (istream& in, vjChunkDescDB& self) {
 	    ch = new vjChunkDesc();
 	    in >> *ch;
 	    self.insert(ch);
-	} 
+	}
 	else if (!strcasecmp (str, "end"))
 	    break;
 	else {
-	    vjDEBUG(1) << "Unexpected symbol parsing vjChunkDescDB: '" 
+	    vjDEBUG(vjDBG_ALL,1) << "Unexpected symbol parsing vjChunkDescDB: '"
 		       << str <<"'"<< endl << vjDEBUG_FLUSH;
 	}
     }
-    vjDEBUG(4) << "vjChunkDescDB::>> : Finished - " << self.descs.size()
+    vjDEBUG(vjDBG_ALL,4) << "vjChunkDescDB::>> : Finished - " << self.descs.size()
 	       << " descriptions read." << endl << vjDEBUG_FLUSH;
     return in;
 }
@@ -113,7 +115,7 @@ bool vjChunkDescDB::load (char *fname) {
     ifstream in(fname);
 
     if (!in) {
-	vjDEBUG(1) << "vjChunkDescDB::load(): Unable to open file '"
+	vjDEBUG(vjDBG_ALL,1) << "vjChunkDescDB::load(): Unable to open file '"
 		   << fname << "'" << endl << vjDEBUG_FLUSH;
 	return false;
     }
@@ -126,7 +128,7 @@ bool vjChunkDescDB::load (char *fname) {
 bool vjChunkDescDB::save (char *fname) {
     ofstream out(fname);
     if (!out) {
-	vjDEBUG(1) << "vjChunkDescDB::save(): Unable to open file '"
+	vjDEBUG(vjDBG_ALL,1) << "vjChunkDescDB::save(): Unable to open file '"
 		   << fname << "'" << endl << vjDEBUG_FLUSH;
 	return false;
     }

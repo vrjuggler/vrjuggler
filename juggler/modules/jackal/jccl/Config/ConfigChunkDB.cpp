@@ -158,7 +158,7 @@ int vjConfigChunkDB::removeMatching (const std::string& property, int value) {
 int vjConfigChunkDB::removeMatching (const std::string& property, float value) {
     int i = 0;
     float c;
-    
+
     std::vector<vjConfigChunk*>::iterator begin = chunks.begin();
     while (begin != chunks.end()) {
 	c = (*begin)->getProperty(property);
@@ -201,24 +201,26 @@ int vjConfigChunkDB::dependencySort(vjConfigChunkDB* auxChunks)
 {
     // Print out dependancies
 #ifdef VJ_DEBUG
-    vjDEBUG_BEGIN(4) << "---- Dependencies -----------\n" << vjDEBUG_FLUSH;
+
+    vjDEBUG_BEGIN(vjDBG_ALL,4) << "---- Dependencies -----------\n" << vjDEBUG_FLUSH;
     for(int i=0;i<chunks.size();i++)
 	{
-	    vjDEBUG(4) << "Chunk:" << chunks[i]->getProperty("name") << endl
+	    vjDEBUG(vjDBG_ALL,4) << "Chunk:" << chunks[i]->getProperty("name") << endl
 		       << "\tDepends on:\n" << vjDEBUG_FLUSH;
 	    std::vector<std::string> deps = chunks[i]->getDependencies();
 	    if(deps.size() > 0)
 		{
 		    for(int j=0;j<deps.size();j++)
-			vjDEBUG(4) << "   " << j << ": " << deps[j] << endl << vjDEBUG_FLUSH;
+			vjDEBUG(vjDBG_ALL,4) << "   " << j << ": " << deps[j] << endl << vjDEBUG_FLUSH;
 		} else {
-		    vjDEBUG(4) << "   Nothing.\n" << vjDEBUG_FLUSH;
+		    vjDEBUG(vjDBG_ALL,4) << "   Nothing.\n" << vjDEBUG_FLUSH;
 		}
 	    //vjDEBUG(2) << endl;
 	}
-    vjDEBUG_END(4) << "-----------------------------\n" << vjDEBUG_FLUSH;
+    vjDEBUG_END(vjDBG_ALL,4) << "-----------------------------\n" << vjDEBUG_FLUSH;
 #endif
-    
+
+
     // Create new src list to work from
     // Targetting the local data
     // So basically, we take an element from the src list one at a time
@@ -226,16 +228,15 @@ int vjConfigChunkDB::dependencySort(vjConfigChunkDB* auxChunks)
     // else go on to the next one
     std::vector<vjConfigChunk*> src_chunks = chunks;
     chunks = std::vector<vjConfigChunk*>(0);        // Chunks is the local data - Zero it out to start
-    
+
     bool dep_pass(true);             // Flag for Pass dependency check
     std::vector<std::string> deps;   // Dependencies of current item
-    std::vector<vjConfigChunk*>::iterator cur_item
-	= src_chunks.begin();          // The current src item to look at
-    
+    std::vector<vjConfigChunk*>::iterator cur_item = src_chunks.begin();          // The current src item to look at
+
     while(cur_item != src_chunks.end())          // While not at end of src list
 	{
-	    vjDEBUG(4) << "Checking depencies for: " << (*cur_item)->getProperty("name") << "\n" << vjDEBUG_FLUSH;
-      
+	    vjDEBUG(vjDBG_ALL,4) << "Checking depencies for: " << (*cur_item)->getProperty("name") << "\n" << vjDEBUG_FLUSH;
+
 	    deps = (*cur_item)->getDependencies();             // Get src dependencies
 	    for(int dep_num=0;dep_num<deps.size();dep_num++)   // For each dependency
 		// If dependency not in list yet or in aux buffer
@@ -243,7 +244,7 @@ int vjConfigChunkDB::dependencySort(vjConfigChunkDB* auxChunks)
 		if ((getChunk((char*)deps[dep_num].c_str()) == NULL) &&
 		    ((auxChunks == NULL) || (auxChunks->getChunk((char*)deps[dep_num].c_str()) == NULL)))
 		    dep_pass = false;                                   // Failed check (we don't pass)
-	    
+	
 	    if(dep_pass)        // If all dependencies are accounted for
 		{
 		    chunks.push_back(*cur_item);        // Copy src to dst
@@ -252,58 +253,59 @@ int vjConfigChunkDB::dependencySort(vjConfigChunkDB* auxChunks)
 		}
 	    else
 		cur_item++;             // Try next item
-	    
+	
 	    dep_pass = true;           // Reset to passing
 	}
-    
+
     // ASSERT:
     //   Either, all depencies have been accounted for and the src list is empty
     //   OR we went all the way through list without finding an item that passes
-    
+
     if(src_chunks.size() > 0)     // Items left, so we failed to get all dependencies
 	{
 	    // ouput error
 	    for(int i=0;i<src_chunks.size();i++)
 		{
-		    vjDEBUG(0) << "ERROR: Dependency error:  Chunk:" << src_chunks[i]->getProperty("name")
+		    vjDEBUG(vjDBG_ALL,0) << "ERROR: Dependency error:  Chunk:" << src_chunks[i]->getProperty("name")
 			       << "\tDepends on: \n" << vjDEBUG_FLUSH;
 		    std::vector<std::string> deps = src_chunks[i]->getDependencies();
 		    if(deps.size() > 0)
 			{
 			    for(int j=0;j<deps.size();j++)
-				vjDEBUG(0) << "\tdep " << j << ": " << deps[j] << endl << vjDEBUG_FLUSH;
+				vjDEBUG(vjDBG_ALL,0) << "\tdep " << j << ": " << deps[j] << endl << vjDEBUG_FLUSH;
 			} else {
-			    vjDEBUG(0) << "Nothing.\n" << vjDEBUG_FLUSH;
+			    vjDEBUG(vjDBG_ALL,0) << "Nothing.\n" << vjDEBUG_FLUSH;
 			}
-		    vjDEBUG(0) << "Check for undefined devices that others depend upon.\n" << vjDEBUG_FLUSH;
+		    vjDEBUG(vjDBG_ALL,0) << "Check for undefined devices that others depend upon.\n" << vjDEBUG_FLUSH;
 		}
 	    chunks.insert(chunks.end(), src_chunks.begin(), src_chunks.end());   // Copy over the rest anyway
-	    
+	
 	    return -1;
 	}
     else
 	{
 	    // Print out sorted dependancies
 #ifdef VJ_DEBUG
-	    vjDEBUG_BEGIN(4) << "---- After sort ----" << endl << vjDEBUG_FLUSH;
+
+	    vjDEBUG_BEGIN(vjDBG_ALL,4) << "---- After sort ----" << endl << vjDEBUG_FLUSH;
 	    for(int i=0;i<chunks.size();i++)
 		{
-		    vjDEBUG(4) << "Chunk:" << chunks[i]->getProperty("name") << endl
+		    vjDEBUG(vjDBG_ALL,4) << "Chunk:" << chunks[i]->getProperty("name") << endl
 			       << "\tDepends on:\n" << vjDEBUG_FLUSH;
 		    std::vector<std::string> deps = chunks[i]->getDependencies();
-		    
+		
 		    if(deps.size() > 0)
 			{
 			    for(int j=0;j<deps.size();j++)
-				vjDEBUG(4) << "   " << j << ": " << deps[j] << endl << vjDEBUG_FLUSH;
+				vjDEBUG(vjDBG_ALL,4) << "   " << j << ": " << deps[j] << endl << vjDEBUG_FLUSH;
 			} else {
-			    vjDEBUG(4) << "   Nothing.\n" << vjDEBUG_FLUSH;
+			    vjDEBUG(vjDBG_ALL,4) << "   Nothing.\n" << vjDEBUG_FLUSH;
 			}
 		    //vjDEBUG(2) << endl;
 		}
-	    vjDEBUG_END(4) << "-----------------\n" << vjDEBUG_FLUSH;
+	    vjDEBUG_END(vjDBG_ALL,4) << "-----------------\n" << vjDEBUG_FLUSH;
 #endif
-	    
+	
 	    return 0;      // Success
 	}
 }
@@ -323,46 +325,53 @@ ostream& operator << (ostream& out, vjConfigChunkDB& self) {
 
 
 istream& operator >> (istream& in, vjConfigChunkDB& self) {
-    char str[512];
-    vjChunkDesc *cd;
-    vjConfigChunk *ch;
-    
-    if (self.descs == NULL) {
-	vjDEBUG(1) << "ERROR: vjChunkDescDB::>> - No vjChunkDescDB." << endl
-		   << vjDEBUG_FLUSH;
-	return in;
-    }
 
-    do {
-	if (0 == readString (in, str, 512))
-	    break; /* eof */
-	if (!strcasecmp (str, "end"))
-	    break;
-	cd = self.descs->getChunkDesc (str);
-	if (cd == NULL) {
-	    vjDEBUG(1) << "ERROR!: Unknown Chunk type: " << str << endl
-		       << vjDEBUG_FLUSH;
-	    // skip to end of chunk
-	    while (strcasecmp (str, "end")) {
-		if (0 == readString (in, str, 512))
-		    break;
-		//cerr << "read " << str << endl;
-	    }
-	} else {
-	    ch = new vjConfigChunk(cd, self.descs);
-	    in >> *ch;
-	    /* OK.  If this chunk has the same instancename as a chunk
-	     * already in self, we want to remove the old one
-	     */
-	    if (ch->getNum ("name"))
-		self.removeMatching ("name", (std::string)ch->getProperty ("name"));
-	    self.chunks.push_back(ch);
-	}
-    } while (!in.eof());
-    
-    vjDEBUG(3) << "vjConfigChunkDB::>> : Finished - " << self.chunks.size() << " chunks read." << endl << vjDEBUG_FLUSH;
-    
-    return in;
+   char str[512];
+   vjChunkDesc *cd;
+   vjConfigChunk *ch;
+
+   if (self.descs == NULL)
+   {
+      vjDEBUG(vjDBG_ALL,1) << "ERROR: vjChunkDescDB::>> - No vjChunkDescDB." << endl
+      << vjDEBUG_FLUSH;
+      return in;
+   }
+
+   do
+   {
+      if (0 == readString (in, str, 512))
+         break; /* eof */
+      if (!strcasecmp (str, "end"))
+         break;
+      cd = self.descs->getChunkDesc (str);
+      if (cd == NULL)
+      {
+         vjDEBUG(1) << "ERROR!: Unknown Chunk type: " << str << endl
+         << vjDEBUG_FLUSH;
+         // skip to end of chunk
+         while (strcasecmp (str, "end"))
+         {
+            if (0 == readString (in, str, 512))
+               break;
+            //cerr << "read " << str << endl;
+         }
+      }
+      else
+      {
+         ch = new vjConfigChunk(cd, self.descs);
+         in >> *ch;
+         /* OK.  If this chunk has the same instancename as a chunk
+          * already in self, we want to remove the old one
+          */
+         if (ch->getNum ("name"))
+            self.removeMatching ("name", (std::string)ch->getProperty ("name"));
+         self.chunks.push_back(ch);
+      }
+   } while (!in.eof());
+
+   vjDEBUG(3) << "vjConfigChunkDB::>> : Finished - " << self.chunks.size() << " chunks read." << endl << vjDEBUG_FLUSH;
+
+   return in;
 }
 
 
@@ -370,31 +379,34 @@ istream& operator >> (istream& in, vjConfigChunkDB& self) {
 bool vjConfigChunkDB::load (const char *fname) {
     ifstream in(fname);
 
-    vjDEBUG(4) << "vjConfigChunkDB::load(): opening file " << fname << " -- " << vjDEBUG_FLUSH;
+    vjDEBUG(vjDBG_ALL,4) << "vjConfigChunkDB::load(): opening file " << fname << " -- " << vjDEBUG_FLUSH;
+
 
     if (descs == NULL) {
-	vjDEBUG(1) << "\nERROR: vjConfigChunkDB::load - no vjChunkDescDB" << endl << vjDEBUG_FLUSH;
+	vjDEBUG(vjDBG_ALL,1) << "\nERROR: vjConfigChunkDB::load - no vjChunkDescDB" << endl << vjDEBUG_FLUSH;
 	return false;
     }
     if (!in) {
-	vjDEBUG(1) << "\nvjConfigChunkDB::load(): Unable to open file '"
+	vjDEBUG(vjDBG_ALL,1) << "\nvjConfigChunkDB::load(): Unable to open file '"
 		   << fname << "'" << endl << vjDEBUG_FLUSH;
 	return false;
     }
-    vjDEBUG(3) << " succeeded." << endl << vjDEBUG_FLUSH;
+    vjDEBUG(vjDBG_ALL,3) << " succeeded." << endl << vjDEBUG_FLUSH;
     in >> *this;
     return true;
 }
 
 bool vjConfigChunkDB::save (const char *fname) {
-    ofstream out(fname);
-    if (!out) {
-	vjDEBUG(1) << "ERROR: vjConfigChunkDB::save() - Unable to open file '"
-		   << fname << "'" << endl << vjDEBUG_FLUSH;
-	return false;
-    }
-    out << *this;
-    return true;
+
+   ofstream out(fname);
+   if (!out)
+   {
+      vjDEBUG(vjDBG_ALL,1) << "ERROR: vjConfigChunkDB::save() - Unable to open file '"
+      << fname << "'" << endl << vjDEBUG_FLUSH;
+      return false;
+   }
+   out << *this;
+   return true;
 }
 
 

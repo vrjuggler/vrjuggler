@@ -88,7 +88,7 @@ std::vector<std::string> vjConfigChunk::getDependencies()
 	    for (j = 0; j < props[i]->getNum(); j++) {
 		// if we ever have cyclic dependencies, we're in trouble
 		child_deps = ((vjConfigChunk*)props[i]->getValue(j))->getDependencies();
-		dep_list.insert (dep_list.end(), child_deps.begin(), child_deps.end()); 
+		dep_list.insert (dep_list.end(), child_deps.begin(), child_deps.end());
 	    }
 	}
     }
@@ -203,7 +203,7 @@ bool vjConfigChunk::getVJCFGToken (istream& in, VJCFGToken& tok) {
     tok.type = TK_Int;
     tok.intval = atoi (tok.strval);
     return true;
-    
+
 }
 
 
@@ -216,8 +216,8 @@ bool vjConfigChunk::tryassign (vjProperty *p, VJCFGToken &tok, int i) {
      * wether a type mismatch occurred (ie we return false if
      * a type mismatch occurs ).
      *
-     * Incidentally, this is also where string values get 
-     * mangled into enumeration entries when assigning strings 
+     * Incidentally, this is also where string values get
+     * mangled into enumeration entries when assigning strings
      * to T_INTs.
      */	
     vjEnumEntry *e;
@@ -293,18 +293,18 @@ istream& operator >> (istream& in, vjConfigChunk& self) {
     int i;
 
     self.getVJCFGToken (in, tok);
-    
+
     while (tok.type != TK_End) {
 	
 	if (tok.type != TK_String) {
-	    vjDEBUG(3) << "ERROR: Unexpected Token #" << tok.type << endl << vjDEBUG_FLUSH;
+	    vjDEBUG(vjDBG_ALL,3) << "ERROR: Unexpected Token #" << tok.type << endl << vjDEBUG_FLUSH;
 	    self.getVJCFGToken(in,tok);
 	    continue;
 	}
 	
 	// We have a string token; assumably a property name.
 	if (!(p = self.getPropertyFromToken (tok.strval))) {
-	    vjDEBUG(3) << "ERROR: Property '" << tok.strval << "' is not found in"
+	    vjDEBUG(vjDBG_ALL,3) << "ERROR: Property '" << tok.strval << "' is not found in"
 		       << " Chunk " << self.desc->name << endl << vjDEBUG_FLUSH;
 	    self.getVJCFGToken(in,tok);
 	    continue;
@@ -327,23 +327,23 @@ istream& operator >> (istream& in, vjConfigChunk& self) {
 		}
 		else {
 		    if (!self.tryassign (p, tok, i++))
-			vjDEBUG(3) << "ERROR: Assigning to property "
+			vjDEBUG(vjDBG_ALL,3) << "ERROR: Assigning to property "
 				   << p->getName() << endl << vjDEBUG_FLUSH;
 		}
 		self.getVJCFGToken (in, tok);
 	    }
 	    if ((p->num != -1) && (p->num != i))
-		vjDEBUG(3) << "ERROR: vjProperty " << p->getName() << " should have "
+		vjDEBUG(vjDBG_ALL,3) << "ERROR: vjProperty " << p->getName() << " should have "
 			   << p->num << " values; " << i << " found" << endl << vjDEBUG_FLUSH;
 	    if (tok.type != TK_CloseBracket)
-		vjDEBUG(3) << "ERROR: vjProperty " << p->getName() << ": '}' expected"
+		vjDEBUG(vjDBG_ALL,3) << "ERROR: vjProperty " << p->getName() << ": '}' expected"
 			   << endl << vjDEBUG_FLUSH;
 	    self.getVJCFGToken (in,tok);
 	}
 	else {
 	    // we're just doing one value.
 	    if (!self.tryassign (p, tok, 0))
-		vjDEBUG(3) << "ERROR: Assigning to property "
+		vjDEBUG(vjDBG_ALL,3) << "ERROR: Assigning to property "
 			   << p->getName() << endl << vjDEBUG_FLUSH;
 	    self.getVJCFGToken (in,tok);
 	    if (tok.type == TK_Unit) {
@@ -351,7 +351,7 @@ istream& operator >> (istream& in, vjConfigChunk& self) {
 		self.getVJCFGToken (in, tok);
 	    }
 	    if (p->num > 1) {
-		vjDEBUG(3) << "ERROR: Property " << p->getName()
+		vjDEBUG(vjDBG_ALL,3) << "ERROR: Property " << p->getName()
 			   << " expects " << p->num << " values." << endl << vjDEBUG_FLUSH;
 	    }
 	}
@@ -379,15 +379,17 @@ vjVarValue& vjConfigChunk::getType () {
 
 
 vjVarValue& vjConfigChunk::getProperty (const std::string& property_token, int ind) {
-    if (!vjstrcasecmp(property_token,"type")) {
-	return type_as_varvalue;
-    }
-    
-    vjProperty *p = getPropertyFromToken (property_token);
-    if (!p) {
-	return vjVarValue::getInvalidInstance();
-    }
-    return p->getValue (ind);
+   if (!vjstrcasecmp(property_token,"type"))
+   {
+      return type_as_varvalue;
+   }
+
+   vjProperty *p = getPropertyFromToken (property_token);
+   if (!p)
+   {
+      return vjVarValue::getInvalidInstance();
+   }
+   return p->getValue (ind);
 }
 
 
