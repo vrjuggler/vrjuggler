@@ -98,8 +98,8 @@ AC_ARG_WITH(cxx-orb-lib,
                           Path to C++ ORB libraries],
             [CXX_ORB_LIB_DIR="$withval"], [CXX_ORB_LIB_DIR='none'])
 
-AC_ARG_WITH(gmtl-prefix,
-            [  --with-gmtl-prefix=<PATH>
+AC_ARG_WITH(gmtl,
+            [  --with-gmtl=<PATH>
                        Prefix where GMTL is installed  [default=/usr/local]],
             [GMTL_ROOT="$withval"], [GMTL_ROOT=/usr/local])
 
