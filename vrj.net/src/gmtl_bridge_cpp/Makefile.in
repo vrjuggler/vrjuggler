@@ -33,9 +33,7 @@ EXTRA_INCLUDES=	-I$(top_srcdir)/src $(shell vpr-config --includes)
 EXTRA_LDFLAGS=	
 MOD_NAME=	gmtl
 
-SRCS=		Gmtl.cpp			\
-		Math.cpp			\
-		gmtl_AABoxd.cpp			\
+SRCS=		gmtl_AABoxd.cpp			\
 		gmtl_AABoxf.cpp			\
 		gmtl_AxisAngled.cpp		\
 		gmtl_AxisAnglef.cpp		\
@@ -65,8 +63,10 @@ SRCS=		Gmtl.cpp			\
 		gmtl_EulerAngleZXYf.cpp		\
 		gmtl_EulerAngleZYXd.cpp		\
 		gmtl_EulerAngleZYXf.cpp		\
+		gmtl_Gmtl.cpp			\
 		gmtl_LineSegd.cpp		\
 		gmtl_LineSegf.cpp		\
+		gmtl_Math.cpp			\
 		gmtl_Matrix33f.cpp		\
 		gmtl_Matrix44f.cpp		\
 		gmtl_Planed.cpp			\
