@@ -40,7 +40,7 @@
 # related to the Tweek website.
 # -----------------------------------------------------------------------------
 
-srcdir=		.
+srcdir=		.:../extensions/java
 JDK_HOME?=	/usr/java
 
 # List the packages for which JavaDoc documentation will be generated.
@@ -55,6 +55,10 @@ DOC_PKGS=	$(BASE_PKG)			\
 		$(BASE_PKG).event		\
 		$(BASE_PKG).services		\
 		$(BASE_PKG).text		\
+		$(BASE_PKG).ui			\
+		$(BASE_PKG).ui.treetable	\
+		$(BASE_PKG).wizard		\
+		$(BASE_PKG).wizard.panes	\
 		tweek				\
 		tweek.SubjectManagerPackage
 
