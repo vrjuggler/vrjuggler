@@ -1032,7 +1032,7 @@ fi
 dnl # -------------------------------------------------------------------------
 dnl # Checks for library functions.
 dnl # -------------------------------------------------------------------------
-AC_CHECK_FUNCS(gettimeofday socket strdup strerror strtod sginap)
+AC_CHECK_FUNCS(gettimeofday socket strcasecmp strdup strerror strtod sginap)
 
 dnl # On Solaris, sched_yield(3) and its synchronization friends are in
 dnl # libposix4.
