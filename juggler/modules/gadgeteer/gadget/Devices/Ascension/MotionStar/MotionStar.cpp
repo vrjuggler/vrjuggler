@@ -383,6 +383,12 @@ int MotionStar::sample()
 
                   transmitter_T_receiver = trans_mat * rot_mat;
                   break;
+               case FLOCK::FEEDTHROUGH_DATA:
+                  vprASSERT(false && "We don't handle feedthrough data");
+                  break;
+               default:
+                  vprASSERT(false && "Unknown data-type");
+                  break;
             }
 
             // Store corrected xform back into data.
