@@ -31,7 +31,7 @@
 #elif defined(VJ_OS_Win32)
 #  include <Sync/vjSemaphoreWin32.h>
    typedef vjSemaphoreWin32 vjSemaphore;
-#elif defined(VJ_USE_PTHREADS) || defined(VJ_USE_POSIX)
+#elif defined(VJ_POSIX_SEMAPHORES)
 #ifndef _POSIX_C_SOURCE
 #   define _POSIX_C_SOURCE VJ_POSIX_C_SOURCE
 #endif
@@ -39,6 +39,7 @@
 #   include <Sync/vjSemaphorePosix.h>
 
     typedef vjSemaphorePosix vjSemaphore;
-#endif   /* VJ_IRIX_SPROC */
+#endif	/* VJ_IRIX_SPROC */
 
-#endif
+
+#endif	/* _VJSempahore_h_ */
