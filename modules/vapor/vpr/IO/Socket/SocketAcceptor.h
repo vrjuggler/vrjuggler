@@ -87,50 +87,6 @@ private:
     SocketStream    mSocket;
 };
 
-SocketAcceptor::SocketAcceptor(const InetAddr& addr, bool reuseAddr, int backlog)
-{
-    open(addr, reuseAddr, backlog);
-}
-
-vpr::Status SocketAcceptor::open(const InetAddr& addr, bool reuseAddr, int backlog)
-{
-   vpr::Status ret_val;
-
-   vprASSERT((!mSocket.isOpen()) && "Trying to re-open socket that has already been opened");
-
-    mSocket.setLocalAddr(addr);
-
-    ret_val = mSocket.open();
-    if(ret_val.failure())
-        return ret_val;
-
-    mSocket.setReuseAddr(reuseAddr);
-
-    ret_val = mSocket.bind();
-    if(ret_val.failure())
-    {
-        mSocket.close();
-        return ret_val;
-    }
-
-    ret_val = mSocket.listen(backlog);
-    if(ret_val.failure())
-    {
-        mSocket.close();
-        return ret_val;
-    }
-    return ret_val;
-}
-
-vpr::Status SocketAcceptor::accept(SocketStream& sock)
-{
-    vprASSERT(mSocket.isOpen());
-
-    return mSocket.accept(sock);
-}
-
-
-
 }
 
 
