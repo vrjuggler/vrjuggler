@@ -32,9 +32,7 @@
 
 #include <vrj/vrjConfig.h>
 
-#include <vrj/Display/SurfaceViewport.h>
-#include <vrj/Display/WallProjection.h>
-#include <vrj/Display/TrackedWallProjection.h>
+#include <string>
 #include <gmtl/Math.h>
 //#include <vrj/Math/Coord.h>
 #include <gmtl/Vec.h>
@@ -47,6 +45,10 @@
 #include <gmtl/MatrixOps.h>
 #include <gmtl/Generate.h>
 #include <gmtl/Xforms.h>
+
+#include <vrj/Display/WallProjection.h>
+#include <vrj/Display/TrackedWallProjection.h>
+#include <vrj/Display/SurfaceViewport.h>
 
 namespace vrj
 {
@@ -153,6 +155,28 @@ void SurfaceViewport::updateProjections(const float positionScale)
    mRightProj->calcViewMatrix(right_eye_pos, positionScale);
 }
 
+std::ostream& SurfaceViewport::outStream(std::ostream& out,
+                                         const unsigned int indentLevel)
+{
+   Viewport::outStream(out, indentLevel);
+   out << std::endl;
+
+   const std::string indent_text(indentLevel, ' ');
+
+   /*
+   out << "LL: " << mLLCorner << ", LR: " << mLRCorner
+       << ", UR: " << mURCorner << ", UL:" << mULCorner << std::endl;
+   out << "surfRot: \n" << mSurfaceRotation << std::endl;
+   */
+   out << indent_text << "Left projection:\n";
+   mLeftProj->outStream(out, indentLevel + 2);
+   out << std::endl;
+   out << indent_text << "Right projection:\n";
+   mRightProj->outStream(out, indentLevel + 2);
+
+   return out;
+}
+
 void SurfaceViewport::calculateSurfaceRotation()
 {
    assertPtsLegal();
@@ -191,10 +215,10 @@ void SurfaceViewport::calculateCornersInBaseFrame()
                                           << vprDEBUG_FLUSH;
 #ifdef VJ_DEBUG
    const float epsilon = 1e-6;
-#endif
    vprASSERT(gmtl::Math::isEqual(mxLLCorner[gmtl::Zelt], mxLRCorner[gmtl::Zelt], epsilon) &&
              gmtl::Math::isEqual(mxURCorner[gmtl::Zelt], mxULCorner[gmtl::Zelt], epsilon) &&
              gmtl::Math::isEqual(mxLLCorner[gmtl::Zelt], mxULCorner[gmtl::Zelt], epsilon));
+#endif
 }
 
-};
+}

@@ -31,12 +31,14 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include <vrj/vrjConfig.h>
-#include <vrj/Display/Projection.h>
+#include <string>
 
 #include <gmtl/Matrix.h>
 #include <gmtl/MatrixOps.h>
 #include <gmtl/Xforms.h>
 #include <gmtl/Output.h>
+
+#include <vrj/Display/Projection.h>
 
 namespace vrj
 {
@@ -83,10 +85,16 @@ void Projection::getFrustumApexAndCorners(gmtl::Vec3f& apex,
    ll = view_mat_inv * llClip;
 }
 
-
-std::ostream& Projection::outStream(std::ostream& out)
+std::ostream& Projection::outStream(std::ostream& out,
+                                    const unsigned int indentLevel)
 {
-   out << "eye: ";
+   const int pad_width_dot(20 - indentLevel);
+   out.setf(std::ios::left);
+
+   const std::string indent_text(indentLevel, ' ');
+
+   out << indent_text << std::setw(pad_width_dot) << "Eye " << " ";
+
    switch(mEye)
    {
    case Projection::LEFT:
@@ -96,7 +104,9 @@ std::ostream& Projection::outStream(std::ostream& out)
       out << "Right";
       break;
    }
-   out << "  Frustum: " << mFrustum;
+   out << std::endl;
+   out << indent_text << std::setw(pad_width_dot)
+       << "Frustum " << " " << mFrustum;
    return out;
 }
 

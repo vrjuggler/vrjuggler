@@ -79,19 +79,8 @@ public:
       ll = mLLCorner; lr = mLRCorner; ur = mURCorner; ul = mULCorner;
    }
 
-   virtual std::ostream& outStream(std::ostream& out)
-   {
-      Viewport::outStream(out);
-
-      /*
-      out << "LL: " << mLLCorner << ", LR: " << mLRCorner
-          << ", UR: " << mURCorner << ", UL:" << mULCorner << std::endl;
-      out << "surfRot: \n" << mSurfaceRotation << std::endl;
-      */
-      out << "leftProj: " << *mLeftProj;
-      out << "  rightProj: " << *mRightProj << std::endl;
-      return out;
-   }
+   virtual std::ostream& outStream(std::ostream& out,
+                                   const unsigned int indentLevel = 0);
 
 protected:
    void calculateSurfaceRotation();
@@ -127,5 +116,6 @@ private:
    gmtl::Point3f  mxLLCorner, mxLRCorner, mxURCorner, mxULCorner;    /**< The corners transformed onto an x,y plane */
 };
 
-};
+}
+
 #endif

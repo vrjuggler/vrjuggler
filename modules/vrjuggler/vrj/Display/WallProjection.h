@@ -88,7 +88,8 @@ public:
     */
    virtual void calcViewFrustum(gmtl::Matrix44f& eyePos, const float scaleFactor);
 
-   std::ostream& outStream(std::ostream& out);
+   std::ostream& outStream(std::ostream& out,
+                           const unsigned int indentLevel = 0);
 
 protected:
    /// Rotation of the screen
@@ -98,5 +99,6 @@ protected:
    float mOriginToScreen, mOriginToRight, mOriginToLeft, mOriginToTop, mOriginToBottom;
 };
 
-};
+}
+
 #endif

@@ -107,7 +107,8 @@ public:
    * Every class derived from us shoudl just define this, and
    * the opertetor<< will "just work"
    */
-   virtual std::ostream& outStream(std::ostream& out);
+   virtual std::ostream& outStream(std::ostream& out,
+                                   const unsigned int indentLevel = 0);
 
    friend VJ_API(std::ostream&) operator<<(std::ostream& out, Projection& proj);
 
