@@ -1073,8 +1073,8 @@ if test "x${_enable_gl_api}" = "xyes" ; then
         dnl # files to be compiled and enable the OpenGL API compile-time
         dnl # option.
         AC_CHECK_LIB(GL, glEnable, ,
-            AC_MSG_ERROR(*** OpenGL API will not be used (library not found) ***),
-            -lGLU -lm -lX11 -lXext -lXt)
+            AC_MSG_ERROR(*** OpenGL API will not be used (GL library not found) ***),
+            -lm)
 
         dnl # This is necessary because AC_CHECK_LIB() adds -lGL to $LIBS.  We
         dnl # want to do that ourselves later.
@@ -1093,7 +1093,18 @@ if test "x${_enable_gl_api}" = "xyes" ; then
             INCLUDES="$INCLUDES -I$x_includes"
         fi
 
-        AC_CHECK_HEADER(GL/gl.h,
+        AC_CHECK_HEADER(GL/gl.h, ,
+            AC_MSG_ERROR(*** OpenGL API will not be used (header not found) ***))
+
+        AC_CHECK_LIB(GLU, gluNewQuadric, ,
+            AC_MSG_ERROR(*** OpenGL API will not be used (GLU library not found) ***),
+            -lGL -lm -lX11 -lXext -lXt)
+
+        dnl # This is necessary again because AC_CHECK_LIB() adds -lGLU to
+        dnl # $LIBS
+        LIBS="${_vjsave_LIBS}"
+
+        AC_CHECK_HEADER(GL/glu.h,
             [ OPENGL_API="Y"; AC_DEFINE(VJ_API_OPENGL,) ],
             AC_MSG_ERROR(*** OpenGL API will not be used (header not found) ***))
     fi
