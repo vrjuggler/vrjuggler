@@ -14,7 +14,7 @@
 #include <vpr/IO/SerializableObject.h>
 #include <vpr/IO/ObjectReader.h>
 #include <vpr/IO/ObjectWriter.h>
-
+#include <cluster/Plugins/ApplicationDataManager/UserData.h>
 
 class NavData : public vpr::SerializableObject
 {
@@ -42,7 +42,7 @@ public:
          writer->writeFloat(pos_data[n]); 
       }
       return vpr::ReturnStatus::Succeed;
-   }  
+   } 
 public:   
    gmtl::Matrix44f mCurPos;
 };
@@ -61,6 +61,9 @@ public:
    void init()
    {
       mActive = true;
+      vpr::GUID new_guid("d6be4359-e8cf-41fc-a72b-a5b4f3f29aa2");
+      std::string hostname = "crash";
+      mNavData.init(new_guid, hostname);
    }
 
    void setWalkMode(bool walk_mode)
@@ -104,11 +107,11 @@ public:
       {
          gmtl::EulerAngleXYZf euler( 0.0f, gmtl::makeYRot(result), 0.0f );// Only allow Yaw (rot y)
          gmtl::Matrix44f real = gmtl::makeRot<gmtl::Matrix44f>( euler ); 
-         gmtl::postMult(mNavData.mCurPos, real);
+         gmtl::postMult(mNavData->mCurPos, real);
       }
       else
       {
-         gmtl::postMult(mNavData.mCurPos, result);
+         gmtl::postMult(mNavData->mCurPos, result);
       }
       
      
@@ -129,7 +132,7 @@ public:
       // Post multiply the delta translation
       gmtl::Matrix44f trans_matrix = gmtl::makeTrans<gmtl::Matrix44f>(trans_delta);
 
-      gmtl::postMult(mNavData.mCurPos, trans_matrix);
+      gmtl::postMult(mNavData->mCurPos, trans_matrix);
             
       //osg::Matrix osg_trans_matrix;
       //osg_trans_matrix.set(trans_matrix.getData());
@@ -145,7 +148,7 @@ public:
       }
       else
       {
-         return mNavData.mCurPos;
+         return mNavData->mCurPos;
       }
    }
    
@@ -153,7 +156,7 @@ public:
    {
       if(mActive)
       {
-         mNavData.mCurPos = pos;
+         mNavData->mCurPos = pos;
       }
    }
     
@@ -193,8 +196,9 @@ private:
    bool                    mActive;
    NavMode                 mMode;
    
-   NavData                 mNavData;
-      
+   //NavData                 mNavData;
+   cluster::UserData< NavData >  mNavData;
+
    //gmtl::Matrix44f         mCurPos;
   
    gmtl::Vec3f             mVelocity;
