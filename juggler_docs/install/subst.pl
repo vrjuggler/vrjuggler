@@ -25,6 +25,7 @@ $path_subst{"ROOT"} = '/';
 $path_subst{"HTML"} = 'html/';
 $path_subst{"IMAGES"} = 'images/';
 $path_subst{"CLASS_PATH"} = 'java.class/ver1.07/';
+$path_subst{"JEXPLORER_DOCS"} = 'JExplorer/JEXPLORE.HTM';
 ## put all binaries, tarballs, and pdf's here...
 $path_subst{"PUB"} = 'pub/';
 
@@ -80,6 +81,7 @@ $alias_subst{"IASTATE"} = 'http://www.iastate.edu';
 $alias_subst{"TREE_FONTSIZE"} = '11';
 
 # links to documentation
+$alias_subst{"JEXPLORER"} = 'http://www.jexplorer.com';
 $alias_subst{"AUTOCONF"} = 'http://www.gnu.org/software/autoconf/autoconf.html';
 $alias_subst{"MAKE"} = 'http://www.gnu.org/software/make/make.html';
 $alias_subst{"PERL"} = 'http://www.perl.com/';
