@@ -486,6 +486,8 @@ def generateAntBuildFiles():
                          r'JCCL_Java\RTRC_Plugin_Java', 'build.xml'))
    mods.append(AntTarget(r'modules\vrjuggler\vrjconfig', 'VRJConfig',
                          'build.xml'))
+   mods.append(AntTarget(r'modules\vrjuggler\vrjconfig\customeditors\display_window',
+                         'VRJConfig', 'build-display_window.xml'))
    mods.append(AntTarget(r'modules\vrjuggler\vrjconfig\customeditors\intersense',
                          'VRJConfig', 'build-intersense.xml'))
    mods.append(AntTarget(r'modules\vrjuggler\vrjconfig\customeditors\pinchglove',
