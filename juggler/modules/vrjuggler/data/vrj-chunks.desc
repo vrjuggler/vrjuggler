@@ -161,7 +161,6 @@ chunk EnvironmentManager "Environment Manager" "Application-side of connection t
   Name String 1 "Name" "Unique name of an instance of this chunk type"
   Port Int 1 "Port" "Networking port to listen on"
   AcceptConnections Bool 1 "Accept Connections" "Whether or not we should accept connections from vjcontrol clients"
-  PerformanceTarget Chunk 1 "Performance Target" vj_enumeration { "FileConnect" "NetworkConnect" } "File or network connection that performance data should be sent to."
   end
 chunk FileConnect "EM Connection" "A file for outputing Environment Manager data"
   Name String 1 "Name" "Unique name of an instance of this chunk type"
@@ -191,6 +190,7 @@ chunk simKeyboardDigital "simKeyboardDigital" ""
   end
 chunk PerfMeasure "Performance Measurements" "Controls performance monitoring of Juggler library"
   Name String 1 "Name" "Unique name of an instance of this chunk type"
+  PerformanceTarget Chunk 1 "Performance Target" vj_enumeration { "FileConnect" "NetworkConnect" } "File or network connection that performance data should be sent to."
   TimingTests EmbeddedChunk -1 "Timing Tests" vj_enumeration { "PerfTestActive" } "Turn on/off Juggler internal timing tests"
   end
 chunk PerfTestActive "PerfTestActive" "inner chunk for Performance Testing"
