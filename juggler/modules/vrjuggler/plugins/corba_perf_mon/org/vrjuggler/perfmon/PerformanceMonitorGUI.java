@@ -83,7 +83,10 @@ public class PerformanceMonitorGUI extends JPanel
    public PerformanceMonitorGUI()
    {
       mDataset = new TimeSeriesCollection( );
-      JFreeChart chart = createChart( mDataset );
+
+      // Get data from combo box and create type of chart 
+      // based on that.
+      JFreeChart chart = createTimeSeriesChart( mDataset );
       mChartPanel = new ChartPanel( chart );
 
       jbInit();
@@ -100,13 +103,7 @@ public class PerformanceMonitorGUI extends JPanel
        jPanel1.add( mJSpinner, null );
   }
 
-   // To change the refresh rate of data
-   void getSleepTime ()
-   {
-      //return mSleepTime;
-   }
-   
-   private JFreeChart createChart ( XYDataset dataset )
+   private JFreeChart createTimeSeriesChart ( XYDataset dataset )
    {
       JFreeChart result = ChartFactory.createTimeSeriesChart(
          "Performance Monitoring Statistics",
