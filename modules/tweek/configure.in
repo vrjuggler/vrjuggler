@@ -443,12 +443,15 @@ AC_PATH_PROG(PYUIC, pyuic, no)
 
 if test "x$PYTHON" = "xno" ; then
    AC_MSG_WARN([*** Python is required to use the Python GUI ***])
-   BUILD_PYTHON='N'
+   BUILD_PYTHON_IDL='N'
+   BUILD_PYTHON_GUI='N'
 elif test "x$PYUIC" = "xno" ; then
    AC_MSG_WARN([*** pyuic is required to build Python GUI ***])
-   BUILD_PYTHON='N'
+   BUILD_PYTHON_IDL='Y'
+   BUILD_PYTHON_GUI='N'
 else
-   BUILD_PYTHON=''
+   BUILD_PYTHON_IDL=''
+   BUILD_PYTHON_GUI=''
 fi
 
 # -----------------------------------------------------------------------------
@@ -662,7 +665,8 @@ setup_omniORB_python ( )
 
    if test "x$PYTHON_IDL" = "xno" ; then
       AC_MSG_WARN([*** $python_orb_name required for Tweek Python API ***])
-      BUILD_PYTHON='N'
+      BUILD_PYTHON_IDL='N'
+      BUILD_PYTHON_GUI='N'
    else
       PYTHON_ORB_MODULE='omniORB'
       PYTHON_IDL_OPTS='-bpython'
@@ -673,10 +677,11 @@ setup_omniORB_python ( )
       if ! (eval $PYTHON_IDL $PYTHON_IDL_OPTS -u >/dev/null 2>&1) 2>&1 ; then
          AC_MSG_RESULT([no])
          AC_MSG_WARN([*** $python_orb_name required for Tweek Python API ***])
-         BUILD_PYTHON='N'
+         BUILD_PYTHON_IDL='N'
+         BUILD_PYTHON_GUI='N'
       else
          AC_MSG_RESULT([yes])
-         BUILD_PYTHON='Y'
+         BUILD_PYTHON_IDL='Y'
       fi
    fi
 }
@@ -799,7 +804,7 @@ fi
 # --------------------
 # Find the Python ORB.
 # --------------------
-if test "x$BUILD_PYTHON" != "xN" ; then
+if test "x$BUILD_PYTHON_IDL" != "xN" ; then
    AC_MSG_CHECKING([for Python version])
    changequote(<<, >>)
    PYTHON_VER=`echo "import sys; print sys.version[:3]" | $PYTHON -`
@@ -1040,7 +1045,8 @@ AC_SUBST(ORB_SINGLETON_CLASS_PROP)
 AC_SUBST(config_java_idl)
 
 AC_SUBST(PYTHON_VER)
-AC_SUBST(BUILD_PYTHON)
+AC_SUBST(BUILD_PYTHON_IDL)
+AC_SUBST(BUILD_PYTHON_GUI)
 AC_SUBST(PYTHON_ORB_MODULE)
 AC_SUBST(PYTHON_IDL)
 AC_SUBST(PYTHON_IDL_OPTS)
