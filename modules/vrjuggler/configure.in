@@ -36,11 +36,10 @@ AC_ARG_WITH(threads,
 
 dnl # Define the root directory for the Java installation.
 dnl # The default is /usr/java.
-_JDK_HOME_DEFAULT="/usr/java"
 _JDK_HOME_ALT_LIST="/usr/local/java"
 AC_ARG_WITH(jdkhome,
             [  --with-jdkhome=<PATH>   JDK installation directory      [default=/usr/java]],
-            JDK_HOME="$withval", JDK_HOME="${_JDK_HOME_DEFAULT}")
+            JDK_HOME="$withval", JDK_HOME="${JDK_HOME-/usr/java}")
 
 dnl # Define the root directory for the Performer installation.
 dnl # The default is /usr.
