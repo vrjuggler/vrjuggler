@@ -37,5 +37,5 @@ endif
 cleandepend:
 	-rm -f *.d
 ifdef _LOCAL_CLEANDEP
-	${MAKE} _cleandepend
+	@${MAKE} _cleandepend
 endif
