@@ -59,17 +59,17 @@ int vjMotionStar::getBirdIndex(int birdNum, int bufferIndex)
    return ret_val;
 }
  
-vjMotionStar::vjMotionStar(unsigned int format,
+vjMotionStar::vjMotionStar(int hemisphere,
                 unsigned int birdFormat,
                 unsigned int birdsRequired,
-                double birdRate,
-                int runMode
+                int runMode,
+                double birdRate
 //              unsigned char reportRate
-                ) : mMotionStar(format,
+                ) : mMotionStar(hemisphere,
                                                     birdFormat,
                                                     birdsRequired,
-                                                    birdRate,
                                                     runMode,
+                                                    birdRate,
                                                     1
 //                                                  reportRate
                                                     )
@@ -79,10 +79,13 @@ vjMotionStar::vjMotionStar(unsigned int format,
  
 bool vjMotionStar::config(vjConfigChunk *c)
 {
+
+   if (!vjPosition::config(c))
+       return false;
    vjDEBUG(vjDBG_INPUT_MGR,3) << "       vjMotionStar::vjMotionStar(vjConfigChunk*)" << endl << vjDEBUG_FLUSH;
  
    // set mMotionStar with the config info.
-   mMotionStar.setFormat((unsigned int)(static_cast<int> (c->getProperty("format"))));
+   mMotionStar.setHemisphere((unsigned int)(static_cast<int> (c->getProperty("hemisphere"))));
    mMotionStar.setBirdFormat((unsigned int)(static_cast<int> (c->getProperty("bformat"))));
    mMotionStar.setNumBirds((unsigned int)(static_cast<int> (c->getProperty("num"))));
    mMotionStar.setBirdRate((double)(static_cast<int>(c->getProperty("brate"))));
@@ -160,18 +163,13 @@ int vjMotionStar::startSampling()
  
       myThread = new vjThread(sampleBirds, (void*) devicePtr, 0);
  
-      if (mMotionStar.getRunMode()==0) 
-      {
-          mMotionStar.sample(0);
-      }
-
       if ( myThread == NULL )
       {
          return 0;  // Fail
       }
       else
       {
-         return 1;   // success
+          return 1;   // success
       }
    }
    else
@@ -182,29 +180,30 @@ int vjMotionStar::sample()
 {
 /*   if (this->isActive() == false)
       return 0;
-*/ 
+*/
+   mMotionStar.sample();
    int i;
-   if (mMotionStar.getRunMode()==1) {mMotionStar.sample(1);}
- 
+  
    // For each bird
    for (i=0; i < (mMotionStar.getNumBirds()); i++)
-   {
-
+      
+      {
       // Get the index to the current read buffer
       int index = getBirdIndex(i,progress);
  
-      // We add 1 to "i" to account for the fact that aFlock is 1-based
+      //if (i==0) 
+      vjDEBUG(vjDBG_ALL,0) << "i:  " << i << "  x: " << xPos(i) << "  y: " << yPos(i) << endl << vjDEBUG_FLUSH;
+      
+      theData[index].makeZYXEuler(mMotionStar.zRot( i ),
+                                  mMotionStar.yRot( i ),
+                                  mMotionStar.xRot( i ));
  
-      theData[index].makeZYXEuler(mMotionStar.zRot( i+1 ),
-                                  mMotionStar.yRot( i+1 ),
-                                  mMotionStar.xRot( i+1 ));
+      theData[index].setTrans(mMotionStar.xPos( i ),
+                              mMotionStar.yPos( i ),
+                              mMotionStar.zPos( i ));
  
-      theData[index].setTrans(mMotionStar.xPos( i+1 ),
-                              mMotionStar.yPos( i+1 ),
-                              mMotionStar.zPos( i+1 ));
- 
-      //if (i==1)
-         //vjDEBUG(vjDBG_ALL,2) << "Flock: bird1:    orig:" << vjCoord(theData[index]).pos << endl << vjDEBUG_FLUSH;
+//      if (i==1)
+//         vjDEBUG(vjDBG_ALL,2) << "Flock: bird1:    orig:" << vjCoord(theData[index]).pos << endl << vjDEBUG_FLUSH;
  
       // Transforms between the cord frames
       // See transform documentation and VR System pg 146
@@ -218,8 +217,8 @@ int vjMotionStar::sample()
       theData[index] = world_T_reciever;                                     //Store corrected xform back into data
  
  
-      //if (i == 1)
-         //vjDEBUG(vjDBG_ALL,2) << "Flock: bird1: xformed:" << vjCoord(theData[index]).pos << endl << vjDEBUG_FLUSH;
+//      if (i == 1)
+//         vjDEBUG(vjDBG_ALL,2) << "Flock: bird1: xformed:" << vjCoord(theData[index]).pos << endl << vjDEBUG_FLUSH;
    }
  
    // Locks and then swaps the indices
@@ -230,8 +229,8 @@ int vjMotionStar::sample()
  
 int vjMotionStar::stopSampling()
 {
-   if (this->isActive() == false)
-      return 0;
+   //if (this->isActive() == false)
+   //   return 0;
  
    if (myThread != NULL)
    {
@@ -260,19 +259,23 @@ int vjMotionStar::stopSampling()
  
 vjMatrix* vjMotionStar::getPosData( int d ) // d is 0 based
 {
-    if (this->isActive() == false)
-        return NULL;
+    //if (this->isActive() == false)
+    //    return NULL;
  
     return (&theData[getBirdIndex(d,current)]);
 }
  
+vjTimeStamp* vjMotionStar::getPosUpdateTime (int d) 
+{
+    return (&mDataTimes[getBirdIndex(d,current)]);
+}
 
 void vjMotionStar::updateData()
 {
-   int new_index, old_index, tmp;
+//   int new_index, old_index, tmp;
  
-   if (this->isActive() == false)
-      return;
+   //if (this->isActive() == false)
+   //   return;
  
    vjGuard<vjMutex> updateGuard(lock);
  
@@ -288,14 +291,14 @@ void vjMotionStar::updateData()
  
 
 
-void vjMotionStar::setFormat (unsigned int i)
+void vjMotionStar::setHemisphere ( int i)
 {
     if (this->isActive())
     {
-      vjDEBUG(vjDBG_INPUT_MGR,2) << "vjMotionStar: Cannot change format while active\n" << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_INPUT_MGR,2) << "vjMotionStar: Cannot change hemisphere while active\n" << vjDEBUG_FLUSH;
       return;
     }
-    mMotionStar.setFormat ( i );
+    mMotionStar.setHemisphere ( i );
 }
 
 
@@ -314,7 +317,7 @@ void vjMotionStar::setNumBirds (unsigned int i)
 {
     if (this->isActive())
     {
-      vjDEBUG(vjDBG_INPUT_MGR,2) << "vjMotionStar: Cannot change format while active\n" << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_INPUT_MGR,2) << "vjMotionStar: Cannot change number of birds while active\n" << vjDEBUG_FLUSH;
       return;
     }
     mMotionStar.setNumBirds ( i );
@@ -325,7 +328,7 @@ void vjMotionStar::setBirdRate (double d)
 {
     if (this->isActive())
     {
-      vjDEBUG(vjDBG_INPUT_MGR,2) << "vjMotionStar: Cannot change format while active\n" << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_INPUT_MGR,2) << "vjMotionStar: Cannot change sample rate while active\n" << vjDEBUG_FLUSH;
       return;
     }
     mMotionStar.setBirdRate ( d );
@@ -336,7 +339,7 @@ void vjMotionStar::setRunMode (int i)
 {
     if (this->isActive())
     {
-      vjDEBUG(vjDBG_INPUT_MGR,2) << "vjMotionStar: Cannot change format while active\n" << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_INPUT_MGR,2) << "vjMotionStar: Cannot change run mode while active\n" << vjDEBUG_FLUSH;
       return;
     }
     mMotionStar.setRunMode ( i );
@@ -347,7 +350,7 @@ void vjMotionStar::setReportRate (unsigned char ch)
 {
     if (this->isActive())
     {
-      vjDEBUG(vjDBG_INPUT_MGR,2) << "vjMotionStar: Cannot change format while active\n" << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_INPUT_MGR,2) << "vjMotionStar: Cannot change report rate while active\n" << vjDEBUG_FLUSH;
       return;
     }
     mMotionStar.setReportRate ( ch );
