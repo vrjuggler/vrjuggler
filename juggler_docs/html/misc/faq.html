@@ -62,10 +62,9 @@ F.A.Q.</H2>
         <li><a href="#portingcaveapps"> How do I port a CAVElib application
 	to VR Juggler?</a>
         <li><a href="#portingglutapps"> How do I port a GLUT application to VR Juggler?</a>
-        <li>
-	  <a href="#c++compiler">When I compile, the file <TT>vector</TT>
+        <li><a href="#c++compiler">When I compile, the file <TT>vector</TT>
           (or <TT>algorithm</TT> or <TT>iostream</TT> etc.) cannot be found</a>
-        
+        <li><a href="#edge-trigger">When mouse/wand clicks are setup to register as digital button presses it is hard to get just one click</a>
       </ul>
     
 
@@ -476,6 +475,18 @@ F.A.Q.</H2>
 	<P> </P>
       </DD>
 
+   <DT><a name="edge-trigger"><B>When mouse/wand clicks are setup to register as digital button presses it is hard to get just one click</B></a>
+      <DD>
+	You'll want to look at <a href="${MISC}/glossary.html#edge-triggering">edge triggering</a> on vjDigital devices..
+An edge trigger gives you 4 states.  On, Off, Just_On, Just_Off
+VRJuggler digital devices do edge triggering for you automatically.
+You'll want to test for Just_On, so that your presses don't keep
+retriggering.
+For example, you can test for if (vjDigital::TOGGLE_ON == vjDigitalProxy::getData() )
+to see when the button is first pressed.
+	<P> </P>
+      </DD>
+      
    <DT><font size=1>Can't find your answer here?
        <a href="${MAILTO_JUGGLER_MAILING_LIST}">Contact The User
        List</a></font>
