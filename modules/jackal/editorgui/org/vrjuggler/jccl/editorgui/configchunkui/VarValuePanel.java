@@ -29,20 +29,17 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
+package org.vrjuggler.jccl.editorgui.configchunkui;
 
-
-
-package VjComponents.ConfigEditor.ConfigChunkUI;
-
-import javax.swing.JPanel;
 import java.awt.event.ActionListener;
+import javax.swing.JPanel;
 
-import VjConfig.VarValue;
-import VjConfig.PropertyDesc;
-import VjComponents.ConfigEditor.ConfigUIHelper;
+import org.vrjuggler.jccl.config.PropertyDesc;
+import org.vrjuggler.jccl.config.VarValue;
+import org.vrjuggler.jccl.editorgui.ConfigUIHelper;
 
-
-/* VarValuePanel is just a little panel that we'll stick several of 
+/**
+ * VarValuePanel is just a little panel that we'll stick several of 
  * in a PropertyPanel.
  *
  *     -----------------------------------------------------
@@ -60,16 +57,15 @@ import VjComponents.ConfigEditor.ConfigUIHelper;
  *    "Remove" - if the panel's remove button was pressed.
  *    "Rename" - if it's an embedded chunk panel & the chunk's renamed.
  */
-abstract public class VarValuePanel extends JPanel {
+abstract public class VarValuePanel
+   extends JPanel
+{
+   abstract public void setValue(VarValue v);
+   abstract public VarValue getValue();
 
-    abstract public void setValue (VarValue v);
-    abstract public VarValue getValue ();
+   abstract public void setConfigUIHelper(ConfigUIHelper ui_helper);
+   abstract public void setPropertyDesc(PropertyDesc desc);
 
-    abstract public void setConfigUIHelper (ConfigUIHelper ui_helper);
-    abstract public void setPropertyDesc (PropertyDesc desc);
-
-    abstract public void addActionListener (ActionListener l);
-    abstract public void removeActionListener (ActionListener l);
-
+   abstract public void addActionListener(ActionListener l);
+   abstract public void removeActionListener(ActionListener l);
 }
-

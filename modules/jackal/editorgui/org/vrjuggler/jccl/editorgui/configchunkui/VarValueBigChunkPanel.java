@@ -29,21 +29,17 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-
-
-
-package VjComponents.ConfigEditor.ConfigChunkUI;
+package org.vrjuggler.jccl.editorgui.configchunkui;
 
 import java.awt.*;
 import java.awt.event.*;
 import java.util.*;
 import javax.swing.*;
 
-import VjControl.Core;
-import VjConfig.*;
-import VjComponents.ConfigEditor.*;
-import VjComponents.UI.Widgets.*;
-
+import org.vrjuggler.jccl.config.*;
+import org.vrjuggler.jccl.editorgui.*;
+import org.vrjuggler.jccl.vjcontrol.Core;
+import org.vrjuggler.jccl.vjcontrol.ui.widgets.*;
 
 /** Subclass of VarValuePanel for displaying large embedded chunks.
  *  This panel simply uses an "edit" button which brings up the 
@@ -205,12 +201,4 @@ public class VarValueBigChunkPanel
             }
         }
     }
-
-
 }
-
-
-
-
-
-
