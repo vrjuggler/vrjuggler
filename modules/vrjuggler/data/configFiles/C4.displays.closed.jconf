@@ -47,40 +47,24 @@
          </event_window_device>
          <active>true</active>
          <surface_viewports>
-            <surface_viewport name="RightScreen viewport" version="1">
+            <surface_viewport name="RightScreen viewport" version="2">
                <origin>0.0</origin>
                <origin>0.0</origin>
                <size>1.0</size>
                <size>1.0</size>
                <view>Stereo</view>
-               <corners>
-                  <vec3 name="lower left" version="1">
-                     <x>1.8288</x>
-                     <y>0.0</y>
-                     <z>-1.8288</z>
-                  </vec3>
-               </corners>
-               <corners>
-                  <vec3 name="lower right" version="1">
-                     <x>1.8288</x>
-                     <y>0.0</y>
-                     <z>1.8288</z>
-                  </vec3>
-               </corners>
-               <corners>
-                  <vec3 name="upper right" version="1">
-                     <x>1.8288</x>
-                     <y>2.7432</y>
-                     <z>1.8288</z>
-                  </vec3>
-               </corners>
-               <corners>
-                  <vec3 name="upper left" version="1">
-                     <x>1.8288</x>
-                     <y>2.7432</y>
-                     <z>-1.8288</z>
-                  </vec3>
-               </corners>
+               <lower_left_corner>1.8288</lower_left_corner>
+               <lower_left_corner>0.0</lower_left_corner>
+               <lower_left_corner>-1.8288</lower_left_corner>
+               <lower_right_corner>1.8288</lower_right_corner>
+               <lower_right_corner>0.0</lower_right_corner>
+               <lower_right_corner>1.8288</lower_right_corner>
+               <upper_right_corner>1.8288</upper_right_corner>
+               <upper_right_corner>2.7432</upper_right_corner>
+               <upper_right_corner>1.8288</upper_right_corner>
+               <upper_left_corner>1.8288</upper_left_corner>
+               <upper_left_corner>2.7432</upper_left_corner>
+               <upper_left_corner>-1.8288</upper_left_corner>
                <user>User1</user>
                <active>true</active>
                <tracked>false</tracked>
@@ -125,40 +109,24 @@
          </event_window_device>
          <active>true</active>
          <surface_viewports>
-            <surface_viewport name="LeftScreen viewport" version="1">
+            <surface_viewport name="LeftScreen viewport" version="2">
                <origin>0.0</origin>
                <origin>0.0</origin>
                <size>1.0</size>
                <size>1.0</size>
                <view>Stereo</view>
-               <corners>
-                  <vec3 name="lower left" version="1">
-                     <x>-1.8288</x>
-                     <y>0.0</y>
-                     <z>1.8288</z>
-                  </vec3>
-               </corners>
-               <corners>
-                  <vec3 name="lower right" version="1">
-                     <x>-1.8288</x>
-                     <y>0.0</y>
-                     <z>-1.8288</z>
-                  </vec3>
-               </corners>
-               <corners>
-                  <vec3 name="upper right" version="1">
-                     <x>-1.8288</x>
-                     <y>2.7432</y>
-                     <z>-1.8288</z>
-                  </vec3>
-               </corners>
-               <corners>
-                  <vec3 name="upper left" version="1">
-                     <x>-1.8288</x>
-                     <y>2.7432</y>
-                     <z>1.8288</z>
-                  </vec3>
-               </corners>
+               <lower_left_corner>-1.8288</lower_left_corner>
+               <lower_left_corner>0.0</lower_left_corner>
+               <lower_left_corner>1.8288</lower_left_corner>
+               <lower_right_corner>-1.8288</lower_right_corner>
+               <lower_right_corner>0.0</lower_right_corner>
+               <lower_right_corner>-1.8288</lower_right_corner>
+               <upper_right_corner>-1.8288</upper_right_corner>
+               <upper_right_corner>2.7432</upper_right_corner>
+               <upper_right_corner>-1.8288</upper_right_corner>
+               <upper_left_corner>-1.8288</upper_left_corner>
+               <upper_left_corner>2.7432</upper_left_corner>
+               <upper_left_corner>1.8288</upper_left_corner>
                <user>User1</user>
                <active>true</active>
                <tracked>false</tracked>
@@ -203,40 +171,24 @@
          </event_window_device>
          <active>true</active>
          <surface_viewports>
-            <surface_viewport name="FrontScreen viewport" version="1">
+            <surface_viewport name="FrontScreen viewport" version="2">
                <origin>0.0</origin>
                <origin>0.0</origin>
                <size>1.0</size>
                <size>1.0</size>
                <view>Stereo</view>
-               <corners>
-                  <vec3 name="lower left" version="1">
-                     <x>-1.8288</x>
-                     <y>0.0</y>
-                     <z>-1.8288</z>
-                  </vec3>
-               </corners>
-               <corners>
-                  <vec3 name="lower right" version="1">
-                     <x>1.8288</x>
-                     <y>0.0</y>
-                     <z>-1.8288</z>
-                  </vec3>
-               </corners>
-               <corners>
-                  <vec3 name="upper right" version="1">
-                     <x>1.8288</x>
-                     <y>2.7432</y>
-                     <z>-1.8288</z>
-                  </vec3>
-               </corners>
-               <corners>
-                  <vec3 name="upper left" version="1">
-                     <x>-1.8288</x>
-                     <y>2.7432</y>
-                     <z>-1.8288</z>
-                  </vec3>
-               </corners>
+               <lower_left_corner>-1.8288</lower_left_corner>
+               <lower_left_corner>0.0</lower_left_corner>
+               <lower_left_corner>-1.8288</lower_left_corner>
+               <lower_right_corner>1.8288</lower_right_corner>
+               <lower_right_corner>0.0</lower_right_corner>
+               <lower_right_corner>-1.8288</lower_right_corner>
+               <upper_right_corner>1.8288</upper_right_corner>
+               <upper_right_corner>2.7432</upper_right_corner>
+               <upper_right_corner>-1.8288</upper_right_corner>
+               <upper_left_corner>-1.8288</upper_left_corner>
+               <upper_left_corner>2.7432</upper_left_corner>
+               <upper_left_corner>-1.8288</upper_left_corner>
                <user>User1</user>
                <active>true</active>
                <tracked>false</tracked>
@@ -281,40 +233,24 @@
          </event_window_device>
          <active>true</active>
          <surface_viewports>
-            <surface_viewport name="FloorScreen viewport" version="1">
+            <surface_viewport name="FloorScreen viewport" version="2">
                <origin>0.0</origin>
                <origin>0.0</origin>
                <size>1.0</size>
                <size>1.0</size>
                <view>Stereo</view>
-               <corners>
-                  <vec3 name="lower left" version="1">
-                     <x>-1.8288</x>
-                     <y>0.0</y>
-                     <z>1.8288</z>
-                  </vec3>
-               </corners>
-               <corners>
-                  <vec3 name="lower right" version="1">
-                     <x>1.8288</x>
-                     <y>0.0</y>
-                     <z>1.8288</z>
-                  </vec3>
-               </corners>
-               <corners>
-                  <vec3 name="upper right" version="1">
-                     <x>1.8288</x>
-                     <y>0.0</y>
-                     <z>-1.8288</z>
-                  </vec3>
-               </corners>
-               <corners>
-                  <vec3 name="upper left" version="1">
-                     <x>-1.8288</x>
-                     <y>0.0</y>
-                     <z>-1.8288</z>
-                  </vec3>
-               </corners>
+               <lower_left_corner>-1.8288</lower_left_corner>
+               <lower_left_corner>0.0</lower_left_corner>
+               <lower_left_corner>1.8288</lower_left_corner>
+               <lower_right_corner>1.8288</lower_right_corner>
+               <lower_right_corner>0.0</lower_right_corner>
+               <lower_right_corner>1.8288</lower_right_corner>
+               <upper_right_corner>1.8288</upper_right_corner>
+               <upper_right_corner>0.0</upper_right_corner>
+               <upper_right_corner>-1.8288</upper_right_corner>
+               <upper_left_corner>-1.8288</upper_left_corner>
+               <upper_left_corner>0.0</upper_left_corner>
+               <upper_left_corner>-1.8288</upper_left_corner>
                <user>User1</user>
                <active>true</active>
                <tracked>false</tracked>
