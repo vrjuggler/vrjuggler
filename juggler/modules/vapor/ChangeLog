@@ -1,5 +1,9 @@
 DATE       AUTHOR   CHANGE
 ---------- -------- -----------------------------------------------------------
+2003-04-25 patrickh Fixed a problem in vpr::LibraryUNIX::load() where
+                    dynamically loaded code could not dynamically load other
+                    code.
+                    NEW VERSION: 0.27.2
 2003-04-14 patrickh Added vpr::DsoLoader.
                     NEW VERSION: 0.27.1
 2003-03-20 patrickh Updated to require Boost 1.30.0.
