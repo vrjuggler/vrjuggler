@@ -37,7 +37,7 @@ int main( int argc, char* argv[] )
    
    //aj.startAPI();
    std::cout<<"associate: \n" << std::flush;
-   aj.associate( "kevin", si );
+   aj.configure( "kevin", si );
    
    std::cout<<"trigger: \n" << std::flush;
    aj.trigger( "kevin" );

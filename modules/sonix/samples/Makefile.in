@@ -3,8 +3,7 @@
 PROJECT_NAME = sample
 
 SRCS	:= main.cpp
-INCLUDE_PATHS = 
-PATH_TO_SRCS = ${srcdir} ${srcdir}/TestCases ${srcdir}/CppUnit/framework ${srcdir}/CppUnit/textui
+PATH_TO_SRCS = ${srcdir}
 
 ########################################################################3
 default: $(PROJECT_NAME)
@@ -22,7 +21,7 @@ DEP_GEN_FLAG	= @DEP_GEN_FLAG@
 DEPEND_FLAGS	= @DEPEND_FLAGS@ $(INCLUDES)
 DEPEND_EXTRAS	= @DEPEND_EXTRAS@ $(DEFS)
 EXTRA_FLAGS	= 
-INCLUDES	= @INCLUDES@ -I$(topdir) -I$(srcdir)
+INCLUDES	= @INCLUDES@ -I$(topdir) -I$(srcdir) -I$(AJ_BASE_DIR)
 OPTIMIZER	= @DBG_FLAGS@ -D_DEBUG
 LD		= @LD@
 LDFLAGS		= @LDFLAGS@ -L/usr/lib$(LIBBITSUF)
