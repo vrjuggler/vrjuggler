@@ -33,7 +33,6 @@
 #include <gadget/gadgetConfig.h>
 
 #include <string>
-#include <sys/time.h>
 #include <stdio.h>                      /* need stdio for sprintf */
 #include <vpr/System.h>
 
