@@ -110,8 +110,9 @@ Observer.java: Observer.idl
 # -----------------------------------------------------------------------------
 clean:
 	rm -f Makedepend *.@OBJEXT@ networktest.ilk  so_locations *.?db	\
-          core* $(IDL_CXX_FILES) $(IDL_JAVA_FILES)
-	rm -rf ii_files
+          core* $(addprefix $(srcdir)/, $(IDL_CXX_FILES))		\
+          $(addprefix $(srcdir)/networktest/, $(IDL_JAVA_FILES))
+	rm -rf ii_files $(srcdir)/tweek
 
 clobber:
 	@$(MAKE) clean
