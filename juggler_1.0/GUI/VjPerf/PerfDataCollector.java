@@ -7,6 +7,7 @@ import VjPerf.DataLine;
 import VjConfig.*;
 import VjGUI.Core;
 import VjGUI.util.*;
+import VjConfig.ConfigStreamTokenizer;
 
 public class PerfDataCollector {
     // stores all performance data coming from a particular buffer
@@ -77,6 +78,8 @@ public class PerfDataCollector {
 	}
 	dl = new DataLine (num);
 	place = 0;
+
+	System.out.println ("creating PerfDataCollector " + _name + " with " + _num + " elements.");
 
 	infochunk = Core.findPrefixMatchChunk (name);
 //  	if (infochunk != null) {
@@ -351,7 +354,7 @@ public class PerfDataCollector {
 //      }
 
 
-  public void read (StreamTokenizer st) {
+  public void read (ConfigStreamTokenizer st) {
     // we'll assume that the initial id stuff has already been read
     // and we can dig straight into the data lines.
     int i, j;
@@ -365,24 +368,24 @@ public class PerfDataCollector {
     try {
       for (;;) {
 	  st.nextToken();
-	  index = (int)st.nval;
+	  index = Integer.parseInt(st.sval);//(int)st.nval;
 	  st.nextToken();
 	  //System.out.println ("index is " + index + "\nval is " + st.nval);
 	  if (index == -1) {
-	      if ((int)st.nval == 0)
+	      int numlost = Integer.parseInt(st.sval);
+	      if (numlost == 0)
 		  break; // no data lost, no reason to muck with things
 	      for (; place < num; place++)
 		  dl.vals[place] = Double.NaN;
-	      dl.numlost = (int)st.nval;
+	      dl.numlost = numlost;
 	      prevplace = -1;
 	      addDataLine (dl);
-	      //datalines.addElement(dl);
 	      dl = new DataLine(num);
 	      place = 0;
 	      break;
 	  }
 	  //System.out.println ("place1 is " + place); 
-	  val = (double)st.nval;
+	  val = new Double(st.sval).doubleValue();//(double)st.nval;
 	  for (; place != index; place++) {
 	      //System.out.println ("place1 is " + place);
 	      if (place >= num) {

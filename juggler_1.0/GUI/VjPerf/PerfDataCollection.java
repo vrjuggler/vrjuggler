@@ -4,6 +4,7 @@ package VjPerf;
 import VjPerf.PerfDataCollector;
 import java.io.*;
 import java.util.Vector;
+import VjConfig.ConfigStreamTokenizer;
 
 public class PerfDataCollection {
 
@@ -47,34 +48,34 @@ public class PerfDataCollection {
     }
 
 
-    public void read (StreamTokenizer st) {
+    public void read (ConfigStreamTokenizer st) {
 	String perfdatatype, name;
 	int num;
 	PerfDataCollector p;
 
 	try {
-	    for (;;) {
-		st.nextToken();
-		if (st.ttype == StreamTokenizer.TT_EOF)
-		    break;
-		if (st.ttype == StreamTokenizer.TT_WORD) {
-		    //System.out.println ("token is " + st.ttype + " " + st.sval);
-		    perfdatatype = st.sval;
-		    if (!st.sval.equalsIgnoreCase ("PerfData1")) {
-			System.out.println ("this isn't something i'm prepared to deal with");
-		    }
-		    st.nextToken();
-		    name = st.sval;
-		    st.nextToken();
-		    num = (int)st.nval;
-		    //System.out.println ("read name is " + name + "\nnum is " + num);
-		    
-		    p = getCollector (name);
-		    if (p == null)
-			p = addCollector (name, num);
-		    
-		    p.read (st);
+	    st.nextToken();
+	    if (st.ttype == ConfigStreamTokenizer.TT_WORD) {
+		System.out.println ("token is " + st.ttype + " " + st.sval);
+		perfdatatype = st.sval;
+		if (!st.sval.equalsIgnoreCase ("PerfData1")) {
+		    System.out.println ("this isn't something i'm prepared to deal with");
 		}
+		st.nextToken();
+		//System.out.println ("token is " + st.ttype + " " + st.sval);
+		name = st.sval;
+		st.nextToken();
+		//System.out.println ("token is " + st.ttype + " " + st.sval);
+		num = Integer.parseInt(st.sval);
+		//System.out.println ("read name is " + name + "\nnum is " + num);
+		
+		System.out.println ("reading perf info for " + name);
+		
+		p = getCollector (name);
+		if (p == null)
+		    p = addCollector (name, num);
+		
+		p.read (st);
 	    }
 	}
 	catch (IOException e) {
