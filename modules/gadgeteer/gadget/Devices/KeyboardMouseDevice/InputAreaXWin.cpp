@@ -6,9 +6,7 @@ namespace gadget
 {
 void InputAreaXWin::handleEvents()
 {
-   XEvent event;
-   KeySym key;
-   gadget::Keys vj_key;          // The key in vj space
+   ::XEvent event;
    bool have_events_to_check(true);  // Used by the while loop below
 
    // XXX: Need to add to mask to get more events for subclasses
@@ -43,6 +41,18 @@ vpr::Guard<vpr::Mutex> guard(mKeyboardMouseDevice->mKeysLock);      // Lock acce
    // of the given event mask.
    while(have_events_to_check)
    {
+      
+      handleEvent(event);
+      have_events_to_check = XCheckWindowEvent(mXDisplay, mXWindow, event_mask,
+                                               &event);
+   }
+}
+
+void InputAreaXWin::handleEvent(::XEvent& event)
+{
+   KeySym key;
+   gadget::Keys vj_key;          // The key in vj space
+   
       switch (event.type)
       {
       // A KeyPress event occurred.  Flag the key that was pressed (as a
@@ -96,7 +106,7 @@ vpr::Guard<vpr::Mutex> guard(mKeyboardMouseDevice->mKeysLock);      // Lock acce
                vprDEBUG(gadgetDBG_INPUT_MGR,vprDBG_STATE_LVL)
                   << "gadget::InputAreaXWin: STATE switch: Unlocked --> Lock_KeyDown\n"
                   << vprDEBUG_FLUSH;
-               lockMouse();
+               lockMouse(&event);
             }
             else if(vj_key == mLockToggleKey)
             {
@@ -104,7 +114,7 @@ vpr::Guard<vpr::Mutex> guard(mKeyboardMouseDevice->mKeysLock);      // Lock acce
                vprDEBUG(gadgetDBG_INPUT_MGR,vprDBG_STATE_LVL)
                   << "gadget::InputAreaXWin: STATE switch: Unlocked --> Lock_LockKey\n"
                   << vprDEBUG_FLUSH;
-               lockMouse();
+               lockMouse(&event);
             }
          }
          else if((mLockState == Lock_KeyDown) && (vj_key == mLockToggleKey))     // Just switch the current locking state
@@ -120,7 +130,7 @@ vpr::Guard<vpr::Mutex> guard(mKeyboardMouseDevice->mKeysLock);      // Lock acce
             vprDEBUG(gadgetDBG_INPUT_MGR,vprDBG_STATE_LVL)
                << "gadget::InputAreaXWin: STATE switch: Lock_LockKey --> Unlocked\n"
                << vprDEBUG_FLUSH;
-            unlockMouse();
+            unlockMouse(&event);
          }
 
          vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_HVERB_LVL)    //vprDBG_HVERB_LVL
@@ -149,7 +159,7 @@ vpr::Guard<vpr::Mutex> guard(mKeyboardMouseDevice->mKeysLock);      // Lock acce
             vprDEBUG(gadgetDBG_INPUT_MGR,vprDBG_STATE_LVL)
                << "gadget::InputAreaXWin: STATE switch: Lock_KeyDown --> Unlocked\n"
                << vprDEBUG_FLUSH;
-            unlockMouse();
+            unlockMouse(&event);
          }
 
          vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_HVERB_LVL)
@@ -296,33 +306,44 @@ vpr::Guard<vpr::Mutex> guard(mKeyboardMouseDevice->mKeysLock);      // Lock acce
 
       // Let any other event watchers process their events
       this->processEvent(event);
-
-      have_events_to_check = XCheckWindowEvent(mXDisplay, mXWindow, event_mask,
-                                               &event);
-   }
 }
 
 // Called when locking states
 // - Recenter the mouse
-void InputAreaXWin::lockMouse()
+void InputAreaXWin::lockMouse(XEvent* ev)
 {
+   Display* display;
+   Window window;
+
+   // Fall back on default if event is NULL.
+   if ( NULL != ev )
+   {
+      display = ((XAnyEvent*)ev)->display;
+      window = ((XAnyEvent*)ev)->window;
+   }
+   else
+   {
+      display = mXDisplay;
+      window = mXWindow;
+   }
+   
    vprDEBUG(gadgetDBG_INPUT_MGR,vprDBG_STATE_LVL)
       << "gadget::InputAreaXWin: LOCKING MOUSE..." << vprDEBUG_FLUSH;
 
    if ( mEmptyCursorSet )
    {
-      XDefineCursor(mXDisplay, mXWindow, mEmptyCursor);
+      XDefineCursor(display, window, mEmptyCursor);
    }
 
    // Center the mouse
    int win_center_x(mWidth/2), win_center_y(mHeight/2);
-   XWarpPointer(mXDisplay, None, mXWindow, 0,0, 0,0, win_center_x, win_center_y);
+   XWarpPointer(display, None, window, 0,0, 0,0, win_center_x, win_center_y);
 
    // Grab the keyboard input so that holding down a key works even
    // if the window loses focus.  While the keyboard is grabbed,
    // keyboard and pointer events will be processed normally
    // (GrabModeAsync).
-   XGrabKeyboard(mXDisplay, mXWindow, True, GrabModeAsync, GrabModeAsync,
+   XGrabKeyboard(display, window, True, GrabModeAsync, GrabModeAsync,
                  CurrentTime);
 
    // While the pointer is grabbed, we will watch for the events in
@@ -332,7 +353,7 @@ void InputAreaXWin::lockMouse()
    event_mask = ButtonPressMask | ButtonReleaseMask |
                 PointerMotionMask | ButtonMotionMask;
 
-   XGrabPointer(mXDisplay, mXWindow, True, event_mask, GrabModeAsync,
+   XGrabPointer(display, window, True, event_mask, GrabModeAsync,
                 GrabModeAsync, None, None, CurrentTime);
 
    vprDEBUG_CONT(gadgetDBG_INPUT_MGR,vprDBG_STATE_LVL)
@@ -340,20 +361,35 @@ void InputAreaXWin::lockMouse()
 }
 
 // Called when locking ends
-void InputAreaXWin::unlockMouse()
+void InputAreaXWin::unlockMouse(XEvent* ev)
 {
+   Display* display;
+   Window window;
+
+   // Fall back on default if event is NULL.
+   if ( NULL != ev )
+   {
+      display = ((XAnyEvent*)ev)->display;
+      window = ((XAnyEvent*)ev)->window;
+   }
+   else
+   {
+      display = mXDisplay;
+      window = mXWindow;
+   }
+
    vprDEBUG(gadgetDBG_INPUT_MGR,vprDBG_STATE_LVL)
       << "gadget::InputAreaXWin: UN-LOCKING MOUSE..." << vprDEBUG_FLUSH;
 
    // Un-grab the keyboard now
-   XUngrabKeyboard(mXDisplay, CurrentTime);
+   XUngrabKeyboard(display, CurrentTime);
 
    // Un-grab the pointer as well
-   XUngrabPointer(mXDisplay, CurrentTime);
+   XUngrabPointer(display, CurrentTime);
 
    if ( mEmptyCursorSet )
    {
-      XUndefineCursor(mXDisplay, mXWindow);
+      XUndefineCursor(display, window);
    }
 
    vprDEBUG_CONT(gadgetDBG_INPUT_MGR,vprDBG_STATE_LVL)
