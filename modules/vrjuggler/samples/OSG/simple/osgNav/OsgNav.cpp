@@ -106,7 +106,7 @@ void OsgNav::myInit()
    // Transform node for the model
    mModelTrans  = new osg::MatrixTransform();
    //This can be used if the model orientation needs to change
-   mModelTrans->preMult( osg::Matrix::rotate( gmtl::Math::deg2Rad( 90.0f ), 1.0f, 0.0f, 0.0f) );
+   mModelTrans->preMult( osg::Matrix::rotate( gmtl::Math::deg2Rad( -90.0f ), 1.0f, 0.0f, 0.0f) );
    
    // Add model to the transform
    mModelTrans->addChild(mModel);
