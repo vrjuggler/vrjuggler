@@ -31,9 +31,13 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 package org.vrjuggler.jccl.config.parser.v1_0;
 
+import java.io.*;
 import java.util.*;
 import org.jdom.*;
+import org.vrjuggler.tweek.services.EnvironmentService;
+
 import org.vrjuggler.jccl.config.*;
+import org.vrjuggler.jccl.config.parser.ConfigDefinitionBuilder;
 import org.vrjuggler.jccl.config.parser.ParseException;
 import org.vrjuggler.jccl.config.parser.MissingAttributeException;
 
@@ -51,15 +55,20 @@ public class ConfigElementParser
     * configuration definitions.
     *
     * @param repos         the repository in which to lookup config definitions
+    * @param searchPath    the path in which to look for config definitions when
+    *                      they cannot be found in the repository
     */
-   public ConfigElementParser(ConfigDefinitionRepository repos)
+   public ConfigElementParser(ConfigDefinitionRepository repos, List searchPath)
    {
       mDefinitionRepos = repos;
+      mSearchPath = searchPath;
    }
 
    /**
     * Parses the given XML DOM element for the configuration element defined
-    * therein.
+    * therein. If the element requires a configuration definition that is not in
+    * this parser's repository and it can be found, the definition will be added
+    * to the repository.
     *
     * @param root          the XML DOM element to parse
     */
@@ -93,7 +102,7 @@ public class ConfigElementParser
       }
 
       // Get the definition for this configuration element
-      ConfigDefinition def = mDefinitionRepos.get(token, version);
+      ConfigDefinition def = getDefinition(token, version);
       if (def == null)
       {
          throw new ParseException("Could not find definition: "+token+" version "+version);
@@ -106,6 +115,10 @@ public class ConfigElementParser
       return new ConfigElement(def, name, props);
    }
 
+   /**
+    * Parses all the property XML DOM nodes in the given configuration element
+    * root node using the given configuration definition as a reference.
+    */
    private Map parseProperties(Element root, ConfigDefinition def)
       throws ParseException
    {
@@ -126,6 +139,10 @@ public class ConfigElementParser
       return props;
    }
 
+   /**
+    * Parses all the property values that reference the given property
+    * definition out of the list of XML DOM property nodes.
+    */
    private List parsePropertyValues(List elements, PropertyDefinition propDef)
       throws ParseException
    {
@@ -149,6 +166,10 @@ public class ConfigElementParser
       return values;
    }
 
+   /**
+    * Parses an individual property value XML DOM node out of the given element
+    * using the given property definition as a reference.
+    */
    private Object parsePropertyValue(Element elt, PropertyDefinition propDef)
       throws ParseException
    {
@@ -172,6 +193,9 @@ public class ConfigElementParser
       return parse(config_element_node);
    }
 
+   /**
+    * Converts the given value from a string to the given value type class.
+    */
    private Object convertValue(String valueStr, Class type)
       throws ParseException
    {
@@ -204,9 +228,78 @@ public class ConfigElementParser
       }
    }
 
+   /**
+    * Given the token and version of the configuration definition to retrieve,
+    * the appropriate definition is retrieved. If the definition is not in the
+    * repository, then the search path is used to try to find the required
+    * configuration definition file. If it is found and parsed correctly, the
+    * definitions contained therein are added to the repository.
+    */
+   private ConfigDefinition getDefinition(String token, int version)
+   {
+      ConfigDefinition def = mDefinitionRepos.get(token, version);
+      if (def == null)
+      {
+         File def_file = findDefinition(token);
+         if (def_file != null)
+         {
+            try
+            {
+               // Get the definitions in the file
+               ConfigDefinitionBuilder builder = new ConfigDefinitionBuilder();
+               List defs = builder.parse(def_file);
+               // Make sure the file has the right definition version
+               for (Iterator itr = defs.iterator(); itr.hasNext(); )
+               {
+                  def = (ConfigDefinition)itr.next();
+                  if (def.getVersion() == version)
+                  {
+                     // For now, only add in the definition that we explicitly
+                     // want so that we don't stomp over the other definitions
+                     // that are already in the repository
+                     mDefinitionRepos.add(def);
+                     return def;
+                  }
+               }
+            }
+            catch (IOException ioe)
+            {}
+            catch (ParseException ioe)
+            {}
+         }
+      }
+      return null;
+   }
+
+   /**
+    * Given the token for a configuration definition, this method attempts to
+    * find a file named "token".jdef in this parser's search path.
+    */
+   private File findDefinition(String token)
+   {
+      String filename = token + ".jdef";
+      for (Iterator itr = mSearchPath.iterator(); itr.hasNext(); )
+      {
+         // Get the next directory
+         String dir = (String)itr.next();
+         dir = EnvironmentService.expandEnvVars(dir);
+         File file = new File(dir, filename);
+
+         // If the file exists, return it
+         if (file.exists())
+         {
+            return file;
+         }
+      }
+
+      return null;
+   }
+
    private static final String CONFIGURATION_ELEMENTS = "configuration_elements";
    private static final String NAME                   = "name";
    private static final String VERSION                = "version";
 
    private ConfigDefinitionRepository mDefinitionRepos;
+
+   private List mSearchPath;
 }
