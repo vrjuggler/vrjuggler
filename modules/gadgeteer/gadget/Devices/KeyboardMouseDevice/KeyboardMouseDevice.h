@@ -35,8 +35,6 @@
 
 #include <gadget/gadgetConfig.h>
 
-#include <boost/concept_check.hpp>
-
 #include <vpr/Sync/Mutex.h>
 
 #include <gadget/Type/Input.h>
@@ -52,35 +50,6 @@
 namespace gadget
 {
 
-/**
- * X Winndow System event window class.
- * This device is a source of keyboard events.  The device should not be
- * used directly, it should be referenced through proxies.
- *
- * There are two modes that this device can operate in:
- *
- * 1. Controlling local window
- *
- *    In this mode, the device opens and manages it's own
- *    x window for getting input.
- *
- * 2. Connecting to remotely management window
- *
- *    In this mode, the device connects through X to a
- *    window (and display) that have been opened by
- *    another process (normally an GLX window from VR Juggler).
- *
- * Mouse Locking:<br>
- *    This device recieves input from the XWindows display.  As such,
- *  the xwindow must have focus to generate events.  In order to help
- *  users keep the window in focus, there are two cases where the
- *  driver will "lock" the mouse to the window, thus preventing loss of focus.<br>
- *  CASE 1: The user holds down any key. (ie. a,b, ctrl, shift, etc)<br>
- *  CASE 2: The user can toggle locking using a special "locking" key
- *           defined in the configuration element.
- *
- * @see KeyboardMouse, KeyboardMouseProxy
- */
 class KeyboardMouseDevice : public InputMixer<Input,KeyboardMouse>
 {
 public:  // --- Internal helper class ----- //
