@@ -35,7 +35,6 @@
 
 #include <vrj/vrjConfig.h>
 #include <vector>
-#include <vrj/Display/Viewport.h>
 #include <jccl/Config/ConfigChunkPtr.h>
 
 
@@ -51,7 +50,7 @@ namespace vrj
  *
  * @date 3-5-2001
  */
-class Display
+class VJ_CLASS_API Display
 {
 public:
    Display()
