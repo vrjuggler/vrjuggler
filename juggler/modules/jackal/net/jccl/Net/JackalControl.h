@@ -29,8 +29,6 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-
-
 #ifndef _JCCL_JACKAL_CONTROL_H_
 #define _JCCL_JACKAL_CONTROL_H_
 

@@ -29,24 +29,17 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-
-
-
-#include <jccl/JackalServer/Command.h>
-
+#include <jccl/Net/Command.h>
 
 namespace jccl {
 
-
     // generic Command
-
     Command::Command () {
         ;
     }
 
 
     // Periodic Command
-
     PeriodicCommand::PeriodicCommand (float _rt): refresh_time (_rt) {
         next_fire_time = 0.0f;
     }
@@ -61,6 +54,4 @@ namespace jccl {
         // true if self should be called _after_ cmd2
         return (next_fire_time < cmd2.next_fire_time);
     }
-
-    
-};
+}

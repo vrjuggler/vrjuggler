@@ -29,15 +29,13 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-
-
 #ifndef _JCCL_JACKAL_SERVER_H_
 #define _JCCL_JACKAL_SERVER_H_
 
 #include <jccl/jcclConfig.h>
 #include <jccl/Config/ConfigChunkPtr.h>
-#include <jccl/Plugins/ConfigManager/ConfigChunkHandler.h>
-#include <jccl/JackalServer/Socket.h>
+#include <jccl/RTRC/ConfigChunkHandler.h>
+#include <jccl/Net/Socket.h>
 #include <vpr/Thread/Thread.h>
 #include <vpr/Sync/Mutex.h>
 #include <vpr/Util/Singleton.h>

@@ -29,23 +29,14 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-
-
-// implementation of Environment Manager
-//
-// author: Christopher Just
-
-
-#include <jccl/JackalServer/JackalServer.h>
-#include <jccl/JackalServer/JackalControl.h>
-#include <jccl/JackalServer/Connect.h>
+#include <jccl/Net/JackalServer.h>
+#include <jccl/Net/JackalControl.h>
+#include <jccl/Net/Connect.h>
 #include <jccl/Config/ChunkDescDB.h>
 #include <jccl/Config/ConfigChunkDB.h>
 #include <jccl/Config/ConfigChunk.h>
 #include <jccl/Config/ParseUtil.h>
 #include <jccl/Util/Debug.h>
-
-//#include <jccl/Plugins/ConfigManager/ConfigManager.h>
 
 namespace jccl {
 
