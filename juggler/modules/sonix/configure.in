@@ -346,7 +346,7 @@ AC_CONFIG_FILES([
    make.defs.mk
    snx/Makefile
    snx/Util/Makefile
-   samples/Makefile
+   samples/simple/Makefile
    samples/opengl/Makefile
    mtree/SNX.data.dist
    mtree/SNX.include.dist
