@@ -42,7 +42,6 @@
 
 #include <Kernel/vjDebug.h>
 
-#include <fstream.h>
 
 // ----------------------------------------------------------------------------
 // Helper to return the index for theData array given the birdNum we are
