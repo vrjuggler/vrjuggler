@@ -34,6 +34,9 @@
 #define _CLUSTER_CLUSTER_MANAGER_H
 
 #include <vpr/Util/Singleton.h>
+#include <vpr/vpr.h>
+#include <vpr/DynLoad/Library.h>
+
 
 #include <gadget/gadgetConfig.h>
 #include <gadget/Type/DeviceFactory.h>
@@ -141,6 +144,8 @@ public:
 
    ClusterPlugin* getPluginByGUID(const vpr::GUID& plugin_guid);
 
+   vpr::ReturnStatus loadDriverDSO(vpr::LibraryPtr driverDSO);
+
    //General helper functions
 public:
    jccl::ConfigChunkPtr getConfigChunkPointer(std::string& name);
@@ -157,6 +162,7 @@ private:
    bool                          mBarrierMaster;
    std::string                   mBarrierMasterHostname;
    std::map<vpr::GUID, ClusterPlugin*>                   mPluginMap;
+   std::vector<vpr::LibraryPtr>  mPluginLibraries;
 };
 
 } // end namespace

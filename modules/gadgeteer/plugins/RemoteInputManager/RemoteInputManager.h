@@ -41,10 +41,13 @@
 #include <gadget/gadgetConfig.h>
 // Must implement the Abstract Base Class in order to be a manager used on the ClusterNetwork
 #include <cluster/ClusterPlugin.h>
+#include <cluster/Plugins/PluginConfig.h>
 
 #include <jccl/Config/ConfigChunkPtr.h>
 
 #include <list>
+
+extern "C" GADGET_CLUSTER_PLUGIN_API(cluster::ClusterPlugin*) initPlugin();
 
 namespace gadget
 {

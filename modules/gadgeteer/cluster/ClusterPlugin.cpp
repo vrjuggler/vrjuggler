@@ -46,11 +46,6 @@ namespace cluster
       ClusterManager::instance()->removePlugin(this);
    }
 
-   void ClusterPlugin::load()
-   {
-      ClusterManager::instance()->addPlugin(this);
-   }
-   
    void ClusterPlugin::setActive(bool active)
    {
       mActive = active;

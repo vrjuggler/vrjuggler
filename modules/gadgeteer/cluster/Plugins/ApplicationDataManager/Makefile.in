@@ -31,31 +31,31 @@
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # -----------------------------------------------------------------------------
-# Makefile.in for gadgeteer/cluster/Plugins/ApplicationDataManager.  It
-# requires GNU make.
+# Makefile.in for gadgeteer/cluster/Plugins/ApplicaionDataManager.  It requires
+# GNU make.
 #
 # Generated for use on @PLATFORM@
 # -----------------------------------------------------------------------------
 
 default: all
 
-# Include common definitions
+# Include common definitions.
 include @topdir@/make.defs.mk
 
-includedir=	@includedir@/cluster/Plugins/ApplicationDataManager
+PLUGIN_NAME=	ApplicationDataManager
+
 srcdir=		@srcdir@
 top_srcdir=	@top_srcdir@
 INSTALL=	@INSTALL@
-SUBOBJDIR=	$(GADGET_LIBRARY)
+INSTALL_FILES=	
+SUBOBJDIR=	$(PLUGIN_NAME)
+C_AFTERBUILD=	plugin-dso
 
 SRCS=		ApplicationDataManager.cpp   \
-		ApplicationDataServer.cpp
-
-#ifneq (@OS_TYPE@, Win32)
-#SRCS+=		ClusterBarrierWired.cpp
-#endif
+                ApplicationDataServer.cpp
 
 include $(MKPATH)/dpp.obj.mk
+include @topdir@/cluster/Plugins/plugin.defs.mk
 
 # -----------------------------------------------------------------------------
 # Include dependencies generated automatically.

@@ -39,23 +39,29 @@
 
 default: all
 
-# Include common definitions
+# Include common definitions.
 include @topdir@/make.defs.mk
 
-includedir=	@includedir@/cluster/Plugins/RemoteInputManager
+PLUGIN_NAME=	RemoteInputManager
+
 srcdir=		@srcdir@
 top_srcdir=	@top_srcdir@
 INSTALL=	@INSTALL@
-SUBOBJDIR=	$(GADGET_LIBRARY)
+INSTALL_FILES=	DeviceServer.h	 \
+		RemoteInputManager.h \
+		VirtualDevice.h
 
-SRCS=		RemoteInputManager.cpp	\
-		DeviceServer.cpp	\
-		VirtualDevice.cpp
-#ifneq (@OS_TYPE@, Win32)
-#SRCS+=		ClusterBarrierWired.cpp
-#endif
+SUBOBJDIR=	$(PLUGIN_NAME)
+C_AFTERBUILD=	plugin-dso
 
-include $(MKPATH)/dpp.obj.mk
+SRCS=		RemoteInputManager.cpp  \
+                DeviceServer.cpp        \
+                VirtualDevice.cpp
+
+#include $(MKPATH)/dpp.obj.mk
+include $(MKPATH)/dpp.obj-subdir.mk
+
+include @topdir@/cluster/Plugins/plugin.defs.mk
 
 # -----------------------------------------------------------------------------
 # Include dependencies generated automatically.

@@ -125,6 +125,7 @@ afterbuild:
 ifdef GLOBAL_BUILD
 	@$(MAKE) links
 endif
+	@$(MAKE) plugins
 	@$(MAKE) drivers
 	@echo ""
 	@echo "---------------------------------------------------------------"
@@ -249,6 +250,44 @@ drivers-prof:
           BASE_OBJDIR="$(PROF_BUILDDIR)" OPTIMIZER="$(PROF_OPT_FLAGS)"	\
           recursive
 
+
+## TEST
+DSO_PLUGIN_SUBDIR=	gadgeteer/plugins
+DSO_PLUGIN_DIR=		$(LIBDIR_BASE)/$(DSO_PLUGIN_SUBDIR)
+
+plugins:
+ifdef BUILD_TYPE
+	$(MAKE) plugins-$(BUILD_TYPE)
+else
+	$(MAKE) plugins-dbg
+endif
+	$(MAKE) EXTRA_INSTALL_ARGS=-l prefix="$(instlinks)" install-plugins
+
+# XXX: DSO_DRIVER_DIR="$(DSO_PLUGIN_DIR)" needs to be changed to DSO_PLUGIN_DIR="$(DSO_PLUGIN_DIR)".
+#	 It is currently only like this since we are using the same build files
+#	 as we use for the driver build.
+
+plugins-all plugins-opt:
+	$(MKINSTALLDIRS) $(DSO_PLUGIN_DIR)
+	$(MAKE) -C cluster/Plugins RECTARGET="$(BUILD_TYPE)"		\
+          DSO_PLUGIN_DIR="$(DSO_PLUGIN_DIR)" OPTIMIZER="$(OPT_FLAGS)"	\
+          BASE_OBJDIR="$(OPT_BUILDDIR)" LIBDIR="$(LIBDIR)" recursive
+
+plugins-dbg:
+	$(MKINSTALLDIRS) $(DSO_PLUGIN_DIR)
+	$(MAKE) -C cluster/Plugins RECTARGET="$(BUILD_TYPE)"		\
+          DSO_PLUGIN_DIR="$(DSO_PLUGIN_DIR)" OPTIMIZER="$(DBG_FLAGS)"	\
+          BASE_OBJDIR="$(DBG_BUILDDIR)" LIBDIR="$(LIBDIR)" recursive
+
+plugins-prof:
+	$(MKINSTALLDIRS) $(DSO_PLUGIN_DIR)
+	$(MAKE) -C cluster/Plugins RECTARGET="$(BUILD_TYPE)"		\
+          DSO_PLUGIN_DIR="$(DSO_PLUGIN_DIR)" LIBDIR="$(LIBDIR)"		\
+          BASE_OBJDIR="$(PROF_BUILDDIR)" OPTIMIZER="$(PROF_OPT_FLAGS)"	\
+          recursive
+## END TEST
+
+
 # =============================================================================
 # Installation targets.  The default (what is done by 'install') is to install
 # the static debugging version of the libraries.  The steps taken for a full
@@ -300,6 +339,7 @@ pre-install:
 # XXX: See Source Forge Bug #667204.
 post-install:
 	@$(MAKE) install-drivers
+	@$(MAKE) install-plugins
 	@$(MAKE) install-test
 	@$(MAKE) install-tools
 	@$(MAKE) install-data
@@ -319,6 +359,10 @@ post-install-headers:
           $(GADGETROOT_ABS)/gadget/Devices/DriverConfig.h		\
           $(includedir)/gadget/Devices/DriverConfig.h
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
+          $(EXTRA_INSTALL_ARGS)						\
+          $(GADGETROOT_ABS)/cluster/Plugins/DriverConfig.h		\
+          $(includedir)/cluster/Plugins/DriverConfig.h
+	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
           $(EXTRA_INSTALL_ARGS) $(GADGETROOT_ABS)/gadget/gadgetConfig.h	\
           $(includedir)/gadget/gadgetConfig.h
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
@@ -337,6 +381,18 @@ install-drivers install-drivers-dbg install-drivers-opt install-drivers-prof:
             $(DSO_DRIVER_DIR) ;						\
         fi
 	$(MAKE) -C gadget/Devices $@
+
+# Install dynamically loadable plugins (if any exist in $(DSO_PLUGIN_DIR)).
+install-plugins install-plugins-dbg install-plugins-opt install-plugins-prof:
+	if [ -d $(DSO_PLUGIN_DIR) ] ; then				\
+          $(PERL) $(scriptdir)/install-dir.pl -m $(EXEC_PERMS)		\
+            $(GROUP_OPT_UNIX) -e .so,.dll,.dylib $(EXTRA_INSTALL_ARGS)	\
+            -o $(libdir)$(LIBBITSUF)/$(DSO_PLUGIN_SUBDIR) -i		\
+            $(DSO_PLUGIN_DIR) ;						\
+        fi
+	$(MAKE) -C cluster/Plugins $@
+
+
 
 # Install the test programs.
 install-test:

@@ -57,6 +57,10 @@
 #include <cluster/Packets/ApplicationDataAck.h>
 #include <cluster/Packets/DataPacket.h>
 
+cluster::ClusterPlugin* initPlugin()
+{
+   return cluster::ApplicationDataManager::instance();
+}
 
 namespace cluster
 {

@@ -31,25 +31,30 @@
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # -----------------------------------------------------------------------------
-# Makefile.in for gadgeteer/cluster/Plugins.  It requires GNU make.
+# Makefile.in for gadgeteer/gadget/Devices.  It requires GNU make.
 #
 # Generated for use on @PLATFORM@
 # -----------------------------------------------------------------------------
 
-default: all
-
-# Include common definitions
+# Include common definitions.
 include @topdir@/make.defs.mk
 
 # Prefix for recursive stuff.
 DIRPRFX=	cluster/Plugins/
 
-# Subdirectories to compile.
-SUBDIR=		ApplicationDataManager	\
-		RemoteInputManager	\
-		SwapLockPlugin
+include @UNIX_GADGETROOT_ABS@/cluster/plugins.mk
 
+# Subdirectories to compile.
+SUBDIR=		$(PLUGINS)
+
+# This is a hack until I can figure out a better way to do this automatically
+# in Doozer++.  The problem is that GNU make doesn't offer much in the way
+# of execution logic, and when recursion gets to this point, I don't know a
+# good way to tell it to continue recursing with the given arguments.
 $(RECTARGET): recursive
+
+install-plugins install-plugins-dbg install-plugins-opt install-plugins-prof:
+	$(MAKE) RECTARGET="install" recursive
 
 include $(MKPATH)/dpp.subdir.mk
 include $(MKPATH)/dpp.clean.mk

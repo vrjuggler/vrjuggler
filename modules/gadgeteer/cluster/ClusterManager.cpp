@@ -34,7 +34,8 @@
 
 #include <cluster/ClusterManager.h> // my header...
 
-#include <vpr/IO/Socket/SocketStream.h>
+#include <vpr/DynLoad/LibraryFinder.h>
+#include <vpr/Util/FileUtils.h>
 
 #include <cluster/ClusterNetwork/ClusterNetwork.h>
 #include <cluster/ClusterNetwork/ClusterNode.h>
@@ -313,7 +314,7 @@ namespace cluster
             << "Configure the Cluster: " << chunk->getName() 
             << "\n" << vprDEBUG_FLUSH;
                   
-         int num_plugins = chunk->getNum(std::string("clusterPlugin"));
+/*         int num_plugins = chunk->getNum(std::string("clusterPlugin"));
          for (int i = 0 ; i < num_plugins ; i++)
          {
             std::string new_plugin = chunk->getProperty<std::string>(std::string("clusterPlugin"), i);
@@ -331,6 +332,35 @@ namespace cluster
                SwapLockPlugin::instance()->load();
             }
          }
+*/
+
+         //Dynamic Plugin Loading
+         
+         // --- Load ClusterPlugin dsos -- //
+         // - Load individual plugins
+         const std::string plugin_prop_name("clusterPlugin");
+         int plugin_count = chunk->getNum(plugin_prop_name);
+         std::string plugin_dso;
+
+         for ( int i = 0; i < plugin_count; ++i )
+         {
+            plugin_dso =
+               vpr::replaceEnvVars(chunk->getProperty<std::string>(plugin_prop_name, i));
+            if(!plugin_dso.empty())
+            {
+               vprDEBUG(gadgetDBG_INPUT_MGR, vprDBG_STATE_LVL)
+                  << "InputMgr::config: Loading ClusterPlugin DSO '" << plugin_dso << "'\n" << vprDEBUG_FLUSH;
+
+               // If any part of the driver loading fails, the object driver_library
+               // will go out of scope at the end of this iteration, thereby freeing
+               // the allocated memory.
+               vpr::LibraryPtr plugin_library =
+                  vpr::LibraryPtr(new vpr::Library(plugin_dso));
+               this->loadDriverDSO(plugin_library);
+            }
+         }
+
+
 
 ///////////////////////////
          int num_nodes = chunk->getNum(std::string("cluster_nodes"));
@@ -558,5 +588,58 @@ namespace cluster
 
       //return(NULL); //HOW DO I DO THIS WITH BOOST SHARED POINTERS 
    }
+
+
+vpr::ReturnStatus ClusterManager::loadDriverDSO(vpr::LibraryPtr driverDSO)
+{
+   vprASSERT(driverDSO.get() != NULL && "Invalid vpr::LibraryPtr object");
+
+   const int lib_name_width(50);
+
+   vprDEBUG(gadgetDBG_RIM, vprDBG_CONFIG_LVL)
+      << "Loading plugin library: " << std::setiosflags(std::ios::right)
+      << std::setfill(' ') << std::setw(lib_name_width) << driverDSO->getName()
+      << std::resetiosflags(std::ios::right) << "     " << vprDEBUG_FLUSH;
+
+   // Load the driver
+   vpr::ReturnStatus status;
+   status = driverDSO->load();
+
+   if ( status.success() )
+   {
+      vprDEBUG(gadgetDBG_RIM, vprDBG_WARNING_LVL)
+         << "Success DSO loaded.\n" << vprDEBUG_FLUSH;
+
+      ClusterPlugin* (*creator)();
+
+      creator = (ClusterPlugin* (*)()) driverDSO->findSymbol("initPlugin");
+
+      if ( NULL != creator )
+      {
+         vprDEBUG_CONT(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "[ " << clrSetNORM(clrGREEN) << "OK" << clrRESET << " ]\n" << vprDEBUG_FLUSH;
+         vprDEBUG(gadgetDBG_RIM, vprDBG_WARNING_LVL)
+            << "Got pointer to driver factory\n" << vprDEBUG_FLUSH;
+
+         mPluginLibraries.push_back(driverDSO);
+         ClusterPlugin* new_plugin = (*creator)();
+         addPlugin(new_plugin);
+      }
+      else
+      {
+         vprDEBUG_CONT(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "[ " << clrSetNORM(clrRED) << "FAILED lookup" << clrRESET << " ]\n" << vprDEBUG_FLUSH;
+         vprDEBUG(gadgetDBG_RIM, vprDBG_WARNING_LVL)
+            << clrOutNORM(clrYELLOW, "WARNING")
+            << ": Failed to look up factory function in driver DSO '"
+            << driverDSO << "'\n" << vprDEBUG_FLUSH;
+      }
+   }
+   else
+   {
+      vprDEBUG_CONT(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << "[ " << clrSetNORM(clrRED) << "FAILED" << clrRESET << " ]\n" << vprDEBUG_FLUSH;
+   }
+
+   return status;
+}
+
 
 } // End of gadget namespace
