@@ -75,6 +75,11 @@
 
 #include "pfFileIO.h" // handy fileloading/caching functions
 
+#include <Performer/pf/pfTraverser.h>
+
+int AppNotifyPreTrav(pfTraverser* trav, void* data);
+int AppNotifyPostTrav(pfTraverser* trav, void* data);
+
 // Declare my application class
 class simplePfNavApp : public vjPfApp
 {
@@ -258,7 +263,9 @@ public:
 
    /// Function called after pfDraw
    virtual void intraFrame()
-   {;}
+   {
+      //vjDEBUG(vjDBG_ALL,0) << "-------- simplePfNavApp::intraFrame -------\n" << vjDEBUG_FLUSH;
+   }
 
    //: Reset the application to initial state
    virtual void reset()
@@ -526,11 +533,15 @@ void simplePfNavApp::initScene()
 
    // Allocate all the nodes needed
    mRootNode             = new pfGroup;       // Root of our graph
+   mRootNode->setName("simplePfNavApp::mRootNode");
    mNavigationDCS        = new pfNavDCS;      // DCS to navigate with
    mCollidableModelGroup = new pfGroup;
    mUnCollidableModelGroup = new pfGroup;
    mNoNav                  = new pfGroup;
    //mWorldDCS             = new pfDCS;
+
+   // Add callback for testing to the root node
+   //mRootNode->setTravFuncs(PFTRAV_DRAW, AppNotifyPreTrav, AppNotifyPostTrav);
 
    mRootNode->addChild( mNoNav );
    /*  SHOWS The feet and the head...
@@ -617,6 +628,18 @@ void simplePfNavApp::initScene()
    pfuTravPrintNodes( mRootNode, "lastscene.out" );
    pfdStoreFile( mRootNode, "lastscene.pfb" );
    */
+}
+
+int AppNotifyPreTrav(pfTraverser* trav, void* data)
+{
+   vjDEBUG(vjDBG_ALL,0) << "Traversing app (pre): " << "chan: " << (void*)trav->getChan() << " node:" << (void*)trav->getNode() << ": " << trav->getNode()->getName() << endl << vjDEBUG_FLUSH;
+   return PFTRAV_CONT;
+}
+
+int AppNotifyPostTrav(pfTraverser* trav, void* data)
+{
+   vjDEBUG(vjDBG_ALL,0) << "Traversing app (post): " << "chan: " << (void*)trav->getChan() << " node:" << (void*)trav->getNode() << ": " << trav->getNode()->getName() << endl << vjDEBUG_FLUSH;
+   return PFTRAV_CONT;
 }
 
 #endif
