@@ -65,20 +65,9 @@ namespace gadget
 
 /**
  * Configure constructor.
- *
- * @param port  such as "/dev/ttyd3"
- * @param baud  such as 38400, 19200, 9600, 14400, etc...
- * @param sync  sync type
- * @param block  blocking
- * @param numBrds  number of birds in flock (without transmitter)
- * @param transmit  transmitter unit number
- * @param hemi  hemisphere to track from
- * @param filt  filtering type
- * @param report  flock report rate
- * @param calfile  a calibration file, if "", then use none
  */
-Flock::Flock(const char* const port, const int& baud,
-             const int& numBrds, const int& transmit)
+Flock::Flock(const char* port, const int baud, const int numBrds,
+             const int transmit)
    : mThread(NULL)
    , mFlockOfBirds(port, baud)
 {
