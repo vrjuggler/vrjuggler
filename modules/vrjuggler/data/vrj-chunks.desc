@@ -608,6 +608,12 @@ So for example a rate of:
 1000 - Allow full duplication (basically no compression)</help>
       <item label="Compression value" defaultvalue="0" />
     </PropertyDesc>
+    <PropertyDesc name="Ignore Elements" token="ignore_elems" type="string" variable="1">
+      <item label="Element name" defaultvalue="" />
+    </PropertyDesc>
+    <PropertyDesc name="Ignore Attributes" token="ignore_attribs" type="string" variable="1">
+      <item label="Attribute Name" defaultvalue="" />
+    </PropertyDesc>
   </ChunkDesc>
   <ChunkDesc token="GestureProxy" name="Gesture Proxy">
     <category>Proxies</category>
