@@ -158,7 +158,7 @@ void AudiereSoundImplementation::trigger( const std::string& alias, const int& l
 bool AudiereSoundImplementation::isPlaying( const std::string& alias )
 {
    vprASSERT(mDev.get() != NULL && "startAPI must be called prior to this function");
-   boost::ignore_unused_variable_warning(alias);
+   bool is_playing(false);
 
    snx::SoundInfo si = this->lookup(alias);
 
@@ -166,18 +166,20 @@ bool AudiereSoundImplementation::isPlaying( const std::string& alias )
    {
       if(trackMap.count(alias) > 0)
       {
-         return trackMap[alias]->isPlaying();
+         is_playing = trackMap[alias]->isPlaying();
       }
    }
    else
    {
-      return false;
+      is_playing = false;
       /*
       if(effectMap.count(alias) > 0)
       {
       }
       */
    }
+
+   return is_playing;
 }
 
 /** if the sound is paused, then return true. */
