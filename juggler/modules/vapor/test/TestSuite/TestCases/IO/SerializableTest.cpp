@@ -73,10 +73,17 @@ void SerializableTest::testReaderWriter()
    reader->readUint16(read_uint16);
    reader->readUint32(read_uint32);
    reader->readUint64(read_uint64);
+#ifdef VPR_OS_IRIX
+   read_int8 = reader->readUint8();
+   read_int16 = reader->readUint16();
+   read_int32 = reader->readUint32();
+   read_int64 = reader->readUint64();
+#else
    reader->readUint8(vpr::Uint8(read_int8));
    reader->readUint16(vpr::Uint16(read_int16));
    reader->readUint32(vpr::Uint32(read_int32));
    reader->readUint64(vpr::Uint64(read_int64));
+#endif
    reader->readFloat(read_float);
    reader->readDouble(read_double);
    reader->readString(read_string);
@@ -86,9 +93,6 @@ void SerializableTest::testReaderWriter()
    CPPUNIT_ASSERT(data_uint16 == read_uint16);
    CPPUNIT_ASSERT(data_uint32 == read_uint32);
    CPPUNIT_ASSERT(data_uint64 == read_uint64);
-   std::cout << "\ndata_int8: " << (int) data_int8
-             << "\nread_int8: " << (int) read_int8
-             << std::endl;
    CPPUNIT_ASSERT(data_int8 == read_int8);
    CPPUNIT_ASSERT(data_int16 == read_int16);
    CPPUNIT_ASSERT(data_int32 == read_int32);
