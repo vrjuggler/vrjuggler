@@ -74,7 +74,7 @@ class GADGET_CLASS_API EventWindowWin32
 #endif
 {
 public:
-   /**< Enum to keep track of current lock state for state machine. */
+   /** Enum to keep track of current lock state for state machine. */
    enum lockState
    {
       Unlocked,     /**< The mouse is free. */

@@ -151,8 +151,6 @@ public:
    /**
     * Updates the data in all the devices.
     * This calls updateData() on all the devices in the device table.
-    *
-    * @modifies Instances pointed to by device table.
     */
    void updateAllDevices();
 
@@ -177,7 +175,6 @@ public:
     * Adds the devPtr to the device table.  devPtr should not already be in
     * the array.
     *
-    * @modifies self
     * @post mDevTable' = mDevTable \/ devPtr
     *
     * @return false if device addition fails.
@@ -189,7 +186,6 @@ public:
     * Adds the devPtr to the device table.  devPtr should not already be in
     * the array.
     *
-    * @modifies self
     * @post mDevTable' = mDevTable \/ devPtr
     *
     * @return false if device addition fails.
@@ -201,16 +197,16 @@ public:
     * Removes a device from the InputManager.
     * Remove the named device from the device table.
     *
-    * @modifies self
     * @post mDevTable[devNum]' = NULL
     *
     * @return true on success.
     */
    bool removeDevice(const std::string& mInstName);
 
-   /** Remove a device given a pointer to the device.
-   * Internally this just uses removeDevice(dev_name)
-   */
+   /**
+    * Remove a device given a pointer to the device.
+    * Internally this just uses removeDevice(dev_name).
+    */
    bool removeDevice(const Input* devPtr);
 
    // ------------------------------- //
@@ -220,7 +216,7 @@ public:
 
    /**
     * Adds a proxy to the proxy table.
-    * @param proxy - The proxy to add.  It is added with name: proxy->getName()
+    * @param proxy The proxy to add.  It is added with name: proxy->getName().
     * @return true if the proxy was added correctly.
     */
    bool addProxy(Proxy* proxy);
@@ -243,7 +239,7 @@ protected:
    bool removeProxy(jccl::ConfigElementPtr element);
 
 public:
-   /** Get the input logger connected to the system */
+   /** Get the input logger connected to the system. */
    gadget::InputLoggerPtr getInputLogger();
 
    /* friends */

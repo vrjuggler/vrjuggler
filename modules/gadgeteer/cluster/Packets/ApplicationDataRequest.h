@@ -52,10 +52,13 @@ public:
    {;}
 
    /**
-    * Create a ApplicationDataRequest packet to request a remote ApplicationData object.
+    * Create a ApplicationDataRequest packet to request a remote
+    * ApplicationData object.
     *
-    * @param plugin_guid -GUID of the ClusterPlugin that should handle this packet.
-    * @param id -GUID of the ApplicationData object that we are requesting.
+    * @param plugin_guid GUID of the ClusterPlugin that should handle this
+    *                    packet.
+    * @param id          GUID of the ApplicationData object that we are
+    *                    requesting.
     */
    ApplicationDataRequest(const vpr::GUID plugin_guid, const vpr::GUID& id);
    

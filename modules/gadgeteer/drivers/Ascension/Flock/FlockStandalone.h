@@ -587,9 +587,10 @@ public:
    { return mOutputFormat; }
 
 public:
-   /** Send command.
-   * @param cmd - cmd to send
-   */
+   /**
+    * Send command.
+    * @param cmd Command to send.
+    */
    void sendCommand(vpr::Uint8 cmd, std::vector<vpr::Uint8> data = std::vector<vpr::Uint8>(0));
 
    /** Send command to all units (except excluded types)
@@ -599,17 +600,17 @@ public:
    /**
     * Examines an attribute.
     *
-    * @param attrib - Attribute to query for - see the Flock manual.
-    * @param respSize - Expected size of the response
-    * @param respData   - Returned data
+    * @param attrib   Attribute to query for.  See the Flock manual.
+    * @param respSize Expected size of the response.
+    * @param respData Returned data.
     */
    void getAttribute(vpr::Uint8 attrib, unsigned respSize, std::vector<vpr::Uint8>& respData);
 
    /**
     * Change an attribute.
     *
-    * @param attrib - Attribute to set - see the Flock manual.
-    * @param respData - Argument data
+    * @param attrib   Attribute to set.  See the Flock manual.
+    * @param respData Argument data.
     */
    void setAttribute(vpr::Uint8 attrib, std::vector<vpr::Uint8>& attribData);
 

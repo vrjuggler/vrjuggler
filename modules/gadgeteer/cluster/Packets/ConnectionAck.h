@@ -54,9 +54,12 @@ namespace cluster
       /**
        * Create a ConnectionAck packet to acknowledge a ConnectionRequest.
        *
-       * @param host_name -The hostname of the machine that is acknowledging the connection.
-       * @param port -The port that the acknowledging machine is listening on.
-       * @param ack -Boolean determining if this is a positive(ACK) or a negative(NACK) responce.
+       * @param host_name The hostname of the machine that is acknowledging
+       *                  the connection.
+       * @param port      The port that the acknowledging machine is listening
+       *                  on.
+       * @param ack       Boolean determining if this is a positive (ACK) or a
+       *                  negative (NACK) responce.
        */
       ConnectionAck(std::string host_name, vpr::Uint16 port, bool ack);
 

@@ -42,10 +42,12 @@ namespace cluster
 CLUSTER_REGISTER_CLUSTER_PACKET_CREATOR(StartBlock);
 
    /**
-    * Create a StartBlock packet to signal that the local node is ready to start.
+    * Create a StartBlock packet to signal that the local node is ready to
+    * start.
     *
-    * @param plugin_guid -GUID of the ClusterPlugin that should handle this packet.
-    * @param frame_number -The current number of frames that have been drawn.
+    * @param plugin_id    GUID of the ClusterPlugin that should handle this
+    *                     packet.
+    * @param frame_number The current number of frames that have been drawn.
     */
    StartBlock::StartBlock(const vpr::GUID& plugin_id, const vpr::Uint32& frame_number)
    {
@@ -107,8 +109,5 @@ CLUSTER_REGISTER_CLUSTER_PACKET_CREATOR(StartBlock);
       vprDEBUG_END(gadgetDBG_RIM,vprDBG_VERB_LVL) 
          <<  clrOutBOLD(clrYELLOW,"=======================\n") << vprDEBUG_FLUSH;
    }
+
 } // end namespace cluster
-
-
-
-

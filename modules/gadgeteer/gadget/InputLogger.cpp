@@ -271,9 +271,10 @@ void InputLogger::stampRecord()
    mRootNode->addChild(stamp_node);
 }
 
-/** Load a log file.
-* @param logFilename - The name of the log file to load
-*/
+/**
+ * Load a log file.
+ * @param logFilename The name of the log file to load.
+ */
 void InputLogger::load(std::string logFilename)
 {
    vprASSERT(Inactive == mCurState && "Tried to load a file while logger is active");

@@ -79,7 +79,6 @@ public:
 
 /**
  * Object used for creating devices.
- * @note Singleton
  */
 class GADGET_CLASS_API BaseTypeFactory
 {
@@ -102,18 +101,27 @@ public:
 
    /**
     * Queries if the factory knows about the given device.
-    * @pre element != NULL, element is a valid element.
-    * @param element The element we are requesting about knowledge to create.
+    *
+    * @pre base_type is a valid configuration element type.
+    * @param base_type The base type of the config element element we are
+    *                  requesting about knowledge to create.
+    *
     * @return true if the factory knows how to create the device; false if not.
     */
    bool recognizeNetDevice(std::string base_type);
 
    /**
     * Loads the specified device.
-    * @pre recognizeDevice(element) == true
-    * @param element The specification of the device to load.
+    *
+    * @pre recognizeNetDevice(base_type) == true.
+    *
+    * @param base_type The base type of the specification of the device to
+    *                  load.
+    *
     * @return NULL is returned if the device failed to load.
     *         Otherwise, a pointer to the loaded device is returned.
+    *
+    * @see recognizeNetDevice
     */
    Input* loadNetDevice(std::string base_type);
 

@@ -55,11 +55,13 @@ public:
    /**
     * Create a DeviceAck packet to acknowledge a ApplicationDataRequest.
     *
-    * @param plugin_guid -GUID of the ClusterPlugin that should handle this packet.
-    * @param id -GUID of the Device that we are acknowledging.
-    * @param device_name -Name of the device that we are acknowledging.
-    * @param device_base_type -Basetype of the device that we are acknowledging.
-    * @param ack -Boolean determining if this is a positive(ACK) or a negative(NACK) responce.
+    * @param plugin_id        GUID of the ClusterPlugin that should handle this
+    *                         packet.
+    * @param id               GUID of the Device that we are acknowledging.
+    * @param device_name      Name of the device that we are acknowledging.
+    * @param device_base_type Basetype of the device that we are acknowledging.
+    * @param ack              Boolean determining if this is a positive (ACK)
+    *                         or a negative (NACK) responce.
     */
    DeviceAck(const vpr::GUID& plugin_id, const vpr::GUID& id, 
              const std::string& device_name, 

@@ -49,13 +49,15 @@ namespace gadget
       /**
        * Create a new DeviceServer.
        *
-       * @param name -Name of the device that we are sharing.
-       * @param device -Pointer to the device that we are sharing.
-       * @param plugin_id -GUID that should be placed at the beginning of 
-       *                   each data packet so that the receiver knows which 
-       *                   plugin the data is coming from.
+       * @param name      Name of the device that we are sharing.
+       * @param device    Pointer to the device that we are sharing.
+       * @param plugin_id GUID that should be placed at the beginning of 
+       *                  each data packet so that the receiver knows which 
+       *                  plugin the data is coming from.
        */
-      DeviceServer(const std::string& name, gadget::Input* device, const vpr::GUID& plugin_guid);
+      DeviceServer(const std::string& name, gadget::Input* device,
+                   const vpr::GUID& plugin_id);
+
       ~DeviceServer();
 
       void send();

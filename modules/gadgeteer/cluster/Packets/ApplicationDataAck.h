@@ -54,11 +54,15 @@ public:
    {;}
    
    /**
-    * Create a ApplicationDataAck packet to acknowledge a ApplicationDataRequest.
+    * Create a ApplicationDataAck packet to acknowledge a
+    * ApplicationDataRequest.
     *
-    * @param plugin_guid -GUID of the ClusterPlugin that should handle this packet.
-    * @param id -GUID of the ApplicationData object that we are acknowledging.
-    * @param ack -Boolean determining if this is a positive(ACK) or a negative(NACK) responce.
+    * @param plugin_guid GUID of the ClusterPlugin that should handle this
+    *                    packet.
+    * @param id          GUID of the ApplicationData object that we are
+    *                    acknowledging.
+    * @param ack         Boolean determining if this is a positive (ACK) or a
+    *                    negative (NACK) responce.
     */
    ApplicationDataAck(const vpr::GUID& plugin_guid, 
                       const vpr::GUID& id, 

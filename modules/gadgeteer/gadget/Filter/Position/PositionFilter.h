@@ -46,9 +46,11 @@
 
 namespace gadget
 {
-/** PositionFilter is the abstract base class that all position filters derive from
-*
-*/
+
+/**
+ * PositionFilter is the abstract base class that all position filters derive
+ * from.
+ */
 class GADGET_CLASS_API PositionFilter
 {
 public:
@@ -63,16 +65,19 @@ public:
    virtual ~PositionFilter()
    {;}
 
-   /** Configuration for the filter
-   * @return Returns true if configured correctly
-   */
+   /**
+    * Configuration for the filter.
+    * @return Returns true if configured correctly.
+    */
    virtual bool config(jccl::ConfigElementPtr c) = 0;   
 
-   /** Apply the pos filter.
-   * Apply the filter to the posSample in place.
-   * @param posSample - The sample to modify in place
-   * @post posSample is updated with a modified version.
-   */
+   /**
+    * Applies the position filter to the given sample in place.
+    *
+    * @post posSample is updated with a modified version.
+    *
+    * @param posSample The sample to modify in place.
+    */
    virtual void apply(std::vector< PositionData >& posSample) = 0;
 
    /**

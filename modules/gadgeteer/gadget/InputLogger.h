@@ -49,8 +49,9 @@
 namespace gadget
 {
 
-/** Input data logger.
-*/
+/**
+ * Input data logger.
+ */
 class GADGET_CLASS_API InputLogger
 {
 public:
@@ -58,18 +59,19 @@ public:
       : mCurState(Inactive), mSleepFramesLeft(0), mLimitFrameRate(false)
    {;}
 
-   /** Destructor */
+   /** Destructor. */
    virtual ~InputLogger()
    {;}
 
    /** Configures the logger. */
    virtual bool config(jccl::ConfigElementPtr element);
 
-   /** Processing function.
-   * This method is called by the input manager each update frame
-   * to allow the logger to do any processing that it needs
-   * to complete.
-   */
+   /**
+    * Processing function.
+    * This method is called by the input manager each update frame
+    * to allow the logger to do any processing that it needs
+    * to complete.
+    */
    void process();
 
 public:
@@ -79,22 +81,23 @@ public:
 
    void stopRecording();
 
-   /** Collect a stamp in the recording */
+   /** Collect a stamp in the recording. */
    void stampRecord();
    //@}
 
 public:
    /** @name Playback interface */
    //@{
-   /** Load a log file.
-   * @param logFilename - The name of the log file to load
-   */
+   /**
+    * Load a log file.
+    * @param logFilename The name of the log file to load.
+    */
    void load(std::string logFilename);
 
-   /** Play the currently active log */
+   /** Play the currently active log. */
    void play();
 
-   /** Stop playing a log */
+   /** Stop playing a log. */
    void stop();
 
    /** Pause log playback. */
@@ -121,34 +124,39 @@ protected:
 
    void playNextSample();
 
-   /** Limit the framerate to the speed configured.
-   * @pre mLimitFrameRate == true
-   * @post Method will sleep until enough time passed to slow to configured framerate
-   */
+   /**
+    * Limit the framerate to the speed configured.
+    *
+    * @pre mLimitFrameRate == true
+    * @post Method will sleep until enough time passed to slow to configured
+    *       framerate.
+    */
    void limitFramerate();
    //@}
 
-   /** Eliminates duplicates in the current sampled data
-   * It ignores the timestamp attribute
-   */
+   /**
+    * Eliminates duplicates in the current sampled data.
+    * It ignores the timestamp attribute.
+    */
    void compressSamples();
 
 public:
-   /** List of states that the Logger can be in */
+   /** List of states that the Logger can be in. */
    enum State
    {
-      Inactive,   /**< The Logger is Inactive to be told what to do. ie. doing nothing */
-      Recording,  /**< The Logger is current recording */
-      Playing,    /**< The Logger is currently playing */
-      Paused      /**< The Logger is currently paused */
+      Inactive,   /**< The Logger is Inactive to be told what to do (i.e., doing nothing). */
+      Recording,  /**< The Logger is current recording. */
+      Playing,    /**< The Logger is currently playing. */
+      Paused      /**< The Logger is currently paused. */
    };
 
 private:
    State       mCurState;        /**< The current state of the logger */
 
-   /** When the state becomes inactive, this is the number of frames that
-   * we wait before processing any input.
-   */
+   /**
+    * When the state becomes inactive, this is the number of frames that
+    * we wait before processing any input.
+    */
    unsigned    mSleepFramesLeft;
    std::string mActiveStamp;     /**< The active stamp for this frame */
 
