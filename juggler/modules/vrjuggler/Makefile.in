@@ -1054,11 +1054,8 @@ install-headers:
 	@echo "------------------------------------------------"
 	${MTREE_CMD} -Ude -f ${mtreedir}/VJ.include.dist -p ${prefix}
 	@${MAKE} RECTARGET="install" recursive
-	@cat ${VJROOT_ABS}/vjConfig.h |					\
-            sed -e 's/^#ifdef HAVE_CONFIG_H//'				\
-                -e 's/^#endif..*HAVE_CONFIG_H.*$$//' >./vjConfig.tmp
 	${INSTALL} -m ${FILE_PERMS} ${_GROUP_OPT_UNIX}			\
-          ./vjConfig.tmp ${includedir}/vjConfig.h
+          ${VJROOT_ABS}/vjConfig.h ${includedir}/vjConfig.h
 	@-rm -f ./vjConfig.tmp
 	${INSTALL} -m ${FILE_PERMS} ${_GROUP_OPT_UNIX}			\
           ${topdir}/vjDefines.h ${includedir}
