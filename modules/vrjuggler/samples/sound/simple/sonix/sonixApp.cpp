@@ -138,15 +138,14 @@ void sonixApp::initSonix()
    sound.init( "sol");
 
    // initialize sonix with openal
-   sonix::instance()->changeAPI( "Stub" );
+   snx::sonix::instance()->changeAPI("Stub");
    snx::SoundInfo si;
    si.filename = "sol.wav";
    si.ambient = false;
    si.datasource = snx::SoundInfo::FILESYSTEM;
    sound.configure( si );
 
-   sonix::instance()->changeAPI( "OpenAL" );
-
+   snx::sonix::instance()->changeAPI("OpenAL");
 }
 
 

@@ -681,7 +681,7 @@ void simplePfNavApp::initializeSounds()
 
       pfSoundNode* nextSound = new pfSoundNode( mSoundList[x].alias, mSoundList[x].positional );
 
-      sonix::instance()->trigger( mSoundList[x].alias );
+      snx::sonix::instance()->trigger(mSoundList[x].alias);
 
       nextSoundDCS->addChild( nextSound );
       mSoundNodes->addChild( nextSoundDCS );
