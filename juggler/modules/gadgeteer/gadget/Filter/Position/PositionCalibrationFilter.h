@@ -79,7 +79,7 @@ namespace gadget
        *
        * @return     solution will be replaced with the solution matrix X.
        */
-      void luBacksubstitution(float** decomposedA, unsigned int size, 
+      void luBacksubstitution(float** decomposedA, int size, 
                               int* permutation, float* solution);
 
       /**
@@ -100,7 +100,7 @@ namespace gadget
        * @param   size           the size of the square matrix.
        * @param   permutation    the permutation vector.
        */
-      void luDecomposition(float** matrix, unsigned int size, int* permutation);
+      void luDecomposition(float** matrix, int size, int* permutation);
 
    };
 }
