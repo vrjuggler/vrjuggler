@@ -40,35 +40,39 @@
 class DOMParser;
 class ErrorHandler;
 
-namespace jccl {
+namespace jccl
+{
 
-//: Wrapper for libxerces-c parsers.
-//  This class should never be instantiated by itself; only thru the
-//  XercesXMLParserPool object.
-class JCCL_CLASS_API XercesXMLParser {
+/**
+ * Wrapper for libxerces-c parsers.
+ * This class should never be instantiated by itself; only thru the
+ * XercesXMLParserPool object.
+ */
+class JCCL_CLASS_API XercesXMLParser
+{
 
 public:
 
-    XercesXMLParser ();
+   XercesXMLParser ();
 
-    ~XercesXMLParser ();
+   ~XercesXMLParser ();
 
-    bool readStream (std::istream& input, DOM_Node& doc);
+   bool readStream (std::istream& input, DOM_Node& doc);
 
-    bool readFile (const std::string& filename, DOM_Node& doc);
+   bool readFile (const std::string& filename, DOM_Node& doc);
 
-    bool writeStream (std::ostream& output, DOM_Node& doc);
+   bool writeStream (std::ostream& output, DOM_Node& doc);
 
-    bool writeFile (const std::string& filename, DOM_Node& doc);
+   bool writeFile (const std::string& filename, DOM_Node& doc);
 
 private:
 
-    DOMParser *parser;
+   DOMParser *parser;
 
-    ErrorHandler *error_handler;
-
-};
+   ErrorHandler *error_handler;
 
 };
+
+} // End of jccl namespace
 
 #endif

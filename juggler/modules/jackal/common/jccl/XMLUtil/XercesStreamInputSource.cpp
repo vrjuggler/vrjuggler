@@ -33,20 +33,24 @@
 #include <jccl/XMLUtil/XercesStreamInputSource.h>
 #include <jccl/XMLUtil/XercesStreamInputStream.h>
 
-namespace jccl {
+namespace jccl
+{
 
-XercesStreamInputSource::XercesStreamInputSource (std::istream& _in, char const * _terminator) {
-    in = &_in;
-    terminator = strdup (_terminator);
+XercesStreamInputSource::XercesStreamInputSource (std::istream& _in, char const * _terminator)
+{
+   in = &_in;
+   terminator = strdup (_terminator);
 }
 
-/*virtual*/ XercesStreamInputSource::~XercesStreamInputSource () {
-    free (terminator);
+/*virtual*/ XercesStreamInputSource::~XercesStreamInputSource ()
+{
+   free (terminator);
 }
 
-/*virtual*/ BinInputStream* XercesStreamInputSource::makeStream() const {
-    return new XercesStreamInputStream (*in, terminator);
+/*virtual*/ BinInputStream* XercesStreamInputSource::makeStream() const
+{
+   return new XercesStreamInputStream (*in, terminator);
 }
 
 
-};
+} // End of jccl namespace

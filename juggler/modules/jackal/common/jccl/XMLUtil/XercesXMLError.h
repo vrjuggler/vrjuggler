@@ -37,26 +37,27 @@
 #include <xercesc/util/XercesDefs.hpp>
 #include <xercesc/sax/ErrorHandler.hpp>
 
-namespace jccl {
+namespace jccl
+{
 
 class XercesXMLError : public ErrorHandler
 {
 public:
-    XercesXMLError()
-    {
-    }
+   XercesXMLError()
+   {
+   }
 
-    ~XercesXMLError()
-    {
-    }
+   ~XercesXMLError()
+   {
+   }
 
 
-    void warning(const SAXParseException& toCatch);
-    void error(const SAXParseException& toCatch);
-    void fatalError(const SAXParseException& toCatch);
-    void resetErrors();
+   void warning(const SAXParseException& toCatch);
+   void error(const SAXParseException& toCatch);
+   void fatalError(const SAXParseException& toCatch);
+   void resetErrors();
 };
 
-};
+} // End of jccl namespace
 
 #endif

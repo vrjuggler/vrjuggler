@@ -30,53 +30,61 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-
 #include <jccl/XMLUtil/XercesXMLParserPool.h>
 #include <xercesc/util/PlatformUtils.hpp>
 
-namespace jccl {
+namespace jccl
+{
 
-XercesXMLParserPool::XercesXMLParserPool () {
-    // Initialize the XML4C2 system
-    try {
-        XMLPlatformUtils::Initialize();
-    }
-    catch(const XMLException& toCatch) {
-//         cerr << "Error during Xerces-c Initialization.\n"
-//              << "  Exception message:"
-//              << toCatch.getMessage() << endl;
-    }
+XercesXMLParserPool::XercesXMLParserPool ()
+{
+   // Initialize the XML4C2 system
+   try
+   {
+      XMLPlatformUtils::Initialize();
+   }
+   catch ( const XMLException& toCatch )
+   {
+//      std::cerr << "Error during Xerces-c Initialization.\n"
+//                << "  Exception message:"
+//                << toCatch.getMessage() << std::endl;
+   }
 }
 
 
-XercesXMLParserPool::~XercesXMLParserPool () {
-    XMLPlatformUtils::Terminate();
+XercesXMLParserPool::~XercesXMLParserPool ()
+{
+   XMLPlatformUtils::Terminate();
 }
 
-XercesXMLParser* XercesXMLParserPool::getParser() {
-    XercesXMLParser* p;
-    pool_lock.acquire();
-    if (free_parsers.empty()) {
-        p = new XercesXMLParser();
-        used_parsers.push_back (p);
-    }
-    else {
-        p = free_parsers[free_parsers.size()-1];
-        free_parsers.pop_back();
-        used_parsers.push_back (p);
-    }
-    pool_lock.release();
-    return p;
+XercesXMLParser* XercesXMLParserPool::getParser()
+{
+   XercesXMLParser* p;
+   pool_lock.acquire();
+   if ( free_parsers.empty() )
+   {
+      p = new XercesXMLParser();
+      used_parsers.push_back (p);
+   }
+   else
+   {
+      p = free_parsers[free_parsers.size()-1];
+      free_parsers.pop_back();
+      used_parsers.push_back (p);
+   }
+   pool_lock.release();
+   return p;
 }
 
-void XercesXMLParserPool::releaseParser (XercesXMLParser* parser) {
-    pool_lock.acquire();
-    free_parsers.push_back (parser);
-    used_parsers.erase (std::find (used_parsers.begin(), used_parsers.end(), parser));
-    pool_lock.release();
+void XercesXMLParserPool::releaseParser (XercesXMLParser* parser)
+{
+   pool_lock.acquire();
+   free_parsers.push_back (parser);
+   used_parsers.erase (std::find (used_parsers.begin(), used_parsers.end(), parser));
+   pool_lock.release();
 }
 
 
 vprSingletonImp (XercesXMLParserPool);
 
-};
+} // End of jccl namespace
