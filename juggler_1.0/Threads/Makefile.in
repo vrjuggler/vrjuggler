@@ -20,16 +20,15 @@ include ${MKPATH}/vj.compile.mk
 include ${MKPATH}/vj.dep.mk
 include ${MKPATH}/vj.install.mk
 
-#--- Search path -------
+# Search path for source code and object files.
 vpath
 vpath %.c @srcdir@
 vpath %.cpp @srcdir@
 vpath %.o ${OBJDIR}
-#------------------------
 
-DEPEND_SRCS	:= vjThreadFunctor.cpp \
-		   vjBaseThread.cpp \
-		   vjThreadManager.cpp
+DEPEND_SRCS	:= vjThreadFunctor.cpp	\
+                   vjBaseThread.cpp	\
+                   vjThreadManager.cpp
 
 ifeq (@THREAD_SYS@,POSIX)
     DEPEND_SRCS += vjThreadPosix.cpp

@@ -20,14 +20,13 @@ include ${MKPATH}/vj.compile.mk
 include ${MKPATH}/vj.dep.mk
 include ${MKPATH}/vj.install.mk
 
-#--- Search path -------
+# Search path for source code and object files.
 vpath
 vpath %.c @srcdir@
 vpath %.cpp @srcdir@
 vpath %.o ${OBJDIR}
-#------------------------
 
-# ---- Determine what objects to use ----
+# Determine what objects to use.
 ifeq (@SYNC_SYS@,POSIX)
     DEPEND_SRCS :=
 else
