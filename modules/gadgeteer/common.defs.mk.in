@@ -27,14 +27,14 @@
 # Boston, MA 02111-1307, USA.
 #
 # -----------------------------------------------------------------
-# File:          RCSfile: common.defs.mk.in,v
-# Date modified: Date: 2002/01/04 20:42:30
-# Version:       Revision: 1.26
+# File:          common.defs.mk.in,v
+# Date modified: 2002/04/06 20:24:55
+# Version:       1.30.2.1
 # -----------------------------------------------------------------
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # =============================================================================
-# $Id$
+# common.defs.mk.in,v 1.30.2.1 2002/04/06 20:24:55 patrickh Exp
 #
 # This file <common.defs.mk> provides variable assignments based on the
 # results of running a Doozer++-aware configure script.  It is distributed
@@ -100,7 +100,9 @@
 # INCLUDES        - Additions to the include path (-I/path/to/include).
 # JCPS            - The Java classpath separator character for this platform.
 # JAR             - Command for creating Java JAR files.
+# JAVA            - The java command.
 # JAVAC           - Java compiler.
+# JAVADOC         - Java documentation generator.
 # JAVAH           - javah utility.
 # JAVAP           - javap utility.
 # JDK_HOME        - Base Java installation directory.
@@ -151,93 +153,96 @@
 # -----------------------------------------------------------------------------
 # Base variables needed by all makefiles.
 # -----------------------------------------------------------------------------
-bindir		= @bindir@
-datadir		= @datadir@
-exec_prefix	= @exec_prefix@
-libdir		= @libdir@
-libexecdir	= @libexecdir@
-prefix		= @prefix@
-sbindir		= @sbindir@
-sysconfdir	= @sysconfdir@
-topdir		= @topdir@
+bindir=			@bindir@
+datadir=		@datadir@
+exec_prefix=		@exec_prefix@
+libdir=			@libdir@
+libexecdir=		@libexecdir@
+prefix=			@prefix@
+sbindir=		@sbindir@
+sysconfdir=		@sysconfdir@
+topdir=			@topdir@
 
-AR		= @AR@ $(DPP_EXTRA_ARFLAGS) $(EXTRA_ARFLAGS) $(ARFLAGS)
-ARFLAGS		= @ARFLAGS@
-AR_NAME_FLAG	= @AR_NAME_FLAG@
-CC		= @CC@
-CXX		= @CXX@
-CPP		= @CPP@
-CXXCPP		= @CXXCPP@
-CFLAGS		= @CFLAGS@ $(OPTIMIZER) $(EXTRA_CFLAGS)
-CFLAGS_DYNLIB	= @CFLAGS_DYNLIB@
-CC_PROF_FLAGS	= @CC_PROF_FLAGS@
-CPPFLAGS	= @CPPFLAGS@ $(EXTRA_CPPFLAGS)
-CXXFLAGS	= @CXXFLAGS@ $(OPTIMIZER) $(EXTRA_CXXFLAGS)
-CXXFLAGS_DYNLIB	= @CXXFLAGS_DYNLIB@
-CXX_PROF_FLAGS	= @CXX_PROF_FLAGS@
-DEFS		= @DEFS@ $(EXTRA_DEFS)
-DEP_GEN_FLAG	= @DEP_GEN_FLAG@
-DEPEND_FLAGS	= @DEPEND_FLAGS@ @INCLUDES@ -I$(topdir) $(EXTRA_DEPEND_FLAGS)
-DEPEND_EXTRAS	= @DEPEND_EXTRAS@ $(DEFS)
-DYLIB_NAME_FLAG	= @DYLIB_NAME_FLAG@
-EXEEXT		= @EXEEXT@
-EXE_NAME_FLAG	= @EXE_NAME_FLAG@
-INCLUDES	= @INCLUDES@ -I$(topdir) $(EXTRA_INCLUDES)
-INSTALL		= @INSTALL@
-JCPS		= @JCPS@
-JAR		= @JAR@
-JAVAC		= @JAVAC@
-JAVAH		= @JAVAH@
-JAVAP		= @JAVAP@
-JDK_HOME	= @JDK_HOME@
-JNI_INC		= @JNI_INC@
-JNI_LIB		= @JNI_LIB@
-LD		= @LD@ $(DPP_EXTRA_LDFLAGS) $(EXTRA_LDFLAGS)
-LDFLAGS		= @LDFLAGS@ -L/usr/lib$(LIBBITSUF) -L/usr/lib
-LDOPTS		= @LDOPTS@ $(DPP_EXTRA_LDOPTS) $(EXTRA_LDOPTS)		\
-                  $(DSOVERSIONOPTS)
-LDOPTS_DBG	= @LDOPTS_DBG@ $(EXTRA_LDOPTS_DBG)
-LDOPTS_OPT	= @LDOPTS_OPT@ $(EXTRA_LDOPTS_OPT)
-LDOPTS_PROF	= @LDOPTS_PROF@ $(EXTRA_LDOPTS_PROF)
-LIBS		= @LIBS@ $(EXTRA_LIBS)
-LN_S		= @LN_S@
-MAKEDEPEND	= @MAKEDEPEND@
-MKPATH		?=
-OBJEXT		= @OBJEXT@
-OBJ_BUILD_FLAG	= @OBJ_BUILD_FLAG@
-OBJ_NAME_FLAG	= @OBJ_NAME_FLAG@
-OS_TYPE		= @OS_TYPE@
-PERL		= @PERL@
-RANLIB		= @RANLIB@
-RMIC		= @RMIC@
+AR=			@AR@ $(DPP_EXTRA_ARFLAGS) $(EXTRA_ARFLAGS) $(ARFLAGS)
+ARFLAGS=		@ARFLAGS@
+AR_NAME_FLAG=		@AR_NAME_FLAG@
+CC=			@CC@
+CXX=			@CXX@
+CPP=			@CPP@
+CXXCPP=			@CXXCPP@
+CFLAGS=			@CFLAGS@ $(OPTIMIZER) $(EXTRA_CFLAGS)
+CFLAGS_DYNLIB=		@CFLAGS_DYNLIB@
+CC_PROF_FLAGS=		@CC_PROF_FLAGS@
+CPPFLAGS=		@CPPFLAGS@ $(EXTRA_CPPFLAGS)
+CXXFLAGS=		@CXXFLAGS@ $(OPTIMIZER) $(EXTRA_CXXFLAGS)
+CXXFLAGS_DYNLIB=	@CXXFLAGS_DYNLIB@
+CXX_PROF_FLAGS= 	@CXX_PROF_FLAGS@
+DEFS=			@DEFS@ $(EXTRA_DEFS)
+DEP_GEN_FLAG=		@DEP_GEN_FLAG@
+DEPEND_FLAGS=		@DEPEND_FLAGS@ @INCLUDES@ -I$(topdir)		\
+			$(EXTRA_DEPEND_FLAGS)
+DEPEND_EXTRAS=		@DEPEND_EXTRAS@ $(DEFS)
+DYLIB_NAME_FLAG=	@DYLIB_NAME_FLAG@
+EXEEXT=			@EXEEXT@
+EXE_NAME_FLAG=		@EXE_NAME_FLAG@
+INCLUDES=		@INCLUDES@ -I$(topdir) $(EXTRA_INCLUDES)
+INSTALL=		@INSTALL@
+JCPS=			@JCPS@
+JAR=			@JAR@
+JAVA=			@JAVA@
+JAVAC=			@JAVAC@
+JAVADOC=		@JAVADOC@
+JAVAH=			@JAVAH@
+JAVAP=			@JAVAP@
+JDK_HOME=		@JDK_HOME@
+JNI_INC=		@JNI_INC@
+JNI_LIB=		@JNI_LIB@
+LD=			@LD@ $(DPP_EXTRA_LDFLAGS) $(EXTRA_LDFLAGS)
+LDFLAGS=		@LDFLAGS@ -L/usr/lib$(LIBBITSUF) -L/usr/lib
+LDOPTS=			@LDOPTS@ $(DPP_EXTRA_LDOPTS) $(EXTRA_LDOPTS)	\
+			$(DSOVERSIONOPTS)
+LDOPTS_DBG=		@LDOPTS_DBG@ $(EXTRA_LDOPTS_DBG)
+LDOPTS_OPT=		@LDOPTS_OPT@ $(EXTRA_LDOPTS_OPT)
+LDOPTS_PROF=		@LDOPTS_PROF@ $(EXTRA_LDOPTS_PROF)
+LIBS=			@LIBS@ $(EXTRA_LIBS)
+LN_S=			@LN_S@
+MAKEDEPEND=		@MAKEDEPEND@
+MKPATH?=		
+OBJEXT=			@OBJEXT@
+OBJ_BUILD_FLAG=		@OBJ_BUILD_FLAG@
+OBJ_NAME_FLAG=		@OBJ_NAME_FLAG@
+OS_TYPE=		@OS_TYPE@
+PERL=			@PERL@
+RANLIB=			@RANLIB@
+RMIC=			@RMIC@
 
 # SGI-specific dynamic-shared-object information.
-DSOREGFILE	= @DSOREGFILE@
-DSOVERSION	= @DSOVERSION@
-DSOVERSIONOPTS	= @DSOVERSIONOPTS@
+DSOREGFILE=		@DSOREGFILE@
+DSOVERSION=		@DSOVERSION@
+DSOVERSIONOPTS=		@DSOVERSIONOPTS@
 
-USE_MAKEDEPEND	= @USE_MAKEDEPEND@
+USE_MAKEDEPEND=		@USE_MAKEDEPEND@
 
 # Installation information (permissions, ownership).
-OWNER_NAME	= @OWNER_NAME@
-GROUP_NAME	= @GROUP_NAME@
-FILE_PERMS	= @FILE_PERMS@
-EXEC_PERMS	= @EXEC_PERMS@
-DIR_PERMS	= @DIR_PERMS@
+OWNER_NAME=		@OWNER_NAME@
+GROUP_NAME=		@GROUP_NAME@
+FILE_PERMS=		@FILE_PERMS@
+EXEC_PERMS=		@EXEC_PERMS@
+DIR_PERMS=		@DIR_PERMS@
 
 # Allow overriding the default value of $(OBJDIR) by setting $(BASE_OBJDIR)
 # (probably using an externally defined value).
 ifdef BASE_OBJDIR
-    OBJDIR	= $(BASE_OBJDIR)
+   OBJDIR=		$(BASE_OBJDIR)
 else
-    OBJDIR	= .
+   OBJDIR=		.
 endif
 
 # -----------------------------------------------------------------------------
 # Compiler command lines.
 # -----------------------------------------------------------------------------
-C_COMPILE	= $(CC) $(DEFS) $(INCLUDES) $(CPPFLAGS) $(CFLAGS)
-CXX_COMPILE	= $(CXX) $(DEFS) $(INCLUDES) $(CPPFLAGS) $(CXXFLAGS)
+C_COMPILE=		$(CC) $(DEFS) $(INCLUDES) $(CPPFLAGS) $(CFLAGS)
+CXX_COMPILE=		$(CXX) $(DEFS) $(INCLUDES) $(CPPFLAGS) $(CXXFLAGS)
 
 # -----------------------------------------------------------------------------
 # Platform- and binary-specific options.  The assignments preceding the
@@ -246,74 +251,76 @@ CXX_COMPILE	= $(CXX) $(DEFS) $(INCLUDES) $(CPPFLAGS) $(CXXFLAGS)
 # ABIs.
 # -----------------------------------------------------------------------------
 ifdef dppABI
-    ifeq ($(dppABI), N32_M3)
-        ABI     = N32
-        ISA     = mips3
-    endif
-    ifeq ($(dppABI), N32_M4)
-        ABI     = N32
-        ISA     = mips4
-    endif
-    ifeq ($(dppABI), 64_M3)
-        ABI     = 64
-        ISA     = mips3
-    endif
-    ifeq ($(dppABI), 64_M4)
-        ABI     = 64
-        ISA     = mips4
-    endif
-    ifeq ($(dppABI), ELF_i386)
-        ABI     = ELF
-        ISA     = i386
-    endif
-    ifeq ($(dppABI), MACINTOSH_PPC)
-        ABI     = MAC
-        ISA     = powerpc
-    endif
+   ifeq ($(dppABI), N32_M3)
+      ABI=	N32
+      ISA=	mips3
+   endif
+   ifeq ($(dppABI), N32_M4)
+      ABI=	N32
+      ISA=	mips4
+   endif
+   ifeq ($(dppABI), 64_M3)
+      ABI=	64
+      ISA=	mips3
+   endif
+   ifeq ($(dppABI), 64_M4)
+      ABI=	64
+      ISA=	mips4
+   endif
+   ifeq ($(dppABI), ELF_i386)
+      ABI=	ELF
+      ISA=	i386
+   endif
+   ifeq ($(dppABI), MACINTOSH_PPC)
+      ABI=	MAC
+      ISA=	powerpc
+   endif
 else
-    ABI		?= @ABI@
-    ISA		?= @ISA@
-    LIBBITSUF	?= @LIBBITSUF@
+   ABI?=	@ABI@
+   ISA?=	@ISA@
+   LIBBITSUF?=	@LIBBITSUF@
 endif
 
-ABI_LIST	= @ABI_LIST@
-PLATFORM	= @PLATFORM@
+ABI_LIST=	@ABI_LIST@
+PLATFORM=	@PLATFORM@
 
+ifneq ($(findstring gcc, $(CC)), gcc)
 ifeq ($(ABI), N32)
-    ARFLAGS	:= -n32 $(ARFLAGS)
-    CFLAGS	+= -n32
-    CXXFLAGS	+= -n32
-    LDOPTS	+= -n32
-    LIBBITSUF	= 32
+   ARFLAGS:=	-n32 $(ARFLAGS)
+   CFLAGS+=	-n32
+   CXXFLAGS+=	-n32
+   LDOPTS+=	-n32
+   LIBBITSUF=	32
 endif
 ifeq ($(ABI), 64)
-    ARFLAGS	:= -64 $(ARFLAGS)
-    CFLAGS	+= -64
-    CXXFLAGS	+= -64
-    LDOPTS	+= -64
-    LIBBITSUF	= 64
+   ARFLAGS:=	-64 $(ARFLAGS)
+   CFLAGS+=	-64
+   CXXFLAGS+=	-64
+   LDOPTS+=	-64
+   LIBBITSUF=	64
 endif
 ifeq ($(ABI), HP64)
-    CFLAGS	+= +DD64
-    CXXFLAGS	+= +DD64
-    LDOPTS	+= +DD64
-    LIBBITSUF	= /pa20_64
+   CFLAGS+=	+DD64
+   CXXFLAGS+=	+DD64
+   LDOPTS+=	+DD64
+   LIBBITSUF=	/pa20_64
 endif
 ifeq ($(ABI), ELF)
-    LIBBITSUF	=
+   LIBBITSUF=	
 endif
 
 ifeq ($(ISA), mips3)
-    ARFLAGS	:= -mips3 $(ARFLAGS)
-    CFLAGS	+= -mips3
-    CXXFLAGS	+= -mips3
-    LDOPTS	+= -mips3
+   ARFLAGS:=	-mips3 $(ARFLAGS)
+   CFLAGS+=	-mips3
+   CXXFLAGS+=	-mips3
+   LDOPTS+=	-mips3
 endif
 ifeq ($(ISA), mips4)
-    ARFLAGS	:= -mips4 $(ARFLAGS)
-    CFLAGS	+= -mips4
-    CXXFLAGS	+= -mips4
-    LDOPTS	+= -mips4
+   ARFLAGS:=	-mips4 $(ARFLAGS)
+   CFLAGS+=	-mips4
+   CXXFLAGS+=	-mips4
+   LDOPTS+=	-mips4
+endif
 endif
 
 @SET_MAKE@
