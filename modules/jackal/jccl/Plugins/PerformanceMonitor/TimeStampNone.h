@@ -54,7 +54,7 @@
 // @author  Christopher Just
 //-----------------------------------------
 
-class vjTimeStampNone {
+class VJ_CLASS_API vjTimeStampNone {
 
 public:
 
