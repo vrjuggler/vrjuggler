@@ -2,7 +2,8 @@
 #define COMPATIBILITY_HEADER_VJ_GL_CONTEXT_DATA
 
 #include <vrj/Draw/OGL/GlContextData.h>
+#include <deprecated/Kernel/GL/vjGlDrawManager.h>
 
-typedef vrj::GlContextData vjGlContextData;
+#define vjGlContextData vrj::GlContextData
 
 #endif
