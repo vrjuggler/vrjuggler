@@ -126,30 +126,36 @@ void KeyboardOSX::updateData()
     if(mHandleEventsHasBeenCalled)            // If we haven't updated anything, then don't swap stuff
     {
         mHandleEventsHasBeenCalled = false;
-
+        
         // Scale mouse values based on sensitivity
         m_keys[VJMOUSE_POSX] = int(float(m_keys[VJMOUSE_POSX]) * m_mouse_sensitivity);
         m_keys[VJMOUSE_NEGX] = int(float(m_keys[VJMOUSE_NEGX]) * m_mouse_sensitivity);
         m_keys[VJMOUSE_POSY] = int(float(m_keys[VJMOUSE_POSY]) * m_mouse_sensitivity);
         m_keys[VJMOUSE_NEGY] = int(float(m_keys[VJMOUSE_NEGY]) * m_mouse_sensitivity);
-
-      /*
-      vprDEBUG(vprDBG_ALL,0)   << "gadget::KeyboardOSX::updateData:" << mInstName << " -- "
-                             << "mouse_keys: px:" << m_keys[VJMOUSE_POSX]
+        
+        /*
+        vprDEBUG(vprDBG_ALL,0)   << "gadget::KeyboardOSX::updateData:" << mInstName << " -- "
+                                << "mouse_keys: px:" << m_keys[VJMOUSE_POSX]
                                         << " nx:" << m_keys[VJMOUSE_NEGX]
                                         << " py:" << m_keys[VJMOUSE_POSY]
                                         << " ny:" << m_keys[VJMOUSE_NEGY]
                                         << std::endl << vprDEBUG_FLUSH;
-      */
-
-      // Copy over values
-      for(unsigned int i=0;i<256;i++)
-         m_curKeys[i] = m_keys[i];
-
-      // Re-initialize the m_keys based on current key state in realKeys
-      // Set the initial state of the m_key key counts based on the current state of the system
-      for(unsigned int j = 0; j < 256; j++)
-         m_keys[j] = m_realkeys[j];
+        */
+        
+        // Copy over values
+        for(unsigned int i=0;i<256;i++)
+            m_curKeys[i] = m_keys[i];
+        
+        // Re-initialize the m_keys based on current key state in realKeys
+        // Set the initial state of the m_key key counts based on the current state of the system
+        for(unsigned int j = 0; j < 256; j++)
+            m_keys[j] = m_realkeys[j];
+        
+        //clear the mose movement
+        m_keys[VJMOUSE_POSX] = 0.0;
+        m_keys[VJMOUSE_NEGX] = 0.0;
+        m_keys[VJMOUSE_POSY] = 0.0;
+        m_keys[VJMOUSE_NEGY] = 0.0;
    }
 }
 
@@ -242,7 +248,7 @@ int KeyboardOSX::osxKeyToKey(UInt32 osxKey)
 int KeyboardOSX::openTheWindow()
 {
     Rect         wRect;
-    EventTypeSpec    eventTypes[7];
+    EventTypeSpec    eventTypes[8];  //Remember to pass the size when registering ther handler
     EventHandlerUPP  handlerUPP;
 
     //Get the size of the screen from core graphics
@@ -287,6 +293,9 @@ int KeyboardOSX::openTheWindow()
 
     eventTypes[6].eventClass = kEventClassMouse;
     eventTypes[6].eventKind  = kEventMouseMoved;
+    
+    eventTypes[7].eventClass = kEventClassMouse;
+    eventTypes[7].eventKind  = kEventMouseDragged;
 
 
 
@@ -294,7 +303,7 @@ int KeyboardOSX::openTheWindow()
     handlerUPP = NewEventHandlerUPP(keyboardHandlerOSX);
 
     InstallWindowEventHandler (mWindow, handlerUPP,  // Install handler
-                                7, eventTypes,
+                                8, eventTypes,
                                 this, NULL);
 
     ShowWindow (mWindow);
@@ -390,7 +399,7 @@ pascal OSStatus KeyboardOSX::gotKeyEvent (  EventHandlerCallRef  nextHandler,
             //The type of event
             UInt32     eventClass;
             UInt32     eventKind;
-            int     vj_key; // The key in vj space
+            int        vj_key; // The key in vj space
             //The modifier keys
             UInt32     modKeys;
             //The mouse button
@@ -420,6 +429,8 @@ pascal OSStatus KeyboardOSX::gotKeyEvent (  EventHandlerCallRef  nextHandler,
                 vj_key = osxKeyToKey(keyInt);
                 m_realkeys[vj_key] = 1;
                 m_keys[vj_key] += 1;
+                
+                //std::cout << "Got Down: " << vj_key << std::endl;
 
                 // -- Update lock state -- //
                 // Any[key == ESC]/unlock(ifneeded) -> Unlocked
@@ -434,37 +445,37 @@ pascal OSStatus KeyboardOSX::gotKeyEvent (  EventHandlerCallRef  nextHandler,
                     << vprDEBUG_FLUSH;
                     if(mLockState != Unlocked)
                     {
-                    vprDEBUG_NEXT(gadgetDBG_INPUT_MGR,vprDBG_STATE_LVL)
-                        << "gadget::KeyboardOSX: STATE switch: <ESCAPE> --> Unlocked\n"
-                        << vprDEBUG_FLUSH;
-                    mLockState = Unlocked;
-                    unlockMouse();
+                        vprDEBUG_NEXT(gadgetDBG_INPUT_MGR,vprDBG_STATE_LVL)
+                            << "gadget::KeyboardOSX: STATE switch: <ESCAPE> --> Unlocked\n"
+                            << vprDEBUG_FLUSH;
+                        mLockState = Unlocked;
+                        unlockMouse();
                     }
                     else
                     {
-                    vprDEBUG_NEXT(gadgetDBG_INPUT_MGR,vprDBG_STATE_LVL)
-                        << "gadget::KeyboardOSX: Already unlocked.  Cannot ESCAPE."
-                        << vprDEBUG_FLUSH;
+                        vprDEBUG_NEXT(gadgetDBG_INPUT_MGR,vprDBG_STATE_LVL)
+                            << "gadget::KeyboardOSX: Already unlocked.  Cannot ESCAPE."
+                            << vprDEBUG_FLUSH;
                     }
                 }
                 else if(mLockState == Unlocked)
                 {
                     if(vj_key != mLockToggleKey)
                     {
-                    mLockState = Lock_KeyDown;       // Switch state
-                    mLockStoredKey = vj_key;         // Store the VJ key that is down
-                    vprDEBUG(gadgetDBG_INPUT_MGR,vprDBG_STATE_LVL)
-                        << "gadget::KeyboardOSX: STATE switch: Unlocked --> Lock_KeyDown\n"
-                        << vprDEBUG_FLUSH;
-                    lockMouse();
+                        mLockState = Lock_KeyDown;       // Switch state
+                        mLockStoredKey = vj_key;         // Store the VJ key that is down
+                        vprDEBUG(gadgetDBG_INPUT_MGR,vprDBG_STATE_LVL)
+                            << "gadget::KeyboardOSX: STATE switch: Unlocked --> Lock_KeyDown\n"
+                            << vprDEBUG_FLUSH;
+                        lockMouse();
                     }
                     else if(vj_key == mLockToggleKey)
                     {
-                    mLockState = Lock_LockKey;
-                    vprDEBUG(gadgetDBG_INPUT_MGR,vprDBG_STATE_LVL)
-                        << "gadget::KeyboardOSX: STATE switch: Unlocked --> Lock_LockKey\n"
-                        << vprDEBUG_FLUSH;
-                    lockMouse();
+                        mLockState = Lock_LockKey;
+                        vprDEBUG(gadgetDBG_INPUT_MGR,vprDBG_STATE_LVL)
+                            << "gadget::KeyboardOSX: STATE switch: Unlocked --> Lock_LockKey\n"
+                            << vprDEBUG_FLUSH;
+                        lockMouse();
                     }
                 }
                 else if((mLockState == Lock_KeyDown) && (vj_key == mLockToggleKey))
@@ -472,15 +483,15 @@ pascal OSStatus KeyboardOSX::gotKeyEvent (  EventHandlerCallRef  nextHandler,
                 {
                     mLockState = Lock_LockKey;
                     vprDEBUG(gadgetDBG_INPUT_MGR,vprDBG_STATE_LVL)
-                    << "gadget::KeyboardOSX: STATE switch: Lock_KeyDown --> Lock_LockKey\n"
-                    << vprDEBUG_FLUSH;
+                        << "gadget::KeyboardOSX: STATE switch: Lock_KeyDown --> Lock_LockKey\n"
+                        << vprDEBUG_FLUSH;
                 }
                 else if((mLockState == Lock_LockKey) && (vj_key == mLockToggleKey))
                 {
                     mLockState = Unlocked;
                     vprDEBUG(gadgetDBG_INPUT_MGR,vprDBG_STATE_LVL)
-                    << "gadget::KeyboardOSX: STATE switch: Lock_LockKey --> Unlocked\n"
-                    << vprDEBUG_FLUSH;
+                        << "gadget::KeyboardOSX: STATE switch: Lock_LockKey --> Unlocked\n"
+                        << vprDEBUG_FLUSH;
                     unlockMouse();
                 }
                 /*
@@ -503,6 +514,8 @@ pascal OSStatus KeyboardOSX::gotKeyEvent (  EventHandlerCallRef  nextHandler,
 
                 vj_key = osxKeyToKey(keyInt);
                 m_realkeys[vj_key] = 0;
+                
+                //std::cout << "Got Up: " << vj_key << std::endl;
 
                 // -- Update lock state -- //
                 // lock_keyDown[key==storedKey]/unlockMouse -> unlocked
@@ -628,11 +641,12 @@ pascal OSStatus KeyboardOSX::gotKeyEvent (  EventHandlerCallRef  nextHandler,
                         m_realkeys[VJMBUTTON3] = m_keys[VJMBUTTON3] = 1;
                         break;
                 }
+                //std::cout << "mouse down" << std::endl;
             }
 
             if ( eventClass == kEventClassMouse && eventKind == kEventMouseUp)
             {
-
+                //std::cout << "mouse up" << std::endl;
                 result = CallNextEventHandler (nextHandler, theEvent);
 
                 GetEventParameter (theEvent, kEventParamMouseButton, typeMouseButton,
@@ -653,11 +667,14 @@ pascal OSStatus KeyboardOSX::gotKeyEvent (  EventHandlerCallRef  nextHandler,
 
             }
 
-            if ( eventClass == kEventClassMouse && eventKind == kEventMouseMoved)
+            if ( eventClass == kEventClassMouse &&
+                (eventKind == kEventMouseMoved || eventKind == kEventMouseDragged) )
             {
 
                 result = CallNextEventHandler (nextHandler, theEvent);
-
+                    
+                     //std::cout << "mouse moved" << std::endl;
+                    
                 // Note even though 'kEventParamMouseDelta' is a carbon call
                 // it does not work on OS 9
                 GetEventParameter (theEvent, kEventParamMouseDelta, typeQDPoint,
