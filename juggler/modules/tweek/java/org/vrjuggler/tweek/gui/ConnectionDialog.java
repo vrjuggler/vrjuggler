@@ -40,6 +40,8 @@ import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
 import javax.swing.border.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
@@ -71,6 +73,9 @@ public class ConnectionDialog extends JDialog
       {
          e.printStackTrace();
       }
+
+      mNSHostField.getDocument().addDocumentListener(new AddressFieldValidator());
+      mNSPortField.getDocument().addDocumentListener(new AddressFieldValidator());
 
       this.mSubjectMgrList.addListSelectionListener(new SubjectMgrListSelectionListener());
 
@@ -172,6 +177,8 @@ public class ConnectionDialog extends JDialog
       mSubjectMgrPanel.setLayout(mSubjectMgrLayout);
       mSubjectMgrSplitPane.setDividerSize(7);
       mNSConnectButton.setEnabled(false);
+      mNSConnectButton.setMaximumSize(new Dimension(60, 18));
+      mNSConnectButton.setMinimumSize(new Dimension(60, 18));
       mNSConnectButton.setText("Connect");
       mNSConnectButton.addActionListener(new java.awt.event.ActionListener()
       {
@@ -235,8 +242,8 @@ public class ConnectionDialog extends JDialog
             ,GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 0, 0, 2), 56, 18));
       mNSConnectPanel.add(mNamingContextField,    new GridBagConstraints(1, 2, 1, 1, 1.0, 0.0
             ,GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 44, 6));
-      mNSConnectPanel.add(mNSConnectButton,          new GridBagConstraints(0, 3, 2, 1, 0.0, 0.0
-            ,GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(5, 0, 2, 0), 45, 5));
+      mNSConnectPanel.add(mNSConnectButton,             new GridBagConstraints(0, 3, 2, 1, 0.0, 0.0
+            ,GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(5, 0, 0, 0), 45, 5));
 
       this.getContentPane().add(mButtonPanel, BorderLayout.SOUTH);
       mButtonPanel.add(mOkayButton, null);
@@ -370,7 +377,7 @@ public class ConnectionDialog extends JDialog
    private void validateNetworkAddress(ActionEvent e)
    {
       if ( ! mNSHostField.getText().equals("") &&
-           ! mNSPortField.getText().equals("") )
+           validatePortNumber(mNSPortField.getText()) )
       {
          mNSConnectButton.setEnabled(true);
       }
@@ -385,12 +392,11 @@ public class ConnectionDialog extends JDialog
     */
    private boolean validatePortNumber(String port)
    {
-      System.out.println("Validating " + port);
       boolean valid = false;
 
       try
       {
-         int port_num = Integer.getInteger(port).intValue();
+         int port_num = Integer.parseInt(port);
 
          if ( port_num > 0 && port_num < 65536 )
          {
@@ -399,10 +405,32 @@ public class ConnectionDialog extends JDialog
       }
       catch (Exception e)
       {
-         // Invalid port number.
+         System.err.println("Invalid port number: " + port);
       }
 
       return valid;
+   }
+
+   /**
+    * An implementation of DocumentListener used to validate the network
+    * address entered for the CORBA Naming Service.
+    */
+   private class AddressFieldValidator implements DocumentListener
+   {
+      public void insertUpdate(DocumentEvent e)
+      {
+         validateNetworkAddress(null);
+      }
+
+      public void removeUpdate(DocumentEvent e)
+      {
+         validateNetworkAddress(null);
+      }
+
+      public void changedUpdate(DocumentEvent e)
+      {
+         validateNetworkAddress(null);
+      }
    }
 
    /**
