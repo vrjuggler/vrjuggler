@@ -4,7 +4,7 @@
 # This include file <vj.lib.mk> handles compiling of libraries (both static
 # and shared) from compiled object files.
 # -----------------------------------------------------------------------------
-# The Makefile including this file should define the following variables:
+# The Makefile including this file must define the following variables:
 #
 # AR      - Path to ar(1) (or equivalent program).
 # LD      - Path to ld(1) (or equivalent program).
