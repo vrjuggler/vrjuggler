@@ -122,7 +122,7 @@ void GlBasicSimulator::draw(const float scaleFactor)
 /**
  * Sets the event window the simulator can use to get input from the user.
  */
-void GlBasicSimulator::setEventWindow(gadget::EventWindowInterface ewInterface)
+void GlBasicSimulator::setKeyboardMouse(gadget::KeyboardMouseInterface ewInterface)
 {
    boost::ignore_unused_variable_warning(ewInterface);
 }
@@ -352,6 +352,7 @@ void GlBasicSimulator::drawSimulator(const float scaleFactor)
       }
 
       glPushMatrix();
+         glLoadIdentity();
          gmtl::Vec3f x_axis(scaleFactor,0.0f,0.0f); gmtl::Vec3f y_axis(0.0f, scaleFactor, 0.0f);
          gmtl::Vec3f z_axis(0.0f, 0.0f, scaleFactor); gmtl::Vec3f origin(0.0f, 0.0f, 0.0f);
          glBegin(GL_LINES);
@@ -370,6 +371,7 @@ void GlBasicSimulator::drawSimulator(const float scaleFactor)
 
       // Draw the user's head
       glPushMatrix();
+         glLoadIdentity();
          glMultMatrixf(getHeadPos().mData);
          glScalef(scaleFactor, scaleFactor, scaleFactor);
          glEnable(GL_NORMALIZE);
@@ -378,6 +380,7 @@ void GlBasicSimulator::drawSimulator(const float scaleFactor)
 
       // Draw the wand
       glPushMatrix();
+         glLoadIdentity();
          glMultMatrixf(getWandPos().mData);
          glScalef(scaleFactor,scaleFactor,scaleFactor);
          glEnable(GL_NORMALIZE);
@@ -391,6 +394,7 @@ void GlBasicSimulator::drawSimulator(const float scaleFactor)
       }
 
       glPushMatrix();
+         glLoadIdentity();
          drawProjections(shouldDrawProjections(), getSurfaceColor(), scaleFactor);
       glPopMatrix();
    }
