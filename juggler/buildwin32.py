@@ -40,14 +40,14 @@ import sys
 import time
 import traceback
 
-ErrorImportingTkinter = False
+ErrorImportingTkinter = True
 try:
    import Tkinter
    import tkMessageBox
    import tkFileDialog
    import threading
+   ErrorImportingTkinter = False
 except ImportError, ex:
-   ErrorImportingTkinter = True
    print ex
 
 def guessBoostToolset(reattempt = False):
