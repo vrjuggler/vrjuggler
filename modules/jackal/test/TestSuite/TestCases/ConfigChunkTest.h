@@ -63,13 +63,20 @@ public:
 
       CPPUNIT_ASSERT( std::string("test string") == std::string( chunk1->getProperty("single_string") ));
 
+      // Test embedded
+      CPPUNIT_ASSERT( chunk1->getNum("embedded_chunk") == 1);
+      jccl::ConfigChunkPtr embedded_chunk = chunk1->getProperty("embedded_chunk");
+      
+      CPPUNIT_ASSERT(embedded_chunk.get() != NULL);
+      CPPUNIT_ASSERT( int(embedded_chunk->getProperty("single_int")) == 17);
+
+      // Test chunk ptr
       CPPUNIT_ASSERT( chunk1->getNum("single_chunk") == 1);
       jccl::ConfigChunkPtr chunk2;
       chunk2 = chunk1->getProperty("single_chunk",0);
 
       CPPUNIT_ASSERT(chunk2.get() != NULL);
       CPPUNIT_ASSERT( int(chunk2->getProperty("single_int")) == 21);
-      
     }
         
 
