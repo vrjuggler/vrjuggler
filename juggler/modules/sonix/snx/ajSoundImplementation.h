@@ -35,9 +35,15 @@ public:
    /**
     * copies current state of the system from one API to another. 
     */
-   void copy( const ajSoundImplementation & si )
+   void copy( const ajSoundImplementation& si )
    {
+      // clean up from any previous state...
+      this->_unbindAll();
+      
+      // copy over the current state
       mSounds = si.mSounds;
+      
+      // bind all sounds
       this->_bindAll();
    }
 
@@ -200,9 +206,10 @@ public:
     */
    virtual void _unbind( const std::string& alias ) = 0;
 
-private:
+protected:
    std::map<std::string, ajSoundInfo> mSounds;
 
+private:
    /*
     * position of the observer/listener
     */

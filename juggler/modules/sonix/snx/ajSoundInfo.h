@@ -9,7 +9,7 @@
  */
 struct ajSoundInfo
 {
-   ajSoundInfo() : isPlaying( false ), datasource( FILESYSTEM ), repeat( 1 ), repeat_countdown( 0 )
+   ajSoundInfo() : isPlaying( false ), datasource( FILESYSTEM ), repeat( 1 ), repeat_countdown( 0 ), data(), filename()
    {
       position[0] = 0.0f;
       position[1] = 0.0f;
