@@ -32,6 +32,7 @@
 #
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
+import glob
 import os
 import re
 import shutil
@@ -186,6 +187,19 @@ def setVars():
    processInput(options, 'JAVA3D_HOME', 'Java3D installation directory', False)
    processInput(options, 'OMNIORB_ROOT', 'omniORB installation directory',
                 False)
+
+   if os.environ['OMNIORB_ROOT'] != '' and os.path.exists(os.environ['OMNIORB_ROOT']):
+      omnilib = os.path.join(os.environ['OMNIORB_ROOT'], 'lib', 'x86_win32')
+      omni_glob = os.path.join(omnilib, 'omniORB*_rt.lib')
+      omni_ver_re = re.compile(r'omniORB(\d\d\d)_rt.lib')
+      libs = glob.glob(omni_glob)
+      print libs
+      for l in libs:
+         match = omni_ver_re.search(l)
+         if match is not None:
+            os.environ['OMNIORB_VERSION'] = match.group(1)
+            break
+
    processInput(options, 'PFROOT', 'OpenGL Performer installation directory',
                 False)
    processInput(options, 'VRPN_ROOT', 'VRPN installation directory', False)

@@ -34,7 +34,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="omniORB402_rtd.lib omnithread30_rtd.lib omniDynamic402_rtd.lib vpr_d.lib libnspr4.lib $(NOINHERIT)"
+				AdditionalDependencies="omniORB$(OMNIORB_VERSION)_rtd.lib omnithread30_rtd.lib omniDynamic$(OMNIORB_VERSION)_rtd.lib vpr_d.lib libnspr4.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/tweek_d.dll"
 				Version="0.16.2"
 				LinkIncremental="2"
@@ -51,7 +51,7 @@
 				Name="VCPostBuildEventTool"/>
 			<Tool
 				Name="VCPreBuildEventTool"
-				Description="Generate C++ stubs from CORBA IDL"
+				Description="Generating C++ stubs from CORBA IDL..."
 				CommandLine="mkdir tweek\CORBA
 $(OMNIORB_ROOT)\bin\x86_win32\omniidl -bcxx -Wbh=.h,s=.cpp -Ctweek\CORBA -I../../modules/tweek ../../modules/tweek/tweek/idl/SubjectManager.idl
 $(OMNIORB_ROOT)\bin\x86_win32\omniidl -bcxx -Wbh=.h,s=.cpp -Ctweek\CORBA -I../../modules/tweek ../../modules/tweek/tweek/idl/Subject.idl
@@ -94,7 +94,7 @@ $(OMNIORB_ROOT)\bin\x86_win32\omniidl -bcxx -Wbh=.h,s=.cpp -Ctweek\CORBA -I../..
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="omniORB402_rt.lib omnithread30_rt.lib omniDynamic402_rt.lib vpr.lib libnspr4.lib $(NOINHERIT)"
+				AdditionalDependencies="omniORB$(OMNIORB_VERSION)_rt.lib omnithread30_rt.lib omniDynamic$(OMNIORB_VERSION)_rt.lib vpr.lib libnspr4.lib $(NOINHERIT)"
 				OutputFile="$(OutDir)/tweek.dll"
 				Version="0.16.2"
 				LinkIncremental="1"
@@ -112,7 +112,7 @@ $(OMNIORB_ROOT)\bin\x86_win32\omniidl -bcxx -Wbh=.h,s=.cpp -Ctweek\CORBA -I../..
 				Name="VCPostBuildEventTool"/>
 			<Tool
 				Name="VCPreBuildEventTool"
-				Description="Generate C++ stubs from CORBA IDL"
+				Description="Generating C++ stubs from CORBA IDL..."
 				CommandLine="mkdir tweek\CORBA
 $(OMNIORB_ROOT)\bin\x86_win32\omniidl -bcxx -Wbh=.h,s=.cpp -Ctweek\CORBA -I../../modules/tweek ../../modules/tweek/tweek/idl/SubjectManager.idl
 $(OMNIORB_ROOT)\bin\x86_win32\omniidl -bcxx -Wbh=.h,s=.cpp -Ctweek\CORBA -I../../modules/tweek ../../modules/tweek/tweek/idl/Subject.idl
@@ -159,7 +159,7 @@ $(OMNIORB_ROOT)\bin\x86_win32\omniidl -bcxx -Wbh=.h,s=.cpp -Ctweek\CORBA -I../..
 				Name="VCPostBuildEventTool"/>
 			<Tool
 				Name="VCPreBuildEventTool"
-				Description="Generate C++ stubs from CORBA IDL"
+				Description="Generating C++ stubs from CORBA IDL..."
 				CommandLine="mkdir tweek\CORBA
 $(OMNIORB_ROOT)\bin\x86_win32\omniidl -bcxx -Wbh=.h,s=.cpp -Ctweek\CORBA -I../../modules/tweek ../../modules/tweek/tweek/idl/SubjectManager.idl
 $(OMNIORB_ROOT)\bin\x86_win32\omniidl -bcxx -Wbh=.h,s=.cpp -Ctweek\CORBA -I../../modules/tweek ../../modules/tweek/tweek/idl/Subject.idl
@@ -207,7 +207,7 @@ $(OMNIORB_ROOT)\bin\x86_win32\omniidl -bcxx -Wbh=.h,s=.cpp -Ctweek\CORBA -I../..
 				Name="VCPostBuildEventTool"/>
 			<Tool
 				Name="VCPreBuildEventTool"
-				Description="Generate C++ stubs from CORBA IDL"
+				Description="Generating C++ stubs from CORBA IDL..."
 				CommandLine="mkdir tweek\CORBA
 $(OMNIORB_ROOT)\bin\x86_win32\omniidl -bcxx -Wbh=.h,s=.cpp -Ctweek\CORBA -I../../modules/tweek ../../modules/tweek/tweek/idl/SubjectManager.idl
 $(OMNIORB_ROOT)\bin\x86_win32\omniidl -bcxx -Wbh=.h,s=.cpp -Ctweek\CORBA -I../../modules/tweek ../../modules/tweek/tweek/idl/Subject.idl
