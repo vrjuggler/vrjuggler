@@ -31,28 +31,46 @@
 
 
 
-vjConfigChunk::vjConfigChunk (vjChunkDesc *d) :props(), type_as_varvalue(T_STRING) {
+vjConfigChunk::vjConfigChunk (): props(), type_as_varvalue(T_STRING) {
+    desc = 0;
+}
 
-    desc = d;
-    type_as_varvalue = desc->getToken();
-    for (int i = 0; i < desc->plist.size(); i++) {
-   vjPropertyDesc* pd = desc->plist[i];
-   vjProperty* pr = new vjProperty (pd);
-   props.push_back (pr);
-    }
+
+
+vjConfigChunk::vjConfigChunk (vjChunkDesc *d) :props(), type_as_varvalue(T_STRING) {
+    associateDesc (d);
 }
 
 
 
 vjConfigChunk::~vjConfigChunk () {
     for (int i = 0; i < props.size(); i++)
-   delete (props[i]);
+        delete (props[i]);
 }
 
 
 
 vjConfigChunk::vjConfigChunk (vjConfigChunk& c):props(), type_as_varvalue(T_STRING) {
     *this = c;
+}
+
+
+
+void vjConfigChunk::associateDesc (vjChunkDesc* d) {
+    int i;
+
+    desc = d;
+    type_as_varvalue = desc->getToken();
+
+    for (i = 0; i < props.size(); i++)
+        delete (props[i]);
+    props.erase (props.begin(), props.end());
+
+    for (i = 0; i < desc->plist.size(); i++) {
+        vjPropertyDesc* pd = desc->plist[i];
+        vjProperty* pr = new vjProperty (pd);
+        props.push_back (pr);
+    }
 }
 
 
@@ -75,6 +93,7 @@ vjConfigChunk& vjConfigChunk::operator = (const vjConfigChunk& c) {
 }
 
 
+
 //: tests for equality of two vjConfigChunks
 bool vjConfigChunk::operator== (const vjConfigChunk& c) const {
     // equality operator - this makes a couple of assumptions:
@@ -83,15 +102,16 @@ bool vjConfigChunk::operator== (const vjConfigChunk& c) const {
     //    reasonable if 1. is true.
 
     if (desc != c.desc)
-   return false;
+        return false;
     if (props.size() != c.props.size()) // probably redundant
-   return false;
+        return false;
     for (int i = 0; i < props.size(); i++) {
-   if (*(props[i]) != *(c.props[i]))
-       return false;
+        if (*(props[i]) != *(c.props[i]))
+            return false;
     }
     return true;
 }
+
 
 
 //: Compares two vjConfigChunks based on their instance names
@@ -144,8 +164,8 @@ std::vector<std::string> vjConfigChunk::getChunkPtrDependencies() const
 
 vjProperty* vjConfigChunk::getPropertyPtrFromName (const std::string& property) const {
     for (int i = 0; i < props.size(); i++) {
-   if (!vjstrcasecmp (props[i]->getName(), property))
-       return props[i];
+        if (!vjstrcasecmp (props[i]->getName(), property))
+            return props[i];
     }
     return NULL;
 }
@@ -153,11 +173,11 @@ vjProperty* vjConfigChunk::getPropertyPtrFromName (const std::string& property) 
 
 
 vjProperty* vjConfigChunk::getPropertyPtrFromToken (const std::string& token) const {
-  for (int i = 0; i < props.size(); i++) {
-    if (!vjstrcasecmp(props[i]->description->getToken(), token))
-      return props[i];
-  }
-  return NULL;
+    for (int i = 0; i < props.size(); i++) {
+        if (!vjstrcasecmp(props[i]->description->getToken(), token))
+            return props[i];
+    }
+    return NULL;
 }
 
 
@@ -170,11 +190,10 @@ std::vector<vjVarValue*> vjConfigChunk::getAllProperties(const std::string& prop
 {
     int num_properties = getNum(property);
     std::vector<vjVarValue*> ret_val;
-    for(int i=0;i<num_properties;i++)
-   {
-       vjVarValue* new_var_val = new vjVarValue(getProperty(property,i));
-       ret_val.push_back(new_var_val);
-   }
+    for(int i=0;i<num_properties;i++) {
+        vjVarValue* new_var_val = new vjVarValue(getProperty(property,i));
+        ret_val.push_back(new_var_val);
+    }
 
     return ret_val;
 }
@@ -182,12 +201,15 @@ std::vector<vjVarValue*> vjConfigChunk::getAllProperties(const std::string& prop
 
 
 ostream& operator << (ostream& out, vjConfigChunk& self) {
-  out << self.desc->token.c_str() << endl;
-  for (int i =0; i < self.props.size(); i++) {
-    out << "  " << *(self.props[i]) << endl;
-  }
-  out << "  End" << endl;
-  return out;
+    // outputting an uninitialized chunk would be a mistake...
+    if (self.desc) {
+        out << self.desc->token.c_str() << endl;
+        for (int i =0; i < self.props.size(); i++) {
+            out << "  " << *(self.props[i]) << endl;
+        }
+        out << "  End" << endl;
+    }
+    return out;
 }
 
 
@@ -209,55 +231,54 @@ bool vjConfigChunk::tryassign (vjProperty *p, int index, const char* val) {
     float f;
     bool b;
 
-    if(p->type != T_CHUNK)          // T_CHUNKS have enumeration, but they are really strings (or something)
-    {
-       vjEnumEntry* e = p->getEnumEntry (val);
-       if (e) {
-         p->setValue (e->getValue());
-         return true;
-       }
+    if(p->type != T_CHUNK) {          // T_CHUNKS have enumeration, but they are really strings (or something)
+        vjEnumEntry* e = p->getEnumEntry (val);
+        if (e) {
+            p->setValue (e->getValue());
+            return true;
+        }
     }
-
+    
     switch (p->type) {
     case T_INT:
-   i = strtol (val, &endval, 0);
-   if (*endval != '\0')
-       vjDEBUG (vjDBG_CONFIG, 0) << "WARNING: Parser expected int, got '"
+        i = strtol (val, &endval, 0);
+        if (*endval != '\0')
+            vjDEBUG (vjDBG_CONFIG, 0) << "WARNING: Parser expected int, got '"
                   << val << "'\n" << vjDEBUG_FLUSH;
-   p->setValue (i, index);
-   return true;
+        p->setValue (i, index);
+        return true;
     case T_FLOAT:
-   f = (float)strtod (val, &endval);
-   if (*endval != '\0')
-       vjDEBUG (vjDBG_CONFIG, 0) << "WARNING: Parser expected float, got '"
-                  << val << "'\n" << vjDEBUG_FLUSH;
-   p->setValue (f, index);
-   return true;
+        f = (float)strtod (val, &endval);
+        if (*endval != '\0')
+            vjDEBUG (vjDBG_CONFIG, 0) << "WARNING: Parser expected float, got '"
+                                      << val << "'\n" << vjDEBUG_FLUSH;
+        p->setValue (f, index);
+        return true;
     case T_BOOL:
-   b = false;
-   if (!strcasecmp (val, "true"))
-       b = true;
-   else if (!strcasecmp (val, "false"))
-       b = false;
-   else { // we'll try to accept a numeric value
-       b = strtol (val, &endval, 0);
-       if (endval != '\0') {
-      b = false;
-      vjDEBUG (vjDBG_CONFIG,0) << "WARNING: Parser expected bool, got '"
-                << val << "'\n" << vjDEBUG_FLUSH;
-       }
-   }
-   p->setValue (b, index);
-   return true;
+        b = false;
+        if (!strcasecmp (val, "true"))
+            b = true;
+        else if (!strcasecmp (val, "false"))
+            b = false;
+        else { // we'll try to accept a numeric value
+            b = strtol (val, &endval, 0);
+            if (endval != '\0') {
+                b = false;
+                vjDEBUG (vjDBG_CONFIG,0) << "WARNING: Parser expected bool, got '"
+                                         << val << "'\n" << vjDEBUG_FLUSH;
+            }
+        }
+        p->setValue (b, index);
+        return true;
     case T_STRING:
     case T_CHUNK:
-   p->setValue (val, index);
-   return true;
+        p->setValue (val, index);
+        return true;
     case T_EMBEDDEDCHUNK:
-   cout << "NOT HANDLED HERE!" << endl;
-   return false;
+        cout << "NOT HANDLED HERE!" << endl;
+        return false;
     default:
-   return false;
+        return false;
     }
 }
 
@@ -274,67 +295,71 @@ istream& operator >> (istream& in, vjConfigChunk& self) {
     int i;
     bool quoted;
 
+    // if this chunk hasn't been assigned a description yet, something's wrong
+    if (!self.desc)
+        return in;
+
     while (readString (in, buf, buflen, NULL)) {
 
-   if (!strcasecmp (buf, "end"))
-       break;
+        if (!strcasecmp (buf, "end"))
+            break;
 
-   // We have a string token; assumably a property name.
-   if (!(p = self.getPropertyPtrFromToken (buf))) {
-       vjDEBUG(vjDBG_ERROR,0) << "ERROR: Property '" << buf << "' is not found in"
-             << " Chunk " << self.desc->name.c_str() << endl << vjDEBUG_FLUSH;
-       continue;
-   }
-   
-   // We're reading a line of input for a valid Property.
-   readString (in, buf, buflen, &quoted);
+        // We have a string token; assumably a property name.
+        if (!(p = self.getPropertyPtrFromToken (buf))) {
+            vjDEBUG(vjDBG_ERROR,0) << "ERROR: Property '" << buf << "' is not found in"
+                                   << " Chunk " << self.desc->name.c_str() << endl << vjDEBUG_FLUSH;
+            continue;
+        }
+        
+        // We're reading a line of input for a valid Property.
+        readString (in, buf, buflen, &quoted);
 
-   if (!quoted && (buf[0] == '{')) {
-       // We're reading values until we get a close bracket.
-       i = 0;
-       for (;;) {
-      readString (in, buf, buflen, &quoted);
-      if (!quoted && (buf[0] == '}'))
-          break;
+        if (!quoted && (buf[0] == '{')) {
+            // We're reading values until we get a close bracket.
+            i = 0;
+            for (;;) {
+                readString (in, buf, buflen, &quoted);
+                if (!quoted && (buf[0] == '}'))
+                    break;
 
-      // this works because the chunk >> expects the typename to have
-      // already been read (which we did when looking for '}')
-      if (p->type == T_EMBEDDEDCHUNK) {
-          vjConfigChunk *ch = vjChunkFactory::createChunk (p->embeddesc);
-          in >> *ch;
-          p->setValue (ch, i++);
-      }
-//       else if (tok.type == TK_Unit) {
-//           p->applyUnits (tok.unitval);
-//       }
-      else {
-          if (!self.tryassign (p, i++, buf))
-         vjDEBUG(vjDBG_ERROR,2) << "ERROR: Assigning to property "
-               << p->getName().c_str() << endl << vjDEBUG_FLUSH;
-      }
-       }
-
-       if ((p->num != -1) && (p->num != i))
-      vjDEBUG(vjDBG_ERROR,1) << "ERROR: vjProperty " << p->getName().c_str() << " should have "
-            << p->num << " values; " << i << " found" << endl << vjDEBUG_FLUSH;
-   }
-   else {
-       // we're just doing one value.
-       if (!self.tryassign (p, 0, buf))
-      vjDEBUG(vjDBG_ERROR,1) << "ERROR: Assigning to property "
-            << p->getName().c_str() << endl << vjDEBUG_FLUSH;
-//        self.getVJCFGToken (in,tok);
-//        if (tok.type == TK_Unit) {
-//       p->applyUnits (tok.unitval);
-//       self.getVJCFGToken (in, tok);
-//        }
-       if (p->num > 1) {
-      vjDEBUG(vjDBG_ERROR,3) << "ERROR: Property " << p->getName().c_str()
-            << " expects " << p->num << " values." << endl << vjDEBUG_FLUSH;
-       }
-   }
+                // this works because the chunk >> expects the typename to have
+                // already been read (which we did when looking for '}')
+                if (p->type == T_EMBEDDEDCHUNK) {
+                    vjConfigChunk *ch = vjChunkFactory::createChunk (p->embeddesc);
+                    in >> *ch;
+                    p->setValue (ch, i++);
+                }
+                //       else if (tok.type == TK_Unit) {
+                //           p->applyUnits (tok.unitval);
+                //       }
+                else {
+                    if (!self.tryassign (p, i++, buf))
+                        vjDEBUG(vjDBG_ERROR,2) << "ERROR: Assigning to property "
+                                               << p->getName().c_str() << endl << vjDEBUG_FLUSH;
+                }
+            }
+            
+            if ((p->num != -1) && (p->num != i))
+                vjDEBUG(vjDBG_ERROR,1) << "ERROR: vjProperty " << p->getName().c_str() << " should have "
+                                       << p->num << " values; " << i << " found" << endl << vjDEBUG_FLUSH;
+        }
+        else {
+            // we're just doing one value.
+            if (!self.tryassign (p, 0, buf))
+                vjDEBUG(vjDBG_ERROR,1) << "ERROR: Assigning to property "
+                                       << p->getName().c_str() << endl << vjDEBUG_FLUSH;
+            //        self.getVJCFGToken (in,tok);
+            //        if (tok.type == TK_Unit) {
+            //       p->applyUnits (tok.unitval);
+            //       self.getVJCFGToken (in, tok);
+            //        }
+            if (p->num > 1) {
+                vjDEBUG(vjDBG_ERROR,3) << "ERROR: Property " << p->getName().c_str()
+                                       << " expects " << p->num << " values." << endl << vjDEBUG_FLUSH;
+            }
+        }
     }
-
+    
     return in;
 }
 
@@ -343,9 +368,9 @@ istream& operator >> (istream& in, vjConfigChunk& self) {
 int vjConfigChunk::getNum (const std::string& property_token) const {
     vjProperty* p = getPropertyPtrFromToken (property_token);
     if (p)
-   return p->getNum();
+        return p->getNum();
     else
-   return 0;
+        return 0;
 }
 
 
@@ -357,19 +382,17 @@ const vjVarValue& vjConfigChunk::getType () const {
 
 
 const vjVarValue& vjConfigChunk::getProperty (const std::string& property_token, int ind) const {
-   if (!vjstrcasecmp(property_token,"type"))
-   {
-      return type_as_varvalue;
-   }
+    if (!vjstrcasecmp(property_token,"type")) {
+        return type_as_varvalue;
+    }
 
-   vjProperty *p = getPropertyPtrFromToken (property_token);
-   if (!p)
-   {
-       vjDEBUG(vjDBG_CONFIG,2) << "getProperty(\"" << property_token.c_str() << "\") in chunk \""
-       << getProperty("Name") << "\" - no such property; returning T_INVALID\n" << vjDEBUG_FLUSH;
-      return vjVarValue::getInvalidInstance();
-   }
-   return p->getValue (ind);
+    vjProperty *p = getPropertyPtrFromToken (property_token);
+    if (!p) {
+        vjDEBUG(vjDBG_CONFIG,2) << "getProperty(\"" << property_token.c_str() << "\") in chunk \""
+                                << getProperty("Name") << "\" - no such property; returning T_INVALID\n" << vjDEBUG_FLUSH;
+        return vjVarValue::getInvalidInstance();
+    }
+    return p->getValue (ind);
 }
 
 
@@ -381,7 +404,7 @@ bool vjConfigChunk::setProperty (const std::string& property, int val, int ind) 
     vjProperty *p;
     p = getPropertyPtrFromToken (property);
     if (!p)
-   return false;
+        return false;
     return p->setValue (val, ind);
 }
 
@@ -389,7 +412,7 @@ bool vjConfigChunk::setProperty (const std::string& property, float val, int ind
     vjProperty *p;
     p = getPropertyPtrFromToken (property);
     if (!p)
-   return false;
+        return false;
     return p->setValue (val, ind);
 }
 
@@ -397,7 +420,7 @@ bool vjConfigChunk::setProperty (const std::string& property, const std::string&
     vjProperty *p;
     p = getPropertyPtrFromToken (property);
     if (!p)
-   return false;
+        return false;
     return p->setValue (val, ind);
 }
 
@@ -405,9 +428,9 @@ bool vjConfigChunk::setProperty (const std::string& property, vjConfigChunk* val
     vjProperty *p;
     p = getPropertyPtrFromToken (property);
     if (!p) {
-   vjDEBUG (vjDBG_ERROR, 1) << "ConfigChunk.setProperty: no such property " << property.c_str()
-                << "\n" << vjDEBUG_FLUSH;
-   return false;
+        vjDEBUG (vjDBG_ERROR, 1) << "ConfigChunk.setProperty: no such property " << property.c_str()
+                                 << "\n" << vjDEBUG_FLUSH;
+        return false;
     }
     return p->setValue (val, ind);
 }
@@ -417,9 +440,9 @@ bool vjConfigChunk::addValue (const std::string& property, int val) {
     vjProperty *p;
     p = getPropertyPtrFromToken (property);
     if (p == NULL)
-   return false;
+        return false;
     if (p->num != -1)
-   return false;
+        return false;
     return setProperty (property, val, p->value.size());
 }
 
@@ -427,9 +450,9 @@ bool vjConfigChunk::addValue (const std::string& property, float val) {
     vjProperty *p;
     p = getPropertyPtrFromToken (property);
     if (p == NULL)
-   return false;
+        return false;
     if (p->num != -1)
-   return false;
+        return false;
     return setProperty (property, val, p->value.size());
 }
 
@@ -437,9 +460,9 @@ bool vjConfigChunk::addValue (const std::string& property, const std::string& va
     vjProperty *p;
     p = getPropertyPtrFromToken (property);
     if (p == NULL)
-   return false;
+        return false;
     if (p->num != -1)
-   return false;
+        return false;
     return setProperty (property, val, p->value.size());
 }
 
@@ -447,9 +470,9 @@ bool vjConfigChunk::addValue (const std::string& property, vjConfigChunk* val) {
     vjProperty *p;
     p = getPropertyPtrFromToken (property);
     if (p == NULL)
-   return false;
+        return false;
     if (p->num != -1)
-   return false;
+        return false;
     return setProperty (property, val, p->value.size());
 }
 
