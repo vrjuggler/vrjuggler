@@ -46,7 +46,6 @@
 #include <IO/Socket/SocketTypes.h>
 #include <IO/Socket/SocketIpOpt.h>
 #include <IO/IOSys.h>
-#include <vprStatus.h>
 
 #include <Utils/Debug.h>
 
