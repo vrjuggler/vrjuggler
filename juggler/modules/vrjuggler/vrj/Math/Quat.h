@@ -34,10 +34,10 @@
 #ifndef _VJ_QUAT_H_
 #define _VJ_QUAT_H_
 
+#include <math.h>
+
 #include <Math/vjVec4.h>
 #include <Math/vjVec3.h>
-#include <math.h>
-#include <iostream.h> // ostream
 #include <Math/vjMatrix.h>
 
 #define VJ_QUAT_EPSILON     0.00001f
