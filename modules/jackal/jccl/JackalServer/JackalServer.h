@@ -18,9 +18,9 @@
 
 #include <vjConfig.h>
 #include <Environment/vjConnect.h>
-#include <Environment/vjTuPerfBufReader.h>
+//#include <Environment/vjTuPerfBufReader.h>
 #include <Kernel/vjConfigChunkHandler.h>
-
+#include <Performance/vjPerfDataBuffer.h>
 
 //-------------------------------------
 //: vjEnvironmentManager controls the network socket to the GUI.
@@ -81,7 +81,7 @@ public:
 
 
     //: returns a pointer to a connection with the given name
-    vjConnect* getConnect (std::string _name);
+    vjConnect* getConnect (const std::string& _name);
 
 
 
@@ -115,7 +115,8 @@ private:
     vjThread*                 listen_thread;
     int                       Port;
     int                       listen_socket;
-    vjTuPerfBufReader*     perf_buffer_reader;
+    vjConnect*                perf_target;
+    float                     perf_refresh_time;  // in milliseconds
     bool                      activated;
     bool                      configured_to_accept;
     void controlLoop (void* nullParam);
@@ -127,6 +128,10 @@ private:
     // should this buffer be active under our current config?
     // used when a buffer is added after configure
     bool configuredToActivate (vjPerfDataBuffer* b);
+
+
+    void setPerformanceTarget (vjConnect* con);
+
 
 
 }; // end vjEnvironmentManager

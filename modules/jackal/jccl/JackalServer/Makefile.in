@@ -27,10 +27,8 @@ vpath %.cpp @srcdir@
 vpath %.o ${OBJDIR}
 
 ENVIRONTMENT_SRCS	:= vjEnvironmentManager.cpp	\
-                           vjConnect.cpp		\
-                           vjSyncWriter.cpp		\
-                           vjTuPerfBufReader.cpp	\
-                           vjTimedUpdate.cpp
+                           vjConnect.cpp                \
+		           vjTimedUpdate.cpp
 
 ENVIRONMENT_OBJECTS	:= ${addprefix ${OBJDIR}/,${ENVIRONTMENT_SRCS:.cpp=.o}}
 DEPEND_FILES		:= ${ENVIRONTMENT_SRCS:.cpp=.d}

@@ -29,9 +29,9 @@ vjEnvironmentManager::vjEnvironmentManager():
     listen_socket = -1;
     activated = false;
     configured_to_accept = false;
+    perf_refresh_time = 500;
 
-    perf_buffer_reader = new vjTuPerfBufReader(NULL, 500);
-    updaters.push_back (perf_buffer_reader);
+    perf_target = NULL;
 
 }
 
@@ -46,9 +46,9 @@ vjEnvironmentManager::~vjEnvironmentManager() {
 void vjEnvironmentManager::activate() {
 
     /* start updaters */
-    for (int i = 0; i < updaters.size(); i++) {
-	updaters[i]->startProcess();
-    }
+//      for (int i = 0; i < updaters.size(); i++) {
+//  	updaters[i]->startProcess();
+//      }
 
     activated = true;
     if (configured_to_accept) {
@@ -65,10 +65,10 @@ void vjEnvironmentManager::deactivate() {
     rejectConnections();
     killConnections();
 
-    /* kill updaters - this needs work */
-    for (int i = 0; i < updaters.size(); i++) {
-	updaters[i]->stopProcess();
-    }
+//      /* kill updaters - this needs work */
+//      for (int i = 0; i < updaters.size(); i++) {
+//  	updaters[i]->stopProcess();
+//    }
 }
 
 
@@ -141,10 +141,11 @@ bool vjEnvironmentManager::isAccepting() {
 
 
 void vjEnvironmentManager::addPerfDataBuffer (vjPerfDataBuffer *v) {
+    cout << "adding perf data buffer " << v->getName() << endl;
     perf_buffers.push_back(v);
-    if (configuredToActivate(v)) {
+    if (configuredToActivate(v) && perf_target) {
 	v->activate();
-	perf_buffer_reader->addBuffer(v);
+	perf_target->addTimedUpdate (v, perf_refresh_time);
     }
 }
 
@@ -153,7 +154,8 @@ void vjEnvironmentManager::removePerfDataBuffer (vjPerfDataBuffer *b) {
     std::vector<vjPerfDataBuffer*>::iterator it;
 
     b->deactivate();
-
+    if (perf_target)
+	perf_target->removeTimedUpdate (b);
     // this is one of those things I really hate:
     for (it = perf_buffers.begin(); it != perf_buffers.end(); it++) {
         if (*it == b) {
@@ -161,15 +163,13 @@ void vjEnvironmentManager::removePerfDataBuffer (vjPerfDataBuffer *b) {
             break;
         }
     }
-
-    perf_buffer_reader->removeBuffer(b);
 }
 
 
 
-vjConnect* vjEnvironmentManager::getConnect (std::string s) {
+vjConnect* vjEnvironmentManager::getConnect (const std::string& s) {
     for (int i = 0; i < connections.size(); i++)
-	if (s == connections[i]->name)
+	if (s == connections[i]->getName())
 	    return connections[i];
     return NULL;
 }
@@ -215,17 +215,31 @@ void vjEnvironmentManager::sendRefresh() {
 
 }
 
+bool stringIsPrefix (const std::string& a, const std::string& b) {
+  // returns true if a is a prefix of b, not case sensitive
+  if (b.size() < a.size())
+    return false;
+  for (int i = 0; i < a.size(); i++)
+    if (toupper(a[i]) != toupper(b[i]))
+      return false;
+  return true;
+}
 
 void vjEnvironmentManager::activatePerfBuffersWithPrefix (std::string prefix) {
     // activates all perf buffers whose names start with prefix
     vjPerfDataBuffer* b;
     int i;
 
+    //cout << "activatePerfBuffers with prefix " << prefix << " with " << perf_buffers.size() << " buffers " << endl;
     for (i = 0; i < perf_buffers.size(); i++) {
 	b = perf_buffers[i];
 	std::string n = b->getName();
-	if (!n.compare (0, prefix.size(), prefix)) {
-	    perf_buffer_reader->addBuffer(b);
+	cout << "checking to activate buffer " << n << endl;
+	if (stringIsPrefix (prefix, n)) {
+	    if (perf_target && !b->isActive()) {
+		b->activate();
+		perf_target->addTimedUpdate (b, perf_refresh_time);
+	    }
 	}
     }
 }
@@ -237,13 +251,26 @@ void vjEnvironmentManager::deactivatePerfBuffersWithPrefix (std::string prefix) 
 
     for (i = 0; i < perf_buffers.size(); i++) {
 	b = perf_buffers[i];
-	// this below is correct!!! returns false when strings match, true else
-	// just like strcmp
 	std::string n = b->getName();
-	if (!n.compare (0, prefix.size(), prefix)) {
-	    perf_buffer_reader->removeBuffer(b);
+	if (stringIsPrefix (prefix, n)) {
+	    b->deactivate();
+	    if (perf_target)
+		perf_target->removeTimedUpdate(b);
 	}
     }
+}
+
+
+void vjEnvironmentManager::setPerformanceTarget (vjConnect* con) {
+    vjPerfDataBuffer* b;
+    for (int i = 0; i < perf_buffers.size(); i++) {
+	b = perf_buffers[i];
+	if (perf_target)
+	    perf_target->removeTimedUpdate (b);
+	if (b->isActive())
+	    con->addTimedUpdate (b, perf_refresh_time);
+    }
+    perf_target = con;
 }
 
 
@@ -265,7 +292,7 @@ bool vjEnvironmentManager::configAdd(vjConfigChunk* chunk) {
 	if (newport != Port || configured_to_accept != isAccepting())
 	    networkingchanged = 1;
 	std::string s = chunk->getProperty ("PerformanceTarget");
-	perf_buffer_reader->setTarget(getConnect(s));
+	setPerformanceTarget(getConnect(s));
 
 	if (networkingchanged) {
 	    Port = newport;
@@ -283,10 +310,10 @@ bool vjEnvironmentManager::configAdd(vjConfigChunk* chunk) {
 	for (int i = 0; i < chunk->getNum ("TimingTests"); i++) {
 	    c2 = chunk->getProperty ("TimingTests", i);
 	    if ((bool)c2->getProperty ("Enabled") == true) {
-		activatePerfBuffersWithPrefix ((std::string)c2->getProperty ("Prefix"));
+	      activatePerfBuffersWithPrefix (/*(std::string)*/c2->getProperty ("Prefix"));
 	    }
 	    else {
-		deactivatePerfBuffersWithPrefix ((std::string)c2->getProperty ("Prefix"));
+	      deactivatePerfBuffersWithPrefix (/*(std::string)*/c2->getProperty ("Prefix"));
 	    }
 	}
 	sendRefresh();

@@ -5,7 +5,9 @@
 #include <Threads/vjThread.h>
 #include <Config/vjChunkDescDB.h>
 #include <Config/vjConfigChunkDB.h>
-#include <Environment/vjSyncWriter.h>
+#include <Environment/vjTimedUpdate.h>
+#include <Environment/vjCommand.h>
+#include <queue>
 
 
 //--------------------------------------------------
@@ -14,13 +16,13 @@
 class vjConnect {
  public:
 
-    vjConnect (int fd, char* _name="unnamed");
+    vjConnect (int fd, const std::string& _name="unnamed");
 
 
     //: default constructor
     //! POST: self is initialized (filename = s, controlPID is NULL)
     //! ARGS: s - name of file to open; a non-NULL C string
-    vjConnect(char* s, char* _name);
+    vjConnect(const std::string& s, const std::string& _name);
 
 
 
@@ -34,6 +36,12 @@ class vjConnect {
     //+       If ControlPID is non-NULL, the process it refers
     //+       to is stopped.
     ~vjConnect();
+
+
+
+    std::string getName () {
+	return name;
+    }
 
 
 
@@ -57,27 +65,65 @@ class vjConnect {
     bool stopProcess();
 
 
-    void reopenFile ();
-
     void sendDescDB (vjChunkDescDB* db);
     void sendChunkDB (vjConfigChunkDB* db, bool all);
     void sendRefresh ();
 
-    vjSyncWriter            output;
-    char*                   name;
-    char*                   filename;
-    vjConfigChunkDB*        cachedChunkdb;
-    vjChunkDescDB*          cachedDescdb;
+
+    //! ARGS: _tu - a vjTimedUpdate* 
+    //! ARGS: _refresh_time - time between refreshes, in milliseconds
+    void addTimedUpdate (vjTimedUpdate* _tu, float _refresh_time) {
+	cout << "vjconnect " << name << " adding timedupdate request" << endl;
+	commands_mutex.acquire();
+	timed_commands.push (new vjCommandTimedUpdate (_tu, _refresh_time));
+	commands_mutex.release();
+    }
+
+    void removeTimedUpdate (vjTimedUpdate* _tu) {
+	// this better not be called often - it's gotta be nlogn or something.
+	// still, there'll probably never be more than a couple dozen
+	// items in the timed_commands queue anyway.
+	std::priority_queue<vjCommand*> newq;
+	vjCommandTimedUpdate* ctu2;
+	vjCommand* ctu1;
+	commands_mutex.acquire();
+	while (!timed_commands.empty()) {
+	    ctu1 = timed_commands.top();
+	    ctu2 = dynamic_cast<vjCommandTimedUpdate*>(ctu1);
+	    timed_commands.pop();
+	    if (ctu2 && (ctu2->timed_update == _tu))
+		    continue;
+	    newq.push (ctu1);
+	}
+	timed_commands = newq;
+	commands_mutex.release();
+    }
+
+private:
+
+    ofstream                 output;
+    std::string                  name;
+    std::string                  filename;
+    //vjConfigChunkDB*        cachedChunkdb;
+    //vjChunkDescDB*          cachedDescdb;
     vjThread*               connect_thread;
     int                     fd;
     bool                    readable;
-    bool                    i_opened_this;  // workaround for write bug
+    bool                    writeable;
+    bool                    shutdown;        // set to stop procs
 
-    static char* default_name;
+    std::priority_queue<vjCommand*>          timed_commands; // used as heap
+    std::queue<vjCommand*>                   commands;
+    vjMutex                 commands_mutex;
+
+    //: used to see if it's time to spring a timed_command
+    vjTimeStamp             current_time;
 
     //: body of network process.
-    void controlLoop(void* nullParam);
+    void controlLoop (void* nullParam);
 
+    //: utility for controlLoop()
+    void readCommand (ifstream& fin);
 
 }; // end vjConnect
 
