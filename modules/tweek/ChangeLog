@@ -1,6 +1,7 @@
 DATE       AUTHOR      CHANGE
 ---------- ----------- --------------------------------------------------------
-2004-03-05 patrich     Changed the default omniORB version tested for by
+2004-04-10 patrickh    Added a new Swing look and feel called Liquid.
+2004-04-05 patrickh    Changed the default omniORB version tested for by
                        configure to omniORB4.
 2003-12-08 patrickh    Initial support for using Fnorb or PyORBit 2 as
                        alternatives to omniORBpy.  This work is not yet done.

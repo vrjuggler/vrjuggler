@@ -1097,7 +1097,7 @@ if test "x$PLATFORM" = "xIRIX" -a "x$USE_GCC" != "xyes" ; then
    tweek_64_flags='-64'
 fi
 
-jars='Tweek.jar TweekBeans.jar TweekEvents.jar TweekNet.jar TweekBeanDelivery.jar TweekServices.jar kunststoff-mod.jar metouia.jar looks.jar jaxen-core.jar jaxen-jdom.jar jdom.jar saxpath.jar xalan.jar xerces.jar xml-apis.jar'
+jars='Tweek.jar TweekBeans.jar TweekEvents.jar TweekNet.jar TweekBeanDelivery.jar TweekServices.jar kunststoff-mod.jar metouia.jar liquid.jar looks.jar jaxen-core.jar jaxen-jdom.jar jdom.jar saxpath.jar xalan.jar xerces.jar xml-apis.jar'
 ext_jars='wizard.jar ui.jar'
 
 if test "x$JAVA_ORB_JAR" != "xnone" ; then

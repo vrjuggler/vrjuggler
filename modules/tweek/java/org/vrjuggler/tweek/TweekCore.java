@@ -42,6 +42,7 @@ import java.util.List;
 import java.util.Vector;
 import javax.swing.UIManager;
 import javax.swing.tree.DefaultMutableTreeNode;
+import com.birosoft.liquid.LiquidLookAndFeel;
 import com.incors.plaf.kunststoff.KunststoffLookAndFeel;
 import com.incors.plaf.kunststoff.mini.KunststoffMiniLookAndFeel;
 import com.jgoodies.plaf.windows.ExtWindowsLookAndFeel;
@@ -412,6 +413,9 @@ public class TweekCore
       UIManager.installLookAndFeel("Kunststoff Mini",
                                    KunststoffMiniLookAndFeel.class.getName());
       KunststoffMiniLookAndFeel.setIsInstalled(true);
+
+      UIManager.installLookAndFeel("Liquid",
+                                   LiquidLookAndFeel.class.getName());
 
       // This class installs itself with the UI Manager automatically.
       new net.sourceforge.mlf.metouia.MetouiaLookAndFeel();

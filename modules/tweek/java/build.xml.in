@@ -18,6 +18,7 @@
       <pathelement path="${jdomdir}/xerces.jar" />
       <pathelement path="${jdomdir}/xml-apis.jar" />
       <pathelement path="@JAVA_ORB_JAR@" />
+      <pathelement path="${lafdir}/liquid/liquidlnf.jar" />
       <pathelement path="${lafdir}/metouia/metouia.jar" />
       <pathelement path="${lafdir}/jgoodies-looks/looks.jar" />
    </path>
