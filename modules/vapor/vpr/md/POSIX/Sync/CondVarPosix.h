@@ -54,6 +54,7 @@
 #include <pthread.h>
 #include <vpr/md/POSIX/Sync/MutexPosix.h>
 #include <vpr/Util/Interval.h>
+#include <vpr/Util/Debug.h>
 #include <sys/time.h>
 
 
@@ -117,56 +118,7 @@ public:
     *         vpr::ReturnStatus::Fail is returned if an error occurred when
     *         trying to wait on the condition variable.
     */
-   vpr::ReturnStatus wait (vpr::Interval time_to_wait = vpr::Interval::NoTimeout)
-   {
-      // ASSERT:  We have been locked
-      vpr::ReturnStatus status;
-
-      // If not locked ...
-      if ( mCondMutex->test() == 0 )
-      {
-         std::cerr << "vpr::CondVarPosix::wait: INCORRECT USAGE: Mutex was not "
-                   << "locked when wait invoked!!!\n";
-
-         status.setCode(vpr::ReturnStatus::Fail);
-      }
-      else
-      {
-         // The mutex variable must be locked when passed to
-         // pthread_cond_wait().
-         if ( vpr::Interval::NoTimeout == time_to_wait )
-         {
-            if ( pthread_cond_wait(&mCondVar, &(mCondMutex->mMutex)) != 0 )
-            {
-               status.setCode(vpr::ReturnStatus::Fail);
-            }
-         }
-         else
-         {
-            struct timeval  now;                // The current time
-            struct timespec abs_timeout;        // The absolute time of the timeout
-            int    retcode;
-
-            // Calculate the absolute time for wait timeout
-            gettimeofday(&now, NULL);
-            abs_timeout.tv_sec = now.tv_sec + time_to_wait.sec();
-
-            vpr::Uint64 left_over_us = time_to_wait.usec()%1000000;     // Get the left over usecs
-            abs_timeout.tv_nsec = 1000 * (now.tv_usec + left_over_us);
-
-            retcode = pthread_cond_timedwait(&mCondVar, &(mCondMutex->mMutex), &abs_timeout);
-
-            if(0 == retcode)
-            { status.setCode(vpr::ReturnStatus::Succeed); }
-            else if(ETIMEDOUT == retcode)
-            { status.setCode(vpr::ReturnStatus::Timeout); }
-            else
-            { status.setCode(vpr::ReturnStatus::Fail); }
-         }
-      }
-
-      return status;
-   }
+   vpr::ReturnStatus wait (vpr::Interval time_to_wait = vpr::Interval::NoTimeout);
 
    /**
     * Signals a thread waiting on this condition variable.
@@ -321,6 +273,7 @@ private:
    void operator= (const CondVarPosix&) {;}
    CondVarPosix(const CondVarPosix&) {;}
 };
+
 
 } // End of vpr namespace
 
