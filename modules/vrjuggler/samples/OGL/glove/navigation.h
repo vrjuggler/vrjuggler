@@ -1,8 +1,6 @@
-/*
- * VRJuggler
- *   Copyright (C) 1997,1998,1999,2000
- *   Iowa State University Research Foundation, Inc.
- *   All Rights Reserved
+/*************** <auto-copyright.pl BEGIN do not edit this line> **************
+ *
+ * VR Juggler is (C) Copyright 1998, 1999, 2000 by Iowa State University
  *
  * Original Authors:
  *   Allen Bierbaum, Christopher Just,
@@ -29,7 +27,9 @@
  * Date modified: $Date$
  * Version:       $Revision$
  * -----------------------------------------------------------------
- */
+ *
+ *************** <auto-copyright.pl END do not edit this line> ***************/
+
 
 #ifndef NAVIGATION_H
 #define NAVIGATION_H
