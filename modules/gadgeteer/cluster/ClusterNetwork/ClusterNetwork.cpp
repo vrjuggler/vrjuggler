@@ -754,6 +754,7 @@ namespace cluster
    {
       // ClusterNetwork is ready if it has
       // no pending connections
+      vpr::Guard<vpr::Mutex> guard(mPendingNodesLock);
       return (0 == mPendingNodes.size());
    }
 } // end namespace cluster
