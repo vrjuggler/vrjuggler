@@ -87,7 +87,6 @@ int main(int argc, char* argv[])
    for(int thread_num=1;thread_num < num_threads;thread_num++)
    {
       vpr::Thread* new_thread = new vpr::Thread(doFunc, (void*)(thread_num));
-      new_thread->start();
 
       // Increment the thread count
       thread_count_mutex.acquire();

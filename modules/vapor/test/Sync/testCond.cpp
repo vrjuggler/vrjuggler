@@ -123,7 +123,6 @@ int SyncIncrementer::start()
    new vpr::ThreadMemberFunctor<SyncIncrementer>(this, &SyncIncrementer::main, NULL);
 
    vpr::Thread* control_thread = new vpr::Thread(memberFunctor);
-   control_thread->start();
 
    vprDEBUG(vprDBG_ALL, 0) << "SyncIncrementer::start: Just started main loop.  "
                            << control_thread << std::endl << vprDEBUG_FLUSH;

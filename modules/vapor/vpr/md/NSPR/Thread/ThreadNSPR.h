@@ -59,6 +59,7 @@
 #include <prinrval.h>
 
 #include <vpr/Thread/BaseThread.h>
+#include <vpr/Thread/ThreadFunctor.h>
 #include <vpr/Thread/ThreadManager.h>
 
 
@@ -71,22 +72,25 @@ namespace vpr
 class VPR_CLASS_API ThreadNSPR : public BaseThread
 {
 public:
+   /** Non-spawning constructor.  This will not start a thread. */
+   ThreadNSPR(VPRThreadPriority priority = VPR_PRIORITY_NORMAL,
+              VPRThreadScope scope = VPR_GLOBAL_THREAD,
+              VPRThreadState state = VPR_JOINABLE_THREAD,
+              PRUint32 stack_size = 0);
+
    /**
-    * Spawning constructor.
-    *
-    * This will actually start a new thread that will execute the specified
-    * function.
+    * Spawning constructor.  This will start a new thread that will execute
+    * the specified function.
     */
-   ThreadNSPR(thread_func_t func, void* arg = 0,
+   ThreadNSPR(thread_func_t func, void* arg = NULL,
               VPRThreadPriority priority = VPR_PRIORITY_NORMAL,
               VPRThreadScope scope = VPR_GLOBAL_THREAD,
               VPRThreadState state = VPR_JOINABLE_THREAD,
               PRUint32 stack_size = 0);
 
    /**
-    * Spawning constructor with arguments (functor version).
-    *
-    * This will start a new thread that will execute the specified function.
+    * Spawning constructor (functor version).  This will start a new thread
+    * that will execute the specified functor.
     */
    ThreadNSPR(BaseThreadFunctor* functor_ptr,
               VPRThreadPriority priority = VPR_PRIORITY_NORMAL,
@@ -104,13 +108,21 @@ public:
    virtual ~ThreadNSPR();
 
    /**
+    * Sets the functor that this thread will execute.
+    *
+    * @pre The thread is not already running.  The functor is valid.
+    */
+   virtual void setFunctor(BaseThreadFunctor* functorPtr);
+
+   /**
     * Creates a new thread that will execute this thread's functor.
     *
-    * @pre None.
+    * @pre The functor to execute has been set.  The thread is not already
+    *      running.
     * @post A thread (with any specified attributes) is created that begins
-    *        executing func().  Depending on the scheduler, it may being
-    *        execution immediately, or it may block for a short time before
-    *        beginning execution.
+    *       executing our functor.  Depending on the scheduler, it may begin
+    *       execution immediately, or it may block for a short time before
+    *       beginning execution.
     *
     * @return A vpr::ReturnStatus obj is returned to indicate the result of
     *         the thread creation.
