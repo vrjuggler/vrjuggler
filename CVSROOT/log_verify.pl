@@ -27,6 +27,8 @@ use vars qw/*name *dir *prune/;
 *dir    = *File::Find::dir;
 *prune  = *File::Find::prune;
 
+sub validUser();
+
 my $CVSROOT = $ENV{'CVSROOT'} || "/cvsroot/vrjuggler";
 
 sub print_exit_message {
@@ -88,7 +90,7 @@ my $junk = <CMDFILE>;
 
 chomp $junk;
 
-if ( $junk eq "COMMAND" )
+if ( $junk eq "COMMAND" && validUser() )
 {
    print "We have a command in log_verify.pl\n";
 
@@ -124,4 +126,19 @@ if ( $junk eq "COMMAND" )
 else
 {
    exit 0;
+}
+
+sub validUser ()
+{
+   my @users = ('patrickh', 'allenb', 'subatomic');
+
+   foreach ( @users )
+   {
+      if ( $_ eq "$ENV{'USER'}" )
+      {
+         return 1;
+      }
+   }
+
+   return 0;
 }
