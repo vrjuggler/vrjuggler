@@ -50,23 +50,23 @@ default: all
 # Include common definitions.
 include @topdir@/make.defs.mk
 
-includedir	= @includedir@/vpr/Util
-srcdir		= @srcdir@
-top_srcdir	= @top_srcdir@
-EXTRA_DEFS	+= @UUID_DEFS@
-INSTALL		= @INSTALL@
-SUBOBJDIR	= $(VPR_LIBRARY)
+includedir=	@includedir@/vpr/Util
+srcdir=		@srcdir@
+top_srcdir=	@top_srcdir@
+EXTRA_DEFS+=	@UUID_DEFS@
+INSTALL=	@INSTALL@
+SUBOBJDIR=	$(VPR_LIBRARY)
 
-DIRPRFX		= vpr/Util/
-SUBDIR		= md5		\
-                  uuid
+DIRPRFX=	vpr/Util/
+SUBDIR=		md5			\
+		uuid
 
-SRCS 		= Debug.cpp		\
-                  FileUtils.cpp		\
-                  GUID.cpp		\
-                  Interval.cpp		\
-                  StreamLock.cpp	\
-                  Version.cpp
+SRCS=		Debug.cpp		\
+		FileUtils.cpp		\
+		GUID.cpp		\
+		Interval.cpp		\
+		StreamLock.cpp		\
+		Version.cpp
 
 include $(MKPATH)/dpp.obj-subdir.mk
 
@@ -75,6 +75,6 @@ include $(MKPATH)/dpp.obj-subdir.mk
 # -----------------------------------------------------------------------------
 ifndef DO_CLEANDEPEND
 ifndef DO_BEFOREBUILD
-    -include $(DEPEND_FILES)
+   -include $(DEPEND_FILES)
 endif
 endif
