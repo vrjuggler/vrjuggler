@@ -282,7 +282,7 @@
                             </spacer>
                             <widget class="QPushButton">
                                 <property name="name">
-                                    <cstring>mResetButton_2</cstring>
+                                    <cstring>mResetButton</cstring>
                                 </property>
                                 <property name="text">
                                     <string>Reset</string>
@@ -316,6 +316,96 @@
                 <attribute name="title">
                     <string>Jump</string>
                 </attribute>
+                <widget class="QComboBox">
+                    <property name="name">
+                        <cstring>comboBox1</cstring>
+                    </property>
+                    <property name="geometry">
+                        <rect>
+                            <x>60</x>
+                            <y>20</y>
+                            <width>85</width>
+                            <height>21</height>
+                        </rect>
+                    </property>
+                </widget>
+                <widget class="QLabel">
+                    <property name="name">
+                        <cstring>textLabel1</cstring>
+                    </property>
+                    <property name="geometry">
+                        <rect>
+                            <x>10</x>
+                            <y>20</y>
+                            <width>40</width>
+                            <height>20</height>
+                        </rect>
+                    </property>
+                    <property name="text">
+                        <string>Place</string>
+                    </property>
+                </widget>
+                <widget class="QLabel">
+                    <property name="name">
+                        <cstring>textLabel1_2</cstring>
+                    </property>
+                    <property name="geometry">
+                        <rect>
+                            <x>10</x>
+                            <y>120</y>
+                            <width>62</width>
+                            <height>20</height>
+                        </rect>
+                    </property>
+                    <property name="text">
+                        <string>Place Name</string>
+                    </property>
+                </widget>
+                <widget class="QLineEdit">
+                    <property name="name">
+                        <cstring>lineEdit1</cstring>
+                    </property>
+                    <property name="geometry">
+                        <rect>
+                            <x>80</x>
+                            <y>120</y>
+                            <width>108</width>
+                            <height>21</height>
+                        </rect>
+                    </property>
+                </widget>
+                <widget class="QPushButton">
+                    <property name="name">
+                        <cstring>pushButton4</cstring>
+                    </property>
+                    <property name="geometry">
+                        <rect>
+                            <x>40</x>
+                            <y>50</y>
+                            <width>75</width>
+                            <height>22</height>
+                        </rect>
+                    </property>
+                    <property name="text">
+                        <string>Jump There</string>
+                    </property>
+                </widget>
+                <widget class="QPushButton">
+                    <property name="name">
+                        <cstring>pushButton4_2</cstring>
+                    </property>
+                    <property name="geometry">
+                        <rect>
+                            <x>50</x>
+                            <y>150</y>
+                            <width>75</width>
+                            <height>22</height>
+                        </rect>
+                    </property>
+                    <property name="text">
+                        <string>Add It</string>
+                    </property>
+                </widget>
             </widget>
             <widget class="QWidget">
                 <property name="name">
@@ -328,89 +418,38 @@
                     <property name="name">
                         <cstring>unnamed</cstring>
                     </property>
-                    <widget class="QLayoutWidget">
+                    <property name="margin">
+                        <number>2</number>
+                    </property>
+                    <widget class="QGroupBox">
                         <property name="name">
-                            <cstring>layout4</cstring>
+                            <cstring>groupBox1</cstring>
+                        </property>
+                        <property name="title">
+                            <string>Output</string>
                         </property>
                         <vbox>
                             <property name="name">
                                 <cstring>unnamed</cstring>
                             </property>
-                            <widget class="QLayoutWidget">
+                            <property name="margin">
+                                <number>3</number>
+                            </property>
+                            <widget class="QTextBrowser">
                                 <property name="name">
-                                    <cstring>layout3</cstring>
+                                    <cstring>txtDebugOutput</cstring>
                                 </property>
-                                <hbox>
-                                    <property name="name">
-                                        <cstring>unnamed</cstring>
-                                    </property>
-                                    <widget class="QLayoutWidget">
-                                        <property name="name">
-                                            <cstring>layout1</cstring>
-                                        </property>
-                                        <vbox>
-                                            <property name="name">
-                                                <cstring>unnamed</cstring>
-                                            </property>
-                                            <widget class="QPushButton">
-                                                <property name="name">
-                                                    <cstring>pushButton1</cstring>
-                                                </property>
-                                                <property name="text">
-                                                    <string>pushButton1</string>
-                                                </property>
-                                            </widget>
-                                            <widget class="QPushButton">
-                                                <property name="name">
-                                                    <cstring>pushButton2</cstring>
-                                                </property>
-                                                <property name="text">
-                                                    <string>pushButton2</string>
-                                                </property>
-                                            </widget>
-                                        </vbox>
-                                    </widget>
-                                    <spacer>
-                                        <property name="name">
-                                            <cstring>spacer1</cstring>
-                                        </property>
-                                        <property name="orientation">
-                                            <enum>Horizontal</enum>
-                                        </property>
-                                        <property name="sizeType">
-                                            <enum>Expanding</enum>
-                                        </property>
-                                        <property name="sizeHint">
-                                            <size>
-                                                <width>40</width>
-                                                <height>20</height>
-                                            </size>
-                                        </property>
-                                    </spacer>
-                                </hbox>
-                            </widget>
-                            <widget class="QGroupBox">
-                                <property name="name">
-                                    <cstring>groupBox1</cstring>
+                                <property name="font">
+                                    <font>
+                                        <family>Monospace</family>
+                                    </font>
                                 </property>
-                                <property name="title">
-                                    <string>Output</string>
+                                <property name="vScrollBarMode">
+                                    <enum>AlwaysOn</enum>
                                 </property>
-                                <vbox>
-                                    <property name="name">
-                                        <cstring>unnamed</cstring>
-                                    </property>
-                                    <widget class="QTextBrowser">
-                                        <property name="name">
-                                            <cstring>txtDebugOutput</cstring>
-                                        </property>
-                                        <property name="font">
-                                            <font>
-                                                <family>Monospace</family>
-                                            </font>
-                                        </property>
-                                    </widget>
-                                </vbox>
+                                <property name="hScrollBarMode">
+                                    <enum>AlwaysOn</enum>
+                                </property>
                             </widget>
                         </vbox>
                     </widget>
@@ -427,6 +466,12 @@
     </image>
 </images>
 <connections>
+    <connection>
+        <sender>mResetButton</sender>
+        <signal>clicked()</signal>
+        <receiver>MainWindowBase</receiver>
+        <slot>resetClicked()</slot>
+    </connection>
 </connections>
 <slots>
     <slot>helpAbout()</slot>
