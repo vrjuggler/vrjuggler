@@ -29,22 +29,23 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
+
 #include <iostream>
-#include <Math/vjQuat.h>
+#include <vrj/Math/Quat.h>
 #include <glquat.h>
 
 int number_failed = 0;
 
 std::ostream& operator<<(std::ostream& out, GL_QUAT& quat);
-void testMatch(Quat& vj_quat, GL_QUAT& gl_quat);
+void testMatch(vrj::Quat& vj_quat, GL_QUAT& gl_quat);
 
 
 int main(void)
 {
-   Matrix mat;
+   vrj::Matrix mat;
 
    GL_QUAT gl_quat;
-   Quat vj_quat;
+   vrj::Quat vj_quat;
 
    // --- Test 1 --- //
    std::cout << "Test 1" << std::endl;
@@ -78,7 +79,7 @@ int main(void)
 
    // ---- Test Mat construct --- //
    std::cout << "Construct Matrix" << std::endl;
-   Matrix gl_mat;
+   vrj::Matrix gl_mat;
    gluQuatToMat_EXT(&gl_quat, (GLfloat (*)[4])gl_mat.getFloatPtr());
    mat.makeQuaternion(vj_quat);
 
@@ -96,17 +97,17 @@ int main(void)
    // Kevin's Vec test...
    {
       std::cout << "Construct Matrix, xformVecFull" << std::endl;
-      Matrix kevinMat;
-      Quat kevinQuat;
-      Vec3 kevinVec( 0.0f, 0.0f, -1.0f );
+      vrj::Matrix kevinMat;
+      vrj::Quat kevinQuat;
+      vrj::Vec3 kevinVec( 0.0f, 0.0f, -1.0f );
       float fourtyFiveDegs = 3.145f / 4.0f;
       kevinQuat.makeRot( fourtyFiveDegs, 0.0f, 1.0f, 0.0f );
       kevinMat.makeQuaternion( kevinQuat );
 
-      Vec3 tempVec;
+      vrj::Vec3 tempVec;
       tempVec.xformFull( kevinMat, kevinVec );
 
-      Vec3 shouldBe( -0.707708, 0, -0.706504 );
+      vrj::Vec3 shouldBe( -0.707708, 0, -0.706504 );
       std::cout<<"\tshouldBe: "<<shouldBe[0]<<" "<<shouldBe[1]<<" "<<shouldBe[2]<< std::endl;
       std::cout<<"\ttempVec: "<<tempVec[0]<<" "<<tempVec[1]<<" "<<tempVec[2]<< std::endl;
       std::cout << "Testing match.....";
@@ -122,15 +123,15 @@ int main(void)
    // Kevin's makeRot test...
    {
       std::cout << "Construct Matrix, makeRot" << std::endl;
-      Matrix kevinMat;
-      Quat kevinQuat;
+      vrj::Matrix kevinMat;
+      vrj::Quat kevinQuat;
       float fourtyFiveRads = 3.145f / 4.0f;
       float fourtyFiveDegs = 45.0f;
       kevinQuat.makeRot( fourtyFiveRads, 0.0f, 1.0f, 0.0f );
       kevinMat.makeQuaternion( kevinQuat );
 
-      Matrix kevin2Mat;
-      kevin2Mat.makeRot( fourtyFiveDegs, Vec3( 0.0f, 1.0f, 0.0f ));
+      vrj::Matrix kevin2Mat;
+      kevin2Mat.makeRot( fourtyFiveDegs, vrj::Vec3( 0.0f, 1.0f, 0.0f ));
 
       std::cout<<"kevinMat:\n"<<kevinMat<< std::endl;
       std::cout<<"kevin2Mat:\n"<<kevin2Mat<< std::endl;
@@ -147,7 +148,7 @@ int main(void)
    
    // --- Inverse ---- //
    std::cout << "Test Invert\n";
-   Quat vj_inv;
+   vrj::Quat vj_inv;
    GL_QUAT gl_inv;
    gl_inv = gl_quat;
    gluQuatInverse_EXT(&gl_inv);
@@ -159,7 +160,7 @@ int main(void)
 
    // ---- Multiply ---- //
    std::cout << "Mult:\n";
-   Quat vj_quat1, vj_quat2;
+   vrj::Quat vj_quat1, vj_quat2;
    GL_QUAT gl_quat1, gl_quat2;
    mat.makeXYZEuler(123.0f, -15.0f, 12.21f);
    gluMatToQuat_EXT((GLfloat (*)[4])mat.getFloatPtr(), &gl_quat1);
@@ -189,7 +190,7 @@ int main(void)
       // loose test...
       std::cout << "\tTesting equality using a tolerance... (if this passes, ignore previous)" << std::endl;
       std::cout << "\tTesting match.........";
-      Quat glquat( gl_quat.w, gl_quat.x, gl_quat.y, gl_quat.z );
+      vrj::Quat glquat( gl_quat.w, gl_quat.x, gl_quat.y, gl_quat.z );
       if(vj_quat.isEqual( glquat, 0.001f ))
          std::cout << "passed.\n" << std::flush;
       else
@@ -218,9 +219,9 @@ int main(void)
    testMatch(vj_quat, gl_quat);
 
    // ---- Test matrix conversion --- //
-   Matrix mat1, mat2;
-   Quat quat;
-   Vec3 angles;
+   vrj::Matrix mat1, mat2;
+   vrj::Quat quat;
+   vrj::Vec3 angles;
    GL_QUAT q;
 
    std::cout << "--- Test matrix conversion ---" << std::endl;
@@ -250,7 +251,7 @@ std::ostream& operator<<(std::ostream& out, GL_QUAT& quat)
    return out;
 }
 
-void testMatch(Quat& vj_quat, GL_QUAT& gl_quat)
+void testMatch(vrj::Quat& vj_quat, GL_QUAT& gl_quat)
 {
    std::cout << "\tTesting match.........";
    if((vj_quat[VJ_X] == gl_quat.x) &&
