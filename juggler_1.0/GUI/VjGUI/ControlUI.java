@@ -65,7 +65,9 @@ public class ControlUI
                 help_menu, 
                 looknfeel_menu, 
                 preferences_menu, 
-                helptech_menu, 
+                helptech_menu,
+                helpvjc_menu,
+                helpbasic_menu,
                 helpdesc_menu;
     JMenuItem   quit_mi, 
 	        network_refresh_mi,
@@ -85,10 +87,14 @@ public class ControlUI
                 helpdesc_mi, 
                 helporgtree_mi, 
                 helpcmdline_mi, 
+                helpdynamic_mi,
                 descformat_mi, 
                 chunkformat_mi, 
                 orgtreeformat_mi, 
                 helpprefs_mi;
+    JMenuItem   hboverview_mi,
+                hbchunks_mi,
+                hbapps_mi;
 
     JLabel      status_label;
 
@@ -162,14 +168,23 @@ public class ControlUI
 
 	main_menubar.add (help_menu = new JMenu ("Help"));
 	help_menu.add (helpindex_mi = new JMenuItem ("Help Index"));
-	help_menu.add (helpabout_mi = new JMenuItem ("About VjControl"));
-	help_menu.add (helpstart_mi = new JMenuItem ("Getting Started"));
-	help_menu.add (helpcmdline_mi = new JMenuItem ("Command Line Arguments"));
-	help_menu.add (helpchunk_mi = new JMenuItem ("Working with Config Files"));
-	help_menu.add (helpdesc_mi = new JMenuItem ("Working with ChunkDesc Files"));
-	help_menu.add (helporgtree_mi = new JMenuItem ("Working with ChunkOrgTrees"));
-	help_menu.add (helpprefs_mi = new JMenuItem ("VjControl Preferences"));
-	help_menu.add (helpbugs_mi = new JMenuItem ("Known Bugs"));
+
+        help_menu.add (helpbasic_menu = new JMenu ("Configuration Basics"));
+        helpbasic_menu.add (hboverview_mi = new JMenuItem ("Configuration Files"));
+        helpbasic_menu.add (hbchunks_mi = new JMenuItem ("ConfigChunks"));
+        helpbasic_menu.add (hbapps_mi = new JMenuItem ("Configuring Applications"));
+
+        help_menu.add (helpvjc_menu = new JMenu ("Using VjControl"));
+
+	helpvjc_menu.add (helpabout_mi = new JMenuItem ("About VjControl"));
+	helpvjc_menu.add (helpstart_mi = new JMenuItem ("Getting Started"));
+	helpvjc_menu.add (helpcmdline_mi = new JMenuItem ("Command Line Arguments"));
+	helpvjc_menu.add (helpchunk_mi = new JMenuItem ("Working with Config Files"));
+	helpvjc_menu.add (helpdesc_mi = new JMenuItem ("Working with ChunkDesc Files"));
+	helpvjc_menu.add (helporgtree_mi = new JMenuItem ("Working with ChunkOrgTrees"));
+        helpvjc_menu.add (helpdynamic_mi = new JMenuItem ("Dynamic Reconfiguration"));
+	helpvjc_menu.add (helpprefs_mi = new JMenuItem ("VjControl Preferences"));
+	helpvjc_menu.add (helpbugs_mi = new JMenuItem ("Known Bugs"));
 
 	help_menu.add (helptech_menu = new JMenu ("Technical Information"));
 	helptech_menu.add (descformat_mi = new JMenuItem ("ChunkDesc File Format"));
@@ -182,6 +197,7 @@ public class ControlUI
 	quit_mi.addActionListener (this);
 	network_refresh_mi.addActionListener (this);
         tree_rebuild_kludge_mi.addActionListener (this);
+
 	lnf_win_mi.addActionListener (this);
 	lnf_java_mi.addActionListener (this);
 	lnf_motif_mi.addActionListener (this);
@@ -189,6 +205,7 @@ public class ControlUI
 	lnf_organic1_mi.addActionListener (this);
 	editprefs_mi.addActionListener (this);
 	saveprefs_mi.addActionListener (this);
+
 	helpindex_mi.addActionListener (this);
 	helpabout_mi.addActionListener (this);
 	helpstart_mi.addActionListener (this);
@@ -198,9 +215,15 @@ public class ControlUI
 	helpprefs_mi.addActionListener (this);
 	helpbugs_mi.addActionListener (this);
 	helpcmdline_mi.addActionListener (this);
+        helpdynamic_mi.addActionListener (this);
+
 	descformat_mi.addActionListener (this);
 	chunkformat_mi.addActionListener (this);
 	orgtreeformat_mi.addActionListener (this);
+
+        hboverview_mi.addActionListener (this);
+        hbchunks_mi.addActionListener (this);
+        hbapps_mi.addActionListener (this);
 
 	// initial helpdesc menu stuff...
  	for (int i = 0; i < Core.descdb.size(); i++) {
@@ -343,6 +366,14 @@ public class ControlUI
 	    loadHelp ("VjFiles/DescDBPanel.html");
 	else if (o == helporgtree_mi)
 	    loadHelp ("VjFiles/OrgTreePanel.html");
+        else if (o == helpdynamic_mi)
+            loadHelp ("VjFiles/DynamicReconfiguration.html");
+        else if (o == hboverview_mi)
+            loadHelp ("VjFiles/cfgfiles_intro.html");
+        else if (o == hbchunks_mi)
+            loadHelp ("VjFiles/chunkprimer.html");
+        else if (o == hbapps_mi)
+            loadHelp ("VjFiles/configApps.html");
 	else if (o == descformat_mi)
 	    loadHelp ("VjFiles/ChunkDescFormat.html");
 	else if (o == chunkformat_mi)
