@@ -25,7 +25,7 @@ void TrackedInfo::updateWithMatrix( vjMatrix& matrix )
     _vec = wandForward - wandPos;
 
     // get the x,y,z rotations of the tracker.
-    matrix.getXYZEuler( _rot[0], _rot[1], _rot[2] );
+    matrix.getXYZEuler( _rot.vec[0], _rot.vec[1], _rot.vec[2] );
     
     // calculate the new rotational delta
     _rotDelta = _rot - _rotOld;
