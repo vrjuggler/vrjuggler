@@ -87,7 +87,7 @@ inline float vj_htonf(float f)
 inline int binaryToInt(const char* a, const int len){
     int return_int = 0;
     for (int i = 0; i < len; i++) {
-        return_int += a[i] * pow((double)256,i);  // that means += a[i] * 256 ^ i
+        return_int += (int)(a[i]) * (int)(pow((double)256,i));  // that means += a[i] * 256 ^ i
     }
     return return_int;
 }

@@ -31,11 +31,6 @@ public:
    // Overriding NetInput virtual functions
    virtual void updateFromLocalSource();
    virtual void updateFromRemoteSource(char* recv_buffer, int recv_buff_len);
-   virtual char* getDataPtr(){ return (char*) &(mSendBuffer[0]); }
-   virtual int getDataByteLength() const { return mSendBuffer.size(); }
-   virtual VJ_NETID_TYPE getLocalId() const { return mLocalId; }
-   virtual VJ_NETID_TYPE getRemoteId() const { return mRemoteId; }
-   virtual void setRemoteId(VJ_NETID_TYPE remote_id){ mRemoteId = remote_id; }
 };
 
 }  // end namespace gadget
