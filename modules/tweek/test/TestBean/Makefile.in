@@ -42,7 +42,7 @@ install:
 # Clean-up targets.
 # -----------------------------------------------------------------------------
 clean:
-	rm -f $(ALL_CLASSES)
+	rm -f $(CLASSES)
 
 clobber:
 	@$(MAKE) clean
