@@ -120,7 +120,8 @@ bool SocketConnector::connect(SocketStream& newStream, const InetAddr& remoteAdd
     newStream.setRemoteAddr(remoteAddr);
     
     // XXX: This needs to return a value once we fix up non-blocking
-    newStream.connect();
+    if(!newStream.connect())
+        return false;
 
     InetAddr remote_addr;
 
@@ -156,7 +157,10 @@ bool SocketConnector::connectStart (SocketStream& newStream,
   
   // If timeout is 0, then we are non-blocking
   if(timeout == 0)
+  {
       newStream.enableNonBlocking();
+      vprASSERT(false && "vpr does not support non-blocking connections yet");
+  }
 
   // Check to bind to local addr
   if(localAddr != InetAddr::AnyAddr)
