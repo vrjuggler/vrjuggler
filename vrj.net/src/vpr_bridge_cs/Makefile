@@ -25,6 +25,7 @@
 #
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
+LIBDIR=		../lib
 MOD_NAME=	vprnet
 
 SRCS=		vpr_GUID.cs			\
