@@ -84,7 +84,7 @@ VNCDesktop::VNCDesktop(const std::string& hostname, const vpr::Uint16& port,
    updateDesktopParameters();       // Initial update of desktop parameters
 
    // Set initial transform
-   //gmtl::setTrans( m_world_M_desktop, gmtl::Vec3f(-3.0f, -1.0f, -4.0f));
+   gmtl::setTrans( m_world_M_desktop, gmtl::Vec3f(-3.0f, -1.0f, -4.0f));
 
    // Request the first update.
    mVncIf.updateFramebuffer(0, 0, mVncIf.getWidth(), mVncIf.getHeight());
@@ -263,7 +263,13 @@ VNCDesktop::Focus VNCDesktop::update(const gmtl::Matrix44f& navMatrix)
 
    // Get the point position of the wand and construct a ray that shoots out of the wand.
    const float max_ray_length(100.0f);
-   const gmtl::Matrix44f wand_mat(*(mWand->getData()));
+
+   // Compute the wand xform in the local desktop coordinate frame
+   const gmtl::Matrix44f wand_mat_world(*(mWand->getData()));
+   gmtl::Matrix44f desktop_M_world;
+   gmtl::invert(desktop_M_world, m_world_M_desktop);
+   gmtl::Matrix44f wand_mat = desktop_M_world * wand_mat_world;
+
    const gmtl::Point3f wand_point(gmtl::makeTrans<gmtl::Point3f>(wand_mat));
    const gmtl::Vec3f ray_vector(0.0f, 0.0f, -max_ray_length);
    mWandRay.setOrigin(gmtl::makeTrans<gmtl::Point3f>(wand_mat) );          // For now set it long.  Clip later.
