@@ -251,6 +251,6 @@ public:
    virtual std::string& name() = 0;
 };
 
-}; // end namespace
+} // end namespace
 
 #endif //SNXSOUNDIMPLEMENTATION_INTERFACE_H

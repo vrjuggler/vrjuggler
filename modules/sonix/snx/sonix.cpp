@@ -79,6 +79,7 @@ sonix::~sonix()
  */
 void sonix::trigger( const std::string& alias, const int& repeat )
 {
+   std::cout << "triggering from in sonix" << std::endl;
    this->impl().trigger( alias, repeat );
 }
 
@@ -258,7 +259,9 @@ void sonix::pause( const std::string& alias )
       std::cout <<"[snx] NOTIFY: startAPI return 0, changing API back to stub" << std::endl;
       changeAPI("stub");
    }
-
+   
+   
+   
    // load all sound data
    mImplementation->bindAll();
 }
