@@ -54,14 +54,23 @@ DPP_ABI_SETUP
 # Ensure that a version of Perl greater than or equal to 5.004 is available.
 DPP_PERL_VER(5.004)
 
+dnl ignore the nasty paths appended by the config scripts...
+saveCXXFLAGS="$CXXFLAGS"
+saveINCLUDES="$INCLUDES"
+
 # -----------------------------------------------------------------------------
 # Checks for libraries.
 # -----------------------------------------------------------------------------
 VPR_PATH(0.4.1, , AC_MSG_ERROR(*** VPR required for sonix***))
 VRJUGGLER_PATH(1.1.91, , AC_MSG_ERROR(*** VR Juggler Math required for sonix ***))
 #CXXFLAGS="$VRJ_CXXFLAGS $VPR_CXXFLAGS $CXXFLAGS"
-CXXFLAGS="-I${VJ_BASE_DIR}/include -I${VPR_BASE_DIR}/include $CXXFLAGS"
 
+dnl ignore the nasty paths appended by the config scripts...
+CXXFLAGS="$saveCXXFLAGS"
+INCLUDES="-I${VJ_BASE_DIR}/include -I${VPR_BASE_DIR}/include  $saveINCLUDES"
+if test "x$PLATFORM" = "xIRIX" ; then
+   INCLUDES="-I${VPR_BASE_DIR}/include/boost/compatibility/cpp_c_headers $INCLUDES"
+fi
 
 DPP_BASIC_PROGS($PLATFORM, $OS_TYPE)
 
@@ -305,7 +314,7 @@ fi
 dnl -------------------------------------------------------------
 dnl external stuff (like sample apps, also for those who use sonix-config)....
 dnl -------------------------------------------------------------
-sample_application_includes="-I\$(SNX_BASE_DIR)/include $INCLUDES"
+sample_application_includes="-I\${SNX_BASE_DIR}/include $INCLUDES"
 sample_application_ldflags="$LDFLAGS"
 if test "x$dpp_os_type" = "xWin32" ; then
    snx_ldflags_compiler="/link /libpath:\$prefix/lib"
@@ -329,7 +338,7 @@ fi
 dnl ===================================================
 dnl  Just extra stuff here (non-sonic stuff)
 dnl ===================================================
-snx_extra_cxxflags="$VRJ_CXXFLAGS $VPR_CXXFLAGS"
+snx_extra_cxxflags=""
 snx_extra_include_dirs=''
 snx_extra_ldflags="$APP_EXTRA_LIBS_BEGIN"
 snx_extra_libs="$LDFLAGS $VPR_LIBS $VRJ_LIBS $LIBS $APP_EXTRA_LIBS_END"
