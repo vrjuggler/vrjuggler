@@ -281,33 +281,15 @@ int PinchGloveStandalone::mReadRecordsFromHardware(const int& rec_max_len, unsig
         if ( (buf[0] == START_BYTE_DATA) || (buf[0] == START_BYTE_DATA_TS) || (buf[0] == START_BYTE_TEXT))
 		{
             records[numbytes++] = buf[0];
-			t1 = clock();
-			t2 = clock();
-
-			if (t1 > t2)
-			{
-                t1 = t2;
-				t2 = clock();
-			}
             do
             {
                 written=0;
                 port->read(&records[numbytes], 1,written);
                 numbytes += written;
-                if (t1 > t2)
-				{
-                    t1 = t2;
-				    t2 = clock();
-				}
-            }while ( (records[numbytes-written] != END_BYTE) && ((clock_t)t2 - (clock_t)t1 < CLOCKS_PER_SEC));
-        }
-        if (t1 > t2)
-		{
-           t1 = t2;
-		   t2 = clock();
+            }while ( (records[numbytes-written] != END_BYTE));
         }
         //vpr::System::usleep(150000);
-    }
+	}
     return numbytes;
 }
 
