@@ -151,7 +151,7 @@ vpr::ReturnStatus SelectorImplSIM::select (vpr::Uint16& numWithEvents,
 
    numWithEvents = 0;
 
-   for ( i = mPollDescs.begin(); i != mPollDescs.end(); i++ )
+   for ( i = mPollDescs.begin(); i != mPollDescs.end(); ++i )
    {
       // We have to do this every time to insure that a previous event is not
       // "reselected".
@@ -207,7 +207,7 @@ std::vector<SelectorImplSIM::SimPollDesc>::iterator SelectorImplSIM::getHandle (
 
    for ( std::vector<SimPollDesc>::iterator i=mPollDescs.begin();
          i != mPollDescs.end();
-         i++ )
+         ++i )
    {
       if ( (*i).fd == handle )
       {
