@@ -213,6 +213,7 @@ public class ConfigDefinitionRepositoryEditor
                                                      "untitled",
                                                      "",
                                                      1,
+                                                     new ArrayList(),
                                                      "",
                                                      categories,
                                                      new ArrayList());
