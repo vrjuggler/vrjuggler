@@ -523,32 +523,25 @@ AC_OUTPUT(jccl-config
           config/jccl/Makefile
           config/jccl/Makefile.inc
           config/jccl/Config/Makefile
-          editorgui/Makefile
-          editorgui/Makefile.inc
+          editors/Makefile
+          editors/Makefile.inc
           net/Makefile
           net/Makefile.inc
           net/jccl/Makefile
           net/jccl/Makefile.inc
           net/jccl/Net/Makefile
-          perfmonitor/Makefile
-          perfmonitor/Makefile.inc
-          perfmonitor/jccl/Makefile
-          perfmonitor/jccl/Makefile.inc
-          perfmonitor/jccl/PerfMonitor/Makefile
           rtrc/Makefile
           rtrc/Makefile.inc
           rtrc/jccl/Makefile
           rtrc/jccl/Makefile.inc
           rtrc/jccl/RTRC/Makefile
-          test/Makefile
-          test/TestSuite/Makefile
-          test/TestSuite/test.defs.mk
-          test/TestSuite/java/Makefile
-          test/TestSuite/TestCases/Makefile
+          perfmonitor/Makefile
+          perfmonitor/Makefile.inc
+          perfmonitor/jccl/Makefile
+          perfmonitor/jccl/Makefile.inc
+          perfmonitor/jccl/PerfMonitor/Makefile
           tools/Makefile
           tools/ConfigUpdater/Makefile
-          vjcontrol/Makefile
-          vjcontrol/Makefile.inc
           mtree/JCCL.data.dist
           mtree/JCCL.include.dist
           mtree/JCCL.install.dist

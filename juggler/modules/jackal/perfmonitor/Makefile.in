@@ -69,25 +69,25 @@ INSTALL_FILES			=
 # -----------------------------------------------------------------------------
 # Java-related setup
 # -----------------------------------------------------------------------------
-JDOM_JAR	= @JDOM_JAR@
-CLASSPATH	= $(JDOM_JAR)$(JCPS)$(topdir)/config$(JCPS)$(topdir)/net$(JCPS)$(topdir)/vjcontrol
-
-PERFMONITOR_PKG		= org.vrjuggler.jccl.perfmonitor
-PERFMONITOR_DIR		= $(subst .,/,$(PERFMONITOR_PKG))
-PERFMONITOR_SRCS		= $(patsubst $(srcdir)/%,%,$(wildcard $(srcdir)/$(PERFMONITOR_DIR)/*.java))
-PERFMONITOR_CLASSES	= $(PERFMONITOR_SRCS:.java=.class)
-
-JAVA_SRCS = $(PERFMONITOR_SRCS)
-JARS		 = jccl_perfmonitor.jar
-
-# List the packages for which JavaDoc documentation will be generated.
-DOC_PKGS		= $(PERFMONITOR_PKG)
-webroot		= $(HOME)/public_html/jugglerweb
-instdir		= jccl/perfmonitor/1.0
-doc_prefix	= $(webroot)/$(instdir)
-DOC_ROOT		= programmer.reference.java
-
-JAVA_AFTERBUILD = jars
+#JDOM_JAR	= @JDOM_JAR@
+#CLASSPATH	= $(JDOM_JAR)$(JCPS)$(topdir)/config$(JCPS)$(topdir)/net$(JCPS)$(topdir)/vjcontrol
+#
+#PERFMONITOR_PKG		= org.vrjuggler.jccl.perfmonitor
+#PERFMONITOR_DIR		= $(subst .,/,$(PERFMONITOR_PKG))
+#PERFMONITOR_SRCS		= $(patsubst $(srcdir)/%,%,$(wildcard $(srcdir)/$(PERFMONITOR_DIR)/*.java))
+#PERFMONITOR_CLASSES	= $(PERFMONITOR_SRCS:.java=.class)
+#
+#JAVA_SRCS = $(PERFMONITOR_SRCS)
+#JARS		 = jccl_perfmonitor.jar
+#
+## List the packages for which JavaDoc documentation will be generated.
+#DOC_PKGS		= $(PERFMONITOR_PKG)
+#webroot		= $(HOME)/public_html/jugglerweb
+#instdir		= jccl/perfmonitor/1.0
+#doc_prefix	= $(webroot)/$(instdir)
+#DOC_ROOT		= programmer.reference.java
+#
+#JAVA_AFTERBUILD = jars
 
 include $(MKPATH)/dpp.compile.mk
 
@@ -156,53 +156,53 @@ $(LIBDIR)/$(JCCL_PERFMONITOR_LIB_DYNAMIC) $(LIBDIR)/$(JCCL_PERFMONITOR_PROF_LIB_
 # -----------------------------------------------------------------------------
 # Duplicate from dpp.obj.mk
 # -----------------------------------------------------------------------------
-java: do-beforebuild
-ifdef BEFOREBUILD
-	@$(MAKE) $(BEFOREBUILD)
-endif
-ifdef JAVA_BEFOREBUILD
-	@$(MAKE) $(JAVA_BEFOREBUILD)
-endif
-	@$(MAKE) do-java-build OBJDIR=.
-ifdef JAVA_AFTERBUILD
-	@$(MAKE) $(JAVA_AFTERBUILD)
-endif
-
-
+#java: do-beforebuild
+#ifdef BEFOREBUILD
+#	@$(MAKE) $(BEFOREBUILD)
+#endif
+#ifdef JAVA_BEFOREBUILD
+#	@$(MAKE) $(JAVA_BEFOREBUILD)
+#endif
+#	@$(MAKE) do-java-build OBJDIR=.
+#ifdef JAVA_AFTERBUILD
+#	@$(MAKE) $(JAVA_AFTERBUILD)
+#endif
+#
+#
 # -----------------------------------------------------------------------------
 # Extra targets.
 # -----------------------------------------------------------------------------
-jars: $(JARS)
-ifdef GLOBAL_BUILD
-	@$(MKINSTALLDIRS) $(top_srcdir)/bin
-	cp $(JARS) $(top_srcdir)/bin
-endif
-
-jccl_perfmonitor.jar: $(PERFMONITOR_CLASSES)
-	$(JAR) cvf $@ $(PERFMONITOR_DIR)/*.class
-
-docs:
-	$(JDK_HOME)/bin/javadoc -d $(DOC_ROOT) -sourcepath $(srcdir)	\
-          -classpath $(CLASSPATH) $(DOC_PKGS)
-
-# This cannot be named 'install' because Doozer++ already defines that.
-perfmonitor-install:
-	@echo "------------------------------------------------"
-	@echo "Installing the JCCL perfmonitor Java code base"
-	@echo "------------------------------------------------"
-	for jar in $(JARS) ; \
-          do \
-              $(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX) \
-                $(topdir)/perfmonitor/$$jar $(bindir) ; \
-          done
-
-install-docs:
-	$(MKINSTALLDIRS) $(doc_prefix)
-	rm -rf $(doc_prefix)/$(DOC_ROOT)
-	mv $(DOC_ROOT) $(doc_prefix)
-
-CLEAN_FILES	+= $(JARS) $(PERFMONITOR_CLASSES)
-
+#jars: $(JARS)
+#ifdef GLOBAL_BUILD
+#	@$(MKINSTALLDIRS) $(top_srcdir)/bin
+#	cp $(JARS) $(top_srcdir)/bin
+#endif
+#
+#jccl_perfmonitor.jar: $(PERFMONITOR_CLASSES)
+#	$(JAR) cvf $@ $(PERFMONITOR_DIR)/*.class
+#
+#docs:
+#	$(JDK_HOME)/bin/javadoc -d $(DOC_ROOT) -sourcepath $(srcdir)	\
+#          -classpath $(CLASSPATH) $(DOC_PKGS)
+#
+## This cannot be named 'install' because Doozer++ already defines that.
+#perfmonitor-install:
+#	@echo "------------------------------------------------"
+#	@echo "Installing the JCCL perfmonitor Java code base"
+#	@echo "------------------------------------------------"
+#	for jar in $(JARS) ; \
+#          do \
+#              $(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX) \
+#                $(topdir)/perfmonitor/$$jar $(bindir) ; \
+#          done
+#
+#install-docs:
+#	$(MKINSTALLDIRS) $(doc_prefix)
+#	rm -rf $(doc_prefix)/$(DOC_ROOT)
+#	mv $(DOC_ROOT) $(doc_prefix)
+#
+#CLEAN_FILES	+= $(JARS) $(PERFMONITOR_CLASSES)
+#
 ifdef GLOBAL_BUILD
     CLEAN_DIRS	+= $(top_srcdir)/bin
 endif

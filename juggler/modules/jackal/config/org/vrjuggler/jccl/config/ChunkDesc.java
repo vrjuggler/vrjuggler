@@ -31,9 +31,10 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 package org.vrjuggler.jccl.config;
 
+import java.beans.*;
 import java.io.*;
-import java.util.Iterator;
-import java.util.Vector;
+import java.util.*;
+import javax.swing.event.EventListenerList;
 import org.jdom.Element;
 
 /**
@@ -45,10 +46,12 @@ import org.jdom.Element;
  */
 public class ChunkDesc
    implements Cloneable
+            , PropertyChangeListener
 {
    public ChunkDesc(Element root)
    {
       this.mDomElement = root;
+      changeSupport = new PropertyChangeSupport(this);
    }
 
    /**
@@ -58,8 +61,10 @@ public class ChunkDesc
    public ChunkDesc()
    {
       mDomElement = new Element(ConfigTokens.chunk_desc_TOKEN);
-      this.setName("");
+      changeSupport = new PropertyChangeSupport(this);
       this.setToken("");
+      this.setName("");
+      addCategory("Unknown");
    }
 
    /**
@@ -93,7 +98,7 @@ public class ChunkDesc
       // token.
       if ( attr == null || attr.getValue().equals("") )
       {
-         name = mDomElement.getAttribute("token").getValue();
+         name = getToken();
          mDomElement.setAttribute("name", name);
       }
       // Otherwise, just return the current name token.
@@ -110,7 +115,9 @@ public class ChunkDesc
     */
    public final void setName(String newName)
    {
+      String old = getName();
       mDomElement.setAttribute("name", newName);
+      changeSupport.firePropertyChange("name", old, newName);
    }
 
    /**
@@ -118,7 +125,11 @@ public class ChunkDesc
     */
    public final String getToken()
    {
-      return mDomElement.getAttribute("token").getValue();
+      if (mDomElement.getAttribute("token") != null)
+      {
+         return mDomElement.getAttribute("token").getValue();
+      }
+      return null;
    }
 
    /**
@@ -126,7 +137,103 @@ public class ChunkDesc
     */
    public final void setToken(String newToken)
    {
+      String old = getToken();
       mDomElement.setAttribute("token", newToken);
+      changeSupport.firePropertyChange("token", old, newToken);
+   }
+
+   /**
+    * Gets an iterator for the categories in which this ChunkDesc belongs.
+    *
+    * @see #addCategory
+    */
+   public final Iterator getCategories()
+   {
+      Set result = new HashSet();
+
+      Iterator itr = mDomElement.getChildren(ConfigTokens.category_TOKEN).iterator();
+      while (itr.hasNext())
+      {
+         result.add(((Element)itr.next()).getText());
+      }
+
+      return result.iterator();
+   }
+
+   /**
+    * Gets the ith category in which the ChunkDesc belongs.
+    *
+    * @see #addCategory
+    */
+   public final String getCategory(int idx)
+   {
+      Element element = (Element)mDomElement.getChildren(
+                                       ConfigTokens.category_TOKEN).get(idx);
+      return element.getText();
+   }
+
+   /**
+    * Gets the number of categories in which this ChunkDesc belongs.
+    *
+    * @see #addCategory
+    */
+   public final int getNumCategories()
+   {
+      return mDomElement.getChildren(ConfigTokens.category_TOKEN).size();
+   }
+
+   /**
+    * Adds this ChunkDesc to the given category. Categories are defined as
+    * '/'-delimited strings. For example, "Devices" and "Devices/Simulator" are
+    * valid categories where Simulator is a sub-category of Devices.
+    */
+   public final void addCategory(String category)
+   {
+      // Check if this desc is already in the given category
+      List cats = mDomElement.getChildren(ConfigTokens.category_TOKEN);
+      for (Iterator itr = cats.iterator(); itr.hasNext(); )
+      {
+         // Return if this desc is already in the category
+         Element element = (Element)itr.next();
+         if (element.getText().equals(category))
+         {
+            return;
+         }
+      }
+
+      // This desc isn't already in the category, add it
+      Element newCat = new Element(ConfigTokens.category_TOKEN);
+      newCat.setText(category);
+      mDomElement.addContent(newCat);
+      changeSupport.firePropertyChange("category", null, category);
+   }
+
+   /**
+    * Removes this ChunkDesc from the given category.
+    *
+    * @see #addCategory
+    */
+   public final void removeCategory(String category)
+   {
+      boolean removed = false;
+
+      List cats = mDomElement.getChildren(ConfigTokens.category_TOKEN);
+      for (Iterator itr = cats.iterator(); itr.hasNext(); )
+      {
+         // If we found the category, remove it and we're done
+         Element element = (Element)itr.next();
+         if (element.getText().equals(category))
+         {
+            mDomElement.removeContent(element);
+            removed = true;
+         }
+      }
+
+      // Notify listeners if something was actually removed
+      if (removed)
+      {
+         changeSupport.firePropertyChange("category", null, null);
+      }
    }
 
    /**
@@ -160,17 +267,23 @@ public class ChunkDesc
          mDomElement.addContent(help_child);
       }
 
+      String old = help_child.getText();
       help_child.setText(helpText);
+      changeSupport.firePropertyChange("help", null, null);
    }
 
    public void addPropertyDesc(PropertyDesc newPropDesc)
    {
       mDomElement.addContent(newPropDesc.getNode());
+      newPropDesc.addPropertyChangeListener(this);
+      firePropertyDescAdded(newPropDesc);
    }
 
    public void removePropertyDesc(PropertyDesc propDesc)
    {
       mDomElement.removeContent(propDesc.getNode());
+      propDesc.removePropertyChangeListener(this);
+      firePropertyDescRemoved(propDesc);
    }
 
    public Vector getPropertyDescs()
@@ -181,7 +294,9 @@ public class ChunkDesc
 
       while ( i.hasNext() )
       {
-         prop_descs.add(new PropertyDesc((Element)i.next()));
+         PropertyDesc desc = new PropertyDesc((Element)i.next());
+         desc.addPropertyChangeListener(this);
+         prop_descs.add(desc);
       }
 
       return prop_descs;
@@ -210,6 +325,7 @@ public class ChunkDesc
          Element prop_desc_child =
             (Element)mDomElement.getChildren(ConfigTokens.property_desc_TOKEN).get(i);
          prop_desc = new PropertyDesc(prop_desc_child);
+         prop_desc.addPropertyChangeListener(this);
       }
 
       return prop_desc;
@@ -237,6 +353,7 @@ public class ChunkDesc
          if ( token.equals(propDescToken) )
          {
             p = new PropertyDesc(prop_desc_elem);
+            p.addPropertyChangeListener(this);
             break;
          }
       }
@@ -267,7 +384,123 @@ public class ChunkDesc
    }
 
    /**
+    * Called when a property desc contained within this chunk desc has changed.
+    */
+   public void propertyChange(PropertyChangeEvent evt)
+   {
+      PropertyDesc desc = (PropertyDesc)evt.getSource();
+      System.out.println("ChunkDesc.propertyChange src="+desc.getToken()+", prop="+evt.getPropertyName());
+      firePropertyDescChanged(desc);
+//      changeSupport.firePropertyChange(evt.getPropertyName(), null, desc);
+   }
+
+   /**
+    * Adds the given listener to be notified when this chunk desc's properties
+    * change.
+    */
+   public void addPropertyChangeListener(PropertyChangeListener listener)
+   {
+      changeSupport.addPropertyChangeListener(listener);
+   }
+
+   /**
+    * Removes the given listener that was registered to be notified when this
+    * chunk descs's properties change.
+    */
+   public void removePropertyChangeListener(PropertyChangeListener listener)
+   {
+      changeSupport.removePropertyChangeListener(listener);
+   }
+
+   /**
+    * Adds the given listener to be notified when this ChunkDesc has been
+    * modified.
+    */
+   public void addChunkDescListener(ChunkDescListener listener)
+   {
+      listenerList.add(ChunkDescListener.class, listener);
+   }
+
+   /**
+    * Removes the given listener from this ChunkDesc.
+    */
+   public void removeChunkDescListener(ChunkDescListener listener)
+   {
+      listenerList.remove(ChunkDescListener.class, listener);
+   }
+
+   /**
+    * Notifies listeners of this chunk desc that the given contained property
+    * desc has been modified in some way.
+    */
+   protected void firePropertyDescChanged(PropertyDesc desc)
+   {
+      ChunkDescEvent evt = null;
+      Object[] listeners = listenerList.getListenerList();
+      for (int i=listeners.length-2; i>=0; i-=2)
+      {
+         if (listeners[i] == ChunkDescListener.class)
+         {
+            if (evt == null)
+            {
+               evt = new ChunkDescEvent(this, desc);
+            }
+            ((ChunkDescListener)listeners[i+1]).propertyDescChanged(evt);
+         }
+      }
+   }
+
+   /**
+    * Notifies listeners of this chunk desc that the given contained property
+    * desc has been added to this chunk desc.
+    */
+   protected void firePropertyDescAdded(PropertyDesc desc)
+   {
+      ChunkDescEvent evt = null;
+      Object[] listeners = listenerList.getListenerList();
+      for (int i=listeners.length-2; i>=0; i-=2)
+      {
+         if (listeners[i] == ChunkDescListener.class)
+         {
+            if (evt == null)
+            {
+               evt = new ChunkDescEvent(this, desc);
+            }
+            ((ChunkDescListener)listeners[i+1]).propertyDescAdded(evt);
+         }
+      }
+   }
+
+   /**
+    * Notifies listeners of this chunk desc that the given contained property
+    * desc has been removed from this chunk desc.
+    */
+   protected void firePropertyDescRemoved(PropertyDesc desc)
+   {
+      ChunkDescEvent evt = null;
+      Object[] listeners = listenerList.getListenerList();
+      for (int i=listeners.length-2; i>=0; i-=2)
+      {
+         if (listeners[i] == ChunkDescListener.class)
+         {
+            if (evt == null)
+            {
+               evt = new ChunkDescEvent(this, desc);
+            }
+            ((ChunkDescListener)listeners[i+1]).propertyDescRemoved(evt);
+         }
+      }
+   }
+
+   /**
     * The XML DOM element that contains this ChunkDesc's properties.
     */
    private Element mDomElement = null;
+
+   /**
+    * Support for handling property changes and submitting them to listeners.
+    */
+   private PropertyChangeSupport changeSupport = null;
+
+   private EventListenerList listenerList = new EventListenerList();
 }

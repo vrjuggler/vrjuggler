@@ -59,12 +59,12 @@ ifeq ($(BUILD_PROF_CXX), Y)
 endif
 endif
 
-beandir					= $(bindir)/beans
-srcdir					= @srcdir@
-top_srcdir				= @top_srcdir@
+beandir			= $(bindir)/beans
+srcdir			= @srcdir@
+top_srcdir		= @top_srcdir@
 EXTRA_JAVA_SRCS_PATH	= $(srcdir)
-INSTALL					= @INSTALL@
-INSTALL_FILES			=
+INSTALL			= @INSTALL@
+INSTALL_FILES		=
 
 
 # -----------------------------------------------------------------------------
@@ -73,21 +73,21 @@ INSTALL_FILES			=
 JDOM_JAR	= @JDOM_JAR@
 CLASSPATH	= $(JDOM_JAR)
 
-CONFIG_PKG		= org.vrjuggler.jccl.config
-CONFIG_DIR		= $(subst .,/,$(CONFIG_PKG))
-CONFIG_SRCS		= $(patsubst $(srcdir)/%,%,$(wildcard $(srcdir)/$(CONFIG_DIR)/*.java))
-CONFIG_CLASSES = $(CONFIG_SRCS:.java=.class)
+CONFIG_PKG	= org.vrjuggler.jccl.config
+CONFIG_DIR	= $(subst .,/,$(CONFIG_PKG))
+CONFIG_SRCS	= $(patsubst $(srcdir)/%,%,$(wildcard $(srcdir)/$(CONFIG_DIR)/*.java))
+CONFIG_CLASSES	= $(CONFIG_SRCS:.java=.class)
 
-JAVA_SRCS = $(CONFIG_SRCS)
-JARS		 =
-BEANS		 = jccl_config
+JAVA_SRCS 	= $(CONFIG_SRCS)
+JARS		=
+BEANS		= jccl_config
 
 # List the packages for which JavaDoc documentation will be generated.
-DOC_PKGS		= $(CONFIG_PKG)
+DOC_PKGS	= $(CONFIG_PKG)
 webroot		= $(HOME)/public_html/jugglerweb
 instdir		= jccl/config/1.0
 doc_prefix	= $(webroot)/$(instdir)
-DOC_ROOT		= programmer.reference.java
+DOC_ROOT	= programmer.reference.java
 
 JAVA_AFTERBUILD = jars
 
@@ -177,7 +177,13 @@ endif
 jars: $(JARS) $(addsuffix .jar, $(BEANS))
 ifdef GLOBAL_BUILD
 	@$(MKINSTALLDIRS) $(top_srcdir)/bin
-	cp $(JARS) $(addsuffix .jar, $(BEANS)) $(top_srcdir)/bin
+	@$(MKINSTALLDIRS) $(top_srcdir)/bin/beans
+ifneq ($(JARS), )
+	cp $(JARS) $(top_srcdir)/bin
+endif
+ifneq ($(BEANS), )
+	cp $(addsuffix .jar, $(BEANS)) $(top_srcdir)/bin/beans
+endif
 endif
 
 jccl_config.jar: $(CONFIG_CLASSES)

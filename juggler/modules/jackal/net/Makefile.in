@@ -69,27 +69,27 @@ INSTALL_FILES			=
 # -----------------------------------------------------------------------------
 # Java-related setup
 # -----------------------------------------------------------------------------
-JDOM_JAR	= @JDOM_JAR@
-TWEEK_JARS	= @TWEEK_JARS@
-CLASSPATH	= $(JDOM_JAR)$(JCPS)$(topdir)/config$(JCPS)$(topdir)/vjcontrol$(JCPS)$(TWEEK_JARS)
-JAVA_SRC_PATH	= $(top_srcdir)/vjcontrol
-
-NET_PKG		= org.vrjuggler.jccl.net
-NET_DIR		= $(subst .,/,$(NET_PKG))
-NET_SRCS		= $(patsubst $(srcdir)/%,%,$(wildcard $(srcdir)/$(NET_DIR)/*.java))
-NET_CLASSES = $(NET_SRCS:.java=.class)
-
-JAVA_SRCS = $(NET_SRCS)
-JARS		 = jccl_net.jar
-
-# List the packages for which JavaDoc documentation will be generated.
-DOC_PKGS		= $(NET_PKG)
-webroot		= $(HOME)/public_html/jugglerweb
-instdir		= jccl/net/1.0
-doc_prefix	= $(webroot)/$(instdir)
-DOC_ROOT		= programmer.reference.java
-
-JAVA_AFTERBUILD = jars
+#JDOM_JAR	= @JDOM_JAR@
+#TWEEK_JARS	= @TWEEK_JARS@
+#CLASSPATH	= $(JDOM_JAR)$(JCPS)$(topdir)/config$(JCPS)$(topdir)/vjcontrol$(JCPS)$(TWEEK_JARS)
+#JAVA_SRC_PATH	= $(top_srcdir)/vjcontrol
+#
+#NET_PKG		= org.vrjuggler.jccl.net
+#NET_DIR		= $(subst .,/,$(NET_PKG))
+#NET_SRCS		= $(patsubst $(srcdir)/%,%,$(wildcard $(srcdir)/$(NET_DIR)/*.java))
+#NET_CLASSES = $(NET_SRCS:.java=.class)
+#
+#JAVA_SRCS = $(NET_SRCS)
+#JARS		 = jccl_net.jar
+#
+## List the packages for which JavaDoc documentation will be generated.
+#DOC_PKGS		= $(NET_PKG)
+#webroot		= $(HOME)/public_html/jugglerweb
+#instdir		= jccl/net/1.0
+#doc_prefix	= $(webroot)/$(instdir)
+#DOC_ROOT		= programmer.reference.java
+#
+#JAVA_AFTERBUILD = jars
 
 include $(MKPATH)/dpp.compile.mk
 
@@ -158,52 +158,52 @@ $(LIBDIR)/$(JCCL_NET_LIB_DYNAMIC) $(LIBDIR)/$(JCCL_NET_PROF_LIB_DYNAMIC): $(OBJD
 # -----------------------------------------------------------------------------
 # Duplicate from dpp.obj.mk
 # -----------------------------------------------------------------------------
-java: do-beforebuild
-ifdef BEFOREBUILD
-	@$(MAKE) $(BEFOREBUILD)
-endif
-ifdef JAVA_BEFOREBUILD
-	@$(MAKE) $(JAVA_BEFOREBUILD)
-endif
-	@$(MAKE) do-java-build OBJDIR=.
-ifdef JAVA_AFTERBUILD
-	@$(MAKE) $(JAVA_AFTERBUILD)
-endif
-
-
+#java: do-beforebuild
+#ifdef BEFOREBUILD
+#	@$(MAKE) $(BEFOREBUILD)
+#endif
+#ifdef JAVA_BEFOREBUILD
+#	@$(MAKE) $(JAVA_BEFOREBUILD)
+#endif
+#	@$(MAKE) do-java-build OBJDIR=.
+#ifdef JAVA_AFTERBUILD
+#	@$(MAKE) $(JAVA_AFTERBUILD)
+#endif
+#
+#
 # -----------------------------------------------------------------------------
 # Extra targets.
 # -----------------------------------------------------------------------------
-jars: $(JARS)
-ifdef GLOBAL_BUILD
-	@$(MKINSTALLDIRS) $(top_srcdir)/bin
-	cp $(JARS) $(top_srcdir)/bin
-endif
-
-jccl_net.jar: $(NET_CLASSES)
-	$(JAR) cvf $@ $(NET_DIR)/*.class
-
-docs:
-	$(JDK_HOME)/bin/javadoc -d $(DOC_ROOT) -sourcepath $(srcdir)	\
-          -classpath $(CLASSPATH) $(DOC_PKGS)
-
-# This cannot be named 'install' because Doozer++ already defines that.
-net-install:
-	@echo "------------------------------------------------"
-	@echo "Installing the JCCL net Java code base"
-	@echo "------------------------------------------------"
-	for jar in $(JARS) ; \
-          do \
-              $(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX) \
-                $(topdir)/net/$$jar $(bindir) ; \
-          done
-
-install-docs:
-	$(MKINSTALLDIRS) $(doc_prefix)
-	rm -rf $(doc_prefix)/$(DOC_ROOT)
-	mv $(DOC_ROOT) $(doc_prefix)
-
-CLEAN_FILES	+= $(JARS) $(NET_CLASSES)
+#jars: $(JARS)
+#ifdef GLOBAL_BUILD
+#	@$(MKINSTALLDIRS) $(top_srcdir)/bin
+#	cp $(JARS) $(top_srcdir)/bin
+#endif
+#
+#jccl_net.jar: $(NET_CLASSES)
+#	$(JAR) cvf $@ $(NET_DIR)/*.class
+#
+#docs:
+#	$(JDK_HOME)/bin/javadoc -d $(DOC_ROOT) -sourcepath $(srcdir)	\
+#          -classpath $(CLASSPATH) $(DOC_PKGS)
+#
+## This cannot be named 'install' because Doozer++ already defines that.
+#net-install:
+#	@echo "------------------------------------------------"
+#	@echo "Installing the JCCL net Java code base"
+#	@echo "------------------------------------------------"
+#	for jar in $(JARS) ; \
+#          do \
+#              $(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX) \
+#                $(topdir)/net/$$jar $(bindir) ; \
+#          done
+#
+#install-docs:
+#	$(MKINSTALLDIRS) $(doc_prefix)
+#	rm -rf $(doc_prefix)/$(DOC_ROOT)
+#	mv $(DOC_ROOT) $(doc_prefix)
+#
+#CLEAN_FILES	+= $(JARS) $(NET_CLASSES)
 
 ifdef GLOBAL_BUILD
     CLEAN_DIRS	+= $(top_srcdir)/bin
