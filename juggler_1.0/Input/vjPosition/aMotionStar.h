@@ -46,8 +46,6 @@
 
 #define MYPORT 4000 /* Indy port number */
 #define TCP_PORT 6000 /* bird server port */
-#define TRUE 1 /* true value */
-#define FALSE 0 /* false value */
 
 struct SINGLE_BIRD_STATUS {
   unsigned char status;
@@ -260,8 +258,8 @@ struct BIRD_STATUS Bird[120];
 struct HEADER command, *lpCommand;
 struct RSP_GET_STATUS_all RspGetStatAll, *lpRspGetStatAll;
 struct DATAPACKET response, *lpResponse;
-struct sockaddr_in client,server;
-
+struct sockaddr_in server;
+ 
 int s,rtn;
 unsigned  long i,n;
 unsigned int sequenceNumber;
