@@ -59,10 +59,8 @@ public class ConfigContextEdit extends AbstractUndoableEdit
 
    public void undo() throws CannotUndoException 
    {
-      System.out.println("undoing..");
       super.undo();
-      System.out.println("undoing...");
-      
+
       ConfigBroker broker = new ConfigBrokerProxy();
       if (mAddRemove)
       {

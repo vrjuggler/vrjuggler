@@ -52,10 +52,7 @@ public class ConfigElementPropertyEdit extends AbstractUndoableEdit
 
    public void undo() throws CannotUndoException 
    {      
-      System.out.println("undoing..");
       super.undo();
-      System.out.println("undoing...");
-      
       mElement.setProperty(mPropName, mPropIndex, mOldValue);
    }
 
