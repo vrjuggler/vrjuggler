@@ -48,7 +48,8 @@ include @topdir@/make.defs.mk
 beandir			= $(bindir)/beans
 srcdir			= @srcdir@
 top_srcdir		= @top_srcdir@
-EXTRA_SRCS_PATH		= $(srcdir)/../tweek/idl $(srcdir)/tweek
+EXTRA_SRCS_PATH		= $(srcdir)/../tweek/idl
+EXTRA_JAVA_SRCS_PATH	= $(srcdir)/tweek
 INSTALL			= @INSTALL@
 JAVA_IDL_OPTS		= -emitAll -td $(srcdir)
 JAVA_IDL_INCLUDES	= -i $(top_srcdir)
@@ -56,7 +57,9 @@ JAVA_IDL_INCLUDES	= -i $(top_srcdir)
 JDOM_JAR	= @JDOM_JAR@
 CLASSPATH	= $(JDOM_JAR)
 
-IDL_JAVA_FILES	= SubjectManager.java
+IDL_JAVA_FILES	= SubjectManager.java	\
+                  Subject.java		\
+                  Observer.java
 
 JAVA_SRCS	= org/vrjuggler/tweek/Tweek.java			\
                   org/vrjuggler/tweek/beans/BeanCollectionBuilder.java	\
