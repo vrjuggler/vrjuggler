@@ -46,7 +46,7 @@ vjEnvironmentManager::~vjEnvironmentManager() {
 
 
 void vjEnvironmentManager::activate() {
-    //reconfigure();
+    reconfigure();
 
     /* start updaters */
     for (int i = 0; i < updaters.size(); i++) {
@@ -57,6 +57,8 @@ void vjEnvironmentManager::activate() {
     if (configured_to_accept) {
 	acceptConnections();
     }
+    else
+	vjDEBUG(0) << "NOTE: EM not configured to accept connections!!!\n" << vjDEBUG_FLUSH;
 }
 
 
@@ -90,10 +92,13 @@ bool vjEnvironmentManager::acceptConnections() {
     
     if (bind ( listen_socket, (sockaddr*)&sockaddress, 
 	       sizeof (struct sockaddr_in))) {
-	vjDEBUG(1) << "vjEnvironmentManager couldn't open socket\n" 
+	vjDEBUG(0) << "vjEnvironmentManager couldn't open socket\n" 
 		   << vjDEBUG_FLUSH;
 	return false;
     }
+    else
+	vjDEBUG(0) << "vjEnvironmentManager accepting connections on port "
+		   << Port << '\n' << vjDEBUG_FLUSH;
 
     /* now we ought to spin off a thread to do the listening */
     vjThreadMemberFunctor<vjEnvironmentManager>* memberFunctor = 

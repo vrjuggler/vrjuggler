@@ -291,6 +291,5 @@ void vjKernel::setupEnvironmentManager() {
    vjTimeStamp::initialize();
    environmentManager = new vjEnvironmentManager();
    environmentManager->activate();
-   vjDEBUG(0) << "      Environment Manager running & accepting "
-              << "connections\n" << vjDEBUG_FLUSH;
+   vjDEBUG(0) << "      Environment Manager running\n" << vjDEBUG_FLUSH;
 }
