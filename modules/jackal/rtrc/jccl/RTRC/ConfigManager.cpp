@@ -49,31 +49,33 @@ namespace jccl {
 
 
 
-    ConfigManager::ConfigManager() {
+    ConfigManager::ConfigManager() 
+    {
         mPendingCheckCount = 0;
         mLastPendingSize = 0;
-        config_communicator = new XMLConfigCommunicator(this);
+        mConfigCommunicator = new XMLConfigCommunicator(this);
     }
 
     
-    /*virtual*/ ConfigManager::~ConfigManager () {
+    /*virtual*/ ConfigManager::~ConfigManager () 
+    {
         ;
     }
 
 
-
     //-------------------- Pending List Stuff -------------------------------
 
-
     // Add the given chunk db to the pending list as adds
-    void ConfigManager::addPendingAdds (ConfigChunkDB* db) {
+    void ConfigManager::addPendingAdds (ConfigChunkDB* db) 
+    {
         vprASSERT(0 == mPendingLock.test());     // ASSERT: Make sure we don't already have it
         lockPending();
 
         PendingChunk pending;
         pending.mType = PendingChunk::ADD;
         
-        for(ConfigChunkDB::iterator i=db->begin();i!=db->end();i++) {
+        for(ConfigChunkDB::iterator i=db->begin();i!=db->end();i++) 
+        {
             pending.mChunk = (*i);
             mPendingConfig.push_back(pending);
         }
@@ -85,14 +87,16 @@ namespace jccl {
     
 
 
-    void ConfigManager::addPendingRemoves (ConfigChunkDB* db) {
+    void ConfigManager::addPendingRemoves (ConfigChunkDB* db) 
+    {
         vprASSERT(0 == mPendingLock.test());     // ASSERT: Make sure we don't already have it
         lockPending();
 
         PendingChunk pending;
         pending.mType = PendingChunk::REMOVE;
         
-        for(ConfigChunkDB::iterator i=db->begin();i!=db->end();i++) {
+        for(ConfigChunkDB::iterator i=db->begin();i!=db->end();i++) 
+        {
             pending.mChunk = (*i);
             mPendingConfig.push_back(pending);
         }
@@ -111,7 +115,8 @@ namespace jccl {
     }
 
 
-    void ConfigManager::refreshPendingList () {
+    void ConfigManager::refreshPendingList () 
+    {
         vprASSERT (0 == mPendingCountMutex.test());
         mPendingCountMutex.acquire();
         mPendingCheckCount = 0;
@@ -125,7 +130,8 @@ namespace jccl {
     // each time it is called.
     // if it goes pending_repeat_limit calls without
     // changing size, then it returns false until mLastPendingSize changes
-    bool ConfigManager::pendingNeedsChecked() {
+    bool ConfigManager::pendingNeedsChecked() 
+    {
         const int pending_repeat_limit = 3;    // Must be one or greater.  1 means only allow one time of no changes
         int cur_pending_size = 0;
         bool ret_val = false;
@@ -133,19 +139,23 @@ namespace jccl {
         mPendingCountMutex.acquire();
         
         cur_pending_size = mPendingConfig.size();
-        if(cur_pending_size != mLastPendingSize) {
+        if(cur_pending_size != mLastPendingSize) 
+        {
             ret_val = true;                           // Flag it for a check
-            mPendingCheckCount=0;                     // Reset the counter
+            mPendingCheckCount = 0;                     // Reset the counter
             mLastPendingSize = cur_pending_size;      // Keep track of size
         }
-        else if(mPendingCheckCount < pending_repeat_limit) {
+        else if(mPendingCheckCount < pending_repeat_limit)
+        {
             // allowed in at least once [1...pending_repeat_limit]
             mPendingCheckCount++;   // Increment it
                     
-            if(mPendingCheckCount < pending_repeat_limit) {
+            if(mPendingCheckCount < pending_repeat_limit) 
+            {
                 ret_val = true;        // Repeats still allowed
             }
-            else {
+            else 
+            {
                 vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
                     << "ConfigManager::pendingNeedsChecked: Pending list is now\n"
                     << vprDEBUG_FLUSH;
@@ -173,7 +183,8 @@ namespace jccl {
                 ret_val = false;
             }
         }
-        else {
+        else 
+        {
             ret_val = false;
         }
 
@@ -184,7 +195,8 @@ namespace jccl {
 
 
 
-    void ConfigManager::addPending(PendingChunk& pendingChunk) {
+    void ConfigManager::addPending(PendingChunk& pendingChunk)
+    {
         vprASSERT(0 == mPendingLock.test());
         lockPending();
         mPendingConfig.push_back(pendingChunk);
@@ -200,7 +212,8 @@ namespace jccl {
     //! POST: Any chunks in active with dependencies not filled are added to the
     //+       the pending list. (A remove and an add are added to the pending)
     //! RETURNS: The number of lost dependencies found
-    int ConfigManager::scanForLostDependencies() {
+    int ConfigManager::scanForLostDependencies()
+    {
         vprASSERT(0 == mActiveLock.test());        
         // We can't hold the lock upon entry
 
@@ -217,9 +230,10 @@ namespace jccl {
         mActiveLock.release();
 
         // Now test them
-        for(unsigned int i=0;i<chunks.size();i++) {
-            if(!dep_mgr->isSatisfied(chunks[i])) {     // We are not satisfied
-      
+        for(unsigned int i=0;i<chunks.size();i++)
+        {
+            if(!dep_mgr->isSatisfied(chunks[i]))     // We are not satisfied
+            {
                 vprDEBUG_NEXT(vprDBG_ALL,1) << chunks[i]->getProperty("name")
                                             << " type: " << ((std::string)chunks[i]->getType()).c_str()
                                             << " has lost dependencies.\n"
@@ -249,7 +263,8 @@ namespace jccl {
 
 
 
-    void ConfigManager::debugDumpPending(int debug_level) {
+    void ConfigManager::debugDumpPending(int debug_level)
+    {
         vprASSERT(1 == mPendingLock.test());
         vprDEBUG(vprDBG_ALL,debug_level)
             << clrSetNORM(clrGREEN)
@@ -259,7 +274,8 @@ namespace jccl {
         current = getPendingBegin();
         end = getPendingEnd();
         
-        while(current != end) {
+        while(current != end)
+        {
             ConfigChunkPtr cur_chunk = (*current).mChunk;
             
             if((*current).mType == PendingChunk::ADD)
@@ -289,10 +305,10 @@ namespace jccl {
 
         ConfigChunkDB::iterator i;
         for(i=mActiveConfig.begin(); i != mActiveConfig.end();i++)
-            {
-                if(std::string((*i)->getProperty("name")) == chunk_name)
-                    return true;
-            }
+        {
+            if(std::string((*i)->getProperty("name")) == chunk_name)
+               return true;
+        }
         
         return false;     // Not found, so return false
     }
@@ -327,59 +343,65 @@ namespace jccl {
 
     //------------------ DynamicReconfig Stuff ------------------------------
 
-    void ConfigManager::addConfigChunkHandler (ConfigChunkHandler* h) {
-        chunk_handlers.push_back (h);
+    void ConfigManager::addConfigChunkHandler (ConfigChunkHandler* h)
+    {
+        mChunkHandlers.push_back (h);
     }
 
 
-    void ConfigManager::removeConfigChunkHandler (ConfigChunkHandler* h) {
+    void ConfigManager::removeConfigChunkHandler (ConfigChunkHandler* h)
+    {
         std::vector<ConfigChunkHandler*>::iterator it;
-        for (it = chunk_handlers.begin(); it != chunk_handlers.end(); it++) {
-            if (*it == h) {
-                chunk_handlers.erase(it);
+        for (it = mChunkHandlers.begin(); it != mChunkHandlers.end(); it++)
+        {
+            if (*it == h)
+            {
+                mChunkHandlers.erase(it);
                 break;
             }
         }
     }
 
 
-    int ConfigManager::attemptReconfiguration () {
+    int ConfigManager::attemptReconfiguration ()
+    {
         int chunks_processed(0);     // Needs to return this value
-        if (pendingNeedsChecked()) {
+        if (pendingNeedsChecked()) 
+        {
             vprDEBUG_BEGIN(vprDBG_ALL,vprDBG_STATE_LVL) << "ConfigManager::attemptReconfiguration: Examining pending list.\n" << vprDEBUG_FLUSH;
-            std::vector<ConfigChunkHandler*>::iterator it = chunk_handlers.begin();
-            std::vector<ConfigChunkHandler*>::iterator end = chunk_handlers.end();
+            std::vector<ConfigChunkHandler*>::iterator it = mChunkHandlers.begin();
+            std::vector<ConfigChunkHandler*>::iterator end = mChunkHandlers.end();
 
             lockPending();
 
-            for (; it != end; it++) {
+            for (; it != end; it++)
+            {
                 chunks_processed += (*it)->configProcessPending ();
             }
 
             unlockPending();
         }
 
-        if (chunks_processed > 0) {
-            config_communicator->configChanged();
+        if (chunks_processed > 0)
+        {
+            mConfigCommunicator->configChanged();
         }
 
         return chunks_processed;
     }
 
-
-
     enum PendItemResult { SUCCESS, FAILED, NEED_DEPS };
-
-
-
+    
     //------------------ JackalControl Stuff --------------------------------
     
-    /*virtual*/ void ConfigManager::addConnect (Connect *c) {
-        c->addCommunicator (config_communicator);
+    /*virtual*/ void ConfigManager::addConnect (Connect *c)
+    {
+        c->addCommunicator (mConfigCommunicator);
         //addActive (new ConfigChunk(*(c->getConfiguration())));
         addActive (c->getConfiguration());
     }
-    /*virtual*/ void ConfigManager::removeConnect (Connect* c) {
+    /*virtual*/ void ConfigManager::removeConnect (Connect* c)
+    {
         removeActive (c->getConfiguration()->getName());
     }
 

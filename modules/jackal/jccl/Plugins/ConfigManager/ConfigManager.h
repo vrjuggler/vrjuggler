@@ -120,8 +120,7 @@ public:   // ----- PENDING LIST ----- //
      *  Manager will mark the pending list as "stale" if it does not
      *  change for several consecutive calls of attemptReconfiguration.
      *  Call this method when something happens that might allow 
-     *  items on a stale pending list to be processed (e.g. if a
-     *  new Manager is added to the system).
+     *  items on a stale pending list to be processed.
      *  <p>
      *  For example, in VR Juggler, applications (which are 
      *  ConfigChunkHandlers) can be explicitly changed via a vrj::Kernel
@@ -230,16 +229,12 @@ public:   // ----- PENDING LIST ----- //
     { return mPendingConfig.size(); }
 
 
-
 public:   // ----- ACTIVE LIST ----- //
-
-
     /** Checks if active list is empty.
      *  CONCURRENCY: concurrent
      */
     bool isActiveEmpty()
     { return mActiveConfig.isEmpty(); }
-
 
 
     /** Locks the active list.
@@ -348,8 +343,6 @@ public:
     virtual void removeConnect (Connect* c);
 
 
-
-
 private:
     ConfigChunkDB            mActiveConfig;   //: List of current configuration
     std::list<PendingChunk>  mPendingConfig;  //: List of pending configuration
@@ -357,7 +350,7 @@ private:
     vpr::Mutex               mPendingLock;    //: Lock on pending list
     vpr::Mutex               mActiveLock;     //: Lock for current config list
 
-    std::vector<ConfigChunkHandler*> chunk_handlers;
+    std::vector<ConfigChunkHandler*> mChunkHandlers;
 
     // The following variables are used to implement some logic
     // that "stales" the pending list.   (see pendingNeedsChecked)
@@ -365,7 +358,7 @@ private:
     int                      mPendingCheckCount;  //: How many pending checks since last change to pending
     int                      mLastPendingSize;    //: The size of pending at last check
 
-    XMLConfigCommunicator*   config_communicator;
+    XMLConfigCommunicator*   mConfigCommunicator;
 
 
 protected:

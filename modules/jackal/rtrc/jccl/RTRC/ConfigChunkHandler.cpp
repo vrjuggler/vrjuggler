@@ -62,6 +62,7 @@ int ConfigChunkHandler::configProcessPending()
    vprDEBUG_BEGIN(vprDBG_ALL,vprDBG_STATE_LVL) << typeid(*this).name() << "::configProcessPending: Entering: "
                               << num_pending_before << " items pending.\n" << vprDEBUG_FLUSH;
 
+// XXX: This is not thread safe now. (bad things can happen)
 //    if(lockIt)
 //       cfg_mgr->lockPending();     // We need to lock the pending first
 //    {
