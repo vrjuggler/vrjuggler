@@ -51,9 +51,8 @@ CliGuard::CliGuard()
    if ( NULL == mState->mDomain )
    {
       mState->mDomain = mono_domain_create();
+      mono_thread_attach(mState->mDomain);
    }
-
-   mono_thread_attach(mState->mDomain);
 }
 
 CliGuard::~CliGuard()
