@@ -33,19 +33,20 @@
 #ifndef _VRJ_GL_WINDOW_WIN32_H_
 #define _VRJ_GL_WINDOW_WIN32_H_
 
+#include <vrj/vrjConfig.h>
+
 #pragma warning(disable:4786)  // identifier truncated to 255 characters in the debug information
 
 #include <GL/gl.h>
 
-#include <gadget/Devices/Eventwindow/EventwindowWin32.h>
+#include <gadget/Devices/EventWindow/EventWindowWin32.h>
 
-#include <vrj/vrjConfig.h>
 #include <vrj/Draw/OGL/GlWindow.h>
 
 namespace vrj
 {
 
-class VJ_CLASS_API GlWindowWin32 : public GlWindow, public gadget::EventwindowWin32
+class VJ_CLASS_API GlWindowWin32 : public GlWindow, public gadget::EventWindowWin32
 {
 public:
    GlWindowWin32();

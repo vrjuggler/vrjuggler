@@ -314,8 +314,8 @@ void GlWindowWin32::config( vrj::Display* disp )
       gadget::EventWindowWin32::config(event_win_chunk);
 
       // Custom configuration
-      gadget::EventWindowWin32::m_width = GlWindowWin32::window_width;
-      gadget::EventWindowWin32::m_height = GlWindowWin32::window_height;
+      gadget::EventWindowWin32::mWidth = GlWindowWin32::window_width;
+      gadget::EventWindowWin32::mHeight = GlWindowWin32::window_height;
 
       mWeOwnTheWindow = false;      // Event window device does not own window
 
@@ -403,7 +403,7 @@ bool GlWindowWin32::setPixelFormat(HDC hDC)
    /* Defaults. */
    pfd.dwFlags = PFD_SUPPORT_OPENGL | PFD_DRAW_TO_WINDOW | PFD_DOUBLEBUFFER;
 
-   if ( mDisplay->inStereo() )
+   if ( mVrjDisplay->inStereo() )
    {
       in_stereo = true;
       pfd.dwFlags |= PFD_STEREO;
@@ -414,7 +414,7 @@ bool GlWindowWin32::setPixelFormat(HDC hDC)
    }
 
    int red_size(8), green_size(8), blue_size(8), alpha_size(8), db_size(32);
-   jccl::ConfigChunkPtr gl_fb_chunk = mDisplay->getGlFrameBufferConfig();
+   jccl::ConfigChunkPtr gl_fb_chunk = mVrjDisplay->getGlFrameBufferConfig();
 
    if ( gl_fb_chunk.get() != NULL )
    {
@@ -466,7 +466,7 @@ bool GlWindowWin32::setPixelFormat(HDC hDC)
    }
 
    vprDEBUG(vrjDBG_DISP_MGR, vprDBG_CONFIG_LVL)
-      << "Frame buffer visual settings for " << mDisplay->getName()
+      << "Frame buffer visual settings for " << mVrjDisplay->getName()
       << ": R:" << red_size << " G:" << green_size << " B:" << blue_size
       << " A:" << alpha_size << " DB:" << db_size << std::endl
       << vprDEBUG_FLUSH;
@@ -494,7 +494,7 @@ bool GlWindowWin32::setPixelFormat(HDC hDC)
          format that doesn't have stereo even if it was requested
          so we need to make sure that if stereo was selected, we
          got it. */
-      if ( mDisplay->inStereo() )
+      if ( mVrjDisplay->inStereo() )
       {
          if ( !(mMatch->dwFlags & PFD_STEREO) )
          {
