@@ -53,6 +53,7 @@ KERNEL_SRCS	:= vjAPI.cpp			\
                    vjFrustum.cpp		\
                    vjKernel.cpp			\
                    vjProjection.cpp		\
+		   vjQueuedConfigChunkHandler.cpp \
                    vjSGISystemFactory.cpp	\
                    vjStreamLock.cpp		\
                    vjTrackedWallProjection.cpp	\

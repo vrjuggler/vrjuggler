@@ -131,7 +131,7 @@ std::vector<std::string> vjConfigChunk::getDependencies() const
          std::vector<std::string> child_deps;
          for (j = 0; j < props[i]->getNum(); j++)
          {
-            // if we ever have cyclic dependencies, we're in trouble
+            // XXX: if we ever have cyclic dependencies, we're in trouble
             child_deps = ((vjConfigChunk*)props[i]->getValue(j))->getDependencies();
             dep_list.insert (dep_list.end(), child_deps.begin(), child_deps.end());
          }
@@ -175,7 +175,7 @@ std::vector<vjVarValue*> vjConfigChunk::getAllProperties(const std::string& prop
 	    vjVarValue* new_var_val = new vjVarValue(getProperty(property,i));
 	    ret_val.push_back(new_var_val);
 	}
-    
+
     return ret_val;
 }
 

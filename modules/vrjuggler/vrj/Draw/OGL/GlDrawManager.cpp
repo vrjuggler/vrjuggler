@@ -183,9 +183,10 @@ void vjGlDrawManager::addDisplay(vjDisplay* disp)
 
    //	-- Create a window for new display
    //	-- Store the window in the wins vector
-   vjGlWindow* new_win = vjKernel::instance()->getSysFactory()->getGLWindow();   // Create gl window
+      // Create the gl window object.  NOTE: The glPipe actually "creates" the opengl window and context later
+   vjGlWindow* new_win = vjKernel::instance()->getSysFactory()->getGLWindow();
    new_win->config(disp);                                            // Configure it
-   mWins.push_back(new_win);                                          // Add to our local window list
+   mWins.push_back(new_win);                                         // Add to our local window list
 
    // -- Create any needed Pipes & Start them
    int pipe_num = new_win->getDisplay()->getPipe();    // Find pipe to add it too

@@ -42,8 +42,7 @@ class vjApp;
     // Config stuff
 #include <Config/vjConfigChunkDB.h>
 #include <Config/vjChunkDescDB.h>
-#include <Sync/vjGuardedQueue.h>
-
+#include <Kernel/vjQueuedConfigChunkHandler.h>
 
 //-------------------------------------------------------
 //: Main control class for all vj applications.
@@ -58,7 +57,7 @@ class vjApp;
 // Date: 9-7-97
 //-------------------------------------------------------
 //!PUBLIC_API:
-class vjKernel
+class vjKernel : public vjQueuedConfigChunkHandler
 {
 public:
 
@@ -103,11 +102,15 @@ public:  // --- Config interface --- //
       return mInitialChunkDB;
    }
 
-   //: Add a group of config chunks
-   void configAdd(vjConfigChunkDB* chunkDB);
+protected:
+   // --- Process adds from the queue ---- //
+   //: Take care of adding a single chunk
+   //! RETVAL: true - Chunk has been added
+   bool processChunkAdd(vjConfigChunk* chunk);
 
-   //: Remove a group of config chunks
-   void configRemove(vjConfigChunkDB* chunkDB);
+   //: Take care of removing a single chunk
+   //! RETVAL: true - Chunk has been added
+   bool processChunkRemove(vjConfigChunk* chunk);
 
 protected:     // Config chunks local to kernel
    bool configKernelHandle(vjConfigChunk* chunk);
@@ -130,14 +133,6 @@ protected:
    //! ARGS: _app - If NULL, stops current application
    //! NOTE: This can only be called from the kernel thread
    void changeApplication(vjApp* _app);
-
-   //: Takes any chunks in add queue and adds them to running system
-   //! NOTE: This can only be called from the kernel thread
-   void processConfigAddQueue();
-
-   //: Takes any chunks in remove queue and reconfigures system by removing them
-   //! NOTE: This can only be called from the kernel thread
-   void processConfigRemoveQueue();
 
 protected:      // --- STARTUP ROUTINES --- //
          // --- Manager Initial setup functions ---- //
@@ -210,10 +205,6 @@ protected:
    vjConfigChunkDB*  mInitialChunkDB;     //: Initial chunks added to system before it is started
    //vjSemaphore       mRuntimeConfigSema;  //: Protects run-time config.  Only when this semaphore
                                           //+ is acquired can run-time config occur
-
-   vjGuardedQueue<vjConfigChunkDB*> mConfigAddQueue;      //: A queue of chunDB's to reconfig from
-   vjGuardedQueue<vjConfigChunkDB*> mConfigRemoveQueue;   //: A queue of chunkDB's to remove
-
    /// Shared Memory stuff
    vjMemPool*       sharedMemPool;
 
