@@ -245,14 +245,7 @@ AC_TYPE_SIZE_T
 # -----------------------------------------------------------------------------
 # Checks for library functions.
 # -----------------------------------------------------------------------------
-AC_CHECK_FUNCS(socket strcasecmp)
-
-## All of the above function checks may not be necessary ...
-
-_vjsave_LIBS="$LIBS"
-AC_CHECK_FUNC([gethostbyname], [SOCKET_LIB=''],
-    [AC_CHECK_LIB([socket], [gethostbyname], [SOCKET_LIB='-lsocket'])])
-LIBS="${_vjsave_LIBS}"
+AC_CHECK_FUNCS(strcasecmp)
 
 # -----------------------------------------------------------------------------
 # Miscellaneous checks.
