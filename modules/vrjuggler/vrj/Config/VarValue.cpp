@@ -6,6 +6,7 @@
 #include <Kernel/vjDebug.h>
 
 vjVarValue* vjVarValue::invalid_instance = NULL;
+std::string vjVarValue::using_invalid_msg = "Using T_INVALID VarValue - something's messed up";
 
 vjVarValue::vjVarValue (vjVarValue &v) {
     *this = v;
@@ -104,24 +105,37 @@ bool vjVarValue::operator == (const vjVarValue& v) {
 
 
 vjVarValue::operator int() {
-    if ((type == T_INT) || (type == T_BOOL))
+    switch (type) {
+    case T_INT:
 	return val.intval;
-    if (type != T_INVALID)
-	cerr << "Type error in cast!\n";
-    return 0;
+    case T_BOOL:
+	return val.boolval;
+    case T_FLOAT:
+	return (int)val.floatval;
+    case T_INVALID:
+	cerr << using_invalid_msg << endl;
+	return 0;
+    default:
+	cerr << "vjVarValue: type error in cast to int" << endl;
+	return 0;
+    }
 }
 
 
 
 vjVarValue::operator vjConfigChunk*() {
-    if ((type == T_EMBEDDEDCHUNK))
+    switch (type) {
+    case T_EMBEDDEDCHUNK:
+	// we need to make a copy because if the value is deleted, it deletes 
+	// its embeddedchunk
 	return new vjConfigChunk (*val.embeddedchunkval);
-    // we need to make a copy because if the value is deleted, it deletes 
-    // its embeddedchunk
-    //return val.embeddedchunkval;
-    if (type != T_INVALID)
-	cerr << "Type error in cast!\n";
-    return NULL;
+    case T_INVALID:
+	cerr << using_invalid_msg << endl;
+	return NULL;
+    default:
+	cerr << "vjVarValue: type error in cast to vjConfigChunk*" << endl;
+	return NULL;
+    }
 }
 
 
@@ -129,127 +143,165 @@ vjVarValue::operator vjConfigChunk*() {
 vjVarValue::operator bool() {
     if ((type == T_BOOL))
 	return val.boolval;
-    if (type != T_INVALID)
-	cerr << "Type error in cast!\n";
-    return 0;
+    switch (type) {
+    case T_BOOL:
+	return val.boolval;
+    case T_INT:
+	return (bool)val.intval;
+    case T_FLOAT:
+	return (bool)val.floatval;
+    case T_INVALID:
+	cerr << using_invalid_msg << endl;
+	return false;
+    default:
+	cerr << "vjVarValue: type error in cast to bool!" << endl;
+	return false;
+    }
 }
 
 
 
 vjVarValue::operator float () {
-    if ((type == T_FLOAT) || (type == T_DISTANCE))
+    switch (type) {
+    case T_FLOAT:
 	return val.floatval;
-    if (type != T_INVALID)
-	cerr << "Type error in cast!\n";
-    return 0.0;
+    case T_INT:
+	return (float)val.floatval;
+    case T_BOOL:
+	return (float)val.boolval;
+    case T_INVALID:
+	cerr << using_invalid_msg << endl;
+	return 0.0f;
+    default:
+	cerr << "vjVarValue: type error in case to float." << endl;
+	return 0.0f;
+    }
 }
 
 
 
 char* vjVarValue::cstring () {
-    if ((type == T_STRING) || (type == T_CHUNK)) {
+    switch (type) {
+    case T_STRING:
+    case T_CHUNK:
 	return strdup (val.strval.c_str());
+    case T_INVALID:
+	cerr << using_invalid_msg << endl;
+	return strdup("");
+    default:
+	cerr << "vjVarValue: type error in cstring()." << endl;
+	return strdup("");
     }
-    if (type != T_INVALID)
-	cerr << "Type error in cast to char*!" << endl;
-    return strdup("");
 }
 
+
+
 vjVarValue::operator std::string () {
-    if ((type == T_STRING) || (type == T_CHUNK)) {
-      return val.strval;
+    switch (type) {
+    case T_STRING:
+    case T_CHUNK:
+	return val.strval;
+    case T_INVALID:
+	cerr << using_invalid_msg << endl;
+	return (std::string)"";
+    default:
+	cerr << "vjVarValue: type error in cast to std::string." << endl;
+	return (std::string)"";
     }
-    if (type != T_INVALID) {
-	cerr << "Type error in cast to std::string!" << endl;
-	//vjASSERT(false);
-    }
-    return (std::string)"";
 }
 
 
 
 vjVarValue &vjVarValue::operator = (int i) {
-    if (type == T_INT) {
+    switch (type) {
+    case T_INT:
 	val.intval = i;
-	return *this;
+	break;
+    case T_FLOAT:
+	val.floatval = (float)i;
+	break;
+    case T_BOOL:
+	val.boolval = (bool)i;
+	break;
+    default:
+	cerr << "Type error in assignment!" << endl;
     }
-    else if (type == T_BOOL) {
-	val.boolval = i;
-	return *this;
-    }
-    else {
-	cerr << "Type error in assignment!\n";
-	return *this;
-    }
+    return *this;
 }
 
 
 
 vjVarValue& vjVarValue::operator = (bool i) {
-    if (type == T_BOOL) {
+    switch (type) {
+    case T_INT:
+	val.intval = (int)i;
+	break;
+    case T_BOOL:
 	val.boolval = i;
-	return *this;
+	break;
+    default:
+	cerr << "Type error in assignment!" << endl;
     }
-    else if (type == T_INT) {
-	val.intval = i;
-	return *this;
-    }
-    else {
-	cerr << "Type error in assignment!\n";
-	return *this;
-    }
+    return *this;
 }
 
 
 
 vjVarValue &vjVarValue::operator = (float i) {
-    if ((type == T_FLOAT) || (type == T_DISTANCE)) {
+    switch (type) {
+    case T_FLOAT:
+    case T_DISTANCE:
 	val.floatval = i;
-	return *this;
-    } else {
-	cerr << "Type error in assignment!\n";
-	return *this;
+	break;
+    default:
+	cerr << "Type error in assignment!" << endl;
     }
+    return *this;
 }
 
 
 
 vjVarValue &vjVarValue::operator = (std::string s) {
-    if ((type == T_STRING) || (type == T_CHUNK)) {
-      val.strval = s;
-	return *this;
-    } else {
-	cerr << "Type error in assignment!\n";
-	return *this;
+    switch (type) {
+    case T_STRING:
+    case T_CHUNK:
+	val.strval = s;
+	break;
+    default:
+	cerr << "Type error in assignment!" << endl;
     }
+    return *this;
 }
 
 
 
 vjVarValue &vjVarValue::operator = (char *s) {
-    if ((type == T_STRING) || (type == T_CHUNK)) {
-      val.strval = s;
-	return *this;
-    } else {
-	cerr << "Type error in assignment!\n";
-	return *this;
+    switch (type) {
+    case T_STRING:
+    case T_CHUNK:
+	val.strval = s;
+	break;
+    default:
+	cerr << "Type error in assignment!" << endl;
     }
+    return *this;
 }
 
 
 vjVarValue &vjVarValue::operator = (vjConfigChunk *s) {
-    if (type == T_EMBEDDEDCHUNK) {
+    switch (type) {
+    case T_EMBEDDEDCHUNK:
 	if (val.embeddedchunkval)
 	    delete val.embeddedchunkval;
 	if (s)
 	    val.embeddedchunkval = new vjConfigChunk (*s);
 	else
 	    val.embeddedchunkval = NULL;
-	return *this;
-    } else {
-	cerr << "Type error in assignment!\n";
-	return *this;
+	break;
+    default:
+	cerr << "Type error in assignment!" << endl;
     }
+    return *this;
 }
 
 
