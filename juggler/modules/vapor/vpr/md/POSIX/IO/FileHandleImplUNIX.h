@@ -132,7 +132,7 @@ public:
            << "ERROR: Cannot get handle for UNIX file descriptor with NSPR!\n";
        return NULL;
 #else
-       return m_handle->m_fdesc;
+       return m_fdesc;
 #endif
     }
 
