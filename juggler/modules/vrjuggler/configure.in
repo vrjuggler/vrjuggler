@@ -152,7 +152,7 @@ AC_ARG_ENABLE(performance,
 
 dnl # Set default values for these before checking $abi_type.  Currently,
 dnl # these are for non-SGI platforms.
-ABI='32'
+ABI=''
 LIBBITSUF=''
 
 dnl # Based on the value of $abi_type, set $ABI for later use and the Makefile
