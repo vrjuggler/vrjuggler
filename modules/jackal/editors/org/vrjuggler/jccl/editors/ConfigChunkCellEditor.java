@@ -100,27 +100,35 @@ public class ConfigChunkCellEditor
                                                 boolean selected,
                                                 int row, int col)
    {
-      // Assume that the table model is an instance of ConfigChunkTableModel and
-      // get the property description for the row this cell is in
-      ConfigChunkTableModel dataModel = (ConfigChunkTableModel)table.getModel();
-      PropertyDesc desc = dataModel.getPropertyDesc(row);
-
-      // If the value is an embedded ConfigChunk, just use a button
-      if (value instanceof ConfigChunk)
+      // The first row is always the chunk name
+      if (row == 0)
       {
-         int base_row = dataModel.getRowFor(desc);
-         int value_idx = row - base_row;
-         ConfigChunk chunk = (ConfigChunk)value;
-         String name = chunk.getName();
-//         String name = chunk.getProperty(desc.getToken(), value_idx).getEmbeddedChunk().getName();
-         JButton btn = new JButton(name);
-         btn.setMargin(new Insets(0,0,0,0));
-         btn.setBorderPainted(false);
-         return btn;
+         editor = PropertyEditorManager.findEditor(value.getClass());
       }
+      else
+      {
+         // Assume that the table model is an instance of ConfigChunkTableModel and
+         // get the property description for the row this cell is in
+         ConfigChunkTableModel dataModel = (ConfigChunkTableModel)table.getModel();
+         PropertyDesc desc = dataModel.getPropertyDesc(row);
 
-      // Get the property editor for the given value
-      editor = findEditor(value, desc);
+         // If the value is an embedded ConfigChunk, just use a button
+         if (value instanceof ConfigChunk)
+         {
+            int base_row = dataModel.getRowFor(desc);
+            int value_idx = row - base_row;
+            ConfigChunk chunk = (ConfigChunk)value;
+            String name = chunk.getName();
+//            String name = chunk.getProperty(desc.getToken(), value_idx).getEmbeddedChunk().getName();
+            JButton btn = new JButton(name);
+            btn.setMargin(new Insets(0,0,0,0));
+            btn.setBorderPainted(false);
+            return btn;
+         }
+
+         // Get the property editor for the given value
+         editor = findEditor(value, desc);
+      }
       if (editor == null)
       {
          // We still can't find an editor for the value! Our lives have failed
