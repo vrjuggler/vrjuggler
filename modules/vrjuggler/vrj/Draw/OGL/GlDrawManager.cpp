@@ -492,6 +492,16 @@ void GlDrawManager::drawSimulator(SimViewport* sim_vp)
 
    glPushAttrib( GL_ENABLE_BIT | GL_COLOR_BUFFER_BIT | GL_LIGHTING_BIT);
    {
+      // Test to see wethere there is lighting active
+      GLboolean lighting_on, light0_on;
+      glGetBooleanv(GL_LIGHTING, &lighting_on);
+      glGetBooleanv(GL_LIGHT0, &light0_on);
+
+      bool use_lighting_in_sim = (lighting_on == GL_TRUE);
+
+      vprDEBUG(vprDBG_ALL,0) << "lighting on: " << ((lighting_on == GL_TRUE)?"Y":"N")
+                             << "  light0_on:" << ((light0_on == GL_TRUE)?"Y":"N") << std::endl << vprDEBUG_FLUSH;
+
       //-----------------set up materials....
       float mat_ambient[] = {0.1f, 0.1f, 0.1f, 1.0f};
       float mat_shininess[] = {50.0f};
@@ -511,7 +521,9 @@ void GlDrawManager::drawSimulator(SimViewport* sim_vp)
 
       // Draw base coordinate axis
       ///*
-      glDisable(GL_LIGHTING);
+      if(lighting_on)
+         glDisable(GL_LIGHTING);
+
       glPushMatrix();
          gmtl::Vec3f x_axis(2.0f,0.0f,0.0f); gmtl::Vec3f y_axis(0.0f, 2.0f, 0.0f);
          gmtl::Vec3f z_axis(0.0f, 0.0f, 2.0f); gmtl::Vec3f origin(0.0f, 0.0f, 0.0f);
@@ -523,7 +535,8 @@ void GlDrawManager::drawSimulator(SimViewport* sim_vp)
       glPopMatrix();
       //*/
 
-      glEnable(GL_LIGHTING);
+      if(use_lighting_in_sim)
+         glEnable(GL_LIGHTING);
       // Draw the user's head
       glPushMatrix();
          glMultMatrixf(sim_vp->getHeadPos().mData);
@@ -551,11 +564,13 @@ void GlDrawManager::drawSimulator(SimViewport* sim_vp)
       // Draw the wand
       glPushMatrix();
          glMultMatrixf(sim_vp->getWandPos().mData);
-         mDrawWandFunctor->draw();         
+         mDrawWandFunctor->draw();
       glPopMatrix();
 
        // Draw a The display surfaces
-      glDisable(GL_LIGHTING);
+      if(use_lighting_in_sim)
+         glDisable(GL_LIGHTING);
+
       glPushMatrix();
          drawProjections(sim_vp->shouldDrawProjections(), sim_vp->getSurfaceColor());
       glPopMatrix();
