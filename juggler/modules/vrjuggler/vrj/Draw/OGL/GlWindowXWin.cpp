@@ -407,7 +407,7 @@ void GlWindowXWin::checkEvents()
 {
    if(true == mAreKeyboardDevice)
    {
-      KeyboardXWin::sample();    /** Sample from the xwindow (calls HandleEvents() )*/
+      gadget::KeyboardXWin::sample();    /** Sample from the xwindow (calls HandleEvents() )*/
    }
 
 }
