@@ -45,7 +45,9 @@ public:
 
         jccl::ChunkFactory::instance()->loadDescs ("${JCCL_BASE_DIR}/share/data/jccl-chunks.desc");
 
-        chunkdb.load ("TestFiles/IncludesTest/xml_desc_include.config");
+
+        std::string file_path(TESTFILES_PATH);
+        chunkdb.load (file_path + "IncludesTest/xml_desc_include.config");
 
         //        jccl::ChunkFactory::instance()->loadDescs ("TestFiles/xml_desc_include.desc");
 
@@ -70,7 +72,9 @@ public:
         jccl::ConfigChunkPtr chunk;
         jccl::ConfigChunkDB chunkdb;
 
-        chunkdb.load ("TestFiles/IncludesTest/standard_desc_include.config");
+
+        std::string file_path(TESTFILES_PATH);
+        chunkdb.load (file_path + "IncludesTest/standard_desc_include.config");
 
         // get a desc from a file that was included w/ relative path
         desc = jccl::ChunkFactory::instance()->getChunkDesc ("standard_included_desc1");
@@ -85,7 +89,9 @@ public:
         jccl::ConfigChunkPtr chunk;
         jccl::ConfigChunkDB chunkdb;
 
-        chunkdb.load ("TestFiles/IncludesTest/xml_chunk_include.config");
+
+        std::string file_path(TESTFILES_PATH);
+        chunkdb.load (file_path + "IncludesTest/xml_chunk_include.config");
 
         chunk = chunkdb.getChunk ("chunk_using_included_desc");
         CPPUNIT_ASSERT (chunk.get() != NULL);
