@@ -90,8 +90,8 @@
          <value label="Accumulation Buffer Alpha Channel Size" defaultvalue="1"/>
       </property>
       <property valuetype="boolean" variable="false" name="fsaa_enable">
-         <help>Toggles the use of full-screen anti-aliasing.  This may not be available with all OpenGL implementations.</help>
-         <value label="Enable FSAA" defaultvalue="false"/>
+         <help>Toggles the use of multisampling (also known as full-screen anti-aliasing).  This may not be available with all OpenGL implementations.</help>
+         <value label="Enable Multisampling" defaultvalue="false"/>
       </property>
       <upgrade_transform>
          <xsl:stylesheet xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:jconf="http://www.vrjuggler.org/jccl/xsd/3.0/configuration" version="1.0">
