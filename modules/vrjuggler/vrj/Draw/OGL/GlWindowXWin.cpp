@@ -283,7 +283,7 @@ void vjGlxWindow::config(vjDisplay* _display)
    }
 
    // Create hardware group
-#ifdef VJ_OS_SGI
+#ifdef VJ_OS_IRIX
    for(i=0;i<glx_wins.size();i++)      // For each window
    {
       if(glx_wins[i] != this)    // If not me
