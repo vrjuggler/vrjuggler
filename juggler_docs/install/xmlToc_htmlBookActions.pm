@@ -77,16 +77,16 @@ sub popFolder_action ($$$$$) {
 
     if ( $whatAmI =~ /rootfolder/ ) {
         # Insert header.
-        $$xmlToc_data_out =~ s|</head>|\n${InstallWeb::html_header}\n</head>\n|is;
+        $$xmlToc_data_out =~ s|</head>|\n${InstallWeb::html_header}\n</head>\n|ois;
 
         # CSS header insert.  If there is </head> then insert before it.
-        if ( $$xmlToc_data_out =~ s/<\/head>/\n${InstallWeb::css_header}\n<\/head>\n/is )
+        if ( $$xmlToc_data_out =~ s/<\/head>/\n${InstallWeb::css_header}\n<\/head>\n/ois )
         {
 #           print "added css (</head>)...";
         }
         # If not, then look for <html> and insert after it with
         # <head>...</head> around it.
-        elsif ( $$xmlToc_data_out =~ s/<html>/<html>\n<head>\n${InstallWeb::css_header}\n<\/head>\n/is )
+        elsif ( $$xmlToc_data_out =~ s/<html>/<html>\n<head>\n${InstallWeb::css_header}\n<\/head>\n/ois )
         {
 #           print "added css (<html>)...";
         }
@@ -131,7 +131,7 @@ sub popFolder_action ($$$$$) {
         }
 
         # Insert footer.
-        $$xmlToc_data_out =~ s/<\/body>/\n${InstallWeb::html_footer}\n<\/body>/is;
+        $$xmlToc_data_out =~ s/<\/body>/\n${InstallWeb::html_footer}\n<\/body>/ois;
     }
 }
 
@@ -232,7 +232,7 @@ sub loadHTML ($$$) {
 
         # If this file is flagged as an appendix, move its contents to the
         # book's appendices.
-        if ( $body =~ /${html_comment_begin}\s+install-web\s+appendix\s*${html_comment_end}/is ) {
+        if ( $body =~ /${html_comment_begin}\s+install-web\s+appendix\s*${html_comment_end}/ois ) {
             push(@{$book{'appendices'}}, "$body");
         }
         # Otherwise, put the file contents in the chapter array.
@@ -269,7 +269,7 @@ sub filterHTML ($) {
     else {
         ############### search and replace (tags and includes) ################
         #
-        if ( $$file_contents =~ /${html_comment_begin}\s*?$ignore_includes_str\s*?${html_comment_end}/is )
+        if ( $$file_contents =~ /${html_comment_begin}\s*?$ignore_includes_str\s*?${html_comment_end}/ois )
         {
             print "[ignoring includes...]";
         }
@@ -277,7 +277,7 @@ sub filterHTML ($) {
             InstallWeb::processIncludesRecursive($file_contents);
         }
 
-        if ( $$file_contents =~ /${html_comment_begin}\s*?$ignore_tags_str\s*?${html_comment_end}/is )
+        if ( $$file_contents =~ /${html_comment_begin}\s*?$ignore_tags_str\s*?${html_comment_end}/ois )
         {
             print "[ignoring tags...]";
         }
