@@ -80,41 +80,49 @@ public:
       return !(*this == d);
    }
 
-   /** Returns name.
-    * @return "" if not set.
-    */
+   /** Returns the human-readable name of this definition. */
    std::string getName() const;
    
-   /** Returns token.
-    * @return "" if not set.
+   /**
+    * Returns the token (a valid XML element identifier) of this definition.
+    * This corresponds to the ID of a config element.
     */
    std::string getToken() const;
 
-   /** Gets the version of this definition.
+   /**
+    * Gets the version of this definition.
     * @return 0 if not set.
     */
    unsigned int getVersion() const;
-   
-   /** Returns help text.
-    * @return "" if not set.
-    */
+
+   /** Returns the help text for this definition. */
    std::string getHelp() const;
 
    /**
-    * Test to see if we derive from the given ConfigDefinition.
+    * Tests to see if we derive from the named ConfigDefinition.  This is used
+    * in the context of config definition inheritance.
+    *
+    * @param token A token for the ConfigDefinition that may be our parent.
+    *
+    * @return true is returned if the named ConfigDefinition type is a parent
+    *         of this definition.  false is returned otherwise.
     */
    bool isParent(const std::string& token) const;
    
-   /** Gets a PropertyDefinitoin from self with matching token.
-    * @param   token Non-NULL token for the desired jccl::PropertyDefinition.
-    * @returns pdesc Pointer to propertydesc in self with matching token.
+   /**
+    * Gets a PropertyDefinition object from self with matching token.
+    *
+    * @param token Non-NULL token for the desired jccl::PropertyDefinition.
+    *
+    * @returns A copy of a PropertyDefinition object in self whose token
+    *          matches the given value.
     */
    PropertyDefinition getPropertyDefinition(const std::string& token) const;
 
-   /** Get all the PropertyDefinitions from the ConfigDefinition */
+   /** Gets all the PropertyDefinition objects from self. */
    std::vector<PropertyDefinition> getAllPropertyDefinitions() const;
 
-   /** Set the node.  Do any specialized processing necessary. */
+   /** Sets the node.  Do any specialized processing necessary. */
    void setNode(cppdom::NodePtr node)
    {
       mNode = node;

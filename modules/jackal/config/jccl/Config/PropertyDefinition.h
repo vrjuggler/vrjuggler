@@ -44,13 +44,20 @@ namespace jccl
 /**
  * Describes properties.  Holds all the information describing a property.
  * Instances of this class are read-only objects.
+ *
+ * Properties are composed to make up a config element.  Each property has
+ * zero or more values depending on how it is defined.  The basic type of all
+ * the values for a given property will be the same.
+ *
+ * @see VarType
  */
 class JCCL_CLASS_API PropertyDefinition
 {
 public:
 
-   /** Constructor.
-    * Initialized with default values.
+   /**
+    * Constructor.  This property definition is initialized with default
+    * values.
     */
    PropertyDefinition();
 
@@ -79,15 +86,26 @@ public:
    {}
 #endif
 
-   /** Returns the token string for the described property. */
+   /**
+    * Returns the token (a valid XML element identifier) of this property.
+    */
    std::string getToken() const;
 
+   /** Returns the human-readable name of this property. */
    std::string getName() const;
 
+   /** Returns the help text for this property. */
    std::string getHelp() const;
 
+   /**
+    * Returns an identifier that indicates the type of the values of this
+    * property.
+    */
    VarType getVarType() const;
 
+   /**
+    * Returns the number of values allowed for this property.
+    */
    int getNumAllowed() const;
 
    /**
