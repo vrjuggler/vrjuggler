@@ -855,7 +855,7 @@ protected:
                                      const vpr::Interval timeout = vpr::Interval::NoTimeout) = 0;
 
    // Friends
-   friend class vpr::BaseIOStatsStrategy;    // Need it to be able to call the protected read_i, readn_i, and write_i memebers
+   friend class vpr::BaseIOStatsStrategy<>;    // Need it to be able to call the protected read_i, readn_i, and write_i memebers
 
 protected:
    /// The name of the I/O device.
