@@ -2,7 +2,7 @@
 
 NAME =  programmer.guide
 MK_PATH=../../../../doc/
-default: html pdf
+default: html pdf chunk-html
 
 docs: html chunk-html pdf
 install-docs: install-html install-chunk-html install-pdf
@@ -18,7 +18,6 @@ INSTALL_FILES=	$(webroot)/base_style.css *.png
 # comment these out if you don't want to use renderX
 XSLT_TOOL=Saxon 
 FO_VERSION=XEP
-
 
 #########################################################
 #EXTRA_XALAN_FO_PARAMS= -PARAM draft.watermark.image " " -PARAM draft.watermark.image.frag " " -PARAM background-image " "
