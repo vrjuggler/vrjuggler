@@ -647,15 +647,20 @@ BOOL waitForShort( COMM_PORT *port, short *num )
     union {
        char bytes[2];
        short word;
-    } bytesToWord;
+    } bytesToWord, endian;
 
-#if defined REVERSE_BYTE_ORDER
-    if( !waitForChar( port, &bytesToWord.bytes[1] ))  return FALSE;
-    if( !waitForChar( port, &bytesToWord.bytes[0] ))  return FALSE;
-#else
-    if( !waitForChar( port, &bytesToWord.bytes[0] ))  return FALSE;
-    if( !waitForChar( port, &bytesToWord.bytes[1] ))  return FALSE;
-#endif
+    endian.word = 256;
+
+    /* Big endian. */
+    if ( endian.bytes[0] ) {
+        if( !waitForChar( port, &bytesToWord.bytes[1] ))  return FALSE;
+        if( !waitForChar( port, &bytesToWord.bytes[0] ))  return FALSE;
+    }
+    /* Little endian. */
+    else {
+        if( !waitForChar( port, &bytesToWord.bytes[0] ))  return FALSE;
+        if( !waitForChar( port, &bytesToWord.bytes[1] ))  return FALSE;
+    }
 
     *num = bytesToWord.word;
 
