@@ -201,7 +201,7 @@ public class ControlPanelView
 
    public boolean openRequested()
    {
-      return true;
+      return mToolbar.doOpen();
    }
 
    public boolean canSave()
