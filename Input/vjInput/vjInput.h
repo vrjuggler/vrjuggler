@@ -144,7 +144,7 @@ public:
      * It hasn't been resolved as to whether these functions should be removed
      */
    //@{
-   void SetPort(char* serialPort);
+   void SetPort(const char* serialPort);
    char* GetPort();
    void SetBaudRate(int baud);
    int  GetBaudRate() { return baudRate;}
