@@ -1,0 +1,1367 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?xml-stylesheet href="../../../../../../docs/stylesheet/docbook_ab.css" type="text/css"?>
+<!DOCTYPE book PUBLIC "-//OASIS//DTD DocBook XML V4.1.2//EN" "http://www.oasis-open.org/docbook/xml/4.1.2/docbookx.dtd">
+<book>
+   <bookinfo>
+      <title>Tweek</title>
+      <subtitle>The Programmer's Guide</subtitle>
+      <authorgroup>
+         <author>
+            <firstname>Patrick</firstname>
+            <surname>Hartling</surname>
+         </author>
+      </authorgroup>
+      <releaseinfo>0.0.1</releaseinfo>
+      <pubdate>$Date$</pubdate>
+   </bookinfo>
+   <preface>
+      <title>Prefrace</title>
+      <para>This book is the programmer's guide for Tweek. The main focus is how to use the features and capabilities of Tweek to enable cross-platform Java <glossterm linkend="gloss.gui">graphical user interfaces</glossterm> (GUIs) to communicate with C++ applications.</para>
+   </preface>
+   <part>
+      <title>Introduction</title>
+      <chapter id="intro.tweek.chapter">
+         <title>Tweek</title>
+         <para>Programmers using Tweek must first understand what it is and what at does, at least at a conceptual level. Tweek has two parts: a Java <glossterm linkend="gloss.api">API</glossterm> and a C++ API. The two provide very distinct functionality, but they share a common bond through the use of remote method calls on shared objects. Objects defined in the C++ programming language can be accessed by objects defined in the Java programming language. This functionality is achieved through the use of remote method calls.</para>
+         <para>Some readers may be familiar with remote procedure calls (RPC), a remote programming system that uses the procedural programming paradigm. Remote method calls differ primarily through the use of the object-oriented programming paradigm. Tweek is implemented in two object-oriented languages and thus lends itself very well to a system implementing remote method calls.</para>
+         <para>In the remainder of this chapter, we present a high-level description of the Tweek C++ API. The Java API design is much more complex and is not included in this revision. Most users of Tweek need to know much more about the C++ side of Tweek than the Java side.</para>
+         <section id="intro.design.section">
+            <title>C++ API Design Overview</title>
+            <para>The heart of the Tweek software system implements a subject/observer pattern <xref linkend="Gam95"/>. This pattern is used to define the relationship between the Java GUI (observer) and the C++ application (subject). Within this section, we explain how the subject and observer are used. Moving beyond the subject/observer pattern, we also explain the <firstterm>Subject Manager</firstterm><indexterm>
+                  <primary>Subject Manager</primary>
+               </indexterm> and the <firstterm>CORBA Manager</firstterm><indexterm>
+                  <primary>CORBA Manager</primary>
+               </indexterm>.</para>
+            <section>
+               <title>Subject</title>
+               <indexterm>
+                  <primary>subject</primary>
+                  <secondary>design and use</secondary>
+               </indexterm>
+               <para>The subjects in Tweek are part of the C++ applications. The communication interface is defined by the subject interface. An observer is attached to a subject. Whenever the state of a subject changes, it notifies all of its attached observers.</para>
+               <para>The Tweek C++ API defines the basic subject interface (<classname>tweek::Subject</classname><indexterm>
+                     <primary>classes</primary>
+                     <secondary>tweek::Subject</secondary>
+                  </indexterm>) that implements the subject pattern <xref linkend="Gam95"/>. Users of the Tweek C++ API derive from the base implementation and extend it by adding their own interface methods. This extension is twofold. First, an inteface must be defined using the <glossterm linkend="gloss.idl">Interface Definition Language</glossterm> (IDL)<indexterm>
+                     <primary>IDL</primary>
+                  </indexterm>. Then it must be implemented in C++ code. (Refer to <xref linkend="intro.corba.idl.section"/> for more information about IDL in Tweek.)</para>
+            </section>
+            <section>
+               <title>Observer</title>
+               <indexterm>
+                  <primary>observer</primary>
+                  <secondary>design and use</secondary>
+               </indexterm>
+               <para>The observers in Tweek are part of the Java GUI. They observe the state of the remote subjects and provide a visual rendering of that state.</para>
+               <para>Observers do not define interfaces for the observers. As with subjects, the Tweek C++ API defines a basic observer interface (<classname>tweek::Observer</classname>). There is no <quote>standard</quote> observer implementation, however. Observers must correspond directly with subjects. Observer implementations simply inherit from the basic observer class and implement the <methodname>update()</methodname> method. Other interface extensions can be added, of course, but an implementation of <methodname>update()</methodname> is required.</para>
+            </section>
+            <section>
+               <title>CORBA Manager</title>
+               <indexterm>
+                  <primary>CORBA Manager</primary>
+                  <secondary>design and use</secondary>
+               </indexterm>
+               <para></para>
+            </section>
+            <section>
+               <title>Subject Manager</title>
+               <indexterm>
+                  <primary>Subject Manager</primary>
+                  <secondary>design and use</secondary>
+               </indexterm>
+               <para></para>
+            </section>
+         </section>
+         <section id="intro.corba.section">
+            <title>CORBA</title>
+            <para></para>
+            <section id="intro.corba.idl.section">
+               <title>Interface Definition Language</title>
+               <para>The <glossterm linkend="gloss.idl">Interface Definition Language</glossterm> (IDL)<indexterm>
+                     <primary>IDL</primary>
+                  </indexterm> is ..</para>
+            </section>
+            <section>
+               <title>Supported Languages</title>
+               <para></para>
+               <section>
+                  <title>C++</title>
+                  <para></para>
+               </section>
+               <section>
+                  <title>Java</title>
+                  <para></para>
+               </section>
+               <section>
+                  <title>Others</title>
+                  <para></para>
+               </section>
+            </section>
+         </section>
+      </chapter>
+      <chapter id="intro.javabeans.chapter">
+         <title>JavaBeans</title>
+         <para></para>
+         <section>
+            <title>Bean Types</title>
+            <para>There are four types of Beans that may be loaded by the Tweek Java GUI.</para>
+         </section>
+         <section>
+            <title>XML</title>
+            <indexterm>
+               <primary>Bean descriptions</primary>
+               <secondary>using XML</secondary>
+            </indexterm>
+            <para>All JavaBeans loaded by the Tweek Java GUI are describe by at least one <glossterm linkend="gloss.xml.main">XML</glossterm> file<indexterm>
+                  <primary>XML</primary>
+               </indexterm>. The XML file can contain information about many Beans or about a single Bean.</para>
+         </section>
+      </chapter>
+   </part>
+   <part>
+      <title>Programming</title>
+      <preface>
+         <title>Programming Basics</title>
+         <para>In the following chapters, we present the basic information needed to start programming with Tweek. There will be discussion covering IDL, C++, Java, and CORBA. To use Tweek effectively, a good understand of C++ and Java is required. The IDL aspect of Tweek is minimal, and programmers familiar with basic object-oriented concepts should be able to understand IDL code easily. Discussion related to CORBA is based on the brief introduction given in <xref linkend="intro.corba.section"/>. The Tweek Java and C++ APIs are designed to hide most CORBA details. Whenever possible, references are given to good sources of information on all of the aforementioned topics.</para>
+      </preface>
+      <chapter id="prog.idl.chapter">
+         <title>IDL</title>
+         <para>In this chapter, we present the basic information needed to define interfaces that will be used by Tweek. This is not an introduction to IDL programming. Readers are referred to <xref linkend="Hen99"/>.</para>
+      </chapter>
+      <chapter id="prog.cplusplus.chapter">
+         <title>C++</title>
+         <para></para>
+      </chapter>
+      <chapter id="prog.java.chapter">
+         <title>Java</title>
+         <para></para>
+         <section>
+            <title>Java Libraries</title>
+            <para>The Tweek Java API is broken up into a collection of Java class libraries, each packaged in a unique JAR file. Programmers can choose the library or libraries they need when writing Java code that uses Tweek. It is possible to write JavaBeans that do not use any of the Tweek Java libraries, but such Beans may not be very full-featured. On the other hand, because the Tweek Java GUI is capable of loading any JavaBean, there is no reason that a fully functional Bean must be written to take advantage of Tweek services and utilities.</para>
+            <section id="bean.library.section">
+               <title>Bean Library</title>
+               <indexterm>
+                  <primary>Java libraries</primary>
+                  <secondary>Bean</secondary>
+               </indexterm>
+               <para></para>
+            </section>
+            <section id="event.library.section">
+               <title>Event Library</title>
+               <indexterm>
+                  <primary>Java libraries</primary>
+                  <secondary>Event</secondary>
+               </indexterm>
+               <para></para>
+            </section>
+            <section id="gui.library.section">
+               <title>GUI Library</title>
+               <indexterm>
+                  <primary>Java libraries</primary>
+                  <secondary>GUI</secondary>
+               </indexterm>
+               <para></para>
+            </section>
+            <section id="network.library.section">
+               <title>Network Library</title>
+               <indexterm>
+                  <primary>Java libraries</primary>
+                  <secondary>Network</secondary>
+               </indexterm>
+               <para></para>
+            </section>
+         </section>
+      </chapter>
+      <chapter id="prog.all.chapter">
+         <title>Putting It All Together</title>
+         <para>Based on the information presented in the previous chapters, we can combine all of the information into an example. In this chapter, we present the step-by-step process for using the Tweek Java and C++ APIs.</para>
+         <section id="collab.slider.section">
+            <title>Collaborative Slider</title>
+            <para>In this example, we explain how to develop a simple Tweek interface. The goal is to have a <quote>collaborative</quote> slider in a Java GUI component. The value displayed by the slider is retained by a C++ application so that multiple independent sliders can show the same value. The steps explained here are highly representative of the normal steps to be followed when using the Tweek Java and C++ APIs. The structure of the following sections lays out the order of the steps taken. An example makefile that goes along with the code presented in this section can be found in <xref linkend="SliderSubject.makefile.section"/> of <xref linkend="makefile.appendix"/>. The full source for the examples presented in this section can be found in <filename>$TWEEK_BASE_DIR/share/test/NetworkTestBean</filename>.</para>
+            <section>
+               <title>The Subject</title>
+               <para>To begin, the subject interface must be defined in IDL and implemented in C++. The interface will be <quote>compiled</quote> into Java and C++ code.</para>
+               <section>
+                  <title>Creating the Interface</title>
+                  <para>Creating an IDL interface involves writing an IDL file. For this example, we will be storing an integer variable in a C++ servant. The Java GUIs will need to read and write the value, so we need two methods: <methodname>getValue()</methodname> and <methodname>setValue()</methodname>. The type being passed between <glossterm linkend="gloss.orb">ORBs</glossterm> will be <type>long</type>, a 32-bit integer. Depending on the target language, this will map to the corresponding type of the same size.</para>
+                  <example id="SliderSubject.idl.example">
+                     <title>SliderSubject.idl</title>
+                     <programlistingco>
+                        <areaspec>
+                           <areaset coords="" id="cpp.protection">
+                              <area coords="1" id="cpp.ifndef.line"/>
+                              <area coords="2" id="cpp.define.line"/>
+                              <area coords="13" id="cpp.endif.line"/>
+                           </areaset>
+                           <area coords="4" id="tweek.subject.idl.include"/>
+                           <area coords="6" id="idl.module.block"/>
+                           <area coords="8" id="idl.interface.decl"/>
+                           <areaset coords="" id="SliderSubject.methods">
+                              <area coords="10" id="SliderSubject.setValue.decl"/>
+                              <area coords="11" id="SliderSubject.getValue.decl"/>
+                           </areaset>
+                        </areaspec>
+                        <programlisting linenumbering="numbered">#ifndef _NETWORK_TEST_SLIDER_SUBJECT_IDL_
+#define _NETWORK_TEST_SLIDER_SUBJECT_IDL_
+
+#include &lt;tweek/idl/Subject.idl&gt;
+
+module networktest
+{
+   interface SliderSubject : tweek::Subject
+   {
+      void setValue(in long val);
+      long getValue();
+   };
+};
+
+#endif</programlisting>
+                        <calloutlist>
+                           <callout arearefs="cpp.protection">
+                              <para>IDL files are run through the C preprocessor so that they may include external files. For protection of the file contents, it must be enclosed in the traditional preprocessor protection block. This is exactly what is done in C/C++ header files.</para>
+                           </callout>
+                           <callout arearefs="tweek.subject.idl.include">
+                              <para>All Tweek subject IDL files must include <filename>tweek/idl/Subject.idl</filename>. This is required so that the interface being defined can inherit from <classname>tweek::Subject</classname>.</para>
+                           </callout>
+                           <callout arearefs="idl.module.block">
+                              <para>Typically, using a module to contain the interface is recommended. Using a module defines a Java package and a C++ namespace (named <literal>networktest</literal> in this case).</para>
+                           </callout>
+                           <callout arearefs="idl.interface.decl">
+                              <para>The definition of the subject interface must inherit from <classname>tweek::Subject</classname>. If this is not done, there is no way that the subject interface will plug into the Tweek Subject Manager.</para>
+                           </callout>
+                           <callout arearefs="SliderSubject.methods">
+                              <para>This simple interface has only two functions: <methodname>setValue()</methodname> and <methodname>getValue()</methodname>.</para>
+                           </callout>
+                        </calloutlist>
+                     </programlistingco>
+                  </example>
+                  <para>The file <filename>SliderSubject.idl</filename> must be <quote>compiled</quote> by an <glossterm linkend="gloss.idl-compiler">IDL compiler</glossterm>. For use with Tweek, the interface must be compiled into Java and C++ code. The Java code will be used solely for communicating with CORBA <classname>networktest.SliderSubject</classname> references. the C++ code will be extended to provide an implementation of the <classname>networktest::SliderSubject</classname> interface. (The implementation will be a CORBA <glossterm linkend="gloss.servant">servant</glossterm> object to which references will be made by remote code.)</para>
+               </section>
+               <section>
+                  <title>Implementing the Interface in C++</title>
+                  <para>After running an IDL compiler to generate the stub CORBA code, the interface must be implemented. In particular, there will be pure virtual methods in <filename>SliderSubject.h</filename> that must be implemented. The implementing class will be the CORBA <glossterm linkend="gloss.servant">servant</glossterm> holding the actual data being visualized in the Java GUI slider.</para>
+                  <example id="SliderSubjectImpl.h.example">
+                     <title>SliderSubjectImpl.h</title>
+                     <programlistingco>
+                        <areaspec>
+                           <areaset coords="" id="SliderSubjectImpl.h.includes">
+                              <area coords="8 68" id="SliderSubjectImpl.h.includes.subjimpl"/>
+                              <area coords="9 68" id="SliderSubjectImpl.h.includes.obs"/>
+                           </areaset>
+                           <area coords="10 68" id="SliderSubjectImpl.h.include.subj"/>
+                           <area coords="13 68" id="SliderSubjectImpl.h.namespace"/>
+                           <area coords="21 68" id="SliderSubjectImpl.h.class.decl"/>
+                           <areaset coords="" id="SliderSubjectImpl.h.virtuals">
+                              <area coords="39 68" id="SliderSubjectImpl.h.setValue"/>
+                              <area coords="44 68" id="SliderSubjectImpl.h.getValue"/>
+                           </areaset>
+                           <area coords="53 68" id="SliderSubjectImpl.h.hack"/>
+                           <area coords="59 68" id="SliderSubjectImpl.h.mValue"/>
+                        </areaspec>
+                        <programlisting linenumbering="numbered">#ifndef _SLIDER_SUBJECT_IMPL_H_
+#define _SLIDER_SUBJECT_IMPL_H_
+
+#include &lt;tweek/tweekConfig.h&gt;
+
+#include &lt;vector&gt;
+
+#include &lt;tweek/CORBA/SubjectImpl.h&gt;
+#include &lt;tweek/CORBA/Observer.h&gt;
+#include &lt;SliderSubject.h&gt;
+
+
+namespace networktest
+{
+
+/**
+ * This class is an extension to the base Tweek SubjectImpl class.  It uses
+ * multiple inheritance with that class and with the generated CORBA class
+ * corresponding to the IDL for SliderSubject.
+ */
+class SliderSubjectImpl : public POA_networktest::SliderSubject,
+                          public tweek::SubjectImpl
+{
+public:
+   SliderSubjectImpl (void)
+      : tweek::SubjectImpl(), mValue(0)
+   {
+      /* Do nothing. */ ;
+   }
+
+   virtual ~SliderSubjectImpl (void)
+   {
+      /* Do nothing. */ ;
+   }
+
+   /**
+    * Sets this subject's internal value.
+    */
+   virtual void setValue(long value);
+
+   /**
+    * Returns this subject's internal value.
+    */
+   virtual long getValue(void);
+
+   /**
+    * This overriding method is needed so that the correct type is returned
+    * when the _this() method is invoked.  Without this method, an object of
+    * type tweek::Subject_ptr would be returned.
+    *
+    * XXX: It may be possible to remove this requirement in the future.
+    */
+   networktest::SliderSubject_ptr _this (void)
+   {
+      return POA_networktest::SliderSubject::_this();
+   }
+
+private:
+   long mValue;   /**&lt; Our value */
+};
+
+} // End of networktest namespace
+
+
+#endif /* _SLIDER_SUBJECT_IMPL_H_ */</programlisting>
+                        <calloutlist>
+                           <callout arearefs="SliderSubjectImpl.h.includes">
+                              <para>These files will always be included by implementations of Tweek subject derived classes. The first contains the declaration for the basic Tweek subject implementation. The second contains the C++ code generated from the Tweek <filename>Observer.idl</filename> file.</para>
+                           </callout>
+                           <callout arearefs="SliderSubjectImpl.h.include.subj">
+                              <para>This header is generated by the IDL compiler from <filename>SliderSubject.idl</filename>. In particular, it defines the class from which <classname>networktest::SliderSubjectImpl</classname> must inherit.</para>
+                           </callout>
+                           <callout arearefs="SliderSubjectImpl.h.namespace">
+                              <para>In <filename>SliderSubject.idl</filename>, shown in <xref linkend="SliderSubject.idl.example"/>, the interface is in the <literal>networktest</literal> module. In the C++ implementation code, the module name corresponds to a namespace.</para>
+                           </callout>
+                           <callout arearefs="SliderSubjectImpl.h.class.decl">
+                              <para>The interface implementation class must inherit from the IDL-generated class <classname>POA_networktest::SliderSubject</classname> and from <classname>tweek::SubjectImpl</classname>.</para>
+                           </callout>
+                           <callout arearefs="SliderSubjectImpl.h.virtuals">
+                              <para><classname>POA_networktest::SliderSubject</classname> defines two pure virtual methods that must be implemented. These correspond to the methods in <filename>SliderSubject.idl</filename>.</para>
+                           </callout>
+                           <callout arearefs="SliderSubjectImpl.h.hack">
+                              <para>As of this writing, all subject implementations must contain an overriding version of the <methodname>_this()</methodname> method. This is due to the use of multiple inheritance. Note the return type and the <literal>return</literal> statement. These will vary for each subject implementation.</para>
+                           </callout>
+                           <callout arearefs="SliderSubjectImpl.h.mValue">
+                              <para>This is the actual value being stored by the C++ servant.</para>
+                           </callout>
+                        </calloutlist>
+                     </programlistingco>
+                  </example>
+                  <para>In <filename>SliderSubjectImpl.h</filename>, the most important parts to note are the use of multiple inheritance, the declarations of the <classname>SliderSubject</classname> interface methods, and the implementation of <methodname>_this()</methodname>. The implementations of setValue() and getValue() are shown in <xref linkend="SliderSubjectImpl.cpp.example"/>.</para>
+                  <example id="SliderSubjectImpl.cpp.example">
+                     <title>SliderSubjectImpl.cpp</title>
+                     <programlistingco>
+                        <areaspec>
+                           <area coords="2" id="SliderSubjectImpl.cpp.inc"/>
+                           <area coords="10" id="SliderSubjectImpl.cpp.mValue.assign"/>
+                           <area coords="14" id="SliderSubjectImpl.cpp.notify"/>
+                           <area coords="19" id="SliderSubjectImpl.cpp.mValue.return"/>
+                        </areaspec>
+                        <programlisting linenumbering="numbered">#include &lt;vpr/Util/Debug.h&gt;
+#include &lt;SliderSubjectImpl.h&gt;
+
+
+namespace networktest
+{
+
+void SliderSubjectImpl::setValue (long value)
+{
+   mValue = value;
+
+   // Notify any observers that our value has changed.  This is very
+   // important.
+   tweek::SubjectImpl::notify();
+}
+
+long SliderSubjectImpl::getValue ()
+{
+   return mValue;
+}
+
+} // End networktest namespace</programlisting>
+                        <calloutlist>
+                           <callout arearefs="SliderSubjectImpl.cpp.inc">
+                              <para>Include the class declaration file, shown in <xref linkend="SliderSubjectImpl.h.example"/>.</para>
+                           </callout>
+                           <callout arearefs="SliderSubjectImpl.cpp.mValue.assign">
+                              <para>When invoke, the remote caller will pass a <type>long</type> value, and this saves the result into the servant's storage.</para>
+                           </callout>
+                           <callout arearefs="SliderSubjectImpl.cpp.notify">
+                              <para>Because the subject's state has been modified, all attached observers must be notified. This is a very important step that must be taken in this method. Note that it invokes the parent class <methodname>notify()</methodname> method.</para>
+                           </callout>
+                           <callout arearefs="SliderSubjectImpl.cpp.mValue.return">
+                              <para>Observers will invoke this method when requesting the current <varname>mValue</varname>.</para>
+                           </callout>
+                        </calloutlist>
+                     </programlistingco>
+                  </example>
+                  <para></para>
+               </section>
+            </section>
+            <section>
+               <title>The Observer</title>
+               <para>The observer does not define its own specialized IDL interface. Instead, it makes use of the existing Tweek basic observer (<classname>tweek.ObserverPOA</classname> in Java). The method <methodname>notify()</methodname> must be implemented. The remainder of the observer implementation is centered around communication with a <classname>SliderSubject</classname> object reference. All observer code is written in Java. The only observer C++ code is part of the Tweek library, and it is generated by the <glossterm linkend="gloss.idl-compiler">IDL compiler</glossterm>.</para>
+               <section>
+                  <title>Implementing the Observer in Java</title>
+                  <para>For every subect interface defined in IDL, a corresponding oberver class must be written in Java. Without an observer, there is no way for the Java and C++ sides to conduct two-way communication. At best, the Java GUI could request a subject reference and manipulate the C++ application through the reference, but the communication would be entirely one-way.</para>
+                  <para>In <xref linkend="SliderObserverImpl.java.example"/>, we show the complete Java implementation of an observer corresponding to the <classname>tweek::SliderSubject</classname> interface defined earlier. (The JavaBean that uses this observer is explained in <xref linkend="slider.subject.bean.section"/>.) The main focus of this observer is to update its contained JSlider whenever the state of the corresponding subject changes.</para>
+                  <example id="SliderObserverImpl.java.example">
+                     <title>SliderObserverImpl.java</title>
+                     <programlistingco>
+                        <areaspec>
+                           <area coords="14 70" id="SliderObserverImpl.java.class.decl"/>
+                           <area coords="16 70" id="SliderObserverImpl.java.constructor"/>
+                           <area coords="26 70" id="SliderObserverImpl.java.update"/>
+                           <area coords="34 70" id="SliderObserverImpl.java.getValue"/>
+                           <area coords="45 70" id="SliderObserverImpl.java.detach"/>
+                        </areaspec>
+                        <programlisting linenumbering="numbered">package networktest;
+
+import javax.swing.DefaultBoundedRangeModel;
+import javax.swing.JSlider;
+import tweek.*;
+
+
+/**
+ * Implementation of the Observer side of the Tweek Subject/Observer pattern.
+ * It must extend tweek.ObserverPOA so that instances of this class can be
+ * registered as CORBA servants.  In addition, CORBA references to the
+ * servants must be capable of being attached to remote subjects.
+ */
+public class SliderObserverImpl extends ObserverPOA
+{
+   public SliderObserverImpl (JSlider slider, SliderSubject subject)
+   {
+      mSlider        = slider;
+      mSliderSubject = subject;
+   }
+
+   /**
+    * Implements the required method in tweek.ObserverPOA.  The remote subject
+    * will invoke this method whenever it is notified of a change.
+    */
+   public void update ()
+   {
+      // If we have a valid slider object, we need to update its value to
+      // whatever our subject has.
+      if ( mSlider != null )
+      {
+         DefaultBoundedRangeModel model =
+            (DefaultBoundedRangeModel) mSlider.getModel();
+         model.setValue(mSliderSubject.getValue());
+         mSlider.repaint();
+      }
+   }
+
+   /**
+    * Detaches this observer from our subject.  This is needed when shutting
+    * down a CORBA connection.
+    */
+   public void detach ()
+   {
+      mSliderSubject.detach(this._this());
+   }
+
+   private SliderSubject mSliderSubject = null;
+   private JSlider       mSlider        = null;
+}</programlisting>
+                        <calloutlist>
+                           <callout arearefs="SliderObserverImpl.java.class.decl">
+                              <para>As an observer, this class must derive from <classname>tweek.ObserverPOA</classname>. This class is generated by the IDL compiler and is part of the Tweek Network Library (see <xref linkend="network.library.section"/>).</para>
+                           </callout>
+                           <callout arearefs="SliderObserverImpl.java.constructor">
+                              <para>The constructor for this observer takes two arguments: a <classname>JSlider</classname> object reference and a <classname>networktest.SliderSubject</classname> object reference. The observer needs the latter argument so that it can query state information from the subject when notified of state changes. This is part of the subject/observer design pattern.</para>
+                           </callout>
+                           <callout arearefs="SliderObserverImpl.java.update">
+                              <para>As stated, all observers must implement <methodname>notify()</methodname>. This will be invoked by the remote subject when its <methodname>notify()</methodname> method is invoked.</para>
+                           </callout>
+                           <callout arearefs="SliderObserverImpl.java.getValue">
+                              <para>To get the updated state of the remote subject, the encapsulated subject reference's <methodname>getValue()</methodname> method is invoked. The value returned will be the most up-to-date information from the subject.</para>
+                           </callout>
+                           <callout arearefs="SliderObserverImpl.java.detach">
+                              <para>It may be convenient for the observer to implement a <methodname>detach()</methodname> method (though the name may vary). This is used when the Java application is shutting down to ensure that the remote subject does not have dangling references to observer that no longer exist. The only action required here is invoking the subject's <methodname>detach()</methodname> method to inform the subject that this observer is going away.</para>
+                           </callout>
+                        </calloutlist>
+                     </programlistingco>
+                  </example>
+                  <para>This example demonstrates that observers do not have to be complex to be usable. While this example is purposely simple, it should illustrate that developers of observers do not necessarily have to make their implementations complex. As will be shown in <xref linkend="slider.subject.bean.section"/>, the JavaBean that uses this observer completes the picture and provides users with a GUI slider that can be manipulated by any number of simultaneous users.</para>
+               </section>
+            </section>
+            <section>
+               <title>The Application</title>
+               <para>Now that we have the subject and observer ready to go, we can make an application that uses them. The following example is a (relatively) simple C++ application that starts the Tweek CORBA Manager<indexterm>
+                     <primary>CORBA Manager</primary>
+                     <secondary>initialization</secondary>
+                     <tertiary>example of</tertiary>
+                  </indexterm>, creates the Subject Manager<indexterm>
+                     <primary>Subject Manager</primary>
+                     <secondary>creation</secondary>
+                     <tertiary>example of</tertiary>
+                  </indexterm>, registers a SliderSubject servant, and then waits for the user to press '<literal>x</literal>' to exit. The use of exceptions may appear unfamiliar to some C++ programmers. CORBA makes use of exceptions as a cross-langauge mechanism to report errors, and thus, there must be proper exception handling code for the appliction to work correctly.</para>
+               <example id="SliderSubjectApp.cpp.example">
+                  <title>SliderSubjectApp.cpp</title>
+                  <programlistingco>
+                     <areaspec>
+                        <areaset coords="" id="SliderSubjectApp.cpp.includes">
+                           <area coords="1 78" id="SliderSubjectApp.cpp.includes.tweek"/>
+                           <area coords="5 78" id="SliderSubjectApp.cpp.includes.gen"/>
+                        </areaset>
+                        <areaset coords="" id="SliderSubjectApp.cpp.corbamgr">
+                           <area coords="13 78" id="SliderSubjectApp.cpp.corbamgr.decl"/>
+                           <area coords="19 78" id="SliderSubjectApp.cpp.corbamgr.init"/>
+                        </areaset>
+                        <area coords="27 78" id="SliderSubjectApp.cpp.subjectmgr.create"/>
+                        <area coords="36 78" id="SliderSubjectApp.cpp.subject.create"/>
+                        <area coords="43 78" id="SliderSubjectApp.cpp.subject.register"/>
+                        <area coords="70 78" id="SliderSubjectApp.cpp.loop"/>
+                     </areaspec>
+                     <programlisting linenumbering="numbered">#include &lt;tweek/CORBA/CorbaManager.h&gt;
+#include &lt;vpr/Thread/Thread.h&gt;
+#include &lt;vpr/Util/Debug.h&gt;
+
+#include &lt;SliderSubjectImpl.h&gt;
+
+
+/**
+ * This application starts the CORBA server for the C++ side of the test.
+ */
+int main (int argc, char* argv[])
+{
+   tweek::CorbaManager mgr;
+
+   // The first thing we have to do is initialize the Tweek CORBA Manager.
+   // If this fails, we're out of luck.
+   try
+   {
+      if ( mgr.init("corba_test", argc, argv).success() )
+      {
+         vpr::ReturnStatus status;
+
+         // Once the CORBA Manager is initialized, we need to create a
+         // Subject Manager.  This will hold our SliderSubject object.
+         try
+         {
+            status = mgr.createSubjectManager();
+
+            // If we were able to create the Subject Manager, now we register
+            // our objects with it.
+            if ( status.success() )
+            {
+               // First, create real instances of the C++ object that will
+               // be the CORBA servant.  This must be allocated on the heap.
+               networktest::SliderSubjectImpl* slider_subj =
+                  new networktest::SliderSubjectImpl();
+
+               // Now we try to register the subject and give it a symbolic,
+               // easy-to-remember name.
+               try
+               {
+                  mgr.getSubjectManager()-&gt;registerSubject(slider_subj,
+                                                           "SliderSubject");
+               }
+               catch (...)
+               {
+                  vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+                     &lt;&lt; "Failed to register subject\n" &lt;&lt; vprDEBUG_FLUSH;
+               }
+            }
+         }
+         catch (CORBA::Exception&amp; ex)
+         {
+            vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+               &lt;&lt; "Caught an unknown CORBA exception when trying to register!\n"
+               &lt;&lt; vprDEBUG_FLUSH;
+         }
+
+         if ( ! status.success() )
+         {
+            vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+               &lt;&lt; "Failed to register Subject Manager instance\n"
+               &lt;&lt; vprDEBUG_FLUSH;
+         }
+
+         std::cout &lt;&lt; "Press 'x' to exit" &lt;&lt; std::endl;
+         char input;
+
+         // Loop forever so that we can act sort of like a server.
+         while ( 1 )
+         {
+            std::cin &gt;&gt; input;
+            if ( input == 'x' )
+            {
+               break;
+            }
+            else
+            {
+               vpr::Thread::msleep(100);
+            }
+         }
+      }
+      else
+      {
+         vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+            &lt;&lt; "CORBA failed to initialize\n" &lt;&lt; vprDEBUG_FLUSH;
+      }
+   }
+   catch (...)
+   {
+      vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
+         &lt;&lt; "Caught an unknown exception!\n" &lt;&lt; vprDEBUG_FLUSH;
+   }
+
+   vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL) &lt;&lt; "Exiting\n" &lt;&lt; vprDEBUG_FLUSH;
+
+   return 0;
+}</programlisting>
+                     <calloutlist>
+                        <callout arearefs="SliderSubjectApp.cpp.includes">
+                           <para>These two headers are typically needed. The first includes the declaration of the Tweek CORBA Manager, and the second is the subject implementation declaration, shown in <xref linkend="SliderSubject.idl.example"/>.</para>
+                        </callout>
+                        <callout arearefs="SliderSubjectApp.cpp.corbamgr">
+                           <para>In order to use CORBA through Tweek, the CORBA Manager must be created and initialized. Any number of these may be created, but in general, only one is needed per application</para>
+                        </callout>
+                        <callout arearefs="SliderSubjectApp.cpp.subjectmgr.create">
+                           <para>After the COBRA Manager has been initialized successfully, the Tweek Subject Manager must be created.</para>
+                        </callout>
+                        <callout arearefs="SliderSubjectApp.cpp.subject.create">
+                           <para>Once we have a valid Subject Manager, we must register subjects with it in order for object references to be passed out by CORBA. This creates the <glossterm linkend="gloss.servant">servant</glossterm> to which <classname>networktest::SliderSubject</classname> references will be made.</para>
+                        </callout>
+                        <callout arearefs="SliderSubjectApp.cpp.subject.register">
+                           <para>Once the servant is created, it is registered with the Subject Manager. The Subject Manager will activate the servant within the POA so that references to it can be created and returned to cients.</para>
+                        </callout>
+                        <callout arearefs="SliderSubjectApp.cpp.loop">
+                           <para>After the subject is registered, all the work is done. This application now just waits for clients to request references. It will exit when the user enters '<literal>x</literal>'.</para>
+                        </callout>
+                     </calloutlist>
+                  </programlistingco>
+               </example>
+               <para>The application shown in <xref linkend="SliderSubjectApp.cpp.example"/> is purposely simple. There are many ways to use the Tweek CORBA Manager and Tweek Subject Manager. For example, an object registry could be built on top of the Subject Manager so that only specific types of servant objects may be registered. Servant registration could be automated in object constructors. The C++ API is intended to be simple to enhance its usability and flexibility, and the application shown in the example is just that: an example.</para>
+            </section>
+            <section id="slider.subject.bean.section">
+               <title>The JavaBean</title>
+               <para>We have finally reached the point at which we implement a JavaBean that can visualize the numeric data held by the C++ slider subject. Such a JavaBean must be defined as a Tweek Panel Bean. What these things mean is described in this section and in the introductory chapters of this book.</para>
+               <para>The JavaBean shown in the following example is typical of one that uses the Tweek Network library to take advantage of CORBA facilities. The code for the Bean is longer than previous examples, and because of this, it will be split into multiple code blocks. Each will be discussed in turn. The full code is in one file, <filename>NetworkTest.java</filename>.</para>
+               <para>Please not that the details of setting up the GUI elements used by the Bean is left out. The code in this case was generated by JBuilder and could easily vary from Bean to Bean. For the full code, please refer to the aforementioned locations.</para>
+               <section>
+                  <title>Imports</title>
+                  <para>The slider JavaBean uses common Java Swing classes, a CORBA exception class, the Tweek Event library, the Tweek Network library, and Java code generated by an IDL compiler. The following explains how each of these are imported into the main Bean class.</para>
+                  <programlistingco>
+                     <areaspec>
+                        <area coords="1" id="NetworkTest.java.package"/>
+                        <areaset coords="" id="NetworkTest.java.imports.gui">
+                           <area coords="3" id="NetworkTest.java.imports.gui.awt"/>
+                           <area coords="4" id="NetworkTest.java.imports.gui.swing"/>
+                           <area coords="5" id="NetworkTest.java.imports.gui.swing.events"/>
+                        </areaset>
+                        <area coords="6" id="NetworkTest.java.imports.corba"/>
+                        <areaset coords="" id="NetworkTest.java.imports.tweek">
+                           <area coords="7" id="NetworkTest.java.imports.tweek.event"/>
+                           <area coords="8" id="NetworkTest.java.imports.tweek.net"/>
+                           <area coords="9" id="NetworkTest.java.imports.tweek.net.corba"/>
+                        </areaset>
+                        <area coords="10" id="NetworkTest.java.imports.tweek-gen"/>
+                     </areaspec>
+                     <programlisting>package networktest;
+
+import java.awt.*;
+import javax.swing.*;
+import javax.swing.event.*;
+import org.omg.CORBA.BAD_PARAM;
+import org.vrjuggler.tweek.event.*;
+import org.vrjuggler.tweek.net.*;
+import org.vrjuggler.tweek.net.corba.*;
+import tweek.*;
+</programlisting>
+                     <calloutlist>
+                        <callout arearefs="NetworkTest.java.package">
+                           <para>This Bean is in a package corresponding to the IDL module defined in <filename>SliderSubject.idl</filename>. Using a consistent name throughout makes the code easier to manage and understand.</para>
+                        </callout>
+                        <callout arearefs="NetworkTest.java.imports.gui">
+                           <para>These imports bring in common Swing and AWT GUI classes. Different Beans will use different classes and packages.</para>
+                        </callout>
+                        <callout arearefs="NetworkTest.java.imports.corba">
+                           <para>In order to do proper narrowing of reference types, the exception <classname>org.omg.CORBA.BAD_PARAM</classname> must be caught.</para>
+                        </callout>
+                        <callout arearefs="NetworkTest.java.imports.tweek">
+                           <para>These imports bring in the classes of the Tweek Event and Network libraries.</para>
+                        </callout>
+                        <callout arearefs="NetworkTest.java.imports.tweek-gen">
+                           <para>Tweek Java code generated by an IDL compiler will always be in the package tweek. This corresponds to the IDL module and to the C++ namespace.</para>
+                        </callout>
+                     </calloutlist>
+                  </programlistingco>
+               </section>
+               <section>
+                  <title>Class Declaration</title>
+                  <para>Now we can begin writing the Bean code. Besides the class <classname>SliderObserverImpl</classname>, this Bean has only one class: <classname>NetworkTest</classname>. It will provide the GUI representation of the numeric data. The declaration of the class follows.</para>
+                  <programlistingco>
+                     <areaspec>
+                        <area coords="9" id="NetworkTest.java.superclass"/>
+                        <area coords="10" id="NetworkTest.java.interfaces"/>
+                     </areaspec>
+                     <programlisting>/**
+ * This is an example of a JavaBean that Tweek can load dynamically.  It holds
+ * a JSlider that acts as an Observer in the Tweek CORBA Subject/Observer
+ * pattern implementation.
+ *
+ * @version 1.0
+ */
+public class NetworkTest
+   extends JPanel
+   implements CommunicationListener, TweekFrameListener
+{
+...
+}</programlisting>
+                     <calloutlist>
+                        <callout arearefs="NetworkTest.java.superclass">
+                           <para>As a Tweek Panel Bean, there must be a class that derives from <classname>javax.swing.JComponent</classname> or some subclass thereof. In this case, the superclass is <classname>javax.swing.JPanel</classname>.</para>
+                        </callout>
+                        <callout arearefs="NetworkTest.java.interfaces">
+                           <para>Since this Bean needs to access the Tweek Subject Manager, it needs to know when a CORBA service is available. By implementing <classname>org.vrjuggler.tweek.net.CommunicationListener</classname>, the Bean will be informed by the Tweek Java GUI whenever the communication state with a CORBA service changes. This Bean also listens for <classname>TweekFrameEvents</classname> so that it can shut itself down cleanly. To be informed of such events, it must implement <classname>org.vrjuggler.tweek.event.TweekFrameListener</classname>.</para>
+                        </callout>
+                     </calloutlist>
+                  </programlistingco>
+               </section>
+               <section>
+                  <title>Member Variables</title>
+                  <para>Before delving into the methods of the <classname>networktest.NetworkTest</classname> class, it will be helpful to review the member variables used throughout the class. Refer back to this section if there is any confusion regarding the use or the type of some member variable in the method implementations.</para>
+                  <programlistingco>
+                     <areaspec>
+                        <area coords="1" id="ID1"/>
+                        <areaset coords="" id="NetworkTest.java.members.slider-group">
+                           <area coords="3" id="NetworkTest.java.members.slider-group.panel"/>
+                           <area coords="4" id="NetworkTest.java.members.slider-group.slider"/>
+                        </areaset>
+                        <area coords="6" id="NetworkTest.java.members.observer"/>
+                     </areaspec>
+                     <programlisting>private BorderLayout mBeanLayout = new BorderLayout();
+
+private JPanel mSliderPanel = new JPanel();
+private JSlider mDataSlider = new JSlider();
+
+private SliderObserverImpl mSliderObserver = null;
+</programlisting>
+                     <calloutlist>
+                        <callout arearefs="NetworkTest.java.members.slider-group">
+                           <para>This is the containing layout for the entire Bean.</para>
+                        </callout>
+                        <callout arearefs="NetworkTest.java.members.slider-group">
+                           <para>The <classname>JSlider</classname> used for visually representing the subject's numeric data is <varname>mDataSlider</varname>, and it will be contained within <varname>mSliderPanel</varname>.</para>
+                        </callout>
+                        <callout arearefs="NetworkTest.java.members.observer">
+                           <para>The <classname>networktest::SliderSubject</classname> observer will be stored within <varname>mSliderObserver</varname>.</para>
+                        </callout>
+                     </calloutlist>
+                  </programlistingco>
+                  <para>Note that the observer is stored in a member variable initialized to <symbol>null</symbol>. It will be assigned a value when a CORBA service becomes available and the corresponding subject can be requested. The object itself is stored as a member variable so that it can be accessed by all the methods of the class.</para>
+               </section>
+               <section>
+                  <title>Handling CORBA Communications</title>
+                  <para>The most complex part of this Bean is the handling of CORBA communication events delivered by the Tweek GUI. All of the handling in this example will be done in the method <methodname>connectionStateChanged()</methodname>. The steps that must be followed are straightforward, but there are errors that must be handled properly. It is the error handling that can make the code look daunting, not the use of the Tweek Network library.</para>
+                  <programlistingco>
+                     <areaspec>
+                        <areaset coords="" id="NetworkTest.java.corba">
+                           <area coords="11 70" id="NetworkTest.java.corba.service"/>
+                           <area coords="12 70" id="NetworkTest.java.corba.subjectmgr"/>
+                        </areaset>
+                        <area coords="14 70" id="NetworkTest.java.getSubject"/>
+                        <areaset coords="" id="NetworkTest.java.narrow">
+                           <area coords="22 70" id="NetworkTest.java.narrow-subject"/>
+                           <area coords="24 70" id="NetworkTest.java.narrow-exception"/>
+                        </areaset>
+                        <area coords="33 70" id="NetworkTest.java.connect"/>
+                        <area coords="41 70" id="NetworkTest.java.observer.create"/>
+                        <area coords="42 70" id="NetworkTest.java.observer.register"/>
+                        <area coords="47 70" id="NetworkTest.java.observer.attach"/>
+                        <area coords="51 70" id="NetworkTest.java.setValue"/>
+                        <area coords="52 70" id="NetworkTest.java.addChangeListener"/>
+                        <area coords="56 70" id="NetworkTest.java.disconnect"/>
+                        <area coords="60 70" id="NetworkTest.java.observer.detach"/>
+                     </areaspec>
+                     <programlisting linenumbering="numbered">/**
+ * Implements the Tweek CommunicationListener interface needed for being
+ * informed of connections and disconnections with remote CORBA servers.
+ */
+public void connectionStateChanged (CommunicationEvent e)
+{
+   // The first thing to do is get the CORBA service object from the
+   // event.  We need this so we know to whom we are are connecting.  Once
+   // we have the CORBA service, we get its Subject Manager since that's
+   // what contains the actual subjects we need.
+   CorbaService corba_service = e.getCorbaService();
+   SubjectManager mgr         = corba_service.getSubjectManager();
+
+   Subject subject = mgr.getSubject("SliderSubject");
+   SliderSubject slider_subject = null;
+
+   // Try to narrow the Subjet object to a SliderSubject object.  If this
+   // fails, it throws a CORBA BAD_PARAM exception.  In that case, we open
+   // a dialog box saying that the narrowing failed.
+   try
+   {
+      slider_subject = SliderSubjectHelper.narrow(subject);
+   }
+   catch (BAD_PARAM narrow_ex)
+   {
+      JOptionPane.showMessageDialog(null,
+                                    "Failed to narrow subject to SliderSubject",
+                                    "SliderSubject Narrow Error",
+                                    JOptionPane.ERROR_MESSAGE);
+   }
+
+   // Handle a CORBA connection event from Tweek.
+   if ( CommunicationEvent.CONNECT == e.getType() )
+   {
+      // Ensure that slider_subject is a valid object just to be safe.
+      if ( slider_subject != null )
+      {
+         // First, we need a Java object that implements the Observer.  That
+         // object must be registered with the Java CORBA service.
+         m_slider_observer = new SliderObserverImpl(mDataSlider,
+                                                    slider_subject);
+         corba_service.registerObject(mSliderObserver, "SliderObserver");
+
+         // Now that the observer is registered, we can attach it to the
+         // subject.  The subject needs to know who its observers are so
+         // that it can notify them of updates.
+         slider_subject.attach(mSliderObserver._this());
+
+         // Now we set the slider in our GUI to be whatever value the
+         // remote subject is holding for us.
+         mDataSlider.setValue(slider_subject.getValue());
+         mDataSlider.addChangeListener(new SliderChangeListener(slider_subject));
+      }
+   }
+   // Handle a CORBA disconnect event from Tweek.
+   else if ( CommunicationEvent.DISCONNECT == e.getType() )
+   {
+      if ( slider_subject != null )
+      {
+         slider_subject.detach(mSliderObserver._this());
+      }
+   }
+}</programlisting>
+                     <calloutlist>
+                        <callout arearefs="NetworkTest.java.corba">
+                           <para>The first step that must be taken is retrieving the <classname>org.vrjuggler.tweek.net.corba.CorbaService</classname> object from the event. This is needed as the basis for all further actions. With the CORBA service reference, we can request the Subject Manager reference. The result is a CORBA reference to the remote Subject Manager, a servant within the C++ application.</para>
+                        </callout>
+                        <callout arearefs="NetworkTest.java.getSubject">
+                           <para>Through the Subject Manager, we request subjects using symbolic names. In this case, we request the subject with the hard-coded name <quote>SliderSbuject</quote>.</para>
+                        </callout>
+                        <callout arearefs="NetworkTest.java.narrow">
+                           <para>The call to <methodname>getSubject()</methodname> returns a reference of type <classname>tweek.Subject</classname>, but we need to narrow it to <classname>networktest.SliderSubject</classname> so we can use it. Among the code generated by the IDL compiler is a class named <classname>networktest.SliderSubjectHelper</classname>. Its <methodname>narrow()</methodname> method is used to narrow the CORBA reference type to a more specific type. If the narrowing fails, an exception of type <classname>org.omg.CORBA.BAD_PARAM</classname> is thrown, and it is best to handle it here.</para>
+                        </callout>
+                        <callout arearefs="NetworkTest.java.connect">
+                           <para>If the event delivered to the Bean was of type <varname>org.vrjuggler.tweek.net.CommunicationEvent.CONNECT</varname>, there is a new CORBA service available, so we will create a new observer to communicate through that service.</para>
+                        </callout>
+                        <callout arearefs="NetworkTest.java.observer.create">
+                           <para>Once we have the subject reference, we create an observer servant that we will attach to the subject. This is where <classname>networktest.SliderObserverImpl</classname> comes into the picture.</para>
+                        </callout>
+                        <callout arearefs="NetworkTest.java.observer.register">
+                           <para>The observer servant must be registered with the local CORBA service so that references to it can be created. This single statement takes care of all the POA activation behind the scenes.</para>
+                        </callout>
+                        <callout arearefs="NetworkTest.java.observer.attach">
+                           <para>Now that the servant is registered with the CORBA service, a reference to it can be passed to the remote subject in order to attach the observer to the subject.</para>
+                        </callout>
+                        <callout arearefs="NetworkTest.java.setValue">
+                           <para>Once the initial references are passed around, we need to update the GUI slider to the current value held by the subject.</para>
+                        </callout>
+                        <callout arearefs="NetworkTest.java.addChangeListener">
+                           <para>As part of the collaborative slider, we need to register a change listener with the GUI slider so that it will be informed of changes made by the local user. These changes are reported to the remote subject so that other users get the update. The class <classname>SliderChangeListener</classname> is shown later.</para>
+                        </callout>
+                        <callout arearefs="NetworkTest.java.disconnect">
+                           <para>If the event delivered to the Bean was of type <varname>org.vrjuggler.tweek.net.CommunicationEvent.DISCONNECT</varname>, the CORBA service is being shut down.</para>
+                        </callout>
+                        <callout arearefs="NetworkTest.java.observer.detach">
+                           <para>When the CORBA service is shut down, we need to detach the local observer from the remote subject to prevent further update notification attempts for this observer.</para>
+                        </callout>
+                     </calloutlist>
+                  </programlistingco>
+                  <para>It is important to note that the use of hard-coded subject names is not recommended. In this example, the subject name is hard-coded for simplicity. The Tweek Subject Manager allows accessing code to request a list of all registered subjects. Using this information, it is possible to present the Java GUI user with a list of subjects from which they can make a selection.</para>
+               </section>
+               <section>
+                  <title>Handling Frame Events</title>
+                  <para>This Bean makes an effort to close open CORBA connections when the Tweek GUI is shut down. It does this by implementing <classname>org.vrjuggler.tweek.event.TweekFrameListener</classname> which has a single method <methodname>frameStateChanged()</methodname>.</para>
+                  <programlistingco>
+                     <areaspec>
+                        <area coords="3" id="NetworkTest.java.frame.close"/>
+                        <area coords="7" id="NetworkTest.java.frame.detach"/>
+                     </areaspec>
+                     <programlisting>public void frameStateChanged (TweekFrameEvent e)
+{
+   if ( e.getType() == TweekFrameEvent.FRAME_CLOSE )
+   {
+      if ( mSliderObserver != null )
+      {
+         mSliderObserver.detach();
+         mSliderObserver = null;
+      }
+   }
+}</programlisting>
+                     <calloutlist>
+                        <callout arearefs="NetworkTest.java.frame.close">
+                           <para>If the event is the closing of the Tweek GUI frame, the CORBA reference clean up steps will be taken.</para>
+                        </callout>
+                        <callout arearefs="NetworkTest.java.frame.detach">
+                           <para>If the slider observer is defined, we assume that the observer is attached. The handy <methodname>detatch()</methodname> method is called to detach this observer from the remote subject.</para>
+                        </callout>
+                     </calloutlist>
+                  </programlistingco>
+               </section>
+               <section>
+                  <title>Handling Local Slider Change Events</title>
+                  <para>A helper class is used to handle local change events in the slider. The class is a private inner class within the Bean and is defined as follows:</para>
+                  <programlistingco>
+                     <areaspec>
+                        <areaset coords="" id="NetworkTest.java.SliderChangeListener.stateChanged">
+                           <area coords="12" id="NetworkTest.java.SliderChangeListener.stateChanged.adjust"/>
+                           <area coords="14" id="NetworkTest.java.SliderChangeListener.stateChanged.setValue"/>
+                        </areaset>
+                     </areaspec>
+                     <programlisting>private class SliderChangeListener implements ChangeListener
+{
+   public SliderChangeListener (SliderSubject subject)
+   {
+      mSliderSubject = subject;
+   }
+
+   public void stateChanged (javax.swing.event.ChangeEvent e)
+   {
+      JSlider source = (JSlider) e.getSource();
+
+      if ( ! source.getValueIsAdjusting() )
+      {
+         mSliderSubject.setValue(source.getValue());
+      }
+   }
+
+   private SliderSubject mSliderSubject = null;
+}</programlisting>
+                     <calloutlist>
+                        <callout arearefs="NetworkTest.java.SliderChangeListener.stateChanged">
+                           <para>Within the <methodname>stateChanged()</methodname> method, we check to see if the user is done adjusting the slider. If so, the remote subject is updated so that its internal value matches that of the local slider. Other users are automatically updated when this happens.</para>
+                        </callout>
+                     </calloutlist>
+                  </programlistingco>
+               </section>
+               <section>
+                  <title>XML File</title>
+                  <para>With the Bean implementation done, the XML file that describes the Bean must be written. All Beans loaded by the Tweek Java GUI are described by an XML file. In <xref linkend="NetworkTestBean.xml.example"/>, we show the XML file for the Bean we have been developing.</para>
+                  <example id="NetworkTestBean.xml.example">
+                     <title>NetworkTestBean.xml</title>
+                     <programlistingco>
+                        <areaspec>
+                           <area coords="1" id="NetworkTestBean.xml.version"/>
+                           <area coords="2" id="NetworkTestBean.xml.beanlist"/>
+                           <area coords="3" id="NetworkTestBean.xml.guipanel"/>
+                           <area coords="4" id="NetworkTestBean.xml.file"/>
+                           <area coords="6" id="NetworkTestBean.xml.tree"/>
+                        </areaspec>
+                        <programlisting>&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;beanlist&gt;
+&lt;guipanel name="Network Tester"&gt;
+&lt;file name="${TWEEK_BASE_DIR}/bin/beans/NetworkTestBean.jar"
+      entry="networktest/NetworkTest" /&gt;
+&lt;tree path="/Beans" /&gt;
+&lt;/guipanel&gt;
+&lt;/beanlist&gt;</programlisting>
+                        <calloutlist>
+                           <callout arearefs="NetworkTestBean.xml.version">
+                              <para>Well-formed XML requires this line.</para>
+                           </callout>
+                           <callout arearefs="NetworkTestBean.xml.beanlist">
+                              <para>Tweek XML Bean files are <sgmltag>beanlist</sgmltag> documents. There must be exactly one <sgmltag>beanlist</sgmltag> per file, but the list itself can contain multiple Beans.</para>
+                           </callout>
+                           <callout arearefs="NetworkTestBean.xml.guipanel">
+                              <para>The Bean we have been developing is a GUI Panel Bean, and this indicates that fact.</para>
+                           </callout>
+                           <callout arearefs="NetworkTestBean.xml.file">
+                              <para>To find the Bean, a path must be specified. In this example, we will put the XML and JAR files in <filename>$TWEEK_BASE_DIR/bin/beans</filename>. Note the use of curly braces around the environment variable. This is required.</para>
+                           </callout>
+                           <callout arearefs="NetworkTestBean.xml.tree">
+                              <para>Panel Beans are loaded into a tree data structure and visualized using a viewer. This specifies the path within the tree using a UNIX-style path. The path is arbitrary and will be constructed as needed when the Bean is loaded.</para>
+                           </callout>
+                        </calloutlist>
+                     </programlistingco>
+                  </example>
+                  <para>After the Bean is compiled into a JAR file, the JAR file and XML file need to be copied into <filename>$TWEEK_BASE_DIR/bin/beans</filename>. This is the default path that Tweek searches for Beans at startup, and it is a convenient place to put this example Bean.</para>
+               </section>
+            </section>
+            <section>
+               <title>Running the Example</title>
+               <para>With all the coding done and the code compiled, we can run the C++ application and connect multiple instances of the Tweek Java GUI to it. The steps to run the C++ application are as follows:</para>
+               <orderedlist>
+                  <listitem>
+                     <para>Run a CORBA Naming Service. This is required so that the C++ and Java ORBs can resolve symbolic references.</para>
+                  </listitem>
+                  <listitem>
+                     <para>Since Tweek uses omniORB for a C++ ORB, the environment variable <varname>$OMNIORB_CONFIG</varname> must be set. This gives the full path to an omniORB configuration file that omniORB will load at runtime.</para>
+                  </listitem>
+                  <listitem>
+                     <para>Run the C++ application.</para>
+                  </listitem>
+                  <listitem>
+                     <para>Run the Tweek Java GUI. This will find and load all the Beans in <filename>$TWEEK_BASE_DIR/bin/beans</filename>.</para>
+                  </listitem>
+                  <listitem>
+                     <para>Within the Java GUI, connect to the CORBA Naming Service started in step 1. The way the Bean is written, it will automatically request the subject held by the C++ application, and the slider will be updated to the current value.</para>
+                  </listitem>
+               </orderedlist>
+            </section>
+         </section>
+         <section>
+            <title>File Loader</title>
+            <para>Not everything written in Tweek must use Java, C++, IDL, and CORBA. The Tweek Java GUI is a generalized Bean-loading environment, and as such, its main focus is to load JavaBeans and present them to the user. Those Beans may take advantage of CORBA, but they are not required to do so.</para>
+         </section>
+      </chapter>
+   </part>
+   <part>
+      <title>Appendices</title>
+      <appendix id="makefile.appendix">
+         <title>Makefiles for Example Code</title>
+         <para>This appendix provides makefiles that can be used as starting points for compiling the example code shown earlier. These can also be used as the basis for future projects using Tweek.</para>
+         <section id="SliderSubject.makefile.section">
+            <title>SliderSubject</title>
+            <para>The following is a makefile that shows how to compile the code related to the <classname>SliderSubject</classname> example presented in <xref linkend="collab.slider.section"/>. It runs the IDL compiler, the C++ compiler, and the Java compiler. It assumes the use of <command>omniidl</command>, the JacORB compiler, and GCC in a Linux environment.</para>
+            <programlisting># Generated automatically from Makefile.in by configure.
+# Generated by mkmakefile.pl using the following options:
+#    --app=server
+
+default: all
+
+# Basic options.
+srcdir		= .
+CFLAGS		= $(EXTRA_CFLAGS) $(INCLUDES) $(DEFS)
+CXXFLAGS		= -Wall -Werror-implicit-function-declaration \
+                    -I$(VPR_BASE_DIR/include -I$(TWEEK_BASE_DIR)/include/tweek/CORBA \
+                    $(EXTRA_CFLAGS) $(INCLUDES) $(DEFS)
+CXX_IDL_OPTS	= -bcxx -Wbh=.h,s=.cpp -C$(srcdir)
+CXX_IDL_INCLUDES	= -I$(TWEEK_BASE_DIR)/include
+JAVAC_FLAGS	= -classpath $(CLASSPATH) -sourcepath $(srcdir) -d .
+JAVA_IDL_OPTS	=  -d $(srcdir)
+JAVA_IDL_INCLUDES	= -I$(TWEEK_BASE_DIR)/include
+JCPS		= :
+
+OPENORB_JAR	= $(HOME)/OpenORB-1.2.0/lib/openorb-1.2.0.jar
+
+CLASSPATH	= $(TWEEK_BASE_DIR)/bin/TweekEvents.jar$(JCPS)$(TWEEK_BASE_DIR)/bin/TweekNet.jar$(JCPS)$(OPENORB_JAR)
+DEFS		= -D__linux__ -D__OSVERSION__=2 -D__x86__
+EXTRA_CFLAGS	= $(DEBUG_CFLAGS)
+DEBUG_CFLAGS	= -g -D_DEBUG
+OPTIM_CFLAGS	= -O2 -fno-strict-aliasing -D_OPT
+INCLUDES		= -I$(TWEEK_BASE_DIR)/include -I$(HOME)/omni/include -I$(srcdir)
+
+EXTRA_LFLAGS	= $(DEBUG_LFLAGS)
+DEBUG_LFLAGS	= 
+OPTIM_LFLAGS	= 
+LINK_FLAGS	= $(EXTRA_LFLAGS)
+
+# Libraries needed for linking.
+BASIC_LIBS	= -Wl,-Bstatic $(LINKALL_ON) -L$(TWEEK_BASE_DIR)/lib -ltweek \
+                    $(LINKALL_OFF) -Wl,-Bdynamic
+EXTRA_LIBS	= -Wl,-Bdynamic  -L$(HOME)/omni/lib/i586_linux_2.0_glibc \
+                    -lomniORB3 -lomnithread -lomniDynamic3 -lomniGK_stub   \
+                    -L$(VPR_BASE_DIR)/lib -lvpr  -pthread   
+
+# Commands to execute.
+C_COMPILE	= gcc $(CFLAGS)
+CXX_IDL		= $(HOME)/omni/bin/i586_linux_2.0_glibc/omniidl
+CXX_COMPILE	= c++ $(CXXFLAGS)
+JAVA_COMPILE	= /usr/java/jdk1.3.1_02/bin/javac $(JAVAC_FLAGS)
+JAVA_IDL		= JACORB_PATH="$(TWEEK_BASE_DIR)/bin" "$(TWEEK_BASE_DIR)/bin/idl"
+JAR		= /usr/java/jdk1.3.1_02/bin/jar
+LINK		= c++ $(LINK_FLAGS)
+LINKALL_ON	= -W,--whole-archive
+LINKALL_OFF	= -W,--no-whole-archive
+
+VPATH		= ../../../test/NetworkTestBean:../../../test/NetworkTestBean/networktest:../../../test/NetworkTestBean/tweek:$(TWEEK_BASE_DIR)/include/tweek/idl
+
+IDL_CXX_FILES	= SliderSubject.cpp SliderSubject.h		\
+                    WhiteboardSubject.cpp WhiteboardSubject.h
+IDL_JAVA_FILES	= SliderSubject.java		\
+                    WhiteboardSubject.java		\
+                    Observer.java
+
+OBJS		= SliderSubject.o SliderSubjectImpl.o	\
+                    WhiteboardSubject.o WhiteboardSubjectImpl.o \
+                    SliderSubjectApp.o
+CLASSES		= networktest/NetworkTest.class		\
+                    networktest/SliderObserverImpl.class	\
+                    networktest/SliderSubjectHolder.class	\
+                    networktest/WhiteboardObserverImpl.class	\
+                    networktest/WhiteboardSubjectHolder.class	\
+                    tweek/ObserverHolder.class
+
+NETWORK_TEST_CLASSES = networktest/*.class tweek/*.class
+
+# -----------------------------------------------------------------------------
+# Application build targets.
+# -----------------------------------------------------------------------------
+all:
+	$(MAKE) cxx_idl
+	$(MAKE) java_idl
+	$(MAKE) cxx
+	$(MAKE) server
+	$(MAKE) java
+	$(MAKE) NetworkTestBean.jar
+	-$(MAKE) install
+
+cxx_idl: $(IDL_CXX_FILES)
+
+java_idl: $(IDL_JAVA_FILES)
+
+cxx: $(OBJS)
+
+java: $(CLASSES)
+
+server: $(OBJS)
+	$(LINK) -o $@ $(OBJS) $(BASIC_LIBS) $(EXTRA_LIBS)
+
+NetworkTestBean.jar: $(CLASSES)
+	$(JAR) cvfm $@ $(srcdir)/networktest.MF $(NETWORK_TEST_CLASSES)
+
+install:
+	cp NetworkTestBean.jar $(TWEEK_BASE_DIR)/bin/beans
+	cp $(srcdir)/NetworkTestBean.xml $(TWEEK_BASE_DIR)/bin/beans
+
+# Suffix rules for building object files.
+.SUFFIXES: .cpp .o .java .class .idl .h
+
+.cpp.o:
+	$(CXX_COMPILE) -o $@ -c $&lt;
+
+.java.class:
+	$(JAVA_COMPILE) $&lt;
+
+.idl.cpp:
+	$(CXX_IDL) $(CXX_IDL_OPTS) $(CXX_IDL_INCLUDES) $&lt;
+
+.idl.h:
+	$(CXX_IDL) $(CXX_IDL_OPTS) $(CXX_IDL_INCLUDES) $&lt;
+
+SliderSubject.java: SliderSubject.idl
+	$(JAVA_IDL) $(JAVA_IDL_OPTS) -noskel $(JAVA_IDL_INCLUDES) $&lt;
+
+WhiteboardSubject.java: WhiteboardSubject.idl
+	$(JAVA_IDL) $(JAVA_IDL_OPTS) -noskel $(JAVA_IDL_INCLUDES) $&lt;
+
+.idl.java:
+	$(JAVA_IDL) $(JAVA_IDL_OPTS) $(JAVA_IDL_INCLUDES) $&lt;
+
+# -----------------------------------------------------------------------------
+# Clean-up targets.
+# -----------------------------------------------------------------------------
+clean:
+	rm -f Makedepend *.o networktest.ilk  so_locations *.?db	\
+          core* $(addprefix $(srcdir)/, $(IDL_CXX_FILES))		\
+          $(addprefix $(srcdir)/networktest/, $(IDL_JAVA_FILES))
+	rm -rf ii_files $(srcdir)/tweek
+
+clobber:
+	@$(MAKE) clean
+	rm -f server </programlisting>
+         </section>
+      </appendix>
+   </part>
+   <bibliography>
+      <biblioentry id="Gam95">
+         <authorgroup>
+            <author>
+               <firstname>Erich</firstname>
+               <surname>Gamma</surname>
+            </author>
+            <author>
+               <firstname>Richard</firstname>
+               <surname>Helm</surname>
+            </author>
+            <author>
+               <firstname>Ralph</firstname>
+               <surname>Johnson</surname>
+            </author>
+            <author>
+               <firstname>John</firstname>
+               <surname>Vlissides</surname>
+            </author>
+         </authorgroup>
+         <copyright>
+            <year>1995</year>
+            <holder>Addison Wesley Longman, Inc.</holder>
+         </copyright>
+         <isbn>0-201-63361-2</isbn>
+         <publisher>
+            <publishername>Addison-Wesley</publishername>
+         </publisher>
+         <title>Design Patterns</title>
+      </biblioentry>
+      <biblioentry id="Hen99">
+         <authorgroup>
+            <author>
+               <firstname>Michi</firstname>
+               <surname>Henning</surname>
+            </author>
+            <author>
+               <firstname>Steve</firstname>
+               <surname>Vinoski</surname>
+            </author>
+         </authorgroup>
+         <copyright>
+            <year>1999</year>
+            <holder>Addison Wesley Longman, Inc.</holder>
+         </copyright>
+         <isbn>0-201-37927-9</isbn>
+         <publisher>
+            <publishername>Addison Wesley Longman, Inc.</publishername>
+         </publisher>
+         <title>Advanced CORBA Programming with C++</title>
+      </biblioentry>
+   </bibliography>
+   <glossary>
+      <title>Glossary</title>
+      <glossdiv>
+         <title>A</title>
+         <glossentry id="gloss.api">
+            <glossterm>application programmer interface</glossterm>
+            <acronym>API</acronym>
+            <glossdef>
+               <para></para>
+            </glossdef>
+         </glossentry>
+      </glossdiv>
+      <glossdiv>
+         <title>C</title>
+         <glossentry id="gloss.corba">
+            <glossterm>Common Object Request Broker Architcture</glossterm>
+            <acronym>CORBA</acronym>
+            <glossdef>
+               <para></para>
+            </glossdef>
+         </glossentry>
+      </glossdiv>
+      <glossdiv>
+         <title>E</title>
+         <glossentry id="gloss.xml.main">
+            <glossterm>Extensible Markup Language</glossterm>
+            <acronym>XML</acronym>
+            <glossdef>
+               <para></para>
+            </glossdef>
+         </glossentry>
+      </glossdiv>
+      <glossdiv>
+         <title>G</title>
+         <glossentry id="gloss.gui">
+            <glossterm>graphical user interface</glossterm>
+            <acronym>GUI</acronym>
+            <glossdef>
+               <para></para>
+            </glossdef>
+         </glossentry>
+      </glossdiv>
+      <glossdiv>
+         <title>I</title>
+         <glossentry id="gloss.idl-compiler">
+            <glossterm>IDL compiler</glossterm>
+            <glossdef>
+               <para>A software tool that reads an IDL file and generates code in a specific language (e.g., Java, C++, Smalltalk, etc.). This code may be anything, but typically, it is stub or skeleton code that is extended by user-defined code that completes the interface implementation.</para>
+            </glossdef>
+         </glossentry>
+         <glossentry>
+            <glossterm>interface</glossterm>
+            <glossdef>
+               <para>Several types of <quote>interfaces</quote> exist within the scope of Tweek:</para>
+               <itemizedlist>
+                  <listitem>
+                     <para>In Java. there is a keyword <literal>interface</literal> that can be used to define a set of methods that must be part of an implementing class. Classes that claim to implement a given interface must define the methods described by the interface or declare themselves abstract.</para>
+                  </listitem>
+                  <listitem>
+                     <para>In <glossterm linkend="gloss.idl">IDL</glossterm>, an interface is essentially identical to a Java interface, but an IDL compiler can generate code from the IDL. The interface methods must still be implemented (by a C++ class, for example), and thus, the main function of an IDL interface is to define a language-indepent signature through which CORBA communication may occur.</para>
+                  </listitem>
+                  <listitem>
+                     <para>In C++, there is no <literal>interface</literal> keyword as in Java and IDL. The term <quote>interface</quote> is typically applied to abstract classes (those with pure virtual methods). More generally, it is use to refer to the collection of methods defined by a class.</para>
+                  </listitem>
+               </itemizedlist>
+            </glossdef>
+         </glossentry>
+         <glossentry id="gloss.idl">
+            <glossterm>Interface Definition Language</glossterm>
+            <acronym>IDL</acronym>
+            <glossdef>
+               <para>It's this thing.</para>
+            </glossdef>
+         </glossentry>
+         <glossentry id="gloss.iiop">
+            <glossterm>Internet Inter-ORB Protocol</glossterm>
+            <acronym>IIOP</acronym>
+            <glossdef>
+               <para></para>
+            </glossdef>
+         </glossentry>
+      </glossdiv>
+      <glossdiv>
+         <title>J</title>
+         <glossentry id="gloss.javabean">
+            <glossterm>JavaBean</glossterm>
+            <glossdef>
+               <para></para>
+            </glossdef>
+         </glossentry>
+         <glossentry id="gloss.jni">
+            <glossterm>Java Native Interface</glossterm>
+            <acronym>JNI</acronym>
+            <glossdef>
+               <para></para>
+            </glossdef>
+         </glossentry>
+      </glossdiv>
+      <glossdiv>
+         <title>O</title>
+         <glossentry id="gloss.orb">
+            <glossterm>Object Request Broker</glossterm>
+            <acronym>ORB</acronym>
+            <glossdef>
+               <para></para>
+            </glossdef>
+         </glossentry>
+      </glossdiv>
+      <glossdiv>
+         <title>P</title>
+         <glossentry>
+            <glossterm>Portable Object Adapter</glossterm>
+            <acronym>POA</acronym>
+            <glossdef>
+               <para></para>
+            </glossdef>
+         </glossentry>
+      </glossdiv>
+      <glossdiv>
+         <title>R</title>
+         <glossentry id="gloss.rmi">
+            <glossterm>Remote Method Invocation</glossterm>
+            <acronym>RMI</acronym>
+            <glossdef>
+               <para></para>
+            </glossdef>
+         </glossentry>
+      </glossdiv>
+      <glossdiv>
+         <title>S</title>
+         <glossentry id="gloss.servant">
+            <glossterm>servant</glossterm>
+            <glossdef>
+               <para>In CORBA, a servant is an instance of an interface implementation that is registered with an ORB. A servant receives method invocations through the CORBA object adapter.</para>
+            </glossdef>
+         </glossentry>
+      </glossdiv>
+      <glossdiv>
+         <title>X</title>
+         <glossentry id="gloss.xml">
+            <glossterm>XML</glossterm>
+            <glossdef>
+               <para>See <glossterm linkend="gloss.xml.main">Extensible Markup Language</glossterm>.</para>
+            </glossdef>
+         </glossentry>
+      </glossdiv>
+   </glossary>
+   <index/>
+</book>
