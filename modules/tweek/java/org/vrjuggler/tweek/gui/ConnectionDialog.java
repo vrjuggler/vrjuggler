@@ -51,7 +51,9 @@ import org.vrjuggler.tweek.beans.TweekBean;
 import org.vrjuggler.tweek.services.*;
 import org.vrjuggler.tweek.net.corba.CorbaService;
 import tweek.SubjectManagerPackage.SubjectMgrInfoItem;
+import org.vrjuggler.tweek.TweekCore;
 import org.vrjuggler.tweek.services.EnvironmentServiceProxy;
+import org.vrjuggler.tweek.text.MessageDocument;
 
 
 /**
@@ -581,7 +583,8 @@ public class ConnectionDialog extends JDialog
       }
       catch (Exception e)
       {
-         System.err.println("Invalid port number: " + port);
+         MessageDocument doc = TweekCore.instance().getMessageDocument();
+         doc.printErrornl("Invalid port number: " + port);
       }
 
       return valid;
