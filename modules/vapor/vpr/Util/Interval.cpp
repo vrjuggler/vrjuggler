@@ -39,8 +39,23 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
+#include <vpr/vprConfig.h>
+
+#ifdef VPR_SIMULATOR
+#  include <vpr/md/SIM/Controller.h>
+#endif
+
 #include <vpr/Util/Interval.h>
 
 const vpr::Interval vpr::Interval::NoWait(0,vpr::Interval::Base);
 const vpr::Interval vpr::Interval::NoTimeout(0xffffffffUL, vpr::Interval::Base);
 const vpr::Interval vpr::Interval::HalfPeriod((0xffffffffUL/2), vpr::Interval::Base);
+
+// Simulator-only version of vpr::Interval::setNow().
+#ifdef VPR_SIMULATOR
+void vpr::Interval::setNow ()
+{
+   mTensOfUsecs = vpr::sim::Controller::instance()->getClock().getCurrentTime();
+}
+#endif /* ifdef VPR_SIMULATOR */
+

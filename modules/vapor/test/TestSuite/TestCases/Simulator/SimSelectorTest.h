@@ -43,9 +43,8 @@ public:
       vpr::SocketStream sender, acceptor, receiver;
       vpr::Selector selector;
       vpr::ReturnStatus status;
-      vpr::sim::Controller simulator;
 
-      status = simulator.constructNetwork("test_network.tiers");
+      status = vpr::sim::Controller::instance()->constructNetwork("test_network.tiers");
       CPPUNIT_ASSERT(status.success());
 
       status = acceptor.setLocalAddr(vpr::InetAddr(5556));
@@ -111,7 +110,7 @@ public:
       selector.addHandle(receiver.getHandle(), vpr::Selector::Read);
 
       do {
-         simulator.step();
+         vpr::sim::Controller::instance()->processNextEvent();
          status = selector.select(num_events);
       } while (status == vpr::ReturnStatus::Timeout);
 

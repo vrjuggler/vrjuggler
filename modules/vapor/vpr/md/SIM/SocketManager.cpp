@@ -63,19 +63,7 @@ namespace vpr
 namespace sim
 {
 
-   vpr::Interval SocketManager::getNow( )
-   {
-      vpr::Interval now;
-
-      mSimulatorTimeMutex.acquire();
-      {
-         now = mSimulatorTime;
-      }
-      mSimulatorTimeMutex.release();
-
-      return now;
-   }
-
+#if 0
    void SocketManager::step (vpr::Uint32 step_size)
    {
       if ( step_size == 0 )
@@ -110,6 +98,7 @@ namespace sim
       }
       mBindListSockMutex.release();
    }
+#endif
 
    bool SocketManager::hasActiveSockets ()
    {
@@ -148,10 +137,12 @@ namespace sim
                                              NetworkGraph::VertexListPtr& path,
                                              vpr::Interval timeout )
    {
+      vprASSERT(mActive && "Socket manager not activated yet");
+
       vpr::ReturnStatus status;
 
       vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
-         <<"connect( "<<remoteName.getAddressString()<<" )\n"<<vprDEBUG_FLUSH;
+         <<"connect( "<<remoteName<<" )\n"<<vprDEBUG_FLUSH;
 
       const vpr::SocketStreamImplSIM* stream_socket;
       stream_socket = dynamic_cast<const vpr::SocketStreamImplSIM*>(local_socket);
@@ -238,8 +229,7 @@ namespace sim
 
             const NetworkGraph::net_vertex_t& u = local_socket->getNetworkNode();
             const NetworkGraph::net_vertex_t& v = (*remote_socket)->getNetworkNode();
-            vprASSERT(mGraph != NULL && "No network graph avaiable!");
-            path = mGraph->getShortestPath(u, v);
+            path = vpr::sim::Controller::instance()->getNetworkGraph().getShortestPath(u, v);
 
             // Now find the shortest path between u and v.
 
@@ -277,9 +267,7 @@ namespace sim
                                           const vpr::InetAddrSIM& localName )
    {
       vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)<<"bind( "<<handle<<", "
-                                            <<localName.getAddressValue()<<":"
-                                            <<localName.getPort()<<")\n"
-                                            <<vprDEBUG_FLUSH;
+                                            <<localName<<vprDEBUG_FLUSH;
       if (handle->isOpen() &&
           isBound( handle ) == false &&
           isBound( localName ) == false)
@@ -302,7 +290,7 @@ namespace sim
          {
             vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
                << "vpr::sim::SocketManager: handle(" << handle << ") and address("
-               << localName.getAddressValue() << ") already bound\n"
+               << localName << ") already bound\n"
                << vprDEBUG_FLUSH;
          }
          else if (isBound( handle ) == true)
@@ -317,8 +305,7 @@ namespace sim
             {
                vprASSERT( mBindListAddr.count( localName ) > 0 && "error" );
                vprDEBUG(vprDBG_ALL, vprDBG_CRITICAL_LVL)
-                  << "vpr::sim::SocketManager: address " << localName.getAddressValue()
-                  << ":" << localName.getPort()
+                  << "vpr::sim::SocketManager: address " << localName
                   << " is already bound by socket " << mBindListAddr[localName]
                   << " (couldn't bind sock " << handle << ")\n"
                   << vprDEBUG_FLUSH;
@@ -400,7 +387,7 @@ namespace sim
 
       bool attached = false;
 
-      vpr::Uint32 node_count = mGraph->getNodeCount();
+      vpr::Uint32 node_count = vpr::sim::Controller::instance()->getNetworkGraph().getNodeCount();
       vprASSERT(node_count > 0 && "No nodes in the network!");
 
       // Ensure that we get a network node that is not already attached to a
@@ -417,8 +404,8 @@ namespace sim
          // if the address to which the socket is bound corresponded to the
          // node in the graph.  This could lead to better grouping of nodes as
          // would occur on a real network.
-         NetworkGraph::net_vertex_t node = mGraph->getNode(n);
-         NetworkNode node_prop           = mGraph->getNodeProperty(node);
+         NetworkGraph::net_vertex_t node = vpr::sim::Controller::instance()->getNetworkGraph().getNode(n);
+         NetworkNode node_prop           = vpr::sim::Controller::instance()->getNetworkGraph().getNodeProperty(node);
 
          if ( ! node_prop.hasSocket(handle->getLocalAddr().getPort(),
                                     handle->getType()) )
@@ -436,7 +423,7 @@ namespace sim
 
             // Ensure that the property associated with node n is updated
             // properly.  What a pain.
-            mGraph->setNodeProperty(node, node_prop);
+            vpr::sim::Controller::instance()->getNetworkGraph().setNodeProperty(node, node_prop);
 
             attached = true;
          }
@@ -451,14 +438,14 @@ namespace sim
       NetworkGraph::net_vertex_t node;
       vpr::ReturnStatus status;
 
-      status = mGraph->getNodeWithAddr(addr.getAddressValue(), node);
+      status = vpr::sim::Controller::instance()->getNetworkGraph().getNodeWithAddr(addr.getAddressValue(), node);
 
       if ( status.success() )
       {
-         NetworkNode node_prop = mGraph->getNodeProperty(node);
+         NetworkNode node_prop = vpr::sim::Controller::instance()->getNetworkGraph().getNodeProperty(node);
          handle->setNetworkNode(node);
          node_prop.addSocket(handle);
-         mGraph->setNodeProperty(node, node_prop);
+         vpr::sim::Controller::instance()->getNetworkGraph().setNodeProperty(node, node_prop);
       }
       // Fall back on a randomly assigned node.
       else
@@ -472,23 +459,23 @@ namespace sim
    void SocketManager::findRoute (vpr::SocketImplSIM* src_sock,
                                   vpr::SocketImplSIM* dest_sock)
    {
-      vprASSERT(mGraph != NULL && "No network graph avaiable!");
+      vprASSERT(mActive && "Socket manager not activated!");
 
       const NetworkGraph::net_vertex_t& u = src_sock->getNetworkNode();
       const NetworkGraph::net_vertex_t& v = dest_sock->getNetworkNode();
       NetworkGraph::VertexListPtr path;
 
       // Now find the shortest path between u and v.
-      path = mGraph->getShortestPath(u, v);
+      path = vpr::sim::Controller::instance()->getNetworkGraph().getShortestPath(u, v);
       src_sock->setPathToPeer(path);
-      dest_sock->setPathToPeer(mGraph->reversePath(path));
+      dest_sock->setPathToPeer(vpr::sim::Controller::instance()->getNetworkGraph().reversePath(path));
    }
 
    void SocketManager::sendMessage (vpr::sim::MessagePtr msg)
    {
       // There is no point in doing anything if we do not have a controller
       // for the simulation.
-      vprASSERT(mController != NULL && "No simulation controller defined");
+      vprASSERT(mActive && "Socket manager not activated yet");
 
       NetworkGraph::net_vertex_t first_hop, second_hop;
       vpr::ReturnStatus status;
@@ -500,7 +487,7 @@ namespace sim
       status = msg->getNextHop(second_hop, false);
       vprASSERT(status.success() && "Could not get second node in message's path");
 
-      boost::tie(first_edge, found) = mGraph->getEdge(first_hop, second_hop);
+      boost::tie(first_edge, found) = vpr::sim::Controller::instance()->getNetworkGraph().getEdge(first_hop, second_hop);
 
       if ( found )
       {
@@ -508,13 +495,13 @@ namespace sim
          NetworkLine::LineDirection dir;
          vpr::Interval event_time;
 
-         first_edge_prop = mGraph->getLineProperty(first_edge);
+         first_edge_prop = vpr::sim::Controller::instance()->getNetworkGraph().getLineProperty(first_edge);
 
-         dir = mGraph->isSource(first_hop, first_edge) ? NetworkLine::FORWARD
+         dir = vpr::sim::Controller::instance()->getNetworkGraph().isSource(first_hop, first_edge) ? NetworkLine::FORWARD
                                                        : NetworkLine::REVERSE;
 
          // XXX: The direction will not always be forward!
-         first_edge_prop.calculateMessageEventTimes(msg, mSimulatorTime.now(),
+         first_edge_prop.calculateMessageEventTimes(msg, vpr::Interval::now(),
                                                     dir);
 
          vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
@@ -525,7 +512,7 @@ namespace sim
             << msg->whenArrivesFully().usec() << ")\n" << vprDEBUG_FLUSH;
 
          event_time = msg->whenStartOnWire();
-         mController->addEvent(event_time, first_edge);
+         vpr::sim::Controller::instance()->addEvent(event_time, first_edge);
       }
    }
 
@@ -536,13 +523,13 @@ namespace sim
       vpr::ReturnStatus status;
       NetworkGraph::net_vertex_t dest_node;
 
-      status = mGraph->getNodeWithAddr(dest_addr.getAddressValue(), dest_node);
+      status = vpr::sim::Controller::instance()->getNetworkGraph().getNodeWithAddr(dest_addr.getAddressValue(), dest_node);
 
       if ( status.success() )
       {
          NetworkNode dest_node_prop;
 
-         dest_node_prop = mGraph->getNodeProperty(dest_node);
+         dest_node_prop = vpr::sim::Controller::instance()->getNetworkGraph().getNodeProperty(dest_node);
 
          if ( dest_node_prop.hasSocket(dest_addr.getPort(), vpr::SocketTypes::DATAGRAM) )
          {
@@ -550,7 +537,7 @@ namespace sim
             NetworkGraph::VertexListPtr path;
 
             peer = const_cast<vpr::SocketImplSIM*>(mBindListAddr[dest_addr]);
-            path = mGraph->getShortestPath(src_sock->getNetworkNode(), dest_node);
+            path = vpr::sim::Controller::instance()->getNetworkGraph().getShortestPath(src_sock->getNetworkNode(), dest_node);
             msg->setPath(path, src_sock, peer);
 
             // At this point, the message is ready to go, so we can send it in
@@ -684,10 +671,8 @@ namespace sim
          hand = handle;                // Temporary storage ...
 
          vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL)
-            << "_unbind() unmapping: "
-            << mBindListSock[handle].getAddressValue() << ":"
-            << mBindListSock[handle].getPort() << " " << handle << "\n"
-            << vprDEBUG_FLUSH;
+            << "_unbind() unmapping: " << mBindListSock[handle] << " "
+            << handle << "\n" << vprDEBUG_FLUSH;
 
          mBindListAddrMutex.acquire();
          {

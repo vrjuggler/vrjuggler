@@ -50,12 +50,9 @@
 #include <iostream>
 #include <pair.h>
 
-#include <vpr/vpr.h>
+#include <vpr/vprTypes.h>
 #include <vpr/IO/Socket/SocketTypes.h>
 #include <vpr/Sync/Mutex.h>
-#include <vpr/Util/Singleton.h>
-#include <vpr/Util/Interval.h>
-#include <vpr/System.h>
 
 #include <vpr/md/SIM/IO/Socket/InetAddrSIM.h> /* Plexus InetAddr implementation */
 #include <vpr/md/SIM/Network/NetworkGraph.h>
@@ -65,6 +62,7 @@
 namespace vpr
 {
 
+class Interval;
 class SocketImplSIM;
 class SocketStreamImplSIM;
 
@@ -78,56 +76,18 @@ class Controller;
  * in the overall sim socket scheme, this sits at the operating system level.
  * This roughly corresponds to the data link layer.
  */
-class VPR_CLASS_API SocketManager : public vpr::Singleton<SocketManager>
+class VPR_CLASS_API SocketManager
 {
 public:
-   void setNetworkGraph (vpr::sim::NetworkGraph* graph)
+   SocketManager (void) : mActive(false)
    {
-      mGraph = graph;
+      /* Do nothing. */ ;
    }
 
-   /**
-    * Assigns the controller of the simulation.  The existence of this method
-    * is probably a hack, but it is needed so that the Socket Manager can
-    * add events when its sockets send messages.
-    */
-   void setController (vpr::sim::Controller* controller)
+   void setActive (void)
    {
-      mController = controller;
+      mActive = true;
    }
-
-   /**
-    * Sets the current time for the socket manager's simulation clock.  The
-    * given value is interpreted as microseconds.  This is intended to be
-    * used when starting a simulation run.
-    *
-    * @pre  The time for a running simulation is less than the given time.
-    * @post The internal simulation clock is reset to use the given time.
-    *
-    * @param ms The value (in microseconds) used for setting the internal
-    *           clock.
-    */
-   void setTime (const vpr::Uint32 microseconds)
-   {
-      mSimulatorTimeMutex.acquire();
-         mSimulatorTime.set(microseconds, vpr::Interval::Usec);
-      mSimulatorTimeMutex.release();
-   }
-
-   /**
-    * Returns the current time as defined by the manager's internal clock.
-    */
-   vpr::Interval getNow(void);
-
-   /**
-    * Causes the internal simulated clock to take at least one time step
-    * forward.
-    *
-    * @pre The current time is "accurate".
-    * @post The internal clock is incremented by the given value.  If the
-    *       value is 0, the time is incremented by one time unit.
-    */
-   void step(vpr::Uint32 step_size);
 
    /**
     * Queries if there are currently any active sockets registered with this
@@ -278,15 +238,6 @@ public:
    vpr::ReturnStatus bindUnusedPort( vpr::SocketImplSIM* sock,
                                      vpr::InetAddrSIM& addr );
 
-protected:
-   friend class vpr::Singleton<SocketManager>;
-
-   SocketManager (void)
-      : mGraph(NULL), mController(NULL), mSimulatorTime(0, vpr::Interval::Usec)
-   {
-      /* Do nothing. */ ;
-   }
-
 private:
    /**
     * The "internal" bind method called by the public bind() method.  This one
@@ -327,11 +278,7 @@ private:
       }
    };
 
-   vpr::sim::NetworkGraph* mGraph;
-   vpr::sim::Controller*   mController;
-
-   vpr::Interval mSimulatorTime;
-   vpr::Mutex    mSimulatorTimeMutex;
+   bool mActive;
 
    std::map<vpr::InetAddrSIM, std::pair<const vpr::SocketStreamImplSIM*, int>, ltaddr> mListenerList;
    vpr::Mutex mListenerListMutex;
