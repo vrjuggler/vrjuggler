@@ -38,15 +38,19 @@
 #include <gmtl/Coord.h>
 #include <gmtl/Xforms.h>
 #include <gmtl/Math.h>
-#include "remotenav/Subject/RemoteNavSubjectImpl.h"
+
+#ifdef USE_REMOTE_NAV
+#   include <remotenav/Subject/RemoteNavSubjectImpl.h>
+#endif
 
 OsgNav::OsgNav(vrj::Kernel* kern, int& argc, char** argv) : vrj::OsgApp(kern)
 {
    mFileToLoad = std::string("");
-   
-   //Initialize tweek, which registers a new RemoteNavSubjectImpl with the
-   //nameserver.
+
+#ifdef USE_REMOTE_NAV   
+   // Initialize tweek and register RemoteNavSubjectImpl with the nameserver.
    initTweek( argc, argv );
+#endif
 }
 
 void OsgNav::latePreFrame()
@@ -178,7 +182,7 @@ void OsgNav::myInit()
 
 void OsgNav::initTweek( int& argc, char* argv[] )
 {
-#ifdef TWEEK_HAVE_CXX
+#ifdef USE_REMOTE_NAV
    std::cout << "\n\nSTARTING TWEEK INITIALIZATION!!\n\n" << std::flush;
 
    std::string name_context( "OSG_REMOTE_NAV_");
