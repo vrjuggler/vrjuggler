@@ -33,7 +33,7 @@
 #include <iostream>
 #include <math.h>
 
-#include <Math/vjQuat.h>
+#include <vrj/Math/Quat.h>
 
 #include <cubesApp.h>
 
