@@ -44,6 +44,7 @@
 
 #include <vpr/vprConfig.h>
 #include <stdlib.h>
+#include <boost/concept_check.hpp>
 
 #include <vpr/Util/Assert.h>
 
@@ -186,6 +187,7 @@ public:
 
    void operator() (void* arg)
    {
+      boost::ignore_unused_variable_warning(arg);
       (mObject->*mFunction)();
    }
 
@@ -196,6 +198,7 @@ public:
 
    virtual void setArg(void* arg)
    {
+      boost::ignore_unused_variable_warning(arg);
    }
 
    virtual bool isValid()
