@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beanlist>
+  <service name="Environment">
+    <file name="${TWEEK_BASE_DIR}/bin/beans/Services.jar" 
+          entry="org/vrjuggler/tweek/services/EnvironmentService" />
+  </service>
+</beanlist>

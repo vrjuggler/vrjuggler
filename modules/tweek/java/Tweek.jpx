@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--JBuilder XML Project-->
+<project>
+  <property category="idl" name="ProcessIDL" value="false" />
+  <property category="runtime.0" name="RunnableType" value="com.borland.jbuilder.runtime.ApplicationRunner" />
+  <property category="runtime.0" name="application.class" value="org.vrjuggler.tweek.Tweek" />
+  <property category="sys" name="AuthorLabel" value="@author" />
+  <property category="sys" name="BackupPath" value="bak" />
+  <property category="sys" name="BeansInstantiate" value="false" />
+  <property category="sys" name="BraceStyle" value="1" />
+  <property category="sys" name="CheckStable" value="1" />
+  <property category="sys" name="Company" value="VRAC" />
+  <property category="sys" name="CompanyLabel" value="Company:" />
+  <property category="sys" name="Copyright" value="Copyright (c) 2001" />
+  <property category="sys" name="CopyrightLabel" value="Copyright:" />
+  <property category="sys" name="Description" value="" />
+  <property category="sys" name="DescriptionLabel" value="Description:" />
+  <property category="sys" name="DocPath" value="doc" />
+  <property category="sys" name="EventMatch" value="false" />
+  <property category="sys" name="EventStyle" value="1" />
+  <property category="sys" name="ExcludeClassEnabled" value="0" />
+  <property category="sys" name="InstanceVisibility" value="0" />
+  <property category="sys" name="JDK" value="java 1.3.1_01" />
+  <property category="sys" name="JbxEventListener0" value="org.vrjuggler.tweek.net.CommunicationListener" />
+  <property category="sys" name="JbxEventListener1" value="org.vrjuggler.tweek.beans.BeanInstantiationListener" />
+  <property category="sys" name="LastTag" value="113" />
+  <property category="sys" name="Libraries" value="JDOM B7;Xerces" />
+  <property category="sys" name="MakeStable" value="0" />
+  <property category="sys" name="OutPath" value="classes" />
+  <property category="sys" name="SourcePath" value="." />
+  <property category="sys" name="Title" value="Tweek JavaBean Loader" />
+  <property category="sys" name="TitleLabel" value="Title:" />
+  <property category="sys" name="Version" value="1.0" />
+  <property category="sys" name="VersionLabel" value="@since" />
+  <property category="sys" name="WorkingDirectory" value="." />
+  <file path="org/vrjuggler/tweek/AboutBox.java" />
+  <file path="org/vrjuggler/tweek/beans/BeanCollectionBuilder.java" />
+  <file path="org/vrjuggler/tweek/BeanContainer.java" />
+  <file path="org/vrjuggler/tweek/beans/BeanDependency.java" />
+  <file path="org/vrjuggler/tweek/beans/BeanFocusChangeEvent.java" />
+  <file path="org/vrjuggler/tweek/beans/BeanFocusChangeListener.java" />
+  <file path="org/vrjuggler/tweek/iconviewer/BeanIconPanel.java" />
+  <file path="org/vrjuggler/tweek/iconviewer/BeanIconViewer.java" />
+  <file path="org/vrjuggler/tweek/beans/BeanInstantiationCommunicator.java" />
+  <file path="org/vrjuggler/tweek/beans/BeanInstantiationEvent.java" />
+  <file path="org/vrjuggler/tweek/beans/loader/BeanInstantiationException.java" />
+  <file path="org/vrjuggler/tweek/beans/BeanInstantiationListener.java" />
+  <file path="org/vrjuggler/tweek/beans/loader/BeanJarClassLoader.java" />
+  <file path="org/vrjuggler/tweek/beans/loader/BeanJarFile.java" />
+  <file path="org/vrjuggler/tweek/beans/loader/BeanLoader.java" />
+  <file path="org/vrjuggler/tweek/beans/BeanModelViewer.java" />
+  <file path="org/vrjuggler/tweek/beans/BeanPathException.java" />
+  <file path="org/vrjuggler/tweek/treeviewer/BeanTree.java" />
+  <file path="org/vrjuggler/tweek/beans/BeanTreeModel.java" />
+  <file path="org/vrjuggler/tweek/treeviewer/BeanTreeViewer.java" />
+  <file path="org/vrjuggler/tweek/net/CommunicationEvent.java" />
+  <file path="org/vrjuggler/tweek/net/CommunicationListener.java" />
+  <file path="org/vrjuggler/tweek/net/corba/CorbaService.java" />
+  <file path="org/vrjuggler/tweek/beans/DefaultBeanModelViewer.java" />
+  <file path="org/vrjuggler/tweek/services/EnvironmentService.java" />
+  <file path="org/vrjuggler/tweek/beans/FileFinder.java" />
+  <file path="org/vrjuggler/tweek/beans/GenericBean.java" />
+  <file path="org/vrjuggler/tweek/services/GlobalPreferencesService.java" />
+  <file path="org/vrjuggler/tweek/beans/PanelBean.java" />
+  <file path="org/vrjuggler/tweek/PrefsDialog.java" />
+  <file path="org/vrjuggler/tweek/beans/ServiceBean.java" />
+  <file path="org/vrjuggler/tweek/ServiceRegistry.java" />
+  <file path="org/vrjuggler/tweek/beans/TreeModelRefreshEvent.java" />
+  <file path="org/vrjuggler/tweek/beans/TreeModelRefreshListener.java" />
+  <file path="org/vrjuggler/tweek/Tweek.java" />
+  <file path="org/vrjuggler/tweek/beans/TweekBean.java" />
+  <file path="org/vrjuggler/tweek/TweekCore.java" />
+  <file path="org/vrjuggler/tweek/TweekFrame.java" />
+  <file path="org/vrjuggler/tweek/beans/UserLevelChangeEvent.java" />
+  <file path="org/vrjuggler/tweek/beans/UserLevelChangeListener.java" />
+  <file path="org/vrjuggler/tweek/beans/ViewerBean.java" />
+  <file path="org/vrjuggler/tweek/ViewerRegistry.java" />
+</project>
+

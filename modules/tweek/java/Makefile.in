@@ -1,0 +1,185 @@
+# **************** <Tweek heading BEGIN do not edit this line> ****************
+# Tweek
+#
+# -----------------------------------------------------------------
+# File:          $RCSfile$
+# Date modified: $Date$
+# Version:       $Revision$
+# -----------------------------------------------------------------
+# **************** <Tweek heading END do not edit this line> ******************
+
+# ************** <auto-copyright.pl BEGIN do not edit this line> **************
+#
+# VR Juggler is (C) Copyright 1998, 1999, 2000, 2001 by Iowa State University
+#
+# Original Authors:
+#   Allen Bierbaum, Christopher Just,
+#   Patrick Hartling, Kevin Meinert,
+#   Carolina Cruz-Neira, Albert Baker
+#
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Library General Public
+# License as published by the Free Software Foundation; either
+# version 2 of the License, or (at your option) any later version.
+#
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Library General Public License for more details.
+#
+# You should have received a copy of the GNU Library General Public
+# License along with this library; if not, write to the
+# Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+# Boston, MA 02111-1307, USA.
+#
+# *************** <auto-copyright.pl END do not edit this line> ***************
+
+# -----------------------------------------------------------------------------
+# Makefile.in for tweek/java.  It requires GNU make.
+#
+# Generated for use on @PLATFORM@
+# -----------------------------------------------------------------------------
+
+default: all
+
+# Include common definitions.
+include @topdir@/make.defs.mk
+
+beandir		= $(bindir)/beans
+srcdir		= @srcdir@
+top_srcdir	= @top_srcdir@
+INSTALL		= @INSTALL@
+
+JDOM_JAR	= @JDOM_JAR@
+CLASSPATH	= $(JDOM_JAR)
+
+JAVA_SRCS	= org/vrjuggler/tweek/Tweek.java			\
+                  org/vrjuggler/tweek/beans/BeanCollectionBuilder.java	\
+                  org/vrjuggler/tweek/services/EnvironmentService.java	\
+                  org/vrjuggler/tweek/iconviewer/BeanIconViewer.java	\
+                  org/vrjuggler/tweek/treeviewer/BeanTreeViewer.java	\
+                  org/vrjuggler/tweek/net/rmi/Connection.java		\
+                  org/vrjuggler/tweek/net/rmi/Initializer.java
+
+JARS		= Tweek.jar		\
+                  TweekBeans.jar	\
+                  TweekComm.jar
+BEANS		= Viewers		\
+                  Services
+
+# For the following, *.class is used so that these variables may be used as
+# dependencies of .jar targets.
+
+TWEEK_CLASSES	= org/vrjuggler/tweek/*.class
+
+BEANS_MF	= $(srcdir)/beans.MF
+BEANS_EXTRAS	= org/vrjuggler/tweek/beans/icon/*.gif
+BEANS_CLASSES	= org/vrjuggler/tweek/beans/*.class		\
+                  org/vrjuggler/tweek/beans/icon/*.class	\
+                  org/vrjuggler/tweek/beans/loader/*.class	\
+                  org/vrjuggler/tweek/beans/tree/*.class
+
+COMM_CLASSES	= org/vrjuggler/tweek/net/*.class			\
+                  org/vrjuggler/tweek/net/rmi/Connection_Stub.class	\
+                  org/vrjuggler/tweek/net/rmi/PlexusNodeInterfaceRMI.class \
+                  org/vrjuggler/tweek/net/rmi/RemoteInterface.class
+
+SERVICE_MF	= $(srcdir)/services.MF
+SERVICE_CLASSES	= org/vrjuggler/tweek/services/EnvironmentService.class
+
+VIEWERS_MF	= $(srcdir)/viewers.MF
+VIEWERS_CLASSES	= org/vrjuggler/tweek/iconviewer/*.class	\
+                  org/vrjuggler/tweek/treeviewer/*.class
+VIEWERS_EXTRAS	= org/vrjuggler/tweek/iconviewer/*.gif
+
+include $(MKPATH)/dpp.obj.mk
+
+# -----------------------------------------------------------------------------
+# Extra targets.
+# -----------------------------------------------------------------------------
+#plx/comm/rmi/Connection_Stub.class: plx/comm/rmi/Connection.class	\
+#                                    plx/comm/rmi/Connection.java
+#	$(RMIC) $(RMIC_FLAGS) -d $(OBJDIR) plx.comm.rmi.Connection
+
+jars: $(JARS) $(addsuffix .jar, $(BEANS))
+
+Tweek.jar: $(TWEEK_CLASSES)
+	$(JAR) cvf $@ $(TWEEK_CLASSES)
+
+TweekComm.jar: $(COMM_CLASSES)
+	$(JAR) cvf $@ $(COMM_CLASSES)
+
+TweekBeans.jar: $(BEANS_MF) $(BEANS_CLASSES)
+	$(JAR) cvfm $@ $(BEANS_MF) $(BEANS_CLASSES)
+	cd $(srcdir) &&							\
+          $(JAR) uvf $(topdir)/org/vrjuggler/tweek/$@ $(BEANS_EXTRAS)
+
+Viewers.jar: $(VIEWERS_CLASSES)
+	$(JAR) cvfm $@ $(VIEWERS_MF) $(VIEWERS_CLASSES)
+	cd $(srcdir) &&							\
+          $(JAR) uvf $(topdir)/org/vrjuggler/tweek/$@ $(VIEWERS_EXTRAS)
+
+Services.jar: $(SERVICE_CLASSES)
+	$(JAR) cvfm $@ $(SERVICE_MF) $(SERVICE_CLASSES)
+
+links:
+	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/bin/beans
+	cd $(instlinks)/bin && rm -f ./*.jar
+	cd $(instlinks)/bin &&						\
+          for jar in $(JARS) ;						\
+          do								\
+              $(LN_S) $(topdir)/java/$$jar ./ ;				\
+          done
+	cd $(instlinks)/bin/beans && rm -f ./*.jar
+	cd $(instlinks)/bin/beans &&					\
+          for bean in $(BEANS) ;					\
+          do								\
+              $(LN_S) $(topdir)/java/$$bean.jar ./ ;			\
+              $(LN_S) $(topdir)/java/$$bean.xml ./ ;			\
+          done
+	cd $(instlinks)/bin &&						\
+          for jar in `echo "$(JDOM_JAR)" | sed -e 's/$(JCPS)/ /g'` ;	\
+          do								\
+              $(LN_S) $$jar ./ ;					\
+          done
+	cd $(instlinks)/bin && rm -f ./tweek &&				\
+          $(LN_S) $(TWEEKROOT_ABS)/java/tweek.sh ./tweek
+	cd $(instlinks)/bin && rm -f ./java.security.policy.txt &&	\
+          $(LN_S) $(TWEEKROOT_ABS)/java/java.security.policy.txt ./
+
+# This cannot be named 'install' because Doozer++ already defines that.
+tweek-install:
+	@echo "------------------------------------------------"
+	@echo "Installing the Tweek Java code base"
+	@echo "------------------------------------------------"
+ifeq (@OS_TYPE@, UNIX)
+	$(INSTALL) -m $(EXEC_PERMS) $(GROUP_OPT_UNIX)			\
+          $(TWEEKROOT_ABS)/java/tweek.sh $(bindir)/tweek
+else
+	$(INSTALL) -m $(EXEC_PERMS) $(GROUP_OPT_UNIX)			\
+          $(TWEEKROOT_ABS)/java/tweek.bat $(bindir)/tweek.bat
+endif	# if OS_TYPE == UNIX
+	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
+          $(topdir)/java/java.security.policy.txt $(bindir)
+	for jar in $(JARS) ;						\
+          do								\
+              $(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)		\
+                $(topdir)/java/$$jar $(bindir) ;			\
+          done
+	for bean in $(BEANS) ;						\
+          do								\
+              $(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)		\
+                $(topdir)/java/$$bean.jar $(beandir) ;			\
+              $(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)		\
+                $(topdir)/java/$$bean.xml $(beandir) ;			\
+          done
+	for jar in `echo "$(JDOM_JAR)" | sed -e 's/$(JCPS)/ /g'` ;	\
+          do								\
+              $(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIT)		\
+                $$jar $(bindir) ;					\
+          done
+
+CLEAN_FILES	+= $(JARS)
+CLEAN_DIRS	+= org
+
+include Makefile.inc
