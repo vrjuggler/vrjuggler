@@ -112,7 +112,10 @@ public class ConfigDefinitionEditor
       mNameTxt.setText(name);
       mTokenTxt.setText(token);
 
-      mAbstractBox.setSelected(mDefinition.isAbstract());
+      if ( mDefinition != null )
+      {
+         mAbstractBox.setSelected(mDefinition.isAbstract());
+      }
 
       // Reset the categories list
       mCategoriesModel.clear();
