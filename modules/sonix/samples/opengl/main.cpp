@@ -30,7 +30,7 @@
  * Juggler Juggler
  *
  * Original Authors:
- *   Kevin Meinert, Carolina Cruz-Neira
+ *   Kevin Meinert
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile$
@@ -201,7 +201,18 @@ static void OnKeyboardDown( unsigned char k, int x, int y )
       sonix::instance()->changeAPI( "AudioWorks" );
    }
    break;
-      case '3':
+   case '3':
+   {
+      sonix::instance()->changeAPI( "Stub" );
+      snx::SoundInfo si;
+      si.filename = "attack.wav";
+      si.ambient = false;
+      si.datasource = snx::SoundInfo::FILESYSTEM;
+      kevinSound.configure( si );
+
+      sonix::instance()->changeAPI( "Subsynth" );
+   }
+   case '4':
    {
       sonix::instance()->changeAPI( "Stub" );
    }
