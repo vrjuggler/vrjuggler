@@ -33,7 +33,7 @@
 #ifndef GADGET_VIRTUAL_DEVICE_H
 #define GADGET_VIRTUAL_DEVICE_H
 
-#include <cluster/Plugins/PluginConfig.h>
+#include <cluster/PluginConfig.h>
 #include <gadget/Util/Debug.h>
 #include <gadget/Type/Input.h>
 

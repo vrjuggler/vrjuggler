@@ -33,7 +33,7 @@
 #ifndef CLUSTER_DEVICE_SERVER_H
 #define CLUSTER_DEVICE_SERVER_H
 
-#include <cluster/Plugins/PluginConfig.h>
+#include <cluster/PluginConfig.h>
 #include <cluster/Packets/DataPacket.h>
 #include <gadget/Type/Input.h>
 #include <vpr/Sync/Semaphore.h>
