@@ -41,6 +41,7 @@
 #include <Threads/vjThreadPool.h>
 #include <SharedMem/vjMemory.h>
 #include <Kernel/vjDebug.h>
+#include <Sync/vjMutex.h>
 
 void doIt(void*);
 
@@ -56,6 +57,7 @@ int main(void)
 {
     vjSharedPool myPool(65536, 16);    // size, num threads
     vjThreadPool* thePool = new(&myPool) vjThreadPool(NUMTHREADS);
+    vjMutex DebugLock;
     
     std::cout << "\nMax: " << intVector.max_size() << std::endl;
 
