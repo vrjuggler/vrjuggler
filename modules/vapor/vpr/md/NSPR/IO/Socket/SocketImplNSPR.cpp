@@ -301,6 +301,8 @@ SocketImplNSPR::read_i (void* buffer, const size_t length, ssize_t& bytes_read,
 {
    Status retval;
 
+   m_blocking_fixed = true;
+
    bytes_read = PR_Recv(m_handle, buffer, length, 0, NSPR_getInterval(timeout));
 
    // -1 indicates failure which includes PR_WOULD_BLOCK_ERROR.
@@ -325,6 +327,8 @@ SocketImplNSPR::readn_i (void* buffer, const size_t length,
 {
    Status retval;
 
+   m_blocking_fixed = true;
+
    bytes_read = PR_Recv(m_handle, buffer, length, 0, NSPR_getInterval(timeout));
 
    // -1 indicates failure which includes PR_WOULD_BLOCK_ERROR.
@@ -347,6 +351,8 @@ SocketImplNSPR::write_i (const void* buffer, const size_t length,
                          ssize_t& bytes_written, const vpr::Interval timeout)
 {
    Status retval;
+
+   m_blocking_fixed = true;
 
    bytes_written = PR_Send(m_handle, buffer, length, 0,
                            NSPR_getInterval(timeout));
