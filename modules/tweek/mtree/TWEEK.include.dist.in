@@ -43,6 +43,8 @@
         tweek
             CORBA
             ..
+            Client
+            ..
             Util
             ..
             idl
