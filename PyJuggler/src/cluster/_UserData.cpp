@@ -79,7 +79,6 @@ public:
          try
          {
             // Pickle the object to be shared.
-            pickle_dumps(self);
             str pickled_obj(pickle_dumps(self));
 
             vprDEBUG(pyjDBG_CXX, vprDBG_HEX_LVL)
