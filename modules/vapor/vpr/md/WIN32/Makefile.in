@@ -49,9 +49,8 @@
 include @topdir@/make.defs.mk
 
 # Prefix for recursive stuff.
-DIRPRFX		= vpr/md/WIN32/
-
-SUBDIR		= IO
+DIRPRFX=	vpr/md/WIN32/
+SUBDIR=		IO
 
 $(RECTARGET): recursive
 

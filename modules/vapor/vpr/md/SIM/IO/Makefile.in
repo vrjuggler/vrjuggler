@@ -50,21 +50,21 @@ default: all
 # Include common definitions.
 include @topdir@/make.defs.mk
 
-includedir	= @includedir@/vpr/md/SIM/IO
-srcdir		= @srcdir@
-top_srcdir	= @top_srcdir@
-INSTALL		= @INSTALL@
-SUBOBJDIR	= $(VPR_LIBRARY)
+includedir=	@includedir@/vpr/md/SIM/IO
+srcdir=		@srcdir@
+top_srcdir=	@top_srcdir@
+INSTALL=	@INSTALL@
+SUBOBJDIR=	$(VPR_LIBRARY)
 
 # Prefix for recursive stuff.
-DIRPRFX		= vpr/md/SIM/IO/
+DIRPRFX=	vpr/md/SIM/IO/
 
 # Subdirectories used for recursion through the source tree.
-SUBDIR		= Socket
+SUBDIR=		Socket
 
 ifeq (@SIMULATOR@, Y)
-    SRCS	= IOSysSIM.cpp		\
-                  SelectorImplSIM.cpp
+   SRCS=	IOSysSIM.cpp		\
+		SelectorImplSIM.cpp
 endif
 
 include $(MKPATH)/dpp.obj-subdir.mk
@@ -74,6 +74,6 @@ include $(MKPATH)/dpp.obj-subdir.mk
 # -----------------------------------------------------------------------------
 ifndef DO_CLEANDEPEND
 ifndef DO_BEFOREBUILD
-    -include $(DEPEND_FILES)
+   -include $(DEPEND_FILES)
 endif
 endif
