@@ -67,6 +67,28 @@ public class UnitInfo
       this.unitNumber = new Integer(this.unitNumber.intValue() + 1);
    }
 
+   public boolean equals(Object obj)
+   {
+      boolean result = false;
+
+      if ( this == obj )
+      {
+         result = true;
+      }
+      else if ( obj instanceof UnitInfo )
+      {
+         UnitInfo info_obj = (UnitInfo) obj;
+
+         if ( this.unitType.equals(info_obj.unitType) &&
+              this.unitNumber.equals(info_obj.unitNumber) )
+         {
+            result = true;
+         }
+      }
+
+      return result;
+   }
+
    private Integer unitType   = null;
    private Integer unitNumber = null;
 }
