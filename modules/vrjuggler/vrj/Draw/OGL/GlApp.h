@@ -63,10 +63,10 @@ namespace vrj
  *  while (drawing)                                 
  *  {                                               
  *     preFrame();                 
- *     <b>bufferPreDraw();</b>     // called for each draw buffer
- *     <b>contextPreDraw();</b>    // called for each context
- *     <b>draw();</b>              // called for each surfacewindow
- *     <b>contextPostDraw();</b>   // called for each context
+ *     bufferPreDraw();            // called for each draw buffer
+ *     contextPreDraw();           // called for each context
+ *     draw();                     // called for each surfacewindow
+ *     contextPostDraw();          // called for each context
  *     intraFrame();               // called in parallel to the draw functions.
  *     sync();
  *     postFrame();
@@ -89,42 +89,42 @@ public:
 
    GlApp() {;}
 
-   /** Function to draw the scene
-    * Override this function with the user draw routine
-    * @pre OpenGL state has correct transformation and buffer selected
-    * @post The current scene has been drawn
+   /** Function to draw the scene.
+    * Override this function with the user draw routine.
+    * @pre OpenGL state has correct transformation and buffer selected.
+    * @post The current scene has been drawn.
     */
    virtual void draw() = 0;
 
-   /** Function that is called immediately after a new context is created
+   /** Function that is called immediately after a new context is created.
     *  Use this function to create context specific data structures.
     *  i.e. Display lists, Texture objects, etc.
-    * @pre The ogl context has been set to the new context
-    * @post Application has completed in initialization the user wishes
+    * @pre The OpenGL context has been set to the new context.
+    * @post Application has completed in initialization the user wishes.
     */
    virtual void contextInit()
    {;}
 
-   /** Function that is called immediately before a context is closed
-    * Use the function to clean up any context data structures
+   /** Function that is called immediately before a context is closed.
+    * Use the function to clean up any context data structures.
     */
    virtual void contextClose()
    {;}
 
    /** Function that is called upon entry into the context for a draw.
-    * @pre The ogl context has been set to the context for drawing
+    * @pre The OpenGL context has been set to the context for drawing.
     * @post User application has executed any commands that need
-    *   to only be executed once per context, per frame
+    *   to only be executed once per context, per frame.
     * @note This function can be used for things that need to happen
-    *       every frame, but only once per context
+    *       every frame, but only once per context.
     *  <br> 
-    * Ex: Dynamically Create display lists
+    * Ex: Dynamically Create display lists.
     */
    virtual void contextPreDraw()
    {;}
 
    /** Function that is called upon exit of the context for a draw.
-    * @pre The ogl context has been set to the context for drawing
+    * @pre The OpenGL context has been set to the context for drawing.
     */
    virtual void contextPostDraw()
    {;}
@@ -133,7 +133,7 @@ public:
     * This function is executed after contextInit() (if needed) but before
     * contextPreDraw().  It is called once per framebuffer (see note).
     *
-    * @pre The ogl context has been set to the context for drawing
+    * @pre The OpenGL context has been set to the context for drawing
     * @post User application has executed any commands that need
     *   to only be executed once per context, per buffer, per frame
     * @note This function is designed to be used when you want to do something
@@ -145,12 +145,13 @@ public:
    virtual void bufferPreDraw()
    {;}
 
-   /** Function that is called at the beginning of the drawing of each pipe
-   * @pre The library is preparing to render all windows on a given pipe
-   * @post Any pre-pipe user calls have been done
-   * @note Currently the OGL context is not set when this function is called <br>
-   *      This is a TEST function.  USE AT YOUR OWN RISK!!!
-   */
+   /** Function that is called at the beginning of the drawing of each pipe.
+    * @pre The library is preparing to render all windows on a given pipe.
+    * @post Any pre-pipe user calls have been done.
+    * @note Currently the OpenGL context is not set when this function is
+    *       called.<br>
+    *       This is a TEST function.  USE AT YOUR OWN RISK!!!
+    */
    virtual void pipePreDraw()
    {;}
 
@@ -159,8 +160,8 @@ public:
     * @{
     */
           
-   /** Get the DrawManager to use
-   * Returns the ogl draw manager
+   /** Get the DrawManager to use.
+   * Returns the OpenGL Draw Manager.
    */
    virtual DrawManager*    getDrawManager()
    { return GlDrawManager::instance(); }
@@ -168,7 +169,7 @@ public:
     /** @} */
 };
 
+} // End of vrj namespace
 
-};
 
 #endif
