@@ -31,10 +31,10 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include <jccl/jcclConfig.h>
-#include <jccl/ConfigManager/ConfigChunkHandler.h>
-#include <jccl/ConfigManager/ConfigManager.h>
+#include <jccl/Plugins/ConfigManager/ConfigChunkHandler.h>
+#include <jccl/Plugins/ConfigManager/ConfigManager.h>
 #include <jccl/Config/ConfigChunk.h>
-#include <jccl/ConfigManager/DependencyManager.h>
+#include <jccl/Plugins/ConfigManager/DependencyManager.h>
 #include <jccl/Util/Debug.h>
 #include <typeinfo>
 

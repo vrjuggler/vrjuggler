@@ -30,9 +30,9 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <jccl/ConfigManager/XMLConfigCommunicator.h>
-#include <jccl/ConfigManager/ConfigManager.h>
-#include <jccl/ConfigManager/ConfigCommand.h>
+#include <jccl/Plugins/ConfigManager/XMLConfigCommunicator.h>
+#include <jccl/Plugins/ConfigManager/ConfigManager.h>
+#include <jccl/Plugins/ConfigManager/ConfigCommand.h>
 #include <jccl/JackalServer/Connect.h>
 #include <jccl/XMLUtil/XercesXMLParserPool.h>
 #include <jccl/Config/ConfigIO.h>

@@ -33,13 +33,13 @@
 
 
 #include <jccl/jcclConfig.h>
-#include <jccl/Performance/TimeStamp.h>
+#include <jccl/Plugins/PerformanceMonitor/TimeStamp.h>
 
 // these should all be in separate .cpp files.  fix later
 
 #if VJ_PERFORMANCE == VJ_PERF_SGI
 
-//#include <jccl/Performance/TimeStampSGI.h>
+//#include <jccl/Plugins/PerformanceMonitor/TimeStampSGI.h>
 
 /*
  * SGI cyclecounter timing
@@ -151,7 +151,7 @@ long long TimeStampSGI::maxval;
 /*
  * gettimeofday version
  */
-#include <jccl/Performance/TimeStampPosix.h>
+#include <jccl/Plugins/PerformanceMonitor/TimeStampPosix.h>
 
 namespace jccl {
 

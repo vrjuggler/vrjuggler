@@ -37,11 +37,10 @@ include @topdir@/make.defs.mk
 DIRPRFX		= jccl/
 
 SUBDIR		= Config		\
-                  XMLUtil		\
                   JackalServer		\
-                  Performance 		\
-		  ConfigManager		\
-		  Util
+		  Plugins		\
+		  Util			\
+		  XMLUtil
 
 $(RECTARGET): recursive
 

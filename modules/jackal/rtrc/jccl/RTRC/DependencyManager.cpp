@@ -32,7 +32,7 @@
 
 
 #include <jccl/jcclConfig.h>
-#include <jccl/ConfigManager/DependencyManager.h>
+#include <jccl/Plugins/ConfigManager/DependencyManager.h>
 
 namespace jccl {
 
