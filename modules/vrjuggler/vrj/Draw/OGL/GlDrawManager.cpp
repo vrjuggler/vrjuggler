@@ -54,11 +54,6 @@
 #include <vrj/Draw/OGL/GlWindow.h>
 #include <vrj/Draw/OGL/GlSimInterfaceFactory.h>
 
-// XXX: This is a hack.
-#ifdef VPR_OS_Darwin
-#  include <vrj/Draw/OGL/GlBasicSimulator.h>
-#endif
-
 #include <gmtl/Vec.h>
 #include <gmtl/Output.h>
 
@@ -271,13 +266,8 @@ void GlDrawManager::addDisplay(Display* disp)
             << "GlDrawManager::addDisplay() creating simulator of type '"
             << sim_chunk->getDescToken() << "'\n" << vprDEBUG_FLUSH;
 
-         // XXX: This is a big hack.
-#ifdef VPR_OS_Darwin
-         DrawSimInterface* new_sim_i = new GlBasicSimulator();
-#else
          DrawSimInterface* new_sim_i =
             GlSimInterfaceFactory::instance()->createObject(sim_chunk->getDescToken());
-#endif
 
          // XXX: Change this to an error once the new simulator loading code is
          // more robust.  -PH (4/13/2003)
