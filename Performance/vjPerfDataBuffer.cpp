@@ -117,7 +117,7 @@ void vjPerfDataBuffer::write (ostream& out) {
 
     //out.width(13);
     
-    out << "PerfData1 " << name << " " << nindex << endl; 
+    out << "PerfData1 \"" << name << "\" " << nindex << endl; 
 
     if (active) {
 	//out << "PerfData " << name << "\n";
@@ -164,7 +164,7 @@ void vjPerfDataBuffer::write (ostream& out) {
 }
 
 // this probably isn't safe in a multitasking environment
-void vjPerfDataBuffer::writeTotal(ostream& out, float discrep) {
+void vjPerfDataBuffer::writeTotal(ostream& out, int preskip, int postskip, float discrep) {
     int begin = read_begin;
     int end = (write_pos - 1 + numbufs)%numbufs;
     int last = (end + numbufs-1) %numbufs;
@@ -173,7 +173,7 @@ void vjPerfDataBuffer::writeTotal(ostream& out, float discrep) {
     int i;
     float diff, avg;
 
-    retval = buffer[end].ts - buffer[begin].ts;
+    retval = buffer[(end-postskip)%numbufs].ts - buffer[(begin+preskip)%numbufs].ts;
     /*
     cout << "begin is " << begin 
 	 << "\nend is " << end
@@ -184,13 +184,15 @@ void vjPerfDataBuffer::writeTotal(ostream& out, float discrep) {
     else
 	nump = last + (numbufs - begin);
 
-    avg = retval/nump;
+    avg = retval/(nump - preskip - postskip);
 
     out << "Dumping buffer: " << nump << " samples, total: "
 	<< retval << " us, avg: " << avg << "us\n";
     if (discrep > 0) {
 	out << "Reporting Discrepencies:\n";
     }
+    end = (end-postskip)%numbufs;
+    begin = (begin + preskip)%numbufs;
 
 	if (begin == end)
 	    return;
