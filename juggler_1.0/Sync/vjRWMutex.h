@@ -33,83 +33,34 @@ public:
     {}
 
     //---------------------------------------------------------
-    // int aquire()
+    //: Lock the mutex.
     //
-    // PURPOSE:
-    //:   Lock the mutex
-    //! RETVAL:   1 - Aquired
-    //! RETVAL:  -1 - Error
+    //! RETURNS:  1 - Acquired
+    //! RETURNS: -1 - Error
     //---------------------------------------------------------
     int acquire()
     {
-        return aquireWrite();
+        return acquireWrite();
     }
 
     //----------------------------------------------------------
-    //:  Aquire a read mutex
+    //: Acquire a read mutex.
     //----------------------------------------------------------
-    int acquireRead()
-    {
-        int retVal = 0;
-        if (stateLock.aquire() == -1)
-            retVal = -1;			// Didn't get the lock
-        else
-        {
-	    // let those writers who are waiting have first shot
-            while(refCount < 0 || numWaitingWriters > 0)
-            {
-                numWaitingReaders++;	    // Another one waiting
-                waitingReaders.wait();	    // So wait until something changes
-                numWaitingReaders--;	    //
-            }
-        }
-
-        if (retVal == 0) {
-            refCount++;
-            stateLock.release();
-        }
-
-        return retVal;
-    }
+    int acquireRead(void);
 
     //----------------------------------------------------------
-    //:  Aquire a write mutex
+    //: Acquire a write mutex.
     //----------------------------------------------------------
-    int acquireWrite()
-    {
-        int retVal = 0;
-        if (stateLock.aquire() == -1)
-            retVal = -1;			// Didn't get the lock
-        else
-        {
-            while(refCount != 0)	    // While there are readers
-            {
-                numWaitingWriters++;	// One more waiting
-                waitingWriters.wait();	// Wait for soemthing to change
-                numWaitingWriters--;	// Not waiting any more
-            }
-        }
-
-        if(retVal == 0)
-        {
-            refCount = -1;		// Tell everyone that there is a writer
-            stateLock.release();
-        }
-
-        return retVal;
-    }
+    int acquireWrite(void);
 
     //---------------------------------------------------------
-    // int tryAquire()
+    //: Trys to acquire the mutex.
+    //  Wait until the semaphore value is greater than 0.
+    //  Then decrement by 1 and return.
+    //  P operation.
     //
-    // PURPOSE:
-    //:  Trys to aquire the mutex.
-    //   Wait until the semaphore value is greater than 0.
-    //   Then decrement by 1 and return.
-    //   P operation.
-    // RETURNS:
-    //!RETVAL:   1 - Aquired
-    //!RETVAL:   0 - Not Aquired
+    //! RETURNS: 1 - Acquired
+    //! RETURNS: 0 - Not acquired
     //---------------------------------------------------------
     int tryAcquire ()
     {
@@ -117,113 +68,42 @@ public:
     }
 
     //----------------------------------------------------------
-    //:  Try to aquire a read mutex
+    //: Try to acquire a read mutex.
     //----------------------------------------------------------
-    int tryAcquireRead ()
-    {
-        int retVal = -1;
-
-        if (stateLock.acquire() != -1)
-        {
-            if(refCount == -1 || numWaitingWriters >0)
-                retVal = -1;
-            else
-            {
-                refCount++;
-                retVal = 0;
-            }
-            stateLock.release();
-        }
-        return retVal;
-    }
+    int tryAcquireRead (void);
 
     //----------------------------------------------------------
-    //:  Try to aquire a write mutex
+    //: Try to acquire a write mutex.
     //----------------------------------------------------------
-    int tryAcquireWrite ()
-    {
-        int retVal = -1;
-
-        if (stateLock.acquire() != -1)
-        {
-            if(refCount != 0)
-                retVal = -1;
-            else
-            {
-                refCount = -1;
-                retVal = 0;
-            }
-            stateLock.release();
-        }
-        return retVal;
-    }
+    int tryAcquireWrite (void);
 
     //---------------------------------------------------------
-    // int release()
+    //: Release the mutex.
     //
-    // PURPOSE:
-    //:   Release the mutex.
-    // RETURNS:
-    //!RETVAL:   0 - Success
-    //!RETVAL:  -1 - Error
+    //! RETURNS:  0 - Success
+    //! RETURNS: -1 - Error
     //---------------------------------------------------------
-    int release()
-    {
-        if (stateLock.acquire() == -1)
-            return -1;
-
-        if(refCount > 0)	    // We have a reader to release
-            refCount--;
-        else if (refCount == -1)	// We have writer
-            refCount = 0;
-        else			// We have an error
-            cerr << "vjRWMutex::release: Should not have refCount of 0!!!" << endl;
-	
-        int retVal = 0;
-
-	// Preference to writers
-        if (numWaitingWriters > 0)
-        {
-            retVal = waitingWriters.signal();
-        }
-        else if (numWaitingReaders > 0)
-        {
-            retVal = waitingReaders.broadcast();
-        }
-        else
-            retVal = 0;
-	
-        stateLock.release();
-
-        return retVal;	
-    }
+    int release(void);
 
     //------------------------------------------------------
-    // int test()
+    //:	Test the current lock status.
     //
-    // PURPOSE:
-    //:	Test the current lock status
-    // RETURNS:
-    //!RETVAL:  0 - Not locked
-    //!RETVAL:  1 - Locked
+    //! RETURNS: 0 - Not locked
+    //! RETURNS: 1 - Locked
     //------------------------------------------------------
     int test()
     {
         return stateLock.test();
     }
 
-
     //---------------------------------------------------------
-    // void dump()
-    //
-    // PURPOSE:
-    //:  Dump the mutex debug stuff and current state.
+    //: Dump the mutex debug stuff and current state.
     //---------------------------------------------------------
-    void dump (FILE* dest = stderr, const char* message = "\n------ Mutex Dump -----\n") const
+    void dump (FILE* dest = stderr,
+               const char* message = "\n------ Mutex Dump -----\n") const
     {
         stateLock.dump();
     }
-
 
 protected:
     vjMutex stateLock;        //: Serialize access to internal state.
