@@ -5,7 +5,7 @@
 
 <HTML>
 <HEAD>
-
+<TITLE>VR Juggler FAQ</TITLE>
 </HEAD>
 
 <body>
@@ -13,48 +13,64 @@
 <H2><img border=0 src="${IMAGES}/Icons/24x24_Images/Help.gif" alt="">
 F.A.Q.</H2>
 
-<BR>
 <!-- table of contents begin -->
 <h3><a name="top">Table of Contents</a></h3>
-<ul>
-	<li><a href="#general"> General</a></LI>
-	<ul>
+
+  <ul>
+    <li><a href="#general"> General</a>
+      <ul>
         <li> <a href="#isthereafaq">Is there a FAQ for VR Juggler?</a></li>
 
         <li> <a href="#anyapps">Are there any applications (other than the
             demos) that can be downloaded for vrjuggler?</a></li>
 
-	  <li><a href="#WhatIs">What is VR Juggler?</a></li>
-	  <li><a href="#WhatIsNot">What is VR Juggler not?</a></li>
-	  <li><a href="#getstarted">Great, where do I begin?</a></li>
-     <li>
-       <a href="#whatdoineed">What do I need to run a VR Juggler
-       application?</a>
-     </li>
-     <li>
-       <a href="#supported_compilers">What C++ compilers are
-       supported?</a>
-     </li>
-     <li><a href="#compilejugglerwin32">How do I compile the juggler source code under Win32?</a></li>
-   </ul>
-	<li><a href="#applications"> VjControl</a></LI>
-   <ul>
-      <li><a href="#vjcontrolDoesntRun"> Why doesn't vjcontrol or vjcontrol1.1 run?</a></li>
-   </ul>
-	<li><a href="#applications"> VR applications</a></LI>
-   <ul>
-      <LI><A HREF="#head_wand">Why is there a blue sphere and a green cone in
-      my way when I run in simulator mode?</A></LI>
-      <li><a href="#cavelib2dxform"> 2D Projections </a></li>
-      <li><a href="#portingcaveapps"> How do I port a CAVElib application to Juggler? </a></li>
-      <li><a href="#c++compiler">When I compile, the file <TT>vector</TT>
-      (or <TT>algorithm</TT> or <TT>iostream</TT> etc.) cannot be found</a>
-   </ul>
-	<li><a href="#dev"> Juggler Development</a></LI>
-	<li>
-	     <a href="#troubleshooting"> Troubleshooting</a> 
-	</LI>
-	<ul>
+	<li><a href="#WhatIs">What is VR Juggler?</a></li>
+	<li><a href="#WhatIsNot">What is VR Juggler not?</a></li>
+	<li><a href="#getstarted">Great, where do I begin?</a></li>
+        <li>
+          <a href="#whatdoineed">What do I need to run a VR Juggler
+          application?</a>
+        </li>
+        <li>
+          <a href="#supported_compilers">What C++ compilers are
+          supported?</a>
+        </li>
+        <li>
+	  <a href="#compilejugglerwin32">How do I compile the juggler source
+	  code under Win32?</a>
+        </li>
+      </ul>
+    </LI>
+
+    <li><a href="#applications"> VjControl</a>
+      <ul>
+        <li>
+	  <a href="#vjcontrolDoesntRun"> Why doesn't vjcontrol or
+	  vjcontrol1.1 run?</a></li>
+      </ul>
+    </LI>
+
+    <li>
+	<a href="#applications"> VR applications</a>
+      <ul>
+        <LI><A HREF="#head_wand">Why is there a blue sphere and a green cone
+        in my way when I run in simulator mode?</A></LI>
+        <li><a href="#cavelib2dxform"> 2D Projections </a></li>
+        <li><a href="#portingcaveapps"> How do I port a CAVElib application
+	to VR Juggler?</a></li>
+        <li>
+	  <a href="#c++compiler">When I compile, the file <TT>vector</TT>
+          (or <TT>algorithm</TT> or <TT>iostream</TT> etc.) cannot be found</a>
+        </li>
+      </ul>
+    </li>
+
+    <li><a href="#dev"> Juggler Development</a></LI>
+
+    <li>
+      <a href="#troubleshooting"> Troubleshooting</a> 
+
+      <ul>
 	<li><a href="#general_compile">General Compiling</a> 
 	  <UL>
 	    <LI>
@@ -72,23 +88,28 @@ F.A.Q.</H2>
 	  </UL>
 	</LI>
 	<li><a href="#performer"> Performer</a> 
-		<ul>
-		<li><a href="#pftexturing"> Why does texturing not work?  I copied the pfNav sample!</a> 
-		</ul>
-   <li><a href="#linuxandperformer"> LiNUX and Performer</a> 
-		<ul>
-		<li><a href="#lnpnotcompile"> Why don't my LiNUX/Performer Juggler applications compile?</a> 
-		</ul>
-	<li><a href="#SGI"> SGI</a>  </li>
-		<ul>
+	  <ul>
+	    <li><a href="#pftexturing"> Why does texturing not work?  I
+	    copied the <TT>pfNav</TT> sample!</a>
+	  </ul>
+          <li><a href="#linuxandperformer"> LiNUX and Performer</a> 
+	    <ul>
+	      <li><a href="#lnpnotcompile"> Why don't my LiNUX/Performer Juggler applications compile?</a> 
+	    </ul>
+	  <li><a href="#SGI"> SGI</a>
+	      <ul>
 		<li><a href="#sginotcompile"> Why don't my SGI Juggler applications compile?</a> 
-		</ul>
-	</ul>
-	<li>
-	      <a href="#misc">Misc</a><BR>
-	</li>
-	<LI><font size=1>Can't find your answer here? <a href="${MAILTO_JUGGLER_MAILING_LIST}">Contact The User List</a></font></li>
-</ul>
+	      </ul>
+	  </li>
+      </ul>
+    </LI>
+
+    <li>
+      <a href="#misc">Misc</a>
+    </li>
+
+    <LI><font size=1>Can't find your answer here? <a href="${MAILTO_JUGGLER_MAILING_LIST}">Contact The User List</a></font></li>
+  </ul>
 
 <HR><!-- ----------------------------------------- -->
 <!-- table of contents end -->
