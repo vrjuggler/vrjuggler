@@ -37,8 +37,6 @@
 
 #include <vrj/Kernel/App.h>
 
-#include <vrj/Draw/OGL/GlDrawManager.h>
-
 #include <vrj/Kernel/User.h>
 #include <vrj/Display/Projection.h>
 
@@ -82,17 +80,11 @@ namespace vrj
 class VJ_CLASS_API GlApp : public App
 {
 public:
-   GlApp(Kernel* kern) : App(kern)
-   {
-      //api.setOpenGL();     // Tell everyone that we are OpenGL
-   }
+   GlApp(Kernel* kern);
 
-   GlApp() {;}
+   GlApp();
 
-   virtual ~GlApp()
-   {
-      /* Do nothing. */ ;
-   }
+   virtual ~GlApp();
 
    /** Function to draw the scene.
     * Override this function with the user draw routine.
@@ -166,12 +158,11 @@ public:
     */
 
    /** Get the DrawManager to use.
-   * Returns the OpenGL Draw Manager.
-   */
-   virtual DrawManager*    getDrawManager()
-   { return GlDrawManager::instance(); }
+    * Returns the OpenGL Draw Manager.
+    */
+   virtual DrawManager* getDrawManager();
 
-    /** @} */
+   /** @} */
 };
 
 } // End of vrj namespace
