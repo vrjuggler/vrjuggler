@@ -7,6 +7,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SimpleApp", "CSharp\SimpleA
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
+Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "SimpleAppVB", "VB.NET\SimpleApp\SimpleAppVB.vbproj", "{C04E4DD0-2F7D-43B6-9555-F2464E1556FF}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfiguration) = preSolution
 		Debug = Debug
@@ -21,6 +25,10 @@ Global
 		{47FE8EAF-71A2-4B20-943E-A933EF847C14}.Debug.Build.0 = Debug|.NET
 		{47FE8EAF-71A2-4B20-943E-A933EF847C14}.Release.ActiveCfg = Release|.NET
 		{47FE8EAF-71A2-4B20-943E-A933EF847C14}.Release.Build.0 = Release|.NET
+		{C04E4DD0-2F7D-43B6-9555-F2464E1556FF}.Debug.ActiveCfg = Debug|.NET
+		{C04E4DD0-2F7D-43B6-9555-F2464E1556FF}.Debug.Build.0 = Debug|.NET
+		{C04E4DD0-2F7D-43B6-9555-F2464E1556FF}.Release.ActiveCfg = Release|.NET
+		{C04E4DD0-2F7D-43B6-9555-F2464E1556FF}.Release.Build.0 = Release|.NET
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 	EndGlobalSection
