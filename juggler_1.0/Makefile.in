@@ -208,8 +208,9 @@ SUBDIRS		= Math Config Kernel Environment Performance Input	\
 
 # Subdirectories used for recursion through the application source trees when
 # installing.
-SAMPLE_SUBDIRS	= . ogl ogl/combo ogl/cubes ogl/glove ogl/simpleGlove	\
-                  ogl/torus ogl/wand pf pf/pfConfigNav pf/pfNav pf/pfSwitcher
+SAMPLE_SUBDIRS	= . ogl ogl/combo ogl/cubes ogl/glove ogl/digitalGlove	\
+                  ogl/simpleGlove ogl/torus ogl/wand pf pf/pfConfigNav	\
+                  pf/pfNav pf/pfSwitcher
 TEST_SUBDIRS	= . CfgTest GLWindow Math Matrix Quat Sync input	\
                   testDynamicCastSTL threads
 TOOLS_SUBDIRS	= .
