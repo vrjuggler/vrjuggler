@@ -7,6 +7,7 @@
 
       // --- Lib Stuff --- //
 #include <Kernel/vjKernel.h>
+#include <unistd.h>
 
 int main(int argc, char* argv[])
 {
@@ -24,5 +25,7 @@ int main(int argc, char* argv[])
       //- Load user local config
 
    while(1)
-   {;}
+   {
+      sched_yield();
+   }
 }
