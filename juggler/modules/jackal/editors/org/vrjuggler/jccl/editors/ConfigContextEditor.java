@@ -67,6 +67,14 @@ public class ConfigContextEditor
                if (value == null || !(value instanceof ConfigElement))
                {
                   System.out.println("Selecting a node that is not a ConfigElement");
+                  
+                  // Empty the property sheet.
+                  mElementPropSheet.finalize();
+                  mElementPropSheet.revalidate();
+                  mElementPropSheet.repaint();
+                  // Empty the help information
+                  getHelpPane().setText("");
+
                   return;
                }
 
