@@ -46,6 +46,7 @@
 
 #include <iomanip>
 #include <map>
+#include <boost/concept_check.hpp>
 #include <vpr/vprTypes.h>
 #include <vpr/Thread/TSTable.h>            /* Needed to cache a copy here */
 
@@ -238,6 +239,7 @@ public:
     */
    virtual int getPrio(VPRThreadPriority* prio)
    {
+      boost::ignore_unused_variable_warning(prio);
       return -1;
    }
 
@@ -251,6 +253,7 @@ public:
     */
    virtual int setPrio(VPRThreadPriority prio)
    {
+      boost::ignore_unused_variable_warning(prio);
       return -1;
    }
 
@@ -293,8 +296,9 @@ public:
     * @return 0 is returned if the thread was sent the given signal.<br>
     *         -1 is returned if an error occurred.
     */
-   virtual int kill (int signum)
+   virtual int kill(int signum)
    {
+      boost::ignore_unused_variable_warning(signum);
       return -1;
    }
 

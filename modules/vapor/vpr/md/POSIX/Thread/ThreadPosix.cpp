@@ -51,6 +51,8 @@
 #  include <sys/capability.h>
 #endif
 
+#include <boost/concept_check.hpp>
+
 #include <vpr/Thread/ThreadManager.h>
 #include <vpr/Thread/ThreadFunctor.h>
 #include <vpr/Thread/Thread.h>
@@ -278,6 +280,8 @@ vpr::ReturnStatus ThreadPosix::spawn(BaseThreadFunctor* functorPtr)
  */
 void ThreadPosix::startThread(void* null_param)
 {
+   boost::ignore_unused_variable_warning(null_param);
+
    // WE are a new thread... yeah!!!!
    // TELL EVERYONE THAT WE LIVE!!!!
    ThreadManager::instance()->lock();      // Lock manager
@@ -338,6 +342,7 @@ int ThreadPosix::setPrio (VPRThreadPriority prio)
 
    return pthread_setschedparam(mThread, SCHED_FIFO, &fifo_sched_param);
 #else
+   boost::ignore_unused_variable_warning(prio);
    std::cerr << "vpr::ThreadPosix::setPrio(): Not supported\n";
 
    return -1;
@@ -361,6 +366,7 @@ int ThreadPosix::setRunOn(int cpu)
 
    return ret_val;
 #else
+   boost::ignore_unused_variable_warning(cpu);
    std::cerr << "vpr::ThreadPosix::setRunOn(): Not available on this system.\n";
 
    return -1;
@@ -384,6 +390,7 @@ int ThreadPosix::getRunOn(int* cur_cpu)
 
    return ret_val;
 #else
+   boost::ignore_unused_variable_warning(cur_cpu);
    std::cerr << "vpr::ThreadPosix::getRunOn(): Not available on this system.\n";
 
    return -1;
