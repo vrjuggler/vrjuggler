@@ -47,7 +47,8 @@
 #include <stdlib.h>
 #include <math.h>
 #include <string>
-#include <map>
+#include <deque>
+#include <utility>
 #include <vpr/vpr.h>
 #include <vpr/Util/Interval.h>
 
@@ -223,7 +224,7 @@ public:
    }
 
 private:
-   typedef std::map<vpr::Interval, vpr::sim::MessagePtr> msg_queue_t;
+   typedef std::deque<std::pair<vpr::Interval, vpr::sim::MessagePtr> > msg_queue_t;
 
    vpr::ReturnStatus getArrivedMessageFromQueue(const vpr::Interval& event_time,
                                                 vpr::sim::MessagePtr& msg,
