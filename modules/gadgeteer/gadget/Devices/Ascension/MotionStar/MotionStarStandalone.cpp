@@ -509,7 +509,7 @@ aMotionStar::getSystemStatus () {
   void* lp_buffer;
   int header_bytes, data_bytes;
   int bytes_received;
-  unsigned char all, FBBerror, flock_number;
+  unsigned char flock_number;
   char sz_rate[7];
   int rate;
 
@@ -547,8 +547,8 @@ aMotionStar::getSystemStatus () {
 
   /* now print out the details of the status packet */
 
-  all          = mResponse.buffer[0];
-  FBBerror     = mResponse.buffer[1];
+  // mResponse.buffer byte 0 -> all
+  // mResponse.buffer byte 1 -> FBBerror
   flock_number = mResponse.buffer[2];
   printf("Number of FBB devices in system = %d\n", flock_number);
 
