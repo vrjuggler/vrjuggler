@@ -114,18 +114,6 @@ public:
     }
 
     // ------------------------------------------------------------------------
-    //: Construct a vpr::InetAddrBSD object from a pointer to a sockaddr struct.
-    //
-    //! PRE: The given pointer points to a valid sockaddr struct.
-    //! POST: The memory pointed to by addr is copied into m_addr.
-    //
-    //! ARGS: addr - A pointer to a sockaddr struct
-    // ------------------------------------------------------------------------
-    InetAddrBSD (const struct sockaddr* addr) {
-        memcpy((void*) &m_addr, (void*) addr, sizeof(m_addr));
-    }
-
-    // ------------------------------------------------------------------------
     //: Copy constructor.
     //
     //! PRE: None.
@@ -260,24 +248,6 @@ public:
     }
 
     // ------------------------------------------------------------------------
-    //: Copy the given array of bytes (an A record) into this structure's IP
-    //+ address value.  The record must be in network byte order.  This method
-    //+ is useful when working with host entries returned by gethostname(3).
-    //
-    //! PRE: The given array of bytes represents an A record in network byte
-    //+      order.
-    //! POST: The bytes are copied into this structure's IP address value.
-    //
-    //! ARGS: addr_value - The A record contianing an IP address in network
-    //+                    byte order.
-    // ------------------------------------------------------------------------
-    inline void
-    copyAddressValue (const char* addr_value) {
-        memcpy((void*) &m_addr.sin_addr.s_addr, (void*) addr_value,
-               sizeof(m_addr.sin_addr.s_addr));
-    }
-
-    // ------------------------------------------------------------------------
     //: Get the IP address associated with this structure as a human-readable
     //+ string.
     //
@@ -300,6 +270,59 @@ public:
     inline bool
     setAddress (const std::string& addr) {
         return lookupAddress(addr);
+    }
+
+    // ------------------------------------------------------------------------
+    //: Overloaded assignment operator to ensure that assignments work
+    //+ correctly.
+    //
+    //! PRE: None.
+    //! POST: A copy of the given vpr::InetAddrBSD object is made in this object
+    //+       which is then returned to the caller.
+    //
+    //! ARGS: addr - The vpr::InetAddrBSD object to be copied into this object.
+    //
+    //! RETURNS: A reference to this object.
+    // ------------------------------------------------------------------------
+    inline InetAddrBSD&
+    operator= (const InetAddrBSD& addr) {
+        copy(addr);
+        return *this;
+    }
+
+protected:
+    friend class SocketImpBSD;
+    friend class SocketDatagramImpBSD;
+    friend class SocketStreamImpBSD;
+
+    // ------------------------------------------------------------------------
+    //: Construct a vpr::InetAddrBSD object from a pointer to a sockaddr struct.
+    //
+    //! PRE: The given pointer points to a valid sockaddr struct.
+    //! POST: The memory pointed to by addr is copied into m_addr.
+    //
+    //! ARGS: addr - A pointer to a sockaddr struct
+    // ------------------------------------------------------------------------
+    InetAddrBSD (const struct sockaddr* addr) {
+        memcpy((void*) &m_addr, (void*) addr, sizeof(m_addr));
+    }
+
+    // ------------------------------------------------------------------------
+    //: Copy the given array of bytes (an A record) into this structure's IP
+    //+ address value.  The record must be in network byte order.  This method
+    //+ is useful when working with host entries returned by gethostname(3).
+    //
+    //! PRE: The given array of bytes represents an A record in network byte
+    //+      order.
+    //! POST: The bytes are copied into this structure's IP address value.
+    //
+    //! ARGS: addr_value - The A record contianing an IP address in network
+    //+                    byte order.
+    // ------------------------------------------------------------------------
+    inline void
+    copyAddressValue (const char* addr_value) {
+        memcpy((void*) &m_addr.sin_addr.s_addr, (void*) addr_value,
+               sizeof(m_addr.sin_addr.s_addr));
     }
 
     // ------------------------------------------------------------------------
@@ -343,28 +366,6 @@ public:
     }
 
     // ------------------------------------------------------------------------
-    //: Overloaded assignment operator to ensure that assignments work
-    //+ correctly.
-    //
-    //! PRE: None.
-    //! POST: A copy of the given vpr::InetAddrBSD object is made in this object
-    //+       which is then returned to the caller.
-    //
-    //! ARGS: addr - The vpr::InetAddrBSD object to be copied into this object.
-    //
-    //! RETURNS: A reference to this object.
-    // ------------------------------------------------------------------------
-    inline InetAddrBSD&
-    operator= (const InetAddrBSD& addr) {
-        copy(addr);
-        return *this;
-    }
-
-//protected:
-    struct sockaddr_in m_addr;    //: The Ineternet address structure
-
-protected:
-    // ------------------------------------------------------------------------
     //: Make a copy of the given vpr::InetAddrBSD object in this object.
     //
     //! PRE: None.
@@ -392,6 +393,8 @@ protected:
     //             printed to stderr explaining what went wrong.
     // ------------------------------------------------------------------------
     bool lookupAddress(const std::string& addr);
+
+    struct sockaddr_in m_addr;    //: The Ineternet address structure
 };
 
 }; // End of vpr namespace
