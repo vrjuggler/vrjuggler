@@ -44,6 +44,7 @@
 //#pragma once
 
 #include <vpr/vprConfig.h>
+#include <stdlib.h>
 #include <typeinfo>
 #include <vpr/Thread/Thread.h>
 #include <vpr/Thread/TSObject.h>
@@ -54,11 +55,11 @@
 namespace vpr
 {
 
-
-/** Base class for all TS Object proxies.
-* Handles ts key allocation
-* Allows for friendship (if needed)
-*/
+/**
+ * Base class for all TS Object proxies.
+ * Handles ts key allocation.
+ * Allows for friendship (if needed).
+ */
 class VPR_CLASS_API TSObjectProxyBase
 {
 public:
@@ -74,20 +75,24 @@ protected:
 };
 
 /**
- * This is a smart pointer to a thread specific object.
+ * This is a smart pointer to a thread-specific object.
  *
  * This allows users to have an object that has a seperate copy
  * for each thread.
  *
- * NOTE: The object used for type T must have a default constructor
+ * @note The object used for type T must have a default constructor
  *       This class creates each instance of the real objects
  *       using this default constructor.
  *
- * Uses TSObject<> internally to keep some type information
+ * Uses TSObject<> internally to keep some type information.
  *
  *
- * @usage   vpr::TSObjectProxy<obj_type> var;
- *          (*var).method();
+ * @example "Example of using vpr::TSObjectProxy"
+ *
+ * \code
+ * vpr::TSObjectProxy<obj_type> var;
+ * (*var).method();
+ * \endcode
  */
 template <class T>
 class TSObjectProxy : public TSObjectProxyBase
@@ -105,51 +110,62 @@ public:
    {;}
 
    T* operator->()
-   { return getSpecific(); }
+   {
+      return getSpecific();
+   }
 
    T& operator*()
-   { return *getSpecific();}
+   {
+      return *getSpecific();
+   }
 
 private:
    /** Get the correct version for current thread.
-    * - Find the correct table
-    * - Make sure that object exists locally
-    * - Get the obj pointer
-    * - Attempts a dynamic cast
+    * - Find the correct table<br>
+    * - Make sure that object exists locally<br>
+    * - Get the obj pointer<br>
+    * - Attempts a dynamic cast<br>
     */
    T* getSpecific()
    {
-      TSTable* table = NULL;
+      TSTable* table(NULL);
 
       // --- GET TS TABLE --- //
       // - If have self, get mine.  Otherwise use global one
-      vpr::BaseThread* thread_self = NULL;
+      vpr::BaseThread* thread_self(NULL);
       thread_self = Thread::self();
+
       if(NULL != thread_self)
-      {  table = thread_self->getTSTable(); }
+      {
+         table = thread_self->getTSTable();
+      }
       else
-      {  table = Thread::getGlobalTSTable(); }
+      {
+         table = Thread::getGlobalTSTable();
+      }
 
       // ---- DOES OBJECT EXIST --- //
       // If not, Create the object and add it to the table
       if(!table->containsKey(mObjectKey))
       {
-         table->setObject(NULL, mObjectKey);       // Extend table and set to NULL
+         table->setObject(NULL, mObjectKey);   // Extend table and set to NULL
       }
 
       // --- GET THE TS OBJECT --- //
-      TSBaseObject* object = table->getObject(mObjectKey);                  // get the specific object
+
+      TSBaseObject* object = table->getObject(mObjectKey); // get the specific object
 
       // Check if we have not allocated it yet, if not, then allocate
       if(NULL == object)
       {
-         TSBaseObject* new_object = new TSObject<T>;                            // Allocate new object
-         vprASSERT((new_object != NULL) && "Failed to allocate TSObject<T>");      // NULL is bad
-         table->setObject(new_object, mObjectKey);                                  // Set the value
-         object = new_object;                                                       // Reference the new one
+         TSBaseObject* new_object = new TSObject<T>;      // Allocate new object
+         vprASSERT((new_object != NULL) && "Failed to allocate TSObject<T>");
+         table->setObject(new_object, mObjectKey);        // Set the value
+         object = new_object;                             // Reference the new one
       }
 
-      vprASSERT((object != NULL) && "Bad object ptr.  It is NULL.");    // We should not have NULL objects
+      // We should not have NULL objects
+      vprASSERT((object != NULL) && "Bad object ptr.  It is NULL.");
 
       // --- Dynamic cast to "real" type wrapper
       TSObject<T>* real_object = dynamic_cast< TSObject<T>* >(object);
@@ -158,21 +174,26 @@ private:
       if(real_object == NULL)    // Failed cast
       {
          std::cout << "Failed dynamic cast\n";
-         std::cout << "Have pointer of type: " << typeid(*object).name() << std::endl;
+         std::cout << "Have pointer of type: " << typeid(*object).name()
+                   << std::endl;
          std::cout << "Want type: " << typeid(T).name() << std::endl;
       }
 #endif
 
-      vprASSERT((real_object != NULL) && "Dynamic_cast of TS object failed");  // If fails, it means that "real" object was different type than the proxy
+      // If fails, it means that "real" object was different type than the
+      // proxy.
+      vprASSERT((real_object != NULL) && "Dynamic_cast of TS object failed");
       /*
       if(real_object == NULL)    // Should NEVER return NULL.  If we did, then we can't dereference it.
          return NULL;
       else
       */
-      return real_object->getObject();                                   // return the ptr;
+
+      // Return the pointer.
+      return real_object->getObject();
    }
 
-   // Don't allow copy construction
+   // Don't allow copy construction.
    TSObjectProxy(TSObjectProxy& proxy)
    {;}
 
