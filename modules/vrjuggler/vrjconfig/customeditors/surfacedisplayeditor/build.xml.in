@@ -8,6 +8,7 @@
    <path id="tweek.classpath">
       <pathelement path="@TWEEK_JARS@" />
       <pathelement path="@TWEEK_EXT_JARS@" />
+      <pathelement path="@JAVA3D_JAR@" />
    </path>
 
    <path id="jccl.classpath">
