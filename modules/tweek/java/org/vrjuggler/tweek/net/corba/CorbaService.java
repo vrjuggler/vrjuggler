@@ -46,12 +46,25 @@ import org.omg.CosNaming.*;
 import org.omg.CosNaming.NamingContextPackage.*;
 
 
+/**
+ * This is a convenience class that wraps all CORBA functionality that will be
+ * needed by Tweek client code.
+ */
 public class CorbaService
 {
    /**
-    * @param ns_uri The URI that can be used as the initial reference for the
-    *               NameService.
-    * @param
+    * Creates a new instance of this class and initializes the URI that will
+    * be used to contact the CORBA Naming Service.
+    *
+    * @param nsHost       The hostname (or IP address) of the machine where
+    *                     the Naming Service is running.
+    * @param nsPort       The port number on which the Naming Service is
+    *                     listening.  Normally, this will be 2809.
+    * @param iiopVer      The version of IIOP to use when communicating with
+    *                     the Naming Service.  Common values are "1.0" and
+    *                     "1.2".
+    * @param subcontextId The identifier for the Naming subcontext.  This is
+    *                     currently unused.
     */
    public CorbaService(String nsHost, int nsPort, String iiopVer,
                        String subcontextId)
@@ -265,7 +278,18 @@ public class CorbaService
       return this.subjectManager;
    }
 
-   public byte[] registerObject (Servant servant, String name)
+   /**
+    * Registers the given servant with the local Portable Object Adaptor.
+    * This is necessary for tweek::Observer implementations to be referenced
+    * by their corresponding subject.
+    *
+    * @param servant The servant (interface implementation object) to register.
+    * @param name    The name of the servant within the local POA.
+    *
+    * @return The ID of the servant within the POA.  This should be retained
+    *         so that the servant can be unregistered later.
+    */
+   public byte[] registerObject(Servant servant, String name)
    {
       byte[] obj_id = null;
 
@@ -289,11 +313,14 @@ public class CorbaService
    }
 
    /**
-    * Removes the given Servant object from the collection of activated CORBA
-    * objects.  In CORBA terms, the servant is deactivated within the POA and
-    * cannot be referenced after this occurs.
+    * Removes the identified Servant object from the collection of activated
+    * CORBA objects.  In CORBA terms, the servant is deactivated within the
+    * POA and cannot be referenced after this occurs.
+    *
+    * @param servant_id The unique identifier for the servant that is to be
+    *                   deactivated.
     */
-   public void unregisterObject (byte[] servant_id)
+   public void unregisterObject(byte[] servant_id)
    {
       if ( servant_id != null )
       {
