@@ -68,7 +68,7 @@ namespace sim
 
       mBindListSockMutexTCP.acquire();
       {
-         status = mBindListSockTCP.size() > 0;
+         status = (! mBindListSockTCP.empty());
       }
       mBindListSockMutexTCP.release();
 
@@ -76,7 +76,7 @@ namespace sim
       {
          mBindListSockMutexUDP.acquire();
          {
-            status = mBindListSockUDP.size() > 0;
+            status = (! mBindListSockUDP.empty());
          }
          mBindListSockMutexUDP.release();
       }

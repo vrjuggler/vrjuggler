@@ -170,7 +170,7 @@ vpr::Uint32 SocketImplSIM::availableBytes ()
    vpr::Guard<vpr::Mutex> guard(mArrivedQueueMutex);
    vpr::Uint32 bytes = 0;
 
-   if ( mArrivedQueue.size() > 0 )
+   if ( ! mArrivedQueue.empty() )
    {
       std::vector<vpr::sim::MessagePtr>::iterator i = mArrivedQueue.begin();
       bytes = (*i)->getSize();
@@ -191,7 +191,7 @@ vpr::ReturnStatus SocketImplSIM::read_i (void* buffer,
    // arrvied queue stays in a consistent state while we are working.
    mArrivedQueueMutex.acquire();
    {
-      if ( mArrivedQueue.size() > 0 )
+      if ( ! mArrivedQueue.empty() )
       {
          vpr::sim::MessagePtr message;
          size_t copy_len, msg_size;
@@ -241,7 +241,7 @@ vpr::ReturnStatus SocketImplSIM::read_i( vpr::sim::Message::MessageDataPtr& msgD
    // arrvied queue stays in a consistent state while we are working.
    mArrivedQueueMutex.acquire();
    {
-      if ( mArrivedQueue.size() > 0 )
+      if ( ! mArrivedQueue.empty() )
       {
          // Get copy of message data, then
          // Remove the message from the arrival queue.
