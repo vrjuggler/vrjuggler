@@ -31,12 +31,20 @@
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # -----------------------------------------------------------------------------
-# Makefile.in for vrjuggler/samples/OGL
+# Makefile.in for vrjuggler/test/Draw/OGL
 #
 # Generated for use on @PLATFORM@
 # -----------------------------------------------------------------------------
 
-APPS	= glove
+APPS	= analog	\
+          combo		\
+          cones		\
+          cubes		\
+          digitalGlove	\
+          simpleGlove	\
+          texture	\
+          torus		\
+          wand
 
 # -----------------------------------------------------------------------------
 # Build targets.
