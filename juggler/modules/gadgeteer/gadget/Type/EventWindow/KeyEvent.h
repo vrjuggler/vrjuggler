@@ -127,9 +127,9 @@ public:
    }
 
    /**
-    * Serializes this event using the given ObjectWriter
+    * Serializes this event using the given ObjectWriter.
     */
-   vpr::ReturnStatus KeyEvent::writeObject(vpr::ObjectWriter* writer)
+   vpr::ReturnStatus writeObject(vpr::ObjectWriter* writer)
    {
       writer->writeUint16(mType);
 
@@ -143,9 +143,9 @@ public:
    }
    
    /**
-    * De-Serializes this event using the given ObjectReader
+    * De-serializes this event using the given ObjectReader.
     */
-   vpr::ReturnStatus KeyEvent::readObject(vpr::ObjectReader* reader)
+   vpr::ReturnStatus readObject(vpr::ObjectReader* reader)
    {
       // We have already read the type in EventWindow to decide
       // if we should construct a KeyEvent or a MouseEvent
