@@ -56,7 +56,6 @@ top_srcdir	= @top_srcdir@
 EXTRA_DEFS	+= @UUID_DEFS@
 INSTALL		= @INSTALL@
 SUBOBJDIR	= $(VPR_LIBRARY)
-VPR_SRCDIR	= @VPR_SRCDIR@/vpr/Util
 
 DIRPRFX		= vpr/Util/
 SUBDIR		= md5		\
