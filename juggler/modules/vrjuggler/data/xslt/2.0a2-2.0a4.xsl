@@ -1078,6 +1078,20 @@
       </xsl:element>
    </xsl:template>
 
+   <!-- IntersenseAPI property "position_filters". -->
+   <xsl:template match="IntersenseAPI/position_filters">
+      <xsl:element name="position_filters">
+         <xsl:apply-templates select="./*" />
+      </xsl:element>
+   </xsl:template>
+
+   <!-- IntersenseAPI property "stations". -->
+   <xsl:template match="IntersenseAPI/stations">
+      <xsl:element name="stations">
+         <xsl:apply-templates select="./*" />
+      </xsl:element>
+   </xsl:template>
+
    <!-- IntersenseAPI property "deviceHost". -->
    <xsl:template match="IntersenseAPI/deviceHost">
       <xsl:element name="device_host">
