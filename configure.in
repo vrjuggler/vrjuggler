@@ -471,9 +471,9 @@ case $target_os in
             AR_NAME_FLAG='-out:'
             CFLAGS="-nologo"
             CXXFLAGS="-nologo"
-            DBG_FLAGS='-Od -GZ'
+            DBG_FLAGS='-Od -GZ -MTd'
             DEP_GEN_FLAG='-FD'
-            OPT_FLAGS='-GB'
+            OPT_FLAGS='-GB -MT'
             LD='link -dll'
             LDOPTS="$LDOPTS -nologo -out:\"${OBJDIR}/Juggler.lib\""
             LDOPTS_DBG='-LDd -MDd'
@@ -511,8 +511,6 @@ case $target_os in
 
         AC_DEFINE(WIN32,)
         AC_DEFINE(_MBCS,)
-        AC_DEFINE(_LIB,)
-        AC_DEFINE(_MT,)
         ;;
     dnl # Unkown operating system (to config.guess).
     unknown)
@@ -1063,7 +1061,7 @@ if test "$PLATFORM" = "SGI" ; then
 elif test "$OS_TYPE" = "Win32" -a "x${_use_gcc}" != "xyes" ; then
     CFLAGS="$CFLAGS -W3 -Gm -GR -GX -ZI -EHc -QIfdiv -QI0f"
     CXXFLAGS="$CXXFLAGS -W3 -Gm -GR -GX -ZI -EHc -QIfdiv -QI0f"
-    EXTRA_LINK_FLAGS="$EXTRA_LINK_FLAGS -MT"
+    EXTRA_LINK_FLAGS="$EXTRA_LINK_FLAGS -MTd"
 fi
 
 DEPENDFLAGS=""
@@ -1124,8 +1122,8 @@ if test "$OS_TYPE" = "UNIX" ; then
     TEST_EXTRA_LIBS_GL="-L${OGLROOT}/lib${LIBBITSUF} ${_SYSTEM_OPENGL}"
     TEST_EXTRA_LIBS_PF="${_PFOGLLIB}"
 elif test "$OS_TYPE" = "Win32" ; then
-    TEST_VJ_LIBS_BASIC="-link -nodefaultlib:libc -libpath:\$(VJ_BASE_DIR)/lib/debug Juggler.lib"
-    TEST_LIBS_BASIC='comctl32.lib user32.lib gdi32.lib libcmtd.lib'
+    TEST_VJ_LIBS_BASIC="-link -libpath:\$(VJ_BASE_DIR)/lib/debug Juggler.lib"
+    TEST_LIBS_BASIC='comctl32.lib user32.lib gdi32.lib'
     TEST_VJ_LIBS_GL='Juggler_ogl.lib'
     TEST_VJ_LIBS_PF='Juggler_pf.lib'
     TEST_EXTRA_LIBS_BASIC="$LDFLAGS $LIBS"
