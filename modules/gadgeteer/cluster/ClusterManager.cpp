@@ -66,14 +66,21 @@ namespace cluster
    {
       jccl::ConfigManager::instance()->addConfigChunkHandler(ClusterNetwork::instance());
       jccl::DependencyManager::instance()->registerChecker(new ClusterDepChecker());
-      mBarrierMachineName = std::string("Barrier Machine Not Set");
-      mStatus = PRE_CLUSTER_CONFIG;
+      
+      //We start all nodes thinking they are masters
+      //This makes us not actually do anything bellow
+      //Until configuration occurs
+      mRunning = false;
+      mBarrierMaster = false;
    }
    ClusterManager::~ClusterManager()
    {
       ;
    }
 
+   /**
+    * Adds a new plugin to the ClusterManager.
+    */
    void ClusterManager::addPlugin(ClusterPlugin* new_plugin)
    {
       vpr::Guard<vpr::Mutex> guard(mPluginsLock);
@@ -89,6 +96,9 @@ namespace cluster
       }
    }
 
+   /**
+    * Removes a plugin from the ClusterManager
+    */
    void ClusterManager::removePlugin(ClusterPlugin* old_plugin)
    {
       vpr::Guard<vpr::Mutex> guard(mPluginsLock);
@@ -107,6 +117,9 @@ namespace cluster
       }
    }
 
+   /**
+    * Checks if a plugin exists in the ClusterManager
+    */
    bool ClusterManager::doesPluginExist(ClusterPlugin* old_manager)
    {
       vprASSERT(mPluginsLock.test() == 1 && "mManagers Lock must be aquired before calling ClusterManager::doesManagerExist()");
@@ -124,70 +137,60 @@ namespace cluster
 
    void ClusterManager::preDraw()
    {
-      if (RUNNING == mStatus)
+      // Idea is to not create frame lock if we do not need to
+      bool updateNeeded = false;
+      vpr::Guard<vpr::Mutex> guard(mPluginsLock);
+      
+      for (std::list<ClusterPlugin*>::iterator i = mPlugins.begin();
+           i != mPlugins.end() ; i++)
       {
-         // Idea is to not create frame lock if we do not need to
-         bool updateNeeded = false;
-         vpr::Guard<vpr::Mutex> guard(mPluginsLock);
-         
-         for (std::list<ClusterPlugin*>::iterator i = mPlugins.begin();
-              i != mPlugins.end() ; i++)
-         {
-            //if ((*i)->isActive())
-            //{
-               (*i)->preDraw();
-               updateNeeded = true;
-            //}                  
-         }
-         if (updateNeeded)
-         {
-            sendEndBlocksAndSignalUpdate();
-         }                                 
-      }  
+         (*i)->preDraw();
+         updateNeeded = true;
+      }
+      if (updateNeeded)
+      {
+         sendEndBlocksAndSignalUpdate();
+      }                                 
    }
    void ClusterManager::postPostFrame()
    {
-      if (RUNNING == mStatus)
+      // -If not running
+      //   -If all plugins ready
+      //     - isClusterReady
+      
+      
+      // Idea is to not create frame lock if we do not need to
+      bool updateNeeded = false;
+      vpr::Guard<vpr::Mutex> guard(mPluginsLock);
+      
+      for (std::list<ClusterPlugin*>::iterator i = mPlugins.begin();
+           i != mPlugins.end() ; i++)
       {
-         // Idea is to not create frame lock if we do not need to
-         bool updateNeeded = false;
-         vpr::Guard<vpr::Mutex> guard(mPluginsLock);
-         
-         for (std::list<ClusterPlugin*>::iterator i = mPlugins.begin();
-              i != mPlugins.end() ; i++)
-         {
-            //if ((*i)->isActive())
-            //{
-               (*i)->postPostFrame();      
-               updateNeeded = true;
-            //}
-         }  
-         if (updateNeeded)
-         {
-            sendEndBlocksAndSignalUpdate();
-         }
+         (*i)->postPostFrame();      
+         updateNeeded = true;
+      }  
+      if (updateNeeded)
+      {
+         sendEndBlocksAndSignalUpdate();
       }
    }
 
    void ClusterManager::createBarrier()
    {  
-      if (RUNNING == mStatus)
+      vpr::Guard<vpr::Mutex> guard(mPluginsLock);
+   
+      for (std::list<ClusterPlugin*>::iterator i = mPlugins.begin();
+           i != mPlugins.end() ; i++)
       {
-         vpr::Guard<vpr::Mutex> guard(mPluginsLock);
-      
-         for (std::list<ClusterPlugin*>::iterator i = mPlugins.begin();
-              i != mPlugins.end() ; i++)
-         {
-            //if ((*i)->isActive())
-            //{  // As soon as we find a plug-in that creates 
-               // a barrier, we can continue. Maybe not since 
-               // this will not match up on different machines
-               if((*i)->createBarrier())
-               {
-                  return; 
-               }
-            //}
-         }
+         //if ((*i)->isActive())
+         //{  // As soon as we find a plug-in that creates 
+            // a barrier, we can continue. Maybe not since 
+            // this will not match up on different machines
+            if((*i)->createBarrier())
+            {
+               return; 
+            }
+         //}
       }
    }
 
@@ -284,6 +287,32 @@ namespace cluster
                SwapLockPlugin::instance()->load();
             }
          }
+
+///////////////////////////
+         int num_nodes = chunk->getNum(std::string("cluster_nodes"));
+         vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << clrOutBOLD(clrCYAN,"[XXX] ")
+            << "configAdd() Number of nodes: " << num_nodes
+            << "\n" << vprDEBUG_FLUSH;         
+         for (int i = 0 ; i < num_nodes ; i++)
+         {
+            std::string new_node = chunk->getProperty<std::string>(std::string("cluster_nodes"), i);            
+                  vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << clrOutBOLD(clrCYAN,"[XXX] ")
+                     << "configAdd() New Node Name: " << new_node
+                     << "\n" << vprDEBUG_FLUSH;                     
+            jccl::ConfigChunkPtr new_node_chunk = getConfigChunkPointer(new_node);
+            std::string new_node_hostname = new_node_chunk->getProperty<std::string>(std::string("host_name"));
+                  vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << clrOutBOLD(clrCYAN,"[XXX] ")
+                     << "configAdd() New Node Hostname: " << new_node_hostname
+                     << "\n" << vprDEBUG_FLUSH;         
+            if (new_node_hostname != ClusterNetwork::instance()->getLocalHostname())
+            {
+                     vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << clrOutBOLD(clrCYAN,"[XXX] ")
+                        << "configAdd() Added Node since it is non-local\n" << vprDEBUG_FLUSH;         
+               mPendingSlaves.push_back(new_node_hostname);
+               mSlaves.push_back(new_node_hostname);
+            }
+         }
+////////////////////////////
          
          /////////////////////////////////////////
          //  Starting Barrier Stuff
@@ -292,17 +321,31 @@ namespace cluster
          // -Get Sync Machine Chunk Name
          // -Get ChunkPtr to this chunk
          // -Get the Hostname of this node
-         mStatus = POST_CLUSTER_CONFIG;
-         std::string barrier_machine_chunk_name = chunk->getProperty<std::string>(std::string("sync_machine"));
+         
+         std::string barrier_machine_chunk_name = chunk->getProperty<std::string>(std::string("barrier_master"));
          jccl::ConfigChunkPtr barrier_machine_chunk = getConfigChunkPointer(barrier_machine_chunk_name);
-         mBarrierMachineName = barrier_machine_chunk->getProperty<std::string>(std::string("host_name"));
+         vprASSERT(NULL != barrier_machine_chunk && "ConfigManager Chunk MUST have a barrier_master.");
+         mBarrierMasterHostname = barrier_machine_chunk->getProperty<std::string>(std::string("host_name"));
 
-         vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << clrOutBOLD(clrCYAN,"[BARRIER] ")
+         vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << clrOutBOLD(clrCYAN,"[XXX] ")
             << "Barrier Machine Chunk Name is: " << barrier_machine_chunk_name << std::endl << vprDEBUG_FLUSH;         
-         vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << clrOutBOLD(clrCYAN,"[BARRIER] ")
-            << "Barrier Machine Hostname is: " << mBarrierMachineName << std::endl << vprDEBUG_FLUSH;         
+         vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << clrOutBOLD(clrCYAN,"[XXX] ")
+            << "Barrier Machine Hostname is: " << mBarrierMasterHostname << std::endl << vprDEBUG_FLUSH;         
          // Starting Barrier Stuff
          /////////////////////////////////////         
+         
+         if (mBarrierMasterHostname == ClusterNetwork::instance()->getLocalHostname())
+         {
+            vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << clrOutBOLD(clrCYAN,"[XXX] ")
+               << "ClusterManager::ConfigAdd() Barrier Master!\n" << vprDEBUG_FLUSH;         
+            mBarrierMaster = true;
+         }
+         else
+         {
+            vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << clrOutBOLD(clrCYAN,"[XXX] ")
+               << "ClusterManager::ConfigAdd() Barrier Slave!\n" << vprDEBUG_FLUSH;         
+            mBarrierMaster = false;
+         }
          
          return(true);
       }
@@ -369,184 +412,73 @@ namespace cluster
 
    bool ClusterManager::isClusterReady()
    {
-      return(RUNNING == mStatus);
-   }
+      // THIS CASE ASSUMES YOU WILL NEVR CALL
+      // THIS FUNCTION IF YOU ARE NOT IN A CLUSTER
+      
+      //We start all nodes thinking they are masters
+      //This makes us not actually do anything bellow
+      //Until configuration occurs
 
-   void ClusterManager::updateStatus()
-   {      
-      switch (mStatus)
+      // -If NOT Running
+      //   -If Slave
+      //     -Find BarrierMaster ClusterNode
+      //     -Send Barrier Signal
+      //   -Else
+      //     -Nothing
+
+      if (!mRunning)
       {
-      case NOTUSED:
-         break;
-      case RUNNING:
-         break;
-      case PRE_CLUSTER_CONFIG:
+         if (!mBarrierMaster)
          {
-            if (jccl::ConfigManager::instance()->isPendingStale())
+            ClusterNode* barrier_master = ClusterNetwork::instance()->getClusterNodeByHostname(mBarrierMasterHostname);
+            if (NULL == barrier_master)
             {
-               mStatus = NOTUSED;
-               vprDEBUG(gadgetDBG_RIM,vprDBG_STATE_LVL) << clrOutBOLD(clrCYAN,"[Start Barrier] ")
-                  << "Changing state to RUNNING, because we never configured a ClusterManager chunk" << std::endl << vprDEBUG_FLUSH;
+               vprDEBUG(gadgetDBG_RIM,vprDBG_CRITICAL_LVL) 
+                  << clrOutBOLD(clrRED,"[Start Barrier] isClusterReady() Barrier machine configuration not yet loaded.")
+                  << std::endl << vprDEBUG_FLUSH;
             }
-            else
+            else if (barrier_master->isConnected())
             {
-               processPackets();
-            }
-            break;
-         }
-      case POST_CLUSTER_CONFIG:
-         {
-            //XXX: Might want to output that we are going
-            //     into a waiting state for the cluster
-            if (jccl::ConfigManager::instance()->isPendingStale())
-            {
-               // Check if this is hostname
-               if (mBarrierMachineName == ClusterNetwork::instance()->getLocalHostname())
-               {
-                  //Wait for all to get here
-                  mStatus = WAITING;
-                  vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << clrOutBOLD(clrCYAN,"[Start Barrier] ")
-                     << "Changing state to WAITING, because I am the server and I am waiting for my clients." << std::endl << vprDEBUG_FLUSH;
-               }
-               else
-               {
-                  // Could error out if node does not exist in current configuration
-                  ClusterNode* barrierMachine = ClusterNetwork::instance()->getClusterNodeByHostname(mBarrierMachineName);
-                  if (NULL == barrierMachine)
-                  {
-                     vprDEBUG(gadgetDBG_RIM,vprDBG_CRITICAL_LVL) 
-                        << clrOutBOLD(clrRED,"[Start Barrier] ERROR: Barrier machine is not in current configuration.")
-                        << std::endl << vprDEBUG_FLUSH;
-                     exit(1);
-                  }
-                  else if (barrierMachine->isConnected())
-                  {
-                     //Send packet to server machine
-                     StartBlock temp_start_block(0);
-                     temp_start_block.send(barrierMachine->getSockStream());
-                     mStatus = WAITING;
-                     vprDEBUG(gadgetDBG_RIM,vprDBG_CONFIG_LVL) << clrOutBOLD(clrCYAN,"[Start Barrier] ")
-                        << "Changing State to WAITING, because I am the slave and I have sent my start block" << std::endl << vprDEBUG_FLUSH;
-                  }
-                  // Else I am waiting to connect to the server
-               }
-            }
-            else
-            {
-               processPackets();
-            }
-            break;
-         }
-      case WAITING:
-         {
-            if (mBarrierMachineName == ClusterNetwork::instance()->getLocalHostname())
-            {
-               if (allNodesRunning())
-               {
-                  //Send packet to all nodes
-                  sendStartPacketToAllNodes();
-                  mStatus = RUNNING;
-                  vprDEBUG(gadgetDBG_RIM,vprDBG_STATE_LVL) << clrOutBOLD(clrCYAN,"[Start Barrier] ")
-                     << "Changing State to RUNNING becasue we are the server and I have recieved all start blocks." 
-                     << std::endl << vprDEBUG_FLUSH;
-               }
-               else
-               {
-                  processPackets();
-               }
-            }
-            else
-            {
-               // Could error out if node does not exist in current configuration
-               ClusterNode* barrierMachine = ClusterNetwork::instance()->getClusterNodeByHostname(mBarrierMachineName);
-               if (NULL == barrierMachine)
-               {
-                  vprDEBUG(gadgetDBG_RIM,vprDBG_CRITICAL_LVL) 
-                     << clrOutBOLD(clrRED,"[Start Barrier] ERROR: Barrier machine is not in current configuration.")
-                     << std::endl << vprDEBUG_FLUSH;
-                  exit(1);
-               }
-               
                //Send packet to server machine
-               if (barrierMachine->isRunning())
-               {
-                  mStatus = RUNNING;
-                  vprDEBUG(gadgetDBG_RIM,vprDBG_STATE_LVL) << clrOutBOLD(clrCYAN,"[Start Barrier] ")
-                     << "Changing to State RUNNING, because I am a slave and the server is now running." << std::endl << vprDEBUG_FLUSH;
-               }
-               else
-               {
-                  processPackets();
-               }
+               StartBlock temp_start_block(0);
+               temp_start_block.send(barrier_master->getSockStream());
+               vprDEBUG(gadgetDBG_RIM,vprDBG_VERB_LVL) << clrOutBOLD(clrCYAN,"[Start Barrier] ")
+                  << "isClusterReady() Sending Barrier Signal to master: " << mBarrierMasterHostname << std::endl << vprDEBUG_FLUSH;
             }
-            break;
          }
-      }// End case      
-   }
-
-   bool ClusterManager::allNodesRunning()
-   {
-      ClusterNetwork::instance()->lockClusterNodes();
-
-      std::vector<cluster::ClusterNode*>::iterator begin_cluster_nodes = ClusterNetwork::instance()->getClusterNodesBegin();
-      std::vector<cluster::ClusterNode*>::iterator end_cluster_nodes = ClusterNetwork::instance()->getClusterNodesEnd();
-   
-      for(std::vector<cluster::ClusterNode*>::iterator i=begin_cluster_nodes;i!=end_cluster_nodes;i++)
-      {
-         // If the node is not connected or not running
-         if (!(*i)->isConnected() || !(*i)->isRunning())
+         else
          {
-            ClusterNetwork::instance()->unlockClusterNodes();
-            return false;
-         }               
+            vprDEBUG(gadgetDBG_RIM,vprDBG_VERB_LVL) << clrOutBOLD(clrCYAN,"[XXX] ")
+               << "isClusterReady() Barrier Master waiting...\n" << vprDEBUG_FLUSH;         
+            
+            int num_pending_nodes = getPendingBarrierSlaves().size();
+            if (0 == num_pending_nodes)
+            {
+               StartBlock temp_start_block(0);
+
+               //Send responce to all nodes
+               for (std::vector<std::string>::iterator i = mSlaves.begin();
+                    i != mSlaves.end() ; i++)
+               {
+                  // Dead lock since we are actually in a recursion of ClusterNodes
+                  ClusterNode* node = ClusterNetwork::instance()->getClusterNodeByHostname(*i);
+                  temp_start_block.send(node->getSockStream());
+                  vprDEBUG(gadgetDBG_RIM,vprDBG_VERB_LVL) << clrOutBOLD(clrCYAN,"[Start Barrier] ")
+                     << "Sending Barrier Signal to slave: " << (*i) << std::endl << vprDEBUG_FLUSH;              
+               }
+
+               //Set running true
+               ClusterManager::instance()->setRunning(true);
+            }
+         }
+         // We will delay the server until the next call
+         // to isClusterReady to better sync it with the 
+         // slaves since they still have to read the 
+         // packet of the network
+         return false;
       }
-      ClusterNetwork::instance()->unlockClusterNodes();
       return true;
    }
-
-   void ClusterManager::processPackets()
-   {
-      ClusterNetwork::instance()->lockClusterNodes();
-
-      std::vector<cluster::ClusterNode*>::iterator begin_cluster_nodes = ClusterNetwork::instance()->getClusterNodesBegin();
-      std::vector<cluster::ClusterNode*>::iterator end_cluster_nodes = ClusterNetwork::instance()->getClusterNodesEnd();
-   
-      for(std::vector<cluster::ClusterNode*>::iterator i=begin_cluster_nodes;i!=end_cluster_nodes;i++)
-      {
-         if ((*i)->isConnected())
-         {
-              //Block waiting for all packets to be received
-            cluster::Packet* temp_packet = NULL;
-            while ((*i)->getSockStream()->availableBytes() > 0)
-            {
-               temp_packet = PacketFactory::instance()->recvPacket((*i)->getSockStream());
-               temp_packet->printData(1);
-               temp_packet->action(*i);
-            }
-            delete temp_packet;
-         }               
-      }
-      ClusterNetwork::instance()->unlockClusterNodes();
-   }
-   
-   void ClusterManager::sendStartPacketToAllNodes()
-   {
-      ClusterNetwork::instance()->lockClusterNodes();
-
-      std::vector<cluster::ClusterNode*>::iterator begin_cluster_nodes = ClusterNetwork::instance()->getClusterNodesBegin();
-      std::vector<cluster::ClusterNode*>::iterator end_cluster_nodes = ClusterNetwork::instance()->getClusterNodesEnd();
-      StartBlock temp_start_block(0);
-      
-      for(std::vector<cluster::ClusterNode*>::iterator i=begin_cluster_nodes;i!=end_cluster_nodes;i++)
-      {
-         if ((*i)->isConnected())
-         {
-            temp_start_block.send((*i)->getSockStream());
-         }                                               
-      }
-      ClusterNetwork::instance()->unlockClusterNodes();
-   }
-
 
    // STARTING BARRIER
    //////////////////////////////////////////////

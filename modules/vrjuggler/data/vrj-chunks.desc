@@ -35,6 +35,7 @@ The filters are applied in the order that they are specified in this configurati
       <allowedtype>IBox</allowedtype>
       <allowedtype>TrackdController</allowedtype>
       <allowedtype>Intersense</allowedtype>
+      <allowedtype>IntersenseAPI</allowedtype>
       <allowedtype>TrackdAPIController</allowedtype>
       <allowedtype>TweekGadget</allowedtype>
     </PropertyDesc>
@@ -97,19 +98,12 @@ The filters are applied in the order that they are specified in this configurati
       <item label="Machine" defaultvalue="" />
       <allowedtype>MachineSpecific</allowedtype>
     </PropertyDesc>
-    <PropertyDesc name="Sync Machine" token="sync_machine" type="chunk" variable="0">
+    <PropertyDesc name="Barrier Master" token="barrier_master" type="chunk" variable="0">
       <help>Cluster Node that is responsible for syncronizing all other nodes.</help>
       <item label="Machine" defaultvalue="" />
       <allowedtype>MachineSpecific</allowedtype>
     </PropertyDesc>
-    <PropertyDesc token="sync_method" name="Sync Method" type="int" variable="0">
-      <help>Cluster Node that is responsible for syncronizing all other nodes.</help>
-      <item label="Sync Method" defaultvalue="0" />
-      <enumeration name="None" value="0" />
-      <enumeration name="TCP/IP Sockets" value="1" />
-      <enumeration name="TCP/IP Sockets &amp; Serial Port" value="2" />
-    </PropertyDesc>
-  </ChunkDesc>
+ </ChunkDesc>
   <ChunkDesc token="CyberGlove" name="CyberGlove" version="1.0">
     <category>Devices</category>
     <help>Configuration for the CyberGlove</help>
@@ -231,6 +225,7 @@ The filters are applied in the order that they are specified in this configurati
       <allowedtype>SimDigitalGlove</allowedtype>
       <allowedtype>TrackdController</allowedtype>
       <allowedtype>Intersense</allowedtype>
+      <allowedtype>IntersenseAPI</allowedtype>
       <allowedtype>TrackdAPIController</allowedtype>
       <allowedtype>TweekGadget</allowedtype>
       <allowedtype>Vrpn</allowedtype>
@@ -796,17 +791,12 @@ The filters are applied in the order that they are specified in this configurati
       <help>Serial port speed</help>
       <item label="Baud Rate" defaultvalue="115200" />
     </PropertyDesc>
-    <PropertyDesc token="translate" name="Translation" type="float" variable="0">
-      <help>(world_T_transmitter) Translation of the transmitter from Juggler coord system.</help>
-      <item label="X" defaultvalue="0.0" />
-      <item label="Y" defaultvalue="0.0" />
-      <item label="Z" defaultvalue="0.0" />
-    </PropertyDesc>
-    <PropertyDesc token="rotate" name="Rotation" type="float" variable="0">
-      <help>(world_T_transmitter) Rotation (in degrees) of the tranmitter from the Juggler coord system.</help>
-      <item label="X Axis" defaultvalue="0.0" />
-      <item label="Y Axis" defaultvalue="0.0" />
-      <item label="Z Axis" defaultvalue="0.0" />
+    <PropertyDesc name="Position Filters" token="position_filters" type="embeddedchunk" variable="1">
+      <item label="Position Filter" />
+      <allowedtype>PosXformFilter</allowedtype>
+      <help>This is a list of all the filters that are to be applied to the postional device data.
+
+The filters are applied in the order that they are specified in this configuration.</help>
     </PropertyDesc>
     <PropertyDesc token="stations" name="Stations" type="embeddedchunk" variable="1">
       <help>Settings for each Station.</help>
@@ -1293,6 +1283,7 @@ The filters are applied in the order that they are specified in this configurati
       <allowedtype>SimRelativePosition</allowedtype>
       <allowedtype>SimSetablePosition</allowedtype>
       <allowedtype>Intersense</allowedtype>
+      <allowedtype>IntersenseAPI</allowedtype>
       <allowedtype>TrackdAPISensor</allowedtype>
       <allowedtype>TweekGadget</allowedtype>
       <allowedtype>Vrpn</allowedtype>

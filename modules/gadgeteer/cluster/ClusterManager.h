@@ -50,14 +50,6 @@ namespace cluster
 
 class GADGET_CLASS_API ClusterManager : public jccl::ConfigChunkHandler
 {      
-   enum Status
-   {
-      PRE_CLUSTER_CONFIG   = 0,
-      POST_CLUSTER_CONFIG  = 1,
-      WAITING              = 2,
-      RUNNING              = 3,
-      NOTUSED              = 4
-   };
    vprSingletonHeader( ClusterManager );
 public:
    ClusterManager();
@@ -114,11 +106,34 @@ private:
    //Start Barrier Stuff
 public:
    bool isClusterReady();
-   void updateStatus();
-private:   
-   bool allNodesRunning();
-   void processPackets();
-   void sendStartPacketToAllNodes();
+   
+   bool isBarrierMaster()
+   { return mBarrierMaster; }
+   
+   bool isRunning()
+   { return mRunning; }
+   
+   void setRunning(bool run)
+   { mRunning = run;}
+   
+   std::vector<std::string> getBarrierSlaves()
+   { return mSlaves; }
+   
+   std::vector<std::string> getPendingBarrierSlaves()
+   { return mPendingSlaves; }
+   
+   void removePendingBarrierSlave(const std::string& hostname)
+   {
+      for (std::vector<std::string>::iterator i = mPendingSlaves.begin();
+           i != mPendingSlaves.end() ; i++)
+      {
+         if (hostname == (*i))
+         {
+            mPendingSlaves.erase(i);
+            return;
+         }
+      }
+   }
 
    //General helper functions
 public:
@@ -128,7 +143,14 @@ private:
    std::list<ClusterPlugin*>     mPlugins;            /**< List of Plugins.*/
    vpr::Mutex                    mPluginsLock;        /**< Lock on plugins list.*/
    std::string                   mBarrierMachineName; /**< Name of the barrier machine.*/
-   int                           mStatus;             /**< Current status of the cluster*/
+   
+   // Barrier Variables //
+   std::vector<std::string>      mSlaves;
+   std::vector<std::string>      mPendingSlaves;
+   bool                          mRunning;
+   bool                          mBarrierMaster;
+   std::string                   mBarrierMasterHostname;
+
 };
 
 } // end namespace
