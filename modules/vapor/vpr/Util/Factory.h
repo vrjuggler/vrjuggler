@@ -87,7 +87,9 @@ class Factory : public FactoryErrorPolicy
 public:
    bool registerCreator(const IdentifierType& id, ProductCreator creator)
    {
-      return mCreatorMap.insert( CreatorMap::value_type(id,creator)).second;
+      // XXX: It would probably be better to use CreatorMap::value_type here.
+      std::pair<const IdentifierType, ProductCreator> p = std::make_pair(id, creator);
+      return mCreatorMap.insert(p).second;
    }
 
    bool unregisterCreator(const IdentifierType& id)
