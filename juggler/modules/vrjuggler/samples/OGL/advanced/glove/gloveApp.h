@@ -96,11 +96,37 @@ public:
    // Executes any initialization needed before the API is started
    virtual void init()
    {
-      // Initialize devices
+      // for the glove position
       mGlove.init("VJGlove");
-      mGesture.init("VJGesture");
+      
+      // for the glove fingers.
+      mPinchLeftThumb.init("PinchLeftThumb");
+      mPinchLeftIndex.init("PinchLeftIndex");
+      mPinchLeftMiddle.init("PinchLeftMiddle");
+      mPinchLeftRing.init("PinchLeftRing");
+      mPinchLeftPinky.init("PinchLeftPinky");
+      mPinchRightThumb.init("PinchRightThumb");
+      mPinchRightIndex.init("PinchRightIndex");
+      mPinchRightMiddle.init("PinchRightMiddle");
+      mPinchRightRing.init("PinchRightRing");
+      mPinchRightPinky.init("PinchRightPinky");
+
       //mGloveTracker.init("GlovePos Proxy");
    }
+  
+   //: is the glove pointing?
+   bool LeftPointing();
+
+   //: is the the glove open?
+   bool LeftOpen();
+
+   bool RightPointing();
+
+   bool RightOpen();
+
+   bool LeftFist();
+
+   bool RightFist();
 
    //: API Init
    //  Executes any initialization needed after API is started
@@ -146,11 +172,22 @@ private:
     void myDraw();
 
 protected:
-   //: VR Juggler devices
+   // for the glove position
    vjGloveInterface    mGlove;
-   vjGestureInterface  mGesture;
-   //vjPosInterface      mGloveTracker;
 
+   // for the glove fingers
+   vjDigitalInterface  mPinchLeftThumb;
+   vjDigitalInterface  mPinchLeftIndex;
+   vjDigitalInterface  mPinchLeftMiddle;
+   vjDigitalInterface  mPinchLeftRing;
+   vjDigitalInterface  mPinchLeftPinky;
+   vjDigitalInterface  mPinchRightThumb;
+   vjDigitalInterface  mPinchRightIndex;
+   vjDigitalInterface  mPinchRightMiddle;
+   vjDigitalInterface  mPinchRightRing;
+   vjDigitalInterface  mPinchRightPinky;
+   
+   
    //: Object selection
    bool                mCubeSelected;
    bool                mSphereSelected;

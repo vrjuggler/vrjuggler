@@ -72,6 +72,36 @@ public:
       mNowTranslating = state;
    }
    
+   //: tell the navigator to stop
+   virtual void stop()
+   {
+      //TODO
+   }
+   
+   //: tell the navigator to reverse acceleration
+   virtual void reverse()
+   {
+      //TODO
+   }
+   
+   //: tell the navigator to brake
+   virtual void brake()
+   {
+      //TODO
+   }
+   
+   //: tell the navigator to reset its matrix to origin
+   virtual void reset()
+   {
+      //TODO
+   }
+   
+   //: tell the navigator the matrix that reset() uses as it's origin.
+   virtual void setOrigin( const vjMatrix& matrix )
+   {
+      //TODO
+   }
+   
    //: tell the navigator what the pointing device's matrix is.
    //  you can usually do this to get that matrix
    //  vjMatrix* wand_mat = mWand->getData();
@@ -94,30 +124,13 @@ protected:
 
 vjStdCaveNavigator::vjStdCaveNavigator() : vjMatrix(), mNowTranslating( false ), mNowRotating( false )
 {
-   //mKern = vjKernel::instance();    // Store the kernel
-   //mWand.init("VJWand");
-   //mButton0.init("VJButton0");
-   //mButton1.init("VJButton1");
-   //mButton2.init("VJButton2");
    mVNav.setRotAxis(false, true, false);
    mVNav.setMode( velocityNav::FLY );
 }
 
-
-// app() - APP traversal function.  This overloads the standard pfNode
-// app() method, which will be called each frame during the APP
-// traversal of the scene graph (*only if* needsApp() (below) returns
-// TRUE).
-// app() is called automatically by Performer; it is not called directly
-// by a program.
+//: call once per frame (pre or post frame, not intra frame)
 int vjStdCaveNavigator::update()
 {
-   //bool nowTranslating = mButton0->getData();
-   //bool nowRotating = mButton1->getData();
-   //int button2_state = mButton2->getData();
-
-   //vjMatrix* mDeviceMatrix = mWand->getData();
-
    vjDEBUG(vjDBG_ALL, vjDBG_VERB_LVL) << "b0: " << mNowTranslating
                          << "b1: " << mNowRotating
                          //<< "b2: " << button2_state
@@ -138,7 +151,7 @@ int vjStdCaveNavigator::update()
    this->copy( world_pos );
 
 
-   return 1;        /* Finish by calling the parent class's app() */
+   return 1;
 }
 
 #endif
