@@ -541,12 +541,10 @@ void InputAreaWin32::addKeyEvent(const gadget::Keys& key,
                                    const gadget::EventType& type,
                                    const MSG& msg)
 {
-/*
    // XXX: Missing modifier key information here...
    // XXX: Missing ASCII character value here...
    gadget::EventPtr key_event(new gadget::KeyEvent(type, key, 0, msg.time));
    mKeyboardMouseDevice->addEvent(key_event);
-*/
 }
 
 void InputAreaWin32::resize(long width, long height)
@@ -559,7 +557,6 @@ void InputAreaWin32::addMouseButtonEvent(const gadget::Keys& button,
                                          const gadget::EventType& type,
                                          const MSG& msg)
 {
-/*
    // XXX: Missing keyboard modifier information here...
    gadget::EventPtr mouse_event(new gadget::MouseEvent(type, button,
                                                        GET_X_LPARAM(msg.lParam),
@@ -567,12 +564,10 @@ void InputAreaWin32::addMouseButtonEvent(const gadget::Keys& button,
                                                        msg.pt.x, msg.pt.y, 0,
                                                        msg.time));
    mKeyboardMouseDevice->addEvent(mouse_event);
-*/
 }
 
 void InputAreaWin32::addMouseMoveEvent(const MSG& msg)
 {
-/*
    gadget::EventPtr mouse_event(new gadget::MouseEvent(gadget::MouseMoveEvent,
                                                        gadget::NO_MBUTTON,
                                                        GET_X_LPARAM(msg.lParam),
@@ -580,7 +575,6 @@ void InputAreaWin32::addMouseMoveEvent(const MSG& msg)
                                                        msg.pt.x, msg.pt.y, 0,
                                                        msg.time));
    mKeyboardMouseDevice->addEvent(mouse_event);
-*/
 }
 
 void InputAreaWin32::doInternalError( const std::string& msg )
