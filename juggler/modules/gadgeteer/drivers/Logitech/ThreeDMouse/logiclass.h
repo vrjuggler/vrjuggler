@@ -131,20 +131,23 @@ public:
    int openMouse(const std::string& portName);
    int closeMouse();
 
-   void cuDemandReporting ();
-   void cuEulerMode ();
-   void cuHeadtrackerMode ();
-   void cuMouseMode ();
-   void cuRequestDiagnostics ();
-   void cuRequestReport ()     // Inline, most called function in package
+   void cuDemandReporting();
+   void cuEulerMode();
+   void cuHeadtrackerMode();
+   void cuMouseMode();
+   void cuRequestDiagnostics();
+
+   void cuRequestReport()     // Inline, most called function in package
+   {
       // Demand a single report
-       {write (mouseFD, "*d", 2); }
+      write(mouseFD, "*d", 2);
+   }
 
-   void cuResetControlUnit ();
+   void cuResetControlUnit();
 
-   void getDiagnostics (unsigned char data[]);
-   int  getRecord (gadget::PositionData *data);
-   void resetControlUnit ();
+   void getDiagnostics(unsigned char data[]);
+   int  getRecord(gadget::PositionData *data);
+   void resetControlUnit();
 
    //void setBaseOrigin();
        // PURPOSE: Sets the current mouse X,Y,Z position to be the base origin
@@ -182,10 +185,10 @@ private:
 
    std::string    mPortName;
 
-   int  logitechOpen (const std::string& port_name);
+   int  logitechOpen(const std::string& port_name);
 
-   void eulerToAbsolute (vpr::Uint8 record[], gmtl::Matrix44f& data);
-   void printBin (char a);
+   void eulerToAbsolute(vpr::Uint8 record[], gmtl::Matrix44f& data);
+   void printBin(char a);
 };
 }
 
