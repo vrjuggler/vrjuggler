@@ -50,14 +50,11 @@
 #include <jccl/RTRC/ConfigElementHandler.h>
 
 
-extern "C" GADGET_CLUSTER_PLUGIN_API(cluster::ClusterPlugin*) initPlugin();
-
 namespace cluster
 {
 class GADGET_CLUSTER_PLUGIN_CLASS_API SwapLockTCPPlugin
    : public cluster::ClusterPlugin
 {
-   vprSingletonHeader( SwapLockTCPPlugin );
 public:
    SwapLockTCPPlugin()  : mPluginGUID("5edfc033-1b3e-4741-b0e0-6ebb47967644"),
       SYNC_SIGNAL('G'), read_timeout(1000,vpr::Interval::Msec), mIsMaster(false), mActive(false)
