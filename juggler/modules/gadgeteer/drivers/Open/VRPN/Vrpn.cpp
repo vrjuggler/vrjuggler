@@ -75,7 +75,7 @@
 
 #include <drivers/Open/VRPN/Vrpn.h>
 
-#define VRPN_DEBUG 1
+#define VRPN_DEBUG 0
 // 1 == reporting
 // 2 == misc
 
@@ -214,16 +214,29 @@ void Vrpn::readLoop(void *nullParam)
    vrpn_Tracker_Remote *tracker;
    vrpn_Button_Remote *button;
 
-   tracker = new vrpn_Tracker_Remote(mTrackerServer.c_str());
-   button = new vrpn_Button_Remote(mButtonServer.c_str());
-   tracker->register_change_handler((void *) this, staticHandleTracker);
-   button->register_change_handler((void *) this, staticHandleButton);
+   if ( mTrackerNumber > 0 )
+   {
+      tracker = new vrpn_Tracker_Remote(mTrackerServer.c_str());
+      tracker->register_change_handler((void *) this, staticHandleTracker);
+   }
+
+   if ( mButtonNumber > 0 )
+   {
+      button = new vrpn_Button_Remote(mButtonServer.c_str());
+      button->register_change_handler((void *) this, staticHandleButton);
+   }
 
    // loop through  and keep sampling
    while ( !mExitFlag )
    {
-      tracker->mainloop();
-      button->mainloop();
+      if ( mTrackerNumber > 0 )
+      {
+         tracker->mainloop();
+      }
+      if ( mButtonNumber > 0 )
+      {
+         button->mainloop();
+      }
    }
 }
 
