@@ -33,6 +33,6 @@
 links:
 	cd $(instlinks)/include/vrj &&					\
           for dir in $(SUBDIR) ; do					\
-              rm -f ./$$dir ;						\
-              ln -s $(VJROOT_ABS)/vrj/$$dir ./$$dir ;			\
+              $(RM_LN) ./$$dir ;					\
+              $(LN_S) $(VJROOT_ABS)/vrj/$$dir ./$$dir ;			\
           done
