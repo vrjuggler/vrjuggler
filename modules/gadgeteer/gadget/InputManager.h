@@ -77,12 +77,28 @@ class DeviceFactory;
 class GADGET_CLASS_API InputManager : public jccl::ConfigElementHandler
 {
    vprSingletonHeader( InputManager );    // Make it a singleton
-public:
+
+protected:
+   /** Constructor is hidden, so no direct instantiation is allowed. */
    InputManager();
+
    virtual ~InputManager();
 
+   /** Constructor is hidden, so no copying is allowed. */
+   InputManager(const gadget::InputManager& obj)
+      : jccl::ConfigElementHandler(obj)
+   {
+      /* Do nothing. */ ;
+   }
+
+   void operator=(const gadget::InputManager& k)
+   {
+      /* Do nothing. */ ;
+   }
+
+public:
    friend GADGET_API(std::ostream&) operator<<(std::ostream& out,
-                                           InputManager& iMgr);
+                                               InputManager& iMgr);
 
  //---------------------------//
  //      CONFIG               //
