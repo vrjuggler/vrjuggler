@@ -899,7 +899,11 @@ if test "x${_enable_gl_api}" = "xyes" ; then
             _x_lib_path="-L$x_libraries"
         fi
 
-        _LIBOPENGL="-L${OGLROOT} -lGLU -lGL ${_x_lib_path} -lX11 -lXext"
+	if test "$OS_TYPE" = "UNIX" ;  then
+            _LIBOPENGL="-L${OGLROOT} -lGLU -lGL ${_x_lib_path} -lX11 -lXext"
+        else
+            _LIBOPENGL='opengl32.lib glu32.lib'
+        fi
 
         if test "$PLATFORM" = "SGI" -a "$ABI" = "O32" ; then
             _SYSTEM_OPENGL="-lmpc -lGLw ${_LIBOPENGL} -lfpe -lXm -lXt -lmalloc"
@@ -1079,30 +1083,39 @@ dnl #       for the $TEST_VJ_LIBS_GL variable.
 dnl #     * TEST_VJ_LIBS_PF: The Performer libraries needed for compiling
 dnl #       with the Performer API.
 dnl #
-if test "$PLATFORM" = "SGI" ; then
-    TEST_VJ_LIBS_BASIC="-B static -L\${VJ_BASE_DIR}/lib${LIBBITSUF} -lJuggler"
-    TEST_VJ_LIBS_BASIC_SUBST="-B dynamic -L$\${VJ_BASE_DIR}/lib\${LIBBITSUF} -lJuggler"
-    TEST_LIBS_BASIC="-B dynamic -lm -lC"
-elif test "$OS_TYPE" = "Win32" ; then
-    TEST_VJ_LIBS_BASIC="-L\${VJ_BASE_DIR}/lib -lJuggler"
-    TEST_VJ_LIBS_BASIC_SUBST="-L$\${VJ_BASE_DIR}/lib -lJuggler"
-    TEST_LIBS_BASIC="-lm"
-else
-    dnl # For now, we are disabling static linking for the sample applications
-    dnl # when compiled in a developer's build tree.  This is only the case
-    dnl # on non-SGI platforms.
-    TEST_VJ_LIBS_BASIC="-L\${VJ_BASE_DIR}/lib${LIBBITSUF} -lJuggler"
-    TEST_VJ_LIBS_BASIC_SUBST="-L$\${VJ_BASE_DIR}/lib\${LIBBITSUF} -lJuggler"
-    TEST_LIBS_BASIC="-lm"
-fi
+if test "$OS_TYPE" = "UNIX" ; then
+    if test "$PLATFORM" = "SGI" ; then
+        TEST_VJ_LIBS_BASIC="-B static -L\${VJ_BASE_DIR}/lib${LIBBITSUF} -lJuggler"
+        TEST_VJ_LIBS_BASIC_SUBST="-B dynamic -L$\${VJ_BASE_DIR}/lib\${LIBBITSUF} -lJuggler"
+        TEST_LIBS_BASIC="-B dynamic -lm -lC"
+    else
+        dnl # For now, we are disabling static linking for the sample
+        dnl # applications when compiled in a developer's build tree.  This
+        dnl # is only the case on non-SGI platforms.
+        TEST_VJ_LIBS_BASIC="-L\${VJ_BASE_DIR}/lib${LIBBITSUF} -lJuggler"
+        TEST_VJ_LIBS_BASIC_SUBST="-L$\${VJ_BASE_DIR}/lib\${LIBBITSUF} -lJuggler"
+        TEST_LIBS_BASIC="-lm"
+    fi
 
-TEST_VJ_LIBS_GL="-lJuggler_ogl"
-TEST_VJ_LIBS_PF="-lJuggler_pf"
-TEST_EXTRA_LIBS_BASIC="$LDFLAGS $LIBS"
-TEST_EXTRA_LIBS_BASIC_SUBST="$LDFLAGS $LIBS"
-TEST_EXTRA_LIBS_GL="-L${OGLROOT}/lib${LIBBITSUF} ${_SYSTEM_OPENGL}"
-TEST_EXTRA_LIBS_GL_SUBST="-L${OGLROOT}/lib\${LIBBITSUF} ${_SYSTEM_OPENGL}"
-TEST_EXTRA_LIBS_PF="${_PFOGLLIB}"
+    TEST_VJ_LIBS_GL="-lJuggler_ogl"
+    TEST_VJ_LIBS_PF="-lJuggler_pf"
+    TEST_EXTRA_LIBS_BASIC="$LDFLAGS $LIBS"
+    TEST_EXTRA_LIBS_BASIC_SUBST="$LDFLAGS $LIBS"
+    TEST_EXTRA_LIBS_GL="-L${OGLROOT}/lib${LIBBITSUF} ${_SYSTEM_OPENGL}"
+    TEST_EXTRA_LIBS_GL_SUBST="-L${OGLROOT}/lib\${LIBBITSUF} ${_SYSTEM_OPENGL}"
+    TEST_EXTRA_LIBS_PF="${_PFOGLLIB}"
+elif test "$OS_TYPE" = "Win32" ; then
+    TEST_VJ_LIBS_BASIC="-link -nodefaultlib:libc -libpath:\${VJ_BASE_DIR}/lib/$ISA/debug Juggler.lib"
+    TEST_VJ_LIBS_BASIC_SUBST="-link -nodefaultlib:libc -libpath:$\${VJ_BASE_DIR}/lib/$ISA/debug Juggler.lib"
+    TEST_LIBS_BASIC='comctl32.lib user32.lib gdi32.lib libcmtd.lib'
+    TEST_VJ_LIBS_GL='Juggler_ogl.lib'
+    TEST_VJ_LIBS_PF='Juggler_pf.lib'
+    TEST_EXTRA_LIBS_BASIC="$LDFLAGS $LIBS"
+    TEST_EXTRA_LIBS_BASIC_SUBST="$TEST_EXTRA_LIBS_BASIC"
+    TEST_EXTRA_LIBS_GL="${_SYSTEM_OPENGL}"
+    TEST_EXTRA_LIBS_GL_SUBST="${_SYSTEM_OPENGL}"
+    TEST_EXTRA_LIBS_PF="${_PFOGLLIB}"
+fi
 
 dnl # Translate paths from UNIX-style to Win32.
 if test "$OS_TYPE" = "Win32" ; then
