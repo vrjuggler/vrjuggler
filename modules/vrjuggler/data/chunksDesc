@@ -110,7 +110,7 @@ chunk GloveProxy "Glove Proxy" "A Glove Proxy points to a glove device and unit"
   end
 chunk KeyboardProxy "Keyboard Proxy" "This proxy points to a keyboard device."
   Name String 1 "Name" "Unique name of an instance of this chunk type"
-  device Chunk 1 "Device" vj_enumeration { "Keyboard" "simKeyboardDigital" } "The keyboard device to hook the proxy to."
+  device Chunk 1 "Device" vj_enumeration { "Keyboard" "simKeyboardDigital" "surfaceDisplay" "simDisplay" } "The keyboard device to hook the proxy to."
   end
 chunk MotionStar "MotionStar" "Ascension MotionStar server chassis configuration"
   Name String 1 "Name" "Unique name of an instance of this chunk type"
@@ -198,6 +198,8 @@ chunk simDisplay "Simulator Display" "This is a surface that images are projecte
   surfaceColor Float 3 "surfaceColor" vj_valuelabels { "red" "green" "blue" } "What color should the surfaces be?"
   vert_fov Float 1 "Vertical FOV" "Vertical field of view in degrees"
   aspect_ration Float 1 "Aspect Ratio" "Aspect ratio of the window (w/h)"
+  act_as_keyboard_device Bool 1 "Act as keyboard device" "Should this window also be a keyboard event device."
+  keyboard_device_chunk EmbeddedChunk 1 "Keyboard configuration" vj_enumeration { "Keyboard" } "Configuration of this keyboard device."
   end
 chunk simKeyDigital "simKeyDigital" "This chunk holds a key and a modifier key.  It is for key events."
   Name String 1 "Name" "Unique name of an instance of this chunk type"
@@ -221,6 +223,8 @@ chunk surfaceDisplay "Surface Display" "This is a surface that images are projec
   active Bool 1 "active" "Is the window active?"
   tracked Bool 1 "tracked" "Is this a tracked surface?"
   trackerproxy Chunk 1 "trackerproxy" vj_enumeration { "PosProxy" } "The tracker proxy that tracks the screen's reference frame."
+  act_as_keyboard_device Bool 1 "Act as keyboard device" "Should this window also be a keyboard event device."
+  keyboard_device_chunk EmbeddedChunk 1 "Keyboard configuration" vj_enumeration { "Keyboard" } "Configuration of this keyboard device."
   end
 chunk PerfMeasure "Performance Measurements" "Controls performance monitoring of Juggler library"
   Name String 1 "Name" "Unique name of an instance of this chunk type"
