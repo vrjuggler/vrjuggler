@@ -1,5 +1,7 @@
 DATE       AUTHOR   CHANGE
 ---------- -------- -----------------------------------------------------------
+2003-04-14 patrickh Added vpr::DsoLoader.
+                    NEW VERSION: 0.27.1
 2003-03-20 patrickh Updated to require Boost 1.30.0.
                     NEW VERSION: 0.27.0
 2003-03-14 patrickh Fixed a bug in the vpr::ThreadPosix constructors where the
