@@ -184,7 +184,7 @@ $(LIBDIR)/$(OPENAL_LIB_DYNAMIC): $(OBJDIR)/*.$(OBJEXT)
 	@echo "$@ done"
 	@echo "------------------------------------------------"
 
-$(LIBDIR)/$(SUBSYNTH_LIBRARY): $(OBJDIR)/*.$(OBJEXT)
+$(LIBDIR)/$(SUBSYNTH_LIB_DYNAMIC): $(OBJDIR)/*.$(OBJEXT)
 	@echo "------------------------------------------------"
 	@echo "Creating $@"
 	@echo "------------------------------------------------"
