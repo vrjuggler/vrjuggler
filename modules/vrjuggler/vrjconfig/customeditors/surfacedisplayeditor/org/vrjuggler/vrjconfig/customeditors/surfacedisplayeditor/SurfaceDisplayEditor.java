@@ -253,7 +253,7 @@ public class SurfaceDisplayEditor extends JSplitPane implements CustomEditor
       return("3D Surface Editor");
    }
    
-   public void setContext(ConfigContext context)
+   public void setConfig(ConfigContext context, ConfigElement elm)
    {
       mContext = context;
       java.util.List elms = mBroker.getElements(mContext);
@@ -264,6 +264,22 @@ public class SurfaceDisplayEditor extends JSplitPane implements CustomEditor
          
       }
       
+      mUniverse = new UniverseBuilder(mCanvas);
+      BranchGroup scene = createSceneGraph();
+      mUniverse.addBranchGraph(scene);	
+
+      mConfigElement = elm;
+      mSheet.setElement(elm);
+
+      if (elm.getDefinition().getToken().equals("display_window")) 
+      {
+         addDisplayWindow(elm);
+      }
+      else if (elm.getDefinition().getToken().equals("surface_viewport")) 
+      {
+         addSurfaceViewport(elm);
+      }
+
       mUniverse = new UniverseBuilder(mCanvas);
       BranchGroup scene = createSceneGraph();
       mUniverse.addBranchGraph(scene);	
@@ -284,28 +300,8 @@ public class SurfaceDisplayEditor extends JSplitPane implements CustomEditor
       }
    }
 
-  
-   public void setConfigElement(ConfigElement elm)
-   {
-      mConfigElement = elm;
-      mSheet.setElement(elm);
-
-      if (elm.getDefinition().getToken().equals("display_window")) 
-      {
-         addDisplayWindow(elm);
-      }
-      else if (elm.getDefinition().getToken().equals("surface_viewport")) 
-      {
-         addSurfaceViewport(elm);
-      }
-
-      mUniverse = new UniverseBuilder(mCanvas);
-      BranchGroup scene = createSceneGraph();
-      mUniverse.addBranchGraph(scene);	
-   }
-
    static int surface_viewport_number = 0;
-      
+
    private void addSurfaceViewport(ConfigElement elm)
    {
       if (elm.getDefinition().getToken().equals("surface_viewport")) 
