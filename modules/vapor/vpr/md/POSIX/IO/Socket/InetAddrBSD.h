@@ -347,6 +347,7 @@ protected:
     // ------------------------------------------------------------------------
     inline void
     copyAddressValue (const char* addr_value) {
+       vprASSERT(addr_value != NULL);
         memcpy((void*) &m_addr.sin_addr.s_addr, (void*) addr_value,
                sizeof(m_addr.sin_addr.s_addr));
     }
