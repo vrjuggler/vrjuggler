@@ -125,7 +125,7 @@ private:
    std::vector<vjProxyConstructorBase*> mConstructors;   //: List of the proxy constructors
 
 
-vjSingletonHeader(vjProxyFactory);
+vjSingletonHeaderWithInitFunc(vjProxyFactory,loadKnownProxies);
 /*
 public:     // ------ SINGLETON ----- ///
    //: Return singleton instance of the class
