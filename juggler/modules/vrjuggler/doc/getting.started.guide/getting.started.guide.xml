@@ -763,16 +763,35 @@ value</screen>
           <term>JCCL_DEFINITION_PATH</term>
 
           <listitem>
-            <para>This variable provides the search path for JCCL definition
-            files (those files with the extension <filename>.jdef</filename>).
-            It is set using a platform-specific format. On Windows, DOS paths
-            should be used, and they must be separated by the semi-colon (;)
-            character. On UNIX variants and Mac OS X, the paths should be
-            separated by the colon (:) character. This is exactly the way that
-            the <envar>PATH</envar> environment variable would be set on these
-            platforms. If not set, the default search path for configuration
-            files is
-            <filename>$VJ_BASE_DIR/share/vrjuggler/data/definitions</filename>.</para>
+            <para>This variable <emphasis>augments</emphasis> the search path
+            for JCCL definition files (those files with the extension
+            <filename>.jdef</filename>). It is set using a platform-specific
+            format. On Windows, DOS paths should be used, and they must be
+            separated by the semi-colon (;) character. On UNIX variants and
+            Mac OS X, the paths should be separated by the colon (:)
+            character. This is exactly the way that the <envar>PATH</envar>
+            environment variable would be set on these platforms.</para>
+
+            <para>The default search path for configuration files is always
+            <filename>$VJ_BASE_DIR/share/vrjuggler/data/definitions</filename>.
+            Setting the environment variable
+            <envar>JCCL_DEFINITION_PATH</envar> appends directories to the
+            default search path. It is not possible to change the default
+            search path without changing the value of
+            <envar>VJ_BASE_DIR</envar>.</para>
+
+            <sidebar>
+              <para>Python programmers will find this sort of behavior
+              familiar. This functionality is based on the way that the Python
+              environment variables <envar>PYTHONHOME</envar> and
+              <envar>PYTHONPATH</envar> behave. In this case,
+              <envar>PYTHONHOME</envar> corresponds to
+              <envar>VJ_BASE_DIR</envar>, and <envar>PYTHONPATH</envar>
+              corresponds with <envar>JCCL_DEFINITION_PATH</envar>. Indeed,
+              the behavior of <envar>JCCL_DEFINITION_PATH</envar> was inspired
+              by the handling of <envar>PYTHONPATH</envar> by the Python
+              interpreter.</para>
+            </sidebar>
           </listitem>
         </varlistentry>
 
