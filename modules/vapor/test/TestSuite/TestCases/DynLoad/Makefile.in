@@ -49,8 +49,7 @@ builddir=	$(shell pwd)
 EXTRA_DEFS+=	-DMODULE_DIR="\"$(builddir)/modules\""
 C_AFTERBUILD=	afterbuild-libs
 
-SRCS=	DsoLoaderTest.cpp	\
-	LibraryFinderTest.cpp	\
+SRCS=	LibraryFinderTest.cpp	\
 	LibraryLoaderTest.cpp	\
 	LibraryTest.cpp
 

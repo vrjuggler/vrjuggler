@@ -56,8 +56,7 @@ top_srcdir=	@top_srcdir@
 INSTALL=	@INSTALL@
 SUBOBJDIR=	$(VPR_LIBRARY)
 
-SRCS=		DsoLoader.cpp		\
-		LibraryFinder.cpp	\
+SRCS=		LibraryFinder.cpp	\
 		LibraryLoader.cpp	\
 		LoaderError.cpp
 
