@@ -20,8 +20,8 @@
 #include <Kernel/GL/vjGlApp.h>
 #include <Kernel/GL/vjGlWindow.h>
 #include <Kernel/GL/vjGlPipe.h>
+#include <Threads/vjTSObjectProxy.h>
 
-class vjGlPipe;
 class vjConfigChunkDB;
 class vjSimulator;
 
@@ -30,8 +30,8 @@ class vjSimulator;
 
 //-----------------------------------------------
 //: Concrete Singleton Class for OpenGL drawing
-// 
-//    Responsible for all OGL based rendering. 
+//
+//    Responsible for all OGL based rendering.
 //
 // @author Allen Bierbaum
 //  Date: 1-7-98
@@ -39,6 +39,9 @@ class vjSimulator;
 class vjGlDrawManager : public vjDrawManager
 {
 public:
+   friend class vjGlPipe;
+   friend class vjGlContextDataBase;
+
     //: Function to config API specific stuff.
     // Takes a chunkDB and extracts API specific stuff
    virtual void config(vjConfigChunkDB*  chunkDB);
@@ -56,7 +59,7 @@ public:
    //: Initialize the drawing API (if not already running)
    virtual void initAPI();
 
-   //: Initialize the drawing state for the API based on 
+   //: Initialize the drawing state for the API based on
    // the data in the display manager.
    //
    //! PRE: API is running (initAPI has been called)
@@ -103,9 +106,10 @@ protected:
    int      numPipes;     //: The number of pipes in the system
 
    // --- API data --- //
-   vjGlApp*             app;        //: The OpenGL application
-   vector<vjGlWindow*>  wins;       //: A list of the windows in the system
-   vector<vjGlPipe*>    pipes;      //: A list of the pipes in the system
+   vjGlApp*             app;           //: The OpenGL application
+   vector<vjGlWindow*>  wins;          //: A list of the windows in the system
+   vector<vjGlPipe*>    pipes;         //: A list of the pipes in the system
+   vjTSObjectProxy<int> mContextId;    //: TS Data for context id
 
    // --- MP Stuff -- //
    // vjCond     syncCond;       //: Condition var for syncing
@@ -114,6 +118,9 @@ protected:
    vjSemaphore    drawTriggerSema;  // Semaphore for draw trigger
    vjSemaphore    drawDoneSema;     // Semaphore for drawing done
 
+protected:
+   int& currentContext()
+   { return (*mContextId); }
 
    // --- Singleton Stuff --- //
 public:
@@ -127,7 +134,7 @@ protected:
    vjGlDrawManager() : drawTriggerSema(0), drawDoneSema(0)
    { ;}
 private:
-   static vjGlDrawManager* _instance;          
+   static vjGlDrawManager* _instance;
 };
 
 #endif
