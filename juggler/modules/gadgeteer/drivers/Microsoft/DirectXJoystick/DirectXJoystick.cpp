@@ -209,30 +209,19 @@ void DirectXJoystick::updateData()
          float norm_value;
          normalizeMinToMax(mInputDrv.getAxisValue(i), norm_value);
          mCurAxes[i].setAnalog(norm_value);
-      }
 
-/*
-      // use axes as button, only first 3 are tested.
-      for ( unsigned int axis_number = 0; axis_number < mCurAxes.size(); ++axis_number )
-      {
-         mCurAxes[axis_number].setTime();
-
-         // Check for axis buttons
-         // - If we have a mapping
-         // - If axis is gt 0.5, then btn is down
-         if ( axis_number < 3 )
+         // If the current axis maps to a virtual button, update the correct
+         // digital sample in mCurButtons.
+         if ( mAxisToButtonIndexLookup[i] != -1 )
          {
-            float norm_value(0.0f); // mCurAxes[axis_number].getAnalog();
-            if ( mAxisToButtonIndexLookup[axis_number] != -1 ) // If we map to a virtual button
-            {
-               unsigned vir_btn_index = mAxisToButtonIndexLookup[axis_number];
-               vprASSERT(vir_btn_index < mCurButtons.size() && "Virtual button index out of range");
-               mCurButtons[vir_btn_index] = ((norm_value > 0.5f) ? 1 : 0);
-               mCurButtons[vir_btn_index].setTime();
-            }
+            unsigned int vir_btn_index = mAxisToButtonIndexLookup[i];
+            vprASSERT(vir_btn_index < mCurButtons.size() &&
+                      "Virtual button index out of range");
+            mCurButtons[vir_btn_index] = ((norm_value > 0.5f) ? 1 : 0);
+            mCurButtons[vir_btn_index].setTime();
          }
       }
-*/
+
 
       addDigitalSample(mCurButtons);
       swapDigitalBuffers();
