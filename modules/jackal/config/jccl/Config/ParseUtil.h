@@ -32,11 +32,11 @@
 
 
 
-#ifndef _PARSEUTIL_H_
-#define _PARSEUTIL_H_
+#ifndef _JCCL_PARSEUTIL_H_
+#define _JCCL_PARSEUTIL_H_
 
 #include <jccl/jcclConfig.h>
-#include <jccl/Config/vjVarValue.h>
+#include <jccl/Config/VarValue.h>
 
 namespace jccl
 {

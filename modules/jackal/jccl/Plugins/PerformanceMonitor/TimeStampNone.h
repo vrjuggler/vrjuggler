@@ -32,8 +32,8 @@
 
 
 
-#ifndef _VJ_TIMESTAMP_NONE_
-#define _VJ_TIMESTAMP_NONE_
+#ifndef _JCCL_TIMESTAMP_NONE_
+#define _JCCL_TIMESTAMP_NONE_
 
 #include <jccl/jcclConfig.h>
 

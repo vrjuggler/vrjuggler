@@ -30,9 +30,9 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <jccl/Config/vjStandardConfigIOHandler.h>
-#include <jccl/Config/vjConfigChunkDB.h>
-#include <jccl/Config/vjChunkDescDB.h>
+#include <jccl/Config/StandardConfigIOHandler.h>
+#include <jccl/Config/ConfigChunkDB.h>
+#include <jccl/Config/ChunkDescDB.h>
 
 
 namespace jccl

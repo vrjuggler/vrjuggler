@@ -35,8 +35,8 @@
 /* TimeStamp... a simple class to enclose a timestamp */
 
 
-#ifndef _VJ_TIMESTAMP_
-#define _VJ_TIMESTAMP_
+#ifndef _JCCL_TIMESTAMP_
+#define _JCCL_TIMESTAMP_
 
 #include <jccl/jcclConfig.h>
 

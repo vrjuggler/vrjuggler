@@ -36,16 +36,16 @@
 // author: Christopher Just
 
 
-#include <jccl/JackalServer/vjEnvironmentManager.h>
-//#include <Kernel/vjKernel.h>
-#include <jccl/JackalServer/vjConnect.h>
-//#include <Performance/vjPerfDataBuffer.h>
-#include <jccl/Config/vjChunkDescDB.h>
-#include <jccl/Config/vjConfigChunkDB.h>
-#include <jccl/Config/vjParseUtil.h>
-#include <jccl/JackalServer/vjTimedUpdate.h>
+#include <jccl/JackalServer/EnvironmentManager.h>
+//#include <Kernel/Kernel.h>
+#include <jccl/JackalServer/Connect.h>
+#include <Performance/PerfDataBuffer.h>
+#include <jccl/Config/ChunkDescDB.h>
+#include <jccl/Config/ConfigChunkDB.h>
+#include <jccl/Config/ParseUtil.h>
+#include <jccl/JackalServer/TimedUpdate.h>
 
-//#include <Kernel/vjConfigManager.h>
+//#include <Kernel/ConfigManager.h>
 
 namespace jccl {
 
@@ -84,9 +84,9 @@ bool JackalServer::isAccepting() {
 
 
 
-void JackalServer::addPerfDataBuffer (vjPerfDataBuffer *b) {
-    vjDEBUG (vjDBG_PERFORMANCE, 4) << "EM adding perf data buffer " << b->getName().c_str() << "\n"
-                                   << vjDEBUG_FLUSH;
+void JackalServer::addPerfDataBuffer (PerfDataBuffer *b) {
+    vprDEBUG (vprDBG_PERFORMANCE, 4) << "EM adding perf data buffer " << b->getName().c_str() << "\n"
+                                   << vprDEBUG_FLUSH;
     perf_buffers_mutex.acquire();
     perf_buffers.push_back(b);
     activatePerfBuffers();
@@ -96,11 +96,11 @@ void JackalServer::addPerfDataBuffer (vjPerfDataBuffer *b) {
 
 
 
-void JackalServer::removePerfDataBuffer (vjPerfDataBuffer *b) {
-    std::vector<vjPerfDataBuffer*>::iterator it;
+void JackalServer::removePerfDataBuffer (PerfDataBuffer *b) {
+    std::vector<PerfDataBuffer*>::iterator it;
 
-    vjDEBUG (vjDBG_PERFORMANCE, 4) << "EM removing perf data buffer " << b->getName().c_str()
-                                   << "\n" << vjDEBUG_FLUSH;
+    vprDEBUG (vprDBG_PERFORMANCE, 4) << "EM removing perf data buffer " << b->getName().c_str()
+                                   << "\n" << vprDEBUG_FLUSH;
 
     perf_buffers_mutex.acquire();
     b->deactivate();
@@ -121,15 +121,15 @@ void JackalServer::removePerfDataBuffer (vjPerfDataBuffer *b) {
 
 //: tells EM that a connection has died (ie by gui disconnecting)
 //  not for the case of removal by configRemove
-void JackalServer::connectHasDied (vjConnect* con) {
+void JackalServer::connectHasDied (Connect* con) {
     std::string s = con->getName();
 
     connections_mutex.acquire();
     removeConnect(con);
     connections_mutex.release();
-    vjConfigManager::instance()->lockActive();
-    vjConfigManager::instance()->getActiveConfig()->removeNamed(s);
-    vjConfigManager::instance()->unlockActive();
+    ConfigManager::instance()->lockActive();
+    ConfigManager::instance()->getActiveConfig()->removeNamed(s);
+    ConfigManager::instance()->unlockActive();
     sendRefresh();
 }
 
@@ -148,12 +148,12 @@ void JackalServer::sendRefresh() {
 //: ConfigChunkHandler stuff
 //! PRE: configCanHandle(chunk) == true
 //! RETURNS: success
-bool JackalServer::configAdd(vjConfigChunk* chunk) {
+bool JackalServer::configAdd(ConfigChunk* chunk) {
     bool networkingchanged = false;
     int newport;
 
     std::string s = chunk->getType();
-    if (!vjstrcasecmp (s, "EnvironmentManager")) {
+    if (!strcasecmp (s, "EnvironmentManager")) {
         configured_to_accept = chunk->getProperty ("AcceptConnections");
         newport = chunk->getProperty("Port");
 
@@ -164,7 +164,7 @@ bool JackalServer::configAdd(vjConfigChunk* chunk) {
         perf_target_name = (std::string)chunk->getProperty ("PerformanceTarget");
         connections_mutex.acquire();
 
-        vjConnect* new_perf_target = getConnect(perf_target_name);
+        Connect* new_perf_target = getConnect(perf_target_name);
         if (new_perf_target != perf_target)
             setPerformanceTarget (NULL);
 
@@ -183,29 +183,29 @@ bool JackalServer::configAdd(vjConfigChunk* chunk) {
 
         return true;
     }
-    else if (!vjstrcasecmp (s, "PerfMeasure")) {
-        current_perf_config = new vjConfigChunk (*chunk);
+    else if (!strcasecmp (s, "PerfMeasure")) {
+        current_perf_config = new ConfigChunk (*chunk);
         perf_buffers_mutex.acquire();
         activatePerfBuffers();
         perf_buffers_mutex.release();
         return true;
     }
-    else if (!vjstrcasecmp (s, "FileConnect")) {
+    else if (!strcasecmp (s, "FileConnect")) {
         // I wanted to just look if the fileconnect had been added yet.
         // however I seem to have a chicken/egg problem.
         // so the kludge we'll do now is to not directly add a chunk that's
-        // of type VJC_INTERACTIVE. sigh.
+        // of type C_INTERACTIVE. sigh.
         // Unfortunately, this means that for other cases (such as attaching
         // to a named pipe) we're still broken
-        if ((int)chunk->getProperty("Mode") != VJC_INTERACTIVE) {
+        if ((int)chunk->getProperty("Mode") != C_INTERACTIVE) {
             // it's new to us
-            vjConnect* vn = new vjConnect (chunk);
-            vjDEBUG (vjDBG_ENV_MGR, 1) << "EM adding connection: " << vn->getName().c_str() << '\n'
-                                       << vjDEBUG_FLUSH;
+            Connect* vn = new Connect (chunk);
+            vprDEBUG (vprDBG_ENV_MGR, 1) << "EM adding connection: " << vn->getName().c_str() << '\n'
+                                       << vprDEBUG_FLUSH;
             connections_mutex.acquire();
             connections.push_back (vn);
             vn->startProcess();
-            if (!vjstrcasecmp (vn->getName(), perf_target_name))
+            if (!strcasecmp (vn->getName(), perf_target_name))
                 setPerformanceTarget (vn);
             connections_mutex.release();
         }
@@ -219,10 +219,10 @@ bool JackalServer::configAdd(vjConfigChunk* chunk) {
 //: Remove the chunk from the current configuration
 //! PRE: configCanHandle(chunk) == true
 //!RETURNS: success
-bool JackalServer::configRemove(vjConfigChunk* chunk) {
+bool JackalServer::configRemove(ConfigChunk* chunk) {
 
     std::string s = chunk->getType();
-    if (!vjstrcasecmp (s, "EnvironmentManager")) {
+    if (!strcasecmp (s, "EnvironmentManager")) {
         // this could be trouble if the chunk being removed isn't the chunk
         // we were configured with...
         rejectConnections();
@@ -230,9 +230,9 @@ bool JackalServer::configRemove(vjConfigChunk* chunk) {
         configured_to_accept = false;
         return true;
     }
-    else if (!vjstrcasecmp (s, "PerfMeasure")) {
+    else if (!strcasecmp (s, "PerfMeasure")) {
         if (current_perf_config) {
-            if (!vjstrcasecmp (current_perf_config->getProperty ("Name"),
+            if (!strcasecmp (current_perf_config->getProperty ("Name"),
                                chunk->getProperty ("Name"))) {
                 delete (current_perf_config);
                 current_perf_config = NULL;
@@ -243,16 +243,16 @@ bool JackalServer::configRemove(vjConfigChunk* chunk) {
         }
         return true;
     }
-    else if (!vjstrcasecmp (s, "FileConnect")) {
-        vjDEBUG (vjDBG_ENV_MGR,1) << "EM Removing connection: "
-                                  << chunk->getProperty ("Name") << '\n' << vjDEBUG_FLUSH;
+    else if (!strcasecmp (s, "FileConnect")) {
+        vprDEBUG (vprDBG_ENV_MGR,1) << "EM Removing connection: "
+                                  << chunk->getProperty ("Name") << '\n' << vprDEBUG_FLUSH;
         connections_mutex.acquire();
-        vjConnect* c = getConnect (chunk->getProperty ("Name"));
+        Connect* c = getConnect (chunk->getProperty ("Name"));
         if (c) {
             removeConnect (c);
         }
         connections_mutex.release();
-        vjDEBUG (vjDBG_ENV_MGR,4) << "EM completed connection removal\n" << vjDEBUG_FLUSH;
+        vprDEBUG (vprDBG_ENV_MGR,4) << "EM completed connection removal\n" << vprDEBUG_FLUSH;
         return true;
     }
 
@@ -264,11 +264,11 @@ bool JackalServer::configRemove(vjConfigChunk* chunk) {
 //: Can the handler handle the given chunk?
 //! RETURNS: true - Can handle it
 //+          false - Can't handle it
-bool JackalServer::configCanHandle(vjConfigChunk* chunk) {
+bool JackalServer::configCanHandle(ConfigChunk* chunk) {
     std::string s = chunk->getType();
-    return (!vjstrcasecmp (s, "EnvironmentManager") ||
-            !vjstrcasecmp (s, "PerfMeasure") ||
-            !vjstrcasecmp (s, "FileConnect"));
+    return (!strcasecmp (s, "EnvironmentManager") ||
+            !strcasecmp (s, "PerfMeasure") ||
+            !strcasecmp (s, "FileConnect"));
 }
 
 
@@ -276,12 +276,12 @@ bool JackalServer::configCanHandle(vjConfigChunk* chunk) {
 //-------------------- PRIVATE MEMBER FUNCTIONS -------------------------
 
 // should only be called when we own connections_mutex
-void JackalServer::removeConnect (vjConnect* con) {
+void JackalServer::removeConnect (Connect* con) {
     if (!con)
         return;
     if (con == perf_target)
         setPerformanceTarget (NULL);
-    std::vector<vjConnect*>::iterator i;
+    std::vector<Connect*>::iterator i;
     for (i = connections.begin(); i != connections.end(); i++)
         if (con == *i) {
             connections.erase (i);
@@ -293,7 +293,7 @@ void JackalServer::removeConnect (vjConnect* con) {
 
 
 // should only be called when we own connections_mutex
-void JackalServer::setPerformanceTarget (vjConnect* con) {
+void JackalServer::setPerformanceTarget (Connect* con) {
     if (con == perf_target)
         return;
     perf_buffers_mutex.acquire();
@@ -306,7 +306,7 @@ void JackalServer::setPerformanceTarget (vjConnect* con) {
 
 
 // should only be called when we own connections_mutex
-vjConnect* JackalServer::getConnect (const std::string& s) {
+Connect* JackalServer::getConnect (const std::string& s) {
     for (unsigned int i = 0; i < connections.size(); i++)
         if (s == connections[i]->getName())
             return connections[i];
@@ -318,20 +318,20 @@ vjConnect* JackalServer::getConnect (const std::string& s) {
 void JackalServer::controlLoop (void* nullParam) {
     // Child process used to listen for new network connections
     //struct sockaddr_in servaddr;
-    vjSocket* servsock;
+    Socket* servsock;
     //int len;
-    vjConnect* connection;
+    Connect* connection;
 
-    vjDEBUG(vjDBG_ENV_MGR,4) << "JackalServer started control loop.\n"
-          << vjDEBUG_FLUSH;
+    vprDEBUG(vprDBG_ENV_MGR,4) << "JackalServer started control loop.\n"
+          << vprDEBUG_FLUSH;
 
     for (;;) {
         servsock = listen_socket->accept();
         char name[128];
         //sprintf (name, "Network Connect %d", servsock->getID());
-        vjDEBUG(vjDBG_ENV_MGR,vjDBG_CONFIG_LVL) << "JackalServer: Accepted connection: id: "
-                                                << servsock->getID() << " on port: N/A\n" << vjDEBUG_FLUSH;
-        connection = new vjConnect (servsock, (std::string)name);
+        vprDEBUG(vprDBG_ENV_MGR,vprDBG_CONFIG_LVL) << "JackalServer: Accepted connection: id: "
+                                                << servsock->getID() << " on port: N/A\n" << vprDEBUG_FLUSH;
+        connection = new Connect (servsock, (std::string)name);
         connections_mutex.acquire();
         connections.push_back( connection );
         connection->startProcess();
@@ -343,7 +343,7 @@ void JackalServer::controlLoop (void* nullParam) {
 
 // should only be called while we have the connections mutex...
 void JackalServer::deactivatePerfBuffers () {
-    std::vector<vjPerfDataBuffer*>::iterator i;
+    std::vector<PerfDataBuffer*>::iterator i;
     for (i = perf_buffers.begin(); i != perf_buffers.end(); i++) {
         (*i)->deactivate();
         if (perf_target)
@@ -366,18 +366,18 @@ void JackalServer::activatePerfBuffers () {
         return;
     }
 
-    std::vector<vjVarValue*> v = current_perf_config->getAllProperties ("TimingTests");
-    std::vector<vjPerfDataBuffer*>::const_iterator b;
-    std::vector<vjVarValue*>::const_iterator val;
+    std::vector<VarValue*> v = current_perf_config->getAllProperties ("TimingTests");
+    std::vector<PerfDataBuffer*>::const_iterator b;
+    std::vector<VarValue*>::const_iterator val;
     bool found;
-    vjConfigChunk* ch;
+    ConfigChunk* ch;
 
     for (b = perf_buffers.begin(); b != perf_buffers.end(); b++) {
         found = false;
         for (val = v.begin(); val != v.end(); val++) {
             ch = *(*val); // this line demonstrates a subtle danger
             if ((bool)ch->getProperty ("Enabled")) {
-                if (!vjstrncasecmp(ch->getProperty("Prefix"), (*b)->getName()))
+                if (!strncasecmp(ch->getProperty("Prefix"), (*b)->getName()))
                     found = true;
             }
         }
@@ -403,17 +403,17 @@ bool JackalServer::acceptConnections() {
     if (listen_thread != NULL)
         return true;
 
-    listen_socket = new vjSocket ();
+    listen_socket = new Socket ();
     if (!listen_socket->listen (Port)) {
-        vjDEBUG(vjDBG_ERROR,vjDBG_CRITICAL_LVL) <<  clrOutNORM(clrRED,"ERROR:") << "Environment Manager couldn't open socket\n"
-                                                << vjDEBUG_FLUSH;
+        vprDEBUG(vprDBG_ERROR,vprDBG_CRITICAL_LVL) <<  clrOutNORM(clrRED,"ERROR:") << "Environment Manager couldn't open socket\n"
+                                                << vprDEBUG_FLUSH;
         return false;
     }
     else
-        vjDEBUG(vjDBG_ALL,vjDBG_CRITICAL_LVL)
+        vprDEBUG(vprDBG_ALL,vprDBG_CRITICAL_LVL)
             << clrOutNORM(clrCYAN, "Environment Manager")
             << " listening on port " << clrOutNORM(clrMAGENTA, Port) << "\n"
-            << vjDEBUG_FLUSH;
+            << vprDEBUG_FLUSH;
 
     /* now we ought to spin off a thread to do the listening */
     vpr::ThreadMemberFunctor<JackalServer>* memberFunctor =

@@ -30,7 +30,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <jccl/XMLUtil/vjXercesXMLParser.h>
+#include <jccl/XMLUtil/XercesXMLParser.h>
 
 #include <util/PlatformUtils.hpp>
 #include <util/XMLString.hpp>
@@ -46,8 +46,8 @@
 //#include <string.h>
 #include <stdlib.h>
 
-#include <jccl/XMLUtil/vjXercesStreamInputSource.h>
-#include <jccl/XMLUtil/vjXercesXMLError.h>
+#include <jccl/XMLUtil/XercesStreamInputSource.h>
+#include <jccl/XMLUtil/XercesXMLError.h>
 #include <vpr/Util/Debug.h>
 
 namespace jccl {

@@ -232,7 +232,7 @@ void PerfDataBuffer::writeTotal(std::ostream& out, int preskip, int postskip, fl
     float retval;
     int nump;
     int i;
-    float diff, avg;
+    float diff, avg, x;
 
     retval = buffer[(end-postskip)%numbufs].ts - buffer[(begin+preskip)%numbufs].ts;
     /*
@@ -260,7 +260,10 @@ void PerfDataBuffer::writeTotal(std::ostream& out, int preskip, int postskip, fl
 	else if (begin < end) {
 	    for (i = begin+1; i < end; i++) {
 		diff = buffer[i].ts - buffer[i-1].ts;
-		if (Math::abs(diff - avg) > avg * discrep) {
+                x = diff - avg;
+                if (x < 0)
+                    x = -x;
+		if (x > avg * discrep) {
 		    out << "    " << diff << " us at time "
 			<< buffer[i-1].ts << " us\n";
 		}
@@ -269,20 +272,29 @@ void PerfDataBuffer::writeTotal(std::ostream& out, int preskip, int postskip, fl
 	else { /* wraparound */
 	    for (i = begin+1; i < numbufs; i++) {
 		diff = buffer[i].ts - buffer[i-1].ts;
-		if (Math::abs(diff - avg) > avg * discrep) {
+                x = diff - avg;
+                if (x < 0)
+                    x = -x;
+		if (x > avg * discrep) {
 		    out << "    " << diff << " us at time "
 			<< buffer[i-1].ts << " us\n";
 
 		}
 	    }
 	    diff = buffer[0].ts - buffer[numbufs].ts;
-	    if (Math::abs(diff - avg) > avg * discrep) {
+            x = diff - avg;
+            if (x < 0)
+                x = -x;
+	    if (x > avg * discrep) {
 		out << "    " << diff << " us at time "
 		    << buffer[numbufs].ts << " us\n";
 	    }
 	    for (i = 1; i < end; i++) {
 		diff = buffer[i].ts - buffer[i-1].ts;
-		if (Math::abs(diff - avg) > avg * discrep) {
+                x = diff - avg;
+                if (x < 0)
+                    x = -x;
+		if (x > avg * discrep) {
 		    out << "    " << diff << " us at time "
 			<< buffer[i-1].ts << " us\n";
 		}

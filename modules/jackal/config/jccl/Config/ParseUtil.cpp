@@ -33,10 +33,9 @@
 
 #include <jccl/jcclConfig.h>
 #include <ctype.h>
-//#include <Math/vjMath.h>
-#include <jccl/Config/vjParseUtil.h>
+#include <jccl/Config/ParseUtil.h>
 #include <vpr/Util/Debug.h>
-#include <jccl/Config/vjConfigTokens.h>
+#include <jccl/Config/ConfigTokens.h>
 
 namespace jccl {
    

@@ -31,8 +31,8 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 
-#ifndef _VJ_ENUMENTRY_H_
-#define _VJ_ENUMENTRY_H_
+#ifndef _JCCL_ENUMENTRY_H_
+#define _JCCL_ENUMENTRY_H_
 
 /* Tiny little data structure used to store an entry of enumeration
  * or valuelabel data 
@@ -40,7 +40,7 @@
 
 
 #include <jccl/jcclConfig.h>
-#include <jccl/Config/vjVarValue.h>
+#include <jccl/Config/VarValue.h>
 
 namespace jccl {
    

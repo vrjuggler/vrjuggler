@@ -37,10 +37,10 @@
 
 #include <vpr/Util/Debug.h>
 #include <vpr/Util/Assert.h>
-#include <jccl/Config/vjChunkDescDB.h>
-#include <jccl/Config/vjParseUtil.h>
-#include <jccl/Config/vjConfigTokens.h>
-#include <jccl/Config/vjConfigIO.h>
+#include <jccl/Config/ChunkDescDB.h>
+#include <jccl/Config/ParseUtil.h>
+#include <jccl/Config/ConfigTokens.h>
+#include <jccl/Config/ConfigIO.h>
 
 namespace jccl {
    

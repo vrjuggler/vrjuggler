@@ -30,8 +30,8 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _VJCONFIGIOHANDLER_H_
-#define _VJCONFIGIOHANDLER_H_
+#ifndef _JCCL_CONFIGIOHANDLER_H_
+#define _JCCL_CONFIGIOHANDLER_H_
 
 #include <jccl/jcclConfig.h>
 

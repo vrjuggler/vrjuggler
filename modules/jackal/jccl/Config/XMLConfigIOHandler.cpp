@@ -39,13 +39,13 @@
 
 #include <stdlib.h>
 
-#include <jccl/Config/vjConfigChunkDB.h>
-#include <jccl/Config/vjChunkFactory.h>
-#include <jccl/Config/vjParseUtil.h>
-#include <jccl/XMLUtil/vjXercesXMLParserPool.h>
+#include <jccl/Config/XMLConfigIOHandler.h>
+#include <jccl/Config/ConfigChunkDB.h>
+#include <jccl/Config/ChunkFactory.h>
+#include <jccl/Config/ParseUtil.h>
+#include <jccl/XMLUtil/XercesXMLParserPool.h>
 #include <vpr/Util/Debug.h>
 
-#include <jccl/Config/vjXMLConfigIOHandler.h>
 
 
 namespace jccl {

@@ -32,12 +32,12 @@
 
 
 
-#ifndef _VJ_PROPERTY_H_
-#define _VJ_PROPERTY_H_
+#ifndef _JCCL_PROPERTY_H_
+#define _JCCL_PROPERTY_H_
 
 #include <jccl/jcclConfig.h>
-#include <jccl/Config/vjVarValue.h>
-#include <jccl/Config/vjPropertyDesc.h>
+#include <jccl/Config/VarValue.h>
+#include <jccl/Config/PropertyDesc.h>
 
 namespace jccl {
    

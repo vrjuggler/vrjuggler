@@ -31,7 +31,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 
-#include <jccl/XMLUtil/vjXercesXMLParserPool.h>
+#include <jccl/XMLUtil/XercesXMLParserPool.h>
 #include <util/PlatformUtils.hpp>
 
 namespace jccl {

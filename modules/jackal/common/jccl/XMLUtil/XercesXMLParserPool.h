@@ -30,13 +30,13 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _VJXERCESXMLPARSERPOOL_H_
-#define _VJXERCESXMLPARSERPOOL_H_
+#ifndef _JCCL_XERCESXMLPARSERPOOL_H_
+#define _JCCL_XERCESXMLPARSERPOOL_H_
 
 #include <jccl/jcclConfig.h>
 
 #include <vpr/Util/Singleton.h>
-#include <jccl/XMLUtil/vjXercesXMLParser.h>
+#include <jccl/XMLUtil/XercesXMLParser.h>
 
 namespace jccl {
 
