@@ -60,10 +60,10 @@ DPP_STD_CPP(yes)
 
 # Enable performance testing.  Values that enable it are as follows:
 #
-#      SGI: Enable SGI IPC performance testing.  This defines VJ_PERFORMANCE to
-#           be VJ_PERF_SGI
+#      SGI: Enable SGI IPC performance testing.  This defines JCCL_PERFORMANCE to
+#           be JCCL_PERF_SGI
 #    POSIX: Enable POSIX threads performance testing.  This defines
-#           VJ_PERFORMANCE to be VJ_PERF_POSIX
+#           JCCL_PERFORMANCE to be JCCL_PERF_POSIX
 #
 # Values that disable it are "no" or "NONE".  The default is "SGI".
 AC_ARG_ENABLE(performance,
@@ -111,10 +111,10 @@ DPP_WIN32_SETUP
 AC_CANONICAL_SYSTEM
 DPP_SYSTEM_SETUP
 
-## These are used on all platforms.
-#AC_DEFINE_UNQUOTED(VJ_OS_RELEASE, "$OS_REL_STR")
-#AC_DEFINE_UNQUOTED(VJ_OS_RELEASE_MAJOR, $OS_REL_NUM_MAJOR)
-#AC_DEFINE_UNQUOTED(VJ_OS_RELEASE_MINOR, $OS_REL_NUM_MINOR)
+# These are used on all platforms.
+AC_DEFINE_UNQUOTED(JCCL_OS_RELEASE, "$OS_REL_STR")
+AC_DEFINE_UNQUOTED(JCCL_OS_RELEASE_MAJOR, $OS_REL_NUM_MAJOR)
+AC_DEFINE_UNQUOTED(JCCL_OS_RELEASE_MINOR, $OS_REL_NUM_MINOR)
 
 # Depending on the target operating system, set various command options and
 # such.
@@ -123,50 +123,50 @@ case $target_os in
     irix6*)
         DBG_FLAGS="$DBG_FLAGS -gslim"
 
-        AC_DEFINE(VJ_OS_IRIX,)
+        AC_DEFINE(JCCL_OS_IRIX,)
         AC_DEFINE(_BSD_TYPES,)
         ;;
     # HP PA-RISC machine running HP-UX 10.20.
     hpux10.20)
-        AC_DEFINE(VJ_OS_HPUX,)
-        AC_DEFINE(VJ_HPUX_VERSION, 10)
+        AC_DEFINE(JCCL_OS_HPUX,)
+        AC_DEFINE(JCCL_HPUX_VERSION, 10)
         AC_DEFINE(_INCLUDE_TERMIO,)
         AC_DEFINE(_CMA_NOWRAPPERS_,)
         ;;
     # HP PA-RISC machine running HP-UX 11.x.
     hpux11*)
-        AC_DEFINE(VJ_OS_HPUX,)
-        AC_DEFINE(VJ_HPUX_VERSION, 11)
+        AC_DEFINE(JCCL_OS_HPUX,)
+        AC_DEFINE(JCCL_HPUX_VERSION, 11)
         AC_DEFINE(_INCLUDE_TERMIO,)
         AC_DEFINE(_CMA_NOWRAPPERS_,)
         ;;
     # DEC Alpha running Digital UNIX 4.0.
     osf4.0)
-        AC_DEFINE(VJ_OS_DUX,)
+        AC_DEFINE(JCCL_OS_DUX,)
         ;;
     # A machine running FreeBSD.  Currently only i386 is known to compile.
     freebsd*)
         CXXFLAGS="-Wall -Werror-implicit-function-declaration $CXXFLAGS"
 
-        AC_DEFINE(VJ_OS_FreeBSD,)
+        AC_DEFINE(JCCL_OS_FreeBSD,)
         ;;
     # A machine running Linux.  Currently only i386 is known to work.
     linux*)
         # CXXFLAGS="-fhonor-std -Wall -Werror-implicit-function-declaration $CXXFLAGS"
         CXXFLAGS="-Wall -Werror-implicit-function-declaration $CXXFLAGS"
 
-        AC_DEFINE(VJ_OS_Linux,)
+        AC_DEFINE(JCCL_OS_Linux,)
         ;;
     # A machine running Solaris (aka SunOS).  Currently only i386 is known to
     # work.
     solaris*)
         CXXFLAGS="-Wall -Werror-implicit-function-declaration $CXXFLAGS"
 
-        AC_DEFINE(VJ_OS_Solaris,)
+        AC_DEFINE(JCCL_OS_Solaris,)
         ;;
     # IBM RS/6000 running AIX.
     aix*)
-        AC_DEFINE(VJ_OS_AIX)
+        AC_DEFINE(JCCL_OS_AIX)
         ;;
     # i386-class machine running Windows {98,NT} with Cygnus GNU-Win32.
     cygwin)
@@ -176,15 +176,15 @@ case $target_os in
             _enable_perf='NONE'
         fi
 
-        AC_DEFINE(VJ_OS_Win32,)
+        AC_DEFINE(JCCL_OS_Win32,)
         ;;
     darwin1.*)
-        AC_DEFINE(VJ_OS_Darwin,)
+        AC_DEFINE(JCCL_OS_Darwin,)
         AC_DEFINE(_BSD_TYPES,) 
         ;;
     # Unkown operating system (to config.guess).
     unknown)
-        AC_DEFINE(VJ_OS_GENERIC,)
+        AC_DEFINE(JCCL_OS_GENERIC,)
         ;;
 esac
 
@@ -197,21 +197,21 @@ if test "$PLATFORM" != "IRIX" -a "${_enable_perf}" != "NONE" ; then
 fi
 
 # Define unique values for each type of performance testing option.
-# Only one of these may be used for the value to which VJ_PERFORMANCE is set.
-AC_DEFINE(VJ_PERF_NONE, 0)
-AC_DEFINE(VJ_PERF_SGI, 1)
-AC_DEFINE(VJ_PERF_POSIX, 2)
+# Only one of these may be used for the value to which JCCL_PERFORMANCE is set.
+AC_DEFINE(JCCL_PERF_NONE, 0)
+AC_DEFINE(JCCL_PERF_SGI, 1)
+AC_DEFINE(JCCL_PERF_POSIX, 2)
 
-# Define VJ_PERFORMANCE based on ${_enable_perf}.  Default to VJ_PERF_SGI if
+# Define JCCL_PERFORMANCE based on ${_enable_perf}.  Default to JCCL_PERF_SGI if
 # ${_enable_perf} has some unknown value.
 if test "x${_enable_perf}" = "xSGI" ; then
-    AC_DEFINE(VJ_PERFORMANCE, VJ_PERF_SGI)
+    AC_DEFINE(JCCL_PERFORMANCE, JCCL_PERF_SGI)
 elif test "x${_enable_perf}" = "xPOSIX" ; then
-    AC_DEFINE(VJ_PERFORMANCE, VJ_PERF_POSIX)
+    AC_DEFINE(JCCL_PERFORMANCE, JCCL_PERF_POSIX)
 elif test "x${_enable_perf}" = "xNONE" ; then
-    AC_DEFINE(VJ_PERFORMANCE, VJ_PERF_NONE)
+    AC_DEFINE(JCCL_PERFORMANCE, JCCL_PERF_NONE)
 else
-    AC_DEFINE(VJ_PERFORMANCE, VJ_PERF_SGI)
+    AC_DEFINE(JCCL_PERFORMANCE, JCCL_PERF_SGI)
 fi
 
 # -----------------------------------------------------------------------------
@@ -358,18 +358,10 @@ AC_CHECK_FUNCS(gettimeofday socket strcasecmp strdup strerror strtod strtok_r)
 
 ## All of the above function checks may not be necessary ...
 
-#_vjsave_LIBS="$LIBS"
-#AC_CHECK_FUNC(gethostbyname, SOCKET_LIB='',
-#    AC_CHECK_LIB(socket, gethostbyname, SOCKET_LIB='-lsocket'))
-#LIBS="${_vjsave_LIBS}"
-#
-## Ensure that we have sched_yield(3).  On Solaris, sched_yield(3) and its
-## synchronization friends are in libposix4.
-#_vjsave_LIBS="$LIBS"
-#AC_CHECK_FUNC(sched_yield, AC_DEFINE(HAVE_SCHED_YIELD),
-#              AC_CHECK_LIB(posix4, sched_yield,
-#                  [ _sched_lib='-lposix4' ; AC_DEFINE(HAVE_SCHED_YIELD) ]))
-#LIBS="${_vjsave_LIBS}"
+_vjsave_LIBS="$LIBS"
+AC_CHECK_FUNC(gethostbyname, SOCKET_LIB='',
+    AC_CHECK_LIB(socket, gethostbyname, SOCKET_LIB='-lsocket'))
+LIBS="${_vjsave_LIBS}"
 
 # In a Win32 environment with MS Visual C++ as the compiler, these math
 # functions are not in any special library.  Test for them normally.
@@ -467,7 +459,6 @@ elif test "$OS_TYPE" = "Win32" ; then
 #    DYLIB_DEPS_JCCL="-libpath:\$(LIBDIR) jccl.lib $DYLIB_DEPS_BASIC"
      DYLIB_DEPS_JCCL="$DYLIB_DEPS_BASIC"
 #    DYLIB_DEPS_UTILS="$DYLIB_DEPS_BASIC"
-#    DYLIB_DEPS_GL="-libpath:\$(LIBDIR) Juggler.lib Juggler_utils.lib $DYLIB_DEPS_BASIC $OGL_LDFLAGS $LIBOPENGL"
 
 fi
 

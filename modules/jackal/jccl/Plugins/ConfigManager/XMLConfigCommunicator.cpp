@@ -43,7 +43,7 @@
 // a totally cheezy kludge to avoid asserts becasue of some disagreement
 // between xerces & jackal/juggler/etc.  Doing this causes the loader code
 // to leak memory like a sieve.
-#ifdef VJ_OS_Win32
+#ifdef JCCL_OS_Win32
 
 #define delete[] //
 
