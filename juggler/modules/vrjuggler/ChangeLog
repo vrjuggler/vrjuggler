@@ -1,5 +1,7 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Oct-10-2002 nonchocoboy VRJConfig loads include files relative to the file that
+                        included it.
 [1.1 DR3 released - 9.29.2002]=================================================
 Sep-29-2002 nonchocoboy NEW VERSION: 1.1.128
 Sep-26-2002 patrickh    Regorganized the samples directory to separate simple
