@@ -138,8 +138,8 @@ void vjGlDrawManager::initDrawing()
       // (If they really have windows)
    for(int pipeNum=0;pipeNum<pipes.size();pipeNum++)
    {
-      if(pipes[pipeNum]->hasWindows())
-         pipes[pipeNum]->start();
+      //**//if(pipes[pipeNum]->hasWindows())    // Actually we want all the pipes to run
+      pipes[pipeNum]->start();
    }
 
       // --- Setup Multi-Process stuff --- //
