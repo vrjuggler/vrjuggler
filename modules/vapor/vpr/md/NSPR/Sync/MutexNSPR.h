@@ -242,7 +242,7 @@ public:
     * @return 0 is returned if this mutex is not locked.  1 is returned if it
     *         is locked.
     */
-   int test()
+   int test() const
    {
       return mLocked;
    }
