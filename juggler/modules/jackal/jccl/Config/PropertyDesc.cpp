@@ -5,47 +5,47 @@
 
 
 vjPropertyDesc::vjPropertyDesc () : enumv(), valuelabels() {
-  name = NULL;
-  token = NULL;
-  num = 0;
-  type = T_INVALID;
-  help = NULL;
+    name = NULL;
+    token = NULL;
+    num = 0;
+    type = T_INVALID;
+    help = NULL;
 }
 
 
 
 vjPropertyDesc::vjPropertyDesc (char *n, int i, VarType t, char* h):enumv(), valuelabels () {
-  name = new char[strlen(n)+1];
-  strcpy (name, n);
-  token = new char[strlen(n)+1];
-  strcpy (token, n);
-  num = i;
-  type = t;
-  help = new char[strlen(h)+1];
-  strcpy (help, h);
+    name = new char[strlen(n)+1];
+    strcpy (name, n);
+    token = new char[strlen(n)+1];
+    strcpy (token, n);
+    num = i;
+    type = t;
+    help = new char[strlen(h)+1];
+    strcpy (help, h);
 }
 
 
 
 vjPropertyDesc::~vjPropertyDesc () {
-  int i;
-  for (i = 0; i < enumv.size(); i++)
-    delete enumv[i];
-  for (i = 0; i < valuelabels.size(); i++)
-    delete valuelabels[i];
-  if (name)
-    delete name;
-  if (token)
-    delete token;
-  if (help) {
-    delete help;
+    int i;
+    for (i = 0; i < enumv.size(); i++)
+	delete enumv[i];
+    for (i = 0; i < valuelabels.size(); i++)
+	delete valuelabels[i];
+    if (name)
+	delete name;
+    if (token)
+	delete token;
+    if (help) {
+	delete help;
   }
 }
 
 
 
 vjEnumEntry* vjPropertyDesc::getEnumEntryAt (int index) {
-    if (enumv.size() > index)
+    if ((enumv.size() > index) && (index >= 0))
 	return enumv[index];
     else
 	return NULL;

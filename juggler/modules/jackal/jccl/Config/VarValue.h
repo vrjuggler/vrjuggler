@@ -66,20 +66,27 @@ private:
 
 public:
 
+    //:Gets a reference to a global "invalid" vjVarValue
+    //!NOTE: This is mainly useful for returning an invalid VarValue in
+    //+      case of an error, and is used internally by some Config/*
+    //+      classes.
+    //!NOTE: There is a farily harmless race condition where an extra
+    //+      invalid vjVarValue gets created & not deleted.  This is 
+    //+      very unlikely, and would only result in losing a few bytes
+    //+      anyway.
     static vjVarValue& getInvalidInstance () {
 	if (invalid_instance == NULL)
 	    invalid_instance = new vjVarValue (T_INVALID);
 	return *invalid_instance;
     }
 
+
     //: Copy constructor.
     vjVarValue (vjVarValue &v);
 
 
+    //: Constructor - creates a T_EMBEDDEDCHUNK vjVarValue containing ch
     vjVarValue (vjConfigChunk* ch);
-
-
-    vjVarValue& operator= (vjVarValue &v);
 
 
     //: Creates a new vjVarValue of type t.
@@ -94,16 +101,24 @@ public:
 
 
 
-  /** @name Cast Operators
-   *  These operators are used whenever a vjVarValue is cast to another
-   *  type.  They do some amount of type checking and coercion,
-   *  eventually returning the data stored within the config itself.
-   *  Right now, in event of an error we only write a message to cerr
-   *  and return a "reasonable" value - 0, 0.0, false, NULL, etc.
-   */
-  //@{
-  /// handles T_INT and T_BOOLs
-  operator int();
+    //: Assignment Operator
+    vjVarValue& operator= (vjVarValue &v);
+
+
+
+    /*  Cast Operators
+     *  These operators are used whenever a vjVarValue is cast to another
+     *  type.  They do some amount of type checking and coercion,
+     *  eventually returning the data stored within the config itself.
+     *  Right now, in event of an error we only write a message to cerr
+     *  and return a "reasonable" value - 0, 0.0, false, NULL, etc.
+     */
+
+    //: Cast to int
+    //!RETURNS: i - integer value of self if T_INT, 0 or 1 if T_BOOL
+    //!RETURNS: 0 - if not T_INT or T_BOOL (this is bad)
+    operator int();
+    
 
     //: cast to ConfigChunk
     //!NOTE: Returns a copy of the contained chunk which must be
@@ -121,40 +136,40 @@ public:
     operator float ();
 
 
-  /** handles T_STRING.  Note that the char array returned is a freshly
-   *  allocated copy, which you're responsible for freeing when you're
-   *  done with.  Also note that it's perfectly possible for this string
-   *  to be NULL.
-   */
-  operator char* ();
+    //: Cast to char* (can return NULL!)
+    //!NOTE: if non-NULL, returns a freshly-allocated char array, which the
+    //+      caller is responsible for freeing.
+    operator char* ();
+
+
+    //: Cast to std::string
     operator std::string ();
 
-  /** @name Assignment Operators.
-   *  This is the flip side of the cast: when data is assigned into
-   *  a vjVarValue, we do some type checking (at this point only
-   *  writing to cerr if an error occurs)
-   */
-  vjVarValue &operator = (int i);
-  vjVarValue& operator = (bool i);
-  vjVarValue &operator = (float i);
+
+    //: Assignment overload 
+    //!NOTE: type of a vjVarValue is immutable, so a type mismatch here
+    //+      can cause an error (in which case the assignment fails)
+    vjVarValue& operator = (int i);
+    vjVarValue& operator = (bool i);
+    vjVarValue& operator = (float i);
 
 
-  /** Note that the string assignment makes a copy of the string that
-   *  belongs to the vjVarValue - you can do with the original string
-   *  what you want.
-   */
-  vjVarValue &operator = (char *s);
+    //: Assignment overload 
+    //!NOTE: type of a vjVarValue is immutable, so a type mismatch here
+    //+      can cause an error (in which case the assignment fails)
+    //!NOTE: the vjVarValue makes a copy of the string - you can do with
+    //+      the original as you please.
+    vjVarValue &operator = (char *s);
 
     vjVarValue &operator = (vjConfigChunk *s);
 
 
 
-  /** Writes the value of self to out.  Note that self knows what type
-   *  it is, so it makes sure it's printed in a reasonable way.
-   *  ints, floats, and distances are printed as numbers (w/out units).
-   *  bools are printed as the strings "true" and "false", and
-   *  strings are printed as strings.
-   */
+    //: Writes the value of self to the stream out
+    //!NOTE: v knows what type it is, so it makes sure it's printed
+    //+      in a reasonable way.  ints & floats are printed as numbers,
+    //+      bools as the strings "true" and "false", strings and 
+    //+      chunks as their string reps, etc.
     friend ostream& operator << (ostream& out, vjVarValue& v);
     
 };

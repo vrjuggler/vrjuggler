@@ -19,6 +19,8 @@
 //  functions to search for particular vjChunkDescs, and to read
 //  and write ChunkDesc files.
 //
+// @author: Christopher Just
+// October 1997
 //!PUBLIC_API:
 //-----------------------------------------------------------------
 

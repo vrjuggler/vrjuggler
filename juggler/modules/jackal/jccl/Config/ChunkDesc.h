@@ -28,9 +28,11 @@
 //-----------------------------------------------------------------
 //:Defines name and properties for a kind of vjConfigChunk
 //
-// Primarily, it is a name and a list of vjPropertyDescs.
-// vjChunkDescs will probably only need to be used by the
-// vjChunkDescDB, vjChunkFactory, and the GUI.
+//       Primarily, it is a name and a list of vjPropertyDescs.
+//       vjChunkDescs will probably only need to be used by the
+//       vjChunkDescDB, vjChunkFactory, and the GUI.
+//
+//
 //!PUBLIC_API:
 //------------------------------------------------------------------------
 class vjChunkDesc {

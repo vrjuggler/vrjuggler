@@ -6,25 +6,25 @@
 
 class vjEnumEntry {
 private:
-  char *entry;
-  int val;
+    char *entry;
+    int val;
 
 public:
-  vjEnumEntry (char *e, int v) {
-    entry = new char[strlen(e)+1];
-    strcpy (entry, e);
-    val = v;
-  }
+    vjEnumEntry (char *e, int v) {
+	entry = new char[strlen(e)+1];
+	strcpy (entry, e);
+	val = v;
+    }
 
-  ~vjEnumEntry () {
-    delete entry;
-  }
+    ~vjEnumEntry () {
+	delete entry;
+    }
 
-  char* getName () {
-    return entry;
-  }
+    char* getName () {
+	return entry;
+    }
 
-  int getVal () {
-    return val;
-  }
+    int getVal () {
+	return val;
+    }
 };
