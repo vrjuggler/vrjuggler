@@ -88,13 +88,12 @@ void pfSwitcherApp::registerApp(pfAppHandle appHandle)
 {
    // Add application to list
    mApps.push_back(appHandle);
+   appHandle.mApp->setFocus(false);          // Set to non-focused
    vjDEBUG(vjDBG_ALL,0) << clrSetNORM(clrMAGENTA) << "Registered App: " << appHandle.mAppName << clrRESET << endl << vjDEBUG_FLUSH;
 
    // If first application in list, then set it active
    if(mActiveApp == -1)
    { setActiveApp(0); }
-   else        // else, set it unfocused
-   { appHandle.mApp->setFocus(false);}
 
    // If we have already initialized, then call whatever we can
    // XXX: write this code
@@ -173,13 +172,11 @@ void pfSwitcherApp::setActiveApp(unsigned index)
                         << "pfSwitcher: have old ap: "
                         << mApps[mActiveApp].mAppName << " idx:"
                         << mActiveApp << " Closing it.\n" << clrRESET << vjDEBUG_FLUSH;
-      mApps[mActiveApp].mApp->setFocus(false);
       mApps[mActiveApp].switchOff();
    }
 
    // -- SET NEW ONE -- //
    mActiveApp = index;                       // Set new active
-   mApps[mActiveApp].mApp->setFocus(true);   // Change focus state
    mApps[mActiveApp].switchOn();
 }
 
