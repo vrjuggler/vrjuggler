@@ -1172,6 +1172,11 @@ sub GENTEXT {
               (($arg[1] eq "brief") && !$mname && ${"$sdesc"}{$cname})  ||
               (($arg[1] eq "detail") && $mname && ${"$desc"}{"$mloc","$mnm"}) ||
               (($arg[1] eq "detail") && !$mname && ${"$desc"}{$cname})  ||
+	      ( ("$arg[1]" eq "descr") &&
+	        ( ($mname && (${"$sdesc"}{"$mloc", "$mnm"} ||
+			      ${"$desc"}{"$mloc", "$mnm"})) ||
+		  (! $mname && (${"$sdesc"}{"$cname"} ||
+		  		${"$desc"}{"$cname"})) ) ) ||
               (($arg[1] eq "first") && $ord==0)  ||
               (($arg[1] eq "last") && $ord==-1)  ||
               (($arg[1] eq "mid") && $ord>0)  ||
