@@ -171,7 +171,7 @@ public:
    /// Function called after tracker update but before start of drawing
    virtual void preFrame()
    {
-       vjDEBUG(vjDBG_ALL,2) << "cubesApp::preFrame()" << std::endl
+       vjDEBUG(vjDBG_ALL,5) << "cubesApp::preFrame()" << std::endl
                             << vjDEBUG_FLUSH;
 
        for(unsigned int i=0;i<mUserData.size();i++)
@@ -181,14 +181,14 @@ public:
    /// Function called after drawing has been triggered but BEFORE it completes
    virtual void intraFrame()
    {
-      vjDEBUG(vjDBG_ALL,2) << "cubesApp::intraFrame()" << std::endl
+      vjDEBUG(vjDBG_ALL,5) << "cubesApp::intraFrame()" << std::endl
                            << vjDEBUG_FLUSH;
    }
 
    /// Function called before updating trackers but after the frame is drawn
    virtual void postFrame()
    {
-      vjDEBUG(vjDBG_ALL,2) << "cubesApp::postFrame" << std::endl
+      vjDEBUG(vjDBG_ALL,5) << "cubesApp::postFrame" << std::endl
                            << vjDEBUG_FLUSH;
    }
 
