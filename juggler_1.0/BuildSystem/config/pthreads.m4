@@ -68,7 +68,7 @@ dnl     _PTHREADS_DRAFT_10 - The POSIX thread implementation is Draft 10.
 dnl     _PTHREADS_DRAFT_4  - The POSIX thread implementation is Draft 4.
 dnl ===========================================================================
 
-dnl pthreads.m4,v 1.13 2001/02/16 22:05:24 patrick Exp
+dnl pthreads.m4,v 1.16 2001/05/23 19:13:01 patrickh Exp
 
 dnl ---------------------------------------------------------------------------
 dnl State that POSIX threads are needed for compiling.
@@ -261,9 +261,10 @@ AC_DEFUN(DPP_GET_PTHREAD_VER,
     LIBS="$dpp_save_LIBS"
 
     if test "x$dpp_cv_pthread_version" = "xDraft 10" ; then
-        AC_DEFINE(_PTHREADS_DRAFT_10,)
+        AC_DEFINE(_PTHREADS_DRAFT_10, ,
+                  [define if using POSIX threads Draft 10])
     else
-        AC_DEFINE(_PTHREADS_DRAFT_4,)
+        AC_DEFINE(_PTHREADS_DRAFT_4, , [define if using POSIX threads Draft 4])
     fi
 
     if test "x$2" != "x" ; then
@@ -310,14 +311,19 @@ AC_DEFUN(DPP_GET_POSIX_SEMAPHORE_LIB,
     AC_LANG_SAVE
     AC_LANG_C
 
-    dnl # If we have sem_init(3), we can use POSIX semaphores.  If not, exit
-    dnl # with a fatal error.  If we are using POSIX threads, we need to have
-    dnl # working POSIX semaphores too.
-    AC_CHECK_FUNC(sem_init, $1,
+    dpp_sem_init_found='no'
+
+    dnl Check if we have sem_init(3) available.  It may be in the standard C
+    dnl library, in libposix4, or in librt depending on the platform.
+    AC_CHECK_FUNC(sem_init, dpp_sem_init_found='yes',
         AC_CHECK_LIB(posix4, sem_init,
-            [ SEM_LIB='-lposix4'
-              $1 ],
-            $2))
+            [ SEM_LIB='-lposix4' dpp_sem_init_found='yes' ],
+            AC_CHECK_LIB(rt, sem_init,
+                [ SEM_LIB='-lrt' dpp_sem_init_found='yes' ], $2)))
+
+    if test "x$dpp_sem_init_found" = "xyes" ; then
+        ifelse([$1], , :, [$1])
+    fi
 
     AC_LANG_RESTORE
 

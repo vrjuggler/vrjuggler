@@ -37,17 +37,19 @@ dnl     --with-oglroot - Give the root directory of the OpenGL implementation
 dnl                      installation.
 dnl
 dnl Variables defined:
-dnl     USE_MESA    - Either 'yes' or 'no' depending on whether Mesa3D is
-dnl                   being used.
-dnl     OGLROOT     - The OpenGL installation directory.
-dnl     LIBOPENGL   - The list of libraries to link for OpenGL appliations.
-dnl     GL_INCLUDES - Extra include path for the OpenGL header directory.
-dnl     GL_LDFLAGS  - Extra linker flags for the OpenGL library directory.
-dnl     X_INCLUDES  - Extra include path for the X11 header directory.
-dnl     X_LDFLAGS   - Extra linker flags for the X11 library directory.
+dnl     USE_MESA     - Either 'yes' or 'no' depending on whether Mesa3D is
+dnl                    being used.
+dnl     OGLROOT      - The OpenGL installation directory.
+dnl     LIBOPENGL    - The list of libraries to link for OpenGL appliations.
+dnl     GL_LIB       - The basic OpenGL library.
+dnl     GLU_LIB      - The OpenGL utilities library.
+dnl     OGL_INCLUDES - Extra include path for the OpenGL header directory.
+dnl     OGL_LDFLAGS  - Extra linker flags for the OpenGL library directory.
+dnl     X_INCLUDES   - Extra include path for the X11 header directory.
+dnl     X_LDFLAGS    - Extra linker flags for the X11 library directory.
 dnl ===========================================================================
 
-dnl opengl.m4,v 1.5 2001/02/19 20:46:44 patrick Exp
+dnl opengl.m4,v 1.17 2001/06/18 21:47:18 patrickh Exp
 
 dnl ---------------------------------------------------------------------------
 dnl Determine if the target system has OpenGL (or Mesa3D) installed.  This
@@ -107,10 +109,14 @@ AC_DEFUN(DPP_HAVE_OPENGL,
     dpp_save_INCLUDES="$INCLUDES"
     dpp_save_LDFLAGS="$LDFLAGS"
 
+    if test "x$dpp_platform" = "xMacOSX" ; then
+        OGLROOT='/System/Library/Frameworks/OpenGL.framework'
+    fi
+
     dnl Add the user-specified OpenGL installation directory to these
     dnl paths.  Ensure that /usr/include and /usr/lib are not included
     dnl multiple times if $OGLROOT is "/usr".
-    if test "x$OGLROOT" != "x/usr" ; then
+    if test "x$OGLROOT" != "x/usr" -a "x$dpp_platform" != "xMacOSX" ; then
         CPPFLAGS="$CPPFLAGS -I$OGLROOT/include"
         INCLUDES="$INCLUDES -I$OGLROOT/include"
         LDFLAGS="-L$OGLROOT/lib$LIBBITSUF $LDFLAGS"
@@ -121,8 +127,19 @@ AC_DEFUN(DPP_HAVE_OPENGL,
     dnl On HP-UX, we have to compile the test code with the C++ compiler
     dnl because the HP-UX OpenGL 1.1 implementation mandates this.
     if test "x$dpp_platform" = "xHP" ; then
-        AC_LANG_SAVE
-        AC_LANG_CPLUSPLUS
+        X_LDFLAGS=''
+        X_INCLUDES=''
+
+        if test "x$x_libraries" != "xNONE" -a "x$x_libraries" != "x" ; then
+            X_LDFLAGS="-L$x_libraries"
+        fi
+
+        if test "x$x_includes" != "xNONE" -a "x$x_includes" != "x" ; then
+            X_INCLUDES="-I$x_includes"
+        fi
+
+        DPP_LANG_SAVE
+        DPP_LANG_CPLUSPLUS
 
         dpp_save_LIBS="$LIBS"
         LIBS="$LIBS -l${MESA}GL"
@@ -134,27 +151,95 @@ AC_DEFUN(DPP_HAVE_OPENGL,
         AC_CACHE_CHECK(for glEnable in -l${MESA}GL, ac_cv_glEnable_available,
             AC_TRY_LINK([#include <GL/gl.h>], [glEnable(GL_CULL_FACE)],
                 ac_cv_glEnable_available='yes',
-                [ LIBS="$dpp_save_LIBS"; $4 ]))
+                LIBS="$dpp_save_LIBS"))
 
-        dnl If the library was found, add the OpenGL API object files to
-        dnl the files to be compiled and enable the OpenGL API compile-time
-        dnl option.
         if test "x$ac_cv_glEnable_available" = "xyes" ; then
             dpp_have_opengl='yes'
-            $3
-            true
+            ifelse([$3], , :, [$3])
+        else
+            ifelse([$4], , :, [$4])
         fi
 
         dnl This is necessary again because AC_CHECK_LIB() adds -l${MESA}GLU
         dnl to $LIBS.
         LIBS="$dpp_save_LIBS"
 
-        AC_LANG_RESTORE
+        DPP_LANG_RESTORE
+    elif test "x$dpp_platform" = "xMacOSX" ; then
+        AC_LANG_SAVE
+        AC_LANG_C
+
+        CPPFLAGS="$CPPFLAGS -F$OGLROOT"
+        LDFLAGS="$LDFLAGS -framework OpenGL"
+
+        AC_CACHE_CHECK(for glEnable in OpenGL framework,
+                       dpp_cv_glEnable_framework_OpenGL,
+                       AC_TRY_LINK([#include <OpenGL/gl.h>],
+                           [glEnable(GL_LIGHTING)],
+                           dpp_cv_glEnable_framework_OpenGL='yes',
+                           dpp_cv_glEnable_framework_OpenGL='no'))
+
+        if test "x$dpp_cv_glEnable_framework_OpenGL" = "xno" ; then
+            ifelse([$4], , :, [$4])
+        fi
+
+        AC_CACHE_CHECK(for gluNewQuadric in OpenGL framework,
+                       dpp_cv_gluNewQuadric_framework_OpenGL,
+                       AC_TRY_LINK([
+#include <OpenGL/gl.h>
+#include <OpenGL/glu.h>],
+                           [gluNewQuadric()],
+                           dpp_cv_gluNewQuadric_framework_OpenGL='yes',
+                           dpp_cv_gluNewQuadric_framework_OpenGL='no'))
+
+        if test "x$dpp_cv_gluNewQuadric_framework_OpenGL" = "xno" ; then
+            ifelse([$4], , :, [$4])
+        else
+            OGL_INCLUDES="-F$OGLROOT"
+            OGL_LDFLAGS="-framework OpenGL"
+            ifelse([$3], , :, [$3])
+        fi
+
+        DPP_LANG_RESTORE
     elif test "x$dpp_os_type" = "xWin32" ; then
-        AC_MSG_WARN(Assuming that OpenGL is available in a standard location)
-        dpp_have_opengl='yes'
-        $3
-        true
+        AC_LANG_SAVE
+        AC_LANG_C
+
+        LIBS="$LIBS opengl32.lib"
+
+        AC_CACHE_CHECK(for glEnable in opengl32.lib,
+                       dpp_cv_glEnable_opengl32_lib,
+                       AC_TRY_LINK([#include <windows.h>
+#include <GL/gl.h>],
+                           [glEnable(GL_LIGHTING);],
+                           dpp_cv_glEnable_opengl32_lib='yes',
+                           dpp_cv_glEnable_opengl32_lib='no'))
+
+        if test "x$dpp_cv_glEnable_opengl32_lib" = "xno" ; then
+            ifelse([$4], , :, [$4])
+        fi
+
+        LIBS="$LIBS glu32.lib"
+
+        AC_CACHE_CHECK(for gluNewQuadric in glu32.lib,
+                       dpp_cv_gluNewQuadric_glu32_lib,
+                       AC_TRY_LINK([#include <windows.h>
+#include <GL/gl.h>
+#include <GL/glu.h>],
+                           [gluNewQuadric();],
+                           dpp_cv_gluNewQuadric_glu32_lib='yes',
+                           dpp_cv_gluNewQuadric_glu32_lib='no'))
+
+        LIBS="$dpp_save_LIBS"
+
+        if test "x$dpp_cv_glEnable_opengl32_lib" = "xyes" ; then
+            dpp_have_opengl='yes'
+            ifelse([$3], , :, [$3])
+        else
+            ifelse([$4], , :, [$4])
+        fi
+
+        AC_LANG_RESTORE
     else
         X_LDFLAGS=''
 
@@ -169,9 +254,6 @@ AC_DEFUN(DPP_HAVE_OPENGL,
         AC_LANG_SAVE
         AC_LANG_C
 
-        dnl If the OpenGL library was found, add the API object files to the
-        dnl files to be compiled and enable the OpenGL API compile-time
-        dnl option.
         AC_CHECK_LIB(${MESA}GL, glEnable, , $4, -lX11 -lXext -lm)
 
         dnl This is necessary because AC_CHECK_LIB() adds -l${MESA}GL to
@@ -202,9 +284,11 @@ AC_DEFUN(DPP_HAVE_OPENGL,
         dnl to $LIBS.
         LIBS="$dpp_save_LIBS"
 
-        AC_CHECK_HEADER(GL/glu.h,
-            [ dpp_have_opengl='yes' ;
-              $3 ], $4)
+        AC_CHECK_HEADER(GL/glu.h, dpp_have_opengl='yes', $4)
+
+        if test "x$dpp_have_opengl" = "xyes" ; then
+            ifelse([$3], , :, [$3])
+        fi
 
         AC_LANG_RESTORE
     fi
@@ -214,8 +298,12 @@ AC_DEFUN(DPP_HAVE_OPENGL,
     if test "x$dpp_have_opengl" = "xyes" ; then
         if test "x$OS_TYPE" = "xUNIX" ;  then
             LIBOPENGL="-l${MESA}GLU -l${MESA}GL $X_LDFLAGS -lX11 -lXext"
+            GL_LIB="-l${MESA}GL"
+            GLU_LIB="-l${MESA}GLU"
         else
             LIBOPENGL='opengl32.lib glu32.lib'
+            GL_LIB='opengl32.lib'
+            GLU_LIB='glu32.lib'
         fi
 
         if test "x$OGLROOT" != "x/usr" ; then

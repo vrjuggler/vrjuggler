@@ -28,20 +28,12 @@ dnl capabilities of the C++ compiler are tested here as well to ensure that
 dnl the proper language support is available.
 dnl ---------------------------------------------------------------------------
 dnl Macros:
-dnl     DPP_STD_CPP       - Add a command line option to enable or disable the
-dnl                         use of standard C++ by the C++ compiler.
-dnl     DPP_PROG_CC       - Check for the existence and usability of a C
-dnl                         compiler.
-dnl     DPP_PROG_CXX      - Check for the existence and usability of a C++
-dnl                         compiler.
-dnl     DPP_CXX_TEMPLATES - Test the C++ compiler's template-handling
-dnl                         capabilities.
-dnl
-dnl Command-line options added:
-dnl     --enable-std
+dnl     DPP_PROG_CC  - Check for the existence and usability of a C compiler.
+dnl     DPP_GET_EXT  - Get the extensions for object files and executables.
+dnl     DPP_PROG_CXX - Check for the existence and usability of a C++
+dnl                    compiler.
 dnl
 dnl Variables defined:
-dnl
 dnl     CC              - The C compiler.
 dnl     CPP             - The C compiler's preprocessor.
 dnl     CXX             - The C++ compiler.
@@ -52,27 +44,7 @@ dnl     CXXFLAGS_DYNLIB - Position-independent code generation flag for the
 dnl                       C++ compiler.  Substituted automatically.
 dnl ===========================================================================
 
-dnl compiler.m4,v 1.9 2001/02/20 17:33:17 patrick Exp
-
-dnl ---------------------------------------------------------------------------
-dnl Add a command line option to enable or disable the use of standard C++ by
-dnl the C++ compiler.  This includes use of the std namespace.
-dnl
-dnl Usage:
-dnl     DPP_STD_CPP([default-std-setting])
-dnl
-dnl Arguments:
-dnl     default-std-setting - The default value, "yes" or "no, for the use of
-dnl                           standard C++ by the compiler.
-dnl ---------------------------------------------------------------------------
-AC_DEFUN(DPP_STD_CPP,
-[
-    AC_BEFORE([$0], [DPP_SYSTEM_SETUP])
-
-    AC_ARG_ENABLE(std,
-                  [  --enable-std            Force the use of standard C++   [default=$1]],
-                  dpp_std="$enableval", dpp_std=$1)
-])
+dnl compiler.m4,v 1.18 2001/05/23 23:00:25 patrickh Exp
 
 dnl ---------------------------------------------------------------------------
 dnl Check for the existence and usability of a C compiler (or the given C
@@ -84,7 +56,7 @@ dnl fallbacks can be provided by setting a value for the variable
 dnl $CC_FALLBACKS.  This must be in the format of an sh list.
 dnl
 dnl Usage:
-dnl     DPP_PROG_CC([C-compiler [, extra-flags [, action-if-not-found]]])
+dnl     DPP_PROG_CC([C-compiler [, extra-flags [, action-if-not-found [, path ]]]])
 dnl
 dnl Arguments:
 dnl     C-compiler          - Force the check to look for this C compiler.
@@ -93,6 +65,8 @@ dnl     extra-flags         - Extra compiler flags to use when checking.  This
 dnl                           is optional.
 dnl     action-if-not-found - The action to take if the C compiler cannot be
 dnl                           found or does not work.  This is optional.
+dnl     path                - Extra path information for finding the C
+dnl                           compiler.  This is optional.
 dnl ---------------------------------------------------------------------------
 AC_DEFUN(DPP_PROG_CC,
 [
@@ -110,10 +84,10 @@ AC_DEFUN(DPP_PROG_CC,
     if test "x$1" != "x" -o "x$CC" != "x" ; then
         if test "x$1" != "x" ; then
             dpp_CC_found_val=$1
-            AC_CHECK_PROG(dpp_CC_check_val, $1, $1)
+            AC_CHECK_PROG(dpp_CC_check_val, $1, $1, , $4)
         else
             dpp_CC_found_val="$CC"
-            AC_CHECK_PROG(dpp_CC_check_val, $CC, $CC)
+            AC_CHECK_PROG(dpp_CC_check_val, $CC, $CC, , $4)
         fi
 
         if test "x$dpp_CC_check_val" = "x$dpp_CC_found_val" ; then
@@ -125,7 +99,7 @@ AC_DEFUN(DPP_PROG_CC,
             dnl variable, loop over them and try to use another C compiler.
             if test "x$CC_FALLBACKS" != "x" ; then
                 for dpp_cc in $CC_FALLBACKS ; do
-                    AC_CHECK_PROG(dpp_CC_check_val, $dpp_cc, $dpp_cc)
+                    AC_CHECK_PROG(dpp_CC_check_val, $dpp_cc, $dpp_cc, , $4)
                     if test "x$dpp_CC_check_val" = "x$dpp_cc" ; then
                         CC="$dpp_cc"
                         dpp_CC_found='yes'
@@ -136,8 +110,7 @@ AC_DEFUN(DPP_PROG_CC,
 
             dnl No viable C compiler was found.
             if test "x$dpp_CC_found" = "xno" ; then
-                $3
-                true
+                ifelse([$3], , :, [$3])
             fi
         fi
     fi
@@ -161,6 +134,24 @@ AC_DEFUN(DPP_PROG_CC,
 ])
 
 dnl ---------------------------------------------------------------------------
+dnl Get the extensions for object files and executables.  The extension
+dnl strings are stored in $OBJEXT and $EXEEXT.
+dnl
+dnl Usage:
+dnl     DPP_GET_EXT
+dnl ---------------------------------------------------------------------------
+AC_DEFUN(DPP_GET_EXT,
+[
+    AC_REQUIRE([DPP_PROG_CC])
+
+    dnl Determine the suffix for object file names.
+    AC_OBJEXT
+
+    dnl Determine the suffix for executable file names.
+    AC_EXEEXT
+])
+
+dnl ---------------------------------------------------------------------------
 dnl Check for the existence and usability of a C++ compiler (or the given C++
 dnl compiler if one is specified) and how to run its preprocessor.  A
 dnl platform-specific hint for the C++ compiler can be given by setting a
@@ -170,7 +161,7 @@ dnl fallbacks can be provided by setting a value for the variable
 dnl $CXX_FALLBACKS.  This must be in the format of an sh list.
 dnl
 dnl Usage:
-dnl     DPP_PROG_CXX([C++-compiler [, extra-flags [, action-if-not-found]]])
+dnl     DPP_PROG_CXX([C++-compiler [, extra-flags [, action-if-not-found [, path]]]])
 dnl
 dnl Arguments:
 dnl     C++-compiler        - Force the check to look for this C++ compiler.
@@ -179,6 +170,8 @@ dnl     extra-flags         - Extra compiler flags to use when checking.  This
 dnl                           is optional.
 dnl     action-if-not-found - The action to take if the C++ compiler cannot be
 dnl                           found or does not work.  This is optional.
+dnl     path                - Extra path information for finding the C++
+dnl                           compiler.  This is optional.
 dnl ---------------------------------------------------------------------------
 AC_DEFUN(DPP_PROG_CXX,
 [
@@ -196,10 +189,10 @@ AC_DEFUN(DPP_PROG_CXX,
     if test "x$1" != "x" -o "x$CXX" != "x" ; then
         if test "x$1" != "x" ; then
             dpp_CXX_found_val=$1
-            AC_CHECK_PROG(dpp_CXX_check_val, $1, $1)
+            AC_CHECK_PROG(dpp_CXX_check_val, $1, $1, , $4)
         else
             dpp_CXX_found_val="$CXX"
-            AC_CHECK_PROG(dpp_CXX_check_val, $CXX, $CXX)
+            AC_CHECK_PROG(dpp_CXX_check_val, $CXX, $CXX, , $4)
         fi
 
         if test "x$dpp_CXX_check_val" = "x$dpp_CXX_found_val" ; then
@@ -212,7 +205,7 @@ AC_DEFUN(DPP_PROG_CXX,
             dnl C++ compiler.
             if test "x$CXX_FALLBACKS" != "x" ; then
                 for dpp_cxx in $CXX_FALLBACKS ; do
-                    AC_CHECK_PROG(dpp_CXX_check_val, $dpp_cxx, $dpp_cxx)
+                    AC_CHECK_PROG(dpp_CXX_check_val, $dpp_cxx, $dpp_cxx, , $4)
                     if test "x$dpp_CXX_check_val" = "x$dpp_cxx" ; then
                         CXX="$dpp_cxx"
                         dpp_CXX_found='yes'
@@ -223,8 +216,7 @@ AC_DEFUN(DPP_PROG_CXX,
 
             dnl No viable C++ compiler was found.
             if test "x$dpp_CXX_found" = "xno" ; then
-                $3
-                true
+                ifelse([$3], , :, [$3])
             fi
         fi
     fi
@@ -245,46 +237,4 @@ AC_DEFUN(DPP_PROG_CXX,
     fi
 
     AC_SUBST(CXXFLAGS_DYNLIB)
-])
-
-dnl ---------------------------------------------------------------------------
-dnl Test the C++ compiler's template-handling capabilities.
-dnl
-dnl Usage:
-dnl     DPP_CXX_TEMPLATES([action-if-not-capable])
-dnl
-dnl Arguments:
-dnl     action-if-not-capable - The action to take if the C++ compiler cannot
-dnl                             deal with modern templates.
-dnl ---------------------------------------------------------------------------
-AC_DEFUN(DPP_CXX_TEMPLATES,
-[
-    AC_REQUIRE([DPP_PROG_CXX])
-    AC_REQUIRE([DPP_SYSTEM_SETUP])
-
-    dnl Ensure that the C++ compiler we've found is capable of compiling the
-    dnl newer C++ features that we need.
-    AC_LANG_SAVE
-    AC_LANG_CPLUSPLUS
-
-    dpp_save_CXXFLAGS="$CXXFLAGS"
-
-    dnl When compiling on Windows, we need to force the compiler to treat the
-    dnl source file as a .cpp file even though it will end in .C.  The lack
-    dnl of case-sensitive file names strikes again!
-    if test "x$dpp_os_type" = "xWin32" -a "x$USE_GCC" != "xyes" ; then
-        CXXFLAGS="$CXXFLAGS -TP"
-    fi
-
-    AC_CACHE_CHECK(whether the C++ compiler handles templates properly,
-        dpp_cv_CXX_handles_templates,
-        AC_TRY_COMPILE([#include <map> ],
-                       [ std::map<const char*, int> test_map; ],
-                       [ dpp_cv_CXX_handles_templates='yes' ;
-                         rm -rf ./ii_files ],
-                       [ dpp_cv_CXX_handles_templates='no' ; $1 ]))
-
-    CXXFLAGS="$dpp_save_CXXFLAGS"
-
-    AC_LANG_RESTORE
 ])

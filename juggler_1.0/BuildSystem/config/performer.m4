@@ -43,7 +43,7 @@ dnl     PF_INCLUDES - Extra include path for the Performer header directory.
 dnl     PF_LDFLAGS  - Extra linker flags for the Performer library directory.
 dnl ===========================================================================
 
-dnl performer.m4,v 1.4 2001/02/16 22:05:24 patrick Exp
+dnl performer.m4,v 1.7 2001/05/25 17:17:12 patrickh Exp
 
 dnl ---------------------------------------------------------------------------
 dnl Determine if the target system has IRIS/OpenGL Performer installed.  This
@@ -83,7 +83,7 @@ AC_DEFUN(DPP_HAVE_PERFORMER,
 
     dnl Define the Performer version installed..
     AC_ARG_WITH(pfver,
-                [  --with-pfver=<VER>      Performer version to use        [default=2.4]],
+                [  --with-pfver=<VER>      Performer version to use        [default=$2]],
                 PF_VER="$withval", PF_VER=$2)
 
     dpp_save_CFLAGS="$CFLAGS"
@@ -132,10 +132,12 @@ AC_DEFUN(DPP_HAVE_PERFORMER,
     dnl files to be compiled and enable the Performer API compile-time
     dnl option.
     AC_CHECK_LIB(pf, pfInit,
-        AC_CHECK_HEADER(Performer/pf.h,
-            [ dpp_have_performer='yes' ;
-              $3 ], $4),
+        AC_CHECK_HEADER(Performer/pf.h, dpp_have_performer='yes', $4),
         $4)
+
+    if test "x$dpp_have_performer" = "xyes" ; then
+        ifelse([$3], , :, [$3])
+    fi
 
     LIBS="$dpp_save_LIBS"
 

@@ -43,7 +43,7 @@ dnl               be "no" or the empty string.  This is set by the
 dnl               DPP_WITH_GCC macro.
 dnl ===========================================================================
 
-dnl gcc.m4,v 1.4 2001/02/19 23:24:29 patrick Exp
+dnl gcc.m4,v 1.6 2001/05/22 22:37:36 patrickh Exp
 
 dnl ---------------------------------------------------------------------------
 dnl Force the use of GCC as the compiler suite.
@@ -78,17 +78,8 @@ AC_DEFUN(DPP_GPLUSPLUS_VER,
 [
     AC_REQUIRE([DPP_PROG_CXX])
 
-    AC_CACHE_CHECK(if $CXX version is >= $1,
-        dpp_cv_CXX_is_egcs,
-        [ dpp_gcc_ver=`$CXX -dumpversion` 
-          DPP_VERSION_CHECK($dpp_gcc_ver, $1, dpp_cv_CXX_is_egcs='yes',
-                            dpp_cv_CXX_is_egcs='no')
-        ])
-
-    if test "x$dpp_cv_CXX_is_egcs" = "xno" ; then
-        $2
-        true
-    fi
+    dpp_gcc_ver=`$CXX -dumpversion` 
+    DPP_VERSION_CHECK_MSG($CXX, $dpp_gcc_ver, $1, dpp_cv_CXX_is_egcs, , $2)
 ])
 
 dnl ---------------------------------------------------------------------------

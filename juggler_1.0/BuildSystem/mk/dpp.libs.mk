@@ -23,7 +23,7 @@
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # =============================================================================
-# dpp.libs.mk,v 1.6 2001/02/16 22:05:26 patrick Exp
+# dpp.libs.mk,v 1.8 2001/06/18 18:28:32 patrickh Exp
 #
 # This file <dpp.libs.mk> defines many targets for use in compiling a software
 # library (or a set of libraries).  An including makefile can take advantage
@@ -55,6 +55,9 @@
 #
 # Optionally, it can define the following variables for added functionality:
 #
+# EXEC_PERMS          - UNIX-style permissions for executable files.
+# FILE_PERMS          - UNIX-style permissions for normal (non-executable)
+#                       files.
 # UMASK               - The permissions mask to use when installing files.  If
 #                       not specified, it defaults to 002.
 # GROUP_NAME          - The name of the group used for ownership of installed
@@ -97,8 +100,6 @@
 #                       defaults to -D_DEBUG.
 # OPT_FLAGS           - Compiler optimizing flags.  If not specified, it
 #                       defaults to -D_OPT.
-#
-# GROUP_NAME          - Name of the group owner for installed files.
 #
 # OBJDIR_NAME         - Name of the directory where objects will be compiled.
 #                       If not specified, it defaults to obj.
@@ -148,6 +149,8 @@ DBG_DIR		?= debug
 OPT_DIR		?= opt
 DEFAULT_DIR	?= $(DBG_DIR)
 
+EXEC_PERMS	?= 755
+FILE_PERMS	?= 644
 UMASK		?= 002
 
 # If we have a name for the install group, define group-setting options for

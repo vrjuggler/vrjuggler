@@ -23,7 +23,7 @@
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # =============================================================================
-# dpp.dep.mk,v 1.6 2001/02/16 22:05:26 patrick Exp
+# dpp.dep.mk,v 1.8 2001/05/23 22:39:46 patrickh Exp
 #
 # This include file <dpp.dep.mk> handles source code dependencies.  It
 # generates makefiles corresponding to each source file (ending in .c or .cpp)
@@ -90,48 +90,46 @@ endif
 _CC_SED_EXP	= '\''s|\($*\)\.$(OBJEXT)[ :]*|$$(OBJDIR)/\1.$(OBJEXT) $@: |g'\''
 _MKDEP_SED_EXP	= '\''s|.*\($*\)\.$(OBJEXT)[ :]*|$$(OBJDIR)/\1.$(OBJEXT) $@: |g'\''
 
-# Determine, based on the C compiler, how to generate the dependencies.  If
-# the compiler is cl (Windows only), use makedepend(1).  Otherwise, we can use
-# the compiler itself to do the job.
-ifeq ($(CC), cl)
-    _C_DEPGEN	= $(SHELL) -ec 'makedepend -f- -o.$(OBJEXT)		\
+_DEPGEN_MKDEP	= $(SHELL) -ec '$(MAKEDEPEND) -f- -o.$(OBJEXT)		\
                       $(DEPEND_FLAGS) -- $(DEPEND_EXTRAS) -- $< |	\
                       sed $(_MKDEP_SED_EXP) > $@ ; [ -s $@ ] || rm -f $@'
-    _CXX_DEPGEN	= $(SHELL) -ec 'makedepend -f- -o.$(OBJEXT)		\
-                      $(DEPEND_FLAGS) -D__cplusplus -- $(DEPEND_EXTRAS)	\
-                      -- $< | sed $(_MKDEP_SED_EXP) > $@ ; [ -s $@ ] ||	\
-                      rm -f $@'
+
+# If we have to use makedepend(1), then go that route.  Otherwise, use the
+# compiler's built-in dependency generation features.
+ifeq ($(USE_MAKEDEPEND), Y)
+    C_DEPGEN	= $(_DEPGEN_MKDEP)
+    CXX_DEPGEN	= $(_DEPGEN_MKDEP)
 else
-    _C_DEPGEN	= $(SHELL) -ec '$(MKDEP_C) $(DEP_GEN_FLAG) $< |		\
+    C_DEPGEN	= $(SHELL) -ec '$(MKDEP_C) $(DEP_GEN_FLAG) $< |		\
                       sed $(_CC_SED_EXP) > $@ ; [ -s $@ ] || rm -f $@'
-    _CXX_DEPGEN	= $(SHELL) -ec '$(MKDEP_CXX) $(DEP_GEN_FLAG) $< |	\
+    CXX_DEPGEN	= $(SHELL) -ec '$(MKDEP_CXX) $(DEP_GEN_FLAG) $< |	\
                       sed $(_CC_SED_EXP) > $@ ; [ -s $@ ] || rm -f $@'
 endif
 
 $(DEPDIR)/%.d: %.c
 	@echo "Updating dependency file $@ ..."
-	@$(_C_DEPGEN)
+	@$(C_DEPGEN)
 
 $(DEPDIR)/%.d: %.C
 	@echo "Updating dependency file $@ ..."
-	@$(_CXX_DEPGEN)
+	@$(CXX_DEPGEN)
 
 $(DEPDIR)/%.d: %.CC
 	@echo "Updating dependency file $@ ..."
-	@$(_CXX_DEPGEN)
+	@$(CXX_DEPGEN)
 
 $(DEPDIR)/%.d: %.cc
 	@echo "Updating dependency file $@ ..."
-	@$(_CXX_DEPGEN)
+	@$(CXX_DEPGEN)
 
 $(DEPDIR)/%.d: %.c++
 	@echo "Updating dependency file $@ ..."
-	@$(_CXX_DEPGEN)
+	@$(CXX_DEPGEN)
 
 $(DEPDIR)/%.d: %.cpp
 	@echo "Updating dependency file $@ ..."
-	@$(_CXX_DEPGEN)
+	@$(CXX_DEPGEN)
 
 $(DEPDIR)/%.d: %.cxx
 	@echo "Updating dependency file $@ ..."
-	@$(_CXX_DEPGEN)
+	@$(CXX_DEPGEN)

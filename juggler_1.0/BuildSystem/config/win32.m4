@@ -28,13 +28,19 @@ dnl ---------------------------------------------------------------------------
 dnl Macros:
 dnl     DPP_WIN32_SETUP - Define path conversion (DOS to UNIX and UNIX to DOS)
 dnl                       subroutines.
+dnl     DPP_PROG_MSVCCC - Find the msvccc shell script wrapper around the
+dnl                       Microsoft Visual C++ command-line compiler CL.EXE.
 dnl 
 dnl Subroutines defined:
 dnl     unix2dos - Convert a UNIX-style path into a DOS-style path.
 dnl     dos2unix - Convert a DOS-style path into a UNIX-style path.
+dnl
+dnl Variables defined:
+dnl     DPP_USING_MSVCCC - Set to either 'yes' or 'no' depending on whether
+dnl                        msvccc will be used as the compiler.
 dnl ===========================================================================
 
-dnl win32.m4,v 1.8 2001/02/16 22:05:24 patrick Exp
+dnl win32.m4,v 1.10 2001/06/18 21:15:25 patrickh Exp
 
 dnl ---------------------------------------------------------------------------
 dnl Define path conversion (DOS to UNIX and UNIX to DOS) subroutines.
@@ -121,10 +127,52 @@ AC_DEFUN(DPP_WIN32_SETUP,
 
             dnl This changes the leading "C:" to "//C" (for the appropriate
             dnl drive letter).
-            dpp_colon_rem_exp=['s/^\([[:alpha:]]\):/\/\/\1/']
-            dpp_retval=`echo "$dpp_unix_root" | sed -e "$dpp_colon_rem_exp"`
+            dpp_colon_rem_exp=['s/\([[:alpha:]]\):/\/\/\1/g']
+            dpp_colon_rem_root=`echo "$dpp_unix_root" | sed -e "$dpp_colon_rem_exp"`
+
+            dnl This changes any ";" into ":"
+            dpp_semicolon_exp=['s/\;/:/g']
+            dpp_retval=`echo "$dpp_colon_rem_root" | sed -e "$dpp_semicolon_exp"`
         fi
 
         echo "$dpp_retval"
     }
+])
+
+dnl ---------------------------------------------------------------------------
+dnl Find the msvccc shell script wrapper around the Microsoft Visual C++
+dnl command-line compiler CL.EXE.  This works similarly to a normal
+dnl AC_CHECK_PROG call, but it looks for a specific program (msvccc) and will
+dnl perform an optional action if that program is not found.  The variable
+dnl $DPP_USING_MSVCCC will be set to 'yes' or 'no' depending on the results of
+dnl the lookup of msvccc in the path.
+dnl
+dnl Note:
+dnl     This macro must be called before any compiler checks are performed.
+dnl
+dnl Usage:
+dnl     DPP_PROG_MSVCCC([path [, action-if-found [, action-if-not-found]]])
+dnl
+dnl Arguments:
+dnl     path                - The path to use when trying to find msvccc.
+dnl                           This argument is optional.
+dnl     action-if-found     - Any action(s) to take if msvccc is found.  This
+dnl                           argument is optional.
+dnl     action-if-not-found - Any action(s) to take if msvccc is not found.
+dnl                           This argument is optional.
+dnl ---------------------------------------------------------------------------
+AC_DEFUN(DPP_PROG_MSVCCC,
+[
+    AC_CHECK_PROG(dpp_msvccc, msvccc, msvccc, no, $1)
+
+    if test "x$dpp_msvccc" = "xno" ; then
+        DPP_USING_MSVCCC='no'
+        ifelse([$3], , :, [$3])
+    else
+        DPP_USING_MSVCCC='yes'
+        CXX='msvccc'
+        CC="$CXX"
+
+        ifelse([$2], , :, [$2])
+    fi
 ])

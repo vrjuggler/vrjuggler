@@ -54,6 +54,8 @@ dnl     LDOPTS_DBG      - Options for $LD when making a library with debugging
 dnl                       symbols.
 dnl     LDOPTS_OPT      - Options for $LD when making an optimized library.
 dnl     OBJ_NAME_FLAG   - Flag used for naming a compiled object file.
+dnl     OBJ_BUILD_FLAG  - Flag passed to compiler to build a compiled object file.
+dnl     EXE_NAME_FLAG   - Flag used for naming a compiled executable file.
 dnl
 dnl     DBG_FLAGS       - Complier flags for adding debugging symbols.
 dnl     OPT_FLAGS       - Complier flags for compiling optimized code.
@@ -82,13 +84,11 @@ dnl
 dnl Possible preprocssor symbols defined:
 dnl     WIN32
 dnl     _MBCS
-dnl     _HPUX_SOURCE
-dnl     notdef
 dnl     IRIXREL      - Defined to the string "IRIX5" or "IRIX6" based on the
 dnl                    determined version of IRIX.
 dnl ===========================================================================
 
-dnl sys.m4,v 1.12 2001/02/16 22:05:24 patrick Exp
+dnl sys.m4,v 1.31 2001/06/19 21:51:19 subatomic Exp
 
 dnl ---------------------------------------------------------------------------
 dnl Based on the given target host and CPU, set up the system-specific
@@ -102,12 +102,6 @@ AC_DEFUN(DPP_SYSTEM_SETUP,
     dnl We use AC_CANONICAL SYSTEM so that we can find out information about
     dnl the build, arget and host platforms rather than only the host.
     AC_REQUIRE([AC_CANONICAL_SYSTEM])
-
-    dnl Determine the suffix for object file names.
-    AC_OBJEXT
-
-    dnl Determine the suffix for executable file names.
-    AC_EXEEXT
 
     dnl Operating system release information.  This may contain anything and
     dnl should be treated as a string.
@@ -143,6 +137,8 @@ AC_DEFUN(DPP_SYSTEM_SETUP,
 
     dnl Flag used for naming a compiled object file.
     OBJ_NAME_FLAG='-o $[@]'
+    OBJ_BUILD_FLAG='-c'
+    EXE_NAME_FLAG='-o $[@]'
 
     dnl Library naming conventions (prefix, extension for static libraries,
     dnl extension for dynamic libraries respectively).
@@ -159,6 +155,8 @@ AC_DEFUN(DPP_SYSTEM_SETUP,
     DSOREGFILE=''
     DSOVERSION=''
     DSOVERSIONOPTS=''
+
+    USE_MAKEDEPEND='N'
 
     dnl List of supported ABIs on a given platform.
     ABI_LIST=''
@@ -202,25 +200,27 @@ AC_DEFUN(DPP_SYSTEM_SETUP,
             if test "x$USE_GCC" = "xyes" ; then
                 AR='ar'
                 ARFLAGS='-ruv'
-                CFLAGS="-mno-cygwin"
-                CXXFLAGS="-mno-cygwin"
                 DBG_FLAGS='-g'
 
                 LD='$(CXX) -shared'
             else
-                AR='link -lib'
-                ARFLAGS="$ARFLAGS -nologo"
-                AR_NAME_FLAG='-out:'
-                CFLAGS="$CFLAGS -nologo"
-                CXXFLAGS="$CXXFLAGS -nologo"
-                DBG_FLAGS='-Od -GZ -MTd -Z7'
-                DEP_GEN_FLAG='-FD'
-                OPT_FLAGS='-GB -MT'
-                LD='link -dll'
-                LDOPTS="$LDOPTS -nologo"
-                LDOPTS_DBG='-LDd -MDd -PDB:NONE'
-                LDOPTS_OPT='-LD -MD'
-                OBJ_NAME_FLAG='-Fo$[@]'
+                AR='link /lib'
+                ARFLAGS="$ARFLAGS /nologo"
+                AR_NAME_FLAG='/out:'
+                CFLAGS="$CFLAGS /nologo"
+                CXXFLAGS="$CXXFLAGS /nologo"
+                DBG_FLAGS='/Od /GZ /MTd /Z7'
+                DEP_GEN_FLAG='/FD'
+                OPT_FLAGS="/Ogityb$dpp_opt_level /GB /MT"
+                LD='link /dll'
+                LDOPTS="$LDOPTS /nologo"
+                LDOPTS_DBG='/LDd /MDd /PDB:NONE'
+                LDOPTS_OPT='/LD /MD'
+                OBJ_NAME_FLAG='/Fo$[@]'
+                OBJ_BUILD_FLAG=''
+                EXE_NAME_FLAG='/OUT:$[@]'
+
+                USE_MAKEDEPEND='Y'
             fi
 
             LIB_PREFIX=''
@@ -244,14 +244,25 @@ AC_DEFUN(DPP_SYSTEM_SETUP,
                 *WIN_9*-4.*)
                     PLATFORM='Win9x'
                     ;;
+                dnl Windows ME.
+                *WIN_ME-4.*)
+                    PLATFORM='WinMe'
+                    ;;
                 dnl Unknown version of Windows that may not yet be supported.
                 *)
-                    AC_MSG_ERROR(Unknown Windows type $dpp_sys_name!)
+                    AC_MSG_WARN(Unknown Windows type $dpp_sys_name!)
                     ;;
             esac
 
-            AC_DEFINE(WIN32,)
-            AC_DEFINE(_MBCS,)
+            AC_DEFINE(WIN32, , [define if compiling on a Win32 platform])
+            AC_DEFINE(_MBCS, , [define if compiling on a Win32 platform])
+            ;;
+        darwin1.*)
+            AR='ar'
+            ARFLAGS='-ruv'
+            DYNAMICLIB_EXT='dylib'
+
+            PLATFORM='MacOSX'
             ;;
         dnl A machine running FreeBSD.
         freebsd*)
@@ -281,8 +292,12 @@ AC_DEFUN(DPP_SYSTEM_SETUP,
 
             AR='ar'
             ARFLAGS='-ruv'
-            CFLAGS="-Aa $CFLAGS"
-            CXXFLAGS="+p $CXXFLAGS"
+
+            if test "x$USE_GCC" != "xyes" ; then
+                CFLAGS="-Aa $CFLAGS"
+                CXXFLAGS="+p $CXXFLAGS"
+            fi
+
             LD='ld'
             LDFLAGS="$LDFLAGS -L/usr/lib/X11R6"
             LDOPTS='-b'
@@ -290,8 +305,33 @@ AC_DEFUN(DPP_SYSTEM_SETUP,
             OPT_FLAGS='+inline_level 3'
             DYNAMICLIB_EXT='sl'
 
-            AC_DEFINE(_HPUX_SOURCE,)
-            AC_DEFINE(notdef,)
+            ABI_LIST='HP'
+            PLATFORM='HP'
+            ;;
+        dnl HP PA-RISC machine running HP-UX 11.x.
+        hpux11*)
+            dnl If no ABI has been set yet, default to HP PA-RISC.
+            if test "x$ABI" = "x" ; then
+                DPP_ABI_CFG('HP', 'PA-RISC')
+            fi
+
+            AR='ar'
+            ARFLAGS='-ruv'
+
+            if test "x$USE_GCC" != "xyes" ; then
+                CFLAGS="-Aa $CFLAGS"
+                CXXFLAGS="-AA $CXXFLAGS"
+                DEP_GEN_FLAG='-E +m'
+                LD='$(CXX)'
+                LDOPTS='-b'
+            else
+                LD='ld'
+            fi
+
+            LDFLAGS="$LDFLAGS -L/usr/lib/X11R6"
+            DBG_FLAGS='-g'
+            OPT_FLAGS=''
+            DYNAMICLIB_EXT='sl'
 
             ABI_LIST='HP'
             PLATFORM='HP'
@@ -299,7 +339,8 @@ AC_DEFUN(DPP_SYSTEM_SETUP,
         dnl A machine running IRIX 6.x.
         irix6*)
             dnl If no ABI has been set yet, default to N32_M3.
-            if test "x$ABI" = "x" -a "x$USE_GCC" = "xno" ; then
+            if test "x$ABI" = "x" -a "x$USE_GCC" = "xno" -o "x$USE_GCC" = "x"
+            then
                 DPP_ABI_CFG('N32', 'mips3', '32', '-n32 -mips3')
             fi
 
@@ -382,10 +423,13 @@ AC_DEFUN(DPP_SYSTEM_SETUP,
             PLATFORM='IRIX'
 
             if test $OS_REL_NUM_MAJOR -lt 6 ; then
-                AC_DEFINE(IRIXREL, "IRIX5")
+                dpp_IRIXREL='IRIX5'
             else
-                AC_DEFINE(IRIXREL, "IRIX6")
+                dpp_IRIXREL='IRIX6'
             fi
+
+            AC_DEFINE_UNQUOTED(IRIXREL, "$dpp_IRIXREL",
+                [define to \"IRIX5\" or \"IRIX6\" depending on IRIX version])
             ;;
         dnl A machine running Linux.
         linux*)
@@ -455,6 +499,12 @@ AC_DEFUN(DPP_SYSTEM_SETUP,
             ;;
     esac
 
+    if test "x$PLATFORM" = "x" ; then
+        AC_MSG_WARN(Unknown target OS!)
+        PLATFORM='UNKNOWN'
+        OS_TYPE='UNKNOWN'
+    fi
+
     dpp_platform="$PLATFORM"
     dpp_os_type="$OS_TYPE"
 ])
@@ -477,7 +527,9 @@ AC_DEFUN(DPP_SYSTEM_SUBST,
 
     dnl Provide the linker options for static and dynamic linking of
     dnl applications on various platforms.
-    if test "x$dpp_platform" = "xIRIX" -a "x$USE_GCC" = "xno" ; then
+    if test "x$dpp_platform" = "xIRIX" -a "x$USE_GCC" = "xno" -o \
+            "x$USE_GCC" = "x"
+    then
         LDFLAGS_STATIC='-B static'
         LDFLAGS_DYNAMIC='-B dynamic'
     dnl XXX: I don't know what to do for Win32...
@@ -507,6 +559,8 @@ AC_DEFUN(DPP_SYSTEM_SUBST,
     AC_SUBST(LDOPTS_DBG)
     AC_SUBST(LDOPTS_OPT)
     AC_SUBST(OBJ_NAME_FLAG)
+    AC_SUBST(OBJ_BUILD_FLAG)
+    AC_SUBST(EXE_NAME_FLAG)
 
     AC_SUBST(DBG_FLAGS)
     AC_SUBST(OPT_FLAGS)
@@ -524,4 +578,6 @@ AC_DEFUN(DPP_SYSTEM_SUBST,
     AC_SUBST(DSOREGFILE)
     AC_SUBST(DSOVERSION)
     AC_SUBST(DSOVERSIONOPTS)
+
+    AC_SUBST(USE_MAKEDEPEND)
 ])

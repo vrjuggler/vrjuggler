@@ -23,7 +23,7 @@
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # =============================================================================
-# dpp.install.mk,v 1.5 2001/02/16 22:05:26 patrick Exp
+# dpp.install.mk,v 1.6 2001/06/18 18:36:38 patrickh Exp
 #
 # This include file <dpp.install.mk> handles install operations.  It adds an
 # 'install' target.
@@ -59,7 +59,11 @@
 # =============================================================================
 
 FILE_PERMS	?= 644
+
+ifdef GROUP_NAME
 GROUP_OPT	?= -g $(GROUP_NAME)
+endif
+
 #INSTALL_DEPS	?=
 INSTALL_FILES	?= $(srcdir)/*.h
 INSTALL_PATH	?= $(includedir)

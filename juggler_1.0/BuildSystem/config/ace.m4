@@ -47,7 +47,7 @@ dnl     ACE_LDFLAGS  - The compiler argument to add the ACE library path and
 dnl                    libraries.
 dnl ===========================================================================
 
-dnl	ace.m4,v 1.2 2001/02/16 22:05:23 patrick Exp
+dnl	ace.m4,v 1.5 2001/05/25 17:03:17 patrickh Exp
 
 dnl ---------------------------------------------------------------------------
 dnl Usage:
@@ -70,71 +70,84 @@ AC_DEFUN(DPP_HAVE_ACE,
     dnl # Define the directory where the ACE header files can be found.
     AC_ARG_WITH(ace-includes,
                 [  --with-ace-includes=<PATH>
-                              Path to ACE header file directory
-                              [default=\$ACE_ROOT/include]],
+                          Path to ACE header file directory
+                                              [default=\$ACE_ROOT/include]],
                 ACE_INCDIR="$withval", ACE_INCDIR="$ACE_ROOT/include")
 
     dnl # Define the directory where the ACE libraries can be found.
     AC_ARG_WITH(ace-libs,
-                [  --with-ace-libs=<PATH>  Path to ACE libraries
-                              [default=\$ACE_ROOT/lib]],
+                [  --with-ace-libs=<PATH>  Path to ACE libraries           [default=\$ACE_ROOT/lib]],
                 ACE_LIBDIR="$withval", ACE_LIBDIR="$ACE_ROOT/lib")
 
     dnl Check the ACE version if a version number was given.
     if test "x$1" != "x" ; then
-        DPP_ACE_VER($ACE_INCDIR, $2, $3, $4)
+        DPP_ACE_VER($ACE_INCDIR $ACE_ROOT, $2, $3, $4)
     else
         AC_MSG_ERROR(*** No ACE version given! ***)
     fi
 
     dpp_save_CXXFLAGS="$CXXFLAGS"
     dpp_save_CPPFLAGS="$CPPFLAGS"
-    dpp_save_INCLUDES="$INCLUDES"
     dpp_save_LDFLAGS="$LDFLAGS"
     dpp_save_LIBS="$LIBS"
 
-    dnl Ensure that /usr/include and /usr/lib are not included multiple times
-    dnl if $PFROOT is "/usr".
     if test "x$ACE_ROOT" != "x/usr" ; then
-        CPPFLAGS="-I$ACE_INCDIR $CPPFLAGS"
-        INCLUDES="-I$ACE_INCDIR $INCLUDES"
+        if test "x$ACE_INCDIR" != "x$dpp_ace_header_dir" ; then
+            ACE_INCLUDES="-I$dpp_ace_header_dir -I$ACE_INCDIR"
+        else
+            ACE_INCLUDES="-I$ACE_INCDIR"
+        fi
+
+
         LDFLAGS="-L$ACE_LIBDIR $LDFLAGS"
     fi
 
-    CXXFLAGS="$CXXFLAGS $INCLUDES ${_EXTRA_FLAGS}"
+    CPPFLAGS="$CPPFLAGS $ACE_INCLUDES"
+    CXXFLAGS="$CXXFLAGS $ACE_INCLUDES ${_EXTRA_FLAGS}"
+
+    if test "x$dpp_os_type" = "xWin32" ; then
+        CPPFLAGS="$CPPFLAGS -DACE_HAS_DLL=0 /GX /MT"
+        CXXFLAGS="$CXXFLAGS -DACE_HAS_DLL=0 /GX /MT"
+    fi
 
     dpp_have_ace='no'
 
-    AC_LANG_SAVE
-    AC_LANG_CPLUSPLUS
+    DPP_LANG_SAVE
+    DPP_LANG_CPLUSPLUS
 
     LIBS="$LIBS -lACE"
 
     dnl If the ACE library was found, add the API object files to the files
     dnl to be compiled and enable the Performer API compile-time option.
+    dnl This ace_main_i crap is for Windows.
     AC_CACHE_CHECK(for ACE_OS::perror in -lACE,
         dpp_cv_ACE_OS__perror_in_ACE,
-        AC_TRY_LINK([#include <ace/OS.h> ],
-                    [ ACE_OS::perror("test"); ],
+        AC_TRY_LINK([#include <ace/OS.h>
+int ace_main_i(int argc, char** const argv) {
+    return 0;
+}],
+                    [ACE_OS::perror("test");],
                     [ dpp_cv_ACE_OS__perror_in_ACE='yes'
                       rm -rf ./ii_files ],
                     dpp_cv_ACE_OS__perror_in_ACE='no'))
 
     if test "x$dpp_cv_ACE_OS__perror_in_ACE" = "xyes" ; then
         AC_CHECK_HEADER(ace/OS.h,
-            [ dpp_have_ace='yes'
-              ACE_INCLUDES="-I$ACE_INCDIR"
-              ACE_LDFLAGS="-L$ACE_LIBDIR -lace"
-              $3 ],
-            $4)
+            [ dpp_have_ace='yes' ACE_LDFLAGS="-L$ACE_LIBDIR -lace" ], $4)
+
+        if test "x$dpp_have_ace" = "xyes" ; then
+            ifelse([$3], , :, [$3])
+        fi
     else
-        AC_MSG_WARN(*** Cannot find ACE ***)
-        $4
-        true
+        AC_MSG_WARN(*** Cannot find ACE library ***)
+        ifelse([$4], , :, [$4])
     fi
 
-    AC_LANG_RESTORE
+    DPP_LANG_RESTORE
 
+    CXXFLAGS="$dpp_save_CXXFLAGS"
+    CPPFLAGS="$dpp_save_CPPFLAGS"
+    LDFLAGS="$dpp_save_LDFLAGS"
     LIBS="$dpp_save_LIBS"
 
     dnl -----------------------------------------------------------------------
@@ -150,7 +163,8 @@ dnl Usage:
 dnl     DPP_ACE_VER(ace-root, version [, action-if-found [, action-if-not-found]])
 dnl
 dnl Arguments:
-dnl     ace-include-dir     - Directory containing the ACE heder files.
+dnl     ace-include-dirs    - Space-separated list of directories that might
+dnl                           contain the ACE heder files.
 dnl     version             - Minimum required version.
 dnl     action-if-found     - Action to take if the version requirement is
 dnl                           met.
@@ -169,32 +183,47 @@ AC_DEFUN(DPP_ACE_VER,
                 ACE_VER="$withval", ACE_VER=$2)
 
     dpp_save_CPPFLAGS="$CPPFLAGS"
-    CPPFLAGS="$CPPFLAGS -I$1"
+    dpp_ace_header_dir=''
 
-    AC_CHECK_HEADER(ace/Version.h, $3, $4)
+    for dir in $1 ; do
+        CPPFLAGS="$CPPFLAGS -I$dir"
+
+        dpp_safe=`echo "$dir/ace/Version.h" | sed 'y%.:/+-%___p_%'`
+
+        AC_MSG_CHECKING([for ace/Version.h in $dir])
+        AC_CACHE_VAL(dpp_cv_header_$dpp_safe,
+            [AC_TRY_CPP([#include <ace/Version.h>],
+                        eval "dpp_cv_header_$dpp_safe=yes",
+                        eval "dpp_cv_header_$dpp_safe=no")])dnl
+
+        if eval "test \"`echo '$dpp_cv_header_'$dpp_safe`\" = yes"; then
+            AC_MSG_RESULT(yes)
+            dpp_ace_header_dir="$dir"
+            break
+        else
+            AC_MSG_RESULT(no)
+            CPPFLAGS="$dpp_save_CPPFLAGS"
+        fi
+    done
 
     CPPFLAGS="$dpp_save_CPPFLAGS"
 
+    if test "x$dpp_ace_header_dir" != "x" ; then
+        ifelse([$3], , :, [$3])
+    else
+        ifelse([$4], , :, [$4])
+    fi
+
     dnl Determine the ACE version being used.
     dpp_ver_num_exp=['s/.*\([0-9][0-9]*\)$/\1/']
-    dpp_ace_ver_major=`grep ACE_MAJOR_VERSION $1/ace/Version.h | sed -e $dpp_ver_num_exp` ;
-    dpp_ace_ver_minor=`grep ACE_MINOR_VERSION $1/ace/Version.h | sed -e $dpp_ver_num_exp` ;
-    dpp_ace_ver_patch=`grep ACE_BETA_VERSION $1/ace/Version.h | sed -e $dpp_ver_num_exp` ;
+    dpp_ace_ver_major=`grep ACE_MAJOR_VERSION $dpp_ace_header_dir/ace/Version.h | sed -e $dpp_ver_num_exp` ;
+    dpp_ace_ver_minor=`grep ACE_MINOR_VERSION $dpp_ace_header_dir/ace/Version.h | sed -e $dpp_ver_num_exp` ;
+    dpp_ace_ver_patch=`grep ACE_BETA_VERSION $dpp_ace_header_dir/ace/Version.h | sed -e $dpp_ver_num_exp` ;
 
     dpp_ace_ver="${dpp_ace_ver_major}.${dpp_ace_ver_minor}.${dpp_ace_ver_patch}"
 
-    AC_CACHE_CHECK(if ACE version is >= $2, dpp_cv_ace_version_okay,
-        DPP_VERSION_CHECK($dpp_ace_ver, $2,
-          dpp_cv_ace_version_okay='yes',
-          dpp_cv_ace_version_okay='no'))
-
-    if test "x$dpp_cv_ace_version_okay" = "xyes" ; then
-        $3
-        true
-    else
-        $4
-        true
-    fi
+    DPP_VERSION_CHECK_MSG(ACE, $dpp_ace_ver, $2, dpp_cv_ace_version_okay,
+                          $3, $4)
 
     ACE_VER="$dpp_ace_ver_major"
 ])

@@ -38,7 +38,7 @@ dnl     GLUT_INCLUDES - Extra include path for the GLUT header directory.
 dnl     GLUT_LDFLAGS  - Extra linker flags for the GLUT library directory.
 dnl ===========================================================================
 
-dnl glut.m4,v 1.1 2001/02/19 21:18:45 patrick Exp
+dnl glut.m4,v 1.2 2001/05/02 15:42:57 patrickh Exp
 
 dnl ---------------------------------------------------------------------------
 dnl Determine if the target system has GLUT installed.  This adds the
@@ -99,8 +99,7 @@ AC_DEFUN(DPP_HAVE_GLUT,
     if test "x$dpp_os_type" = "xWin32" ; then
         AC_MSG_WARN(Assuming that GLUT is available in a standard location)
         dpp_have_glut='yes'
-        $3
-        true
+        ifelse([$3], , :, [$3])
     else
         X_LDFLAGS=''
 
@@ -124,15 +123,15 @@ AC_DEFUN(DPP_HAVE_GLUT,
             dpp_cv_glutMainLoop_available,
             AC_TRY_LINK([#include <GL/glut.h>], [glutMainLoop()],
                 dpp_cv_glutMainLoop_available='yes',
-                [ dpp_cv_glutMainLoop_available='no';
-                  $4 ]))
+                dpp_cv_glutMainLoop_available='no'))
 
         LIBS="$dpp_save_LIBS"
 
         if test "x$dpp_cv_glutMainLoop_available" = "xyes" ; then
             dpp_have_glut='yes'
-            $3
-            true
+            ifelse([$3], , :, [$3])
+        else
+            ifelse([$4], , :, [$4])
         fi
 
         AC_LANG_RESTORE

@@ -27,20 +27,22 @@ dnl General macros for use within Doozer++ and by some users constructing
 dnl moderately complex tests.
 dnl ---------------------------------------------------------------------------
 dnl Macros:
-dnl     DPP_PREREQ        - Complain and exit if the Doozer++ version is less
-dnl                         than the given version number.
-dnl     DPP_INIT          - Initialize Doozer++.
-dnl     DPP_SUBST         - Finish up with Doozer++ by substituting variables
-dnl                         defined by DPP_INIT.
-dnl     DPP_VERSION_CHECK - Compare two version numbers.
-dnl     DPP_GEN_RECONFIG  - Generate a script called 'reconfig' that will
-dnl                         reconfigure a build directory from scratch.
+dnl     DPP_PREREQ            - Complain and exit if the Doozer++ version is
+dnl                             less than the given version number.
+dnl     DPP_INIT              - Initialize Doozer++.
+dnl     DPP_SUBST             - Finish up with Doozer++ by substituting
+dnl                             variables defined by DPP_INIT.
+dnl     DPP_VERSION_CHECK     - Compare two version numbers.
+dnl     DPP_VERSION_CHECK_MSG - Wrap a call to DPP_VERSION_CHECK inside a call
+dnl                             to AC_CACHE_CHECK. 
+dnl     DPP_GEN_RECONFIG      - Generate a script called 'reconfig' that will
+dnl                             reconfigure a build directory from scratch.
 dnl ===========================================================================
 
-dnl general.m4,v 1.16 2001/02/22 23:40:06 patrick Exp
+dnl general.m4,v 1.26 2001/06/20 14:02:26 patrickh Exp
 
 dnl Set the version of Doozer++.
-define(DPP_DPPVERSION, 1.3)
+define(DPP_DPPVERSION, 1.3.9)
 
 dnl ---------------------------------------------------------------------------
 dnl Change the dots in NUMBER into commas.
@@ -134,7 +136,7 @@ dnl
 dnl Arguments:
 dnl     known-version       - The known version number to be tested.  It must
 dnl                           be of the form major.minor[.patch]
-dnl     requird-version     - The minimum requird version number.  It must
+dnl     required-version    - The minimum required version number.  It must
 dnl                           be of the form major.minor[.patch]
 dnl     action-if-found     - The action to take if the known version number
 dnl                           is at least the required version number.  This
@@ -167,6 +169,41 @@ AC_DEFUN(DPP_VERSION_CHECK,
     DPP_VERSION_COMPARE($known_major, $known_minor, $known_patch,
                         $req_major, $req_minor, $req_patch,
                         $3, $4)
+])
+
+dnl ---------------------------------------------------------------------------
+dnl Wrap a call to DPP_VERSION_CHECK inside a call to AC_CACHE_CHECK.  This is
+dnl a helper macro to simplify user-level code down to the bare minimum.
+dnl
+dnl Usage:
+dnl     DPP_VERSION_CHECK_MSG(pkg-name, known-version, required-version, cache_var [, action-if-found [, action-if-not-found]])
+dnl
+dnl Arguments:
+dnl     pkg-name            - The name of the package whose version number
+dnl                           will be tested.
+dnl     known-version       - The known version number to be tested.  It must
+dnl                           be of the form major.minor[.patch]
+dnl     required-version    - The minimum required version number.  It must
+dnl                           be of the form major.minor[.patch]
+dnl     cache-var           - A variable to be used for caching the comparison
+dnl                           results.
+dnl     action-if-found     - The action to take if the known version number
+dnl                           is at least the required version number.  This
+dnl                           is optional.
+dnl     action-if-not-found - The action to take if the known version number
+dnl                           is not at least the required version number.
+dnl                           This is optional.
+dnl ---------------------------------------------------------------------------
+AC_DEFUN(DPP_VERSION_CHECK_MSG,
+[
+    AC_CACHE_CHECK(whether $1 version is >= $3, $4,
+        DPP_VERSION_CHECK($2, $3,
+            [ $4="$2"
+              ifelse([$5], , :, [$5])
+            ],
+            [ $4='no'
+              ifelse([$6], , :, [$6])
+            ]))
 ])
 
 dnl ---------------------------------------------------------------------------
@@ -209,6 +246,38 @@ AC_DEFUN(DPP_SUBST,
 ])
 
 dnl ---------------------------------------------------------------------------
+dnl Get the absolute path to your project directory
+dnl (directory where you run configure)
+dnl
+dnl Sets:
+dnl   $projectdir  --- within configure.in
+dnl   @projectdir@ --- within external files processed by AC_OUTPUT 
+dnl
+dnl Usage:
+dnl     DPP_GET_PROJECTDIR
+dnl ---------------------------------------------------------------------------
+AC_DEFUN(DPP_GET_PROJECTDIR,
+[
+   AC_REQUIRE([DPP_INIT])
+   AC_REQUIRE([DPP_SUBST])
+
+   dnl $srcdir is the root directory of the juggler source tree reletive to 
+   dnl where configure is being run.  To get an absolute path for 
+   dnl $projectdir, we cd there and save the value of running pwd.  
+   dnl Then return to the directory where configure is being run ($topdir).
+   dnl 
+   dnl NOTE: look for a less hacky way to do this!  srcdir is only valid to 
+   dnl       go off of in the configure script, not within individual subdirs.
+   dnl
+   cd "$srcdir"
+   projectdir=`pwd`
+   cd "$topdir"
+   
+   AC_SUBST(projectdir)
+])
+
+
+dnl ---------------------------------------------------------------------------
 dnl Generate a script called 'reconfig'.  This script cleans out all the files
 dnl generated by configure in a build directory.  It then runs configure again
 dnl using the same arguments given to it when the script was generated.
@@ -229,7 +298,7 @@ AC_DEFUN(DPP_GEN_RECONFIG,
 [
     cat > $RECONFIG <<RECONFIG_SCRIPT
 rm -f config.status config.cache config.log
-${0} $ac_configure_args
+${0} $ac_configure_args $*
 RECONFIG_SCRIPT
 ]
 

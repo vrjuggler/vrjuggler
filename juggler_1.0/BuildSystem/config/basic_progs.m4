@@ -24,12 +24,21 @@ dnl ************** <auto-copyright.pl END do not edit this line> **************
 
 dnl ===========================================================================
 dnl Perform checks for various programs that are helpful for a complete build
-dnl system.  Currently, it checks for a BSD-compatible install(1), for
-dnl ranlib(1) (except on IRIX) and for a working 'ln -s' command.  It also
-dnl determines whether make(1) sets $(MAKE).
+dnl system.
+dnl ---------------------------------------------------------------------------
+dnl Macros:
+dnl     DPP_BASIC_PROGS      - Test for basic programs need by most, if not
+dnl                            all, build systems.
+dnl     DPP_MAKE_IS_GNU_MAKE - Test if the given make(1) command (make-cmd) is
+dnl                            GNU make.
+dnl     DPP_HAVE_GNU_MAKE    - Test if the host system has at least the given
+dnl                            version of GNU make.
+dnl
+dnl Variables defined:
+dnl     GMAKE                - The GNU make executable.
 dnl ===========================================================================
 
-dnl basic_progs.m4,v 1.5 2001/02/16 22:05:23 patrick Exp
+dnl basic_progs.m4,v 1.9 2001/05/23 22:39:46 patrickh Exp
 
 dnl ---------------------------------------------------------------------------
 dnl Test for basic programs need by most, if not all, build systems.
@@ -67,4 +76,87 @@ AC_DEFUN(DPP_BASIC_PROGS,
     fi
 
     AC_PROG_LN_S
+
+    if test "x$USE_MAKEDEPEND" = "xY" ; then
+        AC_CHECK_PROG(MAKEDEPEND, makedepend, makedepend)
+    fi
+])
+
+dnl ---------------------------------------------------------------------------
+dnl Test if the given make(1) command (make-cmd) is GNU make.
+dnl
+dnl Usage:
+dnl     DPP_MAKE_IS_GNU_MAKE(make-cmd [, action-if-gnu-make [, action-if-not-gnu-make]])
+dnl
+dnl Arguments:
+dnl     make-cmd               - The make(1) command to test.
+dnl     action-if-gnu-make     - The action(s) to take if the given command is
+dnl                              a GNU make executable.  This argument is
+dnl                              optional.
+dnl     action-if-not-gnu-make - The action(s) to take if the given command is
+dnl                              not a GNU make executable.  This argument is
+dnl                              optional.
+dnl ---------------------------------------------------------------------------
+AC_DEFUN(DPP_MAKE_IS_GNU_MAKE,
+[
+    AC_MSG_CHECKING(whether $1 is GNU make)
+    dpp_gmake_ver_cmd='$1 --version | grep GNU 1>&AC_FD_CC'
+
+    if (eval "$dpp_gmake_ver_cmd") 2>&AC_FD_CC ; then
+        AC_MSG_RESULT(yes)
+        ifelse([$2], , :, [$2])
+    else
+        AC_MSG_RESULT(no)
+        ifelse([$3], , :, [$3])
+    fi
+])
+
+dnl ---------------------------------------------------------------------------
+dnl Test if the host system has at least the given version of GNU make.
+dnl
+dnl Usage:
+dnl     DPP_HAVE_GNU_MAKE(version [, action-if-found [, action-if-not-found [, path]]])
+dnl
+dnl Arguments:
+dnl     version             - The minimum required version of GNU make.
+dnl     action-if-found     - The action(s) to take if a suitable version of
+dnl                           GNU make is found.  This argument is optional.
+dnl     action-if-not-found - The action(s) to take if a suitable version of
+dnl                           GNU make is not found.  This argument is
+dnl                           optional.
+dnl     path                - Extra directories where GNU make might be found.
+dnl                           This must be a colon-separated list of
+dnl                           UNIX-style directories. This argument is
+dnl                           optional.
+dnl ---------------------------------------------------------------------------
+AC_DEFUN(DPP_HAVE_GNU_MAKE,
+[
+    dpp_GMAKE=''
+
+    if test "x$GMAKE" = "x" ; then
+        AC_CHECK_PROG(dpp_make_is_gmake, make, make, no, $4)
+
+        if test "x$dpp_make_is_gmake" != "xno" ; then
+            DPP_MAKE_IS_GNU_MAKE($dpp_make_is_gmake, GMAKE="$dpp_make_is_gmake",
+                [ AC_CHECK_PROG(dpp_gmake_is_gmake, gmake, gmake, no, $4)
+                  DPP_MAKE_IS_GNU_MAKE($dpp_gmake_is_gmake,
+                                       GMAKE="$dpp_gmake_is_gmake", $3) ])
+        else
+            AC_CHECK_PROG(dpp_gmake_is_gmake, gmake, gmake, no, $4)
+
+            if test "x$dpp_gmake_is_gmake" != "xno" ; then
+                DPP_MAKE_IS_GNU_MAKE($dpp_gmake_is_gmake,
+                                     GMAKE="$dpp_gmake_is_gmake", $3)
+            else
+                ifelse([$3], , :, [$3])
+            fi
+        fi
+    fi
+
+    dpp_gmake_ver_exp='s/.*version \(.*\),.*/\1/'
+    dpp_gmake_ver=`$GMAKE --version | grep version | sed -e "$dpp_gmake_ver_exp"`
+    DPP_VERSION_CHECK_MSG(GNU make, $dpp_gmake_ver, $1,
+                          dpp_cv_gmake_version_okay, $2, $3)
+
+    AC_SUBST(GMAKE)
 ])

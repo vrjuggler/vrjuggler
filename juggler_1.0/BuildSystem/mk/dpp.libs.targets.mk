@@ -23,7 +23,7 @@
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # =============================================================================
-# dpp.libs.targets.mk,v 1.2 2001/02/16 22:05:26 patrick Exp
+# dpp.libs.targets.mk,v 1.4 2001/06/18 18:33:55 patrickh Exp
 #
 # This file <dpp.libs.targets.mk> defines many targets for use in compiling a
 # software library (or a set of libraries).  It should not be included
@@ -77,6 +77,8 @@
 # OPT_LIBDIR     - Full destination path for the compiled optimized
 #                  libraries.
 #
+# EXEC_PERMS     - UNIX-style permissions for executable files.
+# FILE_PERMS     - UNIX-style permissions for normal (non-executable) files.
 # UMASK          - The permissions mask to use when installing files.
 #
 # Optionally, it can define the following variables for added functionality:
@@ -633,9 +635,11 @@ ifdef MAKE_REL_SYMLINKS
 	@for lib in $(LIBS) ; do					\
             for ext in $(DYNAMICLIB_EXT) $(STATICLIB_EXT) ; do		\
                 echo "$$lib.$$ext -> $(INSTALL_LIBDIR_REL)/$(DEFAULT_DIR)/$$lib.$$ext" ; \
+                cur_dir=`pwd` ;						\
                 cd $(libdir)$(LIBBITSUF) && umask $(UMASK) &&		\
                   rm -f ./$$lib.$$ext &&				\
                   $(LN_S) $(INSTALL_LIBDIR_REL)/$(DEFAULT_DIR)/$$lib.$$ext ./ ; \
+                cd "$$cur_dir" ;					\
             done ;							\
           done
 ifdef DYNAMICLIB_VER
@@ -652,9 +656,11 @@ endif
 	@for lib in $(LIBS) ; do					\
             for ext in $(DYNAMICLIB_EXT) $(STATICLIB_EXT) ; do		\
                 echo "$$lib.$$ext -> $(DEFAULT_DIR)/$$lib.$$ext" ;	\
+                cur_dir=`pwd` ;						\
                 cd $(INSTALL_LIBDIR_ABS) && umask $(UMASK) &&		\
                   rm -f ./$$lib.$$ext &&				\
                   $(LN_S) $(DEFAULT_DIR)/$$lib.$$ext ./ ;		\
+                cd "$$cur_dir" ;					\
             done ;							\
           done
 ifdef DYNAMICLIB_VER

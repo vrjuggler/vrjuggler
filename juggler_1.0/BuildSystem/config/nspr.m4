@@ -42,12 +42,17 @@ dnl     --with-nsprver  - Define the NSPR version number.
 dnl
 dnl Variables defined:
 dnl     NSPR_ROOT       - The root of the NSPR installation.
+dnl     NSPR_INCLUDES   - The compiler option giving the NSPR include path.
+dnl     NSPR_LIB        - The linker option for the basic NSPR library.
+dnl     PLC_LIB         - The linker option for the NSPR PLC library.
+dnl     PLDS_LIB        - The linker option for the NSPR PLDS library.
+dnl     NSPR_LDFLAGS    - The linker option for finding the NSPR libraries.
 dnl     NSPR_LIB_STATIC - Full path to the static NSPR base library.
 dnl     PLC_LIB_STATIC  - Full path to the static NSPR PLC library.
 dnl     PLDS_LIB_STATIC - Full path to the static NSPR PLDS library.
 dnl ===========================================================================
 
-dnl nspr.m4,v 1.9 2001/02/17 19:00:57 patrick Exp
+dnl nspr.m4,v 1.19 2001/06/13 20:12:52 patrickh Exp
 
 dnl ---------------------------------------------------------------------------
 dnl State that NSPR threads are in use within NSPR.
@@ -104,35 +109,54 @@ AC_DEFUN(DPP_HAVE_NSPR,
                 [  --with-nspr=<PATH>      NSPR installation directory     [default=/usr/local]],
                 NSPR_ROOT="$withval", NSPR_ROOT='/usr/local')
 
-    AC_LANG_SAVE
-    AC_LANG_C
+    if test "x$NSPR_ROOT" != "xno" ; then
+        AC_LANG_SAVE
+        AC_LANG_C
 
-    dnl Check the NSPR version if a version number was given.
-    if test "x$1" != "x" ; then
-        DPP_NSPR_VER($NSPR_ROOT, $1, $3)
-    else
-        AC_MSG_ERROR(*** No NSPR version given! ***)
+        dnl Check the NSPR version if a version number was given.
+        if test "x$1" != "x" ; then
+            DPP_NSPR_VER($NSPR_ROOT, $1, $3)
+        else
+            AC_MSG_ERROR(*** No NSPR version given! ***)
+        fi
+
+        dpp_save_CPPFLAGS="$CPPFLAGS"
+        dpp_save_LDFLAGS="$LDFLAGS"
+        dpp_save_LIBS="$LIBS"
+
+        CPPFLAGS="$CPPFLAGS -I$NSPR_ROOT/include"
+        LDFLAGS="$PTHREAD_ARG -L$NSPR_ROOT/lib $LDFLAGS"
+
+        if test "x$dpp_os_type" = "xWin32" ; then
+            NSPR_LIB_NAME_PREFIX='lib'
+        fi
+
+        dpp_nspr_lib="${NSPR_LIB_NAME_PREFIX}nspr$NSPR_VER"
+        dpp_plc_lib="${NSPR_LIB_NAME_PREFIX}plc$NSPR_VER"
+        dpp_plds_lib="${NSPR_LIB_NAME_PREFIX}plds$NSPR_VER"
+
+        AC_CHECK_LIB($dpp_nspr_lib, PR_CreateThread,
+                     AC_CHECK_HEADER(nspr.h, dpp_nspr_inc="$NSPR_ROOT/include",
+                         AC_CHECK_HEADER(nspr/nspr.h,
+                             dpp_nspr_inc="$NSPR_ROOT/include/nspr", $3)),
+                     $3, [$PTHREAD_LIB $SEM_LIB])
+
+        CPPFLAGS="$dpp_save_CPPFLAGS"
+        LDFLAGS="$dpp_save_LDFLAGS"
+        LIBS="$dpp_save_LIBS"
+
+        AC_LANG_RESTORE
+
+        NSPR_INCLUDES="-I$dpp_nspr_inc"
+        NSPR_LIB="-l$dpp_nspr_lib"
+        PLC_LIB="-l$dpp_plc_lib"
+        PLDS_LIB="-l$dpp_plds_lib"
+        NSPR_LDFLAGS="-L$NSPR_ROOT/lib"
+
+        NSPR_LIB_STATIC="\$(NSPR_ROOT)/lib/libnspr$NSPR_VER.a"
+        PLC_LIB_STATIC="\$(NSPR_ROOT)/lib/libplc$NSPR_VER.a"
+        PLDS_LIB_STATIC="\$(NSPR_ROOT)/lib/libplds$NSPR_VER.a"
     fi
-
-    dpp_save_CPPFLAGS="$CPPFLAGS"
-    dpp_save_LDFLAGS="$LDFLAGS"
-    dpp_save_LIBS="$LIBS"
-
-    CPPFLAGS="$CPPFLAGS -I$NSPR_ROOT/include"
-    LDFLAGS="$PTHREAD_ARG -L$NSPR_ROOT/lib $LDFLAGS"
-
-    AC_CHECK_LIB(nspr$NSPR_VER, PR_CreateThread, AC_CHECK_HEADER(nspr.h, , $3),
-                 $3, [$PTHREAD_LIB $SEM_LIB])
-
-    CPPFLAGS="$dpp_save_CPPFLAGS"
-    LDFLAGS="$dpp_save_LDFLAGS"
-    LIBS="$dpp_save_LIBS"
-
-    AC_LANG_RESTORE
-
-    NSPR_LIB_STATIC="\$(NSPR_ROOT)/lib/libnspr$NSPR_VER.a"
-    PLC_LIB_STATIC="\$(NSPR_ROOT)/lib/libplc$NSPR_VER.a"
-    PLDS_LIB_STATIC="\$(NSPR_ROOT)/lib/libplds$NSPR_VER.a"
 
     dnl -----------------------------------------------------------------------
     dnl Do the substition step for $NSPR_ROOT.
@@ -170,27 +194,27 @@ AC_DEFUN(DPP_NSPR_VER,
     dpp_save_CPPFLAGS="$CPPFLAGS"
     CPPFLAGS="$CPPFLAGS -I$1/include"
 
-    AC_CHECK_HEADER(prinit.h, , $3)
+    AC_CHECK_HEADER(prinit.h, dpp_include_path="$1/include",
+        AC_CHECK_HEADER(nspr/prinit.h, dpp_include_path="$1/include/nspr",
+            dpp_prinit_found='no'))
 
     CPPFLAGS="$dpp_save_CPPFLAGS"
 
-    dnl Determine the NSPR version being used.
-    dpp_ver_num_exp=['s/.*\([0-9][0-9]*\)$/\1/']
-    dpp_nspr_ver_major=`grep PR_VMAJOR $1/include/prinit.h | sed -e $dpp_ver_num_exp` ;
-    dpp_nspr_ver_minor=`grep PR_VMINOR $1/include/prinit.h | sed -e $dpp_ver_num_exp` ;
-    dpp_nspr_ver_patch=`grep PR_VPATCH $1/include/prinit.h | sed -e $dpp_ver_num_exp` ;
+    dnl If prinit.h was not found, we're out of luck.
+    if test "x$dpp_prinit_found" = "xno" ; then
+        ifelse([$3], , :, [$3])
+    dnl Otherwise, use prinit.h to determine the NSPR version being used.
+    else
+        dpp_ver_num_exp=['s/.*\([0-9][0-9]*\)$/\1/']
+        dpp_nspr_ver_major=`grep PR_VMAJOR $dpp_include_path/prinit.h | sed -e $dpp_ver_num_exp` ;
+        dpp_nspr_ver_minor=`grep PR_VMINOR $dpp_include_path/prinit.h | sed -e $dpp_ver_num_exp` ;
+        dpp_nspr_ver_patch=`grep PR_VPATCH $dpp_include_path/prinit.h | sed -e $dpp_ver_num_exp` ;
 
-    dpp_nspr_ver="${dpp_nspr_ver_major}.${dpp_nspr_ver_minor}.${dpp_nspr_ver_patch}"
+        dpp_nspr_ver="${dpp_nspr_ver_major}.${dpp_nspr_ver_minor}.${dpp_nspr_ver_patch}"
 
-    AC_CACHE_CHECK(if NSPR version is >= $2, dpp_cv_nspr_version_okay,
-        DPP_VERSION_CHECK($dpp_nspr_ver, $2,
-          dpp_cv_nspr_version_okay='yes',
-          dpp_cv_nspr_version_okay='no'))
+        DPP_VERSION_CHECK_MSG(NSPR, $dpp_nspr_ver, $2,
+                              dpp_cv_nspr_version_okay, , $3)
 
-    if test "x$dpp_cv_nspr_version_okay" = "xno" ; then
-        $3
-        true
+        NSPR_VER="$dpp_nspr_ver_major"
     fi
-
-    NSPR_VER="$dpp_nspr_ver_major"
 ])

@@ -23,28 +23,32 @@
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 # =============================================================================
-# dpp.compile.mk,v 1.2 2001/02/16 22:05:26 patrick Exp
+# dpp.compile.mk,v 1.5 2001/06/19 22:46:56 patrickh Exp
 #
 # This include file <dpp.compile.mk> handles source code compiling.
 # -----------------------------------------------------------------------------
 # The Makefile including this file should define the following variables:
 #
-# OBJDIR        - The directory where the object file will be created.
-# C_COMPILE     - The C compiler command line (without -c or -o <outfile>
-#                 options).
-# CXX_COMPILE   - The C++ compiler command line (without -c or -o <outfile>
-#                 options).
-# OBJEXT        - Suffix for object file names (e.g., "o" or "obj").
-# OBJ_NAME_FLAG - Flag (with any extra options) used for naming the object
-#                 file being compiled here.
-# JAVAC         - The path to the Java compiler.
-# JAVA_SRC_PATH - The path to .java files in a directory other than
-#                 $(srcdir).
-# ORB_JAR       - The .jar file providing an ORB implementation.
+# OBJDIR         - The directory where the object file will be created.
+# C_COMPILE      - The C compiler command line (without -c or -o <outfile>
+#                  options).
+# CXX_COMPILE    - The C++ compiler command line (without -c or -o <outfile>
+#                  options).
+# OBJEXT         - Suffix for object file names (e.g., "o" or "obj").
+# OBJ_NAME_FLAG  - Flag (with any extra options) used for naming the object
+#                  file being compiled here.
+# OBJ_BUILD_FLAG - Flag (with any extra options) used to tell the compiler to 
+#                  generate an object (precompiler only flag, usually -c)
+# JAVAC          - The path to the Java compiler.
+# JAVA_SRC_PATH  - The path to .java files in a directory other than
+#                  $(srcdir).
+# ORB_JAR        - The .jar file providing an ORB implementation.
 # =============================================================================
 
-C_COMPILE_LINE		= $(C_COMPILE) $(OBJ_NAME_FLAG) -c $<
-CXX_COMPILE_LINE	= $(CXX_COMPILE) $(OBJ_NAME_FLAG) -c $<
+OBJ_BUILD_FLAG ?= -c
+
+C_COMPILE_LINE		= $(C_COMPILE) $(OBJ_BUILD_FLAG) $(OBJ_NAME_FLAG) $<
+CXX_COMPILE_LINE	= $(CXX_COMPILE) $(OBJ_BUILD_FLAG) $(OBJ_NAME_FLAG) $<
 
 # Pattern rule for compiling .$(OBJEXT) files from .c files.
 $(OBJDIR)/%.$(OBJEXT): %.c
