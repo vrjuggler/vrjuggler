@@ -29,15 +29,12 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
+package org.vrjuggler.jccl.net;
 
-
-package VjComponents.Network;
-
-import java.io.IOException;
 import java.io.InputStream;
+import java.io.IOException;
 
-import VjComponents.Network.NetworkModule;
-import VjControl.DefaultVjComponent;
+import org.vrjuggler.jccl.vjcontrol.DefaultVjComponent;
 
 /** Base interface for all NetworkModule communications modules.
  *  NetworkModule is used to communicate with VR Juggler applications.

@@ -29,12 +29,9 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-
-
-package VjComponents.Network;
+package org.vrjuggler.jccl.net;
 
 import java.io.*;
-
 
 /** An InputStream subclass that terminates and returns EOF when a particular
  *  string is read from the stream it attaches to.  It doesn't read any
@@ -44,7 +41,6 @@ import java.io.*;
  *  The JAXP input handler for vjcontrol uses this to know when to stop 
  *  reading from an input stream coming over a network socket.
  *
- *  @author Christopher Just
  *  @version $Revision$
  */
 public class ProtocolInputStream extends InputStream {

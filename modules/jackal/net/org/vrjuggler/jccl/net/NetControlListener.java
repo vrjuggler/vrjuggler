@@ -29,10 +29,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-
-package VjComponents.Network;
-
-import VjComponents.Network.NetControlEvent;
+package org.vrjuggler.jccl.net;
 
 /** Listener for network connection events.
  *  <p>
@@ -41,7 +38,6 @@ import VjComponents.Network.NetControlEvent;
  *  SwingUtilities.invokeLater or something similar to ensure correct
  *  synchronization.
  *
- *  @author Christopher Just
  *  @version $Revision$
  */
 public interface NetControlListener extends java.util.EventListener {
