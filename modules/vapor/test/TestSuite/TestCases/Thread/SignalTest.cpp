@@ -6,7 +6,12 @@
 #include <SignalTest.h>
 
 
-static RETSIGTYPE handlerSIGSEGV (int signum)
+static RETSIGTYPE handlerSIGSEGV
+#if defined(VPR_OS_IRIX) && defined(__GNUC__)
+   (void)
+#else
+   (int signum)
+#endif
 {
 //   std::cout << "\n\n\nSignal caught\n" << std::flush;
 //   throw new CppUnit::Exception("stuff");
