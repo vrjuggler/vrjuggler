@@ -304,40 +304,9 @@ links:
 	@echo "------------------------------------------------"
 	@echo "Setting up developer installation links"
 	@echo "------------------------------------------------"
-	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/include/vrj
-	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/$(LIBDIR_NAME)
-	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/$(VJ_SHARE_DIR)
-	@$(MAKE) -C vrj instlinks=$(instlinks) links
-	cd $(instlinks)/include && $(RM_LN) ./deprecated &&		\
-          $(LN_S) $(VJROOT_ABS)/deprecated ./
-ifeq (@OS_TYPE@, Win32)
-	cd $(instlinks)/$(LIBDIR_NAME) && cp -r $(LIBDIR_BASE)/* .
-else
-	for lib in $(LIBS) ; do 					\
-            cd $(instlinks)/$(LIBDIR_NAME) && $(RM_LN) $$lib* &&	\
-              $(LN_S) $(LIBDIR_BASE)/$$lib* ./ ;			\
-          done
-endif
-	cd $(instlinks)/$(VJ_SHARE_DIR) &&  $(RM_LN) ./vrj.appdefs.mk && \
-          $(LN_S) $(topdir)/vrj.appdefs.mk ./vrj.appdefs.mk
-	cd $(instlinks)/$(VJ_SHARE_DIR) && $(RM_LN) ./data &&		\
-          $(LN_S) $(VJROOT_ABS)/data ./data
-	cd $(instlinks)/$(VJ_SHARE_DIR) && $(RM_LN) ./samples &&	\
-          $(LN_S) $(VJROOT_ABS)/samples ./samples
-	cd $(instlinks)/include/vrj && $(RM_LN) ./*.h &&		\
-          $(LN_S) $(VJROOT_ABS)/vrj/*.h ./
-	cd $(instlinks)/include/vrj && $(RM_LN) ./vrjDefines.h &&	\
-          $(LN_S) $(topdir)/vrj/vrjDefines.h ./
-	cd $(instlinks)/include/vrj && $(RM_LN) ./vrjParam.h &&		\
-          $(LN_S) $(topdir)/vrj/vrjParam.h ./
-	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/bin
-ifndef NO_JAVA
-ifeq ($(BUILD_JAVA), Y)
-	@$(MAKE) -C vrjconfig instlinks="$(instlinks)" vrjconfig-gui-links
-endif
-endif
-	cd $(instlinks)/bin && cp -p $(topdir)/vrjuggler-config .
-	@echo "\n\n"
+	@$(MAKE) EXTRA_INSTALL_ARGS=-l prefix="$(instlinks)"		\
+          DEFAULT_DIR="$(DBG_DIR)" installworld
+	@echo ""
 	@echo "---------------------------------------------------------------"
 	@echo 'You must now set $$VJ_BASE_DIR to:'
 	@cd $(instlinks) && echo "  `pwd`"
@@ -412,7 +381,7 @@ post-install:
 	@$(MAKE) install-data
 	@$(MAKE) install-m4
 	$(INSTALL) -m $(EXEC_PERMS) $(GROUP_OPT_UNIX)			\
-          $(topdir)/vrjuggler-config $(bindir)
+          $(EXTRA_INSTALL_ARGS) $(topdir)/vrjuggler-config $(bindir)
 
 PREINSTALL_HEADERS	= pre-install-headers
 POSTINSTALL_HEADERS	= post-install-headers
@@ -423,11 +392,12 @@ pre-install-headers:
 post-install-headers:
 	$(MAKE) install-headers-deprecated
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
-          $(VJROOT_ABS)/vrj/vrjConfig.h $(includedir)/vrj/vrjConfig.h
+          $(EXTRA_INSTALL_ARGS) $(VJROOT_ABS)/vrj/vrjConfig.h		\
+          $(includedir)/vrj/vrjConfig.h
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
-          $(topdir)/vrj/vrjDefines.h $(includedir)/vrj
+          $(EXTRA_INSTALL_ARGS) $(topdir)/vrj/vrjDefines.h $(includedir)/vrj
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
-          $(topdir)/vrj/vrjParam.h $(includedir)/vrj
+          $(EXTRA_INSTALL_ARGS) $(topdir)/vrj/vrjParam.h $(includedir)/vrj
 
 install-headers-deprecated:
 	@$(PERL) $(scriptdir)/install-dir.pl -m $(FILE_PERMS)		\
@@ -503,7 +473,8 @@ install-m4:
 	@echo "------------------------------------------------"
 	$(SHELL) $(MKINSTALLDIRS) $(datadir)/aclocal
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
-          $(JUGGLERROOT_ABS)/macros/vrj.m4 $(datadir)/aclocal
+          $(EXTRA_INSTALL_ARGS) $(JUGGLERROOT_ABS)/macros/vrj.m4	\
+          $(datadir)/aclocal
 
 # =============================================================================
 # Clean-up targets.  '_clean' removes all the files in the build directories.  

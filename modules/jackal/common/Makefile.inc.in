@@ -58,10 +58,4 @@ else
 endif
 endif	# ifndef NO_JAVA
 
-config-pkg-links:
-	@$(MAKE) instlinks="$(instlinks)" links
-
 java-install:
-
-links:
-	@$(MAKE) -C jccl instlinks="$(instlinks)" links

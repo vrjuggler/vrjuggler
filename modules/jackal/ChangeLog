@@ -1,5 +1,7 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Aug-06-2002 patrickh    Developer installations are now constructed using the
+                        standard installation targets.
 Jul-30-2002 nonchocoboy Added ConfigBroker Tweek service to be the intermediary
                         between a view unto a configuration and the files that
                         make up that configuration.

@@ -59,11 +59,12 @@
 # topdir         - The top of the build tree.
 # ROOT_ABS       - The absolute path to the root of the Sonix source tree.
 #
-# MKDEPS_CC     - Compiler for C dependencies.
-# MKDEPS_CXX    - Compiler for CXX dependencies.
-# MKINSTALLDIRS - Path to shell script for making directories.
-# MKPATH        - Path to shared dpp.*.mk file directory.
-# MTREE_CMD     - Path to a BSD-compatible mtree.
+# DPP_SCRIPTDIR  - The directory containing Doozer++ helper scripts.
+# MKDEPS_CC      - Compiler for C dependencies.
+# MKDEPS_CXX     - Compiler for CXX dependencies.
+# MKINSTALLDIRS  - Path to shell script for making directories.
+# MKPATH         - Path to shared dpp.*.mk file directory.
+# MTREE_CMD      - Path to a BSD-compatible mtree.
 #
 # ABI           - Application Binary Interface type.  This may be used for
 #                 other binary types when supported by the operating system
@@ -88,6 +89,7 @@ releasedir=		@SAFE_JUGGLERROOT_ABS@/release
 scriptdir=		$(releasedir)/scripts
 topdir=			@topdir@
 top_srcdir=		@top_srcdir@
+DPP_SCRIPTDIR=		$(JUGGLERROOT_ABS)/Doozer++/scripts
 MAKEFLAGS+=		--no-print-directory
 DEPGEN_TOOL_CC=		@CC@
 DEPGEN_TOOL_CXX=	@CXX@

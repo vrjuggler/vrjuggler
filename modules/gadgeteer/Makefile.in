@@ -229,15 +229,16 @@ endif
 	@$(MAKE) BUILD_PROF_C=N BUILD_PROF_CXX=N install-libs
 	@$(MAKE) BUILD_PROF_C=N BUILD_PROF_CXX=N do-post-install
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
-          $(GADGETROOT_ABS)/ChangeLog $(projdatadir)
+          $(EXTRA_INSTALL_ARGS) $(GADGETROOT_ABS)/ChangeLog $(projdatadir)
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
-          $(GADGETROOT_ABS)/COPYING.txt $(projdatadir)
+          $(EXTRA_INSTALL_ARGS) $(GADGETROOT_ABS)/COPYING.txt $(projdatadir)
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
-          $(GADGETROOT_ABS)/INSTALL.txt $(projdatadir)
+          $(EXTRA_INSTALL_ARGS) $(GADGETROOT_ABS)/INSTALL.txt $(projdatadir)
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
-          $(GADGETROOT_ABS)/README.txt $(projdatadir)
+          $(EXTRA_INSTALL_ARGS) $(GADGETROOT_ABS)/README.txt $(projdatadir)
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
-          $(GADGETROOT_ABS)/RELEASE_NOTES.txt $(projdatadir)
+          $(EXTRA_INSTALL_ARGS) $(GADGETROOT_ABS)/RELEASE_NOTES.txt	\
+          $(projdatadir)
 	@echo "Build time: `LTIME=C date`" > $(projdatadir)/BUILD_TIME
 	@echo "==============================================================="
 	@echo ">>> Gadgeteer make release started on $(STARTTIME)"

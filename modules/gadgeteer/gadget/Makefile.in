@@ -61,7 +61,6 @@ SRCS	= InputManager.cpp	\
           ProxyFactory.cpp
 
 include $(MKPATH)/dpp.obj-subdir.mk
-include Makefile.inc
 
 # -----------------------------------------------------------------------------
 # Include dependencies generated automatically.

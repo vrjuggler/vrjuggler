@@ -41,7 +41,7 @@
 
 AC_INIT
 AC_CONFIG_AUX_DIR(../../share/config)
-DPP_PREREQ([1.4.106])
+DPP_PREREQ([1.4.107])
 DPP_INIT
 
 dnl make the nice reconfig script.
@@ -156,7 +156,7 @@ CXXFLAGS="$CXXFLAGS $GMTL_INCLUDES"
 # Ensure that a version of Perl greater than or equal to 5.004 is available.
 DPP_PERL_VER(5.004, , , [AC_MSG_ERROR([*** Perl is required ***])])
 DPP_BASIC_PROGS([$PLATFORM], [$OS_TYPE])
-DPP_PROG_INSTALL(no)
+DPP_PROG_INSTALL
 
 # -----------------------------------------------------------------------------
 # Miscellaneous checks.

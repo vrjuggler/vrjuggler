@@ -190,26 +190,9 @@ links:
 	@echo "------------------------------------------------"
 	@echo "Setting up developer installation links"
 	@echo "------------------------------------------------"
-	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/include/gadget
-	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/$(LIBDIR_NAME)
-	@$(MAKE) -C gadget instlinks=$(instlinks) links
-ifeq (@OS_TYPE@, Win32)
-	cd $(instlinks)/$(LIBDIR_NAME) && cp -r $(LIBDIR_BASE)/* .
-else
-	for lib in $(LIBS) ; do 					\
-            cd $(instlinks)/$(LIBDIR_NAME) && $(RM_LN) $$lib* &&	\
-              $(LN_S) $(LIBDIR_BASE)/$$lib* ./ ;			\
-          done
-endif
-	cd $(instlinks)/include/gadget && $(RM_LN) ./*.h &&		\
-          $(LN_S) $(GADGETROOT_ABS)/gadget/*.h ./
-	cd $(instlinks)/include/gadget && $(RM_LN) ./gadgetDefines.h &&	\
-          $(LN_S) $(topdir)/gadget/gadgetDefines.h ./gadgetDefines.h
-	cd $(instlinks)/include/gadget && $(RM_LN) ./gadgetParam.h &&	\
-          $(LN_S) $(topdir)/gadget/gadgetParam.h ./gadgetParam.h
-	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/bin
-	cd $(instlinks)/bin && cp -p $(topdir)/gadgeteer-config .
-	@echo "\n\n"
+	@$(MAKE) EXTRA_INSTALL_ARGS=-l prefix="$(instlinks)"		\
+          DEFAULT_DIR="$(DBG_DIR)" installworld
+	@echo ""
 	@echo "---------------------------------------------------------------"
 	@echo 'You should now set $$GADGET_BASE_DIR to:'
 	@cd $(instlinks) && echo "  `pwd`"
@@ -278,7 +261,7 @@ post-install:
 	@$(MAKE) install-data
 	@$(MAKE) install-m4
 	$(INSTALL) -m $(EXEC_PERMS) $(GROUP_OPT_UNIX)			\
-          $(topdir)/gadgeteer-config $(bindir)
+          $(EXTRA_INSTALL_ARGS) $(topdir)/gadgeteer-config $(bindir)
 
 PREINSTALL_HEADERS	= pre-install-headers
 POSTINSTALL_HEADERS	= post-install-headers
@@ -288,12 +271,14 @@ pre-install-headers:
 
 post-install-headers:
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
-          $(GADGETROOT_ABS)/gadget/gadgetConfig.h			\
+          $(EXTRA_INSTALL_ARGS) $(GADGETROOT_ABS)/gadget/gadgetConfig.h	\
           $(includedir)/gadget/gadgetConfig.h
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
-          $(topdir)/gadget/gadgetDefines.h $(includedir)/gadget
+          $(EXTRA_INSTALL_ARGS) $(topdir)/gadget/gadgetDefines.h	\
+          $(includedir)/gadget
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
-          $(topdir)/gadget/gadgetParam.h $(includedir)/gadget
+          $(EXTRA_INSTALL_ARGS) $(topdir)/gadget/gadgetParam.h		\
+          $(includedir)/gadget
 
 # Install the test programs.
 install-test:
@@ -331,7 +316,8 @@ install-m4:
 	@echo "------------------------------------------------"
 	$(SHELL) $(MKINSTALLDIRS) $(datadir)/aclocal
 	$(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX)			\
-          $(JUGGLERROOT_ABS)/macros/gadget.m4 $(datadir)/aclocal
+          $(EXTRA_INSTALL_ARGS) $(JUGGLERROOT_ABS)/macros/gadget.m4	\
+          $(datadir)/aclocal
 
 # =============================================================================
 # Clean-up targets.  '_clean' removes all the files in the build directories.  

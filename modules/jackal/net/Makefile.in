@@ -195,7 +195,7 @@ $(LIBDIR)/$(JCCL_NET_LIB_DYNAMIC) $(LIBDIR)/$(JCCL_NET_PROF_LIB_DYNAMIC): $(OBJD
 #	for jar in $(JARS) ; \
 #          do \
 #              $(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX) \
-#                $(topdir)/net/$$jar $(bindir) ; \
+#                $(EXTRA_INSTALL_ARGS) $(topdir)/net/$$jar $(bindir) ; \
 #          done
 #
 #install-docs:
