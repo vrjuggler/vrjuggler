@@ -402,28 +402,28 @@ void NavGrabApp::drawCube(const gmtl::AABoxf& cube, const bool& intersected,
 
 void NavGrabApp::drawFloor()
 {
-   glPushMatrix();
-      glPolygonMode(GL_FRONT, GL_LINE);
-      glLineWidth(2);
-      glColor3f(0.0f, 0.9f, 0.3f);
+   glPushAttrib(GL_LINE_BIT | GL_POLYGON_BIT);
+      glPushMatrix();
+         glPolygonMode(GL_FRONT, GL_LINE);
+         glLineWidth(2);
+         glColor3f(0.0f, 0.9f, 0.3f);
 
-      glBegin(GL_LINES);
-         for ( int z = -25; z < 25; ++z )
-         {
-            for ( int x = -25; x < 25; ++x )
+         glBegin(GL_LINES);
+            for ( int z = -25; z < 25; ++z )
             {
-               // Draw the line along the Z axis.
-               glVertex3f((float) x, 0.01f, (float) z);
-               glVertex3f((float) x, 0.01f, (float) z + 1.0f);
+               for ( int x = -25; x < 25; ++x )
+               {
+                  // Draw the line along the Z axis.
+                  glVertex3f((float) x, 0.01f, (float) z);
+                  glVertex3f((float) x, 0.01f, (float) z + 1.0f);
 
-               // Draw the line along the X axis.
-               glVertex3f((float) x, 0.01f, (float) z);
-               glVertex3f((float) x + 1.0f, 0.01f, (float) z);
+                  // Draw the line along the X axis.
+                  glVertex3f((float) x, 0.01f, (float) z);
+                  glVertex3f((float) x + 1.0f, 0.01f, (float) z);
+               }
             }
-         }
-      glEnd();
-
-      glPolygonMode(GL_FRONT, GL_FILL);
-   glPopMatrix();
+         glEnd();
+      glPopMatrix();
+   glPopAttrib();
 }
 
