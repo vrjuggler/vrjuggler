@@ -35,11 +35,12 @@
 #include <string.h>
 
 #include <sys/types.h>
+#include <sys/time.h>
 #include <sys/ipc.h>
 #include <sys/shm.h>
 #include <limits.h>
 #include <sys/prctl.h>
-#include <sys/schedctl.h>
+//#include <sys/schedctl.h>
 #include <unistd.h>
 
 #include <gadget/Devices/Open/Trackd/trackdmem.h>
@@ -171,24 +172,29 @@ void setNewTrackerData(int numSensors)
  }
  gettimeofday(&curtime,NULL);
  t = curtime.tv_sec-starttime.tv_sec + (curtime.tv_usec-starttime.tv_usec)/1000000.0f;
+
+ // Translate head in circle around y axis radius of 4.0f
+ // Also rotate around z axis
+ // Head will bob up and down as well
+ // Head should also "nod" while spinning
  if (nextSensor==0)
  {
-   tracker->sensor[0].x = fsin(t/2.0f) * 2.0f;
-   tracker->sensor[0].y = 6;
-   tracker->sensor[0].z = fcos(t) * 3.0f;
-   tracker->sensor[0].elev = fsin(t/10.0f) * 45.0f;
-   tracker->sensor[0].azim = fsin(t/3.0f) * 120.0f;
-   tracker->sensor[0].roll = 0;
+   tracker->sensor[0].x = sin(t) * 2.0f;
+   tracker->sensor[0].y = 6 + cos(t/2.0f);
+   tracker->sensor[0].z = cos(t) * 3.0f;
+   tracker->sensor[0].elev = sin(t)*45.0f; 	// sin(t/10.0f) * 45.0f;
+   tracker->sensor[0].azim = t*36.0f;	// sin(t/3.0f) * 120.0f;
+   tracker->sensor[0].roll = 0.0f;
    tracker->sensor[0].calibrated = 0;
  }
  else
  {
-   tracker->sensor[nextSensor].x = fsin(t+nextSensor) + nextSensor*2.0f - 2.0f;
-   tracker->sensor[nextSensor].y = fcos(t+nextSensor) + 4.0f;
+   tracker->sensor[nextSensor].x = sin(t+nextSensor) + nextSensor*2.0f - 2.0f;
+   tracker->sensor[nextSensor].y = cos(t+nextSensor) + 4.0f;
    tracker->sensor[nextSensor].z = -4.0f;
-   tracker->sensor[nextSensor].elev = fsin(t/4.0f+nextSensor) * 180.0f;
-   tracker->sensor[nextSensor].azim = fsin(t/2.0f+nextSensor) * 120.0f;
-   tracker->sensor[nextSensor].roll = fsin(t/7.0f+nextSensor) * 90.0f;
+   tracker->sensor[nextSensor].elev = sin(t/4.0f+nextSensor) * 180.0f;
+   tracker->sensor[nextSensor].azim = sin(t/2.0f+nextSensor) * 120.0f;
+   tracker->sensor[nextSensor].roll = sin(t/7.0f+nextSensor) * 90.0f;
    tracker->sensor[nextSensor].calibrated = 0;
  }
  nextSensor = ((nextSensor+1) % numSensors);
