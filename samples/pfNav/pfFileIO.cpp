@@ -23,13 +23,13 @@ std::string pfFileIO::filePath = ".:";
 // outputs useful stuff, to let you know current status.
 pfNode* pfFileIO::loadFile( const std::string& filename )
 {
-   pfdInitConverter( filename.data() );
-   pfFilePath( filePath.data() );
-   pfNode* node = pfdLoadFile( filename.data() );
+   pfdInitConverter( filename.c_str() );
+   pfFilePath( filePath.c_str() );
+   pfNode* node = pfdLoadFile( filename.c_str() );
 
    if (node == NULL)
    {
-      cout << "pfFileIO::loadFile: COULDN'T FIND "<<filename.data()
+      cout << "pfFileIO::loadFile: COULDN'T FIND "<<filename.c_str()
            << "\tusing filepath: " << filePath << endl;
    }
 
@@ -48,7 +48,7 @@ std::string pfFileIO::optimizedName( std::string originalFltName )
 // NOTE: usually pass in the name returned by optimizedName() function
 void pfFileIO::writeOptimizedFile( pfNode* node, std::string optimizedName )
 {
-   pfdStoreFile( node, optimizedName.data() );
+   pfdStoreFile( node, optimizedName.c_str() );
 }
 
 //: check the filename.  Does it look like it is already optimized?
@@ -57,10 +57,12 @@ bool pfFileIO::isOptimized( const std::string& fileName )
 {
    int size = fileName.find( ".pfb" );
 
-   if (size == 0)
-      return false;
-   else
+   cout<<"OP: "<<size<<"\n"<<flush;
+   
+   if (size > 0)
       return true;
+   else
+      return false;
 }
 
 // use this function just like the pfdLoadFile performer function.
@@ -72,25 +74,26 @@ bool pfFileIO::isOptimized( const std::string& fileName )
 pfNode* pfFileIO::autoloadFile( const std::string& fileName, const pfFileIO::units& un )
 {
    pfNode* node = NULL;
-
+   
    std::string optimizedFileName = optimizedName( fileName );
-   if(isOptimized(fileName))
+   if (pfFileIO::isOptimized( fileName ))
    {
-      node = loadFile(fileName);
-   }
+      cout<<"Loading(o) "<<fileName.c_str()<<".\n "<<flush;
+      node = loadFile( fileName );
+   }   
    else if (fileIO::fileExists(optimizedFileName))
    {
       // don't need to output this, because performer already does. :)
-      //cout<<"Loading "<<optimizedFileName.data()<<"\n"<<flush;
+      //cout<<"Loading "<<optimizedFileName.c_str()<<"\n"<<flush;
       node = loadFile( optimizedFileName );
    }
    else
    {
-      cout<<"Loading "<<fileName.data()<<"... "<<flush;
+      cout<<"Loading(c) "<<fileName.c_str()<<"... "<<flush;
       node = loadFile( fileName );
       if(node != NULL)
       {
-         cout<<"Caching to "<<optimizedFileName.data()<<"...\n"<<flush;
+         cout<<"Caching to "<<optimizedFileName.c_str()<<"...\n"<<flush;
          writeOptimizedFile( node, optimizedFileName );
       }
       // TODO: consider if the user has write access,
