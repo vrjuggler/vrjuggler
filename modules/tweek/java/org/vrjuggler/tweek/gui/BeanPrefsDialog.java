@@ -90,6 +90,14 @@ public class BeanPrefsDialog extends JDialog
    }
 
    /**
+    * Returns the number of Beans with editable preferences.
+    */
+   public int getPrefsBeanCount()
+   {
+      return mPrefsBeans.size();
+   }
+
+   /**
     * Displays this dialog box.  Call this when the user wants to edit Bean
     * preferences.
     */
