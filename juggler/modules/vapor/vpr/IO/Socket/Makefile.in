@@ -50,16 +50,16 @@ default: all
 # Include common definitions.
 include @topdir@/make.defs.mk
 
-includedir	= @includedir@/vpr/IO/Socket
-srcdir		= @srcdir@
-top_srcdir	= @top_srcdir@
-INSTALL		= @INSTALL@
-SUBOBJDIR	= $(VPR_LIBRARY)
+includedir=	@includedir@/vpr/IO/Socket
+srcdir=		@srcdir@
+top_srcdir=	@top_srcdir@
+INSTALL=	@INSTALL@
+SUBOBJDIR=	$(VPR_LIBRARY)
 
-SRCS	 	= SocketAcceptor.cpp	\
-                  SocketConnector.cpp	\
-                  SocketDatagramOpt.cpp	\
-                  SocketStreamOpt.cpp
+SRCS=		SocketAcceptor.cpp	\
+		SocketConnector.cpp	\
+		SocketDatagramOpt.cpp	\
+		SocketStreamOpt.cpp
 
 include $(MKPATH)/dpp.obj.mk
 
@@ -68,6 +68,6 @@ include $(MKPATH)/dpp.obj.mk
 # -----------------------------------------------------------------------------
 ifndef DO_CLEANDEPEND
 ifndef DO_BEFOREBUILD
-    -include $(DEPEND_FILES)
+   -include $(DEPEND_FILES)
 endif
 endif
