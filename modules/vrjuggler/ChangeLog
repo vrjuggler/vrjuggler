@@ -1,5 +1,8 @@
 DATE        AUTHOR    CHANGE
 ----------- --------- ---------------------------------------------------------
+Aug-22-2001 cjust     Added XML-based configuration file support to the
+                      C++ side of Juggler (EnvironmentManager and ConfigIO
+                      classes).
 Aug-20-2001 cjust     Added a VjControl wizard for creating simulator-mode
                       configuration files.
 Aug-20-2001 cjust     Merged support for XML-based configuration files in
