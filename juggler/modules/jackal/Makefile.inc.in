@@ -50,7 +50,8 @@ top_srcdir	= @top_srcdir@
 DBG_FLAGS	= -D_DEBUG @DBG_FLAGS@
 OPT_FLAGS	= -D_OPT @OPT_FLAGS@
 
-JAXP_JAR		= @JAXP_JAR@
+BUILD_VJCONTROL	= @BUILD_VJCONTROL@
+JAXP_JAR	= @JAXP_JAR@
 
 # =============================================================================
 # Build and installation directory naming and ownership information.
@@ -406,7 +407,9 @@ ifdef NO_JAVA_GUI
 	@echo "Skipping Java GUI targets."
 	@echo "------------------------------------------------"
 else
+ifeq ($(BUILD_VJCONTROL), Y)
 	$(MAKE) $(MAKEFLAGS) RECTARGET=java recursive
+endif
 endif #ifdef NO_JAVA_GUI
 
 include $(MKPATH)/dpp.libs.mk
