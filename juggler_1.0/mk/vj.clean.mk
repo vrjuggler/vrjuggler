@@ -10,11 +10,11 @@
 #
 # To provide a "local" 'clean' target in the file including this code,
 # define ${_LOCAL_CLEAN} before including this file and define a target
-# called 'local_clean'.  It will be run after the standard 'clean' target is
+# called '_clean'.  It will be run after the standard 'clean' target is
 # executed.
 #
 # Example:
-#     CLEAN_FILES += file1.o file2.o 
+#     CLEAN_FILES += file1.o file2.o
 # -----------------------------------------------------------------------------
 
 CLEAN_FILES	= Makedepend core so_locations
