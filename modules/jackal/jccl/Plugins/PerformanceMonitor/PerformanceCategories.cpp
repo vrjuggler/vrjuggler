@@ -33,8 +33,37 @@
 
 
 #include <jccl/Plugins/PerformanceMonitor/PerformanceCategories.h>
+#include <jccl/Plugins/PerformanceMonitor/LabeledPerfDataBuffer.h>
 
 namespace jccl {
+
+    void PerformanceCategories::addBuffer (LabeledPerfDataBuffer* buffer) {
+        mBuffersLock.acquire();
+        mBuffers.push_back (buffer);
+        mBuffersLock.release();
+    }
+
+    void PerformanceCategories::removeBuffer (LabeledPerfDataBuffer* buffer) {
+        mBuffersLock.acquire();
+        std::vector<LabeledPerfDataBuffer*>::iterator i = mBuffers.begin();
+        while (i != mBuffers.end()) {
+            if (*i == buffer) {
+                mBuffers.erase(i);
+                break;
+            }
+        }
+        mBuffersLock.release();
+    }
+
+    void PerformanceCategories::writeAllBuffers (std::ostream& out, 
+                                                 const std::string& pad /*=""*/) {
+        mBuffersLock.acquire();
+        for (int i = 0; i < mBuffers.size(); i++) {
+            mBuffers[i]->write (out, pad);
+        }
+        mBuffersLock.release();
+    }
+
 
     vprSingletonImp (PerformanceCategories);
 

@@ -44,6 +44,7 @@ LabeledPerfDataBuffer::LabeledPerfDataBuffer () {
     read_begin = 0;
     write_pos = 1;
     lost = 0;
+    PerformanceCategories::instance()->addBuffer (this);
 }
 
 
@@ -55,11 +56,13 @@ LabeledPerfDataBuffer::LabeledPerfDataBuffer (const std::string& _name,
     read_begin = 0;
     write_pos = 1;
     lost = 0;
+    PerformanceCategories::instance()->addBuffer (this);
 }
 
 
 
 LabeledPerfDataBuffer::~LabeledPerfDataBuffer () {
+    PerformanceCategories::instance()->removeBuffer (this);
     delete[] buffer;
 }
 
@@ -176,53 +179,59 @@ void LabeledPerfDataBuffer::setBeginCycle (const vpr::GUID &category) {
     //+       <br>2 25
     //+       <br>3 27
     //+       <br>1 42
-void LabeledPerfDataBuffer::write (std::ostream& out) {
-//     // the only tricky part of this is that the region we
-//     // want to print out might wrap back around to the
-//     // beginning of the list.  That's what the 2nd big
-//     // case is for.
-//     int begin, end, i, tlost;
-//     buf_entry* b;
+void LabeledPerfDataBuffer::write (std::ostream& out, const std::string& pad) {
+     // the only tricky part of this is that the region we
+     // want to print out might wrap back around to the
+     // beginning of the list.  That's what the 2nd big
+     // case is for.
+     int begin, end, i, tlost;
+     buf_entry* b;
 
-//     //out.width(13);
+     //out.width(13);
 
 //     if (!active)
 // 	return;
 
-//     //out << "PerfData " << name << "\n";
-//     begin = read_begin;
-//     end = (write_pos - 1 + numbufs)%numbufs;
-//     //cout << "begin/end are " << begin <<' '<< end << endl;
-//     if (begin == end)
-// 	return;
-//     out << "PerfData1 \"" << name << "\" " << nindex << std::endl;
-//     if (begin < end) {
-// 	for (i = begin; i < end; i++) {
-// 	    b = &(buffer[i]);
-// 	    out << b->phase << ' '
-// 		<< std::setiosflags(std::ios::fixed) << b->ts << '\n';
-// 	}
-//     }
-//     else { /* wraparound */
-// 	for (i = begin; i < numbufs; i++) {
-// 	    b = &(buffer[i]);
-// 	    out << b->phase << ' ' << std::setiosflags(std::ios::fixed)
-// 		<< b->ts << '\n';
-// 	}
-// 	for (i = 0; i < end; i++) {
-// 	    b = &(buffer[i]);
-// 	    out << b->phase << ' ' << std::setiosflags(std::ios::fixed)
-// 		<< b->ts << '\n';
-// 	}
-//     }
-	
-//     lost_lock.acquire();
-//     tlost = lost;
-//     lost = 0;
-//     lost_lock.release();
-//     read_begin = end;
 
-//     out << -1 << ' ' << tlost << std::endl;
+     begin = read_begin;
+     end = (write_pos - 1 + numbufs)%numbufs;
+//     //cout << "begin/end are " << begin <<' '<< end << endl;
+     if (begin == end)
+ 	return;
+     out << pad << "<labeledbuffer name=\"" << name << "\" >\n";
+
+     if (begin < end) {
+ 	for (i = begin; i < end; i++) {
+ 	    b = &(buffer[i]);
+            out << pad << pad << "<stamp label=\"" << index << "\" time=\""
+                << std::setiosflags(std::ios::fixed) << b->stamp << "\" />\n";
+
+ 	}
+     }
+     else { /* wraparound */
+         for (i = begin; i < numbufs; i++) {
+ 	    b = &(buffer[i]);
+            out << pad << pad << "<stamp label=\"" << index << "\" time=\""
+                << std::setiosflags(std::ios::fixed) << b->stamp << "\" />\n";
+         }
+         for (i = 0; i < end; i++) {
+             b = &(buffer[i]);
+            out << pad << pad << "<stamp label=\"" << index << "\" time=\""
+                << std::setiosflags(std::ios::fixed) << b->stamp << "\" />\n";
+         }
+     }
+	
+     lost_lock.acquire();
+     tlost = lost;
+     lost = 0;
+     lost_lock.release();
+     read_begin = end;
+
+     //out << -1 << ' ' << tlost << std::endl;
+     if (tlost > 0)
+         out << pad << pad << "<lost num=\"" << tlost << "\" />\n";
+
+     out << pad << "</labeledbuffer>\n";
 
 }
 
