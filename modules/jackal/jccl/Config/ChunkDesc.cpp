@@ -62,11 +62,8 @@ ChunkDesc::ChunkDesc (const ChunkDesc& desc): plist() {
 
 
 ChunkDesc::~ChunkDesc() {
-    /* XXX: Leave it for now
     for (unsigned int i = 0; i < plist.size(); i++)
         delete plist[i];
-    */
-    // delete default_chunk;
     validation = 0;
 }
 
@@ -90,13 +87,10 @@ ChunkDesc& ChunkDesc::operator= (const ChunkDesc& other) {
     if (&other == this)
         return *this;
 
-    /* XXX: Leave it alone for now
     for (i = 0; i < plist.size(); i++)
     {
        delete plist[i];
-       plist[i] = NULL;       // Overwrite dangling pointer
     }
-    */
     plist.clear();
 
     name = other.name;
@@ -107,7 +101,6 @@ ChunkDesc& ChunkDesc::operator= (const ChunkDesc& other) {
 
     plist.reserve (other.plist.size());
     for (i = 0; i < other.plist.size(); i++) {
-        //plist.push_back ( other.plist[i]);
         plist.push_back ( new PropertyDesc(*(other.plist[i])));
     }
 
@@ -219,10 +212,6 @@ bool ChunkDesc::remove (const std::string& _token)
     std::vector<PropertyDesc*>::iterator cur_desc = plist.begin();
     while (cur_desc != plist.end()) {
         if (!vjstrcasecmp ((*cur_desc)->getToken(), _token)) {
-            /* XXX:
-               delete (*cur_desc);
-               *cur_desc = NULL;
-               */
             cur_desc = plist.erase(cur_desc);
             return true;
         }
@@ -265,10 +254,7 @@ JCCL_IMPLEMENT(std::istream&) operator >> (std::istream& in, ChunkDesc& self)
     self.help = str;
 
     for (unsigned int i = 0; i < self.plist.size(); i++) {
-        /* XXX: Leave the memory for now.  Need to fix
-           delete self.plist[i];
-           self.plist[i] = NULL;                  // Get rid of dangling pointer
-        */
+        delete self.plist[i];
     }
     self.plist.clear();
     
@@ -277,9 +263,7 @@ JCCL_IMPLEMENT(std::istream&) operator >> (std::istream& in, ChunkDesc& self)
         p = new PropertyDesc();
         in >> *p;
         if (!vjstrcasecmp (p->getToken(),std::string("end"))) {
-            /* XXX:
-               delete p;
-            */
+            delete p;
             break;
         }
         self.add(p);

@@ -35,40 +35,38 @@
 #define _JCCL_CHUNKDESCDB_H_
 
 #include <jccl/jcclConfig.h>
-//#include <jccl/Config/ConfigChunk.h>
 #include <jccl/Config/ChunkDescPtr.h>
 
 namespace jccl {
    
-//--------------------------------------------------------------
-//: Storage class for ChunkDescs used by the ConfigChunkDB.
-//
-//  A ChunkDescDB is a container for ChunkDescs.  Includes
-//  functions to search for particular ChunkDescs, and to read
-//  and write ChunkDesc files.
-//
-// @author Christopher Just
-// October 1997
-//!PUBLIC_API:
-//-----------------------------------------------------------------
 
-
+    /** Storage class for ChunkDescs.
+     *  A ChunkDescDB is a container for ChunkDescs.  It includes
+     *  functions for searching, as well as reading and writing
+     *  ChunkDescDB files.
+     *  All ChunkDescs contained in a DB are guaranteed to have a
+     *  unique token.  If a ChunkDesc with an already used token is
+     *  added to a ChunkDescDB, it replaces the previous ChunkDesc.
+     */
 class JCCL_CLASS_API ChunkDescDB {
 private:
 
-    //:Internal storage of ChunkDescs
+    /** Internal storage of ChunkDescs.
+     *  Note that we use boost shared_ptrs for storage, so we never have
+     *  to explicitly delete a ChunkDesc - they are automatically freed
+     *  when all ChunkDescPtrs referencing them are out of scope.
+     *  This also means that ChunkDescs can be (and are) shared between
+     *  ChunkDescDBs.
+     */
     std::vector<ChunkDescPtr> descs;
 
 public:
 
-    //:Default Constructor
-    //!POST: Self is created with an empty vector of ChunkDescs
+    /** Constructor.  Creates an empty ChunkDescDB. */
     ChunkDescDB ();
 
 
-    //:Destructor
-    //!POST: Self is destroyed; all memory (including contained
-    //+      ChunkDescs) is destroyed.
+    /** Destructor.  Doesn't really do anything. */
     ~ChunkDescDB ();
 
 
@@ -92,9 +90,11 @@ public:
     }
 
 
-    //:Searches for a particular ChunkDesc
-    //!RETURNS: desc - a ChunkDesc whose token matches _token
-    //!RETURNS: NULL - if no such ChunkDesc is found
+    /** Finds a ChunkDesc by token.
+     *  @param token - The token of a ChunkDesc to find.
+     *  @return A ChunkDesc in self matching token, or a NULL
+     *          ChunkDescPtr if none was found.
+     */
     ChunkDescPtr getChunkDesc (const std::string& _token);
 
 
