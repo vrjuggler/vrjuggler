@@ -566,7 +566,7 @@ tweek_dep_scripts="vpr-config"
 
 if test "x$PLATFORM" = "xIRIX" -a "x$USE_GCC" != "xyes" ; then
    CFLAGS="$CFLAGS -woff 1685,515,608,658,799,803,852,1048,1233,1499"
-   CXXFLAGS="$CXXFLAGS -woff 1234,3303,3322 -w2"
+   CXXFLAGS="$CXXFLAGS -woff 1234,1388,3303,3322 -w2"
    EXTRA_LINK_FLAGS="$EXTRA_LINK_FLAGS -J4 -all"
 elif test "x$OS_TYPE" = "xWin32" -a "x$USE_GCC" != "xyes" ; then
    CFLAGS="$CFLAGS /W3 /GR /GX -EHc /QIfdiv /QI0f"
