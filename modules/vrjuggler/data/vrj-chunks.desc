@@ -233,6 +233,7 @@ The filters are applied in the order that they are specified in this configurati
       <allowedtype>Intersense</allowedtype>
       <allowedtype>TrackdAPIController</allowedtype>
       <allowedtype>TweekGadget</allowedtype>
+      <allowedtype>Vrpn</allowedtype>
     </PropertyDesc>
     <PropertyDesc token="unit" name="Unit" type="int" variable="0">
       <help>The unit in the device this proxy attaches to</help>
@@ -1276,6 +1277,7 @@ The filters are applied in the order that they are specified in this configurati
       <allowedtype>Intersense</allowedtype>
       <allowedtype>TrackdAPISensor</allowedtype>
       <allowedtype>TweekGadget</allowedtype>
+      <allowedtype>Vrpn</allowedtype>
     </PropertyDesc>
     <PropertyDesc token="unit" name="unit" type="int" variable="0">
       <help>The unit in the device this proxy attaches to</help>
@@ -1770,6 +1772,26 @@ The filters are applied in the order that they are specified in this configurati
     </PropertyDesc>
     <PropertyDesc token="z" name="z" type="float" variable="0">
       <item label="Z" defaultvalue="0.0" />
+    </PropertyDesc>
+  </ChunkDesc>
+  <ChunkDesc token="Vrpn" name="Vrpn" version="1.0">
+    <category>Devices</category>
+    <help>Configure an interface to an external VRPN server</help>
+    <PropertyDesc token="trackServer" name="trackerServer" type="string" variable="0">
+      <help>Tracker server.</help>
+      <item label="TrackerServer" defaultvalue="Tracker0@localhost" />
+    </PropertyDesc>
+    <PropertyDesc token="buttonserver" name="ButtonServer" type="string" variable="0">
+      <help>Button server </help>
+      <item label="ButtonServer" defaultvalue="Button0@localhost" />
+    </PropertyDesc>
+    <PropertyDesc token="numTrackers" name="NumberTrackers" type="int" variable="0">
+      <help>Number of trackers supported by Vrpn server.</help>
+      <item label="Number of trackers" defaultvalue="2" />
+    </PropertyDesc>
+    <PropertyDesc token="numButtons" name="NumberButtons" type="int" variable="0">
+      <help>Number of buttons supported by Vrpn server.</help>
+      <item label="Number of buttons" defaultvalue="1" />
     </PropertyDesc>
   </ChunkDesc>
   <ChunkDesc token="simKeyDigital" name="simKeyDigital" version="1.0">
