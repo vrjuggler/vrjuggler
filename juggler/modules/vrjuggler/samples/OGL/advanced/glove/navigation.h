@@ -83,30 +83,33 @@ public:
     //  transform to put the scene into the user's point of view
     void  getSceneTransform( vjMatrix& sceneMatrtix ) const;
     
-    inline void move( vjVec3& dist )
-    { move( dist[0], dist[1], dist[2] ); }
-    
     inline void move( float a, float b, float c )
-    { _pos[0] += a; 
-      _pos[1] += b;
-      _pos[2] += c;
+    { 
+       _pos[0] += a; 
+       _pos[1] += b;
+       _pos[2] += c;
+    }
+    
+    inline void move( vjVec3& dist )
+    { 
+       move( dist[0], dist[1], dist[2] ); 
     }
     
     inline void reset()
     {
-	_pos.set(0, 0, 0);
-	_posOld.set(0, 0, 0);
-	_rot.set(0, 0, 0);
-	_rotOld.set(0, 0, 0);
-	_velocity = 0.0f;
-	_velocityVec.set(0, 0, 0);
-	_angularVelocity = 0;
+         _pos.set(0, 0, 0);
+         _posOld.set(0, 0, 0);
+         _rot.set(0, 0, 0);
+         _rotOld.set(0, 0, 0);
+         _velocity = 0.0f;
+         _velocityVec.set(0, 0, 0);
+         _angularVelocity = 0;
     }
     
     
     inline bool&  walk()
     {
-	return _walkingMode;
+	      return _walkingMode;
     }
     
 private:

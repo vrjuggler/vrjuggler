@@ -51,12 +51,14 @@ void TrackedInfo::updateWithMatrix( vjMatrix& matrix )
     _rotOld = _rot;
     
     // get the forward direction that the tracker is pointing.
-    // (_vec = matrix * forwardVec)
     vjVec3 wandPos, wandForward;
+    // (wandForward = matrix * forwardVec)
     wandForward.xformVec( matrix, forwardVec );
     wandPos.xformVec( matrix, origin );
     _vec = wandForward - wandPos;
-
+   cout<<_vec.vec[0]<<" "<<_vec.vec[1]<<" "<<_vec.vec[2]<<"\n"<<flush;
+    
+    
     // get the x,y,z rotations of the tracker.
     matrix.getXYZEuler( _rot.vec[0], _rot.vec[1], _rot.vec[2] );
     

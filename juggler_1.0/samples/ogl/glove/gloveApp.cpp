@@ -35,23 +35,9 @@
 #include <GL/gl.h>
 #include <GL/glu.h>
 
+
+
 #include <gloveApp.h>
-
-
-/*
-vjVec3 operator*( const vjMatrix& m, const vjVec3& v )
-{
-    float a[4];
-    a[0] = m(0,0) * v[0] + m(0,1) * v[1] + m(0,2)  * v[2] + m(0,3) * 1.0f;
-    a[1] = m(1,0) * v[0] + m(1,1) * v[1] + m(1,2)  * v[2] + m(1,3) * 1.0f;
-    a[2] = m(2,0) * v[0] + m(2,1) * v[1] + m(2,2) * v[2] + m(2,3) * 1.0f;
-    a[3] = m(3,0) * v[0] + m(3,1) * v[1] + m(3,2) * v[2] + m(3,3) * 1.0f;
-
-    float invA3 = 1.0f / a[3];
-
-    return vjVec3( a[0] * invA3, a[1] * invA3, a[2] * invA3 );
-}
-*/
 
 void gloveApp::renderLightsAndMaterials()
 {
@@ -91,6 +77,7 @@ void gloveApp::initGlState()
 
 void gloveApp::myDraw()
 {
+   //static vjGlContextData< vjMatrix > matrix;
     glClearColor(0.0, 0.0, 0.0, 0.0);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -98,9 +85,11 @@ void gloveApp::myDraw()
     this->renderLightsAndMaterials();
 
     glPushMatrix();
+    
    glMatrixMode(GL_MODELVIEW);
-   glMultMatrixf( mNavigation.getFloatPtr() );
-
+   //glLoadIdentity();
+   glLoadMatrixf( mNavigation.getFloatPtr() );
+   
    // draw the floor
    glPushMatrix();
        glScalef( 3.0f, 1.0f, 3.0f );
@@ -139,7 +128,8 @@ void gloveApp::myDraw()
        mScene->drawTable();
        glDisable(GL_TEXTURE_2D);
    glPopMatrix();
-    glPopMatrix();
+   
+   glPopMatrix();
 }
 
 //: Function called after tracker update but before start of drawing
@@ -147,12 +137,17 @@ void gloveApp::myDraw()
 //  objects.
 void gloveApp::preFrame()
 {
+   mNavigation.accelerate( mGesture->getGesture() == mGesture->getGestureIndex("Pointing") );
+   mNavigation.rotate( mGesture->getGesture() != mGesture->getGestureIndex("Closed Fist") );
+   mNavigation.setMatrix( mGlove->getPos(vjGloveData::INDEX) );
+   mNavigation.update();
     //: we need to keep track of the wand, and the user.
-    UserInfo    userInfo;
-    TrackedInfo wandInfo;
-    TrackedInfo headInfo;
+    //UserInfo    userInfo;
+    //TrackedInfo wandInfo;
+    //TrackedInfo headInfo;
 
     vjVec3 glovePos;
+/*
     vjMatrix finger_matrix;
     vjMatrix invNav;
     invNav.invert(mNavigation);
@@ -161,7 +156,8 @@ void gloveApp::preFrame()
     finger_matrix = mGlove->getPos(vjGloveData::INDEX);
     finger_matrix.getTrans( glovePos[0], glovePos[1], glovePos[2] );
     glovePos.xformVec( invNav, glovePos );
-
+*/
+      /*
     //vjDEBUG(7) << "Gesture: " << mGesture->getGestureString(mGesture->getGesture())<<"\n"<<flush;
     //vjDEBUG(7) << glovePos[0]<<" "<<glovePos[1]<<" "<<glovePos[2]<<" : "<<mCubePos[0]<<" "<<mCubePos[1]<<" "<<mCubePos[2]<<"\n"<<flush;
 
@@ -172,10 +168,12 @@ void gloveApp::preFrame()
 
     if (mGesture->getGesture() == mGesture->getGestureIndex("Pointing"))
     {
-   userVelocity += 0.0001f;
+       cout<<"Pointing"<<mGesture->getGesture()<<"\n"<<flush;
+      userVelocity += 0.0001f;
     } else
     if (mGesture->getGesture() == mGesture->getGestureIndex("Closed Fist"))
     {
+       cout<<"Closed Fist"<<mGesture->getGesture()<<"\n"<<flush;
    userVelocity = 0.0f;
     }
     userInfo.setVelocity( userVelocity );
@@ -184,18 +182,22 @@ void gloveApp::preFrame()
     userInfo.update( wandInfo, vjVec3(0.0f, 0.0f, 0.0f) );
     userInfo.getSceneTransform( mNavigation );
     ////////////////////////////////////////////////////////
-
+*/
     ////////////////////////////////////////////////////////
     //: pick up the object if you're pointing.
     //  set the object position equal to the glove position.
+      
+      /*
+      
     if ( mGesture->getGesture() == mGesture->getGestureIndex("Open Hand"))
     {
-   if (mConeSelected)
-       mConePos = glovePos;
-   else if (mSphereSelected)
-       mSpherePos = glovePos;
-   else if (mCubeSelected)
-       mCubePos = glovePos;
+       cout<<"Open Hand"<<mGesture->getGesture()<<"\n"<<flush;
+      if (mConeSelected)
+          mConePos = glovePos;
+      else if (mSphereSelected)
+          mSpherePos = glovePos;
+      else if (mCubeSelected)
+          mCubePos = glovePos;
     }
 
     float cubeDistance   = (glovePos - mCubePos).length();
@@ -220,9 +222,11 @@ void gloveApp::preFrame()
           mSphereSelected == false &&
           mConeSelected   == false)   )
     {
+       cout<<"NotOpenHand"<<mGesture->getGesture()<<"\n"<<flush;
    // ... highlight the closest one to the glove.
       if (min == coneDistance)
    {
+      
        mCubeSelected = false;
        mSphereSelected = false;
        mConeSelected = true;
@@ -238,4 +242,5 @@ void gloveApp::preFrame()
        mConeSelected = false;
    }
     }
+    */
 }
