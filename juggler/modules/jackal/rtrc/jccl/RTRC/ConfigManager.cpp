@@ -428,18 +428,18 @@ int ConfigManager::scanForLostDependencies()
          PendingElement pending;
          pending.mType = PendingElement::REMOVE;
          pending.mElement = elements[i];
-         lockPending();
+         
+         vprASSERT(1 == mPendingLock.test());
          addPending(pending);
-         unlockPending();
 
          // Add the pending re-addition
 //         ConfigElementPtr copy_of_element;          // Need a copy so that the remove can delete the element
 //         copy_of_element = new ConfigElement(*elements[i]);
          pending.mType = PendingElement::ADD;
          pending.mElement = elements[i];//copy_of_element;
-         lockPending();
+         
+         vprASSERT(1 == mPendingLock.test());
          addPending(pending);                   // Add the add item
-         unlockPending();
       }
    }
 
