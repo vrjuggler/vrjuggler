@@ -343,8 +343,8 @@ else
     CXX="${_alt_cxx}"
 fi
 
-DPP_PROG_CC($CC, , $CC_ERR)
-DPP_PROG_CXX($CXX, , $CXX_ERR)
+DPP_PROG_CC($CC, , AC_MSG_ERROR($CC_ERR))
+DPP_PROG_CXX($CXX, , AC_MSG_ERROR($CXX_ERR))
 
 if test "x$GXX" = "xyes" ; then
     dnl # If we are using GCC as the compiler, we need to be using at least
