@@ -48,6 +48,10 @@
 #define SNXSOUNDFACTORY_H
 #include <iostream>
 #include <string>
+#include <fstream>
+#include "snx/xdl.h"
+#include "snx/dirlist.h"
+#include "snx/ReplaceEnvVars.h"
 #include "snx/Singleton.h"
 #include "snx/SoundImplementation.h"
 
@@ -57,6 +61,95 @@ namespace snx
 class SoundFactory : public snx::Singleton<SoundFactory>
 {
 public:
+   SoundFactory() : snx::Singleton<SoundFactory>()
+   {
+      std::vector<std::string> search_paths;
+      search_paths.push_back( "${SNX_BASE_DIR}/lib/modules/sonix" );
+      search_paths.push_back( "${SNX_BASE_DIR}/share/sonix/plugins" );
+      search_paths.push_back( "${HOME}/.sonix/plugins" );
+
+      std::vector<std::string> filelist;
+      for (int x = 0; x < search_paths.size(); ++x)
+      {
+         search_paths[x] = snx::replaceEnvVars( search_paths[x] );
+         std::cout << "[snx]SoundFactory| Finding plugins in: \n"
+                   << " + " << search_paths[x] << std::endl;
+         if (std::ifstream(search_paths[x].c_str()).good())
+         {
+            xdl::dirlist( search_paths[x].c_str(), filelist );
+            this->filterOutPluginFileNames( filelist, filelist );
+            this->loadPlugins( filelist );
+         }
+      }
+   }
+
+   bool isPlugin( std::string filename )
+   {
+      if (filename.find( ".snx" ) != std::string::npos)
+      {
+         xdl::Library lib;
+         if (lib.open( filename.c_str(), xdl::NOW ) == false) return false;
+         if (lib.lookup( "regPlugin" ) == NULL) return false;
+         if (lib.lookup( "unregPlugin" ) == NULL) return false;
+         if (lib.lookup( "getVersion" ) == NULL) return false;
+         if (lib.lookup( "getName" ) == NULL) return false;
+
+         // @todo give sonix an internal version number string!
+         typedef std::string (*getVersionFunc)(void);
+         getVersionFunc getVersion = (getVersionFunc)lib.lookup( "getVersion" );
+         //if (getVersion != NULL && getVersion() != snx::version) return false;
+
+         lib.close();
+         return true;
+      }
+      else
+      {
+         return false;
+      }
+   }
+
+   void filterOutPluginFileNames( std::vector<std::string> srclist,
+                                  std::vector<std::string>& destlist )
+   {
+      for (int x = 0; x < srclist.size(); ++x)
+      {
+         if (this->isPlugin( srclist[x] ))
+         {
+            destlist.push_back( srclist[x] );
+         }
+      }
+   }
+   
+   std::vector<xdl::Library> mPlugins;
+   
+   
+   void loadPlugins( std::vector<std::string> filelist )
+   {
+      unloadPlugins();
+      mPlugins.clear();
+      mPlugins.resize( filelist.size() );
+      for (int x = 0; x < filelist.size(); ++x)
+      {
+         typedef SoundImplementation* (*regPluginFunc)(void);
+         mPlugins[x].open( filelist[x].c_str(), xdl::NOW );
+         regPluginFunc regPlugin = (regPluginFunc)mPlugins[x].lookup( "regPlugin" );
+         if (regPlugin != NULL)
+            regPlugin();
+      }
+   }   
+   
+   void unloadPlugins()
+   {
+      for (int x = 0; x < mPlugins.size(); ++x)
+      {
+         typedef void (*unregPluginFunc)(void);
+         unregPluginFunc unregPlugin = (unregPluginFunc)mPlugins[x].lookup( "unregPlugin" );
+         if (unregPlugin != NULL)
+            unregPlugin();
+         mPlugins[x].close();
+      }
+      mPlugins.clear();
+   }
 
    /**
     * @input name of api to create
