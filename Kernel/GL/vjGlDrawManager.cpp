@@ -520,14 +520,15 @@ void vjGlDrawManager::drawSimulator(vjSimDisplay* sim)
     /// dumps the object's internal state
 void vjGlDrawManager::outStream(ostream& out)
 {
-    out     << "========== vjGlDrawManager: " << (void*)this << " =========" << endl
-            << "\tapp:" << (void*)mApp << endl
-            << "\tWins:" << mWins.size();
+    out     << clrSetNORM(clrGREEN)
+            << "========== vjGlDrawManager: " << (void*)this << " =========" << clrRESET << endl
+            << clrOutNORM(clrCYAN,"\tapp:") << (void*)mApp << endl
+            << clrOutNORM(clrCYAN,"\tWins:") << mWins.size() << endl << flush;
 
     for(unsigned int i = 0; i < mWins.size(); i++)
     {
        vjASSERT(mWins[i] != NULL);
-       out << "\n\t\tvjGlWindow:\n" << mWins[i] << endl;
+       out << clrOutNORM(clrCYAN,"\tvjGlWindow:\n") << mWins[i] << endl;
     }
     out << "=======================================" << endl;
 }
