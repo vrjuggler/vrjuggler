@@ -55,37 +55,37 @@ AC_DEFUN(EQUIP_PATH,
                 [  --with-eqidl=<PATH>     Path to eqidl executable [default=none]],
                 eqidl_prefix="$withval", eqidl_prefix="")
 
-		dnl -----------------------------------------------
+    dnl -----------------------------------------------
     dnl -- Checks for header files and build EQ_LIBS --
     dnl ----------------------------------------------- 
-		DPP_LANG_SAVE
-		DPP_LANG_CPLUSPLUS
-		AC_CHECK_HEADERS(iostream hash_map hash_map.h)
+    DPP_LANG_SAVE
+    DPP_LANG_CPLUSPLUS
+    AC_CHECK_HEADERS(iostream hash_map hash_map.h)
 
-		dso_save_CPPFLAGS="$CPPFLAGS"
-		CPPFLAGS="$CPPFLAGS $VPR_CXXFLAGS -I$eq_standalone/include -I$eq_standalone/include/Modules/equip/equip_runtime/include"
-		AC_CHECK_HEADER(EquipExt/VectorStream.h, ,
-                		AC_MSG_ERROR(*** Equip standalone required for DSO ***))
-		CPPFLAGS="$dso_save_CPPFLAGS"
-		INCLUDES="$INCLUDES -I$eq_standalone/include -I$eq_standalone/include/Modules/equip/equip_runtime/include"
+    dso_save_CPPFLAGS="$CPPFLAGS"
+    CPPFLAGS="$CPPFLAGS $VPR_CXXFLAGS -I$eq_standalone/include -I$eq_standalone/include/Modules/equip/equip_runtime/include"
+    AC_CHECK_HEADER(EquipExt/VectorStream.h, ,
+                    AC_MSG_ERROR(*** Equip standalone required for DSO ***))
+    CPPFLAGS="$dso_save_CPPFLAGS"
+    INCLUDES="$INCLUDES -I$eq_standalone/include -I$eq_standalone/include/Modules/equip/equip_runtime/include"
 
-		if test "x$OS_TYPE" = "xWin32" ; then
-    		EQ_LIBS="-libpath:$eq_standalone/lib$LIBBITSUF eqStandalone.lib"
-		else
-    		EQ_LIBS="-L$eq_standalone/lib$LIBBITSUF -leqStandalone"
-		fi
+    if test "x$OS_TYPE" = "xWin32" ; then
+        EQ_LIBS="-libpath:$eq_standalone/lib$LIBBITSUF eqStandalone.lib"
+    else
+        EQ_LIBS="-L$eq_standalone/lib$LIBBITSUF -leqStandalone"
+    fi
 
-		DPP_LANG_RESTORE
+    DPP_LANG_RESTORE
     dnl ------------------------------------------------
 
         
-		dnl -- Construct path to eqidl --
-		EQIDL=''
-		if test "x$eqidl_prefix" != "x" ; then
-			EQIDL="$eqidl_prefix/eqidl"
-		fi       
+    dnl -- Construct path to eqidl --
+    EQIDL=''
+    if test "x$eqidl_prefix" != "x" ; then
+        EQIDL="$eqidl_prefix/eqidl"
+    fi       
       
-		dnl -- Try to find eqidl program --
+    dnl -- Try to find eqidl program --
     AC_PATH_PROG(EQIDL, eqidl, no)
 
     dnl Do a sanity check to ensure that $EQIDL actually works.
@@ -94,11 +94,11 @@ AC_DEFUN(EQUIP_PATH,
     fi
 
     if test "$EQIDL" = "no" ; then
-    		echo "*** The eqidl program was not found."
-      	echo "*** Make sure to set --with-eqidl path"
-    		EQIDL=""
-				ifelse([$3], , :, [$3])
-   	fi
+        echo "*** The eqidl program was not found."
+        echo "*** Make sure to set --with-eqidl path"
+        EQIDL=""
+        ifelse([$3], , :, [$3])
+    fi
     
     AC_SUBST(EQIDL)
     AC_SUBST(EQ_LIBS)
