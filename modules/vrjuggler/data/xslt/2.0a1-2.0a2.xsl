@@ -196,12 +196,6 @@
       <xsl:copy-of select="vert_fov"/>
       <xsl:value-of select="$newline"/>
 
-      <!-- Add the hasSimPlugIn property and set it to true. -->
-      <xsl:element name="hasSimPlugin">
-        <xsl:text>true</xsl:text>
-      </xsl:element>
-      <xsl:value-of select="$newline"/>
-
       <!--
         Add the simPlugIn property and fill it in using the existing values
         from the old structure.
