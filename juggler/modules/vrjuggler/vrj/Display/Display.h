@@ -27,9 +27,11 @@ public:
    vjDisplay() : mUser(NULL), mDisplayChunk(NULL)
    {
       _xo = _yo = _xs = _ys = -1;
+      mType = vjDisplay::UNDEFINED;
+      mDisplayChunk = NULL;
    }
 
-   enum DisplayType { SURFACE, SIM};      // What type of display is it
+   enum DisplayType { UNDEFINED, SURFACE, SIM};      // What type of display is it
 
 public:
       //: Takes a display chunk and configures the display based one it.

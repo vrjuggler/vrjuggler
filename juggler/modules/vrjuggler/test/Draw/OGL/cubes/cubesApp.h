@@ -22,6 +22,9 @@
 
 #include <Kernel/vjUser.h>
 
+
+#include </home/users/allenb/Source/tools/abTimer.h>
+
 // Class to hold all context specific data
 class ContextData
 {
@@ -259,17 +262,25 @@ public:
 
        for(int i=0;i<mUserData.size();i++)
           mUserData[i]->updateNavigation();       // Update the navigation matrix
+
+       mDrawTimer.startTiming();
    }
 
    /// Function called after drawing has been triggered but BEFORE it completes
    virtual void postDraw()
    {
-       vjDEBUG(vjDBG_ALL,2) << "cubesApp::postDraw()" << endl << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_ALL,2) << "cubesApp::postDraw()" << endl << vjDEBUG_FLUSH;
    }
 
    /// Function called before updating trackers but after the frame is drawn
    virtual void postSync()
    {
+      mDrawTimer.stopTiming();
+      if((mDrawTimer.getTimeCount() % 60) == 0)
+      {
+         vjDEBUG(vjDBG_ALL,0) << "mDraw time: " << 1.0f/mDrawTimer.getTiming()  << " (per/sec)\n" << vjDEBUG_FLUSH;
+      }
+
       vjDEBUG(vjDBG_ALL,2) << "cubesApp::postSync" << endl << vjDEBUG_FLUSH;
    }
 
@@ -381,6 +392,20 @@ private:
 
 
    void drawbox(GLdouble x0, GLdouble x1, GLdouble y0, GLdouble y1,
+                GLdouble z0, GLdouble z1, GLenum type);
+public:
+   vjGlContextData<ContextData>  mDlData;       // Data for display lists
+   std::vector<UserData*>        mUserData;     // All the users in the program
+
+   abTimer                       mDrawTimer;    // Timing of the draw function
+};
+
+
+//////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
+
+
+void cubesApp::drawbox(GLdouble x0, GLdouble x1, GLdouble y0, GLdouble y1,
                 GLdouble z0, GLdouble z1, GLenum type)
    {
       static GLdouble n[6][3] = {
@@ -427,10 +452,5 @@ private:
          glEnd();
       }
    }
-
-public:
-   vjGlContextData<ContextData>  mDlData;       // Data for display lists
-   std::vector<UserData*>        mUserData;     // All the users in the program
-};
 
 #endif

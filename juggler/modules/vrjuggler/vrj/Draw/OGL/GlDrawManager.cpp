@@ -316,18 +316,10 @@ void vjGlDrawManager::drawProjections(vjSimDisplay* sim)
    {
       if(disps[i]->isSurface())
       {
-         //if(disps[i]->isSurface())
-         //{
-            vjSurfaceDisplay* surf_disp = dynamic_cast<vjSurfaceDisplay*>(disps[i]);
-            vjASSERT(surf_disp != NULL);
-            proj = surf_disp->getLeftProj();
-         //}
-         //else if (disps[i]->isSimulator())
-         //{
-         //   vjSimDisplay* sim_disp = dynamic_cast<vjSimDisplay*>(disps[i]);
-         //   vjASSERT(sim_disp != NULL);
-         //   proj = sim_disp->getCameraProj();
-         //}
+         // Get a pointer to the surface
+         vjSurfaceDisplay* surf_disp = dynamic_cast<vjSurfaceDisplay*>(disps[i]);
+         vjASSERT(surf_disp != NULL);
+         proj = surf_disp->getLeftProj();
 
          // Create color values that are unique
          // Basically count in binary (skipping 0), and use the first 3 digits.  That will give six colors
@@ -376,7 +368,7 @@ void vjGlDrawManager::drawSimulator(vjSimDisplay* sim)
    const float interoccular(0.27);
    const float eye_radius(0.08f);
 
-   glPushAttrib( GL_ENABLE_BIT | GL_COLOR_BUFFER_BIT | GL_LIGHTING_BIT );
+   glPushAttrib( GL_ENABLE_BIT | GL_COLOR_BUFFER_BIT | GL_LIGHTING_BIT);
    {
    	//-----------------set up materials....
    	float mat_ambient[] = {0.1, 0.1, 0.1, 1.0};
@@ -389,9 +381,11 @@ void vjGlDrawManager::drawSimulator(vjSimDisplay* sim)
    	glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
    	glMaterialfv(GL_FRONT, GL_DIFFUSE, mat_diffuse);
    	//----------------Enable Materials.....
-   	glColorMaterial(GL_FRONT_AND_BACK, GL_DIFFUSE);
+   	glColorMaterial(GL_FRONT_AND_BACK, GL_AMBIENT_AND_DIFFUSE);
    	glEnable(GL_COLOR_MATERIAL);
-	
+
+	   glDisable(GL_TEXTURE_2D);
+      glDisable(GL_TEXTURE_1D);
      // Draw the user's head
       glPushMatrix();
 	      glMultMatrixf(sim->getHeadPos().getFloatPtr());

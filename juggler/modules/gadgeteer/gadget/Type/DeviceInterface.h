@@ -18,19 +18,37 @@
 class vjDeviceInterface
 {
 public:
-   vjDeviceInterface() : mProxyIndex(-1)
-   {;}
+   vjDeviceInterface();
+
+   virtual ~vjDeviceInterface();
 
    //: Initialize the object
    //! ARGS: proxyName - String name of the proxy to connect to
    void init(std::string proxyName);
+
+   //: Refreshes the interface based on the current configuration
+   void refresh();
 
    //: Return the index of the proxy
    int getProxyIndex()
    {  return mProxyIndex; }
 
 protected:
-   int mProxyIndex;        //: The index of the proxy
+   int         mProxyIndex;         //: The index of the proxy
+   std::string mProxyName;          //: The name of the proxy (or alias) we are looking at
+
+
+public:
+   static void refreshAllDevices();
+
+private:    // Static information
+   /* We need to keep track of all the allocated device interfaces
+    * so we can update them when the system reconfigures itself
+    */
+   static void addDevInterface(vjDeviceInterface* dev);
+   static void removeDevInterface(vjDeviceInterface* dev);
+
+   static std::vector<vjDeviceInterface*> mAllocatedDevices;
 };
 
 #endif

@@ -62,6 +62,18 @@ public:
    ContextDataType* operator->()
    { return getPtrToCur(); }
 
+   //: This function gives exclusive access to ALL copies
+   //+  of the context specific data
+   //! NOTE: THIS CAN NOT BE USED IN A DRAW PROCESS
+   //+       OR VERY BAD THINGS WILL HAPPEN.
+   //+       only for EXPERT use
+   //+ Needed for casses where something must be done to each
+   //+ copy of the data during pre-draw.
+   std::vector<ContextDataType>* getDataVector()
+   {
+      return &mContextDataVector;
+   }
+
 protected:
    //: Return a ptr to the correct data element in the current context
    //! PRE: We are in the draw function
