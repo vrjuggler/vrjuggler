@@ -53,8 +53,8 @@ extern const float VJ_PI_2;
 //: PI * 0.25
 extern const float VJ_PI_4;
 
-//: default epsillon used by some juggler math routines...
-extern const float VJ_EPSILLON_DEFAULT;
+//: default epsilon used by some juggler math routines...
+extern const float VJ_EPSILON_DEFAULT;
 
 //: x-platform standard math routines.
 class vjMath 
@@ -306,21 +306,21 @@ public:
    
 // clampy clampy
 public:
-   // clamp a number to zero if lower than epsillon
-   // usage: zero_clamp( number )       /* use default VJ_EPSILLON_DEFAULT for epsillon */
-   //        zero_clamp( number, eps )  /* use eps for epsillon */
+   // clamp a number to zero if lower than epsilon
+   // usage: zero_clamp( number )       /* use default VJ_EPSILON_DEFAULT for epsilon */
+   //        zero_clamp( number, eps )  /* use eps for epsilon */
    template <class dataType>
-   inline static dataType zero_clamp( const dataType& number, const dataType& epsillon = VJ_EPSILLON_DEFAULT ) 
+   inline static dataType zero_clamp( const dataType& number, const dataType& epsilon = VJ_EPSILON_DEFAULT ) 
    {
-      return ( vjMath::abs( number ) < epsillon ) ? 0.0f : number;
+      return ( vjMath::abs( number ) < epsilon ) ? 0.0f : number;
    }
-   // is a number close to zero? (within specified epsillon)
-   // usage: isZero( number )       /* use default VJ_EPSILLON_DEFAULT for epsillon */
-   //        isZero( number, eps )  /* use eps for epsillon */
+   // is a number close to zero? (within specified epsilon)
+   // usage: isZero( number )       /* use default VJ_EPSILON_DEFAULT for epsilon */
+   //        isZero( number, eps )  /* use eps for epsilon */
    template <class dataType>
-   inline static bool isZero( const dataType& number, const dataType& epsillon = VJ_EPSILLON_DEFAULT ) 
+   inline static bool isZero( const dataType& number, const dataType& epsilon = VJ_EPSILON_DEFAULT ) 
    {
-      return vjMath::abs( number ) < epsillon;
+      return vjMath::abs( number ) < epsilon;
    }
 
    //: clamp a number to some value
