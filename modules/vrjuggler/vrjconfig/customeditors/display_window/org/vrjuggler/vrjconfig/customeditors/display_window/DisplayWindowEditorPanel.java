@@ -530,7 +530,7 @@ public class DisplayWindowEditorPanel
       {
          ConfigBrokerProxy broker = new ConfigBrokerProxy();
          ConfigDefinition window_def =
-            broker.getRepository().get(DISPLAY_WINDOW_TYPE);
+            broker.getRepository().get(INPUT_WINDOW_TYPE);
          ConfigElementFactory factory =
             new ConfigElementFactory(broker.getRepository().getAllLatest());
 
@@ -550,6 +550,9 @@ public class DisplayWindowEditorPanel
          elt.setProperty(ORIGIN_PROPERTY, 1, new Integer(bounds.y));
          elt.setProperty(SIZE_PROPERTY, 0, new Integer(bounds.width));
          elt.setProperty(SIZE_PROPERTY, 1, new Integer(bounds.height));
+         elt.setProperty(LOCK_KEY_PROPERTY, 0, dlg.getLockKey());
+         elt.setProperty(START_LOCKED_PROPERTY, 0, dlg.shouldStartLocked());
+         elt.setProperty(SLEEP_TIME_PROPERTY, 0, dlg.getSleepTime());
 
          broker.add(mContext, elt, dlg.getResource());
          addInputWindow(elt);
