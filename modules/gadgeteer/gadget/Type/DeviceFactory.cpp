@@ -112,7 +112,7 @@ void vjDeviceFactory::registerDevice(vjDeviceConstructorBase* constructor)
    vjASSERT(constructor != NULL);
    mConstructors.push_back(constructor);     // Add the constructor to the list
    vjDEBUG(vjDBG_INPUT_MGR,1) << "vjDeviceFactory::registerDevice: Device registered for: "
-              << constructor->getChunkType().c_str()
+              << constructor->getChunkType()
               << "   :" << (void*)constructor
               << " type:" << typeid(*constructor).name() << std::endl
               << vjDEBUG_FLUSH;
@@ -179,7 +179,7 @@ void vjDeviceFactory::debugDump()
       vjDeviceConstructorBase* dev_constr = mConstructors[cNum];
       vjDEBUG(vjDBG_INPUT_MGR,0) << cNum << ": Constructor:" << (void*)dev_constr
                  << "   type:" << typeid(*dev_constr).name() << "\n" << vjDEBUG_FLUSH;
-      vjDEBUG(vjDBG_INPUT_MGR,0) << "   recog:" << dev_constr->getChunkType().c_str() << "\n" << vjDEBUG_FLUSH;
+      vjDEBUG(vjDBG_INPUT_MGR,0) << "   recog:" << dev_constr->getChunkType() << "\n" << vjDEBUG_FLUSH;
    }
 
    vjDEBUG_END(vjDBG_INPUT_MGR,0) << "------ END DUMP ------\n" << vjDEBUG_FLUSH;

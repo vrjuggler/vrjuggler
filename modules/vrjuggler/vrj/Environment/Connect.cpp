@@ -47,6 +47,7 @@
 #include <Environment/vjTimedUpdate.h>
 //#include <Kernel/vjKernel.h>
 #include <Kernel/vjConfigManager.h>
+#include <Config/vjConfigTokens.h>
 
 
 vjConnect::vjConnect(vjSocket* s, const std::string& _name,
@@ -294,12 +295,12 @@ void vjConnect::writeControlLoop(void* nullParam) {
             break;
 
         commands_mutex.acquire();
-        
+
         while (!commands.empty()) {
             cmd = commands.front();
             commands.pop();
-            vjDEBUG (vjDBG_ENV_MGR, 5) << "calling EM command " 
-                                       << cmd->getName().c_str() 
+            vjDEBUG (vjDBG_ENV_MGR, 5) << "calling EM command "
+                                       << cmd->getName().c_str()
                                        <<vjDEBUG_FLUSH;
             cmd->call (*outstream);
             vjDEBUG (vjDBG_ENV_MGR, 5) << " -- done.\n" << vjDEBUG_FLUSH;
@@ -307,7 +308,7 @@ void vjConnect::writeControlLoop(void* nullParam) {
         }
 
         current_time.set();
-        
+
         while (!timed_commands.empty()) {
             cmd = timed_commands.top();
             if (current_time.usecs() < (cmd->next_fire_time * 1000))
@@ -319,7 +320,7 @@ void vjConnect::writeControlLoop(void* nullParam) {
         }
 
         commands_mutex.release();
-        
+
     } // end main loop
     vjDEBUG (vjDBG_ENV_MGR,5) << "vjConnect " << name.c_str() << " ending write loop.\n" << vjDEBUG_FLUSH;
     //write_connect_thread = NULL;
@@ -347,19 +348,19 @@ bool vjConnect::readCommand(std::istream& fin) {
                                << vjDEBUG_FLUSH;
     }
 
-    if (!strcasecmp (s, "get")) {
+    if (!strcasecmp (s, get_TOKEN)) {
         s = strtok (NULL, " \t\n");
-        if (!strcasecmp (s, "descriptions")) {
+        if (!strcasecmp (s, descriptions_TOKEN)) {
             vjChunkDescDB* db = vjChunkFactory::instance()->getChunkDescDB();
             vjDEBUG(vjDBG_ENV_MGR,4) << "vjConnect: Sending (requested) chunkdesc.\n" << vjDEBUG_FLUSH;
             vjDEBUG(vjDBG_ENV_MGR,5) << *db << std::endl << vjDEBUG_FLUSH;
             sendDescDB (db);
         }
-        else if (!strcasecmp (s,"chunks")) {
+        else if (!strcasecmp (s,chunks_TOKEN)) {
             vjConfigManager::instance()->lockActive();
             vjConfigChunkDB* db = new vjConfigChunkDB((*(vjConfigManager::instance()->getActiveConfig())));   // Make a copy
             vjConfigManager::instance()->unlockActive();
-            
+
             vjDEBUG(vjDBG_ENV_MGR,4) << "vjConnect: Sending (requested) chunkdb.\n" << vjDEBUG_FLUSH;
             vjDEBUG(vjDBG_ENV_MGR,5) << *db << std::endl << vjDEBUG_FLUSH;
             sendChunkDB (db, true);
@@ -371,7 +372,7 @@ bool vjConnect::readCommand(std::istream& fin) {
         }
     }
 
-    else if (!strcasecmp (s, "descriptions")) {
+    else if (!strcasecmp (s, descriptions_TOKEN)) {
         /* message contains one or more descriptions, to
          * be read in just like a ChunkDescDB.  If the
          * descriptions line itself contains the word
@@ -386,7 +387,7 @@ bool vjConnect::readCommand(std::istream& fin) {
         //fin >> *cachedDescdb;
     }
 
-    else if (!strcasecmp (s, "chunks")) {
+    else if (!strcasecmp (s, chunks_TOKEN)) {
         /* message contains one or more chunks.  If the
          * descriptions line contains "all", we should
          * clear the db first
@@ -396,7 +397,7 @@ bool vjConnect::readCommand(std::istream& fin) {
         //if (!strcasecmp (s, "all"))
         //   chunkdb->removeAll()
         vjDEBUG(vjDBG_ENV_MGR,1) << "vjConnect:: Read: chunks: Started\n" << vjDEBUG_FLUSH;
-        
+
         vjConfigChunkDB* newchunkdb = new vjConfigChunkDB;
         fin >> *newchunkdb;
         vjDEBUG(vjDBG_ENV_MGR,5) << *newchunkdb << std::endl << vjDEBUG_FLUSH;
@@ -405,26 +406,26 @@ bool vjConnect::readCommand(std::istream& fin) {
         vjConfigManager::instance()->addChunkDB(newchunkdb);    // Adds chunks to the pending list
         vjDEBUG(vjDBG_ENV_MGR,3) << "vjConnect: Added chunks to vjConfigManager pending list to add\n" << vjDEBUG_FLUSH;
     }
-    
-    else if (!strcasecmp (s, "remove")) {
+
+    else if (!strcasecmp (s, remove_TOKEN)) {
         s = strtok (NULL, " \t\n");
-        if (!strcasecmp (s, "descriptions")) {
+        if (!strcasecmp (s, descriptions_TOKEN)) {
             while ( (s = strtok (NULL, " \t\n")) ) {
                 // BUG! - what if chunks exist in db using the desc we're removing?
                 //cachedDescdb->remove(s);
                 vjDEBUG(vjDBG_ENV_MGR,3) << "EM Remove Descriptions disabled!\n" << vjDEBUG_FLUSH;
             }
         }
-        else if (!strcasecmp (s, "chunks")) {
+        else if (!strcasecmp (s, chunks_TOKEN)) {
             vjConfigChunkDB* remove_chunk_db = new vjConfigChunkDB();
-            
+
             vjDEBUG(vjDBG_ENV_MGR,5) << "vjConnect: Remove: chunks: Starting...\n"  << vjDEBUG_FLUSH;
-            
+
             fin >> *remove_chunk_db;       // Read in the chunks to remove
-            
+
             vjDEBUG(vjDBG_ENV_MGR,5) << *remove_chunk_db << std::endl
                                      << vjDEBUG_FLUSH;
-            
+
             // Tell config manager to remove the chunks
             vjConfigManager::instance()->removeChunkDB(remove_chunk_db);     // Add chunks to pending list as removes
             vjDEBUG(vjDBG_ENV_MGR,3) << "vjConnect: Remove chunks added to vjConfigManager pending list\n" << vjDEBUG_FLUSH;
