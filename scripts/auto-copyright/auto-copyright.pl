@@ -36,12 +36,12 @@ use RecurseDir;
 
 # get opts:
 use Getopt::Std;
-getopts('t:c:e:ha');
+getopts('d:t:c:e:ha');
 
 my $tags_file = "$opt_t";
 my $copyright_file = "$opt_c";
 my @extensions = split( /,/, "$opt_e" );
-
+my $working_dir = "$opt_d" || ".";
 
 
 
@@ -78,7 +78,7 @@ my(@copyright) = <COPYRIGHT>;
 close(COPYRIGHT);
 
 
-recurseDir(".");
+recurseDir( $working_dir );
 
 exit 0;
 
@@ -120,7 +120,7 @@ sub makeRegexSafe( $$ )
 }
 
 
-sub recurseFunc ($) {
+sub recurseFunc {
     my $filename = shift;
 
     return unless checkName("$filename");
