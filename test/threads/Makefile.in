@@ -30,7 +30,7 @@ VPATH		= @srcdir@
 # use -L/usr/lib64.
 EXTRA_LIBS	= @APP_EXTRA_LIBS_BEGIN@ @APP_EXTRA_LIBS_BASIC@ @APP_EXTRA_LIBS_GL@ @APP_EXTRA_LIBS_END@
 
-TEST_PROGS	= test stlTest testPool
+TEST_PROGS	= test stlTest testPool testSelfPerformance testTSD_Performance
 
 # -----------------------------------------------------------------------------
 # Targets.
@@ -47,6 +47,12 @@ stlTest: stlTest.@OBJ_FILE_SUFFIX@
 
 testPool: testPool.@OBJ_FILE_SUFFIX@
 	$(LINK) -o $@ testPool.@OBJ_FILE_SUFFIX@ $(VJ_LIBS) $(EXTRA_LIBS)
+	
+testSelfPerformance: testSelfPerformance.@OBJ_FILE_SUFFIX@
+	$(LINK) -o $@ testSelfPerformance.@OBJ_FILE_SUFFIX@ $(VJ_LIBS) $(EXTRA_LIBS)
+	
+testTSD_Performance: testTSD_Performance.@OBJ_FILE_SUFFIX@
+	$(LINK) -o $@ testTSD_Performance.@OBJ_FILE_SUFFIX@ $(VJ_LIBS) $(EXTRA_LIBS)		
 
 .cpp.@OBJ_FILE_SUFFIX@:
 	$(COMPILE) @OBJ_NAME_FLAG@ -c $<
