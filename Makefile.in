@@ -96,11 +96,16 @@ include ${MKPATH}/vj.lib.mk
 include ${MKPATH}/vj.rec.mk
 
 # -----------------------------------------------------------------------------
-# Build and installation directory naming information.
+# Build and installation directory naming and permission information.
 # -----------------------------------------------------------------------------
 _DEBUG_DIR	= debug
 _OPT_DIR	= opt
 _DEFAULT_DIR	= ${_DEBUG_DIR}
+
+_UMASK		= 002
+_FILE_PERMS	= 644
+_EXEC_PERMS	= 755
+_GROUP_NAME	= c2dev
 
 # ------------------------------------------------
 # Object file build and installation directories.
@@ -155,7 +160,8 @@ PF_LIB_DYNAMIC	= ${PF_LIBRARY}.@SHAREDLIB_EXT@
 # -----------------------------------------------------------------------------
 
 # Subdirectories used for recursion through the source tree.
-SUBDIRS		= Math Config Kernel Environment Performance Input SharedMem Sync Threads
+SUBDIRS		= Math Config Kernel Environment Performance Input	\
+                  SharedMem Sync Threads
 
 # Subdirectories used for recursion through the test source tree when
 # installing.
@@ -268,7 +274,7 @@ _build_dbg:
 	@echo "------------------------------------------------"
 	@echo "Building object files"
 	@echo "------------------------------------------------"
-	${MAKE} RECTARGET="dbg" OPTIMIZER="-g"			\
+	${MAKE} RECTARGET="dbg" OPTIMIZER="-g"				\
           BASE_OBJDIR="${_DBG_BUILDDIR}" recursive
 
 # Build the object files with the optimization flags enabled.
@@ -281,7 +287,7 @@ _build_opt:
 	@echo "------------------------------------------------"
 	@echo "Building object files"
 	@echo "------------------------------------------------"
-	${MAKE} RECTARGET="opt" OPTIMIZER="${OPT_FLAGS}"	\
+	${MAKE} RECTARGET="opt" OPTIMIZER="${OPT_FLAGS}"		\
           BASE_OBJDIR="${_OPT_BUILDDIR}" recursive
 
 # Build only the object files using the default values for ${OBJDIR}.
@@ -387,20 +393,20 @@ install-all: install-opt install-dso install-dbg install-ddso		\
 	@echo "------------------------------------------------"
 	@echo "Creating symlinks in ${_install_libdir}"
 	@echo "------------------------------------------------"
-	cd ${_install_libdir} && umask 002 &&				\
+	cd ${_install_libdir} && umask ${_UMASK} &&			\
           rm -f ${VJ_LIB_STATIC} && ln -s ${_DEFAULT_DIR}/${VJ_LIB_STATIC} ./
-	cd ${_install_libdir} && umask 002 &&				\
+	cd ${_install_libdir} && umask ${_UMASK} &&			\
           rm -f ${VJ_LIB_DYNAMIC} && ln -s ${_DEFAULT_DIR}/${VJ_LIB_DYNAMIC} ./
 ifeq (${GL_API}, Y)
-	cd ${_install_libdir} && umask 002 &&				\
+	cd ${_install_libdir} && umask ${_UMASK} &&			\
           rm -f ${GL_LIB_STATIC} && ln -s ${_DEFAULT_DIR}/${GL_LIB_STATIC} ./
-	cd ${_install_libdir} && umask 002 &&				\
+	cd ${_install_libdir} && umask ${_UMASK} &&			\
           rm -f ${GL_LIB_DYNAMIC} && ln -s ${_DEFAULT_DIR}/${GL_LIB_DYNAMIC} ./
 endif
 ifeq (${PF_API}, Y)
-	cd ${_install_libdir} && umask 002 &&				\
+	cd ${_install_libdir} && umask ${_UMASK} &&			\
           rm -f ${PF_LIB_STATIC} && ln -s ${_DEFAULT_DIR}/${PF_LIB_STATIC} ./
-	cd ${_install_libdir} && umask 002 &&				\
+	cd ${_install_libdir} && umask ${_UMASK} &&			\
           rm -f ${PF_LIB_DYNAMIC} && ln -s ${_DEFAULT_DIR}/${PF_LIB_DYNAMIC} ./
 endif
 	@echo "------------------------------------------------"
@@ -436,20 +442,20 @@ install-dbg: dbg
 	@echo "Installing static debugging libraries"
 	@echo "------------------------------------------------"
 	${scriptdir}/mkinstalldirs ${_install_libdir}/${_DEBUG_DIR}
-	${INSTALL} -m 644 -g c2dev ${_DBG_LIBDIR}/${VJ_LIB_STATIC}	\
-          ${_install_libdir}/${_DEBUG_DIR}/
-	cd ${libdir}${LIBBITSUF} && umask 002 &&			\
+	${INSTALL} -m ${_FILE_PERMS} -g ${_GROUP_NAME}			\
+          ${_DBG_LIBDIR}/${VJ_LIB_STATIC} ${_install_libdir}/${_DEBUG_DIR}/
+	cd ${libdir}${LIBBITSUF} && umask ${_UMASK} &&			\
           ln -sf ${_install_libdir}/${_DEBUG_DIR}/${VJ_LIB_STATIC} ./
 ifeq (${GL_API}, Y)
-	${INSTALL} -m 644 -g c2dev ${_DBG_LIBDIR}/${GL_LIB_STATIC}	\
-          ${_install_libdir}/${_DEBUG_DIR}/
-	cd ${libdir}${LIBBITSUF} && umask 002 &&			\
+	${INSTALL} -m ${_FILE_PERMS} -g ${_GROUP_NAME}			\
+          ${_DBG_LIBDIR}/${GL_LIB_STATIC} ${_install_libdir}/${_DEBUG_DIR}/
+	cd ${libdir}${LIBBITSUF} && umask ${_UMASK} &&			\
           ln -sf ${_install_libdir}/${_DEBUG_DIR}/${GL_LIB_STATIC} ./
 endif
 ifeq (${PF_API}, Y)
-	${INSTALL} -m 644 -g c2dev ${_DBG_LIBDIR}/${PF_LIB_STATIC}	\
-          ${_install_libdir}/${_DEBUG_DIR}/
-	cd ${libdir}${LIBBITSUF} && umask 002 &&			\
+	${INSTALL} -m ${_FILE_PERMS} -g ${_GROUP_NAME}			\
+          ${_DBG_LIBDIR}/${PF_LIB_STATIC} ${_install_libdir}/${_DEBUG_DIR}/
+	cd ${libdir}${LIBBITSUF} && umask ${_UMASK} &&			\
           ln -sf ${_install_libdir}/${_DEBUG_DIR}/${PF_LIB_STATIC} ./
 endif
 
@@ -458,20 +464,20 @@ install-ddso: ddso
 	@echo "Installing dynamic debugging libraries"
 	@echo "------------------------------------------------"
 	${scriptdir}/mkinstalldirs ${_install_libdir}/${_DEBUG_DIR}
-	${INSTALL} -m 755 -g c2dev ${_DBG_LIBDIR}/${VJ_LIB_DYNAMIC}	\
-          ${_install_libdir}/${_DEBUG_DIR}/
-	cd ${libdir}${LIBBITSUF} && umask 002 &&			\
+	${INSTALL} -m ${_EXEC_PERMS} -g ${_GROUP_NAME}			\
+          ${_DBG_LIBDIR}/${VJ_LIB_DYNAMIC} ${_install_libdir}/${_DEBUG_DIR}/
+	cd ${libdir}${LIBBITSUF} && umask ${_UMASK} &&			\
           ln -sf ${_install_libdir}/${_DEBUG_DIR}/${VJ_LIB_DYNAMIC} ./
 ifeq (${GL_API}, Y)
-	${INSTALL} -m 755 -g c2dev ${_DBG_LIBDIR}/${GL_LIB_DYNAMIC}	\
-          ${_install_libdir}/${_DEBUG_DIR}/
-	cd ${libdir}${LIBBITSUF} && umask 002 &&			\
+	${INSTALL} -m ${_EXEC_PERMS} -g ${_GROUP_NAME}			\
+          ${_DBG_LIBDIR}/${GL_LIB_DYNAMIC} ${_install_libdir}/${_DEBUG_DIR}/
+	cd ${libdir}${LIBBITSUF} && umask ${_UMASK} &&			\
           ln -sf ${_install_libdir}/${_DEBUG_DIR}/${GL_LIB_DYNAMIC} ./
 endif
 ifeq (${PF_API}, Y)
-	${INSTALL} -m 755 -g c2dev ${_DBG_LIBDIR}/${PF_LIB_DYNAMIC}	\
-          ${_install_libdir}/${_DEBUG_DIR}/
-	cd ${libdir}${LIBBITSUF} && umask 002 &&			\
+	${INSTALL} -m ${_EXEC_PERMS} -g ${_GROUP_NAME}			\
+          ${_DBG_LIBDIR}/${PF_LIB_DYNAMIC} ${_install_libdir}/${_DEBUG_DIR}/
+	cd ${libdir}${LIBBITSUF} && umask ${_UMASK} &&			\
           ln -sf ${_install_libdir}/${_DEBUG_DIR}/${PF_LIB_DYNAMIC} ./
 endif
 
@@ -480,20 +486,20 @@ install-opt: opt
 	@echo "Installing static optimized libraries"
 	@echo "------------------------------------------------"
 	${scriptdir}/mkinstalldirs ${_install_libdir}/${_OPT_DIR}
-	${INSTALL} -m 644 -g c2dev ${_OPT_LIBDIR}/${VJ_LIB_STATIC}	\
-          ${_install_libdir}/${_OPT_DIR}/
-	cd ${libdir}${LIBBITSUF} && umask 002 &&			\
+	${INSTALL} -m ${_FILE_PERMS} -g ${_GROUP_NAME}			\
+          ${_OPT_LIBDIR}/${VJ_LIB_STATIC} ${_install_libdir}/${_OPT_DIR}/
+	cd ${libdir}${LIBBITSUF} && umask ${_UMASK} &&			\
           ln -sf ${_install_libdir}/${_OPT_DIR}/${VJ_LIB_STATIC} ./
 ifeq (${GL_API}, Y)
-	${INSTALL} -m 644 -g c2dev ${_OPT_LIBDIR}/${GL_LIB_STATIC}	\
-          ${_install_libdir}/${_OPT_DIR}/
-	cd ${libdir}${LIBBITSUF} && umask 002 &&			\
+	${INSTALL} -m ${_FILE_PERMS} -g ${_GROUP_NAME}			\
+          ${_OPT_LIBDIR}/${GL_LIB_STATIC} ${_install_libdir}/${_OPT_DIR}/
+	cd ${libdir}${LIBBITSUF} && umask ${_UMASK} &&			\
           ln -sf ${_install_libdir}/${_OPT_DIR}/${GL_LIB_STATIC} ./
 endif
 ifeq (${PF_API}, Y)
-	${INSTALL} -m 644 -g c2dev ${_OPT_LIBDIR}/${PF_LIB_STATIC}	\
-          ${_install_libdir}/${_OPT_DIR}/
-	cd ${libdir}${LIBBITSUF} && umask 002 &&			\
+	${INSTALL} -m ${_FILE_PERMS} -g ${_GROUP_NAME}			\
+          ${_OPT_LIBDIR}/${PF_LIB_STATIC} ${_install_libdir}/${_OPT_DIR}/
+	cd ${libdir}${LIBBITSUF} && umask ${_UMASK} &&			\
           ln -sf ${_install_libdir}/${_OPT_DIR}/${PF_LIB_STATIC} ./
 endif
 
@@ -502,20 +508,20 @@ install-dso: dso
 	@echo "Installing dynamic optimizied libraries"
 	@echo "------------------------------------------------"
 	${scriptdir}/mkinstalldirs ${_install_libdir}/${_OPT_DIR}
-	${INSTALL} -m 755 -g c2dev ${_OPT_LIBDIR}/${VJ_LIB_DYNAMIC}	\
-          ${_install_libdir}/${_OPT_DIR}/
-	cd ${libdir}${LIBBITSUF} && umask 002 &&			\
+	${INSTALL} -m ${_EXEC_PERMS} -g ${_GROUP_NAME}			\
+          ${_OPT_LIBDIR}/${VJ_LIB_DYNAMIC} ${_install_libdir}/${_OPT_DIR}/
+	cd ${libdir}${LIBBITSUF} && umask ${_UMASK} &&			\
           ln -sf ${_install_libdir}/${_OPT_DIR}/${VJ_LIB_DYNAMIC} ./
 ifeq (${GL_API}, Y)
-	${INSTALL} -m 755 -g c2dev ${_OPT_LIBDIR}/${GL_LIB_DYNAMIC}	\
-          ${_install_libdir}/${_OPT_DIR}/
-	cd ${libdir}${LIBBITSUF} && umask 002 &&			\
+	${INSTALL} -m ${_EXEC_PERMS} -g ${_GROUP_NAME}			\
+          ${_OPT_LIBDIR}/${GL_LIB_DYNAMIC} ${_install_libdir}/${_OPT_DIR}/
+	cd ${libdir}${LIBBITSUF} && umask ${_UMASK} &&			\
           ln -sf ${_install_libdir}/${_OPT_DIR}/${GL_LIB_DYNAMIC} ./
 endif
 ifeq (${PF_API}, Y)
-	${INSTALL} -m 755 -g c2dev ${_OPT_LIBDIR}/${PF_LIB_DYNAMIC}	\
-          ${_install_libdir}/${_OPT_DIR}/
-	cd ${libdir}${LIBBITSUF} && umask 002 &&			\
+	${INSTALL} -m ${_EXEC_PERMS} -g ${_GROUP_NAME}			\
+          ${_OPT_LIBDIR}/${PF_LIB_DYNAMIC} ${_install_libdir}/${_OPT_DIR}/
+	cd ${libdir}${LIBBITSUF} && umask ${_UMASK} &&			\
           ln -sf ${_install_libdir}/${_OPT_DIR}/${PF_LIB_DYNAMIC} ./
 endif
 
@@ -524,20 +530,23 @@ install-headers:
 	@echo "Installing header files"
 	@echo "------------------------------------------------"
 	${MAKE} RECTARGET="install" recursive
-	${INSTALL} -m 644 -g c2dev ${VJROOT_ABS}/vjConfig.h ${includedir}
-	${INSTALL} -m 644 -g c2dev ${topdir}/vjDefines.h ${includedir}
+	${INSTALL} -m ${_FILE_PERMS} -g ${_GROUP_NAME}			\
+          ${VJROOT_ABS}/vjConfig.h ${includedir}
+	${INSTALL} -m ${_FILE_PERMS} -g ${_GROUP_NAME}			\
+          ${topdir}/vjDefines.h ${includedir}
 
 install-test:
 	@echo "------------------------------------------------"
 	@echo "Installing test programs"
 	@echo "------------------------------------------------"
-	${scriptdir}/install-src.pl -i ${top_srcdir}/test -m 644	\
-          -g c2dev -o ${prefix}/test
+	${scriptdir}/install-src.pl -i ${top_srcdir}/test		\
+          -m ${_FILE_PERMS} -g ${_GROUP_NAME} -o ${prefix}/test
 	${scriptdir}/makefiles-gen.pl --CXX="${CXX}" --DEFS="${DEFS}"	\
           --CPPFLAGS="${CPPFLAGS}" --CXXFLAGS="${CXXFLAGS}" 		\
           --INCLUDES="@INCLUDES@" --startdir="${top_srcdir}/test" 	\
-          --SUBDIRS="${TEST_SUBDIRS}" --mode="644" --gname="c2dev"	\
-          --srcdir="." --prefix="${prefix}/test"			\
+          --SUBDIRS="${TEST_SUBDIRS}" --mode="${_FILE_PERMS}"		\
+          --gname="${_GROUP_NAME}" --srcdir="."				\
+          --prefix="${prefix}/test"					\
           --TEST_VJ_LIBS_BASIC='@TEST_VJ_LIBS_BASIC_SUBST@'		\
           --TEST_VJ_LIBS_GL='@TEST_VJ_LIBS_GL@'				\
           --TEST_VJ_LIBS_PF='@TEST_VJ_LIBS_PF@'				\
@@ -550,8 +559,8 @@ install-data:
 	@echo "------------------------------------------------"
 	@echo "Installing standard data files"
 	@echo "------------------------------------------------"
-	${scriptdir}/install-dir.pl -i ${top_srcdir}/Data -m 644 	\
-          -g c2dev -o ${prefix}/Data
+	${scriptdir}/install-dir.pl -i ${top_srcdir}/Data		\
+          -m ${_FILE_PERMS} -g ${_GROUP_NAME} -o ${prefix}/Data
 
 install-gui: _check_gui
 ifeq (@BUILD_GUI@, yes)
@@ -559,9 +568,10 @@ ifeq (@BUILD_GUI@, yes)
 	@echo "Installing vjConfig"
 	@echo "------------------------------------------------"
 	${scriptdir}/mkinstalldirs ${bindir}
-	${INSTALL} -m 644 -g c2dev ${topdir}/GUI/VjCfg.jar ${bindir}
-	${INSTALL} -m 755 -g c2dev ${VJROOT_ABS}/GUI/editconfig		\
-          ${bindir}/vjConfig
+	${INSTALL} -m ${_FILE_PERMS} -g ${_GROUP_NAME}			\
+          ${topdir}/GUI/VjCfg.jar ${bindir}
+	${INSTALL} -m ${_EXEC_PERMS} -g ${_GROUP_NAME}			\
+          ${VJROOT_ABS}/GUI/editconfig ${bindir}/vjConfig
 else
 	@echo "------------------------------------------------"
 	@echo "Skipping installation of vjConfig (not built)"
