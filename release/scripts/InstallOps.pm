@@ -195,7 +195,6 @@ sub replaceTags ($%) {
     my(%VARS) = @_;
 
     my $count = 0;
-    my $tag;
 
     my $progname = (fileparse("$0"))[0];
     my $outfile;
@@ -206,32 +205,42 @@ sub replaceTags ($%) {
 	$outfile = "/tmp/$progname.$$";
     }
 
-    foreach $tag ( keys(%VARS) ) {
-	if ( ! open(INPUT, "$infile") ) {
-	    warn "WARNING: Cannot read from $infile: $!\n";
-	    return -1;
-	}
-
-	if ( ! open(OUTPUT, "> $outfile") ) {
-	    warn "WARNING: Cannot create $outfile: $!\n";
-	    close(INPUT) or warn "WARNING: Cannot close $infile: $!\n";
-	    return -1;
-	}
-
-	my $line;
-
-	while ( $line = <INPUT> ) {
-	    $count++ if $line =~ /\@$tag\@/;
-	    $line =~ s/\@$tag\@/$VARS{"$tag"}/g;
-	    print OUTPUT "$line";
-	}
-
-	close(OUTPUT) or warn "WARNING: Cannot save $outfile: $!\n";
-	close(INPUT) or warn "WARNING: Cannot close $infile: $!\n";
-
-	copy("$outfile", "$infile");
+    # Open the input file, read its contents into @input_file and close it.
+    # Once it is in the array, we no longer need to worry about it.
+    if ( ! open(INPUT, "$infile") ) {
+	warn "WARNING: Cannot read from $infile: $!\n";
+	return -1;
     }
 
+    my(@input_file) = <INPUT>;
+    close(INPUT) or warn "WARNING: Cannot close $infile: $!\n";
+
+    # Loop over all the lines in @input_array and replace occurrences of the
+    # tags (the keys of %VARS) with the corresponding values.
+    my $line;
+    foreach $line ( @input_file ) {
+	my $tag;
+	foreach $tag ( keys(%VARS) ) {
+	    $count++ if $line =~ /\@$tag\@/;
+	    $line =~ s/\@$tag\@/$VARS{"$tag"}/g;
+	}
+    }
+
+    # Create the output file.
+    if ( ! open(OUTPUT, "> $outfile") ) {
+	warn "WARNING: Cannot create $outfile: $!\n";
+	return -1;
+    }
+
+    # Now generate the new output file using the contents of @input_file with
+    # all @..@ (that can be substituted) replaced.
+    foreach ( @input_file ) {
+	print OUTPUT;
+    }
+
+    close(OUTPUT) or warn "WARNING: Cannot save $outfile: $!\n";
+
+    copy("$outfile", "$infile");
     unlink("$outfile");
 
     return $count;
