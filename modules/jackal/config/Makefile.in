@@ -59,7 +59,8 @@ ifeq ($(BUILD_PROF_CXX), Y)
 endif
 endif
 
-beandir=		$(bindir)/beans
+beandir=		$(projdatadir)/beans
+javadir=		$(projdatadir)/java
 srcdir=			@srcdir@
 top_srcdir=		@top_srcdir@
 INSTALL=		@INSTALL@
@@ -169,11 +170,12 @@ config-install:
 	@echo "------------------------------------------------"
 	@echo "Installing the JCCL config Java code base"
 	@echo "------------------------------------------------"
+	$(MTREE_CMD) -Ude -f $(mtreedir)/JCCL.java.dist -p $(projdatadir)
 ifneq ($(JARS), )
 	for jar in $(JARS) ; \
           do \
               $(INSTALL) -m $(FILE_PERMS) $(GROUP_OPT_UNIX) \
-                $(EXTRA_INSTALL_ARGS) $(topdir)/config/$$jar $(bindir) \
+                $(EXTRA_INSTALL_ARGS) $(topdir)/config/$$jar $(javadir) \
               || exit 1; \
           done
 endif
