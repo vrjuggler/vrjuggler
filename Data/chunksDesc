@@ -316,5 +316,7 @@ chunk Isense "Isense" "Intersense Tracking Devices"
   script String 1 "Script File" "File path of script sent to the tracker on startup."
   min Float 1 "min" "the actual analog data values range - lower bound"
   max Float 1 "max" "the actual analog data values range - upper bound"
+  vjUnits Int 1 "Juggler Units" vj_enumeration { "Inches=0" "Feet" "Centimeters" "Meters" } ""
+  isUnits Int 1 "Intersense Units" vj_enumeration { "Inches=0" "Feet" "Centimeters" "Meters" } ""
   end
 End
