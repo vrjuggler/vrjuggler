@@ -531,12 +531,13 @@ install-test:
 	@echo "------------------------------------------------"
 	@echo "Installing test programs"
 	@echo "------------------------------------------------"
-	${scriptdir}/install-src.pl -i ${top_srcdir}/test -o ${prefix}/test
+	${scriptdir}/install-src.pl -i ${top_srcdir}/test -m 644	\
+          -g c2dev -o ${prefix}/test
 	${scriptdir}/makefiles-gen.pl --CXX="${CXX}" --DEFS="${DEFS}"	\
           --CPPFLAGS="${CPPFLAGS}" --CXXFLAGS="${CXXFLAGS}" 		\
           --INCLUDES="@INCLUDES@" --startdir="${top_srcdir}/test" 	\
-          --SUBDIRS="${TEST_SUBDIRS}" --srcdir="."			\
-          --prefix="${prefix}/test"					\
+          --SUBDIRS="${TEST_SUBDIRS}" --mode="644" --gname="c2dev"	\
+          --srcdir="." --prefix="${prefix}/test"			\
           --TEST_VJ_LIBS_BASIC='@TEST_VJ_LIBS_BASIC_SUBST@'		\
           --TEST_VJ_LIBS_GL='@TEST_VJ_LIBS_GL@'				\
           --TEST_VJ_LIBS_PF='@TEST_VJ_LIBS_PF@'				\
@@ -549,7 +550,8 @@ install-data:
 	@echo "------------------------------------------------"
 	@echo "Installing standard data files"
 	@echo "------------------------------------------------"
-	${scriptdir}/install-dir.pl -i ${top_srcdir}/Data -o ${prefix}/Data
+	${scriptdir}/install-dir.pl -i ${top_srcdir}/Data -m 644 	\
+          -g c2dev -o ${prefix}/Data
 
 install-gui: _check_gui
 ifeq (@BUILD_GUI@, yes)
