@@ -40,8 +40,6 @@
 #include <math.h>
 #include <string.h>
 
-#include <Math/vjVec3.h>
-
 class vjQuat;
 class vjVec3;
 class vjCoord;

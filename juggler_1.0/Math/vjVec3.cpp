@@ -31,9 +31,11 @@
  * -----------------------------------------------------------------
  */
 
-
 #include <vjConfig.h>
 #include <Math/vjVec3.h>
+#include <Math/vjMatrix.h>
+#include <Math/vjVec4.h>
+
 
 void vjVec3::xformFull(const vjMatrix& _m, const vjVec3& _v)
 {

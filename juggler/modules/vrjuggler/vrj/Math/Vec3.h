@@ -39,9 +39,7 @@
 #include <vjConfig.h>
 #include <math.h>
 
-#include <Math/vjMatrix.h>
 class vjMatrix;
-#include <Math/vjVec4.h>
 
 //----------------------------------------------------------------
 //: Vector of length 3
