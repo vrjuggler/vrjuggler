@@ -139,12 +139,12 @@ public class PropertySheetFactory extends PropertyComponent
    }
 
    public PropertySheet makeVarSheet(ConfigElement elm, ConfigContext ctx,
-                                     PropertyDefinition prop_def, Color color)
+                                     PropertyDefinition propDef, Color color)
    {
       PropertySheet sheet = new PropertySheet();
 
       System.out.println("Variable Property List.");
-      List props = elm.getPropertyValues(prop_def.getToken());
+      List props = elm.getPropertyValues(propDef.getToken());
 
       sheet.setConfigElement(elm);
       sheet.setColor(color);
@@ -164,7 +164,7 @@ public class PropertySheetFactory extends PropertyComponent
       JButton add_button = new JButton();
 
       // If we have a variable list then create the buttons to add new values.
-      if(prop_def.isVariable())
+      if(propDef.isVariable())
       {
          add_button.setIcon(add_icon);
          add_button.setMargin(new Insets(0,0,0,0));
@@ -173,7 +173,7 @@ public class PropertySheetFactory extends PropertyComponent
          add_button.setContentAreaFilled(false);
 
          final ConfigElement temp_elm = elm;
-         final PropertyDefinition temp_prop_def = prop_def;
+         final PropertyDefinition temp_prop_def = propDef;
 
          add_button.addActionListener(new ActionListener()
          {
@@ -204,24 +204,24 @@ public class PropertySheetFactory extends PropertyComponent
          if(value.getClass() == ConfigElement.class)
          {
             // Embedded Element.
-            addEmbeddedElement(sheet, ctx, elm, value, prop_def, row);
+            addEmbeddedElement(sheet, ctx, elm, value, propDef, row);
          }
          else // List of normal values.
          {
             String label = null;
             // If it is variable then there will only be one label for the
             // property. Otherwise there will be one for each value.
-            if(prop_def.isVariable())
+            if(propDef.isVariable())
             {
-               label = prop_def.getPropertyValueDefinition(0).getLabel();
+               label = propDef.getPropertyValueDefinition(0).getLabel();
             }
             else
             {
                label =
-                  prop_def.getPropertyValueDefinition(list_number).getLabel();
+                  propDef.getPropertyValueDefinition(list_number).getLabel();
             }
 
-            addNormalEditor(sheet, ctx, elm, value, prop_def, label, row,
+            addNormalEditor(sheet, ctx, elm, value, propDef, label, row,
                             list_number);
             ++list_number;
          }
@@ -236,7 +236,7 @@ public class PropertySheetFactory extends PropertyComponent
     * it will remove the property from the ConfigElement.
     */
    private void addDeleteButton(PropertySheet sheet, ConfigElement elm,
-                                PropertyDefinition prop_def, Object value,
+                                PropertyDefinition propDef, Object value,
                                 int row)
    {
       ClassLoader loader = getClass().getClassLoader();
@@ -251,12 +251,12 @@ public class PropertySheetFactory extends PropertyComponent
       remove_button.setContentAreaFilled(false);
 
       // Verify that the property is variable.
-      if(prop_def.isVariable())
+      if(propDef.isVariable())
       {
          remove_button.setEnabled(true);
 
          final Object temp_value = value;
-         final String temp_string = prop_def.getToken();
+         final String temp_string = propDef.getToken();
          final ConfigElement temp_elm = elm;
 
          remove_button.addActionListener(new ActionListener()
@@ -295,11 +295,11 @@ public class PropertySheetFactory extends PropertyComponent
    }
 
    private void addVarList(PropertySheet sheet, ConfigContext ctx,
-                           ConfigElement elm, PropertyDefinition prop_def,
+                           ConfigElement elm, PropertyDefinition propDef,
                            int row)
    {
       // Use the same color for the list panel.
-      VarListPanel editor_list = new VarListPanel(ctx, elm, prop_def,
+      VarListPanel editor_list = new VarListPanel(ctx, elm, propDef,
                                                   sheet.getColor());
 
       ((TableLayout)sheet.getLayout()).insertRow(row, TableLayout.PREFERRED);
@@ -315,12 +315,12 @@ public class PropertySheetFactory extends PropertyComponent
 
    public void addNormalEditor(PropertySheet sheet, ConfigContext ctx,
                                ConfigElement elm, Object value,
-                               PropertyDefinition prop_def, String label,
-                               int row, int list_num)
+                               PropertyDefinition propDef, String label,
+                               int row, int listNum)
    {
       PropertyEditorPanel editor = new PropertyEditorPanel(ctx, value,
-                                                           prop_def, elm,
-                                                           list_num,
+                                                           propDef, elm,
+                                                           listNum,
                                                            sheet.getColor());
 
       ((TableLayout)sheet.getLayout()).insertRow(row, TableLayout.PREFERRED);
@@ -332,7 +332,7 @@ public class PropertySheetFactory extends PropertyComponent
       sheet.add(editor, c);
       sheet.add(new JLabel(label), "0," + Integer.toString(row) + ",F,F");
 
-      addDeleteButton(sheet, elm, prop_def, value, row);
+      addDeleteButton(sheet, elm, propDef, value, row);
 
       revalidate();
       repaint();
@@ -340,7 +340,7 @@ public class PropertySheetFactory extends PropertyComponent
 
    public void addEmbeddedElement(PropertySheet sheet, ConfigContext ctx,
                                   ConfigElement elm, Object value,
-                                  PropertyDefinition prop_def, int row)
+                                  PropertyDefinition propDef, int row)
    {
       // Embedded Element
       // Adding a List
@@ -355,18 +355,18 @@ public class PropertySheetFactory extends PropertyComponent
                                                             TableLayout.FULL);
       sheet.add(editor_list, c);
 
-      addDeleteButton(sheet, elm, prop_def, value, row);
+      addDeleteButton(sheet, elm, propDef, value, row);
 
       revalidate();
       repaint();
    }
 
    private void addNewNormalEditor(ConfigElement elm,
-                                   PropertyDefinition prop_def)
+                                   PropertyDefinition propDef)
    {
       // We know that we want the default value for the first
       // PropertyValueDefinition since this is a variable list.
-      PropertyValueDefinition pvd = prop_def.getPropertyValueDefinition(0);
+      PropertyValueDefinition pvd = propDef.getPropertyValueDefinition(0);
       Object default_value = null;
 
       // NOTE: This fixed a rather large bug that caused
@@ -374,7 +374,7 @@ public class PropertySheetFactory extends PropertyComponent
       //       edit the same ConfigElementPointer.  By default the
       //       PropertyValueDefinition returns a default value that is always
       //       the same, bad idea.
-      if (prop_def.getType() == ConfigElementPointer.class)
+      if (propDef.getType() == ConfigElementPointer.class)
       {
          default_value = new ConfigElementPointer("");
       }
@@ -383,21 +383,21 @@ public class PropertySheetFactory extends PropertyComponent
          default_value = pvd.getDefaultValue();
       }
 
-      elm.addProperty(prop_def.getToken(), default_value);
+      elm.addProperty(propDef.getToken(), default_value);
 
       //XXX: This should be detected through a listener in the Property sheet.
       // We select 2 here because we want to add it to the top of the list.
-      //addNormalEditor(default_value, prop_def, pvd.getLabel(), 2,
-      //      elm.getPropertyValueCount(prop_def.getToken()) - 1);
+      //addNormalEditor(default_value, propDef, pvd.getLabel(), 2,
+      //                elm.getPropertyValueCount(propDef.getToken()) - 1);
    }
 
    private void addNewEmbeddedElement(ConfigElement elm,
-                                      PropertyDefinition prop_def)
+                                      PropertyDefinition propDef)
    {
       Object new_value = null;
 
       // Pick which type of embedded element to add
-      List string_allowed_types = prop_def.getAllowedAndDerivedTypes();
+      List string_allowed_types = propDef.getAllowedAndDerivedTypes();
       List allowed_types = new ArrayList();
 
       ConfigBroker broker = new ConfigBrokerProxy();
@@ -431,11 +431,11 @@ public class PropertySheetFactory extends PropertyComponent
          new_value = temp_factory.create("CHANGEME",
                                          chooser.getSelectedDefinition());
 
-         elm.addProperty(prop_def.getToken(), new_value);
+         elm.addProperty(propDef.getToken(), new_value);
          // XXX: This should be detected through a listener in the Property
          // sheet.  We select 2 here because we want to add it to the top of
          // the list.
-         //addEmbeddedElement(new_value, prop_def, 2);
+         //addEmbeddedElement(new_value, propDef, 2);
       }
    }
 }
