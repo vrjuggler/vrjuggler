@@ -59,17 +59,17 @@ void Viewport::config(jccl::ConfigChunkPtr chunk)
    // NOTE: If there are errors, set them to some default value
    if(sizeX <= 0)
    {
-      vprDEBUG(vrjDBG_DISP_MGR,2) << "WARNING: viewport sizeX set to: " << sizeX
-                                << ".  Setting to 1." << std::endl
-                                << vprDEBUG_FLUSH;
+      vprDEBUG(vrjDBG_DISP_MGR, vprDBG_WARNING_LVL)
+         << "WARNING: viewport sizeX set to: " << sizeX
+         << ".  Setting to 1." << std::endl << vprDEBUG_FLUSH;
       sizeX = 1.0f;
    }
 
    if(sizeY <= 0)
    {
-      vprDEBUG(vrjDBG_DISP_MGR,2) << "WARNING: viewport sizeY set to: " << sizeY
-                                << ".  Setting to 1." << std::endl
-                                << vprDEBUG_FLUSH;
+      vprDEBUG(vrjDBG_DISP_MGR, vprDBG_WARNING_LVL)
+         << "WARNING: viewport sizeY set to: " << sizeY
+         << ".  Setting to 1." << std::endl << vprDEBUG_FLUSH;
       sizeY = 1.0f;
    }
 

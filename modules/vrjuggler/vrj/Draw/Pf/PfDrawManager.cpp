@@ -498,9 +498,10 @@ void PfDrawManager::addDisplay(Display* disp)
    mDisplays.push_back(pf_disp);
 
    // Dump the state
-   vprDEBUG(vrjDBG_DRAW_MGR, 1) << "Reconfiged the pfDrawManager.\n" << vprDEBUG_FLUSH;
-   //vprDEBUG(vrjDBG_DRAW_MGR, 1) << (*this) << vprDEBUG_FLUSH;
-   debugDump(1);
+   vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CONFIG_LVL)
+      << "Reconfiged the pfDrawManager.\n" << vprDEBUG_FLUSH;
+   //vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_CONFIG_LVL) << (*this) << vprDEBUG_FLUSH;
+   debugDump(vprDBG_CONFIG_LVL);
 }
 
 
@@ -1198,9 +1199,9 @@ void PfPipeSwapFunc(pfPipe *p, pfPipeWindow *pw)
     vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_VERB_LVL) << "--- PfPipeSwapFunc: pipe:" << pf_draw_mgr << " -- pw:" << pw << "\n" << vprDEBUG_FLUSH;
 
     // Barrier for Cluster
-    //vprDEBUG(vprDBG_ALL,1) <<  "BARRIER: Going to sleep for: " << num << std::endl << vprDEBUG_FLUSH;
+    //vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL) <<  "BARRIER: Going to sleep for: " << num << std::endl << vprDEBUG_FLUSH;
    cluster::ClusterManager::instance()->createBarrier();
-    //vprDEBUG(vprDBG_ALL,1) <<  "BARRIER: IS DONE" << std::endl << vprDEBUG_FLUSH;
+    //vprDEBUG(vprDBG_ALL, vprDBG_STATE_LVL) <<  "BARRIER: IS DONE" << std::endl << vprDEBUG_FLUSH;
 
     pw->swapBuffers();
 }

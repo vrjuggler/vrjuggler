@@ -93,7 +93,8 @@ void GlWindowOSX::swapBuffers() {
 }
 
 int GlWindowOSX::open() {
-    vprDEBUG(vrjDBG_DRAW_MGR,2) << "vjGlWindowOSX::open()" << std::endl << vprDEBUG_FLUSH;
+    vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_STATE_LVL)
+       << "vrj::GlWindowOSX::open()" << std::endl << vprDEBUG_FLUSH;
 
     GDHandle hGDWindow;
 
@@ -170,7 +171,8 @@ int GlWindowOSX::open() {
 }
 
 int GlWindowOSX::close() {
-    vprDEBUG(vrjDBG_DRAW_MGR,2) << "vjGlWindowOSX::close()" << std::endl << vprDEBUG_FLUSH;
+    vprDEBUG(vrjDBG_DRAW_MGR, vprDBG_STATE_LVL)
+       << "vrj::GlWindowOSX::close()" << std::endl << vprDEBUG_FLUSH;
     if(!gpWindow) return false;
 
     DestroyGLFromWindow (&aglContext, &glInfo);
@@ -695,5 +697,4 @@ int GlWindowOSX::startSampling()
     return 1;
 }
 
-
-};
+}

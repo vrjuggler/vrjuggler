@@ -82,12 +82,12 @@ int pfSoundNode::app(pfTraverser *trav)
 
       pfCoord coord;
       matrix.getOrthoCoord( &coord );
-      
+
       // set my sound's position.
       pfVec3 pf_soundPosition = coord.xyz;
       gmtl::Vec3f soundPosition = vrj::GetVjVec( pf_soundPosition );
       sonix::instance()->setPosition( mSound, soundPosition[0], soundPosition[1], soundPosition[2] );
-      
+
       // Engine's update should be called by the app's frame process,
       // or in juggler's manager (not both, of course)...
 
@@ -112,9 +112,11 @@ int pfSoundNode::app(pfTraverser *trav)
 // this class must then call setType(classType_).
 pfType* pfSoundNode::classType = NULL;
 
-void pfSoundNode::init(void)
+void pfSoundNode::init()
 {
-   vprDEBUG(vprDBG_ALL,1)<<"[pfSoundNode] Registering sound node with performer.\n"<<vprDEBUG_FLUSH;
+   vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_LVL)
+      << "[pfSoundNode] Registering sound node with performer.\n"
+      << vprDEBUG_FLUSH;
 
    if (classType == NULL)
    {
