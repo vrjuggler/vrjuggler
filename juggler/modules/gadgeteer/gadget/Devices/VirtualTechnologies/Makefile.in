@@ -35,9 +35,9 @@ ifneq (@OS_TYPE@, Win32)
 VJGLOVE_SRCS	+= CyberGloveBasic.cpp		\
                    vjCyberGlove.cpp		\
                    fsPinchGlove.cpp		\
-                   vjPinchGlove.cpp    \
+                   vjPinchGlove.cpp		\
                    vt_glove.cpp			\
-				   vt_error.cpp			\
+                   vt_error.cpp			\
                    vt_init.cpp			\
                    vt_math3d.cpp		\
                    vt_read_hand_model.cpp	\
@@ -47,7 +47,7 @@ VJGLOVE_SRCS	+= CyberGloveBasic.cpp		\
                    vt_virtual_hand.cpp
 endif
 
-VJGLOVE_OBJECTS := ${addprefix ${OBJDIR}/,${VJGLOVE_SRCS:.cpp=.${OBJ_FILE_SUFFIX}}}
+VJGLOVE_OBJECTS	:= ${addprefix ${OBJDIR}/,${VJGLOVE_SRCS:.cpp=.${OBJ_FILE_SUFFIX}}}
 DEPEND_FILES	:= ${VJGLOVE_SRCS:.cpp=.d}
 
 # -----------------------------------------------------------------------------
