@@ -98,9 +98,10 @@ VPR_PROF_LIB_STATIC	= $(VPR_LIBRARY)$(PROFLIB_EXT).$(STATICLIB_EXT)
 VPR_PROF_LIB_DYNAMIC	= $(VPR_LIBRARY)$(PROFLIB_EXT).$(DYNAMICLIB_EXT)
 
 # Version information.
+PARAM_HEADER	= vpr/vprParam.h
 BRANCH		= HEAD
 VER_ARGS	= -f $(VPRROOT_ABS)/VERSION -s @SUBSYSTEM@ -b $(BRANCH)	\
-                  -i $(VPRROOT_ABS)/vpr/vprParam.h.in -o vpr/vprParam.h	\
+                  -i $(VPRROOT_ABS)/vpr/vprParam.h.in -o $(PARAM_HEADER) \
                   -d "`date '+%b %e, %Y %H:%M:%S'`"
 
 ifdef VERSION
@@ -115,7 +116,9 @@ BEFOREBUILD	= beforebuild
 AFTERBUILD	= afterbuild
 
 # Things to do before the object files and library are built.
-beforebuild:
+beforebuild: $(PARAM_HEADER)
+
+$(PARAM_HEADER):
 	@$(SHELL) $(scriptdir)/make-ver.sh $(VER_ARGS)
 
 # Things to do after the object files and library are built.
@@ -331,5 +334,6 @@ _LOCAL_CLOBBER	= 1
 include $(MKPATH)/dpp.libs.mk
 include $(MKPATH)/dpp.clean.mk
 
+CLEAN_FILES	+= $(PARAM_HEADER)
 CLEAN_DIRS	+= $(BUILDDIR_BASE) $(LIBDIR_NAME)
 CLOBBER_DIRS	+= $(BUILDDIR_BASE) $(LIBDIR_NAME)
