@@ -42,6 +42,13 @@
 #include <wandApp.h>
 
 
+void wandApp::bufferPreDraw()
+{
+   glClearColor(0.0, 0.0, 0.0, 0.0);
+   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+}
+
+
 //----------------------------------------------
 //  Draw the scene.  A box on the end of the wand
 //----------------------------------------------
@@ -53,8 +60,6 @@ void wandApp::myDraw()
    //cout << "HeadPos:" << vjCoord(*mHead->getData()).pos << "\t"
    //     << "WandPos:" << vjCoord(*mWand->getData()).pos << endl;
 
-   glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
-   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
    glMatrixMode(GL_MODELVIEW);
 
       // -- Draw box on wand --- //

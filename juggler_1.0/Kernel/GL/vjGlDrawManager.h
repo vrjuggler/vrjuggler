@@ -100,16 +100,6 @@ public:
    //: Initialize the drawing API (if not already running)
    virtual void initAPI();
 
-   //: Initialize the drawing state for the API based on
-   // the data in the display manager.
-   //
-   //! PRE: API is running (initAPI has been called)
-   //! POST: API is ready do draw <br>
-   //+    Process model is configured <br>
-   //  Multi-pipe data is set <br>
-   //  Window list is correct
-   virtual void initDrawing();
-
    //: Callback when display is added to display manager
    //! NOTE: This function can only be called by the display manager
    //+      functioning in the kernel thread to signal a new display added
@@ -135,7 +125,7 @@ public:
    //: Return the app we are rendering
    vjGlApp* getApp();
 
-   void setDisplayManager(vjDisplayManager* _dispMgr);
+   //void setDisplayManager(vjDisplayManager* _dispMgr);
 
 public: // Chunk handlers
    //: Add the chunk to the configuration

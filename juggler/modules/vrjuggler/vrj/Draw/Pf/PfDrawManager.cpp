@@ -115,7 +115,7 @@ bool vjPfDrawManager::configDisplaySystem(vjConfigChunk* chunk)
 
       if(strcmp(mPipeStrs[i], cur_disp_name) == 0)    // Use display env
       {
-	 char env_var[] = "DISPLAY";
+    char env_var[] = "DISPLAY";
          char* display_env = getenv(env_var);
          char* xpipe_name  = new char[strlen(display_env)+1];
          strcpy(xpipe_name, display_env);
@@ -218,11 +218,6 @@ void vjPfDrawManager::initAPI()
 
    app->preForkInit();
 
-   initDrawing();
-}
-
-void vjPfDrawManager::initDrawing()
-{
    vjDEBUG_BEGIN(vjDBG_DRAW_MGR,vjDBG_STATE_LVL) << "vjPfDrawManager::initDrawing: Entering." << std::endl << vjDEBUG_FLUSH;
 
    // Set params for Multi-pipe and Multiprocess

@@ -180,20 +180,6 @@ void vjGlDrawManager::initAPI()
    start();
 }
 
-//: Initialize the drawing state for the API based on
-//+ the data in the display manager.
-//
-//! PRE: API is running (initAPI has been called)
-//! POST: API is ready do draw    <br>
-//+    Process model is configured <br>
-//+    Multi-pipe data is set      <br>
-//+    Window list is correct      <br>
-void vjGlDrawManager::initDrawing()
-{
-   vjDEBUG(vjDBG_DRAW_MGR,3) << "vjGlDrawManager::initDrawing: Entering."
-                             << std::endl << vjDEBUG_FLUSH;
-}
-
 
 //: Callback when display is added to display manager
 //! PRE: Must be in kernel controlling thread

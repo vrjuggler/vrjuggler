@@ -72,18 +72,10 @@ public:
    //+    because it's "real" type is only known in the derived classes
    virtual void setApp(vjApp* _app) = 0;
 
-   void setDisplayManager(vjDisplayManager* _dispMgr);
-
    //: Initialize the drawing API (if not already running)
    //! NOTE: If the draw manager should be an active object,
    //        start the process here.
    virtual void initAPI() = 0;
-
-   //: Initialize the drawing state for the API
-   // based on the data in the display manager.
-   //! PRE: API is running (initAPI has been called)
-   //! POST: API is ready do draw
-   //virtual void initDrawing() = 0;
 
    //: Callback when display is added to display manager
    virtual void addDisplay(vjDisplay* disp) = 0;
@@ -100,6 +92,9 @@ public:
    // Should do any API specific stuff.
    virtual void updateProjections()
    {;}
+
+   // Setter for display manager variable
+   void setDisplayManager(vjDisplayManager* _dispMgr);
 
    friend std::ostream& operator<<(std::ostream& out, vjDrawManager& drawMgr);
    virtual void outStream(std::ostream& out)
