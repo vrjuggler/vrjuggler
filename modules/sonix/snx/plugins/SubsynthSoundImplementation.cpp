@@ -136,7 +136,7 @@ void SubsynthSoundImplementation::trigger( const std::string& alias, const int& 
             mBindLookup[alias].inst->setParam( "loop", false );
          }
          
-         std::cout << "[snx] trigger" << std::endl;
+         //std::cout << "[snx] trigger" << std::endl;
          mBindLookup[alias].inst->setParam( "trigger", true );
       }
    }
@@ -359,7 +359,7 @@ void SubsynthSoundImplementation::startAPI()
    
    // open the audio port
    result = sink->open();
-   if (result == false) { std::cout<<"out couldn't open"<<std::endl; return; }
+   if (result == false) { std::cout<<"[snx]Subsynth| sink couldn't open"<<std::endl; return; }
    
    // mixer
    syn::MixerModule* mixer = new syn::MixerModule;
@@ -368,16 +368,16 @@ void SubsynthSoundImplementation::startAPI()
    
    // open the mixer
    result = mixer->open();
-   if (result == false) { std::cout<<"mix couldn't open"<<std::endl; return; }
+   if (result == false) { std::cout<<"[snx]Subsynth| mix couldn't open"<<std::endl; return; }
 
    std::cout<<"make connections\n"<<std::flush;
    syn::TerminalPtr output, input;
 
-   std::cout<<"mixer -> audioport connection\n"<<std::flush;
+   std::cout<<"[snx]Subsynth| mixer -> audioport connection\n"<<std::flush;
    result = mixer->getOutput( "output", output );
-   if (result == false) { std::cout << "couldn't get mixer out-term" << std::endl; return; }
+   if (result == false) { std::cout << "[snx]Subsynth| couldn't get mixer out-term" << std::endl; return; }
    result = sink->getInput( "mono audio", input );
-   if (result == false) { std::cout << "couldn't get audioport in-term" << std::endl; return; }
+   if (result == false) { std::cout << "[snx]Subsynth| couldn't get audioport in-term" << std::endl; return; }
    syn::Terminal::connect( input, output );
 //   syn::SampleBufferRepos::instance()->setBlockSize( blocksize );
       
