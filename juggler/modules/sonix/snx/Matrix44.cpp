@@ -5,6 +5,13 @@
 namespace aj
 {
 
+//: Default Constructor
+//  NOTE: does no initialization, call identity() to init to identity matrix
+Matrix44::Matrix44()
+{
+   this->makeIdent();
+}
+
 //: set the matrix with 16 floats
 void Matrix44::set( float a0, float a4, float a8,  float a12,
        float a1, float a5, float a9,  float a13,
@@ -38,14 +45,6 @@ Matrix44& Matrix44::operator=( const Matrix44& mat )
    return *this;
 }
 
-//: Default Constructor
-//  NOTE: does no initialization, call identity() to init to identity matrix
-Matrix44::Matrix44()
-{
-   this->makeIdent();
-}
-
-     
 //: Copy constructor
 Matrix44::Matrix44( const Matrix44& mat )
 {
