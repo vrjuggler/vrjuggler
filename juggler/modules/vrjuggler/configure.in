@@ -150,8 +150,14 @@ esac
 cd "$srcdir"
 VJROOT_ABS=`pwd`
 cd "$VJROOT_ABS/../.."
-JUGGLERROOT_ABS=`pwd`
+UNIX_JUGGLERROOT_ABS=`pwd`
 cd "$topdir"
+
+if test "x$CYGPATH" != "xno" ; then
+   JUGGLERROOT_ABS=`cygpath -w "$UNIX_JUGGLERROOT_ABS" | sed -e 's/\\\\/\\//g'`
+else
+   JUGGLERROOT_ABS="$UNIX_JUGGLER_ROOT"
+fi
 
 # -----------------------------------------------------------------------------
 # Checks for programs.
@@ -482,7 +488,6 @@ fi
 # Define the base path to the source directory using $(VJROOT_ABS) as an
 # alternative to using $(srcdir).
 UNIX_VJROOT_ABS="$VJROOT_ABS"
-UNIX_JUGGLERROOT_ABS="$JUGGLERROOT_ABS"
 
 # Translate paths from UNIX-style to Win32.
 if test "x$OS_TYPE" = "xWin32" ; then
