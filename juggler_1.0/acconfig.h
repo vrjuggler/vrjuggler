@@ -129,6 +129,9 @@
 /* Define to one of the above values to enable performance testing. */
 #undef VJ_PERFORMANCE
 
+/* Define to `int' if the socklen_t type is not available.  */
+#undef socklen_t
+
 /*
  * Define to `unsigned int' if the u_int type is not available.  On Windows
  * when using Visual C++, define to UINT.
