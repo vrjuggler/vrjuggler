@@ -89,7 +89,6 @@ void JackalServer::addJackalControl (JackalControl* jc) {
     connections_mutex.release();
     jackal_controls_mutex.release();
 
-    jc->setJackalServer (this);
 }
 
 

@@ -62,36 +62,52 @@ class JCCL_CLASS_API ConfigChunkHandler {
 
 public:
 
-   //: Can the handler handle the given chunk?
-   //! RETURNS: true - Can handle it
-   //+          false - Can't handle it
+    /** Checks if this handler can process chunk.
+     *  Typically, an implementation of handler will check the chunk's
+     *  description name/token to decide if it knows how to deal with
+     *  it.
+     *  @return true iff this handler can process chunk.
+     */
    virtual bool configCanHandle(ConfigChunk* chunk) = 0;
 
-   //: Process any pending reconfiguration that we can deal with
-   // This function processes each pending reconfiguration in configuration manager
-   // The default implementation does the following. <br>
-   // if(this->configCanHandle && passesDepCheck)
-   //    configAdd/configRemove(chunk)
-   // if(success)
-   //   add/remove from pending
-   //   remove/add from current
-   //
-   //! ARGS: lockIt - Should we lock the cfg_mgr pending list
-   //+       defaults to true.  The only time this should be false is 
-   //+       if you override this function and still want to make use of it's abilities
-   //+         (ex.  The kernel needs to do this because if has to call configProcessPending on other managers in addition to itself)
-   //! RETURNS: Number of chunks it actually processes
-   virtual int configProcessPending (ConfigManager* cfg_mgr);
 
-   //: Add the chunk to the configuration
-   //! PRE: configCanHandle(chunk) == true
-   //! RETURNS: success
+    /** Process any pending reconfiguration requests that we know how to
+     *  deal with.
+     *
+     *  The default implementation does the following for each item in the
+     *  pending list:
+     *
+     *  <pre>
+     *    for each pending item p in the pending list do
+     *        if this->configCanHandle(p) AND p's dependencies are met
+     *            retval = configAdd or configRemove (p)
+     *            if retval = true
+     *                remove request from pending
+     *                add or remove p.chunk from active
+     *  </pre>
+     *
+     *  ConfigManager's pending list MUST be locked before this function
+     *  is called.  Typically, configProcessPending will be called by
+     *  ConfigManager::attemptReconfiguration(), which takes care of
+     *  this automatically.
+     */
+   virtual int configProcessPending ();
+
+
+    /** Add the pending chunk to the configuration.
+     *  PRE: configCanHandle (chunk) == true.
+     *  @return true iff chunk was successfully added to configuration.
+     */
    virtual bool configAdd(ConfigChunk* chunk) = 0;
 
-   //: Remove the chunk from the current configuration
-   //! PRE: configCanHandle(chunk) == true
-   //!RETURNS: success
+
+    /** Remove the pending chunk from the current configuration.
+     *  PRE: configCanHandle (chunk) == true.
+     *  @return true iff the chunk (and any objects it represented)
+     *          were successfully removed.
+     */
    virtual bool configRemove(ConfigChunk* chunk) = 0;
+
 };
 
 }; // namespace jccl

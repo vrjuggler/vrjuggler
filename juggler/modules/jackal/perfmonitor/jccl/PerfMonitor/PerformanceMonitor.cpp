@@ -51,8 +51,6 @@ PerformanceMonitor::PerformanceMonitor():
                           perf_buffers(),
                           perf_buffers_mutex() {
 
-    jackal_server = NULL;
-
     perf_refresh_time = 500;
 
     perf_target_name = "";
@@ -67,13 +65,6 @@ PerformanceMonitor::~PerformanceMonitor() {
 }
 
 
-
-/*virtual*/ void PerformanceMonitor::setJackalServer (JackalServer* js) {
-    jackal_server = js;
-
-    // look for perf target...
-    // or do we make js responsible for a bunch of addConnects... ?
-}
 
 /*virtual*/ void PerformanceMonitor::addConnect (Connect* con) {
     vprASSERT (con != NULL);

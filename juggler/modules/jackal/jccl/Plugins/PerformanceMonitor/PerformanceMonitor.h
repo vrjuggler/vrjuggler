@@ -82,10 +82,13 @@ public:
 
 
 
-    virtual void setJackalServer (JackalServer* js);
+    //--------------- JackalControl Stuff -----------------------
+
     virtual void addConnect (Connect *c);
     virtual void removeConnect (Connect* c);
 
+
+    //---------------- ConfigChunkHandler Stuff -----------------
 
     //: ConfigChunkHandler stuff
     //! PRE: configCanHandle(chunk) == true
@@ -114,7 +117,6 @@ private:
         PeriodicCommand* command;
     };
 
-    JackalServer*             jackal_server;
     std::string               perf_target_name;
     Connect*                  perf_target;
     std::vector<buffer_element> perf_buffers;
@@ -124,7 +126,7 @@ private:
 
     // PRIVATE utility functions
 
-    void controlLoop (void* nullParam);
+//      void controlLoop (void* nullParam);
 
     void activatePerfBuffers();
     void deactivatePerfBuffers();
