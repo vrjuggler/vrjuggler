@@ -111,7 +111,7 @@ def setVars():
 
    def processInput(optionDict, envVar, inputDesc, required = False):
       default_value = optionDict[envVar]
-      print "    Enter %s [%s]: " % (inputDesc, default_value),
+      print "    %s [%s]: " % (inputDesc, default_value),
       input_str = sys.stdin.readline().strip(" \n")
 
       if input_str == '':
@@ -160,7 +160,8 @@ def setVars():
       execfile(cache_file)
 
    print "+++ Required Settings"
-   boost_ver = processInput(options, 'prefix', 'installation prefix')
+   boost_ver = processInput(options, 'prefix',
+                            'Directory where VR Juggler will be installed')
    boost_ver = processInput(options, 'BOOST_VERSION', 'Boost C++ version')
    boost_dir = processInput(options, 'BOOST_ROOT',
                             'Boost C++ installation directory')
@@ -169,17 +170,18 @@ def setVars():
       options['BOOST_INCLUDES'] = boost_dir + r'\include\boost-' + boost_ver
 
    processInput(options, 'BOOST_INCLUDES',
-                'directory containing the Boost C++ header tree')
+                'Directory containing the Boost C++ header tree')
 
    processInput(options, 'BOOST_TOOL',
-                'the Boost.Build toolset used to compile Boost C++')
+                'Boost.Build toolset used to compile Boost C++')
 
    processInput(options, 'NSPR_ROOT', 'NSPR installation directory')
    processInput(options, 'CPPDOM_ROOT', 'CppDOM installation directory')
    processInput(options, 'GMTL_ROOT', 'GMTL installation directory')
 
    print "+++ Optional Settings"
-   processInput(options, 'deps-prefix', 'dependency installation prefix')
+   processInput(options, 'deps-prefix',
+                'Directory where dependencies will be installed')
    processInput(options, 'JAVA_HOME', 'Java installation directory', False)
 
    # If the %JAVA_HOME% setting is a valid directory, add its bin subdirectory
