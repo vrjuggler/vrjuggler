@@ -178,11 +178,10 @@ private:
    osg::Group* mNoNav;
    osg::MatrixTransform* mNavTrans;
    osg::MatrixTransform* mModelTrans;
-   osg::MatrixTransform* mModelBaseXform;
-
    osg::Node* mModel;
 
    float speed;
+   float inc;
 
    std::string mFileToLoad;
 

@@ -37,70 +37,35 @@
 #include <gmtl/Vec.h>
 #include <gmtl/Coord.h>
 #include <gmtl/Xforms.h>
-
-
-
-
-//----------------------------------------------
-//  Draw the scene.  A box on the end of the wand
-//----------------------------------------------
+#include <gmtl/Math.h>
 
 void OsgNav::preFrame()
 {
 
 //vprDEBUG(vprDBG_ALL,0) << "------- preFrame ------\n" << vprDEBUG_FLUSH;
-/*
-   std::cout << "Wand Buttons:"
-             << " 0:" << mButton0->getData()
-             << " 1:" << mButton1->getData()
-             << " 2:" << mButton2->getData()
-             << " 3:" << mButton3->getData()
-             << " 4:" << mButton4->getData()
-             << " 5:" << mButton5->getData()
-             << std::endl;
-*/
-
-   float inc = 0.005f;
-
-   // MOVE the model around
-
-   //If the model has moved +/- 10 move back
-   //std::cout << posCount << std::endl;
-   if ( (mPos[0] > 10.0f) || (mPos[0] < -10.0f) )
-   {
-      posInc *= -1.0f;
-   }
-
-   mPos[0] += posInc;
-
-   //Do the actual move
-   osg::Matrix cur_xform = mModelTrans->getMatrix();
-   cur_xform.setTrans(mPos);
-   mModelTrans->setMatrix(cur_xform);
 
    // -- Get wand info -- //
    gmtl::Matrix44f* wandMatrix;
    wandMatrix = mWand->getData();      // Get the wand matrix
 
    osg::Matrix osgWandMat;
-   //float * fPtr;
    osgWandMat.set(wandMatrix->getData());
 
 
    if ( mButton0->getData() == gadget::Digital::ON )
    {
-      //Move in the direction of the wand
+      // Speed up
       speed = speed + inc;
       std::cout << "speed: " << speed << std::endl;
    }
    if ( mButton1->getData() == gadget::Digital::ON )
    {
-      //joint->preRotate(5.0f, 0.0f, 0.0f, 1.0f);
-      speed = 0;
+      // Stop
+      speed = 0.0;
    }
    if ( mButton2->getData() == gadget::Digital::ON )
    {
-      //joint->preRotate(-5.0f, 0.0f, 0.0f, 1.0f);
+      // Slow down
       speed = speed - inc;
       std::cout << "speed: " << speed << std::endl;
    }
@@ -110,7 +75,6 @@ void OsgNav::preFrame()
    gmtl::Vec3f direction;
    gmtl::Vec3f Zdir = gmtl::Vec3f(0.0f, 0.0f, speed);
    gmtl::xform(direction, *wandMatrix, Zdir);
-   //mNavTrans->preTranslate(direction[0], direction[1], direction[2]);
    mNavTrans->preMult(osg::Matrix::translate(direction[0], direction[1], direction[2]));
 }
 
@@ -129,30 +93,25 @@ void OsgNav::myInit()
 
    //The top level nodes of the tree
    mRootNode = new osg::Group();
-   mNoNav   = new osg::Group();
+   mNoNav    = new osg::Group();
    mNavTrans = new osg::MatrixTransform();
 
    mRootNode->addChild( mNoNav );
    mRootNode->addChild( mNavTrans );
 
-   //Load the models and add them to the tree
-   mModelTrans  = new osg::MatrixTransform();         // Transform node for the model
-
-   //model = osgDB::readNodeFile("paraglider.osg");
-   //mModel = osgDB::readNodeFile("dumptruck.osg");
-
+   //Load the model
    std::cout << "Attempting to load file: " << mFileToLoad << "... ";
    mModel = osgDB::readNodeFile(mFileToLoad);
    std::cout << "done." << std::endl;
 
-   // Could use this to correct for incorrectly rotated models
-   mModelBaseXform = new osg::MatrixTransform();
-   //mModelBaseXform->preRotate(90.0f, 1.0f, 0.0f, 0.0f);
-   mModelBaseXform->preMult( osg::Matrix::rotate(90.0f, 1.0f, 0.0f, 0.0f));
-   mModelBaseXform->setMatrix( osg::Matrix::scale(50.0f, 50.0f, 50.0f));
-
-   // Add model to the tree
+   // Transform node for the model
+   mModelTrans  = new osg::MatrixTransform();
+   //This can be used if the model orientation needs to change
+   mModelTrans->preMult( osg::Matrix::rotate( gmtl::Math::deg2Rad( 90.0f ), 1.0f, 0.0f, 0.0f) );
+   
+   // Add model to the transform
    mModelTrans->addChild(mModel);
+   // Add the transform to the tree
    mNavTrans->addChild( mModelTrans );
 
    // run optimization over the scene graph
@@ -163,13 +122,9 @@ void OsgNav::myInit()
    // OpenGL display lists.
    //osgUtil::DisplayListVisitor dlv(osgUtil::DisplayListVisitor::SWITCH_ON_DISPLAY_LISTS);
    //mRootNode->accept(dlv);
-
-   //The increment to move the model by
-   mPos[0] = 0.0f;
-   mPos[1] = 0.0f;
-   mPos[2] = 0.0f;
-   //posInc = 0.05f;
-   posInc = 0.0f;
-
+   
+   // The initial speed for navigation is set to zero
    speed = 0.0f;
+   // How much we should accelerat each frame the button is held
+   inc = 0.005f;
 }
