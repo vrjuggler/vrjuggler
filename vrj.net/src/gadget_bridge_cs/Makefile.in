@@ -46,6 +46,7 @@ SRCS=		gadget_Analog.cs			\
 		gadget_PositionData.cs			\
 		gadget_PositionInterface.cs		\
 		gadget_PositionProxy.cs			\
+		gadget_PositionUnitConversion.cs	\
 		gadget_Proxy.cs				\
 		gadget_TypedProxy_gadget__Analog.cs	\
 		gadget_TypedProxy_gadget__Digital.cs	\
