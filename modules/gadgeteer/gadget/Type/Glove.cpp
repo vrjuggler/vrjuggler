@@ -39,7 +39,6 @@
 #include <gmtl/VecOps.h>
 #include <gmtl/MatrixOps.h>
 #include <gmtl/Generate.h>
-#include <gmtl/Convert.h>
 #include <gmtl/Xforms.h>
 
 
