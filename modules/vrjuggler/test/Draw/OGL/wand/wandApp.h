@@ -125,12 +125,11 @@ private:
    
    void initGLState()
    {
-      GLfloat light0_ambient[] = { .2,  .2,  .2,  1.0};
-      GLfloat light0_diffuse[] = { 1.0,  1.0,  1.0,  1.0};
-      GLfloat light0_specular[] = { 1.0,  1.0,  1.0,  1.0};
-      GLfloat light0_position[] = {2000.0, 1000.0, 100.0, 1.0};
-      GLfloat light0_direction[] = {-100, -100.0, -100.0};
-   
+      GLfloat light0_ambient[] = { 0.1f,  0.1f,  0.1f,  1.0f};
+      GLfloat light0_diffuse[] = { 0.8f,  0.8f,  0.8f,  1.0f};
+      GLfloat light0_specular[] = { 1.0f,  1.0f,  1.0f,  1.0f};
+      GLfloat light0_position[] = {0.0f, 0.75f, 0.75f, 0.0f};
+      
       GLfloat mat_ambient[] = { 0.7, 0.7,  0.7,  1.0};
       GLfloat mat_diffuse[] = { 1.0,  0.5,  0.8,  1.0};
       GLfloat mat_specular[] = { 1.0,  1.0,  1.0,  1.0};
@@ -142,8 +141,7 @@ private:
       glLightfv(GL_LIGHT0, GL_DIFFUSE,  light0_diffuse);
       glLightfv(GL_LIGHT0, GL_SPECULAR,  light0_specular);
       glLightfv(GL_LIGHT0, GL_POSITION,  light0_position);
-      glLightfv(GL_LIGHT0, GL_SPOT_DIRECTION, light0_direction);
-   
+      
       glMaterialfv( GL_FRONT, GL_AMBIENT, mat_ambient );
       glMaterialfv( GL_FRONT,  GL_DIFFUSE, mat_diffuse ); 
       glMaterialfv( GL_FRONT, GL_SPECULAR, mat_specular );
