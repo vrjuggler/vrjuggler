@@ -190,7 +190,8 @@ public class BeanContainer
          catch (Exception open_ex)
          {
             System.err.println("Caught exception when notifying listener of opened connection");
-            System.err.println(open_ex.getMessage());
+//            System.err.println("Error: " + open_ex.getMessage());
+            open_ex.printStackTrace();
          }
       }
    }
@@ -222,7 +223,8 @@ public class BeanContainer
          catch (Exception close_ex)
          {
             System.err.println("Caught exception when notifying listener of closed connection");
-            System.err.println(close_ex.getMessage());
+//            System.err.println("Error: " + close_ex.getMessage());
+            close_ex.printStackTrace();
          }
       }
    }
