@@ -305,6 +305,11 @@ rename(Trii, 'Trii')
 Function('gmtl::center', 'gmtl-functions.h')
 # ================================================================= gmtl::Tri<>
 
+# Math operations =============================================================
+Function('gmtl::Math::deg2Rad', 'gmtl/Math.h')
+Function('gmtl::Math::rad2Deg', 'gmtl/Math.h')
+# ============================================================= Math operations
+
 # Generator operations ========================================================
 Function('gmtlWrapper::makeRotMatrix33', 'gmtl-wrappers.h')
 Function('gmtlWrapper::makeRotMatrix44', 'gmtl-wrappers.h')
