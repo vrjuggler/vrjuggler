@@ -1,0 +1,39 @@
+package idkfctylgvb1ctyljbch;
+
+/**
+@version 2.0
+@physicalPackage
+@__modelType diagram 
+*/
+class diagram {
+/**
+@__ref <oiref:idl#Class#tweek::Subject:oiref><oihard>
+@__modelType reference 
+*/
+class reference {
+}/**
+@__ref <oiref:idl#Class#tweek::SubjectManager:oiref><oihard>
+@__modelType reference 
+*/
+class reference23 {
+}/**
+@__ref <oiref:idl#Class#tweek::Observer:oiref><oihard>
+@__modelType reference 
+*/
+class reference24 {
+}}/**
+@__tags
+@shapeType ClassDiagram 
+*/
+class __tags {
+}/**
+@__options 
+*/
+class __options {
+}/**
+@__positions <oigroup:<oiref:idl#Class#tweek::SubjectManager:oiref>=10,170,200,92,1:oigroup>
+<oigroup:<oiref:idl#Class#tweek::Subject:oiref>=10,10,189,118,1:oigroup>
+<oigroup:<oiref:idl#Class#tweek::Observer:oiref>=219,10,125,92,1:oigroup> 
+*/
+class __positions {
+}
