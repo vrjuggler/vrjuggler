@@ -1,5 +1,7 @@
 DATE       AUTHOR   CHANGE
 ---------- -------- -----------------------------------------------------------
+2002-06-23 patrickh The vpr-config script is now written in Perl.  It is
+                    capable of determining its installation path at runtime.
 2002-06-07 patrickh Moved the object serialization code from Plexus to VPR.
                     NEW VERSION: 0.16.0
 2002-06-04 patrickh The process of making symlinks to juggler/external/boost
