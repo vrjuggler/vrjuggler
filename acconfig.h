@@ -78,6 +78,9 @@
 /* Define if building on Linux. */
 #undef VJ_OS_Linux
 
+/* Define if building on Solaris. */
+#undef VJ_OS_Solaris
+
 /* Define if building on a platform not specified above. */
 #undef VJ_OS_GENERIC
 
