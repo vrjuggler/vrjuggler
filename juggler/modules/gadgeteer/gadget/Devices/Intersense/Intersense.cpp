@@ -77,6 +77,7 @@ Intersense::Intersense()
 {
     vprDEBUG(vrjDBG_INPUT_MGR,1) << "*** Intersense::Intersense() ***\n" << vprDEBUG_FLUSH;
     //vprDEBUG(vrjDBG_INPUT_MGR,1) << "*** Intersense::deviceAbilities = " << deviceAbilities << " ***\n" << vprDEBUG_FLUSH;
+    mData = NULL;
 }
 
 bool Intersense::config(jccl::ConfigChunkPtr c)
@@ -130,38 +131,33 @@ Intersense::~Intersense()
 {
     this->stopSampling();
     if (stations != NULL)
-   delete [] stations;
-    if (theData != NULL)
-        delete [] theData;
-    if (mDataTimes != NULL)
-        delete [] mDataTimes;
+        delete [] stations;
+    if (mData != NULL)
+        delete [] mData;
 }
 
 // Main thread of control for this active object
 void Intersense::controlLoop(void* nullParam)
 {
 
-    if (theData != NULL)
-        delete [] theData;
-    if (mDataTimes != NULL)
-        delete mDataTimes;
+    if (mData != NULL)
+        delete [] mData;
 
     int numbuffs = (mTracker.NumStations())*3;
-    theData = (vrj::Matrix*) new vrj::Matrix[numbuffs];
-    mDataTimes = new jccl::TimeStamp[numbuffs];
+    mData = new PositionData[numbuffs];
 
 // Configure the stations used by the configuration
     int j = 0;
     for( int i = 0; i < mTracker.NumStations(); i++ )
     {
-   j = stations[i].stationIndex;
+        j = stations[i].stationIndex;
 
-   mTracker.getConfigState(j);
-   mTracker.rState(j) = stations[i].enabled;
-   mTracker.rAngleFormat(j) = ISD_EULER;
-   mTracker.rButtons(j) = stations[i].useDigital;
-   mTracker.rAnalogData(j) = stations[i].useAnalog;
-   mTracker.setConfigState(j);
+        mTracker.getConfigState(j);
+        mTracker.rState(j) = stations[i].enabled;
+        mTracker.rAngleFormat(j) = ISD_EULER;
+        mTracker.rButtons(j) = stations[i].useDigital;
+        mTracker.rAnalogData(j) = stations[i].useAnalog;
+        mTracker.setConfigState(j);
     }
 
 // Reset current, progress, and valid indices
@@ -230,8 +226,8 @@ int Intersense::sample()
     jccl::TimeStamp sampletime;
 
 
-    sampletime.set();
     mTracker.updateData();
+    sampletime.set();
 
 
     int k;
@@ -242,27 +238,27 @@ int Intersense::sample()
 
     for (i = 0 ; i < (mTracker.NumStations()); i++)
     {
-   int index = getStationIndex(i,progress);
+        int index = getStationIndex(i,progress);
 
-   stationIndex = stations[i].stationIndex;
+        stationIndex = stations[i].stationIndex;
 
-   if( mTracker.rAngleFormat(stationIndex) == ISD_EULER ) {
-       theData[index].makeZYXEuler(mTracker.zRot( stationIndex ),
-               mTracker.yRot( stationIndex ),
-               mTracker.xRot( stationIndex ));
-       theData[index].setTrans(mTracker.xPos( stationIndex ),
-                               mTracker.yPos( stationIndex ),
-                               mTracker.zPos( stationIndex ));
-   } else {
-
-       vrj::Quat quatValue(mTracker.xQuat( stationIndex ),
-              mTracker.yQuat( stationIndex ),
-              mTracker.zQuat( stationIndex ),
-              mTracker.wQuat( stationIndex ));
-       theData[index].makeQuaternion(quatValue);
-   }
-   mDataTimes[index] = sampletime;
-
+        if( mTracker.rAngleFormat(stationIndex) == ISD_EULER ) {
+            mData[index].getPositionData()->makeZYXEuler(mTracker.zRot( stationIndex ),
+                                      mTracker.yRot( stationIndex ),
+                                      mTracker.xRot( stationIndex ));
+            mData[index].getPositionData()->setTrans(mTracker.xPos( stationIndex ),
+                                  mTracker.yPos( stationIndex ),
+                                  mTracker.zPos( stationIndex ));
+        } else {
+            
+            vrj::Quat quatValue(mTracker.xQuat( stationIndex ),
+                                mTracker.yQuat( stationIndex ),
+                                mTracker.zQuat( stationIndex ),
+                                mTracker.wQuat( stationIndex ));
+            mData[index].getPositionData()->makeQuaternion(quatValue);
+        }
+        mData[index].setTimeStamp (sampletime);
+        
 // We start at the index of the first digital item (set in the config files)
 // and we copy the digital data from this station to the Intersense device for range (min -> min+count-1)
    min = stations[i].dig_min;
@@ -287,9 +283,9 @@ int Intersense::sample()
         vrj::Matrix world_T_transmitter, transmitter_T_reciever, world_T_reciever;
 
         world_T_transmitter = xformMat;                    // Set transmitter offset from local info
-        transmitter_T_reciever = theData[index];           // Get reciever data from sampled data
+        transmitter_T_reciever = *(mData[index].getPositionData());           // Get reciever data from sampled data
         world_T_reciever.mult(world_T_transmitter, transmitter_T_reciever);   // compute total transform
-        theData[index] = world_T_reciever;                                     // Store corrected xform back into data
+        *(mData[index].getPositionData()) = world_T_reciever;                                     // Store corrected xform back into data
 
    }
 
@@ -329,13 +325,12 @@ int Intersense::stopSampling()
 }
 
 
-//d == station#
-vrj::Matrix* Intersense::getPosData( int d )
-{
-    if (this->isActive() == false)
+PositionData* Intersense::getPositionData (int dev) {
+    if (this->isActive() == false) {
         return NULL;
-
-    return (&theData[getStationIndex(d,current)]);
+    }
+    else
+        return &mData[getStationIndex (dev, current)];
 }
 
 
@@ -356,13 +351,6 @@ float Intersense::getAnalogData( int d )
     return newValue;
 }
 
-jccl::TimeStamp* Intersense::getPosUpdateTime (int d)
-{
-    if (this->isActive() == false)
-        return NULL;
-
-    return (&mDataTimes[getStationIndex(d,current)]);
-}
 
 void Intersense::updateData()
 {
@@ -377,7 +365,7 @@ void Intersense::updateData()
 // TODO: modify the datagrabber to get correct data
 // Copy the valid data to the current data so that both are valid
     for(i=0;i<mTracker.NumStations();i++)
-        theData[getStationIndex(i,current)] = theData[getStationIndex(i,valid)];   // first hand
+        mData[getStationIndex(i,current)] = mData[getStationIndex(i,valid)];   // first hand
     for(i=0;i<IS_BUTTON_NUM;i++)
    mInput[current].digital[i] = mInput[valid].digital[i];
     for(i=0;i<IS_ANALOG_NUM;i++)

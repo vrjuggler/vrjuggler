@@ -81,8 +81,7 @@ bool Bird::config(jccl::ConfigChunkPtr c)
 
   strncpy(sPort,"/dev/ttyd3", 30);
   initCorrectionTable();
-  //theData = (vrj::Matrix*)allocate(3*sizeof(vrj::Matrix));
-  theData = new vrj::Matrix[3];
+  mData = new PositionData[3];
 
   return true;
 }
@@ -90,8 +89,8 @@ bool Bird::config(jccl::ConfigChunkPtr c)
 Bird::~Bird()
 {
   stopSampling();
-    if (theData != NULL)
-      delete theData;
+    if (mData != NULL)
+      delete[] mData;
        //getMyMemPool()->deallocate((void*)theData);
 }
 
@@ -167,7 +166,8 @@ int Bird::sample()
      //for(i=1; i < theTransmitter; i++)
      {
    //int subNum;
-        getReading(&theData[progress], port_id);
+        getReading(mData[progress].getPositionData(), port_id);
+        mData[progress].setTimeStamp();
    /* XXX:
    positionCorrect(theData[progress].pos[0],
           theData[progress].pos[1],
@@ -212,11 +212,15 @@ int Bird::stopSampling()
    return 1;
 }
 
-// XXX: Bad Bad Bad
-vrj::Matrix* Bird::getPosData( int d) // d is 0 based
-{
-  return (vrj::Matrix*)&theData[current];
+
+PositionData* Bird::getPositionData (int dev) {
+    if (this->isActive() == false)
+        return NULL;
+    else
+        return &mData[current];
 }
+
+
 
 void Bird::updateData()
 {

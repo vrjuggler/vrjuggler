@@ -42,6 +42,7 @@
 #include <gadget/gadgetConfig.h>
 #include <typeinfo>
 #include <gadget/Type/Input.h>
+#include <gadget/Type/PositionData.h>
 #include <vrj/Math/Vec3.h>
 #include <vrj/Math/Matrix.h>
 #include <jccl/Plugins/PerformanceMonitor/TimeStamp.h>
@@ -81,17 +82,11 @@ public:
 
     virtual bool config(jccl::ConfigChunkPtr c);
 
-    /* New pure virtual functions */
-    //: Get Position data
-    virtual vrj::Matrix* getPosData(int devNum = 0) = 0;
-    virtual jccl::TimeStamp* getPosUpdateTime (int devNum = 0);
+    /** Get Positional data. */
+    virtual PositionData* getPositionData (int devNum = 0) = 0;
 
 public:
-    /* XXX: Some of this stuff should be removed */
-    /* XXX: theData is a ptr because flock needs an infinite number */
-    /* XXX: We should change this so that theData is defined in each class and not here */
-    vrj::Matrix* theData;   // Ptr to matrix that holds the actually position data
-    jccl::TimeStamp* mDataTimes; // time when each buffer was last filled.
+    
 
     vrj::Matrix xformMat;   // The total xform matrix.  T*R  NOTE: Used to move from trk coord system to Juggler coord system
     vrj::Matrix rotMat;     // Only the rotation matrix

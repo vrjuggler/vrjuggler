@@ -87,8 +87,8 @@ public:
    Matrix* getHeadPos()
    { return mHead->getData(); }
 
-   jccl::TimeStamp* getHeadUpdateTime()
-   { return mHead->getUpdateTime(); }
+   jccl::TimeStamp getHeadUpdateTime()
+   { return mHead->getTimeStamp(); }
 
    float getInterocularDistance()
    { return mInterocularDist; }

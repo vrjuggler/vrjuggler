@@ -30,34 +30,47 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <gadget/gadgetConfig.h>
 
-#include <gadget/Devices/Sim/SimRelativePosition.h>
-#include <jccl/Config/ConfigChunk.h>
+#ifndef _GADGET_POSITIONDATA_H_
+#define _GADGET_POSITIONDATA_H_
 
-namespace gadget
-{
+#include <gadget/Type/InputData.h>
+#include <vrj/Math/Matrix.h>
 
-bool SimRelativePosition::config(jccl::ConfigChunkPtr chunk)
-{
-    if(! (Input::config(chunk) && Position::config(chunk)))
-      return false;
+namespace gadget {
 
-   // Initialize the positional devices
-   std::string base_frame_proxy = chunk->getProperty("base_frame_proxy");
-   std::string relative_pos_proxy = chunk->getProperty("relative_proxy");
+    /** InputData subclass for positional data. */
+class GADGET_CLASS_API PositionData: public InputData {
 
-   mBaseFrame.init(base_frame_proxy);
-   mRelativePos.init(relative_pos_proxy);
-   return true;
-}
+public:
+
+    /** Constructor. */
+    PositionData (): InputData() {
+
+    }
 
 
-void SimRelativePosition::updateData()
-{
-   mPos.getPositionData()->mult( *(mBaseFrame->getData()),
-                                 *(mRelativePos->getData()) );
-}
+    vrj::Matrix* getPositionData() {
+        return &mPosData;
+    }
 
 
-};
+    PositionData& operator= (const PositionData& pd) {
+        InputData::copy (pd);
+        mPosData = pd.mPosData;
+        return *this;
+    }
+
+
+protected:
+
+    vrj::Matrix mPosData;
+
+
+}; // class PositionData
+
+
+}; // namespace gadget
+
+
+#endif

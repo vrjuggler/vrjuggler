@@ -75,9 +75,10 @@ bool SimPosition::config(jccl::ConfigChunkPtr chunk)
    float z_rot = chunk->getProperty("initialRot",2);
 
    if((x_pos != 0.0f) || (y_pos != 0.0f) || (z_pos != 0.0f))
-      mPos.makeTrans(x_pos, y_pos, z_pos);
+      mPos.getPositionData()->makeTrans(x_pos, y_pos, z_pos);
    if((x_rot != 0.0f) || (y_rot != 0.0f) || (z_rot != 0.0f))
-      mPos.postXYZEuler(mPos, x_rot, y_rot, z_rot);
+      mPos.getPositionData()->postXYZEuler(*(mPos.getPositionData()), x_rot, y_rot, z_rot);
+   mPos.setTimeStamp();
 
    return true;
 }
@@ -89,7 +90,8 @@ void SimPosition::updateData()
                      // Used to keep from calling checkKey twice on success
       // NOTE: Could have implemented using side effects of assignment
       //       and used less lines, but this is more explicit
-   mUpdateTime.set();
+   //mUpdateTime.set();
+   mPos.setTimeStamp();
 
    amt = checkKeyPair(mSimKeys[FORWARD]);
    if(amt)
@@ -145,9 +147,9 @@ void SimPosition::moveFor(const float amt)
    if(isTransAllowed(move_forward))
    {
       if(mTransCoordSystem == LOCAL)
-         mPos.postTrans(mPos, move_forward);
+         mPos.getPositionData()->postTrans(*(mPos.getPositionData()), move_forward);
       else
-         mPos.preTrans(move_forward, mPos);
+         mPos.getPositionData()->preTrans(move_forward, *(mPos.getPositionData()));
    }
    else
       vprDEBUG(vrjDBG_INPUT_MGR,4) << "SimPos hit a surface.\n" << vprDEBUG_FLUSH;
@@ -163,9 +165,9 @@ void SimPosition::moveLeft(const float amt)
    if(isTransAllowed(move_left))
    {
       if(mTransCoordSystem == LOCAL)
-         mPos.postTrans(mPos, move_left);
+         mPos.getPositionData()->postTrans(*(mPos.getPositionData()), move_left);
       else
-         mPos.preTrans(move_left, mPos);
+         mPos.getPositionData()->preTrans(move_left, *(mPos.getPositionData()));
    }
    else
       vprDEBUG(vrjDBG_INPUT_MGR,4) << "SimPos hit a surface.\n" << vprDEBUG_FLUSH;
@@ -181,9 +183,9 @@ void SimPosition::moveUp(const float amt)
    if(isTransAllowed(move_up))
    {
       if(mTransCoordSystem == LOCAL)
-         mPos.postTrans(mPos, move_up);
+         mPos.getPositionData()->postTrans(*(mPos.getPositionData()), move_up);
       else
-         mPos.preTrans(move_up, mPos);
+         mPos.getPositionData()->preTrans(move_up, *(mPos.getPositionData()));
    }
    else
       vprDEBUG(vrjDBG_INPUT_MGR,4) << "SimPos hit a surface.\n" << vprDEBUG_FLUSH;
@@ -193,23 +195,24 @@ void SimPosition::moveUp(const float amt)
 void SimPosition::rotUp(const float amt)
 {
    static vrj::Vec3 x_axis(1.0,0.0,0.0);
+   vrj::Matrix* m = mPos.getPositionData();
    if(mRotCoordSystem == LOCAL)
-      mPos.postRot(mPos, amt*mDRot, x_axis);
+      m->postRot(*m, amt*mDRot, x_axis);
    else
    {
       // Get the translation and rotation seperated
       // Make new matrix with Trans*DeltaRot*Rot
       float x,y,z;
-      mPos.getTrans(x,y,z);      // Get translation
+      m->getTrans(x,y,z);      // Get translation
       vrj::Matrix trans;
       trans.makeTrans(x,y,z);
 
       vrj::Matrix delta_rot;        // make delta rot
       delta_rot.makeRot(amt*mDRot, x_axis);
 
-      mPos.setTrans(0,0,0);      // Get to rotation only
-      mPos.preMult(delta_rot);
-      mPos.preMult(trans);
+      m->setTrans(0,0,0);      // Get to rotation only
+      m->preMult(delta_rot);
+      m->preMult(trans);
    }
 }
 
@@ -217,24 +220,25 @@ void SimPosition::rotUp(const float amt)
 void SimPosition::rotLeft(const float amt)
 {
    static vrj::Vec3 y_axis(0.0, 1.0, 0.0);
+   vrj::Matrix* m = mPos.getPositionData();
 
    if(mRotCoordSystem == LOCAL)
-      mPos.postRot(mPos, amt*mDRot, y_axis);
+      m->postRot(*m, amt*mDRot, y_axis);
    else
    {
       // Get the translation and rotation seperated
       // Make new matrix with Trans*DeltaRot*Rot
       float x,y,z;
-      mPos.getTrans(x,y,z);      // Get translation
+      m->getTrans(x,y,z);      // Get translation
       vrj::Matrix trans;
       trans.makeTrans(x,y,z);
 
       vrj::Matrix delta_rot;        // make delta rot
       delta_rot.makeRot(amt*mDRot, y_axis);
 
-      mPos.setTrans(0,0,0);      // Get to rotation only
-      mPos.preMult(delta_rot);
-      mPos.preMult(trans);
+      m->setTrans(0,0,0);      // Get to rotation only
+      m->preMult(delta_rot);
+      m->preMult(trans);
    }
 }
 
@@ -242,24 +246,25 @@ void SimPosition::rotLeft(const float amt)
 void SimPosition::rotRollCCW(const float amt)
 {
    static vrj::Vec3 neg_z_axis(0.0, 0.0, -1.0);
+   vrj::Matrix* m = mPos.getPositionData();
 
    if(mRotCoordSystem == LOCAL)
-      mPos.postRot(mPos, amt*mDRot, neg_z_axis);
+      m->postRot(*m, amt*mDRot, neg_z_axis);
    else
    {
       // Get the translation and rotation seperated
       // Make new matrix with Trans*DeltaRot*Rot
       float x,y,z;
-      mPos.getTrans(x,y,z);      // Get translation
+      m->getTrans(x,y,z);      // Get translation
       vrj::Matrix trans;
       trans.makeTrans(x,y,z);
 
       vrj::Matrix delta_rot;        // make delta rot
       delta_rot.makeRot(amt*mDRot, neg_z_axis);
 
-      mPos.setTrans(0,0,0);      // Get to rotation only
-      mPos.preMult(delta_rot);
-      mPos.preMult(trans);
+      m->setTrans(0,0,0);      // Get to rotation only
+      m->preMult(delta_rot);
+      m->preMult(trans);
    }
 }
 
