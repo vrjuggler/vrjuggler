@@ -238,10 +238,10 @@ int vjConfigChunkDB::dependencySort(vjConfigChunkDB* auxChunks)
 	    for(int dep_num=0;dep_num<deps.size();dep_num++)   // For each dependency
 		// If dependency not in list yet or in aux buffer
 		// If (not in src && (!aux exists || not in aux))
-		if ((getChunk((char*)deps[dep_num].c_str()) == NULL) &&
-		    ((auxChunks == NULL) || (auxChunks->getChunk((char*)deps[dep_num].c_str()) == NULL)))
+		if ((getChunk(deps[dep_num]) == NULL) &&
+		    ((auxChunks == NULL) || (auxChunks->getChunk(deps[dep_num]) == NULL)))
 		    dep_pass = false;                                   // Failed check (we don't pass)
-	
+
 	    if(dep_pass)        // If all dependencies are accounted for
 		{
 		    chunks.push_back(*cur_item);        // Copy src to dst
