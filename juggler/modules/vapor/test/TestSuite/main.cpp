@@ -11,6 +11,8 @@
 #include <TestCases/IO/Socket/InetAddrTest.h>
 #include <TestCases/IO/SelectorTest.h>
 
+#include <TestCases/IO/Stats/SocketBandwidthIOStatsTest.h>
+
 #include <TestCases/StatusTest.h>
 #include <TestCases/Util/IntervalTest.h>
 
@@ -71,7 +73,8 @@ int main (int ac, char **av)
    TestSuite* metrics_suite = new TestSuite("metrics");
 
    metrics_suite->addTest(vprTest::IntervalTest::metric_suite());
-
+   metrics_suite->addTest(vprTest::SocketBandwidthIOStatsTest::metric_suite());
+   
    runner.addTest("metrics", metrics_suite);
 
    //noninteractive_suite->addTest(metrics_suite);

@@ -48,14 +48,14 @@ namespace vpr {
  * @author Allen Bierbaum
  * @author Kevin Meinert
  */
-template<class RealSocketStreamImpl, class RealSocketStreamImplParent>
-class SocketStream_t : public Socket_t<RealSocketStreamImplParent> {
+template<class RealSocketStreamImpl, class RealSocketStreamImplParent, class IO_STATS_STRATEGY = NullIOStatsStrategy>
+class SocketStream_t : public Socket_t<RealSocketStreamImplParent, IO_STATS_STRATEGY> {
 public:
     /**
      * Default constructor.
      */
     SocketStream_t (void)
-        : Socket_t<RealSocketStreamImplParent>(), m_socket_stream_imp()
+        : m_socket_stream_imp()
     {
         m_socket_imp = &m_socket_stream_imp;
     }
@@ -74,8 +74,7 @@ public:
      *                     remote socket address.
      */
     SocketStream_t (vpr::InetAddr local_addr, vpr::InetAddr remote_addr)
-        : Socket_t<RealSocketStreamImplParent>(),
-          m_socket_stream_imp(local_addr, remote_addr)
+        : m_socket_stream_imp(local_addr, remote_addr)
     {
         m_socket_imp = &m_socket_stream_imp;
     }

@@ -751,6 +751,7 @@ AC_OUTPUT(Makefile
           vpr/IO/Makefile
           vpr/IO/Port/Makefile
           vpr/IO/Socket/Makefile
+					vpr/IO/Stats/Makefile
           vpr/Sync/Makefile
           vpr/Thread/Makefile
           vpr/Util/Makefile
