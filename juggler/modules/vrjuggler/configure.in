@@ -37,6 +37,7 @@ dnl # -------------------------------------------------------------------------
 dnl # This file is "compiled" by GNU autoconf to generate the configure script
 dnl # that is actually run.
 dnl # -------------------------------------------------------------------------
+dnl # 
 
 AC_REVISION($Revision$)
 AC_INIT(vjConfig.h)
