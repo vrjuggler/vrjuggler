@@ -1,0 +1,282 @@
+<HEAD>
+  <TITLE>Description of {classname}</TITLE>
+</HEAD>
+
+<!-- install-web strip-blank-lines -->
+
+<BODY>
+
+<!-- Opening heading. -->
+<H2>
+  {include ../common/class_name.html.inc}
+</H2>
+
+{if children}
+  <P>
+    <B>Known direct subclasses:</B>
+    {foreach child}
+      <A HREF="{name}.html">{name}</A>{if !last}, {endif}
+    {next child}
+  </P>
+
+  <HR>
+{endif}
+
+  <P>
+    {include ../common/class_name.html.inc}
+
+    {if class}
+      {if parents}
+	<BR>
+	Sub class of: {parents}
+      {endif}
+    {endif}
+  </P>
+
+  {if brief}
+    <P>
+      {brief}
+    </P>
+  {endif}
+
+{if detail}
+  <P>
+    {detail}
+  </P>
+{endif}
+
+{if italic}
+  <P>
+    <I>{italic}</I>
+  </P>
+{endif}
+
+{if NOTE}
+  <P>
+    <B>NOTE:</B> {NOTE}
+  </P>
+{endif}
+
+<HR>
+
+{if class}
+  {if membervar !private}
+    <!-- Index of non-private class member variable(s). -->
+    <H3>Member Variable Summary</H3>
+
+      <DL>
+	{foreach member all}
+	  {if !mprivate}
+	    {if !func}
+	      <DT>{include ../common/member_type.html.inc}
+		  <TT><B>{name}</B></TT>
+		  {if enum}
+		  <FONT SIZE="-1"><TT>{lb}{args}{rb}</TT></FONT><BR>
+		  {endif}
+		<DD>
+		  {if brief}
+		    {brief}
+		  {endif}
+		  <P> </P>
+		</DD>
+	    {endif}
+	  {endif}
+	{next member}
+      </DL>
+  {endif}
+
+  {if constructor !private}
+    <!-- Index of non-private class constructor(s). -->
+    <H3>Constructor Summary</H3>
+
+      <DL>
+	{foreach member}
+	  {if !mprivate}
+	    {if mconstructor}
+	      <DT><TT><A HREF="#{memberef}"><B>{mname}</B></A>({args})
+		  {if const} const {endif}
+		  {if throws}
+		    <FONT COLOR="#ff0000">throws {throwclass}({throwargs})</FONT>
+		  {endif}
+		  </TT>
+		<DD>
+		  {if brief}
+		    {brief}
+		  {endif}
+		  <P> </P>
+		</DD>
+	    {endif}
+	  {endif}
+	{next member}
+      </DL>
+  {endif}
+
+  {if method !private}
+    <!-- Index of non-private class method(s). -->
+    <H3>Method Summary</H3>
+
+      <DL>
+	{foreach member all}
+	  {if !mprivate}
+	    {if func}
+	      {if !mconstructor}
+		{if !inherited}
+		  <DT>
+		    {include ../common/member_type.html.inc}
+		    <TT>
+		    <A HREF="#{memberef}"><B>{mname}</B></A>({args})
+		    {if const} const {endif}
+		    {if throws}
+		      <FONT COLOR="#ff0000">throws {throwclass}({throwargs})</FONT>
+		    {endif}
+		    </TT>
+		    <DD>
+		      {if brief}
+			{brief}
+		      {endif}
+		      <P> </P>
+		    </DD>
+	        {endif}
+	      {endif}
+	      {else}
+		{if !overridden}
+		  <DT>
+		    {include ../common/member_type.html.inc}
+		    <TT>
+		    {nolink true}
+		    <A HREF="{defclass}_desc.html#{memberef}"><B>{mname}</B></A>({args})
+		    {nolink false}
+		    {if const} const {endif}
+		    {if throws}
+		      <FONT COLOR="#ff0000">throws {throwclass}({throwargs})</FONT>
+		    {endif}
+		    </TT>
+		    <DD>
+		      {if brief}
+			{brief}
+		      {endif}
+		      <P> </P>
+		    </DD>
+		{endif}
+	      {endelse}
+	    {endif}
+	  {endif}
+	{next member}
+      </DL>
+  {endif}
+
+  <HR>
+
+  {if constructor !private}
+    <!-- Class constructor(s). -->
+    <!-- install-web book-ignore-begin -->
+    <H3>Constructor Detail</H3>
+
+      {foreach member}
+	{if !mprivate}
+	  {if mconstructor}
+	    {nolink true}
+	    <H4><A NAME="{memberef}">{mname}</A></H4>
+	    {nolink false}
+
+	    <BLOCKQUOTE>
+	      {include ../common/member_prototype.html.inc}
+	    </BLOCKQUOTE>
+
+	    <BLOCKQUOTE>
+	      {private false}
+		{if descr}
+		  {include ../common/descr.html.inc}
+		{endif}
+
+		<H5>Contract</H5>
+
+		  <BLOCKQUOTE>
+		    {include ../common/contract.html.inc}
+		  </BLOCKQUOTE>
+	      {endprivate}
+
+	      {if ARGS}
+		{ARGS}
+	      {endif}
+	      {if RETURNS}
+		{RETURNS}
+	      {endif}
+	    </BLOCKQUOTE>
+
+	  {endif}
+	{endif}
+      {next member}
+
+    <HR>
+  {endif}
+
+  {if method !private}
+    <!-- Class method(s). -->
+    <H3>Method Detail</H3>
+
+    {foreach member}
+      {if !mprivate}
+	{if func}
+	  {if !mconstructor}
+	    <H4><A NAME="{memberef}">{mname}</A></H4>
+
+	    <BLOCKQUOTE>
+	      {include ../common/member_prototype.html.inc}
+	    </BLOCKQUOTE>
+
+	    <BLOCKQUOTE>
+	      {private false}
+		{if descr}
+		  {include ../common/descr.html.inc}
+		{endif}
+		{else}
+		  {if overrides}
+		    {include ../common/descr.html.inc}
+		  {endif}
+		{endelse}
+
+		<H5>Contract</H5>
+
+		  <BLOCKQUOTE>
+		    {include ../common/contract.html.inc}
+		  </BLOCKQUOTE>
+	      {endprivate}
+
+	      {if ARGS}
+		{ARGS}
+	      {endif}
+	      {if RETURNS}
+		{RETURNS}
+	      {endif}
+	    </BLOCKQUOTE>
+
+	  {endif}
+	{endif}
+      {endif}
+
+    {next member}
+    <HR>
+  {endif}
+{endif}		<!-- End of class information block -->
+{else}
+  <!-- Index of struct/union element(s). -->
+  {private false}
+    <H3>Element Information</H3>
+
+      <DL>
+	{foreach member}
+	  <DT><TT>{type}</TT> <TT><B>{name}</B></TT>
+	    <DD>
+	      {if brief}
+		{brief}
+	      {endif}
+	      <P> </P>
+	    </DD>
+	{next member}
+      </DL>
+
+  {endprivate}
+{endelse}
+
+</BODY>
