@@ -46,11 +46,11 @@ public class ControlUI  extends JFrame
 
 
     JPanel      main_panel;
-    ConfigurePane configure_pane;
+    JComponent configure_pane;
     ConnectionPane connection_pane;
-    DescDBPanel descdb_pane;
-    ConsolePane console_pane;
-    ChunkOrgTreePane orgtree_pane;
+    JComponent descdb_pane;
+    JComponent console_pane;
+    JComponent orgtree_pane;
     PerfAnalyzerPanel perfanalyze_pane;
 
     JMenuBar    main_menubar;
@@ -225,18 +225,6 @@ public class ControlUI  extends JFrame
     public void quit() {
         dispose();
         System.exit(0);
-    }
-
-
-    public void selectLeftDB (String name) {
-	configure_pane.selectLeftDB (name);
-    }
-    public void selectRightDB (String name) {
-	configure_pane.selectRightDB (name);
-    }
-
-    public void selectDescDB (String name) {
-	descdb_pane.selectDB (name);
     }
 
 
@@ -461,7 +449,9 @@ public class ControlUI  extends JFrame
 	    UIManager.put (keys[i], newfont);
 	} 
 	changeFont (this, newfont);
-	changeFont (Core.active_treemodel.tree, newfont);
+
+	// -- BUG --- not changing fonts correctly anymore...
+	//changeFont (Core.active_treemodel.tree, newfont);
 
 	for (i = 0; i < Core.chunkdbs.size(); i++) {
 	    dbt = (ChunkDBTreeModel)Core.chunkdbs.elementAt (i);
