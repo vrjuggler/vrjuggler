@@ -50,7 +50,7 @@ Builder: JExplorerBuilder V 1. 0. 7
 					info="Compile a sample application.  Make sure you have everything set up." 
 					image="Leaf.gif">
 				< item title="Setup Your Configuration" 
-					link="getting.started/compiling.html" 
+					link="getting.started/configuration.html" 
 					info="Set up your default Juggler configuration." 
 					image="Leaf.gif">
 				< item title="Run The Application" 
