@@ -368,8 +368,7 @@ public:  // ----- Various other thread functions ------ //
     //! RETURNS: NULL - Thread is not in global table
     //! RETURNS: NonNull - Ptr to the thread that we are running within
     // -----------------------------------------------------------------------
-    static vjBaseThread*
-    self(void);
+    static vjBaseThread* self(void);
 
     // -----------------------------------------------------------------------
     //: Provide a way of printing the process ID neatly.
