@@ -132,7 +132,9 @@ BEFOREBUILD	= beforebuild
 AFTERBUILD	= afterbuild
 
 # Things to do before the object files and library are built.
-beforebuild: $(PARAM_HEADER)
+beforebuild:
+	@$(MAKE) $(PARAM_HEADER)
+	@$(MAKE) vrjconfig-java
 
 $(PARAM_HEADER): $(VJROOT_ABS)/$(PARAM_HEADER).in $(VJROOT_ABS)/VERSION
 	@$(SHELL) $(scriptdir)/make-ver.sh $(VER_ARGS)
@@ -212,6 +214,28 @@ $(LIBDIR)/$(PF_LIB_DYNAMIC) $(LIBDIR)/$(PF_PROF_LIB_DYNAMIC): $(OBJDIR)/*.$(OBJE
 	@echo "------------------------------------------------"
 
 # =============================================================================
+# VRJConfig targets
+# =============================================================================
+EXTRA_OBJ_TARGETS = vrjconfig-jar
+
+# Build the VRJConfig code base and the JAR files
+vrjconfig-gui:
+	@$(MAKE) vrjconfig-java
+	@$(MAKE) vrjconfig-jar
+
+# Build the java code and the JAR files
+vrjconfig-java vrjconfig-jar:
+ifeq (@BUILD_JAVA@, Y)
+	@echo "===> vrjconfig"
+	$(MAKE) -C vrjconfig $@
+	@echo "<=== vrjconfig"
+else
+	@echo "------------------------------------------------"
+	@echo "VRJConfig build skipped"
+	@echo "------------------------------------------------"
+endif
+
+# =============================================================================
 # Make links for developer use that provide the needed functionality for
 # the $VJ_BASE_DIR environment variable to be used when needed.  $VJ_BASE_DIR
 # should be set to $(instlinks).
@@ -247,6 +271,9 @@ endif
 	cd $(instlinks)/include/vrj && $(RM_LN) ./vrjParam.h &&		\
           $(LN_S) $(topdir)/vrj/vrjParam.h ./
 	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/bin
+ifeq (@BUILD_JAVA@, Y)
+	@$(MAKE) -C vrjconfig instlinks="$(instlinks)" vrjconfig-gui-links
+endif
 	cd $(instlinks)/bin && cp -p $(topdir)/vrjuggler-config .
 	@echo "\n\n"
 	@echo "---------------------------------------------------------------"
