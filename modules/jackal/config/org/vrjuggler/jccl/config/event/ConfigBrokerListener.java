@@ -37,7 +37,7 @@ import java.util.EventListener;
  * Interface for an observer to receive notifications of changes to a config
  * broker.
  *
- * @see ConfigBroker
+ * @see org.vrjuggler.jccl.config.ConfigBroker
  */
 public interface ConfigBrokerListener
    extends EventListener
