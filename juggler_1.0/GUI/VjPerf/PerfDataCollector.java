@@ -195,7 +195,7 @@ public class PerfDataCollector {
 	// 3 after...
 	String s = Double.toString(f);
 	int i = s.lastIndexOf('.');
-	if (i >= 0)
+	if ((i >= 0) && (i +3 < s.length()))
 	    s = s.substring (0, i + 3);
 	while (s.length() < 11)
 	    s = ' ' + s;
@@ -204,54 +204,6 @@ public class PerfDataCollector {
 
 
     public void generateAverages (int preskip, int postskip) {
-
-//  	DataLine dl,dl2;
-//  	double total = 0.0;
-//  	int totalsamps = 0;
-//  	int i,j;
-//  	Property labelsprop = null;
-//  	String label;
-//  	ListIterator li;
-
-//  	if (preskip < 1)
-//  	    preskip = 1;
-
-//  	for (i = 0; i < num; i++) {
-//  	    sums[i] = 0.0;
-//  	    maxvals[i] = 0.0;
-//  	    numsamps[i] = 0;
-//  	}
-
-//  	// this is a sucky way of taking care of pre/postskip
-//  	li = datalines.listIterator();
-//  	int limit = Math.min (preskip, datalines.size());
-//  	for (i = 0; i < limit; i++)
-//  	    li.next();
-	
-//  	while (li.hasNext()) {
-//  	    dl = (DataLine)li.next();
-//  	    if (j < datalines.size()-1) {
-//  		dl2 = (DataLine)li.next();
-//  		if (dl.numlost == 0) {
-//  		    double t = dl2.vals[0] - dl.vals[0];
-//  		    if (!Double.isNaN (t)) {
-//  			totalsamps++;
-//  			total += t;
-//  		    }
-//  		}
-//  		li.getPrev(); // undo extra getnext
-//  	    }
-//  	    for (i = 0; i < num; i++) {
-//  		if (!Double.isNaN(dl.diffs[i])) {
-//  		    numsamps[i]++;
-//  		    if (dl.diffs[i] > maxvals[i])
-//  			maxvals[i] = dl.diffs[i];
-//  		    sums[i] += dl.diffs[i];
-//  		    //totalsamps++;
-//  		    //total += dl.diffs[i];
-//  		}
-//  	    }
-//  	}
 
     }
 
