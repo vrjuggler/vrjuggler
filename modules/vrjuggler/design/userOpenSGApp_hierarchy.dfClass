@@ -21,7 +21,11 @@ class diagram {
 @__hiddenMember <oiref:cpp#Member#vrj::App#reset#(##)#:oiref>
 @__hiddenMember <oiref:cpp#Member#vrj::App#$$constructor$$#(##)#:oiref>
 @__hiddenMember <oiref:cpp#Member#vrj::App#$$constructor$$#(#Kernel*#)#:oiref>
-@hideAttributes 
+@hideAttributes
+@__hiddenMember <oiref:cpp#Member#vrj::App#configAdd#(#jccl::ConfigElementPtr#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::App#configRemove#(#jccl::ConfigElementPtr#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::App#configCanHandle#(#jccl::ConfigElementPtr#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::App#$$destructor$$#(##)#:oiref> 
 */
 class reference {
 }/**
@@ -35,6 +39,7 @@ class reference {
 @__hiddenMember <oiref:cpp#Member#vrj::GlApp#contextClose#(##)#:oiref>
 @__hiddenMember <oiref:cpp#Member#vrj::GlApp#contextPreDraw#(##)#:oiref>
 @__hiddenMember <oiref:cpp#Member#vrj::GlApp#contextPostDraw#(##)#:oiref> 
+@__hiddenMember <oiref:cpp#Member#vrj::GlApp#$$destructor$$#(##)#:oiref>
 */
 class reference1 {
 }/**
@@ -76,13 +81,13 @@ class __tags {
 */
 class __options {
 }/**
-@__positions <oigroup:<oiref:cpp#Extends#vrj::OpenSGApp#vrj::GlApp:oiref>=338,300,338,168:oigroup>
-<oigroup:<oiref:cpp#Extends#vrj::GlApp#vrj::App:oiref>=270,104,175,104:oigroup>
-<oigroup:<oiref:cpp#Extends#userOpenSGApp#vrj::OpenSGApp:oiref>=194,354,270,354:oigroup>
-<oigroup:<oiref:cpp#Class#vrj::OpenSGApp:oiref>=270,300,200,130,0:oigroup>
-<oigroup:<oiref:cpp#Class#vrj::GlApp:oiref>=270,40,136,128,1:oigroup>
-<oigroup:<oiref:cpp#Class#vrj::App:oiref>=10,10,165,193,1:oigroup>
-<oigroup:<oiref:cpp#Class#userOpenSGApp:oiref>=10,280,184,128,1:oigroup>
+@__positions <oigroup:<oiref:cpp#Extends#vrj::OpenSGApp#vrj::GlApp:oiref>=341,220,341,153:oigroup>
+<oigroup:<oiref:cpp#Extends#vrj::GlApp#vrj::App:oiref>=270,104,192,104:oigroup>
+<oigroup:<oiref:cpp#Extends#userOpenSGApp#vrj::OpenSGApp:oiref>=206,284,240,284:oigroup>
+<oigroup:<oiref:cpp#Class#vrj::OpenSGApp:oiref>=240,220,200,130,0:oigroup>
+<oigroup:<oiref:cpp#Class#vrj::GlApp:oiref>=270,40,143,113,1:oigroup>
+<oigroup:<oiref:cpp#Class#vrj::App:oiref>=10,10,182,193,1:oigroup>
+<oigroup:<oiref:cpp#Class#userOpenSGApp:oiref>=10,220,196,128,1:oigroup>
 */
 class __positions {
 }

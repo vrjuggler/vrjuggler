@@ -47,6 +47,9 @@ class reference1 {
 @__hiddenMember <oiref:cpp#Member#vrj::App#$$constructor$$#(##)#:oiref>
 @__hiddenMember <oiref:cpp#Member#vrj::App#$$constructor$$#(#Kernel*#)#:oiref>
 @__hiddenMember <oiref:cpp#Member#vrj::App#$$destructor$$#(##)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::App#configRemove#(#jccl::ConfigElementPtr#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::App#configAdd#(#jccl::ConfigElementPtr#)#:oiref>
+@__hiddenMember <oiref:cpp#Member#vrj::App#configCanHandle#(#jccl::ConfigElementPtr#)#:oiref>
 */
 class reference2 {
 }}/**
@@ -61,13 +64,13 @@ class __tags {
 class __options {
 }/**
 @__positions 
-<oigroup:<oiref:cpp#Class#userOglApp:oiref>=270,270,160,260,0:oigroup>
-<oigroup:<oiref:cpp#Extends#vrj::GlApp#vrj::App:oiref>=260,140,200,140:oigroup>
-<oigroup:<oiref:cpp#Extends#userOglApp#vrj::GlApp:oiref>=350,270,350,230:oigroup>
+<oigroup:<oiref:cpp#Class#userOglApp:oiref>=270,240,160,190,0:oigroup>
+<oigroup:<oiref:cpp#Extends#vrj::GlApp#vrj::App:oiref>=260,110,200,110:oigroup>
+<oigroup:<oiref:cpp#Extends#userOglApp#vrj::GlApp:oiref>=350,240,350,170:oigroup>
 <oigroup:<oiref:cpp#Member#userOglApp#apiInit#(##)#:oiref>=110,130,211,13,1:oigroup>
 <oigroup:<oiref:cpp#Member#userOglApp#preFrame#(##)#:oiref>=110,150,211,13,1:oigroup>
-<oigroup:<oiref:cpp#Class#vrj::GlApp:oiref>=260,50,180,180,0:oigroup>
-<oigroup:<oiref:cpp#Class#vrj::App:oiref>=10,10,190,240,0:oigroup>
+<oigroup:<oiref:cpp#Class#vrj::GlApp:oiref>=260,50,180,120,0:oigroup>
+<oigroup:<oiref:cpp#Class#vrj::App:oiref>=10,10,190,210,0:oigroup>
 */
 class __positions {
 }
