@@ -49,6 +49,7 @@ import org.vrjuggler.tweek.services.EnvironmentService;
 import org.vrjuggler.tweek.services.EnvironmentServiceProxy;
 
 import org.vrjuggler.vrjconfig.ui.ConfigToolbar;
+import org.vrjuggler.vrjconfig.ui.ContextToolbar;
 
 public class VrjConfig
    extends JPanel
@@ -126,7 +127,8 @@ public class VrjConfig
     */
    private ConfigIFrame toolbarContextChanged()
    {
-      ConfigIFrame frame = new ConfigIFrame();
+      ConfigIFrame frame = new ConfigIFrame(mToolbar.getCurrentDirectory(),
+                                            mToolbar.getConfigContext());
       frame.getEditor().setConfigContext(mToolbar.getConfigContext());
       addFrame(frame);
       return frame;
@@ -223,7 +225,7 @@ public class VrjConfig
    private class ConfigIFrame
       extends JInternalFrame
    {
-      public ConfigIFrame()
+      public ConfigIFrame(File curDir, ConfigContext ctx)
       {
          super("Configuration Editor",
                true,
@@ -231,6 +233,8 @@ public class VrjConfig
                true,
                true);
          getContentPane().setLayout(new BorderLayout());
+         getContentPane().add(new ContextToolbar(curDir, ctx),
+                              BorderLayout.NORTH);
          getContentPane().add(editor, BorderLayout.CENTER);
          setDefaultCloseOperation(JInternalFrame.DO_NOTHING_ON_CLOSE);
       }
