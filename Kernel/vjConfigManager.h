@@ -165,7 +165,9 @@ public:   // ----- PENDING LIST ----- //
          vjConfigChunk* cur_chunk = (*current).mChunk;
 
          vjDEBUGlg(vjDBG_ALL,0,false,true) << cur_chunk->getProperty("name")
-                                           << " type: " << (std::string)cur_chunk->getType() << endl << vjDEBUG_FLUSH;
+                                           << " type: "
+                                           << ((std::string)cur_chunk->getType()).c_str()
+                                           << endl << vjDEBUG_FLUSH;
          current++;
       }
       vjDEBUG_ENDlg(vjDBG_ALL,0,false,true) << "-------------------------------\n" << vjDEBUG_FLUSH      ;
