@@ -67,6 +67,16 @@ public:
                          const InetAddr& remote_addr);
 
     // ------------------------------------------------------------------------
+    // Copy constructor.
+    // ------------------------------------------------------------------------
+    SocketDatagramImpBSD (const SocketDatagramImpBSD& sock) {
+        m_local_addr      = sock.m_local_addr;
+        m_remote_addr     = sock.m_remote_addr;
+        m_handle          = new FileHandleUNIX(sock.m_handle->getName());
+        m_handle->m_fdesc = sock.m_handle->m_fdesc;
+    }
+
+    // ------------------------------------------------------------------------
     //: Destructor.  This currently does nothing.
     //
     //! PRE: None.
