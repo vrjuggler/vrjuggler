@@ -281,7 +281,6 @@ vpr::ReturnStatus XMLObjectReader::endAttribute()
    mCurSource = CdataSource;     // Set back to getting data from cdata
    return vpr::ReturnStatus::Succeed;
 }
-//@}
 
 void XMLObjectReader::resetReading()
 {

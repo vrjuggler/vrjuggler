@@ -252,7 +252,6 @@ inline vpr::ReturnStatus XMLObjectWriter::endAttribute()
 
    return vpr::ReturnStatus::Succeed;
 }
-//@}
 
 /* Write out the single byte.
 * @post: data = old(data)+val, mCurHeadPos advaced 1
