@@ -48,7 +48,7 @@ OBJEXT=		@OBJEXT@
 
 SRCS=		main.cpp
 OBJS=		$(SRCS:.cpp=.$(OBJEXT))
-APP_NAME=	pyApp$(EXEEXT)
+APP_NAME=	pyAppLoader$(EXEEXT)
 
 vpath %.cpp $(srcdir)
 
