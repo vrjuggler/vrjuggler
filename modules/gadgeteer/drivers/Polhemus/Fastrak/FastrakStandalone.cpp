@@ -634,7 +634,7 @@ int FastrakStandalone::getNewButtonStatus(unsigned int station)
    if ( (unsigned)(--station) >= 4 ) return 0;
    c = '1'+station;
    psp = &mConf.perstation[station];
-   if ( psp->rec & (1<<But) == 0 ) return 0;
+   if ( (psp->rec & (1 << But)) == 0 ) return 0;
    getTrackerInfo(psp, c);
    return mTrackerBuf[psp->butoff] - '0';
 }
