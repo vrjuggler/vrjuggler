@@ -84,7 +84,7 @@ ThreadPosix::ThreadPosix (thread_func_t func, void* arg,
    // NOTE: Automagically registers thread UNLESS failure
    int ret_val = spawn(start_functor, priority, scope, state, stack_size);
 
-   if(!ret_val)
+   if(ret_val)
    {
       vpr_tm_inst->lock();  // Need to lock thread manager before I register the thread with them
       {
@@ -120,7 +120,7 @@ ThreadPosix::ThreadPosix (BaseThreadFunctor* functorPtr,
     // NOTE: Automagically registers thread UNLESS failure
     int ret_val = spawn(start_functor, priority, scope, state, stack_size);
 
-    if(!ret_val)
+    if(ret_val)
     {
        vpr_tm_inst->lock();  // Need to lock thread manager before I register the thread with them
        {
