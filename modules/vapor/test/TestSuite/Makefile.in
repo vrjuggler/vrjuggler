@@ -85,7 +85,7 @@ clean:
 	@echo "Removing compiled stuff from the system	 "
 	@echo "-------------------------------------------"
 	rm -fr $(OBJS) $(PROJECT_NAME) *.ncb *.opt *.plg *.ilk *.idb	\
-          *.pdb *.pch Debug/ Release/ ii_files/
+          *.pdb *.pch Debug/ Release/ ii_files/ *core
 
 clobber: clean
 	rm -f *.d
