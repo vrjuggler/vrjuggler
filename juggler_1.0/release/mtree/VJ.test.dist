@@ -25,6 +25,8 @@
 	ogl
 	    cubes
 	    ..
+	    simpleGlove
+	    ..
 	    wand
 	    ..
 	..
