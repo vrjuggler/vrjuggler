@@ -41,8 +41,9 @@ class vjSoundEngine;
 class vjSound
 {
 public:
-   vjSound( vjSoundEngine& engine ) : mPosition( 0.0f, 0.0f, 0.0f ), mVolume( 1.0f ), 
-      mEngine(&engine), mFalloff( 20.0f ), mLooping( 0 ) 
+   vjSound( vjSoundEngine& engine )
+     : mLooping( 0 ),  mEngine(&engine), mPosition( 0.0f, 0.0f, 0.0f ),
+       mVolume( 1.0f ), mFalloff( 20.0f )
    {
    }
    
