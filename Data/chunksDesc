@@ -66,6 +66,8 @@ chunk PosProxy "Position Proxy" "Used to access a single positional input source
   etrans Bool 1 "Enable Transformation" "If true, the Proxy Transformation is applied to data"
   translate Float 3 "Translation" vj_valuelabels { "Trans X" "Trans Y" "Trans Z" } "(recv_T_modRecv) Proxy translation (in the reciever's coord system)"
   rotate Float 3 "Rotation" vj_valuelabels { "X" "Y" "Z" } "(recv_T_modRecv) Proxy rotation (Euler angles in the reciever's coord system)"
+  useFilter Bool 1 "Use Filter" ""
+  sigmoidParams EmbeddedChunk 1 "sigmoidParams" vj_enumeration { "sigmoid_linear_pos_filter" } ""
   end
 chunk InputManager "Input Manager" "Configure the initial Input Manager settings."
   Name String 1 "Name" "Unique name of an instance of this chunk type"
@@ -250,6 +252,11 @@ chunk SimRelativePosition "SimRelativePosition" "A positional device simulator f
   Name String 1 "Name" "Unique name of an instance of this chunk type"
   base_frame_proxy Chunk 1 "base_frame_proxy" vj_enumeration { "PosProxy" } "Pos proxy that devices the base frame of reference"
   relative_proxy Chunk 1 "relative_proxy" vj_enumeration { "PosProxy" } "device that is relative to the base frame"
+  end
+chunk sigmoid_linear_pos_filter "SigmoidLinearPosFilter" ""
+  Name String 1 "Name" "Unique name of an instance of this chunk type"
+  minDist Float 1 "minDist" ""
+  maxDist Float 1 "maxDist" ""
   end
 chunk AwSoundEngine "Audioworks Sound Engine" "Use an audioworks sound engine."
   Name String 1 "Name" "Unique name of an instance of this chunk type"
