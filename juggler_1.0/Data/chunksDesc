@@ -9,6 +9,12 @@ chunk IBox "IBox" "Configuration for the IBox"
   portnum Int 1 "portnum" ""
   baud Int 1 "Baud Rate" "Serial port speed"
   end
+chunk PinchGlove "PinchGlove" "Configuration for the PinchGlove"
+  Name String 1 "Name" "Unique name of an instance of this chunk type"
+  port String 1 "Port" "Serial port that the PinchGlove is connected to"
+  baud Int 1 "Baud Rate" "Serial port speed (9600)"
+  glovePos Chunk 1 "Glove Position" vj_enumeration { "proxyAlias" "PosProxy" } "The position proxy for the glove position. i.e. the tracker on the glove."
+  end
 chunk CyberGlove "CyberGlove" "Configuration for the CyberGlove"
   Name String 1 "Name" "Unique name of an instance of this chunk type"
   port String 1 "Port" "Serial port that the CyberGlove is connected to"
@@ -83,7 +89,7 @@ chunk Keyboard "Keyboard" "Configures a window that accepts keyboard & mouse inp
   end
 chunk GloveProxy "Glove Proxy" "A Glove Proxy points to a glove device and unit"
   Name String 1 "Name" "Unique name of an instance of this chunk type"
-  device Chunk 1 "Device" vj_enumeration { "CyberGlove" "SimGloveGesture" } "The glove device the proxy connects to."
+  device Chunk 1 "Device" vj_enumeration { "CyberGlove" "SimGloveGesture" "PinchGlove" } "The glove device the proxy connects to."
   unit Int 1 "Unit" "The unit number in the device to hook to."
   visible Bool 1 "Visible" "If true, the glove will be rendered in display windows."
   end
