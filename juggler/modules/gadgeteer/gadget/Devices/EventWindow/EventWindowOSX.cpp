@@ -72,7 +72,7 @@ std::string EventWindowOSX::getElementType()
 /** Constructor. */
 bool EventWindowOSX::config(jccl::ConfigElementPtr e)
 {
-   if ( ! (Input::config(c) && EventWindow::config(c)) )
+   if ( ! (Input::config(e) && EventWindow::config(e)) )
    {
       return false;
    }
@@ -86,8 +86,8 @@ bool EventWindowOSX::config(jccl::ConfigElementPtr e)
    mCurKeys[0] = m_realkeys[0] = m_keys[0] = 1;
 
    // Get size and position
-   m_width = c->getProperty<int>("width");
-   m_height = c->getProperty<int>("height");
+   m_width = e->getProperty<int>("width");
+   m_height = e->getProperty<int>("height");
 
    if ( m_width == 0 )
    {
@@ -103,8 +103,8 @@ bool EventWindowOSX::config(jccl::ConfigElementPtr e)
    m_y = e->getProperty<int>("origin", 1);
 
    // Get the lock information
-   mLockToggleKey = c->getProperty<int>("lock_key");
-   bool start_locked = c->getProperty<bool>("start_locked");
+   mLockToggleKey = e->getProperty<int>("lock_key");
+   bool start_locked = e->getProperty<bool>("start_locked");
    if ( start_locked )
    {
       mLockState = Lock_LockKey;      // Initialize to the locked state
