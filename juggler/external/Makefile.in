@@ -103,6 +103,8 @@ USE_OMNIPYTHON=		@USE_OMNIPYTHON@
 OMNIPYTHON=		@OMNIPYTHON@
 OMNIPYTHON_HOME=	@OMNIPYTHON_HOME@
 
+TAO_CMDS=		@TAO_CMDS@
+
 # NOTE: There are no spaces between the commas in the $(subst) function call
 # because that introduces whitespace into the resulting string.
 #BOOST_INCLUDE_DIR=	$(subst $(BOOST_ROOT),,$(BOOST_INCLUDES))
@@ -258,6 +260,44 @@ ifeq ($(USE_OMNIPYTHON), Y)
 	$(LN_S) $(OMNIPYTHON_HOME)/lib/$(OMNI_PYTHON_DIR)/lib-dynload	\
           $(instlinks)/lib/$(OMNI_PYTHON_DIR)
 endif
+
+# XXX: There are way too many ACE+TAO libraries.  Can some be removed?
+links-TAO:
+	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/include
+	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/bin
+	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/lib$(LIBBITSUF)
+	-$(RM_LN) $(instlinks)/include/ace
+	-$(RM_LN) $(instlinks)/include/orbsvcs
+	-$(RM_LN) $(instlinks)/include/tao
+	@for c in $(TAO_CMDS) ; do					\
+            $(RM_LN) $(instlinks)/bin/$$c ;				\
+            $(LN_S) $(CXX_ORB_BIN_DIR)/$$c $(instlinks)/bin/$$c || exit 1; \
+          done
+	$(LN_S) $(CXX_ORB_ROOT)/include/ace $(instlinks)/include/ace
+	$(LN_S) $(CXX_ORB_ROOT)/include/orbsvcs $(instlinks)/include/orbsvcs
+	$(LN_S) $(CXX_ORB_ROOT)/include/tao $(instlinks)/include/tao
+	$(INSTALL) -l $(CXX_ORB_ROOT)/$(CXX_ORB_LIB_PATH)/libACE*	\
+          $(instlinks)/lib$(LIBBITSUF)
+	$(INSTALL) -l $(CXX_ORB_ROOT)/$(CXX_ORB_LIB_PATH)/libClient_Test* \
+          $(instlinks)/lib$(LIBBITSUF)
+	$(INSTALL) -l $(CXX_ORB_ROOT)/$(CXX_ORB_LIB_PATH)/libDump_Restore* \
+          $(instlinks)/lib$(LIBBITSUF)
+	$(INSTALL) -l $(CXX_ORB_ROOT)/$(CXX_ORB_LIB_PATH)/libGateway*	\
+          $(instlinks)/lib$(LIBBITSUF)
+	$(INSTALL) -l $(CXX_ORB_ROOT)/$(CXX_ORB_LIB_PATH)/libJAWS3*	\
+          $(instlinks)/lib$(LIBBITSUF)
+	$(INSTALL) -l $(CXX_ORB_ROOT)/$(CXX_ORB_LIB_PATH)/libKokyu*	\
+          $(instlinks)/lib$(LIBBITSUF)
+	$(INSTALL) -l $(CXX_ORB_ROOT)/$(CXX_ORB_LIB_PATH)/libTMCast*	\
+          $(instlinks)/lib$(LIBBITSUF)
+	$(INSTALL) -l $(CXX_ORB_ROOT)/$(CXX_ORB_LIB_PATH)/libasnmp*	\
+          $(instlinks)/lib$(LIBBITSUF)
+	$(INSTALL) -l $(CXX_ORB_ROOT)/$(CXX_ORB_LIB_PATH)/libnetsvcs*	\
+          $(instlinks)/lib$(LIBBITSUF)
+	$(INSTALL) -l $(CXX_ORB_ROOT)/$(CXX_ORB_LIB_PATH)/libwebsvcs*	\
+          $(instlinks)/lib$(LIBBITSUF)
+	$(INSTALL) -l $(CXX_ORB_ROOT)/$(CXX_ORB_LIB_PATH)/libTAO*	\
+          $(instlinks)/lib$(LIBBITSUF)
 
 links-openal:
 	$(SHELL) $(MKINSTALLDIRS) $(instlinks)/include
@@ -437,6 +477,59 @@ ifeq ($(USE_OMNIPYTHON), Y)
           $(deps_prefix)/lib/$(OMNI_PYTHON_DIR)
 	-rm -f $(deps_prefix)/lib/$(OMNI_PYTHON_DIR)/site.pyc
 endif
+
+# XXX: There are way too many ACE+TAO libraries.  Can some be removed?
+install-TAO:
+	$(SHELL) $(MKINSTALLDIRS) $(deps_prefix)/include/ace
+	$(SHELL) $(MKINSTALLDIRS) $(deps_prefix)/include/orbsvcs
+	$(SHELL) $(MKINSTALLDIRS) $(deps_prefix)/include/tao
+	$(SHELL) $(MKINSTALLDIRS) $(deps_prefix)/bin
+	$(SHELL) $(MKINSTALLDIRS) $(deps_prefix)/lib
+	@for c in $(TAO_CMDS) ; do					\
+            $(INSTALL) -m $(EXEC_PERMS) $(GROUP_OPT_UNIX) $(CXX_ORB_BIN_DIR)/$$c $(deps_prefix)/bin/$$c || exit 1; \
+          done
+	$(PERL) $(scriptdir)/install-dir.pl -m $(FILE_PERMS)		\
+          -e .cpp,.h,.i,.inl $(GROUP_OPT_UNIX)				\
+          -i $(CXX_ORB_ROOT)/include/ace -o $(deps_prefix)/include/ace
+	$(PERL) $(scriptdir)/install-dir.pl -m $(FILE_PERMS)		\
+          -e .cpp,.h,.i,.inl $(GROUP_OPT_UNIX)				\
+          -i $(CXX_ORB_ROOT)/include/orbsvcs -o $(deps_prefix)/include/orbsvcs
+	$(PERL) $(scriptdir)/install-dir.pl -m $(FILE_PERMS)		\
+          -e .cpp,.h,.i,.inl $(GROUP_OPT_UNIX)				\
+          -i $(CXX_ORB_ROOT)/include/tao -o $(deps_prefix)/include/tao
+	$(INSTALL) -L $(GROUP_OPT_UNIX) -m $(EXEC_PERMS)		\
+          $(CXX_ORB_ROOT)/$(CXX_ORB_LIB_PATH)/libACE*.$(DYNAMICLIB_EXT)* \
+          $(deps_prefix)/lib
+	$(INSTALL) -L $(GROUP_OPT_UNIX) -m $(EXEC_PERMS)		\
+          $(CXX_ORB_ROOT)/$(CXX_ORB_LIB_PATH)/libClient_Test.$(DYNAMICLIB_EXT)* \
+          $(deps_prefix)/lib
+	$(INSTALL) -L $(GROUP_OPT_UNIX) -m $(EXEC_PERMS)		\
+          $(CXX_ORB_ROOT)/$(CXX_ORB_LIB_PATH)/libDump_Restore.$(DYNAMICLIB_EXT)* \
+          $(deps_prefix)/lib
+	$(INSTALL) -L $(GROUP_OPT_UNIX) -m $(EXEC_PERMS)		\
+          $(CXX_ORB_ROOT)/$(CXX_ORB_LIB_PATH)/libGateway.$(DYNAMICLIB_EXT)* \
+          $(deps_prefix)/lib
+	$(INSTALL) -L $(GROUP_OPT_UNIX) -m $(EXEC_PERMS)		\
+          $(CXX_ORB_ROOT)/$(CXX_ORB_LIB_PATH)/libJAWS3.$(DYNAMICLIB_EXT)* \
+          $(deps_prefix)/lib
+	$(INSTALL) -L $(GROUP_OPT_UNIX) -m $(EXEC_PERMS)		\
+          $(CXX_ORB_ROOT)/$(CXX_ORB_LIB_PATH)/libKokyu.$(DYNAMICLIB_EXT)* \
+          $(deps_prefix)/lib
+	$(INSTALL) -L $(GROUP_OPT_UNIX) -m $(EXEC_PERMS)		\
+          $(CXX_ORB_ROOT)/$(CXX_ORB_LIB_PATH)/libTMCast.$(DYNAMICLIB_EXT)* \
+          $(deps_prefix)/lib
+	$(INSTALL) -L $(GROUP_OPT_UNIX) -m $(EXEC_PERMS)		\
+          $(CXX_ORB_ROOT)/$(CXX_ORB_LIB_PATH)/libasnmp.$(DYNAMICLIB_EXT)* \
+          $(deps_prefix)/lib
+	$(INSTALL) -L $(GROUP_OPT_UNIX) -m $(EXEC_PERMS)		\
+          $(CXX_ORB_ROOT)/$(CXX_ORB_LIB_PATH)/libnetsvcs.$(DYNAMICLIB_EXT)* \
+          $(deps_prefix)/lib
+	$(INSTALL) -L $(GROUP_OPT_UNIX) -m $(EXEC_PERMS)		\
+          $(CXX_ORB_ROOT)/$(CXX_ORB_LIB_PATH)/libwebsvcs.$(DYNAMICLIB_EXT)* \
+          $(deps_prefix)/lib
+	$(INSTALL) -L $(GROUP_OPT_UNIX) -m $(EXEC_PERMS)		\
+          $(CXX_ORB_ROOT)/$(CXX_ORB_LIB_PATH)/libTAO*.$(DYNAMICLIB_EXT)* \
+          $(deps_prefix)/lib
 
 install-openal:
 	$(SHELL) $(MKINSTALLDIRS) $(deps_prefix)/include/AL
