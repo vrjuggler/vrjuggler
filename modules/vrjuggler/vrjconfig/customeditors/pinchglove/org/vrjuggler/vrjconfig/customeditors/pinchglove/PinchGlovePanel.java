@@ -158,6 +158,11 @@ public class PinchGlovePanel extends JPanel implements CustomEditor
       return "PinchGlove Editor";
    }
 
+   public ActionListener getHelpActionListener()
+   {
+      return null;
+   }
+
    private void loadLabelIcon(JLabel button, String path, String alt)
    {
       try

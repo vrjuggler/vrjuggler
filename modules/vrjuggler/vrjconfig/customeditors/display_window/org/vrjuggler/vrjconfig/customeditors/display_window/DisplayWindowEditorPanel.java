@@ -189,6 +189,11 @@ public class DisplayWindowEditorPanel
       return "Display Window Editor";
    }
 
+   public ActionListener getHelpActionListener()
+   {
+      return null;
+   }
+
    public void internalFrameActivated(InternalFrameEvent e)
    {
       setActiveDisplayWindow((DisplayWindowFrame) e.getInternalFrame());
