@@ -1,5 +1,9 @@
 DATE        AUTHOR      CHANGE
 ----------- ----------- -------------------------------------------------------
+Mar-20-2005 patrickh    Added functions to the JCCL Config Java classes that
+                        are useful in performing base type operations on config
+                        definitions.
+                        NEW VERSION: 0.92.9
 Mar-14-2005 patrickh    Provide public Java classes for allowing ConfigElement
                         references to be stored in the Java clipboard.
                         NEW VERSION: 0.92.8

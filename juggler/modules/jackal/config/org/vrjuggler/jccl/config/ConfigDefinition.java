@@ -332,6 +332,40 @@ public class ConfigDefinition
    }
 
    /**
+    * Determines if this config definition is of the given type.
+    *
+    * @param token      the config definition type that may or may not be a
+    *                   base type of this config definition
+    *
+    * @return true is returned if this config definition is of the given type;
+    *         false is returned otherwise
+    *
+    * @since 0.92.9
+    */
+   public synchronized boolean isOfType(String token)
+   {
+      ConfigDefinitionRepository repos = getBroker().getRepository();
+
+      if ( getToken().equals(token) )
+      {
+         return true;
+      }
+      else
+      {
+         for ( Iterator p = mParents.iterator(); p.hasNext(); )
+         {
+            ConfigDefinition parent_def = repos.get((String) p.next());
+            if ( parent_def.isOfType(token) )
+            {
+               return true;
+            }
+         }
+      }
+
+      return false;
+   }
+
+   /**
     * Get a list of all ConfigDefinitions that derive from this definition.
     */
    public synchronized List getSubDefinitions()
