@@ -30,7 +30,7 @@ public class ConfigChunkDBPanel extends MainWindowPanel
 
 
 
-    public ConfigChunkDBPanel (ClientGlobals c) {
+    public ConfigChunkDBPanel (ClientGlobals c ) {
 	super(); 
 
 	BorderedPanel      p;

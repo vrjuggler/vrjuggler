@@ -57,7 +57,7 @@ public class FileControl {
 	    return false;
 	}
 	else {
-	    if (basedir.endsWith (fileseparator))
+	    if (!basedir.endsWith (fileseparator))
 		basedir = basedir + fileseparator;
 	    return true;
 	}
@@ -221,7 +221,7 @@ public class FileControl {
 					 FileDialog.SAVE);
     
 	/*CfgFileRequester fd = new CfgFileRequester(core.ui,
-	  homedir + "/.C2config",
+	  homedir + "/.vjconfig",
 	  "",
 	  true);
 	*/
@@ -275,7 +275,7 @@ public class FileControl {
 
 
     public boolean loadBaseConfigChunkDB () {
-	String fname = basedir + "Data/C2config";
+	String fname = basedir + "Data/vjConfig";
 	
 	try {
 	    FileReader r = new FileReader(fname);
@@ -309,15 +309,16 @@ public class FileControl {
     
     //ElCheapoRequester fd = new ElCheapoRequester(core.ui);
       /*CfgFileRequester fd = new CfgFileRequester(core.ui,
-					       homedir + "/.C2config",
+					       homedir + "/.vjconfig",
 					       ".cfg",
 					       false);
       */
     fd.show();
     String name = fd.getFile();
+System.out.println ("attempting to load '" + name + "'");
     if ((name == null) || name.equals(""))
       return false;
-    //return loadUserConfigChunkDB (homedir + "/.C2config/" + name);
+    //return loadUserConfigChunkDB (homedir + "/.vjconfig/" + name);
     return loadUserConfigChunkDB (name);
   }
 
@@ -365,7 +366,7 @@ public class FileControl {
 
 
   public boolean saveBaseConfigChunkDB () {
-     String name = basedir + "Data/C2Config";
+     String name = basedir + "Data/vjConfig";
      return saveBaseConfigChunkDB(name);
   }
 
@@ -393,7 +394,7 @@ public class FileControl {
 				     FileDialog.SAVE);
     
       /*CfgFileRequester fd = new CfgFileRequester(core.ui,
-					       homedir + "/.C2config",
+					       homedir + "/.vjconfig",
 					       ".cfg",
 					       true);
       */
@@ -401,7 +402,7 @@ public class FileControl {
     String name = fd.getFile();
       if ((name == null) || name.equals(""))
 	return false;
-      //return saveUserConfigChunkDB(homedir + "/.C2config/" + name);
+      //return saveUserConfigChunkDB(homedir + "/.vjconfig/" + name);
       return saveUserConfigChunkDB (name);
   }
 

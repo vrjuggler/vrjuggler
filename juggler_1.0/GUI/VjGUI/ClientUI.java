@@ -2,6 +2,7 @@
  * ClientUI.java
  *
  * Author: Christopher Just
+ *
  */
 
 
@@ -36,17 +37,30 @@ public class ClientUI extends Frame
     public Dialog         waitdialog;
 
 
-    public ClientUI (ClientGlobals c) {
+    public ClientUI (ClientGlobals _core) {
 	super("VR Juggler Configuration Editor");
-	core = c;
 
-	windowfont = new Font ("Courier", Font.PLAIN, 12);
-	//windowfont = new Font ("Courier", Font.PLAIN, 16);
+	core = _core;
+
+    }
+
+
+    public void initialize() {
+	/* we need to separate all this into initialize because
+	 * a lot of stuff that gets created as a result of this
+	 * needs the ui value in core to be set, and that doesn't
+	 * happen until _after_ the constructor completes.
+	 */
+	activepanel = null;
+
+	//windowfont = new Font ("Courier", Font.PLAIN, 12);
+	windowfont = new Font ("Courier", Font.PLAIN, 16);
        	windowfontbold = new Font ("Courier", Font.BOLD, 16);
 	setFont (windowfont);
 
-	/* we use this when we're opening a window that may take a while
-	 * to layout,so the user has some immediate feedback
+	/* we use this when we're opening a window that 
+	 * may take a while to layout,so the user has 
+	 * some immediate feedback
 	 */
 	waitdialog = new Dialog (this, "Laying out window...", false);
 	waitdialog.add (new Label ("Laying out this window..."));
@@ -106,20 +120,23 @@ public class ClientUI extends Frame
 	    activepanel = connectpanel;
 	}
 	else {
-	    layout.show(cardpanel, "Chunks");
-	    activepanel = chunkspanel;
+	    //	    layout.show(cardpanel, "Chunks");
+	    //	    activepanel = chunkspanel;
+	    showPanel ("Chunks");
 	}
 
 	procframe = new ProcessFrame (core, windowfont);
 
 	pack();
-	setVisible(true);
+	//	setVisible(true);
+	show();
     }
 
 
 
     public boolean showPanel (String s) {
-	activepanel.deactivate();
+	if (activepanel != null)
+	    activepanel.deactivate();
 	
 	if (s.equalsIgnoreCase("Processes")) {
 	    procframe.update();
@@ -202,13 +219,17 @@ public class ClientUI extends Frame
 	 * Now we just have to call update of everything else 
 	 * that's visible
 	 */
-	for (j = 0; j < datadisplayframes.size(); j++) {
-	    f = (DataDisplayFrame)datadisplayframes.elementAt(j);
-	    f.update();
+	if (core.mode == core.APP_GUI) {
+	    for (j = 0; j < datadisplayframes.size(); j++) {
+		f = (DataDisplayFrame)datadisplayframes.elementAt(j);
+		f.update();
+	    }
+	    if (procframe.isVisible())
+		procframe.update();
 	}
-	if (procframe.isVisible())
-	    procframe.update();
-	activepanel.update();
+
+	if (activepanel != null)
+	    activepanel.update();
 	return true;
     }
 

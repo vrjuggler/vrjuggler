@@ -12,85 +12,90 @@ import VjGUI.AppCore;
 public class ChunkDescDBPanel extends MainWindowPanel 
 implements ActionListener {
 
-  ClientGlobals core;
-  List list;
-  Button savebutton, loadbutton, removebutton, insertbutton, clearbutton;
-  Vector cdframes; // vector storing all the ChunkDescPanels...
-  Menu filemenu, networkmenu;
+    ClientGlobals core;
+    List list;
+    Button savebutton, loadbutton, 
+	removebutton, insertbutton, clearbutton;
+    Vector cdframes; // vector storing all the ChunkDescPanels...
+    Menu filemenu, networkmenu;
 
-  public ChunkDescDBPanel (ClientGlobals c) {
-    super(); 
-      /* watch his every move - superconstructor
-       * orchestrate illusions - superconstructor
-       */
-    cdframes = new Vector();
-    core = c;
 
-    setLayout (new BorderLayout());
 
-    add (new Label ("Available Chunk Descriptions:", Label.LEFT), "North");
-
-    list = new List (10, false);
-    list.addActionListener(this);
-    add(list, "Center");
-
-    Panel buttonpanel = new BorderedPanel(20,5,0,0);
-    GridBagLayout buttonlayout = new GridBagLayout();
-    buttonpanel.setLayout(buttonlayout);
-    GridBagConstraints buttonconstraints = new GridBagConstraints();
-    buttonconstraints.insets.top = 10;
-    buttonconstraints.gridwidth = GridBagConstraints.REMAINDER;
-    buttonconstraints.anchor = GridBagConstraints.WEST;
-    buttonconstraints.fill = GridBagConstraints.HORIZONTAL;
-
-    add(buttonpanel,"East");
-
-    insertbutton = new Button ("Insert");
-    insertbutton.addActionListener(this);
-    buttonlayout.setConstraints (insertbutton, buttonconstraints);
-    buttonpanel.add(insertbutton);
-    removebutton = new Button ("Remove");
-    removebutton.addActionListener(this);
-    buttonlayout.setConstraints (removebutton, buttonconstraints);
-    buttonpanel.add (removebutton);
-
-    clearbutton = new Button ("Clear");
-    clearbutton.addActionListener(this);
-    buttonlayout.setConstraints (clearbutton, buttonconstraints);
-    buttonpanel.add (clearbutton);
-
-    loadbutton = new Button ("Load");
-    loadbutton.addActionListener(this);
-    buttonlayout.setConstraints (loadbutton, buttonconstraints);
-    buttonpanel.add (loadbutton);
-    savebutton = new Button ("Save");
-    savebutton.addActionListener(this);
-    buttonlayout.setConstraints (savebutton, buttonconstraints);
-    buttonpanel.add(savebutton);
-
-    /* build menus - but don't add them until "activate" */
-    filemenu = new Menu("File");
-    filemenu.addActionListener(this);
-    if (core.multilevelchunkdescenabled) {
-	filemenu.add("Open User Descriptions");
-	filemenu.add("Save User Descriptions");
-	filemenu.add("Save User Descriptions As...");
-	filemenu.add("Open Global Descriptions");
-	filemenu.add("Save Global Descriptions");
-	filemenu.add("Save Global Descriptions As...");
+    public ChunkDescDBPanel (ClientGlobals c) {
+	super(); 
+	/* watch his every move - superconstructor
+	 * orchestrate illusions - superconstructor
+	 */
+	cdframes = new Vector();
+	core = c;
+	
+	setLayout (new BorderLayout());
+	
+	add (new Label ("Available Chunk Descriptions:", Label.LEFT), "North");
+	
+	list = new List (10, false);
+	list.addActionListener(this);
+	add(list, "Center");
+	
+	Panel buttonpanel = new BorderedPanel(20,5,0,0);
+	GridBagLayout buttonlayout = new GridBagLayout();
+	buttonpanel.setLayout(buttonlayout);
+	GridBagConstraints buttonconstraints = new GridBagConstraints();
+	buttonconstraints.insets.top = 10;
+	buttonconstraints.gridwidth = GridBagConstraints.REMAINDER;
+	buttonconstraints.anchor = GridBagConstraints.WEST;
+	buttonconstraints.fill = GridBagConstraints.HORIZONTAL;
+	
+	add(buttonpanel,"East");
+	
+	insertbutton = new Button ("Insert");
+	insertbutton.addActionListener(this);
+	buttonlayout.setConstraints (insertbutton, buttonconstraints);
+	buttonpanel.add(insertbutton);
+	removebutton = new Button ("Remove");
+	removebutton.addActionListener(this);
+	buttonlayout.setConstraints (removebutton, buttonconstraints);
+	buttonpanel.add (removebutton);
+	
+	clearbutton = new Button ("Clear");
+	clearbutton.addActionListener(this);
+	buttonlayout.setConstraints (clearbutton, buttonconstraints);
+	buttonpanel.add (clearbutton);
+	
+	loadbutton = new Button ("Load");
+	loadbutton.addActionListener(this);
+	buttonlayout.setConstraints (loadbutton, buttonconstraints);
+	buttonpanel.add (loadbutton);
+	savebutton = new Button ("Save");
+	savebutton.addActionListener(this);
+	buttonlayout.setConstraints (savebutton, buttonconstraints);
+	buttonpanel.add(savebutton);
+      
+	/* build menus - but don't add them until "activate" */
+	filemenu = new Menu("File");
+	filemenu.addActionListener(this);
+	if (core.multilevelchunkdescenabled) {
+	    filemenu.add("Open User Descriptions");
+	    filemenu.add("Save User Descriptions");
+	    filemenu.add("Save User Descriptions As...");
+	    filemenu.add("Open Global Descriptions");
+	    filemenu.add("Save Global Descriptions");
+	    filemenu.add("Save Global Descriptions As...");
+	}
+	else {
+	    filemenu.add ("Open Descriptions...");
+	    filemenu.add ("Save Descriptions");
+	    filemenu.add ("Save Descriptions As...");
+	}
+	filemenu.add("Exit");
+	
+	networkmenu = new Menu("File");
+	networkmenu.addActionListener(this);
+	networkmenu.add("Disconnect");
+	networkmenu.add("Exit");
     }
-    else {
-	filemenu.add ("Open Descriptions...");
-	filemenu.add ("Save Descriptions");
-	filemenu.add ("Save Descriptions As...");
-    }
-    filemenu.add("Exit");
 
-    networkmenu = new Menu("File");
-    networkmenu.addActionListener(this);
-    networkmenu.add("Disconnect");
-    networkmenu.add("Exit");
-  }
+
 
   public void activate() {
     if (core.isConnected())
@@ -176,7 +181,8 @@ implements ActionListener {
 
       ChunkDescFrame cdf = 
 	  new ChunkDescFrame (core, this, 
-			      core.descs.getByName(name));
+			      core.descs.getByName(name),
+			      core.mode == core.FILE_EDITOR);
       cdf.addWindowListener (cdf);
       cdframes.addElement(cdf);
       //cdf.setSize (550,350);
@@ -243,9 +249,6 @@ implements ActionListener {
   }
 
 }
-
-
-
 
 
 
