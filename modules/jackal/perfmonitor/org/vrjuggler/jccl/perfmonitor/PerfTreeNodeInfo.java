@@ -54,6 +54,7 @@ public class PerfTreeNodeInfo implements ActionListener {
 
     public String sublabel;
     public LabeledPerfDataCollector.IndexInfo ii; // null for folders
+    protected double mSumAverages; // sum of averages of children, if ii = null
     protected LabeledPerfDataCollector mCollector;
     protected JComponent mComponent;
     protected JLabel mValueLabel;
@@ -62,6 +63,7 @@ public class PerfTreeNodeInfo implements ActionListener {
     public PerfTreeNodeInfo (String _sublabel, LabeledPerfDataCollector.IndexInfo _ii, LabeledPerfDataCollector col) {
 	sublabel = _sublabel;
 	ii = _ii;
+	mSumAverages = 0.0;
 	mCollector = col;
 
         mComponent = new JPanel();
@@ -71,7 +73,7 @@ public class PerfTreeNodeInfo implements ActionListener {
 	    JLabel l = new JLabel(_sublabel);
 	    mComponent.add (l);
             mComponent.add (Box.createHorizontalGlue());
-	    mValueLabel = new JLabel (padFloat(ii.getAverage()/1000.0), JLabel.RIGHT);
+	    mValueLabel = new JLabel (padFloat(getAverage()/1000.0), JLabel.RIGHT);
 	    mComponent.add (mValueLabel);
 	    mGraphButton = new LabeledPanelButton (col, ii, "Graph");
 	    mGraphButton.setActionCommand ("Graph");
@@ -84,6 +86,8 @@ public class PerfTreeNodeInfo implements ActionListener {
 	else {
 	    mComponent.add(new JLabel ("<html><h2><i>" + sublabel + "</i></h2></html>"));
             mComponent.add (Box.createHorizontalGlue());
+	    mValueLabel = new JLabel (padFloat(getAverage()/1000.0), JLabel.RIGHT);
+	    mComponent.add (mValueLabel);
 	    mGraphButton = new LabeledPanelButton (col, null, "Graph");
 	    mGraphButton.setActionCommand ("Graph");
 	    mGraphButton.addActionListener (this);
@@ -110,15 +114,24 @@ public class PerfTreeNodeInfo implements ActionListener {
 	return mCollector;
     }
 
+    public double getAverage () {
+	if (ii != null) 
+	    return ii.getAverage();
+	else
+	    return mSumAverages;
+    }
+
+    public void setAverage (double avg) {
+	mSumAverages = avg;
+    }
+
     public JButton getGraphButton () {
 	return mGraphButton;
     }
 
     public void update() {
-	if (ii != null) {
-	    if (mValueLabel != null)
-		mValueLabel.setText (padFloat(ii.getAverage()/1000.0));
-	}
+	if (mValueLabel != null)
+	    mValueLabel.setText (padFloat(getAverage()/1000.0));
     }
 
     /** Utility method for various printing routines. */

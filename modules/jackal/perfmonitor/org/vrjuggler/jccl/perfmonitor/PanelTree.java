@@ -93,8 +93,10 @@ public class PanelTree extends JComponent implements TreeModelListener {
 //      }
 
     public void treeNodesChanged(TreeModelEvent e) {
-	removeAll();
-	doInitialLayout();
+	System.out.println ("got a treenodeschanged event");
+	repaint();
+//  	removeAll();
+//  	doInitialLayout();
     }
     public void treeNodesInserted(TreeModelEvent e) {
 	// crappy implementation
