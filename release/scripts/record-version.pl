@@ -44,17 +44,22 @@ use vars qw(%opts);
 
 my $status = 0;
 
-getopts('f:i:o:v:', \%opts);
+getopts('f:i:Mmo:pv:', \%opts);
 
 die "ERROR: No version number given!\n" unless $opts{'f'} || $opts{'v'};
 
 my($version_string, $version_number) = ('0.0.0', '000000000');
+my($major, $minor, $patch) = (0, 0, 0);
 
 # If -v was given on the command line, use that for the version number.
 if ( $opts{'v'} ) {
     $version_string = "$opts{'v'}";
     $version_string =~ /^(\d+)\.(\d+)\.(\d+)$/;
-    $version_number = sprintf("%03d%03d%03d", $1, $2, $3);
+
+    $major          = $1;
+    $minor          = $2;
+    $patch          = $3;
+    $version_number = sprintf("%03d%03d%03d", $major, $minor, $patch);
 }
 # Otherwise, extract the version number from the named version input file.
 elsif ( $opts{'f'} ) {
@@ -66,7 +71,10 @@ elsif ( $opts{'f'} ) {
 
     if ( $line =~ /^\s*((\d+)\.(\d+)\.(\d+))/ ) {
         $version_string = "$1";
-        $version_number = sprintf("%03d%03d%03d", $2, $3, $4);
+        $major          = $2;
+        $minor          = $3;
+        $patch          = $4;
+        $version_number = sprintf("%03d%03d%03d", $major, $minor, $patch);
     }
     else {
         die "ERROR: No version number found in $opts{'f'}\n";
@@ -122,6 +130,18 @@ if ( $opts{'o'} ) {
     else {
         die "ERROR: Must have input file to create output file!\n";
     }
+}
+# Return the major version number.
+elsif ( $opts{'M'} ) {
+    print "$major\n";
+}
+# Return the minor version number.
+elsif ( $opts{'m'} ) {
+    print "$minor\n";
+}
+# Return the patch level.
+elsif ( $opts{'p'} ) {
+    print "$patch\n";
 }
 else {
     die "ERROR: Must have output file to generate!\n";
