@@ -79,6 +79,8 @@ public:
       {
          delete mOrbThread;
          mOrbThread = NULL;
+         delete mOrbFunctor;
+         mOrbFunctor = NULL;
       }
    }
 
@@ -180,16 +182,18 @@ public:
       return mBeanDeliverySubject;
    }
 
+   /**
+    * Runs the server.  This should not be invoked by user code.  It is for
+    * use with the internally managed ORB thread.
+    */
+   void run();
+
 private:
    vpr::ReturnStatus createChildPOA(const std::string& local_id);
 
-   /**
-    * Runs the server.
-    */
-   void run(void* args);
-
    std::string mAppName;
 
+   vpr::ThreadRunFunctor<tweek::CorbaManager>* mOrbFunctor;
    vpr::Thread* mOrbThread;
 
    CORBA::ORB_var mORB;
