@@ -218,10 +218,7 @@ namespace vpr {
       { return mDebugLock;}
 
       /// Adds a category name.
-      void addCategoryName(std::string name, const vpr::GUID& catId);
-
-      /// Allows the given category.
-      void addAllowedCategory(const vpr::GUID& catId);
+      void addCategory(const vpr::GUID& catId, std::string name, std::string prefix);
 
       /// Are we allowed to print this category??
       bool isCategoryAllowed(const vpr::GUID& catId);
@@ -230,7 +227,7 @@ namespace vpr {
       void setDefaultCategoryNames();
 
       /// Configures the allowed categories from the users environment.
-      void getAllowedCatsFromEnv();
+      void updateAllowedCategories();
 
       void enableThreadLocalSettings()
       { mUseThreadLocal = true;}
@@ -267,8 +264,24 @@ namespace vpr {
 
       //std::vector<bool> mAllowedCategories;      //! The categories we allow
 
-      std::map<std::string, vpr::GUID> mCategoryNames; //! The names and id of allowed catagories
-      std::map<vpr::GUID, bool> mAllowedCategories;   // The categories that we allow printing of
+      struct CategoryInfo
+      {
+         /*CategoryInfo()
+          : mName("un-named"), mPrefix("unset"), mAllowed(false)
+         {;}*/
+
+         CategoryInfo(std::string name, std::string prefix, bool allowed)
+          : mName(name), mPrefix(prefix), mAllowed(allowed)
+         {;}
+
+         std::string mName;
+         std::string mPrefix;
+         bool        mAllowed;
+      };
+
+      // GUID, pair( name, prefix )
+      typedef std::map<vpr::GUID, CategoryInfo > category_map_t;
+      std::map<vpr::GUID, CategoryInfo > mCategories; //! The names and id of allowed catagories    
 
       vprSingletonHeader(Debug);
    };
@@ -331,9 +344,9 @@ namespace vpr
 
    struct DebugCatRegistrator
    {
-      DebugCatRegistrator(vpr::GUID catGuid, std::string catName)
+      DebugCatRegistrator(vpr::GUID catGuid, std::string catName, std::string catPrefix)
       {
-         vpr::Debug::instance()->addCategoryName(catName, catGuid);
+         vpr::Debug::instance()->addCategory(catGuid, catName, catPrefix);
       }
    };
 }; // namespace
@@ -345,12 +358,12 @@ namespace vpr
 * Use this in the .cpp files to register the actually token with vpr::Debug.
 * @see Debug.cpp
 */
-#define vprREGISTER_DBG_CATEGORY(NAME, CAT) vpr::DebugCatRegistrator NAME ## _registrator (CAT, #NAME);
+#define vprREGISTER_DBG_CATEGORY(CAT, NAME, PREFIX ) vpr::DebugCatRegistrator NAME ## _registrator (CAT, #NAME, PREFIX);
 
 // Debug output categories
 const vpr::GUID vprDBG_ALL("660b4b06-1f5b-4e4b-abb8-d44229ce1319");
 const vpr::GUID vprDBG_ERROR("b081eb68-0a61-4a65-a0a1-dd3ccc90a82b");   /* Error output */
-
-
+const vpr::GUID vprDBG_SIM("64872313-a5b7-4d1d-b7a3-5f269b4adde4");   /* Sim output */
+const vpr::GUID vprDBG_VPR("28648014-ec63-4707-90e3-76a3ea450036");
 
 #endif
