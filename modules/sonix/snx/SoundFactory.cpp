@@ -77,26 +77,33 @@ SoundFactory::SoundFactory()
    for (unsigned int x = 0; x < search_paths.size(); ++x)
    {
       search_paths[x] = vpr::replaceEnvVars(search_paths[x]);
-      vpr::DebugOutputGuard output1(snxDBG, vprDBG_CONFIG_LVL, std::string("Finding plugins in: \n"), std::string(""));
-      vpr::DebugOutputGuard output2(snxDBG, vprDBG_CONFIG_LVL, search_paths[x]+ std::string("\n"), std::string(""));
+      vprDEBUG(snxDBG, vprDBG_CONFIG_LVL) << "Finding plugins in "
+                                          << search_paths[x] << std::endl
+                                          << vprDEBUG_FLUSH;
+
       if (xdl::isDir(search_paths[x].c_str()))
       {
          xdl::dirlist( search_paths[x].c_str(), filelist );
          this->filterOutPluginFileNames( search_paths[x].c_str(), filelist, filelist );
          this->loadPlugins( search_paths[x], filelist );
          
-         vpr::DebugOutputGuard output3(snxDBG, vprDBG_CONFIG_LVL, std::string("filelist: \n"), std::string(""));
-         for(unsigned int i=0;i<filelist.size();i++){
-            vpr::DebugOutputGuard output4(snxDBG, vprDBG_CONFIG_LVL, filelist[i]+std::string("\n"), std::string(""), false);
+#ifdef SNX_DEBUG
+         vprDEBUG(snxDBG, vprDBG_CONFIG_LVL) << "filelist:\n" << vprDEBUG_FLUSH;
+         for ( unsigned int i = 0; i < filelist.size(); ++i )
+         {
+            vprDEBUG(snxDBG, vprDBG_CONFIG_LVL) << "\t" << filelist[i]
+                                                << std::endl << vprDEBUG_FLUSH;
          }
+#endif
       }
    }
 }
 
 void SoundFactory::errorOutput(std::string filename, const char* test)
 {
-   vpr::DebugOutputGuard output4(snxDBG, vprDBG_CONFIG_LVL, std::string("Plugin: ") + filename + std::string("\n"), std::string(""));
-   vpr::DebugOutputGuard output5(snxDBG, vprDBG_CONFIG_LVL, std::string(" does not export symbol: ") + std::string(test), std::string(""));
+   vprDEBUG(snxDBG, vprDBG_WARNING_LVL)
+      << "ERROR: Plugin '" << filename << "' does not export symbol '"
+      << test << "'\n" << vprDEBUG_FLUSH;
 }
 
 bool SoundFactory::isPlugin(std::string filename)
@@ -104,7 +111,9 @@ bool SoundFactory::isPlugin(std::string filename)
    xdl::Library lib;
    if (lib.open( filename.c_str(), xdl::NOW ) == false)
    {
-      vpr::DebugOutputGuard output6(snxDBG, vprDBG_CONFIG_LVL, std::string("Plugin: " + filename + " has invalid name.\n"), std::string(""));
+      vprDEBUG(snxDBG, vprDBG_WARNING_LVL)
+         << clrOutBOLD(clrYELLOW, "WARNING:") << " Plugin '" << filename
+         << "' has invalid name.\n" << vprDEBUG_FLUSH;
       return false;
    }
    if (lib.lookup( "newPlugin" ) == NULL)
@@ -134,7 +143,9 @@ bool SoundFactory::isPlugin(std::string filename)
    //if (getVersion != NULL && getVersion() != snx::version) return false;
 
    lib.close();
-   vpr::DebugOutputGuard output7(snxDBG, vprDBG_CONFIG_LVL, std::string("Plugin: ") + filename + std::string(" is a valid sonix plugin.\n"), std::string(""),false); 
+   vprDEBUG(snxDBG, vprDBG_CONFIG_STATUS_LVL) << "Plugin '" << filename
+                                              << "' is a valid Sonix plugin.\n"
+                                              << vprDEBUG_FLUSH;
    return true;
 }
 
@@ -145,12 +156,18 @@ void SoundFactory::filterOutPluginFileNames(const char* dir,
    destlist.clear();
    std::string temp;
    
-   vpr::DebugOutputGuard output8(snxDBG, vprDBG_CONFIG_LVL, std::string("Checking Plugins validity...\n"), std::string(""));
+   vpr::DebugOutputGuard output(snxDBG, vprDBG_STATE_LVL,
+                                std::string("Filtering plug-ins from ") +
+                                std::string(dir) + std::string("\n"),
+                                std::string("Done filtering directory.\n"));
+
    for (unsigned int x = 0; x < srclist.size(); ++x)
    {
       if(srclist[x] != "." && srclist[x] != "..")
       {
-         vpr::DebugOutputGuard output9(snxDBG, vprDBG_CONFIG_LVL, srclist[x]+std::string("\n"), std::string(""), false);
+         vprDEBUG(snxDBG, vprDBG_STATE_LVL)
+            << "Checking '" << srclist[x] << "'\n" << vprDEBUG_FLUSH;
+
          temp = dir + std::string("/") + srclist[x];
          if (this->isPlugin( temp/*srclist[x]*/ ))
          {
@@ -179,9 +196,10 @@ void SoundFactory::loadPlugins(std::string prefix,
       if (getName != NULL)
       {
          name = getName();
-         vpr::DebugOutputGuard output9(snxDBG, vprDBG_CONFIG_LVL, std::string("Got plugin: ")+ name+std::string(" registering...\n"), std::string(""));
-         
-      
+         vprDEBUG(snxDBG, vprDBG_STATE_LVL) << "Got plug-in '" << name
+                                            << "'--registering\n"
+                                            << vprDEBUG_FLUSH;
+
          // create the implementation
          newPluginFunc newPlugin = (newPluginFunc)mPlugins[x].lookup( "newPlugin" );
          ISoundImplementation* si = NULL;
@@ -230,16 +248,20 @@ void SoundFactory::reg(const std::string& apiName,
 {
    if (impl != NULL)
    {
-      vpr::DebugOutputGuard output10(snxDBG, vprDBG_CONFIG_LVL, std::string("NOTICE: Registering sound API: ")+apiName+std::string("\n"), std::string(""));
-            //std::string(" [")+(int)impl+"]\n", std::string("\n"));
+      vprDEBUG(snxDBG, vprDBG_CONFIG_LVL)
+         << "NOTICE: Registering sound API '" << apiName << "'\n"
+         << vprDEBUG_FLUSH;
+
       impl->setName( apiName );
       mRegisteredImplementations[apiName] = impl;
    }
    else
    {
       mRegisteredImplementations.erase( apiName );
-      vpr::DebugOutputGuard output11(snxDBG, vprDBG_CONFIG_LVL, std::string("NOTICE: UnRegistered sound API: ")+apiName+std::string("\n"), std::string(""));
-         //   +std::string(" [")+(int)impl+std::string("]\n") std::string("\n"));
+
+      vprDEBUG(snxDBG, vprDBG_CONFIG_LVL)
+         << "NOTICE: Unregistered sound API '" << apiName << "'\n"
+         << vprDEBUG_FLUSH;
    }      
 }
 
