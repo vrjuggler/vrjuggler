@@ -41,9 +41,11 @@ import javax.swing.event.*;
 
 import org.vrjuggler.jccl.config.*;
 import org.vrjuggler.jccl.editors.*;
+import org.vrjuggler.jccl.editors.net.TinyBrowser;
 
 import org.vrjuggler.tweek.beans.BeanRegistry;
 import org.vrjuggler.tweek.beans.FileLoader;
+import org.vrjuggler.tweek.beans.HelpProvider;
 import org.vrjuggler.tweek.beans.loader.BeanJarClassLoader;
 import org.vrjuggler.tweek.event.*;
 import org.vrjuggler.tweek.services.EnvironmentService;
@@ -55,6 +57,7 @@ import org.vrjuggler.vrjconfig.ui.ContextToolbar;
 public class VrjConfig
    extends JPanel
    implements FileLoader
+            , HelpProvider
 {
    public VrjConfig()
    {
@@ -67,6 +70,11 @@ public class VrjConfig
       {
          e.printStackTrace();
       }
+
+      mHelpBrowserFrame.setContentPane(mHelpBrowser);
+      mHelpBrowserFrame.setSize(new java.awt.Dimension(640, 480));
+      mHelpBrowserFrame.setTitle("VR Juggler Configuration Help Browser");
+      mHelpBrowserFrame.validate();
 
       // Parsing command line arguments
       try
@@ -136,6 +144,27 @@ public class VrjConfig
       removeFrame(frame);
       frame.dispose();
       return true;
+   }
+
+   public String getHelpDescription()
+   {
+      return "VR Juggler Configuration Help ...";
+   }
+
+   public void helpRequested()
+   {
+      try
+      {
+         mHelpBrowser.setPage(
+            new java.net.URL(VrjConfigConstants.HELP_URL_STR)
+         );
+      }
+      catch(java.net.MalformedURLException ex)
+      {
+         /* Ignore the exception. */ ;
+      }
+
+      mHelpBrowserFrame.setVisible(true);
    }
 
    public int getOpenFileCount()
@@ -225,6 +254,9 @@ public class VrjConfig
       this.add(mToolbar,  BorderLayout.NORTH);
       this.add(mDesktop, BorderLayout.CENTER);
    }
+
+   private TinyBrowser mHelpBrowser      = new TinyBrowser();
+   private JFrame      mHelpBrowserFrame = new JFrame();
 
    // JBuilder GUI variables
    private BorderLayout mBaseLayout = new BorderLayout();

@@ -46,24 +46,30 @@ import org.jdom.input.*;
 import org.jdom.Document;
 
 import org.vrjuggler.jccl.config.*;
+import org.vrjuggler.jccl.editors.*;
+import org.vrjuggler.jccl.editors.net.TinyBrowser;
+
+import org.vrjuggler.tweek.TweekCore;
+import org.vrjuggler.tweek.beans.BeanPathException;
 import org.vrjuggler.tweek.beans.BeanRegistry;
+import org.vrjuggler.tweek.beans.HelpProvider;
+import org.vrjuggler.tweek.beans.XMLBeanFinder;
 import org.vrjuggler.tweek.beans.loader.BeanJarClassLoader;
 import org.vrjuggler.tweek.services.EnvironmentServiceProxy;
 import org.vrjuggler.tweek.services.GlobalPreferencesService;
 import org.vrjuggler.tweek.services.GlobalPreferencesServiceProxy;
 import org.vrjuggler.tweek.wizard.*;
-import org.vrjuggler.vrjconfig.ui.*;
-import org.vrjuggler.jccl.editors.*;
 
-import org.vrjuggler.tweek.TweekCore;
-import org.vrjuggler.tweek.beans.XMLBeanFinder;
-import org.vrjuggler.tweek.beans.BeanPathException;
+import org.vrjuggler.vrjconfig.VrjConfigConstants;
+import org.vrjuggler.vrjconfig.ui.*;
+
 
 /**
  * Provides a control panel view into a config element collection.
  */
 public class ControlPanelView
    extends JPanel
+   implements HelpProvider
 {
    public ControlPanelView()
    {
@@ -104,6 +110,11 @@ public class ControlPanelView
       {
          e.printStackTrace();
       }
+
+      mHelpBrowserFrame.setContentPane(mHelpBrowser);
+      mHelpBrowserFrame.setSize(new java.awt.Dimension(640, 480));
+      mHelpBrowserFrame.setTitle("VR Juggler Configuration Help Browser");
+      mHelpBrowserFrame.validate();
 
       try
       {
@@ -157,6 +168,27 @@ public class ControlPanelView
       String controlpanel_path = env_service.expandEnvVars("${VJ_BASE_DIR}/share/vrjuggler/data/ControlPanel.xml");
       ControlPanelViewModel model = new ControlPanelViewModel(controlpanel_path);
       showCategoryPanel((CategoryNode)model.getRoot());
+   }
+
+   public String getHelpDescription()
+   {
+      return "VR Juggler Configuration Help ...";
+   }
+
+   public void helpRequested()
+   {
+      try
+      {
+         mHelpBrowser.setPage(
+            new java.net.URL(VrjConfigConstants.HELP_URL_STR)
+         );
+      }
+      catch(java.net.MalformedURLException ex)
+      {
+         /* Ignore the exception. */ ;
+      }
+
+      mHelpBrowserFrame.setVisible(true);
    }
 
    /**
@@ -494,6 +526,9 @@ public class ControlPanelView
       });
       this.add(mToolbar,  BorderLayout.NORTH);
    }
+
+   private TinyBrowser mHelpBrowser      = new TinyBrowser();
+   private JFrame      mHelpBrowserFrame = new JFrame();
 
    //--- JBuilder GUI variables ---//
    private BorderLayout mBaseLayout = new BorderLayout();
