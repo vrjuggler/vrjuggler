@@ -30,8 +30,8 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _GADGET_SPEECH_RECOG_STRING_H_
-#define _GADGET_SPEECH_RECOG_STRING_H_
+#ifndef _GADGET_STRING_H_
+#define _GADGET_STRING_H_
 
 #include <gadget/gadgetConfig.h>
 #include <vector>
@@ -39,7 +39,6 @@
 #include <jccl/Config/ConfigElementPtr.h>
 #include <gadget/Type/StringData.h>
 #include <gadget/Type/SampleBuffer.h>
-#include <vpr/Util/Debug.h>
 #include <vpr/IO/SerializableObject.h>
 #include <gadget/Util/DeviceSerializationTokens.h>
 
@@ -47,81 +46,63 @@
 namespace gadget
 {
 
-   const unsigned short MSG_DATA_SPEECH_RECOG_STRING = 430;
+   const unsigned short MSG_DATA_STRING = 430;
 
    /**
-    * SpeechRecogString is the abstract base class for devices that return
+    * gadget::String is the abstract base class for devices that return
     * spoken commends.  Drivers for all such devices must derive from this
     * class (through gadget::InputMixer).  This is in addition to
     * gadget::Input.  gadget::Input provides pure virtual function constraints
     * in the following functions: startSampling(), stopSampling(), sample(),
     * and updateData().
     *
-    * gadget::SpeechRecogString adds the function getStringData() for
-    * retreiving the received commands.  This is similar to the additions made
+    * gadget::String adds the function getStringData() for retreiving the
+    * received commands.  This is similar to the additions made
     * by gadget::Position and gadget::Analog.
     *
     * @see Input, InputMixer
     */
-   class GADGET_CLASS_API SpeechRecogString : public vpr::SerializableObject
+   class GADGET_CLASS_API String : public vpr::SerializableObject
    {
    public:
       typedef gadget::SampleBuffer<StringData> SampleBuffer_t;
 
    public:
       /* Constructor/Destructors */
-      SpeechRecogString() : mDefaultValue("")
+      String() : mDefaultValue("")
       {
-         //vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL)<<"*** SpeechRecogString::SpeechRecogString()\n"<< vprDEBUG_FLUSH;
+         ;
       }
 
-      virtual ~SpeechRecogString()
+      virtual ~String()
       {
+         ;
       }
 
       virtual bool config(jccl::ConfigElementPtr e)
       {
          boost::ignore_unused_variable_warning(e);
-         //vprDEBUG(vprDBG_ALL, vprDBG_VERB_LVL)<<"*** SpeechRecogString::config()\n"<< vprDEBUG_FLUSH;
          return true;
       }
 
       /**
-       * Gets the digital data for the given devNum.
+       * Gets the string data for the given devNum.
        *
-       * @return SpeechRecogString 0 or 1, if devNum makes sense.
-       *         -1 is returned if function fails or if devNum is out of range.
        * @note If devNum is out of range, function will fail, possibly issuing
        *       an error to a log or console - but will not ASSERT.
        */
-      const StringData getStringData(int devNum = 0)
-      {
-         SampleBuffer_t::buffer_t& stable_buffer = mStringSamples.stableBuffer();
+      const StringData getStringData(int devNum = 0);
 
-         if ( (!stable_buffer.empty()) &&
-              (stable_buffer.back().size() > (unsigned)devNum) )  // If Have entry && devNum in range
-         {
-            return stable_buffer.back()[devNum];
-         }
-         else        // No data or request out of range, return default value
-         {
-            if ( stable_buffer.empty() )
-            {
-               vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL) << "Warning: SpeechRecogString::getStringData: Stable buffer is empty. If this is not the first read, then this is a problem.\n" << vprDEBUG_FLUSH;
-            }
-            else
-            {
-               vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_LVL) << "Warning: SpeechRecogString::getStringData: Requested devNum " << devNum << " is not in the range available.  May have configuration error\n" << vprDEBUG_FLUSH;
-            }
-            return mDefaultValue;
-         }
-      }
-
-      /** Helper method to add a sample to the sample buffers.
-      * This MUST be called by all digital devices to add a new sample.
-      * The data samples passed in will then be modified by any local filters.
-      * @post Sample is added to the buffers and the local filters are run on that sample.
-      */
+      /**
+       * Helper method to add a collection of string samples to the sample
+       * buffers.  This MUST be called by all string devices to add new
+       * samples.
+       *
+       * @post The given string samples are added to the buffers.
+       *
+       * @param digSample A vector of StringData objects that represent the
+       *                  newest samples taken.
+       */
       void addStringSample(const std::vector< StringData >& stringSample)
       {
          // Locks and then swaps the indices.
@@ -130,9 +111,12 @@ namespace gadget
          mStringSamples.unlock();
       }
 
-      /** Swap the digital data buffers.
-       * @post If ready has values, then copy values from ready to stable
-       *        if not, then stable keeps its old values
+      /**
+       * Swaps the string data buffers.
+       *
+       * @post If the ready queue has values, then those values are copied from
+       *       the ready queue to the stable queue.  If not, then stable queue
+       *       is not changed.
        */
       void swapStringBuffers()
       {
@@ -145,7 +129,7 @@ namespace gadget
       }
       virtual std::string getInputTypeName()
       {
-         return std::string("SpeechRecogString");
+         return std::string("String");
       }
 
       virtual vpr::ReturnStatus writeObject(vpr::ObjectWriter* writer);
@@ -154,11 +138,11 @@ namespace gadget
 
    protected:
       // gadget::SampleBuffer<T> is not copyable, so neither are we.
-      SpeechRecogString(const gadget::SpeechRecogString& o)
+      String(const gadget::String& o)
          : vpr::SerializableObject(o)
       {;}
 
-      void operator=(const gadget::SpeechRecogString&) {;}
+      void operator=(const gadget::String&) {;}
 
    private:
       SampleBuffer_t mStringSamples;  /**< String samples */
@@ -167,4 +151,4 @@ namespace gadget
 
 } // End of gadget namespace
 
-#endif   /* _GADGET_SPEECH_RECOG_STRING_H_ */
+#endif   /* _GADGET_STRING_H_ */

@@ -34,18 +34,48 @@
 #include <boost/concept_check.hpp>
 #include <vpr/IO/ObjectWriter.h>
 #include <vpr/IO/ObjectReader.h>
-#include <gadget/Type/SpeechRecogString.h>
+#include <vpr/Util/Debug.h>
+#include <gadget/Type/String.h>
 
 namespace gadget
 {
 
-vpr::ReturnStatus SpeechRecogString::writeObject(vpr::ObjectWriter* writer)
+const StringData String::getStringData(int devNum)
 {
-   writer->beginTag(SpeechRecogString::getInputTypeName());
-   //std::cout << "[Remote Input Manager] In SpeechRecogString write" << std::endl;
+   SampleBuffer_t::buffer_t& stable_buffer = mStringSamples.stableBuffer();
+
+   if ( (!stable_buffer.empty()) &&
+        (stable_buffer.back().size() > (unsigned)devNum) )  // If Have entry && devNum in range
+   {
+      return stable_buffer.back()[devNum];
+   }
+   else        // No data or request out of range, return default value
+   {
+      if ( stable_buffer.empty() )
+      {
+         vprDEBUG(vprDBG_ALL, vprDBG_WARNING_LVL)
+            << "WARNING: [gadget::String::getStringData()] "
+            << "Stable buffer is empty.  If this is not the first "
+            << "read, then this is a problem.\n" << vprDEBUG_FLUSH;
+      }
+      else
+      {
+         vprDEBUG(vprDBG_ALL, vprDBG_CONFIG_LVL)
+            << "WARNING: [gadget::String::getStringData()] "
+            << "Requested devNum (" << devNum
+            << ") is not in the range available.  "
+            << "This is probably a configuration error.\n" << vprDEBUG_FLUSH;
+      }
+      return mDefaultValue;
+   }
+}
+
+vpr::ReturnStatus String::writeObject(vpr::ObjectWriter* writer)
+{
+   writer->beginTag(String::getInputTypeName());
    SampleBuffer_t::buffer_t& stable_buffer = mStringSamples.stableBuffer();
    writer->beginAttribute(gadget::tokens::DataTypeAttrib);
-      writer->writeUint16(MSG_DATA_SPEECH_RECOG_STRING);                               // Write out the data type so that we can assert if reading in wrong place
+      writer->writeUint16(MSG_DATA_STRING);                               // Write out the data type so that we can assert if reading in wrong place
    writer->endAttribute();
 
    writer->beginAttribute(gadget::tokens::SampleBufferLenAttrib);
@@ -67,7 +97,7 @@ vpr::ReturnStatus SpeechRecogString::writeObject(vpr::ObjectWriter* writer)
             writer->beginAttribute(gadget::tokens::TimeStamp);
                writer->writeUint64(stable_buffer[j][i].getTime().usec());           // Write Time Stamp vpr::Uint64
             writer->endAttribute();
-            writer->writeString(stable_buffer[j][i].getString());  // Write SpeechRecogString Data(std::string)
+            writer->writeString(stable_buffer[j][i].getString());  // Write String Data(std::string)
             writer->endTag();
          }
          writer->endTag();
@@ -79,21 +109,20 @@ vpr::ReturnStatus SpeechRecogString::writeObject(vpr::ObjectWriter* writer)
    return vpr::ReturnStatus::Succeed;
 }
 
-vpr::ReturnStatus SpeechRecogString::readObject(vpr::ObjectReader* reader)
+vpr::ReturnStatus String::readObject(vpr::ObjectReader* reader)
 {
-      //std::cout << "[Remote Input Manager] In SpeechRecogString read" << std::endl;
    vprASSERT(reader->attribExists("rim.timestamp.delta"));
    vpr::Uint64 delta = reader->getAttrib<vpr::Uint64>("rim.timestamp.delta");
 
       // ASSERT if this data is really not String Data
-   reader->beginTag(SpeechRecogString::getInputTypeName());
+   reader->beginTag(String::getInputTypeName());
    reader->beginAttribute(gadget::tokens::DataTypeAttrib);
       vpr::Uint16 temp = reader->readUint16();
    reader->endAttribute();
 
    // XXX: Should there be error checking for the case when vprASSERT()
    // is compiled out?  -PH 8/21/2003
-   vprASSERT(temp==MSG_DATA_SPEECH_RECOG_STRING && "[Remote Input Manager]Not SpeechRecogString Data");
+   vprASSERT(temp==MSG_DATA_STRING && "[Remote Input Manager]Not String Data");
    boost::ignore_unused_variable_warning(temp);
 
    std::vector<StringData> dataSample;
@@ -107,7 +136,6 @@ vpr::ReturnStatus SpeechRecogString::readObject(vpr::ObjectReader* reader)
       unsigned numVectors = reader->readUint16();
    reader->endAttribute();
 
-   //std::cout << "Stable SpeechRecogString Buffer Size: "  << numVectors << std::endl;
    mStringSamples.lock();
    for ( unsigned i=0;i<numVectors;i++ )
    {
@@ -123,7 +151,7 @@ vpr::ReturnStatus SpeechRecogString::readObject(vpr::ObjectReader* reader)
          reader->beginAttribute(gadget::tokens::TimeStamp);
             timeStamp = reader->readUint64();    // read Time Stamp vpr::Uint64
          reader->endAttribute();
-         value = reader->readString();           // read SpeechRecogString Data(std::string)
+         value = reader->readString();           // read String Data(std::string)
          reader->endTag();
 
          temp_string_data.setString(value);

@@ -30,12 +30,12 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _GADGET_SPEECH_RECOG_STRING_INTERFACE_H_
-#define _GADGET_SPEECH_RECOG_STRING_INTERFACE_H_
+#ifndef _GADGET_COMMAND_INTERFACE_H_
+#define _GADGET_COMMAND_INTERFACE_H_
 
 #include <gadget/gadgetConfig.h>
 
-#include <gadget/Type/SpeechRecogStringProxy.h>
+#include <gadget/Type/CommandProxy.h>
 #include <gadget/Type/DeviceInterface.h>
 
 #endif

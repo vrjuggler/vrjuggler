@@ -58,7 +58,7 @@ namespace gadget
 {
 
 class MSFTSpeechRecogDigital
-   : public gadget::InputMixer<gadget::Input, gadget::SpeechRecogDigital>
+   : public gadget::InputMixer<gadget::Input, gadget::Command>
 {
 public:
    MSFTSpeechRecogDigital();
