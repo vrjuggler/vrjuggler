@@ -69,6 +69,18 @@ public:
    virtual void initScene() = 0;
    virtual osg::Group* getScene() = 0;
 
+   /**
+   * Configure newly created scene viewers
+   * This is called immediately after a new scene viewer is created for a context
+   * This is the place to configure application background colors and other viewer
+   * specific information
+   */
+   virtual void configSceneView(osgUtil::SceneView* newSceneViewer)
+   {
+      newSceneViewer->setDefaults();
+      newSceneViewer->setBackgroundColor( osg::Vec4(0.0f, 0.0f, 0.0f, 0.0f) );
+   }
+
    //: Function to draw the scene
    // Override this function with the user draw routine
    //!PRE: OpenGL state has correct transformation and buffer selected
@@ -79,11 +91,8 @@ public:
    // Make sure to call initScene if you override this function
    virtual void init()
    {
-      sceneView = new  osgUtil::SceneView;
-      sceneView->setDefaults();
-      
-      //Create the scene      
-      initScene();
+      //Create the scene
+      this->initScene();
    }
 
    //: Function that is called immediately after a new context is created
@@ -127,74 +136,73 @@ public:
    {;}
 
 protected:
-   osgUtil::SceneView* sceneView;        // Renderer.  XXX: Probably need multiple of them
    vrj::GlContextData< osgUtil::SceneView* > sceneViewer;
 };
 
 inline void OsgApp::contextInit()
 {
-   //if ( (*sceneViewer).valid() == false )    // Not allocated yet
-   //{
    unsigned int unique_context_id = GlDrawManager::instance()->getCurrentContext();
 
-   (*sceneViewer) = new osgUtil::SceneView;
-   (*sceneViewer)->setDefaults();
-   (*sceneViewer)->getState()->setContextID(unique_context_id);
+   // --- Create new context specific scene viewer -- //
+   osgUtil::SceneView* new_sv = new osgUtil::SceneView;
+   this->configSceneView(new_sv);            // Configure the new viewer
+   new_sv->getState()->setContextID(unique_context_id);
+   (*sceneViewer) = new_sv;
 }
-   
 
 
 inline void OsgApp::draw()
-{  
-   osg::ref_ptr< osgUtil::SceneView> scene_view = (*sceneViewer);
-   vprASSERT( scene_view.valid() );
+{
+   osgUtil::SceneView* sv(NULL);
+   sv = (*sceneViewer);    // Get context specific scene viewer
+   vprASSERT( sv != NULL);
 
    // Add the tree to the scene viewer
-    (*sceneViewer)->setSceneData(getScene());
-    (*sceneViewer)->setCalcNearFar(false);
+   sv->setSceneData(getScene());
+   sv->setCalcNearFar(false);
 
    //Take care of the view port (this does not work)
-    GLint view[4];
-    glGetIntegerv(GL_VIEWPORT, view);      //Get the view port that juggler sets
-    (*sceneViewer)->setViewport(view[0],view[1],view[2],view[3]);
+   GLint view[4];
+   glGetIntegerv(GL_VIEWPORT, view);      //Get the view port that juggler sets
+   sv->setViewport(view[0],view[1],view[2],view[3]);
 
    //Get the view matrix and the frustrum form the draw manager
-    GlDrawManager* drawMan = dynamic_cast<GlDrawManager*> ( this->getDrawManager() );
+   GlDrawManager* drawMan = dynamic_cast<GlDrawManager*> ( this->getDrawManager() );
    vprASSERT(drawMan != NULL);
-    GlUserData* userData = drawMan->currentUserData();
+   GlUserData* userData = drawMan->currentUserData();
 
    // Configure the viewport information
    //vjViewport* cur_vp = userData->getViewport();
    //float xo, yo, xs, ys;
    //cur_vp->getOriginAndSize(xo,yo,xs,ys);
-   //(*sceneViewer)->setViewport(xo, yo, xs, ys);
+   //sv->setViewport(xo, yo, xs, ys);
 
    // Copy the matrix
-    Projection* project = userData->getProjection();
-    float* vj_proj_view_mat = project->mViewMat.getFloatPtr();
+   Projection* project = userData->getProjection();
+   float* vj_proj_view_mat = project->mViewMat.getFloatPtr();
    osg::Matrix osgMat;
-    osgMat.set( vj_proj_view_mat );
+   osgMat.set( vj_proj_view_mat );
 
-    //Get the frustrum
-    Frustum frustum = project->mFrustum;
+   //Get the frustrum
+   Frustum frustum = project->mFrustum;
 
-    //Reset the camera
-   osg::Camera* the_cam = (*sceneViewer)->getCamera();
-    the_cam->home();
+   //Reset the camera
+   osg::Camera* the_cam = sv->getCamera();
+   the_cam->home();
 
-    //Set the frustrum (this is set with the matrix below)
+   //Set the frustrum (this is set with the matrix below)
    float near_val = frustum[Frustum::VJ_NEAR];
-    the_cam->setFrustum(frustum[Frustum::VJ_LEFT]*near_val,   frustum[Frustum::VJ_RIGHT]*near_val,
-                      frustum[Frustum::VJ_BOTTOM]*near_val,  frustum[Frustum::VJ_TOP]*near_val,
-                      frustum[Frustum::VJ_NEAR],             frustum[Frustum::VJ_FAR]);
+   the_cam->setFrustum(frustum[Frustum::VJ_LEFT]*near_val,   frustum[Frustum::VJ_RIGHT]*near_val,
+                       frustum[Frustum::VJ_BOTTOM]*near_val,  frustum[Frustum::VJ_TOP]*near_val,
+                       frustum[Frustum::VJ_NEAR],             frustum[Frustum::VJ_FAR]);
 
-    //Set the look at
-    the_cam->attachTransform(osg::Camera::MODEL_TO_EYE, &osgMat);
+   //Set the look at
+   the_cam->attachTransform(osg::Camera::MODEL_TO_EYE, &osgMat);
 
    //Draw the scene
-    (*sceneViewer)->app();
-    (*sceneViewer)->cull();
-    (*sceneViewer)->draw();
+   sv->app();
+   sv->cull();
+   sv->draw();
 }
 
 
