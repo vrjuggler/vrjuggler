@@ -169,7 +169,7 @@ GMTL_PATH(0.1.9, [/usr/local], , ,
           [AC_MSG_ERROR([*** GMTL required for Gadgeteer ***])])
 CPPFLAGS="$gadsave_CPPFLAGS"
 
-AC_PATH_X
+AC_PATH_XTRA
 
 gadget_use_x11='no'
 
@@ -258,10 +258,6 @@ fi
 # alternative to using $(srcdir).
 UNIX_GADGETROOT_ABS="$GADGETROOT_ABS"
 
-if test "x$x_libraries" != "xNONE" -a "x$x_libraries" != "x" ; then
-   X_LDFLAGS="-L$x_libraries"
-fi
-
 # $APP_EXTRA_LIBS must list all the libraries need to link a Gadgeteer-based
 # application.
 if test "x$OS_TYPE" = "xWin32" ; then
@@ -272,8 +268,8 @@ else
     APP_EXTRA_PROF_LIBS="$LDFLAGS $JCCL_PROF_LIBS_CC_MIN $JCCL_EXTRA_LIBS_CC_MIN $VPR_PROF_LIBS_CC_MIN $LIBS $DTK_LDFLAGS $VPR_EXTRA_LIBS_CC_MIN"
 
     if test "x$gadget_use_x11" = "xyes" ; then
-       APP_EXTRA_LIBS="$APP_EXTRA_LIBS $X_LDFLAGS -lX11"
-       APP_EXTRA_PROF_LIBS="$APP_EXTRA_PROF_LIBS $X_LDFLAGS -lX11"
+       APP_EXTRA_LIBS="$APP_EXTRA_LIBS $X_PRE_LIBS $X_LIBS -lX11 $X_EXTRA_LIBS"
+       APP_EXTRA_PROF_LIBS="$APP_EXTRA_PROF_LIBS $X_PRE_LIBS $X_LIBS -lX11 $X_EXTRA_LIBS"
     elif test "x$PLATFORM" = "xDarwin" ; then
        APP_EXTRA_LIBS="$APP_EXTRA_LIBS -framework Carbon"
        APP_EXTRA_PROF_LIBS="$APP_EXTRA_PROF_LIBS -framework Carbon"
@@ -282,12 +278,9 @@ fi
 
 if test "x$OS_TYPE" = "xUNIX" ; then
    if test "x$gadget_use_x11" = "xyes" ; then
-      if test "x$x_includes" != "xNONE" -a "x$x_includes" != "x" ; then
-         INCLUDES="$INCLUDES -I$x_includes"
-         gadget_cxxflags="$gadget_cxxflags -I$x_includes"
-      fi
-
-      APP_EXTRA_LIBS_X11="$X_LDFLAGS -lX11"
+      INCLUDES="$INCLUDES $X_CFLAGS"
+      gadget_cxxflags="$gadget_cxxflags $X_CFLAGS"
+      APP_EXTRA_LIBS_X11="$X_PRE_LIBS $X_LIBS -lX11 $X_EXTRA_LIBS"
    fi
 fi
 
